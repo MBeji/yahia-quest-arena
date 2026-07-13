@@ -1,11 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { optionalSupabaseAuth } from "@/shared/integrations/supabase/optional-auth-middleware";
 import { isRateLimited, isRateLimitedLocal } from "@/shared/lib/rate-limit";
 import { MIN_SECONDS_PER_QUESTION, QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
 import { errorMessage, failWithClientError } from "@/shared/lib/safe-error";
+import { findAnswerFormatViolation, MAX_CHOICE_LENGTH } from "@/shared/lib/answer-formats";
 import { logger } from "@/shared/lib/logger";
 import type { UnlockedBadge } from "@/shared/types/gamification";
 import type { Database } from "@/shared/integrations/supabase/types";
@@ -26,6 +28,42 @@ export const PARCOURS_COMING_SOON_MESSAGE =
   "Parcours premium : ce parcours sera bientôt disponible.";
 
 type ProfileSnapshot = Database["public"]["Tables"]["profiles"]["Row"];
+
+/** Thrown when an answer's wire format doesn't match its question's type. */
+export const ANSWER_FORMAT_MESSAGE = "Réponse invalide pour ce type de question.";
+
+/**
+ * Per-type wire-format validation (docs/interactive-question-types.md): fetch
+ * the exercise's (client-readable) question types and reject any answer whose
+ * `choice` doesn't match its question's expected format — e.g. a non-numeric
+ * string for a `numeric` question. Degrades open when the fetch itself fails:
+ * the scoring RPCs are garbage-safe either way, this only improves the error.
+ */
+async function assertAnswerFormats(
+  supabase: SupabaseClient<Database>,
+  scope: string,
+  exerciseId: string,
+  answers: ReadonlyArray<{ questionId: string; choice: string }>,
+): Promise<void> {
+  const { data: rows, error } = await supabase
+    .from("questions")
+    .select("id,question_type")
+    .eq("exercise_id", exerciseId);
+  if (error || !rows) {
+    logger.warn(`${scope}: question_type fetch failed — skipping format validation`, {
+      exerciseId,
+      error: error?.message,
+    });
+    return;
+  }
+  const violation = findAnswerFormatViolation(
+    new Map(rows.map((row) => [row.id, row.question_type])),
+    answers,
+  );
+  if (violation) {
+    failWithClientError(scope, null, ANSWER_FORMAT_MESSAGE);
+  }
+}
 
 /** Multiplier potion applied to a reward-earning attempt (null when none armed). */
 export type PotionApplied = {
@@ -207,6 +245,46 @@ export const getSubject = createServerFn({ method: "GET" })
       }
     }
 
+    // Parcours that owns this subject — powers the hub's level anchor + back link
+    // (étude 15 lot 7, D-6 : the kicker shows the CLASS, not the RPG attribute, and
+    // the hub gets a way back up to /niveau). Resolved for EVERYONE (anon included);
+    // a resolution failure degrades to "no anchor", never a broken page.
+    type ParcoursAnchorRow = {
+      id: string;
+      name_fr: string;
+      name_en: string | null;
+      name_ar: string | null;
+      is_premium: boolean;
+    };
+    let parcoursRow: ParcoursAnchorRow | null = null;
+    try {
+      const themeId = (subj.data as { theme_id?: string | null }).theme_id ?? null;
+      const gradeId = (subj.data as { grade_id?: string | null }).grade_id ?? null;
+      if (themeId) {
+        // resolve_subject_parcours matches grade_id with IS NOT DISTINCT FROM, so a
+        // null grade is valid (grade-agnostic themes resolve their own parcours); the
+        // generated arg type narrows p_grade to string, hence the cast on the nullable.
+        const parcoursIdRes = await supabase.rpc("resolve_subject_parcours", {
+          p_theme: themeId,
+          p_grade: gradeId as string,
+        });
+        const parcoursId = (parcoursIdRes as { data?: string | null }).data ?? null;
+        if (parcoursId) {
+          const { data: p } = await supabase
+            .from("parcours")
+            .select("id,name_fr,name_en,name_ar,is_premium")
+            .eq("id", parcoursId)
+            .maybeSingle();
+          parcoursRow = (p as ParcoursAnchorRow | null) ?? null;
+        }
+      }
+    } catch (err) {
+      logger.warn("quest.getSubject: parcours anchor fetch failed", {
+        subjectId: data.subjectId,
+        error: errorMessage(err),
+      });
+    }
+
     // Parcours access context for premium gating of missions on the page.
     // Assigned on every path below (both try branches + the catch's locked-safe default),
     // so it needs no initializer — and an unread one trips eslint's no-useless-assignment.
@@ -216,32 +294,21 @@ export const getSubject = createServerFn({ method: "GET" })
       viewer = { level: 0, isPremium: false, hasEntitlement: true };
     } else {
       try {
-        const themeId = (subj.data as { theme_id?: string | null }).theme_id ?? null;
-        const gradeId = (subj.data as { grade_id?: string | null }).grade_id ?? null;
-        const [viewerProfile, parcoursIdRes] = await Promise.all([
-          supabase.from("profiles").select("level").eq("id", userId).maybeSingle(),
-          themeId
-            ? // resolve_subject_parcours matches grade_id with IS NOT DISTINCT FROM, so a
-              // null grade is valid (grade-agnostic themes resolve their own parcours); the
-              // generated arg type narrows p_grade to string, hence the cast on the nullable.
-              supabase.rpc("resolve_subject_parcours", {
-                p_theme: themeId,
-                p_grade: gradeId as string,
-              })
-            : Promise.resolve({ data: null as string | null }),
-        ]);
+        const viewerProfile = await supabase
+          .from("profiles")
+          .select("level")
+          .eq("id", userId)
+          .maybeSingle();
         const level = viewerProfile.data?.level ?? 0;
-        const parcoursId = (parcoursIdRes as { data?: string | null }).data ?? null;
-        if (parcoursId) {
-          const [parcoursRow, entRes] = await Promise.all([
-            supabase.from("parcours").select("is_premium").eq("id", parcoursId).maybeSingle(),
-            supabase.rpc("has_parcours_entitlement", {
-              p_user: userId,
-              p_parcours: parcoursId,
-            }),
-          ]);
-          const isPremium = parcoursRow.data?.is_premium ?? false;
-          viewer = { level, isPremium, hasEntitlement: isPremium ? entRes.data === true : true };
+        if (parcoursRow) {
+          const isPremium = parcoursRow.is_premium ?? false;
+          const entRes = isPremium
+            ? await supabase.rpc("has_parcours_entitlement", {
+                p_user: userId,
+                p_parcours: parcoursRow.id,
+              })
+            : null;
+          viewer = { level, isPremium, hasEntitlement: isPremium ? entRes?.data === true : true };
         } else {
           viewer = { level, isPremium: false, hasEntitlement: true };
         }
@@ -261,6 +328,14 @@ export const getSubject = createServerFn({ method: "GET" })
       bestByExercise: best,
       quizPassedByChapter,
       viewer,
+      parcours: parcoursRow
+        ? {
+            id: parcoursRow.id,
+            name_fr: parcoursRow.name_fr,
+            name_en: parcoursRow.name_en,
+            name_ar: parcoursRow.name_ar,
+          }
+        : null,
     };
   });
 
@@ -269,11 +344,11 @@ export const getChapterLesson = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
   .inputValidator((d) => z.object({ chapterId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
-    const { supabase } = context;
+    const { supabase, userId } = context;
     const { data: chapter, error } = await supabase
       .from("chapters")
       .select(
-        "id, title, description, lesson_content, summary, subject_id, display_order, subjects(id, name_fr, color_token, icon, content_language)",
+        "id, title, description, lesson_content, summary, subject_id, display_order, subjects(id, name_fr, color_token, icon, content_language, grade_id)",
       )
       .eq("id", data.chapterId)
       .single();
@@ -281,18 +356,33 @@ export const getChapterLesson = createServerFn({ method: "GET" })
       failWithClientError("quest.getChapterLesson", error, "Impossible de charger la leçon.");
     }
 
-    // Fetch all sibling chapters for navigation
-    const { data: siblings } = await supabase
-      .from("chapters")
-      .select("id, title, display_order, lesson_content")
-      .eq("subject_id", chapter.subject_id)
-      .order("display_order");
+    // Fetch all sibling chapters for navigation. We only need each sibling's
+    // metadata + whether it HAS a lesson — never the lesson body itself. Pulling
+    // `lesson_content` here shipped every sibling's full markdown over the wire
+    // just to derive a boolean (a subject with N chapters × ~30 KB each). Split
+    // into two tiny reads: the metadata for all siblings, and the id-only set of
+    // those that actually carry a lesson.
+    const [{ data: siblings }, { data: siblingsWithLesson }] = await Promise.all([
+      supabase
+        .from("chapters")
+        .select("id, title, display_order")
+        .eq("subject_id", chapter.subject_id)
+        .order("display_order"),
+      supabase
+        .from("chapters")
+        .select("id")
+        .eq("subject_id", chapter.subject_id)
+        .not("lesson_content", "is", null)
+        // Preserve the old `!!lesson_content` semantics: an empty string is "no lesson".
+        .neq("lesson_content", ""),
+    ]);
 
+    const withLesson = new Set((siblingsWithLesson ?? []).map((s) => s.id));
     const allChapters = (siblings ?? []).map((s) => ({
       id: s.id,
       title: s.title,
       display_order: s.display_order,
-      hasLesson: !!s.lesson_content,
+      hasLesson: withLesson.has(s.id),
     }));
 
     // Target for the course reader's single « practise this chapter » CTA: the
@@ -306,7 +396,30 @@ export const getChapterLesson = createServerFn({ method: "GET" })
       .order("display_order");
     const practiceExerciseId = (chapterExercises ?? []).find((e) => e.mode !== "quiz")?.id ?? null;
 
-    return { chapter, allChapters, practiceExerciseId };
+    // Quiz-gate affordance for the reader CTA (étude 15, lot 1 — audit §D-4): the
+    // chapter's quiz id, whether the gate applies (school subjects only — same
+    // rule as getSubject), and — signed-in only — whether THIS user already
+    // passed it (score ≥ threshold AND not rushed, mirroring getSubject).
+    // Anonymous visitors resolve their pass client-side (sessionStorage, see
+    // anon-quiz-gate.ts), so quizPassed stays null for them.
+    const quizExerciseId = (chapterExercises ?? []).find((e) => e.mode === "quiz")?.id ?? null;
+    const isSchoolSubject =
+      ((chapter.subjects as { grade_id?: string | null } | null)?.grade_id ?? null) !== null;
+    const quizGated = isSchoolSubject && quizExerciseId !== null;
+    let quizPassed: boolean | null = null;
+    if (quizGated && userId) {
+      const { data: passedRows } = await supabase
+        .from("attempts")
+        .select("duration_seconds,total_count")
+        .eq("user_id", userId)
+        .eq("exercise_id", quizExerciseId as string)
+        .gte("score_pct", QUIZ_PASS_THRESHOLD_PCT);
+      quizPassed = (passedRows ?? []).some(
+        (r) => (r.duration_seconds ?? 0) >= (r.total_count ?? 0) * MIN_SECONDS_PER_QUESTION,
+      );
+    }
+
+    return { chapter, allChapters, practiceExerciseId, quizExerciseId, quizGated, quizPassed };
   });
 
 // ---------- Manuel élève pages (login-gated) ----------
@@ -401,7 +514,9 @@ function clientIpKey(): string {
  * Public, stateless correction for anonymous (or signed-in) practice. Calls the
  * SECURITY DEFINER check_answers RPC — no session, no attempt, no XP. Returns the
  * per-question correction for admin practice/boss exercises; comprehension quizzes
- * and parent content yield an empty, non-reviewable result.
+ * and parent content yield an empty, non-reviewable result. The RPC withholds the
+ * `explanation` from anonymous callers (auth.uid() IS NULL) — hint-economy content
+ * (audit #1) — so `correctChoice` is set but `explanation` is null for visitors.
  */
 export const checkAnswersPublic = createServerFn({ method: "POST" })
   .middleware([optionalSupabaseAuth])
@@ -410,7 +525,9 @@ export const checkAnswersPublic = createServerFn({ method: "POST" })
       .object({
         exerciseId: z.guid(),
         answers: z
-          .array(z.object({ questionId: z.guid(), choice: z.string() }))
+          .array(
+            z.object({ questionId: z.guid(), choice: z.string().min(1).max(MAX_CHOICE_LENGTH) }),
+          )
           .min(1)
           .max(100),
       })
@@ -428,6 +545,8 @@ export const checkAnswersPublic = createServerFn({ method: "POST" })
     if (limited) {
       throw new Error("Trop de requêtes. Réessaie dans un instant.");
     }
+
+    await assertAnswerFormats(supabase, "quest.checkAnswersPublic", data.exerciseId, data.answers);
 
     const { data: rows, error } = await supabase.rpc("check_answers", {
       p_exercise_id: data.exerciseId,
@@ -471,6 +590,62 @@ export const checkAnswersPublic = createServerFn({ method: "POST" })
     return { reviewable: total > 0, correct, total, scorePct, review };
   });
 
+// ---------- Public quiz scoring (anonymous gate parity) ----------
+/**
+ * Public, stateless SCORING for the comprehension quiz. Mirrors the connected gate
+ * WITHOUT leaking it: calls the SECURITY DEFINER `score_quiz` RPC, which returns
+ * only the aggregate (correct count + total) for admin mode='quiz' exercises —
+ * never per-question correctness, the correct option, or explanations. So an
+ * anonymous visitor can self-validate their comprehension and unlock a chapter's
+ * practice client-side, exactly like a signed-in student (whose quiz attempts also
+ * return a score only). No session, no attempt, no XP.
+ */
+export const scoreQuizPublic = createServerFn({ method: "POST" })
+  .middleware([optionalSupabaseAuth])
+  .inputValidator((d) =>
+    z
+      .object({
+        exerciseId: z.guid(),
+        answers: z
+          .array(
+            z.object({ questionId: z.guid(), choice: z.string().min(1).max(MAX_CHOICE_LENGTH) }),
+          )
+          .min(1)
+          .max(100),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    // Anti-abuse — same split as checkAnswersPublic: persistent limiter for
+    // signed-in callers, best-effort in-memory IP limiter for anonymous ones.
+    const limited = userId
+      ? await isRateLimited(supabase, `score_quiz_${userId}`, 30, 60_000)
+      : isRateLimitedLocal(`score_quiz_ip_${clientIpKey()}`, 30, 60_000);
+    if (limited) {
+      throw new Error("Trop de requêtes. Réessaie dans un instant.");
+    }
+
+    await assertAnswerFormats(supabase, "quest.scoreQuizPublic", data.exerciseId, data.answers);
+
+    const { data: rows, error } = await supabase.rpc("score_quiz", {
+      p_exercise_id: data.exerciseId,
+      p_answers: data.answers,
+    });
+    if (error) {
+      failWithClientError("quest.scoreQuizPublic", error, "Impossible de corriger le quiz.");
+    }
+
+    const row = Array.isArray(rows)
+      ? (rows[0] as { correct?: number; total?: number } | undefined)
+      : undefined;
+    const total = Number(row?.total ?? 0);
+    const correct = Number(row?.correct ?? 0);
+    const scorePct = total > 0 ? Math.round((correct / total) * 100) : 0;
+    return { correct, total, scorePct };
+  });
+
 // ---------- Get exercise + questions ----------
 export const getExercise = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
@@ -481,13 +656,13 @@ export const getExercise = createServerFn({ method: "GET" })
       supabase
         .from("exercises")
         .select(
-          "*, subjects(id,name_fr,color_token,icon,content_language), chapters(id,title,subject_id)",
+          "*, subjects(id,name_fr,color_token,icon,content_language,grade_id), chapters(id,title,subject_id)",
         )
         .eq("id", data.exerciseId)
         .single(),
       supabase
         .from("questions")
-        .select("id,prompt,options,display_order")
+        .select("id,prompt,options,display_order,question_type")
         .eq("exercise_id", data.exerciseId)
         .order("display_order"),
     ]);
@@ -516,7 +691,34 @@ export const getExercise = createServerFn({ method: "GET" })
       }
     }
 
-    return { exercise: ex.data, questions: qs.data ?? [], hintCharges };
+    // Direct unlock target for the comprehension-quiz gate: when a non-quiz
+    // exercise is gated, the lock screen links straight to the chapter's quiz
+    // instead of bouncing the student to the subject hub to hunt for it.
+    let chapterQuizId: string | null = null;
+    const exRow = ex.data as { chapter_id?: string | null; mode?: string | null } | null;
+    if (exRow?.chapter_id && exRow.mode !== "quiz") {
+      const { data: quizRow } = await supabase
+        .from("exercises")
+        .select("id")
+        .eq("chapter_id", exRow.chapter_id)
+        .eq("mode", "quiz")
+        .maybeSingle();
+      chapterQuizId = (quizRow as { id?: string } | null)?.id ?? null;
+    }
+
+    // The comprehension-quiz gate applies to SCHOOL subjects only (grade-bound):
+    // a non-quiz exercise whose chapter has a quiz is gated until that quiz is
+    // passed. Non-school themes leave grade_id NULL -> never gated. Computed here
+    // so BOTH the connected (`/quest`) and anonymous (`/exercice`) players share
+    // one definition of "is this locked behind the quiz?" — the connected start is
+    // still enforced server-side in start_exercise_session; the anon player reads
+    // this flag and checks the session-local pass state.
+    const subjectGradeId =
+      (ex.data as { subjects?: { grade_id?: string | null } | null } | null)?.subjects?.grade_id ??
+      null;
+    const quizGated = chapterQuizId !== null && subjectGradeId !== null;
+
+    return { exercise: ex.data, questions: qs.data ?? [], hintCharges, chapterQuizId, quizGated };
   });
 
 // ---------- Start a secure exercise session ----------
@@ -613,7 +815,9 @@ export const submitAttempt = createServerFn({ method: "POST" })
         sessionId: z.guid(),
         exerciseId: z.guid(),
         answers: z
-          .array(z.object({ questionId: z.guid(), choice: z.string() }))
+          .array(
+            z.object({ questionId: z.guid(), choice: z.string().min(1).max(MAX_CHOICE_LENGTH) }),
+          )
           .min(1)
           .max(100),
       })
@@ -626,6 +830,8 @@ export const submitAttempt = createServerFn({ method: "POST" })
     if (await isRateLimited(supabase, `submit_${userId}`, 5, 10_000)) {
       throw new Error("Too many submissions. Please slow down.");
     }
+
+    await assertAnswerFormats(supabase, "quest.submitAttempt", data.exerciseId, data.answers);
 
     // Comprehension quizzes are validated by the student alone: we never return
     // the correct answers / explanations for a quiz, so they cannot be memorised
@@ -671,15 +877,20 @@ export const submitAttempt = createServerFn({ method: "POST" })
     // answering (GAP-020). We zip the caller's answers against it.
     let review: ReviewItem[] = [];
     if (!isQuiz) {
+      // Passing the answers lets the RPC score each one through the same
+      // `score_answer` seam as the submit RPC — so a numeric answer inside its
+      // tolerance shows as correct in the review, exactly as it was counted.
       const { data: reviewRows } = await supabase.rpc("get_attempt_review", {
         p_session_id: data.sessionId,
+        p_answers: data.answers,
       });
       const rows = Array.isArray(reviewRows)
         ? (reviewRows as Array<{
             question_id: string;
             prompt: string;
-            correct_option: string;
+            correct_option: string | null;
             explanation: string | null;
+            is_correct: boolean | null;
           }>)
         : [];
       const byId = new Map(rows.map((r) => [r.question_id, r]));
@@ -693,7 +904,9 @@ export const submitAttempt = createServerFn({ method: "POST" })
             prompt: q?.prompt ?? "Question",
             selectedChoice: answer.choice,
             correctChoice: q?.correct_option ?? "",
-            isCorrect: q?.correct_option === answer.choice,
+            // Server-scored; the string-equality fallback covers a transient
+            // pre-migration RPC shape (is_correct absent) — mcq semantics only.
+            isCorrect: q ? (q.is_correct ?? q.correct_option === answer.choice) : false,
             explanation: q?.explanation ?? null,
           };
         });

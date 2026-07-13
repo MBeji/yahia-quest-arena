@@ -1,0 +1,82 @@
+{
+  "title": "📝 Training ⭐⭐⭐: full review of Module Three",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Complete the question: \"___ is your new dress?\" — \"It's pink and white.\"",
+      "options": [
+        { "id": "a", "text": "What colour" },
+        { "id": "b", "text": "How old" },
+        { "id": "c", "text": "What time" },
+        { "id": "d", "text": "How many" }
+      ],
+      "correctOption": "a",
+      "explanation": "The answer names colours (pink and white), so the question asks \"What colour\": What colour is your dress? \"How old\" asks about age, \"What time\" about the clock, and \"How many\" about a number of things.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"First we light the candles, ___ we blow them out.\"",
+      "options": [
+        { "id": "a", "text": "but" },
+        { "id": "b", "text": "because" },
+        { "id": "c", "text": "near" },
+        { "id": "d", "text": "then" }
+      ],
+      "correctOption": "d",
+      "explanation": "The two actions happen one after the other, so we use \"then\" to show the next step: first we light the candles, then we blow them out ✓. \"But\" shows a contrast, \"because\" a reason, and \"near\" is a preposition of place, not a linker.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "One sentence has a mistake. Which one? (1) There are many fruits at the market. (2) Me like strawberries very much. (3) My mother buys apples and figs. (4) We eat them at home.",
+      "options": [
+        { "id": "a", "text": "Sentence 1" },
+        { "id": "b", "text": "Sentence 2" },
+        { "id": "c", "text": "Sentence 3" },
+        { "id": "d", "text": "Sentence 4" }
+      ],
+      "correctOption": "b",
+      "explanation": "Sentence 2 is the faulty one. \"Me\" is an object pronoun and cannot be the subject of a verb: it must be \"I like strawberries very much\" ✓. Sentences 1, 3 and 4 correctly use \"there are\", the simple present, and the object pronoun \"them\".",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"___ market is near ___ big mosque in our town.\"",
+      "options": [
+        { "id": "a", "text": "A … a" },
+        { "id": "b", "text": "A … the" },
+        { "id": "c", "text": "The … the" },
+        { "id": "d", "text": "The … a" }
+      ],
+      "correctOption": "c",
+      "explanation": "Both places are specific, well-known places in the town that the speaker and listener both know, so we use \"the\" for each: The market is near the big mosque ✓. \"A / an\" would introduce them as new, unknown things, which does not fit \"our town\".",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Rewrite \"the toys of the children\" with a genitive: \"the ___ toys.\"",
+      "options": [
+        { "id": "a", "text": "childrens'" },
+        { "id": "b", "text": "children's" },
+        { "id": "c", "text": "childs'" },
+        { "id": "d", "text": "children" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Children\" is an irregular plural, so its genitive adds apostrophe + s, like a singular owner: the children's toys ✓. \"Childrens'\" is wrong because \"childrens\" does not exist, \"childs'\" uses a non-existent plural, and \"children\" alone shows no possession.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"There ___ two markets ___ my town: one near the beach and one in the centre.\"",
+      "options": [
+        { "id": "a", "text": "are … in" },
+        { "id": "b", "text": "is … in" },
+        { "id": "c", "text": "are … on" },
+        { "id": "d", "text": "are … at" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Two markets\" is plural → there are; and for a town (an area) we use \"in\": there are two markets in my town ✓. \"There is\" does not agree with a plural, and \"on / at my town\" are the wrong prepositions for a place this size.",
+      "difficulty": 3
+    }
+  ]
+}

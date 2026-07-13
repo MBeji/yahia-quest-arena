@@ -1,0 +1,125 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Comment forme-t-on le plus-que-parfait ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "l'auxiliaire être ou avoir à l'imparfait + le participe passé"
+        },
+        {
+          "id": "b",
+          "text": "l'auxiliaire être ou avoir au présent + le participe passé"
+        },
+        {
+          "id": "c",
+          "text": "le verbe à l'imparfait, tout simplement"
+        },
+        {
+          "id": "d",
+          "text": "l'auxiliaire au futur + le participe passé"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Le plus-que-parfait est un temps composé : auxiliaire être ou avoir à l'IMPARFAIT (avais, était…) + participe passé, par exemple « j'avais préparé », « elle était partie ». Avec l'auxiliaire au présent, on obtiendrait le passé composé.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle phrase est au plus-que-parfait ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Le guide a préparé les chameaux."
+        },
+        {
+          "id": "b",
+          "text": "Le guide avait préparé les chameaux."
+        },
+        {
+          "id": "c",
+          "text": "Le guide prépare les chameaux."
+        },
+        {
+          "id": "d",
+          "text": "Le guide préparera les chameaux."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« avait préparé » = auxiliaire avoir à l'imparfait + participe passé → plus-que-parfait. « a préparé » est un passé composé (auxiliaire au présent), « prépare » un présent et « préparera » un futur.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Le plus-que-parfait sert surtout à exprimer :",
+      "options": [
+        {
+          "id": "a",
+          "text": "une action qui se déroule maintenant"
+        },
+        {
+          "id": "b",
+          "text": "un ordre ou un conseil"
+        },
+        {
+          "id": "c",
+          "text": "une action accomplie avant une autre action passée"
+        },
+        {
+          "id": "d",
+          "text": "une action qui se passera plus tard"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Le plus-que-parfait est le « passé du passé » : il marque l'antériorité, c'est-à-dire une action déjà accomplie avant une autre action passée, comme dans « le soleil s'était couché quand ils arrivèrent ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "« Lorsque Nour ouvrit le carnet, sa grand-mère avait déjà écrit les dernières pages. » Quelle action s'est passée EN PREMIER ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Nour a ouvert le carnet."
+        },
+        {
+          "id": "b",
+          "text": "Les deux actions se passent en même temps."
+        },
+        {
+          "id": "c",
+          "text": "On ne peut pas le savoir."
+        },
+        {
+          "id": "d",
+          "text": "La grand-mère a écrit les dernières pages."
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "« avait écrit » est au plus-que-parfait : cette action est antérieure. La grand-mère a donc écrit les pages AVANT que Nour n'ouvre le carnet, même si cette action est citée en second dans la phrase (le mot « déjà » le confirme).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Mets « partir » au plus-que-parfait : « Les caravaniers ___ à l'aube. »",
+      "options": [
+        {
+          "id": "a",
+          "text": "avaient partis"
+        },
+        {
+          "id": "b",
+          "text": "étaient parti"
+        },
+        {
+          "id": "c",
+          "text": "étaient partis"
+        },
+        {
+          "id": "d",
+          "text": "ont partis"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "« partir » est un verbe de mouvement : il se conjugue avec être. Au plus-que-parfait : être à l'imparfait (étaient) + participe accordé avec le sujet masculin pluriel → « étaient partis ». « avaient partis » se trompe d'auxiliaire, « étaient parti » oublie l'accord et « ont partis » est un passé composé fautif.",
+      "difficulty": 2
+    }
+  ]
+}

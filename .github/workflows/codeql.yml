@@ -1,0 +1,57 @@
+name: CodeQL
+
+# Static security analysis (SAST) of the JS/TS codebase — the code-level
+# complement to `audit:deps` (known-vulnerable packages) and the pgTAP suite
+# (SQL grants/RLS). Runs on every PR (it is a ruleset-required check, so it
+# must always report), on pushes to main, weekly (to pick up new queries
+# against unchanged code), and on demand (auto-pr.yml dispatches it for
+# bot-created PRs, which fire no pull_request events).
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    # Weekly sweep, Monday 03:17 UTC — new CodeQL queries vs unchanged code.
+    - cron: "17 3 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    # Job name IS the required-check context in .github/rulesets/main-protection.json
+    # — keep them in sync.
+    name: CodeQL
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
+      # Upload the SARIF results to the repo's code-scanning dashboard.
+      security-events: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: javascript-typescript
+          # No compilation needed for JS/TS — skip autobuild entirely.
+          build-mode: none
+          # security-extended adds the lower-severity/precision security queries
+          # on top of the default suite; right for a public app handling minors'
+          # accounts. Not `-and-quality` — style issues belong to ESLint.
+          queries: security-extended
+
+      - name: Analyze
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:javascript-typescript"

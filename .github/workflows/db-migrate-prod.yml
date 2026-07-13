@@ -6,6 +6,12 @@ name: db-migrate-prod
 #
 #   push (main, supabase/migrations/**) -> auto-apply pending migrations to prod
 #   workflow_dispatch                   -> manual: push | list (read-only) | repair-all
+#   schedule (hourly)                   -> RECONCILIATION: pushes performed with
+#     GITHUB_TOKEN (e.g. an auto-merge squash) fire NO workflow events, so the
+#     push trigger silently misses them and prod falls behind main (observed on
+#     #288/#290/#291 — each needed a manual dispatch). The hourly run compares the
+#     newest local migration to prod's schema_migrations and applies the pending
+#     ones; when prod is already up to date it exits early (no pg_dump, no apply).
 #
 # Safety: a fresh pg_dump of prod is taken & uploaded BEFORE any apply; the
 # scripts/db/push-prod.mjs guard refuses to run unless the URL targets prod (and
@@ -16,13 +22,19 @@ on:
   push:
     branches: [main]
     paths: ["supabase/migrations/**"]
+  schedule:
+    - cron: "7 * * * *" # hourly reconciliation (see header) — cheap no-op when up to date
   workflow_dispatch:
     inputs:
       mode:
-        description: "push = apply pending · list = read-only diff · repair-all = one-time bootstrap (mark all local as applied)"
+        description: "push = apply pending · list = read-only diff · repair-all = bootstrap (mark all local applied) · repair-revert = clear remote-only phantom(s) then push"
         type: choice
-        options: [push, list, repair-all]
+        options: [push, list, repair-all, repair-revert]
         default: push
+      versions:
+        description: "repair-revert only: space-separated 14-digit version(s) to mark reverted (remote-only phantoms with no local file)"
+        type: string
+        default: ""
 
 # Never let two prod migration runs overlap.
 concurrency:
@@ -31,6 +43,11 @@ concurrency:
 
 permissions:
   contents: read
+  # Open/update a tracking issue when an auto-apply fails. A back-dated migration
+  # (#97) made `db push` abort on EVERY push to `main` for ~2 weeks while the
+  # failure stayed buried in the Actions log — prod silently fell behind code.
+  # This surfaces it the same day (#227/#229).
+  issues: write
 
 jobs:
   migrate:
@@ -50,19 +67,19 @@ jobs:
           echo "Mode: ${MODE}"
 
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Setup Node 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22
 
       - name: Install the Supabase CLI
         # Pinned to the same version as db-tests.yml / e2e-auth.yml for a
         # deterministic toolchain. Bump deliberately, with a green run.
-        uses: supabase/setup-cli@v1
+        uses: supabase/setup-cli@v2
         with:
-          version: 2.106.0
+          version: 2.108.0
 
       # --- Pre-apply safety net: a fresh prod dump (skipped for read-only list) ---
       - name: Install postgresql-client-17 (prod runs Postgres 17.x)
@@ -74,8 +91,30 @@ jobs:
           sudo apt-get install -y -qq postgresql-client-17 >/dev/null
           echo "/usr/lib/postgresql/17/bin" >> "$GITHUB_PATH"
 
+      # --- Hourly reconciliation gate: skip everything when prod is up to date ---
+      # Compares the newest LOCAL migration version to the newest APPLIED version
+      # in prod's supabase_migrations.schema_migrations. A merged-but-unapplied
+      # migration is always the newest local one, so `local > remote` is the
+      # pending signal. (A remote-only phantom is unaffected: the tracking-issue
+      # path + the repair-revert dispatch mode own that case.)
+      - name: Reconciliation check (schedule only)
+        id: recon
+        if: ${{ github.event_name == 'schedule' }}
+        run: |
+          set -euo pipefail
+          LOCAL=$(ls supabase/migrations/*.sql | sed -E 's|.*/([0-9]{14})_.*|\1|' | sort | tail -1)
+          REMOTE=$(psql "${PROD_SUPABASE_DB_URL}" -tAc "select coalesce(max(version), '0') from supabase_migrations.schema_migrations" | tr -d '[:space:]')
+          echo "local=$LOCAL remote=$REMOTE"
+          if [ "$LOCAL" \> "$REMOTE" ]; then
+            echo "pending=true" >> "$GITHUB_OUTPUT"
+            echo "::warning title=Prod en retard sur main::Migration $LOCAL non appliquée (remote: $REMOTE) — apply de rattrapage (le push d'un automerge ne déclenche pas de workflow)."
+          else
+            echo "pending=false" >> "$GITHUB_OUTPUT"
+            echo "### ✅ Réconciliation : prod à jour (remote $REMOTE ≥ local $LOCAL) — rien à appliquer" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
       - name: Backup prod (pg_dump public+auth) BEFORE applying
-        if: ${{ env.MODE != 'list' }}
+        if: ${{ env.MODE != 'list' && (github.event_name != 'schedule' || steps.recon.outputs.pending == 'true') }}
         run: |
           set -euo pipefail
           STAMP="$(date -u +%Y%m%d-%H%M%S)"
@@ -90,7 +129,7 @@ jobs:
           [ "$OBJECTS" -gt 50 ] || { echo "::error::Dump suspect ($OBJECTS objets) — abort avant migration."; exit 1; }
 
       - name: Upload pre-migration backup (retention 14 j)
-        if: ${{ env.MODE != 'list' }}
+        if: ${{ env.MODE != 'list' && (github.event_name != 'schedule' || steps.recon.outputs.pending == 'true') }}
         uses: actions/upload-artifact@v7
         with:
           name: prod-pre-migration-${{ env.STAMP }}
@@ -100,18 +139,96 @@ jobs:
 
       # --- Pending diff (read-only) — always shown first ---
       - name: Pending migrations (before)
+        if: ${{ github.event_name != 'schedule' || steps.recon.outputs.pending == 'true' }}
         run: node scripts/db/push-prod.mjs --mode list
 
       # --- Apply / bootstrap ---
       - name: Apply pending migrations (db push)
-        if: ${{ env.MODE == 'push' }}
+        if: ${{ env.MODE == 'push' && (github.event_name != 'schedule' || steps.recon.outputs.pending == 'true') }}
         run: node scripts/db/push-prod.mjs --mode push
 
       - name: Bootstrap — mark all local migrations as applied (repair-all)
         if: ${{ env.MODE == 'repair-all' }}
         run: node scripts/db/push-prod.mjs --mode repair-all
 
+      # Clear a remote-only PHANTOM (a version applied to prod whose migration file
+      # was later removed/renamed on main) then apply the genuinely-pending
+      # migrations. Bookkeeping-only revert: no down-SQL, no data touched.
+      - name: Repair phantom history then apply (repair-revert)
+        if: ${{ env.MODE == 'repair-revert' }}
+        env:
+          REPAIR_VERSIONS: ${{ github.event.inputs.versions }}
+        run: node scripts/db/push-prod.mjs --mode repair-revert
+
       # --- Confirm the post-apply state ---
       - name: Pending migrations (after)
-        if: ${{ env.MODE != 'list' }}
+        if: ${{ env.MODE != 'list' && (github.event_name != 'schedule' || steps.recon.outputs.pending == 'true') }}
         run: node scripts/db/push-prod.mjs --mode list
+
+      # --- Surface a failed auto-apply (never let it stay buried in the log) ---
+      # For the automatic triggers (push AND the hourly reconciliation): a manual
+      # dispatch has a human watching.
+      - name: Report apply outcome on a tracking issue
+        if: ${{ always() && (github.event_name == 'push' || github.event_name == 'schedule') }}
+        uses: actions/github-script@v9
+        env:
+          JOB_STATUS: ${{ job.status }}
+        with:
+          script: |
+            const failed = process.env.JOB_STATUS !== 'success';
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const date = new Date().toISOString().slice(0, 10);
+            const LABEL = 'prod-migration-failure';
+
+            try {
+              await github.rest.issues.getLabel({ ...context.repo, name: LABEL });
+            } catch {
+              await github.rest.issues.createLabel({
+                ...context.repo,
+                name: LABEL,
+                color: 'b60205',
+                description: "Échec de l'auto-apply des migrations en production",
+              });
+            }
+
+            const existing = await github.rest.issues.listForRepo({
+              ...context.repo,
+              state: 'open',
+              labels: LABEL,
+            });
+
+            if (failed) {
+              let body = `### 🛑 Auto-apply des migrations en PRODUCTION en échec — ${date}\n\n`;
+              body += `\`db-migrate-prod\` a échoué sur le push \`${context.sha.slice(0, 7)}\`. `;
+              body += `Tant que ce job échoue, **la prod est en retard sur le code** `;
+              body += `(une migration mal horodatée bloque \`supabase db push\`, et toutes `;
+              body += `les migrations suivantes restent en attente derrière elle).\n\n`;
+              body += `**À faire** : ouvrir le run, lire l'erreur \`db push\`, corriger l'ordre `;
+              body += `(re-horodater la migration fautive pour qu'elle trie APRÈS la dernière `;
+              body += `appliquée), puis re-déclencher le workflow. Voir CLAUDE.md §7.\n\n`;
+              body += `[Voir le run complet](${runUrl})\n`;
+
+              const title = '🛑 Auto-apply migrations prod en échec';
+              if (existing.data.length > 0) {
+                const n = existing.data[0].number;
+                await github.rest.issues.update({ ...context.repo, issue_number: n, title });
+                await github.rest.issues.createComment({ ...context.repo, issue_number: n, body });
+              } else {
+                await github.rest.issues.create({ ...context.repo, title, body, labels: [LABEL] });
+              }
+              core.setFailed('Prod migration auto-apply failed — see the tracking issue.');
+            } else {
+              // Apply succeeded: close any open failure issue with a recovery note.
+              for (const issue of existing.data) {
+                await github.rest.issues.createComment({
+                  ...context.repo,
+                  issue_number: issue.number,
+                  body: `✅ Auto-apply repassé au vert le ${date} ([run](${runUrl})) — fermeture automatique.`,
+                });
+                await github.rest.issues.update({
+                  ...context.repo,
+                  issue_number: issue.number,
+                  state: 'closed',
+                });
+              }
+            }

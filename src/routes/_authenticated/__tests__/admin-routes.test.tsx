@@ -55,6 +55,10 @@ vi.mock("@/features/content-report", () => ({
   ContentReportsAdmin: () => React.createElement("div", { "data-testid": "content-reports-admin" }),
 }));
 
+vi.mock("@/features/bug-report", () => ({
+  BugReportsAdmin: () => React.createElement("div", { "data-testid": "bug-reports-admin" }),
+}));
+
 vi.mock("@/features/dashboard", () => ({
   getParcours: vi.fn(() => Promise.resolve({ parcours: [] })),
   getParcoursInterestCounts: vi.fn(() => Promise.resolve({ counts: [] })),
@@ -73,11 +77,13 @@ vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 import "../admin.subscriptions";
 import "../admin.beta-requests";
 import "../admin.content-reports";
+import "../admin.bug-reports";
 import "../admin.parcours-interest";
 
 const SUBSCRIPTIONS = "/_authenticated/admin/subscriptions";
 const BETA = "/_authenticated/admin/beta-requests";
 const REPORTS = "/_authenticated/admin/content-reports";
+const BUGS = "/_authenticated/admin/bug-reports";
 const INTEREST = "/_authenticated/admin/parcours-interest";
 
 function pageFor(path: string): React.ComponentType {
@@ -182,6 +188,30 @@ describe("admin console route guards (GAP-017)", () => {
 
       expect(screen.getByText(fr.subscription.accessDenied)).toBeInTheDocument();
       expect(screen.queryByTestId("content-reports-admin")).not.toBeInTheDocument();
+    });
+  });
+
+  describe("/admin/bug-reports", () => {
+    it("lets an admin into the bug-reports console", () => {
+      h.role = ADMIN;
+      renderPage(pageFor(BUGS));
+
+      expect(screen.getByTestId("bug-reports-admin")).toBeInTheDocument();
+      expect(screen.queryByText(fr.subscription.accessDenied)).not.toBeInTheDocument();
+    });
+
+    it("refuses a non-admin", () => {
+      h.role = {
+        role: "student",
+        isAdmin: false,
+        currentParcoursId: null,
+        hasProfile: true,
+        isLoaded: true,
+      };
+      renderPage(pageFor(BUGS));
+
+      expect(screen.getByText(fr.subscription.accessDenied)).toBeInTheDocument();
+      expect(screen.queryByTestId("bug-reports-admin")).not.toBeInTheDocument();
     });
   });
 

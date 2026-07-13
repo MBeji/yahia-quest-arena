@@ -75,7 +75,7 @@
         { "id": "d", "text": "Students can still pay with cash after 1st September." }
       ],
       "correctOption": "d",
-      "explanation": "The notice says \"Cash will not be accepted\" from 1st September — so (b) is false. (a) The change starts on 1st September ✓. (c) Students without a card should speak to the office ✓. (d) Only card payments will be accepted ✓. (b) directly contradicts the notice.",
+      "explanation": "The notice says cash will not be accepted from 1st September, so \"Students can still pay with cash after 1st September\" is FALSE — that is the answer. The other three statements are all true: the change starts on 1st September, card payment will be required, and students without a card should contact the office.",
       "difficulty": 3
     }
   ]

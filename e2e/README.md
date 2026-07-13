@@ -122,7 +122,9 @@ Seeded accounts (all password `E2E_USER_PASSWORD`):
 Premium is now per-parcours: `student.premium@` is **granted the `concours-9eme` +
 `concours-6eme` entitlements** via `admin_grant_parcours` (the seed runs as service-role,
 bypassing `is_admin()`); `student.free@` has **no entitlements**. There are no
-`subscription_*` columns anymore.
+`subscription_*` columns anymore. Note (free phase, since migration `20260711100000`):
+every parcours is `is_premium = false` in prod, so these seeded entitlements exercise the
+**dormant** premium machinery — specs assert the free-phase behavior.
 
 ## Maintenance / guardrails
 

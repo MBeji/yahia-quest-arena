@@ -1,0 +1,68 @@
+{
+  "title": "Test de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Comment forme-t-on l'imparfait de l'indicatif ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Sur le radical du « nous » au présent + -ais, -ais, -ait, -ions, -iez, -aient"
+        },
+        { "id": "b", "text": "Sur l'infinitif + -rai, -ras, -ra, -rons, -rez, -ront" },
+        { "id": "c", "text": "Avec l'auxiliaire être ou avoir + le participe passé" },
+        { "id": "d", "text": "Sur l'infinitif + -ai, -as, -a, -âmes, -âtes, -èrent" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'imparfait se construit sur le radical de la 1re personne du pluriel du présent (nous chantons → chant-) auquel on ajoute -ais, -ais, -ait, -ions, -iez, -aient, les mêmes pour tous les verbes. La réponse b décrit le futur simple, la c le passé composé et la d le passé simple du 1er groupe.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelles sont les terminaisons du passé simple pour les verbes du 1er groupe (en -er) ?",
+      "options": [
+        { "id": "a", "text": "-ais, -ais, -ait, -ions, -iez, -aient" },
+        { "id": "b", "text": "-ai, -as, -a, -âmes, -âtes, -èrent" },
+        { "id": "c", "text": "-is, -is, -it, -îmes, -îtes, -irent" },
+        { "id": "d", "text": "-us, -us, -ut, -ûmes, -ûtes, -urent" }
+      ],
+      "correctOption": "b",
+      "explanation": "Au passé simple, les verbes du 1er groupe (chanter, aller) prennent -ai, -as, -a, -âmes, -âtes, -èrent : « il chanta, ils chantèrent ». Les terminaisons en -is (c) valent pour finir et beaucoup de verbes du 3e groupe ; celles en -us (d) pour d'autres verbes du 3e groupe ; la série a est celle de l'imparfait.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans un récit, quel temps sert à planter le décor et l'arrière-plan de l'histoire ?",
+      "options": [
+        { "id": "a", "text": "Le passé simple" },
+        { "id": "b", "text": "Le futur simple" },
+        { "id": "c", "text": "L'imparfait" },
+        { "id": "d", "text": "L'impératif" }
+      ],
+      "correctOption": "c",
+      "explanation": "L'imparfait est le temps du décor et de l'arrière-plan : il fait durer la scène (« la médina dormait sous un ciel gris »). Le passé simple, lui, sert aux événements de premier plan qui font avancer l'histoire.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelle valeur de l'imparfait trouve-t-on dans : « Chaque matin, Nour prenait le bus pour aller au collège. » ?",
+      "options": [
+        { "id": "a", "text": "Une action habituelle, répétée" },
+        { "id": "b", "text": "Une action soudaine et unique" },
+        { "id": "c", "text": "Un ordre donné à quelqu'un" },
+        { "id": "d", "text": "Une action située dans le futur" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Chaque matin » indique une habitude : l'imparfait exprime ici une action répétée dans le passé. Une action soudaine et unique se dirait au passé simple (« un matin, Nour prit le bus »).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans « Le soleil se couchait quand un cri déchira le silence. », pourquoi « déchira » est-il au passé simple ?",
+      "options": [
+        { "id": "a", "text": "Parce que c'est une description qui dure" },
+        { "id": "b", "text": "Parce que c'est un événement soudain de premier plan" },
+        { "id": "c", "text": "Parce que c'est une action habituelle" },
+        { "id": "d", "text": "Parce que c'est un ordre" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Se couchait » décrit le décor qui dure (imparfait) ; « déchira » est l'événement soudain qui rompt cette durée et fait avancer l'histoire, d'où le passé simple. C'est le cœur de l'alternance : arrière-plan à l'imparfait, premier plan au passé simple.",
+      "difficulty": 2
+    }
+  ]
+}

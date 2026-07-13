@@ -1,10 +1,27 @@
 import DOMPurify from "dompurify";
 import { isolateLtrRunsHtml } from "@/shared/lib/bidi";
+import { sanitizeSvg } from "@/shared/lib/figure";
+
+/** A lesson may embed inline `<svg>…</svg>` figures (anatomy, geometry, diagrams). */
+const SVG_BLOCK = /<svg[\s\S]*?<\/svg>/gi;
+/** Placeholder marker used to shelter an SVG figure from HTML-escaping and the final sanitize. */
+const figurePlaceholder = (i: number) => `svgfigureplaceholder${i}end`;
 
 /** Simple markdown-to-HTML renderer for lesson content */
 export function renderMarkdown(md: string): string {
+  // Pull inline <svg> figures out before HTML-escaping so their markup survives.
+  // Each is sanitized through the vetted SVG profile (see docs/xss-rendering-policy.md)
+  // and re-injected after the final sanitize pass, whose ALLOWED_TAGS deliberately
+  // excludes SVG. Without this, escaping turns the markup into visible literal text.
+  const figures: string[] = [];
+  const sheltered = md.replace(SVG_BLOCK, (svg) => {
+    const token = figurePlaceholder(figures.length);
+    figures.push(sanitizeSvg(svg));
+    return `\n\n${token}\n\n`;
+  });
+
   let h2Counter = 0;
-  let html = md
+  let html = sheltered
     // Escape HTML
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -66,25 +83,42 @@ export function renderMarkdown(md: string): string {
   // RTL prose; `$$ … $$` display blocks are already isolated via CSS.
   html = isolateLtrRunsHtml(html);
 
-  return DOMPurify.sanitize(html, {
-    ALLOWED_TAGS: [
-      "h1",
-      "h2",
-      "h3",
-      "p",
-      "strong",
-      "em",
-      "blockquote",
-      "div",
-      "hr",
-      "table",
-      "tr",
-      "td",
-      "th",
-      "ul",
-      "ol",
-      "li",
-    ],
-    ALLOWED_ATTR: ["class", "id", "dir"],
-  });
+  // The body is already HTML-escaped above, so it is safe even without the
+  // sanitize pass; when DOMPurify is unavailable (no DOM at SSR) we skip the
+  // no-op call explicitly rather than depend on its pass-through behavior. Any
+  // embedded figure is sheltered and fails closed in sanitizeSvg.
+  const safe = DOMPurify.isSupported
+    ? DOMPurify.sanitize(html, {
+        ALLOWED_TAGS: [
+          "h1",
+          "h2",
+          "h3",
+          "p",
+          "strong",
+          "em",
+          "blockquote",
+          "div",
+          "hr",
+          "table",
+          "tr",
+          "td",
+          "th",
+          "ul",
+          "ol",
+          "li",
+        ],
+        ALLOWED_ATTR: ["class", "id", "dir"],
+      })
+    : html;
+
+  if (figures.length === 0) return safe;
+  // Re-inject each already-sanitized figure, replacing the paragraph the placeholder
+  // ended up wrapped in (or the bare token, defensively).
+  return figures.reduce((out, svg, i) => {
+    const token = figurePlaceholder(i);
+    // Function replacers avoid `$`-pattern interpretation inside the SVG markup.
+    return out
+      .replace(`<p>${token}</p>`, () => `<div class="lesson-figure">${svg}</div>`)
+      .replace(token, () => `<div class="lesson-figure">${svg}</div>`);
+  }, safe);
 }

@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : la ponctuation et les verbes du dialogue",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Le maître ouvrit la porte et dit ___ « Entrez, les enfants. » Quel signe faut-il dans le blanc, juste avant les paroles ?",
+      "options": [
+        { "id": "a", "text": "une virgule ( , )" },
+        { "id": "b", "text": "deux-points ( : )" },
+        { "id": "c", "text": "un point-virgule ( ; )" },
+        { "id": "d", "text": "un tiret ( — )" }
+      ],
+      "correctOption": "b",
+      "explanation": "Les deux-points annoncent les paroles qui vont être prononcées. On écrit : « Le maître dit : « Entrez, les enfants. » »",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel signe faut-il pour OUVRIR les paroles rapportées au discours direct ?",
+      "options": [
+        { "id": "a", "text": "«" },
+        { "id": "b", "text": "(" },
+        { "id": "c", "text": "[" },
+        { "id": "d", "text": "/" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le guillemet ouvrant « ouvre la parole ; le guillemet fermant » la referme. Les parenthèses, crochets et barres ne s'emploient pas pour le dialogue.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans « — Attends-moi ! cria Yassine. », quel mot est le verbe introducteur (verbe de parole) ?",
+      "options": [
+        { "id": "a", "text": "Attends" },
+        { "id": "b", "text": "moi" },
+        { "id": "c", "text": "cria" },
+        { "id": "d", "text": "Yassine" }
+      ],
+      "correctOption": "c",
+      "explanation": "« cria » est le verbe qui présente la parole (verbe introducteur). « Attends » est la parole du personnage, et « Yassine » est le sujet de « cria ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans un dialogue écrit, le tiret placé au début d'une ligne sert à :",
+      "options": [
+        { "id": "a", "text": "montrer qu'un AUTRE personnage prend la parole" },
+        { "id": "b", "text": "additionner deux nombres" },
+        { "id": "c", "text": "terminer le récit" },
+        { "id": "d", "text": "séparer les syllabes d'un mot" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le tiret marque le changement d'interlocuteur : on va à la ligne et on met un tiret dès qu'un autre personnage parle.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète avec le verbe introducteur qui convient au ton : « Sortez immédiatement ! ___ le directeur. »",
+      "options": [
+        { "id": "a", "text": "chuchota" },
+        { "id": "b", "text": "demanda" },
+        { "id": "c", "text": "ordonna" },
+        { "id": "d", "text": "bredouilla" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Sortez immédiatement ! » est un ordre lancé fort : le verbe juste est « ordonna ». « chuchota » et « bredouilla » sont des voix faibles, « demanda » annonce une question.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète correctement les paroles : « La vieille dame sourit et dit : ___ »",
+      "options": [
+        { "id": "a", "text": "« bonjour, mon enfant. »" },
+        { "id": "b", "text": "« Bonjour, mon enfant. »" },
+        { "id": "c", "text": "bonjour, mon enfant." },
+        { "id": "d", "text": "(Bonjour, mon enfant.)" }
+      ],
+      "correctOption": "b",
+      "explanation": "Après les deux-points, on ouvre les guillemets et la parole commence par une MAJUSCULE, puis on referme les guillemets : « Bonjour, mon enfant. » La minuscule (a), l'absence de guillemets (c) et les parenthèses (d) sont fausses.",
+      "difficulty": 2
+    }
+  ]
+}

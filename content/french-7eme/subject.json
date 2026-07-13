@@ -1,0 +1,12 @@
+{
+  "id": "french-7eme",
+  "nameFr": "Français",
+  "description": "Le français en 7ème année de base : lecture, conjugaison, syntaxe, orthographe et vocabulaire au fil de cinq modules thématiques",
+  "attribute": "Sagesse",
+  "colorToken": "subject-french",
+  "icon": "BookOpen",
+  "displayOrder": 2,
+  "contentLanguage": "fr",
+  "themeId": "ecole-tn",
+  "gradeSlug": "7eme-base"
+}

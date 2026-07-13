@@ -1,0 +1,82 @@
+{
+  "title": "👑 Elite challenge ⭐⭐⭐⭐: the top explorer's final test",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 6,
+  "questions": [
+    {
+      "prompt": "Complete: \"Our guide says we ___ visit the oldest part of the city first.\"",
+      "options": [
+        { "id": "a", "text": "are going to" },
+        { "id": "b", "text": "is going to" },
+        { "id": "c", "text": "going to" },
+        { "id": "d", "text": "are go to" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"We\" takes \"are going to\" + base verb: we are going to visit ✓. \"Is going to\" is for one person, \"going to\" drops the verb be, and \"are go to\" removes the -ing of going.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"The stadium is ___ from the hotel than the museum, so let's go there last.\"",
+      "options": [
+        { "id": "a", "text": "more far" },
+        { "id": "b", "text": "farer" },
+        { "id": "c", "text": "farther" },
+        { "id": "d", "text": "farthest" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Far\" is irregular: its comparative is \"farther\" (than) ✓. \"More far\" and \"farer\" are not correct forms, and \"farthest\" is the superlative, not a comparison of two distances. The common trap is building a regular comparative from \"far\".",
+      "difficulty": 3
+    },
+    {
+      "prompt": "One sentence has a mistake. Which one? (1) This is the most expensive shop. (2) Camden is the most cheapest market. (3) The Tube is faster than the bus. (4) We are going to walk to the park.",
+      "options": [
+        { "id": "a", "text": "Sentence 1" },
+        { "id": "b", "text": "Sentence 2" },
+        { "id": "c", "text": "Sentence 3" },
+        { "id": "d", "text": "Sentence 4" }
+      ],
+      "correctOption": "b",
+      "explanation": "Sentence 2 marks the superlative twice: \"the most cheapest\" ✓ is the error — \"cheap\" is short, so it should be \"the cheapest\". Sentences 1, 3 and 4 correctly use \"the most expensive\", \"faster than\" and \"are going to\". The trap is adding \"most\" to an adjective that already has -est.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which suggestion to take the river boat to Tower Bridge is written correctly?",
+      "options": [
+        { "id": "a", "text": "Shall we to take the river boat?" },
+        { "id": "b", "text": "Shall we taking the river boat?" },
+        { "id": "c", "text": "Do we shall take the river boat?" },
+        { "id": "d", "text": "Shall we take the river boat?" }
+      ],
+      "correctOption": "d",
+      "explanation": "\"Shall we\" is followed by the base verb: Shall we take the river boat? ✓ Option a adds an extra \"to\", option b uses -ing, and option c puts \"do\" before \"shall\", which is impossible. The trap is treating \"shall\" like an ordinary verb that needs \"do\".",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"London's new buildings are ___ than the very old ones in the medina at home.\"",
+      "options": [
+        { "id": "a", "text": "moderner" },
+        { "id": "b", "text": "more moderner" },
+        { "id": "c", "text": "more modern" },
+        { "id": "d", "text": "most modern" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"Modern\" has two syllables and does not end in -y, so its comparative is \"more modern than\" ✓. \"Moderner\" and \"more moderner\" are impossible, and \"most modern\" is the superlative, not a comparison of two sets of buildings.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Which sentence is completely correct?",
+      "options": [
+        { "id": "a", "text": "We going to climb the highest tower in London." },
+        { "id": "b", "text": "We are going to climb the highest tower in London." },
+        { "id": "c", "text": "We are going to climb the most high tower in London." },
+        { "id": "d", "text": "We are going to climbing the highest tower in London." }
+      ],
+      "correctOption": "b",
+      "explanation": "Option b is correct: \"are going to\" + base verb (climb), and the superlative of the short adjective \"high\" is \"the highest\" ✓. Option a forgets \"are\", option c uses \"the most high\" (wrong for a short adjective), and option d puts -ing on \"climb\" after \"to\". This item combines be going to with a superlative.",
+      "difficulty": 3
+    }
+  ]
+}

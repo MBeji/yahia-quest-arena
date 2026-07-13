@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : Premières armes — limites et continuité",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Calculer lim x→2 (3x² − 5).",
+      "options": [
+        { "id": "a", "text": "1" },
+        { "id": "b", "text": "7" },
+        { "id": "c", "text": "12" },
+        { "id": "d", "text": "17" }
+      ],
+      "correctOption": "b",
+      "explanation": "Un polynôme est continu sur ℝ : la limite s'obtient en remplaçant x par 2. lim x→2 (3x² − 5) = 3 × 2² − 5 = 12 − 5 = 7 ✓. Répondre 12 revient à oublier le − 5, 1 provient du calcul 3 × 2 − 5 où le carré a été oublié, et 17 d'une erreur de signe (12 + 5).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Calculer lim x→+∞ (−2x³ + 5x² − 7).",
+      "options": [
+        { "id": "a", "text": "−∞" },
+        { "id": "b", "text": "−2" },
+        { "id": "c", "text": "0" },
+        { "id": "d", "text": "+∞" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le comportement d'un polynôme en ±∞ est dicté par son terme de plus haut degré : lim x→+∞ (−2x³ + 5x² − 7) = lim x→+∞ (−2x³) = −∞, car le coefficient dominant −2 est négatif. Répondre +∞ revient à ignorer ce signe (ou à regarder 5x²), et −2 confond la limite avec le coefficient dominant.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Calculer lim x→+∞ (3x + 1)/(x + 2).",
+      "options": [
+        { "id": "a", "text": "0" },
+        { "id": "b", "text": "1/2" },
+        { "id": "c", "text": "3" },
+        { "id": "d", "text": "+∞" }
+      ],
+      "correctOption": "c",
+      "explanation": "Pour une fonction rationnelle en +∞, on garde les termes de plus haut degré : (3x + 1)/(x + 2) se comporte comme 3x/x = 3, donc la limite vaut 3 ✓. Répondre 1/2 revient à prendre le rapport des constantes, et +∞ à laisser la forme ∞/∞ sans la lever.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Soit f la fonction définie par f(x) = (x² − 9)/(x − 3) si x ≠ 3, et f(3) = m. Pour quelle valeur de m la fonction f est-elle continue en 3 ?",
+      "options": [
+        { "id": "a", "text": "m = 0" },
+        { "id": "b", "text": "m = 6" },
+        { "id": "c", "text": "m = 9" },
+        { "id": "d", "text": "Aucune valeur de m ne convient" }
+      ],
+      "correctOption": "b",
+      "explanation": "Pour x ≠ 3, (x² − 9)/(x − 3) = ((x − 3)(x + 3))/(x − 3) = x + 3, donc lim x→3 f(x) = 6 : f est continue en 3 si et seulement si m = 6 ✓. Répondre 9 revient à ne calculer que x² en 3, 0 provient de la simplification fautive en x − 3, et la forme 0/0 n'est pas une impasse : elle se lève par factorisation.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Soit f(x) = (3x − 1)/(x + 2). La courbe de f admet une asymptote verticale : laquelle ?",
+      "options": [
+        { "id": "a", "text": "La droite d'équation x = −2" },
+        { "id": "b", "text": "La droite d'équation x = 2" },
+        { "id": "c", "text": "La droite d'équation x = 3" },
+        { "id": "d", "text": "La droite d'équation y = 3" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le dénominateur x + 2 s'annule en x = −2 (et le numérateur y vaut −7 ≠ 0), donc les limites de f en −2 sont infinies : la droite d'équation x = −2 est l'asymptote verticale ✓. Répondre x = 2 est une erreur de signe en résolvant x + 2 = 0, x = 3 lit le coefficient du numérateur, et y = 3 est l'asymptote horizontale — une limite finie à l'infini, pas une limite infinie en un point.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Calculer lim x→3⁺ 1/(x − 3).",
+      "options": [
+        { "id": "a", "text": "−∞" },
+        { "id": "b", "text": "0" },
+        { "id": "c", "text": "3" },
+        { "id": "d", "text": "+∞" }
+      ],
+      "correctOption": "d",
+      "explanation": "Quand x → 3⁺, le dénominateur x − 3 tend vers 0 en restant strictement positif, donc 1/(x − 3) → +∞ ✓. Une erreur d'étude de signe donnerait −∞ (qui est en réalité la limite à gauche), 0 confond avec la limite en +∞, et 3 confond la valeur vers laquelle tend x avec la limite de f.",
+      "difficulty": 2
+    }
+  ]
+}

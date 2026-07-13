@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { parseManuelPages } from "./schema.ts";
-import type { LoadedSubject } from "./schema.ts";
+import type { CompetencyRegistry, ContentQuestion, LoadedSubject } from "./schema.ts";
 
 /**
  * Pure helpers that turn a {@link LoadedSubject} into an idempotent SQL
@@ -14,7 +14,17 @@ export const CONTENT_UUID_NAMESPACE = "5f1d6b6e-2a4c-5e7b-9c3a-7d2e1f0a8b44";
 export const QUIZ_XP_REWARD = 20;
 export const QUIZ_COIN_REWARD = 5;
 
-/** Deterministic RFC-4122 v5 UUID (SHA-1 based) for a given name. */
+/**
+ * Deterministic RFC-4122 v5 UUID (SHA-1 based) for a given name.
+ *
+ * SHA-1 here is mandated by the v5 spec, not a security choice: this derives a
+ * stable, public content id (chapter/exercise/question), never a secret or an
+ * authentication token. Swapping the hash would silently change every id
+ * already upserted into prod, breaking the ON CONFLICT / prune keying across
+ * the whole content catalogue (see "Content pipeline" in CLAUDE.md). CodeQL's
+ * js/weak-cryptographic-algorithm alert on this line is a dismissed false
+ * positive — it assumes a security context that doesn't apply to id derivation.
+ */
 export function uuidV5(name: string, namespace: string = CONTENT_UUID_NAMESPACE): string {
   const nsBytes = Buffer.from(namespace.replace(/-/g, ""), "hex");
   const hash = createHash("sha1").update(nsBytes).update(Buffer.from(name, "utf8")).digest();
@@ -37,6 +47,9 @@ export const questionId = (
   exerciseSlug: string,
   index: number,
 ): string => uuidV5(`${subjectId}/${chapterSlug}/${exerciseSlug}/q${index}`);
+
+/** Deterministic id of a competency, derived from its stable slug (étude 07 R-1). */
+export const competencyId = (slug: string): string => uuidV5(`competency/${slug}`);
 
 /** Single-quote a string literal for SQL, escaping embedded quotes. */
 export function sqlString(value: string): string {
@@ -64,6 +77,9 @@ export function buildMigrationSql(subject: LoadedSubject): string {
   const chapterIds: string[] = [];
   const exerciseIds: string[] = [];
   const questionIds: string[] = [];
+  /** question → competency mappings asserted by this subject (étude 07 D-2). */
+  const competencyRows: Array<{ questionId: string; competencyId: string; isPrimary: boolean }> =
+    [];
 
   const out: string[] = [];
   out.push(
@@ -215,13 +231,6 @@ export function buildMigrationSql(subject: LoadedSubject): string {
   }
 
   // --- Exercises (upsert) ---
-  type EmittedQuestion = {
-    prompt: string;
-    options: unknown;
-    correctOption: string;
-    explanation: string;
-    difficulty?: number;
-  };
   const emitExercise = (
     chId: string,
     exId: string,
@@ -233,7 +242,7 @@ export function buildMigrationSql(subject: LoadedSubject): string {
     rewardCoins: number,
     mode: string,
     displayOrder: number,
-    questions: EmittedQuestion[],
+    questions: ContentQuestion[],
   ) => {
     out.push(
       "INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES",
@@ -258,18 +267,69 @@ export function buildMigrationSql(subject: LoadedSubject): string {
       .map((e) => e.q);
     ordered.forEach((q, i) => {
       const qId = questionId(subjectId, chapterSlug, slug, i + 1);
+      // Evaluated competencies (étude 07 D-2/R-2): the authored ids become
+      // junction rows against the compiled registry; first id = primary.
+      (q.competencies ?? []).forEach((competencySlug, k) => {
+        competencyRows.push({
+          questionId: qId,
+          competencyId: competencyId(competencySlug),
+          isPrimary: k === 0,
+        });
+      });
+      // Per-type columns (Tier B — docs/interactive-question-types.md): mcq keeps
+      // the historical shape (options + correct_option, no answer_key); numeric
+      // carries its typed key and no options; ordering/matching carry BOTH the
+      // items (options) and their typed key. `answer_key` is server-only (never
+      // client-granted), which is fine for generated SQL applied as the owner.
+      // Client options carry only {id, text}: any server-only misconceptionTag
+      // (mcq distractors, étude 04 D-4) is STRIPPED here and routed into the
+      // server-only distractor_tags map below — never sent to the client.
+      const optionsSql =
+        q.type === "numeric"
+          ? "'[]'::jsonb"
+          : sqlJson(q.options.map((o) => ({ id: o.id, text: o.text })));
+      const correctOptionSql = q.type === "mcq" ? sqlString(q.correctOption) : "NULL";
+      // distractor_tags: { optionId: tag } for mcq distractors that name an error
+      // (server-only column — R-1). NULL when the question carries no tag.
+      const distractorTags =
+        q.type === "mcq"
+          ? Object.fromEntries(
+              q.options
+                .filter((o) => o.misconceptionTag)
+                .map((o) => [o.id, o.misconceptionTag as string]),
+            )
+          : {};
+      const distractorTagsSql =
+        Object.keys(distractorTags).length > 0 ? sqlJson(distractorTags) : "NULL";
+      const answerKeySql =
+        q.type === "numeric"
+          ? sqlJson({
+              value: q.answerKey.value,
+              ...(q.answerKey.tolerance !== undefined ? { tolerance: q.answerKey.tolerance } : {}),
+              ...(q.answerKey.unit !== undefined ? { unit: q.answerKey.unit } : {}),
+            })
+          : q.type === "ordering"
+            ? sqlJson({ order: q.answerKey.order })
+            : q.type === "matching"
+              ? sqlJson({ pairs: q.answerKey.pairs })
+              : q.type === "multi"
+                ? sqlJson({ correct: q.answerKey.correct })
+                : "NULL";
       out.push(
-        "INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES",
-        `  (${sqlString(qId)}, ${sqlString(exId)}, ${sqlString(q.prompt)}, ${sqlJson(
-          q.options,
-        )}, ${sqlString(q.correctOption)}, ${sqlString(q.explanation)}, ${i + 1})`,
+        "INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES",
+        `  (${sqlString(qId)}, ${sqlString(exId)}, ${sqlString(q.prompt)}, ${optionsSql}, ${correctOptionSql}, ${sqlString(
+          q.explanation,
+        )}, ${i + 1}, ${sqlString(q.type)}, ${answerKeySql}, ${distractorTagsSql})`,
         "ON CONFLICT (id) DO UPDATE SET",
         "  exercise_id = EXCLUDED.exercise_id,",
         "  prompt = EXCLUDED.prompt,",
         "  options = EXCLUDED.options,",
         "  correct_option = EXCLUDED.correct_option,",
         "  explanation = EXCLUDED.explanation,",
-        "  display_order = EXCLUDED.display_order;",
+        "  display_order = EXCLUDED.display_order,",
+        "  question_type = EXCLUDED.question_type,",
+        "  answer_key = EXCLUDED.answer_key,",
+        "  distractor_tags = EXCLUDED.distractor_tags;",
         "",
       );
     });
@@ -307,6 +367,112 @@ export function buildMigrationSql(subject: LoadedSubject): string {
         ex.questions,
       );
     }
+  }
+
+  // --- Question → competency mappings (étude 07 D-2) ---
+  // Converge the junction to exactly the authored `competencies` fields: prune
+  // mappings this subject no longer asserts, then upsert the asserted ones.
+  // Guarded with to_regclass (same pattern as the dungeon prune) so migrations
+  // regenerated for stacks predating the étude-07 schema still apply cleanly.
+  out.push(
+    "-- Converge question → competency mappings for this subject (étude 07 D-2).",
+    "DO $$",
+    "BEGIN",
+    "  IF to_regclass('public.question_competencies') IS NOT NULL THEN",
+    "    DELETE FROM public.question_competencies qc",
+    "    USING public.questions q, public.exercises e",
+    "    WHERE qc.question_id = q.id",
+    "      AND q.exercise_id = e.id",
+    `      AND e.subject_id = ${sqlString(subjectId)}`,
+    "      AND e.source = 'admin'" + (competencyRows.length > 0 ? "" : ";"),
+    ...(competencyRows.length > 0
+      ? [
+          `      AND (qc.question_id, qc.competency_id) NOT IN (${competencyRows
+            .map((r) => `(${sqlString(r.questionId)}::uuid, ${sqlString(r.competencyId)}::uuid)`)
+            .join(", ")});`,
+          "    INSERT INTO public.question_competencies (question_id, competency_id, is_primary) VALUES",
+          competencyRows
+            .map(
+              (r) =>
+                `      (${sqlString(r.questionId)}, ${sqlString(r.competencyId)}, ${r.isPrimary})`,
+            )
+            .join(",\n"),
+          "    ON CONFLICT (question_id, competency_id) DO UPDATE SET is_primary = EXCLUDED.is_primary;",
+        ]
+      : []),
+    "  END IF;",
+    "END $$;",
+    "",
+  );
+
+  return out.join("\n");
+}
+
+/**
+ * Compile the competency family registries (étude 07 D-1) into one idempotent
+ * migration: upsert every competency (stable UUIDv5 of the slug — R-1), prune
+ * the ones a family no longer declares (family-scoped, cascades to edges and
+ * junction rows), and rebuild each family's prerequisite edges. Regenerate
+ * with `npm run content:build -- --competences` whenever a registry changes.
+ */
+export function buildCompetencyRegistryMigrationSql(registries: CompetencyRegistry[]): string {
+  const out: string[] = [
+    "-- =========================================================",
+    "-- GENERATED FILE — do not edit by hand.",
+    `-- Competency graph registry (étude 07 D-1) — families: ${registries
+      .map((r) => r.family)
+      .join(", ")}`,
+    "-- Regenerate with: npm run content:build -- --competences",
+    "-- Source of truth: content/competences/*.json",
+    "-- =========================================================",
+    "",
+  ];
+
+  for (const registry of registries) {
+    const family = registry.family;
+    const slugs = registry.competencies.map((c) => c.id);
+
+    out.push(`-- --- Family: ${family} (${registry.competencies.length} competencies) ---`);
+    out.push(
+      "INSERT INTO public.competencies (id, slug, family, label_fr, label_en, label_ar) VALUES",
+      registry.competencies
+        .map(
+          (c) =>
+            `  (${sqlString(competencyId(c.id))}, ${sqlString(c.id)}, ${sqlString(family)}, ${sqlString(
+              c.labels.fr,
+            )}, ${sqlString(c.labels.en)}, ${sqlString(c.labels.ar)})`,
+        )
+        .join(",\n"),
+      "ON CONFLICT (id) DO UPDATE SET",
+      "  slug = EXCLUDED.slug,",
+      "  family = EXCLUDED.family,",
+      "  label_fr = EXCLUDED.label_fr,",
+      "  label_en = EXCLUDED.label_en,",
+      "  label_ar = EXCLUDED.label_ar;",
+      "",
+      "-- Prune competencies this family no longer declares (R-1: deprecation,",
+      "-- never rename). FK cascades clean the edges and question mappings.",
+      `DELETE FROM public.competencies WHERE family = ${sqlString(family)} AND slug NOT IN (${sqlIdList(
+        slugs,
+      )});`,
+      "",
+      "-- Rebuild the family's prerequisite edges (R-3: same-family DAG).",
+      "DELETE FROM public.competency_prereqs cp",
+      "USING public.competencies c",
+      `WHERE cp.competency_id = c.id AND c.family = ${sqlString(family)};`,
+    );
+
+    const edges = registry.competencies.flatMap((c) =>
+      c.prereqs.map((p) => `  (${sqlString(competencyId(c.id))}, ${sqlString(competencyId(p))})`),
+    );
+    if (edges.length > 0) {
+      out.push(
+        "INSERT INTO public.competency_prereqs (competency_id, prereq_id) VALUES",
+        edges.join(",\n"),
+        "ON CONFLICT (competency_id, prereq_id) DO NOTHING;",
+      );
+    }
+    out.push("");
   }
 
   return out.join("\n");

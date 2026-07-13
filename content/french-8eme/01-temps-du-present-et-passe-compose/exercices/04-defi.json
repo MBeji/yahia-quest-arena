@@ -1,0 +1,82 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : les accords sous contraintes",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "« Je finis mes devoirs, tu ranges ta chambre, il choisi un livre et nous partons. » Quel verbe est mal orthographié ?",
+      "options": [
+        { "id": "a", "text": "« finis »" },
+        { "id": "b", "text": "« ranges »" },
+        { "id": "c", "text": "« choisi »" },
+        { "id": "d", "text": "« partons »" }
+      ],
+      "correctOption": "c",
+      "explanation": "Chasse à l'erreur : « il choisi » est faux. Choisir est du 2e groupe et prend -it à la 3e personne → il choisit. Les trois autres verbes sont correctement conjugués.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans quelle phrase l'auxiliaire est-il mal choisi ?",
+      "options": [
+        { "id": "a", "text": "« Ils ont resté à la maison. »" },
+        { "id": "b", "text": "« Elle est tombée dans l'escalier. »" },
+        { "id": "c", "text": "« Nous avons mangé des dattes. »" },
+        { "id": "d", "text": "« Tu es arrivé le premier. »" }
+      ],
+      "correctOption": "a",
+      "explanation": "Rester se conjugue avec être, pas avec avoir : il faut « ils sont restés ». Les phrases b (tomber → être), c (manger → avoir) et d (arriver → être) sont correctes.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase contient une FAUTE d'accord du participe passé ?",
+      "options": [
+        { "id": "a", "text": "« Les fleurs que Nour a cueillies sentent bon. »" },
+        { "id": "b", "text": "« Nour a cueilli des fleurs. »" },
+        { "id": "c", "text": "« Les fleurs que Nour a cueilli sentent bon. »" },
+        { "id": "d", "text": "« Nour les a cueillies ce matin. »" }
+      ],
+      "correctOption": "c",
+      "explanation": "Dans c, le COD « que » (= les fleurs, féminin pluriel) est placé avant le verbe : le participe doit s'accorder → « cueillies ». Les phrases a et d accordent correctement (COD avant), et b n'accorde pas car le COD est après.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Transforme au passé composé ET à la forme négative : « Selim se réveille tôt. »",
+      "options": [
+        { "id": "a", "text": "« Selim n'est pas se réveillé tôt. »" },
+        { "id": "b", "text": "« Selim ne s'est pas réveillé tôt. »" },
+        { "id": "c", "text": "« Selim ne c'est pas réveillé tôt. »" },
+        { "id": "d", "text": "« Selim ne s'est pas réveiller tôt. »" }
+      ],
+      "correctOption": "b",
+      "explanation": "Trois étapes : verbe pronominal → auxiliaire être (« s'est ») ; accord avec le sujet masculin singulier → « réveillé » ; négation « ne… pas » autour de l'auxiliaire → Selim ne s'est pas réveillé tôt. « c'est » et l'infinitif « réveiller » sont des pièges.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Chaque été, nous ___ à Djerba ; l'an dernier, nous y ___ un mois. » Quelle suite de temps convient (retourner / rester) ?",
+      "options": [
+        { "id": "a", "text": "« retournons » (présent) et « sommes restés » (passé composé)" },
+        { "id": "b", "text": "« sommes retournés » et « restons »" },
+        { "id": "c", "text": "« retournons » et « avons resté »" },
+        { "id": "d", "text": "« retournions » et « sommes restés »" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Chaque été » marque une habitude → présent (retournons). « L'an dernier » marque un fait précis et achevé → passé composé ; rester se conjugue avec être → sommes restés. « avons resté » se trompe d'auxiliaire.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « Les cadeaux que mes cousins m'ont ___ (offrir) sont magnifiques. »",
+      "options": [
+        { "id": "a", "text": "offert" },
+        { "id": "b", "text": "offertes" },
+        { "id": "c", "text": "offrir" },
+        { "id": "d", "text": "offerts" }
+      ],
+      "correctOption": "d",
+      "explanation": "Auxiliaire avoir : le COD « que » (= les cadeaux, masculin pluriel) est placé AVANT le verbe → accord → offerts. Le participe passé d'offrir est « offert » (et non « offrir »).",
+      "difficulty": 3
+    }
+  ]
+}

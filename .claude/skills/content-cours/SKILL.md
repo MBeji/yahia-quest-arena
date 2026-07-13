@@ -36,9 +36,11 @@ official scope + language of instruction).
 
 1. **Establish the scope to cover.** School content: the authoritative scope is the **CNP program**, read
    via the **programme transcription**
-   `content-ecole-tn/references/programmes-officiels/programme/<gradeSlug>/<matière>.md` (consume it —
-   **don't render→vision the `cnp-officiel/` scans**; that's the persistence session's job, and if the
-   transcription is missing the unit is blocked on it, see `programme/_INDEX.md`), with the Taybah school
+   `content-ecole-tn/references/programmes-officiels/programme/<gradeSlug>/<matière>.md` (consume it — it
+   already **combines the teacher guide AND the manuel élève**, so it carries both the scope and the
+   content/examples to teach; **don't render→vision the `cnp-officiel/` scans**; that's the persistence
+   session's job, and if the transcription is missing the unit is blocked on it, see `programme/_INDEX.md`),
+   with the Taybah school
    file (`programmes-officiels/<école>/<gradeSlug>.md`) as a secondary cross-check / trimester sequencing —
    plus `chapter.json` sources. Non-school:
    `chapter.json` description. Then — critical — **read the chapter's `quiz.json` and every

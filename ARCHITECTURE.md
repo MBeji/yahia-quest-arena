@@ -1,19 +1,22 @@
 # Architecture — Na9ra Nal3ab (yahia-quest-arena)
 
-> **Purpose**: Single source of truth for any AI or developer working on this codebase.
-> Read this file first before making any change.
+> **Purpose**: architecture companion to [`CLAUDE.md`](./CLAUDE.md) (which wins on any conflict).
+> Read this file before making structural changes. Project state (phase, dated decisions,
+> feature status) lives in [`STATUS.md`](./STATUS.md).
 
 ---
 
 ## 1. What is this project?
 
-A gamified learning **academy** for the Tunisian curriculum. Its paid flagship is national-exam
-prep for the two concours years — **Concours 6ème and 9ème** (sold as per-parcours "concours"
-tracks) — alongside FREE exploration parcours (culture générale, brain-training, languages).
-Students progress through subjects as "quests", earn XP/coins, unlock badges, and compete on a
-leaderboard — shonen manga/RPG aesthetic, trilingual (FR/EN/AR with RTL).
+A gamified learning **academy** for the Tunisian curriculum — a public platform, **100 % free in
+the current phase** (pivot of 2026-06-21 + étude 15 Q-2; see `STATUS.md`): the whole catalogue
+(13 school grades with the concours milestones 6ème/9ème/bac, plus culture générale,
+brain-training and language tracks) can be browsed **and practiced without an account**.
+Signed-in students progress through subjects as "quests", earn XP/coins, unlock badges, duel
+each other in real time and compete on a leaderboard — shonen manga/RPG aesthetic, trilingual
+(FR/EN/AR with RTL). A per-parcours premium layer exists in the schema but is **dormant** (§8a).
 
-**Live stack**: Vite 7 + TanStack Start (SSR) + React 19 + Supabase (Postgres + Auth) + Cloudflare Workers.
+**Live stack**: Vite 8 + TanStack Start (SSR) + React 19 + Supabase (Postgres + Auth) — **deployed on Vercel** (a Cloudflare Workers config survives as a vestige, not the live target).
 
 ---
 
@@ -21,17 +24,20 @@ leaderboard — shonen manga/RPG aesthetic, trilingual (FR/EN/AR with RTL).
 
 ```
 src/
-├── features/           ← Domain modules (one folder per bounded context — 10 total)
+├── features/           ← Domain modules (one folder per bounded context — 13 total)
 │   ├── auth/           ← Login, signup, guest access, session management (incl. use-auth)
 │   ├── dashboard/      ← Main dashboard: stats, radar, recent attempts, leaderboard
 │   ├── quest/          ← Exercise flow: subject → chapter → exercise → submit
 │   ├── dungeon/        ← Boss/dungeon mode: timed floor-by-floor challenge
+│   ├── duel/           ← Real-time duels + weekly leagues (étude 05)
 │   ├── shop/           ← In-game shop: purchase & equip skins, consumables
 │   ├── progression/    ← Spaced repetition, daily objectives, weekly quests, difficulty
-│   ├── parent-report/  ← Family link + parent progress report
-│   ├── subscription/   ← Premium parcours entitlements + beta access + admin RPCs
+│   ├── parent-report/  ← Family link + parent progress report (incl. public report by alliance code)
+│   ├── subscription/   ← DORMANT premium layer: entitlements + beta access + paywall + admin RPCs
 │   ├── content-report/ ← User-flagged content errors ("Signaler une erreur") + admin triage
-│   └── parcours/       ← Gamified journey-map: world map of subjects (/parcours); nodes route to /subject/$id
+│   ├── bug-report/     ← User bug reports (global launcher) + admin triage
+│   ├── notifications/  ← Web-push subscriptions + service-worker push handlers
+│   └── parcours/       ← Gamified journey-map: world map of subjects (/parcours); nodes route to /matiere/$subjectId
 │
 │   (Leaderboard has no feature folder — `getLeaderboard` lives in dashboard.server.ts.
 │    Onboarding has no feature folder — it is an inline route at
@@ -108,16 +114,16 @@ features/{name}/
 
 ## 5. Tech stack details
 
-| Layer     | Technology                 | Notes                                        |
-| --------- | -------------------------- | -------------------------------------------- |
-| Framework | TanStack Start 1.x         | File-based routing, SSR, server functions    |
-| UI        | React 19 + Radix/shadcn    | Tailwind CSS 4, motion (Framer Motion)       |
-| State     | TanStack Query 5           | Server state; no client global store         |
-| Auth      | Supabase Auth              | JWT passed via cookie → server middleware    |
-| DB        | Supabase Postgres          | Row-level security, SQL RPCs for complex ops |
-| Deploy    | Cloudflare Workers         | Via @cloudflare/vite-plugin                  |
-| Tests     | Vitest 4 + Testing Library | Unit + integration; mocked Supabase          |
-| Lint      | ESLint 9 + Prettier        | Zero-warning policy                          |
+| Layer     | Technology                 | Notes                                                           |
+| --------- | -------------------------- | --------------------------------------------------------------- |
+| Framework | TanStack Start 1.x         | File-based routing, SSR, server functions                       |
+| UI        | React 19 + Radix/shadcn    | Tailwind CSS 4, motion (Framer Motion)                          |
+| State     | TanStack Query 5           | Server state; no client global store                            |
+| Auth      | Supabase Auth              | JWT passed via cookie → server middleware                       |
+| DB        | Supabase Postgres          | Row-level security, SQL RPCs for complex ops                    |
+| Deploy    | Vercel                     | Push to `main` = prod (build-vercel.mjs); migrations auto-apply |
+| Tests     | Vitest 4 + Testing Library | Unit + integration; mocked Supabase                             |
+| Lint      | ESLint 10 + Prettier       | Zero-warning policy                                             |
 
 ---
 
@@ -162,55 +168,71 @@ Run with coverage: `npm run test:coverage`
 
 ## 8. Key data model (Supabase tables)
 
-| Table                      | Purpose                                                                     |
-| -------------------------- | --------------------------------------------------------------------------- |
-| profiles                   | Student profile (XP, level, streak, coins, hero_class, current_parcours_id) |
-| subjects                   | Math, Science, etc.                                                         |
-| chapters                   | Chapters within a subject                                                   |
-| exercises                  | Exercises within a chapter                                                  |
-| questions                  | Multiple-choice questions within an exercise                                |
-| attempts                   | Student exercise attempt results                                            |
-| student_badges             | Awarded badges                                                              |
-| shop_items                 | Purchasable items                                                           |
-| inventory_items            | Student-owned items                                                         |
-| daily_objectives           | Daily goals (auto-created)                                                  |
-| weekly_quests              | Weekly challenges                                                           |
-| spaced_repetition_schedule | SM-2 style review schedule                                                  |
-| dungeon_runs               | Boss mode run state                                                         |
-| parent_student_links       | Parent-student linking                                                      |
-| parcours                   | Sellable tracks — FREE or PREMIUM concours                                  |
-| parcours_entitlements      | Per-parcours grants (purchase/beta/gift/family)                             |
-| subscriptions (DEPRECATED) | Removed in migration 20260609000000 → parcours_entitlements                 |
-| beta_access_requests       | Beta-access requests + admin review                                         |
-| content_reports            | User-flagged content errors ("Signaler une erreur")                         |
-| themes                     | Top-level content tracks (école-tn, culture-générale…)                      |
-| grades                     | Grade levels (e.g. 9th grade)                                               |
+| Table                                  | Purpose                                                                      |
+| -------------------------------------- | ---------------------------------------------------------------------------- |
+| profiles                               | Student profile (XP, level, streak, coins, hero_class, current_parcours_id)  |
+| subjects                               | Math, Science, etc.                                                          |
+| chapters                               | Chapters within a subject                                                    |
+| exercises                              | Exercises within a chapter                                                   |
+| questions                              | Multiple-choice questions within an exercise                                 |
+| attempts                               | Student exercise attempt results                                             |
+| student_badges                         | Awarded badges                                                               |
+| shop_items                             | Purchasable items                                                            |
+| inventory_items                        | Student-owned items                                                          |
+| daily_objectives                       | Daily goals (auto-created)                                                   |
+| weekly_quests                          | Weekly challenges                                                            |
+| spaced_repetition_schedule             | SM-2 style review schedule                                                   |
+| dungeon_runs                           | Boss mode run state                                                          |
+| exercise_sessions                      | Server-authoritative quest sessions (started via RPC, direct writes REVOKEd) |
+| duel_queue / duels / duel_participants | Real-time duels + weekly leagues (étude 05)                                  |
+| parent_student_links                   | Parent-student linking                                                       |
+| parcours                               | Tracks — kinds concours/scolaire/libre; **all free in the current phase**    |
+| parcours_entitlements                  | Per-parcours grants (purchase/beta/gift/family) — dormant                    |
+| parcours_interest                      | Interest votes on `coming_soon` parcours                                     |
+| subscriptions (DEPRECATED)             | Removed in migration 20260609000000 → parcours_entitlements                  |
+| beta_access_requests                   | Beta-access requests + admin review                                          |
+| content_reports                        | User-flagged content errors ("Signaler une erreur")                          |
+| bug_reports                            | User bug reports + admin triage                                              |
+| question_attempts                      | Append-only per-question telemetry (adaptive engine A0)                      |
+| user_misconceptions                    | Per-(user, misconception-tag) aggregate, trigger-maintained                  |
+| themes                                 | Top-level content tracks (école-tn, culture-générale…)                       |
+| grades                                 | Grade levels (e.g. 9th grade; incl. lycée section nodes)                     |
 
-### 8a. Premium access model (parcours + entitlements)
+### 8a. Access model (parcours + entitlements) — premium DORMANT in the free phase
 
-Premium is **per-parcours**, not global. A **parcours** is the student's enrolled track
-(`profiles.current_parcours_id`), resolved from a `(theme_id, grade_id)` pair:
+**Current state** (free phase — migration `20260711100000`, 2026-07-11): every parcours has
+`is_premium = false`, so the gate below short-circuits to "allowed" for **every** exercise, the
+paywall is unreachable, and no user-facing surface may use premium vocabulary (étude 15 D-3).
+The machinery is intact and reversible — étude 01 (paiement en ligne, **gelée**) is the
+designated re-activation vehicle.
 
-- **PREMIUM concours** parcours — `concours-9eme`, `concours-6eme` (the paid products), under theme
-  `ecole-tn`.
-- **FREE exploration** parcours — one per standalone theme (culture-générale, muscle-cerveau,
-  langues…), `grade_id` NULL.
+Access is **per-parcours**, not global. A **parcours** is the student's enrolled track
+(`profiles.current_parcours_id`), resolved from a `(theme_id, grade_id)` pair. Kinds:
+
+- **concours** — `concours-9eme`, `concours-6eme`, `concours-bac-math` (the historical premium
+  milestones), under theme `ecole-tn`.
+- **scolaire** — one per school grade (full Tunisian ladder, incl. lycée section nodes).
+- **libre** — one per standalone theme (culture-générale, muscle-cerveau, langues…), `grade_id` NULL.
 
 `parcours_entitlements` (`user_id`, `parcours_id`, `source` ∈ {purchase|beta|gift|family},
 `expires_at` nullable = perpetual, `revoked_at` soft-delete) holds the grants. The **single
 authoritative gate** is the SECURITY DEFINER RPC `resolve_exercise_access(exercise)`:
 
-- FREE parcours → always allowed.
-- PREMIUM parcours → allowed iff the caller holds a live entitlement (`has_parcours_entitlement`,
-  which also honors an **active linked parent's** grant — the _family pack_), **or** the exercise is
-  in the **free preview** (the chapter comprehension quiz + difficulty-1 missions,
-  `FREE_PREVIEW_MAX_DIFFICULTY`). A `coming_soon` parcours returns a distinct reason.
+- Non-premium parcours (all of them today) → always allowed.
+- A premium parcours would be allowed iff the caller holds a live entitlement
+  (`has_parcours_entitlement`, which also honors an **active linked parent's** grant — the
+  _family pack_), **or** the exercise is in the **free preview** (the chapter comprehension quiz +
+  difficulty-1 missions, `FREE_PREVIEW_MAX_DIFFICULTY`). A `coming_soon` parcours returns a
+  distinct reason.
 
-The Dungeon is a premium perk gated on holding any concours entitlement. Admin provisioning:
-`admin_grant_parcours` / `admin_revoke_parcours` / `admin_list_parcours_entitlements`; onboarding sets
-the active track via `set_current_parcours`. Migrations: `20260608120000` (entity + RPCs), `…121000`
-(resolver), `…122000` (backfill), `…123000` (dungeon gate), `20260609000000` (drops the legacy
-`subscription_*` columns + `has_active_subscription` / `admin_*_subscription` RPCs).
+The Dungeon is **no longer entitlement-gated**: `get_dungeon_access()` keeps only the progression
+locks (PREREQ / LEVEL / DAILY_LIMIT) — the `SUBSCRIPTION` reason was removed by the free-phase
+migration. Admin provisioning stays live (`/admin/subscriptions`): `admin_grant_parcours` /
+`admin_revoke_parcours` / `admin_list_parcours_entitlements`; onboarding sets the active track via
+`set_current_parcours`. Migrations: `20260608120000` (entity + RPCs), `…121000` (resolver),
+`…122000` (backfill), `…123000` (dungeon gate), `20260609000000` (drops the legacy
+`subscription_*` columns + RPCs), `20260617120000` (kind `scolaire` + `parcours_interest`),
+`20260711100000` (**free phase**: `is_premium = false` everywhere + dungeon un-gated).
 
 ---
 
@@ -310,9 +332,12 @@ writing, and `npm run content:qa` for QA.
 
 ## 11. Deployment
 
-- **Platform**: Cloudflare Workers (via Vercel adapter fallback for preview).
-- **Build**: `vite build` → outputs worker bundle.
-- **Config**: `wrangler.jsonc` for Cloudflare, `vercel.json` for Vercel preview.
+- **Platform**: **Vercel** — push to `main` auto-deploys prod (`na9ranal3ab.vercel.app`) and
+  auto-applies new `supabase/migrations/**` via `db-migrate-prod.yml` (backup + guard + push,
+  with hourly reconciliation).
+- **Build**: `scripts/build-vercel.mjs` wraps `vite build` into the Vercel output layout.
+- **Config**: `vercel.json` (live target); `wrangler.jsonc` survives as a Cloudflare vestige,
+  not the deploy target.
 - **Env vars**: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` (set in deploy platform).
 
 ---

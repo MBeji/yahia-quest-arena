@@ -13,7 +13,9 @@ const NAV = [
   // « Découvrir » converged onto the public catalogue (chantier L2.A) — the nav now
   // points at /programme (the old /themes hub is a 301 redirect to it).
   { href: "/programme", url: /\/programme/ },
-  { href: "/dungeon", url: /\/dungeon/ },
+  // Étude 15 lot 5 (D-4): Donjon/Duels/Classement are grouped under the /arene pole,
+  // so the primary nav points at /arene (not /dungeon directly).
+  { href: "/arene", url: /\/arene/ },
   { href: "/dashboard", url: /\/dashboard/ },
 ];
 
@@ -35,5 +37,12 @@ test.describe("Primary navigation", () => {
       .getByRole("link", { name: /na9ra\s*nal3ab/i })
       .click();
     await expect(page).toHaveURL(/\/dashboard/);
+  });
+
+  test("the Arène pole links to the three competitive screens", async ({ page }) => {
+    await page.goto("/arene");
+    for (const href of ["/dungeon", "/duel", "/leaderboard"]) {
+      await expect(page.locator(`main a[href="${href}"]`).first()).toBeVisible({ timeout: 15_000 });
+    }
   });
 });

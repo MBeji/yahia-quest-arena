@@ -87,6 +87,22 @@ export interface AdminDb {
   /** The comprehension-quiz exercise (mode='quiz') with the lowest display order. */
   quizExerciseId(subjectId: string): Promise<string>;
   /**
+   * An admin, non-quiz mission carrying at least one native `numeric` question
+   * (Tier B, phase B1) — null until the content lot (B1.4) seeds one. Lets the
+   * numeric e2e spec skip cleanly instead of failing on an empty catalogue.
+   */
+  numericExerciseId(): Promise<string | null>;
+  /**
+   * An admin, non-quiz mission carrying at least one native board question
+   * (`ordering`/`matching` — Tier B, phase B2) — null until seeded (lot B2.4).
+   */
+  boardExerciseId(): Promise<string | null>;
+  /**
+   * An admin, non-quiz mission carrying at least one native `multi` question
+   * (Tier B, phase B3) — null until seeded (lot B3.4).
+   */
+  multiExerciseId(): Promise<string | null>;
+  /**
    * Grant a user a live entitlement on a parcours (per-parcours premium model)
    * via the admin_grant_parcours RPC — service-role bypasses is_admin(). Pass
    * `months` for a time-boxed grant; omit for perpetual. Idempotent (upserts the
@@ -258,16 +274,17 @@ export function createAdminDb(): AdminDb {
       return { exerciseId: data.id as string, subjectId: data.subject_id as string };
     },
     /**
-     * Resolve a PREMIUM concours parcours' (theme_id, grade_id) and id. Used to find
-     * gated subjects/missions without hard-coding the catalogue. Throws if none is
-     * seeded (the parcours migration seeds concours-9eme / concours-6eme).
+     * Resolve a concours parcours' (theme_id, grade_id) and id — the EX-premium
+     * tracks. Phase gratuite (étude 15, lot 2) : `is_premium` is false everywhere,
+     * so the parcours stays identifiable by its kind; étude 01 will reinstate the
+     * is_premium filter when premium returns. Throws if none is seeded (the
+     * parcours migration seeds concours-9eme / concours-6eme).
      */
     async premiumConcoursParcours() {
       const { data, error } = await client
         .from("parcours")
         .select("id, theme_id, grade_id")
         .eq("kind", "concours")
-        .eq("is_premium", true)
         .not("grade_id", "is", null)
         .order("display_order")
         .limit(1)
@@ -365,6 +382,42 @@ export function createAdminDb(): AdminDb {
         .delete()
         .eq("parent_user_id", parentUserId);
       if (error) throw new Error(`clearParentLinks: ${error.message}`);
+    },
+    async numericExerciseId() {
+      const { data, error } = await client
+        .from("questions")
+        .select("exercise_id, exercises!inner(mode, source)")
+        .eq("question_type", "numeric")
+        .neq("exercises.mode", "quiz")
+        .eq("exercises.source", "admin")
+        .limit(1)
+        .maybeSingle();
+      if (error) throw new Error(`numericExerciseId: ${error.message}`);
+      return (data?.exercise_id as string) ?? null;
+    },
+    async boardExerciseId() {
+      const { data, error } = await client
+        .from("questions")
+        .select("exercise_id, exercises!inner(mode, source)")
+        .in("question_type", ["ordering", "matching"])
+        .neq("exercises.mode", "quiz")
+        .eq("exercises.source", "admin")
+        .limit(1)
+        .maybeSingle();
+      if (error) throw new Error(`boardExerciseId: ${error.message}`);
+      return (data?.exercise_id as string) ?? null;
+    },
+    async multiExerciseId() {
+      const { data, error } = await client
+        .from("questions")
+        .select("exercise_id, exercises!inner(mode, source)")
+        .eq("question_type", "multi")
+        .neq("exercises.mode", "quiz")
+        .eq("exercises.source", "admin")
+        .limit(1)
+        .maybeSingle();
+      if (error) throw new Error(`multiExerciseId: ${error.message}`);
+      return (data?.exercise_id as string) ?? null;
     },
     async quizExerciseId(subjectId: string) {
       const { data, error } = await client

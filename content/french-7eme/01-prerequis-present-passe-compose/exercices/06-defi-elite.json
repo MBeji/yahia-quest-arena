@@ -1,0 +1,88 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : le maître des prérequis",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 6,
+  "questions": [
+    {
+      "prompt": "Une seule de ces phrases est correctement écrite. Laquelle ?",
+      "options": [
+        { "id": "a", "text": "Elles sont arrivé en retard." },
+        { "id": "b", "text": "Ma sœur est resté à la maison." },
+        { "id": "c", "text": "Les enfants sont sortis dans la cour." },
+        { "id": "d", "text": "Mon frère est tombée de vélo." }
+      ],
+      "correctOption": "c",
+      "explanation": "Avec l'auxiliaire être, le participe s'accorde avec le sujet. « Les enfants sont sortis » : masculin pluriel, accord correct ✓. Les autres oublient ou ratent l'accord : arrivé → arrivées (fém. plur.), resté → restée (fém. sing.), tombée → tombé (masc. sing., « mon frère »).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Un élève écrit : « Le matin, je finit mon déjeuner, tu choisis tes habits, il prend le bus et nous partons ensemble. » Un verbe est mal conjugué. Lequel ?",
+      "options": [
+        { "id": "a", "text": "« je finit »" },
+        { "id": "b", "text": "« tu choisis »" },
+        { "id": "c", "text": "« il prend »" },
+        { "id": "d", "text": "« nous partons »" }
+      ],
+      "correctOption": "a",
+      "explanation": "Question « chasse à l'erreur » : la bonne réponse est le verbe fautif. Finir est du 2e groupe : avec « je », la terminaison est -is → « je finis » (le -it est réservé à il/elle : il finit). Le piège courant : croire que « tu choisis » est faux — choisir est aussi du 2e groupe et prend bien -is avec tu.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Réécris au passé composé ET à la forme négative : « Sonia se réveille avant l'aube. »",
+      "options": [
+        { "id": "a", "text": "Sonia n'a pas réveillé avant l'aube." },
+        { "id": "b", "text": "Sonia ne c'est pas réveillée avant l'aube." },
+        { "id": "c", "text": "Sonia ne s'est pas réveillée avant l'aube." },
+        { "id": "d", "text": "Sonia ne s'est pas réveillé avant l'aube." }
+      ],
+      "correctOption": "c",
+      "explanation": "Trois contraintes : (1) « se réveiller » est pronominal → auxiliaire être : « s'est » ; (2) accord du participe avec le sujet féminin « Sonia » → « réveillée » ; (3) négation « ne… pas » autour de l'auxiliaire ✓. Le piège courant : écrire « c'est » devant le participe passé — devant un participe passé, c'est toujours « s'est » ; l'option d, elle, oublie l'accord au féminin.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "On lit : « Les deux amies sont descendues du bus. » Pourquoi le participe passé s'écrit-il « descendues » ?",
+      "options": [
+        { "id": "a", "text": "Parce que « descendre » se conjugue avec l'auxiliaire « avoir »." },
+        {
+          "id": "b",
+          "text": "Parce que l'auxiliaire est « être » et le participe s'accorde avec le sujet féminin pluriel « les deux amies »."
+        },
+        { "id": "c", "text": "Parce que tous les participes passés prennent -es au pluriel." },
+        {
+          "id": "d",
+          "text": "Parce que le participe passé s'accorde toujours avec le complément du verbe."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« Descendre » (verbe de mouvement) se conjugue avec être ; le participe s'accorde alors avec le sujet, ici féminin pluriel « les deux amies » → descendues ✓. Le piège courant : l'option a se trompe d'auxiliaire, et les options c et d inventent des règles fausses (le participe avec être suit le sujet, pas le complément).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète : « ___ enfants adorent leur maîtresse : ___ elle qui leur a appris à lire, et chacun range ___ cahiers avec soin. »",
+      "options": [
+        { "id": "a", "text": "Ces / s'est / ses" },
+        { "id": "b", "text": "Ses / c'est / ces" },
+        { "id": "c", "text": "Ces / c'est / ces" },
+        { "id": "d", "text": "Ces / c'est / ses" }
+      ],
+      "correctOption": "d",
+      "explanation": "Trois choix : « Ces enfants » = déterminant démonstratif pluriel (on les désigne) ✓ ; « c'est elle » = « cela est elle » ✓ ; « ses cahiers » = les siens, possession → déterminant possessif ✓. Le piège courant : écrire « ces cahiers » pour le dernier blanc, alors que la possession (« chacun range les siens ») impose « ses ».",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Lis ce récit : « Je m'appelle Farah. Chaque été, je rejoins mes cousins à Tabarka. Nous plongeons du haut des rochers et nous rentrons épuisés mais heureux. » Qui raconte cette histoire ?",
+      "options": [
+        { "id": "a", "text": "Un narrateur extérieur qui ne participe pas à l'histoire." },
+        { "id": "b", "text": "Farah, un personnage de l'histoire qui dit « je »." },
+        { "id": "c", "text": "Les cousins de Farah." },
+        { "id": "d", "text": "On ne peut pas le savoir." }
+      ],
+      "correctOption": "b",
+      "explanation": "Le récit est raconté à la 1re personne (« je m'appelle Farah… je rejoins ») : le narrateur est Farah elle-même, un personnage de l'histoire ✓. Le piège courant : répondre « narrateur extérieur » — c'est le cas quand le récit dit « il/elle », mais ici le « je » désigne clairement une héroïne qui vit l'histoire.",
+      "difficulty": 3
+    }
+  ]
+}

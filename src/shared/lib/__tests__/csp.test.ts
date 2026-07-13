@@ -46,6 +46,19 @@ describe("buildContentSecurityPolicy", () => {
     expect(csp).toContain("connect-src 'self' https://*.supabase.co wss://*.supabase.co");
   });
 
+  it("allows the Google Analytics 4 origins (gtag.js loader + collect beacons)", () => {
+    for (const csp of [buildContentSecurityPolicy(), buildContentSecurityPolicy("n")]) {
+      const scriptSrc = csp.split("; ").find((d) => d.startsWith("script-src "));
+      const connectSrc = csp.split("; ").find((d) => d.startsWith("connect-src "));
+      // gtag.js loads as an external script from the tag-manager host…
+      expect(scriptSrc).toContain("https://www.googletagmanager.com");
+      // …and beacons the measurement protocol to the google-analytics.com hosts.
+      expect(connectSrc).toContain("https://www.google-analytics.com");
+      expect(connectSrc).toContain("https://*.google-analytics.com");
+      expect(connectSrc).toContain("https://*.analytics.google.com");
+    }
+  });
+
   it("is a single well-formed header value (directives joined by '; ')", () => {
     const csp = buildContentSecurityPolicy("n");
     expect(csp).not.toContain(";;");

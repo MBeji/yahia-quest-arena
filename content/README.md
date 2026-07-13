@@ -30,15 +30,53 @@ content/
   scolaire ou `francais` pour un module autonome), `gradeSlug` (niveau dans
   l'échelle du thème, ex. `9eme-base` ; `null` pour les matières indépendantes
   d'un niveau — le slug est résolu en UUID `grades` à la compilation, jamais
-  codé en dur), `isPremium?`.
+  codé en dur), `isPremium?` (dormant : en phase gratuite, la migration
+  `20260711100000` force `is_premium = false` sur tous les parcours),
+  `compileTo?` (mutualisation lycée — voir plus bas).
 - **`chapter.json`** : `title`, `description`, `displayOrder`, `sources` (liste
-  d'URLs / références — traçabilité des sources).
+  d'URLs / références — traçabilité des sources), `gradeSlugs?` (dossier partagé
+  uniquement : sections destinataires du chapitre).
 - **`quiz.json`** (obligatoire) : `title?` + `questions[]` (même forme que les
   questions d'exercice). Compilé en exercice `mode='quiz'` ; l'élève doit le
   réussir (≥ `QUIZ_PASS_THRESHOLD_PCT`) pour débloquer les exercices du chapitre.
 - **exercice `*.json`** : `title`, `difficulty` (1-4), `mode`
-  (`practice` | `boss` | `challenge`), `xpReward`, `rewardCoins`, `displayOrder`, et
+  (`practice` | `boss` | `challenge`), `xpReward`, `rewardCoins`, `displayOrder`,
+  `gradeSlugs?` (dossier partagé uniquement), et
   `questions[]` : `{ prompt, options:[{id,text}], correctOption, explanation, difficulty? (1-3) }`.
+
+### Mutualisation entre sections (`compileTo` — étude 16)
+
+Au lycée, plusieurs sections partagent des programmes identiques (tronc commun :
+langues, philo, histoire-géo). Une matière partagée s'écrit **une seule fois**
+dans un dossier « source » dont le `subject.json` déclare ses cibles :
+
+```jsonc
+{
+  "id": "anglais-3eme-sec", // id source VIRTUEL (<matière>-<année>) — n'atteint jamais la DB
+  // ... pas de gradeSlug racine ...
+  "compileTo": [
+    { "id": "anglais-3eme-sec-math", "gradeSlug": "3eme-sec-math" },
+    { "id": "anglais-3eme-sec-lettres", "gradeSlug": "3eme-sec-lettres", "description": "…" },
+  ],
+}
+```
+
+À la compilation, le dossier devient **un subject par cible** (id
+`<matière>-<gradeSlug>` verbatim, migration séparée par cible). `nameFr` /
+`description` peuvent être surchargés par cible. Un chapitre ou un exercice
+peut restreindre ses sections via `gradeSlugs` (sous-ensemble des cibles —
+permet des paliers d3/d4 propres à une section dans le dossier partagé).
+Slugs autorisés : le référentiel canonique (`KNOWN_GRADE_SLUGS`,
+`src/shared/content/schema.ts`) hors nœuds plats legacy.
+
+**Invariant capital** : les UUID v5 dérivent de l'**identité compilée** (id
+cible + slugs), jamais du dossier source. **Forker** une section (lui donner
+son dossier dédié en reprenant l'id cible et les slugs de chapitres/exercices)
+ne perd donc **aucune progression élève**. Règle de partage : programme
+officiel identique (constaté sur transcription) ⇒ partage ; divergence
+structurelle ⇒ dossiers séparés ; divergence de profondeur seulement ⇒
+partage + `gradeSlugs` par exercice — doctrine complète :
+`docs/lycee-architecture.md` §2/§8 et `FableEtudes/16-ouverture-lycee/ETUDE.md` (D-4).
 
 Tout est validé par Zod (`src/shared/content/schema.ts`). Un fichier invalide
 n'atteint jamais la base.
@@ -54,9 +92,20 @@ auto-vérification) : `.claude/skills/content-engine/references/quality-bar.md`.
 ## Commandes
 
 ```bash
-npm run content:check   # valide tout le contenu (n'écrit rien)
-npm run content:build   # génère les migrations dans supabase/migrations/
+npm run content:check                 # valide tout le contenu (n'écrit rien)
+npm run content:build -- --subject <id>   # régénère la migration du SEUL sujet modifié
 ```
+
+> ⚠️ **Ne lance jamais `content:build` sans `--subject`** : il régénère les ~60 sujets avec un
+> horodatage neuf → des dizaines de migrations parasites (doublons de sujets non modifiés) qu'il ne
+> faut **pas** committer. Toujours cibler `--subject <id>` (une fois par sujet changé). Un build
+> complet involontaire se nettoie avec `git clean -f supabase/migrations/`.
+> `--subject` désigne le **dossier source** : un dossier partagé (`compileTo`)
+> régénère d'un coup ses N migrations `_generated_<id-cible>_content.sql`.
+
+> **Quel skill pour quoi ?** La carte complète du pipeline (skills de base `content-*` pour
+> créer/compléter un chapitre vs professeurs `prof-*` pour rehausser le plafond en d3–4, + règles
+> cumulatives) est dans `.claude/skills/content-engine/references/generation-pipeline.md`.
 
 Les `id` de chapitres / exercices / questions sont des **UUID v5 déterministes**
 dérivés des slugs : régénérer met à jour les lignes en place (pas de doublon),

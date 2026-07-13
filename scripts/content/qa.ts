@@ -11,8 +11,22 @@
  */
 import { argv, cwd, exit, stdout } from "node:process";
 import { join, resolve } from "node:path";
-import { loadAllSubjects, loadSubject } from "../../src/shared/content/loader.ts";
-import { auditQuestion, type Flag } from "./qa-checks.ts";
+import {
+  expandSubjects,
+  loadAllSubjects,
+  loadCompetencyRegistries,
+  loadMisconceptionRegistry,
+  loadSubject,
+} from "../../src/shared/content/loader.ts";
+import {
+  auditBoardQuestion,
+  auditCompetencyRefs,
+  auditMisconceptionTags,
+  auditNumericQuestion,
+  auditQuestion,
+  type CompetencyVocabulary,
+  type Flag,
+} from "./qa-checks.ts";
 
 const hasFlag = (n: string) => argv.includes(`--${n}`);
 const getFlag = (n: string) => {
@@ -24,7 +38,19 @@ function main(): void {
   const root = cwd();
   const contentDir = resolve(root, "content");
   const only = getFlag("subject");
-  const subjects = only ? [loadSubject(join(contentDir, only))] : loadAllSubjects(contentDir);
+  // QA audits COMPILED subjects (étude 16 D-4): a shared dir is checked once
+  // per section target, exactly as it will land in the DB.
+  const subjects = expandSubjects(
+    only ? [loadSubject(join(contentDir, only))] : loadAllSubjects(contentDir),
+  );
+  const knownTags = new Set(Object.keys(loadMisconceptionRegistry(contentDir)));
+
+  // Competency vocabulary (étude 07): declared ids + family→subject coverage.
+  const registries = loadCompetencyRegistries(contentDir);
+  const competencyVocab: CompetencyVocabulary = {
+    ids: new Set(registries.flatMap((r) => r.competencies.map((c) => c.id))),
+    subjectPrefixes: new Map(registries.map((r) => [r.family, r.subjectPrefixes])),
+  };
 
   const flags: Flag[] = [];
 
@@ -39,7 +65,17 @@ function main(): void {
       for (const g of groups) {
         g.questions.forEach((q, i) => {
           const where = `${subject.meta.id}/${chapter.slug}/${g.slug} · Q${i + 1}`;
-          flags.push(...auditQuestion(q, where));
+          // Per-type lints (Tier B): numeric has its own audit; mcq keeps the
+          // historical one. Future types get theirs when their phase ships.
+          flags.push(
+            ...(q.type === "numeric"
+              ? auditNumericQuestion(q, where)
+              : q.type === "ordering" || q.type === "matching" || q.type === "multi"
+                ? auditBoardQuestion(q, where)
+                : [...auditQuestion(q, where), ...auditMisconceptionTags(q, knownTags, where)]),
+            // Competency refs apply to EVERY question type (étude 07 R-2).
+            ...auditCompetencyRefs(q, subject.meta.id, competencyVocab, where),
+          );
         });
       }
     }

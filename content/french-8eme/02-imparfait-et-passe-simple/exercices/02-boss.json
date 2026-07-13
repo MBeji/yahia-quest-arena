@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : le conteur de la médina",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Complète à l'imparfait : « Il ___ (être) une fois un jeune pêcheur de Mahdia. »",
+      "options": [
+        { "id": "a", "text": "étais" },
+        { "id": "b", "text": "fut" },
+        { "id": "c", "text": "était" },
+        { "id": "d", "text": "serait" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Être » est le seul verbe vraiment irrégulier à l'imparfait : j'étais, tu étais, il était… La formule d'ouverture des contes est « Il était une fois » ✓. « fut » est le passé simple, « étais » la 1re/2e personne et « serait » le conditionnel.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète au passé simple : « En ouvrant la porte, Ghofrane ___ (voir) un étrange paquet. »",
+      "options": [
+        { "id": "a", "text": "vit" },
+        { "id": "b", "text": "voyait" },
+        { "id": "c", "text": "vut" },
+        { "id": "d", "text": "voit" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Voir » fait au passé simple : je vis, il vit, ils virent. À la 3e personne du singulier : « vit » ✓. « voyait » est l'imparfait, « voit » le présent et « vut » n'existe pas (on ne construit pas le passé simple sur l'infinitif).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Choisis la forme correcte : « Il faisait nuit lorsque la voiture ___ devant la maison. » (s'arrêter)",
+      "options": [
+        { "id": "a", "text": "s'arrêtait" },
+        { "id": "b", "text": "s'arrêta" },
+        { "id": "c", "text": "s'arrête" },
+        { "id": "d", "text": "s'arrêtera" }
+      ],
+      "correctOption": "b",
+      "explanation": "« Il faisait nuit » est le décor (imparfait) ; l'arrivée de la voiture est un événement soudain de premier plan : passé simple « s'arrêta » ✓. Mettre « s'arrêtait » ferait de cette action un simple décor, ce qui n'a pas de sens ici.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Une phrase contient une erreur de temps. Laquelle ? « 1. Il faisait beau ce matin-là. 2. Les oiseaux chantaient dans les arbres. 3. Soudain, un orage éclatait. 4. La pluie tomba sur la médina. »",
+      "options": [
+        { "id": "a", "text": "La phrase 1" },
+        { "id": "b", "text": "La phrase 2" },
+        { "id": "c", "text": "La phrase 3" },
+        { "id": "d", "text": "La phrase 4" }
+      ],
+      "correctOption": "c",
+      "explanation": "« Soudain » annonce un événement brusque de premier plan : il faut le passé simple « un orage éclata », pas l'imparfait « éclatait ». Les phrases 1 et 2 sont des décors qui durent (imparfait, correct) et la phrase 4 est bien un événement au passé simple. (Chasse à l'erreur : on désigne la phrase fautive.)",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète au passé simple : « Les élèves ___ (entrer) puis ils ___ (finir) l'exercice. »",
+      "options": [
+        { "id": "a", "text": "entrèrent … finirent" },
+        { "id": "b", "text": "entrirent … finirent" },
+        { "id": "c", "text": "entrèrent … finissèrent" },
+        { "id": "d", "text": "entraient … finirent" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Entrer » (1er groupe) → -èrent : « entrèrent » ; « finir » (2e groupe) → -irent : « finirent » ✓. Le piège : appliquer -èrent à finir (« finissèrent » n'existe pas) ou -irent à entrer (« entrirent »). « entraient » est l'imparfait.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complète au passé simple : « Mehdi ___ (vouloir) parler, mais il ne ___ (pouvoir) pas. »",
+      "options": [
+        { "id": "a", "text": "voulait … pouvait" },
+        { "id": "b", "text": "voulut … pouva" },
+        { "id": "c", "text": "voula … put" },
+        { "id": "d", "text": "voulut … put" }
+      ],
+      "correctOption": "d",
+      "explanation": "« Vouloir » et « pouvoir » suivent la série en -u : il voulut, il put ✓. Le piège : « pouva » et « voula » appliquent à tort les terminaisons des verbes en -er. « voulait … pouvait » serait l'imparfait, qui décrit au lieu de raconter l'événement.",
+      "difficulty": 3
+    }
+  ]
+}

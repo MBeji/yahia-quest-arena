@@ -1,15 +1,23 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const { mockRpc, mockIsRateLimited, mockIsRateLimitedLocal, mockGetRequest } = vi.hoisted(() => ({
-  mockRpc: vi.fn(),
-  mockIsRateLimited: vi.fn(),
-  mockIsRateLimitedLocal: vi.fn(),
-  mockGetRequest: vi.fn(),
-}));
+const { mockRpc, mockFrom, mockIsRateLimited, mockIsRateLimitedLocal, mockGetRequest } = vi.hoisted(
+  () => ({
+    mockRpc: vi.fn(),
+    mockFrom: vi.fn(),
+    mockIsRateLimited: vi.fn(),
+    mockIsRateLimitedLocal: vi.fn(),
+    mockGetRequest: vi.fn(),
+  }),
+);
 
 // Controls the userId the mocked middleware injects (null = anonymous visitor).
 let ctxUserId: string | null = null;
-const mockSupabase = { rpc: mockRpc };
+const mockSupabase = { rpc: mockRpc, from: mockFrom };
+
+/** Thenable select().eq() chain for the per-type format-validation lookup. */
+function questionTypesQuery(rows: unknown, error: unknown = null) {
+  return { select: () => ({ eq: () => Promise.resolve({ data: rows, error }) }) };
+}
 
 vi.mock("@tanstack/react-start", () => ({
   createMiddleware: () => ({ server: (fn: unknown) => fn }),
@@ -80,6 +88,13 @@ describe("quest.checkAnswersPublic", () => {
   beforeEach(() => {
     ctxUserId = null;
     mockRpc.mockReset();
+    // Default: both questions are plain mcq (format validation passes).
+    mockFrom.mockReset().mockReturnValue(
+      questionTypesQuery([
+        { id: Q1, question_type: "mcq" },
+        { id: Q2, question_type: "mcq" },
+      ]),
+    );
     mockIsRateLimited.mockReset().mockResolvedValue(false);
     mockIsRateLimitedLocal.mockReset().mockReturnValue(false);
     mockGetRequest
@@ -167,6 +182,56 @@ describe("quest.checkAnswersPublic", () => {
       call({ exerciseId: EX, answers: [{ questionId: Q1, choice: "a" }] }),
     ).rejects.toThrow("Trop de requêtes");
     expect(mockRpc).not.toHaveBeenCalled();
+  });
+
+  it("rejects a malformed numeric answer before calling the RPC", async () => {
+    mockFrom.mockReturnValue(questionTypesQuery([{ id: Q1, question_type: "numeric" }]));
+    await expect(
+      call({ exerciseId: EX, answers: [{ questionId: Q1, choice: "abc" }] }),
+    ).rejects.toThrow("Réponse invalide pour ce type de question.");
+    expect(mockRpc).not.toHaveBeenCalled();
+  });
+
+  it("accepts a well-formed numeric answer (comma decimal)", async () => {
+    mockFrom.mockReturnValue(questionTypesQuery([{ id: Q1, question_type: "numeric" }]));
+    mockRpc.mockResolvedValue({
+      data: [{ question_id: Q1, is_correct: true, correct_option: "3.14", explanation: null }],
+      error: null,
+    });
+    const res = await call({ exerciseId: EX, answers: [{ questionId: Q1, choice: "3,14" }] });
+    expect(res.correct).toBe(1);
+    expect(res.review[0].correctChoice).toBe("3.14");
+  });
+
+  it("rejects a malformed ordering answer before calling the RPC (B2 wire format)", async () => {
+    mockFrom.mockReturnValue(questionTypesQuery([{ id: Q1, question_type: "ordering" }]));
+    await expect(
+      call({ exerciseId: EX, answers: [{ questionId: Q1, choice: "b,,a" }] }),
+    ).rejects.toThrow("Réponse invalide pour ce type de question.");
+    expect(mockRpc).not.toHaveBeenCalled();
+  });
+
+  it("accepts a well-formed matching answer (B2 wire format)", async () => {
+    mockFrom.mockReturnValue(questionTypesQuery([{ id: Q1, question_type: "matching" }]));
+    mockRpc.mockResolvedValue({
+      data: [
+        { question_id: Q1, is_correct: false, correct_option: "l1:r2,l2:r1", explanation: null },
+      ],
+      error: null,
+    });
+    const res = await call({
+      exerciseId: EX,
+      answers: [{ questionId: Q1, choice: "l1:r1,l2:r2" }],
+    });
+    expect(res.review[0].correctChoice).toBe("l1:r2,l2:r1");
+  });
+
+  it("degrades open when the question_type lookup fails", async () => {
+    mockFrom.mockReturnValue(questionTypesQuery(null, { message: "boom" }));
+    mockRpc.mockResolvedValue({ data: [], error: null });
+    const res = await call({ exerciseId: EX, answers: [{ questionId: Q1, choice: "abc" }] });
+    expect(res.reviewable).toBe(false);
+    expect(mockRpc).toHaveBeenCalled();
   });
 
   it("throws a sanitized error when the RPC fails", async () => {

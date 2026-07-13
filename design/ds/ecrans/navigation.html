@@ -1,0 +1,335 @@
+<!-- @dsCard group="Écrans" -->
+<title>Navigation cible (Q-3)</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+  }
+  body {
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    background: #f3f2ee;
+    padding: 16px;
+    color: #1a1a1a;
+  }
+  .display {
+    font-family: "Orbitron", "Space Grotesk", system-ui, sans-serif;
+  }
+  h3.section {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin: 22px 0 8px;
+    font-weight: 700;
+  }
+  h3.section:first-child {
+    margin-top: 0;
+  }
+  .note {
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: #555;
+    margin: 6px 0 4px;
+  }
+  .note b {
+    color: #1a1a1a;
+  }
+  .avant {
+    border-inline-start: 3px solid #c0392b;
+    background: #fbeae8;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    color: #7a2018;
+    margin-bottom: 10px;
+  }
+  .apres {
+    border-inline-start: 3px solid #0f6e56;
+    background: #e7f3ee;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    color: #0b4535;
+    margin-bottom: 10px;
+  }
+  .frame {
+    --background: oklch(0.145 0.008 85);
+    --foreground: oklch(0.965 0.012 92);
+    --card: oklch(0.185 0.012 85);
+    --primary: oklch(0.83 0.15 86);
+    --muted-fg: oklch(0.73 0.02 90);
+    --border: oklch(0.36 0.035 88 / 0.5);
+    --gold: oklch(0.83 0.15 86);
+    --gold-bright: oklch(0.92 0.12 96);
+    --neon-gold: oklch(0.85 0.16 90);
+    --flame: oklch(0.74 0.22 45);
+    --gradient-gold: linear-gradient(
+      135deg,
+      oklch(0.66 0.13 70),
+      var(--gold) 45%,
+      var(--gold-bright)
+    );
+    background: var(--background);
+    color: var(--foreground);
+    border-radius: 14px;
+    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+  }
+  .frame.ref {
+    --background: oklch(0.985 0.008 165);
+    --foreground: oklch(0.26 0.03 175);
+    --card: oklch(1 0 0);
+    --primary: #0f6e56;
+    --muted-fg: oklch(0.48 0.025 172);
+    --border: oklch(0.9 0.015 168);
+    --gold: #0f6e56;
+    --neon-gold: #0b5a47;
+    --flame: oklch(0.62 0.21 45);
+    background: var(--background);
+    color: var(--foreground);
+  }
+  .cap {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted-fg);
+    margin-bottom: 8px;
+  }
+
+  /* Desktop top nav */
+  .topnav {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: color-mix(in oklab, var(--card) 92%, transparent);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 14px;
+    backdrop-filter: blur(8px);
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+  }
+  .brand .logo {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: var(--gradient-gold);
+    display: grid;
+    place-items: center;
+    color: #1a1508;
+    font-size: 14px;
+  }
+  .navitems {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .navlink {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 11px;
+    border-radius: 9px;
+    color: var(--foreground);
+    opacity: 0.82;
+    white-space: nowrap;
+  }
+  .navlink.active {
+    background: color-mix(in oklab, var(--gold) 15%, transparent);
+    color: var(--gold);
+    opacity: 1;
+  }
+  .navlink.group {
+    color: var(--gold);
+    border: 1px solid color-mix(in oklab, var(--gold) 30%, transparent);
+  }
+  .spacer {
+    flex: 1;
+  }
+  .hud {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: color-mix(in oklab, var(--gold) 12%, transparent);
+    border: 1px solid color-mix(in oklab, var(--gold) 25%, transparent);
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 12.5px;
+    font-weight: 700;
+  }
+  .hud .flame {
+    color: var(--flame);
+  }
+  .hud .xp {
+    color: var(--gold);
+  }
+  .icobtn {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    display: grid;
+    place-items: center;
+    font-size: 13px;
+    color: var(--muted-fg);
+  }
+
+  /* Arène dropdown */
+  .drop {
+    margin-top: 6px;
+    margin-inline-start: auto;
+    width: 210px;
+    background: var(--card);
+    border: 1px solid color-mix(in oklab, var(--gold) 25%, transparent);
+    border-radius: 12px;
+    padding: 6px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  }
+  .dropitem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .dropitem .i {
+    width: 20px;
+    text-align: center;
+    color: var(--gold);
+  }
+  .dropitem small {
+    display: block;
+    font-weight: 500;
+    font-size: 11px;
+    color: var(--muted-fg);
+  }
+
+  /* Mobile bottom bar */
+  .phone {
+    width: 300px;
+  }
+  .bottombar {
+    display: flex;
+    justify-content: space-between;
+    background: color-mix(in oklab, var(--card) 94%, transparent);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 8px 6px;
+  }
+  .tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted-fg);
+  }
+  .tab .ti {
+    font-size: 17px;
+  }
+  .tab.on {
+    color: var(--gold);
+  }
+  .row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  @media (max-width: 720px) {
+    .row2 {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<h3 class="section">Navigation — élève connecté (registre « Arène »)</h3>
+<div class="avant">
+  <b>Avant (audit §E-4)</b> — le ruban desktop déborde : « Duels » est tronqué en « Du », «
+  Classement » sort de l'écran ; « Hall des Héros » casse sur 3 lignes. 6 entrées à plat.
+</div>
+<div class="apres">
+  <b>Après (D-4)</b> — 4 entrées : <b>Donjon · Duels · Classement</b> sont regroupés sous un pôle
+  <b>« Arène »</b>. Plus de débordement ; les 3 écrans compétitifs se maillent entre eux.
+</div>
+
+<div class="row2">
+  <div class="frame">
+    <div class="cap">Desktop 1280 — barre du haut</div>
+    <div class="topnav">
+      <div class="brand"><span class="logo display">N</span><span>Na9ra&nbsp;Nal3ab</span></div>
+      <div class="navitems">
+        <span class="navlink active">QG</span>
+        <span class="navlink">Parcours</span>
+        <span class="navlink">Découvrir</span>
+        <span class="navlink group">⚔️ Arène ▾</span>
+      </div>
+      <span class="spacer"></span>
+      <span class="hud"><span class="flame">🔥 4</span> · <span class="xp">⚡ 1 250 XP</span></span>
+      <span class="icobtn">FR</span><span class="icobtn">☾</span><span class="icobtn">⎋</span>
+    </div>
+    <div class="drop">
+      <div class="dropitem">
+        <span class="i">💀</span>
+        <div>Donjon<small>Défi chrono, 1 vie</small></div>
+      </div>
+      <div class="dropitem">
+        <span class="i">⚔️</span>
+        <div>Duels<small>1 contre 1 · ligue</small></div>
+      </div>
+      <div class="dropitem">
+        <span class="i">👑</span>
+        <div>Classement<small>National · par matière</small></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame phone">
+    <div class="cap">Mobile — barre du bas (6 → 4 onglets)</div>
+    <div class="bottombar">
+      <div class="tab on"><span class="ti">🏰</span>QG</div>
+      <div class="tab"><span class="ti">🗺️</span>Parcours</div>
+      <div class="tab"><span class="ti">🧭</span>Découvrir</div>
+      <div class="tab"><span class="ti">⚔️</span>Arène</div>
+    </div>
+    <p class="note" style="margin-top: 12px">
+      « Arène » ouvre une page-pôle légère (Donjon · Duels · Classement) —
+      <b>fin de la tab-bar surchargée</b>, et le donjon n'est plus « immersif » dès le lobby (la nav
+      reste tant qu'on ne joue pas).
+    </p>
+  </div>
+</div>
+
+<h3 class="section">Navigation — parent (coquille dédiée)</h3>
+<div class="avant">
+  <b>Avant (audit §F-1)</b> — le parent vit dans l'app d'élève : nav Donjon/Duels/Classement, chips
+  XP/série de <i>son</i> compte, « Suivi » réduit à une icône sans libellé.
+</div>
+<div class="apres">
+  <b>Après (D-4)</b> — coquille minimale : sa seule destination (Suivi) est nommée ; zéro entrée
+  gamer ; registre « Référence » sobre et vouvoyé.
+</div>
+<div class="frame ref">
+  <div class="cap">Desktop / mobile — parent</div>
+  <div class="topnav">
+    <div class="brand"><span class="logo display">N</span><span>Na9ra&nbsp;Nal3ab</span></div>
+    <div class="navitems"><span class="navlink active">Suivi de mon enfant</span></div>
+    <span class="spacer"></span>
+    <span class="icobtn">FR</span><span class="icobtn">☾</span><span class="icobtn">⎋</span>
+  </div>
+</div>
+
+<h3 class="section">Coquille publique / catalogue — auth-aware</h3>
+<p class="note">
+  Les pages partagées (programme, matière, chapitre) affichent la nav <b>du jeu</b> pour un élève
+  connecté (fin du flip-flop entre les deux coquilles, audit §A-2) et la nav publique pour un
+  anonyme. Une seule barre, deux compositions.
+</p>

@@ -38,11 +38,25 @@
  *           `content-audit` (human/LLM) pass; this only catches the lexical slice.
  */
 
-export type QAOption = { id: string; text: string };
+export type QAOption = { id: string; text: string; misconceptionTag?: string };
 export type QAQuestion = {
   prompt: string;
   options: QAOption[];
   correctOption: string;
+  explanation: string;
+  difficulty?: number;
+};
+/** Native numeric-entry question (Tier B, phase B1) — no options, a typed key. */
+export type QANumericQuestion = {
+  prompt: string;
+  answerKey: { value: number; tolerance?: number; unit?: string };
+  explanation: string;
+  difficulty?: number;
+};
+/** Native board question (Tier B, phase B2) — items in options, a typed key. */
+export type QABoardQuestion = {
+  prompt: string;
+  options: QAOption[];
   explanation: string;
   difficulty?: number;
 };
@@ -145,6 +159,45 @@ export function classifyOption(text: string): "meta" | "calque" | null {
   return null;
 }
 
+/**
+ * Field-level rendering checks shared by every question type:
+ *   [error] <svg> without a viewBox (collapses on the fixed-width surface);
+ *   [error] Arabic radicand of a radical / Arabic comma in math notation
+ *           (both break the LTR isolate in RTL — see the header).
+ */
+export function auditRenderedFields(
+  fields: ReadonlyArray<readonly [string, string]>,
+  where: string,
+): Flag[] {
+  const flags: Flag[] = [];
+  for (const [field, raw] of fields) {
+    for (const tag of raw.match(/<svg\b[^>]*>/gi) ?? []) {
+      if (!/\bviewBox=/i.test(tag)) {
+        flags.push({
+          level: "error",
+          where,
+          msg: "<svg> figure has no viewBox (will collapse when rendered)",
+        });
+      }
+    }
+    if (hasBidiFragileMath(raw)) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `Arabic script as the radicand of a radical (√) in ${field} — will mis-render in RTL; write the operand as a number/symbol`,
+      });
+    }
+    if (hasArabicCommaInMath(raw)) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `math notation uses the Arabic comma «،» as a separator in ${field} — breaks the LTR run in RTL; use «;» (e.g. «{−4 ; 4}», «]−1 ; 4[»)`,
+      });
+    }
+  }
+  return flags;
+}
+
 const buildSaysWrong = (letter: string) =>
   new RegExp(
     `l['’]option\\s+\\(?${letter}\\)?[^.;:!?\\n]{0,30}(?:est\\s+(?:fausse?|incorrecte?|erronée?)|comporte\\s+une\\s+erreur|n['’]est\\s+pas\\s+correcte?)`,
@@ -223,45 +276,18 @@ export function auditQuestion(q: QAQuestion, where: string): Flag[] {
     }
   }
 
-  // 6) every embedded <svg> must carry a viewBox. The renderer draws figures on
-  //   a fixed-width white surface and relies on the viewBox for the aspect ratio;
-  //   a viewBox-less SVG has no intrinsic ratio and collapses to a dot/blank.
-  //   (See content-engine content-schema.md "rendering contract".)
-  const fields = [q.prompt, q.explanation, ...q.options.map((o) => o.text)];
-  for (const raw of fields) {
-    for (const tag of raw.match(/<svg\b[^>]*>/gi) ?? []) {
-      if (!/\bviewBox=/i.test(tag)) {
-        flags.push({
-          level: "error",
-          where,
-          msg: "<svg> figure has no viewBox (will collapse when rendered)",
-        });
-      }
-    }
-  }
-
-  // 7) bidi-fragile math: Arabic script inside an LTR-isolated construct
-  //   (radical operand or bracketed group). Unrenderable — see header.
-  for (const [field, raw] of [
-    ["prompt", q.prompt] as const,
-    ["explanation", q.explanation] as const,
-    ...q.options.map((o) => [`option ${o.id}`, o.text] as const),
-  ]) {
-    if (hasBidiFragileMath(raw)) {
-      flags.push({
-        level: "error",
-        where,
-        msg: `Arabic script as the radicand of a radical (√) in ${field} — will mis-render in RTL; write the operand as a number/symbol`,
-      });
-    }
-    if (hasArabicCommaInMath(raw)) {
-      flags.push({
-        level: "error",
-        where,
-        msg: `math notation uses the Arabic comma «،» as a separator in ${field} — breaks the LTR run in RTL; use «;» (e.g. «{−4 ; 4}», «]−1 ; 4[»)`,
-      });
-    }
-  }
+  // 6+7) rendering checks (svg viewBox, bidi-fragile math) — shared with the
+  //   numeric audit; see auditRenderedFields.
+  flags.push(
+    ...auditRenderedFields(
+      [
+        ["prompt", q.prompt] as const,
+        ["explanation", q.explanation] as const,
+        ...q.options.map((o) => [`option ${o.id}`, o.text] as const),
+      ],
+      where,
+    ),
+  );
 
   // 8) meta-options & the non-idiomatic "none" calque (warn — quality, not structure).
   for (const o of q.options) {
@@ -280,6 +306,190 @@ export function auditQuestion(q: QAQuestion, where: string): Flag[] {
       });
     }
   }
+
+  return flags;
+}
+
+/**
+ * Registry cross-check for misconception tags (étude 04 D-4/R-5). Every
+ * `misconceptionTag` used on a distractor must be declared in the closed
+ * registry `content/misconceptions.json` — an unknown tag is an [error] (the
+ * telemetry would record a tag nothing can ever explain to the student). The
+ * schema already guarantees the tag's namespaced SHAPE and that the correct
+ * option is untagged; this adds the VOCABULARY check the schema cannot do.
+ */
+export function auditMisconceptionTags(
+  q: QAQuestion,
+  known: ReadonlySet<string>,
+  where: string,
+): Flag[] {
+  const flags: Flag[] = [];
+  for (const o of q.options) {
+    if (o.misconceptionTag && !known.has(o.misconceptionTag)) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `option "${o.id}" uses misconception tag "${o.misconceptionTag}" not declared in content/misconceptions.json`,
+      });
+    }
+  }
+  return flags;
+}
+
+/** Prepared vocabulary of the competency registries (étude 07 D-1). */
+export type CompetencyVocabulary = {
+  /** Every declared competency id, across all family registries. */
+  ids: ReadonlySet<string>;
+  /** family → the subject-id prefixes it covers (`math` → `math`, `math-*`). */
+  subjectPrefixes: ReadonlyMap<string, readonly string[]>;
+};
+
+/**
+ * Registry cross-check for evaluated competencies (étude 07 R-1/R-2 — the twin
+ * of {@link auditMisconceptionTags}, applying to EVERY question type). An id
+ * missing from `content/competences/<famille>.json` is an [error] (the junction
+ * row would violate the registry FK); a family whose declared subject prefixes
+ * do not cover the tagging subject is a [warn] (cross-matière tagging is almost
+ * always an authoring slip, but stays reviewable).
+ */
+export function auditCompetencyRefs(
+  q: { competencies?: string[] },
+  subjectId: string,
+  vocab: CompetencyVocabulary,
+  where: string,
+): Flag[] {
+  const flags: Flag[] = [];
+  for (const id of q.competencies ?? []) {
+    const family = id.split(".")[0] ?? id;
+    if (!vocab.ids.has(id)) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `references competency "${id}" not declared in content/competences/${family}.json`,
+      });
+      continue;
+    }
+    const prefixes = vocab.subjectPrefixes.get(family) ?? [];
+    if (!prefixes.some((p) => subjectId === p || subjectId.startsWith(`${p}-`))) {
+      flags.push({
+        level: "warn",
+        where,
+        msg: `competency "${id}" belongs to family "${family}" which does not cover subject "${subjectId}" (declared prefixes: ${prefixes.join(", ")})`,
+      });
+    }
+  }
+  return flags;
+}
+
+/**
+ * Per-question heuristics for the native board/checklist questions
+ * (`ordering` / `matching` / `multi` — Tier B, phases B2–B3). Their
+ * STRUCTURAL integrity (permutation / bijection / proper-subset keys, id
+ * charset) is hard-enforced by the Zod schema; this pass keeps the quality
+ * heuristics that still apply:
+ *   [error] duplicate item texts (two identical steps/pairs are unorderable);
+ *   [warn]  thin explanation; [error] figure referenced but absent;
+ *   [error] rendering checks (svg viewBox, bidi) — shared.
+ */
+export function auditBoardQuestion(q: QABoardQuestion, where: string): Flag[] {
+  const flags: Flag[] = [];
+
+  const texts = q.options.map((o) => norm(o.text));
+  if (new Set(texts).size !== texts.length) {
+    flags.push({ level: "error", where, msg: "duplicate option texts" });
+  }
+
+  if (q.explanation.trim().length < 25) {
+    flags.push({ level: "warn", where, msg: "explanation is very short" });
+  }
+
+  if (FIGURE_REFERENCE.test(q.prompt)) {
+    const hasFigure = SVG_BLOCK.test(q.prompt) || q.options.some((o) => SVG_BLOCK.test(o.text));
+    if (!hasFigure) {
+      flags.push({
+        level: "error",
+        where,
+        msg: "prompt references a figure but no <svg> is present (unanswerable without it)",
+      });
+    }
+  }
+
+  flags.push(
+    ...auditRenderedFields(
+      [
+        ["prompt", q.prompt] as const,
+        ["explanation", q.explanation] as const,
+        ...q.options.map((o) => [`option ${o.id}`, o.text] as const),
+      ],
+      where,
+    ),
+  );
+
+  return flags;
+}
+
+/**
+ * Per-question heuristics for native `numeric` questions (Tier B, phase B1):
+ *   [error] tolerance as wide as the value    → any plausible answer passes;
+ *           an acceptance window ≥ |value| is almost surely an authoring typo.
+ *   [warn]  very generous tolerance (> 25 %)  → double-check it is intended.
+ *   [warn]  canonical value not echoed in the explanation (same spirit as the
+ *           mcq check: the key and the worked solution may disagree).
+ *   [warn]  thin explanation                  → same bar as mcq.
+ *   [error] figure referenced but absent / rendering checks — shared.
+ */
+export function auditNumericQuestion(q: QANumericQuestion, where: string): Flag[] {
+  const flags: Flag[] = [];
+  const { value, tolerance } = q.answerKey;
+
+  if (tolerance !== undefined && tolerance > 0 && value !== 0) {
+    if (tolerance >= Math.abs(value)) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `numeric tolerance ${tolerance} is as wide as the value ${value} — any plausible answer would score correct`,
+      });
+    } else if (tolerance > Math.abs(value) / 4) {
+      flags.push({
+        level: "warn",
+        where,
+        msg: `numeric tolerance ${tolerance} is more than 25% of the value ${value} — double-check it is intended`,
+      });
+    }
+  }
+
+  // Canonical value echoed in the explanation (dot or comma decimal accepted).
+  const dot = String(Math.abs(value));
+  const explNums = new Set(numbersIn(q.explanation));
+  if (!explNums.has(dot) && !explNums.has(dot.replace(".", ","))) {
+    flags.push({
+      level: "warn",
+      where,
+      msg: `canonical value ${value} not echoed in the explanation`,
+    });
+  }
+
+  if (q.explanation.trim().length < 25) {
+    flags.push({ level: "warn", where, msg: "explanation is very short" });
+  }
+
+  if (FIGURE_REFERENCE.test(q.prompt) && !SVG_BLOCK.test(q.prompt)) {
+    flags.push({
+      level: "error",
+      where,
+      msg: "prompt references a figure but no <svg> is present (unanswerable without it)",
+    });
+  }
+
+  flags.push(
+    ...auditRenderedFields(
+      [
+        ["prompt", q.prompt],
+        ["explanation", q.explanation],
+      ],
+      where,
+    ),
+  );
 
   return flags;
 }

@@ -1,11 +1,16 @@
 import { describe, it, expect } from "vitest";
 import {
+  auditBoardQuestion,
+  auditMisconceptionTags,
+  auditNumericQuestion,
   auditQuestion,
   classifyOption,
   hasArabicCommaInMath,
   hasBidiFragileMath,
   norm,
   numbersIn,
+  type QABoardQuestion,
+  type QANumericQuestion,
   type QAQuestion,
 } from "../../../../scripts/content/qa-checks.ts";
 
@@ -28,6 +33,41 @@ describe("qa-checks helpers", () => {
   });
   it("numbersIn extracts Latin + folded Arabic numbers", () => {
     expect(numbersIn("x = ١٢ et 3.5")).toEqual(["12", "3.5"]);
+  });
+});
+
+describe("auditMisconceptionTags — registry cross-check (étude 04 A0.3)", () => {
+  const known = new Set(["math.frac.add-denominators"]);
+
+  it("passes when every used tag is declared in the registry", () => {
+    const q = base({
+      options: [
+        { id: "a", text: "5/6" },
+        { id: "b", text: "2/5", misconceptionTag: "math.frac.add-denominators" },
+        { id: "c", text: "1/6" },
+        { id: "d", text: "2/6" },
+      ],
+    });
+    expect(auditMisconceptionTags(q, known, "w")).toEqual([]);
+  });
+
+  it("errors on a tag that is not in the registry", () => {
+    const q = base({
+      options: [
+        { id: "a", text: "5/6" },
+        { id: "b", text: "2/5", misconceptionTag: "math.frac.unknown-error" },
+        { id: "c", text: "1/6" },
+        { id: "d", text: "2/6" },
+      ],
+    });
+    const flags = auditMisconceptionTags(q, known, "w");
+    expect(flags).toHaveLength(1);
+    expect(flags[0]).toMatchObject({ level: "error" });
+    expect(flags[0].msg).toContain("math.frac.unknown-error");
+  });
+
+  it("is a no-op for untagged questions", () => {
+    expect(auditMisconceptionTags(base({}), known, "w")).toEqual([]);
   });
 });
 
@@ -328,5 +368,131 @@ describe("hasArabicCommaInMath — interval/set separator", () => {
       "w",
     );
     expect(flags.some((f) => f.level === "error" && /Arabic comma/.test(f.msg))).toBe(true);
+  });
+});
+
+describe("auditNumericQuestion — native numeric lints (Tier B, B1)", () => {
+  const numeric = (over: Partial<QANumericQuestion> = {}): QANumericQuestion => ({
+    prompt: "Calcule l'aire du carré de côté 6 cm.",
+    answerKey: { value: 36 },
+    explanation: "Aire = côté × côté = 6 × 6 = 36 cm².",
+    ...over,
+  });
+
+  it("passes a clean numeric question with no flags", () => {
+    expect(auditNumericQuestion(numeric(), "w")).toEqual([]);
+  });
+
+  it("errors when the tolerance is as wide as the value (any answer would pass)", () => {
+    const flags = auditNumericQuestion(numeric({ answerKey: { value: 10, tolerance: 10 } }), "w");
+    expect(flags.some((f) => f.level === "error" && /tolerance/.test(f.msg))).toBe(true);
+  });
+
+  it("warns on a very generous tolerance (> 25% of the value)", () => {
+    const flags = auditNumericQuestion(
+      numeric({
+        answerKey: { value: 10, tolerance: 3 },
+        explanation: "Le résultat vaut environ 10 selon l'estimation demandée.",
+      }),
+      "w",
+    );
+    expect(flags.some((f) => f.level === "warn" && /25%/.test(f.msg))).toBe(true);
+  });
+
+  it("accepts a proportionate tolerance without flags (3.14 ± 0.01)", () => {
+    const flags = auditNumericQuestion(
+      numeric({
+        prompt: "Donne une valeur approchée de π au centième.",
+        answerKey: { value: 3.14, tolerance: 0.01 },
+        explanation: "π ≈ 3.14 au centième près (3,14159…).",
+      }),
+      "w",
+    );
+    expect(flags).toEqual([]);
+  });
+
+  it("warns when the canonical value is not echoed in the explanation", () => {
+    const flags = auditNumericQuestion(
+      numeric({ explanation: "On multiplie le côté par lui-même pour obtenir l'aire." }),
+      "w",
+    );
+    expect(flags.some((f) => f.level === "warn" && /not echoed/.test(f.msg))).toBe(true);
+  });
+
+  it("accepts the value echoed with a comma decimal", () => {
+    const flags = auditNumericQuestion(
+      numeric({
+        answerKey: { value: 2.5 },
+        explanation: "La moitié de 5 est 2,5 — on divise simplement par deux.",
+      }),
+      "w",
+    );
+    expect(flags).toEqual([]);
+  });
+
+  it("errors on a figure-dependent prompt with no <svg>", () => {
+    const flags = auditNumericQuestion(
+      numeric({ prompt: "Calcule l'aire de la figure ci-dessous en cm²." }),
+      "w",
+    );
+    expect(flags.some((f) => f.level === "error" && /figure/.test(f.msg))).toBe(true);
+  });
+
+  it("runs the shared rendering checks (viewBox-less svg is an error)", () => {
+    const flags = auditNumericQuestion(
+      numeric({ prompt: 'Aire du carré <svg width="80"><rect/></svg> ? (en cm²)' }),
+      "w",
+    );
+    expect(flags.some((f) => f.level === "error" && /viewBox/.test(f.msg))).toBe(true);
+  });
+});
+
+describe("auditBoardQuestion — ordering/matching lints (Tier B, B2)", () => {
+  const board = (over: Partial<QABoardQuestion> = {}): QABoardQuestion => ({
+    prompt: "Range les étapes de la démarche.",
+    options: [
+      { id: "a", text: "Lire l'énoncé" },
+      { id: "b", text: "Poser le calcul" },
+      { id: "c", text: "Vérifier le résultat" },
+    ],
+    explanation: "On lit d'abord, on calcule ensuite, on vérifie à la fin.",
+    ...over,
+  });
+
+  it("passes a clean board question with no flags", () => {
+    expect(auditBoardQuestion(board(), "w")).toEqual([]);
+  });
+
+  it("errors on duplicate item texts (two identical steps are unorderable)", () => {
+    const flags = auditBoardQuestion(
+      board({
+        options: [
+          { id: "a", text: "Étape" },
+          { id: "b", text: "Étape" },
+          { id: "c", text: "Autre" },
+        ],
+      }),
+      "w",
+    );
+    expect(flags.some((f) => f.level === "error" && /duplicate/.test(f.msg))).toBe(true);
+  });
+
+  it("warns on a thin explanation", () => {
+    const flags = auditBoardQuestion(board({ explanation: "Voilà." }), "w");
+    expect(flags.some((f) => f.level === "warn" && /very short/.test(f.msg))).toBe(true);
+  });
+
+  it("runs the shared rendering checks on item texts", () => {
+    const flags = auditBoardQuestion(
+      board({
+        options: [
+          { id: "a", text: '<svg width="10"><rect/></svg>' },
+          { id: "b", text: "Poser le calcul" },
+          { id: "c", text: "Vérifier" },
+        ],
+      }),
+      "w",
+    );
+    expect(flags.some((f) => f.level === "error" && /viewBox/.test(f.msg))).toBe(true);
   });
 });

@@ -70,6 +70,8 @@ function mockQuery(data: unknown, error: unknown = null) {
   chain.insert = vi.fn().mockReturnValue(chain);
   chain.in = vi.fn().mockReturnValue(chain);
   chain.gte = vi.fn().mockReturnValue(chain);
+  chain.not = vi.fn().mockReturnValue(chain);
+  chain.neq = vi.fn().mockReturnValue(chain);
   // Make the chain itself resolve like a promise with data/error
   chain.then = (fn: (v: unknown) => unknown) => fn(result);
   Object.assign(chain, result);
@@ -110,6 +112,8 @@ describe("gamification.quest — getSubject", () => {
       bestByExercise: { "ex-1": 85 },
       quizPassedByChapter: {},
       viewer: { level: 0, isPremium: false, hasEntitlement: true },
+      // Level anchor (étude 15 lot 7) — null here: the mocked RPC resolves no parcours.
+      parcours: null,
     });
   });
 
@@ -172,7 +176,33 @@ describe("gamification.quest — getExercise", () => {
       exercise: exerciseData,
       questions: questionsData,
       hintCharges: 0,
+      // No chapter_id on this exercise → no comprehension-quiz lookup.
+      chapterQuizId: null,
+      // No chapter quiz + no grade → the exercise is not quiz-gated.
+      quizGated: false,
     });
+  });
+
+  it("resolves the chapter's comprehension quiz id for a gated (non-quiz) exercise", async () => {
+    const exerciseData = { id: "ex-1", title: "Ex 1", chapter_id: "ch-1", mode: "practice" };
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") {
+        // First call → the exercise itself; the follow-up quiz lookup is also on
+        // "exercises" but selects by chapter_id+mode and reads .maybeSingle().
+        const chain = mockQuery(exerciseData) as Record<string, unknown>;
+        chain.maybeSingle = vi.fn().mockReturnValue({ data: { id: "quiz-1" }, error: null });
+        return chain;
+      }
+      if (table === "questions") return mockQuery([]);
+      return mockQuery([]);
+    });
+
+    const { getExercise } = await import("@/features/quest");
+    const result = (await (getExercise as unknown as (d: unknown) => Promise<unknown>)({
+      exerciseId: "11111111-1111-1111-1111-111111111111",
+    })) as { chapterQuizId: string | null };
+
+    expect(result.chapterQuizId).toBe("quiz-1");
   });
 
   it("sums reveal charges from owned hint consumables", async () => {
@@ -372,6 +402,67 @@ describe("gamification.quest — submitAttempt", () => {
     // actually increments (they used to never be created → stuck at 0).
     expect(mockRpc).toHaveBeenCalledWith("ensure_daily_weekly_goals", {
       p_user: expect.any(String),
+    });
+  });
+
+  it("rejects a malformed numeric answer before any scoring RPC", async () => {
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") return mockQuery({ mode: "practice" });
+      return mockQuery([{ id: Q1_ID, question_type: "numeric" }]);
+    });
+
+    const { submitAttempt } = await import("@/features/quest");
+    await expect(
+      (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
+        sessionId: SESSION_ID,
+        exerciseId: EXERCISE_ID,
+        answers: [{ questionId: Q1_ID, choice: "abc" }],
+      }),
+    ).rejects.toThrow("Réponse invalide pour ce type de question.");
+    expect(mockRpc).not.toHaveBeenCalledWith("submit_exercise_attempt", expect.anything());
+  });
+
+  it("scores the review through the RPC — an in-tolerance numeric answer shows correct", async () => {
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") return mockQuery({ mode: "practice" });
+      return mockQuery([{ id: Q1_ID, question_type: "numeric" }]);
+    });
+    mockRpc.mockImplementation((name: string) => {
+      if (name === "get_attempt_review") {
+        return {
+          data: [
+            {
+              question_id: Q1_ID,
+              prompt: "pi ≈ ?",
+              correct_option: "3.14",
+              explanation: null,
+              is_correct: true,
+            },
+          ],
+          error: null,
+        };
+      }
+      return {
+        data: { correct: 1, total: 1, scorePct: 100, xpEarned: 10, coinsEarned: 1 },
+        error: null,
+      };
+    });
+
+    const { submitAttempt } = await import("@/features/quest");
+    const res = (await (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
+      sessionId: SESSION_ID,
+      exerciseId: EXERCISE_ID,
+      answers: [{ questionId: Q1_ID, choice: "3,15" }],
+    })) as Record<string, unknown>;
+
+    const review = res.review as Array<{ isCorrect: boolean; correctChoice: string }>;
+    // Server-scored via score_answer (is_correct), NOT the old "3,15" === "3.14"
+    // string equality — the review can no longer contradict the counted score.
+    expect(review[0].isCorrect).toBe(true);
+    expect(review[0].correctChoice).toBe("3.14");
+    expect(mockRpc).toHaveBeenCalledWith("get_attempt_review", {
+      p_session_id: SESSION_ID,
+      p_answers: [{ questionId: Q1_ID, choice: "3,15" }],
     });
   });
 
@@ -650,16 +741,21 @@ describe("gamification.quest — getChapterLesson", () => {
   });
 
   it("returns the chapter and sibling nav (hasLesson reflects lesson_content)", async () => {
+    // Three chapters reads: (1) the chapter itself, (2) sibling metadata WITHOUT
+    // the lesson body, (3) the id-only set of siblings that have a lesson.
     let calls = 0;
     mockFrom.mockImplementation((table: string) => {
       if (table === "chapters") {
         calls += 1;
-        return calls === 1
-          ? mockQuery({ id: "ch-1", title: "C1", subject_id: "s1", lesson_content: "x" })
-          : mockQuery([
-              { id: "ch-1", title: "C1", display_order: 1, lesson_content: "x" },
-              { id: "ch-2", title: "C2", display_order: 2, lesson_content: null },
-            ]);
+        if (calls === 1)
+          return mockQuery({ id: "ch-1", title: "C1", subject_id: "s1", lesson_content: "x" });
+        if (calls === 2)
+          return mockQuery([
+            { id: "ch-1", title: "C1", display_order: 1 },
+            { id: "ch-2", title: "C2", display_order: 2 },
+          ]);
+        // Only ch-1 carries a lesson.
+        return mockQuery([{ id: "ch-1" }]);
       }
       return mockQuery([]);
     });
@@ -680,6 +776,50 @@ describe("gamification.quest — getChapterLesson", () => {
     ]);
     // No exercises returned for this chapter → no practise CTA target.
     expect(res.practiceExerciseId).toBeNull();
+  });
+
+  it("does NOT fetch sibling lesson bodies — only metadata + an id-only has-lesson set", async () => {
+    // Regression guard for the over-fetch fix: shipping every sibling's full
+    // lesson_content just to compute a boolean was the perf bug. The nav query
+    // must select metadata only, and the has-lesson set must filter on (not null
+    // AND not empty) without selecting the body.
+    const selects: string[] = [];
+    let calls = 0;
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "chapters") {
+        calls += 1;
+        const q =
+          calls === 1
+            ? mockQuery({ id: "ch-1", title: "C1", subject_id: "s1", lesson_content: "x" })
+            : calls === 2
+              ? mockQuery([
+                  { id: "ch-1", title: "C1", display_order: 1 },
+                  { id: "ch-2", title: "C2", display_order: 2 },
+                ])
+              : mockQuery([{ id: "ch-1" }]);
+        const origSelect = q.select as ReturnType<typeof vi.fn>;
+        origSelect.mockImplementation((cols: string) => {
+          selects.push(cols);
+          return q;
+        });
+        return q;
+      }
+      return mockQuery([]);
+    });
+
+    const { getChapterLesson } = await import("@/features/quest");
+    const res = (await (getChapterLesson as unknown as (d: unknown) => Promise<unknown>)({
+      chapterId: CH,
+    })) as { allChapters: Array<{ id: string; hasLesson: boolean }> };
+
+    // The sibling-nav select (2nd chapters read) must not pull the body.
+    expect(selects[1]).not.toContain("lesson_content");
+    // The has-lesson probe (3rd read) selects ids only, never the body.
+    expect(selects[2]).toBe("id");
+    expect(res.allChapters).toEqual([
+      { id: "ch-1", title: "C1", display_order: 1, hasLesson: true },
+      { id: "ch-2", title: "C2", display_order: 2, hasLesson: false },
+    ]);
   });
 
   it("returns the chapter's first non-quiz exercise as the practise CTA target", async () => {
@@ -707,6 +847,10 @@ describe("gamification.quest — getChapterLesson", () => {
     // The comprehension quiz is the connected gate, not practice → it's skipped.
     expect(res.practiceExerciseId).toBe("ex");
   });
+
+  // The quiz-gate fields added by étude 15 lot 1 (quizExerciseId / quizGated /
+  // quizPassed) are covered in the co-located quest-lesson-gate.test.ts —
+  // this file is at its max-lines budget.
 
   it("falls back to an empty sibling list when none are returned", async () => {
     let calls = 0;

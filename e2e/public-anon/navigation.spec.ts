@@ -38,31 +38,31 @@ test.describe("Anonymous inter-screen navigation (cours ↔ exercice)", () => {
     await expect(page).toHaveURL(new RegExp(`/exercice/${exerciseId}`));
     await expect(page).not.toHaveURL(/\/auth/);
 
-    // …and it really practises (immediate correction, no account needed).
+    // …and it really practises (question-by-question, no account needed).
     const practice = new PracticePage(page);
-    await practice.answerAll();
-    await practice.checkButton.click();
+    await practice.playThrough();
     await expect(practice.score).toBeVisible({ timeout: 15_000 });
   });
 
-  test("practice → « revoir le cours » → back to the course reader", async ({ page, adminDb }) => {
+  test("practice → « quitter » → back to the subject hub", async ({ page, adminDb }) => {
     const subjectId = await adminDb.nonSchoolSubjectId();
     const target = await adminDb.chapterWithPractice(subjectId);
     if (!target)
       throw new Error("test subject has no practiceable chapter (apply content to TEST?)");
-    const { chapterId, exerciseId } = target;
+    const { exerciseId } = target;
 
     const practice = new PracticePage(page);
     await practice.goto(exerciseId);
-    await expect(practice.heading).toBeVisible({ timeout: 15_000 });
+    await practice.firstQuestionVisible();
 
-    // The fix: practice links back to the very chapter it belongs to.
-    await expect(practice.reviewCourseLink).toBeVisible();
-    await practice.reviewCourseLink.click();
+    // The unified player's « leave » link returns to the subject hub (the chapter
+    // course stays one tap away from there) — never a login wall.
+    await expect(practice.leaveLink).toBeVisible();
+    await practice.leaveLink.click();
 
-    await expect(page).toHaveURL(new RegExp(`/chapitre/${chapterId}`));
-    const reader = new LessonReaderPage(page);
-    await expect(reader.heading).toBeVisible({ timeout: 15_000 });
+    await expect(page).toHaveURL(new RegExp(`/matiere/${subjectId}`));
+    const subject = new SubjectHubPage(page);
+    await expect(subject.heading).toBeVisible({ timeout: 15_000 });
     await expect(page).not.toHaveURL(/\/auth/);
   });
 
@@ -88,7 +88,10 @@ test.describe("Anonymous inter-screen navigation (cours ↔ exercice)", () => {
 
     await expect(page).toHaveURL(new RegExp(`/exercice/${quizId}`));
     await expect(page).not.toHaveURL(/\/auth/);
-    // The quiz is presented as an account invite, not fake-corrected.
-    await expect(page.getByText(/Quiz de compréhension/)).toBeVisible();
+    // Gate parity: the comprehension quiz is now PLAYABLE for an anonymous visitor
+    // (same question-by-question player), not fake-corrected and not a login wall —
+    // passing it unlocks the chapter's exercises for the browsing session.
+    const practice = new PracticePage(page);
+    await expect(practice.questionGroups.first()).toBeVisible({ timeout: 15_000 });
   });
 });

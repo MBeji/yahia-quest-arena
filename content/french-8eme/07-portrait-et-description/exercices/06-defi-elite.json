@@ -1,0 +1,154 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : le portraitiste virtuose",
+  "difficulty": 4,
+  "mode": "boss",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 6,
+  "questions": [
+    {
+      "prompt": "Dans « le contrebandier, au sourire aimable mais aux yeux fuyants », qu'est-ce que le narrateur laisse deviner ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "une contradiction : l'amabilité affichée cache une nature peu franche"
+        },
+        {
+          "id": "b",
+          "text": "qu'il est simplement malade"
+        },
+        {
+          "id": "c",
+          "text": "uniquement la couleur de ses yeux"
+        },
+        {
+          "id": "d",
+          "text": "qu'il est très grand"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "« un sourire aimable » (apparence avenante) opposé à « des yeux fuyants » (le regard fuyant trahit le malaise ou la malhonnêteté) crée une contradiction : sous l'amabilité perce une nature peu franche. Le physique décrit sert à suggérer le moral.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Classe ces trois expansions de « l'aïeule » selon leur nature : « courbée » / « aux mains ridées » / « qui racontait les vieilles histoires ».",
+      "options": [
+        {
+          "id": "a",
+          "text": "adjectif épithète / complément du nom / subordonnée relative"
+        },
+        {
+          "id": "b",
+          "text": "complément du nom / adjectif épithète / comparaison"
+        },
+        {
+          "id": "c",
+          "text": "subordonnée relative / complément du nom / adjectif épithète"
+        },
+        {
+          "id": "d",
+          "text": "comparaison / adjectif attribut / complément du nom"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "« courbée » = adjectif épithète ; « aux mains ridées » = à + les mains = complément du nom ; « qui racontait les vieilles histoires » = pronom relatif « qui » + verbe = subordonnée relative. Trois outils différents pour un même nom.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Pour peindre l'avarice d'un personnage SANS employer le mot « avare », quelle phrase est la plus efficace ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Il était connu pour son avarice légendaire."
+        },
+        {
+          "id": "b",
+          "text": "Il comptait ses sous trois fois avant de rendre la monnaie, et fermait la lumière dès qu'on quittait la pièce."
+        },
+        {
+          "id": "c",
+          "text": "C'était un homme très, très économe et avare."
+        },
+        {
+          "id": "d",
+          "text": "Tout le monde le trouvait avare et pingre."
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Montrer le moral par des actions précises (« comptait ses sous trois fois », « fermait la lumière ») fait sentir l'avarice sans la nommer : c'est l'art du portrait révélateur. Les autres phrases répètent l'adjectif « avare » au lieu de le montrer.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Rigide comme un piquet, l'inspecteur restait droit ; jamais un pli de son uniforme ne se froissait. » Que traduit surtout ce portrait ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "seulement des détails physiques sans signification"
+        },
+        {
+          "id": "b",
+          "text": "par la comparaison et le détail de l'uniforme, une rigueur, une discipline morale"
+        },
+        {
+          "id": "c",
+          "text": "la gentillesse et la douceur du personnage"
+        },
+        {
+          "id": "d",
+          "text": "l'endroit exact où il travaillait"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "« Rigide comme un piquet » (comparaison), « restait droit » (verbe d'état + attribut) et « jamais un pli… ne se froissait » sont des détails physiques choisis pour suggérer une qualité morale : la rigueur, la discipline. Le physique est mis au service du moral.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans « ses joues creuses, que la maladie avait pâlies, semblaient de cire », combien d'outils de caractérisation différents repère-t-on ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "un seul : un adjectif"
+        },
+        {
+          "id": "b",
+          "text": "aucun, il n'y a qu'un nom"
+        },
+        {
+          "id": "c",
+          "text": "trois : un adjectif épithète (creuses), une subordonnée relative (que la maladie avait pâlies) et une comparaison via un attribut (semblaient de cire)"
+        },
+        {
+          "id": "d",
+          "text": "deux compléments du nom"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "« creuses » = adjectif épithète ; « que la maladie avait pâlies » = subordonnée relative (pronom « que » + verbe) ; « semblaient de cire » = verbe d'état « semblaient » introduisant une image comparative (attribut). Trois outils s'additionnent pour un portrait riche.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Un jury de rédaction doit choisir le meilleur portrait « du général au particulier avec passage au moral ». Lequel récompenser ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "« Menteur. De grands pieds. Un front. Il trichait toujours. »"
+        },
+        {
+          "id": "b",
+          "text": "« De taille moyenne, le marchand avait un visage rond aux petits yeux mobiles ; ces yeux, sans cesse en mouvement, disaient assez sa méfiance. »"
+        },
+        {
+          "id": "c",
+          "text": "« Sa méfiance d'abord. Puis un œil. Puis, tout à la fin, sa taille moyenne. »"
+        },
+        {
+          "id": "d",
+          "text": "« Il avait un œil. Il était moyen. Il se méfiait. Il avait un visage. »"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "La version b va du général (taille moyenne) au particulier (visage rond, petits yeux mobiles), puis glisse vers le moral (« disaient assez sa méfiance ») que le détail des yeux laisse deviner : ordre clair, physique au service du moral. Les autres sont en désordre ou commencent par le moral.",
+      "difficulty": 3
+    }
+  ]
+}

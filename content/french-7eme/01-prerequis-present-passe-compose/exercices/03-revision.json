@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision (type examen) : consolider les acquis",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 70,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Dans quelle phrase le verbe est-il conjugué au présent de l'indicatif ?",
+      "options": [
+        { "id": "a", "text": "Nous avons visité le musée du Bardo." },
+        { "id": "b", "text": "Nous visiterons le musée du Bardo." },
+        { "id": "c", "text": "Nous visitons le musée du Bardo." },
+        { "id": "d", "text": "Nous allons visiter le musée du Bardo." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Visitons » porte la terminaison du présent avec nous (-ons) : c'est le présent de l'indicatif. « Avons visité » est un passé composé et les phrases b et d expriment le futur.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choisis l'auxiliaire correct : « Les voyageurs ___ partis à l'aube. »",
+      "options": [
+        { "id": "a", "text": "sont" },
+        { "id": "b", "text": "ont" },
+        { "id": "c", "text": "est" },
+        { "id": "d", "text": "a" }
+      ],
+      "correctOption": "a",
+      "explanation": "Partir est un verbe de mouvement : il se conjugue avec être. Le sujet « les voyageurs » est pluriel → sont partis. « Ont parti » est une faute classique d'auxiliaire.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Regarde ___ nuages noirs à l'horizon ! »",
+      "options": [
+        { "id": "a", "text": "s'est" },
+        { "id": "b", "text": "ses" },
+        { "id": "c", "text": "c'est" },
+        { "id": "d", "text": "ces" }
+      ],
+      "correctOption": "d",
+      "explanation": "On montre les nuages : il faut le déterminant démonstratif « ces » devant un nom pluriel. « Ses » exprimerait une possession, impossible pour des nuages.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle est la transformation correcte de « Vous prenez le bus. » en phrase interrogative ?",
+      "options": [
+        { "id": "a", "text": "Vous prenez le bus !" },
+        { "id": "b", "text": "Prenez-vous le bus ?" },
+        { "id": "c", "text": "Prenez le bus !" },
+        { "id": "d", "text": "Vous ne prenez pas le bus." }
+      ],
+      "correctOption": "b",
+      "explanation": "La phrase interrogative pose une question et se termine par « ? » : on inverse le sujet et le verbe → « Prenez-vous le bus ? » (on peut aussi dire « Est-ce que vous prenez le bus ? »).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète au passé composé : « Les joueuses ___ (s'entraîner) au stade toute la matinée. »",
+      "options": [
+        { "id": "a", "text": "s'ont entraînées" },
+        { "id": "b", "text": "se sont entraîné" },
+        { "id": "c", "text": "se sont entraînées" },
+        { "id": "d", "text": "se sont entraînés" }
+      ],
+      "correctOption": "c",
+      "explanation": "Un verbe pronominal se conjugue avec être au passé composé, et le participe passé s'accorde avec le sujet « les joueuses » (féminin pluriel) → se sont entraînées. « S'ont » n'existe pas : jamais l'auxiliaire avoir avec un verbe pronominal.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quelle phrase est déclarative et de forme négative ?",
+      "options": [
+        { "id": "a", "text": "Le vent ne souffle plus." },
+        { "id": "b", "text": "Le vent souffle très fort." },
+        { "id": "c", "text": "Est-ce que le vent souffle ?" },
+        { "id": "d", "text": "Comme le vent souffle fort !" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Le vent ne souffle plus. » donne une information (type déclaratif) et contient la négation « ne… plus » (forme négative). La phrase b est déclarative mais affirmative ; c est interrogative ; d est exclamative.",
+      "difficulty": 2
+    }
+  ]
+}

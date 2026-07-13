@@ -1,0 +1,82 @@
+{
+  "title": "👑 Elite challenge ⭐⭐⭐⭐: two worlds compared",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Which question matches the answer \"She bought some souvenirs.\"?",
+      "options": [
+        { "id": "a", "text": "What did she buy?" },
+        { "id": "b", "text": "What did she bought?" },
+        { "id": "c", "text": "What she buy?" },
+        { "id": "d", "text": "What does she buy?" }
+      ],
+      "correctOption": "a",
+      "explanation": "The answer is in the simple past (\"bought\"), so the question uses \"did + base verb\": \"What did she buy?\" ✓. \"What did she bought?\" wrongly keeps the past after \"did\", \"What she buy?\" has no auxiliary, and \"does\" is present.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Which adjective describes a person's **character**, not their body?",
+      "options": [
+        { "id": "a", "text": "tall" },
+        { "id": "b", "text": "generous" },
+        { "id": "c", "text": "slim" },
+        { "id": "d", "text": "curly" }
+      ],
+      "correctOption": "b",
+      "explanation": "\"Generous\" (loving to share) describes character ✓. \"Tall\" and \"slim\" describe the body, and \"curly\" describes hair — all three are physical, not personality.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complete: \"In the picture, Anis ___ a huge ice-cream while Oliver ___ a photo.\"",
+      "options": [
+        { "id": "a", "text": "ate … took" },
+        { "id": "b", "text": "was eating … took" },
+        { "id": "c", "text": "was eating … was taking" },
+        { "id": "d", "text": "ate … was taking" }
+      ],
+      "correctOption": "c",
+      "explanation": "\"While\" links two actions in progress at the same moment, so both take the past continuous: \"was eating … was taking\" ✓. The common trap is switching one verb to the simple past — but neither action interrupts the other here; they happen together.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"London is much ___ and ___ than Bizerte.\"",
+      "options": [
+        { "id": "a", "text": "biggest … most crowded" },
+        { "id": "b", "text": "bigger … more crowded" },
+        { "id": "c", "text": "more big … crowdeder" },
+        { "id": "d", "text": "bigger … crowdeder" }
+      ],
+      "correctOption": "b",
+      "explanation": "Two comparisons of two things: \"big\" is short → \"bigger\", and \"crowded\" is long → \"more crowded\", both with \"than\" ✓. \"Biggest/most crowded\" are for three or more, \"more big\" and \"crowdeder\" break the short/long rule.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "One sentence has a mistake. Which one?",
+      "options": [
+        { "id": "a", "text": "Anis didn't visit the Tower on Monday." },
+        { "id": "b", "text": "Did the Bakers meet him at the airport?" },
+        { "id": "c", "text": "Oliver didn't went to school that week." },
+        { "id": "d", "text": "They saw the London Eye at night." }
+      ],
+      "correctOption": "c",
+      "explanation": "After \"didn't\" the verb must be the base form: it should be \"Oliver didn't go to school\" ✓. The others are correct: \"didn't visit\", \"Did … meet?\" and the irregular past \"saw\" all follow the rule.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Complete: \"Anis thought the food at home was ___ than English food, but the parks in London were ___ than the ones back home.\"",
+      "options": [
+        { "id": "a", "text": "better … more beautiful" },
+        { "id": "b", "text": "gooder … beautifuler" },
+        { "id": "c", "text": "best … more beautiful" },
+        { "id": "d", "text": "better … beautifuller" }
+      ],
+      "correctOption": "a",
+      "explanation": "\"Good\" is irregular → \"better than\", and \"beautiful\" is long → \"more beautiful than\" ✓. The common trap is \"gooder\" — \"good\" never takes -er. \"Beautifuler/beautifuller\" break the long-adjective rule, and \"best\" is for three or more.",
+      "difficulty": 3
+    }
+  ]
+}

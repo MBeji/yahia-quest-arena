@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { ThemeProvider, useTheme } from "@/lib/theme";
-import { isTheme, themeFromCookieHeader, DEFAULT_THEME } from "@/lib/theme/context";
+import { isTheme, normalizeTheme, themeFromCookieHeader, DEFAULT_THEME } from "@/lib/theme/context";
 
 function TestConsumer() {
   const { theme, setTheme } = useTheme();
@@ -9,7 +9,6 @@ function TestConsumer() {
     <div>
       <span data-testid="theme">{theme}</span>
       <button data-testid="set-reference" onClick={() => setTheme("reference")} />
-      <button data-testid="set-light" onClick={() => setTheme("light")} />
       <button data-testid="set-dark" onClick={() => setTheme("dark")} />
     </div>
   );
@@ -31,17 +30,25 @@ function resetThemeState() {
 }
 
 describe("theme context helpers", () => {
-  it("isTheme accepts only the three known themes", () => {
+  it("isTheme accepts only the two known themes", () => {
     expect(isTheme("dark")).toBe(true);
-    expect(isTheme("light")).toBe(true);
     expect(isTheme("reference")).toBe(true);
+    // `light` was removed by the 2-theme unification (étude 14, Q-1).
+    expect(isTheme("light")).toBe(false);
     expect(isTheme("solarized")).toBe(false);
     expect(isTheme(null)).toBe(false);
     expect(isTheme(undefined)).toBe(false);
   });
 
+  it("normalizeTheme migrates the removed light theme to the default", () => {
+    expect(normalizeTheme("light")).toBe("reference");
+    expect(normalizeTheme("dark")).toBe("dark");
+    expect(normalizeTheme("reference")).toBe("reference");
+    expect(normalizeTheme("neon")).toBe(DEFAULT_THEME);
+    expect(normalizeTheme(null)).toBe(DEFAULT_THEME);
+  });
+
   it("themeFromCookieHeader parses the theme cookie", () => {
-    expect(themeFromCookieHeader("xp-scholars-theme=light")).toBe("light");
     expect(themeFromCookieHeader("foo=bar; xp-scholars-theme=dark; baz=1")).toBe("dark");
     expect(themeFromCookieHeader("xp-scholars-theme=reference")).toBe("reference");
   });
@@ -51,6 +58,10 @@ describe("theme context helpers", () => {
     expect(themeFromCookieHeader("")).toBe(DEFAULT_THEME);
     expect(themeFromCookieHeader("xp-scholars-theme=neon")).toBe(DEFAULT_THEME);
     expect(themeFromCookieHeader("other=value")).toBe(DEFAULT_THEME);
+  });
+
+  it("themeFromCookieHeader lands a legacy light cookie on reference", () => {
+    expect(themeFromCookieHeader("xp-scholars-theme=light")).toBe("reference");
   });
 });
 
@@ -68,7 +79,7 @@ describe("ThemeProvider", () => {
     expect(document.documentElement.classList.contains("reference")).toBe(true);
   });
 
-  it("switches between the three themes and reflects a single <html> class", () => {
+  it("switches between the two themes and reflects a single <html> class", () => {
     render(
       <ThemeProvider>
         <TestConsumer />
@@ -76,19 +87,11 @@ describe("ThemeProvider", () => {
     );
 
     act(() => {
-      fireEvent.click(screen.getByTestId("set-light"));
-    });
-    expect(screen.getByTestId("theme").textContent).toBe("light");
-    expect(document.documentElement.classList.contains("light")).toBe(true);
-    expect(document.documentElement.classList.contains("reference")).toBe(false);
-    expect(document.documentElement.classList.contains("dark")).toBe(false);
-
-    act(() => {
       fireEvent.click(screen.getByTestId("set-dark"));
     });
     expect(screen.getByTestId("theme").textContent).toBe("dark");
     expect(document.documentElement.classList.contains("dark")).toBe(true);
-    expect(document.documentElement.classList.contains("light")).toBe(false);
+    expect(document.documentElement.classList.contains("reference")).toBe(false);
 
     act(() => {
       fireEvent.click(screen.getByTestId("set-reference"));
@@ -106,15 +109,15 @@ describe("ThemeProvider", () => {
     );
 
     act(() => {
-      fireEvent.click(screen.getByTestId("set-light"));
+      fireEvent.click(screen.getByTestId("set-dark"));
     });
 
-    expect(localStorage.getItem("xp-scholars-theme")).toBe("light");
-    expect(themeFromCookieHeader(document.cookie)).toBe("light");
+    expect(localStorage.getItem("xp-scholars-theme")).toBe("dark");
+    expect(themeFromCookieHeader(document.cookie)).toBe("dark");
   });
 
   it("restores the theme from localStorage on mount", () => {
-    localStorage.setItem("xp-scholars-theme", "light");
+    localStorage.setItem("xp-scholars-theme", "dark");
 
     render(
       <ThemeProvider>
@@ -123,8 +126,8 @@ describe("ThemeProvider", () => {
     );
 
     // Applied in the post-mount effect.
-    expect(screen.getByTestId("theme").textContent).toBe("light");
-    expect(document.documentElement.classList.contains("light")).toBe(true);
+    expect(screen.getByTestId("theme").textContent).toBe("dark");
+    expect(document.documentElement.classList.contains("dark")).toBe(true);
   });
 
   it("restores the theme from the cookie when localStorage is empty", () => {
@@ -137,6 +140,24 @@ describe("ThemeProvider", () => {
     );
 
     expect(screen.getByTestId("theme").textContent).toBe("dark");
+  });
+
+  it("migrates a persisted legacy light theme to reference and rewrites storage", () => {
+    localStorage.setItem("xp-scholars-theme", "light");
+    document.cookie = "xp-scholars-theme=light; path=/";
+
+    render(
+      <ThemeProvider>
+        <TestConsumer />
+      </ThemeProvider>,
+    );
+
+    expect(screen.getByTestId("theme").textContent).toBe("reference");
+    expect(document.documentElement.classList.contains("reference")).toBe(true);
+    expect(document.documentElement.classList.contains("light")).toBe(false);
+    // The one-time migration rewrites both persistence layers.
+    expect(localStorage.getItem("xp-scholars-theme")).toBe("reference");
+    expect(themeFromCookieHeader(document.cookie)).toBe("reference");
   });
 
   it("falls back to the default for an invalid stored theme", () => {

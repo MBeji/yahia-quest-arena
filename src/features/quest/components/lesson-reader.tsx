@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   BookOpen,
+  Brain,
   ChevronLeft,
   ChevronRight,
   Dumbbell,
@@ -46,12 +47,16 @@ export function LessonReader({
   chapter,
   allChapters,
   practiceExerciseId = null,
+  quizCta = null,
   isAuthenticated = false,
 }: {
   chapterId: string;
   chapter: LessonReaderChapter;
   allChapters: LessonReaderSibling[];
   practiceExerciseId?: string | null;
+  /** When the chapter's quiz gate is still closed for THIS visitor, the CTA
+   *  targets the comprehension quiz instead of a locked exercise (audit §D-4). */
+  quizCta?: { exerciseId: string } | null;
   isAuthenticated?: boolean;
 }) {
   const t = useT();
@@ -69,13 +74,23 @@ export function LessonReader({
 
   const showingSummary = showSummary && !!summary;
   const body = showingSummary ? summary : content;
+  // renderMarkdown runs ~15 regex passes + a DOMPurify sanitize; memoize so a
+  // re-render that doesn't change the body (e.g. the Cours/Résumé toggle landing
+  // back on the same text) doesn't re-parse + re-sanitize the whole lesson.
+  const bodyHtml = useMemo(() => (body ? renderMarkdown(body) : ""), [body]);
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
       <header className="mb-6" dir={isRtl ? "rtl" : "ltr"}>
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
           <BookOpen className="h-3.5 w-3.5 shrink-0" />
-          <span className="truncate">{subjectData?.name_fr ?? t.public.reader.defaultSubject}</span>
+          <Link
+            to="/matiere/$subjectId"
+            params={{ subjectId: chapter.subject_id }}
+            className="truncate transition hover:underline"
+          >
+            {subjectData?.name_fr ?? t.public.reader.defaultSubject}
+          </Link>
           {allChapters.length > 0 && (
             <span className="text-muted-foreground">
               · {currentIdx + 1}/{allChapters.length}
@@ -97,7 +112,7 @@ export function LessonReader({
               type="button"
               data-testid="lesson-tab-course"
               onClick={() => setShowSummary(false)}
-              className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
+              className={`rounded-md px-3 py-1.5 text-sm font-medium transition [@media(pointer:coarse)]:min-h-11 ${
                 !showingSummary ? "bg-card text-primary shadow-sm" : "text-muted-foreground"
               }`}
             >
@@ -107,7 +122,7 @@ export function LessonReader({
               type="button"
               data-testid="lesson-tab-summary"
               onClick={() => setShowSummary(true)}
-              className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
+              className={`rounded-md px-3 py-1.5 text-sm font-medium transition [@media(pointer:coarse)]:min-h-11 ${
                 showingSummary ? "bg-card text-primary shadow-sm" : "text-muted-foreground"
               }`}
             >
@@ -119,7 +134,7 @@ export function LessonReader({
           type="button"
           data-testid="lesson-print"
           onClick={() => window.print()}
-          className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition hover:border-primary/40 hover:text-primary"
+          className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition hover:border-primary/40 hover:text-primary [@media(pointer:coarse)]:min-h-11"
         >
           <Printer className="h-4 w-4" /> {t.public.reader.print}
         </button>
@@ -129,7 +144,7 @@ export function LessonReader({
         <div
           className="lesson-content"
           dir={isRtl ? "rtl" : "ltr"}
-          dangerouslySetInnerHTML={{ __html: renderMarkdown(body) }}
+          dangerouslySetInnerHTML={{ __html: bodyHtml }}
         />
       ) : (
         <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-12 text-center">
@@ -140,16 +155,29 @@ export function LessonReader({
 
       <ManuelPagesSection chapterId={chapterId} isAuthenticated={isAuthenticated} />
 
-      {practiceExerciseId && (
+      {(quizCta || practiceExerciseId) && (
         <div className="mt-10 print:hidden">
-          <Link
-            to={exerciseRouteFor(isAuthenticated)}
-            params={{ exerciseId: practiceExerciseId }}
-            data-testid="lesson-practice-cta"
-            className="flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
-          >
-            <Dumbbell className="h-4 w-4" /> {t.public.reader.practiceCta}
-          </Link>
+          {quizCta ? (
+            // Gate still closed for this visitor: practising would hit the locked
+            // screen, so the single CTA sends them to the comprehension quiz first.
+            <Link
+              to={exerciseRouteFor(isAuthenticated)}
+              params={{ exerciseId: quizCta.exerciseId }}
+              data-testid="lesson-practice-cta"
+              className="flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+            >
+              <Brain className="h-4 w-4" /> {t.public.reader.quizFirstCta}
+            </Link>
+          ) : (
+            <Link
+              to={exerciseRouteFor(isAuthenticated)}
+              params={{ exerciseId: practiceExerciseId as string }}
+              data-testid="lesson-practice-cta"
+              className="flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+            >
+              <Dumbbell className="h-4 w-4" /> {t.public.reader.practiceCta}
+            </Link>
+          )}
         </div>
       )}
 
@@ -180,21 +208,25 @@ export function LessonReader({
         )}
       </nav>
 
-      <aside className="mt-12 rounded-2xl border border-primary/20 bg-secondary px-6 py-7 text-center print:hidden">
-        <FileText className="mx-auto h-6 w-6 text-primary" />
-        <h2 className="mt-2 font-display text-lg font-bold text-foreground">
-          {t.public.reader.inviteTitle}
-        </h2>
-        <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
-          {t.public.reader.inviteDesc}
-        </p>
-        <Link
-          to="/signup"
-          className="mt-4 inline-flex items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
-        >
-          {t.public.reader.inviteCta}
-        </Link>
-      </aside>
+      {/* Soft account invite — anonymous readers only: a signed-in student must
+          never be told to create the account they already have (audit §B-4). */}
+      {!isAuthenticated && (
+        <aside className="mt-12 rounded-2xl border border-primary/20 bg-secondary px-6 py-7 text-center print:hidden">
+          <FileText className="mx-auto h-6 w-6 text-primary" />
+          <h2 className="mt-2 font-display text-lg font-bold text-foreground">
+            {t.public.reader.inviteTitle}
+          </h2>
+          <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
+            {t.public.reader.inviteDesc}
+          </p>
+          <Link
+            to="/signup"
+            className="mt-4 inline-flex items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+          >
+            {t.public.reader.inviteCta}
+          </Link>
+        </aside>
+      )}
     </article>
   );
 }

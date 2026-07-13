@@ -19,7 +19,7 @@ function StatusBadge({ status }: { status: BetaRequestStatus }) {
     approved: {
       Icon: Check,
       label: t.betaAccess.statusApproved,
-      cls: "text-emerald-400 border-emerald-500/40 bg-emerald-500/10",
+      cls: "text-success border-success/40 bg-success/10",
     },
     rejected: {
       Icon: X,
@@ -132,7 +132,7 @@ export function BetaRequestsAdmin() {
                       <button
                         onClick={() => mutation.mutate({ requestId: r.id, approve: true })}
                         disabled={busy}
-                        className="inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-3 py-1.5 text-sm font-bold text-black shadow-gold transition hover:scale-105 disabled:opacity-50"
+                        className="inline-flex min-h-11 items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-3 py-1.5 text-sm font-bold text-black shadow-gold transition hover:scale-105 disabled:opacity-50"
                       >
                         {busy ? (
                           <Loader2 className="h-4 w-4 animate-spin" />
@@ -144,7 +144,7 @@ export function BetaRequestsAdmin() {
                       <button
                         onClick={() => mutation.mutate({ requestId: r.id, approve: false })}
                         disabled={busy}
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-destructive/50 px-3 py-1.5 text-sm font-semibold text-destructive transition hover:bg-destructive/10 disabled:opacity-50"
+                        className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-destructive/50 px-3 py-1.5 text-sm font-semibold text-destructive transition hover:bg-destructive/10 disabled:opacity-50"
                       >
                         <X className="h-4 w-4" /> {t.betaAccess.reject}
                       </button>

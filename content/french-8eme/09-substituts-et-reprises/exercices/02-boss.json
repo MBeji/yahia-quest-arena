@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : Le maître des reprises",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Dans « Les touristes photographiaient la médina. Ils admiraient ses ruelles étroites. », que reprend le déterminant possessif « ses » ?",
+      "options": [
+        { "id": "a", "text": "les touristes" },
+        { "id": "b", "text": "la médina" },
+        { "id": "c", "text": "les ruelles" },
+        { "id": "d", "text": "les photos" }
+      ],
+      "correctOption": "b",
+      "explanation": "« ses ruelles » = les ruelles de la médina : le possessif « ses » reprend le référent « la médina ». Le piège est de le rattacher à « les touristes », mais ce sont les ruelles de la médina, pas celles des touristes.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Ton exposé est déjà prêt ; ___ est encore à écrire. » (il s'agit de mon exposé)",
+      "options": [
+        { "id": "a", "text": "le mien" },
+        { "id": "b", "text": "mon" },
+        { "id": "c", "text": "mien" },
+        { "id": "d", "text": "le mon" }
+      ],
+      "correctOption": "a",
+      "explanation": "« le mien » est un pronom possessif : il remplace tout le groupe « mon exposé ». « mon » seul est un déterminant, il exigerait un nom derrière (mon exposé) ; « mien » sans article et « le mon » n'existent pas ainsi.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Complète : « Deux romans sont posés sur la table : ___ de Skander est corné. »",
+      "options": [
+        { "id": "a", "text": "celle" },
+        { "id": "b", "text": "celui" },
+        { "id": "c", "text": "ceux" },
+        { "id": "d", "text": "cela" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le pronom démonstratif reprend « roman », masculin singulier → celui de Skander. « celle » serait féminin, « ceux » pluriel, et « cela » reprend une idée, pas un nom précis.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans quelle phrase la reprise par le pronom est-elle ambiguë ?",
+      "options": [
+        { "id": "a", "text": "Skander salua le libraire, puis il rangea les livres." },
+        { "id": "b", "text": "Nour ferma son cahier et le rangea dans son sac." },
+        { "id": "c", "text": "Les élèves sortirent en récréation ; ils riaient." },
+        { "id": "d", "text": "La cloche sonna ; elle annonçait la fin du cours." }
+      ],
+      "correctOption": "a",
+      "explanation": "« il » peut renvoyer à Skander ou au libraire : deux masculins singuliers, donc la reprise est ambiguë. On lèverait le doute en nommant celui qui range. Dans les autres phrases, un seul référent possible correspond au genre et au nombre du pronom.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Pour reprendre « une truite » par un terme générique exact, quel substitut convient ?",
+      "options": [
+        { "id": "a", "text": "ce fauve" },
+        { "id": "b", "text": "cet oiseau" },
+        { "id": "c", "text": "ce poisson" },
+        { "id": "d", "text": "ce reptile" }
+      ],
+      "correctOption": "c",
+      "explanation": "La truite est un poisson : « ce poisson » l'englobe correctement. Un terme générique doit vraiment contenir le référent ; « fauve », « oiseau » et « reptile » désignent d'autres catégories d'animaux et seraient des reprises fausses.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "« Le vieux figuier était énorme. L'arbre donnait de l'ombre. Il abritait les oiseaux. Ce géant vivait là depuis un siècle. » Combien de substituts reprennent « le vieux figuier » ?",
+      "options": [
+        { "id": "a", "text": "un" },
+        { "id": "b", "text": "deux" },
+        { "id": "c", "text": "trois" },
+        { "id": "d", "text": "quatre" }
+      ],
+      "correctOption": "c",
+      "explanation": "Trois substituts forment la chaîne : « L'arbre » (terme générique), « Il » (pronom) et « Ce géant » (périphrase). « les oiseaux » n'est pas une reprise du figuier, c'est un autre référent.",
+      "difficulty": 3
+    }
+  ]
+}

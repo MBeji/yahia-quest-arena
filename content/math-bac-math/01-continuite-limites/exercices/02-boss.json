@@ -1,0 +1,94 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : Le gardien du seuil",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Soit f la fonction définie pour x ≠ 1 par f(x) = (√(x + 3) − 2)/(x − 1). Peut-on prolonger f par continuité en 1 ?",
+      "options": [
+        { "id": "a", "text": "Oui, en posant f(1) = 0" },
+        { "id": "b", "text": "Oui, en posant f(1) = 1/4" },
+        { "id": "c", "text": "Oui, en posant f(1) = 1/2" },
+        { "id": "d", "text": "Non, f n'est pas prolongeable en 1" }
+      ],
+      "correctOption": "b",
+      "explanation": "En 1, numérateur et dénominateur s'annulent (√4 − 2 = 0) : forme 0/0. Expression conjuguée : (√(x + 3) − 2)(√(x + 3) + 2) = x + 3 − 4 = x − 1, donc f(x) = (x − 1)/((x − 1)(√(x + 3) + 2)) = 1/(√(x + 3) + 2), qui tend vers 1/(2 + 2) = 1/4 quand x → 1 ✓. La limite étant finie, f se prolonge avec f(1) = 1/4. Le piège courant : oublier le terme + 2 du conjugué au dénominateur donne 1/2 ; traiter 0/0 comme nul donne 0 ; et une forme 0/0 n'interdit pas le prolongement.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Une fonction f vérifie, pour tout x > 0 : (2x − 1)/x ≤ f(x) ≤ (2x + 3)/x. Déterminer lim x→+∞ f(x).",
+      "options": [
+        { "id": "a", "text": "−1" },
+        { "id": "b", "text": "0" },
+        { "id": "c", "text": "2" },
+        { "id": "d", "text": "3" }
+      ],
+      "correctOption": "c",
+      "explanation": "(2x − 1)/x = 2 − 1/x tend vers 2, et (2x + 3)/x = 2 + 3/x tend vers 2. Les deux gendarmes ayant la même limite, le théorème des gendarmes donne lim x→+∞ f(x) = 2 ✓. Le piège courant : répondre −1 ou 3 en lisant les constantes des numérateurs, ou 0 en croyant que les termes en 1/x dictent la limite — ils tendent vers 0, mais s'ajoutent à 2.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Déterminer lim x→+∞ (3x + sin x)/x.",
+      "options": [
+        { "id": "a", "text": "3" },
+        { "id": "b", "text": "4" },
+        { "id": "c", "text": "+∞" },
+        { "id": "d", "text": "Cette limite n'existe pas, car sin x n'a pas de limite en +∞" }
+      ],
+      "correctOption": "a",
+      "explanation": "Pour x > 0, −1 ≤ sin x ≤ 1 donne l'encadrement (3x − 1)/x ≤ (3x + sin x)/x ≤ (3x + 1)/x. Les deux bornes tendent vers 3, donc la limite vaut 3 ✓ (théorème des gendarmes, avec sin x/x → 0). Le piège courant : conclure que la limite n'existe pas parce que sin x oscille — l'encadrement neutralise l'oscillation. Répondre 4 fige sin x à sa valeur maximale 1, et +∞ oublie la division par x.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Pour calculer lim x→+∞ (√(4x² + x) − 2x), un élève rédige :\n① √(4x² + x) → +∞ et 2x → +∞ : forme indéterminée du type ∞ − ∞.\n② Pour x > 0, √(4x² + x) = x√(4 + 1/x).\n③ Comme √(4 + 1/x) → 2, l'expression devient x × 2 − 2x = 0.\n④ Conclusion : la limite vaut 0.\nDans quelle étape se cache l'erreur ?",
+      "options": [
+        { "id": "a", "text": "L'étape ①" },
+        { "id": "b", "text": "L'étape ②" },
+        { "id": "c", "text": "L'étape ③" },
+        { "id": "d", "text": "L'étape ④" }
+      ],
+      "correctOption": "c",
+      "explanation": "L'erreur se cache à l'étape ③ : dans une forme indéterminée, on n'a pas le droit de remplacer un morceau de l'expression (√(4 + 1/x)) par sa limite avant de conclure — c'est une levée illégale de l'indétermination. Les étapes ① et ② sont exactes, et ④ ne fait que suivre ③. Calcul correct par le conjugué : √(4x² + x) − 2x = (4x² + x − 4x²)/(√(4x² + x) + 2x) = x/(√(4x² + x) + 2x) = 1/(√(4 + 1/x) + 2), qui tend vers 1/4 ✓. La conclusion 0 de l'élève est donc fausse : c'est bien sa démarche qu'il fallait invalider.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "On considère l'affirmation : « Si f est continue sur [a ; b] et f(a) · f(b) < 0, alors l'équation f(x) = 0 admet une unique solution dans [a ; b]. » Cette affirmation est-elle vraie ou fausse ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Vraie : le théorème des valeurs intermédiaires garantit à la fois l'existence et l'unicité de la solution"
+        },
+        {
+          "id": "b",
+          "text": "Vraie : f(a) et f(b) étant de signes contraires, la courbe ne peut couper l'axe des abscisses qu'une seule fois"
+        },
+        {
+          "id": "c",
+          "text": "Fausse : le théorème des valeurs intermédiaires exige f(a) · f(b) > 0"
+        },
+        {
+          "id": "d",
+          "text": "Fausse : sans stricte monotonie, f peut s'annuler plusieurs fois sur [a ; b]"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "L'affirmation est fausse ✓ : la continuité et le changement de signe garantissent au moins une annulation (TVI), mais jamais l'unicité — une fonction qui oscille peut couper l'axe des abscisses trois fois entre a et b. L'unicité exige en plus la stricte monotonie (corollaire de la bijection). Le piège courant : croire que le TVI livre existence et unicité d'un coup ; et le TVI demande bien des signes contraires, pas f(a) · f(b) > 0.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Soit f(x) = x³ + x − 5. f est continue et strictement croissante sur [1 ; 2] (somme de fonctions strictement croissantes), avec f(1) = −3 et f(2) = 5 : l'équation f(x) = 0 admet donc une unique solution α dans [1 ; 2]. On calcule f(1,5) = −0,125. Dans quel intervalle se trouve α ?",
+      "options": [
+        { "id": "a", "text": "]1 ; 1,5[" },
+        { "id": "b", "text": "]1,5 ; 2[" },
+        { "id": "c", "text": "α est exactement égal à 1,5" },
+        { "id": "d", "text": "On ne peut pas conclure avec ces informations" }
+      ],
+      "correctOption": "b",
+      "explanation": "f(1,5) = 1,5³ + 1,5 − 5 = 3,375 + 1,5 − 5 = −0,125 < 0, et f(2) = 5 > 0 : le changement de signe se produit entre 1,5 et 2, donc α ∈ ]1,5 ; 2[ ✓ (la stricte croissance garantit l'unicité). Le piège courant : une erreur de signe sur f(1,5) envoie vers ]1 ; 1,5[ ; le milieu 1,5 n'est pas la solution puisque f(1,5) ≠ 0 ; et un seul pas de dichotomie suffit bel et bien à conclure.",
+      "difficulty": 3
+    }
+  ]
+}

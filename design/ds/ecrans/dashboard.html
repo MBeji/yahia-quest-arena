@@ -1,0 +1,349 @@
+<!-- @dsCard group="Écrans" -->
+<title>Dashboard dégroupé (Q-4)</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+  }
+  body {
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    background: #f3f2ee;
+    padding: 16px;
+    color: #1a1a1a;
+  }
+  .display {
+    font-family: "Orbitron", "Space Grotesk", system-ui, sans-serif;
+  }
+  h3.section {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin: 0 0 8px;
+    font-weight: 700;
+  }
+  .avant {
+    border-inline-start: 3px solid #c0392b;
+    background: #fbeae8;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    color: #7a2018;
+    margin-bottom: 6px;
+  }
+  .apres {
+    border-inline-start: 3px solid #0f6e56;
+    background: #e7f3ee;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    color: #0b4535;
+    margin-bottom: 12px;
+  }
+  .lay {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+  @media (max-width: 760px) {
+    .lay {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .phone {
+    --background: oklch(0.145 0.008 85);
+    --foreground: oklch(0.965 0.012 92);
+    --card: oklch(0.185 0.012 85);
+    --primary: oklch(0.83 0.15 86);
+    --muted-fg: oklch(0.73 0.02 90);
+    --border: oklch(0.36 0.035 88 / 0.5);
+    --gold: oklch(0.83 0.15 86);
+    --gold-bright: oklch(0.92 0.12 96);
+    --neon-gold: oklch(0.85 0.16 90);
+    --flame: oklch(0.74 0.22 45);
+    --success: oklch(0.78 0.21 150);
+    --gradient-gold: linear-gradient(
+      135deg,
+      oklch(0.66 0.13 70),
+      var(--gold) 45%,
+      var(--gold-bright)
+    );
+    background: var(--background);
+    color: var(--foreground);
+    border-radius: 22px;
+    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .blk {
+    border-radius: 14px;
+    padding: 13px 14px;
+    border: 1px solid var(--border);
+    background: color-mix(in oklab, var(--card) 88%, transparent);
+    margin-bottom: 11px;
+  }
+  .k {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted-fg);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .hero {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .ava {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: var(--gradient-gold);
+    display: grid;
+    place-items: center;
+    color: #1a1508;
+    font-weight: 800;
+  }
+  .hero .n {
+    font-weight: 800;
+    font-size: 17px;
+  }
+  .chips {
+    display: flex;
+    gap: 6px;
+    margin-top: 5px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--gold) 14%, transparent);
+    color: var(--gold);
+  }
+  .chip.fl {
+    background: color-mix(in oklab, var(--flame) 16%, transparent);
+    color: var(--flame);
+  }
+
+  .focus {
+    border: 1px solid color-mix(in oklab, var(--gold) 34%, transparent);
+    background: color-mix(in oklab, var(--gold) 8%, transparent);
+  }
+  .cta {
+    display: block;
+    text-align: center;
+    background: var(--gradient-gold);
+    color: #1a1508;
+    font-weight: 800;
+    border-radius: 11px;
+    padding: 12px;
+    font-size: 15px;
+  }
+  .subrow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 9px;
+  }
+  .mini {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 9px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted-fg);
+  }
+  .ring {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted-fg);
+    margin-top: 8px;
+  }
+  .ring b {
+    color: var(--gold);
+  }
+
+  .subj {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 0;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .subj:first-of-type {
+    border-top: 0;
+  }
+  .subj .d {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: color-mix(in oklab, var(--gold) 18%, transparent);
+    display: grid;
+    place-items: center;
+    font-size: 13px;
+  }
+  .subj .st {
+    margin-inline-start: auto;
+    font-size: 11px;
+    color: var(--success);
+    font-weight: 700;
+  }
+  .subj .st.todo {
+    color: var(--muted-fg);
+  }
+
+  .fam {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 12.5px;
+  }
+  .fam .badge {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--success);
+  }
+  .disc {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gold);
+  }
+
+  .moved {
+    list-style: none;
+    padding: 0;
+  }
+  .moved li {
+    font-size: 12.5px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: #f7f6f2;
+    border: 1px solid #e6e4dd;
+    margin-bottom: 6px;
+    color: #333;
+  }
+  .moved li b {
+    color: #0f6e56;
+  }
+  .moved li s {
+    color: #a33;
+  }
+</style>
+
+<div class="avant">
+  <b>Avant (audit §A-4/§B-1)</b> — six écrans en un (~30 hauteurs mobile) : l'action n°1 passe sous
+  le pli, derrière l'identité + un cross-sell concours ; catalogue ×2, boutique, inventaire, badges,
+  stats empilés.
+</div>
+<div class="apres">
+  <b>Après (D-5, arbitrage Q-4)</b> — un vrai QG : la bande focus <b>en premier</b>, puis
+  l'essentiel. La boutique/inventaire/badges partent sur <code>/boutique</code> ; « Autres thèmes »
+  (25 cartes) devient une passerelle ; le cross-sell concours disparaît (phase gratuite).
+</div>
+
+<div class="lay">
+  <div>
+    <h3 class="section">Cible — mobile 375 (registre Arène)</h3>
+    <div class="phone">
+      <div class="blk hero">
+        <div class="ava display">Y</div>
+        <div>
+          <div class="k" style="margin: 0">Bon retour</div>
+          <div class="n display">Yahia</div>
+          <div class="chips">
+            <span class="chip">Niv. 6</span><span class="chip fl">🔥 4 j</span
+            ><span class="chip">⚡ 1 250</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="blk focus">
+        <div class="k" style="color: var(--gold)">Ta prochaine étape</div>
+        <span class="cta">▶ Reprendre — Fractions, ch. 3</span>
+        <div class="subrow">
+          <span class="mini">💀 Donjon</span><span class="mini">⚔️ Duels</span>
+        </div>
+        <div class="ring">Objectif du jour · <b>60 / 100 XP</b></div>
+      </div>
+
+      <div class="blk">
+        <div class="k">Quêtes du jour &amp; de la semaine</div>
+        <div style="font-size: 12.5px; color: var(--muted-fg)">
+          Complète 3 exercices · <b style="color: var(--gold)">+60 XP</b><br />Tiens une série de 5
+          jours · <b style="color: var(--gold)">+150 XP</b>
+        </div>
+      </div>
+
+      <div class="blk">
+        <div class="k">Tes matières</div>
+        <div class="subj"><span class="d">➗</span> Mathématiques <span class="st">82%</span></div>
+        <div class="subj">
+          <span class="d">🧪</span> Sciences physiques <span class="st todo">à faire</span>
+        </div>
+        <div class="subj"><span class="d">📖</span> Arabe <span class="st">74%</span></div>
+      </div>
+
+      <div class="blk disc"><span>🧭 Découvrir d'autres thèmes</span><span>→</span></div>
+
+      <div class="blk fam">
+        <span style="font-size: 16px">👨‍👩‍👧</span>
+        <div>
+          Famille — <span class="badge">parent lié ✓</span><br /><span
+            style="color: var(--muted-fg)"
+            >Ton parent suit ta progression.</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h3 class="section">Ce qui bouge</h3>
+    <ul class="moved">
+      <li>
+        <b>1. Bande focus en tête</b> — l'action prioritaire (Reprendre) au-dessus du pli, comme le
+        voulait #345.
+      </li>
+      <li>
+        <b>2. Quêtes condensées</b> — types traduits (fin de « beat 2 bosses »), plus de doubles
+        barres.
+      </li>
+      <li>
+        <b>3. Matières du parcours</b> — avec leur état réel (fait ✓ / à faire), sans les 25 cartes
+        « Autres thèmes ».
+      </li>
+      <li>
+        Boutique · inventaire · badges → <b>nouvelle route <code>/boutique</code></b> (exposée par
+        la nav).
+      </li>
+      <li>
+        <s>Bannière « Prépare ton concours national »</s> — retirée (phase gratuite, déjà fait lot
+        2).
+      </li>
+      <li>
+        <s>Liste « Autres thèmes » (≈ 25 cartes à plat)</s> → une carte <b>« Découvrir »</b> vers
+        <code>/programme</code>.
+      </li>
+      <li>
+        Code alliance long → <b>carte « Famille » compacte</b> avec l'état lié / à lier (détail dans
+        le profil).
+      </li>
+      <li>Radar / stats détaillées → section profil (hors du premier écran).</li>
+    </ul>
+    <p class="avant" style="margin-top: 10px">
+      <b>First-run (audit §A-5)</b> — un compte neuf reçoit un accueil dédié (« Choisis ta première
+      mission ») au lieu de « Bon retour » + une colonne de zéros ; « Bon retour » est réservé aux
+      comptes ayant déjà une progression.
+    </p>
+  </div>
+</div>

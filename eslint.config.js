@@ -49,7 +49,12 @@ export default tseslint.config(
         },
       ],
       "react-refresh/only-export-components": ["error", { allowConstantExport: true }],
-      "@typescript-eslint/no-unused-vars": "off",
+      // Re-enabled (audit quick win): tools dead-code detection. Underscore-prefixed
+      // names are intentionally-unused escape hatches (args, destructured props, catch vars).
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" },
+      ],
       "max-lines": ["error", { max: 750, skipBlankLines: true, skipComments: true }],
     },
   },
@@ -57,6 +62,16 @@ export default tseslint.config(
     files: ["src/components/ui/**/*.{ts,tsx}"],
     rules: {
       "react-refresh/only-export-components": "off",
+    },
+  },
+  {
+    // The i18n dictionaries are flat, logic-free contract files (one key per line,
+    // three locales). They grow with the product surface, not with complexity, so
+    // the max-lines complexity guard doesn't apply — splitting them would only
+    // scatter the translation contract. (étude 14 lot 3: +7 route-error keys.)
+    files: ["src/lib/i18n/*.ts"],
+    rules: {
+      "max-lines": "off",
     },
   },
   {

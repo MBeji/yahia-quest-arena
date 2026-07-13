@@ -16,6 +16,10 @@ import DOMPurify from "dompurify";
 
 const SVG_BLOCK = /<svg[\s\S]*?<\/svg>/i;
 
+/** URL schemes that can carry executable content (not just `javascript:` —
+ *  `data:` and `vbscript:` are equally capable per CWE-20/CWE-184). */
+const DANGEROUS_URL_SCHEME = /(?:javascript|data|vbscript):/gi;
+
 /** Split a content field into its plain text and an optional embedded SVG block. */
 export function extractFigure(raw: string): { text: string; svg: string | null } {
   if (!raw) return { text: "", svg: null };
@@ -38,6 +42,11 @@ export function hasFigure(raw: string): boolean {
  * (`href`/`xlink:href`, `<image>`, `<use>`) to avoid SSRF/exfiltration.
  */
 export function sanitizeSvg(svg: string): string {
+  // Fail closed: DOMPurify is a no-op when no DOM is available (e.g. an SSR
+  // runtime without a global `window` — jsdom is a dev-only dependency). Rather
+  // than let author SVG through unsanitized, drop the figure entirely when
+  // sanitization is unavailable — a missing figure is safe, raw markup is not.
+  if (!DOMPurify.isSupported) return "";
   const cleaned = DOMPurify.sanitize(svg, {
     USE_PROFILES: { svg: true, svgFilters: true },
     FORBID_TAGS: ["foreignObject", "a", "image", "use", "script", "style"],
@@ -45,5 +54,5 @@ export function sanitizeSvg(svg: string): string {
   });
   // Defense-in-depth: neutralize any residual dangerous scheme DOMPurify may leave
   // inside non-URI attribute values (e.g. fill="url(javascript:…)").
-  return cleaned.replace(/javascript:/gi, "");
+  return cleaned.replace(DANGEROUS_URL_SCHEME, "");
 }

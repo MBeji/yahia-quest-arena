@@ -1,6 +1,6 @@
 # `_INDEX.md` — work-list de transcription du programme CNP
 
-> Une ligne par **guide-programme** (الدليل المرجعي / guide méthodologique). Cocher `[x]` quand `programme/<niveau>/<matière>.md` est transcrit + audité + mergé. Les مدونة القسم / bandes dessinées / manuels élève sont des **enrichissements optionnels** (non listés ici).
+> Une ligne par couple (niveau, matière), repérée par son **guide-programme** (الدليل المرجعي / guide méthodologique). Cocher `[x]` quand `programme/<niveau>/<matière>.md` est transcrit + audité + mergé. **Chaque transcription combine le guide enseignant ET le manuel élève** (le manuel élève est un **complément indispensable**, pas optionnel — cf. `README.md` « Sources combinées » ; quand une seule source existe, c'est la référence). Repérer le manuel élève correspondant dans `cnp-officiel/CATALOGUE.md` (même matière×classe, dossier `eleve/`). Les مدونة القسم / bandes dessinées restent des enrichissements optionnels (non listés ici).
 
 ## 1ere-base
 
@@ -85,17 +85,17 @@
 
 | ☐   | matière  | code guide | fichier cible                     | titre                              |
 | --- | -------- | ---------- | --------------------------------- | ---------------------------------- |
-| [ ] | anglais  | `541805`   | `programme/8eme-base/anglais.md`  | الدليل المرجعي في اللغة الانقليزية |
-| [ ] | arabe    | `501802`   | `programme/8eme-base/arabe.md`    | الدليل المرجعي في النحو العربي     |
-| [ ] | francais | `521802`   | `programme/8eme-base/francais.md` | الدليل المرجعي في اللغة الفرنسية   |
+| [~] | anglais  | `541805`   | `programme/8eme-base/anglais.md`  | الدليل المرجعي في اللغة الانقليزية |
+| [~] | arabe    | `501802`   | `programme/8eme-base/arabe.md`    | الدليل المرجعي في النحو العربي     |
+| [~] | francais | `521802`   | `programme/8eme-base/francais.md` | الدليل المرجعي في اللغة الفرنسية   |
 
 ## 9eme-base
 
 | ☐   | matière  | code guide | fichier cible                     | titre                              |
 | --- | -------- | ---------- | --------------------------------- | ---------------------------------- |
-| [ ] | anglais  | `541905`   | `programme/9eme-base/anglais.md`  | الدليل المرجعي في اللغة الانقليزية |
-| [ ] | arabe    | `501902`   | `programme/9eme-base/arabe.md`    | الدليل المرجعي في النحو العربي     |
-| [ ] | francais | `521902`   | `programme/9eme-base/francais.md` | الدليل المرجعي في اللغة الفرنسية   |
+| [~] | anglais  | `541905`   | `programme/9eme-base/anglais.md`  | الدليل المرجعي في اللغة الانقليزية |
+| [~] | arabe    | `501902`   | `programme/9eme-base/arabe.md`    | الدليل المرجعي في النحو العربي     |
+| [~] | francais | `521902`   | `programme/9eme-base/francais.md` | الدليل المرجعي في اللغة الفرنسية   |
 
 ## 2eme-sec
 
@@ -119,6 +119,22 @@
 | --- | ------- | ---------- | -------------------------- | ---------------------------------- |
 | [ ] | anglais | `641404`   | `programme/bac/anglais.md` | الدليل المرجعي في اللغة الانقليزية |
 
-**Total : 57 guides à transcrire · 0 mergés · 1 pilote transcrit (éveil 1ère-base, en validation).**
+**Total : 60 lignes au work-list (57 guides du corpus + 3 pilotes secondaires hors corpus / manuels élève) · 23 `[x]` transcrites, auditées et mergées (1ère→5ème base) · 18 `[~]` transcrites, en validation (6ème→9ème base, 1ère-sec, bac-math) · 19 `[ ]` à faire — soit 41 fichiers `programme/<niveau>/<matière>.md` existants.**
 
-> **Légende statut** : `[ ]` à faire · `[x]` transcrit, en audit/validation · `[x]` transcrit + audité + mergé.
+> **Légende statut** : `[ ]` à faire · `[~]` transcrit, en audit/validation · `[x]` transcrit + audité + mergé.
+
+## bac-math (secondaire — pilote lycée)
+
+| ☐   | matière | code guide                       | fichier cible                         | titre                                                                                        |
+| --- | ------- | -------------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------- |
+| [~] | maths   | _(corpus secondaire à intégrer)_ | `programme/bac-math/mathematiques.md` | 🚧 **transcription pilote 2026-07-05** (hors corpus — à valider contre les textes officiels) |
+
+## 1ere-sec (secondaire — pilote lycée, tronc commun)
+
+| ☐   | matière            | code guide (manuel élève)                     | fichier cible                              | titre                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| --- | ------------------ | --------------------------------------------- | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [~] | maths              | `222104P01` + `222104P02`                     | `programme/1ere-sec/mathematiques.md`      | 🚧 **transcription pilote 2026-07-07, complétée 2026-07-09** — manuel élève seul (pas de guide au corpus) ; **16 chapitres transcrits en profondeur** (ch.1 Angles + ch.2 Thalès ajoutés)                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| [~] | sciences-physiques | `223103P00` (physique) + `224101P00` (chimie) | `programme/1ere-sec/sciences-physiques.md` | 🚧 **transcription pilote 2026-07-07** — manuels élève seuls (pas de guide au corpus) ; ch.1 physique + ch.1 chimie transcrits en profondeur, le reste au niveau bloc                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| [~] | francais           | `221104P00` (manuel élève)                    | `programme/1ere-sec/francais.md`           | 🚧 **transcription ScribeKit 2026-07-10 (first-pass, vérifiée fidèle)** — manuel élève « Communiquer en français » (224 p., lu intégralement) ; structure des 7 modules + objectifs (profondeur par-module à venir)                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| [~] | anglais            | `241104P00` (manuel élève)                    | `programme/1ere-sec/anglais.md`            | 🚧 **transcription ScribeKit 2026-07-10 (first-pass, vérifiée fidèle)** — manuel élève « Perform through English » (150 p.) ; book map + 35 leçons + appendice (profondeur à venir)                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| [x] | chimie             | `224101P00` (manuel élève)                    | `programme/1ere-sec/chimie.md`             | ✅ **profondeur de génération complète 2026-07-12, R-7 vérifiée 2026-07-13** — manuel élève seul (160 p., relu intégralement) ; **4 parties / 9 chapitres transcrits en profondeur** (chaque activité/exercice/document/T.P. décrit individuellement, encadrés « Retenir »/« Essentiel du cours » verbatim) ; vérifié aucun chevauchement avec `sciences-physiques.md` (ne couvre que la physique, ch.2-17) ; **relecture indépendante contre la source primaire confirmée fidèle** (toutes les anomalies « Incertitudes » recoupées comme réelles, une coquille source additionnelle trouvée et documentée) — promue référence canonique |

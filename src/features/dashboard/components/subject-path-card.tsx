@@ -70,22 +70,22 @@ export function SubjectPathCard(props: {
           meets contrast over the subject-colour blob — readable in all 3 themes
           (the gold token is dark teal under Référence). */}
       {premiumLocked && (
-        <div className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-[color:var(--gold)]/50 bg-card px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-foreground shadow-sm">
+        <div className="absolute end-3 top-3 z-10 flex items-center gap-1 rounded-full border border-[color:var(--gold)]/50 bg-card px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-foreground shadow-sm">
           <Lock className="h-3 w-3 text-[color:var(--gold)]" />
           Premium
         </div>
       )}
       <div
-        className="absolute -right-8 -top-8 h-28 w-28 rounded-full blur-2xl opacity-50 transition-opacity group-hover:opacity-90"
+        className="absolute -end-8 -top-8 h-28 w-28 rounded-full blur-2xl opacity-50 transition-opacity group-hover:opacity-90"
         style={{ background: color }}
       />
       <div className="relative flex items-start justify-between">
         <Icon className="h-8 w-8" style={{ color }} />
-        <ChevronRight className="h-5 w-5 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-foreground" />
+        <ChevronRight className="h-5 w-5 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-foreground rtl:-scale-x-100 rtl:group-hover:-translate-x-1" />
       </div>
-      <div className="relative mt-4">
-        <div className="font-display text-lg font-bold">{subject.name_fr}</div>
-        <div className="text-xs uppercase tracking-wider text-muted-foreground">
+      <div className="relative mt-4 min-w-0">
+        <div className="truncate font-display text-lg font-bold">{subject.name_fr}</div>
+        <div className="truncate text-xs uppercase tracking-wider text-muted-foreground">
           Attribute · {subject.attribute}
         </div>
       </div>

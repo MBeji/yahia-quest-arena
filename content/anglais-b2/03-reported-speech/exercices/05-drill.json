@@ -74,8 +74,8 @@
         { "id": "c", "text": "was waiting / had seen" },
         { "id": "d", "text": "had been waiting / saw" }
       ],
-      "correctOption": "d",
-      "explanation": "Past continuous 'was waiting' backshifts to past perfect continuous 'had been waiting'; past simple 'saw' backshifts to past perfect 'had seen'. Option A applies no backshift to either verb. Option B correctly backshifts both but the past perfect continuous and past perfect form a grammatically odd pair here — the second event (seeing) should be past perfect 'had seen' while the ongoing background action (waiting) becomes past perfect continuous. Option C only backshifts the second verb. Option D correctly applies 'had been waiting' (duration) and 'had seen' (completed event).",
+      "correctOption": "b",
+      "explanation": "In backshift, both verbs move one tense back: past continuous 'was waiting' → past perfect continuous 'had been waiting', and past simple 'saw' → past perfect 'had seen'. So: he had been waiting for the bus when he had seen the accident. The other options each leave a verb un-backshifted: 'was waiting / saw' shifts neither; 'was waiting / had seen' keeps the first in the present-tense-area; 'had been waiting / saw' leaves 'saw' un-backshifted.",
       "difficulty": 3
     }
   ]

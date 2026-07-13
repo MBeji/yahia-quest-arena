@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Timer } from "lucide-react";
 import { BOSS_TIME_PER_QUESTION_S } from "@/shared/constants/gamification";
+import { useSound } from "@/lib/sound";
+
+/** Play a tick from this many seconds down to 1 — the tense final stretch. */
+const TICK_FROM_SECONDS = 5;
 
 /**
  * Boss-mode per-question countdown. Owns its own 1 Hz state so the ticking
@@ -21,6 +25,12 @@ export function BossCountdown({
   const [seconds, setSeconds] = useState(BOSS_TIME_PER_QUESTION_S);
   const onTimeoutRef = useRef(onTimeout);
   onTimeoutRef.current = onTimeout;
+  const { play } = useSound();
+
+  // Tense tick over the final seconds (no-op when sound is muted).
+  useEffect(() => {
+    if (active && seconds > 0 && seconds <= TICK_FROM_SECONDS) play("tick");
+  }, [active, seconds, play]);
 
   useEffect(() => {
     if (!active) return;

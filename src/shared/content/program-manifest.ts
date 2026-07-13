@@ -76,11 +76,7 @@ export type ProgramManifest = z.infer<typeof programManifestSchema>;
 // --------------------------------------------------------------------------
 
 export type FindingLevel =
-  | "missing-subject"
-  | "missing-chapter"
-  | "off-program"
-  | "incomplete"
-  | "language";
+  "missing-subject" | "missing-chapter" | "off-program" | "incomplete" | "language";
 
 export type Finding = { level: FindingLevel; subject: string; detail: string };
 

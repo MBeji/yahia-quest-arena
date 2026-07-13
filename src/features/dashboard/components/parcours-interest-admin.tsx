@@ -21,10 +21,10 @@ export function ParcoursInterestAdmin({ counts }: { counts: ParcoursInterestCoun
     <div className="overflow-hidden rounded-2xl border border-border/50">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-border/50 bg-card/40 text-left text-xs uppercase tracking-wider text-muted-foreground">
+          <tr className="border-b border-border/50 bg-card/40 text-start text-xs uppercase tracking-wider text-muted-foreground">
             <th className="w-12 px-4 py-3">#</th>
             <th className="px-4 py-3">{t.parcoursInterest.colProgram}</th>
-            <th className="px-4 py-3 text-right">{t.parcoursInterest.colInterest}</th>
+            <th className="px-4 py-3 text-end">{t.parcoursInterest.colInterest}</th>
           </tr>
         </thead>
         <tbody>
@@ -32,7 +32,7 @@ export function ParcoursInterestAdmin({ counts }: { counts: ParcoursInterestCoun
             <tr key={c.parcoursId} className="border-b border-border/30 last:border-0">
               <td className="px-4 py-3 text-muted-foreground">{i + 1}</td>
               <td className="px-4 py-3 font-semibold">{c.name}</td>
-              <td className="px-4 py-3 text-right font-bold text-[color:var(--gold)]">{c.count}</td>
+              <td className="px-4 py-3 text-end font-bold text-[color:var(--gold)]">{c.count}</td>
             </tr>
           ))}
         </tbody>

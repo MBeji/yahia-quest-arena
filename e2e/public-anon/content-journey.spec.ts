@@ -55,12 +55,12 @@ test.describe("Anonymous content journey (no login wall)", () => {
 
     const practice = new PracticePage(page);
     await practice.goto(exerciseId);
-    await expect(practice.heading).toBeVisible({ timeout: 15_000 });
+    await practice.firstQuestionVisible();
 
-    await practice.answerAll();
-    await practice.checkButton.click();
+    // Same question-by-question player as the connected quest, login-free.
+    await practice.playThrough();
 
-    // Immediate correction: a score appears (nothing saved, no XP, no login).
+    // The run finishes on a result screen with the score (nothing saved, no XP).
     await expect(practice.score).toBeVisible({ timeout: 15_000 });
     // The « moment d'or »: a non-blocking account invite (gain XP / save / rank).
     await expect(practice.accountInvite).toBeVisible();

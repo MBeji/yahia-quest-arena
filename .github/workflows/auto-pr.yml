@@ -1,0 +1,174 @@
+name: Auto PR
+
+# Completes the commit→push→merge chain with ZERO human steps (décision
+# 2026-07-12 — CLAUDE.md DoD §8): pushing ANY non-main branch opens its pull
+# request READY with auto-merge armed, so it merges alone the moment the
+# ruleset's required checks are green on an up-to-date head (automerge.yml
+# keeps armed heads up to date). Nobody reads, readies or merges by hand — the
+# required checks ARE the gate, and the session that pushed watches them until
+# the merge lands.
+#
+# Deliberate WIP is the opt-out, not the default: `[wip]` or `[draft]` (or
+# `[no-automerge]`) in the head-commit subject — or a `wip/`, `draft/` or
+# `rescue/` branch prefix — opens a DRAFT PR instead (nothing arms; promote
+# later with `gh pr ready`). The `no-automerge` label freezes an already-open
+# PR (automerge.yml disarms it). An existing draft PR is never promoted by a
+# later push: whoever drafted it decides when it ships.
+#
+# Why GH_AUTOMATION_PAT (optional secret), not just GITHUB_TOKEN: a PR opened
+# by the `github-actions[bot]` actor (GITHUB_TOKEN's identity) is NOT a repo
+# collaborator, and GitHub gates every `pull_request`-triggered run on such a
+# PR behind manual "Approve and run" — the same mechanism used for fork PRs
+# from outside contributors, applied here to our own automation (confirmed
+# live: CI/CodeQL/Migration gate/Auto-merge all sat at conclusion
+# `action_required` on bot-opened PRs, non-deterministically racing against
+# our workaround dispatches below — sometimes the dispatched run reported
+# green first, sometimes the gated native run "won" and the PR showed stuck
+# pending approval). A PAT belonging to an actual collaborator makes every
+# event's actor that collaborator, so nothing is ever gated — deterministic,
+# no manual approval, ever. Provision it as a fine-grained PAT scoped to this
+# repo only (contents:write, pull requests:write, workflows:write) stored in
+# Settings > Secrets and variables > Actions as `GH_AUTOMATION_PAT`. Without
+# it, this workflow still works via the GITHUB_TOKEN fallback below, using
+# the `gh workflow run` dispatch as a workaround for the gated native runs
+# (best-effort, not fully deterministic — see the diagnosis above).
+
+on:
+  push:
+    branches-ignore: [main]
+
+# One run per branch; a rapid second push supersedes the first.
+concurrency:
+  group: auto-pr-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  # write (not read): arming auto-merge calls enablePullRequestAutoMerge,
+  # which GitHub gates on contents:write — with read it fails with "Resource
+  # not accessible by integration" (bit us on #272). The merge itself stays
+  # gated by the ruleset's required checks. Irrelevant when GH_AUTOMATION_PAT
+  # is set (the PAT's own scopes govern those calls instead).
+  contents: write
+  # Create the PR and enable auto-merge.
+  pull-requests: write
+  # Dispatch the required-check workflows on the new PR's branch (fallback path).
+  actions: write
+
+jobs:
+  open-pr:
+    name: Open PR for pushed branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      # Falls back to GITHUB_TOKEN when the PAT secret isn't configured — see
+      # the header for what that costs (gated native pull_request runs).
+      GH_TOKEN: ${{ secrets.GH_AUTOMATION_PAT || secrets.GITHUB_TOKEN }}
+      USING_PAT: ${{ secrets.GH_AUTOMATION_PAT != '' }}
+    steps:
+      - name: Checkout (PR template + head commit subject)
+        uses: actions/checkout@v7
+
+      - name: Create the PR if none is open
+        id: pr
+        env:
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          existing="$(gh pr list --repo "$REPO" --head "$BRANCH" --state open \
+            --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            echo "PR #$existing already open for $BRANCH — nothing to create."
+            echo "created=false" >> "$GITHUB_OUTPUT"
+            echo "target=$existing" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          subject="$(git log -1 --pretty=%s "$HEAD_SHA")"
+
+          # Default: READY (auto-merge armed by the next step). Opt-out to a
+          # DRAFT savepoint via a subject token or a branch prefix — rescue/
+          # sauvegarde/WIP pushes must use one of these.
+          draft_flag=""
+          case "$subject" in
+            *"[wip]"*|*"[WIP]"*|*"[draft]"*|*"[no-automerge]"*) draft_flag="--draft" ;;
+          esac
+          case "$BRANCH" in
+            wip/*|draft/*|rescue/*) draft_flag="--draft" ;;
+          esac
+
+          body_file="$(mktemp)"
+          {
+            cat .github/pull_request_template.md
+            echo ""
+            echo "---"
+            echo "_PR ouverte automatiquement par \`auto-pr.yml\` pour la branche \`$BRANCH\`._"
+          } > "$body_file"
+
+          # Prerequisite (GITHUB_TOKEN fallback only): Settings > Actions >
+          # General > Workflow permissions > "Allow GitHub Actions to create
+          # and approve pull requests" must be ON, or createPullRequest is
+          # rejected. Not needed when GH_AUTOMATION_PAT is set.
+          if ! url="$(gh pr create --repo "$REPO" --base main --head "$BRANCH" \
+            $draft_flag --title "$subject" --body-file "$body_file")"; then
+            echo "::error title=Auto-PR impossible::Si vous n'utilisez pas GH_AUTOMATION_PAT, activez 'Allow GitHub Actions to create and approve pull requests' (Settings > Actions > General > Workflow permissions), puis relancez ce workflow — ou ouvrez la PR à la main."
+            exit 1
+          fi
+          if [ -n "$draft_flag" ]; then
+            echo "Created $url as a DRAFT (deliberate WIP opt-out)."
+          else
+            echo "Created $url ready for auto-merge."
+          fi
+          echo "created=true" >> "$GITHUB_OUTPUT"
+          echo "target=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Arm auto-merge (default — drafts & no-automerge opt out)
+        env:
+          REPO: ${{ github.repository }}
+          TARGET: ${{ steps.pr.outputs.target }}
+        run: |
+          set -euo pipefail
+
+          # Runs for the fresh PR AND for repeat pushes on an existing one —
+          # self-healing: a ready-but-unarmed PR gets armed by its next push.
+          # An existing draft stays a draft (deliberate WIP, see header).
+          read -r is_draft armed optout <<<"$(gh pr view "$TARGET" --repo "$REPO" \
+            --json isDraft,labels,autoMergeRequest \
+            --jq '[.isDraft, (.autoMergeRequest != null), any(.labels[]; .name == "no-automerge")] | @tsv')"
+
+          if [ "$is_draft" = "true" ]; then
+            echo "Draft PR (deliberate WIP) — not arming; promote with 'gh pr ready' when it must ship."
+            exit 0
+          fi
+          if [ "$optout" = "true" ]; then
+            echo "Label no-automerge — not arming."
+            exit 0
+          fi
+          if [ "$armed" = "true" ]; then
+            echo "Auto-merge already armed."
+            exit 0
+          fi
+
+          # Squash + delete-branch: same merge shape as the upgrade guard's lot.
+          if gh pr merge "$TARGET" --repo "$REPO" --auto --squash --delete-branch; then
+            echo "Auto-merge armed — merges alone once the required checks are green on an up-to-date head."
+          else
+            echo "::warning title=Auto-merge non armé::Activez 'Allow auto-merge' dans Settings > General du repo."
+          fi
+
+      - name: Dispatch the required checks on the branch (GITHUB_TOKEN fallback only)
+        # Only needed without a PAT: a PAT-opened PR fires real, non-gated
+        # `pull_request` runs for every required check on its own, so this
+        # workaround dispatch would just be a confusing, redundant duplicate.
+        if: steps.pr.outputs.created == 'true' && env.USING_PAT != 'true'
+        env:
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          gh workflow run ci.yml --repo "$REPO" --ref "$BRANCH"
+          gh workflow run migration-gate.yml --repo "$REPO" --ref "$BRANCH" -f base=main
+          gh workflow run codeql.yml --repo "$REPO" --ref "$BRANCH"
+          echo "Dispatched ci.yml + migration-gate.yml + codeql.yml on $BRANCH (no GH_AUTOMATION_PAT configured)."

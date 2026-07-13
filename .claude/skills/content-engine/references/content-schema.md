@@ -45,11 +45,14 @@ There is **no** `nameEn`/`nameAr` — `nameFr` is the single display-name field,
 subject's `contentLanguage` (the "Fr" in the name is legacy only). There is **no** per-language text
 anywhere else.
 
-> **Premium is per-parcours, not per-subject.** Access is governed by the parcours a subject resolves
-> to (its theme+grade) and enforced server-side by `resolve_exercise_access` — not by `isPremium`. The
-> `isPremium` flag is legacy and no longer read by the gate; leave it `false`/omit it. The **free
-> preview** (the chapter comprehension quiz + every difficulty-1 mission) always shows, even on a
-> premium parcours, so a prospect can taste a chapter before paying. See CLAUDE.md "Premium gate".
+> **Premium is per-parcours, not per-subject — but dormant in the current free phase.** Access is
+> governed by the parcours a subject resolves to (its theme+grade) and enforced server-side by
+> `resolve_exercise_access` — not by `isPremium`. The `isPremium` flag is legacy and no longer read
+> by the gate; leave it `false`/omit it. Every parcours is currently `is_premium=false` (2026-06-21
+> pivot + étude 15 Q-2), so **nothing is gated today**. The **free preview** (the chapter
+> comprehension quiz + every difficulty-1 mission) is what would still show on a premium parcours if
+> one is ever reactivated (frozen étude `FableEtudes/01-paiement-en-ligne`). See CLAUDE.md "Access
+> gate".
 
 ## chapter.json
 
@@ -85,8 +88,16 @@ bucket; this field carries only the metadata.
 
 ## Question object (shared by quiz.json and exercise files)
 
+Questions are a **discriminated union on `type`**. Omitting `type` means `mcq` — every
+pre-existing file stays valid unchanged. All Tier-B types have shipped: `mcq`, `numeric`,
+`ordering`, `matching` and `multi` are ALL authorable (`docs/interactive-question-types.md`
+is fully executed — no more native types are planned).
+
+**`mcq` (default) — the classic QCM:**
+
 | Field           | Type     | Required | Constraint                                                                      |
 | --------------- | -------- | -------- | ------------------------------------------------------------------------------- |
+| `type`          | string   | no       | `"mcq"` (or omitted)                                                            |
 | `prompt`        | string   | yes      | non-empty                                                                       |
 | `options`       | option[] | yes      | **2–6** items (use 4). Each `{ id: string≥1, text: string≥1 }`                  |
 | `correctOption` | string   | yes      | must equal one of the option **ids** (not the text, not an index)               |
@@ -95,6 +106,77 @@ bucket; this field carries only the metadata.
 
 Cross-field rules (Zod refine): option **ids must be unique**; `correctOption` ∈ option ids.
 Convention: option ids `a`,`b`,`c`,`d`.
+
+**Optional `misconceptionTag` per distractor (mcq only — étude 04, moteur adaptatif).** Any
+_wrong_ option may carry `"misconceptionTag": "<id>"` naming the error a student who picks it is
+making. It is **server-only diagnostics**: `sql-builder` routes it into the `questions.distractor_tags`
+map and **strips it from `options`** (it never reaches the client — R-1), so the correct option must
+stay **untagged** (Zod errors otherwise). The id must be **namespaced by subject** (`math.frac.add-denominators`)
+and **declared in the registry `content/misconceptions.json`** (`content:qa` errors on an unknown or
+undeclared tag). The registry maps each id → `{ subject, labels: { fr, en, ar } }` (the student-facing
+wording; the tag itself is never displayed). Tagging is **optional and progressive** — leave distractors
+untagged when the error isn't crisp; the `prof-*` trap taxonomies are the natural source of tags. Only
+`mcq` resolves telemetry (the wire choice equals the option id), so only `mcq` options take the field.
+
+**`numeric` — native free numeric entry (no options, no elimination):**
+
+| Field                 | Type   | Required | Constraint                                                                                                                                       |
+| --------------------- | ------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `type`                | string | yes      | `"numeric"`                                                                                                                                      |
+| `prompt`              | string | yes      | non-empty. **State the expected unit and precision in the prompt** ("en cm²", "arrondi au centième")                                             |
+| `answerKey.value`     | number | yes      | the canonical answer (finite; standard Western-digit notation)                                                                                   |
+| `answerKey.tolerance` | number | no       | accepted absolute deviation; **omit for exact** (0). Keep it proportionate — `content:qa` errors when tolerance ≥ \|value\| and warns above 25 % |
+| `answerKey.unit`      | string | no       | informative label only — the student never types the unit; the hint lives in the prompt                                                          |
+| `explanation`         | string | yes      | same bar as mcq; **echo the canonical value** in the worked solution                                                                             |
+| `difficulty`          | number | no       | same semantics as mcq                                                                                                                            |
+
+The student types a plain number (`-`, `.` or `,` decimal); the server scores
+`abs(x − value) ≤ tolerance` via `score_answer`. Use `numeric` when options would give the
+answer away by elimination (calculs, mesures, résultats d'équations); keep `mcq` when the
+distractors themselves teach (misconception encoding — see expert-exercises.md).
+
+**`ordering` — native drag-&-drop sequencing (B2):**
+
+| Field             | Type     | Required | Constraint                                                                                  |
+| ----------------- | -------- | -------- | ------------------------------------------------------------------------------------------- |
+| `type`            | string   | yes      | `"ordering"`                                                                                |
+| `options`         | option[] | yes      | **3–6** steps to arrange (shuffled at render). Ids alphanumeric (`a`…, no `,`/`:`/spaces)   |
+| `answerKey.order` | string[] | yes      | the correct id sequence — must be an **exact permutation** of the option ids (Zod-enforced) |
+| `explanation`     | string   | yes      | justify the ORDER (why this step before that one), not just restate it                      |
+
+Scoring is an exact sequence match, all-or-nothing. Step texts must be unambiguous and
+mutually distinct (`content:qa` errors on duplicates) and each step self-contained — never
+"then…" phrasing that only works in one position.
+
+**`matching` — native drag-&-drop pair alignment (B2):**
+
+| Field             | Type     | Required | Constraint                                                                                                               |
+| ----------------- | -------- | -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `type`            | string   | yes      | `"matching"`                                                                                                             |
+| `options`         | option[] | yes      | the fixed left items (**ids `l1`,`l2`…**) + the movable right items (**ids `r1`,`r2`…**), 2–6 of each, balanced          |
+| `answerKey.pairs` | [l,r][]  | yes      | the correct left→right associations — must pair every left with every right **exactly once** (a bijection, Zod-enforced) |
+| `explanation`     | string   | yes      | state each association and why                                                                                           |
+
+Scoring is set equality of the pairs, all-or-nothing. Every right item must be a plausible
+partner for more than one left item — otherwise the exercise solves itself.
+
+**`multi` — native multi-select judgment (B3, "select ALL that apply"):**
+
+| Field               | Type     | Required | Constraint                                                                                                                                      |
+| ------------------- | -------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `type`              | string   | yes      | `"multi"`                                                                                                                                       |
+| `options`           | option[] | yes      | **3–6** candidates (checkboxes). Ids alphanumeric (`a`…, no `,`/`:`/spaces)                                                                     |
+| `answerKey.correct` | string[] | yes      | **2–5** ids — the correct candidates. Must be a **proper subset**: at least one option must be wrong, or "select ALL" is vacuous (Zod-enforced) |
+| `explanation`       | string   | yes      | justify EACH correct candidate and why the wrong one(s) don't qualify                                                                           |
+
+Scoring is set equality of the checked ids, all-or-nothing (no partial credit). The client
+renders the explicit **"select ALL that apply"** instruction — never omit it or the item
+reads as an ordinary single-choice QCM and becomes unfair. Use `multi` for judgment items
+where more than one option is legitimately correct (properties, classifications); a `multi`
+item with exactly one intended correct answer should be an `mcq` instead.
+
+Prefer these three native types (`ordering`/`matching`/`multi`) over the QCM-encoded
+permutation/multi-select formats for new content.
 
 ### Figures (inline SVG) in questions
 
@@ -148,15 +230,15 @@ you do **not** author quiz rewards.
 
 ## exercices/\*.json
 
-| Field          | Type       | Required | Constraint                                                                             |
-| -------------- | ---------- | -------- | -------------------------------------------------------------------------------------- |
-| `title`        | string     | yes      | non-empty (RPG-flavored, see style-guide.md)                                           |
-| `difficulty`   | number     | yes      | integer **1–4** (1 easy · 2 medium · 3 boss · 4 élite; 3–4 premium-gated per parcours) |
-| `mode`         | enum       | yes      | `"practice"` \| `"boss"` \| `"challenge"` (never `"quiz"`)                             |
-| `xpReward`     | number     | yes      | positive integer — use the canonical table (rewards-and-modes.md)                      |
-| `rewardCoins`  | number     | yes      | non-negative integer                                                                   |
-| `displayOrder` | number     | yes      | positive integer (match the filename `NN`)                                             |
-| `questions`    | question[] | yes      | **1–50** (use 6)                                                                       |
+| Field          | Type       | Required | Constraint                                                                                                    |
+| -------------- | ---------- | -------- | ------------------------------------------------------------------------------------------------------------- |
+| `title`        | string     | yes      | non-empty (RPG-flavored, see style-guide.md)                                                                  |
+| `difficulty`   | number     | yes      | integer **1–4** (1 easy · 2 medium · 3 boss · 4 élite; 3–4 are the dormant premium-gate ceiling per parcours) |
+| `mode`         | enum       | yes      | `"practice"` \| `"boss"` \| `"challenge"` (never `"quiz"`)                                                    |
+| `xpReward`     | number     | yes      | positive integer — use the canonical table (rewards-and-modes.md)                                             |
+| `rewardCoins`  | number     | yes      | non-negative integer                                                                                          |
+| `displayOrder` | number     | yes      | positive integer (match the filename `NN`)                                                                    |
+| `questions`    | question[] | yes      | **1–50** (use 6)                                                                                              |
 
 ## Defaults you may omit
 
