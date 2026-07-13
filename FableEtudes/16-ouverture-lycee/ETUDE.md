@@ -341,8 +341,8 @@ hors périmètre ; divergence étude↔code = STOP et remontée.
 - [x] Lot 0 — étude + amendements docs + maquette (PR #367)
 - [x] Lot 1 — pipeline `compileTo` (PR #369)
 - [x] Lot 2 — données de l'arbre + compteur public + types (PR #371)
-- [x] Lot 3 — UI arborescence drill-down (PR ouverte en draft — la passer « ready » = validation
-      visuelle humaine sur la preview Vercel, voir journal)
+- [x] Lot 3 — UI arborescence drill-down (PR #375 — validée visuellement sur la preview Vercel
+      puis passée « ready », mergée)
 
 **Coordination étude 15 (anti-collision, RISK-2)** : lot 3 é16 ne recompose PAS les pages — il
 remplace le seul bloc « liste du cycle secondaire » (onboarding) et le seul bloc « grille Lycée »
@@ -524,3 +524,6 @@ EXECUTE TO anon` sur `parcours_interest_counts`), `getParcoursInterestCounts` an
   (c'est elle qui arme l'auto-merge) ; (b) kicker JourneyMap descopé — porté par é15 D-5/D-6
   (« kicker = classe »), retiré d'ici pour éviter la collision RISK-2 ; (c) e2e inchangés — les
   specs onboarding/catalogue sont des smokes qui ne traversent pas le picker lycée (vérifié).
+- 2026-07-12 — PR #375 validée sur preview Vercel puis passée « ready » ; auto-merge, mergée.
+  Lots 0–3 tous livrés (#367/#369/#371/#375). Reste de l'étude : la campagne de contenu
+  (§4bis) — vague A (1ère sec) en attente du corpus de transcription officielle L1.
