@@ -539,6 +539,15 @@ export const ar: TranslationKeys = {
     parcoursSubtitleLibre: "انطلق في مغامرتك المفضلة.",
     saving: "جاري الحفظ…",
     saveError: "تعذّر حفظ مسارك. أعد المحاولة.",
+    promise: "مرحباً! لنجهّز مساحتك في نقرتين.",
+    chooseAnyway: "اختيار هذا القسم",
+    celebrateTitle: "انطلقنا!",
+    celebrateDesc: "مرحباً بك في {parcours}. لوحة تحكّمك جاهزة.",
+    celebrateSoonTitle: "قسمك قادم قريباً",
+    celebrateSoonDesc:
+      "{parcours} قيد الإنشاء. في الأثناء، استكشف الإضافات — وصوتك يقدّمه في الأولوية.",
+    celebrateExtrasCta: "استكشاف الإضافات",
+    celebrateDashboardCta: "الذهاب إلى لوحة التحكّم",
   },
   cycles: {
     primaire: "الابتدائي",

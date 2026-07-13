@@ -140,7 +140,9 @@ function AuthPage() {
           password,
           options: {
             emailRedirectTo: `${window.location.origin}/dashboard`,
-            data: { display_name: displayName },
+            // `role` lets `handle_new_user` persist the parent/student choice even on
+            // the email-confirmation path where `bootstrapProfile` never runs (lot 10).
+            data: { display_name: displayName, role },
           },
         });
         if (error) throw error;

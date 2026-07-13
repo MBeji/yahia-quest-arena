@@ -267,7 +267,7 @@ périmètre ; divergence étude↔code = STOP et remontée (règle FableEtudes).
 - [x] Lot 7 — hub matière connecté
 - [x] Lot 8 — funnel public
 - [x] Lot 9 — auth v2
-- [ ] Lot 10 — onboarding v2
+- [x] Lot 10 — onboarding v2
 - [ ] Lot 11 — arène
 - [ ] Lot 12 — parent
 - [ ] Lot 13 — admin
@@ -488,3 +488,20 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   3 specs `/auth/reset` (succès→dashboard, mot de passe court refusé, lien invalide→demande) ; le flux
   `forgot` sur `/auth` reste couvert par l'e2e auth-flows (cf. tableau des lots). Budget i18n : 108→116
   Ko (déjà relevé au lot 8), chunk à 112 Ko. Gate vert (1292 tests + build).
+- 2026-07-13 — Lot 10 livré (onboarding v2, D-8 c-d) : maquette `design/ds/ecrans/onboarding-v2.html`
+  publiée dans le projet DS puis implémentée, **greffée sur le picker é16 lot 3** (drill-down lycée +
+  R-1 nœuds hérités masqués — déjà en place, non touchés). **(c) Fix du rôle parent (US audit §G)** :
+  migration additive `20260713160000` — `handle_new_user` lit désormais le rôle depuis les métadonnées
+  du signUp (`raw_user_meta_data->>'role'`, borné à student|parent, jamais admin) et le pose sur le
+  profil neuf ; l'écriture (rôle non-défaut) est autorisée par le **même GUC transactionnel
+  `app.allow_role_change`** que `set_profile_role` (chemin definer sanctionné) ; `auth.tsx` passe
+  `role` dans `options.data`. Corrige la perte du rôle parent sur le chemin « confirmation e-mail »
+  (pas de session → `bootstrapProfile` sauté). Rétro-compatible (sans rôle → student, comme avant).
+  **(d) Onboarding v2** : promesse d'accueil + **sélecteur de langue** en tête (parent arabophone
+  bascule d'entrée) ; **Q-6 option A** — une classe `coming_soon` reste **choisissable** (« Choisir
+  cette classe », la RPC l'autorise) en plus du vote d'intérêt → **accueil dédié « ta classe arrive »**
+  pointant vers les extras ; **célébration + atterrissage guidé** (étape 2 : récap + CTA, ressort à la
+  place du saut silencieux vers le dashboard) ; **deep-link restauré** (search param `redirect`
+  assaini en chemin interne — pas d'open-redirect). i18n ×3 (8 clés). Tests : 2 specs `CelebrationStep`
+  (dispo→dashboard/deep-link ; en construction→extras+dashboard) ; `handle_new_user` couvert par la
+  suite pgTAP (CI). Gate vert (1294 tests + build ; i18n 114/116 Ko).

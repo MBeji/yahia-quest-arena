@@ -22,6 +22,9 @@ import {
   Trophy,
   Compass,
   Clock,
+  Sparkles,
+  Rocket,
+  ArrowRight,
 } from "lucide-react";
 import {
   getParcours,
@@ -31,6 +34,7 @@ import {
 } from "@/features/dashboard";
 import type { LyceeYearGroup, ParcoursInterestState } from "@/features/dashboard";
 import { setCurrentParcours } from "@/features/auth";
+import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { useEntrance } from "@/shared/lib/motion";
 import { parcoursName } from "@/shared/lib/parcours-locale";
 import { useI18n, useT } from "@/lib/i18n";
@@ -217,6 +221,16 @@ function ParcoursCard({
             onToggle={() => interest.onToggle(parcours.id)}
           />
         )}
+        {/* Option A (Q-6) : une classe en construction reste CHOISISSABLE — la RPC
+            l'autorise ; l'élève atterrit sur un accueil dédié « ta classe arrive ». */}
+        <button
+          type="button"
+          onClick={onSelect}
+          disabled={isSaving}
+          className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg border border-[color:var(--gold)]/40 py-2.5 text-xs font-bold text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/10 disabled:opacity-60"
+        >
+          {t.onboarding.chooseAnyway} <ArrowRight className="h-3.5 w-3.5 rtl:-scale-x-100" />
+        </button>
       </div>
     );
   }
@@ -441,7 +455,77 @@ function ParcoursStep({
   );
 }
 
+// ---------------------------------------------------------------------------
+// Step 2 — celebration + guided landing (lot 10). A coming-soon pick gets its
+// own « ta classe arrive » welcome (Q-6 option A) pointing to the extras.
+// ---------------------------------------------------------------------------
+export function CelebrationStep({
+  parcours,
+  landing,
+  onGo,
+}: {
+  parcours: Parcours | null;
+  landing: string;
+  onGo: (to: string) => void;
+}) {
+  const t = useT();
+  const { locale } = useI18n();
+  const stepSlide = useStepSlide();
+  const isComingSoon = parcours?.status === "coming_soon";
+  const label = parcours ? parcoursName(parcours, locale) : "";
+
+  return (
+    <motion.div {...stepSlide} className="space-y-6 text-center">
+      <motion.div
+        initial={{ scale: 0.6, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 200, damping: 15 }}
+        className="mx-auto grid h-20 w-20 place-items-center rounded-3xl bg-[color:var(--gold)]/15"
+      >
+        {isComingSoon ? (
+          <Sparkles className="h-10 w-10 text-[color:var(--gold)]" />
+        ) : (
+          <Rocket className="h-10 w-10 text-[color:var(--gold)]" />
+        )}
+      </motion.div>
+      <div>
+        <h2 className="font-display text-3xl font-bold">
+          {isComingSoon ? t.onboarding.celebrateSoonTitle : t.onboarding.celebrateTitle}
+        </h2>
+        <p className="mx-auto mt-2 max-w-md text-muted-foreground">
+          {(isComingSoon ? t.onboarding.celebrateSoonDesc : t.onboarding.celebrateDesc).replace(
+            "{parcours}",
+            label,
+          )}
+        </p>
+      </div>
+      <div className="flex flex-col gap-3">
+        {isComingSoon ? (
+          <>
+            <Button onClick={() => onGo("/extras")} className="min-h-12 gap-2 text-base">
+              {t.onboarding.celebrateExtrasCta} <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
+            </Button>
+            <Button onClick={() => onGo(landing)} variant="outline" className="min-h-11">
+              {t.onboarding.celebrateDashboardCta}
+            </Button>
+          </>
+        ) : (
+          <Button onClick={() => onGo(landing)} className="min-h-12 gap-2 text-base">
+            {t.onboarding.celebrateDashboardCta} <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
+          </Button>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
 export const Route = createFileRoute("/_authenticated/onboarding")({
+  // Deep-link restoration (lot 10): where to land after onboarding. Sanitised to an
+  // internal path (single leading slash) so a crafted `?redirect=` can't open-redirect.
+  validateSearch: (s: Record<string, unknown>): { redirect?: string } => {
+    const r = typeof s.redirect === "string" ? s.redirect : "";
+    return r.startsWith("/") && !r.startsWith("//") ? { redirect: r } : {};
+  },
   component: OnboardingComponent,
 });
 
@@ -449,9 +533,12 @@ function OnboardingComponent() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const t = useT();
+  const { redirect } = Route.useSearch();
+  const landing = redirect ?? "/dashboard";
   const fadeIn = useEntrance("fade");
-  const [step, setStep] = useState<0 | 1>(0);
+  const [step, setStep] = useState<0 | 1 | 2>(0);
   const [intent, setIntent] = useState<Intent | null>(null);
+  const [selected, setSelected] = useState<Parcours | null>(null);
 
   const fetchParcours = useServerFn(getParcours);
   const saveParcours = useServerFn(setCurrentParcours);
@@ -472,13 +559,13 @@ function OnboardingComponent() {
     mutationFn: (parcoursId: string) => saveParcours({ data: { parcoursId } }),
     onSuccess: async () => {
       // Refresh dashboard + profile-bearing queries so the new scope is reflected,
-      // then land on the dashboard.
+      // then celebrate + guide the landing (lot 10) rather than a silent jump.
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
         queryClient.invalidateQueries({ queryKey: ["me-role"] }),
         queryClient.invalidateQueries({ queryKey: ["me-parcours"] }),
       ]);
-      navigate({ to: "/dashboard" });
+      setStep(2);
     },
     onError: () => {
       // Graceful: never trap the aspirant in onboarding.
@@ -490,13 +577,24 @@ function OnboardingComponent() {
     setIntent(chosen);
     setStep(1);
   };
+  const handleSelect = (id: string) => {
+    setSelected(parcours.find((p) => p.id === id) ?? null);
+    selectMutation.mutate(id);
+  };
 
   return (
     <div className="min-h-[100dvh] bg-black-deep p-6">
       <div className="mx-auto max-w-2xl">
+        {/* Promise + explicit language (lot 10): a short welcome and a language
+            switch up front — a parent can set their language before choosing. */}
+        <div className="mb-6 flex items-center justify-between gap-3">
+          <p className="text-sm text-muted-foreground">{t.onboarding.promise}</p>
+          <LanguageSwitcher />
+        </div>
+
         {/* Progress indicator */}
-        <div className="mb-12 flex gap-2">
-          {[0, 1].map((i) => (
+        <div className="mb-10 flex gap-2">
+          {[0, 1, 2].map((i) => (
             <motion.div
               key={i}
               {...fadeIn}
@@ -518,9 +616,17 @@ function OnboardingComponent() {
               isPending={parcoursPending}
               isError={parcoursError}
               isSaving={selectMutation.isPending}
-              onSelect={(id) => selectMutation.mutate(id)}
+              onSelect={handleSelect}
               onPrev={() => setStep(0)}
               interest={interest}
+            />
+          )}
+          {step === 2 && (
+            <CelebrationStep
+              key="celebrate"
+              parcours={selected}
+              landing={landing}
+              onGo={(to) => navigate({ to })}
             />
           )}
         </AnimatePresence>

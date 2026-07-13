@@ -539,6 +539,15 @@ export const en: TranslationKeys = {
     parcoursSubtitleLibre: "Dive into the adventure of your choice.",
     saving: "Saving…",
     saveError: "Couldn't save your path. Try again.",
+    promise: "Welcome! Let's set up your space in two clicks.",
+    chooseAnyway: "Choose this class",
+    celebrateTitle: "You're all set!",
+    celebrateDesc: "Welcome to {parcours}. Your dashboard is ready.",
+    celebrateSoonTitle: "Your class is coming soon",
+    celebrateSoonDesc:
+      "{parcours} is under construction. Meanwhile, explore the extras — and your vote moves it up.",
+    celebrateExtrasCta: "Explore the extras",
+    celebrateDashboardCta: "Go to my dashboard",
   },
   cycles: {
     primaire: "Primary",

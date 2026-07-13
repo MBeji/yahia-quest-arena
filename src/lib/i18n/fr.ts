@@ -541,6 +541,15 @@ export const fr: TranslationKeys = {
     parcoursSubtitleLibre: "Lance-toi dans l'aventure de ton choix.",
     saving: "Enregistrement…",
     saveError: "Impossible d'enregistrer ton parcours. Réessaie.",
+    promise: "Bienvenue ! On configure ton espace en deux clics.",
+    chooseAnyway: "Choisir cette classe",
+    celebrateTitle: "C'est parti !",
+    celebrateDesc: "Bienvenue dans {parcours}. Ton tableau de bord t'attend.",
+    celebrateSoonTitle: "Ta classe arrive bientôt",
+    celebrateSoonDesc:
+      "{parcours} est en construction. En attendant, explore les extras — et ton vote la fait avancer.",
+    celebrateExtrasCta: "Explorer les extras",
+    celebrateDashboardCta: "Voir mon tableau de bord",
   },
   cycles: {
     primaire: "Primaire",
