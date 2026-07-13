@@ -1,0 +1,88 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Propriétés du quart de tour",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Un triangle ABC de périmètre 20 cm et d'aire 15 cm² a pour image A'B'C' par un quart de tour. Que valent le périmètre et l'aire de A'B'C' ?",
+      "options": [
+        { "id": "a", "text": "périmètre 20 cm et aire 15 cm²" },
+        { "id": "b", "text": "périmètre 40 cm et aire 60 cm²" },
+        { "id": "c", "text": "périmètre 20 cm, mais une aire différente" },
+        { "id": "d", "text": "on ne peut pas les déterminer" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le quart de tour est une isométrie : la figure et son image sont superposables, donc même périmètre (20 cm) et même aire (15 cm²) ✓. Rien n'est doublé ou quadruplé (réponse b), l'aire est conservée (réponse c), et tout est parfaitement déterminé (réponse d).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Une droite (d) subit, dans deux situations distinctes, une translation puis un quart de tour. Quelles sont les positions des deux images par rapport à (d) ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "parallèle pour la translation, perpendiculaire pour le quart de tour"
+        },
+        {
+          "id": "b",
+          "text": "perpendiculaire pour la translation, parallèle pour le quart de tour"
+        },
+        { "id": "c", "text": "parallèle dans les deux cas" },
+        { "id": "d", "text": "perpendiculaire dans les deux cas" }
+      ],
+      "correctOption": "a",
+      "explanation": "La translation transforme une droite en une droite parallèle ; le quart de tour la transforme en une droite perpendiculaire ✓. C'est la différence essentielle entre ces deux transformations — la réponse a est la seule à respecter les deux règles.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "On veut construire un triangle rectangle isocèle en A à partir du point B (avec AB donné). Quelle transformation appliquer à B pour obtenir le troisième sommet C ?",
+      "options": [
+        { "id": "a", "text": "un quart de tour de centre A" },
+        { "id": "b", "text": "une translation de vecteur AB" },
+        { "id": "c", "text": "une symétrie d'axe (AB)" },
+        { "id": "d", "text": "un demi-tour de centre A" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le quart de tour de centre A produit un point C tel que AC = AB et angle BAC = 90° : c'est exactement un triangle rectangle isocèle en A ✓. La translation garderait la même direction ; la symétrie d'axe (AB) laisse un point de (AB) sur place ; le demi-tour donne un angle de 180°, pas 90°.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Un polygone possède un angle de 130°. Quelle est la mesure de l'angle homologue dans son image par un quart de tour ?",
+      "options": [
+        { "id": "a", "text": "130°" },
+        { "id": "b", "text": "40°" },
+        { "id": "c", "text": "220°" },
+        { "id": "d", "text": "50°" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le quart de tour conserve les angles : l'angle homologue mesure encore 130° ✓. La rotation de 90° oriente la figure autrement, mais ne modifie pas les angles internes. 40° (= 130° − 90°), 220° (= 130° + 90°) et 50° résultent de l'idée fausse qu'on ajoute ou retranche l'angle de rotation.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "ABCD et AEFG sont deux carrés ayant le sommet A en commun. Le quart de tour de centre A qui envoie B sur D envoie aussi E sur G. Que peut-on affirmer sur les segments [BE] et [DG] ?",
+      "options": [
+        { "id": "a", "text": "BE = DG et (BE) ⊥ (DG)" },
+        { "id": "b", "text": "BE = DG et (BE) // (DG)" },
+        { "id": "c", "text": "BE = 2 × DG" },
+        { "id": "d", "text": "rien de particulier" }
+      ],
+      "correctOption": "a",
+      "explanation": "Ce quart de tour envoie B sur D et E sur G, donc il transforme le segment [BE] en [DG]. Conservation des longueurs : BE = DG ; image d'une droite par un quart de tour : (BE) ⊥ (DG) ✓. Le quart de tour rend les droites perpendiculaires (pas parallèles, réponse b), conserve les longueurs (pas de facteur 2, réponse c) et permet donc de conclure (réponse d).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trois points A, M, B sont alignés. A', M', B' sont leurs images par un même quart de tour de centre O. Que peut-on affirmer ?",
+      "options": [
+        { "id": "a", "text": "A', M', B' sont alignés et (A'B') est perpendiculaire à (AB)" },
+        { "id": "b", "text": "A', M', B' sont alignés et (A'B') est parallèle à (AB)" },
+        { "id": "c", "text": "A', M', B' ne sont pas nécessairement alignés" },
+        { "id": "d", "text": "(A'B') est confondue avec (AB)" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le quart de tour conserve l'alignement, donc A', M', B' restent alignés ; et l'image d'une droite est une perpendiculaire, donc (A'B') ⊥ (AB) ✓. L'image d'une droite n'est pas parallèle (réponse b, ce serait une translation), l'alignement est toujours conservé (réponse c) et (A'B') n'est pas (AB) (réponse d).",
+      "difficulty": 3
+    }
+  ]
+}
