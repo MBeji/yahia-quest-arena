@@ -16,6 +16,10 @@ import DOMPurify from "dompurify";
 
 const SVG_BLOCK = /<svg[\s\S]*?<\/svg>/i;
 
+/** URL schemes that can carry executable content (not just `javascript:` —
+ *  `data:` and `vbscript:` are equally capable per CWE-20/CWE-184). */
+const DANGEROUS_URL_SCHEME = /(?:javascript|data|vbscript):/gi;
+
 /** Split a content field into its plain text and an optional embedded SVG block. */
 export function extractFigure(raw: string): { text: string; svg: string | null } {
   if (!raw) return { text: "", svg: null };
@@ -50,5 +54,5 @@ export function sanitizeSvg(svg: string): string {
   });
   // Defense-in-depth: neutralize any residual dangerous scheme DOMPurify may leave
   // inside non-URI attribute values (e.g. fill="url(javascript:…)").
-  return cleaned.replace(/javascript:/gi, "");
+  return cleaned.replace(DANGEROUS_URL_SCHEME, "");
 }
