@@ -1,0 +1,9 @@
+{
+  "title": "Somme de deux vecteurs et vecteurs colinéaires",
+  "description": "Somme de deux vecteurs et relation de Chasles (AB + BC = AC), règle du parallélogramme (AB + AC = AD), vecteurs opposés, produit d'un vecteur par un réel (sens et longueur selon le signe et la valeur du coefficient), vecteurs colinéaires et leur lien avec le parallélisme de deux droites, et caractérisation vectorielle du milieu d'un segment (IA + IB = 0, AB = 2 AI)",
+  "displayOrder": 5,
+  "sources": [
+    "Programme officiel — Mathématiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 222104P02 (chapitre 5, p.69–80)",
+    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/mathematiques.md (§2.5)"
+  ]
+}

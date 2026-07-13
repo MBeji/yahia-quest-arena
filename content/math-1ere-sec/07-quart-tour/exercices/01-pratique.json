@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : Le quart de tour pas à pas",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Par un quart de tour de centre O, le segment [AB] a pour image [A'B']. Si AB = 7 cm, combien vaut A'B' ?",
+      "options": [
+        { "id": "a", "text": "7 cm" },
+        { "id": "b", "text": "14 cm" },
+        { "id": "c", "text": "3,5 cm" },
+        { "id": "d", "text": "9 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le quart de tour conserve les longueurs : A'B' = AB = 7 cm ✓. La longueur n'est ni doublée (réponse b), ni divisée par deux (réponse c) ; l'angle de 90° agit sur la direction, pas sur la mesure (réponse d).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "M' est l'image de M par un quart de tour de centre O. Si OM = 5 cm, combien vaut OM' ?",
+      "options": [
+        { "id": "a", "text": "5 cm" },
+        { "id": "b", "text": "10 cm" },
+        { "id": "c", "text": "2,5 cm" },
+        { "id": "d", "text": "7,07 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "Par définition, le quart de tour conserve la distance au centre : OM' = OM = 5 cm ✓. Les autres valeurs (double, moitié, ou 5√2 ≈ 7,07) proviennent de calculs qui n'ont pas lieu d'être ici.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "M' est l'image de M (avec M ≠ O) par un quart de tour de centre O. Combien vaut l'angle MOM' ?",
+      "options": [
+        { "id": "a", "text": "90°" },
+        { "id": "b", "text": "45°" },
+        { "id": "c", "text": "180°" },
+        { "id": "d", "text": "60°" }
+      ],
+      "correctOption": "a",
+      "explanation": "Un quart de tour est une rotation de 90° : l'angle MOM' est droit ✓. 45° est un demi-angle droit ; 180° correspond à un demi-tour (symétrie centrale) ; 60° n'a aucun rapport avec cette transformation.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Une droite (d) a pour image (d') par un quart de tour. Quelle est la position de (d') par rapport à (d) ?",
+      "options": [
+        { "id": "a", "text": "(d') est perpendiculaire à (d)" },
+        { "id": "b", "text": "(d') est parallèle à (d)" },
+        { "id": "c", "text": "(d') est confondue avec (d)" },
+        { "id": "d", "text": "(d') est une demi-droite" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'image d'une droite par un quart de tour lui est perpendiculaire ✓. La parallèle (réponse b) est le résultat d'une translation ; l'image reste une droite complète, ni confondue (réponse c) ni réduite à une demi-droite (réponse d).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Un cercle de rayon 6 cm a pour image, par un quart de tour, un cercle de rayon :",
+      "options": [
+        { "id": "a", "text": "6 cm" },
+        { "id": "b", "text": "12 cm" },
+        { "id": "c", "text": "3 cm" },
+        { "id": "d", "text": "8,49 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le quart de tour conserve les longueurs, donc le rayon ne change pas : le cercle image a un rayon de 6 cm ✓ (seul son centre se déplace, à l'image du centre initial). Les autres valeurs (double, moitié, ou 6√2) n'ont pas lieu d'être.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "M' est l'image de M par un quart de tour de centre O. Quelle est la nature du triangle OMM' ?",
+      "options": [
+        { "id": "a", "text": "Rectangle isocèle en O" },
+        { "id": "b", "text": "Équilatéral" },
+        { "id": "c", "text": "Rectangle en M" },
+        { "id": "d", "text": "Isocèle en M" }
+      ],
+      "correctOption": "a",
+      "explanation": "On a OM = OM' (donc isocèle en O) et l'angle MOM' = 90° (donc rectangle en O) : le triangle OMM' est rectangle isocèle en O ✓. Il n'est pas équilatéral (l'angle en O est droit, pas 60°) ; l'angle droit est en O, pas en M (réponses c et d).",
+      "difficulty": 2
+    }
+  ]
+}
