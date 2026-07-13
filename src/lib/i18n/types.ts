@@ -507,6 +507,15 @@ export type TranslationKeys = {
     parcoursSubtitleLibre: string;
     saving: string;
     saveError: string;
+    // Onboarding v2 (étude 15 lot 10)
+    promise: string;
+    chooseAnyway: string;
+    celebrateTitle: string;
+    celebrateDesc: string;
+    celebrateSoonTitle: string;
+    celebrateSoonDesc: string;
+    celebrateExtrasCta: string;
+    celebrateDashboardCta: string;
   };
   // School cycle group labels (programme scolaire)
   cycles: {
