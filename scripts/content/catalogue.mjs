@@ -105,7 +105,7 @@ for (const theme of themes) {
   out.push("| --- | --- | --- | --- | --: | --: | --: |");
   for (const s of list) {
     const stub = s.chapters === 0 ? " ⚠ stub" : "";
-    const name = s.name.replace(/\|/g, "\\|");
+    const name = s.name.replace(/\\/g, "\\\\").replace(/\|/g, "\\|");
     out.push(
       `| \`${s.id}\`${stub} | ${name} | ${s.gradeSlug ?? "—"} | ${s.lang || "—"} | ` +
         `${s.chapters} | ${s.exercises} | ${s.quizzes} |`,
