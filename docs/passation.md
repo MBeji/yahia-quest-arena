@@ -11,16 +11,17 @@ et du ruleset) — en cas de divergence, CLAUDE.md gagne.
 ```
 Dev local ──► git commit ──► git push (branche)
                 │                 │
-           [hooks husky]     [auto-pr.yml] ──► PR draft + checks lancés
-                                  │
+           [hooks husky]     [auto-pr.yml] ──► PR READY + auto-merge armé + checks
+                                  │            (opt-out WIP : [wip]/[draft] → draft)
                     ┌─────────────┴──────────────┐
                     │  Checks requis sur la PR    │
                     │  verify · Migration presence│
                     │  Migration order · CodeQL   │
                     └─────────────┬──────────────┘
                                   │
-              PR « Ready » ──► [automerge.yml] arme l'auto-merge
-                                  │  (retard sur main ? → update auto + re-checks)
+                                  │  [automerge.yml] garde la tête à jour
+                                  │  (retard sur main → update auto + re-checks ;
+                                  │   conflit → label needs-rebase)
                                   ▼
                     Squash-merge sur main (ruleset main-protection)
                                   │
@@ -32,10 +33,13 @@ Dev local ──► git commit ──► git push (branche)
                     Gardes post-prod (nightly, guards…)
 ```
 
-**Le seul geste humain** entre « j'ai fini de coder » et « c'est en prod » est de marquer
-la PR **« Ready for review »** — ou de pousser avec **`[auto-merge]`** dans le sujet du
-commit de tête pour supprimer même ce geste. Le label **`no-automerge`** gèle une PR
-qu'on veut relire tranquillement.
+**Aucun geste humain** entre « j'ai fini de coder » et « c'est en prod » (décision
+2026-07-12) : la PR s'ouvre **ready, auto-merge armé**, et merge seule quand les checks
+requis sont verts sur une tête à jour. La session qui a poussé surveille ses checks
+jusqu'au merge et corrige tout rouge (CLAUDE.md, DoD §8). Pour un savepoint volontaire :
+`[wip]` / `[draft]` dans le sujet du commit de tête (ou une branche `wip/`, `draft/`,
+`rescue/`) → PR **draft**, à promouvoir plus tard avec `gh pr ready`. Le label
+**`no-automerge`** gèle une PR qu'on veut retenir.
 
 ## 1. Fin de dev — garde-fous locaux (hooks git)
 
@@ -49,10 +53,13 @@ Avant même que le code quitte la machine (husky, installé par `npm install`) :
 
 ## 2. Push de la branche — inscription automatique en PR
 
-- **`auto-pr.yml`** : tout push d'une branche non-`main` ouvre automatiquement sa
-  **PR draft** (titre = sujet du commit de tête, corps = template du repo).
-- Raccourci opt-in : un sujet de commit contenant **`[auto-merge]`** ouvre la PR
-  directement « ready » et arme le merge sans autre geste.
+- **`auto-pr.yml`** : tout push d'une branche non-`main` ouvre automatiquement sa PR
+  **ready, auto-merge armé** (titre = sujet du commit de tête, corps = template du
+  repo). Sur un push répété, une PR déjà ouverte ready mais non armée est ré-armée
+  (self-healing) ; un draft existant n'est **jamais** promu par un push.
+- Opt-out WIP (savepoint volontaire) : `[wip]` / `[draft]` / `[no-automerge]` dans le
+  sujet du commit de tête, ou un préfixe de branche `wip/`, `draft/`, `rescue/` →
+  PR **draft**, rien ne s'arme.
 
 ### Le piège du bot non-collaborateur (`GH_AUTOMATION_PAT`)
 
@@ -143,8 +150,8 @@ La configuration est versionnée dans le repo, mais l'application vit dans GitHu
    **`GH_AUTOMATION_PAT`** — un PAT _fine-grained_ d'un compte collaborateur, scopé à ce
    seul dépôt (`contents: write`, `pull requests: write`, `workflows: write`). Sans lui,
    la chaîne fonctionne mais **n'est pas déterministe** : voir « Le piège du bot
-   non-collaborateur » plus haut — parfois un clic « Ready for review » ou
-   « Approve and run » reste nécessaire.
+   non-collaborateur » plus haut — parfois un clic « Approve and run » reste
+   nécessaire.
 
 _Les réglages 1 à 3 ont été activés le 2026-07-02 ; la chaîne a été validée en
 conditions réelles sur la PR #270 (qui l'a elle-même installée). Le réglage 4

@@ -65,7 +65,8 @@ Content generation is **a planning layer + two authoring layers**, not competing
      **existing** chapters, so broader lycée professor work is queued behind them.
 
 The overlay **never** replaces the base: professors only **add** top-tier files to a chapter that
-already exists; they never rewrite the course/quiz or convert a free d1–2 mission to premium d3–4.
+already exists; they never rewrite the course/quiz or convert a free d1–2 mission to the d3–4
+ceiling tier (the dormant premium gate).
 
 ## Skill selection map (task → skill)
 

@@ -45,10 +45,12 @@ plafond — strictement dans le programme de la section et de l'année.
   mise en base des chapitres (transcription des programmes → `content-ecole-tn`). Les cartes ci-dessous
   restent **indicatives** (grands blocs sûrs du programme tunisien) et devront être alignées sur la
   transcription officielle.
-- **Premium** : seuls les parcours `bac-*` sont concours PREMIUM (d3/d4 gated, preview = quiz + d1) ;
-  1ère→3ème sec = FREE (d3/d4 = palier difficile du ladder libre). Récompenses canoniques : d3 boss
-  120/30, d4 challenge 300/60 ; étoiles + libellés FR (Difficile / Élite). Ne jamais convertir un d1–2
-  existant en d3–4.
+- **Phase gratuite : rien n'est gaté.** Les parcours `bac-*` sont **concours national** ; leur
+  statut « premium » (d3/d4 gated, preview = quiz + d1) est une **architecture dormante**
+  (réactivation via l'étude gelée `FableEtudes/01-paiement-en-ligne`, voir CLAUDE.md « Access
+  gate ») — 1ère→3ème sec comme `bac-*` sont FREE aujourd'hui. Récompenses canoniques inchangées :
+  d3 boss 120/30, d4 challenge 300/60 ; étoiles + libellés FR (Difficile / Élite). Ne jamais
+  convertir un d1–2 existant en d3–4.
 - **Palier bac dédié** : fichier `NN-annales-bac.json` (d4, challenge, 300/60) — items style annales
   session principale, multi-étapes, discriminants du top décile.
 

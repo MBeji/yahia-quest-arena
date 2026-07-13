@@ -75,7 +75,10 @@ anglais `en`. Full policy: `docs/lycee-architecture.md` §4 and `content-ecole-t
 Dominantes per section (planning weights; coefficients _(à confirmer)_ at transcription):
 math → maths+physique · sciences-exp → SVT+physique · lettres → arabe+philo+histoire-géo ·
 eco-gestion → économie+gestion · techniques → technologie+maths+physique · info → informatique+maths.
-Premium: only `bac-*` parcours are concours PREMIUM; 1ère→3ème sec are FREE exploration.
+Premium: `bac-*` parcours are concours (national exam year); their PREMIUM status (vs. 1ère→3ème
+sec FREE exploration) is a dormant architecture in the current free phase — every parcours is
+`is_premium=false` today (see CLAUDE.md "Access gate"); reactivation is the frozen
+`FableEtudes/01-paiement-en-ligne`.
 
 ## Non-school themes (no grades — planned by level model instead)
 
