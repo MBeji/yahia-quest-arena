@@ -604,6 +604,9 @@ export type TranslationKeys = {
     youChip: string;
     lvl: string;
     emptyGlobal: string;
+    coldStartTitle: string;
+    coldStartDesc: string;
+    coldStartCta: string;
     emptySubject: string;
   };
   // Parent / admin follow-up report

@@ -268,7 +268,7 @@ périmètre ; divergence étude↔code = STOP et remontée (règle FableEtudes).
 - [x] Lot 8 — funnel public
 - [x] Lot 9 — auth v2
 - [x] Lot 10 — onboarding v2
-- [ ] Lot 11 — arène
+- [x] Lot 11 — arène
 - [ ] Lot 12 — parent
 - [ ] Lot 13 — admin
 
@@ -505,3 +505,18 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   assaini en chemin interne — pas d'open-redirect). i18n ×3 (8 clés). Tests : 2 specs `CelebrationStep`
   (dispo→dashboard/deep-link ; en construction→extras+dashboard) ; `handle_new_user` couvert par la
   suite pgTAP (CI). Gate vert (1294 tests + build ; i18n 114/116 Ko).
+- 2026-07-13 — Lot 11 livré (arène, D-7 — first-run & cold-start racontés) : maquette
+  `design/ds/ecrans/arene-v2.html` publiée dans le projet DS puis implémentée. **Classement cold-start
+  (le fix à vrai bug)** : `getLeaderboard` **et** `getSubjectLeaderboard` filtrent désormais les rangs
+  **sans XP** (`xp > 0`) — le **« #1 fictif » disparaît** et un nouveau venu n'a **jamais un rang
+  creux** (règle « ne jamais afficher de rang sans XP », côté serveur) ; l'écran vide raconte « Le
+  classement démarre — gagne tes premiers XP » avec un **CTA** pour lancer une quête ; la carte « toi »
+  - top 10 réapparaissent au premier XP (exception R-10b : mise en forme en lecture, aucune mécanique
+    touchée). **Duel raconté avant le clic** : la page `/duel` annonce la règle « premier arrivé » et les
+    **trois paliers 60 / 40 / 20 XP** (victoire / nul / participation, **lus de `gamification.ts`
+    `DUEL_REWARDS`**, jamais dupliqués) — participer paie. i18n ×3 (3 clés classement + 5 clés duel).
+    Tests : 2 specs `getLeaderboard` cold-start (rang-sans-XP supprimé ; conservé dès le 1er XP).
+    **Écart de périmètre assumé** : les autres surfaces D-7 sont déjà couvertes — l'accueil first-run du
+    hero dashboard (lot 6) et les indices de récompense du pôle Arène (lot 5) sont en place ; le donjon
+    affiche déjà prérequis + record au lobby (lot 2). Ce lot livre le **cœur cold-start** (classement +
+    duel), là où se trouvait le vrai défaut (#1 fictif). Gate vert (1296 tests + build ; i18n 115/116 Ko).
