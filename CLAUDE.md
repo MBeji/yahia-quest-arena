@@ -243,8 +243,8 @@ professors) is covered the same grade-aware way: `prof-math-college`, `prof-phys
 `prof-svt-college`, `prof-arabe-college`, `prof-francais-college`, `prof-anglais-college` (the 8ème
 base shipped 2026-07 — all six core subjects; a professor only overlays existing chapters). The **lycée cycle**
 (1ère sec→bac) is covered by section-aware professors — sections are grade nodes and scientific
-subjects switch ar→fr at 1ère sec with a mandatory transition bridge, all specified in
-`docs/lycee-architecture.md`: `prof-math-lycee`, `prof-physique-lycee`, `prof-svt-lycee`,
+subjects switch ar→fr at 1ère sec (authored **natively in French, in the official manuals' jargon,
+never as translation** — décision 2026-07-13), all specified in `docs/lycee-architecture.md`: `prof-math-lycee`, `prof-physique-lycee`, `prof-svt-lycee`,
 `prof-francais-lycee`, `prof-anglais-lycee`, `prof-arabe-lycee`, `prof-philo-lycee`,
 `prof-histoire-geo-lycee`, `prof-eco-gestion-lycee`, `prof-info-lycee` (they also own the
 `NN-annales-bac` d4 tier; the lycée base is a pilot — section seed merged, one complete chapter
@@ -370,8 +370,9 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   `FableEtudes/03-types-questions-natifs` (fully executed); the QCM-encodable
   interactive formats live in `content-engine/references/interactive-formats.md`), and
   `docs/lycee-architecture.md` (secondary-cycle architecture: sections as grade nodes +
-  slugs/subject-id conventions, the ar→fr transition bridge, bac-\* parcours (premium dormant), the full
-  lycée mission ladder incl. `NN-annales-bac`/`NN-pont-linguistique`, seed-migration spec and
+  slugs/subject-id conventions, the ar→fr language switch (native-French authoring, official
+  jargon, no translation — décision 2026-07-13), bac-\* parcours (premium dormant), the full
+  lycée mission ladder incl. `NN-annales-bac`, seed-migration spec and
   phased rollout). Two **functional** how-to guides (audience: authors / product / ops, French)
   complement the normative specs above: `docs/guide-types-questions-natifs.md` (étude 03 — when to
   use each native question type + the authoring shapes) and `docs/guide-duels-et-ligues.md` (étude

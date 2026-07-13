@@ -161,8 +161,9 @@ flowchart TD
 ```
 
 > 🏛️ **Lycée** : l'architecture du secondaire (sections = nœuds de grade, bascule linguistique
-> ar→fr des matières scientifiques avec pont terminologique en 1ère sec, parcours premium `bac-*`,
-> ladder complet incl. `NN-annales-bac` et `NN-pont-linguistique`, migration de seed et rollout
+> ar→fr des matières scientifiques en 1ère sec — générées **nativement en français** dans le
+> jargon des manuels officiels, jamais en traduction (décision 2026-07-13) —, parcours premium
+> `bac-*`, ladder complet incl. `NN-annales-bac`, migration de seed et rollout
 > phasé) est spécifiée dans [`docs/lycee-architecture.md`](./lycee-architecture.md).
 
 > 🎭 **Les rôles classiques d'une équipe éditoriale sont tous couverts** — Curriculum Designer →

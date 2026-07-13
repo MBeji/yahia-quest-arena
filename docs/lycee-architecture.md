@@ -83,7 +83,7 @@ lors de la transcription — station L1) :
 The stable per-grade detail lives in `curriculum-architect/references/programme-map.md`; the
 authoritative scope will live in the **secondary programme transcriptions** (station L1).
 
-## 4. Language policy & the ar→fr transition bridge (the major change)
+## 4. Language policy — native-French generation for the switched subjects (the major change)
 
 Per-subject `contentLanguage` at the lycée:
 
@@ -93,24 +93,20 @@ Per-subject `contentLanguage` at the lycée:
   et économie/gestion _(langue à confirmer contre les programmes officiels)_.
 - **`en`**: anglais.
 
-**The bridge (pont terminologique)** — mandatory treatment of the switch, owned by the **base
-layer** (`content-ecole-tn`) and enforced by `content-audit`:
+**Native-French rule (décision 2026-07-13 — replaces the former «pont linguistique»)** — owned by
+the **base layer** (`content-ecole-tn`) and enforced by `content-audit`:
 
-1. **1ère sec, switched subjects**: every chapter's `cours.md` opens with a **«lexique de
-   transition» block** (8–15 key terms, `terme français = المصطلح العربي` — the notation itself
-   does not change: digits/equations were already standard LTR in the Arabic content, which is the
-   deliberate payoff of `math-and-notation.md`). New French terms are **glossed with the Arabic
-   equivalent in parentheses at first use** in the course and in difficulty-1 missions. The quiz
-   may test the lexicon itself (1 question max).
-2. **Interactive reinforcement**: each 1ère-sec chapter of a switched subject gets a
-   `NN-pont-linguistique.json` d1 mission (appariement terme fr ↔ terme ar + cloze on definitions —
-   formats from `interactive-formats.md`), authored via `content-interactif`.
-3. **Degressive**: 2ème sec = gloss only genuinely new terms; 3ème/bac = **no glossing** (exam
-   conditions — the bac is in French for these subjects), but professor trap taxonomies keep 1–2
-   **transition traps** (faux-amis, mistranslated properties) alive at 1ère/2ème sec.
-4. **Prose discipline**: outside the lexicon/glosses, a `fr` subject is written in French only —
-   no code-switching in stems/options (bidi noise, and the skill QA treats it as language
-   impurity).
+1. **No translation, ever**: a `fr` subject is **authored natively in French** — no fr↔ar
+   «lexique de transition», no Arabic glosses at first use, no `NN-pont-linguistique` missions.
+   The pre-2026-07-13 "transition bridge" apparatus formerly specified here is **withdrawn**.
+2. **Official jargon**: the terminology is that of the official French documentation — the CNP
+   manuels élève, captured verbatim by the L1 transcriptions
+   (`programmes-officiels/programme/<gradeSlug>/`), which are the terminology reference at
+   authoring time.
+3. **Notation unchanged**: digits/equations were already standard LTR in the Arabic years — the
+   deliberate payoff of `math-and-notation.md`; they carry over untouched.
+4. **Prose discipline**: a `fr` subject is written in French only — no code-switching in
+   stems/options (bidi noise, and the skill QA treats it as language impurity).
 
 ## 5. Parcours & premium
 
@@ -153,8 +149,7 @@ Canonical rewards/gates unchanged (`rewards-and-modes.md`). Per chapter of a lyc
 | file                     | tier/mode              | role                                                                          | free on bac-\*? |
 | ------------------------ | ---------------------- | ----------------------------------------------------------------------------- | --------------- |
 | `quiz.json` (auto)       | quiz 20/5              | comprehension gate (≥80% unlocks — school rule)                               | ✅ preview      |
-| `01-pratique`            | d1 practice 50/10      | free intro; glossed terms at 1ère sec (switched subjects)                     | ✅ preview      |
-| `NN-pont-linguistique`   | d1 practice 50/10      | **1ère sec switched subjects only** — fr↔ar matching/cloze (§4)               | ✅ preview      |
+| `01-pratique`            | d1 practice 50/10      | free intro                                                                    | ✅ preview      |
 | `03-revision`            | d2 practice 75/15      | standard free practice                                                        | ❌              |
 | `NN-mission-interactive` | d2 practice 75/15      | mixed interactive formats (≥3, `interactive-formats.md`)                      | ❌              |
 | `NN-sprint-chrono`       | d2–d3 boss 120/30      | timed automatisms (calcul, conjugaison, vocab, SQL reading)                   | ❌              |
@@ -176,9 +171,9 @@ The five stations of `curriculum-architect` §2 apply, with lycée-specific cont
 | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
 | **L0 — product/DB**  | §6 seed migration + onboarding/section UI follow-up                                                                                                                                                                                | human + normal dev flow                                                                     |
 | **L1 — persistence** | transcribe the **official secondary programmes** per (section-grade × matière) into `programmes-officiels/programme/<gradeSlug>/` (extend the corpus: secondary sources are ministry programmes + manuels scolaires du secondaire) | dedicated persistence session                                                               |
-| **L2 — base**        | `content-ecole-tn`: cours (+ **lexique de transition** at 1ère sec) + resume + quiz + d1/d2 ladder                                                                                                                                 | `content-ecole-tn` (+ `content-cours`)                                                      |
+| **L2 — base**        | `content-ecole-tn`: cours + resume + quiz + d1/d2 ladder (fr subjects: native French, official jargon — §4)                                                                                                                        | `content-ecole-tn` (+ `content-cours`)                                                      |
 | **L3 — ceiling**     | d3 boss / d4 défi / `NN-annales-bac` on existing chapters                                                                                                                                                                          | `prof-{math,physique,svt,francais,anglais,arabe,philo,histoire-geo,eco-gestion,info}-lycee` |
-| **L4 — interactive** | `NN-pont-linguistique` (1ère sec), missions interactives, sprints, histoires, documents                                                                                                                                            | `content-interactif`                                                                        |
+| **L4 — interactive** | missions interactives, sprints, histoires, documents                                                                                                                                                                               | `content-interactif`                                                                        |
 | **L5 — audit**       | re-solve + language-purity check (no ar/fr code-switching outside the bridge) + program conformance                                                                                                                                | `content-audit`                                                                             |
 
 **Build priority** (defaults — `curriculum-architect` arbitrates live): ① L0 migration; ② L1+L2 for

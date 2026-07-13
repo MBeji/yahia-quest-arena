@@ -1,6 +1,6 @@
 # Étude 16 — Ouverture du lycée : 4 années × sections, mutualisation du tronc commun, arborescence UX
 
-> **Statut** : en exécution (validée le 2026-07-11, arbitrages Q-1…Q-5 ; lots 0–2 livrés — PRs #367/#369/#371 ; maquette du lot 3 à valider sur R-8 é15)
+> **Statut** : en exécution (validée le 2026-07-11, arbitrages Q-1…Q-5 ; lots 0–3 livrés — PRs #367/#369/#371/#375 ; reste : campagne de contenu §4bis, vague A)
 > **Priorité** : 16 · **Valeur** : 🎓 ouverture du second cycle complet — 17 classes sélectionnables, ~15-19 ans, l'audience la plus motivée (bac) · **Complexité** : haute (surface large, mais découpée en lots courts + vagues de contenu)
 > **Architecte** : Fable / 2026-07-11 · **Exécuteur cible** : Sonnet (lots 1-3) + skills contenu (vagues, pilotées par `curriculum-architect`)
 > **Dépend de** : [`docs/lycee-architecture.md`](../../docs/lycee-architecture.md) (normatif — amendé par la PR de cette étude), étude 15 (lots 3/8/10 : coordination écrans, voir RISK-2), corpus L1 secondaire (transcriptions officielles)
@@ -310,7 +310,8 @@ US-7 é15). Le vote (`toggle_parcours_interest`) reste authenticated-only, incha
 Une vague = un jalon de contenu (§4bis) clôturé par une migration `open_*_parcours` **par
 section** dès que R-8 est atteint (une matière complète — les sections d'une même vague ouvrent
 donc au fil de l'eau, pas d'un bloc). Ordre **arbitré Q-2** (aligné doc lycée §8) :
-**A** `1ere-sec` (tronc commun : sert les 15 sections d'aval + porte le pont linguistique) →
+**A** `1ere-sec` (tronc commun : sert les 15 sections d'aval + porte la bascule ar→fr en
+génération native fr) →
 **B** `bac-math` + `bac-sciences-exp` (années d'examen, audience max ; le tronc `*-bac` compilé
 ×6 pré-remplit les 4 autres bacs) → **C** les 4 autres `bac-*` → **D** les 6 `3eme-sec-*` →
 **E** les 4 `2eme-sec-*`. Re-priorisation : les votes `parcours_interest` (US-8) peuvent faire
@@ -359,12 +360,15 @@ est un défaut de planification à CONFIRMER sur transcription L1 (R-5/D-4.b)** 
 = `<matière>-<année>`. Périmètre par classe : **4-5 matières cœur** (R-10, arbitrage Q-3) — le
 cap gouverne l'effort d'authoring ; un tronc ⚭ déjà compilé peut porter une classe à 6 matières
 visibles sans coût. **L'anglais et la philosophie de 3ème sortent du v1** (pack d'extension
-v1.1, voir fin de section). Le pont linguistique (doc §4) s'applique aux matières basculées
-ar→fr en 1ère sec.
+v1.1, voir fin de section). Les matières basculées ar→fr en 1ère sec sont générées **nativement
+en français**, dans le jargon des manuels officiels (transcriptions L1 = référence
+terminologique) — jamais en traduction : ni lexique fr↔ar, ni gloses, ni mission
+`NN-pont-linguistique` (décision 2026-07-13, doc §4 amendé — l'ancien « pont linguistique » est
+supprimé).
 
 **Vague A — `1ere-sec` (5 dossiers → 5 subjects)**
-`math-1ere-sec`, `physique-1ere-sec`, `svt-1ere-sec` (fr — pont + `NN-pont-linguistique`),
-`francais-1ere-sec`, `arabe-1ere-sec`. Ouvre `ecole-1ere-sec` dès la première matière complète
+`math-1ere-sec`, `physique-1ere-sec`, `svt-1ere-sec` (fr natif — jargon des manuels officiels,
+sans traduction), `francais-1ere-sec`, `arabe-1ere-sec`. Ouvre `ecole-1ere-sec` dès la première matière complète
 (R-8).
 
 **Vague B — `bac-math` + `bac-sciences-exp` (7 dossiers → ~17 subjects compilés)**
@@ -527,3 +531,9 @@ EXECUTE TO anon` sur `parcours_interest_counts`), `getParcoursInterestCounts` an
 - 2026-07-12 — PR #375 validée sur preview Vercel puis passée « ready » ; auto-merge, mergée.
   Lots 0–3 tous livrés (#367/#369/#371/#375). Reste de l'étude : la campagne de contenu
   (§4bis) — vague A (1ère sec) en attente du corpus de transcription officielle L1.
+- 2026-07-13 — Arbitrage humain (cadrage vague A) : **suppression du pont linguistique**. Les
+  matières `fr` sont générées **nativement en français**, dans le jargon de la documentation
+  officielle (les transcriptions L1 sont la référence terminologique), **sans traduction** — ni
+  lexique fr↔ar, ni gloses arabes, ni mission `NN-pont-linguistique`. Amendés dans la même PR :
+  doc lycée §4/§7/§8, `content-ecole-tn` §Langue, `programme-map.md`, CLAUDE.md,
+  `content-generation-pipeline.md` ; en-tête de statut resynchronisé (lots 0–3 livrés, #375).
