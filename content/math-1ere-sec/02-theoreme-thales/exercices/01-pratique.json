@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : Rapports de Thalès en action",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Dans un triangle ABC, I et J sont les milieux respectifs de [AB] et [AC]. Si BC = 14 cm, combien vaut IJ ?",
+      "options": [
+        { "id": "a", "text": "7 cm" },
+        { "id": "b", "text": "14 cm" },
+        { "id": "c", "text": "28 cm" },
+        { "id": "d", "text": "3,5 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "La droite des milieux mesure la moitié du troisième côté : IJ = BC / 2 = 14 / 2 = 7 cm ✓. 14 cm oublie de diviser par deux ; 28 cm double au lieu de diviser ; 3,5 cm divise par quatre.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans un triangle ABC, M est sur [AB], N sur [AC] et (MN) // (BC). On donne AB = 8 cm, AM = 6 cm et BC = 12 cm. Combien vaut MN ?",
+      "options": [
+        { "id": "a", "text": "9 cm" },
+        { "id": "b", "text": "16 cm" },
+        { "id": "c", "text": "6 cm" },
+        { "id": "d", "text": "8 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le coefficient de Thalès est AM/AB = 6/8 = 3/4, donc MN = BC × 3/4 = 12 × 3/4 = 9 cm ✓. 16 cm vient d'inverser le rapport (12 × 8/6) ; 6 cm recopie AM ; 8 cm recopie AB.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans un triangle ABC, M est sur [AB], N sur [AC] et (MN) // (BC). On donne AB = 10 cm, AM = 4 cm et AC = 15 cm. Combien vaut AN ?",
+      "options": [
+        { "id": "a", "text": "6 cm" },
+        { "id": "b", "text": "37,5 cm" },
+        { "id": "c", "text": "9 cm" },
+        { "id": "d", "text": "4 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "Par Thalès, AN/AC = AM/AB, donc AN = AC × AM/AB = 15 × 4/10 = 6 cm ✓. 37,5 cm inverse le rapport (15 × 10/4) ; 9 cm calcule AC − AN au lieu de AN ; 4 cm recopie AM.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Un segment de 5 cm est agrandi à l'échelle k = 3. Quelle est sa nouvelle longueur ?",
+      "options": [
+        { "id": "a", "text": "15 cm" },
+        { "id": "b", "text": "8 cm" },
+        { "id": "c", "text": "45 cm" },
+        { "id": "d", "text": "1,67 cm" }
+      ],
+      "correctOption": "a",
+      "explanation": "Une échelle multiplie les longueurs par k : 5 × 3 = 15 cm ✓. 8 cm additionne au lieu de multiplier (5 + 3) ; 45 cm multiplie par k² = 9 (effet réservé aux aires) ; 1,67 cm divise par 3 au lieu de multiplier.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Un rectangle a une aire de 6 cm². On le reproduit à l'échelle k = 2. Quelle est l'aire de la reproduction ?",
+      "options": [
+        { "id": "a", "text": "24 cm²" },
+        { "id": "b", "text": "12 cm²" },
+        { "id": "c", "text": "6 cm²" },
+        { "id": "d", "text": "36 cm²" }
+      ],
+      "correctOption": "a",
+      "explanation": "Une échelle k multiplie l'aire par k² : 6 × 2² = 6 × 4 = 24 cm² ✓. 12 cm² multiplie par k (erreur classique) ; 6 cm² laisse l'aire inchangée ; 36 cm² élève l'aire elle-même au carré, ce qui n'a pas de sens.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans un triangle ABC, M est sur [AB] et N sur [AC] avec AB = 12, AM = 8, AC = 9 et AN = 6. Les droites (MN) et (BC) sont-elles parallèles ?",
+      "options": [
+        { "id": "a", "text": "Oui, car AM/AB = AN/AC = 2/3" },
+        { "id": "b", "text": "Non, car AM ≠ AN" },
+        { "id": "c", "text": "Non, car AB ≠ AC" },
+        { "id": "d", "text": "On ne peut pas le savoir sans mesurer les angles" }
+      ],
+      "correctOption": "a",
+      "explanation": "On compare les rapports : AM/AB = 8/12 = 2/3 et AN/AC = 6/9 = 2/3. Ils sont égaux, donc par la réciproque de Thalès (MN) // (BC) ✓. Le parallélisme se lit sur les rapports, pas sur l'égalité des longueurs AM et AN (réponse b) ni sur AB et AC (réponse c) ; il n'est pas nécessaire de mesurer un angle (réponse d).",
+      "difficulty": 2
+    }
+  ]
+}
