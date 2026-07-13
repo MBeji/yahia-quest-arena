@@ -1,0 +1,82 @@
+{
+  "title": "👑 Défi de l'élite ⭐⭐⭐⭐ : maître de l'école",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Léa demande : « … est dans la classe ? » On lui répond : « La maîtresse. » Quel mot manque dans sa question ?",
+      "options": [
+        { "id": "a", "text": "où" },
+        { "id": "b", "text": "dans" },
+        { "id": "c", "text": "qui" },
+        { "id": "d", "text": "que" }
+      ],
+      "correctOption": "c",
+      "explanation": "La réponse est une personne (la maîtresse), donc la question est « Qui est dans la classe ? ». L'erreur fréquente : utiliser « où », qui demande un lieu, pas une personne.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Trois mots commencent par le son « o ». Lequel ne commence PAS par le son « o » ?",
+      "options": [
+        { "id": "a", "text": "roue" },
+        { "id": "b", "text": "olive" },
+        { "id": "c", "text": "orange" },
+        { "id": "d", "text": "ortie" }
+      ],
+      "correctOption": "a",
+      "explanation": "« roue » commence par le son r, pas par le son o. L'erreur fréquente : voir la lettre o écrite dans le mot et croire qu'on l'entend au début.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Sami dit : « Je mange dans la bibliothèque. » Que faut-il corriger ?",
+      "options": [
+        { "id": "a", "text": "rien, la phrase est juste" },
+        { "id": "b", "text": "on lit à la cantine" },
+        { "id": "c", "text": "on joue à la bibliothèque" },
+        { "id": "d", "text": "on mange à la cantine, pas à la bibliothèque" }
+      ],
+      "correctOption": "d",
+      "explanation": "On mange à la cantine ; à la bibliothèque, on lit des livres. L'erreur fréquente : confondre la cantine (pour manger) et la bibliothèque (pour lire).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Je lis la syllabe « du ». Quelles lettres ai-je jointes ?",
+      "options": [
+        { "id": "a", "text": "d + o" },
+        { "id": "b", "text": "d + u" },
+        { "id": "c", "text": "u + d" },
+        { "id": "d", "text": "r + u" }
+      ],
+      "correctOption": "b",
+      "explanation": "« du » se lit d puis u : d + u = du. L'erreur fréquente : choisir d + o (qui donne « do ») au lieu de d + u.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Quel mot contient le son « u », comme dans « lune » ?",
+      "options": [
+        { "id": "a", "text": "lit" },
+        { "id": "b", "text": "do" },
+        { "id": "c", "text": "rue" },
+        { "id": "d", "text": "cou" }
+      ],
+      "correctOption": "c",
+      "explanation": "« rue » contient le son u, comme « lune ». L'erreur fréquente : confondre le son u (rue) avec le son ou (cou) ou le son i (lit).",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Range ces nombres du plus petit au plus grand : seize, douze, dix-neuf. Lequel est le plus petit ?",
+      "options": [
+        { "id": "a", "text": "douze" },
+        { "id": "b", "text": "dix-neuf" },
+        { "id": "c", "text": "seize" },
+        { "id": "d", "text": "ils sont égaux" }
+      ],
+      "correctOption": "a",
+      "explanation": "douze (12) est plus petit que seize (16) et que dix-neuf (19). L'erreur fréquente : choisir dix-neuf en croyant que « neuf » le rend petit, alors que dix-neuf vaut 19.",
+      "difficulty": 3
+    }
+  ]
+}

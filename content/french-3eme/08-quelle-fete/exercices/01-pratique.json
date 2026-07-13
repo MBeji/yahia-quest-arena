@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : les mots de la fête",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Avec quoi est-ce qu'on décore la scène ?",
+      "options": [
+        { "id": "a", "text": "des guirlandes" },
+        { "id": "b", "text": "un gâteau" },
+        { "id": "c", "text": "un poème" },
+        { "id": "d", "text": "une équipe" }
+      ],
+      "correctOption": "a",
+      "explanation": "On décore la scène avec des guirlandes. L'erreur fréquente : choisir le gâteau, qu'on mange à la fête mais qui ne décore pas la scène.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Comment appelle-t-on la personne qui chante ?",
+      "options": [
+        { "id": "a", "text": "la danseuse" },
+        { "id": "b", "text": "la chanteuse" },
+        { "id": "c", "text": "l'équipe" },
+        { "id": "d", "text": "la scène" }
+      ],
+      "correctOption": "b",
+      "explanation": "La chanteuse est la personne qui chante. L'erreur fréquente : choisir la danseuse, qui danse au lieu de chanter.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel vêtement est de chez nous, en Tunisie ?",
+      "options": [
+        { "id": "a", "text": "le kimono" },
+        { "id": "b", "text": "la chéchia" },
+        { "id": "c", "text": "le pantalon" },
+        { "id": "d", "text": "les chaussures" }
+      ],
+      "correctOption": "b",
+      "explanation": "La chéchia est un vêtement de chez nous. L'erreur fréquente : choisir le kimono, qui est un vêtement du Japon (le pantalon et les chaussures sont pour tout le monde).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Qu'est-ce qu'on mange à la fête de l'école ?",
+      "options": [
+        { "id": "a", "text": "une guirlande" },
+        { "id": "b", "text": "une danse" },
+        { "id": "c", "text": "un gâteau" },
+        { "id": "d", "text": "une chanson" }
+      ],
+      "correctOption": "c",
+      "explanation": "On mange un bon gâteau à la fête. L'erreur fréquente : choisir la danse, qui est un numéro du spectacle, pas quelque chose qu'on mange.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Complète : « Je … ma chéchia pour la fête. »",
+      "options": [
+        { "id": "a", "text": "mets" },
+        { "id": "b", "text": "mange" },
+        { "id": "c", "text": "lis" },
+        { "id": "d", "text": "range" }
+      ],
+      "correctOption": "a",
+      "explanation": "Pour un vêtement, je dis « je mets » : je mets ma chéchia. L'erreur fréquente : choisir « je mange », qui sert pour la nourriture, pas pour un vêtement.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Sur quoi danse et chante l'équipe pendant le spectacle ?",
+      "options": [
+        { "id": "a", "text": "la scène" },
+        { "id": "b", "text": "le gâteau" },
+        { "id": "c", "text": "la guirlande" },
+        { "id": "d", "text": "le pantalon" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'équipe monte sur la scène pour le spectacle. L'erreur fréquente : choisir le gâteau, qu'on mange, pas un lieu où l'on danse.",
+      "difficulty": 1
+    }
+  ]
+}

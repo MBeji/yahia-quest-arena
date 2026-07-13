@@ -1,0 +1,65 @@
+{
+  "title": "Quiz de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Avec quoi est-ce que je sens les odeurs ?",
+      "options": [
+        { "id": "a", "text": "la main" },
+        { "id": "b", "text": "le nez" },
+        { "id": "c", "text": "le pied" },
+        { "id": "d", "text": "le dos" }
+      ],
+      "correctOption": "b",
+      "explanation": "j'ai un nez pour sentir. L'erreur fréquente : confondre le nez (sentir) avec la bouche (goûter).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans le corps, qu'est-ce qui est en bas ?",
+      "options": [
+        { "id": "a", "text": "les cheveux" },
+        { "id": "b", "text": "la tête" },
+        { "id": "c", "text": "les oreilles" },
+        { "id": "d", "text": "les pieds" }
+      ],
+      "correctOption": "d",
+      "explanation": "la tête est en haut et les pieds sont en bas. L'erreur fréquente : mettre la tête en bas.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel jour vient juste après lundi ?",
+      "options": [
+        { "id": "a", "text": "mardi" },
+        { "id": "b", "text": "dimanche" },
+        { "id": "c", "text": "samedi" },
+        { "id": "d", "text": "jeudi" }
+      ],
+      "correctOption": "a",
+      "explanation": "dans la semaine, après lundi vient mardi. L'erreur fréquente : oublier l'ordre des jours.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Je lis la syllabe : t + ou = ?",
+      "options": [
+        { "id": "a", "text": "to" },
+        { "id": "b", "text": "ti" },
+        { "id": "c", "text": "tou" },
+        { "id": "d", "text": "ta" }
+      ],
+      "correctOption": "c",
+      "explanation": "t fait le son [t] et ou fait le son [ou] : ensemble, cela fait « tou ». L'erreur fréquente : lire « ou » comme [o].",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Combien de jours y a-t-il dans une semaine ?",
+      "options": [
+        { "id": "a", "text": "trois" },
+        { "id": "b", "text": "sept" },
+        { "id": "c", "text": "dix" },
+        { "id": "d", "text": "vingt" }
+      ],
+      "correctOption": "b",
+      "explanation": "la semaine a sept jours : lundi, mardi, mercredi, jeudi, vendredi, samedi, dimanche. L'erreur fréquente : compter seulement les jours d'école.",
+      "difficulty": 2
+    }
+  ]
+}

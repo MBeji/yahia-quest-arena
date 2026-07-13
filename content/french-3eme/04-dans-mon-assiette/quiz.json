@@ -1,0 +1,65 @@
+{
+  "title": "Quiz de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Lequel de ces mots est un aliment ?",
+      "options": [
+        { "id": "a", "text": "une tasse" },
+        { "id": "b", "text": "un fouet" },
+        { "id": "c", "text": "une assiette" },
+        { "id": "d", "text": "un gâteau" }
+      ],
+      "correctOption": "d",
+      "explanation": "Un gâteau est un aliment : on le mange. La tasse, le fouet et l'assiette sont des ustensiles : ils servent à manger ou à cuisiner. L'erreur fréquente : confondre ce qu'on mange avec l'objet qui sert à manger.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Le matin, quel repas est-ce que je prends ?",
+      "options": [
+        { "id": "a", "text": "le dîner" },
+        { "id": "b", "text": "le déjeuner" },
+        { "id": "c", "text": "le petit déjeuner" },
+        { "id": "d", "text": "le goûter" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le matin, on prend le petit déjeuner. Le déjeuner est le midi et le dîner est le soir. L'erreur fréquente : confondre le repas du matin avec celui du soir.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel mot dit une grande quantité ?",
+      "options": [
+        { "id": "a", "text": "beaucoup" },
+        { "id": "b", "text": "un peu" },
+        { "id": "c", "text": "rien" },
+        { "id": "d", "text": "jamais" }
+      ],
+      "correctOption": "a",
+      "explanation": "« Beaucoup » dit une grande quantité : il y a beaucoup de fruits. « Un peu » dit une petite quantité. L'erreur fréquente : prendre « un peu » pour une grande quantité.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "À table, avant de commencer à manger, on dit :",
+      "options": [
+        { "id": "a", "text": "« Bonne nuit ! »" },
+        { "id": "b", "text": "« Bon appétit ! »" },
+        { "id": "c", "text": "« Au revoir ! »" },
+        { "id": "d", "text": "« À demain ! »" }
+      ],
+      "correctOption": "b",
+      "explanation": "Avant de manger, on dit « Bon appétit ! ». « Bonne nuit ! » se dit le soir avant de dormir. L'erreur fréquente : choisir une formule qui n'est pas pour le repas.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans le mot « tasse », quelles lettres font le son [s] ?",
+      "options": [
+        { "id": "a", "text": "la lettre t" },
+        { "id": "b", "text": "la lettre é" },
+        { "id": "c", "text": "les lettres ss" },
+        { "id": "d", "text": "la lettre b" }
+      ],
+      "correctOption": "c",
+      "explanation": "Entre deux voyelles, le son [s] s'écrit « ss », comme dans « tasse » et « assiette ». L'erreur fréquente : écrire un seul « s » entre deux voyelles.",
+      "difficulty": 2
+    }
+  ]
+}

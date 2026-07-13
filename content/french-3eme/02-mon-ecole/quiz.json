@@ -1,0 +1,65 @@
+{
+  "title": "Quiz de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "À l'école, dans quel lieu mange-t-on ?",
+      "options": [
+        { "id": "a", "text": "la bibliothèque" },
+        { "id": "b", "text": "la cantine" },
+        { "id": "c", "text": "la cour" },
+        { "id": "d", "text": "la classe" }
+      ],
+      "correctOption": "b",
+      "explanation": "On mange à la cantine. L'erreur fréquente : confondre la cantine (pour manger) et la bibliothèque (pour lire des livres).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Comment s'appelle le lieu couvert, près de la cour ?",
+      "options": [
+        { "id": "a", "text": "le cartable" },
+        { "id": "b", "text": "le drapeau" },
+        { "id": "c", "text": "le crayon" },
+        { "id": "d", "text": "le préau" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le préau est l'endroit couvert près de la cour. L'erreur fréquente : choisir le cartable, qui est un sac pour ranger les affaires, pas un lieu.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Choisis le mot qui manque : « Il y a un livre … le cartable. »",
+      "options": [
+        { "id": "a", "text": "dans" },
+        { "id": "b", "text": "qui" },
+        { "id": "c", "text": "où" },
+        { "id": "d", "text": "et" }
+      ],
+      "correctOption": "a",
+      "explanation": "Pour dire où est une chose, on dit « il y a … dans … » : il y a un livre dans le cartable. L'erreur fréquente : mettre « qui », qui sert à poser une question sur une personne.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel mot sert à poser une question sur une personne ?",
+      "options": [
+        { "id": "a", "text": "où ?" },
+        { "id": "b", "text": "que ?" },
+        { "id": "c", "text": "qui ?" },
+        { "id": "d", "text": "dans ?" }
+      ],
+      "correctOption": "c",
+      "explanation": "On demande « qui ? » pour une personne (Qui est dans la classe ? La maîtresse). L'erreur fréquente : utiliser « où ? », qui sert à demander un lieu.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Je joins les lettres : d + o = … ?",
+      "options": [
+        { "id": "a", "text": "od" },
+        { "id": "b", "text": "do" },
+        { "id": "c", "text": "du" },
+        { "id": "d", "text": "ro" }
+      ],
+      "correctOption": "b",
+      "explanation": "Je lis d'abord d, puis o : d + o = do. L'erreur fréquente : inverser l'ordre et lire « od » au lieu de « do ».",
+      "difficulty": 1
+    }
+  ]
+}
