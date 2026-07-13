@@ -26,7 +26,7 @@
 
 ## Usage
 
-- Use `src/lib/logger.ts`.
+- Use `@/shared/lib/logger` (canonical path; the old `src/lib/logger.ts` shim was removed).
 - Prefer `logger.info/warn/error` over `console.*` in server-side runtime code.
 
 ## Error Handling

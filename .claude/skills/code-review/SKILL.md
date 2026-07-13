@@ -9,7 +9,7 @@ description: >-
   revue », « code review » d'une PR, d'une branche ou du diff courant.
 ---
 
-# Revue de code — XP Scholars (yahia-quest-arena)
+# Revue de code — Na9ra Nal3ab (yahia-quest-arena)
 
 Ce skill conduit une **revue de code complète et exigeante** d'une PR. Il ne se
 limite pas à chercher des bugs : il évalue l'architecture, le craft, la
@@ -230,7 +230,9 @@ seulement « c'est mal »), et propose un **correctif concret**.
       l'existant ; `audit:deps` propre ; cf. `docs/dependency-maintenance.md`. Les
       plugins Vite sont composés **à la main** dans `vite.config.ts` (l'ancien
       méta-plugin vendorisé a été retiré) — ne pas réintroduire de méta-plugin ni
-      dupliquer un plugin déjà câblé.
+      dupliquer un plugin déjà câblé, et ne pas reshaper `manualChunks` sans
+      relancer `build:check` (risque de vendor chunk circulaire = crash prod).
+      Garder le pin sécurité `esbuild`.
 - [ ] **Compat SSR / Workers** : pas d'API navigateur-only exécutée côté serveur.
 - [ ] Pas de `--no-verify`, `@ts-ignore`/`as any`, règle ESLint désactivée inline,
       ni seuil de couverture abaissé pour « faire passer » (affaiblir le gate =

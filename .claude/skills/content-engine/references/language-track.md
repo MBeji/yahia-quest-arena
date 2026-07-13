@@ -72,8 +72,9 @@ chapter. This mirrors the `culture-generale-dungeon-*` precedent.
 
 ## The ascending exercise ladder (use this — ordered easy→elite)
 
-Every level chapter **and** the donjon chapter use this 4-rung ladder (canonical modes + rewards from
-`rewards-and-modes.md`), ordered so difficulty climbs from the simplest to the most complex:
+Every level chapter **and** the donjon chapter use the **language-track variant** of the canonical
+ladder (`rewards-and-modes.md`) — reordered strictly ascending (review at `02`, boss at `03`) plus an
+added cumulative `05-drill`, so difficulty climbs from the simplest to the most complex:
 
 | file          | mode      | difficulty | xp / coins | displayOrder | title pattern (localize; ⭐ = difficulty) |
 | ------------- | --------- | ---------- | ---------- | ------------ | ----------------------------------------- |

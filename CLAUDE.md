@@ -56,7 +56,7 @@ npm run lint         # eslint src --max-warnings=0  (zero-warning policy)
 npm run typecheck    # tsc --noEmit (strict)
 npm run format       # prettier --write .
 npm run verify       # lint + typecheck + test                          (fast local gate / pre-push)
-npm run ci:verify    # verify + coverage + build:check + audit:deps + content:qa:strict  (full gate)
+npm run ci:verify    # verify + coverage + build:check + audit:deps + content:qa:strict + content:audit:strict  (full gate)
 ```
 
 **Content pipeline** (authored files → Supabase migrations — see "Content pipeline" below):
