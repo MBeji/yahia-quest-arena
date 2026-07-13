@@ -34,19 +34,19 @@ réellement en place et vérifiées :
 
 ## Findings
 
-| #   | Sévérité | Sujet                                                                                             | Nature                                       |
-| --- | -------- | ------------------------------------------------------------------------------------------------- | -------------------------------------------- |
-| 1   | Moyen    | Récolte non limitée de la clé de correction + explications via `check_answers` (PostgREST direct) | Anti-abus / décision produit                 |
-| 2   | Moyen    | `get_student_report_by_code` : RPC lourde **sans rate-limit**, appelable en anonyme               | Anti-abus (DoS)                              |
-| 3   | Moyen    | `?debug=1` renvoie la **stack complète** à tout visiteur anonyme                                  | **Corrigé dans cette PR**                    |
-| 4   | Moyen    | Rate-limiting anonyme inopérant (mémoire par-instance + clé `x-forwarded-for` spoofable)          | Anti-abus / infra                            |
-| 5   | Moyen    | Pas de CAPTCHA/anti-bot sur signup/login                                                          | Config Supabase                              |
-| 6   | Faible   | DOMPurify no-op sans DOM (XSS SSR latente)                                                        | **Corrigé (fail-closed)**                    |
-| 7   | Faible   | Énumération d'emails au signup + politique de mot de passe client-only                            | Config Supabase                              |
-| 8   | Faible   | Tokens de session en `localStorage`                                                               | Atténué (CSP)                                |
-| 9   | Faible   | `display_name` non borné via metadata signup (chemin trigger)                                     | **Corrigé dans cette PR**                    |
-| 10  | Faible   | Page d'erreur / sitemap / bot-guard sans CSP                                                      | Durcissement                                 |
-| —   | Info     | Messages d'erreur distincts « not found » vs « not a student » sur le code parent                 | **Acceptation documentée** (voir ci-dessous) |
+| #   | Sévérité | Sujet                                                                                             | Nature                                            |
+| --- | -------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| 1   | Moyen    | Récolte non limitée de la clé de correction + explications via `check_answers` (PostgREST direct) | **Explication anon retirée** ; throttling → infra |
+| 2   | Moyen    | `get_student_report_by_code` : RPC lourde **sans rate-limit**, appelable en anonyme               | Anti-abus (DoS)                                   |
+| 3   | Moyen    | `?debug=1` renvoie la **stack complète** à tout visiteur anonyme                                  | **Corrigé dans cette PR**                         |
+| 4   | Moyen    | Rate-limiting anonyme inopérant (mémoire par-instance + clé `x-forwarded-for` spoofable)          | Anti-abus / infra                                 |
+| 5   | Moyen    | Pas de CAPTCHA/anti-bot sur signup/login                                                          | Config Supabase                                   |
+| 6   | Faible   | DOMPurify no-op sans DOM (XSS SSR latente)                                                        | **Corrigé (fail-closed)**                         |
+| 7   | Faible   | Énumération d'emails au signup + politique de mot de passe client-only                            | Config Supabase                                   |
+| 8   | Faible   | Tokens de session en `localStorage`                                                               | Atténué (CSP)                                     |
+| 9   | Faible   | `display_name` non borné via metadata signup (chemin trigger)                                     | **Corrigé dans cette PR**                         |
+| 10  | Faible   | Page d'erreur / sitemap / bot-guard sans CSP                                                      | Durcissement                                      |
+| —   | Info     | Messages d'erreur distincts « not found » vs « not a student » sur le code parent                 | **Acceptation documentée** (voir ci-dessous)      |
 
 ### 1 — `check_answers` : récolte de la clé de correction, non throttlée (Moyen)
 
@@ -59,10 +59,17 @@ faille répondre juste**. En énumérant les `id` (colonne lisible par `anon`), 
 la banque de réponses + explications — court-circuitant aussi l'économie d'indices payants
 (`consume_hint`). Seul le `quiz` de compréhension (la porte) est protégé.
 
-C'est un **choix produit** (correction publique, entraînement anonyme). Recommandation :
-acceptation de risque explicite + throttling au **bord** (Cloudflare / Vercel Edge — la
-seule couche qui compte puisque PostgREST est joignable directement), et envisager de ne
-pas renvoyer `explanation` à l'anonyme.
+C'est un **choix produit** (correction publique, entraînement anonyme).
+
+**Partiellement corrigé :** l'`explanation` (contenu d'indice payant) n'est **plus renvoyée
+aux appelants anonymes** — la RPC la met à `NULL` quand `auth.uid() IS NULL` (migration
+`20260713120000`, `CASE WHEN auth.uid() IS NULL`), donc la restriction tient aussi sur
+l'appel PostgREST direct ; les connectés sont inchangés. La bonne réponse (`correct_option`)
+reste, car c'est l'objet même de la correction publique.
+
+**Reste ouvert (infra) :** le _throttling_ de la RPC contre la récolte en masse de la banque
+de réponses doit se faire au **bord** (Cloudflare / Vercel Edge — la seule couche efficace
+puisque PostgREST est joignable directement).
 
 ### 2 — `get_student_report_by_code` : DoS sur RPC lourde (Moyen)
 
@@ -131,16 +138,18 @@ gain sécurité est nul et la précision de l'erreur sert le parent.
    joignable directement (findings #1, #2, #4).
 2. **Anti-bot signup/login** + versionner la config auth dans `supabase/config.toml`
    (findings #5, #7).
-3. Décider explicitement du **risque « banque de réponses publique »** : accepter, exiger
-   une réponse pour révéler, ou retirer `explanation` de la réponse anonyme (finding #1).
+3. Décider du reliquat **« banque de réponses publique »** (finding #1) : `explanation` est
+   déjà retirée à l'anonyme ; reste la question du throttling de la récolte en masse (infra).
 
 ## Findings corrigés
 
 - **#3** (stack `?debug=1`) et **#9** (`display_name` borné) — PR #384 (mergée).
 - **#6** (sanitisation SSR fail-closed) — PR de suivi.
+- **#1 (volet code)** — `explanation` retirée aux appelants anonymes de `check_answers`
+  (migration `20260713120000`) — PR de suivi.
 
 ## Reste ouvert (edge / infra / config)
 
-Findings **#1, #2, #4** (throttling au bord des RPC/server fns anon), **#5, #7** (anti-bot +
-config auth versionnée), **#10** (CSP sur les réponses hors routeur) — décisions
-infra/produit, hors correctif de code.
+Findings **#2, #4** et le **throttling de #1** (rate-limit au bord des RPC/server fns anon),
+**#5, #7** (anti-bot + config auth versionnée), **#10** (CSP sur les réponses hors routeur) —
+décisions infra/produit, hors correctif de code.
