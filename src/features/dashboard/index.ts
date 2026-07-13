@@ -2,6 +2,7 @@
 // Public API — import from "@/features/dashboard"
 
 export {
+  getCatalogueStats,
   getDashboard,
   getDashboardSecondary,
   getLeaderboard,

@@ -700,7 +700,14 @@ export type TranslationKeys = {
       personaParentDesc: string;
       personaTeacherTitle: string;
       personaTeacherDesc: string;
-      personaCta: string;
+      personaStudentCta: string;
+      personaParentCta: string;
+      personaTeacherCta: string;
+      proofBandKicker: string;
+      proofStatSubjects: string;
+      proofStatLessons: string;
+      proofStatExercises: string;
+      proofSampleCta: string;
       cyclesTitle: string;
       cyclesSubtitle: string;
       proofCoursesTitle: string;
@@ -764,6 +771,11 @@ export type TranslationKeys = {
       cardComingSoon: string;
       cardContent: string;
       cardConcoursBadge: string;
+      cardSubjects: string;
+      themeDescAnglais: string;
+      themeDescFrancais: string;
+      themeDescCultureGenerale: string;
+      themeDescMuscleCerveau: string;
       /** Sober description of a lycée year page (public register). */
       lyceeYearDesc: string;
     };
