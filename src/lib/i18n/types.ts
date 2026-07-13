@@ -84,6 +84,25 @@ export type TranslationKeys = {
     emailSentBody2: string;
     emailSentSpam: string;
     emailSentEdit: string;
+    // Password reset (étude 15 lot 9) — forgot-password request + /auth/reset
+    forgotCta: string;
+    forgotTitle: string;
+    forgotSubtitle: string;
+    forgotSubmit: string;
+    forgotBack: string;
+    forgotSentTitle: string;
+    forgotSentBody: string;
+    forgotSentSpam: string;
+    resetTitle: string;
+    resetSubtitle: string;
+    resetPasswordLabel: string;
+    resetSubmit: string;
+    resetSuccess: string;
+    resetInvalidTitle: string;
+    resetInvalidBody: string;
+    resetRequestNew: string;
+    resetError: string;
+    resetChecking: string;
   };
   // Dashboard
   dashboard: {
