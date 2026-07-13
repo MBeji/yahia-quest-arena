@@ -83,27 +83,33 @@ export function renderMarkdown(md: string): string {
   // RTL prose; `$$ … $$` display blocks are already isolated via CSS.
   html = isolateLtrRunsHtml(html);
 
-  const safe = DOMPurify.sanitize(html, {
-    ALLOWED_TAGS: [
-      "h1",
-      "h2",
-      "h3",
-      "p",
-      "strong",
-      "em",
-      "blockquote",
-      "div",
-      "hr",
-      "table",
-      "tr",
-      "td",
-      "th",
-      "ul",
-      "ol",
-      "li",
-    ],
-    ALLOWED_ATTR: ["class", "id", "dir"],
-  });
+  // The body is already HTML-escaped above, so it is safe even without the
+  // sanitize pass; when DOMPurify is unavailable (no DOM at SSR) we skip the
+  // no-op call explicitly rather than depend on its pass-through behavior. Any
+  // embedded figure is sheltered and fails closed in sanitizeSvg.
+  const safe = DOMPurify.isSupported
+    ? DOMPurify.sanitize(html, {
+        ALLOWED_TAGS: [
+          "h1",
+          "h2",
+          "h3",
+          "p",
+          "strong",
+          "em",
+          "blockquote",
+          "div",
+          "hr",
+          "table",
+          "tr",
+          "td",
+          "th",
+          "ul",
+          "ol",
+          "li",
+        ],
+        ALLOWED_ATTR: ["class", "id", "dir"],
+      })
+    : html;
 
   if (figures.length === 0) return safe;
   // Re-inject each already-sanitized figure, replacing the paragraph the placeholder

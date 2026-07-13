@@ -336,6 +336,51 @@ export function auditMisconceptionTags(
   return flags;
 }
 
+/** Prepared vocabulary of the competency registries (étude 07 D-1). */
+export type CompetencyVocabulary = {
+  /** Every declared competency id, across all family registries. */
+  ids: ReadonlySet<string>;
+  /** family → the subject-id prefixes it covers (`math` → `math`, `math-*`). */
+  subjectPrefixes: ReadonlyMap<string, readonly string[]>;
+};
+
+/**
+ * Registry cross-check for evaluated competencies (étude 07 R-1/R-2 — the twin
+ * of {@link auditMisconceptionTags}, applying to EVERY question type). An id
+ * missing from `content/competences/<famille>.json` is an [error] (the junction
+ * row would violate the registry FK); a family whose declared subject prefixes
+ * do not cover the tagging subject is a [warn] (cross-matière tagging is almost
+ * always an authoring slip, but stays reviewable).
+ */
+export function auditCompetencyRefs(
+  q: { competencies?: string[] },
+  subjectId: string,
+  vocab: CompetencyVocabulary,
+  where: string,
+): Flag[] {
+  const flags: Flag[] = [];
+  for (const id of q.competencies ?? []) {
+    const family = id.split(".")[0] ?? id;
+    if (!vocab.ids.has(id)) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `references competency "${id}" not declared in content/competences/${family}.json`,
+      });
+      continue;
+    }
+    const prefixes = vocab.subjectPrefixes.get(family) ?? [];
+    if (!prefixes.some((p) => subjectId === p || subjectId.startsWith(`${p}-`))) {
+      flags.push({
+        level: "warn",
+        where,
+        msg: `competency "${id}" belongs to family "${family}" which does not cover subject "${subjectId}" (declared prefixes: ${prefixes.join(", ")})`,
+      });
+    }
+  }
+  return flags;
+}
+
 /**
  * Per-question heuristics for the native board/checklist questions
  * (`ordering` / `matching` / `multi` — Tier B, phases B2–B3). Their

@@ -147,8 +147,8 @@ candidate rewrites). Use them to diversify d3–4 tiers — see `expert-exercise
   or renumber the canonical `01-pratique`/`02-boss`/`04-defi` ladder, and never duplicate its
   questions (`generation-pipeline.md` rules).
 - **Free tier gets interactivity too.** Keep at least one interactive format present in d1–2 files —
-  interactivity is a product differentiator, not a premium perk. Premium d3–4 gets the heavy
-  formats (document chains, story défis).
+  interactivity is a product differentiator, not a premium perk. The d3–4 ceiling tier (dormant
+  premium gate) gets the heavy formats (document chains, story défis).
 - **Same bar, same gates.** Every question still clears `quality-bar.md` (single defensible key,
   executed-error distractors, explanation that teaches) and the self-verification protocol, then
   `content:check` + `content:qa:strict`.

@@ -56,7 +56,7 @@ npm run lint         # eslint src --max-warnings=0  (zero-warning policy)
 npm run typecheck    # tsc --noEmit (strict)
 npm run format       # prettier --write .
 npm run verify       # lint + typecheck + test                          (fast local gate / pre-push)
-npm run ci:verify    # verify + coverage + build:check + audit:deps + content:qa:strict  (full gate)
+npm run ci:verify    # verify + coverage + build:check + audit:deps + content:qa:strict + content:audit:strict  (full gate)
 ```
 
 **Content pipeline** (authored files → Supabase migrations — see "Content pipeline" below):
@@ -121,8 +121,9 @@ staged files); `pre-push` runs `npm run verify`. Installed automatically via the
 `content_reports` (user-flagged content errors) · `bug_reports` (user bug reports) ·
 `themes` / `grades` · `question_attempts`
 (append-only per-question telemetry — moteur adaptatif étude 04) + `user_misconceptions` (its
-per-(user, tag) aggregate, trigger-maintained). (The old `subscriptions` columns + RPCs were
-removed in migration `20260609000000`.)
+per-(user, tag) aggregate, trigger-maintained) · `competencies` / `competency_prereqs` /
+`question_competencies` (knowledge graph — étude 07 lot 1). (The old `subscriptions` columns +
+RPCs were removed in migration `20260609000000`.)
 
 **Adaptive-engine telemetry (étude 04, phase A0).** Each answer submitted through
 `submit_exercise_attempt`/`submit_dungeon_answer` also appends a `question_attempts` row in the
@@ -133,6 +134,17 @@ drawn from the closed registry `content/misconceptions.json` (id → FR/EN/AR la
 optional per-option `misconceptionTag` content field and validated by `content:qa`. A trigger keeps
 `user_misconceptions` (occurrences + distinct sessions) for the later "Révision du jour" / "Points
 faibles" lots; raw telemetry is purged after 12 months (`purge_question_attempts`, pg_cron).
+
+**Knowledge graph (étude 07, lot 1).** Competencies live in versioned family registries
+`content/competences/<famille>.json` (`math.geo.thales-direct` → FR/EN/AR labels + same-family
+prereq DAG, cycle = `content:check` error), compiled — like all content — into relational tables
+(`competencies`, `competency_prereqs`; stable UUIDv5, family-scoped prune) via
+`npm run content:build -- --competences` (registry ONLY — never regenerates subjects). Questions
+declare 1–3 evaluated competencies via the optional `competencies` content field (first =
+primary, ANY question type), compiled into the client-readable `question_competencies` junction —
+unlike `distractor_tags` these ids describe the question, not the options, so they never leak the
+key. Unknown id = `content:qa` error; family≠subject = warning (`subjectPrefixes` in the
+registry). Per-student mastery (EWMA + forgetting) arrives with lot 2 (`user_competency_mastery`).
 
 Server-side logic lives in SQL: `handle_new_user` (auto-profile on signup), `award_xp`
 (streak + level curve: 200 XP/level, hero-class tiers), and the `submit_exercise_attempt`
@@ -228,15 +240,15 @@ professors — one per subject, each with a per-grade chapter map and age calibr
 (الإيقاظ العلمي, 1ère→6ème), and `prof-islamique-primaire` (1ère→4ème, Quran text in **رواية قالون**
 only — Tunisia's official reading). The **collège cycle** (7ème–8ème; 9ème keeps its dedicated
 professors) is covered the same grade-aware way: `prof-math-college`, `prof-physique-college`,
-`prof-svt-college`, `prof-arabe-college`, `prof-francais-college`, `prof-anglais-college` (8ème's
-base content is still empty — a professor only overlays existing chapters). The **lycée cycle**
+`prof-svt-college`, `prof-arabe-college`, `prof-francais-college`, `prof-anglais-college` (the 8ème
+base shipped 2026-07 — all six core subjects; a professor only overlays existing chapters). The **lycée cycle**
 (1ère sec→bac) is covered by section-aware professors — sections are grade nodes and scientific
 subjects switch ar→fr at 1ère sec with a mandatory transition bridge, all specified in
 `docs/lycee-architecture.md`: `prof-math-lycee`, `prof-physique-lycee`, `prof-svt-lycee`,
 `prof-francais-lycee`, `prof-anglais-lycee`, `prof-arabe-lycee`, `prof-philo-lycee`,
 `prof-histoire-geo-lycee`, `prof-eco-gestion-lycee`, `prof-info-lycee` (they also own the
-`NN-annales-bac` d4 tier; the whole lycée base is still empty — seed migration + secondary
-transcriptions + base come first). Each carries its
+`NN-annales-bac` d4 tier; the lycée base is a pilot — section seed merged, one complete chapter
+`math-bac-math/01-continuite-limites` — the rest waits on secondary transcriptions + base). Each carries its
 subject's chapter map and misconception/trap taxonomy; all defer to `content-engine`'s shared
 `references/expert-exercises.md` (hard-item archetypes, executed-error distractors, double-solve
 verification) and to `content-ecole-tn` for program fidelity. Skills produce
@@ -299,25 +311,34 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   `npm run test:e2e:auth` (`authed-chromium`), `npm run test:e2e:install` (install the
   browser). Authenticated runs are seeded via `scripts/e2e/seed-test-users.mjs`. E2E is
   separate from the Vitest unit/integration gate.
-- **Merge automation (push → PR → checks → merge, fully automatic).** Pushing any
-  non-`main` branch auto-opens its **draft** PR (`auto-pr.yml`); marking the PR ready
-  (or pushing with `[auto-merge]` in the head-commit subject) arms GitHub **auto-merge**
-  (`automerge.yml`, squash + delete branch, label `no-automerge` opts out; a push to `main`
-  auto-updates armed PRs left behind). The merge itself is enforced by the
-  `main-protection` ruleset (`.github/rulesets/main-protection.json`, imported in repo
-  Settings → Rules): required checks `verify` + `Migration presence` + `Migration order`
-  - `CodeQL` (SAST, `codeql.yml`) on an up-to-date head. Merging to `main` then
-    auto-deploys (Vercel) and auto-applies migrations (§7). Prereqs (repo Settings):
-    "Allow auto-merge" (General) and "Allow GitHub Actions to create and approve pull
-    requests" (Actions → General) on; re-import the ruleset JSON after changing it. **Also
-    provision `GH_AUTOMATION_PAT`** (Settings → Secrets and variables → Actions — a
-    fine-grained PAT of a real collaborator, scoped to this repo, `contents`/
-    `pull requests`/`workflows: write`): without it, PRs are opened by the
-    `github-actions[bot]` actor, which is not a repo collaborator, so GitHub gates every
-    `pull_request`-triggered required check behind manual "Approve and run" — the same
-    mechanism as an outside contributor's fork PR, applied to our own automation. Both
-    workflows fall back to `GITHUB_TOKEN` + a `workflow_dispatch` workaround when the
-    secret is absent, but that path is **not deterministic** (see docs/passation.md).
+- **Merge automation (push → PR → checks → merge — fully automatic, zero human
+  steps; décision 2026-07-12).** Pushing any non-`main` branch auto-opens its PR
+  **ready with auto-merge armed** (`auto-pr.yml`, squash + delete branch): it merges
+  alone once the `main-protection` ruleset's required checks — `verify` +
+  `Migration presence` + `Migration order` + `CodeQL` (SAST, `codeql.yml`) — are
+  green on an up-to-date head (ruleset JSON at `.github/rulesets/main-protection.json`,
+  imported in repo Settings → Rules; re-import after changing it). Nobody marks
+  anything ready and nobody merges by hand — the session that pushed owns the PR
+  until the merge lands (DoD §8). Deliberate WIP opts out: `[wip]` / `[draft]` /
+  `[no-automerge]` in the head-commit subject (or a `wip/`/`draft/`/`rescue/` branch
+  prefix) opens a **draft** instead — promote with `gh pr ready`; the `no-automerge`
+  label freezes a PR, and a later push never promotes an existing draft.
+  `automerge.yml` (re)arms ready PRs on PR events and, on every push to `main`,
+  updates armed PRs left behind — "behind" decided by the compare API (`behind_by`),
+  never the lazily-recomputed `mergeStateStatus` (staleness that stranded armed PRs
+  until 2026-07-12) — and labels **`needs-rebase`** any armed PR whose auto-update
+  fails on a conflict (the next session rebases it). Merging to `main` then
+  auto-deploys (Vercel) and auto-applies migrations (§7). Prereqs (all in place):
+  "Allow auto-merge" (General), "Allow GitHub Actions to create and approve pull
+  requests" (Actions → General), and **`GH_AUTOMATION_PAT`** (Settings → Secrets and
+  variables → Actions — a fine-grained PAT of a real collaborator, scoped to this
+  repo, `contents`/`pull requests`/`workflows: write`, provisioned 2026-07-06):
+  without it, PRs are opened by the `github-actions[bot]` actor, which is not a repo
+  collaborator, so GitHub gates every `pull_request`-triggered required check behind
+  manual "Approve and run" — the same mechanism as an outside contributor's fork PR,
+  applied to our own automation. Both workflows fall back to `GITHUB_TOKEN` + a
+  `workflow_dispatch` workaround when the secret is absent, but that path is **not
+  deterministic** (see docs/passation.md).
 - **Scheduled automations (GitHub Actions + repo skills).** Run on a schedule, all
   gracefully skipping without `CLAUDE_CODE_OAUTH_TOKEN`. The E2E/pgTAP nightly runs
   **every night**; the three Claude-agent guards run **2×/week** (each holds a runner for
@@ -412,6 +433,18 @@ the project stays regression- and debt-free while being improved by AI.
    (DROP/REVOKE) in a **separate** merge, **after** the code that stopped using the
    old shape is live. The `pgTAP suite` check proves every migration applies
    cleanly on a fresh DB before merge.
+8. **A pushed branch is the session's PR to LAND — Mohamed never touches the PR
+   lifecycle (décision 2026-07-12).** The chain is 100 % automatic: the push opens
+   the PR ready with auto-merge armed, and it merges alone when the required checks
+   are green on an up-to-date head — no human reads, readies or merges anything.
+   The session that pushed stays on duty until the merge is real: watch the checks
+   (`gh pr checks <n> --watch`), fix any red check and push the fix, confirm the
+   merge actually happened, then clean up (prune the local branch/worktree; the
+   remote branch auto-deletes). Deliberate savepoint? Push with `[wip]`/`[draft]`
+   in the subject (or a `wip/`/`draft/`/`rescue/` branch) and own its promotion
+   later. Before ending, sweep `gh pr list` for `needs-rebase` or armed-but-red
+   PRs and rescue what you can. Never end a session with its PR unmerged unless a
+   written blocker says why (PR comment or STATUS.md).
 
 When unsure about scope or a destructive action, ask before proceeding.
 
