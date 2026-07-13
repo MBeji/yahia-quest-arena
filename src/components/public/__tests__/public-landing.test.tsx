@@ -98,4 +98,27 @@ describe("PublicLanding", () => {
     // The catalogue entry stays available to a signed-in visitor.
     expect(container.querySelector('a[href="/programme"]')).not.toBeNull();
   });
+
+  it("renders the proof band with real numbers and a sample-course deep link", () => {
+    const { container } = render(
+      <PublicLanding
+        stats={{ subjects: 62, lessons: 418, exercises: 3250, sampleChapterId: "chap-1" }}
+      />,
+    );
+    expect(screen.getByText("62")).toBeInTheDocument();
+    expect(screen.getByText("418")).toBeInTheDocument();
+    // thousands are grouped with a space (Western digits, all locales).
+    expect(screen.getByText("3 250")).toBeInTheDocument();
+    // « Voir un exemple de cours » deep-links into the public reader.
+    expect(container.querySelector('a[href="/chapitre/chap-1"]')).not.toBeNull();
+  });
+
+  it("omits the proof band when there are no stats or an empty catalogue", () => {
+    const { container: noStats } = render(<PublicLanding />);
+    expect(noStats.querySelector('a[href^="/chapitre/"]')).toBeNull();
+    const { container: empty } = render(
+      <PublicLanding stats={{ subjects: 0, lessons: 0, exercises: 0, sampleChapterId: null }} />,
+    );
+    expect(empty.querySelector('a[href^="/chapitre/"]')).toBeNull();
+  });
 });

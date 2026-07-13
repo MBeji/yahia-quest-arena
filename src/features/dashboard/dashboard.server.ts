@@ -358,6 +358,16 @@ export const getParcours = createServerFn({ method: "GET" })
       .select("id,slug,cycle,display_order,is_selectable");
     const gradeById = new Map((gradeRows ?? []).map((g) => [g.id, g]));
 
+    // Real volumetry per parcours (« N matières », étude 15 lot 8): a parcours pins a
+    // (theme, grade) pair — grade null for the libre extras — and its subjects are the
+    // ones sharing that pair. One cheap catalogue-wide scan → a count map keyed by pair.
+    const { data: subjectRows } = await supabase.from("subjects").select("theme_id,grade_id");
+    const subjectsCountByPair = new Map<string, number>();
+    for (const s of subjectRows ?? []) {
+      const key = `${s.theme_id}::${s.grade_id ?? ""}`;
+      subjectsCountByPair.set(key, (subjectsCountByPair.get(key) ?? 0) + 1);
+    }
+
     const enriched = await Promise.all(
       rows.map(async (p) => {
         const grade = p.grade_id ? gradeById.get(p.grade_id) : undefined;
@@ -367,6 +377,7 @@ export const getParcours = createServerFn({ method: "GET" })
           grade_order: grade?.display_order ?? null,
           grade_slug: grade?.slug ?? null,
           grade_selectable: grade?.is_selectable ?? true,
+          subjects_count: subjectsCountByPair.get(`${p.theme_id}::${p.grade_id ?? ""}`) ?? 0,
         };
         // Free parcours — and every parcours for an anonymous visitor — carry no
         // lock in the public register; skip the entitlement RPC (anon has none).
@@ -380,6 +391,59 @@ export const getParcours = createServerFn({ method: "GET" })
     );
 
     return { parcours: enriched };
+  });
+
+// ---------- Catalogue stats (landing proof band — real compiled numbers) ----------
+// Anon-capable (étude 15 lot 8). The public landing replaces the "conforme au
+// programme" *claim* with *proof*: the REAL compiled size of the free catalogue —
+// how many subjects, taught chapters (each = one cours + one résumé) and corrected
+// missions already exist — plus `sampleChapterId`, the first taught chapter of the
+// richest subject, so « Voir un exemple de cours » deep-links into the public reader.
+// Numbers are computed server-side (never hardcoded) and degrade to 0 on error. Only
+// aggregate counts + one id cross the wire — no lesson content is transferred.
+export const getCatalogueStats = createServerFn({ method: "GET" })
+  .middleware([optionalSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase } = context;
+    const [subjectsRes, lessonsRes, exercisesRes, taughtRes] = await Promise.all([
+      supabase.from("subjects").select("id", { count: "exact", head: true }),
+      supabase
+        .from("chapters")
+        .select("id", { count: "exact", head: true })
+        .not("lesson_content", "is", null),
+      supabase.from("exercises").select("id", { count: "exact", head: true }),
+      // id + subject only (never lesson_content); ordered so the first match per
+      // subject is its lowest display_order chapter.
+      supabase
+        .from("chapters")
+        .select("id,subject_id")
+        .not("lesson_content", "is", null)
+        .order("display_order"),
+    ]);
+
+    // Richest subject = the one with the most taught chapters; its first taught
+    // chapter is the sample. Deterministic given the stable display_order sort.
+    const taught = taughtRes.data ?? [];
+    const perSubject = new Map<string, number>();
+    for (const c of taught) perSubject.set(c.subject_id, (perSubject.get(c.subject_id) ?? 0) + 1);
+    let richest: string | null = null;
+    let richestCount = 0;
+    for (const [subjectId, n] of perSubject) {
+      if (n > richestCount) {
+        richestCount = n;
+        richest = subjectId;
+      }
+    }
+    const sampleChapterId = richest
+      ? (taught.find((c) => c.subject_id === richest)?.id ?? null)
+      : null;
+
+    return {
+      subjects: subjectsRes.count ?? 0,
+      lessons: lessonsRes.count ?? 0,
+      exercises: exercisesRes.count ?? 0,
+      sampleChapterId,
+    };
   });
 
 // ---------- Subjects of one parcours (public drill: catalogue → level → subjects) ----------

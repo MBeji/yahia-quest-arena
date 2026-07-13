@@ -1,0 +1,290 @@
+<!-- @dsCard group="Écrans" -->
+<title>Funnel public (lot 8)</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+  }
+  body {
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    background: #f3f2ee;
+    padding: 16px;
+    color: #1a1a1a;
+  }
+  h3.section {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin: 18px 0 8px;
+    font-weight: 700;
+  }
+  h3.section:first-of-type {
+    margin-top: 0;
+  }
+  .avant {
+    border-inline-start: 3px solid #c0392b;
+    background: #fbeae8;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    color: #7a2018;
+    margin-bottom: 6px;
+  }
+  .apres {
+    border-inline-start: 3px solid #0f6e56;
+    background: #e7f3ee;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    color: #0b4535;
+    margin-bottom: 12px;
+  }
+  .frame {
+    --primary: #0f6e56;
+    --muted: #5c6f68;
+    --border: #e2e0d8;
+    background: #fbfaf7;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 14px;
+    max-width: 560px;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .stat {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
+  }
+  .stat .n {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--primary);
+  }
+  .stat .l {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .sample {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  .doors {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .door {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 11px;
+    font-size: 12px;
+  }
+  .door b {
+    display: block;
+    font-size: 12.5px;
+    margin-bottom: 3px;
+  }
+  .door .cta {
+    color: var(--primary);
+    font-weight: 700;
+    margin-top: 6px;
+    display: block;
+  }
+  .lycee {
+    margin-top: 8px;
+  }
+  .cardrow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .pc {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 11px;
+    font-size: 12.5px;
+    font-weight: 700;
+  }
+  .pc small {
+    display: block;
+    font-weight: 500;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .soonwrap {
+    margin-top: 8px;
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    padding: 10px 12px;
+    background: #fff;
+  }
+  .soonwrap summary {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .soonchips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .soonchip {
+    font-size: 11px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 3px 9px;
+    color: var(--muted);
+    background: #faf9f6;
+  }
+  .extra {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 11px;
+    margin-top: 8px;
+    font-size: 12.5px;
+  }
+  .extra b {
+    display: block;
+  }
+  .extra small {
+    color: var(--muted);
+  }
+</style>
+
+<h3 class="section">1 · Landing — la preuve remplace l'affirmation</h3>
+<div class="avant">
+  <b>Avant (audit §C-1 MAJEUR)</b> — « Conforme au programme officiel » affirmé deux fois, jamais
+  démontré : zéro chiffre, aucun exemple de cours cliquable.
+</div>
+<div class="apres">
+  <b>Après</b> — bande de preuve avec les <b>chiffres réels compilés du catalogue</b> (server fn
+  anonyme, jamais codés en dur) + un <b>exemple de cours ouvrable en un clic</b> (premier chapitre
+  avec leçon de la matière la plus riche).
+</div>
+<div class="frame">
+  <div class="stats">
+    <div class="stat">
+      <div class="n">62</div>
+      <div class="l">matières</div>
+    </div>
+    <div class="stat">
+      <div class="n">418</div>
+      <div class="l">cours &amp; résumés</div>
+    </div>
+    <div class="stat">
+      <div class="n">3 250</div>
+      <div class="l">missions corrigées</div>
+    </div>
+  </div>
+  <div class="sample">📖 Voir un exemple de cours →</div>
+</div>
+
+<h3 class="section">2 · Landing — la porte enseignant honorée</h3>
+<div class="avant">
+  <b>Avant (§C-1 MOYEN)</b> — la porte « Enseignant » promet des fiches « prêtes à imprimer » mais
+  route vers le même /programme que l'élève, sans différenciation.
+</div>
+<div class="apres">
+  <b>Après</b> — la promesse devient vraie et spécifique : chaque cours a un bouton Imprimer (il
+  existe déjà) ; la porte le dit et pointe le catalogue avec ce bénéfice en tête.
+</div>
+<div class="frame">
+  <div class="doors">
+    <div class="door">
+      <b>👨‍🎓 Élève</b>Révise et joue, gratuitement.<span class="cta">Explorer le programme →</span>
+    </div>
+    <div class="door">
+      <b>👪 Parent</b>Suivez la progression, sans compte.<span class="cta">Ouvrir le suivi →</span>
+    </div>
+    <div class="door">
+      <b>🧑‍🏫 Enseignant</b>Des cours conformes,
+      <b style="display: inline">imprimables en un clic</b> pour la classe.<span class="cta"
+        >Parcourir les cours →</span
+      >
+    </div>
+  </div>
+</div>
+
+<h3 class="section">3 · Programme — le lycée compacté</h3>
+<div class="avant">
+  <b>Avant (§D-1 MOYEN)</b> — 15 cartes « Bientôt disponible » sur 16 diluent la moitié basse du
+  catalogue (~25 cartes empilées mobile).
+</div>
+<div class="apres">
+  <b>Après</b> — les classes disponibles gardent leurs cartes (avec <b>volumétrie réelle</b> « N
+  matières ») ; les « en construction » se replient en un bloc compact de chips (l'arborescence
+  lycée complète arrive avec l'étude 16, qui dépend de ce lot).
+</div>
+<div class="frame">
+  <div class="cardrow">
+    <div class="pc">
+      Préparation Bac Mathématiques<small>Cours · résumés · exercices · 5 matières</small>
+    </div>
+    <div class="pc">1ère année secondaire <span class="soonchip">Bientôt</span></div>
+  </div>
+  <details class="soonwrap" open>
+    <summary>+ 14 classes du lycée en construction — dis-nous laquelle t'intéresse</summary>
+    <div class="soonchips">
+      <span class="soonchip">2ème Sciences</span><span class="soonchip">2ème Lettres</span
+      ><span class="soonchip">2ème Éco &amp; Services</span><span class="soonchip">2ème Info</span
+      ><span class="soonchip">3ème Math</span><span class="soonchip">3ème Sc. exp.</span
+      ><span class="soonchip">…</span>
+    </div>
+  </details>
+</div>
+
+<h3 class="section">4 · Extras — des cartes qui aident à choisir</h3>
+<div class="avant">
+  <b>Avant (§C-3 MOYEN)</b> — les 4 cartes actives portent toutes le même sous-texte « Cours ·
+  résumés · exercices » : la page n'aide pas à choisir.
+</div>
+<div class="apres">
+  <b>Après</b> — un descripteur spécifique par thème (i18n ×3), la promesse CECRL des langues enfin
+  visible.
+</div>
+<div class="frame">
+  <div class="extra">
+    🇬🇧
+    <span
+      ><b>Améliore ton anglais</b
+      ><small>Du A1 au C2 : temps, vocabulaire, compréhension — aligné CECRL.</small></span
+    >
+  </div>
+  <div class="extra">
+    🌍
+    <span
+      ><b>Culture générale</b
+      ><small>Histoire, géographie, sciences, arts — en trois langues.</small></span
+    >
+  </div>
+  <div class="extra">
+    🧠
+    <span
+      ><b>Muscler ton cerveau</b
+      ><small>Logique, calcul mental, énigmes — zéro par-cœur.</small></span
+    >
+  </div>
+</div>
