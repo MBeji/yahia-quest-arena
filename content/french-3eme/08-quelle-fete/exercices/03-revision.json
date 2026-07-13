@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision : quelle fête (mots, sons et nombres)",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Quel numéro du spectacle se lit à voix haute et rime souvent ?",
+      "options": [
+        { "id": "a", "text": "le gâteau" },
+        { "id": "b", "text": "le poème" },
+        { "id": "c", "text": "la guirlande" },
+        { "id": "d", "text": "la chéchia" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le poème est un numéro qu'on dit à voix haute pendant le spectacle. L'erreur fréquente : choisir le gâteau, qu'on mange, ce n'est pas un numéro.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Pour dire ce que je désire faire, je dis :",
+      "options": [
+        { "id": "a", "text": "je veux chanter" },
+        { "id": "b", "text": "je mets chanter" },
+        { "id": "c", "text": "je range chanter" },
+        { "id": "d", "text": "je décore chanter" }
+      ],
+      "correctOption": "a",
+      "explanation": "Pour dire mon désir, je dis « je veux » : je veux chanter. L'erreur fréquente : dire « je mets », qui sert pour un vêtement (je mets ma chéchia).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Amine dit : « C'est ma danse … » pour dire que c'est la danse qu'il aime le plus. Quel mot manque ?",
+      "options": [
+        { "id": "a", "text": "vide" },
+        { "id": "b", "text": "blanche" },
+        { "id": "c", "text": "préférée" },
+        { "id": "d", "text": "dorée" }
+      ],
+      "correctOption": "c",
+      "explanation": "Ce qu'on aime le plus est « préféré » : c'est ma danse préférée. L'erreur fréquente : choisir « blanche », qui est une couleur, pas ce qu'on aime le plus.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans quel mot entends-tu le son « oi » ?",
+      "options": [
+        { "id": "a", "text": "beau" },
+        { "id": "b", "text": "étoile" },
+        { "id": "c", "text": "kimono" },
+        { "id": "d", "text": "chat" }
+      ],
+      "correctOption": "b",
+      "explanation": "« étoile » contient le son oi. L'erreur fréquente : choisir beau, qui contient le son o (eau), pas le son oi.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Je récite les mois. Quel mois vient juste après avril ?",
+      "options": [
+        { "id": "a", "text": "mars" },
+        { "id": "b", "text": "juin" },
+        { "id": "c", "text": "mai" },
+        { "id": "d", "text": "janvier" }
+      ],
+      "correctOption": "c",
+      "explanation": "Après avril vient mai. L'erreur fréquente : revenir en arrière vers mars, qui vient avant avril.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Je compte : « … vingt et un, vingt-deux, vingt-trois … ». Quel nombre vient juste avant vingt et un ?",
+      "options": [
+        { "id": "a", "text": "vingt" },
+        { "id": "b", "text": "vingt-deux" },
+        { "id": "c", "text": "dix" },
+        { "id": "d", "text": "trente" }
+      ],
+      "correctOption": "a",
+      "explanation": "Avant vingt et un (21) vient vingt (20). L'erreur fréquente : choisir vingt-deux (22), qui vient après vingt et un, pas avant.",
+      "difficulty": 2
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⚔️ Le gardien du chapitre ⭐⭐⭐ : les sons f, v et la lettre c",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Dans quel mot entends-tu le son « f » ?",
+      "options": [
+        { "id": "a", "text": "livre" },
+        { "id": "b", "text": "revue" },
+        { "id": "c", "text": "frère" },
+        { "id": "d", "text": "élève" }
+      ],
+      "correctOption": "c",
+      "explanation": "« frère » commence par le son f. L'erreur fréquente : confondre le son f (frère) avec le son v (livre, revue, élève).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Je lis la syllabe : v + i = … ?",
+      "options": [
+        { "id": "a", "text": "iv" },
+        { "id": "b", "text": "vi" },
+        { "id": "c", "text": "fi" },
+        { "id": "d", "text": "vo" }
+      ],
+      "correctOption": "b",
+      "explanation": "Je lis d'abord v, puis i : v + i = vi (comme dans « vide »). L'erreur fréquente : inverser et lire « iv » au lieu de « vi ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans « carton », quel son fait la lettre « c » ?",
+      "options": [
+        { "id": "a", "text": "le son s" },
+        { "id": "b", "text": "le son k" },
+        { "id": "c", "text": "le son v" },
+        { "id": "d", "text": "le son f" }
+      ],
+      "correctOption": "b",
+      "explanation": "Devant a, o, u, la lettre c fait le son k : carton, colle, conte. L'erreur fréquente : lire « c = s » comme dans merci, mais devant a le c fait le son k.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Dans quel mot la lettre « c » fait-elle le son « s » ?",
+      "options": [
+        { "id": "a", "text": "carton" },
+        { "id": "b", "text": "colle" },
+        { "id": "c", "text": "ici" },
+        { "id": "d", "text": "conte" }
+      ],
+      "correctOption": "c",
+      "explanation": "Dans « ici », le c est devant i, donc il fait le son s. L'erreur fréquente : choisir carton ou colle, où le c est devant a ou o et fait le son k.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Léa demande : « … lis-tu ? » Sami répond : « Une belle histoire. » Quel mot manque ?",
+      "options": [
+        { "id": "a", "text": "Où" },
+        { "id": "b", "text": "Que" },
+        { "id": "c", "text": "Sur" },
+        { "id": "d", "text": "Dans" }
+      ],
+      "correctOption": "b",
+      "explanation": "La réponse est une chose (une histoire), donc la question est « Que lis-tu ? ». L'erreur fréquente : choisir « Où », qui demande un lieu, pas la chose qu'on lit.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Je suis très content de mon livre. Quelle phrase montre ma joie ?",
+      "options": [
+        { "id": "a", "text": "Où est le livre ?" },
+        { "id": "b", "text": "Je range le livre." },
+        { "id": "c", "text": "Quel beau livre !" },
+        { "id": "d", "text": "Le livre est dans la boîte." }
+      ],
+      "correctOption": "c",
+      "explanation": "« Quel beau livre ! » est une phrase exclamative : elle montre la joie et finit par « ! ». L'erreur fréquente : choisir une question (« Où est le livre ? »), qui demande quelque chose au lieu de montrer la joie.",
+      "difficulty": 2
+    }
+  ]
+}

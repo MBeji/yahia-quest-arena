@@ -1,0 +1,65 @@
+{
+  "title": "Quiz de compréhension ⭐",
+  "questions": [
+    {
+      "prompt": "Sur quoi monte-t-on pour présenter le spectacle ?",
+      "options": [
+        { "id": "a", "text": "la guirlande" },
+        { "id": "b", "text": "le gâteau" },
+        { "id": "c", "text": "la scène" },
+        { "id": "d", "text": "la chanson" }
+      ],
+      "correctOption": "c",
+      "explanation": "On monte sur la scène pour le spectacle. L'erreur fréquente : choisir la guirlande, qui sert à décorer la scène, pas à monter dessus.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel vêtement vient du Japon ?",
+      "options": [
+        { "id": "a", "text": "la chéchia" },
+        { "id": "b", "text": "le kimono" },
+        { "id": "c", "text": "la jebba" },
+        { "id": "d", "text": "le pantalon" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le kimono est un vêtement du Japon. L'erreur fréquente : choisir la chéchia ou la jebba, qui sont des vêtements de chez nous.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Pour dire que tu es capable de danser, tu dis :",
+      "options": [
+        { "id": "a", "text": "je veux danser" },
+        { "id": "b", "text": "je mets danser" },
+        { "id": "c", "text": "je sais danser" },
+        { "id": "d", "text": "je décore danser" }
+      ],
+      "correctOption": "c",
+      "explanation": "Pour dire ce que je suis capable de faire, je dis « je sais » : je sais danser. L'erreur fréquente : dire « je veux danser », qui dit ce que je désire, pas ce que je sais faire.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans quel mot entends-tu le son « ch » ?",
+      "options": [
+        { "id": "a", "text": "kimono" },
+        { "id": "b", "text": "roi" },
+        { "id": "c", "text": "gâteau" },
+        { "id": "d", "text": "chéchia" }
+      ],
+      "correctOption": "d",
+      "explanation": "« chéchia » commence par le son ch. L'erreur fréquente : choisir kimono, qui commence par le son k, pas par le son ch.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel nombre vient juste après vingt-neuf (29) ?",
+      "options": [
+        { "id": "a", "text": "vingt-huit" },
+        { "id": "b", "text": "trente" },
+        { "id": "c", "text": "vingt" },
+        { "id": "d", "text": "vingt et un" }
+      ],
+      "correctOption": "b",
+      "explanation": "Après vingt-neuf (29) vient trente (30). L'erreur fréquente : revenir en arrière vers vingt-huit (28) au lieu d'avancer.",
+      "difficulty": 2
+    }
+  ]
+}
