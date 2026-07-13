@@ -146,10 +146,11 @@ seulement « c'est mal »), et propose un **correctif concret**.
       consommables et les gates anti-farm (`tooFast` / `≥60%` / `improved`) ne
       sont jamais contournables côté client ; le scoring reste atomique dans
       `submit_exercise_attempt`.
-- [ ] **Gate premium par parcours** : l'accès est désormais **par parcours** — un
-      parcours concours exige une entitlement active (l'aperçu gratuit = quiz de
-      compréhension + difficulté 1). Vérifié **côté serveur** via
-      `resolve_exercise_access`, jamais seulement masqué dans l'UI.
+- [ ] **Gate premium par parcours (dormant en phase gratuite)** : l'accès est **par
+      parcours** — un parcours marqué premium exigerait une entitlement active
+      (l'aperçu gratuit = quiz de compréhension + difficulté 1) ; aujourd'hui tous
+      les parcours sont `is_premium=false`, rien n'est gaté. Vérifié **côté
+      serveur** via `resolve_exercise_access`, jamais seulement masqué dans l'UI.
 - [ ] **Données de mineurs / vie privée** : pas d'exposition de PII (élève,
       famille) au-delà du strict nécessaire ; les `parent_student_links`,
       `parent-report`, leaderboard ne fuitent pas d'identifiants/données privées.
@@ -248,9 +249,9 @@ Ces zones concentrent le risque ; double-attention dès qu'elles sont touchées 
 - `activate_inventory_item` / mécaniques de consommables (slots next-quest vs
   passif, anti-gaspillage).
 - `auth-middleware.ts` et tout `createServerFn` — surface authn/authz.
-- Gate premium (`parcours/` — entitlements + `resolve_exercise_access`) — toute logique de
-  scoring/déblocage ; aucun code ne dépend de `subscription_*` / `has_active_subscription` /
-  `admin_*_subscription` (supprimés dans la migration `20260609000000`).
+- Gate premium (`parcours/` — entitlements + `resolve_exercise_access`, **dormant** en phase
+  gratuite) — toute logique de scoring/déblocage ; aucun code ne dépend de `subscription_*` /
+  `has_active_subscription` / `admin_*_subscription` (supprimés dans la migration `20260609000000`).
 - `content-report/` et `parent-report/` — exposition de données.
 - `src/server.ts` / `src/start.ts` — entrées SSR/Worker, gestion d'erreur 500.
 - Toute migration sous `supabase/migrations/` et les grants/RLS.

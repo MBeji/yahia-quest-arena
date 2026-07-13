@@ -31,7 +31,8 @@ d'appropriation à l'âge dans `quality-bar.md`) et `content-ecole-tn/SKILL.md`.
   `math-5eme`. `gradeSlug` = `1ere-base` … `5eme-base` · thème `ecole-tn` · **langue arabe (`ar`)**,
   notation 100 % standard (chiffres 0–9, unités SI ; jamais de chiffres arabo-indiens).
 - Le primaire est un **parcours FREE** (pas de gate concours) : d3/d4 y sont le **palier difficile
-  du ladder libre**, pas du premium. On garde la table de récompenses standard (d3 boss 120/30,
+  du ladder libre**, pas le palier premium (architecture dormante en phase gratuite — voir
+  CLAUDE.md « Access gate »). On garde la table de récompenses standard (d3 boss 120/30,
   d4 challenge 300/60) et les titres à étoiles + libellé arabe (صعب / نخبة). Ne jamais convertir un
   d1–2 existant en d3–4.
 

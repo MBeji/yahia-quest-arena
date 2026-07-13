@@ -73,8 +73,9 @@ First read the content-engine skill and its references (`.claude/skills/content-
   why each tempting wrong option fails. Even a missed item must teach a transferable reasoning move.
 - **Difficulty ladder + ⭐** as usual: quiz ⭐ (warm-up reasoning, d1–2) · `01-pratique` ⭐ (d1) ·
   `02-defi-logique` ⚔️ ⭐⭐⭐ (boss, d3) · optional `03-...` ⭐⭐ (d2) · `04-elite-qi` 👑 ⭐⭐⭐⭐
-  (challenge, d4). Keep free progression at d1–2 (d3–4 are premium-gated — they require a parcours
-  entitlement). 6 items per exercise, 4 options.
+  (challenge, d4). Keep free progression at d1–2 (d3–4 are the premium-gate ceiling — dormant in
+  the current free phase, so nothing is actually gated today; see CLAUDE.md "Access gate"). 6 items
+  per exercise, 4 options.
 
 ## Figures — how to build them
 

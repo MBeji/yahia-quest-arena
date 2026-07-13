@@ -5,21 +5,33 @@ This repo auto-deploys: **pushing to `main` deploys to Vercel production.** Ther
 applied. The guardrails below enforce that. (Background: CLAUDE.md §7; the full
 end-of-dev → production walkthrough lives in [passation.md](./passation.md).)
 
-## Merge automation (push → PR → merge, no manual steps)
+## Merge automation (push → PR → checks → merge — zéro geste humain)
 
-- **`auto-pr.yml`** — pushing any non-`main` branch auto-opens its **draft** PR and
-  dispatches the required-check workflows on the branch (a PR created with the Actions
-  token fires no `pull_request` events, so its checks would otherwise never report).
-  `[auto-merge]` in the head-commit subject opens the PR ready and arms the merge
-  immediately.
-- **`automerge.yml`** — arms GitHub native auto-merge (squash + delete branch) on every
-  ready, same-repo PR; the `no-automerge` label opts out. Its `keep-up-to-date` job
+- **`auto-pr.yml`** — pushing any non-`main` branch auto-opens its PR **ready with
+  auto-merge armed** (squash + delete branch): it merges alone once the ruleset's
+  required checks are green on an up-to-date head. Nobody marks ready, nobody merges
+  by hand (décision 2026-07-12 — CLAUDE.md DoD §8: the session that pushed watches
+  its checks until the merge lands). Deliberate WIP opts out: `[wip]` / `[draft]` /
+  `[no-automerge]` in the head-commit subject, or a `wip/` / `draft/` / `rescue/`
+  branch prefix, opens a **draft** instead (promote with `gh pr ready`). A repeat
+  push re-arms a ready-but-unarmed PR (self-healing) but never promotes an existing
+  draft. Without `GH_AUTOMATION_PAT`, the workflow also dispatches the required-check
+  workflows on the branch (a PR created with the Actions token fires no
+  `pull_request` events, so its checks would otherwise never report).
+- **`automerge.yml`** — (re)arms GitHub native auto-merge on every ready, same-repo
+  PR; the `no-automerge` label opts out (and disarms). Its `keep-up-to-date` job
   runs on every push to `main` and updates armed PRs left behind (the ruleset's strict
   mode only merges an up-to-date head, and GitHub never updates a branch by itself),
-  re-dispatching their checks.
-- Repo-settings prerequisites (one-time): "Allow GitHub Actions to create and approve
-  pull requests" (Settings → Actions → General) and "Allow auto-merge"
-  (Settings → General).
+  re-dispatching their checks when no PAT is configured. **"Behind" is decided by the
+  compare API (`behind_by`), never by `mergeStateStatus`** — that field is recomputed
+  lazily after a push to `main` and reads stale/UNKNOWN in the very seconds the job
+  runs, which stranded armed PRs before 2026-07-12. If update-branch fails (merge
+  conflict), the PR is labelled **`needs-rebase`**: the next working session rebases
+  it (CLAUDE.md DoD §8) — never Mohamed.
+- Repo-settings prerequisites (one-time, all in place): "Allow GitHub Actions to create
+  and approve pull requests" (Settings → Actions → General), "Allow auto-merge"
+  (Settings → General), and the `GH_AUTOMATION_PAT` secret (since 2026-07-06 — see
+  [passation.md](./passation.md), « Le piège du bot non-collaborateur »).
 
 ## Required status checks
 

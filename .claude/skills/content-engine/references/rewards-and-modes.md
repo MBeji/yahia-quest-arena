@@ -9,7 +9,7 @@ Source: `src/shared/constants/gamification.ts`, `src/shared/content/schema.ts`,
 | ----------- | ---------- | ------------------------------------------------------------------------- |
 | `practice`  | yes        | standard practice exercise                                                |
 | `boss`      | yes        | chapter boss; timed at 20s/question at runtime                            |
-| `challenge` | yes        | premium "Défi élite" tier                                                 |
+| `challenge` | yes        | "Défi élite" tier — d4 ceiling (dormant premium gate)                     |
 | `quiz`      | **no**     | auto-generated from `quiz.json`; `display_order=0`, fixed 20 XP / 5 coins |
 
 `practice|boss|challenge` is the full authorable enum. Multiple files may share a mode (e.g. both
@@ -20,11 +20,14 @@ Source: `src/shared/constants/gamification.ts`, `src/shared/content/schema.ts`,
 - **Exercise** `difficulty`: 1–4 → 1 easy · 2 medium · 3 boss · 4 élite.
 - **Question** `difficulty`: 1–3 (optional, untagged = 2). Questions are emitted easiest→hardest, so
   difficulty tags set ordering — keep them deliberate.
-- **Premium gate: difficulty 3–4 are premium-gated _per parcours_** — they require a live parcours
-  entitlement on the exercise's (premium) parcours. The **free preview always includes** the chapter
-  comprehension quiz + every difficulty-1 (⭐) mission, so a prospect can taste a chapter end-to-end
-  before paying. Enforced server-side by `resolve_exercise_access` (see CLAUDE.md "Premium gate").
-  Therefore keep **core, free progression at difficulty 1–2**; reserve 3–4 for premium boss/challenge.
+- **Premium gate (dormant in the current free phase): difficulty 3–4 are the premium-gate ceiling
+  _per parcours_** — a premium parcours would require a live entitlement to unlock them, with the
+  chapter comprehension quiz + every difficulty-1 (⭐) mission always open as the free preview.
+  Enforced server-side by `resolve_exercise_access` (see CLAUDE.md "Access gate"), but every
+  parcours is currently `is_premium=false` (2026-06-21 pivot + étude 15 Q-2) — **nothing is gated
+  today**, all difficulties are open to everyone. Still author as if it mattered: keep **core
+  progression at difficulty 1–2**; reserve 3–4 for boss/challenge, so the free-preview shape stays
+  correct whenever premium reactivates (frozen étude `FableEtudes/01-paiement-en-ligne`).
 
 ### Difficulty indicator — show it on every mission & quiz
 
@@ -42,13 +45,13 @@ the schema `difficulty` field (which the engine uses for gating/ordering):
 
 ## Canonical reward table (use these)
 
-| difficulty | mode      | xpReward | rewardCoins | use                                       |
-| ---------- | --------- | -------- | ----------- | ----------------------------------------- |
-| 1          | practice  | 50       | 10          | free intro practice                       |
-| 2          | practice  | 75       | 15          | free standard practice                    |
-| 3          | boss      | 120      | 30          | chapter boss (premium-gated, parcours)    |
-| 4          | challenge | 300      | 60          | élite challenge (premium-gated, parcours) |
-| (auto)     | quiz      | 20       | 5           | generated from quiz.json — never author   |
+| difficulty | mode      | xpReward | rewardCoins | use                                              |
+| ---------- | --------- | -------- | ----------- | ------------------------------------------------ |
+| 1          | practice  | 50       | 10          | free intro practice                              |
+| 2          | practice  | 75       | 15          | free standard practice                           |
+| 3          | boss      | 120      | 30          | chapter boss (parcours premium-gate, dormant)    |
+| 4          | challenge | 300      | 60          | élite challenge (parcours premium-gate, dormant) |
+| (auto)     | quiz      | 20       | 5           | generated from quiz.json — never author          |
 
 Keep boss at difficulty 3 and challenge at difficulty 4 (the dominant pattern); avoid off-pattern
 combos like `difficulty:4, mode:boss` or `difficulty:3, mode:practice`. Coins track XP at roughly
@@ -96,5 +99,6 @@ Both ladders: **6 questions per exercise**, 4 options, per-question difficulty r
 | `improved`                 | —     | re-attempts only re-award on an improved score (anti-farm)                                                            |
 
 Don't set rewards expecting them to apply on a sub-60%, rushed, or non-improving attempt — the engine
-won't grant them. Don't put essential free progression behind difficulty 3–4 (those are premium-gated
-via parcours entitlements; free access always includes the quiz + difficulty-1 missions).
+won't grant them. Don't put essential free progression behind difficulty 3–4 (those are the dormant
+premium-gate ceiling; today every difficulty is free, but keep the quiz + difficulty-1 missions as
+the self-contained core so the free-preview shape stays correct whenever premium reactivates).

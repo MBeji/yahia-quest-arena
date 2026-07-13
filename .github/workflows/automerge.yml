@@ -4,13 +4,18 @@ name: Auto-merge
 # automatically the moment the ruleset's required checks (`verify`, `Migration
 # presence`, `Migration order`, `CodeQL`) are green — completing the fully
 # automatic push → PR → checks → merge → deploy chain (Vercel + db-migrate-prod
-# fire on the merge to main).
+# fire on the merge to main). Since 2026-07-12, auto-pr.yml opens PRs READY
+# with auto-merge armed by default — there is NO human step anywhere in the
+# chain (CLAUDE.md DoD §8); this workflow is the safety net that (re)arms on
+# PR events, disarms on opt-out, and keeps armed heads mergeable.
 #
 # Security model — arming is cheap, MERGING is gated:
 #   • Only same-repo branches: a fork PR's GITHUB_TOKEN is read-only anyway,
 #     and we never want external code merging itself.
-#   • Drafts are skipped (auto-pr.yml opens drafts by default): marking a PR
-#     "ready for review" is the one deliberate human step.
+#   • Drafts are skipped: a draft is the deliberate WIP opt-out (`[wip]`/
+#     `[draft]` subject token or `wip/`/`draft/`/`rescue/` branch prefix via
+#     auto-pr.yml, or the scheduled guards' review drafts). Whoever drafted it
+#     promotes it (`gh pr ready`) when it must ship.
 #   • The `no-automerge` label opts a PR out (and disarms it if already armed).
 #   • The actual merge is enforced by the main-protection ruleset: all required
 #     status checks green on an up-to-date head (strict policy). This workflow
@@ -26,9 +31,9 @@ name: Auto-merge
 # alongside CI/CodeQL/Migration gate on bot-opened PRs. auto-pr.yml's
 # `GH_AUTOMATION_PAT` secret (see its header) fixes this at the source — a
 # PAT-opened PR's events are attributed to a real collaborator and are never
-# gated, including THIS job. Without that secret, auto-pr.yml's own
-# [auto-merge] fast path is the only reliable way to arm a bot-opened PR
-# (this job may simply never run, or sit pending approval).
+# gated, including THIS job. Without that secret, auto-pr.yml's own arming
+# step is the only reliable way to arm a bot-opened PR (this job may simply
+# never run, or sit pending approval).
 #
 # The `keep-up-to-date` job closes a separate gap: the ruleset's STRICT policy
 # only merges an up-to-date head, but GitHub never updates a PR branch by
@@ -37,6 +42,15 @@ name: Auto-merge
 # required workflows are re-dispatched on them as a GITHUB_TOKEN-fallback
 # safety net (redundant, and harmless, when GH_AUTOMATION_PAT is configured —
 # the update-branch commit then fires its own non-gated pull_request run).
+#
+# "Behind" is decided by the compare API (`behind_by`), NEVER by
+# `mergeStateStatus`: GitHub recomputes that field lazily after main moves,
+# and in the first seconds — exactly when this job runs — it still reads
+# stale/UNKNOWN. Trusting it left armed PRs stranded BEHIND while the job
+# logged "nothing to update" (confirmed live 2026-07-12 on #379/#383). When
+# update-branch fails (merge conflict), the PR gets the `needs-rebase` label
+# so the next working session rebases it (CLAUDE.md DoD §8); the label is
+# removed on the next successful update.
 
 on:
   pull_request:
@@ -86,7 +100,7 @@ jobs:
           fi
 
           if [ "$IS_DRAFT" = "true" ]; then
-            echo "Draft PR — auto-merge arms when it's marked ready for review."
+            echo "Draft PR (deliberate WIP) — auto-merge arms when it's marked ready."
             exit 0
           fi
 
@@ -101,14 +115,20 @@ jobs:
           # Race guard: if the PR is ALREADY behind main at arming time (main
           # moved while it was a draft / before it was armed), no future main
           # push is guaranteed to rescue it — keep-up-to-date only sees armed
-          # PRs. Update it now.
-          state="$(gh pr view "$PR" --repo "$REPO" --json mergeStateStatus --jq .mergeStateStatus)"
-          if [ "$state" = "BEHIND" ]; then
-            echo "PR #$PR is behind main — updating branch now."
+          # PRs. Update it now. Deterministic compare — never mergeStateStatus
+          # (lazy/stale, see header).
+          behind="$(gh api "repos/$REPO/compare/main...$BRANCH" --jq .behind_by || echo 0)"
+          if [ "${behind:-0}" -gt 0 ]; then
+            echo "PR #$PR is $behind commit(s) behind main — updating branch now."
             if ! gh api -X PUT "repos/$REPO/pulls/$PR/update-branch" >/dev/null; then
-              echo "::warning title=Update impossible::PR #$PR : update-branch refusé (conflit ?). Résolution manuelle requise."
+              gh label create needs-rebase --repo "$REPO" --color D93F0B \
+                --description "PR armée dont l'update-branch automatique a échoué (conflit) — une session doit la rebaser (DoD §8)" \
+                2>/dev/null || true
+              gh pr edit "$PR" --repo "$REPO" --add-label needs-rebase || true
+              echo "::warning title=Update impossible::PR #$PR : update-branch refusé (conflit probable) — label needs-rebase posé, à reprendre par la prochaine session (DoD §8)."
               exit 0
             fi
+            gh pr edit "$PR" --repo "$REPO" --remove-label needs-rebase 2>/dev/null || true
             if [ "$USING_PAT" != "true" ]; then
               # GITHUB_TOKEN fallback only: the update commit's pull_request
               # run would be gated (see header), so re-dispatch as a workaround.
@@ -136,29 +156,41 @@ jobs:
       - name: Update branch + re-dispatch required checks
         run: |
           set -euo pipefail
-          # Armed, same-repo, non-draft PRs whose head is now behind main.
-          # mergeStateStatus BEHIND == the ruleset's "up to date" gate is what
-          # blocks them; everything else (BLOCKED = checks pending, DIRTY =
-          # conflict) is not ours to fix here.
+          # Armed, same-repo, non-draft PRs. Whether each one is behind is
+          # decided per-PR by the compare API — NEVER by mergeStateStatus,
+          # which is recomputed lazily after a push to main and reads
+          # stale/UNKNOWN exactly when this job runs (see header; this is the
+          # hole that stranded #379/#383 on 2026-07-12).
           prs="$(gh pr list --repo "$REPO" --base main --state open \
-            --json number,isDraft,headRefName,mergeStateStatus,autoMergeRequest,headRepositoryOwner \
+            --json number,isDraft,headRefName,autoMergeRequest,headRepositoryOwner \
             --jq '.[] | select(.autoMergeRequest != null
                                and .isDraft == false
-                               and .mergeStateStatus == "BEHIND"
                                and .headRepositoryOwner.login == "'"${REPO%%/*}"'")
                       | "\(.number) \(.headRefName)"')"
 
           if [ -z "$prs" ]; then
-            echo "No armed PR is behind main — nothing to update."
+            echo "No armed PR is open — nothing to do."
             exit 0
           fi
 
           while read -r pr branch; do
-            echo "PR #$pr ($branch) is behind main — updating branch."
-            if ! gh api -X PUT "repos/$REPO/pulls/$pr/update-branch" >/dev/null; then
-              echo "::warning title=Update impossible::PR #$pr : update-branch refusé (conflit ?). Résolution manuelle requise."
+            behind="$(gh api "repos/$REPO/compare/main...$branch" --jq .behind_by || echo 0)"
+            if [ "${behind:-0}" -eq 0 ]; then
+              echo "PR #$pr ($branch) is up to date with main — nothing to do."
               continue
             fi
+            echo "PR #$pr ($branch) is $behind commit(s) behind main — updating branch."
+            if ! gh api -X PUT "repos/$REPO/pulls/$pr/update-branch" >/dev/null; then
+              # Almost always a merge conflict: flag it for the next working
+              # session's sweep (CLAUDE.md DoD §8) — Mohamed never intervenes.
+              gh label create needs-rebase --repo "$REPO" --color D93F0B \
+                --description "PR armée dont l'update-branch automatique a échoué (conflit) — une session doit la rebaser (DoD §8)" \
+                2>/dev/null || true
+              gh pr edit "$pr" --repo "$REPO" --add-label needs-rebase || true
+              echo "::warning title=Update impossible::PR #$pr : update-branch refusé (conflit probable) — label needs-rebase posé, à reprendre par la prochaine session (DoD §8)."
+              continue
+            fi
+            gh pr edit "$pr" --repo "$REPO" --remove-label needs-rebase 2>/dev/null || true
             if [ "$USING_PAT" != "true" ]; then
               # GITHUB_TOKEN fallback only: re-dispatch as a workaround for the
               # gated native run (see workflow header). Redundant with a PAT.

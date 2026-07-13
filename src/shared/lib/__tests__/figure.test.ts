@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import DOMPurify from "dompurify";
 import { extractFigure, hasFigure, sanitizeSvg } from "../figure";
 
 describe("extractFigure", () => {
@@ -72,5 +73,18 @@ describe("sanitizeSvg (security boundary)", () => {
   it("strips javascript: payloads", () => {
     const out = sanitizeSvg('<svg><rect fill="url(javascript:alert(1))" /></svg>');
     expect(out.toLowerCase()).not.toContain("javascript:");
+  });
+
+  it("fails closed (drops the figure) when DOMPurify has no DOM to sanitize with", () => {
+    const purify = DOMPurify as { isSupported: boolean };
+    const original = purify.isSupported;
+    purify.isSupported = false;
+    try {
+      // Without a DOM, sanitize is a no-op — returning raw author SVG would be
+      // unsafe, so we must emit nothing rather than pass the markup through.
+      expect(sanitizeSvg("<svg><script>alert(1)</script><rect /></svg>")).toBe("");
+    } finally {
+      purify.isSupported = original;
+    }
   });
 });
