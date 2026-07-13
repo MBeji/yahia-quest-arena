@@ -101,7 +101,7 @@
 
 | ☐   | matière | code guide | fichier cible                   | titre                              |
 | --- | ------- | ---------- | ------------------------------- | ---------------------------------- |
-| [ ] | anglais | `641203`   | `programme/2eme-sec/anglais.md` | الدليل المرجعي في اللغة الانقليزية |
+| [~] | anglais | `641203`   | `programme/2eme-sec/anglais.md` | الدليل المرجعي في اللغة الانقليزية |
 
 ## 3eme-sec
 
