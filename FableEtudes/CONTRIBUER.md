@@ -7,9 +7,11 @@
 > [`../CLAUDE.md`](../CLAUDE.md), qui reste **la source canonique** (commandes, conventions,
 > Definition of Done). En cas de désaccord entre ce guide et CLAUDE.md, **CLAUDE.md gagne**.
 >
-> Tu veux plutôt **transcrire un document CNP manquant** (couche de persistance du contenu)
-> avec ton agent IA, sans rien connaître du projet ? Utilise le prompt clé-en-main
-> [`PROMPT-TRANSCRIPTION-CNP.md`](./PROMPT-TRANSCRIPTION-CNP.md) — ce guide-ci n'est pas requis.
+> Tu veux plutôt **transcrire les documents CNP manquants et générer leur contenu** (couche de
+> persistance + génération) avec ton agent IA, sans rien connaître du projet ? Utilise le prompt
+> clé-en-main [`PROMPT-TRANSCRIPTION-CNP.md`](./PROMPT-TRANSCRIPTION-CNP.md) — il **boucle** classe
+> par classe, matière par matière, chapitre par chapitre, et pousse une PR par lot. Ce guide-ci
+> n'est pas requis.
 
 ## TL;DR (à lire en entier avant de commencer)
 
