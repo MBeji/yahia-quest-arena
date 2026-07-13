@@ -22,10 +22,11 @@ de scoring** d'un exercice existant, plus difficile et mieux récompensé (XP ×
 
 **État réel du code (audit 2026-07-13, chiffres mesurés sur `content/`)** — annexe §9 :
 
-- 18 465 questions `mcq` sur 18 504 (39 natives) ; **12 429 éligibles (67,3 %)** à la saisie
-  libre selon la règle déterministe R-2 (réponse courte tapable, énoncé auto-suffisant).
-- **2 006 exercices sur 2 639 (76 %)** ont ≥ 3 questions éligibles → autant de missions
-  « Rappel » potentielles. Taux homogène par langue (ar 70 %, fr 65 %, en 70 %).
+- 18 533 questions `mcq` sur 18 572 (39 natives) ; **12 431 éligibles (67,1 %)** à la saisie
+  libre selon la règle déterministe R-2 (réponse courte tapable au clavier, énoncé
+  auto-suffisant).
+- **2 007 exercices sur 2 647 (75,8 %)** ont ≥ 3 questions éligibles → autant de missions
+  « Rappel » potentielles. Taux homogène par langue (ar 70 %, fr 60 %, en 63 %).
 - La couture technique existe déjà : le wire `answers: [{questionId, choice: string}]`
   transporte une chaîne libre (précédent `numeric`, étude 03), le scoring est factorisé
   derrière `score_answer(question, choice)` (5 RPCs), la clé (`correct_option` /
@@ -89,7 +90,9 @@ sur l'historique durable `attempts`, que l'anonyme n'a pas.
    score Rappel s'affiche à côté quand il existe (même style que le score classique).
 2. **Player `/quest/$exerciseId?variant=recall`** : bandeau d'en-tête « Mode Rappel · sans
    options · XP ×1,5 » ; question identique (RichField) ; **input texte** à la place du
-   radiogroup ; bouton Indice **absent** (R-11) ; validation par question comme aujourd'hui.
+   radiogroup, avec la **barre de caractères d'appoint** sous l'input (R-12 — chips par
+   langue de contenu, ex. accents FR, hamza AR) ; bouton Indice **absent** (R-11) ;
+   validation par question comme aujourd'hui.
    États : chargement identique au player actuel ; erreur `RECALL_LOCKED` /
    `RECALL_NOT_ELIGIBLE` → écran de verrou (même pattern que `QuizLockScreen`) avec CTA
    « Rejouer la mission en QCM ».
@@ -118,7 +121,12 @@ sur l'historique durable `attempts`, que l'anonyme n'a pas.
   (FR `lequel|laquelle|parmi|…suivant(e)s|ci-dessous|intrus|incorrect…`, EN
   `which of|following|below|odd one out…`, AR `مما يلي|من بين|أي من|الدخيل|الخاطئ…` —
   liste close dans la fonction SQL, annexe §9) ;
-  (h) pas de collision : la bonne réponse normalisée ≠ un distracteur normalisé.
+  (h) pas de collision : la bonne réponse normalisée ≠ un distracteur normalisé ;
+  (i) **charset tapable au clavier** : la bonne réponse, une fois normalisée (R-4), ne
+  contient que des lettres latines de base, des lettres arabes, des chiffres et le point
+  décimal (`^[a-z0-9.ء-ي]+$`) — tout caractère qu'un clavier classique ne produit pas
+  (grec, flèches, symboles spéciaux…) rend la question inéligible plutôt que la saisie
+  injuste (mesuré : 0,5 % d'exclusions, annexe §9).
   Un **exercice** est éligible ssi ≥ `RECALL_MIN_QUESTIONS = 3` questions éligibles ;
   la session Rappel joue **uniquement** les questions éligibles, dans le `display_order`.
 - **R-3 — déverrouillage (authoritative serveur).** La variante Rappel d'un exercice `E`
@@ -162,6 +170,17 @@ sur l'historique durable `attempts`, que l'anonyme n'a pas.
 - **R-11 — pas d'indice en Rappel.** `explanation` contient souvent la réponse : le bouton
   Indice est absent du player en variante Rappel (`capabilities.hints = false`) et
   `consume_hint` reste inchangé (il n'est simplement jamais offert dans ce contexte).
+- **R-12 — barre de caractères d'appoint (amendement 2026-07-13).** Sous l'input, une
+  rangée de chips tapables insère les caractères peu accessibles au clavier, **définie
+  statiquement par la langue du contenu** — JAMAIS dérivée de la réponse attendue (une
+  barre par-réponse révélerait des lettres de la réponse : anti-fuite, même posture que
+  R-1). Palettes v1 (constante UI `RECALL_CHAR_BAR` par langue) :
+  FR → `à â ç é è ê ë î ï ô û ù œ` · AR → `أ إ آ ء ؤ ئ ة ى` · EN → aucune barre.
+  Comportement : insertion au caret, focus conservé sur l'input, ordre RTL pour l'arabe,
+  boutons avec `aria-label` (« insérer é »), masquée quand le clavier de l'OS suffit n'est
+  PAS détectable → toujours affichée pour FR/AR. Ces chips sont un confort d'écriture :
+  grâce à R-4 (accents/hamza/ta marbuta pliés, `%`/`°` insignifiants, ligatures `œ→oe`),
+  **aucune réponse éligible n'exige un caractère absent du clavier** — critère (i).
 
 ### i18n
 
@@ -218,13 +237,18 @@ IMMUTABLE LANGUAGE sql AS $$ ... $$;
 Pipeline exact (appliqué dans cet ordre, testé table-driven en pgTAP) :
 
 1. `normalize(p, NFKC)` puis `lower()` ;
-2. dé-accentuation latine par `translate()` (map close : `àâäéèêëïîôöùûüÿçñ…`) ;
+2. dé-accentuation latine par `translate()` (map close : `àâäéèêëïîôöùûüÿçñ…`) et pliage
+   des ligatures `œ → oe`, `æ → ae` (NFKC ne les décompose PAS — sans ce pliage, taper
+   `soeur` contre `sœur` échouerait) ;
 3. arabe : suppression tashkeel/tatweel (`[ً-ْ ـ ٰ]`), pliage `أ/إ/آ → ا`, `ى → ي`,
    `ة → ه` ;
 4. chiffres arabes-indics (٠-٩, ۰-۹) → occidentaux ;
 5. jonction des groupes de chiffres séparés par espaces (`1 000 → 1000`) ;
 6. virgule décimale → point (`3,14 → 3.14`) ;
-7. suppression de toute ponctuation/symbole **sauf** `.` `%` `°` ;
+7. suppression de toute ponctuation/symbole **sauf** le `.` — y compris `%` et `°`,
+   rendus **insignifiants** (amendement 2026-07-13 : `°` est introuvable sur beaucoup de
+   claviers ; `50 %` ≡ `50`, `45°` ≡ `45` — l'ambiguïté intra-question est impossible par
+   construction, critère (h) collision) ;
 8. suppression des `.` non intercalés entre deux chiffres (point final, abréviations) ;
 9. suppression de **tous** les espaces (comparaison insensible à la segmentation :
    `grand-père` = `grand père` = `grandpère`, `25 cm` = `25cm`).
@@ -232,7 +256,7 @@ Pipeline exact (appliqué dans cet ordre, testé table-driven en pgTAP) :
 ```sql
 -- Éligibilité question (R-2) : IMMUTABLE, fonction du seul row questions.
 CREATE FUNCTION public.is_question_recall_eligible(q public.questions) RETURNS boolean
-IMMUTABLE LANGUAGE plpgsql AS $$ ... $$;   -- critères R-2 (a)–(h), listes closes en tête
+IMMUTABLE LANGUAGE plpgsql AS $$ ... $$;   -- critères R-2 (a)–(i), listes closes en tête
 
 -- Scoring Rappel : STABLE. score_answer N'EST PAS MODIFIÉE (D-3).
 CREATE FUNCTION public.score_recall_answer(q public.questions, p_choice text) RETURNS boolean
@@ -307,6 +331,11 @@ options: []}` — options vides par construction) et `hintCharges` est forcé à
 
 - `src/shared/lib/answer-formats.ts` : type effectif `"recall"` → non-vide, ≤ 120 c.
   (borne UX ; le wire garde 512).
+- `<RecallCharBar>` (nouveau, rendu par `<RecallInput>`) : chips d'insertion au caret
+  (R-12), palettes dans une constante `RECALL_CHAR_BAR: Record<ContentLanguage, string[]>`
+  co-localisée avec `quest-labels.ts` (contenu UI, pas une règle de jeu — ne va PAS dans
+  `gamification.ts`) ; boutons `type="button"` + `aria-label`, ordre RTL en arabe, aucun
+  rendu quand la palette de la langue est vide (EN).
 - `question-input.tsx` : prop `variant` ; en Rappel rendre `<RecallInput>` (nouveau,
   calqué sur `NumericInput` : `type="text"`, `inputMode="text"`, `dir` = langue contenu,
   `data-testid="recall-answer-input"`, Entrée = valider, `autoComplete/autoCorrect/
@@ -373,7 +402,7 @@ Suivi produit : les sessions Rappel se comptent en SQL (`attempts WHERE variant=
 | 1   | Migration : colonnes `variant` + index, `normalize_recall_text`, `is_question_recall_eligible`, `score_recall_answer`, REVOKEs                                                                                   | pgTAP table-driven : normalisation (FR/AR/EN, chiffres, ponctuation), éligibilité (a)–(h), scorer, REVOKEs                                                                           | —         |
 | 2   | Migration : `start_exercise_session` v2, `submit_exercise_attempt` (branches variant), `get_attempt_review` v2, `get_recall_questions`, `get_recall_availability`, `get_best_scores_by_exercise` scopée + grants | pgTAP : R-3 (LOCKED/NOT_ELIGIBLE/anti-rush), scoring Rappel bout-en-bout, R-5/R-6 (XP ×1,5, best scopé), R-7 (misconception typée), review texte, **régression classique inchangée** | lot 1     |
 | 3   | Server fns : `startExerciseSession`/`getExercise`/`submitAttempt`/`getSubject` + zod + regen `types.ts`                                                                                                          | Vitest quest.test.ts : variant relayé, questions sans options, hints=0, review assemblée, erreurs localisées                                                                         | lot 2     |
-| 4   | UI : `RecallInput`, player variant + search param, chip hub, écran verrou, célébration déblocage, i18n ×3, constantes gamification                                                                               | Vitest : question-input (recall), exercise-player (bandeau, pas d'indice, review), subject-hub (états chip), answer-formats                                                          | lot 3     |
+| 4   | UI : `RecallInput` + `RecallCharBar` (R-12), player variant + search param, chip hub, écran verrou, célébration déblocage, i18n ×3, constantes gamification                                                      | Vitest : question-input (recall), char bar (insertion caret, RTL, a11y), exercise-player (bandeau, pas d'indice, review), subject-hub (états chip), answer-formats                   | lot 3     |
 | 5   | E2E authed (`recall-mode.spec.ts` : débloquer → jouer → XP ×1,5 → review), `docs/guide-rappel-actif.md`, lexique voice doc, STATUS.md §3, ARCHITECTURE.md                                                        | Playwright authed + `npm run ci:verify` complet                                                                                                                                      | lot 4     |
 
 - [ ] Lot 1 — fondations SQL pures (rien d'appelable par le client)
@@ -399,6 +428,7 @@ STOPPE et escalade (règle FableEtudes).
   badges, télémétrie) quand `variant` est absent/`'classic'`.
 - **Vitest (lots 3–4)** : pattern mock Supabase existant (`mockQuery`/`mockRpc`) pour les
   server fns ; Testing Library pour `RecallInput` (dir RTL, Entrée, spellcheck off),
+  `RecallCharBar` (insertion au caret, focus conservé, palettes par langue, a11y),
   le player (bandeau, absence du bouton Indice, review textes), le hub (3 états du chip).
 - **Playwright (lot 5, projet TEST)** : spec authed — jouer une mission QCM à 100 % (helper
   `answerKey` existant, pace anti-rush), vérifier le chip débloqué, jouer la variante
@@ -428,10 +458,12 @@ STOPPE et escalade (règle FableEtudes).
   impact fort. Mitigations : recréation verbatim + branche (pattern éprouvé A0), pgTAP de
   non-régression classique, déploiement migration-d'abord (le code TS du lot 3 n'arrive
   qu'après), `pgTAP suite` sur PR.
-- **RISK-5 — saisie mobile pénible (clavier, RTL, autocorrect).** Moyenne/UX. Mitigations :
-  attributs R-8, réponses cibles courtes par construction (≤ 60 c., 83 % ≤ 30 c.), Entrée
-  pour valider, e2e mobile public non requis (mode connecté) mais test manuel mobile au
-  lot 4.
+- **RISK-5 — saisie mobile pénible (clavier, RTL, autocorrect, caractères spéciaux).**
+  Moyenne/UX. Mitigations : attributs R-8, réponses cibles courtes par construction
+  (≤ 60 c., 83 % ≤ 30 c.), Entrée pour valider, **barre de caractères d'appoint R-12** +
+  critère (i) (aucune réponse éligible n'exige un caractère hors clavier) + `%`/`°`/
+  ligatures neutralisés par R-4, e2e mobile public non requis (mode connecté) mais test
+  manuel mobile au lot 4.
 - **RISK-6 — dérive éligibilité SQL vs audit TS.** Faible : l'audit (annexe §9) est un
   one-shot de conception ; la seule source runtime est la fonction SQL. Le lot 5 documente
   dans le guide que toute évolution des critères se fait par migration + re-mesure.
@@ -453,29 +485,35 @@ STOPPE et escalade (règle FableEtudes).
 - 2026-07-13 — étude créée (brouillon). Audit d'éligibilité mesuré sur `content/` (annexe
   §9). PR #399.
 - 2026-07-13 — Q-1…Q-4 arbitrées par Mohamed (toutes sur les recommandations) → statut
-  **validée**. Aucun lot démarré — prête pour l'exécuteur (lot 1).
+  **validée**. PR #401.
+- 2026-07-13 — amendement (demande Mohamed, avant exécution) : caractères hors clavier.
+  Nouvelle règle **R-12** (barre de caractères d'appoint par langue, jamais dérivée de la
+  réponse), R-4 durci (ligatures `œ/æ` pliées, `%`/`°` insignifiants), nouveau critère
+  d'éligibilité **(i)** charset tapable (0,5 % d'exclusions), annexe §9 re-mesurée.
+  Aucun lot démarré — prête pour l'exécuteur (lot 1).
 
-## 9. Annexe — audit d'éligibilité (mesuré le 2026-07-13)
+## 9. Annexe — audit d'éligibilité (mesuré le 2026-07-13, re-mesuré après l'amendement R-12/(i))
 
 Méthode : script one-shot sur les fichiers `content/**/exercices/*.json` + `quiz.json`
-(75 dossiers sujets authored), appliquant les critères R-2 et la normalisation R-4.
-Chiffres au niveau authored (les sujets `compileTo` du lycée comptent une fois).
+(75 dossiers sujets authored), appliquant les critères R-2 (a)–(i) et la normalisation R-4
+durcie. Chiffres au niveau authored (les sujets `compileTo` du lycée comptent une fois).
 
 | Mesure                                               | Valeur                                            |
 | ---------------------------------------------------- | ------------------------------------------------- |
-| Questions totales / `mcq`                            | 18 504 / 18 465 (99,8 %)                          |
-| Questions `mcq` **éligibles**                        | **12 429 (67,3 %)**                               |
-| — dont réponse purement numérique                    | 1 537                                             |
-| — dont « réponse sûrement unique » (cloze/numérique) | 4 298 (23,3 %)                                    |
-| Exercices avec ≥ 3 questions éligibles               | **2 006 / 2 639 (76,0 %)**                        |
-| Exercices avec ≥ 4 questions éligibles               | 1 666 (63,1 %)                                    |
-| Exercices 100 % éligibles                            | 773 (29,3 %)                                      |
-| Quiz avec ≥ 3 éligibles (hors périmètre v1)          | 416 / 529 (78,6 %)                                |
-| Par langue (éligibles/total)                         | ar 8 714/12 448 · fr 2 069/3 445 · en 1 646/2 611 |
+| Questions totales / `mcq`                            | 18 572 / 18 533 (99,8 %)                          |
+| Questions `mcq` **éligibles**                        | **12 431 (67,1 %)**                               |
+| — dont réponse purement numérique                    | 1 543                                             |
+| — dont « réponse sûrement unique » (cloze/numérique) | 4 303 (23,2 %)                                    |
+| Exercices avec ≥ 3 questions éligibles               | **2 007 / 2 647 (75,8 %)**                        |
+| Exercices avec ≥ 4 questions éligibles               | 1 663 (62,8 %)                                    |
+| Exercices 100 % éligibles                            | 767 (29,0 %)                                      |
+| Quiz avec ≥ 3 éligibles (hors périmètre v1)          | 417 / 533 (78,2 %)                                |
+| Par langue (éligibles/total)                         | ar 8 692/12 448 · fr 2 093/3 513 · en 1 646/2 611 |
 
 Exclusions (cumulables) : réponse > 6 mots 24,4 % · > 60 caractères 10,7 % · énoncé
-dépendant des options 6,4 % · symboles math 5,5 % · réponse composite 2,0 % · contenu riche
-(SVG/img/URL) 1,4 % · collision distracteur normalisé 0,8 %. Longueurs des bonnes réponses :
+dépendant des options 6,4 % · symboles math 5,6 % · réponse composite 2,1 % · contenu riche
+(SVG/img/URL) 1,4 % · collision distracteur normalisé 0,8 % · **charset hors clavier,
+critère (i) : 0,5 %**. Longueurs des bonnes réponses :
 ≤ 15 c. 54 % · 16–30 c. 16 % · 31–60 c. 19 % · > 60 c. 11 %.
 
 Lecture : la règle R-2 est volontairement **conservatrice** (précision d'abord — un refus
