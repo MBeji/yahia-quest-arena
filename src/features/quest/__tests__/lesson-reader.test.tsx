@@ -228,6 +228,32 @@ describe("LessonReader", () => {
     expect(container.querySelector(".lesson-blk--piege")?.textContent).toContain("Piège");
   });
 
+  it("renders the summary tab as a deck of revision cards, the course as blocks (US-6)", () => {
+    const { container } = render(
+      <LessonReader
+        chapterId="c1"
+        chapter={{
+          ...chapter,
+          lesson_content: "## Thalès\n\n> ⚠️ Un piège.",
+          summary: "- **La formule**: AM/AB = AN/AC\n- ⚠️ **Le piège**: MN/BC ≠ AM/MB",
+        }}
+        allChapters={siblings}
+      />,
+    );
+
+    // Onglet Cours : des blocs, pas des cartes.
+    expect(container.querySelector(".lesson-blk--piege")).not.toBeNull();
+    expect(container.querySelector(".lesson-cards")).toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: "Résumé" }));
+
+    // Onglet Résumé : un paquet de cartes — dont une carte-piège typée.
+    expect(container.querySelector(".lesson-cards")).not.toBeNull();
+    expect(container.querySelectorAll(".lesson-card").length).toBe(2);
+    expect(container.querySelector(".lesson-card--piege")).not.toBeNull();
+    expect(container.querySelector(".lesson-card__title")?.textContent).toBe("La formule");
+  });
+
   it("opens a figure in a zoom dialog on click and on keyboard (US-3)", () => {
     const svg = '<svg viewBox="0 0 10 10"><circle cx="5" cy="5" r="4"/></svg>';
     const { container } = render(
