@@ -270,7 +270,7 @@ périmètre ; divergence étude↔code = STOP et remontée (règle FableEtudes).
 - [x] Lot 10 — onboarding v2
 - [x] Lot 11 — arène
 - [x] Lot 12 — parent
-- [ ] Lot 13 — admin
+- [x] Lot 13 — admin
 
 ## 5. Stratégie de test
 
@@ -534,3 +534,25 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
   (au lieu du hero-class dans l'en-tête) reste à faire côté **RPC** `get_student_report` pour rester
   cohérente sur le chemin anonyme `/suivi` — différée pour éviter une migration RPC (risque de
   collision de timestamps, déjà rencontré 2×). Gate vert (1297 tests + build ; i18n 115/116 Ko).
+- 2026-07-14 — Lot 13 livré (admin, D-10 — efficacité, petit) : maquette
+  `design/ds/ecrans/admin-v2.html` publiée dans le projet DS puis implémentée. **Triage des
+  signalements de contenu efficace** (surface admin la plus fréquentée) : les signalements sont
+  **regroupés par cible** (`exerciseId` → un bloc, compteur si >1 ; fallback `subjectId`/`id` pour
+  les orphelins) — fini le traitement 3× du même exercice ; chaque groupe porte un **lien direct
+  vers le contenu** (`/matiere/$subjectId`, ids déjà servis par `admin_list_content_reports` — aucun
+  changement serveur), chaque signalement restant résoluble/rejetable individuellement. i18n ×3
+  (2 clés : `reportCount`, `viewContent`). Tests : 1 spec `ContentReportsAdmin` (2 cibles → 2 groupes
+  liés, tous les messages conservés). **Écart assumé (D-10 reste « petit »)** : la recherche
+  utilisateur par email (console abonnements) et l'aperçu du grant sur « Approuver » (bêta) demandent
+  respectivement une nouvelle server-fn et un élargissement SELECT du grant résolu à l'approbation
+  (`current_parcours_id`) ; différés — ce lot livre le gain de triage substantiel et testé. Gate vert
+  (1298 tests + build ; i18n 115/116 Ko).
+- 2026-07-14 — **Étude 15 CLÔTURÉE** : les 13 lots (0→13) sont livrés en production. Les frictions
+  de trunk actif rencontrées en route (collision é16 lot 3 sur les fichiers lycée au lot 8 ;
+  collisions de timestamps de migration au lot 10, 2×) ont été résolues par rebase/réconciliation
+  propres, sans jamais écraser le travail concurrent. Écarts de périmètre assumés et tracés au fil
+  des lots (classe scolaire réelle du bilan parent, email-search/approve-preview admin, sous-items
+  D-7 déjà couverts par les lots 5/6/2). Bilan : funnel public (preuve chiffrée, lycée en drill-down
+  hérité d'é16, extras différenciés), auth v2 (reset + langue + registre R-7), onboarding v2
+  (rôle parent réparé + option A + célébration), arène cold-start (fin du #1 fictif), bilan parent
+  actionnable (chapitres cliquables des deux côtés), triage admin regroupé.

@@ -419,6 +419,8 @@ export const ar: TranslationKeys = {
     openCount: "للمعالجة",
     empty: "لا توجد بلاغات بعد.",
     unknownExercise: "تمرين غير معروف",
+    reportCount: "{n} إبلاغات",
+    viewContent: "عرض المحتوى",
     statusOpen: "مفتوح",
     statusResolved: "محلول",
     statusDismissed: "مرفوض",

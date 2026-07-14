@@ -373,6 +373,8 @@ export type TranslationKeys = {
     openCount: string;
     empty: string;
     unknownExercise: string;
+    reportCount: string;
+    viewContent: string;
     statusOpen: string;
     statusResolved: string;
     statusDismissed: string;
