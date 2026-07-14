@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { Flag, Check, X, Loader2 } from "lucide-react";
+import { Flag, Check, X, Loader2, ExternalLink } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { isRtlText } from "@/shared/lib/utils";
 import type { ContentReportStatus } from "../content-report.server";
@@ -74,6 +75,31 @@ export function ContentReportsAdmin() {
   const reports = listQuery.data?.reports ?? [];
   const openCount = reports.filter((r) => r.status === "open").length;
 
+  // Group by target (same exercise → one cluster) so duplicate reports about the
+  // same content are triaged together (D-10). Orphans keep a distinct fallback key.
+  const groups = new Map<
+    string,
+    {
+      key: string;
+      exerciseTitle: string | null;
+      subjectId: string | null;
+      reports: typeof reports;
+    }
+  >();
+  for (const r of reports) {
+    const key = r.exerciseId ?? r.subjectId ?? r.id;
+    const g = groups.get(key);
+    if (g) g.reports.push(r);
+    else
+      groups.set(key, {
+        key,
+        exerciseTitle: r.exerciseTitle,
+        subjectId: r.subjectId,
+        reports: [r],
+      });
+  }
+  const grouped = [...groups.values()];
+
   return (
     <div>
       <div className="mb-6 flex items-center gap-3">
@@ -99,58 +125,84 @@ export function ContentReportsAdmin() {
         </div>
       ) : (
         <div className="space-y-3">
-          {reports.map((r) => {
-            const busy = pendingId === r.id && mutation.isPending;
-            return (
-              <div
-                key={r.id}
-                className="rounded-2xl border border-[color:var(--neon-gold)]/20 bg-card/50 p-4 backdrop-blur-md"
-              >
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2 font-display font-bold">
-                      {r.exerciseTitle ?? t.contentReport.unknownExercise}{" "}
-                      <StatusBadge status={r.status} />
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {[r.subjectId, new Date(r.createdAt).toLocaleDateString()]
-                        .filter(Boolean)
-                        .join(" · ")}
-                    </div>
-                  </div>
-                  {r.status === "open" && (
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => mutation.mutate({ reportId: r.id, status: "resolved" })}
-                        disabled={busy}
-                        className="inline-flex min-h-11 items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-3 py-1.5 text-sm font-bold text-black shadow-gold transition hover:scale-105 disabled:opacity-50"
-                      >
-                        {busy ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : (
-                          <Check className="h-4 w-4" />
-                        )}
-                        {t.contentReport.resolve}
-                      </button>
-                      <button
-                        onClick={() => mutation.mutate({ reportId: r.id, status: "dismissed" })}
-                        disabled={busy}
-                        className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-border/50 px-3 py-1.5 text-sm font-semibold text-muted-foreground transition hover:text-foreground disabled:opacity-50"
-                      >
-                        <X className="h-4 w-4" /> {t.contentReport.dismiss}
-                      </button>
-                    </div>
+          {grouped.map((g) => (
+            <div
+              key={g.key}
+              className="rounded-2xl border border-[color:var(--neon-gold)]/20 bg-card/50 p-4 backdrop-blur-md"
+            >
+              {/* Target header + DIRECT link to the reported content (D-10). */}
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/40 pb-2">
+                <div className="flex items-center gap-2 font-display font-bold">
+                  {g.exerciseTitle ?? t.contentReport.unknownExercise}
+                  {g.reports.length > 1 && (
+                    <span className="rounded-full bg-[color:var(--neon-gold)]/20 px-2 py-0.5 text-xs font-bold text-[color:var(--neon-gold)]">
+                      {t.contentReport.reportCount.replace("{n}", String(g.reports.length))}
+                    </span>
                   )}
                 </div>
-                <p
-                  className="mt-3 rounded-lg border border-border/40 bg-background/30 p-3 text-sm text-muted-foreground"
-                  dir={isRtlText(r.message) ? "rtl" : undefined}
-                >
-                  {r.message}
-                </p>
+                {g.subjectId && (
+                  <Link
+                    to="/matiere/$subjectId"
+                    params={{ subjectId: g.subjectId }}
+                    className="inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-[color:var(--neon-gold)] hover:underline"
+                  >
+                    <ExternalLink className="h-4 w-4" /> {t.contentReport.viewContent}
+                  </Link>
+                )}
               </div>
-            );
-          })}
+              <div className="mt-3 space-y-3">
+                {g.reports.map((r) => {
+                  const busy = pendingId === r.id && mutation.isPending;
+                  return (
+                    <div
+                      key={r.id}
+                      className="rounded-lg border border-border/40 bg-background/30 p-3"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <StatusBadge status={r.status} />
+                          {new Date(r.createdAt).toLocaleDateString()}
+                        </div>
+                        {r.status === "open" && (
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() =>
+                                mutation.mutate({ reportId: r.id, status: "resolved" })
+                              }
+                              disabled={busy}
+                              className="inline-flex min-h-11 items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-3 py-1.5 text-sm font-bold text-black shadow-gold transition hover:scale-105 disabled:opacity-50"
+                            >
+                              {busy ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                <Check className="h-4 w-4" />
+                              )}
+                              {t.contentReport.resolve}
+                            </button>
+                            <button
+                              onClick={() =>
+                                mutation.mutate({ reportId: r.id, status: "dismissed" })
+                              }
+                              disabled={busy}
+                              className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-border/50 px-3 py-1.5 text-sm font-semibold text-muted-foreground transition hover:text-foreground disabled:opacity-50"
+                            >
+                              <X className="h-4 w-4" /> {t.contentReport.dismiss}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                      <p
+                        className="mt-2 text-sm text-muted-foreground"
+                        dir={isRtlText(r.message) ? "rtl" : undefined}
+                      >
+                        {r.message}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>

@@ -1,0 +1,134 @@
+<!-- @dsCard group="Écrans" -->
+<title>Admin — triage signalements (lot 13)</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+  }
+  body {
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    background: #f3f2ee;
+    padding: 16px;
+    color: #1a1a1a;
+  }
+  h3.section {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin: 18px 0 8px;
+    font-weight: 700;
+  }
+  h3.section:first-of-type {
+    margin-top: 0;
+  }
+  .avant {
+    border-inline-start: 3px solid #c0392b;
+    background: #fbeae8;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    color: #7a2018;
+    margin-bottom: 6px;
+  }
+  .apres {
+    border-inline-start: 3px solid #0f6e56;
+    background: #e7f3ee;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    color: #0b4535;
+    margin-bottom: 12px;
+  }
+  .frame {
+    background: #15120d;
+    color: #f5ecd8;
+    border-radius: 16px;
+    padding: 16px;
+    max-width: 460px;
+  }
+  .group {
+    border: 1px solid rgba(229, 181, 103, 0.25);
+    border-radius: 12px;
+    padding: 12px;
+  }
+  .ghead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border-bottom: 1px solid #3a3122;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+  }
+  .ghead b {
+    font-size: 13px;
+  }
+  .count {
+    background: rgba(229, 181, 103, 0.2);
+    color: #e5b567;
+    border-radius: 999px;
+    padding: 1px 8px;
+    font-size: 10.5px;
+    font-weight: 700;
+    margin-inline-start: 6px;
+  }
+  .view {
+    color: #e5b567;
+    font-weight: 700;
+    font-size: 12px;
+    text-decoration: none;
+  }
+  .rep {
+    border: 1px solid #3a3122;
+    background: #211c14;
+    border-radius: 8px;
+    padding: 9px;
+    margin-bottom: 6px;
+    font-size: 12px;
+  }
+  .rep .meta {
+    color: #8a7c5f;
+    font-size: 10.5px;
+    margin-bottom: 4px;
+  }
+</style>
+
+<h3 class="section">Triage des signalements — efficacité admin (D-10)</h3>
+<div class="avant">
+  <b>Avant (§D-10)</b> — une liste plate : 3 signalements sur le même exercice apparaissent
+  séparément (on traite 3× la même chose), et le <code>subjectId</code> est du texte brut — l'admin
+  doit chercher le contenu à la main.
+</div>
+<div class="apres">
+  <b>Après</b> — les signalements sont <b>regroupés par cible</b> (même exercice → un seul bloc,
+  avec compteur), et chaque groupe porte un
+  <b>lien direct vers le contenu</b> (<code>/matiere</code>) : un clic pour voir, chaque signalement
+  reste résoluble individuellement.
+</div>
+<div class="frame">
+  <div class="group">
+    <div class="ghead">
+      <b>Fractions <span class="count">2 signalements</span></b>
+      <a class="view" href="#">↗ Voir le contenu</a>
+    </div>
+    <div class="rep">
+      <div class="meta">🟡 Ouvert · 14/07</div>
+      La réponse B est aussi correcte, pas seulement A.
+    </div>
+    <div class="rep">
+      <div class="meta">🟡 Ouvert · 14/07</div>
+      Il manque une parenthèse dans l'énoncé.
+    </div>
+  </div>
+  <div class="group" style="margin-top: 8px">
+    <div class="ghead">
+      <b>Théorème de Pythagore</b>
+      <a class="view" href="#">↗ Voir le contenu</a>
+    </div>
+    <div class="rep">
+      <div class="meta">🟡 Ouvert · 14/07</div>
+      Le schéma ne s'affiche pas sur mobile.
+    </div>
+  </div>
+</div>

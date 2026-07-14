@@ -419,6 +419,8 @@ export const en: TranslationKeys = {
     openCount: "to review",
     empty: "No reports yet.",
     unknownExercise: "Unknown exercise",
+    reportCount: "{n} reports",
+    viewContent: "View content",
     statusOpen: "Open",
     statusResolved: "Resolved",
     statusDismissed: "Dismissed",
