@@ -26,16 +26,17 @@ non-conformity. `content:qa` warns on it; `content-audit` grades it `[MAJOR]`.
 
 **Families where a chapter MUST carry at least one figure:**
 
-| family                | typical chapters                                                              |
-| --------------------- | ----------------------------------------------------------------------------- |
-| Plane geometry        | Thalès, Pythagore, triangles, quadrilatères, polygones, droites, symétries    |
-| Circle & angles       | cercle, disque, angles inscrits / au centre, arcs                             |
-| Coordinates & vectors | repère, coordonnées, vecteurs, translations, colinéarité                      |
-| Solids                | cube, pavé, prisme, cylindre, cône, sphère, pyramide, géométrie dans l'espace |
-| Trigonometry          | rapports trigonométriques (the right triangle must be drawn)                  |
-| Measurement of shapes | périmètre, aire, volume — the shape being measured is drawn                   |
-| Science diagrams      | SVT (organs, cycles, food chains), physics (circuits, optics, forces)         |
-| Time & data           | frises chronologiques, graphiques, tableaux de données lus sur un schéma      |
+| family                | typical chapters                                                                                                |
+| --------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Plane geometry        | Thalès, Pythagore, triangles, quadrilatères, polygones, droites, symétries                                      |
+| Circle & angles       | cercle, disque, angles inscrits / au centre, arcs                                                               |
+| Coordinates & vectors | repère, coordonnées, vecteurs, translations, colinéarité                                                        |
+| Solids                | cube, pavé, prisme, cylindre, cône, sphère, pyramide, géométrie dans l'espace                                   |
+| Trigonometry          | rapports trigonométriques (the right triangle must be drawn)                                                    |
+| Measurement of shapes | périmètre, aire, volume — the shape being measured is drawn                                                     |
+| Science diagrams      | SVT (organs, cycles, food chains), physics (circuits, optics, forces)                                           |
+| **Functions**         | fonctions linéaires, affines — **la droite EST la leçon** : sans elle, le cours décrit ce qu'il fallait montrer |
+| Time & data           | statistiques (bâtons, circulaire, histogramme), frises chronologiques, graphiques                               |
 
 The QA regex that mirrors this table lives in `scripts/content/qa-checks.ts` (`SPATIAL_CHAPTER`,
 tested on the chapter **slug**). **Keep the two in phase**: adding a family here means adding its

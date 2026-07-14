@@ -21,6 +21,16 @@ _Exemple détaillé_ : un cylindre de rayon 3 cm et de hauteur 10 cm a pour volu
 
 ## ▭ Section d'un parallélépipède rectangle
 
+::: figure Section d'un pavé par un plan parallèle à une face: on retrouve exactement le même rectangle
+<svg viewBox="0 0 300 220">
+<path d="M60 180 L200 180 L200 80 L60 80 Z" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<path d="M200 180 L245 145 M200 80 L245 45 M60 80 L105 45 M245 145 L245 45 M105 45 L245 45" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M60 180 L105 145 M105 145 L245 145 M105 145 L105 45" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/>
+<path d="M82.5 162.5 L222.5 162.5 L222.5 62.5 L82.5 62.5 Z" fill="#0f6e56" opacity="0.16"/>
+<path d="M82.5 162.5 L222.5 162.5 L222.5 62.5 L82.5 62.5 Z" fill="none" stroke="#0f6e56" stroke-width="2.5" stroke-linejoin="round"/>
+</svg>
+:::
+
 Deux cas au programme :
 
 > La section d'un parallélépipède droit par un plan **parallèle à une face** est un **rectangle isométrique** (identique) à cette face.
@@ -30,6 +40,23 @@ Deux cas au programme :
 _Exemple détaillé_ : on coupe une boîte parallélépipédique par un plan parallèle à sa face avant. La tranche obtenue est un rectangle exactement superposable à cette face avant.
 
 ## 🔺 Section d'une pyramide et d'un cône
+
+::: figure Section d'une pyramide par un plan parallèle à la base: c'est une RÉDUCTION de la base, de même forme
+<svg viewBox="0 0 300 220">
+<path d="M150 40 L60 190 L200 190 Z" fill="#0f6e56" opacity="0.07"/>
+<path d="M60 190 L200 190 L240 155" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<path d="M150 40 L60 190 M150 40 L200 190 M150 40 L240 155" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M60 190 L100 155 L240 155" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/>
+<path d="M150 40 L100 155" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/>
+<path d="M105 115 L175 115 L195 97.5 L125 97.5 Z" fill="#0f6e56" opacity="0.18"/>
+<path d="M105 115 L175 115 L195 97.5" fill="none" stroke="#0f6e56" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M105 115 L125 97.5 L195 97.5" fill="none" stroke="#0f6e56" stroke-width="2" stroke-dasharray="5 3"/>
+<g fill="#0f172a"><circle cx="150" cy="40" r="4"/></g>
+<g font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="150" y="30" text-anchor="middle" fill="#0f172a">S</text>
+</g>
+</svg>
+:::
 
 Quand le plan est **parallèle à la base** :
 
@@ -42,6 +69,20 @@ Cette réduction suit une **échelle k** (comme au chapitre Thalès) : les longu
 _Exemple détaillé_ : une pyramide à base carrée est coupée à mi-hauteur par un plan parallèle à la base (k = 1/2). La section est un carré dont le côté est la moitié de celui de la base, donc d'aire quatre fois plus petite (k² = 1/4).
 
 ## ⭕ Section d'un cylindre et d'une sphère
+
+::: figure Section d'une sphère par un plan: c'est toujours un CERCLE — d'autant plus petit que le plan s'éloigne du centre
+<svg viewBox="0 0 300 250">
+<circle cx="150" cy="130" r="90" fill="#0f6e56" opacity="0.07"/>
+<circle cx="150" cy="130" r="90" fill="none" stroke="#0f172a" stroke-width="2"/>
+<ellipse cx="150" cy="130" rx="90" ry="24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/>
+<path d="M65.15 100 A 84.85 22 0 0 1 234.85 100" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/>
+<path d="M65.15 100 A 84.85 22 0 0 0 234.85 100" fill="none" stroke="#0f6e56" stroke-width="2.5"/>
+<g fill="#0f172a"><circle cx="150" cy="130" r="4"/></g>
+<g font-size="14" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="150" y="148" text-anchor="middle" fill="#0f172a">O</text>
+</g>
+</svg>
+:::
 
 > La section d'un **cylindre** par un plan **parallèle à une base** est un **cercle de même rayon** que la base.
 
