@@ -524,7 +524,19 @@ const DIRECTIVE_CLOSE = /^:::[ \t]*$/;
  * deux en phase.
  */
 const SPATIAL_CHAPTER =
-  /thales|thal[eè]s|pythagore|triangle|g[ée]om[ée]tri|cercle|angle|vecteur|rep[eè]re|espace|solide|sym[ée]trie|translation|rotation|homoth[ée]tie|perim[eè]tre|p[ée]rim[eè]tre|quadrilat[eè]re|polygone|trigo|prisme|pyramide|c[oô]ne|cylindre|sph[eè]re|droites/i;
+  // Formes & espace
+  /thales|thal[eè]s|pythagore|triangle|g[ée]om[ée]tri|cercle|angle|vecteur|rep[eè]re|espace|solide|sym[ée]trie|translation|rotation|quart.?tour|homoth[ée]tie|section|perim[eè]tre|p[ée]rim[eè]tre|quadrilat[eè]re|polygone|trigo|prisme|pyramide|c[oô]ne|cylindre|sph[eè]re|droites/i;
+
+/**
+ * Deuxième famille — les notions qui se LISENT sur un graphique. Une leçon sur les fonctions
+ * linéaires sans sa droite, ou sur les statistiques sans son diagramme, souffre exactement du
+ * même défaut qu'une géométrie sans triangle : elle décrit ce qu'il fallait montrer.
+ * Ajoutée le 2026-07-14 en illustrant math-1ere-sec — la première version de la liste ne
+ * couvrait que les formes, et laissait passer `12-fonctions-lineaires` et
+ * `16-exploitation-information` sans le moindre dessin.
+ */
+const GRAPHICAL_CHAPTER =
+  /fonction|graphique|diagramme|statistiq|donn[ée]es|exploitation.?information|frise|chronolog/i;
 
 /**
  * Audit d'une leçon. Contrôles :
@@ -609,5 +621,5 @@ export function auditLesson(md: string, where: string, opts: { spatial?: boolean
 
 /** Le chapitre relève-t-il d'une famille où la figure est exigible ? (axe 5) */
 export function isSpatialChapter(slug: string): boolean {
-  return SPATIAL_CHAPTER.test(slug);
+  return SPATIAL_CHAPTER.test(slug) || GRAPHICAL_CHAPTER.test(slug);
 }

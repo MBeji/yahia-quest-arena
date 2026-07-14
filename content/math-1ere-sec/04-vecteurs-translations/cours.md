@@ -8,6 +8,19 @@ Jusqu'ici, un point restait à sa place. Le **vecteur** capture l'idée de **dé
 
 Un couple ordonné de points (A, B) est un **bipoint**. Le **vecteur AB** possède trois caractères : une **direction** (celle de la droite (AB)), un **sens** (de A vers B) et une **longueur** (la distance AB).
 
+::: figure Le vecteur AB porte trois caractères: une direction (celle de la droite (AB)), un sens (de A vers B) et une longueur
+<svg viewBox="0 0 300 200">
+<path d="M60 155 L235 65" fill="none" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="6 5"/>
+<path d="M60 155 L225 70" fill="none" stroke="#0f6e56" stroke-width="3"/>
+<path d="M232 66.4 L219.7 82 L215.6 68.6 Z" fill="#0f6e56"/>
+<g fill="#0f172a"><circle cx="60" cy="155" r="4.5"/><circle cx="235" cy="65" r="4.5"/></g>
+<g font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="48" y="170" text-anchor="middle" fill="#0f172a">A</text>
+<text x="248" y="58" text-anchor="middle" fill="#0f172a">B</text>
+</g>
+</svg>
+:::
+
 Deux bipoints représentent **le même vecteur** — on dit qu'ils sont **équipollents** — lorsqu'ils ont même direction, même sens et même longueur. On le reconnaît ainsi :
 
 > Le vecteur AB est égal au vecteur CD **si et seulement si les segments [AD] et [BC] ont le même milieu**.
@@ -26,9 +39,48 @@ La définition par les milieux se traduit par des critères commodes :
 
 _Exemple détaillé_ : ABDC est un parallélogramme. Alors vecteur AB = vecteur CD, et aussi vecteur AC = vecteur BD (les deux autres côtés). C'est la façon la plus rapide de « lire » des vecteurs égaux sur une figure.
 
+::: figure Dans le parallélogramme ABDC, les vecteurs AB et CD sont égaux: même direction, même sens, même longueur
+<svg viewBox="0 0 310 215">
+<path d="M60 180 L180 180 L250 80 L130 80 Z" fill="#0f6e56" opacity="0.08"/>
+<path d="M60 180 L180 180 L250 80 L130 80 Z" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<path d="M60 180 L166 180" fill="none" stroke="#0f6e56" stroke-width="3"/>
+<path d="M180 180 L166 186 L166 174 Z" fill="#0f6e56"/>
+<path d="M130 80 L236 80" fill="none" stroke="#0f6e56" stroke-width="3"/>
+<path d="M250 80 L236 86 L236 74 Z" fill="#0f6e56"/>
+<g fill="#0f172a"><circle cx="60" cy="180" r="4"/><circle cx="180" cy="180" r="4"/><circle cx="250" cy="80" r="4"/><circle cx="130" cy="80" r="4"/></g>
+<g font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="48" y="196" text-anchor="middle" fill="#0f172a">A</text>
+<text x="190" y="196" text-anchor="middle" fill="#0f172a">B</text>
+<text x="264" y="74" text-anchor="middle" fill="#0f172a">D</text>
+<text x="118" y="74" text-anchor="middle" fill="#0f172a">C</text>
+</g>
+</svg>
+:::
+
 > ⚠️ L'ordre des lettres compte. Le vecteur AB et le vecteur BA ont la même direction et la même longueur mais des **sens opposés** : ils ne sont pas égaux (ce sont des vecteurs opposés).
 
 ## 🎯 La translation et l'image d'un point
+
+::: figure La translation fait glisser toute la figure du même vecteur: l'image est superposable à l'original
+<svg viewBox="0 0 320 215">
+<path d="M50 175 L120 175 L75 110 Z" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<path d="M160 120 L230 120 L185 55 Z" fill="#0f6e56" opacity="0.12"/>
+<path d="M160 120 L230 120 L185 55 Z" fill="none" stroke="#0f6e56" stroke-width="2" stroke-linejoin="round"/>
+<g stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4" fill="none">
+<path d="M50 175 L160 120 M120 175 L230 120 M75 110 L185 55"/>
+</g>
+<path d="M245 175 L340 128" fill="none" stroke="#0f6e56" stroke-width="0"/>
+<path d="M60 60 L165 7" fill="none" stroke="#0f6e56" stroke-width="0"/>
+<g font-size="14" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="40" y="190" text-anchor="middle" fill="#0f172a">A</text>
+<text x="130" y="190" text-anchor="middle" fill="#0f172a">B</text>
+<text x="66" y="102" text-anchor="middle" fill="#0f172a">C</text>
+<text x="150" y="135" text-anchor="middle" fill="#0f6e56">A'</text>
+<text x="242" y="135" text-anchor="middle" fill="#0f6e56">B'</text>
+<text x="176" y="47" text-anchor="middle" fill="#0f6e56">C'</text>
+</g>
+</svg>
+:::
 
 Se donner un vecteur AB, c'est se donner une **translation**.
 

@@ -18,6 +18,26 @@ _Exemple détaillé_ : sur une droite, A a pour abscisse 2 et B pour abscisse 5.
 
 ## 🗺️ Repère du plan : coordonnées d'un point
 
+::: figure Les coordonnées de M se lisent par projection sur les deux axes: l'abscisse en premier, l'ordonnée ensuite
+<svg viewBox="0 0 300 240">
+<g stroke="#94a3b8" stroke-width="1" opacity="0.5">
+<path d="M80 15 V225 M110 15 V225 M140 15 V225 M170 15 V225 M200 15 V225 M230 15 V225 M260 15 V225"/>
+<path d="M25 25 H285 M25 55 H285 M25 85 H285 M25 115 H285 M25 145 H285 M25 175 H285"/>
+</g>
+<path d="M25 205 H282 M50 228 V18" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M288 205 L276 210 L276 200 Z M50 12 L45 24 L55 24 Z" fill="#0f172a"/>
+<path d="M140 145 L140 205 M140 145 L50 145" fill="none" stroke="#0f6e56" stroke-width="2" stroke-dasharray="6 4"/>
+<g fill="#0f172a"><circle cx="50" cy="205" r="4"/></g>
+<g fill="#0f6e56"><circle cx="140" cy="145" r="5"/></g>
+<g font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="38" y="222" text-anchor="middle" fill="#0f172a">O</text>
+<text x="154" y="137" text-anchor="middle" fill="#0f6e56">M</text>
+<text x="140" y="224" text-anchor="middle" fill="#0f6e56">3</text>
+<text x="36" y="150" text-anchor="middle" fill="#0f6e56">2</text>
+</g>
+</svg>
+:::
+
 Un **repère cartésien du plan** est un triplet (O, I, J). L'**axe des abscisses** porte OI, l'**axe des ordonnées** porte OJ. Tout point M a un unique couple de **coordonnées** (x ; y) tel que :
 
 $$ vecteur OM = x · vecteur OI + y · vecteur OJ $$
@@ -33,6 +53,31 @@ Un vecteur possède un couple de **composantes**, obtenu en soustrayant les coor
 $$ vecteur AB (xB − xA ; yB − yA) $$
 
 _Exemple détaillé_ : pour A(1 ; 2) et B(4 ; 6), les composantes de vecteur AB sont (4 − 1 ; 6 − 2) = (3 ; 4). **Deux vecteurs sont égaux si et seulement s'ils ont les mêmes composantes.**
+
+::: figure Les composantes de AB se lisent « arrivée moins départ »: de A(1 ; 2) à B(4 ; 6), on avance de 3 et on monte de 4
+<svg viewBox="0 0 300 240">
+<g stroke="#94a3b8" stroke-width="1" opacity="0.5">
+<path d="M80 15 V225 M110 15 V225 M140 15 V225 M170 15 V225 M200 15 V225 M230 15 V225 M260 15 V225"/>
+<path d="M25 25 H285 M25 55 H285 M25 85 H285 M25 115 H285 M25 145 H285 M25 175 H285"/>
+</g>
+<path d="M25 205 H282 M50 228 V18" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M288 205 L276 210 L276 200 Z M50 12 L45 24 L55 24 Z" fill="#0f172a"/>
+<path d="M80 145 L170 145" fill="none" stroke="#0f6e56" stroke-width="2" stroke-dasharray="6 4"/>
+<path d="M170 145 L170 25" fill="none" stroke="#0f6e56" stroke-width="2" stroke-dasharray="6 4"/>
+<path d="M80 145 L162 33.6" fill="none" stroke="#0f172a" stroke-width="2.5"/>
+<path d="M170 25 L157.5 40.6 L153.6 27.2 Z" fill="#0f172a"/>
+<g fill="#0f172a"><circle cx="50" cy="205" r="4"/><circle cx="80" cy="145" r="4.5"/><circle cx="170" cy="25" r="4.5"/></g>
+<g font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="38" y="222" text-anchor="middle" fill="#0f172a">O</text>
+<text x="68" y="162" text-anchor="middle" fill="#0f172a">A</text>
+<text x="184" y="22" text-anchor="middle" fill="#0f172a">B</text>
+</g>
+<g font-size="13" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="125" y="162" text-anchor="middle" fill="#0f6e56">3</text>
+<text x="184" y="90" text-anchor="middle" fill="#0f6e56">4</text>
+</g>
+</svg>
+:::
 
 > 🗡️ Ordre à respecter : toujours **coordonnées de l'arrivée moins coordonnées du départ**. Inverser donne le vecteur opposé.
 
@@ -53,6 +98,32 @@ _Exemple détaillé (colinéarité)_ : vecteur AB(3 ; 4) et vecteur CD(6 ; 8) : 
 > ⚠️ Pour la colinéarité, le **même** coefficient k doit convenir aux **deux** composantes. Si 6 = 2 × 3 mais 8 ≠ 3 × 3, les vecteurs ne sont pas colinéaires.
 
 ## 📏 Distance dans un repère orthonormé
+
+::: figure La distance AB est l'hypoténuse du triangle rectangle des composantes: AB = √(3² + 4²) = 5
+<svg viewBox="0 0 300 240">
+<g stroke="#94a3b8" stroke-width="1" opacity="0.5">
+<path d="M80 15 V225 M110 15 V225 M140 15 V225 M170 15 V225 M200 15 V225 M230 15 V225 M260 15 V225"/>
+<path d="M25 25 H285 M25 55 H285 M25 85 H285 M25 115 H285 M25 145 H285 M25 175 H285"/>
+</g>
+<path d="M25 205 H282 M50 228 V18" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M288 205 L276 210 L276 200 Z M50 12 L45 24 L55 24 Z" fill="#0f172a"/>
+<path d="M80 145 L170 145 L170 25 Z" fill="#0f6e56" opacity="0.10"/>
+<path d="M80 145 L170 145 L170 25 Z" fill="none" stroke="#0f6e56" stroke-width="2" stroke-linejoin="round"/>
+<path d="M80 145 L170 25" fill="none" stroke="#0f172a" stroke-width="2.5"/>
+<path d="M152 145 L152 127 L170 127" fill="none" stroke="#0f6e56" stroke-width="2"/>
+<g fill="#0f172a"><circle cx="50" cy="205" r="4"/><circle cx="80" cy="145" r="4.5"/><circle cx="170" cy="25" r="4.5"/></g>
+<g font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="38" y="222" text-anchor="middle" fill="#0f172a">O</text>
+<text x="68" y="162" text-anchor="middle" fill="#0f172a">A</text>
+<text x="184" y="22" text-anchor="middle" fill="#0f172a">B</text>
+</g>
+<g font-size="13" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="125" y="162" text-anchor="middle" fill="#0f6e56">3</text>
+<text x="184" y="90" text-anchor="middle" fill="#0f6e56">4</text>
+<text x="112" y="80" text-anchor="middle" fill="#0f172a">5</text>
+</g>
+</svg>
+:::
 
 Un repère est **orthonormé** lorsque ses deux axes sont perpendiculaires et de même unité. On peut alors calculer une **distance** :
 

@@ -30,6 +30,29 @@ _Exemple détaillé_ : le coefficient est l'image de 1. Donc si l'on connaît f(
 
 ## 📉 La représentation graphique
 
+::: figure La représentation d'une fonction linéaire est une droite qui passe par l'origine — et le coefficient a se lit directement: c'est f(1)
+<svg viewBox="0 0 280 245">
+<g stroke="#94a3b8" stroke-width="1" opacity="0.45">
+<path d="M36 25 V230 M84 25 V230 M108 25 V230 M132 25 V230 M156 25 V230 M180 25 V230 M204 25 V230 M228 25 V230"/>
+<path d="M20 37 H250 M20 61 H250 M20 85 H250 M20 109 H250 M20 133 H250 M20 157 H250 M20 181 H250 M20 229 H250"/>
+</g>
+<path d="M20 205 H248 M60 232 V28" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M254 205 L242 210 L242 200 Z M60 22 L55 34 L65 34 Z" fill="#0f172a"/>
+<g fill="#0f172a"><circle cx="60" cy="205" r="3.5"/></g>
+<text x="48" y="222" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">O</text>
+<path d="M36 229 L150 1" fill="none" stroke="#0f6e56" stroke-width="0"/>
+<path d="M48 229 L146 33" fill="none" stroke="#0f6e56" stroke-width="2.5"/>
+<path d="M60 205 L84 205" fill="none" stroke="#0f172a" stroke-width="2" stroke-dasharray="5 3"/>
+<path d="M84 205 L84 157" fill="none" stroke="#0f172a" stroke-width="2" stroke-dasharray="5 3"/>
+<g fill="#0f6e56"><circle cx="84" cy="157" r="5"/></g>
+<g font-size="13" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="72" y="222" text-anchor="middle" fill="#0f172a">+1</text>
+<text x="99" y="186" text-anchor="middle" fill="#0f172a">+2</text>
+<text x="106" y="150" text-anchor="middle" fill="#0f6e56">f(1) = 2</text>
+</g>
+</svg>
+:::
+
 Dans un repère (O, I, J), la représentation graphique de f : x ↦ ax est une **droite qui passe par l'origine O**, d'équation :
 
 $$ y = ax $$
@@ -41,6 +64,25 @@ _Exemple détaillé_ : la fonction f : x ↦ 2x est représentée par la droite 
 > ⚠️ La droite d'une fonction linéaire passe **toujours** par l'origine (car f(0) = 0). Si une droite ne passe pas par O, elle ne représente pas une fonction linéaire (ce sera une fonction affine, au chapitre 14).
 
 ## 🔍 Lire un graphique
+
+::: figure Le signe du coefficient décide du sens: a > 0 donne une droite qui monte, a < 0 une droite qui descend
+<svg viewBox="0 0 280 245">
+<g stroke="#94a3b8" stroke-width="1" opacity="0.45">
+<path d="M36 25 V230 M84 25 V230 M108 25 V230 M132 25 V230 M156 25 V230 M180 25 V230 M204 25 V230 M228 25 V230"/>
+<path d="M20 37 H250 M20 61 H250 M20 85 H250 M20 109 H250 M20 133 H250 M20 157 H250 M20 181 H250 M20 229 H250"/>
+</g>
+<path d="M20 205 H248 M60 232 V28" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M254 205 L242 210 L242 200 Z M60 22 L55 34 L65 34 Z" fill="#0f172a"/>
+<g fill="#0f172a"><circle cx="60" cy="205" r="3.5"/></g>
+<text x="48" y="222" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">O</text>
+<path d="M48 229 L146 33" fill="none" stroke="#0f6e56" stroke-width="2.5"/>
+<path d="M20 157 L84 229" fill="none" stroke="#0f172a" stroke-width="2.5" stroke-dasharray="7 4"/>
+<g font-size="13" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="168" y="50" text-anchor="middle" fill="#0f6e56">y = 2x</text>
+<text x="44" y="150" text-anchor="middle" fill="#0f172a">y = −x</text>
+</g>
+</svg>
+:::
 
 Sur la droite d'une fonction linéaire, on lit directement :
 

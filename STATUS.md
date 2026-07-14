@@ -79,7 +79,23 @@
 
 Source de vérité : [FableEtudes/README.md](./FableEtudes/README.md) (index) + l'en-tête de chaque `ETUDE.md`.
 
-- **Livrées** : 03 (types natifs) · 05 (duels/ligues) · 13 (moteur de transcription **ScribeKit**, repo externe ; pilote d'usage en cours via PR #348) · 14 (refonte UX/design, close 2026-07-11) · **18 (cours vivants, close 2026-07-14, 5 lots)** — le moteur promeut les 2 637 callouts déjà écrits (**517 cours / 541** structurés), les figures sont des planches légendées/numérotées/agrandissables, le résumé est un jeu de **3 827 cartes**, le gate contenu inspecte enfin les **541 leçons** (46 violations de notation trouvées et corrigées), la barre qualité a un **axe 5 « Illustration »**, et **la géométrie de 9ᵉ est illustrée** (25 figures, 6 chapitres). Backlog laissé par l'axe 5 : **22 chapitres spatiaux sans dessin** (6ᵉ, 7ᵉ, 1ère sec…) = la campagne à venir.
+- **Livrées** : 03 (types natifs) · 05 (duels/ligues) · 13 (moteur de transcription **ScribeKit**, repo externe ; pilote d'usage en cours via PR #348) · 14 (refonte UX/design, close 2026-07-11) · **18 (cours vivants, close 2026-07-14, 5 lots)** — le moteur promeut les 2 637 callouts déjà écrits (**517 cours / 541** structurés), les figures sont des planches légendées/numérotées/agrandissables, le résumé est un jeu de **3 827 cartes**, le gate contenu inspecte enfin les **541 leçons** (46 violations de notation trouvées et corrigées), la barre qualité a un **axe 5 « Illustration »**, et **la géométrie de 9ᵉ est illustrée** (25 figures, 6 chapitres).
+
+**Campagne d'illustration (le backlog que l'axe 5 génère lui-même) — en cours :**
+
+| vague              | état                                                                                                                                                              |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| maths 9ᵉ           | ✅ 2026-07-14 — 25 figures, 6 chapitres (toute la géométrie)                                                                                                      |
+| **maths 1ère sec** | ✅ 2026-07-14 — **38 figures, 11 chapitres** (angles, Thalès, trigo, vecteurs, repère, quart de tour, sections planes, fonctions linéaires/affines, statistiques) |
+| reste              | **19 chapitres** : maths 6ᵉ (6), maths 7ᵉ (5), maths 1ère (2), **maths 9ᵉ fonctions + statistiques (2)**, iq-training (3), français (1)                           |
+
+> **L'axe 5 s'est élargi en route (2026-07-14).** Sa première liste ne couvrait que les **formes** :
+> elle laissait passer `07-quart-tour` (une rotation), `08-sections-planes` (des solides) et surtout
+> les chapitres de **fonctions** et de **statistiques** — or une fonction linéaire sans sa droite
+> décrit exactement ce qu'il fallait montrer. La liste couvre désormais aussi la famille
+> **graphique** (fonctions, diagrammes, séries, frises) : le signalement est passé de 22 à 30
+> chapitres, dont 11 réglés dans la foulée.
+
 - **En exécution** : 04 (adaptatif — A0 fait, A1+ à venir) · 15 (contenu & composition — lots 0-6 livrés / 14) · 16 (ouverture lycée — lots 0-3 livrés, PRs #367/#369/#371/#375 ; campagne §4bis vague A **en cours : `math-1ere-sec` complète 16/16 et parcours `ecole-1ere-sec` OUVERT le 2026-07-13** — PRs #397/#398/#402/#404 + migration `20260713180000_open_ecole_1ere_sec_parcours` ; reste 4 autres matières 1ère sec ; génération native fr sans traduction, décision 2026-07-13)
 - **Validées (prêtes à exécuter)** : 17 (rappel actif — QCM rejoués en saisie libre, arbitrée 2026-07-13).
 - **Brouillons** (non validées) : 02 (examen blanc*) · 06 (PWA) · 07 (knowledge graph*) · 08 (analytics familles*) · 09 (économie du jeu) · 10 (anti-fraude) · 12 (studio d'ingestion).

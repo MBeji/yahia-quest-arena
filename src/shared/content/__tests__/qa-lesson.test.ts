@@ -91,7 +91,7 @@ describe("auditLesson", () => {
   });
 
   describe("isSpatialChapter", () => {
-    it("reconnaît les familles où la figure est exigible", () => {
+    it("reconnaît les familles de FORMES", () => {
       for (const slug of [
         "08-thales",
         "09-triangle-rectangle-trigo",
@@ -100,13 +100,34 @@ describe("auditLesson", () => {
         "13-geometrie-espace",
         "23-solides-cube-pave",
         "17-perimetre",
+        // Deux familles que la première version de la liste laissait passer, découvertes
+        // en illustrant math-1ere-sec : une rotation et des sections de solides.
+        "07-quart-tour",
+        "08-sections-planes",
       ]) {
         expect(isSpatialChapter(slug), slug).toBe(true);
       }
     });
 
-    it("ne réclame pas de figure là où la notion n'est pas spatiale", () => {
-      for (const slug of ["01-nombres-reels", "03-calcul-litteral", "07-statistiques"]) {
+    it("reconnaît les familles GRAPHIQUES — une fonction sans sa droite décrit ce qu'il fallait montrer", () => {
+      for (const slug of [
+        "12-fonctions-lineaires",
+        "14-fonctions-affines",
+        "06-fonctions-lineaires-affines",
+        "16-exploitation-information",
+        "07-statistiques",
+      ]) {
+        expect(isSpatialChapter(slug), slug).toBe(true);
+      }
+    });
+
+    it("ne réclame pas de figure là où la notion n'est ni spatiale ni graphique", () => {
+      for (const slug of [
+        "01-nombres-reels",
+        "03-calcul-litteral",
+        "09-activites-numeriques-i",
+        "11-activites-algebriques",
+      ]) {
         expect(isSpatialChapter(slug), slug).toBe(false);
       }
     });
