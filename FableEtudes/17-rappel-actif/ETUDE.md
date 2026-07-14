@@ -406,7 +406,7 @@ Suivi produit : les sessions Rappel se comptent en SQL (`attempts WHERE variant=
 | 5   | E2E authed (`recall-mode.spec.ts` : débloquer → jouer → XP ×1,5 → review), `docs/guide-rappel-actif.md`, lexique voice doc, STATUS.md §3, ARCHITECTURE.md                                                        | Playwright authed + `npm run ci:verify` complet                                                                                                                                      | lot 4     |
 
 - [x] Lot 1 — fondations SQL pures (rien d'appelable par le client)
-- [ ] Lot 2 — RPCs variant-aware (le mode existe en base, aucune UI)
+- [x] Lot 2 — RPCs variant-aware (le mode existe en base, aucune UI)
 - [ ] Lot 3 — couche server fns/TS
 - [ ] Lot 4 — UI complète + i18n
 - [ ] Lot 5 — e2e + docs + lexique
@@ -500,6 +500,20 @@ STOPPE et escalade (règle FableEtudes).
   aucun fichier `src/` touché. Écart accepté : critère R-2(a) implémenté en
   `question_type = 'mcq'` **strict** (le pipeline de contenu écrit toujours `'mcq'`
   explicitement — cf. `sql-builder.ts`), conforme à la posture « précision d'abord ».
+- 2026-07-14 — **Lot 2 livré** : migration `20260714130000_recall_mode_rpcs.sql`. Six RPCs
+  recréés VERBATIM depuis leur dernière définition + branche Rappel additive (pattern A0) :
+  `start_exercise_session` v2 (`p_variant text DEFAULT 'classic'` ; porte R-3 après premium +
+  quiz gate : `INVALID_VARIANT`, `RECALL_NOT_ELIGIBLE` quiz|non-admin|< 3 éligibles,
+  `RECALL_LOCKED`), `submit_exercise_attempt` (variante lue depuis la session, jamais du
+  client ; scoring éligible via `score_recall_answer`, anti-farm/best scopés par variante R-6,
+  XP ×1,5 R-5, misconception typée par appariement de texte R-7, retour `variant`+`perQuestion`
+  D-4), `get_attempt_review` v2 (Rappel : questions éligibles seules, `correct_option` = TEXTE
+  de la bonne option), `get_best_scores_by_exercise` (+ `variant = 'classic'`, R-6) ; deux
+  nouvelles fonctions `get_recall_questions` (prompt seul, jamais d'options — R-1) et
+  `get_recall_availability` (compteur éligible + déblocage + meilleur Rappel). Test pgTAP
+  `supabase/tests/29_recall_mode_rpcs.test.sql` (26 assertions : porte R-3, scoring bout-en-bout,
+  R-5/R-6/R-7, review texte, `get_recall_*`, **non-régression classique**). DB-only, aucun
+  fichier `src/` touché (le défaut `'classic'` garde le code déployé inchangé).
 
 ## 9. Annexe — audit d'éligibilité (mesuré le 2026-07-13, re-mesuré après l'amendement R-12/(i))
 
