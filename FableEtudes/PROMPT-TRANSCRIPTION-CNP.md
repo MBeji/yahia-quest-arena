@@ -25,7 +25,8 @@
 
 ```
 PORTEE     : tout                 # défaut — boucle sur TOUS les couples [ ] de programme/_INDEX.md,
-                                  # classe par classe (1ere-base → bac) puis matière par matière.
+                                  # classe par classe (1ere-base → bac) puis matière par matière,
+                                  # EN EXCLUANT les matières annexes (voir note ci-dessous).
                                   # Restreindre : "3eme-base" (une classe entière) ou
                                   # "3eme-base / eps" (un seul couple).
 FICHIERS   : <chemins locaux>     # OPTIONNEL — PDF déjà téléchargés (guide enseignant et/ou manuel
@@ -36,6 +37,16 @@ GENERATION : oui                  # oui (défaut) = après chaque fiche mergée,
                                   # non = s'arrêter à la couche de persistance (fiches seulement).
 PSEUDO     : <ton pseudo GitHub>  # pour la traçabilité (_INDEX.md + commits)
 ```
+
+> ⚠️ **Périmètre matières — pour le moment.** La campagne cible les **matières principales**
+> (celles qui portent le gros de l'apprentissage scolaire et du programme d'examen : maths,
+> sciences physiques, SVT, arabe, français, anglais, histoire-géo, éco-gestion, informatique,
+> philosophie…). Les **matières annexes** — musique, éducation artistique/dessin, EPS/sport, et
+> assimilées — sont **hors périmètre pour le moment**, même si leur ligne est `[ ]` dans
+> `_INDEX.md` : ne les transcris pas et ne les génère pas tant que ce prompt n'a pas été mis à
+> jour pour les inclure explicitement. `PORTEE: tout` boucle donc sur toutes les classes mais
+> **saute** ces matières annexes ; un `PORTEE` ciblant explicitement l'une d'elles (ex.
+> `"3eme-base / musique"`) doit être refusé avec un rappel de cette règle plutôt qu'exécuté.
 
 Un accès **collaborateur (write)** au dépôt `MBeji/yahia-quest-arena` est requis pour pousser
 (demande-le à Mohamed) ; sans lui, l'agent terminera chaque lot par un fork + PR classique.
@@ -120,8 +131,11 @@ Règles de la boucle (non négociables) :
    Un modèle de fiche aboutie : `programme/1ere-sec/mathematiques.md`.
 
 4. Construis ta **file de travail** : parcours `programme/_INDEX.md` dans l'ordre du fichier
-   et retiens tous les couples `[ ]` inclus dans `PORTEE`. Annonce la file au contributeur
-   (nombre de lots, ordre), puis démarre la boucle.
+   et retiens tous les couples `[ ]` inclus dans `PORTEE`, **en excluant les matières
+   annexes** (musique, éducation artistique/dessin, EPS/sport et assimilées — voir la note de
+   périmètre ci-dessus) : ne les ajoute pas à la file même si elles matchent `PORTEE: tout` ou
+   une classe entière. Annonce la file au contributeur (nombre de lots, ordre, matières
+   annexes sautées et pourquoi), puis démarre la boucle.
 
 ---
 
