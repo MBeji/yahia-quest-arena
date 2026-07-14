@@ -421,6 +421,8 @@ export const fr: TranslationKeys = {
     openCount: "à traiter",
     empty: "Aucun signalement pour l'instant.",
     unknownExercise: "Exercice inconnu",
+    reportCount: "{n} signalements",
+    viewContent: "Voir le contenu",
     statusOpen: "Ouvert",
     statusResolved: "Résolu",
     statusDismissed: "Rejeté",
