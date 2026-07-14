@@ -12,10 +12,68 @@
 | المربّع        | مستطيلٌ ومعيّنٌ معًا: 4 أضلاع متساوية و4 زوايا قائمة |
 | شبه المنحرف    | له **زوجٌ واحد** فقط من الأضلاع المتوازية            |
 
+::: figure عائلةُ متوازي الأضلاع: الأسهم تدلّ على التوازي، والشُّرَط على تساوي الأضلاع، والمربّعُ الصغير على الزاوية القائمة
+<svg viewBox="0 0 470 155">
+<g fill="#0f6e56" opacity="0.09">
+<path d="M30 120 L105 120 L130 55 L55 55 Z"/>
+<path d="M155 120 L240 120 L240 55 L155 55 Z"/>
+<path d="M285 88 L325 120 L365 88 L325 56 Z"/>
+<path d="M395 120 L450 120 L450 65 L395 65 Z"/>
+</g>
+<g fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round">
+<path d="M30 120 L105 120 L130 55 L55 55 Z"/>
+<path d="M155 120 L240 120 L240 55 L155 55 Z"/>
+<path d="M285 88 L325 120 L365 88 L325 56 Z"/>
+<path d="M395 120 L450 120 L450 65 L395 65 Z"/>
+</g>
+<g fill="none" stroke="#0f6e56" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M64 114 L70 120 L64 126"/>
+<path d="M89 49 L95 55 L89 61"/>
+<path d="M155 108 L161 114 L155 120"/>
+<path d="M240 108 L246 114 L240 120"/>
+</g>
+<path d="M155 69 L169 69 L169 55" fill="none" stroke="#0f6e56" stroke-width="2"/>
+<path d="M395 79 L409 79 L409 65" fill="none" stroke="#0f6e56" stroke-width="2"/>
+<g fill="none" stroke="#0f6e56" stroke-width="2.5" stroke-linecap="round">
+<path d="M301 100 L309 108"/>
+<path d="M341 108 L349 100"/>
+<path d="M341 68 L349 76"/>
+<path d="M301 76 L309 68"/>
+<path d="M418 114 L426 126"/>
+<path d="M444 87 L456 95"/>
+<path d="M418 59 L426 71"/>
+<path d="M389 87 L401 95"/>
+</g>
+</svg>
+:::
+
 ## 🏷️ علاماتُ الرسم
 
 - **الأضلاع المتوازية:** أسهمٌ متماثلة على الضلعين المتوازيين.
 - **الزاوية القائمة:** مربّعٌ صغير في الزاوية.
+
+::: figure الفخّ: شبه المنحرف له زوجٌ واحدٌ فقط من الأضلاع المتوازية؛ متوازي الأضلاع له زوجان
+<svg viewBox="0 0 350 175">
+<path d="M30 125 L140 125 L115 60 L60 60 Z" fill="#0f6e56" opacity="0.09"/>
+<path d="M30 125 L140 125 L115 60 L60 60 Z" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<path d="M190 125 L300 125 L325 60 L215 60 Z" fill="#0f6e56" opacity="0.09"/>
+<path d="M190 125 L300 125 L325 60 L215 60 Z" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<g fill="none" stroke="#0f6e56" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<path d="M79 119 L85 125 L79 131"/>
+<path d="M81 54 L87 60 L81 66"/>
+<path d="M239 119 L245 125 L239 131"/>
+<path d="M264 54 L270 60 L264 66"/>
+<path d="M196 96 L204 92 L200 100"/>
+<path d="M188 88 L196 84 L192 92"/>
+<path d="M306 96 L314 92 L310 100"/>
+<path d="M298 88 L306 84 L302 92"/>
+</g>
+<g font-size="13" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="85" y="152" text-anchor="middle" fill="#0f6e56">1</text>
+<text x="257" y="152" text-anchor="middle" fill="#0f6e56">2</text>
+</g>
+</svg>
+:::
 
 ## 🛠️ بناءُ متوازي الأضلاع
 
