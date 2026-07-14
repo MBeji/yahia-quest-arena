@@ -1,0 +1,147 @@
+<!-- @dsCard group="Écrans" -->
+<title>Parent — bilan actionnable (lot 12)</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+  }
+  body {
+    font-family: "Space Grotesk", system-ui, sans-serif;
+    background: #f3f2ee;
+    padding: 16px;
+    color: #1a1a1a;
+  }
+  h3.section {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin: 18px 0 8px;
+    font-weight: 700;
+  }
+  h3.section:first-of-type {
+    margin-top: 0;
+  }
+  .avant {
+    border-inline-start: 3px solid #c0392b;
+    background: #fbeae8;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    color: #7a2018;
+    margin-bottom: 6px;
+  }
+  .apres {
+    border-inline-start: 3px solid #0f6e56;
+    background: #e7f3ee;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    color: #0b4535;
+    margin-bottom: 12px;
+  }
+  .frame {
+    background: #15120d;
+    color: #f5ecd8;
+    border-radius: 16px;
+    padding: 16px;
+    max-width: 440px;
+  }
+  .advice {
+    display: flex;
+    gap: 10px;
+    border: 1px solid #6b5a2e;
+    background: rgba(229, 181, 103, 0.08);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  .advice b {
+    color: #e5b567;
+    font-size: 13px;
+  }
+  .advice p {
+    font-size: 12px;
+    color: #cbb98f;
+    margin: 3px 0 6px;
+  }
+  .advice a {
+    color: #e5b567;
+    font-weight: 700;
+    font-size: 12px;
+    text-decoration: none;
+  }
+  .weak b {
+    display: block;
+    font-size: 12px;
+    color: #cbb98f;
+    margin-bottom: 8px;
+  }
+  .item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border-radius: 8px;
+    padding: 8px;
+    background: rgba(255, 122, 89, 0.08);
+    border: 1px solid rgba(255, 122, 89, 0.3);
+    margin-bottom: 6px;
+  }
+  .item:hover {
+    background: rgba(255, 122, 89, 0.14);
+  }
+  .item .txt small {
+    display: block;
+    color: #8a7c5f;
+    font-size: 10.5px;
+  }
+  .item .score {
+    background: rgba(255, 122, 89, 0.2);
+    color: #ff9a7a;
+    border-radius: 6px;
+    padding: 2px 7px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .chev {
+    color: #cbb98f;
+  }
+</style>
+
+<h3 class="section">Bilan parent — le cœur de l'offre : actionnable (D-9)</h3>
+<div class="avant">
+  <b>Avant (§D-9)</b> — le conseil et les « chapitres à renforcer » sont du <b>texte mort</b> : le
+  parent lit « revoir les Fractions » mais doit ensuite chercher le chapitre lui-même. La valeur
+  (savoir quoi faire) s'arrête à l'affichage.
+</div>
+<div class="apres">
+  <b>Après</b> — le conseil de la semaine et chaque chapitre à renforcer sont <b>cliquables</b> et
+  ouvrent directement le cours/lecteur (<code>/chapitre</code>) : un clic, on révise. Fonctionne
+  aussi sur le suivi public <code>/suivi</code> (sans compte), qui affiche le même bilan.
+</div>
+<div class="frame">
+  <div class="advice">
+    💡
+    <div>
+      <b>Le conseil de la semaine</b>
+      <p>Aide-le à revoir « Fractions » en Maths — c'est là qu'il bute le plus.</p>
+      <a href="#">Revoir ce chapitre →</a>
+    </div>
+  </div>
+  <div class="weak">
+    <b>⚠️ À renforcer (30 j)</b>
+    <div class="item">
+      <div class="txt">Fractions<small>Maths · 3 tentatives</small></div>
+      <div style="display: flex; align-items: center; gap: 6px">
+        <span class="score">40 %</span><span class="chev">›</span>
+      </div>
+    </div>
+    <div class="item">
+      <div class="txt">Théorème de Pythagore<small>Maths · 2 tentatives</small></div>
+      <div style="display: flex; align-items: center; gap: 6px">
+        <span class="score">48 %</span><span class="chev">›</span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,7 @@
 import { motion } from "motion/react";
+import { Link } from "@tanstack/react-router";
 import {
+  ChevronRight,
   Clock,
   Target,
   TrendingUp,
@@ -33,6 +35,8 @@ export function ReportContent({ report }: { report: ReportData }) {
   const riseIn = useEntrance("rise");
 
   const advice = buildWeeklyAdvice(report, t);
+  // The advice is built around the weakest chapter — make it actionable (D-9).
+  const adviceChapter = chapterInsights.weaknesses[0];
 
   return (
     <div className="family-report space-y-6">
@@ -87,6 +91,15 @@ export function ReportContent({ report }: { report: ReportData }) {
         <div>
           <div className="font-semibold text-champagne">{t.parentReport.adviceTitle}</div>
           <p className="mt-1 text-sm text-muted-foreground">{advice}</p>
+          {adviceChapter?.chapterId && (
+            <Link
+              to="/chapitre/$chapterId"
+              params={{ chapterId: adviceChapter.chapterId }}
+              className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-gold hover:underline print:hidden"
+            >
+              {t.parentReport.adviceReviewCta} <ChevronRight className="h-4 w-4 rtl:-scale-x-100" />
+            </Link>
+          )}
         </div>
       </motion.div>
 
@@ -460,24 +473,48 @@ function InsightList({
         <p className="mt-2 text-sm text-muted-foreground">{emptyLabel}</p>
       ) : (
         <ul className="mt-2 space-y-2">
-          {items.map((c) => (
-            <li key={c.chapterId} className="flex items-center justify-between gap-2 text-sm">
-              <div className="min-w-0">
-                <div className="truncate text-foreground">{c.chapterTitle}</div>
-                <div className="text-xs text-muted-foreground">
-                  {c.subjectName} ·{" "}
-                  {t.parentReport.insightAttempts.replace("{n}", String(c.attempts))}
+          {items.map((c) => {
+            // Actionable (D-9 — le cœur de l'offre parent) : chaque chapitre pointé
+            // ouvre son cours/lecteur (`/chapitre/$id`), pour réviser sans chercher.
+            const inner = (
+              <>
+                <div className="min-w-0">
+                  <div className="truncate text-foreground">{c.chapterTitle}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {c.subjectName} ·{" "}
+                    {t.parentReport.insightAttempts.replace("{n}", String(c.attempts))}
+                  </div>
                 </div>
-              </div>
-              <span
-                className={`shrink-0 rounded-md px-2 py-1 text-xs font-bold ${
-                  tone === "strength" ? "bg-success/20 text-success" : "bg-flame/20 text-flame"
-                }`}
-              >
-                {c.avgScore}%
-              </span>
-            </li>
-          ))}
+                <span className="flex shrink-0 items-center gap-1.5">
+                  <span
+                    className={`rounded-md px-2 py-1 text-xs font-bold ${
+                      tone === "strength" ? "bg-success/20 text-success" : "bg-flame/20 text-flame"
+                    }`}
+                  >
+                    {c.avgScore}%
+                  </span>
+                  {c.chapterId && (
+                    <ChevronRight className="h-4 w-4 text-muted-foreground rtl:-scale-x-100 print:hidden" />
+                  )}
+                </span>
+              </>
+            );
+            return (
+              <li key={c.chapterId}>
+                {c.chapterId ? (
+                  <Link
+                    to="/chapitre/$chapterId"
+                    params={{ chapterId: c.chapterId }}
+                    className="flex items-center justify-between gap-2 rounded-md text-sm transition hover:bg-white/5"
+                  >
+                    {inner}
+                  </Link>
+                ) : (
+                  <div className="flex items-center justify-between gap-2 text-sm">{inner}</div>
+                )}
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

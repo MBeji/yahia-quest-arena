@@ -702,6 +702,7 @@ export const en: TranslationKeys = {
     weaknessesEmpty: "No gap detected this month. Well done!",
     insightAttempts: "{n} mission(s)",
     adviceTitle: "Tip of the week",
+    adviceReviewCta: "Review this chapter",
     adviceWeakness:
       "Have them review “{chapter}” in {subject}: re-read the lesson, then redo the chapter's missions.",
     adviceKeepUp:
