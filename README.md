@@ -9,15 +9,16 @@ sans compte. Détails, décisions et état des features : [STATUS.md](./STATUS.m
 
 ## Par où commencer
 
-| Besoin                                                      | Document                                 |
-| ----------------------------------------------------------- | ---------------------------------------- |
-| État du projet (phase, décisions, features, travaux en vol) | [STATUS.md](./STATUS.md)                 |
-| Conventions, commandes, Definition of Done — **canonique**  | [CLAUDE.md](./CLAUDE.md)                 |
-| Architecture (stack, flux, modèle de données, sécurité)     | [ARCHITECTURE.md](./ARCHITECTURE.md)     |
-| Études d'architecture des epics                             | [FableEtudes/](./FableEtudes/README.md)  |
-| Specs normatives, guides et runbooks                        | [docs/](./docs)                          |
-| Pipeline de contenu pédagogique (fichiers → migrations SQL) | [content/README.md](./content/README.md) |
-| Tests end-to-end (Playwright, projet TEST dédié)            | [e2e/README.md](./e2e/README.md)         |
+| Besoin                                                      | Document                                                 |
+| ----------------------------------------------------------- | -------------------------------------------------------- |
+| État du projet (phase, décisions, features, travaux en vol) | [STATUS.md](./STATUS.md)                                 |
+| Conventions, commandes, Definition of Done — **canonique**  | [CLAUDE.md](./CLAUDE.md)                                 |
+| Architecture (stack, flux, modèle de données, sécurité)     | [ARCHITECTURE.md](./ARCHITECTURE.md)                     |
+| Études d'architecture des epics                             | [FableEtudes/](./FableEtudes/README.md)                  |
+| **Contribuer à une étude** (collaborateur / dév)            | [FableEtudes/CONTRIBUER.md](./FableEtudes/CONTRIBUER.md) |
+| Specs normatives, guides et runbooks                        | [docs/](./docs)                                          |
+| Pipeline de contenu pédagogique (fichiers → migrations SQL) | [content/README.md](./content/README.md)                 |
+| Tests end-to-end (Playwright, projet TEST dédié)            | [e2e/README.md](./e2e/README.md)                         |
 
 ## Stack & commandes essentielles
 

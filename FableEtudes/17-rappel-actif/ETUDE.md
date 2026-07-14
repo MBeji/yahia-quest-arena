@@ -405,7 +405,7 @@ Suivi produit : les sessions Rappel se comptent en SQL (`attempts WHERE variant=
 | 4   | UI : `RecallInput` + `RecallCharBar` (R-12), player variant + search param, chip hub, écran verrou, célébration déblocage, i18n ×3, constantes gamification                                                      | Vitest : question-input (recall), char bar (insertion caret, RTL, a11y), exercise-player (bandeau, pas d'indice, review), subject-hub (états chip), answer-formats                   | lot 3     |
 | 5   | E2E authed (`recall-mode.spec.ts` : débloquer → jouer → XP ×1,5 → review), `docs/guide-rappel-actif.md`, lexique voice doc, STATUS.md §3, ARCHITECTURE.md                                                        | Playwright authed + `npm run ci:verify` complet                                                                                                                                      | lot 4     |
 
-- [ ] Lot 1 — fondations SQL pures (rien d'appelable par le client)
+- [x] Lot 1 — fondations SQL pures (rien d'appelable par le client)
 - [ ] Lot 2 — RPCs variant-aware (le mode existe en base, aucune UI)
 - [ ] Lot 3 — couche server fns/TS
 - [ ] Lot 4 — UI complète + i18n
@@ -491,6 +491,15 @@ STOPPE et escalade (règle FableEtudes).
   réponse), R-4 durci (ligatures `œ/æ` pliées, `%`/`°` insignifiants), nouveau critère
   d'éligibilité **(i)** charset tapable (0,5 % d'exclusions), annexe §9 re-mesurée.
   Aucun lot démarré — prête pour l'exécuteur (lot 1).
+- 2026-07-14 — **Lot 1 livré** : migration `20260714120000_recall_mode_foundations.sql`
+  (colonnes `variant` sur `exercise_sessions`/`attempts` + index anti-farm ;
+  `normalize_recall_text` IMMUTABLE — pipeline 9 étapes ; `is_question_recall_eligible`
+  IMMUTABLE — R-2 (a)–(i) ; `score_recall_answer` STABLE ; REVOKEs R-1). Test pgTAP
+  `supabase/tests/28_recall_mode_foundations.test.sql` (38 assertions : normalisation
+  FR/AR/EN table-driven, éligibilité critère par critère, scorer, REVOKEs). DB-only,
+  aucun fichier `src/` touché. Écart accepté : critère R-2(a) implémenté en
+  `question_type = 'mcq'` **strict** (le pipeline de contenu écrit toujours `'mcq'`
+  explicitement — cf. `sql-builder.ts`), conforme à la posture « précision d'abord ».
 
 ## 9. Annexe — audit d'éligibilité (mesuré le 2026-07-13, re-mesuré après l'amendement R-12/(i))
 
