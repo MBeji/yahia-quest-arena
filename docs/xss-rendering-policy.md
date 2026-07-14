@@ -13,7 +13,15 @@ Applies to any rendering path that may transform text into HTML.
 
 ## Current Boundaries
 
-- Lesson markdown renderer path (`renderMarkdown`).
+- Lesson markdown renderer path (`renderLesson` in `src/shared/lib/markdown.ts`, rendered by
+  `LessonReader`). The invariant IS the order of its passes: the body is fully HTML-escaped
+  **before** any tag is emitted, so the only tags that survive are the ones the renderer itself
+  produces — an author cannot inject markup, whatever they write. The pedagogical blocks of
+  étude 18 (`::: definition …`, promoted `> ⚠️` callouts) are emitted from a line-level parser,
+  never copied from the source. `ALLOWED_TAGS` therefore carries only inert elements
+  (`section`/`span` alongside the original set) and `ALLOWED_ATTR` stays `class`/`id`/`dir` —
+  no `style`, no `href`, no `on*`. A directive with an unknown type degrades to a neutral block
+  and an unclosed one is implicitly closed: a content mistake can cost style, never safety.
 - Chart style injection path (internal CSS generation only).
 - Question figure SVG path (`sanitizeSvg` in `src/shared/lib/figure.ts`, rendered by
   `SvgFigure` in `src/components/ui/svg-figure.tsx`). A quiz/exercise question field

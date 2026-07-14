@@ -658,6 +658,120 @@ html.reference *:focus-visible {
   height: auto;
   max-width: 100%;
 }
+
+/* =====================================================
+  Blocs pédagogiques (étude 18, lot 1)
+
+  Le contenu encodait déjà la sémantique (`> ⚠️` piège, `> 🗡️` astuce, `> 💡` éclairage,
+  `> 🏆` clôture — 2 637 occurrences dans 512 cours sur 541) ; le renderer l'aplatissait en
+  <blockquote> identiques. Ces règles lui donnent enfin un relief.
+
+  Le thème « Référence » (défaut) n'a qu'UNE teinte de marque — ses tokens « or » sont
+  retintés en teal. Les blocs se distinguent donc par le POIDS (filet / contour / aplat) et
+  non par la teinte ; `--destructive` est la seule hue sémantique, réservée au piège.
+  Propriétés logiques partout : ces encadrés vivent aussi en prose arabe RTL.
+  ===================================================== */
+.lesson-content .lesson-blk {
+  margin: 1.5rem 0;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--card);
+}
+.lesson-content .lesson-blk__label {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  /* `inherit` et non var(--font-display) : Orbitron n'a pas de glyphes arabes. */
+  font-family: inherit;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.lesson-content .lesson-blk__title {
+  margin: 0 0 0.4rem;
+  font-weight: 700;
+  color: var(--foreground);
+}
+.lesson-content .lesson-blk > p:last-child,
+.lesson-content .lesson-blk > ul:last-child,
+.lesson-content .lesson-blk > ol:last-child,
+.lesson-content .lesson-blk > .lesson-math:last-child {
+  margin-bottom: 0;
+}
+
+/* L'énoncé qui fait autorité : contour teinté. */
+.lesson-content .lesson-blk--definition,
+.lesson-content .lesson-blk--propriete,
+.lesson-content .lesson-blk--methode {
+  background: color-mix(in oklab, var(--primary) 6%, var(--card));
+  border-color: color-mix(in oklab, var(--primary) 32%, transparent);
+}
+.lesson-content .lesson-blk--definition .lesson-blk__label,
+.lesson-content .lesson-blk--propriete .lesson-blk__label,
+.lesson-content .lesson-blk--methode .lesson-blk__label {
+  color: var(--primary);
+}
+
+/* L'exemple résolu : une fiche neutre — il doit se lire, pas clignoter. */
+.lesson-content .lesson-blk--exemple {
+  background: var(--secondary);
+  border-color: var(--border);
+}
+.lesson-content .lesson-blk--exemple .lesson-blk__label {
+  color: var(--muted-foreground);
+}
+
+/* Le piège : la seule couleur sémantique du système. */
+.lesson-content .lesson-blk--piege {
+  background: color-mix(in oklab, var(--destructive) 7%, var(--card));
+  border-color: color-mix(in oklab, var(--destructive) 38%, transparent);
+}
+.lesson-content .lesson-blk--piege .lesson-blk__label {
+  color: var(--destructive);
+}
+
+/* L'astuce et l'éclairage : un filet, pas un encadré — ils ponctuent la lecture. */
+.lesson-content .lesson-blk--astuce,
+.lesson-content .lesson-blk--insight {
+  border: none;
+  border-inline-start: 3px solid var(--primary);
+  border-radius: 0 0.75rem 0.75rem 0;
+  background: color-mix(in oklab, var(--primary) 5%, transparent);
+  padding-inline-start: 1rem;
+}
+.lesson-content .lesson-blk--insight {
+  border-inline-start-color: color-mix(in oklab, var(--muted-foreground) 55%, transparent);
+}
+.lesson-content .lesson-blk--astuce .lesson-blk__label {
+  color: var(--primary);
+}
+
+/* « À retenir » : un aplat. C'est la carte qu'on garde. */
+.lesson-content .lesson-blk--retenir {
+  background: color-mix(in oklab, var(--primary) 14%, var(--card));
+  border-color: color-mix(in oklab, var(--primary) 55%, transparent);
+  border-width: 2px;
+}
+.lesson-content .lesson-blk--retenir .lesson-blk__label {
+  color: var(--primary);
+}
+
+/* L'épigraphe : l'exergue qui ouvre le chapitre (le premier `> 💡`) — pas un encadré. */
+.lesson-content .lesson-epigraph {
+  margin: 1.25rem 0 1.75rem;
+  padding-inline-start: 1.1rem;
+  border-inline-start: 3px solid var(--primary);
+  font-size: 1.1rem;
+  font-style: italic;
+  line-height: 1.75;
+  color: var(--muted-foreground);
+}
+.lesson-content .lesson-epigraph p {
+  margin: 0;
+}
+
 .lesson-content strong {
   color: var(--neon-gold);
 }

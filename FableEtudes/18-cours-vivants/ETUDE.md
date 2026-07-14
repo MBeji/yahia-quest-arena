@@ -1,7 +1,7 @@
 # Étude 18 — Cours vivants : moteur de blocs pédagogiques & doctrine d'illustration
 
 > **Statut** : validée
-> **Priorité** : 18 · **Valeur** : le cours cesse d'être un mur de texte — 512 cours gagnent une structure lisible sans qu'un fichier de contenu soit touché, et la géométrie cesse de s'enseigner sans figure · **Complexité** : moyenne+
+> **Priorité** : 18 · **Valeur** : le cours cesse d'être un mur de texte — 517 cours gagnent une structure lisible sans qu'un fichier de contenu soit touché, et la géométrie cesse de s'enseigner sans figure · **Complexité** : moyenne+
 > **Architecte** : Opus 4.8 / 2026-07-14 · **Exécuteur cible** : Sonnet (ou équiv.)
 > **Dépend de** : é14 (design system, livrée) · **Bloque** : rien
 > **Docs normatifs liés** : CLAUDE.md, ARCHITECTURE.md, `docs/xss-rendering-policy.md`,
@@ -40,7 +40,7 @@ Or **le contenu encode déjà cette sémantique** — le `style-guide.md` l'impo
 | tableaux markdown                                 |           — |             405 |
 | sections `##`                                     |           — |             526 |
 
-**2 637 callouts sémantiques**, présents dans **512 cours sur 541 (94,6 %)**, sont aujourd'hui
+**2 637 callouts sémantiques**, présents dans **517 cours sur 541 (95,6 %)**, sont aujourd'hui
 aplatis en `<blockquote>` identiques. Idem côté résumé : **525 `resume.md` sur 541 (97,0 %)** suivent
 déjà le motif normatif `- **Concept** : essence` (`course-quality.md` axe 3, « resume ↔ course
 bijection ») — c'est-à-dire une carte de révision, rendue en puce grise.
@@ -90,7 +90,7 @@ ne s'en aperçoive.
 
 | KPI                                                                        | avant | cible (fin d'étude) |
 | -------------------------------------------------------------------------- | ----- | ------------------- |
-| Cours dont la sémantique est rendue en blocs typés (non en `<blockquote>`) | 0     | **512** (94,6 %)    |
+| Cours dont la sémantique est rendue en blocs typés (non en `<blockquote>`) | 0     | **517** (95,6 %)    |
 | Résumés rendus en cartes de révision                                       | 0     | **541**             |
 | Figures dans les 5 chapitres de géométrie 9ᵉ                               | 0     | **≥ 12**            |
 | Axes de la barre qualité couvrant le visuel                                | 0 / 4 | **1 / 5**           |
@@ -383,7 +383,7 @@ Rien à instrumenter (rendu pur, pas d'I/O). Aucun log ajouté.
 ### Décisions d'architecture (ADR)
 
 - **D-1 — Deux mécanismes de rendu, pas un.** (a) **Promotion** des callouts emoji déjà normatifs
-  (R-4) : 512 cours sur 541 gagnent une structure **sans qu'un fichier de contenu soit touché** ;
+  (R-4) : 517 cours sur 541 gagnent une structure **sans qu'un fichier de contenu soit touché** ;
   (b) **directives `:::`** (R-6) pour la sémantique que le contenu n'encode pas encore (définition,
   propriété, exemple, méthode, figure, à retenir).
   _Alternatives rejetées_ : le **sniffing de prose** (« Exemple calculé : ») — fragile en trois langues,
@@ -429,7 +429,7 @@ Rien à instrumenter (rendu pur, pas d'I/O). Aucun log ajouté.
 | **4** | Doctrine d'illustration + ouverture du gate contenu           | `course-quality.md`, `course-figures.md` (n), `content-engine/SKILL.md`, `content-cours/SKILL.md`, `content-audit/SKILL.md`, `style-guide.md`, `scripts/content/qa.ts`, `scripts/content/qa-checks.ts`      | `qa-checks.test.ts` étendu                          | 2         |
 | **5** | Campagne pilote : géométrie 9ᵉ illustrée                      | `content/math/{08,09,10,11,13}-*/cours.md` + `resume.md`, migration `content:build -- --subject math`                                                                                                       | `content:check` + `content:qa:strict`               | 4         |
 
-- [ ] **Lot 1 — Le moteur de blocs.**
+- [x] **Lot 1 — Le moteur de blocs.**
       _Périmètre_ : R-1 → R-8. Remplacer `renderMarkdown` par `renderLesson` (un seul appelant).
       Parser de blocs par lignes (pas de regex globale). Promotion des callouts. Directives `:::`
       (tous types, y compris `figure`, mais **sans** la refonte visuelle des figures — lot 2). CSS des
@@ -591,6 +591,7 @@ Reste :
 
 ## 8. Journal d'exécution
 
-| date       | lot | PR  | écarts acceptés / dettes notées                                                                  |
-| ---------- | --- | --- | ------------------------------------------------------------------------------------------------ |
-| 2026-07-14 | —   | —   | Étude rédigée (Opus 4.8). Maquette du chapitre pilote (Thalès) validée par Mohamed. Q-1 ouverte. |
+| date       | lot | PR  | écarts acceptés / dettes notées                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ---------- | --- | --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-07-14 | —   | —   | Étude rédigée (Opus 4.8). Maquette du chapitre pilote (Thalès) validée par Mohamed. Q-1 ouverte.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| 2026-07-14 | 1   | —   | **Lot 1 livré.** Mesure réelle : **517** cours / 541 (95,6 %) gagnent un bloc typé — l'étude annonçait 512, qui était le compte du seul `> 💡` ; l'union des 4 marqueurs donne 517 (§1 et KPI corrigés). 2 637 citations promues sur 2 974 : les 337 autres restent des `<blockquote>` inchangés. Aucun `:::` préexistant dans `content/` → zéro collision de syntaxe. **3 écarts assumés** : (a) la directive `::: figure` est reportée au **lot 2** avec la refonte visuelle — la garder ici aurait forcé la réécriture des 6 tests de figure existants, or le stop-point du lot 1 l'interdit ; le `<svg>` nu rend donc exactement comme avant ; (b) le **rail collant `lg:`** passe au lot 2 (qui touche déjà la colonne de lecture) — le lot 1 livre le sommaire en carte, scroll-spy compris, ce qui couvre US-4 ; (c) `renderMarkdown` → `renderLesson` a imposé un renommage **mécanique** de 31 appels dans `markdown.test.ts` : **aucune assertion modifiée** (le diff ne contient pas une seule ligne `expect` touchée), l'invariant R-1 tient. |
