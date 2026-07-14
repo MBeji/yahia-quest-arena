@@ -677,6 +677,7 @@ export type TranslationKeys = {
     weaknessesEmpty: string;
     insightAttempts: string;
     adviceTitle: string;
+    adviceReviewCta: string;
     adviceWeakness: string;
     adviceKeepUp: string;
     adviceInactive: string;

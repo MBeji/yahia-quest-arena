@@ -699,6 +699,7 @@ export const ar: TranslationKeys = {
     weaknessesEmpty: "لم تُرصد أي ثغرة هذا الشهر. أحسنت!",
     insightAttempts: "{n} مهمّة",
     adviceTitle: "نصيحة الأسبوع",
+    adviceReviewCta: "مراجعة هذا الفصل",
     adviceWeakness: "اجعله يراجع «{chapter}» في مادة {subject}: قراءة الدرس ثم إعادة مهمّات الفصل.",
     adviceKeepUp:
       "لم تُرصد أي ثغرة هذا الشهر. شجّع {name} على المحافظة على هذا النسق — المواظبة تصنع الفرق.",
