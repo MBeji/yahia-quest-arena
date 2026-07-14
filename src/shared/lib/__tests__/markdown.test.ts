@@ -166,7 +166,8 @@ describe("renderLesson", () => {
 
     it("renders an inline svg as a real figure, not escaped text", () => {
       const result = html(`Look:\n\n${FIGURE}\n\ndone`);
-      expect(result).toContain('<div class="lesson-figure">');
+      expect(result).toContain('<figure class="lesson-figure"');
+      expect(result).toContain('<div class="lesson-figure__plate">');
       expect(result).toContain("<svg");
       expect(result).toContain("<circle");
       // Must NOT have been escaped into literal text
@@ -177,18 +178,19 @@ describe("renderLesson", () => {
       const result = html(`# Title\n\n${FIGURE}\n\n**bold**`);
       expect(result).toContain('<h1 class="lesson-h1">Title</h1>');
       expect(result).toContain("<strong>bold</strong>");
-      expect(result).toContain('<div class="lesson-figure">');
+      expect(result).toContain('<figure class="lesson-figure"');
+      expect(result).toContain('<div class="lesson-figure__plate">');
     });
 
     it("does not wrap the figure in a paragraph", () => {
       const result = html(FIGURE);
-      expect(result).not.toContain("<p><div");
+      expect(result).not.toContain("<p><figure");
       expect(result).not.toMatch(/<p>svgfigureplaceholder/);
     });
 
     it("renders multiple figures independently", () => {
       const result = html(`${FIGURE}\n\ntext\n\n${FIGURE}`);
-      expect(result.match(/<div class="lesson-figure">/g)).toHaveLength(2);
+      expect(result.match(/<figure class="lesson-figure"/g)).toHaveLength(2);
       expect(result).not.toContain("svgfigureplaceholder");
     });
 
@@ -196,7 +198,8 @@ describe("renderLesson", () => {
       const evil =
         '<svg viewBox="0 0 10 10"><script>alert(1)</script><circle cx="5" cy="5" r="4" onclick="alert(2)"/></svg>';
       const result = html(evil);
-      expect(result).toContain('<div class="lesson-figure">');
+      expect(result).toContain('<figure class="lesson-figure"');
+      expect(result).toContain('<div class="lesson-figure__plate">');
       expect(result).not.toContain("<script");
       expect(result).not.toContain("onclick");
     });
@@ -372,5 +375,82 @@ describe("renderLesson — blocs pédagogiques", () => {
       expect(renderLesson(`texte\n\n${svg}`).figureCount).toBe(1);
       expect(renderLesson("aucune figure").figureCount).toBe(0);
     });
+  });
+});
+
+/**
+ * Figures légendées — étude 18, lot 2.
+ *
+ * Une figure est une PLANCHE : légende, numéro, agrandissable. Les 186 figures nues des
+ * 66 cours legacy reçoivent le MÊME habillage que celles d'une directive — une seule
+ * figure, un seul markup, un seul chemin de code.
+ */
+describe("renderLesson — figures légendées", () => {
+  const SVG = '<svg viewBox="0 0 10 10"><circle cx="5" cy="5" r="4"/></svg>';
+
+  it("légende et numérote une figure déclarée par directive", () => {
+    const result = renderLesson(`::: figure Configuration de Thalès\n${SVG}\n:::`).html;
+    expect(result).toContain('<figcaption class="lesson-figure__caption">');
+    expect(result).toContain('<span class="lesson-figure__num">Figure 1</span>');
+    expect(result).toContain("Configuration de Thalès");
+  });
+
+  it("numérote les figures dans l'ordre du document, nues et déclarées confondues", () => {
+    const result = renderLesson(
+      `${SVG}\n\ntexte\n\n::: figure La deuxième\n${SVG}\n:::\n\n${SVG}`,
+    ).html;
+    expect(result).toContain(">Figure 1<");
+    expect(result).toContain(">Figure 2<");
+    expect(result).toContain(">Figure 3<");
+    expect(result).toContain("La deuxième");
+  });
+
+  it("habille une figure nue comme les autres, sans légende (les 66 cours legacy)", () => {
+    const result = renderLesson(`Regarde :\n\n${SVG}`).html;
+    expect(result).toContain('<figure class="lesson-figure"');
+    expect(result).toContain('<div class="lesson-figure__plate">');
+    expect(result).toContain('<span class="lesson-figure__num">Figure 1</span>');
+    expect(result).toContain("<circle");
+  });
+
+  it("rend la figure agrandissable au clavier (role, tabindex, aria-label)", () => {
+    const result = renderLesson(`::: figure Le triangle ABC\n${SVG}\n:::`).html;
+    expect(result).toContain('role="button"');
+    expect(result).toContain('tabindex="0"');
+    expect(result).toContain('aria-label="Figure 1 — Le triangle ABC"');
+  });
+
+  it("numérote et libelle dans la langue du CONTENU (R-8)", () => {
+    const result = renderLesson(`::: figure وضعية طاليس\n${SVG}\n:::`, { lang: "ar" }).html;
+    expect(result).toContain("الشكل 1");
+    expect(result).not.toContain("Figure 1");
+  });
+
+  it("échappe les GUILLEMETS d'une légende — l'aria-label est un attribut", () => {
+    // escapeHtml n'échappe pas les quotes : un `"` dans une légende fermerait l'attribut.
+    // C'est la seule porte d'injection que ce lot pouvait ouvrir.
+    const result = renderLesson(
+      `::: figure Le "triangle" ABC" onmouseover="alert(1)\n${SVG}\n:::`,
+    ).html;
+    expect(result).toContain("&quot;");
+
+    const host = document.createElement("div");
+    host.innerHTML = result;
+    const figure = host.querySelector(".lesson-figure");
+    expect(figure).not.toBeNull();
+    // L'attribut a tenu : rien ne s'est échappé de ses guillemets.
+    expect(figure?.getAttribute("onmouseover")).toBeNull();
+    expect(figure?.getAttribute("aria-label")).toContain('Le "triangle" ABC');
+    const handlers = Array.from(host.querySelectorAll("*")).flatMap((el) =>
+      el.getAttributeNames().filter((name) => name.startsWith("on")),
+    );
+    expect(handlers).toEqual([]);
+  });
+
+  it("dégrade une `::: figure` SANS figure en bloc neutre (R-7)", () => {
+    const result = renderLesson("::: figure Une légende orpheline\nMais aucun SVG.\n:::").html;
+    expect(result).toContain("lesson-blk");
+    expect(result).toContain("Mais aucun SVG.");
+    expect(result).not.toContain("lesson-figure__plate");
   });
 });

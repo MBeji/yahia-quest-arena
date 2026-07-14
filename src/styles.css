@@ -637,26 +637,95 @@ html.reference *:focus-visible {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
-/* Inline lesson figures (anatomy, geometry, diagrams). Authored SVGs use dark ink
-   on an implied light worksheet, so they are drawn on a white surface to stay
-   visible on every theme — matching the exercise figure surface. */
+/* =====================================================
+  Figures de cours (étude 18, lot 2)
+
+  Une figure est une PLANCHE légendée, pas une vignette. Le plafond de 22rem était le
+  bug visuel : une configuration de Thalès y devenait illisible. Elle occupe désormais
+  la colonne de lecture, déborde légèrement sur grand écran, porte sa légende et son
+  numéro, et s'agrandit au clic comme au clavier.
+
+  D-4 — la planche reste CLAIRE dans les deux thèmes (crème en « Noir & Or », pas une
+  lampe torche) : les 448 figures déjà écrites (66 cours + 382 questions) portent leur
+  encre sombre en dur. Thémer la planche imposerait de migrer 448 SVG pour une valeur
+  pédagogique nulle, et ferait diverger la convention du cours de celle des exercices.
+  Une planche claire sur fond noir, c'est la planche d'un manuel — c'est un choix.
+  ===================================================== */
 .lesson-content .lesson-figure {
+  margin: 1.5rem 0;
+  cursor: zoom-in;
+  border-radius: 0.75rem;
+}
+/* Débord maîtrisé : la figure respire au-delà de la colonne de texte, sans jamais
+   dépasser le padding de l'article (donc jamais de scroll horizontal). */
+@media (min-width: 640px) {
+  .lesson-content .lesson-figure {
+    margin-inline: -1rem;
+  }
+}
+.lesson-content .lesson-figure:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+.lesson-content .lesson-figure:hover .lesson-figure__plate {
+  border-color: color-mix(in oklab, var(--primary) 45%, transparent);
+}
+
+/* La planche. Classe AUTONOME (non préfixée par .lesson-content) : le dialogue
+   d'agrandissement la réutilise hors du corps de la leçon. */
+.lesson-figure__plate {
   display: flex;
   justify-content: center;
-  margin: 1.25rem auto;
-  max-width: 22rem;
-  padding: 0.75rem;
+  padding: 1rem;
   background: #ffffff;
   color: #0f172a;
   border-radius: 0.75rem;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
   border: 1px solid rgb(0 0 0 / 0.1);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+  transition: border-color 0.15s;
 }
-.lesson-content .lesson-figure svg {
+/* Thème sombre « Noir & Or » : une planche de manuel, crème — pas du blanc pur. */
+html:not(.reference) .lesson-figure__plate {
+  background: #f4f1e8;
+  border-color: rgb(255 255 255 / 0.12);
+}
+.lesson-figure__plate svg {
   display: block;
   width: 100%;
   height: auto;
+  max-width: 30rem;
+}
+/* Agrandie, la planche prend toute la place du dialogue : c'est tout l'intérêt. */
+.lesson-figure__plate--zoom svg {
   max-width: 100%;
+}
+
+.lesson-content .lesson-figure__caption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+  padding-inline: 0.25rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+}
+.lesson-content .lesson-figure__num {
+  flex: none;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--primary);
+  align-self: center;
+}
+
+/* À l'impression, la figure est du contenu : elle reste, sans affordance de clic. */
+@media print {
+  .lesson-content .lesson-figure {
+    cursor: auto;
+    break-inside: avoid;
+  }
 }
 
 /* =====================================================

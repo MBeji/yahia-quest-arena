@@ -49,6 +49,35 @@ type Ctx = { lang: ContentLang; sections: LessonSection[]; h2: number };
 const escapeHtml = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
+/**
+ * Échappement pour un contenu d'ATTRIBUT. La légende d'auteur atterrit dans `aria-label`
+ * (étude 18, R-3) : `escapeHtml` n'échappe PAS les guillemets, et un `"` dans une légende
+ * fermerait l'attribut — la seule porte d'injection que ce lot pouvait ouvrir.
+ */
+const escapeAttr = (s: string) => escapeHtml(s).replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+
+/** Le jeton d'abri d'une figure porte son index — donc son ORDRE dans le document. */
+const FIGURE_TOKEN = /svgfigureplaceholder(\d+)end/;
+
+/**
+ * Habillage d'une figure. Le numéro est l'index du `<svg>` dans le document : l'abri des
+ * figures les collecte dans l'ordre, la numérotation est donc juste sans compteur séparé.
+ * Le jeton reste en place ici ; il devient le SVG assaini après la passe de sanitize.
+ */
+function figureMarkup(token: string, index: number, caption: string | null, lang: ContentLang) {
+  const number = `${BLOCK_LABELS.figure[lang]} ${index + 1}`;
+  const aria = caption ? `${number} — ${caption}` : number;
+  return (
+    `<figure class="lesson-figure" role="button" tabindex="0" aria-label="${escapeAttr(aria)}">` +
+    `<div class="lesson-figure__plate">${token}</div>` +
+    `<figcaption class="lesson-figure__caption">` +
+    `<span class="lesson-figure__num">${escapeHtml(number)}</span>` +
+    (caption ? `<span>${escapeHtml(caption)}</span>` : "") +
+    `</figcaption>` +
+    `</figure>`
+  );
+}
+
 /** Inverse exact de `escapeHtml` (on n'échappe que ces trois entités) + emphase markdown
  *  retirée : le sommaire est du TEXTE rendu par React, pas du HTML. */
 const toPlainText = (s: string) =>
@@ -201,12 +230,20 @@ function renderChunk(lines: string[], ctx: Ctx): string {
 }
 
 function renderBlock(seg: Extract<Segment, { kind: "block" }>, ctx: Ctx): string {
+  // Une figure n'est pas un encadré à libellé : c'est une planche légendée.
+  if (seg.type === "figure") {
+    const token = seg.lines.join("\n").match(FIGURE_TOKEN);
+    // `::: figure` sans figure : on ne casse pas la page, on dégrade en bloc neutre —
+    // c'est `content:qa` (lot 4) qui remontera l'erreur, pas le lecteur (R-7).
+    if (token) return figureMarkup(token[0], Number(token[1]), seg.title, ctx.lang);
+  }
+
   const inner = renderChunk(seg.lines, ctx);
 
   // L'épigraphe ouvre le chapitre : c'est une exergue, pas un encadré à libellé.
   if (seg.epigraph) return `<blockquote class="lesson-epigraph">${inner}</blockquote>`;
 
-  const label = seg.type ? BLOCK_LABELS[seg.type][ctx.lang] : null;
+  const label = seg.type && seg.type !== "figure" ? BLOCK_LABELS[seg.type][ctx.lang] : null;
   const className = seg.type ? `lesson-blk lesson-blk--${seg.type}` : "lesson-blk";
   const head =
     (label ? `<span class="lesson-blk__label">${escapeHtml(label)}</span>` : "") +
@@ -269,25 +306,35 @@ export function renderLesson(md: string, opts: { lang?: ContentLang } = {}): Ren
           "ul",
           "ol",
           "li",
-          // étude 18 — deux balises INERTES, porteuses des blocs pédagogiques.
+          // étude 18 — des balises INERTES, porteuses des blocs et des figures légendées.
           // Ni `style`, ni `href`, ni `on*` : la surface d'injection est inchangée.
           "section",
           "span",
+          "figure",
+          "figcaption",
         ],
-        ALLOWED_ATTR: ["class", "id", "dir"],
+        // `role`/`tabindex`/`aria-label` rendent la figure agrandissable au clavier.
+        // Trois attributs INERTES : ils ne peuvent porter aucun script.
+        ALLOWED_ATTR: ["class", "id", "dir", "role", "tabindex", "aria-label"],
       })
     : html;
 
   if (figures.length === 0) return { html: safe, sections: ctx.sections, figureCount: 0 };
 
-  // Re-inject each already-sanitized figure, replacing the paragraph the placeholder
-  // ended up wrapped in (or the bare token, defensively).
   const withFigures = figures.reduce((out, svg, i) => {
     const token = figurePlaceholder(i);
+    // Une figure NUE dans la prose (les 186 figures des 66 cours legacy) reçoit exactement
+    // le même habillage que celle d'une directive : une seule figure, un seul markup, un
+    // seul chemin de code. Elle n'a pas de légende — `content:qa` (lot 4) le signalera.
+    const bare = figureMarkup(token, i, null, ctx.lang);
     // Function replacers avoid `$`-pattern interpretation inside the SVG markup.
-    return out
-      .replace(`<p>${token}</p>`, () => `<div class="lesson-figure">${svg}</div>`)
-      .replace(token, () => `<div class="lesson-figure">${svg}</div>`);
+    return (
+      out
+        .replace(`<p>${token}</p>`, () => bare)
+        // Le jeton restant vit désormais dans une planche (celle qu'on vient de poser, ou
+        // celle d'une directive `::: figure`) : il devient le SVG assaini, sans habillage.
+        .replace(token, () => svg)
+    );
   }, safe);
 
   return { html: withFigures, sections: ctx.sections, figureCount: figures.length };
