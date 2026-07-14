@@ -87,7 +87,8 @@ Source de vérité : [FableEtudes/README.md](./FableEtudes/README.md) (index) + 
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | maths 9ᵉ           | ✅ 2026-07-14 — 25 figures, 6 chapitres (toute la géométrie)                                                                                                      |
 | **maths 1ère sec** | ✅ 2026-07-14 — **38 figures, 11 chapitres** (angles, Thalès, trigo, vecteurs, repère, quart de tour, sections planes, fonctions linéaires/affines, statistiques) |
-| reste              | **19 chapitres** : maths 6ᵉ (6), maths 7ᵉ (5), maths 1ère (2), **maths 9ᵉ fonctions + statistiques (2)**, iq-training (3), français (1)                           |
+| **maths 6ᵉ**       | ✅ 2026-07-14 — **20 figures, 6 chapitres** (angles, triangles, quadrilatères, aires, cercle/disque, cube & pavé) — année de concours national                    |
+| reste              | **13 chapitres** : maths 7ᵉ (5), maths 1ère année (2), **maths 9ᵉ fonctions + statistiques (2)**, iq-training (3), français (1)                                   |
 
 > **L'axe 5 s'est élargi en route (2026-07-14).** Sa première liste ne couvrait que les **formes** :
 > elle laissait passer `07-quart-tour` (une rotation), `08-sections-planes` (des solides) et surtout

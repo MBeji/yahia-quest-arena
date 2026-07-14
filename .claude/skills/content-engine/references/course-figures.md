@@ -82,9 +82,20 @@ Everything in `content-schema.md` § Figures applies. On top of it:
   muted `#94a3b8`.
 - **`viewBox` is mandatory**, `width`/`height` are forbidden (`content:qa` → `[error]`). Author for
   a ~340×260 box; the renderer scales it to the reading column and lets the reader enlarge it.
-- **Labels in standard notation, LTR** — Latin vertex names (A, B, C, M, N), Western digits, SI
-  units — **even in Arabic courses** (`math-and-notation.md`). Arabic prose lives in the caption and
-  the surrounding text, never inside the drawing. Keep label text short (a letter, a number, a unit).
+- **Label the vertices the way the COURSE labels them.** This rule was wrong in its first version
+  (2026-07-14), which demanded Latin letters everywhere; illustrating maths 6ème showed why. The
+  official Tunisian curriculum names points with **Arabic letters in the primary cycle** (« الزاوية
+  أ‌ب‌ج رأسُها ب », « نصف القطر ر », « القطر ق ») and switches to **Latin letters from collège on**
+  (A, B, C, M, N — as maths 9ème does). A figure labelled A/B/C under a text that says أ‌ب‌ج teaches
+  nothing to an 11-year-old: **the figure must be consistent with its own statement**. So: read the
+  course, and use its letters.
+- **Digits, units and operators stay standard everywhere** — Western digits (0–9), SI units, LTR
+  equations, in **every** language and every cycle (`math-and-notation.md`). Only the _vertex naming_
+  follows the cycle.
+- **Never put Arabic PROSE inside the drawing.** A label is a glyph (`أ`, `ر`, `5`, `cm`), not a
+  sentence. Words like « القاعدة » or « الارتفاع » belong in the caption — the drawing shows them
+  (a dashed segment, a right-angle square), it does not spell them. Keep every label to one or two
+  characters.
 - **Label legibility over strokes**: give `<text>` a halo —
   `paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round"`.
 - **THE FIGURE MUST BE TRUE.** A figure that contradicts its own statement is worse than no figure.
