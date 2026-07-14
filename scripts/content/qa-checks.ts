@@ -493,3 +493,121 @@ export function auditNumericQuestion(q: QANumericQuestion, where: string): Flag[
 
   return flags;
 }
+
+/* ============================================================================
+   Leçons (`cours.md` / `resume.md`) — étude 18, lot 4.
+
+   Jusqu'ici, `content:qa` ne lisait QUE les questions : les 541 leçons étaient
+   hors de tout gate déterministe, et c'est précisément pour cela que la dérive
+   « aucune figure en géométrie » a pu durer sans qu'aucune CI ne bronche.
+   ========================================================================== */
+
+/** Miroir de `DIRECTIVE_TYPES` dans `src/shared/lib/lesson-blocks.ts` — garder en phase. */
+const LESSON_DIRECTIVES = new Set([
+  "definition",
+  "propriete",
+  "exemple",
+  "methode",
+  "figure",
+  "piege",
+  "astuce",
+  "retenir",
+]);
+
+const DIRECTIVE_OPEN = /^:::[ \t]+([a-z]+)(?:[ \t]+(.*))?$/;
+const DIRECTIVE_CLOSE = /^:::[ \t]*$/;
+
+/**
+ * Chapitres dont les notions sont intrinsèquement SPATIALES : y énoncer une règle sur des
+ * formes sans la dessiner est une non-conformité (axe 5 « Illustration »). Testé sur le SLUG
+ * du chapitre. Liste normative : `content-engine/references/course-figures.md` — garder les
+ * deux en phase.
+ */
+const SPATIAL_CHAPTER =
+  /thales|thal[eè]s|pythagore|triangle|g[ée]om[ée]tri|cercle|angle|vecteur|rep[eè]re|espace|solide|sym[ée]trie|translation|rotation|homoth[ée]tie|perim[eè]tre|p[ée]rim[eè]tre|quadrilat[eè]re|polygone|trigo|prisme|pyramide|c[oô]ne|cylindre|sph[eè]re|droites/i;
+
+/**
+ * Audit d'une leçon. Contrôles :
+ *  - directives `:::` : type inconnu, non fermée, `:::` orphelin, `::: figure` sans légende ;
+ *  - la leçon DÉSIGNE une figure (« ci-dessous », « الشكل المجاور »…) mais n'en porte aucune ;
+ *  - chapitre spatial sans la moindre figure ;
+ *  - notation (viewBox, bidi, virgule arabe) — via `auditRenderedFields`, dont c'est le
+ *    tout premier passage sur des leçons.
+ */
+export function auditLesson(md: string, where: string, opts: { spatial?: boolean } = {}): Flag[] {
+  const flags: Flag[] = [];
+  const lines = md.split("\n");
+
+  let open: { type: string; line: number } | null = null;
+  for (let i = 0; i < lines.length; i++) {
+    const opener = DIRECTIVE_OPEN.exec(lines[i]);
+    if (opener) {
+      const [, type, caption] = opener;
+      if (open) {
+        flags.push({
+          level: "error",
+          where,
+          msg: `directive \`::: ${open.type}\` (l.${open.line}) is never closed — \`::: ${type}\` opens at l.${i + 1}`,
+        });
+      }
+      if (!LESSON_DIRECTIVES.has(type)) {
+        flags.push({
+          level: "error",
+          where,
+          msg: `unknown block directive \`::: ${type}\` (l.${i + 1}) — allowed: ${[...LESSON_DIRECTIVES].join(", ")}`,
+        });
+      }
+      if (type === "figure" && !(caption ?? "").trim()) {
+        flags.push({
+          level: "error",
+          where,
+          msg: `\`::: figure\` (l.${i + 1}) carries no caption — every course figure is captioned and numbered`,
+        });
+      }
+      open = { type, line: i + 1 };
+      continue;
+    }
+    if (DIRECTIVE_CLOSE.test(lines[i])) {
+      if (!open) {
+        flags.push({ level: "error", where, msg: `stray \`:::\` (l.${i + 1}) closes nothing` });
+      }
+      open = null;
+    }
+  }
+  if (open) {
+    flags.push({
+      level: "error",
+      where,
+      msg: `directive \`::: ${open.type}\` (l.${open.line}) is never closed`,
+    });
+  }
+
+  const hasFigure = SVG_BLOCK.test(md);
+
+  // Le contrôle le plus discriminant : la leçon parle d'une image absente.
+  if (!hasFigure && FIGURE_REFERENCE.test(md)) {
+    flags.push({
+      level: "error",
+      where,
+      msg: "the lesson points at a figure («ci-dessous», «الشكل المجاور»…) but carries none — the student is sent to an image that does not exist",
+    });
+  }
+
+  // Axe 5 « Illustration » : un chapitre de formes enseigné sans un seul dessin.
+  if (opts.spatial && !hasFigure) {
+    flags.push({
+      level: "warn",
+      where,
+      msg: "spatial chapter with no figure at all — a rule about shapes taught without a drawing (course-quality.md, axis 5)",
+    });
+  }
+
+  flags.push(...auditRenderedFields([["lesson", md]], where));
+
+  return flags;
+}
+
+/** Le chapitre relève-t-il d'une famille où la figure est exigible ? (axe 5) */
+export function isSpatialChapter(slug: string): boolean {
+  return SPATIAL_CHAPTER.test(slug);
+}

@@ -53,15 +53,33 @@ official scope + language of instruction).
 3. **Write `cours.md`** per the style-guide skeleton and course-quality Axis 1–2: concrete
    example before each rule, a worked example for every rule, formulas displayed on their own
    line, tables for classifications, grade-calibrated sentences, ~50–75 lines.
-4. **Write `resume.md`**: one bullet per section, same order, bolded concept + one-line essence,
+4. **ILLUSTRATE — a rule about shapes taught without a drawing is a non-conformity**
+   (course-quality Axis 5; doctrine, families and copy-paste SVG templates:
+   `content-engine/references/course-figures.md`). Go back over the sections you just wrote and ask,
+   for each: _is this notion spatial?_ Geometry, circle & angles, repère & vecteurs, solids,
+   trigonometry, measurement of shapes, science diagrams (organs, cycles, circuits, optics),
+   timelines, data graphs → it gets a figure, **next to its rule**, not at the end.
+   Attach it with `::: figure <légende>` + an inline `<svg viewBox="…">`; the number is automatic.
+   Three rules that decide whether the figure helps or harms:
+   - **it must be TRUE** — re-derive the coordinates (points announced on a segment are on it,
+     "parallels" really are parallel, a right angle is 90°). A wrong figure teaches a wrong shape,
+     and **no automated gate can catch it**;
+   - **one figure = one idea**;
+   - **never point at a figure you did not draw** (« ci-dessous », « الشكل المجاور » with no `<svg>`
+     = `content:qa` **[error]**).
+     Illustrate the **résumé** too when the notion is visual: a revision card carrying the shape beats
+     a card describing it.
+5. **Write `resume.md`**: one bullet per section, same order, bolded concept + one-line essence,
    7–10 bullets, revisable standalone.
-5. **Self-verification (before the checks)** — walk course-quality's four axes; verify the
-   tested-notions list from step 1 is fully covered (cite section per notion); verify
-   resume ↔ course bijection; run the notation scans (`[٠-٩]`, `\d \d{3}` in ar, hyphen-minus).
+6. **Self-verification (before the checks)** — walk course-quality's **five** axes (Illustration
+   included); verify the tested-notions list from step 1 is fully covered (cite section per notion);
+   verify resume ↔ course bijection; run the notation scans (`[٠-٩]`, `\d \d{3}` in ar, hyphen-minus,
+   and the **Arabic comma `،` inside a math bracket group** — `content:qa` fails strict on it, and
+   the first pass over the lessons on 2026-07-14 found 46 such violations across 22 files).
    If you changed which notions the course covers, re-check the quiz is still answerable from
    the course alone — and report any quiz/exercise that should be adjusted (don't edit items
    unless asked; that's content-engine/content-audit territory).
-6. `npm run content:check` (must pass) — then **stop and report**: chapter(s) touched, the
+7. `npm run content:check` (must pass) — then **stop and report**: chapter(s) touched, the
    tested-notion coverage map, axis-by-axis self-assessment, and the human's build/apply steps
    (a course rewrite changes `chapters` rows → `content:build` + apply before deploy, UUIDs
    stable).
