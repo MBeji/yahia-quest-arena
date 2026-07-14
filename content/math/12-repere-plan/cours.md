@@ -11,6 +11,27 @@
 - **المحور الثاني (محور الترتيبات)**: المستقيم العمودي، اتّجاهه الشعاع j.
 - **المتجانس**: كلّ وحدة على المحورين لها نفس الطول (المقياس موحَّد).
 
+::: figure المعلّم المتعامد والمتجانس (O ; i ; j): محوران متعامدان، ونفس الوحدة على كليهما
+<svg viewBox="0 0 310 235">
+<g stroke="#94a3b8" stroke-width="1" opacity="0.55">
+<path d="M30 40 V220 M90 40 V220 M120 40 V220 M150 40 V220 M180 40 V220 M210 40 V220 M240 40 V220 M270 40 V220"/>
+<path d="M30 40 H290 M30 70 H290 M30 100 H290 M30 130 H290 M30 160 H290 M30 220 H290"/>
+</g>
+<path d="M30 190 H290 M60 220 V40" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M296 190 L284 195 L284 185 Z M60 34 L55 46 L65 46 Z" fill="#0f172a"/>
+<path d="M60 190 L90 190" fill="none" stroke="#0f6e56" stroke-width="3"/>
+<path d="M92 190 L82 195 L82 185 Z" fill="#0f6e56"/>
+<path d="M60 190 L60 160" fill="none" stroke="#0f6e56" stroke-width="3"/>
+<path d="M60 158 L55 168 L65 168 Z" fill="#0f6e56"/>
+<g fill="#0f172a"><circle cx="60" cy="190" r="4"/></g>
+<g font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="48" y="206" text-anchor="middle" fill="#0f172a">O</text>
+<text x="80" y="208" text-anchor="middle" fill="#0f6e56">i</text>
+<text x="44" y="170" text-anchor="middle" fill="#0f6e56">j</text>
+</g>
+</svg>
+:::
+
 الخاصيّتان الجوهريّتان:
 
 - المحوران عموديّان: زاوية 90° بين محور الفاصلات ومحور الترتيبات.
@@ -26,6 +47,26 @@
 - **الترتيبة**: y = الإسقاط العمودي على محور الترتيبات.
 
 نكتب: M(xM ; yM).
+
+::: figure النقطة M(3 ; 2): الفاصلة تُقرأ على المحور الأفقي، والترتيبة على المحور العمودي
+<svg viewBox="0 0 310 235">
+<g stroke="#94a3b8" stroke-width="1" opacity="0.55">
+<path d="M30 40 V220 M90 40 V220 M120 40 V220 M150 40 V220 M180 40 V220 M210 40 V220 M240 40 V220 M270 40 V220"/>
+<path d="M30 40 H290 M30 70 H290 M30 100 H290 M30 130 H290 M30 160 H290 M30 220 H290"/>
+</g>
+<path d="M30 190 H290 M60 220 V40" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M296 190 L284 195 L284 185 Z M60 34 L55 46 L65 46 Z" fill="#0f172a"/>
+<path d="M150 130 L150 190 M150 130 L60 130" fill="none" stroke="#0f6e56" stroke-width="2" stroke-dasharray="6 4"/>
+<g fill="#0f172a"><circle cx="60" cy="190" r="4"/></g>
+<g fill="#0f6e56"><circle cx="150" cy="130" r="5"/></g>
+<g font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="48" y="206" text-anchor="middle" fill="#0f172a">O</text>
+<text x="164" y="122" text-anchor="middle" fill="#0f6e56">M</text>
+<text x="150" y="208" text-anchor="middle" fill="#0f6e56">3</text>
+<text x="46" y="135" text-anchor="middle" fill="#0f6e56">2</text>
+</g>
+</svg>
+:::
 
 | النقطة | الفاصلة | الترتيبة | الموضع             |
 | ------ | ------- | -------- | ------------------ |
@@ -84,6 +125,26 @@ $$ M'(x + a ; y + b) $$
 **مثال:** سابقة N'(5 ; 0) بالانسحاب نفسه هي N(5 − 3 ; 0 + 2) = N(2 ; 2).
 
 ## 🔮 إحداثيّات منتصف قطعة
+
+::: figure منتصف [AB]: إحداثيّاته هي معدّل إحداثيّات A وB — A(2 ; 1) وB(6 ; 5) ⟹ I(4 ; 3)
+<svg viewBox="0 0 310 235">
+<g stroke="#94a3b8" stroke-width="1" opacity="0.55">
+<path d="M30 40 V220 M90 40 V220 M120 40 V220 M150 40 V220 M180 40 V220 M210 40 V220 M240 40 V220 M270 40 V220"/>
+<path d="M30 40 H290 M30 70 H290 M30 100 H290 M30 130 H290 M30 160 H290 M30 220 H290"/>
+</g>
+<path d="M30 190 H290 M60 220 V40" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M296 190 L284 195 L284 185 Z M60 34 L55 46 L65 46 Z" fill="#0f172a"/>
+<path d="M120 160 L240 40" fill="none" stroke="#0f6e56" stroke-width="2.5"/>
+<g fill="#0f172a"><circle cx="60" cy="190" r="4"/><circle cx="120" cy="160" r="4"/><circle cx="240" cy="40" r="4"/></g>
+<g fill="#0f6e56"><circle cx="180" cy="100" r="5"/></g>
+<g font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="48" y="206" text-anchor="middle" fill="#0f172a">O</text>
+<text x="108" y="176" text-anchor="middle" fill="#0f172a">A</text>
+<text x="252" y="34" text-anchor="middle" fill="#0f172a">B</text>
+<text x="194" y="94" text-anchor="middle" fill="#0f6e56">I</text>
+</g>
+</svg>
+:::
 
 إذا كانت A(xA ; yA) و B(xB ; yB)، فإنّ المنتصف I للقطعة [AB] له إحداثيّات:
 
@@ -149,11 +210,11 @@ CI = √((3 − 3)² + (0 − 4)²) = √(0 + 16) = 4.
 
 ## 🏅 خلاصة الصيغ — بطاقة البطل
 
-| المطلوب                         | الصيغة                                                                             |
-| ------------------------------- | ---------------------------------------------------------------------------------- |
+| المطلوب             | الصيغة                                          |
+| ------------------- | ----------------------------------------------- |
 | إحداثيّات الشعاع AB | (xB − xA ; yB − yA)                             |
-| منتصف [AB]                      | ((xA + xB)/2 ; (yA + yB)/2)                               |
-| المسافة AB                      | √((xB − xA)² + (yB − yA)²)                                                   |
-| شعاعان متساويان                 | AB = CD ⟺ xB − xA = xD − xC و yB − yA = yD − yC |
+| منتصف [AB]          | ((xA + xB)/2 ; (yA + yB)/2)                     |
+| المسافة AB          | √((xB − xA)² + (yB − yA)²)                      |
+| شعاعان متساويان     | AB = CD ⟺ xB − xA = xD − xC و yB − yA = yD − yC |
 
 > 🏆 اكتملت خريطة المستوي: رأس رابع، انسحاب، منتصف ومسافة — كلّها صارت حسابًا بين يديك. استعدّ للفصل القادم: الهندسة تغادر الورقة نحو **الفضاء**!

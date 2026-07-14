@@ -10,6 +10,26 @@
 - **نصف القطر r**: المسافة من المركز إلى أيّ نقطة على الدائرة.
 - **الوتر**: قطعة مستقيمة تصل نقطتين على الدائرة.
 - **القطر**: وتر يمرّ بالمركز، طوله = 2r.
+
+::: figure تشريح الدائرة: المركز O، نصف القطر r، الوتر [AB]، والقطر [CD] الذي يمرّ بالمركز
+<svg viewBox="0 0 300 240">
+<circle cx="150" cy="120" r="90" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M60 120 L240 120" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M150 120 L213.6 56.4" fill="none" stroke="#0f6e56" stroke-width="2.5"/>
+<path d="M134.4 208.6 L207.9 188.9" fill="none" stroke="#0f6e56" stroke-width="2.5"/>
+<g fill="#0f172a"><circle cx="150" cy="120" r="4"/><circle cx="60" cy="120" r="4"/><circle cx="240" cy="120" r="4"/></g>
+<g fill="#0f6e56"><circle cx="213.6" cy="56.4" r="4"/><circle cx="134.4" cy="208.6" r="4"/><circle cx="207.9" cy="188.9" r="4"/></g>
+<g font-size="14" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="143" y="137" text-anchor="middle" fill="#0f172a">O</text>
+<text x="48" y="126" text-anchor="middle" fill="#0f172a">C</text>
+<text x="252" y="126" text-anchor="middle" fill="#0f172a">D</text>
+<text x="126" y="224" text-anchor="middle" fill="#0f6e56">A</text>
+<text x="220" y="196" text-anchor="middle" fill="#0f6e56">B</text>
+<text x="188" y="82" text-anchor="middle" fill="#0f6e56">r</text>
+</g>
+</svg>
+:::
+
 - **القوس**: جزء من الدائرة محصور بين نقطتين. نرمز للقوس بـ AB.
 
 > 🗡️ القيس: نقيس الأقواس بالدرجات (من 0° إلى 360°). القوس الكامل = 360°.
@@ -41,6 +61,25 @@ $$ الزاوية المحيطية ACB تحصر القوس AB الذي لا يح
 هذه هي الضربة الرئيسية في هذا الفصل:
 
 $$ **الزاوية المحيطية = (1/2) × الزاوية المركزية المقابلة لنفس القوس** $$
+
+::: figure الزاوية المحيطية ACB تساوي نصف الزاوية المركزية AOB — وكلتاهما تحصر القوس AB نفسه
+<svg viewBox="0 0 320 250">
+<circle cx="160" cy="130" r="95" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M160 130 L221.1 202.8 M160 130 L98.9 202.8" fill="none" stroke="#0f6e56" stroke-width="2.5"/>
+<path d="M160 35 L221.1 202.8 M160 35 L98.9 202.8" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M178 151.4 A 28 28 0 0 1 142 151.4" fill="none" stroke="#0f6e56" stroke-width="2"/>
+<path d="M170.3 63.2 A 30 30 0 0 1 149.7 63.2" fill="none" stroke="#0f172a" stroke-width="2"/>
+<g fill="#0f172a"><circle cx="160" cy="130" r="4"/><circle cx="160" cy="35" r="4"/><circle cx="221.1" cy="202.8" r="4"/><circle cx="98.9" cy="202.8" r="4"/></g>
+<g font-size="14" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="148" y="126" text-anchor="middle" fill="#0f172a">O</text>
+<text x="160" y="25" text-anchor="middle" fill="#0f172a">C</text>
+<text x="236" y="216" text-anchor="middle" fill="#0f172a">A</text>
+<text x="84" y="216" text-anchor="middle" fill="#0f172a">B</text>
+<text x="160" y="182" text-anchor="middle" fill="#0f6e56">80°</text>
+<text x="160" y="90" text-anchor="middle" fill="#0f172a">40°</text>
+</g>
+</svg>
+:::
 
 **البرهان:** في المثلث OAC، OA = OC (نصفا قطر)، إذن المثلث متساوي الساقين، وبالتالي:
 
@@ -85,6 +124,23 @@ $$ الزاوية ACB = الزاوية ADB $$
 **النظرية:** إذا كانت [AC] قطرًا للدائرة وكانت B نقطة على الدائرة (غير A وC)، فإنّ:
 
 $$ الزاوية ABC = 90° $$
+
+::: figure [AC] قطر وB نقطة على الدائرة ⟹ الزاوية ABC قائمة — مهما تحرّكت B على المحيط
+<svg viewBox="0 0 300 230">
+<circle cx="150" cy="120" r="90" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M60 120 L240 120" fill="none" stroke="#0f6e56" stroke-width="2.5"/>
+<path d="M105 42.1 L60 120 M105 42.1 L240 120" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M97 56 L110.9 64 L118.9 50.1" fill="none" stroke="#0f172a" stroke-width="2"/>
+<g fill="#0f172a"><circle cx="105" cy="42.1" r="4"/><circle cx="150" cy="120" r="3.5"/></g>
+<g fill="#0f6e56"><circle cx="60" cy="120" r="4"/><circle cx="240" cy="120" r="4"/></g>
+<g font-size="14" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="46" y="126" text-anchor="middle" fill="#0f6e56">A</text>
+<text x="254" y="126" text-anchor="middle" fill="#0f6e56">C</text>
+<text x="95" y="32" text-anchor="middle" fill="#0f172a">B</text>
+<text x="152" y="138" text-anchor="middle" fill="#0f172a">O</text>
+</g>
+</svg>
+:::
 
 **البرهان بالنظرية الكبرى:** القطر AC يقابل الزاوية المركزية AOC = 180° (نصف دائرة). إذن:
 
