@@ -22,6 +22,13 @@ const QUOTE_LINE = /^>[ \t]?(.*)$/;
 /** Une section `##`+ a commencé : au-delà, un `> 💡` n'est plus l'épigraphe. */
 const SECTION_HEADING = /^#{2,}[ \t]/;
 
+/** Une puce de premier niveau d'un `resume.md` : elle devient une carte de révision. */
+const CARD_LINE = /^- (.+)$/;
+/** Une ligne indentée appartient à la carte qui la précède (exemples, sous-puces). */
+const CARD_CHILD = /^[ \t]+\S/;
+/** `**Concept**: essence` — le motif normatif, suivi par 3 549 puces sur 3 827. */
+const CARD_TITLE = /^\*\*(.+?)\*\*[ \t]*[:：]?[ \t]*([\s\S]*)$/;
+
 export type LessonSection = { id: string; title: string };
 
 export type RenderedLesson = {
@@ -254,39 +261,31 @@ function renderBlock(seg: Extract<Segment, { kind: "block" }>, ctx: Ctx): string
 }
 
 /**
- * Rend une leçon (`cours.md`) ou un résumé (`resume.md`) en HTML assaini.
- *
- * Invariant de sécurité (étude 18, R-1) — l'ordre des passes EST la garantie : le corps est
- * intégralement HTML-échappé AVANT qu'aucune balise ne soit émise, et les seules balises qui
- * survivent sont celles que ce module produit lui-même. Un auteur ne peut donc pas injecter
- * de markup, quoi qu'il écrive. L'unique exception est le bloc `<svg>`, extrait avant
- * l'échappement, passé par le profil SVG vetté (`sanitizeSvg`, qui échoue fermé sans DOM) et
- * ré-injecté après le sanitize final — dont l'`ALLOWED_TAGS` exclut délibérément le SVG.
- * Voir `docs/xss-rendering-policy.md`.
+ * Extrait les `<svg>` AVANT tout échappement et les remplace par des jetons. Chacun est
+ * assaini au passage par le profil SVG vetté (`sanitizeSvg`, qui échoue fermé sans DOM).
+ * Sans cet abri, l'échappement transformerait le markup en texte littéral visible.
  */
-export function renderLesson(md: string, opts: { lang?: ContentLang } = {}): RenderedLesson {
+function shelterFigures(md: string): { sheltered: string; figures: string[] } {
   const figures: string[] = [];
   const sheltered = md.replace(SVG_BLOCK, (svg) => {
     const token = figurePlaceholder(figures.length);
     figures.push(sanitizeSvg(svg));
     return `\n\n${token}\n\n`;
   });
+  return { sheltered, figures };
+}
 
-  const ctx: Ctx = { lang: opts.lang ?? "fr", sections: [], h2: 0 };
-
-  let html = segment(sheltered)
-    .map((seg) => (seg.kind === "raw" ? renderChunk(seg.lines, ctx) : renderBlock(seg, ctx)))
-    .filter(Boolean)
-    .join("\n");
-
+/**
+ * Passe finale, commune au cours et au résumé : isolation bidi, sanitize, ré-injection des
+ * figures. Le corps est déjà HTML-échappé en amont, donc sûr même sans le sanitize ; quand
+ * DOMPurify n'a pas de DOM (SSR), on saute explicitement l'appel no-op plutôt que de
+ * dépendre de son comportement pass-through.
+ */
+function finalize(body: string, figures: string[], lang: ContentLang): string {
   // Keep inline math (`√64`, `√(25 × 2) = 5√2`, …) a contiguous LTR run inside
   // RTL prose; `$$ … $$` display blocks are already isolated via CSS.
-  html = isolateLtrRunsHtml(html);
+  const html = isolateLtrRunsHtml(body);
 
-  // The body is already HTML-escaped above, so it is safe even without the
-  // sanitize pass; when DOMPurify is unavailable (no DOM at SSR) we skip the
-  // no-op call explicitly rather than depend on its pass-through behavior. Any
-  // embedded figure is sheltered and fails closed in sanitizeSvg.
   const safe = DOMPurify.isSupported
     ? DOMPurify.sanitize(html, {
         ALLOWED_TAGS: [
@@ -308,6 +307,8 @@ export function renderLesson(md: string, opts: { lang?: ContentLang } = {}): Ren
           "li",
           // étude 18 — des balises INERTES, porteuses des blocs et des figures légendées.
           // Ni `style`, ni `href`, ni `on*` : la surface d'injection est inchangée.
+          // Les cartes de révision réutilisent `ul`/`li`/`h3` : un paquet de cartes EST
+          // une liste, et l'allowlist n'a donc pas à grandir pour le lot 3.
           "section",
           "span",
           "figure",
@@ -319,14 +320,14 @@ export function renderLesson(md: string, opts: { lang?: ContentLang } = {}): Ren
       })
     : html;
 
-  if (figures.length === 0) return { html: safe, sections: ctx.sections, figureCount: 0 };
+  if (figures.length === 0) return safe;
 
-  const withFigures = figures.reduce((out, svg, i) => {
+  return figures.reduce((out, svg, i) => {
     const token = figurePlaceholder(i);
     // Une figure NUE dans la prose (les 186 figures des 66 cours legacy) reçoit exactement
     // le même habillage que celle d'une directive : une seule figure, un seul markup, un
     // seul chemin de code. Elle n'a pas de légende — `content:qa` (lot 4) le signalera.
-    const bare = figureMarkup(token, i, null, ctx.lang);
+    const bare = figureMarkup(token, i, null, lang);
     // Function replacers avoid `$`-pattern interpretation inside the SVG markup.
     return (
       out
@@ -336,6 +337,117 @@ export function renderLesson(md: string, opts: { lang?: ContentLang } = {}): Ren
         .replace(token, () => svg)
     );
   }, safe);
+}
 
-  return { html: withFigures, sections: ctx.sections, figureCount: figures.length };
+/**
+ * Rend une leçon (`cours.md`) en HTML assaini.
+ *
+ * Invariant de sécurité (étude 18, R-1) — l'ordre des passes EST la garantie : le corps est
+ * intégralement HTML-échappé AVANT qu'aucune balise ne soit émise, et les seules balises qui
+ * survivent sont celles que ce module produit lui-même. Un auteur ne peut donc pas injecter
+ * de markup, quoi qu'il écrive. L'unique exception est le bloc `<svg>`, extrait avant
+ * l'échappement et ré-injecté après le sanitize final — dont l'`ALLOWED_TAGS` exclut
+ * délibérément le SVG. Voir `docs/xss-rendering-policy.md`.
+ */
+export function renderLesson(md: string, opts: { lang?: ContentLang } = {}): RenderedLesson {
+  const { sheltered, figures } = shelterFigures(md);
+  const ctx: Ctx = { lang: opts.lang ?? "fr", sections: [], h2: 0 };
+
+  const body = segment(sheltered)
+    .map((seg) => (seg.kind === "raw" ? renderChunk(seg.lines, ctx) : renderBlock(seg, ctx)))
+    .filter(Boolean)
+    .join("\n");
+
+  return {
+    html: finalize(body, figures, ctx.lang),
+    sections: ctx.sections,
+    figureCount: figures.length,
+  };
+}
+
+/**
+ * Une puce de résumé → une carte de révision.
+ *
+ * Le contenu porte DÉJÀ la structure : `course-quality.md` (axe 3, « resume ↔ course
+ * bijection ») impose « concept en gras + essence en une ligne », et 3 549 puces sur 3 827
+ * le respectent. Une carte se déduit donc — on ne réécrit aucun résumé (D-6).
+ */
+function renderCard(text: string, children: string[], ctx: Ctx): string {
+  // Un `- ⚠️ …` de résumé est une carte-piège (117 puces dans 81 résumés), un `- 🏆 …` une
+  // carte « à retenir » (10 puces). Le marqueur est consommé, comme dans le cours.
+  const marked = markerBlockType(text);
+  const body = marked ? marked.rest : text;
+
+  const titled = CARD_TITLE.exec(body);
+  const title = titled ? titled[1] : null;
+  const essence = titled ? titled[2] : body;
+
+  const className = marked ? `lesson-card lesson-card--${marked.type}` : "lesson-card";
+  // Le titre est du texte d'auteur : échappé, jamais interprété (R-1).
+  const head = title ? `<h3 class="lesson-card__title">${escapeHtml(title)}</h3>` : "";
+  // L'essence et les sous-puces (exemples) forment le corps de la carte : elles lui
+  // appartiennent, elles ne sont pas des cartes sœurs.
+  const inner = renderChunk(
+    [essence, ...children].filter((line) => line.trim().length > 0),
+    ctx,
+  );
+
+  return `<li class="${className}"><div class="lesson-card__body">${head}${inner}</div></li>`;
+}
+
+/**
+ * Rend un résumé (`resume.md`) en jeu de CARTES de révision.
+ *
+ * La veille du concours, un élève ne relit pas des puces grises — il révise des cartes.
+ * Même invariant de sécurité que `renderLesson` (R-1) : le corps est échappé avant qu'aucune
+ * balise ne soit émise. Un paquet de cartes est une LISTE (`ul`/`li`), donc l'allowlist du
+ * sanitize n'a pas eu à grandir.
+ */
+export function renderSummary(md: string, opts: { lang?: ContentLang } = {}): RenderedLesson {
+  const { sheltered, figures } = shelterFigures(md);
+  const ctx: Ctx = { lang: opts.lang ?? "fr", sections: [], h2: 0 };
+  const lines = sheltered.split("\n");
+
+  const out: string[] = [];
+  let raw: string[] = [];
+  let cards: string[] = [];
+
+  const flushRaw = () => {
+    if (raw.length) out.push(renderChunk(raw, ctx));
+    raw = [];
+  };
+  const flushCards = () => {
+    if (cards.length) out.push(`<ul class="lesson-cards">${cards.join("")}</ul>`);
+    cards = [];
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    const bullet = CARD_LINE.exec(lines[i]);
+    if (!bullet) {
+      flushCards();
+      raw.push(lines[i]);
+      continue;
+    }
+    flushRaw();
+
+    // Les lignes indentées qui suivent (27 résumés en ont) sont les exemples de CETTE
+    // carte : on les dé-indente et on les lui rattache, au lieu d'en faire des cartes.
+    const children: string[] = [];
+    let j = i + 1;
+    while (j < lines.length && CARD_CHILD.test(lines[j])) {
+      children.push(lines[j].replace(/^[ \t]+/, ""));
+      j++;
+    }
+    cards.push(renderCard(bullet[1], children, ctx));
+    i = j - 1;
+  }
+
+  flushCards();
+  flushRaw();
+
+  return {
+    html: finalize(out.filter(Boolean).join("\n"), figures, ctx.lang),
+    sections: ctx.sections,
+    figureCount: figures.length,
+  };
 }

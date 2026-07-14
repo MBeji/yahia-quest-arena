@@ -827,6 +827,72 @@ html:not(.reference) .lesson-figure__plate {
   color: var(--primary);
 }
 
+/* =====================================================
+  Cartes de révision (étude 18, lot 3)
+
+  La veille du concours, un élève ne relit pas des puces grises — il révise des cartes.
+  Le contenu porte déjà la structure : 3 549 puces sur 3 827 suivent le motif normatif
+  « **concept** : essence ». Un paquet de cartes reste une LISTE (ul/li) : sémantique
+  correcte pour un lecteur d'écran, et l'allowlist du sanitize n'a pas eu à grandir.
+  ===================================================== */
+.lesson-content .lesson-cards {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.85rem;
+  margin: 1.25rem 0;
+  padding: 0;
+}
+.lesson-content .lesson-card {
+  margin: 0;
+  padding: 0.95rem 1.05rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--card);
+  break-inside: avoid;
+}
+.lesson-content .lesson-card__title {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--primary);
+}
+.lesson-content .lesson-card__body {
+  font-size: 0.93rem;
+  line-height: 1.7;
+}
+.lesson-content .lesson-card__body > p:first-of-type {
+  margin-top: 0;
+}
+.lesson-content .lesson-card__body > :last-child {
+  margin-bottom: 0;
+}
+/* Les sous-puces d'une carte sont ses exemples : plus discrètes que son énoncé. */
+.lesson-content .lesson-card .lesson-ul {
+  margin: 0.5rem 0 0;
+  font-size: 0.88rem;
+  color: var(--muted-foreground);
+}
+
+/* Une puce `- ⚠️ …` de résumé est une carte-piège (117 puces, 81 résumés). */
+.lesson-content .lesson-card--piege {
+  background: color-mix(in oklab, var(--destructive) 7%, var(--card));
+  border-color: color-mix(in oklab, var(--destructive) 38%, transparent);
+}
+.lesson-content .lesson-card--piege .lesson-card__title {
+  color: var(--destructive);
+}
+/* Une puce `- 🏆 …` est la carte qu'on garde. */
+.lesson-content .lesson-card--retenir {
+  background: color-mix(in oklab, var(--primary) 14%, var(--card));
+  border-color: color-mix(in oklab, var(--primary) 55%, transparent);
+}
+.lesson-content .lesson-card--astuce,
+.lesson-content .lesson-card--insight {
+  border-inline-start: 3px solid var(--primary);
+}
+
 /* L'épigraphe : l'exergue qui ouvre le chapitre (le premier `> 💡`) — pas un encadré. */
 .lesson-content .lesson-epigraph {
   margin: 1.25rem 0 1.75rem;

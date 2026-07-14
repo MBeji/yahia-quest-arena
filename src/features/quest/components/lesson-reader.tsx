@@ -10,7 +10,7 @@ import {
   Printer,
   ScrollText,
 } from "lucide-react";
-import { renderLesson } from "@/shared/lib/markdown";
+import { renderLesson, renderSummary } from "@/shared/lib/markdown";
 import { asContentLang } from "@/shared/lib/lesson-blocks";
 import { sanitizeSvg } from "@/shared/lib/figure";
 import { isRtlText } from "@/shared/lib/utils";
@@ -84,10 +84,13 @@ export function LessonReader({
 
   const showingSummary = showSummary && !!summary;
   const body = showingSummary ? summary : content;
-  // renderLesson segments the body then runs ~15 regex passes + a DOMPurify sanitize;
-  // memoize so a re-render that doesn't change the body (e.g. the Cours/Résumé toggle
-  // landing back on the same text) doesn't re-parse + re-sanitize the whole lesson.
-  const rendered = useMemo(() => (body ? renderLesson(body, { lang }) : null), [body, lang]);
+  // Le cours et le résumé n'ont pas la même grammaire : le cours est une suite de blocs
+  // pédagogiques, le résumé un jeu de cartes de révision (étude 18, D-6). Mémoïsé : chaque
+  // rendu enchaîne une segmentation, ~15 passes de regex et un sanitize DOMPurify.
+  const rendered = useMemo(() => {
+    if (!body) return null;
+    return showingSummary ? renderSummary(body, { lang }) : renderLesson(body, { lang });
+  }, [body, lang, showingSummary]);
   // Référence stable : le scroll-spy en dépend, un tableau neuf à chaque rendu le relancerait.
   const sections = useMemo(() => rendered?.sections ?? [], [rendered]);
   // A table of contents earns its place from two sections up; below that it is noise.
