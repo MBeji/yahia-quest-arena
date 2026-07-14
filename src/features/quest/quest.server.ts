@@ -11,6 +11,14 @@ import { findAnswerFormatViolation, MAX_CHOICE_LENGTH } from "@/shared/lib/answe
 import { logger } from "@/shared/lib/logger";
 import type { UnlockedBadge } from "@/shared/types/gamification";
 import type { Database } from "@/shared/integrations/supabase/types";
+import {
+  RECALL_LOCKED_MESSAGE,
+  RECALL_NOT_ELIGIBLE_MESSAGE,
+  fetchRecallQuestions,
+  fetchRecallAvailability,
+  buildAttemptReview,
+  toPerQuestion,
+} from "./quest.recall";
 
 /** Error message thrown when an exercise is locked behind its chapter quiz. */
 export const QUIZ_LOCKED_MESSAGE =
@@ -26,6 +34,13 @@ export const PARCOURS_LOCKED_MESSAGE =
 /** Thrown when the resolved parcours is not yet available (coming soon). */
 export const PARCOURS_COMING_SOON_MESSAGE =
   "Parcours premium : ce parcours sera bientôt disponible.";
+
+/**
+ * Recall mode (étude 17). The gate-signal → localized message mapping and the
+ * data helpers live in the co-located `quest.recall.ts` module; re-exported here
+ * so callers importing from `./quest.server` keep working.
+ */
+export { RECALL_LOCKED_MESSAGE, RECALL_NOT_ELIGIBLE_MESSAGE } from "./quest.recall";
 
 type ProfileSnapshot = Database["public"]["Tables"]["profiles"]["Row"];
 
@@ -91,6 +106,10 @@ type AtomicSubmitResponse = {
    * two scores wins via the existing best-score eligibility gate.
    */
   retryShieldUsed: boolean;
+  /** The session's scoring variant (étude 17): "classic" (default) or "recall". */
+  variant: "classic" | "recall";
+  /** Per-question verdicts, RECALL only (D-4); null in classic. */
+  perQuestion: Array<{ questionId: string; isCorrect: boolean }> | null;
 };
 
 function toUnlockedBadges(value: unknown): UnlockedBadge[] {
@@ -154,6 +173,9 @@ function parseAtomicSubmitResponse(payload: unknown): AtomicSubmitResponse {
     unlockedBadges: toUnlockedBadges(row.unlockedBadges),
     potionApplied: toPotionApplied(row.potionApplied),
     retryShieldUsed: row.retryShieldUsed === true,
+    // A missing/legacy shape (pre-lot-2 RPC) defaults to classic with no verdicts.
+    variant: row.variant === "recall" ? "recall" : "classic",
+    perQuestion: toPerQuestion(row.perQuestion),
   };
 }
 
@@ -206,6 +228,12 @@ export const getSubject = createServerFn({ method: "GET" })
       if (typeof r.exercise_id !== "string") continue;
       best[r.exercise_id] = Number(r.best_score ?? 0);
     }
+
+    // Recall availability (étude 17) — an account concept (anonymous visitors have
+    // none); resolved in the co-located helper with a graceful empty fallback.
+    const recall = userId
+      ? await fetchRecallAvailability(supabase, data.subjectId)
+      : { eligibleByExercise: {}, unlockedByExercise: {}, bestByExercise: {} };
 
     // Comprehension-quiz gate: a chapter's exercises stay locked until the
     // user passes that chapter's mode='quiz' exercise at/above the threshold.
@@ -328,6 +356,7 @@ export const getSubject = createServerFn({ method: "GET" })
       bestByExercise: best,
       quizPassedByChapter,
       viewer,
+      recall,
       parcours: parcoursRow
         ? {
             id: parcoursRow.id,
@@ -649,9 +678,17 @@ export const scoreQuizPublic = createServerFn({ method: "POST" })
 // ---------- Get exercise + questions ----------
 export const getExercise = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
-  .inputValidator((d) => z.object({ exerciseId: z.guid() }).parse(d))
+  .inputValidator((d) =>
+    z
+      .object({
+        exerciseId: z.guid(),
+        variant: z.enum(["classic", "recall"]).default("classic"),
+      })
+      .parse(d),
+  )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
+    const isRecall = data.variant === "recall";
     const [ex, qs] = await Promise.all([
       supabase
         .from("exercises")
@@ -660,20 +697,29 @@ export const getExercise = createServerFn({ method: "GET" })
         )
         .eq("id", data.exerciseId)
         .single(),
-      supabase
-        .from("questions")
-        .select("id,prompt,options,display_order,question_type")
-        .eq("exercise_id", data.exerciseId)
-        .order("display_order"),
+      // Classic questions carry `options`. In recall we never fetch them here —
+      // the play set (prompt only, no options — R-1) comes from get_recall_questions.
+      isRecall
+        ? Promise.resolve({ data: null, error: null })
+        : supabase
+            .from("questions")
+            .select("id,prompt,options,display_order,question_type")
+            .eq("exercise_id", data.exerciseId)
+            .order("display_order"),
     ]);
     if (ex.error) {
       failWithClientError("quest.getExercise", ex.error, "Impossible de charger l'exercice.");
     }
 
+    // Recall play set: prompt only, options empty by construction (the answer is
+    // typed, never chosen — R-1). Rendered by the same 'mcq' input contract.
+    const recallQuestions = isRecall ? await fetchRecallQuestions(supabase, data.exerciseId) : null;
+
     // Hint consumables are an account perk; anonymous practice has none. Each owned
     // unit = one reveal, so we sum the quantities (mirrors consume_hint's filter).
+    // Recall never offers hints (R-11) — the point is to retrieve from memory.
     let hintCharges = 0;
-    if (userId) {
+    if (userId && !isRecall) {
       const { data: hintInv } = await supabase
         .from("inventory_items")
         .select("quantity, item:shop_items!inner(item_type, effect_payload)")
@@ -718,7 +764,14 @@ export const getExercise = createServerFn({ method: "GET" })
       null;
     const quizGated = chapterQuizId !== null && subjectGradeId !== null;
 
-    return { exercise: ex.data, questions: qs.data ?? [], hintCharges, chapterQuizId, quizGated };
+    return {
+      exercise: ex.data,
+      questions: recallQuestions ?? qs.data ?? [],
+      hintCharges,
+      chapterQuizId,
+      quizGated,
+      variant: data.variant,
+    };
   });
 
 // ---------- Start a secure exercise session ----------
@@ -730,12 +783,22 @@ export const getExercise = createServerFn({ method: "GET" })
 // maps its raised gate signals to the localized client messages.
 export const startExerciseSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ exerciseId: z.guid() }).parse(d))
+  .inputValidator((d) =>
+    z
+      .object({
+        exerciseId: z.guid(),
+        // Closed set (étude 17). Defaults to classic so every existing caller
+        // (which sends no variant) keeps its exact behaviour.
+        variant: z.enum(["classic", "recall"]).default("classic"),
+      })
+      .parse(d),
+  )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
 
     const { data: rows, error } = await supabase.rpc("start_exercise_session", {
       p_exercise_id: data.exerciseId,
+      p_variant: data.variant,
     });
 
     if (error) {
@@ -749,6 +812,12 @@ export const startExerciseSession = createServerFn({ method: "POST" })
       }
       if (signal.includes("QUIZ_LOCKED")) {
         failWithClientError("quest.startExerciseSession", null, QUIZ_LOCKED_MESSAGE);
+      }
+      if (signal.includes("RECALL_LOCKED")) {
+        failWithClientError("quest.startExerciseSession", null, RECALL_LOCKED_MESSAGE);
+      }
+      if (signal.includes("RECALL_NOT_ELIGIBLE") || signal.includes("INVALID_VARIANT")) {
+        failWithClientError("quest.startExerciseSession", null, RECALL_NOT_ELIGIBLE_MESSAGE);
       }
       failWithClientError(
         "quest.startExerciseSession",
@@ -871,49 +940,16 @@ export const submitAttempt = createServerFn({ method: "POST" })
       );
     }
 
-    // Build the end-of-quest correction from the SECURITY DEFINER review RPC. It
-    // returns the answer key only for the caller's now-completed session, and only
-    // for non-quiz exercises — so the key is never client-readable before/around
-    // answering (GAP-020). We zip the caller's answers against it.
-    let review: ReviewItem[] = [];
-    if (!isQuiz) {
-      // Passing the answers lets the RPC score each one through the same
-      // `score_answer` seam as the submit RPC — so a numeric answer inside its
-      // tolerance shows as correct in the review, exactly as it was counted.
-      const { data: reviewRows } = await supabase.rpc("get_attempt_review", {
-        p_session_id: data.sessionId,
-        p_answers: data.answers,
-      });
-      const rows = Array.isArray(reviewRows)
-        ? (reviewRows as Array<{
-            question_id: string;
-            prompt: string;
-            correct_option: string | null;
-            explanation: string | null;
-            is_correct: boolean | null;
-          }>)
-        : [];
-      const byId = new Map(rows.map((r) => [r.question_id, r]));
-      // Degrade cleanly: if the review RPC returned nothing (e.g. transient error),
-      // surface the score without a half-built correction rather than failing.
-      if (byId.size > 0) {
-        review = data.answers.map((answer) => {
-          const q = byId.get(answer.questionId);
-          return {
-            questionId: answer.questionId,
-            prompt: q?.prompt ?? "Question",
-            selectedChoice: answer.choice,
-            correctChoice: q?.correct_option ?? "",
-            // Server-scored; the string-equality fallback covers a transient
-            // pre-migration RPC shape (is_correct absent) — mcq semantics only.
-            isCorrect: q ? (q.is_correct ?? q.correct_option === answer.choice) : false,
-            explanation: q?.explanation ?? null,
-          };
-        });
-      }
-    }
-
     const atomic = parseAtomicSubmitResponse(submitData);
+    // The correction is served only for non-quiz exercises, so the answer key is
+    // never client-readable before/around answering (GAP-020). In recall its
+    // verdicts come from the submit RPC (D-4), assembled in the shared helper.
+    const review: ReviewItem[] = isQuiz
+      ? []
+      : await buildAttemptReview(supabase, data.sessionId, data.answers, {
+          isRecall: atomic.variant === "recall",
+          perQuestion: atomic.perQuestion,
+        });
 
     return {
       correct: atomic.correct,
@@ -930,5 +966,6 @@ export const submitAttempt = createServerFn({ method: "POST" })
       unlockedBadges: atomic.unlockedBadges,
       potionApplied: atomic.potionApplied,
       retryShieldUsed: atomic.retryShieldUsed,
+      variant: atomic.variant,
     };
   });

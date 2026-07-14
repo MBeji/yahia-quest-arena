@@ -407,7 +407,7 @@ Suivi produit : les sessions Rappel se comptent en SQL (`attempts WHERE variant=
 
 - [x] Lot 1 — fondations SQL pures (rien d'appelable par le client)
 - [x] Lot 2 — RPCs variant-aware (le mode existe en base, aucune UI)
-- [ ] Lot 3 — couche server fns/TS
+- [x] Lot 3 — couche server fns/TS
 - [ ] Lot 4 — UI complète + i18n
 - [ ] Lot 5 — e2e + docs + lexique
 
@@ -514,6 +514,24 @@ STOPPE et escalade (règle FableEtudes).
   `supabase/tests/29_recall_mode_rpcs.test.sql` (26 assertions : porte R-3, scoring bout-en-bout,
   R-5/R-6/R-7, review texte, `get_recall_*`, **non-régression classique**). DB-only, aucun
   fichier `src/` touché (le défaut `'classic'` garde le code déployé inchangé).
+- 2026-07-14 — **Lot 3 livré** : couche server fns/TS (premier lot qui touche `src/`).
+  `types.ts` amendé à la main hors-ligne (pas de stack Supabase locale) : `p_variant?` sur
+  `start_exercise_session`, + `get_recall_questions` et `get_recall_availability`. Dans
+  `quest.server.ts` : `startExerciseSession` relaie `variant` (zod enum fermé, défaut `classic`)
+  au RPC et mappe `RECALL_LOCKED`/`RECALL_NOT_ELIGIBLE`/`INVALID_VARIANT` vers leurs messages
+  localisés (pattern `QUIZ_LOCKED`) ; `getExercise` porte `variant`, sert le jeu Rappel via
+  `get_recall_questions` (prompt seul, `options: []` — R-1) et force `hintCharges = 0` (R-11) ;
+  `submitAttempt` assemble la review depuis `get_attempt_review` (`correct_option` = TEXTE) en
+  prenant les verdicts par question du RPC de soumission (`perQuestion`, D-4 — jamais re-normalisé
+  côté TS) et expose `variant` ; `getSubject` expose `recall {eligibleByExercise, unlockedByExercise,
+bestByExercise}` via `get_recall_availability` avec dégradation gracieuse (RPC absent → objets
+  vides, pattern `get_best_scores_by_exercise`). Helpers extraits dans un module co-localisé
+  `quest.recall.ts` (constantes + `fetchRecallQuestions`/`fetchRecallAvailability`/
+  `buildAttemptReview`/`toPerQuestion`) pour rester sous le plafond `max-lines`. Tests co-localisés
+  `__tests__/recall-mode.test.ts` (10 cas : variant relayé, jeu Rappel sans options, hints=0,
+  review sourcée du `perQuestion`, erreurs localisées, dispo + dégradation) + contrats de shape
+  non-régression mis à jour. Gate vert (lint/typecheck/1307 tests vitest). Aucune migration
+  (lot pur TS) ; aucun composant UI (réservé au lot 4).
 
 ## 9. Annexe — audit d'éligibilité (mesuré le 2026-07-13, re-mesuré après l'amendement R-12/(i))
 

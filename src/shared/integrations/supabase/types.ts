@@ -1722,6 +1722,25 @@ export type Database = {
           xp: number;
         }[];
       };
+      // Hand-added offline for 20260714130000_recall_mode_rpcs (étude 17 lot 2/3 —
+      // regenerate via `supabase gen types` on the next sync).
+      get_recall_availability: {
+        Args: { p_subject_id: string };
+        Returns: {
+          best_recall_pct: number | null;
+          eligible_count: number;
+          exercise_id: string;
+          unlocked: boolean;
+        }[];
+      };
+      get_recall_questions: {
+        Args: { p_exercise_id: string };
+        Returns: {
+          display_order: number;
+          id: string;
+          prompt: string;
+        }[];
+      };
       // Hand-added offline for 20260701100000_parent_weekly_goals (regenerate via
       // `supabase gen types` on the next sync).
       get_family_weekly_goal: { Args: { p_student: string }; Returns: Json };
@@ -1904,7 +1923,7 @@ export type Database = {
       };
       start_dungeon_run: { Args: never; Returns: string };
       start_exercise_session: {
-        Args: { p_exercise_id: string };
+        Args: { p_exercise_id: string; p_variant?: string };
         Returns: { session_id: string; started_at: string }[];
       };
       submit_dungeon_answer: {

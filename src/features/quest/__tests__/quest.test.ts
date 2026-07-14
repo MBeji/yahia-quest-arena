@@ -98,7 +98,10 @@ describe("gamification.quest — getSubject", () => {
       if (table === "exercises") return mockQuery(exercisesData);
       return mockQuery([]);
     });
-    mockRpc.mockReturnValue({ data: bestScoresData, error: null });
+    mockRpc.mockImplementation((fn: string) => {
+      if (fn === "get_best_scores_by_exercise") return { data: bestScoresData, error: null };
+      return { data: [], error: null };
+    });
 
     const { getSubject } = await import("@/features/quest");
     const result = await (getSubject as unknown as (d: unknown) => Promise<unknown>)({
@@ -112,6 +115,8 @@ describe("gamification.quest — getSubject", () => {
       bestByExercise: { "ex-1": 85 },
       quizPassedByChapter: {},
       viewer: { level: 0, isPremium: false, hasEntitlement: true },
+      // Recall availability (étude 17) — empty here: the mocked RPC resolves nothing.
+      recall: { eligibleByExercise: {}, unlockedByExercise: {}, bestByExercise: {} },
       // Level anchor (étude 15 lot 7) — null here: the mocked RPC resolves no parcours.
       parcours: null,
     });
@@ -180,6 +185,8 @@ describe("gamification.quest — getExercise", () => {
       chapterQuizId: null,
       // No chapter quiz + no grade → the exercise is not quiz-gated.
       quizGated: false,
+      // Default variant (étude 17): classic behaviour is unchanged.
+      variant: "classic",
     });
   });
 
