@@ -571,13 +571,15 @@ describe("NON-REGRESSION: Data shape contracts", () => {
     })) as Record<string, unknown>;
 
     // These keys are consumed by the SubjectPage component (`parcours` is the
-    // hub's level anchor — étude 15 lot 7).
+    // hub's level anchor — étude 15 lot 7; `recall` is the recall-mode
+    // availability — étude 17 lot 3).
     expect(Object.keys(result).sort()).toEqual([
       "bestByExercise",
       "chapters",
       "exercises",
       "parcours",
       "quizPassedByChapter",
+      "recall",
       "subject",
       "viewer",
     ]);
@@ -586,7 +588,7 @@ describe("NON-REGRESSION: Data shape contracts", () => {
     expect(typeof result.bestByExercise).toBe("object");
   });
 
-  it("getExercise returns { exercise, questions, hintCharges, chapterQuizId, quizGated }", async () => {
+  it("getExercise returns { exercise, questions, hintCharges, chapterQuizId, quizGated, variant }", async () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "exercises") return mockQuery({ id: "ex1", title: "E" });
       if (table === "questions") return mockQuery([]);
@@ -604,6 +606,7 @@ describe("NON-REGRESSION: Data shape contracts", () => {
       "hintCharges",
       "questions",
       "quizGated",
+      "variant",
     ]);
     expect(result.questions).toBeInstanceOf(Array);
     expect(result.hintCharges).toBe(0);
