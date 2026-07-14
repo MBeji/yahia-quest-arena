@@ -127,6 +127,7 @@ export const arPublic: TranslationKeys["public"] = {
     defaultSubject: "درس",
     courseTab: "الدرس",
     summaryTab: "الملخّص",
+    toc: "المحتويات",
     print: "طباعة",
     courseSoon: "درس هذا الفصل قريبًا.",
     practiceCta: "تدرّب على هذا الفصل",

@@ -129,6 +129,7 @@ export const enPublic: TranslationKeys["public"] = {
     defaultSubject: "Lesson",
     courseTab: "Lesson",
     summaryTab: "Summary",
+    toc: "Contents",
     print: "Print",
     courseSoon: "The lesson for this chapter is coming soon.",
     practiceCta: "Practise this chapter",

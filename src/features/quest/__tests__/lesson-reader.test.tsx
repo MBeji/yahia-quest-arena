@@ -176,4 +176,72 @@ describe("LessonReader", () => {
     expect(screen.queryByText(/entraîner sur ce chapitre/i)).not.toBeInTheDocument();
     expect(container.querySelector('a[href="/exercice/$exerciseId"]')).not.toBeNull();
   });
+
+  // ---- Sommaire & blocs pédagogiques (étude 18, lot 1) ----
+
+  it("renders a table of contents from the lesson sections", () => {
+    const { container } = render(
+      <LessonReader chapterId="c1" chapter={chapter} allChapters={siblings} />,
+    );
+    const toc = container.querySelector('[data-testid="lesson-toc"]');
+    expect(toc).not.toBeNull();
+    expect(toc?.textContent).toContain("Section A");
+    expect(toc?.textContent).toContain("Section B");
+    // Les ancres ciblent les id que le renderer a toujours émis — et que rien n'utilisait.
+    expect(toc?.querySelector('a[href="#section-0"]')).not.toBeNull();
+    expect(toc?.querySelector('a[href="#section-1"]')).not.toBeNull();
+  });
+
+  it("hides the table of contents on the summary tab and below two sections", () => {
+    const { container, unmount } = render(
+      <LessonReader chapterId="c1" chapter={chapter} allChapters={siblings} />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Résumé" }));
+    expect(container.querySelector('[data-testid="lesson-toc"]')).toBeNull();
+    unmount();
+
+    // Un sommaire d'une seule entrée est du bruit.
+    const single = render(
+      <LessonReader
+        chapterId="c1"
+        chapter={{ ...chapter, lesson_content: "## Seule section\nDu texte." }}
+        allChapters={siblings}
+      />,
+    );
+    expect(single.container.querySelector('[data-testid="lesson-toc"]')).toBeNull();
+  });
+
+  it("promotes the callouts already written in the content into typed blocks", () => {
+    const { container } = render(
+      <LessonReader
+        chapterId="c1"
+        chapter={{
+          ...chapter,
+          lesson_content: "## Thalès\n\n> ⚠️ MN/BC ne vaut pas AM/MB.\n\n> 🗡️ Écris les rapports.",
+        }}
+        allChapters={siblings}
+      />,
+    );
+    expect(container.querySelector(".lesson-blk--piege")).not.toBeNull();
+    expect(container.querySelector(".lesson-blk--astuce")).not.toBeNull();
+    // Le libellé suit la langue du CONTENU (fr ici), pas la locale de l'interface.
+    expect(container.querySelector(".lesson-blk--piege")?.textContent).toContain("Piège");
+  });
+
+  it("labels the blocks in the content language for an Arabic lesson (R-8)", () => {
+    const { container } = render(
+      <LessonReader
+        chapterId="c1"
+        chapter={{
+          ...chapter,
+          lesson_content: "## مقدمة\n\n> ⚠️ انتبه إلى النسب.",
+          summary: null,
+          subjects: { name_fr: "الرياضيات", content_language: "ar" },
+        }}
+        allChapters={siblings}
+      />,
+    );
+    expect(container.querySelector(".lesson-blk--piege")?.textContent).toContain("تحذير");
+    expect(container.querySelector(".lesson-blk--piege")?.textContent).not.toContain("Piège");
+  });
 });

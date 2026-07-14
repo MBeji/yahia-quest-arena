@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   BookOpen,
   Brain,
@@ -10,7 +10,8 @@ import {
   Printer,
   ScrollText,
 } from "lucide-react";
-import { renderMarkdown } from "@/shared/lib/markdown";
+import { renderLesson } from "@/shared/lib/markdown";
+import { asContentLang } from "@/shared/lib/lesson-blocks";
 import { isRtlText } from "@/shared/lib/utils";
 import { useT } from "@/lib/i18n";
 import { exerciseRouteFor } from "../exercise-route";
@@ -61,11 +62,16 @@ export function LessonReader({
 }) {
   const t = useT();
   const [showSummary, setShowSummary] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
 
   const content = chapter.lesson_content;
   const summary = chapter.summary;
   const subjectData = chapter.subjects as { name_fr: string; content_language?: string } | null;
   const isRtl = subjectData?.content_language === "ar" || (content ? isRtlText(content) : false);
+  // Les libellés des blocs pédagogiques suivent la langue du CONTENU, pas celle de
+  // l'interface (étude 18, R-8) : un chip « PIÈGE » français dans une prose arabe RTL
+  // serait une faute de composition.
+  const lang = asContentLang(subjectData?.content_language, isRtl ? "ar" : "fr");
 
   const currentIdx = allChapters.findIndex((c) => c.id === chapterId);
   const prevChapter = currentIdx > 0 ? allChapters[currentIdx - 1] : null;
@@ -74,10 +80,35 @@ export function LessonReader({
 
   const showingSummary = showSummary && !!summary;
   const body = showingSummary ? summary : content;
-  // renderMarkdown runs ~15 regex passes + a DOMPurify sanitize; memoize so a
-  // re-render that doesn't change the body (e.g. the Cours/Résumé toggle landing
-  // back on the same text) doesn't re-parse + re-sanitize the whole lesson.
-  const bodyHtml = useMemo(() => (body ? renderMarkdown(body) : ""), [body]);
+  // renderLesson segments the body then runs ~15 regex passes + a DOMPurify sanitize;
+  // memoize so a re-render that doesn't change the body (e.g. the Cours/Résumé toggle
+  // landing back on the same text) doesn't re-parse + re-sanitize the whole lesson.
+  const rendered = useMemo(() => (body ? renderLesson(body, { lang }) : null), [body, lang]);
+  // Référence stable : le scroll-spy en dépend, un tableau neuf à chaque rendu le relancerait.
+  const sections = useMemo(() => rendered?.sections ?? [], [rendered]);
+  // A table of contents earns its place from two sections up; below that it is noise.
+  const showToc = !showingSummary && sections.length >= 2;
+
+  // Scroll-spy: the `#section-N` anchors have always been emitted by the renderer and
+  // never used. Degrades to a plain (unhighlighted) TOC where IntersectionObserver is
+  // unavailable — jsdom, older engines — rather than crashing the public reader.
+  useEffect(() => {
+    if (!showToc || typeof IntersectionObserver === "undefined") return;
+    const headings = sections
+      .map((s) => document.getElementById(s.id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (headings.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const onScreen = entries.filter((e) => e.isIntersecting);
+        if (onScreen.length > 0) setActiveSection(onScreen[0].target.id);
+      },
+      { rootMargin: "-15% 0px -70% 0px" },
+    );
+    headings.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [rendered, showToc, sections]);
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
@@ -140,11 +171,44 @@ export function LessonReader({
         </button>
       </div>
 
-      {body ? (
+      {/* Sommaire — construit en React à partir des sections retournées par le renderer,
+          jamais dans la chaîne HTML injectée : aucun href n'entre donc dans le HTML
+          assaini (étude 18, D-3). */}
+      {showToc && (
+        <nav
+          aria-label={t.public.reader.toc}
+          data-testid="lesson-toc"
+          dir={isRtl ? "rtl" : "ltr"}
+          className="mb-8 rounded-xl border border-border bg-secondary px-4 py-3 print:hidden"
+        >
+          <p className="mb-2 text-2xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+            {t.public.reader.toc}
+          </p>
+          <ol className="grid gap-x-6 sm:grid-cols-2">
+            {sections.map((section, i) => (
+              <li key={section.id}>
+                <a
+                  href={`#${section.id}`}
+                  className={`flex items-baseline gap-2 py-1 text-sm transition hover:text-primary ${
+                    activeSection === section.id
+                      ? "font-semibold text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <span className="shrink-0 tabular-nums opacity-60">{i + 1}.</span>
+                  <span className="truncate">{section.title}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )}
+
+      {rendered ? (
         <div
           className="lesson-content"
           dir={isRtl ? "rtl" : "ltr"}
-          dangerouslySetInnerHTML={{ __html: bodyHtml }}
+          dangerouslySetInnerHTML={{ __html: rendered.html }}
         />
       ) : (
         <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-12 text-center">
