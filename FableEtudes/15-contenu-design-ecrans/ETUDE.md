@@ -269,7 +269,7 @@ périmètre ; divergence étude↔code = STOP et remontée (règle FableEtudes).
 - [x] Lot 9 — auth v2
 - [x] Lot 10 — onboarding v2
 - [x] Lot 11 — arène
-- [ ] Lot 12 — parent
+- [x] Lot 12 — parent
 - [ ] Lot 13 — admin
 
 ## 5. Stratégie de test
@@ -520,3 +520,17 @@ Toutes arbitrées le 2026-07-10 — l'étude passe « validée ». Décisions co
     hero dashboard (lot 6) et les indices de récompense du pôle Arène (lot 5) sont en place ; le donjon
     affiche déjà prérequis + record au lobby (lot 2). Ce lot livre le **cœur cold-start** (classement +
     duel), là où se trouvait le vrai défaut (#1 fictif). Gate vert (1296 tests + build ; i18n 115/116 Ko).
+- 2026-07-13 — Lot 12 livré (parent, D-9) : maquette `design/ds/ecrans/parent-v2.html` publiée dans
+  le projet DS puis implémentée. **Bilan actionnable (LE cœur de l'offre parent)** : le conseil de la
+  semaine **et** chaque chapitre « à renforcer / points forts » deviennent **cliquables** → ouvrent le
+  cours/lecteur (`/chapitre/$id`) — un clic, on révise, plus de texte mort. Les ids (`chapterId`/
+  `subjectId`) étaient **déjà servis** par `get_student_report` (aucun changement serveur) ; seul
+  `ReportContent` est touché, donc **les DEUX surfaces en héritent** : `/parent-report` (parent
+  connecté) ET `/suivi` (public par code d'alliance, sans compte). i18n ×3 (1 clé `adviceReviewCta`).
+  Tests : 1 spec `ReportContent` (2 chemins cliquables vers le chapitre faible : ligne d'insight + CTA
+  du conseil). **D-9 déjà couvert / assumé** : `/suivi` porte déjà la promesse « sans compte » + le
+  bilan complet + le pré-remplissage `?code=` + les erreurs i18n (`parentCodeErrorLabel`, lot 3) ; le
+  verdict + le conseil sont déjà en tête (hiérarchie). **Écart assumé** : la « classe scolaire réelle »
+  (au lieu du hero-class dans l'en-tête) reste à faire côté **RPC** `get_student_report` pour rester
+  cohérente sur le chemin anonyme `/suivi` — différée pour éviter une migration RPC (risque de
+  collision de timestamps, déjà rencontré 2×). Gate vert (1297 tests + build ; i18n 115/116 Ko).
