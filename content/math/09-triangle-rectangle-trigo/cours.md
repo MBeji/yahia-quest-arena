@@ -14,6 +14,21 @@
 - الوتر هو [AC].
 - الضلعان القائمان هما [AB] و[BC].
 
+::: figure الوتر [AC] هو الضلع المقابل للزاوية القائمة في B — وهو دائمًا الأطول
+<svg viewBox="0 0 280 240">
+<path d="M60 80 L60 200 L220 200 Z" fill="#0f6e56" opacity="0.10"/>
+<path d="M60 80 L60 200 L220 200 Z" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<path d="M60 80 L220 200" fill="none" stroke="#0f6e56" stroke-width="3"/>
+<path d="M60 182 L78 182 L78 200" fill="none" stroke="#0f172a" stroke-width="2"/>
+<g fill="#0f172a"><circle cx="60" cy="80" r="4"/><circle cx="60" cy="200" r="4"/><circle cx="220" cy="200" r="4"/></g>
+<g font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="46" y="74" text-anchor="middle" fill="#0f172a">A</text>
+<text x="46" y="218" text-anchor="middle" fill="#0f172a">B</text>
+<text x="234" y="218" text-anchor="middle" fill="#0f172a">C</text>
+</g>
+</svg>
+:::
+
 ## 🛡️ نظرية فيثاغورس
 
 في أيّ مثلث قائم، **مربّع الوتر يساوي مجموع مربّعي الضلعين القائمين**:
@@ -22,6 +37,25 @@ $$ AC² = AB² + BC² $$
 
 **مثال 1 — حساب الوتر (بالجمع)**: مثلث قائم ضلعاه القائمان 6 و8.
 AC² = 6² + 8² = 36 + 64 = 100، إذن AC = √100 = 10.
+
+::: figure المثلّث 6-8-10: مربّع الوتر (100) يساوي مجموع مربّعَي الضلعين القائمين (36 + 64)
+<svg viewBox="0 0 280 240">
+<path d="M60 80 L60 200 L220 200 Z" fill="#0f6e56" opacity="0.10"/>
+<path d="M60 80 L60 200 L220 200 Z" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<path d="M60 182 L78 182 L78 200" fill="none" stroke="#0f172a" stroke-width="2"/>
+<g fill="#0f172a"><circle cx="60" cy="80" r="4"/><circle cx="60" cy="200" r="4"/><circle cx="220" cy="200" r="4"/></g>
+<g font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="46" y="74" text-anchor="middle" fill="#0f172a">A</text>
+<text x="46" y="218" text-anchor="middle" fill="#0f172a">B</text>
+<text x="234" y="218" text-anchor="middle" fill="#0f172a">C</text>
+</g>
+<g font-size="14" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="44" y="145" text-anchor="middle" fill="#0f6e56">6</text>
+<text x="140" y="222" text-anchor="middle" fill="#0f6e56">8</text>
+<text x="152" y="128" text-anchor="middle" fill="#0f6e56">10</text>
+</g>
+</svg>
+:::
 
 **مثال 2 — حساب ضلع قائم (بالطرح)**: مثلث قائم في B، الوتر AC = 25 و AB = 7. أحسب BC.
 BC² = AC² − AB² = 625 − 49 = 576، إذن BC = √576 = 24.
@@ -61,6 +95,21 @@ BC² = AC² − AB² = 625 − 49 = 576، إذن BC = √576 = 24.
 - **الضلع المجاور**: الضلع القائم الملاصق للزاوية x (غير الوتر).
 - **الضلع المقابل**: الضلع القائم المقابل للزاوية x.
 - **الوتر**: الضلع الأطول (يقابل الزاوية القائمة).
+
+::: figure بالنسبة للزاوية x: [AB] هو الضلع المجاور، [BC] هو الضلع المقابل، [AC] هو الوتر
+<svg viewBox="0 0 280 240">
+<path d="M60 80 L60 200 L220 200 Z" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<path d="M60 182 L78 182 L78 200" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M60 110 A 30 30 0 0 0 84 98" fill="none" stroke="#0f6e56" stroke-width="2"/>
+<g fill="#0f172a"><circle cx="60" cy="80" r="4"/><circle cx="60" cy="200" r="4"/><circle cx="220" cy="200" r="4"/></g>
+<g font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="46" y="74" text-anchor="middle" fill="#0f172a">A</text>
+<text x="46" y="218" text-anchor="middle" fill="#0f172a">B</text>
+<text x="234" y="218" text-anchor="middle" fill="#0f172a">C</text>
+<text x="82" y="126" text-anchor="middle" fill="#0f6e56">x</text>
+</g>
+</svg>
+:::
 
 $$ cos(x) = الضلع المجاور/الوتر (جيب التمام — جتا) $$
 

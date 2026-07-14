@@ -6,6 +6,18 @@
 
 الشعاع هو **قطعة مستقيمة مزوّدة باتجاه ومنحى**. نرمز للشعاع الذي منشأه A وطرفه B بـ AB.
 
+::: figure الشعاع AB: اتجاه (حامله)، منحى (السهم من A نحو B)، وطول (المسافة AB)
+<svg viewBox="0 0 300 210">
+<path d="M70 160 L230 80" fill="none" stroke="#0f6e56" stroke-width="2.5"/>
+<path d="M230 80 L220.2 91.7 L214.8 80.9 Z" fill="#0f6e56"/>
+<g fill="#0f172a"><circle cx="70" cy="160" r="4"/><circle cx="230" cy="80" r="4"/></g>
+<g font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="58" y="174" text-anchor="middle" fill="#0f172a">A</text>
+<text x="242" y="72" text-anchor="middle" fill="#0f172a">B</text>
+</g>
+</svg>
+:::
+
 للشعاع AB أربع خصائص:
 
 - **المنشأ**: النقطة A، وهي نقطة الانطلاق.
@@ -44,18 +56,35 @@ $$ MM' = u $$
 - صورة مستقيم هي مستقيم **موازٍ** له.
 - صورة قطعة هي قطعة مساوية لها في الطول.
 
-| الصورة بالانسحاب u = AB | الشكل الأصلي                | ملاحظة                 |
-| ----------------------------------------------------------- | --------------------------- | ---------------------- |
-| نقطة M' بحيث MM' = u    | نقطة M                      | MM' = AB               |
-| مستقيم موازٍ للمستقيم (d)                                   | مستقيم (d)                  | تحفّظ الموازاة         |
-| مثلّث مساوٍ في الشكل والحجم                                 | مثلّث                       | تحفّظ الأطوال والزوايا |
-| دائرة مركزها I' (صورة I) وبنفس نصف القطر r                  | دائرة مركزها I ونصف قطرها r | تحفّظ نصف القطر        |
+| الصورة بالانسحاب u = AB                    | الشكل الأصلي                | ملاحظة                 |
+| ------------------------------------------ | --------------------------- | ---------------------- |
+| نقطة M' بحيث MM' = u                       | نقطة M                      | MM' = AB               |
+| مستقيم موازٍ للمستقيم (d)                  | مستقيم (d)                  | تحفّظ الموازاة         |
+| مثلّث مساوٍ في الشكل والحجم                | مثلّث                       | تحفّظ الأطوال والزوايا |
+| دائرة مركزها I' (صورة I) وبنفس نصف القطر r | دائرة مركزها I ونصف قطرها r | تحفّظ نصف القطر        |
 
 ## 🔮 جمع الأشعّة وعلاقة شال (Chasles)
 
 **قاعدة شال (Chasles):**
 
 $$ **AB + BC = AC** $$
+
+::: figure علاقة شال: الانتقال من A إلى B ثمّ من B إلى C يكافئ الانتقال المباشر من A إلى C
+<svg viewBox="0 0 320 215">
+<path d="M50 180 L160 70" fill="none" stroke="#0f6e56" stroke-width="2.5"/>
+<path d="M160 70 L154.3 84.1 L145.9 75.7 Z" fill="#0f6e56"/>
+<path d="M160 70 L270 150" fill="none" stroke="#0f6e56" stroke-width="2.5"/>
+<path d="M270 150 L255.2 146.7 L262.2 136.9 Z" fill="#0f6e56"/>
+<path d="M50 180 L270 150" fill="none" stroke="#0f172a" stroke-width="2.5" stroke-dasharray="7 4"/>
+<path d="M270 150 L256.9 157.8 L255.3 146 Z" fill="#0f172a"/>
+<g fill="#0f172a"><circle cx="50" cy="180" r="4"/><circle cx="160" cy="70" r="4"/><circle cx="270" cy="150" r="4"/></g>
+<g font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="38" y="194" text-anchor="middle" fill="#0f172a">A</text>
+<text x="160" y="58" text-anchor="middle" fill="#0f172a">B</text>
+<text x="284" y="148" text-anchor="middle" fill="#0f172a">C</text>
+</g>
+</svg>
+:::
 
 هذه العلاقة تقول: للانتقال من A إلى C، يمكنني المرور بأيّ نقطة وسطى B.
 
@@ -100,6 +129,24 @@ $$ AB + BC + CA = AC + CA = 0 $$
 **الخاصيّة الأساسية:**
 
 ABCD متوازي أضلاع ⟺ AB = DC
+
+::: figure ABCD متوازي أضلاع ⟺ الشعاعان AB وDC متساويان: نفس الاتجاه، نفس المنحى، نفس الطول
+<svg viewBox="0 0 310 215">
+<path d="M60 180 L180 180 L250 80 L130 80 Z" fill="#0f6e56" opacity="0.08"/>
+<path d="M60 180 L180 180 L250 80 L130 80 Z" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<path d="M60 180 L180 180" fill="none" stroke="#0f6e56" stroke-width="3"/>
+<path d="M180 180 L166 186 L166 174 Z" fill="#0f6e56"/>
+<path d="M130 80 L250 80" fill="none" stroke="#0f6e56" stroke-width="3"/>
+<path d="M250 80 L236 86 L236 74 Z" fill="#0f6e56"/>
+<g fill="#0f172a"><circle cx="60" cy="180" r="4"/><circle cx="180" cy="180" r="4"/><circle cx="250" cy="80" r="4"/><circle cx="130" cy="80" r="4"/></g>
+<g font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="48" y="196" text-anchor="middle" fill="#0f172a">A</text>
+<text x="190" y="196" text-anchor="middle" fill="#0f172a">B</text>
+<text x="264" y="74" text-anchor="middle" fill="#0f172a">C</text>
+<text x="118" y="74" text-anchor="middle" fill="#0f172a">D</text>
+</g>
+</svg>
+:::
 
 معنى ذلك أنّ الضلعَين [AB] و[DC] متوازيان ومتساويان في الطول وبالمنحى نفسه.
 
