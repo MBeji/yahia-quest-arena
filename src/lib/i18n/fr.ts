@@ -290,6 +290,11 @@ export const fr: TranslationKeys = {
     activeDuels: "Duels en cours",
     history: "Historique",
     noHistory: "Aucun duel pour l'instant. Lance-toi !",
+    rulesFirstDone: "Mêmes questions pour les deux : le premier à finir juste l'emporte.",
+    rewardWin: "Victoire",
+    rewardDraw: "Nul",
+    rewardLoss: "Participation",
+    rewardsHint: "Tu gagnes des XP même en perdant — participer paie toujours.",
     play: "Jouer",
     resume: "Reprendre",
     forfeit: "Abandonner",
@@ -628,6 +633,10 @@ export const fr: TranslationKeys = {
     youChip: "Toi",
     lvl: "Niv.",
     emptyGlobal: "Aucun héros inscrit pour l'instant.",
+    coldStartTitle: "Le classement démarre !",
+    coldStartDesc:
+      "Gagne tes premiers XP pour apparaître ici — chaque quête réussie te fait grimper.",
+    coldStartCta: "Commencer une quête",
     emptySubject: "Aucun score dans cette matière pour l'instant.",
   },
   parentReport: {

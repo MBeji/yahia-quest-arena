@@ -319,8 +319,12 @@ export const getLeaderboard = createServerFn({ method: "GET" })
       isMe: r.is_me,
     }));
 
-    const leaderboard = mapped.filter((r) => r.rank <= LEADERBOARD_LIMIT);
-    const myRank = mapped.find((r) => r.isMe) ?? null;
+    // Cold-start (étude 15 lot 11, D-7): never show a rank without XP. A brand-new
+    // player with 0 XP must not surface as a « fictitious #1 » (nor be told they
+    // rank Nth). They appear only once they've earned their first XP.
+    const ranked = mapped.filter((r) => r.xp > 0);
+    const leaderboard = ranked.filter((r) => r.rank <= LEADERBOARD_LIMIT);
+    const myRank = ranked.find((r) => r.isMe) ?? null;
 
     return { leaderboard, myRank };
   });
@@ -547,8 +551,10 @@ export const getSubjectLeaderboard = createServerFn({ method: "GET" })
       isMe: r.is_me,
     }));
 
-    const leaderboard = mapped.filter((r) => r.rank <= LEADERBOARD_LIMIT);
-    const myRank = mapped.find((r) => r.isMe) ?? null;
+    // Cold-start (D-7): never show a rank without XP — same rule as the global board.
+    const ranked = mapped.filter((r) => r.xp > 0);
+    const leaderboard = ranked.filter((r) => r.rank <= LEADERBOARD_LIMIT);
+    const myRank = ranked.find((r) => r.isMe) ?? null;
 
     return { leaderboard, myRank };
   });
