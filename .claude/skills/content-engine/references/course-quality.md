@@ -3,8 +3,10 @@
 The questions have their bar (`quality-bar.md`); this is the equivalent for the **lesson text**.
 A chapter's course is what the student reads _before_ being tested — if it is unclear, incomplete,
 or unteachable, every downstream question becomes unfair. Both the authoring skill
-(`content-cours`) and the audit skill (`content-audit`) grade against the four axes below.
+(`content-cours`) and the audit skill (`content-audit`) grade against the **five** axes below.
 `style-guide.md` gives the skeleton/voice; this file defines **what makes the content good**.
+A lesson is not only a text: axis 5 (**Illustration**) is as binding as the other four — see
+`course-figures.md` for the doctrine, the families that require a figure, and the SVG templates.
 
 ## Axis 1 — Clarté (clarity)
 
@@ -67,19 +69,52 @@ or unteachable, every downstream question becomes unfair. Both the authoring ski
 - **Language purity & RTL**: entirely in the subject's `contentLanguage` (per `quality-bar.md`),
   Arabic prose around standard math, fluent and idiomatic — never translated-sounding.
 
+## Axis 5 — Illustration (the visual axis)
+
+> Added 2026-07-14 (étude 18). Its absence was not a detail: with four purely textual axes, an
+> audit of the repo found **66 illustrated courses out of 541** and **zero figures in the five
+> geometry chapters of 9ème** — the national-exam year. The Thalès course described triangle ABC
+> and line (MN) **in words only**. Nothing in this bar asked for a drawing, so nothing drew.
+> **A geometry course without an illustration makes no sense.** Full doctrine, families and SVG
+> templates: `course-figures.md`.
+
+- **A rule about shapes, space, structure or change is TAUGHT WITH A DRAWING.** Plane geometry,
+  circle & angles, coordinates & vectors, solids, trigonometry, measurement of shapes, science
+  diagrams (SVT organs/cycles, circuits, optics), timelines and data graphs: the chapter carries at
+  least one figure, and each spatial rule has its figure **next to it**, not at the end.
+- **Never point at a figure that does not exist.** If the prose says «ci-dessous» / «الشكل المجاور»,
+  the `<svg>` is in the file. This is the most damning defect — the pupil is sent to an image that
+  isn't there — and `content:qa` fails **strict** on it.
+- **The figure must be TRUE.** Points announced on a segment are on it; lines announced parallel are
+  parallel; a right angle is 90°. A wrong figure teaches a wrong shape, and no automated gate can
+  catch it — re-derive the coordinates before shipping.
+- **One figure = one idea.** A figure carrying two notions carries neither.
+- **Every course figure is captioned** (`::: figure <légende>`); its number is automatic. The caption
+  says what to **see** («le petit triangle AMN est une réduction du grand»), not what the object is
+  («un triangle»). It is written in the subject's content language.
+- **Labels stay standard and LTR** — Latin vertex names, Western digits, SI units — **even in Arabic
+  courses** (`math-and-notation.md`). Arabic prose belongs in the caption, never inside the drawing.
+- **The summary is illustrated too** where the notion is visual: a revision card carrying the shape
+  beats a card describing it.
+
 ## Audit grading (used by content-audit)
 
 Map findings to the standard severities:
 
 - **[BLOCKER]** — factually false statement or rule; course contradicts the answer keys of its
-  own quiz/exercises; formula or worked example with a wrong result.
+  own quiz/exercises; formula or worked example with a wrong result; **a figure that contradicts
+  its own statement** (point off the segment, "parallels" that aren't) — it teaches a wrong shape.
 - **[MAJOR]** — tested-but-untaught notion (golden rule); rule without a worked example;
   off-program/wrong-grade notion (school); section incomprehensible at grade level; resume bullet
   missing for a section or inventing new material; notation violations (Arabic-Indic digits,
-  bidi-unsafe grouped numbers, arabized formulas); language impurity.
+  bidi-unsafe grouped numbers, arabized formulas); language impurity; **a spatial chapter with no
+  figure at all**; **a spatial rule stated without its figure**; **prose pointing at a figure the
+  file does not contain**.
 - **[MINOR]** — style-guide skeleton gaps (missing epigraph/callouts/closing); sentence-length /
   jargon issues; length out of range; weak motivation; table opportunity missed; resume order
-  drift.
+  drift; **figure without a caption, figure redundant with the text it sits next to, or a caption
+  that names the object instead of saying what to see**.
 
 Verdict per chapter: **ship** (no blocker, ≤1 major) or **fix-first**. Report per axis: one line
-each for clarté / compréhension / exhaustivité / expérience with the findings that drove it.
+each for clarté / compréhension / exhaustivité / expérience / **illustration** with the findings
+that drove it.

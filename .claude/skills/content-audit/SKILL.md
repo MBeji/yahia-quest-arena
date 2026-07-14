@@ -212,8 +212,9 @@ Also run `npm run content:check` and `npm run content:qa` over the scope and fol
 ## The course & summary audit (axis: courses)
 
 Grade each chapter's `cours.md` + `resume.md` against
-`content-engine/references/course-quality.md` (read it first — it defines the four axes and the
-severity mapping). Per chapter:
+`content-engine/references/course-quality.md` (read it first — it defines the **five** axes and the
+severity mapping; the visual one, **Illustration**, was added on 2026-07-14 and its doctrine lives in
+`content-engine/references/course-figures.md`). Per chapter:
 
 1. **Exhaustivité (golden rule first)** — extract the list of notions/edge cases the chapter's
    quiz + exercises test, and point each to the course section that teaches it. Any
@@ -234,10 +235,21 @@ severity mapping). Per chapter:
 4. **Expérience pédagogique** — style-guide skeleton (epigraph, emoji sections, callouts,
    closing), motivation, length 50–75 lines, and **resume.md as a standalone revision tool**
    (one bullet per section, bolded concept + essence, no invented material).
-5. **Factual & notation pass** — re-derive every worked example and formula in the course
+5. **Illustration (the visual axis)** — a rule about shapes, space, structure or change taught
+   **without a drawing** is a **[MAJOR]**; a chapter of a spatial family (geometry, circle & angles,
+   repère & vecteurs, solids, trigonometry, measurement of shapes, science diagrams, timelines,
+   graphs) with **no figure at all** is a **[MAJOR]**; prose pointing at a figure the file does not
+   contain («ci-dessous», «الشكل المجاور» with no `<svg>`) is a **[MAJOR]** and fails `content:qa`
+   strict. Then verify each figure **is true**: re-derive its coordinates — points announced on a
+   segment are on it, "parallels" really are parallel, a right angle is 90°. **A figure that
+   contradicts its own statement is a [BLOCKER]**: it teaches a wrong shape, and no automated gate
+   can catch it — this check is the whole reason a human/model audit exists on this axis. Missing
+   caption, caption that names the object instead of saying what to see, or a figure redundant with
+   the sentence beside it = **[MINOR]**. Doctrine and templates: `course-figures.md`.
+6. **Factual & notation pass** — re-derive every worked example and formula in the course
    (wrong result = **[BLOCKER]**); run the notation scans (Arabic-Indic digits, bidi-unsafe
-   `\d \d{3}` in ar, hyphen-minus, LaTeX residue `\\[a-zA-Z]+` and inline `$…$` — both render
-   raw); check language purity.
+   `\d \d{3}` in ar, hyphen-minus, the **Arabic comma `،` inside a math bracket group**, LaTeX
+   residue `\\[a-zA-Z]+` and inline `$…$` — both render raw); check language purity.
 
 Report one line per axis per chapter with the findings that drove it, then the severity list.
 Fix mode: course rewrites are UUID-safe (in-place `cours.md`/`resume.md` edits); large rewrites

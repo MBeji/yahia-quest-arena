@@ -21,9 +21,11 @@ import {
 import {
   auditBoardQuestion,
   auditCompetencyRefs,
+  auditLesson,
   auditMisconceptionTags,
   auditNumericQuestion,
   auditQuestion,
+  isSpatialChapter,
   type CompetencyVocabulary,
   type Flag,
 } from "./qa-checks.ts";
@@ -56,6 +58,17 @@ function main(): void {
 
   for (const subject of subjects) {
     for (const chapter of subject.chapters) {
+      // Les LEÇONS entrent enfin dans le gate (étude 18, lot 4). Jusqu'ici la QA ne
+      // parcourait que les questions : les 541 `cours.md` / `resume.md` n'avaient jamais
+      // été inspectés — d'où une dérive (« aucune figure en géométrie ») qu'aucune CI ne
+      // pouvait voir. Les contrôles de notation (bidi, virgule arabe, viewBox) s'y
+      // appliquent donc pour la toute première fois.
+      const spatial = isSpatialChapter(chapter.slug);
+      flags.push(
+        ...auditLesson(chapter.lesson, `${subject.meta.id}/${chapter.slug}/cours`, { spatial }),
+        ...auditLesson(chapter.summary, `${subject.meta.id}/${chapter.slug}/resume`),
+      );
+
       // Check the chapter quiz too (its questions also have answer keys).
       const groups: Array<{ slug: string; questions: typeof chapter.quiz.questions }> = [
         { slug: "quiz", questions: chapter.quiz.questions },
