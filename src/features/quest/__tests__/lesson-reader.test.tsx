@@ -228,6 +228,34 @@ describe("LessonReader", () => {
     expect(container.querySelector(".lesson-blk--piege")?.textContent).toContain("Piège");
   });
 
+  it("opens a figure in a zoom dialog on click and on keyboard (US-3)", () => {
+    const svg = '<svg viewBox="0 0 10 10"><circle cx="5" cy="5" r="4"/></svg>';
+    const { container } = render(
+      <LessonReader
+        chapterId="c1"
+        chapter={{
+          ...chapter,
+          lesson_content: `## Thalès\n\n::: figure Le triangle ABC\n${svg}\n:::`,
+          summary: null,
+        }}
+        allChapters={siblings}
+      />,
+    );
+
+    const figure = container.querySelector(".lesson-figure");
+    expect(figure).not.toBeNull();
+    expect(screen.queryByTestId("lesson-figure-zoom")).toBeNull();
+
+    fireEvent.click(figure as Element);
+    const dialog = screen.getByTestId("lesson-figure-zoom");
+    expect(dialog).toBeInTheDocument();
+    expect(dialog.querySelector("svg")).not.toBeNull();
+    // La légende sert de titre accessible au dialogue.
+    expect(dialog.textContent).toContain("Le triangle ABC");
+
+    fireEvent.keyDown(document, { key: "Escape" });
+  });
+
   it("labels the blocks in the content language for an Arabic lesson (R-8)", () => {
     const { container } = render(
       <LessonReader

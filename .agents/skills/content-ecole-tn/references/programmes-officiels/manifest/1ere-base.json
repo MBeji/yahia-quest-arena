@@ -1,0 +1,82 @@
+{
+  "grade": "1ere-base",
+  "sealed": false,
+  "source": "CNP — programme national 1ère année de base (guides enseignant, cnp-officiel/). Chapitres math = programme réaligné (#161). Vérif. séquençage : taybah/1ere-base.md.",
+  "note": "sealed=false : seul math-1ere est codifié+autorisé. Les 5 autres matières sont attendues (→ rapportées 'manquantes') ; transcrire leurs chapitres depuis le guide CNP puis sceller le niveau quand il est complet.",
+  "subjects": [
+    {
+      "id": "math-1ere",
+      "name": "الرياضيات",
+      "contentLanguage": "ar",
+      "chapters": [
+        { "slug": "07-reperage-espace", "notion": "التموقع في الفضاء" },
+        { "slug": "10-lignes", "notion": "الخطوط المفتوحة والمغلقة" },
+        { "slug": "08-ensembles", "notion": "المجموعات" },
+        { "slug": "01-nombres-jusqu-9", "notion": "الأعداد من 0 إلى 9" },
+        { "slug": "03-comparaison-rangement", "notion": "المقارنة والترتيب" },
+        { "slug": "02-nombres-jusqu-99", "notion": "الأعداد إلى 99" },
+        { "slug": "04-addition", "notion": "الجمع" },
+        { "slug": "09-monnaie", "notion": "النقود" },
+        { "slug": "06-formes-geometriques", "notion": "الأشكال الهندسية" }
+      ]
+    },
+    {
+      "id": "arabic-1ere",
+      "name": "اللغة العربية",
+      "contentLanguage": "ar",
+      "chapters": [
+        { "slug": "01-aswat-wal-huruf", "notion": "التعرّف على الأصوات والحروف" },
+        { "slug": "02-sawt-awwal", "notion": "الصوت الأوّل في الكلمة" },
+        { "slug": "03-maqati-wal-kalima", "notion": "المقاطع وقراءة الكلمة" },
+        { "slug": "04-ashkal-al-harf", "notion": "أشكال الحرف (أوّل، وسط، آخر)" },
+        { "slug": "05-al-khatt-wal-kitaba", "notion": "الخطّ والكتابة والنسخ" },
+        { "slug": "06-al-istima-wal-fahm", "notion": "الاستماع وفهم المسموع" },
+        { "slug": "07-at-tabir-ash-shafawi", "notion": "التعبير الشفوي" },
+        { "slug": "08-al-jumla", "notion": "قراءة الجملة البسيطة وفهمها" }
+      ]
+    },
+    {
+      "id": "education-islamique-1ere",
+      "name": "التربية الإسلامية",
+      "contentLanguage": "ar",
+      "chapters": [
+        { "slug": "01-sourate-al-fatiha", "notion": "سورة الفاتحة" },
+        { "slug": "02-sourate-al-ikhlas", "notion": "سورة الإخلاص (+ الإيمان بالله ورسوله ﷺ)" },
+        { "slug": "03-adab-al-jouloos", "notion": "آداب الجلوس في القسم" },
+        { "slug": "04-birr-al-walidayn", "notion": "برّ الوالدين" },
+        { "slug": "05-sourate-an-nas-al-falaq", "notion": "سورتا النّاس والفلق" },
+        { "slug": "06-adab-attahiyya", "notion": "آداب التّحيّة" },
+        { "slug": "07-sourate-an-nasr-al-kawthar", "notion": "سورتا النّصر والكوثر" },
+        { "slug": "08-annadhafa", "notion": "النّظافة" }
+      ]
+    },
+    {
+      "id": "eveil-scientifique-1ere",
+      "name": "الإيقاظ العلمي",
+      "contentLanguage": "ar",
+      "chapters": [
+        { "slug": "01-cinq-sens", "notion": "الحواسّ الخمس" },
+        { "slug": "02-alimentation", "notion": "التغذية" },
+        { "slug": "03-croissance", "notion": "النموّ" },
+        { "slug": "04-animaux", "notion": "تنقّل الحيوانات" },
+        { "slug": "05-respiration", "notion": "التنفّس" },
+        { "slug": "06-espace", "notion": "التموقّع في الفضاء" },
+        { "slug": "07-temps", "notion": "الزّمن" },
+        { "slug": "08-matiere", "notion": "المادّة" },
+        { "slug": "09-force", "notion": "القوّة (الدفع والجذب)" }
+      ]
+    },
+    {
+      "id": "french-1ere",
+      "name": "Français",
+      "contentLanguage": "fr",
+      "chapters": []
+    },
+    {
+      "id": "english-1ere",
+      "name": "English",
+      "contentLanguage": "en",
+      "chapters": []
+    }
+  ]
+}

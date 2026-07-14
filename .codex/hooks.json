@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node 'D:\\11-coding\\YahiaAcademy\\yahia-quest-arena\\.claude\\worktrees\\global-org-cleanup-35b7b7\\.codex\\hooks\\guard-generated.mjs'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node 'D:\\11-coding\\YahiaAcademy\\yahia-quest-arena\\.claude\\worktrees\\global-org-cleanup-35b7b7\\.codex\\hooks\\format-changed.mjs'"
+          }
+        ]
+      }
+    ]
+  }
+}

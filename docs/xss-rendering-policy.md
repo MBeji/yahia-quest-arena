@@ -19,9 +19,18 @@ Applies to any rendering path that may transform text into HTML.
   produces — an author cannot inject markup, whatever they write. The pedagogical blocks of
   étude 18 (`::: definition …`, promoted `> ⚠️` callouts) are emitted from a line-level parser,
   never copied from the source. `ALLOWED_TAGS` therefore carries only inert elements
-  (`section`/`span` alongside the original set) and `ALLOWED_ATTR` stays `class`/`id`/`dir` —
-  no `style`, no `href`, no `on*`. A directive with an unknown type degrades to a neutral block
-  and an unclosed one is implicitly closed: a content mistake can cost style, never safety.
+  (`section`/`span`/`figure`/`figcaption` alongside the original set) and `ALLOWED_ATTR` only
+  inert attributes (`class`/`id`/`dir` plus `role`/`tabindex`/`aria-label`, which make a figure
+  zoomable from the keyboard) — no `style`, no `href`, no `on*`. A directive with an unknown
+  type degrades to a neutral block and an unclosed one is implicitly closed: a content mistake
+  can cost style, never safety.
+  - **Author text in an attribute.** A `::: figure <caption>` legend reaches `aria-label`, so it
+    goes through `escapeAttr` (quotes escaped), not merely `escapeHtml` (which escapes only
+    `&`/`<`/`>`): an unescaped `"` would close the attribute. Regression test:
+    « échappe les GUILLEMETS d'une légende » in `markdown.test.ts`.
+- Lesson figure zoom dialog (`LessonReader`). Clicking a figure re-reads its already-sanitized
+  SVG from the DOM and re-injects it into a dialog — passing it through `sanitizeSvg` **again**
+  (defense in depth: the value is read back from a `dangerouslySetInnerHTML` subtree).
 - Chart style injection path (internal CSS generation only).
 - Question figure SVG path (`sanitizeSvg` in `src/shared/lib/figure.ts`, rendered by
   `SvgFigure` in `src/components/ui/svg-figure.tsx`). A quiz/exercise question field

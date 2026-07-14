@@ -829,6 +829,9 @@ export type TranslationKeys = {
       courseTab: string;
       summaryTab: string;
       toc: string;
+      figureCount: string;
+      figureCountOne: string;
+      zoomFigure: string;
       print: string;
       courseSoon: string;
       practiceCta: string;

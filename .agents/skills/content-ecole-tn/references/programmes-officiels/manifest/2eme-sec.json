@@ -1,0 +1,9 @@
+{
+  "grade": "2eme-sec",
+  "sealed": false,
+  "source": "CNP — programme national 2ème année secondaire (2ème année du lycée). Guide enseignant cnp-officiel/manuels/secondaire/c2/enseignant/641203P00.pdf « Perform to Learn — Second Year Secondary Education — Teacher's Book » (National Pedagogic Centre, authors Ammar/Merdessi/Omrane/Raddaoui), combiné au manuel élève 241203P00.pdf (même titre, Student's Book, 184 p. — table des matières lue intégralement). Transcription sous programme/2eme-sec/anglais.md.",
+  "note": "MANIFESTE PARTIEL — ne code que l'anglais (seule matière secondaire dont le guide enseignant est au corpus et a été transcrit à ce jour). chapters=[] volontairement : content/english-2eme-sec/ n'existe pas encore (aucun contenu généré) ; le chapitrage officiel (11 thèmes) est néanmoins entièrement codifié dans programme/2eme-sec/anglais.md §4, à reprendre lors de la première génération. id de subject `english-2eme-sec` proposé par analogie avec la convention primaire — à confirmer (cf. anglais.md §6). Les 20 leçons Arts/Économie du guide sont un supplément optionnel par filière, hors scope générique (cf. anglais.md §2).",
+  "subjects": [
+    { "id": "english-2eme-sec", "name": "English", "contentLanguage": "en", "chapters": [] }
+  ]
+}

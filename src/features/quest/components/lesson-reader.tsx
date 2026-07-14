@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   BookOpen,
   Brain,
@@ -12,7 +12,9 @@ import {
 } from "lucide-react";
 import { renderLesson } from "@/shared/lib/markdown";
 import { asContentLang } from "@/shared/lib/lesson-blocks";
+import { sanitizeSvg } from "@/shared/lib/figure";
 import { isRtlText } from "@/shared/lib/utils";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useT } from "@/lib/i18n";
 import { exerciseRouteFor } from "../exercise-route";
 import { ManuelPagesSection } from "./manuel-pages-section";
@@ -63,6 +65,8 @@ export function LessonReader({
   const t = useT();
   const [showSummary, setShowSummary] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [zoomedFigure, setZoomedFigure] = useState<{ svg: string; label: string } | null>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const content = chapter.lesson_content;
   const summary = chapter.summary;
@@ -109,6 +113,43 @@ export function LessonReader({
     headings.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, [rendered, showToc, sections]);
+
+  // Agrandissement des figures (US-3). L'écouteur est DÉLÉGUÉ sur le conteneur : les
+  // figures sont du HTML injecté, il n'existe aucun nœud React où accrocher un handler.
+  // Le renderer leur pose `role="button"` + `tabindex="0"`, d'où le clavier.
+  useEffect(() => {
+    const root = contentRef.current;
+    if (!root) return;
+
+    const openFrom = (target: EventTarget | null): boolean => {
+      if (!(target instanceof Element)) return false;
+      const figure = target.closest(".lesson-figure");
+      const plate = figure?.querySelector(".lesson-figure__plate");
+      if (!figure || !plate) return false;
+      // Défense en profondeur : ce SVG a déjà été assaini au rendu, mais il repasse par
+      // le profil vetté avant d'être réinjecté dans le dialogue (docs/xss-rendering-policy.md).
+      setZoomedFigure({
+        svg: sanitizeSvg(plate.innerHTML),
+        label: figure.getAttribute("aria-label") ?? "",
+      });
+      return true;
+    };
+
+    const onClick = (event: MouseEvent) => {
+      openFrom(event.target);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      if (openFrom(event.target)) event.preventDefault();
+    };
+
+    root.addEventListener("click", onClick);
+    root.addEventListener("keydown", onKeyDown);
+    return () => {
+      root.removeEventListener("click", onClick);
+      root.removeEventListener("keydown", onKeyDown);
+    };
+  }, [rendered]);
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
@@ -181,8 +222,18 @@ export function LessonReader({
           dir={isRtl ? "rtl" : "ltr"}
           className="mb-8 rounded-xl border border-border bg-secondary px-4 py-3 print:hidden"
         >
-          <p className="mb-2 text-2xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-            {t.public.reader.toc}
+          <p className="mb-2 flex flex-wrap items-center gap-x-2 text-2xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+            <span>{t.public.reader.toc}</span>
+            {/* « 3 figures » — un chapitre illustré l'annonce : c'est ce que l'élève cherche
+                en géométrie, et ce que 12 % des cours seulement peuvent afficher aujourd'hui. */}
+            {rendered && rendered.figureCount > 0 && (
+              <span className="text-primary">
+                ·{" "}
+                {rendered.figureCount === 1
+                  ? t.public.reader.figureCountOne
+                  : t.public.reader.figureCount.replace("{n}", String(rendered.figureCount))}
+              </span>
+            )}
           </p>
           <ol className="grid gap-x-6 sm:grid-cols-2">
             {sections.map((section, i) => (
@@ -206,6 +257,7 @@ export function LessonReader({
 
       {rendered ? (
         <div
+          ref={contentRef}
           className="lesson-content"
           dir={isRtl ? "rtl" : "ltr"}
           dangerouslySetInnerHTML={{ __html: rendered.html }}
@@ -216,6 +268,28 @@ export function LessonReader({
           <p className="mt-3 text-muted-foreground">{t.public.reader.courseSoon}</p>
         </div>
       )}
+
+      {/* Agrandissement d'une figure — une configuration de géométrie doit pouvoir se lire
+          sur un téléphone, étiquettes comprises (US-3). Le SVG y est re-assaini. */}
+      <Dialog
+        open={zoomedFigure !== null}
+        onOpenChange={(open) => {
+          if (!open) setZoomedFigure(null);
+        }}
+      >
+        <DialogContent className="max-w-3xl" data-testid="lesson-figure-zoom">
+          <DialogTitle className="text-sm font-medium text-muted-foreground">
+            {zoomedFigure?.label || t.public.reader.zoomFigure}
+          </DialogTitle>
+          {zoomedFigure && (
+            <div
+              className="lesson-figure__plate lesson-figure__plate--zoom"
+              dir="ltr"
+              dangerouslySetInnerHTML={{ __html: zoomedFigure.svg }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
 
       <ManuelPagesSection chapterId={chapterId} isAuthenticated={isAuthenticated} />
 

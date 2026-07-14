@@ -20,6 +20,7 @@ export const DIRECTIVE_TYPES = [
   "propriete",
   "exemple",
   "methode",
+  "figure",
   "piege",
   "astuce",
   "retenir",
@@ -57,6 +58,8 @@ export const BLOCK_LABELS: Record<LessonBlockType, Record<ContentLang, string>> 
   propriete: { fr: "Propriété", en: "Property", ar: "خاصّية" },
   exemple: { fr: "Exemple résolu", en: "Worked example", ar: "مثال محلول" },
   methode: { fr: "Méthode", en: "Method", ar: "طريقة" },
+  // `figure` ne sert pas de chip : il préfixe la numérotation (« Figure 1 », « الشكل 1 »).
+  figure: { fr: "Figure", en: "Figure", ar: "الشكل" },
   piege: { fr: "Piège", en: "Pitfall", ar: "تحذير" },
   astuce: { fr: "Astuce", en: "Tip", ar: "حيلة" },
   retenir: { fr: "À retenir", en: "Remember", ar: "للحفظ" },
