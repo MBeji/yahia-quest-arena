@@ -113,6 +113,18 @@ export interface AdminDb {
   revokeEntitlement(userId: string, parcoursId: string): Promise<void>;
   /** Whether a user currently holds a live (non-revoked, non-expired) grant on a parcours. */
   hasEntitlement(userId: string, parcoursId: string): Promise<boolean>;
+  /**
+   * A non-school (never quiz-gated) admin mission with at least
+   * RECALL_MIN_QUESTIONS recall-eligible questions (étude 17) — the seed for the
+   * recall e2e. Returns the subject + exercise ids plus the exercise's answer key
+   * (used both to master the classic run at 100% and to type the recall answers).
+   * Null when the test catalogue has no such exercise, so the spec skips cleanly.
+   */
+  recallReadyExercise(): Promise<{
+    subjectId: string;
+    exerciseId: string;
+    answerKey: { prompt: string; correctText: string }[];
+  } | null>;
 }
 
 export function createAdminDb(): AdminDb {
@@ -481,6 +493,62 @@ export function createAdminDb(): AdminDb {
       if (!data) return false;
       const expires = data.expires_at as string | null;
       return expires === null || new Date(expires) > new Date();
+    },
+    async recallReadyExercise() {
+      const MIN = 3; // RECALL_MIN_QUESTIONS (src/shared/constants/gamification.ts)
+      // Non-school (grade_id null), free subjects only — never quiz-gated.
+      const { data: subjects, error: subErr } = await client
+        .from("subjects")
+        .select("id")
+        .eq("is_premium", false)
+        .is("grade_id", null)
+        .order("display_order")
+        .limit(25);
+      if (subErr) throw new Error(`recallReadyExercise/subjects: ${subErr.message}`);
+      for (const s of subjects ?? []) {
+        const { data: exercises, error: exErr } = await client
+          .from("exercises")
+          .select("id")
+          .eq("subject_id", s.id)
+          .eq("source", "admin")
+          .neq("mode", "quiz")
+          .order("display_order")
+          .limit(30);
+        if (exErr) throw new Error(`recallReadyExercise/exercises: ${exErr.message}`);
+        for (const ex of exercises ?? []) {
+          const { data: questions, error: qErr } = await client
+            .from("questions")
+            .select("prompt, options, correct_option, question_type, display_order")
+            .eq("exercise_id", ex.id)
+            .order("display_order");
+          if (qErr) throw new Error(`recallReadyExercise/questions: ${qErr.message}`);
+          const answerKey: { prompt: string; correctText: string }[] = [];
+          let eligible = 0;
+          for (const q of questions ?? []) {
+            const opts = (q.options as { id: string; text: string }[] | null) ?? [];
+            const correct = opts.find((o) => o.id === q.correct_option);
+            const correctText = correct?.text ?? "";
+            answerKey.push({ prompt: q.prompt as string, correctText });
+            // A JS-expressible subset of is_question_recall_eligible (R-2): a real
+            // MCQ with a keyed, short (1..60 char) free-text answer. Enough to seed
+            // the spec; the exact server rule stays authoritative (pgTAP lot 1).
+            const text = correctText.trim();
+            if (
+              q.question_type === "mcq" &&
+              q.correct_option != null &&
+              opts.length >= 3 &&
+              text.length >= 1 &&
+              text.length <= 60
+            ) {
+              eligible += 1;
+            }
+          }
+          if (eligible >= MIN) {
+            return { subjectId: s.id as string, exerciseId: ex.id as string, answerKey };
+          }
+        }
+      }
+      return null;
     },
   };
 }

@@ -168,35 +168,35 @@ Run with coverage: `npm run test:coverage`
 
 ## 8. Key data model (Supabase tables)
 
-| Table                                  | Purpose                                                                      |
-| -------------------------------------- | ---------------------------------------------------------------------------- |
-| profiles                               | Student profile (XP, level, streak, coins, hero_class, current_parcours_id)  |
-| subjects                               | Math, Science, etc.                                                          |
-| chapters                               | Chapters within a subject                                                    |
-| exercises                              | Exercises within a chapter                                                   |
-| questions                              | Multiple-choice questions within an exercise                                 |
-| attempts                               | Student exercise attempt results                                             |
-| student_badges                         | Awarded badges                                                               |
-| shop_items                             | Purchasable items                                                            |
-| inventory_items                        | Student-owned items                                                          |
-| daily_objectives                       | Daily goals (auto-created)                                                   |
-| weekly_quests                          | Weekly challenges                                                            |
-| spaced_repetition_schedule             | SM-2 style review schedule                                                   |
-| dungeon_runs                           | Boss mode run state                                                          |
-| exercise_sessions                      | Server-authoritative quest sessions (started via RPC, direct writes REVOKEd) |
-| duel_queue / duels / duel_participants | Real-time duels + weekly leagues (étude 05)                                  |
-| parent_student_links                   | Parent-student linking                                                       |
-| parcours                               | Tracks — kinds concours/scolaire/libre; **all free in the current phase**    |
-| parcours_entitlements                  | Per-parcours grants (purchase/beta/gift/family) — dormant                    |
-| parcours_interest                      | Interest votes on `coming_soon` parcours                                     |
-| subscriptions (DEPRECATED)             | Removed in migration 20260609000000 → parcours_entitlements                  |
-| beta_access_requests                   | Beta-access requests + admin review                                          |
-| content_reports                        | User-flagged content errors ("Signaler une erreur")                          |
-| bug_reports                            | User bug reports + admin triage                                              |
-| question_attempts                      | Append-only per-question telemetry (adaptive engine A0)                      |
-| user_misconceptions                    | Per-(user, misconception-tag) aggregate, trigger-maintained                  |
-| themes                                 | Top-level content tracks (école-tn, culture-générale…)                       |
-| grades                                 | Grade levels (e.g. 9th grade; incl. lycée section nodes)                     |
+| Table                                  | Purpose                                                                               |
+| -------------------------------------- | ------------------------------------------------------------------------------------- |
+| profiles                               | Student profile (XP, level, streak, coins, hero_class, current_parcours_id)           |
+| subjects                               | Math, Science, etc.                                                                   |
+| chapters                               | Chapters within a subject                                                             |
+| exercises                              | Exercises within a chapter                                                            |
+| questions                              | Multiple-choice questions within an exercise                                          |
+| attempts                               | Student exercise attempt results (`variant` classic/recall — étude 17)                |
+| student_badges                         | Awarded badges                                                                        |
+| shop_items                             | Purchasable items                                                                     |
+| inventory_items                        | Student-owned items                                                                   |
+| daily_objectives                       | Daily goals (auto-created)                                                            |
+| weekly_quests                          | Weekly challenges                                                                     |
+| spaced_repetition_schedule             | SM-2 style review schedule                                                            |
+| dungeon_runs                           | Boss mode run state                                                                   |
+| exercise_sessions                      | Server-authoritative quest sessions (`variant` classic/recall; direct writes REVOKEd) |
+| duel_queue / duels / duel_participants | Real-time duels + weekly leagues (étude 05)                                           |
+| parent_student_links                   | Parent-student linking                                                                |
+| parcours                               | Tracks — kinds concours/scolaire/libre; **all free in the current phase**             |
+| parcours_entitlements                  | Per-parcours grants (purchase/beta/gift/family) — dormant                             |
+| parcours_interest                      | Interest votes on `coming_soon` parcours                                              |
+| subscriptions (DEPRECATED)             | Removed in migration 20260609000000 → parcours_entitlements                           |
+| beta_access_requests                   | Beta-access requests + admin review                                                   |
+| content_reports                        | User-flagged content errors ("Signaler une erreur")                                   |
+| bug_reports                            | User bug reports + admin triage                                                       |
+| question_attempts                      | Append-only per-question telemetry (adaptive engine A0)                               |
+| user_misconceptions                    | Per-(user, misconception-tag) aggregate, trigger-maintained                           |
+| themes                                 | Top-level content tracks (école-tn, culture-générale…)                                |
+| grades                                 | Grade levels (e.g. 9th grade; incl. lycée section nodes)                              |
 
 ### 8a. Access model (parcours + entitlements) — premium DORMANT in the free phase
 
@@ -233,6 +233,36 @@ migration. Admin provisioning stays live (`/admin/subscriptions`): `admin_grant_
 `…122000` (backfill), `…123000` (dungeon gate), `20260609000000` (drops the legacy
 `subscription_*` columns + RPCs), `20260617120000` (kind `scolaire` + `parcours_interest`),
 `20260711100000` (**free phase**: `is_premium = false` everywhere + dungeon un-gated).
+
+---
+
+### 8b. Active recall (recall variant) — étude 17
+
+A **mastered** QCM mission unlocks a second form: the same questions, **no options shown**, the
+student **types** the answer, and the server compares it — normalized — to the correct option
+already in the DB. It is a display + scoring **mode** of an existing exercise (no new content, no
+new `question_type`), harder and worth **1.5× XP** (`RECALL_XP_MULTIPLIER`).
+
+- **Wire**: the recall run travels as the `?variant=recall` search param on `/quest/$exerciseId`
+  (default `classic`); `attempts.variant` / `exercise_sessions.variant` (`'classic'` default,
+  CHECK-constrained) record which form was played.
+- **Eligibility (R-2)** is computed server-side by the IMMUTABLE `is_question_recall_eligible`
+  (real MCQ, ≥3 options, keyed answer 1–60 chars, self-sufficient prompt, no figure). A mission
+  needs ≥ `RECALL_MIN_QUESTIONS` (3) eligible questions to expose the variant.
+- **Unlock (R-3)**: a classic attempt at `RECALL_UNLOCK_SCORE_PCT` (100%) that is **not rushed**
+  (duration ≥ 4 s/question). The hub chip (`get_recall_availability`) is signed-in only (R-9).
+- **Scoring (R-4)**: `normalize_recall_text` (a 9-step IMMUTABLE pipeline) is applied to both sides
+  for a **deterministic equality** — no fuzzy matcher, no partial credit. Best score is tracked
+  **separately per variant** (`get_best_scores_by_exercise` is classic-only; R-5/R-6). A typed
+  answer equal to a distractor resolves the same `misconception_tag` as clicking it (R-7).
+- **No client oracle (R-1)**: `normalize_recall_text`, `is_question_recall_eligible` and
+  `score_recall_answer` are `REVOKE`d from anon/authenticated; `getExercise` serves the recall
+  play set **without options** and with `hints = 0`. The char bar (R-12) is static per content
+  language, never derived from the answer.
+- Migrations: `20260714120000` (columns + index + the 3 functions), `20260714130000` (variant-aware
+  RPCs: `start_exercise_session` v2, `submit_exercise_attempt`, `get_attempt_review` v2,
+  `get_recall_questions`, `get_recall_availability`). Constants in
+  `src/shared/constants/gamification.ts`. Player guide: `docs/guide-rappel-actif.md`.
 
 ---
 

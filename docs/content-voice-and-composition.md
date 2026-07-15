@@ -35,23 +35,24 @@ Règles d'application :
 Un concept = un mot par langue, partout (écrans, toasts, erreurs, e-mails futurs). Toute
 nouvelle clé i18n le respecte ; toute dérive est un bug de PR.
 
-| Concept               | FR                              | EN                   | AR                                      | Notes                                                                                      |
-| --------------------- | ------------------------------- | -------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------ |
-| streak                | **série**                       | streak               | **سلسلة**                               | jamais « streak » en FR ; format « série de {n} jours » / « {n} j »                        |
-| coins                 | **pièces**                      | coins                | **عملات**                               | la monnaie du jeu ; « {n} pièces »                                                         |
-| XP                    | XP                              | XP                   | **نقاط الخبرة** (prose) / XP (compteur) | sigle conservé dans les chips                                                              |
-| niveau (jeu)          | niveau {n}                      | level {n}            | المستوى {n}                             | ne pas confondre avec la classe scolaire                                                   |
-| classe (école)        | classe                          | class/grade          | **القسم**                               | registre scolaire tunisien (« ما هو قسمك؟ »)                                               |
-| quête / mission       | quête (jeu) · mission (contenu) | quest · mission      | مهمة                                    | « mission » pour les exercices du contenu                                                  |
-| donjon                | le Donjon Infini                | the Infinite Dungeon | **القبو اللانهائي**                     | « الزنزانة » (cellule de prison) est **banni** (Q-1b)                                      |
-| duel                  | duel                            | duel                 | مبارزة                                  |                                                                                            |
-| classement            | classement                      | leaderboard          | الترتيب                                 | assiette : l'Académie entière, jamais « du concours »                                      |
-| parcours              | parcours                        | track                | مسار                                    | le produit-track choisi à l'onboarding                                                     |
-| code alliance         | code alliance                   | alliance code        | رمز التحالف                             | UN seul nom par langue sur tout le tunnel parent (fin de « Alliance Code »/« Code élève ») |
-| suivi parental        | suivi                           | monitoring/report    | المتابعة                                | verbe côté parent : « voir/ouvrir le bilan », jamais « associer » pour une consultation    |
-| quiz de compréhension | quiz de compréhension           | comprehension quiz   | اختبار الفهم                            | LE seul verrou de l'app en phase gratuite                                                  |
-| boutique              | boutique                        | shop                 | المتجر                                  |                                                                                            |
-| classe de héros       | classe de héros                 | hero class           | رتبة البطل                              | les intitulés de rangs seront localisés au lot des écrans qui les affichent                |
+| Concept               | FR                               | EN                         | AR                                      | Notes                                                                                      |
+| --------------------- | -------------------------------- | -------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------ |
+| streak                | **série**                        | streak                     | **سلسلة**                               | jamais « streak » en FR ; format « série de {n} jours » / « {n} j »                        |
+| coins                 | **pièces**                       | coins                      | **عملات**                               | la monnaie du jeu ; « {n} pièces »                                                         |
+| XP                    | XP                               | XP                         | **نقاط الخبرة** (prose) / XP (compteur) | sigle conservé dans les chips                                                              |
+| niveau (jeu)          | niveau {n}                       | level {n}                  | المستوى {n}                             | ne pas confondre avec la classe scolaire                                                   |
+| classe (école)        | classe                           | class/grade                | **القسم**                               | registre scolaire tunisien (« ما هو قسمك؟ »)                                               |
+| quête / mission       | quête (jeu) · mission (contenu)  | quest · mission            | مهمة                                    | « mission » pour les exercices du contenu                                                  |
+| donjon                | le Donjon Infini                 | the Infinite Dungeon       | **القبو اللانهائي**                     | « الزنزانة » (cellule de prison) est **banni** (Q-1b)                                      |
+| duel                  | duel                             | duel                       | مبارزة                                  |                                                                                            |
+| classement            | classement                       | leaderboard                | الترتيب                                 | assiette : l'Académie entière, jamais « du concours »                                      |
+| parcours              | parcours                         | track                      | مسار                                    | le produit-track choisi à l'onboarding                                                     |
+| code alliance         | code alliance                    | alliance code              | رمز التحالف                             | UN seul nom par langue sur tout le tunnel parent (fin de « Alliance Code »/« Code élève ») |
+| suivi parental        | suivi                            | monitoring/report          | المتابعة                                | verbe côté parent : « voir/ouvrir le bilan », jamais « associer » pour une consultation    |
+| quiz de compréhension | quiz de compréhension            | comprehension quiz         | اختبار الفهم                            | LE seul verrou de l'app en phase gratuite                                                  |
+| rappel actif          | **Rappel** (mode) · rappel actif | **Recall** · active recall | **استرجاع**                             | mode de réactivation (étude 17) ; jamais « quiz Rappel » ; chip « 🧠 Rappel »              |
+| boutique              | boutique                         | shop                       | المتجر                                  |                                                                                            |
+| classe de héros       | classe de héros                  | hero class                 | رتبة البطل                              | les intitulés de rangs seront localisés au lot des écrans qui les affichent                |
 
 Compléments de langue :
 

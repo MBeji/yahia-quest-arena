@@ -41,6 +41,20 @@ export class QuestPage {
     return this.page.getByTestId("review-item");
   }
 
+  // --- Active recall (étude 17) ---
+  /** The recall-mode banner shown atop a `?variant=recall` run. */
+  get recallBanner(): Locator {
+    return this.page.getByTestId("recall-banner");
+  }
+  /** The recall free-text answer field (replaces the radios in a recall run). */
+  get recallInput(): Locator {
+    return this.page.getByTestId("recall-answer-input");
+  }
+  /** The current question's prompt (rendered as an <h2> by the player). */
+  get prompt(): Locator {
+    return this.page.locator("h2").first();
+  }
+
   // --- "Report an error" (content report), shown on the results screen ---
   get reportButton(): Locator {
     return this.page.getByRole("button", { name: /report an error|signaler une erreur/i });
@@ -164,5 +178,47 @@ export class QuestPage {
     const texts = await this.options.allInnerTexts();
     const idx = texts.findIndex((t) => stripIsolates(t).includes(correctText));
     return idx >= 0 ? idx : 0;
+  }
+
+  /**
+   * Play a whole RECALL run (étude 17): for each question, read the prompt, look
+   * up its correct answer text in the key, type it into the free-text field, and
+   * submit. Matches by prompt because the recall set is a subset (only eligible
+   * questions) served in its own order. Paces each answer past the server's "too
+   * fast" anti-farm floor (≥4s/question) so the pass actually awards (boosted) XP.
+   */
+  async answerRecallAll(
+    answerKey: { prompt: string; correctText: string }[],
+    preSelectPauseMs = 4500,
+  ): Promise<void> {
+    // Directional isolates (U+2066…U+2069) wrap inline LTR runs in Arabic prompts;
+    // strip them so a rendered prompt matches its raw answer-key string.
+    const strip = (s: string): string =>
+      [...s]
+        .filter((c) => (c.codePointAt(0) ?? 0) < 0x2066 || (c.codePointAt(0) ?? 0) > 0x2069)
+        .join("")
+        .trim();
+    const byPrompt = new Map(answerKey.map((k) => [strip(k.prompt), k.correctText]));
+    const maxQuestions = answerKey.length + 5; // safety cap
+    for (let i = 0; i < maxQuestions; i += 1) {
+      await expect(this.recallInput.or(this.score)).toBeVisible({ timeout: 20_000 });
+      if (await this.score.isVisible().catch(() => false)) return;
+      const before = strip((await this.prompt.innerText().catch(() => "")) ?? "");
+      const answer = byPrompt.get(before) ?? "";
+      if (preSelectPauseMs > 0) await this.page.waitForTimeout(preSelectPauseMs);
+      await this.recallInput.fill(answer);
+      await expect(this.submit).toBeEnabled({ timeout: 5000 });
+      await this.submit.click();
+      await expect
+        .poll(
+          async () => {
+            if (await this.score.isVisible().catch(() => false)) return "done";
+            const now = strip((await this.prompt.innerText().catch(() => "")) ?? "");
+            return now && now !== before ? "next" : "wait";
+          },
+          { timeout: 12_000 },
+        )
+        .not.toBe("wait");
+    }
   }
 }
