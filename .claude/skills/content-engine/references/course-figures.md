@@ -102,9 +102,21 @@ Everything in `content-schema.md` § Figures applies. On top of it:
   Before shipping, re-derive the coordinates: points announced _on_ a segment are actually on it,
   lines announced parallel actually are, a right angle is actually 90°. A wrong figure teaches a
   wrong shape and no gate can catch it. **Double-check the arithmetic.**
-- **Young grades (≈ 1ère–3ème)** keep the age rule of `style-guide.md`: playful, **colourful**
-  illustrations (dark outline + bright saturated fills) rather than grey geometry. The colour rule
-  and the ink rule are not in conflict — the outline stays dark, the fills are free.
+- **Young grades (≈ 1ère–3ème) are the HIGHEST illustration priority, not the lowest.** This was
+  learned the hard way (2026-07-14): the campaign began with the exam years and left the youngest
+  for last — backwards. A 6-year-old can barely read; they learn almost entirely from pictures. A
+  chapter like «التموقع في الفضاء» (dessus/dessous, gauche/droite, dedans/dehors) or «الأشكال» or
+  «الخطوط» taught as pure text is the most flagrant possible anomaly. And at that age the bar is
+  **broader than "spatial"**: numbers (count the apples), money (draw the coins), sets (draw the
+  grouping), comparison (big vs small) — **nearly every young-grade chapter earns a figure**, well
+  beyond what the slug-based `SPATIAL_CHAPTER`/`GRAPHICAL_CHAPTER` heuristic can flag. So for the
+  primary cycle, illustrate by **pedagogical judgement**, not only when the gate warns.
+- **Young-grade figures are playful and colourful** (`style-guide.md`): concrete, recognisable
+  objects (a bird above a tree, a ball in a box, an elephant beside a mouse), **dark outline +
+  bright saturated fills**, not grey geometry. The colour rule and the ink rule do not conflict —
+  the outline stays dark, the fills are free. Label the object with the notion's word in the
+  **course** (it teaches the word); in a **question**, show the scene but carry **no answer-word
+  label** (it would leak the key — R-4 of étude 19).
 
 ---
 
