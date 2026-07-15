@@ -229,6 +229,13 @@ export const ar: TranslationKeys = {
     questionN: "السؤال {n}",
     potionXpApplied: "جرعة الخبرة ×{x} مُطبّقة !",
     potionCoinsApplied: "جرعة العملات ×{x} مُطبّقة !",
+    recallBadge: "استرجاع",
+    recallUnlockedTitle: "تمّ فتح وضع الاسترجاع!",
+    recallUnlockedBody:
+      "أعِد لعب هذه المهمّة بلا خيارات — اكتب إجاباتك، ونقاط الخبرة ×1.5 في انتظارك.",
+    recallPlay: "العب في وضع الاسترجاع",
+    recallChip: "🧠 استرجاع",
+    recallLockedHint: "أنجِز المهمّة أوّلًا بنسبة 100%",
   },
   levelUp: {
     title: "مستوى أعلى!",
