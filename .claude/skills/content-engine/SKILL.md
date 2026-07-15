@@ -78,12 +78,18 @@ Consequences you must respect:
 - **Numbers & equations are standard in every language.** Western digits (0–9) and standard LTR
   mathematical notation everywhere — **including Arabic content** (Arabic prose around standard
   math, never Arabic-Indic digits or arabized formulas). Hard rule: `references/math-and-notation.md`.
-- **A rule about shapes is taught WITH A DRAWING — at every grade.** Geometry, circle & angles,
-  repère & vecteurs, solids, trigonometry, measurement of shapes, science diagrams, timelines,
-  graphs: the chapter carries at least one figure, and each spatial rule has its figure next to it.
-  Attach it with `::: figure <légende>` + an inline `<svg viewBox="…">`. Doctrine, required families
-  and copy-paste SVG templates: `references/course-figures.md` (quality bar:
-  `references/course-quality.md` **Axis 5 — Illustration**).
+- **Illustrate what is spatial/visual — in the COURSE and in the QUESTIONS, at every grade.**
+  Geometry, circle & angles, repère & vecteurs, solids, trigonometry, measurement of shapes, a
+  curve/graph to read, science diagrams, timelines: the **course** carries a figure next to each
+  spatial rule (`::: figure <légende>` + inline `<svg viewBox="…">`), and every **question** whose
+  notion is spatial/visual carries an inline `<svg>` too — reading the figure is the skill. Three
+  invariants both sides share: illustrate **only where it serves** (a pure computation gets no
+  figure — decoration or spoiler), the figure must be **TRUE** (re-derive coordinates; a false
+  figure makes a correct item unanswerable), and a question figure **never leaks the key**. Young
+  grades (1ère–3ème, 6–8 ans) are the HIGHEST priority and illustrate almost everything, colourfully.
+  One shared doctrine + copy-paste SVG templates: `references/course-figures.md`. Quality bars:
+  `references/course-quality.md` **Axis 5** (courses) and `references/quality-bar.md` § "Illustrate
+  what the question is about" (questions).
 
 ## What you do (and where you stop)
 

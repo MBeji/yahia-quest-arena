@@ -1,4 +1,13 @@
-# Course figures — the illustration doctrine for `cours.md` / `resume.md`
+# Content figures — the illustration doctrine for courses AND questions
+
+> **Scope.** This file is the single doctrine for **every** figure in the catalogue — a `cours.md`
+> or `resume.md` illustration **and** an `<svg>` inside a question (`prompt`, an option's `text`, or
+> `explanation`). The families that require a figure, the "a figure must be TRUE" rule, the
+> per-cycle vertex-naming, the young-grade colour rule: all apply to both. The only difference is
+> the label — a **course** figure labels the notion's word (it teaches it), a **question** figure
+> shows the scene but carries **no answer-word label** (it would leak the key). The question quality
+> bar (`quality-bar.md`, § Visual) and the course quality bar (`course-quality.md`, Axis 5) both
+> point here; do not duplicate the rules — extend them here.
 
 > **Why this file exists.** On 2026-07-14 an audit of the repo found **66 illustrated courses out
 > of 541** — and **zero figures in the five geometry chapters of 9ème**, the national-exam year.

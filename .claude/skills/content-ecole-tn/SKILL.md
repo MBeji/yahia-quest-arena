@@ -200,6 +200,16 @@ La **notation reste standard** (chiffres 0–9, etc. — règle ci-dessus) ; cet
    `chapter.json` `sources[]`.
 5. Then author the files exactly per the content-engine workflow (cours.md, resume.md, quiz.json,
    exercises ladder), keeping core free progression at difficulty 1–2 and boss/challenge at 3–4.
+6. **Illustrate — course AND questions.** School content is where the visual gap was worst (a
+   geometry course with no triangle, a «التموقع في الفضاء» chapter for 6-year-olds with no image).
+   Every spatial/visual notion is drawn: in the **course** a `::: figure` next to the rule, and in
+   every **question** whose notion is spatial/visual (shape, angle, solid, repère/vecteur, a
+   graph/table to read, a science diagram) an inline `<svg>`. Only where it serves (a pure
+   computation gets none); the figure must be **TRUE** (double-solve it) and must not leak the key;
+   **young grades (1ère–3ème) illustrate almost everything, colourfully** — highest priority.
+   Per-cycle vertex naming (Arabic letters أ/ب/ج at primary, Latin A/B/C from collège), families,
+   drawing rules and copy-paste SVG templates: **`content-engine/references/course-figures.md`**
+   (bars: `course-quality.md` Axis 5 + `quality-bar.md` § "Illustrate what the question is about").
 
 ## Sourcing
 

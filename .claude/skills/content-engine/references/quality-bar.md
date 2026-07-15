@@ -111,6 +111,28 @@ Beyond the distractor/explanation rules above, every item must pass these craft 
 - **Difficulty tag is honest.** A d1 question is answerable by a student who just read the course;
   a d3 question requires combining ≥2 notions or a multi-step computation. Don't tag for ordering
   convenience.
+- **Illustrate what the question is ABOUT — a spatial/visual item without a figure is a defect.**
+  This is the question-side of `course-quality.md` Axis 5. If the item is about a **shape, an angle,
+  a triangle, a circle, a solid, a coordinate/vector plane, a graph to read, a scientific diagram, a
+  figure/table to interpret**, it carries an inline `<svg>` — reading the figure is the skill, and
+  the words-only version forces the pupil to build the picture in their head before they can even
+  start. Full doctrine (families, drawing rules, per-cycle vertex naming, colour for young grades):
+  **`course-figures.md`** (one shared doctrine for courses and questions). Three hard rules:
+  - **Only where it SERVES (never decoration).** A pure computation — «calculer lim x→2 (3x²−5)»,
+    «3/4 + 1/2» — gets **no** figure: a graph there is noise, or it hands over the answer (the
+    horizontal asymptote _is_ the limit). Illustrate the _visual_ items, not every item.
+  - **The figure must be TRUE.** Points announced on a segment are on it, parallels are parallel, a
+    right angle is 90°, a plotted curve passes through the stated values. A figure that contradicts
+    its statement makes a correct question **unanswerable** — worse than no figure. Re-derive the
+    coordinates; double-solve the item _on the figure_.
+  - **The figure must not LEAK the key.** A question figure shows the _scene_, never the answer: no
+    answer-word label, no marked correct option. A figure may live in the **options** (visual QCM:
+    "which piece completes the pattern?") — then all four options carry a comparable figure, none
+    marked. And for a "how many solutions" item, draw the _forced_ crossings, not one that quietly
+    argues for the wrong count (a single crossing under a "unique solution is false" stem is a trap).
+  - **Young grades (≈ 1ère–3ème, 6–8 ans) — illustrate almost everything**, colourfully and
+    concretely (a bird above a tree, a ball in a box), because a 6-year-old barely reads. This is the
+    HIGHEST illustration priority in the catalogue, not the lowest.
 
 ## Self-verification protocol — run it BEFORE `content:check`/`content:qa`
 
@@ -131,6 +153,11 @@ verification pass** over every file you wrote:
    `math-and-notation.md`).
 6. **Check the ramp**: per-question difficulty is non-decreasing within each exercise and matches
    the exercise tier; the quiz stays at d1–2.
+7. **Figure sweep** (§ Question craft, "Illustrate what the question is about"): list every item
+   whose notion is spatial/visual (shape, angle, solid, repère/vecteur, graph-reading, diagram,
+   figure/table to interpret) — each must carry an `<svg>`, or you note why a figure would not
+   serve. For every figure present, **double-solve the item on the figure** (it must be TRUE and
+   must not leak the key). For a young-grade (1ère–3ème) file, expect a figure on nearly every item.
 
 Only after this pass run `content:check` and `content:qa:strict`. To audit _existing_ content with
 the same rigor, use the **`content-audit`** skill.
