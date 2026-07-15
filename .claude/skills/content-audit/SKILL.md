@@ -205,6 +205,19 @@ Per exercise / chapter:
     dark hues) so it shows on the white "paper" surface — an SVG whose only strokes/fills are
     white/near-white is invisible = **[MAJOR]**. A prompt/option that references a figure but ships
     none = **[BLOCKER]** (also caught by `content:qa --strict`).
+13. **Illustration — a spatial/visual question SHOULD carry a figure** (the question-side of Axis 5;
+    doctrine `course-figures.md`, bar `quality-bar.md` § "Illustrate what the question is about").
+    A question about a **shape, angle, triangle, circle, solid, repère/vecteur, a curve/graph to
+    read, a scientific diagram, a figure/table to interpret** that ships **no `<svg>`** = **[MAJOR]**
+    — words-only, the pupil must build the picture before starting. For a **young-grade** file
+    (1ère–3ème, 6–8 ans), expect a figure on nearly every item; a bare visual item there is a
+    **[MAJOR]**. Pure-computation items («calculer lim…») correctly have none — flagging those would
+    be wrong (decoration/spoiler). And **verify each present figure is TRUE** by double-solving the
+    item _on the figure_: a figure that contradicts its statement (point off the segment, "parallels"
+    that aren't, a curve missing the stated value, a "how-many-solutions" drawing that implies the
+    wrong count) makes a correct question unanswerable = **[BLOCKER]** — the single check no automated
+    gate can do, so it is the whole reason this audit exists on this axis. A figure that leaks the
+    key (marks the answer) = **[MAJOR]**.
 
 Also run `npm run content:check` and `npm run content:qa` over the scope and fold their findings in
 (they're fast and catch regressions in files you didn't open).

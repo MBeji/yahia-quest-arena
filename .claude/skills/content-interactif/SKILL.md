@@ -64,10 +64,16 @@ An interactive skin never loosens the content rules of the subject's track:
 3. **Author** 6+ questions per exercise, per-question difficulty ramp, in the chapter's language and
    RPG voice. Apply the format craft rules AND the anti-patterns list from
    `interactive-formats.md` — shuffle-safety (no display-letter references), question independence,
-   one `<svg>` per field, executed-error distractors.
+   one `<svg>` per field, executed-error distractors. For the **visual formats** (QCM visuel SVG,
+   lecture de document, chasse à l'erreur on a figure), the figure follows the shared doctrine
+   `content-engine/references/course-figures.md`: it must be **TRUE** (double-solve on the figure —
+   a false figure makes a correct item unanswerable) and must **not leak the key** (show the scene,
+   not the answer; in a visual QCM all four options carry a comparable figure, none marked). A
+   "how-many / which-is-true" figure shows the _forced_ configuration, never one that implies the
+   wrong count.
 4. **Self-verify** per `quality-bar.md` (re-solve blind; for matching/sequencing, enumerate ALL
    permutations and prove exactly one option is fully correct; for SVG, re-read the figure as the
-   student sees it).
+   student sees it — TRUE and no key leak).
 5. **Validate and stop:** `npm run content:check` → `npm run content:qa:strict` (0 errors) → report
    (chapter, files, formats used per question, QA output). Files only — build with
    `npm run content:build -- --subject <id>`, apply, push **only when asked**.

@@ -88,7 +88,11 @@ it vanishes on the white background. For a matrix, draw the 3×3 grid with a cle
 make each option a small standalone `<svg>`.
 Numbers inside figures and in number-sequence items use **Western digits (0–9) in all languages,
 including Arabic** (`content-engine/references/math-and-notation.md`) — this also keeps figures
-reusable across the three sibling subjects.
+reusable across the three sibling subjects. Drawing conventions and the shared figure doctrine live
+in `content-engine/references/course-figures.md`. Two rules matter doubly here, where the figure IS
+the question: it must be **TRUE** (the rule/sequence/matrix has **exactly one** deducible answer —
+double-solve it), and it must **not leak the key** (the answer-cell is a "?", the options are
+comparable standalone figures, none marked).
 
 ## Then validate and stop
 

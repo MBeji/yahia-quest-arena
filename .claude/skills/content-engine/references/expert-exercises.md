@@ -84,6 +84,24 @@ random neighbour value:
 5. Homogeneity check: same length/format/precision across options — the correct one must not be
    recognisable by form (cf. quality-bar "Homogeneous options").
 
+## Illustrate the spatial items — a hard geometry/analysis question needs its figure
+
+A difficulty-3/4 item is not exempt from illustration; it needs it MORE, because the reasoning is
+deeper. If the item is about a **shape, angle, circle, solid, repère/vecteur, a curve/graph to
+read, a scientific diagram, a figure or table to interpret**, it carries an inline `<svg>` — the
+figure is part of the challenge, not decoration. This is the question-side of the illustration
+doctrine (`course-figures.md`, one shared reference for courses and questions; question quality bar:
+`quality-bar.md` § "Illustrate what the question is about"). Non-negotiables for an expert item:
+
+- **The figure must be TRUE** — the whole point of a hard item is destroyed by a false figure.
+  Re-derive every coordinate; a bac analysis curve is **computed** (it passes through the stated
+  values and crosses where the sign changes). A wrong figure makes a correct question unanswerable.
+- **The figure must not LEAK the key** — show the scene, never the answer. For a "how many
+  solutions / which is true" item, draw the _forced_ configuration, not one that quietly implies the
+  wrong count (a single crossing under a "unique-solution-is-false" stem argues for the wrong answer).
+- **Pure computation stays figureless** — «calculer lim…», an algebraic manipulation: a graph there
+  is decoration or a spoiler. Illustrate the items where _reading the figure is the skill_.
+
 ## Verification protocol — double solve, then adversarial pass
 
 Hard items are where wrong keys hide. Before shipping an exercise:
@@ -93,9 +111,11 @@ Hard items are where wrong keys hide. Before shipping an exercise:
    order of magnitude, verify units).
 2. **Adversarial pass**: for each question, try to argue each distractor is defensible. If you can
    build a reasonable case for a second option, rewrite.
-3. Confirm every fact/date/constant used is on-program and correct (web-verify non-trivial ones;
+3. **Figure pass**: every spatial/visual item has its `<svg>`; each figure is TRUE (double-solved on
+   the figure) and leaks no key. Pure-computation items correctly have none.
+4. Confirm every fact/date/constant used is on-program and correct (web-verify non-trivial ones;
    cite in `chapter.json` `sources[]`).
-4. Run `npm run content:check` + `npm run content:qa:strict` — then stop and report (never
+5. Run `npm run content:check` + `npm run content:qa:strict` — then stop and report (never
    build/apply/push unless asked).
 
 ## The ladder-completion workflow (what a professor session does)

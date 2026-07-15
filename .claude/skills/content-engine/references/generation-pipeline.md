@@ -170,6 +170,11 @@ forgot the rebuild is caught there.
 - [ ] Existing ladder audited; new work fills upward, no rename/renumber, no duplicate questions.
 - [ ] Quality bar + self-verification (re-solve blind; executed-error distractors; notation standard;
       `الخطأ الشائع`/trap named on d3–4 — see `expert-exercises.md`).
+- [ ] **Illustration (cross-cutting — COURSE and QUESTIONS)**: every spatial/visual notion is drawn
+      (course `::: figure`; question inline `<svg>`), only where it serves, each figure **TRUE**
+      (double-solved on the figure) and leaking no key; young grades (1ère–3ème) illustrate almost
+      everything, colourfully. Doctrine `course-figures.md`; bars `course-quality.md` Axis 5 +
+      `quality-bar.md` § "Illustrate what the question is about".
 - [ ] `npm run content:check` ✓ · `npm run content:qa:strict` → 0 error.
 - [ ] `npm run content:build -- --subject <id>` → exactly one new migration; no stray full-build files.
 - [ ] `content/` files + the one migration staged together; report written; push/PR only if asked.
