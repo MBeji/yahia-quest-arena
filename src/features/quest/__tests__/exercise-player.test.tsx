@@ -124,13 +124,13 @@ function anonStrategy(overrides: Partial<ExercisePlayerStrategy> = {}): Exercise
   };
 }
 
-function renderPlayer(strategy: ExercisePlayerStrategy) {
+function renderPlayer(strategy: ExercisePlayerStrategy, variant: "classic" | "recall" = "classic") {
   const qc = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   });
   return render(
     <QueryClientProvider client={qc}>
-      <ExercisePlayer exerciseId={EXERCISE_ID} strategy={strategy} />
+      <ExercisePlayer exerciseId={EXERCISE_ID} strategy={strategy} variant={variant} />
     </QueryClientProvider>,
   );
 }
@@ -196,5 +196,40 @@ describe("ExercisePlayer", () => {
     expect(await screen.findByTestId("quest-score")).toBeInTheDocument();
     // The reward grid surfaces the earned XP amount.
     expect(screen.getByText(/120/)).toBeInTheDocument();
+  });
+});
+
+describe("ExercisePlayer — recall variant (étude 17)", () => {
+  beforeEach(() => {
+    mockGetExercise.mockReset().mockResolvedValue(exerciseData());
+    mockGetSubject.mockReset().mockResolvedValue({ chapters: [], exercises: [] });
+  });
+
+  it("replays a mastered mission as free text: banner shown, options gone, no hint button", async () => {
+    const strategy = anonStrategy({
+      capabilities: { rewards: true, hints: true, boss: false, next: false },
+    });
+    renderPlayer(strategy, "recall");
+
+    expect(await screen.findByTestId("recall-banner")).toBeInTheDocument();
+    // The free-text input replaces the radiogroup options (R-8).
+    expect(screen.getByTestId("recall-answer-input")).toBeInTheDocument();
+    expect(screen.queryAllByRole("radio")).toHaveLength(0);
+    // The variant is threaded to the data + session layers.
+    expect(mockGetExercise).toHaveBeenCalledWith(
+      expect.objectContaining({ data: expect.objectContaining({ variant: "recall" }) }),
+    );
+  });
+
+  it("surfaces the recall lock screen when the mission is not yet mastered", async () => {
+    const strategy = anonStrategy({
+      startSession: vi.fn().mockResolvedValue({ ok: false, kind: "recall", reason: "locked" }),
+    });
+    const { container } = renderPlayer(strategy, "recall");
+    // The lock reuses the quiz-lock CTA (replay in QCM), never the recall run.
+    await waitFor(() =>
+      expect(container.querySelector('a[href="/exercice/$exerciseId"]')).not.toBeNull(),
+    );
+    expect(screen.queryByTestId("recall-answer-input")).not.toBeInTheDocument();
   });
 });

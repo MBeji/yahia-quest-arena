@@ -230,6 +230,15 @@ export type TranslationKeys = {
     questionN: string;
     potionXpApplied: string;
     potionCoinsApplied: string;
+    // Recall mode (étude 17) — UI-locale strings (the content-language player
+    // labels live in buildQuestLabels). Result badge, classic-100% unlock
+    // celebration + CTA, and the subject-hub chip.
+    recallBadge: string;
+    recallUnlockedTitle: string;
+    recallUnlockedBody: string;
+    recallPlay: string;
+    recallChip: string;
+    recallLockedHint: string;
   };
   // Level up
   levelUp: {

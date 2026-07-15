@@ -11,6 +11,8 @@ export {
   revealHint,
   checkAnswersPublic,
   scoreQuizPublic,
+  RECALL_LOCKED_MESSAGE,
+  RECALL_NOT_ELIGIBLE_MESSAGE,
 } from "./quest.server";
 export type { ManuelPage } from "./quest.server";
 export { computeNextExerciseId } from "./next-exercise";

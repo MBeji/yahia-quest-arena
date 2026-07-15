@@ -1,8 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo } from "react";
+import { z } from "zod";
 import { ArrowLeft, Crown } from "lucide-react";
-import { revealHint, startExerciseSession, submitAttempt } from "@/features/quest";
+import {
+  RECALL_LOCKED_MESSAGE,
+  RECALL_NOT_ELIGIBLE_MESSAGE,
+  revealHint,
+  startExerciseSession,
+  submitAttempt,
+} from "@/features/quest";
 import {
   ExercisePlayer,
   type ExercisePlayerStrategy,
@@ -24,11 +31,17 @@ import { SubscriptionPaywall } from "@/features/subscription";
  */
 export const Route = createFileRoute("/_authenticated/quest/$exerciseId")({
   head: () => ({ meta: [{ title: "Quête · Na9ra Nal3ab" }] }),
+  // Recall mode (étude 17) travels as a search param. Optional (not defaulted in
+  // the schema) so every existing link to `/quest/$exerciseId` stays valid
+  // without passing a search — the component treats an absent value as classic.
+  validateSearch: (search) =>
+    z.object({ variant: z.enum(["classic", "recall"]).optional() }).parse(search),
   component: QuestPage,
 });
 
 function QuestPage() {
   const { exerciseId } = Route.useParams();
+  const { variant = "classic" } = Route.useSearch();
   const t = useT();
   const startSession = useServerFn(startExerciseSession);
   const submit = useServerFn(submitAttempt);
@@ -39,9 +52,9 @@ function QuestPage() {
       capabilities: { rewards: true, hints: true, boss: true, next: true },
       quizExerciseTo: "/quest/$exerciseId",
       homeTo: "/dashboard",
-      startSession: async ({ exerciseId: exId }): Promise<StartOutcome> => {
+      startSession: async ({ exerciseId: exId, variant: v }): Promise<StartOutcome> => {
         try {
-          const res = await startSession({ data: { exerciseId: exId } });
+          const res = await startSession({ data: { exerciseId: exId, variant: v } });
           return { ok: true, sessionId: res.sessionId };
         } catch (e) {
           const msg = e instanceof Error ? e.message : "";
@@ -50,6 +63,10 @@ function QuestPage() {
             return { ok: false, kind: "premium", message: msg };
           }
           if (msg.includes("quiz de compréhension")) return { ok: false, kind: "quiz" };
+          if (msg === RECALL_LOCKED_MESSAGE) return { ok: false, kind: "recall", reason: "locked" };
+          if (msg === RECALL_NOT_ELIGIBLE_MESSAGE) {
+            return { ok: false, kind: "recall", reason: "not-eligible" };
+          }
           throw e instanceof Error ? e : new Error(t.errors.sessionStartFailed);
         }
       },
@@ -122,7 +139,7 @@ function QuestPage() {
   // registers render identically.
   return (
     <div className="game-surface">
-      <ExercisePlayer exerciseId={exerciseId} strategy={strategy} />
+      <ExercisePlayer exerciseId={exerciseId} strategy={strategy} variant={variant} />
     </div>
   );
 }

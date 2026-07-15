@@ -58,6 +58,7 @@ function MatierePage() {
       bestByExercise={data.bestByExercise}
       quizPassedByChapter={data.quizPassedByChapter}
       parcours={data.parcours}
+      recall={data.recall}
       isAuthenticated={!!user}
     />
   );

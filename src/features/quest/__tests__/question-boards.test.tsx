@@ -16,6 +16,9 @@ const labels: QuestionInputLabels = {
   multiHint: "Sélectionne TOUTES les bonnes réponses.",
   unsupportedTitle: "⚠️ Question indisponible",
   unsupportedBody: "Type non pris en charge.",
+  recallPlaceholder: "Tape ta réponse",
+  recallHint: "Tape ta réponse, puis Entrée pour valider.",
+  recallInsertChar: "insérer {char}",
 };
 
 const steps = [

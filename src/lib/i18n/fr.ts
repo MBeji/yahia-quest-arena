@@ -231,6 +231,13 @@ export const fr: TranslationKeys = {
     questionN: "Question {n}",
     potionXpApplied: "Potion XP ×{x} appliquée !",
     potionCoinsApplied: "Potion Pièces ×{x} appliquée !",
+    recallBadge: "Rappel",
+    recallUnlockedTitle: "Mode Rappel débloqué !",
+    recallUnlockedBody:
+      "Rejoue cette mission sans les options — tape tes réponses, XP ×1,5 à la clé.",
+    recallPlay: "Jouer en Rappel",
+    recallChip: "🧠 Rappel",
+    recallLockedHint: "Termine d'abord la mission à 100 %",
   },
   levelUp: {
     title: "Niveau supérieur !",

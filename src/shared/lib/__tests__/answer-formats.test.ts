@@ -6,6 +6,7 @@ import {
   TIMEOUT_ANSWER_CHOICE,
   UNSUPPORTED_ANSWER_CHOICE,
 } from "@/shared/lib/answer-formats";
+import { RECALL_MAX_ANSWER_LENGTH } from "@/shared/constants/gamification";
 
 describe("answer-formats — isValidAnswerFormat", () => {
   it("accepts any bounded non-empty string for mcq (historical contract)", () => {
@@ -89,6 +90,22 @@ describe("answer-formats — isValidAnswerFormat", () => {
     expect(isValidAnswerFormat("matching", "l1:,l2:r1")).toBe(false); // empty right side
     expect(isValidAnswerFormat("matching", "l1:r2,l1:r2")).toBe(false); // duplicated pair
     expect(isValidAnswerFormat("matching", "b,a,c")).toBe(false); // ordering syntax
+  });
+
+  it("accepts free-text recall answers up to the tighter recall cap (étude 17)", () => {
+    expect(isValidAnswerFormat("recall", "Paris")).toBe(true);
+    // Recall answers may contain punctuation the CSV-based types would reject.
+    expect(isValidAnswerFormat("recall", "l'accord du participe passé")).toBe(true);
+    expect(isValidAnswerFormat("recall", "a,b:c")).toBe(true);
+    expect(isValidAnswerFormat("recall", "x".repeat(RECALL_MAX_ANSWER_LENGTH))).toBe(true);
+  });
+
+  it("rejects empty or over-cap recall answers", () => {
+    expect(isValidAnswerFormat("recall", "")).toBe(false);
+    expect(isValidAnswerFormat("recall", "   ")).toBe(false);
+    // The recall cap is tighter than the generic wire bound.
+    expect(RECALL_MAX_ANSWER_LENGTH).toBeLessThan(MAX_CHOICE_LENGTH);
+    expect(isValidAnswerFormat("recall", "x".repeat(RECALL_MAX_ANSWER_LENGTH + 1))).toBe(false);
   });
 });
 
