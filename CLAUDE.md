@@ -373,11 +373,12 @@ Arabic-Indic digits). Rule: `content-engine/references/math-and-notation.md`.
   slugs/subject-id conventions, the ar→fr language switch (native-French authoring, official
   jargon, no translation — décision 2026-07-13), bac-\* parcours (premium dormant), the full
   lycée mission ladder incl. `NN-annales-bac`, seed-migration spec and
-  phased rollout). Two **functional** how-to guides (audience: authors / product / ops, French)
+  phased rollout). Three **functional** how-to guides (audience: authors / product / ops, French)
   complement the normative specs above: `docs/guide-types-questions-natifs.md` (étude 03 — when to
-  use each native question type + the authoring shapes) and `docs/guide-duels-et-ligues.md` (étude
-  05 — the duel/league player flow, game constants, pg_cron jobs, optional Realtime, ops notes).
-  These defer
+  use each native question type + the authoring shapes), `docs/guide-duels-et-ligues.md` (étude
+  05 — the duel/league player flow, game constants, pg_cron jobs, optional Realtime, ops notes),
+  and `docs/guide-rappel-actif.md` (étude 17 — active recall: how a mastered QCM unlocks a
+  free-text replay worth 1.5× XP, eligibility/unlock rules, ops notes). These defer
   to CLAUDE.md / ARCHITECTURE.md for anything that overlaps.
 - **Epic studies (`FableEtudes/`).** Complete functional + technical architecture dossiers for
   the project's epics — 16 studies, from paiement en ligne (**gelée** post-pivot gratuité) to

@@ -409,7 +409,7 @@ Suivi produit : les sessions Rappel se comptent en SQL (`attempts WHERE variant=
 - [x] Lot 2 — RPCs variant-aware (le mode existe en base, aucune UI)
 - [x] Lot 3 — couche server fns/TS
 - [x] Lot 4 — UI complète + i18n
-- [ ] Lot 5 — e2e + docs + lexique
+- [x] Lot 5 — e2e + docs + lexique
 
 **Stop-points.** Lot 1–2 sont DB-only : ne toucher AUCUN fichier `src/` (le défaut
 `'classic'` garantit que le code déployé continue de fonctionner — DoD §7, migration
@@ -554,6 +554,20 @@ bestByExercise}` via `get_recall_availability` avec dégradation gracieuse (RPC 
   caret, RTL, a11y, palette vide masquée), `exercise-player` (bandeau, options remplacées, verrou),
   `subject-hub` (états chip), `answer-formats` (validation recall). Gate vert (lint incl. RTL/token
   guards, typecheck, 1322 tests vitest). Aucune migration (lot UI pur) ; registre public intact (R-9).
+  Suivi (même lot) : `validateSearch` réécrit en fonction plate sans `zod` — le schéma zod faisait
+  basculer l'heuristique de partage de Rollup et hissait toute la lib (~63 kB min) dans le chunk
+  `index` eager (434→498 kB, hors budget 450) ; validateur zéro-dépendance équivalent → index 435 kB.
+- 2026-07-15 — **Lot 5 livré** : e2e + docs. `e2e/authed/recall-mode.spec.ts` (maîtriser un QCM
+  100 % non-rushé → chip `recall-chip-unlocked` sur le hub → jouer en saisie libre `?variant=recall`
+  → review + XP créditée), helper `adminDb.recallReadyExercise()` (sélection d'une mission
+  non-scolaire à ≥ 3 questions éligibles + clé de réponse), Page Object `QuestPage.answerRecallAll`
+  - getters `recallBanner`/`recallInput`/`prompt`. Skip propre si le catalogue TEST n'a rien
+    d'éligible ; le ×1,5 exact reste épinglé par pgTAP R-5 (XP monotone sous utilisateur partagé).
+    Doc fonctionnel `docs/guide-rappel-actif.md` (parcours élève, déblocage, récompenses, ops,
+    constantes), ligne « rappel actif » ajoutée au lexique trilingue `content-voice-and-composition.md`
+    §2 (FR Rappel · EN Recall · AR استرجاع), `STATUS.md` §3/§4 (feature 🟢, étude 17 → Livrées),
+    `ARCHITECTURE.md` §8/§8b (colonnes `variant`, sous-section « Active recall »), guide listé dans
+    `CLAUDE.md`. Gate `ci:verify` vert. Aucune migration.
 
 ## 9. Annexe — audit d'éligibilité (mesuré le 2026-07-13, re-mesuré après l'amendement R-12/(i))
 
