@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo } from "react";
-import { z } from "zod";
 import { ArrowLeft, Crown } from "lucide-react";
 import {
   RECALL_LOCKED_MESSAGE,
@@ -31,11 +30,14 @@ import { SubscriptionPaywall } from "@/features/subscription";
  */
 export const Route = createFileRoute("/_authenticated/quest/$exerciseId")({
   head: () => ({ meta: [{ title: "Quête · Na9ra Nal3ab" }] }),
-  // Recall mode (étude 17) travels as a search param. Optional (not defaulted in
-  // the schema) so every existing link to `/quest/$exerciseId` stays valid
-  // without passing a search — the component treats an absent value as classic.
-  validateSearch: (search) =>
-    z.object({ variant: z.enum(["classic", "recall"]).optional() }).parse(search),
+  // Recall mode (étude 17) travels as a search param. Optional (not defaulted)
+  // so every existing link to `/quest/$exerciseId` stays valid without passing a
+  // search — the component treats an absent value as classic. Hand-rolled (no zod)
+  // to keep the validator out of the eager index chunk (bundle budget).
+  validateSearch: (search: Record<string, unknown>): { variant?: "classic" | "recall" } => {
+    const variant = search.variant;
+    return variant === "recall" || variant === "classic" ? { variant } : {};
+  },
   component: QuestPage,
 });
 
