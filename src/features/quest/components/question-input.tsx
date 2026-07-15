@@ -1,4 +1,4 @@
-import { useEffect, useMemo, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, type ReactNode } from "react";
 import { Check } from "lucide-react";
 import { isMathExpression, isRtlText } from "@/shared/lib/utils";
 import { isValidAnswerFormat, UNSUPPORTED_ANSWER_CHOICE } from "@/shared/lib/answer-formats";
@@ -37,6 +37,10 @@ export type QuestionInputLabels = {
   multiHint: string;
   unsupportedTitle: string;
   unsupportedBody: string;
+  // Recall mode (étude 17) — only the free-text input pieces are needed here.
+  recallPlaceholder: string;
+  recallHint: string;
+  recallInsertChar: string;
 };
 
 export type McqOptionRender = { option: DisplayOption; isSelected: boolean };
@@ -44,6 +48,12 @@ export type McqOptionRender = { option: DisplayOption; isSelected: boolean };
 export type QuestionInputProps = {
   /** questions.question_type — anything unknown renders the R-3 fallback. */
   questionType: string | null | undefined;
+  /**
+   * Play variant (étude 17). In "recall" the input is a free-text field (no
+   * options), regardless of `questionType` (the recall play set is served as
+   * mcq prompts). Defaults to "classic".
+   */
+  variant?: "classic" | "recall";
   /** Accessible name of the radiogroup (the question prompt). */
   prompt: string;
   /** Shuffled display options — mcq only (ignored by other types). */
@@ -57,6 +67,8 @@ export type QuestionInputProps = {
   /** The subject's content language is RTL (numeric entry stays LTR — R-4). */
   rtl?: boolean;
   labels: QuestionInputLabels;
+  /** Recall (étude 17, R-12): the static per-language "extra characters" palette. */
+  recallChars?: string[];
   /** Per-surface mcq option styling (quest vs boss vs dungeon feedback). */
   optionClassName: (state: McqOptionRender) => string;
   /** Per-surface trailing indicator (check / correct / wrong icons). */
@@ -64,6 +76,9 @@ export type QuestionInputProps = {
 };
 
 export function QuestionInput(props: QuestionInputProps) {
+  // Recall (étude 17) overrides the per-type input: a mastered QCM is replayed
+  // as free text, so the variant wins over questionType.
+  if (props.variant === "recall") return <RecallInput {...props} />;
   const type = props.questionType ?? "mcq";
   if (type === "numeric") return <NumericInput {...props} />;
   if (type === "ordering") return <OrderingBoard {...props} />;
@@ -147,6 +162,125 @@ function NumericInput({ value, onChange, onSubmit, disabled, rtl, labels }: Ques
       >
         {invalid ? labels.numericInvalid : labels.numericHint}
       </p>
+    </div>
+  );
+}
+
+function RecallInput({
+  value,
+  onChange,
+  onSubmit,
+  disabled,
+  rtl,
+  labels,
+  recallChars = [],
+  prompt,
+}: QuestionInputProps) {
+  const raw = value ?? "";
+  const inputRef = useRef<HTMLInputElement>(null);
+  return (
+    <div className="mt-6">
+      {/* Recall (étude 17): a free-text answer replaces the options. Unlike
+          `numeric`, the field follows the CONTENT language's direction (R-8) —
+          Arabic answers are typed RTL. Autocomplete/correct/spellcheck are off
+          so the phone keyboard can't suggest the answer. */}
+      <input
+        ref={inputRef}
+        type="text"
+        inputMode="text"
+        dir={rtl ? "rtl" : "ltr"}
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
+        spellCheck={false}
+        data-testid="recall-answer-input"
+        aria-label={prompt}
+        placeholder={labels.recallPlaceholder}
+        value={raw}
+        disabled={disabled}
+        onChange={(e) => onChange(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && raw.trim().length > 0) {
+            e.preventDefault();
+            onSubmit?.();
+          }
+        }}
+        className="w-full rounded-xl border border-border bg-black/40 px-4 py-3.5 text-lg outline-none transition focus:border-(--gold) focus:bg-black/70 disabled:opacity-50"
+      />
+      <RecallCharBar
+        chars={recallChars}
+        rtl={rtl}
+        disabled={disabled}
+        insertLabel={labels.recallInsertChar}
+        inputRef={inputRef}
+        value={raw}
+        onChange={onChange}
+      />
+      <p className="mt-2 text-xs text-muted-foreground/60" dir={rtl ? "rtl" : undefined}>
+        {labels.recallHint}
+      </p>
+    </div>
+  );
+}
+
+/**
+ * Recall "extra characters" bar (étude 17, R-12): a static per-language row of
+ * tappable chips that insert a hard-to-type character at the caret, keeping
+ * focus on the input. The palette is STATIC (never derived from the answer —
+ * that would leak it). Empty palette (e.g. English) → renders nothing.
+ */
+export function RecallCharBar({
+  chars,
+  rtl,
+  disabled,
+  insertLabel,
+  inputRef,
+  value,
+  onChange,
+}: {
+  chars: string[];
+  rtl?: boolean;
+  disabled?: boolean;
+  insertLabel: string;
+  inputRef: React.RefObject<HTMLInputElement | null>;
+  value: string;
+  onChange: (choice: string) => void;
+}) {
+  if (chars.length === 0) return null;
+  const insert = (char: string) => {
+    const el = inputRef.current;
+    const start = el?.selectionStart ?? value.length;
+    const end = el?.selectionEnd ?? value.length;
+    const next = value.slice(0, start) + char + value.slice(end);
+    onChange(next);
+    // Restore focus and place the caret after the inserted character once React
+    // has committed the new value.
+    const caret = start + char.length;
+    requestAnimationFrame(() => {
+      const node = inputRef.current;
+      if (!node) return;
+      node.focus();
+      node.setSelectionRange(caret, caret);
+    });
+  };
+  return (
+    <div
+      className="mt-3 flex flex-wrap gap-2"
+      dir={rtl ? "rtl" : "ltr"}
+      data-testid="recall-char-bar"
+    >
+      {chars.map((char) => (
+        <button
+          key={char}
+          type="button"
+          disabled={disabled}
+          aria-label={insertLabel.replace("{char}", char)}
+          onClick={() => insert(char)}
+          className="min-w-9 rounded-lg border border-border bg-black/40 px-2.5 py-1.5 text-sm transition hover:border-(--gold)/60 hover:bg-black/70 disabled:opacity-50 [@media(pointer:coarse)]:min-h-11"
+        >
+          {char}
+        </button>
+      ))}
     </div>
   );
 }

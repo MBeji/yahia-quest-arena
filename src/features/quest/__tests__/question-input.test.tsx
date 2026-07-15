@@ -18,6 +18,9 @@ const labels: QuestionInputLabels = {
   multiHint: "Sélectionne TOUTES les bonnes réponses.",
   unsupportedTitle: "⚠️ Question indisponible",
   unsupportedBody: "Ce type de question n'est pas encore pris en charge ici.",
+  recallPlaceholder: "Tape ta réponse",
+  recallHint: "Tape ta réponse, puis Entrée pour valider.",
+  recallInsertChar: "insérer {char}",
 };
 
 const options = [
@@ -185,6 +188,59 @@ describe("QuestionInput — B2 boards routing", () => {
       ],
     });
     expect(screen.getByTestId("matching-board")).toBeInTheDocument();
+  });
+});
+
+describe("QuestionInput — recall (étude 17 free-text)", () => {
+  it("renders a free-text input following the content direction and forwards typed text", () => {
+    const { onChange } = renderInput({ variant: "recall", options: [], rtl: true });
+    const input = screen.getByTestId("recall-answer-input");
+    // R-8: recall follows the CONTENT language direction (unlike numeric).
+    expect(input).toHaveAttribute("dir", "rtl");
+    expect(input).toHaveAttribute("autocomplete", "off");
+    expect(input).toHaveAttribute("spellcheck", "false");
+    expect(input).toHaveAttribute("placeholder", labels.recallPlaceholder);
+    expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
+    fireEvent.change(input, { target: { value: "Paris" } });
+    expect(onChange).toHaveBeenCalledWith("Paris");
+  });
+
+  it("submits a non-empty answer on Enter but ignores an empty one", () => {
+    const blank = renderInput({ variant: "recall", options: [], value: "  " });
+    fireEvent.keyDown(blank.getByTestId("recall-answer-input"), { key: "Enter" });
+    expect(blank.onSubmit).not.toHaveBeenCalled();
+
+    const filled = renderInput({ variant: "recall", options: [], value: "42" });
+    const inputs = filled.getAllByTestId("recall-answer-input");
+    fireEvent.keyDown(inputs[inputs.length - 1], { key: "Enter" });
+    expect(filled.onSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it("shows the char bar for a non-empty palette and inserts a character at the caret", () => {
+    const { onChange } = renderInput({
+      variant: "recall",
+      options: [],
+      value: "e",
+      recallChars: ["é", "è"],
+    });
+    const bar = screen.getByTestId("recall-char-bar");
+    expect(bar).toBeInTheDocument();
+    const chip = screen.getByRole("button", {
+      name: labels.recallInsertChar.replace("{char}", "é"),
+    });
+    fireEvent.click(chip);
+    expect(onChange).toHaveBeenCalledWith("eé");
+  });
+
+  it("hides the char bar entirely for an empty palette (e.g. English — R-12)", () => {
+    renderInput({ variant: "recall", options: [], recallChars: [] });
+    expect(screen.queryByTestId("recall-char-bar")).not.toBeInTheDocument();
+  });
+
+  it("wins over questionType — a recall-variant mcq is still free text", () => {
+    renderInput({ variant: "recall", questionType: "mcq", options });
+    expect(screen.getByTestId("recall-answer-input")).toBeInTheDocument();
+    expect(screen.queryByRole("radiogroup")).not.toBeInTheDocument();
   });
 });
 

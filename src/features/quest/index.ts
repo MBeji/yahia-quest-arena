@@ -13,6 +13,9 @@ export {
   scoreQuizPublic,
 } from "./quest.server";
 export type { ManuelPage } from "./quest.server";
+// Zero-import module — importing these plain strings must NOT pull the server
+// module into the client `index` chunk (bundle-budget regression, étude 17).
+export { RECALL_LOCKED_MESSAGE, RECALL_NOT_ELIGIBLE_MESSAGE } from "./recall-messages";
 export { computeNextExerciseId } from "./next-exercise";
 export { noXpReason } from "./no-xp-reason";
 export { exerciseRouteFor } from "./exercise-route";

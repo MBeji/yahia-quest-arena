@@ -152,3 +152,33 @@ export const DUEL_REWARDS = {
  * mirrors the rule for the lock/preview affordances in the UI.
  */
 export const FREE_PREVIEW_MAX_DIFFICULTY = 1;
+
+// --- Recall mode (étude 17) — mirrors the SQL constants of the recall
+// migrations; the server gates are authoritative, these drive the UI. ---
+
+/**
+ * XP multiplier for a successful recall session (R-5). Mirrors the `1.5`
+ * factor in `submit_exercise_attempt`'s recall branch — playing without the
+ * options is harder, so it pays more (same anti-farm gates apply).
+ */
+export const RECALL_XP_MULTIPLIER = 1.5;
+
+/**
+ * Minimum recall-eligible questions for a mission to offer the recall mode
+ * (R-2). Below this the chip is never shown (US-6, no dead end). Mirrors the
+ * `>= 3` eligibility check in `get_recall_availability` / the start gate.
+ */
+export const RECALL_MIN_QUESTIONS = 3;
+
+/**
+ * Classic score (%) that unlocks a mission's recall mode (R-3): a 100% classic
+ * run (not rushed). Mirrors the `score_pct = 100` unlock check server-side.
+ */
+export const RECALL_UNLOCK_SCORE_PCT = 100;
+
+/**
+ * Client-side cap on a typed recall answer's length. Eligible target answers
+ * are 1–60 chars by construction (R-2c), so 120 is generous; the wire bound
+ * stays `MAX_CHOICE_LENGTH` (512). Purely a UI guard against runaway input.
+ */
+export const RECALL_MAX_ANSWER_LENGTH = 120;

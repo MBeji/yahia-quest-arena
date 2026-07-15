@@ -1,28 +1,26 @@
-import { Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Loader2, Trophy, Skull, Heart, BookOpen, Check } from "lucide-react";
+import { Loader2, Skull, Heart, Check } from "lucide-react";
 import { toast } from "sonner";
 import { computeNextExerciseId, getExercise, getSubject } from "@/features/quest";
-import { PASS_THRESHOLD_PCT, QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
+import { PASS_THRESHOLD_PCT, RECALL_MIN_QUESTIONS } from "@/shared/constants/gamification";
 import { shuffleOptions, type BaseOption } from "@/shared/lib/question-utils";
 import { isValidAnswerFormat, TIMEOUT_ANSWER_CHOICE } from "@/shared/lib/answer-formats";
 import { isolateLtrRuns } from "@/shared/lib/bidi";
 import { RichField } from "@/components/ui/svg-figure";
 import { QuestionInput, type McqOptionRender } from "@/features/quest/components/question-input";
 import { levelForXp } from "@/shared/lib/level";
-import { noXpReason } from "@/features/quest/no-xp-reason";
-import { QuestRewardGrid } from "@/features/quest/components/quest-reward-grid";
-import { QuestReviewList } from "@/features/quest/components/quest-review-list";
+import { QuestResultScreen } from "@/features/quest/components/quest-result-screen";
 import { QuizContractHint, QuizLockScreen } from "@/features/quest/components/quiz-lock-screen";
 import { QuestHintButton } from "@/features/quest/components/quest-hint-button";
 import { BossCountdown } from "@/features/quest/components/boss-countdown";
-import { buildQuestLabels, type QuestContentLang } from "@/features/quest/quest-labels";
-import { Confetti } from "@/features/quest/components/confetti";
-import { LevelUpCelebration } from "@/components/ui/level-up-celebration";
-import { ExplainHint } from "@/components/ui/explain-hint";
+import {
+  buildQuestLabels,
+  RECALL_CHAR_BAR,
+  type QuestContentLang,
+} from "@/features/quest/quest-labels";
 import { useT } from "@/lib/i18n";
 import { LoadingState } from "@/components/ui/loading-state";
 import { BackLink } from "@/components/ui/back-link";
@@ -80,7 +78,10 @@ export type PlayerResult = {
 export type StartOutcome =
   | { ok: true; sessionId: string }
   | { ok: false; kind: "quiz" }
-  | { ok: false; kind: "premium"; message: string };
+  | { ok: false; kind: "premium"; message: string }
+  // Recall gates (étude 17): the classic run isn't mastered yet ("locked") or
+  // the mission can't be played in recall at all ("not-eligible").
+  | { ok: false; kind: "recall"; reason: "locked" | "not-eligible" };
 
 export type ExercisePlayerStrategy = {
   capabilities: { rewards: boolean; hints: boolean; boss: boolean; next: boolean };
@@ -93,6 +94,7 @@ export type ExercisePlayerStrategy = {
     quizGated: boolean;
     chapterId: string | null;
     mode: string;
+    variant: "classic" | "recall";
   }) => Promise<StartOutcome>;
   submit: (args: {
     sessionId: string;
@@ -125,9 +127,11 @@ export type ExercisePlayerStrategy = {
 export function ExercisePlayer({
   exerciseId,
   strategy,
+  variant = "classic",
 }: {
   exerciseId: string;
   strategy: ExercisePlayerStrategy;
+  variant?: "classic" | "recall";
 }) {
   const t = useT();
   const scaleIn = useEntrance("scale");
@@ -139,10 +143,11 @@ export function ExercisePlayer({
   const fetchExercise = useServerFn(getExercise);
   const fetchSubjectForNext = useServerFn(getSubject);
   const { capabilities } = strategy;
+  const isRecall = variant === "recall";
 
   const { data, isLoading } = useQuery({
-    queryKey: ["exercise", exerciseId],
-    queryFn: () => fetchExercise({ data: { exerciseId } }),
+    queryKey: ["exercise", exerciseId, variant],
+    queryFn: () => fetchExercise({ data: { exerciseId, variant } }),
   });
 
   const subjectIdForNext = data?.exercise?.subject_id ?? null;
@@ -158,6 +163,13 @@ export function ExercisePlayer({
     if (!sd || !cur) return null;
     return computeNextExerciseId(sd.chapters, sd.exercises, cur);
   }, [siblingSubjectQuery.data, data]);
+
+  // Recall (étude 17, US-1): a classic 100% run unlocks this mission's recall
+  // mode, but only if the mission is recall-eligible (>= 3 eligible questions).
+  // The count rides the same getSubject round-trip as the best/next lookups.
+  const recallEligibleCount =
+    siblingSubjectQuery.data?.recall?.eligibleByExercise?.[exerciseId] ?? 0;
+  const recallUnlockable = !isRecall && recallEligibleCount >= RECALL_MIN_QUESTIONS;
 
   const [idx, setIdx] = useState(0);
   const [answers, setAnswers] = useState<PlayerAnswer[]>([]);
@@ -180,6 +192,7 @@ export function ExercisePlayer({
       quizGated: boolean;
       chapterId: string | null;
       mode: string;
+      variant: "classic" | "recall";
     }) => strategy.startSession(payload),
     onSuccess: (outcome) => {
       if (outcome.ok) {
@@ -264,6 +277,11 @@ export function ExercisePlayer({
   const getDisplayChoice = useCallback(
     (questionId: string, choice: string) => {
       if (!choice) return "-";
+      // Recall (étude 17): the answer is free text, options are empty by
+      // construction — show the raw typed/expected text, LTR-isolated. Skipping
+      // the option/CSV lookups avoids a comma/colon in the text hitting the B2
+      // branch by accident.
+      if (isRecall) return isolateLtrRuns(choice);
       const opts = shuffledOptionsByQuestionId.get(questionId) ?? [];
       // mcq: show the option's display letter.
       const direct = opts.find((opt) => opt.id === choice)?.displayId;
@@ -290,7 +308,7 @@ export function ExercisePlayer({
       // Otherwise (numeric value, give-up sentinel): the raw answer, LTR-isolated.
       return isolateLtrRuns(choice);
     },
-    [shuffledOptionsByQuestionId],
+    [shuffledOptionsByQuestionId, isRecall],
   );
 
   const total = questions.length;
@@ -300,7 +318,10 @@ export function ExercisePlayer({
   // The answer must match its type's wire format before it can be validated
   // (the server rejects malformed payloads with a client error). mcq option
   // ids and the boards' generated CSVs always pass; a half-typed number doesn't.
-  const canValidate = Boolean(selected && isValidAnswerFormat(currentType, selected));
+  // In recall the play set is served as mcq prompts but answered as free text,
+  // so validation uses the "recall" effective format (non-empty, bounded).
+  const effectiveType = isRecall ? "recall" : currentType;
+  const canValidate = Boolean(selected && isValidAnswerFormat(effectiveType, selected));
   const progress = useMemo(() => (total > 0 ? (idx / total) * 100 : 0), [idx, total]);
   const isQuiz = data?.exercise?.mode === "quiz";
   // Boss chrome + time pressure are a connected perk; an anon visitor plays a
@@ -410,8 +431,9 @@ export function ExercisePlayer({
       quizGated: data?.quizGated ?? false,
       chapterId: (ex.chapter_id as string | null) ?? null,
       mode: (ex.mode as string | null) ?? "",
+      variant,
     });
-  }, [data, result, sessionId, startGate, startSessionMutate]);
+  }, [data, result, sessionId, startGate, startSessionMutate, variant]);
 
   const advanceWithChoice = useCallback(
     (choice: string) => {
@@ -500,170 +522,63 @@ export function ExercisePlayer({
     );
   }
 
-  if (result) {
-    const passed = result.scorePct >= (isQuiz ? QUIZ_PASS_THRESHOLD_PCT : PASS_THRESHOLD_PCT);
-    const resultLevel = Number(result.profile?.level ?? 1);
+  // Recall gates (étude 17): the mission's recall mode is locked (classic not
+  // mastered) or not eligible. Same lock pattern as the quiz gate; the CTA is
+  // "replay this mission in QCM" (classic) instead of "take the quiz".
+  if (startGate?.kind === "recall") {
+    const locked = startGate.reason === "locked";
     return (
-      <PageShell width="narrow" className="py-12" dir={isRtlSubject ? "rtl" : undefined}>
-        {capabilities.rewards && showConfetti && <Confetti />}
-        {capabilities.rewards && (
-          <LevelUpCelebration
-            show={showLevelUp}
-            newLevel={resultLevel}
-            xpGained={result.xpEarned}
-            onComplete={() => setShowLevelUp(false)}
-          />
-        )}
-        <motion.div
-          {...scaleIn}
-          className="relative overflow-hidden rounded-3xl border border-gold/40 bg-black/60 p-8 text-center backdrop-blur-xl shadow-gold"
-        >
-          <div className="absolute -top-20 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full bg-gold/30 blur-3xl" />
-          <div className="relative">
-            <div className="animate-gold-pulse mx-auto grid h-20 w-20 place-items-center rounded-2xl bg-[image:var(--gradient-gold)]">
-              <Trophy className="h-10 w-10 text-primary-foreground" />
-            </div>
-            <h1 className="mt-5 font-display text-3xl font-bold">
-              {passed ? t.quest.victoryTitle : t.quest.niceTriTitle}
-            </h1>
-            <p className="mt-1 text-muted-foreground" data-testid="quest-score">
-              <ExplainHint
-                text={t.explain.questResultScore
-                  .replace("{correct}", String(result.correct))
-                  .replace("{total}", String(result.total))}
-              >
-                {t.quest.resultScore
-                  .replace("{correct}", String(result.correct))
-                  .replace("{total}", String(result.total))
-                  .replace("{pct}", String(Math.round(result.scorePct)))}
-              </ExplainHint>
-            </p>
-            <p className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">
-              {/* "Server-validated" only holds on the connected strategy — anon measures client-side. */}
-              {(strategy.capabilities.rewards
-                ? t.quest.serverValidatedTime
-                : t.quest.timeSpent
-              ).replace("{n}", String(result.durationSeconds))}
-            </p>
-            {isQuiz && (
-              <div
-                className={`mt-4 rounded-2xl border p-4 text-sm font-semibold ${
-                  passed && !result.quizTooFast
-                    ? "border-success/40 bg-success/10 text-success"
-                    : "border-neon-gold/50 bg-neon-gold/10 text-neon-gold"
-                }`}
-                dir={isRtlSubject ? "rtl" : undefined}
-              >
-                {result.quizTooFast
-                  ? QL.quizTooFast
-                  : passed
-                    ? QL.quizPassedBanner
-                    : QL.quizFailedBanner}
-                {(!passed || result.quizTooFast) && chapterId && (
-                  <Link
-                    to="/chapitre/$chapterId"
-                    params={{ chapterId }}
-                    className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2 text-xs font-bold text-primary-foreground shadow-gold hover:scale-105"
-                  >
-                    <BookOpen className="h-4 w-4" /> {QL.review}
-                  </Link>
-                )}
-              </div>
-            )}
-            {capabilities.rewards && result.xpEarned === 0 && (
-              <div className="mt-6 rounded-xl border border-gold/30 bg-gold/5 p-3 text-center text-xs text-gold">
-                {noXpReason(result)}
-              </div>
-            )}
-            {capabilities.rewards && result.potionApplied && (
-              <div className="mt-6 rounded-xl border border-gold/40 bg-gold/10 p-3 text-center text-sm font-bold text-gold">
-                {result.potionApplied.xpMultiplier > 1
-                  ? t.quest.potionXpApplied.replace(
-                      "{x}",
-                      String(result.potionApplied.xpMultiplier),
-                    )
-                  : t.quest.potionCoinsApplied.replace(
-                      "{x}",
-                      String(result.potionApplied.coinMultiplier),
-                    )}
-              </div>
-            )}
-            {capabilities.rewards && (
-              <>
-                <QuestRewardGrid
-                  xpEarned={result.xpEarned}
-                  coinsEarned={result.coinsEarned ?? 0}
-                  level={(result.profile?.level as number | string) ?? "?"}
-                  streak={(result.profile?.current_streak as number) ?? 0}
-                />
-                <div className="mt-6 text-xs uppercase tracking-widest text-[color:var(--champagne)]">
-                  {result.profile?.hero_class as string}
-                </div>
-                {result.unlockedBadges.length > 0 && (
-                  <div className="mt-6 rounded-2xl border border-neon-gold/30 bg-neon-gold/10 p-4 text-start">
-                    <div className="text-xs uppercase tracking-widest text-neon-gold">
-                      {t.quest.badgesUnlocked}
-                    </div>
-                    <div className="mt-3 flex flex-wrap gap-3">
-                      {result.unlockedBadges.map((badge) => (
-                        <div key={badge.code} className="rounded-xl bg-black/70 px-4 py-3">
-                          <div className="font-display text-sm font-bold">{badge.name}</div>
-                          <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                            {badge.rarity}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {result.retryShieldUsed && (
-                  <div className="mt-6 rounded-xl border border-gold/40 bg-gold/10 p-3 text-center text-sm font-bold text-gold">
-                    {t.quest.retryShieldUsed}
-                  </div>
-                )}
-              </>
-            )}
+      <QuizLockScreen
+        title={locked ? QL.recallLockedTitle : QL.recallNotEligibleTitle}
+        body={locked ? QL.recallLockedBody : QL.recallNotEligibleBody}
+        takeQuizLabel={QL.recallReplayQcm}
+        reviewLabel={QL.review}
+        backLabel={QL.back}
+        quizId={exerciseId}
+        chapterId={chapterId}
+        subjectId={exSubjectId}
+        rtl={isRtlSubject}
+        quizExerciseTo={strategy.quizExerciseTo}
+      />
+    );
+  }
 
-            {strategy.renderResultFooter({
-              exerciseId,
-              subjectId: exSubjectId,
-              nextExerciseId,
-              onReplay: resetRun,
-              result,
-            })}
-
-            {!isQuiz && !result.reviewHidden && result.review.length > 0 && (
-              <QuestReviewList
-                review={result.review}
-                labels={{
-                  questReview: t.quest.questReview,
-                  questionN: t.quest.questionN,
-                  passed: t.quest.passed,
-                  needsWork: t.quest.needsWork,
-                  yourAnswer: t.quest.yourAnswer,
-                  correctAnswer: t.quest.correctAnswer,
-                }}
-                resolvePrompt={(questionId) => promptByQuestionId.get(questionId) ?? ""}
-                getDisplayChoice={getDisplayChoice}
-              />
-            )}
-          </div>
-        </motion.div>
-      </PageShell>
+  if (result) {
+    return (
+      <QuestResultScreen
+        result={result}
+        isQuiz={isQuiz}
+        isRtl={isRtlSubject}
+        isRecall={isRecall}
+        rewards={capabilities.rewards}
+        recallUnlockable={recallUnlockable}
+        qlang={qlang}
+        chapterId={chapterId}
+        subjectId={exSubjectId}
+        exerciseId={exerciseId}
+        nextExerciseId={nextExerciseId}
+        showConfetti={showConfetti}
+        showLevelUp={showLevelUp}
+        onLevelUpComplete={() => setShowLevelUp(false)}
+        onReplay={resetRun}
+        renderResultFooter={strategy.renderResultFooter}
+        resolvePrompt={(questionId) => promptByQuestionId.get(questionId) ?? ""}
+        getDisplayChoice={getDisplayChoice}
+      />
     );
   }
 
   if (!sessionId && !sessionMutation.isError) return preparingScreen;
 
   function handleSelect(optId: string) {
-    // Discrete taps get a blip; typed input (numeric) would fire on every
-    // keystroke, so it stays silent.
-    if (currentType === "mcq" || currentType === "multi") play("select");
+    // Discrete taps get a blip; typed input (numeric, recall free text) would
+    // fire on every keystroke, so it stays silent.
+    if (!isRecall && (currentType === "mcq" || currentType === "multi")) play("select");
     setSelected(optId);
   }
 
   const options = current ? (shuffledOptionsByQuestionId.get(current.id) ?? []) : [];
-  const canUseHints = !isQuiz && !bossMode && capabilities.hints;
+  const canUseHints = !isQuiz && !bossMode && capabilities.hints && !isRecall;
   const currentHintRevealed = current ? current.id in revealedHints : false;
 
   return (
@@ -674,6 +589,16 @@ export function ExercisePlayer({
         </BackLink>
       ) : (
         <BackLink to={strategy.homeTo}>{t.quest.leaveQuest}</BackLink>
+      )}
+
+      {isRecall && (
+        <div
+          className="mb-6 rounded-2xl border border-(--gold)/40 bg-(--gold)/5 px-4 py-3 text-center text-sm font-bold text-(--gold)"
+          data-testid="recall-banner"
+          dir={isRtlSubject ? "rtl" : undefined}
+        >
+          {QL.recallBanner}
+        </div>
       )}
 
       {bossMode && (
@@ -764,6 +689,7 @@ export function ExercisePlayer({
           </p>
           <QuestionInput
             questionType={currentType}
+            variant={variant}
             prompt={current.prompt}
             options={options}
             value={selected}
@@ -771,6 +697,7 @@ export function ExercisePlayer({
             onSubmit={validate}
             rtl={isRtlSubject}
             labels={QL}
+            recallChars={RECALL_CHAR_BAR[qlang]}
             optionClassName={({ isSelected }: McqOptionRender) =>
               `active:scale-[0.97] ${
                 isSelected
@@ -792,7 +719,7 @@ export function ExercisePlayer({
             }
           />
 
-          {currentType === "mcq" && (
+          {currentType === "mcq" && !isRecall && (
             <div className="mt-3 text-center text-xs text-muted-foreground/60 hidden sm:block">
               {t.quest.keyboardHint.replace("{keys1}", "1-4").replace("{keys2}", "A-D")}
             </div>

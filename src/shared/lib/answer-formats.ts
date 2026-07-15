@@ -11,6 +11,8 @@
  * Shared by the quest and dungeon server fns (features never import features).
  */
 
+import { RECALL_MAX_ANSWER_LENGTH } from "@/shared/constants/gamification";
+
 /** Upper bound for any answer string — generous for the B2/B3 CSV encodings. */
 export const MAX_CHOICE_LENGTH = 512;
 
@@ -81,6 +83,8 @@ function isValidMultiChoice(value: string): boolean {
  * - `ordering` → the arranged sequence as a unique-id CSV ("b,a,d,c");
  * - `matching` → the associations as a unique "left:right" pair CSV;
  * - `multi` → the checked ids as a unique-id CSV ("a,c");
+ * - `recall` → any non-empty string, capped tighter (≤ RECALL_MAX_ANSWER_LENGTH)
+ *   than the wire bound — the typed free-text answer (étude 17);
  * - `mcq` → any non-empty bounded string, the historical contract.
  */
 export function isValidAnswerFormat(
@@ -94,6 +98,7 @@ export function isValidAnswerFormat(
   if (questionType === "ordering") return isValidOrderingChoice(value);
   if (questionType === "matching") return isValidMatchingChoice(value);
   if (questionType === "multi") return isValidMultiChoice(value);
+  if (questionType === "recall") return value.length <= RECALL_MAX_ANSWER_LENGTH;
   return true;
 }
 

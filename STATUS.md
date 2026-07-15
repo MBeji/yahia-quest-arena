@@ -107,6 +107,11 @@ Source de vérité : [FableEtudes/README.md](./FableEtudes/README.md) (index) + 
 > campagne), mais le rendu existe déjà (`SvgFigure`) et la détection est par-question, à l'échelle
 > de 18 708 items dont 780 illustrés (4,2 %). Ne pas confondre les deux backlogs.
 
+> **La campagne ci-dessus ne concerne QUE les cours** (`cours.md`/`resume.md`). Le pendant côté
+> **questions & exercices** est l'**étude 19** (brouillon) : mêmes principes (doctrine + gate +
+> campagne), mais le rendu existe déjà (`SvgFigure`) et la détection est par-question, à l'échelle
+> de 18 708 items dont 780 illustrés (4,2 %). Ne pas confondre les deux backlogs.
+
 - **En exécution** : 04 (adaptatif — A0 fait, A1+ à venir) · 15 (contenu & composition — lots 0-6 livrés / 14) · 16 (ouverture lycée — lots 0-3 livrés, PRs #367/#369/#371/#375 ; campagne §4bis vague A **en cours : `math-1ere-sec` complète 16/16 et parcours `ecole-1ere-sec` OUVERT le 2026-07-13** — PRs #397/#398/#402/#404 + migration `20260713180000_open_ecole_1ere_sec_parcours` ; reste 4 autres matières 1ère sec ; génération native fr sans traduction, décision 2026-07-13)
 - **Validées (prêtes à exécuter)** : 17 (rappel actif — QCM rejoués en saisie libre, arbitrée 2026-07-13).
 - **Brouillons** (non validées) : 02 (examen blanc*) · 06 (PWA) · 07 (knowledge graph*) · 08 (analytics familles*) · 09 (économie du jeu) · 10 (anti-fraude) · 12 (studio d'ingestion) · **19 (questions & exercices illustrés — pendant de l'étude 18 côté questions ; le rendu existe déjà (`SvgFigure`), l'enjeu est la détection par-question à l'échelle : 780/18 708 questions illustrées (4,2 %) ; lot 1 = doctrine + gate signalant les questions spatiales sans figure, exécutable dès sa Q-1 tranchée ; Q-1…Q-4 ouvertes)**.

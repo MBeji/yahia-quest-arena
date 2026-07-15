@@ -196,3 +196,111 @@ describe("SubjectHub", () => {
     expect(container.querySelector('div[dir="rtl"]')).not.toBeNull();
   });
 });
+
+describe("SubjectHub — recall chip (étude 17, US-6)", () => {
+  const openC1 = { c1: true, c2: true };
+
+  it("unlocked: an eligible + mastered mission links into the recall run with its best score", () => {
+    const { container } = render(
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        quizPassedByChapter={openC1}
+        isAuthenticated={true}
+        recall={{
+          eligibleByExercise: { e2: 5 },
+          unlockedByExercise: { e2: true },
+          bestByExercise: { e2: 88 },
+        }}
+      />,
+    );
+    expandAll(container);
+    const chip = screen.getByTestId("recall-chip-unlocked");
+    expect(chip).toBeInTheDocument();
+    expect(chip.getAttribute("href")).toBe("/quest/$exerciseId");
+    expect(screen.getByText(/88%/)).toBeInTheDocument();
+  });
+
+  it("locked: eligible but not mastered shows the inert lock, never a link", () => {
+    const { container } = render(
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        quizPassedByChapter={openC1}
+        isAuthenticated={true}
+        recall={{
+          eligibleByExercise: { e2: 5 },
+          unlockedByExercise: {},
+          bestByExercise: {},
+        }}
+      />,
+    );
+    expandAll(container);
+    expect(screen.getByTestId("recall-chip-locked")).toBeInTheDocument();
+    expect(screen.queryByTestId("recall-chip-unlocked")).not.toBeInTheDocument();
+  });
+
+  it("absent below RECALL_MIN_QUESTIONS eligible questions (no dead end)", () => {
+    const { container } = render(
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        quizPassedByChapter={openC1}
+        isAuthenticated={true}
+        recall={{
+          eligibleByExercise: { e2: 2 },
+          unlockedByExercise: { e2: true },
+          bestByExercise: {},
+        }}
+      />,
+    );
+    expandAll(container);
+    expect(screen.queryByTestId("recall-chip-locked")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("recall-chip-unlocked")).not.toBeInTheDocument();
+  });
+
+  it("absent for anonymous visitors (R-9) and on quiz rows", () => {
+    const { container } = render(
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        quizPassedByChapter={openC1}
+        isAuthenticated={false}
+        recall={{
+          eligibleByExercise: { e1: 5, e2: 5 },
+          unlockedByExercise: { e1: true, e2: true },
+          bestByExercise: {},
+        }}
+      />,
+    );
+    expandAll(container);
+    // anon → nothing at all
+    expect(screen.queryByTestId("recall-chip-unlocked")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("recall-chip-locked")).not.toBeInTheDocument();
+  });
+
+  it("absent on the quiz row even when signed-in and eligible", () => {
+    const { container } = render(
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        quizPassedByChapter={openC1}
+        isAuthenticated={true}
+        recall={{
+          eligibleByExercise: { e1: 5 },
+          unlockedByExercise: { e1: true },
+          bestByExercise: {},
+        }}
+      />,
+    );
+    expandAll(container);
+    // e1 is the quiz mission → no recall chip, only e-row chips would appear.
+    expect(screen.queryByTestId("recall-chip-unlocked")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("recall-chip-locked")).not.toBeInTheDocument();
+  });
+});

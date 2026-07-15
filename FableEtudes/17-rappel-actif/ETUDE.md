@@ -408,7 +408,7 @@ Suivi produit : les sessions Rappel se comptent en SQL (`attempts WHERE variant=
 - [x] Lot 1 — fondations SQL pures (rien d'appelable par le client)
 - [x] Lot 2 — RPCs variant-aware (le mode existe en base, aucune UI)
 - [x] Lot 3 — couche server fns/TS
-- [ ] Lot 4 — UI complète + i18n
+- [x] Lot 4 — UI complète + i18n
 - [ ] Lot 5 — e2e + docs + lexique
 
 **Stop-points.** Lot 1–2 sont DB-only : ne toucher AUCUN fichier `src/` (le défaut
@@ -532,6 +532,28 @@ bestByExercise}` via `get_recall_availability` avec dégradation gracieuse (RPC 
   review sourcée du `perQuestion`, erreurs localisées, dispo + dégradation) + contrats de shape
   non-régression mis à jour. Gate vert (lint/typecheck/1307 tests vitest). Aucune migration
   (lot pur TS) ; aucun composant UI (réservé au lot 4).
+- 2026-07-15 — **Lot 4 livré** : couche UI complète + i18n ×3 + constantes gamification.
+  Constantes (`gamification.ts`) : `RECALL_XP_MULTIPLIER = 1.5` (R-5), `RECALL_MIN_QUESTIONS = 3`,
+  `RECALL_UNLOCK_SCORE_PCT = 100`, `RECALL_MAX_ANSWER_LENGTH = 120`. `answer-formats.ts` :
+  type effectif `recall` (non vide ≤ 120, accepte la ponctuation que les CSV rejettent).
+  `QuestionInput` reçoit `variant` : en `recall` il rend `RecallInput` (champ libre, `dir` =
+  langue de contenu R-8, autocomplete/correct/spellcheck off, Entrée valide si non vide) +
+  `RecallCharBar` (palette STATIQUE par langue R-12, insertion au caret, `type=button` + aria,
+  RTL, rien si palette vide → anglais). `RECALL_CHAR_BAR` vit dans `quest-labels.ts` (contenu UI,
+  jamais dérivé de la réponse — anti-fuite). `exercise-player.tsx` : prop `variant`, clé/fn de
+  query portant `variant`, bandeau Rappel (testid `recall-banner`), écran verrou `recall`
+  (LOCKED/NOT_ELIGIBLE via `QuizLockScreen`, CTA « rejouer en QCM »), pas d'indice (R-11),
+  `getDisplayChoice` recall-aware (texte libre, jamais branche CSV B2), célébration de déblocage
+  après un 100 % classique (`?variant=recall`). Écran résultat extrait dans un nouveau composant
+  `quest-result-screen.tsx` (badge Rappel + déblocage) pour rester sous le plafond `max-lines`.
+  Route `quest.$exerciseId.tsx` : `validateSearch` (`variant?` optionnel — `.default()` rendrait
+  `search` obligatoire sur tous les `<Link>`), défaut à la destructuration. `SubjectHub` : chip
+  « 🧠 Rappel » par mission (3 états US-6 : absent < 3 éligibles/anon/quiz, verrou inerte, lien
+  déverrouillé + meilleur score), gardé sur `isAuthenticated` (R-9). i18n `t.quest.recall*` ×3
+  (badge, déblocage, chip). Tests co-localisés : `question-input` (recall + char bar : insertion
+  caret, RTL, a11y, palette vide masquée), `exercise-player` (bandeau, options remplacées, verrou),
+  `subject-hub` (états chip), `answer-formats` (validation recall). Gate vert (lint incl. RTL/token
+  guards, typecheck, 1322 tests vitest). Aucune migration (lot UI pur) ; registre public intact (R-9).
 
 ## 9. Annexe — audit d'éligibilité (mesuré le 2026-07-13, re-mesuré après l'amendement R-12/(i))
 

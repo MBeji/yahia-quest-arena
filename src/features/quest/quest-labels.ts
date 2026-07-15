@@ -4,6 +4,19 @@
 
 export type QuestContentLang = "ar" | "fr" | "en";
 
+/**
+ * Recall mode (étude 17, R-12) — the "extra characters" bar shown under the
+ * recall input. STATICALLY defined per content language, NEVER derived from the
+ * expected answer (a per-answer bar would leak its letters — same anti-leak
+ * posture as R-1). Arabic chips render in RTL order at the call site. English
+ * needs no bar (its answers use plain ASCII); an empty palette hides it.
+ */
+export const RECALL_CHAR_BAR: Record<QuestContentLang, string[]> = {
+  fr: ["à", "â", "ç", "é", "è", "ê", "ë", "î", "ï", "ô", "û", "ù", "œ"],
+  ar: ["أ", "إ", "آ", "ء", "ؤ", "ئ", "ة", "ى"],
+  en: [],
+};
+
 export type QuestLabels = {
   lockedTitle: string;
   lockedBody: string;
@@ -25,6 +38,17 @@ export type QuestLabels = {
   multiHint: string;
   unsupportedTitle: string;
   unsupportedBody: string;
+  // Recall mode (étude 17) — driven by the CONTENT language (an Arabic mission
+  // shows its recall banner/placeholder in Arabic even in a French UI).
+  recallBanner: string;
+  recallPlaceholder: string;
+  recallHint: string;
+  recallInsertChar: string;
+  recallLockedTitle: string;
+  recallLockedBody: string;
+  recallNotEligibleTitle: string;
+  recallNotEligibleBody: string;
+  recallReplayQcm: string;
 };
 
 export function buildQuestLabels(qlang: QuestContentLang): QuestLabels {
@@ -124,6 +148,56 @@ export function buildQuestLabels(qlang: QuestContentLang): QuestLabels {
       ar: "هذا النوع من الأسئلة غير مدعوم في هذه النسخة. تقدّم إلى السؤال الموالي.",
       fr: "Ce type de question n'est pas encore pris en charge ici. Passe à la question suivante.",
       en: "This question type isn't supported here yet. Move on to the next question.",
+    }[qlang],
+    // Recall mode (étude 17). The header banner announces the stake before play
+    // (no options, XP ×1,5); the input placeholder/hint frame the free-text
+    // answer; the char-bar aria template names each inserted character; the two
+    // lock screens mirror QuizLockScreen for the R-3 gates.
+    recallBanner: {
+      ar: "🧠 وضع الاسترجاع · بلا خيارات · نقاط الخبرة ×1.5",
+      fr: "🧠 Mode Rappel · sans options · XP ×1,5",
+      en: "🧠 Recall mode · no options · XP ×1.5",
+    }[qlang],
+    recallPlaceholder: {
+      ar: "اكتب إجابتك",
+      fr: "Tape ta réponse",
+      en: "Type your answer",
+    }[qlang],
+    recallHint: {
+      ar: "اكتب إجابتك ثمّ اضغط Enter للتحقّق.",
+      fr: "Tape ta réponse, puis Entrée pour valider.",
+      en: "Type your answer, then press Enter to validate.",
+    }[qlang],
+    // {char} is the character inserted by the tapped chip.
+    recallInsertChar: {
+      ar: "إدراج {char}",
+      fr: "insérer {char}",
+      en: "insert {char}",
+    }[qlang],
+    recallLockedTitle: {
+      ar: "🔒 وضع الاسترجاع مقفل",
+      fr: "🔒 Mode Rappel verrouillé",
+      en: "🔒 Recall mode locked",
+    }[qlang],
+    recallLockedBody: {
+      ar: "أنجِز هذه المهمّة أوّلًا بنسبة 100% في نمط الاختيار من متعدّد لفتح وضع الاسترجاع.",
+      fr: "Réussis d'abord cette mission à 100 % en QCM pour débloquer le mode Rappel.",
+      en: "First complete this mission at 100% in multiple-choice to unlock recall mode.",
+    }[qlang],
+    recallNotEligibleTitle: {
+      ar: "الاسترجاع غير متاح",
+      fr: "Rappel indisponible",
+      en: "Recall unavailable",
+    }[qlang],
+    recallNotEligibleBody: {
+      ar: "لا يمكن لعب هذه المهمّة في وضع الاسترجاع.",
+      fr: "Cette mission ne peut pas être jouée en mode Rappel.",
+      en: "This mission can't be played in recall mode.",
+    }[qlang],
+    recallReplayQcm: {
+      ar: "أعِد لعب المهمّة في نمط الاختيار من متعدّد",
+      fr: "Rejouer la mission en QCM",
+      en: "Replay the mission in multiple-choice",
     }[qlang],
   };
 }

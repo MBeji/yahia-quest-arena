@@ -14,7 +14,7 @@ import { useI18n, useT } from "@/lib/i18n";
 import { isRtlText } from "@/shared/lib/utils";
 import { parcoursName } from "@/shared/lib/parcours-locale";
 import { PageShell } from "@/components/ui/page-shell";
-import { QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
+import { QUIZ_PASS_THRESHOLD_PCT, RECALL_MIN_QUESTIONS } from "@/shared/constants/gamification";
 import { hasPassedChapterQuiz } from "../anon-quiz-gate";
 import { exerciseRouteFor } from "../exercise-route";
 
@@ -48,6 +48,18 @@ export type SubjectHubParcours = {
 };
 
 /**
+ * Per-mission recall availability (étude 17), from getSubject().recall. Drives
+ * the "🧠 Rappel" chip: eligible count (>= RECALL_MIN_QUESTIONS to show at all),
+ * unlocked (classic mastered → the chip links to the recall run), and the best
+ * recall score so far. Signed-in only (R-9) — the caller passes null for anon.
+ */
+export type SubjectHubRecall = {
+  eligibleByExercise: Record<string, number>;
+  unlockedByExercise: Record<string, boolean>;
+  bestByExercise: Record<string, number>;
+};
+
+/**
  * Public subject hub — « Référence » register, RECOMPOSED by étude 15 lot 7
  * (D-6, the "L2" layer deferred at chantier C8 and never built): the pivot
  * screen finally carries its gameplay state.
@@ -76,6 +88,7 @@ export function SubjectHub({
   bestByExercise = {},
   quizPassedByChapter = {},
   parcours = null,
+  recall = null,
   isAuthenticated,
 }: {
   subject: SubjectHubSubject;
@@ -84,6 +97,7 @@ export function SubjectHub({
   bestByExercise?: Record<string, number>;
   quizPassedByChapter?: Record<string, boolean>;
   parcours?: SubjectHubParcours | null;
+  recall?: SubjectHubRecall | null;
   isAuthenticated: boolean;
 }) {
   const t = useT();
@@ -316,6 +330,12 @@ export function SubjectHub({
                                 ) : null}
                               </span>
                             </Link>
+                            <RecallChip
+                              exerciseId={ex.id}
+                              isQuiz={isQuiz}
+                              isAuthenticated={isAuthenticated}
+                              recall={recall}
+                            />
                           </li>
                         );
                       })}
@@ -334,5 +354,59 @@ export function SubjectHub({
         })}
       </div>
     </PageShell>
+  );
+}
+
+/**
+ * "🧠 Rappel" secondary chip under a mission (étude 17, US-2/US-6). Signed-in
+ * only (R-9). Three states:
+ *   - absent  — anon, a quiz row, or fewer than RECALL_MIN_QUESTIONS eligible
+ *               questions (no dead end: no lock, no promise);
+ *   - unlocked — the classic run is mastered → a link into the recall run
+ *               (`?variant=recall`), with the best recall score when it exists;
+ *   - locked  — eligible but not yet mastered → a non-interactive Lock + the
+ *               one-sentence reason.
+ */
+function RecallChip({
+  exerciseId,
+  isQuiz,
+  isAuthenticated,
+  recall,
+}: {
+  exerciseId: string;
+  isQuiz: boolean;
+  isAuthenticated: boolean;
+  recall: SubjectHubRecall | null;
+}) {
+  const t = useT();
+  if (!isAuthenticated || isQuiz || !recall) return null;
+  const eligible = recall.eligibleByExercise[exerciseId] ?? 0;
+  if (eligible < RECALL_MIN_QUESTIONS) return null;
+  const unlocked = recall.unlockedByExercise[exerciseId] === true;
+  const bestRecall = recall.bestByExercise[exerciseId];
+
+  if (!unlocked) {
+    return (
+      <div
+        className="flex items-center gap-1.5 pb-2 ps-6 text-xs text-muted-foreground/60"
+        data-testid="recall-chip-locked"
+      >
+        <Lock className="h-3 w-3 shrink-0" />
+        <span>{t.quest.recallChip}</span>
+        <span className="text-muted-foreground/50">· {t.quest.recallLockedHint}</span>
+      </div>
+    );
+  }
+  return (
+    <Link
+      to="/quest/$exerciseId"
+      params={{ exerciseId }}
+      search={{ variant: "recall" }}
+      data-testid="recall-chip-unlocked"
+      className="flex items-center gap-1.5 pb-2 ps-6 text-xs font-semibold text-(--gold) transition hover:opacity-80 [@media(pointer:coarse)]:min-h-11"
+    >
+      <span>{t.quest.recallChip}</span>
+      {bestRecall != null && <span className="font-bold">· {Math.round(bestRecall)}%</span>}
+    </Link>
   );
 }
