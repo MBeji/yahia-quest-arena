@@ -12,6 +12,26 @@ $$ cos B = adjacent / hypoténuse = AB/BC $$
 $$ sin B = opposé / hypoténuse = AC/BC $$
 $$ tan B = opposé / adjacent = AC/AB $$
 
+::: figure Rectangle en A: vu de l'angle B, [AB] est l'adjacent, [AC] l'opposé, [BC] l'hypoténuse — ici cos B = 3/5 = 0,6
+<svg viewBox="0 0 260 230">
+<path d="M70 190 L175 190 L70 50 Z" fill="#0f6e56" opacity="0.10"/>
+<path d="M70 190 L175 190 L70 50 Z" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<path d="M70 172 L88 172 L88 190" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M145 190 A 30 30 0 0 1 157 166" fill="none" stroke="#0f6e56" stroke-width="2.5"/>
+<g fill="#0f172a"><circle cx="70" cy="190" r="4"/><circle cx="175" cy="190" r="4"/><circle cx="70" cy="50" r="4"/></g>
+<g font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="58" y="207" text-anchor="middle" fill="#0f172a">A</text>
+<text x="188" y="207" text-anchor="middle" fill="#0f172a">B</text>
+<text x="58" y="43" text-anchor="middle" fill="#0f172a">C</text>
+</g>
+<g font-size="14" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="122" y="209" text-anchor="middle" fill="#0f6e56">3</text>
+<text x="54" y="124" text-anchor="middle" fill="#0f6e56">4</text>
+<text x="140" y="112" text-anchor="middle" fill="#0f6e56">5</text>
+</g>
+</svg>
+:::
+
 _Exemple détaillé_ : dans un triangle rectangle où l'adjacent à B vaut 3 cm et l'hypoténuse 5 cm, cos B = 3/5 = 0,6. Si l'opposé vaut 4 cm, alors sin B = 4/5 = 0,8 et tan B = 4/3.
 
 > 🗡️ Moyen mnémotechnique : **CAH – SOH – TOA** (Cosinus = Adjacent/Hypoténuse, Sinus = Opposé/Hypoténuse, Tangente = Opposé/Adjacent). Adjacent et opposé changent selon l'angle aigu choisi ; l'hypoténuse, elle, ne bouge jamais.
@@ -34,6 +54,25 @@ $$ (sin a)² + (cos a)² = 1 $$
 De plus, dans un triangle rectangle en A, les angles B et C sont **complémentaires** (B + C = 90°). D'où :
 
 > Si deux angles sont complémentaires, le **sinus de l'un est égal au cosinus de l'autre** : sin B = cos C et cos B = sin C.
+
+::: figure Les deux angles aigus sont complémentaires (B + C = 90°) — c'est pourquoi sin B = cos C
+<svg viewBox="0 0 260 230">
+<path d="M70 190 L175 190 L70 50 Z" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<path d="M70 172 L88 172 L88 190" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M145 190 A 30 30 0 0 1 157 166" fill="none" stroke="#0f6e56" stroke-width="2.5"/>
+<path d="M70 80 A 30 30 0 0 0 88 74" fill="none" stroke="#0f172a" stroke-width="2.5"/>
+<g fill="#0f172a"><circle cx="70" cy="190" r="4"/><circle cx="175" cy="190" r="4"/><circle cx="70" cy="50" r="4"/></g>
+<g font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="58" y="207" text-anchor="middle" fill="#0f172a">A</text>
+<text x="188" y="207" text-anchor="middle" fill="#0f172a">B</text>
+<text x="58" y="43" text-anchor="middle" fill="#0f172a">C</text>
+</g>
+<g font-size="13" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="146" y="163" text-anchor="middle" fill="#0f6e56">B</text>
+<text x="96" y="88" text-anchor="middle" fill="#0f172a">C</text>
+</g>
+</svg>
+:::
 
 _Exemple détaillé_ : si cos a = 3/5, alors (sin a)² = 1 − (3/5)² = 1 − 9/25 = 16/25, donc sin a = 4/5 (positif car a est aigu). On vérifie : (3/5)² + (4/5)² = 9/25 + 16/25 = 1 ✓.
 

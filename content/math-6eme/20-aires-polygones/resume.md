@@ -1,5 +1,16 @@
 # 📜 ملخّص: مساحاتُ المضلّعات
 
+<svg viewBox="0 0 390 180">
+  <path d="M40 140 L160 140 L120 60 Z" fill="#0f6e56" opacity="0.10"/>
+  <path d="M40 140 L160 140 L120 60 Z" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M120 60 L120 140" fill="none" stroke="#0f6e56" stroke-width="2" stroke-dasharray="6 4"/>
+  <path d="M120 126 L134 126 L134 140" fill="none" stroke="#0f6e56" stroke-width="2"/>
+  <path d="M200 140 L310 140 L350 70 L240 70 Z" fill="#0f6e56" opacity="0.10"/>
+  <path d="M200 140 L310 140 L350 70 L240 70 Z" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M240 70 L240 140" fill="none" stroke="#0f6e56" stroke-width="2" stroke-dasharray="6 4"/>
+  <path d="M240 126 L254 126 L254 140" fill="none" stroke="#0f6e56" stroke-width="2"/>
+</svg>
+
 - **الوحدةُ المرجعيّة:** المتر المربّع (م²).
 - **بين وحدتين متتاليتين عاملُ 100:** 1 م² = 100 دسم² = 10 000 سم².
 - **الآر** = 100 م² · **الهكتار** = 10 000 م² (= 100 آر).

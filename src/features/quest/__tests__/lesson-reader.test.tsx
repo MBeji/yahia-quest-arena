@@ -176,4 +176,126 @@ describe("LessonReader", () => {
     expect(screen.queryByText(/entraîner sur ce chapitre/i)).not.toBeInTheDocument();
     expect(container.querySelector('a[href="/exercice/$exerciseId"]')).not.toBeNull();
   });
+
+  // ---- Sommaire & blocs pédagogiques (étude 18, lot 1) ----
+
+  it("renders a table of contents from the lesson sections", () => {
+    const { container } = render(
+      <LessonReader chapterId="c1" chapter={chapter} allChapters={siblings} />,
+    );
+    const toc = container.querySelector('[data-testid="lesson-toc"]');
+    expect(toc).not.toBeNull();
+    expect(toc?.textContent).toContain("Section A");
+    expect(toc?.textContent).toContain("Section B");
+    // Les ancres ciblent les id que le renderer a toujours émis — et que rien n'utilisait.
+    expect(toc?.querySelector('a[href="#section-0"]')).not.toBeNull();
+    expect(toc?.querySelector('a[href="#section-1"]')).not.toBeNull();
+  });
+
+  it("hides the table of contents on the summary tab and below two sections", () => {
+    const { container, unmount } = render(
+      <LessonReader chapterId="c1" chapter={chapter} allChapters={siblings} />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Résumé" }));
+    expect(container.querySelector('[data-testid="lesson-toc"]')).toBeNull();
+    unmount();
+
+    // Un sommaire d'une seule entrée est du bruit.
+    const single = render(
+      <LessonReader
+        chapterId="c1"
+        chapter={{ ...chapter, lesson_content: "## Seule section\nDu texte." }}
+        allChapters={siblings}
+      />,
+    );
+    expect(single.container.querySelector('[data-testid="lesson-toc"]')).toBeNull();
+  });
+
+  it("promotes the callouts already written in the content into typed blocks", () => {
+    const { container } = render(
+      <LessonReader
+        chapterId="c1"
+        chapter={{
+          ...chapter,
+          lesson_content: "## Thalès\n\n> ⚠️ MN/BC ne vaut pas AM/MB.\n\n> 🗡️ Écris les rapports.",
+        }}
+        allChapters={siblings}
+      />,
+    );
+    expect(container.querySelector(".lesson-blk--piege")).not.toBeNull();
+    expect(container.querySelector(".lesson-blk--astuce")).not.toBeNull();
+    // Le libellé suit la langue du CONTENU (fr ici), pas la locale de l'interface.
+    expect(container.querySelector(".lesson-blk--piege")?.textContent).toContain("Piège");
+  });
+
+  it("renders the summary tab as a deck of revision cards, the course as blocks (US-6)", () => {
+    const { container } = render(
+      <LessonReader
+        chapterId="c1"
+        chapter={{
+          ...chapter,
+          lesson_content: "## Thalès\n\n> ⚠️ Un piège.",
+          summary: "- **La formule**: AM/AB = AN/AC\n- ⚠️ **Le piège**: MN/BC ≠ AM/MB",
+        }}
+        allChapters={siblings}
+      />,
+    );
+
+    // Onglet Cours : des blocs, pas des cartes.
+    expect(container.querySelector(".lesson-blk--piege")).not.toBeNull();
+    expect(container.querySelector(".lesson-cards")).toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: "Résumé" }));
+
+    // Onglet Résumé : un paquet de cartes — dont une carte-piège typée.
+    expect(container.querySelector(".lesson-cards")).not.toBeNull();
+    expect(container.querySelectorAll(".lesson-card").length).toBe(2);
+    expect(container.querySelector(".lesson-card--piege")).not.toBeNull();
+    expect(container.querySelector(".lesson-card__title")?.textContent).toBe("La formule");
+  });
+
+  it("opens a figure in a zoom dialog on click and on keyboard (US-3)", () => {
+    const svg = '<svg viewBox="0 0 10 10"><circle cx="5" cy="5" r="4"/></svg>';
+    const { container } = render(
+      <LessonReader
+        chapterId="c1"
+        chapter={{
+          ...chapter,
+          lesson_content: `## Thalès\n\n::: figure Le triangle ABC\n${svg}\n:::`,
+          summary: null,
+        }}
+        allChapters={siblings}
+      />,
+    );
+
+    const figure = container.querySelector(".lesson-figure");
+    expect(figure).not.toBeNull();
+    expect(screen.queryByTestId("lesson-figure-zoom")).toBeNull();
+
+    fireEvent.click(figure as Element);
+    const dialog = screen.getByTestId("lesson-figure-zoom");
+    expect(dialog).toBeInTheDocument();
+    expect(dialog.querySelector("svg")).not.toBeNull();
+    // La légende sert de titre accessible au dialogue.
+    expect(dialog.textContent).toContain("Le triangle ABC");
+
+    fireEvent.keyDown(document, { key: "Escape" });
+  });
+
+  it("labels the blocks in the content language for an Arabic lesson (R-8)", () => {
+    const { container } = render(
+      <LessonReader
+        chapterId="c1"
+        chapter={{
+          ...chapter,
+          lesson_content: "## مقدمة\n\n> ⚠️ انتبه إلى النسب.",
+          summary: null,
+          subjects: { name_fr: "الرياضيات", content_language: "ar" },
+        }}
+        allChapters={siblings}
+      />,
+    );
+    expect(container.querySelector(".lesson-blk--piege")?.textContent).toContain("تحذير");
+    expect(container.querySelector(".lesson-blk--piege")?.textContent).not.toContain("Piège");
+  });
 });

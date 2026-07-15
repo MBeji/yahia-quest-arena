@@ -18,6 +18,15 @@
 
 ## ⚡ الموشور القائم — حجمه وخصائصه
 
+::: figure الموشور القائم: قاعدتان متقايستان ومتوازيتان، والأحرف الجانبية عمودية عليهما (المتقطّع = محجوب)
+<svg viewBox="0 0 280 220">
+<path d="M60 180 L170 180 L115 110 Z" fill="#0f6e56" opacity="0.10"/>
+<path d="M60 180 L170 180 L115 110 Z" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<path d="M170 180 L225 140 M115 110 L170 70 M225 140 L170 70" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M60 180 L115 140 M115 140 L225 140 M115 140 L170 70" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/>
+</svg>
+:::
+
 **الموشور القائم** هو مجسّم ارتفاعه عموديّ على القاعدة، والقاعدة أيّ مضلّع.
 
 $$ **V(موشور) = S(قاعدة) × h** $$
@@ -39,6 +48,22 @@ $$ S(قاعدة) = (1/2) × 3 × 4 = 6 cm² ⟹ V = 6 × 10 = 60 cm³ $$
 $$ S = (√3/4) × a² ; a = 6 cm ⟹ S = (√3/4) × 36 = 9√3 ≈ 15,59 cm² $$
 
 ## 🛡️ الأسطوانة — حجمها ومساحتها الجانبية
+
+::: figure الأسطوانة: قاعدتان دائريّتان متطابقتان، والارتفاع h عمودي عليهما
+<svg viewBox="0 0 300 240">
+<path d="M80 60 L80 190 M220 60 L220 190" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M80 190 A 70 22 0 0 1 220 190" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/>
+<path d="M80 190 A 70 22 0 0 0 220 190" fill="none" stroke="#0f172a" stroke-width="2"/>
+<ellipse cx="150" cy="60" rx="70" ry="22" fill="#0f6e56" opacity="0.10"/>
+<ellipse cx="150" cy="60" rx="70" ry="22" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M150 60 L150 190" fill="none" stroke="#0f6e56" stroke-width="2" stroke-dasharray="6 4"/>
+<path d="M150 60 L220 60" fill="none" stroke="#0f6e56" stroke-width="2"/>
+<g font-size="14" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="163" y="130" text-anchor="middle" fill="#0f6e56">h</text>
+<text x="188" y="52" text-anchor="middle" fill="#0f6e56">r</text>
+</g>
+</svg>
+:::
 
 **الأسطوانة** قاعدتها دائرتان نصف قطر كلٍّ منهما r وارتفاعها h.
 
@@ -62,6 +87,19 @@ $$ S(جانبية) = 2πrh = 2 × 3,14 × 3 × 4 ≈ 75,36 cm² $$
 
 ## 🔮 الهرم — حجمه وخصائصه
 
+::: figure الهرم: قاعدة مضلّعة ورأس واحد S — الأحرف المتقطّعة محجوبة خلف المجسّم
+<svg viewBox="0 0 300 220">
+<path d="M150 40 L60 190 L200 190 Z" fill="#0f6e56" opacity="0.10"/>
+<path d="M60 190 L200 190 L240 155" fill="none" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+<path d="M150 40 L60 190 M150 40 L200 190 M150 40 L240 155" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M60 190 L100 155 L240 155 M150 40 L100 155" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/>
+<g fill="#0f172a"><circle cx="150" cy="40" r="4"/></g>
+<g font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="150" y="30" text-anchor="middle" fill="#0f172a">S</text>
+</g>
+</svg>
+:::
+
 **الهرم** قاعدته مضلّع (مربّع، مثلّث…) وله قمّة نرمز لها بـ S (حتّى لا تلتبس بالحجم V)، وارتفاع الهرم h هو العمود النازل من القمّة S على القاعدة.
 
 $$ **V(هرم) = (1/3) × S(قاعدة) × h** $$
@@ -79,6 +117,23 @@ $$ l² = h² + (a√2/2)² ; a = 8, h = 3 ⟹ l² = 9 + (4√2)² = 9 + 32 = 41 
 > 🗡️ حيلة: «ثلث حجم موشوره (أو أسطوانته)» — الهرم والمخروط دائمًا يأخذان الثلث!
 
 ## 🧪 المخروط — حجمه ومساحته الجانبية
+
+::: figure المخروط: قاعدة دائرية نصف قطرها r ورأس S، والارتفاع h عمودي على القاعدة
+<svg viewBox="0 0 300 240">
+<path d="M150 40 L75 185 L225 185 Z" fill="#0f6e56" opacity="0.10"/>
+<path d="M150 40 L75 185 M150 40 L225 185" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M75 185 A 75 24 0 0 1 225 185" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/>
+<path d="M75 185 A 75 24 0 0 0 225 185" fill="none" stroke="#0f172a" stroke-width="2"/>
+<path d="M150 40 L150 185" fill="none" stroke="#0f6e56" stroke-width="2" stroke-dasharray="6 4"/>
+<path d="M150 185 L225 185" fill="none" stroke="#0f6e56" stroke-width="2"/>
+<g fill="#0f172a"><circle cx="150" cy="40" r="4"/></g>
+<g font-size="14" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round">
+<text x="150" y="30" text-anchor="middle" fill="#0f172a">S</text>
+<text x="163" y="120" text-anchor="middle" fill="#0f6e56">h</text>
+<text x="190" y="178" text-anchor="middle" fill="#0f6e56">r</text>
+</g>
+</svg>
+:::
 
 **المخروط** قاعدته دائرة نصف قطرها r وارتفاعه h (عمودي من المركز إلى القمّة).
 
@@ -135,12 +190,12 @@ $$ r³ = 3V/(4π) = (3 × 972π)/(4π) = 729 ⟹ r = ∛729 = 9 cm $$
 
 ## 🏅 بطاقة الصيغ — ملخّص المجسّمات
 
-| المجسّم        | الحجم                                   | ملاحظة                 |
-| -------------- | --------------------------------------- | ---------------------- |
-| الموشور القائم | S(قاعدة) × h             | أيّ شكل قاعدة          |
-| الأسطوانة      | πr²h                             | قاعدة دائرية           |
-| الهرم          | (1/3) × S(قاعدة) × h | أيّ شكل قاعدة          |
-| المخروط        | (1/3)πr²h                 | قاعدة دائرية           |
-| الكرة          | (4/3)πr³                   | مساحة سطحها 4πr² |
+| المجسّم        | الحجم                | ملاحظة           |
+| -------------- | -------------------- | ---------------- |
+| الموشور القائم | S(قاعدة) × h         | أيّ شكل قاعدة    |
+| الأسطوانة      | πr²h                 | قاعدة دائرية     |
+| الهرم          | (1/3) × S(قاعدة) × h | أيّ شكل قاعدة    |
+| المخروط        | (1/3)πr²h            | قاعدة دائرية     |
+| الكرة          | (4/3)πr³             | مساحة سطحها 4πr² |
 
 > 🏆 القاعدة الذهبية: موشور/أسطوانة = القاعدة × الارتفاع؛ هرم/مخروط = ثلث ذلك. الكرة = صيغة منفردة.

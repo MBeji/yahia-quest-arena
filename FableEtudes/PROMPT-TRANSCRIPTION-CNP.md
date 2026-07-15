@@ -24,9 +24,11 @@
 ## INPUT (l'unique chose à renseigner)
 
 ```
-PORTEE     : tout                 # défaut — boucle sur TOUS les couples [ ] de programme/_INDEX.md,
-                                  # classe par classe (1ere-base → bac) puis matière par matière.
-                                  # Restreindre : "3eme-base" (une classe entière) ou
+PORTEE     : tout                 # défaut — boucle sur TOUS les couples [ ] restants, dans l'ORDRE
+                                  # DE PRIORITÉ ci-dessous (le cycle LYCÉE d'abord), matière par
+                                  # matière, EN EXCLUANT les matières annexes (voir notes ci-dessous).
+                                  # Restreindre : "2eme-sec-sciences" (une classe/section entière),
+                                  # "lycee" (tout le cycle secondaire) ou
                                   # "3eme-base / eps" (un seul couple).
 FICHIERS   : <chemins locaux>     # OPTIONNEL — PDF déjà téléchargés (guide enseignant et/ou manuel
                                   # élève), séparés par des espaces. Vide = l'agent télécharge
@@ -36,6 +38,48 @@ GENERATION : oui                  # oui (défaut) = après chaque fiche mergée,
                                   # non = s'arrêter à la couche de persistance (fiches seulement).
 PSEUDO     : <ton pseudo GitHub>  # pour la traçabilité (_INDEX.md + commits)
 ```
+
+> ⚠️ **Périmètre matières — pour le moment.** La campagne cible les **matières principales**
+> (celles qui portent le gros de l'apprentissage scolaire et du programme d'examen : maths,
+> sciences physiques, SVT, arabe, français, anglais, histoire-géo, éco-gestion, informatique,
+> philosophie…). Les **matières annexes** — musique, éducation artistique/dessin, EPS/sport, et
+> assimilées — sont **hors périmètre pour le moment**, même si leur ligne est `[ ]` dans
+> `_INDEX.md` : ne les transcris pas et ne les génère pas tant que ce prompt n'a pas été mis à
+> jour pour les inclure explicitement. `PORTEE: tout` boucle donc sur toutes les classes mais
+> **saute** ces matières annexes ; un `PORTEE` ciblant explicitement l'une d'elles (ex.
+> `"3eme-base / musique"`) doit être refusé avec un rappel de cette règle plutôt qu'exécuté.
+
+> 🎯 **Ordre de priorité — le cycle LYCÉE d'abord (décision 2026-07-14).** Le secondaire est le
+> gros trou du corpus : il est **quasi entièrement manquant** (seuls quelques pilotes existent en
+> `1ere-sec` et `bac-math`), alors que le cycle de base est largement couvert. `PORTEE: tout`
+> traite donc les couples restants dans **cet ordre**, et pas dans l'ordre du fichier :
+>
+> 1. **1ère année secondaire** (`1ere-sec`) — **tronc commun, pas de section** : un seul jeu de
+>    matières qui sert toutes les sections futures. C'est le plus fort levier : commence par là et
+>    finis-la avant de passer à la suite.
+> 2. **2ème année secondaire**, **section par section** : `2eme-sec-sciences` ·
+>    `2eme-sec-lettres` · `2eme-sec-eco-services` · `2eme-sec-info` — une section entièrement
+>    terminée (toutes ses matières principales) avant d'ouvrir la suivante.
+> 3. **3ème année secondaire**, section par section : `3eme-sec-math` · `3eme-sec-sciences-exp` ·
+>    `3eme-sec-lettres` · `3eme-sec-eco-gestion` · `3eme-sec-techniques` · `3eme-sec-info`.
+> 4. **Baccalauréat**, section par section : `bac-math` · `bac-sciences-exp` · `bac-lettres` ·
+>    `bac-eco-gestion` · `bac-techniques` · `bac-info`.
+> 5. **Seulement ensuite**, le reliquat du **cycle de base** (`1ere-base` → `9eme-base`).
+>
+> Référence normative des sections et des conventions de slugs/identifiants :
+> [`docs/lycee-architecture.md`](../docs/lycee-architecture.md) (§2 sections = nœuds `grades`, §3
+> matrice sections × matières). La **section sport** et les **3èmes langues** (allemand, espagnol,
+> italien) sont **hors périmètre**, comme les matières annexes ci-dessus.
+>
+> ⚠️ Conséquence pratique : le lycée étant neuf, ses lignes **n'existent pas encore** dans
+> `_INDEX.md` (qui est construit sur le corpus CNP du cycle de base). Ta file de travail pour le
+> secondaire se construit donc **depuis la matrice de `docs/lycee-architecture.md`**, pas depuis
+> `_INDEX.md` — et **tu ajoutes la ligne manquante** (niveau/section, matière, source, fichier
+> cible) dans `_INDEX.md` **dans le même lot** que la fiche que tu produis, sous une section
+> `## <slug-de-la-section>` créée si besoin. Les sources du secondaire sont les **programmes
+> officiels + manuels scolaires du secondaire** (pas de code guide CNP à 6 chiffres pour la
+> plupart) : renseigne la source réellement utilisée, et si aucune source officielle n'est
+> trouvable, applique STOP (jamais d'invention).
 
 Un accès **collaborateur (write)** au dépôt `MBeji/yahia-quest-arena` est requis pour pousser
 (demande-le à Mohamed) ; sans lui, l'agent terminera chaque lot par un fork + PR classique.
@@ -55,8 +99,10 @@ bloquant, applique la section STOP.
 ### La boucle de campagne (vue d'ensemble)
 
 ```
-pour chaque CLASSE de programme/_INDEX.md (ordre du fichier), dans PORTEE :
-  pour chaque MATIÈRE de la classe encore cochée [ ] :
+pour chaque CLASSE/SECTION dans l'ORDRE DE PRIORITÉ (1ere-sec → 2eme-sec par section →
+    3eme-sec par section → bac par section → reliquat du cycle de base), dans PORTEE :
+  pour chaque MATIÈRE PRINCIPALE de la classe encore à faire ([ ], ou absente d'_INDEX.md
+      pour le lycée) :
     LOT A — fiche (étapes 1→6) : phase 1 transcription + phase 2 enrichissement
             + audits → 1 commit → 1 push → 1 PR (auto-merge) → attendre le merge
     si GENERATION = oui :
@@ -119,9 +165,19 @@ Règles de la boucle (non négociables) :
    `.claude/skills/content-ingest/SKILL.md` (règles R-1…R-7 — elles s'appliquent à toi).
    Un modèle de fiche aboutie : `programme/1ere-sec/mathematiques.md`.
 
-4. Construis ta **file de travail** : parcours `programme/_INDEX.md` dans l'ordre du fichier
-   et retiens tous les couples `[ ]` inclus dans `PORTEE`. Annonce la file au contributeur
-   (nombre de lots, ordre), puis démarre la boucle.
+4. Construis ta **file de travail**, dans l'**ordre de priorité** de la note ci-dessus (lycée
+   d'abord : `1ere-sec`, puis 2ème sec section par section, puis 3ème sec, puis bac ; le cycle
+   de base en dernier) :
+   - pour le **lycée** : la file vient de la matrice sections × matières de
+     [`docs/lycee-architecture.md`](../docs/lycee-architecture.md) — la plupart de ces couples
+     n'ont pas encore de ligne dans `_INDEX.md` ; tu la créeras dans le lot ;
+   - pour le **cycle de base** : la file vient de `programme/_INDEX.md` (couples `[ ]`) ;
+   - dans les deux cas, **exclus les matières annexes** (musique, éducation artistique/dessin,
+     EPS/sport, section sport, 3èmes langues — voir la note de périmètre) : ne les ajoute pas à
+     la file même si elles matchent `PORTEE: tout` ou une classe entière.
+
+   Annonce la file au contributeur (nombre de lots, ordre retenu, matières/couples sautés et
+   pourquoi), puis démarre la boucle.
 
 ---
 
@@ -138,6 +194,11 @@ Puis, dans `programme/_INDEX.md` (version fraîche de main), trouve la ligne du 
   encore sous `content/` (vérifie `content/CATALOGUE.md`), passe directement au LOT B ;
   sinon **saute au couple suivant** de la file.
 - `[ ]` → vrai manquant : continue. Note le **code guide** (6 chiffres) de la ligne.
+- **Aucune ligne** (cas normal au lycée : `_INDEX.md` ne couvre pas encore le secondaire) →
+  vrai manquant lui aussi. **Vérifie quand même** que `programme/<niveau>/<matière>.md`
+  n'existe pas déjà sur disque (des pilotes existent en `1ere-sec` et `bac-math` — s'ils sont
+  là, on est dans le cas « first-pass à compléter » ci-dessous), puis continue : tu **créeras**
+  la ligne dans `_INDEX.md` à l'étape 5.4.
 - Si `programme/<niveau>/<matière>.md` existe déjà partiellement (fiche « first-pass ») :
   ton travail est de le **compléter**, jamais de le refaire en parallèle.
 
@@ -166,8 +227,17 @@ exemples, exercices). Une seule source disponible ⇒ elle fait référence.
   campagne avec les couples suivants en attendant. **N'invente jamais un contenu faute de
   source.**
 
-- **Droits (R-2)** : le corpus CNP officiel est la source prévue. Tout autre document sans
-  autorisation claire ⇒ STOP.
+- **Cas du LYCÉE (la priorité actuelle)** : le corpus secondaire n'est **pas** indexé par les
+  codes guides à 6 chiffres du cycle de base — la plupart des couples n'ont **pas de guide
+  enseignant** disponible, et la source de référence est alors le **manuel élève du secondaire**
+  (codes commençant par `2` — ex. `222104P01` pour les maths 1ère sec) complété par le
+  **programme officiel** du ministère quand il est publié. Cherche d'abord dans le corpus déjà
+  téléchargé (`cnp-officiel/CATALOGUE.md`), puis sur le site du CNP ; à défaut, demande les PDF
+  au contributeur (champ `FICHIERS`). **Manuel élève seul ⇒ il fait référence** (c'est déjà le
+  cas des pilotes `1ere-sec`), et tu le signales explicitement dans la fiche. Aucune source
+  officielle trouvable ⇒ STOP, jamais d'invention.
+- **Droits (R-2)** : le corpus officiel (CNP / manuels scolaires officiels) est la source
+  prévue. Tout autre document sans autorisation claire ⇒ STOP.
 
 ### Étape 3 — PHASE 1 : transcription simple (ScribeKit + ta vision)
 
@@ -247,6 +317,12 @@ Complète les sections §1–§6 du gabarit en **combinant guide + manuel** :
 4. **Mets à jour `programme/_INDEX.md`** : passe la ligne du couple à `[~]` (« transcrit, en
    validation » — **jamais `[x]`**, la promotion finale appartient à l'humain), ajoute
    date + PSEUDO + profondeur atteinte, et ajuste la ligne de totaux en bas de section.
+   **Au lycée**, la ligne n'existe en général pas encore : **crée-la** (au statut `[~]`, même
+   format de tableau que les autres sections), sous une rubrique `## <niveau-section>` que tu
+   ajoutes si elle manque — en respectant les slugs de `docs/lycee-architecture.md`
+   (`1ere-sec`, `2eme-sec-sciences`, `3eme-sec-math`, `bac-info`…). Renseigne la **source
+   réellement utilisée** dans la colonne « code guide » (ex. `222104P01` (manuel élève) ·
+   _pas de guide au corpus_) plutôt que d'inventer un code à 6 chiffres.
 
 ### Étape 6 — Push du lot A (les livrables, au bon endroit)
 

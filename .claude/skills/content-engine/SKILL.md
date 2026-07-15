@@ -78,6 +78,12 @@ Consequences you must respect:
 - **Numbers & equations are standard in every language.** Western digits (0–9) and standard LTR
   mathematical notation everywhere — **including Arabic content** (Arabic prose around standard
   math, never Arabic-Indic digits or arabized formulas). Hard rule: `references/math-and-notation.md`.
+- **A rule about shapes is taught WITH A DRAWING — at every grade.** Geometry, circle & angles,
+  repère & vecteurs, solids, trigonometry, measurement of shapes, science diagrams, timelines,
+  graphs: the chapter carries at least one figure, and each spatial rule has its figure next to it.
+  Attach it with `::: figure <légende>` + an inline `<svg viewBox="…">`. Doctrine, required families
+  and copy-paste SVG templates: `references/course-figures.md` (quality bar:
+  `references/course-quality.md` **Axis 5 — Illustration**).
 
 ## What you do (and where you stop)
 

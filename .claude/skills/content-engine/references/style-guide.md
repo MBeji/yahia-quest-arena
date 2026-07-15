@@ -83,6 +83,21 @@ language — **including the subject `nameFr` and every chapter `title`** (an `a
 Arabic, names and titles included; only digits/notation stay Latin). The folder slugs and `mode`
 values are the only French structural tokens.
 
+## Figures are NOT optional, and NOT only for the youngest
+
+> This section used to be the only mention of figures in the whole authoring system — and it spoke
+> of **questions** for **young grades**. That hole is exactly why, on 2026-07-14, an audit found
+> 66 illustrated courses out of 541 and **zero figures in the five geometry chapters of 9ème**.
+> A geometry course without an illustration makes no sense, at **any** age.
+
+- **A rule about shapes, space, structure or change is taught WITH A DRAWING** — at every grade,
+  from the 1ère année to the Bac. Geometry, circle & angles, repère & vecteurs, solids,
+  trigonometry, measurement of shapes, science diagrams, timelines, graphs.
+- In `cours.md` / `resume.md`, attach it with `::: figure <légende>` + an inline `<svg viewBox="…">`.
+  The caption is mandatory; the number is automatic.
+- Doctrine, the families that **require** a figure, the drawing rules and copy-paste SVG templates:
+  **`course-figures.md`**. Quality bar: `course-quality.md` **Axis 5 — Illustration**.
+
 ## Calibrate to the student's age (and colourful figures for the youngest)
 
 Tune sentence length, vocabulary, and figure density to the learner's age — detailed bands in

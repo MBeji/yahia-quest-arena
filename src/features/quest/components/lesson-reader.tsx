@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   BookOpen,
   Brain,
@@ -10,8 +10,11 @@ import {
   Printer,
   ScrollText,
 } from "lucide-react";
-import { renderMarkdown } from "@/shared/lib/markdown";
+import { renderLesson, renderSummary } from "@/shared/lib/markdown";
+import { asContentLang } from "@/shared/lib/lesson-blocks";
+import { sanitizeSvg } from "@/shared/lib/figure";
 import { isRtlText } from "@/shared/lib/utils";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useT } from "@/lib/i18n";
 import { exerciseRouteFor } from "../exercise-route";
 import { ManuelPagesSection } from "./manuel-pages-section";
@@ -61,11 +64,18 @@ export function LessonReader({
 }) {
   const t = useT();
   const [showSummary, setShowSummary] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [zoomedFigure, setZoomedFigure] = useState<{ svg: string; label: string } | null>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const content = chapter.lesson_content;
   const summary = chapter.summary;
   const subjectData = chapter.subjects as { name_fr: string; content_language?: string } | null;
   const isRtl = subjectData?.content_language === "ar" || (content ? isRtlText(content) : false);
+  // Les libellés des blocs pédagogiques suivent la langue du CONTENU, pas celle de
+  // l'interface (étude 18, R-8) : un chip « PIÈGE » français dans une prose arabe RTL
+  // serait une faute de composition.
+  const lang = asContentLang(subjectData?.content_language, isRtl ? "ar" : "fr");
 
   const currentIdx = allChapters.findIndex((c) => c.id === chapterId);
   const prevChapter = currentIdx > 0 ? allChapters[currentIdx - 1] : null;
@@ -74,10 +84,75 @@ export function LessonReader({
 
   const showingSummary = showSummary && !!summary;
   const body = showingSummary ? summary : content;
-  // renderMarkdown runs ~15 regex passes + a DOMPurify sanitize; memoize so a
-  // re-render that doesn't change the body (e.g. the Cours/Résumé toggle landing
-  // back on the same text) doesn't re-parse + re-sanitize the whole lesson.
-  const bodyHtml = useMemo(() => (body ? renderMarkdown(body) : ""), [body]);
+  // Le cours et le résumé n'ont pas la même grammaire : le cours est une suite de blocs
+  // pédagogiques, le résumé un jeu de cartes de révision (étude 18, D-6). Mémoïsé : chaque
+  // rendu enchaîne une segmentation, ~15 passes de regex et un sanitize DOMPurify.
+  const rendered = useMemo(() => {
+    if (!body) return null;
+    return showingSummary ? renderSummary(body, { lang }) : renderLesson(body, { lang });
+  }, [body, lang, showingSummary]);
+  // Référence stable : le scroll-spy en dépend, un tableau neuf à chaque rendu le relancerait.
+  const sections = useMemo(() => rendered?.sections ?? [], [rendered]);
+  // A table of contents earns its place from two sections up; below that it is noise.
+  const showToc = !showingSummary && sections.length >= 2;
+
+  // Scroll-spy: the `#section-N` anchors have always been emitted by the renderer and
+  // never used. Degrades to a plain (unhighlighted) TOC where IntersectionObserver is
+  // unavailable — jsdom, older engines — rather than crashing the public reader.
+  useEffect(() => {
+    if (!showToc || typeof IntersectionObserver === "undefined") return;
+    const headings = sections
+      .map((s) => document.getElementById(s.id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (headings.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const onScreen = entries.filter((e) => e.isIntersecting);
+        if (onScreen.length > 0) setActiveSection(onScreen[0].target.id);
+      },
+      { rootMargin: "-15% 0px -70% 0px" },
+    );
+    headings.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [rendered, showToc, sections]);
+
+  // Agrandissement des figures (US-3). L'écouteur est DÉLÉGUÉ sur le conteneur : les
+  // figures sont du HTML injecté, il n'existe aucun nœud React où accrocher un handler.
+  // Le renderer leur pose `role="button"` + `tabindex="0"`, d'où le clavier.
+  useEffect(() => {
+    const root = contentRef.current;
+    if (!root) return;
+
+    const openFrom = (target: EventTarget | null): boolean => {
+      if (!(target instanceof Element)) return false;
+      const figure = target.closest(".lesson-figure");
+      const plate = figure?.querySelector(".lesson-figure__plate");
+      if (!figure || !plate) return false;
+      // Défense en profondeur : ce SVG a déjà été assaini au rendu, mais il repasse par
+      // le profil vetté avant d'être réinjecté dans le dialogue (docs/xss-rendering-policy.md).
+      setZoomedFigure({
+        svg: sanitizeSvg(plate.innerHTML),
+        label: figure.getAttribute("aria-label") ?? "",
+      });
+      return true;
+    };
+
+    const onClick = (event: MouseEvent) => {
+      openFrom(event.target);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      if (openFrom(event.target)) event.preventDefault();
+    };
+
+    root.addEventListener("click", onClick);
+    root.addEventListener("keydown", onKeyDown);
+    return () => {
+      root.removeEventListener("click", onClick);
+      root.removeEventListener("keydown", onKeyDown);
+    };
+  }, [rendered]);
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
@@ -140,11 +215,55 @@ export function LessonReader({
         </button>
       </div>
 
-      {body ? (
+      {/* Sommaire — construit en React à partir des sections retournées par le renderer,
+          jamais dans la chaîne HTML injectée : aucun href n'entre donc dans le HTML
+          assaini (étude 18, D-3). */}
+      {showToc && (
+        <nav
+          aria-label={t.public.reader.toc}
+          data-testid="lesson-toc"
+          dir={isRtl ? "rtl" : "ltr"}
+          className="mb-8 rounded-xl border border-border bg-secondary px-4 py-3 print:hidden"
+        >
+          <p className="mb-2 flex flex-wrap items-center gap-x-2 text-2xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+            <span>{t.public.reader.toc}</span>
+            {/* « 3 figures » — un chapitre illustré l'annonce : c'est ce que l'élève cherche
+                en géométrie, et ce que 12 % des cours seulement peuvent afficher aujourd'hui. */}
+            {rendered && rendered.figureCount > 0 && (
+              <span className="text-primary">
+                ·{" "}
+                {rendered.figureCount === 1
+                  ? t.public.reader.figureCountOne
+                  : t.public.reader.figureCount.replace("{n}", String(rendered.figureCount))}
+              </span>
+            )}
+          </p>
+          <ol className="grid gap-x-6 sm:grid-cols-2">
+            {sections.map((section, i) => (
+              <li key={section.id}>
+                <a
+                  href={`#${section.id}`}
+                  className={`flex items-baseline gap-2 py-1 text-sm transition hover:text-primary ${
+                    activeSection === section.id
+                      ? "font-semibold text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <span className="shrink-0 tabular-nums opacity-60">{i + 1}.</span>
+                  <span className="truncate">{section.title}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )}
+
+      {rendered ? (
         <div
+          ref={contentRef}
           className="lesson-content"
           dir={isRtl ? "rtl" : "ltr"}
-          dangerouslySetInnerHTML={{ __html: bodyHtml }}
+          dangerouslySetInnerHTML={{ __html: rendered.html }}
         />
       ) : (
         <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-12 text-center">
@@ -152,6 +271,28 @@ export function LessonReader({
           <p className="mt-3 text-muted-foreground">{t.public.reader.courseSoon}</p>
         </div>
       )}
+
+      {/* Agrandissement d'une figure — une configuration de géométrie doit pouvoir se lire
+          sur un téléphone, étiquettes comprises (US-3). Le SVG y est re-assaini. */}
+      <Dialog
+        open={zoomedFigure !== null}
+        onOpenChange={(open) => {
+          if (!open) setZoomedFigure(null);
+        }}
+      >
+        <DialogContent className="max-w-3xl" data-testid="lesson-figure-zoom">
+          <DialogTitle className="text-sm font-medium text-muted-foreground">
+            {zoomedFigure?.label || t.public.reader.zoomFigure}
+          </DialogTitle>
+          {zoomedFigure && (
+            <div
+              className="lesson-figure__plate lesson-figure__plate--zoom"
+              dir="ltr"
+              dangerouslySetInnerHTML={{ __html: zoomedFigure.svg }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
 
       <ManuelPagesSection chapterId={chapterId} isAuthenticated={isAuthenticated} />
 
