@@ -58,7 +58,7 @@ périmètre v1, §Hors-périmètre étude 17). Cette étude EST cette v2, élarg
 **Résultat attendu.** Pour chaque question éligible, le moteur compare la saisie normalisée non
 plus à une seule chaîne mais à un **ensemble fermé de réponses acceptées** (la bonne option **plus**
 ses variantes valides : paraphrases, synonymes, formes morphologiques — avec/sans article, genre,
-pluriel —, positions équivalentes, et pour l'arabe des petites classes, translittérations latines
+pluriel —, positions équivalentes, et pour l'arabe — tous niveaux (Q-1) — translittérations latines
 usuelles). L'ensemble est **produit hors-ligne** (passe de génération outillée + revue), stocké dans
 le contenu versionné, **compilé** comme le reste, et **jamais envoyé au client** (même posture
 server-only que la clé). Le scoring **reste 100 % déterministe au runtime** (test d'appartenance
