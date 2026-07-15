@@ -83,19 +83,29 @@ Source de vérité : [FableEtudes/README.md](./FableEtudes/README.md) (index) + 
 
 **Campagne d'illustration (le backlog que l'axe 5 génère lui-même) — en cours :**
 
-| vague              | état                                                                                                                                                              |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| maths 9ᵉ           | ✅ 2026-07-14 — 25 figures, 6 chapitres (toute la géométrie)                                                                                                      |
-| **maths 1ère sec** | ✅ 2026-07-14 — **38 figures, 11 chapitres** (angles, Thalès, trigo, vecteurs, repère, quart de tour, sections planes, fonctions linéaires/affines, statistiques) |
-| **maths 6ᵉ**       | ✅ 2026-07-14 — **20 figures, 6 chapitres** (angles, triangles, quadrilatères, aires, cercle/disque, cube & pavé) — année de concours national                    |
-| reste              | **13 chapitres** : maths 7ᵉ (5), maths 1ère année (2), **maths 9ᵉ fonctions + statistiques (2)**, iq-training (3), français (1)                                   |
+| vague                        | état                                                                                                                                                                                                                                                                                                                |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| maths 9ᵉ                     | ✅ 2026-07-14 — 25 figures, 6 chapitres (toute la géométrie)                                                                                                                                                                                                                                                        |
+| **maths 1ère sec**           | ✅ 2026-07-14 — **38 figures, 11 chapitres** (angles, Thalès, trigo, vecteurs, repère, quart de tour, sections planes, fonctions linéaires/affines, statistiques)                                                                                                                                                   |
+| **maths 6ᵉ**                 | ✅ 2026-07-14 — **20 figures, 6 chapitres** (angles, triangles, quadrilatères, aires, cercle/disque, cube & pavé) — année de concours national                                                                                                                                                                      |
+| **maths 1ère année (6 ans)** | 🚧 2026-07-14 — `07-reperage-espace` (التموقع في الفضاء) illustré **cours (5) + quiz (3)**, figures **colorées et concrètes** (oiseau/arbre, balle/boîte, éléphant/souris). **Reste tout le reste de la classe** (voir priorité corrigée ci-dessous)                                                                |
+| **priorité CORRIGÉE**        | **les petites classes d'abord, pas en dernier.** Un enfant de 6 ans lit à peine et apprend par l'image → 1ère→3ème année de base sont le chantier n° 1. Constat : **tout le cours de 1ère ET 2ème année est vierge de figures** (0 sur toutes les matières), alors que ce sont les élèves qui en ont le plus besoin |
+| reste (ordre revu)           | **petites classes math 1ère→3ème (cours ET questions, illustration large — pas seulement « spatial »)**, puis maths 7ᵉ (5) · maths 9ᵉ fonctions+stats (2) · iq-training (3) · français (1) · et le reste des questions (étude 19)                                                                                   |
 
 > **L'axe 5 s'est élargi en route (2026-07-14).** Sa première liste ne couvrait que les **formes** :
 > elle laissait passer `07-quart-tour` (une rotation), `08-sections-planes` (des solides) et surtout
 > les chapitres de **fonctions** et de **statistiques** — or une fonction linéaire sans sa droite
 > décrit exactement ce qu'il fallait montrer. La liste couvre désormais aussi la famille
 > **graphique** (fonctions, diagrammes, séries, frises) : le signalement est passé de 22 à 30
-> chapitres, dont 11 réglés dans la foulée.
+> chapitres, dont 11 réglés dans la foulée. **2ᵉ élargissement (fin de journée)** : les mots-clés
+> `forme`/`ligne` ont été ajoutés (le primaire — «الأشكال», «الخطوط», «التموقع في الفضاء» — les
+> chapitres les PLUS visuels qui soient pour un enfant de 6 ans — passaient inaperçus), et surtout
+> la **priorité a été inversée** : les petites classes d'abord (voir tableau).
+
+> **La campagne ci-dessus ne concerne QUE les cours** (`cours.md`/`resume.md`). Le pendant côté
+> **questions & exercices** est l'**étude 19** (brouillon) : mêmes principes (doctrine + gate +
+> campagne), mais le rendu existe déjà (`SvgFigure`) et la détection est par-question, à l'échelle
+> de 18 708 items dont 780 illustrés (4,2 %). Ne pas confondre les deux backlogs.
 
 > **La campagne ci-dessus ne concerne QUE les cours** (`cours.md`/`resume.md`). Le pendant côté
 > **questions & exercices** est l'**étude 19** (brouillon) : mêmes principes (doctrine + gate +

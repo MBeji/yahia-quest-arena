@@ -104,6 +104,12 @@ describe("auditLesson", () => {
         // en illustrant math-1ere-sec : une rotation et des sections de solides.
         "07-quart-tour",
         "08-sections-planes",
+        // Le primaire (6 ans) — les plus visuels de tous, ajoutés le 2026-07-14 après
+        // le signalement de «التموقع في الفضاء» resté sans la moindre image.
+        "07-reperage-espace",
+        "06-formes-geometriques",
+        "10-lignes",
+        "07-formes-lignes",
       ]) {
         expect(isSpatialChapter(slug), slug).toBe(true);
       }

@@ -2,12 +2,24 @@
   "title": "اختبار فهم الدرس ⭐",
   "questions": [
     {
-      "prompt": "الشمس تكون عادةً:",
+      "prompt": "الشمس تكون عادةً: <svg viewBox=\"0 0 120 120\"><g stroke=\"#f59e0b\" stroke-width=\"3\" stroke-linecap=\"round\"><path d=\"M60 8 v10 M60 52 v8 M28 30 l7 6 M92 30 l-7 6 M18 30 h10 M92 30 h10\"/></g><circle cx=\"60\" cy=\"32\" r=\"15\" fill=\"#fbbf24\" stroke=\"#1f2937\" stroke-width=\"2.5\"/><circle cx=\"60\" cy=\"92\" r=\"20\" fill=\"#fcd34d\" stroke=\"#1f2937\" stroke-width=\"2.5\"/><circle cx=\"53\" cy=\"90\" r=\"2\" fill=\"#1f2937\"/><circle cx=\"67\" cy=\"90\" r=\"2\" fill=\"#1f2937\"/><path d=\"M52 99 q8 6 16 0\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"2\" stroke-linecap=\"round\"/></svg>",
       "options": [
-        { "id": "a", "text": "فوق رأسنا" },
-        { "id": "b", "text": "تحت أقدامنا" },
-        { "id": "c", "text": "داخل الحقيبة" },
-        { "id": "d", "text": "خلف الباب" }
+        {
+          "id": "a",
+          "text": "فوق رأسنا"
+        },
+        {
+          "id": "b",
+          "text": "تحت أقدامنا"
+        },
+        {
+          "id": "c",
+          "text": "داخل الحقيبة"
+        },
+        {
+          "id": "d",
+          "text": "خلف الباب"
+        }
       ],
       "correctOption": "a",
       "explanation": "الشمس في الأعلى في السماء، أي فوق رأسنا.",
@@ -16,34 +28,70 @@
     {
       "prompt": "أيّ حيوانٍ أكبر؟",
       "options": [
-        { "id": "a", "text": "الفأر" },
-        { "id": "b", "text": "النملة" },
-        { "id": "c", "text": "الفيل" },
-        { "id": "d", "text": "العصفور" }
+        {
+          "id": "a",
+          "text": "الفأر"
+        },
+        {
+          "id": "b",
+          "text": "النملة"
+        },
+        {
+          "id": "c",
+          "text": "الفيل"
+        },
+        {
+          "id": "d",
+          "text": "العصفور"
+        }
       ],
       "correctOption": "c",
       "explanation": "الفيل أكبر من الفأر والنملة والعصفور بكثير. إذن الأكبر هو الفيل.",
       "difficulty": 1
     },
     {
-      "prompt": "القلم موضوعٌ في جوف المقلمة. أين هو؟",
+      "prompt": "القلم موضوعٌ في جوف المقلمة. أين هو؟ <svg viewBox=\"0 0 140 100\"><path d=\"M22 46 H118 V82 H22 Z\" fill=\"#60a5fa\" stroke=\"#1f2937\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/><path d=\"M22 46 q48 -14 96 0\" fill=\"#93c5fd\" stroke=\"#1f2937\" stroke-width=\"2.5\"/><rect x=\"40\" y=\"52\" width=\"60\" height=\"10\" rx=\"2\" fill=\"#fbbf24\" stroke=\"#1f2937\" stroke-width=\"2\"/><path d=\"M100 52 l12 5 -12 5 z\" fill=\"#f472b6\" stroke=\"#1f2937\" stroke-width=\"1.5\" stroke-linejoin=\"round\"/><rect x=\"34\" y=\"52\" width=\"8\" height=\"10\" fill=\"#ef4444\" stroke=\"#1f2937\" stroke-width=\"2\"/></svg>",
       "options": [
-        { "id": "a", "text": "خارج المقلمة" },
-        { "id": "b", "text": "داخل المقلمة" },
-        { "id": "c", "text": "فوق المقلمة" },
-        { "id": "d", "text": "خلف المقلمة" }
+        {
+          "id": "a",
+          "text": "خارج المقلمة"
+        },
+        {
+          "id": "b",
+          "text": "داخل المقلمة"
+        },
+        {
+          "id": "c",
+          "text": "فوق المقلمة"
+        },
+        {
+          "id": "d",
+          "text": "خلف المقلمة"
+        }
       ],
       "correctOption": "b",
       "explanation": "ما كان في جوف الشيء فهو داخله، فالقلم داخل المقلمة.",
       "difficulty": 1
     },
     {
-      "prompt": "في الصفّ، السبّورة عادةً تكون:",
+      "prompt": "في الصفّ، السبّورة عادةً تكون: <svg viewBox=\"0 0 150 110\"><rect x=\"104\" y=\"24\" width=\"40\" height=\"34\" rx=\"3\" fill=\"#16a34a\" stroke=\"#1f2937\" stroke-width=\"2.5\"/><circle cx=\"58\" cy=\"40\" r=\"16\" fill=\"#fcd34d\" stroke=\"#1f2937\" stroke-width=\"2.5\"/><path d=\"M73 37 l9 3 -9 4 z\" fill=\"#fcd34d\" stroke=\"#1f2937\" stroke-width=\"1.5\"/><circle cx=\"66\" cy=\"37\" r=\"1.8\" fill=\"#1f2937\"/><path d=\"M40 62 Q58 55 76 62 L80 100 Q58 106 36 100 Z\" fill=\"#f472b6\" stroke=\"#1f2937\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/><path d=\"M76 68 Q95 64 104 52\" fill=\"none\" stroke=\"#1f2937\" stroke-width=\"5\" stroke-linecap=\"round\"/></svg>",
       "options": [
-        { "id": "a", "text": "خلف التلميذ" },
-        { "id": "b", "text": "تحت التلميذ" },
-        { "id": "c", "text": "أمام التلميذ" },
-        { "id": "d", "text": "داخل التلميذ" }
+        {
+          "id": "a",
+          "text": "خلف التلميذ"
+        },
+        {
+          "id": "b",
+          "text": "تحت التلميذ"
+        },
+        {
+          "id": "c",
+          "text": "أمام التلميذ"
+        },
+        {
+          "id": "d",
+          "text": "داخل التلميذ"
+        }
       ],
       "correctOption": "c",
       "explanation": "التلميذ ينظر نحو السبّورة، فهي أمامه.",
@@ -52,10 +100,22 @@
     {
       "prompt": "أيّ شيءٍ أطول؟",
       "options": [
-        { "id": "a", "text": "القلم" },
-        { "id": "b", "text": "العمود الكهربائيّ" },
-        { "id": "c", "text": "الملعقة" },
-        { "id": "d", "text": "المفتاح" }
+        {
+          "id": "a",
+          "text": "القلم"
+        },
+        {
+          "id": "b",
+          "text": "العمود الكهربائيّ"
+        },
+        {
+          "id": "c",
+          "text": "الملعقة"
+        },
+        {
+          "id": "d",
+          "text": "المفتاح"
+        }
       ],
       "correctOption": "b",
       "explanation": "العمود الكهربائيّ أطول بكثير من القلم والملعقة والمفتاح. إذن الأطول هو العمود.",

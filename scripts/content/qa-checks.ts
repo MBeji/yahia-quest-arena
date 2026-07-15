@@ -524,8 +524,10 @@ const DIRECTIVE_CLOSE = /^:::[ \t]*$/;
  * deux en phase.
  */
 const SPATIAL_CHAPTER =
-  // Formes & espace
-  /thales|thal[eè]s|pythagore|triangle|g[ée]om[ée]tri|cercle|angle|vecteur|rep[eè]re|espace|solide|sym[ée]trie|translation|rotation|quart.?tour|homoth[ée]tie|section|perim[eè]tre|p[ée]rim[eè]tre|quadrilat[eè]re|polygone|trigo|prisme|pyramide|c[oô]ne|cylindre|sph[eè]re|droites/i;
+  // Formes & espace. `ligne`/`reperage`/`forme` ajoutés le 2026-07-14 : le chapitre
+  // «التموقع في الفضاء» (`07-reperage-espace`) et «الخطوط» (`10-lignes`, `07-formes-lignes`)
+  // du primaire — les plus visuels qui soient pour un enfant de 6  ans — passaient inaperçus.
+  /thales|thal[eè]s|pythagore|triangle|g[ée]om[ée]tri|forme|cercle|angle|vecteur|rep[eè]re|espace|solide|sym[ée]trie|translation|rotation|quart.?tour|homoth[ée]tie|section|perim[eè]tre|p[ée]rim[eè]tre|quadrilat[eè]re|polygone|trigo|prisme|pyramide|c[oô]ne|cylindre|sph[eè]re|droites|ligne/i;
 
 /**
  * Deuxième famille — les notions qui se LISENT sur un graphique. Une leçon sur les fonctions
