@@ -89,7 +89,7 @@ describe("quest anonymous content reads (L0.4b)", () => {
     mockRpc.mockReset();
   });
 
-  it("getSubject (anon): open viewer, no best scores, no RPC, quiz gate left unpassed", async () => {
+  it("getSubject (anon): open viewer, no best scores, only content-derived RPCs, quiz gate left unpassed", async () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "subjects")
         return mockQuery({
@@ -115,10 +115,14 @@ describe("quest anonymous content reads (L0.4b)", () => {
     expect(res.quizPassedByChapter).toEqual({ ch1: false });
     expect(res.exercises).toHaveLength(2);
     // No ACCOUNT-BOUND RPC (best scores / entitlements) runs for an anon caller.
-    // The parcours-anchor resolution (étude 15 lot 7 — the hub's back link works
-    // for anonymous visitors too) is the only call allowed here.
+    // Only CONTENT-DERIVED RPCs are allowed: the parcours-anchor resolution (étude
+    // 15 lot 7 — the hub's back link works for anonymous visitors too) and recall
+    // availability (étude 17, R-9 amendée 2026-07-15 — the locked recall mission
+    // rows are discoverable while signed out; the RPC returns eligibility only,
+    // unlocked=false for anon).
+    const allowedRpcs = new Set(["resolve_subject_parcours", "get_recall_availability"]);
     for (const call of mockRpc.mock.calls) {
-      expect(call[0]).toBe("resolve_subject_parcours");
+      expect(allowedRpcs).toContain(call[0]);
     }
     expect(mockRpc).not.toHaveBeenCalledWith("get_best_scores_by_exercise", expect.anything());
     expect(mockRpc).not.toHaveBeenCalledWith("has_parcours_entitlement", expect.anything());

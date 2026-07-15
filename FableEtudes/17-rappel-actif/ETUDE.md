@@ -161,9 +161,17 @@ sur l'historique durable `attempts`, que l'anonyme n'a pas.
   tapée/attendue dans la review passe par `isolateLtrRuns` comme tout texte existant.
   `autocomplete/autocorrect/spellcheck` désactivés (le correcteur du téléphone ne doit pas
   souffler la réponse).
-- **R-9 — anonyme.** Aucune surface Rappel dans le registre public v1 (routes `/exercice`,
-  i18n `*-public` intacts). Le hub, partagé, conditionne le chip à `isAuthenticated`
-  (précédent : l'affichage `+XP`).
+- **R-9 — anonyme. ⚠️ AMENDÉE le 2026-07-15 (arbitrage Mohamed).** ~~Aucune surface Rappel
+  dans le registre public v1.~~ Désormais la mission Rappel est **découvrable par tous, anonyme
+  inclus** : le hub matière affiche la **ligne de mission Rappel dédiée verrouillée** (cadenas +
+  raison « connecte-toi et finis la mission à 100 % ») même déconnecté. L'éligibilité est dérivée
+  du contenu (aucune donnée de compte), donc calculable sans session ; le déblocage (`unlocked`)
+  et le meilleur score restent des concepts de compte → `false`/absent pour l'anonyme, jamais de
+  lien jouable. Le RPC `get_recall_availability` est rendu appelable par `anon` (migration
+  `20260715120000`, sans le garde `Unauthorized`), `getSubject` le résout pour tout le monde, et
+  `RecallMissionRow` ne conditionne plus l'affichage à `isAuthenticated` (seule la raison change).
+  Les routes de jeu Rappel (`/quest/$exerciseId?variant=recall`) restent gardées côté serveur
+  (`start_exercise_session` → `RECALL_LOCKED`) : l'anonyme voit la promesse, il ne peut pas jouer.
 - **R-10 — périmètre moteur.** Quiz de compréhension, Donjon, duels, examens : jamais de
   variante Rappel v1. `check_answers`, `score_quiz`, `submit_dungeon_answer` ne sont
   **pas modifiés**.

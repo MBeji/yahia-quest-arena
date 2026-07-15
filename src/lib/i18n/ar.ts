@@ -236,6 +236,7 @@ export const ar: TranslationKeys = {
     recallPlay: "العب في وضع الاسترجاع",
     recallChip: "🧠 استرجاع",
     recallLockedHint: "أنجِز المهمّة أوّلًا بنسبة 100%",
+    recallLockedHintAnon: "سجّل الدخول وأنجِز المهمّة بنسبة 100%",
   },
   levelUp: {
     title: "مستوى أعلى!",

@@ -49,9 +49,13 @@ export type SubjectHubParcours = {
 
 /**
  * Per-mission recall availability (étude 17), from getSubject().recall. Drives
- * the "🧠 Rappel" chip: eligible count (>= RECALL_MIN_QUESTIONS to show at all),
- * unlocked (classic mastered → the chip links to the recall run), and the best
- * recall score so far. Signed-in only (R-9) — the caller passes null for anon.
+ * the "🧠 Rappel" dedicated mission row: eligible count (>= RECALL_MIN_QUESTIONS
+ * to surface it), unlocked (classic mastered → the row links to the recall run),
+ * and the best recall score so far. Resolved for EVERYONE — anon included
+ * (override de R-9, 2026-07-15): the row is DISCOVERABLE while signed out, shown
+ * locked with a "connecte-toi et finis à 100 %" reason. Eligibility is content-
+ * derived (no account data); unlocked/best stay account concepts (false/absent
+ * for anon).
  */
 export type SubjectHubRecall = {
   eligibleByExercise: Record<string, number>;
@@ -330,8 +334,9 @@ export function SubjectHub({
                                 ) : null}
                               </span>
                             </Link>
-                            <RecallChip
+                            <RecallMissionRow
                               exerciseId={ex.id}
+                              title={ex.title}
                               isQuiz={isQuiz}
                               isAuthenticated={isAuthenticated}
                               recall={recall}
@@ -358,42 +363,53 @@ export function SubjectHub({
 }
 
 /**
- * "🧠 Rappel" secondary chip under a mission (étude 17, US-2/US-6). Signed-in
- * only (R-9). Three states:
- *   - absent  — anon, a quiz row, or fewer than RECALL_MIN_QUESTIONS eligible
- *               questions (no dead end: no lock, no promise);
+ * "🧠 Rappel" dedicated mission row under its classic mission (étude 17,
+ * US-2/US-6). Rendered at the same visual level as the other mission rows so the
+ * recall variant is a first-class, discoverable mission — visible to EVERYONE,
+ * anon included (override de R-9, 2026-07-15). States:
+ *   - absent  — a quiz row, or fewer than RECALL_MIN_QUESTIONS eligible questions
+ *               (no dead end: no lock, no promise);
  *   - unlocked — the classic run is mastered → a link into the recall run
  *               (`?variant=recall`), with the best recall score when it exists;
- *   - locked  — eligible but not yet mastered → a non-interactive Lock + the
- *               one-sentence reason.
+ *   - locked  — eligible but not yet unlocked → a non-interactive Lock + the
+ *               one-sentence reason (signed-in: « finis à 100 % » ; anon:
+ *               « connecte-toi et finis à 100 % »).
  */
-function RecallChip({
+function RecallMissionRow({
   exerciseId,
+  title,
   isQuiz,
   isAuthenticated,
   recall,
 }: {
   exerciseId: string;
+  title: string;
   isQuiz: boolean;
   isAuthenticated: boolean;
   recall: SubjectHubRecall | null;
 }) {
   const t = useT();
-  if (!isAuthenticated || isQuiz || !recall) return null;
+  if (isQuiz || !recall) return null;
   const eligible = recall.eligibleByExercise[exerciseId] ?? 0;
   if (eligible < RECALL_MIN_QUESTIONS) return null;
   const unlocked = recall.unlockedByExercise[exerciseId] === true;
   const bestRecall = recall.bestByExercise[exerciseId];
+  const label = (
+    <span className="min-w-0 flex-1 truncate" dir={isRtlText(title) ? "rtl" : "ltr"}>
+      {t.quest.recallChip} · {title}
+    </span>
+  );
 
   if (!unlocked) {
+    const hint = isAuthenticated ? t.quest.recallLockedHint : t.quest.recallLockedHintAnon;
     return (
       <div
-        className="flex items-center gap-1.5 pb-2 ps-6 text-xs text-muted-foreground/60"
+        className="flex items-center gap-2 border-t border-dashed border-border/50 py-2.5 text-sm text-muted-foreground/70"
         data-testid="recall-chip-locked"
       >
-        <Lock className="h-3 w-3 shrink-0" />
-        <span>{t.quest.recallChip}</span>
-        <span className="text-muted-foreground/50">· {t.quest.recallLockedHint}</span>
+        <Lock className="h-4 w-4 shrink-0" />
+        {label}
+        <span className="shrink-0 text-xs text-muted-foreground/60">{hint}</span>
       </div>
     );
   }
@@ -403,10 +419,13 @@ function RecallChip({
       params={{ exerciseId }}
       search={{ variant: "recall" }}
       data-testid="recall-chip-unlocked"
-      className="flex items-center gap-1.5 pb-2 ps-6 text-xs font-semibold text-(--gold) transition hover:opacity-80 [@media(pointer:coarse)]:min-h-11"
+      className="flex items-center gap-2 border-t border-dashed border-(--gold)/30 py-2.5 text-sm font-semibold text-(--gold) transition hover:opacity-80 [@media(pointer:coarse)]:min-h-11"
     >
-      <span>{t.quest.recallChip}</span>
-      {bestRecall != null && <span className="font-bold">· {Math.round(bestRecall)}%</span>}
+      <Play className="h-4 w-4 shrink-0" />
+      {label}
+      <span className="shrink-0 text-xs">
+        {bestRecall != null ? `${Math.round(bestRecall)}%` : t.quest.recallPlay}
+      </span>
     </Link>
   );
 }

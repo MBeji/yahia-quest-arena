@@ -229,11 +229,12 @@ export const getSubject = createServerFn({ method: "GET" })
       best[r.exercise_id] = Number(r.best_score ?? 0);
     }
 
-    // Recall availability (étude 17) — an account concept (anonymous visitors have
-    // none); resolved in the co-located helper with a graceful empty fallback.
-    const recall = userId
-      ? await fetchRecallAvailability(supabase, data.subjectId)
-      : { eligibleByExercise: {}, unlockedByExercise: {}, bestByExercise: {} };
+    // Recall availability (étude 17) — resolved for EVERYONE, anon included
+    // (override de R-9, 2026-07-15) : l'éligibilité est dérivée du contenu, donc
+    // calculable sans session ; unlocked/best restent des concepts de compte
+    // (false/null pour l'anonyme). Le hub affiche ainsi les missions Rappel
+    // verrouillées même déconnecté. Graceful empty fallback dans le helper.
+    const recall = await fetchRecallAvailability(supabase, data.subjectId);
 
     // Comprehension-quiz gate: a chapter's exercises stay locked until the
     // user passes that chapter's mode='quiz' exercise at/above the threshold.

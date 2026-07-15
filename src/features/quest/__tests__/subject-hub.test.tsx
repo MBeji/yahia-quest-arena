@@ -9,6 +9,7 @@ vi.mock("@tanstack/react-router", () => ({
 
 import { SubjectHub } from "../components/subject-hub";
 import { QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
+import { fr } from "@/lib/i18n/fr";
 
 const subject = {
   name_fr: "Mathématiques",
@@ -197,7 +198,7 @@ describe("SubjectHub", () => {
   });
 });
 
-describe("SubjectHub — recall chip (étude 17, US-6)", () => {
+describe("SubjectHub — recall mission row (étude 17, US-6 + override R-9)", () => {
   const openC1 = { c1: true, c2: true };
 
   it("unlocked: an eligible + mastered mission links into the recall run with its best score", () => {
@@ -240,6 +241,8 @@ describe("SubjectHub — recall chip (étude 17, US-6)", () => {
     expandAll(container);
     expect(screen.getByTestId("recall-chip-locked")).toBeInTheDocument();
     expect(screen.queryByTestId("recall-chip-unlocked")).not.toBeInTheDocument();
+    // Signed-in reason omits the "sign in" step.
+    expect(screen.getByText(fr.quest.recallLockedHint)).toBeInTheDocument();
   });
 
   it("absent below RECALL_MIN_QUESTIONS eligible questions (no dead end)", () => {
@@ -262,7 +265,7 @@ describe("SubjectHub — recall chip (étude 17, US-6)", () => {
     expect(screen.queryByTestId("recall-chip-unlocked")).not.toBeInTheDocument();
   });
 
-  it("absent for anonymous visitors (R-9) and on quiz rows", () => {
+  it("anonymous visitor: the recall mission is DISCOVERABLE but locked (override R-9)", () => {
     const { container } = render(
       <SubjectHub
         subject={subject}
@@ -270,17 +273,19 @@ describe("SubjectHub — recall chip (étude 17, US-6)", () => {
         exercises={exercises}
         quizPassedByChapter={openC1}
         isAuthenticated={false}
+        // Anon never unlocks (no durable attempts) → server returns unlocked=false.
         recall={{
-          eligibleByExercise: { e1: 5, e2: 5 },
-          unlockedByExercise: { e1: true, e2: true },
+          eligibleByExercise: { e2: 5 },
+          unlockedByExercise: {},
           bestByExercise: {},
         }}
       />,
     );
     expandAll(container);
-    // anon → nothing at all
+    // Locked row shown with the sign-in reason; never a playable link.
+    expect(screen.getByTestId("recall-chip-locked")).toBeInTheDocument();
     expect(screen.queryByTestId("recall-chip-unlocked")).not.toBeInTheDocument();
-    expect(screen.queryByTestId("recall-chip-locked")).not.toBeInTheDocument();
+    expect(screen.getByText(fr.quest.recallLockedHintAnon)).toBeInTheDocument();
   });
 
   it("absent on the quiz row even when signed-in and eligible", () => {

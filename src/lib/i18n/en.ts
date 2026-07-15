@@ -236,6 +236,7 @@ export const en: TranslationKeys = {
     recallPlay: "Play in Recall",
     recallChip: "🧠 Recall",
     recallLockedHint: "First complete the mission at 100%",
+    recallLockedHintAnon: "Sign in and complete the mission at 100%",
   },
   levelUp: {
     title: "Level up!",
