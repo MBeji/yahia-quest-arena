@@ -23,7 +23,9 @@ const BUDGETS = {
   // proof band + per-door CTAs + per-theme extras descriptors) stacked on the lycée
   // drill-down namespace (étude 16 lot 3: `lycee.*` + `lyceeYearDesc`) — headroom
   // reserved for the remaining étude 15 lots (auth/onboarding/arène/parent/admin copy).
-  "i18n-": 116 * 1024,
+  // Then 116→118 KB for the trilingual recall-mode keys (étude 17 lot 4: result-screen
+  // badge/unlock + hub chip copy) — a handful of short keys, restores the headroom.
+  "i18n-": 118 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
   // @dnd-kit (core+sortable+utilities) powering the B2 ordering/matching

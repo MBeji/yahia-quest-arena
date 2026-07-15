@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { errorMessage, failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
 import type { Database } from "@/shared/integrations/supabase/types";
+import { RECALL_LOCKED_MESSAGE, RECALL_NOT_ELIGIBLE_MESSAGE } from "./recall-messages";
 
 type Supabase = SupabaseClient<Database>;
 
@@ -27,16 +28,13 @@ export function toPerQuestion(value: unknown): RecallVerdict[] | null {
 }
 
 /**
- * Recall mode (étude 17). The RPC raises a stable token per gate; these are the
- * localized surfaces (same pattern as QUIZ_LOCKED). `RECALL_LOCKED` means the
- * classic run isn't mastered yet; `RECALL_NOT_ELIGIBLE` means the mission can't
- * be played in recall at all (quiz/non-admin/too few eligible questions). An
- * `INVALID_VARIANT` is a programming error (the input is a closed enum) and maps
- * to the generic not-eligible surface.
+ * Recall mode (étude 17). The RPC raises a stable token per gate; the localized
+ * surfaces live in the zero-import `recall-messages.ts` module (importing them
+ * from `quest.server` into a client route would pull server code into the client
+ * `index` chunk). Re-exported here for consumers that already reach for this
+ * helper module; `quest.server.ts` raises them.
  */
-export const RECALL_LOCKED_MESSAGE =
-  "Réussis d'abord cette mission à 100 % en QCM pour débloquer le mode Rappel.";
-export const RECALL_NOT_ELIGIBLE_MESSAGE = "Cette mission ne peut pas être jouée en mode Rappel.";
+export { RECALL_LOCKED_MESSAGE, RECALL_NOT_ELIGIBLE_MESSAGE };
 
 /** A recall play-set question — prompt only, options empty by construction (R-1). */
 export type RecallQuestion = {
