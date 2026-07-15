@@ -62,6 +62,7 @@ voie qui fait quoi (procédure : [`CONTRIBUER.md`](./CONTRIBUER.md) §4).
 | 16  | [Ouverture du lycée (sections, mutualisation, arborescence)](16-ouverture-lycee/ETUDE.md)    | 🎓 second cycle complet — 17 classes                                                       | haute      | en exécution | lots 0–3 livrés (#367/#369/#371/#375) ; reste : campagne de contenu (vague A, corpus L1 secondaire)                                                                                                                                                                                                                           |
 | 17  | [Rappel actif (rejouer les QCM en saisie libre)](17-rappel-actif/ETUDE.md)                   | 🧠 double le contenu jouable à coût zéro (active recall)                                   | moyenne    | **validée**  | — (le contenu QCM existant suffit) ; Q-1…Q-4 arbitrées 2026-07-13 ; s'articule avec 03 et 04-A1                                                                                                                                                                                                                               |
 | 18  | [Cours vivants (blocs pédagogiques & illustration)](18-cours-vivants/ETUDE.md)               | 📐 le cours cesse d'être un mur de texte ; la géométrie cesse d'être enseignée sans figure | moyenne+   | **livrée**   | — (5 lots livrés 2026-07-14 : 517 cours structurés · 3 827 cartes de révision · figures légendées/agrandissables · gate contenu ouvert aux 541 leçons (46 violations de notation corrigées) · axe 5 « Illustration » · **géométrie 9ᵉ illustrée, 25 figures**. Backlog laissé par l'axe 5 : 22 chapitres spatiaux → campagne) |
+| 19  | [Questions & exercices illustrés (doctrine + campagne)](19-questions-illustrees/ETUDE.md)    | 🖼️ une question de géométrie sans figure n'a pas plus de sens qu'un cours sans figure      | moyenne    | brouillon    | é18 (livrée — réutilise `course-figures.md`) ; le **rendu existe déjà** (`SvgFigure`), l'enjeu est la détection par-question à l'échelle (780/18 708 illustrées) ; Q-1…Q-4 ouvertes ; **lot 1 (doctrine+gate) exécutable dès Q-1 tranchée**                                                                                   |
 
 **Ordre d'exécution recommandé — révisé post-pivot gratuité (2026-07-11)** (les numéros sont des
 identifiants, pas l'ordre) : finir l'en-cours `15 → 16 → 04-A1`, puis
@@ -71,6 +72,10 @@ de contenu qui suit : la barre qualité a désormais un **axe 5 « Illustration 
 inspecte les leçons, et un chapitre à notions spatiales sans figure est signalé. Toute vague de
 génération (16, lycée) doit s'y conformer, et **22 chapitres spatiaux sans dessin** restent au
 backlog que l'axe 5 a produit (6ᵉ, 7ᵉ, 1ère sec…).
+**`19` (questions & exercices illustrés)** est le pendant de `18` côté **questions** : le rendu
+existe déjà (`SvgFigure`), donc l'étude est **doctrine + détection + campagne**, pas ingénierie.
+Son lot 1 (barre qualité + gate qui signale les questions spatiales sans figure) est du code/skills
+pur, exécutable dès l'arbitrage de sa Q-1 ; sa campagne suit la même priorité (concours d'abord).
 Les études `01` et `11` sont **gelées** tant que dure la phase gratuite (sortie de gel = décision
 humaine). L'ancien ordre « monétisation d'abord » (`01 → 02 → …`) et ses verdicts restent lisibles
 dans [`REVUE-2026-07-dix-features.md`](REVUE-2026-07-dix-features.md) (trace d'arbitrage datée,
