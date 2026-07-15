@@ -238,6 +238,7 @@ export const fr: TranslationKeys = {
     recallPlay: "Jouer en Rappel",
     recallChip: "🧠 Rappel",
     recallLockedHint: "Termine d'abord la mission à 100 %",
+    recallLockedHintAnon: "Connecte-toi et finis la mission à 100 %",
   },
   levelUp: {
     title: "Niveau supérieur !",

@@ -239,6 +239,7 @@ export type TranslationKeys = {
     recallPlay: string;
     recallChip: string;
     recallLockedHint: string;
+    recallLockedHintAnon: string;
   };
   // Level up
   levelUp: {

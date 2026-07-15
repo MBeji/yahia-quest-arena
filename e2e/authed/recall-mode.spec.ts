@@ -31,7 +31,8 @@ test.describe("Active recall (étude 17)", () => {
     await expect(quest.score).toBeVisible({ timeout: 15_000 });
     await expect(quest.score).toContainText("100%");
 
-    // 2. The subject hub now surfaces an UNLOCKED recall chip (signed-in only, R-9).
+    // 2. The subject hub now surfaces an UNLOCKED recall row (mastered → playable;
+    //    the locked row is also shown to anon since the R-9 override of 2026-07-15).
     await page.goto(`/matiere/${subjectId}`);
     await expect(page.getByTestId("recall-chip-unlocked").first()).toBeVisible({
       timeout: 15_000,
