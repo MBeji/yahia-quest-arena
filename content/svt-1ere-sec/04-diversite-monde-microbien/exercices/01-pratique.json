@@ -1,0 +1,85 @@
+{
+  "title": "⭐ Exercice : Reconnaître un microbe",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Où vit la paramécie, et est-elle dangereuse pour l'homme ?",
+      "options": [
+        { "id": "a", "text": "Dans les eaux stagnantes ; c'est un micro-organisme inoffensif" },
+        { "id": "b", "text": "Dans le gros intestin ; elle cause la dysentérie amibienne" },
+        { "id": "c", "text": "Dans le sol ; elle décompose la matière organique des déchets" },
+        { "id": "d", "text": "Sur la peau ; elle provoque des furoncles et des abcès" }
+      ],
+      "correctOption": "a",
+      "explanation": "La paramécie est un animal unicellulaire des eaux stagnantes, et c'est un micro-organisme inoffensif ✓ — on l'obtient en laissant une semaine de l'eau et du foin dans un cristallisoir, à l'abri du soleil et à 25 à 30 °C. Le gros intestin et la dysentérie amibienne sont l'affaire de l'amibe dysentérique, l'autre protozoaire du chapitre : elle, elle est pathogène. La décomposition de la matière organique est le travail des bactéries du sol. Et les furoncles sont l'œuvre des staphylocoques.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "À quoi servent les pseudopodes de l'amibe ?",
+      "options": [
+        { "id": "a", "text": "À la respiration et à l'excrétion" },
+        { "id": "b", "text": "À la reproduction et à l'enkystement" },
+        { "id": "c", "text": "Au déplacement et à la nutrition" },
+        { "id": "d", "text": "À la fixation sur la paroi de l'intestin" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le cytoplasme de l'amibe forme des prolongements, les pseudopodes, qui assurent le déplacement et la nutrition ✓. La respiration et l'excrétion ne leur sont pas attribuées. L'enkystement est un phénomène distinct : lorsque les conditions sont défavorables, l'amibe s'enkyste — et ce sont ces kystes, ingérés avec de l'eau ou des aliments souillés, qui se transforment en amibes dans le tube digestif. Enfin les pseudopodes ne servent pas à se fixer : ils sont au contraire l'organe du mouvement.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Placée dans des conditions favorables, Eschérishia Coli s'allonge et se divise en deux. À quel rythme ?",
+      "options": [
+        { "id": "a", "text": "Toutes les 20 secondes" },
+        { "id": "b", "text": "Toutes les 20 minutes" },
+        { "id": "c", "text": "Toutes les 20 heures" },
+        { "id": "d", "text": "Tous les 20 jours" }
+      ],
+      "correctOption": "b",
+      "explanation": "Deux nouvelles bactéries se forment à partir d'une bactérie initiale toutes les 20 minutes ✓ : ce mode de division est la bipartition, et c'est lui qui donne aux bactéries leur grande capacité de multiplication dès que le milieu leur est favorable. En une heure, cela fait 3 divisions — une bactérie en devient 8. Ni les 20 secondes, ni les 20 heures, ni les 20 jours ne correspondent à ce que l'on observe en culture.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "De quel micro-organisme la pénicilline est-elle tirée ?",
+      "options": [
+        { "id": "a", "text": "De la levure de bière" },
+        { "id": "b", "text": "D'une bactérie lactique" },
+        { "id": "c", "text": "De l'amibe dysentérique" },
+        { "id": "d", "text": "Du Pénicillium notatum" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le Pénicillium notatum, ou Pénicille, est une moisissure verte à partir de laquelle est fabriquée la pénicilline, un antibiotique ✓ : c'est l'exemple type du microbe utile, cultivé par l'homme pour un usage médical. La levure de bière sert, elle, à fabriquer le pain, le vin, la bière et le cidre. Les bactéries lactiques transforment le lait en yaourt. Quant à l'amibe dysentérique, c'est un protozoaire pathogène, agent de l'amibiase.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Sur un microscope, l'oculaire porte l'indication × 15 et l'objectif × 40. Quel est le grossissement de l'observation ?",
+      "options": [
+        { "id": "a", "text": "× 2,7" },
+        { "id": "b", "text": "× 40" },
+        { "id": "c", "text": "× 55" },
+        { "id": "d", "text": "× 600" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le grossissement du microscope est le produit de celui de l'oculaire par celui de l'objectif : 15 × 40 = 600 ✓. Trouver 55 revient à additionner au lieu de multiplier (15 + 40) — c'est le piège courant. Trouver 40 revient à ne retenir que l'objectif et à oublier l'oculaire. Et trouver 2,7 revient à diviser (40 / 15), ce qui n'aurait aucun sens : un microscope grossit, il ne réduit pas.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Les bactéries du sol décomposent la matière organique des cadavres et des déchets animaux et végétaux. En quoi la transforment-elles, et comment nomme-t-on ce processus ?",
+      "options": [
+        { "id": "a", "text": "En humus et en eau ; c'est la fermentation" },
+        {
+          "id": "b",
+          "text": "En sels minéraux et en dioxyde de carbone ; c'est la minéralisation"
+        },
+        { "id": "c", "text": "En matière organique nouvelle ; c'est la photosynthèse" },
+        { "id": "d", "text": "En nitrates et en oxygène ; c'est la respiration" }
+      ],
+      "correctOption": "b",
+      "explanation": "Les bactéries du sol transforment la matière organique des cadavres et des déchets en sels minéraux et en dioxyde de carbone, qui se dégage dans l'air : ce processus est la minéralisation ✓, et il restitue au sol les sels minéraux puisés par les plantes — c'est exactement ce qui fait fonctionner la fertilisation organique vue au chapitre 1. La fermentation est une autre capacité bactérienne, employée pour produire fromages, yaourts et vinaigres. La photosynthèse fabrique de la matière organique au lieu de la décomposer, et elle est l'œuvre des végétaux chlorophylliens. Quant aux nitrates, ils apparaissent bien dans le sol, mais au terme de la minéralisation de l'azote organique — et ce processus ne s'appelle pas la respiration.",
+      "difficulty": 2
+    }
+  ]
+}
