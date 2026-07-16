@@ -34,6 +34,13 @@ $$ نخلة → حشرة → عصفور → ثعلب $$
 
 نقرأ هذه السلسلة هكذا: النخلة (منتج) تُؤكل من طرف الحشرة (مستهلك أوّل)، والحشرة تُؤكل من طرف العصفور (مستهلك ثانٍ)، والعصفور يُؤكل من طرف الثعلب (مستهلك ثالث).
 
+<svg viewBox="0 0 300 150">
+<title>سلسلة غذائية: نبات ← عاشب ← لاحم، والسهم معناه «يُؤكل من طرف»</title>
+<rect x="19" y="41" width="74" height="42" rx="8" fill="#bbf7d0" stroke="#0f172a" stroke-width="2"/><text x="56" y="67" text-anchor="middle" fill="#0f172a" font-size="14" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">نبات</text><text x="56" y="103" text-anchor="middle" fill="#64748b" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">مُنتِج</text><rect x="113" y="41" width="74" height="42" rx="8" fill="#fde68a" stroke="#0f172a" stroke-width="2"/><text x="150" y="67" text-anchor="middle" fill="#0f172a" font-size="14" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">عاشب</text><text x="150" y="103" text-anchor="middle" fill="#64748b" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">مستهلك أوّل</text><rect x="207" y="41" width="74" height="42" rx="8" fill="#fecaca" stroke="#0f172a" stroke-width="2"/><text x="244" y="67" text-anchor="middle" fill="#0f172a" font-size="14" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">لاحم</text><text x="244" y="103" text-anchor="middle" fill="#64748b" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">مستهلك ثانٍ</text><line x1="95" y1="62" x2="111" y2="62" stroke="#0f172a" stroke-width="2.5"/>
+<polygon points="111,62 101,67 101,57" fill="#0f172a"/><line x1="189" y1="62" x2="205" y2="62" stroke="#0f172a" stroke-width="2.5"/>
+<polygon points="205,62 195,67 195,57" fill="#0f172a"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="103" y="46" text-anchor="middle" fill="#0f172a" font-size="10">يُؤكل من طرف</text><text x="197" y="46" text-anchor="middle" fill="#0f172a" font-size="10">يُؤكل من طرف</text></g>
+</svg>
+
 > ⚠️ الخطأ الشائع هو قلب اتّجاه السهم. السهم لا يعني «يأكل» بل **«يُؤكل من طرف»**: نخلة → حشرة تعني أنّ النخلة هي المأكولة، لا الآكلة.
 
 ## 🏜️🌊 أمثلة تونسية: من الواحة إلى الشاطئ

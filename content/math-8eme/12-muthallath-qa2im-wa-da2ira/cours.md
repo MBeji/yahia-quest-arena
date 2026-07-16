@@ -22,6 +22,11 @@ $$ IA = IB = IC $$
 
 فالدائرة التي مركزها I وتمرّ بـ B وC تمرّ أيضًا بـ A. هذا يعني أنّ الوتر [BC] قطرٌ لهذه الدائرة.
 
+<svg viewBox="0 0 300 190">
+<title>المثلث القائم والدائرة: الوتر [BC] قطر، ومركزها I منتصف الوتر</title>
+<circle cx="150" cy="92" r="70" fill="none" stroke="#2563eb" stroke-width="2"/><line x1="80" y1="92" x2="220" y2="92" stroke="#0f172a" stroke-width="2.5"/><polygon points="109.85,34.66 80,92 220,92" fill="none" stroke="#0f172a" stroke-width="2.5"/><line x1="150" y1="92" x2="109.85" y2="34.66" stroke="#0f6e56" stroke-width="2.2"/><polyline points="104.77,44.42 114.53,49.5 119.61,39.74" fill="none" stroke="#0f172a" stroke-width="1.8"/><line x1="125.01" y1="66.77" x2="134.84" y2="59.89" stroke="#ef4444" stroke-width="2"/><line x1="115" y1="98" x2="115" y2="86" stroke="#ef4444" stroke-width="2"/><line x1="185" y1="86" x2="185" y2="98" stroke="#ef4444" stroke-width="2"/><circle cx="109.85" cy="34.66" r="3" fill="#0f172a"/><circle cx="150" cy="92" r="3" fill="#0f172a"/><circle cx="80" cy="92" r="3" fill="#0f172a"/><circle cx="220" cy="92" r="3" fill="#0f172a"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="103.85" y="26.66" text-anchor="middle" fill="#0f172a" font-size="13">A</text><text x="69" y="97" text-anchor="middle" fill="#0f172a" font-size="13">B</text><text x="231" y="97" text-anchor="middle" fill="#0f172a" font-size="13">C</text><text x="154" y="108" text-anchor="middle" fill="#0f172a" font-size="13">I</text><text x="117" y="66" text-anchor="middle" fill="#0f6e56" font-size="12">R</text><text x="150" y="180" text-anchor="middle" fill="#64748b" font-size="11">I منتصف [BC] ، و IA = IB = IC = R</text></g>
+</svg>
+
 > ⚠️ الفخّ الأخطر: يظنّ كثيرٌ من التلاميذ أنّ المركز هو رأسُ **الزاوية القائمة** A. خطأ! المركزُ هو منتصفُ **الوتر** I، وهو أبعدُ نقطةٍ في الفكرة عن A.
 
 ## 📏 نصفُ القطر ومتوسّطُ الوتر

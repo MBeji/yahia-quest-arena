@@ -35,6 +35,17 @@
 
 التفسير: الضغط الجوّي يدفع البطاقة من الأسفل نحو الأعلى بقوّة أكبر من وزن الماء الذي يدفعها نحو الأسفل، فتبقى البطاقة ملتصقة والماء محبوسًا داخل الكأس.
 
+<svg viewBox="0 0 300 214">
+<title>الضغط الجوّي يدفع في كلّ الاتّجاهات</title>
+<line x1="120" y1="58" x2="180" y2="58" stroke="#0f172a" stroke-width="2.5"/><line x1="120" y1="58" x2="126" y2="150" stroke="#0f172a" stroke-width="2.5"/><line x1="180" y1="58" x2="174" y2="150" stroke="#0f172a" stroke-width="2.5"/><polygon points="121,60 179,60 174,149 126,149" fill="#bfdbfe" stroke="none" stroke-width="2"/><rect x="116" y="150" width="68" height="6" rx="1" fill="#f59e0b" stroke="#0f172a" stroke-width="2"/><line x1="150" y1="196" x2="150" y2="160" stroke="#ef4444" stroke-width="3"/>
+<polygon points="150,160 155.5,171 144.5,171" fill="#ef4444"/><line x1="88" y1="104" x2="116" y2="104" stroke="#ef4444" stroke-width="2.5"/>
+<polygon points="116,104 107,108.5 107,99.5" fill="#ef4444"/><line x1="212" y1="104" x2="184" y2="104" stroke="#ef4444" stroke-width="2.5"/>
+<polygon points="184,104 193,99.5 193,108.5" fill="#ef4444"/><line x1="120" y1="40" x2="132" y2="55" stroke="#ef4444" stroke-width="2.2"/>
+<polygon points="132,55 123.88,51.25 130.13,46.25" fill="#ef4444"/><line x1="180" y1="40" x2="168" y2="55" stroke="#ef4444" stroke-width="2.2"/>
+<polygon points="168,55 169.87,46.25 176.12,51.25" fill="#ef4444"/><line x1="150" y1="90" x2="150" y2="120" stroke="#0f172a" stroke-width="2"/>
+<polygon points="150,120 146,112 154,112" fill="#0f172a"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="150" y="205" text-anchor="middle" fill="#ef4444" font-size="12">ضغط جوّي</text><text x="70" y="104" text-anchor="middle" fill="#ef4444" font-size="11">ضغط</text><text x="232" y="104" text-anchor="middle" fill="#ef4444" font-size="11">ضغط</text><text x="150" y="108" text-anchor="middle" fill="#0f172a" font-size="10">وزن الماء</text><text x="150" y="174" text-anchor="middle" fill="#0f172a" font-size="11">بطاقة</text></g>
+</svg>
+
 > ⚠️ خطأ شائع: يتخيّل بعض التلاميذ أنّ الضغط الجوّي يؤثّر من الأعلى إلى الأسفل فقط (كأنّه "وزن" يسقط علينا)؛ في الحقيقة يضغط الهواء في **كلّ الاتّجاهات** في الآن نفسه، وهذا بالضبط ما يفسّر بقاء البطاقة ملتصقة من الأسفل في التجربة السابقة.
 
 ## ⚡ آثار الضّغط الجوّي في حياتنا اليومية

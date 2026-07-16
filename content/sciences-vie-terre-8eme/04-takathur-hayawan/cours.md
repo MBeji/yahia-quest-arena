@@ -49,6 +49,48 @@
 
 > البيضة ← الشرغوف (يعيش في الماء، له ذيل وخياشيم) ← ضفدع صغير (تنمو أطرافه ويختفي ذيله) ← الضفدع البالغ (يعيش على اليابسة ويتنفّس برئتين).
 
+<svg viewBox="0 0 300 300">
+<title>تحوّل الضفدع: دورة من أربع مراحل</title>
+<circle cx="136" cy="54" r="7" fill="#e0f2fe" stroke="#2563eb" stroke-width="1.6"/>
+<circle cx="136" cy="54" r="2.6" fill="#0f172a"/>
+<circle cx="148" cy="48" r="7" fill="#e0f2fe" stroke="#2563eb" stroke-width="1.6"/>
+<circle cx="148" cy="48" r="2.6" fill="#0f172a"/>
+<circle cx="160" cy="56" r="7" fill="#e0f2fe" stroke="#2563eb" stroke-width="1.6"/>
+<circle cx="160" cy="56" r="2.6" fill="#0f172a"/>
+<circle cx="144" cy="64" r="7" fill="#e0f2fe" stroke="#2563eb" stroke-width="1.6"/>
+<circle cx="144" cy="64" r="2.6" fill="#0f172a"/>
+<circle cx="156" cy="64" r="7" fill="#e0f2fe" stroke="#2563eb" stroke-width="1.6"/>
+<circle cx="156" cy="64" r="2.6" fill="#0f172a"/>
+<circle cx="150" cy="57" r="7" fill="#e0f2fe" stroke="#2563eb" stroke-width="1.6"/>
+<circle cx="150" cy="57" r="2.6" fill="#0f172a"/>
+<path d="M 250 144 Q 276 138, 286 150 Q 276 162, 250 156 Z" fill="#dcfce7" stroke="#0f6e56" stroke-width="2"/>
+<ellipse cx="238" cy="150" rx="15" ry="11" fill="#bbf7d0" stroke="#0f6e56" stroke-width="2"/>
+<circle cx="233" cy="147" r="2.4" fill="#0f172a"/>
+<ellipse cx="150" cy="250" rx="17" ry="13" fill="#86efac" stroke="#0f6e56" stroke-width="2"/>
+<path d="M 165 252 q 12 4, 16 12" fill="none" stroke="#0f6e56" stroke-width="2.4"/>
+<path d="M 138 258 q -8 6, -4 14" fill="none" stroke="#0f6e56" stroke-width="2.4"/>
+<path d="M 158 259 q 8 6, 4 13" fill="none" stroke="#0f6e56" stroke-width="2.4"/>
+<circle cx="144" cy="246" r="2.4" fill="#0f172a"/>
+<circle cx="156" cy="246" r="2.4" fill="#0f172a"/>
+<ellipse cx="56" cy="150" rx="22" ry="16" fill="#0f6e56" stroke="#065f46" stroke-width="2"/>
+<circle cx="47" cy="138" r="5" fill="#0f6e56" stroke="#065f46" stroke-width="1.6"/>
+<circle cx="65" cy="138" r="5" fill="#0f6e56" stroke="#065f46" stroke-width="1.6"/>
+<circle cx="47" cy="138" r="2" fill="#0f172a"/>
+<circle cx="65" cy="138" r="2" fill="#0f172a"/>
+<path d="M 40 160 q -12 4, -14 16 q 8 -2, 12 2" fill="none" stroke="#065f46" stroke-width="2.4"/>
+<path d="M 72 160 q 12 4, 14 16 q -8 -2, -12 2" fill="none" stroke="#065f46" stroke-width="2.4"/>
+<line x1="196" y1="78" x2="226" y2="116" stroke="#0f172a" stroke-width="2.5"/>
+<polygon points="226,116 216.89,111.72 223.96,106.15" fill="#0f172a"/>
+<line x1="224" y1="196" x2="190" y2="228" stroke="#0f172a" stroke-width="2.5"/>
+<polygon points="190,228 193.47,218.55 199.64,225.11" fill="#0f172a"/>
+<line x1="104" y1="224" x2="74" y2="190" stroke="#0f172a" stroke-width="2.5"/>
+<polygon points="74,190 83.33,193.77 76.58,199.73" fill="#0f172a"/>
+<line x1="72" y1="112" x2="106" y2="80" stroke="#0f172a" stroke-width="2.5"/>
+<polygon points="106,80 102.53,89.45 96.36,82.89" fill="#0f172a"/>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="150" y="156" text-anchor="middle" fill="#d97706" font-size="12.5">دورة التحوّل</text></g>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="150" y="26" text-anchor="middle" fill="#2563eb" font-size="13">البيضة</text><text x="252" y="182" text-anchor="middle" fill="#0f6e56" font-size="13">الشرغوف</text><text x="150" y="286" text-anchor="middle" fill="#0f6e56" font-size="13">ضفدع صغير</text><text x="56" y="196" text-anchor="middle" fill="#065f46" font-size="13">الضفدع البالغ</text></g>
+</svg>
+
 **تحوّل الفراشة** (حشرة):
 
 > البيضة ← اليرقة (دودة تأكل الأوراق) ← الخادرة (طور ساكن داخل شرنقة) ← الفراشة البالغة.

@@ -46,6 +46,13 @@ $$ f(x) = a × x + b $$
 
 - **القطع b** هو تراتيب النقطة التي يقطع فيها المستقيم محور التراتيب؛ أي f(0) = b.
 
+<svg viewBox="0 0 224 168">
+<title>الدالة الخطية تمرّ بالأصل، والتآلفية تقطع محور التراتيب في b</title>
+<line x1="44" y1="150" x2="44" y2="20" stroke="#0f172a" stroke-width="1.5"/>
+<polygon points="44,20 47.5,27 40.5,27" fill="#0f172a"/><line x1="44" y1="150" x2="215" y2="150" stroke="#0f172a" stroke-width="1.5"/>
+<polygon points="215,150 208,153.5 208,146.5" fill="#0f172a"/><line x1="44" y1="150" x2="165" y2="35" stroke="#0f6e56" stroke-width="2.5"/><line x1="44" y1="108" x2="205" y2="48" stroke="#2563eb" stroke-width="2.5"/><circle cx="44" cy="150" r="3" fill="#0f172a"/><circle cx="44" cy="108" r="3" fill="#2563eb"/><line x1="40" y1="108" x2="48" y2="108" stroke="#0f172a" stroke-width="1.5"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="36" y="164" text-anchor="end" fill="#0f172a" font-size="12">O</text><text x="36" y="112" text-anchor="end" fill="#2563eb" font-size="12">b</text><text x="150" y="44" text-anchor="middle" fill="#0f6e56" font-size="11">خطية</text><text x="170" y="70" text-anchor="middle" fill="#2563eb" font-size="11">تآلفية</text><text x="210" y="163" text-anchor="middle" fill="#0f172a" font-size="11">x</text><text x="44" y="16" text-anchor="middle" fill="#0f172a" font-size="11">y</text></g>
+</svg>
+
 **مستقيمان متوازيان** ⟺ لهما **معامل التوجيه نفسه** (a₁ = a₂ مع b₁ ≠ b₂).
 
 - مثال: f(x) = 2x + 1 و g(x) = 2x − 4 يمثّلان مستقيمَين متوازيَين (المعامل نفسه 2)؛ أمّا h(x) = 3x + 1 فمستقيمه يقطعهما.

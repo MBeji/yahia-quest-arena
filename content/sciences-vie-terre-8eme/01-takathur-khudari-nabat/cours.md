@@ -25,6 +25,60 @@
 - **السّاق الزّاحفة (المدّادة)**: ساق تزحف **أفقيًّا فوق سطح التّربة**، وتكوّن جذورًا وبراعم عند نقاط تماسّها بالأرض فتعطي نباتات جديدة. مثال: **الفراولة (الفريز)**.
 - **الفسائل**: براعم تنمو من **قاعدة النّبات الأمّ** أو من جذوره، فتعطي نباتات صغيرة تُفصل لاحقًا. المثال التّونسيّ الشّهير: **فسيلة النّخيل**، وكذلك **الصّبّار** و**الموز**.
 
+<svg viewBox="0 0 300 258">
+<title>أعضاء التكاثر الخضري الطبيعي</title>
+<line x1="40" y1="32" x2="152" y2="32" stroke="#d97706" stroke-width="1.4" stroke-dasharray="4 3"/>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="40" y="28" text-anchor="start" fill="#d97706" font-size="9">سطح التربة</text></g>
+<path d="M 44 66 h 96" fill="none" stroke="#d97706" stroke-width="7" stroke-linecap="round"/>
+<line x1="62" y1="66" x2="62" y2="24" stroke="#0f6e56" stroke-width="2.4"/>
+<ellipse cx="62" cy="20" rx="5" ry="8" fill="#86efac" stroke="#0f6e56" stroke-width="1.6"/>
+<line x1="62" y1="70" x2="56" y2="84" stroke="#065f46" stroke-width="1.4"/>
+<line x1="62" y1="70" x2="68" y2="84" stroke="#065f46" stroke-width="1.4"/>
+<line x1="96" y1="66" x2="96" y2="24" stroke="#0f6e56" stroke-width="2.4"/>
+<ellipse cx="96" cy="20" rx="5" ry="8" fill="#86efac" stroke="#0f6e56" stroke-width="1.6"/>
+<line x1="96" y1="70" x2="90" y2="84" stroke="#065f46" stroke-width="1.4"/>
+<line x1="96" y1="70" x2="102" y2="84" stroke="#065f46" stroke-width="1.4"/>
+<line x1="130" y1="66" x2="130" y2="24" stroke="#0f6e56" stroke-width="2.4"/>
+<ellipse cx="130" cy="20" rx="5" ry="8" fill="#86efac" stroke="#0f6e56" stroke-width="1.6"/>
+<line x1="130" y1="70" x2="124" y2="84" stroke="#065f46" stroke-width="1.4"/>
+<line x1="130" y1="70" x2="136" y2="84" stroke="#065f46" stroke-width="1.4"/>
+<ellipse cx="225" cy="64" rx="34" ry="22" fill="#fed7aa" stroke="#b45309" stroke-width="2"/>
+<circle cx="209" cy="56" r="3" fill="#b45309"/>
+<circle cx="229" cy="52" r="3" fill="#b45309"/>
+<circle cx="243" cy="66" r="3" fill="#b45309"/>
+<circle cx="217" cy="72" r="3" fill="#b45309"/>
+<line x1="229" y1="52" x2="229" y2="34" stroke="#0f6e56" stroke-width="2.4"/>
+<ellipse cx="229" cy="30" rx="5" ry="7" fill="#86efac" stroke="#0f6e56" stroke-width="1.6"/>
+<line x1="209" y1="56" x2="195" y2="40" stroke="#0f172a" stroke-width="1.1"/>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="195" y="36" text-anchor="middle" fill="#b45309" font-size="10">عين</text></g>
+<path d="M 40 194 A 30 39 0 0 1 100 194 Z" fill="none" stroke="#7c3aed" stroke-width="1.8"/>
+<path d="M 47 194 A 23 29.900000000000002 0 0 1 93 194 Z" fill="none" stroke="#7c3aed" stroke-width="1.8"/>
+<path d="M 54 194 A 16 20.8 0 0 1 86 194 Z" fill="none" stroke="#7c3aed" stroke-width="1.8"/>
+<path d="M 61 194 A 9 11.700000000000001 0 0 1 79 194 Z" fill="none" stroke="#7c3aed" stroke-width="1.8"/>
+<line x1="40" y1="194" x2="100" y2="194" stroke="#6d28d9" stroke-width="2.4"/>
+<line x1="54" y1="194" x2="51" y2="210" stroke="#065f46" stroke-width="1.4"/>
+<line x1="64" y1="194" x2="61" y2="210" stroke="#065f46" stroke-width="1.4"/>
+<line x1="74" y1="194" x2="71" y2="210" stroke="#065f46" stroke-width="1.4"/>
+<line x1="84" y1="194" x2="81" y2="210" stroke="#065f46" stroke-width="1.4"/>
+<line x1="70" y1="156" x2="70" y2="142" stroke="#0f6e56" stroke-width="2.4"/>
+<ellipse cx="70" cy="138" rx="5" ry="7" fill="#86efac" stroke="#0f6e56" stroke-width="1.6"/>
+<line x1="150" y1="210" x2="300" y2="210" stroke="#d97706" stroke-width="1.6"/>
+<path d="M154 210 L147 217 M166 210 L159 217 M178 210 L171 217 M190 210 L183 217 M202 210 L195 217 M214 210 L207 217 M226 210 L219 217 M238 210 L231 217 M250 210 L243 217 M262 210 L255 217 M274 210 L267 217 M286 210 L279 217" stroke="#d97706" stroke-width="1.2"/>
+<line x1="172" y1="210" x2="172" y2="184" stroke="#0f6e56" stroke-width="2.6"/>
+<ellipse cx="163" cy="180" rx="6" ry="9" fill="#86efac" stroke="#0f6e56" stroke-width="1.6"/>
+<ellipse cx="172" cy="180" rx="6" ry="9" fill="#86efac" stroke="#0f6e56" stroke-width="1.6"/>
+<ellipse cx="181" cy="180" rx="6" ry="9" fill="#86efac" stroke="#0f6e56" stroke-width="1.6"/>
+<line x1="172" y1="210" x2="168" y2="224" stroke="#065f46" stroke-width="1.4"/>
+<line x1="172" y1="210" x2="176" y2="224" stroke="#065f46" stroke-width="1.4"/>
+<path d="M 172 206 q 40 -20, 90 -2" fill="none" stroke="#0f6e56" stroke-width="2.6"/>
+<line x1="262" y1="210" x2="262" y2="192" stroke="#0f6e56" stroke-width="2.2"/>
+<ellipse cx="262" cy="188" rx="5" ry="7" fill="#86efac" stroke="#0f6e56" stroke-width="1.6"/>
+<line x1="262" y1="210" x2="258" y2="222" stroke="#065f46" stroke-width="1.4"/>
+<line x1="262" y1="210" x2="266" y2="222" stroke="#065f46" stroke-width="1.4"/>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="220" y="180" text-anchor="middle" fill="#0f6e56" font-size="9.5">نبتة جديدة</text></g>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="92" y="116" text-anchor="middle" fill="#d97706" font-size="12.5">الجذمور</text><text x="225" y="110" text-anchor="middle" fill="#b45309" font-size="12.5">الدّرنة (بعيون)</text><text x="70" y="244" text-anchor="middle" fill="#7c3aed" font-size="12.5">البصلة</text><text x="235" y="250" text-anchor="middle" fill="#0f6e56" font-size="12.5">السّاق الزّاحفة</text></g>
+</svg>
+
 > 🗡️ في **واحة توزر**، لا يزرع الفلّاح نواة تمرة لينتج نخلة تشبه الأمّ، لأنّ نخلة النّواة قد تختلف عنها؛ بل يفصل **فسيلة** تنمو عند قاعدة النّخلة الأمّ ويغرسها، فيحصل على نخلة تحمل **صفات الأمّ نفسها** ونوع تمرها ذاته.
 
 ## 🌍 التّكاثر الخضريّ الطّبيعيّ

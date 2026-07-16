@@ -15,6 +15,38 @@
 
 > ⚠️ الكأس والتويج ليسا عضوَي تكاثر: هما ورقتان واقيتان وجاذبتان فقط. الأعضاء التكاثرية الحقيقية هي **الأسدية** (ذكرية) و**المدقّة** (أنثوية).
 
+<svg viewBox="0 0 300 310">
+<title>مقطع في زهرة كاملة</title>
+<polygon points="150,248 190,248 184,266 156,266" fill="#dcfce7" stroke="#0f6e56" stroke-width="2"/>
+<path d="M152 244 C 95 235, 60 175, 82 108 C 108 150, 150 200, 156 240 Z" fill="#fbcfe8" stroke="#7c3aed" stroke-width="2"/>
+<path d="M188 244 C 245 235, 280 175, 258 108 C 232 150, 190 200, 184 240 Z" fill="#fbcfe8" stroke="#7c3aed" stroke-width="2"/>
+<polygon points="152,246 126,270 150,258" fill="#bbf7d0" stroke="#0f6e56" stroke-width="2"/>
+<polygon points="188,246 214,270 190,258" fill="#bbf7d0" stroke="#0f6e56" stroke-width="2"/>
+<path d="M156 244 C 140 200, 120 160, 122 124" fill="none" stroke="#d97706" stroke-width="2.4"/>
+<ellipse cx="122" cy="116" rx="9" ry="13" fill="#fde68a" stroke="#d97706" stroke-width="2"/>
+<path d="M184 244 C 200 200, 220 160, 218 124" fill="none" stroke="#d97706" stroke-width="2.4"/>
+<ellipse cx="218" cy="116" rx="9" ry="13" fill="#fde68a" stroke="#d97706" stroke-width="2"/>
+<ellipse cx="170" cy="212" rx="21" ry="30" fill="#d1fae5" stroke="#0f6e56" stroke-width="2.4"/>
+<circle cx="160" cy="206" r="3.4" fill="#0f6e56"/>
+<circle cx="170" cy="216" r="3.4" fill="#0f6e56"/>
+<circle cx="180" cy="206" r="3.4" fill="#0f6e56"/>
+<line x1="170" y1="183" x2="170" y2="112" stroke="#0f6e56" stroke-width="3"/>
+<ellipse cx="163" cy="104" rx="9" ry="6" fill="#86efac" stroke="#0f6e56" stroke-width="2"/>
+<ellipse cx="177" cy="104" rx="9" ry="6" fill="#86efac" stroke="#0f6e56" stroke-width="2"/>
+<line x1="170" y1="96" x2="170" y2="100" stroke="#0f172a" stroke-width="1.2"/>
+<line x1="214" y1="150" x2="172" y2="150" stroke="#0f172a" stroke-width="1.2"/>
+<line x1="232" y1="210" x2="192" y2="211" stroke="#0f172a" stroke-width="1.2"/>
+<line x1="238" y1="236" x2="176" y2="216" stroke="#0f172a" stroke-width="1.2"/>
+<line x1="52" y1="116" x2="110" y2="116" stroke="#0f172a" stroke-width="1.2"/>
+<line x1="56" y1="182" x2="140" y2="182" stroke="#0f172a" stroke-width="1.2"/>
+<line x1="66" y1="88" x2="86" y2="120" stroke="#0f172a" stroke-width="1.2"/>
+<line x1="80" y1="276" x2="138" y2="262" stroke="#0f172a" stroke-width="1.2"/>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="170" y="90" text-anchor="middle" fill="#0f172a" font-size="12">الميسم</text><text x="232" y="148" text-anchor="start" fill="#0f172a" font-size="12">القلم</text><text x="250" y="210" text-anchor="start" fill="#0f6e56" font-size="12">المبيض</text><text x="256" y="238" text-anchor="start" fill="#0f6e56" font-size="12">البويضات</text><text x="48" y="118" text-anchor="end" fill="#d97706" font-size="12">المئبر</text><text x="52" y="184" text-anchor="end" fill="#d97706" font-size="12">الخيط</text><text x="62" y="84" text-anchor="end" fill="#7c3aed" font-size="11.5">البتلة (التويج)</text><text x="76" y="280" text-anchor="end" fill="#0f6e56" font-size="11.5">السبلة (الكأس)</text></g>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="122" y="300" text-anchor="middle" fill="#d97706" font-size="11.5">سداة (ذكرية)</text><text x="218" y="300" text-anchor="middle" fill="#0f6e56" font-size="11.5">مدقّة (أنثوية)</text></g>
+<line x1="122" y1="290" x2="122" y2="132" stroke="#d97706" stroke-width="1" stroke-dasharray="3 3"/>
+<line x1="218" y1="290" x2="192" y2="190" stroke="#0f6e56" stroke-width="1" stroke-dasharray="3 3"/>
+</svg>
+
 ## 🟡 الأعضاء الذكرية: الأسدية وحبوب الطلع
 
 **الأسدية** هي الأعضاء **الذكرية** في الزهرة، وتكون عادةً متعدّدةً تحيط بالمدقّة. تتكوّن كلّ **سداة** من جزأين:

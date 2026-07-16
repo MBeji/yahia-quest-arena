@@ -30,6 +30,11 @@
 
 **الترشيح** هو سكب الخليط غير المتجانس على **ورقة ترشيح** موضوعة في قمع: يمرّ السائل عبر مسامّها الدقيقة ويتساقط صافيًا، بينما تبقى الحبيبات الصلبة محتجزة فوق الورقة.
 
+<svg viewBox="0 0 300 215">
+<title>الترشيح: القمع وورقة الترشيح والراشح</title>
+<line x1="48" y1="26" x2="48" y2="200" stroke="#64748b" stroke-width="3"/><line x1="30" y1="200" x2="90" y2="200" stroke="#64748b" stroke-width="3"/><line x1="48" y1="70" x2="96" y2="70" stroke="#64748b" stroke-width="3"/><polyline points="96,60 143,112 143,140 157,140 157,112 206,60" fill="none" stroke="#0f172a" stroke-width="2.5"/><polygon points="110,68 150,114 192,68" fill="#fff" stroke="#64748b" stroke-width="1.8"/><polygon points="122,82 150,112 180,82" fill="#dbeafe"/><line x1="122" y1="82" x2="180" y2="82" stroke="#2563eb" stroke-width="1.6"/><circle cx="140" cy="104" r="2.8" fill="#0f172a"/><circle cx="150" cy="100" r="2.8" fill="#0f172a"/><circle cx="160" cy="104" r="2.8" fill="#0f172a"/><circle cx="148" cy="108" r="2.8" fill="#0f172a"/><circle cx="156" cy="96" r="2.8" fill="#0f172a"/><ellipse cx="150" cy="150" rx="2.6" ry="4" fill="#2563eb"/><ellipse cx="150" cy="162" rx="2.4" ry="3.6" fill="#2563eb"/><polyline points="118,172 118,206 184,206 184,172" fill="none" stroke="#0f172a" stroke-width="2.5"/><rect x="120" y="186" width="62" height="18" fill="#dbeafe"/><line x1="120" y1="186" x2="182" y2="186" stroke="#2563eb" stroke-width="1.6"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="150" y="44" text-anchor="middle" fill="#0f172a" font-size="11">خليط غير متجانس</text><text x="150" y="55" text-anchor="middle" fill="#0f172a" font-size="10">(ماء + حبيبات)</text><text x="214" y="74" text-anchor="start" fill="#0f172a" font-size="11">قمع</text><text x="210" y="96" text-anchor="start" fill="#0f172a" font-size="11">ورقة الترشيح</text><text x="206" y="108" text-anchor="start" fill="#0f172a" font-size="10">تحجز الحبيبات</text><text x="151" y="200" text-anchor="middle" fill="#0f172a" font-size="12">الراشح</text></g>
+</svg>
+
 - السائل الصافي النافذ عبر الورقة يُسمّى **الراشح**.
 - يفصل الترشيح حبيبات أدقّ ممّا يفصله الترسيب وحده، وفي درجة حرارة عادية دون أيّ تسخين.
 

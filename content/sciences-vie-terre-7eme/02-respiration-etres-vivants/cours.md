@@ -19,6 +19,13 @@
 
 الحيوانات الفقارية التي تعيش على اليابسة (كالثدييات والطيور والزواحف)، مثل **الأرنب** و**الحمامة** و**الأفعى**، تتنفّس بواسطة **رئتين**. يسلك الهواء المسار التالي: يدخل عبر الأنف أو الفم، فالقصبة الهوائية، فالأنابيب الشعبية، وصولًا إلى الرئتين.
 
+<svg viewBox="0 0 300 275">
+<title>مسار الهواء في رئتَي الفقاري: الأنف/الفم ← القصبة الهوائية ← الأنابيب الشعبية ← الرئتان</title>
+<ellipse cx="96" cy="195" rx="34" ry="46" fill="#fde2e4" stroke="#0f172a" stroke-width="2"/><ellipse cx="204" cy="195" rx="34" ry="46" fill="#fde2e4" stroke="#0f172a" stroke-width="2"/><line x1="144" y1="62" x2="144" y2="128" stroke="#0f172a" stroke-width="2"/><line x1="156" y1="62" x2="156" y2="128" stroke="#0f172a" stroke-width="2"/><line x1="146" y1="126" x2="100" y2="168" stroke="#0f172a" stroke-width="2.5"/><line x1="154" y1="126" x2="200" y2="168" stroke="#0f172a" stroke-width="2.5"/><polygon points="128,40 172,40 166,62 134,62" fill="#fef3c7" stroke="#0f172a" stroke-width="2"/><line x1="112" y1="20" x2="132" y2="48" stroke="#2563eb" stroke-width="2.5"/>
+<polygon points="132,48 123.11,43.29 130.43,38.06" fill="#2563eb"/><line x1="168" y1="48" x2="188" y2="20" stroke="#ef4444" stroke-width="2.5"/>
+<polygon points="188,20 186.43,29.94 179.11,24.71" fill="#ef4444"/><line x1="160" y1="95" x2="176" y2="92" stroke="#64748b" stroke-width="1.2"/><line x1="178" y1="150" x2="190" y2="152" stroke="#64748b" stroke-width="1.2"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="150" y="34" text-anchor="middle" fill="#0f172a" font-size="12">الأنف / الفم</text><text x="222" y="92" text-anchor="middle" fill="#0f172a" font-size="11">القصبة الهوائية</text><text x="232" y="150" text-anchor="middle" fill="#0f172a" font-size="11">الأنابيب الشعبية</text><text x="96" y="258" text-anchor="middle" fill="#0f172a" font-size="12">الرئتان</text><text x="204" y="258" text-anchor="middle" fill="#0f172a" font-size="12">الرئتان</text><text x="95" y="16" text-anchor="middle" fill="#2563eb" font-size="13">O₂</text><text x="95" y="30" text-anchor="middle" fill="#2563eb" font-size="10">دخول</text><text x="205" y="16" text-anchor="middle" fill="#ef4444" font-size="13">CO₂</text><text x="205" y="30" text-anchor="middle" fill="#ef4444" font-size="10">خروج</text></g>
+</svg>
+
 داخل الرئتين يحدث التبادل الغازي: يمتصّ الدمّ الأكسجين من الهواء الداخل، ويطرح ثاني أكسيد الكربون فيه ليخرج مع الزفير. تتكرّر هذه الدورة في حركتين متعاقبتين:
 
 - **الشهيق**: دخول هواء غنيّ بالأكسجين إلى الرئتين.

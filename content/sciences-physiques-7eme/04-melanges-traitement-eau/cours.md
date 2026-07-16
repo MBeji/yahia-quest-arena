@@ -29,6 +29,11 @@
 - السائل الصافي الذي يمرّ عبر الورقة يُسمّى **الراشح**.
 - الترشيح يفصل حبيبات أدقّ ممّا يفصله الترسيب وحده، ولا يحتاج إلى أيّ تسخين.
 
+<svg viewBox="0 0 300 224">
+<title>الترشيح</title>
+<polygon points="104,52 196,52 156,112 156,138 144,138 144,112" fill="#f8fafc" stroke="#0f172a" stroke-width="2.5"/><polygon points="112,57 188,57 150,108" fill="#fef9c3" stroke="#d97706" stroke-width="2"/><polygon points="120,61 180,61 150,95" fill="#a8b8a0" stroke="none" stroke-width="2"/><circle cx="150" cy="148" r="3" fill="#2563eb" stroke="none" stroke-width="2"/><circle cx="150" cy="158" r="2.5" fill="#2563eb" stroke="none" stroke-width="2"/><polyline points="122,162 122,200 178,200 178,162" fill="none" stroke="#0f172a" stroke-width="2.5"/><rect x="124" y="178" width="52" height="21" fill="#bfdbfe" stroke="none" stroke-width="2"/><line x1="124" y1="178" x2="176" y2="178" stroke="#2563eb" stroke-width="1.5"/><line x1="196" y1="60" x2="224" y2="52" stroke="#64748b" stroke-width="1.2"/><line x1="180" y1="82" x2="214" y2="92" stroke="#64748b" stroke-width="1.2"/><line x1="164" y1="90" x2="214" y2="118" stroke="#64748b" stroke-width="1.2"/><circle cx="138" cy="88" r="2.6" fill="#4d3b1f" stroke="none" stroke-width="2"/><circle cx="150" cy="92" r="2.6" fill="#4d3b1f" stroke="none" stroke-width="2"/><circle cx="160" cy="87" r="2.6" fill="#4d3b1f" stroke="none" stroke-width="2"/><circle cx="145" cy="96" r="2.6" fill="#4d3b1f" stroke="none" stroke-width="2"/><circle cx="156" cy="96" r="2.6" fill="#4d3b1f" stroke="none" stroke-width="2"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="150" y="30" text-anchor="middle" fill="#0f172a" font-size="12">سكب المزيج العكر</text><text x="246" y="52" text-anchor="middle" fill="#0f172a" font-size="12">قمع</text><text x="244" y="96" text-anchor="middle" fill="#d97706" font-size="11">ورقة الترشيح</text><text x="244" y="122" text-anchor="middle" fill="#4d3b1f" font-size="11">حبيبات صلبة</text><text x="150" y="216" text-anchor="middle" fill="#1e3a8a" font-size="12">الراشح (سائل صافٍ)</text></g>
+</svg>
+
 > ⚠️ لا تخلط بين الترشيح والتقطير: الترشيح يفصل **جسمًا صلبًا** عن سائل بتمريره عبر ورقة في درجة حرارة عادية، بينما التقطير (الآتي) يفصل مكوّنات **مزيج متجانس** بالتسخين والتبخّر.
 
 ## 🔥 التقطير: فصل مكوّنات مزيج متجانس بالتسخين

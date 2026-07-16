@@ -14,6 +14,31 @@
 2. **النّقل**: حمل الفتات النّاتج بعيدًا عن مكانه.
 3. **التّرسّب**: تراكم الفتات واستقراره في مكان جديد.
 
+<svg viewBox="0 0 300 196">
+<title>سلسلة: تعرية ← نقل ← ترسّب</title>
+<polygon points="82,150 100,150 152,130 206,116 256,44 300,152 300,190 82,190" fill="#fde68a" stroke="#b45309" stroke-width="2"/>
+<polygon points="206,116 256,44 300,152 300,116" fill="#e7c9a0" stroke="#92400e" stroke-width="1.6"/>
+<line x1="256" y1="58" x2="268" y2="86" stroke="#92400e" stroke-width="1.3"/>
+<line x1="256" y1="58" x2="246" y2="84" stroke="#92400e" stroke-width="1.3"/>
+<line x1="272" y1="70" x2="284" y2="104" stroke="#92400e" stroke-width="1.3"/>
+<circle cx="238" cy="100" r="2.2" fill="#92400e"/>
+<circle cx="248" cy="112" r="2.2" fill="#92400e"/>
+<circle cx="230" cy="110" r="2.2" fill="#92400e"/>
+<rect x="0" y="150" width="82" height="40" fill="#bfdbfe"/>
+<polyline points="0,150 12,146 24,150 36,146 48,150 60,146 72,150 82,150" fill="none" stroke="#2563eb" stroke-width="1.6"/>
+<rect x="0" y="178" width="82" height="5" fill="#fef3c7" stroke="#b45309" stroke-width="1"/>
+<rect x="0" y="183" width="82" height="5" fill="#e2e8f0" stroke="#64748b" stroke-width="1"/>
+<polyline points="252,62 214,112 158,128 100,148 82,150" fill="none" stroke="#2563eb" stroke-width="3.4"/>
+<line x1="236" y1="86" x2="214" y2="110" stroke="#2563eb" stroke-width="2.4"/>
+<polygon points="214,110 216.46,101.4 222.35,106.81" fill="#2563eb"/>
+<line x1="186" y1="122" x2="150" y2="130" stroke="#2563eb" stroke-width="2.4"/>
+<polygon points="150,130 156.94,124.36 158.68,132.17" fill="#2563eb"/>
+<line x1="128" y1="143" x2="98" y2="149" stroke="#2563eb" stroke-width="2.4"/>
+<polygon points="98,149 105.06,143.51 106.63,151.35" fill="#2563eb"/>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="262" y="30" text-anchor="middle" fill="#92400e" font-size="12.5">التعرية</text><text x="180" y="104" text-anchor="middle" fill="#2563eb" font-size="12.5">النقل</text><text x="40" y="138" text-anchor="middle" fill="#b45309" font-size="12.5">الترسّب</text></g>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="272" y="140" text-anchor="middle" fill="#92400e" font-size="10.5">جبل</text><text x="150" y="158" text-anchor="middle" fill="#2563eb" font-size="10.5">واد</text><text x="40" y="174" text-anchor="middle" fill="#b45309" font-size="9.5">رواسب في طبقات</text><text x="24" y="166" text-anchor="middle" fill="#2563eb" font-size="9.5">البحر / السهل</text></g>
+</svg>
+
 > ⚠️ لا تخلط بين هذه الظّواهر **الخارجيّة** الّتي تحدث فوق سطح الأرض، وظواهر أخرى **باطنيّة** مصدرها باطن الأرض؛ موضوعنا هنا هو ما يجري فوق السّطح فقط.
 
 ## 🪨 المرحلة الأولى: التّعرية (تفتّت الصّخور وتآكلها)

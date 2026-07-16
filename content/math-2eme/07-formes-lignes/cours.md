@@ -18,6 +18,11 @@
 
 > 🗡️ الحيلة: ضع المسطرة على الخطّ. إن طابقه تمامًا فهو **مستقيم**، وإن ابتعد عنه فهو **منحنٍ**.
 
+<svg viewBox="0 0 300 92">
+<title>أنواع الخطوط: مستقيم، منحنٍ، منكسر</title>
+<line x1="20" y1="40" x2="90" y2="40" stroke="#0f172a" stroke-width="2.5"/><path d="M120 55 Q155 15 190 55" fill="none" stroke="#0f172a" stroke-width="2.5"/><polyline points="220,30 235,55 250,30 265,55 280,30" fill="none" stroke="#0f172a" stroke-width="2.5"/><circle cx="220" cy="30" r="2.5" fill="#ef4444"/><circle cx="235" cy="55" r="2.5" fill="#ef4444"/><circle cx="250" cy="30" r="2.5" fill="#ef4444"/><circle cx="265" cy="55" r="2.5" fill="#ef4444"/><circle cx="280" cy="30" r="2.5" fill="#ef4444"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="55" y="78" text-anchor="middle" fill="#0f172a" font-size="12">مستقيم</text><text x="155" y="78" text-anchor="middle" fill="#0f172a" font-size="12">منحنٍ</text><text x="250" y="78" text-anchor="middle" fill="#0f172a" font-size="12">منكسر</text></g>
+</svg>
+
 ## 🔷 المربّع والمستطيل
 
 **المربّع** شكلٌ له **4 أضلاع متساوية** (كلّ الأضلاع لها نفس الطول) و**4 رؤوس** (زوايا). بلاطة الأرض مربّع.
@@ -35,6 +40,11 @@
 **الدائرة** شكلٌ **مدوّر** تمامًا. خطّها كلّه **منحنٍ**، ولذلك **لا أضلاع لها ولا رؤوس** (0 أضلاع و0 رؤوس). الساعة الحائطية والعجلة والقمر دوائر.
 
 > 🗡️ تذكّر: إن كان الخطّ مستقيمًا فالشكل له أضلاعٌ ورؤوس؛ وإن كان كلّه منحنيًا (مدوّرًا) فهو دائرة بلا أضلاع.
+
+<svg viewBox="0 0 300 172">
+<title>الأشكال الأربعة: أضلاعها (أحمر = رأس) ورؤوسها</title>
+<rect x="24" y="34" width="48" height="48" fill="none" stroke="#0f172a" stroke-width="2.5"/><circle cx="24" cy="34" r="2.6" fill="#ef4444"/><circle cx="72" cy="34" r="2.6" fill="#ef4444"/><circle cx="72" cy="82" r="2.6" fill="#ef4444"/><circle cx="24" cy="82" r="2.6" fill="#ef4444"/><g stroke="#0f6e56" stroke-width="2"><path d="M44 34 l4 4 M52 34 l-4 4"/><path d="M44 82 l4 -4 M52 82 l-4 -4"/><path d="M24 54 l4 4 M24 62 l4 -4"/><path d="M72 54 l4 4 M72 62 l4 -4"/></g><rect x="96" y="40" width="70" height="40" fill="none" stroke="#0f172a" stroke-width="2.5"/><circle cx="96" cy="40" r="2.6" fill="#ef4444"/><circle cx="166" cy="40" r="2.6" fill="#ef4444"/><circle cx="166" cy="80" r="2.6" fill="#ef4444"/><circle cx="96" cy="80" r="2.6" fill="#ef4444"/><polygon points="210,82 246,30 282,82" fill="none" stroke="#0f172a" stroke-width="2.5"/><circle cx="210" cy="82" r="2.6" fill="#ef4444"/><circle cx="246" cy="30" r="2.6" fill="#ef4444"/><circle cx="282" cy="82" r="2.6" fill="#ef4444"/><circle cx="48" cy="128" r="22" fill="none" stroke="#0f172a" stroke-width="2.5"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="48" y="100" text-anchor="middle" fill="#0f172a" font-size="10">مربّع (4 أضلاع متساوية)</text><text x="131" y="100" text-anchor="middle" fill="#0f172a" font-size="11">مستطيل</text><text x="246" y="100" text-anchor="middle" fill="#0f172a" font-size="10">مثلّث (3 أضلاع)</text><text x="48" y="162" text-anchor="middle" fill="#2563eb" font-size="10">دائرة (بلا أضلاع)</text></g>
+</svg>
 
 ## 📐 جدول الأضلاع والرؤوس
 

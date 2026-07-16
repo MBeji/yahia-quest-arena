@@ -16,6 +16,11 @@
 
 - _مثال:_ خطٌّ مثل السور حول الحديقة.
 
+<svg viewBox="0 0 300 104">
+<title>الخطّ المفتوح له طرفان، والمغلق يحيط بمنطقة</title>
+<path d="M30 40 C60 10 90 70 130 40" fill="none" stroke="#0f172a" stroke-width="2.5"/><circle cx="30" cy="40" r="3.5" fill="#ef4444" stroke="#0f172a" stroke-width="1"/><circle cx="130" cy="40" r="3.5" fill="#ef4444" stroke="#0f172a" stroke-width="1"/><path d="M195 25 C240 15 260 55 240 65 C220 75 180 60 195 25 Z" fill="#dbeafe" stroke="#0f172a" stroke-width="2.5"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="80" y="82" text-anchor="middle" fill="#0f172a" font-size="11">خطّ مفتوح (له طرفان)</text><text x="222" y="92" text-anchor="middle" fill="#2563eb" font-size="11">خطّ مغلق</text></g>
+</svg>
+
 ## 🏠 داخل وخارج
 
 الخطّ المغلق يفصل المكان إلى ثلاثة مواضع:

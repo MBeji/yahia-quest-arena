@@ -16,6 +16,11 @@ $$ OM = OM′ \quad \text{والنقاطُ } M, O, M′ \text{ على استقا
 
 فالنقطة O تقع في **منتصف المسافة** بين M ومناظرِها M′، والنقاطُ الثلاث في صفٍّ واحد.
 
+<svg viewBox="0 0 300 140">
+<title>مناظر النقطة M بالنسبة إلى المركز O</title>
+<line x1="40" y1="105" x2="260" y2="31" stroke="#0f172a" stroke-width="2.5"/><line x1="93.09" y1="80.81" x2="96.91" y2="92.19" stroke="#ef4444" stroke-width="2"/><line x1="203.09" y1="43.81" x2="206.91" y2="55.19" stroke="#ef4444" stroke-width="2"/><circle cx="40" cy="105" r="3.2" fill="#0f172a"/><circle cx="150" cy="68" r="3.6" fill="#2563eb"/><circle cx="260" cy="31" r="3.2" fill="#0f172a"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="36" y="121" text-anchor="middle" fill="#0f172a" font-size="13">M</text><text x="150" y="56" text-anchor="middle" fill="#2563eb" font-size="13">O</text><text x="264" y="21" text-anchor="middle" fill="#0f172a" font-size="13">M′</text><text x="150" y="128" text-anchor="middle" fill="#64748b" font-size="12">O منتصف [MM′]</text></g>
+</svg>
+
 _ملاحظتان أساسيّتان:_
 
 - مناظرُ المركز O بالنسبة إلى O **هو O نفسُه** (النقطةُ الوحيدةُ التي تنطبق على مناظرها).
@@ -64,6 +69,11 @@ _ملاحظتان أساسيّتان:_
 ## 🎡 مركزُ تناظرِ شكل
 
 نقول إنّ لشكلٍ **مركزَ تناظرٍ** O إذا كان **مناظرُ الشكل بالنسبة إلى O هو الشكلُ نفسُه** (ينطبق عليه تمامًا بعد نصف الدورة).
+
+<svg viewBox="0 0 300 150">
+<title>مركز تناظر متوازي الأضلاع هو تقاطع قطريه</title>
+<polygon points="40,120 200,120 260,40 100,40" fill="none" stroke="#0f172a" stroke-width="2.5"/><line x1="40" y1="120" x2="260" y2="40" stroke="#2563eb" stroke-width="2" stroke-dasharray="5 4"/><line x1="200" y1="120" x2="100" y2="40" stroke="#2563eb" stroke-width="2" stroke-dasharray="5 4"/><line x1="92.95" y1="94.36" x2="97.05" y2="105.64" stroke="#ef4444" stroke-width="2"/><line x1="202.95" y1="54.36" x2="207.05" y2="65.64" stroke="#ef4444" stroke-width="2"/><line x1="171.25" y1="104.69" x2="178.75" y2="95.31" stroke="#0f6e56" stroke-width="2"/><line x1="121.25" y1="64.69" x2="128.75" y2="55.31" stroke="#0f6e56" stroke-width="2"/><circle cx="150" cy="80" r="3.8" fill="#2563eb"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="30" y="124" text-anchor="middle" fill="#0f172a" font-size="13">A</text><text x="210" y="124" text-anchor="middle" fill="#0f172a" font-size="13">B</text><text x="270" y="42" text-anchor="middle" fill="#0f172a" font-size="13">C</text><text x="90" y="42" text-anchor="middle" fill="#0f172a" font-size="13">D</text><text x="165" y="71" text-anchor="middle" fill="#2563eb" font-size="13">O</text></g>
+</svg>
 
 أشهرُ الأشكال ومراكزُ تناظرها:
 

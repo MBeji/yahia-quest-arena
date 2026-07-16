@@ -59,14 +59,29 @@ $$ i = r $$
 
 ## 🏆 ملخّص رسومي
 
-```
-        الشعاع الوارد      الشعاع المنعكس
-              \                /
-               \  i   =   r  /
-                \           /
-         --------I-----------  ← سطح المرآة
-                 |
-              الناظم N
-```
+<svg viewBox="0 0 300 175">
+<title>انعكاس شعاع ضوئي على مرآة مستوية: زاوية الورود i تساوي زاوية الانعكاس r</title>
+<line x1="40" y1="120" x2="260" y2="120" stroke="#0f172a" stroke-width="2.5"/>
+<g stroke="#64748b" stroke-width="1.5">
+<path d="M56 120 L48 130 M80 120 L72 130 M104 120 L96 130 M128 120 L120 130 M152 120 L144 130 M176 120 L168 130 M200 120 L192 130 M224 120 L216 130 M248 120 L240 130"/>
+</g>
+<line x1="150" y1="120" x2="150" y2="30" stroke="#64748b" stroke-width="1.5" stroke-dasharray="5 4"/>
+<line x1="78" y1="48" x2="150" y2="120" stroke="#2563eb" stroke-width="2.5"/>
+<polygon points="138,108 125.3,103.7 133.7,95.3" fill="#2563eb"/>
+<line x1="150" y1="120" x2="222" y2="48" stroke="#ef4444" stroke-width="2.5"/>
+<polygon points="210,60 205.7,72.7 197.3,64.3" fill="#ef4444"/>
+<path d="M150 94 A 26 26 0 0 0 131.6 101.6" fill="none" stroke="#0f172a" stroke-width="1.2"/>
+<path d="M150 94 A 26 26 0 0 1 168.4 101.6" fill="none" stroke="#0f172a" stroke-width="1.2"/>
+<circle cx="150" cy="120" r="3" fill="#0f172a"/>
+<g font-size="13" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">
+<text x="150" y="24" text-anchor="middle" fill="#64748b">N</text>
+<text x="140" y="134" text-anchor="end" fill="#0f172a">I</text>
+<text x="137" y="92" text-anchor="middle" fill="#2563eb">i</text>
+<text x="163" y="92" text-anchor="middle" fill="#ef4444">r</text>
+<text x="86" y="42" text-anchor="middle" fill="#2563eb">وارد</text>
+<text x="214" y="42" text-anchor="middle" fill="#ef4444">منعكس</text>
+<text x="256" y="114" text-anchor="end" fill="#0f172a">مرآة</text>
+</g>
+</svg>
 
 > 🏆 أتقنتَ قوانين الانعكاس! في الفصل القادم سنكتشف ما يحدث حين يخترق الضوء وسطًا شفّافًا آخر: **الانكسار والعدسات**.

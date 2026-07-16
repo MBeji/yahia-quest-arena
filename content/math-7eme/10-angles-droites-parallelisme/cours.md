@@ -42,6 +42,20 @@
 
 أمّا الزاويتان المتجاورتان (تشتركان في الرأس وفي ضلعٍ واحد، وضلعاهما الآخران يكوّنان معًا المستقيمَ نفسَه) فهما **متكاملتان**: مجموعُ قياسَيهما 180°.
 
+<svg viewBox="0 0 300 210">
+<title>الزاويتان المتقابلتان بالرأس عند تقاطع مستقيمين متقايستان</title>
+<line x1="40" y1="60" x2="260" y2="160" stroke="#0f172a" stroke-width="2.4"/>
+<line x1="45" y1="165" x2="255" y2="55" stroke="#0f172a" stroke-width="2.4"/>
+<path d="M 173.03 97.94 A 26 26 0 0 0 126.33 99.24" fill="none" stroke="#0f6e56" stroke-width="2.4"/>
+<path d="M 126.97 122.06 A 26 26 0 0 0 173.67 120.76" fill="none" stroke="#0f6e56" stroke-width="2.4"/>
+<path d="M 131.79 101.72 A 20 20 0 0 0 132.28 119.28" fill="none" stroke="#2563eb" stroke-width="2.4"/>
+<path d="M 126.33 99.24 A 26 26 0 0 0 126.97 122.06" fill="none" stroke="#2563eb" stroke-width="2.4"/>
+<path d="M 168.21 118.28 A 20 20 0 0 0 167.72 100.72" fill="none" stroke="#2563eb" stroke-width="2.4"/>
+<path d="M 173.67 120.76 A 26 26 0 0 0 173.03 97.94" fill="none" stroke="#2563eb" stroke-width="2.4"/>
+<g fill="#0f172a"><circle cx="150" cy="110" r="4"/></g>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="160" y="126" text-anchor="middle" fill="#0f172a" font-size="13">O</text><text x="274" y="164" text-anchor="middle" fill="#0f172a" font-size="12">(d)</text><text x="269" y="55" text-anchor="middle" fill="#0f172a" font-size="12">(d′)</text><text x="150" y="195" text-anchor="middle" fill="#0f172a" font-size="11">الزاويتان المتقابلتان بالرأس متقايستان</text></g>
+</svg>
+
 **مثال محسوب**: يتقاطع مستقيمان في نقطة O فتتكوّن زاويةٌ قياسُها 55°.
 
 - الزاويةُ المقابلة لها بالرأس: قياسُها 55° أيضًا (متقايستان).
@@ -61,6 +75,22 @@
 مثال موصوف: القاطع (AB) يقطع (d) في A و(d′) في B، بحيث (d) أعلى (d′). الزاويةُ الواقعة أسفلَ (d) ويمينَ (AB) هي زاويةٌ **داخليّة**. زاويتُها **المتبادلةُ داخليًّا** عند B هي الزاويةُ الداخليّةُ الواقعة **يسارَ** (AB). أمّا زاويتُها **المتناظرةُ** عند B فهي الزاويةُ الواقعة أسفلَ (d′) و**يمينَ** (AB) أيضًا (الوضعُ نفسُه: أسفلَ مستقيمها، يمينَ القاطع).
 
 > 🗡️ لتمييز النوعَين بسرعة: المتبادلتان داخليّتان ترسمان شكلَ الحرف Z، والمتناظرتان ترسمان شكلَ الحرف F على الرسم.
+
+<svg viewBox="0 0 300 232">
+<title>مستقيمان متوازيان وقاطع: الزوايا المتناظرة (F) والمتبادلة داخليًّا (Z) متقايستان</title>
+<line x1="30" y1="60" x2="280" y2="60" stroke="#0f172a" stroke-width="2.4"/>
+<line x1="30" y1="150" x2="280" y2="150" stroke="#0f172a" stroke-width="2.4"/>
+<polyline points="51,55 59,60 51,65" fill="none" stroke="#64748b" stroke-width="1.8"/>
+<polyline points="51,145 59,150 51,155" fill="none" stroke="#64748b" stroke-width="1.8"/>
+<line x1="70" y1="25" x2="235" y2="195" stroke="#0f172a" stroke-width="2.2"/>
+<path d="M 121.97 60 A 18 18 0 0 0 91.43 47.08" fill="none" stroke="#2563eb" stroke-width="2.4"/>
+<path d="M 209.32 150 A 18 18 0 0 0 178.79 137.08" fill="none" stroke="#2563eb" stroke-width="2.4"/>
+<path d="M 125.97 60 A 22 22 0 0 1 119.29 75.79" fill="none" stroke="#0f6e56" stroke-width="2.4"/>
+<path d="M 169.32 150 A 22 22 0 0 1 176 134.21" fill="none" stroke="#0f6e56" stroke-width="2.4"/>
+<g fill="#0f172a"><circle cx="103.97" cy="60" r="4"/><circle cx="191.32" cy="150" r="4"/></g>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="274" y="52" text-anchor="middle" fill="#0f172a" font-size="12">(d)</text><text x="274" y="142" text-anchor="middle" fill="#0f172a" font-size="12">(d′)</text><text x="91.97" y="52" text-anchor="middle" fill="#0f172a" font-size="13">A</text><text x="203.32" y="164" text-anchor="middle" fill="#0f172a" font-size="13">B</text><text x="255" y="190" text-anchor="middle" fill="#64748b" font-size="12">(Δ)</text><text x="232" y="46" text-anchor="middle" fill="#2563eb" font-size="14">F</text><text x="232" y="132" text-anchor="middle" fill="#2563eb" font-size="14">F</text><text x="150" y="96" text-anchor="middle" fill="#0f6e56" font-size="15">Z</text></g>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="140" y="218" text-anchor="middle" fill="#0f172a" font-size="10.5">F: متناظرتان متقايستان — Z: متبادلتان داخليًّا متقايستان</text></g>
+</svg>
 
 ## 🧮 التوصيفُ الزاويّ للتوازي: من الزوايا إلى التوازي، ومن التوازي إلى الزوايا
 
