@@ -255,13 +255,22 @@ export function auditRtlNotation(raw: string, field: string, where: string): Fla
   // An SVG <text> node is its own bidi paragraph, and an LTR isolate on it DOES save
   // the number: sos becomes L, so W7 retypes the digits and nothing reorders. Prose
   // has no such escape — a caption takes no markup, so U+00A0 is the only fix there.
+  //
+  // Both loops SPLIT on markup rather than stripping it. A number cannot span a tag
+  // boundary, so each piece is exactly one text run — and `replace(/<[^>]+>/g, "")`
+  // reads to CodeQL as an incomplete HTML sanitiser (js/incomplete-multi-character-
+  // sanitization), which this is not.
   for (const [, attrs, inner] of raw.matchAll(/<text\b([^>]*)>([\s\S]*?)<\/text>/gi)) {
-    const text = inner.replace(/<[^>]+>/g, "");
-    if (SPLIT_NUMBER_RE.test(text) && !/direction="ltr"/.test(attrs)) report(text);
+    if (/direction="ltr"/.test(attrs)) continue;
+    for (const piece of inner.split(/<[^>]*>/)) {
+      if (SPLIT_NUMBER_RE.test(piece)) report(piece);
+    }
   }
 
-  for (const line of raw.replace(/<svg[\s\S]*?<\/svg>/gi, "\n").split("\n")) {
-    if (SPLIT_NUMBER_RE.test(line)) report(line);
+  for (const chunk of raw.split(/<svg[\s\S]*?<\/svg>/i)) {
+    for (const line of chunk.split("\n")) {
+      if (SPLIT_NUMBER_RE.test(line)) report(line);
+    }
   }
 
   return flags;
