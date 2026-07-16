@@ -26,7 +26,7 @@
       "difficulty": 1
     },
     {
-      "prompt": "في تجربة الكأس المملوء بالماء والمغطّى ببطاقة مقوّاة ثمّ المقلوب رأسًا على عقب، لماذا لا يسقط الماء؟",
+      "prompt": "في تجربة الكأس المملوء بالماء والمغطّى ببطاقة مقوّاة ثمّ المقلوب رأسًا على عقب، لماذا لا يسقط الماء؟\n<svg viewBox=\"0 0 240 250\">\n<title>تجربة الكأس المقلوب المغطّى ببطاقة</title>\n<polygon points=\"95,55 145,55 162,195 78,195\" fill=\"#bfdbfe\" stroke=\"#0f172a\" stroke-width=\"3\"/><rect x=\"70\" y=\"197\" width=\"100\" height=\"11\" rx=\"2\" fill=\"#f5deb3\" stroke=\"#0f172a\" stroke-width=\"2.5\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"120\" y=\"130\" text-anchor=\"middle\" fill=\"#1d4ed8\" font-size=\"15\">ماء</text><text x=\"120\" y=\"225\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">بطاقة مقوّاة</text></g>\n</svg>",
       "options": [
         { "id": "a", "text": "لأنّ البطاقة لاصقة بالكأس بمادّة غراء" },
         {
