@@ -7,7 +7,7 @@
   "displayOrder": 1,
   "questions": [
     {
-      "prompt": "Dans un triangle ABC rectangle en A, AB = 8 cm et BC = 17 cm. Combien vaut cos B ?",
+      "prompt": "Dans un triangle ABC rectangle en A, AB = 8 cm et BC = 17 cm. Combien vaut cos B ?\n<svg viewBox=\"0 0 235 165\">\n<title>Triangle ABC rectangle en A : AB et l'hypoténuse BC donnés, cos B demandé</title>\n<polygon points=\"45,140 205,140 45,30\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><polyline points=\"57,140 57,128 45,128\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><path d=\"M 185 140 A 20 20 0 0 1 188.52 128.67\" fill=\"none\" stroke=\"#d97706\" stroke-width=\"1.6\"/><circle cx=\"45\" cy=\"140\" r=\"2.4\" fill=\"#0f172a\"/><circle cx=\"205\" cy=\"140\" r=\"2.4\" fill=\"#0f172a\"/><circle cx=\"45\" cy=\"30\" r=\"2.4\" fill=\"#0f172a\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"125\" y=\"157\" text-anchor=\"middle\" fill=\"#2563eb\" font-size=\"13\">8 cm</text><text x=\"135\" y=\"79\" text-anchor=\"start\" fill=\"#2563eb\" font-size=\"13\">17 cm</text><text x=\"39\" y=\"155\" text-anchor=\"end\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"215\" y=\"145\" text-anchor=\"start\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"39\" y=\"26\" text-anchor=\"end\" fill=\"#0f172a\" font-size=\"13\">C</text></g>\n</svg>",
       "options": [
         { "id": "a", "text": "8/17" },
         { "id": "b", "text": "17/8" },
@@ -19,7 +19,7 @@
       "difficulty": 1
     },
     {
-      "prompt": "Dans un triangle ABC rectangle en A, AC = 15 cm et BC = 17 cm. Combien vaut sin B ?",
+      "prompt": "Dans un triangle ABC rectangle en A, AC = 15 cm et BC = 17 cm. Combien vaut sin B ?\n<svg viewBox=\"0 0 235 165\">\n<title>Triangle ABC rectangle en A : AC et l'hypoténuse BC donnés, sin B demandé</title>\n<polygon points=\"45,140 205,140 45,30\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><polyline points=\"57,140 57,128 45,128\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><path d=\"M 185 140 A 20 20 0 0 1 188.52 128.67\" fill=\"none\" stroke=\"#d97706\" stroke-width=\"1.6\"/><circle cx=\"45\" cy=\"140\" r=\"2.4\" fill=\"#0f172a\"/><circle cx=\"205\" cy=\"140\" r=\"2.4\" fill=\"#0f172a\"/><circle cx=\"45\" cy=\"30\" r=\"2.4\" fill=\"#0f172a\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"37\" y=\"85\" text-anchor=\"end\" fill=\"#2563eb\" font-size=\"13\">15 cm</text><text x=\"135\" y=\"79\" text-anchor=\"start\" fill=\"#2563eb\" font-size=\"13\">17 cm</text><text x=\"39\" y=\"155\" text-anchor=\"end\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"215\" y=\"145\" text-anchor=\"start\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"39\" y=\"26\" text-anchor=\"end\" fill=\"#0f172a\" font-size=\"13\">C</text></g>\n</svg>",
       "options": [
         { "id": "a", "text": "15/17" },
         { "id": "b", "text": "8/17" },
@@ -31,7 +31,7 @@
       "difficulty": 1
     },
     {
-      "prompt": "Dans un triangle rectangle en A, l'hypoténuse BC = 12 cm et l'angle B = 30°. Combien vaut AC, le côté opposé à B ?",
+      "prompt": "Dans un triangle rectangle en A, l'hypoténuse BC = 12 cm et l'angle B = 30°. Combien vaut AC, le côté opposé à B ?\n<svg viewBox=\"0 0 235 165\">\n<title>Triangle rectangle en A : hypoténuse BC et angle B donnés, côté opposé AC demandé</title>\n<polygon points=\"45,140 205,140 45,30\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><polyline points=\"57,140 57,128 45,128\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><path d=\"M 183 140 A 22 22 0 0 1 186.87 127.54\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"1.6\"/><text x=\"171.58\" y=\"134.17\" text-anchor=\"middle\" fill=\"#2563eb\" font-size=\"13\" font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\">30°</text><circle cx=\"45\" cy=\"140\" r=\"2.4\" fill=\"#0f172a\"/><circle cx=\"205\" cy=\"140\" r=\"2.4\" fill=\"#0f172a\"/><circle cx=\"45\" cy=\"30\" r=\"2.4\" fill=\"#0f172a\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"37\" y=\"85\" text-anchor=\"end\" fill=\"#ef4444\" font-size=\"16\">?</text><text x=\"135\" y=\"79\" text-anchor=\"start\" fill=\"#2563eb\" font-size=\"13\">12 cm</text><text x=\"39\" y=\"155\" text-anchor=\"end\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"215\" y=\"145\" text-anchor=\"start\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"39\" y=\"26\" text-anchor=\"end\" fill=\"#0f172a\" font-size=\"13\">C</text></g>\n</svg>",
       "options": [
         { "id": "a", "text": "6 cm" },
         { "id": "b", "text": "12 cm" },
@@ -43,7 +43,7 @@
       "difficulty": 1
     },
     {
-      "prompt": "Dans un triangle ABC rectangle en A, AB = 5 cm et AC = 12 cm. Combien vaut l'hypoténuse BC ?",
+      "prompt": "Dans un triangle ABC rectangle en A, AB = 5 cm et AC = 12 cm. Combien vaut l'hypoténuse BC ?\n<svg viewBox=\"0 0 235 165\">\n<title>Triangle ABC rectangle en A : côtés AB et AC donnés, hypoténuse BC demandée</title>\n<polygon points=\"45,140 205,140 45,30\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><polyline points=\"57,140 57,128 45,128\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><path d=\"M 185 140 A 20 20 0 0 1 188.52 128.67\" fill=\"none\" stroke=\"#d97706\" stroke-width=\"1.6\"/><circle cx=\"45\" cy=\"140\" r=\"2.4\" fill=\"#0f172a\"/><circle cx=\"205\" cy=\"140\" r=\"2.4\" fill=\"#0f172a\"/><circle cx=\"45\" cy=\"30\" r=\"2.4\" fill=\"#0f172a\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"125\" y=\"157\" text-anchor=\"middle\" fill=\"#2563eb\" font-size=\"13\">5 cm</text><text x=\"37\" y=\"85\" text-anchor=\"end\" fill=\"#2563eb\" font-size=\"13\">12 cm</text><text x=\"135\" y=\"79\" text-anchor=\"start\" fill=\"#ef4444\" font-size=\"16\">?</text><text x=\"39\" y=\"155\" text-anchor=\"end\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"215\" y=\"145\" text-anchor=\"start\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"39\" y=\"26\" text-anchor=\"end\" fill=\"#0f172a\" font-size=\"13\">C</text></g>\n</svg>",
       "options": [
         { "id": "a", "text": "13 cm" },
         { "id": "b", "text": "17 cm" },

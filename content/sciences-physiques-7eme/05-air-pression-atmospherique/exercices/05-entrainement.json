@@ -19,7 +19,7 @@
       "difficulty": 1
     },
     {
-      "prompt": "حاول تلميذ نفخ بالون داخل زجاجة بلاستيكية فارغة ومغلقة تمامًا (لا فتحة فيها سوى عنق ضيّق يمرّ منه البالون)، فلاحظ أنّه يعجز عن نفخه مهما حاول. لكن عندما ثقب صديقه الزجاجة بثقب صغير إضافي في جدارها، نجح نفخ البالون بسهولة تامّة. ما السبب العلمي لهذا الفرق؟",
+      "prompt": "حاول تلميذ نفخ بالون داخل زجاجة بلاستيكية فارغة ومغلقة تمامًا (لا فتحة فيها سوى عنق ضيّق يمرّ منه البالون)، فلاحظ أنّه يعجز عن نفخه مهما حاول. لكن عندما ثقب صديقه الزجاجة بثقب صغير إضافي في جدارها، نجح نفخ البالون بسهولة تامّة. ما السبب العلمي لهذا الفرق؟\n<svg viewBox=\"0 0 230 250\">\n<title>نفخ بالون داخل قارورة مغلقة</title>\n<polyline points=\"70,80 70,225 150,225 150,80\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"3\"/><line x1=\"70\" y1=\"225\" x2=\"150\" y2=\"225\" stroke=\"#0f172a\" stroke-width=\"3\"/><polyline points=\"70,80 90,52 90,32 130,32 130,52 150,80\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"3\"/><rect x=\"88\" y=\"22\" width=\"44\" height=\"12\" rx=\"2\" fill=\"#cbd5e1\" stroke=\"#0f172a\" stroke-width=\"2\"/><line x1=\"110\" y1=\"60\" x2=\"110\" y2=\"94\" stroke=\"#64748b\" stroke-width=\"2\"/><polygon points=\"106,52 114,52 110,60\" fill=\"#fca5a5\" stroke=\"#0f172a\" stroke-width=\"1.5\"/><ellipse cx=\"110\" cy=\"120\" rx=\"20\" ry=\"26\" fill=\"#fca5a5\" stroke=\"#0f172a\" stroke-width=\"2.5\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"110\" y=\"205\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">قارورة مغلقة</text><text x=\"152\" y=\"120\" text-anchor=\"start\" fill=\"#0f172a\" font-size=\"12\">بالون</text></g>\n</svg>",
       "options": [
         {
           "id": "a",

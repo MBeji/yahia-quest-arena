@@ -9,22 +9,46 @@
     {
       "prompt": "شكلٌ كلّ أضلاعه الأربعة متساوية وكلّ زواياه قائمة. ما هو؟",
       "options": [
-        { "id": "a", "text": "المثلّث" },
-        { "id": "b", "text": "المستطيل" },
-        { "id": "c", "text": "الدائرة" },
-        { "id": "d", "text": "المربّع" }
+        {
+          "id": "a",
+          "text": "المثلّث"
+        },
+        {
+          "id": "b",
+          "text": "المستطيل"
+        },
+        {
+          "id": "c",
+          "text": "الدائرة"
+        },
+        {
+          "id": "d",
+          "text": "المربّع"
+        }
       ],
       "correctOption": "d",
       "explanation": "المربّع هو الشكل ذو 4 أضلاع متساوية و4 زوايا قائمة. المستطيل له 4 زوايا قائمة لكن أضلاعه ليست كلّها متساوية.",
       "difficulty": 2
     },
     {
-      "prompt": "مربّعٌ ضلعه 4 cm. ما محيطه؟",
+      "prompt": "مربّعٌ ضلعه 4 cm. ما محيطه؟\n<svg viewBox=\"0 0 130 108\">\n<title>مربّع ضلعه 4 cm</title>\n<rect x=\"30\" y=\"24\" width=\"70\" height=\"70\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.5\"/><text x=\"65\" y=\"16\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"15\" font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\">4 cm</text>\n</svg>",
       "options": [
-        { "id": "a", "text": "8 cm" },
-        { "id": "b", "text": "12 cm" },
-        { "id": "c", "text": "16 cm" },
-        { "id": "d", "text": "20 cm" }
+        {
+          "id": "a",
+          "text": "8 cm"
+        },
+        {
+          "id": "b",
+          "text": "12 cm"
+        },
+        {
+          "id": "c",
+          "text": "16 cm"
+        },
+        {
+          "id": "d",
+          "text": "20 cm"
+        }
       ],
       "correctOption": "c",
       "explanation": "محيط المربّع = الضلع × 4 = 4 × 4 = 16 cm.",
@@ -33,10 +57,22 @@
     {
       "prompt": "ما محيط هذا المستطيل؟<svg viewBox=\"0 0 140 95\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"20\" y=\"24\" width=\"100\" height=\"44\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><text x=\"70\" y=\"17\" font-size=\"11\" fill=\"currentColor\" text-anchor=\"middle\">7 cm</text><text x=\"10\" y=\"50\" font-size=\"11\" fill=\"currentColor\" text-anchor=\"middle\">3 cm</text></svg>",
       "options": [
-        { "id": "a", "text": "10 cm" },
-        { "id": "b", "text": "14 cm" },
-        { "id": "c", "text": "21 cm" },
-        { "id": "d", "text": "20 cm" }
+        {
+          "id": "a",
+          "text": "10 cm"
+        },
+        {
+          "id": "b",
+          "text": "14 cm"
+        },
+        {
+          "id": "c",
+          "text": "21 cm"
+        },
+        {
+          "id": "d",
+          "text": "20 cm"
+        }
       ],
       "correctOption": "d",
       "explanation": "الطول 7 cm والعرض 3 cm. المحيط = (7 + 3) × 2 = 10 × 2 = 20 cm. الخطأ الشائع: التوقّف عند 7 + 3 = 10 دون الضرب في 2.",
@@ -45,22 +81,46 @@
     {
       "prompt": "مربّعٌ محيطه 32 cm. ما طول ضلعه؟",
       "options": [
-        { "id": "a", "text": "6 cm" },
-        { "id": "b", "text": "8 cm" },
-        { "id": "c", "text": "16 cm" },
-        { "id": "d", "text": "28 cm" }
+        {
+          "id": "a",
+          "text": "6 cm"
+        },
+        {
+          "id": "b",
+          "text": "8 cm"
+        },
+        {
+          "id": "c",
+          "text": "16 cm"
+        },
+        {
+          "id": "d",
+          "text": "28 cm"
+        }
       ],
       "correctOption": "b",
       "explanation": "الضلع = المحيط ÷ 4 = 32 ÷ 4 = 8 cm. تحقّق: 8 × 4 = 32 cm. ✓ الخطأ الشائع: طرح 4 من 32 بدل القسمة عليها.",
       "difficulty": 3
     },
     {
-      "prompt": "نريد إطارًا حول صورةٍ مستطيلةٍ طولها 12 cm وعرضها 8 cm. كم سنتيمترًا من الإطار نحتاج؟",
+      "prompt": "نريد إطارًا حول صورةٍ مستطيلةٍ طولها 12 cm وعرضها 8 cm. كم سنتيمترًا من الإطار نحتاج؟\n<svg viewBox=\"0 0 196 128\">\n<title>مستطيل طوله 12 cm وعرضه 8 cm</title>\n<rect x=\"56\" y=\"24\" width=\"118\" height=\"80\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.5\"/><text x=\"115\" y=\"16\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"15\" font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\">12 cm</text><text x=\"28\" y=\"69\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"15\" font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\">8 cm</text>\n</svg>",
       "options": [
-        { "id": "a", "text": "20 cm" },
-        { "id": "b", "text": "32 cm" },
-        { "id": "c", "text": "40 cm" },
-        { "id": "d", "text": "96 cm" }
+        {
+          "id": "a",
+          "text": "20 cm"
+        },
+        {
+          "id": "b",
+          "text": "32 cm"
+        },
+        {
+          "id": "c",
+          "text": "40 cm"
+        },
+        {
+          "id": "d",
+          "text": "96 cm"
+        }
       ],
       "correctOption": "c",
       "explanation": "طول الإطار = محيط المستطيل = (12 + 8) × 2 = 20 × 2 = 40 cm. الخطأ الشائع: ضرب 12 × 8 = 96 (ذلك ليس المحيط).",
@@ -69,10 +129,22 @@
     {
       "prompt": "مستطيلٌ طوله 11 cm، ومحيطه 30 cm. ما عرضه؟",
       "options": [
-        { "id": "a", "text": "4 cm" },
-        { "id": "b", "text": "19 cm" },
-        { "id": "c", "text": "8 cm" },
-        { "id": "d", "text": "15 cm" }
+        {
+          "id": "a",
+          "text": "4 cm"
+        },
+        {
+          "id": "b",
+          "text": "19 cm"
+        },
+        {
+          "id": "c",
+          "text": "8 cm"
+        },
+        {
+          "id": "d",
+          "text": "15 cm"
+        }
       ],
       "correctOption": "a",
       "explanation": "مجموع الطول والعرض = 30 ÷ 2 = 15، والعرض = 15 − 11 = 4 cm. تحقّق: (11 + 4) × 2 = 30 cm. ✓",
