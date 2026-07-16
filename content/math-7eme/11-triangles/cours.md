@@ -29,6 +29,17 @@ $$ AB < AC + CB وAC < AB + BC وBC < AB + AC $$
 3. نفتح الفرجارَ على طول الضلع [AC] المعطى، ونرسم بمركزِ C قوسَ دائرة.
 4. نقطةُ تقاطع القوسَين هي الرأسُ الثالث A. نصل A بـ B وبـ C، فنحصل على المثلّث ABC.
 
+<svg viewBox="0 0 305 220">
+<title>بناء مثلّث بالمسطرة والفرجار: قوسان يتقاطعان في الرأس A</title>
+<path d="M 104.05 45.21 A 124.54 124.54 0 0 1 168.85 89.25" fill="none" stroke="#64748b" stroke-width="1.8"/>
+<path d="M 112.42 97.11 A 140.12 140.12 0 0 1 177.22 37.34" fill="none" stroke="#64748b" stroke-width="1.8"/>
+<line x1="70" y1="165" x2="235" y2="165" stroke="#0f172a" stroke-width="2.4"/>
+<line x1="70" y1="165" x2="140" y2="62" stroke="#0f172a" stroke-width="2.4"/>
+<line x1="235" y1="165" x2="140" y2="62" stroke="#0f172a" stroke-width="2.4"/>
+<g fill="#0f172a"><circle cx="140" cy="62" r="4"/><circle cx="70" cy="165" r="4"/><circle cx="235" cy="165" r="4"/></g>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="140" y="50" text-anchor="middle" fill="#0f172a" font-size="13">A</text><text x="58" y="171" text-anchor="middle" fill="#0f172a" font-size="13">B</text><text x="247" y="171" text-anchor="middle" fill="#0f172a" font-size="13">C</text><text x="95" y="205" text-anchor="middle" fill="#0f172a" font-size="11">قوسان مركزاهما B و C يتقاطعان في A</text></g>
+</svg>
+
 **مثال محسوب**: نبني مثلّثًا ABC حيث BC = 6 سم، AB = 5 سم، AC = 4 سم (تحقّقٌ سريع: 6 < 5 + 4 = 9 ✓، فالبناءُ ممكن). نرسم [BC] بطول 6 سم، ثمّ قوسًا مركزُه B نصفُ قطره 5 سم، وقوسًا مركزُه C نصفُ قطره 4 سم؛ تقاطعُهما يعطي A.
 
 > 🗡️ قبل الشروع في أيّ بناء، تحقّق دائمًا من المتراجحة المثلّثيّة أوّلًا: بناءٌ بأطوالٍ لا تحقّقها مضيعةٌ للوقت، لأنّ القوسَين لن يتقاطعا أبدًا.
@@ -38,6 +49,19 @@ $$ AB < AC + CB وAC < AB + BC وBC < AB + AC $$
 في أيّ مثلّثٍ ABC، مهما كان شكلُه، **مجموعُ قياسات زواياه الثلاث يساوي 180°** دائمًا:
 
 $$ قياس Â + قياس B̂ + قياس Ĉ = 180° $$
+
+<svg viewBox="0 0 300 215">
+<title>مجموع زوايا المثلّث = 180°: مستقيم يمرّ بـ A موازٍ لـ BC</title>
+<line x1="40" y1="55" x2="215" y2="55" stroke="#64748b" stroke-width="1.8" stroke-dasharray="5 4"/>
+<polygon points="120,55 50,165 255,165" fill="none" stroke="#0f172a" stroke-width="2.4"/>
+<path d="M 98 55 A 22 22 0 0 0 108.19 73.56" fill="none" stroke="#0f6e56" stroke-width="2.4"/>
+<path d="M 111.41 68.5 A 16 16 0 0 0 132.4 65.11" fill="none" stroke="#d97706" stroke-width="2.4"/>
+<path d="M 137.06 68.9 A 22 22 0 0 0 142 55" fill="none" stroke="#2563eb" stroke-width="2.4"/>
+<path d="M 74 165 A 24 24 0 0 0 62.89 144.75" fill="none" stroke="#0f6e56" stroke-width="2.4"/>
+<path d="M 236.39 149.84 A 24 24 0 0 0 231 165" fill="none" stroke="#2563eb" stroke-width="2.4"/>
+<g fill="#0f172a"><circle cx="120" cy="55" r="4"/><circle cx="50" cy="165" r="4"/><circle cx="255" cy="165" r="4"/></g>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="120" y="43" text-anchor="middle" fill="#0f172a" font-size="13">A</text><text x="38" y="171" text-anchor="middle" fill="#0f172a" font-size="13">B</text><text x="267" y="171" text-anchor="middle" fill="#0f172a" font-size="13">C</text><text x="90" y="49" text-anchor="middle" fill="#0f6e56" font-size="12">B̂</text><text x="120" y="31" text-anchor="middle" fill="#d97706" font-size="12">Â</text><text x="150" y="49" text-anchor="middle" fill="#2563eb" font-size="12">Ĉ</text><text x="72" y="157" text-anchor="middle" fill="#0f6e56" font-size="12">B̂</text><text x="233" y="157" text-anchor="middle" fill="#2563eb" font-size="12">Ĉ</text><text x="147" y="200" text-anchor="middle" fill="#0f172a" font-size="13">Â + B̂ + Ĉ = 180°</text></g>
+</svg>
 
 تُستعمل هذه الخاصيّةُ لإيجاد قياس زاويةٍ مجهولة إذا عُرف قياسُ الزاويتَين الأخرَيَين: نجمع الزاويتَين المعلومتَين، ثمّ نطرح المجموعَ من 180°.
 
