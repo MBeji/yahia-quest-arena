@@ -1,0 +1,5252 @@
+-- =========================================================
+-- GENERATED FILE — do not edit by hand.
+-- Subject: eveil-scientifique-6eme (إيقاظ علمي)
+-- Regenerate with: npm run content:build
+-- Source of truth: content/eveil-scientifique-6eme/
+-- =========================================================
+
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'exercises_mode_check') THEN
+    ALTER TABLE public.exercises DROP CONSTRAINT exercises_mode_check;
+  END IF;
+  ALTER TABLE public.exercises
+    ADD CONSTRAINT exercises_mode_check CHECK (mode IN ('practice', 'boss', 'quiz', 'challenge'));
+END $$;
+
+INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language, is_premium, theme_id, grade_id) VALUES
+  ('eveil-scientifique-6eme', 'إيقاظ علمي', 'اكتشافُ عالَم العلوم: الهواء والتنفّس والدم والتغذية والوسط البيئي والمغانط، وفق برنامج الإيقاظ العلمي للسنة السادسة من التعليم الأساسي', 'Observation', 'subject-svt', 'Microscope', 2, 'ar', false, 'ecole-tn', (SELECT id FROM public.grades WHERE theme_id = 'ecole-tn' AND slug = '6eme-base'))
+ON CONFLICT (id) DO UPDATE SET
+  name_fr = EXCLUDED.name_fr,
+  description = EXCLUDED.description,
+  attribute = EXCLUDED.attribute,
+  color_token = EXCLUDED.color_token,
+  icon = EXCLUDED.icon,
+  display_order = EXCLUDED.display_order,
+  content_language = EXCLUDED.content_language,
+  is_premium = EXCLUDED.is_premium,
+  theme_id = EXCLUDED.theme_id,
+  grade_id = EXCLUDED.grade_id;
+
+-- Prune admin-authored content that is no longer in the source tree.
+DO $$
+BEGIN
+  IF to_regclass('public.dungeon_run_questions') IS NOT NULL THEN
+    DELETE FROM public.dungeon_run_questions d
+    USING public.questions q, public.exercises e
+    WHERE d.question_id = q.id
+      AND q.exercise_id = e.id
+      AND e.subject_id = 'eveil-scientifique-6eme'
+      AND e.source = 'admin'
+      AND q.id NOT IN ('22b1784b-cfc3-514b-9c28-f09f47b66944', '647cbfbc-b8e2-5b40-bba6-22e3c136e4cd', '5d2c2a2f-85de-50da-8e69-e418201c807b', '25148e63-2f62-5534-92f4-be9d4d5c8ce0', 'ab2c7b9c-0468-5dec-b731-4762c3bdfbcb', '82dcbdab-16a7-5df9-9cb7-f4cddb7cb0e1', 'e06a976d-142d-556b-811c-49bc1cadae23', 'c0061061-4c17-5e75-ab76-75793f41e464', 'b76bf2e4-e2a0-597d-a05a-6be2a216e4a2', '139e4b74-06da-5979-8395-f9497d98cb71', '8f9da4f4-5811-5f01-a30b-10d394173566', '23ba0a44-a33b-5cc0-b56c-0ed407c81516', 'faff4440-78e7-5010-b17d-3a2b46830f88', '8dff7eee-11c3-5ba3-98bc-ff8f02ead6db', 'f683b638-cc3c-5a55-a388-82ba940e7b29', '9b17c77a-462b-5ecb-b45a-8efe0e8e6c45', 'e8e67b32-c3ac-5bd8-a988-3f58829e1ad7', 'cb6656de-0f96-5120-bd27-cfe3d371dd65', 'fabdd1ed-2731-53e9-b46b-e7848bcca742', '6e1b2b61-5df0-58d5-847f-b84878fde7c9', '477d8191-370c-54f3-b72b-9c11054d1edd', '85e563a0-fd0f-5fd4-b229-fa1ffbdb5912', '642b9384-a3b7-5657-b727-de2b8817ce7b', '7ff2e5f0-a0d5-545e-aa4f-e6a68802bbc0', '2127e544-e2ff-5603-9d28-3dc492666a99', '353627f0-2068-5961-8f0a-4cb97333879c', '07d3d011-b650-5bc8-b293-607d11bcffff', '74666f2c-e6d6-5769-8c5d-2d0294955edc', 'd6709280-b3d8-5a2c-99f1-84ca6e159405', 'ef8fe2ed-827e-5bc2-9690-1f6133188c6d', 'e11a043e-95e0-593f-80b3-913cc03f1b0e', '09fd283e-06cc-5e66-a3de-3999e365a953', '08ff61cc-7013-5d02-a8df-34f4ea0d8559', '13349f24-ec96-5949-86bb-3971f68b5d2e', '1f6d5b40-df86-50b9-8d0b-5fbf6e753273', 'daf8a4c2-099a-5dbc-8de1-39c4e7fd305a', '9e96e371-8cfb-5e45-88b8-b335cfd4ddc8', 'bccab6fe-9303-559a-90c7-3b76e3aedc39', '1bf295eb-9a58-5cae-879c-2df38cdbba36', '7bd45187-54c3-5296-bcb5-bafb7c24bbe4', 'a9118ad3-48fd-54b7-8a88-74254fdcdb7a', '02b7493d-0a90-51b9-ab4d-2c6062fb8b2b', 'e1c04794-5255-56a7-8877-0c5575d985c7', '9fcadfa1-c422-577a-a63f-ac6e8515f591', '159c036b-42bc-56a3-aaf8-969b97f1496f', '0d03b54c-9422-51dc-85ff-7d37a59ac103', '6214cf7a-e549-588d-8cbb-b406af16aff0', 'abc98ba8-9d5c-5498-acc1-f743901e7879', '5a559640-7cd6-5fe1-ae7e-81f1de11de8e', '67b14cb9-a119-57db-8eba-706116074617', 'f7f33503-b459-5d27-adc8-d84ddd9cff08', 'dd185a0c-5964-5921-89c5-6efda6cc9cd4', 'd8a54c40-6502-5056-bf69-f383bc3a676a', 'd7655934-9e62-5a01-a5ed-22de92ae59cb', '0993075f-f19b-509e-825f-0ed08c7fd454', '18063625-8d57-5ff3-928c-639e90c4fa14', '6a967509-b002-58fc-b16d-d5ffd9242d63', '608c5491-da95-5c7d-893e-750d1b7b6f9d', '1f99edab-6543-54c6-ac7b-77f9f4a1d8c7', 'c03e30e1-b023-51fb-a85a-c0398441f94c', '386d67af-7e63-5a6a-8a0c-e2509a41a81b', '39959081-838f-544e-bc60-b45818a9f0ce', 'b93f158a-23c1-5475-9070-bd3f7855aaa8', 'f3cd1045-3d9f-55ce-9308-aa21205f383b', '76e167cd-8d4e-5be5-85ef-6fc2c010ef91', '25767b39-8d52-50ae-84b5-430398ee5bf3', 'dcd9b827-88b9-54d0-8744-f6a7c258031c', '1cc0ee4d-cb5d-5c0c-bcf1-95ef5f970df4', '4bb77781-f351-5501-9e6d-237773298888', '6dd95402-0204-5cd8-9f51-681b9577b53d', '57e35d02-c3b4-57d0-a79d-c78d60e826b7', 'd07f106a-5080-58ba-87c1-5f4b7778c331', 'f97d3e0d-fc52-58b2-8851-99a53f0ea7b4', 'ff728071-e2ab-5e02-a50f-9a0bae3ec40a', '83feb802-34ba-547d-86f5-afa61e0f361a', 'eb65f3da-8183-580d-a805-1f2d36292a0f', '27a56397-91e1-5876-814a-f8283f7a913a', '6778f97d-b31f-5c85-b06f-f31d204d840f', '509f07d9-78c5-573f-bfe1-c6a40f324ce2', 'a43c0482-0ff7-54b7-892b-e9a96e9f316d', '789f77cb-8f58-51f6-b872-c6db571d7355', '4251c047-26f4-55a4-b131-ee1af87d5bef', 'ce65fa02-3925-56b9-bad1-1e1a4f856b5c', '5dd3b035-e4b9-56bc-8d84-bb098ef7e407', '7cfe7c7b-ef68-57d9-8143-948130313ce7', '2841e9e5-9800-5ec2-bf00-6f62c4357b3e', '6fbf4970-b44d-57ae-8fef-942a73ec719d', '5346b05b-37c7-5fd6-aeda-1ef357eb8278', '38dc6a97-457f-5c42-b02e-069a87a11bc3', 'fbd347fa-698b-5e74-9e4c-049422a29781', '87623f38-b4f1-5bed-ab71-9b216463a61b', 'dfcb43b3-6192-5598-8236-2bcce1004488', 'deda32eb-75cc-532a-bfbd-f824f2f9d810', '811267f4-0bee-574b-b9f1-76291e74a596', 'd96dc9dc-8f78-5259-aded-3995906da600', '995f1b02-168d-59ae-b2b3-d84204c67ed9', 'b13a435f-81ba-57b4-b009-54a8978d619d', 'da55f641-4fd9-5828-8444-472d2388d0fb', '0c4cd92f-70c9-5c7a-a1f6-af7d4570dc3f', '7a23f433-a990-549e-8e5b-42066890bf8b', '200f2a92-1c5e-5594-bd59-6bac9037abf7', 'f7e5501e-298d-5303-9222-88503da6124d', '82e16296-f6d6-57b6-927e-04c21c48ac31', '198f99da-24d1-5be9-984c-4c2b81154870', '70237436-444d-5abf-912c-37e00c8aa73b', '598dcf22-8f0d-56ce-af19-6b95c7a7fdeb', 'da6185d0-9015-526f-936e-d63ab33167ec', 'f9230061-659f-5ead-b17e-a9d0010fb4ba', 'ec33c552-5786-5491-9e34-996aa80fa514', 'ff7b5569-9796-5ac6-a861-0e8dc4336867', '728bd33e-bc94-5853-816f-e757c62a2534', 'fdb90979-16b6-58ad-b6d0-f774fe4fa0cd', 'e64affef-a984-594f-8854-a74afeea2a04', '77812901-dfc7-58f1-ab41-2e518f9d1e5f', 'b994ad66-2f09-5b3e-b031-152ba52996df', 'cf5bedb3-703f-54a9-b9b2-cccb424ef271', '3fa136f8-5cb2-574b-9e29-3a498c81f9fc', 'f0051dd3-2108-542f-9056-d381d5a66bb2', 'f752a0de-59fc-5806-9508-122a259aadf2', '05ccad0d-d28d-5b03-9d8a-38cd65ec2946', 'f11d30a2-0109-5e57-9587-d17ba1364d2d', '03573208-af6c-5ed7-9d4c-6c73be6b8e0c', 'e611dbfd-ac17-5584-b1b0-6dbe0c407730', '1cad21f2-f878-55cf-9553-a5b25b154c08', '3d7c9686-9569-5fa3-abe2-68866ccba0d6', 'f37d1227-5fed-5f71-b7cf-911057ed7cbc', 'b84472e9-1a12-5a28-bbb7-483090ff55b9', '4c6305b4-68c8-53bf-9c67-37683416661d', '0b597e1c-2c66-5072-b8bb-188d2955bffb', 'cae8c318-5cb1-53e1-9207-61b6eea69920', '74774f6f-ead4-59ce-91dd-8c37a9ad15b9', '7cfb07f9-0b74-5ef3-b5b6-b57275fcde39', '35d47135-093a-5bc5-aa71-00cbd54a5e29', 'd8fae5a7-b5ba-5410-8f2f-effd0afeb672', '27b32498-29b4-58ca-9e78-ae91c64c8872', '340967fe-54ec-5093-b4e6-c4f010d6493c', 'b04a5bbe-62b0-5aeb-8e73-d09f158a1efe', 'a9f28943-cd78-59c0-9ec2-f4ca21e6d665', 'd2effcaa-5c75-55f3-9d0f-6f91896d7a6a', 'f466f465-4355-5fed-bd9b-0337ac97e29a', '1ddefae2-932b-55ce-83ea-8c745346b781', 'a2106db2-cacb-51c3-b71b-d1189eb3dc1e', '33092fc0-5b35-5d31-be3a-b98dd2ad8074', '4603f188-7346-59a1-b447-49e499583f4e', '192f1e6c-eee1-5a15-907e-e0ba2eeb7368', '70e19185-686c-5957-80e1-23b4ab8910d1', '4487ff4a-4305-59e0-aca0-70dc32f837c9', 'c94f1475-70bc-59e4-84ab-bdab9703f69e', '2fbeb761-6f14-5efd-ac39-b57649a3860b', '13666676-4288-5243-8b94-ad9144595a6c', '10f9124d-6062-5a14-85da-05d74a49ca63', '96682937-6424-5f10-9726-ea65590a5a83', '9d8d6b7e-7264-5200-bebf-f90b66b3715f', 'b4a1e85a-98d4-5a0f-bacb-3dc566b49cdb', 'cd5c0596-3059-58d8-b7b5-fce4d0edd6fd', '52b6e98a-a695-538b-97a7-6c35ff5b3b38', 'a60bb7c9-eccf-56e9-b201-a1eee0c25750', '4e4b5c15-8899-5eaa-a3d5-d182d1069395', '56e31342-66d1-592b-a872-99387da8398e', '2dca6e5f-c324-5c69-9856-fde628426355', '77af92ff-190d-5880-8cf0-0ab8a42f711f', '4f277377-e4a1-5197-a312-aeaedae93c8c', '1add8108-981a-59e8-a114-22e96465a994', '06fcf09f-b204-55e4-9716-52447033af38', '85629355-1dfb-5867-854d-5e90ff7a8cda', 'e1d625de-4248-5afd-ad67-01f49bee9ba2', '54f0a1c3-ca4a-5761-b5f9-82a62c9bffa0', 'dd4301d0-a563-57ca-a2b7-17de966778d6', 'ee37c28b-d434-575f-a056-0f393ab6ef5b', '90a55f25-585c-5d4f-a75f-def19cf984c9', 'c87db149-cb49-563e-bb8a-1718cae44d49', 'bfa5b9e7-418c-5904-92de-f76610812f5e', 'd0f525a2-04db-5aaa-85d1-f023d453e991', 'c01255e1-92d7-5ae1-a47b-660e6c83cc3a', '1a0940ba-0491-5893-887e-9458b4a95fec', '9ff0fa0e-ceb2-542b-98d2-11b6503b4952', 'e3f94122-34b2-58ad-9d07-1842dc036788', 'b8e9062d-fc04-5337-8052-ee68f52a4cbc', '10f28926-d69c-5e4c-ad73-6f000773ca5e', 'be2066f4-831b-5374-9209-52625ab917cc', 'e9694da7-f84a-5ad9-9c2f-dae0a67df983', '0ec9c581-0f7e-59c2-9a26-967f25e4532d', '39ea143d-5bd5-5949-8d45-e80a442a22e0', 'f3876931-078c-5ea5-9a97-d3071363a772', 'a2212adf-5348-57e3-93c9-558512a5bfec', '5a0028f6-1ec1-55b0-811e-2a8b19e43b84', '234a4c92-14e2-594e-8363-29295812781a', '35a06ef2-252b-56d6-8a06-8b977e5cb2ec', '1d41f55b-ce1c-5792-96ee-a265d681134b', '0cfc7d1d-3d62-506d-af5a-66bf7e79fa9a', '041a32e3-ca09-53c8-bd8d-7c17dc936de6', 'a121d3ed-faf8-5c63-85fd-efef1289a853', 'd3400afd-9aed-5021-bad2-9232143b8a5e', '696705c1-6992-5c02-ae44-181c4600c8e0', '4925edea-3589-52d2-8d3c-623a75a42ed2', '565e825d-4d13-5669-a32f-6f693d355e83', '4b285a90-109a-5fcb-b29a-0ee814779d76', '38327403-a725-5017-a840-b7561d5f37d1', 'a477778d-8cf7-5cd1-95e0-08a9cd2939d2', '4e38af77-173d-5cc8-adf3-ae1a1438b7ba', '25f94ba5-e6ee-591d-b928-4f736df8acb7', 'f539aa3c-0955-5c9b-9845-d549ae885309', 'ce37af1c-fb83-5a55-aa72-391d5cc2689b', '36ad0255-9d43-5199-90d3-f75d4095a2db', '23a33e83-084b-5a3a-8637-b0663766f18c', 'f5d1e33b-ecc7-55e3-b44e-f6cabe34dbb4', '8a1dc8d9-4bda-5a4a-ace4-d82a28eae8fa', 'f464854e-fd92-5c86-aaab-964f06fbe33a', '9546b566-f476-5209-a1e1-c1fcc8e43742', 'b5448929-2227-53df-aa24-c45020f29aeb', '26a5eb9e-5b2a-56b1-a6ca-ecd2d6f962c0', 'c7a5fc84-2242-57d9-9cac-7e8513947f2d', '41d7dcda-2ea3-52cb-b146-cc18327f8e12', 'c53e4b41-3136-56f7-b6e1-9957ad0fe710', 'dc552419-dc18-5bf9-840d-8b81e904fc51', 'ad751329-4a02-5197-ba36-abea8e4d2026', '7750579f-e6a3-5d35-bbda-9c6079118ec2', 'd02c64e5-4b19-52cc-9ee7-a2a780473d84', '85e52cea-54c7-5626-9051-729e9f3dafbf', '88588c75-a942-53f2-838c-dabd05732699', 'b125d3ba-7e31-5be8-a5b1-35a411894f08', 'c800adc8-8e8b-5627-a1cf-98c150df0173', 'cc04833f-062f-5e8b-bf35-36dffaac300a', '3038ae0e-4afb-55d1-9c30-d9df8024c58a', 'c2b37e1f-aae5-51a5-9c5b-c28bfa9dd35f', 'c565a814-6249-559c-905d-6d3787ffd9ca', 'c2dd9ea1-b9ab-5f7a-bbce-8fda65bd3080', 'cdf412ef-6e69-508f-b41a-4aafa705fcf3', '6daa1b9a-b48a-5ec8-8449-730ad34b381c', '92d8c3b9-8abd-589d-b9bf-1caf9ad39232', '472d26a2-f2bb-5a4b-b7db-b0d44af7d518', 'af4946e0-d0c0-59c1-a2ff-158b4ce3f7b7', '35b1fd77-40e7-51e9-90ef-1469e7af9510', '1fecf934-e6ea-5fcb-b1d2-aa8c5597ccdd', '8253f21a-09e3-5d68-a635-de41f1555ef4', '977e5217-e004-5354-97d5-2fd48757b5c7', 'c8136840-6814-5f06-9c40-b10e1d1f479e', '060da265-9844-5182-ac24-b125dec38f43', '343c82f0-3d6e-5bd2-8429-f13e834ec8aa', 'f7fd461a-020a-5354-84bc-84ddc7589b38', 'ca568965-18e4-5703-8456-4e5efa3e99df', '731334d8-546d-56a9-a819-4af74305b5cb', '208c172d-6179-5d44-bb96-bc72b7822c38', '4757b52b-ab55-5f6b-8b0d-b5db59c6e535', 'd500c0ee-f9aa-5990-8ba8-9764b6906ba8', '50aead6a-3172-59e2-94b8-83b0eeab5a66', 'e7601d7f-c809-5386-ba3e-7f3333bacf33', '58d591fe-2158-558e-a03f-b606e383cb98', '2bcd33e9-8f53-5508-a242-b5375b1cd4ee', 'c23ef002-b497-5eb5-89ad-1547d242043d', 'a0a8dbf0-54f2-5afd-8de0-89b822cdae73', '0724bb22-0521-50eb-9114-ccade861f225', 'b1b4b978-6d50-5037-8bef-28bb82bb3f95', '2b86c94d-29a8-5203-996d-c8287ce5194f', '6d344ac5-c956-50b5-a16c-38a4b71a087a', '9224c225-bafd-5280-af8d-d03661027534', 'e6ebd9af-a2cd-5000-88ad-e0e8bcc285d9', '7e5202e1-7349-5323-8760-76a47d7d5f61', 'a9bec904-cfd1-542d-8606-dfef7b825beb', 'd840415a-7b4e-5a0f-9f75-8629e9502dc0', 'ded64a78-046e-5a02-beb9-92b00833f915', 'bcdc025c-8f7d-57a7-a0cd-5d67eecedc0a', '0ba93b45-71f5-5fb5-bad9-b29b3d87ed4d', 'b67924e8-f021-5a78-94fb-f07b71c11f3c', '43fabd5a-a0ac-5f7a-9e35-1bb71f10cb8e', '959efeaa-7de0-53c8-9a9d-3860b0e20285', 'a749d251-5477-53f5-b091-3bcf82a0b1b8', '6fadf351-ece8-5791-86e8-1515c25b7261', '2b4e10b4-d65e-56d5-adc5-89b5bff33060', '2540166d-cb24-5925-bdbf-ae3fdadfc00f', '3b0e53a7-e763-5b43-b3d1-0d3d524d39df', '16800556-089a-5bdc-b7bc-8a29f80ae9fb', '21d55777-f632-5727-8a77-9745a5395bc5', '2215f8f0-28c0-5c97-ad25-5f314b845415', '1154077d-d319-5347-8149-7de3436be35b', '544cd381-48fb-5c01-8580-258f563eb9d6', 'f73471ba-30c8-54d8-a0a6-3f7b3d3fdba5', '61fe56df-d6c8-5004-ab16-3d0c7ef09cc0', 'caaa4398-3082-5045-914e-3aec6636044b', '0fc01dc4-5ec8-522b-9a27-385299106c38', 'f778eee0-c790-5d2c-bcfc-96776ad15054', '0fb446bb-900a-547f-8f1e-e37fe381625a', '78d9e7ea-b59a-59f6-9b0e-ae8bf4caaeca', '61148198-06d4-573f-b8e0-a6099b256fe2', 'f60e2a21-9adf-5ad5-8889-25a2fd7d0502', '3858e486-bf12-5765-9396-519120f10d1b', 'a0f8dad8-cba3-54f1-bef3-022a72e05d38', '1f792b4e-3233-5afc-b11b-f6489894e4c1', '594f1059-51c8-546e-8e4b-2aa02acad6ca', 'ed764c79-7d80-59b7-b437-2cc5030b30a4', '127735db-376b-5a17-b95c-9ca725ffe95f', '9de8733e-7941-5942-83c6-49d7d12185c8', '60dad7b5-6fa7-56f4-a8c5-5c7cb0d920d9', 'edb6be80-efb8-5740-a274-dff4c884074f', '286ed54d-0cbf-54e2-ae9c-a6a7f7f9d591', '4e77bff5-505f-5e30-89be-4d82fcfd6f8e', '74170d35-fdd3-5484-bba7-e7e41811b725', 'd3f9ff06-c2c7-5dd7-82ef-bd0a733ec2c6', '1f014717-2587-5769-84f6-7f0bee00b184', '445e5317-752b-5994-aefc-e00ac72043c2', '559a0a71-4537-565d-890e-8bbc27fee6a7', 'aa8b2aae-b7ba-552e-8fc8-578493a4a278', '99023dd2-5b75-528d-bf29-49c8e9adc16f', 'e72fa168-7255-56b3-8663-1cc23d1936d8', 'f86e71af-947d-5f3c-a07f-2bd522e86532', '96d3b885-17f0-5264-a26f-b6550b9da543', '2f9c7651-8e3c-56a0-92a3-e24ca3a2cbb9', 'c020a39e-c424-5b74-b8ad-d49e94266492', '1cdc49db-9396-5dd5-8d53-5989d560c625', '91dc2be8-c0a1-5259-8fba-62f965af4181', '6083bb95-1e30-5c0f-b33b-ef96563341d2', '324b1dd7-0a3b-5e32-9114-4ba17dd49e73', 'eef3a4ae-0f63-5def-8fc8-51265c64d054', '1d246c5f-088e-53c0-893a-a72f5fec6956', 'b60dd4e0-427c-5445-865a-775d138588db');
+  END IF;
+END $$;
+DELETE FROM public.exercises WHERE subject_id = 'eveil-scientifique-6eme' AND source = 'admin' AND id NOT IN ('1c711c11-93d9-5c1a-a172-2e42e9639577', '95a7dd4f-f56f-5189-87f5-f8258dd27a5b', 'dbd48634-d6aa-59c9-96de-2e95e4c8e4be', '7552521d-0930-57e3-bc97-d27689d002f2', '3dd0f522-71ce-5d61-bbd7-1ff28f99740b', '31c7f00e-2811-5947-b3fb-96d2c5012f46', '785b1133-03dc-5ea6-a119-68343d35e8c5', '45614f7e-b1c0-5094-8f09-3d1ee809b452', 'c9471038-aa68-5d23-9828-c6787a18a851', '93e3ff54-751f-5338-9891-ed7496283db4', '83144a7b-33cd-5d46-981e-0d6aea1b6c3f', '9ce85352-fd3a-5438-b2c8-5490dc648e59', '21283609-6e6f-5624-bc24-cedd580c9f0a', 'ba04966f-d093-56cb-81c9-1dd689f6edc5', '25e852eb-166d-5524-beb5-573294fd9eb6', '5a8adbb4-f4f5-51ac-bbee-71e52c439c0a', 'd97ff5d4-e6f6-54be-8c0f-eaf6fe2e1a2a', '69aa3ace-412d-5b40-9cef-44addf566012', '1d0412f9-ef6c-5479-84a2-2e542351f305', 'a1223f64-4330-52b5-8b8a-ae4694a55832', '259fd70b-0e26-583e-941d-5b8ff81932c2', '93b390db-d856-50d9-8cc7-74dc537f737d', '6c647109-fa0a-5dd0-992a-37912e24f1c5', 'e5fb5a0a-624e-5402-b813-fea1d2e80fd0', 'aecf02b2-d4c6-5cc5-867f-38928ffbdb57', '02ecec19-f2c1-58c9-bb3f-5f5a83be045b', '68655d37-f975-53af-b6fb-2687adba1ce9', '28c17ebc-d3df-52e1-bf70-852dfb60ab2e', 'c5cd521a-7515-5ad2-9da2-0302047934f2', 'ae6c1d5c-5cad-5808-89e8-9e1adf0bf999', '2d4a5a54-c42d-5b52-af11-1defbf9d111b', 'c4e2a3ed-497c-53fb-8fcf-43715af0a905', 'e3e33551-4a10-565a-8e72-5d793a91cd21', '8b358f1d-19f3-59a8-8c1d-05a7b4b974f8', '7604dfa9-2520-5fa6-b167-7b20b942b74f', '36dcfbe7-b335-532c-84cb-b653a205ab43', '5d11df30-d45c-5032-8b00-54443d9ee35e', '7049d040-615f-5421-8a70-4ca5d31245f9', '2a7e2ab1-3888-5d77-b216-dd3c7bbe7b87', 'ec50f320-46e1-5832-be14-69e1a409032e', '1b677443-6deb-5939-bcb6-d20ef3d481ac', '8a4a236b-8822-5ea9-a6b1-cd02385c3ae1', '2b3f3ebc-164e-551a-aac8-57ac330a531c', '1e33a32a-5f87-5cca-83ce-6ea7d3423dcb', '271b1526-be79-5804-9478-e7fd732b9131', '6e200bc7-e58e-577c-baaf-55a949d2dd53', '8f161787-a898-59a5-8134-f42406e0d550', '0054979e-48e6-52da-920d-ddb26b045cf1', 'b6a7681c-91e3-54b4-803e-7962284147cd', 'a42bdc73-186e-55b0-9d2c-81e5c7d80597', 'b62dfdd8-6431-5b94-ba86-dc4827008072', '96302446-dd68-562d-bc70-7940d5935052', '91498677-36e3-51c3-9196-fac9b6705f1a', 'ea014475-8628-5998-8d3b-010690177228');
+DELETE FROM public.questions WHERE exercise_id IN ('1c711c11-93d9-5c1a-a172-2e42e9639577', '95a7dd4f-f56f-5189-87f5-f8258dd27a5b', 'dbd48634-d6aa-59c9-96de-2e95e4c8e4be', '7552521d-0930-57e3-bc97-d27689d002f2', '3dd0f522-71ce-5d61-bbd7-1ff28f99740b', '31c7f00e-2811-5947-b3fb-96d2c5012f46', '785b1133-03dc-5ea6-a119-68343d35e8c5', '45614f7e-b1c0-5094-8f09-3d1ee809b452', 'c9471038-aa68-5d23-9828-c6787a18a851', '93e3ff54-751f-5338-9891-ed7496283db4', '83144a7b-33cd-5d46-981e-0d6aea1b6c3f', '9ce85352-fd3a-5438-b2c8-5490dc648e59', '21283609-6e6f-5624-bc24-cedd580c9f0a', 'ba04966f-d093-56cb-81c9-1dd689f6edc5', '25e852eb-166d-5524-beb5-573294fd9eb6', '5a8adbb4-f4f5-51ac-bbee-71e52c439c0a', 'd97ff5d4-e6f6-54be-8c0f-eaf6fe2e1a2a', '69aa3ace-412d-5b40-9cef-44addf566012', '1d0412f9-ef6c-5479-84a2-2e542351f305', 'a1223f64-4330-52b5-8b8a-ae4694a55832', '259fd70b-0e26-583e-941d-5b8ff81932c2', '93b390db-d856-50d9-8cc7-74dc537f737d', '6c647109-fa0a-5dd0-992a-37912e24f1c5', 'e5fb5a0a-624e-5402-b813-fea1d2e80fd0', 'aecf02b2-d4c6-5cc5-867f-38928ffbdb57', '02ecec19-f2c1-58c9-bb3f-5f5a83be045b', '68655d37-f975-53af-b6fb-2687adba1ce9', '28c17ebc-d3df-52e1-bf70-852dfb60ab2e', 'c5cd521a-7515-5ad2-9da2-0302047934f2', 'ae6c1d5c-5cad-5808-89e8-9e1adf0bf999', '2d4a5a54-c42d-5b52-af11-1defbf9d111b', 'c4e2a3ed-497c-53fb-8fcf-43715af0a905', 'e3e33551-4a10-565a-8e72-5d793a91cd21', '8b358f1d-19f3-59a8-8c1d-05a7b4b974f8', '7604dfa9-2520-5fa6-b167-7b20b942b74f', '36dcfbe7-b335-532c-84cb-b653a205ab43', '5d11df30-d45c-5032-8b00-54443d9ee35e', '7049d040-615f-5421-8a70-4ca5d31245f9', '2a7e2ab1-3888-5d77-b216-dd3c7bbe7b87', 'ec50f320-46e1-5832-be14-69e1a409032e', '1b677443-6deb-5939-bcb6-d20ef3d481ac', '8a4a236b-8822-5ea9-a6b1-cd02385c3ae1', '2b3f3ebc-164e-551a-aac8-57ac330a531c', '1e33a32a-5f87-5cca-83ce-6ea7d3423dcb', '271b1526-be79-5804-9478-e7fd732b9131', '6e200bc7-e58e-577c-baaf-55a949d2dd53', '8f161787-a898-59a5-8134-f42406e0d550', '0054979e-48e6-52da-920d-ddb26b045cf1', 'b6a7681c-91e3-54b4-803e-7962284147cd', 'a42bdc73-186e-55b0-9d2c-81e5c7d80597', 'b62dfdd8-6431-5b94-ba86-dc4827008072', '96302446-dd68-562d-bc70-7940d5935052', '91498677-36e3-51c3-9196-fac9b6705f1a', 'ea014475-8628-5998-8d3b-010690177228') AND id NOT IN ('22b1784b-cfc3-514b-9c28-f09f47b66944', '647cbfbc-b8e2-5b40-bba6-22e3c136e4cd', '5d2c2a2f-85de-50da-8e69-e418201c807b', '25148e63-2f62-5534-92f4-be9d4d5c8ce0', 'ab2c7b9c-0468-5dec-b731-4762c3bdfbcb', '82dcbdab-16a7-5df9-9cb7-f4cddb7cb0e1', 'e06a976d-142d-556b-811c-49bc1cadae23', 'c0061061-4c17-5e75-ab76-75793f41e464', 'b76bf2e4-e2a0-597d-a05a-6be2a216e4a2', '139e4b74-06da-5979-8395-f9497d98cb71', '8f9da4f4-5811-5f01-a30b-10d394173566', '23ba0a44-a33b-5cc0-b56c-0ed407c81516', 'faff4440-78e7-5010-b17d-3a2b46830f88', '8dff7eee-11c3-5ba3-98bc-ff8f02ead6db', 'f683b638-cc3c-5a55-a388-82ba940e7b29', '9b17c77a-462b-5ecb-b45a-8efe0e8e6c45', 'e8e67b32-c3ac-5bd8-a988-3f58829e1ad7', 'cb6656de-0f96-5120-bd27-cfe3d371dd65', 'fabdd1ed-2731-53e9-b46b-e7848bcca742', '6e1b2b61-5df0-58d5-847f-b84878fde7c9', '477d8191-370c-54f3-b72b-9c11054d1edd', '85e563a0-fd0f-5fd4-b229-fa1ffbdb5912', '642b9384-a3b7-5657-b727-de2b8817ce7b', '7ff2e5f0-a0d5-545e-aa4f-e6a68802bbc0', '2127e544-e2ff-5603-9d28-3dc492666a99', '353627f0-2068-5961-8f0a-4cb97333879c', '07d3d011-b650-5bc8-b293-607d11bcffff', '74666f2c-e6d6-5769-8c5d-2d0294955edc', 'd6709280-b3d8-5a2c-99f1-84ca6e159405', 'ef8fe2ed-827e-5bc2-9690-1f6133188c6d', 'e11a043e-95e0-593f-80b3-913cc03f1b0e', '09fd283e-06cc-5e66-a3de-3999e365a953', '08ff61cc-7013-5d02-a8df-34f4ea0d8559', '13349f24-ec96-5949-86bb-3971f68b5d2e', '1f6d5b40-df86-50b9-8d0b-5fbf6e753273', 'daf8a4c2-099a-5dbc-8de1-39c4e7fd305a', '9e96e371-8cfb-5e45-88b8-b335cfd4ddc8', 'bccab6fe-9303-559a-90c7-3b76e3aedc39', '1bf295eb-9a58-5cae-879c-2df38cdbba36', '7bd45187-54c3-5296-bcb5-bafb7c24bbe4', 'a9118ad3-48fd-54b7-8a88-74254fdcdb7a', '02b7493d-0a90-51b9-ab4d-2c6062fb8b2b', 'e1c04794-5255-56a7-8877-0c5575d985c7', '9fcadfa1-c422-577a-a63f-ac6e8515f591', '159c036b-42bc-56a3-aaf8-969b97f1496f', '0d03b54c-9422-51dc-85ff-7d37a59ac103', '6214cf7a-e549-588d-8cbb-b406af16aff0', 'abc98ba8-9d5c-5498-acc1-f743901e7879', '5a559640-7cd6-5fe1-ae7e-81f1de11de8e', '67b14cb9-a119-57db-8eba-706116074617', 'f7f33503-b459-5d27-adc8-d84ddd9cff08', 'dd185a0c-5964-5921-89c5-6efda6cc9cd4', 'd8a54c40-6502-5056-bf69-f383bc3a676a', 'd7655934-9e62-5a01-a5ed-22de92ae59cb', '0993075f-f19b-509e-825f-0ed08c7fd454', '18063625-8d57-5ff3-928c-639e90c4fa14', '6a967509-b002-58fc-b16d-d5ffd9242d63', '608c5491-da95-5c7d-893e-750d1b7b6f9d', '1f99edab-6543-54c6-ac7b-77f9f4a1d8c7', 'c03e30e1-b023-51fb-a85a-c0398441f94c', '386d67af-7e63-5a6a-8a0c-e2509a41a81b', '39959081-838f-544e-bc60-b45818a9f0ce', 'b93f158a-23c1-5475-9070-bd3f7855aaa8', 'f3cd1045-3d9f-55ce-9308-aa21205f383b', '76e167cd-8d4e-5be5-85ef-6fc2c010ef91', '25767b39-8d52-50ae-84b5-430398ee5bf3', 'dcd9b827-88b9-54d0-8744-f6a7c258031c', '1cc0ee4d-cb5d-5c0c-bcf1-95ef5f970df4', '4bb77781-f351-5501-9e6d-237773298888', '6dd95402-0204-5cd8-9f51-681b9577b53d', '57e35d02-c3b4-57d0-a79d-c78d60e826b7', 'd07f106a-5080-58ba-87c1-5f4b7778c331', 'f97d3e0d-fc52-58b2-8851-99a53f0ea7b4', 'ff728071-e2ab-5e02-a50f-9a0bae3ec40a', '83feb802-34ba-547d-86f5-afa61e0f361a', 'eb65f3da-8183-580d-a805-1f2d36292a0f', '27a56397-91e1-5876-814a-f8283f7a913a', '6778f97d-b31f-5c85-b06f-f31d204d840f', '509f07d9-78c5-573f-bfe1-c6a40f324ce2', 'a43c0482-0ff7-54b7-892b-e9a96e9f316d', '789f77cb-8f58-51f6-b872-c6db571d7355', '4251c047-26f4-55a4-b131-ee1af87d5bef', 'ce65fa02-3925-56b9-bad1-1e1a4f856b5c', '5dd3b035-e4b9-56bc-8d84-bb098ef7e407', '7cfe7c7b-ef68-57d9-8143-948130313ce7', '2841e9e5-9800-5ec2-bf00-6f62c4357b3e', '6fbf4970-b44d-57ae-8fef-942a73ec719d', '5346b05b-37c7-5fd6-aeda-1ef357eb8278', '38dc6a97-457f-5c42-b02e-069a87a11bc3', 'fbd347fa-698b-5e74-9e4c-049422a29781', '87623f38-b4f1-5bed-ab71-9b216463a61b', 'dfcb43b3-6192-5598-8236-2bcce1004488', 'deda32eb-75cc-532a-bfbd-f824f2f9d810', '811267f4-0bee-574b-b9f1-76291e74a596', 'd96dc9dc-8f78-5259-aded-3995906da600', '995f1b02-168d-59ae-b2b3-d84204c67ed9', 'b13a435f-81ba-57b4-b009-54a8978d619d', 'da55f641-4fd9-5828-8444-472d2388d0fb', '0c4cd92f-70c9-5c7a-a1f6-af7d4570dc3f', '7a23f433-a990-549e-8e5b-42066890bf8b', '200f2a92-1c5e-5594-bd59-6bac9037abf7', 'f7e5501e-298d-5303-9222-88503da6124d', '82e16296-f6d6-57b6-927e-04c21c48ac31', '198f99da-24d1-5be9-984c-4c2b81154870', '70237436-444d-5abf-912c-37e00c8aa73b', '598dcf22-8f0d-56ce-af19-6b95c7a7fdeb', 'da6185d0-9015-526f-936e-d63ab33167ec', 'f9230061-659f-5ead-b17e-a9d0010fb4ba', 'ec33c552-5786-5491-9e34-996aa80fa514', 'ff7b5569-9796-5ac6-a861-0e8dc4336867', '728bd33e-bc94-5853-816f-e757c62a2534', 'fdb90979-16b6-58ad-b6d0-f774fe4fa0cd', 'e64affef-a984-594f-8854-a74afeea2a04', '77812901-dfc7-58f1-ab41-2e518f9d1e5f', 'b994ad66-2f09-5b3e-b031-152ba52996df', 'cf5bedb3-703f-54a9-b9b2-cccb424ef271', '3fa136f8-5cb2-574b-9e29-3a498c81f9fc', 'f0051dd3-2108-542f-9056-d381d5a66bb2', 'f752a0de-59fc-5806-9508-122a259aadf2', '05ccad0d-d28d-5b03-9d8a-38cd65ec2946', 'f11d30a2-0109-5e57-9587-d17ba1364d2d', '03573208-af6c-5ed7-9d4c-6c73be6b8e0c', 'e611dbfd-ac17-5584-b1b0-6dbe0c407730', '1cad21f2-f878-55cf-9553-a5b25b154c08', '3d7c9686-9569-5fa3-abe2-68866ccba0d6', 'f37d1227-5fed-5f71-b7cf-911057ed7cbc', 'b84472e9-1a12-5a28-bbb7-483090ff55b9', '4c6305b4-68c8-53bf-9c67-37683416661d', '0b597e1c-2c66-5072-b8bb-188d2955bffb', 'cae8c318-5cb1-53e1-9207-61b6eea69920', '74774f6f-ead4-59ce-91dd-8c37a9ad15b9', '7cfb07f9-0b74-5ef3-b5b6-b57275fcde39', '35d47135-093a-5bc5-aa71-00cbd54a5e29', 'd8fae5a7-b5ba-5410-8f2f-effd0afeb672', '27b32498-29b4-58ca-9e78-ae91c64c8872', '340967fe-54ec-5093-b4e6-c4f010d6493c', 'b04a5bbe-62b0-5aeb-8e73-d09f158a1efe', 'a9f28943-cd78-59c0-9ec2-f4ca21e6d665', 'd2effcaa-5c75-55f3-9d0f-6f91896d7a6a', 'f466f465-4355-5fed-bd9b-0337ac97e29a', '1ddefae2-932b-55ce-83ea-8c745346b781', 'a2106db2-cacb-51c3-b71b-d1189eb3dc1e', '33092fc0-5b35-5d31-be3a-b98dd2ad8074', '4603f188-7346-59a1-b447-49e499583f4e', '192f1e6c-eee1-5a15-907e-e0ba2eeb7368', '70e19185-686c-5957-80e1-23b4ab8910d1', '4487ff4a-4305-59e0-aca0-70dc32f837c9', 'c94f1475-70bc-59e4-84ab-bdab9703f69e', '2fbeb761-6f14-5efd-ac39-b57649a3860b', '13666676-4288-5243-8b94-ad9144595a6c', '10f9124d-6062-5a14-85da-05d74a49ca63', '96682937-6424-5f10-9726-ea65590a5a83', '9d8d6b7e-7264-5200-bebf-f90b66b3715f', 'b4a1e85a-98d4-5a0f-bacb-3dc566b49cdb', 'cd5c0596-3059-58d8-b7b5-fce4d0edd6fd', '52b6e98a-a695-538b-97a7-6c35ff5b3b38', 'a60bb7c9-eccf-56e9-b201-a1eee0c25750', '4e4b5c15-8899-5eaa-a3d5-d182d1069395', '56e31342-66d1-592b-a872-99387da8398e', '2dca6e5f-c324-5c69-9856-fde628426355', '77af92ff-190d-5880-8cf0-0ab8a42f711f', '4f277377-e4a1-5197-a312-aeaedae93c8c', '1add8108-981a-59e8-a114-22e96465a994', '06fcf09f-b204-55e4-9716-52447033af38', '85629355-1dfb-5867-854d-5e90ff7a8cda', 'e1d625de-4248-5afd-ad67-01f49bee9ba2', '54f0a1c3-ca4a-5761-b5f9-82a62c9bffa0', 'dd4301d0-a563-57ca-a2b7-17de966778d6', 'ee37c28b-d434-575f-a056-0f393ab6ef5b', '90a55f25-585c-5d4f-a75f-def19cf984c9', 'c87db149-cb49-563e-bb8a-1718cae44d49', 'bfa5b9e7-418c-5904-92de-f76610812f5e', 'd0f525a2-04db-5aaa-85d1-f023d453e991', 'c01255e1-92d7-5ae1-a47b-660e6c83cc3a', '1a0940ba-0491-5893-887e-9458b4a95fec', '9ff0fa0e-ceb2-542b-98d2-11b6503b4952', 'e3f94122-34b2-58ad-9d07-1842dc036788', 'b8e9062d-fc04-5337-8052-ee68f52a4cbc', '10f28926-d69c-5e4c-ad73-6f000773ca5e', 'be2066f4-831b-5374-9209-52625ab917cc', 'e9694da7-f84a-5ad9-9c2f-dae0a67df983', '0ec9c581-0f7e-59c2-9a26-967f25e4532d', '39ea143d-5bd5-5949-8d45-e80a442a22e0', 'f3876931-078c-5ea5-9a97-d3071363a772', 'a2212adf-5348-57e3-93c9-558512a5bfec', '5a0028f6-1ec1-55b0-811e-2a8b19e43b84', '234a4c92-14e2-594e-8363-29295812781a', '35a06ef2-252b-56d6-8a06-8b977e5cb2ec', '1d41f55b-ce1c-5792-96ee-a265d681134b', '0cfc7d1d-3d62-506d-af5a-66bf7e79fa9a', '041a32e3-ca09-53c8-bd8d-7c17dc936de6', 'a121d3ed-faf8-5c63-85fd-efef1289a853', 'd3400afd-9aed-5021-bad2-9232143b8a5e', '696705c1-6992-5c02-ae44-181c4600c8e0', '4925edea-3589-52d2-8d3c-623a75a42ed2', '565e825d-4d13-5669-a32f-6f693d355e83', '4b285a90-109a-5fcb-b29a-0ee814779d76', '38327403-a725-5017-a840-b7561d5f37d1', 'a477778d-8cf7-5cd1-95e0-08a9cd2939d2', '4e38af77-173d-5cc8-adf3-ae1a1438b7ba', '25f94ba5-e6ee-591d-b928-4f736df8acb7', 'f539aa3c-0955-5c9b-9845-d549ae885309', 'ce37af1c-fb83-5a55-aa72-391d5cc2689b', '36ad0255-9d43-5199-90d3-f75d4095a2db', '23a33e83-084b-5a3a-8637-b0663766f18c', 'f5d1e33b-ecc7-55e3-b44e-f6cabe34dbb4', '8a1dc8d9-4bda-5a4a-ace4-d82a28eae8fa', 'f464854e-fd92-5c86-aaab-964f06fbe33a', '9546b566-f476-5209-a1e1-c1fcc8e43742', 'b5448929-2227-53df-aa24-c45020f29aeb', '26a5eb9e-5b2a-56b1-a6ca-ecd2d6f962c0', 'c7a5fc84-2242-57d9-9cac-7e8513947f2d', '41d7dcda-2ea3-52cb-b146-cc18327f8e12', 'c53e4b41-3136-56f7-b6e1-9957ad0fe710', 'dc552419-dc18-5bf9-840d-8b81e904fc51', 'ad751329-4a02-5197-ba36-abea8e4d2026', '7750579f-e6a3-5d35-bbda-9c6079118ec2', 'd02c64e5-4b19-52cc-9ee7-a2a780473d84', '85e52cea-54c7-5626-9051-729e9f3dafbf', '88588c75-a942-53f2-838c-dabd05732699', 'b125d3ba-7e31-5be8-a5b1-35a411894f08', 'c800adc8-8e8b-5627-a1cf-98c150df0173', 'cc04833f-062f-5e8b-bf35-36dffaac300a', '3038ae0e-4afb-55d1-9c30-d9df8024c58a', 'c2b37e1f-aae5-51a5-9c5b-c28bfa9dd35f', 'c565a814-6249-559c-905d-6d3787ffd9ca', 'c2dd9ea1-b9ab-5f7a-bbce-8fda65bd3080', 'cdf412ef-6e69-508f-b41a-4aafa705fcf3', '6daa1b9a-b48a-5ec8-8449-730ad34b381c', '92d8c3b9-8abd-589d-b9bf-1caf9ad39232', '472d26a2-f2bb-5a4b-b7db-b0d44af7d518', 'af4946e0-d0c0-59c1-a2ff-158b4ce3f7b7', '35b1fd77-40e7-51e9-90ef-1469e7af9510', '1fecf934-e6ea-5fcb-b1d2-aa8c5597ccdd', '8253f21a-09e3-5d68-a635-de41f1555ef4', '977e5217-e004-5354-97d5-2fd48757b5c7', 'c8136840-6814-5f06-9c40-b10e1d1f479e', '060da265-9844-5182-ac24-b125dec38f43', '343c82f0-3d6e-5bd2-8429-f13e834ec8aa', 'f7fd461a-020a-5354-84bc-84ddc7589b38', 'ca568965-18e4-5703-8456-4e5efa3e99df', '731334d8-546d-56a9-a819-4af74305b5cb', '208c172d-6179-5d44-bb96-bc72b7822c38', '4757b52b-ab55-5f6b-8b0d-b5db59c6e535', 'd500c0ee-f9aa-5990-8ba8-9764b6906ba8', '50aead6a-3172-59e2-94b8-83b0eeab5a66', 'e7601d7f-c809-5386-ba3e-7f3333bacf33', '58d591fe-2158-558e-a03f-b606e383cb98', '2bcd33e9-8f53-5508-a242-b5375b1cd4ee', 'c23ef002-b497-5eb5-89ad-1547d242043d', 'a0a8dbf0-54f2-5afd-8de0-89b822cdae73', '0724bb22-0521-50eb-9114-ccade861f225', 'b1b4b978-6d50-5037-8bef-28bb82bb3f95', '2b86c94d-29a8-5203-996d-c8287ce5194f', '6d344ac5-c956-50b5-a16c-38a4b71a087a', '9224c225-bafd-5280-af8d-d03661027534', 'e6ebd9af-a2cd-5000-88ad-e0e8bcc285d9', '7e5202e1-7349-5323-8760-76a47d7d5f61', 'a9bec904-cfd1-542d-8606-dfef7b825beb', 'd840415a-7b4e-5a0f-9f75-8629e9502dc0', 'ded64a78-046e-5a02-beb9-92b00833f915', 'bcdc025c-8f7d-57a7-a0cd-5d67eecedc0a', '0ba93b45-71f5-5fb5-bad9-b29b3d87ed4d', 'b67924e8-f021-5a78-94fb-f07b71c11f3c', '43fabd5a-a0ac-5f7a-9e35-1bb71f10cb8e', '959efeaa-7de0-53c8-9a9d-3860b0e20285', 'a749d251-5477-53f5-b091-3bcf82a0b1b8', '6fadf351-ece8-5791-86e8-1515c25b7261', '2b4e10b4-d65e-56d5-adc5-89b5bff33060', '2540166d-cb24-5925-bdbf-ae3fdadfc00f', '3b0e53a7-e763-5b43-b3d1-0d3d524d39df', '16800556-089a-5bdc-b7bc-8a29f80ae9fb', '21d55777-f632-5727-8a77-9745a5395bc5', '2215f8f0-28c0-5c97-ad25-5f314b845415', '1154077d-d319-5347-8149-7de3436be35b', '544cd381-48fb-5c01-8580-258f563eb9d6', 'f73471ba-30c8-54d8-a0a6-3f7b3d3fdba5', '61fe56df-d6c8-5004-ab16-3d0c7ef09cc0', 'caaa4398-3082-5045-914e-3aec6636044b', '0fc01dc4-5ec8-522b-9a27-385299106c38', 'f778eee0-c790-5d2c-bcfc-96776ad15054', '0fb446bb-900a-547f-8f1e-e37fe381625a', '78d9e7ea-b59a-59f6-9b0e-ae8bf4caaeca', '61148198-06d4-573f-b8e0-a6099b256fe2', 'f60e2a21-9adf-5ad5-8889-25a2fd7d0502', '3858e486-bf12-5765-9396-519120f10d1b', 'a0f8dad8-cba3-54f1-bef3-022a72e05d38', '1f792b4e-3233-5afc-b11b-f6489894e4c1', '594f1059-51c8-546e-8e4b-2aa02acad6ca', 'ed764c79-7d80-59b7-b437-2cc5030b30a4', '127735db-376b-5a17-b95c-9ca725ffe95f', '9de8733e-7941-5942-83c6-49d7d12185c8', '60dad7b5-6fa7-56f4-a8c5-5c7cb0d920d9', 'edb6be80-efb8-5740-a274-dff4c884074f', '286ed54d-0cbf-54e2-ae9c-a6a7f7f9d591', '4e77bff5-505f-5e30-89be-4d82fcfd6f8e', '74170d35-fdd3-5484-bba7-e7e41811b725', 'd3f9ff06-c2c7-5dd7-82ef-bd0a733ec2c6', '1f014717-2587-5769-84f6-7f0bee00b184', '445e5317-752b-5994-aefc-e00ac72043c2', '559a0a71-4537-565d-890e-8bbc27fee6a7', 'aa8b2aae-b7ba-552e-8fc8-578493a4a278', '99023dd2-5b75-528d-bf29-49c8e9adc16f', 'e72fa168-7255-56b3-8663-1cc23d1936d8', 'f86e71af-947d-5f3c-a07f-2bd522e86532', '96d3b885-17f0-5264-a26f-b6550b9da543', '2f9c7651-8e3c-56a0-92a3-e24ca3a2cbb9', 'c020a39e-c424-5b74-b8ad-d49e94266492', '1cdc49db-9396-5dd5-8d53-5989d560c625', '91dc2be8-c0a1-5259-8fba-62f965af4181', '6083bb95-1e30-5c0f-b33b-ef96563341d2', '324b1dd7-0a3b-5e32-9114-4ba17dd49e73', 'eef3a4ae-0f63-5def-8fc8-51265c64d054', '1d246c5f-088e-53c0-893a-a72f5fec6956', 'b60dd4e0-427c-5445-865a-775d138588db');
+DELETE FROM public.chapters c WHERE c.subject_id = 'eveil-scientifique-6eme' AND c.id NOT IN ('e560f7f7-a314-5ca6-a3f1-a294385e4f28', '38976f55-d157-591a-9efd-ad38e0e0b33a', 'a5efe929-363c-5e01-a9bc-06eff4fbe288', 'dcc4acda-70b9-50dd-b4f2-b161b7ddd292', '9ba90402-06a3-5fc3-84bf-8c80671bb811', 'd5eff8d2-9652-5d05-acbb-cc647378b654', '2c330d4a-3925-533b-a583-37df79d0c174', 'c383f16c-2ad5-5bf9-95d8-9b798e80b4ac', '18a4f2b8-242a-546b-9fe3-e13f232feb35') AND NOT EXISTS (SELECT 1 FROM public.exercises e WHERE e.chapter_id = c.id);
+
+INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order, manuel_ref) VALUES
+  ('e560f7f7-a314-5ca6-a3f1-a294385e4f28', 'eveil-scientifique-6eme', 'الهواء', 'خاصيّاتُ الهواء ومكوّناتُه (الآزوت والأكسجين)، وأهميّتُه للحياة، والاحتراقُ ودورُ الأكسجين', '# 💨 الهواء
+
+> 💡 «الهواءُ غازٌ لا نراه، لكنّنا نحسّ به ولا نعيشُ من دونه. لنكتشفْ ممّ يتكوّن وكيف يحفظُ الحياة.»
+
+## 🌬️ خاصيّاتُ الهواء
+
+- **غيرُ مرئيّ**، لكنّه مادّةٌ حقيقيّة.
+- **له كتلة** (يمكن وزنُه).
+- **يشغلُ حيّزًا** (يملأ كلَّ إناءٍ يوجدُ فيه).
+- **قابلٌ للانضغاط** (يمكن ضغطُه في حجمٍ أصغر، كما في إطار العجلة).
+
+## 🧪 مكوّناتُ الهواء
+
+الهواءُ **خليطٌ** من الغازات:
+
+| الغاز                                 | النسبة التقريبيّة |
+| ------------------------------------- | ----------------- |
+| الآزوت (النيتروجين)                   | حوالي 78%         |
+| الأكسجين                              | حوالي 21%         |
+| غازاتٌ أخرى (منها ثاني أكسيد الكربون) | حوالي 1%          |
+
+<svg viewBox="0 0 300 150">
+<title>مكوّنات الهواء بالنسب التقريبيّة</title>
+<rect x="22" y="60" width="199.68" height="46" fill="#93c5fd" stroke="#0f172a" stroke-width="2"/><text x="121.84" y="82" text-anchor="middle" fill="#0f172a" font-size="13" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الآزوت</text><text x="121.84" y="98" text-anchor="middle" fill="#0f172a" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">78%</text><rect x="221.68" y="60" width="53.76" height="46" fill="#86efac" stroke="#0f172a" stroke-width="2"/><text x="248.56" y="82" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الأكسجين</text><text x="248.56" y="98" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">21%</text><rect x="275.44" y="60" width="2.56" height="46" fill="#cbd5e1" stroke="#0f172a" stroke-width="2"/><line x1="276.72" y1="60" x2="274" y2="42" stroke="#64748b" stroke-width="1.5"/><text x="282" y="38" text-anchor="end" fill="#64748b" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">غازات أخرى</text><text x="282" y="52" text-anchor="end" fill="#64748b" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">1%</text><text x="150" y="132" text-anchor="middle" fill="#0f172a" font-size="13" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">مكوّنات الهواء</text>
+</svg>
+
+## 🔥 الاحتراقُ وأهميّةُ الأكسجين
+
+- **الأكسجينُ** غازٌ ضروريٌّ للتنفّس وللاحتراق.
+- لا يحدثُ **احتراقٌ** بدون أكسجين: إذا غطّينا شمعةً مشتعلةً بكأسٍ مقلوب **تنطفئ** بعد نفاد الأكسجين.
+- الهواءُ ضروريٌّ لحياة **الإنسان والحيوان والنبات**.
+
+> ⚠️ الفخّ الشائع: الظنُّ أنّ الهواء كلَّه أكسجين. في الحقيقة الأكسجينُ حوالي **21%** فقط، والأغلبُ آزوت (حوالي 78%).
+
+> 🏆 عرفتَ خاصيّاتِ الهواء ومكوّناتِه. التالي: كيف يستعملُ جسمُنا أكسجينَ الهواء في التنفّس.', '# 📜 ملخّص: الهواء
+
+- **خاصيّاتُ الهواء:** غيرُ مرئيّ، له كتلة، يشغلُ حيّزًا، قابلٌ للانضغاط.
+- **مكوّناتُه:** آزوت حوالي 78%، أكسجين حوالي 21%، غازاتٌ أخرى حوالي 1% (منها ثاني أكسيد الكربون).
+- **الأكسجين** ضروريٌّ للتنفّس وللاحتراق؛ بدونه تنطفئُ الشعلة.
+- الهواءُ ضروريٌّ لحياة الإنسان والحيوان والنبات.
+- ⚠️ الأكسجينُ ليس كلَّ الهواء، بل حوالي 21% فقط.', 1, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  description = EXCLUDED.description,
+  lesson_content = EXCLUDED.lesson_content,
+  summary = EXCLUDED.summary,
+  display_order = EXCLUDED.display_order,
+  manuel_ref = EXCLUDED.manuel_ref;
+
+INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order, manuel_ref) VALUES
+  ('38976f55-d157-591a-9efd-ad38e0e0b33a', 'eveil-scientifique-6eme', 'التنفّس عند الإنسان', 'حركتا الشهيق والزفير، ومسارُ الهواء في جهاز التنفّس، والتبادلُ الغازيُّ في مستوى الرئتين', '# 🫁 التنفّس عند الإنسان
+
+> 💡 «في كلّ لحظةٍ نتنفّس: نأخذُ الأكسجينَ من الهواء ونتخلّصُ من ثاني أكسيد الكربون. لنتتبّعْ رحلةَ الهواء داخل أجسامنا.»
+
+## 🔄 حركتا التنفّس
+
+- **الشهيق:** ندخلُ الهواءَ الغنيَّ بالأكسجين إلى الرئتين.
+- **الزفير:** نُخرجُ الهواءَ المحمّلَ بثاني أكسيد الكربون.
+
+## 🛣️ مسارُ الهواء (جهاز التنفّس)
+
+الأنف ← القصبة الهوائيّة ← الرئتان ← الحويصلات الهوائيّة.
+
+<svg viewBox="0 0 300 200">
+<title>مسار الهواء والتبادل الغازيّ في الحويصلة</title>
+<polygon points="38,40 60,40 54,54 44,54" fill="#fde68a" stroke="#0f172a" stroke-width="2"/><text x="49" y="34" text-anchor="middle" fill="#0f172a" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الأنف</text><rect x="45" y="54" width="10" height="40" rx="3" fill="#dbeafe" stroke="#0f172a" stroke-width="2"/><text x="115" y="72" text-anchor="middle" fill="#0f172a" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">القصبة الهوائيّة</text><line x1="88" y1="74" x2="56" y2="74" stroke="#64748b" stroke-width="1.5"/><line x1="50" y1="94" x2="34" y2="104" stroke="#0f172a" stroke-width="2"/><line x1="50" y1="94" x2="66" y2="104" stroke="#0f172a" stroke-width="2"/><ellipse cx="30" cy="122" rx="15" ry="24" fill="#fecdd3" stroke="#0f172a" stroke-width="2"/><ellipse cx="70" cy="122" rx="15" ry="24" fill="#fecdd3" stroke="#0f172a" stroke-width="2"/><text x="50" y="158" text-anchor="middle" fill="#0f172a" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الرئتان</text><circle cx="78" cy="116" r="6" fill="none" stroke="#64748b" stroke-width="1.5"/><line x1="84" y1="116" x2="150" y2="90" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4 3"/><line x1="84" y1="116" x2="150" y2="150" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4 3"/><rect x="150" y="60" width="138" height="130" rx="6" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/><text x="219" y="76" text-anchor="middle" fill="#0f172a" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الحويصلة الهوائيّة</text><circle cx="200" cy="130" r="34" fill="#e0f2fe" stroke="#2563eb" stroke-width="2"/><text x="200" y="133" text-anchor="middle" fill="#2563eb" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">هواء</text><polyline points="248,96 262,116 258,140 266,164" fill="none" stroke="#ef4444" stroke-width="5"/><text x="272" y="130" text-anchor="start" fill="#ef4444" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">دم</text><line x1="228" y1="116" x2="258" y2="116" stroke="#0f6e56" stroke-width="2.5"/>
+<polygon points="258,116 250,120 250,112" fill="#0f6e56"/><text x="238" y="108" text-anchor="middle" fill="#0f6e56" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">O₂</text><line x1="258" y1="150" x2="228" y2="150" stroke="#ef4444" stroke-width="2.5"/>
+<polygon points="228,150 236,146 236,154" fill="#ef4444"/><text x="246" y="168" text-anchor="middle" fill="#ef4444" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">CO₂</text>
+</svg>
+
+## 💨 التبادلُ الغازيُّ في الرئتين
+
+في **الحويصلات الهوائيّة** يحدثُ التبادل:
+
+- **الأكسجين** ينتقلُ من الهواء إلى **الدم**.
+- **ثاني أكسيد الكربون** ينتقلُ من الدم إلى الهواء ليُطرحَ بالزفير.
+
+> 🌬️ لذلك يكون **هواءُ الشهيق** أغنى بالأكسجين، و**هواءُ الزفير** أغنى بثاني أكسيد الكربون.
+
+> ⚠️ الفخّ الشائع: الظنُّ أنّنا نطردُ كلَّ الأكسجين في الزفير. الحقيقة أنّنا نأخذُ جزءًا منه فقط؛ يبقى في الزفير أكسجين، لكنّ نسبةَ ثاني أكسيد الكربون فيه ترتفع.
+
+> 🏆 فهمتَ كيف يدخلُ الأكسجينُ إلى الدم. التالي: كيف ينقلُ الدمُ هذا الأكسجينَ إلى كلّ الجسم.', '# 📜 ملخّص: التنفّس عند الإنسان
+
+- **التنفّس:** أخذُ الأكسجين وطرحُ ثاني أكسيد الكربون.
+- **حركتاه:** الشهيق (إدخال الهواء) والزفير (إخراج الهواء).
+- **المسار:** الأنف ← القصبة الهوائيّة ← الرئتان ← الحويصلات الهوائيّة.
+- **التبادلُ الغازيّ** في الحويصلات: الأكسجين إلى الدم، وثاني أكسيد الكربون من الدم إلى الهواء.
+- هواءُ الشهيق غنيٌّ بالأكسجين، وهواءُ الزفير غنيٌّ بثاني أكسيد الكربون.
+- ⚠️ الزفيرُ لا يخلو من الأكسجين، لكنّ نسبة ثاني أكسيد الكربون فيه أعلى.', 2, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  description = EXCLUDED.description,
+  lesson_content = EXCLUDED.lesson_content,
+  summary = EXCLUDED.summary,
+  display_order = EXCLUDED.display_order,
+  manuel_ref = EXCLUDED.manuel_ref;
+
+INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order, manuel_ref) VALUES
+  ('a5efe929-363c-5e01-a9bc-06eff4fbe288', 'eveil-scientifique-6eme', 'جهاز دوران الدم', 'تركيبةُ الدم (البلازما والكريّات الحمراء والبيضاء والصفيحات)، والقلبُ والأوعية، ودورُ الدم في نقل الأكسجين والمغذّيات', '# ❤️ جهاز دوران الدم
+
+> 💡 «الدمُ نهرٌ أحمرُ يجري في جسمك ليلَ نهار، يحملُ الغذاءَ والأكسجينَ إلى كلّ خليّة، والقلبُ مضخّتُه التي لا تتوقّف.»
+
+## 🩸 تركيبةُ الدم
+
+| المكوّن           | الدور                             |
+| ----------------- | --------------------------------- |
+| البلازما          | سائلٌ يحملُ المكوّناتِ والمغذّيات |
+| الكريّات الحمراء  | نقلُ الأكسجين                     |
+| الكريّات البيضاء  | الدفاعُ عن الجسم ضدّ الميكروبات   |
+| الصفيحات الدمويّة | تخثّرُ الدم وإيقافُ النزيف        |
+
+## 🫀 القلبُ والأوعية
+
+- **القلب:** عضلةٌ تعملُ كـ**مضخّة** تدفعُ الدمَ باستمرار في كامل الجسم.
+- **الأوعية الدمويّة:** الشرايينُ (يخرجُ فيها الدمُ من القلب)، والأوردةُ (يرجعُ فيها الدمُ إلى القلب)، والشعيراتُ الدمويّة (دقيقةٌ جدًّا).
+
+<svg viewBox="0 0 300 185">
+<title>دورة الدم: قلب ← شرايين ← شعيرات ← أوردة ← قلب</title>
+<polygon points="62,131 36,101 48,85 62,97 76,85 88,101" fill="#fca5a5" stroke="#0f172a" stroke-width="2.5"/><text x="62" y="109" text-anchor="middle" fill="#0f172a" font-size="13" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">القلب</text><rect x="196" y="78" width="88" height="54" rx="10" fill="#ede9fe" stroke="#0f172a" stroke-width="2"/><text x="240" y="100" text-anchor="middle" fill="#7c3aed" font-size="13" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الشعيرات</text><text x="240" y="116" text-anchor="middle" fill="#7c3aed" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الدمويّة</text><line x1="92" y1="74" x2="194" y2="74" stroke="#ef4444" stroke-width="3"/>
+<polygon points="194,74 184,79 184,69" fill="#ef4444"/><text x="143" y="62" text-anchor="middle" fill="#ef4444" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الشرايين</text><line x1="194" y1="140" x2="92" y2="140" stroke="#2563eb" stroke-width="3"/>
+<polygon points="92,140 102,135 102,145" fill="#2563eb"/><text x="143" y="158" text-anchor="middle" fill="#2563eb" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الأوردة</text><line x1="62" y1="85" x2="92" y2="74" stroke="#ef4444" stroke-width="2"/><line x1="62" y1="131" x2="92" y2="140" stroke="#2563eb" stroke-width="2"/>
+</svg>
+
+## 🚚 وظيفةُ الدم
+
+الدمُ ينقل:
+
+- **الأكسجين** من الرئتين و**المغذّيات** من الأمعاء إلى كلّ الأعضاء.
+- **ثاني أكسيد الكربون** والفضلاتِ بعيدًا عن الأعضاء لطرحها.
+
+> ⚠️ الفخّ الشائع: الخلطُ بين دور الكريّات الحمراء (نقلُ الأكسجين) ودور الكريّات البيضاء (الدفاع). لكلٍّ منهما وظيفةٌ مختلفة.
+
+> 🏆 عرفتَ كيف ينقلُ الدمُ الأكسجينَ والغذاء. والتالي في رحلتنا: من أين يأتي هذا الغذاء؟ التغذية عند الإنسان.', '# 📜 ملخّص: جهاز دوران الدم
+
+- **تركيبةُ الدم:** البلازما + الكريّات الحمراء (نقل الأكسجين) + الكريّات البيضاء (الدفاع) + الصفيحات الدمويّة (التخثّر).
+- **القلب:** مضخّةٌ تدفعُ الدمَ في كامل الجسم.
+- **الأوعية:** الشرايين (من القلب) والأوردة (إلى القلب) والشعيرات الدمويّة.
+- **وظيفةُ الدم:** نقلُ الأكسجين والمغذّيات إلى الأعضاء، ونقلُ ثاني أكسيد الكربون والفضلات بعيدًا.
+- ⚠️ الكريّاتُ الحمراء تنقلُ الأكسجين، والبيضاءُ تدافعُ عن الجسم.', 3, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  description = EXCLUDED.description,
+  lesson_content = EXCLUDED.lesson_content,
+  summary = EXCLUDED.summary,
+  display_order = EXCLUDED.display_order,
+  manuel_ref = EXCLUDED.manuel_ref;
+
+INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order, manuel_ref) VALUES
+  ('dcc4acda-70b9-50dd-b4f2-b161b7ddd292', 'eveil-scientifique-6eme', 'التغذية عند الإنسان', 'أصنافُ الأغذية (بانية، طاقيّة، واقية) ووظائفُها، والوجبةُ المتوازنة، والأمراضُ الناتجة عن سوء التغذية', '# 🍎 التغذية عند الإنسان
+
+> 💡 «نأكلُ لنبني أجسامَنا ونتحرّكَ ونقاومَ المرض. لكنّ الغذاءَ الصحّيَّ توازنٌ، لا كثرةٌ ولا قلّة.»
+
+## 🍽️ أصنافُ الأغذية ووظائفُها
+
+| الصنف        | أمثلة                                    | الوظيفة                     |
+| ------------ | ---------------------------------------- | --------------------------- |
+| أغذية بانية  | اللحوم، السمك، البيض، الحليب، البقول     | بناءُ الجسم ونموّه وترميمُه |
+| أغذية طاقيّة | الخبز، العجائن، الأرز، السكّر، الزيت     | تمدُّ الجسمَ بالطاقة        |
+| أغذية واقية  | الخضر والغلال (فيتامينات وأملاح معدنيّة) | تقي الجسمَ من الأمراض       |
+
+> 💧 ولا ننسى **الماء**: ضروريٌّ لكلّ وظائف الجسم.
+
+<svg viewBox="0 0 300 180">
+<title>أصناف الأغذية والماء</title>
+<circle cx="62" cy="66" r="34" fill="#fca5a5" stroke="#0f172a" stroke-width="2"/><text x="62" y="70" text-anchor="middle" fill="#0f172a" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">أغذية بانية</text><text x="62" y="120" text-anchor="middle" fill="#64748b" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">لحوم، بيض، حليب</text><circle cx="150" cy="66" r="34" fill="#fde68a" stroke="#0f172a" stroke-width="2"/><text x="150" y="70" text-anchor="middle" fill="#0f172a" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">أغذية طاقيّة</text><text x="150" y="120" text-anchor="middle" fill="#64748b" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">خبز، أرز، زيت</text><circle cx="238" cy="66" r="34" fill="#bbf7d0" stroke="#0f172a" stroke-width="2"/><text x="238" y="70" text-anchor="middle" fill="#0f172a" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">أغذية واقية</text><text x="238" y="120" text-anchor="middle" fill="#64748b" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">خضر وغلال</text><polygon points="150,134 138,154 142,164 158,164 162,154" fill="#7dd3fc" stroke="#0f172a" stroke-width="2"/><text x="172" y="156" text-anchor="start" fill="#2563eb" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الماء</text><line x1="164" y1="152" x2="170" y2="152" stroke="#64748b" stroke-width="1.5"/>
+</svg>
+
+## ⚖️ الوجبةُ المتوازنة
+
+الوجبةُ المتوازنة تحتوي على **الأصناف الثلاثة** بكمّيّاتٍ مناسبة، وتختلفُ الحاجةُ حسب **السنّ والنشاط** (الرياضيُّ يحتاجُ طاقةً أكثر).
+
+## 🤒 سوءُ التغذية
+
+- **الإفراط** (خاصّةً في السكّريات والدهون) ⟵ السمنةُ وتسوّسُ الأسنان.
+- **النقص** ⟵ الهزالُ وضعفُ النموّ.
+- **نقصُ صنفٍ معيّن** ⟵ أمراضٌ خاصّة (مثل نقص الحديد ⟵ فقر الدم).
+
+> ⚠️ الفخّ الشائع: اعتبارُ الأكل الكثير غذاءً جيّدًا. الغذاءُ الصحّيُّ **متوازنٌ ومتنوّع**، لا مجرّدُ كمّيّةٍ كبيرة.
+
+> 🏆 عرفتَ كيف تختارُ غذاءَك. التالي: كيف تترابطُ الكائناتُ الحيّة في الطبيعة عبر السلاسل الغذائيّة.', '# 📜 ملخّص: التغذية عند الإنسان
+
+- **الأغذية البانية:** (لحوم، سمك، بيض، حليب، بقول) لبناء الجسم ونموّه.
+- **الأغذية الطاقيّة:** (خبز، أرز، سكّر، زيت) تمدُّ بالطاقة.
+- **الأغذية الواقية:** (خضر وغلال) فيتامينات وأملاح تقي من الأمراض.
+- **الماء** ضروريٌّ لكلّ وظائف الجسم.
+- **الوجبة المتوازنة:** الأصناف الثلاثة بنسبٍ مناسبة حسب السنّ والنشاط.
+- **سوء التغذية:** الإفراط ← السمنة وتسوّس الأسنان؛ النقص ← الهزال؛ نقص الحديد ← فقر الدم.
+- ⚠️ الغذاء الجيّد متوازنٌ ومتنوّع، لا مجرّد كمّيّةٍ كبيرة.', 4, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  description = EXCLUDED.description,
+  lesson_content = EXCLUDED.lesson_content,
+  summary = EXCLUDED.summary,
+  display_order = EXCLUDED.display_order,
+  manuel_ref = EXCLUDED.manuel_ref;
+
+INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order, manuel_ref) VALUES
+  ('9ba90402-06a3-5fc3-84bf-8c80671bb811', 'eveil-scientifique-6eme', 'الوسط البيئي والسلاسل الغذائية', 'الوسطُ البيئي ومكوّناتُه، والسلسلةُ الغذائية (منتِج، مستهلكون) واتّجاهُ السهم، والتوازنُ الطبيعي، وتلوّثُ المياه والمحافظةُ عليها', '# 🌿 الوسط البيئي والسلاسل الغذائية
+
+> 💡 «في الطبيعة، كلُّ كائنٍ حيٍّ يأكلُ ويُؤكَل. هذه العلاقاتُ تنسجُ سلاسلَ تربطُ النباتَ بالحيوان وتحفظُ توازنَ الوسط.»
+
+## 🏞️ الوسطُ البيئي
+
+**الوسطُ البيئي** هو المكانُ الذي تعيشُ فيه الكائناتُ الحيّة (نباتاتٌ وحيوانات) وتتفاعلُ فيما بينها ومع مكوّناته غير الحيّة: **الماء، الهواء، التربة، الضوء**.
+
+## 🔗 السلسلةُ الغذائية
+
+تبيّنُ السلسلةُ الغذائيّة علاقةَ **«مَن يأكلُ مَن»**:
+
+- **المُنتِج:** النباتُ الأخضر، يصنعُ غذاءَه بنفسه.
+- **المستهلِكُ الأوّل:** حيوانٌ عاشبٌ يأكلُ النبات.
+- **المستهلِكُ الثاني:** حيوانٌ لاحمٌ يأكلُ العاشب.
+
+> 🔁 مثال: **عُشب ← أرنب ← ثعلب** (النباتُ يأكلُه الأرنب، والأرنبُ يأكلُه الثعلب). السهمُ (←) يعني **«يُؤكَلُ مِن قِبَل»**، أي يتّجهُ من المأكول إلى الآكل.
+
+<svg viewBox="0 0 300 145">
+<title>سلسلة غذائية: عشب ← أرنب ← ثعلب</title>
+<rect x="212" y="44" width="76" height="44" rx="8" fill="#dcfce7" stroke="#0f172a" stroke-width="2"/><text x="250" y="71" text-anchor="middle" fill="#0f172a" font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">عُشب</text><text x="250" y="106" text-anchor="middle" fill="#64748b" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">مُنتِج</text><rect x="112" y="44" width="76" height="44" rx="8" fill="#fef3c7" stroke="#0f172a" stroke-width="2"/><text x="150" y="71" text-anchor="middle" fill="#0f172a" font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">أرنب</text><text x="150" y="106" text-anchor="middle" fill="#64748b" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">مستهلك أوّل</text><rect x="12" y="44" width="76" height="44" rx="8" fill="#fed7aa" stroke="#0f172a" stroke-width="2"/><text x="50" y="71" text-anchor="middle" fill="#0f172a" font-size="15" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">ثعلب</text><text x="50" y="106" text-anchor="middle" fill="#64748b" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">مستهلك ثانٍ</text><line x1="210" y1="66" x2="190" y2="66" stroke="#0f6e56" stroke-width="2.5"/>
+<polygon points="190,66 199,61.5 199,70.5" fill="#0f6e56"/><line x1="110" y1="66" x2="90" y2="66" stroke="#0f6e56" stroke-width="2.5"/>
+<polygon points="90,66 99,61.5 99,70.5" fill="#0f6e56"/><text x="150" y="128" text-anchor="middle" fill="#0f6e56" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">السهم ← يعني «يُؤكَلُ مِن قِبَل»</text>
+</svg>
+
+## ⚖️ التوازنُ الطبيعي
+
+كلُّ حلقةٍ تعتمدُ على غيرها؛ فإذا اختفت حلقةٌ (مثلًا النبات) **اختلّت** السلسلةُ كلُّها وتأثّرت بقيّةُ الكائنات.
+
+## 💧 تلوّثُ الأوساط المائية والمحافظةُ عليها
+
+- **مصادرُ التلوّث:** النفاياتُ، المياهُ المستعملة، الموادُّ الكيميائيّة.
+- **الوقاية:** عدمُ رمي الفضلات في الماء، ومعالجةُ المياه المستعملة، والمحافظةُ على نظافة الأوساط.
+- المياهُ الملوّثةُ تسبّبُ **أمراضًا**، لذلك تجبُ حمايتُها.
+
+> ⚠️ الفخّ الشائع: عكسُ اتّجاه السهم. السهمُ في السلسلة الغذائيّة يتّجهُ دائمًا من **المأكول إلى الآكل** (من النبات إلى العاشب)، لا العكس.
+
+> 🏆 فهمتَ كيف ترتبطُ الكائناتُ في الوسط وكيف نحميه. رحلتُك في عالَم العلوم تتواصل!', '# 📜 ملخّص: الوسط البيئي والسلاسل الغذائية
+
+- **الوسطُ البيئي:** مكانُ عيش الكائنات الحيّة وتفاعلُها فيما بينها ومع الماء والهواء والتربة والضوء.
+- **السلسلةُ الغذائية:** المُنتِج (نباتٌ أخضر) ← مستهلكٌ أوّل (عاشب) ← مستهلكٌ ثانٍ (لاحم).
+- **السهمُ** يعني «يُؤكَلُ مِن قِبَل»، ويتّجهُ من المأكول إلى الآكل.
+- **التوازنُ الطبيعي:** اختفاءُ حلقةٍ يُخلّ بالسلسلة كلّها.
+- **تلوّثُ المياه:** مصادرُه النفايات والمياه المستعملة والمواد الكيميائيّة؛ نحميها بعدم التلويث والمعالجة.
+- ⚠️ السهمُ يتّجه من المأكول إلى الآكل (لا العكس).', 5, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  description = EXCLUDED.description,
+  lesson_content = EXCLUDED.lesson_content,
+  summary = EXCLUDED.summary,
+  display_order = EXCLUDED.display_order,
+  manuel_ref = EXCLUDED.manuel_ref;
+
+INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order, manuel_ref) VALUES
+  ('d5eff8d2-9652-5d05-acbb-cc647378b654', 'eveil-scientifique-6eme', 'التكاثر الزهري', 'أعضاءُ الزهرة (السبلات، البتلات، الأسدية، المدقّة)، والتلقيحُ والإخصاب، وتكوّنُ الثمرة والبذور ودورةُ حياة النبات', '# 🌸 التكاثر الزهري
+
+> 💡 «من زهرةٍ صغيرةٍ تولدُ ثمرةٌ وبذور، ومن البذرة تنبتُ نبتةٌ جديدة. هكذا تدومُ حياةُ النبات.»
+
+## 🌼 أعضاءُ الزهرة
+
+| العضو            | الوصف والدور                                    |
+| ---------------- | ----------------------------------------------- |
+| السبلات (الكأس)  | أوراقٌ خضراءُ تحمي الزهرةَ وهي برعم             |
+| البتلات (التويج) | أوراقٌ ملوّنةٌ تجذبُ الحشرات                    |
+| الأسدية          | الأعضاءُ الذكريّة، تحملُ **حبوبَ الطلع**        |
+| المدقّة          | العضوُ الأنثويّ، يحوي **المبيضَ** وفيه البويضات |
+
+<svg viewBox="0 0 330 230">
+<title>مقطع في الزهرة وأعضاؤها</title>
+<polygon points="143,210 187,210 179,198 151,198" fill="#bbf7d0" stroke="#0f172a" stroke-width="2"/><polygon points="151,198 121,214 145,186" fill="#4d7c0f" stroke="#0f172a" stroke-width="2"/><polygon points="179,198 209,214 185,186" fill="#4d7c0f" stroke="#0f172a" stroke-width="2"/><text x="95" y="220" text-anchor="end" fill="#0f6e56" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">السبلات</text><line x1="99" y1="216" x2="125" y2="212" stroke="#64748b" stroke-width="1.5"/><polygon points="151,194 105,114 143,150" fill="#f9a8d4" stroke="#0f172a" stroke-width="2"/><polygon points="179,194 225,114 187,150" fill="#f9a8d4" stroke="#0f172a" stroke-width="2"/><text x="87" y="136" text-anchor="end" fill="#7c3aed" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">البتلات</text><line x1="91" y1="132" x2="119" y2="136" stroke="#64748b" stroke-width="1.5"/><line x1="150" y1="190" x2="135" y2="122" stroke="#d97706" stroke-width="2.5"/><ellipse cx="135" cy="118" rx="7" ry="5" fill="#facc15" stroke="#0f172a" stroke-width="2"/><line x1="180" y1="190" x2="195" y2="122" stroke="#d97706" stroke-width="2.5"/><ellipse cx="195" cy="118" rx="7" ry="5" fill="#facc15" stroke="#0f172a" stroke-width="2"/><text x="243" y="114" text-anchor="start" fill="#d97706" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الأسدية</text><text x="243" y="128" text-anchor="start" fill="#d97706" font-size="10" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">(حبوب الطلع)</text><line x1="239" y1="118" x2="203" y2="118" stroke="#64748b" stroke-width="1.5"/><ellipse cx="165" cy="184" rx="15" ry="20" fill="#dcfce7" stroke="#0f172a" stroke-width="2"/><line x1="165" y1="164" x2="165" y2="106" stroke="#0f6e56" stroke-width="3"/><ellipse cx="165" cy="102" rx="9" ry="5" fill="#16a34a" stroke="#0f172a" stroke-width="2"/><circle cx="160" cy="184" r="2.5" fill="#0f6e56" stroke="none" stroke-width="2"/><circle cx="170" cy="184" r="2.5" fill="#0f6e56" stroke="none" stroke-width="2"/><circle cx="165" cy="192" r="2.5" fill="#0f6e56" stroke="none" stroke-width="2"/><text x="165" y="90" text-anchor="middle" fill="#0f6e56" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">المدقّة</text><line x1="165" y1="96" x2="165" y2="94" stroke="#64748b" stroke-width="1.5"/><text x="243" y="180" text-anchor="start" fill="#0f6e56" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">المبيض</text><text x="243" y="194" text-anchor="start" fill="#0f6e56" font-size="10" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">(البويضات)</text><line x1="239" y1="184" x2="180" y2="184" stroke="#64748b" stroke-width="1.5"/>
+</svg>
+
+## 🐝 التلقيح
+
+**التلقيحُ** هو انتقالُ حبوب الطلع من الأسدية إلى المدقّة. ينقلُها:
+
+- **الحشرات** (مثل النحل) المنجذبةُ إلى لون البتلات ورحيقها.
+- **الرياح**.
+
+## 🌱 الإخصابُ وتكوّنُ الثمرة
+
+- بعد التلقيح يحدثُ **الإخصاب**: اتّحادُ حبّة الطلع بالبويضة.
+- يتحوّلُ **المبيضُ إلى ثمرة**، و**البويضاتُ إلى بذور**.
+- تنبتُ البذرةُ فتعطي **نبتةً جديدة**، فتكتملُ دورةُ الحياة.
+
+> ⚠️ الفخّ الشائع: الخلطُ بين **التلقيح** (انتقالُ حبوب الطلع) و**الإخصاب** (اتّحادُ حبّة الطلع بالبويضة). التلقيحُ يسبقُ الإخصاب.
+
+> 🏆 عرفتَ كيف تتكاثرُ النباتاتُ الزهريّة. التالي: عالَمُ المغانط والبوصلة.', '# 📜 ملخّص: التكاثر الزهري
+
+- **أعضاءُ الزهرة:** السبلات (الكأس)، البتلات (التويج)، الأسدية (ذكريّة، حبوب الطلع)، المدقّة (أنثويّة، المبيض والبويضات).
+- **التلقيح:** انتقالُ حبوب الطلع من الأسدية إلى المدقّة (بالحشرات أو الرياح).
+- **الإخصاب:** اتّحادُ حبّة الطلع بالبويضة.
+- **بعد الإخصاب:** المبيضُ ← ثمرة، والبويضاتُ ← بذور.
+- **البذرة** تنبتُ فتعطي نبتةً جديدة (دورة الحياة).
+- ⚠️ التلقيحُ (نقلُ الطلع) يسبقُ الإخصابَ (اتّحادُ الطلع بالبويضة).', 6, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  description = EXCLUDED.description,
+  lesson_content = EXCLUDED.lesson_content,
+  summary = EXCLUDED.summary,
+  display_order = EXCLUDED.display_order,
+  manuel_ref = EXCLUDED.manuel_ref;
+
+INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order, manuel_ref) VALUES
+  ('2c330d4a-3925-533b-a583-37df79d0c174', 'eveil-scientifique-6eme', 'المغانط والبوصلة', 'المغنطُ وقدرتُه على جذب المواد الحديديّة، قطباه (N و S)، التجاذبُ والتنافر، والبوصلةُ وإشارتُها إلى الشمال', '# 🧲 المغانط والبوصلة
+
+> 💡 «قطعةُ حديدٍ خاصّةٌ تجذبُ المساميرَ من بعيد، وإبرةٌ صغيرةٌ تدلّكَ على الشمال أينما كنت. هذا سحرُ المغناطيس.»
+
+## 🧲 المغنطُ وخاصيّاتُه
+
+- **المغنطُ** جسمٌ يجذبُ **الموادَّ الحديديّة** (الحديد والفولاذ).
+- لا يجذبُ النحاسَ ولا الخشبَ ولا البلاستيكَ ولا الزجاج.
+- له أشكالٌ متعدّدة: **مستقيم**، على شكل **حدوة حصان (U)**، **إبرة**.
+
+## 🔴🔵 قطبا المغنط
+
+لكلّ مغنطٍ **قطبان**: قطبٌ شماليّ **(N)** وقطبٌ جنوبيّ **(S)**، وقوّةُ الجذب **أكبرُ عند القطبين**.
+
+## 🤝 التجاذبُ والتنافر
+
+- قطبان **مختلفان** (N و S) ⟵ **يتجاذبان**.
+- قطبان **متماثلان** (N و N، أو S و S) ⟵ **يتنافران**.
+
+## 🧭 البوصلة
+
+**البوصلةُ** إبرةٌ ممغنطةٌ حرّةُ الحركة، تشيرُ دائمًا إلى **الشمال** (لأنّ الأرضَ نفسَها مغناطيسٌ عملاق)، فنستعملُها لتحديد الجهات.
+
+> ⚠️ الفخّ الشائع: الظنُّ أنّ المغنط يجذبُ كلَّ المعادن. هو يجذبُ **الحديديّةَ** فقط؛ لا النحاسَ ولا الألمنيوم العاديّ.
+
+> 🏆 عرفتَ أسرارَ المغناطيس والبوصلة، وأتممتَ هذه الجولةَ في عالَم العلوم. أحسنت!', '# 📜 ملخّص: المغانط والبوصلة
+
+- **المغنط** يجذبُ الموادَّ الحديديّة فقط (لا النحاس/الخشب/البلاستيك/الزجاج).
+- أشكالُه: مستقيم، حدوة حصان (U)، إبرة.
+- لكلّ مغنطٍ **قطبان**: شماليّ (N) وجنوبيّ (S)، والجذبُ أقوى عند القطبين.
+- **التجاذب:** قطبان مختلفان (N–S). **التنافر:** قطبان متماثلان (N–N أو S–S).
+- **البوصلة** إبرةٌ ممغنطةٌ تشيرُ إلى الشمال، تُستعمل لتحديد الجهات.
+- ⚠️ المغنطُ يجذبُ الحديديّةَ فقط، لا كلَّ المعادن.', 7, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  description = EXCLUDED.description,
+  lesson_content = EXCLUDED.lesson_content,
+  summary = EXCLUDED.summary,
+  display_order = EXCLUDED.display_order,
+  manuel_ref = EXCLUDED.manuel_ref;
+
+INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order, manuel_ref) VALUES
+  ('c383f16c-2ad5-5bf9-95d8-9b798e80b4ac', 'eveil-scientifique-6eme', 'الثقل', 'الثقلُ قوّةُ جذب الأرض للأجسام واتّجاهُه نحو الأسفل، والتمييزُ بين الكتلة والثقل، وقياسُ الثقل بالدينامومتر', '# ⬇️ الثقل
+
+> 💡 «لماذا تسقطُ التفّاحةُ إلى الأرض ولا تطيرُ إلى الأعلى؟ لأنّ الأرضَ تجذبُها. هذه القوّةُ اسمُها الثقل.»
+
+## 🌍 ما هو الثقل؟
+
+**الثقلُ** قوّةٌ تجذبُ بها الأرضُ كلَّ الأجسام نحوها. بسببه:
+
+- تسقطُ الأجسامُ إلى **الأسفل** عند تركها.
+- نشعرُ بثقل الأشياء حين نحملُها.
+
+## ↧ اتّجاهُ الثقل
+
+اتّجاهُ الثقل دائمًا **نحو الأسفل** (شاقوليٌّ، نحو مركز الأرض). نمثّلُه بسهمٍ متّجهٍ إلى أسفل.
+
+## ⚖️ الكتلةُ والثقل
+
+|        | الكتلة                  | الثقل                      |
+| ------ | ----------------------- | -------------------------- |
+| ما هي؟ | كمّيّةُ المادة في الجسم | قوّةُ جذب الأرض للجسم      |
+| الأداة | الميزان                 | الدينامومتر (ميزان نابضيّ) |
+| الوحدة | الكيلوغرام (كغ)         | النيوتن (N)                |
+
+> 🔧 **الدينامومتر** أداةٌ فيها نابضٌ (زنبرك) يتمدّدُ بقدر ثقل الجسم المعلّق به.
+
+> ⚠️ الفخّ الشائع: الخلطُ بين الكتلة والثقل. الكتلةُ كمّيّةُ مادةٍ ثابتة، والثقلُ قوّةٌ قد تتغيّرُ حسب المكان (مثلًا على القمر يكون الثقلُ أقلّ، بينما الكتلةُ لا تتغيّر).
+
+> 🏆 أتممتَ الثقل. بقي عضوٌ عجيبٌ نختمُ به الرحلة: العين والإبصار.', '# 📜 ملخّص: الثقل
+
+- **الثقل** قوّةٌ تجذبُ بها الأرضُ الأجسامَ نحوها.
+- **اتّجاهُه:** دائمًا نحو الأسفل (شاقوليّ).
+- بسبب الثقل **تسقطُ الأجسامُ** إلى الأرض.
+- **يُقاسُ بالدينامومتر** (ميزان نابضيّ)، ووحدتُه النيوتن (N).
+- **الكتلة ≠ الثقل:** الكتلةُ كمّيّةُ مادة (بالكغ، بالميزان)؛ الثقلُ قوّةٌ (بالدينامومتر).
+- ⚠️ لا تخلط بين الكتلة (مادة ثابتة) والثقل (قوّة).', 8, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  description = EXCLUDED.description,
+  lesson_content = EXCLUDED.lesson_content,
+  summary = EXCLUDED.summary,
+  display_order = EXCLUDED.display_order,
+  manuel_ref = EXCLUDED.manuel_ref;
+
+INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order, manuel_ref) VALUES
+  ('18a4f2b8-242a-546b-9fe3-e13f232feb35', 'eveil-scientifique-6eme', 'العين والإبصار', 'العينُ عضوُ البصر وأجزاؤها (القرنيّة، القزحيّة، البؤبؤ، العدسة، الشبكيّة، العصب البصريّ)، وآليّةُ الإبصار، والعنايةُ بالعين', '# 👁️ العين والإبصار
+
+> 💡 «بالعين نرى ألوانَ العالم وأشكالَه. لكن كيف تتحوّلُ أشعّةُ الضوء إلى صورةٍ نُدركُها؟»
+
+## 👁️ العينُ عضوُ الإبصار
+
+العينُ هي عضوُ حاسّة **البصر**. من أجزائها:
+
+- **القرنيّة:** الغشاءُ الأماميُّ الشفّاف.
+- **القزحيّة:** الجزءُ الملوّنُ من العين.
+- **البؤبؤ (الحدقة):** الفتحةُ السوداءُ في وسط القزحيّة، يدخلُ منها الضوء.
+- **العدسة:** تجمعُ الضوءَ لتكوين صورةٍ واضحة.
+- **الشبكيّة:** الغشاءُ الخلفيُّ حيث تتكوّنُ الصورة.
+- **العصبُ البصريّ:** ينقلُ الرسالةَ إلى الدماغ.
+
+<svg viewBox="0 0 360 220">
+<title>مقطع في العين ومسار الضوء</title>
+<circle cx="195" cy="118" r="76" fill="#eff6ff" stroke="#0f172a" stroke-width="2.5"/><polyline points="123,88 103,118 123,148" fill="none" stroke="#2563eb" stroke-width="3"/><text x="30" y="122" text-anchor="start" fill="#2563eb" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">القرنيّة</text><line x1="74" y1="118" x2="107" y2="118" stroke="#64748b" stroke-width="1.5"/><line x1="127" y1="84" x2="135" y2="106" stroke="#d97706" stroke-width="5"/><line x1="127" y1="152" x2="135" y2="130" stroke="#d97706" stroke-width="5"/><text x="125" y="70" text-anchor="middle" fill="#d97706" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">القزحيّة</text><line x1="131" y1="78" x2="131" y2="94" stroke="#64748b" stroke-width="1.5"/><text x="139" y="176" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">البؤبؤ</text><line x1="134" y1="118" x2="137" y2="166" stroke="#64748b" stroke-width="1.5"/><ellipse cx="153" cy="118" rx="8" ry="26" fill="#bae6fd" stroke="#0f172a" stroke-width="2"/><text x="179" y="68" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">العدسة</text><line x1="159" y1="74" x2="153" y2="92" stroke="#64748b" stroke-width="1.5"/><path d="M 250.07 71.62 A 72 72 0 0 1 250.07 164.38" fill="none" stroke="#ef4444" stroke-width="3"/><text x="275" y="112" text-anchor="start" fill="#ef4444" font-size="12" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الشبكيّة</text><line x1="273" y1="116" x2="263" y2="114" stroke="#64748b" stroke-width="1.5"/><rect x="267" y="138" width="30" height="14" rx="4" fill="#fde68a" stroke="#0f172a" stroke-width="2"/><text x="263" y="172" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">العصب البصريّ</text><line x1="277" y1="152" x2="271" y2="162" stroke="#64748b" stroke-width="1.5"/><line x1="70" y1="72" x2="133" y2="112" stroke="#d97706" stroke-width="1.8"/>
+<polygon points="133,112 126.33,111.32 129.54,106.25" fill="#d97706"/><line x1="70" y1="164" x2="133" y2="124" stroke="#d97706" stroke-width="1.8"/>
+<polygon points="133,124 129.54,129.75 126.33,124.68" fill="#d97706"/><line x1="133" y1="112" x2="263" y2="118" stroke="#d97706" stroke-width="1.8" stroke-dasharray="3 2"/><line x1="133" y1="124" x2="263" y2="118" stroke="#d97706" stroke-width="1.8" stroke-dasharray="3 2"/><circle cx="263" cy="118" r="3" fill="#ef4444" stroke="none" stroke-width="2"/><text x="66" y="64" text-anchor="start" fill="#d97706" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الضوء</text>
+</svg>
+
+## 🔦 كيف نُبصر؟
+
+1. ينعكسُ الضوءُ عن الأجسام ويدخلُ العينَ عبر **البؤبؤ**.
+2. تجمعُه **العدسةُ** فتتكوّنُ صورةٌ على **الشبكيّة**.
+3. ينقلُ **العصبُ البصريُّ** الرسالةَ إلى **الدماغ** فنُبصر.
+
+> 🌑 لا نرى في **الظلام التامّ**؛ فالإبصارُ يحتاجُ ضوءًا ينعكسُ عن الأجسام إلى أعيننا.
+
+## 🛡️ العنايةُ بالعين
+
+نحمي أبصارَنا بـ: **إضاءةٍ كافية** عند القراءة، وعدمِ الاقتراب كثيرًا من الشاشات، وعدمِ النظر إلى الشمس مباشرةً.
+
+> ⚠️ الفخّ الشائع: الظنُّ أنّ العينَ **تُصدرُ** ضوءًا لترى. في الحقيقة العينُ **تستقبلُ** الضوءَ المنعكسَ عن الأجسام.
+
+> 🏆 بهذا جُلتَ في عالَم الإيقاظ العلميّ: الهواء، التنفّس، الدم، التغذية، الوسط، التكاثر، المغانط، الثقل، والإبصار. أحسنت! 🎉', '# 📜 ملخّص: العين والإبصار
+
+- **العين** عضوُ حاسّة البصر.
+- **أجزاؤها:** القرنيّة (أمامٌ شفّاف)، القزحيّة (الملوّن)، البؤبؤ (فتحة الضوء)، العدسة، الشبكيّة (تتكوّن عليها الصورة)، العصب البصريّ (ينقل إلى الدماغ).
+- **الإبصار:** ضوءٌ منعكسٌ ← البؤبؤ ← العدسة ← صورةٌ على الشبكيّة ← العصب البصريّ ← الدماغ.
+- **لا نرى في الظلام:** الإبصار يحتاجُ ضوءًا.
+- **العناية:** إضاءةٌ كافية، ابتعادٌ عن الشاشات، عدمُ النظر للشمس.
+- ⚠️ العينُ تستقبلُ الضوءَ، لا تُصدرُه.', 9, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  description = EXCLUDED.description,
+  lesson_content = EXCLUDED.lesson_content,
+  summary = EXCLUDED.summary,
+  display_order = EXCLUDED.display_order,
+  manuel_ref = EXCLUDED.manuel_ref;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('1c711c11-93d9-5c1a-a172-2e42e9639577', 'e560f7f7-a314-5ca6-a3f1-a294385e4f28', 'eveil-scientifique-6eme', 'اختبار فهم الدرس ⭐', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('22b1784b-cfc3-514b-9c28-f09f47b66944', '1c711c11-93d9-5c1a-a172-2e42e9639577', 'ما الغازُ الأكثرُ وفرةً في الهواء؟', '[{"id":"a","text":"الآزوت (النيتروجين)"},{"id":"b","text":"الأكسجين"},{"id":"c","text":"ثاني أكسيد الكربون"},{"id":"d","text":"بخار الماء"}]'::jsonb, 'a', 'الآزوتُ (النيتروجين) هو الغازُ الأكثرُ وفرةً في الهواء بنسبةٍ تقارب 78%.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('647cbfbc-b8e2-5b40-bba6-22e3c136e4cd', '1c711c11-93d9-5c1a-a172-2e42e9639577', 'ما الغازُ الضروريُّ للتنفّس وللاحتراق؟', '[{"id":"a","text":"الأكسجين"},{"id":"b","text":"الآزوت"},{"id":"c","text":"ثاني أكسيد الكربون"},{"id":"d","text":"الهيدروجين"}]'::jsonb, 'a', 'الأكسجينُ هو الغازُ الذي نستعملُه في التنفّس وفي الاحتراق.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('5d2c2a2f-85de-50da-8e69-e418201c807b', '1c711c11-93d9-5c1a-a172-2e42e9639577', 'ما النسبةُ التقريبيّةُ للأكسجين في الهواء؟', '[{"id":"a","text":"حوالي 21%"},{"id":"b","text":"حوالي 78%"},{"id":"c","text":"حوالي 50%"},{"id":"d","text":"حوالي 1%"}]'::jsonb, 'a', 'يمثّلُ الأكسجينُ حوالي 21% من الهواء، بينما الآزوت حوالي 78%.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('25148e63-2f62-5534-92f4-be9d4d5c8ce0', '1c711c11-93d9-5c1a-a172-2e42e9639577', 'شمعةٌ مشتعلةٌ غُطّيت بكأسٍ مقلوب. ماذا يحدثُ لها؟', '[{"id":"a","text":"تنطفئ بعد نفاد الأكسجين"},{"id":"b","text":"يزدادُ لهبُها أكثر"},{"id":"c","text":"لا يتغيّرُ شيء"},{"id":"d","text":"تتحوّلُ إلى ماء"}]'::jsonb, 'a', 'الاحتراقُ يحتاجُ الأكسجين؛ وعند حصره داخل الكأس ينفدُ الأكسجينُ فتنطفئُ الشمعة.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('ab2c7b9c-0468-5dec-b731-4762c3bdfbcb', '1c711c11-93d9-5c1a-a172-2e42e9639577', 'أيُّ عبارةٍ صحيحةٌ عن الهواء؟', '[{"id":"a","text":"له كتلةٌ ويشغلُ حيّزًا"},{"id":"b","text":"لا كتلةَ له ولا يشغلُ حيّزًا"},{"id":"c","text":"مرئيٌّ بوضوحٍ كالماء"},{"id":"d","text":"لا يمكنُ ضغطُه أبدًا"}]'::jsonb, 'a', 'الهواءُ مادّةٌ لها كتلةٌ وتشغلُ حيّزًا، وهو غيرُ مرئيٍّ وقابلٌ للانضغاط.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('95a7dd4f-f56f-5189-87f5-f8258dd27a5b', 'e560f7f7-a314-5ca6-a3f1-a294385e4f28', 'eveil-scientifique-6eme', '⭐ تمرين: أوّلُ خطوات مع الهواء', 1, 50, 10, 'practice', 'admin', 1)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('82dcbdab-16a7-5df9-9cb7-f4cddb7cb0e1', '95a7dd4f-f56f-5189-87f5-f8258dd27a5b', 'الهواءُ ضروريٌّ لحياة:', '[{"id":"a","text":"الإنسان والحيوان والنبات"},{"id":"b","text":"الإنسان فقط"},{"id":"c","text":"الحيوان فقط"},{"id":"d","text":"الجمادات"}]'::jsonb, 'a', 'الهواءُ ضروريٌّ لحياة الكائنات الحيّة جميعها: الإنسان والحيوان والنبات.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('e06a976d-142d-556b-811c-49bc1cadae23', '95a7dd4f-f56f-5189-87f5-f8258dd27a5b', 'ما الغازُ الذي نستعملُه في التنفّس؟', '[{"id":"a","text":"الأكسجين"},{"id":"b","text":"الآزوت"},{"id":"c","text":"ثاني أكسيد الكربون"},{"id":"d","text":"الهيليوم"}]'::jsonb, 'a', 'نستنشقُ الأكسجينَ من الهواء، وهو الغازُ الضروريُّ للتنفّس.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('c0061061-4c17-5e75-ab76-75793f41e464', '95a7dd4f-f56f-5189-87f5-f8258dd27a5b', 'ما الغازُ الأكثرُ وفرةً في الهواء؟', '[{"id":"a","text":"الآزوت"},{"id":"b","text":"الأكسجين"},{"id":"c","text":"ثاني أكسيد الكربون"},{"id":"d","text":"بخار الماء"}]'::jsonb, 'a', 'الآزوتُ يمثّلُ النسبةَ الأكبرَ في الهواء (حوالي 78%).', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('b76bf2e4-e2a0-597d-a05a-6be2a216e4a2', '95a7dd4f-f56f-5189-87f5-f8258dd27a5b', 'هل الهواءُ مادّةٌ لها كتلة؟', '[{"id":"a","text":"نعم، له كتلةٌ يمكن وزنُها"},{"id":"b","text":"لا، لا كتلةَ له إطلاقًا"},{"id":"c","text":"له كتلةٌ سالبة"},{"id":"d","text":"يصبحُ ذا كتلةٍ إذا تجمّد فقط"}]'::jsonb, 'a', 'الهواءُ مادّةٌ حقيقيّةٌ له كتلة؛ فالكرةُ المنفوخةُ أثقلُ من الفارغة.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('139e4b74-06da-5979-8395-f9497d98cb71', '95a7dd4f-f56f-5189-87f5-f8258dd27a5b', 'ما النسبةُ التقريبيّةُ للأكسجين في الهواء؟', '[{"id":"a","text":"حوالي 21%"},{"id":"b","text":"حوالي 78%"},{"id":"c","text":"حوالي 90%"},{"id":"d","text":"حوالي 5%"}]'::jsonb, 'a', 'يمثّلُ الأكسجينُ حوالي 21% من الهواء.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('8f9da4f4-5811-5f01-a30b-10d394173566', '95a7dd4f-f56f-5189-87f5-f8258dd27a5b', 'لماذا تنطفئُ شمعةٌ مشتعلةٌ وُضع عليها كأسٌ مقلوب؟', '[{"id":"a","text":"لنفاد الأكسجين داخل الكأس"},{"id":"b","text":"لأنّ الكأسَ بارد"},{"id":"c","text":"لزيادة الأكسجين"},{"id":"d","text":"لأنّ الشمعةَ تكره الزجاج"}]'::jsonb, 'a', 'الاحتراقُ يحتاجُ الأكسجين؛ وحين ينفدُ الأكسجينُ المحصورُ في الكأس تنطفئُ الشمعة.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('dbd48634-d6aa-59c9-96de-2e95e4c8e4be', 'e560f7f7-a314-5ca6-a3f1-a294385e4f28', 'eveil-scientifique-6eme', '⚔️ زعيم الفصل ⭐⭐⭐: تحدّي الهواء', 3, 120, 30, 'boss', 'admin', 2)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('23ba0a44-a33b-5cc0-b56c-0ed407c81516', 'dbd48634-d6aa-59c9-96de-2e95e4c8e4be', 'ما الغازُ الذي يمثّلُ حوالي 78% من الهواء؟', '[{"id":"a","text":"الآزوت"},{"id":"b","text":"الأكسجين"},{"id":"c","text":"ثاني أكسيد الكربون"},{"id":"d","text":"الأوزون"}]'::jsonb, 'a', 'الآزوتُ هو المكوّنُ الأكبرُ للهواء بنسبةٍ تقارب 78%.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('faff4440-78e7-5010-b17d-3a2b46830f88', 'dbd48634-d6aa-59c9-96de-2e95e4c8e4be', 'أيٌّ ممّا يلي من خاصيّات الهواء؟', '[{"id":"a","text":"يشغلُ حيّزًا ويملأُ الإناء"},{"id":"b","text":"لا يشغلُ أيَّ حيّز"},{"id":"c","text":"صلبٌ في الظروف العاديّة"},{"id":"d","text":"مرئيٌّ كالحجر"}]'::jsonb, 'a', 'الهواءُ يشغلُ حيّزًا، فهو يملأُ كلَّ إناءٍ يوجدُ فيه ويأخذُ شكلَه.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('8dff7eee-11c3-5ba3-98bc-ff8f02ead6db', 'dbd48634-d6aa-59c9-96de-2e95e4c8e4be', 'الاحتراقُ في الهواء يحتاجُ أساسًا إلى:', '[{"id":"a","text":"الأكسجين"},{"id":"b","text":"الآزوت"},{"id":"c","text":"ثاني أكسيد الكربون"},{"id":"d","text":"بخار الماء"}]'::jsonb, 'a', 'الأكسجينُ هو الغازُ الذي يُغذّي الاحتراق؛ بدونه لا تشتعلُ النار.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('f683b638-cc3c-5a55-a388-82ba940e7b29', 'dbd48634-d6aa-59c9-96de-2e95e4c8e4be', 'نضغطُ مكبسَ محقنٍ مسدودِ الفُوّهة وممتلئٍ بالهواء، فيتراجعُ المكبسُ قليلًا. ماذا نستنتج؟', '[{"id":"a","text":"الهواءُ قابلٌ للانضغاط"},{"id":"b","text":"الهواءُ لا كتلةَ له"},{"id":"c","text":"الهواءُ سائل"},{"id":"d","text":"الهواءُ اختفى"}]'::jsonb, 'a', 'إمكانيّةُ ضغط الهواء في حجمٍ أصغرَ تدلّ على أنّه قابلٌ للانضغاط.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('9b17c77a-462b-5ecb-b45a-8efe0e8e6c45', 'dbd48634-d6aa-59c9-96de-2e95e4c8e4be', 'ما الغازُ الذي يطرحُه الإنسانُ بكثرةٍ عند الزفير؟', '[{"id":"a","text":"ثاني أكسيد الكربون"},{"id":"b","text":"الأكسجين النقيّ"},{"id":"c","text":"الآزوت فقط"},{"id":"d","text":"الهيدروجين"}]'::jsonb, 'a', 'عند الزفير يطرحُ الإنسانُ هواءً غنيًّا بثاني أكسيد الكربون الناتج عن نشاط الجسم.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('e8e67b32-c3ac-5bd8-a988-3f58829e1ad7', 'dbd48634-d6aa-59c9-96de-2e95e4c8e4be', 'لماذا يُنصحُ بتهوية الغرف المغلقة؟', '[{"id":"a","text":"لتجديد الأكسجين وطرد ثاني أكسيد الكربون"},{"id":"b","text":"لزيادة ثاني أكسيد الكربون"},{"id":"c","text":"لإخراج كلّ الهواء نهائيًّا"},{"id":"d","text":"لتبريد الجدران فقط"}]'::jsonb, 'a', 'التهويةُ تُجدّدُ الهواءَ: تُدخلُ أكسجينًا جديدًا وتطردُ ثاني أكسيد الكربون المتراكم.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('7552521d-0930-57e3-bc97-d27689d002f2', 'e560f7f7-a314-5ca6-a3f1-a294385e4f28', 'eveil-scientifique-6eme', '⭐⭐ تمرين مراجعة (نمط امتحان): الهواء', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('cb6656de-0f96-5120-bd27-cfe3d371dd65', '7552521d-0930-57e3-bc97-d27689d002f2', 'ما الغازُ المحيي للاحتراق؟', '[{"id":"a","text":"الأكسجين"},{"id":"b","text":"الآزوت"},{"id":"c","text":"ثاني أكسيد الكربون"},{"id":"d","text":"بخار الماء"}]'::jsonb, 'a', 'الأكسجينُ غازٌ محيٍّ للاحتراق: وجودُه ضروريٌّ لاستمرار اشتعال النار.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('fabdd1ed-2731-53e9-b46b-e7848bcca742', '7552521d-0930-57e3-bc97-d27689d002f2', 'ما المكوّنان الرئيسيّان للهواء؟', '[{"id":"a","text":"الآزوت والأكسجين"},{"id":"b","text":"الأكسجين والهيدروجين"},{"id":"c","text":"بخار الماء والدخان"},{"id":"d","text":"ثاني أكسيد الكربون والهيليوم"}]'::jsonb, 'a', 'يتكوّنُ الهواءُ أساسًا من الآزوت (حوالي 78%) والأكسجين (حوالي 21%).', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('6e1b2b61-5df0-58d5-847f-b84878fde7c9', '7552521d-0930-57e3-bc97-d27689d002f2', 'ما النسبةُ التقريبيّةُ للآزوت في الهواء؟', '[{"id":"a","text":"حوالي 78%"},{"id":"b","text":"حوالي 21%"},{"id":"c","text":"حوالي 10%"},{"id":"d","text":"حوالي 100%"}]'::jsonb, 'a', 'يمثّلُ الآزوتُ حوالي 78% من الهواء، وهو الجزءُ الأكبر.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('477d8191-370c-54f3-b72b-9c11054d1edd', '7552521d-0930-57e3-bc97-d27689d002f2', 'هل الهواءُ مرئيّ؟', '[{"id":"a","text":"غيرُ مرئيّ لكنّه مادّةٌ حقيقيّة"},{"id":"b","text":"مرئيٌّ وملوّنٌ كالماء"},{"id":"c","text":"مرئيٌّ في الليل فقط"},{"id":"d","text":"ليس مادّةً أصلًا"}]'::jsonb, 'a', 'الهواءُ غيرُ مرئيّ، لكنّه مادّةٌ حقيقيّةٌ لها كتلةٌ وتشغلُ حيّزًا.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('85e563a0-fd0f-5fd4-b229-fa1ffbdb5912', '7552521d-0930-57e3-bc97-d27689d002f2', 'ماذا يحدثُ للنبات إذا حُرم تمامًا من الهواء؟', '[{"id":"a","text":"لا يعيشُ (يذبلُ ويموت)"},{"id":"b","text":"ينمو أسرع"},{"id":"c","text":"لا يتأثّرُ إطلاقًا"},{"id":"d","text":"يتحوّلُ إلى حيوان"}]'::jsonb, 'a', 'النباتُ كائنٌ حيٌّ يحتاجُ الهواء؛ فحرمانُه منه يؤدّي إلى ذبوله وموته.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('642b9384-a3b7-5657-b727-de2b8817ce7b', '7552521d-0930-57e3-bc97-d27689d002f2', 'إناءٌ يبدو فارغًا قلبناه في الماء فلم يدخله الماءُ بسهولة. لماذا؟', '[{"id":"a","text":"لأنّه ممتلئٌ بالهواء الذي يشغلُ حيّزًا"},{"id":"b","text":"لأنّ الماءَ يخافُ الإناء"},{"id":"c","text":"لأنّ الإناءَ ممتلئٌ بالماء أصلًا"},{"id":"d","text":"لأنّ الهواءَ لا يشغلُ حيّزًا"}]'::jsonb, 'a', 'الإناءُ ليس فارغًا بل ممتلئٌ بالهواء الذي يشغلُ حيّزًا، فيمنعُ دخولَ الماء.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('3dd0f522-71ce-5d61-bbd7-1ff28f99740b', 'e560f7f7-a314-5ca6-a3f1-a294385e4f28', 'eveil-scientifique-6eme', '👑 تحدّي النخبة ⭐⭐⭐⭐: سيّدُ الهواء', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('7ff2e5f0-a0d5-545e-aa4f-e6a68802bbc0', '3dd0f522-71ce-5d61-bbd7-1ff28f99740b', 'أيُّ نسبةٍ هي الأصحُّ للأكسجين في الهواء؟', '[{"id":"a","text":"حوالي 21%"},{"id":"b","text":"حوالي 78%"},{"id":"c","text":"حوالي 33%"},{"id":"d","text":"حوالي 12%"}]'::jsonb, 'a', 'نسبةُ الأكسجين في الهواء حوالي 21%، وهي ثابتةٌ تقريبًا في الهواء النقيّ.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('2127e544-e2ff-5603-9d28-3dc492666a99', '3dd0f522-71ce-5d61-bbd7-1ff28f99740b', 'شمعتان متماثلتان: الأولى تحت كأسٍ صغير والثانية تحت كأسٍ كبير. أيُّهما تنطفئُ أوّلًا؟', '[{"id":"a","text":"التي تحت الكأس الصغير"},{"id":"b","text":"التي تحت الكأس الكبير"},{"id":"c","text":"تنطفئان في الوقت نفسه"},{"id":"d","text":"لا تنطفئُ أيٌّ منهما"}]'::jsonb, 'a', 'الكأسُ الصغيرُ يحوي أكسجينًا أقلّ، فينفدُ أسرعَ وتنطفئُ شمعتُه أوّلًا.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('353627f0-2068-5961-8f0a-4cb97333879c', '3dd0f522-71ce-5d61-bbd7-1ff28f99740b', 'نُطلقُ فقّاعةَ هواءٍ في كأس ماء، فترتفعُ نحو السطح. لماذا؟', '[{"id":"a","text":"لأنّ الهواءَ أخفُّ من الماء"},{"id":"b","text":"لأنّ الهواءَ أثقلُ من الماء"},{"id":"c","text":"لأنّ الماءَ يدفعُها للأسفل"},{"id":"d","text":"لأنّ الهواءَ ذاب في الماء"}]'::jsonb, 'a', 'كتلةُ حجمٍ من الهواء أقلُّ من كتلة الحجم نفسِه من الماء، فالهواءُ أخفُّ ويصعدُ إلى السطح.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('07d3d011-b650-5bc8-b293-607d11bcffff', '3dd0f522-71ce-5d61-bbd7-1ff28f99740b', 'عند احتراق الفحم في الهواء، يُستهلكُ الأكسجينُ ويتكوّنُ غالبًا:', '[{"id":"a","text":"ثاني أكسيد الكربون"},{"id":"b","text":"أكسجينٌ إضافيّ"},{"id":"c","text":"آزوتٌ نقيّ"},{"id":"d","text":"ماءٌ صالحٌ للشرب"}]'::jsonb, 'a', 'الاحتراقُ يستهلكُ الأكسجينَ ويُنتجُ غالبًا ثاني أكسيد الكربون.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('74666f2c-e6d6-5769-8c5d-2d0294955edc', '3dd0f522-71ce-5d61-bbd7-1ff28f99740b', 'ما الدليلُ العمليّ على أنّ للهواء كتلة؟', '[{"id":"a","text":"كرةٌ منفوخةٌ أثقلُ من الكرة نفسِها فارغة"},{"id":"b","text":"الهواءُ غيرُ مرئيّ"},{"id":"c","text":"الهواءُ يملأُ الغرفة"},{"id":"d","text":"الهواءُ باردٌ في الشتاء"}]'::jsonb, 'a', 'إذا وزنّا كرةً قبل النفخ وبعده نجدُ المنفوخةَ أثقل، وهذا دليلٌ على أنّ للهواء كتلة.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('d6709280-b3d8-5a2c-99f1-84ca6e159405', '3dd0f522-71ce-5d61-bbd7-1ff28f99740b', 'لماذا يحملُ الغوّاصُ قارورةً على ظهره تحت الماء؟', '[{"id":"a","text":"ليتزوّدَ بالأكسجين اللازم للتنفّس"},{"id":"b","text":"ليشربَ منها الماء"},{"id":"c","text":"ليثقلَ وزنَه فقط"},{"id":"d","text":"لأنّ الماءَ فيه أكسجينٌ كثير يتنفّسُه مباشرة"}]'::jsonb, 'a', 'لا يستطيعُ الإنسانُ أخذَ الأكسجين من الماء، فيحملُ قارورةَ هواءٍ ليتنفّسَ تحت الماء.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('31c7f00e-2811-5947-b3fb-96d2c5012f46', 'e560f7f7-a314-5ca6-a3f1-a294385e4f28', 'eveil-scientifique-6eme', '📝 تدريب ⭐⭐⭐: مراجعةٌ شاملةٌ للهواء', 3, 120, 30, 'boss', 'admin', 5)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('ef8fe2ed-827e-5bc2-9690-1f6133188c6d', '31c7f00e-2811-5947-b3fb-96d2c5012f46', 'ما الغازُ الضروريُّ للتنفّس وللاحتراق معًا؟', '[{"id":"a","text":"الأكسجين"},{"id":"b","text":"الآزوت"},{"id":"c","text":"ثاني أكسيد الكربون"},{"id":"d","text":"النيون"}]'::jsonb, 'a', 'الأكسجينُ ضروريٌّ للتنفّس وللاحتراق في آنٍ واحد.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('e11a043e-95e0-593f-80b3-913cc03f1b0e', '31c7f00e-2811-5947-b3fb-96d2c5012f46', 'ما الغازُ صاحبُ النسبة الأكبر في الهواء؟', '[{"id":"a","text":"الآزوت"},{"id":"b","text":"الأكسجين"},{"id":"c","text":"ثاني أكسيد الكربون"},{"id":"d","text":"بخار الماء"}]'::jsonb, 'a', 'الآزوتُ هو الأكبرُ نسبةً في الهواء (حوالي 78%).', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('09fd283e-06cc-5e66-a3de-3999e365a953', '31c7f00e-2811-5947-b3fb-96d2c5012f46', 'ما النسبةُ التقريبيّةُ للأكسجين في الهواء؟', '[{"id":"a","text":"حوالي 21%"},{"id":"b","text":"حوالي 78%"},{"id":"c","text":"حوالي 41%"},{"id":"d","text":"حوالي 8%"}]'::jsonb, 'a', 'يمثّلُ الأكسجينُ حوالي 21% من حجم الهواء.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('08ff61cc-7013-5d02-a8df-34f4ea0d8559', '31c7f00e-2811-5947-b3fb-96d2c5012f46', 'لماذا تنطفئُ النارُ إذا غطّيناها ببطّانيّةٍ مبلّلة؟', '[{"id":"a","text":"لأنّنا نمنعُ عنها الأكسجين"},{"id":"b","text":"لأنّنا نزيدُها أكسجينًا"},{"id":"c","text":"لأنّ البطّانيّةَ تُشعلُها أكثر"},{"id":"d","text":"لأنّ النارَ تحبُّ الماء"}]'::jsonb, 'a', 'تغطيةُ النار تعزلُها عن أكسجين الهواء، وبدون أكسجينٍ ينطفئُ الاحتراق.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('13349f24-ec96-5949-86bb-3971f68b5d2e', '31c7f00e-2811-5947-b3fb-96d2c5012f46', 'أيُّ خاصيّةٍ تسمحُ بنفخ إطار العجلة بكمّيّةٍ كبيرةٍ من الهواء؟', '[{"id":"a","text":"الهواءُ قابلٌ للانضغاط"},{"id":"b","text":"الهواءُ غيرُ مرئيّ"},{"id":"c","text":"الهواءُ ثقيلٌ جدًّا"},{"id":"d","text":"الهواءُ صلب"}]'::jsonb, 'a', 'لأنّ الهواءَ قابلٌ للانضغاط يمكنُ حشرُ كمّيّةٍ كبيرةٍ منه في حجم الإطار الصغير.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('1f6d5b40-df86-50b9-8d0b-5fbf6e753273', '31c7f00e-2811-5947-b3fb-96d2c5012f46', 'في غرفةٍ مغلقةٍ مكتظّةٍ بالناس، ماذا يحدثُ لنسبة ثاني أكسيد الكربون مع الوقت؟', '[{"id":"a","text":"ترتفعُ تدريجيًّا"},{"id":"b","text":"تنعدمُ تمامًا"},{"id":"c","text":"تبقى ثابتةً دائمًا"},{"id":"d","text":"تتحوّلُ إلى أكسجين"}]'::jsonb, 'a', 'زفيرُ الناس يطرحُ ثاني أكسيد الكربون، فترتفعُ نسبتُه في الغرفة المغلقة، لذا تجبُ التهوية.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('785b1133-03dc-5ea6-a119-68343d35e8c5', '38976f55-d157-591a-9efd-ad38e0e0b33a', 'eveil-scientifique-6eme', 'اختبار فهم الدرس ⭐', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('daf8a4c2-099a-5dbc-8de1-39c4e7fd305a', '785b1133-03dc-5ea6-a119-68343d35e8c5', 'ما العضوان الرئيسيّان للتنفّس عند الإنسان؟', '[{"id":"a","text":"الرئتان"},{"id":"b","text":"الكليتان"},{"id":"c","text":"المعدة"},{"id":"d","text":"الكبد"}]'::jsonb, 'a', 'الرئتان هما العضوان الرئيسيّان للتنفّس، وفيهما يحدثُ التبادلُ الغازيّ مع الدم.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('9e96e371-8cfb-5e45-88b8-b335cfd4ddc8', '785b1133-03dc-5ea6-a119-68343d35e8c5', 'حركةُ إدخال الهواء إلى الرئتين تُسمّى:', '[{"id":"a","text":"الشهيق"},{"id":"b","text":"الزفير"},{"id":"c","text":"الهضم"},{"id":"d","text":"النبض"}]'::jsonb, 'a', 'الشهيقُ هو حركةُ إدخال الهواء الغنيّ بالأكسجين إلى الرئتين.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('bccab6fe-9303-559a-90c7-3b76e3aedc39', '785b1133-03dc-5ea6-a119-68343d35e8c5', 'عند الزفير نطرحُ هواءً غنيًّا بـ:', '[{"id":"a","text":"ثاني أكسيد الكربون"},{"id":"b","text":"الأكسجين النقيّ"},{"id":"c","text":"الآزوت فقط"},{"id":"d","text":"بخار البنزين"}]'::jsonb, 'a', 'هواءُ الزفير غنيٌّ بثاني أكسيد الكربون الناتج عن نشاط الجسم.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('1bf295eb-9a58-5cae-879c-2df38cdbba36', '785b1133-03dc-5ea6-a119-68343d35e8c5', 'أين يحدثُ التبادلُ الغازيُّ بين الهواء والدم؟', '[{"id":"a","text":"في الحويصلات الهوائيّة بالرئتين"},{"id":"b","text":"في المعدة"},{"id":"c","text":"في الأنف فقط"},{"id":"d","text":"في العظام"}]'::jsonb, 'a', 'يحدثُ التبادلُ الغازيُّ في الحويصلات الهوائيّة داخل الرئتين.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('7bd45187-54c3-5296-bcb5-bafb7c24bbe4', '785b1133-03dc-5ea6-a119-68343d35e8c5', 'في الرئتين، ينتقلُ الأكسجينُ من الهواء إلى:', '[{"id":"a","text":"الدم"},{"id":"b","text":"العظام"},{"id":"c","text":"الجلد"},{"id":"d","text":"الشعر"}]'::jsonb, 'a', 'ينتقلُ الأكسجينُ من الحويصلات الهوائيّة إلى الدم ليُوزَّع على الجسم.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('45614f7e-b1c0-5094-8f09-3d1ee809b452', '38976f55-d157-591a-9efd-ad38e0e0b33a', 'eveil-scientifique-6eme', '⭐ تمرين: أوّلُ خطوات مع التنفّس', 1, 50, 10, 'practice', 'admin', 1)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('a9118ad3-48fd-54b7-8a88-74254fdcdb7a', '45614f7e-b1c0-5094-8f09-3d1ee809b452', 'ما العضوان اللذان نتنفّسُ بهما؟', '[{"id":"a","text":"الرئتان"},{"id":"b","text":"الأمعاء"},{"id":"c","text":"القلب"},{"id":"d","text":"الدماغ"}]'::jsonb, 'a', 'نتنفّسُ بالرئتين، وهما العضوان الرئيسيّان للتنفّس.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('02b7493d-0a90-51b9-ab4d-2c6062fb8b2b', '45614f7e-b1c0-5094-8f09-3d1ee809b452', 'حركةُ إدخال الهواء تُسمّى:', '[{"id":"a","text":"الشهيق"},{"id":"b","text":"الزفير"},{"id":"c","text":"العطس"},{"id":"d","text":"البلع"}]'::jsonb, 'a', 'الشهيقُ هو إدخالُ الهواء إلى الرئتين.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('e1c04794-5255-56a7-8877-0c5575d985c7', '45614f7e-b1c0-5094-8f09-3d1ee809b452', 'حركةُ إخراج الهواء تُسمّى:', '[{"id":"a","text":"الزفير"},{"id":"b","text":"الشهيق"},{"id":"c","text":"الهضم"},{"id":"d","text":"النبض"}]'::jsonb, 'a', 'الزفيرُ هو إخراجُ الهواء المحمّل بثاني أكسيد الكربون من الرئتين.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('9fcadfa1-c422-577a-a63f-ac6e8515f591', '45614f7e-b1c0-5094-8f09-3d1ee809b452', 'ما الغازُ الذي نأخذُه من الهواء عند التنفّس؟', '[{"id":"a","text":"الأكسجين"},{"id":"b","text":"ثاني أكسيد الكربون"},{"id":"c","text":"الآزوت"},{"id":"d","text":"الدخان"}]'::jsonb, 'a', 'نأخذُ الأكسجينَ من الهواء، فهو الغازُ الضروريُّ لنشاط الجسم.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('159c036b-42bc-56a3-aaf8-969b97f1496f', '45614f7e-b1c0-5094-8f09-3d1ee809b452', 'ما الغازُ الذي نطرحُه بكثرةٍ عند الزفير؟', '[{"id":"a","text":"ثاني أكسيد الكربون"},{"id":"b","text":"الأكسجين"},{"id":"c","text":"الآزوت"},{"id":"d","text":"الهيليوم"}]'::jsonb, 'a', 'نطرحُ هواءً غنيًّا بثاني أكسيد الكربون عند الزفير.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('0d03b54c-9422-51dc-85ff-7d37a59ac103', '45614f7e-b1c0-5094-8f09-3d1ee809b452', 'من أين يدخلُ الهواءُ إلى جهاز التنفّس عادةً؟', '[{"id":"a","text":"الأنف"},{"id":"b","text":"الأذن"},{"id":"c","text":"العين"},{"id":"d","text":"الجلد"}]'::jsonb, 'a', 'يدخلُ الهواءُ عبر الأنف ثمّ يمرّ في القصبة الهوائيّة نحو الرئتين.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('c9471038-aa68-5d23-9828-c6787a18a851', '38976f55-d157-591a-9efd-ad38e0e0b33a', 'eveil-scientifique-6eme', '⚔️ زعيم الفصل ⭐⭐⭐: تحدّي التنفّس', 3, 120, 30, 'boss', 'admin', 2)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('6214cf7a-e549-588d-8cbb-b406af16aff0', 'c9471038-aa68-5d23-9828-c6787a18a851', 'أين يحدثُ التبادلُ الغازيّ في جهاز التنفّس؟', '[{"id":"a","text":"في الحويصلات الهوائيّة"},{"id":"b","text":"في الأنف"},{"id":"c","text":"في القصبة الهوائيّة فقط"},{"id":"d","text":"في المريء"}]'::jsonb, 'a', 'يتمّ التبادلُ الغازيُّ في الحويصلات الهوائيّة الدقيقة داخل الرئتين.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('abc98ba8-9d5c-5498-acc1-f743901e7879', 'c9471038-aa68-5d23-9828-c6787a18a851', 'في الرئتين، ينتقلُ الأكسجينُ من الحويصلات إلى:', '[{"id":"a","text":"الدم"},{"id":"b","text":"المعدة"},{"id":"c","text":"العظام"},{"id":"d","text":"خارج الجسم مباشرة"}]'::jsonb, 'a', 'ينتقلُ الأكسجينُ من الحويصلات إلى الدم الذي يوزّعُه على أعضاء الجسم.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('5a559640-7cd6-5fe1-ae7e-81f1de11de8e', 'c9471038-aa68-5d23-9828-c6787a18a851', 'ما الترتيبُ الصحيحُ لمسار الهواء عند الشهيق؟', '[{"id":"a","text":"الأنف ← القصبة الهوائيّة ← الرئتان"},{"id":"b","text":"الرئتان ← الأنف ← القصبة الهوائيّة"},{"id":"c","text":"القصبة الهوائيّة ← الأنف ← الرئتان"},{"id":"d","text":"الأنف ← المعدة ← الرئتان"}]'::jsonb, 'a', 'يدخلُ الهواءُ من الأنف، ثمّ يمرّ في القصبة الهوائيّة، ليصلَ إلى الرئتين.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('67b14cb9-a119-57db-8eba-706116074617', 'c9471038-aa68-5d23-9828-c6787a18a851', 'لماذا يكون هواءُ الزفير غنيًّا بثاني أكسيد الكربون؟', '[{"id":"a","text":"لأنّ الدمَ ينقلُه من الأعضاء إلى الرئتين ليُطرح"},{"id":"b","text":"لأنّنا نأكلُ ثاني أكسيد الكربون"},{"id":"c","text":"لأنّ الرئتين تصنعان الأكسجين"},{"id":"d","text":"لأنّ الأنفَ يبرّدُ الهواء"}]'::jsonb, 'a', 'ينتجُ الجسمُ ثاني أكسيد الكربون، فينقلُه الدمُ إلى الرئتين ليُطرحَ مع هواء الزفير.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('f7f33503-b459-5d27-adc8-d84ddd9cff08', 'c9471038-aa68-5d23-9828-c6787a18a851', 'ماذا ينقلُ الدمُ انطلاقًا من الرئتين إلى بقيّة الأعضاء؟', '[{"id":"a","text":"الأكسجين"},{"id":"b","text":"ثاني أكسيد الكربون فقط"},{"id":"c","text":"الهواءَ كاملًا"},{"id":"d","text":"الفضلاتِ الصلبة"}]'::jsonb, 'a', 'بعد التبادل في الرئتين، ينقلُ الدمُ الأكسجينَ إلى كلّ أعضاء الجسم.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('dd185a0c-5964-5921-89c5-6efda6cc9cd4', 'c9471038-aa68-5d23-9828-c6787a18a851', 'ما وظيفةُ القصبة الهوائيّة؟', '[{"id":"a","text":"نقلُ الهواء بين الأنف والرئتين"},{"id":"b","text":"هضمُ الطعام"},{"id":"c","text":"ضخُّ الدم"},{"id":"d","text":"تخزينُ الماء"}]'::jsonb, 'a', 'القصبةُ الهوائيّة أنبوبٌ ينقلُ الهواءَ بين الأنف والرئتين.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('93e3ff54-751f-5338-9891-ed7496283db4', '38976f55-d157-591a-9efd-ad38e0e0b33a', 'eveil-scientifique-6eme', '⭐⭐ تمرين مراجعة (نمط امتحان): التنفّس', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('d8a54c40-6502-5056-bf69-f383bc3a676a', '93e3ff54-751f-5338-9891-ed7496283db4', 'ما هما حركتا التنفّس؟', '[{"id":"a","text":"الشهيق والزفير"},{"id":"b","text":"الأكل والشرب"},{"id":"c","text":"النبض والضغط"},{"id":"d","text":"الهضم والامتصاص"}]'::jsonb, 'a', 'حركتا التنفّس هما الشهيق (إدخال الهواء) والزفير (إخراجه).', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('d7655934-9e62-5a01-a5ed-22de92ae59cb', '93e3ff54-751f-5338-9891-ed7496283db4', 'ما العضو الذي يصلُ إليه الهواءُ في نهاية مساره؟', '[{"id":"a","text":"الرئتان"},{"id":"b","text":"المعدة"},{"id":"c","text":"الكبد"},{"id":"d","text":"الأمعاء"}]'::jsonb, 'a', 'يصلُ الهواءُ في نهاية مساره إلى الرئتين حيث يحدثُ التبادلُ الغازيّ.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('0993075f-f19b-509e-825f-0ed08c7fd454', '93e3ff54-751f-5338-9891-ed7496283db4', 'في الحويصلات، ينتقلُ ثاني أكسيد الكربون من الدم إلى:', '[{"id":"a","text":"الهواء ليُطرحَ بالزفير"},{"id":"b","text":"العظام"},{"id":"c","text":"المعدة"},{"id":"d","text":"العضلات"}]'::jsonb, 'a', 'ينتقلُ ثاني أكسيد الكربون من الدم إلى الهواء في الحويصلات، ثمّ يُطرحُ بالزفير.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('18063625-8d57-5ff3-928c-639e90c4fa14', '93e3ff54-751f-5338-9891-ed7496283db4', 'هواءُ الشهيق غنيٌّ بـ:', '[{"id":"a","text":"الأكسجين"},{"id":"b","text":"ثاني أكسيد الكربون"},{"id":"c","text":"الدخان"},{"id":"d","text":"بخار الزيت"}]'::jsonb, 'a', 'هواءُ الشهيق هو هواءُ الجوّ، وهو غنيٌّ بالأكسجين.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('6a967509-b002-58fc-b16d-d5ffd9242d63', '93e3ff54-751f-5338-9891-ed7496283db4', 'لماذا نتنفّس؟', '[{"id":"a","text":"لأخذ الأكسجين وطرح ثاني أكسيد الكربون"},{"id":"b","text":"لهضم الطعام"},{"id":"c","text":"لتبريد الدم فقط"},{"id":"d","text":"لإنتاج الأكسجين"}]'::jsonb, 'a', 'نتنفّسُ لتزويد الجسم بالأكسجين وللتخلّص من ثاني أكسيد الكربون.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('608c5491-da95-5c7d-893e-750d1b7b6f9d', '93e3ff54-751f-5338-9891-ed7496283db4', 'إذا انسدّت القصبةُ الهوائيّة تمامًا، فما النتيجة؟', '[{"id":"a","text":"لا يصلُ الهواءُ إلى الرئتين"},{"id":"b","text":"يتحسّنُ التنفّس"},{"id":"c","text":"يزدادُ الأكسجين في الدم"},{"id":"d","text":"لا يتغيّرُ شيء"}]'::jsonb, 'a', 'القصبةُ الهوائيّة ممرُّ الهواء؛ فانسدادُها يمنعُ وصولَ الهواء إلى الرئتين.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('83144a7b-33cd-5d46-981e-0d6aea1b6c3f', '38976f55-d157-591a-9efd-ad38e0e0b33a', 'eveil-scientifique-6eme', '👑 تحدّي النخبة ⭐⭐⭐⭐: سيّدُ التنفّس', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('1f99edab-6543-54c6-ac7b-77f9f4a1d8c7', '83144a7b-33cd-5d46-981e-0d6aea1b6c3f', 'أين بالضبط يتمّ التبادلُ الغازيّ بين الهواء والدم؟', '[{"id":"a","text":"في الحويصلات الهوائيّة"},{"id":"b","text":"في القلب"},{"id":"c","text":"في المعدة"},{"id":"d","text":"في الكلى"}]'::jsonb, 'a', 'الحويصلاتُ الهوائيّة هي السطحُ الذي يتمّ عنده مرورُ الغازات بين الهواء والدم.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('c03e30e1-b023-51fb-a85a-c0398441f94c', '83144a7b-33cd-5d46-981e-0d6aea1b6c3f', 'أيُّ جملةٍ صحيحةٌ عند مقارنة هواء الزفير بهواء الشهيق؟', '[{"id":"a","text":"الزفيرُ نسبةُ ثاني أكسيد الكربون فيه أعلى"},{"id":"b","text":"الزفيرُ خالٍ تمامًا من الأكسجين"},{"id":"c","text":"الشهيقُ غنيٌّ بثاني أكسيد الكربون"},{"id":"d","text":"لا فرقَ بينهما إطلاقًا"}]'::jsonb, 'a', 'بعد التبادل في الرئتين ترتفعُ نسبةُ ثاني أكسيد الكربون في هواء الزفير مقارنةً بالشهيق.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('386d67af-7e63-5a6a-8a0c-e2509a41a81b', '83144a7b-33cd-5d46-981e-0d6aea1b6c3f', 'ما العلاقةُ بين التنفّس والدم؟', '[{"id":"a","text":"الدمُ يأخذُ الأكسجين من الرئتين وينقلُه للأعضاء"},{"id":"b","text":"لا علاقةَ بينهما"},{"id":"c","text":"الدمُ يصنعُ الهواء"},{"id":"d","text":"الرئتان تضخّان الدم"}]'::jsonb, 'a', 'في الرئتين يلتقطُ الدمُ الأكسجينَ ويتخلّصُ من ثاني أكسيد الكربون، ثمّ ينقلُ الأكسجينَ للأعضاء.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('39959081-838f-544e-bc60-b45818a9f0ce', '83144a7b-33cd-5d46-981e-0d6aea1b6c3f', 'لماذا يتسارعُ تنفّسُنا بعد الجري؟', '[{"id":"a","text":"لأنّ الجسمَ يحتاجُ أكسجينًا أكثر فنتنفّسُ أسرع"},{"id":"b","text":"لأنّ الرئتين تتعبان وتتوقّفان"},{"id":"c","text":"لأنّنا لا نحتاجُ أكسجينًا أثناء الجري"},{"id":"d","text":"لأنّ الهواءَ يصبحُ أثقل"}]'::jsonb, 'a', 'يزيدُ نشاطُ العضلات الحاجةَ إلى الأكسجين، فيتسارعُ التنفّسُ لتوفيره وطرد ثاني أكسيد الكربون الزائد.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('b93f158a-23c1-5475-9070-bd3f7855aaa8', '83144a7b-33cd-5d46-981e-0d6aea1b6c3f', 'ما الذي يميّزُ هواءَ الشهيق؟', '[{"id":"a","text":"أنّه أغنى بالأكسجين"},{"id":"b","text":"أنّه أغنى بثاني أكسيد الكربون"},{"id":"c","text":"أنّه بلا أكسجين"},{"id":"d","text":"أنّه دخانٌ كثيف"}]'::jsonb, 'a', 'هواءُ الشهيق هو هواءُ الجوّ الغنيُّ بالأكسجين قبل أن يأخذَ الجسمُ حاجتَه منه.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('f3cd1045-3d9f-55ce-9308-aa21205f383b', '83144a7b-33cd-5d46-981e-0d6aea1b6c3f', 'ما دورُ الحويصلات الهوائيّة الدقيقة في الرئتين؟', '[{"id":"a","text":"توفّرُ سطحًا واسعًا للتبادل الغازيّ مع الدم"},{"id":"b","text":"تهضمُ الطعام"},{"id":"c","text":"تضخُّ الدم"},{"id":"d","text":"تخزّنُ البول"}]'::jsonb, 'a', 'الحويصلاتُ الكثيرةُ توفّرُ سطحًا واسعًا يسمحُ بتبادلٍ غازيٍّ سريعٍ بين الهواء والدم.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('9ce85352-fd3a-5438-b2c8-5490dc648e59', '38976f55-d157-591a-9efd-ad38e0e0b33a', 'eveil-scientifique-6eme', '📝 تدريب ⭐⭐⭐: مراجعةٌ شاملةٌ للتنفّس', 3, 120, 30, 'boss', 'admin', 5)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('76e167cd-8d4e-5be5-85ef-6fc2c010ef91', '9ce85352-fd3a-5438-b2c8-5490dc648e59', 'ما العضو المسؤولُ عن التنفّس؟', '[{"id":"a","text":"الرئتان"},{"id":"b","text":"المعدة"},{"id":"c","text":"الطحال"},{"id":"d","text":"المثانة"}]'::jsonb, 'a', 'الرئتان هما عضوُ التنفّس حيث يحدثُ التبادلُ الغازيّ.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('25767b39-8d52-50ae-84b5-430398ee5bf3', '9ce85352-fd3a-5438-b2c8-5490dc648e59', 'الشهيقُ هو:', '[{"id":"a","text":"إدخالُ الهواء إلى الرئتين"},{"id":"b","text":"إخراجُ الهواء من الرئتين"},{"id":"c","text":"بلعُ الطعام"},{"id":"d","text":"ضخُّ الدم"}]'::jsonb, 'a', 'الشهيقُ هو إدخالُ الهواء الغنيّ بالأكسجين إلى الرئتين.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('dcd9b827-88b9-54d0-8744-f6a7c258031c', '9ce85352-fd3a-5438-b2c8-5490dc648e59', 'ما الغازُ الذي يكثرُ في هواء الزفير؟', '[{"id":"a","text":"ثاني أكسيد الكربون"},{"id":"b","text":"الأكسجين"},{"id":"c","text":"الآزوت وحدَه"},{"id":"d","text":"الأوزون"}]'::jsonb, 'a', 'يكثرُ ثاني أكسيد الكربون في هواء الزفير لأنّ الجسمَ يطرحُه.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('1cc0ee4d-cb5d-5c0c-bcf1-95ef5f970df4', '9ce85352-fd3a-5438-b2c8-5490dc648e59', 'ما الترتيبُ الصحيحُ لمسار الهواء؟', '[{"id":"a","text":"الأنف ← القصبة الهوائيّة ← الرئتان"},{"id":"b","text":"الفم ← المعدة ← الرئتان"},{"id":"c","text":"الرئتان ← القصبة الهوائيّة ← الأنف"},{"id":"d","text":"الأنف ← الرئتان ← القصبة الهوائيّة"}]'::jsonb, 'a', 'يسلكُ الهواءُ المسار: الأنف ← القصبة الهوائيّة ← الرئتان.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('4bb77781-f351-5501-9e6d-237773298888', '9ce85352-fd3a-5438-b2c8-5490dc648e59', 'في الرئتين ينتقلُ الأكسجينُ إلى الدم عبر:', '[{"id":"a","text":"الحويصلات الهوائيّة"},{"id":"b","text":"العظام"},{"id":"c","text":"الجلد"},{"id":"d","text":"الأظافر"}]'::jsonb, 'a', 'يعبرُ الأكسجينُ من الحويصلات الهوائيّة إلى الدم المحيط بها.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('6dd95402-0204-5cd8-9f51-681b9577b53d', '9ce85352-fd3a-5438-b2c8-5490dc648e59', 'لماذا يُعدُّ التنفّسُ ضروريًّا للحياة؟', '[{"id":"a","text":"لأنّه يزوّدُ الجسمَ بالأكسجين اللازم لنشاط الخلايا"},{"id":"b","text":"لأنّه يُنتجُ الطعام"},{"id":"c","text":"لأنّه يبرّدُ الجلد"},{"id":"d","text":"لأنّه يصنعُ العظام"}]'::jsonb, 'a', 'يحتاجُ الجسمُ الأكسجينَ لإنتاج الطاقة في خلاياه، والتنفّسُ هو ما يوفّرُه.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('21283609-6e6f-5624-bc24-cedd580c9f0a', 'a5efe929-363c-5e01-a9bc-06eff4fbe288', 'eveil-scientifique-6eme', 'اختبار فهم الدرس ⭐', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('57e35d02-c3b4-57d0-a79d-c78d60e826b7', '21283609-6e6f-5624-bc24-cedd580c9f0a', 'ما العضو الذي يضخُّ الدمَ في الجسم؟', '[{"id":"a","text":"القلب"},{"id":"b","text":"الرئة"},{"id":"c","text":"المعدة"},{"id":"d","text":"الكبد"}]'::jsonb, 'a', 'القلبُ عضلةٌ تعملُ كمضخّةٍ تدفعُ الدمَ في كامل الجسم.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('d07f106a-5080-58ba-87c1-5f4b7778c331', '21283609-6e6f-5624-bc24-cedd580c9f0a', 'ما المكوّنُ الذي ينقلُ الأكسجينَ في الدم؟', '[{"id":"a","text":"الكريّات الحمراء"},{"id":"b","text":"الكريّات البيضاء"},{"id":"c","text":"الصفيحات الدمويّة"},{"id":"d","text":"البلازما وحدها"}]'::jsonb, 'a', 'الكريّاتُ الحمراء هي المسؤولةُ عن نقل الأكسجين إلى أعضاء الجسم.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('f97d3e0d-fc52-58b2-8851-99a53f0ea7b4', '21283609-6e6f-5624-bc24-cedd580c9f0a', 'ما دورُ الكريّات البيضاء؟', '[{"id":"a","text":"الدفاعُ عن الجسم ضدّ الميكروبات"},{"id":"b","text":"نقلُ الأكسجين"},{"id":"c","text":"هضمُ الطعام"},{"id":"d","text":"تبريدُ الجسم"}]'::jsonb, 'a', 'الكريّاتُ البيضاء تدافعُ عن الجسم وتحاربُ الميكروبات المسبّبةَ للأمراض.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('ff728071-e2ab-5e02-a50f-9a0bae3ec40a', '21283609-6e6f-5624-bc24-cedd580c9f0a', 'ما دورُ الصفيحات الدمويّة؟', '[{"id":"a","text":"تخثّرُ الدم وإيقافُ النزيف"},{"id":"b","text":"نقلُ الأكسجين"},{"id":"c","text":"ضخُّ الدم"},{"id":"d","text":"إنتاجُ الهواء"}]'::jsonb, 'a', 'الصفيحاتُ الدمويّة تساعدُ على تخثّر الدم وإيقاف النزيف عند الجروح.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('83feb802-34ba-547d-86f5-afa61e0f361a', '21283609-6e6f-5624-bc24-cedd580c9f0a', 'ما اسمُ الجزء السائل من الدم؟', '[{"id":"a","text":"البلازما"},{"id":"b","text":"الكريّات الحمراء"},{"id":"c","text":"العظام"},{"id":"d","text":"العصارة"}]'::jsonb, 'a', 'البلازما هي الجزءُ السائلُ من الدم، وفيها تسبحُ الكريّاتُ والصفيحات.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('ba04966f-d093-56cb-81c9-1dd689f6edc5', 'a5efe929-363c-5e01-a9bc-06eff4fbe288', 'eveil-scientifique-6eme', '⭐ تمرين: أوّلُ خطوات مع الدم', 1, 50, 10, 'practice', 'admin', 1)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('eb65f3da-8183-580d-a805-1f2d36292a0f', 'ba04966f-d093-56cb-81c9-1dd689f6edc5', 'ما العضو الذي يضخُّ الدم؟', '[{"id":"a","text":"القلب"},{"id":"b","text":"الرئة"},{"id":"c","text":"الكلية"},{"id":"d","text":"الدماغ"}]'::jsonb, 'a', 'القلبُ هو المضخّةُ التي تدفعُ الدمَ في الجسم كلّه.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('27a56397-91e1-5876-814a-f8283f7a913a', 'ba04966f-d093-56cb-81c9-1dd689f6edc5', 'ما لونُ الدم؟', '[{"id":"a","text":"أحمر"},{"id":"b","text":"أزرق"},{"id":"c","text":"أخضر"},{"id":"d","text":"عديمُ اللون"}]'::jsonb, 'a', 'الدمُ سائلٌ أحمرُ اللون بفضل الكريّات الحمراء.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('6778f97d-b31f-5c85-b06f-f31d204d840f', 'ba04966f-d093-56cb-81c9-1dd689f6edc5', 'ما المكوّنُ الذي ينقلُ الأكسجين؟', '[{"id":"a","text":"الكريّات الحمراء"},{"id":"b","text":"الكريّات البيضاء"},{"id":"c","text":"الصفيحات الدمويّة"},{"id":"d","text":"الماء فقط"}]'::jsonb, 'a', 'الكريّاتُ الحمراء تنقلُ الأكسجينَ إلى أعضاء الجسم.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('509f07d9-78c5-573f-bfe1-c6a40f324ce2', 'ba04966f-d093-56cb-81c9-1dd689f6edc5', 'ما اسمُ الجزء السائل من الدم؟', '[{"id":"a","text":"البلازما"},{"id":"b","text":"الصفيحات"},{"id":"c","text":"العظم"},{"id":"d","text":"اللعاب"}]'::jsonb, 'a', 'البلازما هي السائلُ الذي يحملُ مكوّناتِ الدم والمغذّيات.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('a43c0482-0ff7-54b7-892b-e9a96e9f316d', 'ba04966f-d093-56cb-81c9-1dd689f6edc5', 'ما دورُ الكريّات البيضاء؟', '[{"id":"a","text":"الدفاعُ عن الجسم"},{"id":"b","text":"نقلُ الأكسجين"},{"id":"c","text":"ضخُّ الدم"},{"id":"d","text":"تكوينُ العظام"}]'::jsonb, 'a', 'الكريّاتُ البيضاء تدافعُ عن الجسم ضدّ الميكروبات.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('789f77cb-8f58-51f6-b872-c6db571d7355', 'ba04966f-d093-56cb-81c9-1dd689f6edc5', 'ما الذي يوقفُ النزيفَ عند جرحٍ صغير؟', '[{"id":"a","text":"الصفيحات الدمويّة"},{"id":"b","text":"الكريّات الحمراء"},{"id":"c","text":"البلازما وحدها"},{"id":"d","text":"الأكسجين"}]'::jsonb, 'a', 'الصفيحاتُ الدمويّة تساعدُ على تخثّر الدم فيتوقّفُ النزيف.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('25e852eb-166d-5524-beb5-573294fd9eb6', 'a5efe929-363c-5e01-a9bc-06eff4fbe288', 'eveil-scientifique-6eme', '⚔️ زعيم الفصل ⭐⭐⭐: تحدّي الدم', 3, 120, 30, 'boss', 'admin', 2)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('4251c047-26f4-55a4-b131-ee1af87d5bef', '25e852eb-166d-5524-beb5-573294fd9eb6', 'القلبُ في جهاز الدوران يعملُ كـ:', '[{"id":"a","text":"مضخّةٍ تدفعُ الدم"},{"id":"b","text":"مصفاةٍ للهواء"},{"id":"c","text":"خزّانٍ للطعام"},{"id":"d","text":"غدّةٍ للعرق"}]'::jsonb, 'a', 'القلبُ مضخّةٌ عضليّةٌ تدفعُ الدمَ في الأوعية إلى كامل الجسم.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('ce65fa02-3925-56b9-bad1-1e1a4f856b5c', '25e852eb-166d-5524-beb5-573294fd9eb6', 'ماذا ينقلُ الدمُ إلى الأعضاء؟', '[{"id":"a","text":"الأكسجين والمغذّيات"},{"id":"b","text":"العظام"},{"id":"c","text":"الفضلاتِ فقط"},{"id":"d","text":"الهواءَ كاملًا"}]'::jsonb, 'a', 'ينقلُ الدمُ الأكسجينَ من الرئتين والمغذّياتِ من الأمعاء إلى كلّ الأعضاء.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('5dd3b035-e4b9-56bc-8d84-bb098ef7e407', '25e852eb-166d-5524-beb5-573294fd9eb6', 'ما الأوعيةُ التي يخرجُ فيها الدمُ من القلب؟', '[{"id":"a","text":"الشرايين"},{"id":"b","text":"الأوردة"},{"id":"c","text":"القصبة الهوائيّة"},{"id":"d","text":"المريء"}]'::jsonb, 'a', 'الشرايينُ هي الأوعيةُ التي يخرجُ فيها الدمُ من القلب نحو الأعضاء.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('7cfe7c7b-ef68-57d9-8143-948130313ce7', '25e852eb-166d-5524-beb5-573294fd9eb6', 'ماذا ينقلُ الدمُ بعيدًا عن الأعضاء ليُطرح؟', '[{"id":"a","text":"ثاني أكسيد الكربون والفضلات"},{"id":"b","text":"الأكسجين والمغذّيات"},{"id":"c","text":"العظامَ والعضلات"},{"id":"d","text":"الكريّاتِ الحمراء فقط"}]'::jsonb, 'a', 'يحملُ الدمُ ثاني أكسيد الكربون والفضلاتِ بعيدًا عن الأعضاء لطرحها (عبر الرئتين والكلى).', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('2841e9e5-9800-5ec2-bf00-6f62c4357b3e', '25e852eb-166d-5524-beb5-573294fd9eb6', 'لماذا يجبُ أن يدورَ الدمُ في الجسم باستمرار؟', '[{"id":"a","text":"ليصلَ الأكسجينُ والغذاءُ إلى كلّ الخلايا"},{"id":"b","text":"ليبقى الجسمُ ساكنًا"},{"id":"c","text":"ليصنعَ الهواء"},{"id":"d","text":"ليُوقفَ نبضَ القلب"}]'::jsonb, 'a', 'دورانُ الدم المستمرُّ يضمنُ وصولَ الأكسجين والغذاء لكلّ خلايا الجسم وإزالةَ الفضلات.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('6fbf4970-b44d-57ae-8fef-942a73ec719d', '25e852eb-166d-5524-beb5-573294fd9eb6', 'لماذا تكثرُ الكريّاتُ الحمراء في الدم؟', '[{"id":"a","text":"لأنّها تنقلُ الأكسجينَ إلى كلّ الجسم"},{"id":"b","text":"لأنّها تهضمُ الطعام"},{"id":"c","text":"لأنّها تصنعُ العظام"},{"id":"d","text":"لأنّها تطردُ العرق"}]'::jsonb, 'a', 'يحتاجُ الجسمُ كمّيّةً كبيرةً من الأكسجين، لذلك تكثرُ الكريّاتُ الحمراءُ الناقلةُ له.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('5a8adbb4-f4f5-51ac-bbee-71e52c439c0a', 'a5efe929-363c-5e01-a9bc-06eff4fbe288', 'eveil-scientifique-6eme', '⭐⭐ تمرين مراجعة (نمط امتحان): الدم', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('5346b05b-37c7-5fd6-aeda-1ef357eb8278', '5a8adbb4-f4f5-51ac-bbee-71e52c439c0a', 'ممّ يتكوّنُ الدم؟', '[{"id":"a","text":"بلازما وكريّات حمراء وبيضاء وصفيحات"},{"id":"b","text":"ماءٍ وملحٍ فقط"},{"id":"c","text":"عظامٍ وعضلات"},{"id":"d","text":"أكسجينٍ وحدَه"}]'::jsonb, 'a', 'يتكوّنُ الدمُ من البلازما والكريّات الحمراء والكريّات البيضاء والصفيحات الدمويّة.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('38dc6a97-457f-5c42-b02e-069a87a11bc3', '5a8adbb4-f4f5-51ac-bbee-71e52c439c0a', 'ما الذي ينقلُ الأكسجينَ في الدم؟', '[{"id":"a","text":"الكريّات الحمراء"},{"id":"b","text":"الكريّات البيضاء"},{"id":"c","text":"الصفيحات"},{"id":"d","text":"البلازما وحدها"}]'::jsonb, 'a', 'الكريّاتُ الحمراء هي ناقلُ الأكسجين في الدم.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('fbd347fa-698b-5e74-9e4c-049422a29781', '5a8adbb4-f4f5-51ac-bbee-71e52c439c0a', 'ما العضو المضخّةُ في جهاز الدوران؟', '[{"id":"a","text":"القلب"},{"id":"b","text":"الرئة"},{"id":"c","text":"الكبد"},{"id":"d","text":"المعدة"}]'::jsonb, 'a', 'القلبُ هو المضخّةُ التي تحرّكُ الدمَ في الأوعية.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('87623f38-b4f1-5bed-ab71-9b216463a61b', '5a8adbb4-f4f5-51ac-bbee-71e52c439c0a', 'الأوردةُ هي الأوعيةُ التي يرجعُ فيها الدمُ إلى:', '[{"id":"a","text":"القلب"},{"id":"b","text":"الرئة مباشرة فقط"},{"id":"c","text":"المعدة"},{"id":"d","text":"الجلد"}]'::jsonb, 'a', 'الأوردةُ تُرجعُ الدمَ إلى القلب، بينما الشرايينُ تُخرجُه منه.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('dfcb43b3-6192-5598-8236-2bcce1004488', '5a8adbb4-f4f5-51ac-bbee-71e52c439c0a', 'ما دورُ الكريّات البيضاء؟', '[{"id":"a","text":"الدفاعُ عن الجسم ومحاربةُ الميكروبات"},{"id":"b","text":"نقلُ الأكسجين"},{"id":"c","text":"إيقافُ النزيف"},{"id":"d","text":"ضخُّ الدم"}]'::jsonb, 'a', 'الكريّاتُ البيضاء جنودُ الجسم: تدافعُ عنه وتحاربُ الميكروبات.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('deda32eb-75cc-532a-bfbd-f824f2f9d810', '5a8adbb4-f4f5-51ac-bbee-71e52c439c0a', 'عند جرحِ إصبعك يسيلُ الدمُ ثمّ يتوقّف. ما الذي ساعدَ على إيقافه؟', '[{"id":"a","text":"الصفيحات الدمويّة"},{"id":"b","text":"الكريّات الحمراء"},{"id":"c","text":"البلازما وحدها"},{"id":"d","text":"الأكسجين"}]'::jsonb, 'a', 'الصفيحاتُ الدمويّة تُحدثُ تخثّرَ الدم فيتوقّفُ النزيف.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('d97ff5d4-e6f6-54be-8c0f-eaf6fe2e1a2a', 'a5efe929-363c-5e01-a9bc-06eff4fbe288', 'eveil-scientifique-6eme', '👑 تحدّي النخبة ⭐⭐⭐⭐: سيّدُ جهاز الدوران', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('811267f4-0bee-574b-b9f1-76291e74a596', 'd97ff5d4-e6f6-54be-8c0f-eaf6fe2e1a2a', 'أيُّ مكوّنٍ من الدم يدافعُ عن الجسم ضدّ الميكروبات؟', '[{"id":"a","text":"الكريّات البيضاء"},{"id":"b","text":"الكريّات الحمراء"},{"id":"c","text":"الصفيحات"},{"id":"d","text":"البلازما"}]'::jsonb, 'a', 'الكريّاتُ البيضاء هي خطُّ الدفاع الذي يحاربُ الميكروباتِ في الجسم.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('d96dc9dc-8f78-5259-aded-3995906da600', 'd97ff5d4-e6f6-54be-8c0f-eaf6fe2e1a2a', 'ما العلاقةُ بين الدم والتنفّس؟', '[{"id":"a","text":"الدمُ يحملُ الأكسجينَ من الرئتين إلى الأعضاء"},{"id":"b","text":"لا علاقةَ بينهما"},{"id":"c","text":"الدمُ يصنعُ الهواء"},{"id":"d","text":"الدمُ يطردُ الأكسجين خارج الجسم"}]'::jsonb, 'a', 'في الرئتين يلتقطُ الدمُ الأكسجينَ، ثمّ ينقلُه إلى كلّ أعضاء الجسم.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('995f1b02-168d-59ae-b2b3-d84204c67ed9', 'd97ff5d4-e6f6-54be-8c0f-eaf6fe2e1a2a', 'ما العلاقةُ بين الدم والتغذية؟', '[{"id":"a","text":"الدمُ ينقلُ المغذّياتِ من الأمعاء إلى الأعضاء"},{"id":"b","text":"الدمُ يهضمُ الطعام"},{"id":"c","text":"الدمُ يصنعُ الطعام"},{"id":"d","text":"لا علاقةَ بينهما"}]'::jsonb, 'a', 'بعد الهضم تمتصُّ الأمعاءُ المغذّيات، فينقلُها الدمُ إلى أعضاء الجسم.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('b13a435f-81ba-57b4-b009-54a8978d619d', 'd97ff5d4-e6f6-54be-8c0f-eaf6fe2e1a2a', 'ما الفرقُ بين الشريان والوريد؟', '[{"id":"a","text":"الشريانُ يُخرجُ الدمَ من القلب، والوريدُ يُرجعُه إليه"},{"id":"b","text":"كلاهما يُخرجُ الدمَ من القلب"},{"id":"c","text":"الوريدُ ينقلُ الهواء"},{"id":"d","text":"لا فرقَ بينهما"}]'::jsonb, 'a', 'الشرايينُ تحملُ الدمَ خارجًا من القلب، والأوردةُ تُعيدُه إلى القلب.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('da55f641-4fd9-5828-8444-472d2388d0fb', 'd97ff5d4-e6f6-54be-8c0f-eaf6fe2e1a2a', 'ماذا يحدثُ لو توقّفَ القلبُ عن ضخّ الدم؟', '[{"id":"a","text":"يتوقّفُ وصولُ الأكسجين والغذاء إلى الأعضاء"},{"id":"b","text":"يتحسّنُ نشاطُ الأعضاء"},{"id":"c","text":"يزدادُ الأكسجينُ في الجسم"},{"id":"d","text":"لا يتغيّرُ شيء"}]'::jsonb, 'a', 'بدون ضخّ القلب لا يصلُ الأكسجينُ والغذاءُ إلى الأعضاء، فيتوقّفُ نشاطُها.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('0c4cd92f-70c9-5c7a-a1f6-af7d4570dc3f', 'd97ff5d4-e6f6-54be-8c0f-eaf6fe2e1a2a', 'مريضٌ شاحبُ اللون ومُتعَبٌ بسبب نقصٍ في كريّاته الحمراء. ما التفسيرُ العلميّ؟', '[{"id":"a","text":"نقصُ الكريّات الحمراء يقلّلُ نقلَ الأكسجين"},{"id":"b","text":"زيادةُ الأكسجين في جسمه"},{"id":"c","text":"كثرةُ الكريّات الحمراء"},{"id":"d","text":"زيادةُ ضخّ القلب"}]'::jsonb, 'a', 'لأنّ الكريّاتِ الحمراء تنقلُ الأكسجين، فنقصُها يقلّلُ الأكسجينَ الواصلَ للأعضاء فيظهرُ الشحوبُ والتعب.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('69aa3ace-412d-5b40-9cef-44addf566012', 'a5efe929-363c-5e01-a9bc-06eff4fbe288', 'eveil-scientifique-6eme', '📝 تدريب ⭐⭐⭐: مراجعةٌ شاملةٌ للدم', 3, 120, 30, 'boss', 'admin', 5)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('7a23f433-a990-549e-8e5b-42066890bf8b', '69aa3ace-412d-5b40-9cef-44addf566012', 'ما العضو الذي يضخُّ الدم؟', '[{"id":"a","text":"القلب"},{"id":"b","text":"الرئة"},{"id":"c","text":"المعدة"},{"id":"d","text":"العين"}]'::jsonb, 'a', 'القلبُ مضخّةُ الدم التي تعملُ دون توقّف.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('200f2a92-1c5e-5594-bd59-6bac9037abf7', '69aa3ace-412d-5b40-9cef-44addf566012', 'الكريّاتُ الحمراء تنقلُ:', '[{"id":"a","text":"الأكسجين"},{"id":"b","text":"العظام"},{"id":"c","text":"الميكروبات"},{"id":"d","text":"الماءَ فقط"}]'::jsonb, 'a', 'الكريّاتُ الحمراء تنقلُ الأكسجينَ إلى أعضاء الجسم.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('f7e5501e-298d-5303-9222-88503da6124d', '69aa3ace-412d-5b40-9cef-44addf566012', 'ما دورُ الكريّات البيضاء؟', '[{"id":"a","text":"الدفاعُ عن الجسم"},{"id":"b","text":"نقلُ الأكسجين"},{"id":"c","text":"تخثّرُ الدم"},{"id":"d","text":"ضخُّ الدم"}]'::jsonb, 'a', 'الكريّاتُ البيضاء تدافعُ عن الجسم وتحاربُ الميكروبات.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('82e16296-f6d6-57b6-927e-04c21c48ac31', '69aa3ace-412d-5b40-9cef-44addf566012', 'ماذا ينقلُ الدمُ انطلاقًا من الأمعاء؟', '[{"id":"a","text":"المغذّيات"},{"id":"b","text":"الهواءَ فقط"},{"id":"c","text":"العظام"},{"id":"d","text":"العرق"}]'::jsonb, 'a', 'تمتصُّ الأمعاءُ المغذّياتِ من الطعام فينقلُها الدمُ إلى الأعضاء.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('198f99da-24d1-5be9-984c-4c2b81154870', '69aa3ace-412d-5b40-9cef-44addf566012', 'ما الذي يوقفُ النزيفَ عند الجرح؟', '[{"id":"a","text":"الصفيحات الدمويّة"},{"id":"b","text":"الكريّات الحمراء"},{"id":"c","text":"الأكسجين"},{"id":"d","text":"البلازما وحدها"}]'::jsonb, 'a', 'الصفيحاتُ الدمويّة تُسبّبُ تخثّرَ الدم فيتوقّفُ النزيف.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('70237436-444d-5abf-912c-37e00c8aa73b', '69aa3ace-412d-5b40-9cef-44addf566012', 'لماذا يُعدُّ الدمُ مهمًّا للحياة؟', '[{"id":"a","text":"لأنّه ينقلُ الأكسجينَ والغذاءَ ويزيلُ الفضلات"},{"id":"b","text":"لأنّه يصنعُ الهواء"},{"id":"c","text":"لأنّه يبرّدُ الجلدَ فقط"},{"id":"d","text":"لأنّه يُنتجُ العظام"}]'::jsonb, 'a', 'الدمُ يحفظُ الحياةَ لأنّه ينقلُ الأكسجينَ والمغذّياتِ لكلّ الأعضاء ويُبعدُ الفضلات.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('1d0412f9-ef6c-5479-84a2-2e542351f305', 'dcc4acda-70b9-50dd-b4f2-b161b7ddd292', 'eveil-scientifique-6eme', 'اختبار فهم الدرس ⭐', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('598dcf22-8f0d-56ce-af19-6b95c7a7fdeb', '1d0412f9-ef6c-5479-84a2-2e542351f305', 'الأغذيةُ البانية (كاللحوم والبيض) تُستعملُ أساسًا لـ:', '[{"id":"a","text":"بناء الجسم ونموّه"},{"id":"b","text":"إمداد الجسم بالطاقة فقط"},{"id":"c","text":"تبريد الجسم"},{"id":"d","text":"تلوين الجلد"}]'::jsonb, 'a', 'الأغذيةُ البانية (بروتينات) تُستعملُ لبناء الجسم ونموّه وترميم أنسجته.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('da6185d0-9015-526f-936e-d63ab33167ec', '1d0412f9-ef6c-5479-84a2-2e542351f305', 'الأغذيةُ الطاقيّة (كالخبز والأرز) تمدُّ الجسمَ بـ:', '[{"id":"a","text":"الطاقة"},{"id":"b","text":"الفيتامينات فقط"},{"id":"c","text":"الميكروبات"},{"id":"d","text":"الهواء"}]'::jsonb, 'a', 'الأغذيةُ الطاقيّة (سكّريات ودهون) تمدُّ الجسمَ بالطاقة اللازمة للحركة والنشاط.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('f9230061-659f-5ead-b17e-a9d0010fb4ba', '1d0412f9-ef6c-5479-84a2-2e542351f305', 'أيُّ هذه أغذيةٌ واقية؟', '[{"id":"a","text":"الخضر والغلال"},{"id":"b","text":"اللحوم الحمراء"},{"id":"c","text":"الزيت والزبدة"},{"id":"d","text":"السكّر"}]'::jsonb, 'a', 'الخضرُ والغلالُ أغذيةٌ واقية، فهي غنيّةٌ بالفيتامينات والأملاح التي تقي من الأمراض.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('ec33c552-5786-5491-9e34-996aa80fa514', '1d0412f9-ef6c-5479-84a2-2e542351f305', 'ما الوجبةُ الغذائيّةُ المتوازنة؟', '[{"id":"a","text":"التي تجمعُ الأصناف الثلاثة بنسبٍ مناسبة"},{"id":"b","text":"التي تتكوّنُ من السكّر فقط"},{"id":"c","text":"أكبرُ كمّيّةٍ ممكنةٍ من الطعام"},{"id":"d","text":"اللحومُ فقط"}]'::jsonb, 'a', 'الوجبةُ المتوازنة تجمعُ الأغذيةَ البانية والطاقيّة والواقية بكمّيّاتٍ مناسبة.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('ff7b5569-9796-5ac6-a861-0e8dc4336867', '1d0412f9-ef6c-5479-84a2-2e542351f305', 'الإفراطُ في السكّريات والدهون قد يسبّبُ:', '[{"id":"a","text":"السمنة وتسوّس الأسنان"},{"id":"b","text":"زيادةَ الذكاء"},{"id":"c","text":"نموًّا أسرعَ للعظام"},{"id":"d","text":"لا شيءَ إطلاقًا"}]'::jsonb, 'a', 'كثرةُ السكّريات والدهون تؤدّي إلى السمنة وإلى تسوّس الأسنان.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('a1223f64-4330-52b5-8b8a-ae4694a55832', 'dcc4acda-70b9-50dd-b4f2-b161b7ddd292', 'eveil-scientifique-6eme', '⭐ تمرين: أوّلُ خطوات مع التغذية', 1, 50, 10, 'practice', 'admin', 1)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('728bd33e-bc94-5853-816f-e757c62a2534', 'a1223f64-4330-52b5-8b8a-ae4694a55832', 'اللحومُ والبيضُ والحليب أغذيةٌ:', '[{"id":"a","text":"بانية"},{"id":"b","text":"طاقيّة"},{"id":"c","text":"واقية"},{"id":"d","text":"ضارّة"}]'::jsonb, 'a', 'اللحومُ والبيضُ والحليب أغذيةٌ بانية تساعدُ على بناء الجسم ونموّه.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('fdb90979-16b6-58ad-b6d0-f774fe4fa0cd', 'a1223f64-4330-52b5-8b8a-ae4694a55832', 'الخبزُ والأرزُ والسكّر أغذيةٌ:', '[{"id":"a","text":"طاقيّة"},{"id":"b","text":"بانية"},{"id":"c","text":"واقية"},{"id":"d","text":"معدنيّة"}]'::jsonb, 'a', 'الخبزُ والأرزُ والسكّر أغذيةٌ طاقيّة تمدُّ الجسمَ بالطاقة.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('e64affef-a984-594f-8854-a74afeea2a04', 'a1223f64-4330-52b5-8b8a-ae4694a55832', 'الخضرُ والغلالُ أغذيةٌ:', '[{"id":"a","text":"واقية"},{"id":"b","text":"بانية"},{"id":"c","text":"طاقيّة فقط"},{"id":"d","text":"بلا فائدة"}]'::jsonb, 'a', 'الخضرُ والغلالُ أغذيةٌ واقية غنيّةٌ بالفيتامينات والأملاح المعدنيّة.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('77812901-dfc7-58f1-ab41-2e518f9d1e5f', 'a1223f64-4330-52b5-8b8a-ae4694a55832', 'أيُّ شرابٍ ضروريٌّ لكلّ وظائف الجسم؟', '[{"id":"a","text":"الماء"},{"id":"b","text":"المشروباتُ الغازيّة"},{"id":"c","text":"القهوة"},{"id":"d","text":"العصيرُ المحلّى"}]'::jsonb, 'a', 'الماءُ ضروريٌّ لكلّ وظائف الجسم، ولا يمكنُ الاستغناءُ عنه.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('b994ad66-2f09-5b3e-b031-152ba52996df', 'a1223f64-4330-52b5-8b8a-ae4694a55832', 'ما وظيفةُ الأغذية البانية؟', '[{"id":"a","text":"بناءُ الجسم ونموّه"},{"id":"b","text":"تبريدُ الجسم"},{"id":"c","text":"إنتاجُ الهواء"},{"id":"d","text":"تلوينُ البشرة"}]'::jsonb, 'a', 'الأغذيةُ البانية مسؤولةٌ عن بناء الجسم ونموّه وترميم أنسجته.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('cf5bedb3-703f-54a9-b9b2-cccb424ef271', 'a1223f64-4330-52b5-8b8a-ae4694a55832', 'ما وظيفةُ الأغذية الطاقيّة؟', '[{"id":"a","text":"إمدادُ الجسم بالطاقة"},{"id":"b","text":"بناءُ العضلات فقط"},{"id":"c","text":"محاربةُ الميكروبات"},{"id":"d","text":"إيقافُ النزيف"}]'::jsonb, 'a', 'الأغذيةُ الطاقيّة تمدُّ الجسمَ بالطاقة اللازمة للحركة والنشاط.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('259fd70b-0e26-583e-941d-5b8ff81932c2', 'dcc4acda-70b9-50dd-b4f2-b161b7ddd292', 'eveil-scientifique-6eme', '⚔️ زعيم الفصل ⭐⭐⭐: تحدّي التغذية', 3, 120, 30, 'boss', 'admin', 2)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('3fa136f8-5cb2-574b-9e29-3a498c81f9fc', '259fd70b-0e26-583e-941d-5b8ff81932c2', 'الأغذيةُ الواقية تأتي أساسًا من:', '[{"id":"a","text":"الخضر والغلال"},{"id":"b","text":"اللحوم والأسماك"},{"id":"c","text":"الزيوت والدهون"},{"id":"d","text":"الحلويات"}]'::jsonb, 'a', 'الخضرُ والغلالُ مصدرٌ أساسيٌّ للأغذية الواقية (فيتامينات وأملاح معدنيّة).', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('f0051dd3-2108-542f-9056-d381d5a66bb2', '259fd70b-0e26-583e-941d-5b8ff81932c2', 'ما الذي يميّزُ الوجبةَ المتوازنة؟', '[{"id":"a","text":"احتواؤها على الأصناف الثلاثة بنسبٍ مناسبة"},{"id":"b","text":"احتواؤها على صنفٍ واحدٍ فقط"},{"id":"c","text":"كثرةُ الحلويات فيها"},{"id":"d","text":"خلوّها من الماء"}]'::jsonb, 'a', 'الوجبةُ المتوازنة تحتوي الأصنافَ الثلاثة (بانية وطاقيّة وواقية) بكمّيّاتٍ مناسبة.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('f752a0de-59fc-5806-9508-122a259aadf2', '259fd70b-0e26-583e-941d-5b8ff81932c2', 'لماذا يحتاجُ الرياضيُّ إلى طاقةٍ أكثر من غيره؟', '[{"id":"a","text":"لأنّ نشاطَه البدنيَّ أكبر"},{"id":"b","text":"لأنّه ينامُ أكثر"},{"id":"c","text":"لأنّه لا يتحرّك"},{"id":"d","text":"لأنّ جسمَه لا يحتاجُ غذاءً"}]'::jsonb, 'a', 'يستهلكُ الرياضيُّ طاقةً كبيرةً في الحركة، فيحتاجُ أغذيةً طاقيّةً أكثر.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('05ccad0d-d28d-5b03-9d8a-38cd65ec2946', '259fd70b-0e26-583e-941d-5b8ff81932c2', 'الإفراطُ في تناول الحلويات يؤدّي غالبًا إلى:', '[{"id":"a","text":"السمنة وتسوّس الأسنان"},{"id":"b","text":"تقويةِ النظر"},{"id":"c","text":"زيادةِ الطول فقط"},{"id":"d","text":"لا شيء"}]'::jsonb, 'a', 'كثرةُ الحلويات (سكّريات) تسبّبُ السمنةَ وتسوّسَ الأسنان.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('f11d30a2-0109-5e57-9587-d17ba1364d2d', '259fd70b-0e26-583e-941d-5b8ff81932c2', 'نقصُ الحديد في الغذاء قد يؤدّي إلى:', '[{"id":"a","text":"فقر الدم"},{"id":"b","text":"زيادةِ الوزن"},{"id":"c","text":"قوّةِ العضلات"},{"id":"d","text":"تحسّنِ البصر"}]'::jsonb, 'a', 'الحديدُ ضروريٌّ لتكوين الكريّات الحمراء، فنقصُه يسبّبُ فقرَ الدم.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('03573208-af6c-5ed7-9d4c-6c73be6b8e0c', '259fd70b-0e26-583e-941d-5b8ff81932c2', 'لماذا يُنصحُ بتنويع الغذاء؟', '[{"id":"a","text":"ليحصلَ الجسمُ على كلّ ما يحتاجُه من الأصناف"},{"id":"b","text":"ليأكلَ الإنسانُ أكثر دائمًا"},{"id":"c","text":"لأنّ صنفًا واحدًا يكفي الجسمَ تمامًا"},{"id":"d","text":"لتلوين الطبق فقط"}]'::jsonb, 'a', 'كلُّ صنفٍ يقدّمُ فائدةً مختلفة، فتنويعُ الغذاء يضمنُ حصولَ الجسم على كلّ حاجاته.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('93b390db-d856-50d9-8cc7-74dc537f737d', 'dcc4acda-70b9-50dd-b4f2-b161b7ddd292', 'eveil-scientifique-6eme', '⭐⭐ تمرين مراجعة (نمط امتحان): التغذية', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('e611dbfd-ac17-5584-b1b0-6dbe0c407730', '93b390db-d856-50d9-8cc7-74dc537f737d', 'صنّفِ السمكَ ضمن الأغذية:', '[{"id":"a","text":"البانية"},{"id":"b","text":"الطاقيّة"},{"id":"c","text":"الواقية"},{"id":"d","text":"المعدنيّة"}]'::jsonb, 'a', 'السمكُ غذاءٌ بانٍ غنيٌّ بالبروتينات التي تبني الجسم.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('1cad21f2-f878-55cf-9553-a5b25b154c08', '93b390db-d856-50d9-8cc7-74dc537f737d', 'صنّفِ الزيتَ ضمن الأغذية:', '[{"id":"a","text":"الطاقيّة"},{"id":"b","text":"البانية"},{"id":"c","text":"الواقية"},{"id":"d","text":"غير الغذائيّة"}]'::jsonb, 'a', 'الزيتُ مادّةٌ دهنيّةٌ غذاؤها طاقيّ، يمدُّ الجسمَ بالطاقة.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('3d7c9686-9569-5fa3-abe2-68866ccba0d6', '93b390db-d856-50d9-8cc7-74dc537f737d', 'صنّفِ البرتقالَ ضمن الأغذية:', '[{"id":"a","text":"الواقية"},{"id":"b","text":"البانية"},{"id":"c","text":"الطاقيّة فقط"},{"id":"d","text":"الضارّة"}]'::jsonb, 'a', 'البرتقالُ من الغلال، وهو غذاءٌ واقٍ غنيٌّ بالفيتامينات.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('f37d1227-5fed-5f71-b7cf-911057ed7cbc', '93b390db-d856-50d9-8cc7-74dc537f737d', 'ما الذي يميّزُ وجبةً متوازنة؟', '[{"id":"a","text":"تنوّعُ الأصناف بكمّيّاتٍ مناسبة"},{"id":"b","text":"صنفٌ واحدٌ بكمّيّةٍ كبيرة"},{"id":"c","text":"حلوياتٌ فقط"},{"id":"d","text":"غيابُ الخضر والغلال"}]'::jsonb, 'a', 'الوجبةُ المتوازنة تتميّزُ بتنوّع أصنافها بكمّيّاتٍ مناسبة.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('b84472e9-1a12-5a28-bbb7-483090ff55b9', '93b390db-d856-50d9-8cc7-74dc537f737d', 'ما سببُ الهزال وضعف النموّ عند الطفل؟', '[{"id":"a","text":"نقصُ الغذاء (سوء تغذية)"},{"id":"b","text":"الإفراطُ في الخضر"},{"id":"c","text":"شربُ الماء"},{"id":"d","text":"النومُ الكافي"}]'::jsonb, 'a', 'نقصُ الغذاء يحرمُ الجسمَ من حاجاته، فيؤدّي إلى الهزال وضعف النموّ.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('4c6305b4-68c8-53bf-9c67-37683416661d', '93b390db-d856-50d9-8cc7-74dc537f737d', 'طفلٌ يأكلُ الحلويات فقط ويُهملُ بقيّةَ الأصناف. ما الخطرُ على صحّته؟', '[{"id":"a","text":"سوءُ تغذيةٍ ونقصٌ في الأغذية البانية والواقية"},{"id":"b","text":"صحّةٌ مثاليّة"},{"id":"c","text":"نموٌّ متوازن"},{"id":"d","text":"مناعةٌ قويّة"}]'::jsonb, 'a', 'الاقتصارُ على الحلويات يحرمُ الجسمَ من الأغذية البانية والواقية ويسبّبُ سوءَ تغذية.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('6c647109-fa0a-5dd0-992a-37912e24f1c5', 'dcc4acda-70b9-50dd-b4f2-b161b7ddd292', 'eveil-scientifique-6eme', '👑 تحدّي النخبة ⭐⭐⭐⭐: سيّدُ التغذية', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('0b597e1c-2c66-5072-b8bb-188d2955bffb', '6c647109-fa0a-5dd0-992a-37912e24f1c5', 'نقصُ أيِّ عنصرٍ في الغذاء يسبّبُ فقرَ الدم؟', '[{"id":"a","text":"الحديد"},{"id":"b","text":"السكّر"},{"id":"c","text":"الزيت"},{"id":"d","text":"الملح"}]'::jsonb, 'a', 'الحديدُ لازمٌ لتكوين الكريّات الحمراء، فنقصُه يؤدّي إلى فقر الدم.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('cae8c318-5cb1-53e1-9207-61b6eea69920', '6c647109-fa0a-5dd0-992a-37912e24f1c5', 'وجبةٌ فيها لحمٌ وأرزٌ وسلطةٌ خضراء. هل هي متوازنة؟', '[{"id":"a","text":"نعم، فهي تجمعُ بانيًا وطاقيًّا وواقيًا"},{"id":"b","text":"لا، لأنّها تنقصُها الحلويات"},{"id":"c","text":"لا، لأنّ فيها أصنافًا كثيرة"},{"id":"d","text":"نعم، لأنّها كلُّها لحوم"}]'::jsonb, 'a', 'اللحمُ بانٍ والأرزُ طاقيٌّ والسلطةُ واقية، فالوجبةُ تجمعُ الأصنافَ الثلاثة فهي متوازنة.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('74774f6f-ead4-59ce-91dd-8c37a9ad15b9', '6c647109-fa0a-5dd0-992a-37912e24f1c5', 'لماذا يُنصحُ بالتقليل من السكّر؟', '[{"id":"a","text":"لتجنّب السمنة وتسوّس الأسنان"},{"id":"b","text":"لأنّ السكّرَ يبني العضلات"},{"id":"c","text":"لأنّه يقي من كلّ الأمراض"},{"id":"d","text":"لأنّه غذاءٌ بانٍ"}]'::jsonb, 'a', 'الإفراطُ في السكّر يسبّبُ السمنةَ وتسوّسَ الأسنان، لذلك يُنصحُ بالتقليل منه.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('7cfb07f9-0b74-5ef3-b5b6-b57275fcde39', '6c647109-fa0a-5dd0-992a-37912e24f1c5', 'أيُّ مجموعةٍ غذائيّةٍ مسؤولةٌ أساسًا عن بناء العضلات؟', '[{"id":"a","text":"الأغذية البانية (البروتينات)"},{"id":"b","text":"الأغذية الطاقيّة"},{"id":"c","text":"الماء وحده"},{"id":"d","text":"السكّريات"}]'::jsonb, 'a', 'البروتينات في الأغذية البانية هي التي تبني العضلاتِ وأنسجةَ الجسم.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('35d47135-093a-5bc5-aa71-00cbd54a5e29', '6c647109-fa0a-5dd0-992a-37912e24f1c5', 'عدّاءُ مسافاتٍ طويلة يحتاجُ بكثرةٍ إلى:', '[{"id":"a","text":"الأغذية الطاقيّة"},{"id":"b","text":"الفيتامينات وحدها"},{"id":"c","text":"تقليل كلّ الطعام"},{"id":"d","text":"الماء فقط دون طعام"}]'::jsonb, 'a', 'الجريُ الطويلُ يستهلكُ طاقةً كبيرة، فيحتاجُ العدّاءُ أغذيةً طاقيّةً وافرة.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('d8fae5a7-b5ba-5410-8f2f-effd0afeb672', '6c647109-fa0a-5dd0-992a-37912e24f1c5', 'لماذا تبقى الخضرُ والغلالُ مهمّةً رغم أنّها لا تبني ولا تعطي طاقةً كبيرة؟', '[{"id":"a","text":"لأنّها واقيةٌ تمدُّ الجسمَ بفيتاميناتٍ وأملاحٍ تقي من الأمراض"},{"id":"b","text":"لأنّها تبني العظامَ فقط"},{"id":"c","text":"لأنّها أكبرُ مصدرٍ للطاقة"},{"id":"d","text":"لأنّها بلا فائدةٍ حقيقيّة"}]'::jsonb, 'a', 'دورُ الخضر والغلال وقائيٌّ: تمدُّ الجسمَ بالفيتامينات والأملاح المعدنيّة التي تحميه من الأمراض.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('e5fb5a0a-624e-5402-b813-fea1d2e80fd0', 'dcc4acda-70b9-50dd-b4f2-b161b7ddd292', 'eveil-scientifique-6eme', '📝 تدريب ⭐⭐⭐: مراجعةٌ شاملةٌ للتغذية', 3, 120, 30, 'boss', 'admin', 5)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('27b32498-29b4-58ca-9e78-ae91c64c8872', 'e5fb5a0a-624e-5402-b813-fea1d2e80fd0', 'من أمثلة الأغذية البانية:', '[{"id":"a","text":"اللحوم والبيض والحليب"},{"id":"b","text":"الخبز والأرز"},{"id":"c","text":"الخضر والغلال"},{"id":"d","text":"الماء فقط"}]'::jsonb, 'a', 'اللحومُ والبيضُ والحليب أمثلةٌ على الأغذية البانية الغنيّة بالبروتينات.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('340967fe-54ec-5093-b4e6-c4f010d6493c', 'e5fb5a0a-624e-5402-b813-fea1d2e80fd0', 'من أمثلة الأغذية الطاقيّة:', '[{"id":"a","text":"الخبز والأرز والزيت"},{"id":"b","text":"اللحوم والسمك"},{"id":"c","text":"الخضر والغلال"},{"id":"d","text":"الفيتامينات"}]'::jsonb, 'a', 'الخبزُ والأرزُ والزيت أغذيةٌ طاقيّة تمدُّ الجسمَ بالطاقة.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('b04a5bbe-62b0-5aeb-8e73-d09f158a1efe', 'e5fb5a0a-624e-5402-b813-fea1d2e80fd0', 'من أمثلة الأغذية الواقية:', '[{"id":"a","text":"الخضر والغلال"},{"id":"b","text":"اللحوم"},{"id":"c","text":"السكّر"},{"id":"d","text":"الزبدة"}]'::jsonb, 'a', 'الخضرُ والغلالُ أغذيةٌ واقيةٌ غنيّةٌ بالفيتامينات والأملاح.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('a9f28943-cd78-59c0-9ec2-f4ca21e6d665', 'e5fb5a0a-624e-5402-b813-fea1d2e80fd0', 'ما تعريفُ الوجبة المتوازنة؟', '[{"id":"a","text":"التي تجمعُ الأصناف الثلاثة بنسبٍ مناسبة"},{"id":"b","text":"التي تحتوي صنفًا واحدًا بكثرة"},{"id":"c","text":"أكبرُ كمّيّةٍ من الحلويات"},{"id":"d","text":"وجبةٌ بلا ماء"}]'::jsonb, 'a', 'الوجبةُ المتوازنة هي التي تجمعُ الأغذيةَ البانية والطاقيّة والواقية بنسبٍ مناسبة.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('d2effcaa-5c75-55f3-9d0f-6f91896d7a6a', 'e5fb5a0a-624e-5402-b813-fea1d2e80fd0', 'أيُّ مرضٍ قد ينتجُ عن الإفراط في الغذاء؟', '[{"id":"a","text":"السمنة"},{"id":"b","text":"الهزال"},{"id":"c","text":"فقر الدم بسبب نقص الحديد"},{"id":"d","text":"ضعفُ النموّ"}]'::jsonb, 'a', 'الإفراطُ في الغذاء (خاصّةً الدهون والسكّريات) يؤدّي إلى السمنة.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('f466f465-4355-5fed-bd9b-0337ac97e29a', 'e5fb5a0a-624e-5402-b813-fea1d2e80fd0', 'لماذا تُعدُّ التغذيةُ السليمةُ مهمّة؟', '[{"id":"a","text":"لنموّ الجسم ونشاطه ووقايته من الأمراض"},{"id":"b","text":"لزيادة الوزن دائمًا"},{"id":"c","text":"لتلوين الطعام"},{"id":"d","text":"لا أهمّيةَ لها"}]'::jsonb, 'a', 'التغذيةُ السليمة تضمنُ نموَّ الجسم ونشاطَه ووقايتَه من الأمراض.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('aecf02b2-d4c6-5cc5-867f-38928ffbdb57', '9ba90402-06a3-5fc3-84bf-8c80671bb811', 'eveil-scientifique-6eme', 'اختبار فهم الدرس ⭐', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('1ddefae2-932b-55ce-83ea-8c745346b781', 'aecf02b2-d4c6-5cc5-867f-38928ffbdb57', 'مَنِ المُنتِجُ في السلسلة الغذائية؟', '[{"id":"a","text":"النبات الأخضر"},{"id":"b","text":"الحيوان العاشب"},{"id":"c","text":"الحيوان اللاحم"},{"id":"d","text":"الإنسان فقط"}]'::jsonb, 'a', 'النباتُ الأخضرُ هو المُنتِج لأنّه يصنعُ غذاءَه بنفسه، فهو أوّلُ حلقةٍ في السلسلة.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('a2106db2-cacb-51c3-b71b-d1189eb3dc1e', 'aecf02b2-d4c6-5cc5-867f-38928ffbdb57', 'المستهلِكُ الأوّلُ حيوانٌ:', '[{"id":"a","text":"عاشبٌ يأكلُ النبات"},{"id":"b","text":"لاحمٌ يأكلُ الأسود"},{"id":"c","text":"يصنعُ غذاءَه بنفسه"},{"id":"d","text":"لا يأكلُ شيئًا"}]'::jsonb, 'a', 'المستهلِكُ الأوّلُ حيوانٌ عاشبٌ يتغذّى على النبات (المُنتِج).', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('33092fc0-5b35-5d31-be3a-b98dd2ad8074', 'aecf02b2-d4c6-5cc5-867f-38928ffbdb57', 'في أيِّ اتّجاهٍ يسيرُ سهمُ السلسلة الغذائية؟', '[{"id":"a","text":"من المأكول إلى الآكل"},{"id":"b","text":"من الآكل إلى المأكول"},{"id":"c","text":"في كلّ الاتّجاهات معًا"},{"id":"d","text":"لا اتّجاهَ له"}]'::jsonb, 'a', 'السهمُ يعني «يُؤكَلُ مِن قِبَل»، فيتّجهُ من المأكول إلى الآكل.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('4603f188-7346-59a1-b447-49e499583f4e', 'aecf02b2-d4c6-5cc5-867f-38928ffbdb57', 'ماذا يحدثُ للسلسلة الغذائية إذا اختفى النبات؟', '[{"id":"a","text":"تختلُّ السلسلةُ ويتأثّرُ باقي الكائنات"},{"id":"b","text":"لا يتغيّرُ شيء"},{"id":"c","text":"تزدادُ الحيوانات قوّة"},{"id":"d","text":"تصبحُ الحيوانات نباتات"}]'::jsonb, 'a', 'النباتُ أوّلُ حلقة؛ فاختفاؤه يحرمُ العواشبَ غذاءَها فتختلُّ السلسلةُ كلُّها.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('192f1e6c-eee1-5a15-907e-e0ba2eeb7368', 'aecf02b2-d4c6-5cc5-867f-38928ffbdb57', 'من مصادر تلوّث الأوساط المائية:', '[{"id":"a","text":"النفايات والمياه المستعملة"},{"id":"b","text":"ضوءُ الشمس"},{"id":"c","text":"هبوبُ الرياح"},{"id":"d","text":"مياهُ المطر النظيفة"}]'::jsonb, 'a', 'رميُ النفايات والمياه المستعملة والمواد الكيميائيّة من أهمّ مصادر تلوّث المياه.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('02ecec19-f2c1-58c9-bb3f-5f5a83be045b', '9ba90402-06a3-5fc3-84bf-8c80671bb811', 'eveil-scientifique-6eme', '⭐ تمرين: أوّلُ خطوات مع الوسط البيئي', 1, 50, 10, 'practice', 'admin', 1)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('70e19185-686c-5957-80e1-23b4ab8910d1', '02ecec19-f2c1-58c9-bb3f-5f5a83be045b', 'ما الوسطُ البيئي؟', '[{"id":"a","text":"مكانُ عيش الكائنات الحيّة وتفاعلِها"},{"id":"b","text":"نوعٌ من الطعام"},{"id":"c","text":"آلةٌ كهربائيّة"},{"id":"d","text":"مرضٌ معدٍ"}]'::jsonb, 'a', 'الوسطُ البيئي هو المكانُ الذي تعيشُ فيه الكائناتُ الحيّة وتتفاعلُ فيما بينها ومع محيطها.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('4487ff4a-4305-59e0-aca0-70dc32f837c9', '02ecec19-f2c1-58c9-bb3f-5f5a83be045b', 'مَن يصنعُ غذاءَه بنفسه في السلسلة الغذائية؟', '[{"id":"a","text":"النبات الأخضر"},{"id":"b","text":"الأرنب"},{"id":"c","text":"الثعلب"},{"id":"d","text":"الأسد"}]'::jsonb, 'a', 'النباتُ الأخضرُ منتِجٌ يصنعُ غذاءَه بنفسه، بينما الحيواناتُ مستهلكة.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('c94f1475-70bc-59e4-84ab-bdab9703f69e', '02ecec19-f2c1-58c9-bb3f-5f5a83be045b', 'الحيوانُ العاشبُ يتغذّى على:', '[{"id":"a","text":"النبات"},{"id":"b","text":"الحجارة"},{"id":"c","text":"الماء فقط"},{"id":"d","text":"الحديد"}]'::jsonb, 'a', 'الحيوانُ العاشبُ يأكلُ النبات، فهو مستهلكٌ أوّل في السلسلة.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('2fbeb761-6f14-5efd-ac39-b57649a3860b', '02ecec19-f2c1-58c9-bb3f-5f5a83be045b', 'الحيوانُ اللاحمُ يتغذّى على:', '[{"id":"a","text":"حيواناتٍ أخرى"},{"id":"b","text":"النبات فقط"},{"id":"c","text":"الضوء"},{"id":"d","text":"التربة"}]'::jsonb, 'a', 'الحيوانُ اللاحمُ يأكلُ حيواناتٍ أخرى، فهو مستهلكٌ في مرتبةٍ أعلى.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('13666676-4288-5243-8b94-ad9144595a6c', '02ecec19-f2c1-58c9-bb3f-5f5a83be045b', 'في السلسلة «عُشب ← أرنب ← ثعلب»، مَنِ المُنتِج؟', '[{"id":"a","text":"العُشب (النبات)"},{"id":"b","text":"الأرنب"},{"id":"c","text":"الثعلب"},{"id":"d","text":"لا منتِجَ فيها"}]'::jsonb, 'a', 'العُشبُ نباتٌ أخضرُ يصنعُ غذاءَه، فهو المُنتِجُ وأوّلُ حلقةٍ في السلسلة.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('10f9124d-6062-5a14-85da-05d74a49ca63', '02ecec19-f2c1-58c9-bb3f-5f5a83be045b', 'أيٌّ ممّا يلي من مكوّنات الوسط غير الحيّة؟', '[{"id":"a","text":"الماء والهواء والتربة"},{"id":"b","text":"النباتات"},{"id":"c","text":"الحيوانات"},{"id":"d","text":"الإنسان"}]'::jsonb, 'a', 'الماءُ والهواءُ والتربةُ والضوءُ مكوّناتٌ غيرُ حيّةٍ في الوسط البيئي.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('68655d37-f975-53af-b6fb-2687adba1ce9', '9ba90402-06a3-5fc3-84bf-8c80671bb811', 'eveil-scientifique-6eme', '⚔️ زعيم الفصل ⭐⭐⭐: تحدّي الوسط البيئي', 3, 120, 30, 'boss', 'admin', 2)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('96682937-6424-5f10-9726-ea65590a5a83', '68655d37-f975-53af-b6fb-2687adba1ce9', 'المستهلِكُ الأوّلُ في السلسلة الغذائية هو:', '[{"id":"a","text":"الحيوان العاشب"},{"id":"b","text":"النبات الأخضر"},{"id":"c","text":"الحيوان اللاحم الكبير"},{"id":"d","text":"التربة"}]'::jsonb, 'a', 'المستهلِكُ الأوّلُ حيوانٌ عاشبٌ يأكلُ النباتَ مباشرةً.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('9d8d6b7e-7264-5200-bebf-f90b66b3715f', '68655d37-f975-53af-b6fb-2687adba1ce9', 'ماذا يعني السهمُ (←) في السلسلة الغذائية؟', '[{"id":"a","text":"يُؤكَلُ مِن قِبَل (من المأكول إلى الآكل)"},{"id":"b","text":"يهربُ مِن"},{"id":"c","text":"يساوي"},{"id":"d","text":"يعيشُ بعيدًا عن"}]'::jsonb, 'a', 'السهمُ يدلّ على «يُؤكَلُ مِن قِبَل»، فيتّجهُ من الكائن المأكول إلى الكائن الآكل.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('b4a1e85a-98d4-5a0f-bacb-3dc566b49cdb', '68655d37-f975-53af-b6fb-2687adba1ce9', 'في السلسلة «عُشب ← أرنب ← ثعلب»، ماذا يأكلُ الثعلب؟', '[{"id":"a","text":"الأرنب"},{"id":"b","text":"العُشب"},{"id":"c","text":"الثعالبَ الأخرى"},{"id":"d","text":"التربة"}]'::jsonb, 'a', 'في هذه السلسلة الثعلبُ لاحمٌ يأكلُ الأرنبَ (المستهلكَ الأوّل).', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('cd5c0596-3059-58d8-b7b5-fce4d0edd6fd', '68655d37-f975-53af-b6fb-2687adba1ce9', 'إذا تكاثرت الثعالبُ كثيرًا في وسطٍ ما، فماذا يحدثُ غالبًا لأعداد الأرانب؟', '[{"id":"a","text":"تتناقصُ لأنّها تُؤكَلُ أكثر"},{"id":"b","text":"تتزايدُ بقوّة"},{"id":"c","text":"لا تتغيّرُ أبدًا"},{"id":"d","text":"تتحوّلُ إلى ثعالب"}]'::jsonb, 'a', 'زيادةُ الثعالب (المفترِسات) تعني افتراسًا أكبرَ للأرانب، فيتناقصُ عددُها.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('52b6e98a-a695-538b-97a7-6c35ff5b3b38', '68655d37-f975-53af-b6fb-2687adba1ce9', 'لو اختفى النباتُ من وسطٍ بيئيّ، فما النتيجةُ المتوقّعة؟', '[{"id":"a","text":"تختلُّ السلسلةُ وتتأثّرُ بقيّةُ الكائنات"},{"id":"b","text":"تزدهرُ كلُّ الحيوانات"},{"id":"c","text":"لا أثرَ لذلك"},{"id":"d","text":"يزدادُ عددُ العواشب"}]'::jsonb, 'a', 'النباتُ قاعدةُ السلسلة؛ فاختفاؤه يحرمُ العواشبَ غذاءَها وتتأثّرُ بقيّةُ الحلقات.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('a60bb7c9-eccf-56e9-b201-a1eee0c25750', '68655d37-f975-53af-b6fb-2687adba1ce9', 'لماذا يُسمّى النباتُ الأخضرُ «منتِجًا»؟', '[{"id":"a","text":"لأنّه يصنعُ غذاءَه بنفسه"},{"id":"b","text":"لأنّه يأكلُ الحيوانات"},{"id":"c","text":"لأنّه لا يحتاجُ ضوءًا"},{"id":"d","text":"لأنّه يصنعُ الحجارة"}]'::jsonb, 'a', 'يُسمّى النباتُ منتِجًا لأنّه يصنعُ غذاءَه بنفسه ولا يعتمدُ على غيره في التغذية.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('28c17ebc-d3df-52e1-bf70-852dfb60ab2e', '9ba90402-06a3-5fc3-84bf-8c80671bb811', 'eveil-scientifique-6eme', '⭐⭐ تمرين مراجعة (نمط امتحان): الوسط البيئي', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('4e4b5c15-8899-5eaa-a3d5-d182d1069395', '28c17ebc-d3df-52e1-bf70-852dfb60ab2e', 'مَنِ المُنتِجُ دائمًا في السلسلة الغذائية؟', '[{"id":"a","text":"النبات الأخضر"},{"id":"b","text":"العاشب"},{"id":"c","text":"اللاحم"},{"id":"d","text":"الميكروب"}]'::jsonb, 'a', 'النباتُ الأخضرُ هو المنتِجُ دائمًا، فهو أوّلُ حلقةٍ تصنعُ الغذاء.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('56e31342-66d1-592b-a872-99387da8398e', '28c17ebc-d3df-52e1-bf70-852dfb60ab2e', 'المستهلِكُ الثاني غالبًا حيوانٌ:', '[{"id":"a","text":"لاحمٌ يأكلُ العاشب"},{"id":"b","text":"يصنعُ غذاءَه بنفسه"},{"id":"c","text":"يأكلُ النباتَ مباشرةً"},{"id":"d","text":"لا يأكلُ شيئًا"}]'::jsonb, 'a', 'المستهلِكُ الثاني لاحمٌ يتغذّى على المستهلك الأوّل (العاشب).', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('2dca6e5f-c324-5c69-9856-fde628426355', '28c17ebc-d3df-52e1-bf70-852dfb60ab2e', 'اتّجاهُ سهم السلسلة الغذائية يكون:', '[{"id":"a","text":"من المأكول إلى الآكل"},{"id":"b","text":"من الآكل إلى المأكول"},{"id":"c","text":"عشوائيًّا"},{"id":"d","text":"من اليمين دائمًا"}]'::jsonb, 'a', 'السهمُ يدلّ على «يُؤكَلُ مِن قِبَل»، أي يسيرُ من المأكول نحو الآكل.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('77af92ff-190d-5880-8cf0-0ab8a42f711f', '28c17ebc-d3df-52e1-bf70-852dfb60ab2e', 'من مصادر تلوّث الماء:', '[{"id":"a","text":"رميُ النفايات والمواد الكيميائيّة"},{"id":"b","text":"غرسُ الأشجار"},{"id":"c","text":"سقوطُ المطر"},{"id":"d","text":"هبوبُ النسيم"}]'::jsonb, 'a', 'رميُ النفايات والمياه المستعملة والمواد الكيميائيّة في الماء يلوّثُه.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('4f277377-e4a1-5197-a312-aeaedae93c8c', '28c17ebc-d3df-52e1-bf70-852dfb60ab2e', 'كيف نحافظُ على نظافة المياه؟', '[{"id":"a","text":"بعدم رمي الفضلات ومعالجة المياه المستعملة"},{"id":"b","text":"بإلقاء النفايات في الأنهار"},{"id":"c","text":"بسكب الزيوت في الماء"},{"id":"d","text":"بعدم استعمال الماء أبدًا"}]'::jsonb, 'a', 'نحافظُ على المياه بعدم رمي الفضلات فيها وبمعالجة المياه المستعملة قبل صرفها.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('1add8108-981a-59e8-a114-22e96465a994', '28c17ebc-d3df-52e1-bf70-852dfb60ab2e', 'لماذا تُعدُّ المياهُ الملوّثةُ خطيرة؟', '[{"id":"a","text":"لأنّها تسبّبُ أمراضًا للإنسان والكائنات"},{"id":"b","text":"لأنّها تجعلُ النباتَ ينمو أسرع"},{"id":"c","text":"لأنّها تنظّفُ الجسم"},{"id":"d","text":"لا خطرَ منها"}]'::jsonb, 'a', 'المياهُ الملوّثةُ تنقلُ الميكروباتِ والموادَّ الضارّة فتسبّبُ أمراضًا للإنسان والكائنات.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('c5cd521a-7515-5ad2-9da2-0302047934f2', '9ba90402-06a3-5fc3-84bf-8c80671bb811', 'eveil-scientifique-6eme', '👑 تحدّي النخبة ⭐⭐⭐⭐: سيّدُ الوسط البيئي', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('06fcf09f-b204-55e4-9716-52447033af38', 'c5cd521a-7515-5ad2-9da2-0302047934f2', 'في أيّة مرتبةٍ يأتي المُنتِجُ في السلسلة الغذائية؟', '[{"id":"a","text":"في البداية (الحلقة الأولى)"},{"id":"b","text":"في النهاية"},{"id":"c","text":"في الوسط دائمًا"},{"id":"d","text":"لا يدخلُ في السلسلة"}]'::jsonb, 'a', 'المُنتِجُ (النبات) هو الحلقةُ الأولى، إذ تعتمدُ عليه بقيّةُ الكائنات في غذائها.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('85629355-1dfb-5867-854d-5e90ff7a8cda', 'c5cd521a-7515-5ad2-9da2-0302047934f2', 'في السلسلة «عُشب ← غزال ← أسد»، مَنِ المستهلِكُ الأوّل؟', '[{"id":"a","text":"الغزال"},{"id":"b","text":"العُشب"},{"id":"c","text":"الأسد"},{"id":"d","text":"لا يوجد"}]'::jsonb, 'a', 'الغزالُ عاشبٌ يأكلُ العُشب، فهو المستهلِكُ الأوّل، والأسدُ لاحمٌ يأكلُ الغزال.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('e1d625de-4248-5afd-ad67-01f49bee9ba2', 'c5cd521a-7515-5ad2-9da2-0302047934f2', 'رُشَّ مبيدٌ قضى على كلّ الحشرات في حقل. ما الأثرُ المتوقّعُ على الطيور التي تتغذّى عليها؟', '[{"id":"a","text":"يقلُّ غذاؤها فيتأثّرُ عددُها"},{"id":"b","text":"يزدادُ عددُها فجأة"},{"id":"c","text":"لا تتأثّرُ إطلاقًا"},{"id":"d","text":"تتحوّلُ إلى حشرات"}]'::jsonb, 'a', 'الطيورُ تعتمدُ على الحشرات في غذائها؛ فاختفاؤها يقلّلُ غذاءَ الطيور ويؤثّرُ في أعدادها.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('54f0a1c3-ca4a-5761-b5f9-82a62c9bffa0', 'c5cd521a-7515-5ad2-9da2-0302047934f2', 'لماذا يُعدُّ التوازنُ الطبيعيُّ مهمًّا في الوسط البيئي؟', '[{"id":"a","text":"لأنّ كلَّ كائنٍ يعتمدُ على غيره في السلسلة"},{"id":"b","text":"لأنّ الكائناتِ لا تتأثّرُ ببعضها"},{"id":"c","text":"لأنّ النباتَ وحدَه يكفي"},{"id":"d","text":"لأنّه لا أهمّيةَ للتوازن"}]'::jsonb, 'a', 'التوازنُ مهمٌّ لأنّ الكائناتِ مرتبطةٌ في سلاسلَ، فاختلالُ حلقةٍ يؤثّرُ في الباقي.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('dd4301d0-a563-57ca-a2b7-17de966778d6', 'c5cd521a-7515-5ad2-9da2-0302047934f2', 'أيُّ سلوكٍ يحمي الأوساطَ المائية؟', '[{"id":"a","text":"معالجةُ المياه المستعملة قبل صرفها"},{"id":"b","text":"رميُ النفايات في النهر"},{"id":"c","text":"سكبُ الزيوت في البحر"},{"id":"d","text":"إلقاءُ المواد الكيميائيّة في الماء"}]'::jsonb, 'a', 'معالجةُ المياه المستعملة قبل إعادتها إلى الطبيعة تحمي الأوساطَ المائيّة من التلوّث.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('ee37c28b-d434-575f-a056-0f393ab6ef5b', 'c5cd521a-7515-5ad2-9da2-0302047934f2', 'لماذا لا يصحُّ عكسُ اتّجاه السهم في السلسلة الغذائية؟', '[{"id":"a","text":"لأنّه يدلُّ على من يأكلُ من؛ من المأكول إلى الآكل"},{"id":"b","text":"لأنّ السهمَ مجرّدُ زينة"},{"id":"c","text":"لأنّ الاتّجاهَ لا معنى له"},{"id":"d","text":"لأنّ النباتَ يأكلُ الحيوان"}]'::jsonb, 'a', 'السهمُ يحملُ معنى «يُؤكَلُ مِن قِبَل»؛ فعكسُه يقلبُ العلاقةَ الغذائيّةَ ويجعلُها خاطئة.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('ae6c1d5c-5cad-5808-89e8-9e1adf0bf999', '9ba90402-06a3-5fc3-84bf-8c80671bb811', 'eveil-scientifique-6eme', '📝 تدريب ⭐⭐⭐: مراجعةٌ شاملةٌ للوسط البيئي', 3, 120, 30, 'boss', 'admin', 5)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('90a55f25-585c-5d4f-a75f-def19cf984c9', 'ae6c1d5c-5cad-5808-89e8-9e1adf0bf999', 'ما السلسلةُ الغذائية؟', '[{"id":"a","text":"علاقةُ «مَن يأكلُ مَن» بين الكائنات"},{"id":"b","text":"قائمةُ مشترياتٍ للطعام"},{"id":"c","text":"نوعٌ من النباتات"},{"id":"d","text":"جهازٌ في جسم الإنسان"}]'::jsonb, 'a', 'السلسلةُ الغذائية تبيّنُ علاقةَ «مَن يأكلُ مَن» وتربطُ الكائناتِ الحيّة ببعضها.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('c87db149-cb49-563e-bb8a-1718cae44d49', 'ae6c1d5c-5cad-5808-89e8-9e1adf0bf999', 'المُنتِجُ في السلسلة هو:', '[{"id":"a","text":"النبات الأخضر"},{"id":"b","text":"العاشب"},{"id":"c","text":"اللاحم"},{"id":"d","text":"التربة"}]'::jsonb, 'a', 'النباتُ الأخضرُ منتِجٌ يصنعُ غذاءَه، وهو قاعدةُ كلّ سلسلةٍ غذائيّة.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('bfa5b9e7-418c-5904-92de-f76610812f5e', 'ae6c1d5c-5cad-5808-89e8-9e1adf0bf999', 'المستهلِكُ الأوّلُ هو:', '[{"id":"a","text":"الحيوان العاشب"},{"id":"b","text":"النبات"},{"id":"c","text":"كبيرُ اللواحم"},{"id":"d","text":"الهواء"}]'::jsonb, 'a', 'المستهلِكُ الأوّلُ حيوانٌ عاشبٌ يأكلُ النباتَ مباشرةً.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('d0f525a2-04db-5aaa-85d1-f023d453e991', 'ae6c1d5c-5cad-5808-89e8-9e1adf0bf999', 'في السلسلة «نبات ← جرادة ← ضفدع ← ثعبان»، مَن يأكلُ الجرادة؟', '[{"id":"a","text":"الضفدع"},{"id":"b","text":"النبات"},{"id":"c","text":"الثعبان"},{"id":"d","text":"لا أحد"}]'::jsonb, 'a', 'حسب السلسلة، الضفدعُ يأكلُ الجرادة، ثمّ يأتي الثعبانُ ليأكلَ الضفدع.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('c01255e1-92d7-5ae1-a47b-660e6c83cc3a', 'ae6c1d5c-5cad-5808-89e8-9e1adf0bf999', 'ماذا يحدثُ لكائنات الوسط إذا لوّثنا ماءَه بشدّة؟', '[{"id":"a","text":"تمرضُ أو تموتُ كثيرٌ منها"},{"id":"b","text":"تزدادُ صحّةً وقوّة"},{"id":"c","text":"تتكاثرُ بسرعة"},{"id":"d","text":"لا تتأثّرُ نهائيًّا"}]'::jsonb, 'a', 'التلوّثُ الشديدُ للماء يضرُّ بالكائنات الحيّة فيمرضُ أو يموتُ كثيرٌ منها.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('1a0940ba-0491-5893-887e-9458b4a95fec', 'ae6c1d5c-5cad-5808-89e8-9e1adf0bf999', 'كيف نحافظُ على الوسط البيئي؟', '[{"id":"a","text":"بعدم التلويث والمحافظة على الكائنات"},{"id":"b","text":"برمي النفايات في كلّ مكان"},{"id":"c","text":"بقطع كلّ الأشجار"},{"id":"d","text":"بتلويث المياه"}]'::jsonb, 'a', 'نحافظُ على الوسط البيئي بعدم تلويثه وبحماية كائناته ومكوّناته الطبيعيّة.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('2d4a5a54-c42d-5b52-af11-1defbf9d111b', 'd5eff8d2-9652-5d05-acbb-cc647378b654', 'eveil-scientifique-6eme', 'اختبار فهم الدرس ⭐', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('9ff0fa0e-ceb2-542b-98d2-11b6503b4952', '2d4a5a54-c42d-5b52-af11-1defbf9d111b', 'ما العضوُ الأنثويُّ في الزهرة؟', '[{"id":"a","text":"المدقّة"},{"id":"b","text":"الأسدية"},{"id":"c","text":"البتلات"},{"id":"d","text":"السبلات"}]'::jsonb, 'a', 'المدقّةُ هي العضوُ الأنثويّ في الزهرة، وتحوي المبيضَ وفيه البويضات.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('e3f94122-34b2-58ad-9d07-1842dc036788', '2d4a5a54-c42d-5b52-af11-1defbf9d111b', 'ماذا تحملُ الأسدية؟', '[{"id":"a","text":"حبوبَ الطلع"},{"id":"b","text":"البذور"},{"id":"c","text":"الماء"},{"id":"d","text":"الرحيقَ فقط"}]'::jsonb, 'a', 'الأسدية هي الأعضاءُ الذكريّة، وتحملُ حبوبَ الطلع اللازمةَ للتلقيح.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('b8e9062d-fc04-5337-8052-ee68f52a4cbc', '2d4a5a54-c42d-5b52-af11-1defbf9d111b', 'ما هو التلقيح؟', '[{"id":"a","text":"انتقالُ حبوب الطلع من الأسدية إلى المدقّة"},{"id":"b","text":"سقوطُ أوراق الزهرة"},{"id":"c","text":"ذبولُ الزهرة"},{"id":"d","text":"نموُّ الجذور"}]'::jsonb, 'a', 'التلقيحُ هو انتقالُ حبوب الطلع من الأسدية (الذكريّة) إلى المدقّة (الأنثويّة).', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('10f28926-d69c-5e4c-ad73-6f000773ca5e', '2d4a5a54-c42d-5b52-af11-1defbf9d111b', 'إلى ماذا يتحوّلُ المبيضُ بعد الإخصاب؟', '[{"id":"a","text":"ثمرة"},{"id":"b","text":"جذر"},{"id":"c","text":"ورقة"},{"id":"d","text":"ساق"}]'::jsonb, 'a', 'بعد الإخصاب يتحوّلُ المبيضُ إلى ثمرة، وتتحوّلُ البويضاتُ داخلَه إلى بذور.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('be2066f4-831b-5374-9209-52625ab917cc', '2d4a5a54-c42d-5b52-af11-1defbf9d111b', 'ما الذي يجذبُ الحشراتِ إلى الزهرة؟', '[{"id":"a","text":"البتلاتُ الملوّنةُ والرحيق"},{"id":"b","text":"السبلاتُ الخضراء"},{"id":"c","text":"الجذور"},{"id":"d","text":"الأشواك"}]'::jsonb, 'a', 'ألوانُ البتلات الزاهيةُ ورحيقُ الزهرة يجذبان الحشراتِ التي تساعدُ على التلقيح.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('c4e2a3ed-497c-53fb-8fcf-43715af0a905', 'd5eff8d2-9652-5d05-acbb-cc647378b654', 'eveil-scientifique-6eme', '⭐ تمرين: أوّلُ خطوات مع الزهرة', 1, 50, 10, 'practice', 'admin', 1)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('e9694da7-f84a-5ad9-9c2f-dae0a67df983', 'c4e2a3ed-497c-53fb-8fcf-43715af0a905', 'ما دورُ البتلات الملوّنة في الزهرة؟', '[{"id":"a","text":"جذبُ الحشرات"},{"id":"b","text":"صنعُ البذور"},{"id":"c","text":"تثبيتُ النبتة في التربة"},{"id":"d","text":"امتصاصُ الماء"}]'::jsonb, 'a', 'البتلاتُ الملوّنة تجذبُ الحشراتِ التي تساعدُ على نقل حبوب الطلع.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('0ec9c581-0f7e-59c2-9a26-967f25e4532d', 'c4e2a3ed-497c-53fb-8fcf-43715af0a905', 'ما العضوُ الذكريُّ في الزهرة؟', '[{"id":"a","text":"الأسدية"},{"id":"b","text":"المدقّة"},{"id":"c","text":"السبلات"},{"id":"d","text":"البتلات"}]'::jsonb, 'a', 'الأسدية هي الأعضاءُ الذكريّة في الزهرة، وتحملُ حبوبَ الطلع.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('39ea143d-5bd5-5949-8d45-e80a442a22e0', 'c4e2a3ed-497c-53fb-8fcf-43715af0a905', 'ما العضوُ الأنثويُّ في الزهرة؟', '[{"id":"a","text":"المدقّة"},{"id":"b","text":"الأسدية"},{"id":"c","text":"التويج"},{"id":"d","text":"الكأس"}]'::jsonb, 'a', 'المدقّةُ هي العضوُ الأنثويّ، وتحوي المبيضَ وفيه البويضات.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('f3876931-078c-5ea5-9a97-d3071363a772', 'c4e2a3ed-497c-53fb-8fcf-43715af0a905', 'ما دورُ السبلات (الكأس)؟', '[{"id":"a","text":"حمايةُ الزهرة وهي برعم"},{"id":"b","text":"جذبُ الحشرات بالألوان"},{"id":"c","text":"حملُ حبوب الطلع"},{"id":"d","text":"إنتاجُ البذور"}]'::jsonb, 'a', 'السبلاتُ أوراقٌ خضراءُ تحمي الزهرةَ في مرحلة البرعم قبل تفتّحها.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('a2212adf-5348-57e3-93c9-558512a5bfec', 'c4e2a3ed-497c-53fb-8fcf-43715af0a905', 'أين توجدُ البويضات في الزهرة؟', '[{"id":"a","text":"في المبيض داخل المدقّة"},{"id":"b","text":"في الأسدية"},{"id":"c","text":"في البتلات"},{"id":"d","text":"في الجذور"}]'::jsonb, 'a', 'توجدُ البويضاتُ في المبيض الذي يقع داخلَ المدقّة (العضو الأنثويّ).', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('5a0028f6-1ec1-55b0-811e-2a8b19e43b84', 'c4e2a3ed-497c-53fb-8fcf-43715af0a905', 'ماذا تحملُ الأسدية؟', '[{"id":"a","text":"حبوبَ الطلع"},{"id":"b","text":"البذورَ الناضجة"},{"id":"c","text":"الثمار"},{"id":"d","text":"الأوراقَ الخضراء"}]'::jsonb, 'a', 'تحملُ الأسدية حبوبَ الطلع، وهي الخلايا الذكريّة اللازمة للتلقيح.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('e3e33551-4a10-565a-8e72-5d793a91cd21', 'd5eff8d2-9652-5d05-acbb-cc647378b654', 'eveil-scientifique-6eme', '⚔️ زعيم الفصل ⭐⭐⭐: تحدّي التكاثر الزهري', 3, 120, 30, 'boss', 'admin', 2)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('234a4c92-14e2-594e-8363-29295812781a', 'e3e33551-4a10-565a-8e72-5d793a91cd21', 'التلقيحُ هو:', '[{"id":"a","text":"انتقالُ حبوب الطلع من الأسدية إلى المدقّة"},{"id":"b","text":"نموُّ الجذور في التربة"},{"id":"c","text":"سقوطُ أوراق الشجر"},{"id":"d","text":"امتصاصُ الماء من التربة"}]'::jsonb, 'a', 'التلقيحُ هو انتقالُ حبوب الطلع من العضو الذكريّ (الأسدية) إلى العضو الأنثويّ (المدقّة).', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('35a06ef2-252b-56d6-8a06-8b977e5cb2ec', 'e3e33551-4a10-565a-8e72-5d793a91cd21', 'مَن ينقلُ حبوبَ الطلع بين الأزهار؟', '[{"id":"a","text":"الحشراتُ والرياح"},{"id":"b","text":"الجذورُ فقط"},{"id":"c","text":"الحجارة"},{"id":"d","text":"لا شيءَ ينقلُها"}]'::jsonb, 'a', 'تنقلُ الحشراتُ (كالنحل) والرياحُ حبوبَ الطلع من زهرةٍ إلى أخرى.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('1d41f55b-ce1c-5792-96ee-a265d681134b', 'e3e33551-4a10-565a-8e72-5d793a91cd21', 'ما هو الإخصاب؟', '[{"id":"a","text":"اتّحادُ حبّة الطلع بالبويضة"},{"id":"b","text":"تفتّحُ البتلات"},{"id":"c","text":"ذبولُ الزهرة"},{"id":"d","text":"نموُّ الساق"}]'::jsonb, 'a', 'الإخصابُ هو اتّحادُ حبّة الطلع بالبويضة، وهو يلي التلقيح.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('0cfc7d1d-3d62-506d-af5a-66bf7e79fa9a', 'e3e33551-4a10-565a-8e72-5d793a91cd21', 'بعد الإخصاب، يتحوّلُ المبيضُ إلى:', '[{"id":"a","text":"ثمرة"},{"id":"b","text":"ورقة"},{"id":"c","text":"سبلة"},{"id":"d","text":"جذر"}]'::jsonb, 'a', 'يتحوّلُ المبيضُ بعد الإخصاب إلى ثمرةٍ تحمي البذور.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('041a32e3-ca09-53c8-bd8d-7c17dc936de6', 'e3e33551-4a10-565a-8e72-5d793a91cd21', 'بعد الإخصاب، تتحوّلُ البويضاتُ إلى:', '[{"id":"a","text":"بذور"},{"id":"b","text":"بتلات"},{"id":"c","text":"أسدية"},{"id":"d","text":"أوراق"}]'::jsonb, 'a', 'تتحوّلُ البويضاتُ داخلَ المبيض إلى بذورٍ بعد الإخصاب.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('a121d3ed-faf8-5c63-85fd-efef1289a853', 'e3e33551-4a10-565a-8e72-5d793a91cd21', 'لماذا تكونُ ألوانُ كثيرٍ من الأزهار زاهية؟', '[{"id":"a","text":"لجذب الحشرات التي تساعدُ على التلقيح"},{"id":"b","text":"لتخويف الحشرات"},{"id":"c","text":"لامتصاص الماء"},{"id":"d","text":"لتبريد النبتة"}]'::jsonb, 'a', 'الألوانُ الزاهيةُ تجذبُ الحشراتِ الملقّحة، فتساعدُ النبتةَ على التكاثر.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('8b358f1d-19f3-59a8-8c1d-05a7b4b974f8', 'd5eff8d2-9652-5d05-acbb-cc647378b654', 'eveil-scientifique-6eme', '⭐⭐ تمرين مراجعة (نمط امتحان): التكاثر الزهري', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('d3400afd-9aed-5021-bad2-9232143b8a5e', '8b358f1d-19f3-59a8-8c1d-05a7b4b974f8', 'أيُّ هذه أعضاءٌ أنثويّةٌ في الزهرة؟', '[{"id":"a","text":"المدقّة"},{"id":"b","text":"الأسدية"},{"id":"c","text":"البتلات"},{"id":"d","text":"السبلات"}]'::jsonb, 'a', 'المدقّةُ هي العضوُ الأنثويّ في الزهرة، أمّا الأسدية فذكريّة.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('696705c1-6992-5c02-ae44-181c4600c8e0', '8b358f1d-19f3-59a8-8c1d-05a7b4b974f8', 'ممّ يتكوّنُ الكأسُ في الزهرة؟', '[{"id":"a","text":"من السبلات"},{"id":"b","text":"من البتلات"},{"id":"c","text":"من الأسدية"},{"id":"d","text":"من البذور"}]'::jsonb, 'a', 'الكأسُ يتكوّنُ من السبلات الخضراء التي تحمي الزهرةَ وهي برعم.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('4925edea-3589-52d2-8d3c-623a75a42ed2', '8b358f1d-19f3-59a8-8c1d-05a7b4b974f8', 'ممّ يتكوّنُ التويجُ في الزهرة؟', '[{"id":"a","text":"من البتلات"},{"id":"b","text":"من السبلات"},{"id":"c","text":"من المدقّة"},{"id":"d","text":"من الجذور"}]'::jsonb, 'a', 'التويجُ يتكوّنُ من البتلات الملوّنة التي تجذبُ الحشرات.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('565e825d-4d13-5669-a32f-6f693d355e83', '8b358f1d-19f3-59a8-8c1d-05a7b4b974f8', 'ما الذي يسبقُ الإخصابَ؟', '[{"id":"a","text":"التلقيح"},{"id":"b","text":"تكوّنُ الثمرة"},{"id":"c","text":"تكوّنُ البذور"},{"id":"d","text":"إنبات البذرة"}]'::jsonb, 'a', 'التلقيحُ (نقلُ حبوب الطلع) يسبقُ الإخصابَ (اتّحادُ الطلع بالبويضة).', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('4b285a90-109a-5fcb-b29a-0ee814779d76', '8b358f1d-19f3-59a8-8c1d-05a7b4b974f8', 'من ماذا تنبتُ النبتةُ الجديدة؟', '[{"id":"a","text":"من البذرة"},{"id":"b","text":"من البتلة"},{"id":"c","text":"من السبلة"},{"id":"d","text":"من حبّة الطلع وحدها"}]'::jsonb, 'a', 'تنبتُ النبتةُ الجديدةُ من البذرة التي تكوّنت بعد الإخصاب.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('38327403-a725-5017-a840-b7561d5f37d1', '8b358f1d-19f3-59a8-8c1d-05a7b4b974f8', 'ما الترتيبُ الصحيح: تلقيح ← إخصاب ← ...؟', '[{"id":"a","text":"تكوّنُ الثمرة والبذور"},{"id":"b","text":"ذبولُ الجذور"},{"id":"c","text":"اختفاءُ النبتة"},{"id":"d","text":"تكوّنُ الأسدية"}]'::jsonb, 'a', 'بعد التلقيح فالإخصاب يأتي تكوّنُ الثمرة (من المبيض) والبذور (من البويضات).', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('7604dfa9-2520-5fa6-b167-7b20b942b74f', 'd5eff8d2-9652-5d05-acbb-cc647378b654', 'eveil-scientifique-6eme', '👑 تحدّي النخبة ⭐⭐⭐⭐: سيّدُ التكاثر الزهري', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('a477778d-8cf7-5cd1-95e0-08a9cd2939d2', '7604dfa9-2520-5fa6-b167-7b20b942b74f', 'ما الفرقُ بين التلقيح والإخصاب؟', '[{"id":"a","text":"التلقيحُ نقلُ حبوب الطلع، والإخصابُ اتّحادُها بالبويضة"},{"id":"b","text":"هما الشيءُ نفسُه"},{"id":"c","text":"التلقيحُ يلي الإخصاب"},{"id":"d","text":"الإخصابُ نقلُ الطلع، والتلقيحُ اتّحادُه"}]'::jsonb, 'a', 'التلقيحُ نقلُ حبوب الطلع إلى المدقّة، ثمّ يأتي الإخصابُ وهو اتّحادُ حبّة الطلع بالبويضة.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('4e38af77-173d-5cc8-adf3-ae1a1438b7ba', '7604dfa9-2520-5fa6-b167-7b20b942b74f', 'لماذا يُعدُّ النحلُ مهمًّا للنباتات الزهريّة؟', '[{"id":"a","text":"لأنّه ينقلُ حبوبَ الطلع فيساعدُ على التلقيح"},{"id":"b","text":"لأنّه يأكلُ الجذور"},{"id":"c","text":"لأنّه يقطعُ الأزهار"},{"id":"d","text":"لأنّه يجفّفُ التربة"}]'::jsonb, 'a', 'ينتقلُ النحلُ بين الأزهار حاملًا حبوبَ الطلع، فيساعدُ على التلقيح والتكاثر.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('25f94ba5-e6ee-591d-b928-4f736df8acb7', '7604dfa9-2520-5fa6-b167-7b20b942b74f', 'إذا لم يحدثْ تلقيحٌ لزهرةٍ، فما النتيجةُ غالبًا؟', '[{"id":"a","text":"لا تتكوّنُ ثمرةٌ ولا بذور"},{"id":"b","text":"تتكوّنُ ثمارٌ أكثر"},{"id":"c","text":"تتضاعفُ البذور"},{"id":"d","text":"تتحوّلُ الزهرةُ إلى جذر"}]'::jsonb, 'a', 'بدون تلقيحٍ لا يحدثُ إخصاب، فلا يتحوّلُ المبيضُ إلى ثمرةٍ ولا البويضاتُ إلى بذور.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('f539aa3c-0955-5c9b-9845-d549ae885309', '7604dfa9-2520-5fa6-b167-7b20b942b74f', 'ما مصدرُ البذور الموجودة داخل الثمرة؟', '[{"id":"a","text":"البويضاتُ بعد إخصابها"},{"id":"b","text":"البتلاتُ المتساقطة"},{"id":"c","text":"السبلاتُ الخضراء"},{"id":"d","text":"حبوبُ الطلع وحدها"}]'::jsonb, 'a', 'البذورُ تتكوّنُ من البويضات بعد إخصابها بحبوب الطلع.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('ce37af1c-fb83-5a55-aa72-391d5cc2689b', '7604dfa9-2520-5fa6-b167-7b20b942b74f', 'دورةُ حياة النبات الزهريّ تبدأ بالبذرة وتعودُ في النهاية إلى:', '[{"id":"a","text":"بذرةٍ جديدة"},{"id":"b","text":"حجرٍ صغير"},{"id":"c","text":"قطرة ماء"},{"id":"d","text":"لا شيء"}]'::jsonb, 'a', 'تنبتُ البذرةُ نبتةً تُزهرُ وتُثمرُ بذورًا جديدة، فتتكرّرُ دورةُ الحياة.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('36ad0255-9d43-5199-90d3-f75d4095a2db', '7604dfa9-2520-5fa6-b167-7b20b942b74f', 'غيرَ الحشرات، ما الذي يمكنُ أن ينقلَ حبوبَ الطلع؟', '[{"id":"a","text":"الرياح"},{"id":"b","text":"الجاذبيّةُ وحدها"},{"id":"c","text":"ضوءُ القمر"},{"id":"d","text":"صوتُ الرعد"}]'::jsonb, 'a', 'تنقلُ الرياحُ حبوبَ الطلع في كثيرٍ من النباتات، إضافةً إلى الحشرات.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('36dcfbe7-b335-532c-84cb-b653a205ab43', 'd5eff8d2-9652-5d05-acbb-cc647378b654', 'eveil-scientifique-6eme', '📝 تدريب ⭐⭐⭐: مراجعةٌ شاملةٌ للتكاثر الزهري', 3, 120, 30, 'boss', 'admin', 5)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('23a33e83-084b-5a3a-8637-b0663766f18c', '36dcfbe7-b335-532c-84cb-b653a205ab43', 'ما العضوُ الذي يحملُ حبوبَ الطلع؟', '[{"id":"a","text":"الأسدية"},{"id":"b","text":"المدقّة"},{"id":"c","text":"البتلات"},{"id":"d","text":"السبلات"}]'::jsonb, 'a', 'الأسدية هي العضوُ الذكريُّ الذي يحملُ حبوبَ الطلع.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('f5d1e33b-ecc7-55e3-b44e-f6cabe34dbb4', '36dcfbe7-b335-532c-84cb-b653a205ab43', 'ما العضوُ الأنثويُّ الذي يحوي المبيض؟', '[{"id":"a","text":"المدقّة"},{"id":"b","text":"الأسدية"},{"id":"c","text":"التويج"},{"id":"d","text":"الكأس"}]'::jsonb, 'a', 'المدقّةُ هي العضوُ الأنثويُّ، وفيها المبيضُ الذي يحوي البويضات.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('8a1dc8d9-4bda-5a4a-ace4-d82a28eae8fa', '36dcfbe7-b335-532c-84cb-b653a205ab43', 'ما هو التلقيح؟', '[{"id":"a","text":"نقلُ حبوب الطلع إلى المدقّة"},{"id":"b","text":"تساقطُ البذور"},{"id":"c","text":"نموُّ الأوراق"},{"id":"d","text":"ذبولُ الزهرة"}]'::jsonb, 'a', 'التلقيحُ هو نقلُ حبوب الطلع من الأسدية إلى المدقّة.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('f464854e-fd92-5c86-aaab-964f06fbe33a', '36dcfbe7-b335-532c-84cb-b653a205ab43', 'ماذا يتكوّنُ بعد الإخصاب؟', '[{"id":"a","text":"الثمرةُ والبذور"},{"id":"b","text":"السبلاتُ والبتلات"},{"id":"c","text":"الجذورُ فقط"},{"id":"d","text":"حبوبُ الطلع"}]'::jsonb, 'a', 'بعد الإخصاب يتحوّلُ المبيضُ إلى ثمرةٍ والبويضاتُ إلى بذور.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('9546b566-f476-5209-a1e1-c1fcc8e43742', '36dcfbe7-b335-532c-84cb-b653a205ab43', 'ما دورُ البتلات الملوّنة؟', '[{"id":"a","text":"جذبُ الحشرات الملقّحة"},{"id":"b","text":"حملُ البذور"},{"id":"c","text":"امتصاصُ الماء"},{"id":"d","text":"تثبيتُ النبتة"}]'::jsonb, 'a', 'البتلاتُ الملوّنةُ تجذبُ الحشراتِ التي تنقلُ حبوبَ الطلع وتساعدُ على التلقيح.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('b5448929-2227-53df-aa24-c45020f29aeb', '36dcfbe7-b335-532c-84cb-b653a205ab43', 'ما الذي ينمو من البذرة؟', '[{"id":"a","text":"نبتةٌ جديدة"},{"id":"b","text":"زهرةٌ ذابلة"},{"id":"c","text":"حبّةُ طلع"},{"id":"d","text":"حشرة"}]'::jsonb, 'a', 'تنبتُ البذرةُ لتعطيَ نبتةً جديدةً تكملُ دورةَ حياة النبات.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('5d11df30-d45c-5032-8b00-54443d9ee35e', '2c330d4a-3925-533b-a583-37df79d0c174', 'eveil-scientifique-6eme', 'اختبار فهم الدرس ⭐', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('26a5eb9e-5b2a-56b1-a6ca-ecd2d6f962c0', '5d11df30-d45c-5032-8b00-54443d9ee35e', 'ماذا يجذبُ هذا المغنط أساسًا؟ <svg viewBox="0 0 100 100"><rect x="20" y="42" width="60" height="20" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="50" y1="42" x2="50" y2="62" stroke="currentColor" stroke-width="1.3"/><text x="31" y="57" font-size="13" fill="#ef4444">N</text><text x="63" y="57" font-size="13" fill="currentColor">S</text></svg>', '[{"id":"a","text":"المواد الحديديّة"},{"id":"b","text":"الخشب"},{"id":"c","text":"الزجاج"},{"id":"d","text":"البلاستيك"}]'::jsonb, 'a', 'المغنطُ يجذبُ الموادَّ الحديديّة (الحديد والفولاذ)، ولا يجذبُ الخشبَ ولا الزجاجَ ولا البلاستيك.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('c7a5fc84-2242-57d9-9cac-7e8513947f2d', '5d11df30-d45c-5032-8b00-54443d9ee35e', 'كم قطبًا لكلّ مغنط؟', '[{"id":"a","text":"قطبان (N و S)"},{"id":"b","text":"قطبٌ واحد"},{"id":"c","text":"ثلاثة أقطاب"},{"id":"d","text":"لا أقطابَ له"}]'::jsonb, 'a', 'لكلّ مغنطٍ قطبان: شماليّ (N) وجنوبيّ (S).', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('41d7dcda-2ea3-52cb-b146-cc18327f8e12', '5d11df30-d45c-5032-8b00-54443d9ee35e', 'إذا قرّبنا قطبين متماثلين (N و N)، فإنّهما:', '[{"id":"a","text":"يتنافران"},{"id":"b","text":"يتجاذبان"},{"id":"c","text":"يلتصقان دائمًا"},{"id":"d","text":"لا يتأثّران"}]'::jsonb, 'a', 'القطبان المتماثلان (N و N أو S و S) يتنافران.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('c53e4b41-3136-56f7-b6e1-9957ad0fe710', '5d11df30-d45c-5032-8b00-54443d9ee35e', 'إذا قرّبنا قطبين مختلفين (N و S)، فإنّهما:', '[{"id":"a","text":"يتجاذبان"},{"id":"b","text":"يتنافران"},{"id":"c","text":"ينفصلان بقوّة"},{"id":"d","text":"لا يتأثّران"}]'::jsonb, 'a', 'القطبان المختلفان (N و S) يتجاذبان.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('dc552419-dc18-5bf9-840d-8b81e904fc51', '5d11df30-d45c-5032-8b00-54443d9ee35e', 'إلى أيّ جهةٍ تشيرُ إبرةُ البوصلة دائمًا؟', '[{"id":"a","text":"الشمال"},{"id":"b","text":"الجنوب"},{"id":"c","text":"حيثما نريد"},{"id":"d","text":"نحو الأرض"}]'::jsonb, 'a', 'تشيرُ إبرةُ البوصلة دائمًا إلى الشمال لأنّ الأرضَ مغناطيسٌ عملاق.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('7049d040-615f-5421-8a70-4ca5d31245f9', '2c330d4a-3925-533b-a583-37df79d0c174', 'eveil-scientifique-6eme', '⭐ تمرين: أوّلُ خطوات مع المغناطيس', 1, 50, 10, 'practice', 'admin', 1)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('ad751329-4a02-5197-ba36-abea8e4d2026', '7049d040-615f-5421-8a70-4ca5d31245f9', 'المغنطُ يجذبُ:', '[{"id":"a","text":"المسمارَ الحديديّ"},{"id":"b","text":"قطعةَ الخشب"},{"id":"c","text":"كأسَ الزجاج"},{"id":"d","text":"الورقة"}]'::jsonb, 'a', 'المغنطُ يجذبُ الموادَّ الحديديّة كالمسمار، لا الخشبَ ولا الزجاجَ ولا الورق.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('7750579f-e6a3-5d35-bbda-9c6079118ec2', '7049d040-615f-5421-8a70-4ca5d31245f9', 'أيُّ مادّةٍ لا يجذبُها المغنط؟', '[{"id":"a","text":"الخشب"},{"id":"b","text":"الحديد"},{"id":"c","text":"الفولاذ"},{"id":"d","text":"مسمارٌ حديديّ"}]'::jsonb, 'a', 'لا يجذبُ المغنطُ الخشبَ؛ فهو يجذبُ الموادَّ الحديديّة (الحديد والفولاذ) فقط.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('d02c64e5-4b19-52cc-9ee7-a2a780473d84', '7049d040-615f-5421-8a70-4ca5d31245f9', 'كم قطبًا لهذا المغنط؟ <svg viewBox="0 0 100 100"><rect x="20" y="42" width="60" height="20" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="50" y1="42" x2="50" y2="62" stroke="currentColor" stroke-width="1.3"/><text x="31" y="57" font-size="13" fill="#ef4444">N</text><text x="63" y="57" font-size="13" fill="currentColor">S</text></svg>', '[{"id":"a","text":"قطبان"},{"id":"b","text":"قطبٌ واحد"},{"id":"c","text":"أربعة أقطاب"},{"id":"d","text":"ثلاثة أقطاب"}]'::jsonb, 'a', 'نرى قطبين: الشماليّ (N) والجنوبيّ (S)، فلكلّ مغنطٍ قطبان.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('85e52cea-54c7-5626-9051-729e9f3dafbf', '7049d040-615f-5421-8a70-4ca5d31245f9', 'ما رمزُ القطب الشماليّ للمغنط؟', '[{"id":"a","text":"N"},{"id":"b","text":"S"},{"id":"c","text":"W"},{"id":"d","text":"E"}]'::jsonb, 'a', 'يُرمَزُ للقطب الشماليّ بـ N وللقطب الجنوبيّ بـ S.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('88588c75-a942-53f2-838c-dabd05732699', '7049d040-615f-5421-8a70-4ca5d31245f9', 'أين تكونُ قوّةُ الجذب أكبرَ في المغنط؟', '[{"id":"a","text":"عند القطبين"},{"id":"b","text":"في الوسط"},{"id":"c","text":"لا تختلفُ في كلّ مكان"},{"id":"d","text":"خارج المغنط فقط"}]'::jsonb, 'a', 'قوّةُ الجذب أكبرُ عند قطبي المغنط منها في وسطه.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('b125d3ba-7e31-5be8-a5b1-35a411894f08', '7049d040-615f-5421-8a70-4ca5d31245f9', 'البوصلةُ أداةٌ تشيرُ إلى:', '[{"id":"a","text":"الشمال"},{"id":"b","text":"الأسفل"},{"id":"c","text":"أقرب مغنط فقط"},{"id":"d","text":"الشمس"}]'::jsonb, 'a', 'البوصلةُ إبرةٌ ممغنطةٌ تشيرُ إلى الشمال، فتساعدُ على تحديد الجهات.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('2a7e2ab1-3888-5d77-b216-dd3c7bbe7b87', '2c330d4a-3925-533b-a583-37df79d0c174', 'eveil-scientifique-6eme', '⚔️ زعيم الفصل ⭐⭐⭐: تحدّي المغناطيس', 3, 120, 30, 'boss', 'admin', 2)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('c800adc8-8e8b-5627-a1cf-98c150df0173', '2a7e2ab1-3888-5d77-b216-dd3c7bbe7b87', 'المغنطُ يجذبُ الحديدَ لكنّه لا يجذبُ:', '[{"id":"a","text":"النحاس"},{"id":"b","text":"الفولاذ"},{"id":"c","text":"مسمارَ الحديد"},{"id":"d","text":"صفيحةَ الحديد"}]'::jsonb, 'a', 'النحاسُ ليس مادّةً حديديّة، فلا يجذبُه المغنط؛ بينما يجذبُ الحديدَ والفولاذ.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('cc04833f-062f-5e8b-bf35-36dffaac300a', '2a7e2ab1-3888-5d77-b216-dd3c7bbe7b87', 'القطبان المتقابلان في الرسم. ماذا يحدثُ بينهما؟ <svg viewBox="0 0 100 100"><rect x="8" y="42" width="34" height="18" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="25" y1="42" x2="25" y2="60" stroke="currentColor" stroke-width="1.2"/><text x="13" y="56" font-size="11" fill="currentColor">S</text><text x="31" y="56" font-size="11" fill="#ef4444">N</text><rect x="58" y="42" width="34" height="18" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="75" y1="42" x2="75" y2="60" stroke="currentColor" stroke-width="1.2"/><text x="62" y="56" font-size="11" fill="currentColor">S</text><text x="80" y="56" font-size="11" fill="#ef4444">N</text></svg>', '[{"id":"a","text":"يتجاذبان (N أمام S)"},{"id":"b","text":"يتنافران"},{"id":"c","text":"لا يتأثّران"},{"id":"d","text":"ينكسران"}]'::jsonb, 'a', 'القطبُ N للمغنط الأيسر يقابلُ القطبَ S للمغنط الأيمن؛ وهما مختلفان فيتجاذبان.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('3038ae0e-4afb-55d1-9c30-d9df8024c58a', '2a7e2ab1-3888-5d77-b216-dd3c7bbe7b87', 'قطبان متماثلان (S و S) قُرّب أحدُهما من الآخر. ماذا يحدث؟', '[{"id":"a","text":"يتنافران"},{"id":"b","text":"يتجاذبان"},{"id":"c","text":"يلتصقان"},{"id":"d","text":"يفقدان مغناطيسيّتهما"}]'::jsonb, 'a', 'القطبان المتماثلان (S و S) يتنافران، كما يتنافرُ N و N.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('c2b37e1f-aae5-51a5-9c5b-c28bfa9dd35f', '2a7e2ab1-3888-5d77-b216-dd3c7bbe7b87', 'لماذا تشيرُ إبرةُ البوصلة إلى الشمال؟', '[{"id":"a","text":"لأنّ الأرضَ نفسَها مغناطيسٌ عملاق"},{"id":"b","text":"لأنّها مصنوعةٌ من الخشب"},{"id":"c","text":"لأنّ الشمالَ أثقل"},{"id":"d","text":"لأنّ الشمسَ تجذبُها"}]'::jsonb, 'a', 'الأرضُ مغناطيسٌ عملاق، فتتّجهُ الإبرةُ الممغنطةُ الحرّةُ نحو الشمال.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('c565a814-6249-559c-905d-6d3787ffd9ca', '2a7e2ab1-3888-5d77-b216-dd3c7bbe7b87', 'أيٌّ ممّا يلي يُعدُّ شكلًا من أشكال المغانط؟', '[{"id":"a","text":"مغنطٌ على شكل حدوة حصان (U)"},{"id":"b","text":"قطعةُ زجاج"},{"id":"c","text":"ورقةٌ مطويّة"},{"id":"d","text":"كأسُ ماء"}]'::jsonb, 'a', 'من أشكال المغانط: المستقيم، وحدوة الحصان (U)، والإبرة الممغنطة.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('c2dd9ea1-b9ab-5f7a-bbce-8fda65bd3080', '2a7e2ab1-3888-5d77-b216-dd3c7bbe7b87', 'لاستعمال البوصلة في تحديد الاتّجاه، نعتمدُ على أنّ إبرتَها تشيرُ إلى:', '[{"id":"a","text":"الشمال"},{"id":"b","text":"الشرق"},{"id":"c","text":"أيّ جهةٍ عشوائيّة"},{"id":"d","text":"باطن الأرض"}]'::jsonb, 'a', 'بما أنّ الإبرةَ تشيرُ إلى الشمال، نستنتجُ منه بقيّةَ الجهات.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('ec50f320-46e1-5832-be14-69e1a409032e', '2c330d4a-3925-533b-a583-37df79d0c174', 'eveil-scientifique-6eme', '⭐⭐ تمرين مراجعة (نمط امتحان): المغناطيس والبوصلة', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('cdf412ef-6e69-508f-b41a-4aafa705fcf3', 'ec50f320-46e1-5832-be14-69e1a409032e', 'المغنطُ يجذبُ:', '[{"id":"a","text":"المواد الحديديّة"},{"id":"b","text":"كلَّ المعادن"},{"id":"c","text":"الخشبَ والورق"},{"id":"d","text":"الماء"}]'::jsonb, 'a', 'المغنطُ يجذبُ الموادَّ الحديديّة فقط (الحديد والفولاذ)، لا كلَّ المعادن.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('6daa1b9a-b48a-5ec8-8449-730ad34b381c', 'ec50f320-46e1-5832-be14-69e1a409032e', 'ما رمزا قطبي المغنط؟', '[{"id":"a","text":"N و S"},{"id":"b","text":"A و B"},{"id":"c","text":"+ و +"},{"id":"d","text":"X و Y"}]'::jsonb, 'a', 'قطبا المغنط هما الشماليّ (N) والجنوبيّ (S).', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('92d8c3b9-8abd-589d-b9bf-1caf9ad39232', 'ec50f320-46e1-5832-be14-69e1a409032e', 'إلامَ يشيرُ العقربُ الأحمرُ في هذه البوصلة؟ <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="2.5"/><text x="46" y="17" font-size="11" fill="currentColor">N</text><polygon points="50,26 44,50 56,50" fill="#ef4444"/><polygon points="50,74 44,50 56,50" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>', '[{"id":"a","text":"الشمال (N)"},{"id":"b","text":"الجنوب"},{"id":"c","text":"الشرق"},{"id":"d","text":"الغرب"}]'::jsonb, 'a', 'العقربُ الأحمرُ يشيرُ إلى الشمال (N) كما هو مكتوبٌ أعلى البوصلة.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('472d26a2-f2bb-5a4b-b7db-b0d44af7d518', 'ec50f320-46e1-5832-be14-69e1a409032e', 'قطبان مختلفان (N و S):', '[{"id":"a","text":"يتجاذبان"},{"id":"b","text":"يتنافران"},{"id":"c","text":"لا يتأثّران"},{"id":"d","text":"ينكسران"}]'::jsonb, 'a', 'القطبان المختلفان (N و S) يتجاذبان.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('af4946e0-d0c0-59c1-a2ff-158b4ce3f7b7', 'ec50f320-46e1-5832-be14-69e1a409032e', 'أيُّ هذه الأجسام يجذبُها المغنط؟', '[{"id":"a","text":"مسمارٌ من حديد"},{"id":"b","text":"ملعقةٌ خشبيّة"},{"id":"c","text":"كأسٌ زجاجيّ"},{"id":"d","text":"قلمُ بلاستيك"}]'::jsonb, 'a', 'المسمارُ الحديديّ مادّةٌ حديديّةٌ يجذبُها المغنط، بخلاف الخشب والزجاج والبلاستيك.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('35b1fd77-40e7-51e9-90ef-1469e7af9510', 'ec50f320-46e1-5832-be14-69e1a409032e', 'لماذا نستعملُ البوصلة؟', '[{"id":"a","text":"لتحديد الجهات"},{"id":"b","text":"لقياس الحرارة"},{"id":"c","text":"لوزن الأجسام"},{"id":"d","text":"لقياس الزمن"}]'::jsonb, 'a', 'نستعملُ البوصلةَ لتحديد الجهات اعتمادًا على إشارة إبرتها إلى الشمال.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('1b677443-6deb-5939-bcb6-d20ef3d481ac', '2c330d4a-3925-533b-a583-37df79d0c174', 'eveil-scientifique-6eme', '👑 تحدّي النخبة ⭐⭐⭐⭐: سيّدُ المغناطيس', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('1fecf934-e6ea-5fcb-b1d2-aa8c5597ccdd', '1b677443-6deb-5939-bcb6-d20ef3d481ac', 'أيُّ هذه الأجسام لا يجذبُه المغنط؟', '[{"id":"a","text":"قطعةُ زجاج"},{"id":"b","text":"مسمارٌ من حديد"},{"id":"c","text":"مشبكٌ من فولاذ"},{"id":"d","text":"صفيحةٌ من حديد"}]'::jsonb, 'a', 'الزجاجُ ليس مادّةً حديديّة، فلا يجذبُه المغنط؛ بينما يجذبُ الحديدَ والفولاذ.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('8253f21a-09e3-5d68-a635-de41f1555ef4', '1b677443-6deb-5939-bcb6-d20ef3d481ac', 'ماذا يحدثُ بين هذين القطبين المتقابلين؟ <svg viewBox="0 0 100 100"><rect x="8" y="42" width="34" height="18" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="25" y1="42" x2="25" y2="60" stroke="currentColor" stroke-width="1.2"/><text x="13" y="56" font-size="11" fill="currentColor">S</text><text x="31" y="56" font-size="11" fill="#ef4444">N</text><rect x="58" y="42" width="34" height="18" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="75" y1="42" x2="75" y2="60" stroke="currentColor" stroke-width="1.2"/><text x="62" y="56" font-size="11" fill="#ef4444">N</text><text x="80" y="56" font-size="11" fill="currentColor">S</text></svg>', '[{"id":"a","text":"يتنافران (N أمام N)"},{"id":"b","text":"يتجاذبان"},{"id":"c","text":"يلتصقان فورًا"},{"id":"d","text":"لا يتأثّران"}]'::jsonb, 'a', 'القطبُ N للمغنط الأيسر يقابلُ القطبَ N للمغنط الأيمن؛ وهما متماثلان فيتنافران.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('977e5217-e004-5354-97d5-2fd48757b5c7', '1b677443-6deb-5939-bcb6-d20ef3d481ac', 'إذا قرّبنا قطبًا شماليًّا (N) من قطبٍ جنوبيّ (S)، فماذا يحدث؟', '[{"id":"a","text":"يتجاذبان"},{"id":"b","text":"يتنافران"},{"id":"c","text":"لا يحدثُ شيء"},{"id":"d","text":"يفقدان مغناطيسيّتهما"}]'::jsonb, 'a', 'القطبان المختلفان (N و S) يتجاذبان دائمًا.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('c8136840-6814-5f06-9c40-b10e1d1f479e', '1b677443-6deb-5939-bcb6-d20ef3d481ac', 'في مغنطٍ مستقيم، أين تكونُ قوّةُ الجذب أكبر؟', '[{"id":"a","text":"عند طرفيه (قطبيه)"},{"id":"b","text":"في منتصفه"},{"id":"c","text":"متساويةٌ في كلّ مكان"},{"id":"d","text":"خارج المغنط فقط"}]'::jsonb, 'a', 'تتركّزُ قوّةُ الجذب عند قطبي المغنط (طرفيه)، وتضعفُ في الوسط.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('060da265-9844-5182-ac24-b125dec38f43', '1b677443-6deb-5939-bcb6-d20ef3d481ac', 'ما السببُ في إشارة إبرة البوصلة إلى الشمال؟', '[{"id":"a","text":"مغناطيسيّةُ الأرض"},{"id":"b","text":"ضوءُ الشمس"},{"id":"c","text":"ثقلُ الإبرة"},{"id":"d","text":"حرارةُ الجوّ"}]'::jsonb, 'a', 'الأرضُ مغناطيسٌ عملاق، ومجالُها يوجّهُ إبرةَ البوصلة الممغنطةَ نحو الشمال.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('343c82f0-3d6e-5bd2-8429-f13e834ec8aa', '1b677443-6deb-5939-bcb6-d20ef3d481ac', 'كيف نتأكّدُ من أنّ جسمًا حديديًّا أصبح ممغنطًا؟', '[{"id":"a","text":"إذا صار يجذبُ موادَّ حديديّةً صغيرة"},{"id":"b","text":"إذا تغيّرَ لونُه"},{"id":"c","text":"إذا أصبح أثقل"},{"id":"d","text":"إذا ذابَ في الماء"}]'::jsonb, 'a', 'الجسمُ الممغنطُ يجذبُ الموادَّ الحديديّة الصغيرة (كبرادة الحديد أو الدبابيس)، وهذا دليلُ مغنطته.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('8a4a236b-8822-5ea9-a6b1-cd02385c3ae1', '2c330d4a-3925-533b-a583-37df79d0c174', 'eveil-scientifique-6eme', '📝 تدريب ⭐⭐⭐: مراجعةٌ شاملةٌ للمغناطيس والبوصلة', 3, 120, 30, 'boss', 'admin', 5)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('f7fd461a-020a-5354-84bc-84ddc7589b38', '8a4a236b-8822-5ea9-a6b1-cd02385c3ae1', 'المغنطُ يجذبُ أساسًا:', '[{"id":"a","text":"الحديدَ والفولاذ"},{"id":"b","text":"الخشبَ"},{"id":"c","text":"الزجاجَ"},{"id":"d","text":"البلاستيكَ"}]'::jsonb, 'a', 'المغنطُ يجذبُ الموادَّ الحديديّة كالحديد والفولاذ.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('ca568965-18e4-5703-8456-4e5efa3e99df', '8a4a236b-8822-5ea9-a6b1-cd02385c3ae1', 'كم قطبًا لكلّ مغنط؟', '[{"id":"a","text":"قطبان"},{"id":"b","text":"قطبٌ واحد"},{"id":"c","text":"ثلاثة"},{"id":"d","text":"لا أقطاب"}]'::jsonb, 'a', 'لكلّ مغنطٍ قطبان: شماليّ (N) وجنوبيّ (S).', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('731334d8-546d-56a9-a819-4af74305b5cb', '8a4a236b-8822-5ea9-a6b1-cd02385c3ae1', 'ما رمزا قطبي هذا المغنط؟ <svg viewBox="0 0 100 100"><rect x="20" y="42" width="60" height="20" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="50" y1="42" x2="50" y2="62" stroke="currentColor" stroke-width="1.3"/><text x="31" y="57" font-size="13" fill="#ef4444">N</text><text x="63" y="57" font-size="13" fill="currentColor">S</text></svg>', '[{"id":"a","text":"N و S"},{"id":"b","text":"A و Z"},{"id":"c","text":"+ و −"},{"id":"d","text":"1 و 2"}]'::jsonb, 'a', 'نرى في الرسم القطبَ الشماليّ (N) والقطبَ الجنوبيّ (S).', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('208c172d-6179-5d44-bb96-bc72b7822c38', '8a4a236b-8822-5ea9-a6b1-cd02385c3ae1', 'قطبان متماثلان (N و N) أو (S و S):', '[{"id":"a","text":"يتنافران"},{"id":"b","text":"يتجاذبان"},{"id":"c","text":"يلتصقان دائمًا"},{"id":"d","text":"لا يتأثّران"}]'::jsonb, 'a', 'القطبان المتماثلان يتنافران (N مع N، وS مع S).', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('4757b52b-ab55-5f6b-8b0d-b5db59c6e535', '8a4a236b-8822-5ea9-a6b1-cd02385c3ae1', 'قطبان مختلفان (N و S):', '[{"id":"a","text":"يتجاذبان"},{"id":"b","text":"يتنافران"},{"id":"c","text":"لا يتأثّران"},{"id":"d","text":"ينكسران"}]'::jsonb, 'a', 'القطبان المختلفان (N و S) يتجاذبان.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('d500c0ee-f9aa-5990-8ba8-9764b6906ba8', '8a4a236b-8822-5ea9-a6b1-cd02385c3ae1', 'تُستعملُ البوصلةُ من أجل:', '[{"id":"a","text":"تحديد الجهات (تشيرُ إلى الشمال)"},{"id":"b","text":"قياس الوزن"},{"id":"c","text":"قياس درجة الحرارة"},{"id":"d","text":"معرفة الوقت"}]'::jsonb, 'a', 'البوصلةُ تُحدّدُ الجهاتِ لأنّ إبرتَها الممغنطةَ تشيرُ دائمًا إلى الشمال.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('2b3f3ebc-164e-551a-aac8-57ac330a531c', 'c383f16c-2ad5-5bf9-95d8-9b798e80b4ac', 'eveil-scientifique-6eme', 'اختبار فهم الدرس ⭐', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('50aead6a-3172-59e2-94b8-83b0eeab5a66', '2b3f3ebc-164e-551a-aac8-57ac330a531c', 'ما هو الثقل؟', '[{"id":"a","text":"قوّةُ جذب الأرض للأجسام"},{"id":"b","text":"لونُ الجسم"},{"id":"c","text":"حجمُ الجسم"},{"id":"d","text":"حرارةُ الجسم"}]'::jsonb, 'a', 'الثقلُ قوّةٌ تجذبُ بها الأرضُ الأجسامَ نحوها (نحو الأسفل).', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('e7601d7f-c809-5386-ba3e-7f3333bacf33', '2b3f3ebc-164e-551a-aac8-57ac330a531c', 'ما اتّجاهُ الثقل دائمًا؟', '[{"id":"a","text":"نحو الأسفل"},{"id":"b","text":"نحو الأعلى"},{"id":"c","text":"نحو اليمين"},{"id":"d","text":"في كلّ الاتّجاهات"}]'::jsonb, 'a', 'اتّجاهُ الثقل دائمًا نحو الأسفل (نحو مركز الأرض).', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('58d591fe-2158-558e-a03f-b606e383cb98', '2b3f3ebc-164e-551a-aac8-57ac330a531c', 'ما الأداةُ التي نقيسُ بها الثقل؟', '[{"id":"a","text":"الدينامومتر (الميزان النابضيّ)"},{"id":"b","text":"المسطرة"},{"id":"c","text":"الترمومتر"},{"id":"d","text":"الساعة"}]'::jsonb, 'a', 'نقيسُ الثقلَ بالدينامومتر، وهو ميزانٌ نابضيٌّ يتمدّدُ نابضُه بقدر الثقل.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('2bcd33e9-8f53-5508-a242-b5375b1cd4ee', '2b3f3ebc-164e-551a-aac8-57ac330a531c', 'السهمُ الأحمرُ يمثّلُ قوّةَ الثقل على الجسم. ما اتّجاهُها؟ <svg viewBox="0 0 100 100"><rect x="38" y="18" width="24" height="22" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="50" y1="40" x2="50" y2="74" stroke="#ef4444" stroke-width="2.5"/><polygon points="50,84 43,73 57,73" fill="#ef4444"/></svg>', '[{"id":"a","text":"نحو الأسفل"},{"id":"b","text":"نحو الأعلى"},{"id":"c","text":"نحو الجانب"},{"id":"d","text":"لا اتّجاهَ له"}]'::jsonb, 'a', 'السهمُ يتّجهُ إلى أسفل، لأنّ الثقلَ يجذبُ الجسمَ نحو الأرض.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('c23ef002-b497-5eb5-89ad-1547d242043d', '2b3f3ebc-164e-551a-aac8-57ac330a531c', 'لماذا تسقطُ الأجسامُ إلى الأرض عند تركها؟', '[{"id":"a","text":"بسبب جذب الأرض لها (الثقل)"},{"id":"b","text":"بسبب الرياح دائمًا"},{"id":"c","text":"لأنّها خفيفة"},{"id":"d","text":"بسبب الضوء"}]'::jsonb, 'a', 'تسقطُ الأجسامُ لأنّ الأرضَ تجذبُها نحوها بقوّة الثقل.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('1e33a32a-5f87-5cca-83ce-6ea7d3423dcb', 'c383f16c-2ad5-5bf9-95d8-9b798e80b4ac', 'eveil-scientifique-6eme', '⭐ تمرين: أوّلُ خطوات مع الثقل', 1, 50, 10, 'practice', 'admin', 1)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('a0a8dbf0-54f2-5afd-8de0-89b822cdae73', '1e33a32a-5f87-5cca-83ce-6ea7d3423dcb', 'الثقلُ هو:', '[{"id":"a","text":"قوّةُ جذب الأرض للأجسام"},{"id":"b","text":"صوتُ الجسم"},{"id":"c","text":"لونُ الجسم"},{"id":"d","text":"رائحةُ الجسم"}]'::jsonb, 'a', 'الثقلُ قوّةُ جذبٍ تمارسُها الأرضُ على كلّ الأجسام.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('0724bb22-0521-50eb-9114-ccade861f225', '1e33a32a-5f87-5cca-83ce-6ea7d3423dcb', 'اتّجاهُ الثقل هو:', '[{"id":"a","text":"نحو الأسفل"},{"id":"b","text":"نحو الأعلى"},{"id":"c","text":"أفقيٌّ نحو اليمين"},{"id":"d","text":"متغيّرٌ عشوائيًّا"}]'::jsonb, 'a', 'يتّجهُ الثقلُ دائمًا نحو الأسفل (نحو مركز الأرض).', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('b1b4b978-6d50-5037-8bef-28bb82bb3f95', '1e33a32a-5f87-5cca-83ce-6ea7d3423dcb', 'لماذا تسقطُ التفّاحةُ من الشجرة إلى الأرض؟', '[{"id":"a","text":"لأنّ الأرضَ تجذبُها بقوّة الثقل"},{"id":"b","text":"لأنّها تكره الشجرة"},{"id":"c","text":"لأنّ الهواءَ يدفعُها"},{"id":"d","text":"لأنّها ملوّنة"}]'::jsonb, 'a', 'تسقطُ التفّاحةُ بفعل الثقل، أي قوّة جذب الأرض لها نحو الأسفل.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('2b86c94d-29a8-5203-996d-c8287ce5194f', '1e33a32a-5f87-5cca-83ce-6ea7d3423dcb', 'علامَ يدلُّ السهمُ الأحمرُ في هذا الرسم؟ <svg viewBox="0 0 100 100"><rect x="38" y="18" width="24" height="22" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="50" y1="40" x2="50" y2="74" stroke="#ef4444" stroke-width="2.5"/><polygon points="50,84 43,73 57,73" fill="#ef4444"/></svg>', '[{"id":"a","text":"اتّجاه الثقل نحو الأسفل"},{"id":"b","text":"اتّجاه الثقل نحو الأعلى"},{"id":"c","text":"حركة الجسم جانبًا"},{"id":"d","text":"حرارة الجسم"}]'::jsonb, 'a', 'السهمُ نحو الأسفل يمثّلُ قوّةَ الثقل التي تجذبُ الجسمَ إلى الأرض.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('6d344ac5-c956-50b5-a16c-38a4b71a087a', '1e33a32a-5f87-5cca-83ce-6ea7d3423dcb', 'بأيّ أداةٍ نقيسُ الثقل؟', '[{"id":"a","text":"الدينامومتر"},{"id":"b","text":"المسطرة"},{"id":"c","text":"الساعة"},{"id":"d","text":"الترمومتر"}]'::jsonb, 'a', 'الدينامومتر (الميزان النابضيّ) هو أداةُ قياس الثقل.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('9224c225-bafd-5280-af8d-d03661027534', '1e33a32a-5f87-5cca-83ce-6ea7d3423dcb', 'بأيّ أداةٍ نقيسُ كتلةَ جسم؟', '[{"id":"a","text":"الميزان"},{"id":"b","text":"الدينامومتر"},{"id":"c","text":"المنقلة"},{"id":"d","text":"البوصلة"}]'::jsonb, 'a', 'نقيسُ الكتلةَ بالميزان، ووحدتُها الكيلوغرام.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('271b1526-be79-5804-9478-e7fd732b9131', 'c383f16c-2ad5-5bf9-95d8-9b798e80b4ac', 'eveil-scientifique-6eme', '⚔️ زعيم الفصل ⭐⭐⭐: تحدّي الثقل', 3, 120, 30, 'boss', 'admin', 2)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('e6ebd9af-a2cd-5000-88ad-e0e8bcc285d9', '271b1526-be79-5804-9478-e7fd732b9131', 'الثقلُ قوّةٌ مصدرُها:', '[{"id":"a","text":"جذبُ الأرض"},{"id":"b","text":"ضوءُ الشمس"},{"id":"c","text":"الرياح"},{"id":"d","text":"صوتُ الجسم"}]'::jsonb, 'a', 'الثقلُ ناتجٌ عن جذب الأرض للأجسام نحوها.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('7e5202e1-7349-5323-8760-76a47d7d5f61', '271b1526-be79-5804-9478-e7fd732b9131', 'بمَ تُقاسُ الكتلةُ وما وحدتُها؟', '[{"id":"a","text":"بالميزان، ووحدتُها الكيلوغرام"},{"id":"b","text":"بالدينامومتر، ووحدتُها المتر"},{"id":"c","text":"بالساعة، ووحدتُها الثانية"},{"id":"d","text":"بالمسطرة، ووحدتُها اللتر"}]'::jsonb, 'a', 'تُقاسُ الكتلةُ بالميزان، ووحدتُها الكيلوغرام (كغ).', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('a9bec904-cfd1-542d-8606-dfef7b825beb', '271b1526-be79-5804-9478-e7fd732b9131', 'ما الأداةُ المرسومة (نابضٌ يتمدّدُ بجسمٍ معلّق)؟ <svg viewBox="0 0 100 100"><line x1="50" y1="10" x2="50" y2="18" stroke="currentColor" stroke-width="2"/><polyline points="50,18 40,23 60,29 40,35 60,41 40,47 60,53 50,58" fill="none" stroke="currentColor" stroke-width="2"/><rect x="40" y="58" width="20" height="16" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="50" y1="74" x2="50" y2="86" stroke="#ef4444" stroke-width="2"/><polygon points="50,92 45,83 55,83" fill="#ef4444"/></svg>', '[{"id":"a","text":"الدينامومتر (لقياس الثقل)"},{"id":"b","text":"الترمومتر (لقياس الحرارة)"},{"id":"c","text":"الساعة (لقياس الزمن)"},{"id":"d","text":"المسطرة (لقياس الطول)"}]'::jsonb, 'a', 'النابضُ الذي يتمدّدُ بقدر ثقل الجسم المعلّق هو الدينامومتر، أداةُ قياس الثقل.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('d840415a-7b4e-5a0f-9f75-8629e9502dc0', '271b1526-be79-5804-9478-e7fd732b9131', 'لماذا لا تطيرُ الأجسامُ تلقائيًّا نحو الأعلى؟', '[{"id":"a","text":"لأنّ الثقلَ يجذبُها نحو الأسفل"},{"id":"b","text":"لأنّها لا تحبُّ الأعلى"},{"id":"c","text":"لأنّ الهواءَ ثقيل"},{"id":"d","text":"لأنّها ساخنة"}]'::jsonb, 'a', 'الثقلُ (جذبُ الأرض) يشدُّ الأجسامَ نحو الأسفل، فلا تصعدُ من تلقاء نفسها.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('ded64a78-046e-5a02-beb9-92b00833f915', '271b1526-be79-5804-9478-e7fd732b9131', 'ما الفرقُ بين الكتلة والثقل؟', '[{"id":"a","text":"الكتلةُ كمّيّةُ مادة، والثقلُ قوّةُ جذب"},{"id":"b","text":"هما الشيءُ نفسُه"},{"id":"c","text":"الكتلةُ قوّة، والثقلُ لون"},{"id":"d","text":"الثقلُ كمّيّةُ مادة، والكتلةُ ضوء"}]'::jsonb, 'a', 'الكتلةُ كمّيّةُ المادة في الجسم (بالكغ)، أمّا الثقلُ فقوّةُ جذب الأرض له (بالدينامومتر).', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('bcdc025c-8f7d-57a7-a0cd-5d67eecedc0a', '271b1526-be79-5804-9478-e7fd732b9131', 'ما وحدةُ قياس الثقل؟', '[{"id":"a","text":"النيوتن (N)"},{"id":"b","text":"الكيلوغرام"},{"id":"c","text":"المتر"},{"id":"d","text":"الثانية"}]'::jsonb, 'a', 'الثقلُ قوّةٌ، ووحدتُه النيوتن (N)؛ أمّا الكيلوغرام فوحدةُ الكتلة.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('6e200bc7-e58e-577c-baaf-55a949d2dd53', 'c383f16c-2ad5-5bf9-95d8-9b798e80b4ac', 'eveil-scientifique-6eme', '⭐⭐ تمرين مراجعة (نمط امتحان): الثقل', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('0ba93b45-71f5-5fb5-bad9-b29b3d87ed4d', '6e200bc7-e58e-577c-baaf-55a949d2dd53', 'اتّجاهُ الثقل دائمًا:', '[{"id":"a","text":"نحو الأسفل"},{"id":"b","text":"نحو الأعلى"},{"id":"c","text":"نحو الشمال"},{"id":"d","text":"نحو الشمس"}]'::jsonb, 'a', 'الثقلُ يتّجهُ دائمًا نحو الأسفل (نحو مركز الأرض).', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('b67924e8-f021-5a78-94fb-f07b71c11f3c', '6e200bc7-e58e-577c-baaf-55a949d2dd53', 'الثقلُ هو:', '[{"id":"a","text":"قوّةُ جذب الأرض للجسم"},{"id":"b","text":"كمّيّةُ الضوء"},{"id":"c","text":"درجةُ الحرارة"},{"id":"d","text":"سرعةُ الجسم"}]'::jsonb, 'a', 'الثقلُ قوّةُ جذبٍ تمارسُها الأرضُ على الجسم نحو الأسفل.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('43fabd5a-a0ac-5f7a-9e35-1bb71f10cb8e', '6e200bc7-e58e-577c-baaf-55a949d2dd53', 'بمَ نقيسُ الثقل؟', '[{"id":"a","text":"الدينامومتر"},{"id":"b","text":"الميزان العاديّ"},{"id":"c","text":"المنقلة"},{"id":"d","text":"البوصلة"}]'::jsonb, 'a', 'نقيسُ الثقلَ بالدينامومتر (الميزان النابضيّ).', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('959efeaa-7de0-53c8-9a9d-3860b0e20285', '6e200bc7-e58e-577c-baaf-55a949d2dd53', 'بمَ نقيسُ الكتلة؟', '[{"id":"a","text":"الميزان"},{"id":"b","text":"الدينامومتر"},{"id":"c","text":"الترمومتر"},{"id":"d","text":"المسطرة"}]'::jsonb, 'a', 'نقيسُ الكتلةَ بالميزان، ووحدتُها الكيلوغرام.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('a749d251-5477-53f5-b091-3bcf82a0b1b8', '6e200bc7-e58e-577c-baaf-55a949d2dd53', 'ماذا يحدثُ لكرةٍ تُركت من اليد في الهواء؟', '[{"id":"a","text":"تسقطُ نحو الأسفل"},{"id":"b","text":"تصعدُ نحو الأعلى"},{"id":"c","text":"تبقى معلّقةً مكانَها"},{"id":"d","text":"تختفي"}]'::jsonb, 'a', 'بفعل الثقل تسقطُ الكرةُ نحو الأسفل إلى الأرض.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('6fadf351-ece8-5791-86e8-1515c25b7261', '6e200bc7-e58e-577c-baaf-55a949d2dd53', 'أيُّ عبارةٍ صحيحة؟', '[{"id":"a","text":"الثقلُ قوّة، والكتلةُ كمّيّةُ مادة"},{"id":"b","text":"الثقلُ والكتلةُ شيءٌ واحد"},{"id":"c","text":"الكتلةُ تتّجهُ نحو الأسفل"},{"id":"d","text":"الثقلُ يُقاسُ بالكيلوغرام دائمًا"}]'::jsonb, 'a', 'الثقلُ قوّةُ جذب (بالنيوتن)، والكتلةُ كمّيّةُ مادة (بالكيلوغرام)؛ فهما مختلفان.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('8f161787-a898-59a5-8134-f42406e0d550', 'c383f16c-2ad5-5bf9-95d8-9b798e80b4ac', 'eveil-scientifique-6eme', '👑 تحدّي النخبة ⭐⭐⭐⭐: سيّدُ الثقل', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('2b4e10b4-d65e-56d5-adc5-89b5bff33060', '8f161787-a898-59a5-8134-f42406e0d550', 'على أيّ مبدأٍ يعملُ الدينامومتر؟', '[{"id":"a","text":"تمدّدُ نابضٍ (زنبرك) بقدر ثقل الجسم المعلّق"},{"id":"b","text":"تغيّرُ لون الجسم"},{"id":"c","text":"دورانُ عقارب"},{"id":"d","text":"تبخّرُ الماء"}]'::jsonb, 'a', 'في الدينامومتر يتمدّدُ النابضُ بمقدارٍ يتناسبُ مع ثقل الجسم المعلّق به، فنقرأُ الثقل.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('2540166d-cb24-5925-bdbf-ae3fdadfc00f', '8f161787-a898-59a5-8134-f42406e0d550', 'على سطح القمر يكونُ ثقلُ الجسم:', '[{"id":"a","text":"أقلَّ منه على الأرض"},{"id":"b","text":"أكبرَ منه على الأرض"},{"id":"c","text":"منعدمًا تمامًا"},{"id":"d","text":"هو نفسُه تمامًا"}]'::jsonb, 'a', 'جذبُ القمر أضعفُ من جذب الأرض، فيكونُ ثقلُ الجسم على القمر أقلّ.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('3b0e53a7-e763-5b43-b3d1-0d3d524d39df', '8f161787-a898-59a5-8134-f42406e0d550', 'هل تتغيّرُ كتلةُ جسمٍ إذا نقلناه من الأرض إلى القمر؟', '[{"id":"a","text":"لا، الكتلةُ ثابتةٌ لأنّها كمّيّةُ مادة"},{"id":"b","text":"نعم، تصبحُ صفرًا"},{"id":"c","text":"نعم، تتضاعف"},{"id":"d","text":"نعم، تختفي"}]'::jsonb, 'a', 'الكتلةُ كمّيّةُ المادة ولا تتغيّرُ بتغيّر المكان؛ الذي يتغيّرُ هو الثقل (قوّة الجذب).', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('16800556-089a-5bdc-b7bc-8a29f80ae9fb', '8f161787-a898-59a5-8134-f42406e0d550', 'لماذا نمثّلُ الثقلَ بسهمٍ متّجهٍ إلى أسفل؟', '[{"id":"a","text":"لأنّ اتّجاهَه نحو الأرض (الأسفل)"},{"id":"b","text":"لأنّه يتّجهُ نحو السماء"},{"id":"c","text":"لأنّه أفقيّ"},{"id":"d","text":"لأنّه بلا اتّجاه"}]'::jsonb, 'a', 'الثقلُ قوّةٌ نحو الأسفل (نحو مركز الأرض)، فنمثّلُه بسهمٍ يشيرُ إلى أسفل.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('21d55777-f632-5727-8a77-9745a5395bc5', '8f161787-a898-59a5-8134-f42406e0d550', 'ما الذي يجعلُ ماءَ الشلّال ينزلُ إلى الأسفل؟', '[{"id":"a","text":"الثقل (جذب الأرض)"},{"id":"b","text":"الرياحُ فقط"},{"id":"c","text":"ضوءُ الشمس"},{"id":"d","text":"صوتُ الماء"}]'::jsonb, 'a', 'ينزلُ ماءُ الشلّال نحو الأسفل بفعل الثقل، أي جذب الأرض له.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('2215f8f0-28c0-5c97-ad25-5f314b845415', '8f161787-a898-59a5-8134-f42406e0d550', 'جسمان على الأرض: الأوّلُ كتلتُه أكبرُ من الثاني. أيُّهما أكبرُ ثقلًا؟', '[{"id":"a","text":"الأكبرُ كتلةً"},{"id":"b","text":"الأصغرُ كتلةً"},{"id":"c","text":"لهما الثقلُ نفسُه دائمًا"},{"id":"d","text":"لا علاقةَ بين الكتلة والثقل"}]'::jsonb, 'a', 'كلّما زادت كتلةُ الجسم زاد ثقلُه على الأرض، فالأكبرُ كتلةً أكبرُ ثقلًا.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('0054979e-48e6-52da-920d-ddb26b045cf1', 'c383f16c-2ad5-5bf9-95d8-9b798e80b4ac', 'eveil-scientifique-6eme', '📝 تدريب ⭐⭐⭐: مراجعةٌ شاملةٌ للثقل', 3, 120, 30, 'boss', 'admin', 5)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('1154077d-d319-5347-8149-7de3436be35b', '0054979e-48e6-52da-920d-ddb26b045cf1', 'الثقلُ قوّةٌ تجذبُ الأجسامَ نحو:', '[{"id":"a","text":"الأسفل (الأرض)"},{"id":"b","text":"الأعلى (السماء)"},{"id":"c","text":"الجوانب"},{"id":"d","text":"الشمس"}]'::jsonb, 'a', 'الثقلُ يجذبُ الأجسامَ نحو الأسفل، أي نحو الأرض.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('544cd381-48fb-5c01-8580-258f563eb9d6', '0054979e-48e6-52da-920d-ddb26b045cf1', 'أداةُ قياس الثقل هي:', '[{"id":"a","text":"الدينامومتر"},{"id":"b","text":"الميزان العاديّ"},{"id":"c","text":"الترمومتر"},{"id":"d","text":"البوصلة"}]'::jsonb, 'a', 'نقيسُ الثقلَ بالدينامومتر (الميزان النابضيّ).', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('f73471ba-30c8-54d8-a0a6-3f7b3d3fdba5', '0054979e-48e6-52da-920d-ddb26b045cf1', 'أداةُ قياس الكتلة هي:', '[{"id":"a","text":"الميزان"},{"id":"b","text":"الدينامومتر"},{"id":"c","text":"المنقلة"},{"id":"d","text":"المسطرة"}]'::jsonb, 'a', 'نقيسُ الكتلةَ بالميزان، ووحدتُها الكيلوغرام.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('61fe56df-d6c8-5004-ab16-3d0c7ef09cc0', '0054979e-48e6-52da-920d-ddb26b045cf1', 'ما وحدةُ قياس الكتلة؟', '[{"id":"a","text":"الكيلوغرام"},{"id":"b","text":"النيوتن"},{"id":"c","text":"المتر"},{"id":"d","text":"اللتر"}]'::jsonb, 'a', 'وحدةُ الكتلة هي الكيلوغرام (كغ)؛ أمّا النيوتن فوحدةُ الثقل.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('caaa4398-3082-5045-914e-3aec6636044b', '0054979e-48e6-52da-920d-ddb26b045cf1', 'السهمُ في الرسم يمثّلُ الثقل. ما اتّجاهُه؟ <svg viewBox="0 0 100 100"><rect x="38" y="18" width="24" height="22" fill="none" stroke="currentColor" stroke-width="2.5"/><line x1="50" y1="40" x2="50" y2="74" stroke="#ef4444" stroke-width="2.5"/><polygon points="50,84 43,73 57,73" fill="#ef4444"/></svg>', '[{"id":"a","text":"نحو الأسفل"},{"id":"b","text":"نحو الأعلى"},{"id":"c","text":"نحو اليسار"},{"id":"d","text":"دائريّ"}]'::jsonb, 'a', 'اتّجاهُ السهم نحو الأسفل، وهو اتّجاهُ قوّة الثقل نحو الأرض.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('0fc01dc4-5ec8-522b-9a27-385299106c38', '0054979e-48e6-52da-920d-ddb26b045cf1', 'لماذا تنزلُ الأمطارُ نحو الأرض؟', '[{"id":"a","text":"بفعل الثقل (جذب الأرض)"},{"id":"b","text":"بفعل الضوء"},{"id":"c","text":"لأنّ الغيومَ تدفعُها للأعلى"},{"id":"d","text":"بفعل الصوت"}]'::jsonb, 'a', 'تسقطُ قطراتُ المطر نحو الأرض بفعل الثقل، أي جذب الأرض لها.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('b6a7681c-91e3-54b4-803e-7962284147cd', '18a4f2b8-242a-546b-9fe3-e13f232feb35', 'eveil-scientifique-6eme', 'اختبار فهم الدرس ⭐', 1, 20, 5, 'quiz', 'admin', 0)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('f778eee0-c790-5d2c-bcfc-96776ad15054', 'b6a7681c-91e3-54b4-803e-7962284147cd', 'العينُ هي عضوُ حاسّة:', '[{"id":"a","text":"البصر"},{"id":"b","text":"السمع"},{"id":"c","text":"الشمّ"},{"id":"d","text":"الذوق"}]'::jsonb, 'a', 'العينُ هي عضوُ حاسّة البصر التي نرى بها الأجسامَ والألوان.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('0fb446bb-900a-547f-8f1e-e37fe381625a', 'b6a7681c-91e3-54b4-803e-7962284147cd', 'ما اسمُ الجزء الملوّن المحيط بالفتحة الوسطى في هذه العين؟ <svg viewBox="0 0 100 100"><path d="M15 50 Q50 24 85 50 Q50 76 15 50 Z" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="50" cy="50" r="16" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="50" cy="50" r="6" fill="#ef4444"/></svg>', '[{"id":"a","text":"القزحيّة"},{"id":"b","text":"الشبكيّة"},{"id":"c","text":"العصب البصريّ"},{"id":"d","text":"العدسة"}]'::jsonb, 'a', 'القزحيّةُ هي الجزءُ الملوّنُ المحيطُ بالبؤبؤ (الفتحة الوسطى).', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('78d9e7ea-b59a-59f6-9b0e-ae8bf4caaeca', 'b6a7681c-91e3-54b4-803e-7962284147cd', 'من أيّ جزءٍ يدخلُ الضوءُ إلى العين؟', '[{"id":"a","text":"البؤبؤ"},{"id":"b","text":"العصب البصريّ"},{"id":"c","text":"الشبكيّة"},{"id":"d","text":"الجفن"}]'::jsonb, 'a', 'يدخلُ الضوءُ إلى العين عبر البؤبؤ (الفتحة السوداء وسط القزحيّة).', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('61148198-06d4-573f-b8e0-a6099b256fe2', 'b6a7681c-91e3-54b4-803e-7962284147cd', 'أين تتكوّنُ صورةُ الأجسام داخل العين؟', '[{"id":"a","text":"على الشبكيّة"},{"id":"b","text":"على القرنيّة"},{"id":"c","text":"على الجفن"},{"id":"d","text":"على القزحيّة"}]'::jsonb, 'a', 'تتكوّنُ صورةُ الأجسام على الشبكيّة في مؤخّرة العين.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('f60e2a21-9adf-5ad5-8889-25a2fd7d0502', 'b6a7681c-91e3-54b4-803e-7962284147cd', 'ما الذي ينقلُ الرسالةَ من العين إلى الدماغ؟', '[{"id":"a","text":"العصب البصريّ"},{"id":"b","text":"العدسة"},{"id":"c","text":"القرنيّة"},{"id":"d","text":"البؤبؤ"}]'::jsonb, 'a', 'العصبُ البصريُّ ينقلُ الرسالةَ من الشبكيّة إلى الدماغ فنُبصر.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('a42bdc73-186e-55b0-9d2c-81e5c7d80597', '18a4f2b8-242a-546b-9fe3-e13f232feb35', 'eveil-scientifique-6eme', '⭐ تمرين: أوّلُ خطوات مع العين', 1, 50, 10, 'practice', 'admin', 1)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('3858e486-bf12-5765-9396-519120f10d1b', 'a42bdc73-186e-55b0-9d2c-81e5c7d80597', 'العينُ عضوٌ لـ:', '[{"id":"a","text":"الإبصار"},{"id":"b","text":"السمع"},{"id":"c","text":"التنفّس"},{"id":"d","text":"الهضم"}]'::jsonb, 'a', 'العينُ عضوُ الإبصار (حاسّة البصر).', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('a0f8dad8-cba3-54f1-bef3-022a72e05d38', 'a42bdc73-186e-55b0-9d2c-81e5c7d80597', 'ما الجزءُ الأماميُّ الشفّاف من العين؟', '[{"id":"a","text":"القرنيّة"},{"id":"b","text":"الشبكيّة"},{"id":"c","text":"العصب البصريّ"},{"id":"d","text":"البؤبؤ"}]'::jsonb, 'a', 'القرنيّةُ هي الغشاءُ الأماميُّ الشفّافُ للعين.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('1f792b4e-3233-5afc-b11b-f6489894e4c1', 'a42bdc73-186e-55b0-9d2c-81e5c7d80597', 'ما اسمُ الجزء الملوّن في هذه العين؟ <svg viewBox="0 0 100 100"><path d="M15 50 Q50 24 85 50 Q50 76 15 50 Z" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="50" cy="50" r="16" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="50" cy="50" r="6" fill="#ef4444"/></svg>', '[{"id":"a","text":"القزحيّة"},{"id":"b","text":"العدسة"},{"id":"c","text":"الشبكيّة"},{"id":"d","text":"الجفن"}]'::jsonb, 'a', 'الجزءُ الملوّنُ المحيطُ بالبؤبؤ هو القزحيّة.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('594f1059-51c8-546e-8e4b-2aa02acad6ca', 'a42bdc73-186e-55b0-9d2c-81e5c7d80597', 'ما اسمُ الفتحة السوداء في وسط العين، التي يدخلُ منها الضوء؟', '[{"id":"a","text":"البؤبؤ (الحدقة)"},{"id":"b","text":"القرنيّة"},{"id":"c","text":"الشبكيّة"},{"id":"d","text":"العصب البصريّ"}]'::jsonb, 'a', 'البؤبؤ (الحدقة) هو الفتحةُ في وسط القزحيّة، ومنه يدخلُ الضوء.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('ed764c79-7d80-59b7-b437-2cc5030b30a4', 'a42bdc73-186e-55b0-9d2c-81e5c7d80597', 'أين تتكوّنُ الصورةُ في العين؟', '[{"id":"a","text":"على الشبكيّة"},{"id":"b","text":"على القرنيّة"},{"id":"c","text":"على القزحيّة"},{"id":"d","text":"على الجفن"}]'::jsonb, 'a', 'تتكوّنُ الصورةُ على الشبكيّة في مؤخّرة العين.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('127735db-376b-5a17-b95c-9ca725ffe95f', 'a42bdc73-186e-55b0-9d2c-81e5c7d80597', 'هل نرى في الظلام التامّ؟', '[{"id":"a","text":"لا، لأنّ الإبصارَ يحتاجُ ضوءًا"},{"id":"b","text":"نعم، نرى بوضوحٍ تامّ"},{"id":"c","text":"نعم، لأنّ العينَ تُصدرُ ضوءًا"},{"id":"d","text":"نرى الألوانَ فقط"}]'::jsonb, 'a', 'لا نرى في الظلام التامّ، لأنّ العينَ تحتاجُ ضوءًا ينعكسُ عن الأجسام لتُبصرها.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('b62dfdd8-6431-5b94-ba86-dc4827008072', '18a4f2b8-242a-546b-9fe3-e13f232feb35', 'eveil-scientifique-6eme', '⚔️ زعيم الفصل ⭐⭐⭐: تحدّي العين', 3, 120, 30, 'boss', 'admin', 2)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('9de8733e-7941-5942-83c6-49d7d12185c8', 'b62dfdd8-6431-5b94-ba86-dc4827008072', 'العينُ عضوُ حاسّة:', '[{"id":"a","text":"البصر"},{"id":"b","text":"اللمس"},{"id":"c","text":"الذوق"},{"id":"d","text":"الشمّ"}]'::jsonb, 'a', 'العينُ هي عضوُ حاسّة البصر، وبها نرى الأجسامَ والألوانَ والأشكال.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('60dad7b5-6fa7-56f4-a8c5-5c7cb0d920d9', 'b62dfdd8-6431-5b94-ba86-dc4827008072', 'من أين يدخلُ الضوءُ إلى العين؟', '[{"id":"a","text":"من البؤبؤ"},{"id":"b","text":"من العصب البصريّ"},{"id":"c","text":"من الشبكيّة"},{"id":"d","text":"من الجفن"}]'::jsonb, 'a', 'يدخلُ الضوءُ من البؤبؤ (الفتحة وسط القزحيّة).', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('edb6be80-efb8-5740-a274-dff4c884074f', 'b62dfdd8-6431-5b94-ba86-dc4827008072', 'ما الذي يجمعُ الضوءَ داخل العين لتكوين صورةٍ واضحة؟', '[{"id":"a","text":"العدسة"},{"id":"b","text":"الجفن"},{"id":"c","text":"العصب البصريّ"},{"id":"d","text":"القزحيّة"}]'::jsonb, 'a', 'العدسةُ تجمعُ الضوءَ الداخلَ لتكوين صورةٍ واضحةٍ على الشبكيّة.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('286ed54d-0cbf-54e2-ae9c-a6a7f7f9d591', 'b62dfdd8-6431-5b94-ba86-dc4827008072', 'أكملِ التسلسل: ضوءٌ ← بؤبؤ ← عدسة ← ...؟', '[{"id":"a","text":"الشبكيّة (ثمّ العصب البصريّ)"},{"id":"b","text":"القرنيّة"},{"id":"c","text":"الجفن"},{"id":"d","text":"خارج العين"}]'::jsonb, 'a', 'بعد العدسة تتكوّنُ الصورةُ على الشبكيّة، ثمّ ينقلُها العصبُ البصريّ إلى الدماغ.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('4e77bff5-505f-5e30-89be-4d82fcfd6f8e', 'b62dfdd8-6431-5b94-ba86-dc4827008072', 'ما الذي ينقلُ الرسالةَ البصريّةَ إلى الدماغ؟', '[{"id":"a","text":"العصب البصريّ"},{"id":"b","text":"العدسة"},{"id":"c","text":"البؤبؤ"},{"id":"d","text":"القرنيّة"}]'::jsonb, 'a', 'العصبُ البصريُّ ينقلُ الرسالةَ من الشبكيّة إلى الدماغ.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('74170d35-fdd3-5484-bba7-e7e41811b725', 'b62dfdd8-6431-5b94-ba86-dc4827008072', 'لماذا لا نرى الأجسامَ في غرفةٍ مظلمةٍ تمامًا؟', '[{"id":"a","text":"لعدم وجود ضوءٍ ينعكسُ عن الأجسام إلى العين"},{"id":"b","text":"لأنّ العينَ تتوقّفُ عن العمل"},{"id":"c","text":"لأنّ الأجسامَ تختفي فعلًا"},{"id":"d","text":"لأنّ العينَ تُصدرُ ضوءًا أزرق"}]'::jsonb, 'a', 'نرى الأجسامَ بالضوء المنعكس عنها؛ وفي الظلام لا ضوءَ ينعكسُ إلى العين فلا نُبصر.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('96302446-dd68-562d-bc70-7940d5935052', '18a4f2b8-242a-546b-9fe3-e13f232feb35', 'eveil-scientifique-6eme', '⭐⭐ تمرين مراجعة (نمط امتحان): العين والإبصار', 2, 70, 15, 'practice', 'admin', 3)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('d3f9ff06-c2c7-5dd7-82ef-bd0a733ec2c6', '96302446-dd68-562d-bc70-7940d5935052', 'ما العضوُ المسؤولُ عن الإبصار؟', '[{"id":"a","text":"العين"},{"id":"b","text":"الأذن"},{"id":"c","text":"الأنف"},{"id":"d","text":"اللسان"}]'::jsonb, 'a', 'العينُ هي العضوُ المسؤولُ عن الإبصار (حاسّة البصر).', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('1f014717-2587-5769-84f6-7f0bee00b184', '96302446-dd68-562d-bc70-7940d5935052', 'ما اسمُ الجزء الملوّن المحيط بالبؤبؤ في هذه العين؟ <svg viewBox="0 0 100 100"><path d="M15 50 Q50 24 85 50 Q50 76 15 50 Z" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="50" cy="50" r="16" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="50" cy="50" r="6" fill="#ef4444"/></svg>', '[{"id":"a","text":"القزحيّة"},{"id":"b","text":"الشبكيّة"},{"id":"c","text":"العدسة"},{"id":"d","text":"القرنيّة"}]'::jsonb, 'a', 'القزحيّةُ هي الجزءُ الملوّنُ المحيطُ بالبؤبؤ.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('445e5317-752b-5994-aefc-e00ac72043c2', '96302446-dd68-562d-bc70-7940d5935052', 'ما دورُ العدسة في العين؟', '[{"id":"a","text":"جمعُ الضوء لتكوين صورة"},{"id":"b","text":"نقلُ الرسالة إلى الدماغ"},{"id":"c","text":"حمايةُ العين من الغبار"},{"id":"d","text":"إصدارُ الضوء"}]'::jsonb, 'a', 'تجمعُ العدسةُ الضوءَ الداخلَ إلى العين لتكوين صورةٍ واضحةٍ على الشبكيّة.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('559a0a71-4537-565d-890e-8bbc27fee6a7', '96302446-dd68-562d-bc70-7940d5935052', 'أين تتكوّنُ صورةُ الأجسام؟', '[{"id":"a","text":"على الشبكيّة"},{"id":"b","text":"على القزحيّة"},{"id":"c","text":"على الجفن"},{"id":"d","text":"على القرنيّة"}]'::jsonb, 'a', 'تتكوّنُ الصورةُ على الشبكيّة في مؤخّرة العين.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('aa8b2aae-b7ba-552e-8fc8-578493a4a278', '96302446-dd68-562d-bc70-7940d5935052', 'كيف نحافظُ على سلامة العين؟', '[{"id":"a","text":"إضاءةٌ كافية وعدمُ الاقتراب من الشاشات"},{"id":"b","text":"النظرُ إلى الشمس مباشرةً"},{"id":"c","text":"القراءةُ في الظلام"},{"id":"d","text":"تقريبُ الكتاب جدًّا من العين"}]'::jsonb, 'a', 'نحمي العينَ بإضاءةٍ كافيةٍ وبالابتعاد المناسب عن الشاشات وعدم النظر للشمس مباشرة.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('99023dd2-5b75-528d-bf29-49c8e9adc16f', '96302446-dd68-562d-bc70-7940d5935052', 'نرى الأجسامَ لأنّ العينَ:', '[{"id":"a","text":"تستقبلُ الضوءَ المنعكسَ عنها"},{"id":"b","text":"تُصدرُ ضوءًا نحوها"},{"id":"c","text":"تلمسُها عن بعد"},{"id":"d","text":"تسمعُ صوتَها"}]'::jsonb, 'a', 'العينُ تستقبلُ الضوءَ المنعكسَ عن الأجسام، ولا تُصدرُ ضوءًا.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('91498677-36e3-51c3-9196-fac9b6705f1a', '18a4f2b8-242a-546b-9fe3-e13f232feb35', 'eveil-scientifique-6eme', '👑 تحدّي النخبة ⭐⭐⭐⭐: سيّدُ الإبصار', 4, 300, 60, 'challenge', 'admin', 4)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('e72fa168-7255-56b3-8663-1cc23d1936d8', '91498677-36e3-51c3-9196-fac9b6705f1a', 'ما التسلسلُ الصحيحُ لعمليّة الإبصار؟', '[{"id":"a","text":"ضوءٌ ← بؤبؤ ← عدسة ← شبكيّة ← عصب بصريّ ← دماغ"},{"id":"b","text":"دماغ ← عين ← ضوء"},{"id":"c","text":"شبكيّة ← بؤبؤ ← ضوء"},{"id":"d","text":"عصب بصريّ ← ضوء ← عدسة"}]'::jsonb, 'a', 'يدخلُ الضوءُ من البؤبؤ، تجمعُه العدسةُ على الشبكيّة، ثمّ ينقلُ العصبُ البصريُّ الرسالةَ إلى الدماغ.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('f86e71af-947d-5f3c-a07f-2bd522e86532', '91498677-36e3-51c3-9196-fac9b6705f1a', 'لماذا يتّسعُ البؤبؤ في الضوء الخافت (الظلام النسبيّ)؟', '[{"id":"a","text":"ليدخلَ ضوءٌ أكثر إلى العين"},{"id":"b","text":"ليدخلَ ضوءٌ أقلّ"},{"id":"c","text":"لأنّ العينَ تتعب"},{"id":"d","text":"لإصدار الضوء"}]'::jsonb, 'a', 'في الإضاءة الخافتة يتّسعُ البؤبؤ ليسمحَ بدخول كمّيّةٍ أكبرَ من الضوء فنرى بوضوحٍ أكبر.', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('96d3b885-17f0-5264-a26f-b6550b9da543', '91498677-36e3-51c3-9196-fac9b6705f1a', 'العبارةُ: «العينُ تُصدرُ ضوءًا حتى ترى». هل هي صحيحة؟', '[{"id":"a","text":"خطأ؛ العينُ تستقبلُ الضوءَ المنعكسَ عن الأجسام"},{"id":"b","text":"صحيحة؛ العينُ مصباح"},{"id":"c","text":"صحيحةٌ في الليل فقط"},{"id":"d","text":"صحيحةٌ للحيوانات فقط"}]'::jsonb, 'a', 'العبارةُ خاطئة؛ فالعينُ لا تُصدرُ ضوءًا بل تستقبلُ الضوءَ المنعكسَ عن الأجسام.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('2f9c7651-8e3c-56a0-92a3-e24ca3a2cbb9', '91498677-36e3-51c3-9196-fac9b6705f1a', 'ما دورُ الشبكيّة في العين؟', '[{"id":"a","text":"تتكوّنُ عليها صورةُ الأجسام"},{"id":"b","text":"تُصدرُ الضوء"},{"id":"c","text":"تحمي العينَ من الغبار"},{"id":"d","text":"تلوّنُ العين"}]'::jsonb, 'a', 'الشبكيّةُ غشاءٌ في مؤخّرة العين تتكوّنُ عليه صورةُ الأجسام قبل نقلها إلى الدماغ.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('c020a39e-c424-5b74-b8ad-d49e94266492', '91498677-36e3-51c3-9196-fac9b6705f1a', 'لماذا يُمنعُ النظرُ إلى الشمس مباشرةً؟', '[{"id":"a","text":"لأنّ ضوءَها القويَّ يضرُّ العين"},{"id":"b","text":"لأنّها بعيدةٌ جدًّا"},{"id":"c","text":"لأنّها باردة"},{"id":"d","text":"لأنّها لا تُرى"}]'::jsonb, 'a', 'ضوءُ الشمس قويٌّ جدًّا، والنظرُ إليه مباشرةً يؤذي الشبكيّةَ ويضرُّ بالبصر.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('1cdc49db-9396-5dd5-8d53-5989d560c625', '91498677-36e3-51c3-9196-fac9b6705f1a', 'ما دورُ العصب البصريّ؟', '[{"id":"a","text":"نقلُ الرسالة البصريّة إلى الدماغ"},{"id":"b","text":"جمعُ الضوء"},{"id":"c","text":"تلوينُ العين"},{"id":"d","text":"إفرازُ الدموع"}]'::jsonb, 'a', 'العصبُ البصريُّ ينقلُ الرسالةَ من الشبكيّة إلى الدماغ حيث تُدرَكُ الصورة.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+  ('ea014475-8628-5998-8d3b-010690177228', '18a4f2b8-242a-546b-9fe3-e13f232feb35', 'eveil-scientifique-6eme', '📝 تدريب ⭐⭐⭐: مراجعةٌ شاملةٌ للعين والإبصار', 3, 120, 30, 'boss', 'admin', 5)
+ON CONFLICT (id) DO UPDATE SET
+  chapter_id = EXCLUDED.chapter_id,
+  subject_id = EXCLUDED.subject_id,
+  title = EXCLUDED.title,
+  difficulty = EXCLUDED.difficulty,
+  xp_reward = EXCLUDED.xp_reward,
+  reward_coins = EXCLUDED.reward_coins,
+  mode = EXCLUDED.mode,
+  display_order = EXCLUDED.display_order;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('91dc2be8-c0a1-5259-8fba-62f965af4181', 'ea014475-8628-5998-8d3b-010690177228', 'العينُ عضوُ حاسّة:', '[{"id":"a","text":"البصر"},{"id":"b","text":"السمع"},{"id":"c","text":"الشمّ"},{"id":"d","text":"اللمس"}]'::jsonb, 'a', 'العينُ عضوُ حاسّة البصر التي نُدركُ بها صورَ العالم من حولنا.', 1, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('6083bb95-1e30-5c0f-b33b-ef96563341d2', 'ea014475-8628-5998-8d3b-010690177228', 'من أين يدخلُ الضوءُ إلى العين؟', '[{"id":"a","text":"البؤبؤ"},{"id":"b","text":"الشبكيّة"},{"id":"c","text":"العصب البصريّ"},{"id":"d","text":"الجفن"}]'::jsonb, 'a', 'يدخلُ الضوءُ عبر البؤبؤ (الفتحة وسط القزحيّة).', 2, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('324b1dd7-0a3b-5e32-9114-4ba17dd49e73', 'ea014475-8628-5998-8d3b-010690177228', 'ما الجزءُ الملوّنُ في العين؟', '[{"id":"a","text":"القزحيّة"},{"id":"b","text":"الشبكيّة"},{"id":"c","text":"العدسة"},{"id":"d","text":"القرنيّة"}]'::jsonb, 'a', 'القزحيّةُ هي الجزءُ الملوّنُ من العين، ويتوسّطُها البؤبؤ.', 3, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('eef3a4ae-0f63-5def-8fc8-51265c64d054', 'ea014475-8628-5998-8d3b-010690177228', 'أين تتكوّنُ الصورةُ في العين؟', '[{"id":"a","text":"على الشبكيّة"},{"id":"b","text":"على القرنيّة"},{"id":"c","text":"على القزحيّة"},{"id":"d","text":"على الجفن"}]'::jsonb, 'a', 'تتكوّنُ صورةُ الأجسام على الشبكيّة في مؤخّرة العين.', 4, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('1d246c5f-088e-53c0-893a-a72f5fec6956', 'ea014475-8628-5998-8d3b-010690177228', 'ما الذي ينقلُ الإشارةَ من العين إلى الدماغ؟', '[{"id":"a","text":"العصب البصريّ"},{"id":"b","text":"العدسة"},{"id":"c","text":"القرنيّة"},{"id":"d","text":"البؤبؤ"}]'::jsonb, 'a', 'العصبُ البصريُّ ينقلُ الإشارةَ من الشبكيّة إلى الدماغ فنُبصر.', 5, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES
+  ('b60dd4e0-427c-5445-865a-775d138588db', 'ea014475-8628-5998-8d3b-010690177228', 'لماذا نحتاجُ الضوءَ لكي نرى؟', '[{"id":"a","text":"لأنّ العينَ تستقبلُ الضوءَ المنعكسَ عن الأجسام"},{"id":"b","text":"لأنّ العينَ تُصدرُ الضوء"},{"id":"c","text":"لأنّ الضوءَ يسخّنُ العين"},{"id":"d","text":"لا حاجةَ للضوء"}]'::jsonb, 'a', 'نرى لأنّ الضوءَ ينعكسُ عن الأجسام ويدخلُ العينَ؛ فبدون ضوءٍ لا إبصار.', 6, 'mcq', NULL, NULL)
+ON CONFLICT (id) DO UPDATE SET
+  exercise_id = EXCLUDED.exercise_id,
+  prompt = EXCLUDED.prompt,
+  options = EXCLUDED.options,
+  correct_option = EXCLUDED.correct_option,
+  explanation = EXCLUDED.explanation,
+  display_order = EXCLUDED.display_order,
+  question_type = EXCLUDED.question_type,
+  answer_key = EXCLUDED.answer_key,
+  distractor_tags = EXCLUDED.distractor_tags;
+
+-- Converge question → competency mappings for this subject (étude 07 D-2).
+DO $$
+BEGIN
+  IF to_regclass('public.question_competencies') IS NOT NULL THEN
+    DELETE FROM public.question_competencies qc
+    USING public.questions q, public.exercises e
+    WHERE qc.question_id = q.id
+      AND q.exercise_id = e.id
+      AND e.subject_id = 'eveil-scientifique-6eme'
+      AND e.source = 'admin';
+  END IF;
+END $$;
+
