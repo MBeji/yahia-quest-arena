@@ -1,0 +1,80 @@
+{
+  "title": "Test de compréhension ⭐ : La multiplication végétative",
+  "questions": [
+    {
+      "prompt": "Qu'est-ce qu'une bouture ?",
+      "options": [
+        { "id": "a", "text": "Une graine sélectionnée pour son fort pouvoir germinatif" },
+        { "id": "b", "text": "Une portion de plante capable de régénérer les parties manquantes" },
+        { "id": "c", "text": "Un bourgeon prélevé pour être fixé sur une autre plante" },
+        { "id": "d", "text": "Une jeune plante issue de la reproduction sexuée" }
+      ],
+      "correctOption": "b",
+      "explanation": "Une bouture est une portion plus ou moins importante d'une plante — feuille, tige, rhizome — capable de régénérer les parties manquantes et de se développer totalement ✓ : mise à terre, elle s'enracine et donne une nouvelle plante. Une graine, comme une jeune plante issue d'un semis, relève de la reproduction sexuée, pas de la multiplication végétative. Et le bourgeon prélevé pour être fixé sur une autre plante est un greffon : il ne s'enracine pas, il se raccorde aux vaisseaux du porte greffe.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Qu'est-ce qui distingue le marcottage du bouturage ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Le marcottage n'emploie que des racines, le bouturage que des tiges"
+        },
+        { "id": "b", "text": "La plante obtenue par marcottage diffère de la plante mère" },
+        { "id": "c", "text": "Le marcottage se pratique in vitro, le bouturage en pleine terre" },
+        { "id": "d", "text": "La tige n'est détachée de la plante mère qu'après son enracinement" }
+      ],
+      "correctOption": "d",
+      "explanation": "Dans le marcottage, on enterre une tige aérienne sans la détacher de la plante ; ce n'est qu'une fois les racines adventives formées qu'on isole la tige enracinée ✓. Dans le bouturage, au contraire, le fragment est détaché d'abord et s'enracine seul : c'est toute la différence, et elle tient à la chronologie. Les deux techniques emploient bien des tiges aériennes, et non des racines. Toutes deux conservent les caractères de la plante mère — c'est justement leur intérêt. Et aucune des deux ne se pratique in vitro : ce sont les techniques traditionnelles.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Après une greffe réussie, d'où viennent les racines de la nouvelle plante, et d'où viennent ses fruits ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Les racines viennent du porte greffe, les fruits viennent du greffon"
+        },
+        {
+          "id": "b",
+          "text": "Les racines viennent du greffon, les fruits viennent du porte greffe"
+        },
+        { "id": "c", "text": "Les racines et les fruits viennent tous deux du greffon" },
+        { "id": "d", "text": "Les racines et les fruits viennent tous deux du porte greffe" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le porte greffe conserve son appareil absorbant complet — ses racines — et une partie du tronc ; le greffon développe l'appareil assimilateur et de fructification (rameaux, tige, feuilles, fruits), à l'exclusion de toute racine ✓. La nouvelle plante porte donc les caractères de la plante qui a fourni le greffon, et c'est bien pour cela qu'on prélève ce dernier sur un végétal sélectionné pour la qualité de ses fruits ou de ses fleurs. Toute autre répartition se trompe sur au moins un des deux rôles.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Qu'est-ce qu'un clone ?",
+      "options": [
+        { "id": "a", "text": "Une plante obtenue en croisant deux variétés différentes" },
+        { "id": "b", "text": "Un ensemble de graines produites par une même plante mère" },
+        { "id": "c", "text": "Un ensemble d'individus identiques issus d'un individu unique" },
+        { "id": "d", "text": "Une plante dont les caractères ont été améliorés au laboratoire" }
+      ],
+      "correctOption": "c",
+      "explanation": "Un clone est un ensemble d'individus possédant les mêmes caractères et provenant de la multiplication végétative d'un individu unique ✓ : toutes les plantes issues d'une même plante mère par bouturage, marcottage, greffage ou culture in vitro en forment un. Un croisement relève de la reproduction sexuée, et ses descendants ne sont justement pas identiques ; des graines non plus. Et la multiplication végétative n'améliore rien : elle conserve et multiplie ce que la plante mère avait déjà — c'est le choix de cette plante mère qui décide de tout.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel est l'avantage décisif de la culture in vitro par rapport au bouturage traditionnel ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Elle produit des plantes différentes de la plante mère, donc plus variées"
+        },
+        {
+          "id": "b",
+          "text": "Elle produit un nombre bien plus grand de plantes dans le même temps"
+        },
+        { "id": "c", "text": "Elle se pratique en pleine terre, sans matériel de laboratoire" },
+        { "id": "d", "text": "Elle permet de se passer de tout milieu nutritif" }
+      ],
+      "correctOption": "b",
+      "explanation": "En un an, le microbouturage in vitro donne 400 000 oliviers identiques à la plante d'origine, là où le bouturage traditionnel n'en donnerait dans le même temps qu'une vingtaine ✓ : c'est un changement d'échelle. Les plantes obtenues ne sont pas plus variées — elles forment justement un clone, toutes identiques à la plante de départ. Et la technique ne se pratique ni en pleine terre ni sans milieu nutritif : elle exige des conditions d'asepsie, et c'est bien sur un milieu nutritif que chaque microbouture est mise en culture.",
+      "difficulty": 2
+    }
+  ]
+}

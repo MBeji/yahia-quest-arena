@@ -1,0 +1,91 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Absorption, transpiration et sels minéraux",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Dans l'expérience de Rosène, cinq jeunes plants ont leurs racines plongées dans cinq tubes A, B, C, D et E. Le tube A est le seul où toute la racine baigne dans l'eau, sans huile. Quel est son rôle ?",
+      "options": [
+        { "id": "a", "text": "Il sert de témoin, aucune zone n'y étant isolée par l'huile" },
+        { "id": "b", "text": "Il sert à mesurer la vitesse d'absorption en cm³/heure" },
+        { "id": "c", "text": "Il sert à empêcher l'évaporation de l'eau des autres tubes" },
+        { "id": "d", "text": "Il sert à comparer deux espèces végétales différentes" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le tube A est le témoin : il montre ce que donne le montage quand aucune zone de la racine n'est isolée de l'eau par l'huile. C'est lui qui permet d'attribuer les différences observées dans les tubes B, C, D et E à la seule zone laissée au contact de l'eau ✓. La vitesse d'absorption, elle, se mesure au potomètre, pas ici. C'est l'huile — justement absente du tube A — qui isole une zone de l'eau, et non le tube témoin qui protégerait les autres de l'évaporation. Enfin, le protocole ne compare pas des espèces : d'un tube à l'autre, seule la zone en contact avec l'eau change.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Un rameau de vigne coupé au printemps laisse s'écouler de la sève au niveau de la section de la tige : on dit que la vigne pleure. Que prouve ce phénomène ?",
+      "options": [
+        { "id": "a", "text": "Que la transpiration foliaire aspire la sève vers le haut" },
+        { "id": "b", "text": "Que la sève est poussée par une pression venue des racines" },
+        { "id": "c", "text": "Que la sève brute descend des feuilles vers les racines" },
+        { "id": "d", "text": "Que le bilan hydrique de la plante est devenu négatif" }
+      ],
+      "correctOption": "b",
+      "explanation": "Un rameau coupé n'a plus de partie aérienne feuillée, donc plus d'aspiration foliaire — et pourtant la sève monte et s'écoule. C'est la preuve qu'elle circule sous pression dans les vaisseaux du bois, poussée depuis les racines : c'est la poussée radiculaire ✓, que l'expérience de Hales mesure au manomètre à mercure. L'aspiration foliaire est bien l'autre moteur de la montée de sève, mais elle ne peut pas agir ici, faute de feuilles : c'est tout l'intérêt de l'observation. La sève brute monte des racines vers les feuilles, elle ne descend pas. Et un bilan hydrique négatif signifie que la plante perd plus d'eau qu'elle n'en absorbe : elle se fane, elle ne rejette pas de sève.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "On cultive six lots de maïs sur six milieux synthétiques pendant trois semaines. Sur l'un d'eux, les feuilles présentent une nécrose et la masse sèche tombe à 44 g pour 100 pieds, contre 162 g sur le milieu de Knop. De quel milieu s'agit-il ?",
+      "options": [
+        { "id": "a", "text": "Le milieu sans azote" },
+        { "id": "b", "text": "Le milieu sans phosphore" },
+        { "id": "c", "text": "Le milieu sans potassium" },
+        { "id": "d", "text": "Le milieu sans fer" }
+      ],
+      "correctOption": "c",
+      "explanation": "Chaque carence laisse sa signature sur les feuilles et sur la masse sèche. La nécrose, accompagnée de la plus forte chute de masse sèche (44 g contre 162 g pour le témoin), est celle du milieu sans potassium ✓. La carence en azote donne une chlorose et 68 g ; celle en phosphore un jaunissement à l'extrémité des feuilles et 116 g ; celle en fer une chlorose et 130 g. Seule la lecture conjointe du symptôme et du chiffre permet de trancher, puisque l'azote et le fer donnent le même symptôme.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Garreau mesure, chez le tilleul, le nombre de stomates et l'eau transpirée par chaque face d'une feuille. La face inférieure porte 300 stomates par mm² et transpire 490 mg d'eau en 24 heures ; la face supérieure n'en porte aucun et transpire pourtant 200 mg en 24 heures. Comment expliquer cette transpiration sans stomate ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Les stomates de la face inférieure transpirent aussi pour la face supérieure"
+        },
+        { "id": "b", "text": "Le tilleul possède des stomates invisibles au microscope" },
+        {
+          "id": "c",
+          "text": "La mesure est fausse : sans stomate, aucune transpiration n'est possible"
+        },
+        { "id": "d", "text": "La cuticule, mince chez le tilleul, laisse passer la vapeur d'eau" }
+      ],
+      "correctOption": "d",
+      "explanation": "Puisque la face supérieure du tilleul transpire 200 mg par 24 heures sans porter un seul stomate, la vapeur emprunte forcément une autre voie. La comparaison des coupes des deux feuilles la désigne : chez le Dahlia, la face supérieure a des stomates et une cuticule épaisse ; chez le tilleul, elle n'a pas de stomate et sa cuticule est mince — c'est donc la cuticule qui est responsable de cette transpiration accessoire ✓. Les stomates d'une face ne transpirent pas pour l'autre : chacun débouche sur sa propre face. Postuler des stomates invisibles contredit l'observation microscopique, qui n'en montre aucun. Et le piège courant est de rejeter la mesure : c'est elle, au contraire, qui oblige à chercher une seconde voie de transpiration.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans un potomètre dont le tube capillaire a un diamètre de 2 mm, l'index se déplace de 8 mm en 5 minutes. Le volume du cylindre d'eau vaut V = R × R × π × h, avec π = 3,14. Quelle est la vitesse d'absorption ?",
+      "options": [
+        { "id": "a", "text": "0,005 cm³/heure" },
+        { "id": "b", "text": "0,025 cm³/heure" },
+        { "id": "c", "text": "0,3 cm³/heure" },
+        { "id": "d", "text": "1,2 cm³/heure" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le tube capillaire est assimilé à un cylindre. Son diamètre vaut 2 mm, donc son rayon R = 1 mm = 0,1 cm ; le déplacement de l'index donne la hauteur h = 8 mm = 0,8 cm. Le volume absorbé vaut V = 0,1 × 0,1 × 3,14 × 0,8 = 0,025 cm³ en 5 minutes. La vitesse est donc 0,025 / 5 = 0,005 cm³/mn, soit 0,005 × 60 = 0,3 cm³/heure ✓. Le piège courant est de prendre le diamètre pour le rayon : le volume est alors multiplié par 4 et l'on trouve 1,2. Trouver 0,025 revient à confondre le volume absorbé en 5 minutes avec une vitesse ; trouver 0,005 revient à s'arrêter à la vitesse par minute, qu'il restait à multiplier par 60.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "On mesure la vitesse de croissance de plantes cultivées sur des solutions ne différant que par leur teneur en potassium : 21 à 100 mg/l, 139 à 500 mg/l, 143 à 600 mg/l, 140 à 700 mg/l, 50 à 900 mg/l et 10 à 1000 mg/l. Un agriculteur dont la solution est à 500 mg/l décide de doubler la dose. Que prévoient ces résultats ?",
+      "options": [
+        { "id": "a", "text": "Une chute de la croissance : à 1000 mg/l, le potassium est toxique" },
+        { "id": "b", "text": "Un doublement de la croissance, puisque la dose est doublée" },
+        {
+          "id": "c",
+          "text": "Une croissance inchangée : la courbe forme un palier après 500 mg/l"
+        },
+        { "id": "d", "text": "Une croissance maximale : 1000 mg/l est la concentration optimale" }
+      ],
+      "correctOption": "a",
+      "explanation": "La croissance ne suit pas la dose : elle traverse trois domaines. En dessous de 500 mg/l, le manque la limite — c'est la déficience. Entre 500 et 700 mg/l elle est maximale (143 à 600 mg/l) — c'est la concentration optimale. Au-delà de 700 mg/l elle s'effondre. En doublant 500 mg/l, l'agriculteur atteint 1000 mg/l, où la vitesse retombe à 10, soit moins que les 21 obtenus à 100 mg/l ✓ : la concentration est devenue toxique et empoisonne la plante. Le piège courant est de raisonner en proportion : à 500 mg/l on est déjà à 139, tout près du maximum de 143 — il n'y a plus rien à gagner. Le palier existe bien, mais il s'arrête à 700 mg/l. Et l'optimum se situe entre 500 et 700 mg/l, pas à 1000.",
+      "difficulty": 3
+    }
+  ]
+}
