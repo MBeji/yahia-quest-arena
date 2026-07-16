@@ -127,7 +127,6 @@ INSERT INTO public.chapters (id, subject_id, title, description, lesson_content,
 <g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="92" y="116" text-anchor="middle" fill="#d97706" font-size="12.5">الجذمور</text><text x="225" y="110" text-anchor="middle" fill="#b45309" font-size="12.5">الدّرنة (بعيون)</text><text x="70" y="244" text-anchor="middle" fill="#7c3aed" font-size="12.5">البصلة</text><text x="235" y="250" text-anchor="middle" fill="#0f6e56" font-size="12.5">السّاق الزّاحفة</text></g>
 </svg>
 
-
 > 🗡️ في **واحة توزر**، لا يزرع الفلّاح نواة تمرة لينتج نخلة تشبه الأمّ، لأنّ نخلة النّواة قد تختلف عنها؛ بل يفصل **فسيلة** تنمو عند قاعدة النّخلة الأمّ ويغرسها، فيحصل على نخلة تحمل **صفات الأمّ نفسها** ونوع تمرها ذاته.
 
 ## 🌍 التّكاثر الخضريّ الطّبيعيّ
@@ -234,7 +233,6 @@ INSERT INTO public.chapters (id, subject_id, title, description, lesson_content,
 <line x1="122" y1="290" x2="122" y2="132" stroke="#d97706" stroke-width="1" stroke-dasharray="3 3"/>
 <line x1="218" y1="290" x2="192" y2="190" stroke="#0f6e56" stroke-width="1" stroke-dasharray="3 3"/>
 </svg>
-
 
 ## 🟡 الأعضاء الذكرية: الأسدية وحبوب الطلع
 
@@ -514,7 +512,6 @@ INSERT INTO public.chapters (id, subject_id, title, description, lesson_content,
 <g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="150" y="26" text-anchor="middle" fill="#2563eb" font-size="13">البيضة</text><text x="252" y="182" text-anchor="middle" fill="#0f6e56" font-size="13">الشرغوف</text><text x="150" y="286" text-anchor="middle" fill="#0f6e56" font-size="13">ضفدع صغير</text><text x="56" y="196" text-anchor="middle" fill="#065f46" font-size="13">الضفدع البالغ</text></g>
 </svg>
 
-
 **تحوّل الفراشة** (حشرة):
 
 > البيضة ← اليرقة (دودة تأكل الأوراق) ← الخادرة (طور ساكن داخل شرنقة) ← الفراشة البالغة.
@@ -711,7 +708,6 @@ $$ زيتون → عثّة → عصفور → بومة $$
 <g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="50" y="248" text-anchor="start" fill="#0f172a" font-size="11">السهم = «يُؤكل من طرف»</text></g>
 </svg>
 
-
 > 🔮 الشبكة الغذائية أمتن من السلسلة الواحدة: إن قلّت فريسة، وجد المفترس بديلًا في سلسلة أخرى، فيصمد النظام. لكنّ لهذا التشابك حدودًا.
 
 ## ⚖️ التوازن الطبيعي والعلاقات بين الكائنات
@@ -805,7 +801,6 @@ INSERT INTO public.chapters (id, subject_id, title, description, lesson_content,
 <g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="262" y="30" text-anchor="middle" fill="#92400e" font-size="12.5">التعرية</text><text x="180" y="104" text-anchor="middle" fill="#2563eb" font-size="12.5">النقل</text><text x="40" y="138" text-anchor="middle" fill="#b45309" font-size="12.5">الترسّب</text></g>
 <g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="272" y="140" text-anchor="middle" fill="#92400e" font-size="10.5">جبل</text><text x="150" y="158" text-anchor="middle" fill="#2563eb" font-size="10.5">واد</text><text x="40" y="174" text-anchor="middle" fill="#b45309" font-size="9.5">رواسب في طبقات</text><text x="24" y="166" text-anchor="middle" fill="#2563eb" font-size="9.5">البحر / السهل</text></g>
 </svg>
-
 
 > ⚠️ لا تخلط بين هذه الظّواهر **الخارجيّة** الّتي تحدث فوق سطح الأرض، وظواهر أخرى **باطنيّة** مصدرها باطن الأرض؛ موضوعنا هنا هو ما يجري فوق السّطح فقط.
 
@@ -956,7 +951,6 @@ INSERT INTO public.chapters (id, subject_id, title, description, lesson_content,
 <g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="8" y="108" text-anchor="start" fill="#ef4444" font-size="11.5">أحدث</text><text x="8" y="228" text-anchor="start" fill="#64748b" font-size="11.5">أقدم</text></g>
 <g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="152" y="86" text-anchor="middle" fill="#ef4444" font-size="12">الطبقة العليا = الأحدث</text><text x="152" y="254" text-anchor="middle" fill="#64748b" font-size="12">الطبقة السفلى = الأقدم</text></g>
 </svg>
-
 
 > ⚠️ خطأٌ شائع: الاعتقاد أنّ الترسّب يحدث حيث يكون الماء **سريعًا**. الحقيقة عكس ذلك: الماء السريع **يحمل** الحبيبات، وحين **يبطؤ** فقط تسقط وتترسّب. لذلك تتجمّع الرواسب في البحيرات والبحار الهادئة لا في وسط الوادي الجارف.
 
