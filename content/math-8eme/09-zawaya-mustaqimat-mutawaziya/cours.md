@@ -12,6 +12,11 @@ $$ \text{الزاويتان المتقابلتان بالرأس متساويتا
 
 _مثال:_ إذا تقاطع مستقيمان وكانت إحدى الزوايا 50°، فالزاوية المقابلة لها بالرأس تساوي 50° أيضًا.
 
+<svg viewBox="0 0 300 158">
+<title>زاويتان متقابلتان بالرأس متساويتان</title>
+<line x1="271.46" y1="116.4" x2="28.54" y2="35.6" stroke="#0f172a" stroke-width="2.5"/><line x1="28.54" y1="116.4" x2="271.46" y2="35.6" stroke="#0f172a" stroke-width="2.5"/><path d="M 174.67 67.79 A 26 26 0 0 1 174.67 84.21" fill="none" stroke="#0f6e56" stroke-width="2"/><path d="M 125.33 84.21 A 26 26 0 0 1 125.33 67.79" fill="none" stroke="#0f6e56" stroke-width="2"/><path d="M 170.88 82.94 A 22 22 0 0 1 129.12 82.94" fill="none" stroke="#d97706" stroke-width="2"/><path d="M 175.62 84.52 A 27 27 0 0 1 124.38 84.52" fill="none" stroke="#d97706" stroke-width="2"/><path d="M 129.12 69.06 A 22 22 0 0 1 170.88 69.06" fill="none" stroke="#d97706" stroke-width="2"/><path d="M 124.38 67.48 A 27 27 0 0 1 175.62 67.48" fill="none" stroke="#d97706" stroke-width="2"/><circle cx="150" cy="76" r="3" fill="#0f172a"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="195" y="81" text-anchor="middle" fill="#0f6e56" font-size="13">a</text><text x="105" y="81" text-anchor="middle" fill="#0f6e56" font-size="13">a</text><text x="152" y="124" text-anchor="middle" fill="#d97706" font-size="13">b</text><text x="152" y="36" text-anchor="middle" fill="#d97706" font-size="13">b</text><text x="162" y="68" text-anchor="middle" fill="#0f172a" font-size="12">O</text><text x="150" y="150" text-anchor="middle" fill="#64748b" font-size="11">المتقابلتان بالرأس متساويتان</text></g>
+</svg>
+
 ## ➕ زاويتان متكاملتان وزاويتان متتامّتان
 
 - **زاويتان متكاملتان** (متجاورتان على استقامة واحدة): مجموعهما 180°.
@@ -44,6 +49,11 @@ _مثال:_ إذا كانت إحدى زاويتَين متكاملتَين 110°
 | **المتحالفتان داخليًّا** | متكاملتان (مجموعهما 180°) |
 
 _مثال محسوب:_ إذا كان (d)//(d') وكانت إحدى زاويتَين متبادلتَين داخليًّا 65°، فالأخرى 65°. لكن إذا كانت إحدى زاويتَين **متحالفتَين** داخليًّا 65°، فالأخرى 180° − 65° = 115°.
+
+<svg viewBox="0 0 300 156">
+<title>زاويتان متبادلتان داخليًّا متساويتان (Z) ومتحالفتان داخليًّا متكاملتان</title>
+<line x1="18" y1="52" x2="282" y2="52" stroke="#0f172a" stroke-width="2.5"/><line x1="18" y1="120" x2="282" y2="120" stroke="#0f172a" stroke-width="2.5"/><line x1="202" y1="32" x2="98" y2="141" stroke="#0f172a" stroke-width="2.5"/><path d="M 160 52 A 22 22 0 0 0 166.92 68.02" fill="none" stroke="#0f6e56" stroke-width="2"/><path d="M 140 120 A 22 22 0 0 0 133.08 103.98" fill="none" stroke="#0f6e56" stroke-width="2"/><path d="M 136.5 100.34 A 27 27 0 0 0 91 120" fill="none" stroke="#d97706" stroke-width="2"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="149.11" y="66.64" text-anchor="middle" fill="#0f6e56" font-size="13">α</text><text x="129.88" y="86.02" text-anchor="middle" fill="#0f6e56" font-size="13">α</text><text x="100.1" y="79.8" text-anchor="middle" fill="#d97706" font-size="11">180°−α</text><text x="268" y="44" text-anchor="middle" fill="#0f172a" font-size="12">(d)</text><text x="268" y="138" text-anchor="middle" fill="#0f172a" font-size="12">(d′)</text></g>
+</svg>
 
 > ⚠️ أخطرُ فخٍّ في الدرس: اعتبارُ **المتحالفتَين داخليًّا متساويتَين**. المتبادلتان داخليًّا متساويتان، أمّا المتحالفتان (على نفس الجهة) فـ **متكاملتان** — مجموعهما 180°، لا متساويتان.
 
