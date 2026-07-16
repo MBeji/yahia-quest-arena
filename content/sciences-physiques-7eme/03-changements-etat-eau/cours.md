@@ -13,6 +13,15 @@
 | سائلة (ماء)  | غازية (بخار) | **التبخّر** أو **الغليان** |
 | غازية (بخار) | سائلة (ماء)  | **التكاثف**                |
 
+<svg viewBox="0 0 300 145">
+<title>تحوّلات حالة الماء</title>
+<rect x="12" y="62" width="70" height="46" rx="8" fill="#f1f5f9" stroke="#0f172a" stroke-width="2"/><rect x="115" y="62" width="70" height="46" rx="8" fill="#f1f5f9" stroke="#0f172a" stroke-width="2"/><rect x="218" y="62" width="70" height="46" rx="8" fill="#f1f5f9" stroke="#0f172a" stroke-width="2"/><line x1="84" y1="78" x2="113" y2="78" stroke="#0f6e56" stroke-width="2.5"/>
+<polygon points="113,78 105,82 105,74" fill="#0f6e56"/><line x1="113" y1="96" x2="84" y2="96" stroke="#2563eb" stroke-width="2.5"/>
+<polygon points="84,96 92,92 92,100" fill="#2563eb"/><line x1="187" y1="78" x2="216" y2="78" stroke="#ef4444" stroke-width="2.5"/>
+<polygon points="216,78 208,82 208,74" fill="#ef4444"/><line x1="216" y1="96" x2="187" y2="96" stroke="#7c3aed" stroke-width="2.5"/>
+<polygon points="187,96 195,92 195,100" fill="#7c3aed"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="47" y="90" text-anchor="middle" fill="#0f172a" font-size="14">صلب</text><text x="150" y="90" text-anchor="middle" fill="#0f172a" font-size="14">سائل</text><text x="253" y="90" text-anchor="middle" fill="#0f172a" font-size="14">غاز</text><text x="98" y="52" text-anchor="middle" fill="#0f6e56" font-size="12">انصهار</text><text x="98" y="124" text-anchor="middle" fill="#2563eb" font-size="12">تصلّب</text><text x="201" y="52" text-anchor="middle" fill="#ef4444" font-size="11">تبخّر / غليان</text><text x="201" y="124" text-anchor="middle" fill="#7c3aed" font-size="12">تكاثف</text></g>
+</svg>
+
 > 🗡️ كلّ هذه التحوّلات **فيزيائية**: يتغيّر شكل الماء الخارجي (حالته) فقط، وتبقى طبيعته الكيميائية كماءٍ دون أيّ تغيير.
 
 ## 🧊 الانصهار والتصلّب
