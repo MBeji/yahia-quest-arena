@@ -124,6 +124,8 @@ Le **faciès d'une roche** est l'ensemble de ses **caractères paléontologiques
 | **Calcaire coquiller** (ou fossilifère)               | **Jebel Abderrahman** (Menzel Bouzelfa) : calcaire à **pecten**, déposé au **miocène moyen**               | coquilles entières de lamellibranches et gastéropodes marins, sections, moules ; quand les fossiles sont **très nombreux** → **lumachelle**  | **marin peu profond**  |
 | **Calcaire à nummulites**                             | **ouest et centre** (Kef, Makthar…), **éocène moyen**                                                      | **tests calcaires de nummulites** — coquilles de **protozoaires géants** du groupe des **foraminifères**                                     | **mer assez profonde** |
 
+> 📖 Deux formulations pour un même faciès — ne les prends pas pour une contradiction. Le manuel décrit le calcaire à nummulites comme un faciès de **« mer assez profonde »** (p.150), tandis que son tableau des faciès (p.152, plus bas) le range dans la colonne **« marin peu profond »**. Les deux disent la même chose, à condition de voir que le tableau compte **trois** colonnes marines : **profond** (globigérines) · **peu profond** (nummulites) · **côtier** (calcaire coquiller). Les nummulites se déposent donc **plus au large que le calcaire coquiller, mais moins que les globigérines** : « assez profonde » se lit **par rapport à la côte**, « peu profond » **par rapport au large**. Retiens la **position dans la série**, pas l'adjectif.
+
 # 📖 Reconstituer l'histoire d'un site
 
 ## 🔑 Les deux principes
