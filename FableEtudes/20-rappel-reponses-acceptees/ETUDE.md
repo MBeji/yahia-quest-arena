@@ -1,7 +1,7 @@
 # Étude 20 — Réponses acceptées : rappel tolérant & questions libres natives (zéro question exclue)
 
-> **Statut** : brouillon (Q-1 & Q-3 arbitrées 2026-07-15 ; restent Q-2 budget/modèle Tier B, Q-4
-> élargissement éligibilité, Q-5 conversion sélective — non bloquantes)
+> **Statut** : validée (Q-1…Q-5 arbitrées par Mohamed — Q-1/Q-3 le 2026-07-15, Q-2/Q-4/Q-5 le
+> 2026-07-16, toutes sur les recommandations) — prête pour l'exécuteur (lot 1)
 > **Priorité** : 20 · **Valeur** : rend les **12 349** missions Rappel (étude 17) réellement
 > jouables — une réponse **correcte mais formulée autrement** cesse d'être refusée, **sans retirer
 > une seule question** du mode — **et** dote le moteur de son premier type natif de **réponse
@@ -759,27 +759,31 @@ automatique en base : la boucle reste **humaine-dans-la-boucle** (pas d'oracle a
   élément déclaré faux normalisé) et le double-solve du skill. Par défaut mono-mot ; le multi-mot
   n'est ajouté que lorsqu'il est **non ambigu** (une seule romanisation raisonnable) et non
   collisionnant — sinon écarté. Impacte Tier A/B (lots 2/3/4) et l'autorat `short_answer` (R-13).
-- **Q-2 — budget/modèle de génération (Tier B seulement).** Le **Tier A** (article/contraction,
-  gisement le plus gros) est **déterministe et gratuit** — aucun modèle. Seul le **Tier B**
-  (paraphrases/synonymes sur les ~7 100 réponses ≥ 2 mots + 385 positionnels) consomme un modèle.
-  Quel modèle/budget, batché par matière ? Recommandation : doctrine skills du repo (exécuteur bon
-  marché + double-solve), priorisée (petites classes d'abord), non bloquante (défaut = canonique
-  seule). Le volet B n'ajoute **rien** à ce budget : les `short_answer` naissent complètes à
-  l'autorat (R-13), dans le flux de génération normal des campagnes de contenu.
+- **Q-2 — budget/modèle de génération (Tier B seulement). ✅ ARBITRÉE 2026-07-16 : exécuteur +
+  double-solve.** Le **Tier A** (article/contraction, gisement le plus gros) est **déterministe et
+  gratuit** — aucun modèle. Seul le **Tier B** (paraphrases/synonymes sur les ~7 100 réponses
+  ≥ 2 mots + 385 positionnels) consomme un modèle : **exécuteur bon marché (Sonnet ou équiv.) +
+  double-solve**, batché une matière par PR, priorisé (petites classes d'abord), non bloquant
+  (défaut = canonique seule) — la doctrine skills du repo ; la qualité est gardée par le
+  double-solve, la QA anti-collision et la revue de diff, pas par le modèle. Le volet B n'ajoute
+  **rien** à ce budget : les `short_answer` naissent complètes à l'autorat (R-13), dans le flux de
+  génération normal des campagnes de contenu.
 - **Q-3 — boucle « refus contesté » (lot 6) : maintenant ou différée ? ✅ ARBITRÉE 2026-07-15.** Cadrer
   le **type `content_reports.recall_false_negative`** dès le **lot 1** (schéma/enum + acceptation
   serveur) ; livrer la **file admin** (`/admin/content-reports` filtré) et la procédure d'ajout de
   variante **après la campagne pilote** (lot 6), quand le volume réel est connu.
-- **Q-4 — élargir l'éligibilité Rappel (R-6) aux questions aujourd'hui exclues ?** Hors-v1 ; à
-  rouvrir si les KPI de couverture et de satisfaction le justifient (nécessiterait de générer des
-  ensembles pour des questions jamais servies en Rappel).
-- **Q-5 — conversion sélective de QCM existants en `short_answer` ?** Le volet B vise le contenu
-  **nouveau** (D-10). Faut-il, en plus, une campagne de conversion ciblée — les QCM dont
-  `content-audit` juge les distracteurs artificiels, à réauthorer en questions libres ?
-  **Recommandation : non en v1** — mesurer d'abord le pilote (lot 8) ; si oui ensuite, uniquement
-  par **remplacement authored** (nouvelle question dans le fichier, l'ancienne retirée — la
-  compilation prune), jamais par mutation de type in-place, pour préserver distracteurs/télémétrie/
-  historique d'attempts.
+- **Q-4 — élargir l'éligibilité Rappel (R-6) aux questions aujourd'hui exclues ? ✅ ARBITRÉE
+  2026-07-16 : non — hors-v1 confirmé.** `is_question_recall_eligible` reste strictement identique
+  (aucune question éligible ne disparaît, R-6). À rouvrir seulement si les KPI de couverture et de
+  satisfaction de la campagne le justifient (nécessiterait de générer des ensembles pour des
+  questions jamais servies en Rappel).
+- **Q-5 — conversion sélective de QCM existants en `short_answer` ? ✅ ARBITRÉE 2026-07-16 : non en
+  v1.** Le volet B vise le contenu **nouveau** (D-10) ; on mesure d'abord le pilote (lot 8). Si une
+  campagne de conversion ciblée est souhaitée ensuite (les QCM dont `content-audit` juge les
+  distracteurs artificiels, à réauthorer en questions libres), elle se fera uniquement par
+  **remplacement authored** (nouvelle question dans le fichier, l'ancienne retirée — la compilation
+  prune), jamais par mutation de type in-place, pour préserver distracteurs/télémétrie/historique
+  d'attempts.
 
 ## 8. Journal d'exécution
 
@@ -788,7 +792,11 @@ automatique en base : la boucle reste **humaine-dans-la-boucle** (pas d'oracle a
   commun D-9, seam étude 03, contraintes d'autorat R-12, né-complet R-13, doctrine R-14, lots 7–8) ;
   **renommage** `recallAnswers` → `acceptedAnswers` / `recall_answers` → `accepted_answers` / skill
   `content-accepted-answers` (D-6) ; R-4 généralisée aux `expectedMistakes` ; Q-5 ouverte ; annexe
-  §9 complétée (volet B). Aucun lot démarré — le renommage est sans coût.
+  §9 complétée (volet B). Aucun lot démarré — le renommage est sans coût. PR #444.
+- 2026-07-16 — **Q-2, Q-4, Q-5 arbitrées par Mohamed** (toutes sur les recommandations : Tier B =
+  exécuteur bon marché + double-solve ; éligibilité Rappel inchangée, élargissement hors-v1 ;
+  aucune conversion de QCM en v1, remplacement authored seulement si rouvert plus tard) → statut
+  **validée**, prête pour l'exécuteur (lot 1). Aucun lot démarré.
 
 _(à remplir lot par lot par l'exécuteur : date, lot, PR, écarts acceptés, dettes.)_
 
