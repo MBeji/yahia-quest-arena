@@ -1,0 +1,125 @@
+{
+  "title": "Test de compréhension ⭐ : Les agents pathogènes et les maladies infectieuses",
+  "questions": [
+    {
+      "prompt": "Qu'est-ce que la contagion ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "La transmission d'une maladie d'un individu atteint à un individu non porteur de cette maladie"
+        },
+        {
+          "id": "b",
+          "text": "La pénétration et le développement de micro-organismes pathogènes dans un organisme"
+        },
+        {
+          "id": "c",
+          "text": "L'ensemble des signes qui révèlent une maladie"
+        },
+        {
+          "id": "d",
+          "text": "La période pendant laquelle une maladie n'a encore produit aucun signe"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "La contagion est la transmission d'une maladie d'un individu atteint à un individu non porteur de cette maladie ✓ : elle décrit le passage d'un organisme à un autre. La pénétration et le développement de micro-organismes pathogènes dans un organisme, avec les troubles d'intensité et de gravités variables qu'ils produisent, c'est l'infection — ce qui se passe à l'intérieur d'un seul organisme. Les signes qui révèlent la maladie sont les symptômes. Et la période sans signe qui suit la contamination est la phase d'incubation, longue de 10 jours dans la rougeole.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel est l'agent pathogène de la tuberculose pulmonaire ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Le virus de la tuberculose"
+        },
+        {
+          "id": "b",
+          "text": "Le bacille de Koch"
+        },
+        {
+          "id": "c",
+          "text": "Le bacille tétanique"
+        },
+        {
+          "id": "d",
+          "text": "Le BCG"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "La tuberculose est causée par le bacille tuberculeux, aussi appelé bacille de Koch, en abrégé BK ✓ : c'est une bactérie, pas un virus — la tuberculose n'est donc pas une maladie virale. Le bacille tétanique est l'agent du tétanos, une tout autre maladie. Quant au BCG, c'est le piège de l'item : il ne s'agit pas d'un microbe mais du vaccin qui protège les enfants contre la tuberculose — ne confonds pas l'agent de la maladie avec le moyen de la prévenir.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Selon le bilan du chapitre, de quelles deux façons les bactéries pathogènes agissent-elles sur l'organisme ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Par voie respiratoire ou par voie digestive"
+        },
+        {
+          "id": "b",
+          "text": "Par leur présence ou par les toxines qu'elles sécrètent"
+        },
+        {
+          "id": "c",
+          "text": "En utilisant le matériel des cellules vivantes pour se multiplier, puis en les détruisant"
+        },
+        {
+          "id": "d",
+          "text": "De façon directe ou de façon indirecte"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Les bactéries pathogènes agissent sur l'organisme soit par leur présence, comme le bacille de Koch qui se multiplie dans les poumons jusqu'à les détruire, soit par les toxines qu'elles sécrètent, comme le bacille tétanique et le bacille diphtérique ✓. Les voies respiratoire et digestive sont des voies de contamination : elles disent par où le microbe entre, pas comment il agit une fois entré. Utiliser le matériel des cellules vivantes pour se multiplier avant de les détruire, c'est le mode d'action des virus, et non celui des bactéries. Enfin, direct et indirect qualifient les deux formes de la contagion de la tuberculose — encore une question de transmission, pas d'action.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Le bacille tétanique reste localisé au niveau de la plaie et n'envahit jamais l'organisme. Comment le tétanos parvient-il alors à provoquer une contraction généralisée des muscles ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Les spores du bacille se détachent de la plaie et gagnent les muscles par le sang"
+        },
+        {
+          "id": "b",
+          "text": "La plaie s'infecte si profondément que les muscles voisins finissent par se contracter de proche en proche"
+        },
+        {
+          "id": "c",
+          "text": "Le bacille fabrique un poison, la toxine tétanique, qui se répand dans l'organisme et se fixe sur le tissu nerveux"
+        },
+        {
+          "id": "d",
+          "text": "Le bacille se multiplie dans les muscles des mâchoires, puis dans les muscles respiratoires"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Le bacille se multiplie au niveau de la plaie mais reste localisé à cet endroit ; ce qui voyage, c'est le poison qu'il fabrique — la toxine tétanique, qui se répand dans l'organisme et se fixe irréversiblement au niveau du tissu nerveux ✓. C'est bien ce qui explique la contraction d'abord limitée aux mâchoires puis généralisée. Faire circuler les spores dans le sang contredit l'énoncé : les spores sont la forme de résistance prise en milieu oxygéné, présente dans la terre et la poussière, et c'est par elles qu'on est contaminé, pas par elles que la maladie se propage à l'intérieur. Une contagion de proche en proche entre muscles, comme une multiplication du bacille dans les muscles eux-mêmes, reviendrait à faire quitter la plaie au microbe — précisément ce qu'il ne fait pas.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Par quelles voies le SIDA se transmet-il, d'après le bilan du chapitre ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Par la voie respiratoire uniquement"
+        },
+        {
+          "id": "b",
+          "text": "Par la voie digestive uniquement"
+        },
+        {
+          "id": "c",
+          "text": "Par la voie sexuelle uniquement"
+        },
+        {
+          "id": "d",
+          "text": "Par la voie sexuelle et par la voie sanguine"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Le SIDA est le seul exemple que le bilan cite sur deux lignes : à la voie sexuelle, par le sperme et les sécrétions vaginales, aux côtés de la blennorragie et de la syphilis, et à la voie sanguine ✓. Répondre « sexuelle uniquement » est donc la moitié de la réponse : c'est l'erreur la plus fréquente, car on oublie la ligne de la voie sanguine. La voie respiratoire est celle de la grippe, de la tuberculose et du SRAS ; la voie digestive celle des infections intestinales liées aux intoxications alimentaires. Ni l'une ni l'autre ne transmet le SIDA.",
+      "difficulty": 2
+    }
+  ]
+}

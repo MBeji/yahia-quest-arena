@@ -1,0 +1,125 @@
+{
+  "title": "Test de compréhension ⭐ : La défense de l'organisme",
+  "questions": [
+    {
+      "prompt": "Qu'est-ce que la diapédèse ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "L'invasion de tout l'organisme par des bactéries qui ont résisté aux phagocytes"
+        },
+        {
+          "id": "b",
+          "text": "Le mécanisme par lequel un globule blanc englobe et digère une particule étrangère"
+        },
+        {
+          "id": "c",
+          "text": "La réaction de l'organisme aux lésions des tissus, marquée par la rougeur et le gonflement"
+        },
+        {
+          "id": "d",
+          "text": "La migration, vers le foyer d'infection, des leucocytes à travers la paroi des vaisseaux sanguins"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "La diapédèse est la migration, vers le foyer d'infection, des leucocytes à travers la paroi des vaisseaux sanguins ✓ : c'est le trajet qu'ils empruntent pour sortir du sang et rejoindre la zone enflammée, où ils sont attirés par des substances chimiques fabriquées par le tissu infecté. Englober et digérer une particule étrangère, c'est la phagocytose — l'étape d'après, une fois le phagocyte arrivé. La réaction marquée par la rougeur et le gonflement est l'inflammation. Et l'invasion générale par des bactéries qui ont résisté est la septicémie, c'est-à-dire l'échec de tout ce dispositif.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quels sont les quatre signes de la réaction inflammatoire ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Fièvre, courbatures, asthénie et perte d'appétit"
+        },
+        {
+          "id": "b",
+          "text": "Rougeur, chaleur, gonflement et douleur"
+        },
+        {
+          "id": "c",
+          "text": "Adhésion, absorption, digestion et exocytose"
+        },
+        {
+          "id": "d",
+          "text": "Mémoire, spécificité, diversité et durée"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "L'inflammation est la réaction de l'organisme aux lésions des tissus ou aux infections, se manifestant localement par la rougeur, la chaleur, le gonflement et la douleur ✓ — c'est le premier signe de l'infection, et il est local. La fièvre, les courbatures, l'asthénie et la perte d'appétit sont des symptômes généraux, ceux de la grippe du chapitre précédent : ils touchent tout le corps, pas la zone piquée. L'adhésion, l'absorption et la digestion sont les étapes de la phagocytose. Et la mémoire, la spécificité et la diversité sont les trois propriétés de l'immunité acquise — la partie B du chapitre.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans quel ordre se déroulent les trois étapes de la phagocytose ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Digestion, puis adhésion, puis absorption"
+        },
+        {
+          "id": "b",
+          "text": "Absorption, puis adhésion, puis digestion"
+        },
+        {
+          "id": "c",
+          "text": "Adhésion, puis absorption (= ingestion), puis digestion"
+        },
+        {
+          "id": "d",
+          "text": "Adhésion, puis digestion, puis absorption (= ingestion)"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Les trois étapes sont, dans l'ordre : l'adhésion, l'absorption — que le manuel note « absorption = ingestion » — puis la digestion ✓. La logique est imparable : le phagocyte doit d'abord toucher le microbe, ensuite l'englober dans un phagosome, et seulement alors le digérer grâce aux vésicules digestives. Chacune des trois autres propositions casse cette chaîne : on ne peut pas digérer un microbe qu'on n'a pas encore touché, ni l'englober avant d'avoir adhéré à lui, ni le digérer avant de l'avoir fait entrer dans la cellule.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Pourquoi la phagocytose est-elle qualifiée de défense « non spécifique » ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Parce qu'elle se produit quelle que soit la nature de l'agent pathogène"
+        },
+        {
+          "id": "b",
+          "text": "Parce qu'elle ne réussit pas toujours à éliminer les microbes"
+        },
+        {
+          "id": "c",
+          "text": "Parce qu'elle n'est assurée que par les polynucléaires"
+        },
+        {
+          "id": "d",
+          "text": "Parce qu'elle se déclenche avant même que le microbe n'ait franchi la peau"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Au foyer de l'infection, et quelle que soit la nature de l'agent pathogène, il se produit entre les polynucléaires et les micro-organismes une lutte pour la survie ✓ : le phagocyte englobe tout élément étranger, sans distinction — voilà exactement ce que « non spécifique » veut dire. Qu'elle échoue parfois est vrai, puisque des bactéries à multiplication rapide peuvent y résister et causer une septicémie, mais l'efficacité n'est pas ce que le mot désigne. Elle n'est pas non plus réservée aux polynucléaires : les monocytes et les macrophages sont eux aussi des phagocytes. Enfin, elle intervient au contraire une fois la peau franchie : c'est la deuxième ligne, pas la première.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Une souris reçoit de l'anatoxine tétanique et survit ; trois semaines plus tard, on lui injecte de la toxine diphtérique et elle meurt. Quelle propriété de l'immunité acquise cette expérience met-elle en évidence ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "La mémoire"
+        },
+        {
+          "id": "b",
+          "text": "La diversité"
+        },
+        {
+          "id": "c",
+          "text": "La spécificité"
+        },
+        {
+          "id": "d",
+          "text": "Le transfert de l'immunité par le sérum"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "La souris était protégée contre le tétanos et meurt de la diphtérie : la protection acquise ne vaut donc que contre l'agent qui l'a provoquée, et reste inefficace contre un autre microbe — c'est la spécificité ✓. La mémoire serait démontrée par deux contacts avec le même agent, la réponse secondaire étant alors plus rapide, plus forte et plus durable ; ici les deux agents sont différents. La diversité est le distracteur qui piège : elle affirme que l'organisme peut développer une réponse contre chaque microbe — c'est presque le contraire de ce que montre cette souris, qui n'en a développé qu'une seule, contre le tétanos. Quant au transfert par le sérum, il se démontre en prélevant le sérum d'une souris immunisée pour l'injecter à une autre.",
+      "difficulty": 2
+    }
+  ]
+}

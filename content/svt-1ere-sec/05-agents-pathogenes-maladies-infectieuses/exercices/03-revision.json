@@ -1,0 +1,154 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Agents, voies de contamination et prévention",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "En 1977, un avion resta immobilisé au sol pendant trois heures, ses 54 passagers à bord. Une passagère présenta, un quart d'heure après l'embarquement, une crise fébrile avec frissons et toux, qui dura pendant l'attente et le voyage. Dans les 48 heures qui suivirent l'arrivée, 38 passagers tombèrent malades, victimes de la grippe. Pourquoi dit-on que la grippe est une maladie infectieuse ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Parce qu'elle a débuté par une fièvre accompagnée de frissons et de toux"
+        },
+        {
+          "id": "b",
+          "text": "Parce qu'elle s'est transmise d'un individu malade à des individus sains"
+        },
+        {
+          "id": "c",
+          "text": "Parce qu'elle a touché une proportion importante du groupe en 48 heures"
+        },
+        {
+          "id": "d",
+          "text": "Parce qu'elle est provoquée par un microbe pathogène, le virus grippal"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "La grippe est une maladie infectieuse car elle est provoquée par un microbe pathogène ; il s'agit du virus grippal ✓ — c'est la définition même de l'infection : la pénétration et le développement d'un micro-organisme pathogène dans un organisme. Le piège est réel : la transmission d'un individu malade à des individus sains est parfaitement exacte, mais elle définit la contagion, pas l'infection. C'est le distracteur qui coûte le plus de points, car les deux notions se ressemblent. L'ampleur de l'atteinte en 48 heures décrit une épidémie ; et la fièvre, les frissons et la toux sont les symptômes — ils décrivent la maladie sans dire ce qui la cause.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Toujours dans l'avion de 1977 : pourquoi cette mini-épidémie s'est-elle déclenchée aussi facilement, et comment la contamination s'est-elle faite ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "L'atmosphère non renouvelée a favorisé la contagion ; le virus est passé par voie aérienne"
+        },
+        {
+          "id": "b",
+          "text": "Les passagers ont partagé des couverts pendant l'attente ; le virus est passé par voie digestive"
+        },
+        {
+          "id": "c",
+          "text": "L'immobilisation a affaibli les passagers, dont l'organisme a fabriqué le virus de la grippe"
+        },
+        {
+          "id": "d",
+          "text": "La passagère a transmis des spores du virus, très fréquentes dans la poussière de la cabine"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Dans l'avion, l'atmosphère non renouvelée a favorisé la contagion, ce qui explique que la plupart des passagers soient tombés malades ; et quand la passagère malade tousse, les gouttes de salive qu'elle projette dans l'air contiennent le virus, qui s'introduit dans les voies respiratoires des individus sains ✓ — la grippe se transmet par voie aérienne. Le partage de couverts est le mode de contagion indirecte de la tuberculose, et la voie digestive concerne les infections intestinales liées aux intoxications alimentaires. Dire que l'organisme fabrique le virus est un contresens : un microbe pathogène vient du dehors, il ne naît pas de la fatigue. Quant aux spores, ce sont les bactéries qui en forment — le bacille tétanique en milieu oxygéné —, jamais les virus.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "La poliomyélite est une maladie infectieuse qui détruit certaines cellules nerveuses commandant les mouvements de l'organisme. Son agent, un virus, peut demeurer virulent plusieurs mois dans les eaux contaminées et pénètre dans l'organisme par les muqueuses respiratoires et digestives. Comment risque-t-on de contracter cette maladie, et comment l'éviter ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "En s'exposant au soleil dans une région où sévit l'épidémie ; on l'évite en restant à l'ombre"
+        },
+        {
+          "id": "b",
+          "text": "Uniquement par une blessure souillée de terre ; on l'évite par un sérum après la blessure"
+        },
+        {
+          "id": "c",
+          "text": "Uniquement par voie sexuelle ; on l'évite par des mesures d'hygiène sexuelle"
+        },
+        {
+          "id": "d",
+          "text": "En buvant de l'eau contaminée ou en respirant l'agent ; on l'évite par la vaccination et l'hygiène"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "L'énoncé donne les deux portes d'entrée : les muqueuses respiratoires et digestives — on se contamine donc en respirant l'agent ou en avalant de l'eau contaminée, où le virus reste virulent plusieurs mois ✓. Et la poliomyélite figure justement parmi les trois maladies contre lesquelles le bilan recommande de pratiquer la vaccination, avec la tuberculose et la rougeole ; s'y ajoutent les règles d'hygiène et la propreté de l'environnement. La blessure souillée de terre suivie d'un sérum décrit le tétanos. La voie sexuelle concerne le SIDA, la blennorragie et la syphilis. Quant au soleil, il tue le bacille de Koch en quelques heures : il protège, il ne contamine pas.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Parmi ces affirmations sur le tétanos, laquelle est FAUSSE ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Il se manifeste par une contracture des muscles"
+        },
+        {
+          "id": "b",
+          "text": "Il est dû à une toxine"
+        },
+        {
+          "id": "c",
+          "text": "C'est une maladie virale"
+        },
+        {
+          "id": "d",
+          "text": "Il peut survenir à l'occasion d'une blessure même bénigne"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Le tétanos n'est pas une maladie virale ✓ : son agent est le bacille tétanique, c'est-à-dire une bactérie — et même une bactérie anaérobie, qui se transforme en spore en milieu oxygéné. C'est donc l'affirmation fausse. Les trois autres sont exactes : la maladie se manifeste bien par une contraction d'abord limitée aux muscles des mâchoires puis généralisée ; elle est bien due à une toxine, puisque le bacille reste localisé dans la plaie et n'agit qu'à travers le poison qu'il sécrète ; et le manuel précise qu'elle peut survenir à l'occasion d'une blessure même bénigne.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Deux malades : chez l'un, le microbe se multiplie dans les poumons jusqu'à les détruire ; chez l'autre, le microbe ne quitte pas la plaie, mais le malade meurt d'une asphyxie par paralysie des muscles respiratoires. Qu'illustre cette comparaison ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Les deux voies de contamination : respiratoire et sanguine"
+        },
+        {
+          "id": "b",
+          "text": "Les deux modes d'action des bactéries pathogènes : par leur présence et par leurs toxines"
+        },
+        {
+          "id": "c",
+          "text": "Les deux formes de la contagion : directe et indirecte"
+        },
+        {
+          "id": "d",
+          "text": "La différence entre une maladie infectieuse et une maladie contagieuse"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Le premier cas est la tuberculose : les bacilles de Koch se multiplient dans les poumons jusqu'à les détruire — la bactérie agit par sa présence, là où elle est. Le second est le tétanos : le bacille reste localisé à la plaie et n'envahit pas l'organisme, mais sa toxine se répand et se fixe irréversiblement sur le tissu nerveux, d'où la paralysie des muscles respiratoires. La comparaison illustre donc exactement les deux modes d'action des bactéries pathogènes ✓, tels que les énonce le bilan. Les voies de contamination diraient par où le microbe est entré, ce dont l'énoncé ne parle pas. La contagion directe ou indirecte concerne le passage d'un malade à l'autre. Quant au couple infectieux/contagieux, il est ici bien présent en filigrane — le tétanos est infectieux sans être contagieux — mais ce n'est pas ce que les deux descriptions comparent : elles décrivent l'action du microbe dans l'organisme.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Un élève range la grippe, la tuberculose, le tétanos et la poliomyélite dans le tableau « maladie / agent / voie de contamination ». Quelle ligne est correcte ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Tétanos — bacille tétanique — voie respiratoire"
+        },
+        {
+          "id": "b",
+          "text": "Grippe — bactérie — voie aérienne"
+        },
+        {
+          "id": "c",
+          "text": "Tuberculose — bacille de Koch — voie respiratoire"
+        },
+        {
+          "id": "d",
+          "text": "Poliomyélite — bactérie — voie sanguine"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Seule la ligne « Tuberculose — bacille de Koch — voie respiratoire » est juste ✓ : le bilan cite d'ailleurs la tuberculose, avec la grippe et le SRAS, comme exemple de contamination par la voie respiratoire, et le BK parvient bien aux voies respiratoires par inhalation des gouttelettes. La ligne du tétanos se trompe de voie : on ne l'attrape pas en respirant, mais par une blessure, quand les spores présentes dans la terre et la poussière pénètrent dans l'organisme. Les deux dernières lignes se trompent d'agent : la grippe et la poliomyélite sont dues à des virus, non à des bactéries — leur voie est d'ailleurs correcte pour la grippe, ce qui rend le piège efficace.",
+      "difficulty": 3
+    }
+  ]
+}
