@@ -108,6 +108,7 @@ function ManuelEleveCardInner({
           </span>
           <Link
             to="/auth"
+            search={{ mode: "login" }}
             data-testid="manuel-eleve-login"
             className="inline-flex items-center rounded-lg border border-primary/35 bg-primary/5 px-3 py-1.5 text-sm font-bold text-primary transition hover:border-primary/60 [@media(pointer:coarse)]:min-h-11"
           >
