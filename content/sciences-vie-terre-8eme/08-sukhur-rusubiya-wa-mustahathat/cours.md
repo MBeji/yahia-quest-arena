@@ -50,6 +50,24 @@
 
 > 🧭 **قاعدة ترتيب الطبقات (التعاقب)**: تترسّب الطبقة السفلى **أوّلًا**، ثم تعلوها الطبقات الأحدث. لذلك، وما لم تنقلب الطبقات: **الطبقة السفلى هي الأقدم، والطبقة العليا هي الأحدث**. هذه القاعدة هي مفتاح قراءة تاريخ الأرض.
 
+<svg viewBox="0 0 300 262">
+<title>تعاقب الطبقات الرسوبية</title>
+<rect x="66" y="96" width="172" height="34" fill="#fecaca" stroke="#ef4444" stroke-width="1.8"/>
+<rect x="66" y="130" width="172" height="34" fill="#fde68a" stroke="#d97706" stroke-width="1.8"/>
+<rect x="66" y="164" width="172" height="34" fill="#dbeafe" stroke="#2563eb" stroke-width="1.8"/>
+<rect x="66" y="198" width="172" height="36" fill="#e2e8f0" stroke="#64748b" stroke-width="1.8"/>
+<rect x="66" y="96" width="172" height="138" fill="none" stroke="#0f172a" stroke-width="2.6"/>
+<path d="M 100 216 a 3 3 0 1 0 5 -1 a 7 7 0 1 0 -11 2 a 11 11 0 1 0 18 -3" fill="none" stroke="#334155" stroke-width="2"/>
+<path d="M 167 187 Q 178 174, 189 187 Q 178 191, 167 187 Z" fill="#f8fafc" stroke="#334155" stroke-width="1.8"/>
+<line x1="178" y1="180" x2="173" y2="187" stroke="#334155" stroke-width="1.1"/>
+<line x1="178" y1="180" x2="178" y2="188" stroke="#334155" stroke-width="1.1"/>
+<line x1="178" y1="180" x2="183" y2="187" stroke="#334155" stroke-width="1.1"/>
+<line x1="46" y1="102" x2="46" y2="230" stroke="#0f172a" stroke-width="2.4"/>
+<polygon points="46,230 41.5,221 50.5,221" fill="#0f172a"/>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="8" y="108" text-anchor="start" fill="#ef4444" font-size="11.5">أحدث</text><text x="8" y="228" text-anchor="start" fill="#64748b" font-size="11.5">أقدم</text></g>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="152" y="86" text-anchor="middle" fill="#ef4444" font-size="12">الطبقة العليا = الأحدث</text><text x="152" y="254" text-anchor="middle" fill="#64748b" font-size="12">الطبقة السفلى = الأقدم</text></g>
+</svg>
+
 > ⚠️ خطأٌ شائع: الاعتقاد أنّ الترسّب يحدث حيث يكون الماء **سريعًا**. الحقيقة عكس ذلك: الماء السريع **يحمل** الحبيبات، وحين **يبطؤ** فقط تسقط وتترسّب. لذلك تتجمّع الرواسب في البحيرات والبحار الهادئة لا في وسط الوادي الجارف.
 
 ## 🦴 المستحاثات: تعريفها وتشكّلها
