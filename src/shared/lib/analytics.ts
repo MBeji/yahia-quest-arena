@@ -18,6 +18,13 @@
  *
  * Enabled only in a production build (`import.meta.env.PROD`) with a non-empty ID,
  * so local dev and the unit run never pollute the analytics stream.
+ *
+ * Developer-traffic tagging: the `config` call stamps every hit with a
+ * `traffic_type` parameter — `developer` on local hosts and Vercel preview
+ * deployments (production builds too, e.g. `vite preview`/smoke runs and the
+ * per-branch `*.vercel.app` URLs), `production` everywhere else — so a GA4
+ * "Internal traffic" data filter on the value `developer` can permanently
+ * exclude those sessions from reports (see `resolveTrafficType`).
  */
 
 declare global {
@@ -45,6 +52,36 @@ export function isAnalyticsEnabled(): boolean {
 
 let installed = false;
 let lastTrackedPath: string | null = null;
+
+/** GA4 `traffic_type` values this app emits (see `resolveTrafficType`). */
+export type TrafficType = "developer" | "production";
+
+/**
+ * The Vercel default domain that serves REAL production traffic today — the
+ * custom `na9ranal3ab.tn` domain is bought but not wired yet (STATUS.md), so
+ * this one hostname must never be tagged `developer`, unlike every other
+ * `*.vercel.app` host (per-branch/per-deploy previews).
+ */
+const PRODUCTION_VERCEL_HOSTNAME = "na9ranal3ab.vercel.app";
+
+/**
+ * Classify a hostname for GA4 data filters: `developer` for local hosts
+ * (localhost/loopback — covers `vite preview` and smoke runs of the prod
+ * bundle) and Vercel preview deployments, `production` for everything else.
+ * Suffix match, not `includes`, so a hostname like `vercel.app.example.com`
+ * is never mis-tagged. Pure — exported for tests.
+ */
+export function resolveTrafficType(hostname: string): TrafficType {
+  const host = hostname.toLowerCase();
+  const isLocalHost =
+    host === "localhost" ||
+    host === "127.0.0.1" ||
+    host === "::1" ||
+    host === "[::1]" ||
+    host.endsWith(".localhost");
+  const isVercelPreview = host.endsWith(".vercel.app") && host !== PRODUCTION_VERCEL_HOSTNAME;
+  return isLocalHost || isVercelPreview ? "developer" : "production";
+}
 
 /**
  * Build the GA `page_path` from a TanStack Router location: pathname + the RAW
@@ -103,7 +140,12 @@ export function initAnalytics(): void {
   };
 
   safeGtag("js", new Date());
-  safeGtag("config", GA_MEASUREMENT_ID, { send_page_view: false });
+  // `traffic_type` set on the config command applies to every event of the
+  // stream — the GA4 "Internal traffic" data filter matches on its value.
+  safeGtag("config", GA_MEASUREMENT_ID, {
+    send_page_view: false,
+    traffic_type: resolveTrafficType(window.location.hostname),
+  });
 }
 
 /**

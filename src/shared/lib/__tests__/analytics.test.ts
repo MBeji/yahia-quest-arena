@@ -73,11 +73,13 @@ describe("initAnalytics", () => {
     expect(loader?.async).toBe(true);
     expect(loader?.src).toContain(`gtag/js?id=${GA_MEASUREMENT_ID}`);
     expect(typeof window.gtag).toBe("function");
-    // js + config commands recorded on the dataLayer, initial page_view suppressed.
+    // js + config commands recorded on the dataLayer, initial page_view
+    // suppressed. jsdom serves the test on localhost, so the stream is tagged
+    // as developer traffic (the GA4 data-filter parameter).
     const entries = (window.dataLayer as IArguments[]).map((entry) => Array.from(entry));
     expect(entries).toEqual([
       ["js", expect.any(Date)],
-      ["config", GA_MEASUREMENT_ID, { send_page_view: false }],
+      ["config", GA_MEASUREMENT_ID, { send_page_view: false, traffic_type: "developer" }],
     ]);
     // Regression guard (prod incident 2026-07-01): entries must be exotic
     // `arguments` objects — gtag.js mis-processes plain arrays and can throw
@@ -106,6 +108,37 @@ describe("initAnalytics", () => {
     initAnalytics();
     initAnalytics();
     expect(document.head.querySelectorAll("script[src*='googletagmanager']")).toHaveLength(1);
+  });
+});
+
+describe("resolveTrafficType", () => {
+  it("tags local hosts as developer (covers vite preview / smoke runs of the prod bundle)", async () => {
+    const { resolveTrafficType } = await loadModule();
+    expect(resolveTrafficType("localhost")).toBe("developer");
+    expect(resolveTrafficType("LOCALHOST")).toBe("developer");
+    expect(resolveTrafficType("127.0.0.1")).toBe("developer");
+    expect(resolveTrafficType("[::1]")).toBe("developer");
+    expect(resolveTrafficType("::1")).toBe("developer");
+    expect(resolveTrafficType("app.localhost")).toBe("developer");
+  });
+
+  it("tags Vercel preview deployments as developer", async () => {
+    const { resolveTrafficType } = await loadModule();
+    expect(resolveTrafficType("yahia-quest-arena-git-fix-foo-mbeji.vercel.app")).toBe("developer");
+    expect(resolveTrafficType("na9ranal3ab-abc123.vercel.app")).toBe("developer");
+  });
+
+  it("NEVER tags the default Vercel production domain as developer — it serves real traffic while the .tn domain is unwired", async () => {
+    const { resolveTrafficType } = await loadModule();
+    expect(resolveTrafficType("na9ranal3ab.vercel.app")).toBe("production");
+  });
+
+  it("tags the custom production domain and unrelated hosts as production", async () => {
+    const { resolveTrafficType } = await loadModule();
+    expect(resolveTrafficType("na9ranal3ab.tn")).toBe("production");
+    expect(resolveTrafficType("www.na9ranal3ab.tn")).toBe("production");
+    // Suffix match, not substring: this host merely CONTAINS "vercel.app".
+    expect(resolveTrafficType("vercel.app.example.com")).toBe("production");
   });
 });
 
