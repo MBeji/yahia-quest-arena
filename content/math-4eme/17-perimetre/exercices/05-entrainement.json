@@ -9,10 +9,22 @@
     {
       "prompt": "أيّ جملةٍ تصف المحيط وصفًا صحيحًا؟",
       "options": [
-        { "id": "a", "text": "هو عدد أضلاع الشكل" },
-        { "id": "b", "text": "هو طول أكبر ضلعٍ في الشكل" },
-        { "id": "c", "text": "هو السطح الذي يملؤه الشكل من الداخل" },
-        { "id": "d", "text": "هو طول الخطّ المحيط بالشكل = مجموع أطوال أضلاعه" }
+        {
+          "id": "a",
+          "text": "هو عدد أضلاع الشكل"
+        },
+        {
+          "id": "b",
+          "text": "هو طول أكبر ضلعٍ في الشكل"
+        },
+        {
+          "id": "c",
+          "text": "هو السطح الذي يملؤه الشكل من الداخل"
+        },
+        {
+          "id": "d",
+          "text": "هو طول الخطّ المحيط بالشكل = مجموع أطوال أضلاعه"
+        }
       ],
       "correctOption": "d",
       "explanation": "المحيط هو طول الخطّ المغلق المحيط بالشكل، أي مجموع أطوال أضلاعه كلّها، وليس عددها ولا أكبرها.",
@@ -21,10 +33,22 @@
     {
       "prompt": "ما محيط مربّعٍ ضلعه 11 cm؟",
       "options": [
-        { "id": "a", "text": "15 cm" },
-        { "id": "b", "text": "22 cm" },
-        { "id": "c", "text": "44 cm" },
-        { "id": "d", "text": "121 cm" }
+        {
+          "id": "a",
+          "text": "15 cm"
+        },
+        {
+          "id": "b",
+          "text": "22 cm"
+        },
+        {
+          "id": "c",
+          "text": "44 cm"
+        },
+        {
+          "id": "d",
+          "text": "121 cm"
+        }
       ],
       "correctOption": "c",
       "explanation": "محيط المربّع = الضلع × 4 = 11 × 4 = 44 cm. الخطأ الشائع: حساب 11 × 11 = 121 (هذه عمليّة المساحة لا المحيط).",
@@ -33,10 +57,22 @@
     {
       "prompt": "ما محيط هذا المستطيل؟ <svg viewBox=\"0 0 100 100\"><rect x=\"14\" y=\"32\" width=\"72\" height=\"36\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><text x=\"38\" y=\"27\" font-size=\"10\" fill=\"currentColor\">14 cm</text><text x=\"2\" y=\"54\" font-size=\"10\" fill=\"currentColor\">8 cm</text></svg>",
       "options": [
-        { "id": "a", "text": "22 cm" },
-        { "id": "b", "text": "44 cm" },
-        { "id": "c", "text": "50 cm" },
-        { "id": "d", "text": "112 cm" }
+        {
+          "id": "a",
+          "text": "22 cm"
+        },
+        {
+          "id": "b",
+          "text": "44 cm"
+        },
+        {
+          "id": "c",
+          "text": "50 cm"
+        },
+        {
+          "id": "d",
+          "text": "112 cm"
+        }
       ],
       "correctOption": "b",
       "explanation": "محيط المستطيل = (الطول + العرض) × 2 = (14 + 8) × 2 = 22 × 2 = 44 cm. الخطأ الشائع: التوقّف عند 14 + 8 = 22 دون الضرب في 2.",
@@ -45,10 +81,22 @@
     {
       "prompt": "مثلّثٌ محيطه 19 cm، وضلعان منه 8 cm و 4 cm. ما طول الضلع الثالث؟",
       "options": [
-        { "id": "a", "text": "6 cm" },
-        { "id": "b", "text": "7 cm" },
-        { "id": "c", "text": "11 cm" },
-        { "id": "d", "text": "12 cm" }
+        {
+          "id": "a",
+          "text": "6 cm"
+        },
+        {
+          "id": "b",
+          "text": "7 cm"
+        },
+        {
+          "id": "c",
+          "text": "11 cm"
+        },
+        {
+          "id": "d",
+          "text": "12 cm"
+        }
       ],
       "correctOption": "b",
       "explanation": "الضلع الثالث = المحيط − مجموع الضلعين = 19 − (8 + 4) = 19 − 12 = 7 cm. تحقّق: 8 + 4 + 7 = 19 cm ✓.",
@@ -57,22 +105,46 @@
     {
       "prompt": "مضلّعٌ سداسيّ منتظم (6 أضلاع متساوية) محيطه 30 cm. ما طول ضلعه؟",
       "options": [
-        { "id": "a", "text": "5 cm" },
-        { "id": "b", "text": "6 cm" },
-        { "id": "c", "text": "24 cm" },
-        { "id": "d", "text": "180 cm" }
+        {
+          "id": "a",
+          "text": "5 cm"
+        },
+        {
+          "id": "b",
+          "text": "6 cm"
+        },
+        {
+          "id": "c",
+          "text": "24 cm"
+        },
+        {
+          "id": "d",
+          "text": "180 cm"
+        }
       ],
       "correctOption": "a",
       "explanation": "للمضلّع السداسيّ 6 أضلاع متساوية، فالضلع = المحيط ÷ 6 = 30 ÷ 6 = 5 cm. تحقّق: 5 × 6 = 30 cm ✓. الخطأ الشائع: القسمة على 4 (نحصل تقريبًا على غير ذلك) بدل القسمة على عدد الأضلاع 6.",
       "difficulty": 3
     },
     {
-      "prompt": "غرفةٌ مستطيلة طولها 5 m وعرضها 4 m، نريد وضع شريطٍ زخرفيّ حول حوافّها كلّها. كم مترًا من الشريط نحتاج؟",
+      "prompt": "غرفةٌ مستطيلة طولها 5 m وعرضها 4 m، نريد وضع شريطٍ زخرفيّ حول حوافّها كلّها. كم مترًا من الشريط نحتاج؟\n<svg viewBox=\"0 0 180 130\">\n<title>غرفة مستطيلة طولها وعرضها معطيان</title>\n<rect x=\"45\" y=\"40\" width=\"90\" height=\"72\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.4\"/><text x=\"90\" y=\"29\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"14\" font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\">5 m</text><text x=\"60\" y=\"80\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"14\" font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\">4 m</text>\n</svg>",
       "options": [
-        { "id": "a", "text": "9 m" },
-        { "id": "b", "text": "14 m" },
-        { "id": "c", "text": "18 m" },
-        { "id": "d", "text": "20 m" }
+        {
+          "id": "a",
+          "text": "9 m"
+        },
+        {
+          "id": "b",
+          "text": "14 m"
+        },
+        {
+          "id": "c",
+          "text": "18 m"
+        },
+        {
+          "id": "d",
+          "text": "20 m"
+        }
       ],
       "correctOption": "c",
       "explanation": "طول الشريط = محيط الغرفة = (الطول + العرض) × 2 = (5 + 4) × 2 = 9 × 2 = 18 m. الخطأ الشائع: حساب 5 × 4 = 20 (عمليّة المساحة) بدل المحيط.",

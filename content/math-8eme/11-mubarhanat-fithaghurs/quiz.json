@@ -4,34 +4,70 @@
     {
       "prompt": "المثلثُ ABC قائمُ الزاوية في A. ما هو الوتر؟",
       "options": [
-        { "id": "a", "text": "الضلع [BC]" },
-        { "id": "b", "text": "الضلع [AB]" },
-        { "id": "c", "text": "الضلع [AC]" },
-        { "id": "d", "text": "الرأس A" }
+        {
+          "id": "a",
+          "text": "الضلع [BC]"
+        },
+        {
+          "id": "b",
+          "text": "الضلع [AB]"
+        },
+        {
+          "id": "c",
+          "text": "الضلع [AC]"
+        },
+        {
+          "id": "d",
+          "text": "الرأس A"
+        }
       ],
       "correctOption": "a",
       "explanation": "الوترُ هو الضلعُ الذي يقابل الزاوية القائمة وهو أطولُ الأضلاع. الزاويةُ القائمة في A فالوترُ هو الضلعُ المقابلُ له [BC] ✓. الضلعان [AB] و[AC] هما الضلعان القائمان اللذان يكوّنان الزاوية القائمة.",
       "difficulty": 1
     },
     {
-      "prompt": "مثلثٌ ABC قائمٌ في A، حيث AB = 3 وAC = 4. احسب طول الوتر BC.",
+      "prompt": "مثلثٌ ABC قائمٌ في A، حيث AB = 3 وAC = 4. احسب طول الوتر BC.\n\n<svg viewBox=\"0 0 200 150\">\n<title>مثلث ABC قائم الزاوية في A</title>\n<polygon points=\"45,120 45,35 170,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.4\"/><polyline points=\"45,107 58,107 58,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.6\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"35\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"35\" y=\"33\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"179\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "7" },
-        { "id": "b", "text": "5" },
-        { "id": "c", "text": "25" },
-        { "id": "d", "text": "12" }
+        {
+          "id": "a",
+          "text": "7"
+        },
+        {
+          "id": "b",
+          "text": "5"
+        },
+        {
+          "id": "c",
+          "text": "25"
+        },
+        {
+          "id": "d",
+          "text": "12"
+        }
       ],
       "correctOption": "b",
       "explanation": "بالنصّ المباشر: BC² = AB² + AC² = 3² + 4² = 9 + 16 = 25، فـ BC = √25 = 5 ✓. الأخطاءُ الشائعة: جمعُ الأطوال 3 + 4 = 7، أو نسيانُ الجذر (BC = 25)، أو ضربُ الطولين 3 × 4 = 12.",
       "difficulty": 1
     },
     {
-      "prompt": "مثلثٌ ABC قائمٌ في A، وترُه BC = 13 وأحدُ ضلعيه القائمين AB = 5. احسب AC.",
+      "prompt": "مثلثٌ ABC قائمٌ في A، وترُه BC = 13 وأحدُ ضلعيه القائمين AB = 5. احسب AC.\n\n<svg viewBox=\"0 0 200 150\">\n<title>مثلث ABC قائم الزاوية في A</title>\n<polygon points=\"45,120 45,35 170,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.4\"/><polyline points=\"45,107 58,107 58,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.6\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"35\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"35\" y=\"33\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"179\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "8" },
-        { "id": "b", "text": "144" },
-        { "id": "c", "text": "12" },
-        { "id": "d", "text": "18" }
+        {
+          "id": "a",
+          "text": "8"
+        },
+        {
+          "id": "b",
+          "text": "144"
+        },
+        {
+          "id": "c",
+          "text": "12"
+        },
+        {
+          "id": "d",
+          "text": "18"
+        }
       ],
       "correctOption": "c",
       "explanation": "المجهولُ ضلعٌ قائم فنطرح: AC² = BC² − AB² = 13² − 5² = 169 − 25 = 144، فـ AC = √144 = 12 ✓. الأخطاءُ الشائعة: طرحُ الأطوال مباشرةً 13 − 5 = 8، أو نسيانُ الجذر (144)، أو الجمعُ بدل الطرح ثمّ جمعُ الأطوال 13 + 5 = 18.",
@@ -40,22 +76,46 @@
     {
       "prompt": "أيُّ ثلاثيّةِ أطوالٍ (بالـ cm) تكوّنُ مثلثًا قائمَ الزاوية؟",
       "options": [
-        { "id": "a", "text": "6, 8, 10" },
-        { "id": "b", "text": "4, 5, 6" },
-        { "id": "c", "text": "5, 6, 7" },
-        { "id": "d", "text": "2, 3, 4" }
+        {
+          "id": "a",
+          "text": "6, 8, 10"
+        },
+        {
+          "id": "b",
+          "text": "4, 5, 6"
+        },
+        {
+          "id": "c",
+          "text": "5, 6, 7"
+        },
+        {
+          "id": "d",
+          "text": "2, 3, 4"
+        }
       ],
       "correctOption": "a",
       "explanation": "بالنصّ العكسي نقارن مربّعَ أطولِ ضلعٍ بمجموع مربّعَي الآخرين: 10² = 100 و6² + 8² = 36 + 64 = 100، متساويان ⇒ قائم ✓. أمّا 6² = 36 ≠ 4² + 5² = 41، و7² = 49 ≠ 5² + 6² = 61، و4² = 16 ≠ 2² + 3² = 13، فليست قائمة.",
       "difficulty": 2
     },
     {
-      "prompt": "مثلثٌ ABC قائمٌ في A، حيث AB = 6 وAC = 8. احسب الوتر BC.",
+      "prompt": "مثلثٌ ABC قائمٌ في A، حيث AB = 6 وAC = 8. احسب الوتر BC.\n\n<svg viewBox=\"0 0 200 150\">\n<title>مثلث ABC قائم الزاوية في A</title>\n<polygon points=\"45,120 45,35 170,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.4\"/><polyline points=\"45,107 58,107 58,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.6\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"35\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"35\" y=\"33\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"179\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "14" },
-        { "id": "b", "text": "100" },
-        { "id": "c", "text": "48" },
-        { "id": "d", "text": "10" }
+        {
+          "id": "a",
+          "text": "14"
+        },
+        {
+          "id": "b",
+          "text": "100"
+        },
+        {
+          "id": "c",
+          "text": "48"
+        },
+        {
+          "id": "d",
+          "text": "10"
+        }
       ],
       "correctOption": "d",
       "explanation": "BC² = 6² + 8² = 36 + 64 = 100، فـ BC = √100 = 10 ✓. الأخطاءُ الشائعة: جمعُ الأطوال 6 + 8 = 14، أو نسيانُ الجذر (100)، أو ضربُ الطولين 6 × 8 = 48.",

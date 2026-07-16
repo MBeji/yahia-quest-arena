@@ -9,10 +9,22 @@
     {
       "prompt": "أكمل: «المثلث المرسوم داخل نصف دائرةٍ ووترُه قطرُها يكون ...».",
       "options": [
-        { "id": "a", "text": "قائم الزاوية" },
-        { "id": "b", "text": "متساوي الساقين" },
-        { "id": "c", "text": "متساوي الأضلاع" },
-        { "id": "d", "text": "منفرج الزاوية" }
+        {
+          "id": "a",
+          "text": "قائم الزاوية"
+        },
+        {
+          "id": "b",
+          "text": "متساوي الساقين"
+        },
+        {
+          "id": "c",
+          "text": "متساوي الأضلاع"
+        },
+        {
+          "id": "d",
+          "text": "منفرج الزاوية"
+        }
       ],
       "correctOption": "a",
       "explanation": "هذه هي المبرهنة العكسية: كلُّ مثلثٍ مرسومٍ في نصف دائرةٍ ووترُه قطرُ الدائرة يكون قائم الزاوية عند الرأس الموجود على القوس ✓.",
@@ -21,58 +33,118 @@
     {
       "prompt": "المثلث ABC قائم في C، وAB = 26 cm، وI منتصف [AB]. ما طول المتوسّط CI؟",
       "options": [
-        { "id": "a", "text": "26 cm" },
-        { "id": "b", "text": "13 cm" },
-        { "id": "c", "text": "6.5 cm" },
-        { "id": "d", "text": "52 cm" }
+        {
+          "id": "a",
+          "text": "26 cm"
+        },
+        {
+          "id": "b",
+          "text": "13 cm"
+        },
+        {
+          "id": "c",
+          "text": "6.5 cm"
+        },
+        {
+          "id": "d",
+          "text": "52 cm"
+        }
       ],
       "correctOption": "b",
       "explanation": "المثلث قائمٌ في C فوترُه [AB]، ومتوسّطُ الوتر CI يساوي نصفَه: CI = 26⁄2 = 13 cm ✓. الخطأُ الشائع: أخذُ المتوسّط مساويًا للوتر (26) أو قسمتُه على 4 (6.5).",
       "difficulty": 2
     },
     {
-      "prompt": "الضلع [BC] قطرٌ لدائرة، وA نقطةٌ منها، مع BC = 17 cm وAC = 15 cm. احسب AB.",
+      "prompt": "الضلع [BC] قطرٌ لدائرة، وA نقطةٌ منها، مع BC = 17 cm وAC = 15 cm. احسب AB.\n\n<svg viewBox=\"0 0 200 150\">\n<title>دائرة قطرها [BC] وA نقطة منها</title>\n<circle cx=\"100\" cy=\"80\" r=\"62\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"1.8\"/><line x1=\"38\" y1=\"80\" x2=\"162\" y2=\"80\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"68.7\" y1=\"26.48\" x2=\"38\" y2=\"80\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"68.7\" y1=\"26.48\" x2=\"162\" y2=\"80\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><circle cx=\"100\" cy=\"80\" r=\"2\" fill=\"#0f172a\"/><circle cx=\"68.7\" cy=\"26.48\" r=\"2\" fill=\"#0f172a\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"29\" y=\"84\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"171\" y=\"84\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text><text x=\"64.7\" y=\"18.48\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "2 cm" },
-        { "id": "b", "text": "32 cm" },
-        { "id": "c", "text": "8 cm" },
-        { "id": "d", "text": "4 cm" }
+        {
+          "id": "a",
+          "text": "2 cm"
+        },
+        {
+          "id": "b",
+          "text": "32 cm"
+        },
+        {
+          "id": "c",
+          "text": "8 cm"
+        },
+        {
+          "id": "d",
+          "text": "4 cm"
+        }
       ],
       "correctOption": "c",
       "explanation": "المثلث ABC قائمٌ في A (وترُه القطر [BC]). بفيثاغور: AB = √(BC² − AC²) = √(17² − 15²) = √(289 − 225) = √64 = 8 cm ✓. الخطأُ الشائع: طرحُ الطولين دون تربيع (17 − 15 = 2)، أو جمعُهما (32).",
       "difficulty": 2
     },
     {
-      "prompt": "المثلث ABC، I منتصف [BC]. أيّ شرطٍ يجعله قائمَ الزاوية في A؟",
+      "prompt": "المثلث ABC، I منتصف [BC]. أيّ شرطٍ يجعله قائمَ الزاوية في A؟\n\n<svg viewBox=\"0 0 200 150\">\n<title>مثلث ABC وI منتصف [BC] ومتوسطه AI</title>\n<polygon points=\"62,34 38,126 172,118\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"62\" y1=\"34\" x2=\"105\" y2=\"122\" stroke=\"#64748b\" stroke-width=\"1.8\"/><circle cx=\"105\" cy=\"122\" r=\"2\" fill=\"#0f172a\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"60\" y=\"26\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"28\" y=\"134\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"181\" y=\"126\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text><text x=\"109\" y=\"137\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">I</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "IA = BC" },
-        { "id": "b", "text": "IA = AB" },
-        { "id": "c", "text": "IA = 2 × BC" },
-        { "id": "d", "text": "IA = نصف BC" }
+        {
+          "id": "a",
+          "text": "IA = BC"
+        },
+        {
+          "id": "b",
+          "text": "IA = AB"
+        },
+        {
+          "id": "c",
+          "text": "IA = 2 × BC"
+        },
+        {
+          "id": "d",
+          "text": "IA = نصف BC"
+        }
       ],
       "correctOption": "d",
       "explanation": "بما أنّ I منتصف [BC] فإنّ IB = IC = BC⁄2 دائمًا؛ فإذا صار IA = BC⁄2 (نصفَ الوتر) أصبح IA = IB = IC، فـ A على الدائرة التي قطرُها [BC] والمثلث قائمٌ في A ✓. الخطأُ الشائع: مساواةُ المتوسّط بالوتر كاملًا (IA = BC).",
       "difficulty": 3
     },
     {
-      "prompt": "المثلث ABC قائم في A، AB = 9 cm وAC = 12 cm. احسب نصف قطر دائرته المحيطة.",
+      "prompt": "المثلث ABC قائم في A، AB = 9 cm وAC = 12 cm. احسب نصف قطر دائرته المحيطة.\n\n<svg viewBox=\"0 0 200 150\">\n<title>مثلث ABC قائم الزاوية في A</title>\n<polygon points=\"45,120 45,35 170,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.4\"/><polyline points=\"45,107 58,107 58,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.6\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"35\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"35\" y=\"33\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"179\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "7.5 cm" },
-        { "id": "b", "text": "15 cm" },
-        { "id": "c", "text": "6 cm" },
-        { "id": "d", "text": "30 cm" }
+        {
+          "id": "a",
+          "text": "7.5 cm"
+        },
+        {
+          "id": "b",
+          "text": "15 cm"
+        },
+        {
+          "id": "c",
+          "text": "6 cm"
+        },
+        {
+          "id": "d",
+          "text": "30 cm"
+        }
       ],
       "correctOption": "a",
       "explanation": "الوتر BC = √(9² + 12²) = √(81 + 144) = √225 = 15 cm، ونصفُ القطر = 15⁄2 = 7.5 cm ✓. الخطأُ الشائع: نسيانُ القسمة على 2 فيبقى R = 15، أو حسابُ نصف مجموع الضلعين (9+12)⁄2 = 10.5.",
       "difficulty": 3
     },
     {
-      "prompt": "دائرةٌ قطرُها [AB] = 10 cm، وM نقطةٌ منها مع AM = 6 cm. احسب محيط المثلث AMB.",
+      "prompt": "دائرةٌ قطرُها [AB] = 10 cm، وM نقطةٌ منها مع AM = 6 cm. احسب محيط المثلث AMB.\n\n<svg viewBox=\"0 0 200 150\">\n<title>دائرة قطرها [AB] وM نقطة منها</title>\n<circle cx=\"100\" cy=\"80\" r=\"62\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"1.8\"/><line x1=\"38\" y1=\"80\" x2=\"162\" y2=\"80\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"68.7\" y1=\"26.48\" x2=\"38\" y2=\"80\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"68.7\" y1=\"26.48\" x2=\"162\" y2=\"80\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><circle cx=\"100\" cy=\"80\" r=\"2\" fill=\"#0f172a\"/><circle cx=\"68.7\" cy=\"26.48\" r=\"2\" fill=\"#0f172a\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"29\" y=\"84\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"171\" y=\"84\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"64.7\" y=\"18.48\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">M</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "14 cm" },
-        { "id": "b", "text": "20 cm" },
-        { "id": "c", "text": "24 cm" },
-        { "id": "d", "text": "30 cm" }
+        {
+          "id": "a",
+          "text": "14 cm"
+        },
+        {
+          "id": "b",
+          "text": "20 cm"
+        },
+        {
+          "id": "c",
+          "text": "24 cm"
+        },
+        {
+          "id": "d",
+          "text": "30 cm"
+        }
       ],
       "correctOption": "c",
       "explanation": "المثلث AMB قائمٌ في M (وترُه القطر [AB]). MB = √(10² − 6²) = √(100 − 36) = √64 = 8 cm. المحيط = AM + MB + AB = 6 + 8 + 10 = 24 cm ✓. الخطأُ الشائع: نسيانُ إضافة الوتر AB (6 + 8 = 14)، أو أخطاءٌ في MB.",
