@@ -32,6 +32,12 @@ content/
   d'un niveau — le slug est résolu en UUID `grades` à la compilation, jamais
   codé en dur), `isPremium?` (dormant : en phase gratuite, la migration
   `20260711100000` force `is_premium = false` sur tous les parcours),
+  `manuels?` (lien vers le **manuel élève officiel CNP en PDF complet**, un
+  objet par tome : `[{ "code": "102306" }]` ou
+  `[{ "code": "102105P01", "label": "الجزء الأول" }, …]` — compilé dans
+  `subjects.manuel_refs` et affiché en carte « Manuel officiel » sur la page
+  matière, connexion requise pour ouvrir ; les PDF sont uploadés hors-bande
+  dans le bucket privé `manuel-eleve` via `scripts/manuel/upload-pdf.mjs`),
   `compileTo?` (mutualisation lycée — voir plus bas).
 - **`chapter.json`** : `title`, `description`, `displayOrder`, `sources` (liste
   d'URLs / références — traçabilité des sources), `gradeSlugs?` (dossier partagé
@@ -111,6 +117,22 @@ Les `id` de chapitres / exercices / questions sont des **UUID v5 déterministes*
 dérivés des slugs : régénérer met à jour les lignes en place (pas de doublon),
 et le contenu admin retiré est élagué automatiquement (le contenu créé par les
 parents n'est jamais touché).
+
+## Schémas explicatifs (figures SVG inline)
+
+Les figures SVG embarquées dans les cours (`cours.md`) et les questions (un `<svg>`
+par `prompt`) se créent, se rendent et se vérifient avec l'outillage
+[`scripts/content/svg/`](../scripts/content/svg/README.md) :
+
+```bash
+npm run content:figures:check                              # lint structurel de toutes les figures
+node scripts/content/svg/preview.mjs <fichier> /tmp/out.png # rend en PNG (décode les .json)
+```
+
+Points clés : un seul `<svg>` par champ, primitives autorisées par le sanitizer
+(`src/shared/lib/figure.ts`), chiffres occidentaux partout, libellés à halo. Pour une
+figure de **question**, la règle _answer-safe_ : ne montrer que le **donné**, jamais la
+réponse — sinon rester en texte. Détails + `svglib.mjs` : voir le README de l'outillage.
 
 ## Workflow DB ↔ code
 

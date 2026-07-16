@@ -865,6 +865,12 @@ export type TranslationKeys = {
       todo: string;
       unlocksChapter: string;
       quizContract: string;
+      manuelTitle: string;
+      manuelHint: string;
+      manuelOpen: string;
+      manuelTome: string;
+      manuelLockedHint: string;
+      manuelLoginCta: string;
     };
     practice: {
       back: string;

@@ -462,7 +462,55 @@ describe("buildMigrationSql", () => {
     });
     expect(agnostic).toContain("'francais'");
     expect(agnostic).not.toContain("SELECT id FROM public.grades");
-    expect(agnostic).toMatch(/'francais', NULL\)/);
+    // Row tail: grade_id NULL, then manuel_refs NULL (no manuels authored).
+    expect(agnostic).toMatch(/'francais', NULL, NULL\)/);
+  });
+
+  it("emits subjects.manuel_refs as jsonb (labels normalized to null)", () => {
+    const withManuels = buildMigrationSql({
+      meta: {
+        ...subject.meta,
+        manuels: [{ code: "102105P01", label: "الجزء الأول" }, { code: "102105P02" }],
+      },
+      chapters: subject.chapters,
+    });
+    expect(withManuels).toContain("grade_id, manuel_refs) VALUES");
+    expect(withManuels).toContain('"code":"102105P01","label":"الجزء الأول"');
+    expect(withManuels).toContain('"code":"102105P02","label":null');
+    expect(withManuels).toContain("manuel_refs = EXCLUDED.manuel_refs");
+    // The base fixture has no manuels → NULL (cleared on rebuild).
+    expect(sql).toContain("manuel_refs = EXCLUDED.manuel_refs");
+    expect(sql).not.toContain('"label":');
+  });
+
+  it("accepts subject manuels volumes and rejects malformed codes", () => {
+    const base = {
+      id: "math",
+      nameFr: "Mathématiques",
+      description: "d",
+      attribute: "Force",
+      colorToken: "subject-math",
+      icon: "Calculator",
+      displayOrder: 1,
+      contentLanguage: "ar",
+      themeId: "ecole-tn",
+    };
+    expect(subjectMetaSchema.safeParse({ ...base, manuels: [{ code: "102306" }] }).success).toBe(
+      true,
+    );
+    expect(
+      subjectMetaSchema.safeParse({
+        ...base,
+        manuels: [{ code: "102105P01", label: "الجزء الأول" }],
+      }).success,
+    ).toBe(true);
+    expect(subjectMetaSchema.safeParse({ ...base, manuels: [] }).success).toBe(false);
+    expect(subjectMetaSchema.safeParse({ ...base, manuels: [{ code: "bad code" }] }).success).toBe(
+      false,
+    );
+    expect(
+      subjectMetaSchema.safeParse({ ...base, manuels: [{ code: "x", label: "" }] }).success,
+    ).toBe(false);
   });
 
   it("self-contains the exercises mode CHECK (incl. 'challenge') so it never blocks", () => {
