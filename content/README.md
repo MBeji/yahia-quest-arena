@@ -32,6 +32,12 @@ content/
   d'un niveau — le slug est résolu en UUID `grades` à la compilation, jamais
   codé en dur), `isPremium?` (dormant : en phase gratuite, la migration
   `20260711100000` force `is_premium = false` sur tous les parcours),
+  `manuels?` (lien vers le **manuel élève officiel CNP en PDF complet**, un
+  objet par tome : `[{ "code": "102306" }]` ou
+  `[{ "code": "102105P01", "label": "الجزء الأول" }, …]` — compilé dans
+  `subjects.manuel_refs` et affiché en carte « Manuel officiel » sur la page
+  matière, connexion requise pour ouvrir ; les PDF sont uploadés hors-bande
+  dans le bucket privé `manuel-eleve` via `scripts/manuel/upload-pdf.mjs`),
   `compileTo?` (mutualisation lycée — voir plus bas).
 - **`chapter.json`** : `title`, `description`, `displayOrder`, `sources` (liste
   d'URLs / références — traçabilité des sources), `gradeSlugs?` (dossier partagé

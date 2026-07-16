@@ -8,5 +8,15 @@
   "displayOrder": 1,
   "contentLanguage": "ar",
   "themeId": "ecole-tn",
-  "gradeSlug": "1ere-base"
+  "gradeSlug": "1ere-base",
+  "manuels": [
+    {
+      "code": "102105P01",
+      "label": "الجزء الأول"
+    },
+    {
+      "code": "102105P02",
+      "label": "الجزء الثاني"
+    }
+  ]
 }
