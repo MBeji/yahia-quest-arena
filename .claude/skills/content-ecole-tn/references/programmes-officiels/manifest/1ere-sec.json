@@ -1,8 +1,8 @@
 {
   "grade": "1ere-sec",
   "sealed": false,
-  "source": "CNP — programme national 1ère année de l'enseignement secondaire (tronc commun). Manuels élèves OFFICIELS CNP : Mathématiques (222104P01/P02, auteurs Mcharek/Mhamdi/Klila/Ben Youssef) ; Sciences Physiques (222105P01/P02) [no guide enseignant au corpus]. Transcriptions sous programme/1ere-sec/.",
-  "note": "sealed=false. MVP 2026 : mathématiques + sciences-physiques (électricité/thermodynamique/optique/mécanique, hors chimie). Chimie (chapitres du tome 2 sciences physiques) → PR séparé. Statut : chapitres 1–16 (mathématiques, intégralité), 2–17 (sciences-physiques, 1 pilote omis) transcrits à profondeur complète.",
+  "source": "CNP — programme national 1ère année de l'enseignement secondaire (tronc commun). Manuels élèves OFFICIELS CNP : Mathématiques (222104P01/P02, auteurs Mcharek/Mhamdi/Klila/Ben Youssef) ; Sciences Physiques (222105P01/P02) ; SVT (225104P00, « Sciences de la Vie et de la Terre — 1ère année de l'enseignement secondaire », 199 p., auteurs Abid/Chebbi/Guermazi/Smaoui) [no guide enseignant au corpus]. Transcriptions sous programme/1ere-sec/.",
+  "note": "sealed=false. MVP 2026 : mathématiques + sciences-physiques (électricité/thermodynamique/optique/mécanique, hors chimie). Chimie (chapitres du tome 2 sciences physiques) → PR séparé. Statut : chapitres 1–16 (mathématiques, intégralité), 2–17 (sciences-physiques, 1 pilote omis) transcrits à profondeur complète. SVT : 8 chapitres (3 parties du manuel — production végétale, microbes et santé, environnement géologique) transcrits à profondeur de génération le 2026-07-16 ; le mapping manuel↔pages par chapitre vit dans §4 de programme/1ere-sec/svt.md (le schéma du manifeste ne porte pas de champ manuel — il alimente chapter.manuel du content au lot de génération).",
   "subjects": [
     {
       "id": "math-1ere-sec",
@@ -57,6 +57,27 @@
         { "slug": "15-lumiere-optique", "notion": "Lumière & optique" },
         { "slug": "16-astre-univers", "notion": "Astres & univers" },
         { "slug": "17-energie-renouvelable", "notion": "Énergies renouvelables" }
+      ]
+    },
+    {
+      "id": "svt-1ere-sec",
+      "name": "Sciences de la Vie et de la Terre",
+      "contentLanguage": "fr",
+      "chapters": [
+        { "slug": "01-nutrition-minerale", "notion": "La nutrition minérale" },
+        { "slug": "02-nutrition-carbonee", "notion": "La nutrition carbonée" },
+        { "slug": "03-multiplication-vegetative", "notion": "La multiplication végétative" },
+        { "slug": "04-diversite-monde-microbien", "notion": "La diversité du monde microbien" },
+        {
+          "slug": "05-agents-pathogenes-maladies-infectieuses",
+          "notion": "Les agents pathogènes et les maladies infectieuses"
+        },
+        { "slug": "06-defense-organisme", "notion": "La défense de l'organisme" },
+        { "slug": "07-site-geologique", "notion": "Étude d'un site géologique" },
+        {
+          "slug": "08-phosphate",
+          "notion": "Exploitation et gestion d'une roche à intérêt économique : le phosphate"
+        }
       ]
     }
   ]
