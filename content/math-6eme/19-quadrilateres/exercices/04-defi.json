@@ -7,24 +7,48 @@
   "displayOrder": 4,
   "questions": [
     {
-      "prompt": "ما محيطُ مربّعٍ طولُ ضلعه 5 سم؟",
+      "prompt": "ما محيطُ مربّعٍ طولُ ضلعه 5 سم؟\n<svg viewBox=\"0 0 190 150\">\n<title>مربّع طول ضلعه معطى</title>\n<rect x=\"70\" y=\"24\" width=\"70\" height=\"70\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.4\"/><line x1=\"105\" y1=\"88\" x2=\"105\" y2=\"100\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><line x1=\"76\" y1=\"59\" x2=\"64\" y2=\"59\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><line x1=\"105\" y1=\"18\" x2=\"105\" y2=\"30\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><line x1=\"146\" y1=\"59\" x2=\"134\" y2=\"59\" stroke=\"#0f172a\" stroke-width=\"1.8\"/><text x=\"105\" y=\"114\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"14\" font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\">5 سم</text>\n</svg>",
       "options": [
-        { "id": "a", "text": "20 سم" },
-        { "id": "b", "text": "25 سم" },
-        { "id": "c", "text": "10 سم" },
-        { "id": "d", "text": "15 سم" }
+        {
+          "id": "a",
+          "text": "20 سم"
+        },
+        {
+          "id": "b",
+          "text": "25 سم"
+        },
+        {
+          "id": "c",
+          "text": "10 سم"
+        },
+        {
+          "id": "d",
+          "text": "15 سم"
+        }
       ],
       "correctOption": "a",
       "explanation": "للمربّع 4 أضلاع متساوية، فالمحيط = 4 × 5 = 20 سم.",
       "difficulty": 2
     },
     {
-      "prompt": "مستطيلٌ طولُه 8 سم وعرضُه 3 سم. ما محيطُه؟",
+      "prompt": "مستطيلٌ طولُه 8 سم وعرضُه 3 سم. ما محيطُه؟\n<svg viewBox=\"0 0 210 115\">\n<title>مستطيل طوله وعرضه معطيان</title>\n<rect x=\"40\" y=\"30\" width=\"120\" height=\"45\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.4\"/><text x=\"100\" y=\"19\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"14\" font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\">8 سم</text><text x=\"55\" y=\"56.5\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"14\" font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\">3 سم</text>\n</svg>",
       "options": [
-        { "id": "a", "text": "11 سم" },
-        { "id": "b", "text": "16 سم" },
-        { "id": "c", "text": "22 سم" },
-        { "id": "d", "text": "24 سم" }
+        {
+          "id": "a",
+          "text": "11 سم"
+        },
+        {
+          "id": "b",
+          "text": "16 سم"
+        },
+        {
+          "id": "c",
+          "text": "22 سم"
+        },
+        {
+          "id": "d",
+          "text": "24 سم"
+        }
       ],
       "correctOption": "c",
       "explanation": "محيط المستطيل = 2 × (الطول + العرض) = 2 × (8 + 3) = 2 × 11 = 22 سم.",
@@ -33,10 +57,22 @@
     {
       "prompt": "في متوازي الأضلاع، الأضلاعُ المتقابلة: <svg viewBox=\"0 0 100 100\"><polygon points=\"26,72 74,72 86,34 38,34\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/></svg>",
       "options": [
-        { "id": "a", "text": "متعامدة" },
-        { "id": "b", "text": "متوازية ومتساوية" },
-        { "id": "c", "text": "مختلفة الأطوال" },
-        { "id": "d", "text": "غيرُ متوازية" }
+        {
+          "id": "a",
+          "text": "متعامدة"
+        },
+        {
+          "id": "b",
+          "text": "متوازية ومتساوية"
+        },
+        {
+          "id": "c",
+          "text": "مختلفة الأطوال"
+        },
+        {
+          "id": "d",
+          "text": "غيرُ متوازية"
+        }
       ],
       "correctOption": "b",
       "explanation": "في متوازي الأضلاع كلُّ ضلعين متقابلين متوازيان ومتساويان.",
@@ -45,10 +81,22 @@
     {
       "prompt": "ما محيطُ معيّنٍ طولُ ضلعه 7 سم؟",
       "options": [
-        { "id": "a", "text": "14 سم" },
-        { "id": "b", "text": "21 سم" },
-        { "id": "c", "text": "28 سم" },
-        { "id": "d", "text": "7 سم" }
+        {
+          "id": "a",
+          "text": "14 سم"
+        },
+        {
+          "id": "b",
+          "text": "21 سم"
+        },
+        {
+          "id": "c",
+          "text": "28 سم"
+        },
+        {
+          "id": "d",
+          "text": "7 سم"
+        }
       ],
       "correctOption": "c",
       "explanation": "للمعيّن 4 أضلاع متساوية، فالمحيط = 4 × 7 = 28 سم.",
@@ -57,10 +105,22 @@
     {
       "prompt": "أيُّ رباعيٍّ ليس بالضرورة متوازيَ أضلاع؟",
       "options": [
-        { "id": "a", "text": "المستطيل" },
-        { "id": "b", "text": "المربّع" },
-        { "id": "c", "text": "المعيّن" },
-        { "id": "d", "text": "شبه المنحرف" }
+        {
+          "id": "a",
+          "text": "المستطيل"
+        },
+        {
+          "id": "b",
+          "text": "المربّع"
+        },
+        {
+          "id": "c",
+          "text": "المعيّن"
+        },
+        {
+          "id": "d",
+          "text": "شبه المنحرف"
+        }
       ],
       "correctOption": "d",
       "explanation": "شبه المنحرف له زوجٌ واحدٌ فقط من التوازي، فهو ليس متوازيَ أضلاع؛ أمّا المستطيل والمربّع والمعيّن فكلُّها متوازيات أضلاع.",
@@ -69,10 +129,22 @@
     {
       "prompt": "كم زوجًا من الأضلاع المتوازية في شبه المنحرف؟ <svg viewBox=\"0 0 100 100\"><polygon points=\"18,72 82,72 64,34 36,34\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"/><polyline points=\"47,74 50,70 53,74\" fill=\"none\" stroke=\"#ef4444\" stroke-width=\"1.5\"/><polyline points=\"47,36 50,32 53,36\" fill=\"none\" stroke=\"#ef4444\" stroke-width=\"1.5\"/></svg>",
       "options": [
-        { "id": "a", "text": "2" },
-        { "id": "b", "text": "1" },
-        { "id": "c", "text": "0" },
-        { "id": "d", "text": "3" }
+        {
+          "id": "a",
+          "text": "2"
+        },
+        {
+          "id": "b",
+          "text": "1"
+        },
+        {
+          "id": "c",
+          "text": "0"
+        },
+        {
+          "id": "d",
+          "text": "3"
+        }
       ],
       "correctOption": "b",
       "explanation": "السهمان يدلّان على زوجٍ واحدٍ (1) فقط من الأضلاع المتوازية في شبه المنحرف؛ القاعدتان متوازيتان والساقان غيرُ متوازيين.",

@@ -7,72 +7,144 @@
   "displayOrder": 2,
   "questions": [
     {
-      "prompt": "المثلث ABC قائم في A وBC = 20 cm. ما نصف قطر دائرته المحيطة؟",
+      "prompt": "المثلث ABC قائم في A وBC = 20 cm. ما نصف قطر دائرته المحيطة؟\n\n<svg viewBox=\"0 0 200 150\">\n<title>مثلث ABC قائم الزاوية في A</title>\n<polygon points=\"45,120 45,35 170,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.4\"/><polyline points=\"45,107 58,107 58,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.6\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"35\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"35\" y=\"33\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"179\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "10 cm" },
-        { "id": "b", "text": "20 cm" },
-        { "id": "c", "text": "40 cm" },
-        { "id": "d", "text": "5 cm" }
+        {
+          "id": "a",
+          "text": "10 cm"
+        },
+        {
+          "id": "b",
+          "text": "20 cm"
+        },
+        {
+          "id": "c",
+          "text": "40 cm"
+        },
+        {
+          "id": "d",
+          "text": "5 cm"
+        }
       ],
       "correctOption": "a",
       "explanation": "الوترُ قطرٌ للدائرة، فنصفُ القطر يساوي نصفَه: R = 20⁄2 = 10 cm ✓. الخطأُ الشائع: أخذُ R مساويًا للوتر (20) أو ضعفَه (40).",
       "difficulty": 1
     },
     {
-      "prompt": "المثلث ABC قائم في A، AB = 8 cm وAC = 6 cm. احسب نصف قطر الدائرة المحيطة.",
+      "prompt": "المثلث ABC قائم في A، AB = 8 cm وAC = 6 cm. احسب نصف قطر الدائرة المحيطة.\n\n<svg viewBox=\"0 0 200 150\">\n<title>مثلث ABC قائم الزاوية في A</title>\n<polygon points=\"45,120 45,35 170,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.4\"/><polyline points=\"45,107 58,107 58,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.6\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"35\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"35\" y=\"33\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"179\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "7 cm" },
-        { "id": "b", "text": "5 cm" },
-        { "id": "c", "text": "10 cm" },
-        { "id": "d", "text": "3 cm" }
+        {
+          "id": "a",
+          "text": "7 cm"
+        },
+        {
+          "id": "b",
+          "text": "5 cm"
+        },
+        {
+          "id": "c",
+          "text": "10 cm"
+        },
+        {
+          "id": "d",
+          "text": "3 cm"
+        }
       ],
       "correctOption": "b",
       "explanation": "نحسب الوتر بفيثاغور: BC = √(8² + 6²) = √(64 + 36) = √100 = 10 cm، ثمّ R = BC⁄2 = 5 cm ✓. الخطأُ الشائع: نسيانُ القسمة على 2 فيبقى R = 10، أو حسابُ نصف مجموع الضلعين (8+6)⁄2 = 7.",
       "difficulty": 2
     },
     {
-      "prompt": "النقطة M من دائرةٍ مركزُها O ونصفُ قطرها 5 cm، و[AB] قطرٌ فيها. عُلم أنّ AM = 8 cm. احسب BM.",
+      "prompt": "النقطة M من دائرةٍ مركزُها O ونصفُ قطرها 5 cm، و[AB] قطرٌ فيها. عُلم أنّ AM = 8 cm. احسب BM.\n\n<svg viewBox=\"0 0 200 150\">\n<title>دائرة قطرها [AB] وM نقطة منها</title>\n<circle cx=\"100\" cy=\"80\" r=\"62\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"1.8\"/><line x1=\"38\" y1=\"80\" x2=\"162\" y2=\"80\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"68.7\" y1=\"26.48\" x2=\"38\" y2=\"80\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"68.7\" y1=\"26.48\" x2=\"162\" y2=\"80\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><circle cx=\"100\" cy=\"80\" r=\"2\" fill=\"#0f172a\"/><circle cx=\"68.7\" cy=\"26.48\" r=\"2\" fill=\"#0f172a\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"29\" y=\"84\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"171\" y=\"84\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"64.7\" y=\"18.48\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">M</text><text x=\"103\" y=\"96\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">O</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "4 cm" },
-        { "id": "b", "text": "13 cm" },
-        { "id": "c", "text": "6 cm" },
-        { "id": "d", "text": "2 cm" }
+        {
+          "id": "a",
+          "text": "4 cm"
+        },
+        {
+          "id": "b",
+          "text": "13 cm"
+        },
+        {
+          "id": "c",
+          "text": "6 cm"
+        },
+        {
+          "id": "d",
+          "text": "2 cm"
+        }
       ],
       "correctOption": "c",
       "explanation": "القطرُ AB = 2 × 5 = 10 cm، والمثلث AMB قائمٌ في M (مرسومٌ في نصف دائرة وترُه قطر). بفيثاغور: BM = √(AB² − AM²) = √(100 − 64) = √36 = 6 cm ✓. الخطأُ الشائع: أخذُ AB = 5 (نصف القطر) بدل 10، أو جمعُ AM ونصف القطر.",
       "difficulty": 2
     },
     {
-      "prompt": "في المثلث ABC، I منتصف [BC]، ولوحظ أنّ المتوسّط AI يساوي نصفَ الوتر BC. ماذا نستنتج؟",
+      "prompt": "في المثلث ABC، I منتصف [BC]، ولوحظ أنّ المتوسّط AI يساوي نصفَ الوتر BC. ماذا نستنتج؟\n\n<svg viewBox=\"0 0 200 150\">\n<title>مثلث ABC وI منتصف [BC] ومتوسطه AI</title>\n<polygon points=\"62,34 38,126 172,118\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"62\" y1=\"34\" x2=\"105\" y2=\"122\" stroke=\"#64748b\" stroke-width=\"1.8\"/><circle cx=\"105\" cy=\"122\" r=\"2\" fill=\"#0f172a\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"60\" y=\"26\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"28\" y=\"134\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"181\" y=\"126\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text><text x=\"109\" y=\"137\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">I</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "المثلث قائم الزاوية في B" },
-        { "id": "b", "text": "المثلث متساوي الساقين فقط" },
-        { "id": "c", "text": "المثلث منفرج الزاوية" },
-        { "id": "d", "text": "المثلث قائم الزاوية في A" }
+        {
+          "id": "a",
+          "text": "المثلث قائم الزاوية في B"
+        },
+        {
+          "id": "b",
+          "text": "المثلث متساوي الساقين فقط"
+        },
+        {
+          "id": "c",
+          "text": "المثلث منفرج الزاوية"
+        },
+        {
+          "id": "d",
+          "text": "المثلث قائم الزاوية في A"
+        }
       ],
       "correctOption": "d",
       "explanation": "بما أنّ I منتصف [BC] فإنّ IB = IC = BC⁄2 دائمًا؛ فإذا صار AI = BC⁄2 أيضًا فـ IA = IB = IC، أي A على الدائرة التي قطرُها [BC]، فالمثلث قائمٌ في A (المبرهنة العكسية) ✓. الخطأُ الشائع: الاكتفاءُ بالقول إنّه متساوي الساقين دون استنتاج القائمية.",
       "difficulty": 3
     },
     {
-      "prompt": "نصفُ دائرةٍ قطرُها [BC] = 13 cm، وM نقطةٌ منها مع BM = 5 cm. احسب مساحة المثلث MBC.",
+      "prompt": "نصفُ دائرةٍ قطرُها [BC] = 13 cm، وM نقطةٌ منها مع BM = 5 cm. احسب مساحة المثلث MBC.\n\n<svg viewBox=\"0 0 200 150\">\n<title>دائرة قطرها [BC] وM نقطة منها</title>\n<circle cx=\"100\" cy=\"80\" r=\"62\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"1.8\"/><line x1=\"38\" y1=\"80\" x2=\"162\" y2=\"80\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"68.7\" y1=\"26.48\" x2=\"38\" y2=\"80\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"68.7\" y1=\"26.48\" x2=\"162\" y2=\"80\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><circle cx=\"100\" cy=\"80\" r=\"2\" fill=\"#0f172a\"/><circle cx=\"68.7\" cy=\"26.48\" r=\"2\" fill=\"#0f172a\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"29\" y=\"84\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"171\" y=\"84\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text><text x=\"64.7\" y=\"18.48\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">M</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "30 cm²" },
-        { "id": "b", "text": "60 cm²" },
-        { "id": "c", "text": "32.5 cm²" },
-        { "id": "d", "text": "78 cm²" }
+        {
+          "id": "a",
+          "text": "30 cm²"
+        },
+        {
+          "id": "b",
+          "text": "60 cm²"
+        },
+        {
+          "id": "c",
+          "text": "32.5 cm²"
+        },
+        {
+          "id": "d",
+          "text": "78 cm²"
+        }
       ],
       "correctOption": "a",
       "explanation": "المثلث MBC قائمٌ في M (وترُه القطر). بفيثاغور: MC = √(13² − 5²) = √(169 − 25) = √144 = 12 cm. المساحة = (BM × MC)⁄2 = (5 × 12)⁄2 = 30 cm² ✓. الخطأُ الشائع: نسيانُ القسمة على 2 (60)، أو استعمالُ الوتر ضلعًا قائمًا (13 × 5)⁄2 = 32.5.",
       "difficulty": 3
     },
     {
-      "prompt": "المثلث ABC قائم في A، I منتصف [BC]، AB = 12 cm وAC = 5 cm. احسب طول المتوسّط AI.",
+      "prompt": "المثلث ABC قائم في A، I منتصف [BC]، AB = 12 cm وAC = 5 cm. احسب طول المتوسّط AI.\n\n<svg viewBox=\"0 0 200 150\">\n<title>مثلث ABC قائم في A ومتوسطه AI</title>\n<polygon points=\"45,120 45,35 170,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"45\" y1=\"120\" x2=\"107.5\" y2=\"77.5\" stroke=\"#64748b\" stroke-width=\"1.8\"/><polyline points=\"45,108 57,108 57,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.6\"/><circle cx=\"107.5\" cy=\"77.5\" r=\"2\" fill=\"#0f172a\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"35\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"35\" y=\"33\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"179\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text><text x=\"116.5\" y=\"79.5\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">I</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "13 cm" },
-        { "id": "b", "text": "6.5 cm" },
-        { "id": "c", "text": "8.5 cm" },
-        { "id": "d", "text": "5 cm" }
+        {
+          "id": "a",
+          "text": "13 cm"
+        },
+        {
+          "id": "b",
+          "text": "6.5 cm"
+        },
+        {
+          "id": "c",
+          "text": "8.5 cm"
+        },
+        {
+          "id": "d",
+          "text": "5 cm"
+        }
       ],
       "correctOption": "b",
       "explanation": "الوتر BC = √(12² + 5²) = √(144 + 25) = √169 = 13 cm، والمتوسّط AI = BC⁄2 = 6.5 cm ✓. الخطأُ الشائع: نسيانُ القسمة على 2 (13)، أو حسابُ نصف مجموع الضلعين (12+5)⁄2 = 8.5.",

@@ -9,10 +9,22 @@
     {
       "prompt": "المثلث ABC قائم في A ووترُه [BC]. مركز الدائرة المحيطة به هو:",
       "options": [
-        { "id": "a", "text": "الرأس A" },
-        { "id": "b", "text": "منتصف الضلع [AC]" },
-        { "id": "c", "text": "منتصف الوتر [BC]" },
-        { "id": "d", "text": "منتصف الضلع [AB]" }
+        {
+          "id": "a",
+          "text": "الرأس A"
+        },
+        {
+          "id": "b",
+          "text": "منتصف الضلع [AC]"
+        },
+        {
+          "id": "c",
+          "text": "منتصف الوتر [BC]"
+        },
+        {
+          "id": "d",
+          "text": "منتصف الضلع [AB]"
+        }
       ],
       "correctOption": "c",
       "explanation": "مركزُ الدائرة المحيطة بمثلثٍ قائم هو منتصفُ الوتر [BC] ✓، لأنّه على مسافةٍ واحدة من الرؤوس الثلاثة. الخطأُ الأشهر: اختيارُ رأس الزاوية القائمة A.",
@@ -21,10 +33,22 @@
     {
       "prompt": "مثلثٌ قائم وترُه BC = 6 cm. ما نصف قطر دائرته المحيطة؟",
       "options": [
-        { "id": "a", "text": "3 cm" },
-        { "id": "b", "text": "6 cm" },
-        { "id": "c", "text": "12 cm" },
-        { "id": "d", "text": "1.5 cm" }
+        {
+          "id": "a",
+          "text": "3 cm"
+        },
+        {
+          "id": "b",
+          "text": "6 cm"
+        },
+        {
+          "id": "c",
+          "text": "12 cm"
+        },
+        {
+          "id": "d",
+          "text": "1.5 cm"
+        }
       ],
       "correctOption": "a",
       "explanation": "نصفُ القطر يساوي نصفَ الوتر لأنّ الوتر قطرٌ للدائرة: R = 6⁄2 = 3 cm ✓. الخطأُ الشائع: أخذُ R مساويًا للوتر (6) أو ضعفَه (12).",
@@ -33,10 +57,22 @@
     {
       "prompt": "المثلث ABC قائم في A، وI منتصف [BC]. المسافات IA وIB وIC هي:",
       "options": [
-        { "id": "a", "text": "مختلفةٌ كلُّها" },
-        { "id": "b", "text": "متساوية" },
-        { "id": "c", "text": "IA أكبرُ من IB" },
-        { "id": "d", "text": "IA أصغرُ من IB" }
+        {
+          "id": "a",
+          "text": "مختلفةٌ كلُّها"
+        },
+        {
+          "id": "b",
+          "text": "متساوية"
+        },
+        {
+          "id": "c",
+          "text": "IA أكبرُ من IB"
+        },
+        {
+          "id": "d",
+          "text": "IA أصغرُ من IB"
+        }
       ],
       "correctOption": "b",
       "explanation": "النقطة I مركزُ الدائرة المحيطة، فهي تبعد بنفس المسافة عن الرؤوس الثلاثة: IA = IB = IC ✓. جميعُها تساوي نصفَ القطر.",
@@ -45,34 +81,70 @@
     {
       "prompt": "دائرةٌ مركزها I ونصف قطرها 5 cm، والوتر [BC] قطرٌ فيها. ما طول BC؟",
       "options": [
-        { "id": "a", "text": "5 cm" },
-        { "id": "b", "text": "20 cm" },
-        { "id": "c", "text": "10 cm" },
-        { "id": "d", "text": "2.5 cm" }
+        {
+          "id": "a",
+          "text": "5 cm"
+        },
+        {
+          "id": "b",
+          "text": "20 cm"
+        },
+        {
+          "id": "c",
+          "text": "10 cm"
+        },
+        {
+          "id": "d",
+          "text": "2.5 cm"
+        }
       ],
       "correctOption": "c",
       "explanation": "القطرُ يساوي ضعفَ نصف القطر: BC = 2 × 5 = 10 cm ✓. الخطأُ الشائع: أخذُ الوتر مساويًا لنصف القطر (5) بدل ضعفه.",
       "difficulty": 1
     },
     {
-      "prompt": "النقطة M من دائرةٍ قطرُها [AB] (M تخالف A وB). ما نوع المثلث MAB؟",
+      "prompt": "النقطة M من دائرةٍ قطرُها [AB] (M تخالف A وB). ما نوع المثلث MAB؟\n\n<svg viewBox=\"0 0 200 150\">\n<title>دائرة قطرها [AB] وM نقطة منها</title>\n<circle cx=\"100\" cy=\"80\" r=\"62\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"1.8\"/><line x1=\"38\" y1=\"80\" x2=\"162\" y2=\"80\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"68.7\" y1=\"26.48\" x2=\"38\" y2=\"80\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"68.7\" y1=\"26.48\" x2=\"162\" y2=\"80\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><circle cx=\"100\" cy=\"80\" r=\"2\" fill=\"#0f172a\"/><circle cx=\"68.7\" cy=\"26.48\" r=\"2\" fill=\"#0f172a\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"29\" y=\"84\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"171\" y=\"84\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"64.7\" y=\"18.48\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">M</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "قائم الزاوية في M" },
-        { "id": "b", "text": "قائم الزاوية في A" },
-        { "id": "c", "text": "متساوي الأضلاع" },
-        { "id": "d", "text": "منفرج الزاوية" }
+        {
+          "id": "a",
+          "text": "قائم الزاوية في M"
+        },
+        {
+          "id": "b",
+          "text": "قائم الزاوية في A"
+        },
+        {
+          "id": "c",
+          "text": "متساوي الأضلاع"
+        },
+        {
+          "id": "d",
+          "text": "منفرج الزاوية"
+        }
       ],
       "correctOption": "a",
       "explanation": "بالمبرهنة العكسية: مثلثٌ مرسومٌ في نصف دائرةٍ ووترُه قطرُها يكون قائمًا عند الرأس على القوس، أي في M ✓. الخطأُ الشائع: وضعُ الزاوية القائمة عند طرف القطر A.",
       "difficulty": 2
     },
     {
-      "prompt": "المثلث ABC قائم في A، BC = 14 cm، وI منتصف الوتر. ما طول المتوسّط AI؟",
+      "prompt": "المثلث ABC قائم في A، BC = 14 cm، وI منتصف الوتر. ما طول المتوسّط AI؟\n\n<svg viewBox=\"0 0 200 150\">\n<title>مثلث ABC قائم في A ومتوسطه AI</title>\n<polygon points=\"45,120 45,35 170,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"45\" y1=\"120\" x2=\"107.5\" y2=\"77.5\" stroke=\"#64748b\" stroke-width=\"1.8\"/><polyline points=\"45,108 57,108 57,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.6\"/><circle cx=\"107.5\" cy=\"77.5\" r=\"2\" fill=\"#0f172a\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"35\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"35\" y=\"33\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"179\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text><text x=\"116.5\" y=\"79.5\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">I</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "14 cm" },
-        { "id": "b", "text": "7 cm" },
-        { "id": "c", "text": "28 cm" },
-        { "id": "d", "text": "3.5 cm" }
+        {
+          "id": "a",
+          "text": "14 cm"
+        },
+        {
+          "id": "b",
+          "text": "7 cm"
+        },
+        {
+          "id": "c",
+          "text": "28 cm"
+        },
+        {
+          "id": "d",
+          "text": "3.5 cm"
+        }
       ],
       "correctOption": "b",
       "explanation": "متوسّطُ الوتر يساوي نصفَ الوتر: AI = 14⁄2 = 7 cm ✓ (فـ AI = IB = IC = نصف القطر). الخطأُ الشائع: أخذُ المتوسّط مساويًا للوتر كاملًا (14).",

@@ -7,24 +7,48 @@
   "displayOrder": 2,
   "questions": [
     {
-      "prompt": "مثلثٌ ABC قائمٌ في A، AB = 8 وAC = 15. احسب الوتر BC.",
+      "prompt": "مثلثٌ ABC قائمٌ في A، AB = 8 وAC = 15. احسب الوتر BC.\n\n<svg viewBox=\"0 0 200 150\">\n<title>مثلث ABC قائم الزاوية في A</title>\n<polygon points=\"45,120 45,35 170,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.4\"/><polyline points=\"45,107 58,107 58,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.6\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"35\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"35\" y=\"33\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"179\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "23" },
-        { "id": "b", "text": "17" },
-        { "id": "c", "text": "289" },
-        { "id": "d", "text": "120" }
+        {
+          "id": "a",
+          "text": "23"
+        },
+        {
+          "id": "b",
+          "text": "17"
+        },
+        {
+          "id": "c",
+          "text": "289"
+        },
+        {
+          "id": "d",
+          "text": "120"
+        }
       ],
       "correctOption": "b",
       "explanation": "BC² = 8² + 15² = 64 + 225 = 289، فـ BC = √289 = 17 ✓. الأخطاءُ الشائعة: جمعُ الأطوال 8 + 15 = 23، أو نسيانُ الجذر (289)، أو ضربُ الطولين 8 × 15 = 120.",
       "difficulty": 1
     },
     {
-      "prompt": "مثلثٌ ABC قائمٌ في A، BC = 17 وAB = 8. احسب AC.",
+      "prompt": "مثلثٌ ABC قائمٌ في A، BC = 17 وAB = 8. احسب AC.\n\n<svg viewBox=\"0 0 200 150\">\n<title>مثلث ABC قائم الزاوية في A</title>\n<polygon points=\"45,120 45,35 170,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.4\"/><polyline points=\"45,107 58,107 58,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.6\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"35\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"35\" y=\"33\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"179\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "25" },
-        { "id": "b", "text": "225" },
-        { "id": "c", "text": "9" },
-        { "id": "d", "text": "15" }
+        {
+          "id": "a",
+          "text": "25"
+        },
+        {
+          "id": "b",
+          "text": "225"
+        },
+        {
+          "id": "c",
+          "text": "9"
+        },
+        {
+          "id": "d",
+          "text": "15"
+        }
       ],
       "correctOption": "d",
       "explanation": "المجهولُ ضلعٌ قائم فنطرح: AC² = BC² − AB² = 17² − 8² = 289 − 64 = 225، فـ AC = √225 = 15 ✓. الأخطاءُ الشائعة: جمعُ الأطوال 17 + 8 = 25، أو نسيانُ الجذر (225)، أو طرحُ الأطوال مباشرةً 17 − 8 = 9.",
@@ -33,46 +57,94 @@
     {
       "prompt": "مثلثٌ ABC أطوالُ أضلاعه AB = 9، AC = 12، BC = 15. بيّن نوعَه ومكانَ الزاوية القائمة إن وُجدت.",
       "options": [
-        { "id": "a", "text": "قائمُ الزاوية في A" },
-        { "id": "b", "text": "قائمُ الزاوية في B" },
-        { "id": "c", "text": "قائمُ الزاوية في C" },
-        { "id": "d", "text": "ليس قائمَ الزاوية" }
+        {
+          "id": "a",
+          "text": "قائمُ الزاوية في A"
+        },
+        {
+          "id": "b",
+          "text": "قائمُ الزاوية في B"
+        },
+        {
+          "id": "c",
+          "text": "قائمُ الزاوية في C"
+        },
+        {
+          "id": "d",
+          "text": "ليس قائمَ الزاوية"
+        }
       ],
       "correctOption": "a",
       "explanation": "أطولُ ضلعٍ هو BC = 15: نقارن 15² = 225 بمجموع مربّعَي الآخرين 9² + 12² = 81 + 144 = 225، متساويان ⇒ المثلثُ قائم، وزاويتُه القائمة تقابل أطولَ ضلعٍ [BC] أي عند الرأس A ✓. الخطأُ الشائع: وضعُ الزاوية القائمة عند رأسٍ يقابل ضلعًا أقصر.",
       "difficulty": 2
     },
     {
-      "prompt": "مثلثٌ ABC قائمٌ في A، AB = 2 وAC = 3. احسب الوتر BC.",
+      "prompt": "مثلثٌ ABC قائمٌ في A، AB = 2 وAC = 3. احسب الوتر BC.\n\n<svg viewBox=\"0 0 200 150\">\n<title>مثلث ABC قائم الزاوية في A</title>\n<polygon points=\"45,120 45,35 170,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.4\"/><polyline points=\"45,107 58,107 58,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.6\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"35\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"35\" y=\"33\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"179\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "√5" },
-        { "id": "b", "text": "√13" },
-        { "id": "c", "text": "13" },
-        { "id": "d", "text": "5" }
+        {
+          "id": "a",
+          "text": "√5"
+        },
+        {
+          "id": "b",
+          "text": "√13"
+        },
+        {
+          "id": "c",
+          "text": "13"
+        },
+        {
+          "id": "d",
+          "text": "5"
+        }
       ],
       "correctOption": "b",
       "explanation": "BC² = 2² + 3² = 4 + 9 = 13، فـ BC = √13 (العددُ 13 ليس مربّعًا كاملًا فنترك الجواب بالصورة الجذرية) ✓. الأخطاءُ الشائعة: الطرحُ بدل الجمع 9 − 4 = 5 فيُكتب √5، أو نسيانُ الجذر (13)، أو جمعُ الأطوال 2 + 3 = 5.",
       "difficulty": 2
     },
     {
-      "prompt": "مستطيلٌ طولُه 12 cm وعرضُه 5 cm. احسب طولَ قُطره.",
+      "prompt": "مستطيلٌ طولُه 12 cm وعرضُه 5 cm. احسب طولَ قُطره.\n\n<svg viewBox=\"0 0 200 150\">\n<title>مستطيل ABCD وقطره</title>\n<rect x=\"30\" y=\"45\" width=\"140\" height=\"70\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"30\" y1=\"115\" x2=\"170\" y2=\"45\" stroke=\"#64748b\" stroke-width=\"1.8\"/><polyline points=\"30,56 41,56 41,45\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.6\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"21\" y=\"43\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"179\" y=\"43\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"179\" y=\"121\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text><text x=\"21\" y=\"123\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">D</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "17" },
-        { "id": "b", "text": "169" },
-        { "id": "c", "text": "13" },
-        { "id": "d", "text": "60" }
+        {
+          "id": "a",
+          "text": "17"
+        },
+        {
+          "id": "b",
+          "text": "169"
+        },
+        {
+          "id": "c",
+          "text": "13"
+        },
+        {
+          "id": "d",
+          "text": "60"
+        }
       ],
       "correctOption": "c",
       "explanation": "القُطرُ وترُ مثلثٍ قائمٍ ضِلعاه القائمان هما الطول والعرض: d² = 12² + 5² = 144 + 25 = 169، فـ d = √169 = 13 ✓. الأخطاءُ الشائعة: جمعُ البُعدين 12 + 5 = 17، أو نسيانُ الجذر (169)، أو ضربُ البُعدين 12 × 5 = 60 (وهي المساحةُ لا القُطر).",
       "difficulty": 3
     },
     {
-      "prompt": "مثلثٌ ABC قائمٌ في A، الوتر BC = 6 والضلع AB = 4. احسب AC.",
+      "prompt": "مثلثٌ ABC قائمٌ في A، الوتر BC = 6 والضلع AB = 4. احسب AC.\n\n<svg viewBox=\"0 0 200 150\">\n<title>مثلث ABC قائم الزاوية في A</title>\n<polygon points=\"45,120 45,35 170,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.4\"/><polyline points=\"45,107 58,107 58,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.6\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"35\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"35\" y=\"33\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"179\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "2" },
-        { "id": "b", "text": "20" },
-        { "id": "c", "text": "√20" },
-        { "id": "d", "text": "√52" }
+        {
+          "id": "a",
+          "text": "2"
+        },
+        {
+          "id": "b",
+          "text": "20"
+        },
+        {
+          "id": "c",
+          "text": "√20"
+        },
+        {
+          "id": "d",
+          "text": "√52"
+        }
       ],
       "correctOption": "c",
       "explanation": "المجهولُ ضلعٌ قائم فنطرح: AC² = BC² − AB² = 6² − 4² = 36 − 16 = 20، فـ AC = √20 ✓. الأخطاءُ الشائعة: طرحُ الأطوال مباشرةً 6 − 4 = 2، أو نسيانُ الجذر (20)، أو الجمعُ بدل الطرح 36 + 16 = 52 فيُكتب √52.",
