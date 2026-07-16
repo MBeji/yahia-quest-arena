@@ -100,6 +100,18 @@ The Content-Security-Policy already allow-lists the required origins
 and the `google-analytics.com` collect endpoints in `connect-src` for the beacons. The loader
 is an external `<script>` and every gtag call is plain JS, so no CSP nonce is involved.
 
+**Developer-traffic tagging.** Every hit carries a `traffic_type` parameter, resolved at
+runtime from `window.location.hostname` (`resolveTrafficType` in `analytics.ts`):
+`developer` on local hosts (`localhost`, loopback — e.g. `vite preview`/smoke runs of the
+prod bundle) and on Vercel **preview** deployments (`*.vercel.app`), `production` everywhere
+else. ⚠️ `na9ranal3ab.vercel.app` is exempt: it serves **real production traffic** while the
+`.tn` domain stays unwired — if the canonical domain ever changes, update
+`PRODUCTION_VERCEL_HOSTNAME` there. To actually drop those sessions from reports, create the
+GA4 data filter once: **Admin → Data collection and modification → Data filters → Create
+filter → Internal traffic**, parameter value `developer`, operation **Exclude** — try it in
+**Testing** state first, then switch to **Active** (exclusion is permanent, never
+retroactive).
+
 ## Error monitoring (Sentry) — optional
 
 Error reporting (`src/shared/lib/monitoring.ts`, hooked into `logger.error` + browser
