@@ -27,7 +27,7 @@
         }
       ],
       "correctOption": "a",
-      "explanation": "L'expérience ne teste qu'une chose : la roche ne se dissout pas, elle est donc insoluble ✓. Les trois autres propositions sont vraies de la roche phosphatée, mais aucune ne se déduit de CETTE expérience — et c'est tout le piège de l'item. La porosité se démontre en versant de l'eau dans un creux ménagé dans la roche : elle est rapidement absorbée, donc la roche est bien poreuse, et l'affirmation « non poreuse » est même carrément fausse. L'imperméabilité se démontre en versant encore de l'eau : elle ne traverse pas. Et l'aspect compact s'observe à l'œil. Retiens la règle : une conclusion ne vaut que ce que vaut le protocole qui la produit.",
+      "explanation": "L'expérience ne teste qu'une chose : la roche ne se dissout pas, elle est donc insoluble ✓. Tout le piège de l'item est là — aucune des trois autres propositions ne se déduit de CETTE expérience. Deux d'entre elles sont pourtant vraies de la roche phosphatée, mais elles se démontrent autrement : l'imperméabilité en versant encore de l'eau, qui ne traverse pas ; l'aspect compact et résistant, en observant l'échantillon. La troisième, « non poreuse », est carrément fausse : verse de l'eau dans un creux ménagé dans la roche, elle est rapidement absorbée — la roche est bel et bien poreuse. Retiens la règle : une conclusion ne vaut que ce que vaut le protocole qui la produit.",
       "difficulty": 2
     },
     {
