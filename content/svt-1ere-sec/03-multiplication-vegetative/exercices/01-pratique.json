@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : Boutures, greffes et éprouvettes",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Le tubercule de pomme de terre permet la multiplication végétative. De quel organe s'agit-il exactement ?",
+      "options": [
+        { "id": "a", "text": "D'une racine gonflée de réserves" },
+        { "id": "b", "text": "D'une portion de tige souterraine portant des bourgeons" },
+        { "id": "c", "text": "D'un bulbe formé de feuilles serrées les unes contre les autres" },
+        { "id": "d", "text": "D'un fruit souterrain contenant des graines" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le tubercule de pomme de terre est une partie d'une tige souterraine qui porte des bourgeons ✓ — et c'est précisément pour cela qu'il multiplie la plante : un seul bourgeon isolé suffit à fournir un plant normal producteur de tubercules normaux. Ce n'est ni une racine ni un bulbe : le tubercule est une tige, reconnaissable à ses bourgeons. Et ce n'est pas un fruit : un fruit contiendrait des graines et relèverait donc de la reproduction sexuée, alors que planter un tubercule est bien une multiplication végétative.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Un rameau feuillé de pélargonium est enfoncé dans de la terre humide. Qu'apparaît-il dans la partie enterrée, au voisinage de la section ?",
+      "options": [
+        { "id": "a", "text": "Des bourgeons floraux" },
+        { "id": "b", "text": "Un cal, et rien d'autre ensuite" },
+        { "id": "c", "text": "Des racines adventives" },
+        { "id": "d", "text": "Des tubercules" }
+      ],
+      "correctOption": "c",
+      "explanation": "Des racines adventives apparaissent dans la partie enterrée, au voisinage de la section ✓ ; la partie aérienne s'accroît alors, se ramifie et engendre des feuilles — le rameau isolé est ainsi à l'origine d'une nouvelle plante. Des bourgeons floraux ne sont pas ce que produit la section. Le cal existe bien, mais il est décrit chez l'olivier en bouturage semi-ligneux, et il précède justement l'émission des racines : la bouture ne s'arrête pas là. Quant aux tubercules, ce sont des tiges souterraines de réserve produites par le plant de pomme de terre.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans une greffe, comment appelle-t-on la plante sur laquelle on fixe le fragment prélevé ?",
+      "options": [
+        { "id": "a", "text": "Le porte greffe" },
+        { "id": "b", "text": "Le greffon" },
+        { "id": "c", "text": "La marcotte" },
+        { "id": "d", "text": "Le végétal franc" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le porte greffe est la plante sur laquelle on fixe le greffon ✓. Le greffon, lui, est le fragment prélevé — un bourgeon ou un jeune rameau — sur un végétal sélectionné pour la qualité de ses fruits ou de ses fleurs : c'est l'inverse du rôle demandé. La marcotte appartient à une autre technique, le marcottage. Quant au végétal franc, c'est un végétal provenant des semis : il sert souvent de porte greffe (pommier franc, amandier franc), mais le terme désigne son origine, pas son rôle dans la greffe.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "En un an, le microbouturage in vitro permet d'obtenir combien d'oliviers identiques à la plante d'origine, là où le bouturage traditionnel n'en donne qu'une vingtaine ?",
+      "options": [
+        { "id": "a", "text": "400" },
+        { "id": "b", "text": "4000" },
+        { "id": "c", "text": "40 000" },
+        { "id": "d", "text": "400 000" }
+      ],
+      "correctOption": "d",
+      "explanation": "En un an, la culture in vitro par microbouturage donne 400 000 oliviers identiques à la plante d'origine ✓, contre une vingtaine seulement par bouturage traditionnel dans le même temps. Aucun des ordres de grandeur plus modestes ne rend justice à ce que permet la technique : ce n'est pas un gain marginal mais un changement d'échelle, rendu possible par la répétition des étapes de fragmentation, de remise sur milieu nutritif et de développement — chaque cycle multipliant à nouveau le nombre de microboutures.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Le bouturage semi-ligneux de l'olivier réclame une température et une humidité ambiante précises. Lesquelles ?",
+      "options": [
+        { "id": "a", "text": "5 à 10 °C, et une humidité inférieure à 20 %" },
+        { "id": "b", "text": "23 à 25 °C, et une humidité supérieure à 80 %" },
+        { "id": "c", "text": "23 à 25 °C, et une humidité inférieure à 20 %" },
+        { "id": "d", "text": "5 à 10 °C, et une humidité supérieure à 80 %" }
+      ],
+      "correctOption": "b",
+      "explanation": "On enracine la bouture d'olivier à une température de 23 à 25 °C et sous une humidité ambiante supérieure à 80 % ✓ ; un cal se développe alors au bout de quelques semaines, et les racines apparaissent vers 8 semaines. Ni une température de 5 à 10 °C ni une atmosphère sèche ne figurent au protocole. Et la forte humidité n'est pas un détail : tant que la bouture n'a pas de racines, elle ne peut pas remplacer l'eau qu'elle perd.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Pourquoi qualifie-t-on de « totipotentes » les cellules du bourgeon prélevé pour le microbouturage ?",
+      "options": [
+        { "id": "a", "text": "Parce qu'elles se divisent indéfiniment sans jamais mourir" },
+        { "id": "b", "text": "Parce qu'elles résistent à toutes les maladies de la plante" },
+        { "id": "c", "text": "Parce qu'elles peuvent donner n'importe quelle partie de la plante" },
+        { "id": "d", "text": "Parce qu'elles contiennent toutes les substances nutritives utiles" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le bourgeon d'une microbouture renferme des cellules embryonnaires dites totipotentes : elles sont capables de se développer pour donner n'importe quelle partie de la plante — tige, racine, feuille ✓. C'est cette propriété, la totipotence, qui rend la reproduction végétative possible : une seule cellule peut donner n'importe quel organe. Ni une division illimitée, ni une résistance aux maladies, ni une réserve de nutriments ne sont ce que le mot désigne — ce sont d'ailleurs bien des maladies à virus que la culture des méristèmes cherche à éliminer, et le milieu nutritif est apporté de l'extérieur, pas contenu dans la cellule.",
+      "difficulty": 2
+    }
+  ]
+}
