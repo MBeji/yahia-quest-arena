@@ -2,36 +2,72 @@
   "title": "Test de compréhension ⭐ : Théorème de Thalès",
   "questions": [
     {
-      "prompt": "Dans un triangle ABC, I et J sont les milieux respectifs de [AB] et [AC]. Que peut-on affirmer sur la droite (IJ) ?",
+      "prompt": "Dans un triangle ABC, I et J sont les milieux respectifs de [AB] et [AC]. Que peut-on affirmer sur la droite (IJ) ?\n<svg viewBox=\"0 0 200 150\">\n<title>Triangle ABC avec I et J les milieux de [AB] et [AC], et la droite (IJ)</title>\n<polygon points=\"100,24 28,126 172,126\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"64\" y1=\"75\" x2=\"136\" y2=\"75\" stroke=\"#ef4444\" stroke-width=\"2.2\"/><line x1=\"78.73\" y1=\"47.19\" x2=\"85.27\" y2=\"51.81\" stroke=\"#0f6e56\" stroke-width=\"1.6\"/><line x1=\"42.73\" y1=\"98.19\" x2=\"49.27\" y2=\"102.81\" stroke=\"#0f6e56\" stroke-width=\"1.6\"/><line x1=\"113.58\" y1=\"50.17\" x2=\"120.11\" y2=\"45.56\" stroke=\"#0f6e56\" stroke-width=\"1.6\"/><line x1=\"115.89\" y1=\"53.44\" x2=\"122.42\" y2=\"48.83\" stroke=\"#0f6e56\" stroke-width=\"1.6\"/><line x1=\"149.58\" y1=\"101.17\" x2=\"156.11\" y2=\"96.56\" stroke=\"#0f6e56\" stroke-width=\"1.6\"/><line x1=\"151.89\" y1=\"104.44\" x2=\"158.42\" y2=\"99.83\" stroke=\"#0f6e56\" stroke-width=\"1.6\"/><circle cx=\"100\" cy=\"24\" r=\"2.4\" fill=\"#0f172a\"/><circle cx=\"28\" cy=\"126\" r=\"2.4\" fill=\"#0f172a\"/><circle cx=\"172\" cy=\"126\" r=\"2.4\" fill=\"#0f172a\"/><circle cx=\"64\" cy=\"75\" r=\"2.4\" fill=\"#0f172a\"/><circle cx=\"136\" cy=\"75\" r=\"2.4\" fill=\"#0f172a\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"100\" y=\"16\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"20\" y=\"132\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"180\" y=\"132\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text><text x=\"55\" y=\"75\" text-anchor=\"end\" fill=\"#ef4444\" font-size=\"12\">I</text><text x=\"145\" y=\"75\" text-anchor=\"start\" fill=\"#ef4444\" font-size=\"12\">J</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "(IJ) est parallèle à (BC) et IJ = BC / 2" },
-        { "id": "b", "text": "(IJ) est perpendiculaire à (BC)" },
-        { "id": "c", "text": "IJ = BC" },
-        { "id": "d", "text": "(IJ) passe par le milieu de [BC]" }
+        {
+          "id": "a",
+          "text": "(IJ) est parallèle à (BC) et IJ = BC / 2"
+        },
+        {
+          "id": "b",
+          "text": "(IJ) est perpendiculaire à (BC)"
+        },
+        {
+          "id": "c",
+          "text": "IJ = BC"
+        },
+        {
+          "id": "d",
+          "text": "(IJ) passe par le milieu de [BC]"
+        }
       ],
       "correctOption": "a",
       "explanation": "C'est le théorème de la droite des milieux : (IJ) // (BC) et IJ vaut la moitié de BC ✓. Rien n'indique un angle droit (réponse b). IJ = BC (réponse c) oublie le facteur 1/2. La droite (IJ) ne rencontre pas [BC] : elle lui est parallèle, donc la réponse d est fausse.",
       "difficulty": 1
     },
     {
-      "prompt": "Dans un triangle ABC, M est sur (AB), N est sur (AC) et (MN) // (BC). Quelle égalité traduit le théorème de Thalès ?",
+      "prompt": "Dans un triangle ABC, M est sur (AB), N est sur (AC) et (MN) // (BC). Quelle égalité traduit le théorème de Thalès ?\n<svg viewBox=\"0 0 200 150\">\n<title>Triangle ABC : M sur (AB), N sur (AC) et (MN) parallèle à (BC)</title>\n<polygon points=\"100,24 28,126 172,126\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"55.36\" y1=\"87.24\" x2=\"144.64\" y2=\"87.24\" stroke=\"#2563eb\" stroke-width=\"2.2\"/><line x1=\"103\" y1=\"87.24\" x2=\"97\" y2=\"91.24\" stroke=\"#2563eb\" stroke-width=\"1.6\"/><line x1=\"103\" y1=\"87.24\" x2=\"97\" y2=\"83.24\" stroke=\"#2563eb\" stroke-width=\"1.6\"/><line x1=\"103\" y1=\"126\" x2=\"97\" y2=\"130\" stroke=\"#2563eb\" stroke-width=\"1.6\"/><line x1=\"103\" y1=\"126\" x2=\"97\" y2=\"122\" stroke=\"#2563eb\" stroke-width=\"1.6\"/><circle cx=\"100\" cy=\"24\" r=\"2.4\" fill=\"#0f172a\"/><circle cx=\"28\" cy=\"126\" r=\"2.4\" fill=\"#0f172a\"/><circle cx=\"172\" cy=\"126\" r=\"2.4\" fill=\"#0f172a\"/><circle cx=\"55.36\" cy=\"87.24\" r=\"2.4\" fill=\"#0f172a\"/><circle cx=\"144.64\" cy=\"87.24\" r=\"2.4\" fill=\"#0f172a\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"100\" y=\"16\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"20\" y=\"132\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"180\" y=\"132\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text><text x=\"46.36\" y=\"87.24\" text-anchor=\"end\" fill=\"#2563eb\" font-size=\"12\">M</text><text x=\"153.64\" y=\"87.24\" text-anchor=\"start\" fill=\"#2563eb\" font-size=\"12\">N</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "AM/AB = AN/AC = MN/BC" },
-        { "id": "b", "text": "AM/AB = AN/AC = BC/MN" },
-        { "id": "c", "text": "AB/AM = AC/AN = MN/BC" },
-        { "id": "d", "text": "AM/AN = AB/AC = MN/BC" }
+        {
+          "id": "a",
+          "text": "AM/AB = AN/AC = MN/BC"
+        },
+        {
+          "id": "b",
+          "text": "AM/AB = AN/AC = BC/MN"
+        },
+        {
+          "id": "c",
+          "text": "AB/AM = AC/AN = MN/BC"
+        },
+        {
+          "id": "d",
+          "text": "AM/AN = AB/AC = MN/BC"
+        }
       ],
       "correctOption": "a",
       "explanation": "Les trois rapports comparent la petite figure à la grande, toujours dans le même sens : AM/AB = AN/AC = MN/BC ✓. La réponse b inverse le dernier rapport (BC/MN) ; la réponse c inverse les deux premiers ; la réponse d mélange des longueurs qui ne se correspondent pas (AM avec AN).",
       "difficulty": 1
     },
     {
-      "prompt": "Dans un triangle ABC, M appartient à [AB] et N à [AC]. Quelle condition permet d'affirmer que (MN) est parallèle à (BC) ?",
+      "prompt": "Dans un triangle ABC, M appartient à [AB] et N à [AC]. Quelle condition permet d'affirmer que (MN) est parallèle à (BC) ?\n<svg viewBox=\"0 0 200 150\">\n<title>Triangle ABC avec M sur [AB] et N sur [AC]</title>\n<polygon points=\"100,24 28,126 172,126\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"55.36\" y1=\"87.24\" x2=\"144.64\" y2=\"87.24\" stroke=\"#0f172a\" stroke-width=\"2\"/><circle cx=\"100\" cy=\"24\" r=\"2.4\" fill=\"#0f172a\"/><circle cx=\"28\" cy=\"126\" r=\"2.4\" fill=\"#0f172a\"/><circle cx=\"172\" cy=\"126\" r=\"2.4\" fill=\"#0f172a\"/><circle cx=\"55.36\" cy=\"87.24\" r=\"2.4\" fill=\"#0f172a\"/><circle cx=\"144.64\" cy=\"87.24\" r=\"2.4\" fill=\"#0f172a\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"100\" y=\"16\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"20\" y=\"132\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"180\" y=\"132\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text><text x=\"46.36\" y=\"87.24\" text-anchor=\"end\" fill=\"#0f172a\" font-size=\"12\">M</text><text x=\"153.64\" y=\"87.24\" text-anchor=\"start\" fill=\"#0f172a\" font-size=\"12\">N</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "AM/AB = AN/AC, avec M et N placés dans le même ordre à partir de A" },
-        { "id": "b", "text": "AM = AN" },
-        { "id": "c", "text": "MN = BC" },
-        { "id": "d", "text": "AM + AN = AB + AC" }
+        {
+          "id": "a",
+          "text": "AM/AB = AN/AC, avec M et N placés dans le même ordre à partir de A"
+        },
+        {
+          "id": "b",
+          "text": "AM = AN"
+        },
+        {
+          "id": "c",
+          "text": "MN = BC"
+        },
+        {
+          "id": "d",
+          "text": "AM + AN = AB + AC"
+        }
       ],
       "correctOption": "a",
       "explanation": "C'est la réciproque de Thalès : l'égalité des rapports AM/AB = AN/AC (points dans le même ordre) entraîne le parallélisme ✓. L'égalité des longueurs AM = AN (réponse b) ne dit rien sur les rapports si AB ≠ AC ; MN = BC (réponse c) est faux dès qu'il y a réduction ; la somme de la réponse d n'a aucun sens géométrique ici.",
@@ -40,10 +76,22 @@
     {
       "prompt": "On agrandit une figure à l'échelle k = 2. Par combien son aire est-elle multipliée ?",
       "options": [
-        { "id": "a", "text": "4" },
-        { "id": "b", "text": "2" },
-        { "id": "c", "text": "8" },
-        { "id": "d", "text": "L'aire ne change pas" }
+        {
+          "id": "a",
+          "text": "4"
+        },
+        {
+          "id": "b",
+          "text": "2"
+        },
+        {
+          "id": "c",
+          "text": "8"
+        },
+        {
+          "id": "d",
+          "text": "L'aire ne change pas"
+        }
       ],
       "correctOption": "a",
       "explanation": "Une échelle k multiplie les longueurs par k mais l'aire par k² : ici k² = 2² = 4 ✓. Répondre 2 confond l'aire avec les longueurs (facteur k) ; 8 correspondrait à k³ (un volume) ; et l'aire change bien, contrairement à la réponse d.",
@@ -52,10 +100,22 @@
     {
       "prompt": "Une figure est reproduite à l'échelle k = 0,5. Que subit-elle ?",
       "options": [
-        { "id": "a", "text": "Une réduction : ses longueurs sont divisées par 2" },
-        { "id": "b", "text": "Un agrandissement : ses longueurs sont multipliées par 2" },
-        { "id": "c", "text": "Aucun changement de taille" },
-        { "id": "d", "text": "Seule son aire change, pas ses longueurs" }
+        {
+          "id": "a",
+          "text": "Une réduction : ses longueurs sont divisées par 2"
+        },
+        {
+          "id": "b",
+          "text": "Un agrandissement : ses longueurs sont multipliées par 2"
+        },
+        {
+          "id": "c",
+          "text": "Aucun changement de taille"
+        },
+        {
+          "id": "d",
+          "text": "Seule son aire change, pas ses longueurs"
+        }
       ],
       "correctOption": "a",
       "explanation": "Une échelle comprise entre 0 et 1 est une réduction : multiplier par 0,5 revient à diviser les longueurs par 2 ✓. La réponse b décrit une échelle k = 2 (agrandissement) ; k = 0,5 ≠ 1 donc la taille change (réponse c fausse) ; et l'échelle agit d'abord sur les longueurs, pas seulement sur l'aire (réponse d).",
