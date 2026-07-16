@@ -112,6 +112,22 @@ dérivés des slugs : régénérer met à jour les lignes en place (pas de doubl
 et le contenu admin retiré est élagué automatiquement (le contenu créé par les
 parents n'est jamais touché).
 
+## Schémas explicatifs (figures SVG inline)
+
+Les figures SVG embarquées dans les cours (`cours.md`) et les questions (un `<svg>`
+par `prompt`) se créent, se rendent et se vérifient avec l'outillage
+[`scripts/content/svg/`](../scripts/content/svg/README.md) :
+
+```bash
+npm run content:figures:check                              # lint structurel de toutes les figures
+node scripts/content/svg/preview.mjs <fichier> /tmp/out.png # rend en PNG (décode les .json)
+```
+
+Points clés : un seul `<svg>` par champ, primitives autorisées par le sanitizer
+(`src/shared/lib/figure.ts`), chiffres occidentaux partout, libellés à halo. Pour une
+figure de **question**, la règle _answer-safe_ : ne montrer que le **donné**, jamais la
+réponse — sinon rester en texte. Détails + `svglib.mjs` : voir le README de l'outillage.
+
 ## Workflow DB ↔ code
 
 Le SQL généré est **appliqué automatiquement à la prod au merge sur `main`**
