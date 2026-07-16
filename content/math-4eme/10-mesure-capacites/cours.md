@@ -16,6 +16,10 @@
 
 ## 🔮 أجزاء اللتر: dL و cL و mL
 
+::: figure القارورة والكوب والملعقة: كلّما صغُر الإناء صغُرت الوحدة
+<svg viewBox="0 0 340 160"><path d="M42 52 h26 v-14 h-26 z" fill="#93c5fd" stroke="#1f2937" stroke-width="2"/><path d="M34 128 V70 q0 -18 21 -18 q21 0 21 18 v58 z" fill="#60a5fa" stroke="#1f2937" stroke-width="2.5" stroke-linejoin="round"/><text x="55.0" y="148.0" text-anchor="middle" font-size="14" font-weight="700" fill="#1d4ed8" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">1 L</text><path d="M136 128 L128 76 h44 l-8 52 z" fill="#93c5fd" stroke="#1f2937" stroke-width="2.5" stroke-linejoin="round"/><text x="150.0" y="148.0" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">20 cL</text><ellipse cx="228" cy="104" rx="15" ry="10" fill="#93c5fd" stroke="#1f2937" stroke-width="2"/><path d="M242 106 L268 118" stroke="#1f2937" stroke-width="3" stroke-linecap="round"/><text x="232.0" y="148.0" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">5 mL</text><text x="170.0" y="30.0" text-anchor="middle" font-size="14" font-weight="700" fill="#15803d" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">1 L = 10 dL = 100 cL = 1000 mL</text></svg>
+:::
+
 عندما يكون السائل قليلًا، نقيسه بأجزاء اللتر. هذه أهمّ ثلاثة أجزاء:
 
 | الوحدة     | الرمز | كم في اللتر الواحد |

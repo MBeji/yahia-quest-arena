@@ -13,12 +13,16 @@
 
 ## 🧮 الرتب الستّ وصنفاها
 
+::: figure ستُّ رتبٍ في صنفين: ثلاثُ رتبٍ لكلّ صنف
+<svg viewBox="0 0 360 150"><rect x="14" y="42" width="164" height="52" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="2.5"/><rect x="184" y="42" width="164" height="52" rx="6" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2.5"/><text x="42.0" y="20.0" text-anchor="middle" font-size="10" font-weight="700" fill="#7c3aed" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">مئات</text><text x="42.0" y="33.0" text-anchor="middle" font-size="10" font-weight="700" fill="#7c3aed" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الآلاف</text><text x="42.0" y="78.0" text-anchor="middle" font-size="20" font-weight="700" fill="#7c3aed" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">•</text><text x="97.0" y="20.0" text-anchor="middle" font-size="10" font-weight="700" fill="#7c3aed" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">عشرات</text><text x="97.0" y="33.0" text-anchor="middle" font-size="10" font-weight="700" fill="#7c3aed" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الآلاف</text><text x="97.0" y="78.0" text-anchor="middle" font-size="20" font-weight="700" fill="#7c3aed" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">•</text><text x="152.0" y="33.0" text-anchor="middle" font-size="10" font-weight="700" fill="#7c3aed" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">آلاف</text><text x="152.0" y="78.0" text-anchor="middle" font-size="20" font-weight="700" fill="#7c3aed" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">•</text><text x="213.0" y="33.0" text-anchor="middle" font-size="10" font-weight="700" fill="#1d4ed8" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">مئات</text><text x="213.0" y="78.0" text-anchor="middle" font-size="20" font-weight="700" fill="#1d4ed8" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">•</text><text x="268.0" y="33.0" text-anchor="middle" font-size="10" font-weight="700" fill="#1d4ed8" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">عشرات</text><text x="268.0" y="78.0" text-anchor="middle" font-size="20" font-weight="700" fill="#1d4ed8" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">•</text><text x="323.0" y="33.0" text-anchor="middle" font-size="10" font-weight="700" fill="#1d4ed8" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">آحاد</text><text x="323.0" y="78.0" text-anchor="middle" font-size="20" font-weight="700" fill="#1d4ed8" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">•</text><text x="96.0" y="112.0" text-anchor="middle" font-size="12" font-weight="700" fill="#6d28d9" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">صنف الآلاف</text><text x="266.0" y="112.0" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">صنف الوحدات</text><text x="180.0" y="142.0" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">ثلاثُ رتبٍ لكلّ صنف</text></svg>
+:::
+
 في عددٍ من ستّة أرقامٍ نجمع الأرقام **صنفين**، كلّ صنفٍ ثلاث رتب:
 
-| الصنف  | صنف الآلاف              |               |       | صنف الوحدات      |       |      |
-| ------ | ---------------------- | ------------- | ----- | ---------------- | ----- | ---- |
-| الرتبة | مئات الآلاف            | عشرات الآلاف  | آلاف  | مئات             | عشرات | آحاد |
-| قيمتها | 100 000                 | 10 000         | 1 000  | 100              | 10    | 1    |
+| الصنف  | صنف الآلاف  |              |       | صنف الوحدات |       |      |
+| ------ | ----------- | ------------ | ----- | ----------- | ----- | ---- |
+| الرتبة | مئات الآلاف | عشرات الآلاف | آلاف  | مئات        | عشرات | آحاد |
+| قيمتها | 100 000     | 10 000       | 1 000 | 100         | 10    | 1    |
 
 - كلّ **10 وحداتٍ** من رتبةٍ تساوي **وحدةً واحدة** من الرتبة التي على يسارها.
 - لقراءة عددٍ كبير نفصل بين الصنفين بفراغٍ صغير: نكتب 268 543 هكذا 268 543 لتسهيل القراءة.
@@ -57,11 +61,11 @@ $$352 716 = 300 000 + 50 000 + 2 000 + 700 + 10 + 6$$
 
 الصفر في رتبةٍ يعني «لا شيء» في تلك الرتبة، لكنّه **يحفظ المكان** فلا تنزلق الأرقام:
 
-| العدد       | يُقرأ                                   |
-| ----------- | --------------------------------------- |
-| 618 000     | ستّمئة وثمانية عشر ألفًا                 |
-| 304 050     | ثلاثمئة وأربعة آلافٍ وخمسون              |
-| 700 005     | سبعمئة ألفٍ وخمسة                        |
+| العدد   | يُقرأ                       |
+| ------- | --------------------------- |
+| 618 000 | ستّمئة وثمانية عشر ألفًا    |
+| 304 050 | ثلاثمئة وأربعة آلافٍ وخمسون |
+| 700 005 | سبعمئة ألفٍ وخمسة           |
 
 > ⚠️ لا تحذف الصفر الداخليّ. لو كتبت 34 050 بدل 304 050 لنقص رقمٌ وصار العدد من خمسة أرقام، فتغيّر تمامًا.
 

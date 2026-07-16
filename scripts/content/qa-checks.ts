@@ -118,6 +118,38 @@ export function hasBidiFragileMath(s: string): boolean {
 const ARABIC_PROSE =
   "\\u0621-\\u064A\\u066E-\\u06FF\\u0750-\\u077F\\u08A0-\\u08FF\\uFB50-\\uFDFF\\uFE70-\\uFEFF";
 const ARABIC_PROSE_RE = new RegExp(`[${ARABIC_PROSE}]`, "u");
+const ARABIC_LETTER_G = new RegExp(`[${ARABIC_PROSE}]`, "gu");
+const LATIN_LETTER_G = /[A-Za-z]/gu;
+
+/**
+ * True when `s` is rendered inside an RTL container (Arabic prose dominates).
+ *
+ * Counted rather than read off `contentLanguage`, because these checks run on raw
+ * fields shared by lessons and questions: a French lesson quoting one Arabic word
+ * must NOT be treated as RTL. Markup is stripped first — an Arabic lesson full of
+ * SVG figures carries far more Latin in its attributes (`viewBox`, `stroke`) than
+ * Arabic in its prose, and would otherwise read as LTR.
+ */
+function rendersRtl(s: string): boolean {
+  const prose = s.replace(/<[^>]+>/g, " ");
+  return (prose.match(ARABIC_LETTER_G) ?? []).length > (prose.match(LATIN_LETTER_G) ?? []).length;
+}
+
+/**
+ * A digit group split by an ORDINARY space (U+0020) inside an RTL block: the two
+ * slices become separate runs, which the container lays back to front. `العدد 3 758`
+ * is drawn `العدد 758 3` — the digits of each slice are intact, but the slices have
+ * swapped, so the number reads 758 3. Nothing rescues it downstream: unlike the
+ * relational operators, digits are not `Bidi_Mirrored`, so no glyph flip restores
+ * the meaning the way it does for `<`/`>` (which is why those are deliberately NOT
+ * checked here — Unicode L4 keeps them true, merely phrased the other way round).
+ *
+ * The fix is U+00A0: class CS, absorbed into the number by W4, which keeps it one
+ * run. It is also the ONLY fix available in a `::: figure` caption, where no markup
+ * can be inserted. Verified in Chromium: with U+0020 the slices swap, with U+00A0
+ * they do not.
+ */
+const SPLIT_NUMBER_RE = /\d \d/u;
 // Any bracketed group: set `{…}`, interval `]…[`/`[…]`, tuple `(…)`.
 const BRACKET_GROUP = /[[\]{}()][^[\]{}()\n]*[[\]{}()]/gu;
 
@@ -194,7 +226,53 @@ export function auditRenderedFields(
         msg: `math notation uses the Arabic comma «،» as a separator in ${field} — breaks the LTR run in RTL; use «;» (e.g. «{−4 ; 4}», «]−1 ; 4[»)`,
       });
     }
+    flags.push(...auditRtlNotation(raw, field, where));
   }
+  return flags;
+}
+
+/**
+ * Numbers that an RTL block silently scrambles — see `SPLIT_NUMBER_RE`. The source
+ * is correct and only the laid-out pixels are wrong, so re-reading the file never
+ * finds it, and neither can any check that inspects characters instead of glyphs.
+ */
+export function auditRtlNotation(raw: string, field: string, where: string): Flag[] {
+  if (!rendersRtl(raw)) return []; // an LTR block reorders nothing
+  const flags: Flag[] = [];
+  const seen = new Set<string>();
+  const report = (sample: string) => {
+    const s = sample.trim();
+    const quoted = s.length > 72 ? `${s.slice(0, 69)}…` : s;
+    if (seen.has(quoted)) return;
+    seen.add(quoted);
+    flags.push({
+      level: "error",
+      where,
+      msg: `«${quoted}» in ${field}: an ordinary space splits a number, so the RTL block lays its groups back to front (3 758 renders «758 3»). Separate the groups with U+00A0.`,
+    });
+  };
+
+  // An SVG <text> node is its own bidi paragraph, and an LTR isolate on it DOES save
+  // the number: sos becomes L, so W7 retypes the digits and nothing reorders. Prose
+  // has no such escape — a caption takes no markup, so U+00A0 is the only fix there.
+  //
+  // Both loops SPLIT on markup rather than stripping it. A number cannot span a tag
+  // boundary, so each piece is exactly one text run — and `replace(/<[^>]+>/g, "")`
+  // reads to CodeQL as an incomplete HTML sanitiser (js/incomplete-multi-character-
+  // sanitization), which this is not.
+  for (const [, attrs, inner] of raw.matchAll(/<text\b([^>]*)>([\s\S]*?)<\/text>/gi)) {
+    if (/direction="ltr"/.test(attrs)) continue;
+    for (const piece of inner.split(/<[^>]*>/)) {
+      if (SPLIT_NUMBER_RE.test(piece)) report(piece);
+    }
+  }
+
+  for (const chunk of raw.split(/<svg[\s\S]*?<\/svg>/i)) {
+    for (const line of chunk.split("\n")) {
+      if (SPLIT_NUMBER_RE.test(line)) report(line);
+    }
+  }
+
   return flags;
 }
 

@@ -4,6 +4,7 @@ import {
   auditMisconceptionTags,
   auditNumericQuestion,
   auditQuestion,
+  auditRtlNotation,
   classifyOption,
   hasArabicCommaInMath,
   hasBidiFragileMath,
@@ -278,6 +279,46 @@ describe("auditQuestion — bidi-fragile math (Arabic radicand)", () => {
   it("does NOT flag a plain Arabic parenthetical that contains a number", () => {
     expect(hasBidiFragileMath("(الشكل 3)")).toBe(false);
     expect(hasBidiFragileMath("(سنة 2024)")).toBe(false);
+  });
+});
+
+describe("auditRtlNotation — numbers split by an ordinary space in RTL", () => {
+  const NBSP = " ";
+  const ar = (body: string) => `العدد ${body} في رتبة الآلاف، وهذا مثالٌ على قيمة الرقم`;
+  const run = (raw: string) => auditRtlNotation(raw, "lesson", "math-3eme/01/cours");
+
+  it("flags a thousands group separated by U+0020 — the RTL block swaps the slices", () => {
+    // Rendered, the slices land back to front: «العدد 758 3». Verified in Chromium.
+    const flags = run(ar("3 758"));
+    expect(flags).toHaveLength(1);
+    expect(flags[0].level).toBe("error");
+    expect(flags[0].msg).toContain("U+00A0");
+  });
+
+  it("accepts the same number joined by U+00A0 — W4 absorbs it and the number holds", () => {
+    expect(run(ar(`3${NBSP}758`))).toEqual([]);
+  });
+
+  it("flags a bare <text> node but not one carrying an LTR isolate", () => {
+    const node = (attrs: string) =>
+      `${ar("واحد")}\n<svg viewBox="0 0 90 40"><text x="10" y="20"${attrs}>3 758</text></svg>`;
+    expect(run(node(""))).toHaveLength(1);
+    // sos becomes L inside the isolate, so W7 retypes the digits and nothing reorders.
+    expect(run(node(' direction="ltr" unicode-bidi="isolate"'))).toEqual([]);
+  });
+
+  it("leaves LTR content alone — a French lesson reorders nothing", () => {
+    expect(run("Le nombre 3 758 a un chiffre des milliers qui vaut 3 000 unités.")).toEqual([]);
+    // …even when it quotes one Arabic word: the block is still laid out left-to-right.
+    expect(run("Le nombre 3 758 s'écrit «العدد» en arabe et garde ses tranches.")).toEqual([]);
+  });
+
+  it("does NOT flag «< > ≤ ≥» next to Arabic — Unicode L4 keeps those statements true", () => {
+    // `2 > 1` renders `1 < 2`: the operator is mirrored AND the operands swap, which
+    // composes back to the same true statement. Phrased the other way round, not false.
+    // This case looks alarming and is not a defect — hence the guard.
+    expect(run("أوّل اختلاف: 2 > 1 إذن العدد الأوّل أكبر من الثاني في هذه المقارنة")).toEqual([]);
+    expect(run("الفم الجائع يفتح فاه دائمًا نحو العدد الأكبر في المقارنة: 9 > 4")).toEqual([]);
   });
 });
 
