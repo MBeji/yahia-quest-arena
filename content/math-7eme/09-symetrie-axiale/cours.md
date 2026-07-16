@@ -15,6 +15,17 @@
 
 **مثال محسوب**: النقطة M تبعد 4 سم عن المحور (d)، على العمود النازل منها إلى (d). نظيرُها M′ يقع على العمود نفسه، على الجهة الأخرى من (d)، ويبعد أيضًا 4 سم عن (d).
 
+<svg viewBox="0 0 310 235">
+<title>النقطة M ونظيرها M′ بالنسبة إلى المحور (d): الموسّط العموديّ لـ [MM′]</title>
+<line x1="155" y1="25" x2="155" y2="218" stroke="#0f172a" stroke-width="2.5"/>
+<line x1="70" y1="120" x2="240" y2="120" stroke="#2563eb" stroke-width="2.5"/>
+<polyline points="143,108 143,120 155,120" fill="none" stroke="#d97706" stroke-width="2"/>
+<line x1="109.5" y1="113" x2="115.5" y2="127" stroke="#0f6e56" stroke-width="2.2"/>
+<line x1="194.5" y1="113" x2="200.5" y2="127" stroke="#0f6e56" stroke-width="2.2"/>
+<g fill="#0f172a"><circle cx="70" cy="120" r="4.5"/><circle cx="240" cy="120" r="4.5"/><circle cx="155" cy="120" r="4"/></g>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="70" y="108" text-anchor="middle" fill="#0f172a" font-size="13">M</text><text x="240" y="108" text-anchor="middle" fill="#0f172a" font-size="13">M′</text><text x="167" y="110" text-anchor="middle" fill="#64748b" font-size="12">H</text><text x="171" y="37" text-anchor="middle" fill="#0f172a" font-size="13">(d)</text></g>
+</svg>
+
 > 🗡️ لإنشاء نظير نقطةٍ بالأدوات: ارسم العمودَ من M على (d)، ثمّ انقل المسافةَ نفسَها على الجهة الأخرى من (d) على العمود نفسه.
 
 ## 🪞 نظيرُ قطعةٍ ومستقيمٍ وشكل
@@ -51,6 +62,23 @@
 | المستطيل               | 2                  | يمرّان بمنتصفَي كلّ زوجٍ من الضلعين المتقابلَين (لا القُطران) |
 | المثلّث متساوي الساقين | 1                  | الموسّطُ العموديّ للقاعدة (يمرّ برأس المثلّث المقابل لها)     |
 | الدائرة                | عددٌ لا نهائيّ     | كلُّ قُطرٍ من أقطارها محورُ تناظرٍ لها                        |
+
+<svg viewBox="0 0 370 155">
+<title>محاور التناظر: المربّع 4، المستطيل 2، المثلّث متساوي الساقين 1</title>
+<rect x="30" y="35" width="60" height="60" fill="none" stroke="#0f172a" stroke-width="2.2"/>
+<line x1="60" y1="27" x2="60" y2="103" stroke="#64748b" stroke-width="1.6" stroke-dasharray="5 4"/>
+<line x1="22" y1="65" x2="98" y2="65" stroke="#64748b" stroke-width="1.6" stroke-dasharray="5 4"/>
+<line x1="24" y1="29" x2="96" y2="101" stroke="#64748b" stroke-width="1.6" stroke-dasharray="5 4"/>
+<line x1="96" y1="29" x2="24" y2="101" stroke="#64748b" stroke-width="1.6" stroke-dasharray="5 4"/>
+<rect x="150" y="45" width="70" height="50" fill="none" stroke="#0f172a" stroke-width="2.2"/>
+<line x1="185" y1="37" x2="185" y2="103" stroke="#64748b" stroke-width="1.6" stroke-dasharray="5 4"/>
+<line x1="142" y1="70" x2="228" y2="70" stroke="#64748b" stroke-width="1.6" stroke-dasharray="5 4"/>
+<polygon points="305,32 270,95 340,95" fill="none" stroke="#0f172a" stroke-width="2.2"/>
+<line x1="305" y1="24" x2="305" y2="103" stroke="#64748b" stroke-width="1.6" stroke-dasharray="5 4"/>
+<line x1="283.5" y1="63.5" x2="291.5" y2="65.5" stroke="#0f6e56" stroke-width="2"/>
+<line x1="318.5" y1="65.5" x2="326.5" y2="63.5" stroke="#0f6e56" stroke-width="2"/>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="60" y="122" text-anchor="middle" fill="#0f172a" font-size="12">مربّع</text><text x="60" y="142" text-anchor="middle" fill="#2563eb" font-size="15">4</text><text x="185" y="122" text-anchor="middle" fill="#0f172a" font-size="12">مستطيل</text><text x="185" y="142" text-anchor="middle" fill="#2563eb" font-size="15">2</text><text x="305" y="122" text-anchor="middle" fill="#0f172a" font-size="11">مثلّث متساوي الساقين</text><text x="305" y="142" text-anchor="middle" fill="#2563eb" font-size="15">1</text></g>
+</svg>
 
 > 🗡️ لا تخلط بين قُطرَي المستطيل ومحوري تناظره: قُطرا المستطيل **ليسا** محوري تناظرٍ (طيُّ المستطيل عليهما لا يُطابق النصفين)، بخلاف المربّع حيث القُطران محوران فعليّان.
 

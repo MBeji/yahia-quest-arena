@@ -24,6 +24,21 @@
 
 > ⚠️ تُقاس الزوايا دائمًا بين الشعاع والناظم، لا بين الشعاع وسطح الفصل.
 
+<svg viewBox="0 0 300 160">
+<title>انكسار شعاع ضوئي من الهواء إلى الزجاج: ينكسر نحو الناظم</title>
+<rect x="20" y="85" width="260" height="70" fill="#dbeafe"/>
+<line x1="20" y1="85" x2="280" y2="85" stroke="#0f172a" stroke-width="2"/>
+<line x1="150" y1="20" x2="150" y2="152" stroke="#64748b" stroke-width="1.5" stroke-dasharray="5 4"/>
+<line x1="85" y1="25" x2="150" y2="85" stroke="#2563eb" stroke-width="2.5"/>
+<polygon points="150,85 140.33,82.2 146.44,75.59" fill="#2563eb"/>
+<line x1="150" y1="85" x2="184.5" y2="150" stroke="#0f6e56" stroke-width="2.5"/>
+<polygon points="184.5,150 176.31,144.16 184.26,139.94" fill="#0f6e56"/>
+<line x1="150" y1="85" x2="215" y2="145" stroke="#64748b" stroke-width="1" stroke-dasharray="3 3"/>
+<path d="M 150 55 A 30 30 0 0 0 127.96 64.65" fill="none" stroke="#2563eb" stroke-width="1.2"/>
+<path d="M 150 119 A 34 34 0 0 0 165.94 115.03" fill="none" stroke="#0f6e56" stroke-width="1.2"/>
+<circle cx="150" cy="85" r="3" fill="#0f172a"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="150" y="16" text-anchor="middle" fill="#64748b" font-size="12">N</text><text x="160" y="100" text-anchor="start" fill="#0f172a" font-size="12">I</text><text x="96" y="34" text-anchor="middle" fill="#2563eb" font-size="12">وارد</text><text x="196" y="140" text-anchor="middle" fill="#0f6e56" font-size="12">منكسر</text><text x="120" y="70" text-anchor="middle" fill="#2563eb" font-size="13">i₁</text><text x="166" y="122" text-anchor="middle" fill="#0f6e56" font-size="13">i₂</text><text x="40" y="78" text-anchor="middle" fill="#0f172a" font-size="12">هواء</text><text x="40" y="105" text-anchor="middle" fill="#2563eb" font-size="12">زجاج</text></g>
+</svg>
+
 ## 🛡️ قاعدة الانكسار
 
 إذا انتقل الضوء من وسط **أقلّ كثافة** (كالهواء) إلى وسط **أكثر كثافة** (كالماء أو الزجاج):
@@ -46,6 +61,41 @@
 | ------------------------ | --------------- | ------------------------------------ |
 | **عدسة مجمّعة (محدّبة)** | أثخن في المنتصف | تجمّع الأشعّة الموازية في نقطة واحدة |
 | **عدسة مفرّقة (مقعّرة)** | أرقّ في المنتصف | تفرّق الأشعّة الموازية               |
+
+<svg viewBox="0 0 300 138">
+<title>العدسة المجمّعة تجمّع الأشعّة، المفرّقة تفرّقها</title>
+<line x1="12" y1="70" x2="138" y2="70" stroke="#64748b" stroke-width="1"/>
+<line x1="75" y1="36" x2="75" y2="104" stroke="#0f172a" stroke-width="2.5"/>
+<polygon points="75,36 71,44 79,44" fill="#0f172a"/>
+<polygon points="75,104 71,96 79,96" fill="#0f172a"/>
+<line x1="20" y1="54" x2="75" y2="54" stroke="#2563eb" stroke-width="2"/>
+<line x1="20" y1="70" x2="75" y2="70" stroke="#2563eb" stroke-width="2"/>
+<line x1="20" y1="86" x2="75" y2="86" stroke="#2563eb" stroke-width="2"/>
+<line x1="75" y1="54" x2="120" y2="70" stroke="#2563eb" stroke-width="2"/>
+<polygon points="120,70 112.23,70.95 114.58,64.36" fill="#2563eb"/>
+<line x1="75" y1="70" x2="120" y2="70" stroke="#2563eb" stroke-width="2"/>
+<polygon points="120,70 113,73.5 113,66.5" fill="#2563eb"/>
+<line x1="75" y1="86" x2="120" y2="70" stroke="#2563eb" stroke-width="2"/>
+<polygon points="120,70 114.58,75.64 112.23,69.05" fill="#2563eb"/>
+<circle cx="120" cy="70" r="2.5" fill="#2563eb"/>
+<text x="120" y="64" text-anchor="middle" fill="#2563eb" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">F</text><line x1="162" y1="70" x2="288" y2="70" stroke="#64748b" stroke-width="1"/>
+<line x1="225" y1="36" x2="225" y2="104" stroke="#0f172a" stroke-width="2.5"/>
+<polygon points="225,44 221,36 229,36" fill="#0f172a"/>
+<polygon points="225,96 221,104 229,104" fill="#0f172a"/>
+<line x1="170" y1="54" x2="225" y2="54" stroke="#ef4444" stroke-width="2"/>
+<line x1="170" y1="70" x2="225" y2="70" stroke="#ef4444" stroke-width="2"/>
+<line x1="170" y1="86" x2="225" y2="86" stroke="#ef4444" stroke-width="2"/>
+<line x1="225" y1="54" x2="288" y2="30" stroke="#ef4444" stroke-width="2"/>
+<polygon points="288,30 282.7,35.76 280.21,29.22" fill="#ef4444"/>
+<line x1="225" y1="70" x2="288" y2="70" stroke="#ef4444" stroke-width="2"/>
+<polygon points="288,70 281,73.5 281,66.5" fill="#ef4444"/>
+<line x1="225" y1="86" x2="288" y2="110" stroke="#ef4444" stroke-width="2"/>
+<polygon points="288,110 280.21,110.78 282.7,104.24" fill="#ef4444"/>
+<line x1="225" y1="54" x2="188" y2="70" stroke="#ef4444" stroke-width="1" stroke-dasharray="3 3"/>
+<line x1="225" y1="86" x2="188" y2="70" stroke="#ef4444" stroke-width="1" stroke-dasharray="3 3"/>
+<circle cx="188" cy="70" r="2.5" fill="#ef4444"/>
+<text x="186" y="64" text-anchor="middle" fill="#ef4444" font-size="11" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">F</text><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="75" y="126" text-anchor="middle" fill="#2563eb" font-size="12">مجمّعة (محدّبة)</text><text x="225" y="126" text-anchor="middle" fill="#ef4444" font-size="12">مفرّقة (مقعّرة)</text></g>
+</svg>
 
 ## 🌟 عناصر العدسة المجمّعة
 
@@ -70,6 +120,32 @@ $$f = OF$$
 | داخل البُعد البؤري (d < f)     | تخيّلية      | مكبّرة | معتدلة   |
 
 > 🗡️ أشعّة البناء الثلاثة: (1) الشعاع الموازي للمحور → ينكسر مارًّا بـ F. (2) الشعاع المارّ بـ O → يواصل مساره مستقيمًا. (3) الشعاع المارّ بـ F → ينكسر موازيًا للمحور.
+
+<svg viewBox="0 0 320 158">
+<title>تكوين الصورة عبر عدسة مجمّعة بأشعّة البناء الثلاثة</title>
+<line x1="10" y1="95" x2="312" y2="95" stroke="#64748b" stroke-width="1.2"/>
+<line x1="160" y1="60" x2="160" y2="130" stroke="#0f172a" stroke-width="2.5"/>
+<polygon points="160,60 156,68 164,68" fill="#0f172a"/>
+<polygon points="160,130 156,122 164,122" fill="#0f172a"/>
+<line x1="110" y1="91" x2="110" y2="99" stroke="#0f172a" stroke-width="1.5"/>
+<line x1="210" y1="91" x2="210" y2="99" stroke="#0f172a" stroke-width="1.5"/>
+<line x1="60" y1="91" x2="60" y2="99" stroke="#0f172a" stroke-width="1.5"/>
+<line x1="260" y1="91" x2="260" y2="99" stroke="#0f172a" stroke-width="1.5"/>
+<line x1="40" y1="95" x2="40" y2="60" stroke="#ef4444" stroke-width="2.5"/>
+<polygon points="40,60 44.5,69 35.5,69" fill="#ef4444"/>
+<line x1="40" y1="60" x2="160" y2="60" stroke="#2563eb" stroke-width="1.8"/>
+<line x1="160" y1="60" x2="288" y2="149.6" stroke="#2563eb" stroke-width="1.8"/>
+<polygon points="288,149.6 280.26,148.45 284.27,142.72" fill="#2563eb"/>
+<line x1="40" y1="60" x2="288" y2="132.33" stroke="#0f6e56" stroke-width="1.8"/>
+<polygon points="288,132.33 280.3,133.73 282.26,127.01" fill="#0f6e56"/>
+<line x1="40" y1="60" x2="160" y2="120" stroke="#d97706" stroke-width="1.8"/>
+<line x1="160" y1="120" x2="288" y2="120" stroke="#d97706" stroke-width="1.8"/>
+<polygon points="288,120 281,123.5 281,116.5" fill="#d97706"/>
+<line x1="246" y1="95" x2="246" y2="120" stroke="#7c3aed" stroke-width="2.5"/>
+<polygon points="246,120 241.5,111 250.5,111" fill="#7c3aed"/>
+<circle cx="160" cy="95" r="3" fill="#0f172a"/>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="160" y="145" text-anchor="middle" fill="#0f172a" font-size="12">O</text><text x="110" y="145" text-anchor="middle" fill="#0f172a" font-size="12">F</text><text x="210" y="145" text-anchor="middle" fill="#0f172a" font-size="12">F'</text><text x="60" y="145" text-anchor="middle" fill="#64748b" font-size="11">2F</text><text x="260" y="145" text-anchor="middle" fill="#64748b" font-size="11">2F'</text><text x="40" y="52" text-anchor="middle" fill="#ef4444" font-size="12">جسم</text><text x="246" y="137" text-anchor="middle" fill="#7c3aed" font-size="12">صورة</text></g>
+</svg>
 
 ## 🏆 التطبيقات
 

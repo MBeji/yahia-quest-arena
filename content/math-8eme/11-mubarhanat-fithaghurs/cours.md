@@ -23,6 +23,11 @@ $$ BC² = AB² + AC² $$
 
 بالكلمات: **مربّعُ الوتر يساوي مجموعَ مربّعَي الضلعين القائمين**.
 
+<svg viewBox="0 0 300 262">
+<title>مبرهنة فيثاغور: المربّعات على أضلاع مثلث قائم (3, 4, 5) ⇐ 9 + 16 = 25</title>
+<polygon points="115,168 195,168 195,248 115,248" fill="none" stroke="#64748b" stroke-width="1.8"/><polygon points="115,168 115,108 55,108 55,168" fill="none" stroke="#64748b" stroke-width="1.8"/><polygon points="195,168 115,108 175,28 255,88" fill="none" stroke="#64748b" stroke-width="1.8"/><polygon points="115,168 195,168 115,108" fill="none" stroke="#0f172a" stroke-width="3"/><polyline points="126,168 126,157 115,157" fill="none" stroke="#0f172a" stroke-width="1.8"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="155" y="213" text-anchor="middle" fill="#2563eb" font-size="15">16</text><text x="85" y="143" text-anchor="middle" fill="#0f6e56" font-size="15">9</text><text x="191" y="102" text-anchor="middle" fill="#d97706" font-size="15">25</text><text x="106" y="181" text-anchor="middle" fill="#0f172a" font-size="13">A</text><text x="206" y="174" text-anchor="middle" fill="#0f172a" font-size="13">B</text><text x="106" y="102" text-anchor="middle" fill="#0f172a" font-size="13">C</text><text x="155" y="162" text-anchor="middle" fill="#0f172a" font-size="12">4</text><text x="124" y="142" text-anchor="middle" fill="#0f172a" font-size="12">3</text><text x="147" y="150" text-anchor="middle" fill="#0f172a" font-size="12">5</text></g>
+</svg>
+
 _مثالٌ محسوب:_ مثلثٌ ABC قائمٌ في A، حيث AB = 3 وAC = 4.
 
 $$ BC² = 3² + 4² = 9 + 16 = 25 $$

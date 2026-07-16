@@ -12,6 +12,27 @@
 - **الزوايا المتقابلة متساويةُ القياس**: قياسُ Â = قياسُ Ĉ، وقياسُ B̂ = قياسُ D̂.
 - **القُطران [AC] و[BD] يتقاطعان في منتصفَيهما معًا**: نقطةُ تقاطعهما هي في آنٍ واحد منتصفُ [AC] ومنتصفُ [BD]. تُسمّى هذه النقطةُ **مركزَ تناظر** متوازي الأضلاع.
 
+<svg viewBox="0 0 305 200">
+<title>متوازي الأضلاع ABCD: الأضلاع المتقابلة متوازية ومتساوية، والقطران يتناصفان في O</title>
+<line x1="55" y1="160" x2="255" y2="65" stroke="#64748b" stroke-width="1.8"/>
+<line x1="200" y1="160" x2="110" y2="65" stroke="#64748b" stroke-width="1.8"/>
+<polygon points="55,160 200,160 255,65 110,65" fill="none" stroke="#0f172a" stroke-width="2.4"/>
+<polyline points="122.5,156 127.5,160 122.5,164" fill="none" stroke="#2563eb" stroke-width="1.8"/>
+<polyline points="177.5,61 182.5,65 177.5,69" fill="none" stroke="#2563eb" stroke-width="1.8"/>
+<line x1="127.5" y1="155" x2="127.5" y2="165" stroke="#2563eb" stroke-width="2"/>
+<line x1="182.5" y1="60" x2="182.5" y2="70" stroke="#2563eb" stroke-width="2"/>
+<polyline points="75.03,117.42 81,115.1 81.95,121.43" fill="none" stroke="#0f6e56" stroke-width="1.8"/><polyline points="78.04,112.23 84,109.9 84.96,116.23" fill="none" stroke="#0f6e56" stroke-width="1.8"/>
+<polyline points="220.03,117.42 226,115.1 226.95,121.43" fill="none" stroke="#0f6e56" stroke-width="1.8"/><polyline points="223.04,112.23 229,109.9 229.96,116.23" fill="none" stroke="#0f6e56" stroke-width="1.8"/>
+<line x1="76.42" y1="113.02" x2="85.07" y2="118.03" stroke="#0f6e56" stroke-width="2"/><line x1="79.93" y1="106.97" x2="88.58" y2="111.98" stroke="#0f6e56" stroke-width="2"/>
+<line x1="221.42" y1="113.02" x2="230.07" y2="118.03" stroke="#0f6e56" stroke-width="2"/><line x1="224.93" y1="106.97" x2="233.58" y2="111.98" stroke="#0f6e56" stroke-width="2"/>
+<line x1="102.85" y1="131.73" x2="107.15" y2="140.77" stroke="#d97706" stroke-width="2"/>
+<line x1="207.15" y1="93.27" x2="202.85" y2="84.23" stroke="#d97706" stroke-width="2"/>
+<line x1="176.28" y1="142.23" x2="183.54" y2="135.35" stroke="#d97706" stroke-width="2"/><line x1="171.46" y1="137.15" x2="178.72" y2="130.27" stroke="#d97706" stroke-width="2"/>
+<line x1="133.72" y1="82.77" x2="126.46" y2="89.65" stroke="#d97706" stroke-width="2"/><line x1="138.54" y1="87.85" x2="131.28" y2="94.73" stroke="#d97706" stroke-width="2"/>
+<g fill="#0f172a"><circle cx="55" cy="160" r="4"/><circle cx="200" cy="160" r="4"/><circle cx="255" cy="65" r="4"/><circle cx="110" cy="65" r="4"/><circle cx="155" cy="112.5" r="3.5"/></g>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="43" y="168" text-anchor="middle" fill="#0f172a" font-size="13">A</text><text x="212" y="168" text-anchor="middle" fill="#0f172a" font-size="13">B</text><text x="267" y="61" text-anchor="middle" fill="#0f172a" font-size="13">C</text><text x="98" y="61" text-anchor="middle" fill="#0f172a" font-size="13">D</text><text x="167" y="116.5" text-anchor="middle" fill="#d97706" font-size="12">O</text></g>
+</svg>
+
 **مثال محسوب**: في متوازي أضلاعٍ ABCD، AB = 7 سم وقياسُ Â = 110°. إذن DC = 7 سم (ضلعٌ متقابل)، وقياسُ Ĉ = 110° (زاويةٌ متقابلة).
 
 > ⚠️ الفخّ الشائع: تساوي الأضلاع المتقابلة **لا يعني** أنّ الأضلاعَ الأربعة كلَّها متساوية (هذا خاصٌّ بالمعيّن)، وتقاطعُ القطرين في المنتصف **لا يعني** أنّهما متساويا الطول (هذا خاصٌّ بالمستطيل).
@@ -57,6 +78,28 @@ $$ مساحةُ المعيّن = (القطرُ الأوّل × القطرُ ال
 | مستطيلٌ طولُه L وعرضُه l                                             | 2 × (L + l)                 | L × l       |
 | مثلّثٌ قاعدتُه b وارتفاعُه h (بالنسبة لهذه القاعدة)                  | مجموعُ أطوال أضلاعه الثلاثة | (b × h) ÷ 2 |
 | متوازي أضلاعٍ ضلعاه المتتاليان a وb، وارتفاعُه h (بالنسبة للقاعدة b) | 2 × (a + b)                 | b × h       |
+
+<svg viewBox="0 0 300 200">
+<title>مساحة المستطيل = الطول L × العرض l</title>
+<rect x="70" y="55" width="180" height="95" fill="none" stroke="#0f172a" stroke-width="2.4"/>
+<g stroke="#64748b" stroke-width="0.8" opacity="0.5"><line x1="100" y1="55" x2="100" y2="150"/><line x1="130" y1="55" x2="130" y2="150"/><line x1="160" y1="55" x2="160" y2="150"/><line x1="190" y1="55" x2="190" y2="150"/><line x1="220" y1="55" x2="220" y2="150"/><line x1="70" y1="85" x2="250" y2="85"/><line x1="70" y1="115" x2="250" y2="115"/><line x1="70" y1="145" x2="250" y2="145"/></g>
+<polyline points="82,150 82,138 70,138" fill="none" stroke="#d97706" stroke-width="1.8"/>
+<line x1="70" y1="172" x2="250" y2="172" stroke="#0f172a" stroke-width="1.6"/>
+<line x1="82" y1="172" x2="70" y2="172" stroke="#0f172a" stroke-width="1.6"/>
+<polygon points="70,172 77,168.5 77,175.5" fill="#0f172a"/>
+<line x1="238" y1="172" x2="250" y2="172" stroke="#0f172a" stroke-width="1.6"/>
+<polygon points="250,172 243,175.5 243,168.5" fill="#0f172a"/>
+<line x1="70" y1="154" x2="70" y2="176" stroke="#64748b" stroke-width="1"/>
+<line x1="250" y1="154" x2="250" y2="176" stroke="#64748b" stroke-width="1"/>
+<line x1="48" y1="55" x2="48" y2="150" stroke="#0f172a" stroke-width="1.6"/>
+<line x1="48" y1="67" x2="48" y2="55" stroke="#0f172a" stroke-width="1.6"/>
+<polygon points="48,55 51.5,62 44.5,62" fill="#0f172a"/>
+<line x1="48" y1="138" x2="48" y2="150" stroke="#0f172a" stroke-width="1.6"/>
+<polygon points="48,150 44.5,143 51.5,143" fill="#0f172a"/>
+<line x1="66" y1="55" x2="44" y2="55" stroke="#64748b" stroke-width="1"/>
+<line x1="66" y1="150" x2="44" y2="150" stroke="#64748b" stroke-width="1"/>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="160" y="188" text-anchor="middle" fill="#0f172a" font-size="14">L</text><text x="36" y="106.5" text-anchor="middle" fill="#0f172a" font-size="14">l</text><text x="160" y="107.5" text-anchor="middle" fill="#0f172a" font-size="12">المساحة = L × l</text></g>
+</svg>
 
 **مثال محسوب**: حديقةٌ مستطيلة الشكل طولُها 12 م وعرضُها 7 م. محيطُها = 2 × (12 + 7) = 2 × 19 = 38 م، ومساحتُها = 12 × 7 = 84 م².
 

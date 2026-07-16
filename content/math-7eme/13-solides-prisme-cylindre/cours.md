@@ -19,6 +19,20 @@
 
 **الموشور القائم** مُجسّمٌ له **قاعدتان** مضلّعتان متطابقتان ومتوازيتان، وله **وجوهٌ جانبيّةٌ** مستطيلة الشكل عددُها يساوي عددَ أضلاع القاعدة، وله **حروفٌ** (حواف): حروفُ القاعدتين، وحروفٌ جانبيّةٌ تصلُ رأسًا من كلّ قاعدة برأسه المقابل من القاعدة الأخرى.
 
+<svg viewBox="0 0 250 190">
+<title>موشور قائم في منظور: قاعدتان مثلّثتان ووجوه جانبيّة مستطيلة</title>
+<line x1="110" y1="133" x2="205" y2="133" stroke="#64748b" stroke-width="1.6" stroke-dasharray="5 4"/>
+<line x1="55" y1="165" x2="110" y2="133" stroke="#64748b" stroke-width="1.6" stroke-dasharray="5 4"/>
+<line x1="110" y1="133" x2="150" y2="58" stroke="#0f172a" stroke-width="2.2"/>
+<line x1="205" y1="133" x2="150" y2="58" stroke="#0f172a" stroke-width="2.2"/>
+<line x1="150" y1="165" x2="205" y2="133" stroke="#0f172a" stroke-width="2.2"/>
+<line x1="95" y1="90" x2="150" y2="58" stroke="#0f172a" stroke-width="2.2"/>
+<polygon points="55,165 150,165 95,90" fill="none" stroke="#0f172a" stroke-width="2.4"/>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="92" y="150" text-anchor="middle" fill="#0f6e56" font-size="11">قاعدة</text><text x="175" y="132" text-anchor="middle" fill="#2563eb" font-size="11">وجه جانبيّ</text></g>
+<line x1="92" y1="143" x2="100" y2="128" stroke="#0f6e56" stroke-width="1.2"/>
+<line x1="150" y1="128" x2="150" y2="138" stroke="#2563eb" stroke-width="1.2"/>
+</svg>
+
 **مثال محسوب**: موشورٌ قائمٌ قاعدتُه **خماسيّة** (5 أضلاع).
 
 - عددُ الوجوه الجانبيّة = عددُ أضلاع القاعدة = **5** وجوهٍ مستطيلة.
@@ -30,6 +44,23 @@
 
 **الأسطوانة الدائريّة القائمة** مُجسّمٌ له **قاعدتان دائريّتان** متطابقتان ومتوازيتان، نصفُ قطر كلٍّ منهما **r**، ويصلُ بينهما **سطحٌ جانبيٌّ منحنٍ** واحد (لا وجوهَ مسطّحة جانبيّة). **ارتفاعُها h** هو المسافةُ العموديّةُ بين القاعدتين، وهو أيضًا طولُ السطح الجانبيّ إذا فُتح.
 
+<svg viewBox="0 0 260 210">
+<title>أسطوانة دائريّة قائمة: قرصان متطابقان وسطح جانبيّ منحنٍ</title>
+<line x1="70" y1="55" x2="70" y2="175" stroke="#0f172a" stroke-width="2.4"/>
+<line x1="190" y1="55" x2="190" y2="175" stroke="#0f172a" stroke-width="2.4"/>
+<path d="M 70 175 A 60 17 0 0 1 190 175" fill="none" stroke="#64748b" stroke-width="1.6" stroke-dasharray="5 4"/>
+<path d="M 70 175 A 60 17 0 0 0 190 175" fill="none" stroke="#0f172a" stroke-width="2.4"/>
+<ellipse cx="130" cy="55" rx="60" ry="17" fill="none" stroke="#0f172a" stroke-width="2.4"/>
+<line x1="130" y1="55" x2="130" y2="175" stroke="#64748b" stroke-width="1" stroke-dasharray="3 3"/>
+<line x1="130" y1="67" x2="130" y2="55" stroke="#64748b" stroke-width="1.4"/>
+<polygon points="130,55 133.5,62 126.5,62" fill="#64748b"/>
+<line x1="130" y1="163" x2="130" y2="175" stroke="#64748b" stroke-width="1.4"/>
+<polygon points="130,175 126.5,168 133.5,168" fill="#64748b"/>
+<line x1="130" y1="55" x2="190" y2="55" stroke="#2563eb" stroke-width="1.6"/>
+<g fill="#0f172a"><circle cx="130" cy="55" r="2.5"/></g>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="142" y="119" text-anchor="middle" fill="#0f172a" font-size="13">h</text><text x="160" y="49" text-anchor="middle" fill="#2563eb" font-size="12">r</text><text x="130" y="29" text-anchor="middle" fill="#0f172a" font-size="10.5">قاعدتان قرصيّتان + سطح جانبيّ منحنٍ</text></g>
+</svg>
+
 > 🗡️ أمثلةٌ من حياتك اليوميّة: علبةُ حليبٍ أسطوانيّة، خزّانُ ماءٍ، عمودُ كهرباء، صومعةُ حبوب — كلُّها أسطواناتٌ دائريّةٌ قائمة.
 
 ## 🗺️ بترون الموشور والأسطوانة
@@ -40,6 +71,24 @@
 | -------------- | ---------------------------------------------------------------------------------------- |
 | الموشور القائم | القاعدتان (نسختان من المضلّع) + شريطٌ من المستطيلات الجانبيّة، عددُها كعدد أضلاع القاعدة |
 | الأسطوانة      | القاعدتان (دائرتان متطابقتان) + مستطيلٌ واحد: طولُه = محيطُ الدائرة، وعرضُه = الارتفاع h |
+
+<svg viewBox="0 0 280 250">
+<title>بترون الأسطوانة: قرصان + مستطيل طولُه محيطُ القاعدة</title>
+<circle cx="135" cy="35" r="27" fill="none" stroke="#0f172a" stroke-width="2.2"/>
+<rect x="60" y="62" width="150" height="70" fill="none" stroke="#0f172a" stroke-width="2.2"/>
+<circle cx="135" cy="203" r="27" fill="none" stroke="#0f172a" stroke-width="2.2"/>
+<line x1="60" y1="146" x2="210" y2="146" stroke="#0f172a" stroke-width="1.4"/>
+<line x1="72" y1="146" x2="60" y2="146" stroke="#0f172a" stroke-width="1.4"/>
+<polygon points="60,146 66,143 66,149" fill="#0f172a"/>
+<line x1="198" y1="146" x2="210" y2="146" stroke="#0f172a" stroke-width="1.4"/>
+<polygon points="210,146 204,149 204,143" fill="#0f172a"/>
+<line x1="226" y1="62" x2="226" y2="132" stroke="#0f172a" stroke-width="1.4"/>
+<line x1="226" y1="74" x2="226" y2="62" stroke="#0f172a" stroke-width="1.4"/>
+<polygon points="226,62 229,68 223,68" fill="#0f172a"/>
+<line x1="226" y1="120" x2="226" y2="132" stroke="#0f172a" stroke-width="1.4"/>
+<polygon points="226,132 223,126 229,126" fill="#0f172a"/>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="135" y="39" text-anchor="middle" fill="#0f6e56" font-size="10">قرص</text><text x="135" y="207" text-anchor="middle" fill="#0f6e56" font-size="10">قرص</text><text x="135" y="101" text-anchor="middle" fill="#2563eb" font-size="11">مستطيل</text><text x="135" y="164" text-anchor="middle" fill="#0f172a" font-size="10.5">المحيط = 2 × π × r</text><text x="240" y="101" text-anchor="middle" fill="#0f172a" font-size="13">h</text></g>
+</svg>
 
 **مثال محسوب**: أسطوانةٌ نصفُ قطرها 5 سم وارتفاعُها 12 سم (π ≈ 3,14). طولُ مستطيل البترون = محيطُ الدائرة = 2 × π × r = 2 × 3,14 × 5 = 31,4 سم، وعرضُه = الارتفاع = 12 سم.
 

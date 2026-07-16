@@ -48,6 +48,34 @@ $$ زيتون → عثّة → عصفور → بومة $$
 
 لكنّ الواقع أعقد: الكائن الواحد قد يكون في أكثر من سلسلة (فالعصفور يأكل عثّات وديدانًا معًا، والبومة تأكل عصافير وفئرانًا). حين تتشابك عدّة سلاسل غذائية في نظام واحد تتكوّن **الشبكة الغذائية**: مجموع السلاسل المترابطة التي تشترك في بعض حلقاتها.
 
+<svg viewBox="0 0 300 258">
+<title>شبكة غذائية: عدّة سلاسل متشابكة</title>
+<line x1="128.99" y1="201.51" x2="74.54" y2="144.49" stroke="#0f6e56" stroke-width="2.2"/>
+<polygon points="74.54,144.49 82.96,147.51 77.17,153.04" fill="#0f6e56"/>
+<line x1="150" y1="195" x2="150" y2="151" stroke="#0f6e56" stroke-width="2.2"/>
+<polygon points="150,151 154,159 146,159" fill="#0f6e56"/>
+<line x1="171.56" y1="201.95" x2="230.98" y2="144.05" stroke="#0f6e56" stroke-width="2.2"/>
+<polygon points="230.98,144.05 228.04,152.5 222.46,146.77" fill="#0f6e56"/>
+<line x1="67.99" y1="116.28" x2="90.41" y2="63.46" stroke="#0f6e56" stroke-width="2.2"/>
+<polygon points="90.41,63.46 90.97,72.39 83.6,69.26" fill="#0f6e56"/>
+<line x1="138.4" y1="116.13" x2="117.15" y2="63.64" stroke="#0f6e56" stroke-width="2.2"/>
+<polygon points="117.15,63.64 123.86,69.55 116.44,72.55" fill="#0f6e56"/>
+<line x1="243.9" y1="114.56" x2="234.91" y2="65.38" stroke="#0f6e56" stroke-width="2.2"/>
+<polygon points="234.91,65.38 240.28,72.53 232.41,73.97" fill="#0f6e56"/>
+<line x1="131.88" y1="46" x2="200.12" y2="46" stroke="#0f6e56" stroke-width="2.2"/>
+<polygon points="200.12,46 192.12,50 192.12,42" fill="#0f6e56"/>
+<ellipse cx="150" cy="214" rx="34" ry="16" fill="#dcfce7" stroke="#0f6e56" stroke-width="2.2"/>
+<ellipse cx="56" cy="132" rx="30" ry="15" fill="#fef3c7" stroke="#d97706" stroke-width="2.2"/>
+<ellipse cx="150" cy="132" rx="30" ry="15" fill="#fef3c7" stroke="#d97706" stroke-width="2.2"/>
+<ellipse cx="250" cy="132" rx="30" ry="15" fill="#fef3c7" stroke="#d97706" stroke-width="2.2"/>
+<ellipse cx="104" cy="46" rx="34" ry="16" fill="#dbeafe" stroke="#2563eb" stroke-width="2.2"/>
+<ellipse cx="228" cy="46" rx="34" ry="16" fill="#ede9fe" stroke="#7c3aed" stroke-width="2.2"/>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="150" y="218" text-anchor="middle" fill="#0f6e56" font-size="12.5">زيتون</text><text x="56" y="136" text-anchor="middle" fill="#d97706" font-size="12.5">عثّة</text><text x="150" y="136" text-anchor="middle" fill="#d97706" font-size="12.5">دودة</text><text x="250" y="136" text-anchor="middle" fill="#d97706" font-size="12.5">فأر</text><text x="104" y="50" text-anchor="middle" fill="#2563eb" font-size="12.5">عصفور</text><text x="228" y="50" text-anchor="middle" fill="#7c3aed" font-size="12.5">بومة</text></g>
+<line x1="20" y1="244" x2="44" y2="244" stroke="#0f6e56" stroke-width="2.2"/>
+<polygon points="44,244 36,248 36,240" fill="#0f6e56"/>
+<g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="50" y="248" text-anchor="start" fill="#0f172a" font-size="11">السهم = «يُؤكل من طرف»</text></g>
+</svg>
+
 > 🔮 الشبكة الغذائية أمتن من السلسلة الواحدة: إن قلّت فريسة، وجد المفترس بديلًا في سلسلة أخرى، فيصمد النظام. لكنّ لهذا التشابك حدودًا.
 
 ## ⚖️ التوازن الطبيعي والعلاقات بين الكائنات

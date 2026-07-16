@@ -16,6 +16,11 @@ $$ AB = A'B' \quad ; \quad BC = B'C' \quad ; \quad CA = C'A' $$
 
 $$ \widehat{A} = \widehat{A'} \quad ; \quad \widehat{B} = \widehat{B'} \quad ; \quad \widehat{C} = \widehat{C'} $$
 
+<svg viewBox="0 0 300 156">
+<title>مثلثان متقايسان برؤوس متناظرة</title>
+<polygon points="38,24 26,116 120,96" fill="none" stroke="#0f172a" stroke-width="2.5"/><line x1="37.95" y1="70.78" x2="26.05" y2="69.22" stroke="#ef4444" stroke-width="2"/><line x1="69.31" y1="100.65" x2="71.8" y2="112.39" stroke="#0f6e56" stroke-width="2"/><line x1="74.2" y1="99.61" x2="76.69" y2="111.35" stroke="#0f6e56" stroke-width="2"/><line x1="78.8" y1="67.81" x2="86.72" y2="58.79" stroke="#7c3aed" stroke-width="2"/><line x1="75.04" y1="64.51" x2="82.96" y2="55.49" stroke="#7c3aed" stroke-width="2"/><line x1="71.28" y1="61.21" x2="79.2" y2="52.19" stroke="#7c3aed" stroke-width="2"/><polygon points="196,24 184,116 278,96" fill="none" stroke="#0f172a" stroke-width="2.5"/><line x1="195.95" y1="70.78" x2="184.05" y2="69.22" stroke="#ef4444" stroke-width="2"/><line x1="227.31" y1="100.65" x2="229.8" y2="112.39" stroke="#0f6e56" stroke-width="2"/><line x1="232.2" y1="99.61" x2="234.69" y2="111.35" stroke="#0f6e56" stroke-width="2"/><line x1="236.8" y1="67.81" x2="244.72" y2="58.79" stroke="#7c3aed" stroke-width="2"/><line x1="233.04" y1="64.51" x2="240.96" y2="55.49" stroke="#7c3aed" stroke-width="2"/><line x1="229.28" y1="61.21" x2="237.2" y2="52.19" stroke="#7c3aed" stroke-width="2"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="34" y="18" text-anchor="middle" fill="#0f172a" font-size="13">A</text><text x="15" y="122" text-anchor="middle" fill="#0f172a" font-size="13">B</text><text x="131" y="101" text-anchor="middle" fill="#0f172a" font-size="13">C</text><text x="192" y="18" text-anchor="middle" fill="#0f172a" font-size="13">A′</text><text x="172" y="122" text-anchor="middle" fill="#0f172a" font-size="13">B′</text><text x="290" y="101" text-anchor="middle" fill="#0f172a" font-size="13">C′</text><text x="150" y="145" text-anchor="middle" fill="#64748b" font-size="11">المثلثان متقايسان: A↔A′ ، B↔B′ ، C↔C′</text></g>
+</svg>
+
 > ⚠️ لا تخلط بين **متقايسَين** و**متشابهَين**: المتشابهان لهما نفسُ الشكل لكنْ قد يختلف الحجم (مثلثٌ صغيرٌ وآخرُ كبيرٌ بنفس الزوايا). المتقايسان متشابهان **وبنفس الحجم** أيضًا. التقايسُ أقوى من التشابه.
 
 ## 📐 الزاوية المحصورة بين ضلعين
@@ -24,6 +29,11 @@ $$ \widehat{A} = \widehat{A'} \quad ; \quad \widehat{B} = \widehat{B'} \quad ; \
 
 - الزاويةُ المحصورةُ بين [AB] و[AC] هي الزاوية A (الرأسُ المشترك A).
 - الزاويةُ المحصورةُ بين [BA] و[BC] هي الزاوية B (الرأسُ المشترك B).
+
+<svg viewBox="0 0 300 158">
+<title>الزاوية المحصورة بين ضلعين</title>
+<line x1="26" y1="128" x2="172" y2="120" stroke="#0f172a" stroke-width="2.5"/><line x1="80" y1="26" x2="26" y2="128" stroke="#2563eb" stroke-width="3"/><line x1="80" y1="26" x2="172" y2="120" stroke="#2563eb" stroke-width="3"/><path d="M 68.77 47.21 A 24 24 0 0 0 96.79 43.15" fill="none" stroke="#d97706" stroke-width="2.4"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="80" y="18" text-anchor="middle" fill="#0f172a" font-size="13">A</text><text x="15" y="134" text-anchor="middle" fill="#0f172a" font-size="13">B</text><text x="183" y="126" text-anchor="middle" fill="#0f172a" font-size="13">C</text><text x="82" y="66" text-anchor="middle" fill="#d97706" font-size="12">A</text><text x="150" y="150" text-anchor="middle" fill="#64748b" font-size="11">A هي الزاوية المحصورة بين [AB] و[AC]</text></g>
+</svg>
 
 > 🗡️ حيلةٌ سريعة: انظر إلى الحرف الذي يتكرّر في اسمَي الضلعين — هو رأسُ الزاوية المحصورة. في [AB] و[BC] الحرفُ المتكرّر هو B.
 

@@ -12,6 +12,11 @@
 - **الوشاح**: الطبقة الوسطى الكبيرة (نحو 2900 كم سُمكًا)، صخري، يكون جزؤه العلوي **لزجًا قابلًا للتيّار** ببطء شديد.
 - **النواة**: الطبقة المركزية، معدنية (الحديد والنيكل أساسًا)؛ نواة خارجية **سائلة** ونواة داخلية **صلبة**، وهي الأشدّ حرارة.
 
+<svg viewBox="0 0 300 232">
+<title>البنية الداخلية للأرض: القشرة والوشاح والنواة</title>
+<circle cx="96" cy="124" r="92" fill="#e0a96b" stroke="#0f172a" stroke-width="2"/><circle cx="96" cy="124" r="92" fill="none" stroke="#8a6d3b" stroke-width="6"/><circle cx="96" cy="124" r="36" fill="#e8531d" stroke="#0f172a" stroke-width="1.6"/><circle cx="96" cy="124" r="16" fill="#f4c430" stroke="#0f172a" stroke-width="1.6"/><line x1="158" y1="62" x2="196" y2="44" stroke="#64748b" stroke-width="1.4"/><line x1="142" y1="94" x2="210" y2="92" stroke="#64748b" stroke-width="1.4"/><line x1="120" y1="128" x2="210" y2="138" stroke="#64748b" stroke-width="1.4"/><line x1="104" y1="136" x2="210" y2="176" stroke="#64748b" stroke-width="1.4"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="212" y="44" text-anchor="start" fill="#0f172a" font-size="13">القشرة</text><text x="212" y="92" text-anchor="start" fill="#0f172a" font-size="13">الوشاح</text><text x="212" y="138" text-anchor="start" fill="#0f172a" font-size="12">النواة الخارجية</text><text x="212" y="154" text-anchor="start" fill="#64748b" font-size="11">(سائلة)</text><text x="212" y="176" text-anchor="start" fill="#0f172a" font-size="12">النواة الداخلية</text><text x="212" y="192" text-anchor="start" fill="#64748b" font-size="11">(صلبة)</text></g>
+</svg>
+
 > ⚠️ لا تخلط بين **القشرة** (طبقة خارجية رقيقة) و**الوشاح** (طبقة سميكة جدًّا تحتها): القشرة جزء صغير فقط من سطح الأرض.
 
 ## ⚡ الليثوسفير والأسثينوسفير والصفائح
@@ -45,6 +50,13 @@
 
 - عند **تقارب** صفيحتين، تغوص الصفيحة **المحيطية الأكثر كثافة** تحت الأخرى داخل الوشاح: هذه **منطقة الطمر (الاندساس)**.
 - يصاحبها تكوّن **خنادق محيطية عميقة**، و**سلاسل جبلية** أو **براكين**، و**زلازل قويّة عميقة**.
+
+<svg viewBox="0 0 320 200">
+<title>منطقة الطمر: غوص الصفيحة المحيطية تحت الصفيحة القارّية</title>
+<rect x="0" y="0" width="320" height="60" fill="#eaf4ff" stroke="none" stroke-width="2"/><rect x="0" y="60" width="320" height="140" fill="#f0dcb8" stroke="none" stroke-width="2"/><rect x="6" y="52" width="142" height="16" fill="#bcd8f5" stroke="none" stroke-width="2"/><polygon points="6,68 150,68 252,152 252,166 150,82 6,82" fill="#5b6470" stroke="#0f172a" stroke-width="2"/><polygon points="150,50 314,50 314,82 150,82" fill="#8a6d3b" stroke="#0f172a" stroke-width="2"/><line x1="24" y1="42" x2="78" y2="42" stroke="#0f172a" stroke-width="2"/>
+<polygon points="78,42 70,46 70,38" fill="#0f172a"/><line x1="300" y1="42" x2="246" y2="42" stroke="#0f172a" stroke-width="2"/>
+<polygon points="246,42 254,38 254,46" fill="#0f172a"/><polyline points="142,52 150,64 158,50" fill="none" stroke="#0f172a" stroke-width="2"/><polygon points="186,50 198,30 210,50" fill="#6b4f26" stroke="#0f172a" stroke-width="1.6"/><polygon points="195,34 198,26 201,34" fill="#e8531d" stroke="none" stroke-width="2"/><line x1="198" y1="50" x2="214" y2="96" stroke="#e8531d" stroke-width="2" stroke-dasharray="4 3"/><polygon points="176,96 180,100 176,104 172,100" fill="#ef4444" stroke="none" stroke-width="2"/><polygon points="200,116 204,120 200,124 196,120" fill="#ef4444" stroke="none" stroke-width="2"/><polygon points="222,134 226,138 222,142 218,138" fill="#ef4444" stroke="none" stroke-width="2"/><line x1="70" y1="82" x2="70" y2="104" stroke="#64748b" stroke-width="1.4"/><line x1="232" y1="142" x2="258" y2="158" stroke="#64748b" stroke-width="1.4"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="70" y="118" text-anchor="middle" fill="#0f172a" font-size="12">صفيحة محيطية</text><text x="268" y="71" text-anchor="middle" fill="#0f172a" font-size="12">صفيحة قارّية</text><text x="60" y="186" text-anchor="middle" fill="#0f172a" font-size="12">الوشاح</text><text x="262" y="172" text-anchor="middle" fill="#0f172a" font-size="12">منطقة الطمر</text><text x="150" y="20" text-anchor="middle" fill="#0f172a" font-size="11">خندق</text><text x="198" y="16" text-anchor="middle" fill="#e8531d" font-size="11">بركان</text><text x="258" y="118" text-anchor="middle" fill="#ef4444" font-size="11">زلازل</text></g>
+</svg>
 
 > ⚠️ لا تخلط بين **الظهرة** (تباعد + إنتاج قشرة جديدة) و**منطقة الطمر** (تقارب + اختفاء قشرة داخل الوشاح): هما عكس بعضهما.
 

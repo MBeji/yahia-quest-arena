@@ -44,6 +44,11 @@
 
 أمثلة: العجلة، الساعة، القمر البدر.
 
+<svg viewBox="0 0 300 172">
+<title>المربّع والمستطيل والمثلّث والدائرة</title>
+<rect x="24" y="34" width="48" height="48" fill="none" stroke="#0f172a" stroke-width="2.5"/><circle cx="24" cy="34" r="2.6" fill="#ef4444"/><circle cx="72" cy="34" r="2.6" fill="#ef4444"/><circle cx="72" cy="82" r="2.6" fill="#ef4444"/><circle cx="24" cy="82" r="2.6" fill="#ef4444"/><g stroke="#0f6e56" stroke-width="2"><path d="M44 34 l4 4 M52 34 l-4 4"/><path d="M44 82 l4 -4 M52 82 l-4 -4"/><path d="M24 54 l4 4 M24 62 l4 -4"/><path d="M72 54 l4 4 M72 62 l4 -4"/></g><rect x="96" y="40" width="70" height="40" fill="none" stroke="#0f172a" stroke-width="2.5"/><circle cx="96" cy="40" r="2.6" fill="#ef4444"/><circle cx="166" cy="40" r="2.6" fill="#ef4444"/><circle cx="166" cy="80" r="2.6" fill="#ef4444"/><circle cx="96" cy="80" r="2.6" fill="#ef4444"/><polygon points="210,82 246,30 282,82" fill="none" stroke="#0f172a" stroke-width="2.5"/><circle cx="210" cy="82" r="2.6" fill="#ef4444"/><circle cx="246" cy="30" r="2.6" fill="#ef4444"/><circle cx="282" cy="82" r="2.6" fill="#ef4444"/><circle cx="48" cy="128" r="22" fill="none" stroke="#0f172a" stroke-width="2.5"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="48" y="100" text-anchor="middle" fill="#0f172a" font-size="10">مربّع (4 أضلاع متساوية)</text><text x="131" y="100" text-anchor="middle" fill="#0f172a" font-size="11">مستطيل</text><text x="246" y="100" text-anchor="middle" fill="#0f172a" font-size="10">مثلّث (3 أضلاع)</text><text x="48" y="162" text-anchor="middle" fill="#2563eb" font-size="10">دائرة (بلا أضلاع)</text></g>
+</svg>
+
 ## 🧩 نُميّز الأشكال
 
 نعرف الشكل من **عدد أضلاعه**:
