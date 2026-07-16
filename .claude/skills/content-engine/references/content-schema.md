@@ -64,6 +64,13 @@ anywhere else.
 | `sources`      | string[] | no (→[]) | each ref ≥3 chars — URLs/citations you actually used (hybrid sourcing)                |
 | `manuel`       | object   | no       | `{ code, pages }` — official student-textbook pages covering this chapter (see below) |
 
+> Subject-level sibling: `subject.json` accepts an optional `manuels` array —
+> `[{ "code": "102306" }]`, one entry per PDF volume with an optional `label`
+> (e.g. `"الجزء الأول"`) — compiled into `subjects.manuel_refs` and surfaced as
+> the login-gated « Manuel officiel » card on the subject page. PDFs are
+> uploaded out-of-band (`scripts/manuel/upload-pdf.mjs`, private bucket
+> `manuel-eleve`, path `<code>.pdf`).
+
 `cours.md` and `resume.md` are separate files, not fields.
 
 ### `manuel` — official student-textbook (manuel élève) pages
