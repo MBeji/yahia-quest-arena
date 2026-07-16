@@ -90,6 +90,15 @@ raw markup to the student, and inline `$…$` shows its dollar signs literally. 
   consistency; in `en` use the comma (`12,500`).
 - Intervals, set notation, function notation follow the official textbook convention of the
   subject's grade (e.g. `]−2 ; +∞[`); keep the notation itself standard/LTR even in Arabic prose.
+- **`< > ≤ ≥` next to Arabic look broken and are NOT — do not "fix" them.** In RTL, `2 > 1` is drawn
+  `1 < 2`: Unicode mirrors the operator (rule L4) _and_ swaps the operands, which composes back to
+  the same true statement, phrased the other way round. Reading the glyph left-to-right while
+  reading the digits right-to-left is what makes it look reversed — that is a reading error, not a
+  rendering one. This has raised a false alarm before (2026-07-16: ~740 correct items were nearly
+  "corrected"), so it is deliberately **not** flagged by `content:qa` and a test guards that.
+  Digits, by contrast, are not mirrorable — which is exactly why the split-number rule above is
+  real. If you want an expression to render verbatim as authored, give it its own LTR-isolated
+  `<text>` node (no Arabic inside); that is a fidelity choice, not a correctness fix.
 - **List/set/interval/tuple separator — bidi-critical, NEVER the Arabic comma `،` (U+060C).**
   Inside a bracketed math group — a set `{−4 ; 4}`, an interval `]−1 ; 4[`, a tuple `(3 ; 4 ; 5)`,
   coordinates `(x ; y)` — separate items with a **semicolon `;`** (preferred — unambiguous next to
@@ -114,8 +123,10 @@ number/symbol or the root in words), and for the **Arabic comma `،` (U+060C) in
 group** (a set/interval/tuple separator — must be zero: use `;`), and for a **spaced signed
 number** in `ar` prose (a sign flanked by spaces where a _signed number_ is meant, `= − 5` /
 `إذن − 5`, rather than a subtraction — write it tight `−5`). The `content-audit` skill performs the
-same scans on existing content, and `content:qa` fails strict on the Arabic-radicand **and**
-Arabic-comma-in-math patterns.
+same scans on existing content, and `content:qa` fails strict on the Arabic-radicand, the
+Arabic-comma-in-math **and** the **split-number** patterns — the last one added 2026-07-16
+(`auditRtlNotation`), after a `::: figure` caption shipped with a plain space and rendered
+«العدد 758 3». The scan below is no longer the only net under this rule.
 
 **Two recurring U+00A0 traps** (seen authoring multi-digit Arabic content):
 

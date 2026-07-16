@@ -17,16 +17,20 @@
 
 ## ⏳ العلاقات الأساسيّة بين الوحدات
 
+::: figure الساعة فيها ستّون دقيقة لا مئة: هذا هو الفخّ الأشهر في الباب
+<svg viewBox="0 0 320 175"><circle cx="88" cy="84" r="62" fill="#ffffff" stroke="#1f2937" stroke-width="3"/><path d="M88.0 30.0 L88.0 22.0" stroke="#1f2937" stroke-width="2.4"/><text x="88.0" y="46.0" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">12</text><path d="M115.0 37.2 L119.0 30.3" stroke="#1f2937" stroke-width="2.4"/><text x="109.0" y="51.6" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">1</text><path d="M134.8 57.0 L141.7 53.0" stroke="#1f2937" stroke-width="2.4"/><text x="124.4" y="67.0" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">2</text><path d="M142.0 84.0 L150.0 84.0" stroke="#1f2937" stroke-width="2.4"/><text x="130.0" y="88.0" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">3</text><path d="M134.8 111.0 L141.7 115.0" stroke="#1f2937" stroke-width="2.4"/><text x="124.4" y="109.0" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">4</text><path d="M115.0 130.8 L119.0 137.7" stroke="#1f2937" stroke-width="2.4"/><text x="109.0" y="124.4" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">5</text><path d="M88.0 138.0 L88.0 146.0" stroke="#1f2937" stroke-width="2.4"/><text x="88.0" y="130.0" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">6</text><path d="M61.0 130.8 L57.0 137.7" stroke="#1f2937" stroke-width="2.4"/><text x="67.0" y="124.4" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">7</text><path d="M41.2 111.0 L34.3 115.0" stroke="#1f2937" stroke-width="2.4"/><text x="51.6" y="109.0" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">8</text><path d="M34.0 84.0 L26.0 84.0" stroke="#1f2937" stroke-width="2.4"/><text x="46.0" y="88.0" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">9</text><path d="M41.2 57.0 L34.3 53.0" stroke="#1f2937" stroke-width="2.4"/><text x="51.6" y="67.0" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">10</text><path d="M61.0 37.2 L57.0 30.3" stroke="#1f2937" stroke-width="2.4"/><text x="67.0" y="51.6" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">11</text><path d="M88 84 V50" stroke="#1f2937" stroke-width="4" stroke-linecap="round"/><path d="M88 84 H130" stroke="#dc2626" stroke-width="3" stroke-linecap="round"/><circle cx="88" cy="84" r="4" fill="#1f2937"/><text x="240.0" y="52.0" text-anchor="middle" font-size="16" font-weight="700" fill="#15803d" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">1 h = 60 min</text><text x="240.0" y="82.0" text-anchor="middle" font-size="14" font-weight="700" fill="#15803d" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">1 min = 60 s</text><rect x="176" y="102" width="128" height="34" rx="6" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/><text x="240.0" y="124.0" text-anchor="middle" font-size="14" font-weight="700" fill="#b91c1c" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">وليس 100 !</text><text x="88.0" y="166.0" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">نصف الساعة ثلاثون دقيقة</text></svg>
+:::
+
 احفظ هذا الجدول جيّدًا، فهو مفتاح كلّ التمارين:
 
-| الوحدة | تساوي |
-| --- | --- |
-| 1 h | 60 min |
-| 1 min | 60 s |
-| اليوم | 24 h |
-| الأسبوع | 7 أيّام |
-| الشهر | 30 أو 31 يومًا |
-| السنة | 12 شهرًا = 365 يومًا |
+| الوحدة  | تساوي                |
+| ------- | -------------------- |
+| 1 h     | 60 min               |
+| 1 min   | 60 s                 |
+| اليوم   | 24 h                 |
+| الأسبوع | 7 أيّام              |
+| الشهر   | 30 أو 31 يومًا       |
+| السنة   | 12 شهرًا = 365 يومًا |
 
 العلاقتان الأهمّ في الحساب:
 
@@ -40,9 +44,9 @@ $$1 min = 60 s$$
 
 لنحوّل من وحدةٍ كبيرة إلى وحدةٍ أصغر، **نضرب**؛ ومن وحدةٍ صغيرة إلى أكبر، **نقسم**.
 
-- من الساعات إلى الدقائق نضرب في 60: *مثال* 3 h = 3 × 60 = **180 min**.
-- من الدقائق إلى الثواني نضرب في 60: *مثال* 2 min = 2 × 60 = **120 s**.
-- من الأسابيع إلى الأيّام نضرب في 7: *مثال* 4 أسابيع = 4 × 7 = **28 يومًا**.
+- من الساعات إلى الدقائق نضرب في 60: _مثال_ 3 h = 3 × 60 = **180 min**.
+- من الدقائق إلى الثواني نضرب في 60: _مثال_ 2 min = 2 × 60 = **120 s**.
+- من الأسابيع إلى الأيّام نضرب في 7: _مثال_ 4 أسابيع = 4 × 7 = **28 يومًا**.
 
 أحيانًا نكتب المدّة بوحدتين معًا: 90 min = 60 min + 30 min = **1 h و 30 min**.
 
@@ -64,11 +68,11 @@ $$1 min = 60 s$$
 
 **المدّة** هي الزمن المنقضي من لحظة البداية إلى لحظة النهاية. نحسبها بالطرح حين تكون اللحظتان في نفس الساعة:
 
-*مثال:* انطلقت الحصّة في 9 h 10 وانتهت في 9 h 55. المدّة = 55 − 10 = **45 min**. ✓
+_مثال:_ انطلقت الحصّة في 9 h 10 وانتهت في 9 h 55. المدّة = 55 − 10 = **45 min**. ✓
 
 أمّا إذا كانت المدّة **على حصان الساعة** (تعبر من ساعةٍ إلى أخرى)، فنحسب على مرحلتين:
 
-*مثال:* رحلةٌ من 8 h 40 إلى 9 h 20. نعدّ أوّلًا إلى تمام الساعة: من 8 h 40 إلى 9 h 00 = 20 min. ثمّ من 9 h 00 إلى 9 h 20 = 20 min. المجموع = 20 + 20 = **40 min**. ✓
+_مثال:_ رحلةٌ من 8 h 40 إلى 9 h 20. نعدّ أوّلًا إلى تمام الساعة: من 8 h 40 إلى 9 h 00 = 20 min. ثمّ من 9 h 00 إلى 9 h 20 = 20 min. المجموع = 20 + 20 = **40 min**. ✓
 
 > ⚠️ احذر الفخّ الشائع! لا تطرح الأرقام مباشرةً حين تعبر المدّة الساعة. من 8 h 40 إلى 9 h 20 ليست 20 − 40، ولا 80 دقيقة؛ المدّة الصحيحة **40 min** (20 إلى تمام الساعة + 20 بعدها).
 

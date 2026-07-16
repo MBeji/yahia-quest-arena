@@ -21,8 +21,8 @@ $$12 ÷ 3 = 4$$
 
 لكلّ عددٍ في القسمة اسمٌ خاصّ. تأمّل المثال 13 ÷ 4:
 
-| المصطلح          | المعنى                              | في 13 ÷ 4 |
-| ---------------- | ----------------------------------- | --------- |
+| المصطلح          | المعنى                               | في 13 ÷ 4 |
+| ---------------- | ------------------------------------ | --------- |
 | **المقسوم**      | العدد الذي نوزّعه (الكميّة الأصليّة) | 13        |
 | **المقسوم عليه** | عدد المجموعات (أو نصيب المجموعة)     | 4         |
 | **الخارج**       | نصيب كلّ مجموعة (نتيجة القسمة)       | 3         |
@@ -34,6 +34,10 @@ $$12 ÷ 3 = 4$$
 
 ## 🔮 العلاقة الأساسيّة
 
+::: figure أربعُ حصصٍ متساوية من ثلاث جواهر، وجوهرةٌ واحدة تبقى دون توزيع
+<svg viewBox="0 0 340 170"><rect x="24" y="34" width="56" height="60" rx="5" fill="#fef3c7" stroke="#1f2937" stroke-width="2"/><path d="M29 47.6 L40 41 L51 47.6 L40 63 Z" fill="#38bdf8" stroke="#1f2937" stroke-width="2" stroke-linejoin="round"/><path d="M53 47.6 L64 41 L75 47.6 L64 63 Z" fill="#38bdf8" stroke="#1f2937" stroke-width="2" stroke-linejoin="round"/><path d="M29 73.6 L40 67 L51 73.6 L40 89 Z" fill="#38bdf8" stroke="#1f2937" stroke-width="2" stroke-linejoin="round"/><text x="52.0" y="110.0" text-anchor="middle" font-size="14" font-weight="700" fill="#a16207" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">3</text><rect x="92" y="34" width="56" height="60" rx="5" fill="#fef3c7" stroke="#1f2937" stroke-width="2"/><path d="M97 47.6 L108 41 L119 47.6 L108 63 Z" fill="#38bdf8" stroke="#1f2937" stroke-width="2" stroke-linejoin="round"/><path d="M121 47.6 L132 41 L143 47.6 L132 63 Z" fill="#38bdf8" stroke="#1f2937" stroke-width="2" stroke-linejoin="round"/><path d="M97 73.6 L108 67 L119 73.6 L108 89 Z" fill="#38bdf8" stroke="#1f2937" stroke-width="2" stroke-linejoin="round"/><text x="120.0" y="110.0" text-anchor="middle" font-size="14" font-weight="700" fill="#a16207" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">3</text><rect x="160" y="34" width="56" height="60" rx="5" fill="#fef3c7" stroke="#1f2937" stroke-width="2"/><path d="M165 47.6 L176 41 L187 47.6 L176 63 Z" fill="#38bdf8" stroke="#1f2937" stroke-width="2" stroke-linejoin="round"/><path d="M189 47.6 L200 41 L211 47.6 L200 63 Z" fill="#38bdf8" stroke="#1f2937" stroke-width="2" stroke-linejoin="round"/><path d="M165 73.6 L176 67 L187 73.6 L176 89 Z" fill="#38bdf8" stroke="#1f2937" stroke-width="2" stroke-linejoin="round"/><text x="188.0" y="110.0" text-anchor="middle" font-size="14" font-weight="700" fill="#a16207" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">3</text><rect x="228" y="34" width="56" height="60" rx="5" fill="#fef3c7" stroke="#1f2937" stroke-width="2"/><path d="M233 47.6 L244 41 L255 47.6 L244 63 Z" fill="#38bdf8" stroke="#1f2937" stroke-width="2" stroke-linejoin="round"/><path d="M257 47.6 L268 41 L279 47.6 L268 63 Z" fill="#38bdf8" stroke="#1f2937" stroke-width="2" stroke-linejoin="round"/><path d="M233 73.6 L244 67 L255 73.6 L244 89 Z" fill="#38bdf8" stroke="#1f2937" stroke-width="2" stroke-linejoin="round"/><text x="256.0" y="110.0" text-anchor="middle" font-size="14" font-weight="700" fill="#a16207" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">3</text><rect x="290" y="118" width="40" height="40" rx="5" fill="#fee2e2" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="5 3"/><path d="M299 133.6 L310 127 L321 133.6 L310 149 Z" fill="#f87171" stroke="#1f2937" stroke-width="2" stroke-linejoin="round"/><text x="258.0" y="144.0" text-anchor="end" font-size="13" font-weight="700" fill="#b91c1c" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الباقي</text><text x="150.0" y="164.0" text-anchor="middle" font-size="15" font-weight="700" fill="#15803d" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">13 = (4 × 3) + 1</text></svg>
+:::
+
 كلّ قسمةٍ تخضع لقاعدةٍ ذهبيّة تربط أعدادها الأربعة:
 
 $$المقسوم = (المقسوم عليه × الخارج) + الباقي$$
@@ -43,6 +47,10 @@ $$المقسوم = (المقسوم عليه × الخارج) + الباقي$$
 _مثال محسوب:_ في 13 ÷ 4 وجدنا الخارج 3 والباقي 1. نتحقّق: (4 × 3) + 1 = 12 + 1 = 13 ✓، والباقي 1 أصغر من المقسوم عليه 4 ✓. القسمة صحيحة.
 
 > ⚠️ الفخّ الأشهر: ترك باقٍ ≥ المقسوم عليه. مثلًا في 13 ÷ 4 لا يصحّ أن نقول «الخارج 2 والباقي 5»، لأنّ 5 ليست أصغر من 4؛ يجب أن نأخذ 4 مرّةً أخرى فيصير الخارج 3 والباقي 1.
+
+::: figure الباقي أصغر من المقسوم عليه، دائمًا
+<svg viewBox="0 0 340 132"><rect x="16" y="24" width="150" height="80" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/><text x="91.0" y="48.0" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الباقي أصغر من المقسوم عليه</text><text x="91.0" y="74.0" text-anchor="middle" font-size="17" font-weight="700" fill="#15803d" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">1 < 4</text><text x="91.0" y="90.0" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">قسمة صحيحة ✓</text><rect x="182" y="24" width="150" height="80" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="2.5"/><text x="257.0" y="48.0" text-anchor="middle" font-size="11" font-weight="700" fill="#b91c1c" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الباقي ليس أصغر من المقسوم عليه</text><text x="257.0" y="74.0" text-anchor="middle" font-size="17" font-weight="700" fill="#b91c1c" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">5 ≥ 4</text><text x="257.0" y="90.0" text-anchor="middle" font-size="11" font-weight="700" fill="#b91c1c" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">خطأ ✗</text><text x="170.0" y="124.0" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">هذه هي العلامة التي تُميّز القسمة الصحيحة</text></svg>
+:::
 
 ## 🛡️ القسمة المنصوبة على عددٍ ذي رقمٍ واحد
 

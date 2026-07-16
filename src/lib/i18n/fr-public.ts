@@ -157,6 +157,12 @@ export const frPublic: TranslationKeys["public"] = {
     todo: "à faire",
     unlocksChapter: "déverrouille le chapitre",
     quizContract: "Réussis le quiz (≥ {pct} %) pour déverrouiller les missions de ce chapitre.",
+    manuelTitle: "Manuel officiel",
+    manuelHint: "Le manuel élève officiel (CNP) de la matière, en PDF.",
+    manuelOpen: "Ouvrir le manuel",
+    manuelTome: "Tome {n}",
+    manuelLockedHint: "Connecte-toi pour consulter le manuel officiel.",
+    manuelLoginCta: "Se connecter",
   },
   practice: {
     back: "Retour à la matière",

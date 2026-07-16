@@ -19,11 +19,15 @@ $$ 1 د = 1000 مليم $$
 
 ## 🔁 التحويل بين الوحدتين
 
+::: figure العلاقة الأساسية: دينارٌ واحد يساوي ألف مليم
+<svg viewBox="0 0 320 130"><circle cx="70" cy="62" r="34" fill="#fbbf24" stroke="#1f2937" stroke-width="2.5"/><circle cx="70" cy="62" r="27" fill="none" stroke="#f59e0b" stroke-width="1.8"/><text x="70.0" y="70.0" text-anchor="middle" font-size="20" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">1 د</text><text x="140.0" y="70.0" text-anchor="middle" font-size="24" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">=</text><rect x="176" y="34" width="120" height="56" rx="6" fill="#fef3c7" stroke="#1f2937" stroke-width="2.5"/><text x="236.0" y="70.0" text-anchor="middle" font-size="18" font-weight="700" fill="#a16207" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">1000 مليم</text><text x="160.0" y="120.0" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الدينار هو الوحدة الكبيرة، والمليم الوحدة الصغيرة</text></svg>
+:::
+
 عندنا قاعدتان متعاكستان:
 
-| التحويل | العملية | مثال |
-| --- | --- | --- |
-| من الدينار إلى المليم | نضرب في 1000 | 3 د = 3 × 1000 = 3000 مليم |
+| التحويل               | العملية       | مثال                          |
+| --------------------- | ------------- | ----------------------------- |
+| من الدينار إلى المليم | نضرب في 1000  | 3 د = 3 × 1000 = 3000 مليم    |
 | من المليم إلى الدينار | نقسم على 1000 | 2000 مليم = 2000 ÷ 1000 = 2 د |
 
 _مثال محسوب:_ كم مليمًا في 5 د؟ نضرب: 5 × 1000 = 5000 مليم.

@@ -17,12 +17,15 @@ import { PageShell } from "@/components/ui/page-shell";
 import { QUIZ_PASS_THRESHOLD_PCT, RECALL_MIN_QUESTIONS } from "@/shared/constants/gamification";
 import { hasPassedChapterQuiz } from "../anon-quiz-gate";
 import { exerciseRouteFor } from "../exercise-route";
+import { ManuelEleveCard } from "./manuel-eleve-card";
 
 export type SubjectHubSubject = {
   name_fr: string;
   attribute: string | null;
   description: string | null;
   content_language?: string | null;
+  /** `subjects.manuel_refs` JSONB — parsed (defensively) by ManuelEleveCard. */
+  manuel_refs?: unknown;
 };
 
 export type SubjectHubChapter = {
@@ -187,6 +190,8 @@ export function SubjectHub({
         </h1>
         {subject.description && <p className="mt-2 text-muted-foreground">{subject.description}</p>}
       </header>
+
+      <ManuelEleveCard manuelRefs={subject.manuel_refs} isAuthenticated={isAuthenticated} />
 
       {resume && resume.next && (
         <Link
