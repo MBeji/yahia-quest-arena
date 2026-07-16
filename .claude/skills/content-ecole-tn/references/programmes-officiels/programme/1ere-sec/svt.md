@@ -37,10 +37,15 @@
 > servi à l'échafaudage et le manifeste ; la lecture-vision n'a pas été nécessaire (aucune unité `pending`).
 > La lecture des 199 pages a été menée **par tranches disjointes et exhaustives** (p.1–43 · 44–88 · 89–134 ·
 > 135–180 · 181–199) par des agents à contexte vierge, sous une spec de fidélité commune, puis assemblée.
-> ⚠️ **La relecture indépendante (R-7) n'a PAS été rendue** : la session qui l'avait lancée a été interrompue
-> (limite de session) **avant son verdict**, le 2026-07-16. Cette fiche **n'est donc pas promue référence
-> canonique** (R-7 du skill `content-ingest` : la promotion exige une re-vérification contre la source
-> elle-même, par un second agent). Elle reste **en validation** ; R-7 est le premier travail à reprendre.
+> **R-7 — relecture indépendante : ✅ FIDÈLE** (2026-07-16, agent à contexte vierge, **contre le PDF source**).
+> Verdict : **aucune invention, aucune erreur de page, aucun écart verbatim** ; 2 corrections mineures — des
+> omissions de _signalement_, non des infidélités — **appliquées ici**. Couverture réelle du contrôle :
+> ré-extraction indépendante du PDF (résultat **identique au byte près** au `_txt` ci-dessus ⇒ référence texte
+> authentique et reproductible par quiconque) · **199/199** pages citées existent · **33/33** titres
+> d'activités à la page annoncée · **143 citations verbatim testées → 0 invention** · les 4 coutures
+> inter-tranches (43/44 · 88/89 · 134/135 · 180/181) saines · 29 pages collationnées à la main · 3 sondages en
+> vision · 0 chiffre arabo-indien. **Ce que R-7 n'a PAS couvert** (à charge) : les chapitres 5 et 6 et les
+> fiches méthodes 2–11 ne sont vérifiés que par échantillon ; le §3 « Notes pédagogiques » n'a pas été audité.
 > **Limite structurelle de cette méthode, à connaître** : `pdftotext` **ne rend pas les figures ni les
 > photographies** (seulement leurs légendes). Le manuel étant **massivement iconographique** (« des documents
 > à exploiter »), chaque document dont le contenu n'existe que dans l'image est **signalé comme tel** — jamais
@@ -7191,17 +7196,19 @@ d'intégration (3) + acquis du collège de la partie · p.135–138 ouverture Pa
 
 ### 6.0 Points d'arbitrage pour Mohamed (les seuls qui appellent une décision)
 
-1. **⚠️ La borne d'usage de cette fiche : les figures ne sont pas transcrites.** Le manuel est
-   **massivement iconographique** (sa préface définit l'activité comme l'exploitation de « **documents** »).
-   L'extraction `pdftotext` rend le texte et les **légendes**, mais **pas** les photos, tracés et schémas.
-   Résultat : une minorité de documents — listés nommément par tranche ci-dessous — ont un **contenu
-   pédagogique qui n'existe que dans l'image** et sont donc **inexploitables sans rouvrir le PDF** (les plus
-   nets : p.11 résultats de l'expérience de Rosène · p.18 tracés de transpiration · p.28–29 diagrammes de
-   rendement · p.54 axe du tracé EXAO · p.88 repères du schéma · p.162 Fig. 5 coupe géologique · p.163
-   schéma des failles · p.169 courbe de production). **Décision à prendre** : si la génération d'une mission
-   a besoin d'un de ces documents, il faudra une **passe vision ciblée** (`render.sh` → PNG → Read) sur ces
-   pages précises — c'est peu de pages, mais ce n'est pas fait ici. Le reste du manuel (la grande majorité)
-   est transcrit sans perte.
+1. **⚠️ La borne d'usage de cette fiche : AUCUNE figure n'est rendue.** Le manuel est **massivement
+   iconographique** (sa préface définit l'activité comme l'exploitation de « **documents** »). L'extraction
+   `pdftotext` rend le texte et les **légendes**, mais **aucune** photo, aucun tracé, aucun schéma : la perte
+   est **systématique**, pas marginale (mesure R-7 : **293 images raster réparties sur 127 des 199 pages**,
+   plus les schémas vectoriels, non comptés). « Transcrit sans perte » ne vaut donc que pour **le texte**,
+   jamais pour les documents. Ce qui est **minoritaire**, ce sont les documents dont cette perte rend l'item
+   **inexploitable en l'état** — leur relevé est **exhaustif, par tranche, en §6.4.1–6.4.5** ; les plus nets :
+   p.11 résultats de l'expérience de Rosène · p.18 tracés de transpiration · p.28–29 diagrammes de rendement ·
+   p.53/54/56/62/63 tracés EXAO portant chacun une consigne « analyser le tracé » · p.88 repères du schéma ·
+   p.162 Fig. 5 coupe géologique · p.163 schéma des failles · p.169 courbe de production. **Décision à
+   prendre** : toute mission adossée à un tracé, un histogramme, une coupe géologique ou une micrographie
+   **exige une passe vision ciblée** (`render.sh` → PNG → Read) sur la page concernée — c'est peu de pages, et
+   elles sont nommées, mais ce n'est pas fait ici.
 2. **Le programme officiel lui-même n'est pas transcrit** (pas de guide enseignant au corpus, cf. §1) : la
    fiche transcrit le **manuel**, qui se dit conforme au programme sans le reproduire. Les « bornes de
    scope » ✅/⛔ portées par chaque chapitre sont donc **déduites du contenu réellement traité par le
@@ -8039,6 +8046,9 @@ sont couvertes.
 
 #### Autres anomalies de la source (sans `[sic]` ponctuel)
 
+- **p.198 — renvoi erroné du sommaire** (relevé par la relecture indépendante R-7) : le sommaire
+  imprime « **Préface ..... 3** », alors que la préface occupe **p.4–5** — la p.3 porte les
+  remerciements. Le sommaire est transcrit tel quel (§ sommaire), **non corrigé**.
 - **p.186 et p.192 — parenthèses fermantes orphelines.** p.186 : « …, les journaux, sur
   Internet… **)** » ; p.192 : « coquilles ou fragments de coquilles …**)** fabriquées par les
   êtres vivants ». Aucune parenthèse ouvrante correspondante n'est imprimée. Transcrites telles
