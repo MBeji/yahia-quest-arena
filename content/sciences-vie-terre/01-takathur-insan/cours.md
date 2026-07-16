@@ -46,6 +46,12 @@
 
 > 🏰 الطمث **دليل على عدم حدوث حمل** في الدورة المنقضية: تكاثفت البطانة عبثًا فتساقطت.
 
+<svg viewBox="0 0 300 140">
+<title>الدورة الجنسية عند المرأة (28 يومًا): الطمث والإباضة وتكاثف بطانة الرحم</title>
+<polygon points="22,100 60.81,96 148.15,78 216.07,66 284,58 284,100" fill="#fbcfe8"/><polyline points="22,100 60.81,96 148.15,78 216.07,66 284,58" fill="none" stroke="#db2777" stroke-width="2"/><rect x="22" y="100" width="38.81" height="14" fill="#ef4444"/><line x1="18" y1="100" x2="288" y2="100" stroke="#0f172a" stroke-width="2"/><line x1="148.15" y1="40" x2="148.15" y2="78" stroke="#ef4444" stroke-width="2"/>
+<polygon points="148.15,78 144.15,70 152.15,70" fill="#ef4444"/><line x1="22" y1="100" x2="22" y2="104" stroke="#0f172a" stroke-width="1.5"/><line x1="80.22" y1="100" x2="80.22" y2="104" stroke="#0f172a" stroke-width="1.5"/><line x1="148.15" y1="100" x2="148.15" y2="104" stroke="#0f172a" stroke-width="1.5"/><line x1="216.07" y1="100" x2="216.07" y2="104" stroke="#0f172a" stroke-width="1.5"/><line x1="284" y1="100" x2="284" y2="104" stroke="#0f172a" stroke-width="1.5"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="41.41" y="126" text-anchor="middle" fill="#ef4444" font-size="11">طمث</text><text x="148.15" y="34" text-anchor="middle" fill="#ef4444" font-size="11">الإباضة (اليوم 14)</text><text x="235.48" y="70" text-anchor="middle" fill="#db2777" font-size="10">تكاثُف بطانة الرحم</text><text x="22" y="116" text-anchor="middle" fill="#0f172a" font-size="10">1</text><text x="80.22" y="116" text-anchor="middle" fill="#0f172a" font-size="10">7</text><text x="148.15" y="116" text-anchor="middle" fill="#0f172a" font-size="10">14</text><text x="216.07" y="116" text-anchor="middle" fill="#0f172a" font-size="10">21</text><text x="284" y="116" text-anchor="middle" fill="#0f172a" font-size="10">28</text><text x="150" y="130" text-anchor="middle" fill="#0f172a" font-size="10">اليوم</text></g>
+</svg>
+
 ## 🌟 الأمشاج: النطفة والبويضة
 
 | المشيج      | المنشأ | الحجم                                | الحركة                |
