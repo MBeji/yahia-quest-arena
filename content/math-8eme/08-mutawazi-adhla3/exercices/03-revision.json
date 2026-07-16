@@ -7,24 +7,48 @@
   "displayOrder": 3,
   "questions": [
     {
-      "prompt": "أيُّ زوجٍ من الأضلاع متقابلٌ في متوازي الأضلاع ABCD؟",
+      "prompt": "أيُّ زوجٍ من الأضلاع متقابلٌ في متوازي الأضلاع ABCD؟\n\n<svg viewBox=\"0 0 200 150\">\n<title>متوازي الأضلاع ABCD</title>\n<polygon points=\"30,115 125,115 170,45 75,45\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"20\" y=\"121\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"133\" y=\"121\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"180\" y=\"43\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text><text x=\"65\" y=\"43\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">D</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "[AB] و[DC]" },
-        { "id": "b", "text": "[AB] و[BC]" },
-        { "id": "c", "text": "[AB] و[AD]" },
-        { "id": "d", "text": "[AC] و[BD]" }
+        {
+          "id": "a",
+          "text": "[AB] و[DC]"
+        },
+        {
+          "id": "b",
+          "text": "[AB] و[BC]"
+        },
+        {
+          "id": "c",
+          "text": "[AB] و[AD]"
+        },
+        {
+          "id": "d",
+          "text": "[AC] و[BD]"
+        }
       ],
       "correctOption": "a",
       "explanation": "في الرباعيّ ABCD الأضلاعُ المتقابلة هي [AB] و[DC] من جهة، و[AD] و[BC] من جهة أخرى ✓. [AB] و[BC] متتاليان؛ و[AC] و[BD] هما القطران لا ضلعان.",
       "difficulty": 1
     },
     {
-      "prompt": "في متوازي الأضلاع ABCD كان OB = 4 cm حيث O مركزُ التقاطع. ما طولُ القطر BD؟",
+      "prompt": "في متوازي الأضلاع ABCD كان OB = 4 cm حيث O مركزُ التقاطع. ما طولُ القطر BD؟\n\n<svg viewBox=\"0 0 200 150\">\n<title>متوازي الأضلاع ABCD وقطراه</title>\n<polygon points=\"30,115 125,115 170,45 75,45\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"30\" y1=\"115\" x2=\"170\" y2=\"45\" stroke=\"#64748b\" stroke-width=\"1.6\"/><line x1=\"125\" y1=\"115\" x2=\"75\" y2=\"45\" stroke=\"#64748b\" stroke-width=\"1.6\"/><circle cx=\"100\" cy=\"80\" r=\"2.2\" fill=\"#0f172a\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"20\" y=\"121\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"133\" y=\"121\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"180\" y=\"43\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text><text x=\"65\" y=\"43\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">D</text><text x=\"109\" y=\"91\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">O</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "4 cm" },
-        { "id": "b", "text": "2 cm" },
-        { "id": "c", "text": "8 cm" },
-        { "id": "d", "text": "يساوي AC" }
+        {
+          "id": "a",
+          "text": "4 cm"
+        },
+        {
+          "id": "b",
+          "text": "2 cm"
+        },
+        {
+          "id": "c",
+          "text": "8 cm"
+        },
+        {
+          "id": "d",
+          "text": "يساوي AC"
+        }
       ],
       "correctOption": "c",
       "explanation": "O منتصفُ [BD] لأنّ القطرَين متناصفان، فـ BD = 2×OB = 2×4 = 8 cm ✓. الخطأُ الشائع: اعتبارُ OB هو القطرَ كلَّه (4 cm)، أو نصفَه (2 cm). القولُ إنّ BD = AC خطأ إلّا في المستطيل.",
@@ -33,22 +57,46 @@
     {
       "prompt": "متوازي أضلاعٍ كلُّ أضلاعه الأربعةُ متقايسة. ما نوعُه؟",
       "options": [
-        { "id": "a", "text": "مستطيل" },
-        { "id": "b", "text": "شبه منحرف" },
-        { "id": "c", "text": "متوازي أضلاع عاديّ فقط" },
-        { "id": "d", "text": "معيّن" }
+        {
+          "id": "a",
+          "text": "مستطيل"
+        },
+        {
+          "id": "b",
+          "text": "شبه منحرف"
+        },
+        {
+          "id": "c",
+          "text": "متوازي أضلاع عاديّ فقط"
+        },
+        {
+          "id": "d",
+          "text": "معيّن"
+        }
       ],
       "correctOption": "d",
       "explanation": "متوازي أضلاعٍ ضلعاه المتتاليان (ومن ثمّ أضلاعُه الأربع) متقايسة هو معيّن ✓. المستطيلُ يُميَّز بزواياه القائمة لا بتقايس أضلاعه.",
       "difficulty": 2
     },
     {
-      "prompt": "في متوازي الأضلاع ABCD كانت Â = 55°. ما قيسُ الزاوية D̂؟",
+      "prompt": "في متوازي الأضلاع ABCD كانت Â = 55°. ما قيسُ الزاوية D̂؟\n\n<svg viewBox=\"0 0 200 150\">\n<title>متوازي الأضلاع ABCD</title>\n<polygon points=\"30,115 125,115 170,45 75,45\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"20\" y=\"121\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"133\" y=\"121\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"180\" y=\"43\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text><text x=\"65\" y=\"43\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">D</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "55°" },
-        { "id": "b", "text": "125°" },
-        { "id": "c", "text": "35°" },
-        { "id": "d", "text": "145°" }
+        {
+          "id": "a",
+          "text": "55°"
+        },
+        {
+          "id": "b",
+          "text": "125°"
+        },
+        {
+          "id": "c",
+          "text": "35°"
+        },
+        {
+          "id": "d",
+          "text": "145°"
+        }
       ],
       "correctOption": "b",
       "explanation": "Â وD̂ زاويتان متتاليتان (متجاورتان على الضلع [AD])، فمجموعهما 180°: D̂ = 180° − 55° = 125° ✓. الخطأُ الشائع: اعتبارُهما متقابلتين فتساويان 55°، أو التكاملُ إلى 90° (35°).",
@@ -57,10 +105,22 @@
     {
       "prompt": "ما الشرطُ الكافي وحدَه ليكون رباعيُّ ABCD متوازيَ أضلاع؟",
       "options": [
-        { "id": "a", "text": "ضلعان متقابلان متقايسان فقط" },
-        { "id": "b", "text": "قطران متقايسان فقط" },
-        { "id": "c", "text": "ضلعان متقابلان متوازيان ومتقايسان معًا" },
-        { "id": "d", "text": "زاويةٌ واحدةٌ قائمة" }
+        {
+          "id": "a",
+          "text": "ضلعان متقابلان متقايسان فقط"
+        },
+        {
+          "id": "b",
+          "text": "قطران متقايسان فقط"
+        },
+        {
+          "id": "c",
+          "text": "ضلعان متقابلان متوازيان ومتقايسان معًا"
+        },
+        {
+          "id": "d",
+          "text": "زاويةٌ واحدةٌ قائمة"
+        }
       ],
       "correctOption": "c",
       "explanation": "زوجُ أضلاعٍ متقابلٍ متوازٍ **ومتقايسٍ معًا** يكفي لإثبات متوازي الأضلاع ✓. تقايسُ ضلعَين فقط أو تقايسُ قطرَين فقط لا يكفي (قد يكون شبهَ منحرفٍ متساويَ الساقين)؛ وزاويةٌ قائمةٌ وحدَها لا تعني توازيَ الأضلاع.",
@@ -69,10 +129,22 @@
     {
       "prompt": "أيُّ العبارات التالية خاطئةٌ حول متوازي الأضلاع في الحالة العامة؟",
       "options": [
-        { "id": "a", "text": "أضلاعُه المتقابلة متقايسة" },
-        { "id": "b", "text": "قطراه متناصفان" },
-        { "id": "c", "text": "زاويتاه المتقابلتان متقايستان" },
-        { "id": "d", "text": "قطراه متعامدان" }
+        {
+          "id": "a",
+          "text": "أضلاعُه المتقابلة متقايسة"
+        },
+        {
+          "id": "b",
+          "text": "قطراه متناصفان"
+        },
+        {
+          "id": "c",
+          "text": "زاويتاه المتقابلتان متقايستان"
+        },
+        {
+          "id": "d",
+          "text": "قطراه متعامدان"
+        }
       ],
       "correctOption": "d",
       "explanation": "تعامدُ القطرَين ليس خاصيةً عامةً لمتوازي الأضلاع؛ إنّه صفةُ المعيّن وحدَه، فالعبارةُ خاطئة ✓. أمّا تقايسُ الأضلاع المتقابلة وتناصفُ القطرَين وتقايسُ الزاويتين المتقابلتين فكلُّها خاصياتٌ صحيحةٌ لكلّ متوازي أضلاع.",

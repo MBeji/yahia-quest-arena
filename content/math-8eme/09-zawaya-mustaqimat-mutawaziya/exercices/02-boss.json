@@ -7,24 +7,48 @@
   "displayOrder": 2,
   "questions": [
     {
-      "prompt": "زاويتان متقابلتان بالرأس، إحداهما قيسها 125°. ما قيس الأخرى؟",
+      "prompt": "زاويتان متقابلتان بالرأس، إحداهما قيسها 125°. ما قيس الأخرى؟\n\n<svg viewBox=\"0 0 200 150\">\n<title>زاويتان متقابلتان بالرأس</title>\n<line x1=\"25.48\" y1=\"54.95\" x2=\"174.52\" y2=\"101.05\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"41.36\" y1=\"129.43\" x2=\"158.64\" y2=\"26.57\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><path d=\"M 119.55 60.86 A 26 26 0 0 1 124.84 85.68\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"2.2\"/><path d=\"M 80.45 95.14 A 26 26 0 0 1 75.16 70.32\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"2.2\"/>\n</svg>",
       "options": [
-        { "id": "a", "text": "55°" },
-        { "id": "b", "text": "125°" },
-        { "id": "c", "text": "35°" },
-        { "id": "d", "text": "65°" }
+        {
+          "id": "a",
+          "text": "55°"
+        },
+        {
+          "id": "b",
+          "text": "125°"
+        },
+        {
+          "id": "c",
+          "text": "35°"
+        },
+        {
+          "id": "d",
+          "text": "65°"
+        }
       ],
       "correctOption": "b",
       "explanation": "المتقابلتان بالرأس متساويتان، فالأخرى 125° ✓. الخطأُ الشائع: أخذُ المكمّلة إلى 180° (55°) بالخلط بين التقابل بالرأس والتكامل.",
       "difficulty": 1
     },
     {
-      "prompt": "مستقيمان متوازيان يقطعهما قاطع. زاويتان متحالفتان داخليًّا (على نفس الجهة)، إحداهما قيسها 130°. ما قيس الأخرى؟",
+      "prompt": "مستقيمان متوازيان يقطعهما قاطع. زاويتان متحالفتان داخليًّا (على نفس الجهة)، إحداهما قيسها 130°. ما قيس الأخرى؟\n\n<svg viewBox=\"0 0 200 150\">\n<title>زاويتان متحالفتان داخليا</title>\n<line x1=\"15\" y1=\"48\" x2=\"185\" y2=\"48\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"15\" y1=\"110\" x2=\"185\" y2=\"110\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"55\" y1=\"130\" x2=\"150\" y2=\"28\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><polyline points=\"95,43 101,48 95,53\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"1.6\"/><polyline points=\"95,105 101,110 95,115\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"1.6\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"192\" y=\"44\" text-anchor=\"end\" fill=\"#0f172a\" font-size=\"12\">(d)</text><text x=\"192\" y=\"126\" text-anchor=\"end\" fill=\"#0f172a\" font-size=\"12\">(d')</text></g><path d=\"M 151.37 48 A 20 20 0 0 1 117.74 62.64\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"2.2\"/><path d=\"M 87.26 95.36 A 20 20 0 0 1 93.63 110\" fill=\"none\" stroke=\"#ef4444\" stroke-width=\"2.2\"/>\n</svg>",
       "options": [
-        { "id": "a", "text": "130°" },
-        { "id": "b", "text": "40°" },
-        { "id": "c", "text": "230°" },
-        { "id": "d", "text": "50°" }
+        {
+          "id": "a",
+          "text": "130°"
+        },
+        {
+          "id": "b",
+          "text": "40°"
+        },
+        {
+          "id": "c",
+          "text": "230°"
+        },
+        {
+          "id": "d",
+          "text": "50°"
+        }
       ],
       "correctOption": "d",
       "explanation": "المتحالفتان داخليًّا عند التوازي متكاملتان، فالأخرى 180° − 130° = 50° ✓. الخطأُ الأشهر: اعتبارُهما متساويتَين (130°) بالخلط مع المتبادلتَين داخليًّا.",
@@ -33,34 +57,70 @@
     {
       "prompt": "رباعي زواياه الثلاث قيسها 100° و80° و90°. ما قيس الزاوية الرابعة؟",
       "options": [
-        { "id": "a", "text": "80°" },
-        { "id": "b", "text": "180°" },
-        { "id": "c", "text": "90°" },
-        { "id": "d", "text": "100°" }
+        {
+          "id": "a",
+          "text": "80°"
+        },
+        {
+          "id": "b",
+          "text": "180°"
+        },
+        {
+          "id": "c",
+          "text": "90°"
+        },
+        {
+          "id": "d",
+          "text": "100°"
+        }
       ],
       "correctOption": "c",
       "explanation": "مجموع زوايا الرباعي (4 − 2)×180° = 360°، فالرابعة = 360° − (100° + 80° + 90°) = 360° − 270° = 90° ✓. الخطأُ الشائع: استعمالُ 180° كمجموع (فتظهر نتيجة سالبة) أو 540° بدل 360°.",
       "difficulty": 2
     },
     {
-      "prompt": "في مثلّث ABC، الزاوية Â قيسها 50°، والزاوية الخارجية عند الرأس C قيسها 120°. ما قيس الزاوية B̂؟",
+      "prompt": "في مثلّث ABC، الزاوية Â قيسها 50°، والزاوية الخارجية عند الرأس C قيسها 120°. ما قيس الزاوية B̂؟\n\n<svg viewBox=\"0 0 200 150\">\n<title>مثلث ABC وزاويته الخارجية عند C</title>\n<polygon points=\"45,35 30,120 160,120\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"160\" y1=\"120\" x2=\"195\" y2=\"120\" stroke=\"#64748b\" stroke-width=\"1.8\" stroke-dasharray=\"4 3\"/><path d=\"M 142.31 106.92 A 22 22 0 0 1 182 120\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"2.2\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"41\" y=\"29\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">A</text><text x=\"21\" y=\"128\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">B</text><text x=\"156\" y=\"136\" text-anchor=\"middle\" fill=\"#0f172a\" font-size=\"13\">C</text></g>\n</svg>",
       "options": [
-        { "id": "a", "text": "70°" },
-        { "id": "b", "text": "60°" },
-        { "id": "c", "text": "130°" },
-        { "id": "d", "text": "10°" }
+        {
+          "id": "a",
+          "text": "70°"
+        },
+        {
+          "id": "b",
+          "text": "60°"
+        },
+        {
+          "id": "c",
+          "text": "130°"
+        },
+        {
+          "id": "d",
+          "text": "10°"
+        }
       ],
       "correctOption": "a",
       "explanation": "الزاوية الخارجية تساوي مجموع الزاويتَين الداخليّتَين غير المجاورتَين لها: 120° = Â + B̂ = 50° + B̂، فـ B̂ = 70° ✓. الخطأُ الشائع: طرحُ 120° من 180° ثمّ من Â، أو معاملةُ الخارجية كأنّها داخلية.",
       "difficulty": 3
     },
     {
-      "prompt": "قاطعٌ يقطع مستقيمَين (d) و(d') فيكوّن زاويتَين متناظرتَين قيسهما 3x و(x + 40) بالدرجات. إذا كان (d)//(d')، فما قيس كلّ زاوية؟",
+      "prompt": "قاطعٌ يقطع مستقيمَين (d) و(d') فيكوّن زاويتَين متناظرتَين قيسهما 3x و(x + 40) بالدرجات. إذا كان (d)//(d')، فما قيس كلّ زاوية؟\n\n<svg viewBox=\"0 0 200 150\">\n<title>زاويتان متناظرتان</title>\n<line x1=\"15\" y1=\"48\" x2=\"185\" y2=\"48\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"15\" y1=\"110\" x2=\"185\" y2=\"110\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><line x1=\"55\" y1=\"130\" x2=\"150\" y2=\"28\" stroke=\"#0f172a\" stroke-width=\"2.2\"/><polyline points=\"95,43 101,48 95,53\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"1.6\"/><polyline points=\"95,105 101,110 95,115\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"1.6\"/><g font-weight=\"700\" paint-order=\"stroke\" stroke=\"#ffffff\" stroke-width=\"3.5\" stroke-linejoin=\"round\"><text x=\"192\" y=\"44\" text-anchor=\"end\" fill=\"#0f172a\" font-size=\"12\">(d)</text><text x=\"192\" y=\"126\" text-anchor=\"end\" fill=\"#0f172a\" font-size=\"12\">(d')</text></g><path d=\"M 145 33.36 A 20 20 0 0 1 151.37 48\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"2.2\"/><path d=\"M 87.26 95.36 A 20 20 0 0 1 93.63 110\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"2.2\"/>\n</svg>",
       "options": [
-        { "id": "a", "text": "20°" },
-        { "id": "b", "text": "60°" },
-        { "id": "c", "text": "70°" },
-        { "id": "d", "text": "40°" }
+        {
+          "id": "a",
+          "text": "20°"
+        },
+        {
+          "id": "b",
+          "text": "60°"
+        },
+        {
+          "id": "c",
+          "text": "70°"
+        },
+        {
+          "id": "d",
+          "text": "40°"
+        }
       ],
       "correctOption": "b",
       "explanation": "المتناظرتان عند التوازي متساويتان: 3x = x + 40، فـ 2x = 40 و x = 20، وقيس كلّ زاوية 3×20 = 60° (أو 20 + 40 = 60°) ✓. الخطأُ الشائع: التوقّفُ عند x = 20 وتقديمُه كقيس الزاوية بدل حسابها.",
@@ -69,10 +129,22 @@
     {
       "prompt": "ما مجموع الزوايا الداخلية لمضلّع خماسي (5 أضلاع)؟",
       "options": [
-        { "id": "a", "text": "360°" },
-        { "id": "b", "text": "900°" },
-        { "id": "c", "text": "720°" },
-        { "id": "d", "text": "540°" }
+        {
+          "id": "a",
+          "text": "360°"
+        },
+        {
+          "id": "b",
+          "text": "900°"
+        },
+        {
+          "id": "c",
+          "text": "720°"
+        },
+        {
+          "id": "d",
+          "text": "540°"
+        }
       ],
       "correctOption": "d",
       "explanation": "المجموع = (n − 2)×180° = (5 − 2)×180° = 3×180° = 540° ✓. الخطأُ الأشهر: استعمالُ n×180° = 900° بنسيان طرح 2، أو الخلطُ بالرباعي 360° أو السداسي 720°.",
