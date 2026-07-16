@@ -14,8 +14,8 @@ BEGIN
     ADD CONSTRAINT exercises_mode_check CHECK (mode IN ('practice', 'boss', 'quiz', 'challenge'));
 END $$;
 
-INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language, is_premium, theme_id, grade_id) VALUES
-  ('math-3eme', 'الرياضيات', 'الأنشطة العددية والقيس والهندسة وفق برنامج الرياضيات للسنة الثالثة من التعليم الأساسي', 'Force', 'subject-math', 'Calculator', 1, 'ar', false, 'ecole-tn', (SELECT id FROM public.grades WHERE theme_id = 'ecole-tn' AND slug = '3eme-base'))
+INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language, is_premium, theme_id, grade_id, manuel_refs) VALUES
+  ('math-3eme', 'الرياضيات', 'الأنشطة العددية والقيس والهندسة وفق برنامج الرياضيات للسنة الثالثة من التعليم الأساسي', 'Force', 'subject-math', 'Calculator', 1, 'ar', false, 'ecole-tn', (SELECT id FROM public.grades WHERE theme_id = 'ecole-tn' AND slug = '3eme-base'), '[{"code":"102306","label":null}]'::jsonb)
 ON CONFLICT (id) DO UPDATE SET
   name_fr = EXCLUDED.name_fr,
   description = EXCLUDED.description,
@@ -26,7 +26,8 @@ ON CONFLICT (id) DO UPDATE SET
   content_language = EXCLUDED.content_language,
   is_premium = EXCLUDED.is_premium,
   theme_id = EXCLUDED.theme_id,
-  grade_id = EXCLUDED.grade_id;
+  grade_id = EXCLUDED.grade_id,
+  manuel_refs = EXCLUDED.manuel_refs;
 
 -- Prune admin-authored content that is no longer in the source tree.
 DO $$
