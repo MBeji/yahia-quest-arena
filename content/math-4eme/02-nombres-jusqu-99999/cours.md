@@ -9,19 +9,23 @@
 العدد ذو خمسة أرقام يضيف رتبةً واحدةً فوق رتبة الآلاف، اسمها **عشرات الآلاف**، وقيمتها **10 000**.
 
 | الرتبة | عشرات الآلاف | آلاف  | مئات | عشرات | آحاد |
-| ------ | ----------- | ----- | ---- | ----- | ---- |
-| قيمتها | 10 000      | 1 000 | 100  | 10    | 1    |
+| ------ | ------------ | ----- | ---- | ----- | ---- |
+| قيمتها | 10 000       | 1 000 | 100  | 10    | 1    |
 
 - أصغر عددٍ من خمسة أرقام هو **10 000**، وأكبرها هو **99 999**.
 - كلّ **10 آلافٍ** تساوي **عشرةَ آلافٍ واحدة** (وحدةً واحدة من الرتبة الجديدة).
 
 ## 🛡️ الصنفان: صنف الآلاف وصنف الوحدات
 
+::: figure نقرأ صنف الآلاف أوّلًا ثمّ صنف الوحدات كعددٍ عاديّ
+<svg viewBox="0 0 350 160"><rect x="18" y="46" width="120" height="46" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="2.5"/><rect x="146" y="46" width="186" height="46" rx="6" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2.5"/><text x="48.0" y="80.0" text-anchor="middle" font-size="26" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">4</text><text x="108.0" y="80.0" text-anchor="middle" font-size="26" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">7</text><text x="180.0" y="80.0" text-anchor="middle" font-size="26" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">3</text><text x="240.0" y="80.0" text-anchor="middle" font-size="26" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">0</text><text x="300.0" y="80.0" text-anchor="middle" font-size="26" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">5</text><text x="78.0" y="36.0" text-anchor="middle" font-size="12" font-weight="700" fill="#6d28d9" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">صنف الآلاف</text><text x="239.0" y="36.0" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">صنف الوحدات</text><text x="78.0" y="112.0" text-anchor="middle" font-size="12" font-weight="700" fill="#6d28d9" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">47 ألفًا</text><text x="239.0" y="112.0" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">305</text><text x="175.0" y="146.0" text-anchor="middle" font-size="20" font-weight="700" fill="#1f2937" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">47 305</text></svg>
+:::
+
 نجمع الرتب في **صنفين**، كلٌّ منهما ثلاثُ رتب، لنقرأ العدد بسهولة:
 
-| الصنف   | صنف الآلاف                  | صنف الوحدات          |
-| ------- | -------------------------- | -------------------- |
-| رتبُه   | عشرات الآلاف · آلاف         | مئات · عشرات · آحاد   |
+| الصنف | صنف الآلاف          | صنف الوحدات         |
+| ----- | ------------------- | ------------------- |
+| رتبُه | عشرات الآلاف · آلاف | مئات · عشرات · آحاد |
 
 - في **صنف الآلاف** نقرأ عددَ الآلاف، ثمّ نقول كلمة **«ألفًا/آلاف»**.
 - ثمّ نقرأ **صنف الوحدات** كعددٍ عاديٍّ من ثلاثة أرقام.

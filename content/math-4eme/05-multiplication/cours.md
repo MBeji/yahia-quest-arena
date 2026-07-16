@@ -18,13 +18,13 @@ $$4 + 4 + 4 + 4 + 4 + 4 = 6 × 4 = 24$$
 
 للضرب خاصيّاتٌ تُسهّل الحساب، احفظها جيّدًا:
 
-| الخاصيّة | القاعدة | مثال |
-| --- | --- | --- |
-| **التبديلية** | a × b = b × a | 7 × 8 = 8 × 7 = 56 |
-| **التجميعية** | (a × b) × c = a × (b × c) | (2 × 5) × 3 = 2 × (5 × 3) = 30 |
-| **التوزيعية على الجمع** | a × (b + c) = a × b + a × c | 6 × (10 + 2) = 60 + 12 = 72 |
-| **الضرب في 1** | a × 1 = a | 9 × 1 = 9 |
-| **الضرب في 0** | a × 0 = 0 | 9 × 0 = 0 |
+| الخاصيّة                | القاعدة                     | مثال                           |
+| ----------------------- | --------------------------- | ------------------------------ |
+| **التبديلية**           | a × b = b × a               | 7 × 8 = 8 × 7 = 56             |
+| **التجميعية**           | (a × b) × c = a × (b × c)   | (2 × 5) × 3 = 2 × (5 × 3) = 30 |
+| **التوزيعية على الجمع** | a × (b + c) = a × b + a × c | 6 × (10 + 2) = 60 + 12 = 72    |
+| **الضرب في 1**          | a × 1 = a                   | 9 × 1 = 9                      |
+| **الضرب في 0**          | a × 0 = 0                   | 9 × 0 = 0                      |
 
 **التوزيعية** هي سرّ الضرب المنصوب: نفكّك العدد إلى آحادٍ وعشراتٍ ومئات، ونضرب كلّ رتبةٍ على حدة، ثمّ نجمع.
 
@@ -34,11 +34,11 @@ $$4 + 4 + 4 + 4 + 4 + 4 = 6 × 4 = 24$$
 
 عند الضرب في 10 أو 100 أو 1000 **لا نحسب**، بل نضيف الأصفار إلى يمين العدد:
 
-| العمليّة | القاعدة | مثال |
-| --- | --- | --- |
-| × 10 | نضيف صفرًا واحدًا | 47 × 10 = 470 |
-| × 100 | نضيف صفرَين | 47 × 100 = 4 700 |
-| × 1000 | نضيف ثلاثة أصفار | 47 × 1000 = 47 000 |
+| العمليّة | القاعدة           | مثال               |
+| -------- | ----------------- | ------------------ |
+| × 10     | نضيف صفرًا واحدًا | 47 × 10 = 470      |
+| × 100    | نضيف صفرَين       | 47 × 100 = 4 700   |
+| × 1000   | نضيف ثلاثة أصفار  | 47 × 1000 = 47 000 |
 
 السبب: الضرب في 10 يدفع كلّ رقمٍ رتبةً واحدةً نحو اليسار، فيصبح مكانُ الآحاد فارغًا نملؤه بـ 0.
 
@@ -57,6 +57,10 @@ $$5 × 600 = 3 000$$
 > 🗡️ عُدّ كلّ الأصفار في العاملَين وأضِفها كاملةً في آخر الجداء: 20 × 300 = (2 × 3) ثمّ ثلاثة أصفار = 6 000.
 
 ## 🧮 الضرب المنصوب في عددٍ ذي رقمٍ واحد
+
+::: figure نضرب من اليمين إلى اليسار، وننقل المحتفظ به إلى الرتبة الموالية
+<svg viewBox="0 0 300 180"><circle cx="98" cy="30" r="11" fill="#fde047" stroke="#1f2937" stroke-width="2"/><text x="98.0" y="35.0" text-anchor="middle" font-size="13" font-weight="700" fill="#b91c1c" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">1</text><circle cx="138" cy="30" r="11" fill="#fde047" stroke="#1f2937" stroke-width="2"/><text x="138.0" y="35.0" text-anchor="middle" font-size="13" font-weight="700" fill="#b91c1c" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">1</text><text x="98.0" y="74.0" text-anchor="middle" font-size="24" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">2</text><text x="138.0" y="74.0" text-anchor="middle" font-size="24" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">5</text><text x="178.0" y="74.0" text-anchor="middle" font-size="24" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">4</text><text x="58.0" y="116.0" text-anchor="middle" font-size="22" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">×</text><text x="178.0" y="116.0" text-anchor="middle" font-size="24" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">3</text><path d="M62 130 H198" stroke="#1f2937" stroke-width="2.5"/><text x="98.0" y="162.0" text-anchor="middle" font-size="24" font-weight="700" fill="#15803d" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">7</text><text x="138.0" y="162.0" text-anchor="middle" font-size="24" font-weight="700" fill="#15803d" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">6</text><text x="178.0" y="162.0" text-anchor="middle" font-size="24" font-weight="700" fill="#15803d" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">2</text><text x="252.0" y="74.0" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">3 × 4 = 12</text><text x="252.0" y="92.0" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">نكتب 2</text><text x="252.0" y="110.0" text-anchor="middle" font-size="11" font-weight="700" fill="#b91c1c" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">نحتفظ بـ 1</text></svg>
+:::
 
 ننصب العملية: العامل الكبير في الأعلى، والرقم الواحد تحت رتبة الآحاد. نضرب من اليمين إلى اليسار **مع الاحتفاظ**.
 
