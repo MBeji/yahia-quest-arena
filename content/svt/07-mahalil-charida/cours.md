@@ -27,6 +27,11 @@ $$ NaCl → Na⁺ + Cl⁻ (في الماء) $$
 - لمبة أو جلفانومتر
 - قطبَين (إلكترودَين) مغمورَين في المحلول المُراد اختباره
 
+<svg viewBox="0 0 300 168">
+<title>دائرة اختبار ناقلية محلول: مولّد، لمبة، إلكترودان مغموران في المحلول</title>
+<path d="M100 150 Q100 158 108 158 L192 158 Q200 158 200 150 L200 105 L100 105 Z" fill="#dbeafe" stroke="#0f172a" stroke-width="2"/><line x1="100" y1="112" x2="200" y2="112" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="4 3"/><polyline points="70,40 142,40" fill="none" stroke="#0f172a" stroke-width="2"/><polyline points="158,40 230,40" fill="none" stroke="#0f172a" stroke-width="2"/><line x1="146" y1="28" x2="146" y2="52" stroke="#0f172a" stroke-width="1.8"/><line x1="154" y1="34" x2="154" y2="46" stroke="#0f172a" stroke-width="4"/><polyline points="70,40 70,88 130,88" fill="none" stroke="#0f172a" stroke-width="2"/><rect x="126" y="88" width="8" height="42" fill="#94a3b8" stroke="#0f172a" stroke-width="1"/><polyline points="230,40 230,64" fill="none" stroke="#0f172a" stroke-width="2"/><circle cx="230" cy="76" r="12" fill="none" stroke="#0f172a" stroke-width="2"/><line x1="221.6" y1="67.6" x2="238.4" y2="84.4" stroke="#0f172a" stroke-width="2"/><line x1="221.6" y1="84.4" x2="238.4" y2="67.6" stroke="#0f172a" stroke-width="2"/><polyline points="230,88 170,88" fill="none" stroke="#0f172a" stroke-width="2"/><rect x="166" y="88" width="8" height="42" fill="#94a3b8" stroke="#0f172a" stroke-width="1"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="150" y="26" text-anchor="middle" fill="#0f172a" font-size="11">مولّد</text><text x="252" y="80" text-anchor="start" fill="#d97706" font-size="11">لمبة</text><text x="150" y="82" text-anchor="middle" fill="#0f172a" font-size="10">إلكترودان</text><text x="150" y="138" text-anchor="middle" fill="#2563eb" font-size="11">محلول</text></g>
+</svg>
+
 | المحلول                       | نتيجة التجربة     | التفسير                   |
 | ----------------------------- | ----------------- | ------------------------- |
 | ماء مقطّر خالص                | اللمبة لا تضيء    | لا توجد شوارد             |

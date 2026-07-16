@@ -61,6 +61,12 @@ $$ U = R × I | R = U/I | I = U/R $$
 - مثال 2: توتر U = 12 V ومقاومة R = 6 Ω. شدّة التيار: I = 12 ÷ 6 = **2 A**
 - مثال 3: توتر U = 9 V وتيار I = 0,3 A. المقاومة: R = 9 ÷ 0,3 = **30 Ω**
 
+<svg viewBox="0 0 300 172">
+<title>قانون أوم: أمبيرمتر على التسلسل وفولطمتر على التوازي</title>
+<polyline points="60,40 240,40" fill="none" stroke="#0f172a" stroke-width="2"/><polyline points="240,40 240,78" fill="none" stroke="#0f172a" stroke-width="2"/><polyline points="240,102 240,140" fill="none" stroke="#0f172a" stroke-width="2"/><polyline points="240,140 60,140" fill="none" stroke="#0f172a" stroke-width="2"/><polyline points="60,140 60,102" fill="none" stroke="#0f172a" stroke-width="2"/><polyline points="60,78 60,40" fill="none" stroke="#0f172a" stroke-width="2"/><polyline points="60,40 120,40" fill="none" stroke="#0f172a" stroke-width="2"/><rect x="130" y="32" width="40" height="16" fill="#fff" stroke="#0f172a" stroke-width="2"/><polyline points="180,40 240,40" fill="none" stroke="#0f172a" stroke-width="2"/><line x1="48" y1="86" x2="72" y2="86" stroke="#0f172a" stroke-width="1.8"/><line x1="54" y1="94" x2="66" y2="94" stroke="#0f172a" stroke-width="4"/><circle cx="240" cy="90" r="13" fill="none" stroke="#0f172a" stroke-width="2"/><text x="240" y="95" text-anchor="middle" fill="#0f172a" font-size="14" font-weight="700">A</text><polyline points="130,40 130,92" fill="none" stroke="#0f172a" stroke-width="2"/><polyline points="170,40 170,92" fill="none" stroke="#0f172a" stroke-width="2"/><circle cx="150" cy="92" r="12" fill="none" stroke="#0f172a" stroke-width="2"/><text x="150" y="97" text-anchor="middle" fill="#0f172a" font-size="14" font-weight="700">V</text><polyline points="138,92 130,92" fill="none" stroke="#0f172a" stroke-width="2"/><polyline points="162,92 170,92" fill="none" stroke="#0f172a" stroke-width="2"/><line x1="160" y1="140" x2="130" y2="140" stroke="#2563eb" stroke-width="2"/>
+<polygon points="130,140 138,136 138,144" fill="#2563eb"/><g font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round"><text x="150" y="24" text-anchor="middle" fill="#0f172a" font-size="13">R</text><text x="40" y="94" text-anchor="end" fill="#0f172a" font-size="10">مولّد</text><text x="262" y="94" text-anchor="start" fill="#0f172a" font-size="10">أمبيرمتر</text><text x="150" y="118" text-anchor="middle" fill="#0f172a" font-size="10">فولطمتر</text><text x="145" y="156" text-anchor="middle" fill="#2563eb" font-size="12">I</text></g>
+</svg>
+
 ## 🌑 التركيب على التسلسل
 
 عند توصيل مقاومتَين R₁ و R₂ **على التسلسل**:
