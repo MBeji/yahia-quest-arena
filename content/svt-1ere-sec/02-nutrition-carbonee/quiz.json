@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐ : La nutrition carbonée",
+  "questions": [
+    {
+      "prompt": "Quel réactif révèle l'amidon d'un tubercule de pomme de terre, et quelle coloration obtient-on ?",
+      "options": [
+        { "id": "a", "text": "L'eau iodée ; coloration bleue foncée" },
+        { "id": "b", "text": "La liqueur de Fehling ; précipité rouge brique" },
+        { "id": "c", "text": "Le sulfate de cuivre puis la soude ; coloration violette" },
+        { "id": "d", "text": "L'alcool à 90° ; coloration verte" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'amidon se révèle par quelques gouttes d'eau iodée, qui donnent une coloration bleue foncée ✓. La liqueur de Fehling chauffée donne bien un précipité rouge brique, mais elle révèle le glucose. Le sulfate de cuivre suivi de la soude donne une coloration violette et révèle le gluten. Quant à l'alcool à 90°, ce n'est pas un révélateur : il sert à extraire la chlorophylle et à décolorer la feuille avant le test à l'eau iodée.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Où se déroule la photosynthèse dans la cellule chlorophyllienne ?",
+      "options": [
+        { "id": "a", "text": "Dans le cytoplasme" },
+        { "id": "b", "text": "Dans la paroi pectocellulosique" },
+        { "id": "c", "text": "Dans le chloroplaste" },
+        { "id": "d", "text": "Dans la vacuole" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le chloroplaste est l'organite de la cellule végétale où se déroule la photosynthèse ✓ : c'est lui qui porte la chlorophylle. Le cytoplasme et la paroi pectocellulosique sont bien des constituants de la cellule chlorophyllienne, mais on les trouve dans toute cellule végétale — ce qui distingue la cellule chlorophyllienne des autres, ce sont précisément ses chloroplastes. La vacuole, elle, n'intervient pas dans la photosynthèse.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "On place des chlorelles, sous fort éclairement, dans de l'eau additionnée de dioxyde de carbone. L'oxygène de cette eau est radioactif. Résultat : l'oxygène dégagé est radioactif, mais pas les glucides fabriqués. Que peut-on en conclure ?",
+      "options": [
+        { "id": "a", "text": "L'oxygène dégagé provient du dioxyde de carbone" },
+        { "id": "b", "text": "L'oxygène des glucides fabriqués provient de l'eau" },
+        { "id": "c", "text": "L'oxygène dégagé provient de l'air ambiant" },
+        { "id": "d", "text": "L'oxygène dégagé provient de l'eau" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le marquage suit l'atome : l'oxygène radioactif était dans l'eau et se retrouve dans l'oxygène dégagé — l'O₂ rejeté par la plante vient donc de l'eau ✓. Il ne vient pas du dioxyde de carbone : dans l'expérience symétrique, où c'est l'oxygène du CO₂ qui est radioactif, l'O₂ dégagé n'est pas radioactif. Il ne vient pas non plus de l'air ambiant : la plante en rejette ici, elle n'en prélève pas. Quant à l'oxygène des glucides, il ne vient pas de l'eau — les glucides ne sont justement pas radioactifs dans cette expérience, alors qu'ils le sont dans celle où le CO₂ porte l'oxygène marqué.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Une feuille panachée porte des zones vertes et des zones blanches. Exposée à la lumière puis traitée à l'eau iodée, quelle condition de la photosynthèse permet-elle de démontrer ?",
+      "options": [
+        { "id": "a", "text": "Le rôle du dioxyde de carbone" },
+        { "id": "b", "text": "Le rôle de la chlorophylle" },
+        { "id": "c", "text": "Le rôle de la lumière" },
+        { "id": "d", "text": "Le rôle de la température" }
+      ],
+      "correctOption": "b",
+      "explanation": "La feuille panachée est éclairée en entier et baigne tout entière dans le même air : la lumière et le dioxyde de carbone sont donc identiques partout. La seule chose qui change d'une zone à l'autre est la présence de chlorophylle — c'est elle, et elle seule, que l'expérience teste ✓. Le rôle du CO₂ se démontre en faisant barboter l'air dans la potasse ; celui de la lumière, avec un cache opaque posé sur une partie de la feuille. La température, elle, n'est pas l'une des trois conditions établies par ces expériences.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Un dispositif mesure le taux d'oxygène du milieu autour d'une plante éclairée. Pour un certain éclairement, ce taux reste constant. Que cela signifie-t-il ?",
+      "options": [
+        { "id": "a", "text": "Photosynthèse et respiration se compensent exactement" },
+        { "id": "b", "text": "La plante a cessé toute activité biologique" },
+        { "id": "c", "text": "La plante ne respire plus : seule la photosynthèse fonctionne" },
+        { "id": "d", "text": "La photosynthèse a atteint son intensité maximale" }
+      ],
+      "correctOption": "a",
+      "explanation": "Un taux d'oxygène constant signifie que la quantité d'O₂ rejetée par la photosynthèse est exactement égale à celle absorbée par la respiration : IPB = IR, donc IPN = 0. C'est le point de compensation ✓. La plante n'a pas cessé toute activité : les deux phénomènes tournent, mais ils s'annulent — c'est très différent. Elle ne cesse jamais non plus de respirer : la respiration se déroule 24 heures sur 24, et c'est justement pour cela qu'on ne mesure jamais qu'une intensité photosynthétique nette. Enfin le maximum de la photosynthèse correspond au palier de la courbe, atteint pour un éclairement bien supérieur.",
+      "difficulty": 2
+    }
+  ]
+}

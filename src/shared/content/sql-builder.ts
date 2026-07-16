@@ -116,13 +116,19 @@ export function buildMigrationSql(subject: LoadedSubject): string {
         meta.gradeSlug,
       )})`
     : "NULL";
+  // Optional manuel élève PDF link: store the authored volume list (label
+  // normalized to null). NULL when unset, so re-upserting a subject that lost
+  // its manuel link clears it.
+  const manuelRefsSql = meta.manuels
+    ? sqlJson(meta.manuels.map((m) => ({ code: m.code, label: m.label ?? null })))
+    : "NULL";
   out.push(
-    "INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language, is_premium, theme_id, grade_id) VALUES",
+    "INSERT INTO public.subjects (id, name_fr, description, attribute, color_token, icon, display_order, content_language, is_premium, theme_id, grade_id, manuel_refs) VALUES",
     `  (${sqlString(subjectId)}, ${sqlString(meta.nameFr)}, ${sqlString(meta.description)}, ${sqlString(
       meta.attribute,
     )}, ${sqlString(meta.colorToken)}, ${sqlString(meta.icon)}, ${meta.displayOrder}, ${sqlString(
       meta.contentLanguage,
-    )}, ${meta.isPremium}, ${sqlString(meta.themeId)}, ${gradeIdSql})`,
+    )}, ${meta.isPremium}, ${sqlString(meta.themeId)}, ${gradeIdSql}, ${manuelRefsSql})`,
     "ON CONFLICT (id) DO UPDATE SET",
     "  name_fr = EXCLUDED.name_fr,",
     "  description = EXCLUDED.description,",
@@ -133,7 +139,8 @@ export function buildMigrationSql(subject: LoadedSubject): string {
     "  content_language = EXCLUDED.content_language,",
     "  is_premium = EXCLUDED.is_premium,",
     "  theme_id = EXCLUDED.theme_id,",
-    "  grade_id = EXCLUDED.grade_id;",
+    "  grade_id = EXCLUDED.grade_id,",
+    "  manuel_refs = EXCLUDED.manuel_refs;",
     "",
   );
 

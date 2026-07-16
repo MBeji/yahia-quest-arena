@@ -8,5 +8,10 @@
   "displayOrder": 1,
   "contentLanguage": "ar",
   "themeId": "ecole-tn",
-  "gradeSlug": "2eme-base"
+  "gradeSlug": "2eme-base",
+  "manuels": [
+    {
+      "code": "102210"
+    }
+  ]
 }

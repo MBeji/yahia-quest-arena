@@ -155,6 +155,12 @@ export const arPublic: TranslationKeys["public"] = {
     todo: "لم يبدأ",
     unlocksChapter: "يفتح الفصل",
     quizContract: "انجح في الاختبار (≥ {pct}٪) لفتح مهمات هذا الفصل.",
+    manuelTitle: "الكتاب المدرسي الرسمي",
+    manuelHint: "كتاب التلميذ الرسمي (CNP) لهذه المادة بصيغة PDF.",
+    manuelOpen: "فتح الكتاب",
+    manuelTome: "الجزء {n}",
+    manuelLockedHint: "سجّل الدخول للاطّلاع على الكتاب المدرسي الرسمي.",
+    manuelLoginCta: "تسجيل الدخول",
   },
   practice: {
     back: "العودة إلى المادة",

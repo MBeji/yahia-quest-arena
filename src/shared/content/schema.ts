@@ -118,6 +118,24 @@ export const subjectMetaSchema = z.object({
    */
   isPremium: z.boolean().default(false),
   /**
+   * Optional link to the official student textbook (manuel élève) as FULL PDF
+   * volume(s): the CNP book `code` per volume (bucket object `<code>.pdf`) plus
+   * an optional display `label` (e.g. "الجزء الأول") for multi-volume books.
+   * Compiled into `subjects.manuel_refs` JSONB and surfaced as a login-gated
+   * « Manuel officiel » card on the public subject page.
+   */
+  manuels: z
+    .array(
+      z.object({
+        code: z
+          .string()
+          .regex(/^[A-Za-z0-9_-]+$/, "manuels[].code must be an alphanumeric book code"),
+        label: z.string().min(1).optional(),
+      }),
+    )
+    .min(1)
+    .optional(),
+  /**
    * Mutualisation (étude 16 D-4): compile this ONE authored directory into N
    * subjects — one per section-grade target. When present, the root `id` is a
    * VIRTUAL source id (convention `<matière>-<année>`, e.g. `anglais-3eme-sec`)
