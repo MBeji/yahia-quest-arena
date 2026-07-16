@@ -1,0 +1,125 @@
+{
+  "title": "Test de compréhension ⭐ : Le phosphate",
+  "questions": [
+    {
+      "prompt": "À partir de quelle teneur en P2O5 un gisement de phosphate est-il exploitable ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "À partir de 25 %"
+        },
+        {
+          "id": "b",
+          "text": "À partir de 47 %"
+        },
+        {
+          "id": "c",
+          "text": "À partir de 56 %"
+        },
+        {
+          "id": "d",
+          "text": "Quelle que soit la teneur, si la couche est épaisse"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Les gisements de phosphate ne sont exploitables que lorsque la teneur en P2O5 est supérieure ou égale à 25 % ✓. Les autres pourcentages existent bien dans le chapitre, mais désignent tout autre chose : 47 % de P2O5 est la teneur du triple superphosphate, un produit fabriqué en usine, et non celle d'un gisement ; et 56 % est le bas de la fourchette du phosphate de Metlaoui exprimée en BPL, une autre façon d'exprimer la teneur, par l'équivalent en phosphate tricalcique Ca3(PO4)2. Enfin, l'épaisseur ne remplace pas la teneur : la puissance de la couche est un critère de rentabilité, mais il s'ajoute au seuil de teneur, il ne le supprime pas.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Qui a découvert les phosphates tunisiens, et où ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Philippe Thomas, en 1885, aux îles Kerkenah, au large de Sfax"
+        },
+        {
+          "id": "b",
+          "text": "Philippe Thomas, en 1885, dans le bassin du Kef, au nord"
+        },
+        {
+          "id": "c",
+          "text": "Le docteur Roux, en 1894, à Kalaa Khasba, dans le Kef"
+        },
+        {
+          "id": "d",
+          "text": "Philippe Thomas, en 1885, à Jebel Thelja près de Metlaoui"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "C'était en avril 1885, lors d'une prospection dans la région de Metlaoui, que Philippe Thomas, géologue amateur français, a découvert des couches puissantes de phosphates de calcium sur le versant Nord de Jebel Thelja ✓. Le bassin du Kef est bien l'un des deux bassins phosphatés avec celui de Gafsa, mais ce n'est pas le lieu de la découverte. Le docteur Roux n'a rien à voir avec la géologie : c'est le disciple de Pasteur qui, en 1894, mit au point la sérothérapie — un nom du chapitre 6, glissé ici pour vérifier que tu ne réponds pas au hasard. Quant aux îles Kerkenah, elles sont le site géologique du chapitre 7, sans phosphate.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Qu'est-ce qu'un coprolithe, dans une roche phosphatée ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Un grain phosphaté de forme sphérique ou ovoïde"
+        },
+        {
+          "id": "b",
+          "text": "Un grain cylindrique de quelques millimètres à 2 cm, correspondant à des restes d'excréments d'organismes"
+        },
+        {
+          "id": "c",
+          "text": "Une petite sphère formée d'enveloppes successives de calcaire autour d'un noyau"
+        },
+        {
+          "id": "d",
+          "text": "Un déchet solide provenant de l'action de l'acide sulfurique sur le minerai"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Les coprolithes sont des grains cylindriques de quelques millimètres à 2 cm environ, qui correspondent à des restes d'excréments d'organismes ✓ — et c'est pour cela qu'ils comptent parmi les meilleurs arguments en faveur de l'origine organique du phosphate. Le grain phosphaté sphérique ou ovoïde est le pellet : les deux se voient à la loupe binoculaire dans le même échantillon, ce qui rend la confusion facile — retiens que le pellet est rond et le coprolithe cylindrique. La sphère faite d'enveloppes successives de calcaire autour d'un noyau est l'oolithe, du chapitre précédent. Et le déchet de l'acide sulfurique est le phosphogypse, qui n'est pas dans la roche mais sort de l'usine.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Selon le bilan, quelles sont les deux origines du phosphate ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Une origine marine et une origine lagunaire"
+        },
+        {
+          "id": "b",
+          "text": "Une origine chimique et une origine organique"
+        },
+        {
+          "id": "c",
+          "text": "Une origine détritique et une origine volcanique"
+        },
+        {
+          "id": "d",
+          "text": "Une origine chimique uniquement"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "On pense actuellement que le phosphate a deux origines : l'une chimique, l'autre organique ✓. La chimique : les courants ascendants font monter des eaux froides riches en ions phosphate HPO4--, qui se combinent avec les ions calcium Ca++ des eaux chaudes de surface pour donner du phosphate de calcium qui précipite. L'organique : le plancton concentre le phosphore, ses cadavres s'accumulent dans un fond pauvre en oxygène, et les bactéries décomposent partiellement la matière organique. Marin et lagunaire sont des faciès, c'est-à-dire des milieux de dépôt, non des origines. Aucune origine volcanique n'est évoquée. Et retenir la seule origine chimique reviendrait à oublier les coprolithes et l'odeur fétide, qui sont les preuves de l'autre.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Qu'est-ce que le phosphogypse ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Un déchet gazeux rejeté lors de la fabrication des engrais"
+        },
+        {
+          "id": "b",
+          "text": "Le minerai de phosphate débarrassé de ses impuretés solides"
+        },
+        {
+          "id": "c",
+          "text": "Un déchet solide provenant de l'action de l'acide sulfurique sur le minerai de phosphate"
+        },
+        {
+          "id": "d",
+          "text": "Un engrais chimique constitué essentiellement de phosphates"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Le phosphogypse est un déchet solide provenant de l'action de l'acide sulfurique sur le minerai de phosphate ✓ : il apparaît à l'étape de fabrication de l'acide phosphorique, et il est stocké à proximité de l'usine, sur trois sites — SIAPE A et NPK à Sfax, et la Skhira. Il n'est pas gazeux : les déchets gazeux de la filière sont les gaz fluorés, les gaz soufrés et le gaz ammoniacal — la distinction solide/gazeux est justement ce que l'item vérifie. Le minerai débarrassé de ses impuretés solides est le minerai de phosphate lui-même, c'est-à-dire le produit recherché et non un déchet. Et l'engrais constitué essentiellement de phosphates est le DAP, le diammonium phosphate.",
+      "difficulty": 2
+    }
+  ]
+}

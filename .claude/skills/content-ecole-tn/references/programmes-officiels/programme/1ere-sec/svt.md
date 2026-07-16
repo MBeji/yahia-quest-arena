@@ -7215,8 +7215,28 @@ d'intégration (3) + acquis du collège de la partie · p.135–138 ouverture Pa
    manuel**, pas d'un texte officiel de programme. C'est la situation de **toutes** les fiches `1ere-sec`.
 3. **Le manuel se contredit sur une réponse notée** (p.154 vs p.175) : l'éocène est daté **55–35 Ma** par le
    tableau de l'échelle des temps géologiques, mais **« il y'a 60 millions d'années » [sic]** par le Bilan
-   p.175 — or c'est la clé attendue de l'**item 1 du QCM p.179**. À trancher **avant** de générer une
-   question sur ce point (détail : §6.4).
+   p.175 — or c'est la clé attendue de l'**item 1 du QCM p.179** (détail : §6.4).
+   **✅ ARBITRÉ le 2026-07-16 par Mohamed** — consigne : « mettre l'information juste, et ajouter un
+   commentaire indiquant la valeur du manuel officiel qui est probablement fausse ». La vérification
+   (échelle ICS + littérature) **déplace la cible** — ce n'est pas le tableau le fautif :
+   - **L'échelle du tableau p.154 est JUSTE** : éocène **55–35 Ma** (ICS : 56–33,9 Ma). Rien à corriger.
+     _Lecture confirmée par passe vision sur la page (la ligne « éocène » est bornée par 35 au-dessus et
+     55 au-dessous), comme l'exigeait l'avertissement du §6.4.4 sur le rattachement des âges._
+   - **Les phosphates tunisiens** (bassin Gafsa-Métlaoui) sont datés **Paléocène supérieur → Éocène
+     inférieur**, soit **~62–48 Ma** (datations Sr de la Fm Chouabine : 61,8 ± 2,2 Ma couche IX ;
+     57,2 ± 1,8 couches VIII–V ; 54,6 ± 1,6 couches IV–0 ; dents de requin Fm Métlaoui 47,9 ± 1,3 Ma).
+   - **La clé du QCM p.179 item 1 (b, −60 MA) N'EST PAS fausse** : c'est la meilleure des 4 options pour la
+     **base** de la série phosphatée. Basculer sur (a) −40 MA **introduirait une erreur** (l'Éocène
+     inférieur s'arrête à 47,8 Ma).
+   - **L'erreur réelle du manuel est l'ÉTIQUETTE, pas la valeur** : le Bilan p.175 équivaut « éocène » et
+     « 60 Ma » — or 60 Ma, c'est le **Paléocène**. Le manuel se contredit avec son propre tableau p.154.
+     ⇒ **En génération** : enseigner l'échelle juste (éocène 55–35 Ma) ; dater les phosphates « Paléocène
+     supérieur à Éocène inférieur (~62–48 Ma) », **jamais « éocène » tout court** ; garder la clé −60 MA sans
+     adosser l'énoncé au mot « éocène » ; porter un commentaire sobre signalant l'incohérence p.175 ↔ p.154.
+     **Appliqué** dans `content/svt-1ere-sec/07-site-geologique` (échelle + note de vocabulaire
+     Paléogène/Paléocène) et `08-phosphate` (datation, § « Quel âge, exactement ? », et l'`explanation` de la
+     question d'âge de `03-revision`). Le reste de la fiche est **inchangé** : les deux valeurs du manuel y
+     restent transcrites `[sic]` — une transcription n'arbitre pas, elle signale.
 4. **Chiffre impossible, p.164** : « plus de **1 million de dollars** » de recettes d'exportation en 2000,
    incompatible avec le reste de la page (8 millions de tonnes, 1er exportateur mondial, 4 500 familles).
    Probable coquille pour « milliard ». **Non corrigé** — à ne pas réutiliser tel quel.

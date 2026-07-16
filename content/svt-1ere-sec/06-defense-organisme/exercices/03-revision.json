@@ -1,0 +1,178 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Immunité acquise, vaccination et sérothérapie",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Pasteur injecte une culture fraîche du bacille du choléra des poules à deux lots : le lot A n'a subi aucun traitement préalable, le lot B a reçu une injection de culture vieillie. Le lot A meurt, le lot B survit. À quoi sert le lot A ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "C'est le lot témoin : il prouve que la culture fraîche est bien mortelle, sans quoi la survie du lot B ne démontrerait rien"
+        },
+        {
+          "id": "b",
+          "text": "Il sert à produire les anticorps que l'on transférera ensuite au lot B"
+        },
+        {
+          "id": "c",
+          "text": "Il sert à vérifier que la culture vieillie n'est pas dangereuse"
+        },
+        {
+          "id": "d",
+          "text": "Il sert à mesurer le délai d'apparition de la réponse secondaire"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Le lot A est le lot témoin : formé de poules n'ayant subi aucun traitement préalable, il reçoit la même culture fraîche que le lot B ✓. Sa mort établit que cette culture tue réellement — sans quoi la survie du lot B pourrait s'expliquer par une culture devenue inoffensive, et non par une protection acquise. C'est là toute la fonction d'un témoin : ne faire varier qu'une seule chose, le traitement préalable. Le transfert d'anticorps d'un organisme à un autre est le principe de la sérothérapie, découvert bien plus tard, et rien de tel n'a lieu ici. L'innocuité de la culture vieillie est déjà connue avant l'expérience — c'est elle qui a donné à Pasteur son idée. Et aucune mesure de délai n'est faite : on constate le résultat le lendemain.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Associe chaque savant à sa découverte.",
+      "type": "matching",
+      "options": [
+        {
+          "id": "l1",
+          "text": "Jenner (1798)"
+        },
+        {
+          "id": "l2",
+          "text": "Pasteur (1879)"
+        },
+        {
+          "id": "l3",
+          "text": "Roux (1894)"
+        },
+        {
+          "id": "l4",
+          "text": "Ramon (1923)"
+        },
+        {
+          "id": "r1",
+          "text": "Inocule à un enfant du pus de vache atteinte de la vaccine ; l'enfant résiste ensuite à la variole"
+        },
+        {
+          "id": "r2",
+          "text": "Injecte à des poules une culture vieillie du bacille du choléra : elles survivent ensuite à la culture fraîche"
+        },
+        {
+          "id": "r3",
+          "text": "Transfère le sérum d'un cheval hyper-immunisé à des malades atteints de diphtérie, qui guérissent"
+        },
+        {
+          "id": "r4",
+          "text": "Prépare une anatoxine en additionnant du formol à la toxine diphtérique portée à 40 °C pendant un mois"
+        }
+      ],
+      "answerKey": {
+        "pairs": [
+          ["l1", "r1"],
+          ["l2", "r2"],
+          ["l3", "r3"],
+          ["l4", "r4"]
+        ]
+      },
+      "explanation": "Jenner, en 1798, part de l'observation que les fermières ayant contracté la vaccine — variole bovine bénigne — échappaient aux épidémies de variole, et inocule à un enfant du pus prélevé sur une pustule de vache ; l'année suivante, l'enfant résiste au pus de varioleux. Pasteur, en 1879, montre avec ses deux lots de poules que la culture vieillie du bacille du choléra protège contre la culture fraîche. Roux, en 1894, disciple de Pasteur, immunise un cheval par des doses croissantes et répétées de toxine diphtérique, puis transfère son sérum à des malades qui guérissent : c'est la naissance de la sérothérapie. Ramon, en 1923, prépare l'anatoxine diphtérique avec du formol et de la chaleur ✓. Le fil à suivre : Jenner et Pasteur atténuent un microbe pour prévenir, Roux transfère des anticorps pour guérir, Ramon inactive une toxine.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "La souris D reçoit de l'anatoxine tétanique et survit ; on lui prélève son sérum, qu'on injecte à la souris E, laquelle résiste ensuite à la toxine tétanique. La souris F, qui a reçu le sérum de la souris témoin T non immunisée, meurt de cette même toxine. Pourquoi l'expérience sur F était-elle indispensable ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Pour vérifier que la toxine tétanique reste mortelle chez une souris en bonne santé"
+        },
+        {
+          "id": "b",
+          "text": "Pour prouver que c'est bien l'immunisation de D, et non le sérum en tant que liquide, qui protège E"
+        },
+        {
+          "id": "c",
+          "text": "Pour montrer que l'anatoxine tétanique est inoffensive"
+        },
+        {
+          "id": "d",
+          "text": "Pour comparer la réponse primaire et la réponse secondaire de la souris E"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Sans la souris F, un doute demeurerait : peut-être qu'injecter du sérum, n'importe quel sérum, suffit à protéger. F reçoit le sérum d'une souris non immunisée et meurt — donc ce n'est pas le sérum en tant que liquide qui sauve E, mais bien ce que l'immunisation de D y a mis : des anticorps ✓. C'est exactement le rôle d'une expérience témoin. Vérifier que la toxine est mortelle chez une souris saine était le rôle de la souris A, dans la première expérience. L'innocuité de l'anatoxine se lit déjà dans la survie de D et de B. Et aucune réponse primaire ou secondaire n'est comparée ici : E ne fabrique rien, elle reçoit des anticorps tout faits.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Une personne se blesse profondément avec un objet rouillé. Elle n'est pas vaccinée contre le tétanos. Pourquoi lui injecte-t-on un sérum antitétanique plutôt que le vaccin ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Parce que le vaccin ne peut jamais être administré à une personne blessée"
+        },
+        {
+          "id": "b",
+          "text": "Parce que le sérum confère une immunité active, plus solide que celle du vaccin"
+        },
+        {
+          "id": "c",
+          "text": "Parce que le sérum protège pour toute la vie, contrairement au vaccin"
+        },
+        {
+          "id": "d",
+          "text": "Parce que le sérum a une action immédiate, alors que le vaccin agit trop tard"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Tout est dans le tableau de comparaison : la vaccination a une action tardive et de longue durée, la sérothérapie une action immédiate et de courte durée ✓. Le vacciné fabrique lui-même ses anticorps, ce qui prend du temps ; le blessé, lui, a déjà les spores dans sa plaie — on lui donne donc des anticorps tout faits, qui agissent tout de suite. C'est aussi pourquoi la sérothérapie est curative et s'effectue sur des organismes atteints ou risquant de l'être. Le sérum confère précisément l'inverse d'une immunité active : une immunité passive, puisque les anticorps sont élaborés par un autre organisme immunisé. Et il ne protège pas pour la vie — sa durée est courte, sans mémoire ; c'est la vaccination qui protège longtemps, à condition d'un rappel tous les 5 ans.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "On injecte à un animal une forme atténuée d'un microbe A, puis, plus tard, la forme virulente du même microbe. Comment se comparent les deux réponses ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "La première est rapide, forte et durable ; la seconde est lente, faible et de courte durée"
+        },
+        {
+          "id": "b",
+          "text": "Les deux réponses sont identiques, car le microbe est le même"
+        },
+        {
+          "id": "c",
+          "text": "La première est une réponse primaire lente, de faible intensité et de courte durée ; la seconde est une réponse secondaire rapide, forte et durable"
+        },
+        {
+          "id": "d",
+          "text": "La première produit des anticorps anti-A, la seconde n'en produit aucun car l'animal est déjà protégé"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "À la suite de chaque injection, il y a bien développement d'une réponse immunitaire, avec apparition d'anticorps anti-A dans le sang. Mais l'injection du microbe atténué induit une réponse primaire lente, de courte durée et de faible production d'anticorps, tandis que l'injection ultérieure du microbe virulent induit une réponse secondaire plus rapide, plus durable et bien plus abondante ✓ : lors du premier contact le système immunitaire est sensibilisé, lors du second il réagit plus efficacement grâce à la mémoire immunitaire. La proposition qui inverse les deux est le piège classique. Dire que les réponses sont identiques nierait la mémoire, la propriété même que l'expérience démontre. Et prétendre que la seconde injection ne produit aucun anticorps est le contraire de ce qu'on observe : c'est elle qui en produit le plus.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Ramon prépare une anatoxine diphtérique et l'injecte à une personne saine : trois injections séparées de 15 jours, puis une injection un an après. Elle lui confère une immunité de plus de 5 ans. S'agit-il d'une méthode préventive ou curative, et quelle immunité confère-t-elle ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Curative, immunité passive"
+        },
+        {
+          "id": "b",
+          "text": "Préventive, immunité active"
+        },
+        {
+          "id": "c",
+          "text": "Curative, immunité active"
+        },
+        {
+          "id": "d",
+          "text": "Préventive, immunité passive"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Deux indices se recoupent. D'abord, l'injection est faite à une personne saine, et vise à la protéger avant toute maladie : c'est donc préventive — le but même de la vaccination, tandis que la sérothérapie est curative et s'adresse à des organismes atteints ou risquant de l'être. Ensuite, ce qu'on injecte est une anatoxine, c'est-à-dire une toxine rendue inactive : ce n'est pas un anticorps, mais un antigène que l'organisme devra reconnaître pour élaborer lui-même ses anticorps — l'immunité est donc active ✓. Le procédé de Ramon est bien une vaccination. Les rappels le confirment : l'immunité dure plus de 5 ans mais pas toute la vie, ce qui est la signature d'une action tardive et de longue durée, à l'opposé de l'action immédiate et brève d'un sérum.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "title": "⭐ Exercice : Le calcaire oolithique sur le terrain",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "De quoi une oolithe est-elle formée ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "D'enveloppes successives de calcaire déposées autour d'un noyau"
+        },
+        {
+          "id": "b",
+          "text": "D'un seul cristal de carbonate de calcium, de forme géométrique parfaite"
+        },
+        {
+          "id": "c",
+          "text": "D'un mélange homogène d'argile et de sable, sans noyau ni enveloppe"
+        },
+        {
+          "id": "d",
+          "text": "Du ciment carbonaté qui soude entre eux les éléments de la roche"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Une oolithe est une petite sphère de la taille du millimètre — 0,5 à 2 mm — formée d'enveloppes successives de calcaire autour d'un noyau, qui peut être un grain de quartz ou un fragment de coquille ✓. C'est cette structure en pelure d'oignon qui raconte sa formation : chaque passage en suspension dans l'eau agitée dépose une couche de plus. Un cristal unique de forme géométrique parfaite décrirait un cristal, pas une oolithe. Un mélange d'argile et de sable est un silt. Et le ciment est ce qui soude les oolithes entre elles — il les entoure, il ne les constitue pas : sans lui la roche ne serait pas compacte.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "On porte du calcaire oolithique à haute température. Un gaz se dégage et trouble l'eau de chaux ; la roche se transforme en une substance friable et blanchâtre. Qu'obtient-on, et qu'en déduit-on ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Du quartz et du sable : la roche est essentiellement siliceuse"
+        },
+        {
+          "id": "b",
+          "text": "De la vapeur d'eau et du gypse : la roche est du sulfate de calcium"
+        },
+        {
+          "id": "c",
+          "text": "Du CO2 et du bicarbonate de calcium : la roche s'est simplement dissoute"
+        },
+        {
+          "id": "d",
+          "text": "Du CO2 et de la chaux vive (CaO) : la roche est du carbonate de calcium"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Le gaz qui trouble l'eau de chaux est le dioxyde de carbone (CO2), et la substance friable et blanchâtre obtenue est la chaux vive, ou oxyde de calcium (CaO) ; on en déduit que le calcaire oolithique est essentiellement constitué de carbonate de calcium (CaCO3) ✓ — c'est d'ailleurs cette réaction qu'exploitent les fours à chaux. La vapeur d'eau et l'odeur fétide seraient le résultat du chauffage d'une roche phosphatée, pas d'un calcaire. Le bicarbonate de calcium ne se forme pas par la chaleur mais par dissolution dans une eau chargée en CO2 — et il se produit en solution, pas dans un tube chauffé. Quant au quartz, il constitue le sable et n'apparaît jamais par chauffage.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Le manuel affirme que le calcaire oolithique est « imperméable à l'échelle de l'échantillon » mais « perméable dans la nature ». Pourquoi cette différence ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Parce que la roche devient soluble une fois exposée à la pluie et au vent"
+        },
+        {
+          "id": "b",
+          "text": "Parce que, dans la nature, la roche est parcourue de fissures"
+        },
+        {
+          "id": "c",
+          "text": "Parce que la roche est poreuse, et la porosité suffit à la rendre perméable"
+        },
+        {
+          "id": "d",
+          "text": "Parce que la chaleur du soleil dilate la roche et ouvre peu à peu ses pores"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Le calcaire oolithique, imperméable à l'échelle de l'échantillon, est perméable dans la nature à cause des fissures qu'il présente ✓ : l'eau ne traverse pas la roche elle-même, elle passe par les cassures qui la parcourent — la propriété change parce que l'échelle d'observation change. La solubilité n'est pas en cause ici : elle exige une eau chargée en CO2 et provoque un tout autre phénomène, l'élargissement des fissures. La porosité est le distracteur essentiel : la roche est bel et bien poreuse, mais poreux et perméable ne sont pas synonymes — poreux signifie contenir des vides, perméable se laisser traverser, et le test montre justement que l'eau pénètre sans ressortir de l'autre côté.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Comment se forment les stalactites au plafond d'une grotte ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Le calcaire du plafond fond sous l'effet de la chaleur puis se fige en aiguilles"
+        },
+        {
+          "id": "b",
+          "text": "L'eau chargée en CO2 dissout le plafond et y creuse des aiguilles calcaires"
+        },
+        {
+          "id": "c",
+          "text": "Des grains de quartz s'accumulent au plafond et se cimentent entre eux"
+        },
+        {
+          "id": "d",
+          "text": "L'eau riche en bicarbonate de calcium suinte, perd son CO2 et dépose du calcaire"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Au plafond des grottes, l'eau suinte sans cesse ; elle est très riche en bicarbonate de calcium. Chaque goutte s'évapore en perdant son dioxyde de carbone et abandonne une mince pellicule de calcaire : ainsi se forment les colonnes descendantes, les stalactites ✓. C'est la réaction de précipitation, qui se déclenche dès que le milieu s'appauvrit en CO2. La dissolution fait exactement le contraire : elle enlève de la matière, elle creuse les cavités — c'est elle qui a formé la grotte, pas ses aiguilles. Le quartz n'intervient pas, et aucune fusion n'a lieu : la chaleur d'une grotte ne fait rien fondre du tout.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans la falaise de Ras Amer, les strates 1 et 3 (calcaires) sont saillantes tandis que la strate 2 (argile silteuse) est creusée. Comment l'expliquer ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Les calcaires sont plus récents, ils ont donc eu moins de temps pour s'éroder"
+        },
+        {
+          "id": "b",
+          "text": "Les calcaires sont plus épais que la strate d'argile silteuse creusée"
+        },
+        {
+          "id": "c",
+          "text": "Le calcaire est dur et résiste ; le silt est tendre et s'altère"
+        },
+        {
+          "id": "d",
+          "text": "L'argile silteuse s'est déposée dans un creux préexistant de la falaise"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Le calcaire, relativement dur, résiste à l'altération et à l'action des agents d'érosion ; le silt, relativement tendre et friable, s'altère plus facilement ✓ : c'est l'érosion différentielle, et c'est pourquoi le relief révèle la dureté des roches. L'âge n'y est pour rien, et l'argument se retourne : la strate 3, la plus ancienne des trois, est pourtant saillante. L'épaisseur non plus — les strates 2 et 3 font toutes deux environ 80 cm, et l'une est creusée quand l'autre est saillante : voilà qui règle la question. Enfin, un dépôt dans un creux préexistant contredirait la sédimentation, qui aboutit à des couches horizontales superposées.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Où et dans quelles conditions des oolithes se forment-elles actuellement ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Dans le golfe de Gabès, en mer peu profonde, chaude et agitée"
+        },
+        {
+          "id": "b",
+          "text": "Au fond des mers profondes et froides, à l'abri de toute agitation"
+        },
+        {
+          "id": "c",
+          "text": "Dans les lagunes sursalées, par évaporation du sel gemme"
+        },
+        {
+          "id": "d",
+          "text": "Dans les eaux douces des rivières, riches en quartz"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Des oolithes se forment actuellement dans le golfe de Gabès et d'autres mers peu profondes et chaudes, de 22 à 31 °C, très riches en bicarbonate de calcium provenant de l'altération chimique des roches calcaires ✓. La suite du mécanisme demande l'agitation : quand la teneur en CO2 baisse — par absorption du CO2 par les végétaux marins verts ou par évaporation — le carbonate de calcium précipite autour des grains de sable ou des fragments de coquilles que l'agitation de l'eau met en suspension. Une mer profonde, froide et calme est donc exclue sur les trois critères à la fois ; c'est là que se déposent les calcaires à globigérines. Le sel gemme et le gypse signent un faciès lagunaire, et l'eau douce un faciès continental — ni l'un ni l'autre ne fabrique d'oolithes.",
+      "difficulty": 2
+    }
+  ]
+}
