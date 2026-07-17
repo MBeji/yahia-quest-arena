@@ -9,7 +9,10 @@
       "name": "Mathématiques",
       "contentLanguage": "fr",
       "chapters": [
-        { "slug": "01-angles", "notion": "Angles" },
+        {
+          "slug": "01-angles",
+          "notion": "Angles"
+        },
         {
           "slug": "02-theoreme-thales",
           "notion": "Théorème de Thalès et sa réciproque"
@@ -18,45 +21,133 @@
           "slug": "03-rapports-trigonometriques",
           "notion": "Rapports trigonométriques & relations métriques"
         },
-        { "slug": "04-vecteurs-translations", "notion": "Vecteurs et translations" },
-        { "slug": "05-somme-vecteurs-colinearite", "notion": "Somme de vecteurs & colinéarité" },
-        { "slug": "06-repere-coordonnees", "notion": "Activités dans un repère" },
-        { "slug": "07-quart-tour", "notion": "Quart de tour" },
-        { "slug": "08-sections-planes", "notion": "Sections planes d'un solide" },
-        { "slug": "09-activites-numeriques-i", "notion": "Activités numériques I" },
-        { "slug": "10-activites-numeriques-ii", "notion": "Activités numériques II" },
-        { "slug": "11-activites-algebriques", "notion": "Activités algébriques" },
-        { "slug": "12-fonctions-lineaires", "notion": "Fonctions linéaires" },
+        {
+          "slug": "04-vecteurs-translations",
+          "notion": "Vecteurs et translations"
+        },
+        {
+          "slug": "05-somme-vecteurs-colinearite",
+          "notion": "Somme de vecteurs & colinéarité"
+        },
+        {
+          "slug": "06-repere-coordonnees",
+          "notion": "Activités dans un repère"
+        },
+        {
+          "slug": "07-quart-tour",
+          "notion": "Quart de tour"
+        },
+        {
+          "slug": "08-sections-planes",
+          "notion": "Sections planes d'un solide"
+        },
+        {
+          "slug": "09-activites-numeriques-i",
+          "notion": "Activités numériques I"
+        },
+        {
+          "slug": "10-activites-numeriques-ii",
+          "notion": "Activités numériques II"
+        },
+        {
+          "slug": "11-activites-algebriques",
+          "notion": "Activités algébriques"
+        },
+        {
+          "slug": "12-fonctions-lineaires",
+          "notion": "Fonctions linéaires"
+        },
         {
           "slug": "13-equations-inegalites-1er-degre",
           "notion": "Équations & inéquations 1er degré"
         },
-        { "slug": "14-fonctions-affines", "notion": "Fonctions affines" },
-        { "slug": "15-systemes-deux-equations", "notion": "Systèmes de deux équations" },
-        { "slug": "16-exploitation-information", "notion": "Exploitation de l'information" }
+        {
+          "slug": "14-fonctions-affines",
+          "notion": "Fonctions affines"
+        },
+        {
+          "slug": "15-systemes-deux-equations",
+          "notion": "Systèmes de deux équations"
+        },
+        {
+          "slug": "16-exploitation-information",
+          "notion": "Exploitation de l'information"
+        }
       ]
     },
     {
-      "id": "sciences-physiques",
+      "id": "physique-1ere-sec",
       "name": "Sciences Physiques",
       "contentLanguage": "fr",
       "chapters": [
-        { "slug": "02-circuits-electriques", "notion": "Circuits électriques" },
-        { "slug": "03-grandeurs-electriques", "notion": "Grandeurs électriques" },
-        { "slug": "04-resistance-thermique", "notion": "Résistance & effet thermique" },
-        { "slug": "05-energie-electrique", "notion": "Énergie électrique" },
-        { "slug": "06-etats-matiere", "notion": "États de la matière" },
-        { "slug": "07-temperature-dilatation", "notion": "Température & dilatation" },
-        { "slug": "08-energie-thermique", "notion": "Énergie thermique" },
-        { "slug": "09-thermodynamique", "notion": "Principes thermodynamiques" },
-        { "slug": "10-forces-mouvements", "notion": "Forces & mouvements" },
-        { "slug": "11-travail-puissance", "notion": "Travail & puissance" },
-        { "slug": "12-energie-mecanique", "notion": "Énergie mécanique" },
-        { "slug": "13-oscillations", "notion": "Oscillations & ondes" },
-        { "slug": "14-ondes-mecaniques", "notion": "Ondes mécaniques" },
-        { "slug": "15-lumiere-optique", "notion": "Lumière & optique" },
-        { "slug": "16-astre-univers", "notion": "Astres & univers" },
-        { "slug": "17-energie-renouvelable", "notion": "Énergies renouvelables" }
+        {
+          "slug": "01-phenomene-electrisation",
+          "notion": "L’ELECTRICITE · CHAPITRE I — Le phénomène d’électrisation"
+        },
+        {
+          "slug": "02-circuit-electrique",
+          "notion": "L’ELECTRICITE · CHAPITRE II — Le circuit électrique"
+        },
+        {
+          "slug": "03-intensite-courant",
+          "notion": "L’ELECTRICITE · CHAPITRE III — L’intensité du courant"
+        },
+        {
+          "slug": "04-tension-electrique",
+          "notion": "L’ELECTRICITE · CHAPITRE IV — La tension électrique"
+        },
+        {
+          "slug": "05-dipole-resistor",
+          "notion": "L’ELECTRICITE · CHAPITRE V — Caractéristique d’un dipôle résistor"
+        },
+        {
+          "slug": "06-etats-physiques-matiere",
+          "notion": "LA MATIERE · CHAPITRE I — Les états physiques de la matière"
+        },
+        {
+          "slug": "07-proprietes-matiere",
+          "notion": "LA MATIERE · CHAPITRE II — Quelques propriétés de la matière"
+        },
+        {
+          "slug": "08-masse",
+          "notion": "LA MATIERE · CHAPITRE III — La masse"
+        },
+        {
+          "slug": "09-changements-etat",
+          "notion": "LA MATIERE · CHAPITRE IV — Les changements d’état physique d’un corps pur"
+        },
+        {
+          "slug": "10-mouvement",
+          "notion": "LA MECANIQUE · CHAPITRE I — Le mouvement"
+        },
+        {
+          "slug": "11-actions-mecaniques",
+          "notion": "LA MECANIQUE · CHAPITRE II — Les actions mécaniques"
+        },
+        {
+          "slug": "12-forces-equilibre",
+          "notion": "LA MECANIQUE · CHAPITRE III — Forces et équilibre"
+        },
+        {
+          "slug": "13-forces-pression",
+          "notion": "LA MECANIQUE · CHAPITRE IV — Forces et pression"
+        },
+        {
+          "slug": "14-energie-controle",
+          "notion": "L’ENERGIE · CHAPITRE I — Energie et contrôle"
+        },
+        {
+          "slug": "15-terre-univers",
+          "notion": "ASTRONOMIE · CHAPITRE I — La Terre et l’univers"
+        },
+        {
+          "slug": "16-lumiere-propagation",
+          "notion": "L’OPTIQUE · CHAPITRE I — La lumière et sa propagation"
+        },
+        {
+          "slug": "17-spectre-vision",
+          "notion": "L’OPTIQUE · CHAPITRE II — Spectre de lumière et vision"
+        }
       ]
     },
     {
@@ -64,16 +155,34 @@
       "name": "Sciences de la Vie et de la Terre",
       "contentLanguage": "fr",
       "chapters": [
-        { "slug": "01-nutrition-minerale", "notion": "La nutrition minérale" },
-        { "slug": "02-nutrition-carbonee", "notion": "La nutrition carbonée" },
-        { "slug": "03-multiplication-vegetative", "notion": "La multiplication végétative" },
-        { "slug": "04-diversite-monde-microbien", "notion": "La diversité du monde microbien" },
+        {
+          "slug": "01-nutrition-minerale",
+          "notion": "La nutrition minérale"
+        },
+        {
+          "slug": "02-nutrition-carbonee",
+          "notion": "La nutrition carbonée"
+        },
+        {
+          "slug": "03-multiplication-vegetative",
+          "notion": "La multiplication végétative"
+        },
+        {
+          "slug": "04-diversite-monde-microbien",
+          "notion": "La diversité du monde microbien"
+        },
         {
           "slug": "05-agents-pathogenes-maladies-infectieuses",
           "notion": "Les agents pathogènes et les maladies infectieuses"
         },
-        { "slug": "06-defense-organisme", "notion": "La défense de l'organisme" },
-        { "slug": "07-site-geologique", "notion": "Étude d'un site géologique" },
+        {
+          "slug": "06-defense-organisme",
+          "notion": "La défense de l'organisme"
+        },
+        {
+          "slug": "07-site-geologique",
+          "notion": "Étude d'un site géologique"
+        },
         {
           "slug": "08-phosphate",
           "notion": "Exploitation et gestion d'une roche à intérêt économique : le phosphate"
