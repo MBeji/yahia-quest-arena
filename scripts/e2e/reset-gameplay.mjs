@@ -9,10 +9,12 @@
  *   SUPABASE_SERVICE_ROLE_KEY=...
  *   node scripts/e2e/reset-gameplay.mjs
  *
- * ⚠️ Never run against production. Add new mutable gameplay tables to GAMEPLAY_TABLES.
+ * ⚠️ Never run against production. Add new mutable gameplay tables to
+ * gameplay-tables.mjs (not here) so the unit-test coverage catches omissions.
  */
 import "./_env.mjs";
 import { createClient } from "@supabase/supabase-js";
+import { GAMEPLAY_TABLES } from "./gameplay-tables.mjs";
 
 const URL =
   process.env.SUPABASE_URL ?? process.env.TEST_SUPABASE_URL ?? process.env.VITE_SUPABASE_URL;
@@ -29,21 +31,6 @@ if (PROD_REFS.some((ref) => URL.includes(ref))) {
   console.error(`Refusing to reset: ${URL} is the production project. Use the TEST project.`);
   process.exit(1);
 }
-
-// Children before parents (FKs). Tolerant: a missing table is skipped, not fatal.
-const GAMEPLAY_TABLES = [
-  "attempts",
-  "dungeon_run_questions",
-  "dungeon_runs",
-  "spaced_repetition_schedule",
-  "daily_objectives",
-  "weekly_quests",
-  "difficulty_adaptation",
-  "student_badges",
-  "inventory_items",
-  "exercise_assignments",
-  "rate_limit_events",
-];
 
 const admin = createClient(URL, SERVICE_KEY, { auth: { persistSession: false } });
 const ALL_ROWS = ["id", "is", null]; // delete().not("id","is",null) ⇒ matches every row
