@@ -5,8 +5,8 @@
 > transcription à la mise en prod, quel que soit l'exécutant : session Claude Code interne (le
 > skill `content-ingest` l'applique nativement), agent IA d'un contributeur externe, campagne
 > opérée. Elle est **générique** (quatre profils de source, § Profils), **résumable** (elle
-> reprend exactement où la work-list en est) et **budgétée** (charte tokens T-1…T-9 : le coût
-> par chapitre publié est un KPI mesuré, pas un hasard).
+> reprend exactement où la work-list en est) et **budgétée** (charte tokens T-1…T-10 : le coût
+> par chapitre publié est un KPI mesuré, pas un hasard — et rien ne reste longtemps non poussé).
 >
 > Ce document **remplace** `PROMPT-TRANSCRIPTION-CNP.md` (consolidation du 2026-07-17) et porte
 > le processus des études [12 — Studio d'ingestion](./12-studio-ingestion/ETUDE.md) (le canal)
@@ -54,16 +54,20 @@ pour chaque UNITÉ de la file (couple niveau × matière, ou document libre) :
                        → A4 profondeur de génération → A5 audits (QA, R-7, _INDEX)
                        → A6 push → 1 PR (auto-merge) → merge confirmé
   si GENERATION = oui :
-  LOT B — LE CONTENU : B1 brief + skills → B2 génération chapitre par chapitre
-                       → B3 gates + migration + push → 1 PR → merge + prod vérifiée
+  LOT B — LE CONTENU : B1 brief + skills → puis PAR TRANCHE de ≤4 chapitres complets :
+                       B2 génération (commit local par chapitre) → B3 gates + migration
+                       + push → 1 PR → merge + prod vérifiée → tranche suivante,
+                       jusqu'à la matière complète
   contexte frais → unité suivante
 fin : PORTEE épuisée, ou arrêt propre (BUDGET) → rapport de campagne
 ```
 
 Règles de boucle (non négociables) :
 
-- **Un lot = une PR = UNE matière** (ou un document). Jamais deux matières dans une PR ; jamais
-  de push groupé « 10 fiches d'un coup » — c'est le signe qu'on va trop vite (R-6).
+- **Une PR = UNE matière, jamais deux** (ni push groupé « 10 fiches d'un coup » — c'est le
+  signe qu'on va trop vite, R-6). Le LOT A tient en une PR ; le LOT B se livre en **plusieurs
+  PRs par tranches de chapitres** (T-10, B2/B3) — plusieurs PRs pour une matière, jamais
+  plusieurs matières dans une PR.
 - **Un lot = un contexte frais** : si le harnais le permet (sous-agents/Task), déléguer chaque
   lot à un sous-agent au contexte vierge et garder le rôle d'orchestrateur mince ; sinon,
   traiter strictement en séquence (T-4).
@@ -102,7 +106,7 @@ Règles de boucle (non négociables) :
 - **Fidélité ≠ génération.** LOT A : on transcrit ce qui est imprimé, rien d'autre. LOT B : on
   génère **avec les skills du dépôt**, jamais sa propre recette.
 
-## La charte tokens (T-1…T-9) — l'économie de la méthode
+## La charte tokens (T-1…T-10) — l'économie de la méthode
 
 Le coût d'une campagne se joue sur une poignée de comportements. Chaque règle T ci-dessous est
 aussi contraignante que les règles R : un agent qui les viole gaspille le budget qui aurait
@@ -147,6 +151,14 @@ publié le chapitre suivant.
   **rapporte son coût** (tokens in/out si le harnais les expose, sinon pages lues / volume
   écrit) : le coût par chapitre publié est le KPI de l'étude 12 — il se mesure, il ne s'estime
   pas.
+- **T-10 — Des livrables courts et fréquents : jamais une longue session sans PR.** Le travail
+  d'une session coupée avant son push est perdu à 100 % — la pire dépense token possible. En
+  **LOT B** : commit local après **chaque chapitre complet**, push en PR par **tranche de ≤4
+  chapitres** (B2/B3) — on ne retient jamais une matière entière non poussée. En **LOT A** :
+  quand la session doit finir, la fiche partielle **honnêtement étiquetée se pousse** (arrêt
+  propre, A3.4) plutôt que de viser le « tout » dans une session à risque. Interruption
+  imminente au milieu d'un chapitre ou d'une tranche ⇒ push de sauvegarde en branche `wip/…`
+  (PR draft, pas d'auto-merge), que la session suivante reprend.
 
 ## Profils de source
 
@@ -303,7 +315,9 @@ chiffres. Téléchargement bloqué ⇒ demander les PDF et continuer avec les co
 
 4. **Lecture intégrale (R-6)** : la source **en entier** avant de clore la phase. Budget court ⇒
    arrêt propre en fin de section + étiquette honnête de profondeur (« modules 1–4 en
-   profondeur, 5–7 en first-pass »).
+   profondeur, 5–7 en first-pass ») — puis **pousser ce palier** (A5→A6 : PR normale, ligne
+   `[~]` avec la profondeur) plutôt que de garder des heures de transcription non poussées
+   (T-10) ; la session suivante **complète** la fiche, ne la refait pas (R-4).
 
 ### A4 — Enrichir (phase 2 : profondeur de génération, R-5)
 
@@ -404,24 +418,31 @@ le LOT B (ou le couple suivant).
    s'invoquent nativement ; autre agent : lire chaque `SKILL.md` + la référence utile, et les
    appliquer à la lettre.
 
-### B2 — Générer chapitre par chapitre (T-5)
+### B2 — Générer par tranches de chapitres (T-5, T-10)
 
-Dans l'**ordre du chapitrage** (§4 de la fiche / `manifest/<niveau>.json`). Pour chaque
-chapitre — contexte : **brief matière + la section de la fiche de CE chapitre** :
+Dans l'**ordre du chapitrage** (§4 de la fiche / `manifest/<niveau>.json`), par **tranches de
+3 chapitres complets par défaut — jamais plus de 4 non poussés**. Pour chaque chapitre —
+contexte : **brief matière + la section de la fiche de CE chapitre** :
 
 - produire `chapter.json`, `cours.md`, `resume.md`, `quiz.json`, `exercices/*.json` (ladder
-  standard — voir les skills). Sujet absent de `content/` ⇒ créer `subject.json` selon la
-  convention d'identifiants ;
+  standard — voir les skills). Sujet absent de `content/` ⇒ créer `subject.json` dans la
+  **première tranche**, selon la convention d'identifiants ;
 - **Illustration (axe 5 — s'applique à toute campagne depuis l'étude 18)** : toute notion
   spatiale/visuelle se **dessine** (cours `::: figure` ; question `<svg>` inline), figures
   **vraies** (double-résolues sur la figure) qui ne fuitent pas la clé ; petites classes
   (1ère–3ème) ⇒ presque tout illustré, coloré ;
 - auto-vérification par chapitre : re-résolution à l'aveugle, distracteurs = erreurs exécutées,
   équilibre des clés, notation standard (0-9, LTR ; milliers arabes en U+00A0 **cohérent**) ;
-- terminer **toute la matière** avant de pousser — le lot B = la matière complète, pas un
-  chapitre isolé.
+- **commit local après chaque chapitre complet** (fichiers `content/` seulement — la migration
+  vient en B3). Un chapitre part **complet ou pas du tout** dans une PR ready (cours + résumé +
+  quiz + ≥1 mission) : un chapitre entamé mais pas fini reste hors tranche (ou part en `wip/`
+  si la session s'interrompt, T-10).
 
-### B3 — Gates, migration, push, prod
+Tranche pleine — ou budget/fenêtre qui approche de sa fin — ⇒ passer en B3 pour la livrer. La
+matière est **finie** quand `content:audit` ne signale plus ni chapitre manquant ni chapitre
+incomplet pour ce sujet vs le manifeste.
+
+### B3 — Gates, migration, push, prod (à chaque tranche)
 
 ```bash
 npm run content:check          # validation Zod de tout le contenu
@@ -429,9 +450,13 @@ npm run content:qa:strict      # QA stricte — 0 [error]
 npm run content:audit          # conformité au programme + couverture vs manifeste
 ```
 
-Puis **audit pédagogique** : appliquer le skill `content-audit` sur le sujet généré
-(re-résoudre chaque question à l'aveugle, clés/distracteurs/calibrage) et corriger avant de
-pousser.
+(`content:audit` sur une tranche intermédiaire : les chapitres des tranches **suivantes**
+apparaissent « manquants » — c'est attendu tant que la matière n'est pas finie ; à la
+**dernière** tranche, 0 manquant / 0 incomplet exigé pour ce sujet.)
+
+Puis **audit pédagogique** : appliquer le skill `content-audit` sur les **chapitres de la
+tranche** (re-résoudre chaque question à l'aveugle, clés/distracteurs/calibrage) et corriger
+avant de pousser.
 
 ```bash
 npm run content:build -- --subject <subject-id>
@@ -439,20 +464,23 @@ npm run content:build -- --subject <subject-id>
 
 ⚠️ **JAMAIS `content:build` sans `--subject`** (il régénérerait ~60 sujets — migrations
 parasites à ne pas committer). **Garder l'horodatage neuf proposé** ; ne jamais réutiliser
-celui d'une migration existante (elle serait « up to date » et sautée en prod). Puis
-`npm run verify`, et **un commit unique** (les fichiers `content/<subject-id>/**` **+ la
-migration générée**, rien d'autre) :
+celui d'une migration existante (elle serait « up to date » et sautée en prod). Chaque tranche
+produit ainsi **une nouvelle migration du sujet** (idempotente, cumulative — le pattern
+documenté de `math`/`math-6eme` ; ne jamais supprimer celles des tranches précédentes). Puis
+`npm run verify`, et le **commit de tranche** (les chapitres de la tranche **+ la migration
+générée**, rien d'autre) :
 
 ```bash
 git add content/<subject-id> supabase/migrations/<ts>_generated_<subject-id>_content.sql
-git commit -m "feat(content): <subject-id> <niveau> — génération depuis la fiche (FableEtudes/12#generation)"
-git push -u origin feat/content-<subject-id>
+git commit -m "feat(content): <subject-id> ch.NN-MM — génération depuis la fiche (FableEtudes/12#generation)"
+git push -u origin feat/content-<subject-id>-chNN-MM
 ```
 
 La PR s'auto-merge comme au LOT A ; **au merge, la migration s'applique seule en prod**
 (`db-migrate-prod`). Confirmer le merge, vérifier dans l'onglet Actions que le run affiche bien
 `Applying migration <ts>_generated_<subject-id>…` (pas « Remote database is up to date »), puis
-**reprendre la boucle** au couple suivant.
+**tranche suivante** (branche fraîche depuis `origin/main` mergé, B2) — et quand la matière est
+finie, **reprendre la boucle** au couple suivant.
 
 ---
 
@@ -484,8 +512,10 @@ ne s'estime pas.
   générer** ; repasser par A3–A4.
 - Un chapitre appelle un **format de contenu inexistant** dans le moteur ⇒ signalement (issue)
   vers l'étude 03 / le catalogue de formats, jamais un format ad hoc.
-- Budget insuffisant ⇒ arrêt propre **en fin de lot** + étiquetage honnête (T-9) ; la campagne
-  reprendra où `_INDEX.md` en est. Jamais de bâclage.
+- Budget insuffisant ⇒ arrêt propre **au dernier palier poussable** (fin de tranche en LOT B,
+  fiche partielle étiquetée en LOT A) + étiquetage honnête (T-9/T-10) ; interruption imminente
+  au milieu d'un chapitre ⇒ sauvegarde `wip/…` (PR draft). La campagne reprendra où
+  `_INDEX.md` en est. Jamais de bâclage.
 
 ---
 
