@@ -1,0 +1,81 @@
+{
+  "grade": "2eme-base",
+  "fiches": [
+    {
+      "matiere": "arabe",
+      "statut": "complete",
+      "profondeur": "generation",
+      "sources": [
+        {
+          "code": "501207",
+          "tomes": ["P00"],
+          "role": "enseignant",
+          "pagesTotal": null,
+          "pagesLues": "integral"
+        }
+      ],
+      "sourcesLibres": [],
+      "r7": null,
+      "maj": "2026-07-17",
+      "par": "seed",
+      "notes": "Seed depuis _INDEX ([x] historique). Guide « Massarati »."
+    },
+    {
+      "matiere": "eveil",
+      "statut": "complete",
+      "profondeur": "generation",
+      "sources": [
+        {
+          "code": "503204",
+          "tomes": ["P00"],
+          "role": "enseignant",
+          "pagesTotal": null,
+          "pagesLues": "integral"
+        }
+      ],
+      "sourcesLibres": [],
+      "r7": null,
+      "maj": "2026-07-17",
+      "par": "seed",
+      "notes": "Seed depuis _INDEX ([x] historique)."
+    },
+    {
+      "matiere": "islamique",
+      "statut": "complete",
+      "profondeur": "generation",
+      "sources": [
+        {
+          "code": "511202",
+          "tomes": ["P00"],
+          "role": "enseignant",
+          "pagesTotal": null,
+          "pagesLues": "integral"
+        }
+      ],
+      "sourcesLibres": [],
+      "r7": null,
+      "maj": "2026-07-17",
+      "par": "seed",
+      "notes": "Seed depuis _INDEX ([x] historique)."
+    },
+    {
+      "matiere": "maths",
+      "statut": "complete",
+      "profondeur": "generation",
+      "sources": [
+        {
+          "code": "502205",
+          "tomes": ["P00"],
+          "role": "enseignant",
+          "pagesTotal": null,
+          "pagesLues": "integral"
+        }
+      ],
+      "sourcesLibres": [],
+      "r7": null,
+      "maj": "2026-07-17",
+      "par": "seed",
+      "notes": "Seed depuis _INDEX ([x] historique) ; a alimenté math-2eme (#162)."
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "grade": "bac-math",
+  "fiches": [
+    {
+      "matiere": "mathematiques",
+      "statut": "partielle",
+      "profondeur": "mixte",
+      "sources": [],
+      "sourcesLibres": [
+        "Transcription pilote 2026-07-05, hors corpus CNP — à valider contre les textes officiels (programmes ministère) et à rattacher aux manuels 4ème secondaire du corpus"
+      ],
+      "r7": null,
+      "maj": "2026-07-17",
+      "par": "seed",
+      "notes": "Seed depuis _INDEX ([~] pilote lycée). A alimenté le chapitre pilote math-bac-math/01-continuite-limites (#288)."
+    }
+  ]
+}

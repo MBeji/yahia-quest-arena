@@ -1,0 +1,62 @@
+{
+  "grade": "8eme-base",
+  "fiches": [
+    {
+      "matiere": "anglais",
+      "statut": "partielle",
+      "profondeur": "mixte",
+      "sources": [
+        {
+          "code": "541805",
+          "tomes": ["P00"],
+          "role": "enseignant",
+          "pagesTotal": null,
+          "pagesLues": "inconnu"
+        }
+      ],
+      "sourcesLibres": [],
+      "r7": null,
+      "maj": "2026-07-17",
+      "par": "seed",
+      "notes": "Seed depuis _INDEX ([~] historique, campagne collège #348). Évaluer lecture + profondeur avant génération (R-5)."
+    },
+    {
+      "matiere": "arabe",
+      "statut": "partielle",
+      "profondeur": "mixte",
+      "sources": [
+        {
+          "code": "501802",
+          "tomes": ["P00"],
+          "role": "enseignant",
+          "pagesTotal": null,
+          "pagesLues": "inconnu"
+        }
+      ],
+      "sourcesLibres": [],
+      "r7": null,
+      "maj": "2026-07-17",
+      "par": "seed",
+      "notes": "Seed depuis _INDEX ([~] historique). Évaluer lecture + profondeur avant génération (R-5)."
+    },
+    {
+      "matiere": "francais",
+      "statut": "partielle",
+      "profondeur": "mixte",
+      "sources": [
+        {
+          "code": "521802",
+          "tomes": ["P00"],
+          "role": "enseignant",
+          "pagesTotal": null,
+          "pagesLues": "inconnu"
+        }
+      ],
+      "sourcesLibres": [],
+      "r7": null,
+      "maj": "2026-07-17",
+      "par": "seed",
+      "notes": "Seed depuis _INDEX ([~] historique). Évaluer lecture + profondeur avant génération (R-5)."
+    }
+  ]
+}
