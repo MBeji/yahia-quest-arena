@@ -27,7 +27,7 @@ pédagogique reste chez les skills existants. Même famille que `curriculum-arch
 
 Docs : **[`FableEtudes/METHODE-GENERATION-CONTENU.md`](../../../FableEtudes/METHODE-GENERATION-CONTENU.md)
 (LA méthode de référence source → fiche → contenu → prod — boucle, lots, profils de source, charte
-tokens T-1…T-9 ; ce skill l'applique nativement)** +
+tokens T-1…T-10 ; ce skill l'applique nativement)** +
 [`FableEtudes/12-studio-ingestion`](../../../FableEtudes/12-studio-ingestion/ETUDE.md) (le canal) +
 [`FableEtudes/13-moteur-transcription`](../../../FableEtudes/13-moteur-transcription/ETUDE.md) (le moteur
 **ScribeKit**, repo `YahiaAcademy/ScribeKit`). Défère à `content-engine` (schéma, barre qualité,
@@ -107,7 +107,9 @@ récompenses, style, notation) et à `content-ecole-tn` (fidélité au programme
 5. **Hand-off génération.** Invoquer les skills de génération pour produire `cours.md` / `resume.md` /
    `quiz.json` / `exercices/*` à partir de la transcription, puis suivre la recette `content-ecole-tn`
    (`content:check` + `content:qa:strict` + `content:audit` → build de migration `--subject <id>` → PR → revue
-   → auto-apply prod au merge).
+   → auto-apply prod au merge). **Livraison par tranches de ≤4 chapitres complets** — commit local par
+   chapitre, une PR + une migration fraîche par tranche, jamais une matière entière retenue non poussée
+   (méthode, T-10 ; interruption ⇒ sauvegarde `wip/`).
 
 ## STOP (escalade — ne re-designe jamais en silence)
 

@@ -6,7 +6,7 @@
 > **Dépend de** : rien de bloquant ; synergie avec la couche de persistance existante (transcriptions CNP) · **Bloque** : rien
 > **Docs normatifs liés** : CLAUDE.md (content pipeline — « files only, never SQL »), `content-engine/references/generation-pipeline.md`, `docs/content-generation-pipeline.md`, REVUE-2026-07 (re-scoping de la feature #2)
 > **Voir aussi** : [étude 13 — Moteur de transcription fidèle (OCR compris)](../13-moteur-transcription/ETUDE.md). L'étude 13 fait toute la **transcription fidèle** du corpus — extraction des PDF à couche-texte **et OCR/vision des scans** (via une interface LLM agnostique) → format app, résumable et traçable — **sans jamais générer de contenu**. L'étude 12 reste le **canal opéré/in-app** et le home de la **génération** (QCM/cours via les skills) : le skill `content-ingest` (D-2 ci-dessous) lance d'abord le moteur 13 pour obtenir la transcription, puis génère le contenu à partir d'elle.
-> **La méthode opérationnelle de ce canal est [`../METHODE-GENERATION-CONTENU.md`](../METHODE-GENERATION-CONTENU.md)** (consolidation 2026-07-17) : le processus de référence source → fiche → contenu → prod, générique (profils ecole-cnp / ecole-secondaire / document-libre / sans-source) et budgété en tokens (charte T-1…T-9). Elle remplace l'ancien `PROMPT-TRANSCRIPTION-CNP.md`.
+> **La méthode opérationnelle de ce canal est [`../METHODE-GENERATION-CONTENU.md`](../METHODE-GENERATION-CONTENU.md)** (consolidation 2026-07-17) : le processus de référence source → fiche → contenu → prod, générique (profils ecole-cnp / ecole-secondaire / document-libre / sans-source) et budgété en tokens (charte T-1…T-10). Elle remplace l'ancien `PROMPT-TRANSCRIPTION-CNP.md`.
 
 ## 1. Contexte & objectif produit
 
@@ -153,3 +153,11 @@ pgTAP (RLS/quota), Vitest (fns zod, upload mocké, états UI), pas d'e2e dédié
   substantielles. Intégré aussi : l'axe 5 Illustration (étude 18) et le français natif lycée
   (2026-07-13), absents de l'ancien prompt. _Reste_ : lot 2 (rapport coût/délai formalisé — la
   campagne 1ère sec fournit déjà les données à consolider), lot 3 (canal in-app, GO humain).
+- **2026-07-17 — Amendement T-10 : livraison par tranches (décision Mohamed).** Plus jamais de
+  longue session de génération sans livrable : le LOT B se livre désormais par **tranches de
+  ≤4 chapitres complets** (commit local par chapitre, une PR + une migration fraîche par
+  tranche, merge entre tranches — la matière reste l'unité de complétude, plus l'unité de
+  livraison) ; au LOT A, l'arrêt propre **pousse** la fiche partielle étiquetée ; interruption
+  au milieu d'un chapitre ⇒ sauvegarde `wip/` (draft). Motif : une session coupée avant son
+  push perd 100 % du travail — le risque principal des campagnes longues. Répercuté dans la
+  méthode (T-10, B2/B3, A3.4, STOP), `content-ingest` et `generation-pipeline.md`.
