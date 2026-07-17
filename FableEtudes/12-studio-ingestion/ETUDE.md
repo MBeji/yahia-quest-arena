@@ -6,6 +6,7 @@
 > **Dépend de** : rien de bloquant ; synergie avec la couche de persistance existante (transcriptions CNP) · **Bloque** : rien
 > **Docs normatifs liés** : CLAUDE.md (content pipeline — « files only, never SQL »), `content-engine/references/generation-pipeline.md`, `docs/content-generation-pipeline.md`, REVUE-2026-07 (re-scoping de la feature #2)
 > **Voir aussi** : [étude 13 — Moteur de transcription fidèle (OCR compris)](../13-moteur-transcription/ETUDE.md). L'étude 13 fait toute la **transcription fidèle** du corpus — extraction des PDF à couche-texte **et OCR/vision des scans** (via une interface LLM agnostique) → format app, résumable et traçable — **sans jamais générer de contenu**. L'étude 12 reste le **canal opéré/in-app** et le home de la **génération** (QCM/cours via les skills) : le skill `content-ingest` (D-2 ci-dessous) lance d'abord le moteur 13 pour obtenir la transcription, puis génère le contenu à partir d'elle.
+> **La méthode opérationnelle de ce canal est [`../METHODE-GENERATION-CONTENU.md`](../METHODE-GENERATION-CONTENU.md)** (consolidation 2026-07-17) : le processus de référence source → fiche → contenu → prod, générique (profils ecole-cnp / ecole-secondaire / document-libre / sans-source) et budgété en tokens (charte T-1…T-9). Elle remplace l'ancien `PROMPT-TRANSCRIPTION-CNP.md`.
 
 ## 1. Contexte & objectif produit
 
@@ -89,7 +90,7 @@ admin list/update-status) ; page « Proposer un contenu » (opt-in, lien discret
 | 3   | App : `ingestion_requests` + Storage + pages élève/admin (D-3)                                              | exécuteur Sonnet    | pgTAP (RLS, quota) ; Vitest fns/UI                  | décision GO après 2 |
 | 4   | v2 (GELÉE) : self-service élargi, notifications de statut, SLA                                              | —                   | —                                                   | Q-2                 |
 
-- [ ] Lot 1 — fiche + skill d'ingestion
+- [x] Lot 1 — fiche + skill d'ingestion (skill 2026-07-09 ; format de fiche D-1 + méthode de référence 2026-07-17)
 - [ ] Lot 2 — pilote (2 chapitres réels, rapport coût/délai)
 - [ ] Lot 3 — canal in-app (GO humain après le pilote)
 - [ ] Lot 4 — gelé
@@ -137,3 +138,18 @@ pgTAP (RLS/quota), Vitest (fns zod, upload mocké, états UI), pas d'e2e dédié
   jour pour ce flux outillé (§ « Transcription outillée : ScribeKit »).
   - _Reste (lots 1–3 de cette étude)_ : format de fiche `sources-externes/<slug>/fiche.md` normé (D-1),
     pilote de bout en bout mesuré (coût/délai), canal in-app `ingestion_requests` (D-3).
+- **2026-07-17 — Consolidation : la méthode de référence remplace le prompt de campagne.**
+  [`../METHODE-GENERATION-CONTENU.md`](../METHODE-GENERATION-CONTENU.md) fusionne l'ancien
+  `PROMPT-TRANSCRIPTION-CNP.md` et le volet processus de cette étude en **une seule méthode**,
+  générique (4 profils : `ecole-cnp` / `ecole-secondaire` / `document-libre` / `sans-source`)
+  et **optimisée tokens** (charte T-1…T-9 : déterministe d'abord, une page lue une fois,
+  fiche = capital, un lot = un contexte, unité de génération = le chapitre, brief matière
+  réutilisé, R-7 par sondage dirigé, coût mesuré par lot). Elle tranche au passage le **D-1
+  résiduel** : les fiches `document-libre` utilisent le **même gabarit `_TEMPLATE.md`** + un
+  en-tête de provenance/droits, sous `programmes-officiels/sources-externes/<slug>/fiche.md`
+  (école) ou `content/_sources/<theme>/<slug>/fiche.md` (hors école) → **lot 1 coché**. Le
+  protocole R-7 est précisé : 100 % du critique (encadrés verbatim, chapitrage, zones `[?]`)
+  plus un sondage ≥15 % des pages, escalade en re-lecture intégrale dès 3 erreurs
+  substantielles. Intégré aussi : l'axe 5 Illustration (étude 18) et le français natif lycée
+  (2026-07-13), absents de l'ancien prompt. _Reste_ : lot 2 (rapport coût/délai formalisé — la
+  campagne 1ère sec fournit déjà les données à consolider), lot 3 (canal in-app, GO humain).
