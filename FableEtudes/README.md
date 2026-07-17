@@ -23,13 +23,15 @@ epics du projet, produites par le **modèle architecte** (Fable/Opus) et destin�
 > de lecture, workflow Git & chaîne d'auto-merge, réservation d'une étude à deux, STOP & escalade.
 > Les « Règles d'exécution » ci-dessous s'appliquent à toi comme au modèle.
 >
-> **Contribuer le contenu persistant CNP avec ton agent IA ?** Prompt clé-en-main, zéro
-> connaissance du projet requise :
-> **[`PROMPT-TRANSCRIPTION-CNP.md`](./PROMPT-TRANSCRIPTION-CNP.md)** (études 12/13) — un seul
-> input (portée + tes PDF, sinon téléchargés depuis le site du CNP), et l'agent **boucle sur
-> tous les documents manquants** — classe par classe, matière par matière, chapitre par
-> chapitre : transcription (ScribeKit) → enrichissement → audits → **génération via les
-> skills du projet**, avec une PR par lot (matière complète).
+> **Produire du contenu (transcription + génération) avec ton agent IA ?** Une seule
+> référence, zéro connaissance du projet requise :
+> **[`METHODE-GENERATION-CONTENU.md`](./METHODE-GENERATION-CONTENU.md)** (études 12/13) — LA
+> méthode source → fiche → contenu → prod, **générique** (corpus CNP, manuels du secondaire,
+> document libre, génération seule) et **budgétée en tokens** (charte T-1…T-9). Un seul input,
+> et l'agent **boucle** — classe par classe, matière par matière, chapitre par chapitre :
+> transcription (ScribeKit) → enrichissement → audits → **génération via les skills du
+> projet**, une PR par lot (matière complète). (Remplace `PROMPT-TRANSCRIPTION-CNP.md`,
+> consolidé le 2026-07-17.)
 
 ## Cycle de vie d'une étude
 
