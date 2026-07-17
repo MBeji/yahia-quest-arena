@@ -75,13 +75,12 @@ On pense actuellement que le phosphate a **deux origines : l'une chimique, l'aut
 
 ::: figure Un même bassin, deux fabriques de phosphate : les ions phosphate montés par les courants rencontrent le calcium des eaux chaudes de surface et précipitent ; et le plancton, qui concentre le phosphore, tombe en cadavres dans un fond sans oxygène
 <svg viewBox="0 0 360 200">
-<path d="M300 34 L346 34 L346 176 L14 176 L14 60 L60 60 Z" fill="#0f6e56" opacity="0.10" stroke="none"/>
-<line x1="14" y1="60" x2="60" y2="60" stroke="#0f6e56" stroke-width="2"/>
-<line x1="60" y1="60" x2="300" y2="34" stroke="none"/>
-<line x1="60" y1="60" x2="346" y2="60" stroke="#0f6e56" stroke-width="2"/>
-<path d="M300 60 L318 100 L346 104 L346 176 L300 176 Z" fill="#94a3b8" opacity="0.5" stroke="#0f172a" stroke-width="1.4"/>
-<path d="M14 176 L14 60 L46 60 L60 100 L40 150 L60 176 Z" fill="#94a3b8" opacity="0.5" stroke="#0f172a" stroke-width="1.4"/>
-<path d="M56 168 Q160 156 314 168 L314 176 L56 176 Z" fill="#7c3aed" opacity="0.4" stroke="#0f172a" stroke-width="1.4"/>
+<path d="M50 60 L300 60 L300 176 L50 176 Z" fill="#0f6e56" opacity="0.10" stroke="none"/>
+<line x1="50" y1="60" x2="300" y2="60" stroke="#0f6e56" stroke-width="2"/>
+<path d="M300 60 L312 38 L346 34 L346 176 L300 176 Z" fill="#94a3b8" opacity="0.5" stroke="#0f172a" stroke-width="1.4"/>
+<path d="M14 176 L14 42 L46 46 L60 100 L40 150 L60 176 Z" fill="#94a3b8" opacity="0.5" stroke="#0f172a" stroke-width="1.4"/>
+<path d="M262 176 L280 90 L298 176 Z" fill="#94a3b8" opacity="0.5" stroke="#0f172a" stroke-width="1.4"/>
+<path d="M56 168 Q160 156 298 168 L298 176 L56 176 Z" fill="#7c3aed" opacity="0.4" stroke="#0f172a" stroke-width="1.4"/>
 <g fill="none" stroke="#dc2626" stroke-width="1.8">
 <path d="M78 158 L78 120"/><path d="M96 162 L96 124"/>
 </g>
@@ -103,13 +102,14 @@ On pense actuellement que le phosphate a **deux origines : l'une chimique, l'aut
 <g font-size="8.5" font-weight="700" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">
 <text x="212" y="32" text-anchor="middle" fill="#0f6e56">évaporation</text>
 <text x="204" y="64" text-anchor="middle" fill="#0f172a">Ca++ — biomasse importante</text>
-<text x="72" y="112" text-anchor="middle" fill="#dc2626">courants</text>
+<text x="72" y="92" text-anchor="middle" fill="#dc2626">courants</text>
 <text x="72" y="102" text-anchor="middle" fill="#dc2626">ascendants</text>
-<text x="72" y="92" text-anchor="middle" fill="#dc2626">HPO4--</text>
+<text x="72" y="112" text-anchor="middle" fill="#dc2626">HPO4--</text>
 <text x="252" y="140" text-anchor="middle" fill="#94a3b8">cadavres</text>
-<text x="330" y="90" text-anchor="middle" fill="#0f172a">terre</text>
-<text x="330" y="100" text-anchor="middle" fill="#0f172a">émergée</text>
-<text x="322" y="120" text-anchor="middle" fill="#0f172a">haut fond</text>
+<text x="38" y="34" text-anchor="middle" fill="#0f172a">terre émergée</text>
+<text x="326" y="48" text-anchor="middle" fill="#0f172a">île de</text>
+<text x="326" y="58" text-anchor="middle" fill="#0f172a">Kasserine</text>
+<text x="280" y="82" text-anchor="middle" fill="#0f172a">haut fond</text>
 <text x="186" y="192" text-anchor="middle" fill="#7c3aed">sédiment phosphaté — milieu pauvre en oxygène</text>
 </g>
 </svg>
