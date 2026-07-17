@@ -5,6 +5,44 @@
   "note": "sealed=false. MVP 2026 : mathématiques + sciences-physiques (électricité/thermodynamique/optique/mécanique, hors chimie). Chimie (chapitres du tome 2 sciences physiques) → PR séparé. Statut : chapitres 1–16 (mathématiques, intégralité), 2–17 (sciences-physiques, 1 pilote omis) transcrits à profondeur complète. SVT : 8 chapitres (3 parties du manuel — production végétale, microbes et santé, environnement géologique) transcrits à profondeur de génération le 2026-07-16 ; le mapping manuel↔pages par chapitre vit dans §4 de programme/1ere-sec/svt.md (le schéma du manifeste ne porte pas de champ manuel — il alimente chapter.manuel du content au lot de génération).",
   "subjects": [
     {
+      "id": "arabe-1ere-sec",
+      "contentLanguage": "ar",
+      "chapters": [
+        {
+          "slug": "01-shi3r-al-ghazal",
+          "notion": "شعر الغزل (قسم الأدب, محور 1)"
+        },
+        {
+          "slug": "02-al-hikaya-al-mathaliyya",
+          "notion": "الحكاية المثليّة عند ابن المقفّع (محور 2)"
+        },
+        {
+          "slug": "03-ash-shi3r-al-watani",
+          "notion": "الشعر الوطنيّ (محور 3)"
+        },
+        {
+          "slug": "04-al-uqsusa-an-nass-al-qasir",
+          "notion": "الأقصوصة : النصّ القصير (محور 4, partie 1)"
+        },
+        {
+          "slug": "05-al-uqsusa-an-nass-at-tawil",
+          "notion": "الأقصوصة : النصّ الطّويل (محور 4, partie 2)"
+        },
+        {
+          "slug": "06-mazahir-al-hayat-al-mu3asira",
+          "notion": "مظاهر من الحياة المعاصرة (المسائل الحضاريّة, محور 1)"
+        },
+        {
+          "slug": "07-ar-riyada-wal-qiyam",
+          "notion": "الرّياضة والقيم (المسائل الحضاريّة, محور 2)"
+        },
+        {
+          "slug": "08-musiqa-wa-adhwaq",
+          "notion": "موسيقى وأذواق (المسائل الحضاريّة, محور 3)"
+        }
+      ]
+    },
+    {
       "id": "math-1ere-sec",
       "name": "Mathématiques",
       "contentLanguage": "fr",
