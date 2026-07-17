@@ -25,7 +25,10 @@ l'intérieur du flux à gates**. Tu **transcris fidèlement, tu ne génères jam
 pédagogique reste chez les skills existants. Même famille que `curriculum-architect` : tu produis la
 **transcription/fiche** + tu **orchestres**, tu ne dupliques pas le cœur de génération.
 
-Docs : [`FableEtudes/12-studio-ingestion`](../../../FableEtudes/12-studio-ingestion/ETUDE.md) (le canal) +
+Docs : **[`FableEtudes/METHODE-GENERATION-CONTENU.md`](../../../FableEtudes/METHODE-GENERATION-CONTENU.md)
+(LA méthode de référence source → fiche → contenu → prod — boucle, lots, profils de source, charte
+tokens T-1…T-9 ; ce skill l'applique nativement)** +
+[`FableEtudes/12-studio-ingestion`](../../../FableEtudes/12-studio-ingestion/ETUDE.md) (le canal) +
 [`FableEtudes/13-moteur-transcription`](../../../FableEtudes/13-moteur-transcription/ETUDE.md) (le moteur
 **ScribeKit**, repo `YahiaAcademy/ScribeKit`). Défère à `content-engine` (schéma, barre qualité,
 récompenses, style, notation) et à `content-ecole-tn` (fidélité au programme officiel + recette).
@@ -79,7 +82,9 @@ récompenses, style, notation) et à `content-ecole-tn` (fidélité au programme
 - **R-7 — Vérification indépendante avant promotion.** Une fiche produite par une session/agent ne devient
   la référence canonique (`programme/<grade>/<matière>.md`, cochée dans `_INDEX.md`) qu'après relecture par
   un second agent qui re-vérifie contre la source elle-même (pas contre la fiche) — pas seulement contre son
-  propre travail.
+  propre travail. Protocole (sondage dirigé, règle T-8 de la méthode) : 100 % du critique (encadrés
+  verbatim, chapitrage/manifeste, zones `[?]`) + ≥15 % des pages restantes ; ≥3 erreurs substantielles ⇒
+  re-lecture intégrale.
 - **Fidélité, pas de génération.** ScribeKit et l'OCR agent **transcrivent** ; difficulté / calibrage / QCM
   / cours = **génération** (couche 3), jamais ici.
 

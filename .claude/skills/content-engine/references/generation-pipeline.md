@@ -8,6 +8,11 @@ follows it. When this file disagrees with a wrapper skill, this file wins — fi
 Read this **before** starting any content-generation task. It sits above `content-engine/SKILL.md`
 (the shared authoring core) and the per-program wrappers.
 
+For the **end-to-end campaign process** (source → transcription → generation → prod: the loop, the
+lots/PRs, source profiles, token budgeting), the reference is
+[`FableEtudes/METHODE-GENERATION-CONTENU.md`](../../../../FableEtudes/METHODE-GENERATION-CONTENU.md) —
+within its generation phase (LOT B), **this map** governs skill selection and authoring rules.
+
 ## The three layers (how the skills fit together — no overlap)
 
 Content generation is **a planning layer + two authoring layers**, not competing tracks:
