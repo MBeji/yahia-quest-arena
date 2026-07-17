@@ -165,6 +165,9 @@ Authored files under `content/` are compiled to **idempotent** Supabase migratio
    The migration **auto-applies to prod on merge** via `db-migrate-prod.yml` (pre-apply `pg_dump`
    backup; never apply by hand, never hand-edit the generated SQL).
 4. **Stop and report** (files, counts, `content:check`/`content:qa:strict` summary). Push/PR only when asked.
+   **Campaign / multi-chapter work**: deliver in slices of **≤4 complete chapters** — local commit per
+   chapter, one PR + one fresh migration per slice, never a whole subject held unpushed (a cut session
+   loses everything) — per the méthode (`FableEtudes/METHODE-GENERATION-CONTENU.md`, rule T-10).
 
 `content:check` in CI re-compiles the authored content and proves it still matches — an edit that
 forgot the rebuild is caught there.
