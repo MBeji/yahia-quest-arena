@@ -1,17 +1,635 @@
-﻿# Sciences Physiques — 1ère année secondaire (tronc commun) · programme officiel CNP
+# Physique (sciences physiques) — 1ère année secondaire (tronc commun) · programme officiel CNP
 
 > **Sources** :
 >
-> - **Manuel élève** (seule source disponible — pas de guide enseignant au corpus pour cette matière/ce niveau) : « **Sciences Physiques — 1ère année de l'enseignement secondaire** » (République Tunisienne, Ministère de l'Éducation, Centre National Pédagogique). Deux tomes (pagination continue) : 222105P01.pdf (tome 1, chapitres 1–9) et 222105P02.pdf (tome 2, chapitres 10–17).
->   **Transcrit le** : 2026-07-08. **Statut** : transcription fidèle (chapitres 2–17, chapitre 1 pilote omis).
->   **Langue d'enseignement** : français. **gradeSlug** : 1ere-sec. **subject id** attendu : sciences-physiques.
->   **Note** : Chimie (chapitres du tome 2) hors périmètre MVP — à traiter dans un PR séparé.
+> - **Guide enseignant** (programme) : **aucun au corpus** pour ce couple (niveau, matière). Le dossier
+>   `cnp-officiel/manuels/secondaire/c1/` ne contient **que** `eleve/` — **vérifié le 2026-07-17** (il n'y a
+>   aucun guide du secondaire dans le corpus téléchargé). **⇒ Le manuel élève fait référence** (règle
+>   « une seule source disponible ⇒ elle fait référence », [`README`](../README.md)) — situation de **toutes**
+>   les fiches `1ere-sec` (mathematiques, svt, chimie, francais, anglais).
+> - **Manuel élève** (source unique, donc source de scope **et** de contenu) : **`223103P00.pdf`**
+>   (`cnp-officiel/manuels/secondaire/c1/eleve/`) — « **PHYSIQUE — 1ère Année de l'enseignement secondaire** »
+>   (République Tunisienne, Ministère de l'Éducation, Centre National Pédagogique). **276 pages, VOLUME
+>   UNIQUE.** **Pages lues : 1–276 (intégralité).**
+>   Auteurs : **Limam Moncef** (Inspecteur) · **Mimouni Slaheddine** (Inspecteur) · **Boudriga Imed**
+>   (Conseiller pédagogique) · **Sridi Thouraya** (Professeur Principal). Évaluateurs : **Daoud Ftouh**
+>   (Inspecteur Général de l'Éducation) · **Gharbi Abdelhafidh** (Professeur Universitaire) ·
+>   **Mandhouj Salem** (Inspecteur Principal). « © Tous **droit** [sic] réservés au Centre National
+>   Pédagogique » (p.2).
+>   **Titre imprimé** : la couverture imprime « **PHYSIQUE** » — « Sciences Physiques » est le nom de la
+>   matière (et de ce fichier), pas celui de l'ouvrage.
+> - **Non transcrit — hors périmètre** : `224101P00.pdf` (« Chimie », 160 p.) est un **manuel distinct**,
+>   déjà couvert par [`chimie.md`](./chimie.md). **Ce manuel-ci ne contient aucune chimie** (voir §5).
+>
+> **Transcrit le** : 2026-07-08 (ch.2–17) · **complété le 2026-07-17** (ch.1 + liminaires + gabarit §1–§6).
+> **Statut** : transcription fidèle, **profondeur de génération** — les **17 chapitres** des **6 thèmes** y
+> sont, chaque activité / manipulation / exercice décrit individuellement avec ses données chiffrées, et les
+> encadrés « L'ESSENTIEL DU COURS » **verbatim**.
+>
+> **Langue d'enseignement** : **`fr`** — **constatée sur la source** : le manuel est **intégralement rédigé en
+> français**, de la couverture à la p.274 (le titre arabe « فيزياء » du `CATALOGUE.md` est un libellé de
+> catalogue, pas la langue de l'ouvrage). ✅ **Conforme** à `docs/lycee-architecture.md` §4, qui prévoit les
+> matières scientifiques en `fr` à partir de la 1ère sec (bascule ar→fr après la 9ème) : **aucune divergence
+> à arbitrer**.
+> **gradeSlug** : `1ere-sec`. **subject id attendu** : **`physique-1ere-sec`** (convention
+> `<matière>-<gradeSlug>`, `docs/lycee-architecture.md` §2 — **pas** `sciences-physiques-1ere-sec`).
+>
+> **Méthode d'obtention du texte (traçabilité)** : ce PDF porte une **couche-texte propre** → extraction
+> **déterministe** `pdftotext -layout` vers `cnp-officiel/_txt/223103P00-physique.txt` (**276 sauts de page =
+> 276 pages `pdfinfo`, aucune troncature** ; 529 556 octets ; SHA256
+> `2b80954ad1030c74d852f41ca8c6eca35f6471e4c534a5566d44b7a558a9f55c` ; UTF-8 strict, CRLF). **0 OCR, 0 clé
+> API** — le corpus n'en a pas eu besoin ici. Les passes **vision** (rastérisation `pdftocairo`/`pdftoppm` →
+> lecture par l'agent) n'ont servi qu'à lever des points que le texte seul ne pouvait pas trancher : elles
+> sont **nommées à l'endroit où elles ont servi** et récapitulées en §6.
+>
+> **R-7 — relecture de fidélité indépendante : ✅ EFFECTUÉE le 2026-07-17.** Périmètre **exact** de
+> l'attestation, à ne pas élargir en le citant :
+>
+> - **Ce qui a été relu contre la source** : **les ch.2–17 (p.25–276), en totalité**, par **5 agents à contexte
+>   vierge**, un par tranche (p.25–86 · 87–146 · 147–208 · 209–242 · 243–276), chacun lisant sa tranche
+>   **intégralement** dans la couche-texte déterministe + des passes vision ciblées (~25 pages au total).
+> - **Ce qui n'a PAS été relu** : le **ch.1 + les liminaires (p.1–24)**, qui ne sont **pas** une relecture mais une
+>   **transcription neuve** du 2026-07-17 (le ch.1 était purement et simplement **absent** de la fiche pilote).
+>   Son auteur a relu les **24/24 pages en vision** et n'a laissé aucun `[?]`, mais **aucun second agent ne l'a
+>   collationnée** : le §2.1 est du **contenu neuf non contre-vérifié**, pas du contenu R-7.
+>
+> **Verdict des 5 tranches — le socle normatif est sain** : les **16 encadrés « L'ESSENTIEL DU COURS » des
+> ch.2–17 sont verbatim exacts, collationnés puce à puce** (155 items : 41 + 36 + 32 + 23 + 23) — le 17ᵉ (ch.1,
+> p.20, 12 puces) vient de la transcription neuve et n'entre pas dans ce décompte. **Toutes les valeurs chiffrées
+> relevées sont conformes à la source et ont été arithmétiquement revérifiées ; aucune valeur inventée, aucune
+> valeur devinée sur un graphique.** Les écarts trouvés étaient de trois ordres : (a) des **inventions** (réponses
+> fabriquées sur des exercices que le manuel ne corrige pas, termes hors-manuel) — **retirées ici** ; (b) des
+> **coquilles de la source corrigées en silence** dans des citations données pour verbatim — **rétablies +
+> `[sic]` ici** ; (c) des **incohérences de la source jamais signalées** — **portées en §6, non arbitrées**.
+>
+> **Ce que R-7 n'a PAS couvert (à charge, honnêtement)** : le **§3 « Notes pédagogiques » n'a pas été audité** ·
+> le **§2.1 (ch.1) n'a pas de relecture indépendante** (ci-dessus) · les **figures listées en §6.2 restent non
+> levées** (~45 documents bloquants ; seule une vingtaine de pages ont été ouvertes en vision) · la **notation
+> vectorielle des ch.11–13 est reconstruite, non vérifiée** (§6.2) · la lecture de **`35.10²⁰` (p.169) reste
+> ouverte**. **Aucune de ces réserves n'invalide le socle** ; toutes bornent son usage.
+> **Limite structurelle, à connaître** : `pdftotext` **ne rend aucune figure** — et, preuve faite (p.247), il
+> **perd aussi le texte incrusté dans les images** (légendes). « Complet » ne vaut donc que pour le texte de
+> flux, jamais pour les documents. Les documents dont le contenu n'existe **que** dans l'image sont
+> **signalés, jamais reconstitués** : leur relevé est en **§6.2 — c'est la borne d'usage de cette fiche.**
 
 ---
 
-## Chapitres transcrits (2–17)
+## 1. Cadre & compétences
 
-## 2.2 Physique — Chapitre 2 : Le circuit électrique (p.26–43, transcrit à profondeur de génération)
+> ⚠️ **Borne de la source.** Le **référentiel officiel de compétences** (objectifs généraux, bornes de scope
+> du programme) est porté par le **guide enseignant**, **absent du corpus** pour ce couple. Cette section
+> transcrit donc **ce que le manuel élève déclare de lui-même** (son Avant-Propos, p.3) et **rien d'autre** :
+> aucune compétence n'est déduite, extrapolée ni empruntée à un autre niveau.
+
+**Conformité déclarée** (p.3, verbatim) : « Ce manuel est destiné aux élèves de première année de
+l'enseignement secondaire. **Il est conforme au programme officiel.** » Le manuel se dit conforme au
+programme **sans le reproduire** — le texte officiel du programme n'est donc **pas** transcrit ici (cf. §6.0).
+
+**Les quatre compétences visées** (p.3, verbatim — « Le contenu et l'approche adoptée visent à développer
+chez l'élève un certain nombre de compétences ») :
+
+- « expérimenter ; »
+- « conceptualiser ; »
+- « communiquer ; »
+- « **resoudre** [sic] des problèmes. » _(sans accent dans la source)_
+
+**La démarche officielle** (p.3, verbatim) : « Dans le souci d'impliquer l'élève dans l'appropriation du
+savoir et de développer ses capacités à apporter des réponses à des situations problèmes, le cheminement
+adopté vise à favoriser une **investigation spontanée** suivie d'une **investigation réfléchie** qui conduit à
+une **structuration des apprentissages**. »
+
+**Le gabarit officiel d'un chapitre** (p.3, verbatim condensé — « Chaque chapitre comporte : »). C'est **la
+clé de lecture de tout le manuel** : les 17 chapitres le suivent sans exception, et le §2 en reprend l'ordre.
+
+| Rubrique imprimée                  | Fonction déclarée par l'Avant-Propos (verbatim)                                                                                                                                                                   |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| « activités de mise en situation » | « permet, suite à des observations, de faire émerger un questionnement qui cadre la (les) situation(s) problème(s) » ; vise « une **curiosité formative** face à son environnement »                              |
+| « activités expérimentales »       | « expérimentation, observation, collecte de données ou d'informations, traitement des données » + « des **questions (en italiques)** posées à la fin de certaines activités visant une **évaluation formative** » |
+| « fiche T.P »                      | « mettre l'élève en contact avec une activité expérimentale **de recherche ou de réalisation d'un projet** »                                                                                                      |
+| « recherche documentaire »         | « collecte des informations […] à partir d'un document écrit ou photographié suivie d'une synthèse » ; « exploiter une publication scientifique et **porter un jugement à son égard** »                           |
+| « l'essentiel du cours »           | « un résumé »                                                                                                                                                                                                     |
+| renvois à des « sites Internet »   | « habituer l'élève à utiliser l'Internet en vue de cherche [sic] une information » _(imprimé « APERCU HISTORIQUE » sur la page — cf. §6.3)_                                                                       |
+| « exercice résolu »                | « acquérir une **méthode de résolution** des problèmes »                                                                                                                                                          |
+| « série d'exercices »              | **trois catégories** : « de vérifier s'il a compris » · « d'utiliser ses acquis dans des situations simples » · « d'utiliser ses acquis pour une synthèse en assurant un certain degré d'intégration »            |
+| « savoir plus »                    | « une ouverture montrant le rôle que jouent les sciences et leurs utilisations dans les activités humaines **en relation avec l'environnement** »                                                                 |
+
+**Trois logos récurrents** structurent chaque activité expérimentale (nommés p.6, « Pour une utilisation aisée
+de Votre manuel ») : **« expérimentons »**, **« observons »**, **« tirons les résultats »** — soit le triptyque
+_protocole → observation → conclusion_ qu'on retrouve dans les 17 chapitres.
+
+---
+
+## 2. Plan annuel (structure officielle du manuel)
+
+> **Source unique = le manuel** : il n'y a **pas** de plan annuel officiel (guide enseignant absent). La
+> progression ci-dessous est **celle du manuel**, dans son ordre imprimé. Aucun séquençage trimestriel n'est
+> disponible pour ce niveau (Taybah ne couvre que le primaire) — **le manuel n'en donne aucun** : il
+> n'imprime ni trimestres, ni volume horaire, ni répartition.
+
+**6 thèmes · 17 chapitres · p.9–274.** ⚠️ **Point de lecture décisif** : le manuel **numérote les chapitres
+par thème, en chiffres romains** — il y a **six « CHAPITRE I »** dans l'ouvrage (un par thème), et **jamais**
+de numérotation de 1 à 17. La numérotation continue **1–17 employée ci-dessous est une convention interne à
+cette fiche** : elle n'est imprimée nulle part. **Citer les pages, jamais « le chapitre 15 ».**
+
+| Thème imprimé     | Chapitres (convention fiche) | Désignation imprimée | Pages     |
+| ----------------- | ---------------------------- | -------------------- | --------- |
+| **L'ELECTRICITE** | 1 → 5                        | CHAPITRE I → V       | p.9–86    |
+| **LA MATIERE**    | 6 → 9                        | CHAPITRE I → IV      | p.87–146  |
+| **LA MECANIQUE**  | 10 → 13                      | CHAPITRE I → IV      | p.147–208 |
+| **L'ENERGIE**     | 14                           | CHAPITRE I           | p.209–226 |
+| **ASTRONOMIE**    | 15                           | CHAPITRE I           | p.227–242 |
+| **L'OPTIQUE**     | 16 → 17                      | CHAPITRE I → II      | p.243–274 |
+
+**Bornes d'un chapitre — convention retenue et vérifiée** : **[page d'ouverture → page « SAVOIR PLUS »]**.
+Contrôle déterministe (2026-07-17) : le manuel imprime **17 pages d'ouverture** (motif `CHAPITRE <romain>`) et
+**17 pages « SAVOIR PLUS »**, qui s'apparient **sans trou ni recouvrement** — la structure est parfaitement
+régulière, il n'y a **aucune « transition d'imprimerie »**. Les bornes du §4 en découlent.
+
+> ⚠️ **Correction appliquée le 2026-07-17.** Les titres de section des **ch.2–14** annonçaient des bornes
+> **décalées de +1** (ex. « ch.2 : p.26–43 »), parce que la transcription pilote avait suivi le **sommaire
+> p.4–5**, dont la première colonne est « Activités de mise en situation » et qui **ne référence jamais la
+> page d'ouverture**. Conséquence **matérielle** (et non cosmétique) : les pages d'ouverture des ch.2–10 et 14
+> — qui portent le **« Plan des activités expérimentales »** et les **« Pré-requis »**, exigés par R-5 —
+> n'étaient transcrites nulle part. **Les bornes sont rectifiées et les 10 pages d'ouverture manquantes sont
+> ajoutées** ci-dessous. Les ch.15, 16 et 17 étaient déjà bornés correctement.
+
+### Liminaires (p.1–8) — hors chapitres
+
+- **p.1** — Couverture / page de titre (auteurs et évaluateurs : cf. en-tête). Aucun libellé arabe.
+- **p.2** — Copyright : « © Tous **droit** [sic] réservés au Centre National Pédagogique ».
+- **p.3** — **Avant-Propos** (signé « Les Auteurs ») → transcrit au **§1**.
+- **p.4–5** — **Sommaire** : un tableau unique imprimé **tourné à 90°** ; colonnes = les 9 rubriques du
+  gabarit, lignes = les 17 chapitres groupés en 6 thèmes. ⚠️ Le sommaire porte **au moins deux renvois faux**
+  et **deux titres divergents** de ceux des pages d'ouverture — cf. §6.3.
+- **p.6–7** — **« Pour une utilisation aisée de Votre manuel »** : double page de vignettes annotées, sans
+  texte de cours. Nomme les trois logos (« expérimentons », « observons », « tirons les résultats ») et les
+  rubriques. Fait notable : les vignettes sont majoritairement des **pages du chapitre 1 lui-même** (p.9, 19,
+  20, 21, 22, 24) — le ch.1 sert de chapitre-étalon au mode d'emploi. Coquille : « **Excercices** [sic]
+  d'évaluation » (p.7) ; « Activités de mise en **situations** » (p.6, au pluriel, contre le singulier partout
+  ailleurs).
+- **p.8** — **« NAVIGUER SUR L'INTERNET »** : ⚠️ page **globale au manuel** (et non propre à l'électricité) —
+  elle liste des URL pour **les six thèmes** : ELECTRICITE (5), MATIERE (4), MECANIQUE (4 — dont **deux
+  strictement identiques**, cf. §6.3), ENERGIE (3), ASTRONOMIE (4), OPTIQUE (4). Elle **ne remplace pas** les
+  renvois « Naviguer sur l'Internet » de chaque chapitre, qui s'impriment sous le titre « APERCU HISTORIQUE ».
+
+---
+
+## 2.1 Physique — Chapitre 1 : Le phénomène d'électrisation (p.9–24, transcrit à profondeur de génération)
+
+**Désignation imprimée (p.9)** : bandeau « **CHAPITRE I** » · thème « **L'ELECTRICITE** » · titre
+« **LE PHENOMENE D'ELECTRISATION** ». **Titre au sommaire (p.4)** : « Le phénomène d'électrisation » —
+**concordant** (à la casse près) ; ce chapitre ne présente **pas** la divergence sommaire/ouverture qui
+affecte les ch.3 et ch.5 (§6.3).
+
+- **Page d'ouverture** (p.9) — imprime deux blocs et rien d'autre (aucune photo) :
+  - **Plan des activités expérimentales** (verbatim) : « • Activités(I) : Mise en évidence du phénomène
+    d'électrisation » · « • Activités(II) : Les deux types de charges électriques » · « • Activités(III) :
+    Autres modes d'électrisation » · « • Activités(IV) : Interprétation du phénomène d'électrisation » ·
+    « • Activités(V) : Corps conducteurs et corps isolants » · « • Activités(VI) : Décharge électrique » ·
+    « • Activités(VII) : Effet de pointe ».
+  - **Pré-requis** (verbatim) : « Sens des mots suivants: • Eclair • Tonnerre • Foudre ». ⇒ Prérequis
+    **lexical uniquement** : le chapitre ne suppose **aucun acquis d'électricité**. C'est le chapitre
+    d'entrée du manuel.
+  - _Note de lecture (dispositif éditorial, pas une incohérence)_ : le plan p.9 donne des intitulés
+    **thématiques**, tandis que chaque activité s'imprime en tête de page sous forme de **question
+    directrice**. Les deux libellés sont donnés ci-dessous. Ce parti-pris est constant dans les 17 chapitres.
+
+- **Structure de la leçon** :
+
+  - **Activités de mise en situation** (p.10–11) : quatre mises en situation, chacune une **photographie** +
+    un encadré de questions ouvertes (**aucune réponse n'est donnée dans le manuel**).
+
+    1. **Le peigne et les cheveux** (p.10, photo : fillette brossant ses cheveux, mèches dressées vers la
+       brosse) — 4 questions : « 1/- Pourquoi des cheveux secs brossés avec un peigne en matière plastique se
+       dressent-ils ? » ; « 2/- Comment expliquer le fait que les cheveux sont attirés par le peigne ? » ;
+       « 3/- Pourquoi nos ancêtres se brossent-ils avec des peignes en bois ? » _(présent de l'indicatif pour
+       une pratique passée — reproduit tel quel)_ ; « 4/- Quel genre de peigne choisissez-vous pour vous
+       brosser ? »
+    2. **La poignée de voiture** (p.10, photo : fillette à la portière d'une voiture rouge, la mère à
+       l'intérieur) — énoncé : « En ouvrant la porte de la voiture, pour embrasser sa maman qui rentre après
+       une course par temps sec et ensoleillé, la petite fille a senti une décharge électrique. » Puis :
+       « 1/- Comment expliquer l'électrisation de la poignée de la voiture ? » ; « 2/- Quelle solution
+       proposez-vous pour : - décharger la carrosserie de la voiture ? - ne pas subir l'effet de la décharge
+       en ouvrant la porte de la voiture ? » ; « 3/- La décharge qu'on peut ressentir, lors du contact avec un
+       corps électrisé, peut-elle présenter un danger ? »
+    3. **L'orage** (p.11, photo : éclair ramifié frappant une crête) — 4 questions : « 1/- Qu'est-ce qu'un
+       éclair ? » ; « 2/- Qu'est-ce qu'une foudre ? » ; « 3/- L'éclair, la foudre et le tonnerre sont-ils
+       dangereux ? » ; « 4/- Qu'est-ce qu'un paratonnerre ( ou parafoudre) et comment fonctionne-t-il ? »
+       (⇒ reprise directe des trois pré-requis lexicaux de la p.9 ; les réponses sont au « Savoir plus » p.24).
+    4. **La peinture électrostatique** (p.11, photo : chaîne industrielle de peinture d'une carrosserie) —
+       2 questions : « 1/- Qu'est-ce qu'une peinture électrostatique ? » ; « 2/- Les gouttelettes de peinture
+       éjectées par le pistolet sont attirées par la carrosserie de la voiture. Quels sont les avantages d'une
+       telle technique ? »
+
+  - **Activités expérimentales** (p.12–17) — **7 blocs**, précédés d'une **consigne générale imprimée en tête
+    de rubrique (p.12)** : « **Toutes les expériences sont à réaliser dans une atmosphère sèche.** »
+
+    1. **Activité I — plan : « Mise en évidence du phénomène d'électrisation » / titre imprimé : « Comment
+       mettre en évidence le phénomène d'électrisation ? »** (p.12) :
+       _Dispositif_ — définition officielle du **pendule électrostatique** : « une boule très légère en
+       polystyrène recouverte d'une feuille très fine en aluminium et suspendue à un fil en soie (dispositif
+       appelé pendule électrostatique) ».
+       _Protocole et observations_ — (a) une règle en plexiglas approchée de la boule : « La règle n'a aucune
+       action sur la boule. » ; (b) « La même règle frottée avec un tissu en laine est approchée du pendule
+       électrostatique **sans toucher la boule** » : « La règle attire la boule. »
+       _Extension_ : « Des expériences analogues aux précédentes, réalisées avec des bâtons en verre puis en
+       cuivre muni d'un manche en bois…, donnent les mêmes observations faites avec la règle en plexiglas. »
+       _Conclusion_ : « Le frottement a modifié les propriétés de la surface de la règle : elle est devenue
+       capable d'attirer les corps légers. On dit qu'elle est **électrisée** ou **chargée d'électricité**. »
+       **Généralisation officielle** (encadré) : « Des matériaux tels que le verre, le plexiglas, le
+       plastique, le caoutchouc synthétique, les métaux, la laine, les tissus synthétiques… sont susceptibles
+       d'être électrisés par frottement. »
+
+    2. **Activité II — plan : « Les deux types de charges électriques » / titre imprimé : « Quels sont les
+       deux types de charges électriques ? »** (p.12–13) :
+       _Protocole_ — « Frottons deux bâtons en verre (V), deux bâtons en plexiglas (P) et deux bâtons en P.V.C
+       avec des tissus en laine et vérifions à l'aide d'un pendule électrique qu'ils sont électrisés. Plaçons
+       les, deux à deux, sur des supports mobiles autour d'un axe vertical et notons dans un tableau les
+       observations. » Trois séries photographiées, légendes verbatim : « Libérons simultanément les deux
+       bâtons en verre » · « Libérons simultanément le bâton en verre et le bâton en P.V.C » · « Libérons
+       simultanément le bâton en verre et le bâton en plexiglas ».
+       _Tableau officiel_ (p.13, **reproduit tel qu'imprimé — les « ? » sont bien dans le manuel : c'est un
+       tableau à compléter par l'élève**, confirmé en vision) :
+
+       |               | Verre (V)  | P.V.C      | Plexiglas(P) |
+       | ------------- | ---------- | ---------- | ------------ |
+       | Verre (V)     | Répulsion  | Attraction | Répulsion    |
+       | P.V.C         | Attraction | ?          | ?            |
+       | Plexiglas (P) | répulsion  | ?          | ?            |
+
+       _(la casse est celle du manuel : « Répulsion » capitalisé partout sauf « répulsion » en
+       Plexiglas × Verre — simple irrégularité, aucune ambiguïté de sens.)_
+       _Consigne_ : « Prévoir et vérifier par l'expérience ce qui se passe lorsqu'on approche un bâton en
+       P.V.C d'un bâton en plexiglas, un bâton en plexiglas d'un autre bâton en plexiglas et un bâton en P.V.C
+       d'un autre bâton en P.V.C. »
+       _Résultats_ : « Entre deux corps électrisés se manifestent des actions mutuelles, appelées
+       **interaction**. » ; « Dans certains cas, cette interaction est une **répulsion** : les corps électrisés
+       se repoussent mutuellement. » ; « Dans d'autres cas cette interaction est une **attraction** : les corps
+       électrisés s'attirent mutuellement. »
+       _Convention de signe (officielle, référencée au verre)_ : « Vis-à-vis du verre électrisé par frottement
+       contre une étoffe en laine, les corps électrisés n'ont pas tous le même comportement : - une famille de
+       corps électrisés **repoussent** le verre. On convient d'attribuer le signe **(+)** à la charge
+       électrique que portent ces corps (ce type d'électricité s'appelait au **XVIII siècle** [sic] :
+       **électricité vitrée**). - une famille de corps électrisés **attirent** le verre. On convient
+       d'attribuer le signe **(-)** à la charge électrique que portent ces corps (ce type d'électricité
+       s'appelait au XVIII siècle: **électricité résineuse**). »
+       **Généralisation officielle** (encadré) : « Deux corps chargés d'électricité de même signe se
+       repoussent. / Deux corps chargés d'électricité de signes **contaires** [sic] s'attirent. »
+       ⚠️ La coquille « contaires » est **dans un encadré normatif** ; l'orthographe correcte figure au même
+       endroit dans « L'essentiel du cours » p.20 (« signes contraires »). Le manuel imprime donc les deux
+       formes — **signalé, non arbitré** (§6.3).
+
+    3. **Activité III — plan : « Autres modes d'électrisation » / titre imprimé : « Y a-t-il d'autres modes
+       d'électrisation ? »** (p.13–14) — **deux volets** :
+       - _Volet contact_ : « Approchons une règle en plexiglas, électrisée par frottement avec un tissu en
+         laine, de la boule d'un pendule électrostatique initialement non électrisée. » → « La boule est
+         attirée par la règle jusqu'à venir la toucher. Juste après le contact, la boule est repoussée. »
+         Répétition avec **une règle en P.V.C** électrisée par frottement → observation **identique** (même
+         phrase imprimée). _Interprétation_ : après contact avec la règle en plexiglas électrisée
+         **positivement**, répulsion ⇒ la boule porte une charge **(+)** ; après contact avec la règle en P.V.C
+         électrisée **négativement**, répulsion ⇒ la boule porte une charge **(-)**.
+         **Généralisation officielle** (encadré) : « Lors d'un contact avec un corps électrisé un deuxième
+         corps est susceptible de devenir électrisé. Il s'agit d'un autre mode d'électrisation :
+         **électrisation par contact**. / Le corps électrisé par contact devient porteur de charges de même
+         signe que le corps électrisant. »
+       - _Volet influence + introduction de l'électroscope_ (p.14) : « Approchons du dispositif ci-contre, un
+         bâton en verre électrisé par frottement avec un tissu en laine. » → « **L'aiguille de l'appareil
+         dévie.** » _Interprétation_ : « La répulsion entre la tige et l'aiguille montre que les propriétés
+         électriques de l'appareil ont changé. On dit que l'appareil est devenu **électrisé par influence**. » ;
+         « L'appareil permet de nous renseigner si un corps qui lui est approché est électrisé ou non. Pour
+         cette raison il est appelé **électroscope**. »
+         ⚠️ Le « dispositif ci-contre » n'est **identifié que par la photographie** (boîtier vitré à cadre
+         métallique, tige et aiguille mobile) : le texte ne le nomme qu'**après** l'expérience. L'appareil est
+         ici **à aiguille** ; l'exercice de synthèse p.23 en utilise une variante **à feuilles** — le manuel
+         emploie « électroscope » pour les deux sans le signaler (§6.3).
+
+    4. **Activité IV — plan : « Interprétation du phénomène d'électrisation » / titre imprimé : « Comment
+       interpréter le phénomène d'électrisation ? »** (p.14–15) :
+       _Trois expériences en cascade, toutes sur le même bâton en plexiglas électrisé par frottement à la
+       laine puis placé sur un pivot vertical_ :
+       - (a) approcher **le tissu en laine** (celui qui a servi au frottement) → « Le tissu attire la règle en
+         plexiglas. »
+       - (b) approcher **un deuxième tissu en laine frotté avec un bâton en P.V.C** → « Le tissu en laine
+         repousse le bâton en plexiglas. »
+       - (c) approcher **un troisième tissu en laine sans qu'il ne soit frotté** → « il n'y a ni attraction, ni
+         répulsion : il n'y a aucune interaction. »
+         _Conclusions_ : « Par frottement, le tissu en laine est susceptible de porter une électricité positive
+         ou une électricité négative **selon le corps frottant**. » ; « Un corps non frotté et non électrisé par
+         contact n'a pas d'action sur les corps frottés. Il est **électriquement neutre**. »
+
+       _Encadré « **Un modèle pour expliquer le phénomène d'électrisation** »_ (p.15) — **le cœur théorique du
+       chapitre** :
+       - « On doit admettre que la matière contient des **porteurs de charges** qui sont de deux types : - des
+         porteurs de charges renfermant de l'électricité négative ; - des porteurs de charges renfermant de
+         l'électricité positive. »
+       - « Un corps électriquement **neutre** est formé de matière qui renferme des **quantités égales**
+         d'électricité positive et d'électricité négative. »
+       - « Lors du frottement, des particules chargées négativement, appelées **électrons**, migrent d'un corps
+         à un autre : - celui qui **reçoit** ces électrons devient porteur d'une quantité d'électricité négative
+         supérieure à la quantité d'électricité positive (qui n'est pas modifiée). La charge globale devient
+         **négative**. - celui qui **cède** ces électrons devient porteur d'une quantité d'électricité positive
+         supérieure à la quantité d'électricité négative. La charge globale devient **positive**. »
+       - « La charge portée par un corps est une grandeur mesurable, notée **q**. Son unité s'exprime dans le
+         système international en **coulomb**, de symbole **(C)**. »
+       - « La charge portée par un électron est notée **–e** ; **e** est la charge élémentaire dont la valeur
+         est **1,6.10⁻¹⁹ C**. » _(exposant confirmé en vision p.15 ; l'extraction texte l'aplatit en
+         « 1,6.10-19 C ». **Seule valeur numérique de tout le chapitre.**)_
+       - « Lors du contact d'un corps (A) électrisé négativement avec un corps (B) neutre, quelques électrons
+         migrent de (A) vers (B) ce qui engendre un excès de charges négatives dans (B). (B) devient, comme
+         (A), électrisé négativement. »
+         _Question ouverte (en italiques, **non corrigée par le manuel**)_ : « **Expliquer l'électrisation d'un
+         corps neutre lors d'un contact avec un corps électrisé positivement.** » (⇒ le cas symétrique, laissé
+         à l'élève.)
+
+    5. **Activité V — plan : « Corps conducteurs et corps isolants » / titre imprimé : « Tous les corps
+       sont-ils conducteurs ? »** (p.16) :
+       _Protocole_ — « Electrisons par frottement (ou par contact) une règle en plexiglas. Plaçons-la à une
+       **distance L** de la boule d'un pendule électrostatique telle qu'on ne perçoit pas un effet appréciable
+       sur la boule. » puis « Intercalons entre la règle et la boule une **tige en carbone (crayon taillé des
+       deux bouts)**, tenue par une **pince en bois** et telle qu'elle vienne toucher par un bout la règle et
+       par l'autre la boule. » puis « Reprenons la même expérience en remplaçant la tige en carbone par une
+       autre en **verre**, puis en **cuivre**, puis en **bois**, puis en **P.V.C**, puis en **plexiglas**, enfin
+       en **aluminium**, » (**7 matériaux testés** au total).
+       _Observations_ : « La boule est **repoussée** dans le cas du cuivre, de l'aluminium et du carbone. » ;
+       « La boule **garde sa position** dans le cas du bois, du verre, du P.V.C et du plexiglas. »
+       _Résultats_ : « La boule s'électrise positivement par contact avec les tiges en cuivre, en aluminium et
+       en carbone. » ; « La boule ne s'électrise pas, malgré le contact avec les autres tiges. »
+       _Encadré « **Interprétation** »_ : « Par contact avec la règle en plexiglas, la tige en cuivre (ou en
+       aluminium ou en carbone) s'électrise positivement en cédant des électrons à la règle. Ces électrons
+       ayant quitté la tige font **apparaitre** [sic] une charge positive sur toute la tige. » ; « La charge
+       positive qui apparaît sur le cuivre (ou l'aluminium ou le carbone) **n'est pas localisée à la zone
+       touchée** par la règle. L'extrémité de la tige, en contact avec la boule, **arrache des électrons** à
+       cette dernière, l'amenant ainsi à devenir chargée positivement ce qui explique la répulsion. » ; « Le
+       cuivre, l'aluminium et le carbone sont des matériaux qui **laissent circuler les électrons** ; ils sont
+       appelés des **conducteurs**. » ; « Le bois, le plexiglas, le verre et le P.V.C sont des matériaux qui
+       **ne permettent pas une circulation des électrons** (la charge électrique **reste localisée** au bout des
+       tiges du côté de la règle en plexiglas) ils sont appelés des **isolants**. »
+       _Trois questions ouvertes (en italiques, **non corrigées**)_ : « Comment expliquer la disparition de la
+       charge électrique d'un corps électrisé par frottement ou par contact quand on touche sa partie
+       électrisée à la main ? » ; « Pourquoi doit-on tenir une tige en cuivre électrisée à l'aide d'un manche
+       en bois ? » ; « Interpréter l'électrisation par influence de l'électroscope observée **aux cours** [sic]
+       des activités III. »
+
+    6. **Activité VI — plan : « Décharge électrique » / titre imprimé : « Qu'est-ce qu'une décharge
+       électrique ? »** (p.17) :
+       _Protocole_ — « Tournons la manivelle de la **machine de Wimshurst**, appelée aussi **machine
+       électrostatique**, après avoir rapproché ses deux sphères (sans qu'elles ne se touchent). »
+       _Observations_ : « Des charges de signes contraires, qu'on vérifiera à l'aide d'un pendule
+       électrostatique, s'accumulent **progressivement** sur les sphères. » ; « Après une accumulation
+       **suffisante** de charges, il apparaît une **étincelle** qui jaillit entre les deux sphères. Cette
+       étincelle est accompagnée d'un **crépitement**. »
+       _Résultat (interprétation officielle)_ : « Deux corps chargés d'électricité de signes différents et
+       rapprochés l'un de l'autre peuvent donner lieu (si les quantités d'électricité sont importantes) à un
+       **déplacement d'électrons à travers l'air**. Ce déplacement se fait **du corps chargé négativement vers
+       le corps chargé positivement**. Il conduit à une **décharge** des corps en regard. Cette décharge brève
+       est accompagnée d'un phénomène lumineux appelé **éclair** qui matérialise le **canal** par lequel
+       s'écoulent les charges. L'**échauffement intense** de l'air contenu dans ce canal est à l'origine des
+       **crépitements**. »
+
+    7. **Activité VII — plan : « Effet de pointe » / titre imprimé : « Sur un corps électrisé, la répartition
+       des charges est-elle partout la même ? »** (p.17) :
+       _Protocole_ — « Fixons à l'une des sphères de la machine de Wimshurst un **corps pointu** et répétons
+       l'expérience précédente. »
+       _Observation_ : « L'étincelle jaillit **facilement** et arrive à la **région la plus pointue** des deux
+       corps électrisés **ou en part**. » _(tour elliptique de la source — « ou part de cette région » —
+       reproduit tel quel.)_
+       _Résultats_ : « Au bout d'une pointe, les charges d'un corps électrisé s'accumulent très fortement et la
+       décharge y est facilitée: c'est **l'effet de pointe**. » ; « Le **canal** d'une décharge dépend de la
+       **forme géométrique** des corps concernés. »
+       _Question ouverte (en italiques, **non corrigée**)_ : « Ce phénomène est à rapprocher d'un phénomène
+       naturel : **la foudre**. Proposer une explication. » (⇒ pont explicite vers le « Savoir plus » p.24.)
+
+  - **Fiche T.P.** (p.18) « **ELECTRISATION PAR FROTTEMENT** » :
+    - _Buts_ (3, verbatim) : « Electriser un corps par frottement. » ; « Déterminer la nature de la charge d'un
+      corps électrisé par frottement. » ; « Montrer que l'électricité qui apparaît sur un corps frotté dépend
+      de **la nature du corps frotté** et de **l'objet qui a servi à l'électriser**. »
+    - _Matériels_ (8) : « Support d'un pendule électrostatique. » · « Bâton en verre. » · « Bâton en
+      plexiglas. » · « Bâton en ébonite. » · « Règle en PVC. » · « Coton. » · « Peau de chat. » · « Sachet en
+      polyéthylène. »
+    - _Expérimentation_ — tableau à **4 colonnes** (« Nature de l'objet frottant » | « Nature du corps
+      frotté » | « **Interaction** » | « **Electricité** ») et **6 lignes** : objet frottant **Sachet en
+      polyéthylène** × {Règle en PVC, Bâton en ébonite, Bâton en plexiglas}, puis objet frottant **Peau de
+      chat** × {Règle en PVC, Bâton en ébonite, Bâton en plexiglas}. **Les colonnes « Interaction » et
+      « Electricité » sont imprimées VIDES** (à remplir par l'élève) — vérifié en vision p.18.
+    - _Protocole_ (verbatim) : « Frotter le bâton en verre avec du coton ou avec un tissu en laine, puis le
+      suspendre au support du pendule électrostatique. » ; « Frotter chaque corps avec l'objet indiqué dans le
+      tableau ci-dessus, puis approcher le du bâton en verre électrisé. » ; « Noter le type d'interaction
+      (attractive ou répulsive). » ; « Déduire la nature de la charge portée par chaque corps et la porter dans
+      le tableau. » ; « Interpréter les résultats. »
+      ⇒ Le **bâton en verre sert de référence** (il matérialise la convention de signe posée en Activité II) ;
+      il n'est pas lui-même une ligne du tableau. Un **tissu en laine** est admis en substitut du coton pour
+      cette référence, bien qu'il ne figure pas dans la liste « Matériels ».
+
+  - **Recherche documentaire** (p.19) « **LA CAGE DE FARADAY** » — texte documentaire court (résumé ; photo :
+    une automobile dans une chambre anéchoïque à parois hérissées d'absorbants) : définition de la cage de
+    Faraday (enceinte ou cage métallique isolant une région de l'espace de l'influence des champs électriques
+    extérieurs) ; champ électrique **nul à l'intérieur**, même si des charges sont placées à l'extérieur ou si
+    la cage est reliée à un générateur électrostatique ; **la carrosserie métallique d'une voiture en est une**
+    et protège ses occupants de l'électrocution (contact extérieur ou décharge atmosphérique) ; les ondes radio
+    (électromagnétiques) ne traversent pas les cages de Faraday — d'où les dysfonctionnements des
+    récepteurs/émetteurs dans l'habitacle et le recours à une **antenne de toit**.
+    _4 questions (verbatim)_ : « 1/- Préciser, en utilisant un dictionnaire, le sens du mot
+    «**élecro-magnétique**» [sic]. » ; « 2/- Citer quelques dangers d'électrocution. » ; « 3/- Donner un
+    exemple de décharge atmosphérique. » ; « 4/- Pourquoi doit-on utiliser une antenne de toit pour faire
+    fonctionner correctement un auto-radio ? »
+    ⚠️ La coquille « élecro » (« t » manquant) est **vérifiée au zoom 300 dpi** et porte **précisément sur le
+    mot que l'élève doit chercher au dictionnaire** — gênante à l'usage (§6.3).
+
+  - **L'essentiel du cours** (p.20, **verbatim — 12 puces**) :
+    - « Certains corps frottés peuvent devenir chargés d'électricité. On dit qu'ils subissent un phénomène
+      d'électrisation par frottement. »
+    - « On distingue deux types de charges électriques : - des charges positives : ce sont des charges que
+      porte le verre frotté avec un tissu en laine ou tout corps repoussé par le verre électrisé. - des charges
+      négatives : ce sont des charges que porte tout corps attiré par le verre électrisé. »
+    - « Deux corps chargés d'électricité de même signe se repoussent. »
+    - « Deux corps chargés d'électricité de signes contraires s'attirent. »
+    - « Un corps électrisé par contact se charge d'électricité de même signe que le corps électrisant. »
+    - « Le phénomène d'électrisation par contact ou par frottement est dû à un transfert d'électrons d'un corps
+      à un autre : celui qui cède des électrons devient chargé positivement et celui qui en reçoit devient
+      chargé négativement. »
+    - « La quantité d'électricité est une grandeur mesurable. Elle s'exprime en coulomb de symbole C. »
+    - « L'électroscope est un appareil qui permet de rendre compte si un corps est chargé ou non et de comparer
+      les quantités d'électricité des corps électrisés. »
+    - « Un corps conducteur permet le passage des électrons (tels que les métaux), un corps isolant ne le permet
+      pas (tels que les matières plastiques). »
+    - « Au bout d'une pointe les charges d'un corps électrisé s'accumulent très fortement. »
+    - « La lumière émise par une étincelle accompagne le passage d'électrons dans l'air. »
+    - « Le canal d'une décharge dépend de la forme géométrique des corps concernés. »
+      ⚠️ **Notable pour la génération** : l'essentiel **n'énonce ni la charge élémentaire e = 1,6.10⁻¹⁹ C, ni la
+      notation q, ni l'électrisation par influence** — pourtant tous trois enseignés dans les activités
+      (p.14–15). Symétriquement, il attribue à l'électroscope une capacité à « **comparer** les quantités
+      d'électricité » qui n'est **démontrée par aucune activité**. Un contenu calibré sur le seul « essentiel »
+      serait **en deçà** du chapitre réellement enseigné et laisserait deux exercices du manuel insolubles
+      (§6.3).
+
+  - **Aperçu historique / Naviguer sur l'Internet** (p.20) : « Naviguer sur l'Internet
+    (`http://www.edunet.tn/physique/savants.htm`) ou
+    (`http://www.infoscience.fr/histoire/biograph/biograph_som.html`) et trouver les découvertes du savant
+    **Dufay (1698/1739)**. » _(Charles François de Cisternay du Fay, auteur de la distinction électricité
+    vitrée/résineuse invoquée en Activité II — le manuel ne fait pas ce lien explicitement. Dates
+    **historiquement exactes**, contrairement à celles des p.82 et p.222 — cf. §6.3.)_ Titre de rubrique imprimé
+    « **APERCU HISTORIQUE** » (sans cédille — usage typographique constant du manuel sur les capitales).
+
+  - **Exercice résolu** (p.21) — _avec_ solution et colonne « Commentaires » :
+    - _Énoncé_ : « On électrise un bâton en plexiglas par frottement avec du **coton**, puis on l'approche d'un
+      bâton en verre électrisé par un tissu en laine. On constate qu'il y a une **répulsion**. Lorsqu'on
+      approche le bâton en plexiglas électrisé de la boule d'un pendule électrostatique initialement non
+      électrisée, on constate qu'il y a une **attraction**, puis une **répulsion** tout juste après que la boule
+      se mette en contact avec le bâton de plexiglas électrisé. »
+      _Questions_ : « 1/- Préciser le signe de la charge portée par le bâton en plexiglas électrisé par
+      frottement avec du coton. » ; « 2/- Préciser le signe de la charge de la boule du pendule électrostatique
+      juste après le contact avec le bâton en plexiglas électrisé. » ; « 3/- Comment expliquer, avant contact,
+      l'interaction attractive entre la boule initialement non électrisée et le bâton en plexiglas électrisé ? »
+    - _Solution imprimée_ : **1/-** « Le bâton en verre et le bâton en plexiglas se repoussent, donc le bâton en
+      plexiglas est électrisé **positivement**. » — _commentaire_ : « Deux charges de même signe se
+      repoussent. » **2/-** « Puisque le bâton en plexiglas est chargé positivement et comme, après contact, on
+      assiste à une répulsion, on conclut que la boule du pendule électrostatique est devenue chargée
+      **positivement**. » — _commentaire_ : « Lors du contact, des électrons quittent la boule du pendule
+      électrostatique pour migrer vers le bâton de plexiglas, ce qui conduit les deux corps à porter des charges
+      de même signe. » **3/-** « La charge positive du bâton en plexiglas **attire les électrons de la surface
+      de la boule** vers la région qui lui est proche, ce qui fait apparaître un **excès de charges positives sur
+      la région la plus éloignée**. La charge globale du pendule étant neutre, la quantité d'électricité positive
+      est égale à la quantité d'électricité négative mais **toutes les deux situées à des distances inégales** du
+      bâton de plexiglas. L'interaction d'attraction **l'emporte alors** sur l'interaction de répulsion d'où
+      l'observation de l'attraction. » — _commentaire_ : « La boule du pendule électrostatique est revêtue d'un
+      conducteur. A l'approche du bâton de plexiglas, **il** [sic] s'électrise par influence. »
+      ⇒ La question 3 est le **seul endroit du chapitre** où le mécanisme de l'**attraction d'un corps neutre par
+      un corps chargé** (influence + inégalité des distances) est réellement démontré. C'est aussi ce qui
+      justifie _a posteriori_ l'Activité I (attraction d'une boule non électrisée).
+
+  - **Exercices à résoudre** (p.22–23) — les **trois catégories** du gabarit, **sans corrigé imprimé** (aucune
+    réponse n'est donnée ci-dessous : le manuel n'en donne aucune) :
+    - **« Vérifier ses acquis »** (p.22) — 3 exercices :
+      1. « Recopier les phrases suivantes en les complétant. » (texte à trous, 3 phrases) : « 1/-Par convention,
+         l'électricité……apparaît sur le verre frotté avec un tissu en laine et sur tout corps qu'il……. » ;
+         « 2/-Un corps électriquement neutre possède……d'électrons que de charges positives. » ; « 3/-Un corps
+         chargé négativement présente un excès……Entre ce corps et un autre corps de charge opposée il y a……. »
+      2. « Répondre par vrai ou faux et justifier la réponse. » (3 affirmations) : « 1/-Par temps sec et après
+         frottement, une baguette **en verre** tenue à la main **garde** sa charge; alors qu'une baguette **en
+         cuivre** tenue à la main **perd** sa charge. » ; « 2/-Par contact avec un corps A déjà chargé, un corps
+         B se charge d'électricité de même signe que celle du corps A. » ; « 3/-Si on relie à la Terre un corps
+         chargé positivement par un fil conducteur, **les charges positives s'écoulent vers la Terre**. »
+      3. « Choisir le ou les mots exacts. » (4 items) : « 1/-Deux corps frottés l'un contre l'autre puis séparés
+         deviennent électrisés. Leurs charges sont _(de même signe/de signes contraires)_. » ; « 2/-Un corps
+         isolant _(permet/ne permet pas)_ un déplacement de charges électriques. » ; « 3/-Dans un corps
+         conducteur électrisé, les charges _(restent localisées/se répartissent sur tout le corps)_. » ;
+         « 4/-L'électrisation par frottement est expliquée par un transfert _(d'électrons/de charges
+         positives)_ d'un corps à un autre. »
+    - **« Utiliser ses acquis dans des situations simples »** (p.22–23) — 3 exercices :
+      1. (p.22) « Choisir la bonne réponse. » — « Après frottement avec un tissu en laine, le verre repousse le
+         plexiglas et le plexiglas attire l'ébonite, donc le verre : (a) attire l'ébonite ; (b) repousse
+         l'ébonite ; (c) n'a aucune action sur l'ébonite. » _(transitivité des signes.)_
+      2. (p.23) « Indiquer comment procéder pour décharger un corps : a)- fortement électrisé. b)- faiblement
+         électrisé. »
+      3. (p.23) « Le frottement de l'air sur les carrosseries des voitures produit des décharges électriques.
+         Comment élimine-t-on ces charges? »
+    - **« Utiliser ses acquis pour une synthèse »** (p.23) — 3 exercices :
+      1. « La boule d'un premier pendule électrostatique est chargée par contact avec un bâton de verre électrisé
+         **positivement**. Celle d'un deuxième pendule est chargée par contact avec une **règle en plastique
+         frottée avec du polyéthylène**. On approche les deux boules l'une de l'autre : **elles se repoussent**.
+         Préciser la nature de la charge de la règle. »
+      2. « On approche de la **boule métallique (B)** d'un **électroscope** (sans la toucher), un **bâton en
+         ébonite (E)** préalablement frotté avec un tissu en laine, nous constatons que **les feuilles** (très
+         minces et très légères d'aluminium) de l'électroscope **se repoussent**. a)- Expliquer la répulsion des
+         feuilles d'aluminium. b)- Les feuilles d'aluminium ont-elles subi une électrisation par contact ou par
+         frottement ? Sinon donner un nom à ce mode d'électrisation. »
+         **Figure associée (p.23, lue en vision)** : deux schémas au trait superposés d'un **électroscope à
+         feuilles** — en haut, l'appareil seul, repéré **(B)** (boule au sommet), feuilles **jointes/parallèles**
+         (état initial, non électrisé) ; en bas, le même appareil repéré **(B)** avec les feuilles **écartées en
+         V** et, approché de la boule sans contact, le bâton **(E)** figuré par un barreau noir horizontal (état
+         après influence). Aucune valeur chiffrée n'y figure. ⚠️ **Seule figure du chapitre porteuse d'une
+         information non redondante avec le texte** (l'état initial feuilles jointes n'est écrit nulle part).
+      3. « 1/- Deux corps électrisés portent de grandes quantités de charges électriques opposées. a)- Expliquer
+         pourquoi il pourrait se produire une décharge électrique entre ces deux corps. b)- Citer les
+         manifestations de cette décharge. 2/- La foudre est un phénomène naturel au cours duquel se manifeste
+         cette décharge. a)- Préciser les deux corps électrisés responsables de ce phénomène naturel. b)-
+         Expliquer l'électrisation de ces deux corps. »
+
+  - **Savoir plus** (p.24) « **LA FOUDRE** » — texte documentaire (résumé ; photo pleine hauteur : éclair
+    ramifié frappant le sol). Contenu : les nuages orageux (**cumulo-nimbus**) sont des masses de **plusieurs
+    milliers de tonnes d'eau**, formées par conditions particulières d'humidité et de température (journée
+    chaude et humide) ; **base entre 1 et 3 km**, **sommet pouvant dépasser 10 km** d'altitude ; les fortes
+    différences de température entre base et sommet provoquent des **courants d'air de convection** ; les
+    courants ascendants entraînent les particules **les plus légères**, qui s'élèvent, se **transforment en
+    glace** et se chargent **positivement**, tandis que les particules **plus lourdes** descendent, restent
+    **liquides** en bas et sont chargées **négativement** ; le bas du nuage, négatif, **repousse les charges
+    négatives du sol**, qui se trouve **chargé positivement par influence**. La décharge peut se produire **entre
+    deux nuages** ou **entre un nuage et le sol** : c'est la **foudre**, avec sa trainée lumineuse, l'**éclair**.
+    Les objets **les plus proches du nuage et les plus pointus** sont atteints de préférence (clochers, poteaux,
+    cimes des arbres). Consignes de sécurité : éviter la proximité de tels points ; ne pas traverser une vaste
+    place ou un champ où **la personne serait la partie la plus pointue** ; ne pas utiliser un parapluie ou un
+    objet pointu (piolet, fourche) ; **l'automobile est un très bon abri** car sa carrosserie métallique
+    constitue une **cage de Faraday** (⇒ rappel explicite de la p.19). Le **paratonnerre** : « une grosse tige
+    métallique, dressée sur le toit et reliée à la Terre, qui conduit les charges électriques vers cette
+    dernière ». Le **tonnerre** : « un phénomène sonore : les couches d'air s'échauffent et vibrent tout au long
+    de l'éclair on entend alors un bruit caractéristique ».
+    ⇒ Cette rubrique **répond** aux questions de mise en situation p.11 (éclair/foudre/tonnerre/paratonnerre) et
+    à la question ouverte de l'Activité VII (p.17), et **fournit la matière** de l'exercice de synthèse 3 (p.23).
+
+- **Concepts / notions** : électrisation **par frottement** ; corps **électrisé** / **chargé d'électricité** ;
+  **pendule électrostatique** (instrument de détection) ; **interaction** entre corps électrisés (attraction /
+  répulsion) ; les **deux types de charges** et la **convention de signe référencée au verre** (+ = vitrée,
+  − = résineuse) ; **électrisation par contact** (même signe que le corps électrisant) ; **électrisation par
+  influence** ; **électroscope** (détecter ; comparer les quantités d'électricité) ; corps **électriquement
+  neutre** ; **modèle des porteurs de charges** et **transfert d'électrons** (le corps qui cède devient +, celui
+  qui reçoit devient −) ; **charge q**, unité **coulomb (C)** ; **charge élémentaire e = 1,6.10⁻¹⁹ C**, charge de
+  l'électron **−e** ; **conducteurs** (cuivre, aluminium, carbone — laissent circuler les électrons, charge
+  **délocalisée** sur toute la tige) vs **isolants** (bois, verre, P.V.C, plexiglas — charge **localisée**) ;
+  **décharge électrique** à travers l'air (des électrons du corps − vers le corps +), **étincelle**, **éclair**,
+  **canal**, **crépitement** (échauffement intense de l'air) ; **effet de pointe** ; dépendance du canal à la
+  **forme géométrique** ; **cage de Faraday** ; **foudre**, **tonnerre**, **paratonnerre**.
+
+- **Vocabulaire officiel** : « électrisation par frottement », « électrisé », « chargé d'électricité »,
+  « pendule électrostatique », « interaction », « attraction », « répulsion », « charge électrique »,
+  « électricité vitrée », « électricité résineuse », « électrisation par contact », « corps électrisant »,
+  « électrisation par influence », « électroscope », « électriquement neutre », « porteurs de charges »,
+  « électrons », « charge globale », « quantité d'électricité », « coulomb (C) », « charge élémentaire »,
+  « conducteurs », « isolants », « décharge », « étincelle », « éclair », « canal », « crépitement », « effet de
+  pointe », « machine de Wimshurst », « machine électrostatique », « cage de Faraday », « cumulo-nimbus »,
+  « foudre », « tonnerre », « paratonnerre », « parafoudre », « peinture électrostatique ».
+
+- **Bornes de scope** :
+  - ✅ **INCLUS** : mise en évidence expérimentale de l'électrisation par frottement (matériaux électrisables) ;
+    existence de **deux** types de charges et convention de signe **par référence au verre frotté à la laine** ;
+    lois qualitatives d'interaction (même signe → répulsion ; signes contraires → attraction) ; les **trois modes
+    d'électrisation** (frottement, contact, influence) ; le **pendule électrostatique** et l'**électroscope**
+    comme détecteurs ; neutralité électrique ; **modèle du transfert d'électrons** comme interprétation unique de
+    tout le chapitre ; la grandeur **charge q** en **coulomb (C)** et la valeur de la **charge élémentaire** ;
+    distinction **conducteur/isolant** posée **par la mobilité des électrons et la localisation de la charge**
+    (jamais par le passage d'un courant) ; **décharge** à travers l'air et ses manifestations (étincelle, éclair,
+    crépitement) ; **effet de pointe** ; applications (cage de Faraday, paratonnerre, peinture électrostatique).
+  - ⛔ **EXCLU (relève des chapitres suivants)** : **tout ce qui touche au circuit et au courant** — notion de
+    dipôle, circuit fermé/ouvert, générateur/récepteur, effets du courant, symboles normalisés, sens conventionnel
+    (**ch.2**, p.25–42) ; intensité et ampèremètre (**ch.3**) ; tension et voltmètre (**ch.4**) ; résistance et loi
+    d'Ohm (**ch.5**). Le chapitre 1 ne comporte **aucun montage électrique, aucun générateur, aucune mesure
+    chiffrée** : la seule valeur numérique de tout le chapitre est **e = 1,6.10⁻¹⁹ C**, et elle est donnée, jamais
+    calculée. **Aucun calcul n'est demandé nulle part** (ni dans les activités, ni dans les 9 exercices) — le
+    chapitre est **intégralement qualitatif**.
+  - ⛔ **EXCLU (hors programme de ce niveau, bien que le mot soit imprimé)** : le **champ électrique** — le terme
+    n'apparaît qu'à la p.19 (« le champ électrique est nul »), dans un texte **documentaire**, sans aucune
+    définition ; la **force de Coulomb** et toute loi quantitative d'interaction ; la structure atomique
+    (noyau/protons) — le manuel s'en tient à des « porteurs de charges » **sans jamais nommer le proton ni
+    l'atome** ; la nature de la charge du corps frottant _dans le cas général_ (seule la laine est étudiée).
+  - 🔗 **Prérequis aval** : ce chapitre est le **prérequis explicite du chapitre II de chimie** (cf.
+    [`chimie.md`](./chimie.md), p.19) — l'électrisation y fonde le modèle de la charge. En amont, il n'exige **que
+    le sens des mots éclair / tonnerre / foudre** (p.9).
+
+---
+
+## 2.2 Physique — Chapitre 2 : Le circuit électrique (p.25–42, transcrit à profondeur de génération)
+
+**Désignation imprimée (p.25)** : « **CHAPITRE II** » · thème « **L'ELECTRICITE** » · titre « **LE CIRCUIT
+ELECTRIQUE** » — concordant avec le sommaire p.4.
+
+- **Page d'ouverture** (p.25) :
+  - **Plan des activités expérimentales** (verbatim) : « • Activités(I) : Le circuit électrique » ·
+    « • Activités(II) : Les effets du courant électrique » · « • Activités(III) : Les conducteurs et les
+    isolants » · « • Activités(IV) : Schématisation d'un circuit électrique » · « • Activités(V) : Le sens du
+    courant électrique » · « • Activités(VI) : La nature du courant électrique » · « • Activités(VII) : La diode
+    et le sens du courant » · « • Activités(VIII) : Le court-circuit ». _(Les 8 sont bien imprimées dans le
+    corps — plan et corps concordent.)_
+  - **Pré-requis** (verbatim) : « Conducteurs et isolants » · « Effet magnétique (aimant, boussole et aiguille
+    aimantée) » · « Cations et anions » · « Incandescence ».
 
 - **Structure de la leçon** :
   - **Activités de mise en situation** (p.26–27) : quatre mises en situation illustrées (bouton
@@ -86,7 +704,9 @@
          le courant est un déplacement ordonné d'ions et non pas d'électrons. » « Les ions
          positifs (appelés cations) se déplacent dans le sens conventionnel du courant. Les ions
          négatifs (appelés anions) se déplacent dans le sens contraire. » Questions ouvertes :
-         eau distillée sucrée (pas de courant détecté) ; batterie d'accumulateurs au plomb.
+         eau distillée sucrée (« …va-t-on détecter le passage d'un courant ? » — **la source pose la
+         question et n'y répond pas** : aucune réponse n'est imprimée) ; batterie d'accumulateurs au
+         plomb.
     7. **Activité VII — Comportement d'une diode dans un circuit électrique** (p.34) : diode
        symbolisée, montages pile + lampe + diode + interrupteur. Diode orientée de sorte que le
        courant la traverse de l'anode (borne éloignée de l'anneau) vers la cathode (borne proche
@@ -198,7 +818,21 @@
     rhéostat (chapitre 5) — ce chapitre 2 pose le vocabulaire et les conventions de base, sans
     aucune mesure chiffrée d'intensité ou de tension.
 
-## 2.3 Physique — Chapitre 3 : L'intensité du courant électrique (p.44–57, transcrit à profondeur de génération)
+## 2.3 Physique — Chapitre 3 : L'intensité du courant électrique (p.43–56, transcrit à profondeur de génération)
+
+**Désignation imprimée (p.43)** : « **CHAPITRE III** » · thème « **L'ELECTRICITE** » · titre imprimé
+« **L'INTENSITE DU COURANT** ». ⚠️ **Divergence imprimée, non arbitrée** : le sommaire p.4 titre « L'intensité
+**du courant électrique** ». **Les deux sont imprimés** ; le titre de section ci-dessus reprend celui du
+sommaire (§6.3).
+
+- **Page d'ouverture** (p.43) :
+  - **Plan des activités expérimentales** (verbatim) : « • Activités(I) : Associations de dipôles » ·
+    « • Activités(II) : Intensité du courant électrique » · « • Activités(III) : Mesure de l'intensité d'un
+    courant électrique dans une branche d'un circuit » · « • Activités(IV) : Intensité du courant dans un
+    circuit en série » · « • Activités(V) : Intensité du courant dans un circuit en dérivation ». _(Les 5 sont
+    bien imprimées dans le corps.)_
+  - **Pré-requis** (verbatim) : « Circuit électrique et sa schématisation » · « Sens du courant électrique » ·
+    « Conducteurs et isolants » · « Court-circuit ».
 
 - **Structure de la leçon** :
   - **Activités de mise en situation** (p.44–45) : différence d'éclairement de deux lampes ;
@@ -349,7 +983,19 @@
     intensité-tension, rhéostat (chapitre 5) — ce chapitre 3 ne traite que l'intensité, jamais la
     tension ni la relation U=f(I).
 
-## 2.4 Physique — Chapitre 4 : La tension électrique (p.58–71, transcrit à profondeur de génération)
+## 2.4 Physique — Chapitre 4 : La tension électrique (p.57–70, transcrit à profondeur de génération)
+
+**Désignation imprimée (p.57)** : « **CHAPITRE IV** » · thème « **L'ELECTRICITE** » · titre « **LA TENSION
+ELECTRIQUE** » — concordant avec le sommaire p.4.
+
+- **Page d'ouverture** (p.57) :
+  - **Plan des activités expérimentales** (verbatim) : « • Activités(I) : La tension électrique » ·
+    « • Activités(II) : Mesure d'une tension aux bornes d'un dipôle isolé » · « • Activités(III) : Mesure d'une
+    tension aux bornes d'un dipôle placé dans un circuit fermé » · « • Activités(IV) : La tension est une
+    grandeur algébrique » · « • Activités(V) : Loi des mailles » · « • Activités(VI) : Visualisation d'une
+    tension à l'oscilloscope ». _(Les 6 sont bien imprimées dans le corps.)_
+  - **Pré-requis** (verbatim) : « Dipôle générateur et dipôle récepteur » · « Dipôle isolé et dipôle en circuit
+    fermé » · « Circuit en série et circuit en dérivation ».
 
 - **Structure de la leçon** :
   - **Activités de mise en situation** (p.58–59) : indications « 4,5 V ; 40 mA » sur une lampe ;
@@ -500,7 +1146,25 @@
     définit la tension et la loi des mailles, sans jamais relier U et I par une loi de
     proportionnalité.
 
-## 2.5 Physique — Chapitre 5 : Le dipôle résistor (p.72–87, transcrit à profondeur de génération)
+## 2.5 Physique — Chapitre 5 : Le dipôle résistor (p.71–86, transcrit à profondeur de génération)
+
+**Désignation imprimée (p.71)** : « **CHAPITRE V** » · thème « **L'ELECTRICITE** » · titre imprimé
+« **CARACTERISTIQUE D'UN DIPÔLE RESISTOR** ». ⚠️ **Divergence imprimée, non arbitrée** : le sommaire p.4 titre
+« Le **dipôle résistor** ». **Les deux sont imprimés** ; le titre de section ci-dessus reprend celui du sommaire
+(§6.3).
+
+- **Page d'ouverture** (p.71) :
+  - **Plan des activités expérimentales** (verbatim) : « • Activités(I) : Caractéristique d'un dipôle » ·
+    « • Activités(II) : Caractéristique d'un résistor : loi d'Ohm » · « • Activités(III) : Détermination de la
+    résistance d'un résistor. » · « • Activités(IV) : Rôle d'un rhéostat dans un circuit » · « • Activités(V) :
+    Exemples de caractéristiques de dipôles ».
+    ⚠️ **Incohérence de la source (signalée, non arbitrée — §6.3)** : le plan annonce **5** activités, le corps
+    n'en imprime que **4** — **il n'existe aucune « ACTIVITES (III) »** dans le chapitre. Le contenu annoncé
+    comme III est traité **p.76 dans un encadré NON numéroté** (« Mesure de la résistance d'un résistor ») + le
+    code des couleurs p.77. La numérotation officielle IV et V est conservée telle qu'imprimée (elle n'est pas
+    renumérotée en 3 et 4).
+  - **Pré-requis** (verbatim) : « Mesurer une intensité » · « Mesurer une tension » · « Choisir un calibre » ·
+    « Tracer un graphique dans un repère cartésien ».
 
 - **Structure de la leçon** :
   - **Activités de mise en situation** (p.72–73) : deux abat-jour en série qui éclairent mal bien
@@ -559,8 +1223,9 @@
        résistance RAC de la partie située entre A et C varie. » Montage complet avec la lampe :
        curseur à l'extrémité côté B non connectée → lampe éteinte, voltmètre 0,02 V, ampèremètre
        9 mA ; curseur déplacé d'environ 2/3 de la longueur → voltmètre 3,5 V, ampèremètre 300 mA,
-       lampe brille normalement (valeur proche, non exactement 350 mA indiqué en mise en
-       situation — cohérent avec un relevé expérimental réel). « Lorsqu'on utilise la borne reliée
+       lampe brille normalement. ⚠️ **Écart de la source, signalé non arbitré (§6.3)** : la lampe
+       est donnée « (3,5 V - 350 mA) » par l'Activité IV **elle-même** (p.77), mais le relevé
+       imprimé pour « la lampe brille normalement » indique **300 mA**. « Lorsqu'on utilise la borne reliée
        au curseur et l'une de ses deux autres bornes, un rhéostat permet, lorsqu'il est introduit
        dans une branche d'un circuit, de commander l'intensité du courant qui le traverse. »
        Questions ouvertes : effet de poursuivre le déplacement de C vers A ; exemples
@@ -571,9 +1236,11 @@
        aucune section autonome intitulée « ACTIVITES (III) » n'apparaît dans le flux de la page
        76-77.)
     4. **Activité V — Les dipôles ont-ils tous des caractéristiques de même forme ?** (p.79) :
-       trois caractéristiques présentées (lampe à incandescence, électrolyseur, diode) — figures
-       graphiques non alignées/non linéaires selon le texte extrait (courbes non détaillées
-       numériquement dans l'extraction, seules les légendes des trois graphes sont lisibles).
+       trois caractéristiques présentées. ⚠️ La p.79 n'imprime **que les trois légendes** — «
+       Caractéristique d'une lampe à incandescence » / « …d'un électrolyseur » / « …d'une diode » —
+       et **aucune description d'allure** : les trois courbes sont des **images non rendues**
+       (§6.2). Le seul énoncé du manuel sur leur forme est **ailleurs**, dans L'essentiel p.82 : «
+       Les dipôles n'ont pas tous des caractéristiques de même allure. »
   - **Fiche T.P.** (p.80) « Loi d'Ohm » : buts (réaliser un circuit, mesurer tensions et
     intensités, tracer la caractéristique intensité-tension d'un résistor, vérifier la loi d'Ohm,
     utiliser un ohmmètre, comparer résistance graphique et résistance affichée par l'ohmmètre) ;
@@ -667,24 +1334,23 @@
     (lampe, électrolyseur, diode) — seule leur existence et leur allure différente sont
     mentionnées.
 
-## Incertitudes rencontrées (ch.2-5)
+## 2.6 Physique — Chapitre 6 : Les états physiques de la matière (p.87–100, transcrit à profondeur de génération)
 
-- Chapitre 5, p.79 (Activité V) : la table des matières annonce une « Activités(III) :
-  Détermination de la résistance d'un résistor » distincte, mais dans le flux de texte extrait
-  cette détermination apparaît fondue dans l'Activité II (encadré ohmmètre + code des couleurs)
-  sans en-tête « ACTIVITES (III) » séparé — possible artefact de mise en page (colonnes/encadrés)
-  perdu par l'extraction pdftotext plutôt qu'une réelle absence dans le manuel. Non vérifié par
-  rendu image.
-- Chapitre 5, Aperçu historique (p.82) : le manuel imprime pour le savant Ohm les dates
-  « (1745/1827) », identiques à celles données pour Volta au chapitre 4 (p.66) — très
-  probablement une coquille d'impression (les dates réelles de Georg Simon Ohm sont 1789–1854).
-  Reproduit tel quel, signalé pour ne pas être pris pour argent comptant lors d'une génération de
-  contenu.
-- Chapitre 5, Activité V (p.79) : les trois graphes de caractéristiques (lampe à incandescence,
-  électrolyseur, diode) n'ont pas de valeurs numériques lisibles dans l'extraction texte (courbes
-  = images) ; seules les légendes sont exploitables ici, sans détail de leur allure exacte.
+**Désignation imprimée (p.87)** : « **CHAPITRE I** » · thème « **LA MATIERE** » · titre « **LES ETATS
+PHYSIQUES DE LA MATIERE** » — concordant avec le sommaire p.4.
 
-## 2.N Physique — Chapitre 6 : Les états physiques de la matière (p.88–101, transcrit à profondeur de génération)
+- **Page d'ouverture** (p.87) :
+  - **Plan des activités expérimentales** (verbatim) : « • Activités(I) : Les états physiques de la matière » ·
+    « • Activités(II) : Calcul et mesure de volumes » · « • Activités(III) : Relation entre certaines unités de
+    mesure de volumes » · « • Activités(IV) : Propriétés caractéristiques des solides et des liquides » ·
+    « • Activités(V) : Propriétés caractéristiques des gaz » · « • Activités(VI) : Description microscopique des
+    états de la matière ».
+    ⚠️ **Incohérence de la source (signalée, non arbitrée — §6.3)** : le corps du chapitre imprime **deux fois
+    « ACTIVITES (II) »** (p.91) puis passe **directement à « ACTIVITES (IV) »** (p.92) — **aucune « ACTIVITES
+    (III) »** n'est imprimée, alors que le plan en annonce une. La 2ᵉ « (II) » (« Utilise-t-on d'autres unités de
+    volume ? ») correspond au contenu annoncé comme (III).
+  - **Pré-requis** (verbatim) : « Mesure des longueurs » · « Unités de mesure des longueurs et des volumes » ·
+    « Calcul des volumes de corps de formes géométriques simples ».
 
 - **Structure de la leçon** :
   - **Activités de mise en situation** (p.88–89) : quatre mises en situation illustrées — corps posés
@@ -772,6 +1438,12 @@
     mesurer le diamètre au pied à coulisse, en déduire R, mesurer V' par déplacement d'eau et
     comparer V' au cube du rayon ; pour (C), mesurer le volume par déplacement d'eau, changer sa
     forme et remesurer pour vérifier l'invariance).
+    **Relation à vérifier, imprimée pour le corps (B)** — c'est le **cœur pédagogique du protocole**
+    (vérification expérimentale du volume de la sphère) : « **Vérifier que : V'/R³ = 4/3 π** ».
+    ⚠️ **Provenance** : cette formule est une **image de formule** — `pdftotext` la rend **vide**
+    (« Vérifier que : . ») ; elle a été **levée en passe vision sur la p.94** par la relecture R-7 du
+    2026-07-17 (tranche ch.6–9), **non par une lecture du `.txt`**. Sans elle, le protocole s'arrêtait
+    sur « comparer V' au cube du rayon » et la vérification demandée n'existait nulle part.
   - **Recherche documentaire** (p.95) — « La plongée sous-marine » : texte sur la plongée libre en
     apnée (poumons contenant 4 à 5 litres d'air qui se réduisent avec la pression, doublée à 10 m,
     triplée à 20 m) et la plongée avec bouteilles d'oxygène/hélium comprimé (dissolution de l'azote
@@ -847,7 +1519,20 @@
     contraction (chapitre 7) ; masse et masse volumique (chapitre 8) ; changements d'état physique,
     fusion/solidification/vaporisation/liquéfaction/sublimation (chapitre 9).
 
-## 2.N Physique — Chapitre 7 : Quelques propriétés de la matière (p.102–115, transcrit à profondeur de génération)
+## 2.7 Physique — Chapitre 7 : Quelques propriétés de la matière (p.101–114, transcrit à profondeur de génération)
+
+**Désignation imprimée (p.101)** : « **CHAPITRE II** » · thème « **LA MATIERE** » · titre « **QUELQUES
+PROPRIETES DE LA MATIERE** » — concordant avec le sommaire p.4.
+
+- **Page d'ouverture** (p.101) :
+  - **Plan des activités expérimentales** (verbatim) : « • Activités(I) : Effet d'une variation de la
+    température sur un corps solide » · « • Activités(II) : Effet d'une variation de la température sur un corps
+    liquide » · « • Activités(III) : Effet d'une variation de la température sur un corps gazeux » ·
+    « • Activités(IV) : **Conductibilité** thermique des corps ». _(Les 4 sont bien imprimées dans le corps.)_
+    ⚠️ Le manuel emploie « **conductibilité** thermique » ici et p.103, mais « **conductivité** thermique » p.107
+    et p.110 — **deux termes pour la même notion dans le même chapitre** (§6.3).
+  - **Pré-requis** (verbatim) : « Notion de température » · « Notion de volume » · « Les états physiques de la
+    matière » · « Précautions à prendre lors de l'utilisation d'une source de chaleur ».
 
 - **Structure de la leçon** :
   - **Activités de mise en situation** (p.102–103) : rails de voies ferrées anciennes séparés par de
@@ -885,7 +1570,13 @@
        facilement, se dilate facilement, ne mouille pas le verre — n'adhère pas —, utilisable sur une
        large plage de températures) ; définition de l'échelle Celsius par les deux points fixes
        (glace fondante = 0, eau bouillante = 100 sous pression atmosphérique normale, intervalle
-       divisé en 100 parties = degré Celsius, symbole °C) ; précautions de mesure (agiter le liquide
+       divisé en 100 parties = degré Celsius, symbole °C).
+       **Définition officielle du degré, imprimée en toutes lettres** (restituée le 2026-07-17 — la
+       version pilote la résumait en « intervalle divisé en 100 parties ») : « **Le degré Celsius est
+       la variation de température qui produit, dans le tube capillaire du thermomètre, une variation
+       du niveau du mercure égale au 1/100 de sa variation observée entre les températures 0°C et
+       100°C suite à l'immersion du réservoir du thermomètre respectivement dans la glace fondante et
+       dans l'eau bouillante.** » Précautions de mesure (agiter le liquide
        pour uniformiser la température, réservoir ne touchant pas les parois, œil au niveau supérieur
        du mercure). **Remarque officielle (anomalie de l'eau)** (p.106) : « La dilatation ou la
        contraction de l'eau présente des particularités : lorsqu'on refroidit l'eau à l'état liquide
@@ -954,8 +1645,13 @@
     - « Les solides isolants électriques sont généralement de mauvais conducteurs de chaleur. »
   - **Aperçu historique** (p.110) : renvoi aux mêmes sites pour rechercher les découvertes du savant
     **S'gravesande (1688–1742)**.
-  - **Exercice résolu** (p.111) : dispositif imaginé par un élève (ballon + tube fin) pour étudier la
-    dilatation d'un liquide plongé dans l'eau chaude. 1) L'élévation du niveau ne provient pas
+  - **Exercice résolu** (p.111) : « le dispositif de **la figure ci-contre** », imaginé par un élève,
+    pour étudier la dilatation d'un liquide plongé dans l'eau chaude. ⚠️ **Le montage n'est décrit
+    nulle part dans le texte** — il n'existe **que dans la figure**, non rendue (§6.2) ; la solution
+    ne nomme que « le verre, le liquide et l'air » et « le tube fin ». _(La version pilote écrivait
+    « ballon + tube fin » : le « ballon » était **déduit par analogie** avec l'activité II p.104,
+    **jamais lu** — reconstitution de figure, contraire à la règle « signalé, jamais reconstitué ».
+    Retirée le 2026-07-17.)_ 1) L'élévation du niveau ne provient pas
     uniquement de la dilatation du liquide : le verre, le liquide et l'air du dispositif se dilatent
     tous, l'élévation renseigne sur la dilatation globale. 2) Inconvénient : la dilatation du verre
     est négligeable devant celle du liquide, mais si de l'air reste emprisonné, sa dilatation
@@ -979,10 +1675,19 @@
     thermomètre à minima et maxima (mercure encadré d'alcool des deux côtés), identifier la branche
     au plus grand volume d'alcool, quel volume se dilate/se contracte le plus, quel index (I ou J)
     monte selon une température maximale ou minimale ; item 2 — tableau du volume de 1 kg d'eau de
-    0°C à 8°C (valeurs 1000,12 à 1000,00 à 4°C puis remontée à 1000,11 mL à 8°C), tracer la courbe,
-    identifier la température de volume minimal (4°C), expliquer l'« anomalie » de l'eau ; item 3 —
+    0°C à 8°C, tracer la courbe, identifier la température de volume minimal (4°C), expliquer
+    l'« anomalie » de l'eau. **Les 9 couples imprimés** (restitués le 2026-07-17 — la version pilote
+    ne donnait que les bornes, ce qui rendait l'exercice **non régénérable**) :
+
+    | θ (°C) | 0       | 1       | 2       | 3       | 4       | 5       | 6       | 7       | 8       |
+    | ------ | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- |
+    | V (mL) | 1000,12 | 1000,07 | 1000,03 | 1000,01 | 1000,00 | 1000,01 | 1000,03 | 1000,07 | 1000,11 |
+
+    **Consigne imprimée également omise par la pilote** : « On prendra la graduation 1000 mL sur l'axe
+    des ordonnées confondue avec la graduation 0°C sur l'axe des abscisses. » ; item 3 —
     rail en acier de 100 m à 25°C, allongement de 0,01 mm par mètre par °C, calculer la longueur à
     50°C et à 0°C, en déduire la distance minimale à respecter entre deux rails identiques.
+
   - **Savoir plus** (p.114) — « Le refroidissement des moteurs » : texte sur les chambres d'explosion
     atteignant 2000°C, le rôle du liquide de refroidissement (circule autour des cylindres, cède sa
     chaleur au radiateur aidé du ventilateur), la plage normale de 80–90°C, le vase d'expansion
@@ -1008,7 +1713,21 @@
     dans les tableaux du chapitre — seuls des exercices numériques simples avec un coefficient donné
     en énoncé (ex. rail en acier) figurent en fin de chapitre.
 
-## 2.N Physique — Chapitre 8 : La masse (p.116–131, transcrit à profondeur de génération)
+## 2.8 Physique — Chapitre 8 : La masse (p.115–130, transcrit à profondeur de génération)
+
+**Désignation imprimée (p.115)** : « **CHAPITRE III** » · thème « **LA MATIERE** » · titre « **LA MASSE** » —
+concordant avec le sommaire p.4.
+
+- **Page d'ouverture** (p.115) :
+  - **Plan des activités expérimentales** (verbatim) : « • Activités(I) : La masse d'un corps » ·
+    « • Activités(II) : Mesure d'une masse » · « • Activités(III) : La masse volumique d'un corps » ·
+    « • Activités(IV) : Densité d'un liquide et d'un solide ».
+    ⚠️ **Incohérence de la source (signalée, non arbitrée — §6.3)** : le plan annonce **4** activités, le corps
+    en imprime **5** (I p.118 → V p.122), et les intitulés décrochent à partir du rang III/IV — le plan (IV)
+    « Densité d'un liquide et d'un solide » correspond en fait à l'**ACTIVITES (V)** imprimée p.122, tandis que
+    l'ACTIVITES (IV) imprimée p.121 porte sur la masse volumique d'un solide.
+  - **Pré-requis** (verbatim) : « Mesurer un volume » · « Conversion des unités de volume » · « Les états
+    physiques de la matière ».
 
 - **Structure de la leçon** :
   - **Activités de mise en situation** (p.116–117) : emballages alimentaires avec indications
@@ -1138,8 +1857,10 @@
     aluminium) de même masse ou de même volume, lequel a le plus grand volume / la plus grande
     masse, en s'appuyant sur le tableau des masses volumiques ; item 2 — recherche du « carat
     métrique », masse en grammes d'un diamant de 10 carats ; item 3 — bouteille de verre de 0,75 L
-    remplie de 745 mL d'eau placée au congélateur (ρ glace = 920 kg.m⁻3), que va-t-il se produire,
-    nombre minimal de masses marquées pour peser la glace formée. **Utiliser ses acquis pour une
+    remplie de 745 mL d'eau placée **« dans la chambre froide d'un réfrigérateur »** (terme exact du
+    manuel — la version pilote écrivait « au congélateur », terme que le manuel emploie ailleurs
+    (p.106, ch.7) mais **pas ici** ; substitution corrigée le 2026-07-17) (ρ glace = 920 kg.m⁻3), que
+    va-t-il se produire, nombre minimal de masses marquées pour peser la glace formée. **Utiliser ses acquis pour une
     synthèse** (p.129) : item 1 — cylindre plein en plomb, hauteur 10 cm, rayon 2 cm, pesée
     schématisée : calculer le volume, la masse, la masse volumique, la densité du plomb, prédire sa
     position dans l'eau ; item 2 — corps en zinc de forme quelconque à 25°C, volume déduit d'un
@@ -1170,7 +1891,22 @@
     sa masse ne change pas ») est en fait traitée au **chapitre 9**, pas ici ; poids et relation
     poids/masse (hors programme de ce chapitre, relève de la mécanique, chapitres 10+).
 
-## 2.N Physique — Chapitre 9 : Les changements d'état d'un corps pur (p.132–147, transcrit à profondeur de génération)
+## 2.9 Physique — Chapitre 9 : Les changements d'état physique d'un corps pur (p.131–146, transcrit à profondeur de génération)
+
+**Désignation imprimée (p.131)** : « **CHAPITRE IV** » · thème « **LA MATIERE** » · titre « **LES CHANGEMENTS
+D'ETAT PHYSIQUE D'UN CORPS PUR** » — concordant avec le sommaire p.4. _(Le mot « **physique** » est imprimé aux
+deux endroits ; la version pilote de cette fiche l'amputait — rétabli le 2026-07-17.)_
+
+- **Page d'ouverture** (p.131) :
+  - **Plan des activités expérimentales** (verbatim) : « • Activités(I) : La solidification d'un corps pur et la
+    transformation inverse » · « • Activités(II) : La vaporisation par ébullition » · « • Activités(III) : La
+    vaporisation par évaporation » · « • Activités(IV) : La condensation de la vapeur d'eau : cycle de l'eau » ·
+    « • Activités(V) : La sublimation » · « • Activités(VI) : Conservation de la masse lors d'un changement
+    d'état » · « • Activités(VII) : Interprétation microscopique des changements d'état / Notion d'équilibre
+    dynamique ». _(Les 7 sont bien imprimées dans le corps.)_
+  - **Pré-requis** (verbatim) : « Propriétés caractéristiques des corps dans les différents états physiques de la
+    matière » · « Structure corpusculaire de la matière et agitation thermique » · « Mesure de la température » ·
+    « Mesure de la masse et mesure du volume d'un corps ».
 
 - **Structure de la leçon** :
   - **Activités de mise en situation** (p.132–133) : les états de l'eau dans la nature (« Dans quels
@@ -1345,22 +2081,19 @@
     fonction de la température, déjà couverte au chapitre 7 (prérequis mentionné explicitement en
     en-tête de chapitre).
 
-## Incertitudes rencontrées (ch.6-9)
+## 2.10 Physique — Chapitre 10 : Le mouvement (p.147–162, transcrit à profondeur de génération)
 
-- Chapitre 9, Activité III (p.136) : le texte source dit « les molécules d'éther quittent la surface
-  de contact avec l'air » alors que l'expérience décrite porte sur de l'alcool (ou de l'acétone), pas
-  sur de l'éther — probable erreur de rédaction dans le manuel original (ou réutilisation d'un
-  paragraphe générique). Transcrit tel quel, verbatim, sans correction.
-- Les schémas/figures (montages expérimentaux, courbes θ(t), tableaux croisés de la fiche T.P.
-  chapitre 6, modèle microscopique des trois états) ne sont pas rendus par l'extraction texte
-  (pdftotext) ; seules les légendes et le texte adjacent ont pu être transcrits. Non vérifié par
-  rendu image (jugé non nécessaire — le contenu textuel est cohérent et complet).
-- Chapitre 8, exercice « Vérifier ses acquis » item 3.3 (p.128) : l'énoncé propose « (dépend/ne
-  dépend pas) » pour la masse selon l'état physique, avec une formulation elliptique dans le texte
-  source ; la bonne réponse pédagogique (masse invariante, seul le volume change) est déduite du
-  cours et non du corrigé (l'exercice n'a pas de corrigé imprimé dans cette section).
+**Désignation imprimée (p.147)** : « **CHAPITRE I** » · thème « **LA MECANIQUE** » · titre « **LE MOUVEMENT** »
+— concordant avec le sommaire p.5.
 
-## 2.N Physique — Chapitre 10 : Le mouvement (p.148–163, transcrit à profondeur de génération)
+- **Page d'ouverture** (p.147) :
+  - **Plan des activités expérimentales** (verbatim) : « • Activités(I) : Repérage du temps » ·
+    « • Activités(II) : Relativité d'un mouvement » · « • Activités(III) : Techniques d'étude d'un mouvement » ·
+    « • Activités(IV) : Trajectoire d'un mobile » · « • Activités(V) : Les trois types de mouvement » ·
+    « • Activités(VI) : Vitesse moyenne d'un mobile » · « • Activités(VII) : Vitesse instantanée ». _(Les 7 sont
+    bien imprimées dans le corps.)_
+  - **Pré-requis** (verbatim) : « Repérage dans le plan (origine, axe des abscisses et axe des ordonnées). » ·
+    « Coordonnées d'un point dans un repère orthonormé. » · « Abscisse linéaire. »
 
 - **Structure de la leçon** :
   - **Activités de mise en situation** (p.148–149) : quatre mises en situation illustrées —
@@ -1420,8 +2153,9 @@
        la rapidité de deux mobiles : par les durées de trajets successifs de même longueur, ou
        par les longueurs de trajets parcourus en durées successives égales. Question ouverte
        (clichés A décéléré/retardé/ralenti/freiné, B uniforme).
-    6. **Activité VI** (p.154–155) — comparer la rapidité de deux mouvements : athlètes (A) 1500 m
-       en 3 min 26 s et (B) 800 m en 1 min 54 s → (A) parcourt en moyenne 7,28 m/s, (B) 7,02 m/s,
+    6. **Activité VI** (p.154–155) — comparer la rapidité de deux mouvements : athlètes (A) **l500**
+       [sic — « l » minuscule pour le chiffre « 1 » ; la lecture « 1500 » est certaine, le manuel
+       calculant lui-même 7,28 m.s⁻¹] m en 3 min 26 s et (B) 800 m en 1 min 54 s → (A) parcourt en moyenne 7,28 m/s, (B) 7,02 m/s,
        (A) plus rapide. **Généralisation officielle** : « La vitesse moyenne, notée Vmoy, d'un
        mobile est égale au quotient de la distance d parcourue par le mobile par la durée t du
        parcours : Vmoy = d/t. » Unité SI : mètre par seconde (m.s⁻¹) ; conversion usuelle
@@ -1475,13 +2209,21 @@
   - **Aperçu historique** (p.158) : recherche sur le savant **Galilée (1564–1642)**.
   - **Exercice résolu** (p.159) : chronophotographie d'une chute de balle prise toutes les
     0,02 s. 1) rôle de la chronophotographie ; 2) mouvement rectiligne (trajectoire = droite) ; 3) a) Vmoy entre 1ère et 2ème position = d1/t1 = 0,006/0,02 = 0,3 m.s⁻¹, entre 2ème et 3ème =
-    d2/t2 = 0,010/0,02 = 0,5 m.s⁻¹ ; b) vitesse croît → mouvement accéléré ; 4) Vmoy entre
-    1ère et dernière position = 0,16/0,16 = 1 m.s⁻¹ (données du corrigé telles qu'imprimées ;
-    la cohérence numérique de ce dernier calcul semble fragile après extraction texte — voir
-    incertitudes).
+    d2/t2 = 0,010/0,02 = 0,5 m.s⁻¹ ; b) vitesse croît → mouvement accéléré ; 4) la **question 4**
+    demande la vitesse moyenne « entre la première et la **dernière** position », mais le **corrigé
+    imprimé** répond « Entre la première et la **deuxième** [sic] position » — **coquille de la
+    source, transcrite telle quelle, non arbitrée** (§6.3) ; valeur : 0,16/0,16 = **1 m.s⁻¹**.
+    ⚠️ **Les valeurs sont justes — ne pas les « réparer ».** Leur cohérence est **triple** : le manuel
+    imprime lui-même « = 1 m.s⁻¹ » ; l'Activité V (p.154) établit une chute de **0,16 s** entre A et
+    B ; une chute de 0,16 m en 0,16 s donne bien 1 m.s⁻¹. _(La version pilote écrivait « 1ère et
+    **dernière** position » — arbitrage silencieux du mot imprimé — et diagnostiquait « cohérence
+    fragile après extraction texte », **piège actif** qui invitait un agent aval à corriger des
+    nombres exacts. Les deux sont **supprimés le 2026-07-17** ; le seul défaut réellement imprimé est
+    le **libellé**.)_
   - **Exercices — Vérifier ses acquis** (p.160, items 1–3) : phrases à compléter (ensemble des
-    « … » occupées par le point mobile au cours de son « mouvement » ; le Soleil se lève à l'Est
-    et se couche à l'Ouest, la Terre tourne donc de l'Ouest à l'Est ; Ismail dans une voiture
+    « … » occupées par le point mobile au cours de son « mouvement » ; « Le Soleil se lève à …… et
+    se couche à …… La Terre tourne donc de …… à ……. » (**texte à trous : les « …… » sont imprimés ;
+    le manuel n'imprime aucun corrigé**) ; Ismail dans une voiture
     arrêtée au passage à niveau, un train passe — objets/personnes en mouvement par rapport au
     train) ; vrai/faux motivé (un mouvement rectiligne dans un repère le reste-t-il dans tout
     autre repère ? comparaison de rapidité par durées de parcours de même longueur ; suffit-il
@@ -1535,7 +2277,7 @@
     purement cinématique (description du mouvement), sans aucune notion dynamique (cause du
     mouvement).
 
-## 2.N Physique — Chapitre 11 : Les actions mécaniques (p.164–179, transcrit à profondeur de génération)
+## 2.11 Physique — Chapitre 11 : Les actions mécaniques (p.163–178, transcrit à profondeur de génération)
 
 - **Structure de la leçon** :
   - **Plan des activités expérimentales** (p.163, en tête de chapitre) : Activités(I) Les effets
@@ -1601,7 +2343,7 @@
        représentation en un point particulier, le **centre de gravité G** ; pour un corps
        homogène de forme géométrique simple à centre de symétrie, G coïncide avec ce centre ;
        G n'appartient pas toujours au corps (ex. anneau, cerceau). Encadré : « La verticale d'un
-       point est la droite qui joint ce point au centre de gravité de la Terre. »
+       point est la droite qui **joigne** [sic] ce point au centre de gravité de la Terre. »
     5. **Activité V** (p.170) — relation masse/poids : renvoi à la fiche T.P. **Généralisation
        officielle** : « En un lieu donné, l'intensité du poids d'un corps est proportionnelle à
        sa masse : P = m.g. » g = intensité de la pesanteur, exprimée en newton par kilogramme
@@ -1687,8 +2429,11 @@
     terrestre à l'intérieur d'un engin spatial ; perturbations physiologiques (otolithes,
     illusions d'orientation) ; illustration : cosmonautes en apesanteur dans la station orbitale
     Mir (satellisée en 1986, détruite le 23 mars 2001).
-  - **Fin de chapitre** (p.179) : plan des activités expérimentales et pré-requis du chapitre 12
-    (Forces et équilibre) apparaissent déjà sur cette page (transition d'imprimerie).
+    _(Le chapitre s'arrête à la p.178. La **p.179 n'en fait pas partie** : c'est la **page d'ouverture
+    normale** du ch.12, strictement identique en structure aux p.147 / 163 / 195, transcrite en §2.12.
+    La version pilote la rattachait ici en invoquant une « transition d'imprimerie » — **rationalisation
+    inventée d'une structure parfaitement régulière** (17 ouvertures ↔ 17 « SAVOIR PLUS », appariées sans
+    trou — §2) : **supprimée le 2026-07-17**.)_
 - **Concepts / notions** : action mécanique (de contact / à distance) ; effet dynamique
   (mise en mouvement, changement de trajectoire/vitesse) vs effet statique (déformation) ;
   corps élastique / inélastique ; caractéristiques d'une action (valeur/intensité, direction,
@@ -1717,7 +2462,7 @@
     mouvement (2ème loi de Newton) n'apparaît dans ce chapitre — seule la 1ère loi (principe
     d'inertie) y est énoncée.
 
-## 2.N Physique — Chapitre 12 : Forces et équilibre (p.180–195, transcrit à profondeur de génération)
+## 2.12 Physique — Chapitre 12 : Forces et équilibre (p.179–194, transcrit à profondeur de génération)
 
 - **Structure de la leçon** :
   - **Plan des activités expérimentales** (p.179, en tête de chapitre) : Activités(I) Équilibre
@@ -1808,8 +2553,12 @@
     Hooke, réaliser un dynamomètre) ; matériel (support, ressort à spires non jointives, masses
     marquées, papier millimétré, miroir plan) ; protocole (repérage de la position à vide G0,
     puis des positions G1, G2, G3… pour m1, m2, m3, tableau m (0,1 à 0,5 kg) / Δl / T, tracé
-    T = f(Δl), écriture vectorielle T = −k.Δl⃗ avec un vecteur unitaire à définir, construction
-    d'un dynamomètre droit).
+    T = f(Δl), puis consigne imprimée : « **proposer une écriture vectorielle** entre [T], Δl et
+    **un vecteur unitaire à définir** » ; construction d'un dynamomètre droit).
+    ⚠️ **Le manuel ne donne PAS la relation ici — il demande à l'élève de la proposer.** _(La version
+    pilote écrivait « écriture vectorielle **T = −k.Δl⃗** » comme si elle était imprimée sur cette
+    page : c'était la **réponse attendue**, pas le texte du T.P. La forme vectorielle n'est imprimée
+    qu'à la **p.190** (L'essentiel). Corrigé le 2026-07-17.)_
   - **Recherche documentaire — Propulsion d'un coureur** (p.189) : starting-block, force de
     propulsion (le coureur pousse vers l'arrière sur le starting-block, celui-ci exerce une force
     opposée vers l'avant — application du principe d'interaction) ; action d'une piste rugueuse =
@@ -1841,6 +2590,9 @@
     affichant 10 N. 1) a) forces appliquées : poids P (Terre) et tension du fil T ; b) à
     l'équilibre P + T = 0 soit T = P = m.g, m = 10/9,8 = 1,02 kg = 1020 g. 2) (C) posé sur un sol
     horizontal : a) forces poids P et réaction du sol R ; b) à l'équilibre R = P = m.g = 10 N.
+    ⚠️ **Numérotation renumérotée ici, incohérence de la source signalée** : le corrigé imprimé porte
+    **deux fois « 1/- a)- »** — la réponse à la **question 2** y est numérotée « 1/- ». Le « 2) »
+    ci-dessus est une **remise en ordre de lecture**, pas ce qui est imprimé (§6.3).
   - **Exercices — Vérifier ses acquis** (p.192) : phrases à compléter (F(A/B) et « F(B/A) » ; les
     deux forces constituent « les éléments/l'interaction », chacune « élément » de l'interaction ;
     tension du ressort linéaire « proportionnelle » à sa déformation) ; vrai/faux motivé (un
@@ -1849,10 +2601,13 @@
     d'élasticité ?) ; choix des mots exacts (force pointe de clou/doigt : plus grande/égale/plus
     petite ; sens contraires/même sens, même valeur, droites confondues/concourantes pour un
     objet en équilibre sous deux forces ; Terre-Lune : force plus/moins intense/égale à celle
-    Lune-Terre). « Utiliser ses acquis dans des situations simples » (p.192–193) : ressort
-    linéaire comprimé de 5 cm par une force de 2 N → constante de raideur (40 N.m⁻¹, calcul
-    k = F/x) ; Tour de Pise (14 500 tonnes, décalage de 4 m entre les verticales des bases,
-    g = 10 N.kg⁻¹) — calcul du poids, de la réaction du sol, représentation de la position de la
+    Lune-Terre). « Utiliser ses acquis dans des situations simples » (p.192–193) : ressort linéaire
+    comprimé de 5 cm par une force de 2 N → constante de raideur, **QCM à trois options imprimées**
+    : « (a) 40 N.m-1 ; (b) 10 N.m-1 ; (c) 40 m.N-1 » (**aucun corrigé imprimé**) ; Tour de Pise (14
+    500 tonnes ; « La verticale (Δ) passant par le centre de sa base d'appui a 4 mètres de décalage
+    par rapport au **centre de sa partie supérieure** » ; « **En suppose** [sic] que le centre de
+    gravité G de la tour est à égale distance de ses deux bases » — donnée qui commande la question
+    c) ; g = 10 N.kg⁻¹) — calcul du poids, de la réaction du sol, représentation de la position de la
     droite d'action par rapport à (Δ) ; dynamomètre à réaliser avec k = 20 N.m⁻¹ (une seule force
     connue de 3 N, distance entre deux divisions consécutives). « Utiliser ses acquis pour une
     synthèse » (p.193–194) : solide de masse m accroché à un ressort k = 20 N.m⁻¹, allongement à
@@ -1895,7 +2650,7 @@
     loi de l'attraction universelle (F = G.m1.m2/d²) — seule la formulation qualitative de Newton
     (« Savoir plus ») est mentionnée, sans formule ni constante G.
 
-## 2.N Physique — Chapitre 13 : Forces et pression (p.196–209, transcrit à profondeur de génération)
+## 2.13 Physique — Chapitre 13 : Forces et pression (p.195–208, transcrit à profondeur de génération)
 
 - **Structure de la leçon** :
   - **Plan des activités expérimentales** (p.195, en tête de chapitre) : Activités(I)
@@ -2019,9 +2774,11 @@
     béton armé, ~90% des constructions), superficielles par radier général, profondes sur pieux/
     micropieux avec longrine ; protection contre le gel (profondeur de garde de 25 cm à plus d'un
     mètre selon la région et l'altitude).
-  - **Transition** (p.209) : plan des activités expérimentales et pré-requis du chapitre suivant
-    de la partie « L'Énergie » (chapitre « Énergie et contrôle ») apparaissent déjà en fin de
-    plage (hors périmètre demandé, non transcrits ici).
+    _(Le chapitre s'arrête à la p.208. La **p.209 n'en fait pas partie** : c'est la **page d'ouverture
+    normale** du ch.14 (« CHAPITRE I / L'ENERGIE / ENERGIE ET CONTRÔLE »), désormais transcrite en §2.14
+    avec son plan et ses pré-requis. La version pilote la rattachait ici comme une « transition » dont le
+    contenu serait « hors périmètre, non transcrit » — **doublement faux** : la structure est régulière
+    (§2) et ce contenu est **exigé par R-5**. **Corrigé le 2026-07-17**.)_
 - **Concepts / notions** : transmission d'une force par un solide (action localisée ou répartie) ;
   force pressante F ; surface pressée s ; pression p = F/s (pascal, Pa) ; multiples (bar,
   millibar) ; relation entre pression, force pressante et surface (à force égale, pression
@@ -2042,28 +2799,26 @@
     dans les fluides (hydrostatique, principe de Pascal appliqué aux liquides, poussée
     d'Archimède) — non abordée ici, cette activité traite uniquement de la pression exercée par un
     **corps solide** sur un support solide ; aucune formule de pression hydrostatique
-    (p = ρ.g.h) n'apparaît dans ce chapitre ; le chapitre suivant du manuel (partie « L'Énergie »,
-    chapitre « Énergie et contrôle ») est hors du périmètre demandé (chapitres 10 à 13
-    uniquement).
+    (p = ρ.g.h) n'apparaît dans ce chapitre ; l'**énergie** (thème suivant du manuel) relève du
+    **ch.14**, transcrit en §2.14. _(La version pilote écrivait ici que le ch.14 était « hors du
+    périmètre demandé (chapitres 10 à 13 uniquement) » — reliquat du **découpage en tranches** de la
+    transcription, sans objet dans cette fiche qui couvre les **17 chapitres**. Retiré le
+    2026-07-17.)_
 
-## Incertitudes rencontrées (ch.10-13)
+## 2.14 Physique — Chapitre 14 : Énergie et contrôle (p.209–226, transcrit à profondeur de génération)
 
-- Chapitre 10, exercice résolu, question 4 (p.159) : le corrigé imprimé donne « Vmoy entre la
-  première et la deuxième position : d/t = 0,16/0,16 = 1 m.s⁻¹ » — cet énoncé (question 4 porte
-  en réalité sur la 1ère et la _dernière_ position) et ces valeurs numériques (0,16/0,16) semblent
-  incohérents avec l'énoncé et avec les distances données au 3/a) (0,006 m et 0,010 m sur 0,02 s).
-  Il s'agit probablement d'un artefact de l'extraction PDF→texte (chiffres tronqués ou mal
-  positionnés dans un tableau/fraction). Transcrit tel quel, sans invention de correction.
-- Chapitre 11, tableau des intensités de forces (p.169) : « Force d'attraction exercée par le
-  Soleil sur la Terre : 35.10²⁰ N » — la notation « 35.1020 » de l'extraction a été interprétée
-  comme 35×10²⁰ N (conforme à l'ordre de grandeur physique réel, ≈ 3,5×10²¹ N) ; l'exposant a pu
-  perdre sa mise en forme lors de l'extraction texte.
-- Aucune vérification par rendu image (render.sh) n'a été nécessaire : le texte extrait était
-  globalement cohérent et complet sur les quatre chapitres, hormis les deux points numériques
-  ci-dessus qui relèvent d'artefacts mineurs de mise en page (fractions/exposants) plutôt que
-  d'un texte manquant.
+**Désignation imprimée (p.209)** : « **CHAPITRE I** » · thème « **L'ENERGIE** » · titre « **ENERGIE ET
+CONTRÔLE** » — concordant avec le sommaire p.5.
 
-## 2.N Physique — Chapitre 14 : Énergie et contrôle (p.210–226, transcrit à profondeur de génération)
+- **Page d'ouverture** (p.209) :
+  - **Plan des activités expérimentales** (verbatim) : « • Activités(I) : Sources d'énergie renouvelables et
+    sources d'énergie non renouvelables » · « • Activités(II) : Les principales formes d'énergie » ·
+    « • Activités(III) : Transformations mutuelles des formes d'énergie » · « • Activités(IV) : Les différents
+    modes de transfert d'énergie » · « • Activités(V) : Les deux modes de transfert d'énergie par chaleur : la
+    conduction et la convection » · « • Activités(VI) : Isolation thermique » · « • Activités(VII) : Energie et
+    contrôle ». _(Les 7 sont bien imprimées dans le corps.)_
+  - **Pré-requis** (verbatim) : « Changement d'état physique de la matière » · « Le thermomètre et son
+    utilisation » · « Mouvement ».
 
 - **Structure de la leçon** :
   - **Activités de mise en situation** (p.210–211) : quatre mises en situation illustrées avec
@@ -2074,7 +2829,11 @@
     l'énergie des aliments ? », « Le gaz naturel est-il une source d'énergie renouvelable ou
     non ? », « Comment la chaleur se transmet-elle dans les solides, les liquides et les gaz ? »,
     « Que signifie, isoler thermiquement un corps ? » (p.211).
-  - **Activités expérimentales** (p.212–218) — 7 blocs :
+  - **Activités expérimentales** (p.212–219) — **7 activités numérotées (I→VII)**, plus le bloc
+    « Interprétation microscopique » qui n'est **pas** une activité numérotée du manuel — soit
+    **8 blocs** décrits ci-dessous. _(Bornes et décompte rectifiés le 2026-07-17 : la version pilote
+    annonçait « p.212–218 — 7 blocs » puis en énumérait 8 ; l'Activité VII court jusqu'à la p.219
+    incluse.)_
     1. **Activité I** — sources d'énergie renouvelables / non renouvelables : classement de
        photos (charbon, vent, pétrole, Soleil, bois, uranium, marées, geyser). **Généralisations
        officielles** : « Le Soleil, le vent, les marées, la biomasse (végétaux et animaux) et la
@@ -2130,7 +2889,7 @@
        chaudes vers les parties froides du liquide par déplacement de matière. »). Remarque :
        distinction chaleur (mode de transfert, en joule) vs température (grandeur caractéristique
        de l'énergie thermique, en °C ou K).
-    6. **Interprétation microscopique** (p.216) : agitation thermique = énergie cinétique
+    6. **Interprétation microscopique** (p.217) : agitation thermique = énergie cinétique
        microscopique des particules ; la température renseigne sur l'agitation moyenne ;
        contact corps chaud/froid → répartition de l'agitation ; lors d'un changement d'état, la
        chaleur fournie/perdue ne modifie pas la température mais brise/reforme les liens entre
@@ -2218,7 +2977,7 @@
     de bicyclette, agitateur magnétique, tête à combustion) croisant formes d'énergie converties
     (mécanique/électrique/chimique/thermique) ; pompe solaire (moteur électrique + batterie +
     cellules photovoltaïques) — source/convertisseur, chaîne énergétique, formes stockées.
-  - **Savoir plus** (p.225–226) — « La centrale nucléaire » : principe (chaleur de l'uranium →
+  - **Savoir plus** (p.226) — « La centrale nucléaire » : principe (chaleur de l'uranium →
     vapeur → turbine → alternateur → électricité) ; contrôle de la réaction en chaîne par des
     barres de contrôle absorbant les neutrons ; barres de sécurité automatiques en cas d'anomalie.
     Schéma légendé (barres de contrôle, cuve, échangeur, pompe, eau, vapeur).
@@ -2249,7 +3008,7 @@
     énergétique (non mentionnées) ; étude quantitative de la propagation thermique (loi de
     Fourier, coefficients de conductivité) — hors-programme, resté qualitatif.
 
-## 2.N Physique — Chapitre 15 : La Terre et l'univers (p.227–242, transcrit à profondeur de génération)
+## 2.15 Physique — Chapitre 15 : La Terre et l'univers (p.227–242, transcrit à profondeur de génération)
 
 - **Plan des activités expérimentales officiel** (p.227) : Activités(I) Les corps célestes ;
   Activités(II) Les constellations ; Activités(III) La Voie Lactée : notre Galaxie ;
@@ -2314,21 +3073,76 @@
        d'hydrogène et d'hélium et généralement ont une faible densité, une rotation rapide, des
        atmosphères épaisses, des anneaux et beaucoup de satellites. » Période de rotation de la
        Terre = 23 h 56 mn (un jour) ; période de révolution = 365,25 j (une année).
+
+       **Tableau « Caractéristiques \ Planète » (p.234) — transcrit tel qu'imprimé.**
+       ⚠️ **Provenance** : ce tableau est une **image raster** — il est **absent de la couche-texte**
+       (preuve auxiliaire : le tableau « à cocher » de la p.241 est, lui, **vectoriel**, et `pdftotext`
+       le capte ; « Mercure » n'apparaît jamais dans le `.txt` des p.240/241). Il a été **levé en passe
+       vision 400 dpi sur la p.234** par la relecture R-7 du 2026-07-17 (tranche ch.14–15), **non par
+       une lecture du `.txt`**. L'en-tête est une **cellule barrée en diagonale** : « Planète »
+       (haut-droite) / « Caractéristiques » (bas-gauche).
+
+       | Caractéristiques                            | Mercure       | Venus  | Terre       | Mars         | Jupiter | Saturne | Uranus | Neptune | Pluton |
+       | ------------------------------------------- | ------------- | ------ | ----------- | ------------ | ------- | ------- | ------ | ------- | ------ |
+       | Distance moyenne au Soleil (millions de km) | 57,93         | 108,20 | 149,6       | 227,94       | 778,33  | 1430    | 2870   | 4490    | 5910   |
+       | Diamètre équatorial (km)                    | 4878          | 12104  | 12756       | 6786         | 142264  | 120536  | 51118  | 49528   | 2300   |
+       | Période de rotation (heure)                 | 1403,5        | 5815,2 | 23,93       | 24,62        | 9,84    | 10,23   | 17,90  | 19,20   | 6,39   |
+       | Période de révolution (année)               | 0,241         | 0,615  | 1           | 1,88         | 11,86   | 29,46   | 84,01  | 164,79  | 248,54 |
+       | Vitesse moyenne orbitale (km/s)             | 47,89         | 35,03  | 29,79       | 24,14        | 13,06   | 9,64    | 6,81   | 5,47    | 4,74   |
+       | Température de surface (°C)                 | de -180 à 430 | 480    | de -55 à 70 | de -120 à 25 | -150    | -180    | -210   | -220    | -230   |
+       | Masse relative à la Terre                   | 0,06          | 0,81   | 1           | 0,11         | 317,93  | 95,18   | 14,53  | 17,14   | 0,01   |
+       | Densité moyenne                             | 5,43          | 5,25   | 5,52        | 3,95         | 1,33    | 0,69    | 1,29   | 1,64    | 2,03   |
+       | Pesanteur à la surface (N/kg)               | 3,73          | 9,12   | 9,80        | 3,72         | 24,9    | 9,02    | 7,74   | 11,8    | 0,392  |
+       | Nombre de satellites connus                 | 0             | 0      | 1           | 2            | 16      | 23      | 15     | 8       | 1      |
+
+       ⚠️ Le manuel écrit « **Venus** » **sans accent** dans ce tableau (et p.238), mais « **Vénus** »
+       **avec** accent p.233 — incohérence de la source, **signalée, non arbitrée** (§6.3).
+       **C'est le tableau référent de deux exercices** : la p.240 (« utiliser ses acquis ») et la p.241
+       (synthèse 1) y renvoient explicitement (« En vous aidant des informations fournies dans le
+       tableau des caractéristiques des planètes »). Contrôle de cohérence effectué par la R-7 : les
+       4 questions de la p.240 sont bien toutes résolubles par ce tableau (plus proche du Soleil →
+       Mercure 57,93 ; la plus grosse → Jupiter 142264 ; la moins dense → Saturne 0,69 ; poids le plus
+       grand → Jupiter 24,9 N/kg), et la p.241 en a besoin (diamètre Terre 12756, distance 149,6).
+
     5. **Activité V** — jours/nuits et saisons (p.235). Expérience du globe terrestre éclairé par
        une lanterne, tournant autour de l'axe polaire : « La rotation de la Terre autour de l'axe
        polaire engendre la succession des jours et des nuits. » Positions solaires caractéristiques
-       (dates avec double numérotation officielle 21/22 ou 22/23) : 21 (ou 22) juin — rayons quasi
+       (le manuel donne systématiquement une **double date**) : **21 (ou 22) juin** — rayons quasi
        orthogonaux sur Tunis, décalage maximal vers le nord (lever nord-est, coucher nord-ouest),
-       début de l'été ; 21 (ou 22) décembre — inclinaison maximale, décalage maximal vers le sud
-       (lever sud-est, coucher sud-ouest), début de l'hiver ; 22 (ou 23) septembre et 20 (ou 21)
-       mars — lever à l'est, coucher à l'ouest (équinoxes, non nommés explicitement dans le
-       texte).
+       début de l'été ; **22 (ou 23) septembre** et **20 (ou 21) mars** — lever à l'est, coucher à
+       l'ouest (équinoxes, **non nommés explicitement** dans le texte).
+       ⚠️ **Pour décembre, le manuel imprime DEUX dates différentes sur la même page — rapportées
+       toutes les deux, non arbitrées** (§6.3) : « Le **21 (ou 22)** Décembre, les rayons solaires
+       arrivent avec une inclinaison maximale » **puis**, plus bas, « Le **22 (ou 23)** Décembre, les
+       rayons solaires tombent avec une inclinaison telle que le temps fera froid. **Il s'agit du début
+       de l'hiver.** » ⇒ c'est la **seconde** phrase (22 ou 23) qui porte « début de l'hiver », pas la
+       première. _(La version pilote de cette fiche fusionnait les deux et rattachait « début de
+       l'hiver » au « 21 (ou 22) » — arbitrage non autorisé, **annulé le 2026-07-17**. Les deux dates
+       sont confirmées imprimées par passe vision de la R-7, tranche ch.14–15.)_ Le décalage vers le
+       sud (lever sud-est, coucher sud-ouest) est bien celui de décembre.
+       **Phrase de la source contredisant sa propre suite** (imprimée, non arbitrée — §6.3) : « **A
+       partir du début de l'hiver, le Soleil commence à se décaler vers le sud.** » (or le décalage sud
+       est déjà maximal au solstice d'hiver).
+       **Deux questions de clôture imprimées** : « **Les débuts des couper du jeun** [sic] **sont-ils à
+       la même heure le long des années ?** » (phrase altérée dans la source — transcrite verbatim,
+       **l'intention n'est pas devinée**, §6.4) ; « Dans la carte des saisons ci-dessus, repérez la
+       position de la Terre à la date de votre naissance. » (⇒ renvoi à la « carte des saisons », figure
+       non rendue — §6.2).
   - **Fiche T.P.** (p.236) — « Les constellations » : buts (construire une partie de la carte du
     ciel, retrouver des constellations connues, reconnaître le nord géographique) ; matériel
     (carte vierge du ciel, tableau de coordonnées d'étoiles) ; tableau de données angle/distance
     pour Étoile polaire (0°, 0), Véga (345°, 5,5 div), Castor (170°, 6,0 div), Arcturus (280°,
-    7,0 div), Pollux (175°, 6,5 div), et deux constellations (Grande Ourse 7 points, Cassiopée 5
-    points) avec leurs angles/distances tabulés.
+    7,0 div), Pollux (175°, 6,5 div), et **deux constellations dont les 12 points sont tabulés**
+    (toutes les distances en **divisions**) :
+    - **Grande Ourse**, points 1→7 : 275°/5,0 · 270°/3,5 · 260°/3,5 · 245°/3,5 · 240°/4,0 ·
+      225°/3,5 · 225°/3,0
+    - **Cassiopée**, points 1→5 : 95°/3,0 · 90°/3,5 · 85°/3,0 · 80°/3,5 · 75°/3,0
+
+    _(Les 12 couples étaient présents dans la couche-texte mais résumés en « avec leurs
+    angles/distances tabulés » par la version pilote ; restitués le 2026-07-17 — R-5 exige les données
+    chiffrées, faute de quoi le T.P. n'est pas régénérable.)_ ⚠️ La **carte vierge du ciel** sur
+    laquelle ces coordonnées se reportent est une **figure non rendue** (§6.2).
+
   - **Recherche documentaire** (p.237) — « Aurores polaires » : taches/bandes de lumière verte ou
     rouge, visibles depuis les hautes latitudes (≈ 70°, Scandinavie, nord de la Sibérie, Canada,
     Alaska, abords de l'Antarctique) ; émises dans l'ionosphère entre 80 et 150 km d'altitude ;
@@ -2371,9 +3185,10 @@
     choisir le(s) mot(s) exact(s) (durée de vie du Soleil : 5/10/15 milliards d'années ;
     comètes/constellations ; couleur bleue→jaune→rouge selon l'âge de l'étoile). **Utiliser ses
     acquis dans des situations simples** — calcul de distance Proxima du Centaure (4,22 a.l → km,
-    QCM (a) 40.10⁹ (b) 12,66.10⁸ (c) 39,92.10¹²) ; tableau des caractéristiques des planètes
-    (planète la plus proche du Soleil, la plus grosse, la moins dense, poids le plus grand — données
-    du tableau non retranscrites ici, extraction texte incomplète pour ce tableau) ; tableau à
+    QCM (a) 40.10⁹ (b) 12,66.10⁸ (c) 39,92.10¹²) ; lecture du **tableau des caractéristiques des
+    planètes** (planète la plus proche du Soleil, la plus grosse, la moins dense, poids le plus
+    grand) — ⚠️ **le tableau n'est PAS imprimé sur cette page** : il est p.234 (Activité IV, où il est
+    désormais transcrit intégralement) ; les p.240/241 ne font qu'y **renvoyer** ; tableau à
     cocher (Halley, Terre, Soleil, Véga, Lune, Io, Voie Lactée, Mars, Cassiopée) × catégories
     (Galaxie, Constellation, Étoile, Planète, Satellite, Comète). **Utiliser ses acquis pour une
     synthèse** — modèle réduit du système solaire (Soleil = boule de 14 cm de diamètre pour un
@@ -2382,7 +3197,7 @@
     (identification, nom des trajectoires = orbites, nom du plan = écliptique, classement en deux
     familles) ; observation d'un paysage et de la course du Soleil (lever/coucher, saison,
     durée jour/nuit).
-  - **Savoir plus** (p.241–242) — « La naissance de l'Univers » : théorie du Big-Bang (explosion
+  - **Savoir plus** (p.242) — « La naissance de l'Univers » : théorie du Big-Bang (explosion
     il y a environ 15 milliards d'années, Univers initial infiniment petit, ultra-dense, très
     chaud) ; loi de Hubble (vitesse d'éloignement d'une galaxie proportionnelle à sa distance) ;
     expansion actuelle sur environ 15 milliards d'années-lumière ; hypothèse du Big-Crunch.
@@ -2402,7 +3217,10 @@
     conversion simple (a.l → km) ; description de la Voie Lactée et des amas de galaxies ;
     composition du système solaire, deux familles de planètes (telluriques/gazeuses) ; rotation
     (jour/nuit) et révolution (saisons) de la Terre, dates caractéristiques (solstices/équinoxes,
-    non nommés comme tels dans le texte officiel transcrit).
+    non nommés comme tels dans le texte officiel transcrit) ; **lecture et comparaison d'un tableau
+    de données chiffrées** (distances, diamètres, densités, pesanteurs du tableau p.234) — c'est
+    l'objet même de l'exercice p.240 et de la synthèse 1 p.241. _(Cette borne a été ajoutée le
+    2026-07-17 : la version pilote ne pouvait pas la voir, faute d'avoir le tableau p.234.)_
   - ⛔ **EXCLU** : lois de Kepler et mécanique céleste quantitative (aucune formule
     gravitationnelle n'apparaît) ; calculs de masse/distance par la troisième loi de Kepler ;
     spectroscopie stellaire détaillée ; théorie du Big-Bang développée au-delà du paragraphe
@@ -2410,7 +3228,7 @@
     Lune et éclipses — traitées dans le **chapitre 16** (« La lumière et sa propagation »), pas
     dans ce chapitre 15.
 
-## 2.N Physique — Chapitre 16 : La lumière et sa propagation (p.243–258, transcrit à profondeur de génération)
+## 2.16 Physique — Chapitre 16 : La lumière et sa propagation (p.243–258, transcrit à profondeur de génération)
 
 - **Plan des activités expérimentales officiel** (p.243) : Activités(I) L'œil, un détecteur de
   lumière ; Activités(II) Sources primaires et sources secondaires de lumière ; Activités(III)
@@ -2531,7 +3349,8 @@
       Terre, sont appelées les phases de la Lune : - si la Lune passe dans le cône d'ombre de la
       Terre, il y a éclipse de Lune ; - si une région de la Terre se trouve dans le cône d'ombre de
       la Lune, il y a éclipse de Soleil dans cette région. »
-  - **Aperçu historique** (p.254) : recherche sur le savant **Ibn Elhaitham (965/1040)**.
+  - **Aperçu historique** (p.254) : recherche sur le savant **IBN ELHAITHEM (965/1040)** [sic —
+    graphie et casse du manuel].
   - **Exercice résolu** (p.255) : construction géométrique de la position d'une source
     ponctuelle produisant l'ombre portée d'une craie (opaque) ; déplacement de la source dans un
     plan vertical (position 1 → 3), variation de longueur/orientation de l'ombre, construction de
@@ -2544,8 +3363,11 @@
     cône d'ombre) ; choisir le(s) mot(s) exact(s) (envoie/reçoit de la lumière vers/en provenance
     de nos yeux ; nécessite/ne nécessite pas un milieu matériel ; image droite/renversée dans une
     chambre noire). **Utiliser ses acquis dans des situations simples** — forme de l'ombre portée
-    d'un cylindre opaque (axe vertical → disque ; axe horizontal perpendiculaire à l'écran →
-    rectangle) ; étoile « Star » apparue en 1992, à 750 années-lumière (calcul de l'année de
+    d'un cylindre opaque donnée par une source ponctuelle sur un écran vertical — **QCM à deux
+    volets, trois options chacun, sans corrigé imprimé** : « - dans le cas où l'axe du cylindre est
+    vertical, est : (a) un disque ; (b) un triangle ; (c) un rectangle. - dans le cas où l'axe du
+    cylindre est horizontal et perpendiculaire à l'écran, est : (a) un disque ; (b) un triangle ;
+    (c) un rectangle. » ; étoile « Star » apparue en 1992, à 750 années-lumière (calcul de l'année de
     naissance de la lumière observée ; « la lumière est le messager des astres ») ; tableau nature
     d'objets (étoile, satellite, comète, œil, photopile, laser) → source primaire/secondaire/
     détecteur. **Utiliser ses acquis pour une synthèse** — Ahmed lisant son roman (identifier
@@ -2558,7 +3380,9 @@
     Soleil et zone de totalité sur un schéma.
   - **Savoir plus** (p.257–258) — « Le laser » : acronyme « Light Amplification by Stimulated
     Emission of Radiation » (amplification de lumière par émission stimulée de rayonnement) ;
-    faisceau étroit, quasi parallèle, monochromatique, de grande intensité ; principe (cylindre
+    « un **faisceaux** [sic] lumineux étroit », quasi parallèle, « **de couleur bien définie** » (le
+    manuel n'écrit **pas** « monochromatique » ici — il réserve ce terme au ch.17), de grande
+    intensité ; principe (cylindre
     rempli d'un composé chimique, miroirs réfléchissant la lumière, orifice de sortie) ;
     applications : télécommunications (fibre optique), médecine (fond de l'œil), microélectronique
     (circuits imprimés), télémétrie spatiale (distance Terre-Lune), spectacles.
@@ -2584,7 +3408,7 @@
     non traitées dans ce chapitre (la chambre noire y est abordée uniquement via la propagation
     rectiligne, sans formule de grandissement).
 
-## 2.N Physique — Chapitre 17 : Spectre de lumière et vision (p.259–274, transcrit à profondeur de génération)
+## 2.17 Physique — Chapitre 17 : Spectre de lumière et vision (p.259–274, transcrit à profondeur de génération)
 
 - **Plan des activités expérimentales officiel** (p.259) : Activités(I) Spectre de la lumière
   blanche ; Activités(II) Lumière blanche et vision des couleurs ; Activités(III) Le daltonisme ;
@@ -2608,7 +3432,14 @@
        appelée lumière monochromatique ou radiation simple. » « L'ensemble des couleurs constitue
        le spectre de la lumière blanche. » « Le spectre de la lumière blanche décomposée est
        constitué de lumières monochromatiques allant du rouge au violet en passant par toutes les
-       lumières monochromatiques intermédiaires. Un tel spectre est dit continu. » Encadré : « Une
+       lumières monochromatiques intermédiaires. Un tel spectre est dit continu. »
+       **⚠️ Énumération officielle des 7 couleurs, imprimée sur la même page** (la version pilote ne
+       retenait que la formule générique « toutes les lumières monochromatiques intermédiaires » et
+       **perdait l'ordre des couleurs — dans un chapitre sur le spectre, c'est la donnée la plus
+       générable de la page** ; restituée le 2026-07-17) : « Elle est constituée de lumières colorées
+       allant du **rouge** au **violet** en passant par **l'orange, le jaune, le vert, le bleu et
+       l'indigo**. » ⇒ ordre officiel : **rouge · orange · jaune · vert · bleu · indigo · violet**.
+       Encadré : « Une
        lumière blanche est une lumière polychromatique : elle est formée par la superposition de
        lumières monochromatiques que nos yeux ne distinguent pas séparément. » Remarque : l'arc-en-
        ciel résulte de la décomposition de la lumière blanche du Soleil par les gouttelettes d'eau
@@ -2649,9 +3480,10 @@
     6. **Activité VI** — ultraviolet et infrarouge (p.264–266) : cuve d'eau à fluorescéine (ou
        écran fluorescent) éclairée par le spectre solaire → « La fluorescéine est impressionnée par
        des radiations invisibles situées dans le spectre après le violet. Elles sont appelées
-       radiations ultraviolettes. » Thermomètre approché d'un filament rouge puis éteint : θ₁
-       (lampe allumée, rouge) > θ₂ (lampe éteinte) > θ₀ (température ambiante à l'ombre) —
-       « Le fait que la température θ₂ > θ₀, cela prouve qu'en deçà du rouge il existe des
+       radiations ultraviolettes. » Thermomètre approché d'un filament rouge puis éteint ;
+       comparaison « à la température **θ** indiquée par le thermomètre à l'ombre » (**θ sans indice
+       dans la source**) : « **θ₁ > θ₂ > θ.** » — « Le fait que la température θ₂ > **θ**, cela
+       prouve qu'en **deça** [sic] du rouge il existe des
        radiations responsables de la sensation de chaleur. Ces radiations sont dites infrarouges. »
        Encadré : « Les radiations solaires ou émises par une lampe à incandescence sont formées :
        - de radiations visibles : la lumière blanche ; - et de radiations invisibles : l'infrarouge
@@ -2713,14 +3545,19 @@
     végétaux).
   - **Exercices** (p.271–273) : **Vérifier ses acquis** — phrases à compléter (spectre continu
     d'un corps incandescent ; illusions dues à la rétine/au cerveau, non à l'œil ; infrarouge et
-    ultraviolet invisibles) ; vrai/faux motivé (filtre rouge laisse passer toutes les lumières sauf
-    le rouge [faux — inverse] ; couleur dépend de l'objet et de l'éclairage ; infrarouge/UV
+    ultraviolet invisibles) ; vrai/faux motivé, **sans corrigé imprimé** (filtre rouge laisse passer
+    toutes les lumières sauf le rouge ; couleur dépend de l'objet et de l'éclairage ; infrarouge/UV
     prolongent le spectre visible) ; choisir le(s) mot(s) exact(s) (composition des radiations
     solaires ; vêtements clairs/sombres en hiver et absorption/diffusion ; fluorescence sensible
     aux UV). **Utiliser ses acquis dans des situations simples** — plongeur en combinaison blanche
-    perçue bleu-vert à 30 m de profondeur (rôle filtrant de l'eau) ; illusion des flèches de
-    Müller-Lyer (mesure à la règle, fiabilité des sens) ; disque compact exposé à la lumière du
-    jour (diffraction/décomposition — fonction optique du CD). **Utiliser ses acquis pour une
+    perçue bleu-vert à 30 m de profondeur (**QCM sans corrigé imprimé**) ; illusion des flèches —
+    **le manuel ne la nomme pas** : « De vue, les traits entre les pointes des flèches ont-ils la
+    même longueur ? Vérifier la réponse en mesurant chacun des segments à l'aide d'une règle. […]
+    Peut-on toujours se fier à nos sens ? » (**figure non rendue**, §6.2) ; disque compact exposé à
+    la lumière du jour : « Pour certaines dispositions du disque on observe un phénomène qu'on
+    reconnaîtra. Le décrire. b)-Quelle fonction optique a joué le disque compact ? » (**sans
+    corrigé** ; le chapitre n'enseigne que le prisme et le réseau — le mot « diffraction »
+    **n'existe nulle part** dans le manuel). **Utiliser ses acquis pour une
     synthèse** — lisibilité des mots « sciences » (fond blanc) et « physiques » (fond noir) à
     travers filtres rouge/vert, choix d'un filtre pour lire toute l'expression ; spectres comparés
     humain/oiseau/poisson (couleurs non perçues par chaque espèce, reproduction du spectre perçu
@@ -2736,7 +3573,8 @@
     bleue neutralisant le jaunissement).
 - **Concepts / notions** : décomposition de la lumière blanche par un prisme/réseau ; lumière
   monochromatique / polychromatique ; spectre continu ; couleur d'un objet (absorption/diffusion
-  sélective) ; corps noir (absorption totale) ; cônes rétiniens (rouge/vert/bleu) ; daltonisme ;
+  sélective) ; « un corps qui absorbe la (ou les) radiation(s) qu'il reçoit **paraît noir** »
+  (formulation du manuel ; le terme « corps noir » **n'apparaît nulle part** dans l'ouvrage) ; cônes rétiniens (rouge/vert/bleu) ; daltonisme ;
   illusion d'optique (double image, fausse perspective, persistance rétinienne, influence de
   l'environnement) ; transfert d'énergie par rayonnement lumineux ; ultraviolet ; infrarouge ;
   effet de serre ; couleurs primaires/secondaires/complémentaires (synthèse additive).
@@ -2759,21 +3597,577 @@
     chapitre 16, non repris ici) ; anatomie détaillée de l'œil au-delà de la rétine/cônes (pas de
     cristallin, cornée, etc. développés dans ce chapitre).
 
-## Incertitudes rencontrées (ch.14–17)
+---
 
-- **Ch.14, aperçu historique (p.222)** : le texte source donne « Joule (1642/1727) » — ces dates
-  correspondent en réalité à Isaac Newton (1642–1727), pas à James Prescott Joule (1818–1889).
-  Il s'agit très probablement d'une confusion ou d'une coquille déjà présente dans le manuel
-  imprimé (ou d'un artefact d'extraction). Transcrit tel quel, fidèlement à la source, sans
-  correction.
-- **Ch.15, exercice « Utiliser ses acquis dans des situations simples » (p.240)** : la question 2
-  fait référence à un « tableau des caractéristiques des planètes » dont les données chiffrées
-  n'apparaissent pas dans le flux de texte extrait à cet endroit (probablement un tableau en
-  image/mise en page complexe non capturé par pdftotext). Le contenu de ce tableau n'a donc pas
-  pu être transcrit ; seule l'existence de l'exercice et son énoncé sont rapportés.
-- **Ch.17, fin de fichier (p.274)** : le fichier texte source s'arrête à la page imprimée 274,
-  au milieu du paragraphe « Savoir plus — Mélanges de couleurs ». La page 275 annoncée par la
-  plage de lignes fournie (10178–10777) n'est pas présente dans le fichier — celui-ci se termine
-  effectivement à la ligne 10777, page 274. Aucun contenu de fin de chapitre 17 ni de
-  corrigé/annexe n'a été rencontré au-delà ; il n'y a donc rien à signaler ou écarter à ce titre,
-  mais la page 275 elle-même n'a pas pu être transcrite faute de texte source disponible.
+## 3. Notes pédagogiques / méthode
+
+> **Source** : le manuel seul (pas de guide enseignant — §1). Ce qui suit est **observé sur les 17 chapitres**,
+> pas prescrit par un texte officiel. ⚠️ **Cette section n'a pas été auditée par la passe R-7** (à charge).
+
+**La démarche, telle qu'elle est réellement mise en œuvre.** Le triptyque annoncé par l'Avant-Propos
+(_investigation spontanée → investigation réfléchie → structuration_) se lit page à page :
+
+1. **Mise en situation** (2 p.) — 4 photographies du quotidien tunisien + questions ouvertes **jamais
+   corrigées**. Elles ne servent pas à évaluer : elles installent le questionnement. Les réponses arrivent
+   parfois **14 pages plus loin**, dans le « Savoir plus » (cas exemplaire du ch.1 : les questions
+   éclair/foudre/tonnerre p.11 sont résolues p.24).
+2. **Activités expérimentales** (4–6 p.) — l'ossature. Chaque activité suit invariablement
+   _protocole → observation → résultat → **encadré de généralisation**_. **L'encadré est la norme** : c'est là,
+   et seulement là, que le savoir est posé. Les **questions en italiques** de fin d'activité sont, elles aussi,
+   **non corrigées** (évaluation formative).
+3. **Fiche T.P.** (1 p.) — buts / matériels / expérimentation / protocole. Les **tableaux y sont imprimés
+   vides** : ce sont des feuilles de relevé à remplir par l'élève (ch.1 p.18, ch.11 p.172…). Ne jamais lire une
+   colonne vide comme une perte d'extraction.
+4. **Recherche documentaire** (1 p.) — texte + 4 questions. Rubrique imprimée tantôt « RECHERCHE
+   DOCUMENTAIRE », tantôt « ACTIVITES DOCUMENTAIRE » (§6.3).
+5. **L'essentiel du cours** (1 p.) — le résumé normatif, **6 à 14 puces**. C'est la source la plus sûre du
+   manuel : les 17 encadrés ont été collationnés verbatim (R-7). ⚠️ Mais **il n'est pas exhaustif** : le ch.1
+   montre qu'il peut **omettre des notions enseignées** (charge élémentaire, influence) et **ajouter une
+   capacité jamais démontrée**. **Ne pas calibrer une génération sur le seul « essentiel ».**
+6. **Aperçu historique** (même page) — renvoi Internet vers un savant. ⚠️ **2 des 14 portent des dates
+   fausses** (§6.3).
+7. **Exercice résolu** (1 p.) — énoncé + solution + **colonne « Commentaires »** (la méthode explicitée). C'est
+   la **seule réponse officielle** du chapitre : tout le reste des exercices est **sans corrigé**.
+8. **Exercices à résoudre** (2 p.) — les 3 catégories de l'Avant-Propos, dans l'ordre :
+   _vérifier ses acquis_ → _situations simples_ → _synthèse_. **Difficulté croissante** ; la 3ᵉ catégorie
+   s'appuie très souvent sur une figure.
+9. **Savoir plus** (1 p.) — ouverture sciences/société/environnement.
+
+**Notations et unités — le manuel est conforme au standard.** Chiffres occidentaux 0-9 partout, équations LTR,
+unités SI. Conventions constantes : virgule décimale (« 12,55 g.cm⁻³ ») ; unités en notation pointée
+(« kg.m⁻³ », « V.A-1 ») ; puissances de 10 en exposant ; grandeurs vectorielles fléchées ; indices
+(W_M / W_E / W_R p.222 ; θ₁, θ₂ p.266). ⚠️ **`pdftotext` aplatit exposants et indices et ne rend aucun symbole
+vectoriel** : toute notation vectorielle de cette fiche est une **reconstruction** (§6.2).
+
+**Savoir-faire transversaux attendus** (récurrents d'un thème à l'autre) : choisir un **calibre** et lire une
+mesure (ampèremètre, voltmètre, ohmmètre, multimètre) ; **tracer et exploiter un graphique** dans un repère
+cartésien ; **lire un tableau de données chiffrées** (ch.15, tableau des planètes p.234) ; convertir des unités
+(volumes, masses, pressions) ; **schématiser un circuit** avec les symboles normalisés (p.31) ; exploiter une
+**chronophotographie** (ch.10) ; construire un vecteur à l'échelle (ch.11–12).
+
+**Pièges et erreurs fréquentes que le manuel travaille explicitement** : confondre **répulsion et attraction**
+comme critère de signe (ch.1, la convention est référencée **au verre**, jamais absolue) ; croire qu'un corps
+**neutre** ne subit rien (ch.1, act. I vs exercice résolu p.21) ; confondre **masse et volume**, puis **masse
+volumique et densité** (ch.8) ; confondre **rotation** et **révolution** (ch.15 — le manuel s'y contredit
+lui-même, §6.3) ; croire que « fondre » et « se dissoudre » sont un même phénomène (ch.9) ; croire que la
+pression dépend de la seule force (ch.13, l'« emprunte » [sic] montre la surface).
+
+**Ce que le manuel ne fait jamais** (borne de méthode, utile en génération) : il **ne corrige pas** les
+exercices à résoudre ; il **ne donne aucun volume horaire ni découpage trimestriel** ; il **ne numérote pas ses
+chapitres de 1 à 17** ; il **n'emploie aucun formalisme mathématique au-delà du produit et du quotient** (ni
+dérivée, ni trigonométrie, ni équation différentielle) ; il **ne chiffre jamais une longueur d'onde** (§6.2).
+
+---
+
+## 4. Chapitrage retenu (→ alimente `manifest/1ere-sec.json`)
+
+**17 chapitres**, dans l'ordre du manuel (seule source). La numérotation continue `01…17` est celle du
+**contenu applicatif** ; la colonne « notion » conserve la **désignation imprimée** (thème + chiffre romain,
+qui redémarre à I à chaque thème) pour rester revérifiable — cf. l'avertissement du §2.
+
+| #   | slug                         | notion (désignation imprimée)                                             | manuel élève (code · pages) |
+| --- | ---------------------------- | ------------------------------------------------------------------------- | --------------------------- |
+| 1   | `01-phenomene-electrisation` | L'ELECTRICITE · CHAPITRE I — Le phénomène d'électrisation                 | `223103P00` · p.9–24        |
+| 2   | `02-circuit-electrique`      | L'ELECTRICITE · CHAPITRE II — Le circuit électrique                       | `223103P00` · p.25–42       |
+| 3   | `03-intensite-courant`       | L'ELECTRICITE · CHAPITRE III — L'intensité du courant                     | `223103P00` · p.43–56       |
+| 4   | `04-tension-electrique`      | L'ELECTRICITE · CHAPITRE IV — La tension électrique                       | `223103P00` · p.57–70       |
+| 5   | `05-dipole-resistor`         | L'ELECTRICITE · CHAPITRE V — Caractéristique d'un dipôle résistor         | `223103P00` · p.71–86       |
+| 6   | `06-etats-physiques-matiere` | LA MATIERE · CHAPITRE I — Les états physiques de la matière               | `223103P00` · p.87–100      |
+| 7   | `07-proprietes-matiere`      | LA MATIERE · CHAPITRE II — Quelques propriétés de la matière              | `223103P00` · p.101–114     |
+| 8   | `08-masse`                   | LA MATIERE · CHAPITRE III — La masse                                      | `223103P00` · p.115–130     |
+| 9   | `09-changements-etat`        | LA MATIERE · CHAPITRE IV — Les changements d'état physique d'un corps pur | `223103P00` · p.131–146     |
+| 10  | `10-mouvement`               | LA MECANIQUE · CHAPITRE I — Le mouvement                                  | `223103P00` · p.147–162     |
+| 11  | `11-actions-mecaniques`      | LA MECANIQUE · CHAPITRE II — Les actions mécaniques                       | `223103P00` · p.163–178     |
+| 12  | `12-forces-equilibre`        | LA MECANIQUE · CHAPITRE III — Forces et équilibre                         | `223103P00` · p.179–194     |
+| 13  | `13-forces-pression`         | LA MECANIQUE · CHAPITRE IV — Forces et pression                           | `223103P00` · p.195–208     |
+| 14  | `14-energie-controle`        | L'ENERGIE · CHAPITRE I — Energie et contrôle                              | `223103P00` · p.209–226     |
+| 15  | `15-terre-univers`           | ASTRONOMIE · CHAPITRE I — La Terre et l'univers                           | `223103P00` · p.227–242     |
+| 16  | `16-lumiere-propagation`     | L'OPTIQUE · CHAPITRE I — La lumière et sa propagation                     | `223103P00` · p.243–258     |
+| 17  | `17-spectre-vision`          | L'OPTIQUE · CHAPITRE II — Spectre de lumière et vision                    | `223103P00` · p.259–274     |
+
+**Bornes vérifiées** (contrôle déterministe du 2026-07-17) : **17 pages d'ouverture** (`CHAPITRE <romain>`) et
+**17 pages « SAVOIR PLUS »**, appariées sans trou ni recouvrement ⇒ les 17 plages ci-dessus **pavent exactement
+p.9–274**, sans chevauchement. **Offset folio imprimé ↔ index PDF = 0** (recoupé indépendamment par les 5
+tranches R-7 sur les folios 3, 6, 8–10, 16, 20, 24, 209, 222, 226–227, 240, 242, 247, 266, 273).
+
+**Pages hors chapitres** (à ne rattacher à aucun chapitre — elles alimentent §1 et §2) : **p.1–8** liminaires
+(couverture, copyright, Avant-Propos, sommaire p.4–5, mode d'emploi p.6–7, « Naviguer sur l'Internet » global
+p.8) · **p.275–276 vides** (§6.5).
+
+> **⚠️ Écart gabarit ↔ schéma réel (signalé, non corrigé en silence).** La dernière colonne alimente le champ
+> **`chapter.manuel = { code, pages }` du _contenu_** (`content/<subject>/NN-<slug>/chapter.json` — schéma Zod
+> `src/shared/content/schema.ts`, compilé dans la colonne `chapters.manuel_ref`), **pas le manifeste** : le
+> schéma du manifeste (`src/shared/content/program-manifest.ts`) n'accepte que `{ slug, notion, optional }` —
+> **il ne porte aucun champ `manuel`**. Le mapping code↔pages vit donc **ici, dans cette table**, et sera
+> consommé au **lot de génération**.
+
+---
+
+## 5. Sources croisées
+
+- **Guide enseignant** : **inexistant au corpus** pour (1ère sec × physique). Le dossier
+  `cnp-officiel/manuels/secondaire/c1/` ne comporte **que** `eleve/` — il n'y a **aucun** guide du secondaire
+  dans le corpus téléchargé (vérifié le 2026-07-17). La règle « une seule source ⇒ elle fait référence »
+  s'applique : **le manuel élève est la référence de scope ET de contenu**. C'est la situation de **toutes** les
+  fiches `1ere-sec` du dépôt.
+- **Manuel élève** : `223103P00` — « PHYSIQUE — 1ère Année de l'enseignement secondaire » (CNP, **276 p., volume
+  unique**). **Source unique, lue intégralement (p.1–276).** Pages par chapitre : cf. §4.
+- **⚠️ Correction de sourcing appliquée le 2026-07-17 — l'en-tête précédent était faux sur trois points.** Il
+  annonçait « Deux tomes (pagination continue) : **222105P01.pdf** (tome 1, chapitres 1–9) et **222105P02.pdf**
+  (tome 2, chapitres 10–17) ». Vérification (`find` sur tout le corpus + `pdfinfo`) :
+  1. **Les codes `222105P01` et `222105P02` n'existent pas** dans le corpus. Le seul `222105*` est
+     **`222105P00.pdf`** — le **cahier d'activités de MATHS** (catalogue « رياضيات », **118 p.**, extrait vers
+     `_txt/222105P00-math-cahier.txt`). Aucun rapport avec la physique.
+  2. **Le modèle « deux tomes » est une fabrication** : le manuel est un **volume unique de 276 p.** (`pdfinfo`)
+     contenant les **17 chapitres**. Il n'a jamais été vérifié avant ce jour.
+  3. La note « **Chimie (chapitres du tome 2) hors périmètre MVP — à traiter dans un PR séparé** » découlait de
+     ce faux modèle et est **caduque** : **ce manuel ne contient aucune chimie** — ses 17 chapitres sont **6
+     thèmes de physique** (Électricité, Matière, Mécanique, Énergie, Astronomie, Optique). ⇒ Note **supprimée**.
+- **`224101P00` — « Chimie », 1ère année de l'enseignement secondaire (160 p.) — NON transcrit ici, hors
+  périmètre (et déjà couvert).** C'est un **manuel distinct**, transcrit dans [`chimie.md`](./chimie.md)
+  (statut `[x]`). **Confirmation croisée indépendante** : l'en-tête de `chimie.md` énonce de son côté que
+  `sciences-physiques.md` « ne transcrit aucun chapitre de chimie » — les deux fiches concordent. Lien
+  pédagogique réel entre les deux ouvrages : le **ch.1 de physique est le prérequis explicite du chapitre II de
+  chimie** (cf. `chimie.md`, p.19).
+- **`225105P00` — « Sciences biologiques » (section SPORT)** : sans objet ici (traité par
+  [`svt.md`](./svt.md) §5).
+- **Taybah** : **sans objet** — les plans trimestriels Taybah ne couvrent que le **primaire** ; aucun séquençage
+  trimestriel externe n'existe pour la 1ère année secondaire. La progression retenue est **celle du manuel**.
+- **Divergences signalées** : voir §6.3 (titres sommaire ↔ ouverture des ch.3 et ch.5 ; renvois faux du
+  sommaire ; incohérences internes du manuel). Rappel de la règle : en cas de divergence de scope le guide
+  enseignant ferait foi — **il n'y en a pas ici**, la source est unique, donc **rien n'arbitre contre le
+  manuel**.
+
+---
+
+## 6. Incertitudes / à revérifier
+
+> **Rien de ce qui suit n'a été corrigé en silence.** Les coquilles de la source sont transcrites telles quelles
+> suivies de `[sic]` ; les lectures impossibles seraient marquées `[?]` et **jamais devinées** (il n'y en a
+> aucune : la couche-texte est propre) ; les incohérences internes du manuel sont **signalées, pas arbitrées** —
+> une transcription n'a pas autorité pour corriger le programme officiel.
+
+### 6.0 Points d'arbitrage pour Mohamed (les seuls qui appellent une décision)
+
+1. **⚠️ La borne d'usage de cette fiche : AUCUNE figure n'est rendue.** `pdftotext` restitue le texte de flux et
+   **rien d'autre** — et la R-7 a prouvé (p.247) qu'il **perd aussi le texte incrusté dans les images**
+   (3 légendes sur 6 manquaient). Le manuel est **massivement expérimental et visuel**. « Transcrit sans perte »
+   ne vaut donc que pour **le texte**, jamais pour les documents. Le relevé **nominatif** des documents dont la
+   perte rend l'item **inexploitable** est en **§6.2** : **~45 documents bloquants**, dont une dizaine rendent un
+   exercice du manuel **strictement insoluble**. **Décision à prendre** : toute mission adossée à un schéma, un
+   graphe, une chronophotographie, un spectre ou un symbole normalisé **exige une passe vision ciblée** sur la
+   page nommée (`render.sh 223103P00.pdf <p> <p> 200` → PNG → `Read`) — c'est peu de pages, elles sont listées,
+   mais **ce n'est pas fait ici**.
+2. **Le programme officiel lui-même n'est pas transcrit** (pas de guide enseignant au corpus, §1) : la fiche
+   transcrit le **manuel**, qui se dit conforme au programme sans le reproduire. Les bornes ✅/⛔ de chaque
+   chapitre sont donc **déduites du contenu réellement traité par le manuel**, pas d'un texte officiel de
+   programme. C'est la situation de **toutes** les fiches `1ere-sec`.
+3. **⚠️ Le manuel se contredit sur une valeur numérique enseignée — le « 220 V·A⁻¹ » (p.76, ch.5). Le point le
+   plus coûteux de la fiche s'il passe en génération.** Le manuel imprime le relevé du dipôle (D) :
+
+   | U(V)  | 2   | 12  | 21  |
+   | ----- | --- | --- | --- |
+   | I(mA) | 91  | 545 | 955 |
+
+   puis conclut : « **I et U sont proportionnelles puisque U1/I1 = U2/I2 = U3/I3 = 220 V.A-1.** » Or les rapports
+   réels sont **21,98 / 22,02 / 21,99 V·A⁻¹ ≈ 22 — pas 220. Facteur 10.** _(Revérifié le 2026-07-17.)_
+   - Le **point pédagogique tient** : les trois rapports sont mutuellement cohérents ⇒ la proportionnalité est
+     bien établie. Le témoin est sain : le potentiomètre p.75 donne 690→702 V·A⁻¹, cohérent.
+   - **Deux lectures possibles, non arbitrées** : soit le « 220 » devrait être « 22 » ; soit les trois intensités
+     sont 10× trop grandes (il faudrait 9,1 / 54,5 / 95,5 mA — ce que donne exactement R = 220 Ω). La p.77
+     imprime « R = 220 Ω » au code des couleurs, ce qui **pourrait** appuyer la 2ᵉ lecture — mais **rien
+     n'établit** que ce résistor est le dipôle (D).
+   - **Décision à prendre** : un item « U = 12 V, I = 545 mA → calculer R » aurait une clé à **22 Ω**
+     contredisant le manuel qui affirme **220**. ⇒ **Ne pas générer d'exercice sur ce relevé** tant que le point
+     n'est pas arbitré. Les chiffres sont transcrits **tels quels** dans le §2.5.
+
+4. **Le manuel se contredit sur la densité du fer** (ch.8) : **d = 7,80** (tableau p.123) alors que
+   **ρ = 7900 kg·m⁻³** (tableau p.122) et que le manuel **définit lui-même** d = ρ(substance)/ρ(eau) avec
+   ρ(eau) = 1000 ⇒ **d attendu = 7,90**. Les deux valeurs sont **confirmées imprimées** (vision p.122 et p.123).
+   Le fer est le **seul** de la table à décrocher (cuivre 8,90 ↔ 8900 ✓ ; or 19,30 ↔ 19300 ✓ ; liège 0,24 ↔ 240 ✓
+   ; chloroforme 1,48 ✓ ; huile 0,92 ✓ ; eau 1,00 ✓). La contradiction est **interne et vérifiable par l'élève**.
+   **Piège direct pour la génération** : l'exercice p.128 renvoie au tableau des **masses volumiques** (7900),
+   tandis qu'un item sur les **densités** renverrait à 7,80. **Les deux valeurs sont transcrites telles quelles ;
+   l'arbitrage n'appartient pas à la transcription.**
+5. **Le manuel affirme une contre-vérité scientifique, en toutes lettres** (p.266, ch.17) : les ultraviolets
+   « sont **responsables de la synthèse chlorophyllienne (photosynthèse)** » — or la photosynthèse relève
+   essentiellement du visible. **Signalé, non corrigé** : un QCM « les UV permettent la photosynthèse » serait
+   généré **de bonne foi** depuis le manuel. Même famille : le « HCFC 134A » (p.146) est en réalité un **HFC**
+   (sans chlore), et le manuel nomme « **première vitesse de libération** » (p.162) la vitesse de satellisation
+   circulaire (l'usage réserve « libération » à la vitesse d'évasion). **Le manuel officiel fait foi pour
+   l'examen** — d'où l'arbitrage nécessaire avant toute génération sur ces trois points.
+
+### 6.1 Ce que la passe R-7 du 2026-07-17 a corrigé (traçabilité)
+
+La fiche pilote (2026-07-08) **n'avait jamais été relue contre sa source**. La R-7 a trouvé — et **cette
+version corrige** — trois familles de défauts. Le **fond était sain** : les **16 « L'ESSENTIEL DU COURS » des
+ch.2–17** sont verbatim exacts et **aucune valeur chiffrée n'était fausse** (le 17ᵉ, ch.1, est du contenu neuf —
+cf. le périmètre exact en tête de fiche).
+
+**(a) Inventions retirées** — la fiche fabriquait des réponses que le manuel **ne donne pas** (les exercices « à
+résoudre » n'ont **aucun corrigé imprimé**). Toutes **supprimées** ; seuls les énoncés et les options imprimées
+subsistent :
+
+| Page | Ce que la fiche affirmait                                                      | Réalité de la source                                                  |
+| ---- | ------------------------------------------------------------------------------ | --------------------------------------------------------------------- |
+| 256  | ombre du cylindre : « axe vertical → disque ; axe horizontal → rectangle »     | QCM **non corrigé** — et l'appariement inventé **paraissait inversé** |
+| 160  | « le Soleil se lève à **l'Est** … la Terre tourne de **l'Ouest** à **l'Est** » | texte à trous « …… » **non corrigé**                                  |
+| 176  | « direction / sens / intensité », « le dynamomètre »                           | texte à trous « …… » **non corrigé**                                  |
+| 192  | « constante de raideur (**40 N.m⁻¹**, calcul k = F/x) »                        | QCM **non corrigé** — 3 options imprimées, aucune restituée           |
+| 206  | « surface », « quotient », « surface pressée », « petite »                     | texte à trous « …… » **non corrigé**                                  |
+| 272  | filtre rouge « **[faux — inverse]** » ; plongeur « (rôle filtrant de l'eau) »  | vrai/faux et QCM **non corrigés**                                     |
+| 33   | eau distillée sucrée « **(pas de courant détecté)** »                          | la source **pose** la question, n'y répond pas                        |
+| 79   | « figures graphiques non alignées/non linéaires **selon le texte extrait** »   | **faux sourcing** — la p.79 ne porte que 3 légendes                   |
+
+**Termes hors-manuel retirés** (recherche exhaustive sur les 276 pages, 2026-07-17) : « **Müller-Lyer** »,
+« **diffraction** », « **corps noir** » — **absents du manuel entier**. Le cas de « diffraction » était le plus
+grave : il faisait entrer **un concept hors programme** qu'un générateur aurait repris de bonne foi (le ch.17
+n'enseigne que le prisme et le réseau). « corps noir » était de surcroît listé comme concept **inclus** et
+**exclu** à la fois.
+
+**Deux inventions supplémentaires retirées** (2ᵉ passe du 2026-07-17) : la **reconstitution d'une figure** —
+l'exercice résolu p.111 était décrit « dispositif (**ballon** + tube fin) », or le manuel ne dit que « le
+dispositif de la figure ci-contre » et sa solution ne nomme que « le verre, le liquide et l'air » : le
+« ballon » était **déduit par analogie** avec l'activité II p.104, **jamais lu** (§2.7) ; et la **réponse
+attendue d'un T.P. présentée comme imprimée** — la fiche T.P. p.188 était créditée de « l'écriture vectorielle
+**T = −k.Δl⃗** », alors que le manuel **demande à l'élève de la proposer** et ne l'imprime qu'à la p.190
+(§2.12).
+
+**(b) Verbatims altérés rétablis + `[sic]`** — la fiche corrigeait des coquilles **à l'intérieur de citations
+données pour verbatim** : `des ses` (p.32), parenthèse jamais fermée (p.49), `notée R` (p.75), `Il ne réalisent`
+(p.82), `trés` (p.35), `joigne` (p.170), `COPRS` (p.172), `Lorsque un` / `Elle et notée` (p.190), `l500` (p.154),
+`su l'écran` (p.250), `ELHAITHEM` (p.254), `de couleur bien définie` (p.258 — remplacé à tort par
+« monochromatique », terme que le manuel réserve au ch.17), `en deça` (p.266), `méhane` (p.233), `tâches`
+(p.237). **Cas particulier — un symbole inventé** : la fiche citait « θ₂ > **θ₀** » (p.266) ; le manuel imprime
+**θ sans indice** (les indices 1 et 2 sont, eux, bien rendus par `pdftotext` — l'absence sur le troisième θ est
+donc significative). Rétabli.
+
+**(c) Diagnostics faux redressés** — trois affirmations de la §Incertitudes pilote étaient **actives et
+nuisibles** :
+
+- « **Aucune vérification par rendu image n'a été nécessaire : le texte extrait était complet** » (ch.10–13) —
+  **faux**. Le `.txt` ne contient **aucun symbole vectoriel, aucun exposant, aucune figure** ; la fiche les avait
+  **reconstruits sans le déclarer**. La phrase disait à l'aval « pas besoin de vision » alors que plusieurs
+  exercices sont inexploitables sans l'image. **Remplacée par le §6.2.**
+- « **La page 275 n'est pas présente dans le fichier** […] le texte s'arrête **au milieu du paragraphe** » —
+  **faux** (§6.5).
+- « **artefact de l'extraction PDF→texte (chiffres tronqués)** » sur l'exercice résolu p.159 — **faux, et c'était
+  un piège actif** : il invitait un agent aval à « réparer » des nombres **justes**. Les valeurs 0,16/0,16 = 1 se
+  vérifient **triplement** (l'activité V p.154 établit une chute de 0,16 s ; le manuel imprime « = 1 m.s⁻¹ »).
+  Le seul défaut réellement imprimé est **le libellé** : le corrigé écrit « entre la première et la **deuxième**
+  position » là où la question demande « la **dernière** ». → `deuxième [sic]`, valeurs conservées (§6.3).
+- La justification du `35.10²⁰ N` (p.169) invoquait un contrôle physique **faux** (« conforme à l'ordre de
+  grandeur réel ≈ 3,5×10²¹ N »). L'attraction Soleil-Terre vaut **≈ 3,5×10²² N** ; `35.10²⁰ = 3,5×10²¹` est donc
+  **10× trop petit**. Le réflexe (signaler l'exposant perdu) était bon, **l'argument qui l'a validé ne tient
+  pas** → **passe vision p.169 requise** (§6.2), justification retirée.
+
+**(d) Contenu manquant ajouté** : les **10 pages d'ouverture** absentes (ch.2–10 et 14 — plan des activités +
+pré-requis) ; le **tableau des caractéristiques des planètes p.234**, image raster absente du `.txt`, **levé en
+vision** et transcrit intégralement en **§2.15** (il porte **deux exercices**, p.240 et p.241, qui n'y renvoyaient
+que dans le vide) ; la formule **`V'/R³ = 4/3 π`** de la fiche T.P. p.94 (image de formule, **cœur du protocole**
+— §2.6) ; les **12 couples angle/distance** des constellations du T.P. p.236 (Grande Ourse 7 points, Cassiopée
+5 points), présents dans le `.txt` mais résumés par la pilote ; les **deux questions de clôture** de la p.235 ;
+l'**énumération officielle des 7 couleurs du spectre** (p.262 — rouge · orange · jaune · vert · bleu · indigo ·
+violet ; **dans un chapitre sur le spectre, la donnée la plus générable de la page**, réduite par la pilote à
+« toutes les lumières monochromatiques intermédiaires », §2.17) ; la **définition officielle du degré Celsius**
+(p.105, imprimée en toutes lettres, résumée par la pilote — §2.7) ; les **9 couples du tableau du volume de 1 kg
+d'eau** (p.113) + sa consigne de tracé, sans lesquels l'exercice n'était **pas régénérable** (§2.7) ; les
+**bornes de chapitre** rectifiées (§2).
+
+**(e) Arbitrages silencieux annulés** — la pilote **tranchait** des incohérences de la source au lieu de les
+rapporter. Cas principal : **les deux dates du solstice de décembre** (p.235) étaient **fusionnées** en une seule
+(« 21 (ou 22) décembre … début de l'hiver ») alors que le manuel imprime **deux phrases à dates différentes**, et
+que c'est la **seconde** (« 22 (ou 23) ») qui porte « début de l'hiver ». **Les deux sont désormais rapportées**
+(§2.15, §6.3). Idem, corrigé plus haut : « chambre froide » rendue par « congélateur » (p.129), le libellé
+« deuxième/dernière » du corrigé p.159, le double « 1/- » du corrigé p.191.
+
+**(f) Paginations rectifiées** (la citation de page est ce qui rend la fiche **revérifiable**) : ch.14 « Savoir
+plus » **p.226** (et non 225–226) · ch.15 « Savoir plus » **p.242** (et non 241–242) · ch.14 « Interprétation
+microscopique » **p.217** (et non 216) · ch.14 « Activités expérimentales » **p.212–219** (et non 212–218), dont
+le décompte annonçait « 7 blocs » pour **8 blocs** énumérés (7 activités numérotées + « Interprétation
+microscopique », qui n'est pas une activité du manuel) · les ~20 paginations internes des ch.2–5, 6–9, 12 et
+16–17 relevées par les tranches R-7.
+
+> **Traçabilité de la consolidation elle-même (à charge).** L'intégration du 2026-07-17 s'est faite en **deux
+> passes**. La première a appliqué l'essentiel des tranches ch.2–13 et ch.16–17, mais a **annoncé en §6.1(d) et
+> §6.2 du contenu qu'elle n'avait pas réellement inséré** (le tableau p.234 et la formule p.94 étaient déclarés
+> « levés / intégrés au §2 » alors que le §2 portait encore « données du tableau non retranscrites ici » et
+> « comparer V' au cube du rayon »), et avait laissé la tranche ch.14–15 largement non appliquée. La seconde
+> passe a **inséré le contenu manquant, annulé l'arbitrage du solstice, rectifié les paginations ci-dessus et
+> resserré l'attestation R-7 en tête de fiche** sur son périmètre réel. **Leçon** : une entrée de traçabilité
+> n'est une preuve de rien — **elle se vérifie contre le §2**, pas contre elle-même.
+
+### 6.1 bis — Findings R-7 **connus et NON appliqués** (dette assumée, à traiter avant `[x]`)
+
+Tous sont de gravité **mineure à moyenne** : aucun ne fait « apprendre faux », aucun ne se propage en invention.
+Ils relèvent de la **profondeur R-5** (du contenu imprimé résumé au lieu d'être transcrit) et sont **entièrement
+documentés dans les rapports de tranche** — le travail de lecture est fait, il ne reste qu'à reporter.
+
+- **Ch.2–5 (tranche R-7 « m3 »)** — une dizaine d'omissions R-5 : la généralisation officielle p.46 (« Le
+  fonctionnement d'un composant électrique dépend du type de branchement des constituants du circuit. ») ; des
+  questions ouvertes p.29, p.48 (×1), p.49 (×2), p.63 ; le **calibre 20 kΩ** de l'exemple ohmmètre p.76 ; une
+  citation tronquée p.48 ; une étape de protocole p.36 ; deux titres d'activités tronqués p.60/p.62.
+  ⚠️ **Non revérifiées par la présente passe** : ces items n'ont pas été recoupés contre le §2.2–§2.5.
+- **Ch.16 (p.255)** — les **réponses de l'exercice résolu** ne sont pas rapportées (alors qu'elles le sont pour
+  le ch.17) : « 1/- C'est la position (2). » · « b)- La craie est opaque puisqu'on observe son ombre portée. » ·
+  « 2/- a)- L'ombre portée de la craie garde la même direction, mais sa longueur diminue. » + commentaire. **Un
+  exercice résolu est une réponse officielle** — contenu de première valeur.
+- **Ch.16 (p.248)** — protocole et 3 observations de l'Activité III non rapportés ; phrases d'encadré omises
+  p.247 et p.251 ; précisions perdues p.250, p.253, p.257, p.258, p.262, p.266 (relevé nominatif en tranche 6).
+- **Ch.14 (p.215, 216, 218–219)** — définitions parallèles de **W_E** et **W_R** (seule celle de W_M figure) ;
+  définition de la **convection** ; le bloc « **Economiser sur l'eau chaude** » (entièrement absent) et
+  « Contrôler la pression des roues » ; p.224 ex.1 2/- ; la cellule pré-remplie du tableau p.225.
+- **Ch.15 (p.239)** — commentaire « Algol […] baptisée Algol par les astronomes arabes ce qui signifie "œil du
+  démon" » non transcrit.
+- **Coquilles `[sic]` de la source** — le §6.4 en recense un grand nombre, mais **le marquage n'est pas
+  systématique dans le corps du §2** : plusieurs sont transcrites fidèlement **sans** leur `[sic]` (p.247
+  « par ce qu' », p.258 « faisceaux »/« cohérentes », p.273 « constituants », p.252 « Garder Constantes »…).
+- **Vocabulaire officiel** — manquants relevés : « capacité », « pied à coulisse », « cristallisoir »,
+  « erlenmeyer », « verre à pied », « pissette » (ch.6) ; « échelle/degré centésimal », « liquide
+  thermométrique », « thermoscope » (ch.7) ; « masse moyenne par unité de volume », « étalon », « platine
+  iridié », « fiole », « carat métrique » (ch.8) ; « nerfs optiques », « rétine », « diffuser », « réseau »,
+  « prisme » (ch.16–17).
+- **Ch.16 (p.245)** — les questions du cadran solaire, numérotées 1, 2, 3, sont restituées dans l'ordre du flux
+  d'extraction (1, 3, 2) et **perdent leur numérotation imprimée** (§6.5).
+
+### 6.2 Figures et symboles non rendus — la borne d'usage
+
+> `pdftotext` **ne rend aucune image**, et **perd le texte incrusté dans les images**. **Rien n'a été deviné.**
+> Un item ci-dessous marqué 🔴 est **strictement insoluble** sans une passe vision sur la page nommée.
+
+**🔴 Bloquants — l'exercice ou l'activité n'existe pas sans la figure :**
+
+| Page(s)        | Document                                                                                                                                          | Pourquoi                                                                   |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| **31**         | **Table des 12 symboles normalisés** (fil, générateur, lampe, moteur, interrupteurs, diode, DEL, électrolyseur, ampèremètre, voltmètre, ohmmètre) | **Seul endroit du manuel** où ils sont donnés ; exigé par L'essentiel p.38 |
+| **77, 83, 85** | **Code des couleurs des résistors** (anneaux + table de correspondance)                                                                           | Exigé 3× : L'essentiel p.82, ex. résolu p.83 q.4, exercice p.85 q.2        |
+| **161**        | Ex. n°3 : « **pour chaque diagramme** déterminer la nature du mouvement »                                                                         | **Zéro donnée dans le texte** — renvoi pur                                 |
+| **161**        | Ex. n°2 : personnages A, B, C sur un tapis roulant                                                                                                | Positions et sens uniquement dans le dessin                                |
+| **159**        | Chronophotographie de l'exercice résolu ch.10                                                                                                     | Les distances **se mesurent sur l'image**                                  |
+| **154**        | Clichés n°1/n°2 de la chute de balle ; clichés (A)/(B) boule M→N                                                                                  | Graduations et intervalles lus sur les clichés                             |
+| **169**        | Tableau « ordre de grandeur » : **l'exposant de `35.10²⁰`**                                                                                       | Lecture actuelle **invalidée** par le contrôle physique (§6.1c)            |
+| **193**        | Tour de Pise + verticale (Δ) ; solide au ressort ; 2 pendules électrostatiques                                                                    | La géométrie **porte** la question                                         |
+| **205**        | Ex. résolu ch.13 : **les deux lignes de calcul**                                                                                                  | La substitution numérique imprimée est **absente du `.txt`**               |
+| **99**         | Synthèse 2 : éprouvette graduée photographiée                                                                                                     | **4 sous-questions** insolubles (unité, max, division, volume)             |
+| **113**        | Synthèse 1 : thermomètre à minima et maxima (indexes I et J)                                                                                      | Insoluble sans l'image                                                     |
+| **129**        | Synthèse 1 : **pesée** du cylindre ; synthèse 2 : lectures d'éprouvette (zinc)                                                                    | « Déterminer sa masse » insoluble                                          |
+| **143, 145**   | Courbes θ(t) : « courbe rouge », « courbe bleue en pointillé » ; courbes (A)/(B)                                                                  | Les tracés n'existent que dans l'image                                     |
+| **239, 241**   | Ch.15 : figure des 2 constellations + 2 étoiles ; ellipses + positions ; course du Soleil                                                         | 3 exercices insolubles                                                     |
+| **255, 257**   | Ch.16 : positions (1)(2)(3) de la source + craie ; schémas (a)–(d) ; région de l'éclipse totale                                                   | Le QCM porte **exclusivement** sur les schémas                             |
+| **273**        | Ch.17 : **spectres humain / oiseau / poisson**                                                                                                    | **Aucune couleur dans le texte** ; questions 100 % graphiques              |
+| **273**        | Ch.17 : « SCIENCES PHYSIQUES » — **la couleur des lettres**                                                                                       | Donnée décisive ; _vision : les deux mots sont en **rouge**_               |
+
+**🟠 Symboles et notations reconstruits, non vérifiés** — **tous** les vecteurs de la mécanique. Le `.txt` laisse
+un **blanc** là où le manuel imprime un vecteur : la fiche a écrit `F`, `P`, `T`, `0⃗`, `p = F/s`… en
+**reconstruisant**. Les lectures sont **physiquement quasi certaines** ; **la notation exacte du manuel (flèche ?
+gras ? `‖F‖` ?) reste inconnue** — et c'est précisément ce dont un générateur aura besoin. Emplacements :
+**p.168, 170, 174, 182–183, 185–187, 190–191, 198, 200, 204**. Exposants aplatis : p.169, 176, 200, 204, 205, 206.
+⇒ **Passe vision requise** avant toute génération notée sur les ch.11–13.
+
+**Levés par les passes vision de la R-7** (contenu désormais établi, intégré au §2) : tableau des planètes
+**p.234** · formule `V'/R³ = 4/3 π` **p.94** · `Δl = lo.λ.Δθ` **p.104** (le « Δ0- » du `.txt` était un artefact) ·
+définitions de la densité **p.123** · tableau ρ des solides **p.122** · tableau des volumes **p.92** · légendes
+**p.247** (« Les lampes », « La lune », « L'atmosphère » — **absentes du `.txt`**) · couleurs **p.273**.
+
+**Catégorie transversale, non listée ci-dessus** : **tous les schémas de montage** des activités et exercices
+(p.29, 41, 46, 55, 69, 78, 85, 148–153, 166–172, 182–188, 198–202, 213, 223, 226, 231, 235–236, 249–253,
+262–269…). Non bloquants pour le texte (le protocole est écrit), mais **aucun exercice « sur schéma » n'est
+générable sans vision**.
+
+### 6.3 Incohérences de la SOURCE — signalées, jamais arbitrées
+
+**Numérotation des activités** (le manuel se contredit avec ses propres plans d'ouverture) :
+
+- **Ch.5** — le plan p.71 annonce **5 activités (I→V)** ; le corps n'imprime que **I, II, IV, V** : **aucune
+  « ACTIVITES (III) »**. Le contenu annoncé comme III (« Détermination de la résistance d'un résistor ») est
+  traité p.76 dans un **encadré non numéroté** (« Mesure de la résistance d'un résistor ») + le code des couleurs
+  p.77. **Anomalie réelle du manuel, pas un artefact** : contrôle déterministe (2026-07-17) — l'extracteur rend
+  **19/19** des en-têtes `ACTIVITES (n)` des ch.2/3/4, il ne perd jamais ce motif. _(La note pilote concluait
+  l'inverse, sur la mauvaise page et en invoquant la « table des matières » — le libellé vient du **plan p.71**.
+  Redressé.)_
+- **Ch.6** — le manuel imprime **deux fois « ACTIVITES (II) »** en p.91 (« Qu'appelle-t-on volume d'un corps ? »
+  puis « Utilise-t-on d'autres unités de volume ? ») et passe **directement à « ACTIVITES (IV) »** p.92 : **aucune
+  (III)**, alors que le plan p.87 en annonce une (« Relation entre certaines unités de mesure de volumes »).
+  _(Confirmé en vision + contrôle regex.)_
+- **Ch.8** — le plan p.115 annonce **4 activités**, le manuel en imprime **5** (I p.118 → V p.122), et les
+  intitulés décrochent à partir du rang III/IV.
+
+**Titres divergents sommaire ↔ page d'ouverture** (les deux sont imprimés ⇒ les deux sont rapportés) :
+
+| ch. | Sommaire p.4                                           | Page d'ouverture                                                   |
+| --- | ------------------------------------------------------ | ------------------------------------------------------------------ |
+| 3   | « L'intensité **du courant électrique** »              | p.43 « **L'INTENSITE DU COURANT** »                                |
+| 5   | « Le **dipôle résistor** »                             | p.71 « **CARACTERISTIQUE D'UN DIPÔLE RESISTOR** »                  |
+| 9   | « Les changements d'état **physique** d'un corps pur » | p.131 idem — _la fiche pilote amputait « physique » ; **rétabli**_ |
+
+_(Les ch.1, 2, 4, 6, 7, 8, 10–17 concordent.)_
+
+**Renvois faux du sommaire** (au moins deux) : ch.7 « Exercices à résoudre » annoncés **p.113**, imprimés
+**p.112** · ch.13 « Savoir Plus » annoncé **p.206**, imprimé **p.208** (le sommaire répète 206 dans deux
+colonnes). Les autres renvois recoupés sont exacts.
+
+**Dates fausses des « Aperçu historique »** — **2 des 14**, par copier-coller manifeste _(mécanisme prouvé le
+2026-07-17 par relevé exhaustif des 14 encadrés)_ :
+
+- **p.82** : « **Ohm (1745/1827)** » = **exactement** les dates de « **Volta (1745/1827)** » p.66. Dates réelles
+  de G. S. Ohm : **1789–1854**.
+- **p.222** : « **Joule (1642/1727)** » = **exactement** les dates de « **Newton (1642/1727)** » p.174. Dates
+  réelles de J. P. Joule : **1818–1889**. _(Confirmé **imprimé** par deux passes vision indépendantes sur la
+  p.222 : l'hypothèse « artefact d'extraction » ou « OCR » est **écartée** — il n'y a jamais eu d'OCR sur ce
+  manuel.)_
+- Les 12 autres sont **exacts** : Dufay (1698/1739), Faraday (1791/1867), Ampère (1775/1836), Volta (1745/1827),
+  Avogadro (1776/1856), S'gravesande (1688/1742), Roberval (1602/1675), Celsius (1701/1744), Galilée (1564/1642),
+  Newton (1642/1727), Hooke (1635/1703), Pascal (1623/1662), Descartes (1596/1650).
+
+**Contradictions internes du manuel** (toutes imprimées, aucune arbitrée) :
+
+- **Ch.15, p.235** — **deux dates différentes pour le solstice de décembre, sur la même page** : « Le **21 (ou 22)** Décembre… » puis « Le **22 (ou 23)** Décembre… ». _(La fiche pilote avait **fusionné** les deux et retenu
+  silencieusement la première — **arbitrage non autorisé, annulé** : les deux sont rapportées.)_
+- **Ch.15, p.235** — « **A partir du début de l'hiver, le Soleil commence à se décaler vers le sud.** » —
+  contredit la suite immédiate et le solstice d'hiver (décalage sud déjà maximal).
+- **Ch.15** — « **Venus** » sans accent dans le tableau p.234 et p.238, « **Vénus** » avec accent p.233.
+- **Ch.15, p.238** (essentiel, puce 9) — « …et de **sa rotation autour du Soleil** » alors que le manuel a défini
+  **révolution** (autour du Soleil) vs **rotation** (axe polaire) p.234.
+- **Ch.16, p.253** — le mouvement apparent du Soleil attribué à la **révolution** (« La Terre tourne autour du
+  Soleil, nous voyons celui-ci se lever à l'Est… ») puis, au paragraphe suivant, à la **rotation propre**
+  (« En 24 heures, la Terre effectue une rotation complète autour d'elle-même, soit 360° »).
+- **Ch.1, p.13 vs p.20** — « signes **contaires** [sic] » dans un **encadré normatif**, « signes contraires »
+  (correct) dans L'essentiel : le manuel imprime les deux formes.
+- **Ch.1, p.20 vs p.14–15** — L'essentiel **omet** la notation **q**, la **charge élémentaire** et
+  l'**électrisation par influence** (pourtant exigée par l'ex. résolu p.21 et la synthèse 2 p.23), et **attribue
+  à l'électroscope** une capacité à « comparer les quantités d'électricité » **qu'aucune activité ne démontre**.
+- **Ch.7** — « **conductibilité** thermique » (plan p.101, p.103) **et** « **conductivité** thermique » (p.107,
+  p.110) : deux termes pour la même notion, dans le même chapitre.
+- **Ch.9, p.137** — « **l'iode** se transforme… » / « **le diiode** se transforme… » : deux nomenclatures en deux
+  phrases consécutives.
+- **Ch.9, p.136** — « les molécules d'**éther** » alors que l'expérience porte sur « quelques gouttes d'alcool
+  (ou d'acétone…) ». _(Coquille **confirmée imprimée** ; la fiche pilote l'avait correctement relevée.)_
+- **Ch.13** — « **emprunte** » [sic] pour « empreinte », **y compris dans les généralisations citées verbatim** ;
+  la p.202 imprime **les deux graphies sur la même page** (« profondeur h1 de l'**empreinte** » ×3, et dans le
+  tableau « Profondeur de l'**emprunte** »).
+- **Ch.16 vs ch.17** — « Une source de Lumière est un **objet** » (p.247) vs « …est un **corps** » (p.254) ;
+  l'illusion d'optique due « à **la rétine et au cerveau** » (p.264) vs « au **cerveau** » (p.270).
+- **Ch.14, p.224** — « le bois » classé **dans les deux listes** du même item : non renouvelable **et**
+  renouvelable. **Ch.14, p.225** — « un radiateur électrique, utilisant la rotation d'un ventilateur **pour
+  refroidir** l'atmosphère ».
+- **Ch.6, p.98** — les exercices numérotent **1/-, 2/-, 4/-** : le **3/- est sauté**.
+- **Ch.12, p.191** — le corrigé imprime **deux fois « 1/- a)- »** (la réponse à la question 2 est numérotée 1).
+- **Ch.10, p.159** — le corrigé écrit « entre la première et la **deuxième** [sic] position » là où la question 4
+  demande « la **dernière** ». **Les valeurs (0,16/0,16 = 1 m.s⁻¹) sont justes** — c'est le libellé qui est
+  fautif (§6.1c).
+- **Ch.8, p.130 vs p.123** — « densité de la glace inférieure de **10 %** ⇒ **90 %** du volume immergé » alors que
+  le tableau p.123 donne d(glace) = **0,92** (⇒ 8 % / 92 %). Arrondi de la source.
+- **Ch.6, p.97** — l'énoncé dit « avoir dans **le bécher** 100 mL d'air », la solution répond « Pour remplir **le
+  verre** d'air… ».
+- **Ch.4, p.62–63** — l'énoncé annonce la tension « **UPA** », le tableau imprime « **UAP** » (valeur 0). Bénin
+  (UAP = −UPA = 0) mais imprimé.
+- **Ch.3, p.70** — « **William Eintroven** » : le manuel se trompe sur le prénom **et** le nom du physiologiste
+  hollandais de l'électrocardiogramme (**Willem Einthoven**, 1860–1927, Nobel 1924).
+- **Ch.13, p.202** — la fiche T.P. annonce une chambre dont « l'ouverture du Diaphragme et la distance
+  **Diaphragme-Ecran** sont réglables », mais le protocole fait varier **Diaphragme-Objet** et **Écran-Objet**.
+- **Ch.17, p.266** — le protocole introduit « un **filament** (une résistance chauffante par exemple) » puis parle
+  de « **la lampe** » sans l'avoir introduite.
+- **Liminaires, p.8** — la section MECANIQUE liste **deux fois la même URL**
+  (`ac-reims.fr/datice/sc_physiques2/docs/lyc/2/galilee.htm`), sur deux lignes consécutives.
+- **Rubriques** — le manuel intitule tantôt « **RECHERCHE DOCUMENTAIRE** » (p.51, 81…), tantôt « **ACTIVITES
+  DOCUMENTAIRE** » (p.37, 65…) ; et le sommaire nomme « Naviguer sur L'Internet » une colonne dont la rubrique
+  s'imprime « **APERCU HISTORIQUE** ».
+
+### 6.4 Coquilles de la source — transcrites telles quelles + `[sic]`
+
+Toutes **vérifiées imprimées** (couche-texte et/ou vision) — ce ne sont **pas** des artefacts d'extraction, et
+**aucune n'est corrigée** :
+
+**Liminaires & ch.1** : « Tous **droit** réservés » (p.2) · « **resoudre** des problèmes » (p.3, dans la liste
+des 4 compétences officielles) · « cherche une information » (p.3) · « **Excercices** d'évaluation » (p.7) ·
+« Activités de mise en **situations** » (p.6) · « signes **contaires** » (p.13) · « au **XVIII siècle** » ×2
+(p.13) · « **apparaitre** » (p.16, alors qu'« appa**raît** » est correct deux lignes plus bas) · « **aux cours**
+des activités III » (p.16) · « «**élecro-magnétique**» » (p.19 — ⚠️ la question **porte sur ce mot** que l'élève
+doit chercher au dictionnaire) · « **il** s'électrise » pour « elle » (p.21) · « **APERCU HISTORIQUE** » sans
+cédille (partout).
+
+**Ch.2–5** : « par l'une **des ses** bornes » (p.32) · « …bornes de connexion**.** » — parenthèse ouvrante jamais
+fermée (p.49) · « le coefficient de proportionnalité est **notée** R » (p.75) · « **Il** ne réalisent pas donc »
+(p.82) · « **trés** important » (p.35) · « montage**s** en dérivation » (p.52) · « est associé une grandeur »
+(p.52).
+
+**Ch.6–9** : « Cube **d'arrête** » (p.92, alors que p.91 écrit « arête ») · « l'**ensemle** » (p.121) · « son
+volume **poura** être évalué » (p.122) · « **Choloforme** » (légende, p.122) · « ρ = m/**v** » minuscule (p.121,
+alors que le texte pose « volume **V** ») · « une balance et **de** corps » (p.128) · « « kilogramme étalon
+international» » — guillemet doublé (p.125) · « température **du** fusion » (p.142, **dans L'essentiel**) · « de
+la glace **mélangé** » (p.143) · « Il est **entrain** de se refroidir » (p.143, ×2).
+
+**Ch.10–13** : « **l500 m** » — `l` minuscule pour `1` (p.154) · « Cavalier **menu** d'un carton » (p.156) ·
+« la droite qui **joigne** » (p.170) · « ressort à **sipres** non jointives » (p.168) · « table **hortisantale** »
+(p.171) · « POIDS ET MASSE D'UN **COPRS** » (p.172) · « les **acvités** les plus élémentaires » (p.178) ·
+« **quelque soit** l'orientation » (p.184) · « **Dés** que (A) et (B) sont libérés » (p.186) · « **Lorsque un**
+ressort » / « **Elle et notée** » (p.190, **dans L'essentiel**) · « **En suppose** que le centre de gravité G »
+(p.193) · « un plan **horizontale** » (p.198) · « **emprunte** » (p.199, 200, 202).
+
+**Ch.14–17** : « L'énergie totale d'un système **et** la somme » (p.222, **dans L'essentiel**) · « alors que
+**chaleur** est un mode de transfert » (p.222) · « non polluantes **et dont** l'exploitation » (p.212) · « Le
+**soeil** » (p.212) · « Il est **notée** WM / WE / WR » (p.214–215) · « Il **,existe** deux principales formes »
+(p.224) · « **méhane** » (p.233) · « Ils sont **situées** à des distances » (p.230) · « **tâches** » pour
+« taches » (p.237) · « **Pérsée** » vs « Persée » (p.239) · « de grandes **figurent** appelées » (p.240) · « Les
+débuts des **couper du jeun** » — phrase altérée, **ne pas deviner l'intention** (p.235) · « l'éclipse **total**
+de Soleil » / « le **pénombre** » (p.245) · « Un objet **nous n'est visible** » / « les phases de la Lune,
+**observé** » / « **surafce** » (p.254) · « dans un **plan verticale** » (p.255) · « visibles **par ce qu'**ils
+émettent » (p.247) · « un **faisceaux** lumineux » / « lumière **cohérentes** » (p.258) · « 750
+années-**lumières** » (p.257) · « en **deça** du rouge » (p.266) · « **contituent** » (p.270) · « est
+**il-lisible** » (p.272–273) · « radiations **constituants** » (p.273).
+
+### 6.5 Artefacts d'EXTRACTION (défauts du `.txt`, **pas** du manuel) — à ne pas propager
+
+- **Fin de manuel (p.274–276) — constat définitif, aucune incertitude.** _(Remplace l'entrée pilote, qui
+  affirmait à tort que la p.275 « n'est pas présente dans le fichier » et que le Savoir plus était coupé « au
+  milieu du paragraphe ».)_ Le manuel se termine au contenu de la **p.274** (« Savoir plus — Mélanges de
+  couleurs »), **complet** (dernière phrase entière « Le vêtement semble plus blanc qu'il n'est en réalité. » +
+  folio imprimé). Les **p.275 et 276 sont VIDES** : présentes dans le PDF comme dans le `.txt` (**276 sauts de
+  page = 276 pages**), mais **0 ligne non vide** _(revérifié le 2026-07-17)_. Le manuel ne comporte **ni
+  corrigés, ni annexes, ni index**. **Aucune troncature.**
+- **Exposants et indices aplatis** : `1,6.10-19` (p.15) → **1,6.10⁻¹⁹** · `35.1020` (p.169) · `107 N`/`103 N`
+  (p.176) · `105 Pa`/`102 Pa` (p.200, 204) · `176,4.103` (p.205) · `125.106`/`0,8.10-4` (p.206) · `3,6.106 J`,
+  `4,2.1014`, `40.109` (ch.14) · `c = 3.108 m.s-1` (ch.17) · W_M/W_E/W_R (p.222) · θ₁/θ₂ (p.266). Les
+  restitutions de la fiche sont **justes** (vérifiées en vision là où c'était nécessaire) — **sauf `35.10²⁰`**,
+  dont la lecture reste **ouverte** (§6.2).
+- **Symboles vectoriels : blancs systématiques** — cf. §6.2.
+- **Fractions éclatées** : `R =(1+ d2 )r` → **R = (1 + d₂/d₁)·r** (p.271, vérifié : (1 + 80/20)×4 = 20 cm ✓) ·
+  `p = F/s` (p.200, 204) · `m = P/g` (p.191).
+- **p.12** — la consigne générale « Toutes les expériences sont à réaliser dans une atmosphère sèche. » s'imprime
+  **en une seule ligne bleue** ; `pdftotext` **entrelace deux colonnes** et la restitue coupée en deux, le titre
+  de rubrique inséré au milieu. **La source est saine** (vérifié au zoom 300 dpi).
+- **Bandeau latéral « C O U R S »** — la mention verticale répétée en marge de chaque page de cours ressort dans
+  le `.txt` en lettres isolées (`C`/`O`/`U`/`R`/`S`) qui s'intercalent dans les phrases. Décoratif.
+- **p.8** — le « N I » en tête de l'extraction n'appartient pas au titre : ce sont deux capitales décoratives en
+  filigrane (vérifié en vision).
+- **p.36 / p.80** — titres de fiches T.P. : « Circuit **lectrique** » (é manquant) et « LOI D**␣**OHM »
+  (apostrophe manquante), alors que les titres p.50 et p.64 sortent **intacts** ⇒ **artefact ponctuel** (glyphes
+  d'une police décorative) bien plus probable qu'une coquille. La fiche restitue la forme correcte — **inférence
+  signalée** ; vision p.36 + p.80 pour lever le doute (2 pages, faible coût).
+- **p.104** — le « Δ0- » du `.txt` est un **artefact** : le manuel imprime bien `Δl = lo.λ.Δθ` (vision).
+- **p.162** — le `.txt` répète le paragraphe « Si on augmente la vitesse initiale de l'objet… », la seconde
+  occurrence s'interrompant net. **Deux hypothèses non tranchées** (répétition réellement imprimée, ou artefact
+  d'ordre de colonnes) → vision p.162.
+- **p.245** — les questions du bloc « cadran solaire », numérotées 1, 2, 3, **apparaissent dans l'ordre 1, 3, 2**
+  dans le flux d'extraction (artefact de mise en page).
+
+### 6.6 Incertitudes de la passe R-7 elle-même (à charge)
+
+- **Aucun `[?]`** dans toute la fiche : la couche-texte est propre, les 276 pages ont été lues, **aucune valeur
+  n'a été devinée**.
+- **Tous les findings R-7 ne sont PAS appliqués.** Le reliquat connu est listé en **§6.1 bis** — dette de
+  **profondeur R-5** (contenu imprimé résumé), sans invention ni erreur de fond. **La fiche n'est donc pas encore
+  promouvable `[x]` sans une passe de report** ; elle est en revanche **utilisable pour la génération** partout
+  où le §6.2 ne l'interdit pas.
+- **Le §2.1 (ch.1 + liminaires) n'a AUCUNE relecture indépendante** : c'est une transcription neuve (vision
+  24/24 pages, 0 `[?]`), pas du contenu R-7. Cf. le périmètre en tête de fiche.
+- **Le §3 « Notes pédagogiques » n'a pas été audité** par la R-7.
+- **Périmètre vision** : ~25 pages sur 276. Les documents du §6.2 marqués « à faire » **n'ont pas été ouverts** et
+  **n'ont pas été reconstitués**.
+- **Non arbitré, par construction** : tous les points du §6.0 et du §6.3. La décision appartient à Mohamed ;
+  aucune correction du programme officiel n'est proposée.
+- **Un point de forme reste ouvert** : « élecro-magnétique » (p.19) — le trait d'union tombe **exactement en fin
+  de ligne**, il est donc indécidable à l'œil s'il s'agit du trait d'union du mot composé ou d'une césure de
+  justification (auquel cas le mot imprimé serait « élecromagnétique »). La forme avec trait d'union a été
+  retenue par cohérence avec « électro-magnétiques » du corps du texte — **sans certitude sur ce point précis**.
+  La coquille « élecro », elle, est **certaine**.
