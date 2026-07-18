@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : Sources, formes et transferts d'énergie",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Parmi ces sources d'énergie, laquelle est non renouvelable (épuisable) ?",
+      "options": [
+        { "id": "a", "text": "le vent" },
+        { "id": "b", "text": "les marées" },
+        { "id": "c", "text": "la géothermie" },
+        { "id": "d", "text": "le gaz naturel" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le gaz naturel disparaît peu à peu à mesure qu'on l'utilise : c'est une source non renouvelable ✓. Le vent, les marées et la géothermie sont renouvelables.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "L'énergie thermique d'un corps fait partie de son énergie...",
+      "options": [
+        { "id": "a", "text": "microscopique" },
+        { "id": "b", "text": "mécanique" },
+        { "id": "c", "text": "macroscopique" },
+        { "id": "d", "text": "de mouvement d'ensemble" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'énergie thermique est liée à l'agitation des particules : c'est une énergie microscopique ✓, distincte de l'énergie mécanique (macroscopique).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Une génératrice de bicyclette transforme l'énergie du mouvement en énergie électrique. C'est donc...",
+      "options": [
+        { "id": "a", "text": "un isolant thermique" },
+        { "id": "b", "text": "un convertisseur d'énergie" },
+        { "id": "c", "text": "une source non renouvelable" },
+        { "id": "d", "text": "une enceinte adiabatique" }
+      ],
+      "correctOption": "b",
+      "explanation": "Elle transforme une forme d'énergie (mécanique) en une autre (électrique) : c'est un convertisseur d'énergie ✓.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "On chauffe une tige métallique à une extrémité : la chaleur se propage de proche en proche, sans déplacement de matière. Ce mode de transfert s'appelle...",
+      "options": [
+        { "id": "a", "text": "la convection" },
+        { "id": "b", "text": "le rayonnement" },
+        { "id": "c", "text": "la conduction" },
+        { "id": "d", "text": "le travail mécanique" }
+      ],
+      "correctOption": "c",
+      "explanation": "La conduction propage la chaleur de proche en proche sans transport de matière ✓. La convection, elle, transporte la chaleur en déplaçant la matière.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Comment appelle-t-on une enceinte qui empêche tout échange de chaleur avec l'extérieur ?",
+      "options": [
+        { "id": "a", "text": "une enceinte adiabatique (calorifugée)" },
+        { "id": "b", "text": "un convertisseur d'énergie" },
+        { "id": "c", "text": "un bon conducteur thermique" },
+        { "id": "d", "text": "une source d'énergie" }
+      ],
+      "correctOption": "a",
+      "explanation": "Une enceinte adiabatique, ou calorifugée, réalise une isolation thermique ✓ : c'est le principe du calorimètre et de la bouteille thermos.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Par opposition à la chaleur, le travail est un mode de transfert d'énergie dit...",
+      "options": [
+        { "id": "a", "text": "désordonné" },
+        { "id": "b", "text": "ordonné" },
+        { "id": "c", "text": "impossible" },
+        { "id": "d", "text": "renouvelable" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le travail est un transfert ordonné d'énergie, alors que la chaleur est un transfert désordonné ✓.",
+      "difficulty": 1
+    }
+  ]
+}
