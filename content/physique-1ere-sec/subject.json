@@ -1,7 +1,7 @@
 {
   "id": "physique-1ere-sec",
   "nameFr": "Sciences Physiques",
-  "description": "L'électricité, la matière et la mécanique selon le programme officiel de la 1ère année de l'enseignement secondaire (tronc commun) : le phénomène d'électrisation, le circuit électrique, l'intensité et la tension électriques, le dipôle résistor et la loi d'Ohm ; les états physiques de la matière, ses propriétés (dilatation, température, conductivité thermique), la masse (masse volumique, densité) et les changements d'état d'un corps pur ; puis la mécanique : le mouvement, les actions mécaniques et le poids, forces et équilibre",
+  "description": "L'électricité, la matière, la mécanique et l'énergie selon le programme officiel de la 1ère année de l'enseignement secondaire (tronc commun) : le phénomène d'électrisation, le circuit électrique, l'intensité et la tension électriques, le dipôle résistor et la loi d'Ohm ; les états physiques de la matière, ses propriétés (dilatation, température, conductivité thermique), la masse (masse volumique, densité) et les changements d'état d'un corps pur ; la mécanique : le mouvement, les actions mécaniques et le poids, forces et équilibre, forces et pression ; enfin l'énergie et son contrôle (sources renouvelables ou non, formes, conservation et conversions, modes de transfert, chaleur, isolation thermique)",
   "attribute": "Observation",
   "colorToken": "subject-svt",
   "icon": "Atom",
