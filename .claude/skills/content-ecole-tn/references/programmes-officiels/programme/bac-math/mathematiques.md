@@ -46,7 +46,7 @@ style annales session principale.
 | #   | Chapitre                     | pages (PDF = imprimées) | profondeur   |
 | --- | ---------------------------- | ----------------------- | ------------ |
 | 1   | Continuité et limites        | 5–27                    | `generation` |
-| 2   | Suites réelles               | 28–52                   | `bloc`       |
+| 2   | Suites réelles               | 28–52                   | `generation` |
 | 3   | Dérivabilité                 | 53–76                   | `bloc`       |
 | 4   | Fonctions réciproques        | 77–95                   | `bloc`       |
 | 5   | Primitives                   | 96–108                  | `bloc`       |
@@ -350,6 +350,298 @@ l'absurde sur le signe constant).
 - ⛔ NON traité dans ce chapitre : dérivation, fonctions dérivées et lien continuité↔dérivabilité
   (études de variations ici admises ou géométriques) ; suites et limites de suites ; définition
   formelle ε de la limite (seule la définition ε-α de la continuité sert dans deux démonstrations).
+
+## 2.2 Chapitre 2 — Suites réelles (manuel 222445, p.28–52)
+
+**Page de garde (p.28)** — Titre : « Suites réelles », Chapitre 2. Citation liminaire d'As-Samaw'al
+(1172), extraite de son traité d'Arithmétique, sur l'approximation indéfinie des racines
+irrationnelles par des quantités rationnelles de plus en plus proches (référence donnée :
+« R. Rashed, _Entre Arithmétique et Algèbre_, 1984 » ; reproduction du « Tableau d'As-Samawal »).
+Le chapitre est structuré en 7 parties (I à VII), suivies d'un QCM / Vrai-Faux, puis d'une rubrique
+« Exercices et problèmes ».
+
+### Cours — Activités
+
+**I. Rappels et compléments sur les limites de suites** (p.29)
+
+- **Activité 1** (p.29) : calculer la limite de (Uₙ) pour Uₙ = 1/n (n ≥ 1) ; Uₙ = n² + 1 (n ≥ 0) ;
+  Uₙ = 10ⁿ (n ≥ 0).
+- **Activité 2** (p.29) : calculer lim de (Uₙ) pour Uₙ = 0 si n ≤ 10²⁰⁰⁷, −n/3 si n > 10²⁰⁰⁷ ;
+  puis Uₙ = n si n ≤ 10²⁰⁰⁷, 1/n si n > 10²⁰⁰⁷. (Encadré : « La limite d'une suite (Uₙ) ne dépend
+  que des grandes valeurs de n. »)
+- **Activité 3** (p.29) : Uₙ = cos(nπ)/(2n + (−1)ⁿ), n ≥ 1. 1. Donner l'expression de U₂ₙ et
+  U₂ₙ₊₁. 2. Que peut-on dire de la limite de Uₙ ? (Suivie du théorème U₂ₙ / U₂ₙ₊₁.)
+- **Activité 4** (p.30) : étudier la convergence de Uₙ = (−1)ⁿ ; Uₙ = (cos(nπ) + (−1)ⁿ)/n (n ≥ 1) ;
+  Uₙ = 1/n si n pair, −n/3 si n impair (n ≥ 1).
+- **Activité 5** (p.30) : 1. montrer que Uₙ = (−1)ⁿ (n ≥ 0) est bornée. 2. reprendre pour
+  Wₙ = 1/n si n pair, −(n + 1)/(3n²) si n impair (n ≥ 1).
+- **Activité 6** (p.32) : calculer lim de (Uₙ) pour Uₙ = 1/(2 − 1/√n) − 3n³ (n ≥ 1) ;
+  Uₙ = (1/n² − 1/2)(n³ + 3n − 1) (n ≥ 1) ; Uₙ = −n + √((5n + 3)/(2n + 9)) (n ≥ 0) ;
+  Uₙ = (√(n + 1) − √n)·√(n + 1/2) (n ≥ 0).
+- **Activité 7** (p.32) : 1. Uₙ = 2(1 + 1/2)(1 + 1/3)…(1 + 1/n) (n ≥ 1) — calculer Uₙ et sa limite. 2. limite de Vₙ = Uₙ/n².
+
+**II. Suites géométriques et applications** (p.32)
+
+- **Activité 1** (p.32) : lim de (Uₙ) pour Uₙ = (1/5)ⁿ ; Uₙ = (−2/√5)ⁿ ; Uₙ = (√π)ⁿ (n ≥ 0).
+- **Activité 2** (p.32) : Uₙ = (cos(πa))²ⁿ (n non nul). 1. limite si a est un entier ; 2. limite si
+  a n'est pas un entier.
+- **Activité 3** (p.33) : yₙ = (sin(n!πa))ⁿ (n non nul). 1. calculer yₙ pour a rationnel de la forme
+  1/q avec q < n ; 2. en déduire lim yₙ pour tout rationnel a.
+- **Activité 4** (p.33) : lim de (Uₙ) pour Uₙ = (1 − (−1/3)ⁿ)/(1 − n³) (n ≥ 2) ;
+  Uₙ = ((−2)ⁿ − 3)/(4(−2)ⁿ + 5) − 2(8/3)ⁿ (n ≥ 0) ; Uₙ = 1 + 5/3 + … + (5/3)ⁿ (n ≥ 0) ;
+  Uₙ = −3 − 9/π − … − 3(3/π)ⁿ (n ≥ 0).
+- **Activité 5** (p.33) : suites (aₙ) et (bₙ) : a₁ = 4,2 ; a₂ = 4,22 ; aₙ = 4,22…2 (n chiffres) ;
+  b₁ = 4,23 ; b₂ = 4,223 ; bₙ = 4,22…23 (n+1 chiffres). 1. via aₙ = 4 + 2(10⁻¹ + … + 10⁻ⁿ),
+  calculer lim aₙ ; 2. calculer lim bₙ.
+- **Activité 6** (p.33) : (Uₙ) définie par U₀ = 2, Uₙ₊₁ = 2Uₙ − 1 (n ≥ 0). 1. solution α de
+  x = 2x − 1 ; 2. Vₙ = Uₙ − α, montrer que (Vₙ) est géométrique ; 3. en déduire Uₙ en fonction de n
+  et lim Uₙ.
+
+**III. Suites du type vₙ = f(uₙ)** (p.35)
+
+- **Activité 1** (p.36) : lim de (Uₙ) pour Uₙ = sin((0,75)ⁿ) (n ≥ 1) ; Uₙ = n·sin(π/(2n)) (n ≥ 1) ;
+  Uₙ = tan(πn/(2n + 1)) (n ≥ 0) ; Uₙ = (1 − cos((0,25)ⁿ))/(0,25)ⁿ (n ≥ 1).
+- **Activité 2** (p.36–37) : 1. cercle 𝒞 de rayon 1, centre O, M et N sur 𝒞 avec l'angle MON = 2a,
+  I milieu de [MN], J intersection de [OI) avec 𝒞, tangente en J coupant [OM) et [ON) en M′ et N′ ;
+  A et A′ aires de MON et M′ON′ — montrer A′/A = 1/cos²(a). 2. Pₙ polygone régulier à n côtés inscrit
+  et P′ₙ circonscrit à 𝒞 (rayon 1), d'aires Aₙ et A′ₙ ; a. les exprimer et montrer qu'elles ont même
+  limite ; b. établir 2√2 < π < 8√2/(2 + √2).
+
+**IV. Limites et ordre** (p.37)
+
+- **Activité 1** (p.37) : Vₙ = n/(n² + 1) + n/(n² + 2) + … + n/(n² + n) (n ≥ 1). 1. encadrement
+  n²/(n² + n) ≤ Vₙ ≤ n²/(n² + 1) ; 2. valeurs approchées à 10⁻³ de V₁₀₀₀ et V₁₀⁶ ; 3. conjecture de
+  lim Vₙ. (Suivie du théorème des « gendarmes ».)
+- **Activité 2** (p.38) : 1. Uₙ = 1/(n + cos n) (n ≥ 0) — encadrement 0 ≤ Uₙ ≤ 1/(n − 1) et limite ; 2. Vₙ = (cos(5n) + sin(2n))/(5n² + 1) (n ≥ 0) — encadrement 0 ≤ |Vₙ| ≤ 2/(5n² + 1) et limite.
+- **Activité 3** (p.38–39) : Uₙ = 10ⁿ/n!. 1. montrer 0 < Uₙ₊₁/Uₙ ≤ 10/11 pour n ≥ 10 ; 2. convergence
+  et limite ; 3. à la calculatrice, un entier n₀ tel que |Uₙ| ≤ 10⁻⁶ pour n ≥ n₀.
+- **Activité 4** (p.39) : Uₙ = n¹⁰⁰/(1,01)ⁿ. 1. montrer (1,01)ⁿ ≥ n(n−1)(n−2)…(n−100)·10⁻²⁰²/101!
+  pour n ≥ 101 (binôme de Newton) ; 2. en déduire la limite.
+- **Activité 5** (p.39) : lim de (Uₙ) pour Uₙ = (3n + 1)ⁿ (n ≥ 1) ; Uₙ = n³/(2 + sin(3n)) (n ≥ 1) ;
+  Uₙ = 1/n² + n³(sin n − 3) (n ≥ 1) ; Uₙ = −n⁶/(n⁴ − π) + cos²(2n)/n³ (n ≥ 1).
+- **Activité 6** (p.40) : symbole Σ. 1. écrire avec Σ : A = 1 + 2 + 3 + … + n ;
+  B = −1/2 + 1/4 − 1/8 + … − 1/512. 2. calculer C = Σ_{k=10}^{500} 1 ; D = Σ_{k=0}^{20} (3k − 1) ;
+  E = Σ_{k=3}^{10} 10⁻ᵏ. (Encadré de notation Σ.)
+- **Activité 7** (p.40) : 1. vérifier 1/(k(k+1)) = 1/k − 1/(k+1) (k non nul) ; 2. en déduire la
+  limite de Wₙ = Σ_{k=1}^{n} 1/(k(k+1)) (n ≥ 1).
+
+**V. Convergence des suites monotones** (p.40)
+
+- **Activité 1** (p.40) : 1. Wₙ = 1/n² + 2/n² + … + n/n² (n ≥ 1) — a. calculer Wₙ ; b. décroissante
+  et minorée ; c. convergente + limite. 2. Vₙ = 1/n + 2/n + … + n/n (n ≥ 1) — a. croissante ;
+  b. convergente ?
+- **Activité 2** (p.41) : suite de rectangles ; le n-ième est limité par y = 0, y = (−1)ⁿ⁺¹/n,
+  x = n − 1, x = n, d'aire algébrique (−1)ⁿ⁺¹/n ; Uₙ = somme des aires des n premiers. 1. a. calculer
+  U₁, U₂, U₃, U₆ ; b. vérifier Uₙ = 1 − 1/2 + 1/3 − 1/4 + … − (−1)ⁿ/n. 2. (U₂ₙ) croissante ;
+  U₂ₙ ≤ 1 − 1/(2n). 3. (U₂ₙ₊₁) décroissante ; U₂ₙ₊₁ ≥ 0,5 + 1/(2n+1). 4. U₂ₙ₊₁ − U₂ₙ ; même limite
+  a. 5. a. (Uₙ) converge vers a ; b. U₁₀, U₁₁ et encadrement de a.
+- **Activité 3** (p.42) : Uₙ = 1 + 1/2 + 1/3 + … + 1/n (n ≥ 1). 1. croissante ; 2. U₂ₙ − Uₙ ≥ 1/2 ; 3. non majorée ; 4. déterminer lim Uₙ.
+
+**VI. Suites récurrentes** (p.42)
+
+- **Activité 1** (p.42) : aₙ avec a₁ = √2, a₂ = √(2√2), a₃ = √(2√(2√2)), … 1. exprimer aₙ₊₁ en
+  fonction de aₙ ; 2. a. a₁ irrationnel ; b. aₙ irrationnel pour tout n ≥ 1 ; 3. croissante et
+  majorée par 2 ; 4. sa limite.
+- **Activité 2** (p.43) : (aₙ) définie par a₀ = 1, aₙ₊₁ = √(aₙ + 1) (n ≥ 0). 1. croissante et
+  majorée par 2 ; 2. sa limite.
+
+**VII. Suites adjacentes** (p.43)
+
+- **Activité 1** (p.43) : Uₙ = 1 − 1/2² + 1/3² + … + (−1)ⁿ⁺¹/n² (n ≥ 1). 1. (U₂ₙ) croissante et
+  majorée ; 2. (U₂ₙ₊₁) décroissante et minorée ; 3. (Uₙ) converge vers un réel α ; 4. a. vérifier
+  U₂ₙ ≤ α ≤ U₂ₙ₊₁ ; b. U₄, U₅ et encadrement de α ; c. à la calculatrice, un entier n donnant un
+  encadrement de α d'amplitude 10⁻⁸.
+- **Activité 2** (p.44) : (Uₙ), (Vₙ) avec U₀ = 1, V₀ = 2, Uₙ₊₁ = (2Uₙ + Vₙ)/3, Vₙ₊₁ = (Uₙ + 2Vₙ)/3.
+  1. a. (Vₙ − Uₙ) géométrique ; b. Uₙ ≤ Vₙ ; c. (Uₙ) croissante, (Vₙ) décroissante ; d. adjacentes,
+     même limite α. 2. (Vₙ + Uₙ) constante. 3. Uₙ et Vₙ en fonction de n. 4. calculer α.
+
+### Cours — Résultats / définitions / théorèmes à retenir (VERBATIM)
+
+> **Théorème** (p.29) — « Soit (Uₙ) une suite réelle et a fini ou infini. lim_{n→+∞} Uₙ = a, si et
+> seulement si, lim_{n→+∞} U₂ₙ = a et lim_{n→+∞} U₂ₙ₊₁ = a. »
+
+> **Encadré** (p.29) — « La limite d'une suite (Uₙ) ne dépend que des grandes valeurs de n. »
+
+> **Théorème** (p.30) — « Toute suite convergente est bornée. »
+
+> **Théorème** (p.30) — « Soit une suite (Uₙ) convergente vers un réel a. • S'il existe un entier N₀
+> tel que 0 ≤ Uₙ pour tout n ≥ N₀, alors 0 ≤ a. • S'il existe un entier N₀ tel que Uₙ ≤ 0 pour tout
+> n ≥ N₀, alors a ≤ 0. »
+
+> **Conséquence** (p.31) — « Soit un entier naturel N₀ et une suite (Uₙ), n ≥ 0. On suppose qu'il
+> existe deux réel [sic] m et M tel que m ≤ Uₙ ≤ M, n ≥ N₀. Si la suite (Uₙ) est convergente vers un
+> réel a, alors m ≤ a ≤ M. »
+
+> **Tableaux — opérations sur les limites de suites** (p.31) — a, b deux réels. Somme lim(Uₙ + Vₙ) :
+> a,b→a+b ; +∞,b→+∞ ; −∞,b→−∞ ; +∞,+∞→+∞ ; −∞,−∞→−∞. Produit lim(Uₙ·Vₙ) : a,b→ab ; ∞,b≠0→∞ (règle des
+> signes) ; ∞,∞→∞ (règle des signes). Quotient lim(Uₙ/Vₙ) : a,b≠0→a/b ; ∞,b≠0→∞ (règle des signes) ;
+> a,+∞→0 ; a,−∞→0 ; a≠0,0→∞ (règle des signes).
+
+> **Théorème** (p.32) — « Soit (Uₙ) une suite géométrique définie par Uₙ = qⁿ, n ≥ 0, où q est un
+> réel non nul. • Si q > 1, alors lim_{n→+∞} Uₙ = +∞. • Si |q| < 1, alors lim_{n→+∞} Uₙ = 0. • Si
+> q ≤ −1, alors la suite (Uₙ) n'a pas de limite. • Si q = 1, alors la suite (Uₙ) est constante. »
+
+> **Théorème** (p.35) — « Soit f une fonction continue sur un intervalle ouvert I et (Uₙ) une suite
+> d'éléments de I. Si (Uₙ) tend vers un réel a de I alors (f(Uₙ)) tend vers f(a). »
+
+> **Théorème** (p.35) — « Soit f une fonction définie sur un intervalle I et (Uₙ) une suite
+> d'éléments de I. Si lim_{n→+∞} Uₙ = ℓ (fini ou infini) et si lim_{x→ℓ} f(x) = L (fini ou infini),
+> alors lim_{n→+∞} f(Uₙ) = L. »
+
+> **Théorème** (p.37) — « Soit deux suites (Uₙ) et (Vₙ) convergentes respectivement vers deux réels a
+> et b. S'il existe un entier N₀ tel que Uₙ ≤ Vₙ pour tout n ≥ N₀ alors a ≤ b. »
+
+> **Théorème** (p.37) — « Soit trois suites réelles (Uₙ), (Vₙ) et (Wₙ). Soit a un réel. On suppose
+> qu'il existe un entier N₀ tel que Vₙ ≤ Uₙ ≤ Wₙ, n ≥ N₀. Si lim_{n→+∞} Vₙ = lim_{n→+∞} Wₙ = a alors
+> lim_{n→+∞} Uₙ = a. » (Théorème d'encadrement / des « gendarmes ».)
+
+> **Corollaire** (p.38) — « Soit deux suites réelles (Uₙ) et (Vₙ). On suppose qu'il existe un entier
+> N tel que 0 ≤ |Uₙ| ≤ Vₙ, n ≥ N. Si lim_{n→+∞} Vₙ = 0 alors lim_{n→+∞} Uₙ = 0. »
+
+> **Encadré — notation Σ** (p.40) — « On note Σ_{k=1}^{n} aₖ et on lit "sigma pour k variant de 1 à
+> n des réels aₖ" le réel obtenu en faisant la somme des réels a₁, a₂, …, aₙ. On a donc
+> Σ_{k=1}^{n} aₖ = a₁ + a₂ + … + aₙ. »
+
+> **Théorème** (p.39) — « Soit deux suites réelles (Uₙ) et (Vₙ). • S'il existe un entier N₀ tel que
+> Uₙ ≤ Vₙ, n ≥ N₀ et si lim_{n→+∞} Uₙ = +∞ alors lim_{n→+∞} Vₙ = +∞. • S'il existe un entier N₀ tel
+> que Uₙ ≤ Vₙ, n ≥ N₀ et si lim_{n→+∞} Vₙ = −∞ alors lim_{n→+∞} Uₙ = −∞. »
+
+> **Théorème (admis)** (p.40) — « Soit (Uₙ) une suite définie pour n ≥ 0. Si la suite (Uₙ) est
+> croissante et majorée, alors elle converge vers un réel a et pour tout n ≥ 0, Uₙ ≤ a. Si la suite
+> (Uₙ) est décroissante et minorée, alors elle converge vers un réel b et pour tout n ≥ 0, Uₙ ≥ b. »
+
+> **Théorème** (p.41) — « • Toute suite croissante et non majorée tend vers +∞. • Toute suite
+> décroissante et non minorée tend vers −∞. »
+
+> **Théorème** (p.42) — « Soit une suite (Uₙ) vérifiant la relation de récurrence Uₙ₊₁ = f(Uₙ),
+> n ≥ 0 où f est une fonction. Si la suite (Uₙ) est convergente vers un réel a et si la fonction f
+> est continue en a alors a = f(a). »
+
+> **Définition et théorème** (p.43) — « Deux suites (Uₙ)_{n≥0} et (Vₙ)_{n≥0} sont adjacentes
+> lorsqu'elles vérifient les conditions • pour tout n ≥ 0, Uₙ ≤ Vₙ, • la suite (Uₙ) est croissante et
+> la suite (Vₙ) est décroissante, • la suite (Vₙ − Uₙ) converge vers 0. Dans ce cas les suites (Uₙ)
+> et (Vₙ) convergent vers la même limite. »
+
+### Cours — Exercice résolu (p.34–35)
+
+Exercice résolu, solution intégrale imprimée (p.34–35) : f : x ↦ 1 + 2/(x + 1). 1. points fixes
+f(x) = x (⇒ f(√3) = √3, f(−√3) = −√3). 2. pour x, y ≠ −1, f(x) − f(y) = 2(y − x)/((x + 1)(y + 1)). 3. suite (Uₙ) : U₀ = 1, Uₙ₊₁ = f(Uₙ) ; a. Uₙ positif (récurrence) ; b. représentation de f et de
+y = x ; c. U₁ = 2, U₂ = 5/3, U₃ = 7/4. 4. Vₙ = (Uₙ − √3)/(Uₙ + √3) : a. via la question 2, (Vₙ) est
+géométrique de raison (1 − √3)/(1 + √3) et de premier terme (1 − √3)/(1 + √3) ; b. (Vₙ) converge
+vers 0, Uₙ = (√3 + √3·Vₙ)/(1 − Vₙ), donc (Uₙ) converge vers √3.
+
+### Cours — Problème corrigé (p.44–45)
+
+Problème corrigé, solution intégrale imprimée (p.45) : Uₙ = 1 + 1/1! + 1/2! + … + 1/n! et
+Vₙ = 1 + 1/1! + 1/2! + … + 1/n! + 1/(n·n!), n ≥ 1. 1. (Uₙ) strictement croissante (Uₙ₊₁ − Uₙ =
+1/(n+1)!), (Vₙ) strictement décroissante (Vₙ₊₁ − Vₙ = −1/(n(n+1)(n+1)!)). 2. Uₙ − Vₙ = −1/(n·n!) → 0
+⇒ (Uₙ) et (Vₙ) adjacentes, limite commune notée e. 3. irrationalité de e : a. e > 0 et Uₙ < e < Vₙ ;
+b. Uq = a/q! (a entier non nul), et de e = p/q on tire a < p(q − 1)! < a + 1 ; c. contradiction avec
+a et p(q − 1)! entiers ⇒ e est irrationnel.
+
+### QCM (p.46) — « Cocher la réponse exacte. »
+
+1. u définie sur ℕ* par Uₙ = (n² + 2)/n : (☐ lim Uₙ = 0 / ☐ Uₙ ≥ n pour tout n de ℕ* /
+   ☐ (Uₙ) est majorée par 1)
+2. Uₙ = (n + cos n)/(n + 1) : (☐ lim Uₙ = 0 / ☐ lim Uₙ = −1 / ☐ lim Uₙ = 1)
+3. u définie sur ℕ* par Uₙ = n·sin(1/n) : (☐ lim Uₙ = 0 / ☐ lim Uₙ = +∞ / ☐ lim Uₙ = 1)
+
+### Vrai ou faux (p.46) — « Répondre par vrai ou faux en justifiant la réponse. » (réponses non fournies)
+
+1. Si (Uₙ) prend un nombre fini de valeurs alors (Uₙ) est convergente.
+2. Si (Uₙ + Vₙ) est convergente alors (Uₙ) et (Vₙ) sont convergentes.
+3. Si (Uₙ²) converge vers L, alors (Uₙ) converge vers √L ou vers −√L.
+4. Si lim_{+∞} Uₙ = lim_{+∞} Vₙ alors (Uₙ) et (Vₙ) sont adjacentes.
+5. Si (U₂ₙ) et (U₂ₙ₊₁) sont convergentes alors (Uₙ) est convergente.
+
+### Exercices et problèmes (p.47–52) — 32 exercices
+
+- **Ex. 1** (p.47) : Uₙ = 2 + 1/5ⁿ (n ≥ 0), Vₙ = √(4 + 1/n) (n ≥ 1) — limites ; entiers n₀, n₁ (à la
+  calculatrice) tels que |Uₙ − 2| ≤ 10⁻⁶ et |Vₙ − 2| ≤ 10⁻⁶.
+- **Ex. 2** (p.47) : aₙ = (n + (−1)ⁿ)/(2n + (−1)ⁿ⁺¹) (n ≥ 0) — a₂ₙ, a₂ₙ₊₁, convergence et limite.
+- **Ex. 3** (p.47) : Uₙ = 2^((−1)ⁿ·n)/(−5)ⁿ⁺¹ (n ≥ 0) — (Uₙ) est-elle convergente ?
+- **Ex. 4** (p.47) : limite de Uₙ = 1 + √n/(2n + (−1)ⁿ) (n ≥ 0).
+- **Ex. 5** (p.47) : limite de Uₙ = (1 − 1/2)(1 − 1/3)…(1 − 1/n) (n ≥ 1).
+- **Ex. 6** (p.47) : suites décimales (xₙ), (yₙ), (zₙ) : xₙ = 0,33…3 (n chiffres) ; yₙ = 0,3535…35
+  (n fois 35) ; zₙ = 0,33…3 55…5 (n chiffres puis n chiffres). 1. a. xₙ = 3(10⁻¹ + … + 10⁻ⁿ) ;
+  b. convergence et limite de (xₙ) ; 2. lim yₙ et lim zₙ.
+- **Ex. 7** (p.47) : 1. vérifier Σ_{k=1}^{n} k = n(n+1)/2 ; 2. (Uₙ) : U₀ = 1, Uₙ₊₁ = Uₙ + 2n + 3 —
+  expression de Uₙ en fonction de n et lim Uₙ.
+- **Ex. 8** (p.47) : 1. Uₙ = (2/n)ⁿ (n ≥ 1) — a. Uₙ ≤ (1/2)ⁿ pour n ≥ 4 ; b. lim Uₙ. 2. Vₙ = n²ⁿ − (2n)ⁿ (n ≥ 1) — lim Vₙ.
+- **Ex. 9** (p.47) : suites (Uₙ), (Sₙ) : Uₙ = (3ⁿ − 4ⁿ)/(3ⁿ + 4ⁿ), Sₙ = Σ_{k=0}^{n} 1/(Uₖ − 1)
+  (n ≥ 0). 1. convergence et limite de (Uₙ) ; 2. a. Sₙ en fonction de n ; b. lim Sₙ.
+- **Ex. 10** (p.48) : Wₙ = n!/3ⁿ (n ≥ 0). 1. Wₙ₊₁/Wₙ ≥ 4/3 pour n ≥ 3 ; 2. lim Wₙ.
+- **Ex. 11** (p.48) : Uₙ = n²/2ⁿ (n ≥ 0). 1. a. placer les points Aᵢ(i, Uᵢ), i ∈ {0,…,7} ;
+  b. Uₙ₊₁/Uₙ ≤ 8/9 pour n ≥ 3 ; c. lim Uₙ. 2. Sₙ = Σ_{k=3}^{n} Uₖ (n ≥ 3) — a. Sₙ ≤ 9U₃ ;
+  b. (Sₙ) convergente.
+- **Ex. 12** (p.48) : Vₙ = 1 + 1/√2 + … + 1/√n (n ≥ 1). 1. Vₙ ≥ √n ; 2. lim Vₙ.
+- **Ex. 13** (p.48) : f : x ↦ sin x / x. 1. lim_{x→0} f et lim_{x→+∞} f ; 2. convergence de
+  Uₙ = f(1/3ⁿ), Vₙ = f(2ⁿ), Wₙ = f((−0,3)ⁿ) (n ≥ 0).
+- **Ex. 14** (p.48) : calculer la limite de (Uₙ) : 1. −3/(3ⁿ − 1) ; 2. 1/(0,8 + (0,2)ⁿ) ; 3. cos(4n) − 4ⁿ ; 4. (√2/2)ⁿ·cos n ; 5. sin(1/n) − 1/n ; 6. (n² + sin n)/n³ ; 7. (n + (−1)ⁿ√n)/(3n + 2) ; 8. tan(−πn/(2n − 1)).
+- **Ex. 15** (p.48) : θ ∈ ]0, π/2] ; (Uₙ) : U₀ = 2cos θ, Uₙ₊₁ = √(2 + Uₙ) (n ≥ 1). 1. U₁ et U₂ en
+  fonction de θ ; 2. Uₙ = 2cos(θ/2ⁿ) pour n ≥ 1 ; 3. lim Uₙ.
+- **Ex. 16** (p.48) : Uₙ = (E(π) + E(2π) + … + E(nπ))/n² (n ≥ 1, E = partie entière). 1. encadrement
+  π/2 + π/(2n) − 1/n ≤ Uₙ ≤ π/2 + π/(2n) ; 2. lim Uₙ.
+- **Ex. 17** (p.48–49) : Uₙ = sin(1/n²) + sin(2/n²) + … + sin(n/n²) (n ≥ 1) — étude de la limite.
+  1. Vₙ = 1/n² + 2/n² + … + n/n² (n ≥ 1), converge vers 1/2 ; 2. 1³ + 2³ + … + n³ ≤ n⁴ ; 3. pour
+     x ≥ 0, x − x³/6 ≤ sin x ≤ x ; 4. Vₙ − 1/(6n²) ≤ Uₙ ≤ Vₙ ; 5. en déduire lim Uₙ.
+- **Ex. 18** (p.49) : (Uₙ) : U₁ = 1, Uₙ₊₁ = √(3Uₙ) (n ≥ 1). 1. Uₙ ≤ 3 ; 2. (Uₙ) croissante ; 3. convergente + limite.
+- **Ex. 19** (p.49) : (Uₙ) : U₀ = a ∈ ]0, π/2[, Uₙ₊₁ = sin(Uₙ) (n ≥ 0). 1. variations de x ↦ sin x − x
+  sur [0, π/2] ; 2. sin x ≤ x sur [0, π/2] ; 3. Uₙ ∈ [0, π/2] (récurrence) ; 4. (Uₙ) décroissante ; 5. convergente + limite.
+- **Ex. 20** (p.49) : f(x) = 1 + 1/x sur ]0, +∞[. 1. variations et f(]0, +∞[) ; 2. représenter f et
+  y = x ; 3. φ = (1 + √5)/2, montrer f(φ) = φ ; 4. suite (xₙ) de rationnels convergeant vers φ :
+  x₀ = 2, xₙ₊₁ = f(xₙ) — a. x₁, x₂, x₃, x₄ ; b. xₙ rationnel positif ; c. |xₙ₊₁ − φ| ≤ (4/9)|xₙ − φ| ;
+  d. conclure.
+- **Ex. 21** (p.49–50) : Uₙ = Σ_{k=1}^{n} 1/k² (n ≥ 1). 1. a. U₁, U₂, U₃ ; b. croissante ; 2. a. 1/k² ≤ 1/(k−1) − 1/k pour k ≥ 2 ; b. Uₙ ≤ 2 − 1/n ; c. converge vers ℓ, 49/36 ≤ ℓ ≤ 2 ; 3. p entier ≥ 3 ; 4. Vₙ = Σ_{k=1}^{n} 1/k^p (n ≥ 1) — a. croissante ; b. Vₙ ≤ Uₙ ; c. converge vers
+  ℓ′ ≤ 2 ; d. avec p = 3, trois premiers termes de (Vₙ) et encadrement de ℓ′.
+- **Ex. 22** (p.50) : Uₙ = (1·3·5·…·(2n−1))/(2·4·6·…·(2n)) et Vₙ = (2·4·6·…·(2n))/(3·5·…·(2n+1))
+  (n ≥ 1). 1. (Uₙ) décroissante, converge vers ℓ ≥ 0 ; 2. (Vₙ) décroissante, converge vers ℓ′ ≥ 0 ; 3. Wₙ = Uₙ·Vₙ — convergence, expression, ℓℓ′ = 0 ; 4. a. Uₙ < Vₙ ; b. ℓ = 0 ; c. 2Uₙ₊₁ > Vₙ ;
+  d. ℓ′.
+- **Ex. 23** (p.50) : f(x) = (4x − 3)/x sur ]0, +∞[ ; variations et tracé. (Uₙ) : U₀ ∈ ]0, +∞[,
+  Uₙ₊₁ = (4Uₙ − 3)/Uₙ. 2. U₀ = 3/4 — a. U₁, représenter U₀, U₁ ; b. (Uₙ) est-elle définie ? 3. U₀ = 3
+  — a. représenter U₁, U₂, U₃ ; b. (Uₙ) constante. 4. U₀ = 5 — a. représenter U₀…U₃ ; b. décroissante,
+  Uₙ ≥ 3 ; c. converge vers α ; d. entier n₀ (calculatrice) tel que Uₙ − α ≤ 10⁻⁵.
+- **Ex. 24** (p.50) : dire si (Uₙ) et (Vₙ) sont adjacentes : 1. Uₙ = 2/n, Vₙ = −3/n (n ≥ 2) ; 2. Uₙ = (n+2)/(n−1), Vₙ = (2n+3)/(2n+5) (n ≥ 4) ; 3. Uₙ = sin(1/n), Vₙ = cos(1/n) − 1 (n ≥ 2) ; 4. Uₙ = Σ_{k=0}^{n} 1/2ᵏ, Vₙ = 2 + 3/n (n ≥ 2) ; 5. Uₙ = √(n+1) − √n, Vₙ = √n − √(n+1) (n ≥ 1).
+- **Ex. 25** (p.50) : (Uₙ), (Vₙ) : U₀ = 12, V₀ = 1, Uₙ₊₁ = (Uₙ + 2Vₙ)/3, Vₙ₊₁ = (Uₙ + 3Vₙ)/4 (n ≥ 0).
+  1. Uₙ ≥ Vₙ ; 2. adjacentes, même limite α ; 3. tₙ = 3Uₙ + 8Vₙ — a. (tₙ) constante ; b. valeur de α.
+- **Ex. 26** (p.51) : a > 0, bₙ = n/(1 + a)ⁿ (n non nul). 1. (1 + a)ⁿ ≥ n(n−1)a²/2 ; 2. lim bₙ ; 3. (xₙ) géométrique de raison q, −1 < q < 1 : lim n|xₙ| = 0, en déduire lim nxₙ ; 4. calculer
+  lim n/2^(n−1) ; lim n(−1/3)^(n+2) ; lim (n+1)(−1/√2)ⁿ.
+- **Ex. 27** (p.51) : 1. pour n > 1 et x ∈ ]−1, 1[ non nul, Σ_{k=0}^{n} xᵏ = (1 − x^(n+1))/(1 − x) ; 2. Σ_{k=1}^{n} k·x^(k−1) = (nx^(n+1) − (n+1)xⁿ + 1)/(1 − x)² ; 3. limites de
+  Uₙ = 1 + 2(5/3) + … + (n+1)(5/3)ⁿ et Vₙ = 2 − 2√2 + … + 2(n+1)(−1/√2)ⁿ (n ≥ 0).
+- **Ex. 28** (p.51) : a, b réels strictement positifs avec a < b ; (Uₙ) : U₁ = a + b,
+  Uₙ₊₁ = a + b − ab/Uₙ (n ≥ 0). 1. vérifier U₂ = (b³ − a³)/(b² − a²) ; 2. Uₙ₊₁ = (b^(n+2) − a^(n+2))/
+  (b^(n+1) − a^(n+1)) ; 3. lim Uₙ.
+- **Ex. 29** (p.51) : (aₙ) : a₀ donné, aₙ₊₁ = aₙ² + aₙ (n ≥ 0). 1. croissante ; 2. si converge, limite
+  nulle ; 3. si a₀ > 0, diverge ; 4. si a₀ < −1, a₁ > 0, en déduire divergence ; 5. si −1 < a₀ < 0 :
+  a. bornée par −1 et 0 ; b. converge, limite ; 6. limite si a₀ = 0 ; si a₀ = −1.
+- **Ex. 30** (p.51–52) : (Uₙ) : U₀ = 0,1, Uₙ₊₁ = 1,6Uₙ(1 − Uₙ) (n ≥ 0). 1. variations de
+  f : x ↦ 1,6x(1 − x) ; 2. 0,1 ≤ Uₙ ≤ 3/8 ; 3. convergence. 4. a. 3/8 − Uₙ₊₁ = 1,6(5/8 − Uₙ)(3/8 − Uₙ) ;
+  b. Vₙ = 3/8 − Uₙ ≥ 0 et Vₙ₊₁/Vₙ ≤ 0,84 ; c. 0 ≤ Vₙ ≤ 0,84ⁿ (récurrence) ; d. lim Uₙ ; e. entier n₀
+  tel que 0 ≤ 3/8 − Uₙ ≤ 10⁻⁵.
+- **Ex. 31** (p.52) : a > 0, f(x) = (1/2)(x + a/x) sur ℝ*. 1. f′(x) = (x − √a)(x + √a)/(2x²) et
+  variations. 2. (Uₙ) : U₀ = E(√a) + 1, Uₙ₊₁ = f(Uₙ) (E = partie entière) — a. √a < Uₙ₊₁ < Uₙ ≤ U₀,
+  convergente ; b. Uₙ₊₁ − √a < (1/2)(Uₙ − √a) ; c. 0 < Uₙ − √a < (1/2)ⁿ(U₀ − √a) ; d. lim Uₙ.
+- **Ex. 32** (p.52) : 1. a, b réels 0 < b < a — a. √(ab) ≤ (a + b)/2 ; b. (a − b)² ≤ a² − b² [sic].
+  (aₙ), (bₙ) : a₀ = a, b₀ = b, aₙ₊₁ = (aₙ + bₙ)/2, bₙ₊₁ = √(aₙbₙ) (n ≥ 0). 2. a. bₙ ≤ aₙ ;
+  b. (aₙ) décroissante, (bₙ) croissante. 3. a. (aₙ₊₁ − bₙ₊₁)² ≤ ((aₙ − bₙ)/2)² ; b. aₙ − bₙ ≤
+  (a − b)/2ⁿ. 4. adjacentes, même limite α. 5. a = 2, b = 1 — entier n donnant un encadrement de α
+  d'amplitude 10⁻¹⁰.
+
+### Bornes de scope observées (chapitre 2)
+
+- ✅ INCLUS : rappels/compléments sur les limites de suites (limite via sous-suites paire/impaire,
+  suite bornée, suites convergentes bornées, signe de la limite, encadrement m ≤ a ≤ M, opérations
+  sur les limites) ; suites géométriques (qⁿ) et applications décimales/télescopiques ; suites du
+  type Vₙ = f(Uₙ) (continuité et composition limite∘suite) ; limites et ordre (théorème des
+  gendarmes, corollaire de valeur absolue, minoration/majoration vers ±∞) ; convergence des suites
+  monotones (croissante majorée / décroissante minorée ; non majorée → +∞) ; suites récurrentes
+  Uₙ₊₁ = f(Uₙ) et point fixe a = f(a) ; suites adjacentes (définition, convergence commune,
+  approximation de e, moyennes arithmético-géométriques). Notation Σ introduite ici.
+- ⛔ NON traité dans ce chapitre : dérivation utilisée sans démonstration dans quelques études de
+  variations (Ex. 31 par exemple) — la dérivabilité est le chapitre 3 ; les fonctions ln/exp
+  (l'irrationalité de e est traitée par les suites, sans la fonction exp) ; définition formelle ε de
+  la limite de suite (seule la caractérisation |Uₙ − a| < β « dès que n ≥ N₀ » sert dans les
+  démonstrations).
 
 ## 3. Notes pédagogiques / méthode
 
