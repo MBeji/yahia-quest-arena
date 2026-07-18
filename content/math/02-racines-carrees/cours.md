@@ -4,6 +4,10 @@
 
 ## 🏰 تعريف الجذر التربيعي
 
+::: figure الجذرُ التربيعيّ لعددٍ هو طولُ ضلع مربّعٍ مساحتُه ذلك العدد: مساحةُ 9 ضلعُها 3
+<svg viewBox="0 0 340 165"><rect x="46" y="34" width="90" height="90" rx="0" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/><text x="91.0" y="84.0" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">المساحة 9</text><text x="91.0" y="26.0" text-anchor="middle" font-size="13" font-weight="700" fill="#1f2937" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">3</text><text x="30.0" y="80.0" text-anchor="middle" font-size="13" font-weight="700" fill="#1f2937" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">3</text><text x="91.0" y="148.0" text-anchor="middle" font-size="15" font-weight="700" fill="#15803d" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">√9 = 3</text><rect x="210" y="62" width="62" height="62" rx="0" fill="#fef9c3" stroke="#a16207" stroke-width="2"/><text x="241.0" y="96.0" text-anchor="middle" font-size="11" font-weight="700" fill="#a16207" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">المساحة 2</text><text x="241.0" y="54.0" text-anchor="middle" font-size="13" font-weight="700" fill="#1f2937" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">√2</text><text x="241.0" y="148.0" text-anchor="middle" font-size="14" font-weight="700" fill="#15803d" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">√2 ≈ 1,41</text></svg>
+:::
+
 الجذر التربيعي لعدد **موجب** a — أي a ≥ 0، والصفر مشمول — هو العدد الموجب الذي مربّعه يساوي a، ونرمز له بـ √a.
 بالنسبة لكلّ عدد a ≥ 0:
 
