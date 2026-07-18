@@ -50,8 +50,8 @@ style annales session principale.
 | 3   | Dérivabilité                 | 53–76                   | `generation` |
 | 4   | Fonctions réciproques        | 77–95                   | `generation` |
 | 5   | Primitives                   | 96–108                  | `generation` |
-| 6   | Intégrales                   | 109–136                 | `bloc`       |
-| 7   | Fonction logarithme népérien | 137–157                 | `bloc`       |
+| 6   | Intégrales                   | 109–136                 | `generation` |
+| 7   | Fonction logarithme népérien | 137–157                 | `generation` |
 | 8   | Fonction exponentielle       | 158–188                 | `bloc`       |
 | 9   | Équations différentielles    | 189–207                 | `bloc`       |
 
@@ -1584,6 +1584,732 @@ de direction (O, j⃗), courbe C_G.)
   intégration par parties nommée comme telle (seule la table « u′v + v′u ↦ u.v » est fournie, sans le
   procédé formalisé) ; fonctions ln/exp et leurs primitives (chapitres 7–8) ; équations différentielles
   (chapitre 9).
+
+## 2.6 Chapitre 6 — Intégrales (manuel 222445, p.109–136)
+
+**Page de garde (p.109)** — Titre : « Intégrales », Chapitre 6. Citation liminaire sur Thabit
+Ibn Qurra (mathématicien arabe du Xe siècle) : la parabole qu'il considère est définie par une
+propriété « que nous traduisons aujourd'hui par l'équation y² = px » et la quadrature de la parabole
+est équivalente au calcul de l'intégrale ∫₀ᵃ √(px) ; le calcul immédiat aurait exigé la sommation
+de √1 + √2 + … + √n, difficulté qu'Ibn Qurra étudie « en recourant à un artifice astucieux »
+(référence donnée : « AP. Youachkevitch, _Les mathématiques arabes_, 1976 »). Le chapitre est
+structuré en 7 parties (I à VII), suivies d'un QCM / Vrai-Faux, puis d'une rubrique « Exercices et
+problèmes ».
+
+### Cours — Activités
+
+**I. Définition**
+
+**I.1 Intégrale d'une fonction continue et positive** (p.110) — encadré liminaire : dans un repère
+orthogonal (O, i⃗, j⃗), l'**unité d'aire** (u.a) est l'aire du rectangle de dimensions ‖i⃗‖ et ‖j⃗‖.
+
+- **Activité 1** (p.110) : g par morceaux (g(x) = −x − 1 si x < −2 ; 1 si −2 ≤ x ≤ 1 ; 3x − 2 si
+  x > 1). 1. tracer la courbe de g ; 2. hachurer la partie 𝒫 limitée par l'axe des abscisses, la
+  courbe de g et les droites x = −3 et x = 3.5 ; 3. calculer l'aire de 𝒫.
+- **Activité 2** (p.110) : f(x) = √(1 − x²) sur [−1, 1] ; 𝒜 l'aire limitée par l'axe des abscisses,
+  C_f et les droites x = −1 et x = 1. 1. représenter C_f ; 2. calculer 𝒜.
+- **Activité 3** (p.110–111) : f(x) = x² sur ℝ ; pour t ∈ [1, +∞[, 𝒜(t) l'aire limitée par C_f,
+  l'axe des abscisses et les droites x = 1 et x = t ; 𝒜 : t ↦ 𝒜(t). 1. 𝒜(1) ? 2. h > 0 : a. montrer
+  hf(t) ≤ 𝒜(t + h) − 𝒜(t) ≤ hf(t + h) ; b. en déduire 𝒜 dérivable à droite en t et 𝒜′_d(t) = f(t). 3. 1 < t − h < t : a. hf(t − h) ≤ 𝒜(t) − 𝒜(t − h) ≤ hf(t) ; b. 𝒜 dérivable à gauche, 𝒜′_g(t) = f(t). 4. a. 𝒜(t) − 𝒜(1) = t³/3 − 1/3 ; b. aire pour x = 1 et x = 2 ? 5. F primitive de f sur [1, +∞[ :
+  F(t) − F(1) = 𝒜(t) − 𝒜(1).
+- **Activité 4** (p.111) : f : x ↦ x³ − x. 1. représenter la partie 𝒫 limitée par l'axe des
+  abscisses, C_f et les droites x = 1 et x = 2 ; 2. calculer l'aire de 𝒫.
+
+**I.2 Intégrale d'une fonction continue** (p.112) — Définition + vocabulaire (voir « Résultats à
+retenir »).
+
+- **Activité 1** (p.112) : calculer ∫*{1/2}^1 (x⁴ − 1)dx ; ∫₀¹ sin(πx)dx ; ∫*{−1}¹ 2x/(x² + 1)² dx.
+- **Activité 2** (p.112) : f(x) = −1/x² sur ]0, +∞[. 1. représenter f ; 2. calculer l'aire limitée
+  par la courbe de −f, l'axe des abscisses et x = 1, x = 2 ; 3. en déduire que l'aire limitée par la
+  courbe de f, l'axe des abscisses et x = 1, x = 2 est égale à ∫₁² −f(x)dx.
+
+**II. Propriétés algébriques de l'intégrale** (p.113) — encadré (∫ₐᵃ = 0, ∫ₐᵇ = −∫ᵦᵃ, relation de
+Chasles) + démonstration (voir « Résultats à retenir »).
+
+- **Activité 1** (p.113) : f(x) = x³ sur ℝ. 1. tracer C′ représentant |f| ; 2. a. représenter P′
+  limitée par l'axe des abscisses, C′ et x = −2, x = 3 ; b. calculer l'aire de P′ ; 3. en déduire
+  l'aire de P limitée par l'axe des abscisses, C et x = −2, x = 3. (Suivie de la Définition de l'aire
+  via ∫ₐᵇ|f(x)|dx — voir « Résultats à retenir ».)
+- **Activité 2** (p.114) : calculer l'aire limitée par l'axe, C_f et x = a, x = b pour 1. f : x ↦
+  sin(2x), a = −π/3 et b = π/4 ; 2. f : x ↦ x/(x² + 1)⁴, a = −2 et b = 1.
+- **Activité 3** (p.114) : calculer ∫₁² x²/(x + 1)² dx + ∫₁² (2x + 1)/(x + 1)² dx.
+- **Activité 4** (p.114) : I = ∫₀^{π/2} sin²x dx et J = ∫₀^{π/2} (cos²x)/2 dx. 1. calculer I + 2J et
+  2J − I ; 2. en déduire les valeurs de I et J.
+
+**III. Intégrales et inégalités** (p.114) — Théorème de positivité + corollaires (voir « Résultats à
+retenir »).
+
+- **Activité 1** (p.115) : 1. montrer ∫*{π/6}^{π/3} dx/cos x > ∫*{π/6}^{π/3} tan x dx ; 2. montrer
+  ∫₀^{1/2} (1 + x + x² + x³ + x⁴)dx < ∫₀^{1/2} dx/(1 − x).
+- **Activité 2** (p.115) : f dérivable sur [−1, 4], tangentes aux points d'abscisses 0 et 3 tracées.
+  1. vérifier graphiquement que pour tout x de [0, 3], x/2 ≤ f(x) ≤ (x + 1)/2 ; 2. en déduire
+     9/4 ≤ ∫₀³ f(x)dx ≤ 15/4.
+- **Activité 3** (p.116) : uₙ = ∫₀¹ x^{n+1}/(1 + x²) dx (n ∈ ℕ). 1. pour x de [0, 1],
+  0 ≤ x^{n+1}/(1 + x²) ≤ x^{n+1} ; 2. en déduire 0 ≤ uₙ ≤ 1/(n + 2) ; 3. a. valeur approchée de u₁₀₀
+  et erreur ; b. valeur approchée de u₁₀₀₀₀ et erreur.
+- **Activité 4** (p.116) : C_f et C_g de f(x) = x et g(x) = x³ sur [−1/2, 1] ; aire limitée par C_f,
+  C_g et x = −1/2, x = 1. 1. a. aire sous C_f (x = 0 à x = 1) ; b. aire sous C_g (x = 0 à x = 1) ;
+  c. en déduire l'aire entre C_f et C_g (x = 0 à x = 1) ; 2. aire entre C_f et C_g (x = −1/2 à x = 0) ; 3. conclure. (Suivie de la Définition de l'aire entre deux courbes via ∫ₐᵇ|f(x) − g(x)|dx — voir
+  « Résultats à retenir ».)
+- **Activité 5** (p.116–117) : f(x) = sin x et g(x) = cos x sur [0, π/2]. 1. représenter C_f et C_g ; 2. étudier le signe de f − g ; 3. calculer l'aire entre C_f, C_g et x = 0, x = π/2.
+- **Activité 6** (p.117) : f(x) = 4x² et h(x) = x/2 sur [0, +∞[ ; g(x) = 4/x² sur ]0, +∞[ ; aire de
+  la partie 𝒟 limitée par les trois courbes et x = 0.5, x = 2. 1. résoudre f(x) = g(x) et g(x) = h(x) ; 2. aire entre C_f, C_h (x = 0.5 à x = 1) ; 3. aire entre C_g, C_h (x = 1 à x = 2) ; 4. en déduire
+  l'aire de 𝒟.
+
+**IV. Calculs d'intégrales**
+
+**IV.1 Calcul au moyen d'une primitive** (p.117)
+
+- **Activité 1** (p.117) : calculer ∫₀³ (5x⁴ − x³ − 2)dx ; ∫*{−2}^{−1} 1/t² dt ; ∫₀^{π/4} 1/cos²x dx ;
+  ∫*{−1}² (3x² + 1)(x³ + x − 2)dx ; ∫₀¹ −2u/(u² + 2)³ du ; ∫_{π/2}^{π/6} cos t/sin³t dt ;
+  ∫₀¹ x³/√(x⁴ + 1) dx.
+- **Activité 2** (p.117) : calculer ∫₀^{π/2} sin³x dx ; ∫_{π/6}^{π/4} (1 + tan²x)/tan⁴x dx.
+
+**IV.2 Intégration par parties** (p.118) — Théorème + démonstration (voir « Résultats à retenir »).
+
+- **Activité** (p.118) : calculer ∫₀^{π/2} x sin x dx ; ∫₀^{π/2} x cos x dx ; ∫₀^{π/2} x² cos x dx.
+
+**IV.3 Calcul approché d'intégrales (Méthode des rectangles)** (p.118)
+
+- **Activité** (p.118–119) : f(x) = 1/x sur ]0, +∞[ ; A l'aire limitée par l'axe, 𝒞 et x = 1, x = 2.
+  1. vérifier A = ∫₁² dx/x ; 2. rectangles r₁, R₁ : vérifier 1/2 ≤ A ≤ 1 ; 3. partage de [1, 2] en 2
+     intervalles de longueur 0.5, rectangles r₁, r₂, R₁, R₂ : vérifier 7/12 ≤ A ≤ 5/6 ; 4. partage en 5
+     intervalles de longueur 1/5, rectangles rᵢ, Rᵢ (1 ≤ i ≤ 5) : donner un nouvel encadrement de A.
+
+**IV.4 Valeur moyenne et inégalité de la moyenne** (p.119) — Définition + interprétation géométrique
+(voir « Résultats à retenir »).
+
+- **Activité 1** (p.119) : f(x) = 3x − 1 sur [0, 2] ; calculer la valeur moyenne de f sur [0, 2], puis
+  la comparer à f(1).
+- **Activité 2** (p.119) : valeur moyenne de f(x) = cos x sur [0, π/2].
+- **Activité 3** (p.119) : parabole P d'équation y = −x² + 2x ; A intersection de P avec l'axe des
+  abscisses distincte de O. Déterminer la largeur du rectangle dont un côté est [OA] et dont l'aire
+  égale celle de la partie D limitée par P et l'axe des abscisses. (Suivie du Théorème « Inégalité de
+  la moyenne » + démonstration, et du Corollaire « il existe c tel que f̄ = f(c) » — voir « Résultats à
+  retenir ».)
+- **Activité 4** (p.120) : montrer 0.5 ≤ ∫₀¹ 1/(1 + x²) dx ≤ 1 et 1/2 ≤ ∫₀^{1/2} 1/√(1 − x²) dx ≤ √3/3.
+
+**V. Calcul de volumes de solides de révolution** (p.120) — définition de la surface / du solide de
+révolution + formule du volume (voir « Résultats à retenir »).
+
+- **Activité 1** (p.121) : demi-cercle AB d'équation y = f(x), A(R, 0), B(−R, 0) ; sa rotation autour
+  de (Ox) engendre la sphère de rayon R et centre O. Déterminer f(x) ; retrouver le volume de la
+  sphère de centre O et rayon R.
+- **Activité 2** (p.122) : solide S obtenu en faisant tourner la portion de parabole y = √x
+  (0 ≤ x ≤ 4) autour de (Ox). Déterminer le volume de S.
+
+**VI. Fonctions définies par une intégrale** (p.122) — Théorème + Conséquence (voir « Résultats à
+retenir »).
+
+- **Activité 1** (p.122) : justifier la dérivabilité de F sur I et calculer F′ pour 1. F(x) =
+  ∫₁ˣ √(1 − t²) dt, I = [−1, 1] ; 2. F(x) = ∫₀ˣ 1/(1 + t²) dt, I = ℝ ; 3. F(x) = ∫₁ˣ (sin t)/t dt,
+  I = ]0, +∞[ ; 4. F(x) = ∫₀ˣ dt/√(1 − t²), I = ]−1, 1[.
+- **Théorème (composée)** (p.124) : F(x) = ∫ₐ^{u(x)} f(t)dt dérivable, F′(x) = f(u(x))·u′(x) (voir
+  « Résultats à retenir »).
+- **Activité 2** (p.124) : f(x) = ∫₀ˣ dt/√(1 − t²) sur [0, 1[. 1. f dérivable, f′ ; 2. g(x) =
+  ∫₀^{sin x} dt/√(1 − t²) sur [0, π/2[ : a. g dérivable, g′ ; b. en déduire g(x) = x ; 3. calculer
+  ∫₀^{1/2} dt/√(1 − t²) et ∫₀^{√3/2} dt/√(1 − t²) ; 4. a. pour x ∈ [0, 1[, unique t ∈ [0, π/2[ avec
+  sin t = x ; b. montrer lim_{x→1⁻} f(x) = π/2 ; 5. représenter f.
+- **Activité 3** (p.125) : f continue sur I centré en 0 ; g(x) = ∫*{−x}^x f(t)dt. 1. g dérivable,
+  dérivée ; 2. f impaire : a. g(x) = 0 ; b. ∫*{−x}^0 f = −∫₀ˣ f ; 3. f paire : a. g primitive de
+  t ↦ 2f(t) s'annulant en 0 ; b. ∫*{−x}^x f = 2∫₀ˣ f et ∫*{−x}^0 f = ∫₀ˣ f. (Suivie du Théorème de
+  parité — voir « Résultats à retenir ».)
+- **Activité 4** (p.125) : calculer ∫*{−5π}^{5π} x⁵ sin⁶(x)dx ; ∫*{−1}¹ t⁵/(t⁶ + 1) dt ;
+  ∫*{−5π}^{5π} x^{1001} cos^{100}(x)dx ; ∫*{−1}¹ |t³ + t| dt.
+- **Activité 5** (p.125) : f continue sur ℝ, périodique de période T ; g(x) = ∫ₓ^{x+T} f(t)dt.
+  Montrer que pour tout réel x, g(x) = ∫₀ᵀ f(t)dt. (Suivie du Théorème de périodicité — voir
+  « Résultats à retenir ».)
+- **Activité 6** (p.126) : calculer ∫₀^{20π} |sin x| dx ; ∫_{−10π}^{10π} |cos x| dx.
+
+**VII. Exemples de suites définies par une intégrale** (p.126)
+
+- **Activité 1** (p.126) : I₁ = ∫₀^{π/2} x sin x dx, J₁ = ∫₀^{π/2} x cos x dx. 1. montrer I₁ = 1 et
+  J₁ = π/2 − 1 ; 2. pour n ≥ 2, Iₙ = ∫₀^{π/2} xⁿ sin x dx, Jₙ = ∫₀^{π/2} xⁿ cos x dx : a. calculer I₂,
+  J₂ ; b. montrer Iₙ = nJₙ₋₁ et Jₙ = (π/2)ⁿ − nIₙ₋₁ ; c. calculer I₃, J₃, I₄, J₄.
+
+### Cours — Résultats / définitions / théorèmes à retenir (VERBATIM)
+
+> **Propriété** (p.111) — « Soit f une fonction continue sur un intervalle I. Si F et G sont deux
+> primitives de f sur I alors pour tous a et b de I, F(b) − F(a) = G(b) − G(a). »
+
+> **Définition — intégrale d'une fonction continue et positive** (p.111) — « Le plan est muni d'un
+> repère orthogonal. Soit f une fonction continue et positive sur un intervalle [a, b] et F une
+> primitive de f sur [a, b]. L'aire (en u.a) de la partie du plan limitée par la courbe de f, l'axe
+> des abscisses et les droites d'équations x = a et x = b est le réel F(b) − F(a). Le réel F(b) − F(a)
+> est appelé intégrale de f de a à b et est noté ∫ₐᵇ f(x)dx. »
+
+> **Définition — intégrale d'une fonction continue** (p.112) — « Soit f une fonction continue sur un
+> intervalle I, a et b deux réels de I et F une primitive de f sur I. On appelle intégrale de f entre
+> a et b le réel, noté ∫ₐᵇ f(x)dx, défini par ∫ₐᵇ f(x)dx = F(b) − F(a). »
+
+> **Vocabulaire et notations** (p.112) — « Le réel ∫ₐᵇ f(x)dx est appelé intégrale de f sur [a, b], ou
+> encore de a à b, ou encore entre a et b. Dans l'écriture ∫ₐᵇ f(x)dx, on peut remplacer la lettre x
+> par n'importe quelle lettre et on peut écrire ∫ₐᵇ f(x)dx = ∫ₐᵇ f(u)du = ∫ₐᵇ f(t)dt. On dit que x est
+> une variable muette. Pour toute primitive F de f, on écrit ∫ₐᵇ f(x)dx = [F(x)]ₐᵇ = F(b) − F(a).
+> L'expression [F(x)]ₐᵇ se lit "F(x) pris entre a et b". »
+
+> **Propriétés algébriques** (p.113) — « Soit f une fonction continue sur un intervalle I, a, b et c
+> des réels de I. Alors ∫ₐᵃ f(x)dx = 0 ; ∫ₐᵇ f(x)dx = −∫ᵦᵃ f(x)dx. ∫ₐᶜ f(x)dx + ∫꜀ᵇ f(x)dx =
+> ∫ₐᵇ f(x)dx (Relation de Chasles). » (Démonstration par F primitive : F(a) − F(a) = 0 ;
+> F(b) − F(a) = −(F(a) − F(b)) ; (F(c) − F(a)) + (F(b) − F(c)) = F(b) − F(a).)
+
+> **Définition — aire (fonction de signe quelconque)** (p.113) — « Le plan est muni d'un repère
+> orthogonal. Soit f une fonction continue sur [a, b]. L'aire (en u.a) de la partie du plan limitée
+> par l'axe des abscisses, la courbe de f, les droites d'équations x = a et x = b est le réel
+> ∫ₐᵇ |f(x)|dx. »
+
+> **Théorème (linéarité)** (p.114) — « Soit f et g deux fonctions continues sur [a, b]. Pour tous
+> réels α et β, ∫ₐᵇ (αf(x) + βg(x))dx = α∫ₐᵇ f(x)dx + β∫ₐᵇ g(x)dx. »
+
+> **Définition — aire entre deux courbes** (p.116) — « Le plan est muni d'un repère orthogonal. Soit f
+> et g deux fonctions continues sur [a, b]. L'aire (en u.a) de la partie du plan limitée par la courbe
+> de f, la courbe de g et les droites d'équations x = a et x = b est le réel ∫ₐᵇ |f(x) − g(x)|dx. »
+
+> **Théorème (positivité)** (p.114) — « Soit f une fonction continue sur [a, b]. Si f est positive sur
+> [a, b], alors ∫ₐᵇ f(x)dx ≥ 0. » (Démonstration : toute primitive sur [a, b] d'une fonction positive
+> est croissante sur [a, b].)
+
+> **Corollaire** (p.115) — « Soit f une fonction continue sur [a, b] où a < b. Si f est positive et ne
+> s'annule qu'en un nombre fini de réels de [a, b], alors ∫ₐᵇ f(x)dx > 0. »
+
+> **Corollaire (comparaison)** (p.115) — « Soit f, g et h trois fonctions continues sur [a, b]. Si
+> h ≤ f ≤ g, alors ∫ₐᵇ h(x)dx ≤ ∫ₐᵇ f(x)dx ≤ ∫ₐᵇ g(x)dx. »
+
+> **Corollaire** (p.115) — « Si f est une fonction continue sur [a, b], alors |∫ₐᵇ f(x)dx| ≤
+> ∫ₐᵇ |f(x)|dx. » (Démonstration : découle du corollaire précédent et de −|f| ≤ f ≤ |f|.)
+
+> **Théorème d'intégration par parties** (p.118) — « Soit f et g deux fonctions dérivables sur [a, b]
+> et telles que leurs dérivées f′ et g′ sont continues sur [a, b]. Alors ∫ₐᵇ f(t)g′(t)dt =
+> [f(t)g(t)]ₐᵇ − ∫ₐᵇ f′(t)g(t)dt. » (Démonstration à partir de (fg)′ = f′g + g′f.)
+
+> **Définition — valeur moyenne** (p.119) — « Soit f une fonction continue sur [a, b] (a < b). On
+> appelle valeur moyenne de f sur [a, b] le réel, noté f̄, défini par f̄ = 1/(b − a) · ∫ₐᵇ f(x)dx. »
+
+> **Interprétation géométrique de la valeur moyenne** (p.119) — « L'aire (en u.a) de la partie du plan
+> limitée par la courbe de f, les droites d'équations x = a, x = b et y = 0 est égale à celle du
+> rectangle de côtés (b − a) et f̄. » (f continue et positive sur [a, b].)
+
+> **Théorème (Inégalité de la moyenne)** (p.120) — « Soit f une fonction continue sur [a, b] (a < b).
+> Soit m et M deux réels. Si pour tout x de [a, b], m ≤ f(x) ≤ M, alors m ≤ f̄ ≤ M. »
+
+> **Corollaire** (p.120) — « Soit f une fonction continue sur [a, b] (a < b). Il existe c ∈ [a, b],
+> tel que f̄ = f(c). »
+
+> **Formule du volume d'un solide de révolution** (p.121) — « L'espace est muni d'un repère
+> orthonormé (O, i⃗, j⃗, k⃗). Soit f une fonction continue et positive sur [a, b]. Le volume V du solide
+> de révolution engendré par la rotation de l'arc AB = {M(x, y) tels que y = f(x) et a ≤ x ≤ b} autour
+> de l'axe (O, i⃗) est le réel V = π ∫ₐᵇ f²(x)dx. » (Aire de la section : S(x) = πy² = πf²(x).)
+
+> **Théorème — fonction définie par une intégrale** (p.122) — « Soit f une fonction continue sur un
+> intervalle I et a un réel de I. Alors la fonction F définie sur I par F(x) = ∫ₐˣ f(t)dt est la
+> primitive de f qui s'annule en a. » **Conséquence** (p.122) — « … la fonction F : x ↦ ∫ₐˣ f(t)dt est
+> dérivable sur I et F′(x) = f(x), pour tout x de I. »
+
+> **Théorème — dérivée de x ↦ ∫ₐ^{u(x)} f(t)dt** (p.124) — « Soit f une fonction continue sur un
+> intervalle I, u une fonction dérivable sur un intervalle J telle que u(J) ⊂ I et a un réel de I.
+> Alors la fonction F définie sur J par F(x) = ∫ₐ^{u(x)} f(t)dt est dérivable sur J et F′(x) =
+> f(u(x))·u′(x), pour tout x de J. » (Démonstration : F = G∘u avec G : x ↦ ∫ₐˣ f(t)dt.)
+
+> **Théorème — parité** (p.125) — « Soit f une fonction continue sur un intervalle I centré en 0 et
+> soit a un réel de I. Si f est impaire alors ∫*{−a}^a f(x)dx = 0. Si f est paire alors
+> ∫*{−a}^a f(x)dx = 2∫₀ᵃ f(x)dx. »
+
+> **Théorème — périodicité** (p.125) — « Soit f une fonction continue sur ℝ, périodique de période T.
+> Pour tout réel a, ∫ₐ^{a+T} f(t)dt = ∫₀ᵀ f(t)dt. »
+
+### Cours — Exercices / problème résolus
+
+- **Exercice résolu 1** (p.123–124) : F(x) = ∫₁ˣ (1 − cos t)/t² dt sur [1, +∞[. 1. a. F croissante
+  (F′(x) = (1 − cos x)/x² ≥ 0) ; b. F majorée par 2 (via |(1 − cos t)/t²| ≤ 2/t² et 2∫₁ˣ dt/t² =
+  2 − 2/x ≤ 2) ; c. F admet une limite finie L en +∞. 2. G(x) = ∫₁ˣ (sin t)/t dt : par IPP
+  (u(t) = 1/t, v(t) = 1 − cos t), G(x) = F(x) + (1 − cos x)/x + cos 1 − 1 ; G admet une limite finie en
+  +∞ (car (1 − cos x)/x → 0).
+- **Exercice résolu 2** (p.126–127) : Iₙ = ∫₀² xⁿ/√(x² + 4) dx (n ≥ 1). 1. I₁ = 2√2 − 2. 2. pour
+  n ≥ 3, Iₙ = ∫₀² x^{n−2}√(x² + 4) dx − 4Iₙ₋₂. 3. par IPP, nIₙ = 2ⁿ√2 − 4(n − 1)Iₙ₋₂ ; d'où
+  I₃ = (16 − 8√2)/3 et I₅ = (224√2 − 256)/15.
+- **Problème résolu** (p.127–129) : **intégrales de Wallis** Iₙ = ∫₀^{π/2} cosⁿ(t)dt (I₀ = ∫₀^{π/2} dt).
+  1. I₀ = π/2, I₁ = 1, I₂ = π/4. 2. a. Iₙ₊₂ = (n + 1)/(n + 2) · Iₙ (par IPP) ; b. I₃ = 2/3, I₄ = 3π/16,
+     I₅ = 8/15, I₆ = 5π/32 ; c. 0 < Iₙ₊₁ ≤ Iₙ. 3. a. 1 ≤ Iₙ/Iₙ₊₂ … ; b. lim Iₙ/Iₙ₊₁ = 1. 4. uₙ =
+     (n + 1)IₙIₙ₊₁ constante, uₙ = π/2 ; π/(2(n + 1)) ≤ Iₙ² ≤ π/(2n), d'où √(π/2002) ≤ I₁₀₀₀ ≤ √(π/2000).
+
+### QCM (p.130) — « Cocher la réponse exacte. »
+
+1. D'après la représentation graphique, l'aire limitée par la courbe de f, l'axe des abscisses et
+   x = −2, x = 3 est encadrée par (☐ 7 et 13 / ☐ 15 et 20 / ☐ 14 et 21).
+2. I = ∫₀¹ t cos²(πt)dt et J = ∫₀¹ t sin²(πt)dt : I + J est égal à (☐ 1 / ☐ 1/2 / ☐ 0).
+3. I = |∫*{−1}¹ (−3x⁵ + 5x)/(x⁴ + 1) dx| et J = ∫*{−1}¹ |(−3x⁵ + 5x)/(x⁴ + 1)| dx. Alors
+   (☐ I ≤ J / ☐ I = J / ☐ I ≥ J).
+
+### Vrai ou faux (p.130) — « Répondre par vrai ou faux en justifiant la réponse. » (réponses non fournies)
+
+1. ∫₀^{π/2} sin x dx = ∫_{4π}^{9π/2} sin x dx.
+2. ∫_{−1}¹ |x| dx = 1.
+3. Si f est dérivable sur [a, b] et sa dérivée est continue sur [a, b] alors ∫ₐᵇ f(x)dx =
+   [xf(x)]ₐᵇ − ∫ₐᵇ x f′(x)dx.
+4. f continue sur [0, 1]. Si f ≤ 1 alors ∫₀¹ f(x)dx ≤ 1.
+5. D'après la représentation graphique, ∫_{−2}² f(x)dx ≥ 0.
+6. Si ∫ₐᵇ f(x)dx ≥ 0 alors f ≥ 0 sur [a, b].
+7. La fonction x ↦ ∫₀ˣ 1/(1 + t²) dt est définie sur ℝ.
+
+### Exercices et problèmes (p.131–136) — 39 exercices
+
+- **Ex. 1** (p.131) : calculer ∫*{−1}³ (x²/2 − x)dx ; ∫₁² t(t + 1)³ dt ; ∫*{−1}¹ (2x + 1)(x² + x − 5)³ dx ;
+  ∫₁² √(2x + 1) dx ; ∫₁² dx/(1 + x)² ; ∫₀⁴ dx/√(2x + 1) ; ∫₀^{π/4} cos⁴t sin t dt ; ∫*{−2}¹ |x(x + 1)| dx ;
+  ∫*{−3}³ |x³ + x| dx ; ∫₀³ |2t − 1| dt ; ∫₀^{2π} |sin x| dx.
+- **Ex. 2** (p.131) : a > 0 ; parabole y = x² et droite y = a délimitent D₁ et D₂. Pour quelle valeur
+  de a les parties D₁ et D₂ ont-elles la même aire ?
+- **Ex. 3** (p.131) : f(x) = (2x − 1)/(x − 1)³ sur ℝ\{1}. 1. étudier f et tracer C_f ; 2. f(x) =
+  a/(x − 1)² + b/(x − 1)³ ; 3. λ < 1/2, 𝒜(λ) l'aire limitée par C_f, l'axe et x = λ, x = 1/2 :
+  a. déterminer 𝒜(λ) ; b. calculer lim_{λ→−∞} 𝒜(λ).
+- **Ex. 4** (p.131) : 1. h(x) = x² − 4x + 6 − 3√x sur ]0, +∞[ : a. h″(x) ; b. h′(x) = 0 admet une
+  unique solution α ∈ ]2, 3[ ; c. signe de h′, tableau de variation ; d. h(1), h(4) ; 1 et 4 uniques
+  solutions de h(x) = 0. 2. a. représenter f(x) = x² − 4x + 6 et g(x) = 3√x ; b. aire entre les deux
+  courbes.
+- **Ex. 5** (p.131) : f(x) = sin x, g(x) = sin²x sur [0, π/2]. 1. étudier f, g ; 2. position de C_f,
+  C_g ; 3. représenter ; 4. aire entre les deux courbes.
+- **Ex. 6** (p.131) : f(x) = x + sin x sur [0, π]. 1. variations ; 2. position de C_f vs D : y = x ; 3. représenter C_f et D ; 4. aire entre C_f et D.
+- **Ex. 7** (p.131–132) : f(x) = 3x² + 2/x³, g(x) = 3x² sur ]0, +∞[. 1. représenter ; 2. λ > 0, A(λ)
+  aire entre C_f, C_g et x = 1, x = λ : a. vérifier A(λ) = |∫₁^λ 2 dx/x³|, calculer ; b. étudier et
+  représenter A : λ ↦ A(λ) ; c. selon m, nombre de solutions de A(λ) = m.
+- **Ex. 8** (p.132) : f(x) = x + 1 + 4/(x − 2)², g(x) = x + 1 sur ]2, +∞[. λ > 2, A(λ) aire entre C_f,
+  C_g et x = 3, x = λ : a. vérifier A(λ) = |∫₃^λ 4 dx/(x − 2)²| ; b. calculer ; c. étudier / représenter
+  A ; d. selon m, nombre de solutions de A(λ) = m.
+- **Ex. 9** (p.132) : A = ∫₀¹ x/(1 + x²)³ dx, B = ∫₀¹ x³/(1 + x²)³ dx. 1. calculer A ; 2. calculer
+  A + B ; 3. en déduire B.
+- **Ex. 10** (p.132) : 1. ∫₀^{π/2} sin²x dx ; 2. en déduire ∫₀^{π/2} cos²x dx.
+- **Ex. 11** (p.132) : 1. par IPP calculer ∫₀^π x cos 2x dx. 2. I = ∫₀^{π/2} x cos²x dx, J =
+  ∫₀^{π/2} x sin²x dx : a. calculer I + J et I − J ; b. en déduire I et J.
+- **Ex. 12** (p.132) : 1. ∫₀^{π/4} dx/cos²x. 2. f(x) = sin x/cos³x sur [0, π/4] ; montrer f′(x) =
+  3/cos⁴x − 2/cos²x. 3. ∫₀^{π/4} dx/cos⁴x.
+- **Ex. 13** (p.132) : f(x) = 1/cos x sur [0, π/4]. 1. 1 ≤ f(x) ≤ √2 ; 2. en déduire π/4 ≤
+  ∫₀^{π/4} dt/cos t ≤ π√2/4.
+- **Ex. 14** (p.132) : I = ∫_{π/2}^π sin x/(1 + x²) dx. 1. a. pour x ∈ [π/2, π], 0 ≤ sin x/(1 + x²) ≤
+  1/(1 + (π/2)²) ; b. en déduire un encadrement de I. 2. a. pour x ∈ [π/2, π],
+  sin x/(1 + π²) ≤ sin x/(1 + x²) ≤ sin x/(1 + (π/2)²) ; b. en déduire un nouvel encadrement de I.
+- **Ex. 15** (p.133) : f(x) = 1/√(1 + x⁴) sur ℝ₊, I = ∫_{100}^{1000} f(t)dt. 1. a. f(x) ≤ 1/x² ;
+  b. par l'inégalité des accroissements finis, 1 − x/2 ≤ 1/√(1 + x) ; c. 1/x² − 1/(2x⁶) ≤ f(x) ; 2. encadrement de I.
+- **Ex. 16** (p.133) : f(x) = 1/sin x sur ]π/2, π[. 1. f réalise une bijection de ]π/2, π[ sur un
+  intervalle I ; 2. f⁻¹ dérivable sur I, (f⁻¹)′(x) = 1/(x√(x² − 1)) ; 3. en déduire ∫_{2/√3}^{√2}
+  dt/(t√(t² − 1)) [bornes lues 2/√3 et √2].
+- **Ex. 17** (p.133) : f(x) = x²/(1 + x²) sur ℝ. 1. représenter f ; 2. 𝒜 aire limitée par C_f, l'axe
+  et x = 1, x = 2 : a. vérifier 1/2 ≤ 𝒜 ≤ 1 ; b. méthode des rectangles, [1, 2] en 5 intervalles
+  d'amplitude 0.2, nouvel encadrement de 𝒜.
+- **Ex. 18** (p.133) : uₙ = ∫₀¹ xⁿ/(x² + 1)² dx (n ≥ 1). 1. pour n ≥ 1 et 0 ≤ x ≤ 1, 0 ≤
+  x^{2n+1}/(x² + 1)² ≤ x^{2n+1} [la définition écrit xⁿ, la question 1 x^{2n+1} — incohérence source
+  [sic]] ; 2. en déduire que (uₙ) converge et sa limite.
+- **Ex. 19** (p.133) : u₀ = ∫₀^{π/4} cos 2x dx, uₙ = ∫₀^{π/4} xⁿ cos 2x dx (n ≥ 1). 1. (uₙ)
+  décroissante ; 2. comparer uₙ et ∫₀^{π/4} xⁿ dx ; 3. (uₙ) convergente et limite ; 4. a. calculer u₀,
+  u₁ ; b. uₙ₊₂ en fonction de uₙ ; c. calculer u₂, u₃.
+- **Ex. 20** (p.133) : u₀ = ∫₀¹ √(1 − x) dx, uₙ = ∫₀¹ xⁿ √(1 − x) dx (n ≥ 1). 1. 0 ≤ uₙ ≤ 1/(n + 1) ; 2. en déduire lim uₙ ; 3. a. calculer u₀, u₁ ; b. (3 + 2n)uₙ = 2n·uₙ₋₁ ; c. calculer u₂, u₃.
+- **Ex. 21** (p.133) : uₙ = ∫₀¹ xⁿ/√(1 + x²) dx (n ≥ 1). 1. calculer u₁ ; 2. 0 ≤ uₙ ≤ 1/(n + 1) ; 3. en déduire lim uₙ.
+- **Ex. 22** (p.134) : f(x) = tan³x + tan x sur [0, π/4]. 1. variations de f ; 2. f bijection de
+  [0, π/4] sur [0, 2] ; 3. a. représenter f et f⁻¹ (demi-tangentes aux extrémités) ; b. calculer
+  ∫₀^{π/4} f(x)dx, en déduire ∫₀² f⁻¹(x)dx.
+- **Ex. 23** (p.134) : f par morceaux sur [0, 3] (f(x) = x si x ∈ [0, 1] ; 1/x² si x ∈ ]1, 3]).
+  1. vérifier f continue sur [0, 3] ; 2. F(x) = ∫₀ˣ f(t)dt : a. expliciter F(x), x ∈ [0, 3] ;
+     b. représenter F.
+- **Ex. 24** (p.134) : f(x) = √(1 − x²) sur [0, 1]. 1. a. étudier f ; b. C_f quart de cercle de centre
+  O rayon 1 ; c. tracer C_f. 2. F(x) = ∫₀ˣ f(t)dt ; représenter la partie d'aire F(1), en déduire
+  F(1). 3. a ∈ [0, 1], θ ∈ [0, π/2] avec cos θ = a : a. montrer F(a) = π/4 − θ/2 + a√(1 − a²)/2 ;
+  b. calculer F(1/2), F(√3/2).
+- **Ex. 25** (p.134) : Iₙ = ∫₀^{π/4} tan^{n+2}x dx. 1. a. calculer I₀ ; b. 0 ≤ Iₙ₊₁ ≤ Iₙ ;
+  c. (Iₙ) convergente. 3. a. Iₙ + Iₙ₊₂ = 1/(n + 3) ; b. lim Iₙ. (Numérotation source : passe de 1 à 3
+  [sic].)
+- **Ex. 26** (p.134) : f(x) = 1/x² sur ]0, +∞[. 1. a. calculer ∫₁ⁿ f(x)dx ; b. lim_{n→+∞} ∫₁ⁿ f ; 2. calculer ∫ₖ^{k+1} f(x)dx ; 3. la somme 1/(1·2) + 1/(2·3) + … + 1/(n(n + 1)) converge et sa limite.
+- **Ex. 27** (p.134–135) : f(x) = 1/x³ sur [1, +∞[, Sₙ = Σ_{k=1}^n f(k). 1. a. f décroissante et
+  positive ; b. (Sₙ) croissante. 2. a. calculer ∫₁ⁿ f(t)dt, 0 ≤ ∫₁ⁿ f ≤ 1/2 ; b. lim_{n→+∞} ∫₁ⁿ f. 3. a. pour k ≥ 2, ∫ₖ^{k+1} f ≤ f(k) ≤ ∫_{k−1}^k f ; b. ∫₂^{n+1} f ≤ Sₙ − f(1) ≤ ∫₁ⁿ f ; c. 1 ≤ Sₙ ≤
+  3/2 ; d. la somme 1 + 1/2³ + … + 1/n³ converge, encadrement de sa limite.
+- **Ex. 28** (p.135) : valeur moyenne de f sur I : 1. f : x ↦ x⁴ − x³ + 1, I = [−1, 3] ; 2. f : x ↦
+  1/x³ − 1, I = [2, 4] ; 3. f : x ↦ sin(2x), I = [0, π].
+- **Ex. 29** (p.135) : par l'inégalité de la moyenne, encadrement de ∫₂⁴ dx/(x² − x + 1).
+- **Ex. 30** (p.135) : par l'inégalité de la moyenne, encadrement de ∫_{π/6}^{π/3} dx/(3 + tan²x).
+- **Ex. 31** (p.135) : C = {M(x, y) : y = x², 0 ≤ x ≤ 2}, S solide par rotation de C autour de (Ox) ;
+  calculer le volume de S.
+- **Ex. 32** (p.135) : C = {y = 1/x, 1 ≤ x ≤ 3}, rotation autour (Ox) ; volume de S.
+- **Ex. 33** (p.135) : C = {y = tan x, 0 ≤ x ≤ π/4}, rotation autour (Ox) ; volume de S.
+- **Ex. 34** (p.135) : C = {y = sin x + cos x, 0 ≤ x ≤ π/2}, rotation autour (Ox) ; volume de S.
+- **Ex. 35** (p.135) : C = {y = sin x} et C′ = {y = x}, 0 ≤ x ≤ π/2 ; S, S′ solides de rotation autour
+  (Ox) ; calculer le volume compris entre S et S′.
+- **Ex. 36** (p.135–136) : **I.** F(x) = ∫₀^{tan x} dt/(1 + t²) sur [0, π/4]. 1. F dérivable, dérivée ; 2. F(x) = x ; 3. calculer ∫₀¹ dt/(1 + t²). **II.** Iₙ = ∫₀¹ dt/(1 + t²)ⁿ (n ≥ 0). 1. calculer I₀,
+  I₁ ; 2. Iₙ₊₁ = 1/(2n)·(1/2ⁿ + (2n − 1)Iₙ) ; 3. calculer I₂, I₃, I₄. **III.** J₀ = ∫₀¹ dt/(1 + t²),
+  Jₙ = ∫₀¹ t^{2n}/(1 + t²) dt (n ≥ 1). 1. a. 0 ≤ Jₙ ≤ 1/(1 + 2n) ; b. lim Jₙ. 2. a. Jₙ₊₁ + Jₙ =
+  1/(1 + 2n) ; b. J₁…J₅. 3. uₙ = 1 − 1/3 + 1/5 − … + (−1)ⁿ/(1 + 2n) ; a. Jₙ₊₁ = (−1)ⁿ(uₙ − J₀) ;
+  b. lim uₙ.
+- **Ex. 37** (p.136) : Iₙ = ∫₀¹ xⁿ/(1 + x + x²) dx (n ≥ 1). 1. a. 1/(3(n + 1)) ≤ Iₙ ≤ 1/(n + 1) ;
+  b. convergente, limite. 2. a. Iₙ = 1/(3(n + 1)) + 1/(n + 1)·∫₀¹ (1 + 2x)x^{n+1}/(1 + x + x²)² dx ;
+  b. 1 + 1/(3(n + 2)) ≤ 3(n + 1)Iₙ ≤ 1 + 3/(n + 2) ; c. lim nIₙ.
+- **Ex. 38** (p.136) : F(x) = ∫₀^{sin x} √(1 − t²) dt sur [0, π/2]. 1. F dérivable, dérivée ; 2. F(x) =
+  x/2 + sin(2x)/4 ; 3. calculer ∫₀¹ √(1 − t²) dt ; 4. variations de F ; 5. tracer C_F.
+- **Ex. 39** (p.136) : f(x) = x + √(4 − x²) sur [−2, 2]. 1. étudier f et tracer C. 2. F(x) =
+  ∫₀^{2cos x} √(4 − t²) dt sur [0, π] : a. F dérivable, F′(x) = −4 sin²x ; b. calculer F(π/2) ;
+  c. F(x) = −2x + sin(2x) + π. 3. 𝒜 aire limitée par C, l'axe, y = x, x = −2, x = 2 : a. montrer
+  𝒜 = F(0) − F(π) ; b. en déduire 𝒜.
+
+### Bornes de scope observées (chapitre 6)
+
+- ✅ INCLUS : intégrale d'une fonction continue et positive comme aire (F(b) − F(a)) ; intégrale d'une
+  fonction continue (∫ₐᵇ f = F(b) − F(a)), variable muette, notation [F(x)]ₐᵇ ; propriétés algébriques
+  (∫ₐᵃ = 0, ∫ₐᵇ = −∫ᵦᵃ, **relation de Chasles**, **linéarité**) ; intégrales et inégalités
+  (**positivité**, corollaire strict, **comparaison** h ≤ f ≤ g, |∫f| ≤ ∫|f|) ; aire d'une fonction de
+  signe quelconque (∫|f|) et **aire entre deux courbes** (∫|f − g|) ; calcul au moyen d'une primitive ;
+  **intégration par parties** ; calcul approché (méthode des rectangles) ; **valeur moyenne** +
+  **inégalité de la moyenne** + corollaire (valeur moyenne atteinte) ; **volume de solides de
+  révolution** V = π∫f² ; **fonctions définies par une intégrale** (F(x) = ∫ₐˣ f = primitive s'annulant
+  en a, F′ = f ; F(x) = ∫ₐ^{u(x)} f → F′ = f(u)·u′) ; intégrale et **parité / périodicité** ; suites
+  définies par une intégrale (Wallis ∫cosⁿ, récurrences par IPP, encadrements, convergence).
+- ⛔ NON traité dans ce chapitre : primitives/intégrales des fonctions **ln et exp** (chapitres 7–8) —
+  donc pas d'intégrale du type ∫dx/x ni ∫eˣdx ; **équations différentielles** (chapitre 9) ; changement
+  de variable **formalisé** (seule l'IPP est un procédé nommé ; les substitutions apparaissent déguisées
+  en dérivation de composées F(u(x))) ; **intégrales impropres / généralisées** (les « limites
+  d'intégrales » se traitent par encadrement et suites, jamais ∫₀^{+∞}).
+
+## 2.7 Chapitre 7 — Fonction logarithme népérien (manuel 222445, p.137–157)
+
+**Page de garde (p.137)** — Titre : « Fonction logarithme népérien », Chapitre 7. Citation liminaire
+sur M. Stifel (1544), qui met en évidence deux suites (une progression arithmétique
+… −3, −2, −1, 0, 1, 2, 3, 4, … 8 en regard d'une progression géométrique … 1/8, 1/4, 1/2, 0
+[sic — la table imprimée aligne le 0 arithmétique sur un 0 géométrique], 1, 4, 8, 16, … 256) : le
+passage de la ligne « in inferiore ordine » à la ligne « in superioreordine » transforme les
+produits en sommes (additionner est plus facile que multiplier). Les premières tables logarithmiques
+ont été calculées par John Napier (1614, 1619), Henry Briggs (1624) et Jost Burgi (1620). Référence
+donnée : « E. Haier [sic] et al, _L'analyse au fil de l'histoire_, 2000 » (même coquille source que
+le chapitre 1 pour Ernst Hairer). Le chapitre est structuré en 5 parties (I à V), suivies d'un
+QCM / Vrai-Faux, puis d'une rubrique « Exercices et problèmes ».
+
+### Cours — Activités
+
+**I. Introduction** (p.138)
+
+- **Activité 1** (p.138–139) — **A/** repère orthonormé, courbe de f : ]0, +∞[ → ℝ, t ↦ 1/t ; pour
+  tout réel a > 0, S(a) est l'aire de la partie limitée par la courbe de f, l'axe des abscisses et
+  les droites x = 1 et x = a. 1. Que vaut S(1) ? 2. a. partager [1, 2] en trois intervalles de même
+  amplitude, rectangles r₁, r₂, r₃ et R₁, R₂, R₃ ; 𝒜 (resp. 𝒜′) = somme des aires des rᵢ (resp. Rᵢ),
+  1 ≤ i ≤ 3 ; montrer que 37/60 ≤ S(2) ≤ 47/60. b. partager [1, 3] en huit intervalles de même
+  amplitude, rectangles rᵢ, 1 ≤ i ≤ 8 ; calculer la somme de leurs aires et vérifier que S(3) ≥ 1.
+  c. montrer que S(2.5) ≤ 1. 3. a. E = {M(x, y) avec 1/2 ≤ x ≤ 1 et 0 ≤ y ≤ 1/x} et F = {M(x, y) avec
+  1 ≤ x ≤ 2 et 0 ≤ y ≤ 1/x} — montrer que E et F ont même aire ; b. en déduire S(1/2) = S(2).
+  **B/** pour tout réel x > 0, on pose F(x) = ∫₁ˣ 1/t dt. 1. a. montrer que F(x) > 0 ssi x > 1 ;
+  b. en déduire F(x) à l'aide de S(x). 2. justifier la dérivabilité de F sur ]0, +∞[, calculer F′(x),
+  en déduire que F est strictement croissante sur ]0, +∞[. 3. montrer qu'il existe un unique réel
+  x ∈ ]2, 3[ tel que F(x) = 1.
+
+**II. Étude et représentation graphique de la fonction ln** (p.140)
+
+- **Activité 1** (p.140) : étudier ln et construire sa courbe C dans un repère orthonormé (O, i⃗, j⃗).
+  1. a. n ≥ 2 entier — montrer ∫*{2^k}^{2^{k+1}} 1/t dt ≥ 1/2 pour 0 ≤ k ≤ n − 1 ; en remarquant que
+     ∫₁^{2ⁿ} 1/t dt = Σ*{k=0}^{n−1} ∫*{2^k}^{2^{k+1}} 1/t dt, en déduire ∫₁^{2ⁿ} 1/t dt ≥ n/2. b. en
+     déduire que ln n'est pas majorée et déterminer lim*{x→+∞} ln x. 2. a. montrer que x ↦ ln x et
+     x ↦ −ln(1/x) (sur ]0, +∞[) ont même dérivée ; b. en déduire ln x = −ln(1/x), x > 0 ; c. calculer
+     lim_{x→0⁺} ln x. 3. a. montrer 1/t ≤ 1/√t pour t ≥ 1, en déduire ln x ≤ 2√x − 2 pour x ≥ 1 ;
+     b. montrer lim_{x→+∞} (ln x)/x = 0. 4. a. dresser le tableau de variation de ln ; b. écrire une
+     équation de la tangente T à C au point d'abscisse 1 ; c. construire C. (« L'activité 1 fournit la
+     démonstration du théorème suivant. »)
+- **Activité 2** (p.141) : C courbe de ln ; A ∈ C d'abscisse a ; la tangente à C en A coupe l'axe des
+  ordonnées en K ; H projeté orthogonal de A sur l'axe des ordonnées ; y_H, y_K ordonnées de H et K.
+  1. montrer que y_H − y_K est constant. 2. en déduire une construction de la tangente en un point de C.
+
+**III. Propriétés algébriques** (p.141)
+
+- **Activité 1** (p.141) : f, g sur ]0, +∞[ par f(x) = ln x, g(x) = ln(ax), a > 0. a. comparer f′(x)
+  et g′(x). b. en déduire qu'il existe une constante c telle que ln(ax) = ln x + c, x > 0.
+  c. montrer alors ln(ax) = ln a + ln x, x > 0. 2. montrer ln(a/b) = ln a − ln b, a > 0 et b > 0.
+- **Activité 2** (p.141) : a > 0. 1. a. montrer par récurrence sur p ∈ ℕ que ln(aᵖ) = p ln a ;
+  b. montrer que la formule reste vraie pour tout entier négatif p. 2. p ≥ 2 entier — en écrivant
+  a = (ᵖ√a)ᵖ, montrer ln(ᵖ√a) = (1/p) ln a.
+- **Activité 3** (p.142) : 1. exprimer à l'aide de ln 2 et ln 3 : ln(√3), ln(³√2), ln 108, ln(81/8),
+  ln(⁵√(2³)) et ln(√(1/27)). 2. simplifier : ln(√e), ln(1/e), ln(e³), ln(e⁻²), ln(³√e/√e) et
+  ln(⁴√e·³√e). 3. a, b > 0 — exprimer à l'aide de ln a et ln b : ln(a³/b²), ln(√a·b²) et ln(³√a/√b).
+- **Activité 4** (p.142) : 1. déterminer le plus petit entier naturel n tel que (1/2)ⁿ ≤ 10⁻⁴. 2. déterminer le plus petit entier naturel n tel que (√2)ⁿ ≥ 10⁵.
+- **Activité 5** (p.142) : résoudre dans ℝ les équations et inéquations 2 ln x = 1 ;
+  (ln x)² + 2 ln x = 3 ; (ln x + 1/2)(ln x − 2) = 0 ; ln(x + 3) + ln(x + 2) = ln(x + 11) ;
+  ln x ≥ −2 ; 2 ln x < 1 ; (1 − ln x)(2 − ln x) ≥ 0.
+- **Activité 6** (p.142) : déterminer lim_{x→1} ln(³√x)/x ; lim_{x→+∞} ln(³√x)/x ;
+  lim_{x→+∞} ln x/(¹⁰√x) ; lim_{x→+∞} ln(2x + 3)/(3x + 4) ; lim_{x→+∞} x − ln x.
+
+**IV. Autres limites** (p.143)
+
+- **Activité 1** (p.143) : m ∈ ℕ*, n entier ≥ 2. 1. a. vérifier (ln x)ⁿ/xᵐ =
+  ((n/m) × ln(ⁿ√(xᵐ))/(ⁿ√(xᵐ)))ⁿ, x > 0 ; b. en déduire lim_{x→+∞} (ln x)ⁿ/xᵐ = 0. 2. calculer lim_{x→0⁺} |xᵐ (ln x)ⁿ|.
+- **Activité 2** (p.143) : 1. lim_{x→+∞} x² − ln³x ; lim_{x→0⁺} x² + ln³x. 2. lim_{x→0⁺} x⁴(1 − ln⁵x) ;
+  lim_{x→+∞} x⁴(1 − ln⁵x) ; lim_{x→−∞} (ln(3 − 2x))²/(4x − 6).
+- **Activité 3** (p.143) : f définie par f(x) = x² ln²x (x > 0), f(0) = 0. 1. étudier la dérivabilité
+  de f sur son ensemble de définition. 2. étudier les variations de f et tracer sa courbe.
+- **Activité 4** (p.143) : a = (2007)²⁰⁰⁸ et b = (2008)²⁰⁰⁷ — comparer a et b (on pourra calculer ln a
+  et ln b).
+
+**V. Fonctions x ↦ ln(u(x)) et x ↦ ln(|u(x)|)** (p.143)
+
+- **Activité 1** (p.143) : u : x ↦ x² + x − 2. 1. résoudre dans ℝ l'inéquation u(x) > 0. 2. f : x ↦ ln(x² + x − 2) : a. ensemble de définition ; b. montrer que f est dérivable en tout réel
+  de son ensemble de définition et calculer f′(x).
+- **Activité 2** (p.144) : u : x ↦ 1 − x⁴. 1. résoudre |u(x)| > 0 ; en déduire l'ensemble de définition
+  de f : x ↦ ln(|1 − x⁴|). 2. montrer que f est dérivable en tout réel de son ensemble de définition et
+  que f′(x) = u′(x)/u(x). (« Le théorème de dérivation des fonctions composées fournit la démonstration
+  des théorèmes ci-dessous. »)
+- **Activité 3** (p.144) : f : x ↦ ln|tan(x/2)|. 1. ensemble de définition. 2. montrer que f est
+  dérivable en tout réel de son ensemble de définition et calculer f′(x). 3. déterminer la primitive
+  sur [π/6, 5π/6] de x ↦ 1/sin x, qui s'annule en π/3.
+- **Activité 4** (p.145) : f : x ↦ ln((x − 2)/(x + 1)) + x. 1. dresser le tableau de variation de f. 2. étudier la nature des branches infinies de la courbe de f. 3. tracer la courbe de f.
+- **Activité 5** (p.145) : 1. montrer 1/(x + 1) ≤ ln(x + 1) − ln(x) ≤ 1/x, pour tout réel x > 0. 2. (vₙ) définie par vₙ = 1/(n + 1) + 1/(n + 2) + … + 1/(2n), n ≥ 1 : a. montrer
+  ln((2n + 1)/(n + 1)) ≤ vₙ ≤ ln 2, pour tout entier non nul n ; b. en déduire que (vₙ) est
+  convergente et déterminer sa limite.
+- **Activité 6** (p.145) : déterminer une primitive de f sur I dans chacun des cas : 1. f(x) =
+  x/(1 − x²), I = ]1, +∞[ ; 2. f(x) = (x + 1)/(3x − 2), I = ]−∞, 2/3[ ; 3. f(x) = 1/(x ln x),
+  I = ]1/e, 1[ ; 4. f(x) = sin(2x)/(2 + cos²(x)), I = ℝ ; 5. f(x) = (x² − x + 5)/(x − 1), I = ]−∞, 1[.
+- **Activité 7** (p.145) : dériver x ↦ x ln x. En déduire une primitive de la fonction ln.
+- **Activité 8** (p.146) : repère (O, i⃗, j⃗) ; f : x ↦ 1 − x + ln x. 1. étudier les variations de f et
+  tracer sa courbe C_f. 2. α ∈ ]0, 1[ : a. exprimer à l'aide de α l'aire 𝒜(α) de la partie limitée
+  par C_f, l'axe des abscisses et x = α, x = 1 ; b. déterminer lim_{α→0⁺} 𝒜(α).
+- **Activité 9** (p.146) : 1. déterminer a et b tels que pour tout t ∈ ℝ*\{−1}, 1/(t(t + 1)) = a/t +
+  b/(t + 1). 2. calculer ∫₁² dt/(t(t + 1)). 3. en déduire la valeur de ∫₁² ln(1 + t)/t² dt.
+- **Activité 10** (p.146) : 1. (uₙ) définie par uₙ = ∫₀¹ xⁿ ln(x + 2) dx, n ≥ 1 — calculer u₁. 2. a. justifier que pour 0 ≤ x ≤ 1, ln 2 ≤ ln(x + 2) ≤ ln 3 ; b. en déduire que pour n ≥ 1,
+  ln 2 ∫₀¹ xⁿ dx ≤ uₙ ≤ ln 3 ∫₀¹ xⁿ dx ; c. calculer lim_{n→+∞} uₙ.
+
+### Cours — Résultats / définitions / théorèmes à retenir (VERBATIM)
+
+> **Définition — fonction logarithme népérien** (p.139) — « On appelle fonction logarithme népérien
+> et on note ln, la fonction x ↦ ln x = ∫₁ˣ 1/t dt, x > 0. » (Résultats découlant immédiatement : la
+> fonction ln est la primitive sur ]0, +∞[ de t ↦ 1/t qui s'annule en 1 ; elle est définie, continue,
+> dérivable sur ]0, +∞[ et ln′(x) = 1/x, x > 0 ; elle est strictement croissante sur ]0, +∞[ et
+> ln 1 = 0 ; il existe un unique réel x ∈ ]2, 3[ tel que ln(x) = 1.)
+
+> **Encadré** (p.139) — « Soit a et b deux réels strictement positifs. ln a > ln b, si et seulement
+> si, a > b. ln a = ln b, si et seulement si, a = b. ln a = 0, si et seulement si, a = 1. ln a > 0, si
+> et seulement si, a > 1. ln a < 0, si et seulement si, 0 < a < 1. »
+
+> **Théorème** (p.141) — « lim_{x→+∞} ln x = +∞ ; lim_{x→0⁺} ln x = −∞ ; lim_{x→+∞} (ln x)/x = 0 ;
+> lim_{x→1} (ln x)/(x − 1) = 1. » « • La fonction ln réalise une bijection strictement croissante de
+> ℝ*₊ sur ℝ. • L'unique solution de l'équation ln x = 1 est le réel noté e. Ainsi, ln e = 1. Les
+> calculatrices donnent des valeurs approchées du réel e, e ≈ 2.71828… »
+
+> **Théorème** (p.141) — « Soit a et b deux réels strictement positifs. ln(a.b) = ln a + ln b.
+> ln(a/b) = ln a − ln b. ln(1/b) = −ln b. »
+
+> **Théorème** (p.142) — « Soit a un réel strictement positif. • Pour tout entier p, ln(aᵖ) = p ln a
+> • Pour tout entier p ≥ 2, ln(ᵖ√a) = (1/p) ln a. »
+
+> **Théorème** (p.143) — « Pour tous entiers naturels non nuls n et m, lim_{x→+∞} lnⁿx/xᵐ = 0 et
+> lim_{x→0⁺} xᵐ lnⁿx = 0. »
+
+> **Théorème** (p.144) — « Soit u une fonction dérivable sur un intervalle I et telle que u(x) > 0,
+> pour tout réel x dans I. Alors la fonction f : x ↦ ln(u(x)) est dérivable sur I et
+> f′(x) = u′(x)/u(x), pour tout x dans I. »
+
+> **Théorème** (p.144) — « Soit u une fonction dérivable sur un intervalle I et telle que u(x) ≠ 0,
+> pour tout réel x dans I. Alors la fonction f : x ↦ ln|u(x)| est dérivable sur I et
+> f′(x) = u′(x)/u(x), pour tout x dans I. »
+
+> **Corollaire** (p.144) — « Soit u une fonction dérivable sur un intervalle I et telle que u(x) ≠ 0,
+> pour tout réel x dans I. Alors la fonction f : x ↦ u′(x)/u(x) admet pour primitive sur I la fonction
+> f : x ↦ ln|u(x)| + k, où k est une constante réelle. »
+
+> **Théorème** (p.145) — « La fonction x ↦ x ln x − x est une primitive de la fonction x ↦ ln x sur
+> ℝ*₊. »
+
+### Cours — Problème résolu (p.146–147)
+
+**Problème résolu** (énoncé p.146, solution intégrale p.147) : 1. (Sₙ) par Sₙ = Σ_{k=1}^n 1/k, n ≥ 1
+— montrer que (Sₙ) est divergente (via, pour t ∈ [k, k + 1], 1/t ≤ 1/k ⇒ Σ 1/k ≥ Σ ∫*k^{k+1} 1/t dt =
+ln(n + 1), donc Sₙ ≥ ln(n + 1) → +∞). 2. (Tₙ) par Tₙ = Sₙ − ln(n), n ≥ 2 : a. par le théorème des
+accroissements finis sur [x, x + 1] (x > 0), montrer 1/(x + 1) ≤ ln(x + 1) − ln(x) ≤ 1/x ; b. en
+déduire T*{n+1} − Tₙ ≤ 0, donc (Tₙ) décroissante. 3. (Rₙ) par Rₙ = S_{n−1} − ln(n), n ≥ 2 :
+a. Tₙ − Rₙ = 1/n ≥ 0 et lim(Rₙ − Tₙ) = 0, (Rₙ) croissante ⇒ (Tₙ) et (Rₙ) **adjacentes** ; b. limite
+commune α, Rₙ ≤ α ≤ Tₙ ; c. l'égalité Tₙ − Rₙ = 1/n donne un encadrement d'amplitude 10⁻³ dès
+n ≥ 1000 ; « en utilisant le tableur Excel on obtient T₁₀₀₀ ≈ 0.57771558 et Rₙ ≈ 0.57671558 »
+(constante d'Euler).
+
+### QCM (p.148) — « Cocher la réponse exacte. »
+
+1. Pour tout réel x > 0, ln(x + x²) est égal à (☐ ln x + ln(x + 1) / ☐ ln(x²) + ln x / ☐ 3 ln x).
+2. ln(1/√e) est égal à (☐ −2 / ☐ 1/2 / ☐ −1/2).
+3. Soit f(x) = ln(−x), x < 0. Alors f′(x) est égal à (☐ −1/x / ☐ 1/x / ☐ −x).
+4. Soit f(x) = x ln(x²), x < 0. Alors f′(x) est égale à (☐ 2(1 + ln|x|) / ☐ 2(1 + ln x) /
+   ☐ ln(x²) + 1/x).
+5. La limite de x ↦ (ln x)/x en 0⁺ est égale à (☐ +∞ / ☐ −∞ / ☐ 0).
+6. La limite de x ↦ ln x + 1/x en 0⁺ est égale à (☐ −∞ / ☐ 0 / ☐ +∞).
+
+### Vrai ou faux (p.148) — « Répondre par vrai ou faux en justifiant la réponse. » (réponses non fournies)
+
+1. La fonction x ↦ x ln x − x + 1 est la primitive de la fonction ln sur ℝ*₊ qui s'annule en 1.
+2. La fonction ln est une bijection de ℝ*₊ sur ℝ*₊.
+3. Pour tout réel x, ln x = ∫₂ˣ dt/t + ln 2.
+4. lim_{x→0⁺} 1/(x ln x − x) = +∞.
+
+### Exercices et problèmes (p.149–157) — 30 exercices
+
+- **Ex. 1** (p.149) : résoudre dans ℝ : 1. ln x + ln(x + 1) = 0 ; 2. ln(ln x) = 0 ; 3. ln(1/x) + ln(x⁴) = 3 ln 2 ; 4. (ln x)² − 3 ln x + 2 = 0 ; 5. ln|x − 1| + ln|x + 2| =
+  ln|4x² + 3x − 7|.
+- **Ex. 2** (p.149) : résoudre dans ℝ : 1. ln(√(3 + x)) < 4 ; 2. ln(5x) > 2 + ln 3 ; 3. ln(4x + 1) ≤ 0 ; 4. ln((1 + x)/(3x − 5)) ≥ 0 ; 5. (ln x)² − 2 ln x < 0 ; 6. ln|sin x| < 0.
+- **Ex. 3** (p.149) : limite de f en +∞ : 1. ln(x + 2)/(x + 3) ; 2. ln(2x + 3)/³√x ; 3. (x² − 2)/(x ln x) ; 4. ln(x² − 3x + 7)/x ; 5. ln(x⁵ − x³)/x ; 6. (1 + ln x)/(1 − ln x) ; 7. ln((1 + x)/(2 + x)) ; 8. x ln((1 + x)/(2 + x)) ; 9. x² − (ln x)⁵.
+- **Ex. 4** (p.149) : déterminer les limites : 1. lim_{x→1/2} (ln x + ln 2)/(x − 1/2) ; 2. lim_{x→7} (ln(1/x) + ln 7)/(x − 7) ; 3. lim_{x→0} ln(1 + 2 sin x)/x ; 4. lim_{x→0}
+  ln(1 + 3 tan x)/x³ ; 5. lim_{x→1} (x² + 3x − 4)/ln x ; 6. lim_{x→0⁺} √x ln x ; 7. lim_{x→0⁺}
+  √x (ln x)¹⁰ ; 8. lim_{x→0} ln(1 + 3x)/sin x.
+- **Ex. 5** (p.149) : primitive de f sur I : 1. f(x) = (1 + x + x² + x³)/x⁴, I = ℝ*₊ ; 2. f(x) =
+  (3x − 4)/(x + 5), I = ]−5, +∞[ ; 3. f(x) = (sin x − cos x)/(sin x + cos x), I = ]0, π/2[ ; 4. f(x) =
+  (2x + 1)/(x(x + 1)), I = ]0, +∞[ ; 5. f(x) = 1/(x ln x), I = ]1, +∞[ ; 6. f(x) = (ln x)³/x,
+  I = ]0, +∞[.
+- **Ex. 6** (p.149–150) : calculer les intégrales : 1. ∫_e¹ ln²x dx ; 2. ∫₁^e x ln x dx ; 3. ∫_e^{e²} x² ln x dx ; 4. ∫_e¹ (x − 1)/(x + 1) dx ; 5. ∫₁² 5x(ln x)² dx ; 6. ∫₃² dx/(x√(ln x)) ; 7. ∫₂³ ln((x + 1)/(x − 1)) dx ; 8. ∫₄² dx/(x ln x) ; 9. ∫₁² ln x/x dx ; 10. ∫₀¹ (x² + 3x − 1)/(2x + 1) dx.
+  (Bornes des intégrales 1, 4, 6, 8 recopiées telles quelles [sic] : borne inférieure supérieure à la
+  borne supérieure.)
+- **Ex. 7** (p.150) : f sur ]1, +∞[ par f(x) = 1/(x²(x − 1)). 1. déterminer a, b, c tels que pour tout
+  x ∈ ]1, +∞[, f(x) = a/x + b/x² + c/(x − 1). 2. calculer ∫₂³ f(x)dx. 3. en déduire la valeur de
+  ∫₂³ ln(x − 1)/x³ dx.
+- **Ex. 8** (p.150) : étudier et tracer : 1. f : x ↦ (ln x)² ; 2. f : x ↦ 1/ln x ; 3. f : x ↦ ln(ln x) ; 4. f : x ↦ ln|x| + ln(x² − 3).
+- **Ex. 9** (p.150) : f sur ]0, +∞[ par f(x) = 2 − x + (ln x)/x. 1. calculer lim_{x→+∞} f(x) et
+  lim_{x→0⁺} f(x). 2. g sur ]0, +∞[ par g(x) = 1 − x² − ln x : a. sens de variation ; b. calculer g(1),
+  en déduire le signe de g. 3. vérifier que pour tout x ∈ ]0, +∞[, f′(x) = g(x)/x². 4. C courbe de f :
+  a. montrer que Δ : y = −x + 2 est asymptote à C ; b. position relative de C et Δ ; c. tracer C et Δ.
+- **Ex. 10** (p.150) : f : x ↦ (ln x)² − 3 ln x + 2. 1. dresser le tableau de variation de f. 2. construire dans (O, i⃗, j⃗) la courbe de f et préciser les points d'intersection avec l'axe (O, i⃗). 3. montrer que F : x ↦ x(ln x)² − 5x ln x + 7x est une primitive de f sur ]0, +∞[. 4. calculer l'aire
+  du domaine limité par la courbe de f et les droites x = e, x = e² et y = 0.
+- **Ex. 11** (p.150) : 1. résoudre dans ℝ l'inéquation ln|x| < 1. 2. f(x) = 2x − x ln|x| si x ≠ 0,
+  0 si x = 0 : a. étudier la continuité et la dérivabilité sur son ensemble de définition ; b. étudier
+  la parité, dresser le tableau de variation ; c. construire dans (O, i⃗, j⃗) la courbe de f, préciser
+  la tangente au point d'abscisse 0 et la nature des branches infinies.
+- **Ex. 12** (p.151) : 0 < a < b ; f(x) = ln(ax + 1)/ln(bx + 1). 1. ensemble de définition. 2. montrer
+  que f est dérivable sur son ensemble de définition et calculer f′(x). 3. g(x) = a(bx + 1)ln(bx + 1) −
+  b(ax + 1)ln(ax + 1) ; calculer g′(x), en déduire que f est strictement croissante sur ]−1/b, 0[ et
+  ]0, +∞[. 4. montrer que ln(a/b + 1)·ln(b/a + 1) < (ln 2)².
+- **Ex. 13** (p.151) : 1. étudier les variations de u(x) = ln x − (x − 1)/x et v(x) = x − 1 − ln x sur
+  ℝ*₊. 2. en déduire (x − 1)/x < ln x < x − 1, pour x > 0. 3. en déduire (1 + 1/n)ⁿ < e < 1/(1 − 1/n)ⁿ,
+  n entier, n ≥ 2.
+- **Ex. 14** (p.151) : 1. montrer que pour t ≥ 0, 1 − t ≤ 1/(t + 1) ≤ 1 − t + t². 2. en déduire que
+  pour x ≥ 0, x − x²/2 ≤ ln(1 + x) ≤ x − x²/2 + x³/3. 3. f(x) = ln(1 + x)/x si x > 0, 1 si x = 0 :
+  a. dérivable sur ]0, +∞[ ; b. continue en 0 à droite ; c. dérivable à droite en 0, préciser f′_d(0).
+- **Ex. 15** (p.151) : tracer x ↦ ln x. Pour n ≥ 2, Sₙ = ln 1 + ln 2 + … + ln n et
+  Tₙ = ln 1 + ln 2 + … + ln(n − 1). 1. montrer Tₙ ≤ ∫₁ⁿ ln x dx ≤ Sₙ. 2. en déduire ln((n − 1)!) ≤
+  n ln n − n + 1 ≤ ln(n!) ; puis e(n/e)ⁿ ≤ n! ≤ ne(n/e)ⁿ.
+- **Ex. 16** (p.151) : f(x) = (x + 1)ln|x − 3| ; C courbe dans (O, i⃗, j⃗). 1. préciser l'ensemble de
+  définition D. 2. a. vérifier que si x ∈ D alors f′(x) = (x + 1)/(x − 3) + ln|x − 3| ; b. calculer
+  f″(x), en déduire les variations de f′ ; c. montrer que f′ s'annule sur ]−∞, 3[ pour une valeur α,
+  encadrement d'amplitude 0.1, signe de f′(x) sur ]−∞, 3[ ; d. signe de f′(x) sur ]3, +∞[. 3. limites
+  de f aux bornes de D_f, asymptotes éventuelles. 4. points d'intersection de C avec l'axe des
+  abscisses. 5. tracer C.
+- **Ex. 17** (p.152) : f(x) = −x/2 + ln|(x − 1)/x| ; C courbe dans (O, i⃗, j⃗). 1. préciser D_f. 2. dresser le tableau de variation de f. 3. montrer que Δ : y = −x/2 est asymptote à C, position
+  relative. 4. montrer que I(1/2, −1/4) est centre de symétrie pour C. 5. construire C. 6. montrer que
+  f(x) = 0 admet une solution réelle unique x₀ et que 2/5 < x₀ < 9/20.
+- **Ex. 18** (p.152) : **A/** 1. g sur ℝ*₊ par g(x) = (1 − x)ln x — résoudre g(x) = 0, déterminer le
+  signe de g(x). 2. h sur ℝ*₊ par h(x) = ln x − x : a. tableau de variation ; b. en déduire le signe de
+  h. **B/** f sur ℝ*₊ par f(x) = ln x(ln x − x) ; C_f dans (O, i⃗, j⃗). 1. montrer que f est dérivable
+  sur ℝ*₊ et que f′(x) = (g(x) + h(x))/x. 2. tableau de variation de f. 3. nature des branches infinies
+  de C_f. 4. a. point d'intersection de C_f avec l'axe des abscisses ; b. équation cartésienne de la
+  tangente T à C_f au point d'abscisse 1 ; c. vérifier que A(e, −e + 1) est un point d'intersection de
+  C_f avec T. 5. construire C_f et T. 6. α ∈ ]0, 1[, D limité par C_f, l'axe des abscisses et x = α,
+  x = 1 : a. aire 𝒜(α) ; b. lim_{α→0⁺} 𝒜(α). 7. a. montrer que f réalise une bijection de ℝ*₊ sur un
+  intervalle J à préciser ; b. construire la courbe de f⁻¹.
+- **Ex. 19** (p.152–153) : courbe C_f d'une fonction f dérivable sur ]2, +∞[ (figure : asymptote
+  x = 2). 1. a. déterminer f(3) et f′(3) par lecture graphique ; b. la tangente au point d'abscisse 4 a
+  pour coefficient −1/2, la tracer. 2. a. limites de f aux bornes de son ensemble de définition ;
+  b. tableau de variation de f. 3. f de la forme f(x) = ax + b + ln(x + c) — calculer a, b, c ; par la
+  suite on utilise cette forme. 4. nature de la branche infinie de C_f au voisinage de +∞. 5. a. tracer
+  Δ : y = −x + 4 ; b. position de C_f par rapport à Δ (algébriquement). 6. g restriction de f à ]2, 3] :
+  a. bijection de ]2, 3] sur un intervalle J ; b. construire la courbe C′ de g⁻¹ ; c. g⁻¹ est-elle
+  dérivable à gauche de 1 ?
+- **Ex. 20** (p.153) : f sur ]0, +∞[\{1} par f(x) = 1/x + 1/ln x ; C_f dans (O, i⃗, j⃗). 1. déterminer
+  lim_{x→0⁺} f, lim_{x→1⁻} f, lim_{x→1⁺} f, lim_{x→+∞} f — interpréter graphiquement. 2. a. f dérivable
+  sur ]0, +∞[\{1} et f′(x) = −1/x² − 1/(x(ln x)²) ; b. tableau de variation de f. 3. h restriction de f
+  à ]0, 1[ : a. bijection de ]0, 1[ sur un ensemble J ; b. h(x) = 0 admet une seule solution α dans
+  ]0, 1[, 0.5 < α < 0.6 ; c. en déduire que C_f coupe l'axe des abscisses en un seul point. 4. tracer
+  C_f. 5. tracer la courbe de h⁻¹, en déduire son tableau de variation. 6. a. montrer h′(α) =
+  −(α + 1)/α³ ; b. montrer que h⁻¹ est dérivable en 0 et exprimer (h⁻¹)′(0) en fonction de α.
+- **Ex. 21** (p.153–154) : **A/** g sur ]0, +∞[ par g(x) = (x + 1)/(2x + 1) − ln x. 1. sens de
+  variation. 2. g(x) = 0 admet une unique solution α dans ]0, +∞[, encadrement d'amplitude 0.1. 3. signe de g(x) sur ]0, +∞[. **B/** f sur ]0, +∞[ par f(x) = 2 ln x/(x² + x) ; C dans un repère
+  orthogonal (2 cm sur (Ox), 4 cm sur (Oy)). 1. limites de f en 0 à droite et en +∞. 2. pour x > 0,
+  f′(x) = 2(2x + 1)/(x² + x)² × g(x), en déduire le signe de f′(x). 3. tableau de variation de f et
+  montrer f(α) = 2/(α(2α + 1)). 4. tracer C, préciser la tangente au point d'abscisse 1. **C/**
+  1. a. primitive sur ]0, +∞[ de x ↦ (ln x)/x ; b. montrer que pour x ≥ 1, f(x) ≤ (ln x)/x. 2. F
+     primitive de f sur [1, +∞[ qui s'annule en 1 ; sans calculer F(x), montrer que pour x ≥ 1,
+     F(x) ≤ (1/2)(ln x)².
+- **Ex. 22** (p.154) : f sur [0, +∞[ par f(x) = ln(x + √(x² + 1)) ; C dans (O, i⃗, j⃗). 1. a. déterminer
+  la dérivée de f ; b. calculer ∫₀¹ dt/√(t² + 1). 2. étudier f et tracer (C). 3. a. f réalise une
+  bijection de [0, +∞[ sur un intervalle J ; b. tracer la courbe de f⁻¹ ; c. calculer par intégration
+  par parties ∫₀¹ ln(x + √(1 + x²)) dx ; en déduire ∫₀^{ln(1+√2)} f⁻¹(x) dx.
+- **Ex. 23** (p.154) : pour tout entier p ≥ 1, I_p = ∫₁^e x²(ln x)ᵖ dx. a. montrer que (I_p) est
+  décroissante. b. montrer la relation de récurrence I_{p+1} + (p + 1)/3·I_p = e³/3. c. calculer I₁ et
+  I₂. 2. montrer que pour p ≥ 1, e³/(p + 4) ≤ I_p ≤ e³/(p + 3) ; calculer lim_{p→+∞} I_p et
+  lim_{p→+∞} pI_p.
+- **Ex. 24** (p.154) : f(x) = ln(ln x). 1. ensemble de définition. 2. étudier la dérivabilité et
+  calculer f′(x). 3. Sₙ = Σ_{k=2}^n 1/(k ln k), n ≥ 2 — montrer que pour tout entier k ≥ 2,
+  ∫*k^{k+1} 1/(t ln t) dt ≤ 1/(k ln k). 4. calculer ∫₂^{n+1} 1/(t ln t) dt et en déduire
+  lim*{n→+∞} Sₙ.
+- **Ex. 25** (p.154) : 1. montrer que pour tout x de ℝ₊, x − x²/2 ≤ ln(1 + x) ≤ x. 2. a. montrer
+  Σ_{p=1}^n p = n(n + 1)/2 et Σ_{p=1}^n p² = n(n + 1)(2n + 1)/6 ; b. Pₙ = (1 + 1/n²)(1 + 2/n²)…
+  (1 + n/n²) — déterminer lim_{n→+∞} Pₙ.
+- **Ex. 26** (p.154–155) : pour tout réel a, f_a(x) = ln(x² + a). 1. a. ensemble de définition de f_a
+  suivant a ; b. tableaux de variation de f_a selon a ; c. lim_{x→+∞} f_a(x)/x, nature des branches
+  infinies (x → +∞ et x → −∞) ; d. (C_a) et (C_{a'}) courbes de f_a et f_{a'} (a ≠ a′), M ∈ (C_a) et
+  M′ ∈ (C_{a'}) de même abscisse — montrer MM′ non nul ; que déduire pour C_a et C_{a'} ; montrer que
+  MM′ → 0 quand x → +∞. e. tracer C_{−1}, C₀, C₁ (unité 2 cm), points d'intersection avec l'axe des
+  abscisses et tangentes en ces points. 2. a = 3/4 : a. g sur ℝ₊ par g(x) = x − ln(x² + 3/4) — sens de
+  variation, position de C_{3/4} par rapport à D : y = x ; b. h restriction de f_{3/4} à ℝ₊, bijection
+  de ℝ₊ sur un ensemble à préciser ; c. tracer h et h⁻¹.
+- **Ex. 27** (p.155) : **A/** n ∈ ℕ*, f_n sur ℝ*₊ par f_n(x) = (x − 1)ⁿ ln x ; C_n dans (O, i⃗, j⃗).
+  1. φ_n(x) = n ln x + 1 − 1/x : a. variations ; b. calculer φ_n(1), en déduire le signe de φ_n(x)
+     pour x > 0. 2. a. variations de f_n, tableau de variation suivant la parité de n ; b. tracer C₁ et C₂,
+     positions relatives. 3. aire de la partie limitée par C₁, C₂ et x = 1, x = 2. **B/** (v_n) par
+     v_n = Σ_{k=0}^n (−1)ᵏ/(k + 1), n ≥ 0. 1. (u_n) par u_n = ∫₁² f_n(x)dx. 2. montrer que pour tout
+     n ∈ ℕ*, (n + 1)u_n = ln 2 − ∫₁² (x − 1)^{n+1}/x dx. 3. a. 1/(2(n + 2)) ≤ ln 2 − (n + 1)u_n ≤
+     1/(n + 2), n ∈ ℕ* ; b. calculer la limite de (n + 1)u_n. 4. S_n(x) = 1 − (x − 1) + (x − 1)² + … +
+     (−1)ⁿ(x − 1)ⁿ (x > 0, n ≥ 1) : a. montrer S_n(x) = 1/x − (−1)^{n+1}(x − 1)^{n+1}/x ; b. en déduire
+     que pour tout n ∈ ℕ*, ln 2 − v_n = (−1)^{n+1}[ln 2 − (n + 1)u_n]. (Puis) montrer que (v_n) est
+     convergente et calculer sa limite.
+- **Ex. 28** (p.155–156) : repère (O, i⃗, j⃗). **I/** 1. g sur [1, +∞[ par g(x) = x ln x − x + 1 :
+  a. tableau de variation ; b. signe de g(x) pour x ∈ [1, +∞[. 2. f(x) = (x − 1)/ln x si x ∈ ]1, +∞[,
+  1 si x = 1 — montrer que f est continue à droite en 1. 3. a. pour tout t ∈ [1, +∞[, t − 1 − (t − 1)² ≤
+  1 − 1/t ≤ t − 1 ; b. en déduire que pour tout x ∈ [1, +∞[, (x − 1)²/2 − (x − 1)³/3 ≤ x − 1 − ln x ≤
+  (x − 1)²/2 ; c. déterminer lim_{x→1⁺} (x − 1 − ln x)/(x − 1)² ; d. en déduire que f est dérivable à
+  droite en 1 et f′_d(1) = 1/2. 4. a. tableau de variation de f ; b. tracer la courbe C (nature de la
+  branche infinie précisée). **II/** F sur [1, +∞[ par F(x) = ∫*x^{x²} 1/ln t dt si x ∈ ]1, +∞[, ln 2
+  si x = 1 ; C′ courbe de F. 1. a. pour tout x ∈ ]1, +∞[ et tout t ∈ [x, x²], x/(t ln t) ≤ 1/ln t ≤
+  x²/(t ln t) ; b. en déduire x ln 2 ≤ F(x) ≤ x² ln 2 ; c. F continue en 1. 3. a. F dérivable sur
+  ]1, +∞[ et F′(x) = f(x) ; b. pour x ∈ ]1, +∞[, il existe c ∈ ]1, x[ tel que F(x) − F(1) =
+  (x − 1)F′(c) ; c. en déduire que F est dérivable à droite en 1 et F′*d(1) = 1. 4. tableau de variation
+  de F, tracer C′. **III/** α ∈ ]1, +∞[, 𝒜(α) aire limitée par C et y = 0, x = 1, x = α. 1. montrer que
+  pour tout x ∈ ]1, +∞[, F(x) = ∫₁ˣ f(t)dt + ln 2. 2. en déduire lim*{α→+∞} 𝒜(α)/α et
+  lim*{α→+∞} 𝒜(α)/α². (Numérotation source : dans I/ et II/ on passe de 3 à 4 sans 2 ni de « 2 » [sic].)
+- **Ex. 29** (p.156) : **I/** 1. h sur ]0, +∞[ par h(x) = x − ln x : a. dresser le tableau de variation
+  de f [sic pour h] ; b. en déduire que pour tout x ∈ ]0, +∞[, h(x) ≥ 1. 2. f sur [0, +∞[ par f(x) =
+  1/(x − ln x) si x > 0, 0 si x = 0 : a. f continue sur [0, +∞[ ; b. f dérivable à droite en 0 ? **II/**
+  F sur [0, +∞[ par F(x) = ∫_x^{2x} f(t)dt. 1. a. F dérivable sur [0, +∞[ ; b. pour x ∈ ]0, +∞[,
+  F′(x) = (ln 2 − ln x)/(h(2x)·h(x)) et F′_d(0) = 0. 2. pour x ∈ ]0, +∞[, ∫*x^{2x} dt/t = ln 2. 3. pour
+  x ∈ [1, +∞[, 0 ≤ F(x) − ln 2 ≤ ln(2x)/(x − ln x) ; en déduire lim*{x→+∞} F(x). 4. a. montrer
+  F(1/2) ≤ ln 2 ; b. en déduire qu'il existe un réel α de [1/2, 1] tel que F(α) = ln 2. 5. a. tableau de
+  variation de F ; b. allure de la courbe de F dans (O, i⃗, j⃗) (« On donne F(1) ≈ 0.9 et F(2) ≈ 1.1 »).
+- **Ex. 30** (p.156–157) : **III/** [préambule commun p.156–157] n désigne un entier naturel non nul.
+  1. (v_n) par v_n = ∫*{1/n}^1 t/(t − ln t) dt, n ≥ 1 : a. pour tout t ∈ ]0, +∞[, t/(t − ln t) ≤ t ;
+     b. (v_n) croissante ; c. (v_n) convergente et 0 ≤ lim v_n ≤ 1/2. 2. (w_n) par w_n = ∫₁ⁿ t/(t − ln t) dt,
+     n ≥ 1 : a. pour tout t ∈ [1, +∞[, t/(t − ln t) ≤ 1 + ln t ; b. calculer ∫₁ⁿ (1 + ln t)/t dt ; c. en
+     déduire lim*{n→+∞} w_n. **[Exercice 30]** **A/** f sur [2, +∞[ par f(x) = ln(x + √(x² − 4)) ; C_f dans
+     (O, i⃗, j⃗). 1. a. f dérivable sur ]2, +∞[, calculer f′(x) ; b. montrer lim_{x→2⁺} (f(x) − f(2))/(x − 2)
+     = +∞ ; c. tableau de variation de f. 2. a. position de C_f et de D : y = x ; b. construire C_f.
+  2. a. f réalise une bijection de [2, +∞[ sur un intervalle J ; b. construire la courbe C′ de f⁻¹.
+     **B/** F sur ]0, 1] par F(x) = ∫₂^{2/x} f(t)dt. 1. F dérivable sur ]0, 1], calculer F′(x). 2. a. pour
+     tout t ∈ [2, +∞[, f(t) ≥ ln t ; b. calculer ∫₂^{2/x} ln t dt ; c. en déduire que pour x ∈ ]0, 1],
+     F(x) ≥ (2/x)(ln(2/x) − 1) ; d. calculer lim_{x→0⁺} F(x). 3. tableau de variation de F, allure de la
+     courbe de F. **C/** pour x ∈ ]2, +∞[ et n ∈ ℕ, g_n(x) = ∫*{2√2}^x t^{2n}/√(t² − 4) dt et
+     ℓ_n = lim*{x→2⁺} g_n(x). 1. justifier l'existence de g_n(x) pour x ∈ ]2, +∞[. 2. calculer g₀(x), en
+     déduire ℓ₀. 3. montrer g₁(x) = (1/2)x√(x² − 4) − 2√2 + 2g₀(x), en déduire ℓ₁. 4. a. pour x ∈ ]2, +∞[
+     et n ∈ ℕ, g_{n+1}(x) = x^{2n+1}√(x² − 4) − 2^{3n+2}√2 − (2n + 1)∫*{2√2}^x t^{2n}√(t² − 4) dt ; b. en
+     déduire (2n + 2)g*{n+1}(x) = x^{2n+1}√(x² − 4) − 2^{3n+2}√2 + 4(2n + 1)g_n(x) ; c. exprimer ℓ_{n+1} à
+     l'aide de ℓ_n. (Les parties III/ p.157 et **A/B/C** appartiennent au dernier problème de la rubrique ;
+     la III/ « suites (v_n)/(w_n) » clôt l'exercice 29, et l'exercice 30 est le problème **A/B/C** ci-dessus.)
+
+### Bornes de scope observées (chapitre 7)
+
+- ✅ INCLUS : construction de ln comme **aire sous 1/t** puis comme **primitive de t ↦ 1/x s'annulant
+  en 1** (ln x = ∫₁ˣ dt/t) ; ln′(x) = 1/x, stricte croissance, ln 1 = 0, existence et définition de **e**
+  (ln e = 1, e ≈ 2.71828), bijection de ℝ*₊ sur ℝ ; **équations et inéquations** avec ln (dont
+  ln a > ln b ⟺ a > b) ; **propriétés algébriques** ln(ab) = ln a + ln b, ln(a/b) = ln a − ln b,
+  ln(1/b) = −ln b, ln(aᵖ) = p ln a, ln(ᵖ√a) = (1/p)ln a ; **limites** de référence (lim_{+∞} ln x = +∞,
+  lim_{0⁺} ln x = −∞, lim_{+∞} (ln x)/x = 0, lim_{1} (ln x)/(x − 1) = 1) et **croissances comparées**
+  lnⁿx/xᵐ → 0, xᵐ lnⁿx → 0 ; **tangente** en 1, tableau de variation et tracé de C ; **dérivation des
+  composées** x ↦ ln(u(x)) et x ↦ ln|u(x)| (f′ = u′/u) ; **primitive de u′/u** (ln|u| + k) et
+  **primitive de ln** (x ln x − x) ; applications : études de fonctions à ln, intégration par parties
+  avec ln, **suites définies par une intégrale** faisant intervenir ln, encadrements et convergence
+  (dont la constante d'Euler γ via Sₙ − ln n).
+- ⛔ NON traité dans ce chapitre : la **fonction exponentielle** et exp comme réciproque de ln, aᵇ à
+  exposant réel, ln comme réciproque de exp (chapitre 8) — ici e est défini uniquement par ln e = 1, et
+  ln(aᵖ)/ln(ᵖ√a) restent limités aux exposants **entiers/rationnels 1/p** ; le **logarithme décimal
+  log** (aucune section ni notation « log » dans ce chapitre — la notation décimale n'y figure pas) ;
+  les **équations différentielles** (chapitre 9).
 
 ## 3. Notes pédagogiques / méthode
 
