@@ -1,7 +1,7 @@
 {
   "id": "physique-1ere-sec",
   "nameFr": "Sciences Physiques",
-  "description": "L'électricité selon le programme officiel de la 1ère année de l'enseignement secondaire (tronc commun) : le phénomène d'électrisation, le circuit électrique, l'intensité du courant électrique et la tension électrique",
+  "description": "L'électricité et la matière selon le programme officiel de la 1ère année de l'enseignement secondaire (tronc commun) : le phénomène d'électrisation, le circuit électrique, l'intensité et la tension électriques, le dipôle résistor et la loi d'Ohm ; puis les états physiques de la matière, ses propriétés (dilatation, température, conductivité thermique) et la masse (masse volumique, densité)",
   "attribute": "Observation",
   "colorToken": "subject-svt",
   "icon": "Atom",

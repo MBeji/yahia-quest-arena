@@ -1,0 +1,85 @@
+{
+  "title": "⭐⭐ Révision (type examen) : États, volumes et particules",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "À combien de millilitres correspond 1 litre ?",
+      "options": [
+        { "id": "a", "text": "10 mL" },
+        { "id": "b", "text": "100 mL" },
+        { "id": "c", "text": "1000 mL" },
+        { "id": "d", "text": "10000 mL" }
+      ],
+      "correctOption": "c",
+      "explanation": "Par définition, 1 L = 1000 mL ✓ (soit 1000 cm³, c'est-à-dire 1 dm³). Les valeurs 10 et 100 mL sont bien trop petites, et 10000 mL correspondrait à 10 litres.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans quel état les particules sont-elles dispersées et très agitées ?",
+      "options": [
+        { "id": "a", "text": "L'état solide" },
+        { "id": "b", "text": "L'état liquide" },
+        { "id": "c", "text": "L'état cristallin" },
+        { "id": "d", "text": "L'état gazeux" }
+      ],
+      "correctOption": "d",
+      "explanation": "Dans un gaz, les particules sont espacées, dispersées et très agitées ✓. Dans un solide elles se touchent et sont ordonnées ; dans un liquide elles se touchent mais glissent les unes sur les autres.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Comment est la surface libre d'un liquide au repos dans un large récipient ?",
+      "options": [
+        { "id": "a", "text": "Plane et horizontale" },
+        { "id": "b", "text": "Toujours courbée" },
+        { "id": "c", "text": "Verticale" },
+        { "id": "d", "text": "Sphérique" }
+      ],
+      "correctOption": "a",
+      "explanation": "La surface libre d'un liquide étendu est plane et horizontale ✓. Elle n'est courbée (le ménisque) qu'au contact des parois, et jamais verticale ni sphérique pour un liquide au repos.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans un solide cristallin, comment sont disposées les particules ?",
+      "options": [
+        { "id": "a", "text": "Dispersées et très agitées" },
+        { "id": "b", "text": "Au contact et ordonnées" },
+        { "id": "c", "text": "Espacées mais immobiles" },
+        { "id": "d", "text": "En désordre, glissant les unes sur les autres" }
+      ],
+      "correctOption": "b",
+      "explanation": "Dans un solide cristallin, les particules se touchent et sont ordonnées, avec une agitation très faible ✓. Être dispersées et agitées décrit un gaz ; glisser en désordre décrit un liquide.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Un récipient cylindrique de rayon R = 2 cm contient de l'eau sur une hauteur h = 5 cm. Quel est le volume de l'eau ? (on prend π ≈ 3,14)",
+      "options": [
+        { "id": "a", "text": "20 cm³" },
+        { "id": "b", "text": "31,4 cm³" },
+        { "id": "c", "text": "62,8 cm³" },
+        { "id": "d", "text": "125,6 cm³" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le volume d'un cylindre est V = π × R² × h = 3,14 × 2² × 5 = 3,14 × 4 × 5 = 62,8 cm³ ✓. Oublier le carré du rayon donne 31,4 ; oublier π donne 20 ; doubler le résultat (ou prendre le diamètre) donne 125,6.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Un verre est déjà rempli à ras bord d'eau. Pourquoi ne peut-on pas y verser du sable sans faire déborder l'eau ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Parce que deux corps ne peuvent occuper le même espace en même temps"
+        },
+        { "id": "b", "text": "Parce que le sable est trop lourd pour l'eau" },
+        { "id": "c", "text": "Parce que le sable se dissout aussitôt dans l'eau" },
+        { "id": "d", "text": "Parce que l'eau s'évapore au contact du sable" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le sable et l'eau ne peuvent occuper le même espace en même temps : le sable prend la place de l'eau, qui déborde ✓. Ce n'est pas une question de poids, et le sable ne se dissout pas ni ne fait s'évaporer l'eau.",
+      "difficulty": 3
+    }
+  ]
+}

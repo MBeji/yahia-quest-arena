@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : Masse, masse volumique et densité",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Quelle est l'unité de la masse volumique dans le système international ?",
+      "options": [
+        { "id": "a", "text": "Le kilogramme (kg)" },
+        { "id": "b", "text": "Le litre (L)" },
+        { "id": "c", "text": "Le newton (N)" },
+        { "id": "d", "text": "Le kg·m⁻³" }
+      ],
+      "correctOption": "d",
+      "explanation": "La masse volumique s'exprime en kg·m⁻³ dans le système international ✓ (on utilise aussi le g·cm⁻³). Le kilogramme est l'unité de la masse, le litre celle d'un volume et le newton celle d'une force.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "On écrase une boule de pâte à modeler pour l'aplatir. Que devient sa masse ?",
+      "options": [
+        { "id": "a", "text": "Elle ne change pas" },
+        { "id": "b", "text": "Elle augmente" },
+        { "id": "c", "text": "Elle diminue" },
+        { "id": "d", "text": "Elle devient nulle" }
+      ],
+      "correctOption": "a",
+      "explanation": "La masse ne dépend pas de la forme du corps : aplatir la pâte ne change pas sa masse ✓. La quantité de matière reste la même, seule la forme change.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Un bloc de glace de masse 1 kg fond entièrement. Quelle est la masse de l'eau obtenue ?",
+      "options": [
+        { "id": "a", "text": "0,92 kg" },
+        { "id": "b", "text": "1 kg" },
+        { "id": "c", "text": "1,08 kg" },
+        { "id": "d", "text": "2 kg" }
+      ],
+      "correctOption": "b",
+      "explanation": "La masse ne dépend pas de l'état physique : 1 kg de glace donne 1 kg d'eau ✓. Seul le volume change lors de la fusion. La valeur 0,92 kg vient d'une confusion avec la densité de la glace (0,92), qui ne s'applique pas à la masse.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Sur une balance de Roberval, l'équilibre est obtenu avec des masses marquées de 20 g, 5 g et 1 g. Quelle est la masse du corps pesé ?",
+      "options": [
+        { "id": "a", "text": "20 g" },
+        { "id": "b", "text": "25 g" },
+        { "id": "c", "text": "26 g" },
+        { "id": "d", "text": "35 g" }
+      ],
+      "correctOption": "c",
+      "explanation": "À l'équilibre, la masse du corps est la somme des masses marquées : m = 20 + 5 + 1 = 26 g ✓. Oublier la masse de 1 g donnerait 25 g, et ne prendre que la plus grande donnerait 20 g.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Le cuivre a une densité de 8,90. Que fait un morceau de cuivre plongé dans l'eau ?",
+      "options": [
+        { "id": "a", "text": "Il flotte" },
+        { "id": "b", "text": "Il coule" },
+        { "id": "c", "text": "Il se dissout" },
+        { "id": "d", "text": "Il reste en surface" }
+      ],
+      "correctOption": "b",
+      "explanation": "Une densité de 8,90 est très supérieure à 1 : le cuivre est bien plus dense que l'eau, il coule ✓. Seule une substance de densité inférieure à 1, moins dense que l'eau, flotterait.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Deux objets ont le même volume mais sont faits de substances différentes. Ont-ils forcément la même masse ?",
+      "options": [
+        { "id": "a", "text": "Non, pas forcément la même masse" },
+        { "id": "b", "text": "Oui, toujours la même masse" },
+        { "id": "c", "text": "Oui, si leur forme est identique" },
+        { "id": "d", "text": "Oui, car le volume fixe la masse" }
+      ],
+      "correctOption": "a",
+      "explanation": "À volume égal, deux substances différentes n'ont pas la même masse ✓ : c'est justement ce qui rend le volume insuffisant pour identifier une substance et motive la masse volumique. La forme n'y change rien.",
+      "difficulty": 1
+    }
+  ]
+}

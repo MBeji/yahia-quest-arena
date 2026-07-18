@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Loi d'Ohm et caractéristiques",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Aux bornes d'un résistor, on mesure une tension U = 6 V pour une intensité I = 0,5 A. Quelle est sa résistance ?",
+      "options": [
+        { "id": "a", "text": "0,08 Ω" },
+        { "id": "b", "text": "3 Ω" },
+        { "id": "c", "text": "6,5 Ω" },
+        { "id": "d", "text": "12 Ω" }
+      ],
+      "correctOption": "d",
+      "explanation": "La résistance est le quotient de la tension par l'intensité : R = U/I = 6/0,5 = 12 Ω ✓. Multiplier (6 × 0,5 = 3) ou additionner (6 + 0,5 = 6,5) est faux, et 0,08 Ω vient de la division inversée 0,5/6.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Un résistor de résistance R = 5 Ω est soumis à une tension U = 10 V. Quelle est l'intensité du courant qui le traverse ?",
+      "options": [
+        { "id": "a", "text": "0,5 A" },
+        { "id": "b", "text": "2 A" },
+        { "id": "c", "text": "15 A" },
+        { "id": "d", "text": "50 A" }
+      ],
+      "correctOption": "b",
+      "explanation": "De la loi d'Ohm U = R × I, on tire I = U/R = 10/5 = 2 A ✓. La valeur 50 A viendrait d'une multiplication (10 × 5), 15 A d'une addition (10 + 5), et 0,5 A de la division inversée 5/10.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Deux résistors sont soumis à la même tension : R1 = 10 Ω et R2 = 20 Ω. Lequel est traversé par le courant le plus faible ?",
+      "options": [
+        { "id": "a", "text": "R1" },
+        { "id": "b", "text": "Les deux le même courant" },
+        { "id": "c", "text": "R2" },
+        { "id": "d", "text": "On ne peut pas savoir" }
+      ],
+      "correctOption": "c",
+      "explanation": "Comme I = U/R, à tension égale, plus la résistance est grande, plus l'intensité est faible. R2 = 20 Ω étant la plus grande résistance, c'est lui qui laisse passer le courant le plus faible ✓. R1, plus petit, laisse passer davantage de courant.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Quel composant a une caractéristique courbe, qui n'est pas une droite passant par l'origine ?",
+      "options": [
+        { "id": "a", "text": "Une diode" },
+        { "id": "b", "text": "Un conducteur ohmique" },
+        { "id": "c", "text": "Un résistor de 10 Ω" },
+        { "id": "d", "text": "Un résistor de 100 Ω" }
+      ],
+      "correctOption": "a",
+      "explanation": "La diode n'est pas un résistor : sa caractéristique n'est pas une droite passant par l'origine ✓. Le conducteur ohmique est justement un autre nom du résistor, et un résistor de 10 Ω comme un de 100 Ω ont bien une caractéristique en droite passant par l'origine.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lorsque la peau est mouillée, la résistance du corps humain chute d'environ 5000 Ω à 1000 Ω. Pour une même tension de contact, que devient l'intensité du courant qui traverse le corps ?",
+      "options": [
+        { "id": "a", "text": "Elle diminue" },
+        { "id": "b", "text": "Elle reste la même" },
+        { "id": "c", "text": "Elle devient nulle" },
+        { "id": "d", "text": "Elle augmente" }
+      ],
+      "correctOption": "d",
+      "explanation": "À tension fixée, I = U/R : quand la résistance chute de 5000 Ω à 1000 Ω, l'intensité augmente ✓. C'est pourquoi une peau mouillée rend l'électricité plus dangereuse, le seuil de tension dangereuse tombant de 50 V à 25 V.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Un rhéostat est branché en série avec une lampe. En déplaçant le curseur, on augmente la résistance du rhéostat. Que devient l'intensité du courant dans le circuit ?",
+      "options": [
+        { "id": "a", "text": "Elle augmente" },
+        { "id": "b", "text": "Elle diminue" },
+        { "id": "c", "text": "Elle reste constante" },
+        { "id": "d", "text": "Elle double" }
+      ],
+      "correctOption": "b",
+      "explanation": "Augmenter la résistance du rhéostat augmente la résistance totale du circuit ; or l'intensité diminue quand la résistance grandit (I = U/R). Le courant diminue donc et la lampe brille moins ✓. C'est précisément ainsi qu'un rhéostat commande l'intensité, sans jamais la faire augmenter.",
+      "difficulty": 3
+    }
+  ]
+}
