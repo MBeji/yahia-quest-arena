@@ -1,0 +1,31 @@
+{
+  "grade": "2eme-sec-sciences",
+  "fiches": [
+    {
+      "matiere": "mathematiques",
+      "statut": "partielle",
+      "profondeur": "mixte",
+      "sources": [
+        {
+          "code": "222231",
+          "tomes": ["P00"],
+          "role": "eleve",
+          "pagesTotal": 164,
+          "pagesLues": [[1, 66]]
+        },
+        {
+          "code": "222232",
+          "tomes": ["P00"],
+          "role": "eleve",
+          "pagesTotal": 200,
+          "pagesLues": [[1, 6]]
+        }
+      ],
+      "sourcesLibres": [],
+      "r7": null,
+      "maj": "2026-07-18",
+      "par": "pilote-opus",
+      "notes": "⛔ GÉNÉRATION INTERDITE (statut partielle). PILOTE lycée 2ème sec sciences (première classe manquante du lycée). Manuel élève seul, 2 tomes (pas de guide au corpus). Langue CONSTATÉE : français (page de titre + corps, conforme lycee-architecture §4). Chapitres 1–4 du tome 1 (222231, p.7–66) transcrits à PROFONDEUR DE GÉNÉRATION (chaque activité/exercice décrit, encadrés Définition/Retenir/Synthèse verbatim, vocabulaire, bornes ✅/⛔). Reste à transcrire : tome 1 ch.5–9 (p.67–164 : calcul vectoriel, barycentre, translations, homothéties, rotations) et tome 2 (222232, p.7–200 : suites arithmétiques/géométriques, généralités & fonctions de référence, trigonométrie, géométrie analytique, droites/plans/parallélisme/orthogonalité de l'espace, statistiques). Chapitrage complet (19 ch.) codifié dans manifest/2eme-sec-sciences.json + fiche §4 (plages dérivées du sommaire). Reprise : compléter la fiche sans refaire ch.1–4 (R-4). Vision 150 dpi via render.sh ; couche-texte propre pour la prose mais notation maths aplatie ⇒ vision requise. Ce manuel dessert aussi 2eme-sec-info (compileTo, étude 16 D-4). Pas de R-7 formelle (fiche non complète)."
+    }
+  ]
+}

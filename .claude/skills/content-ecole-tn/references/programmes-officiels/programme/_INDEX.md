@@ -105,11 +105,17 @@
 | --- | --- | --- | --- | --- | --- | --- |
 | 🚧 partielle — ⛔ génération interdite | **anglais** | mixte | `641203` ? | — | 2026-07-17 (seed) | Seed depuis _INDEX ([~] historique). Évaluer lecture + profondeur, et combiner le manuel élève, avant génération (R-5). |
 
+## 2eme-sec-sciences
+
+| statut | matière | profondeur | sources (couverture calculée) | R-7 | maj | notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| 🚧 partielle — ⛔ génération interdite | **mathematiques** | mixte | `222231` 40 % (manque p.67–164) · `222232` 3 % (manque p.7–200) | — | 2026-07-18 (pilote-opus) | ⛔ GÉNÉRATION INTERDITE (statut partielle). PILOTE lycée 2ème sec sciences (première classe manquante du lycée). Manuel élève seul, 2 tomes (pas de guide au corpus). Langue CONSTATÉE : français (page de titre + corps, conforme lycee-architecture §4). Chapitres 1–4 du tome 1 (222231, p.7–66) transcrits à PROFONDEUR DE GÉNÉRATION (chaque activité/exercice décrit, encadrés Définition/Retenir/Synthèse verbatim, vocabulaire, bornes ✅/⛔). Reste à transcrire : tome 1 ch.5–9 (p.67–164 : calcul vectoriel, barycentre, translations, homothéties, rotations) et tome 2 (222232, p.7–200 : suites arithmétiques/géométriques, généralités & fonctions de référence, trigonométrie, géométrie analytique, droites/plans/parallélisme/orthogonalité de l'espace, statistiques). Chapitrage complet (19 ch.) codifié dans manifest/2eme-sec-sciences.json + fiche §4 (plages dérivées du sommaire). Reprise : compléter la fiche sans refaire ch.1–4 (R-4). Vision 150 dpi via render.sh ; couche-texte propre pour la prose mais notation maths aplatie ⇒ vision requise. Ce manuel dessert aussi 2eme-sec-info (compileTo, étude 16 D-4). Pas de R-7 formelle (fiche non complète). |
+
 ## bac-math
 
 | statut | matière | profondeur | sources (couverture calculée) | R-7 | maj | notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| 🚧 partielle — ⛔ génération interdite | **mathematiques** | mixte | `222445` 13 % (manque p.28–207) · `222446` 3 % (manque p.7–230) | — | 2026-07-18 (bejimed) | Campagne LOT A (METHODE-GENERATION-CONTENU) raccrochée au corpus : tome 1 Analyse (222445, 9 ch.) + tome 2 (222446, 10 ch.) = 19 chapitres ; manuel eleve seul (pas de guide enseignant au corpus) => fait reference. Palier 1 : fiche raccrochee + plan annuel 19 ch. + manifest/bac-math.json + chapitre 1 (p.5-27) transcrit a profondeur de generation ; ch.2-19 restent en 'bloc'. R-7 ch.1 (2026-07-18, integrale sur p.5-27) : CONFORME, 0 erreur substantielle, 3 corrections de forme appliquees. Generation LOT B interdite tant que statut != complete. |
+| 🚧 partielle — ⛔ génération interdite | **mathematiques** | mixte | `222445` 25 % (manque p.53–207) · `222446` 3 % (manque p.7–230) | — | 2026-07-18 (bejimed) | Campagne LOT A (METHODE-GENERATION-CONTENU) raccrochée au corpus : tome 1 Analyse (222445, 9 ch.) + tome 2 (222446, 10 ch.) = 19 chapitres ; manuel eleve seul (pas de guide enseignant au corpus) => fait reference. Paliers 1-2 : fiche raccrochee + plan annuel 19 ch. + manifest/bac-math.json ; chapitres 1-2 (p.5-52) transcrits a profondeur de generation ; ch.3-19 restent en 'bloc'. R-7 (2026-07-18, integrale) : CONFORME sur ch.1 (3 corrections de forme) et ch.2 (0 correction). Generation LOT B interdite tant que statut != complete. |
 
 ## À transcrire (dérivé du corpus — PDF `principale` non rattachés à une fiche)
 
@@ -125,7 +131,7 @@
 - **8eme-base** : **anglais** (`141806`, `141807`) · **arabe** (`101806`, `101808`) · **eveil** (`103802`) · **francais** (`121804`) · **islamique-civique** (`111807`, `111809`) · **maths** (`102805`) · **sciences-physiques** (`123801`) · **svt** (`105804`)
 - **9eme-base** : **anglais** (`141906`, `141907`) · **arabe** (`101908`, `101909`) · **eveil** (`103902`) · **francais** (`121905`) · **islamique-civique** (`111909`, `111911`) · **maths** (`102905`) · **sciences-physiques** (`123901`) · **svt** (`105905`)
 - **1ere-sec** : **arabe** (`201104`) · **geographie** (`206103`) · **histoire** (`207103`) · **islamique-civique** (`211105`, `211107`) · **maths** (`222105`)
-- **2eme-sec** : **anglais** (`241203`) · **arabe** (`201202`, `201203`, `201281`) · **chimie** (`224231`, `224271`) · **eco-gestion** (`229262`) · **francais** (`221203`) · **geographie** (`206203`, `206271`) · **histoire** (`207202`, `207271`) · **islamique-civique** (`211203`, `211204`) · **maths** (`222221`, `222231`, `222232`, `222261`, `222281`) · **sciences-physiques** (`223231`, `223272`) · **svt** (`225202`, `225232`, `225281`)
+- **2eme-sec** : **anglais** (`241203`) · **arabe** (`201202`, `201203`, `201281`) · **chimie** (`224231`, `224271`) · **eco-gestion** (`229262`) · **francais** (`221203`) · **geographie** (`206203`, `206271`) · **histoire** (`207202`, `207271`) · **islamique-civique** (`211203`, `211204`) · **maths** (`222221`, `222261`, `222281`) · **sciences-physiques** (`223231`, `223272`) · **svt** (`225202`, `225232`, `225281`)
 - **3eme-sec** : **anglais** (`241303`, `641303`) · **arabe** (`201302`, `201321`, `201381`) · **chimie** (`224332`, `224333`, `224351`, `224371`) · **eco-gestion** (`229364`) · **francais** (`221302`, `221321`) · **geographie** (`206321`, `206331`) · **histoire** (`207321`, `207331`) · **islamique-civique** (`211306`, `211321`, `211322`) · **maths** (`222322`, `222333`, `222334`, `222343`, `222344`, `222351`, `222362`, `222371`, `222381`) · **philosophie** (`210301`, `210322`) · **sciences-physiques** (`223332`, `223333`, `223351`, `223371`) · **svt** (`225321`, `225333`, `225342`, `225381`)
 - **bac** : **anglais** (`241403`, `641404`) · **arabe** (`201403`, `201421`, `201422`, `201481`) · **chimie** (`224432`, `224433`, `224451`, `224471`) · **eco-gestion** (`229464`) · **francais** (`221402`, `221421`) · **geographie** (`206422`) · **histoire** (`207422`) · **islamique-civique** (`211421`) · **maths** (`222422`, `222433`, `222434`, `222451`, `222463`, `222472`, `222481`) · **philosophie** (`210402`, `210422`, `210423`) · **sciences-physiques** (`223432`, `223433`, `223451`, `223471`) · **svt** (`225421`, `225432`, `225441`, `225481`)
 
@@ -137,4 +143,4 @@
 - **enrichissement** : 21 PDF
   - décisions en attente (`differee`) : `128703`, `128803`, `128903`, `228103`, `228233`, `228362`, `228363`, `228461`, `228462`
 
-**Totaux (calculés)** : 47 fiches suivies (18 partielle · 25 complete · 4 validee-r7) · 346 PDF au corpus · 169 œuvres principales restant à rattacher.
+**Totaux (calculés)** : 48 fiches suivies (19 partielle · 25 complete · 4 validee-r7) · 346 PDF au corpus · 167 œuvres principales restant à rattacher.

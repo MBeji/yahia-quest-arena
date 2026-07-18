@@ -1,0 +1,37 @@
+{
+  "grade": "2eme-sec-sciences",
+  "sealed": false,
+  "source": "CNP — programme national 2ème année secondaire, sections Sciences et Technologie de l'informatique (programme identique pour les deux sections). Manuel élève OFFICIEL CNP en deux tomes : « Mathématiques — 2ème Année de l'Enseignement Secondaire — Sections : Sciences / Technologie de l'informatique » (auteurs Rahmouni/Hnaien/Kefi/M'hamdi/Smida/Oukhai/Marzougui) — Tome 1 = 222231P00.pdf (164 p.), Tome 2 = 222232P00.pdf (200 p.) [pas de guide enseignant au corpus]. Transcription sous programme/2eme-sec-sciences/mathematiques.md.",
+  "note": "sealed=false. Chapitrage COMPLET codifié (19 chapitres, 2 tomes) d'après le sommaire de chaque tome. ⚠️ La fiche de transcription est PARTIELLE au 2026-07-18 : chapitres 1–4 (tome 1) transcrits à profondeur de génération ; chapitres 5–19 listés mais non encore transcrits (cf. programme/2eme-sec-sciences/mathematiques.md §4/§6 et suivi/2eme-sec-sciences.json). Le contenu content/math-2eme-sec-sciences/ n'existe pas encore (aucun LOT B) — l'audit reporte donc le sujet comme manquant, c'est attendu (niveau non scellé). Ids de chapitres numérotés 01–19 en séquence (tome 1 = 01–09, tome 2 = 10–19). subject id `math-2eme-sec-sciences` (convention lycée <matière>-<gradeSlug>, docs/lycee-architecture.md §2).",
+  "subjects": [
+    {
+      "id": "math-2eme-sec-sciences",
+      "name": "Mathématiques",
+      "contentLanguage": "fr",
+      "chapters": [
+        { "slug": "01-calcul-dans-r", "notion": "Calcul dans ℝ" },
+        {
+          "slug": "02-problemes-premier-second-degre",
+          "notion": "Problèmes du 1er degré et du 2nd degré (équations & inéquations du 2nd degré)"
+        },
+        { "slug": "03-notion-polynomes", "notion": "Notion de polynômes" },
+        { "slug": "04-arithmetique", "notion": "Arithmétique" },
+        { "slug": "05-calcul-vectoriel", "notion": "Calcul vectoriel" },
+        { "slug": "06-barycentre", "notion": "Barycentre" },
+        { "slug": "07-translations", "notion": "Translations" },
+        { "slug": "08-homotheties", "notion": "Homothéties" },
+        { "slug": "09-rotations", "notion": "Rotations" },
+        { "slug": "10-suites-arithmetiques", "notion": "Suites arithmétiques" },
+        { "slug": "11-suites-geometriques", "notion": "Suites géométriques" },
+        { "slug": "12-generalites-fonctions", "notion": "Généralités sur les fonctions" },
+        { "slug": "13-fonctions-de-reference", "notion": "Fonctions de référence" },
+        { "slug": "14-trigonometrie", "notion": "Trigonométrie et mesure des grandeurs" },
+        { "slug": "15-geometrie-analytique", "notion": "Géométrie analytique" },
+        { "slug": "16-droites-plans-espace", "notion": "Droites et plans de l'espace" },
+        { "slug": "17-parallelisme-espace", "notion": "Parallélisme dans l'espace" },
+        { "slug": "18-orthogonalite-espace", "notion": "Orthogonalité dans l'espace" },
+        { "slug": "19-statistiques", "notion": "Statistiques" }
+      ]
+    }
+  ]
+}
