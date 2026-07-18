@@ -59,13 +59,15 @@ récompenses, style, notation) et à `content-ecole-tn` (fidélité au programme
 - **R-3 — Programme d'abord.** Pour une matière scolaire, confronter la fiche à la **transcription CNP**
   (`programme/<grade>/<matière>.md`) si elle existe ; divergence de scope ⇒ le **programme officiel gagne**,
   signaler l'écart (règle `content-ecole-tn`).
-- **R-4 — Vérifie l'existant AVANT toute campagne.** Avant de transcrire quoi que ce soit, lis
-  `programme/_INDEX.md` **et** le fichier `programme/<grade>/<matière>.md` s'il existe déjà. Un statut
-  `[~]` = **« transcrit, en validation » — déjà fait**, pas un trou à combler. Un incident réel (2026-07-12,
-  campagne ScribeKit collège) a produit des fiches redondantes pour 6→9ème FR/EN/AR alors que des fiches
-  pré-existantes, plus profondes, couvraient déjà ces matières — seules 1ère-sec FR/EN/chimie étaient de
-  vrais trous. En cas de doublon, ne promeus jamais automatiquement le nouveau lot : compare et garde la
-  meilleure copie (qualité + complétude), documente la décision dans `_INDEX.md`.
+- **R-4 — Vérifie l'existant AVANT toute campagne, dans le REGISTRE.** L'état de transcription vit dans
+  `programmes-officiels/suivi/<grade>.json` (statuts normés, couverture en plages de pages, profondeur),
+  validé en CI par `npm run programme:check` — `programme/_INDEX.md` n'est qu'une **vue générée**
+  (`programme:index`), ⛔ jamais éditée à la main. Une entrée `complete`/`validee-r7`/`promue` = **déjà
+  fait** ; `partielle` = **compléter** (les plages manquantes sont listées), jamais refaire. Vérifie aussi
+  qu'aucune PR/branche `feat/transcription-<grade>-*` ouverte ne travaille déjà le couple. Le check CI
+  rejette un même PDF revendiqué par deux fiches — les incidents de doublons (2026-07-12 collège,
+  2026-07-17 vague-A) ne peuvent plus passer. En cas de doublon hérité : comparer, garder la meilleure
+  copie, documenter dans le registre.
 - **R-5 — Standard de fiche : « profondeur de génération », jamais un résumé.** Une fiche destinée à
   alimenter la génération pédagogique doit décrire **chaque activité/exercice individuellement** (énoncé,
   données, ce qui est demandé), reproduire **verbatim** les encadrés de règles/lois officielles, relever le
@@ -102,8 +104,10 @@ récompenses, style, notation) et à `content-ecole-tn` (fidélité au programme
    vision (abonnement)** et **remplir la transcription fidèle** dans le fichier cible. Rien d'inventé.
 3. **Fiche + confrontation CNP (R-3).** Compléter la fiche/transcription (périmètre, notions, exemples,
    exercices du document, bornes) ; pour le scolaire, confronter au `programme/<grade>/<matière>.md`.
-4. **QA transcription.** `scribekit qa <cible>` (schéma manifeste, notation, non-vides) — **0 erreur** avant
-   le hand-off. `scribekit status <cible>` doit ne plus lister de `pending` non traité.
+4. **QA transcription + registre.** `scribekit qa <cible>` (schéma manifeste, notation, non-vides) —
+   **0 erreur** avant le hand-off ; `scribekit status <cible>` sans `pending` non traité. Puis **mettre à
+   jour le registre** `suivi/<grade>.json` (statut normé, profondeur, plages `pagesLues` par source, r7)
+   et régénérer la vue : `npm run programme:index` + `npm run programme:check` (0 erreur).
 5. **Hand-off génération.** Invoquer les skills de génération pour produire `cours.md` / `resume.md` /
    `quiz.json` / `exercices/*` à partir de la transcription, puis suivre la recette `content-ecole-tn`
    (`content:check` + `content:qa:strict` + `content:audit` → build de migration `--subject <id>` → PR → revue

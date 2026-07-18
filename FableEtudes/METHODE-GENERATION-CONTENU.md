@@ -91,9 +91,13 @@ Règles de boucle (non négociables) :
 - **R-3 — Programme d'abord.** Pour une matière scolaire, confronter la fiche à la
   transcription CNP du couple si elle existe ; divergence de scope ⇒ le **programme officiel
   gagne**, écart signalé.
-- **R-4 — Vérifier l'existant AVANT.** `[~]` / `[x]` dans `_INDEX.md` = **déjà fait** (`[~]` =
-  « transcrit, en validation », pas un trou). Fiche partielle sur disque = la **compléter**,
-  jamais la refaire en parallèle.
+- **R-4 — Vérifier l'existant AVANT, dans le REGISTRE.** L'état de la transcription vit dans le
+  **registre machine-vérifiable** `programmes-officiels/suivi/` (`corpus-cnp.json` +
+  `affectations.json` + `<grade>.json`), validé en CI par `npm run programme:check` —
+  `programme/_INDEX.md` n'est qu'une **vue générée** (⛔ ne jamais l'éditer à la main). Une
+  entrée `complete`/`validee-r7`/`promue` = **déjà fait** ; `partielle` = **compléter** (les
+  plages de pages manquantes sont listées), jamais refaire en parallèle. Un PDF ne peut être
+  revendiqué que par UNE fiche — le doublon est une **erreur CI**, plus un risque.
 - **R-5 — Profondeur de génération, jamais un résumé.** Chaque activité/exercice décrit
   individuellement, encadrés officiels verbatim, vocabulaire officiel, bornes ✅/⛔. Modèle de
   référence : `programme/1ere-sec/mathematiques.md`. Une « first-pass » s'étiquette comme telle
@@ -225,13 +229,21 @@ Notes par profil :
 
    ```
    .claude/skills/content-ecole-tn/references/programmes-officiels/
-   ├── programme/_INDEX.md                      ← work-list (statuts [ ] / [~] / [x])
+   ├── suivi/corpus-cnp.json                    ← corpus CNP exhaustif (346 PDF — généré, ne pas éditer)
+   ├── suivi/affectations.json                  ← catégorie de chaque matière/PDF (décisions)
+   ├── suivi/<grade>.json                       ← REGISTRE d'état des fiches (LA source de vérité)
+   ├── programme/_INDEX.md                      ← vue GÉNÉRÉE du registre (⛔ ne pas éditer)
    ├── programme/_TEMPLATE.md                   ← gabarit de la fiche
    ├── programme/README.md                      ← spec + « Recette » (LOT B)
    ├── programme/<niveau>/<matière>.md          ← livrable LOT A (profils ecole-*)
    ├── sources-externes/<slug>/fiche.md         ← livrable LOT A (document-libre, école)
    └── manifest/<niveau>.json                   ← chapitrage machine-vérifiable (Zod)
    ```
+
+   Trois commandes gouvernent le registre : `npm run programme:check` (le gate — schémas +
+   anti-doublon + cohérence disque↔registre↔index, exécuté en CI), `npm run programme:index`
+   (régénère la vue), `npm run programme:corpus` (resynchronise le snapshot corpus depuis
+   `cnp-officiel/catalogue.csv`, machine locale uniquement).
 
 4. **Construire la file de travail**, dans l'**ordre de priorité** (décision 2026-07-14 — le
    lycée d'abord : c'est le gros trou du corpus, le cycle de base est largement couvert) :
@@ -243,9 +255,11 @@ Notes par profil :
       `info`) ;
    4. **`bac-*`** (`math` · `sciences-exp` · `lettres` · `eco-gestion` · `techniques` · `info`) ;
    5. seulement ensuite, le **reliquat du cycle de base** (`1ere-base` → `9eme-base`).
-   - Sources de la file : **lycée** ⇒ la matrice de `docs/lycee-architecture.md` (les lignes
-     `_INDEX.md` n'existent souvent pas encore — les créer dans le lot, cf. A5.4) ; **base** ⇒
-     les couples `[ ]` de `_INDEX.md`.
+   - Source de la file : le § « **À transcrire (dérivé du corpus)** » de l'`_INDEX.md` généré —
+     la liste **exhaustive** des œuvres principales non rattachées, calculée depuis
+     `suivi/corpus-cnp.json` (au secondaire, préciser la section avec la matrice de
+     `docs/lycee-architecture.md`) ; les entrées `partielle` du registre (trous listés) font
+     aussi partie de la file.
    - **Matières annexes hors périmètre pour le moment** : musique, éducation artistique/dessin,
      EPS/sport, la section sport, les 3èmes langues (allemand, espagnol, italien). Les sauter
      même si leur ligne est `[ ]` ; un `PORTEE` qui les cible explicitement se **refuse** avec
@@ -265,16 +279,20 @@ Branche fraîche :
 git fetch origin main && git checkout -B feat/transcription-<niveau>-<matiere> origin/main
 ```
 
-Puis, dans `_INDEX.md` frais :
+Puis, **dans le registre frais** (`suivi/<grade>.json`, complété par la vue `_INDEX.md`
+générée) — et en vérifiant qu'**aucune autre session ne travaille déjà le couple** :
+`gh pr list --search "<niveau> <matière>"` + branches distantes
+`feat/transcription-<niveau>-*` (une PR/branche ouverte sur le couple ⇒ couple pris, passer au
+suivant) :
 
-- `[x]` ou `[~]` ⇒ **déjà fait**. Si `GENERATION: oui` et que le sujet n'existe pas sous
-  `content/` (vérifier `content/CATALOGUE.md`) ⇒ passer directement au **LOT B** (profil
-  sans-source) ; sinon couple suivant.
-- `[ ]` ⇒ vrai manquant : continuer ; noter le **code guide** de la ligne.
-- **Ligne absente** (cas normal au lycée) ⇒ vérifier quand même que
-  `programme/<niveau>/<matière>.md` n'existe pas sur disque (des pilotes existent en `1ere-sec`
-  et `bac-math`) ; la ligne sera créée en A5.4.
-- Fiche partielle (« first-pass ») ⇒ la **compléter**, jamais la refaire en parallèle.
+- entrée `complete` / `validee-r7` / `promue` ⇒ **déjà fait**. Si `GENERATION: oui` et que le
+  sujet n'existe pas sous `content/` (vérifier `content/CATALOGUE.md`) ⇒ passer directement au
+  **LOT B** (profil sans-source) ; sinon couple suivant.
+- entrée `partielle` ⇒ la **compléter** — le registre liste les **plages de pages manquantes**
+  et la profondeur atteinte ; jamais refaire en parallèle, jamais relire les pages déjà à
+  profondeur (T-2/T-3).
+- **aucune entrée** (vrai manquant — le § « À transcrire » de l'_INDEX généré liste les PDF
+  disponibles du couple) ⇒ continuer ; l'entrée sera créée en A5.4.
 
 ### A2 — Obtenir les sources
 
@@ -363,21 +381,28 @@ guide + manuel :
 3. **Gate du dépôt** : `npm run verify` (lint + typecheck + tests — tourne sans backend). Le
    hook pre-commit formate (Prettier) : le laisser faire, jamais `--no-verify`.
 
-4. **Mettre à jour `programme/_INDEX.md`** : ligne du couple à **`[~]`** (« transcrit, en
-   validation » — **jamais `[x]`**, la promotion finale appartient à l'humain), date + PSEUDO +
-   profondeur atteinte ; ajuster la ligne de totaux de la section. **Au lycée**, la ligne
-   n'existe en général pas : la **créer** (statut `[~]`, même format de tableau), sous une
-   rubrique `## <niveau-section>` ajoutée si besoin — slugs de `docs/lycee-architecture.md` ;
-   colonne source = la **source réellement utilisée** (ex. « `222104P01` (manuel élève) · _pas
-   de guide au corpus_ »), jamais un code inventé.
+4. **Mettre à jour le REGISTRE `suivi/<grade>.json`** (⛔ jamais `_INDEX.md` à la main — c'est
+   une vue générée) : créer/actualiser l'entrée du couple avec le **statut normé** (`partielle`
+   si trous de lecture ou de profondeur, `complete` si 100 % + profondeur de génération —
+   **jamais `promue`**, réservé à l'humain), la **profondeur** (`first-pass`/`mixte`/
+   `generation`), les **sources par code corpus** avec `pagesTotal` et les **plages exactes
+   `pagesLues`** (le % est calculé — fini les « ~48 % » déclarés), le verdict `r7`, `maj`/`par`
+   (PSEUDO) et des notes courtes. Grade lycée sans fichier de suivi ⇒ créer
+   `suivi/<gradeSlug>.json` (slugs de `docs/lycee-architecture.md`). Puis :
+
+   ```bash
+   npm run programme:index    # régénère la vue _INDEX.md
+   npm run programme:check    # 0 erreur exigé — doublons, plages, cohérence disque↔registre
+   ```
 
 ### A6 — Pousser le LOT A
 
-À committer — et **rien d'autre** : la fiche, le manifeste, `_INDEX.md` (+ sorties YAML du
-profil générique si demandées). ⛔ Jamais : `.scribekit/ledger.json`, `AVANCEMENT.md`, les PDF
-sources, ni quoi que ce soit sous `content/` ou `supabase/migrations/` (ça, c'est le LOT B) —
-seule exception : la fiche `content/_sources/<theme>/<slug>/fiche.md` du profil document-libre
-non scolaire, qui est un livrable du LOT A.
+À committer — et **rien d'autre** : la fiche, le manifeste, le **registre**
+`suivi/<grade>.json` et la vue `_INDEX.md` régénérée (+ sorties YAML du profil générique si
+demandées). ⛔ Jamais : `.scribekit/ledger.json`, `AVANCEMENT.md`, les PDF sources, ni quoi que
+ce soit sous `content/` ou `supabase/migrations/` (ça, c'est le LOT B) — seule exception : la
+fiche `content/_sources/<theme>/<slug>/fiche.md` du profil document-libre non scolaire, qui est
+un livrable du LOT A.
 
 ```bash
 git add .claude/skills/content-ecole-tn/references/programmes-officiels/   # document-libre hors école : content/_sources/<theme>/<slug>/
