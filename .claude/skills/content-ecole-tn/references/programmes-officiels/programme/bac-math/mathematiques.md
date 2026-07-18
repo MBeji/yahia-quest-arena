@@ -62,9 +62,9 @@ style annales session principale.
 | 10  | Nombres complexes               | 5–34                    | `generation` |
 | 11  | Isométries du plan              | 35–53                   | `generation` |
 | 12  | Déplacements – Antidéplacements | 54–73                   | `generation` |
-| 13  | Similitudes                     | 74–95                   | `bloc`       |
-| 14  | Coniques                        | 96–120                  | `bloc`       |
-| 15  | Géométrie dans l'espace         | 121–146                 | `bloc`       |
+| 13  | Similitudes                     | 74–95                   | `generation` |
+| 14  | Coniques                        | 96–120                  | `generation` |
+| 15  | Géométrie dans l'espace         | 121–146                 | `generation` |
 | 16  | Divisibilité dans ℤ             | 147–160                 | `bloc`       |
 | 17  | Identité de Bézout              | 161–178                 | `bloc`       |
 | 18  | Probabilités                    | 179–207                 | `bloc`       |
@@ -4347,6 +4347,1585 @@ d'axe (B′C′) et de vecteur B′C′⃗. (Figure.)
   plan). Le chapitre suppose acquis le **chapitre 11 (Isométries du plan)** — décomposition en symétries
   orthogonales, points fixes, isométrie réciproque — qu'il prolonge en distinguant orientation directe /
   indirecte.
+
+## 2.13 Chapitre 13 — Similitudes (manuel 222446, p.74–95)
+
+**Page de garde (p.74)** — Titre de couverture : « Similitudes », Chapitre 4 (numérotation interne
+du tome 2 ; c'est le chapitre 13 dans la numérotation content ; le bandeau courant écrit
+« Similitudes »). Encart historique : rappel que dans son programme d'Erlangen, en 1872, Felix Klein
+propose le caractère d'aujourd'hui de la géométrie, en la considérant comme l'étude d'une famille de
+transformations ; que certaines familles méritent une étude particulière (celles dont la composée de
+deux transformations, l'identité et la transformation inverse appartiennent encore à la famille —
+elles forment alors un groupe) ; que parmi ces transformations, les déplacements, les symétries, les
+similitudes et leurs composés forment ce que Klein appelle le groupe principal de la géométrie
+euclidienne, dont les propriétés métriques sont les propriétés invariantes. Référence : « (J.
+Dhombres et al, Mathématiques au fil des âges, 1987). » Mention liminaire (p.75) : « Dans tout le
+chapitre, le plan est orienté dans le sens direct. » Le chapitre est structuré en cinq parties
+**I. Homothéties et translations**, **II. Similitudes**, **III. Similitudes directes – Similitudes
+indirectes**, **IV. Similitudes directes** (angle, centre, forme réduite, nombres complexes),
+**V. Similitudes indirectes** (forme réduite, nombres complexes), ponctuées d'activités et de trois
+exercices résolus, suivies d'un QCM / Vrai-Faux, puis d'une rubrique « Exercices et problèmes »
+(27 exercices).
+
+### Cours — Activités
+
+**I. Homothéties et translations** (p.75)
+
+- **Activité 1** (p.75) : ABCD un trapèze et M un point ; les droites (AD) et (BC) se coupent en O ; h
+  l'homothétie de centre O qui transforme A en D. 1. montrer que h transforme B en C. 2. construire
+  l'image du point M par h. (Figure.)
+- **Activité 2** (p.76) : A et B deux points distincts, h₁ et h₂ deux homothéties de centres respectifs A
+  et B et de rapports respectifs 2 et 1/3. Construire le centre de chacune des homothéties h₂∘h₁ et h₁∘h₂.
+- **Activité 3** (p.76) : t une translation de vecteur u⃗ et h une homothétie de rapport k ≠ 1. 1.a. A et B
+  deux points d'images A′ et B′ par h∘t ; montrer que A′B′⃗ = kAB⃗. b. quelle est la nature de h∘t ? 2. déterminer de même la nature de t∘h.
+- **Activité 4** (p.77) : donner, dans chaque cas, la nature et les éléments caractéristiques de
+  l'application f : M(z) ↦ M′(z′). a. z′ = −2z + 3. b. z′ = 4z + 1 − i.
+
+**II. Similitudes** (p.77)
+
+- **Activité 1** (p.77) : ABC et A′B′C′ deux triangles tels que A′B′/AB = A′C′/AC = B′C′/BC ; I un point de
+  [A′B′] tel que A′I = AB et J un point de [A′C′] tel que A′J = AC. 1. montrer que les droites (IJ) et
+  (B′C′) sont parallèles. 2. montrer qu'il existe une isométrie g qui envoie A, B et C respectivement sur
+  A′, I et J. 3. h l'homothétie de centre A′ qui envoie I sur B′ et S = h∘g ; déterminer les images de A, B
+  et C par S. (Figure.)
+- **Activité 2** (p.79) : deux triangles ABC et A′B′C′ sont dits semblables s'il existe une similitude qui
+  envoie A, B et C sur A′, B′ et C′. 1. ABC et A′B′C′ deux triangles semblables ; montrer que
+  A′B′/AB = A′C′/AC = B′C′/BC. 2. montrer que deux triangles ABC et A′B′C′ sont semblables, si et seulement
+  si, Â = Â′, B̂ = B̂′ et Ĉ = Ĉ′.
+
+**III. Similitudes directes – Similitudes indirectes** (p.80)
+
+- **Activité 1** (p.80) : h et h₁ deux homothéties et g et g₁ deux isométries telles que h∘g = h₁∘g₁.
+  1. montrer que h₁⁻¹∘h est un déplacement. 2. montrer que g est un déplacement, si et seulement si, g₁ est
+     un déplacement.
+
+**IV. Similitudes directes — IV.1 Angle d'une similitude directe** (p.81)
+
+- **Activité 1** (p.81) : f et g deux similitudes directes d'angles respectifs θ et θ′ ; A et B deux points
+  distincts, A′ et B′ les images de A et B par g et A″ et B″ les images de A′ et B′ par f. Déterminer
+  (AB⃗, A″B″⃗) et (A′B′⃗, AB⃗).
+
+**IV.2 Centre d'une similitude directe** (p.81)
+
+- **Activité 1** (p.81) : A et B deux points distincts et k un réel strictement positif et différent de 1 ;
+  E l'ensemble des points M tels que MA = kMB. 1. montrer que M ∈ E, si et seulement si,
+  (MA⃗ − kMB⃗)·(MA⃗ + kMB⃗) = 0. 2. G le barycentre de (A, 1) et (B, −k) et G′ le barycentre de (A, 1) et
+  (B, k) ; montrer que M ∈ E, si et seulement si, MG⃗·MG′⃗ = 0. 3. en déduire que E est le cercle de diamètre
+  [GG′].
+- **Activité 2** (p.82) : A et B deux points distincts. Déterminer et construire, dans chaque cas,
+  l'ensemble F des points M du plan tels que a. (MA⃗, MB⃗) ≡ π/3 [2π]. b. (MA⃗, MB⃗) ≡ π/2 [2π]. c.
+  (MA⃗, MB⃗) ≡ 4π/3 [2π].
+- **Activité 3** (p.83) : A et B deux points distincts ; f une similitude directe qui ne fixe aucun des
+  points A et B ; A′ et B′ les images de A et B par f, telles que (AA′) et (BB′) soient strictement
+  parallèles. 1. montrer que si deux points C et D de (AB) vérifient CA = DA et CB = DB alors C = D. 2. montrer que si (AB) et (A′B′) sont parallèles, alors le rapport de f vaut 1. 3. f de rapport k ≠ 1, I
+  l'intersection des droites (AB) et (A′B′) ; a. montrer que l'image I′ de I par f appartient à (A′B′).
+  b. montrer que I′A′ = IA′ et I′B′ = IB′. c. en déduire le centre de f.
+
+**IV.3 Forme réduite d'une similitude directe** (p.84)
+
+- **Activité 1** (p.84) : f une similitude directe de centre I, de rapport k et d'angle non nul θ, h
+  l'homothétie de centre I et de rapport k et r la rotation de centre I et d'angle θ. 1. donner les éléments
+  caractéristiques des similitudes f, h∘r et r∘h. 2. en déduire que f = h∘r = r∘h.
+- **Activité 2** (p.84–85) : I un point du plan. Donner la forme réduite de la similitude h∘r dans chacun
+  des cas. 1. h l'homothétie de centre I et de rapport −1/2, r l'identité. 2. h l'homothétie de centre I et
+  de rapport −1/2, r la rotation de centre I et d'angle 2π/3. 3. h l'homothétie de centre I et de rapport
+  −1/2, r la symétrie centrale de centre I.
+- **Activité 3** (p.86) : AECD un carré [sic — le texte écrit « AECD » ; contexte : carré] de centre B ; h
+  l'homothétie de centre A et de rapport 2, r la rotation de centre B qui envoie C sur D. Donner les
+  éléments caractéristiques des similitudes h∘r et r∘h.
+
+**IV.4 Similitudes directes et nombres complexes** (p.85)
+
+- **Activité 1** (p.85) : plan rapporté à un repère orthonormé direct (O, i⃗, j⃗) ; h l'homothétie de centre
+  A(0, 1) et de rapport 2, r la rotation de centre O et d'angle π/3 ; M un point d'affixe z, M′ son image
+  par r et M″ l'image de M′ par h ; z′ et z″ les affixes de M′ et M″. Exprimer z′ en fonction de z, puis z″
+  en fonction de z.
+- **Activité 2** (p.86) : plan rapporté à un repère orthonormé direct (O, i⃗, j⃗). Donner la nature de f et
+  préciser ses éléments caractéristiques : a. z′ = −2iz + 3. b. z′ = 4z + 1 − i. c. z′ = e^{iθ/6}·z + 1
+  [sic — l'exposant imprimé est « iθ/6 », θ non défini dans l'énoncé ; vraisemblablement iπ/6].
+- **Activité 3** (p.86) : ABC un triangle isocèle rectangle en A vérifiant (AB⃗, AC⃗) ≡ π/2 [2π] et AB = AC =
+  1 ; D le milieu de [BC] et le plan muni du repère (A, AB⃗, AC⃗). Donner l'écriture complexe de la
+  similitude directe de centre A qui envoie C sur D.
+
+**V. Similitudes indirectes** (p.86)
+
+- **Activité 1** (p.86) : OBO′A un losange, les droites (CD) et (AB) parallèles ; h l'homothétie de centre O
+  qui envoie C sur B, S la symétrie orthogonale d'axe (AB) ; on pose f = h∘S. 1. E et F les symétriques
+  respectifs de C et D par rapport à (AB) ; déterminer les images par f des points O′, E et F. 2. I le point
+  d'intersection de [AE] et (OO′) et I′ son symétrique par rapport à (AB) ; montrer que I′ appartient à [AC]
+  et en déduire que I est le centre de f. (Figure.)
+
+**V.1 Forme réduite d'une similitude indirecte** (p.87)
+
+- **Activité 1** (p.87) : f une similitude indirecte de centre I et de rapport k ≠ 1 ; h l'homothétie de
+  centre I et de rapport k. 1. montrer que h⁻¹∘f est une symétrie orthogonale d'axe une droite D passant par
+  I. 2. M un point distinct de I et M′ son image par f ; montrer que M appartient à D, si et seulement si,
+  IM′⃗ = kIM⃗. 3. montrer que h∘S_D = S_D∘h.
+- **Activité 2** (p.87) : ABCD un carré direct de centre O ; I le milieu de [AB]. 1. f la similitude directe
+  telle que f(A) = B et f(D) = I ; déterminer le rapport et l'angle de f et construire son centre Ω. 2. g =
+  f∘S_(ΩC) ; montrer que g est une similitude indirecte dont on précisera les éléments caractéristiques.
+- **Activité 3** (p.87) : f une similitude indirecte de centre I, de rapport k ≠ 1, d'axe D et u⃗ un vecteur
+  directeur de D. Montrer que (u⃗, IM′⃗) ≡ −(u⃗, IM⃗) [2π], pour tout point M distinct de I, d'image M′ par f.
+  (Figure.)
+
+**V.2 Similitude indirecte et nombres complexes** (p.88)
+
+- **Activité** (p.89) : plan rapporté à un repère orthonormé direct (O, i⃗, j⃗) ; f la similitude indirecte
+  qui à tout M d'affixe z associe le point M′ d'affixe z′ tel que z′ = −2iz̄ + 6 (z̄ le conjugué de z).
+  1. montrer que f est une similitude indirecte dont on déterminera le rapport et le centre I. 2. déterminer
+     l'ensemble des M d'affixe z tels que IM′⃗ = 2IM⃗ ; en déduire une équation de l'axe de f.
+
+### Cours — Résultats / définitions / théorèmes à retenir (VERBATIM)
+
+> **Définition (rappel)** (p.75, homothétie) — « Soit I un point et k un réel non nul. On appelle
+> homothétie de centre I et de rapport k l'application du plan dans lui-même qui à tout point M associe
+> l'unique point M′ tel que IM′⃗ = kIM⃗. »
+
+> **Théorème (propriété caractéristique d'une homothétie)** (p.75) — « Soit k un réel non nul et différent
+> de 1. Une application f est une homothétie de rapport k, si et seulement si, pour tous points M et N
+> d'images M′ et N′ par f, M′N′⃗ = kMN⃗. »
+
+> **Théorème** (p.75) — « Toute homothétie conserve les mesures des angles orientés. »
+
+> **Théorème** (p.76, composée de deux homothéties) — « La composée de deux homothéties de rapports
+> respectifs k₁ et k₂ est une homothétie de rapport k₁k₂ si k₁k₂ ≠ 1, une translation si k₁k₂ = 1. »
+
+> **Théorème** (p.76) — « La composée d'une translation et d'une homothétie de rapport k ≠ 1 est une
+> homothétie de rapport k. »
+
+> **Théorème** (p.77, homothétie et nombres complexes) — « Soit f une application du plan dans lui-même qui
+> à tout M d'affixe z associe le point M′ d'affixe z′. L'application f est une homothétie de rapport k ≠ 1,
+> si et seulement si, il existe un nombre complexe b tel que z′ = kz + b. De plus, l'affixe z_A du centre A
+> de l'homothétie f vérifie z_A = b/(1−k). »
+
+> **Définition** (p.77, similitude) — « Soit k un réel strictement positif. On appelle similitude de rapport
+> k, toute application du plan dans lui-même telle que pour tous points A et B d'images respectives A′ et
+> B′, A′B′ = k·AB. »
+
+> **Exemples** (p.78) — « Les isométries sont des similitudes de rapport 1. Toute homothétie de rapport k
+> est une similitude de rapport |k|. »
+
+> **Théorème** (p.78) — « La composée de deux similitudes de rapports respectifs k et k′ est une similitude
+> de rapport kk′. »
+
+> **Théorème** (p.78) — « Une application du plan dans lui-même est une similitude, si et seulement si, elle
+> est la composée d'une homothétie et d'une isométrie. »
+
+> **Théorème** (p.78) — « Pour tous points A, B, C et D, d'images respectives A′, B′, C′ et D′ par une
+> similitude de rapport k, A′B′⃗·C′D′⃗ = k²·AB⃗·CD⃗. »
+
+> **Propriétés** (p.79) — « • Une similitude de rapport k est une bijection et sa réciproque est une
+> similitude de rapport 1/k. • Une similitude conserve les angles géométriques. • Une similitude conserve
+> l'orthogonalité. • Une similitude conserve l'alignement et le barycentre. • Une similitude transforme un
+> segment en un segment. • Une similitude transforme une droite en une droite. • Une similitude conserve le
+> parallélisme. • Une similitude transforme un cercle en un cercle et conserve le contact. • Soit A, B, C,
+> D, E, F des points du plan et A′, B′, C′, D′, E′, F′ leurs images respectives par une similitude. Si AB⃗ =
+> aCD⃗ + bEF⃗ où a ∈ ℝ et b ∈ ℝ, alors A′B′⃗ = aC′D′⃗ + bE′F′⃗. »
+
+> **Théorème** (p.79) — « Deux similitudes qui coïncident sur trois points non alignés coïncident sur tout
+> le plan. »
+
+> **Propriétés** (p.79) — « Soit f, g et h trois similitudes. • (f∘g)⁻¹ = g⁻¹∘f⁻¹. • f = g, si et seulement
+> si, h∘f = h∘g. »
+
+> **Définition** (p.80, directe / indirecte) — « On dit qu'une similitude est directe si elle est la
+> composée d'une homothétie et d'un déplacement. On dit qu'une similitude est indirecte si elle est la
+> composée d'une homothétie et d'un antidéplacement. »
+
+> **Conséquence** (p.80) — « Toute similitude directe conserve les mesures des angles orientés. Toute
+> similitude indirecte change les mesures des angles orientés en leurs opposées. »
+
+> **Théorème** (p.80) — « • La composée de deux similitudes directes est une similitude directe. • La
+> composée de deux similitudes indirectes est une similitude directe. • La composée d'une similitude directe
+> et d'une similitude indirecte est une similitude indirecte. • La réciproque d'une similitude directe est
+> une similitude directe. • La réciproque d'une similitude indirecte est une similitude indirecte. »
+
+> **Théorème** (p.80) — « Soit A, B, C et D des points du plan tels que A ≠ B et C ≠ D. Il existe une unique
+> similitude directe qui envoie A sur C et B sur D. Il existe une unique similitude indirecte qui envoie A
+> sur C et B sur D. »
+
+> **Théorème et définition** (p.81, angle d'une similitude directe) — « Soit f une similitude directe et A,
+> B, C et D des points tels que AB ≠ 0 et CD ≠ 0. Soit A′, B′, C′ et D′ les images respectives de A, B, C et
+> D. Alors (AB⃗, A′B′⃗) ≡ (CD⃗, C′D′⃗) [2π]. En désignant par θ une mesure de l'angle (AB⃗, A′B′⃗), on dit que
+> f est une similitude directe d'angle θ. »
+
+> **Théorème** (p.81) — « Soit f et g deux similitudes directes d'angles respectifs θ et θ′. La similitude
+> directe f∘g est d'angle θ + θ′. La similitude directe f⁻¹ est d'angle −θ. »
+
+> **Théorème** (p.82, centre) — « Toute similitude directe de rapport différent de 1 admet un unique point
+> fixe, appelé centre de la similitude. »
+
+> **Conséquence** (p.82) — « Une similitude directe de rapport différent de 1 est parfaitement déterminée
+> par la donnée de son centre, son rapport et son angle. Le centre, le rapport et l'angle d'une similitude
+> directe sont appelés éléments caractéristiques de cette similitude. Une application f est une similitude
+> directe de rapport k ≠ 1, de centre I et d'angle θ, si et seulement si, pour tout point M distinct de I,
+> d'image M′, IM′ = k·IM et (IM⃗, IM′⃗) ≡ θ [2π]. »
+
+> **Théorème** (p.84, forme réduite d'une similitude directe) — « Toute similitude directe de centre I, de
+> rapport k ≠ 1 et d'angle θ se décompose sous la forme f = h∘r = r∘h où h est l'homothétie de centre I et
+> de rapport k et r est la rotation de centre I et d'angle θ. Cette décomposition s'appelle forme réduite de
+> f. »
+
+> **Théorème** (p.85, similitude directe et nombres complexes) — « Le plan est rapporté à un repère
+> orthonormé direct (O, i⃗, j⃗). Soit f une application du plan dans lui-même qui à tout point M d'affixe z
+> associe le point M′ d'affixe z′. L'application f est une similitude directe de centre I, de rapport k ≠ 1
+> et d'angle θ, si et seulement si, il existe deux nombres complexes a et b tels que z′ = az + b, avec a =
+> ke^{iθ} et z_I = b/(1−a) est l'affixe de I. »
+
+> **Théorème et définition** (p.86, centre d'une similitude indirecte) — « Une similitude indirecte de
+> rapport différent de 1 admet un unique point fixe, appelé centre de la similitude. »
+
+> **Théorème** (p.87, forme réduite d'une similitude indirecte) — « Soit f une similitude indirecte de
+> centre I et de rapport k ≠ 1 et h l'homothétie de centre I et de rapport k. Il existe une droite D telle
+> que f se décompose de manière unique sous la forme f = h∘S_D = S_D∘h, où S_D est la symétrie orthogonale
+> d'axe D. Dans ce cas, la droite D est l'ensemble des points M tels que IM′⃗ = kIM⃗, où M′ = f(M). Cette
+> décomposition est appelée forme réduite de f. La droite D est appelée axe de la similitude indirecte f. »
+
+> **Conséquences** (p.87) — « Une similitude indirecte de rapport différent de 1, est parfaitement
+> déterminée par son rapport, son centre et son axe, qui sont appelés éléments caractéristiques de cette
+> similitude. L'axe D d'une similitude indirecte de centre I et la perpendiculaire à D passant par I sont
+> globalement invariants par f. Si f est une similitude indirecte de centre I et de rapport k alors f∘f est
+> une homothétie de centre I et de rapport k². »
+
+> **Propriété** (p.88, similitude indirecte) — « Soit f une similitude indirecte de centre I, de rapport
+> différent de 1 et d'axe D. Si u⃗ est un vecteur directeur de D, alors (u⃗, IM′⃗) ≡ −(u⃗, IM⃗) [2π], pour
+> tout M distinct de I, d'image M′. La droite D porte donc la bissectrice intérieure de MIM′. »
+
+> **Théorème** (p.88, similitude indirecte et nombres complexes) — « Le plan est rapporté à un repère
+> orthonormé direct (O, i⃗, j⃗). Soit f une application du plan dans lui-même qui à tout M d'affixe z associe
+> le point M′ d'affixe z′. L'application f est une similitude indirecte de centre I et de rapport k ≠ 1, si
+> et seulement si, il existe deux nombres complexes a et b tels que z′ = az̄ + b. Dans ce cas k = |a| et
+> z_I = (a·b̄ + b)/(1 − |a|²) est l'affixe du point I. »
+
+### Cours — Exercices résolus
+
+**Exercice résolu 1** (énoncé + solution p.83) : A, B, C et D des points distincts tels que BD = (1/3)AC et
+(AC⃗, BD⃗) ≡ π/3 [2π]. Construire le centre I de la similitude directe S qui transforme A en B et C en D.
+**Solution** : le centre I de S vérifie IA = 3IB et (IA⃗, IB⃗) ≡ π/3 [2π]. En désignant par G et G′ les
+barycentres respectifs de (A, 1), (B, 3) et de (A, 1), (B, −3), le point I appartient à l'intersection du
+cercle de diamètre [GG′] et de l'arc de cercle ensemble des points M du plan tels que
+(MA⃗, MB⃗) ≡ π/3 [2π]. (Figure.)
+
+**Exercice résolu 2** (énoncé p.83, solution p.84) : 𝒞 et 𝒞′ deux cercles de centres respectifs O et O′ se
+coupant en A et B. 1.a. montrer qu'il existe une unique similitude directe f de centre A qui transforme 𝒞
+en 𝒞′. b. préciser le rapport et l'angle de f. 2. M un point de 𝒞 ; a. construire son image M′ par f. b.
+comparer (OA⃗, OM⃗) et (O′A⃗, O′M′⃗). c. en déduire que les points M, B et M′ sont alignés. **Solution** :
+1.a. l'unique similitude directe envoyant A sur A et O sur O′ transforme nécessairement 𝒞 en 𝒞′. b. c'est
+la similitude de centre A, de rapport OA′/OA (= O′A/OA) et d'angle (AO⃗, AO′⃗). 2. M′ appartient à 𝒞′ et
+vérifie (AM⃗, AM′⃗) ≡ (AO⃗, AO′⃗) [2π] (intersection de 𝒞′ avec la demi-droite [AX)) ; f conservant les
+angles orientés, (OA⃗, OM⃗) ≡ (O′A⃗, O′M′⃗) [2π] ; via les angles au centre et la relation de Chasles,
+(BM⃗, BM′⃗) ≡ kπ, k ∈ ℤ, ce qui prouve l'alignement de M, B et M′. (Figure.)
+
+**Exercice résolu** (énoncé + solution p.88, similitude indirecte) : OABC un rectangle tel que OA = 2OC et
+(OA⃗, OC⃗) ≡ π/2 [2π] ; la médiatrice Δ de [OB] coupe la droite (OA) en I et la droite (OC) en I′ ; J et J′
+les symétriques respectifs de O par rapport à I et I′. 1. montrer que les triangles OBJ et OBJ′ sont
+rectangles en B. 2. en déduire que les points B, J et J′ sont alignés. 3. S la similitude indirecte qui
+transforme J en O et O en J′. a. donner le rapport de S et en déduire que S admet un unique point fixe Ω.
+b. caractériser S∘S et en déduire que Ω appartient à (JJ′). c. construire Ω et l'axe de S. **Solution** : I
+est le milieu de [OJ] et le triangle OBJ est rectangle en B (de même OBJ′) ; le rapport de S est OJ′/OJ =
+tan(JÔD [?]) = OA/AB = 2, donc S admet un unique point fixe Ω ; S∘S est l'homothétie de centre Ω et de
+rapport 4, et S∘S(J) = S(O) = J′, d'où ΩJ′⃗ = 4ΩJ⃗ et Ω ∈ (JJ′) ; l'axe de S est la droite portant la
+bissectrice intérieure de l'angle OΩJ. (Figure.)
+
+### QCM (p.90) — « Cocher la réponse exacte. » Le plan est muni d'un repère orthonormé direct (O, u⃗, v⃗) ; M(z) et M′(z′).
+
+1. Soit I un point quelconque. L'homothétie h(I, −4) est (☐ une similitude indirecte de rapport 4 / ☐ une
+   similitude directe de rapport 4 et d'angle nul / ☐ une similitude directe de rapport 4 et d'angle π).
+2. Soit I et J deux points distincts. L'application h(I, 2)∘h(J, −1/2) est (☐ une translation / ☐ une
+   homothétie / ☐ l'identité).
+3. L'image par une similitude de rapport 1/2 d'un triangle d'aire 𝒜 est un triangle dont l'aire est égale à
+   (☐ 𝒜 / ☐ 4𝒜 / ☐ 𝒜/4).
+4. Soit Ω un point quelconque. L'application r(Ω, π/6)∘h(Ω, −2) est une similitude directe dont la forme
+   réduite est (☐ r(Ω, π/6)∘h(Ω, 2) / ☐ r(Ω, −π/6)∘h(Ω, 2) / ☐ r(Ω, −5π/6)∘h(Ω, 2)).
+5. Soit f la similitude indirecte de centre I, de rapport 2 et d'axe Δ. L'application f∘f est (☐ la
+   similitude indirecte de centre I, de rapport 4 et d'axe Δ / ☐ l'homothétie h(I, 4) / ☐ la similitude
+   directe de centre I, de rapport 4 et d'angle π).
+
+### Vrai ou faux (p.90) — « Répondre par vrai ou faux en justifiant la réponse. » (réponses non fournies)
+
+1. Une similitude directe qui fixe deux points distincts est l'identité.
+2. La composée d'une similitude directe de rapport 2 et d'un antidéplacement est une similitude indirecte de
+   rapport 2.
+3. La composée d'une similitude directe de rapport 4 et d'une similitude indirecte de rapport 1/4 est un
+   déplacement.
+4. La réciproque d'une similitude directe de centre I, de rapport 3 et d'angle π/2 est la similitude directe
+   de centre I, de rapport 3 et d'angle −π/2.
+5. Soit A, B, C et D des points tels que A ≠ C et B ≠ D. Soit f la similitude indirecte qui envoie A sur B
+   et C sur D. L'application f∘S_(AC) est une similitude directe de même rapport que f qui envoie A sur B et
+   C sur D.
+
+### Exercices et problèmes (p.91–95) — 27 exercices
+
+Mention liminaire (p.91) : « Dans tous les exercices le plan est orienté dans le sens direct. »
+
+- **Ex. 1** (p.91) : ABC un triangle équilatéral de centre G tel que (AB⃗, AC⃗) ≡ π/3 [2π]. Déterminer, dans
+  chaque cas, le rapport et l'angle de la similitude directe f. a. f fixe B et envoie A sur C. b. f fixe B
+  et envoie C sur G. c. f fixe G et envoie B sur C.
+- **Ex. 2** (p.91) : 1. S une similitude directe ; donner la nature de S∘f∘S⁻¹ dans chacun des cas :
+  a. f une translation de vecteur non nul ; b. f une rotation d'angle non nul ; c. f une homothétie de
+  rapport différent de 1 ; d. f une symétrie orthogonale d'axe passant par le centre de S. 2. reprendre la
+  question précédente en supposant que S est une similitude indirecte.
+- **Ex. 3** (p.91) : ABCD un carré de côté 1, de centre O, tel que (AB⃗, AD⃗) ≡ π/2 [2π] ; I le milieu de
+  [AO]. 1.a. montrer qu'il existe une unique similitude directe S qui envoie A sur O et B sur I. b.
+  déterminer le rapport et l'angle de S. 2.a. donner l'écriture complexe de S dans le repère orthonormé
+  (A, AB⃗, AD⃗). b. déterminer le centre de S.
+- **Ex. 4** (p.91) : ABC un triangle non isocèle, rectangle en A et tel que (AB⃗, AC⃗) ≡ π/2 [2π] ; H le
+  projeté orthogonal de A sur (BC), f la similitude directe qui envoie B sur A et A sur C. 1. déterminer les
+  éléments caractéristiques de f. 2. M un point variable de [AB] ; la perpendiculaire à (MH) menée de H
+  coupe [AC] en N ; montrer que le cercle de diamètre [MN] passe par un point fixe.
+- **Ex. 5** (p.91) : ABCD un carré de centre O tel que (AB⃗, AD⃗) ≡ π/2 [2π] ; S la similitude directe de
+  centre D qui envoie O sur C. 1. déterminer le rapport et l'angle de S. 2. déterminer l'image du point A
+  par S. 3. construire l'image du point C par S.
+- **Ex. 6** (p.91) : ABC un triangle direct et M un point du plan ; S la similitude directe de centre A qui
+  envoie B sur C. Construire l'image de M dans chacun des cas : 1. M n'appartient pas à (AB). 2. M
+  appartient à la droite (AB) privée des points A et B.
+- **Ex. 7** (p.91) : ABC un triangle isocèle et rectangle en A tel que (AB⃗, AC⃗) ≡ π/2 [2π] ; A′ le
+  symétrique de A par rapport à C. 1.a. préciser le rapport et l'angle de la similitude directe S qui envoie
+  A′ sur C et C sur B. b. déterminer l'image par S de la droite (AC). 2.a. I le centre de S ; montrer que le
+  triangle ICB est rectangle isocèle. b. construire I. c. construire l'image du cercle de centre C et de
+  rayon CA.
+- **Ex. 8** (p.91) : ABCD un carré direct de centre O. 1.a. préciser l'angle et le rapport de la similitude
+  directe S qui envoie A sur O et B sur D. b. construire le centre de f. c. déterminer S(D). 2. existe-t-il
+  une similitude directe qui envoie A sur O, B sur D et D sur C ?
+- **Ex. 9** (p.91) : A et B deux points ; h l'homothétie de centre A et de rapport −2, r la rotation de
+  centre B et d'angle π/2 ; on pose S = r∘h. 1. montrer que S est une similitude directe et déterminer son
+  rapport et son angle. 2. O le centre de S et A′ = r(A). a. montrer que (OA⃗, OA′⃗) ≡ −π/2 [2π] et OA′ =
+  2OA. b. construire le point O. 3. B′ = h(B) ; construire le centre de la similitude S′ = h∘r et préciser
+  son angle et son rapport.
+- **Ex. 10** (p.92) : le triangle ABR isocèle et rectangle en B, le triangle BCP isocèle et rectangle en C
+  et le triangle CAQ isocèle et rectangle en A ; S_P, S_Q et S_R les similitudes directes de centres
+  respectifs P, Q et R, de rapport √2 et d'angle π/4 ; f = S_R∘S_P∘S_Q. 1. déterminer f(A). 2. préciser f et
+  donner ses éléments caractéristiques. (Figure.)
+- **Ex. 11** (p.92) : O et B deux points distincts et 𝒞 le cercle de diamètre [OB] ; A un point du segment
+  [OB] distinct de O et B et I le milieu de [AB] ; la médiatrice de [AB] coupe le cercle 𝒞 en M et M′ tels
+  que (MO⃗, MB⃗) ≡ π/2 [2π] ; N le projeté orthogonal de A sur (OM). 1.a. quelle est la nature du
+  quadrilatère AMBM′ ? b. en déduire que la droite (AM′) est orthogonale à (OM) et que les points N, A et M′
+  sont alignés. 2. S la similitude de centre N qui envoie M sur A. a. déterminer l'angle de S. b. déterminer
+  les images par S des droites (MI) et (NA). c. en déduire l'image par S de M′. d. déterminer l'image I′ de
+  I par S. e. montrer que la droite (NI) est tangente en N au cercle de diamètre [OA].
+- **Ex. 12** (p.92) : un triangle AHH′ isocèle en H et tel que (AH⃗, AH′⃗) ≡ π/2 [source peu lisible pour le
+  membre de gauche et le modulo] et M un point de la droite (HH′) et M′ le point tel que le triangle AMM′
+  soit isocèle en M avec (MM′⃗, MA⃗) ≡ π/2 [2π]. 1. préciser la similitude directe de centre A qui envoie M
+  sur M′. 2. quel est l'ensemble E des points M′ lorsque M décrit (HH′) ? 3. J le milieu de [MM′] ; calculer
+  AJ/AM et montrer que (AM⃗, AJ⃗) ne dépend pas du point M. 4. quel est l'ensemble F des points J lorsque M
+  décrit (HH′) ? Construire F.
+- **Ex. 13** (p.92) : ABC un triangle rectangle en A et H le pied de la hauteur issue de A. 1. montrer que
+  le triangle ABH est l'image du triangle CAH par une similitude directe que l'on déterminera. 2. montrer
+  que le triangle AHC est l'image du triangle ABC par la composée d'une similitude directe et d'une symétrie
+  orthogonale que l'on précisera. 3. par quelle transformation peut-on passer du triangle ABC au triangle
+  HA[?] (source peu lisible) ?
+- **Ex. 14** (p.92) : AOO′ un triangle rectangle et isocèle en A ; 𝒞 le cercle de centre O passant par A et
+  𝒞′ le cercle de centre O′ passant par A ; les cercles 𝒞 et 𝒞′ se recoupent en B ; M un point de 𝒞 et M′
+  le point de 𝒞′ tel que (OM⃗, O′M′⃗) ≡ −π/2 [2π]. 1. préciser la similitude directe qui envoie O sur O′ et M
+  sur M′. 2. si M est distinct de B et de S_O(B), la droite (MB) recoupe 𝒞′ en un point N′ et la droite
+  (BM′) recoupe 𝒞 en N ; montrer que BN = BN′ et que les droites (BN) et (BN′) sont perpendiculaires. 3. les
+  carrés MBM′P et NBN′Q ; a. quel est l'ensemble des points P et l'ensemble des points Q lorsque M varie ?
+  b. montrer que la droite (PQ) passe par un point fixe. (Figure.)
+- **Ex. 15** (p.93) : f la transformation du plan qui, à tout point M d'affixe z, associe le point M′
+  d'affixe z′ = 2iz + 3 − i. 1. B le point d'affixe i et C le point d'affixe −1 ; B′ et C′ les images
+  respectives de B et C par f ; déterminer (BC⃗, B′C′⃗) et exprimer B′C′ en fonction de BC. 2. identifier f
+  et donner ses éléments caractéristiques.
+- **Ex. 16** (p.93) : le plan P muni d'un repère orthonormé direct (O, u⃗, v⃗) ; A(3, −1) et B(0, 2) ; h
+  l'homothétie de centre A et de rapport −√2, r la rotation de centre B et d'angle 3π/4 et t la translation
+  de vecteur BO⃗ ; on pose f = t∘r∘h. 1.a. caractériser t∘r. b. en déduire la nature de f et ses éléments
+  caractéristiques. c. donner l'écriture complexe de f. 2. déterminer et construire le point K tel que
+  f(K) = O.
+- **Ex. 17** (p.93) : le plan complexe muni d'un repère orthonormé direct (O, u⃗, v⃗) ; A, B, C et D les
+  points d'affixes respectives z_A = 2 + i, z_B = 1 + 2i, z_C = 6 + 3i et z_D = −1 + 6i. 1. montrer qu'il
+  existe une rotation qui transforme A en B et C en D ; préciser ses éléments caractéristiques. 3 [sic — la
+  numérotation source passe de 1 à 3]. J le point d'affixe 3 + 5i ; montrer que la rotation de centre J et
+  d'angle −π/2 transforme A en D et C en B. 4. I le point d'affixe 1 + i, M et N les milieux respectifs des
+  segments [AC] et [BD] ; déterminer la nature du quadrilatère IMJN. 5. les points P et Q tels que les
+  quadrilatères IAPB et ICQD soient des carrés ; a. calculer z_P et z_Q, affixes respectives de P et Q. b.
+  déterminer IP/IA et IQ/IC ainsi qu'une mesure des angles (IA⃗, IP⃗) et (IC⃗, IQ⃗) ; en déduire les éléments
+  caractéristiques de la similitude directe g telle que g(A) = P et g(C) = Q. c. en déduire que J est
+  l'image de M par g et que J est le milieu de [PQ].
+- **Ex. 18** (p.93) : ABC un triangle quelconque ; AB′B et ACC′ directs, rectangles, isocèles de sommet A
+  et K le milieu de [BC]. Le plan étant rapporté à un repère orthonormé direct d'origine A, on note a, b et
+  c les affixes des points A, B et C. 1. exprimer les affixes k, b′ et c′ des points K, B′ et C′ en fonction
+  de b et c. 2. montrer qu'il existe une unique similitude directe f qui envoie A sur B′ et K sur C′. 3.a.
+  donner les éléments caractéristiques de f, son expression complexe ainsi que sa forme réduite. b. en
+  déduire que les droites (AK) et (B′C′) sont perpendiculaires. (Figure.)
+- **Ex. 19** (p.93) : un rectangle d'or est un rectangle dont le quotient longueur/largeur est égal à
+  φ = (1 + √5)/2 ; ABCD un rectangle d'or et ABFE un carré. 1. vérifier que φ = 1 + 1/φ ; en déduire que
+  EFCD est un rectangle d'or. 2. f la similitude directe qui envoie A sur D et D sur C ; préciser son
+  rapport et son angle. 3. quelle est l'image de C par f ? 4. en déduire que l'intersection O de (AC) et
+  (DF) est invariant par f. 5. montrer que les droites (AC) et (DF) sont perpendiculaires et que si G
+  désigne l'intersection de (AC) et (EF) alors ED = EG. (Figure.)
+- **Ex. 20** (p.94) : ABCD un rectangle tel que AD = 1, AB = 2 et (DC⃗, DA⃗) ≡ π/2 [2π] ; L, K et J les
+  milieux respectifs de [AD], [DC] et [BC] ; le plan muni du repère (D, DK⃗, DA⃗). 1. montrer qu'il existe
+  une unique similitude indirecte f qui envoie A sur D et C sur B. 2.a. déterminer f(L) et f(J). b. donner
+  les éléments caractéristiques de f.
+- **Ex. 21** (p.94) : ABC un triangle équilatéral direct ; I et J les milieux respectifs des segments [AB]
+  et [AC] et D le symétrique de A par rapport à C. 1. f l'antidéplacement tel que f(C) = A et f(A) = B ;
+  identifier f. 2. g la similitude directe telle que g(B) = D et g(I) = C ; montrer que g(A) = A et
+  déterminer les éléments caractéristiques de g. 3. K le point défini par KA⃗ + 2KC⃗ = 0⃗ [source peu
+  lisible]. a. donner la nature de f∘g. b. déterminer f∘g(I) et f∘g(A). c. vérifier que KB⃗ + 2KC⃗ = 0⃗
+  [source peu lisible] ; en déduire que f∘g(K) = K. d. déterminer le rapport de f∘g. e. montrer que l'axe de
+  la similitude f∘g est la perpendiculaire en K à la droite (AB).
+- **Ex. 22** (p.94) : le plan muni du repère orthonormé direct (O, u⃗, v⃗) ; f la similitude indirecte qui à
+  tout point M d'affixe z associe le point M′ d'affixe z′ tel que z′ = (1 + i)z̄ + i. Déterminer le centre
+  et l'axe de f.
+- **Ex. 23** (p.94) : le plan muni du repère orthonormé direct (O, u⃗, v⃗) ; f la similitude indirecte qui à
+  tout point M d'affixe z associe le point M′ d'affixe z′ tel que z′ = −5iz̄ + 1 + i. 1. déterminer le
+  centre et l'axe de f. 2. déterminer l'image par f du cercle de centre I d'affixe 3 + i et de rayon √5.
+- **Ex. 24** (p.94) : OABC un rectangle tel que OA = 2OC et (OA⃗, OC⃗) ≡ π/2 [2π] ; la médiatrice D de [OB]
+  coupe la droite (OA) en H et la droite (OC) en H′ ; J et J′ les symétriques respectifs du point O par
+  rapport à H et H′. 1.a. montrer que les triangles OBJ et OBJ′ sont rectangles en B. b. en déduire que les
+  points B, J et J′ sont alignés. 2. f la similitude directe qui envoie J sur O et O sur J′. a. déterminer
+  l'angle de f. b. déterminer f(B) et en déduire le centre et le rapport de f. 3. g la similitude indirecte
+  qui envoie J sur O et O sur J′. a. donner le rapport de g. b. en déduire que g admet un unique point
+  invariant que l'on notera I. c. montrer que le point I appartient à (JJ′). d. construire le centre et
+  l'axe de g.
+- **Ex. 25** (p.94–95) : un triangle équilatéral ABC tel que (AB⃗, AC⃗) ≡ π/3 [2π] ; I le milieu de [AC] et
+  K le milieu de [AB]. 1.a. montrer qu'il existe un unique antidéplacement f qui envoie B sur A et A sur C.
+  b. montrer que f est une symétrie glissante dont on déterminera l'axe et le vecteur. c. D le symétrique de
+  B par rapport à I ; montrer que f(C) = D. d. D′ = f(D) ; montrer que D′ est le symétrique de B par rapport
+  à C. 2. S la similitude directe qui envoie A sur B et I sur D. a. déterminer le rapport et l'angle de S.
+  b. 𝒞 le cercle de diamètre [AB] et 𝒞′ le cercle de diamètre [BD] ; montrer que 𝒞 et 𝒞′ sont sécants en I
+  et en un autre point Ω, et que Ω est le centre de S. 3. g = f∘S ; déterminer la nature de g et ses
+  éléments caractéristiques.
+- **Ex. 26** (p.95) : un triangle isocèle ABC direct de sommet principal A ; on pose (AB⃗, AC⃗) ≡ 2α [2π] où
+  α est un réel de ]0, π/2[ ; O le milieu de [BC] et D le symétrique de A par rapport à O ; I et J les
+  projetés orthogonaux respectifs de O et D sur (AC). 1. f la similitude directe qui envoie O sur I et D sur
+  J ; déterminer à l'aide de α l'angle et le rapport de f ; montrer que f(A) = A. 2. E le symétrique de O
+  par rapport à I ; montrer que f(B) = O et f(C) = E ; déterminer OE/BC. 3. g la similitude indirecte qui
+  envoie B sur O et C sur E. a. déterminer le rapport de g et l'image de O par g. b. montrer que
+  g = S_(OE)∘f. 4. Ω le centre de g. a. montrer que g∘g(D) = J et en déduire que Ω appartient à la droite
+  (DJ). b. montrer que Ω appartient à la droite (BI). c. construire Ω.
+- **Ex. 27** (p.95) : ABC un triangle rectangle en C tel que (BC⃗, BA⃗) ≡ π/3 [2π] ; la bissectrice
+  intérieure de l'angle ABC coupe [AC] en O ; H le projeté orthogonal de O sur (AB) et H′ le milieu de
+  [OA]. 1.a. faire une figure. b. montrer que le triangle OAB est isocèle et que H est le milieu de [AB]. 2. f la similitude directe telle que f(B) = O et f(H) = H′. a. montrer que le rapport de f est 1/√3 et que
+  π/6 est une mesure de son angle. b. montrer que H′ est le milieu du segment [Of(A)] ; en déduire que A est
+  le centre de f. 3. les cercles (Γ) et (Γ′) de diamètres respectifs [AB] et [AO] se recoupent en D. a.
+  montrer que les points B, O et D sont alignés. b. montrer que les triangles BCD et ODH′ sont équilatéraux
+  et que f(C) = D. c. montrer que le quadrilatère ADC[?] (source peu lisible) est un losange. 4.
+  g = S_(DH′)∘f, où S_(DH′) est la symétrie axiale d'axe (DH′). a. déterminer g(A) et g(C). b. montrer que g
+  est une similitude indirecte dont on précisera le rapport. c. Ω le centre de g ; montrer que ΩD⃗ =
+  (1/3)ΩD⃗ [sic — relation imprimée telle quelle, membre de droite probablement mal rendu par la source] ;
+  construire alors le centre Ω et l'axe Δ de g.
+
+### Bornes de scope observées (chapitre 13)
+
+- ✅ INCLUS : rappels sur les **homothéties** (définition, propriété caractéristique M′N′⃗ = kMN⃗,
+  conservation des angles orientés) et les **translations** ; **composée de deux homothéties** (homothétie
+  de rapport k₁k₂ si ≠ 1, translation sinon), **composée d'une translation et d'une homothétie** (k ≠ 1 ⇒
+  homothétie de rapport k), **écriture complexe de l'homothétie** z′ = kz + b (k réel, centre
+  z_A = b/(1−k)) ; **définition de la similitude de rapport k** (k réel strictement positif, A′B′ = k·AB),
+  isométries = similitudes de rapport 1, homothétie de rapport k = similitude de rapport |k| ; **composée de
+  deux similitudes** (rapport kk′), caractérisation **similitude = composée homothétie∘isométrie**, effet
+  sur le **produit scalaire** (A′B′⃗·C′D′⃗ = k²·AB⃗·CD⃗) ; **propriétés** (bijection de réciproque une
+  similitude de rapport 1/k ; conservation des angles géométriques, de l'orthogonalité, de l'alignement, du
+  barycentre, du parallélisme ; transforme segment→segment, droite→droite, cercle→cercle) ; **triangles
+  semblables** (proportionnalité des côtés ⇔ égalité des angles) ; deux similitudes coïncidant sur 3 points
+  non alignés sont égales ; **similitudes directes / indirectes** (composée avec un déplacement / un
+  antidéplacement ; conservation / inversion des angles orientés ; règles de composition et de réciproque) ;
+  **existence-unicité** (unique similitude directe et unique similitude indirecte envoyant A→C, B→D pour
+  A ≠ B, C ≠ D) ; **angle d'une similitude directe** (θ, additif par composition, opposé par réciproque) ;
+  **centre** (unique point fixe si rapport ≠ 1), éléments caractéristiques (centre, rapport, angle),
+  caractérisation IM′ = k·IM et (IM⃗, IM′⃗) ≡ θ [2π] ; **forme réduite** d'une similitude directe
+  f = h∘r = r∘h ; **écriture complexe** d'une similitude directe z′ = az + b avec a = ke^{iθ}, centre
+  z_I = b/(1−a) ; **similitude indirecte** — centre (unique point fixe), **forme réduite** f = h∘S_D = S_D∘h,
+  **axe** D (ensemble des M tels que IM′⃗ = kIM⃗), globalement invariants (axe et perpendiculaire par I),
+  f∘f = homothétie de rapport k², bissectrice ((u⃗, IM′⃗) ≡ −(u⃗, IM⃗)) ; **écriture complexe** d'une
+  similitude indirecte z′ = az̄ + b, k = |a|, centre z_I = (a·b̄ + b)/(1 − |a|²).
+- ⛔ NON traité dans ce chapitre : les similitudes de l'**espace** (le chapitre est strictement plan) ; toute
+  **réduction matricielle** générale (les écritures analytiques restent traitées via l'écriture complexe ou
+  cas par cas) ; les groupes de transformations au sens abstrait (évoqués seulement dans l'encart historique
+  d'Erlangen). Le chapitre suppose acquis les **homothéties et translations** (rappelées en partie I), le
+  **chapitre 11 (Isométries du plan)** et le **chapitre 12 (Déplacements – Antidéplacements)** — déplacements
+  et antidéplacements, symétrie glissante, écritures complexes z′ = az + b (|a| = 1) — qu'il prolonge au cas
+  |a| ≠ 1 (rapport de similitude quelconque).
+
+## 2.14 Chapitre 14 — Coniques (manuel 222446, p.96–120)
+
+**Page de garde (p.96)** — Titre de couverture : « Coniques », Chapitre 5 (numérotation interne du
+tome 2 ; c'est le chapitre 14 dans la numérotation content ; le bandeau courant écrit « Coniques »).
+Encart historique (citation) : « Dans l'introduction de son livre, Al-Tusi donnait déjà : – L'équation
+de la parabole par rapport à deux axes perpendiculaires dont l'un est l'axe de la parabole et l'autre est
+la tangente au sommet de la parabole. – L'équation de l'hyperbole par rapport à deux axes perpendiculaires
+dont l'un est l'axe de l'hyperbole et l'autre est la tangente au sommet de l'hyperbole. – L'équation d'une
+hyperbole équilatère par rapport à ses asymptotes. Pour résoudre l'équation proposée […]. Al-Tusi démontre
+que les deux coniques se coupent […]. » Référence : « (R. Rashed, Entre Arithmétique et Algèbre, 1984,
+p.177) ». Le chapitre est structuré en quatre parties **I. La parabole**, **II. L'hyperbole**,
+**III. L'ellipse**, **IV. Équations non réduites des coniques**, ponctuées d'activités et de six exercices
+résolus, suivies d'un QCM / Vrai-Faux, puis d'une rubrique « Exercices et problèmes » (30 exercices).
+
+### Cours — Activités
+
+**I. La parabole** (p.97)
+
+- **Activité 1** (p.97) : plan muni d'un repère orthonormé (O, i⃗, j⃗) ; 𝒫 la courbe représentative de la
+  fonction x ↦ x² ; D la droite d'équation y = −1/4 et le point F(0, 1/4) ; M(x, y) et H son projeté
+  orthogonal sur D. 1. calculer les distances MF et MH. 2. en déduire que MF = MH, si et seulement si, M
+  appartient à 𝒫.
+- **Activité 2** (p.97) : D une droite du plan et F un point n'appartenant pas à D. 1. H un point de D ;
+  construire le centre M du cercle passant par F et tangent à D en H ; que vaut le rapport MF/MH ? 2. 𝒫
+  l'ensemble des centres des cercles passant par F et tangents à D ; pour tout point M du plan, H son projeté
+  orthogonal sur D ; a. montrer que 𝒫 = {M tels que MF/MH = 1}. b. construire quelques points de 𝒫. 3. K le
+  projeté orthogonal de F sur D et O le milieu du segment [FK] ; montrer que O appartient à 𝒫.
+- **Activité 3** (p.98) : 𝒫 une parabole de foyer F et de directrice D ; K le projeté orthogonal de F sur D.
+  1. montrer que la parabole 𝒫 coupe la droite (FK) en un unique point S, milieu du segment [FK]. 2. montrer
+     que M appartient à 𝒫, si et seulement si, son symétrique par rapport à (FK) appartient à 𝒫.
+- **Activité 4** (p.98) : D une droite du plan et A un point n'appartenant pas à D ; 𝒞 le cercle de centre A
+  et tangent à la droite D. 1. H le projeté orthogonal de A sur la droite D et F un point de 𝒞 distinct de H ;
+  montrer que F est le foyer d'une parabole passant par A et ayant pour directrice la droite D. 2. préciser le
+  foyer F₁ de la parabole de sommet A et de directrice D.
+
+**I.1 Équation réduite d'une parabole** (p.98)
+
+- **Activité 1** (p.98) : 𝒫 une parabole de foyer F, de directrice D et de sommet S ; K le projeté orthogonal
+  de F sur D ; on pose FK = p, i⃗ = (1/SF)·SF⃗ et j⃗ un vecteur unitaire de sorte que le repère (S, i⃗, j⃗) soit
+  orthonormé. 1. donner une équation de la directrice D dans le repère (S, i⃗, j⃗). 2. M un point de
+  coordonnées (x, y) ; montrer que M appartient à 𝒫, si et seulement si, y² = 2px.
+- **Activité 2** (p.99) : plan rapporté à un repère orthonormé (O, i⃗, j⃗) ; p un réel strictement positif ; on
+  pose 𝒫 = {M(x, y) tels que y² = 2px} et 𝒫′ = {M(x, y) tels que y² = −2px}. 1. montrer que 𝒫′ est la
+  symétrique de 𝒫 par rapport à l'axe (O, j⃗). 2. en déduire que 𝒫′ est une parabole dont on précisera le
+  foyer et la directrice. 3. déterminer 𝒫″ = {M(x, y) tels que x² = 2py}.
+- **Activité 3** (p.99) : plan rapporté à un repère orthonormé (O, i⃗, j⃗). Représenter dans le même repère les
+  paraboles d'équations respectives y² = 3x, y² = −3x, x² = 3y et x² = −3y.
+
+**I.2 Tangentes à une parabole** (p.99)
+
+- **Activité** (p.99) : plan rapporté à un repère orthonormé (O, i⃗, j⃗) ; 𝒫 la parabole d'équation x² = 2py et
+  𝒫′ la parabole d'équation y² = 2px. 1. montrer que la tangente T en un point M₀(x₀, y₀) de 𝒫 a pour équation
+  x₀x = p(y + y₀). 2. en déduire une équation de la tangente T′ en un point M₀(x₀, y₀) de 𝒫′.
+
+**II. L'hyperbole** (p.101)
+
+- **Activité 1** (p.101) : plan muni d'un repère orthonormé (O, i⃗, j⃗) ; ℋ la courbe représentative de la
+  fonction x ↦ 1/x ; le point F(√2, √2) et la droite D d'équation x/√2 + y/√2 − 1 = 0 ; M(x, y) et H son
+  projeté orthogonal sur D. 1. calculer les distances MF et MH. 2. en déduire que MH = (1/√2)·MF, si et
+  seulement si, M appartient à ℋ.
+- **Activité 2** (p.101) : D une droite du plan, F un point n'appartenant pas à D et K le projeté orthogonal de
+  F sur D. 1.a. construire le point S barycentre de (F, 1) et (K, −2) [source peu lisible pour le coefficient].
+  b. que vaut le rapport SF/SK ? 2. construire le point S′ barycentre de (F, 1) et (K, 2) [source peu lisible] ;
+  que vaut le rapport S′F/S′K ? 3. ℋ = {M tels que MF/MH = 2} où H est le projeté orthogonal de M sur D ; on se
+  propose de donner un procédé de construction d'un point de ℋ ; on considère le cercle 𝒞 de centre S et passant
+  par F ; B un point de 𝒞 distinct de F et I le point d'intersection de D et de (FB) ; h l'homothétie de centre I
+  qui envoie B sur F, M l'image de S par h et H le projeté orthogonal de M sur D ; a. montrer que h envoie K en H.
+  b. que vaut le rapport MF/MH ? en déduire que M ∈ ℋ. c. construire quelques points de ℋ.
+- **Activité 3** (p.102) : ℋ une hyperbole de foyer F, de directrice D et d'excentricité e ; K le projeté
+  orthogonal de F sur D. 1. montrer que l'intersection de ℋ avec la droite (FK) se réduit à deux points. 2.
+  montrer que M appartient à ℋ, si et seulement si, son symétrique par rapport à (FK) appartient à ℋ.
+
+**II.1 Équation réduite d'une hyperbole** (p.102)
+
+- **Activité 1** (p.102) : ℋ une hyperbole de foyer F, de directrice D et d'excentricité e ; K le projeté
+  orthogonal de F sur D ; S et S′ les sommets de ℋ et O le milieu de [SS′]. 1. montrer que OF⃗ = e·OS⃗ et
+  OK⃗ = (1/e)·OS⃗ où S est le barycentre des points pondérés (F, 1) et (K, e) [source peu lisible]. 2. on pose
+  i⃗ = (1/OF)·OF⃗ et on considère un vecteur unitaire j⃗ de sorte que le repère (O, i⃗, j⃗) soit orthonormé ; on
+  désigne par (c, 0) les coordonnées de F et (a, 0) celles de S. a. montrer que e = c/a et OK = a²/c. b. M un
+  point de coordonnées (x, y) ; montrer que M appartient à ℋ, si et seulement si, x²/a² − y²/(c²−a²) = 1.
+- **Activité 2** (p.104) : plan muni d'un repère orthonormé (O, i⃗, j⃗) ; ℋ l'ensemble des points M(x, y) tels
+  que x²/9 − y²/16 = 1. 1. montrer que ℋ est une hyperbole de foyer F(5, 0), de directrice associée la droite D
+  d'équation x = 9/5 et d'excentricité e = 5/3. 2.a. étudier la fonction f : x ↦ 4√(x²/9 − 1) pour x ≥ 3. b.
+  représenter les points M(x, y) tels que y = 4√(x²/9 − 1) et x ≥ 3. 3. en déduire une représentation graphique
+  de ℋ.
+
+**II.2 Tangentes à une hyperbole et asymptotes à une hyperbole** (p.104)
+
+- **Activité 1** (p.104) : dans le plan muni d'un repère orthonormé (O, i⃗, j⃗), on considère l'hyperbole ℋ
+  d'équation x²/a² − y²/b² = 1. 1. montrer que M(x, y) appartient à ℋ, si et seulement si,
+  y = (b/a)√(x²−a²) ou y = −(b/a)√(x²−a²). 2. ℋ₁ et ℋ₂ les courbes représentatives des fonctions
+  x ↦ (b/a)√(x²−a²) et x ↦ −(b/a)√(x²−a²). a. montrer que ℋ = ℋ₁ ∪ ℋ₂. b. montrer que les droites d'équations
+  y = (b/a)x et y = −(b/a)x sont asymptotes à ℋ. c. M₀(x₀, y₀) un point de ℋ ; montrer que la tangente à ℋ en
+  M₀ a pour équation x₀x/a² − y₀y/b² = 1.
+- **Activité 2** (p.105) : plan muni d'un repère orthonormé (O, i⃗, j⃗) ; ℋ l'hyperbole d'équation x²/4 − y² = 1.
+  1. déterminer les coordonnées de ses sommets et de ses foyers. 2. donner les équations des asymptotes. 3.a.
+     tracer ℋ. b. en déduire le tracé de l'hyperbole ℋ′ d'équation −x² + y²/4 = 1.
+- **Activité 3** (p.105) : plan muni d'un repère orthonormé (O, i⃗, j⃗). Trouver l'équation réduite de
+  l'hyperbole de centre O, de sommet S(5, 0) et dont l'une de ses asymptotes est la droite d'équation
+  5y + 3x = 0.
+
+**II.3 Équation d'une hyperbole rapportée à ses asymptotes** (p.107)
+
+- **Activité** (p.107) : plan muni d'un repère orthonormé (O, i⃗, j⃗) ; ℋ l'hyperbole de centre O, de foyer
+  F(2, 0) et de directrice associée la droite D d'équation x = 1/2. 1.a. donner l'équation réduite de ℋ. b.
+  construire ℋ. 2. les vecteurs u⃗ = i⃗ + √3 j⃗ et v⃗ = i⃗ − √3 j⃗ ; écrire une équation de ℋ dans le repère
+  (O, u⃗, v⃗).
+
+**III. L'ellipse** (p.107)
+
+- **Activité 1** (p.107–108) : D une droite du plan et F un point n'appartenant pas à D ; K le projeté
+  orthogonal de F sur D. 1.a. construire les points S et S′, barycentres respectifs de (F, 1), (K, −1/2) et
+  (F, 1), (K, 1/2). b. que valent les rapports SF/SK et S′F/S′K ? 2. ℰ = {M tels que MF/MH = 1/2} où H est le
+  projeté orthogonal de M sur D ; on se propose de donner un procédé de construction d'un point de ℰ ; on
+  désigne par 𝒞 le cercle de centre S et passant par F ; B un point de 𝒞 distinct de F et I le point
+  d'intersection de D et de (FB) ; h l'homothétie de centre I qui envoie B sur F, M l'image de S par h et H le
+  projeté orthogonal de M sur D ; a. montrer que h envoie K en H. b. montrer que M ∈ ℰ.
+- **Activité 2** (p.108) : ℰ une ellipse de foyer F, de directrice D et d'excentricité e ; K le projeté
+  orthogonal de F sur D. 1. montrer que l'intersection de ℰ avec la droite (FK) se réduit à deux points. 2.
+  montrer que M appartient à ℰ, si et seulement si, son symétrique par rapport à (FK) appartient à ℰ.
+
+**III.1 Équation réduite d'une ellipse** (p.109)
+
+- **Activité 1** (p.109) : ℰ une ellipse de foyer F, de directrice D et d'excentricité e ; K le projeté
+  orthogonal de F sur D ; S et S′ les sommets principaux de ℰ et O le milieu de [SS′]. 1. montrer que
+  OF⃗ = e·OS⃗ et OK⃗ = (1/e)·OS⃗ où S est le barycentre de (F, 1) et (K, e). 2. on pose i⃗ = (1/OF)·OF⃗ et on
+  considère un vecteur unitaire j⃗ de sorte que (O, i⃗, j⃗) soit un repère orthonormé ; on désigne par (c, 0) les
+  coordonnées de F et (a, 0) celles de S ; montrer que e = c/a et OK = a²/c. 3. M un point de coordonnées
+  (x, y) ; montrer que M appartient à ℰ, si et seulement si, x²/a² + y²/(a²−c²) = 1.
+- **Activité 2** (p.110) : plan muni d'un repère orthonormé (O, i⃗, j⃗) ; ℰ l'ensemble des points M(x, y) tels
+  que x²/25 + y²/9 = 1. 1. montrer que ℰ est une ellipse de foyer F(4, 0), de directrice associée la droite D
+  d'équation x = 25/4 et d'excentricité e = 4/5. 2.a. étudier la fonction f : x ↦ 3√(1 − x²/25) pour −5 ≤ x ≤ 5.
+  b. représenter les points M(x, y) tels que y = 3√(1 − x²/25) et −5 ≤ x ≤ 5. 3. en déduire une représentation
+  graphique de ℰ ; tracer alors ℰ.
+- **Activité 3** (p.111) : plan muni d'un repère orthonormé (O, i⃗, j⃗). 1. trouver l'équation réduite de
+  l'ellipse de centre O tel que S(3, 0) est un sommet et F(√5, 0) est un foyer. 2. trouver l'équation réduite
+  d'une ellipse sachant que O est son centre, F(0, −4) est un foyer et 0.2 est son excentricité.
+
+**III.2 Tangentes à une ellipse** (p.111)
+
+- **Activité** (p.111–112) : plan muni d'un repère orthonormé (O, i⃗, j⃗) ; ℰ l'ellipse d'équation
+  x²/a² + y²/b² = 1, a > 0, b > 0. 1. montrer que M(x, y) appartient à ℰ, si et seulement si,
+  y = (b/a)√(a²−x²) ou y = −(b/a)√(a²−x²). 2. ℰ₁ et ℰ₂ les courbes représentatives des fonctions
+  x ↦ (b/a)√(a²−x²) et x ↦ −(b/a)√(a²−x²). a. montrer que ℰ = ℰ₁ ∪ ℰ₂. b. montrer que la tangente en un point
+  M₀(x₀, y₀) de ℰ a pour équation x₀x/a² + y₀y/b² = 1.
+
+**IV. Équations non réduites des coniques** (p.113)
+
+- **Activité 1** (p.113–114) : plan rapporté à un repère orthonormé (O, i⃗, j⃗) ; 𝒫 l'ensemble des points
+  M(x, y) tels que y² + 2y − 4x + 4 = 0. 1. montrer que M appartient à 𝒫, si et seulement si,
+  (y + 1)² = 4(x − 3/4). 2. montrer que 𝒫 est une parabole de foyer F(7/4, −1) et de directrice la droite
+  d'équation x = −1/4. 3. montrer que l'ensemble des points M(x, y) tels que x² + 2x − 4y + 4 = 0 est une
+  parabole dont on déterminera les coordonnées du foyer et une équation de la directrice.
+- **Activité 2** (p.114) : plan muni d'un repère orthonormé (O, i⃗, j⃗). 1. on considère l'ensemble ℋ des
+  points M(x, y) tels que x² − 9y² − 8x + 36y − 56 = 0. a. montrer que M appartient à ℋ, si et seulement si,
+  (x−4)² − 9(y−2)² − 36 = 0. b. en déduire que M appartient à ℋ, si et seulement si, (x−4)²/36 − (y−2)²/4 = 1.
+  c. O′ le point de coordonnées (4, 2) ; montrer que dans le repère (O′, i⃗, j⃗), ℋ est l'ensemble des points
+  M(X, Y) tels que X²/36 − Y²/4 = 1. d. en déduire que ℋ est une hyperbole dont on déterminera l'excentricité,
+  ainsi que les coordonnées des sommets et des foyers dans le repère (O, i⃗, j⃗). 2. déterminer l'ensemble des
+  points M(x, y) tels que x² − 9y² − 8x + 36y − 20 = 0.
+- **Activité 3** (p.114–115) : plan muni d'un repère orthonormé (O, i⃗, j⃗). 1. on considère l'ensemble ℰ des
+  points M(x, y) tels que x² + 9y² + 4x − 18y − 23 = 0. a. montrer que M appartient à ℰ, si et seulement si,
+  (x+2)²/36 + (y−1)²/4 = 1 ; O′ le point de coordonnées (−2, 1). b. montrer que dans le repère (O′, i⃗, j⃗), ℰ
+  est l'ensemble des points M(X, Y) tels que X²/36 + Y²/4 = 1. c. en déduire que ℰ est une ellipse dont on
+  déterminera l'excentricité, ainsi que les coordonnées des sommets et des foyers dans le repère (O, i⃗, j⃗). 2. déterminer l'ensemble des points M(x, y) tels que x² + 9y² + 4x − 18y + 14 = 0. 3. déterminer l'ensemble
+  des points M(x, y) tels que x² + 9y² + 4x − 18y + 13 = 0.
+- **Activité 4** (p.115) : plan muni d'un repère orthonormé (O, i⃗, j⃗). Déterminer la nature de chacune des
+  courbes suivantes en donnant ses éléments caractéristiques, puis la construire. 1. x² − 2x + y + 1 = 0. 2.
+  x² − y² − 2x − 4y − 7 = 0. 3. (3x + y)² − (x − 1)(6y + 4) = 0.
+
+### Cours — Résultats / définitions / théorèmes à retenir (VERBATIM)
+
+> **Définition** (p.97, parabole) — « Soit D une droite et F un point n'appartenant pas à D. Pour tout point
+> M du plan, on note H son projeté orthogonal sur la droite D. On appelle parabole de foyer F et de directrice
+> D, l'ensemble des points M tels que MF = MH »
+
+> **Vocabulaire** (p.97) — « Soit 𝒫 une parabole de foyer F et de directrice D. La perpendiculaire à D
+> passant par F est appelée axe focal de la parabole. La distance du foyer à la directrice est appelée
+> paramètre de la parabole. »
+
+> **Théorème** (p.98, sommet d'une parabole) — « Toute parabole admet comme axe de symétrie son axe focal.
+> Toute parabole rencontre son axe focal en un unique point appelé sommet de la parabole. Le sommet d'une
+> parabole de foyer F et de directrice D est le milieu du segment [FK] où K est le projeté orthogonal de F sur
+> D. »
+
+> **Théorème** (p.99, équation réduite d'une parabole) — « Soit 𝒫 une parabole de sommet S, de foyer F et de
+> paramètre p. On munit le plan du repère orthonormé (S, i⃗, j⃗), où i⃗ = (1/SF)·SF⃗. La parabole 𝒫 a pour
+> équation y² = 2px, la directrice D a pour équation x = −p/2 et le foyer F a pour coordonnées (p/2, 0).
+> Réciproquement, dans le plan rapporté à un repère orthonormé (O, i⃗, j⃗), l'ensemble des points M(x, y) tels
+> que y² = 2px (p > 0) est la parabole de foyer F(p/2, 0), de directrice la droite d'équation x = −p/2, de
+> paramètre p et de sommet O. »
+
+> **Vocabulaire** (p.99) — « L'équation y² = 2px est appelée équation réduite de la parabole 𝒫. »
+
+> **Théorème** (p.100, tangentes à une parabole) — « Le plan est rapporté à un repère orthonormé (O, i⃗, j⃗).
+> Soit p un réel strictement positif. Si 𝒫 est la parabole d'équation y² = 2px, alors la tangente à 𝒫 en un
+> point M₀(x₀, y₀) est la droite d'équation y₀y = p(x + x₀). Si 𝒫 est la parabole d'équation x² = 2py, alors la
+> tangente à 𝒫 en un point M₀(x₀, y₀) est la droite d'équation x₀x = p(y + y₀). »
+
+> **Conséquence** (p.100) — « Soit une parabole d'équation y² = 2px, dans le repère orthonormé (S, i⃗, j⃗), où S
+> est le sommet de la parabole et i⃗ et j⃗ sont des vecteurs directeurs unitaires respectifs de l'axe focal et
+> de la directrice. Alors sa tangente au sommet a pour équation x = 0. »
+
+> **Vocabulaire** (p.100) — « La tangente à une parabole en son sommet est appelée tangente au sommet. »
+
+> **Définition** (p.101, hyperbole) — « Soit D une droite, F un point n'appartenant pas à D et un réel e > 1.
+> Pour tout point M du plan, on note H son projeté orthogonal sur la droite D. On appelle hyperbole de foyer F,
+> de directrice D et d'excentricité e, l'ensemble des points M tels que MF/MH = e. »
+
+> **Vocabulaire** (p.102) — « Soit ℋ une hyperbole de foyer F et de directrice D. La perpendiculaire à D
+> passant par F est appelée axe focal de l'hyperbole. »
+
+> **Théorème** (p.102, sommets d'une hyperbole) — « Soit ℋ une hyperbole de foyer F, de directrice D et
+> d'excentricité e. • L'axe focal de ℋ est un axe de symétrie pour ℋ. • ℋ rencontre son axe focal en deux
+> points appelés sommets de l'hyperbole et ils sont les barycentres respectifs des points (F, 1), (K, −e) et
+> (F, 1), (K, e) où K est le projeté orthogonal de F sur D. » [note : les signes des coefficients e / −e sont
+> peu lisibles à la source dans l'encadré ; recopiés dans l'ordre standard.]
+
+> **Théorème** (p.103, équation réduite d'une hyperbole) — « Soit ℋ une hyperbole de foyer F, de directrice D
+> et d'excentricité e, de sommet S et S′. On désigne par O le milieu de [SS′], on pose i⃗ = (1/OF)·OF⃗ et on
+> considère un vecteur unitaire j⃗, directeur de D. Si S a pour coordonnées (a, 0) et F a pour coordonnées
+> (c, 0) dans le repère orthonormé (O, i⃗, j⃗), alors l'hyperbole ℋ a pour équation x²/a² − y²/b² = 1, avec
+> b² = c² − a². Réciproquement, dans le plan muni d'un repère orthonormé (O, i⃗, j⃗), l'ensemble des points
+> M(x, y) tels que x²/a² − y²/b² = 1 (a > 0, b > 0) est une hyperbole de centre O, de foyer F(√(a²+b²), 0), de
+> directrice d'équation x = a²/c, d'excentricité e = c/a avec c = √(a²+b²) et de sommets S(a, 0) et S′(−a, 0).
+> Pour des raisons de symétrie par rapport à la droite Δ : y = x, la courbe ℋ d'équation −x²/a² + y²/b² = 1 est
+> une hyperbole de centre O, de foyer F(0, √(a²+b²)), de directrice la droite d'équation y = b²/c,
+> d'excentricité e = c/b avec c = √(a²+b²) et de sommets S(0, b) et S′(0, −b). »
+
+> **Vocabulaire** (p.103) — « L'équation x²/a² − y²/b² = 1 (a > 0, b > 0) est appelée équation réduite de
+> l'hyperbole. »
+
+> **Théorème** (p.103, centre et axes d'une hyperbole) — « • Toute hyperbole admet un centre de symétrie, qui
+> est le milieu de ses sommets. Ce centre de symétrie est appelé centre de l'hyperbole. • Toute hyperbole admet
+> deux axes de symétrie qui sont l'axe focal et l'axe parallèle à la directrice et passant par le centre de
+> symétrie. »
+
+> **Conséquence** (p.104) — « Soit ℋ une hyperbole de foyer F et de directrice D. Le fait que l'hyperbole ℋ
+> admette un centre de symétrie implique l'existence d'une autre directrice D′ et d'un autre foyer F′
+> symétriques respectifs de D et F. On dit alors que F est le foyer associé à la directrice D et F′ est le foyer
+> associé à la directrice D′. »
+
+> **Vocabulaire** (p.105) — « On dit qu'une hyperbole est équilatère si ses asymptotes sont perpendiculaires. »
+
+> **Théorème** (p.105, asymptotes et tangente d'une hyperbole) — « Soit ℋ l'hyperbole d'équation
+> x²/a² − y²/b² = 1, dans le plan muni d'un repère orthonormé (O, i⃗, j⃗). Alors ℋ admet deux asymptotes
+> d'équations y = (b/a)x et y = −(b/a)x. La tangente à ℋ en un point M₀(x₀, y₀) a pour équation
+> x₀x/a² − y₀y/b² = 1. »
+
+> **Conséquence** (p.105) — « La tangente à une hyperbole ℋ en son sommet S(a, 0) a pour équation x = a. »
+
+> **Théorème** (p.107, hyperbole rapportée à ses asymptotes) — « Toute hyperbole rapportée à ses asymptotes a
+> une équation de la forme XY = k où k est un réel non nul. »
+
+> **Définition** (p.108, ellipse) — « Soit D une droite, F un point n'appartenant pas à D et un réel
+> 0 < e < 1. Pour tout point M du plan, on note H son projeté orthogonal sur la droite D. On appelle ellipse de
+> foyer F, de directrice D et d'excentricité e, l'ensemble des points M tels que MF/MH = e. »
+
+> **Vocabulaire** (p.108) — « Soit ℰ une ellipse de foyer F et de directrice D. La perpendiculaire à D passant
+> par F est appelée axe focal de cette ellipse. »
+
+> **Théorème** (p.108, sommets principaux d'une ellipse) — « Soit ℰ une ellipse de foyer F, de directrice D et
+> d'excentricité e. L'axe focal de ℰ est un axe de symétrie pour ℰ. ℰ rencontre son axe focal en deux points
+> appelés sommets principaux de l'ellipse et ils sont les barycentres respectifs des points (F, 1), (K, −e) et
+> (F, 1), (K, e) où K est le projeté orthogonal de F sur D. » [note : les signes des coefficients e / −e sont
+> peu lisibles à la source dans l'encadré ; recopiés dans l'ordre standard.]
+
+> **Théorème** (p.109, équation réduite d'une ellipse) — « Soit ℰ une ellipse de foyer F, de directrice D et
+> d'excentricité e. On désigne par O le milieu des sommets principaux S et S′. On pose i⃗ = (1/OF)·OF⃗ et j⃗ un
+> vecteur unitaire de sorte que le repère (O, i⃗, j⃗) soit orthonormé. Si S a pour coordonnées (a, 0) et F a
+> pour coordonnées (c, 0) alors l'ellipse ℰ a pour équation x²/a² + y²/b² = 1, avec b² = a² − c². Cette équation
+> est appelée équation réduite de ℰ. »
+
+> **Théorème** (p.109, centre et axes d'une ellipse) — « Toute ellipse admet un centre de symétrie, qui est le
+> milieu du segment formé par ses sommets principaux. Ce centre de symétrie est appelé centre de l'ellipse.
+> Toute ellipse admet deux axes de symétrie qui sont l'axe focal et la droite perpendiculaire à l'axe focal en
+> son centre. »
+
+> **Conséquence** (p.110) — « Soit ℰ une ellipse de foyer F et de directrice D. Le fait que l'ellipse ℰ
+> admette un centre de symétrie implique l'existence d'une autre directrice D′ et d'un autre foyer F′
+> symétriques respectifs de D et F par rapport au centre de l'ellipse. On dit que F est le foyer associé à la
+> directrice D et que F′ est le foyer associé à la directrice D′. » (p.110 : « La perpendiculaire à l'axe focal
+> d'une ellipse en son centre coupe cette ellipse en deux points appelés sommets secondaires. »)
+
+> **Théorème** (p.111, cas a > b et a < b) — « Le plan est muni d'un repère orthonormé (O, i⃗, j⃗). • Soit
+> a > b deux réels strictement positifs. L'ensemble des points M(x, y) tels que x²/a² + y²/b² = 1 est une
+> ellipse de centre O, de foyer F(√(a²−b²), 0), de directrice associée la droite d'équation x = a²/c et
+> d'excentricité e = c/a, où a² = c² + b². • Soit a < b deux réels strictement positifs. L'ensemble des points
+> M(x, y) tels que x²/a² + y²/b² = 1 est une ellipse de centre O, de foyer F(0, √(b²−a²)), de directrice
+> associée la droite d'équation y = b²/c et d'excentricité e = c/b, où b² = a² + c². »
+
+> **Théorème** (p.112, tangente à une ellipse) — « Le plan est muni d'un repère orthonormé (O, i⃗, j⃗). Soit ℰ
+> l'ellipse d'équation x²/a² + y²/b² = 1, a > 0, b > 0. Alors la tangente à ℰ en un point M₀(x₀, y₀) a pour
+> équation x₀x/a² + y₀y/b² = 1. »
+
+> **Conséquence** (p.112) — « La tangente à une ellipse ℰ en son sommet S(a, 0) a pour équation x = a. La
+> tangente à une ellipse ℰ en son sommet L(0, b) a pour équation y = b. »
+
+> **Définition générale** (p.113, conique) — « Soit D une droite, F un point n'appartenant pas à D et un réel
+> e > 0. Pour tout point M du plan, on note H son projeté orthogonal sur D. On appelle conique 𝒞 d'excentricité
+> e, de foyer F et de directrice D l'ensemble des points M tels que MF = eMH. Si e = 1, 𝒞 est une parabole de
+> foyer F et de directrice D. Si e > 1, 𝒞 est une hyperbole de foyer F, de directrice D et d'excentricité e. Si
+> e < 1, 𝒞 est une ellipse de foyer F, de directrice D et d'excentricité e. »
+
+> **Équation générale du second degré** (p.115) — « Dans le plan muni d'un repère orthonormé (O, i⃗, j⃗),
+> l'ensemble des points M(x, y) du plan tels que Ax² + By² + Cx + Dy + E = 0, où A, B, C, D et E sont des réels
+> est une courbe dont la nature est donnée par le tableau suivant : AB = 0 ⇒ parabole ou deux droites
+> parallèles ou une droite ou le vide ; AB < 0 ⇒ hyperbole ou deux droites sécantes ; AB > 0 ⇒ ellipse ou
+> cercle ou un point ou le vide. »
+
+### Cours — Exercices résolus
+
+**Exercice résolu 1** (énoncé + solution p.100) : plan rapporté à un repère orthonormé (O, i⃗, j⃗) ; 𝒫 une
+parabole de foyer F, de directrice D et d'équation y² = 2px ; M₀(x₀, y₀) un point de 𝒫 distinct de O et H₀ son
+projeté orthogonal sur D. 1. montrer que la tangente T à 𝒫 en M₀ est la médiatrice du segment [FH₀]. 2. la
+tangente T coupe D en T₀ ; montrer que l'angle M₀FT₀ est droit. **Solution** : F a pour coordonnées (p/2, 0) et
+H₀ pour coordonnées (−p/2, y₀), d'où FH₀⃗(−p, y₀) est orthogonal à la tangente à 𝒫 en M₀ ; l'égalité M₀H₀ = M₀F
+permet de conclure que la tangente est la médiatrice de [FH₀] ; le triangle M₀H₀T₀ est rectangle en H₀ et F est
+le symétrique de H₀ par rapport à (M₀T₀), le résultat en découle. (Figure.)
+
+**Exercice résolu 2** (énoncé p.105, solution p.106) : ℋ l'hyperbole d'équation x²/a² − y²/b² = 1, dans un
+repère orthonormé (O, i⃗, j⃗). 1. montrer que les points d'intersection des asymptotes à ℋ avec la tangente au
+sommet S(a, 0) ont pour coordonnées (a, b) et (a, −b). 2. en déduire un procédé de construction des asymptotes
+d'une hyperbole, sachant que l'on connaît un de ses foyers F et ses sommets S et S′. **Solution** : la tangente
+au sommet S a pour équation x = a ; les asymptotes y = (b/a)x et y = −(b/a)x la coupent en I(a, b) et J(a, −b) ;
+les asymptotes passent par le centre O (milieu de [SS′]) ; en posant OS = a et OF = c, on a
+OI = OJ = √(a²+b²) = c = OF, donc I et J sont les points d'intersection du cercle de centre O et de rayon OF avec
+la tangente au sommet S. (Figure.)
+
+**Exercice résolu 3** (énoncé p.105, solution p.106–107) : un triangle équilatéral ABC de côté L ; ℋ
+l'hyperbole de foyer A, de directrice associée (BC) et d'excentricité 2. 1. déterminer les sommets S et S′ de
+ℋ, son centre et le second foyer F′. 2. calculer les distances SS′ et AF′ en fonction de L. 3. donner une
+équation de ℋ dans le repère orthonormé (O, i⃗, j⃗), O étant le centre de ℋ et i⃗ un vecteur unitaire directeur
+de (OA). **Solution** : l'axe focal de ℋ est la médiatrice de [BC] ; K le milieu de [BC], les sommets vérifient
+SA⃗ = −2SK⃗ et S′A⃗ = 2S′K⃗, donc S est le centre de gravité du triangle ABC et S′ le symétrique de A par rapport
+à K ; le centre O est le milieu de [SS′], donc le symétrique de A par rapport à S ; le second foyer F′ est le
+symétrique de A par rapport à O ; AK = L√3/2, d'où SS′ = SK + KS′ = 2L√3/3 et AF′ = 2·OA = 2SS′ = 4L√3/3 ; avec
+a = OS = (1/2)SS′ = L√3/3 et b² = OA² − OS² = 12L²/9 − 3L²/9 = L², l'hyperbole a pour équation
+3x²/L² − y²/L² = 1.
+
+**Exercice résolu 4** (énoncé + solution p.110) : on connaît le foyer F d'une ellipse ℰ et ses deux sommets S et
+S′ ; construire les points de l'ellipse qui se trouvent sur l'axe de symétrie perpendiculaire à l'axe focal.
+**Solution** : on construit le centre O de l'ellipse, milieu de [SS′] ; les points cherchés se trouvent sur la
+perpendiculaire Δ à (SS′) passant par O ; dans le repère (O, i⃗, j⃗) (i⃗ unitaire de (SS′), j⃗ unitaire de Δ)
+l'équation de ℰ est x²/a² + y²/b² = 1 où b² = a² − c² ; Δ : x = 0 coupe ℰ en B et B′ d'ordonnées b et −b, tels
+que les triangles OFB et OF′B′ sont rectangles et d'hypoténuse égale à a.
+
+**Exercice résolu 5** (énoncé p.112, solution p.112–113) : D et D′ deux droites perpendiculaires en O, de
+vecteurs directeurs unitaires respectifs i⃗ et j⃗ tels que (O, i⃗, j⃗) est un repère orthonormé direct ; 𝒞 et 𝒞′
+deux cercles concentriques de centre O, de rayons a et b avec a > b ; P un point du cercle 𝒞 ; la demi-droite
+[OP) coupe 𝒞′ en P′ ; la parallèle à D′ passant par P coupe la parallèle à D passant par P′ en M. 1. montrer que
+M varie sur une ellipse ℰ lorsque P varie sur 𝒞. 2. la parallèle à D passant par P coupe la parallèle à D′
+passant par P′ en N ; démontrer que la tangente en M à ℰ est perpendiculaire à (ON). **Solution** : P a pour
+coordonnées (a cos θ, a sin θ), P′ (b cos θ, b sin θ), d'où M(a cos θ, b sin θ) vérifie
+x_M²/a² + y_M²/b² = 1 : M décrit l'ellipse ; la tangente T à ℰ en M a pour équation xx_M/a² + yy_M/b² = 1, de
+vecteur directeur U⃗(−sin θ/b, cos θ/a) ; N a pour coordonnées (b cos θ, a sin θ) donc ON⃗(b cos θ, a sin θ) et
+ON⃗·U⃗ = 0, ce qui répond à la question.
+
+**Exercice résolu 6** (énoncé p.115, solution p.115–116) : plan muni d'un repère orthonormé direct (O, i⃗, j⃗) ;
+f la similitude directe de centre A(0, 1), de rapport √2 et d'angle π/4 ; 𝒞 la courbe d'équation
+x² + y² − 2xy + x − 3y = 0. 1.a. déterminer une équation de la courbe 𝒞′ image de 𝒞 par f ; en déduire que 𝒞′
+est une parabole dont on précisera le sommet, le foyer et la directrice. b. construire 𝒞′. 2. en déduire la
+nature de 𝒞 et la construire. **Solution** : l'expression complexe de f est z ↦ (1 + i)z + 1 ; en posant
+z = x + iy et z′ = x′ + iy′, f(M) = M′ équivaut à { x′ = x − y + 1 ; y′ = x + y }, d'où
+x = (1/2)(x′ + y′ − 1) et y = (1/2)(−x′ + y′ + 1) ; M ∈ 𝒞 équivaut à M′ ∈ 𝒞′, et 𝒞′ a pour équation
+y′ + 1 = x′² : c'est une parabole de sommet S′(0, −1), de directrice D′ : y = −5/4 et de foyer F′(0, −3/4). 2.
+en appliquant f⁻¹ (les distances sont divisées par √2, les orthogonalités conservées) 𝒞 est la parabole de
+foyer F et de directrice D, images réciproques de F′ et D′ ; de l'expression analytique de f on déduit
+S(−1, 0), F(−7/8, 1/8) et D : y = −x − 5/4. (Figures p.116.)
+
+### QCM (p.117) — « Cocher la réponse exacte. » Le plan est muni d'un repère orthonormé (O, i⃗, j⃗). (réponses non fournies)
+
+1. La parabole de foyer F(1, 0) et de directrice D : x = −1 a pour équation (☐ y² = 4x / ☐ y² = 2x / ☐ x² = 4y).
+2. L'ensemble des points M(x, y) tels que 4(x−1)² + 9(y+1)² − 1 = 0 est une ellipse de centre (☐ I(−1, 1) / ☐
+   O(0, 0) / ☐ I(1, −1)).
+3. Soit m un réel. L'ensemble d'équation m²x² + |m|y² + 1 = 0 est (☐ une ellipse / ☐ un cercle / ☐ l'ensemble
+   vide).
+4. La courbe d'équation |x² − y²| = 1 est (☐ une hyperbole / ☐ la réunion de deux hyperboles / ☐ la réunion
+   d'une ellipse et d'une hyperbole).
+5. L'hyperbole d'équation (x−2)²/16 − (y+2)²/9 = 1 a pour excentricité (☐ 5/4 / ☐ 5/3 / ☐ 4/3).
+
+### Vrai ou faux (p.117) — « Répondre par vrai ou faux en justifiant la réponse. » (réponses non fournies)
+
+1. La courbe d'équation x = (1/2)y² est une parabole de sommet O, de foyer F(1/4, 0) et de directrice
+   D : x = −1/4.
+2. La parabole d'équation x² = 4y se déduit de la parabole d'équation y² = 4x par symétrie par rapport à la
+   droite Δ : y = x.
+3. La courbe d'équation x² − y² = −5 est une hyperbole de centre O et de sommets S(0, √5) et S′(0, −√5).
+4. Les asymptotes de l'hyperbole d'équation 4(x+2)² − 9(y−1)² − 36 = 0 sont les droites d'équations respectives
+   y = (2/3)x et y = −(2/3)x dans le repère (O, i⃗, j⃗).
+5. L'ellipse d'équation 9x² + 4y² = 36 a pour excentricité √5/2.
+
+### Exercices et problèmes (p.118–120) — 30 exercices
+
+Mention liminaire (p.118) : « Dans tous les exercices le plan est muni d'un repère orthonormé (O, i⃗, j⃗). »
+
+- **Ex. 1** (p.118) : 1. déterminer une équation de la parabole 𝒫 de sommet I(2, 0) et de directrice D : x = 1. 2. construire 𝒫.
+- **Ex. 2** (p.118) : 1. déterminer une équation de la parabole 𝒫 de foyer F(2, 2) et de directrice D : x = 3. 2. construire 𝒫.
+- **Ex. 3** (p.118) : 1. 𝒫 la parabole d'équation y² = 4x ; F son foyer et D sa directrice ; déterminer les
+  coordonnées de F et une équation de D. 2. 𝒫′ la parabole d'équation y² = −4x + 8 ; a. montrer que la parabole
+  𝒫′ a pour foyer F. b. déterminer une équation de la directrice D′ de 𝒫′. c. montrer que F est compris entre D
+  et D′. 3. déterminer les points d'intersection de 𝒫 et 𝒫′. 4. 𝒫″ la parabole d'équation y² = 8x + 8 ; a.
+  montrer que 𝒫″ a pour foyer F. b. déterminer une équation de sa directrice D″. c. montrer que F n'est pas
+  compris entre D et D″. d. existe-t-il des points communs de 𝒫 et 𝒫″ ?
+- **Ex. 4** (p.118) : pour chacune des paraboles suivantes, déterminer son foyer, son sommet et une équation de
+  sa directrice, puis la tracer. a. y² = 10x. b. x² = 12y. c. y² = −10x. d. x² = −12y.
+- **Ex. 5** (p.118) : 𝒫 une parabole de foyer F, de directrice D et de sommet S ; trouver dans chacun des cas
+  l'équation réduite de 𝒫. 1. F a pour coordonnées (−2, 0) et S a pour coordonnées (0, 0). 2. S a pour
+  coordonnées (0, 0) et D a pour équation y + 3 = 0.
+- **Ex. 6** (p.118) : 𝒫 la parabole d'équation y² = 6x ; on considère une droite variable D passant par le
+  foyer F de 𝒫 et de vecteur directeur U⃗(1, m) où m est un réel non nul ; la droite D coupe la parabole 𝒫 en M
+  et M′ ; K le milieu de [MM′]. 1. écrire, à l'aide de m, les coordonnées de K. 2. quel est l'ensemble des
+  points K lorsque m décrit ℝ* ? 3. Δ et Δ′ les tangentes à la parabole 𝒫 issues des points M et M′ ; montrer
+  que Δ et Δ′ se coupent sur la directrice de 𝒫 et qu'elles sont perpendiculaires.
+- **Ex. 7** (p.118) : pour chacune des hyperboles suivantes, déterminer ses foyers, sommets et une équation de
+  chacune de ses directrices, son excentricité, puis la tracer. a. −9x² + 25y² = 225. b. 9x² − 25y² = 225. c.
+  x² − 4y² = 16.
+- **Ex. 8** (p.118) : ℋ une hyperbole de foyers F et F′, de directrice D associée à F, de sommets S et S′ et
+  d'excentricité e ; trouver l'équation réduite de ℋ. 1. F a pour coordonnées (12, 0) et S a pour coordonnées
+  (4, 0). 2. F et F′ ont pour coordonnées (0, 5) et (0, −5) et e = √3. 3. F a pour coordonnées (0, 2), D a pour
+  équation y + 3 = 0 et e = √3.
+- **Ex. 9** (p.118) : ℋ l'hyperbole d'équation x² − 4y² = 1 ; déterminer les asymptotes de ℋ et construire ℋ.
+- **Ex. 10** (p.118) : calculer l'excentricité d'une hyperbole dont les asymptotes sont orthogonales.
+- **Ex. 11** (p.119) : ℋ l'hyperbole d'équation xy = 1 ; A, B et C les points de ℋ d'abscisses respectives 1, 2
+  et −1/2. 1. montrer que la tangente en A à ℋ est perpendiculaire à (BC). 2. F le point de ℋ d'abscisse 3 ; a.
+  donner une équation cartésienne de la hauteur issue de A du triangle ABF. b. démontrer que l'orthocentre de
+  ABF est un point de ℋ.
+- **Ex. 12** (p.119) : pour chacune des ellipses suivantes, déterminer ses foyers, ses sommets et une équation
+  de chacune de ses directrices, son excentricité, puis la tracer. a. 4x² + 9y² = 36. b. 9x² + 4y² = 36. c.
+  −25x² − 9y² = −25.
+- **Ex. 13** (p.119) : 𝒞 un cercle de centre O et de rayon R > 1 ; à tout point M d'affixe z = Re^{iθ} du
+  cercle 𝒞, on associe le point M′ d'affixe 1/z. 1. déterminer la partie réelle et la partie imaginaire du
+  milieu I de [MM′]. 2. montrer que I varie sur une ellipse ℰ lorsque M varie sur 𝒞. 3. donner les éléments
+  caractéristiques de ℰ.
+- **Ex. 14** (p.119) : 1.a. construire la courbe 𝒞 d'équation 3x² + 4y² + 6x − 9 = 0. b. déterminer les foyers
+  et les directrices. 2. M un point de 𝒞 d'affixe z = re^{iθ}, r > 0 ; a. exprimer r en fonction de θ. b.
+  exprimer à l'aide de θ la distance MM′ où M′ est le symétrique de M par rapport à O. c. déterminer θ pour que
+  la distance MM′ soit maximale. d. déterminer θ pour que la distance MM′ soit minimale.
+- **Ex. 15** (p.119) : 𝒞 la courbe d'équation 25(x² + y²) = (3x − 16)². 1. déterminer la nature de 𝒞 et son
+  excentricité. 2. M un point de 𝒞 ; on pose (i⃗, OM⃗) ≡ a [2π] ; exprimer OM à l'aide de a. 3. la droite (OM)
+  coupe la directrice en I et recoupe la conique 𝒞 en M′ ; a. montrer que 1/OM + 1/OM′ est une constante. b.
+  montrer que 1/OM + 1/OM′ = 2/OI pour tout M de 𝒞.
+- **Ex. 16** (p.119) : ℰ une ellipse d'équation x²/a² + y²/b² = 1, a > b ; M₀(x₀, y₀) un point de ℰ ; T la
+  tangente à ℰ en M₀ ; donner l'équation de la perpendiculaire T′ à T en M₀ ; la droite T′ coupe les axes du
+  repère en N et P ; montrer que le rapport M₀N/M₀P est constant.
+- **Ex. 17** (p.119) : ℰ une ellipse d'équation x²/a² + y²/b² = 1, a > b, dont l'un des foyers est noté F ; une
+  droite variable D passant par F coupe l'ellipse en M et N ; montrer que 1/FM + 1/FN est constant.
+- **Ex. 18** (p.119) : f l'application du plan dans lui-même qui à tout point M(x, y) associe le point M′ de
+  coordonnées { X = √2(x + y) ; Y = √2(x − y) }. 1. montrer que f est la composée d'une symétrie axiale que
+  l'on précisera et d'une homothétie de centre O et de rapport 2. 2. une courbe 𝒞 a pour image par f la courbe
+  𝒞′ d'équation 5X² + 5Y² + 6XY − 64 = 0 ; a. déterminer une équation de 𝒞, ses foyers et ses directrices. b.
+  en déduire que 𝒞 est une conique que l'on caractérisera. c. construire 𝒞 et 𝒞′.
+- **Ex. 19** (p.120) : f l'application du plan dans lui-même qui à tout point M(x, y) associe le point M′ de
+  coordonnées { X = (1/4)(x + √3 y) ; Y = (1/4)(−√3 x + y) }. 1. montrer que f est une similitude directe de
+  centre O, de rapport 0.5 et d'angle −π/3. 2. une courbe 𝒞 a pour équation 15x² + 13y² − 2√3 xy − 768 = 0 ; a.
+  déterminer une équation de 𝒞′ image de 𝒞 par f. b. en déduire que 𝒞′ est une ellipse à caractériser.
+- **Ex. 20** (p.120) : 1. E = {M(x, y) ∈ P tel que x² + 4y² = 1} ; donner les éléments caractéristiques de E. 2. D et D′ les droites d'équations respectives x = 1 et x = −1 et F(√3/2, 0) ; M₀(cos θ, (1/2)sin θ) un point
+  de E avec θ ∈ ℝ \ {kπ, k ∈ ℤ} ; a. vérifier que M₀ appartient à E. b. écrire l'équation de la tangente T à E
+  au point M₀. c. T coupe D et D′ respectivement en K et K′ ; montrer que KFK′ est un triangle rectangle en F.
+- **Ex. 21** (p.120) : déterminer la nature de chacune des courbes suivantes en donnant ses éléments
+  caractéristiques, puis la construire. 1. x² + 4y² + 6y = 0. 2. (3x + 5y)² = (6x − 1)(5y + 2). 3.
+  x² − y = 3x − 1.
+- **Ex. 22** (p.120) : construire l'ensemble des points M(x, y) tels que (4x² − 9y² + 8x + 54y − 113) = 0 ou
+  (16x² + 9y² + 12x − 54y − 47) = 0.
+- **Ex. 23** (p.120) : 𝒞 l'ensemble des points M(x, y) tels que y⁴/16 = x⁴ − 2x² + 1 ; montrer que 𝒞 est la
+  réunion de deux coniques ; déterminer les éléments caractéristiques de ces coniques puis les tracer dans un
+  même repère.
+- **Ex. 24** (p.120) : soit m un réel ; discuter suivant les valeurs de m la nature de la courbe 𝒞ₘ d'équation
+  mx² + (1 + m²)y² − 2my = 0.
+- **Ex. 25** (p.120) : 𝒞 l'ensemble des points M(x, y) tels que 4x|x| + y² − 16x − 20 = 0. 1. montrer que 𝒞 est
+  la réunion d'une partie d'une conique 𝒞₁ et d'une partie d'une conique 𝒞₂ que l'on identifiera. 2. déterminer
+  pour chacune des coniques les éléments caractéristiques. 3. A un point où chacune des coniques coupe la droite
+  (O, j⃗) ; montrer que les coniques 𝒞₁ et 𝒞₂ ont même tangente en A ; tracer 𝒞 en prenant pour unité le
+  centimètre.
+- **Ex. 26** (p.120) : construire l'ensemble des points M(x, y) tels que y = √|x² − 6x + 5|.
+- **Ex. 27** (p.120) : construire l'ensemble des points M(x, y) tels que 16x|x| + 36y|y| = 576.
+- **Ex. 28** (p.120) : on considère une ellipse ℰ d'équation x²/a² + y²/b² = 1 (a > b > 0) ; A₁ et A₂ les
+  sommets principaux de ℰ et T₁ et T₂ les tangentes à l'ellipse en A₁ et A₂ ; par un point P de ℰ distinct de A₁
+  et A₂, on mène une tangente T à ℰ qui coupe T₁ en P₁ et T₂ en P₂ ; montrer que A₁P₁⃗·A₂P₂⃗ est indépendant de P.
+- **Ex. 29** (p.120) : 𝒞 la conique d'équation 2x² + y² − 2x + y − 1 = 0 ; déterminer les tangentes issues du
+  point I(2, 3) à 𝒞.
+- **Ex. 30** (p.120) : soit a un réel strictement positif ; ℰ l'ellipse d'équation x²/a² + 4y²/a² = 1 de sommets
+  principaux A et B ; I un point de la droite (AB) tel que IA⃗ = AO⃗ ; on note P et Q les points de contact des
+  tangentes à ℰ issues de I ; que vaut l'angle PIQ ?
+
+### Bornes de scope observées (chapitre 14)
+
+- ✅ INCLUS : définition **par foyer-directrice** des trois coniques (**parabole** MF = MH ; **hyperbole**
+  MF/MH = e avec e > 1 ; **ellipse** MF/MH = e avec 0 < e < 1) et la définition **unifiée** MF = eMH (parabole
+  e = 1, hyperbole e > 1, ellipse e < 1) ; pour la **parabole** : axe focal, paramètre p, sommet (milieu de
+  [FK]), axe de symétrie, **équation réduite** y² = 2px (et x² = 2py par symétrie), foyer F(p/2, 0) et directrice
+  x = −p/2, **tangente** en M₀ (y₀y = p(x + x₀) et x₀x = p(y + y₀)), tangente au sommet x = 0 ; pour
+  l'**hyperbole** : sommets (barycentres), centre et axes de symétrie, second foyer / seconde directrice,
+  **équation réduite** x²/a² − y²/b² = 1 (b² = c² − a²), foyers (±√(a²+b²), 0), directrices x = ±a²/c,
+  excentricité e = c/a, **asymptotes** y = ±(b/a)x, hyperbole **équilatère** (asymptotes perpendiculaires),
+  **tangente** x₀x/a² − y₀y/b² = 1, **équation rapportée aux asymptotes** XY = k ; pour l'**ellipse** : sommets
+  principaux et secondaires, centre et axes de symétrie, second foyer / seconde directrice, **équation réduite**
+  x²/a² + y²/b² = 1 (b² = a² − c²), cas a > b (foyers sur (Ox)) et a < b (foyers sur (Oy)), directrices,
+  excentricité, **tangente** x₀x/a² + y₀y/b² = 1, tangente au sommet (x = a, y = b), génération par cercles
+  concentriques (paramétrage a cos θ, b sin θ) ; **équations non réduites** — réduction par translation
+  d'origine (complétion du carré) et classification par le signe de AB dans Ax² + By² + Cx + Dy + E = 0 ;
+  transformation d'une conique par une **similitude** (exercices résolus 6, ex. 18-19).
+- ⛔ NON traité dans ce chapitre : les coniques de l'**espace** (quadriques) ; les coniques **à centre en repère
+  quelconque** avec **terme croisé xy** traité de façon générale par diagonalisation matricielle (seuls des cas
+  particuliers sont ramenés à une forme réduite via une similitude/rotation connue, ex. résolu 6, ex. 18-19-24) ;
+  la **définition bifocale** (par la somme / différence des distances aux deux foyers) n'est **pas** posée comme
+  définition ici — le chapitre construit systématiquement les coniques par **foyer-directrice-excentricité**. Le
+  chapitre suppose acquis les **fonctions de référence** (x ↦ x², x ↦ 1/x), le **barycentre**, les **homothéties**
+  et les **similitudes** (chapitre 13, réutilisées dans les exercices résolus 6 et les exercices 18-19).
+
+## 2.15 Chapitre 15 — Géométrie dans l'espace (manuel 222446, p.121–146)
+
+**Page de garde (p.121)** — Titre de couverture : « Géométrie dans l'espace », Chapitre 6 (numérotation
+interne du tome 2 ; c'est le chapitre 15 dans la numérotation content ; le bandeau courant écrit « Géométrie
+dans l'espace »). Encart historique : « Le produit scalaire apparaît assez tard dans l'histoire des
+mathématiques. On en trouve trace chez Hamilton en 1843 lorsqu'il crée le corps des quaternions. Peano le
+définit ensuite associé à un calcul d'aire ou de déterminant. Roberto Marcolongo et Cesare Burali-Forti le
+définissent à l'aide du cosinus d'un angle et lui donne le nom de produit intérieur ou produit scalaire. […]
+La définition utilisée actuellement du produit vectoriel est apparu [sic] en 1881 dans un manuel d'analyse
+vectorielle écrit par Josiah Willard Gibbs pour ses étudiants en physique. Les travaux de Hermann Grassmann et
+William Hamilton sont à l'origine du produit vectoriel défini par Gibbs. » Référence : « (M-J. Crowe, A
+history of vector analysis, The Evolution of the Idea of a Vectorial System, 1994) ». Mention liminaire
+(p.122) : « Dans tout le chapitre, l'espace E est orienté dans le sens direct. » Le chapitre est structuré en
+cinq parties **I. Produit scalaire dans l'espace**, **II. Produit vectoriel**, **III. Équations d'une droite,
+d'un plan et d'une sphère**, **IV. Translation**, **V. Homothétie de l'espace**, ponctuées d'activités et
+d'encadrés (définitions / propriétés / théorèmes), suivies d'un QCM / Vrai-Faux, puis d'une rubrique
+« Exercices et problèmes » (40 exercices). **Ce chapitre ne comporte pas de rubrique « exercices résolus »**
+(le cours n'est fait que d'activités et d'encadrés à retenir).
+
+### Cours — Activités
+
+**I. Produit scalaire dans l'espace** (p.122)
+
+- **Activité 1** (p.122) : ABCDEFGH un cube d'arête a. Exprimer en fonction de a les produits scalaires
+  AF⃗.AB⃗, AF⃗.DC⃗, AF⃗.DG⃗, AF⃗.DH⃗, AF⃗.DE⃗.
+- **Activité 2** (p.122) : ABCDEFGH un cube ; I le milieu de [DH], J le milieu de [BF] et O le centre de la
+  face ABCD. 1. montrer que E, I, C et J sont coplanaires. 2. montrer que IJ⃗ = DB⃗ ; en déduire que
+  OI⃗.IJ⃗ = 0. 3.a. calculer EC⃗.IJ⃗ et EC⃗.OI⃗. b. montrer que la diagonale [EC] est perpendiculaire au plan
+  (DBH) [lecture peu lisible pour le troisième point du plan]. 4. en déduire que la droite (OI) est
+  perpendiculaire au plan (EIC). (Figure : cube.)
+- **Activité 3** (p.122–123) : ABCDEFGH un cube d'arête 1 ; I et J les milieux respectifs de [FB] et [CD] et K
+  le pied de la hauteur issue de A dans le triangle ABH ; utiliser un repère orthonormé adéquat. 1. montrer que
+  les droites (BE) et (IJ) sont orthogonales. 2.a. calculer AK⃗.AC⃗ [notation exacte peu lisible à la source].
+  b. en déduire la mesure en radian de l'angle AK̂C [peu lisible].
+- **Activité 4** (p.123) : ABCD un tétraèdre tel que les triangles ABC, ABD et ACD sont rectangles en A ; G le
+  centre de gravité de ABCD et I le symétrique de A par rapport à G ; en choisissant un repère convenable,
+  montrer que I est le centre de la sphère circonscrite au tétraèdre ABCD. (Figure : tétraèdre.)
+
+**II. Produit vectoriel** (p.123)
+
+- **Activité 1** (p.123) : en utilisant la figure d'une pyramide ABCDE, déterminer une base directe et une base
+  indirecte de l'espace. (Figure : pyramide.)
+- **Activité 2** (p.123) : ABCDEFGH un cube d'arête 1 ; déterminer AB⃗∧AD⃗, AD⃗∧AB⃗, AB⃗∧FG⃗, EF⃗∧EF⃗, EF⃗∧EH⃗
+  et HD⃗∧DC⃗ [certaines paires de vecteurs sont peu lisibles à la source]. (Figure : cube.)
+- **Activité 3** (p.123) : A, B et C trois points non alignés de l'espace. 1. déterminer l'ensemble des points M
+  de l'espace tels que AB⃗∧CM⃗ = 0⃗. 2. déterminer l'ensemble des points M de l'espace tels que
+  (MA⃗ + MC⃗)∧(MA⃗ + MB⃗) = 0⃗.
+- **Activité 4** (p.124) : espace muni d'un repère orthonormé direct (O, i⃗, j⃗, k⃗) ; A(1, 0, −1), B(1, −2, 1)
+  et C(0, −1, 2). 1. donner les composantes de AB⃗∧AC⃗. 2. en déduire une valeur approchée à 0.1 près de
+  l'angle géométrique BAĈ.
+- **Activité 5** (p.124) : espace muni d'un repère orthonormé direct (O, i⃗, j⃗, k⃗) ; u⃗, v⃗ et w⃗ trois
+  vecteurs ; montrer que (u⃗∧v⃗).w⃗ = (w⃗∧u⃗).v⃗ = (v⃗∧w⃗).u⃗ = det(u⃗, v⃗, w⃗) [expressions intermédiaires peu
+  lisibles à la source].
+- **Activité 6** (p.124) : ABCDEFGH un cube de centre O tel que AB = 1 ; repère orthonormé direct
+  (A, AB⃗, AD⃗, AE⃗) ; I, J, K et L les centres respectifs des faces ABFE, BCGF, CDHG et ADHE. 1. déterminer
+  AB⃗∧AD⃗. 2. montrer que IJKL est un parallélogramme de centre O. 3.a. déterminer les coordonnées du vecteur
+  IJ⃗∧IL⃗. b. en déduire l'aire du parallélogramme IJKL, puis l'aire du triangle IJK.
+- **Activité 7** (p.124) : OABCDEFG un cube d'arête 1 et a un réel strictement positif ; repère orthonormé
+  direct (O, OA⃗, OC⃗, OD⃗) ; L, M et K les points définis par OL⃗ = a·OC⃗, OM⃗ = a·OA⃗ et BK⃗ = a·BF⃗
+  [dernière relation peu lisible]. 1. déterminer les coordonnées de DL⃗∧DM⃗ à l'aide de a. 2. calculer
+  (DL⃗∧DM⃗).DK⃗ à l'aide de a. 3. en déduire le volume du tétraèdre DLMK à l'aide de a.
+- **Activité 8** (p.125) : ABCDEFGH un parallélépipède, M le point tel que AB⃗∧AD⃗ = AM⃗ et K le projeté
+  orthogonal de E sur la droite (AM) ; 𝒱 le volume du parallélépipède ABCDEFGH. 1. montrer que
+  𝒱 = ‖AM⃗‖·‖AK⃗‖. 2. montrer que |AM⃗.AK⃗| = ‖AM⃗‖·‖AK⃗‖. 3. en déduire que 𝒱 = |(AB⃗∧AD⃗).AE⃗|. (Figure.)
+- **Activité 9** (p.125) : espace muni d'un repère orthonormé direct (O, i⃗, j⃗, k⃗) ; A(1, 0, 0), B(0, 3, 0),
+  C(−1, 3, 0), D(2, 2, 2), E(3, 2, 2), F(2, 5, 2) et G(5, 2, ?) [troisième coordonnée de G illisible à la
+  source]. 1. montrer que OABCDEFG est un parallélépipède. 2. calculer le volume du parallélépipède OABCDEFG.
+
+**III. Équations d'une droite, d'un plan et d'une sphère** (p.125)
+
+- **Activité 1** (p.125) : espace muni d'un repère (O, i⃗, j⃗, k⃗) ; A(0, −1, 1), B(2, 1, 3) et la droite
+  Δ : { x = α ; y = −2 + 2α ; z = 1 + α }, α ∈ ℝ. 1. déterminer un point et un vecteur directeur de Δ. 2.
+  montrer que les droites (AB) et Δ sont sécantes en un point I que l'on précisera. 3. déterminer une
+  représentation paramétrique de la droite Δ′ passant par A et parallèle à Δ.
+- **Activité 2** (p.126) : espace muni d'un repère (O, i⃗, j⃗, k⃗) ; A(−1, 2, 1), B(1, −6, −1) et C(2, 2, 2).
+  1.a. vérifier que les points A, B et C sont non alignés. b. déterminer une équation cartésienne du plan
+  (ABC). 2.a. montrer que les plans (ABC) et (O, i⃗, k⃗) sont sécants. b. déterminer une représentation
+  paramétrique de leur droite d'intersection.
+- **Activité 3** (p.126) : espace muni d'un repère orthonormé direct (O, i⃗, j⃗, k⃗) ; A(2, 0, −1), B(1, −1, 0)
+  et C(0, 1, 4). 1. vérifier que A, B et C sont non alignés. 2. calculer AB⃗∧AC⃗. 3. déterminer une équation
+  cartésienne du plan (ABC). 4. déterminer une équation d'un plan passant par A et perpendiculaire au plan
+  (ABC).
+- **Activité 4** (p.126) : espace muni d'un repère orthonormé (O, i⃗, j⃗, k⃗). 1. montrer que l'ensemble S des
+  points vérifiant x² + y² + z² − 2x − 4z + 4 = 0 est une sphère. 2.a. les points A(1, 1, 2) et B(1, −1, 4)
+  sont-ils des points de la sphère S ? b. déterminer l'intersection de la sphère S et la droite (AB).
+- **Activité 5** (p.126–127) : espace muni d'un repère orthonormé (O, i⃗, j⃗, k⃗). 1. S = {M(x, y, z) ;
+  x² + y² + z² + 2x − 4y + 2z = 3} ; montrer que S est une sphère, préciser son rayon R et les coordonnées de
+  son centre I. 2.a. vérifier que A(−3, 1, 1) est un point de S. b. déterminer une équation cartésienne du plan
+  P tangent à S en A. 3. Q = {M(x, y, z) ; MA² − MI² = −3} ; a. montrer que Q est un plan dont on précisera une
+  équation cartésienne. b. montrer que Q ∩ S est un cercle dont on précisera le centre I₁ et le rayon r. 4.a.
+  vérifier que P et Q sont strictement parallèles. b. déterminer une équation cartésienne de la sphère S′
+  tangente à P et Q respectivement en A et H.
+- **Activité 6** (p.127) : ABCDEFGH un cube tel que AB = 1 ; repère orthonormé direct (A, AB⃗, AD⃗, AE⃗). 1.
+  déterminer une représentation paramétrique de la droite (AG). 2.a. montrer que la droite (AG) est
+  perpendiculaire au plan (EBD). b. en déduire une équation cartésienne du plan (EBD). c. déterminer les
+  coordonnées du point L intersection du plan (EBD) et de la droite (AG). d. déterminer une équation cartésienne
+  de la sphère circonscrite au tétraèdre EDBG. 3. S = {M(x, y, z) ; 3x² + 3y² + 3z² − 4x − 4y − 4z + 3 = 0} ; a.
+  montrer que S est la sphère de diamètre [AG]. b. déterminer la position relative de la sphère S et du plan
+  (EBD). c. déterminer une équation cartésienne du plan Q tangent à S et parallèle à (EBD).
+- **Activité 7 (distance d'un point à une droite)** (p.127) : u⃗ un vecteur non nul, A un point de l'espace, M
+  un point de l'espace n'appartenant pas à la droite D(A, u⃗) et H le projeté orthogonal de M sur la droite D.
+  1. montrer que MA⃗∧u⃗ = MH⃗∧u⃗. 2. en déduire que MH = ‖MA⃗∧u⃗‖ / ‖u⃗‖.
+- **Activité 8** (p.128) : OABCDEFG un cube d'arête 2 ; on pose i⃗ = (1/2)OA⃗, j⃗ = (1/2)OC⃗ et k⃗ = (1/2)OG⃗ ;
+  repère orthonormé direct (O, i⃗, j⃗, k⃗) ; I, J et Q les milieux respectifs des segments [AO], [BC] et [EF] ; P
+  le centre de la face AODC [lecture des sommets peu lisible]. 1. M(x, y, z) un point de l'espace ; déterminer à
+  l'aide de x, y et z les distances d(M, (DG)) et d(M, (IJ)). 2.a. donner une représentation paramétrique de la
+  droite (PQ). b. en déduire les points de la droite (PQ) équidistants des droites (DG) et (IJ). (Figure.)
+
+**IV. Translation** (p.128)
+
+- **IV.1 Définition** (p.128).
+- **Activité 1** (p.128) : ABCDEFGH un parallélépipède rectangle. 1. montrer que les droites (AG) et (FD) se
+  coupent en un point J. 2. déterminer t_{AB⃗}(H), t_{AJ⃗}(J) et t_{FB⃗}(G). 3. déterminer t_{AD⃗+AB⃗}(E) et
+  t_{BA⃗−CD⃗}(A) [dernier vecteur peu lisible]. (Figure.)
+- **Activité 2** (p.129) : ABCD un tétraèdre et f l'application qui à tout point M associe le point M′ tel que
+  MM′⃗ = MA⃗ − 3MB⃗ + MC⃗ + MB⃗ ; montrer que f est une translation.
+- **Activité 3** (p.129) : ABCD un tétraèdre ; I et J les milieux respectifs des segments [AB] et [CD]. 1.
+  montrer que AC⃗ + BD⃗ = 2IJ⃗. 2. A′ et B′ images respectives de A et B par la translation de vecteur IJ⃗, C′ et
+  D′ les antécédents de C et D par la même translation ; montrer que le solide AC′BD′A′CB′D est un
+  parallélépipède [ordre des sommets peu lisible à la source].
+- **IV.2 Propriété caractéristique** (p.129) — Théorème + Démonstration.
+- **Activité** (p.130) : ABCDEFGH un parallélépipède ; I le point vérifiant AI⃗ = (1/2)AB⃗ + (3/4)AD⃗ et J
+  l'image de I par la translation de vecteur AE⃗ ; montrer que J appartient au plan (EFG).
+- **IV.3 Action d'une translation sur les configurations** (p.130).
+- **Activité 1** (p.130) : u⃗ un vecteur de l'espace, A, B et C trois points non alignés ; t la translation de
+  vecteur u⃗, A′ l'image de A par t. 1. montrer que l'image de la droite (AB) par t est la droite passant par A′
+  et parallèle à (AB). 2. montrer que l'image du plan (ABC) par t est le plan passant par A′ et parallèle à
+  (ABC).
+- **Activité 2** (p.130) : ABCD un tétraèdre et I le point défini par AI⃗ = (1/3)AB⃗. 1. construire le plan P
+  image du plan (BCD) par la translation de vecteur BI⃗. 2. le plan P coupe (AC) en J et coupe (AD) en K ;
+  déterminer les images des droites (BC) et (BD) par t_{BI⃗}.
+- **Activité 3** (p.130) : ABCDEFGH un parallélépipède ; I et J les centres de gravité respectifs des triangles
+  ACF et DEG. 1.a. vérifier que BH⃗ = BA⃗ + BC⃗ + BF⃗. b. en déduire que J est l'image de I par la translation de
+  vecteur BH⃗ [vecteur peu lisible]. 2. O le milieu de [FC] et O′ le point tel que OO′⃗ = BH⃗ ; montrer que O′
+  appartient au plan (DEG). 3. la parallèle à la droite (BH) menée de A coupe le plan (DEG) en A′ ; montrer que
+  les points O′, A′ et J sont alignés.
+- **Activité 4** (p.131) : espace muni d'un repère (O, i⃗, j⃗, k⃗) ; A(1, 1, 1), B(0, 2, 1), C(3, 0, 0),
+  D(−2, 1, 4) et E(1, 2, 3). 1. vérifier que A, B et C définissent un plan. 2. montrer que le plan (ABC) est
+  globalement invariant par la translation de vecteur AD⃗. 3. donner une représentation paramétrique du plan P
+  image du plan (ABC) par la translation de vecteur AE⃗.
+- **Activité 5** (p.131) : IABCD une pyramide régulière de sommet I ; J l'image de I par la translation de
+  vecteur AB⃗ et S la sphère de centre J passant par B ; déterminer S ∩ (ABCD).
+- **IV.4 Expression analytique d'une translation** (p.132) — Théorème.
+- **Activité 1** (p.132) : espace muni d'un repère orthonormé (O, i⃗, j⃗, k⃗) ; A(1, 4, 1) et B(4, −2, 4). 1.a.
+  vérifier que O, A et B ne sont pas alignés. b. P le plan contenant O, A et B ; montrer qu'une équation
+  cartésienne de P est x − z = 0. 2. S la sphère de centre A et de rayon √2 ; t la translation de vecteur
+  u⃗(−1, 0, 1). a. déterminer l'expression analytique de t. b. déterminer les coordonnées du point A′ image de A
+  par t. c. déterminer une équation cartésienne du plan P′ image de P par t. d. en déduire que P′ est tangent à
+  S en A′.
+- **Activité 2** (p.132–133) : espace muni d'un repère orthonormé (O, i⃗, j⃗, k⃗) ; les droites
+  D : { x = 1 − α ; y = 2 + α ; z = −α }, α ∈ ℝ, et Δ : { x = −β ; y = 3 ; z = β }, β ∈ ℝ. 1. montrer que les
+  droites D et Δ ne sont pas coplanaires. 2. Δ′ l'image de Δ par la translation de vecteur u⃗(−1, 1, −2). a.
+  déterminer une représentation paramétrique de la droite Δ′. b. montrer que D et Δ′ se coupent en un point que
+  l'on précisera. c. donner une équation cartésienne du plan Q contenant D et parallèle à Δ.
+
+**V. Homothétie de l'espace** (p.133)
+
+- **V.1 Définition** (p.133).
+- **Activité 1** (p.133) : ABCD un tétraèdre ; I, J et K les milieux respectifs des segments [AB], [BD] et [BC].
+  1. exprimer le volume du tétraèdre IJKB [sic] à l'aide du volume V du tétraèdre ABCD. 2. f l'application qui à
+     tout point M associe le point M′ tel que BM′⃗ = −(2/3)BM⃗. a. construire le tétraèdre A′B′C′D′ image du
+     tétraèdre ABCD par f. b. exprimer le volume de A′B′C′D′ à l'aide du volume du tétraèdre ABCD. (Figure.)
+- **Activité 2** (p.133) : ABCD un tétraèdre ; h l'homothétie de centre A et de rapport 2 et h′ l'homothétie de
+  centre C et de rapport 2 ; on pose B′ = h(B), D′ = h(D), B″ = h′(B) et D″ = h′(D) ; déterminer la nature du
+  quadrilatère B′D′D″B″.
+- **Activité 3** (p.133) : ABCDEFGH un parallélépipède ; I, J et K les milieux respectifs des segments [AC],
+  [AD] et [AH] ; L et L′ les centres de gravité respectifs des triangles CDH et IJK ; montrer que L′ est
+  l'image de L par une homothétie de centre A dont on précisera le rapport.
+- **V.2 Propriété caractéristique** (p.134) — Théorème + Démonstration.
+- **Activité 1 (V.2)** (p.134) : démonstration, en deux parties, de la propriété caractéristique de l'homothétie de rapport k : pour tous points M et N d'images respectives M′ et N′, M′N′⃗ = k·MN⃗.
+- **Activité 2 (V.2)** (p.135) : ABCDEFGH un parallélépipède et I un point du segment [BC] distinct de B et C ;
+  la parallèle à (FC) passant par I coupe [BF] en J. 1. f l'homothétie qui transforme C en B et E en I ;
+  préciser le centre et le rapport de f. 2. montrer que f(D) = J. 3. en déduire que les droites (EB), (EI) et
+  (DJ) sont concourantes.
+- **V.3 Action d'une homothétie sur les configurations** (p.135).
+- **Activité 1** (p.135) : k un réel non nul, A, B et C trois points non alignés ; h une homothétie de rapport
+  k, A′ l'image de A par h. 1. montrer que l'image de la droite (AB) par h est la droite passant par A′ et
+  parallèle à (AB). 2. montrer que l'image du plan (ABC) par h est le plan passant par A′ et parallèle à (ABC).
+- **Activité 2 (V.3)** (p.135) : ABCDEFGH un cube ; I et J appartiennent respectivement aux segments [EF] et
+  [FG] tels que EI = GJ, I et J distincts de F ; la droite (BJ) coupe la droite (CG) au point N ; la droite (BI)
+  coupe la droite (AE) au point M ; h l'homothétie de centre B qui transforme J en N. 1. montrer que h(I) = M. 2. en déduire que les droites (IJ) et (MN) sont parallèles. (Figure.)
+- **Activité 3 (V.3)** (p.135) : espace muni d'un repère orthonormé (O, i⃗, j⃗, k⃗) ; le point I(1, 1, 1) et le
+  plan P : x − 3y + z + 1 = 0 ; montrer que le plan P est globalement invariant par toutes les homothéties de
+  centre I.
+- **Activité 4** (p.136) : a > 0 et ABCDEFGH un parallélépipède droit tels que AE = 2AB = 2AD = 2a ; P le point
+  de l'arête [AB] tel que AP⃗ = (1/4)AB⃗ ; M un point à l'intérieur du carré ABCD tel que le triangle AMP est
+  équilatéral ; les droites (AE) et (PF) se coupent en Ω ; h l'homothétie de centre Ω qui transforme A en E.
+  1.a. déterminer h(P). b. N l'image de M par h ; montrer que le triangle EFN est équilatéral. 2.a. exprimer à
+  l'aide de a la distance ΩA. b. en déduire le volume du solide APMEFN. 3. I le centre du carré EFGH ; montrer
+  que les droites (ΩI) et (AC) sont sécantes.
+- **Activité 5** (p.136) : ABCDEFGH un cube d'arête a ; pour tout point M du plan (EFG), on désigne par N le
+  centre de gravité du triangle MAB. 1. déterminer l'ensemble des points N lorsque M varie. 2. P le centre de
+  gravité du triangle MBC ; montrer que la distance PN est constante. 3. Q et R les centres de gravité
+  respectifs des triangles MCD et MAD ; montrer que NPQR est un carré et déterminer son aire.
+- **Activité 6** (p.137) : espace muni d'un repère orthonormé (O, i⃗, j⃗, k⃗) ; S l'ensemble des points M(x, y, z)
+  tels que x² + y² + z² − 2x − 4y − 2z + 2 = 0. 1.a. montrer que S est une sphère dont on précisera le centre I
+  et le rayon R. b. déterminer l'intersection de la sphère S avec le plan (O, i⃗, j⃗). 2. Ω(1, 1, 0) et h
+  l'homothétie de centre Ω et de rapport −3/2. a. déterminer le centre I′ et le rayon R′ de la sphère S′ image
+  de S par h. b. déterminer l'intersection de la sphère S′ avec le plan (O, i⃗, j⃗).
+- **V.4 Expression analytique d'une homothétie** (p.137) — Théorème.
+- **Activité** (p.137) : espace muni d'un repère orthonormé (O, i⃗, j⃗, k⃗) ; le point I(1, −1, 2) et les plans P
+  et Q d'équations respectives x − y + z − 4 = 0 et x + y − 1 = 0. 1. montrer que les plans P et Q sont sécants
+  et donner une représentation paramétrique de leur droite d'intersection Δ. 2. h l'homothétie de centre I et de
+  rapport 3 ; donner l'expression analytique de h. 3. R le plan image de Q par h ; donner une équation
+  cartésienne de R. 4.a. vérifier que h(P) = P. b. en déduire un vecteur directeur de la droite Δ′ intersection
+  des plans P et R.
+
+### Cours — Résultats / définitions / théorèmes à retenir (VERBATIM)
+
+> **Produit scalaire** (p.122, encadré) — « Soit A, B et C des points. Le produit scalaire des vecteurs AB⃗ et
+> AC⃗ est le réel défini par • AB⃗ . AC⃗ = 0, si AB⃗ = 0⃗ ou AC⃗ = 0⃗. • AB⃗ . AC⃗ = AB.AC.cos BAĈ, si AB⃗ et
+> AC⃗ sont non nuls. * AB⃗ . AB⃗ = AB⃗² = ‖AB⃗‖². »
+
+> **Propriétés (Rappel)** (p.122) — « Pour tous vecteurs u⃗, v⃗ et w⃗ de l'espace et tous réels α et β
+> • u⃗.v⃗ = v⃗.u⃗. • u⃗.(v⃗ + w⃗) = u⃗.v⃗ + u⃗.w⃗. • (αu⃗).v⃗ = u⃗.(αv⃗) = α(u⃗.v⃗). • (αu⃗).(βv⃗) = αβ(u⃗.v⃗). »
+
+> **Expression analytique du produit scalaire** (p.122, encadré) — « Soit (O, i⃗, j⃗, k⃗) un repère orthonormé
+> de l'espace. Pour tous vecteurs u⃗(x, y, z) et v⃗(x′, y′, z′), u⃗.v⃗ = xx′ + yy′ + zz′ et
+> ‖u⃗‖ = √(x² + y² + z²). Pour tous points M(x, y, z) et M′(x′, y′, z′),
+> MM′ = √((x − x′)² + (y − y′)² + (z − z′)²). »
+
+> **Produit vectoriel** (p.123, encadré) — « Soit A, B et C des points de l'espace. Le produit vectoriel de AB⃗
+> par AC⃗ est le vecteur noté AB⃗∧AC⃗ et défini comme suit * si AB⃗ et AC⃗ colinéaires, alors AB⃗∧AC⃗ = 0⃗, * si
+> AB⃗ et AC⃗ ne sont pas colinéaires, alors • AB⃗∧AC⃗ est orthogonal à AB⃗ et à AC⃗, • (AB⃗, AC⃗, AB⃗∧AC⃗) est
+> une base directe, • ‖AB⃗∧AC⃗‖ = AB.AC.sin BAĈ. »
+
+> **Propriétés (Rappel)** (p.123) — « Soit u⃗ et v⃗ deux vecteurs et α, β deux réels. • u⃗∧u⃗ = 0⃗. • u⃗∧v⃗ = 0⃗,
+> si et seulement si, u⃗ et v⃗ sont colinéaires. • u⃗∧v⃗ = −(v⃗∧u⃗), u⃗∧(v⃗ + w⃗) = u⃗∧v⃗ + u⃗∧w⃗,
+> αu⃗∧βv⃗ = αβ(u⃗∧v⃗). »
+
+> **Composantes du produit vectoriel** (p.124, encadré) — « L'espace est muni d'une base orthonormée directe
+> (i⃗, j⃗, k⃗). Pour tous vecteurs u⃗(a, b, c) et v⃗(a′, b′, c′),
+> u⃗∧v⃗ = (bc′ − cb′)i⃗ + (ca′ − ac′)j⃗ + (ab′ − ba′)k⃗. »
+
+> **Produit mixte / déterminant** (p.124, Propriété) — « L'espace est muni d'un repère orthonormé direct
+> (O, i⃗, j⃗, k⃗). Pour tous vecteurs u⃗, v⃗ et w⃗, (u⃗∧v⃗).w⃗ = (w⃗∧u⃗).v⃗ = (v⃗∧w⃗).u⃗ = det(u⃗, v⃗, w⃗). »
+> [note : les expressions intermédiaires de la permutation circulaire sont peu lisibles à la source.]
+
+> **Aire du parallélogramme / du triangle** (p.124, encadré) — « L'aire du parallélogramme ABCD est égale à
+> ‖AB⃗∧AD⃗‖. L'aire du triangle ABD est égale à (1/2)‖AB⃗∧AD⃗‖. »
+
+> **Volume d'un tétraèdre** (p.124, encadré) — « Le volume d'un tétraèdre ABCD est égal à
+> (1/6)|(BC⃗∧BD⃗).BA⃗|. »
+
+> **Théorème** (p.125, volume d'un parallélépipède) — « Le volume d'un parallélépipède ABCDEFGH est égal à
+> |(AB⃗∧AD⃗).AE⃗|. »
+
+> **Représentation paramétrique d'une droite** (p.125, encadré) — « Soit A un point, u⃗ un vecteur non nul et D
+> la droite passant par A et de vecteur directeur u⃗. Alors D(A, u⃗) = {M ; AM⃗ = αu⃗, où α est un réel}. »
+
+> **Plan par un point et deux vecteurs** (p.126, encadré) — « L'espace est muni d'un repère (O, i⃗, j⃗, k⃗).
+> Soit A un point, u⃗ et v⃗ deux vecteurs non colinéaires et P le plan passant par A et de vecteurs directeurs
+> u⃗ et v⃗. Alors P(A, u⃗, v⃗) = {M ; det(AM⃗, u⃗, v⃗) = 0}. »
+
+> **Sphère** (p.126, encadré) — « L'espace est muni d'un repère orthonormé (O, i⃗, j⃗, k⃗). Soit A un point, R
+> un réel strictement positif et S la sphère de centre A et de rayon R. Alors S = {M ; AM = R}. »
+
+> **Distance d'un point à un plan** (p.126, encadré) — « L'espace est muni d'un repère orthonormé
+> (O, i⃗, j⃗, k⃗). Soit un plan P d'équation ax + by + cz + d = 0 et A(x₀, y₀, z₀) un point de l'espace. La
+> distance de A à P est le réel, noté d(A, P), égal à |ax₀ + by₀ + cz₀ + d| / √(a² + b² + c²). »
+
+> **Théorème (Rappel)** (p.127, intersection sphère-plan) — « L'espace est muni d'un repère orthonormé
+> (O, i⃗, j⃗, k⃗). Soit S une sphère de centre A et de rayon R. Soit P un plan, h la distance de A à P et H le
+> projeté orthogonal de A sur P. L'intersection de S et P est • vide si h > R, • réduite au singleton {H} si
+> h = R, • le cercle de rayon √(R² − h²) et de centre H si h < R. »
+
+> **Définition** (p.128, distance d'un point à une droite) — « On appelle distance d'un point M à une droite D,
+> la distance MH où H est le projeté orthogonal de M sur D. Cette distance est notée d(M, D). »
+
+> **Théorème** (p.128, distance d'un point à une droite) — « Soit D une droite de vecteur directeur u⃗ et A un
+> point de D. La distance d'un point M de l'espace à la droite D est le réel d(M, D) = ‖MA⃗∧u⃗‖ / ‖u⃗‖. »
+
+> **Définition** (p.128, translation) — « Soit u⃗ un vecteur de l'espace. L'application qui à tout point M de
+> l'espace associe l'unique point M′ tel que MM′⃗ = u⃗ est appelée translation de vecteur u⃗ et notée t_u⃗. Pour
+> tous points M et M′ de l'espace, t_u⃗(M) = M′ équivaut à MM′⃗ = u⃗. »
+
+> **Théorème** (p.129, translation bijective) — « Toute translation de l'espace de vecteur u⃗ est bijective. Son
+> application réciproque est la translation de vecteur −u⃗. Pour tous points M et N de l'espace, N = t_u⃗(M)
+> équivaut à M = t_{−u⃗}(N). »
+
+> **Théorème** (p.129, propriété caractéristique de la translation) — « Une application de l'espace dans
+> lui-même est une translation, si et seulement si, pour tous points M et N d'images respectives M′ et N′,
+> M′N′⃗ = MN⃗. »
+
+> **Conséquences** (p.130) — « • Toute translation de l'espace conserve la distance. • Toute translation de
+> l'espace conserve le produit scalaire. »
+
+> **Théorème** (p.130, image d'une droite / d'un plan par une translation) — « L'image d'une droite par une
+> translation est une droite qui lui est parallèle. L'image d'un plan par une translation est un plan qui lui
+> est parallèle. »
+
+> **Conséquences** (p.130) — « Toute translation conserve le parallélisme et l'orthogonalité. Toute translation
+> conserve le milieu. »
+
+> **Invariance globale** (p.131, encadré) — « Soit Γ une partie de l'espace. On dit que Γ est globalement
+> invariante par une application f lorsque f(Γ) = (Γ). »
+
+> **Théorème** (p.131, image d'une sphère par une translation) — « L'image d'une sphère S par une translation
+> est une sphère S′ de même rayon et de centre l'image du centre. »
+
+> **Pyramide régulière** (p.131, encadré) — « Une pyramide IABCD de sommet I est dite régulière si, sa base
+> ABCD est un carré et le projeté orthogonal de I sur le plan (ABCD) est le centre du carré ABCD. »
+
+> **Théorème** (p.132, expression analytique d'une translation) — « L'espace est muni d'un repère
+> (O, i⃗, j⃗, k⃗). • Soit u⃗(a, b, c) un vecteur de l'espace. Si M(x, y, z) est un point de l'espace et
+> M′(x′, y′, z′) est son image par la translation de vecteur u⃗ alors { x′ = x + a ; y′ = y + b ; z′ = z + c }.
+> • L'application qui à tout point M(x, y, z) associe le point M′(x′, y′, z′) tel que { x′ = x + a ; y′ = y + b ;
+> z′ = z + c } est la translation de vecteur u⃗(a, b, c). »
+
+> **Définition** (p.133, homothétie) — « Soit I un point de l'espace et k un réel non nul. L'application qui à
+> tout point M de l'espace associe l'unique point M′ tel que IM′⃗ = k IM⃗ est appelée homothétie de centre I et
+> de rapport k, elle est notée h_(I,k). Pour tous points M et M′ de l'espace, h_(I,k)(M) = M′ équivaut à
+> IM′⃗ = k IM⃗. »
+
+> **Théorème** (p.134, homothétie bijective) — « Toute homothétie de centre I et de rapport non nul k est une
+> bijection de l'espace et admet comme application réciproque l'homothétie de centre I et de rapport 1/k. Pour
+> tous points M et N de l'espace, N = h_(I,k)(M) équivaut à M = h_(I,1/k)(N). »
+
+> **Théorème** (p.134, propriété caractéristique de l'homothétie) — « Soit f une application de l'espace dans
+> lui-même et k un réel non nul et différent de 1. f est une homothétie de rapport k, si et seulement si, pour
+> tous points M et N d'images respectives M′ et N′ par f, M′N′⃗ = k MN⃗. »
+
+> **Conséquences** (p.134) — « Soit h une homothétie de l'espace de rapport k. Pour tous points M et N d'images
+> respectives M′ et N′ par h, M′N′ = |k| MN. »
+
+> **Théorème** (p.135, image d'une droite / d'un plan par une homothétie) — « L'image d'une droite par une
+> homothétie est une droite qui lui est parallèle. L'image d'un plan par une homothétie est un plan qui lui est
+> parallèle. »
+
+> **Conséquences** (p.135) — « Toute homothétie conserve le parallélisme et l'orthogonalité. Toute homothétie
+> conserve le milieu. »
+
+> **Théorème** (p.136, image d'une sphère par une homothétie) — « L'image d'une sphère S de centre I et de
+> rayon R par une homothétie de l'espace de rapport k est une sphère S′ de centre I′ image de I et de rayon
+> |k|R. »
+
+> **Propriété** (p.137) — « Toute homothétie de l'espace conserve le contact. »
+
+> **Théorème** (p.137, expression analytique d'une homothétie) — « L'espace est muni d'un repère orthonormé
+> (O, i⃗, j⃗, k⃗). • Soit un point I(a, b, c), k un réel non nul et différent de 1 et h l'homothétie de centre I
+> et de rapport k. Si M(x, y, z) est un point de l'espace et M′(x′, y′, z′) est son image par h, alors
+> { x′ = kx + (1 − k)a ; y′ = ky + (1 − k)b ; z′ = kz + (1 − k)c }. • L'application qui à tout point M(x, y, z)
+> associe le point M′(x′, y′, z′) tel que { x′ = kx + α ; y′ = ky + β ; z′ = kz + δ }, k ≠ 1, est l'homothétie
+> de centre I(α/(1 − k), β/(1 − k), δ/(1 − k)) et de rapport k. »
+
+### QCM (p.138) — « Cocher la réponse exacte. » (réponses non fournies)
+
+1. Soit A, B et C trois points non alignés. Le vecteur AB⃗∧AC⃗ est (☐ normal au plan ABC / ☐ directeur du plan
+   ABC / ☐ directeur à la droite (BC)).
+2. Si ABCD est un parallélogramme alors (☐ AB⃗∧AD⃗ = BA⃗∧BC⃗ / ☐ ‖AB⃗∧AD⃗‖ = ‖BA⃗∧BC⃗‖ /
+   ☐ ‖AB⃗∧AD⃗‖ = (1/2)‖AB⃗∧AC⃗‖).
+3. Dans la figure ci-contre ABCDEFGH est un cube d'arête 1. a. Le vecteur AB⃗∧AC⃗ est égal à
+   (☐ AB⃗∧AD⃗ / ☐ AC⃗∧DC⃗ / ☐ √2 AE⃗). b. Le vecteur AC⃗∧EG⃗ est égal à (☐ 0⃗ / ☐ BD⃗ / ☐ BF⃗). c. Le réel
+   AC⃗.FH⃗ est égal à (☐ 2 / ☐ 0 / ☐ √2). d. Le volume du tétraèdre FBEG [sic] est égal à
+   (☐ 1/6 / ☐ 2/3 / ☐ 1/2). (Figure : cube.)
+
+### Vrai ou faux (p.138) — « Répondre par vrai ou faux en justifiant la réponse. » (réponses non fournies)
+
+1. Soit u⃗, v⃗ et w⃗ trois vecteurs. a. Si u⃗∧v⃗ = v⃗ alors v⃗ = 0⃗. b. Si u⃗∧v⃗ = u⃗∧w⃗ alors v⃗ = w⃗. c.
+   u⃗∧v⃗ = v⃗∧w⃗, si et seulement si, u⃗ et v⃗ sont colinéaires.
+2. L'image d'un cube d'arête a par une homothétie de rapport a est un cube de volume a⁶.
+3. Si S et S′ sont deux sphères de même rayon alors il existe une seule translation qui transforme S en S′ et
+   une seule homothétie qui transforme S en S′.
+
+### Exercices et problèmes (p.139–146) — 40 exercices
+
+Mention liminaire (p.139) : « Dans tous les exercices, l'espace est orienté dans le sens direct. »
+
+- **Ex. 1** (p.139) : ABCD un tétraèdre ; I le milieu de [CD], G le centre de gravité du triangle BCD, K le
+  milieu de [AG] et J le point tel que AJ⃗ = (1/4)AB⃗. 1. montrer que 4AK⃗ = 2AK⃗ + 3AK⃗ = … [relation
+  vectorielle peu lisible à la source]. 2. en déduire que les points I, J et K sont alignés. (Figure :
+  tétraèdre.)
+- **Ex. 2** (p.139) : ABCDEFGH un cube. 1. calculer AG⃗.FH⃗ et AG⃗.FC⃗ [notation exacte peu lisible]. 2. en
+  déduire que la droite (AG) est perpendiculaire au plan (FHC) [plan peu lisible]. (Figure : cube.)
+- **Ex. 3** (p.139) : ABCDEFGH un cube ; I et J les milieux respectifs des arêtes [EH] et [BF] ; P le point
+  d'intersection de (EG) et (IF). Q le point d'intersection de (FC) et (GJ) [lecture peu lisible]. 1. montrer
+  que 3PQ⃗ = … [relation vectorielle peu lisible]. 2. calculer 3PQ⃗.EG⃗ et 3PQ⃗.FC⃗. 3. en déduire que la droite
+  (PQ) est perpendiculaire à (EG) et (FC). (Figure : cube.)
+- **Ex. 4** (p.139) : ABCDEFGH un cube d'arête 1 ; I, J, K et L les points définis par AI⃗ = (1/3)AD⃗,
+  BJ⃗ = (1/3)BC⃗, HK⃗ = (1/3)HG⃗ [et une quatrième relation, EL⃗ = (1/3)EG⃗ — lecture peu lisible]. 1. montrer
+  que ABJIKL [sic] est un parallélépipède. 2. repère (A, AB⃗, AD⃗, AE⃗). a. déterminer les composantes des
+  vecteurs AB⃗, AI⃗ et AL⃗. b. en déduire le volume du parallélépipède ABJIKL [sic]. (Figure : cube.)
+- **Ex. 5** (p.139) : ABCDEFGH un cube de centre O d'arête a ; I le milieu du segment [AB], J et K les centres
+  respectifs des faces ABFE et ABCD. 1. montrer que O, I, J et K sont coplanaires. 2. quelle est la nature du
+  quadrilatère OJIK [sic] ? 3. quel est le volume de la pyramide BIOK [sic] ?
+- **Ex. 6** (p.140) : ABCD un tétraèdre régulier. 1.a. calculer AB⃗.AD⃗ et AB⃗.AC⃗. b. en déduire AB⃗.CD⃗. c. en
+  déduire que deux arêtes opposées sont orthogonales. 2. A′ le centre de gravité du triangle BCD ; montrer que
+  la droite (AA′) est perpendiculaire au plan (BCD). 3. O le point tel que OA⃗ + 3OA′⃗ = 0⃗ ; montrer que O est
+  le centre de la sphère S circonscrite au tétraèdre ABCD. 4. I le milieu du segment [BC] et on suppose que
+  AB = a (a ∈ ℝ₊*). a. exprimer, à l'aide de a, les distances DI, DA′ et AA′. b. V le volume du tétraèdre et R
+  le rayon de la sphère S ; exprimer V et R à l'aide de a. c. déterminer cos AÔB et cos AÎD et donner une valeur
+  approchée de ces deux angles en degré, à 0.01 près.
+- **Ex. 7** (p.140) : u⃗ et v⃗ deux vecteurs vérifiant ‖u⃗‖ = 1, ‖v⃗‖ = 4 et u⃗.v⃗ = 2 ; w⃗ = 2u⃗ + 3v⃗
+  [combinaison peu lisible] ; calculer u⃗.w⃗, v⃗.w⃗ et ‖w⃗‖.
+- **Ex. 8** (p.140) : espace muni d'un repère orthonormé direct (O, i⃗, j⃗, k⃗) ; u⃗ = 2i⃗ + j⃗ + k⃗ et
+  w⃗ = 3i⃗ − 4j⃗ − 2k⃗ [composantes peu lisibles]. 1. montrer que les vecteurs u⃗ et w⃗ sont orthogonaux. 2.
+  trouver un vecteur v⃗ vérifiant u⃗∧v⃗ = w⃗ ; trouver tous les vecteurs v⃗ vérifiant u⃗∧v⃗ = w⃗. 3. trouver un
+  vecteur v⃗ vérifiant u⃗∧v⃗ = w⃗ et u⃗.v⃗ = 1.
+- **Ex. 9** (p.140) : u⃗ et v⃗ deux vecteurs unitaires orthogonaux et w⃗ un vecteur vérifiant
+  w⃗ = u⃗ + u⃗∧w⃗ [relation peu lisible]. 1. montrer que w⃗ est orthogonal à v⃗ et que sa norme vaut
+  (1/2)√2. 2. montrer que w⃗ = (1/2)u⃗ − (1/2)u⃗∧v⃗ [expression peu lisible].
+- **Ex. 10** (p.140) : A, B, C, D quatre points de l'espace et a = AB⃗.CD⃗ + AC⃗.DB⃗ + AD⃗.BC⃗. 1. calculer a en
+  remplaçant BC⃗ par AC⃗ − AB⃗. 2. en déduire que si un tétraèdre a deux couples d'arêtes opposées orthogonales,
+  il en est de même du troisième couple.
+- **Ex. 11** (p.140) : espace muni d'un repère orthonormé direct (O, i⃗, j⃗, k⃗). 1. vérifier que les trois
+  points A(1, 1, −1), B(3, 3, 2) et C(3, −1, −2) déterminent un plan (ABC). 2. trouver un vecteur normal au plan
+  (ABC). 3. trouver une équation cartésienne de ce plan (ABC). 4. calculer la distance de l'origine O à ce plan.
+- **Ex. 12** (p.140) : espace muni d'un repère orthonormé (O, i⃗, j⃗, k⃗) ; quatre plans ont pour équations
+  x + y − 2z = 5, 3x − 6y + 3z = 2, 2x + 2y + 2z = −1, x − 2y + z = 7. 1. montrer que deux de ces plans sont
+  parallèles et calculer la distance entre ces deux plans. 2. montrer que deux de ces plans sont
+  perpendiculaires.
+- **Ex. 13** (p.140) : espace muni d'un repère orthonormé (O, i⃗, j⃗, k⃗) ; P le plan d'équation
+  x − y + 5z = 2007 ; trouver un vecteur directeur de P, de norme 1 et orthogonal au vecteur v⃗ = i⃗ + 2j⃗ − 3k⃗.
+- **Ex. 14** (p.140) : espace muni d'un repère orthonormé direct (O, i⃗, j⃗, k⃗) ; donner une équation du plan
+  passant par le point A(2, 0, 0) et de vecteurs directeurs i⃗ + j⃗ et j⃗ + k⃗.
+- **Ex. 15** (p.141) : ABCDEFGH un parallélépipède rectangle tel que AB = 2, AD = 1 et AE = 1 ; I le milieu
+  [BD] ; R = (A, (1/2)AB⃗, AD⃗, AE⃗) un repère de l'espace. 1. déterminer une représentation paramétrique de la
+  droite (FI). 2. déterminer une équation cartésienne du plan (DEG). 3. en déduire que la droite (FI) coupe le
+  plan (DEG) au milieu du segment [FI].
+- **Ex. 16** (p.141) : OABC un tétraèdre trirectangle tel que (OA), (OB) et (OC) sont deux à deux orthogonales
+  et H le projeté orthogonal de O sur le plan (ABC) ; on pose OA = a, OB = b et OC = c avec a, b et c trois
+  réels strictement positifs ; repère R = (O, (1/a)OA⃗, (1/b)OB⃗, (1/c)OC⃗). 1.a. déterminer, à l'aide de a, b et
+  c, une équation du plan (ABC). b. en déduire que 1/OH² = 1/OA² + 1/OB² + 1/OC². 2.a. exprimer l'aire du
+  triangle ABC à l'aide de a, b et c. b. vérifier que le carré de l'aire de la face ABC est égal à la somme des
+  carrés des aires des trois autres faces. (« C'est en 1738 que le mathématicien De Gua de Malves qualifia ce
+  résultat de "généralisation du théorème de Pythagore à l'espace". »)
+- **Ex. 17** (p.141) : ABCDEFGH un cube d'arête 1 ; M et N deux points variables respectivement sur le segment
+  [FB] privé de F et B et [EH] privé de H [lecture peu lisible] et C [sic] tels que BM = CN [sic] ; repère
+  (A, AB⃗, AD⃗, AE⃗) ; on note BM = α avec α un réel appartenant à ]0, 1[. 1. déterminer les coordonnées des
+  points M et N à l'aide de α. 2.a. montrer qu'il existe un vecteur fixe u⃗ tel que MN⃗ = αu⃗ + AD⃗. b. en
+  déduire que la droite (MN) reste parallèle à un plan fixe que l'on précisera. 3. montrer que la droite passant
+  par les milieux de [BC] et [MN] est perpendiculaire aux droites (BC) et (MN). (Figure.)
+- **Ex. 18** (p.141) : espace muni d'un repère orthonormé (O, i⃗, j⃗, k⃗) ; A(0, 4, −1), B(−2, 4, −5),
+  C(1, 1, −5) et D(1, 0, −4). 1. déterminer une équation de chacun des plans médiateurs des segments [AB], [BC]
+  et [AD]. 2. montrer que ces trois plans ont un point commun I ; en déduire une équation cartésienne de la
+  sphère circonscrite au tétraèdre ABCD.
+- **Ex. 19** (p.141–142) : A/ u⃗, v⃗ et w⃗ trois vecteurs de l'espace ; on se propose de montrer que
+  w⃗∧(u⃗∧v⃗) = (w⃗.u⃗)v⃗ − (w⃗.v⃗)u⃗ [formule du double produit vectoriel]. 1. vérifier l'égalité précédente
+  lorsque u⃗ et v⃗ sont colinéaires. 2. dans le cas où u⃗ et v⃗ ne sont pas colinéaires, on pose u⃗ = OA⃗,
+  v⃗ = OB⃗ et i⃗ = OA⃗/‖OA⃗‖, j⃗ un vecteur du plan (OAB) tel que (i⃗, j⃗) soit une base orthonormée de ce plan,
+  k⃗ un vecteur de l'espace tel que (O, i⃗, j⃗, k⃗) soit un repère orthonormé direct de l'espace. a. justifier
+  l'existence de six réels a, b, c, α, β et δ tels que OA⃗ = αi⃗, OB⃗ = βi⃗ + δj⃗ et w⃗ = ai⃗ + bj⃗ + ck⃗. b.
+  déterminer à l'aide de a, b, c, α, β et δ les composantes des vecteurs w⃗∧(u⃗∧v⃗) et (w⃗.u⃗)v⃗ − (w⃗.v⃗)u⃗ ;
+  conclure. B/ **Application 1** : u⃗ et v⃗ deux vecteurs unitaires et orthogonaux ; on pose w⃗ = u⃗∧v⃗ ;
+  montrer que v⃗∧w⃗ = u⃗ et w⃗∧u⃗ = v⃗ [expressions peu lisibles]. **Application 2** : u⃗, v⃗ et w⃗ trois
+  vecteurs de l'espace ; montrer que u⃗∧(v⃗∧w⃗) = (u⃗.w⃗)v⃗ − … [lecture peu lisible], si et seulement si, u⃗ et
+  w⃗ sont colinéaires. **Application 3** : u⃗ et v⃗ deux vecteurs de l'espace. 1. montrer que
+  ‖u⃗∧v⃗‖² = (v⃗∧(u⃗∧v⃗)).u⃗ = ‖u⃗‖²·‖v⃗‖² − (u⃗.v⃗)².
+- **Ex. 20** (p.142) : espace muni d'un repère orthonormé (O, i⃗, j⃗, k⃗) ; A(0, 6, 0), B(0, 0, 8) et C(4, 0, 8).
+  1.a. les droites (BC) et (BA) sont orthogonales. b. les droites (CO) et (OA) sont orthogonales. c. la droite
+  (BC) est orthogonale au plan (OAB). 2. déterminer le volume du tétraèdre OABC. 3. montrer que les quatre
+  points O, A, B et C se trouvent sur une sphère dont on déterminera le centre et le rayon. 4. à tout réel α de
+  l'intervalle ]0, 8[ on associe le point M(0, 0, α) ; le plan contenant M et orthogonal à la droite (OB)
+  rencontre les droites (OC), (AC) et (AB) respectivement en N, P et Q. a. déterminer la nature du quadrilatère
+  MNPQ. b. la droite (PM) est-elle orthogonale à la droite (OB) ? pour quelle valeur de α la droite (PM) est-elle
+  orthogonale à la droite (AC) ? c. déterminer MP² à l'aide de α ; pour quelle valeur de α la distance PM
+  est-elle minimale ? (Figure.)
+- **Ex. 21** (p.142) : espace muni d'un repère orthonormé (O, i⃗, j⃗, k⃗) ; S la sphère de centre J(0, 1, 0) et
+  de rayon 1 ; α et β deux réels donnés, M et N les points définis par OM⃗ = αk⃗ et AN⃗ = βi⃗ où A(0, 2, 0). 1.
+  déterminer une équation cartésienne de la sphère S. 2. déterminer une représentation paramétrique de la droite
+  (MN) à l'aide de α et β. 3.a. montrer que la droite (MN) est tangente à la sphère S si et seulement si
+  α²·β² = 4. b. dans le cas où la droite (MN) est tangente à S, calculer les coordonnées du point de contact à
+  l'aide de α et β. (Figure.)
+- **Ex. 22** (p.143) : ABCD un tétraèdre ; G le centre de gravité du triangle BCD ; I et J les milieux
+  respectifs des segments [BC] et [CD] ; K le point tel que 5GK⃗ … = 0⃗ [relation peu lisible] ; L le point
+  défini par AL⃗ = (1/6)AB⃗ ; repère (A, AB⃗, AC⃗, AD⃗). 1. déterminer les coordonnées des points A, B, C, D, G,
+  I, J et L. 2. déterminer une représentation paramétrique de chacune des droites (KL) et (AG). 3. en déduire
+  que les droites (KL) et (AG) sont concourantes.
+- **Ex. 23** (p.143) : le cube ABCDEFGH d'arête 1 (présenté ci-dessous) ; à chaque réel x on associe le point M
+  de la droite (DF) défini par DM⃗ = x·DF⃗. 1.a. montrer que MB = MG = ME [sic]. b. montrer que le triangle BEG
+  est équilatéral. 2.a. exprimer MB² en fonction de x et étudier les variations de la fonction ainsi obtenue. b.
+  en déduire les coordonnées du centre du cercle circonscrit au triangle BEG. 3. α le réel tel que
+  EM̂B = BM̂G = GM̂E = α. a. montrer que cos α = 1 − 1/(3x² − 4x + 2). b. étudier les variations de la fonction f
+  définie par f(x) = 1 − 1/(3x² − 4x + 2) et résoudre l'équation f(x) = 0. c. en déduire qu'il existe deux points
+  M₁ et M₂ de (DF) tels que les repères (M₁, M₁B⃗, M₁G⃗, M₁E⃗) et (M₂, M₂B⃗, M₂G⃗, M₂E⃗) sont orthonormés [sic].
+  d. en quel point du segment [DF] l'angle α est-il minimum ? (Figure : cube.)
+- **Ex. 24** (p.143) : (O, OA⃗, OC⃗, OS⃗) un repère orthonormé de l'espace ; B le point de coordonnées (1, 1, 0) ;
+  P le plan d'équation x + y = a où a est un réel de l'intervalle ]0, 1[ ; le but du problème est de déterminer
+  la section du plan P avec la pyramide SOABC et le maximum de l'aire de cette section. 1. déterminer une
+  représentation paramétrique de chacune des droites (SA), (SB), (SC), (OC) et (OA). 2. I, J, K, L et M les
+  points d'intersection respectifs du plan P avec les droites (SA), (SB), (SC), (OC) et (OA). a. déterminer les
+  coordonnées des points I, J, K, L et M. b. vérifier que le quadrilatère IJKM [sic] est un rectangle. c.
+  déterminer l'aire du pentagone IJKLM. 3. f la fonction définie sur ]0, 1[ par f(x) = (x√2/4)(4 − 3x). a.
+  étudier les variations de f sur ]0, 1[. b. en déduire la position du plan P qui réalise le maximum de l'aire du
+  pentagone IJKLM ; vérifier qu'il s'agit d'un plan qui passe par le centre de gravité du triangle OAC. (Figure.)
+- **Ex. 25** (p.144) : ABCDEFGH un parallélépipède. 1. A′ le point tel que FA′⃗ = (1/4)FG⃗. Soit D′ le point tel
+  que DD′⃗ = (1/4)DG⃗ [relation peu lisible] ; les droites (AD′) et (DA′) se coupent en O ; déterminer le rapport
+  de l'homothétie de centre O qui transforme A en D′ et D en A′. 2. existe-t-il une homothétie qui transforme
+  (AD) en (EF) ?
+- **Ex. 26** (p.144) : ABCD un tétraèdre ; I et J les milieux respectifs des segments [AB] et [AC] ; E et F
+  désignent respectivement les symétriques du point D par rapport à I et J ; montrer que le triangle BCD est
+  l'image du triangle EFA par une translation que l'on déterminera.
+- **Ex. 27** (p.144) : ABCD un tétraèdre de l'espace et O le centre du cercle circonscrit au triangle ABC ; E
+  l'image du point D par la translation de vecteur AB⃗, F l'image de D par la translation de vecteur AC⃗ et O′
+  le centre du cercle circonscrit au triangle DEF ; montrer (en utilisant une translation) que les droites
+  (OO′), (AD), (BE) et (CF) sont parallèles.
+- **Ex. 28** (p.144) : ABCD un tétraèdre ; M l'image de C par la translation de vecteur BA⃗, N l'image de D par
+  la translation de vecteur CA⃗ et P l'image de B par la translation de vecteur DA⃗ ; montrer que les points A,
+  M, N et P sont coplanaires.
+- **Ex. 29** (p.144) : espace muni d'un repère (O, i⃗, j⃗, k⃗) ; les droites D : { x = 1 − α ; y = 2 + α ;
+  z = −1 − α }, α ∈ ℝ, et D′ : { x = 1 + 2β ; y = 2 − 2β ; z = −1 + 2β }, β ∈ ℝ ; montrer que D′ est l'image de
+  D par la translation de vecteur u⃗ = i⃗ − j⃗ + k⃗.
+- **Ex. 30** (p.144) : espace muni d'un repère orthonormé (O, i⃗, j⃗, k⃗) ; S la sphère dont une équation
+  cartésienne est x² + y² + z² − 2x + 3y − z = 1/2 ; P le plan dont une équation cartésienne est
+  x + 2y + 2z − 1 = 0. 1. montrer que P coupe S suivant un cercle dont on déterminera le centre et le rayon. 2.
+  déterminer les translations qui transforment P en un plan tangent à S.
+- **Ex. 31** (p.144) : A, B et C des points non alignés de l'espace ; un point M décrit une droite D strictement
+  parallèle à la droite (BC) et ne contenant pas A ; déterminer le lieu géométrique du centre de gravité du
+  triangle BCM, puis celui du centre de gravité du tétraèdre ABCM.
+- **Ex. 32** (p.144) : ABCDEFGH un cube ; I et J les milieux respectifs des segments [EH] et [BF], P le centre
+  de gravité du triangle EFH [sic] et Q le centre de gravité du triangle FBG [sic]. 1. montrer que la droite
+  (BH) est perpendiculaire au plan (ACF). 2. K le milieu de [FG]. a. quelles sont les images des points I et B
+  par l'homothétie de centre K et de rapport 1/3 ? b. montrer alors que la droite (PQ) est orthogonale aux
+  droites (EG) et (FC).
+- **Ex. 33** (p.145) : ABCDE une pyramide à base carrée de sommet A ; P le plan parallèle au plan (BCD) passant
+  par G le centre de gravité de la face ABC. 1. montrer que P passe par les centres de gravité des quatre faces
+  triangulaires de la pyramide. 2. un point M décrit les côtés du carré BCDE et N désigne le point d'intersection
+  de la droite (AM) avec le plan P. a. déterminer le lieu géométrique Γ du point N lorsque M décrit le carré
+  BCDE. b. quel est le périmètre de Γ ? c. quel est le volume de la pyramide de sommet A dont Γ est une base ?
+  (Figure : pyramide.)
+- **Ex. 34** (p.145) : ABCD un tétraèdre ; I le milieu de [CD] et E un point de la droite (AI) distinct de A et
+  de I ; h l'homothétie de centre I qui transforme A en E. 1. le plan P passant par E et parallèle au plan (ABC)
+  coupe (CD) en M ; le plan Q passant par E et parallèle au plan (ABD) coupe (CD) en N. a. montrer que h(C) = M.
+  b. montrer que I est le milieu de [MN]. 2.a. montrer que les plans P et Q sont sécants suivant une droite Δ.
+  b. montrer que les droites Δ et (IB) sont coplanaires.
+- **Ex. 35** (p.145) : ABCDEFGH un parallélépipède ; I le centre de gravité du triangle BDE et J le centre de
+  gravité du triangle CFH. 1. montrer que les plans (BDE) et (CFH) sont parallèles. 2.a. montrer que
+  3AI⃗ = AB⃗ + AD⃗ + AE⃗ = AG⃗. b. montrer que J est l'image de I par une homothétie de centre A dont on précisera
+  le rapport. c. en déduire que AI = IJ = JG [sic]. 3. M, N et P les milieux respectifs des segments [BD], [DE]
+  et [EB] ; déterminer les images des points M, N et P par h.
+- **Ex. 36** (p.145) : IABCD une pyramide de sommet I et à base carrée ; h l'homothétie de centre I et de
+  rapport 2/3 et P l'image du plan (ABCD) par h. 1. montrer que P contient les centres de gravité des triangles
+  IAB, IBC, ICD et IDA. 2. à tout point M sur les côtés du carré ABCD, on associe le point N intersection du plan
+  P avec la droite (IM). a. déterminer l'ensemble Γ des points N lorsque M varie. b. exprimer le volume de la
+  pyramide de sommet I dont la base est Γ à l'aide de celle de la pyramide IABCD.
+- **Ex. 37** (p.145) : A, B et C trois points alignés de l'espace ; O le milieu de [AB] et O′ le milieu de [AC].
+  1. h l'homothétie de centre A qui transforme B en C ; montrer que h transforme la sphère S de diamètre [AB] en
+     la sphère S′ de diamètre [AC]. 2. une droite Δ passant par A et distincte de la droite (AB) recoupe S en M et
+     recoupe la sphère S′ en N ; montrer que les droites (BM) et (CN) sont parallèles.
+- **Ex. 38** (p.145–146) : ABCDEFGH un parallélépipède droit et I le point de l'espace défini par
+  3IA⃗ + IB⃗ = 0⃗ ; la droite (IC) coupe la droite (AD) en O ; h l'homothétie de centre O qui transforme A en D.
+  1. déterminer le rapport de h. 2. la droite (OE) perce le plan (CDH) [sic] en J ; montrer que les points D, I
+     et J sont alignés [lecture peu lisible]. 3. P le plan parallèle au plan (IED) et passant par J ; montrer que la
+     droite (AD) perce le plan P en un point K tel que OD² = OA.OK.
+- **Ex. 39** (p.146) : ABCDEFGH un cube d'arête a et I le point tel que IB⃗ = 3IA⃗ ; h l'homothétie de centre I
+  et de rapport 1/3 ; M et N les images respectives des points E et H par h. 1. déterminer l'image du plan (BCE)
+  par h. 2. la droite (IC) perce le plan (AMN) en P ; montrer que IC⃗ = 3IP⃗ et que P appartient à la droite
+  (AD). 3. exprimer en fonction de a le volume de la pyramide IAMNP. (Figure : cube.)
+- **Ex. 40** (p.146) : espace muni d'un repère orthonormé (O, i⃗, j⃗, k⃗) ; f l'application de l'espace dans
+  lui-même qui à tout point M(x, y, z) associe le point M′(x′, y′, z′) tel que { x′ = 3x − 2 ; y′ = 3y − 3 ;
+  z′ = 3z − 4 }. 1. montrer que h [sic, f] est une homothétie dont on précisera le centre I et le rapport. 2.
+  déterminer les coordonnées du point J image du point O par h. 3. P le plan dont une équation est
+  x − y + z = 0 ; déterminer une équation du plan Q image de P par h.
+
+### Bornes de scope observées (chapitre 15)
+
+- ✅ INCLUS : **produit scalaire dans l'espace** (définition par le cosinus / cas nul, carré scalaire, bilinéarité
+  et symétrie, expression analytique u⃗.v⃗ = xx′ + yy′ + zz′ en repère orthonormé, norme et distance de deux
+  points) ; **produit vectoriel** (définition géométrique — orthogonalité, base directe, norme = AB.AC.sin(BAC) —,
+  colinéarité ⇔ produit nul, antisymétrie / bilinéarité, composantes en base orthonormée directe, **produit mixte**
+  (u⃗∧v⃗).w⃗ = det(u⃗, v⃗, w⃗) et permutation circulaire, **aire** d'un parallélogramme / triangle, **volume** d'un
+  tétraèdre (1/6)|(BC⃗∧BD⃗).BA⃗| et d'un **parallélépipède** |(AB⃗∧AD⃗).AE⃗|) ; **droite** (représentation
+  paramétrique, vecteur directeur), **plan** (défini par un point + deux vecteurs directeurs via det(AM⃗, u⃗, v⃗) = 0,
+  équation cartésienne, vecteur normal, positions relatives et intersections, **distance point-plan**
+  |ax₀ + by₀ + cz₀ + d|/√(a² + b² + c²)), **distance d'un point à une droite** ‖MA⃗∧u⃗‖/‖u⃗‖, **sphère** (équation
+  x² + y² + z² + … = 0 ramenée à (x−a)² + (y−b)² + (z−c)² = R², plan tangent, **intersection sphère-plan** selon
+  h ⋛ R : vide / point / cercle de rayon √(R²−h²)) ; **translation** de l'espace (définition, bijection réciproque
+  −u⃗, propriété caractéristique M′N′⃗ = MN⃗, conservation distance / produit scalaire / parallélisme / orthogonalité /
+  milieu, action sur droite / plan / sphère, invariance globale, expression analytique) ; **homothétie** de l'espace
+  (définition IM′⃗ = k·IM⃗, bijection réciproque de rapport 1/k, propriété caractéristique M′N′⃗ = k·MN⃗,
+  M′N′ = |k|·MN, action sur droite / plan / sphère (rayon |k|R), conservation du contact, expression analytique).
+- ⛔ NON traité dans ce chapitre : les **coniques et quadriques** de l'espace (aucune surface du second degré autre
+  que la sphère) ; les **isométries autres que la translation** (les rotations, réflexions et vissages de l'espace,
+  ainsi que les **similitudes** de l'espace, ne sont **pas** au programme de ce chapitre) ; la **réduction générale**
+  par changement de repère orthonormé (diagonalisation / rotation) ; l'**équation générale du second degré** à trois
+  variables. Le chapitre suppose **acquis** le produit scalaire et le produit vectoriel **du plan** (encadrés
+  « Rappel »), le **barycentre**, la **géométrie affine de l'espace** (droites, plans, coplanarité, parallélisme) et
+  les **translations / homothéties du plan** — l'esprit du chapitre est le prolongement systématique à l'espace des
+  outils vus dans le plan.
 
 ## 3. Notes pédagogiques / méthode
 
