@@ -6,6 +6,10 @@
 
 ## 🏰 ما هي القوّة aⁿ؟
 
+::: figure القوّةُ ضربٌ متكرّر: الأُسّ يعُدّ كم مرّةً يتكرّر الأساس، فـ 2⁴ أربعةُ عوامل قيمتُها 16
+<svg viewBox="0 0 340 150"><text x="80.0" y="56.0" text-anchor="middle" font-size="34" font-weight="700" fill="#7c3aed" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">2⁴</text><text x="230.0" y="56.0" text-anchor="middle" font-size="20" font-weight="700" fill="#1f2937" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">2 × 2 × 2 × 2</text><path d="M168 66 Q168 74 176 74 L286 74 Q294 74 294 66" fill="none" stroke="#7c3aed" stroke-width="1.6"/><text x="231.0" y="92.0" text-anchor="middle" font-size="11" font-weight="700" fill="#6d28d9" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">أربعةُ عوامل</text><text x="170.0" y="128.0" text-anchor="middle" font-size="20" font-weight="700" fill="#15803d" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">2⁴ = 16</text></svg>
+:::
+
 عندما يتكرّر ضربُ عددٍ a في نفسه n مرّةً، نكتب النتيجةَ بشكلٍ مختصرٍ: **aⁿ**، ونقرؤها «a أُسّ n» أو «a قوّة n».
 
 $$ aⁿ = a × a × ... × a (n مرّةً) $$
