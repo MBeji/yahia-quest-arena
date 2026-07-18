@@ -1993,6 +1993,9 @@ QCM / Vrai-Faux, puis d'une rubrique « Exercices et problèmes ».
   en déduire que F est strictement croissante sur ]0, +∞[. 3. montrer qu'il existe un unique réel
   x ∈ ]2, 3[ tel que F(x) = 1.
 
+- **Activité 2** (p.140) : 1. Résoudre dans ℝ : a. ln(x² + x + 1) = 0 ; b. ln(1 − x) = ln(2 + x). 2. Résoudre dans ℝ : a. ln(4x − 1) ≤ 0 ; b. ln(4 − 3x) > 0 ; c. ln(x² + x + 1) ≤ 0 ;
+  d. ln(2x − 5) ≤ ln x.
+
 **II. Étude et représentation graphique de la fonction ln** (p.140)
 
 - **Activité 1** (p.140) : étudier ln et construire sa courbe C dans un repère orthonormé (O, i⃗, j⃗).
@@ -2264,7 +2267,7 @@ n ≥ 1000 ; « en utilisant le tableur Excel on obtient T₁₀₀₀ ≈ 0.577
   (x − 1)F′(c) ; c. en déduire que F est dérivable à droite en 1 et F′*d(1) = 1. 4. tableau de variation
   de F, tracer C′. **III/** α ∈ ]1, +∞[, 𝒜(α) aire limitée par C et y = 0, x = 1, x = α. 1. montrer que
   pour tout x ∈ ]1, +∞[, F(x) = ∫₁ˣ f(t)dt + ln 2. 2. en déduire lim*{α→+∞} 𝒜(α)/α et
-  lim*{α→+∞} 𝒜(α)/α². (Numérotation source : dans I/ et II/ on passe de 3 à 4 sans 2 ni de « 2 » [sic].)
+  lim*{α→+∞} 𝒜(α)/α². (Numérotation source : dans II/ la numérotation saute de 1 à 3, sans « 2 » [sic] ; I/ est bien numérotée 1-2-3-4.)
 - **Ex. 29** (p.156) : **I/** 1. h sur ]0, +∞[ par h(x) = x − ln x : a. dresser le tableau de variation
   de f [sic pour h] ; b. en déduire que pour tout x ∈ ]0, +∞[, h(x) ≥ 1. 2. f sur [0, +∞[ par f(x) =
   1/(x − ln x) si x > 0, 0 si x = 0 : a. f continue sur [0, +∞[ ; b. f dérivable à droite en 0 ? **II/**
