@@ -115,7 +115,7 @@
 
 | statut | matière | profondeur | sources (couverture calculée) | R-7 | maj | notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| 🚧 partielle — ⛔ génération interdite | **mathematiques** | mixte | `222445` 25 % (manque p.53–207) · `222446` 3 % (manque p.7–230) | — | 2026-07-18 (bejimed) | Campagne LOT A (METHODE-GENERATION-CONTENU) raccrochée au corpus : tome 1 Analyse (222445, 9 ch.) + tome 2 (222446, 10 ch.) = 19 chapitres ; manuel eleve seul (pas de guide enseignant au corpus) => fait reference. Paliers 1-2 : fiche raccrochee + plan annuel 19 ch. + manifest/bac-math.json ; chapitres 1-2 (p.5-52) transcrits a profondeur de generation ; ch.3-19 restent en 'bloc'. R-7 (2026-07-18, integrale) : CONFORME sur ch.1 (3 corrections de forme) et ch.2 (0 correction). Generation LOT B interdite tant que statut != complete. |
+| 🚧 partielle — ⛔ génération interdite | **mathematiques** | mixte | `222445` 52 % (manque p.109–207) · `222446` 3 % (manque p.7–230) | — | 2026-07-18 (bejimed) | Campagne LOT A (METHODE-GENERATION-CONTENU) raccrochée au corpus : tome 1 Analyse (222445, 9 ch.) + tome 2 (222446, 10 ch.) = 19 chapitres ; manuel eleve seul (pas de guide enseignant au corpus) => fait reference. Paliers 1-3 : fiche raccrochee + plan annuel 19 ch. + manifest/bac-math.json ; chapitres 1-5 (tome 1, p.5-108) transcrits a profondeur de generation ; ch.6-19 restent en 'bloc'. R-7 independant (2026-07-18) : CONFORME sur ch.1/ch.2/ch.3/ch.5 ; ch.4 CORRECTIONS MINEURES (1 correction substantielle appliquee : VF-5 f' -> f). Total corrections de forme ch.1 = 3, autres 0. Generation LOT B interdite tant que statut != complete. |
 
 ## À transcrire (dérivé du corpus — PDF `principale` non rattachés à une fiche)
 
