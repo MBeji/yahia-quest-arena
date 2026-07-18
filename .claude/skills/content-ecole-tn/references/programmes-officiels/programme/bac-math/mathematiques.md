@@ -52,8 +52,8 @@ style annales session principale.
 | 5   | Primitives                   | 96–108                  | `generation` |
 | 6   | Intégrales                   | 109–136                 | `generation` |
 | 7   | Fonction logarithme népérien | 137–157                 | `generation` |
-| 8   | Fonction exponentielle       | 158–188                 | `bloc`       |
-| 9   | Équations différentielles    | 189–207                 | `bloc`       |
+| 8   | Fonction exponentielle       | 158–188                 | `generation` |
+| 9   | Équations différentielles    | 189–207                 | `generation` |
 
 ### Tome 2 — Algèbre · Géométrie · Probabilités (222446P00, 230 p.)
 
@@ -2313,6 +2313,707 @@ n ≥ 1000 ; « en utilisant le tableur Excel on obtient T₁₀₀₀ ≈ 0.577
   ln(aᵖ)/ln(ᵖ√a) restent limités aux exposants **entiers/rationnels 1/p** ; le **logarithme décimal
   log** (aucune section ni notation « log » dans ce chapitre — la notation décimale n'y figure pas) ;
   les **équations différentielles** (chapitre 9).
+
+## 2.8 Chapitre 8 — Fonction exponentielle (manuel 222445, p.158–188)
+
+**Page de garde (p.158)** — Titre : « Fonction exponentielle », Chapitre 8. Citation liminaire
+tirée d'Euler (1748, _Introductio_ §110) : des questions d'accroissement de population (« Si le
+nombre d'habitants d'une province s'accroît tous les ans d'une trentieme… ») et d'intérêts
+composés (« Un particulier doit 400.000 florins… l'intérêt à 5 pour cent… »), puis « En appliquant
+la formule du binôme, Euler dit sans la moindre hésitation, "Si N est un nombre plus grand qu'aucune
+quantité assignable la fraction ((N−1)/N) égalera l'unité". […] si N tend vers l'infini,
+(1 + 1/N)^N tend vers le nombre d'Euler e ». Référence donnée : « E. Haier [sic] et al, _L'analyse
+au fil de l'histoire_, 2000 » (même coquille source que les chapitres 1 et 7 pour Ernst Hairer). Le
+chapitre est structuré en parties numérotées **I, II, III, IV, V, VII, VIII** — la **numérotation
+source saute de V à VII** (aucune partie « VI » n'existe dans le chapitre) [sic] —, suivies de deux
+exercices résolus, d'un QCM / Vrai-Faux, puis d'une rubrique « Exercices et problèmes ».
+
+### Cours — Activités
+
+**I. Définition et propriétés** (p.159)
+
+- **Activité 1** (p.159) : figure représentant ln. 1. donner graphiquement une valeur approchée de
+  l'antécédent de 1/2 et de −√2/2. 2. montrer que ln : x ↦ ln x admet une fonction réciproque notée
+  exp, tracer sa courbe. 3. ensemble de définition de exp et ses limites aux bornes. 4. que valent
+  exp(0), exp(1), exp(2), exp(−1) ? 5. montrer que exp(n) = e^n pour n entier. 6. a. comparer
+  exp(a + b) et exp(a)·exp(b), puis exp(a − b) et exp(a)/exp(b) ; b. montrer que pour tout n ∈ ℕ,
+  exp(na) = (exp(a))^n, a ∈ ℝ.
+- **Activité 2** (p.160) : utiliser une calculatrice pour une valeur approchée de e^(2/3), e^√3,
+  e^(−√2/2).
+- **Activité 3** (p.160) : simplifier e^(ln 1), e^(ln 2), e^(−ln 3), ln(e^−2), ln(e^(−2 ln 3)).
+- **Activité 4** (p.160) : simplifier ⁶√(e²)·e^(3/2) ; (√(e³)/√(e^−4))·⁴√(e²) ;
+  (√(e^30)/√(e^−42))·¹⁰√(e^−20).
+- **Activité 5** (p.160) : résoudre dans ℝ : 1. e^x = 3 ; 2. ln x = 3 ; 3. e^(2x+3) = 4 ; 4. e^(2x+3) = e ; 5. (e^x − 1)(e^x − 2) = 0 ; 6. e^(2x) + e^x − 3 = 0.
+- **Activité 6** (p.161) : x > 0, u_n = (1 + x/n)^n (n > 0). Calculer lim_{n→+∞} ln u_n et en déduire
+  lim_{n→+∞} u_n.
+
+**II. Étude de la fonction exponentielle** (p.161)
+
+- **Activité 1** (p.161) : C courbe de exp dans (O, i⃗, j⃗). 1. lim_{−∞} e^x et lim_{+∞} e^x. 2. X = e^x : a. montrer e^x/x = X/ln X ; b. en déduire lim_{x→+∞} e^x/x, interpréter graphiquement. 3. a. dérivabilité de exp sur ℝ et fonction dérivée ; b. lim_{x→0} (e^x − 1)/x ; c. tableau de
+  variation. 4. intersection de C avec les axes. 5. a. tangente T à C au point d'abscisse 0 ;
+  b. h(x) = e^x − x − 1, variations, position relative de C et T. 6. tracer C et T.
+- **Activité 2** (p.162) : déterminer les fonctions dérivables sur ℝ vérifiant (E) : f′(x) = f(x).
+  1. exp vérifie (E). 2. f vérifie (E), h(x) = e^−x f(x) : h dérivable sur ℝ et h′(x) = 0.
+  2. en déduire l'ensemble des fonctions vérifiant (E).
+- **Activité 3** (p.162) : résoudre dans ℝ 1. e^(3x) ≤ e^(x²) ; 2. e^(3x) ≤ 4 e^x ; 3. e^(x(x−1)) > 1.
+- **Activité 4** (p.162) : figure de f : x ↦ e^x avec une tangente T passant par l'origine.
+  1. coordonnées du point de contact A entre C_f et T. 2. montrer que la tangente à C_f au point
+     d'abscisse (n + 1) passe par le point (n, 0), n entier naturel.
+
+**III. Limites usuelles** (p.162)
+
+- **Activité 1** (p.162) : f(x) = x e^x, C_f dans (O, i⃗, j⃗). 1. nature de la branche infinie en
+  +∞. 2. a. lim_{t→+∞} t/e^t ; b. en déduire lim_{x→−∞} x e^x, interpréter. 3. tableau de variation. 4. point d'inflexion I. 5. tracer C_f en précisant la tangente T en I.
+- **Activité 2** (p.163) : n ∈ ℕ*, f_n sur ℝ*₊ par f_n(x) = e^x − Σ_{k=0}^n x^k/k!. 1. par
+  récurrence sur n, f_n(x) ≥ 0 pour x > 0. 2. a. pour n, m entiers non nuls, lim_{x→+∞} e^(nx)/x^m =
+  +∞ ; b. calculer lim_{x→−∞} |x^m e^(nx)|.
+- **Activité 2** (p.163) [_deuxième « Activité 2 » — la numérotation source répète le libellé, aucune
+  « Activité 3 » ne l'introduit_ [sic]] : calculer lim_{+∞}(x² − e^(2x)) ; lim_{+∞}(x⁴ − x)e^x ;
+  lim_{+∞} x(e^(2x) − e^x + 1) ; lim_{−∞} x(e^(2x) − e^x) ; lim_{+∞} √x/e^x ;
+  lim_{−∞} x + 1 + 1/(e^x + 1) ; lim_{+∞} e^x/(x³ + 1) ; lim_{+∞} e^x/(x² − x + 1).
+- **Activité 3** (p.163) : f(x) = ½x² − e^x, C_f dans (O, i⃗, j⃗). 1. variations. 2. a. C_f coupe
+  l'axe des abscisses en un seul point d'abscisse α, −1 < α < 0 ; b. valeur approchée de α à 10⁻¹. 3. a. point d'inflexion I ; b. tangente à C_f en I. 4. tracer C_f. 5. aire limitée par C_f, l'axe
+  des abscisses, x = 0 et x = 1.
+
+**IV. La fonction x ↦ e^(u(x))** (p.164)
+
+- **Activité 1** (p.164) : étudier et représenter x ↦ e^(2x).
+- **Activité 2** (p.164) : dériver x ↦ √x e^√x ; x ↦ (2x + 1)e^(−3x) ; x ↦ (e^(2x) + 1)/(2e^(2x) + 3) ;
+  x ↦ x³ e^(3x).
+- **Activité 3** (p.164) : primitives sur ℝ de x ↦ e^(−3x) ; x ↦ x e^(x²) ; x ↦ (2x + 1)e^(x²+x) ;
+  x ↦ sin x · e^(cos x).
+- **Activité 4** (p.164) : calculer ∫₀¹ e^x/(e^x + 1)² dx ; ∫₀¹ x e^(x²) dx ; ∫₀¹ x e^x dx ;
+  ∫₀¹ x e^(−x+1) dx.
+- **Activité 5** (p.165) : f : x ↦ e^(−x²), C_f dans un repère orthonormé. 1. étudier f, représenter
+  C_f. 2. montrer que pour x ≥ 1/2, x² ≥ ½x. 3. pour α > 1/2, A(α) = aire limitée par C_f, l'axe des
+  abscisses, x = α et x = 1/2. a. montrer A(α) ≤ ∫*{1/2}^α e^(−½x) dx ; b. en déduire que α ↦ A(α)
+  admet une limite finie L quand α → +∞. 4. pour α ≥ 1, ∫*{1/2}^1 e^−x dx ≤ A(α). 5. encadrement de L.
+- **Activité 6** (p.165) : I_n = ∫₀¹ x^n e^−x dx (n ∈ ℕ*). 1. a. 0 ≤ I_n ≤ 1/(n + 1) ; b. lim I_n. 2. pour n ≥ 2, I_n = n I_{n−1} − 1/e. 3. I_n = (n!/e)[e − Σ_{k=0}^n 1/k!]. 4. en déduire
+  e = lim_{n→+∞} Σ_{k=0}^n 1/k!.
+
+**V. Exponentielle de base a** (p.165)
+
+- **Activité 1** (p.165) : 1. calculer e^(3 ln 2), e^(4 ln(3/2)), e^(−2 ln(1/3)), e^(−2 ln √2). 2. vérifier que pour a > 0 et tout entier n, a^n = e^(n ln a).
+- **Activité 2** (p.166) : p, q entiers avec q ≥ 2, a > 0. Montrer a^(1/q) = q√a ; a^(p/q) = q√(a^p).
+- **Activité 3** (p.166) : résoudre dans ℝ 2^x = 1/2 ; 10^(x+1) = 2^(−x+2) ; (√2)^x = 2^(−x+1).
+- **Activité 4** (p.166) : f : x ↦ e^(x ln 2) et g : x ↦ e^(−x ln 2), C_f et C_g. 1. étudier et
+  représenter f. 2. le symétrique de A(a, f(a)) ∈ C_f par rapport à l'axe des ordonnées est un point
+  de C_g. 3. C_f et C_g symétriques par rapport à l'axe des ordonnées.
+- **Activité 5** (p.167) : graphique de C₁ et C₂, courbes de f_{b₁} : x ↦ (b₁)^x et
+  f_{b₂} : x ↦ (b₂)^x. Déterminer les réels strictement positifs b₁ et b₂.
+- **Activité 6** (p.168) : déterminer lim_{+∞} 2^(x²−2x) ; lim_{−∞} 2^(x²−2x) ; lim_{−∞} (1/2)^(3−2x).
+
+**VII. Fonctions puissances** (p.168) [_la numérotation source passe directement de V à VII, sans
+« VI »_ [sic]]
+
+- **Activité 1** (p.168) : figure représentant x ↦ x⁴, x ↦ x⁵, x ↦ x^−4, x ↦ x^−5 (x > 0) —
+  identifier chacune des fonctions.
+- **Activité 2** (p.168) : figure représentant x ↦ ³√x et x ↦ ³√(1/x) — identifier chacune.
+- **Activité 3** (p.168) : f sur ℝ*₊ par f(x) = √(x³). 1. montrer que pour x > 0, f(x) = e^((3/2)ln x). 2. étudier et représenter f. 3. bijection strictement croissante de ℝ*₊ sur ℝ*₊. 4. déterminer f⁻¹.
+- **Activité 4** (p.169) : f sur ℝ₊ par f(x) = ⁿ√x, n ≥ 2. Montrer que pour x > 0, f(x) = x^(1/n).
+- **Activité 5** (p.169) : calculer lim_{+∞} x^(2/3) ; lim_{0⁺} x^(2/3) ; lim_{+∞} x^(−4/3) ;
+  lim_{0⁺} x^(−4/3).
+- **Activité 6** (p.169–170) : f, g sur ℝ₊ par f(x) = x^(2/3) si x > 0, 0 si x = 0 ; g(x) = x^(10/3)
+  si x > 0, 0 si x = 0. 1. a. f, g continues sur ℝ₊ ; b. dérivabilité à droite en 0. 2. étudier et
+  représenter f et g. 3. (p.170) aire limitée par C_f, C_g, x = 1 et x = 2. 4. bijections strictement
+  croissantes, déterminer leurs réciproques.
+
+**VIII. Croissances comparées** (p.170)
+
+- **Activité 1** (p.170) : f : x ↦ (ln x)², g : x ↦ √x. 1. signe de f′(x) − g′(x). 3. comparer f(x)
+  et g(x) [_la numérotation source saute de 1 à 3, sans « 2 »_ [sic]]. 4. h : x ↦ x², t : x ↦ √(e^x) ;
+  comparer h(x) et t(x).
+- **Activité 2** (p.171) : 1. montrer (1 + x)^(−3/4) ≤ x^(−3/4) pour x > 0. 2. comparer
+  (1 + x)^(1/4) et 1 + x^(1/4) pour x > 0.
+- **Activité 3** (p.171) : r rationnel > 0, f : x ↦ (1 + x)^r. 1. ensemble de définition. 2. si
+  0 < r < 1, comparer (1 + x)^r et 1 + rx. 3. reprendre pour r > 1. 4. représenter f pour r = 1/3
+  puis r = 5/3.
+- **Activité 4** (p.171) : 1. variations de f : x ↦ (ln x)/x. 2. en déduire les variations de
+  g : x ↦ x^(1/x). 3. représenter g.
+
+### Cours — Résultats / définitions / théorèmes à retenir (VERBATIM)
+
+> **Définition — fonction exponentielle** (p.159) — « On appelle fonction exponentielle la fonction
+> réciproque de la fonction logarithme népérien. L'image d'un réel x par la fonction exponentielle
+> est noté [sic] e^x. »
+
+> **Conséquences** (p.159) — « • Pour tout réel x et pour tout réel strictement positif y, y = e^x
+> ⟺ x = ln y. • Pour tout réel x, ln(e^x) = x. • Pour tout réel x > 0, e^(ln x) = x. • ln e = 1. »
+
+> **Propriétés** (p.160) — « Soit deux réels a et b. P₁ : e^(a+b) = e^a × e^b, e^(a−b) = e^a/e^b,
+> e^−a = 1/e^a. P₂ : Pour tout entier n, e^(na) = (e^a)^n. P₃ : Pour tout entier naturel q ≥ 2,
+> e^(a/q) = q√(e^a). P₄ : Pour tout entier naturel q ≥ 2 et tout entier p, e^((p/q)a) = q√(e^(pa)). »
+
+> **Théorème** (p.161) — « • lim_{x→−∞} e^x = 0, lim_{x→+∞} e^x = +∞, lim_{x→+∞} e^x/x = +∞,
+> lim_{x→0} (e^x − 1)/x = 1. • La fonction exponentielle est dérivable sur ℝ et sa fonction dérivée
+> est la fonction x ↦ e^x. La fonction exponentielle est strictement croissante sur ℝ. • La fonction
+> exponentielle est bijective de ℝ sur ℝ*₊ et pour tout réel x, e^x > 0. »
+
+> **Théorème** (p.163) — « Soit m et n deux entiers naturels non nuls, lim_{x→+∞} e^(nx)/x^m = +∞,
+> lim_{x→−∞} x^m e^(nx) = 0. »
+
+> **Théorème** (p.164) — « Soit u une fonction dérivable sur un intervalle I. La fonction
+> h : x ↦ e^(u(x)) est dérivable sur I et h′(x) = u′(x)e^(u(x)), x ∈ I. »
+
+> **Corollaire** (p.164) — « Soit u une fonction dérivable sur un intervalle I. Les primitives sur I
+> de la fonction x ↦ u′(x)e^(u(x)) sont les fonctions x ↦ e^(u(x)) + k, k ∈ ℝ. »
+
+> **Encadré — puissance à exposant réel** (p.166) — « Soit un réel a > 0. Pour tout réel b, on pose
+> a^b = e^(b ln a). »
+
+> **Propriétés** (p.166) — « Pour tous nombres réels strictement positifs a et b et tous réels c et
+> d, a^(c+d) = a^c × a^d ; (a^c)^d = a^(cd) ; a^(c−d) = a^c/a^d ; a^c × b^c = (ab)^c ;
+> a^c/b^c = (a/b)^c. »
+
+> **Définition — exponentielle de base a** (p.166) — « Soit un réel a > 0. On appelle fonction
+> exponentielle de base a la fonction x ↦ a^x. »
+
+> **Conséquences** (p.166–167) — « Soit un réel a > 0. La fonction x ↦ a^x est dérivable sur ℝ et sa
+> fonction dérivée est la fonction x ↦ (ln a)a^x. La fonction x ↦ a^x est strictement croissante sur
+> ℝ si a > 1. La fonction x ↦ a^x est strictement décroissante sur ℝ si 0 < a < 1. La fonction
+> x ↦ 1^x est une fonction constante. Si a > 1 alors lim_{x→+∞} a^x = +∞ ; lim_{x→−∞} a^x = 0. Si
+> 0 < a < 1 alors lim_{x→+∞} a^x = 0 ; lim_{x→−∞} a^x = +∞. » (Suivi du tableau de variation selon
+> a > 1 / 0 < a < 1 et des courbes représentatives pour a = 0.5, 0.2, e, 2, p.167.)
+
+> **Notation** (p.169) — « Pour tout rationnel r et tout x > 0, on note e^(r·ln x) = x^r. »
+
+> **Définition — fonction puissance** (p.169) — « Soit r un rationnel. On appelle fonction puissance
+> r la fonction x ↦ e^(r·ln x), x > 0. »
+
+> **Encadré — limites des fonctions puissances** (p.169) — « Si r > 0 alors lim_{x→+∞} x^r = +∞ ;
+> lim_{x→0⁺} x^r = 0. Si r < 0 alors lim_{x→+∞} x^r = 0 ; lim_{x→0⁺} x^r = +∞. »
+
+> **Théorème** (p.169) — « Soit r un rationnel. La fonction x ↦ x^r est dérivable sur ℝ*₊ et sa
+> dérivée est la fonction x ↦ r x^(r−1). »
+
+> **Corollaire** (p.169) — « Soit r un rationnel différent de −1. Les primitives sur ℝ*₊ de la
+> fonction x ↦ x^r sont les fonctions x ↦ (1/(r + 1))x^(r+1) + k, k ∈ ℝ. »
+
+> **Théorème** (p.170) — « Soit r un rationnel strictement positif. lim_{x→+∞} (ln x)/x^r = 0 ;
+> lim_{x→0⁺} x^r ln x = 0 ; lim_{x→+∞} e^x/x^r = +∞. »
+
+### Cours — Exercices résolus (p.171–175)
+
+**Exercice résolu 1** (énoncé p.171, solution intégrale p.172–173) : f définie sur ℝ par
+f(x) = √|x − 1| · e^(1/x) si x ≠ 0, f(0) = 0 ; C_f dans (O, i⃗, j⃗). Traite : 1. a. dérivabilité de f
+en tout réel ≠ 0 et ≠ 1 ; b. continuité en 0 et en 1 (f non continue en 0 — limite à droite +∞) ;
+c. non-dérivabilité en 1 ; d. dérivabilité à gauche en 0, f′_g(0) = 0. 2. a. ln(f(x)) =
+½ ln|x − 1| + 1/x et f′(x)/f(x) = ½(1/(x − 1)) − 1/x² ; b. signe de f′(x) = celui de 2(x − 1)x². 3. limites de f et de f(x)/x en ±∞ (branches paraboliques de direction (O, i⃗)). 4. tableau de
+variation (f décroissante sur ]−∞, 0[ et ]0, 1[, croissante sur ]1, +∞[) et tracé.
+
+**Exercice résolu 2** (énoncé p.173–174, solution intégrale p.174–175) : préliminaires
+
+1. a. e^−t(1 + t) ≤ 1 pour t ≥ 0 ; b. variations de u(t) = (e^−t − 1)/t sur ℝ*₊ (croissante).
+2. F sur [0, +∞[ par F(x) = ∫_x^{2x} (e^−t/t) dt si x > 0, F(0) = ln 2 : a. F(x) =
+   ∫_x^{2x} (e^−t − 1)/t dt + ln 2 ; b. encadrement e^−x − 1 ≤ ∫ … ≤ (e^−2x − 1)/2 ; c. continuité en 0.
+3. e^−2x ln 2 ≤ F(x) ≤ e^−x ln 2, lim_{+∞} F = 0. 4. dérivabilité à droite en 0, F′_d(0) = −1 ;
+   dérivabilité sur ℝ*₊ (F(x) = G(2x) − G(x), G primitive de t ↦ e^−t/t), F′(x) = e^−x(e^−x − 1)/x < 0.
+4. tableau de variation (F décroissante de ln 2 vers 0), courbe de F : asymptote y = 0 en +∞,
+   demi-tangente de coefficient directeur −1 à l'abscisse 0.
+
+### QCM (p.176) — « Cocher la réponse exacte. »
+
+1. Le réel e^(−3 ln(1/2)) est égal à (☐ −1/8 / ☐ 8 / ☐ −6).
+2. Le réel 2e^(x+y) est égal à (☐ e^(2x+2y) / ☐ e^(2x)e^(2y) / ☐ 2e^x e^y).
+3. L'équation e^x = 1/e est équivalente à (☐ x = −1 / ☐ x = ln e / ☐ x = e).
+4. L'inéquation −2 < e^(x²−1) < 1 est équivalente à (☐ e^(x²−1) > 0 / ☐ x² > 1 / ☐ −1 < x < 1).
+5. f sur ℝ* par f(x) = 2e^x/x⁴ − 1/x² : (☐ lim_{+∞} f(x) = 0 / ☐ = 2 / ☐ = +∞).
+6. Sur ℝ*₊ la dérivée de f : x ↦ e^x/x est (☐ f′(x) = e^x / ☐ f′(x) = (x − 1)/(x²e^−x) /
+   ☐ f′(x) = e^x(x + 1)/x²).
+7. L'intégrale ∫₀¹ x e^(x²) dx est égale à (☐ e − 1 / ☐ ½e / ☐ ½(e − 1)).
+
+### Vrai ou faux (p.176) — « Répondre par vrai ou faux en justifiant la réponse. » (réponses non fournies)
+
+1. La fonction exponentielle est dérivable sur ℝ et égale à sa dérivée.
+2. Pour tout x ∈ ℝ*₊, ln x < x < e^x.
+3. r rationnel différent de 1 : la fonction x ↦ x^(r+1) est une primitive de x ↦ x^r sur ]0, +∞[.
+4. La fonction définie sur ℝ par f(x) = (e^x − 1)/(e^x + 1) est paire.
+5. L'équation (e^x + e^−x)/2 = 1 est équivalente à e^x = 1.
+
+### Exercices et problèmes (p.177–188) — 43 exercices
+
+- **Ex. 1** (p.177) : 1. simplifier e^(5 ln 3), e^(−3 ln 2). 2. écrire plus simplement e^x·e^−2x,
+  e·e^x, (e^−x)², e^x/e^−x, e^(2x)/e^(1−x), (e^x)⁴/e^(2x). 3. vérifier a. e^(2x) + e^(−2x) + 2 =
+  (e^x + e^−x)² ; b. (e^x − e^−x)/(e^x + e^−x) = (e^(2x) − 1)/(e^(2x) + 1). 4. a. si 1 ≤ e^x ≤ 2 alors
+  ¼ ≤ e^−2x ≤ 1 ; b. si 1 ≤ e^x ≤ 9 alors 2 ≤ 2 e^(x/2) ≤ 6.
+- **Ex. 2** (p.177) : résoudre équations et inéquations 1. (x² − 5x + 4)e^x = 0 ; 2. e^(x/4) = 1/e ; 3. e^(3x) − e^−x = 0 ; 4. e^(2x) + e^x − 2 = 0 ; 5. e^x − 5e^−x + 4 = 0 ; 6. ln((x−1)/(x+1)) = 4 ; 7. e^−x ≤ 1 ; 8. e^(−3x) ≥ 0 ; 9. e^(2x) − 1/e^x ≥ 0 ; 10. 2 − e^(1/x) > 0 ; 11. e^x + 2/e^x − 3 ≤ 0.
+- **Ex. 3** (p.177) : figure de C₁…C₄ (repère commun) — associer chaque fonction à sa courbe pour
+  f : x ↦ −e^x, g : x ↦ e^−x, h : x ↦ 1/e^(2−x), k : x ↦ 1 + e^x.
+- **Ex. 4** (p.177) : S_n = Σ_{k=0}^n 1/e^k. Montrer lim_{n→+∞} S_n = e/(e − 1).
+- **Ex. 5** (p.177) : déterminer les limites de x² − e^x, e^(3x) − 2e^x, 2e^x − 1/x (en +∞) ;
+  2e^x − 1/x, x e^(−(1−x)), (x² − 2x + 3)e^x (en −∞) ; (x² − x)e^x (en −∞), x e^(1/x) (en 0⁺),
+  x³ − e^(2x) (en +∞) ; e^x/√(x + 1), (2x − e^x)/(x² + x) (en +∞), e^(−1/x)/x (en 0⁺) ;
+  (e^x − 1)/x, x²(e^(2x) − e^x) (en +∞), (e^(2x) − 1)/x (en 0) ; x/(1 − e^−x) (en 0),
+  (e^x − 1)/√(2x) (en 0⁺), x(e^(1/x) − 1) (en +∞) ; x(e^(1/x²) − 1) (en −∞),
+  x(e^(1/x) − 1)/(e^(1/x) + 1) (en +∞) ; x²(e^(1/x) − e^(1/(x+1))) en +∞ puis en −∞.
+- **Ex. 6** (p.178) : dérivée f′ sur I pour f : x ↦ 2x − e^−x (ℝ) ; x² + e^(1/x) (ℝ*₊) ;
+  x e^−x (ℝ) ; (x − 1)/e^x (ℝ) ; (e^(2x) − 1)/(x² + 1) (ℝ) ; 2x − 2 ln(1 + e^x) (ℝ) ;
+  e^x ln x (ℝ*₊) ; e^−x(e^(2x) + e^x − 1) (ℝ) ; (e^x − e^−x)/(e^x + e^−x) (ℝ).
+- **Ex. 7** (p.178) : f(x) = (ax² + bx + c)e^−x, C dans (O, i⃗, j⃗) passant par A(0, 1), tangente
+  parallèle à l'axe des abscisses au point d'abscisse 1, f′(0) = −6. Déterminer a, b, c.
+- **Ex. 8** (p.178) : f(x) = (x + 1)² e^−x. 1. f′(x), f″(x). 2. montrer f^(n)(x) =
+  (−1)^n(x² + a_n x + b_n)e^−x ; exprimer a_{n+1}, b_{n+1} en fonction de a_n, b_n. 3. a_n, b_n en
+  fonction de n. 4. en déduire f^(100).
+- **Ex. 9** (p.178) : primitive de f sur I pour f : x ↦ e^(2x) (ℝ) ; x e^(x²+1) (ℝ) ;
+  e^(tan x)/cos²x (]−π/2, π/2[) ; sin(2x)e^(cos²x) (ℝ) ; (1/(x−1)²)e^(1/(x−1)) (]1, +∞[) ; √(e^x) (ℝ) ;
+  e^(2x)/(1 + e^(2x)) (ℝ) ; (e^(2x) − 1)/(1 + e^(2x)) (ℝ) ; x e^(2x²) (ℝ).
+- **Ex. 10** (p.178–179) : 1. calculer a. ∫₀¹(1 + e^x)dx ; b. ∫₀¹ x e^(x²) dx ; c. ∫₀¹ e^x/(1 + e^x) dx ;
+  d. ∫₁² dx/(1 + e^x) ; e. ∫₀¹ (1/x)e^(ln x) dx ; f. ∫₁² e^−x/(1 + e^−x)² dx ; g. ∫₁² (1/x²)e^(1/x) dx. 2. par parties a. ∫₁² 2x e^−x dx ; b. ∫₀¹ x³/e^(x²) dx ; c. ∫₀^(−ln2) ln(1 + e^x)/e^x dx ;
+  d. ∫₁⁰ x² e^x dx ; e. ∫₀^(π/2) e^−x sin x dx.
+- **Ex. 11** (p.179) : 1. pour t > 0, t + 1/t ≥ 2. 2. en déduire e^(x/2) + e^(−x/2) ≥ 2 et
+  ln(1 + e^x) ≥ x/2 + ln 2.
+- **Ex. 12** (p.179) : 1. pour x ≥ 0, 0 ≤ e^x − 1 ≤ x e^x. 2. pour x ≥ 0, 0 ≤ e^x − 1 − x ≤ (x²/2)e^x.
+- **Ex. 13** (p.179) : f(x) = (2 + e^x)/(1 + e^x). 1. trouver a, b tels que f(x) = a + b e^x/(1 + e^x). 2. calculer ∫₀¹ (2 + e^x)/(1 + e^x) dx.
+- **Ex. 14** (p.179) : f : x ↦ x − 2 + e^(−x/2), C_f dans (O, i⃗, j⃗). 1. variations. 2. a. D : y = x − 2
+  asymptote ; b. tracer D et C_f. 3. λ > 0, Δ : x = λ, A(λ) = aire limitée par C_f, D, Δ et l'axe des
+  ordonnées ; calculer lim_{λ→+∞} A(λ).
+- **Ex. 15** (p.179) : f : x ↦ (e^x − e^−x)/(e^x + e^−x), C_f dans (O, i⃗, j⃗). 1. parité. 2. a. variations ; b. tracer C_f. 3. λ > 1, Δ : x = λ, A(λ) = aire limitée par C_f, Δ, l'axe des
+  abscisses et l'axe des ordonnées ; calculer A(λ).
+- **Ex. 16** (p.179) : 1. a. e^x > 1 + x pour x non nul ; b. i. e^−x > 1 − x ; ii. e^x < 1/(1 − x)
+  pour x ∈ ]0, 1[. 2. suites u_n = (1 + 1/n)^n, v_n = (1 + 1/n)^(n+1), n ≥ 1 : a. u_n < e < v_n ;
+  b. sachant 2 < e < 3, v_n − u_n ≤ 3/n ; c. encadrement de e d'amplitude 10⁻⁶.
+- **Ex. 17** (p.179–180) : 1. calculer A = ∫₀¹ e^x/(1 + e^x) dx et B = ∫₀¹ e^x/(1 + e^x)² dx. 2. déterminer a, b, c tels que pour t > 0, 1/(1 + t)² = a + bt/(1 + t) + ct/(1 + t)² ; en déduire
+  I = ∫₀¹ 1/(1 + e^x)² dx. 3. J = ∫₀¹ x e^x/(1 + e^x)³ dx ; exprimer J en fonction de I, déduire J.
+- **Ex. 18** (p.180) : 1. résoudre 2 − e^(1/x) > 0. 2. f : x ↦ ln(2 − e^(1/x)). a. ensemble de
+  définition ; b. limites aux bornes ; c. prolongeable par continuité à gauche en 0 (prolongement g). 3. a. dérivabilité de g à gauche en 0 ; b. intervalles où g dérivable, g′(x). 4. variations de g,
+  tracer C_g dans (O, i⃗, j⃗).
+- **Ex. 19** (p.180) : a > 0, G_a : x ↦ e^(−ax²). 1. dérivable, dérivée. 2. tableau de variation. 3. dérivée seconde, deux points d'inflexion (coordonnées). 4. lieu des points d'inflexion quand a
+  varie. 5. tracer G_a pour a = 1/2, 1 et 2.
+- **Ex. 20** (p.180) : f(x) = |3x² − 1| e^(1−x²). 1. parité. 2. limite en +∞. 3. continuité. 4. dérivabilité en x = 1/√3. 5. tableau de variation. 6. représentation graphique.
+- **Ex. 21** (p.180) : I_n = ∫₀^(π/2) e^(−nx) sin x dx, J_n = ∫₀^(π/2) e^(−nx) cos x dx. 1. I₀, J₀. 2. par parties, système { I_n + n J_n = 1 ; −n I_n + J_n = e^(−nπ/2) }. 3. I_n, J_n en fonction de
+  n. 4. lim I_n, lim J_n.
+- **Ex. 22** (p.180) : I_n = ∫*{nπ}^{(n+1)π} e^(−nx) sin x dx. 1. par deux parties,
+  I_n = (−1)^n e^(−n²π)(1 + e^(−nπ))/(n² + 1). 2. lim*{n→+∞} I_n.
+- **Ex. 23** (p.181) : I(n, m) = ∫₀¹ t^n(1 − t)^m dt, I(n, 0) = 1/(n + 1). 1. par parties,
+  I(n, m) = (m/(n + 1)) I(n + 1, m − 1). 2. I(n, m) = (n! m!/(n + m)!) I(n + m, 0). Montrer
+  I(n, m) = n! m!/(n + m + 1)!.
+- **Ex. 24** (p.181) : suite u_0 = 1/2, u_{n+1} = e^(u_n)/(u_n + 2). 1. f(x) = e^x/(x + 2) sur [0, 1] :
+  a. variations ; b. |f′(x)| ≤ e/4 ; c. f(x) = x admet une unique solution α dans [0, 1]. 2. 0 ≤ u_n ≤ 1. 3. a. f(x) − f(α) = ∫*α^x f′(v)dv ; b. |u*{n+1} − α| ≤ (e/4)|u_n − α| ; c. |u_n − α| ≤ ½(e/4)^n ;
+  convergence vers α, valeur approchée à 10⁻¹.
+- **Ex. 25** (p.181) : calculer lim_{+∞} (√3)^x ; lim_{+∞} (1/2)^(1−x) ; lim_{+∞} 2^x/2^(x²+x) ;
+  lim_{−∞} (1/4)^x − (1/4)^(x+1) ; lim_{+∞} (3^x + 3^(x+1))/(2^x + 2^(x−1)) ; lim_{+∞} x^(1/3) − x^(2/3) ;
+  lim_{+∞} ln(x)/2^x ; lim_{+∞} x^(1/3) e^−x ; lim_{0⁺} (x^(2/3) − x^(4/3)) ln x ; lim_{+∞} 2^x − e^x.
+- **Ex. 26** (p.181) : f sur ]0, +∞[ par f(x) = ln(2^x) − ln(x²). 1. f(2), f(4). 2. variations, signe. 3. comparer x² et 2^x.
+- **Ex. 27** (p.181) : f sur ℝ par f(x) = (3/5)^x + (4/5)^x − 1. 1. limites en ±∞. 2. sens de
+  variation ; en déduire le nombre de solutions de 3^x + 4^x = 5^x.
+- **Ex. 28** (p.182) : f sur ℝ* par f(x) = 4^x/(4^(2x) − 1). 1. impaire. 2. variations sur ]0, +∞[. 3. a. résoudre f(x) = 4/15 ; b. en déduire les solutions de f(x) = −4/15.
+- **Ex. 29** (p.182) : intégrales 1. ∫₀¹ 3^x dx ; 2. ∫₀^(−1) 3^x/(1 + 3^x) dx ; 3. ∫₀^(1/ln 2) 2^x(1 + 2^x)² dx ; 4. ∫₁² x^(4/3) dx ; 5. ∫*{1/2}¹ 4 x^(−1/5) dx ; 6. ∫₀¹ ⁴√x dx ; 7. ∫*{1/2}¹ (3x − 1)^(3/2) dx.
+- **Ex. 30** (p.182) : I = ∫₀^(π/2) 2^x cos²(x) dx, J = ∫₀^(π/2) 2^x sin²(x) dx. 1. I + J =
+  (√(2^π) − 1)/ln 2. 2. K = ∫₀^(π/2) 2^x cos(2x) dx ; par deux parties, K = −(ln 2/2)[(√(2^π) + 1)/2 +
+  (ln 2/2)K] ; en déduire I − J. 3. valeurs de I et J.
+- **Ex. 31** (p.182) : 1. f : x ↦ x^−α sur ]0, +∞[, α rationnel > 1 ; variations. 2. S_n =
+  Σ_{k=1}^n 1/k^α, n ≥ 1 ; pour x ∈ [k, k + 1], 1/(k + 1)^α ≤ ∫_k^{k+1} f(x)dx ≤ 1/k^α. 3. a. ∫₁^{n+1} f(x)dx ≤ S_n ≤ S₁ + ∫₁^n f(x)dx ; b. (S_n) croissante et majorée ; c. convergente,
+  encadrement de la limite ; d. déterminer α tel que (S_n) converge vers un réel compris entre 2007 et 2008.
+- **Ex. 32** (p.182–183) : **A/** f sur ℝ par f(x) = 1 + x − e^(−x/2). 1. a. limites en ±∞ ;
+  b. D : y = x + 1 asymptote en +∞ ; c. position C_f/D. 2. a. f′(x), signe ; b. tableau de variation. 3. tracer C_f et D (2 cm). **B/** n > 0, A_n = aire limitée par D, C_f, x = n, x = n + 1.
+  1. A_n en fonction de n. 2. (A_n) géométrique (raison q, premier terme A₁). 3. S_n = A₁ + … + A_n
+     (interprétation graphique). 4. lim_{n→+∞} S_n.
+- **Ex. 33** (p.183) : f sur [0, +∞[ par f(x) = √x e^(1−x), C dans (O, i⃗, j⃗). 1. lim_{+∞} f(x),
+  interpréter. 2. a. dérivable sur ]0, +∞[, f′(x) ; b. dérivabilité à droite en 0 (interprétation
+  graphique). 3. tableau de variation. 4. tracer C. 5. f(x) = 1 a deux solutions α ∈ ]0, 1/2[ et
+  β ∈ ]1/2, +∞[ ; encadrement de α d'amplitude 10⁻².
+- **Ex. 34** (p.183) : **A/** g sur ℝ par g(x) = 2e^x − x − 2. 1. limites en ±∞. 2. variations. 3. g(x) = 0 admet exactement deux solutions 0 et α, −1.6 ≤ α ≤ −1.5. 4. signe de g. **B/** f sur ℝ
+  par f(x) = e^(2x) − (x + 1)e^x. 1. limites en ±∞. 2. f′(x) de même signe que g(x) ; variations. 3. f(α) = −(α² + 2α)/4, encadrement de f(α). 4. tableau de variation. 5. tracer C dans (O, i⃗, j⃗). 6. m réel négatif : a. ∫_m^0 x e^x dx ; b. ∫*m^0 f(x)dx ; c. lim*{m→−∞} ∫_m^0 f(x)dx.
+- **Ex. 35** (p.183–184) : **A/** φ sur ℝ par φ(x) = (x² + x + 1)e^−x − 1. 1. limites en ±∞. 2. variations, tableau. 3. φ(x) = 0 admet deux solutions dans ℝ, dont α ∈ [1, +∞[ (encadrement
+  d'amplitude 10⁻²). 4. signe de φ(x). **B/** f, g sur ℝ par f(x) = (2x + 1)e^−x,
+  g(x) = (2x + 1)/(x² + x + 1), C_f et C_g. 1. passent par A(0, 1), même tangente en A. 2. a. f(x) − g(x) = (2x + 1)φ(x)/(x² + x + 1) ; b. signe ; c. position relative. 3. a. F(x) =
+  −(2x + 3)e^−x, F′(x) = f(x) ; b. primitive sur ℝ de f − g s'annulant en 0.
+- **Ex. 36** (p.184) : **A/** f sur ℝ par f(x) = e^−x ln(1 + e^x). 1. g sur [0, +∞[ par
+  g(t) = t/(1 + t) − ln(1 + t) ; variations, signe. 2. a. dérivable, f′(x) = e^−x[e^x/(1 + e^x) −
+  ln(1 + e^x)] ; b. sens de variation. 3. a. f(x) = x e^−x + e^−x ln(1 + e^−x) ; b. lim en +∞ ;
+  c. lim en −∞. **B/** suite u_0 = 0.5, u_{n+1} = f(u_n). 1. a. f(x) = x a une seule solution α,
+  0.5 ≤ x ≤ 0.6 ; b. 0.5 ≤ f(x) ≤ 0.6 et −0.25 ≤ f′(x) ≤ 0. 2. a. |u_{n+1} − α| ≤ 0.25|u_n − α| ;
+  récurrence |u_n − α| ≤ (0.25)^n × 0.1 ; b. convergence vers α ; c. n₀ tel que |u_n − α| ≤ 5×10⁻⁴.
+  **C/** primitive de f : 1. f′(x) + f(x) = e^−x/(1 + e^−x) ; 2. en déduire une primitive F de f.
+- **Ex. 37** (p.184–185) : parties A et B indépendantes. **Partie A** : f_n sur [0, +∞[ par
+  f_n(x) = (Σ_{k=0}^n x^k/k!)e^−x, n > 0. 1. a. dérivable, f′(x) ; b. lim_{+∞} f_n(x) ; c. sens de
+  variation. 2. a. −1/n! ≤ f′_n(x) ≤ 0 pour x ∈ [0, 1] ; b. −1/n! ≤ f_n(x) − 1 ≤ 0. 3. limite de
+  Σ_{k=0}^n 1/k! quand n → +∞. **Partie B** : u_n = (1 − 1/n)^n, a_n = ln(u_n), n ≥ 2.
+  1. a_n = −ln(1 + (−1/n))/(−1/n). 2. (a_n) convergente. 3. limite de (u_n).
+- **Ex. 38** (p.185) : f sur ℝ par f(x) = (3e^x − 1)/(e^x + 1), C dans (O, i⃗, j⃗). **A/** 1. a.
+  A(0, 1) centre de symétrie ; b. limites en ±∞, interpréter ; c. f′(x), sens de variation. 2. a. tangente Δ en A ; b. g(x) = f(x) − f(x + 1), g′(x) = −((e^x − 1)/(e^x + 1))² ; sens de
+  variation de g (g(0)) ; en déduire la position de C et Δ. 3. tracer C et Δ.
+- **Ex. 39** (p.185–186) : **A/** g sur ]0, +∞[ par g(x) = e^x − ln(x) − x e^x + 1. 1. lim en 0. 2. lim en +∞. 3. variations, tableau. 4. g(x) = 0 admet une unique solution α. 5. α ∈ ]1.23, 1.24[
+  (_). 6. signe de g(x). **B/** f sur [0, +∞[ par f(x) = x/(e^x − ln(x)) si x > 0, 0 si x = 0 ; C dans
+  (O, i⃗, j⃗). 1. continuité en 0. 2. dérivabilité en 0. 3. lim en +∞, interpréter. 4. f′(x) de même
+  signe que g(x), variations. 5. f(α) = 1/(e^α − 1/α). **C/** 1. variations de h sur ]0, +∞[ par
+  h(x) = 1/(e^x − 1/x). 2. via (_), encadrement de f(α) ; 0.38 valeur approchée de f(α) à 10⁻². 3. tracer C, tangentes aux abscisses 0 et α.
+- **Ex. 40** (p.186) : **A/** f sur ℝ par f(x) = ½x + ((1 − x)/2)e^(2x). 1. a. limites en ±∞ ;
+  b. Δ : y = ½x asymptote ; c. position Δ/C. 2. f dérivable, f′(x). 3. u(x) = 1 + (1 − 2x)e^(2x) :
+  a. sens de variation ; b. u(x) = 0 admet une unique solution α dans [0, 1] ; c. valeur approchée
+  décimale par excès à 10⁻² ; d. signe de u(x). 4. tableau de variation, tracer C. **B/** C′ : y = e^x,
+  Δ′ : y = x. 1. M_t point de C′ d'abscisse t, tangente T coupe l'axe des ordonnées en N_t ; coordonnées
+  de N_t. 2. P_t point de Δ′ d'abscisse t, G_t barycentre de (O, 1), (M_t, 1), (P_t, 1), (N_t, 1) :
+  a. placer M_{−2}, P_{−2}, N_{−2}, construire G_{−2} ; b. coordonnées de G_t. 3. ensemble des points
+  G_t quand t décrit ℝ. **C/** 1. construire C. 2. aire limitée par C, Δ, x = 0 et y = 0.
+- **Ex. 41** (p.186–187) : f sur [0, +∞[ par f(x) = (x + 1)e^(−1/x) si x > 0, 0 si x = 0 ; C dans
+  (O, i⃗, j⃗). 1. étude des variations : a. f′(x) = e^(−1/x) Q(x), Q rationnelle ; b. lim (1 + t)e^−t en
+  +∞ ; f dérivable à droite en 0, f′_d(0) ; c. sens de variation ; d. lim f(x) en +∞ ; e. f(x) = 2
+  admet une unique solution α (encadrement à 10⁻¹). 2. fonction auxiliaire φ(t) = 1 − (1 + t)e^−t :
+  a. dérivée ; b. 0 ≤ φ(t) ≤ 1/t². 3. 0 ≤ x − f(x) ≤ 1/(2x) ; asymptote D en +∞, position de C/D. 4. a > 0, T_a tangente à C au point d'abscisse a/(1 + a + a²) : a. équation de T_a ; b. intersection
+  avec l'axe des abscisses. 5. construire C et D (points d'abscisses 1/3, 1, 3).
+- **Ex. 42** (p.187) : k ≤ 0, f_k sur ]0, +∞[ par f_k(x) = ((kx + 1)/x)e^x. 1. limites en 0 et +∞. 2. f′_k(x) ; nombre de solutions de f′*k(x) = 0. 3. courbes f*{−1}, f_{−0.25}, f_0 — identifier. 4. a > 0, A(a) = ∫_a^{a+1} f_0(x)dx : a. que représente A(a) ? ; b. sens de variation de a ↦ A(a) ;
+  c. déterminer a pour que l'aire (limitée par C_0, l'axe des abscisses, x = a et x = a + 1) soit
+  minimale.
+- **Ex. 43** (p.188) : **A/** 1. (E) : x + ln x = 0 admet une unique solution α dans ]1/3, 2/3[. 2. φ(x) = e^(1/x) : a. φ(x) = x ⟺ 1/x + ln(1/x) = 0 ; b. 1/α est l'unique solution de φ(x) = x dans
+  ]0, +∞[ ; c. pour x ∈ [3/2, 3], |φ′(x)| ≤ (4/9)e^(2/3). 3. v_0 = 2, v_{n+1} = φ(v_n) : a. 3/2 ≤ v_n ≤ 2 ;
+  b. |v_{n+1} − 1/α| ≤ (4/9)e^(2/3)|v_n − 1/α| ; c. convergence, limite (valeur approchée de α à 10⁻¹).
+  **B/ Étude d'une fonction** : f(x) = x/(x + ln x) si x ∈ ℝ*₊\{α}, 0 si x = 0. 1. continuité et
+  dérivabilité à droite en 0. 2. variations, tracer C dans (O, i⃗, j⃗) (on prendra α ≈ 0.6).
+  **C/ Encadrement d'une aire** : u_n = ∫₁² (ln x/x)^n dx (n ∈ ℕ*). 1. u₁. 2. par deux parties,
+  u₂ = 1 − ln 2 − (ln 2)²/2. 3. simplifier 1 − ln x/x + (ln x/x)² + … + (−1)^n(ln x/x)^n. 4. I_n =
+  1 − u₁ + u₂ + … + (−1)^n u_n, I = ∫₁² f(x)dx : a. I − I_n = ∫₁² (−1)^(n+1) f(x)(ln x/x)^(n+1) dx ;
+  b. ln x/x ≤ 1/e, |I − I_n| ≤ 1/e^(n+1) ; c. lim I_n ; d. vérifier I₂ − 1/e³ ≤ I ≤ I₂.
+  **D/ Fonction définie à l'aide d'une intégrale** : F sur ℝ₊ par F(x) = ∫₁^(e^x) f(t)dt.
+  1. dérivabilité de F, F′(x). 2. pour t ≥ 1, t/(t + ln t) ≥ 1/2. 3. lim_{+∞} F(x) et lim_{+∞} F(x)/x.
+  2. allure de la courbe de F.
+
+### Bornes de scope observées (chapitre 8)
+
+- ✅ INCLUS : définition de **exp comme fonction réciproque de ln** (e^x), équivalence y = e^x ⟺
+  x = ln y, ln(e^x) = x, e^(ln x) = x, ln e = 1 ; **propriétés algébriques** e^(a+b) = e^a·e^b,
+  e^(a−b) = e^a/e^b, e^−a = 1/e^a, e^(na) = (e^a)^n, e^(a/q) = q√(e^a), e^((p/q)a) = q√(e^(pa)) ;
+  **équations et inéquations** avec exp ; **étude de exp** (limites 0/+∞, e^x/x → +∞,
+  (e^x − 1)/x → 1, (e^x)′ = e^x, stricte croissance, bijection de ℝ sur ℝ*₊, tangente en 0, position
+  vs x + 1) ; l'équation différentielle **f′ = f** (⇒ f = k e^x) traitée comme activité préparatoire ;
+  **croissances comparées** e^(nx)/x^m → +∞, x^m e^(nx) → 0, e^x/x^r → +∞, (ln x)/x^r → 0,
+  x^r ln x → 0 ; **fonction x ↦ e^(u(x))** (dérivée u′e^u, primitive de u′e^u = e^u + k) ;
+  **exponentielle de base a** (a^b = e^(b ln a), dérivée (ln a)a^x, sens de variation et limites selon
+  a ≷ 1, règles opératoires a^(c+d) = a^c a^d, etc.) ; **fonctions puissances à exposant rationnel**
+  x^r = e^(r ln x) (dérivée r x^(r−1), primitive x^(r+1)/(r+1) + k, limites 0/+∞ selon le signe de r,
+  cas ⁿ√x = x^(1/n)) ; applications : études de fonctions à exp, intégration par parties, suites
+  définies par une intégrale (dont I_n = ∫₀¹ x^n e^−x dx menant à e = Σ 1/k!), suites récurrentes et
+  encadrements.
+- ⛔ NON traité dans ce chapitre : la **résolution générale des équations différentielles**
+  y′ = ay + b et y″ + ω²y = 0 (chapitre 9 — ici seule l'équation f′ = f sert d'activité introductive) ;
+  le **logarithme décimal** log (aucune notation « log » dans le chapitre) ; les **fonctions
+  hyperboliques** nommées (ch, sh, th ne sont pas introduites comme telles — seules apparaissent les
+  expressions (e^x ± e^−x)/2 dans des exercices) ; l'exposant **irrationnel** pour x ↦ x^α n'est
+  développé que via la définition a^b = e^(b ln a), la fonction puissance x^r restant énoncée pour r
+  **rationnel**.
+
+## 2.9 Chapitre 9 — Équations différentielles (manuel 222445, p.189–207)
+
+**Page de garde (p.189)** — Titre : « Equations différentielles » [sic, sans accent sur le É dans
+tous les bandeaux-titres du chapitre], Chapitre 9. Citation liminaire sur **le pendule isochrone** :
+« Le pendule isochrone. Le problème consiste à modifier le pendule standard pour rendre la période
+indépendante de l'amplitude. Hygens [sic, pour Huygens] (1673, Horologium Oscillatorium) a l'idée de
+modifier le cercle du pendule standard pour que la force accélératrice devienne proportionnelle à la
+longueur d'arc s. Le mouvement du pendule serait alors décrit par s″ + Ks = 0, dont les oscillations
+sont indépendantes de l'amplitude. » Référence donnée : « (E.Haier [sic] et al, _L'analyse au fil de
+l'histoire_, 2000) » (même coquille source que les chapitres 1, 7 et 8 pour Ernst Hairer). Le
+chapitre est structuré en trois parties **I. Définition**, **II. Équations du type y′ = ay + b**,
+**III. Équations du type y″ + ω²y = 0**, entrecoupées de deux **problèmes résolus**, suivies d'un
+QCM / Vrai-Faux, puis d'une rubrique « Exercices et problèmes ».
+
+### Cours — Activités
+
+**I. Définition** (p.190)
+
+- **Activité 1** (p.190) : 1. f : x ↦ e^−x, déterminer une relation entre f′ et f. 2. reprendre pour
+  g : x ↦ −2e^−x et h : x ↦ 0,5e^−x. 3. représenter f, g, h dans un même repère. 4. donner d'autres
+  fonctions vérifiant la relation trouvée à la question 1.
+- **Activité 2** (p.190) : évolution d'une population de bactéries. N₀ nombre à l'instant t = 0, N(t)
+  nombre à l'instant t, N′(t) vitesse instantanée d'évolution. 1. N(t) = 9000 e^(−0,4t). a. nombre de
+  bactéries aux instants t = 0, t = 10, t = 20 ; b. relation entre N′ et N ; c. vitesse instantanée
+  aux instants t = 10 et t = 20 ; d. représenter t ↦ N(t). 2. reprendre les questions si
+  N(t) = 3000 e^(0,4t).
+- **Activité 3** (p.191) : repère orthogonal ; on a représenté les courbes de quatre fonctions
+  f, g, h et t, solutions de l'équation y′ = 0.3y. Donner les expressions des fonctions f, g, h et t.
+  (Figure : courbes C_g, C_l, C_f, C_h.)
+- **Activité 4** (p.191) : 1. a. résoudre (E) : 2y′ + 3y = 0 ; b. montrer qu'il existe une unique
+  solution f de (E) vérifiant f(0) = −3 ; c. représenter graphiquement cette solution. 2. reprendre la
+  question précédente pour l'équation (E) : y′ = 0.
+- **Activité 5** (p.192) : repère (O, i⃗, j⃗). Représenter graphiquement la fonction f dont la courbe
+  C_f passe par le point A(1, 2) et telle que la tangente en tout point M de C_f a un coefficient
+  directeur égal au double de l'ordonnée de M.
+- **Activité 6** (p.192) : substance radioactive. N(t) nombre de noyaux radioactifs à l'instant t (en
+  années), N₀ le nombre à t = 0. La vitesse N′(t) de désintégration est proportionnelle à N(t), avec
+  un coefficient égal à −λ (λ > 0 constante radioactive du noyau). 1. donner l'expression de N(t). 2. déterminer, en fonction de λ, le temps T₀.₅ au bout duquel la moitié des noyaux s'est désintégrée
+  (durée de demi-vie). 3. substance = carbone 14 : a. déterminer λ sachant que T₀.₅ = 5730 ;
+  b. déterminer l'âge d'un fragment d'os qui contient 60 % de la quantité initiale.
+
+**II. Équations différentielles du type y′ = ay + b, où a et b sont deux réels tels que a ≠ 0** (p.192)
+
+- **Activité 1** (p.192) : figure de f : x ↦ e^(−2x) + 3. 1. montrer que f vérifie l'équation (E) :
+  y′ = −2y + 6. 2. montrer que g est solution de (E) si et seulement si h : x ↦ g(x) − 3 est solution
+  de y′ = −2y. 3. donner toutes les solutions de (E).
+- **Activité 2** (p.193) : donner, dans chacun des cas, la solution f de l'équation différentielle et
+  la représenter. a. √2 y′ − 2y = 1, f(0) = −1. b. √2 y′ − 2y = 1, f(0) = −1/2.
+- **Activité 3** (p.194) : circuit électrique (générateur G tension E, condensateur C, résistance R).
+  i(t) intensité du courant à l'instant t (en seconde), q(t) charge à l'instant t. 1. donner une
+  relation entre i(t) et q′(t). 2. montrer que R q′(t) + (1/C) q(t) = E. 3. donner l'expression de
+  q(t), puis de i(t). 4. représenter t ↦ i(t) si l'on sait que i(0) = 10 mA. (Figure du circuit.)
+
+**III. Équations différentielles du type y″ + ω²y = 0, ω réel** (p.194)
+
+- **Activité 1** (p.194) : 1. f : x ↦ sin x + cos x. a. déterminer les réels r > 0 et φ ∈ ]−π, π] tels
+  que f(x) = r cos(x − φ) pour tout réel x ; b. écrire f″ en fonction de f ; c. représenter f. 2. reprendre les questions pour g : x ↦ √3 sin(2x) − cos(2x).
+- **Activité 2** (p.194) : figure représentant la courbe d'une fonction de la forme
+  f : x ↦ a sin(3x) + b cos(3x). 1. déterminer les réels a et b. 2. montrer que f est deux fois
+  dérivable sur ℝ et trouver une relation entre f″ et f. (Figure : courbe sinusoïdale.)
+- **Activité 3** (p.195) : (E) : y″ + 9y = 0, inconnue y deux fois dérivable sur ℝ. 1. montrer que
+  x ↦ sin(3x) est solution de (E) sur ℝ. 2. montrer que x ↦ cos(3x) est solution. 3. a. montrer que
+  pour tous réels a et b, f : x ↦ a sin(3x) + b cos(3x) est solution de (E) sur ℝ ; b. on suppose
+  f(0) = √3/2 et f′(0) = 3/2, déterminer a et b ; c. en déduire les réels r > 0 et φ ∈ ]−π, π] tels
+  que f(x) = r cos(3x − φ) pour tout réel x ; d. représenter f.
+- **Activité 4** (p.195) : ω réel non nul, x₀ et y₀ deux réels. (E) : y″ + ω²y = 0. 1. montrer que
+  f : x ↦ (y₀/ω) sin(ωx) + x₀ cos(ωx) est solution de (E). Vérifier f(0) = x₀ et f′(0) = y₀. 2. on suppose qu'il existe une autre solution g vérifiant g(0) = x₀ et g′(0) = y₀ ;
+  h(x) = ω²(f(x) − g(x))² + (f′(x) − g′(x))². a. montrer h dérivable sur ℝ et h′(x) =
+  2ω²(f′(x) − g′(x))(f(x) − g(x)) + 2(f″(x) − g″(x))(f′(x) − g′(x)) ; b. en déduire h constante sur ℝ ;
+  c. calculer h(0) et conclure.
+- **Activité 5** (p.196) : 1. a. déterminer la solution f de y″ + 4y = 0 telle que f(π/2) = −1 et
+  f′(π/2) = 2 ; b. représenter f ; c. résoudre dans ℝ f(x) = 1 et f(x) = −1. 2. reprendre les
+  questions pour la solution g de y″ + π²y = 0 vérifiant g(0) = 0 et g′(0) = 1.
+- **Activité 6** (p.196) : ω réel non nul, (E) : y″ + ω²y = 0. A/ 1. montrer que x ↦ cos(ωx) et
+  x ↦ sin(ωx) sont solutions de (E). 2. montrer que pour tous réels A et B, x ↦ A sin(ωx) + B cos(ωx)
+  est solution de (E). B/ f solution de (E). 1. montrer que pour tous réels A et B,
+  g(x) = f(x) − A sin(ωx) − B cos(ωx) est solution de (E). 2. a. déterminer g′(x) ; b. en déduire qu'il
+  existe un unique couple (A, B) tel que g(0) = g′(0) = 0. 3. montrer que les solutions de (E) sont les
+  fonctions x ↦ A sin(ωx) + B cos(ωx), (A, B) ∈ ℝ².
+- **Activité 7** (p.197) : 1. résoudre dans ℝ l'équation y″ + 9y = 0. 2. montrer qu'il existe une seule
+  solution de (E) telle que f(π/12) = √2/2 et f(π/3) = −1/2. 3. existe-t-il une solution de (E) telle
+  que f(0) = 1/2 et f(2π/3) = 1 ?
+
+### Cours — Résultats / définitions / théorèmes à retenir (VERBATIM)
+
+> **Vocabulaire** (p.190) — « Une équation de la forme y′ = ay, où l'inconnue y est une fonction et a
+> est un réel, est appelée équation différentielle linéaire du premier ordre à coefficient constant.
+> Résoudre dans ℝ une équation de la forme y′ = ay, c'est trouver toutes les fonctions dérivables sur
+> ℝ qui vérifie [sic] y′ = ay. Ces fonctions sont appelées solutions sur ℝ de l'équation y′ = ay. »
+
+> **Théorème** (p.190) — « Soit a un réel. L'ensemble des solutions de l'équation différentielle
+> y′ = ay est l'ensemble des fonctions définies sur ℝ par f : x ↦ ke^(ax), où k est un réel
+> quelconque. »
+
+> **Théorème** (p.191) — « Soit a un réel non nul. Pour tous réels x₀ et y₀, l'équation y′ = ay admet
+> une unique solution qui prend la valeur y₀ en x₀. C'est la fonction définie sur ℝ par
+> f : x ↦ y₀ e^(a(x−x₀)). »
+
+> **Théorème** (p.193) — « Soit a et b deux réels tels que a ≠ 0. L'ensemble des solutions de
+> l'équation différentielle y′ = ay + b est l'ensemble des fonctions f : x ↦ ke^(ax) − b/a, où k est
+> un réel quelconque. De plus pour tous réels x₀, y₀, la fonction f : x ↦ (y₀ + b/a)e^(a(x−x₀)) − b/a
+> est l'unique solution de y′ = ay + b, telle que f(x₀) = y₀. »
+
+> **Vocabulaire** (p.194) — « Une équation de la forme y″ + ω²y = 0, où l'inconnue y est une fonction
+> et ω est un réel, est appelée équation différentielle linéaire du second ordre à coefficients
+> constants. Résoudre une équation de la forme y″ + ω²y = 0, c'est trouver toutes les fonctions deux
+> fois dérivable [sic] sur ℝ qui la vérifient. »
+
+> **Théorème** (p.195) — « Soit ω un réel non nul et x₀, y₀ deux réels. L'équation y″ + ω²y = 0 admet
+> une unique solution dans ℝ vérifiant f(0) = x₀ et f′(0) = y₀. C'est la fonction définie sur ℝ par
+> f(x) = (y₀/ω) sin(ωx) + x₀ cos(ωx). »
+
+> **Conséquence** (p.196) — « Soit ω un réel non nul. La fonction nulle est l'unique solution de
+> l'équation différentielle y″ + ω²y = 0 qui vérifie y(0) = y′(0) = 0. »
+
+> **Théorème** (p.196) — « Soit ω un réel non nul. L'ensemble des solutions de l'équation
+> différentielle y″ + ω²y = 0 est l'ensemble des fonctions définies sur ℝ par
+> f(x) = A sin(ωx) + B cos(ωx), (A, B) ∈ ℝ². »
+
+(Les théorèmes de p.190, p.191 et p.193 sont chacun suivis d'une **Démonstration** ; le théorème de
+p.195 est établi via l'**Activité 4**, celui de p.196 via l'**Activité 6**.)
+
+### Cours — Problèmes résolus (p.197–199)
+
+**Problème résolu 1** (énoncé p.197, solution p.197–198) : notion de **« sous tangente »**. Soit C la
+courbe d'une fonction f dans un repère orthonormé ; si la tangente T à C en un point M coupe l'axe
+des abscisses en N, on appelle « sous tangente en M » le nombre x_N − x_M. 1. cas C : y = e^−x :
+a. sous tangente au point d'abscisse 0 (résultat : x_J − x_O = 1) ; b. montrer que la sous tangente en
+tout point de la courbe y = e^−x est une constante que l'on précisera (= 1). 2. réel a ≠ 0 fixé ;
+déterminer les fonctions f dérivables sur ℝ (f′(x) ≠ 0) dont les courbes admettent en tout point une
+sous tangente constante égale à a : a. calculer la sous tangente au point M₀ d'abscisse x₀ et vérifier
+f(x₀) = −a f′(x₀) ; b. en déduire que f est solution de y′ = −(1/a)y ; c. résoudre cette équation
+(solutions x ↦ k e^(−(1/a)x), k ∈ ℝ). (Figures : courbe y = e^−x avec tangente ; agrandissement.)
+
+**Problème résolu 2** (énoncé p.198, solution p.198–199) : mobile en mouvement uniformément varié sur
+un axe (x′x). x(t) position à l'instant t, x′(t) vitesse, x″(t) accélération (t en secondes, x en
+mètres). L'accélération x″(t) est proportionnelle à x(t) de coefficient −π²/4. 1. donner l'équation
+horaire si x(1) = 2 et x(2) = 0 (résultat : x(t) = 2 sin((π/2)t), t ≥ 0, via x″ + (π²/4)x = 0). 2. déterminer position et vitesse du mobile à t = 0 (x(0) = 0, à l'origine ; x′(0) = π, soit π m/s). 3. représenter t ↦ x(t) (fonction périodique de période 4 ; tableau de variation sur [0, 4] et
+courbe sinusoïdale).
+
+### QCM (p.200) — « Cocher la réponse exacte. »
+
+1. La fonction x ↦ 2e^(2x) est solution de l'équation différentielle (☐ y′ = 4y / ☐ y′ = −4y /
+   ☐ y′ = 2y).
+2. Si f est la solution de l'équation différentielle y′ = 2y telle que f(0) = 1, alors la courbe de f
+   admet une tangente (☐ horizontale / ☐ parallèle à y = 2x / ☐ parallèle à y = −x).
+3. Si f est la solution de l'équation différentielle y′ = −y + 1 telle que f(0) = 1, alors la fonction
+   f est (☐ négative / ☐ positive / ☐ n'a pas un signe constant).
+4. La fonction x ↦ 2 cos x − 3 sin x est solution de l'équation différentielle (☐ y″ + 2y = 0 /
+   ☐ y″ + y = 0 / ☐ y″ + 3y = 0).
+
+### Vrai ou faux (p.200) — « Répondre par vrai ou faux en justifiant la réponse. » (réponses non fournies)
+
+1. La fonction f : x ↦ 2^x est solution sur ℝ de l'équation différentielle y′ − ln 2 − y = 0.
+2. Si f est solution sur ℝ de l'équation différentielle y′ = −2y alors la fonction f est croissante
+   sur ℝ.
+3. Si f est la solution sur ℝ de l'équation différentielle y′ = 3y telle que f′(1) = 3 alors f(1) = 1.
+4. Si f est la solution sur ℝ de l'équation différentielle y″ + 2y = 0 qui s'annule et change de signe
+   en π/4 alors sa courbe dans un repère orthonormé admet un point d'inflexion.
+
+### Exercices et problèmes (p.201–207) — 32 exercices
+
+- **Ex. 1** (p.201) : 1. résoudre dans ℝ a. y′ + 3y = 0 ; b. y′ + √2 y = 0 ; c. −5y′ + y = 0. 2. donner la solution f sur ℝ : a. y′ − y/2 = 0 et y(−1) = e ; b. −3y′ − y = 0 et y(ln 8) = 1 ;
+  c. y′ − 2y = 0 et y(0) = 1.
+- **Ex. 2** (p.201) : 1. déterminer la fonction f définie et dérivable sur ℝ vérifiant { f′ = af,
+  f(0) = 1, f(x + 10) = 2f(x) }. 2. représenter f.
+- **Ex. 3** (p.201) : 1. résoudre sur ℝ a. y′ − 2y + 1 = 0 ; b. y′ − πy + 3 = 0 ; c. −2y′ + 5y − 1 = 0. 2. donner la solution f sur ℝ : a. y′ − y − 1 = 0 et y(2) = 0 ; b. 2y′ + y − 3 = 0 et y(0) = 3 ;
+  c. y′ + 3y + 3/4 = 0 et y(−1) = 0.
+- **Ex. 4** (p.201) : loi de refroidissement de Newton (vitesse instantanée de perte de chaleur
+  proportionnelle à la différence de température entre le corps et le milieu). Air ambiant 25 °C ; le
+  corps passe de 100 °C à 75 °C en 15 min ; f(t) température à t (minutes). 1. vérifier qu'il existe un
+  réel a tel que { f′(t) = a(f(t) − 25), f(0) = 100, f(15) = 75 }. 2. déterminer f. 3. au bout de
+  combien de temps (à 1 min près) ce corps aura-t-il une température de 25 °C ?
+- **Ex. 5** (p.201) : substance qui se dissout à une vitesse proportionnelle à la quantité non encore
+  dissoute. 20 g placés dans l'eau ; les dix premiers grammes se dissolvent en 5 min. 1. donner
+  l'expression de la quantité dissoute f(t) (en grammes) en fonction de t (minutes). 2. quantité
+  (à 1 mg près) non dissoute au bout de 10 min ? 30 min ? 1 heure ?
+- **Ex. 6** (p.201) : C(t) concentration (mg/l) d'un médicament dans le sang, t en heures ;
+  concentration initiale 5 mg/l ; C′(t) = −0.25 C(t). 1. déterminer C(t). 2. représenter C. 3. encadrement à 0.1 près de l'instant t₀ à partir duquel C(t) < 1.
+- **Ex. 7** (p.201) : charge et décharge d'un condensateur, définies sur [0, 2ln 3[ par f qui vérifie :
+  sur [0, 2ln 3[, f est solution de y′ + y = 0 avec f(ln 3) = −2. 1. exprimer f(x) en fonction de x. 2. étudier f et la représenter.
+- **Ex. 8** (p.201–202) : 1. vérifier que u : x ↦ 2 vérifie y′ + 2y = y². 1. [sic, numérotation « 1 »
+  répétée] soit E l'ensemble des fonctions f dérivables sur ℝ, ne s'annulant pas sur ℝ, telles que
+  f′(x) + 2f(x) = (f(x))² pour tout réel x. a. vérifier que E est non vide. b. f fonction de E, montrer
+  que g = 1/f est solution d'une équation de la forme y′ = ay + b. c. déterminer alors E.
+- **Ex. 9** (p.202) : culture de microbes, nombre à l'instant t (heures) = fonction y ; vitesse de
+  prolifération = y′ ; y′(t) = ky(t), k > 0 ; N nombre de microbes à t = 0. 1. déterminer l'unique
+  solution de y′ = ky telle que y(0) = N. 2. au bout de deux heures le nombre a quadruplé, calculer en
+  fonction de N le nombre au bout de trois heures. 3. valeur de N sachant que la culture contient
+  6400 microbes au bout de cinq heures.
+- **Ex. 10** (p.202) : f sur ℝ par f(x) = e^−x sin x, C dans un repère orthogonal (2 cm sur l'axe des
+  abscisses, 10 cm sur l'axe des ordonnées). 1. a. calculer f′ et vérifier f′(x) = √2 e^−x cos(x + π/4) ;
+  b. résoudre sur [0, 2π] l'inéquation cos(x + π/4) > 0, en déduire le signe de f′ sur [0, 2π] ;
+  c. tableau de variation de f sur [0, 2π], préciser les tangentes à C aux deux extrémités. 2. C₁ et C₂
+  courbes de x ↦ e^−x et x ↦ −e^−x. a. abscisses dans [0, 2π] des points où C rencontre C₁ et C₂ ;
+  b. vérifier qu'en chacun de ces points, C et C₁ d'une part, C et C₂ d'autre part, ont même tangente. 3. a. vérifier f″ + 2f′ + 2f = 0 ; b. calculer, en cm², l'aire du domaine limité par C, l'axe des
+  abscisses et les droites x = 0 et x = π.
+- **Ex. 11** (p.202) : (E) : y′ + 2y = x². 1. déterminer les solutions de (E₀) : y′ + 2y = 0. 2. déterminer un trinôme du second degré qui vérifie (E). 3. montrer qu'une fonction f est solution
+  de (E) ssi f − g est solution de (E₀). 4. en déduire les solutions de (E).
+- **Ex. 12** (p.202) : (E) : y′ − y = 4 cos x. 1. déterminer les solutions de (E₀) : y′ − y = 0. 2. déterminer les nombres a et b tels que g(x) = a cos x + b sin x vérifie (E). 3. montrer f solution
+  de (E) ssi f − g solution de (E₀). 4. en déduire les solutions de (E).
+- **Ex. 13** (p.202) : circuit avec générateur de fem E, bobine de résistance r (ohms) et inductance L
+  (henrys) ; l'intensité est solution de L y′ + r y = E. On prend E = 10 v, r = 100 Ω, L = 0.2 H ; à
+  l'instant 0 l'intensité est nulle. 1. déterminer la fonction i : t ↦ i(t). 2. déterminer la limite de
+  i quand t → +∞ et interpréter.
+- **Ex. 14** (p.203) : donner la solution f sur ℝ. 1. y″ + 2y = 0, y(0) = 1 et y′(0) = √2. 2. y″ + 16y = 0, y(π) = −1 et y′(π) = −2. 3. y″ + y/4 = 0, y(−π) = 1 et y′(−π) = 0.
+- **Ex. 15** (p.203) : (E) : y″ = 2y′. 1. en posant z = y′, résoudre (E) sur ℝ. 2. déterminer la
+  solution f de (E) vérifiant f′(0) = 1 et f(0) = 2.
+- **Ex. 16** (p.203) : (E) : y″ = −3y′ + 1. 1. en posant z = y′, résoudre (E) sur ℝ. 2. déterminer la
+  solution f de (E) vérifiant f′(0) = 0 et f(0) = 0.
+- **Ex. 17** (p.203) : 1. résoudre y″ + 16y = 0. 2. trouver la solution f vérifiant f(0) = 1 et
+  f′(0) = 4. 3. trouver deux réels positifs a et b tels que pour tout réel t, f(t) = √2 cos(at − b). 4. calculer la valeur moyenne de f sur l'intervalle [0, π/8].
+- **Ex. 18** (p.203) : 1. résoudre dans ℝ y″ + y′ = 0. 2. en déduire les solutions de y‴ + y″ = 0.
+- **Ex. 19** (p.203) : 1. linéariser cos⁴(x). 2. déterminer les réels a, b et c pour que
+  g : x ↦ a cos(4x) + b cos(2x) + c soit solution de (E) : y″ + y′ = cos⁴(x). 3. montrer qu'une
+  fonction f est solution de (E) ssi f − g est solution de y″ + y′ = 0.
+- **Ex. 20** (p.203) : 4y″ + π²y = 0. 1. résoudre cette équation. 2. repère orthonormé (O, i⃗, j⃗) ;
+  déterminer la fonction g solution vérifiant : la courbe de g passe par N de coordonnées
+  (1/2, √2/2) ; la tangente à cette courbe en N est parallèle à l'axe des abscisses. 3. vérifier que
+  pour tout réel x, g(x) = (√2/2) cos((π/2)x − π/4).
+- **Ex. 21** (p.203) : circuit électrique (C capacité du condensateur, R résistance, U tension aux
+  bornes). En physique : R q′(t) + (1/C) q(t) = U, q charge du condensateur, q(0) = 0. 1. écrire
+  l'équation différentielle vérifiée par q. 2. montrer q(t) = CU − CU e^(−t/RC). 3. sachant que
+  l'intensité i(t) = q′(t), déterminer i(t). (Figure du circuit.)
+- **Ex. 22** (p.203) : déterminer les fonctions f continues sur ℝ vérifiant (E) : pour tout réel x,
+  f(x) = ∫₀ˣ f(t)dt + x. 1. montrer que si une fonction f vérifie (E), alors f est dérivable sur ℝ. 2. montrer que toute solution de (E) est solution de (E′) : y′ = y + 1 ; réciproquement, quelle
+  condition doit vérifier une solution de (E′) pour être solution de (E) ? 3. résoudre (E).
+- **Ex. 23** (p.204) (**La piqûre intraveineuse**) : à t = 0 (heures), injection d'une dose de 1.8
+  unité de médicament, réparti instantanément puis éliminé. Q(t) quantité présente ;
+  Q′(t) = −αQ(t). 1. montrer Q(t) = 1.8 e^(−αt) ; au bout d'une heure la quantité a diminué de 30 %,
+  en déduire une équation vérifiée par α ; via x ↦ e^−x, montrer qu'il existe un réel α unique tel que
+  e^−α = 0.7 ; valeur décimale approchée de α à 10⁻⁴ près. 2. sens de variation de Q pour t ≥ 0, limite
+  en +∞ et tracer la courbe C. 3. réinjection d'une dose analogue à t = 1, puis t = 2, t = 3, etc. ;
+  Rₙ quantité présente à t = n (nouvelle injection faite). a. montrer R₁ = 1.8 + 0.7 × 1.8 ; b. montrer
+  R₂ = 1.8 + 0.7 × R₁ et calculer R₂ ; c. exprimer R_{n+1} en fonction de Rₙ ; d. montrer que pour tout
+  entier naturel n, Rₙ = 6(1 − (0.7)^(n+1)) ; e. déterminer la limite de Rₙ.
+- **Ex. 24** (p.204) : (I) : y′ = 2y et (II) : y′ = y. 1. résoudre chacune de ces équations. 2. graphique (partie de la courbe C de f et d'une tangente T dans un repère orthonormé) ; f définie
+  sur ℝ par f(x) = f₁(x) − f₂(x), f₁ solution de (I), f₂ solution de (II). a. à partir des données lues
+  sur le graphique, donner f(0) et f′(0) ; b. déterminer f₁ et f₂ ; en déduire que pour tout réel x,
+  f(x) = 2e^(2x) − e^x ; c. limites de f en −∞ et +∞ ; d. abscisse du point d'intersection de C avec
+  l'axe des abscisses. 3. réel t < −ln 2. a. exprimer à l'aide de t l'aire 𝒜(t) du domaine limité par
+  C, l'axe des abscisses et les droites x = t et x = −ln 2 ; b. montrer lim_{t→−∞} 𝒜(t) =
+  ∫_{−ln2}^0 f(t)dt ; interpréter graphiquement. (Figure : courbe C et tangente T.)
+- **Ex. 25** (p.204–205) : 1. a. résoudre (E) : 4y′ + 3y = 0 ; b. déterminer la fonction f, solution de
+  (E) telle que f′(0) = −6. 2. g sur I = [0, 4] par g(x) = 8 e^(−0.75x). a. étudier les variations de g
+  sur I et tracer sa courbe (C) dans un repère orthonormé ; b. A domaine compris entre (C), l'axe des
+  abscisses et les droites x = 0 et x = 4 ; calculer le volume V du solide engendré par la rotation de
+  A autour de l'axe des abscisses ; valeur exacte de V en cm³ puis valeur approchée arrondie au mm³.
+- **Ex. 26** (p.205) : masse de sel (en grammes) dans un mélange d'eau et de sel à l'instant t
+  (minutes), notée m(t). m(0) = 300, m solution sur [0, +∞[ de (E) : 5y′ + y = 0. 1. a. résoudre (E) ;
+  b. montrer que pour tout t de [0, +∞[, m(t) = 300 e^(−0.2t). 2. déterminer le réel t₀ tel que
+  m(t₀) = 150. 3. il est impossible de détecter la présence de sel ssi m(t) ≤ 10⁻² ; à partir de quel
+  instant est-il impossible de détecter la présence de sel ?
+- **Ex. 27** (p.205) : g sur ℝ par g(x) = cos x − sin x. 1. montrer que pour tout réel x,
+  g′(x) = g(π − x). 2. déterminer toutes les fonctions f définies et dérivables sur ℝ vérifiant pour
+  tout x réel f′(x) = f(π − x). a. montrer que f est deux fois dérivable et que f est solution de
+  y″ + y = 0 ; b. déterminer les fonctions f.
+- **Ex. 28** (p.205) : A/ résoudre (E) : y′ − 2y = −2/(1 + e^(−2x)). 1. déterminer la solution de
+  y′ − 2y = 0 qui prend la valeur 1 en 0. 2. f dérivable sur ℝ avec f(0) = ln 2, g définie sur ℝ par
+  f(x) = e^(2x) g(x). a. calculer g(0) ; b. calculer f′(x) en fonction de g′(x) et g(x) ; c. montrer
+  que f est solution de (E) ssi g′(x) = −2e^(−2x)/(1 + e^(−2x)) ; d. en déduire g(x) puis f(x). B/
+  étude de f(x) = e^(2x) ln(1 + e^(−2x)). 1. h(x) = ln(1 + e^(−2x)) − 1/(e^(2x) + 1) : a. limite de h en
+  +∞ ; b. sens de variation de h ; c. en déduire le signe de h(x). 2. calculer f′(x) et montrer que
+  f′(x) est du signe de h(x). 3. limite de f en +∞ ; montrer f(x) = e^(2x)[−2x + ln(1 + e^(2x))] ;
+  limite de f en −∞. 4. tableau de variation. 5. représenter f (5 cm pour unité), préciser la tangente
+  au point d'abscisse nulle. C/ 1. en remarquant 1/(1 + e^(−2x)) = e^(2x)/(1 + e^(2x)), déterminer une
+  primitive de x ↦ 1/(1 + e^(−2x)). 2. calculer, par intégration par parties, l'aire (en cm²) du
+  domaine limité par l'axe des abscisses, la courbe de f et les droites x = −1 et x = 0 ; valeur exacte
+  et valeur approchée à 10⁻³ près. D/ suite (uₙ) : u₀ = 0, u_{n+1} = f(uₙ). 1. montrer f([0, 1]) ⊂
+  [0, 1], en déduire uₙ ∈ [0, 1] pour tout n ≥ 0. 2. montrer par récurrence que (uₙ) est croissante ;
+  en déduire qu'elle converge vers un réel α. 3. vérifier f(α) = α et 0 < α < 1. 4. utiliser le
+  graphique pour donner une valeur approchée de α à 10⁻¹ près.
+- **Ex. 29** (p.206) : corps de température initiale θ₀ = 30 °C placé dans une ambiance de température T
+  constante ; θ : t ↦ θ(t). Loi de Newton : θ′(t) = k[T − θ(t)], k coefficient. On prend k = 0.1 et
+  θ₀ = 30 °C, temps en minutes, températures en °C. 1. exprimer cette loi par une équation
+  différentielle en précisant les conditions initiales. 2. T = 100 °C : a. déterminer θ ; b. limite de
+  θ quand t → +∞, interpréter. 3. représenter les courbes d'évolution pour T = 100 °C, T = 30 °C et
+  T = −10 °C.
+- **Ex. 30** (p.206) : fil conducteur parcouru par un courant d'intensité constante, s'échauffant par
+  effet Joule ; température θ (°C) fonction du temps t (secondes) ; à t = 0, θ = 0 °C ; θ vérifie
+  θ′(t) + 0.1 θ(t) = 2. 1. déterminer θ(t), t ∈ ℝ₊. 2. a. température au bout de dix secondes, au bout
+  d'une minute ? b. limite de θ(t) quand t → +∞, interpréter.
+- **Ex. 31** (p.206–207) : A/ f(x) = 3e^(x/5)/(e^(x/5) + 2), C dans un repère orthogonal (1 cm sur
+  l'axe des abscisses, 5 cm sur l'axe des ordonnées). 1. étudier les variations de f et préciser les
+  asymptotes de C. 2. équation de la tangente T à C au point d'abscisse 0. 3. tracer C, la tangente et
+  les asymptotes. 4. a. trouver la primitive de f qui s'annule en 0 ; b. calculer le nombre qui mesure
+  (en unités d'aire) l'aire du domaine limité par l'axe des abscisses, l'axe des ordonnées, C et la
+  droite x = 5. B/ 1. population de poissons croissant selon g′ = g/5 (I), g quantité (milliers)
+  dépendant de t (années). a. résoudre (I) ; b. à t = 0 la population comprend un millier, trouver g. 2. avec un prédateur : g′ = g/5 − g²/15 (II). a. h = g/(3 − g), on suppose g(t) ≠ 3 ; montrer que g
+  est solution de (II) ssi h est solution de (I) ; b. trouver les fonctions h solutions de (I), puis
+  les fonctions g solutions de (II) ; c. trouver la fonction g solution de (II) telle que g(0) = 1 ;
+  montrer que cette fonction coïncide avec la fonction f de la partie A ; d. vers quelle limite tend la
+  population ?
+- **Ex. 32** (p.207) : circuit fermé (condensateur capacité C en farads, bobine inductance L en
+  henrys, interrupteur), t en secondes. À t = 0 le condensateur est chargé ; on ferme l'interrupteur
+  et le condensateur se décharge. q(t) (Coulombs) charge à l'instant t, q deux fois dérivable sur
+  [0, +∞[. q solution de (E) : y″ + (1/LC) y = 0. On prend C = 1.25 × 10⁻³ et L = 0.5 × 10⁻².
+  1. résoudre (E). 2. déterminer la solution q vérifiant q(0) = 6 × 10⁻³ et q′(0) = 0. 3. l'intensité
+     i(t) = −q′(t), sur [0, +∞[. a. vérifier i(t) = 2.4 sin(400t) ; b. calculer
+     (400/π) ∫₀^(π/400) cos(800t) dt ; puis intensité efficace I_e (positive, ampères) : son carré est
+     (I_e)² = (400/π) ∫₀^(π/400) i²(t) dt ; calculer (I_e)², puis une valeur approchée de I_e à 10⁻³ près.
+
+### Bornes de scope observées (chapitre 9)
+
+- ✅ INCLUS : les **trois types d'équations différentielles au programme** — (1) **y′ = ay** (linéaire
+  du premier ordre, coefficient constant) : solutions x ↦ k e^(ax), et le problème de Cauchy
+  (condition initiale) f(x₀) = y₀ ⇒ f : x ↦ y₀ e^(a(x−x₀)) ; (2) **y′ = ay + b** (a ≠ 0) : solutions
+  x ↦ k e^(ax) − b/a, avec condition initiale ; (3) **y″ + ω²y = 0** (linéaire du second ordre,
+  coefficients constants) : solutions x ↦ A sin(ωx) + B cos(ωx), unicité sous conditions f(0) = x₀,
+  f′(0) = y₀ (avec f(x) = (y₀/ω) sin(ωx) + x₀ cos(ωx)). **Techniques** : résolution homogène + solution
+  particulière (trinôme, combinaison a cos + b sin) pour les seconds membres non nuls (exercices 11,
+  12, 19), **réduction d'ordre** par z = y′ pour y″ = ay′ + b (exercices 15, 16, 18) ; passage à la
+  forme amplitude-phase r cos(ωx − φ) ; **modélisations physiques** : désintégration radioactive
+  (demi-vie, carbone 14), refroidissement de Newton, dissolution, pharmacocinétique (piqûre
+  intraveineuse, concentration d'un médicament), circuits électriques (charge/décharge d'un
+  condensateur R-C, bobine L-r, oscillations L-C, intensité efficace), croissance de populations
+  (bactéries, microbes, poissons avec modèle logistique par changement de variable h = g/(3 − g)).
+- ⛔ NON traité dans ce chapitre : les équations différentielles **du second ordre du type
+  y″ − ω²y = 0** (solutions exponentielles/hyperboliques — seul le cas oscillatoire y″ + ω²y = 0 est
+  au programme) ; l'équation **y″ = ay′ + by + c** générale (seuls les cas réductibles par z = y′ sont
+  abordés) ; toute **méthode de variation de la constante** formalisée (les solutions particulières
+  sont cherchées par forme imposée) ; les systèmes différentiels.
 
 ## 3. Notes pédagogiques / méthode
 
