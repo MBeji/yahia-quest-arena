@@ -524,7 +524,7 @@ export function renderIndex(input: SuiviCheckInput): string {
       const r7 = entry.r7
         ? `${entry.r7.date} (${entry.r7.portee}, ${entry.r7.verdict}, ${entry.r7.corrections} corr.)`
         : "—";
-      const notes = entry.notes.replace(/\|/g, "\\|");
+      const notes = entry.notes.replace(/\\/g, "\\\\").replace(/\|/g, "\\|");
       const sources =
         entry.sourcesLibres.length > 0
           ? [formatCoverage(entry), ...entry.sourcesLibres.map((s) => `_${s}_`)]
