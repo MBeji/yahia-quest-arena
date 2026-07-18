@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Couleurs, vision et rayonnements",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Un piment, qui paraît vert en lumière blanche, est éclairé uniquement en lumière rouge. Il paraît alors...",
+      "options": [
+        { "id": "a", "text": "vert" },
+        { "id": "b", "text": "rouge" },
+        { "id": "c", "text": "noir" },
+        { "id": "d", "text": "blanc" }
+      ],
+      "correctOption": "c",
+      "explanation": "En lumière blanche, le piment diffuse le vert (sa couleur) et absorbe le reste. Éclairé seulement en rouge, il absorbe ce rouge et ne diffuse aucune lumière : il paraît noir ✓. La couleur perçue dépend donc de la lumière qui éclaire.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Que fait un objet qui nous paraît blanc lorsqu'il est éclairé en lumière blanche ?",
+      "options": [
+        { "id": "a", "text": "il absorbe toutes les couleurs" },
+        { "id": "b", "text": "il diffuse toutes les couleurs" },
+        { "id": "c", "text": "il ne diffuse aucune couleur" },
+        { "id": "d", "text": "il produit sa propre lumière" }
+      ],
+      "correctOption": "b",
+      "explanation": "Un objet blanc diffuse toutes les radiations de la lumière blanche ✓. À l'inverse, un objet qui absorbe tout et ne diffuse rien paraît noir.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Le daltonisme est dû à...",
+      "options": [
+        { "id": "a", "text": "une inflammation des nerfs de l'oreille interne" },
+        { "id": "b", "text": "une opacité passagère du cristallin de l'œil" },
+        { "id": "c", "text": "une déficience d'un des types de cônes de la rétine" },
+        { "id": "d", "text": "une exposition trop forte à la lumière bleue" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le daltonisme vient d'une absence ou d'une faiblesse d'un des trois types de cônes (sensibles au rouge, au vert ou au bleu) : la couleur correspondante n'est plus vue ✓.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Une illusion d'optique est due à...",
+      "options": [
+        { "id": "a", "text": "une mauvaise interprétation des signaux par le cerveau" },
+        { "id": "b", "text": "un trajet incorrect de la lumière dans l'air" },
+        { "id": "c", "text": "une panne des cônes de la rétine, dans l'œil" },
+        { "id": "d", "text": "une décomposition de la lumière par l'atmosphère" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'illusion d'optique n'est pas due au trajet de la lumière : elle vient d'une mauvaise interprétation, par le cerveau, des informations reçues de l'œil ✓.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Parmi ces effets, lequel est dû au rayonnement ultraviolet ?",
+      "options": [
+        { "id": "a", "text": "faire fonctionner une télécommande de télévision" },
+        { "id": "b", "text": "permettre à la peau de synthétiser la vitamine D" },
+        { "id": "c", "text": "transmettre la chaleur d'un radiateur" },
+        { "id": "d", "text": "éclairer une pièce plongée dans le noir" }
+      ],
+      "correctOption": "b",
+      "explanation": "Les ultraviolets permettent à la peau de synthétiser la vitamine D (une carence provoque le rachitisme) ✓. Les télécommandes, la chaleur d'un radiateur et la vision nocturne relèvent, eux, de l'infrarouge.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Deux bouteilles d'eau identiques, l'une peinte en noir, l'autre en blanc, sont exposées au Soleil. Dans laquelle l'eau devient-elle la plus chaude ?",
+      "options": [
+        { "id": "a", "text": "la blanche, car elle absorbe plus de lumière" },
+        { "id": "b", "text": "les deux chauffent exactement autant" },
+        { "id": "c", "text": "la blanche, car elle diffuse plus de lumière" },
+        { "id": "d", "text": "la noire, car elle absorbe plus de lumière" }
+      ],
+      "correctOption": "d",
+      "explanation": "La bouteille noire absorbe presque toute la lumière (donc l'énergie) qu'elle reçoit, tandis que la blanche en diffuse beaucoup : l'eau de la bouteille noire devient la plus chaude ✓.",
+      "difficulty": 3
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐ : Spectre de lumière et vision",
+  "questions": [
+    {
+      "prompt": "Quel objet décompose la lumière blanche en plusieurs lumières colorées ?",
+      "options": [
+        { "id": "a", "text": "un miroir" },
+        { "id": "b", "text": "une lampe" },
+        { "id": "c", "text": "un filtre opaque" },
+        { "id": "d", "text": "un prisme" }
+      ],
+      "correctOption": "d",
+      "explanation": "Un prisme (ou un réseau) décompose la lumière blanche en un spectre de lumières colorées ✓, du rouge au violet.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "La lumière blanche, formée de la superposition de plusieurs lumières colorées, est dite...",
+      "options": [
+        { "id": "a", "text": "monochromatique" },
+        { "id": "b", "text": "polychromatique" },
+        { "id": "c", "text": "opaque" },
+        { "id": "d", "text": "invisible" }
+      ],
+      "correctOption": "b",
+      "explanation": "La lumière blanche est polychromatique ✓ : elle superpose plusieurs lumières monochromatiques que l'œil ne distingue pas séparément.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Éclairée en lumière blanche, une tomate paraît rouge parce qu'elle...",
+      "options": [
+        { "id": "a", "text": "produit elle-même sa propre lumière rouge" },
+        { "id": "b", "text": "absorbe le rouge et diffuse les autres couleurs" },
+        { "id": "c", "text": "diffuse le rouge et absorbe les autres couleurs" },
+        { "id": "d", "text": "laisse passer la lumière sans la diffuser" }
+      ],
+      "correctOption": "c",
+      "explanation": "La tomate diffuse la lumière rouge (sa couleur) et absorbe les autres radiations ✓. Si elle absorbait le rouge, elle ne paraîtrait pas rouge ; et elle ne produit pas sa propre lumière.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Un corps qui absorbe toutes les radiations qu'il reçoit, sans en diffuser aucune, paraît...",
+      "options": [
+        { "id": "a", "text": "noir" },
+        { "id": "b", "text": "blanc" },
+        { "id": "c", "text": "rouge" },
+        { "id": "d", "text": "transparent" }
+      ],
+      "correctOption": "a",
+      "explanation": "S'il absorbe toutes les radiations et n'en diffuse aucune, le corps paraît noir ✓. À l'inverse, un corps qui diffuse toutes les radiations paraît blanc.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Parmi les rayonnements émis par le Soleil, lesquels sont invisibles pour l'œil ?",
+      "options": [
+        { "id": "a", "text": "le rouge et le violet" },
+        { "id": "b", "text": "l'infrarouge et l'ultraviolet" },
+        { "id": "c", "text": "le jaune et le vert" },
+        { "id": "d", "text": "le bleu et l'indigo" }
+      ],
+      "correctOption": "b",
+      "explanation": "L'infrarouge (en deçà du rouge) et l'ultraviolet (au-delà du violet) sont invisibles ✓. Le rouge, le violet, le jaune, le vert, le bleu et l'indigo appartiennent, eux, à la lumière visible.",
+      "difficulty": 2
+    }
+  ]
+}

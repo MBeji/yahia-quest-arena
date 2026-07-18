@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐ : La Terre et l'univers",
+  "questions": [
+    {
+      "prompt": "Le Soleil produit sa propre lumière et scintille dans le ciel. C'est donc...",
+      "options": [
+        { "id": "a", "text": "une planète" },
+        { "id": "b", "text": "une étoile" },
+        { "id": "c", "text": "un satellite" },
+        { "id": "d", "text": "une comète" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le Soleil est une étoile ✓ : il produit sa propre lumière et scintille. Les planètes, elles, ne font que renvoyer la lumière qu'elles reçoivent.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Par rapport à la Terre, la Lune est...",
+      "options": [
+        { "id": "a", "text": "un satellite naturel" },
+        { "id": "b", "text": "une étoile" },
+        { "id": "c", "text": "une planète" },
+        { "id": "d", "text": "une constellation" }
+      ],
+      "correctOption": "a",
+      "explanation": "La Lune tourne autour de la Terre : c'est son satellite naturel ✓. Elle ne produit pas sa propre lumière (ce n'est pas une étoile).",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Comment appelle-t-on un groupement d'étoiles vu dans une même région du ciel ?",
+      "options": [
+        { "id": "a", "text": "une galaxie" },
+        { "id": "b", "text": "un amas" },
+        { "id": "c", "text": "une comète" },
+        { "id": "d", "text": "une constellation" }
+      ],
+      "correctOption": "d",
+      "explanation": "Un groupement d'étoiles vu dans une même région du ciel est une constellation ✓ (comme la Grande Ourse), utilisée depuis toujours pour se repérer.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "L'année-lumière est une unité de...",
+      "options": [
+        { "id": "a", "text": "durée (temps)" },
+        { "id": "b", "text": "distance" },
+        { "id": "c", "text": "masse" },
+        { "id": "d", "text": "vitesse" }
+      ],
+      "correctOption": "b",
+      "explanation": "L'année-lumière est la distance parcourue par la lumière en une année : c'est donc une distance ✓ (1 a.l ≈ 9,46×10¹² km), pas une durée, malgré le mot « année ».",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Parmi ces planètes, laquelle est une planète tellurique ?",
+      "options": [
+        { "id": "a", "text": "Jupiter" },
+        { "id": "b", "text": "Saturne" },
+        { "id": "c", "text": "Mars" },
+        { "id": "d", "text": "Neptune" }
+      ],
+      "correctOption": "c",
+      "explanation": "Mars est une planète tellurique ✓ : dense et à surface solide, comme Mercure, Vénus et la Terre. Jupiter, Saturne et Neptune sont des planètes gazeuses.",
+      "difficulty": 2
+    }
+  ]
+}
