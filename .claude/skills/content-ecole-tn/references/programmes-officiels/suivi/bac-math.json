@@ -5,14 +5,27 @@
       "matiere": "mathematiques",
       "statut": "partielle",
       "profondeur": "mixte",
-      "sources": [],
-      "sourcesLibres": [
-        "Transcription pilote 2026-07-05, hors corpus CNP — à valider contre les textes officiels (programmes ministère) et à rattacher aux manuels 4ème secondaire du corpus"
+      "sources": [
+        {
+          "code": "222445",
+          "tomes": ["P00"],
+          "role": "eleve",
+          "pagesTotal": 207,
+          "pagesLues": [[1, 27]]
+        },
+        {
+          "code": "222446",
+          "tomes": ["P00"],
+          "role": "eleve",
+          "pagesTotal": 230,
+          "pagesLues": [[1, 6]]
+        }
       ],
+      "sourcesLibres": [],
       "r7": null,
-      "maj": "2026-07-17",
-      "par": "seed",
-      "notes": "Seed depuis _INDEX ([~] pilote lycée). A alimenté le chapitre pilote math-bac-math/01-continuite-limites (#288)."
+      "maj": "2026-07-18",
+      "par": "bejimed",
+      "notes": "Campagne LOT A (METHODE-GENERATION-CONTENU) raccrochée au corpus : tome 1 Analyse (222445, 9 ch.) + tome 2 (222446, 10 ch.) = 19 chapitres ; manuel eleve seul (pas de guide enseignant au corpus) => fait reference. Palier 1 : fiche raccrochee + plan annuel 19 ch. + manifest/bac-math.json + chapitre 1 (p.5-27) transcrit a profondeur de generation ; ch.2-19 restent en 'bloc'. R-7 ch.1 (2026-07-18, integrale sur p.5-27) : CONFORME, 0 erreur substantielle, 3 corrections de forme appliquees. Generation LOT B interdite tant que statut != complete."
     }
   ]
 }

@@ -109,7 +109,7 @@
 
 | statut | matière | profondeur | sources (couverture calculée) | R-7 | maj | notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| 🚧 partielle — ⛔ génération interdite | **mathematiques** | mixte | _Transcription pilote 2026-07-05, hors corpus CNP — à valider contre les textes officiels (programmes ministère) et à rattacher aux manuels 4ème secondaire du corpus_ | — | 2026-07-17 (seed) | Seed depuis _INDEX ([~] pilote lycée). A alimenté le chapitre pilote math-bac-math/01-continuite-limites (#288). |
+| 🚧 partielle — ⛔ génération interdite | **mathematiques** | mixte | `222445` 13 % (manque p.28–207) · `222446` 3 % (manque p.7–230) | — | 2026-07-18 (bejimed) | Campagne LOT A (METHODE-GENERATION-CONTENU) raccrochée au corpus : tome 1 Analyse (222445, 9 ch.) + tome 2 (222446, 10 ch.) = 19 chapitres ; manuel eleve seul (pas de guide enseignant au corpus) => fait reference. Palier 1 : fiche raccrochee + plan annuel 19 ch. + manifest/bac-math.json + chapitre 1 (p.5-27) transcrit a profondeur de generation ; ch.2-19 restent en 'bloc'. R-7 ch.1 (2026-07-18, integrale sur p.5-27) : CONFORME, 0 erreur substantielle, 3 corrections de forme appliquees. Generation LOT B interdite tant que statut != complete. |
 
 ## À transcrire (dérivé du corpus — PDF `principale` non rattachés à une fiche)
 
@@ -127,7 +127,7 @@
 - **1ere-sec** : **arabe** (`201104`) · **geographie** (`206103`) · **histoire** (`207103`) · **islamique-civique** (`211105`, `211107`) · **maths** (`222105`)
 - **2eme-sec** : **anglais** (`241203`) · **arabe** (`201202`, `201203`, `201281`) · **chimie** (`224231`, `224271`) · **eco-gestion** (`229262`) · **francais** (`221203`) · **geographie** (`206203`, `206271`) · **histoire** (`207202`, `207271`) · **islamique-civique** (`211203`, `211204`) · **maths** (`222221`, `222231`, `222232`, `222261`, `222281`) · **sciences-physiques** (`223231`, `223272`) · **svt** (`225202`, `225232`, `225281`)
 - **3eme-sec** : **anglais** (`241303`, `641303`) · **arabe** (`201302`, `201321`, `201381`) · **chimie** (`224332`, `224333`, `224351`, `224371`) · **eco-gestion** (`229364`) · **francais** (`221302`, `221321`) · **geographie** (`206321`, `206331`) · **histoire** (`207321`, `207331`) · **islamique-civique** (`211306`, `211321`, `211322`) · **maths** (`222322`, `222333`, `222334`, `222343`, `222344`, `222351`, `222362`, `222371`, `222381`) · **philosophie** (`210301`, `210322`) · **sciences-physiques** (`223332`, `223333`, `223351`, `223371`) · **svt** (`225321`, `225333`, `225342`, `225381`)
-- **bac** : **anglais** (`241403`, `641404`) · **arabe** (`201403`, `201421`, `201422`, `201481`) · **chimie** (`224432`, `224433`, `224451`, `224471`) · **eco-gestion** (`229464`) · **francais** (`221402`, `221421`) · **geographie** (`206422`) · **histoire** (`207422`) · **islamique-civique** (`211421`) · **maths** (`222422`, `222433`, `222434`, `222445`, `222446`, `222451`, `222463`, `222472`, `222481`) · **philosophie** (`210402`, `210422`, `210423`) · **sciences-physiques** (`223432`, `223433`, `223451`, `223471`) · **svt** (`225421`, `225432`, `225441`, `225481`)
+- **bac** : **anglais** (`241403`, `641404`) · **arabe** (`201403`, `201421`, `201422`, `201481`) · **chimie** (`224432`, `224433`, `224451`, `224471`) · **eco-gestion** (`229464`) · **francais** (`221402`, `221421`) · **geographie** (`206422`) · **histoire** (`207422`) · **islamique-civique** (`211421`) · **maths** (`222422`, `222433`, `222434`, `222451`, `222463`, `222472`, `222481`) · **philosophie** (`210402`, `210422`, `210423`) · **sciences-physiques** (`223432`, `223433`, `223451`, `223471`) · **svt** (`225421`, `225432`, `225441`, `225481`)
 
 ## Corpus hors transcription (classé, exhaustif)
 
@@ -137,4 +137,4 @@
 - **enrichissement** : 21 PDF
   - décisions en attente (`differee`) : `128703`, `128803`, `128903`, `228103`, `228233`, `228362`, `228363`, `228461`, `228462`
 
-**Totaux (calculés)** : 47 fiches suivies (18 partielle · 25 complete · 4 validee-r7) · 346 PDF au corpus · 171 œuvres principales restant à rattacher.
+**Totaux (calculés)** : 47 fiches suivies (18 partielle · 25 complete · 4 validee-r7) · 346 PDF au corpus · 169 œuvres principales restant à rattacher.
