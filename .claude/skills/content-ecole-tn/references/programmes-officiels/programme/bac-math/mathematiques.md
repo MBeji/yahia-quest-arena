@@ -60,8 +60,8 @@ style annales session principale.
 | #   | Chapitre                        | pages (PDF = imprimées) | profondeur   |
 | --- | ------------------------------- | ----------------------- | ------------ |
 | 10  | Nombres complexes               | 5–34                    | `generation` |
-| 11  | Isométries du plan              | 35–53                   | `bloc`       |
-| 12  | Déplacements – Antidéplacements | 54–73                   | `bloc`       |
+| 11  | Isométries du plan              | 35–53                   | `generation` |
+| 12  | Déplacements – Antidéplacements | 54–73                   | `generation` |
 | 13  | Similitudes                     | 74–95                   | `bloc`       |
 | 14  | Coniques                        | 96–120                  | `bloc`       |
 | 15  | Géométrie dans l'espace         | 121–146                 | `bloc`       |
@@ -3497,6 +3497,856 @@ Le plan est muni d'un repère orthonormé direct (O, u⃗, v⃗). Soit les point
   fonction) — e^(iθ) est ici une **notation** pour cos θ + i sin θ, pas une fonction analytique ; la
   **résolution générale des équations de degré ≥ 3** sans racine évidente (on suppose toujours une
   racine remarquable donnée ou à deviner par sa nature).
+
+## 2.11 Chapitre 11 — Isométries du plan (manuel 222446, p.35–53)
+
+**Page de garde (p.35)** — Titre de couverture : « Isométrie du plan », Chapitre 2 (numérotation
+interne du tome 2 ; c'est le chapitre 11 dans la numérotation content ; le bandeau courant écrit
+« Isométries du plan »). Encart historique (citation) : « "La théorie des figures isométriques
+curvilignes est beaucoup plus difficile et plus profonde que celle des figures isométriques
+rectilignes. […]. M. Jacques Bernoulli a été le premier qui l'ait traité avec exactitude ; il propose
+le problème qui le résout très promptement ; son mémoire est imprimé parmi ceux de l'académie des
+sciences de 1706, mais il manquait quelque chose à la solution […]. M. Euler a aussi sur cette matière
+plusieurs morceaux très profonds dans les mémoires de l'académie de Pétersbourg et on a imprimé à
+Lafaune, en 1744, un ouvrage fort étendu du même auteur sur ce sujet. Il a pour titre : Methodus
+inveniendi lineas curvas, proprietate grandentes." » Référence : « (D'Alembert, Diderot et al,
+Encyclopédie méthodique des mathématiques, réédité en 1987). » Mention liminaire (p.36) : « Dans tout
+le chapitre, le plan est orienté dans le sens direct. » Le chapitre est structuré en quatre parties
+**I. Définition et propriétés**, **II. Composition d'isométries**, **III. Isométries et points fixes**,
+**IV. Décomposition d'une isométrie**, ponctuées d'activités et d'un exercice résolu, suivies d'un
+QCM / Vrai-Faux, puis d'une rubrique « Exercices et problèmes ».
+
+### Cours — Activités
+
+**I. Définition et propriétés — I.1 Définition** (p.36)
+
+- **Activité 1** (p.36) : dans chacune des trois figures données, déterminer une application f qui fixe
+  B et qui envoie A sur C (① triangle équilatéral ABC, ② points A, B, C alignés avec AB = BC, ③ points
+  A, B, C alignés). (Encart : « Soit f une application du plan dans lui-même et M₀ un point du plan. On
+  dit que f fixe le point M₀ (ou M₀ est invariant par f) si f(M₀) = M₀. »)
+- **Activité 2** (p.36) : on se propose de démontrer qu'une symétrie orthogonale conserve les distances.
+  Δ une droite, O un point de Δ, i⃗ un vecteur unitaire de Δ ; repère orthonormé (O, i⃗, j⃗) ; S_Δ la
+  symétrie orthogonale d'axe Δ. M(x, y) et N(x₁, y₁) d'images M′ et N′ par S_Δ. 1. déterminer les
+  coordonnées de M′ et N′. 2. en déduire que M′N′ = MN. (Figure.)
+- **Activité 3** (p.37) : plan P rapporté à un repère orthonormé direct (O, i⃗, j⃗) ; g l'application qui
+  à tout point M d'affixe z associe M′ d'affixe z′ = ((−1 + i√3)/2)·z. 1. montrer que g est une
+  isométrie. 2. montrer que g est une rotation dont on précisera les éléments caractéristiques.
+
+**I.2 Isométries et produit scalaire** (p.37) — voir encadrés VERBATIM ; démonstrations intégrées au
+cours (Démonstration du théorème, du corollaire et de leurs conséquences, p.37–38).
+
+**I.3 Isométrie réciproque** (p.38)
+
+- **Activité** (p.38–39) : f une isométrie munie d'un repère orthonormé (A, AB⃗, AC⃗) ; A′, B′, C′ les
+  images de A, B, C par f ; deux réels x et y et N le point tel que A′N⃗ = x·A′B′⃗ + y·A′C′⃗. Montrer que
+  le point M de coordonnées (x, y) dans (A, AB⃗, AC⃗) est l'unique point vérifiant f(M) = N. Soit g
+  l'application qui à tout point N associe son unique antécédent M par f ; vérifier que g(N) = M ssi
+  f(M) = N ; en déduire que g est une isométrie.
+
+**I.4 Isométries et configurations** (p.39)
+
+- **Activité 1** (p.39) : f une isométrie munie d'un repère orthonormé (A, AB⃗, AC⃗) ; P, Q, R, S, M, N
+  des points d'images respectives P′, Q′, R′, S′, M′, N′. Montrer que si MN⃗ = a·PQ⃗ + b·RS⃗ alors
+  M′N′⃗ = a·P′Q′⃗ + b·R′S′⃗ où a et b sont réels.
+- **Activité 2** (p.40) : ABC un triangle rectangle en A tel que (AB⃗, AC⃗) ≡ π/2 [2π], H le pied de la
+  hauteur issue de A et D l'image de C par la rotation r de centre A et d'angle π/2. On désigne par O le
+  pied de la hauteur issue de D dans le triangle DCB et par K le pied de la hauteur issue de A dans le
+  triangle DAO. 1. montrer que r transforme (CB) en (DO) et le triangle AHC en le triangle AKD. 2. en
+  déduire que AHOK est un carré.
+
+**II. Composition d'isométries** (p.40)
+
+- **Activité 1** (p.40) : f et g deux isométries, M et N deux points ; M′ = f(M), N′ = f(N), M″ = g(M′),
+  N″ = g(N′). 1. comparer M′N′ et MN, puis M″N″ et M′N′. 2. en déduire que g∘f est une isométrie. 3. montrer de la même manière que f∘g est une isométrie. (Encart : « Soit f et g deux applications du
+  plan dans lui-même. L'application du plan dans lui-même qui à tout point M associe le point g(f(M)) est
+  appelée la composée de f par g. On la note g∘f. Si f, g et h sont trois applications du plan dans
+  lui-même, (g∘f)∘h = g∘(f∘h) = g∘f∘h. »)
+- **Activité 2** (p.40, « Composée de deux symétries orthogonales d'axes sécants ») : D et D′ deux
+  droites sécantes en un point I et de vecteurs directeurs respectifs u⃗ et u′⃗ ; S_D et S_D′ les
+  symétries orthogonales d'axes respectifs D et D′ ; M un point distinct de I, M′ = S_D(M) et
+  M″ = S_D′(M′). 1. montrer que IM″ = IM et que (IM⃗, IM″⃗) ≡ 2(u⃗, u′⃗) [2π]. 2. déduire que S_D′∘S_D
+  est une rotation dont on précisera les éléments caractéristiques. 3. identifier S_D∘S_D′. (Figure.)
+- **Activité 3** (p.41) : ABCD un rectangle, E le symétrique de B par rapport à A et F le symétrique de B
+  par rapport à C. 1. identifier S_(DC)∘S_(DA). 2. une droite Δ passant par B coupe (AD) en E′ et (CD) en
+  F′ ; montrer que les droites (EE′) et (FF′) sont parallèles. (Figure.)
+- **Activité 4** (p.41, « Composée de deux symétries orthogonales d'axes parallèles ») : D et D′ deux
+  droites parallèles, I un point de D et J son projeté orthogonal sur D′ ; S_D et S_D′ les symétries
+  orthogonales d'axes respectifs D et D′. 1. montrer que S_D′∘S_D = t_(2IJ⃗). 2. identifier S_D∘S_D′.
+  (Figure.)
+- **Activité 5** (p.42) : ABCD un parallélogramme, Δ₁ et Δ₂ les médiatrices respectives des segments [AB]
+  et [CD] ; P l'image de B par la symétrie orthogonale d'axe Δ₂ et Q l'image de D par la symétrie
+  orthogonale d'axe Δ₁. Quelle est la nature du quadrilatère APCQ ? (Figure.)
+- **Activité 6** (p.42) : A, B, C trois points non alignés. Donner les réciproques de chacune des
+  isométries : 1. S_(AB)∘S_(AC). 2. S_(AC)∘S_(AB). 3. t_(AB⃗)∘S_(AC)∘t_(−BC⃗).
+
+**III. Isométries et points fixes — III.1 Isométries ayant des points fixes** (p.43)
+
+- **Activité 1** (p.43) : f une isométrie différente de l'identité et A un point non fixe de f d'image
+  A′. Montrer que si M est un point fixe de f, alors M appartient à la médiatrice du segment [AA′].
+- **Activité 2** (p.44) : ABCD un carré direct ; S la symétrie orthogonale d'axe la médiatrice de [BC] et
+  T la translation de vecteur BC⃗. 1.a. déterminer les images par S∘T des points A, B et D ; b. identifier
+  S∘T. 2.a. déterminer les images par T∘S des points C, D et A ; b. identifier T∘S. 3. en déduire la
+  nature de S∘T∘T∘S.
+- **Activité 3** (p.45) : plan P rapporté à un repère orthonormé direct (O, i⃗, j⃗) ; f l'application qui
+  à tout point M(x, y) associe M′(x′, y′) tel que x′ = (√2/2)x − (√2/2)y et y′ = (√2/2)x + (√2/2)y.
+  1. montrer que f est une isométrie de P. 2.a. montrer que f admet un seul point invariant que l'on
+     déterminera ; b. en déduire que f est une rotation dont on précisera les éléments caractéristiques.
+
+**III.2 Isométries sans point fixe** (p.45)
+
+- **Activité 1** (p.45) : Δ une droite de vecteur directeur u⃗ ; S_Δ la symétrie orthogonale d'axe Δ et
+  f = t_u⃗∘S_Δ. 1.a. construire l'image d'un point A de Δ ; b. déterminer f(Δ). 2. montrer que f n'a pas
+  de point fixe.
+- **Activité 2** (p.46) : O et O′ deux points distincts, g une rotation de centre O d'angle non nul α ;
+  isométrie f = t_(OO′⃗)∘g. N un point tel que (OO′⃗, ON⃗) ≡ π/2 − α/2 [2π], N′ son image par g. L'image de
+  la droite (ON) par la translation t_(O′O⃗) coupe (ON′) en un point B. En considérant l'antécédent de B
+  par g, montrer que f possède un point fixe. (Figure.)
+- **Activité 3** (p.46) : f une isométrie, O un point d'image O′ distincte de O ; on suppose qu'il existe
+  une symétrie orthogonale d'axe Δ passant par O telle que f = t_(OO′⃗)∘S_Δ. 1. on suppose OO′⃗ orthogonal
+  à Δ et on désigne par M un point de la médiatrice de [OO′] : montrer que f fixe M et ne fixe pas O, puis
+  identifier f. 2. montrer que si OO′⃗ est un vecteur directeur de Δ alors f n'admet pas de point fixe. 3. on suppose OO′⃗ ni orthogonal à Δ, ni directeur de Δ ; C et D les points tels que OO′⃗ = OC⃗ + OD⃗,
+  OC⃗ directeur de Δ et OD⃗ orthogonal à Δ ; montrer que f = t_(OC⃗)∘S_Δ′ où OC⃗ est directeur de Δ′ ; en
+  déduire que f est sans point fixe.
+
+**IV. Décomposition d'une isométrie — IV.1 Décomposition d'une rotation** (p.47)
+
+- **Activité 1** (p.47) : ABC un triangle direct isocèle rectangle en A et Δ la médiatrice du segment
+  [BC] ; r la rotation de centre A qui transforme B en C ; S_Δ et S_(AB) les symétries orthogonales d'axes
+  respectifs Δ et (AB). Montrer que r = S_Δ∘S_(AB). (Figure.)
+- **Activité 2** (p.47) : r une rotation de centre I et d'angle θ, D une droite passant par I et de
+  vecteur directeur u⃗ ; D′ la droite passant par I et de vecteur directeur u′⃗ tel que 2(u⃗, u′⃗) ≡ θ [2π].
+  Montrer que r = S_D′∘S_D.
+- **Activité 3** (p.48) : ABC un triangle équilatéral direct et A′ le milieu du segment [BC] ; r la
+  rotation de centre A et d'angle π/3, S_(AB) la symétrie orthogonale d'axe (AB). 1. déterminer la droite
+  Δ telle que r = S_Δ∘S_(AB), où S_Δ désigne la symétrie orthogonale d'axe Δ. 2. S_A′ la symétrie centrale
+  de centre A′ ; décomposer S_A′ en deux symétries orthogonales. (Figure.)
+
+**IV.2 Décomposition d'une translation** (p.48)
+
+- **Activité 1** (p.48) : t_u⃗ une translation de vecteur non nul u⃗, D une droite de direction orthogonale
+  à celle de u⃗ et H un point de D. Montrer que t_u⃗ = S_D′∘S_D, où D′ est la droite parallèle à D et
+  passant par le point K tel que HK⃗ = ½ u⃗.
+- **Activité 2** (p.49) : soit un rectangle ABCD. Identifier t_(2AB⃗)∘S_(AD).
+- **Activité 3** (p.49) : montrer que toute symétrie glissante f se décompose sous la forme
+  f = S_D∘S_D′∘S_D″, avec D ∩ D′ = ∅ et D″ perpendiculaire à D.
+
+### Cours — Résultats / définitions / théorèmes à retenir (VERBATIM)
+
+> **Définition** (p.36) — « Une application du plan dans lui-même est une isométrie si elle conserve les
+> distances. C'est-à-dire, si M′N′ = MN pour tous points M et N du plan d'images respectives M′ et N′. »
+
+> **Conséquences** (p.37) — « • L'identité du plan, les translations, les symétries orthogonales et les
+> rotations sont des isométries. • Les images de deux points distincts du plan par une isométrie sont
+> deux points distincts. »
+
+> **Théorème** (p.37) — « Une application du plan dans lui-même est une isométrie, si et seulement si,
+> elle conserve le produit scalaire. Une application f est une isométrie, si et seulement si,
+> AB⃗·AC⃗ = A′B′⃗·A′C′⃗ pour tous points A, B et C d'images respectives A′, B′ et C′. » (Démonstration
+> fournie, p.37.)
+
+> **Corollaire** (p.37) — « Soit f une isométrie du plan. Si A, B et C sont trois points deux à deux
+> distincts, d'images respectives A′, B′ et C′, alors BAC^ = B′A′C′^. On dit qu'une isométrie conserve
+> les mesures des angles géométriques. » (Démonstration p.38.)
+
+> **Conséquence** (p.38) — « Les images par une isométrie de trois points non alignés sont trois points
+> non alignés. »
+
+> **Théorème** (p.38) — « Soit f une isométrie, A, B et C trois points non alignés du plan et A′, B′ et
+> C′ leurs images respectives. Si le repère (A, AB⃗, AC⃗) est orthonormé alors le repère (A′, A′B′⃗, A′C′⃗)
+> est orthonormé. De plus, pour tout point M d'image M′, AM⃗ = x·AB⃗ + y·AC⃗ avec x et y réels, implique
+> que A′M′⃗ = x·A′B′⃗ + y·A′C′⃗. » (Démonstration p.38.)
+
+> **Théorème et définition** (p.39) — « Une isométrie f est une bijection du plan dans lui-même.
+> L'application du plan dans lui-même qui à tout point N du plan associe son unique antécédent M par f est
+> une isométrie appelée réciproque de f et notée f⁻¹. »
+
+> **(Conséquences de la réciproque)** (p.39) — « Pour toute isométrie f et tout point M, f(M) = N, si et
+> seulement si, f⁻¹(N) = M. La réciproque d'une symétrie orthogonale est elle-même. La réciproque d'une
+> symétrie centrale est elle-même. La réciproque d'une translation de vecteur u⃗ est la translation de
+> vecteur −u⃗. La réciproque d'une rotation de centre I et d'angle α est la rotation de centre I et
+> d'angle −α. »
+
+> **Théorème** (p.40, composition) — « La composée de deux isométries est une isométrie. »
+
+> **Théorème** (p.39, configurations) — « Soit f une isométrie et A, B, C et D des points d'images
+> respectives A′, B′, C′ et D′ par f. Si AB⃗ = α·CD⃗ alors A′B′⃗ = α·C′D′⃗, où α est un réel. »
+
+> **(Résumé de l'action d'une isométrie sur les configurations usuelles)** (p.39) — « • Une isométrie
+> conserve le barycentre de deux points. En particulier une isométrie conserve le milieu d'un segment.
+> • L'image d'une droite par une isométrie est une droite. • L'image d'un segment par une isométrie est un
+> segment qui lui est isométrique. • Les images de deux droites parallèles par une isométrie sont deux
+> droites parallèles (on dit qu'une isométrie conserve le parallélisme). • L'image d'un parallélogramme
+> par une isométrie est un parallélogramme. • Les images de deux droites perpendiculaires par une
+> isométrie sont deux droites perpendiculaires (on dit qu'une isométrie conserve l'orthogonalité).
+> • L'image d'un cercle par une isométrie est un cercle qui lui est isométrique. • L'image par une
+> isométrie de la tangente en un point M à un cercle est la tangente au cercle image, au point M′ image de
+> M (on dit qu'une isométrie conserve le contact). »
+
+> **Théorème** (p.41, axes sécants) — « La composée de deux symétries orthogonales d'axes sécants est une
+> rotation. Plus précisément, si D et D′ sont deux droites sécantes en un point I et de vecteurs directeurs
+> respectifs u⃗ et u′⃗ et si S_D et S_D′ sont les symétries orthogonales d'axes respectifs D et D′, alors
+> S_D′∘S_D est la rotation de centre I et d'angle α où α ≡ 2(u⃗, u′⃗) [2π]. »
+
+> **Conséquence** (p.41, axes perpendiculaires) — « La composée de deux symétries orthogonales d'axes
+> perpendiculaires D et D′ en I est la symétrie centrale de centre I, et dans ce cas
+> S_D∘S_D′ = S_D′∘S_D. »
+
+> **Théorème** (p.41, axes parallèles) — « La composée de deux symétries orthogonales d'axes parallèles
+> est une translation. Plus précisément, si D et D′ sont deux droites parallèles et si S_D et S_D′ sont les
+> symétries orthogonales d'axes respectifs D et D′, alors S_D′∘S_D est la translation de vecteur 2IJ⃗, où I
+> est un point de D et J est le projeté orthogonal de I sur D′. »
+
+> **Théorème** (p.42) — « Soit f et g deux isométries. g = f⁻¹, si et seulement si, f∘g = Id, où Id désigne
+> l'identité du plan. » (Démonstration p.42.)
+
+> **Propriété** (p.42) — « Si f et g sont deux isométries, alors (f∘g)⁻¹ = g⁻¹∘f⁻¹. » (Démonstration p.42.)
+
+> **Propriété** (p.42) — « Soit f, g et h trois isométries. f = g, si et seulement si, h∘f = h∘g. »
+> (Démonstration p.42.)
+
+> **Théorème** (p.43, points fixes) — « Soit f une isométrie différente de l'identité, A un point non fixe
+> de f et A′ son image. Alors les points fixes de f, s'ils existent, se trouvent sur la médiatrice du
+> segment [AA′]. »
+
+> **Théorème** (p.43) — « Une isométrie fixe trois points non alignés, si et seulement si, c'est l'identité
+> du plan. » (Démonstration p.43.)
+
+> **Conséquence** (p.44) — « Si deux isométries f et g coïncident sur trois points non alignés, alors elles
+> coïncident partout dans le plan. On dit qu'une isométrie est déterminée par la donnée de trois points non
+> alignés et leurs images. »
+
+> **Théorème** (p.44) — « Si une isométrie fixe deux points distincts A et B, alors elle fixe tous les
+> points de la droite (AB). » (Démonstration p.44.)
+
+> **Théorème** (p.44) — « Si une isométrie f fixe deux points distincts A et B et si elle est différente de
+> l'identité, alors f est la symétrie orthogonale d'axe (AB). » (Démonstration p.44.)
+
+> **Théorème** (p.44) — « Si une isométrie f fixe un unique point I alors f est une rotation de centre I et
+> d'angle non nul. » (Démonstration p.45, avec figure.)
+
+> **Théorème** (p.45, décomposition unique) — « Soit O un point du plan. Alors toute isométrie f se
+> décompose de manière unique en la composée d'une translation et d'une isométrie g qui fixe O. »
+> (Démonstration p.45.)
+
+> **Théorème** (p.46, sans point fixe) — « Une isométrie qui n'a aucun point fixe est soit une translation
+> de vecteur non nul, soit la composée d'une translation de vecteur non nul u⃗ et d'une symétrie
+> orthogonale d'axe Δ tel que u⃗ est directeur de Δ. » (Démonstration p.46.)
+
+> **Définition** (p.47, symétrie glissante) — « La composée d'une translation de vecteur non nul u⃗ et
+> d'une symétrie orthogonale d'axe Δ tel que u⃗ est directeur de Δ est appelée symétrie glissante. »
+
+> **Théorème** (p.47, décomposition) — « Toute isométrie se décompose en au plus trois symétries
+> orthogonales. » (Démonstration p.47, avec figure.)
+
+> **Théorème** (p.48, rotation = 2 symétries d'axes sécants) — « Toute rotation est la composée de deux
+> symétries orthogonales d'axes sécants. Plus précisément, soit r une rotation de centre I et d'angle θ et
+> D une droite quelconque passant par I et de vecteur directeur u⃗. Alors r = S_D′∘S_D, où D′ est la droite
+> passant par I et de vecteur directeur u′⃗ tel que 2(u⃗, u′⃗) ≡ θ [2π]. »
+
+> **Conséquence** (p.48, symétrie centrale) — « Soit S_I la symétrie centrale de centre I et D une droite
+> passant par I. Alors S_I = S_D′∘S_D = S_D∘S_D′, où D′ est la droite perpendiculaire à D en I. »
+
+> **Théorème** (p.49, translation = 2 symétries d'axes parallèles) — « Toute translation est la composée de
+> deux symétries orthogonales d'axes parallèles. Plus précisément, soit t_u⃗ la translation de vecteur non
+> nul u⃗, D une droite quelconque de direction orthogonale à celle de u⃗ et H un point de D. Alors
+> t_u⃗ = S_D′∘S_D, où D′ est la droite parallèle à D et passant par le point K tel que HK⃗ = ½ u⃗. »
+
+> **Tableau de classification** (p.49) — « Le tableau ci-dessous donne une classification des isométries
+> suivant leur décomposition en symétries orthogonales et leurs points fixes. » Colonnes : **Nature de
+> l'isométrie** | **Décomposition en symétries orthogonales** | **Ensemble des points fixes**. Lignes :
+> — Identité du plan | S_D∘S_D | Tout le plan.
+> — Symétrie orthogonale d'axe D. | S_D | La droite D.
+> — Rotation de centre I et d'angle θ, θ ≠ k2π ; k ∈ ℤ | S_D∘S_D′ (D ∩ D′ = {I}) | {I}.
+> — Translation de vecteur non nul. | S_D∘S_D′ (D ∩ D′ = ∅) | L'ensemble vide.
+> — Symétrie glissante d'axe D et de vecteur u⃗. | S_D∘S_D′∘S_D″, (D ∩ D′ = ∅) et D perpendiculaire à D″. |
+> L'ensemble vide.
+
+### Cours — Exercice résolu (p.43)
+
+**Exercice résolu** (énoncé + solution p.43) : D₁, D₂ et D₃ trois droites distinctes et S₁, S₂, S₃ les
+symétries orthogonales d'axes respectifs D₁, D₂, D₃. Montrer que la composée S₁∘S₂∘S₃ est une symétrie
+orthogonale, si et seulement si, les droites D₁, D₂, D₃ sont parallèles ou concourantes. **Solution** :
+on suppose S₁∘S₂∘S₃ = S_D symétrie orthogonale d'axe D ; l'égalité équivaut à S₁∘S₂ = S_D∘S₃ (_). Si D₁
+est parallèle à D₂, S₁∘S₂ est une translation de vecteur u⃗ orthogonal à D₁ et D₂, donc D est parallèle à
+D₃ et u⃗ orthogonal à D₃ ⇒ D₁, D₂, D₃ et D parallèles. Si D₁ et D₂ se coupent en I, S₁∘S₂ est une rotation
+de centre I ⇒ D₃ et D se coupent en I ⇒ D₁, D₂, D₃ et D concourantes en I. L'équivalence (_) permet de
+conclure.
+
+### QCM (p.50) — « Cocher la réponse exacte. »
+
+1. Soit ABCD un carré direct et r la rotation de centre A et d'angle π/2. Alors r est égale à
+   (☐ S_(AB)∘S_(AC) / ☐ S_(AB)∘S_(AD) / ☐ S_(AC)∘S_(AB)).
+2. Soit (AB) une droite et C un point de (AB). Alors S_(AB)∘S_(AC) est (☐ la symétrie centrale S_A /
+   ☐ l'identité / ☐ la symétrie orthogonale S_(BC)).
+3. Soit A, B et C trois points non alignés et f une isométrie qui fixe les deux points A et B et ne fixe
+   pas le point C. Alors f est (☐ l'identité / ☐ la symétrie orthogonale S_(AB) / ☐ la translation t_(AB⃗)).
+4. Soit A et B deux points distincts et O le milieu de [AB]. Soit f une isométrie qui envoie A sur B et B
+   sur A. Alors f(O) est (☐ A / ☐ O / ☐ B).
+5. Soit ABC un triangle équilatéral et f une isométrie qui envoie A sur B, B sur C et C sur A. Alors f∘f∘f
+   est (☐ une symétrie orthogonale S_(AC) / ☐ la translation t_(AB⃗) / ☐ l'identité).
+
+### Vrai ou faux (p.50) — « Répondre par vrai ou faux en justifiant la réponse. » (réponses non fournies)
+
+1. La seule isométrie fixant trois points distincts est l'identité.
+2. Les symétries glissantes sont les seules isométries sans point fixe.
+3. Si une isométrie laisse globalement invariante une droite, alors elle est soit une symétrie
+   orthogonale, soit une translation.
+4. La composée de deux symétries orthogonales distinctes est soit une translation soit une rotation.
+5. Soit ABC un triangle isocèle rectangle en A et direct. Soit f une isométrie qui fixe A et envoie B sur
+   C. Alors f est soit la rotation de centre A et d'angle π/2, soit la symétrie orthogonale d'axe la
+   médiatrice de [BC].
+
+### Exercices et problèmes (p.51–53) — 22 exercices
+
+- **Ex. 1** (p.51) : A et A′ deux points distincts, Δ la médiatrice du segment [AA′]. B un point
+  n'appartenant pas à Δ tel que (AB) et Δ ne sont pas parallèles. Construire à la règle seulement le
+  symétrique B′ de B par rapport à la droite Δ.
+- **Ex. 2** (p.51) : [Ox) et [Oy) deux demi-droites sécantes ; A et B deux points fixes de [Ox) ; M et N
+  deux points variables sur [Oy) tels que MN = AB et N ∈ [My). P le milieu de [AM] et Q le milieu de [BN].
+  Montrer que Q est l'image de P par une translation qui ne dépend pas des points M et N. (Figure.)
+- **Ex. 3** (p.51) : ABC un triangle de centre de gravité G ; A′, B′, C′ les images de A, B, C par une
+  isométrie qui fixe G. Montrer que AA′⃗ + BB′⃗ + CC′⃗ = 0⃗.
+- **Ex. 4** (p.51) : S₁ et S₂ deux symétries orthogonales d'axes respectifs Δ₁ et Δ₂. 1. discuter, suivant
+  la position relative de Δ₁ et Δ₂, la nature de S₁∘S₂. 2. à quelle condition sur Δ₁ et Δ₂ a-t-on
+  S₁∘S₂ = S₂∘S₁ ?
+- **Ex. 5** (p.51) : deux cercles isométriques 𝒞 et 𝒞′ sécants en deux points A et B. Deux points I et J
+  tels que le quadrilatère IAJB est un losange et I est à l'intérieur du cercle 𝒞. On suppose que (IA) et
+  (IB) recoupent le cercle 𝒞′ respectivement en P et Q et que les droites (JA) et (JB) recoupent le cercle
+  𝒞 respectivement en M et N. Montrer que le quadrilatère MNQP est un rectangle.
+- **Ex. 6** (p.51) : ABCD un parallélogramme de centre O ; I, J, K, L les milieux respectifs des segments
+  [AB], [BC], [CD], [DA]. 1. déterminer les images de A, I et L par la symétrie centrale S₁ de centre O. 2. construire les points E et F, images respectives de J et K par la symétrie centrale S₂ de centre C. 3. déterminer les images de A, I et L par S₂∘S₁, puis par la translation de vecteur AC⃗ ; conclure.
+- **Ex. 7** (p.51) : triangle ABC rectangle en A ; A′ le symétrique de A par rapport à la médiatrice du
+  segment [BC] et A″ le symétrique de A′ par rapport à la droite (BC). Montrer que le quadrilatère ACA″B
+  est un rectangle.
+- **Ex. 8** (p.51) : triangle ABC isocèle en A ; D l'image de B par la symétrie orthogonale d'axe (AC) et
+  I le milieu du segment [BC]. Soit f une isométrie laissant A invariant et transformant B et C
+  respectivement en C et D ; on pose g = S_(AC)∘f. 1. déterminer g(A), g(B), g(C) et g(I). 2. montrer que
+  g est une symétrie orthogonale.
+- **Ex. 9** (p.51) : ABC un triangle équilatéral direct ; I le milieu de [AC] et Δ la droite passant par B
+  et parallèle à (AC). J un point de [BA] distinct de B. La droite passant par J et parallèle à (AC) coupe
+  [BC] en un point K. 1. caractériser S_(AC)∘S_Δ et S_(KJ)∘S_(AC). 2. identifier f = S_(AC)∘S_Δ∘S_(KJ)∘S_(AC). 3. déterminer la position du point J sur [BA] pour que f soit la translation de vecteur BI⃗.
+- **Ex. 10** (p.52) : plan P rapporté à un repère orthonormé direct (O, i⃗, j⃗) ; f l'application de P dans
+  P qui à tout point M d'affixe z associe le point M′ d'affixe z′ = iz − 1 − i. Montrer que g [sic] est une
+  isométrie et la caractériser.
+- **Ex. 11** (p.52) : plan P rapporté à un repère orthonormé direct (O, i⃗, j⃗) ; f l'application de P dans
+  P qui à tout point M(x, y) associe M′(x′, y′) tel que x′ = 1 − √2 + (1/√2)x + (1/√2)y et
+  y′ = 1 + (1/√2)x − (1/√2)y. 1. montrer que f est une isométrie. 2.a. déterminer l'ensemble des points
+  fixes de f ; b. en déduire que f est symétrie orthogonale.
+- **Ex. 12** (p.52) : plan orienté P ; f l'application de P dans P qui à tout point M d'affixe z associe le
+  point M′ d'affixe z′ = i·z̄. 1. montrer que f est une isométrie. 2. déterminer l'ensemble des points
+  invariants par f. 3. en déduire la nature de f.
+- **Ex. 13** (p.52) : OAB un triangle équilatéral direct. On désigne par Δ la droite perpendiculaire à
+  (OA) en O, par D la médiatrice de [AB] et par S₁, S₂, S₃, S₄ les symétries orthogonales d'axes
+  respectifs (OA), (OB), Δ et D. On note f = S₃∘S₂∘S₁. 1. montrer que f = S₃∘R où R est une rotation que
+  l'on caractérisera. 2. montrer que R = S₃∘S₄. 3. identifier f.
+- **Ex. 14** (p.52) : A et B deux points distincts du plan et f une isométrie qui laisse globalement
+  invariant le segment [AB]. 1. montrer que f fixe le milieu de [AB]. 2. en déduire toutes les isométries
+  qui laissent globalement invariant le segment [AB].
+- **Ex. 15** (p.52) : 𝒞 un cercle de centre O. 1. donner la nature des isométries qui laissent 𝒞
+  globalement invariant. 2. A et B deux points distincts de 𝒞 ; déterminer les isométries qui laissent
+  globalement invariants le cercle 𝒞 et le triangle OAB.
+- **Ex. 16** (p.52) : ABC un triangle équilatéral direct et f une isométrie qui envoie A sur B et B sur C.
+  1. montrer que si f n'admet pas de points invariants, alors f est une symétrie glissante. 2. on suppose
+     que f admet un point invariant : a. montrer que f n'est pas une symétrie orthogonale ; b. identifier
+     alors f.
+- **Ex. 17** (p.52) : Δ et Δ′ deux droites strictement parallèles, A un point de Δ et B un point de Δ′.
+  Déterminer toutes les isométries qui transforment Δ en Δ′ et A en B.
+- **Ex. 18** (p.52) : ABCD un carré direct de centre I. On se propose de déterminer les isométries du plan
+  qui laissent globalement invariant le carré ABCD. Soit f une isométrie du plan qui laisse globalement
+  invariant le carré ABCD. 1.a. montrer que f(I) = I. b. en déduire que f est soit l'identité du plan,
+  soit une rotation de centre I et d'angle non nul et soit une symétrie orthogonale d'axe passant par I. 2. on suppose que f n'est pas une symétrie orthogonale ; montrer que : si f(A) = A, alors f est
+  l'identité ; si f(A) = B, alors f est la rotation de centre I et d'angle π/2 ; si f(A) = C, alors f est
+  la symétrie centrale de centre I ; si f(A) = D, alors f est la rotation de centre I et d'angle −π/2. 3. on suppose que f est une symétrie orthogonale ; montrer que : si f(A) = A, alors f est la symétrie
+  orthogonale d'axe (IA). (suite p.53)
+- **Ex. 18 (suite)** (p.53) : si f(A) = B, alors f est la symétrie orthogonale d'axe Δ₂ où Δ₂ désigne la
+  médiatrice du segment [DC]. Si f(A) = C, alors f est la symétrie orthogonale d'axe (IB). Si f(A) = D,
+  alors f est la symétrie orthogonale d'axe Δ₁ où Δ₁ désigne la médiatrice du segment [CB]. 4. conclure.
+- **Ex. 19** (p.53) : triangle ABC équilatéral direct de centre G ; r la rotation de centre G et d'angle
+  π/3 et A′, B′, C′ les images respectives de A, B, C par r. 1. quel est le centre de gravité du triangle
+  A′B′C′ ? 2. f une isométrie transformant {A, B, C} en {A′, B′, C′} : a. montrer que f(G) = G ;
+  b. déterminer toutes les isométries transformant {A, B, C} en {A′, B′, C′}.
+- **Ex. 20** (p.53) : ABC un triangle équilatéral direct. 1. déterminer toutes les isométries f qui
+  laissent globalement invariant le triangle ABC. 2. soit D = S_(AC)(B) ; on se propose de déterminer
+  toutes les isométries f qui transforment ABC en ACD. a. on pose g = S_(AC)∘f ; déterminer l'image par g
+  du triangle ABC. b. en déduire toutes les isométries f.
+- **Ex. 21** (p.53) : ABC un triangle rectangle en A et direct ; H le projeté orthogonal de A sur (BC).
+  1. déterminer la droite Δ telle que S_(CA)∘S_(AB) = S_Δ∘S_(AH). 2. donner la nature de
+     S_(BC)∘S_(CA)∘S_(AB).
+- **Ex. 22** (p.53) : ABC un triangle équilatéral direct et 𝒞 le cercle circonscrit à ABC. La médiatrice
+  de [BC] recoupe le cercle 𝒞 en D et la droite (BD) coupe (AC) en E. 1.a. montrer que le triangle BCE est
+  isocèle en C ; b. montrer que (DC) est la médiatrice de [AE]. 2. on note f = S_(BD)∘S_(DC) et
+  g = S_(AC)∘S_(AB). a. caractériser les isométries f et g. b. déterminer les droites Δ et Δ′ telles que
+  f = S_Δ∘S_(AD) et g = S_(AD)∘S_Δ′. c. montrer que Δ et Δ′ sont parallèles puis identifier f∘g.
+
+### Bornes de scope observées (chapitre 11)
+
+- ✅ INCLUS : **définition d'une isométrie** (conservation des distances) et caractérisation par la
+  **conservation du produit scalaire** ; conservation des **angles géométriques** (corollaire), du
+  **parallélisme**, de l'**orthogonalité**, du **barycentre / milieu**, du **contact** (tangentes),
+  images de droites, segments, cercles, parallélogrammes ; **repère orthonormé image** et coordonnées
+  invariantes (AM⃗ = xAB⃗ + yAC⃗) ; **bijectivité** et **isométrie réciproque** f⁻¹ (réciproques des
+  symétries, translations, rotations) ; **composition** d'isométries (associativité, (f∘g)⁻¹ = g⁻¹∘f⁻¹) ;
+  **composée de deux symétries orthogonales** — d'axes sécants = rotation d'angle 2(u⃗, u′⃗), d'axes
+  perpendiculaires = symétrie centrale, d'axes parallèles = translation 2IJ⃗ ; **points fixes** (fixe 3
+  points non alignés ⇔ identité ; fixe 2 points ⇒ fixe la droite ; fixe 2 points ≠ Id ⇒ symétrie
+  orthogonale ; fixe un unique point ⇒ rotation) ; **isométries sans point fixe** (translation ou
+  **symétrie glissante**) ; **décomposition** de toute isométrie en **au plus trois symétries
+  orthogonales**, décomposition d'une **rotation** (2 symétries d'axes sécants) et d'une **translation**
+  (2 symétries d'axes parallèles) ; **classification** des isométries par décomposition et points fixes
+  (tableau récapitulatif) ; **expression complexe** d'une isométrie (z′ = az + b, z′ = az̄ + b) et
+  caractérisation d'une isométrie donnée par ses équations analytiques ou son écriture complexe.
+- ⛔ NON traité dans ce chapitre : la **classification déplacement / antidéplacement** nommée comme telle
+  (le manuel raisonne par décomposition en symétries orthogonales et points fixes, sans le vocabulaire
+  « déplacement/antidéplacement ») ; les **similitudes** (z ↦ az + b avec |a| ≠ 1) et l'**homothétie**
+  (elles relèvent des chapitres suivants du tome 2, pas des isométries) ; la **réduction générale par
+  matrices** (les équations analytiques sont traitées cas par cas, sans formalisme matriciel) ; toute
+  isométrie de l'**espace** (le chapitre est strictement plan).
+
+## 2.12 Chapitre 12 — Déplacements – Antidéplacements (manuel 222446, p.54–73)
+
+**Page de garde (p.54)** — Titre de couverture : « Déplacement / Antidéplacement », Chapitre 3
+(numérotation interne du tome 2 ; c'est le chapitre 12 dans la numérotation content ; le bandeau
+courant écrit « Déplacements / Antidéplacements »). Encart historique : rappel que Euclide (312–215
+av. J.-C.) utilisait les déplacements pour démontrer les cas d'égalité des triangles, que les
+cartographes du XVIᵉ siècle cherchaient des applications conservant les angles, qu'Euler (1707–1784)
+a montré en substance qu'un déplacement plan est une rotation, une translation ou une translation
+suivie d'une symétrie, que Poncelet (1788–1867) a fait apparaître la transformation comme
+correspondance entre figures et que Mobius (1790–1868) a créé la notion d'affinités géométriques
+(le déplacement = cas où figures initiale et transformée sont égales). Références : « (A.
+Dahan-Dalmedico et al, Histoire des mathématiques - routes et dédales, 1982). » et « (J. Dhombres
+et al, Mathématiques au fil des âges, 1987). » Mention liminaire (p.55) : « Dans tout le chapitre le
+plan est orienté dans le sens direct. » Le chapitre est structuré en quatre parties **I. Définitions
+et propriétés**, **II. Détermination d'un déplacement ou d'un antidéplacement**, **III. Déplacements**
+(angle, composition, nombres complexes), **IV. Antidéplacements** (symétrie glissante, forme réduite),
+ponctuées d'activités et de trois exercices résolus, suivies d'un QCM / Vrai-Faux, puis d'une rubrique
+« Exercices et problèmes » (28 exercices).
+
+### Cours — Activités
+
+**I. Définitions et propriétés** (p.55)
+
+- **Activité 1** (p.55) : A et C deux points distincts, S la symétrie orthogonale d'axe (AC). M et N
+  deux points distincts, E le point tel que MN⃗ = AE⃗ ; construire les images M′, N′ et E′ par S.
+  1. comparer (AC⃗, AE⃗) et (AC⃗, AE′⃗). 2. montrer que (AC⃗, MN⃗) ≡ −(AC⃗, M′N′⃗) [2π]. 3. P et Q deux
+     points distincts d'images P′ et Q′ par S ; comparer (MN⃗, PQ⃗) et (M′N′⃗, P′Q′⃗). (Figure.)
+- **Activité 2** (p.55) : g la composée de deux symétries orthogonales ; M, N, P, Q des points tels que
+  MN⃗ ≠ 0⃗ et PQ⃗ ≠ 0⃗, d'images M′, N′, P′ et Q′ par g. Montrer que (MN⃗, PQ⃗) ≡ (M′N′⃗, P′Q′⃗) [2π].
+- **Activité 3** (p.55) : f la composée de n symétries orthogonales. Donner une condition nécessaire et
+  suffisante sur n pour que f change l'orientation ; puis pour que f conserve l'orientation.
+
+**II. Détermination d'un déplacement ou d'un antidéplacement** (p.56)
+
+- **Activité 1** (p.56) : A et B deux points distincts. 1. f et g deux déplacements qui coïncident sur A
+  et B : a. déterminer (f⁻¹∘g)(A) et (f⁻¹∘g)(B) ; b. identifier f⁻¹∘g et en déduire que f = g. 2. f₁ et
+  g₁ deux antidéplacements qui coïncident sur A et B ; identifier f₁⁻¹∘g₁ et en déduire que f₁ = g₁.
+- **Activité 2** (p.57) : A, B, C et D des points tels que AB⃗ = CD⃗ et AB⃗ ≠ 0⃗. 1. montrer qu'il existe
+  une symétrie orthogonale S₁ qui envoie A sur C. 2. on pose M = S₁(B) ; montrer qu'il existe une
+  symétrie orthogonale S₂ qui fixe C et envoie M sur D. 3. montrer que S₂∘S₁ est un déplacement qui
+  envoie A sur C et B sur D. 4. combien existe-t-il de déplacements qui envoient A sur C et B sur D ?
+- **Activité 3** (p.57) : A, B, C et D des points tels que AB⃗ = CD⃗ et AB⃗ ≠ 0⃗ ; t la translation qui
+  envoie A sur C ; on pose M = t(B). 1. montrer qu'il existe une symétrie orthogonale S qui fixe C et
+  envoie M sur D. 2. montrer que f = S∘t est un antidéplacement qui envoie A sur C et B sur D. 3. combien existe-t-il d'antidéplacements qui envoient A sur C et B sur D ?
+
+**III. Déplacements — III.1 Angle d'un déplacement** (p.57)
+
+- **Activité 1** (p.57) : A, B, C et D des points tels que AB⃗ ≠ 0⃗ et CD⃗ ≠ 0⃗ ; f un déplacement,
+  A′, B′, C′ et D′ les images respectives de A, B, C et D. Montrer que (AB⃗, A′B′⃗) ≡ (CD⃗, C′D′⃗) [2π].
+- **Activité 2** (p.58) : OAB un triangle isocèle de sommet principal O tel que (OA⃗, OB⃗) ≡ 2π/3 [2π] ; P
+  un point de [AB] distinct de A et B ; la parallèle menée de P à (OB) coupe (OA) en A′, la parallèle
+  menée de P à (OA) coupe (OB) en B′. 1.a. montrer que OA′ = BB′ ; b. en déduire l'existence d'une unique
+  rotation r qui transforme O en B et A′ en B′. 2. montrer que r(A) = O et déterminer les éléments
+  caractéristiques de r. 3. Ω le centre de r ; montrer que O, A′, B′ et Ω sont sur un même cercle. (Fig.)
+- **Activité 3** (p.58) : ABC un triangle rectangle en A tel que (CA⃗, CB⃗) ≡ π/3 [2π] et O le milieu de
+  [BC]. 1. montrer qu'il existe un unique déplacement f tel que f(A) = O et f(C) = B. 2. montrer que f est
+  une rotation dont on précisera l'angle ; construire son centre.
+- **Activité 4** (p.58) : ABCD un carré de sens direct ; I, J, K, L les milieux respectifs de [AB], [BC],
+  [CD] et [DA]. Justifier, dans chaque cas, l'existence du déplacement f et l'identifier. 1. f(J) = I et
+  f(K) = L. 2. f(I) = K et f(J) = L. 3. f(B) = K et f(L) = A. (Figure.)
+
+**III.2 Composition de déplacements — Composition de deux translations** (p.58)
+
+- **Activité 1** (p.58) : ABCD un parallélogramme, I et J les milieux respectifs de [AB] et [CD] et Δ la
+  droite passant par J et parallèle à (AC). Montrer que Δ est globalement invariante par t_(AI⃗)∘t_(AJ⃗).
+  (Figure.)
+
+**Composition de deux rotations** (p.59)
+
+- **Activité 2** (p.59) : ABCD un carré direct ; r la rotation de centre A et d'angle π/2, r′ la rotation
+  de centre B et d'angle −π/2. 1. montrer que r = S_(AC)∘S_(AB). 2. déterminer la droite Δ telle que
+  r′ = S_(AB)∘S_Δ. 3. identifier r∘r′.
+- **Activité 3** (p.59) : ABC un triangle équilatéral direct de centre O ; r la rotation de centre O et
+  d'angle 2π/3, r′ la rotation de centre A et d'angle π/3. 1. déterminer (r∘r′)(A). 2. identifier r∘r′.
+- **Activité 4** (p.59–60) : r et r′ deux rotations d'angles respectifs θ et θ′ et de centres distincts O
+  et O′. 1. A et B deux points tels que 2(OO′⃗, OA⃗) ≡ θ [2π] et 2(O′B⃗, O′O⃗) ≡ θ′ [2π] ; montrer que
+  r = S_(OA)∘S_(OO′) et r′ = S_(OO′)∘S_(O′B). 2. si θ + θ′ ≠ 2kπ (k ∈ ℤ), justifier que (OA) et (O′B)
+  sont sécantes et que r∘r′ est une rotation dont on déterminera le centre. 3. si θ + θ′ = 2kπ (k ∈ ℤ),
+  a. justifier que (OA) et (O′B) sont parallèles ; b. montrer que r∘r′ est la translation de vecteur
+  2O′H⃗, où H est le projeté orthogonal de O′ sur (OA). (Figure.)
+
+**Composition d'une rotation et d'une translation** (p.60)
+
+- **Activité 5** (p.60) : OAB et OCD deux triangles équilatéraux directs, E le quatrième sommet du
+  parallélogramme BOCE. 1. f = r∘t, r la rotation de centre O et d'angle π/3, t la translation de vecteur
+  BO⃗ ; a. déterminer f(B) ; b. déterminer la nature de f et ses éléments caractéristiques. 2. déterminer
+  f(E) et en déduire la nature du triangle AED. (Figure.)
+- **Activité 6** (p.60–61) : ABC un triangle rectangle et isocèle tel que (AB⃗, AC⃗) ≡ π/2 [2π] ; I le
+  milieu de [BC], J le milieu de [AC] et K le milieu de [AB]. R la rotation de centre I et d'angle π/2, T
+  la translation de vecteur ½BC⃗ ; f = R∘T et g = T∘R. 1. déterminer f(K), f(B), g(J) et g(I). 2. identifier
+  f et g. (Figure.)
+
+**III.3 Déplacements et nombres complexes** (p.61)
+
+- **Activité 1** (p.62) : plan rapporté à un repère orthonormé direct (O, i⃗, j⃗). Caractériser, dans
+  chaque cas, l'application f du plan dans lui-même. 1. f : M(z) ↦ M′(z′) tel que z′ = z + 1 + i. 2. f : M(z) ↦ M′(z′) tel que z′ = −z + 1. 3. f : M(z) ↦ M′(z′) tel que z′ = e^{iπ/4}·z + i.
+
+**IV. Antidéplacements** (p.62)
+
+- **Activité 1** (p.62) : A et B deux points distincts, S la symétrie orthogonale d'axe (AB) ; C un point
+  de (AB) et D n'appartenant pas à (AB) ; A′, B′, C′, D′ les images de A, B, C, D par S. Comparer
+  (AB⃗, A′B′⃗) et (CD⃗, C′D′⃗). Que peut-on conclure ?
+- **Activité 2** (p.63) : ABCD un carré de centre I tel que (AB⃗, AD⃗) ≡ π/2 [2π] ; S la symétrie
+  orthogonale d'axe (AC), R la rotation de centre A et d'angle π/2 ; f = S∘R. 1. montrer que f est un
+  antidéplacement. 2. déterminer f(B) et en déduire la nature de f. 3. Δ la parallèle à (AD) passant par
+  I ; on pose g = t_(BC⃗)∘S_Δ ; quelle est la nature de g ?
+- **Activité 3** (p.63) : D une droite de vecteur directeur u⃗ ; S_D la symétrie orthogonale d'axe D et
+  t_u⃗ la translation de vecteur u⃗. 1. montrer que t_u⃗∘S_D∘t_u⃗∘S_D = t_(2u⃗). 2. en déduire que
+  t_u⃗∘S_D = S_D∘t_u⃗. 3. D′ une droite de vecteur directeur u′⃗, S_(D′) la symétrie d'axe D′ et t_(u′⃗) la
+  translation de vecteur u′⃗ ; montrer que si t_u⃗∘S_D = t_(u′⃗)∘S_(D′) alors D et D′ sont confondues et
+  u⃗ = u′⃗.
+- **Activité 4** (p.64) : f une symétrie glissante de vecteur u⃗ et d'axe D. 1. montrer que pour tout point
+  M d'image M′ par f, le milieu I de [MM′] appartient à D. 2. si M est un point de D d'image M′, alors
+  u⃗ = MM′⃗.
+- **Activité 5** (p.64) : ABC un triangle isocèle en A ; I et J les milieux respectifs de [AB] et [AC] ; f
+  l'antidéplacement qui transforme A en C et B en A. Montrer que f est une symétrie glissante dont on
+  précisera l'axe et le vecteur.
+- **Activité 6** (p.64) : ABCD un rectangle ; I et J les milieux respectifs de [AD] et [BC]. 1. f =
+  t_(AC⃗)∘S_(AB) ; a. déterminer la droite Δ pour que S_Δ∘S_(AB) = t_(AD⃗) ; b. en déduire que f est une
+  symétrie glissante dont on déterminera l'axe et le vecteur. 2. g = S_(AB)∘t_(AC⃗) ; a. Δ′ l'image de la
+  droite (IJ) par la symétrie d'axe (AB) ; caractériser S_(AB)∘S_(Δ′) ; b. en déduire la nature et les
+  éléments caractéristiques de g.
+
+### Cours — Résultats / définitions / théorèmes à retenir (VERBATIM)
+
+> **Théorème** (p.55) — « Toute symétrie orthogonale change les mesures des angles orientés en leurs
+> opposées. (On dit qu'une symétrie orthogonale change l'orientation). »
+
+> **Théorème** (p.55) — « La composée de deux symétries orthogonales conserve les mesures des angles
+> orientés. (On dit que la composée de deux symétries orthogonales conserve l'orientation). »
+
+> **Définition** (p.56) — « On appelle déplacement toute isométrie qui conserve les mesures des angles
+> orientés. On appelle antidéplacement toute isométrie qui change les mesures des angles orientés en
+> leurs opposées. »
+
+> **Théorème** (p.56) — « Une isométrie est un déplacement, si et seulement si, elle est la composée de
+> deux symétries orthogonales. Une isométrie est un antidéplacement, si et seulement si, elle est une
+> symétrie orthogonale ou la composée de trois symétries orthogonales. »
+
+> **Tableau de classification** (p.56) — « Le tableau ci-dessous donne la classification des isométries
+> en déplacements ou antidéplacements. » — Identité → Déplacement ; Rotation → Déplacement ; Translation
+> → Déplacement ; Symétrie orthogonale → Antidéplacement ; Symétrie glissante → Antidéplacement.
+
+> **Théorème** (p.56) — « • La composée de deux déplacements est un déplacement. • La composée de deux
+> antidéplacements est un déplacement. • La composée d'un déplacement et d'un antidéplacement est un
+> antidéplacement. • La réciproque d'un déplacement est un déplacement. • La réciproque d'un
+> antidéplacement est un antidéplacement. »
+
+> **Théorème** (p.56) — « Deux déplacements qui coïncident sur deux points distincts sont égaux. Deux
+> antidéplacements qui coïncident sur deux points distincts sont égaux. »
+
+> **Théorème** (p.57) — « Soit A, B, C et D des points du plan tels que AB⃗ = CD⃗ et AB⃗ ≠ 0⃗. Il existe
+> un unique déplacement qui envoie A sur C et B sur D. Il existe un unique antidéplacement qui envoie A
+> sur C et B sur D. »
+
+> **Théorème et définition** (p.57, angle d'un déplacement) — « Soit f un déplacement et A, B, C et D des
+> points du plan tels que AB⃗ ≠ 0⃗ et CD⃗ ≠ 0⃗. Si A′, B′, C′ et D′ sont les images respectives par f des
+> points A, B, C et D, alors (AB⃗, A′B′⃗) ≡ (CD⃗, C′D′⃗) [2π]. En désignant par θ une mesure de l'angle
+> (AB⃗, A′B′⃗), on dit que f est un déplacement d'angle θ. »
+
+> **Corollaire 1** (p.57) — « Soit f un déplacement d'angle θ. Si θ = 2kπ, k ∈ ℤ alors f est une
+> translation. Si θ ≠ 2kπ, k ∈ ℤ alors f est une rotation d'angle θ. »
+
+> **Corollaire 2** (p.58) — « • Si f est un déplacement d'angle θ et g est un déplacement d'angle θ′,
+> alors f∘g est un déplacement d'angle θ + θ′. • Si f est un déplacement d'angle θ, alors f⁻¹ est un
+> déplacement d'angle −θ. »
+
+> **Théorème (Rappel)** (p.59, composée de deux translations) — « La composée de deux translations t_u⃗ et
+> t_v⃗ est la translation t_(u⃗+v⃗) = t_u⃗∘t_v⃗ = t_v⃗∘t_u⃗ = t_(v⃗+u⃗). »
+
+> **Théorème** (p.60, composée de deux rotations) — « La composée de deux rotations r et r′ d'angles θ et
+> θ′ et de centres respectifs O et O′ est soit une translation de vecteur non nul, soit une rotation
+> d'angle non nul. Si θ + θ′ ≡ 0 [2π], il s'agit d'une translation de vecteur non nul. Si θ + θ′ ≠ 2kπ,
+> k ∈ ℤ, il s'agit d'une rotation d'angle θ + θ′. »
+
+> **Théorème** (p.60, rotation et translation) — « La composée d'une translation et d'une rotation
+> d'angle non nul θ est une rotation d'angle θ. » (Démonstration p.60 : c'est un déplacement d'angle θ.)
+
+> **Théorème** (p.61, translation en complexes) — « Le plan est rapporté à un repère orthonormé direct
+> (O, i⃗, j⃗). Soit f une application du plan dans lui-même qui à tout point M d'affixe z associe le point
+> M′ d'affixe z′. L'application f est une translation de vecteur u⃗, si et seulement si, il existe un
+> nombre complexe b tel que z′ = z + b où b est l'affixe de u⃗. » (Démonstration p.61.)
+
+> **Théorème** (p.61, rotation en complexes) — « Le plan est rapporté à un repère orthonormé direct
+> (O, i⃗, j⃗). Soit f une application du plan dans lui-même qui à tout point M d'affixe z associe le point
+> M′ d'affixe z′. L'application f est une rotation d'angle non nul θ et de centre I, si et seulement si,
+> il existe deux nombres complexes a et b tels que z′ = az + b, avec a = e^{iθ}, a ≠ 1 et z_I = b/(1−a)
+> est l'affixe de I. » (Démonstration p.61.)
+
+> **Théorème** (p.63, antidéplacement) — « Une isométrie est un antidéplacement, si et seulement si,
+> c'est la composée d'une symétrie orthogonale et d'une translation. » (Démonstration p.63.)
+
+> **Théorème et définition** (p.63, forme réduite) — « Soit f une symétrie glissante. Il existe un unique
+> vecteur non nul u⃗ et une droite D unique tels que f = t_u⃗∘S_D = S_D∘t_u⃗ où u⃗ est un vecteur directeur
+> de D. Cette décomposition est appelée forme réduite de f. » (Avec figure.)
+
+> **Vocabulaire** (p.64) — « On dit que D est l'axe de la symétrie glissante et u⃗ son vecteur. L'axe et
+> le vecteur d'une symétrie glissante sont ses éléments caractéristiques. »
+
+> **Propriété** (p.64, symétrie glissante) — « Soit f une symétrie glissante de vecteur u⃗ et d'axe D, M
+> un point d'image M′ par f. • Le milieu de [MM′] appartient à D. • Si M est un point de D, alors
+> u⃗ = MM′⃗. • f∘f est la translation de vecteur 2u⃗. » (Avec figure.)
+
+### Cours — Exercices résolus
+
+**Exercice résolu 1** (énoncé + solution p.62) : repère orthonormé direct (A, u⃗, v⃗) ; ABCD un
+parallélogramme, DCF et BEC des triangles isocèles de sommets respectifs D et B tels que
+(DC⃗, DF⃗) ≡ π/4 [2π] et (BE⃗, BC⃗) ≡ π/4 [2π]. Montrer que le triangle AEF est isocèle en A. **Solution** :
+la rotation r′ de centre B et d'angle −π/4 envoie C sur E, d'où z_E = e^{−iπ/4}(z_C − z_B) + z_B (_) ; la
+rotation r de centre D et d'angle π/4 envoie C sur F, d'où z_F = z_D + e^{iπ/4}(z_C − z_D) (\**) ; l'égalité
+AD⃗ = BC⃗ donne z_C − z_B = z_D, soit z_C = z_B + z_D ; il résulte de (_) et (**) que z_F = e^{iπ/4}·z_E,
+ce qui prouve que AEF est isocèle de sommet principal A. (Figure.)
+
+**Exercice résolu 2** (énoncé + solution p.65) : ABCD un carré direct, I, J, K, L les milieux de [AB],
+[BC], [CD] et [DA]. Justifier l'existence de l'antidéplacement g et donner ses éléments caractéristiques
+dans chacun des cas. 1. g(J) = I et g(K) = L. 2. g(B) = K et g(K) = A. 3. g(A) = C et g(D) = B.
+**Solution** : 1. JK = IL et IL ≠ 0 ⇒ existence de g ; [JI] et [KL] ont la même médiatrice (BD) ⇒ g est la
+symétrie orthogonale d'axe (BD). 2. BK = KA et KA ≠ 0 ⇒ existence ; [BK] et [KA] ont des médiatrices
+distinctes ⇒ g est une symétrie glissante d'axe (LJ) (passant par les milieux de [BK] et [KA]), et
+g∘g(B) = A ⇒ g de vecteur ½BA⃗. 3. AD = CB et CB ≠ 0 ⇒ existence ; le déplacement f tel que f(A) = C et
+f(D) = B est la symétrie centrale de centre O ; g = f∘S_(AD) = S_(JL)∘S_(KI)∘S_(AD) = S_(JL)∘t_(AB⃗).
+
+**Exercice résolu 3** (énoncé p.65, solution p.66) : ABC un triangle équilatéral tel que
+(AB⃗, AC⃗) ≡ π/3 [2π] ; B′ et C′ les milieux respectifs de [AC] et [AB]. Déterminer toutes les isométries
+f telles que f(A) = B et f(B′) = C′. **Solution** : 1. AB′ = BC′ ⇒ existence d'un unique déplacement r
+envoyant A sur B et B′ sur C′. 2. r est la rotation de centre G (centre de gravité de ABC) et d'angle
+2π/3. 3. AB′ = BC′ ⇒ existence d'un unique antidéplacement g envoyant A sur B et B′ sur C′ ; médiatrices
+de [AB] et [B′C′] distinctes ⇒ g est la symétrie glissante d'axe (B′C′) et de vecteur B′C′⃗. Les seules
+isométries répondant au problème sont la rotation de centre G et d'angle 2π/3 et la symétrie glissante
+d'axe (B′C′) et de vecteur B′C′⃗. (Figure.)
+
+### QCM (p.67) — « Cocher la réponse exacte. »
+
+1. Soit u⃗ un vecteur non nul et A un point quelconque. L'application t_u⃗∘S_A est (☐ une translation /
+   ☐ une symétrie centrale / ☐ une symétrie glissante).
+2. Un déplacement qui fixe deux points distincts est (☐ une translation de vecteur non nul / ☐ une
+   rotation d'angle non nul / ☐ l'identité).
+3. La composée de deux symétries glissantes est (☐ une symétrie glissante / ☐ un déplacement / ☐ une
+   symétrie orthogonale).
+4. Soit D une droite et O un point de D. L'application S_D∘R(O, π/3) est (☐ une symétrie orthogonale /
+   ☐ une rotation / ☐ une symétrie glissante).
+5. Soit A et B deux points distincts. L'application S_A∘S_B est (☐ la translation t_(2AB⃗) / ☐ l'identité /
+   ☐ la translation t_(2BA⃗)).
+
+### Vrai ou faux (p.67) — « Répondre par vrai ou faux en justifiant la réponse. » (réponses non fournies)
+
+1. La composée de trois symétries orthogonales est soit une symétrie orthogonale, soit une symétrie
+   glissante.
+2. Un antidéplacement qui fixe un point est une symétrie orthogonale.
+3. Soit I et J deux points distincts, f un déplacement qui envoie I sur J et g un antidéplacement qui
+   envoie J sur I. Alors g∘f est une symétrie glissante.
+4. La réciproque d'une symétrie glissante d'axe Δ et de vecteur u⃗ est la symétrie glissante d'axe Δ et
+   de vecteur −u⃗.
+5. Soit ABCD un carré direct et f le déplacement qui envoie A sur C et B sur D. Alors f est une
+   translation.
+
+### Exercices et problèmes (p.68–73) — 28 exercices
+
+- **Ex. 1** (p.68) : OAB un triangle isocèle en O. Montrer qu'il existe deux isométries qui fixent O et
+  qui envoient A en B.
+- **Ex. 2** (p.68) : ABCD un parallélogramme de centre O et I le milieu de [CD]. 1. montrer qu'il existe
+  quatre isométries qui transforment le segment [AD] en le segment [BC]. 2. existe-t-il une isométrie qui
+  transforme le triangle BCO en le triangle ADI ?
+- **Ex. 3** (p.68) : ABCD un rectangle ; S₁, S₂ et S₃ les symétries d'axes respectifs (AD), (AB) et (AC).
+  1. donner la nature de l'isométrie S₃∘S₂∘S₁. 2. construire le point E, image de B par S₃∘S₂∘S₁.
+  2. caractériser alors S₃∘S₂∘S₁.
+- **Ex. 4** (p.68) : ABC un triangle isocèle en A tel que (AB⃗, AC⃗) ≡ π/12 [2π] ; r la rotation de centre
+  A qui envoie B sur C ; D, E et F les images respectives de C, D et E par r. 1. montrer que F est l'image
+  de B par une rotation r′ de centre A, que l'on précisera. 2. G le symétrique de A par rapport à D ;
+  a-t-on S_(AC)∘S_(AE) = S_(AD)∘S_(AG) ?
+- **Ex. 5** (p.68) : A, B, C et D des points tels que AB⃗ = CD⃗ et AB⃗ ≠ 0⃗. Montrer qu'il existe deux
+  déplacements f et g qui envoient le segment [AB] sur le segment [CD]. 2. définir f et g dans chacun des
+  cas : a. (CD) parallèle à (AB) ; b. (CD) et (AB) sécantes.
+- **Ex. 6** (p.68) : deux cercles isométriques 𝒞 et 𝒞′ de centres O et O′ se coupant en deux points A et
+  B. 1. montrer qu'il existe une unique rotation de centre A qui transforme 𝒞 en 𝒞′ ; préciser son angle. 2. M′ l'image par cette rotation d'un point quelconque M de 𝒞 ; montrer que M, B et M′ sont alignés.
+- **Ex. 7** (p.68) : triangle ABC tel que (AB⃗, AC⃗) ≡ π/3 [2π] et AB < AC ; 𝒞 le cercle circonscrit, O
+  son centre ; E le milieu de [BC] et P le point de [AC] tel que AB = CP ; (OE) coupe 𝒞 en I et J tels que
+  J et A soient sur le même arc orienté BC de 𝒞. 1.a. faire une figure ; b. déterminer l'ensemble des
+  points M du plan vérifiant (MB⃗, MC⃗) ≡ π/3 [2π] ; c. déterminer l'ensemble des points M vérifiant
+  (MB⃗, MC⃗) ≡ π/3 [2π] et MB < MC. 2.a. justifier qu'il existe une rotation R telle que R(A) = P et
+  R(B) = C ; déterminer son angle ; b. démontrer que le centre de R est un point de 𝒞 que l'on précisera ;
+  c. quelle est la nature du triangle JAP ?
+- **Ex. 8** (p.68) : ABCD un carré de sens direct et de centre I tel que (AB⃗, AD⃗) ≡ π/2 [2π] et 𝒞 le
+  cercle circonscrit ; R la rotation de centre D et d'angle π/2, T la translation de vecteur DA⃗ ; f = T∘R.
+  1. déterminer f(D) et f(A). 2. identifier f.
+- **Ex. 9** (p.68) : ABCD un parallélogramme. 1. préciser la nature des transformations : a. f =
+  S_(AB)∘S_(CD)∘S_(AD)∘S_(CB) ; b. g = S_(AB)∘S_(AD)∘S_(CB)∘S_(CD) ; c. h = S_(AB)∘S_(AD)∘S_(CD)∘S_(CB). 2. déterminer les éléments caractéristiques de f, g et h lorsque ABCD est un rectangle.
+- **Ex. 10** (p.68–69) : ABCD un parallélogramme direct ; IBA rectangle isocèle direct en I ; ACC′ et ADD′
+  rectangles isocèles directs en A ; R_A la rotation d'angle π/2 et de centre A, T la translation de
+  vecteur BA⃗. 1. f = R_A∘T ; a. déterminer f(B) ; en déduire que f est la rotation d'angle π/2 et de
+  centre I ; b. montrer que le triangle ICD′ est rectangle isocèle. 2. J le milieu de [CC′], R_J la
+  rotation d'angle π/2 et de centre J ; a. montrer que C = R_J(A) ; b. que vaut (AD′⃗, CB⃗) ? c. montrer
+  que le triangle BDD′ est rectangle isocèle. 3. g = R_J∘f ; a. déterminer g(B) ; b. K = R_J(I) ; montrer
+  que K est le symétrique de I par rapport au milieu A′ de [BC].
+- **Ex. 11** (p.69) : triangles équilatéraux directs OAA′, OBB′ et OCC′ ; I, J, K les milieux respectifs
+  de [A′B], [B′C] et [C′A] ; E, F, G les symétriques de O par rapport à I, J, K. 1. r₁ la rotation de
+  centre O et d'angle π/3, r₂ la rotation de centre B′ et d'angle −π/3 ; identifier f₁ = r₁∘r₂.
+  2.a. évaluer (BE⃗, OA⃗) ; b. en déduire que le triangle EB′A est équilatéral. 3. t₁ = t_(OA⃗), t₂ =
+  t_(B′O⃗) ; a. préciser la nature de f₂ = t₁∘r₁∘t₂ ; b. déterminer f₂(B′) puis identifier f₂ ; c.
+  déterminer f₂(F) ; nature du triangle EFG ; d. nature du triangle IJK (justifier).
+- **Ex. 12** (p.69) : triangle direct OAB rectangle et isocèle en O ; r_A et r_B les rotations de centres A
+  et B et de même angle π/2, S_O la symétrie de centre O ; C non situé sur (AB) ; carrés directs BEDC et
+  ACFG. 1.a. déterminer S_(AO)∘S_(AB) ; b. montrer que S_O = r_A∘r_B. 2.a. déterminer l'image de E par
+  r_A∘r_B ; b. en déduire que O est le milieu de [EG] ; c. r_F et r_D les rotations de centres F et D et
+  d'angle π/2 ; déterminer r_F∘S_O∘r_D(C) puis identifier r_F∘S_O∘r_D ; d. H le symétrique de D par rapport
+  à O ; démontrer que r_F(H) = [?] (formule source peu lisible) ; en déduire que FOD est rectangle isocèle.
+- **Ex. 13** (p.69) : triangle ABC tel que AB = AC et (AB⃗, AC⃗) ≡ π/2 [2π] ; I, J, K les milieux de [BC],
+  [AC], [AB] ; R la rotation de centre I et d'angle π/2, T la translation de vecteur ½BC⃗ ; f = R∘T et
+  g = T∘R. 1.a. déterminer l'image de K par f et de J par g ; b. préciser la nature et les éléments
+  caractéristiques de f et de g. 2.a. déterminer la nature de g∘f⁻¹ ; b. chercher l'image de A par g∘f⁻¹
+  et caractériser g∘f⁻¹ ; c. M un point n'appartenant pas à (IJ), M₁ = f(M), M₂ = g(M) ; montrer que
+  ACM₂M₁ est un parallélogramme.
+- **Ex. 14** (p.70) : ABC rectangle en C tel que (CA⃗, CB⃗) ≡ π/2 [2π] ; r la rotation de centre A et
+  d'angle π/2 ; D = r(C), E = r⁻¹(B) ; I le milieu de [CD]. 1.a. montrer qu'il existe un unique déplacement
+  f tel que f(A) = D et f(C) = A ; b. préciser la nature et les éléments caractéristiques de f. 2. g = f∘r ;
+  a. montrer que g est une translation ; b. F = g(E) ; montrer que f(B) = F et en déduire la nature du
+  triangle BIF ; c. montrer que C, A et F sont alignés.
+- **Ex. 15** (p.70) : repère orthonormé direct (O, u⃗, v⃗) ; j = e^{2iπ/3} ; A, B, C d'affixes a = 8,
+  b = 6j, c = 8j² ; A′ image de B par la rotation de centre C et d'angle π/3, B′ image de C par la rotation
+  de centre A et d'angle π/3, C′ image de A par la rotation de centre B et d'angle π/3. 1.a. placer A, B,
+  C, A′, B′, C′ ; b. déterminer les affixes a′, b′, c′ ; c. montrer que (AA′), (BB′) et (CC′) sont
+  concourantes en O. 2.a. calculer OA + OB + OC ; b. montrer que 1 + j + j² = 0. 3. M d'affixe z ; a.
+  montrer que |(a−z) + (b−z)j² + (c−z)j| = |a + bj² + cj| = 22 ; b. montrer que |z + z′ + z″| ≤ |z| + |z′|
+  - |z″| ; c. en déduire une condition sur M pour que MA + MB + MC soit minimale.
+- **Ex. 16** (p.70) : deux triangles équilatéraux directs ABC et DEF ; G et H tels que EDBG et CDFH soient
+  des parallélogrammes. But : démontrer de deux manières (nombres complexes / composées de déplacements)
+  que le triangle AGH est équilatéral. I/ repère orthonormé direct ; a, b, c, d, e, f, g, h les affixes de
+  A, …, H. 1. montrer que c − a = e^{iπ/3}(b − a) ; exprimer (f − d) à l'aide de (e − d). 2. exprimer g à
+  l'aide de b, d, e ; exprimer h en fonction de c, d, f. 3. montrer que h − a = e^{iπ/3}(g − a) ; en
+  déduire que AGH est équilatéral. II/ t₁ = t_(BD⃗), t₂ = t_(DC⃗), R la rotation de centre D et d'angle
+  π/3 ; f = t₂∘R∘t₁. 1.a. justifier que f est une rotation et préciser son angle ; b. déterminer l'image de
+  B par f et en déduire le centre de f. 2. déterminer l'image de G par f et montrer que AGH est équilatéral.
+- **Ex. 17** (p.70) : ABCD un carré direct de centre O ; f l'antidéplacement qui transforme A en D et D en
+  C. 1. montrer que f est une symétrie glissante et déterminer ses éléments caractéristiques. 2. E = f(C) ;
+  a. montrer que DCE est un triangle isocèle, rectangle en C et direct ; b. construire E ; c. déterminer et
+  construire l'image F de B par f. 3. déterminer et caractériser l'application f∘S_(AD).
+- **Ex. 18** (p.70–71) : rectangle ABCD ; O, I, J, K les milieux respectifs de [AD], [BC], [OB] et [OC].
+  1.a. déterminer les images de B et I par t_[?]∘S_[?] (indices source peu lisibles) ; b. déterminer toutes
+  les isométries qui transforment B en O et I en D. 2. Δ la médiatrice de [IC] ; a. construire le point E
+  image de B par S_Δ ; b. L le milieu de [CD] ; déterminer l'image de D par S_L. c. en déduire la nature de
+  S_L∘t_[?]∘S_[?] (indices source peu lisibles).
+- **Ex. 19** (p.71) : repère orthonormé direct (O, i⃗, j⃗) ; déterminer les expressions analytiques, la
+  nature et les éléments caractéristiques de f. a. A(1, 2), u⃗ = i⃗ − j⃗, f = R(A, π/3)∘t_u⃗. b. D :
+  2x − 3y + 1 = 0, u⃗ = i⃗ + j⃗, f = t_u⃗∘S_D. c. D₁ : y − 1 = 0, D₂ : x − y − 1 = 0, f = S_(D₁)∘S_(D₂).
+- **Ex. 20** (p.71) : repère orthonormé direct (O, i⃗, j⃗) ; r l'application P → P qui à M(x, y) associe
+  M′(x′, y′) tel que x′ = 1 − y et y′ = x. 1. montrer que r est une rotation dont on précisera le centre A
+  et une mesure de l'angle. 2. f = r∘S_(O, j⃗) ; montrer que f est une symétrie glissante que l'on
+  caractérisera.
+- **Ex. 21** (p.71) : (E) : z³ − (2 + 4i)z² − (9 − 10i)z + 18 + 6i = 0. 1.a. vérifier que 3 est racine de
+  (E) ; b. en déduire les deux autres solutions z₁ et z₂ (z₁ ayant la partie réelle positive). Le plan
+  rapporté à un repère orthonormé direct (O, u⃗, v⃗) ; A, B, C d'affixes respectives 3, z₁, z₂. a. montrer
+  que OABC est un parallélogramme ; b. montrer qu'il existe un unique déplacement f et un unique
+  antidéplacement g transformant O en B et A en C. 2. identifier f. 3. S la symétrie orthogonale d'axe
+  (OA) ; montrer que g = f∘S.
+- **Ex. 22** (p.71) : A, B, C et A′ quatre points distincts d'un cercle Γ de centre O. 1. faire une figure
+  et placer B′ et C′ tels que (AB′) et (A′B) soient respectivement parallèles à (BC′) et (B′C). 2. Δ₁, Δ₂,
+  Δ₃ les médiatrices respectives de [AB′], [CB′], [CA′] ; S₁, S₂, S₃ les symétries d'axes Δ₁, Δ₂, Δ₃ ; a.
+  montrer que f = S₃∘S₂∘S₁ est une symétrie orthogonale ; b. identifier f∘f ; c. montrer que S₃(C′) = A et
+  en déduire que (AC′) et (A′C) sont parallèles.
+- **Ex. 23** (p.71–72) : carré ABCD de centre I tel que (AB⃗, AD⃗) ≡ π/2 [2π]. **A/** J, K les milieux de
+  [AD] et [CD] ; C′ le symétrique de C par rapport à D ; R_D et R_B les rotations d'angle π/2 et de centres
+  D et B ; S_I et S_K les symétries centrales de centres I et K. 1. f = R_D∘S_I∘R_B ; a. déterminer f(B) ;
+  b. montrer que f est une translation que l'on caractérisera. 2. g = f∘S_(IJ) ; a. déterminer g(C) et
+  g(D) ; b. en déduire que g est une symétrie glissante et déterminer ses éléments caractéristiques. 3.a.
+  montrer que S_(AD)∘S_(CD)∘S_(IK)∘S_[?] = f (indice source peu lisible) ; b. en déduire que S_K∘S_(IJ) =
+  S_(AD)∘f ; c. montrer que S_(AD)∘f est une symétrie glissante et déterminer ses éléments caractéristiques.
+  **B/** Ω le point d'intersection des bissectrices intérieures du triangle ABD ; r la rotation de centre A
+  et d'angle π/2, r′ la rotation de centre D et d'angle π/4. 1. construire A′ image de A par r′. 2.
+  identifier r′∘r. 3. montrer que (ΩA′) et (AB) sont parallèles.
+- **Ex. 24** (p.72) : ABC un triangle direct, A′ le milieu de [BC] ; P et Q définis par PA = PC,
+  (PA⃗, PC⃗) ≡ π/2 [2π] et QB = QA, (QB⃗, QA⃗) ≡ π/2 [2π] ; Ω le milieu de [PQ], I le milieu de [QA′], J le
+  milieu de [PA′], P′ le symétrique de P par rapport à A′ ; R_P et R_Q les rotations d'angle π/2 et de
+  centres P et Q ; f = R_Q∘S_(A′)∘R_P. 1.a. déterminer f(A) ; caractériser f ; b. montrer que R_Q(P′) = P.
+  2.a. montrer qu'il existe un unique déplacement φ tel que φ(A′) = Q et φ(P) = A′ ; b. caractériser φ ; c.
+  donner la nature et les éléments caractéristiques de h = φ∘S_(A′Q). 3. ψ l'antidéplacement qui envoie A′
+  sur Q et P sur A′ ; a. montrer que ψ(J) = I ; b. montrer que ψ est une symétrie glissante ; c. déterminer
+  ses éléments caractéristiques. 4. M un point ; ψ(M) = M₁, φ(M) = M₂ ; montrer que M₁ et M₂ sont
+  symétriques par rapport à une droite fixe que l'on déterminera.
+- **Ex. 25** (p.72–73) : carré ABCD de centre I tel que (AB⃗, AD⃗) ≡ π/2 [2π] ; E le point tel que DCE est
+  un triangle équilatéral direct ; J, K, L les milieux respectifs de [DC], [AD], [DE] ; O le centre du
+  cercle circonscrit à DCE. 1. φ = R(D, π/3)∘S_(IJ) ; a. déterminer φ(C) et φ(D) ; b. montrer que φ est une
+  symétrie glissante dont on déterminera les éléments caractéristiques. 2.a. caractériser t_(AD⃗)∘S_(AB) ;
+  b. en déduire la nature et les éléments caractéristiques de ψ = t_(BD⃗)∘S_(AB). 3. pour tout point N,
+  N₁ = R(D, π/3)(N) et N₂ = R(O, −2π/3)(N) ; montrer que le milieu de [N₁N₂] est un point fixe que l'on
+  précisera. 4. M₀ un point du plan ; suite (Mₙ) telle que φ(Mₙ) = Mₙ₊₁ pour tout n ∈ ℕ ; a. montrer par
+  récurrence que M₀M₂ₙ⃗ = (2n)·[?] (vecteur source peu lisible) ; b. en déduire que M₂ₙ appartient à une
+  droite fixe que l'on précisera.
+- **Ex. 26** (p.72–73) : rectangle ABCD tel que AB = 2BC et (AB⃗, AD⃗) ≡ π/2 [2π] ; I et J les milieux
+  respectifs de [AB] et [CD]. 1.a. montrer qu'il existe un unique déplacement f tel que f(A) = C et
+  f(I) = J ; b. caractériser f puis en déduire que f(B) = D. 2. déterminer la droite Δ telle que
+  f = S_(IJ)∘S_Δ. 3. r la rotation de centre I et d'angle π/2 ; a. déterminer r(B), r(C) et r(J) ; b. M un
+  point de [CJ], la perpendiculaire à (IM) issue de I coupe la perpendiculaire à (BM) issue de J en M′ ;
+  quel est l'ensemble des M′ lorsque M décrit [CJ] ? 4. g = r∘f ; a. montrer que g est une rotation dont on
+  précisera l'angle ; b. déterminer g(A) ; c. déduire la construction du centre de g. 5.a. montrer qu'il
+  existe un unique antidéplacement h tel que h(A) = C et h(I) = J ; b. montrer que h est une symétrie
+  glissante ; c. montrer que h(B) = D. 6. déterminer les éléments caractéristiques de h par deux méthodes —
+  **Première méthode** : a. déterminer h∘S_(AB)(A) et h∘S_(AB)(B) ; en déduire h∘S_(AB) ; b. déterminer les
+  éléments caractéristiques de h. **Deuxième méthode** : a. D′ = h(D) ; montrer que (CD⃗, CD′⃗) ≡ −π/2 [2π]
+  et CD′ = AD ; en déduire que D′ est le symétrique de B par rapport à C ; b. en déduire les éléments
+  caractéristiques de h ; c. construire le point C′ = h(C). 7. le cercle de diamètre [AB] recoupe [AC] en
+  E ; le cercle de diamètre [CD] recoupe [CC′] en E′ ; F le symétrique de E′ par rapport à (IJ) ; montrer
+  que (EF) est parallèle à (AD).
+- **Ex. 27** (p.73) : AFED un carré de côté 4 cm tel que (AF⃗, AD⃗) ≡ π/2 [2π] et O son centre ; B et O₁ les
+  symétriques respectifs de A et O par rapport à (EF). 1.a. r la rotation définie par r(F) = E et r(E) = D ;
+  préciser l'angle et le centre de r ; b. f = r∘S_(OO₁) ; montrer que f est la symétrie orthogonale d'axe
+  (OE). 2. r′ = t_(OO₁⃗)∘r⁻¹ ; a. montrer que r′ est une rotation dont on précisera l'angle ; b. déterminer
+  r′(O) ; en déduire que F est le centre de r′. 3. g l'antidéplacement défini par g(D) = F et g(O) = O₁ ;
+  a. montrer que g est une symétrie glissante et déterminer sa forme réduite ; b. M un point du plan ;
+  montrer que g(M) = r′(M) ssi f(M) = M ; c. en déduire l'ensemble des points M tels que g(M) = r′(M).
+- **Ex. 28** (p.73) : ABC un triangle tel que (AB⃗, AC⃗) ≡ π/3 [2π] ; O le centre du cercle 𝒞 circonscrit ;
+  I le point d'intersection des bissectrices intérieures ; P et Q sur les demi-droites [CA) et [BA)
+  vérifiant CP = BQ = BC. 1.a. montrer que (CI) est la médiatrice de [PB] et (BI) la médiatrice de [CQ] ;
+  b. montrer que (CP⃗, QB⃗) ≡ 2π/3 [2π]. 2. f la rotation qui transforme C en Q et P en B ; a. montrer que f
+  a pour centre I et pour angle 2π/3 ; b. montrer que (IB⃗, IC⃗) ≡ 2π/3 [2π] ; c. montrer que I, P et Q sont
+  alignés. 3. O₁ = f(O), O₂ = f(O₁) ; a. montrer que O = f(O₂) ; b. en déduire que OO₁O₂ est équilatéral et
+  que (OI) est la médiatrice de [O₁O₂]. 4. r la rotation de centre O et d'angle 2π/3 ; g = f∘r∘f ; a.
+  montrer que g est une translation ; vérifier que g(O₂) = O₁ ; en déduire le vecteur ; b. montrer que
+  r(B) = C ; en déduire que g(P) = Q ; c. montrer que (OI) et (PQ) sont perpendiculaires.
+
+### Bornes de scope observées (chapitre 12)
+
+- ✅ INCLUS : **définition** d'un **déplacement** (isométrie conservant les mesures des angles orientés) et
+  d'un **antidéplacement** (isométrie changeant les angles orientés en leurs opposés) ; caractérisation par
+  la **composition de symétries orthogonales** (déplacement ⇔ composée de 2 symétries ; antidéplacement ⇔
+  1 symétrie ou composée de 3) et **classification** (identité/rotation/translation = déplacements ;
+  symétrie orthogonale/symétrie glissante = antidéplacements) ; règles de **composition et de réciproque**
+  (dép∘dép = dép, antidép∘antidép = dép, dép∘antidép = antidép ; réciproque conserve la nature) ; unicité
+  (deux déplacements — resp. antidéplacements — coïncidant sur 2 points sont égaux) ; **détermination** :
+  unique déplacement et unique antidéplacement envoyant A→C, B→D quand AB⃗ = CD⃗ ≠ 0⃗ ; **angle d'un
+  déplacement** (θ = 2kπ ⇒ translation, sinon rotation d'angle θ ; angle de la composée = θ + θ′ ; angle de
+  la réciproque = −θ) ; **composition de deux translations**, **de deux rotations** (translation si
+  θ + θ′ ≡ 0 [2π], sinon rotation d'angle θ + θ′) et **d'une rotation et d'une translation** (rotation de
+  même angle) ; **expression complexe** d'un déplacement — translation z′ = z + b, rotation z′ = az + b
+  avec a = e^{iθ} (|a| = 1), centre z_I = b/(1−a) ; **antidéplacement** = composée d'une symétrie
+  orthogonale et d'une translation ; **symétrie glissante**, **forme réduite** f = t_u⃗∘S_D = S_D∘t_u⃗ (u⃗
+  directeur de D), axe et vecteur comme éléments caractéristiques, propriétés (milieu de [MM′] sur l'axe,
+  f∘f = t_(2u⃗)).
+- ⛔ NON traité dans ce chapitre : l'écriture complexe d'un **antidéplacement** (z′ = az̄ + b, |a| = 1)
+  n'est **pas** énoncée comme théorème encadré (le manuel caractérise l'antidéplacement par sa
+  décomposition symétrie∘translation, pas par une forme complexe conjuguée) ; les **similitudes** (|a| ≠ 1)
+  et l'**homothétie** (chapitres suivants du tome 2) ; la **réduction matricielle** générale (les équations
+  analytiques sont traitées cas par cas) ; toute isométrie de l'**espace** (le chapitre est strictement
+  plan). Le chapitre suppose acquis le **chapitre 11 (Isométries du plan)** — décomposition en symétries
+  orthogonales, points fixes, isométrie réciproque — qu'il prolonge en distinguant orientation directe /
+  indirecte.
 
 ## 3. Notes pédagogiques / méthode
 
