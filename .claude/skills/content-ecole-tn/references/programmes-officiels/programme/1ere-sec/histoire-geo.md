@@ -2,10 +2,10 @@
 
 > **Sources** (deux manuels élève CNP combinés — pas de guide enseignant au corpus) :
 >
-> - **Manuel élève — التاريخ (Histoire)** : `207103P00.pdf` (`cnp-officiel/manuels/secondaire/c1/eleve/`) — 224 p. **Pages lues** : p.2–5 (© + مقدمة + ouverture module), **p.11–32 (leçons 1–4 à profondeur de génération, §2bis)**, p.221–224 (فهرس + تأليف الدّروس). **⛔ leçons 5–18 NON encore transcrites à profondeur de génération.**
+> - **Manuel élève — التاريخ (Histoire)** : `207103P00.pdf` (`cnp-officiel/manuels/secondaire/c1/eleve/`) — 224 p. **Pages lues** : p.2–5 (© + مقدمة + ouverture module), **p.11–41 (leçons 1–5 = tout le محور 1 de la وحدة 1, à profondeur de génération, §2bis)**, p.221–224 (فهرس + تأليف الدّروس). **⛔ leçons 6–18 NON encore transcrites à profondeur de génération.**
 > - **Manuel élève — الجغرافيا (Géographie)** : `206103P00.pdf` (`…/eleve/`) — 120 p. **Pages lues** : p.2–5 (© + التقديم + خريطة الكتاب + ouverture module 1), p.25, p.45 (ouvreurs de modules), p.116–117 (module 3). **Pas de فهرس dans ce manuel** ; structure établie au niveau **module** (les bornes fines des leçons restent à établir en transcription profonde).
 >
-> **Transcrit le** : 2026-07-18 (palier 1 STRUCTURE, puis paliers 2–3 : histoire leçons 1–4 à profondeur de génération). **Statut** : `partielle` · profondeur `mixte` (leçons 1–4 en `generation`, reste en `first-pass`) → **⛔ GÉNÉRATION INTERDITE** tant que la matière n'est pas complète à profondeur de génération (R-5).
+> **Transcrit le** : 2026-07-18 (palier 1 STRUCTURE, puis paliers 2–4 : histoire leçons 1–5 = tout le محور 1 de la وحدة 1, à profondeur de génération). **Statut** : `partielle` · profondeur `mixte` (leçons 1–5 en `generation`, reste en `first-pass`) → **⛔ GÉNÉRATION INTERDITE** tant que la matière n'est pas complète à profondeur de génération (R-5).
 > **Langue d'enseignement** : `ar` (constatée : manuels intégralement en arabe ; conforme à `docs/lycee-architecture.md` §4 — matière `ar`, pas de bascule fr). **gradeSlug** : `1ere-sec`. **subject id** attendu : `histoire-geo-1ere-sec` (sujet combiné histoire+géographie — cf. overlay `prof-histoire-geo-lycee`).
 > **Provenance / droits** : corpus officiel CNP (المركز الوطني البيداغوجي, © p.2 des deux manuels) — R-2 OK. Manuels « مطابق للبرنامج الرّسمي في صيغته الجديدة » (préface, 2003) → font référence (aucun guide enseignant au corpus).
 
@@ -73,7 +73,7 @@ _Le manuel géo **ne comporte pas de فهرس** ; structure établie à partir d
 
 ## 2bis. Contenu détaillé des leçons transcrites (profondeur de génération)
 
-> Transcription **fidèle** des leçons déjà lues intégralement en vision. Chaque activité/document décrit individuellement, encadrés (`تعريف بمفهوم` / `معطيات مكمّلة` / `أدعّم مكتسباتي`) restitués verbatim, sources citées. **État** : histoire leçons 1–4 (p.11–32) transcrites 2026-07-18 ; le reste (leçons 5–18 + géo) demeure en `first-pass` (structure du §2). Chiffres occidentaux (source, respectée).
+> Transcription **fidèle** des leçons déjà lues intégralement en vision. Chaque activité/document décrit individuellement, encadrés (`تعريف بمفهوم` / `معطيات مكمّلة` / `أدعّم مكتسباتي`) restitués verbatim, sources citées. **État** : histoire leçons 1–5 (p.11–43 = tout le محور 1 de la وحدة 1) transcrites 2026-07-18 ; le reste (leçons 6–18 + géo) demeure en `first-pass` (structure du §2). Chiffres occidentaux (source, respectée).
 
 ### الوحدة الأولى — المحور الأول : قرطاج البونيّة وإشعاعها في المتوسّط
 
@@ -184,6 +184,30 @@ _Le manuel géo **ne comporte pas de فهرس** ; structure établie à partir d
 
 **أدعّم مكتسباتي (synthèse)** : موسوعة ماغون (« كتاب الفلاحة ») هي أحد أهمّ المراجع الأساسيّة لعلم الزّراعة في الفترة القديمة ؛ تجاوز صداها حدود قرطاج المجاليّة والزّمنيّة — اعتبرها الرّومان أهمّ غنائم الحرب البونيّة الثّالثة فترجموها، ووُجدت مقتطفات مترجمة إلى الإغريقيّة واللاّتينيّة في كتب الفلاحة القديمة والوسيطة ؛ أسهمت بمحتواها وطابعها العلمي والعملي في اشعاع قرطاج حتّى بعد سقوطها سنة 146 ق.م ؛ تضمّنت إضافات في تقنيات الإنتاج، التكثيف الزّراعي، الروزنامة الفلاحيّة، استعمال اليد العاملة وارتباط القرطاجيين بالأرض ⇒ أسهمت في تطوّر النّشاط الفلاحي والحرفي والتّجاري ودعم الحضور القرطاجي في المتوسّط.
 
+#### درس 5 — عبقريّة حنبعل (`05-hist-3abqariyyat-hannibal`) · p.33–43 (cœur p.33–40 ; أطالع/lecture p.41–43)
+
+**المدخل (objectif)** : أحدّد خصال حنبعل وعبقريّته الحربيّة من أجل التعرّف إلى إشعاع قرطاج البونيّة في المتوسّط في المجال العسكري.
+
+**النشاط الأوّل** : _أتعرّف إلى الظرفيّة الّتي عاش فيها حنبعل وإلى خصاله._
+
+- **الوثيقة عدد 1 — حرب حنّبعل** (texte) — source : **بوليبيوس، التّاريخ V,33** (guerre d'Hannibal = la plus célèbre et la plus longue après celle de Sicile).
+- **الوثيقة عدد 2** (image) : buste d'**حنبعل (247–183 ق.م)**, المتحف الوطني الإيطالي (Naples).
+- **الوثيقة عدد 3 — دور أزربعل** (texte) — source : **تيتوس ليفيوس، التّاريخ الرّوماني XXI,11**. La mort d'Hamilcar/عبد ملقرط et le jeune âge d'Hannibal retardent la guerre ; **أزربعل (Hasdrubal)** dirige 8 ans, gagne l'appui du parti barcide, fonde قرطاجنّة (Carthagène) en Ibérie, fait renouveler le **traité d'alliance (226 ق.م)** fixant la frontière au fleuve الإيبار (Èbre). Gloses : عبد ملقرط البرقي (Hamilcar Barca, père d'Hannibal, réformes démocratiques après la guerre de Sicile) ; أزربعل assassiné en 221 ق.م ; نهر الايباروس (Èbre, frontière des deux domaines, dont le franchissement — attaque de Sagonte alliée de Rome — déclenche la guerre).
+- **معطيات مكمّلة** (résultats de la 1re guerre punique, **traité de 241 ق.م**) : retrait de Carthage de Sicile ; indemnité de guerre sur 10 ans ; engagement à ne pas attaquer le roi de Syracuse ; **révolte des mercenaires 241–238 ق.م** (soldes impayées + Libyens surtaxés, matée par Hamilcar) ; Rome s'empare de la Sardaigne.
+- **الوثيقة عدد 4 — خصال حنبعل** (texte) — source : **تيتوس ليفيوس XXI,4** : meilleur cavalier et fantassin, premier au combat et dernier à se retirer, 16 ans de guerre sans laisser de répit aux Romains, jamais trahi par ses compagnons d'armes. _معطيات_ : né à Carthage ~247 ق.م ; parti en Ibérie à 9 ans avec son père ; **éducation hellénistique** complète (militaire, philosophique, artistique) ; polyglotte (dont le grec).
+- **التعليمات** : classer les qualités de ce commandement carthaginois (point de force) et justifier ; situer la province carthaginoise d'Ibérie à la mort d'Hasdrubal.
+
+**النشاط الثّاني** : _أتعرّف إلى عبقريّة حنبعل._
+
+- **الوثيقة عدد 5** (carte) : مسار حنّبعل في الحرب الثّانية (Ibérie → Gaule → Alpes → Tessin/Trébie 218 → Trasimène 217 → Cannes 216 → retour → Zama 202). _معطيات_ : départ printemps 218 ق.م avec **50 000 fantassins, 12 000 cavaliers, 60 éléphants** ; traversée des Alpes en 15 jours ; arrivée dans la plaine du Pô (sept. 218) réduit à ~26 000 fantassins, 6 000 cavaliers, 37 éléphants. **خطّة حنبعل** : gagner l'Italie par voie terrestre depuis Carthagène, franchir vite les Alpes, détruire toute force romaine pour briser la **fédération romaine** (cités italiennes alliées) et contraindre Rome à annuler le traité de 241.
+- **الوثيقة عدد 6 — المثال الأول : معركة بحيرة تراسيمانوس** (texte) — source : **تيتوس ليفيوس XXII,4**. Embuscade au lac Trasimène (**21 juin 217 ق.م**) : Flaminius avance sans reconnaissance, brouillard du lac dissimulant l'armée punique, attaque surprise ⇒ **15 000 morts romains** (≈ 1 500 pertes puniques).
+- **الوثيقة عدد 7 — المثال الثّاني : معركة قانة** (schéma tactique) : déploiement puis **double enveloppement** — retraite feinte de l'infanterie punique, fuite provoquée de la cavalerie romaine, encerclement. _معطيات_ : Cannes (**2 août 216 ق.م**, sud-est italien près de l'Adriatique) ; Rome ~70 000 fantassins/6 000 cavaliers, Carthage ~30 000/10 000 ; 8 h de combat ⇒ **45 000 Romains tués, 20 000 prisonniers**.
+- **التعليمات** : mettre en évidence la mobilité de la tactique carthaginoise (contraste des dispositifs romain/punique).
+
+**أدعّم مكتسباتي (synthèse)** : la rivalité en Méditerranée entre Rome et Carthage aboutit, dès le milieu du IIIe s. av. J.-C., à **trois guerres puniques** ; le **génie d'Hannibal** éclate durant la 2e guerre par des tactiques inventives qui infligent de lourdes défaites à Rome malgré l'infériorité numérique carthaginoise ; son but : **annuler le traité de 241** pour rendre à Carthage son influence méditerranéenne. Marche des armées : d'Ibérie (Carthagène) vers le nord de l'Italie par voie terrestre à travers la Gaule (choix imposé par le déclin des ressources navales après la 1re guerre), départ printemps 218 → nord de l'Italie sept. 218. Batailles décisives : **Trasimène (217)**, **Cannes (216)** ; Hannibal remporte de grandes victoires avec peu de troupes et isole Rome de ses alliés italiens — sans toutefois empêcher Rome de porter finalement la guerre en Afrique (Zama, 202).
+
+> **أطالع (p.41–43)** : texte(s) de lecture/enrichissement complétant l'exemple de Trasimène (récit détaillé de l'embuscade, ruse d'Hannibal, présomption de Flaminius) — **hors cœur de leçon** ; résumé ici, non transcrit verbatim (R-2). _(Le محور 1 de la وحدة 1 se clôt p.43 ; p.44 blanche ; la leçon 6 — قرطاج الرّومانيّة — ouvre p.45.)_
+
 ## 3. Notes pédagogiques / méthode
 
 - Démarche **documentaire et intégrative** : toute leçon part de `وثائق` numérotées (texte, carte, image, tableau, statistique) exploitées par des `نشاط` avec consignes, puis structuration (`هيكلة`) sur le cahier. Reproduire fidèlement, à la génération, ce registre « étude de document » (c'est la signature de l'histoire-géo — cf. `prof-histoire-geo-lycee`).
@@ -230,5 +254,5 @@ _Le manuel géo **ne comporte pas de فهرس** ; structure établie à partir d
 - **Histoire — pages de fin** : dérivées des pages de départ du فهرس (fin de leçon = départ suivant − 1) ; la leçon 18 (p.195–220) englobe d'éventuels نصوص للمطالعة de fin d'ouvrage — à confirmer en lecture.
 - **Géographie — pas de فهرس** : bornes de modules approximatives (sondage p.5/25/45/116) ; le découpage fin en leçons et les **intitulés officiels** doivent être relevés sur les ouvreurs/titres du manuel `206103` (aucune invention — R-5).
 - **Couche-texte cassée** (mojibake) sur les deux manuels : transcription **par vision** obligatoire ; cartes/figures à décrire (pdftotext ne les rend pas).
-- **Reprise (R-4)** : compléter cette fiche sans refaire l'existant. **Fait** : structure (§2, §4) + histoire leçons 1–4 à profondeur (§2bis). **Suite** : histoire leçon 5 (`05-hist-3abqariyyat-hannibal`, p.33–44 — fin du محور 1 de la وحدة 1) → و1/م2 (leçons 6–9) → و2–و3, puis géo module par module — par tranches, écriture immédiate au format final (T-2). Rendu vision : `pdftoppm -png -r 150 -f <p1> -l <p2> 207103P00.pdf`.
+- **Reprise (R-4)** : compléter cette fiche sans refaire l'existant. **Fait** : structure (§2, §4) + histoire leçons 1–5 à profondeur (§2bis = tout le محور 1 de la وحدة 1). **Suite** : و1/م2 (leçons 6–9 — قرطاج الرّومانيّة : الازدهار العمراني p.45 → القدّيس أوغسطينوس p.75) → و2 (leçons 10–15) → و3 (leçons 16–18), puis géo module par module — par tranches, écriture immédiate au format final (T-2). Rendu vision : `pdftoppm -png -r 150 -f <p1> -l <p2> 207103P00.pdf`.
 - **Cartes/figures histoire non levées** : les وثائق-images (ex. leçon 2 : بعل حمّون, تانيت, معبد التوفاة, نقيشة, رسم كركوان) sont **décrites** d'après leur légende, non redessinées — à illustrer (SVG/description) au LOT B si la mission les mobilise (axe 5).
