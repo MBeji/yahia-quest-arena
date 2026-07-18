@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐ : L'intensité du courant électrique",
+  "questions": [
+    {
+      "prompt": "Quelle est l'unité de l'intensité du courant électrique dans le système international ?",
+      "options": [
+        { "id": "a", "text": "Le volt (V)" },
+        { "id": "b", "text": "L'ampère (A)" },
+        { "id": "c", "text": "Le coulomb (C)" },
+        { "id": "d", "text": "Le watt (W)" }
+      ],
+      "correctOption": "b",
+      "explanation": "L'intensité du courant, notée I, s'exprime en ampère, de symbole A ✓. Le volt est l'unité de la tension, le coulomb celle de la charge électrique, et le watt celle d'une puissance : aucun ne mesure une intensité.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Comment branche-t-on un ampèremètre pour mesurer l'intensité du courant dans une branche ?",
+      "options": [
+        { "id": "a", "text": "En série" },
+        { "id": "b", "text": "En dérivation" },
+        { "id": "c", "text": "En court-circuit" },
+        { "id": "d", "text": "Aux bornes du générateur uniquement" }
+      ],
+      "correctOption": "a",
+      "explanation": "Un ampèremètre se branche en série dans la branche dont on veut mesurer l'intensité, afin d'être traversé par le même courant qu'elle ✓. Branché en dérivation, il ne mesurerait pas ce courant ; le brancher en court-circuit est dangereux ; et il se place là où l'on veut mesurer, pas seulement aux bornes du générateur.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans un circuit en série, comment se comporte l'intensité du courant d'un point à un autre ?",
+      "options": [
+        { "id": "a", "text": "Elle est plus grande près du générateur" },
+        { "id": "b", "text": "Elle est plus grande dans la première lampe" },
+        { "id": "c", "text": "Elle est la même en tout point" },
+        { "id": "d", "text": "Elle est nulle partout" }
+      ],
+      "correctOption": "c",
+      "explanation": "Dans un circuit série, l'intensité du courant est la même en tout point, quel que soit l'ordre des dipôles ✓ : l'ampèremètre indique la même valeur où qu'on l'insère. Elle n'est donc ni plus forte près du générateur, ni plus forte dans une lampe particulière, et elle n'est nulle que si le circuit est coupé.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans un montage en dérivation, la branche principale porte une intensité de 0,90 A. L'une des deux branches dérivées porte 0,65 A. Quelle est l'intensité dans l'autre branche dérivée ?",
+      "options": [
+        { "id": "a", "text": "0,25 A" },
+        { "id": "b", "text": "0,65 A" },
+        { "id": "c", "text": "0,90 A" },
+        { "id": "d", "text": "1,55 A" }
+      ],
+      "correctOption": "a",
+      "explanation": "D'après la loi des nœuds, l'intensité de la branche principale est la somme des intensités des branches dérivées : I₁ = I₂ + I₃, donc 0,90 = 0,65 + I₃, soit I₃ = 0,90 − 0,65 = 0,25 A ✓. La valeur 1,55 A vient d'une addition au lieu d'une soustraction ; 0,90 A et 0,65 A sont des intensités déjà connues, pas celle cherchée.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Que désigne le calibre d'un ampèremètre ?",
+      "options": [
+        { "id": "a", "text": "La plus petite intensité qu'il peut mesurer" },
+        { "id": "b", "text": "Le nombre de divisions de son échelle" },
+        { "id": "c", "text": "La valeur exacte affichée par l'aiguille" },
+        { "id": "d", "text": "La plus grande intensité qu'il peut mesurer" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le calibre est la plus grande intensité que l'ampèremètre peut mesurer ✓ : on choisit un calibre supérieur à l'intensité attendue pour ne pas détériorer l'appareil. Ce n'est pas la plus petite intensité, ni le nombre de divisions de l'échelle, ni la valeur lue, qui se calcule à partir du calibre et de l'échelle.",
+      "difficulty": 2
+    }
+  ]
+}

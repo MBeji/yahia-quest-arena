@@ -1,0 +1,10 @@
+{
+  "title": "Le circuit électrique",
+  "description": "Notion de dipôle et de circuit électrique fermé (chaîne continue de dipôles avec au moins un générateur) ; dipôle générateur et dipôle récepteur ; les quatre effets du courant (thermique, chimique, magnétique, lumineux) ; conducteurs et isolants, circuit ouvert, conditions de passage du courant ; symboles normalisés et schématisation ; sens conventionnel du courant (de la borne + vers la borne − à l'extérieur du générateur) ; nature du courant (électrons dans les métaux, cations et anions dans les électrolytes) ; la diode, dipôle dissymétrique (sens passant et sens bloquant) ; le court-circuit et ses dangers",
+  "displayOrder": 2,
+  "manuel": { "code": "223103P00", "pages": "25-42" },
+  "sources": [
+    "Programme officiel — Sciences physiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 223103P00 « PHYSIQUE », thème L'ÉLECTRICITÉ, chapitre II (p.25–42)",
+    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/sciences-physiques.md (§2.2)"
+  ]
+}
