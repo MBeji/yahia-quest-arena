@@ -1,0 +1,65 @@
+{
+  "title": "Test de compréhension ⭐ : Forces et équilibre",
+  "questions": [
+    {
+      "prompt": "Un solide soumis à deux forces est en équilibre. Ces deux forces sont...",
+      "options": [
+        { "id": "a", "text": "de même sens" },
+        { "id": "b", "text": "perpendiculaires" },
+        { "id": "c", "text": "de même point d'application" },
+        { "id": "d", "text": "directement opposées" }
+      ],
+      "correctOption": "d",
+      "explanation": "À l'équilibre, deux forces sont directement opposées ✓ : même droite d'action, sens contraires, même intensité (F1 + F2 = 0). Des forces de même sens ou perpendiculaires ne se compenseraient pas.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "En quelle unité s'exprime la constante de raideur k d'un ressort ?",
+      "options": [
+        { "id": "a", "text": "En newton (N)" },
+        { "id": "b", "text": "En N·m⁻¹" },
+        { "id": "c", "text": "En mètre (m)" },
+        { "id": "d", "text": "En kilogramme (kg)" }
+      ],
+      "correctOption": "b",
+      "explanation": "La constante de raideur s'exprime en newton par mètre (N·m⁻¹) ✓, car dans T = k × Δl une force (N) est le produit de k par une longueur (m). Le newton seul est l'unité de la tension T, pas de k.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quand deux corps A et B interagissent, la force de A sur B et la force de B sur A sont...",
+      "options": [
+        { "id": "a", "text": "directement opposées" },
+        { "id": "b", "text": "de même sens" },
+        { "id": "c", "text": "toutes les deux nulles" },
+        { "id": "d", "text": "perpendiculaires" }
+      ],
+      "correctOption": "a",
+      "explanation": "D'après le principe d'interaction (3ème loi de Newton), F(A/B) = −F(B/A) : les deux forces sont directement opposées ✓, de même intensité et de sens contraires. Elles ne sont ni de même sens, ni nulles.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Un ressort de raideur k = 20 N·m⁻¹ est allongé de Δl = 0,1 m. Quelle est l'intensité de sa tension ?",
+      "options": [
+        { "id": "a", "text": "0,2 N" },
+        { "id": "b", "text": "2 N" },
+        { "id": "c", "text": "20 N" },
+        { "id": "d", "text": "200 N" }
+      ],
+      "correctOption": "b",
+      "explanation": "T = k × Δl = 20 × 0,1 = 2 N ✓. Prendre Δl = 0,01 m donnerait 0,2 ; oublier l'allongement laisserait 20 ; se tromper d'un facteur 10 donnerait 200.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Un corps est suspendu à un fil et reste en équilibre. Que peut-on dire de la tension du fil par rapport au poids ?",
+      "options": [
+        { "id": "a", "text": "La tension dépasse le poids" },
+        { "id": "b", "text": "La tension est nulle" },
+        { "id": "c", "text": "La tension a la même intensité que le poids" },
+        { "id": "d", "text": "La tension est plus faible que le poids" }
+      ],
+      "correctOption": "c",
+      "explanation": "À l'équilibre, la tension du fil et le poids sont directement opposés : ils ont la même intensité et des sens contraires ✓. Si la tension était plus grande, plus faible ou nulle, le corps ne resterait pas en équilibre.",
+      "difficulty": 2
+    }
+  ]
+}
