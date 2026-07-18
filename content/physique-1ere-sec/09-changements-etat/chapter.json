@@ -1,0 +1,10 @@
+{
+  "title": "Les changements d'état d'un corps pur",
+  "description": "Les six changements d'état d'un corps pur et leurs couples inverses (fusion/solidification, vaporisation/liquéfaction, sublimation/condensation) ; les deux modes de vaporisation (ébullition à température constante, évaporation à toute température) ; la température de changement d'état constante d'un corps pur sous une pression donnée (0°C et 100°C pour l'eau sous la pression atmosphérique normale) et sa lecture sur une courbe θ(t) à palier ; la conservation de la masse et de la nature au cours d'un changement d'état ; l'interprétation microscopique et la notion d'équilibre dynamique",
+  "displayOrder": 9,
+  "manuel": { "code": "223103P00", "pages": "131-146" },
+  "sources": [
+    "Programme officiel — Sciences physiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 223103P00 « PHYSIQUE », thème LA MATIÈRE, chapitre IV (p.131–146)",
+    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/sciences-physiques.md (§2.9)"
+  ]
+}
