@@ -57,18 +57,18 @@ style annales session principale.
 
 ### Tome 2 — Algèbre · Géométrie · Probabilités (222446P00, 230 p.)
 
-| #   | Chapitre                        | pages (PDF = imprimées) | profondeur |
-| --- | ------------------------------- | ----------------------- | ---------- |
-| 10  | Nombres complexes               | 5–34                    | `bloc`     |
-| 11  | Isométries du plan              | 35–53                   | `bloc`     |
-| 12  | Déplacements – Antidéplacements | 54–73                   | `bloc`     |
-| 13  | Similitudes                     | 74–95                   | `bloc`     |
-| 14  | Coniques                        | 96–120                  | `bloc`     |
-| 15  | Géométrie dans l'espace         | 121–146                 | `bloc`     |
-| 16  | Divisibilité dans ℤ             | 147–160                 | `bloc`     |
-| 17  | Identité de Bézout              | 161–178                 | `bloc`     |
-| 18  | Probabilités                    | 179–207                 | `bloc`     |
-| 19  | Statistiques                    | 208–230                 | `bloc`     |
+| #   | Chapitre                        | pages (PDF = imprimées) | profondeur   |
+| --- | ------------------------------- | ----------------------- | ------------ |
+| 10  | Nombres complexes               | 5–34                    | `generation` |
+| 11  | Isométries du plan              | 35–53                   | `bloc`       |
+| 12  | Déplacements – Antidéplacements | 54–73                   | `bloc`       |
+| 13  | Similitudes                     | 74–95                   | `bloc`       |
+| 14  | Coniques                        | 96–120                  | `bloc`       |
+| 15  | Géométrie dans l'espace         | 121–146                 | `bloc`       |
+| 16  | Divisibilité dans ℤ             | 147–160                 | `bloc`       |
+| 17  | Identité de Bézout              | 161–178                 | `bloc`       |
+| 18  | Probabilités                    | 179–207                 | `bloc`       |
+| 19  | Statistiques                    | 208–230                 | `bloc`       |
 
 ## 2.1 Chapitre 1 — Continuité et limites (manuel 222445, p.5–27)
 
@@ -3014,6 +3014,489 @@ courbe sinusoïdale).
   au programme) ; l'équation **y″ = ay′ + by + c** générale (seuls les cas réductibles par z = y′ sont
   abordés) ; toute **méthode de variation de la constante** formalisée (les solutions particulières
   sont cherchées par forme imposée) ; les systèmes différentiels.
+
+## 2.10 Chapitre 10 — Nombres complexes (manuel 222446, p.5–34)
+
+**Page de garde (p.5)** — Titre : « Nombres complexes », Chapitre 1 (numérotation interne du tome 2 ;
+c'est le chapitre 10 dans la numérotation content). Encart historique : « À partir de la deuxième
+moitié du XVIIe, les géomètres utilisent de façon de plus en plus courante le symbole √−1 dans les
+identités algébriques et les recherches relatives aux résolutions d'équations. En 1740, Euler donne
+la formule cos x = ½(e^(x√−1) + e^(−x√−1)), et en 1748, la formule e^(x√−1) = cos x + √−1 sin x, x est
+réel. Dontzig [sic, pour Dantzig] dit de cette dernière qu'elle contient "les symboles les plus
+importants, union mystérieuse dans laquelle l'arithmétique est représentée par 0 et 1, l'algèbre par
+√−1 [sic, imprimé "-1"], la géométrie par π [imprimé "p"] et l'analyse par e". » Référence :
+« (Dalmedico et al, Une histoire des mathématiques, 1986) ». Suivi d'une remarque sur Cauchy qui « ne
+se ralliera explicitement à la représentation géométrique des nombres complexes qu'en 1874 ». Le
+chapitre est structuré en six parties **I. Rappels et compléments**, **II. Écriture exponentielle
+d'un nombre complexe non nul**, **III. Équation zⁿ = a (n ≥ 1, a ∈ ℂ\*)**, **IV. Résolution dans ℂ de
+l'équation az² + bz + c = 0 (a ≠ 0)**, **V. Exemples d'équations de degré supérieur ou égal à 3**,
+**VI. Nombres complexes et trigonométrie**, entrecoupées de sept **exercices résolus**, suivies d'un
+QCM / Vrai-Faux, puis d'une rubrique « Exercices et problèmes ».
+
+### Cours — Activités
+
+**I. Rappels et compléments — I.1 Définition et opérations sur les nombres complexes** (p.6)
+
+- **Activité 1** (p.6) : déterminer l'écriture cartésienne de (2 − 2i)(1 + i)², (−√2 − i√3)(√2 + i√3),
+  (1 + i)⁴(1 − i)²⁰.
+- **Activité 2** (p.6) : z = 1 + 2i et z′ = i. 1. écriture cartésienne de zz′, (zz′)², (zz′)³, (zz′)⁴,
+  ainsi que de leurs conjugués. 2. écriture cartésienne de z/z′ et (z/z′)³, ainsi que de leurs
+  conjugués. (Encart rappel : conjugué de z = a + ib est z̄ = a − ib.)
+
+**I.2 Affixe d'un point, affixe d'un vecteur** (p.7)
+
+- **Activité 1** (p.7) : repère orthonormé direct (O, u⃗, v⃗). 1. placer A, B, C d'affixes i, 2i,
+  1 + 2i. 2. affixes de leurs symétriques par rapport à l'axe des abscisses. 3. par rapport à O. 4. par
+  rapport à l'axe des ordonnées. 5. affixes des vecteurs OB⃗ − 2OC⃗ et −AB⃗ + (3/2)AC⃗. 6. affixe du
+  centre de gravité du triangle ABC. (Encart : définitions de l'affixe d'un point Aff(M) = z_M et de
+  l'affixe d'un vecteur Aff(w⃗) = z_N − z_M, avec la linéarité Aff(αw⃗ + βw₁⃗) = αAff(w⃗) + βAff(w₁⃗).)
+- **Activité 2** (p.7) : A d'affixe 2 − 2i et M d'affixe z. 1. CNS sur z pour que M ∈ (OA). 2. en
+  déduire l'ensemble des points M d'affixe z = k(2 − 2i), k ∈ ℝ.
+- **Activité 3** (p.8) : repère orthonormé direct (O, u⃗, v⃗). f l'application qui à tout point M
+  d'affixe z associe le point M′ d'affixe z′ = 2(z + z̄) + iz̄. 1. déterminer et construire l'ensemble
+  des M′, images des M d'abscisse nulle. 2. images des M d'ordonnées nulles.
+- **Activité 4** (p.8) : A d'affixe 1 + 2i et M d'affixe z. 1. CNS sur z pour que M ∈ la
+  perpendiculaire à (OA) en O. 2. en déduire l'ensemble des M d'affixe z = ik(1 + 2i), k ∈ ℝ.
+- **Activité 5** (p.9) : déterminer et construire l'ensemble des points M d'affixe z tels que
+  (z − i)/(z − 1) soit imaginaire.
+
+**I.3 Module d'un nombre complexe** (p.9)
+
+- **Activité 1** (p.9) : A et B d'affixes z_A = 1 + i√3 et z_B = 1 − i√3. 1. vérifier que le triangle
+  OAB est isocèle en O. 2. D tel que OADB soit un losange, déterminer l'affixe de D. (Encart :
+  définition |z| = OM = √(a² + b²) et |z_N − z_M| = MN.)
+- **Activité 2** (p.9) : z = 2 − i et z′ = −3 + 4i. Calculer les modules de z + z′, zz′, z/z′, z⁴,
+  (z̄z′)².
+- **Activité 3** (p.10) : repère orthonormé direct. Déterminer l'ensemble des points M d'affixe z tels
+  que : 1. |z − 1 + 2i| = 2. 2. |z + 2 − i| = |z̄ − 2 + 2i|. 3. |2z + 2 − i| = √2/2. 4. |iz + 2 + i| = 2.
+
+**I.4 Argument d'un nombre complexe non nul** (p.10)
+
+- **Activité 1** (p.10) : repère orthonormé direct. 1. placer A, B, C, D d'affixes z_A = −i, z_B = 4,
+  z_C = 2 + 2i, z_D = −1 + i. 2. A₁, B₁, C₁, D₁ symétriques par rapport à l'axe des abscisses ;
+  argument de chacune de leurs affixes. 4. reprendre pour les symétriques par rapport à O. 5. par
+  rapport à l'axe des ordonnées. (Encart + figure : arg(z) = mesure de (u⃗, OM⃗).)
+- **Activité 2** (p.10) : f qui à M d'affixe z associe M′ d'affixe z′ = 2(z − z̄) + 2iz. 1.a. ensemble
+  des M tels que arg(z) ≡ 0 [2π] ; b. ensemble des M′ images. 2. ensemble des M′ images des M tels que
+  arg(z) ≡ π [2π]. 3. ensemble des M′ images des M tels que arg(z) ≡ π/2 [2π].
+- **Activité 3** (p.11) : M distinct de O tel que (u⃗, OM⃗) ≡ θ [2π] ; M₁, M₂, M₃ symétriques de M par
+  rapport à l'axe des abscisses, au point O et à l'axe des ordonnées. Déterminer (u⃗, OM₁⃗), (u⃗, OM₂⃗),
+  (u⃗, OM₃⃗) à l'aide de θ. (Propriétés + figures : arg(z̄), arg(−z), arg(kz) selon signe de k.)
+
+**I.5 Écriture trigonométrique** (p.11)
+
+- **Activité 1** (p.11) : repère orthonormé direct. z = −2√3 + 2i. Déterminer l'écriture
+  trigonométrique de z et placer son point image. En déduire l'écriture trigonométrique de z̄, −z,
+  (1/2)z et −(3/2)z, puis placer leurs points images. (Encart : écriture trigonométrique
+  z = |z|(cos θ + i sin θ) avec arg(z) ≡ θ [2π].)
+- **Activité 2** (p.12) : z = (√3 − i√2)/2 et z′ = (1 − i√2)/2. Donner une valeur approchée de leurs
+  arguments à 10⁻² près. (Encart : cos θ = a/√(a²+b²) et sin θ = b/√(a²+b²).)
+- **Activité 3** (p.12) : A, B, C d'affixes z_A = 4, z_B = 1 + i√3, z_C = 1 − i√3. 1. montrer que le
+  triangle ABC est équilatéral. 2. écritures trigonométriques de z_A, z_B, z_C. 3. D tel que OABD soit
+  un parallélogramme, écriture trigonométrique de z_D. 4. K image de C par le quart de tour direct de
+  centre O, écriture trigonométrique de z_K.
+
+**I.6 Propriétés d'un argument d'un nombre complexe non nul** (p.12)
+
+- **Activité 1** (p.12) : z et z′ non nuls, z = |z|(cos θ + i sin θ), z′ = |z′|(cos θ′ + i sin θ′). 1. écritures trigonométriques de zz′, 1/z et z′/z. 2.a. montrer par récurrence que zⁿ = |z|ⁿ(cos nθ +
+  i sin nθ) ; b. en déduire z⁻ⁿ = |z|⁻ⁿ(cos(−nθ) + i sin(−nθ)). (Propriétés VERBATIM : arguments +
+  formule de Moivre.)
+- **Activité 2** (p.13) : donner l'écriture trigonométrique de (1 + i)⁶, (1 − i)⁹ (√3 + i)⁵/(√3 − i)⁸,
+  (2√3 − 2i)⁶(1 + i√3)³.
+
+**Exercice résolu 1** (énoncé + solution p.13–14) : repère orthonormé direct. M₁ d'affixe z = 1 − i ;
+Mₙ d'affixe zⁿ. 1. écriture trigonométrique de zⁿ (n ≥ 1). 2. construire M₁, M₂, M₃, M₄. 3. entiers n
+tels que Mₙ soit sur la droite y = x ; M₂₀₇₁ y appartient-il ? Solution : 1 − i = √2(cos(−π/4) +
+i sin(−π/4)), Moivre ⇒ zⁿ = (√2)ⁿ(cos(−nπ/4) + i sin(−nπ/4)) ; Mₙ ∈ D : y = x ssi (n + 1) multiple de
+8 ou (n + 5) multiple de 8 ; 2072 divisible par 8 ⇒ M₂₀₇₁ ∈ D. (Figure : points M₁…M₄.)
+
+**I.7 Angles orientés et nombres complexes** (p.14)
+
+- **Activité 1** (p.14) : A, B distincts d'affixes z_A, z_B. 1. avec E tel que AB⃗ = OE⃗, montrer
+  (u⃗, AB⃗) ≡ arg(z_B − z_A) [2π]. 2. C, D distincts : a. vérifier (AB⃗, CD⃗) ≡ (u⃗, CD⃗) − (u⃗, AB⃗) [2π] ;
+  b. en déduire (AB⃗, CD⃗) ≡ arg((z_D − z_C)/(z_B − z_A)) [2π]. (Théorème VERBATIM + Conséquence
+  VERBATIM ; figure.)
+- **Activité 2** (p.15) : A d'affixe 1, B d'affixe i. 1. déterminer et construire l'ensemble des M
+  d'affixe z tels que arg(z − i) ≡ π/3 [2π]. 2. ensemble des M tels que arg((z − i)/(z − 1)) ≡ π/2 [2π].
+
+**Exercice résolu 2** (énoncé + solution p.15–16) : A d'affixe 2 − i. Déterminer et construire
+l'ensemble des M d'affixe z tels que arg((z − 2 + i)³) ≡ π/2 [2π]. Solution : ⇔ arg(z − 2 + i) ≡ π/6,
+5π/6 ou 3π/2 [2π] ; ensemble = réunion des trois demi-droites [AB), [AC), [AD) privées de A. (Figure.)
+
+**Exercice résolu 3** (énoncé + solution p.16) : déterminer et construire l'ensemble E des M d'affixe z
+tels que arg((z − 1)/(z + i)) ≡ π/3 [2π]. Solution : E est l'arc BA privé de A et B du cercle 𝒞 passant
+par A et B et tangent en A à la demi-droite [AT) définie par (AT⃗, AB⃗) ≡ π/3 [2π] (A, B d'affixes 1 et
+−i). (Figure.)
+
+**II. Écriture exponentielle d'un nombre complexe non nul** (p.16)
+
+- **Activité 1** (p.16) : repère orthonormé direct. 1. A, B, C d'affixes z_A = i, z_B = ½(√3 + i),
+  z_C = (√2/2)(1 − i) : a. écritures trigonométriques ; b. en déduire qu'ils appartiennent au cercle
+  trigonométrique. 2. E, F, G du cercle trigonométrique tels que (u⃗, OE⃗) ≡ −3π/2 [2π],
+  (u⃗, OF⃗) ≡ 5π/4 [2π] et (u⃗, OG⃗) ≡ −2π/3 [2π] ; écritures trigonométriques de leurs affixes.
+  (Notation VERBATIM : e^(iθ) = cos θ + i sin θ ; Conséquences VERBATIM.)
+- **Activité 2** (p.17) : z = e^(−iπ/3) et z′ = e^(i3π/2). 1. module et argument de −z, z̄, zz′, 1/z,
+  z/z′, zⁿ (n ∈ ℤ). 2. écrire sous la forme e^(iθ) les complexes zz′, z̄, z/z′, zⁿ. (Propriétés VERBATIM
+  des exponentielles.)
+- **Activité 3** (p.18) : 1. écriture trigonométrique de z₁ = 2i, z₂ = −3i, z₃ = −5/2, z₄ = √3(1 + i),
+  z₅ = (−2√3 + 2i)/5. 2. écrire chacun sous la forme re^(iθ), r > 0. (Théorème et définition VERBATIM :
+  écriture exponentielle.)
+- **Activité 4** (p.18) : z = √3 + i et z′ = −1 + i. Donner l'écriture exponentielle de z, z̄, z′, z̄′,
+  zz′, 1/z, z⁵, z/z′, z′².
+- **Activité 5** (p.18) : 1. écrire sous forme exponentielle z = √3 − i et z′ = 1 + i. 2. en déduire
+  l'écriture cartésienne de (1 + i)¹⁴/(√3 − i)⁸.
+- **Activité 6** (p.19) : 1. vérifier que pour tout réel θ, 1 + e^(iθ) = (e^(−iθ/2) + e^(iθ/2))e^(iθ/2). 2. écriture exponentielle de z = 1 + e^(i2π/5) et z′ = 1 + e^(i3π/5).
+- **Activité 7** (p.19) : A, B d'affixes 1 et −1 ; M d'affixe z = e^(iα), α ∈ ]0, π[. 1. mesure
+  principale de (u⃗, AM⃗) et expression de AM à l'aide de α. 2. (u⃗, BM⃗) et BM. 3. en déduire module et
+  argument de Z₁ = 1 + z et Z₂ = 1 − z. (Figure.)
+
+**III. Équation zⁿ = a, n ≥ 1, a ∈ ℂ\*** (p.19)
+
+- **Activité 1** (p.19) : 1. z non nul d'argument 2kπ/3, k ∈ ℤ ; montrer que a. si k = 3n, arg(z) ≡ 0
+  [2π] ; b. si k = 3n + 1, arg(z) ≡ 2π/3 [2π] ; c. si k = 3n + 2, arg(z) ≡ 4π/3 [2π]. 2. résoudre dans
+  ℂ (E) : z³ = 1 : a. montrer que z solution ssi z = e^(2ikπ/3), k ∈ ℤ ; b. déduire que (E) possède
+  exactement trois solutions distinctes. 3. donner les solutions dans ℂ de zⁿ = 1. (Théorème et
+  définition VERBATIM : racines nièmes de l'unité ; Conséquence VERBATIM : polygone régulier ; figure
+  hexagone racines sixièmes.)
+- **Activité 2** (p.20) : j = (−1 + i√3)/2. 1. vérifier que j est une racine cubique de l'unité. 2. vérifier j³ = 1, j² = j̄ et 1 + j + j² = 0. 3. montrer que pour tout entier naturel n, j^(3n) = 1,
+  j^(3n+1) = j et j^(3n+2) = j̄.
+
+**Exercice résolu 5** (énoncé + solution p.20–21) : 1. vérifier (z − 1)(z⁴ + z³ + z² + z + 1) = z⁵ − 1. 2. en déduire les solutions z₁, z₂, z₃, z₄ de (E) : z⁴ + z³ + z² + z + 1 = 0. 3.a. écrire z₂, z₃, z₄ à
+l'aide de z₁ ; b. en déduire les valeurs de z₁ + z₂ + z₃ + z₄ et 1/z₁ + 1/z₂ + 1/z₃ + 1/z₄. Solution :
+solutions = racines cinquièmes de l'unité autres que 1 : z₁ = e^(i2π/5), z₂ = e^(i4π/5), z₃ = e^(i6π/5),
+z₄ = e^(i8π/5) ; z₁ + z₂ + z₃ + z₄ = −1 et 1/z₁ + 1/z₂ + 1/z₃ + 1/z₄ = −1.
+
+- **Activité 3** (p.21) : résoudre dans ℂ (z/(1 + i))² = 1. En déduire les solutions dans ℂ de z² = 2i.
+- **Activité 4** (p.21) : résoudre dans ℂ (E) : z³ = 8i. 1. montrer que z solution ssi z/(2e^(iπ/6)) est
+  une racine cubique de l'unité. 2. en déduire que (E) possède exactement trois solutions ; vérifier
+  que zₖ = 2e^(i(π/6 + 2kπ/3)), k ∈ {0, 1, 2}. (Théorème et définition VERBATIM : racines nièmes du
+  nombre complexe a, zₖ = r·e^(i(θ/n + 2kπ/n)) avec rⁿ = |a| ; Démonstration ; Conséquence VERBATIM :
+  polygone régulier inscrit dans le cercle de rayon r ; figure.)
+- **Activité 5** (p.22) : déterminer les racines carrées, puis les racines quatrièmes du nombre complexe
+  u = −1 + i√3.
+- **Activité 6** (p.22) : ABCDE pentagone régulier inscrit dans le cercle de centre O de rayon 2 et
+  A(2, 0). 1. affixes de B, C, D, E. 2. déterminer l'ensemble des M d'affixe z tels que a. arg(z) ≡ 4π/5
+  [2π] ; b. arg(z̄) ≡ 2π/5 [2π] ; c. arg(−2z) ≡ 3π/5 [2π]. (Figure.)
+- **Activité 7** (p.22) : z = √(2 − √2) + i√(2 + √2). 1. module et argument de z². 2. en déduire
+  l'écriture trigonométrique de z.
+
+**IV. Résolution dans ℂ de l'équation az² + bz + c = 0, a ≠ 0** (p.23)
+
+- **Activité 1** (p.23) (**Recherche des racines carrées d'un nombre complexe par une méthode
+  algébrique**) : u = 3 − 4i, racines carrées de u ; z = x + iy. 1. montrer que z² = u équivaut au
+  système { x² − y² = 3 ; 2xy = −4 ; x² + y² = 5 }. 2. vérifier que les couples (x, y) solutions sont
+  (2, −1) et (−2, 1). 3. conclure.
+- **Activité 2** (p.23) : déterminer les racines carrées de u = −8 + 6i et u = 1 − 2√2 i.
+- **Activité 3** (p.23) : (E) : z² + 2iz − 7/4 − i = 0. 1. montrer que ⇔ (z + i)² = (3 + 4i)/4. 2. vérifier ((2 + i)/2)² = (3 + 4i)/4. 3. en déduire les solutions de (E).
+- **Activité 4** (p.23) : a, b, c complexes, a ≠ 0, (E) : az² + bz + c = 0. 1. montrer que ⇔
+  (z + b/2a)² = (b² − 4ac)/4a². 2. Δ = b² − 4ac : a. si Δ = 0, (E) admet une unique solution ; b. si
+  Δ ≠ 0, Δ admet deux racines carrées opposées δ et −δ, montrer ⇔ (z + (b − δ)/2a)(z + (b + δ)/2a) = 0,
+  en déduire les solutions. (Théorème VERBATIM : z₁ = (−b + δ)/2a, z₂ = (−b − δ)/2a ; Conséquences
+  VERBATIM : somme −b/a, produit c/a ; Méthode de résolution encadrée.)
+- **Activité 5** (p.24) : résoudre dans ℂ a. z² − (1 − i)z + 2 − 2i = 0 ; b. 1 + z + z² = 0 ;
+  c. 1 − z + z² = 0.
+- **Activité 6** (p.24) : déterminer z₁ et z₂ vérifiant { z₁ + z₂ = 1 + 2i ; z₁z₂ = −1 + i }.
+
+**V. Exemples d'équations de degré supérieur ou égal à 3** (p.25)
+
+- **Activité 1** (p.25) : a₁,…,aₙ complexes, aₙ ≠ 0, n ≥ 2 ; f : z ↦ aₙzⁿ + … + a₁z + a₀ ; (E) : f(z) = 0. 1. montrer que si z₀ est solution, alors pour tout z, f(z) = 0 ⇔ aₙzⁿ + … + a₁z = aₙz₀ⁿ + … + a₁z₀. 2. en déduire que (E) est équivalente à (z − z₀)g(z) = 0, g de la forme aₙz^(n−1) + b_(n−2)z^(n−2) +
+  … + b₀. (Théorème VERBATIM : factorisation P(z) = (z − z₀)g(z).)
+- **Activité 2** (p.26) : f(z) = z³ + (2 + 2i)z² + (2 + i)z + 3 + i. 1. vérifier f(i) = 0. 2. en déduire
+  les solutions dans ℂ de f(z) = 0.
+
+**Exercice résolu 6** (énoncé + solution p.25–26) : (E) : z³ + (1 − 4i)z² − (7 + 3i)z + 6i − 2 = 0. 1. montrer que (E) admet une solution imaginaire et la déterminer (z₀ = 2i). 2. résoudre (E). Solution :
+factorisation (z − 2i)(z² + (1 − 2i)z − 3 − i) = 0 ; solutions z₁ = −2 + i, z₂ = 1 + i ; ensemble
+S = {2i, −2 + i, 1 + i}.
+
+**VI. Nombres complexes et trigonométrie** (p.26) — (Théorème VERBATIM : formule de Moivre + formules
+d'Euler.)
+
+- **Activité 1** (p.26) : k entier ; montrer que pour tout réel x différent de (2k + 1)π/2,
+  (1 + i tan x)/(1 − i tan x) = e^(2ix).
+- **Activité 2** (p.26) : 1. avec Moivre et le binôme de Newton, montrer cos 3x = cos³x − 3 cos x sin²x
+  et sin 3x = 3 cos²x sin x − sin³x. 2. exprimer cos 4x et sin 4x en fonction de puissances de cos x et
+  sin x.
+
+**Exercice résolu 7** (énoncé + solution p.27) : linéariser sin⁵x, x ∈ ℝ. Solution : via Euler
+sin⁵x = (1/(2i)⁵)(e^(ix) − e^(−ix))⁵, binôme de Newton ⇒ sin⁵x = (1/16)(sin 5x − 5 sin 3x + 10 sin x).
+(Encart définition de « linéariser ».)
+
+- **Activité 3** (p.27) : linéariser cos³x, sin³x, sin³x·cos⁴x où x est un réel.
+
+### Cours — Résultats / définitions / théorèmes à retenir (VERBATIM)
+
+> **Théorème et définition (rappel)** (p.6) — « Il existe un ensemble appelé ensemble des nombres
+> complexes, noté ℂ et vérifiant les propriétés ci-dessous. 1. L'ensemble ℂ contient l'ensemble des
+> nombres réels ℝ. 2. Il existe un élément de ℂ, noté i, tel que i² = −1. 3. L'ensemble ℂ est muni
+> d'une addition et d'une multiplication qui vérifient les mêmes propriétés que l'addition et la
+> multiplication dans ℝ. 4. Tout élément z de ℂ s'écrit de façon unique sous la forme z = a + ib, où a
+> et b sont des réels. »
+
+> **Conséquences** (p.6) — « Soit z = a + ib et z′ = a′ + ib′, où a, a′, b et b′ sont des réels. Alors
+> z = z′, si et seulement si, a = a′ et b = b′. z = 0, si et seulement si, a = b = 0. z est réel, si et
+> seulement si, b = 0. z est imaginaire, si et seulement si, a = 0. »
+
+> **Propriétés** (p.7) — « Pour tous nombres complexes z et z′, z̄+z̄′ = z̄ + z̄′ [sic, imprimé
+> "z + z′ = z̄ + z̄′"] ; z̄z′ = z̄ z̄′ ; (zⁿ)‾ = (z̄)ⁿ ; n ∈ ℕ\*. Pour tout nombre complexe z et tout
+> nombre complexe non nul z′, (z/z′)‾ = z̄/z̄′ ; (1/z′ⁿ)‾ = 1/(z̄′)ⁿ, n ∈ ℤ. z + z̄ = 2 Re(z) ;
+> z − z̄ = 2i Im(z) ; zz̄ = (Re(z))² + (Im(z))². z = z̄, si et seulement si, z est réel. z = −z̄, si et
+> seulement si, z est imaginaire. »
+
+> **Propriété** (p.8) — « Soit w⃗ et w₁⃗ deux vecteurs tels que w₁⃗ est non nul. Les vecteurs w⃗ et w₁⃗
+> sont colinéaires, si et seulement si, z_w⃗/z_w₁⃗ est réel. »
+
+> **Propriété** (p.8) — « Soit w⃗ et w₁⃗ deux vecteurs tels que w₁⃗ est non nul. Les vecteurs w⃗ et w₁⃗
+> sont orthogonaux, si et seulement si, z_w⃗/z_w₁⃗ est imaginaire. »
+
+> **Propriétés** (p.9) — « Soit deux nombres complexes z et z′. |z| = 0, si et seulement si, z = 0 ;
+> |z + z′| ≤ |z| + |z′| ; |kz| = |k||z|, k ∈ ℝ. |zz′| = |z||z′| ; |z̄| = |z| ; |z|² = zz̄ ;
+> |zⁿ| = |z|ⁿ, n ∈ ℕ\*. |1/z| = 1/|z|, z ≠ 0 ; |z′/z| = |z′|/|z|, z ≠ 0 ; |1/zⁿ| = 1/|z|ⁿ, z ≠ 0 et
+> n ∈ ℤ. »
+
+> **Propriétés** (p.11) — « Soit z un nombre complexe non nul et k un réel non nul.
+> arg(z̄) ≡ −arg(z) [2π]. arg(−z) ≡ π + arg(z) [2π]. Si k > 0 alors arg(kz) ≡ arg(z) [2π]. Si k < 0
+> alors arg(kz) ≡ π + arg(z) [2π]. »
+
+> **Écriture trigonométrique** (encart p.11) — « Soit z un nombre complexe non nul tel que arg(z) ≡ θ
+> [2π]. Alors z = |z|(cos θ + i sin θ). L'écriture précédente est appelée écriture trigonométrique de
+> z. »
+
+> **Propriétés** (p.12) — « Soit deux nombres complexes non nuls z et z′. arg(zz′) ≡ arg(z) + arg(z′)
+> [2π]. arg(1/z) ≡ −arg(z) [2π]. arg(z′/z) ≡ arg(z′) − arg(z) [2π]. arg(zⁿ) ≡ n arg(z) [2π], n ∈ ℤ.
+> Pour tout nombre complexe non nul z et tout entier n, zⁿ = |z|ⁿ(cos nθ + i sin nθ). La formule
+> précédente est appelée formule de Moivre. »
+
+> **Théorème** (p.14) — « Le plan est muni d'un repère orthonormé direct (O, u⃗, v⃗). Soit A, B, C et D
+> des points d'affixes respectives z_A, z_B, z_C et z_D et tels que AB ≠ 0 et CD ≠ 0. Alors
+> (u⃗, AB⃗) ≡ arg(z_B − z_A) [2π] et (AB⃗, CD⃗) ≡ arg((z_D − z_C)/(z_B − z_A)) [2π]. »
+
+> **Conséquence** (p.15) — « (z_D − z_C)/(z_B − z_A) = (CD/AB)(cos θ + i sin θ) avec (AB⃗, CD⃗) ≡ θ [2π]. »
+
+> **Notation** (p.17) — « Pour tout réel θ, on note e^(iθ) le nombre complexe cos θ + i sin θ. »
+> **Conséquences** (p.17) — « e^(i0) = 1, e^(iπ/2) = i, e^(−iπ/2) = −i, e^(iπ) = −1. Pour tout réel θ
+> et tout entier k, e^(iθ) = e^(i(θ+2kπ)). Pour tout réel θ, |e^(iθ)| = 1 et (e^(iθ))‾ = e^(−iθ) et
+> −e^(iθ) = e^(i(θ+π)). »
+
+> **Propriétés** (p.17) — « Soit deux réels θ et θ′. e^(iθ)·e^(iθ′) = e^(i(θ+θ′)) ; 1/e^(iθ) = e^(−iθ) ;
+> e^(iθ)/e^(iθ′) = e^(i(θ−θ′)) ; (e^(iθ))ⁿ = e^(inθ), n ∈ ℤ. »
+
+> **Théorème et définition** (p.18) — « Tout nombre complexe non nul z, s'écrit sous la forme z = re^(iθ),
+> où r = |z| et arg(z) ≡ θ [2π]. L'écriture z = re^(iθ), r > 0 est appelée écriture exponentielle de z. »
+
+> **Théorème et définition** (p.19) — « Pour tout entier naturel non nul n, l'équation zⁿ = 1 admet dans
+> ℂ n solutions distinctes définies par zₖ = e^(i·2kπ/n), l'entier k appartenant à {0, 1, …, (n − 1)}.
+> Les solutions de l'équation zⁿ = 1 sont appelées racines nièmes de l'unité. »
+
+> **Conséquence** (p.20) — « Le plan est muni d'un repère orthonormé direct (O, u⃗, v⃗). Lorsque n ≥ 3,
+> les points images des racines nièmes de l'unité sont les sommets d'un polygone régulier inscrit dans
+> le cercle trigonométrique. »
+
+> **Théorème et définition** (p.21) — « Soit a un nombre complexe non nul d'argument θ et n un entier
+> naturel non nul. L'équation zⁿ = a admet dans ℂ, n solutions distinctes définies par
+> zₖ = r·e^(i(θ/n + 2kπ/n)), k ∈ {0, 1, …, n − 1}, où r est le réel strictement positif tel que rⁿ = |a|.
+> Ces solutions sont appelées les racines nièmes du nombre complexe a. »
+
+> **Conséquence** (p.22) — « Le plan complexe est muni d'un repère orthonormé direct (O, u⃗, v⃗). Lorsque
+> n ≥ 3, les points images des racines nièmes d'un nombre complexe non nul sont les sommets d'un polygone
+> régulier inscrit dans le cercle de centre O et de rayon r tel que rⁿ = |a|. »
+
+> **Théorème** (p.24) — « Soit a, b et c des nombres complexes tels que a ≠ 0. L'équation az² + bz + c = 0,
+> admet dans ℂ, deux solutions (éventuellement confondues) définies par z₁ = (−b + δ)/2a et
+> z₂ = (−b − δ)/2a, où δ est une racine carrée du discriminant Δ = b² − 4ac. »
+
+> **Conséquences** (p.24) — « Si z₁ et z₂ sont les solutions de az² + bz + c = 0, a ≠ 0, alors
+> az² + bz + c = a(z − z₁)(z − z₂), z₁ + z₂ = −b/a et z₁z₂ = c/a. »
+
+> **Théorème** (p.25) — « Soit a₁, a₂, …, aₙ des nombres complexes tels que aₙ ≠ 0, n ≥ 2. Soit
+> P(z) = aₙzⁿ + a_(n−1)z^(n−1) + … + a₁z + a₀. Si z₀ est un zéro de P, alors P(z) = (z − z₀)g(z), où g(z)
+> est de la forme aₙz^(n−1) + b_(n−2)z^(n−2) + … + b₀, avec b₀, b₁, …, b_(n−2) complexes. »
+
+> **Théorème** (p.26) — « Pour tout réel x et pour tout entier n, (cos x + i sin x)ⁿ = cos(nx) + i sin(nx)
+> (Formule de Moivre). Pour tout réel x, cos x = (e^(ix) + e^(−ix))/2 et sin x = (e^(ix) − e^(−ix))/2i
+> (Formules d'Euler). »
+
+(Les propriétés « colinéaires » et « orthogonaux » de p.8, le théorème de p.14, le théorème de
+p.21 et le théorème de p.24 sont chacun accompagnés d'une **Démonstration**.)
+
+### Cours — Exercices résolus (p.13–27)
+
+Sept exercices résolus jalonnent le cours (déjà décrits ci-dessus, dans leur section respective) :
+**ER 1** (écriture trigonométrique de zⁿ, points sur y = x, p.13–14), **ER 2** (ensemble
+arg((z−2+i)³) ≡ π/2, réunion de trois demi-droites, p.15–16), **ER 3** (ensemble arg((z−1)/(z+i)) ≡ π/3,
+arc de cercle, p.16), **ER 4** (z = 1 + i + e^(iθ), θ ∈ [0, π] ; ensemble E = demi-cercle de diamètre
+[IJ], I(2,1), J(0,1), p.17–18), **ER 5** (racines cinquièmes de l'unité et sommes, p.20–21), **ER 6**
+(équation de degré 3 à solution imaginaire z₀ = 2i, p.25–26), **ER 7** (linéarisation de sin⁵x, p.27).
+
+### QCM (p.28) — « Cocher la réponse exacte. »
+
+Le plan est muni d'un repère orthonormé direct (O, u⃗, v⃗). Soit les points M(z) et M′(z′).
+
+1. a. La distance MM′ est égale à (☐ |z − z′| / ☐ ||z| − |z′|| / ☐ |z + z′|). b. Si arg(z) ≡ arg(z′)
+   [2π] alors (☐ O, M et M′ sont alignés / ☐ z = z′ / ☐ |z| = |z′|).
+2. A, B, C d'affixes z_A, z_B, z_C tels que z_B − z_A = 4i(z_C − z_A). Alors (☐ ABC est isocèle /
+   ☐ (AB) et (AC) sont perpendiculaires / ☐ (AB) et (AC) sont parallèles).
+3. L'équation z² − 2z + 2 = 0 a pour solutions (☐ z₁ = 1 − i et z₂ = 1 + i / ☐ z₁ = 2i et z₂ = −i /
+   ☐ z₁ = 1 − i et z₂ = 2 + i).
+
+### Vrai ou faux (p.28) — « Répondre par vrai ou faux en justifiant la réponse. » (réponses non fournies)
+
+1. Une équation du second degré dans ℂ admet toujours deux racines opposées.
+2. Soit z et a deux nombres complexes non nuls. z⁴ = a⁴, si et seulement si, z = a ou z = −a.
+3. Soit z₁ et z₂ deux nombres complexes non réels. Le conjugué du nombre complexe Z = z₁ + iz₂ est
+   Z̄ = z₁ − iz₂.
+4. Deux nombres complexes non nuls ayant même argument et même partie réelle sont égaux.
+5. Soit z un nombre complexe. Si z³ est réel alors nécessairement z est réel.
+6. Soit z et z′ deux nombres complexes non nuls. Si |z| = |z′| alors nécessairement z = z′ ou z = −z′.
+
+### Exercices et problèmes (p.29–34) — 39 exercices
+
+- **Ex. 1** (p.29) : déterminer z sous forme algébrique. a. (z − i)/(z + i) = 2i. b. (z + i)/2z = 1 − i.
+  c. (2z + i)/iz = 2iz/(1 − z).
+- **Ex. 2** (p.29) : représenter les points A, B, S, P, I, J d'affixes z_A, z_B, z_A + z_B, z_A z_B,
+  1/z_A et 1/z_B. a. |z_A| = 3, arg(z_A) ≡ π/4 [2π], |z_B| = 1 et arg(z_B) ≡ π/2 [2π]. b. |z_A| = 2,
+  arg(z_A) ≡ π/4 [2π], |z_B| = 4 et arg(z_B) ≡ π [2π].
+- **Ex. 3** (p.29) : z ≠ −i, M d'affixe z, Z = (z − i)/(z + i). 1. ensemble des M tels que Z réel. 2. ensemble tels que Z imaginaire.
+- **Ex. 4** (p.29) : z non nul, M d'affixe z, Z = (z + 1)/z. 1. ensemble des M tels que Z réel. 2. Z
+  imaginaire.
+- **Ex. 5** (p.29) : 1. ensemble E = {M(z) tel que |(z − 1)/(z − i)| = 1}. 2. en déduire
+  F = {M(z) tel que |(2z̄ − 2)/(z − i)| = 2}.
+- **Ex. 6** (p.29) : déterminer l'ensemble des M d'affixe z tels que arg(z) − arg(z − 1) ≡ π/2 [2π],
+  z ∈ ℂ \ {0, 1}.
+- **Ex. 7** (p.29) : donner l'écriture algébrique de 2e^(3iπ/2), −e^(3iπ/4) et 3e^(−2iπ/3).
+- **Ex. 8** (p.29) : donner l'écriture exponentielle. a. (3e^(−iπ/5))³, 2e^(iπ/5)/3e^(iπ),
+  (e^(3iπ/8))⁴(e^(−iπ))³. b. −3 + 3i, 2√3 − 2i, (1 − i)⁵, (1 − i + √2)/(1 + i + √2).
+- **Ex. 9** (p.29) : a = (√6 + √2)/2 + i(√6 − √2)/2. 1. écriture exponentielle de a², en déduire celle
+  de a. 2. valeurs exactes de cos(π/12) et sin(π/12). 3. repère orthonormé direct : a. construire A et
+  B d'affixes a et ia² ; b. ensemble E des M d'affixe z tels que arg((iz + a²)/(z − a)) ≡ −11π/12 + kπ,
+  k ∈ ℤ ; vérifier que O ∈ E, tracer E.
+- **Ex. 10** (p.30) : z₁ = e^(iπ/6), z₂ = 2e^(−i2π/3), z₃ = √2 e^(−iπ/4). Donner l'écriture
+  exponentielle de iz₁, z₂/(1 + i), z₁z₂, z₁/z₂, z₁z₂z₃, z₃⁴, z₂³/z₁⁶ et z̄₂/z₃.
+- **Ex. 11** (p.30) : déterminer les racines cubiques de 4√2(i + 1).
+- **Ex. 12** (p.30) : déterminer les racines quatrièmes de 8√2(−1 − i).
+- **Ex. 13** (p.30) : déterminer les racines cinquièmes de 32i.
+- **Ex. 14** (p.30) : déterminer les racines sixièmes de 32(i − √3).
+- **Ex. 15** (p.30) : résoudre dans ℂ. a. z² + 18z + 1681 = 0. b. z² − (5 − i)z + 8 − i = 0.
+  c. z² + 4(i − 1)z + 2(4 − i) = 0. d. z² + (1 − 3i)z − 2(1 + i) = 0.
+- **Ex. 16** (p.30) : résoudre dans ℂ. a. z⁴ + 6z² + 25 = 0. b. z⁴ + 4z² − 77 = 0.
+- **Ex. 17** (p.30) : (E) : z³ − 8z² + 24z − 32 = 0. Vérifier que z₀ = 4 est solution. 2. résoudre (E) ;
+  z₁ solution à partie imaginaire positive, z₂ à partie imaginaire négative ; forme exponentielle de z₁
+  et z₂.
+- **Ex. 18** (p.30) : (E) : z³ − (3 + 4i)z² − 4(1 − 3i)z + 12 = 0. 1. montrer que (E) admet une racine
+  réelle et la déterminer. 2. résoudre (E).
+- **Ex. 19** (p.30) : (E) : z³ = 2 + 11i. 1. vérifier que z₀ = 2 + i est solution. 2. résoudre (E).
+- **Ex. 20** (p.30) : repère orthonormé direct. 1. résoudre dans ℂ zz̄ + 3(z − z̄) = 13 + 18i,
+  solutions z₁, z₂ avec Re(z₁) < 0. 2. représenter A et B d'affixes z₁ et z₂. 3. affixe du centre de
+  gravité G du triangle OAB. 4. affixe de C pour que OABC soit un parallélogramme.
+- **Ex. 21** (p.30) : repère orthonormé direct. 1. (E) : z³ − (4 + i)z² + (7 + i)z − 4 = 0 : a. montrer
+  que (E) admet une racine réelle et la déterminer ; b. résoudre (E). 2.a. représenter A, B, C d'affixes
+  1, 2 + 2i et 1 − i ; b. module et argument de (2 + 2i)/(1 − i), en déduire la nature du triangle OBC ;
+  c. que représente la droite (OA) pour le triangle OBC ? d. D tel que CD⃗ = CO⃗ et (CO⃗, CD⃗) ≡ −π/2 [2π] ;
+  nature de OCDB ?
+- **Ex. 22** (p.31) : 1. déterminer les racines quatrièmes de l'unité. 2. résoudre dans ℂ
+  ((z − i)/(z + i))³ + ((z − i)/(z + i))² + (z − i)/(z + i) + 1 = 0.
+- **Ex. 23** (p.31) : résoudre dans ℂ 1 + z + z² + … + z⁶ = 0. Calculer cos(2π/7) + cos(4π/7) +
+  cos(6π/7).
+- **Ex. 24** (p.31) : 1. montrer que pour tout entier n > 0 et tout z, 1 − z^(n+1) = (1 − z)(1 + z + z²
+  - … + zⁿ). 2. montrer que pour tout réel θ, 1 − e^(iθ) = −2i sin(θ/2) e^(iθ/2). 3. n ≥ 1, θ ≠ 2kπ ;
+    S = 1 + cos θ + cos 2θ + … + cos nθ, S′ = sin θ + sin 2θ + … + sin nθ : a. montrer S + iS′ =
+    (1 − e^(iθ(n+1)))/(1 − e^(iθ)) ; b. en déduire S = (sin((n+1)θ/2)/sin(θ/2)) cos(nθ/2) et
+    S′ = (sin((n+1)θ/2)/sin(θ/2)) sin(nθ/2).
+- **Ex. 25** (p.31) : repère orthonormé direct. f qui à M d'affixe z associe M′ d'affixe z′ = z² − 4z ;
+  A, B d'affixes 1 − i et 3 + i. 1.a. affixes de A′ et B′ images de A et B ; b. deux points de même
+  image sont confondus ou l'un est l'image de l'autre par une symétrie centrale à préciser. 2. I
+  d'affixe −3 : a. montrer que OMIM′ est un parallélogramme ssi z² − 3z + 3 = 0 ; b. résoudre
+  z² − 3z + 3 = 0. 3.a. exprimer (z′ + 4) en fonction de (z − 2) ; relation entre |z′ + 4| et |z − 2|,
+  puis entre arg(z′ + 4) et arg(z − 2) ; b. J, K d'affixes 2 et −4 ; montrer que l'image de tout M du
+  cercle de centre J et de rayon 2 appartient à un même cercle à déterminer ; c. E d'affixe z_E = −4 − 3i ;
+  forme trigonométrique de z_E + 4 et montrer qu'il existe deux points d'image E par f, préciser leur
+  affixe algébrique.
+- **Ex. 26** (p.31) : plan P, repère orthonormé direct. A, B, C d'affixes 2i, −1 et i ; f de P \ {A}
+  dans P qui à M d'affixe z associe M′ d'affixe z′ = (z + 1)/(z − 2i). 1.a. C′ image de C ; nature du
+  quadrilatère ACBC′ ? b. montrer que C admet un unique antécédent C″ par f, nature du triangle BCC″ ? 2. interprétation géométrique du module et d'un argument de z′. 3.a. ensemble E des M tels que z′
+  réel strictement négatif ; b. ensemble F des M tels que z′ imaginaire non nul ; c. ensemble G des M
+  tels que M′ ∈ cercle de centre O et de rayon 1.
+- **Ex. 27** (p.32) : z = e^(iθ) − i, θ ∈ [0, π/2[. 1. M et M′ images de z et z̄ ; déterminer l'affixe
+  de N pour que OMNM′ soit un losange. 2.a. montrer que z = 2 cos(θ/2 + π/4) e^(i(θ/2 − π/4)) ; b. mettre
+  z̄/z sous forme exponentielle ; c. valeur de θ pour que OMNM′ soit un carré ; d. construire le carré.
+- **Ex. 28** (p.32) : plan P, repère orthonormé direct ; A d'affixe 1 ; f de P \ {A} qui à M d'affixe z
+  associe M′ d'affixe z′ = (z̄ + 3)/(z̄ − 1). 1. B d'affixe 1 − i : a. affixe de B′ ; b. placer B et B′. 2. C d'affixe 1 + 2e^(iπ/6) : a. calculer AC ; b. déterminer (u⃗, AC⃗) ; c. construire C ; d. montrer
+  f(C) = C. 3.a. calculer (z̄ − 1)(z′ − 1) ; b. en déduire AM·AM′ = 4 ; c. image par f du cercle de
+  centre A et de rayon 2.
+- **Ex. 29** (p.32) : repère orthonormé direct. a = (√3 + 1)/4 + i(√3 − 1)/4. 2. U = ½[(1 − i) +
+  √3(1 + i)] : a. calculer U² ; b. forme trigonométrique de U ; c. en déduire cos(π/12) et sin(π/12). 3. P(Z) = Z³ − 2(√3 + i)Z² + 4(1 + i√3)Z − 8i : a. montrer que P(Z) = 0 admet une solution imaginaire
+  pure à déterminer ; b. résoudre P(Z) = 0. 4. A(√3 − i), B(√3 + i), C(2i) : a. représenter A, B, C ;
+  b. montrer que OABC est un losange.
+- **Ex. 30** (p.32) : plan P, repère orthonormé direct ; f qui à M d'affixe z non nulle associe M′
+  d'affixe z′ = 1/z. 1. ensemble des points fixes de f. 2. pour tout M distinct de O, O, M, M′ alignés
+  et OM·OM′ = 1. 3.a. A, B, C d'affixes 4, 2 + 2i, 2 − 2i appartiennent au cercle 𝒞 de centre I(2) et
+  de rayon 2 ; b. affixes de A′, B′, C′ images par f ; montrer qu'elles appartiennent à une même droite
+  à déterminer. 4.a. pour tout z non nul, |z − 2| = 2 ssi |1/2 − z′| = |z′| ; b. en déduire l'image par
+  f du cercle 𝒞.
+- **Ex. 31** (p.32) : repère orthonormé direct ; A d'affixe z_A = 1, 𝒞 cercle de centre A de rayon 1.
+  I. F d'affixe 2, B d'affixe z_B = 1 + e^(iπ/3), E d'affixe (1 + z_B²). 1.a. montrer B ∈ 𝒞 ; b. mesure
+  de (AF⃗, AB⃗) ; placer B. 2.a. forme exponentielle de (z_B − z_A) et (z_E − z_A) ; b. en déduire que
+  A, B, E sont alignés. 3. placer E.
+- **Ex. 32** (p.33) : repère orthonormé direct ; suite (αₙ) définie par α₀ = π/2 et αₙ₊₁ = αₙ + 5π/6 ;
+  Mₙ du cercle de centre O et de rayon 1 tel que (u⃗, OMₙ⃗) ≡ αₙ [2π]. 1. placer M₀…M₈. 2. zₙ affixe de
+  Mₙ, écrire zₙ sous forme exponentielle. 3. Mₙ et Mₙ₊₆ diamétralement opposés. 4. Mₙ et Mₙ₊₁₂
+  confondus. 5. montrer zₙ₊₄ = e^(−2iπ/3) zₙ ; en déduire que MₙMₙ₊₄Mₙ₊₈ est équilatéral.
+- **Ex. 33** (p.33) : 1. résoudre dans ℂ Z⁴ = −1. 2. θ ∈ ℝ \ {kπ, k ∈ ℤ} ; montrer que
+  (z + i)/(z − i) = e^(iθ) équivaut à z = 1/tan(θ/2). 3. en déduire les solutions de (z + i)⁴ =
+  −(z − i)⁴.
+- **Ex. 34** (p.33) : plan P, repère orthonormé direct ; A d'affixe −i ; f de P \ {A} qui à M d'affixe
+  z associe M′ d'affixe z′ = iz̄/(i − z). 1. ensemble des points invariants par f. 2.a. pour tout
+  z ∈ ℂ \ {−i}, (z′ + i)(z̄ − i) = 1 ; b. en déduire AM′·AM = 1 et M′ ∈ [AM). 3.a. θ ∈ ℝ \ {−π/2 + 2kπ,
+  k ∈ ℤ} ; montrer que l'affixe de f(M) est égale à e^(iθ) ssi z = −½(tan(θ/2 − π/4) + i) ; b. résoudre
+  dans ℂ z³ = 1 ; c. en déduire les solutions de iz³ = (−i − z)³.
+- **Ex. 35** (p.33) : repère orthonormé direct ; a réel, (E) : z² + a(1 − i)z − ia² = 0. 1. résoudre
+  (E), z₁ solution réelle, z₂ l'autre solution. 2. A, B d'affixes 2 + z₁ et z₂ ; carré de sens direct
+  ACBD : a. montrer que C est fixe ; b. déterminer et construire l'ensemble des D lorsque a varie
+  dans ℝ.
+- **Ex. 36** (p.33) : 1.a. résoudre dans ℂ Z² − 2√3 Z + 4 = 0. b. écrire les solutions sous forme
+  exponentielle.
+- **Ex. 37** (p.34) : α réel de [0, π/2]. I.1. exprimer à l'aide de α (e^(i2α) + 2e^(iα))² −
+  (e^(i2α) − 2e^(iα))². 2. résoudre dans ℂ z² − (e^(i2α) + 2e^(iα))z + 2e^(i3α) = 0. II. repère
+  orthonormé direct ; A, B, A′, B′ d'affixes z_A = e^(i2α), z_B = 2e^(iα), z_A′ = iz_A et z_B′ = −iz_B.
+  1.a. mettre z_A′ et z_B′ sous forme exponentielle. b. placer A, B, A′, B′ pour α = π/6. 2. I milieu
+  de [A′B′] : a. montrer z_I/(z_B − z_A) = −½ i ; b. en déduire que la médiane issue de O du triangle
+  OA′B′ est une hauteur issue de O du triangle OAB et que OI = ½ AB.
+- **Ex. 38** (p.34) : I.1. résoudre dans ℂ z² − 2e^(iα)z + 2e^(2iα) = 0, α réel de [0, π]. 2. mettre
+  les solutions sous forme exponentielle. II. repère orthonormé direct ; A, B d'affixes z₁ = (1 − i)e^(iα)
+  et z₂ = (1 + i)e^(iα). 1.a. montrer z₂/z₁ = i ; b. en déduire que OAB est rectangle et isocèle en O.
+  2.a. montrer (u⃗, AB⃗) ≡ α + π/2 [2π] ; b. déterminer α pour que (AB) soit parallèle à y = x ;
+  c. construire A et B pour cette valeur.
+- **Ex. 39** (p.34) : θ réel de [0, π/2[, (E) : iz² + 6 sin θ z − 9i = 0. 1.a. résoudre (E) ; b. écrire
+  sous forme exponentielle les solutions de (E). 2. repère orthonormé direct ; A, M₁, M₂ d'affixes 3i,
+  z₁ = 3(cos θ + i sin θ), z₂ = 3(−cos θ + i sin θ) : a. vérifier que A, M₁, M₂ sont sur un même cercle
+  à préciser ; b. valeur de θ pour que OM₁AM₂ soit un losange. 3. résoudre dans ℂ iz⁴ + 3√3 z² − 9i = 0 ;
+  placer les points images des solutions.
+
+### Bornes de scope observées (chapitre 10)
+
+- ✅ INCLUS : **définition axiomatique de ℂ** (i² = −1, forme algébrique a + ib unique, Re/Im,
+  conjugué z̄, égalités et caractérisations réel/imaginaire) ; **module** |z| = √(a² + b²) et ses
+  propriétés (inégalité triangulaire, |zz′|, |z/z′|, |zⁿ|, |z|² = zz̄) ; **argument** et ses propriétés
+  (arg(z̄), arg(−z), arg(kz), arg(zz′), arg(z/z), arg(zⁿ)) ; **affixe** d'un point et d'un vecteur,
+  colinéarité (z_w/z_w₁ réel) et orthogonalité (z_w/z_w₁ imaginaire), **angles orientés**
+  (u⃗, AB⃗) ≡ arg(z_B − z_A) et (AB⃗, CD⃗) ≡ arg((z_D − z_C)/(z_B − z_A)) ; **écriture trigonométrique**
+  r(cos θ + i sin θ) et **formule de Moivre** ; **écriture exponentielle** re^(iθ) et règles de calcul,
+  factorisation 1 + e^(iθ) = 2cos(θ/2)e^(iθ/2), 1 − e^(iθ) = −2i sin(θ/2)e^(iθ/2) ; **racines nièmes de
+  l'unité** (zₖ = e^(2ikπ/n), polygone régulier, cas j = e^(2iπ/3)) et **racines nièmes d'un complexe a**
+  (zₖ = r·e^(i(θ/n + 2kπ/n)), rⁿ = |a|), y compris **racines carrées par méthode algébrique** (système
+  x² − y² / 2xy / x² + y²) ; **équation du second degré** az² + bz + c = 0 (discriminant Δ = b² − 4ac,
+  racine carrée δ du discriminant, somme −b/a et produit c/a) ; **équations de degré ≥ 3** par recherche
+  d'une racine (réelle ou imaginaire pure) puis factorisation P(z) = (z − z₀)g(z) ; **trigonométrie**
+  (formules d'Euler, linéarisation de puissances, expression de cos nx / sin nx). **Techniques
+  transverses** : lieux géométriques (droites, cercles, arcs, demi-droites) via module/argument d'un
+  quotient ; transformations du plan z ↦ z′ (z′ = 1/z, z′ = z² − 4z, homographies (z+1)/(z−2i)) ;
+  sommes trigonométriques Σcos kθ / Σsin kθ par exponentielle.
+- ⛔ NON traité dans ce chapitre : la **similitude** en tant que transformation z ↦ az + b classifiée
+  (elle est l'objet des chapitres 11–13 du tome 2, non de ce chapitre) ; la **notation √z** ou une
+  fonction « racine carrée complexe » (on parle DES racines carrées, au pluriel, sans branche
+  privilégiée) ; les **fonctions d'une variable complexe** (holomorphie, exponentielle complexe comme
+  fonction) — e^(iθ) est ici une **notation** pour cos θ + i sin θ, pas une fonction analytique ; la
+  **résolution générale des équations de degré ≥ 3** sans racine évidente (on suppose toujours une
+  racine remarquable donnée ou à deviner par sa nature).
 
 ## 3. Notes pédagogiques / méthode
 

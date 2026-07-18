@@ -18,14 +18,14 @@
           "tomes": ["P00"],
           "role": "eleve",
           "pagesTotal": 230,
-          "pagesLues": [[1, 6]]
+          "pagesLues": [[1, 34]]
         }
       ],
       "sourcesLibres": [],
       "r7": null,
       "maj": "2026-07-18",
       "par": "bejimed",
-      "notes": "Campagne LOT A (METHODE-GENERATION-CONTENU) raccrochée au corpus : tome 1 Analyse (222445, 9 ch.) + tome 2 (222446, 10 ch.) = 19 chapitres ; manuel eleve seul (pas de guide enseignant au corpus) => fait reference. Paliers 1-5 : TOME 1 COMPLET (chapitres 1-9, p.5-207) transcrit a profondeur de generation ; 222445 couvert a 100%. R-7 independant CONFORME sur ch.1/2/3/5/6/8/9 ; CORRECTIONS MINEURES appliquees sur ch.4 (VF-5 f'->f) et ch.7 (Activite 2 p.140 ajoutee + note Ex.28). Ch.10-19 restent en 'bloc'. Reste : TOME 2 (222446, ch.10-19 : complexes, isometries, deplacements, similitudes, coniques, geo espace, divisibilite, Bezout, probas, stats). Generation LOT B interdite tant que statut != complete (tome 2 non couvert)."
+      "notes": "Campagne LOT A (METHODE-GENERATION-CONTENU) raccrochée au corpus : tome 1 Analyse (222445, 9 ch.) + tome 2 (222446, 10 ch.) = 19 chapitres ; manuel eleve seul (pas de guide enseignant au corpus) => fait reference. Paliers 1-5 : TOME 1 COMPLET (chapitres 1-9, p.5-207) transcrit a profondeur de generation ; 222445 couvert a 100%. R-7 independant CONFORME sur ch.1/2/3/5/6/8/9 ; CORRECTIONS MINEURES appliquees sur ch.4 (VF-5 f'->f) et ch.7 (Activite 2 p.140 ajoutee + note Ex.28). Palier 6 : ch.10 Nombres complexes (222446 p.5-34) transcrit a profondeur de generation, R-7 independant CONFORME (0 correction). Ch.11-19 restent en 'bloc'. Reste tome 2 : ch.11 (isometries) + ch.12 (deplacements) puis ch.13-19. Generation LOT B interdite tant que statut != complete (tome 2 non entierement couvert)."
     }
   ]
 }
