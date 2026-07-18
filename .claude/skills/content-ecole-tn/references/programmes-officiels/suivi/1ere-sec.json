@@ -158,7 +158,7 @@
     {
       "matiere": "histoire-geo",
       "statut": "partielle",
-      "profondeur": "first-pass",
+      "profondeur": "mixte",
       "sources": [
         {
           "code": "207103",
@@ -167,6 +167,7 @@
           "pagesTotal": 224,
           "pagesLues": [
             [2, 5],
+            [11, 20],
             [221, 224]
           ]
         },
@@ -187,7 +188,7 @@
       "r7": null,
       "maj": "2026-07-18",
       "par": "bejimed",
-      "notes": "⛔ GÉNÉRATION INTERDITE (statut partielle / first-pass). Sujet COMBINÉ histoire+géographie (subject id cible histoire-geo-1ere-sec ; overlay prof-histoire-geo-lycee). Deux manuels élève arabes (pas de guide au corpus) → font référence. Langue CONSTATÉE : arabe (conforme lycee-architecture §4). PALIER 1 = STRUCTURE : histoire chapitrée 18 leçons / 3 وحدات (vérifié au فهرس p.221-223 + crédits p.224), codifié au manifeste ; géo structuré en 3 modules (الإنسان يعمّر الأرض ~p.5-44 · الإنسان يستثمر الموارد الطبيعيّة ~p.45-112 · الإنسان والأوساط الطبيعيّة ~p.113-117) — pas de فهرس dans ce manuel, leçons internes à établir (hors manifeste pour l'instant). Contenu de génération (activités/encadrés verbatim/exercices, R-5) ENTIÈREMENT à transcrire par vision (couche-texte cassée). Reprise (R-4) : compléter sans refaire la structure ; ordre suggéré histoire و1 (leçons 1-9) → و2-و3 → géo module par module. Pas de R-7 (fiche non complète)."
+      "notes": "⛔ GÉNÉRATION INTERDITE (statut partielle / profondeur mixte). Sujet COMBINÉ histoire+géographie (subject id cible histoire-geo-1ere-sec ; overlay prof-histoire-geo-lycee). Deux manuels élève arabes (pas de guide au corpus) → font référence. Langue CONSTATÉE : arabe (conforme lycee-architecture §4). PALIER 1 (STRUCTURE) : histoire chapitrée 18 leçons / 3 وحدات (vérifié au فهرس p.221-223 + crédits p.224), codifié au manifeste ; géo structuré en 3 modules (الإنسان يعمّر الأرض ~p.5-44 · الإنسان يستثمر الموارد الطبيعيّة ~p.45-112 · الإنسان والأوساط الطبيعيّة ~p.113-117) — pas de فهرس, leçons internes à établir (hors manifeste). PALIER 2 (2026-07-18) : histoire leçons 1-2 (p.11-20) transcrites à PROFONDEUR DE GÉNÉRATION (fiche §2bis : المدخل, وثائق+sources, تعليمات, معطيات مكمّلة, أدعّم مكتسباتي verbatim). RESTE : histoire leçons 3-18 + géo entier, à transcrire par vision (couche-texte cassée ; figures décrites d'après légende). Reprise (R-4) : suite = leçon 3 (p.21-28). Pas de R-7 (fiche non complète)."
     }
   ]
 }
