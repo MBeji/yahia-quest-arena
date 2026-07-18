@@ -1,0 +1,10 @@
+{
+  "title": "La tension électrique",
+  "description": "La tension électrique et son unité le volt (V) ; le voltmètre et son branchement en dérivation (bornes V et COM) ; la tension aux bornes d'un dipôle isolé (non nulle pour un générateur, nulle pour un récepteur) ; force électromotrice (tension à vide) et tension nominale ; la tension en circuit fermé ; le caractère algébrique de la tension, la notation UAB et la relation UAB = −UBA ; la loi des mailles ; l'oscilloscope et la tension continue",
+  "displayOrder": 4,
+  "manuel": { "code": "223103P00", "pages": "57-70" },
+  "sources": [
+    "Programme officiel — Sciences physiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 223103P00 « PHYSIQUE », thème L'ÉLECTRICITÉ, chapitre IV (p.57–70)",
+    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/sciences-physiques.md (§2.4)"
+  ]
+}

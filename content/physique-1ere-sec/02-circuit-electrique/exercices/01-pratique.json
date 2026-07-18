@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : Construire et lire un circuit",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "On intercale un objet isolant dans la chaîne d'un circuit. Comment devient ce circuit ?",
+      "options": [
+        { "id": "a", "text": "Un circuit fermé" },
+        { "id": "b", "text": "Un court-circuit" },
+        { "id": "c", "text": "Un générateur" },
+        { "id": "d", "text": "Un circuit ouvert" }
+      ],
+      "correctOption": "d",
+      "explanation": "Un isolant bloque le courant : la chaîne n'est plus continue, le circuit est ouvert et aucun courant ne circule ✓. Ce n'est donc pas un circuit fermé (qui exige une chaîne continue de conducteurs). Un court-circuit est tout autre chose (des bornes reliées par un fil), et un circuit n'est jamais un « générateur ».",
+      "difficulty": 1
+    },
+    {
+      "prompt": "La lampe et le moteur utilisent le courant pour fonctionner mais ne peuvent pas le créer. Comment appelle-t-on ces dipôles ?",
+      "options": [
+        { "id": "a", "text": "Des générateurs" },
+        { "id": "b", "text": "Des conducteurs" },
+        { "id": "c", "text": "Des récepteurs" },
+        { "id": "d", "text": "Des isolants" }
+      ],
+      "correctOption": "c",
+      "explanation": "Un dipôle qui utilise le courant pour fonctionner est un récepteur ✓ : la lampe et le moteur en sont. Le générateur, lui, fait apparaître le courant : c'est le rôle inverse. « Conducteur » et « isolant » qualifient l'aptitude à laisser passer le courant, pas le rôle du dipôle dans le circuit.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Le filament d'une lampe s'échauffe fortement lorsqu'elle brille. Quel effet du courant cela met-il en évidence ?",
+      "options": [
+        { "id": "a", "text": "L'effet thermique" },
+        { "id": "b", "text": "L'effet magnétique" },
+        { "id": "c", "text": "L'effet chimique" },
+        { "id": "d", "text": "L'effet lumineux" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'échauffement d'un conducteur traduit l'effet thermique du courant ✓. L'effet magnétique fait dévier une aiguille aimantée, l'effet chimique transforme la matière dans un électrolyseur : ni l'un ni l'autre n'est un échauffement. La lampe produit aussi de la lumière (effet lumineux), mais la question porte ici sur l'échauffement du filament.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Une diode branchée dans le sens passant se comporte comme :",
+      "options": [
+        { "id": "a", "text": "Un interrupteur fermé" },
+        { "id": "b", "text": "Un interrupteur ouvert" },
+        { "id": "c", "text": "Un générateur" },
+        { "id": "d", "text": "Un isolant en toute circonstance" }
+      ],
+      "correctOption": "a",
+      "explanation": "Dans le sens passant, la diode laisse circuler le courant : elle agit comme un interrupteur fermé ✓. Dans le sens bloquant, au contraire, elle se comporte comme un interrupteur ouvert. Elle ne produit jamais de courant (ce n'est pas un générateur) et n'est pas isolante en permanence : tout dépend du sens de branchement.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Lequel de ces objets, intercalé dans un circuit, permet à la lampe de rester allumée ?",
+      "options": [
+        { "id": "a", "text": "Une règle en plastique" },
+        { "id": "b", "text": "Un objet métallique" },
+        { "id": "c", "text": "Un morceau de verre" },
+        { "id": "d", "text": "Un bâton en bois" }
+      ],
+      "correctOption": "b",
+      "explanation": "Un objet métallique est un conducteur : il laisse passer le courant, la lampe reste allumée ✓. Le plastique, le verre et le bois sont des isolants : ils ouvrent le circuit et la lampe s'éteint.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans un fil métallique parcouru par un courant, dans quel sens se déplacent les électrons ?",
+      "options": [
+        { "id": "a", "text": "Dans le sens conventionnel du courant" },
+        { "id": "b", "text": "Dans les deux sens à la fois" },
+        { "id": "c", "text": "En sens inverse du courant conventionnel" },
+        { "id": "d", "text": "Ils restent immobiles" }
+      ],
+      "correctOption": "c",
+      "explanation": "Les électrons sont négatifs : ils se déplacent en sens inverse du sens conventionnel du courant, c'est-à-dire vers la borne + du générateur ✓. Le sens conventionnel a été fixé avant qu'on ne connaisse les électrons, d'où cette opposition. Les électrons se déplacent bien (ils ne sont pas immobiles) et tous dans le même sens.",
+      "difficulty": 1
+    }
+  ]
+}

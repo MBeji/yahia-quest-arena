@@ -1,0 +1,10 @@
+{
+  "title": "L'intensité du courant électrique",
+  "description": "Associations de dipôles : montage en série et montage en dérivation (parallèle), branche principale et branches dérivées, nœud et maille ; l'intensité du courant I et son unité l'ampère (A) ; l'ampèremètre (bornes A et COM, commutateur, calibre, échelle), son branchement en série et le choix du calibre ; la conservation de l'intensité dans un circuit série ; la loi des nœuds dans un montage en dérivation ; le fusible et les dangers électriques liés à l'intensité",
+  "displayOrder": 3,
+  "manuel": { "code": "223103P00", "pages": "43-56" },
+  "sources": [
+    "Programme officiel — Sciences physiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 223103P00 « PHYSIQUE », thème L'ÉLECTRICITÉ, chapitre III (p.43–56)",
+    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/sciences-physiques.md (§2.3)"
+  ]
+}

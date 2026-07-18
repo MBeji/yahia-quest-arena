@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Effets, sens et dangers du courant",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "À quelles deux conditions un circuit électrique est-il parcouru par un courant ?",
+      "options": [
+        { "id": "a", "text": "Un générateur et une chaîne continue de conducteurs" },
+        { "id": "b", "text": "Un récepteur et une chaîne interrompue" },
+        { "id": "c", "text": "Au moins deux lampes montées en série" },
+        { "id": "d", "text": "Un interrupteur ouvert dans la chaîne" }
+      ],
+      "correctOption": "a",
+      "explanation": "Un courant circule si, et seulement si, le circuit comporte un dipôle générateur et forme une chaîne continue de conducteurs ✓. Sans générateur, rien n'impose le courant ; sans chaîne continue (chaîne interrompue ou interrupteur ouvert), le circuit est ouvert. Le nombre de lampes n'a rien à voir avec ces deux conditions.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans une solution ionique parcourue par un courant, dans quel sens se déplacent les cations (ions positifs) ?",
+      "options": [
+        { "id": "a", "text": "En sens inverse du courant conventionnel" },
+        { "id": "b", "text": "Dans le sens conventionnel du courant" },
+        { "id": "c", "text": "Ils ne se déplacent pas" },
+        { "id": "d", "text": "Tantôt dans un sens, tantôt dans l'autre" }
+      ],
+      "correctOption": "b",
+      "explanation": "Les cations, positifs, se déplacent dans le sens conventionnel du courant, c'est-à-dire vers la borne − du générateur ✓. Ce sont les anions (négatifs) et les électrons qui se déplacent en sens inverse, vers la borne +. Dans un électrolyte parcouru par un courant, les ions se déplacent bien, chacun dans un sens déterminé.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Près d'un composant d'un circuit, une aiguille aimantée dévie. Que peut-on en conclure ?",
+      "options": [
+        { "id": "a", "text": "Le composant est un aimant permanent" },
+        { "id": "b", "text": "Aucun courant ne circule dans ce composant" },
+        { "id": "c", "text": "Un courant circule dans ce composant" },
+        { "id": "d", "text": "Le composant est un isolant" }
+      ],
+      "correctOption": "c",
+      "explanation": "La déviation d'une aiguille aimantée est l'effet magnétique du courant : sa manifestation prouve qu'un courant circule dans le composant ✓. Ce n'est pas la signature d'un aimant permanent (qui dévierait l'aiguille même sans circuit alimenté), et un isolant ne serait traversé par aucun courant, donc ne dévierait pas l'aiguille.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Deux lampes L1 et L2 sont montées en série. On relie les deux bornes de L1 par un fil de connexion. Que devient L1 ?",
+      "options": [
+        { "id": "a", "text": "Elle brille plus fort" },
+        { "id": "b", "text": "Elle s'éteint" },
+        { "id": "c", "text": "Elle explose" },
+        { "id": "d", "text": "Rien ne change pour elle" }
+      ],
+      "correctOption": "b",
+      "explanation": "En reliant ses deux bornes par un fil, on court-circuite L1 : le courant passe par le fil plutôt que par le filament, qui n'est plus traversé — L1 s'éteint ✓. Un dipôle court-circuité est mis hors usage. Elle ne brille donc pas davantage (c'est L2 qui brillerait plus), et elle n'explose pas.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Une lampe brille dans un circuit contenant une diode montée dans le sens passant. On inverse le sens de la diode. Que devient la lampe ?",
+      "options": [
+        { "id": "a", "text": "Elle brille davantage" },
+        { "id": "b", "text": "Elle brille de la même façon" },
+        { "id": "c", "text": "Elle s'éteint" },
+        { "id": "d", "text": "Elle se met à clignoter" }
+      ],
+      "correctOption": "c",
+      "explanation": "Inversée, la diode est branchée dans le sens bloquant : elle se comporte alors comme un interrupteur ouvert et ne laisse plus passer le courant, la lampe s'éteint ✓. Une diode ne laisse passer le courant que dans un seul sens ; dans l'autre, le circuit est ouvert. La lampe ne peut donc ni briller pareil, ni davantage, ni clignoter.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Pourquoi ne faut-il jamais relier directement les deux bornes d'une pile par un simple fil conducteur ?",
+      "options": [
+        { "id": "a", "text": "Parce que la pile se recharge alors toute seule" },
+        { "id": "b", "text": "Parce que le fil se transforme en aimant permanent" },
+        { "id": "c", "text": "Parce qu'il ne se passe absolument rien" },
+        { "id": "d", "text": "Parce que la pile peut être endommagée et provoquer un incendie" }
+      ],
+      "correctOption": "d",
+      "explanation": "Relier directement les deux bornes d'un générateur, c'est le court-circuiter : un courant très intense s'établit, l'effet thermique devient énorme, la pile peut être endommagée et le fil peut provoquer un incendie ✓. Une pile ne se recharge pas ainsi, le fil ne devient pas un aimant permanent, et il se passe au contraire quelque chose de dangereux.",
+      "difficulty": 3
+    }
+  ]
+}

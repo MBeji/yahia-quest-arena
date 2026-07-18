@@ -1,0 +1,88 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Charges, conducteurs et décharges",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Par temps sec, une baguette en verre frottée et tenue à la main garde sa charge, alors qu'une baguette en cuivre frottée et tenue à la main la perd. Comment l'expliquer ?",
+      "options": [
+        { "id": "a", "text": "Le cuivre est conducteur, le verre est isolant" },
+        { "id": "b", "text": "Le verre est conducteur, le cuivre est isolant" },
+        { "id": "c", "text": "Le cuivre ne peut pas être électrisé" },
+        { "id": "d", "text": "Le verre est plus léger que le cuivre" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le cuivre est un conducteur : sa charge circule et s'écoule à travers la main de l'expérimentateur, si bien que la baguette se décharge ✓. Le verre est un isolant : sa charge reste localisée et ne peut pas s'échapper par la main, donc elle demeure. Inverser les deux natures donne l'option b, fausse. Le cuivre s'électrise très bien, et la masse n'a rien à voir avec la conservation de la charge.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lors d'une décharge électrique entre deux corps chargés de signes contraires, dans quel sens les électrons traversent-ils l'air ?",
+      "options": [
+        { "id": "a", "text": "Du corps positif vers le corps négatif" },
+        { "id": "b", "text": "Dans les deux sens à la fois" },
+        { "id": "c", "text": "Du corps négatif vers le corps positif" },
+        { "id": "d", "text": "Ils restent immobiles" }
+      ],
+      "correctOption": "c",
+      "explanation": "Les électrons portent une charge négative et se déplacent du corps chargé négativement vers le corps chargé positivement ✓ : c'est ce déplacement à travers l'air qui constitue la décharge, matérialisée par l'étincelle. Ils ne vont pas dans l'autre sens (ce serait le sens conventionnel du courant, étudié plus loin), ni dans les deux à la fois, et une décharge est justement un déplacement de charges, non une immobilité.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "En cas d'orage, pourquoi une voiture constitue-t-elle un bon abri ?",
+      "options": [
+        { "id": "a", "text": "Parce que ses pneus en caoutchouc l'isolent du sol" },
+        { "id": "b", "text": "Parce qu'elle roule plus vite que la foudre" },
+        { "id": "c", "text": "Parce que sa carrosserie métallique forme une cage de Faraday" },
+        { "id": "d", "text": "Parce que le verre des vitres arrête la foudre" }
+      ],
+      "correctOption": "c",
+      "explanation": "La carrosserie métallique de la voiture forme une cage de Faraday : le champ électrique reste nul à l'intérieur et les occupants sont protégés, même si la foudre frappe le véhicule ✓. Ce ne sont pas les pneus qui protègent — c'est la croyance courante, mais une décharge capable de traverser des kilomètres d'air n'est pas arrêtée par quelques centimètres de caoutchouc. La vitesse du véhicule et le verre des vitres n'y jouent aucun rôle.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Pourquoi installe-t-on au sommet d'un bâtiment un paratonnerre en forme de pointe métallique reliée à la Terre ?",
+      "options": [
+        { "id": "a", "text": "La pointe repousse la foudre au loin" },
+        {
+          "id": "b",
+          "text": "À la pointe, les charges se concentrent et la décharge est facilitée vers le sol"
+        },
+        { "id": "c", "text": "Le métal empêche toute décharge de se produire" },
+        { "id": "d", "text": "La pointe isole le bâtiment du sol" }
+      ],
+      "correctOption": "b",
+      "explanation": "C'est l'effet de pointe : au bout d'une pointe, les charges d'un corps électrisé s'accumulent très fortement et la décharge y est facilitée ✓. Le paratonnerre capte donc la foudre de préférence et, étant relié à la Terre, il conduit les charges vers le sol sans danger. La pointe ne repousse pas la foudre, elle l'attire ; le métal ne bloque pas la décharge, il la canalise ; et le paratonnerre est justement relié au sol, non isolé de lui.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Après frottement à la laine, un bâton en verre repousse un bâton en plexiglas, et ce bâton en plexiglas attire un bâton en ébonite. Quelle interaction s'exerce entre le verre et l'ébonite ?",
+      "options": [
+        { "id": "a", "text": "Ils se repoussent" },
+        { "id": "b", "text": "Ils s'attirent" },
+        { "id": "c", "text": "Ils n'ont aucune action l'un sur l'autre" },
+        { "id": "d", "text": "L'ébonite est forcément neutre" }
+      ],
+      "correctOption": "b",
+      "explanation": "On enchaîne les deux règles. Le verre repousse le plexiglas : même signe, donc le plexiglas est positif comme le verre. Le plexiglas attire l'ébonite : signes contraires, donc l'ébonite est négative. Le verre (+) et l'ébonite (−) sont de signes contraires : ils s'attirent ✓. Ils ne se repoussent donc pas, et l'ébonite, attirée par un corps chargé, n'est pas neutre.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Un bâton chargé attire une boule métallique légère initialement neutre, avant même tout contact. Comment expliquer cette attraction ?",
+      "options": [
+        { "id": "a", "text": "La boule était en réalité déjà chargée avant l'approche" },
+        { "id": "b", "text": "Un corps chargé attire indifféremment tout objet, sans raison" },
+        { "id": "c", "text": "La boule s'est chargée par frottement avec l'air" },
+        {
+          "id": "d",
+          "text": "Par influence : les charges de la boule se réorganisent et l'attraction l'emporte"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "C'est l'électrisation par influence. Le bâton attire vers sa face proche les charges de signe opposé de la boule et repousse vers la face éloignée les charges de même signe. La boule reste globalement neutre, mais les charges attirées sont plus proches que les charges repoussées : l'attraction l'emporte sur la répulsion, d'où le mouvement ✓. La boule n'était pas chargée au départ, et un corps chargé n'attire pas « sans raison » : c'est cette réorganisation qui l'explique. Le frottement avec l'air n'intervient pas.",
+      "difficulty": 3
+    }
+  ]
+}

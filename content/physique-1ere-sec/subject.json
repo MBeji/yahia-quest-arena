@@ -1,0 +1,12 @@
+{
+  "id": "physique-1ere-sec",
+  "nameFr": "Sciences Physiques",
+  "description": "L'électricité selon le programme officiel de la 1ère année de l'enseignement secondaire (tronc commun) : le phénomène d'électrisation, le circuit électrique, l'intensité du courant électrique et la tension électrique",
+  "attribute": "Observation",
+  "colorToken": "subject-svt",
+  "icon": "Atom",
+  "displayOrder": 2,
+  "contentLanguage": "fr",
+  "themeId": "ecole-tn",
+  "gradeSlug": "1ere-sec"
+}
