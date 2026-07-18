@@ -58,6 +58,28 @@ Pour un couple **(niveau, matière)** :
   dispo ⇒ référence ; plusieurs ⇒ combiner (cf. « Sources officielles combinées » ci-dessus).
 - **Re-télécharger / compléter** : `bash cnp-officiel/_dl-manuels.sh` (résumable, met à jour les index).
 
+## 📇 Suivi de transcription : le registre machine-vérifiable (`suivi/`)
+
+L'état de la couche de persistance est tracé par un **registre validé en CI** — plus jamais par un
+index manuel (les statuts en texte libre ont produit de vraies doubles transcriptions, 2026-07-12 et
+2026-07-17) :
+
+- **`suivi/corpus-cnp.json`** — snapshot **exhaustif** des 346 PDF du corpus (généré :
+  `npm run programme:corpus`, machine locale) ;
+- **`suivi/affectations.json`** — catégorie de chaque matière/PDF : `principale` / `annexe` /
+  `hors-perimetre` / `differee` / `enrichissement` — **aucun PDF hors radar** ;
+- **`suivi/<gradeSlug>.json`** — l'état de chaque fiche : statut normé (`en-cours` → `partielle`
+  [⛔ génération] → `complete` → `validee-r7` → `promue` [humain seul]), **profondeur**
+  (`first-pass`/`mixte`/`generation`), sources par code avec **plages de pages lues** (le % est
+  calculé), verdict R-7, auteur, date ;
+- **`programme/_INDEX.md`** — **vue générée** (`npm run programme:index`), ⛔ jamais éditée à la
+  main ; son § « À transcrire » est le backlog exhaustif dérivé du corpus.
+
+**`npm run programme:check`** (gate CI + `ci:verify`) impose : un PDF n'est revendiqué que par UNE
+fiche (anti-doublon), fiche disque ⇔ entrée registre, plages valides, `complete` ⇒ 100 % de
+couverture ET profondeur de génération (R-5), index jamais désynchronisé. **Toute session qui touche
+une fiche met à jour le registre dans le même commit.** Schéma : `src/shared/content/transcription-suivi.ts`.
+
 ## 🤖 Transcription outillée : ScribeKit (agent-in-the-loop, abonnement — 0 clé API)
 
 La couche de persistance est **industrialisée par ScribeKit** (repo `YahiaAcademy/ScribeKit`, moteur

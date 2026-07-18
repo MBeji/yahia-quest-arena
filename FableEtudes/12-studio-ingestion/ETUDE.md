@@ -153,6 +153,17 @@ pgTAP (RLS/quota), Vitest (fns zod, upload mocké, états UI), pas d'e2e dédié
   substantielles. Intégré aussi : l'axe 5 Illustration (étude 18) et le français natif lycée
   (2026-07-13), absents de l'ancien prompt. _Reste_ : lot 2 (rapport coût/délai formalisé — la
   campagne 1ère sec fournit déjà les données à consolider), lot 3 (canal in-app, GO humain).
+- **2026-07-17 — Registre de suivi machine-vérifiable (décision Mohamed : « plus jamais de
+  doubles transcriptions »).** Les états incohérents de l'`_INDEX.md` manuel (statuts texte
+  libre, totaux qui dérivent, 64 lignes pour 346 PDF) ont produit de vraies doubles
+  transcriptions/générations — coût réel en temps et en tokens. Remplacé par le registre
+  `programmes-officiels/suivi/` : `corpus-cnp.json` (exhaustif, 346 PDF), `affectations.json`
+  (chaque PDF classé — principale/annexe/hors-perimetre/differee/enrichissement),
+  `<grade>.json` (statuts normés, **profondeur** first-pass/mixte/generation, couverture en
+  **plages de pages** calculées, R-7) ; `_INDEX.md` devient une **vue générée** avec backlog
+  dérivé (171 œuvres principales non rattachées révélées, contre 18 affichées avant) ;
+  `npm run programme:check` en CI rejette doublons et statuts mensongers. La méthode (R-4, A1,
+  A5.4, A6), le skill `content-ingest` et le README de la couche sont câblés dessus.
 - **2026-07-17 — Amendement T-10 : livraison par tranches (décision Mohamed).** Plus jamais de
   longue session de génération sans livrable : le LOT B se livre désormais par **tranches de
   ≤4 chapitres complets** (commit local par chapitre, une PR + une migration fraîche par
