@@ -1,6 +1,7 @@
 # Étude 22 — Parcours élève & progression pédagogique (doctrine de navigation, déblocage, cohortes)
 
-> **Statut** : brouillon
+> **Statut** : validée — Q-1…Q-5 arbitrées le 2026-07-18 par Mohamed, toutes sur les
+> recommandations (§7) ; les lots 1–6 sont exécutables
 > **Priorité** : 22 · **Valeur** : un parcours élève cohérent, lisible et motivant — la doctrine
 > unique qui répond à « qu'est-ce qui est ouvert, qu'est-ce qui est verrouillé, et pourquoi » ·
 > **Complexité** : moyenne
@@ -184,7 +185,7 @@ Acteurs : **élève connecté** (rôle `student`, cœur de l'étude) · **visite
   effacée** — on la retrouve intacte en revenant. Généralise l'étude 16 US-5/R-6 à tous les
   changements de parcours, pas seulement les sections.
 - **R-4 (nouveau)** : **la promotion de rentrée est proposée, jamais imposée.** Fenêtre :
-  du 1ᵉʳ septembre au 31 octobre (Q-3). Condition d'affichage : parcours actif scolaire ou
+  du 1ᵉʳ septembre au 31 octobre (Q-3, arbitrée). Condition d'affichage : parcours actif scolaire ou
   concours avec grade non terminal, ET dernier choix de parcours antérieur au 1ᵉʳ septembre de
   l'année scolaire courante (`profiles.current_parcours_set_at`, §3). Actions : « Passer en
   \<classe suivante> » (un clic, RPC existante) · « Je reste en \<classe> » (ferme la bannière
@@ -284,7 +285,9 @@ Acteurs : **élève connecté** (rôle `student`, cœur de l'étude) · **visite
   que le global (top 50 + ma ligne, filtre `xp > 0`, exclusion triche R-26). Élève sans grade
   (parcours libre) : l'onglet est masqué. État creux : narratif d'invitation (« sois le
   premier de ta classe », cold-start étude 15 D-7) — jamais de faux profils. Onglet par
-  défaut : Q-1.
+  défaut (Q-1, arbitrée) : « Ma classe » dès que la cohorte compte ≥ 10 classés
+  (`GRADE_TAB_DEFAULT_MIN_RANKED = 10`, à ajouter dans `gamification.ts` au lot 4), sinon
+  « Global » — bascule automatique, silencieuse.
 - **R-24 (existant, consacré v1)** : la **ligue hebdo de duels reste globale**, à paliers par
   **centile** (top 10 % diamant, etc.) — équitable par construction quel que soit le mélange
   de classes, car elle mesure l'activité et la réussite en duels (eux-mêmes appariés par
@@ -583,23 +586,43 @@ d'ordonnancement à l'index FableEtudes, pas un lot de cette étude.
 
 ## 7. Questions ouvertes (pour l'humain)
 
+> **Section arbitrée le 2026-07-18 (Mohamed) — toutes les décisions ont suivi les
+> recommandations.** L'étude est passée `validée` ; aucune question n'est plus ouverte.
+
 - **Q-1 — Onglet de classement par défaut** : « Ma classe » ou « Global » ? Recommandation :
   « Ma classe » par défaut dès qu'elle compte ≥ 10 classés, sinon « Global » (bascule
   automatique, silencieuse).
+  **Arbitrage : recommandation retenue** — seuil ≥ 10 classés (`xp > 0`) dans la cohorte du
+  grade ; sous le seuil, « Global » reste le défaut et l'onglet classe montre son état
+  d'invitation. R-23/lot 4 appliquent ce seuil (constante `GRADE_TAB_DEFAULT_MIN_RANKED = 10`
+  dans `gamification.ts`).
 - **Q-2 — Donjon scopé (R-25)** : confirmer l'abandon du tirage toutes-classes actuel (un
   élève ne recevra plus de questions très au-dessus/au-dessous de sa classe hors fallback).
   Recommandation : oui — c'est un défaut de pertinence, pas une feature de découverte.
+  **Arbitrage : oui** — R-25 confirmée telle quelle (scope parcours, fallbacks 60/30,
+  `pool_scope` affiché et loggé). Le lot 5 est ferme.
 - **Q-3 — Fenêtre de rentrée** : bornes exactes (recommandation : 1ᵉʳ sept. → 31 oct., fuseau
   Tunis) et comportement pour un bac terminal (recommandation v1 : aucune bannière ;
   félicitations post-bac = idée étude 02/08).
+  **Arbitrage : recommandation retenue** — fenêtre du 1ᵉʳ septembre au 31 octobre, fuseau
+  Tunis ; aucune bannière pour un bac terminal en v1. R-4 et `BACK_TO_SCHOOL_WINDOW` sont
+  fermes. Le lot 3 est ferme.
 - **Q-4 — « Mode discipline » parental** (un parent verrouille l'ordre des chapitres pour son
   enfant) : hors périmètre v1 (D-2). À réétudier avec l'étude 08 ? Recommandation : non tant
   qu'aucune demande utilisateur documentée n'existe.
+  **Arbitrage : non** — hors périmètre confirmé ; la doctrine D-2/R-10 (« trois verrous, rien
+  d'autre ») reste entière. Ré-ouverture uniquement sur demande utilisateur documentée, via
+  l'étude 08.
 - **Q-5 — Ligues par classe** : seuil de volume pour segmenter la ligue hebdo par grade
   (extension étude 05). Recommandation : ne rien faire sous ~200 duellistes actifs/semaine ;
   re-évaluer au signal.
+  **Arbitrage : recommandation retenue** — aucune segmentation sous ~200 duellistes actifs
+  par semaine ; réévaluation au signal, comme extension de l'étude 05 (R-24 inchangée).
 
 ## 8. Journal d'exécution
+
+- **2026-07-18 — Validation.** Q-1…Q-5 arbitrées par Mohamed (toutes sur les
+  recommandations) ; statut `brouillon` → `validée`. Aucun lot commencé.
 
 _(à remplir par l'exécuteur, lot par lot : date, lot, PR, écarts acceptés, dettes notées)_
 
