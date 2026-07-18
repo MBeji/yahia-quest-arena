@@ -18,14 +18,14 @@
           "tomes": ["P00"],
           "role": "eleve",
           "pagesTotal": 230,
-          "pagesLues": [[1, 73]]
+          "pagesLues": [[1, 146]]
         }
       ],
       "sourcesLibres": [],
       "r7": null,
       "maj": "2026-07-18",
       "par": "bejimed",
-      "notes": "Campagne LOT A (METHODE-GENERATION-CONTENU) raccrochée au corpus : tome 1 Analyse (222445, 9 ch.) + tome 2 (222446, 10 ch.) = 19 chapitres ; manuel eleve seul (pas de guide enseignant au corpus) => fait reference. Paliers 1-5 : TOME 1 COMPLET (chapitres 1-9, p.5-207) transcrit a profondeur de generation ; 222445 couvert a 100%. R-7 independant CONFORME sur ch.1/2/3/5/6/8/9 ; CORRECTIONS MINEURES appliquees sur ch.4 (VF-5 f'->f) et ch.7 (Activite 2 p.140 ajoutee + note Ex.28). Paliers 6-7 : tome 2 ch.10-12 (222446 p.5-73) transcrits a profondeur de generation. R-7 independant CONFORME sur ch.10/11/12 (ch.11 : 1 etiquette de page corrigee p.40->p.39). Ch.13-19 restent en 'bloc'. Reste tome 2 : ch.13 (similitudes) + ch.14 (coniques) + ch.15 (geo espace), puis ch.16 (divisibilite) + ch.17 (Bezout) + ch.18 (probas) + ch.19 (stats). Generation LOT B interdite tant que statut != complete (tome 2 non entierement couvert)."
+      "notes": "Campagne LOT A (METHODE-GENERATION-CONTENU) raccrochée au corpus : tome 1 Analyse (222445, 9 ch.) + tome 2 (222446, 10 ch.) = 19 chapitres ; manuel eleve seul (pas de guide enseignant au corpus) => fait reference. Paliers 1-5 : TOME 1 COMPLET (chapitres 1-9, p.5-207) transcrit a profondeur de generation ; 222445 couvert a 100%. R-7 independant CONFORME sur ch.1/2/3/5/6/8/9 ; CORRECTIONS MINEURES appliquees sur ch.4 (VF-5 f'->f) et ch.7 (Activite 2 p.140 ajoutee + note Ex.28). Paliers 6-8 : tome 2 ch.10-15 (222446 p.5-146) transcrits a profondeur de generation. R-7 independant CONFORME sur ch.10/11/12/13/14 ; ch.15 CORRECTIONS MINEURES appliquees (V.2 Propriete caracteristique p.134 ajoutee a l'inventaire). Ch.16-19 restent en 'bloc'. Reste tome 2 (derniere tranche) : ch.16 (divisibilite dans Z, p.147-160) + ch.17 (Bezout, p.161-178) + ch.18 (probabilites, p.179-207) + ch.19 (statistiques, p.208-230). A l'issue : 222446 couvert a 100% => passer la fiche en complete => LOT B debloque. Generation LOT B interdite tant que statut != complete."
     }
   ]
 }
