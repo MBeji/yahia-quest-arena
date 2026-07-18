@@ -17,10 +17,14 @@
 
 ## 📏 وحدات الطول وجدول التحويل
 
+::: figure جدول الأطوال: ننزل خانةً فنضرب في عشرة، ونصعد خانةً فنقسم على عشرة
+<svg viewBox="0 0 360 160"><rect x="14" y="54" width="42" height="32" rx="4" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.4"/><text x="35.0" y="75.0" text-anchor="middle" font-size="14" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">km</text><rect x="60" y="54" width="42" height="32" rx="4" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.4"/><text x="81.0" y="75.0" text-anchor="middle" font-size="14" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">hm</text><rect x="106" y="54" width="42" height="32" rx="4" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.4"/><text x="127.0" y="75.0" text-anchor="middle" font-size="14" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">dam</text><rect x="152" y="54" width="42" height="32" rx="4" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/><text x="173.0" y="75.0" text-anchor="middle" font-size="14" font-weight="700" fill="#1d4ed8" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">m</text><rect x="198" y="54" width="42" height="32" rx="4" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.4"/><text x="219.0" y="75.0" text-anchor="middle" font-size="14" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">dm</text><rect x="244" y="54" width="42" height="32" rx="4" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/><text x="265.0" y="75.0" text-anchor="middle" font-size="14" font-weight="700" fill="#1d4ed8" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">cm</text><rect x="290" y="54" width="42" height="32" rx="4" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.4"/><text x="311.0" y="75.0" text-anchor="middle" font-size="14" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">mm</text><text x="173.0" y="108.0" text-anchor="middle" font-size="16" font-weight="700" fill="#15803d" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">1</text><text x="219.0" y="108.0" text-anchor="middle" font-size="16" font-weight="700" fill="#15803d" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">0</text><text x="265.0" y="108.0" text-anchor="middle" font-size="16" font-weight="700" fill="#15803d" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">0</text><text x="180.0" y="132.0" text-anchor="middle" font-size="15" font-weight="700" fill="#15803d" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">1 m = 100 cm</text><path d="M40 30 H120" stroke="#dc2626" stroke-width="2"/><path d="M120 30 l-9 -4 v8 z" fill="#dc2626"/><text x="80.0" y="24.0" text-anchor="middle" font-size="10" font-weight="700" fill="#b91c1c" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">× 10 عند كلّ خانة</text><path d="M320 44 H240" stroke="#16a34a" stroke-width="2"/><path d="M240 44 l9 -4 v8 z" fill="#16a34a"/><text x="280.0" y="38.0" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">÷ 10 صعودًا</text></svg>
+:::
+
 الوحدة الأساسيّة للطول هي **المتر (m)**. حولها وحداتٌ مرتّبةٌ من الأكبر إلى الأصغر، كلّ وحدةٍ تساوي **10 أضعاف** التي على يمينها:
 
-| km | hm | dam | m | dm | cm | mm |
-| -- | -- | --- | - | -- | -- | -- |
+| km  | hm  | dam | m   | dm  | cm  | mm  |
+| --- | --- | --- | --- | --- | --- | --- |
 
 - الأكبر: **الكيلومتر (km)** للمسافات الطويلة، ثمّ الهكتومتر (hm)، ثمّ الديكامتر (dam).
 - ثمّ **المتر (m)**، ثمّ الديسيمتر (dm)، ثمّ **الصنتيمتر (cm)**، وأصغرها **الميليمتر (mm)**.
@@ -36,8 +40,8 @@ $$1 m = 100 cm = 1 000 mm$$
 
 الوحدة الأساسيّة للكتلة هي **الغرام (g)**، ومن أهمّ وحداتها:
 
-| t |  | kg |  |  | g |
-| - | -- | -- | -- | -- | - |
+| t   |     | kg  |     |     | g   |
+| --- | --- | --- | --- | --- | --- |
 
 - **الطنّ (t)** للأشياء الثقيلة جدًّا (شاحنة، حصاد)، و**الكيلوغرام (kg)** للأشياء العاديّة، و**الغرام (g)** للأشياء الخفيفة.
 
@@ -52,8 +56,8 @@ $$1 t = 1 000 kg$$
 
 الوحدة الأساسيّة للسعة هي **اللتر (L)**، وحوله:
 
-| hL |  | L | dL | cL | mL |
-| -- | -- | - | -- | -- | -- |
+| hL  |     | L   | dL  | cL  | mL  |
+| --- | --- | --- | --- | --- | --- |
 
 - **الهكتولتر (hL)** للكمّيات الكبيرة، و**اللتر (L)** للقارورة، و**الصنتيلتر (cL)** و**الميليلتر (mL)** للكمّيات الصغيرة (دواء، كأس).
 
@@ -81,15 +85,15 @@ $$1 hL = 100 L$$
 
 نختار الوحدة حسب حجم الشيء حتّى يكون العدد بسيطًا:
 
-| المقدار | الوحدة المناسبة | مثال |
-| ------- | --------------- | ---- |
-| سُمك دفتر | mm | 8 mm |
-| طول قلم | cm | 15 cm |
-| المسافة بين مدينتين | km | 60 km |
-| كتلة تفّاحة | g | 150 g |
-| كتلة تلميذ | kg | 35 kg |
-| سعة ملعقة دواء | mL | 5 mL |
-| سعة قارورة ماء | L | 2 L |
+| المقدار             | الوحدة المناسبة | مثال  |
+| ------------------- | --------------- | ----- |
+| سُمك دفتر           | mm              | 8 mm  |
+| طول قلم             | cm              | 15 cm |
+| المسافة بين مدينتين | km              | 60 km |
+| كتلة تفّاحة         | g               | 150 g |
+| كتلة تلميذ          | kg              | 35 kg |
+| سعة ملعقة دواء      | mL              | 5 mL  |
+| سعة قارورة ماء      | L               | 2 L   |
 
 > ⚠️ لا نقول إنّ المسافة بين مدينتين 60 000 m والأفضل 60 km؛ نختار الوحدة التي تُعطي عددًا معقولًا.
 
