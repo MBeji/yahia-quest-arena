@@ -6,6 +6,10 @@
 
 ## 🌑 كيف يتكوّن الظلّ؟
 
+::: figure حين يعترضُ جسمٌ عاتمٌ الضوءَ المستقيم يتكوّنُ خلفَه ظلٌّ على الحاجز
+<svg viewBox="0 0 340 160"><circle cx="38" cy="80" r="15" fill="#fde047" stroke="#f59e0b" stroke-width="2"/><text x="38.0" y="116.0" text-anchor="middle" font-size="10" font-weight="700" fill="#b45309" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">مصدر</text><circle cx="150" cy="80" r="20" fill="#334155" stroke="#1f2937" stroke-width="2"/><text x="150.0" y="34.0" text-anchor="middle" font-size="11" font-weight="700" fill="#334155" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">جسمٌ عاتم</text><rect x="288" y="26" width="14" height="108" rx="3" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/><text x="295.0" y="148.0" text-anchor="middle" font-size="10" font-weight="700" fill="#64748b" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">حاجز</text><path d="M52 80 L150 60 L288 34" fill="none" stroke="#f59e0b" stroke-width="1.6"/><path d="M52 80 L150 100 L288 126" fill="none" stroke="#f59e0b" stroke-width="1.6"/><path d="M288 34 L288 126 L302 126 L302 34 Z" fill="#334155" opacity="0.55"/><text x="295.0" y="84.0" text-anchor="middle" font-size="10" font-weight="700" fill="#ffffff" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">ظلّ</text><text x="170.0" y="148.0" text-anchor="middle" font-size="11" font-weight="700" fill="#334155" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">الجسمُ العاتمُ يمنعُ الضوءَ فيتكوّنُ الظلّ</text></svg>
+:::
+
 يتكوّن الظلّ عندما تجتمع **ثلاثة عناصر**:
 
 1. **مصدرٌ مضيء** (مثل المصباح أو الشمس).
