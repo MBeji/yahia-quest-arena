@@ -6,3 +6,6 @@ pnpm-lock.yaml
 package-lock.json
 bun.lock
 routeTree.gen.ts
+
+# Generated view — byte-compared against renderIndex() by programme:check; Prettier must not touch it
+**/programmes-officiels/programme/_INDEX.md

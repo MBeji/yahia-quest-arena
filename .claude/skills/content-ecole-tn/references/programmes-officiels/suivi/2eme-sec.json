@@ -1,0 +1,24 @@
+{
+  "grade": "2eme-sec",
+  "fiches": [
+    {
+      "matiere": "anglais",
+      "statut": "partielle",
+      "profondeur": "mixte",
+      "sources": [
+        {
+          "code": "641203",
+          "tomes": ["P00"],
+          "role": "enseignant",
+          "pagesTotal": null,
+          "pagesLues": "inconnu"
+        }
+      ],
+      "sourcesLibres": [],
+      "r7": null,
+      "maj": "2026-07-17",
+      "par": "seed",
+      "notes": "Seed depuis _INDEX ([~] historique). Évaluer lecture + profondeur, et combiner le manuel élève, avant génération (R-5)."
+    }
+  ]
+}

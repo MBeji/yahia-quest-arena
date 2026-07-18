@@ -55,6 +55,12 @@ jobs:
       - name: Content quality (strict)
         run: npm run content:qa:strict
 
+      # Transcription registry gate: the CNP corpus snapshot + suivi/*.json must be
+      # coherent (every PDF categorised, one fiche per source — anti double-transcription,
+      # page-range coverage consistent with declared status, generated _INDEX.md in sync).
+      - name: Programme transcription registry
+        run: npm run programme:check
+
       # Keep the k6 load harness (perf/) from rotting: every scenario must parse,
       # and its constants must still mirror the product hot paths (LEADERBOARD_LIMIT,
       # submit rate-limit budget). No k6 binary / Supabase secrets needed.

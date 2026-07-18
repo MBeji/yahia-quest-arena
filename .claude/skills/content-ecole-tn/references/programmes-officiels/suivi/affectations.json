@@ -1,0 +1,92 @@
+{
+  "matieres": {
+    "01": { "id": "arabe", "categorie": "principale" },
+    "02": { "id": "maths", "categorie": "principale" },
+    "03": { "id": "eveil", "categorie": "principale" },
+    "05": { "id": "svt", "categorie": "principale" },
+    "06": {
+      "id": "geographie",
+      "categorie": "principale",
+      "note": "côté app : histoire-geo (lycée, ar)"
+    },
+    "07": {
+      "id": "histoire",
+      "categorie": "principale",
+      "note": "côté app : histoire-geo (lycée, ar)"
+    },
+    "08": {
+      "id": "arts-tech-musique",
+      "categorie": "annexe",
+      "note": "musique / dessin / éducation technique — hors périmètre pour le moment (décision 2026-07-14)"
+    },
+    "10": { "id": "philosophie", "categorie": "principale" },
+    "11": {
+      "id": "islamique-civique",
+      "categorie": "principale",
+      "note": "التربية الإسلامية + المدنية + الاجتماعيات"
+    },
+    "12": {
+      "id": "eps",
+      "categorie": "annexe",
+      "note": "EPS/sport — hors périmètre (décision 2026-07-14)"
+    },
+    "21": { "id": "francais", "categorie": "principale" },
+    "22": { "id": "maths", "categorie": "principale", "note": "mathématiques du secondaire (fr)" },
+    "23": { "id": "sciences-physiques", "categorie": "principale" },
+    "24": { "id": "chimie", "categorie": "principale" },
+    "25": { "id": "svt", "categorie": "principale", "note": "SVT du secondaire (fr)" },
+    "28": {
+      "id": "technologie",
+      "categorie": "differee",
+      "note": "Technologie collège + génie mécanique/électrique lycée — génie = matière PRINCIPALE des sections techniques : reclasser à l'ouverture de la vague 3eme-sec-techniques / bac-techniques"
+    },
+    "29": {
+      "id": "eco-gestion",
+      "categorie": "principale",
+      "note": "التصرف — sections économie & gestion"
+    },
+    "33": { "id": "informatique", "categorie": "principale" },
+    "41": { "id": "anglais", "categorie": "principale" },
+    "51": { "id": "russe", "categorie": "hors-perimetre", "note": "3ème langue" },
+    "61": { "id": "allemand", "categorie": "hors-perimetre", "note": "3ème langue" },
+    "71": { "id": "chinois", "categorie": "hors-perimetre", "note": "3ème langue" },
+    "81": { "id": "italien", "categorie": "hors-perimetre", "note": "3ème langue" },
+    "91": { "id": "espagnol", "categorie": "hors-perimetre", "note": "3ème langue" }
+  },
+  "overrides": {
+    "111001": {
+      "categorie": "enrichissement",
+      "note": "القرآن الكريم — جزء عمّ (support transverse, classe 0)"
+    },
+    "225105": {
+      "categorie": "hors-perimetre",
+      "note": "Sciences biologiques 1ère sec — manuel de la SECTION SPORT, écarté (cf. programme/1ere-sec/svt.md)"
+    },
+    "102408": {
+      "categorie": "enrichissement",
+      "note": "كراس تمارين maths 4ème — cahier d'exercices, complément du manuel"
+    },
+    "102509": {
+      "categorie": "enrichissement",
+      "note": "كراس تمارين maths 5ème — cahier d'exercices"
+    },
+    "102610": {
+      "categorie": "enrichissement",
+      "note": "كراس تمارين maths 6ème — cahier d'exercices"
+    },
+    "501110": { "categorie": "enrichissement", "note": "Bandes dessinées 1ère (arabe)" },
+    "501208": { "categorie": "enrichissement", "note": "Bandes dessinées 2ème (arabe)" },
+    "501306": { "categorie": "enrichissement", "note": "مدونة القسم arabe 3ème" },
+    "501405": { "categorie": "enrichissement", "note": "مدونة القسم arabe 4ème" },
+    "501506": { "categorie": "enrichissement", "note": "مدونة القسم arabe 5ème" },
+    "501604": { "categorie": "enrichissement", "note": "مدونة القسم arabe 6ème" },
+    "502305": { "categorie": "enrichissement", "note": "مدونة القسم maths 3ème" },
+    "502504": { "categorie": "enrichissement", "note": "مدونة القسم maths 5ème" },
+    "502604": { "categorie": "enrichissement", "note": "مدونة القسم maths 6ème" },
+    "521322": { "categorie": "enrichissement", "note": "مدونة القسم français 3ème" },
+    "521418": { "categorie": "enrichissement", "note": "مدونة القسم français 4ème" },
+    "521514": { "categorie": "enrichissement", "note": "Bandes dessinées français 5ème" },
+    "521516": { "categorie": "enrichissement", "note": "مدونة القسم français 5ème" },
+    "521616": { "categorie": "enrichissement", "note": "مدونة القسم français 6ème" }
+  }
+}
