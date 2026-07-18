@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : Dilatation, température et conduction",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Quand on refroidit un corps, que lui arrive-t-il ?",
+      "options": [
+        { "id": "a", "text": "Il se dilate" },
+        { "id": "b", "text": "Il se contracte" },
+        { "id": "c", "text": "Il fond" },
+        { "id": "d", "text": "Il s'évapore" }
+      ],
+      "correctOption": "b",
+      "explanation": "En se refroidissant, un corps se contracte : son volume diminue ✓. C'est en le chauffant qu'il se dilate. Fondre ou s'évaporer sont des changements d'état, pas la contraction due au froid.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Sur l'échelle Celsius, quelle est la température de la glace fondante ?",
+      "options": [
+        { "id": "a", "text": "0 °C" },
+        { "id": "b", "text": "4 °C" },
+        { "id": "c", "text": "50 °C" },
+        { "id": "d", "text": "100 °C" }
+      ],
+      "correctOption": "a",
+      "explanation": "La glace fondante définit le premier point fixe de l'échelle Celsius, à 0 °C ✓. Le 100 °C correspond à l'eau bouillante (second point fixe) et 4 °C au volume minimal de l'eau liquide.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Vis-à-vis de la chaleur, le bois est :",
+      "options": [
+        { "id": "a", "text": "Un bon conducteur de chaleur" },
+        { "id": "b", "text": "Un métal" },
+        { "id": "c", "text": "Un mauvais conducteur de chaleur" },
+        { "id": "d", "text": "Un excellent conducteur de chaleur" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le bois est un mauvais conducteur de chaleur (un isolant thermique) ✓, ce qui explique les manches en bois des ustensiles. Ce n'est pas un métal, et les métaux, eux, sont de bons conducteurs de chaleur.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Sur quel phénomène repose le fonctionnement d'un thermomètre usuel ?",
+      "options": [
+        { "id": "a", "text": "La couleur du liquide" },
+        { "id": "b", "text": "Le poids du liquide" },
+        { "id": "c", "text": "Le bruit du liquide" },
+        { "id": "d", "text": "La dilatation d'un liquide" }
+      ],
+      "correctOption": "d",
+      "explanation": "Un thermomètre fonctionne grâce à la dilatation d'un liquide (souvent le mercure) : quand la température monte, le liquide se dilate et monte dans le tube ✓. Ni la couleur, ni le poids, ni le bruit du liquide n'interviennent.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "On chauffe de la même façon trois tiges de même longueur, en fer, en cuivre et en aluminium. Laquelle s'allonge le plus ?",
+      "options": [
+        { "id": "a", "text": "L'aluminium" },
+        { "id": "b", "text": "Le cuivre" },
+        { "id": "c", "text": "Le fer" },
+        { "id": "d", "text": "Toutes de la même façon" }
+      ],
+      "correctOption": "a",
+      "explanation": "La dilatation dépend de la nature du matériau : l'aluminium s'allonge plus que le cuivre, qui s'allonge plus que le fer ✓. Elles ne s'allongent donc pas de la même façon, malgré une longueur et un chauffage identiques.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Le mercure est utilisé dans les thermomètres notamment parce qu'il :",
+      "options": [
+        { "id": "a", "text": "Ne se dilate jamais" },
+        { "id": "b", "text": "Se dilate facilement" },
+        { "id": "c", "text": "Est un gaz à température ordinaire" },
+        { "id": "d", "text": "Change de couleur avec la chaleur" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le mercure est choisi car il se dilate facilement, s'obtient pur et ne mouille pas le verre ✓ : c'est sa dilatation qui fait monter le liquide dans le tube. Il ne change pas de couleur et reste liquide à température ordinaire.",
+      "difficulty": 1
+    }
+  ]
+}

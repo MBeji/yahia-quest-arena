@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : États, volume et propriétés de la matière",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Un verre semble vide. Renversé sur l'eau puis incliné, il laisse échapper des bulles. Que contenait-il ?",
+      "options": [
+        { "id": "a", "text": "De l'air, qui est de la matière" },
+        { "id": "b", "text": "Rien du tout" },
+        { "id": "c", "text": "Du vide absolu" },
+        { "id": "d", "text": "De l'eau" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le verre « vide » est en réalité plein d'air, qui est de la matière ✓ : les bulles qui s'en échappent le prouvent. Il ne contient ni rien ni du vide, et il n'était pas rempli d'eau au départ.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "À combien de millilitres correspond 1 cm³ ?",
+      "options": [
+        { "id": "a", "text": "0,1 mL" },
+        { "id": "b", "text": "1 mL" },
+        { "id": "c", "text": "10 mL" },
+        { "id": "d", "text": "1000 mL" }
+      ],
+      "correctOption": "b",
+      "explanation": "Par définition, 1 cm³ = 1 mL ✓. C'est une égalité à retenir. La valeur 1000 mL correspond à 1 litre (1 L = 1000 mL), pas à 1 cm³.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quelles propriétés caractérisent un corps à l'état solide ?",
+      "options": [
+        { "id": "a", "text": "Ni forme ni volume propres" },
+        { "id": "b", "text": "Un volume propre mais pas de forme propre" },
+        { "id": "c", "text": "Une forme propre et un volume propre" },
+        { "id": "d", "text": "Une forme propre mais pas de volume propre" }
+      ],
+      "correctOption": "c",
+      "explanation": "Un solide a à la fois une forme propre et un volume propre ✓ : il garde sa forme quel que soit le récipient. Un liquide, lui, a un volume propre sans forme propre ; un gaz n'a ni l'une ni l'autre.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "La farine s'écoule quand on la verse, mais on peut la saisir entre les doigts. C'est :",
+      "options": [
+        { "id": "a", "text": "Un liquide" },
+        { "id": "b", "text": "Un gaz" },
+        { "id": "c", "text": "Un fluide" },
+        { "id": "d", "text": "Un solide" }
+      ],
+      "correctOption": "d",
+      "explanation": "La farine est un solide en grains ✓ : même si elle coule, elle reste saisissable entre les doigts, ce qui la range parmi les solides. Seuls les liquides et les gaz (les fluides) sont insaisissables.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel est le volume d'un cube d'arête a = 5 cm ?",
+      "options": [
+        { "id": "a", "text": "15 cm³" },
+        { "id": "b", "text": "25 cm³" },
+        { "id": "c", "text": "125 cm³" },
+        { "id": "d", "text": "625 cm³" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le volume d'un cube est a³ = 5 × 5 × 5 = 125 cm³ ✓. La valeur 25 cm² est l'aire d'une face (5²), 15 vient de 3 × 5, et 625 de 5⁴ : il faut élever l'arête au cube.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "On verse un liquide d'un verre dans une bouteille de forme différente. Que se passe-t-il ?",
+      "options": [
+        { "id": "a", "text": "Il garde sa forme et son volume" },
+        { "id": "b", "text": "Il change de forme mais garde son volume" },
+        { "id": "c", "text": "Il change de forme et de volume" },
+        { "id": "d", "text": "Son volume double" }
+      ],
+      "correctOption": "b",
+      "explanation": "Un liquide épouse la forme de son récipient (pas de forme propre) mais conserve son volume ✓. Il ne garde donc pas sa forme, et son volume ne change pas : il a un volume propre.",
+      "difficulty": 1
+    }
+  ]
+}

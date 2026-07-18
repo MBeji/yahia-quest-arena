@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : Résistance, loi d'Ohm et rhéostat",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Par quelle lettre note-t-on la résistance d'un dipôle ?",
+      "options": [
+        { "id": "a", "text": "U" },
+        { "id": "b", "text": "I" },
+        { "id": "c", "text": "R" },
+        { "id": "d", "text": "Q" }
+      ],
+      "correctOption": "c",
+      "explanation": "La résistance est notée R ✓ et s'exprime en ohm (Ω). La lettre U désigne la tension, I l'intensité et Q la charge électrique : ce sont d'autres grandeurs du circuit.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Quel appareil permet de mesurer directement une résistance ?",
+      "options": [
+        { "id": "a", "text": "L'ohmmètre" },
+        { "id": "b", "text": "Le voltmètre" },
+        { "id": "c", "text": "L'ampèremètre" },
+        { "id": "d", "text": "Le chronomètre" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'ohmmètre (une fonction du multimètre) affiche directement la résistance ✓, lorsqu'on branche le dipôle hors tension. Le voltmètre mesure une tension, l'ampèremètre une intensité, et le chronomètre une durée.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Comment appelle-t-on aussi un dipôle résistor ?",
+      "options": [
+        { "id": "a", "text": "Un générateur" },
+        { "id": "b", "text": "Un isolant" },
+        { "id": "c", "text": "Un condensateur" },
+        { "id": "d", "text": "Un conducteur ohmique" }
+      ],
+      "correctOption": "d",
+      "explanation": "Un dipôle résistor est aussi appelé conducteur ohmique ✓, car il obéit à la loi d'Ohm. Un générateur produit le courant, un isolant ne le laisse pas passer, et un condensateur est un tout autre composant.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Que caractérise la résistance R d'un dipôle ?",
+      "options": [
+        { "id": "a", "text": "La vitesse du courant" },
+        { "id": "b", "text": "Son opposition au passage du courant" },
+        { "id": "c", "text": "La tension du générateur" },
+        { "id": "d", "text": "Le nombre d'électrons qu'il contient" }
+      ],
+      "correctOption": "b",
+      "explanation": "La résistance mesure à quel point le dipôle s'oppose au passage du courant ✓ : à tension égale, plus R est grande, moins il passe de courant. Ce n'est ni une vitesse, ni la tension du générateur, ni un nombre d'électrons.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Un résistor de résistance R = 12 Ω est traversé par un courant d'intensité I = 0,5 A. Quelle est la tension à ses bornes ?",
+      "options": [
+        { "id": "a", "text": "6 V" },
+        { "id": "b", "text": "12,5 V" },
+        { "id": "c", "text": "24 V" },
+        { "id": "d", "text": "0,04 V" }
+      ],
+      "correctOption": "a",
+      "explanation": "D'après la loi d'Ohm, U = R × I = 12 × 0,5 = 6 V ✓. La valeur 12,5 V viendrait d'une addition (12 + 0,5), 24 V d'une division (12 ÷ 0,5), et 0,04 V d'une division inversée : il faut bien multiplier.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Comment peut-on connaître la valeur d'une résistance en la lisant directement sur le résistor ?",
+      "options": [
+        { "id": "a", "text": "Grâce à sa longueur" },
+        { "id": "b", "text": "Grâce à son poids" },
+        { "id": "c", "text": "Grâce au code des couleurs" },
+        { "id": "d", "text": "Grâce à sa forme" }
+      ],
+      "correctOption": "c",
+      "explanation": "Des anneaux colorés imprimés sur le résistor codent sa valeur : c'est le code des couleurs, qui se lit directement ✓. Ni la longueur, ni le poids, ni la forme du résistor n'indiquent sa résistance.",
+      "difficulty": 1
+    }
+  ]
+}
