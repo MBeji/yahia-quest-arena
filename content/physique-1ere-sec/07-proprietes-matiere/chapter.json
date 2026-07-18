@@ -1,0 +1,10 @@
+{
+  "title": "Quelques propriétés de la matière",
+  "description": "L'effet de la température sur le volume : la dilatation (échauffement) et la contraction (refroidissement) des solides, liquides et gaz ; la dépendance de la dilatation à la nature, au volume et à la variation de température ; la hiérarchie gaz > liquides > solides ; l'anomalie de l'eau entre 0 °C et 4 °C ; le thermomètre et l'échelle Celsius (points fixes 0 °C et 100 °C) ; la conductivité thermique et le classement des bons et mauvais conducteurs de chaleur ; le lien entre conducteurs électriques et conducteurs thermiques",
+  "displayOrder": 7,
+  "manuel": { "code": "223103P00", "pages": "101-114" },
+  "sources": [
+    "Programme officiel — Sciences physiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 223103P00 « PHYSIQUE », thème LA MATIÈRE, chapitre II (p.101–114)",
+    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/sciences-physiques.md (§2.7)"
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Dilatation, eau et conduction",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Pourquoi laisse-t-on un petit espace entre deux rails de chemin de fer ?",
+      "options": [
+        { "id": "a", "text": "Pour leur permettre de se dilater sans se déformer" },
+        { "id": "b", "text": "Pour rendre la pose des rails moins coûteuse" },
+        { "id": "c", "text": "Pour réduire le bruit du passage des trains" },
+        { "id": "d", "text": "Pour faciliter le nettoyage de la voie" }
+      ],
+      "correctOption": "a",
+      "explanation": "Quand il fait chaud, les rails en acier se dilatent et s'allongent ; l'espace leur laisse la place de le faire sans se déformer ✓. Sans cet espace, la dilatation tordrait la voie. Le coût, le bruit ou le nettoyage n'entrent pas en jeu.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Pour un solide filiforme de longueur l₀, quelle relation donne son allongement Δl lorsque sa température varie de Δθ ?",
+      "options": [
+        { "id": "a", "text": "Δl = l₀ × λ × Δθ" },
+        { "id": "b", "text": "Δl = l₀ + λ + Δθ" },
+        { "id": "c", "text": "Δl = l₀ / (λ × Δθ)" },
+        { "id": "d", "text": "Δl = λ / (l₀ × Δθ)" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'allongement d'un solide filiforme est Δl = l₀ × λ × Δθ ✓, où λ est une constante propre au matériau. L'allongement croît avec la longueur initiale, avec λ et avec la variation de température : additionner ou diviser ces grandeurs n'aurait pas de sens physique.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Parmi le cuivre, le verre et le bois, lequel conduit le mieux la chaleur ?",
+      "options": [
+        { "id": "a", "text": "Le verre" },
+        { "id": "b", "text": "Le bois" },
+        { "id": "c", "text": "Ils conduisent tous de la même façon" },
+        { "id": "d", "text": "Le cuivre" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le cuivre est un métal, donc un bon conducteur de chaleur : il conduit bien mieux que le verre, lui-même meilleur que le bois ✓. Le bois est même un isolant thermique. Ils ne conduisent donc pas la chaleur de la même façon.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Les solides qui sont de bons conducteurs d'électricité sont généralement :",
+      "options": [
+        { "id": "a", "text": "Des isolants thermiques" },
+        { "id": "b", "text": "De bons conducteurs de chaleur" },
+        { "id": "c", "text": "De mauvais conducteurs de chaleur" },
+        { "id": "d", "text": "Des liquides" }
+      ],
+      "correctOption": "b",
+      "explanation": "Les bons conducteurs d'électricité, comme les métaux, sont généralement de bons conducteurs de chaleur ✓. À l'inverse, les isolants électriques (bois, verre) sont de mauvais conducteurs de chaleur. C'est le pont avec l'électricité du chapitre 1.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Un rail en acier de 10 m s'allonge de 0,01 mm par mètre et par °C. De combien s'allonge-t-il si sa température augmente de 20 °C ?",
+      "options": [
+        { "id": "a", "text": "0,2 mm" },
+        { "id": "b", "text": "2 mm" },
+        { "id": "c", "text": "20 mm" },
+        { "id": "d", "text": "200 mm" }
+      ],
+      "correctOption": "b",
+      "explanation": "L'allongement est 0,01 mm × 10 (mètres) × 20 (°C) = 2 mm ✓. Oublier la longueur (× 10) donne 0,2 mm ; compter un facteur 10 en trop donne 20 mm. Il faut multiplier les trois nombres.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Une bouteille en verre entièrement remplie d'eau et bien fermée se casse au congélateur. Pourquoi ?",
+      "options": [
+        { "id": "a", "text": "Parce que le verre se dilate au froid" },
+        { "id": "b", "text": "Parce que l'eau devient plus lourde en gelant" },
+        { "id": "c", "text": "Parce que l'eau augmente de volume en gelant" },
+        { "id": "d", "text": "Parce que l'air à l'intérieur se comprime" }
+      ],
+      "correctOption": "c",
+      "explanation": "En gelant, l'eau augmente de volume et pousse sur les parois de la bouteille pleine, qui finit par se casser ✓. Le verre ne se dilate pas au froid (il se contracte), la masse de l'eau ne change pas, et la bouteille pleine ne contient pas d'air.",
+      "difficulty": 3
+    }
+  ]
+}
