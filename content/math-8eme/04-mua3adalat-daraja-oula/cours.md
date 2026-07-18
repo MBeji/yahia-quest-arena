@@ -37,6 +37,10 @@ $$ إذا كان a = b فإنّ a + k = b + k وa − k = b − k $$
 
 ## 🧮 حلّ ax + b = c بمعاملاتٍ صحيحةٍ نسبية
 
+::: figure نعزل الحدّ الحرفيّ بطرح 2 من الطرفين، ثمّ نقسم على −3 فنجد المجهول
+<svg viewBox="0 0 320 180"><text x="160.0" y="42.0" text-anchor="middle" font-size="18" font-weight="700" fill="#1f2937" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">−3x + 2 = 11</text><path d="M160 50 V68" stroke="#94a3b8" stroke-width="1.6"/><path d="M160 68 l-4 -8 h8 z" fill="#94a3b8"/><text x="160.0" y="82.0" text-anchor="middle" font-size="18" font-weight="700" fill="#1d4ed8" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">−3x = 11 − 2 = 9</text><path d="M160 90 V108" stroke="#94a3b8" stroke-width="1.6"/><path d="M160 108 l-4 -8 h8 z" fill="#94a3b8"/><text x="160.0" y="122.0" text-anchor="middle" font-size="18" font-weight="700" fill="#15803d" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">x = 9 ÷ (−3) = −3</text><text x="232.0" y="58.0" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">− 2</text><text x="238.0" y="98.0" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">÷ (−3)</text><rect x="70" y="150" width="180" height="24" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1.6"/><text x="160.0" y="167.0" text-anchor="middle" font-size="12" font-weight="700" fill="#15803d" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">التحقّق: −3×(−3) + 2 = 11 ✓</text></svg>
+:::
+
 نتّبع خطوتَين ثابتتَين:
 
 **1 — نعزل الحدّ الحرفيّ**: ننقل الحدّ العدديّ b إلى الطرف الآخر **مع تغيير إشارته** (لأنّنا نطرحه من الطرفَين).
