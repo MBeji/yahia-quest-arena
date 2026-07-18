@@ -6,18 +6,22 @@
 
 ## 🏰 القسمة الإقليدية ومصطلحاتها
 
+::: figure لكلّ عددٍ في القسمة اسمُه، وتربطها جميعًا العلاقةُ الذهبية مع بقاءٍ أصغر من المقسوم عليه
+<svg viewBox="0 0 350 178"><rect x="20" y="30" width="74" height="50" rx="7" fill="#ffffff" stroke="#1d4ed8" stroke-width="2.2"/><text x="57.0" y="26.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1d4ed8" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">المقسوم</text><text x="57.0" y="64.0" text-anchor="middle" font-size="22" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">47</text><rect x="104" y="30" width="74" height="50" rx="7" fill="#ffffff" stroke="#7c3aed" stroke-width="2.2"/><text x="141.0" y="26.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#7c3aed" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">المقسوم عليه</text><text x="141.0" y="64.0" text-anchor="middle" font-size="22" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">6</text><rect x="188" y="30" width="74" height="50" rx="7" fill="#ffffff" stroke="#15803d" stroke-width="2.2"/><text x="225.0" y="26.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#15803d" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الخارج</text><text x="225.0" y="64.0" text-anchor="middle" font-size="22" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">7</text><rect x="272" y="30" width="74" height="50" rx="7" fill="#ffffff" stroke="#b91c1c" stroke-width="2.2"/><text x="309.0" y="26.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#b91c1c" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الباقي</text><text x="309.0" y="64.0" text-anchor="middle" font-size="22" font-weight="700" fill="#1f2937" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">5</text><text x="175.0" y="108.0" text-anchor="middle" font-size="18" font-weight="700" fill="#15803d" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">47 = (6 × 7) + 5</text><rect x="60" y="126" width="230" height="34" rx="8" fill="#fef9c3" stroke="#a16207" stroke-width="2"/><text x="175.0" y="141.0" text-anchor="middle" font-size="11" font-weight="700" fill="#a16207" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">الباقي 5 أصغر من المقسوم عليه 6</text><text x="175.0" y="154.0" text-anchor="middle" font-size="11" font-weight="700" fill="#a16207" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">إذن القسمة صحيحة ✓</text></svg>
+:::
+
 تخيّل 47 جوهرةً نوزّعها بالعدل على 6 صناديق. ننظر في جدول الضرب لـ 6: أكبر جداءٍ لا يتجاوز 47 هو 6 × 7 = 42. إذن ينال كلّ صندوقٍ 7 جواهر، ويبقى 47 − 42 = 5 جواهر لا تكفي لتوزيعٍ جديد. نكتب:
 
 $$47 ÷ 6 = 7 والباقي 5$$
 
 لكلّ عددٍ في القسمة اسمٌ خاصّ:
 
-| المصطلح | في المثال 47 ÷ 6 | معناه |
-| --- | --- | --- |
-| **المقسوم** | 47 | العدد الذي نوزّعه |
-| **المقسوم عليه** | 6 | عدد الحصص (نقسم عليه) |
-| **الخارج** | 7 | نصيب كلّ حصّة |
-| **الباقي** | 5 | ما تبقّى دون توزيع |
+| المصطلح          | في المثال 47 ÷ 6 | معناه                 |
+| ---------------- | ---------------- | --------------------- |
+| **المقسوم**      | 47               | العدد الذي نوزّعه     |
+| **المقسوم عليه** | 6                | عدد الحصص (نقسم عليه) |
+| **الخارج**       | 7                | نصيب كلّ حصّة         |
+| **الباقي**       | 5                | ما تبقّى دون توزيع    |
 
 > 🗡️ الباقي **يجب** أن يكون **أصغر** من المقسوم عليه دائمًا. فلو بقي عددٌ يساوي المقسوم عليه أو أكبر منه، لأمكن توزيعه مرّةً أخرى ولزاد الخارج.
 
