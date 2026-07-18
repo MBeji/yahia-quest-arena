@@ -14,6 +14,10 @@ $$2,5 × 3 = 2,5 + 2,5 + 2,5 = 7,5$$
 
 ## 🧮 القاعدة: اضرب كأنّهما صحيحان ثمّ ضع الفاصلة
 
+::: figure نضرب كأنّهما عددان صحيحان، ثمّ نضع في الجداء عددًا من الأرقام يساوي أرقام الجزء العشري
+<svg viewBox="0 0 340 160"><rect x="28" y="30" width="130" height="44" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/><text x="93.0" y="50.0" text-anchor="middle" font-size="11" font-weight="700" fill="#6d28d9" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">نتجاهل الفاصلة</text><text x="93.0" y="66.0" text-anchor="middle" font-size="15" font-weight="700" fill="#6d28d9" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">25 × 3 = 75</text><path d="M166 52 H196" stroke="#64748b" stroke-width="2"/><path d="M196 52 l-8 -4 v8 z" fill="#64748b"/><rect x="204" y="30" width="130" height="44" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/><text x="269.0" y="50.0" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">رقمٌ واحد بعد الفاصلة</text><text x="269.0" y="66.0" text-anchor="middle" font-size="16" font-weight="700" fill="#15803d" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">7,5</text><text x="170.0" y="112.0" text-anchor="middle" font-size="20" font-weight="700" fill="#1f2937" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">2,5 × 3 = 7,5</text><text x="170.0" y="140.0" text-anchor="middle" font-size="10" font-weight="700" fill="#64748b" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">عدد الأرقام بعد الفاصلة في الجداء = عددها في العامل</text></svg>
+:::
+
 لضرب عددٍ عشريّ في عددٍ صحيح نتّبع خطوتين:
 
 1. **نضرب العددين كأنّهما صحيحان**، أي نتجاهل الفاصلة مؤقّتًا ونضرب عددًا صحيحًا في عددٍ صحيح.
