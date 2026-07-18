@@ -2,10 +2,10 @@
 
 > **Sources** (deux manuels élève CNP combinés — pas de guide enseignant au corpus) :
 >
-> - **Manuel élève — التاريخ (Histoire)** : `207103P00.pdf` (`cnp-officiel/manuels/secondaire/c1/eleve/`) — 224 p. **Pages lues** : p.2–5 (© + مقدمة + ouverture module), **p.11–20 (leçons 1–2 à profondeur de génération, §2bis)**, p.221–224 (فهرس + تأليف الدّروس). **⛔ leçons 3–18 NON encore transcrites à profondeur de génération.**
+> - **Manuel élève — التاريخ (Histoire)** : `207103P00.pdf` (`cnp-officiel/manuels/secondaire/c1/eleve/`) — 224 p. **Pages lues** : p.2–5 (© + مقدمة + ouverture module), **p.11–32 (leçons 1–4 à profondeur de génération, §2bis)**, p.221–224 (فهرس + تأليف الدّروس). **⛔ leçons 5–18 NON encore transcrites à profondeur de génération.**
 > - **Manuel élève — الجغرافيا (Géographie)** : `206103P00.pdf` (`…/eleve/`) — 120 p. **Pages lues** : p.2–5 (© + التقديم + خريطة الكتاب + ouverture module 1), p.25, p.45 (ouvreurs de modules), p.116–117 (module 3). **Pas de فهرس dans ce manuel** ; structure établie au niveau **module** (les bornes fines des leçons restent à établir en transcription profonde).
 >
-> **Transcrit le** : 2026-07-18 (palier 1 STRUCTURE, puis palier 2 : histoire leçons 1–2 à profondeur de génération). **Statut** : `partielle` · profondeur `mixte` (leçons 1–2 en `generation`, reste en `first-pass`) → **⛔ GÉNÉRATION INTERDITE** tant que la matière n'est pas complète à profondeur de génération (R-5).
+> **Transcrit le** : 2026-07-18 (palier 1 STRUCTURE, puis paliers 2–3 : histoire leçons 1–4 à profondeur de génération). **Statut** : `partielle` · profondeur `mixte` (leçons 1–4 en `generation`, reste en `first-pass`) → **⛔ GÉNÉRATION INTERDITE** tant que la matière n'est pas complète à profondeur de génération (R-5).
 > **Langue d'enseignement** : `ar` (constatée : manuels intégralement en arabe ; conforme à `docs/lycee-architecture.md` §4 — matière `ar`, pas de bascule fr). **gradeSlug** : `1ere-sec`. **subject id** attendu : `histoire-geo-1ere-sec` (sujet combiné histoire+géographie — cf. overlay `prof-histoire-geo-lycee`).
 > **Provenance / droits** : corpus officiel CNP (المركز الوطني البيداغوجي, © p.2 des deux manuels) — R-2 OK. Manuels « مطابق للبرنامج الرّسمي في صيغته الجديدة » (préface, 2003) → font référence (aucun guide enseignant au corpus).
 
@@ -73,7 +73,7 @@ _Le manuel géo **ne comporte pas de فهرس** ; structure établie à partir d
 
 ## 2bis. Contenu détaillé des leçons transcrites (profondeur de génération)
 
-> Transcription **fidèle** des leçons déjà lues intégralement en vision. Chaque activité/document décrit individuellement, encadrés (`تعريف بمفهوم` / `معطيات مكمّلة` / `أدعّم مكتسباتي`) restitués verbatim, sources citées. **État** : histoire leçons 1–2 (p.11–20) transcrites 2026-07-18 ; le reste (leçons 3–18 + géo) demeure en `first-pass` (structure du §2). Chiffres occidentaux (source, respectée).
+> Transcription **fidèle** des leçons déjà lues intégralement en vision. Chaque activité/document décrit individuellement, encadrés (`تعريف بمفهوم` / `معطيات مكمّلة` / `أدعّم مكتسباتي`) restitués verbatim, sources citées. **État** : histoire leçons 1–4 (p.11–32) transcrites 2026-07-18 ; le reste (leçons 5–18 + géo) demeure en `first-pass` (structure du §2). Chiffres occidentaux (source, respectée).
 
 ### الوحدة الأولى — المحور الأول : قرطاج البونيّة وإشعاعها في المتوسّط
 
@@ -139,6 +139,51 @@ _Le manuel géo **ne comporte pas de فهرس** ; structure établie à partir d
 - تميّز البونيون بشدّة تديّنهم وخشيتهم لآلهتهم وسعيهم إلى التقرّب إليها (معابد، قرابين، هدايا) ؛ واعتقدوا أنّ الأرواح تواصل شكلا من الحياة في « مدينة الأموات » (اهتمام بتهيئة القبور ووضع التمائم مع الموتى).
 - **الديانة البونية شرقية في جوهرها** : تعكس تمسّك البونيين بطقوس موروثة عن الفينيقيين، وانفتاحهم على ديانات أخرى (المصرية، الاغريقيّة، والمحليّة اللوبية).
 
+#### درس 3 — الميناء والتوسّع التّجاري (`03-hist-al-mina2-at-tijara`) · p.21–28
+
+**المدخل (objectifs)** : ① أتبيّن خصائص الميناء من أجل فهم دوره في بناء القوّة التّجاريّة والعسكريّة لقرطاج البونيّة ؛ ② أتبيّن أحد أبرز مظاهر القوّة الاقتصاديّة القرطاجيّة : التوسّع التجاري.
+
+**النشاط الأوّل** : _أتعرّف إلى خصائص الميناء ودوره في بناء القوّة التّجاريّة والعسكريّة._
+
+- **الوثيقة عدد 1 — موانئ قرطاج** (texte) — source : **ابيانوس، بونيكا 96** (rapportant Polybe). Description du port : accès depuis la mer par une passe de 70 coudées fermée par des chaînes de fer ; **premier port réservé au commerce** (nombreux amarrages/أقلاس) ؛ **port intérieur militaire** avec une île centrale abritant 220 navires de guerre, colonnes ioniennes donnant l'aspect d'un portique, et au centre le **QG de l'amirauté** (القيادة العامّة للبحريّة) d'où l'amiral surveille la mer sans être vu du dehors ; ateliers dissimulés, doubles murs. Gloses : القدم = unité de mesure (70 pieds ≈ 20,70 m) ; الأقلاس = cordages/barres d'amarrage ; العمود اليوني = colonne ionienne (base + chapiteau à volute).
+- **الوثيقة عدد 2** (2 images) : إعادة تصوّر الموانئ البونية (reconstitution) + صورة لمينائي قرطاج كما يبدوان اليوم (photo actuelle). _معطيات مكمّلة_ : الميناء بنية مركبة ومجال شاسع — **الحوض المستطيل المثمن الأضلاع** : طول 465 م، عرض 325 م، ~15 هكتار = الميناء التّجاري ؛ **الحوض الدّائري** : قطر 325 م، ~8 هكتارات = الميناء العسكري ؛ الشكل الحالي يعود إلى القرن الثّالث ق.م.
+
+**النشاط الثّاني** : _أتعرّف إلى توسّع قرطاج مجاليا._
+
+- **الوثيقة عدد 3** (carte) : المسالك التّجاريّة البحريّة لقرطاج في بداية القرن الثّالث ق.م (routes reliant قرطاج à صور/صيدا/بيروت/جبيل, قبرص, أثينا, روما, مساليا, سرقوسة, قرطاجنّة/مالقا, قورينة… ; légende : مسلك تجاري / مركز تجاري ; en direction des « جزر القصدير » et du « السّاحل الافريقي »).
+- **الوثيقة عدد 4** (carte) : الممتلكات القرطاجيّة في أوج اتّساعها (قبل الحرب الأولى بين قرطاج وروما) — hégémonie économique/politique + comptoirs phénico-puniques.
+- **الوثيقة عدد 5** (carte) : رحلتا حنون وخميلك (أواسط القرن 5 ق.م).
+- **الوثيقة عدد 6** (carte) : المجال القرطاجي في لوبيا في أوج اتّساعه.
+- **معطيات مكمّلة** : الحرب الأولى بين قرطاج وروما = 264–241 ق.م ؛ **حنون** = بحّار قرطاجي (عائلة ماغون) أبحر من قرطاج محاذيا السواحل الإفريقيّة (من ~425 ق.م) حتّى خليج الكامرون ؛ **خيملك/خيملكون** = بحّار (عائلة ماغون) أبحر من جديرا محاذيا السواحل الأوروبيّة الغربيّة (~450 ق.م)، يبدو أنّه بلغ السواحل الأرلنديّة ؛ بلاد الايبار = شبه الجزيرة الايبيرية (إسبانيا والبرتغال) ؛ أعمدة هرقل (أعمدة ملقرط) = مضيق جبل طارق ؛ لوبيا = منطقة تمتدّ من مصر إلى أعمدة هرقل.
+- **التعليمة** : صف وحدّد مجال توسّع قرطاج.
+
+**النشاط الثّالث** : _أتعرّف إلى عوامل ومظاهر القوّة التّجاريّة لقرطاج._
+
+- **الوثيقة عدد 7** (dessins) : نماذج سفن قرطاجيّة من القرن الثّالث ق.م (زورق ؛ سفينة حربيّة ؛ مقاطع عرضيّة لسفينة تجاريّة وأخرى حربيّة). _معطيات_ : أسطول قرطاج شمل **سفنا حربيّة ثلاثينيّة** (كلّ صف 30 جذافا) بلغ عددها **300 سفينة** + سفنا تجاريّة أكبر حجما وأقلّ سرعة قادرة على حمل بضائع ومواد أوليّة ؛ مكّن الأسطول من تكوين امبراطوريّة بحريّة مركزها قرطاج.
+- **الوثيقة عدد 8** (tableau — المبادلات التّجاريّة لقرطاج) : المصدر / السّلع / المسالك — جنوب بلاد الإيبار : الفضّة والنّحاس والقصدير والرّصاص والحديد (بحرا) ؛ افريقيا : الذّهب والعاج والصّمغ والجلود والملح والعبيد والفيلة (محيط ومسالك صحراويّة) ؛ مصر وبلاد كنعان وقبرص : العطور والبخور والحجارة الكريمة والبلوريّات والأقمشة الرّفيعة والتّمائم (بحرا) ؛ المستوطنات الإغريقيّة (صقليّة/إيطاليا/مسّاليا) : الخزف الرّفيع والخمور والزّيوت (بحرا).
+- **التعليمة** : أستخرج عوامل القوّة التّجاريّة لقرطاج وأشرح مظاهرها.
+
+**أدعّم مكتسباتي (synthèse)** : الميناء القرطاجي بنية مركبة (ميناء تجاري + ميناء عسكري + ورشات ومخازن) تجاوزت مساحته 20 هكتارا، بموقع استراتيجي ومحصّن عكس صنعة الإنسان القرطاجي والموروث الفينيقي ؛ تمكّنت قرطاج من التوسّع في المتوسّط مبكّرا، وتدعّم مع القرن الثّالث ق.م بدور متميّز للميناء ؛ سيطرت سفنها على المسالك البحريّة في المتوسّط وفي المحيط الأطلسي عبر حضور مكثّف في الجزر (مالطة، سردينيا، بنتلاريا، البليار، غرب صقليّة) وجنوب إسبانيا ؛ قامت تجارتها على الوساطة والحرفيّة وسياسة تجمع بين المعاهدات واللّجوء إلى القوّة ⇒ بروز امبراطوريّة تجاريّة قرطاجيّة كرّست التّلاقح الحضاري وجسر التّواصل بين شرق المتوسّط وغربه.
+
+#### درس 4 — موسوعة ماغون (`04-hist-mawsu3at-maghun`) · p.29–32
+
+**المدخل (objectif)** : أتعرّف إلى أحد أعلام قرطاج البونية في المجال الفلاحي (ماغون) لأتبيّن دوره في إشعاع الحضارة القرطاجيّة.
+
+**النشاط الأوّل** : _أتعرّف إلى ماغون ومحتوى موسوعته لأبيّن إسهاماته في تطوير النّشاط الفلاحي في الفترة البونيّة._
+
+- **الوثيقة عدد 1 — مقتطفات من موسوعة ماغون حول بعض التّقنيات الزّراعيّة كما أوردها كولوملا** (texte). Techniques de plantation citées verbatim : _الكروم_ (orienter au nord contre la canicule, fosses garnies de pierres) ; _الزيتون_ (75 pieds entre arbres, min. 45 en sol pauvre/venté) ; _اللّوز_ (terre sablonneuse ensoleillée, semis en triangle) ; _صناعة خمر الزبيب_ (procédé détaillé de vinification du raisin sec). Source : **كولوملا، شؤون الفلاحة**. Gloss : كولوملا = agronome latin du Ier s. ap. J.-C. (Gadès, Espagne), qui réserve à Magon une place particulière et l'appelle « **أب الزراعة** » (père de l'agriculture).
+- **الوثيقة عدد 2 — نصائح حول استعمال العبيد في المجال الفلاحي** (texte) — source : **ماغون**. Choisir des esclaves de plus de 22 ans, expérimentés ; mettre à leur tête un esclave compétent servant de modèle ; encourager par des récompenses, le mariage et les enfants qui attachent à la terre.
+- **معطيات مكمّلة** : ماغون = عالم فلاحي قرطاجي (~بين القرن III والقرن II ق.م) ؛ موسوعته (« كتاب الفلاحة ») = **28 كتابا**، لم يبق منها إلا فقرات/مقاطع (~66 حسب بعض المؤرّخين).
+- **التعليمة** : ابحث عن بعض التقنيات الزراعيّة المعتمدة اليوم في بعض الجهات التّونسيّة وقارنها بنصائح ماغون.
+
+**النشاط الثّاني** : _أتبيّن دور موسوعة ماغون في اشعاع الحضارة القرطاجيّة._
+
+- **الوثيقة عدد 3 — روما تعتني بموسوعة ماغون** (texte) — source : **ابيانوس، تاريخ الطّبيعة XVIII,22**. Le sénat de Rome décide de traduire le livre de Magon en latin (traduction achevée en **146 av. J.-C.**), confiée à des connaisseurs du punique (dont ديسميوس سيلانوس).
+- **معطيات مكمّلة** (postérité, au-delà de la chute de Carthage) : ماركوس ترنتيوس فارو (Varron, 116–27 av. J.-C.) ؛ كاسيوس ديونيزيوس (traduction grecque de Magon, 88 av. J.-C.) ؛ بلينيوس الأكبر (Pline l'Ancien, 23–79 ap. J.-C., _التاريخ الطبيعي_) ؛ ابن العوّام الإشبيلي (Ibn al-ʿAwwām, andalou) qui transmet d'importants extraits via Columelle et Varron.
+- **التعليمة** : بيّن تواصل المعرفة الزراعيّة القرطاجيّة عبر الزمن واستنتج إسهام ماغون في اشعاع الحضارة القرطاجيّة.
+
+**أدعّم مكتسباتي (synthèse)** : موسوعة ماغون (« كتاب الفلاحة ») هي أحد أهمّ المراجع الأساسيّة لعلم الزّراعة في الفترة القديمة ؛ تجاوز صداها حدود قرطاج المجاليّة والزّمنيّة — اعتبرها الرّومان أهمّ غنائم الحرب البونيّة الثّالثة فترجموها، ووُجدت مقتطفات مترجمة إلى الإغريقيّة واللاّتينيّة في كتب الفلاحة القديمة والوسيطة ؛ أسهمت بمحتواها وطابعها العلمي والعملي في اشعاع قرطاج حتّى بعد سقوطها سنة 146 ق.م ؛ تضمّنت إضافات في تقنيات الإنتاج، التكثيف الزّراعي، الروزنامة الفلاحيّة، استعمال اليد العاملة وارتباط القرطاجيين بالأرض ⇒ أسهمت في تطوّر النّشاط الفلاحي والحرفي والتّجاري ودعم الحضور القرطاجي في المتوسّط.
+
 ## 3. Notes pédagogiques / méthode
 
 - Démarche **documentaire et intégrative** : toute leçon part de `وثائق` numérotées (texte, carte, image, tableau, statistique) exploitées par des `نشاط` avec consignes, puis structuration (`هيكلة`) sur le cahier. Reproduire fidèlement, à la génération, ce registre « étude de document » (c'est la signature de l'histoire-géo — cf. `prof-histoire-geo-lycee`).
@@ -185,5 +230,5 @@ _Le manuel géo **ne comporte pas de فهرس** ; structure établie à partir d
 - **Histoire — pages de fin** : dérivées des pages de départ du فهرس (fin de leçon = départ suivant − 1) ; la leçon 18 (p.195–220) englobe d'éventuels نصوص للمطالعة de fin d'ouvrage — à confirmer en lecture.
 - **Géographie — pas de فهرس** : bornes de modules approximatives (sondage p.5/25/45/116) ; le découpage fin en leçons et les **intitulés officiels** doivent être relevés sur les ouvreurs/titres du manuel `206103` (aucune invention — R-5).
 - **Couche-texte cassée** (mojibake) sur les deux manuels : transcription **par vision** obligatoire ; cartes/figures à décrire (pdftotext ne les rend pas).
-- **Reprise (R-4)** : compléter cette fiche sans refaire l'existant. **Fait** : structure (§2, §4) + histoire leçons 1–2 à profondeur (§2bis). **Suite** : histoire leçon 3 (`03-hist-al-mina2-at-tijara`, p.21–28) → … → leçon 9, puis و2–و3, puis géo module par module — par tranches, écriture immédiate au format final (T-2). Rendu vision : `pdftoppm -png -r 150 -f <p1> -l <p2> 207103P00.pdf`.
+- **Reprise (R-4)** : compléter cette fiche sans refaire l'existant. **Fait** : structure (§2, §4) + histoire leçons 1–4 à profondeur (§2bis). **Suite** : histoire leçon 5 (`05-hist-3abqariyyat-hannibal`, p.33–44 — fin du محور 1 de la وحدة 1) → و1/م2 (leçons 6–9) → و2–و3, puis géo module par module — par tranches, écriture immédiate au format final (T-2). Rendu vision : `pdftoppm -png -r 150 -f <p1> -l <p2> 207103P00.pdf`.
 - **Cartes/figures histoire non levées** : les وثائق-images (ex. leçon 2 : بعل حمّون, تانيت, معبد التوفاة, نقيشة, رسم كركوان) sont **décrites** d'après leur légende, non redessinées — à illustrer (SVG/description) au LOT B si la mission les mobilise (axe 5).
