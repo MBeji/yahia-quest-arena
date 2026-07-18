@@ -1,0 +1,82 @@
+{
+  "title": "⭐⭐ Révision (type examen) : L'univers, le système solaire et la Terre",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Un corps céleste ne brûle pas entièrement dans l'atmosphère et atteint le sol, y creusant un cratère. On l'appelle...",
+      "options": [
+        { "id": "a", "text": "un astéroïde" },
+        { "id": "b", "text": "un météore" },
+        { "id": "c", "text": "une comète" },
+        { "id": "d", "text": "une météorite" }
+      ],
+      "correctOption": "d",
+      "explanation": "Le corps qui atteint le sol et y creuse un cratère est une météorite ✓. Tant qu'il ne fait que brûler dans l'atmosphère sans toucher le sol, c'est un météore (étoile filante).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "L'étoile Proxima du Centaure est à 4,22 années-lumière de la Terre. Combien de temps la lumière a-t-elle mis pour nous parvenir de cette étoile ?",
+      "options": [
+        { "id": "a", "text": "4,22 secondes" },
+        { "id": "b", "text": "4,22 jours" },
+        { "id": "c", "text": "4,22 ans" },
+        { "id": "d", "text": "4,22 siècles" }
+      ],
+      "correctOption": "c",
+      "explanation": "La lumière parcourt 1 année-lumière en 1 an. Pour 4,22 années-lumière, elle met donc 4,22 ans ✓ : on voit l'étoile telle qu'elle était il y a 4,22 ans.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Qu'est-ce qui caractérise les planètes gazeuses, par rapport aux planètes telluriques ?",
+      "options": [
+        { "id": "a", "text": "elles possèdent des anneaux et de nombreux satellites" },
+        { "id": "b", "text": "elles ont une surface solide et peu de satellites" },
+        { "id": "c", "text": "elles sont plus denses que l'eau" },
+        { "id": "d", "text": "elles sont toutes plus proches du Soleil" }
+      ],
+      "correctOption": "a",
+      "explanation": "Les planètes gazeuses (Jupiter, Saturne, Uranus, Neptune) sont peu denses et possèdent des anneaux et de nombreux satellites ✓. Ce sont les telluriques qui ont une surface solide et peu de satellites.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Le tableau des planètes donne les densités moyennes : Terre 5,52 ; Mars 3,95 ; Jupiter 1,33 ; Saturne 0,69. Quelle est la planète la moins dense de cette liste ?",
+      "options": [
+        { "id": "a", "text": "la Terre" },
+        { "id": "b", "text": "Mars" },
+        { "id": "c", "text": "Jupiter" },
+        { "id": "d", "text": "Saturne" }
+      ],
+      "correctOption": "d",
+      "explanation": "La densité la plus faible de la liste est 0,69, celle de Saturne ✓ : plus la valeur est petite, moins la planète est dense (Saturne est même moins dense que l'eau, dont la densité vaut 1).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "La Terre tourne sur son axe en 23 h 56 min et fait le tour du Soleil en 365,25 jours. Quel mouvement, combiné à l'inclinaison de son axe, explique l'alternance des saisons ?",
+      "options": [
+        { "id": "a", "text": "la rotation de la Terre sur son axe" },
+        { "id": "b", "text": "la révolution de la Terre autour du Soleil" },
+        { "id": "c", "text": "les phases de la Lune" },
+        { "id": "d", "text": "la scintillation des étoiles" }
+      ],
+      "correctOption": "b",
+      "explanation": "Les saisons viennent de la révolution de la Terre autour du Soleil (365,25 jours), combinée à l'inclinaison de son axe ✓. La rotation sur l'axe (23 h 56 min), elle, explique la succession des jours et des nuits.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "La pesanteur à la surface vaut 9,80 N/kg sur la Terre, 24,9 N/kg sur Jupiter et 3,72 N/kg sur Mars. Sur quelle planète un même objet aurait-il le poids le plus grand ?",
+      "options": [
+        { "id": "a", "text": "sur la Terre" },
+        { "id": "b", "text": "sur Jupiter" },
+        { "id": "c", "text": "sur Mars" },
+        { "id": "d", "text": "le poids serait le même partout" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le poids est d'autant plus grand que la pesanteur (en N/kg) est élevée. La plus grande valeur est 24,9 N/kg, sur Jupiter ✓ : un même objet y pèse le plus lourd.",
+      "difficulty": 3
+    }
+  ]
+}

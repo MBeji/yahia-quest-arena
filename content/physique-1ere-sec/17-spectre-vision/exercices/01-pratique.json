@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : Spectre, couleurs et rayonnements",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Une lumière colorée simple, qu'un prisme ne peut plus décomposer, est une lumière...",
+      "options": [
+        { "id": "a", "text": "blanche" },
+        { "id": "b", "text": "monochromatique" },
+        { "id": "c", "text": "polychromatique" },
+        { "id": "d", "text": "noire" }
+      ],
+      "correctOption": "b",
+      "explanation": "Une lumière colorée simple, non décomposable, est monochromatique (une radiation) ✓. La lumière blanche, elle, est polychromatique.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Dans le spectre de la lumière blanche, les couleurs s'étalent du rouge au...",
+      "options": [
+        { "id": "a", "text": "noir" },
+        { "id": "b", "text": "blanc" },
+        { "id": "c", "text": "violet" },
+        { "id": "d", "text": "gris" }
+      ],
+      "correctOption": "c",
+      "explanation": "Le spectre continu va du rouge au violet ✓, en passant par l'orange, le jaune, le vert, le bleu et l'indigo.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "L'arc-en-ciel apparaît quand la lumière blanche du Soleil est décomposée par...",
+      "options": [
+        { "id": "a", "text": "un miroir posé au sol" },
+        { "id": "b", "text": "des nuages opaques" },
+        { "id": "c", "text": "la Lune" },
+        { "id": "d", "text": "les gouttelettes d'eau en suspension dans l'air" }
+      ],
+      "correctOption": "d",
+      "explanation": "Les gouttelettes d'eau en suspension dans l'air décomposent la lumière blanche du Soleil : c'est l'arc-en-ciel ✓.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Comment appelle-t-on les cellules de la rétine responsables de la vision des couleurs ?",
+      "options": [
+        { "id": "a", "text": "les cônes" },
+        { "id": "b", "text": "les os" },
+        { "id": "c", "text": "les muscles" },
+        { "id": "d", "text": "les tympans" }
+      ],
+      "correctOption": "a",
+      "explanation": "Les cônes de la rétine, de trois types (sensibles au rouge, au vert et au bleu), assurent la vision des couleurs ✓.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Une loupe concentre la lumière du Soleil sur du papier noir, qui se met à brûler. Par quel mode l'énergie a-t-elle été transférée au papier ?",
+      "options": [
+        { "id": "a", "text": "la conduction" },
+        { "id": "b", "text": "la convection" },
+        { "id": "c", "text": "le rayonnement" },
+        { "id": "d", "text": "le vent" }
+      ],
+      "correctOption": "c",
+      "explanation": "La lumière transporte de l'énergie : elle est transférée au papier par rayonnement ✓, ce qui le fait brûler.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Le rayonnement invisible situé en deçà du rouge, responsable d'une sensation de chaleur, est...",
+      "options": [
+        { "id": "a", "text": "l'ultraviolet" },
+        { "id": "b", "text": "l'infrarouge" },
+        { "id": "c", "text": "le violet" },
+        { "id": "d", "text": "le bleu" }
+      ],
+      "correctOption": "b",
+      "explanation": "L'infrarouge, situé en deçà du rouge, est invisible et provoque une sensation de chaleur ✓. L'ultraviolet, lui, se situe au-delà du violet.",
+      "difficulty": 1
+    }
+  ]
+}
