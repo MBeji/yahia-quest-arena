@@ -6,6 +6,10 @@
 
 ## 🌱 مكوّنات البذرة والتكاثر بالبذور
 
+::: figure البذرةُ في مقطع: غلافٌ يحميها، وجنينٌ ينمو، ومدّخرٌ غذائيٌّ يغذّيه عند الإنبات
+<svg viewBox="0 0 320 165"><ellipse cx="120" cy="80" rx="66" ry="46" fill="#fef3c7" stroke="#a16207" stroke-width="3"/><ellipse cx="120" cy="80" rx="58" ry="38" fill="#fde68a" stroke="none"/><path d="M114 98 q-12 -18 4 -32 q14 -10 20 2" fill="none" stroke="#15803d" stroke-width="4" stroke-linecap="round"/><circle cx="140" cy="68" r="5" fill="#16a34a" stroke="#15803d" stroke-width="1.5"/><path d="M186.0 50.0 L216.0 40.0" stroke="#a16207" stroke-width="1.6" stroke-linecap="round"/><path d="M216.0 40.0 L209.0 47.6 L205.9 38.1 Z" fill="#a16207"/><text x="300.0" y="38.0" text-anchor="end" font-size="11" font-weight="700" fill="#a16207" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">الغلاف</text><path d="M144.0 68.0 L216.0 84.0" stroke="#15803d" stroke-width="1.6" stroke-linecap="round"/><path d="M216.0 84.0 L206.1 86.9 L208.3 77.2 Z" fill="#15803d"/><text x="300.0" y="86.0" text-anchor="end" font-size="11" font-weight="700" fill="#15803d" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">الجنين</text><path d="M90.0 100.0 L90.0 132.0" stroke="#b45309" stroke-width="1.6" stroke-linecap="round"/><path d="M90.0 132.0 L85.0 123.0 L95.0 123.0 Z" fill="#b45309"/><text x="90.0" y="146.0" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">المدّخر الغذائيّ</text></svg>
+:::
+
 تتكاثر معظم النباتات بـ**البذور**. تتكوّن البذرة من:
 
 - **الغلاف:** يحمي البذرة من الخارج.
