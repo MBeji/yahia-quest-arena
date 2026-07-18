@@ -226,6 +226,46 @@
           "notion": "Exploitation et gestion d'une roche à intérêt économique : le phosphate"
         }
       ]
+    },
+    {
+      "id": "histoire-geo-1ere-sec",
+      "name": "Histoire-Géographie",
+      "contentLanguage": "ar",
+      "chapters": [
+        {
+          "slug": "01-hist-mu2assasat-siyasiyya",
+          "notion": "المؤسّسات السّياسيّة (قرطاج البونيّة)"
+        },
+        { "slug": "02-hist-ad-diyana", "notion": "الديانة (قرطاج البونيّة)" },
+        { "slug": "03-hist-al-mina2-at-tijara", "notion": "الميناء والتوسّع التّجاري" },
+        { "slug": "04-hist-mawsu3at-maghun", "notion": "موسوعة ماغون" },
+        { "slug": "05-hist-3abqariyyat-hannibal", "notion": "عبقريّة حنبعل" },
+        {
+          "slug": "06-hist-al-izdihar-al-3umrani",
+          "notion": "الازدهار العمراني (قرطاج الرّومانيّة)"
+        },
+        { "slug": "07-hist-al-izdihar-al-filaha", "notion": "الازدهار الاقتصادي : الفلاحة" },
+        { "slug": "08-hist-abulius", "notion": "أبوليوس" },
+        { "slug": "09-hist-augustinus", "notion": "القدّيس أوغسطينوس" },
+        {
+          "slug": "10-hist-al-qayrawan-al-intishar",
+          "notion": "القيروان قاعدة الانتشار العربي الإسلامي"
+        },
+        {
+          "slug": "11-hist-an-nashat-at-tijari",
+          "notion": "الدور الاقتصادي للقيروان : أهميّة النّشاط التّجاري"
+        },
+        { "slug": "12-hist-khasa2is-al-3imara", "notion": "خصائص العمارة" },
+        { "slug": "13-hist-al-ish3a3-al-fikri", "notion": "الإشعاع الفكري" },
+        { "slug": "14-hist-3imarat-madinat-tunis", "notion": "عمارة مدينة تونس (العهد الحفصي)" },
+        { "slug": "15-hist-ibn-khaldun", "notion": "عبد الرحمان بن خلدون" },
+        { "slug": "16-hist-al-fikr-al-islahi", "notion": "الفكر الإصلاحي" },
+        {
+          "slug": "17-hist-muqawamat-al-isti3mar",
+          "notion": "التجربة التونسيّة في مقاومة الاستعمار"
+        },
+        { "slug": "18-hist-ta3sir-ad-dawla", "notion": "تعصير الدولة وتحديث المجتمع" }
+      ]
     }
   ]
 }
