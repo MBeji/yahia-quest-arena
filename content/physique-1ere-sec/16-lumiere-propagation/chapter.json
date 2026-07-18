@@ -1,0 +1,10 @@
+{
+  "title": "La lumière et sa propagation",
+  "description": "L'œil, détecteur de lumière : un objet n'est visible que s'il envoie de la lumière dans nos yeux. Les sources primaires de lumière (qui produisent leur lumière) et secondaires (qui diffusent la lumière reçue). Les corps transparents, translucides et opaques. La propagation rectiligne de la lumière dans un milieu homogène et transparent ; le rayon lumineux, les faisceaux (parallèle, convergent, divergent) ; la célérité de la lumière dans le vide c = 3×10⁸ m·s⁻¹. L'ombre propre et l'ombre portée avec une source ponctuelle ; l'ombre et la pénombre avec une source étendue. Les phases de la Lune (lunaison) et les éclipses de Soleil et de Lune, expliquées par la propagation rectiligne et l'alignement des astres",
+  "displayOrder": 16,
+  "manuel": { "code": "223103P00", "pages": "243-258" },
+  "sources": [
+    "Programme officiel — Sciences physiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 223103P00 « PHYSIQUE », thème L'OPTIQUE, chapitre « La lumière et sa propagation » (p.243–258)",
+    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/sciences-physiques.md (Chapitre 16)"
+  ]
+}
