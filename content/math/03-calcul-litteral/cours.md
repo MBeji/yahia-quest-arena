@@ -45,6 +45,10 @@ $$ (a + b)(c + d) = ac + ad + bc + bd $$
 
 ## 🔮 المتطابقات الشهيرة الثلاث
 
+::: figure فرقُ مربّعين a² − b² هو مساحةُ ما يتبقّى من مربّعٍ كبيرٍ بعد نزع مربّعٍ صغير
+<svg viewBox="0 0 380 170"><rect x="40" y="24" width="100" height="100" rx="0" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="1.6"/><rect x="100" y="24" width="40" height="40" rx="0" fill="#ffffff" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="4 3"/><rect x="40" y="24" width="100" height="100" rx="0" fill="none" stroke="#1f2937" stroke-width="2.2"/><text x="70.0" y="80.0" text-anchor="middle" font-size="15" font-weight="700" fill="#1d4ed8" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">a² − b²</text><text x="120.0" y="48.0" text-anchor="middle" font-size="11" font-weight="700" fill="#dc2626" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">b²</text><text x="90.0" y="18.0" text-anchor="middle" font-size="12" font-weight="700" fill="#1f2937" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">a</text><text x="32.0" y="74.0" text-anchor="end" font-size="12" font-weight="700" fill="#1f2937" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">a</text><text x="230.0" y="74.0" text-anchor="start" font-size="15" font-weight="700" fill="#15803d" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">= (a + b)(a − b)</text><text x="190.0" y="160.0" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">المساحةُ المتبقّية بعد نزع المربّع الصغير</text></svg>
+:::
+
 هذه الهويّات الثلاث هي **أسلحة سريّة** — احفظها وستوفّر وقتًا كبيرًا في الحسابات والتحليل:
 
 ### المتطابقة الأولى — مربّع المجموع
