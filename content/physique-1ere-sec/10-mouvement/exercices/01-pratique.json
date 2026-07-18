@@ -1,0 +1,82 @@
+{
+  "title": "⭐ Exercice : Référentiel, trajectoire et vitesse",
+  "difficulty": 1,
+  "mode": "practice",
+  "xpReward": 50,
+  "rewardCoins": 10,
+  "displayOrder": 1,
+  "questions": [
+    {
+      "prompt": "Dans le système international, quelle est l'unité de longueur ?",
+      "options": [
+        { "id": "a", "text": "Le mètre (m)" },
+        { "id": "b", "text": "La seconde (s)" },
+        { "id": "c", "text": "Le litre (L)" },
+        { "id": "d", "text": "Le newton (N)" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'unité de longueur du système international est le mètre (m) ✓. La seconde mesure une durée, le litre un volume et le newton une force.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Qu'est-ce que la trajectoire d'un mobile ?",
+      "options": [
+        { "id": "a", "text": "Sa vitesse à chaque instant" },
+        { "id": "b", "text": "La durée de son parcours" },
+        { "id": "c", "text": "L'ensemble des positions qu'il occupe au cours du temps" },
+        { "id": "d", "text": "Son seul point de départ" }
+      ],
+      "correctOption": "c",
+      "explanation": "La trajectoire est l'ensemble des positions successives occupées par le mobile au cours du temps, dans un repère donné ✓. Ce n'est ni sa vitesse, ni la durée du trajet, ni un point isolé.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Pour dire si un corps est en mouvement ou au repos, il faut d'abord...",
+      "options": [
+        { "id": "a", "text": "connaître sa masse" },
+        { "id": "b", "text": "choisir un corps de référence" },
+        { "id": "c", "text": "mesurer sa température" },
+        { "id": "d", "text": "attendre qu'il s'arrête" }
+      ],
+      "correctOption": "b",
+      "explanation": "Le mouvement est relatif : il faut choisir un corps de référence ✓. Un même corps peut être en mouvement par rapport à l'un et au repos par rapport à un autre. Ni la masse ni la température n'entrent en jeu.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Une voiture qui démarre et prend de la vitesse a un mouvement...",
+      "options": [
+        { "id": "a", "text": "uniforme" },
+        { "id": "b", "text": "décéléré" },
+        { "id": "c", "text": "circulaire" },
+        { "id": "d", "text": "accéléré" }
+      ],
+      "correctOption": "d",
+      "explanation": "Sa vitesse augmente : le mouvement est accéléré ✓. Uniforme = vitesse constante, décéléré = vitesse qui diminue. « Circulaire » décrit la forme de la trajectoire, pas l'évolution de la vitesse.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Une bille roule en ligne droite sur le sol. Sa trajectoire est...",
+      "options": [
+        { "id": "a", "text": "circulaire" },
+        { "id": "b", "text": "curviligne" },
+        { "id": "c", "text": "rectiligne" },
+        { "id": "d", "text": "uniforme" }
+      ],
+      "correctOption": "c",
+      "explanation": "Une trajectoire portée par une droite est rectiligne ✓. Circulaire = un cercle, curviligne = une courbe. « Uniforme » ne qualifie pas la trajectoire mais la vitesse.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "La vitesse moyenne d'un mobile est égale...",
+      "options": [
+        { "id": "a", "text": "au produit de la distance par la durée" },
+        { "id": "b", "text": "au quotient de la distance par la durée" },
+        { "id": "c", "text": "à la somme de la distance et de la durée" },
+        { "id": "d", "text": "à la durée divisée par la distance" }
+      ],
+      "correctOption": "b",
+      "explanation": "La vitesse moyenne est le quotient de la distance parcourue par la durée du parcours : Vmoy = d/t ✓. Multiplier, additionner ou inverser le rapport (t/d) ne donne pas une vitesse.",
+      "difficulty": 1
+    }
+  ]
+}
