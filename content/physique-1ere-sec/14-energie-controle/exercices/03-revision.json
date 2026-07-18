@@ -1,0 +1,97 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Conversions et transferts d'énergie",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Parmi ces sources d'énergie, laquelle est renouvelable ?",
+      "options": [
+        { "id": "a", "text": "le charbon" },
+        { "id": "b", "text": "l'uranium" },
+        { "id": "c", "text": "les marées" },
+        { "id": "d", "text": "le pétrole" }
+      ],
+      "correctOption": "c",
+      "explanation": "Les marées produisent de l'énergie de manière illimitée : c'est une source renouvelable ✓. Le charbon, l'uranium et le pétrole sont épuisables.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Une cellule photovoltaïque reçoit l'énergie du Soleil, puis la transforme en énergie électrique. Par quel mode le Soleil lui transfère-t-il cette énergie ?",
+      "options": [
+        { "id": "a", "text": "le travail rayonnant (WR)" },
+        { "id": "b", "text": "le travail mécanique (WM)" },
+        { "id": "c", "text": "la chaleur (Q) par conduction" },
+        { "id": "d", "text": "le travail électrique (WE)" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'énergie du Soleil parvient à la cellule par rayonnement, c'est-à-dire par travail rayonnant WR ✓. La cellule est alors le convertisseur qui la transforme en énergie électrique.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Dans un liquide chauffé par le bas, les parties chaudes montent et les parties froides descendent, transportant la chaleur. Ce mode de transfert est...",
+      "options": [
+        { "id": "a", "text": "la conduction" },
+        { "id": "b", "text": "la convection" },
+        { "id": "c", "text": "le rayonnement" },
+        { "id": "d", "text": "le travail électrique" }
+      ],
+      "correctOption": "b",
+      "explanation": "Ici la chaleur est transportée par le déplacement de la matière (le liquide qui circule) : c'est la convection ✓, à ne pas confondre avec la conduction (sans déplacement de matière).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Que peut-on dire de la chaleur et de la température ?",
+      "options": [
+        { "id": "a", "text": "ce sont deux noms de la même grandeur" },
+        { "id": "b", "text": "la température se mesure en joule" },
+        { "id": "c", "text": "la chaleur se mesure en degrés Celsius" },
+        {
+          "id": "d",
+          "text": "la chaleur est un transfert d'énergie (en joule), la température renseigne sur l'agitation des particules"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "La chaleur est un transfert d'énergie, mesuré en joule ; la température (en degrés Celsius) renseigne sur l'agitation thermique des particules ✓. Ce sont deux grandeurs différentes.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Un radiateur électrique branché sur le secteur chauffe une pièce. Quels modes de transfert interviennent, dans l'ordre ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "travail électrique (secteur → radiateur), puis chaleur (radiateur → pièce)"
+        },
+        {
+          "id": "b",
+          "text": "chaleur (secteur → radiateur), puis travail mécanique (radiateur → pièce)"
+        },
+        {
+          "id": "c",
+          "text": "travail mécanique (secteur → radiateur), puis rayonnement (radiateur → pièce)"
+        },
+        {
+          "id": "d",
+          "text": "rayonnement (secteur → radiateur), puis travail électrique (radiateur → pièce)"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Le secteur transfère l'énergie au radiateur par travail électrique ; le radiateur la cède ensuite à la pièce par chaleur (et rayonnement) ✓. Le radiateur est le convertisseur.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Une facture d'électricité compte l'énergie en kilowattheures (kWh), avec 1 kWh = 3,6×10⁶ J. À combien de joules correspondent 2 kWh ?",
+      "options": [
+        { "id": "a", "text": "1,8×10⁶ J" },
+        { "id": "b", "text": "3,6×10⁶ J" },
+        { "id": "c", "text": "7,2×10⁶ J" },
+        { "id": "d", "text": "7,2×10³ J" }
+      ],
+      "correctOption": "c",
+      "explanation": "2 kWh = 2 × 3,6×10⁶ = 7,2×10⁶ J ✓. Diviser par 2 donnerait 1,8×10⁶ ; oublier le facteur 2 laisserait 3,6×10⁶.",
+      "difficulty": 3
+    }
+  ]
+}

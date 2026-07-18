@@ -1,0 +1,10 @@
+{
+  "title": "Énergie et contrôle",
+  "description": "Sources d'énergie renouvelables (Soleil, vent, marées, biomasse, géothermie) et non renouvelables ou épuisables (charbon, pétrole, gaz naturel, uranium). L'énergie totale d'un système = énergie mécanique (macroscopique) + énergie microscopique. L'énergie se conserve mais se transforme d'une forme à une autre ; les convertisseurs d'énergie réalisent ces transformations ; seules les variations d'énergie ΔE sont mesurables, en joule (J). Les transferts s'effectuent par travail mécanique (WM), travail électrique (WE), travail rayonnant (WR) ou chaleur (Q) ; le travail est un transfert ordonné, la chaleur un transfert désordonné qui va spontanément du corps chaud vers le corps froid par conduction ou convection. Agitation thermique et température ; enceinte adiabatique (calorifugée) et isolation thermique",
+  "displayOrder": 14,
+  "manuel": { "code": "223103P00", "pages": "209-226" },
+  "sources": [
+    "Programme officiel — Sciences physiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 223103P00 « PHYSIQUE », thème L'ÉNERGIE, chapitre « Énergie et contrôle » (p.209–226)",
+    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/sciences-physiques.md (Chapitre 14)"
+  ]
+}
