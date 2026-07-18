@@ -104,7 +104,26 @@ Everything in `content-schema.md` § Figures applies. On top of it:
 - **Never put Arabic PROSE inside the drawing.** A label is a glyph (`أ`, `ر`, `5`, `cm`), not a
   sentence. Words like « القاعدة » or « الارتفاع » belong in the caption — the drawing shows them
   (a dashed segment, a right-angle square), it does not spell them. Keep every label to one or two
-  characters.
+  characters. (A short Arabic _annotation_ on an arithmetic/algebra figure — « أربعة عوامل » naming
+  a brace — is fine; a sentence is not.)
+- **Arabic labels in an SVG are a bidi minefield — three rules, all verified at the pixel across the
+  5ème/6ème/7ème campaigns (2026-07):**
+  1. **A phrase mixing Arabic text + numbers + units is ONE `<text>` node**, never one node per token
+     at hand-set `x`. Per-token absolute positioning lays tokens in visual (LTR) order, so a reader
+     reading right-to-left sees the phrase **reversed** — « 2 سا 40 د » (2 h 40) becomes « د 40 سا 2 ».
+     In a single node the bidi algorithm orders it correctly, exactly like the course prose.
+  2. **A pure math expression (`3x = 20 − 5 = 15`, `|−3| = 3`, `2⁴ = 16`, `3/4 × 2/3 = 6/12`) gets its
+     own node with `direction="ltr" unicode-bidi="isolate"` and NO Arabic inside** — so it renders
+     verbatim. Don't splice an Arabic word (« إذن ») into an isolated LTR node; split into two nodes.
+  3. **`text-anchor="end"`/`"start"` on Arabic anchors the _visual-opposite_ edge** (end ≈ visual-left),
+     so a side-label at a large `x` overflows off-canvas and gets clipped. Prefer `anchor="middle"`
+     positioned by centre, or move the text to the **caption**. A transformation that would overflow
+     horizontally (« 3 سا 75 د → 4 سا 15 د ») reads better as a **vertical** flow (arrow down + result
+     below).
+     A number line (`مستقيم مدرّج`) is the one axis that stays **LTR by convention** — 0 at centre,
+     negatives left, values increasing rightward — even in Arabic content; its tick numbers are isolated
+     LTR nodes. None of this is caught by any gate: **render the figure in a `dir="rtl"` container and
+     look at it before shipping.**
 - **Label legibility over strokes**: give `<text>` a halo —
   `paint-order="stroke" stroke="#ffffff" stroke-width="4" stroke-linejoin="round"`.
 - **THE FIGURE MUST BE TRUE.** A figure that contradicts its own statement is worse than no figure.

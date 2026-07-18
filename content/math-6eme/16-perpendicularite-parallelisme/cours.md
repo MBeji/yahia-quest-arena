@@ -4,6 +4,10 @@
 
 ## ⊥ المستقيمان المتعامدان
 
+::: figure المتعامدان يصنعان زاويةً قائمة، والمتوازيان لا يلتقيان مهما امتدّا
+<svg viewBox="0 0 340 150"><path d="M40 110 H150" stroke="#1d4ed8" stroke-width="2.5"/><path d="M95 30 V110" stroke="#1d4ed8" stroke-width="2.5"/><path d="M95 96 H109 V110" fill="none" stroke="#dc2626" stroke-width="1.6"/><text x="95.0" y="134.0" text-anchor="middle" font-size="11" font-weight="700" fill="#1d4ed8" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">متعامدان (زاوية قائمة)</text><path d="M200 55 H320" stroke="#7c3aed" stroke-width="2.5"/><path d="M200 95 H320" stroke="#7c3aed" stroke-width="2.5"/><path d="M250 66 l6 0 M258 66 l6 0" stroke="#7c3aed" stroke-width="1.4"/><path d="M250 84 l6 0 M258 84 l6 0" stroke="#7c3aed" stroke-width="1.4"/><text x="260.0" y="134.0" text-anchor="middle" font-size="11" font-weight="700" fill="#7c3aed" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">متوازيان (لا يلتقيان)</text></svg>
+:::
+
 مستقيمان **متعامدان** إذا تقاطعا وكوّنا **زاوية قائمة** (90°). نكتب: (د1) ⊥ (د2).
 
 - نتحقّق من التعامد ونرسمه بـ**الكوس** (فيه زاوية قائمة).

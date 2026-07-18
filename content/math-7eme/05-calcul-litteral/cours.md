@@ -43,6 +43,10 @@ $$ 5x + 3 + 2x = 5x + 2x + 3 = 7x + 3 $$
 
 ## ⚡ التوزيعية: نشرُ عبارةٍ على الشكل k(a + b)
 
+::: figure مستطيلٌ ارتفاعُه 3 وقاعدتُه x + 5: مساحتُه الكلّيّة تساوي مجموعَ مساحتَيه الجزئيّتين
+<svg viewBox="0 0 340 150"><rect x="70" y="40" width="120" height="60" rx="0" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/><rect x="190" y="40" width="80" height="60" rx="0" fill="#fef9c3" stroke="#a16207" stroke-width="2"/><path d="M190 40 V100" stroke="#1d4ed8" stroke-width="2"/><text x="130.0" y="74.0" text-anchor="middle" font-size="16" font-weight="700" fill="#1d4ed8" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">3 × x</text><text x="230.0" y="74.0" text-anchor="middle" font-size="16" font-weight="700" fill="#a16207" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">3 × 5</text><text x="130.0" y="32.0" text-anchor="middle" font-size="13" font-weight="700" fill="#1f2937" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">x</text><text x="230.0" y="32.0" text-anchor="middle" font-size="13" font-weight="700" fill="#1f2937" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">5</text><text x="58.0" y="72.0" text-anchor="end" font-size="13" font-weight="700" fill="#1f2937" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">3</text><text x="170.0" y="130.0" text-anchor="middle" font-size="17" font-weight="700" fill="#15803d" direction="ltr" unicode-bidi="isolate" paint-order="stroke" stroke="#ffffff" stroke-width="3.5" stroke-linejoin="round">3(x + 5) = 3x + 15</text></svg>
+:::
+
 **التوزيعيّةُ** قاعدةٌ تسمح بضرب عددٍ في مجموعٍ (أو فرقٍ) بضربه في كلّ حدٍّ على حدة:
 
 $$ k×(a + b) = k×a + k×b $$
