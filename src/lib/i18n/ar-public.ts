@@ -150,6 +150,7 @@ export const arPublic: TranslationKeys["public"] = {
     videoHostedBy: "الفيديو مُستضاف على {host}",
     videoDuration: "{m} دقيقة",
     videoLoadHint: "بالضغط، تُحمِّل فيديو يوتيوب (Google).",
+    videoReviewTitle: "راجع المفهوم بالفيديو",
   },
   subject: {
     chapter: "الفصل {n}",

@@ -588,7 +588,7 @@ describe("NON-REGRESSION: Data shape contracts", () => {
     expect(typeof result.bestByExercise).toBe("object");
   });
 
-  it("getExercise returns { exercise, questions, hintCharges, chapterQuizId, quizGated, variant }", async () => {
+  it("getExercise returns { exercise, questions, hintCharges, chapterQuizId, quizGated, correctionVideo, variant }", async () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "exercises") return mockQuery({ id: "ex1", title: "E" });
       if (table === "questions") return mockQuery([]);
@@ -602,6 +602,8 @@ describe("NON-REGRESSION: Data shape contracts", () => {
 
     expect(Object.keys(result).sort()).toEqual([
       "chapterQuizId",
+      // Additive (étude 23 lot 3): the review video offered on a failed run.
+      "correctionVideo",
       "exercise",
       "hintCharges",
       "questions",
@@ -610,6 +612,7 @@ describe("NON-REGRESSION: Data shape contracts", () => {
     ]);
     expect(result.questions).toBeInstanceOf(Array);
     expect(result.hintCharges).toBe(0);
+    expect(result.correctionVideo).toBeNull();
   });
 
   it("submitAttempt returns { correct, total, scorePct, xpEarned, coinsEarned, review, ... }", async () => {

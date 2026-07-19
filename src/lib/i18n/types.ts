@@ -865,6 +865,8 @@ export type TranslationKeys = {
       videoDuration: string;
       /** Child-readable two-click consent micro-label (étude 23 R-4). */
       videoLoadHint: string;
+      /** Étude 23 — heading of the review-video block on a failed result screen. */
+      videoReviewTitle: string;
     };
     subject: {
       chapter: string;

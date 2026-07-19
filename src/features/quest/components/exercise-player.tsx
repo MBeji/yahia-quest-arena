@@ -555,6 +555,7 @@ export function ExercisePlayer({
         qlang={qlang}
         chapterId={chapterId}
         subjectId={exSubjectId}
+        correctionVideo={data?.correctionVideo ?? null}
         exerciseId={exerciseId}
         nextExerciseId={nextExerciseId}
         showConfetti={showConfetti}
