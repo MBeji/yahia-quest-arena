@@ -413,3 +413,9 @@ Cases à cocher :
   `package.json` → `"license": "SEE LICENSE IN LICENSE.md"`. Écart accepté : le © applicatif
   existait déjà (meta `copyright` dans `__root.tsx` + clé i18n `copyrightNotice`) — aucun code
   applicatif touché, lot purement documentaire.
+- **2026-07-19 — lot 2 amorcé, bloqué sur l'étape humaine** : la création du repo privé est
+  impossible depuis une session (intégration GitHub scopée au seul repo public — `403`).
+  Annexe [`LOT-2-BOOTSTRAP.md`](./LOT-2-BOOTSTRAP.md) livrée : étape humaine (~3 min, créer
+  `yahia-quest-content` + secrets), puis import + CI privée exécutables en une passe par
+  n'importe quelle session. **D-4 amendée** : symlink du corpus dans le checkout moteur au
+  lieu du patch `--content-dir` (zéro modification du moteur).
