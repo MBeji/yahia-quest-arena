@@ -1,6 +1,6 @@
 # Étude 25 — Harness AI-native & model-agnostic (le repo comme plateforme d'agents)
 
-> **Statut** : brouillon
+> **Statut** : validée (2026-07-19, Q-1…Q-6 arbitrées — toutes sur les recommandations)
 > **Priorité** : 25 · **Valeur** : 🔌 le harness d'ingénierie (docs canoniques, 45 skills, gates,
 > workflows agents, mémoire) cesse d'être exploitable par un seul outil (Claude Code) et devient
 > une **plateforme neutre** sur laquelle n'importe quelle tête d'exécution — Claude, Codex,
@@ -9,11 +9,10 @@
 > **Complexité** : moyenne+
 > **Architecte** : Fable / 2026-07-19 · **Exécuteur cible** : Sonnet (ou équiv.) — lots courts,
 > quasi tout est documentaire/outillage, aucun impact runtime produit
-> **Dépend de** : arbitrages humains Q-1…Q-6 ; s'articule avec l'étude 24 (scission corpus
-> privé — **en exécution depuis le 2026-07-19**, lots 1-2 livrés, repo privé
-> `yahia-quest-content` créé — voir §4 D-8) · **Bloque** : rien (exécutable en parallèle du
-> produit) ; recommandée avant d'inviter un 2ᵉ assistant IA ou un nouveau collaborateur outillé
-> autrement que Claude Code
+> **Dépend de** : — (Q-1…Q-6 arbitrées le 2026-07-19, plus rien ne bloque) ; s'articule avec
+> l'étude 24 (scission corpus privé — **en exécution depuis le 2026-07-19**, lots 1-2 livrés,
+> repo privé `yahia-quest-content` créé — voir §4 D-8) · **Bloque** : rien (exécutable en
+> parallèle du produit)
 > **Docs normatifs liés** : CLAUDE.md, ARCHITECTURE.md, STATUS.md,
 > `docs/ci-cd-and-branch-protection.md`, `docs/passation.md`, `FableEtudes/README.md`,
 > `FableEtudes/METHODE-GENERATION-CONTENU.md`, `.github/copilot-instructions.md`
@@ -839,40 +838,46 @@ Détail des points durs par lot :
   `harness/**` (~2 PRs/mois touchent ces chemins) ; le flux automerge reste intact pour tout le
   reste ; l'arbitrage est explicitement humain (Q-6).
 
-## 9. Questions ouvertes (pour l'humain)
+## 9. Questions ouvertes (pour l'humain) — **toutes arbitrées le 2026-07-19**
 
 - **Q-1 — GO/NO-GO sur la bascule AGENTS.md canonique** (D-1 : renommage du contenu, CLAUDE.md
-  pointeur). C'est LA décision de l'étude ; tout le reste en découle. _Recommandation : GO —
-  standard de fondation, 14 outils natifs, coût d'un lot, réversible en une PR._
+  pointeur). C'est LA décision de l'étude ; tout le reste en découle.
+  → **Arbitrée : GO, exécution immédiate du lot 1.** Standard de fondation, 14 outils natifs,
+  coût d'un lot, réversible en une PR.
 - **Q-2 — Périmètre du miroir `.agents/skills/`** : maintenant que la scission é24 est actée
   (les `prof-*`/`content-*` sortiront physiquement du repo public avec ses lots 3-6), le miroir
   doit-il refléter **tout skill présent dans le repo au moment du sync** (zéro liste à
   maintenir — le tri est fait en amont par é24) ou une sélection éditoriale plus fine ?
-  _Recommandation : refléter tout ce qui est présent ; le manifest (D-2) ne sert qu'aux
-  exclusions ponctuelles._
+  → **Arbitrée : refléter tout ce qui est présent.** Le manifest (D-2) ne sert qu'aux
+  exclusions ponctuelles.
 - **Q-3 — Activer une seconde famille de modèles en CI** (garde « second avis » cross-famille,
   ou bascule d'un garde existant) — implique un compte/abonnement OpenAI ou Google et un secret
-  de plus. _Recommandation : différer — la mécanique (D-6, workflow dormant) sera prête ; la
-  dépense n'est justifiée que par un besoin réel (ex. revue croisée des études avant
-  validation)._
-- **Q-4 — Générateur maison vs `rulesync`** pour la couche de sync. _Recommandation : maison
-  (surface minuscule, zéro dépendance à un projet jeune) avec seuil de bascule écrit
-  (RISK-7)._
+  de plus.
+  → **Arbitrée : différer.** La mécanique (D-6, workflow dormant) sera prête au lot 5 ; la
+  dépense n'est activée que par un besoin réel.
+- **Q-4 — Générateur maison vs `rulesync`** pour la couche de sync.
+  → **Arbitrée : script maison.** Surface minuscule, zéro dépendance à un projet jeune ; seuil
+  de bascule écrit (RISK-7) si le besoin grossit.
 - **Q-5 — Statut de la mémoire automatique personnelle** (Claude auto-memory) : la conserver
   comme cache non normatif (avec la règle « tout savoir projet finit dans le repo ») ou la
-  débrancher au profit du seul repo ? _Recommandation : conserver comme cache — elle reste
-  utile aux sessions locales ; c'est la règle de rapatriement (D-7) qui protège._
+  débrancher au profit du seul repo ?
+  → **Arbitrée : conservée comme cache personnel.** Utile aux sessions locales ; la règle de
+  rapatriement (D-7) protège contre toute dérive normative.
 - **Q-6 — Protéger les chemins de gate par revue humaine ?** CODEOWNERS sur
-  `.github/workflows/**` + `harness/**` = toute PR qui touche la machinerie de merge exige ton
-  approbation explicite — une dérogation assumée au « zéro geste » (décision 2026-07-12), sur
-  un périmètre rare (~2 PRs/mois). Alternative : rester 100 % automatique et s'en remettre à
-  `harness:check` + vigilance. _Recommandation : CODEOWNERS sur ces deux chemins uniquement —
-  c'est la réponse standard au red flag n° 1 (« CI gaming ») et le seul moyen qu'un agent ne
-  puisse pas éditer le juge qui le juge._
+  `.github/workflows/**` + `harness/**` = toute PR qui touche la machinerie de merge exige
+  l'approbation explicite de Mohamed — une dérogation assumée au « zéro geste » (décision
+  2026-07-12), sur un périmètre rare (~2 PRs/mois).
+  → **Arbitrée : oui, CODEOWNERS sur ces deux chemins uniquement.** Réponse standard au red
+  flag n° 1 (« CI gaming ») ; seul moyen qu'un agent ne puisse pas éditer le juge qui le juge.
+  Mis en œuvre au lot 5 (CODEOWNERS n'a de sens qu'une fois `harness/` créé au lot 2+).
 
 ## 10. Journal d'exécution
 
-_(rempli au fil des lots par l'exécuteur : date, lot, PR, écarts acceptés, dettes notées)_
+- **2026-07-19 — Validation.** Les six questions ouvertes ont été arbitrées par Mohamed
+  (une par une, via question structurée) — toutes dans le sens de la recommandation de
+  l'architecte. Statut passé à `validée`. Aucun ADR (§4.2) n'a nécessité de révision : les
+  décisions D-1…D-9 encodaient déjà le chemin recommandé. Lot 1 démarré dans la foulée (même
+  session).
 
 ---
 
