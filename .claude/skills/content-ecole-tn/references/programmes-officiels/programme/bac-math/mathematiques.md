@@ -65,10 +65,10 @@ style annales session principale.
 | 13  | Similitudes                     | 74–95                   | `generation` |
 | 14  | Coniques                        | 96–120                  | `generation` |
 | 15  | Géométrie dans l'espace         | 121–146                 | `generation` |
-| 16  | Divisibilité dans ℤ             | 147–160                 | `bloc`       |
-| 17  | Identité de Bézout              | 161–178                 | `bloc`       |
-| 18  | Probabilités                    | 179–207                 | `bloc`       |
-| 19  | Statistiques                    | 208–230                 | `bloc`       |
+| 16  | Divisibilité dans ℤ             | 147–160                 | `generation` |
+| 17  | Identité de Bézout              | 161–178                 | `generation` |
+| 18  | Probabilités                    | 179–207                 | `generation` |
+| 19  | Statistiques                    | 208–230                 | `generation` |
 
 ## 2.1 Chapitre 1 — Continuité et limites (manuel 222445, p.5–27)
 
@@ -5926,6 +5926,1579 @@ Mention liminaire (p.139) : « Dans tous les exercices, l'espace est orienté da
   « Rappel »), le **barycentre**, la **géométrie affine de l'espace** (droites, plans, coplanarité, parallélisme) et
   les **translations / homothéties du plan** — l'esprit du chapitre est le prolongement systématique à l'espace des
   outils vus dans le plan.
+
+## 2.16 Chapitre 16 — Divisibilité dans ℤ (manuel 222446, p.147–160)
+
+**Page de garde (p.147)** — Titre de couverture : « Divisibilité dans ℤ », Chapitre 7 (numérotation interne du
+tome 2 ; c'est le chapitre 16 dans la numérotation content ; le bandeau courant écrit « Divisibilité dans ℤ »).
+Encart historique : « Pascal (1654) : "[…] j'exposerai aussi une méthode générale qui permet de reconnaître, à la
+simple inspection de ses chiffres, si un nombre donné est divisible par un autre nombre quelconque […]" Cet écrit
+de Pascal expose une théorie de la divisibilité par un nombre quelconque A, fondée sur les restes dans les
+divisions euclidiennes des puissances successives de 10 par A. Comme exemple de diviseur il choisit 7 et observe
+que les restes des puissances dans les divisions euclidiennes des puissances successives de 10 par 7 se
+reproduisent périodiquement, avec une période de longueur 6. » Référence : « (J Dhombres et al, Mathématiques au
+fil des âges, 1987) ». Mention liminaire (p.148) : « Dans ce chapitre ℕ est l'ensemble des entiers naturels et ℤ
+est l'ensemble des entiers. » Le chapitre est structuré en trois parties **I. Diviseurs et multiples d'entiers**,
+**II. Division euclidienne dans ℤ**, **III. Congruence modulo n**, ponctuées d'activités, d'encadrés (définitions /
+propriétés / théorèmes) et d'exercices résolus, suivies d'un QCM / Vrai-Faux, puis d'une rubrique « Exercices et
+problèmes » (50 exercices). **Ce chapitre comporte 7 « exercices résolus »** intégrés au cours.
+
+### Cours — Activités
+
+**I. Diviseurs et multiples d'entiers** (p.148)
+
+- **Activité 1** (p.148) : 1. Soit l'entier a = 599873120. a. déterminer l'entier p tel que a = 4p. b. en déduire
+  l'entier p′ tel que −a = 4p′. 2. déterminer l'entier q tel que a = −11q. 3. existe-t-il un entier s tel que
+  −a = 6s ?
+- **Activité 2** (p.148) : 1. déterminer pour chacun des entiers a, l'ensemble D_a de tous ses diviseurs :
+  a = −15, a = 143, a = −143, a = 1, a = −1 et a = 0. 2. soit p un nombre premier ; quels sont tous ses diviseurs ?
+- **Activité 3** (p.148) : soit a et b deux entiers non nuls et c un entier. Que peut-on dire de a et b sachant
+  que a divise b et b divise a ? Que peut-on dire de a et c sachant que a divise b et b divise c ?
+- **Activité 4** (p.149) : 1. l'entier 4200³ + 3521¹⁰ est-il divisible par 7 ? 2. l'entier 260²⁶⁰ + 11 est-il
+  divisible par −13 ? 3. l'entier 42424242424241 est-il divisible par −42 ? 4. déterminer l'ensemble des entiers n
+  tels que n divise n − 6.
+
+**Exercice résolu 1** (p.149) : « Déterminer l'ensemble des entiers n tels que n − 1 divise n + 10. » Solution
+résumée : n − 1 ≠ 0 nécessairement ; l'écriture n + 10 = n − 1 + 11 prouve que n − 1 divise n + 10 ⟺ n − 1 divise
+11 ⟺ n − 1 ∈ {−11, −1, 1, 11} ; il en résulte que n − 1 divise n + 10 ⟺ n ∈ {−10, 0, 2, 12}.
+
+**II. Division euclidienne dans ℤ** (p.149)
+
+- **Activité 1** (p.149) : en tapant « 12345 ÷ 57 = », la calculatrice affiche 216.5789474. Donner la partie
+  entière de chacun des nombres 12345/57, −12345/57, 12345/−57 et −12345/−57. (Encart : « Pour tout réel x, il
+  existe un entier unique n tel que n ≤ x < n + 1. Cet entier n est appelé partie entière du réel x. »)
+- **Activité 2** (p.150) : calculer le quotient de a par b dans chacun des cas. 1. a = 98765123 et b = 56352. 2. a = 98765123 et b = −56352. 3. a = −98765123 et b = −56352.
+- **Activité 3** (p.150) : en tapant « 12345 − 57 × 216 = », la calculatrice affiche 33. Écrire la division
+  euclidienne de 12345 par 57. En utilisant une calculatrice, écrire la division euclidienne de a. 1234587 par 3547. b. 2358794 par 50111.
+- **Activité 4** (p.150) : calculer le reste de a par b dans chacun des cas. 1. a = 1238745 et b = 5017. 2. a = 1238745 et b = −5017. 3. a = −1238745 et b = −5017.
+- **Activité 5** (p.150) : écrire dans chacun des cas la division euclidienne de a par b. 1. a = 125498, b = 3587. 2. a = −125498, b = 3587. 3. a = 125498, b = −3587. 4. a = −2008, b = −3587.
+- **Activité 6** (p.151) : 1. déterminer les restes possibles dans la division euclidienne d'un entier a par 2. 2. soit a un entier ; montrer que a et a² sont de même parité. 3. déterminer le reste de l'entier (n + 1)³ − n³
+  dans la division euclidienne par 6. (Encart : « Les entiers pairs sont les entiers dont le reste dans la division
+  euclidienne par 2 est égal à 0. Les entiers impairs sont les entiers dont le reste dans la division euclidienne
+  par 2 est égal à 1. »)
+
+**Exercice résolu 2** (p.149–150) : « Calculer le quotient de a par b dans chacun des cas. 1. a = 12354878 ;
+b = 23458. 2. a = −12354878 ; b = 23458. 3. a = −12354878 ; b = −23458. » Solution résumée : cas 1 et 2, b > 0 :
+12354878 ÷ 23458 ≈ 526.6807 ⇒ q = 526 ; −12354878 ÷ 23458 ≈ −526.6807, le plus grand entier inférieur est −527 ⇒
+q = −527. Cas 3, b < 0 : −12354878 ÷ −23458 ≈ 526.6807, le plus petit entier supérieur est 527 ⇒ q = 527.
+
+**Exercice résolu 3** (p.151) : « Déterminer l'ensemble E de tous les entiers a tels que |a| < 53 et tels que le
+reste dans la division de a par 11 soit égal à 3. » Solution résumée : a ∈ E ⟺ a = 11q + 3 et |11q + 3| < 53 ⟺
+a = 11q + 3 et −56 < 11q < 50 ; par suite E = {−52, −41, −30, −19, −8, 3, 14, 25, 36, 47}.
+
+**III. Congruence modulo n** (p.151)
+
+- **Activité 1** (p.151) : 1. soit a et b deux entiers et n un entier naturel non nul ; montrer que a et b ont le
+  même reste dans la division euclidienne par n ⟺ a − b est un multiple de n. 2. montrer que pour tout entier
+  naturel s, (−2)^s et (−2)^{s+1} ont le même reste dans la division euclidienne par 3.
+- **Activité 2** (p.152) : vérifier que les entiers −19, −129, 124 et 13610 ont le même reste modulo 11.
+- **Activité 3** (p.152) : répondre par vrai ou faux. a. 31 ≡ 3 (mod 7). b. −31 ≡ 1 (mod 5). c. −2 ≡ 2 (mod 4).
+  d. 914 ≡ 21 (mod 19). e. 914 ≡ −21 (mod 47).
+- **Activité 4** (p.152) : 1. soit a et b deux entiers dont les restes respectifs modulo 6 sont 2 et 3 ; montrer que
+  ab est un multiple de 6. 2. soit a un entier. a. déterminer les restes possibles de a modulo 6. b. déterminer les
+  restes possibles de a² modulo 6.
+- **Activité 5** (p.153) : vérifier que 566 ≡ 6 (mod 7). En déduire que 566² ≡ 1 (mod 7) puis que 566^{2n} ≡ 1
+  (mod 7), pour tout entier naturel n.
+- **Activité 6** (p.154) : 1. déterminer le reste modulo 3 de 2008 ; en déduire le reste modulo 3 de 2008²⁰⁰⁷. 2. déterminer le reste modulo 5 de chacun des entiers 2011²⁰⁰⁷, (−2011)²⁰⁰⁷ et 2008²⁰⁰⁷.
+- **Activité 7** (p.154) : montrer que pour tous entiers naturels n, p et q, 4ⁿ + 4ᵖ + 4^q ≡ 0 (mod 3).
+- **Activité 8** (p.155) : déterminer tous les entiers a et b tels que ab ≡ 0 (mod 4).
+- **Activité 9** (p.155) : 1. soit a un entier naturel ; montrer que 7 divise (a³ − 1)(a⁴ + a). 2. déterminer les
+  entiers a tels que a^600 ≡ 1 (mod 7). (Encart — Théorème de Fermat : « Pour tout entier naturel a et tout nombre
+  premier p ne divisant pas a, a^{p−1} ≡ 1 (mod p). »)
+
+**Exercice résolu 4** (p.153) : « Déterminer les restes modulo 17 de 55348932 et de 1968755. En déduire le reste
+modulo 17 de 55348932 × 1968755. » Solution résumée : 55348932 ≡ 9 (mod 17) et 1968755 ≡ 2 (mod 17) ; il en
+résulte que 55348932 × 1968755 ≡ 18 (mod 17), et 18 ≡ 1 (mod 17) donne 55348932 × 1968755 ≡ 1 (mod 17).
+
+**Exercice résolu 5** (p.153–154) : « 1.a. Discuter, suivant les valeurs de l'entier naturel k, le reste de 2^k
+modulo 7. b. En déduire le reste de 247³⁴⁹ modulo 7. 2. Calculer le reste de 298³⁴⁹ modulo 13. » Solution
+résumée : 2^k ≡ 1 (mod 7) si k ≡ 0 (mod 3), ≡ 2 si k ≡ 1 (mod 3), ≡ 4 si k ≡ 2 (mod 3) ; 247 ≡ 2 (mod 7) et
+349 ≡ 1 (mod 3) donnent 247³⁴⁹ ≡ 2 (mod 7). 298 = 22 × 13 + 12 ⇒ 298 ≡ 12 ≡ −1 (mod 13), d'où 298³⁴⁹ ≡ −1 ≡ 12
+(mod 13).
+
+**Exercice résolu 6** (p.154) : « Déterminer tous les entiers a et b tel que ab ≡ 1 (mod 6). » Solution résumée :
+en notant r et r′ les restes de a et b modulo 6, on dresse le tableau des valeurs de rr′ puis de leur reste
+modulo 6 ; on conclut que ab ≡ 1 (mod 6) ⟺ (a ≡ 1 (mod 6) et b ≡ 1 (mod 6)) ou (a ≡ 5 (mod 6) et b ≡ 5 (mod 6)).
+(Deux tableaux de congruence.)
+
+**Exercice résolu 7** (p.155) : « Déterminer les restes possibles modulo 9 de a⁹ − a. » Solution résumée : les
+restes possibles d'un entier a modulo 9 sont 0, 1, ..., 8 ; on écrit a⁹ = (a³)³ et l'on dresse un tableau de
+congruence modulo 9 des restes de a, a³, a⁹ puis a⁹ − a. (Tableau de congruence.)
+
+### Cours — Résultats / définitions / théorèmes à retenir (VERBATIM)
+
+> **Définition (diviseur)** (p.148, encadré) — « Soit a un entier et d un entier non nul. On dit que d est un
+> diviseur de a ou que a est divisible par d, s'il existe un entier q tel que a = dq. »
+
+> **Vocabulaire (multiple)** (p.148) — « Si un entier a est divisible par un entier d non nul, on dit que a est un
+> multiple de d. »
+
+> **Conséquence** (p.148, encadré) — « Soit d un entier non nul et a un entier. • Si d divise a alors −d divise a.
+> • Les multiples de d sont les éléments de l'ensemble dℤ = {dq, q ∈ ℤ}. »
+
+> **Propriétés** (p.148, encadré) — « Soit a et b deux entiers non nuls et c un entier. • Si a divise b et b divise
+> a, alors a = b ou a = −b. • Si a divise b et b divise c, alors a divise c. • Si a divise b et a divise c, alors a
+> divise αb + βc pour tous entiers α et β. »
+
+> **Définition (quotient)** (p.149, encadré) — « Soit a et b deux entiers avec b non nul. On appelle quotient de a
+> par b l'entier q défini de la manière suivante • q est le plus grand entier inférieur ou égal à a/b si b > 0,
+> • q est le plus petit entier supérieur ou égal à a/b si b < 0. »
+
+> **Définition (reste)** (p.150, encadré) — « Soit a et b deux entiers avec b non nul. On appelle reste de a par b
+> l'entier r tel que r = a − bq, où q est le quotient de a par b. »
+
+> **Théorème (division euclidienne)** (p.150, encadré) — « Pour tout entier a et pour tout entier b non nul, il
+> existe un couple unique d'entiers (q, r) tel que a = bq + r et 0 ≤ r < |b|. »
+
+> **Vocabulaire** (p.150) — « L'écriture a = bq + r, 0 ≤ r < |b| s'appelle division euclidienne de a par b, q est
+> le quotient de a par b et r est le reste de a par b. »
+
+> **Conséquence** (p.150, encadré) — « Le reste de tout entier n dans la division euclidienne par un entier non nul
+> b est un élément de l'ensemble {0, 1, 2, ..., |b| − 1}. »
+
+> **Définition et notation (congruence)** (p.151, encadré) — « Soit n un entier naturel non nul et a et b deux
+> entiers. On dit que a est congru à b modulo n (ou a et b sont congrus modulo n) si a − b est un multiple de n. On
+> note alors a ≡ b (mod n). »
+
+> **Théorème et définition (reste modulo n)** (p.151, encadré) — « Soit n un entier naturel non nul. Pour tout
+> entier a, il existe un unique entier r appartenant à {0, ..., n − 1} tel que a ≡ r (mod n). On dit que r est le
+> reste modulo n de a. »
+
+> **Conséquence** (p.151, encadré) — « Soit n un entier naturel non nul. Deux entiers sont congrus modulo n, si et
+> seulement si, ils ont le même reste modulo n. »
+
+> **Propriétés (réflexivité / symétrie / transitivité)** (p.152, encadré) — « Soit a, b et c trois entiers et n un
+> entier naturel non nul. • a ≡ a (mod n). • Si a ≡ b (mod n) alors b ≡ a (mod n). • Si a ≡ b (mod n) et
+> b ≡ c (mod n), alors a ≡ c (mod n). »
+
+> **Propriétés (compatibilité avec les opérations)** (p.152, encadré) — « Soit a, b, c et d quatre entiers et n un
+> entier naturel non nul. • Si a ≡ b (mod n) et si c ≡ d (mod n), alors a + c ≡ b + d (mod n) et
+> a × c ≡ b × d (mod n). • Si a ≡ b (mod n) alors ha ≡ hb (mod n) pour tout entier h et aᵐ ≡ bᵐ (mod n) pour tout
+> entier m > 0. »
+
+> **Théorème de Fermat** (p.155, encart) — « Pour tout entier naturel a et tout nombre premier p ne divisant pas a,
+> a^{p−1} ≡ 1 (mod p). »
+
+### QCM (p.156) — « Cocher la réponse exacte. » (réponses non fournies)
+
+1. Le quotient de −20 par 7 est (☐ −3 / ☐ −2 / ☐ 2).
+2. Pour tout entier n, (☐ n³ − n ≡ 0 (mod 6) / ☐ n³ − n ≡ 0 (mod 12) / ☐ n³ − n ≡ n² (mod 6)).
+3. Le nombre 100! est (☐ divisible par 2⁵⁰ / ☐ divisible par 10⁵⁰ / ☐ se termine par exactement cinq zéros).
+4. Soit a un entier non nul. Si a ≡ 19 (mod 20) alors (☐ a^402 ≡ 1 (mod 20) / ☐ a^402 ≡ −1 (mod 20) /
+   ☐ a^402 ≡ 19 × 402 (mod 20)).
+
+### Vrai ou faux (p.156) — « Répondre par vrai ou faux en justifiant la réponse. » (réponses non fournies)
+
+1. Soit a un entier et n un entier naturel non nul. a. Si a ≡ 1 (mod n) alors a² ≡ 1 (mod n). b. Si a² ≡ 0 (mod n)
+   alors a ≡ 0 (mod n). c. Si 2a ≡ 4 (mod 10) alors a ≡ 2 (mod 10).
+2. Pour tout entier a et pour tout entier naturel non nul n, aⁿ ≡ a (mod n).
+3. Il existe un entier b non nul tel que 5b ≡ 0 (mod 10).
+
+### Exercices et problèmes (p.157–160) — 50 exercices
+
+- **Ex. 1** (p.157) : déterminer pour chacun des entiers a, l'ensemble D_a de tous ses diviseurs : a = −13 ;
+  a = −57 ; a = 205.
+- **Ex. 2** (p.157) : le nombre −35763 est-il un multiple de 3 ? de 11 ? de 7 ?
+- **Ex. 3** (p.157) : 1. déterminer l'ensemble des diviseurs de 15. 2. déterminer tous les couples d'entiers (a, b)
+  tels que a² − b² = 15.
+- **Ex. 4** (p.157) : déterminer tous les entiers n tels que n divise n + 5.
+- **Ex. 5** (p.157) : déterminer tous les entiers n tels que n − 2 divise n − 9.
+- **Ex. 6** (p.157) : soit un entier n ≥ 0. Montrer que 3^{2n} − 2ⁿ est un multiple de 7.
+- **Ex. 7** (p.157) : 1. écrire la division euclidienne 3171 par 19. 2. déterminer le reste de la division
+  euclidienne de 3171 par −19.
+- **Ex. 8** (p.157) : déterminer le reste de la division euclidienne de −307 par −7.
+- **Ex. 9** (p.157) : déterminer, dans chacun des cas, le quotient et le reste de la division de a par b.
+  1. a = 1345791113 et b = 246812. 2. a = −1345791113 et b = 246812. 3. a = 1345791113 et b = −246812.
+  2. a = −1345791113 et b = −246812.
+- **Ex. 10** (p.157) : soit le polynôme P(x) = x⁴ − 32x³ + 186x² − 280x + 125. 1. montrer que si n est un entier
+  tel que P(n) = 0, alors n divise 125. 2. résoudre dans ℝ l'équation P(x) = 0.
+- **Ex. 11** (p.157) : soit deux entiers non nuls a et b. On désigne respectivement par q et r le quotient et le
+  reste de la division euclidienne de a par b. Dans chacun des cas, déterminer, si possible a et b. 1. a + b = 44,
+  q = 6 et r = 2. 2. a + b = −49, q = −13 et r = 11. 3. a + b = 42, q = −6 et r = 9.
+- **Ex. 12** (p.157) : déterminer les restes modulo 9 de −1, 10, −10, −27 et −25.
+- **Ex. 13** (p.157) : déterminer les entiers n dans chacun des cas. a. n ≡ −2 (mod 7) et −10 ≤ n ≤ 15.
+  b. n ≡ 6 (mod 11) et −6 ≤ n ≤ 20.
+- **Ex. 14** (p.157) : 1. soit n un entier supérieur ou égal à 1, non divisible par 3 ; montrer que n + 1 ou n − 1
+  est divisible par 3. 2. soit n et p deux entiers naturels ; montrer que l'un des entiers n, p, n − p ou n + p est
+  divisible par 3.
+- **Ex. 15** (p.157) : soit deux entiers a et b tels que a ≡ 3 (mod 15) et b ≡ 11 (mod 15). Déterminer les restes
+  modulo 15 de a + b, a − b, −a, ab, −a²b et ab².
+- **Ex. 16** (p.157) : soit trois entiers a, b et c tels que a ≡ 2 (mod 17), b ≡ 4 (mod 17) et c ≡ 5 (mod 17).
+  Déterminer les restes modulo 17 de a + bc et a² + b² + c².
+- **Ex. 17** (p.158) : soit deux entiers a et b tels que a ≡ 5 (mod 4) et b ≡ 2 (mod 4). Déterminer le reste
+  modulo 4 de 3a² + ab − 9.
+- **Ex. 18** (p.158) : soit un entier a tel que a ≡ 7 (mod 11). Déterminer le reste modulo 11 de a(a + 1)(a + 2).
+- **Ex. 19** (p.158) : 1. montrer que 1² + 2² + ... + n² = n(n + 1)(2n + 1)/6. 2. en déduire le reste modulo 7 de
+  1² + 2² + ... + 100².
+- **Ex. 20** (p.158) : déterminer le reste modulo 10 de chacun des entiers 30757, 15163 et 12924.
+- **Ex. 21** (p.158) : déterminer les restes modulo 17 de 171¹⁷¹, 186¹⁸⁶, 356⁵⁸³.
+- **Ex. 22** (p.158) : 1. déterminer le reste modulo 10 de −1. 2. déterminer le chiffre des unités de 9²⁰⁰⁷ et
+  9²⁰⁰⁸.
+- **Ex. 23** (p.158) : déterminer les restes modulo 16 de chacun des entiers 49³¹⁶, 15²⁰⁰⁸ et (−49)²³⁷.
+- **Ex. 24** (p.158) : déterminer le reste modulo 13 de 4³ et de 121³⁵⁷.
+- **Ex. 25** (p.158) : 1. déterminer le reste modulo 7 de 50⁹⁹. 2. déterminer le reste modulo 17 de 50⁹⁹.
+- **Ex. 26** (p.158) : déterminer le reste modulo 7 de 19⁵² × 23⁴¹.
+- **Ex. 27** (p.158) : 1. déterminer le reste modulo 13 de 5⁴. 2. en déduire les restes modulo 13 de chacun des
+  entiers 5^{4k}, 5^{4k+1}, 5^{4k+2}, 5^{4k+3} avec k ∈ ℕ. 3. déterminer les restes modulo 13 de chacun des entiers
+  5^{202020202041} et 5^{555555555555}. 4. déterminer l'ensemble des entiers naturels n, tels que
+  5^{2n} + 5ⁿ ≡ 0 (mod 13).
+- **Ex. 28** (p.158) : 1. déterminer les restes modulo 5 de −1 et de −2. 2. en déduire que
+  1²⁰⁹⁹ + 2²⁰⁹⁹ + 3²⁰⁹⁹ + 4²⁰⁹⁹ est divisible par 5.
+- **Ex. 29** (p.158) : 1. vérifier que 999 ≡ 0 (mod 27). 2.a. montrer que pour tout entier naturel n,
+  10^{3n} ≡ 1 (mod 27). b. en déduire le reste modulo 27 de 10¹⁰⁰ + 100¹⁰.
+- **Ex. 30** (p.158) : soit n un entier naturel. 1. montrer que 2ⁿ ≡ 1 (mod 5), si et seulement si, n est multiple
+  de 4. 2. donner une condition nécessaire et suffisante sur n pour que 2ⁿ ≡ 1 (mod 11).
+- **Ex. 31** (p.158) : soit n un entier. Quels sont les restes possibles modulo 5 de n² ? Quels sont les restes
+  possibles modulo 7 de n³ ?
+- **Ex. 32** (p.158) : résoudre dans ℤ, a. 2x ≡ 4 (mod 10). b. 4x ≡ 8 (mod 10).
+- **Ex. 33** (p.158) : résoudre dans ℤ, a. x² ≡ 0 (mod 4). b. x² ≡ 2 (mod 4). c. x² ≡ 3 (mod 4).
+- **Ex. 34** (p.159) : résoudre dans ℤ, a. x² ≡ 4 (mod 11). b. x² ≡ −1 (mod 11). c. x² ≡ −2 (mod 11).
+- **Ex. 35** (p.159) : déterminer tous les entiers a et b tels que ab ≡ −2 (mod 8).
+- **Ex. 36** (p.159) : résoudre dans ℤ, a. x² + 6x + 5 ≡ 0 (mod 7). b. x² − 4x + 3 ≡ 0 (mod 8).
+- **Ex. 37** (p.159) : 1. vérifier que 10²⁰ ≡ 1 (mod 11). 2. en déduire le reste modulo 11 de 99999999999999999995.
+- **Ex. 38** (p.159) : déterminer le reste modulo 103 de 10¹⁰² + 3 × 10²⁰⁴ + 106 × 10⁶¹².
+- **Ex. 39** (p.159) : soit x un entier naturel. 1. vérifier que x(x⁴ − 1) ≡ 0 (mod 5) ; en déduire le reste
+  modulo 5 de (x⁴ − x²)(x² + 1). 2. vérifier que x(x⁶ − 1) ≡ 0 (mod 7) ; en déduire le reste modulo 7 de
+  (x⁸ − x⁵)(x³ + 1).
+- **Ex. 40** (p.159) : soit p un nombre premier et a un entier naturel non divisible par p. Déterminer les restes
+  modulo p de a^{p−1}, a^{p−1} − 2 et 2a^{10p−10} − 3.
+- **Ex. 41** (p.159) : 1. soit un entier n ≥ 0. a. déterminer le reste modulo 111 de 1000. b. montrer que les
+  restes modulo 111 de n et 1000n sont égaux. c. en déduire, sans utiliser la calculatrice, que chacun des nombres
+  111111, 100010001 et 100010000001 est divisible par 111. 2. démontrer que 1001001001001 est divisible par 11111.
+- **Ex. 42** (p.159) : soit n un entier naturel. Quel est le reste modulo 4 de 1ⁿ + 2ⁿ + 3ⁿ + 4ⁿ ?
+- **Ex. 43** (p.159) : soit n un entier naturel. 1. déterminer pour tout entier n de {0, 1, ..., 6} le reste
+  modulo 7 de 3ⁿ. 2. montrer que 3^{n+6} − 3ⁿ est divisible par 7. 3.a. calculer le reste modulo 7 de 3¹⁰⁰⁰.
+  b. quel est le chiffre des unités de 3¹⁰⁰⁰ ? c. soit c la somme des diviseurs du nombre 3¹⁰⁰⁰ ; quel est le reste
+  modulo 7 de c.
+- **Ex. 44** (p.159) : soit a et b deux entiers. 1. vérifier que a³ ≡ a (mod 3). 2. montrer les équivalences
+  ci-dessous : a³ − b³ ≡ 0 (mod 3) équivaut à a − b ≡ 0 (mod 3) ; a³ + b³ ≡ 0 (mod 3) équivaut à
+  a + b ≡ 0 (mod 3) ; a³ + 2b³ ≡ 0 (mod 3) équivaut à a + 2b ≡ 0 (mod 3).
+- **Ex. 45** (p.159) : soit a un entier. 1. déterminer les restes modulo 11 de a, a², a³. 2. en déduire que
+  a³ − b³ ≡ 0 (mod 11), si et seulement si, a − b ≡ 0 (mod 11).
+- **Ex. 46** (p.159) : soit n un entier naturel non nul. Montrer par récurrence que, a. 16ⁿ ≡ 1 − 10n (mod 25),
+  b. 7ⁿ ≡ 6n + 1 (mod 36), c. 4ⁿ ≡ 3n + 1 (mod 9), d. 2ⁿ + 3ⁿ ≡ 5ⁿ (mod 6).
+- **Ex. 47** (p.160) : soit un entier n ≥ 4. On se propose d'étudier les solutions entières de l'équation
+  (E) : x² + 9 = 2ⁿ. On suppose que (E) possède une solution entière notée a. 1. montrer que a ≡ 1 (mod 2). 2. en
+  déduire que a² + 9 ≡ 2 (mod 4). 3. montrer que (E) n'admet pas de solution.
+- **Ex. 48** (p.160) : soit un entier n impair. On se propose d'étudier les solutions entières de l'équation
+  (E) : x² + 9 = 3ⁿ. On suppose que (E) possède une solution entière notée a. 1. montrer que a ≡ 0 (mod 2). 2. en
+  déduire que a² + 9 ≡ 1 (mod 4). 3. montrer que 3ⁿ ≡ 3 (mod 4). 4. en déduire que (E) n'admet pas de solution.
+- **Ex. 49** (p.160) : les nombres de Fermat sont définis par F_n = 2^{(2ⁿ)} + 1, n ∈ ℕ. Fermat pensait qu'ils
+  étaient tous premiers. En fait les cinq premiers F₀ = 3, F₁ = 5, F₂ = 17, F₃ = 257 et F₄ = 65537 sont premiers et
+  le sixième F₅ ne l'est pas. On va montrer sans calculer explicitement F₅, que 641 divise F₅. 1. vérifier les
+  égalités 641 = 5 × 2⁷ + 1 = 5⁴ + 2⁴. 2. montrer que 5 × 2⁷ ≡ −1 (mod 641), 5⁴ × 2²⁸ ≡ 1 (mod 641) et
+  5⁴ ≡ −2⁴ (mod 641). 3. en déduire que 641 divise 2³² + 1 = F₅.
+- **Ex. 50** (p.160) : soit n un entier. On désigne par f(n) la somme des chiffres de n. 1. montrer que
+  n ≡ f(n) (mod 9). On pose N = 4444⁴⁴⁴⁴. 2.a. montrer que 4444 ≡ 7 (mod 9). b. écrire la division euclidienne de
+  4444 par 3. c. en déduire que 4444⁴⁴⁴⁴ ≡ 7 (mod 9). d. montrer que f(f(N)) ≡ 7 (mod 9). 3.a. vérifier que
+  N < (10⁴)^{5·10³}, en déduire que N ≤ 10²⁰⁰⁰⁰ puis que f(N) ≤ 180000. b. montrer que f(f(N)) ≤ 54. 4. montrer que
+  f(f(f(N))) = 7.
+
+### Bornes de scope observées (chapitre 16)
+
+- ✅ INCLUS : **divisibilité dans ℤ** (définition d divise a ⟺ a = dq, multiples dℤ = {dq, q ∈ ℤ}, ensemble des
+  diviseurs D_a, propriétés : a|b et b|a ⟺ a = ±b, transitivité, combinaisons linéaires a|αb + βc) ; **division
+  euclidienne dans ℤ** (partie entière, quotient q selon le signe de b, reste r = a − bq, **théorème** d'existence
+  et d'unicité du couple (q, r) avec a = bq + r et 0 ≤ r < |b|, restes ∈ {0, ..., |b| − 1}, parité) ; **congruence
+  modulo n** (définition a ≡ b (mod n) ⟺ a − b multiple de n, reste modulo n unique dans {0, ..., n − 1}, congruence
+  ⟺ même reste, réflexivité / symétrie / transitivité, **compatibilité avec + et ×**, ha ≡ hb et aᵐ ≡ bᵐ, tableaux
+  de congruence, résolution de congruences x² ≡ c (mod n) et ax ≡ b (mod n) par balayage des restes, calcul de
+  restes de grandes puissances par périodicité, chiffre des unités, critères de divisibilité et somme des chiffres
+  n ≡ f(n) (mod 9)) ; **théorème de Fermat** a^{p−1} ≡ 1 (mod p) (p premier ne divisant pas a) cité en encart et
+  exploité (ex. 40, act. 9) ; **nombres de Fermat** F_n = 2^{(2ⁿ)} + 1 (ex. 49).
+- ⛔ NON traité dans ce chapitre : le **PGCD / PPCM**, l'**algorithme d'Euclide** et l'**identité de Bézout**
+  (renvoyés au chapitre 17 « Identité de Bézout ») ; le **théorème de Gauss**, le **lemme d'Euclide** et la
+  **décomposition en facteurs premiers** (les nombres premiers ne sont ici qu'évoqués via leurs diviseurs et le
+  théorème de Fermat, sans étude systématique) ; les **systèmes de congruences** (théorème des restes chinois) ; la
+  **structure de groupe / anneau ℤ/nℤ** (les congruences sont manipulées sans formalisation algébrique) ; les
+  **équations diophantiennes** générales ax + by = c (au-delà des congruences linéaires simples résolues par
+  balayage). Le chapitre suppose **acquis** les entiers naturels et relatifs, la notion de multiple, le
+  raisonnement par **récurrence** (ex. 46) et l'usage de la **calculatrice** pour les divisions euclidiennes de
+  grands nombres ; il constitue le socle d'arithmétique préparant directement le chapitre 17 (Bézout).
+
+## 2.17 Chapitre 17 — Identité de Bézout (manuel 222446, p.161–178)
+
+**Page de garde (p.161)** — Titre de couverture : « Identité de Bezout » [sic, sans accent], Chapitre 8 (numérotation
+interne du tome 2 ; c'est le chapitre 17 dans la numérotation content ; le bandeau courant écrit « Identité de
+Bezout »). Encart historique intitulé « Cryptographie à clé publique (Rivest et al, 1978) » : « Il s'agit d'un
+système permettant à tous les membres d'un réseau de coder leurs messages. Seul le chef du réseau qui a fourni la
+clé du codage possède la clé du décodage de tous les messages. Le principe est le suivant : - le chef du réseau
+choisit deux grands nombres premiers p et q ; - il calcule n = pq et φ(n) = (p−1)(q−1) ; - il choisit un entier
+naturel d inférieur à φ(n) et premier à φ(n) ; - il détermine un entier naturel e tel que d.e ≡ 1 (mod n) ; - il
+diffuse aux membres du réseau les nombres n et e, tout en gardant secrets les nombres p, q, φ(n) et d. Le codage
+s'effectue de la manière suivante : - le message est traduit en nombres N inférieurs à n ; - chacun de ces nombres
+N est remplacé par un nombre C défini par C ≡ Nᵉ (mod n), c'est ce nombre codé qui est transmis. Pour procéder au
+décodage, c'est à dire obtenir N à partir de C, il suffit de calculer Cᵈ. En effet, d'après le petit théorème de
+Fermat Cᵈ ≡ Nᵉᵈ ≡ N^{1+φ(n)} ≡ N (mod n). Ce décodage nécessite la connaissance de d donc de φ(n). Si l'on connaît
+φ(n), on procède à la recherche du PGCD de φ(n) et e en utilisant l'algorithme d'Euclide et on écrit les restes
+successifs en utilisant φ(n) et e. On aboutit alors à une Identité de Bezout de la forme d.e + kφ(n) = 1, k un
+entier. » Référence : « (J-L Chabert et al, Histoire d'algorithmes, 1993) ». Mention liminaire (p.162) : « Dans ce
+chapitre on désigne par ℕ l'ensemble des entiers naturels et par ℤ l'ensemble des entiers. » Le chapitre est
+structuré en six parties **I. PGCD de deux entiers**, **II. Entiers premiers entre eux**, **III. PPCM de deux
+entiers**, **IV. Inverses modulo b**, **V. Identité de Bezout**, **VI. Exemples d'équations de la forme ax + by = c
+; a, b et c entiers**, ponctuées d'activités, d'encadrés (définitions / propriétés / théorèmes) et d'exercices
+résolus, suivies d'un QCM / Vrai-Faux, puis d'une rubrique « Exercices et problèmes » (31 exercices). **Ce chapitre
+comporte 5 « exercices résolus » et 1 « problème résolu »** intégrés au cours. Notation du manuel : a ∧ b désigne le
+PGCD, a ∨ b désigne le PPCM.
+
+### Cours — Activités
+
+**I. PGCD de deux entiers** (p.162)
+
+- **Activité 1** (p.162) : déterminer a ∧ b dans chacun des cas suivants. 1. a = 465 ; b = 225. 2. a = 196 ;
+  b = 116. 3. a = 144 ; b = 388. (Encart rappel : « On rappelle que si a et b sont deux entiers naturels non nuls
+  alors leur plus grand commun diviseur est l'entier naturel a ∧ b, tel que a ∧ b divise a et b et tout diviseur
+  commun à a et b divise a ∧ b. »)
+- **Activité 2** (p.162) : « Dans cette activité nous nous proposons d'utiliser l'algorithme d'Euclide pour
+  déterminer le plus grand diviseur commun de deux entiers naturels a et b. » 1. recherche de 4851 ∧ 616 : les
+  divisions successives 4851 = 616 × 7 + 539 ; 616 = 539 × 1 + 77 ; 539 = 77 × 7 + 0 donnent, le dernier reste non
+  nul étant 77, 4851 ∧ 616 = 77. 2. utiliser l'algorithme d'Euclide pour déterminer a ∧ b : 1. 19625 ∧ 1155. 2. 17680 ∧ 4960. 3. 30870 ∧ 15750. (Encart : « Le plus grand diviseur commun de deux entiers naturels a et b est
+  le dernier reste non nul dans la succession des divisions euclidiennes de l'algorithme d'Euclide de a et b. »)
+- **Activité 3** (p.162–163) : déterminer le PGCD de deux entiers en utilisant la calculatrice. 1. recherche de
+  2003 ∧ 365 : en tapant « 2003 ab/c 365 = », la calculatrice affiche 5 ⌐ 178 ⌐ 365, soit 2003/365 = 5 + 178/365
+  avec 178/365 irréductible, donc 365 ∧ 178 = 1 ; la division euclidienne 2003 = 365 × 5 + 178 donne
+  2003 ∧ 365 = 365 ∧ 178 = 1. 2. recherche de 4010 ∧ 365 : la calculatrice affiche 10 ⌐ 72 ⌐ 73, soit
+  4010/365 = 10 + 72/73 avec 72 ∧ 73 = 1 ; la division 4010 = 365 × 10 + 360 donne
+  4010 ∧ 365 = 365 ∧ 360 = 5(73 ∧ 72) = 5. 3. utiliser la calculatrice pour déterminer a ∧ b : a = 8623 et
+  b = 1155 ; a = 19662 et b = 865 ; a = 4830 et b = 3122.
+- **Activité 4** (p.163) : soit a et b deux entiers naturels non nuls et d un entier non nul, diviseur commun de
+  7a + 9b et 3a + 4b. 1. montrer que d est un diviseur commun de 21a + 27b et 21a + 28b. En déduire que d divise b. 2. montrer que d divise a. 3. montrer que (7a + 9b) ∧ (3a + 4b) = a ∧ b.
+- **Activité 5** (p.163) : soit a et b deux entiers non nuls et d un entier. Montrer que d divise a et b, si et
+  seulement si, d divise |a| et |b|.
+- **Activité 6** (p.163) : en utilisant la calculatrice, déterminer a ∧ b dans chacun des cas ci-dessous.
+  1. a = 462 ; b = −1155. 2. a = −196625 ; b = 654.
+- **Activité 7** (p.164) : 1. à l'aide de la calculatrice, déterminer le quotient et le reste de −2921 par 18. 2. existe-t-il deux entiers a et b tels que a − b = −2921 et a ∧ b = 18 ?
+
+**II. Entiers premiers entre eux** (p.164)
+
+- **Activité 1** (p.164) : soit n un entier et d un entier naturel non nul. 1. montrer que si d est un diviseur
+  commun de n + 1 et n + 9, alors d divise 8. 2. en déduire que si n est pair alors (n + 1) et (n + 9) sont premiers
+  entre eux.
+- **Activité 2** (p.164) : déterminer dans chaque cas les entiers premiers entre eux a′ et b′ tels que
+  a = (a ∧ b).a′ et b = (a ∧ b).b′. 1. a = −60 et b = 84. 2. a = 77 et b = −150. 3. a = −240 et b = −150.
+- **Activité 3** (p.165) : pour tout entier n, on pose a = n − 2 et b = 3n + 1. Déterminer a ∧ b, suivant les valeurs
+  de n.
+- **Activité 4** (p.165) : soit a et b deux entiers non nuls tels que a ∧ b = 1 et soit c un entier non nul.
+  1. justifier que ac ∧ bc = |c|. 2. montrer que si a divise bc alors a divise c.
+- **Activité 5** (p.165) : on se propose de résoudre dans ℤ × ℤ l'équation (E) : 43x + 71y = 0. 1. montrer que si
+  (a, b) est solution de (E) alors 43 divise b et 71 divise a. 2. en déduire l'ensemble des solutions de (E).
+- **Activité 6** (p.166) : résoudre dans ℤ × ℤ les équations ci-dessous. a. 13x + 9y = 0. b. 20x = 17y.
+  c. 21x + 35y = 0.
+- **Activité 7** (p.167) : 1. donner une condition nécessaire et suffisante pour qu'un entier soit divisible par 187. 2. un entier qui est divisible par 2 et par 28 est-il nécessairement divisible par 56 ? 3. soit a et b deux entiers
+  naturels non nuls et premiers entre eux. Montrer que si a divise n et b divise n alors ab divise n.
+- **Activité 8** (p.167) : déterminer les restes respectifs modulo 13 et modulo 17 de 129286. En déduire le reste
+  modulo 221 de 129286.
+
+**III. PPCM de deux entiers** (p.167)
+
+- **Activité 1** (p.167) : soit a et b deux entiers non nuls, d = a ∧ b et a′ et b′ les entiers tels que
+  a′ ∧ b′ = 1, a = da′ et b = db′. On pose m = d|a′b′|. 1. vérifier que m est un multiple commun à a et à b et que
+  tout multiple commun à a et b est un multiple de m. 2. en déduire que m est le plus petit multiple commun
+  strictement positif de a et b.
+- **Activité 2** (p.168) : déterminer a ∧ b dans chacun des cas. En déduire a ∨ b. 1. a = 495 et b = 2541. 2. a = −24 et b = −56. 3. a = 123 et b = −82.
+- **Activité 3** (p.168) : résoudre dans ℤ × ℤ les systèmes ci-dessous. S : {ab = −1176, a ∨ b = 84}. S′ :
+  {ab = 168, a ∨ b = 24}.
+- **Activité 4** (p.168) : soit a un entier non nul et aℤ l'ensemble de tous les multiples de a. 1. déterminer 2ℤ. 2. déterminer les ensembles E, F et G définis par E = {n ∈ 6ℤ et |n| < 31}, F = {n ∈ −5ℤ et |n| < 31} et G
+  intersection de E et F.
+- **Activité 5** (p.168) : 1.a. montrer que si a ≡ 0 (mod 8) et a ≡ 0 (mod 12), alors a ≡ 0 (mod 24). b. la
+  réciproque est-elle vraie ? 2. déterminer les entiers a vérifiant {a ≡ 1 (mod 8), a ≡ 1 (mod 12), |a| ≤ 225}.
+
+**IV. Inverses modulo b** (p.168)
+
+- **Activité 1** (p.168) : 1. soit u un entier. a. déterminer à l'aide d'un tableau de congruence les restes
+  possibles de 6u modulo 9. b. existe-t-il un entier u tel que 6u ≡ 1 (mod 9) ? 2. déterminer un entier u tel que
+  34u ≡ 1 (mod 7).
+
+**V. Identité de Bezout** (p.170)
+
+- **Activité 1** (p.170) : 1.a. déterminer un inverse de 25 modulo 13. b. en déduire deux entiers u et v tels que
+  25u + 13v = 1. 2. déterminer deux entiers u et v tels que 27u + 10v = 1. 3. déterminer, dans chacun des cas
+  suivants, deux entiers u et v tels que au + bv = 1. a = 9 et b = 14 ; a = 9 et b = 8.
+- **Activité 2** (p.171) : 1. vérifier que 11413 et 191 sont premiers entre eux. 2. utiliser le procédé de l'exercice
+  précédent pour déterminer deux entiers u et v tels que 11413u + 191v = 1.
+
+**VI. Exemples d'équations de la forme ax + by = c ; a, b et c entiers** (p.171)
+
+- **Activité 1** (p.171) : soit a, b et c trois entiers et d = a ∧ b. On considère dans ℤ × ℤ l'équation
+  (E) : ax + by = c. 1. montrer que si d ne divise pas c alors (E) n'admet pas de solution dans ℤ × ℤ. 2. montrer que
+  si d divise c alors (E) admet des solutions dans ℤ × ℤ.
+- **Activité 2** (p.171–172) : on se propose de résoudre dans ℤ × ℤ l'équation (E) : 2x + 3y = 1. 1. déterminer une
+  solution particulière (x₀, y₀) de (E). 2.a. vérifier que (x, y) est solution de (E), si et seulement si,
+  2(x − x₀) + 3(y − y₀) = 0. b. en déduire les solutions de (E). 3. soit l'équation (E₁) : 2x + 3y = 5. Montrer que
+  (5x₀, 5y₀) est une solution particulière de (E₁). Donner alors les solutions de (E₁).
+- **Activité 3** (p.172) : 1. résoudre dans ℤ × ℤ l'équation 7x + 11y = 1. 2. en déduire l'ensemble des solutions de
+  chacune des équations suivantes. a. 7x + 11y = 2. b. 7x + 11y = −5. c. 7x − 11y = −5.
+- **Activité 4** (p.172) : résoudre dans ℤ × ℤ l'équation 35x − 14y = 7.
+- **Activité 5** (p.172) : on considère dans ℤ × ℤ l'équation (E) : 46x + 115y = a où a est un entier non nul.
+  1.a. déterminer 46 ∧ 115. b. déterminer une condition nécessaire et suffisante sur a pour que l'équation (E)
+  admette au moins une solution. 2. résoudre dans ℤ × ℤ l'équation (E), dans chacun des cas ci-dessous. • a = 23.
+  • a = 230. • a = 15.
+- **Activité 6** (p.172) : 1. résoudre dans ℤ × ℤ les équations 5x + 3y = 1 et 5x − 3y = 1. 2. en déduire les
+  solutions entières de l'équation 25x² − 9y² = 7.
+
+**Exercice résolu 1** (p.165) : « Pour tout entier n, on pose a = 2n + 5 et b = n − 3. 1. Montrer que tout diviseur
+commun de a et b est un diviseur de 11. 2. En déduire, suivant les valeurs de n, la valeur de a ∧ b. 3. Application :
+Déterminer a ∧ b lorsque a = 2 × 12³¹²⁰ + 5 et b = 12³¹²⁰ − 3. » Solution résumée : 1. tout diviseur d de a et b
+divise a − 2b = 11. 2. a ∧ b ∈ {−11, −1, 1, 11}, donc a ∧ b = 11 ou 1 ; n − 3 ≡ 0 (mod 11) ⟺ n ≡ 3 (mod 11), et dans
+ce cas 2n + 5 ≡ 0 (mod 11) ; d'où a ∧ b = 11 ⟺ n ≡ 3 (mod 11), et a ∧ b = 1 sinon. 3. a et b sont de la forme 2n + 5
+et n − 3 avec n = 12³¹²⁰ ; comme 12 ≡ 1 (mod 11), 12³¹²⁰ ≡ 1 (mod 11), donc n n'est pas ≡ 3 (mod 11) et
+(2 × 12³¹²⁰ + 5) ∧ (12³¹²⁰ − 3) = 1.
+
+**Exercice résolu 2** (p.166) : « Soit a et b deux entiers naturels non nuls tels que a ∧ b = 1. 1. Montrer que a + b
+et ab sont premiers entre eux. 2. Montrer que a + b et a² − ab + b² sont soit premiers entre eux, soit divisibles
+par 3. » Solution résumée : 1. tout diviseur premier p de ab divise a ou b (pas les deux, car a ∧ b = 1) et ne divise
+donc pas a + b ; il en résulte (a + b) ∧ ab = 1. 2. (a + b)² − (a² − ab + b²) = 3ab, donc tout diviseur commun d de
+a + b et a² − ab + b² divise 3ab ; a + b et ab étant premiers entre eux, le lemme de Gauss donne d divise 3, soit
+d = 1 ou d = 3.
+
+**Exercice résolu 3** (p.166–167) : « On se propose de résoudre dans ℤ × ℤ l'équation (E) : 2x ≡ 12y (mod 10).
+
+1. Montrer que si 2x ≡ 12y (mod 10) alors x − y ≡ 0 (mod 5). 2.a. Résoudre dans ℤ × ℤ l'équation x ≡ y (mod 5).
+   b. En déduire les solutions de 2x ≡ 12y (mod 10). » Solution résumée : (x, y) solution ⟺ 2(x − 6y) divisible par 10
+   ⟺ 5 divise x − 6y ⟺ 5 divise x − y (car x − 6y = x − y − 5y) ; les solutions de x ≡ y (mod 5) sont les couples
+   (x, x + 5k), x ∈ ℤ, k ∈ ℤ ; on vérifie que tout couple de cette forme est solution de (E), donc
+   2x ≡ 12y (mod 10) ⟺ (x, y) = (x, x + 5k), x ∈ ℤ et k ∈ ℤ.
+
+**Exercice résolu 4** (p.169) : « 1. Déterminer un inverse de 4 modulo 13. 2. Résoudre dans ℤ l'équation
+4x ≡ 1 (mod 13). 3. En déduire les solutions dans ℤ de 43x ≡ 1 (mod 13). » Solution résumée : 4 et 13 premiers entre
+eux ⇒ il existe u₀ ∈ {0, 1, ..., 12} tel que 4u₀ ≡ 1 (mod 13) ; la division 40 = 3 × 13 + 1 donne u₀ = 10. Les
+solutions de 4x ≡ 1 (mod 13) sont x = 10 + 13k, k ∈ ℤ. Comme 43 ≡ 4 (mod 13), 43x ≡ 1 (mod 13) ⟺ 4x ≡ 1 (mod 13),
+d'où les solutions x = 10 + 13k, k ∈ ℤ.
+
+**Exercice résolu 5** (p.170–171) : « 1. Montrer que les entiers 22826 et 537 sont premiers entre eux. 2. Trouver
+deux entiers u et v tels que 22826u + 537v = 1. » Solution résumée : la calculatrice donne 22826 ∧ 537 = 272 ∧ 537 = 1.
+On écrit les divisions euclidiennes successives jusqu'à obtenir un reste nul (tableau des restes r : 22826, 537, 272,
+265, 7, 6, 1, 0 et des quotients q : 42, 1, 1, 37, 1, 6), puis on complète un tableau en respectant la loi
+(α, β) ↦ (qβ + α) ; les deux dernières colonnes donnent 22826 × 77 − 3273 × 537 = 1 (donc u = 77 et v = −3273).
+
+**Problème résolu** (p.172–173) : « Dans le plan muni d'un repère orthonormé (O, i⃗, j⃗), on considère les points
+A(7, 12), B(7, 0) et C(0, 12). 1.a. Déterminer les points de coordonnées entières qui appartiennent à la droite (OA).
+b. En déduire les points de coordonnées entières qui appartiennent au segment [OA]. 2.a. Résoudre dans ℤ × ℤ les
+équations 12x − 7y = 1 et 12x − 7y = −1. b. Montrer qu'à l'intérieur du rectangle ABOC il existe deux points I et J
+de coordonnées entières et tels que la distance de chacun d'entre eux à la droite soit minimale. 3. Vérifier que le
+quadrilatère OIAJ est un parallélogramme et calculer son aire. » Solution résumée : (OA) a pour équation
+12x − 7y = 0 ; 12 et 7 étant premiers entre eux, les points entiers de (OA) sont les couples (7k, 12k), k ∈ ℤ, et sur
+[OA] seuls O(0, 0) et A(7, 12). L'égalité 12 × 3 − 7 × 5 = 1 donne (3, 5) solution particulière de 12x − 7y = 1, dont
+les solutions sont (7k + 3, 12k + 5), k ∈ ℤ ; celles de 12x − 7y = −1 sont (7k′ − 3, 12k′ − 5), k′ ∈ ℤ. La distance
+d(M, (OA)) = |12x − 7y|/√193 est minimale quand |12x − 7y| = 1 ; les seuls points entiers intérieurs qui répondent
+sont I(3, 5) et J(4, 7). Le milieu S de [OA] a pour coordonnées (7/2, 6) et est aussi milieu de [IJ], donc OIAJ est
+un parallélogramme ; son aire 𝒜 = 2𝒜′ = OA × d(I, (OA)) = √193 × 1/√193 = 1. **(Figure p.173 : droite (OA), points A,
+C, I, J et rectangle ABOC dans un repère.)**
+
+### Cours — Résultats / définitions / théorèmes à retenir (VERBATIM)
+
+> **Théorème et définition (PGCD)** (p.163, encadré) — « Si a et b sont deux entiers non nuls, alors il existe un
+> unique entier naturel d qui vérifie les deux conditions suivantes : 1. d divise a et d divise b, 2. Si un entier k
+> divise a et b alors il divise d. L'entier d défini plus haut est noté a ∧ b et appelé le plus grand commun diviseur
+> de a et b. »
+
+> **Conséquences** (p.163, encadré) — « Pour tous entiers a et b non nuls, a ∧ b > 0. Pour tous entiers a et b non
+> nuls, a ∧ b = |a| ∧ |b|. »
+
+> **Propriétés** (p.164, encadré) — « Soit a et b deux entiers non nuls. • Si b divise a alors a ∧ b = |b|. • Si b ne
+> divise pas a et si r est le reste modulo b de a alors a ∧ b = b ∧ r. • a ∧ b = b ∧ a. • Pour tout entier non nul k,
+> ka ∧ kb = |k|(a ∧ b). • a ∧ (b ∧ c) = (a ∧ b) ∧ c. »
+
+> **Définition (entiers premiers entre eux)** (p.164, encadré) — « Deux entiers non nuls a et b sont dits premiers
+> entre eux, si a ∧ b = 1. »
+
+> **Théorème** (p.164, encadré) — « Soit a et b deux entiers non nuls. Alors il existe un unique couple d'entiers
+> (a′, b′) tel que a = (a ∧ b)a′, b = (a ∧ b)b′ et a′ ∧ b′ = 1. »
+
+> **Lemme de Gauss** (p.165, encadré) — « Soit a, b et c trois entiers non nuls. Si a ∧ b = 1 et a divise bc alors a
+> divise c. »
+
+> **Théorème** (p.167, encadré) — « Soit a et b deux entiers naturels non nuls et n un entier. Si a ∧ b = 1,
+> n ≡ 0 (mod a) et n ≡ 0 (mod b) alors n ≡ 0 (mod ab). »
+
+> **Théorème et définition (PPCM)** (p.167, encadré) — « Pour tous entiers a et b non nuls il existe un unique entier
+> m strictement positif qui vérifie les deux conditions suivantes. • m est un multiple de a et b, • tout multiple
+> commun de a et b est un multiple de m. L'entier m ainsi défini est le plus petit commun multiple de a et b et est
+> noté a ∨ b. »
+
+> **Conséquences (PPCM)** (p.167, encadré) — « • Pour tous entiers a et b non nuls, a ∨ b = |a| ∨ |b|. • Pour tous
+> entiers a et b non nuls, (a ∨ b) × (a ∧ b) = |ab|. »
+
+> **Propriétés (PPCM)** (p.168, encadré) — « Soit a et b deux entiers non nuls. • Si b divise a alors a ∨ b = |a|.
+> • Pour tout entier non nul k, ka ∨ kb = |k|(a ∨ b). • a ∨ b = b ∨ a. • a ∨ (b ∨ c) = (a ∨ b) ∨ c. »
+
+> **Théorème (inverse modulo b)** (p.169, encadré) — « Soit a et b deux entiers naturels non nuls tels que b ≥ 2 et
+> a ∧ b = 1. Alors il existe un unique entier non nul u appartenant à {0, 1, ..., b − 1} tel que au ≡ 1 (mod b). On
+> dit que u est un inverse de a modulo b. »
+
+> **Théorème (Identité de Bezout)** (p.170, encadré) — « Deux entiers non nuls a et b sont premiers entre eux, si et
+> seulement si, il existe deux entiers u et v tels que au + bv = 1. »
+
+> **Corollaire** (p.170, encadré) — « Soit a et b deux entiers non nuls et d = a ∧ b. Alors il existe deux entiers u
+> et v tels que au + bv = d. »
+
+> **Théorème (équations ax + by = c)** (p.171, encadré) — « Soit a, b et c trois entiers et d = a ∧ b. L'équation
+> ax + by = c admet des solutions dans ℤ × ℤ, si et seulement si, d divise c. »
+
+### QCM (p.174) — « Cocher la réponse exacte. » (réponses non fournies)
+
+1. L'entier 5 est un inverse modulo 6 de (☐ 5 / ☐ −5 / ☐ 1).
+2. Soit p un nombre premier. (☐ p ∧ p² = 1 / ☐ p ∧ p² = p / ☐ p ∧ p² = p²).
+3. L'ensemble des solutions entières de l'équation 11x − 5y = 1 est (☐ {(1 + 5k, 2 + 11k), k ∈ ℤ} /
+   ☐ {(1 + 11k, 2 + 5k), k ∈ ℤ} / ☐ {(2 + 5k, 1 + 11k), k ∈ ℤ}).
+4. L'ensemble des solutions entières de l'équation 13x − 17y = 0 est (☐ {(17k, 13k), k ∈ ℤ} /
+   ☐ {(13k, 17k), k ∈ ℤ} / ☐ {(17 + 13k, 13 + 17k), k ∈ ℤ}).
+
+### Vrai ou faux (p.174) — « Répondre par vrai ou faux en justifiant la réponse. » (réponses non fournies)
+
+1. Soit n un entier. n ≡ 0 (mod 143), si et seulement si, n ≡ 0 (mod 13) et n ≡ 0 (mod 11).
+2. Pour tous entiers a et b, a. −3a ∧ 3b = 3(a ∧ b). b. Si a ∧ b = a ∨ b alors a = b.
+3. L'équation 25x − 80y = 3 admet des solutions entières.
+4. Tout entier admet un inverse modulo 14.
+5. Pour tout entier n ≥ 2, (n − 1) est son propre inverse modulo n.
+
+### Exercices et problèmes (p.175–178) — 31 exercices
+
+- **Ex. 1** (p.175) : déterminer a ∧ b dans chacun des cas ci-dessous. 1. a = 558 et b = −1235. 2. a = 924 et
+  b = 990. 3. a = −999 et b = 888. 4. a = 1890 et b = −5250.
+- **Ex. 2** (p.175) : calculer a ∧ b et a ∨ b dans chacun des cas ci-dessous. 1. a = 588 et b = −1235. 2. a = 51 et
+  b = −255. 3. a = 2n + 1 et b = n, où n est un entier non nul.
+- **Ex. 3** (p.175) : trouver les valeurs possibles de l'entier a sachant que a ∧ 180 = 36 et |a| < 360.
+- **Ex. 4** (p.175) : trouver tous les couples (a, b) d'entiers non nuls tels que a ∧ b = 19 et ab = 2166.
+- **Ex. 5** (p.175) : montrer qu'il n'existe aucun couple (a, b) d'entiers tels que a ∧ b = 19 et a² − b² = 490.
+- **Ex. 6** (p.175) : 1. montrer que 2⁵ ≡ −1 (mod 11) et 2⁵ ≡ 1 (mod 31). 2. en déduire les congruences
+  2³⁴⁰ ≡ 1 (mod 11) et 2³⁴⁰ ≡ 1 (mod 31). 3. montrer que 341 divise 2³⁴⁰ − 1.
+- **Ex. 7** (p.175) : la décomposition de 561 en facteurs premiers est 561 = 3 × 11 × 17. Soit a un entier premier
+  avec 561. 1. vérifier que a est premier avec chacun des entiers 3, 11 et 17. 2. montrer que a. 3 divise a² − 1.
+  b. 11 divise a¹⁰ − 1. c. 17 divise a¹⁶ − 1. 3. en déduire les congruences a⁵⁶⁰ ≡ 1 (mod 3), a⁵⁶⁰ ≡ 1 (mod 11) et
+  a⁵⁶⁰ ≡ 1 (mod 17). 3. montrer que 561 divise a⁵⁶⁰ − 1. [sic — la dernière question est numérotée « 3 » alors qu'il
+  s'agirait de la question 4]
+- **Ex. 8** (p.175) : soit a, b et d trois entiers non nuls tels que a ∧ b = d. 1. montrer que si un entier n divise
+  4a + 5b et 5a + 2b alors n divise 17a et 17b. 2. en déduire que (4a + 5b) ∧ (5a + 2b) = d ou
+  (4a + 5b) ∧ (5a + 2b) = 17d.
+- **Ex. 9** (p.175) : soit a, b et n trois entiers non nuls. 1. montrer que si d divise a et b alors d divise a + bn
+  et a + b(n − 1). 2. montrer que si d divise a + bn et a + b(n − 1) alors d divise a et b. 3. en déduire que
+  a ∧ b = (a + bn) ∧ (a + b(n − 1)).
+- **Ex. 10** (p.175) : 1.a. donner une solution particulière de 5x ≡ 1 (mod 17). b. en déduire les solutions dans ℤ
+  de 5x ≡ 1 (mod 17). c. donner les solutions dans ℤ de 345x ≡ 1 (mod 17). 2.a. résoudre dans ℤ 5x ≡ 2 (mod 17).
+  b. donner les solutions dans ℤ de 430x ≡ 2 (mod 17).
+- **Ex. 11** (p.175) : résoudre dans ℤ a. 17x ≡ 1 (mod 33). b. 17x ≡ −9 (mod 33).
+- **Ex. 12** (p.175) : déterminer l'ensemble des couples (x, y) tels que 12x ≡ 30y (mod 15).
+- **Ex. 13** (p.176) : déterminer l'ensemble des couples (x, y) tels que 11x ≡ 99y (mod 77).
+- **Ex. 14** (p.176) : 1. vérifier que 2015 ∧ 2007 = 1. 2. déterminer deux entiers a et b tels que
+  2007a + 2015b = 1.
+- **Ex. 15** (p.176) : 1. vérifier que 391 ∧ 323 = 17. 2. déterminer deux entiers a et b tels que 391a − 323b = 17. 3. en déduire une solution de 391a − 323b = 204.
+- **Ex. 16** (p.176) : 1. résoudre dans ℤ × ℤ l'équation 97x + 11y = 1. 2. soit l'équation (E) : 97x + 77y = 7.
+  a. donner une solution particulière de (E). b. résoudre dans ℤ × ℤ l'équation (E).
+- **Ex. 17** (p.176) : on pose u = 2 + √3. 1.a. montrer par récurrence que, pour tout entier naturel n ≥ 1,
+  uⁿ = aₙ + bₙ√3, où aₙ et bₙ sont des entiers naturels. b. exprimer aₙ₊₁ et bₙ₊₁ à l'aide de aₙ et bₙ. 2.a. montrer
+  que aₙ² − 3bₙ² = 1 et aₙbₙ₊₁ − aₙ₊₁bₙ = 1. b. en déduire que aₙ ∧ bₙ = aₙ₊₁ ∧ aₙ = bₙ₊₁ ∧ bₙ = 1.
+- **Ex. 18** (p.176) : résoudre dans ℤ × ℤ chacune des équations suivantes. a. 7x − 14y = 5. b. 5x − 10y = 10.
+  c. 29x + 58y = 3.
+- **Ex. 19** (p.176) : résoudre dans ℤ × ℤ chacune des équations suivantes. a. (4x − 3y − 5)(4x + 3y − 1) = 0.
+  b. x² − 9y² = 2.
+- **Ex. 20** (p.176–177) : 1. résoudre dans ℤ × ℤ l'équation (E) : 13x − 8y = 1. 2. on considère les triplets
+  (x, y, z) de ℤ × ℤ × ℤ vérifiant le système S : {5x + y − 2z = 1, 8x − 9y + 2z = 0}. Montrer que si (x, y, z) est
+  solution de S alors (x, y) est solution de (E). Résoudre S dans ℤ × ℤ × ℤ.
+- **Ex. 21** (p.176) : 1. déterminer deux entiers u et v tels que 9u − 11v = 1. 2. soit a, b et x trois entiers.
+  Montrer que si x ≡ a (mod 9) et x ≡ b (mod 11), alors x ≡ 45b − 44a (mod 99). 3. résoudre dans ℤ le système
+  {x ≡ 6 (mod 9), x ≡ 8 (mod 11)}.
+- **Ex. 22** (p.176) : pour tout entier n, on considère les nombres a = 2n − 3 et b = 3n − 1. 1. quelles sont les
+  valeurs possibles de a ∧ b ? 2.a. vérifier que pour tout n, le couple (a, b) est solution de l'équation
+  (E) : 3x − 2y = −7. b. résoudre dans ℤ × ℤ l'équation (E). 3. déterminer l'ensemble des entiers n tels que
+  a ∧ b = 7.
+- **Ex. 23** (p.176) : soit p, q et u trois nombres premiers. On pose n = pqu et on suppose que p − 1, q − 1 et u − 1
+  divisent n − 1. Soit a un entier premier avec n. 1. montrer que a^{p−1} ≡ 1 (mod p), a^{q−1} ≡ 1 (mod q) et
+  a^{u−1} ≡ 1 (mod u). En déduire les congruences a^{n−1} ≡ 1 (mod p), a^{n−1} ≡ 1 (mod q) et a^{n−1} ≡ 1 (mod u). 2. montrer que a^{n−1} ≡ 1 (mod n). 3. décomposer 561 en produit de facteurs premiers et montrer que
+  224⁵⁶⁰ ≡ 1 (mod 561). 4. montrer que 561¹⁷²⁸ ≡ 1 (mod 1729).
+- **Ex. 24** (p.177) : 1. soit a et b des entiers naturels non nuls tels que (a + b) ∧ ab = p, où p est nombre
+  premier. a. montrer que p est un diviseur commun de a et b. b. montrer que a ∧ b = p. 2. on désigne par a et b deux
+  entiers naturels tels que a ≤ b. a. résoudre le système {a ∧ b = 5, a ∨ b = 170}. b. en déduire les solutions du
+  système {(a + b) ∧ ab = 5, a ∨ b = 170}.
+- **Ex. 25** (p.177) : on désigne par x et y deux entiers naturels non nuls tels que x < y. Soit S l'ensemble des
+  couples (x, y) tels que x ∧ y = y − x. 1. calculer 363 ∧ 484. Le couple (363, 484) appartient-il à S ? 2. soit n un
+  entier naturel non nul. Le couple (n, n + 1) appartient-il à S ? 3.a. montrer que (x, y) appartient à S, si et
+  seulement si, il existe un entier naturel k non nul tel que x = k(y − x) et y = (k + 1)(y − x). b. en déduire que
+  pour tout couple (x, y) de S, x ∨ y = k(k + 1)(y − x). 4.a. déterminer l'ensemble des entiers naturels diviseurs de 228. b. en déduire l'ensemble des couples (x, y) de S tels que x ∨ y = 228.
+- **Ex. 26** (p.177) : le plan est rapporté à un repère orthonormé direct (O, u⃗, v⃗). On considère l'application f qui
+  au point M d'affixe z associe le point M′ d'affixe z′ tel que z′ = ((3 + 4i)/5)z̄ + (1 − 2i)/5. 1.a. déterminer
+  l'ensemble des points invariants par f. b. quelle est la nature de f ? 2.a. déterminer l'ensemble D des points M
+  d'affixe z tels que z′ soit réel. b. résoudre dans ℤ × ℤ l'équation 4x − 3y = 2. c. en déduire les points de D dont
+  les coordonnées sont entières. 3. on considère les points M d'affixe z = 1 + iy, où y ∈ ℤ. Déterminer les entiers y
+  tels que Re(z′) et Im(z′) soient entiers.
+- **Ex. 27** (p.177) : soit a et b deux entiers. 1. montrer que si (a² + ab − b²)² = 1 alors a et b sont premiers
+  entre eux. On considère l'équation (E) : (x² + xy − y²)² = 1. 2. déterminer les solutions entières de (E) telles que
+  x = y. 3. soit (p, q) une solution de (E). a. montrer que (q, p + q) est une solution de (E). b. en déduire que
+  (p + q, p + 2q) est une solution de (E). c. donner six solutions de (E).
+- **Ex. 28** (p.177) : le but de l'exercice est déterminer l'ensemble E des triplets (x, y, z) de ℕ* × ℕ* × ℕ* tels
+  que x² + y² = z². 1. montrer que pour tout couple (a, b) d'entiers naturels non nuls tels que a > b,
+  (a² − b², 2ab, a² + b²) est un élément de E. 2. soit (x, y, z) un élément de E tel que x ∧ y = 1. a. montrer que
+  x ∧ z = 1 et y ∧ z = 1. b. montrer que x et y ne sont pas tous les deux pairs. c. montrer que l'équation
+  a² ≡ 2 (mod 4) ne possède pas de solution entière. d. montrer que si x et y sont tous les deux impairs alors
+  x² + y² ≡ 2 (mod 4). En déduire que x et y ne peuvent pas être tous les deux impairs. e. on suppose que x est
+  impair et y est pair. Montrer que z est impair et que z + x et z − x sont pairs. En déduire qu'il existe deux
+  entiers strictement positifs p et q, premiers entre eux, tels que x = p − q, z = p + q et y² = 4pq et p et q sont
+  des carrés parfaits. 3. en déduire l'ensemble des éléments de E. 4. donner tous les triplets de E tels que z ≤ 18.
+- **Ex. 29** (p.178) : on considère les dix caractères A, B, C, D, E, F, G, H et J auxquels on associe dans l'ordre
+  les entiers de 1 à 10. On note Ω = {1, 2, 3, ..., 10}. On appelle message tout mot ayant un sens ou non formé avec
+  ces dix caractères. Soit a un entier compris entre 1 et 10. On désigne par f l'application qui à tout élément i de Ω
+  associe le reste de aⁱ modulo 11. 1. on suppose que a = 5. a. coder à l'aide de f le message « BAC » en utilisant la
+  grille de chiffrement (tableau : Message B A C / i 2 1 3 / f(i) 3 … / Code C …). b. coder à l'aide de f le message
+  « FADE ». Peut-on déchiffrer avec certitude le message codé ? 2. on suppose que a = 2. Donner la grille de
+  chiffrement de f. Peut-on déchiffrer avec certitude un message codé ? 3. on se propose de déterminer les valeurs
+  possibles de l'entier a pour que l'application f permette de chiffrer et de déchiffrer avec certitude tous les
+  messages. a. soit i et i′ deux entiers compris entre 1 et 9 tels que i < i′. Montrer que aⁱ ≡ a^{i′} (mod 11)
+  équivaut à a^{i′−i} ≡ 1 (mod 11). b. en déduire que f permet de chiffrer et de déchiffrer avec certitude tous les
+  messages, si et seulement si, aⁱ n'est pas congru à 1 modulo 11 pour tout i ∈ {1, 2, 3, ..., 9}. c. on suppose que
+  k est le plus petit entier de Ω tel que a^k ≡ 1 (mod 11). Montrer que k est un diviseur de 10. d. conclure.
+- **Ex. 30** (p.178) : on considère la suite de Fibonacci (Fₙ)ₙ≥₀ définie par F₀ = 0 ; F₁ = 1 et F_{n+2} = F_{n+1} + Fₙ,
+  n ≥ 0. 1. calculer les termes de cette suite jusqu'à F₁₀. 2. montrer que pour tout entier non nul n,
+  F_{n+1}F_{n−1} − Fₙ² = (−1)ⁿ. 3. en déduire que pour tout entier non nul n, Fₙ ∧ F_{n+1} = 1. 4. soit n un entier non
+  nul. Montrer par récurrence sur l'entier m que F_{n+m} = Fₘ F_{n+1} + F_{m−1} Fₙ. 5. en déduire que
+  Fₘ ∧ Fₙ = Fₘ ∧ F_{m+n}.
+- **Ex. 31** (p.178) : pour tout entier naturel n, on note φ(n) le nombre d'entiers naturels inférieurs à n et premiers
+  avec n. On pose φ(1) = 1. 1. vérifier que φ(7) = 6 et φ(8) = 4. 2. montrer que φ(n) ≤ n − 1. Soit k un entier naturel
+  non nul, p et q deux nombres premiers et a un entier non divisible par p et q. 3.a. montrer que φ(p) = p − 1.
+  b. montrer que a^{φ(p)} ≡ 1 (mod p). 4.a. montrer que φ(pq) = φ(p)φ(q). b. montrer que a^{φ(pq)} ≡ 1 (mod pq). c. en
+  déduire les congruences 10¹⁵³⁶ ≡ 1 (mod 1649) ; 10430¹⁰²⁰⁰ ≡ 1 (mod 10403). 5.a. montrer que φ(pᵏ) = pᵏ − p^{k−1}.
+  b. déterminer φ(125), φ(256) et φ(1331). 6.a. montrer que (1 + up)^{p^{k−1}} ≡ 1 (mod pᵏ) (on pourra utiliser que
+  tout entier non nul n divise Cₙʲ, j ≠ 0 et j ≠ n). b. montrer que a^{φ(pᵏ)} ≡ 1 (mod pᵏ). En déduire les congruences
+  17¹⁰⁰ ≡ 1 (mod 125) ; 17¹²⁸ ≡ 1 (mod 256).
+
+### Bornes de scope observées (chapitre 17)
+
+- ✅ INCLUS : **PGCD de deux entiers** (a ∧ b, algorithme d'Euclide — dernier reste non nul, recherche à la
+  calculatrice via l'affichage ab/c, théorème et définition d'existence/unicité de d, a ∧ b = |a| ∧ |b|, propriétés
+  b | a ⇒ a ∧ b = |b|, a ∧ b = b ∧ r, commutativité, ka ∧ kb = |k|(a ∧ b), associativité) ; **entiers premiers entre
+  eux** (définition a ∧ b = 1, décomposition unique a = (a ∧ b)a′, b = (a ∧ b)b′ avec a′ ∧ b′ = 1, **lemme de
+  Gauss**, produit de diviseurs premiers entre eux ab | n, congruence n ≡ 0 (mod ab) sous a ∧ b = 1) ; **PPCM de deux
+  entiers** (a ∨ b, théorème/définition, a ∨ b = |a| ∨ |b|, (a ∨ b)(a ∧ b) = |ab|, propriétés, systèmes {ab, a ∨ b},
+  ensembles de multiples aℤ) ; **inverses modulo b** (existence/unicité d'un inverse u ∈ {0, ..., b − 1} de a modulo
+  b lorsque a ∧ b = 1 et b ≥ 2, résolution de ax ≡ c (mod b)) ; **identité de Bézout** (a ∧ b = 1 ⟺ ∃ u, v :
+  au + bv = 1 ; **corollaire** au + bv = d avec d = a ∧ b ; procédé de remontée de l'algorithme d'Euclide par tableau
+  (α, β) ↦ qβ + α) ; **équations diophantiennes** ax + by = c (théorème d'existence ⟺ (a ∧ b) | c, solution
+  particulière + solution générale par le paramètre k, systèmes de congruences x ≡ a (mod m), x ≡ b (mod n) — cas
+  particulier du théorème des restes chinois, résolution d'équations 25x² − 9y² = k par factorisation). Le chapitre
+  réinvestit le **petit théorème de Fermat** (chap. 16) et introduit l'**indicatrice d'Euler φ** (ex. 31), les
+  **nombres de Carmichael** (561, ex. 7 et 23), la **suite de Fibonacci** (ex. 30) et une application
+  **cryptographique** (RSA en page de garde, chiffrement par aⁱ mod 11 en ex. 29).
+- ⛔ NON traité / supposé acquis : la **division euclidienne dans ℤ** et la **congruence modulo n** (établies au
+  chapitre 16, ici réutilisées) ; le **petit théorème de Fermat** n'est pas redémontré (cité) ; la **structure de
+  groupe / anneau ℤ/nℤ** n'est pas formalisée (les inverses et congruences sont manipulés élémentairement) ; le
+  **théorème des restes chinois** n'est pas énoncé en général (seuls des systèmes à deux congruences sont résolus via
+  Bézout) ; l'**indicatrice d'Euler** n'est définie que dans l'exercice 31 (hors cours). Le chapitre suppose acquis
+  le raisonnement par **récurrence** (ex. 17, 30, 31), les **nombres complexes** (ex. 26) et l'usage de la
+  **calculatrice** pour les PGCD et divisions euclidiennes de grands nombres ; il clôt le socle d'arithmétique du
+  programme (chap. 16 → 17).
+
+## 2.18 Chapitre 18 — Probabilités (manuel 222446, p.179–207)
+
+**Page de garde (p.179)** — Titre de couverture : « Probabilités », Chapitre 9 (numérotation interne du tome 2 ;
+c'est le chapitre 18 dans la numérotation content ; le bandeau courant écrit « Probabilités »). Encart historique
+(citation) : « Un homme du monde a proposé deux problèmes à Pascal et Roberval, le second fut à l'origine des calculs
+de probabilité. C'est le problème "des points" ou "des parties" ou "de division". Le prix d'un tournoi est gagné par
+le premier des participants qui obtient un certain nombre de points. Comment partager ce prix si le tournoi est
+interrompu ? Toutes les solutions qui en furent ensuite données étaient fausses. Le calcul des probabilités fut
+présenté au monde en 1657 par Huyghens. Pour la première fois, les concepts fondamentaux, énoncés et correctement
+utilisés, sont dans le domaine public. » Référence : « (Dieudonné, Abrégé d'histoire des mathématiques, 1978). » Le
+chapitre est structuré en deux grandes parties **A. Probabilité sur un ensemble fini** (parties **I. Expériences
+aléatoires**, **II. Définition d'une probabilité sur un ensemble fini**, **III. Equiprobabilité**, **IV. Probabilité
+conditionnelle**, **V. Variables aléatoires ou aléa numériques**, **VI. Espérance et variance d'une variable
+aléatoire**, **VII. Fonction de répartition d'une variable aléatoire**, **VIII. Loi binomiale**) et **B/ Exemples de
+lois continues** (parties **I. La loi uniforme**, **II. La loi exponentielle**), ponctuées d'activités, d'encadrés
+(définitions / propriétés / théorèmes) et d'exercices résolus, suivies d'un QCM / Vrai-Faux, puis d'une rubrique
+« Exercices et problèmes » (31 exercices). **Ce chapitre comporte 4 « exercices résolus »** intégrés au cours.
+Notation du manuel : C_n^p désigne le nombre de combinaisons (aussi noté (n parmi p)), A_n^p le nombre
+d'arrangements, p(A/B) la probabilité conditionnelle de A sachant B, 𝒫(E) l'ensemble des parties (événements) de E.
+
+### Cours — Activités
+
+**A. Probabilité sur un ensemble fini** (p.180). « Dans cette partie l'univers E de l'expérience aléatoire considérée
+est un ensemble fini. »
+
+**I. Expériences aléatoires** (p.180)
+
+- **Activité 1** (p.180) : on désigne par E l'ensemble des entiers naturels pairs inférieurs ou égaux à 500. On note
+  A l'ensemble des entiers de E multiples de 10, B ceux multiples de 6, C ceux multiples de 15. 1. dénombrer E, A, B
+  et C. 2. déterminer et dénombrer chacun des ensembles A̅, B̅, C̅, A ∩ B, A ∩ C, B ∩ C, A ∩ B̅, A̅ ∪ B, A̅ ∩ C̅,
+  (A ∩ B) ∪ C.
+- **Activité 2** (p.180) : 1. combien y a-t-il d'anagrammes du mot CHOIX ? 2. du mot POSSIBLE ? 3. du mot
+  BACCALAUREAT ?
+- **Activité 3** (p.180) : une urne contient trois boules numérotées 1, 2 et 3. On effectue p tirages, en tirant les
+  boules une à une et en remettant chaque fois la boule tirée dans l'urne. 1. on note A₃ l'ensemble des tirages qui
+  n'amènent pas le numéro 3 ; déterminer le cardinal de A₃. 2. on note A₂,₃ l'ensemble des tirages qui n'amènent ni le
+  numéro 2 ni le numéro 3 ; déterminer son cardinal. 3. on note B l'ensemble des tirages qui n'amènent pas en même
+  temps les numéros 1, 2 et 3 ; déterminer le cardinal de B.
+- **Activité 4** (p.180–181) : dans une librairie douze titres de revues différentes sont disponibles ; trois clients
+  commandent chacun une revue. 1. combien y a-t-il de commandes possibles ? 2. combien si on suppose qu'aucun titre
+  n'est choisi deux fois ? 3. combien si les clients commandent la même revue ? 4. combien si exactement deux clients
+  choisissent le même titre ?
+- **Activité 5** (p.181) : 1.a. déterminer le nombre de parties d'un ensemble à quatre éléments. b. à cinq éléments. 2. soit E un ensemble à n éléments (n ≥ 1). a. vérifier que Σ_{k=0}^{n} C_n^k = 2ⁿ. b. en déduire le nombre de
+  parties de l'ensemble E.
+- **Activité 6** (p.181) : soit un entier n ≥ 2 et un entier 2 ≤ p ≤ n. On considère un ensemble E de cardinal n et
+  a, b deux éléments de E. 1.a. déterminer le nombre des parties à p éléments contenant a et b. b. contenant a ou bien
+  b. c. ne contenant ni a ni b. 2. en déduire que C_n^p = C_{n−2}^{p−2} + 2C_{n−2}^{p−1} + C_{n−2}^p.
+
+**II. Définition d'une probabilité sur un ensemble fini** (p.182)
+
+- **Activité 1** (p.182) : une expérience consiste à lancer une pièce de monnaie trois fois de suite ; on note à
+  chaque fois le côté exposé (P pour pile et F pour face). 1. dénombrer les issues de cette expérience. 2. déterminer
+  le cardinal de A « la face pile apparaît une seule fois » et de B « obtenir P pour la première fois au deuxième
+  lancer ». 3. déterminer le cardinal de A ∩ B et de A ∪ B.
+- **Activité 2** (p.182–183) : on lance un dé cubique dont les faces sont numérotées de 1 à 6. 1. on suppose que la
+  probabilité d'apparition de 6 est le triple de la probabilité d'apparition de chacun des nombres 1, 2, 3, 4 et 5 ;
+  déterminer la probabilité de chaque événement élémentaire. 2. déterminer la probabilité de A « obtenir un nombre
+  pair », B « obtenir un nombre impair inférieur ou égal à 3 », C « obtenir un nombre pair strictement supérieur à 3 »,
+  D « obtenir un multiple de 3 ou un nombre pair ».
+
+**III. Equiprobabilité** (p.184) — texte liminaire : « Lorsqu'on lance une pièce de monnaie bien équilibrée, on jette
+un dé non pipé ou on effectue un tirage au hasard, les issues ont la même probabilité de réalisation, on dit qu'on est
+en présence d'une situation d'équiprobabilité. »
+
+- **Activité** (p.185, non numérotée) : un code comporte deux lettres suivies de deux chiffres. 1. dénombrer les codes
+  possibles. 2. un enfant compose un code au hasard ; calculer la probabilité d'obtenir a. un code commençant par la
+  lettre A. b. un code contenant les lettres A et Z. c. un code contenant le chiffre 0 deux fois. d. un code ne
+  contenant pas de chiffre pair.
+
+**IV. Probabilité conditionnelle** (p.185)
+
+- **Activité 1** (p.185) : un enquêteur effectue un sondage auprès de familles ayant deux enfants et s'intéresse à la
+  composition des enfants suivant le sexe (F ou G) et leurs âges ; on suppose que les naissances des filles et des
+  garçons sont équiprobables. 1. il choisit une famille au hasard. a. déterminer les quatre éléments possibles de
+  l'univers. b. probabilité que l'aîné soit une fille ? c. que la famille ait deux filles ? d. deux garçons ?
+  e. un garçon et une fille ? 2. il sonne à la porte, une fille vient ouvrir. a. probabilité que l'autre enfant soit
+  une fille ? b. soit un garçon ?
+- **Activité 2** (p.186) : une urne contient quatre boules rouges numérotées (1, 1, 2, 2) et deux boules vertes
+  numérotées (1, 2). Un joueur tire une boule ; R « obtenir une boule rouge », D « obtenir une boule numérotée 2 ».
+  1. probabilité de tirer une boule rouge ? 2. le joueur a tiré une boule rouge : a. probabilité qu'elle soit numérotée
+     2 ? b. numérotée 1 ? 3. le joueur a tiré une boule verte : a. numérotée 2 ? b. numérotée 1 ? 4.a. probabilité de
+     tirer une boule rouge et numérotée 2 ? b. une boule verte et numérotée 1 ? Le manuel introduit ensuite l'**arbre de
+     probabilité** (arbre de choix) modélisant une expérience (I) à deux issues contraires B et B̅ suivie d'une expérience
+     (II) à deux issues contraires A et A̅ ; les branches portent p(B), p(B̅), p(A/B), p(A̅/B), p(A/B̅), p(A̅/B̅) et
+     aboutissent aux nœuds B ∩ A, B ∩ A̅, B̅ ∩ A, B̅ ∩ A̅. **(Figure p.186 : arbre pondéré à deux niveaux.)**
+
+**Evénements indépendants** (p.188)
+
+- **Activité 3** (p.188) : on jette un dé équilibré numéroté de 1 à 6 ; A « obtenir un numéro pair », B « obtenir un
+  multiple de 3 », C « obtenir un multiple de 6 ». Calculer la probabilité de A, B, C, A ∩ B et A ∩ C.
+- **Activité 4** (p.188) : une urne U₁ contient trois boules noires et six boules vertes ; une urne U₂ contient deux
+  boules noires et trois boules vertes. On choisit une urne au hasard et on tire successivement deux boules, en
+  remettant chaque fois la boule, dans l'urne choisie ; A « obtenir une boule verte au premier tirage », B « au
+  deuxième tirage ». Les événements A et B sont-ils indépendants ?
+- **Activité 5** (p.188) : trois personnes A, B et C participent à un jeu télévisé ; l'animateur offre au hasard deux
+  cadeaux aux candidats (un candidat pourra recevoir deux cadeaux). A « la personne A ne reçoit aucun cadeau »,
+  B « la personne B ne reçoit aucun cadeau ». 1. calculer les probabilités de A, B et A ∩ B. 2. A et B sont-ils
+  indépendants ?
+
+**Formule des probabilités totales** (p.189)
+
+- **Activité 6** (p.189) : dans une usine, le tiers de la production provient de la machine A, le quart de la machine
+  B et le reste de la machine C ; les trois machines fabriquent des ampoules de types 1 et 2. Sur 1000 ampoules de A,
+  2 sont défectueuses ; de B, 10 ; de C, 5. On choisit au hasard une ampoule emballée. Déterminer à l'aide d'un arbre
+  la probabilité de a. « l'ampoule est défectueuse ». b. « l'ampoule fonctionne ». c. « l'ampoule provient de A
+  sachant qu'elle est défectueuse ». d. « l'ampoule ne provient pas de A sachant qu'elle fonctionne ».
+- **Activité 7** (p.191) : le cycle d'un feu tricolore dure une minute : vert 25 s, orange 5 s et rouge 30 s.
+  1. probabilité que le feu soit vert ? orange ? rouge ? 2. un automobiliste arrive à 10 mètres d'un feu tricolore
+     (aucun véhicule ne le précède) et passe sans s'arrêter : au feu vert avec probabilité 99 %, au feu orange 80 %, au
+     feu rouge 1 %. Probabilité qu'il passe sans s'arrêter ?
+- **Activité 8** (p.191) : une personne qui fait du sport un jour donné, en fait le lendemain avec la probabilité 0.4 ;
+  si elle n'en fait pas ce jour-là, elle en fera le lendemain avec la probabilité 0.8. Elle a fait du sport le lundi.
+  Quelle est la probabilité qu'elle en fasse le jeudi ?
+
+**V. Variables aléatoires ou aléa numériques** (p.191)
+
+- **Activité 1** (p.191) : une urne contient deux boules numérotées 4 et trois boules numérotées −2, indiscernables au
+  toucher ; on tire simultanément deux boules. 1.a. probabilité de tirer deux boules numérotées 4 ? b. deux numéros
+  différents ? c. le même numéro ? 2. on note X l'application qui à tout événement élémentaire associe la somme des
+  numéros des deux boules tirées ; quelles sont les valeurs prises par X ?
+- **Activité 2** (p.191–192) : on lance une pièce de monnaie bien équilibrée trois fois de suite. 1. déterminer
+  l'ensemble des issues possibles. 2. X = nombre de côtés « face » obtenus ; probabilité de (X = 0), (X = 1), (X = 2),
+  (X = 3) ?
+- **Activité 3** (p.192) : une entreprise organise un concours pour recruter un cadre ; trois candidats se présentent,
+  chacun passe un test et le premier qui y satisfait est engagé ; la probabilité qu'un candidat réussisse est p. X = j
+  si le jᵉ candidat est engagé et X = 4 si aucun candidat n'est engagé. Déterminer la loi de X.
+
+**VI. Espérance et variance d'une variable aléatoire** (p.192)
+
+- **Activité 1** (p.193) : on lance un dé de six faces numérotées de 1 à 6 ; X = numéro obtenu et Y = 1 si le numéro
+  est pair, −1 sinon. Calculer E(X), E(−3X), E(Y) et E(X + Y).
+- **Activité 2** (p.193) : un marchand de glaces propose 5 parfums au choix ; trois personnes choisissent au hasard et
+  indépendamment un parfum. 1.a. probabilité que les trois choisissent des parfums deux à deux différents ? b. le même
+  parfum ? 2. X = nombre de parfums choisis par les trois personnes ; a. déterminer la loi de X. b. calculer
+  l'espérance et l'écart-type de X.
+- **Activité 3** (p.193–194) : une enveloppe contient les douze figures d'un jeu de cartes (quatre rois, quatre dames,
+  quatre valets). 1. on tire simultanément et au hasard cinq cartes ; X = nombre de rois obtenus. a. loi de X.
+  b. espérance et écart-type. 2. on tire successivement, au hasard et avec remise, cinq cartes ; Y = nombre de rois
+  obtenus. a. loi de Y. b. espérance et écart-type. 3. comparer les résultats de 1.b et 2.b et interpréter.
+
+**VII. Fonction de répartition d'une variable aléatoire** (p.194)
+
+- **Activité 1** (p.194) : on donne la représentation graphique d'une fonction F : ℝ → [0, 1], x ↦ p(X ≤ x), où
+  (X ≤ x) désigne l'ensemble {a ∈ E ; X(a) ≤ x}. Déterminer graphiquement 1. les valeurs prises par X. 2. p(X ≤ −1),
+  p(X ≤ 1.3), p(X ≤ 11/3), p(X ≤ 1), p(X < 2), p(X = 2), p(1 ≤ X ≤ 6). 3. la loi de probabilité de X. **(Figure p.194 :
+  fonction en escalier à sauts 0.1, 0.3, 0.8, 0.9, 1 aux abscisses 1 à 5.)**
+- **Activité 2** (p.194) : une pièce de monnaie est truquée de sorte que la probabilité d'obtenir pile est 0.6 ; on
+  lance la pièce trois fois et X = nombre de piles obtenus. 1. déterminer la loi de X. 2. F : ℝ → [0, 1],
+  x ↦ p(X ≤ x) ; déterminer l'expression de F et la représenter.
+- **Activité 3** (p.194–195) : trois urnes contiennent chacune des jetons numérotés de 1 à 6 ; on tire au hasard un
+  jeton de chaque urne et X = plus grand des numéros tirés. 1. soit k un entier ≤ 6. a. dans chaque urne, probabilité
+  de tirer un numéro ≤ k ? b. en déduire p(X ≤ k). 2. déterminer la fonction de répartition de X et tracer sa courbe. 3. déterminer la loi de X.
+
+**VIII. Loi binomiale** (p.195)
+
+- **Activité 1** (p.195) : la probabilité qu'un joueur de fléchettes atteigne sa cible est 0.9. 1. deux tirs ; X =
+  nombre de succès. a. loi de X. b. probabilité « le joueur atteint au moins une fois sa cible ». 2. dix tirs ; Y =
+  nombre de succès. a. probabilités « le joueur réalise neuf succès », « au moins un succès ». b. loi de Y.
+- **Activité 2** (p.195) : un mobile se déplace sur un axe (O, i⃗) ; à t = 0 il est en O, à chaque seconde son abscisse
+  augmente de 1 (probabilité 1/2) ou diminue de 1 (probabilité 1/2). 1. à t = 2 : a. probabilité qu'il soit au point
+  d'abscisse 2 ? b. au point O ? 2. à t = n : a. probabilité au point d'abscisse n ? b. au point d'abscisse −n ?
+- **Activité 3** (p.196) : on lance n fois (n ≥ 1) un dé ; A « obtenir au moins un 6 ». 1. calculer p(A) pour n = 3. 2. exprimer p(A) en fonction de n. 3. combien de fois au moins faut-il lancer le dé pour que p(A) ≥ 0.9 ?
+
+**B/ Exemples de lois continues** — **I. La loi uniforme** (p.196)
+
+- **Activité 1** (p.196) : 1.a. soit I = [−1, 1] ; quelle est son amplitude ? b. f définie sur I par f(x) = 1/2 ;
+  calculer ∫_{−1}^{1} f(x) dx. c. montrer que pour tout intervalle [c, d] de [−1, 1], 0 ≤ ∫_c^d f(x) dx ≤ 1. 2. soit f
+  constante sur [a, b]. a. quelle valeur donner à f pour que ∫_a^b f(x) dx = 1 ? b. montrer que dans ce cas
+  0 ≤ ∫_c^d f(x) dx ≤ 1, pour tout intervalle [c, d] de [a, b].
+- **Activité 2** (p.197) : un joueur lance une fléchette sur une cible circulaire de rayon 30 cm (il n'est pas
+  expérimenté, il atteint aléatoirement la cible) ; d = distance entre le centre et le point d'impact. 1. valeurs
+  possibles de d ? 2. on partage [0, 30] en 10 intervalles de même amplitude. a. amplitude de ces intervalles ?
+  b. d a-t-il plus de chances d'appartenir à un intervalle plutôt qu'à un autre ? c. probabilité que d appartienne à
+  [0, 30] ? [4, 5] ? [9, 10] ?
+- **Activité 3** (p.197) : un mobile M se déplace sur un cercle de centre O à partir d'un point A et s'arrête d'une
+  manière aléatoire ; on mesure l'angle α que fait [OA) avec [OM). P = probabilité uniforme sur [0, 2π]. Calculer
+  P(π/4 ≤ X ≤ π), P(π/4 ≤ X ≤ π/2) et P(0 ≤ X ≤ π). **(Figure p.197 : cercle de centre O, points A et M, angle α.)**
+- **Activité 4** (p.198) : la durée (en minutes) du trajet séparant un employé de son travail est une variable
+  aléatoire X à valeurs dans [30, 50] suivant la loi uniforme P. 1. calculer P(30 ≤ X ≤ 40) et P(30 ≤ X ≤ 43). 2. on
+  considère F : ℝ → [0, 1] définie par F(x) = 0 si x < 30, P(30 ≤ X ≤ x) si x ∈ [30, 50], 1 si x > 50 ; déterminer
+  l'expression de F et la représenter.
+
+**B/ II. La loi exponentielle** (p.198)
+
+- **Activité 1** (p.198) : 1. soit λ un réel strictement positif et f définie sur [0, +∞[ par f(t) = λe^{−λt}.
+  a. calculer ∫*0^x f(t) dt et lim*{x→+∞} ∫_0^x f(t) dt. b. montrer que pour tout intervalle [c, d] de [0, +∞[,
+  0 ≤ ∫_c^d f(x) dx ≤ 1.
+- **Activité 2** (p.199) : on s'intéresse à la durée de vie t (en semaines) d'un appareil électronique ; on suppose que
+  la probabilité que l'appareil soit encore fonctionnel au bout d'un temps t est une loi exponentielle de paramètre
+  0.5. Quelle est la probabilité que la durée de vie soit entre 100 et 200 semaines ?
+- **Activité 3** (p.199) : une variable aléatoire X suit une loi exponentielle de paramètre λ. 1. déterminer λ sachant
+  que P(X ≥ 10) = 0.5. 2. déterminer P(0 ≤ X ≤ 10), P(100 ≤ X ≤ 300) et P(X ≥ 300). 3. F : ℝ → [0, 1] définie par
+  F(x) = 0 si x < 0, P(0 ≤ X ≤ x) si x ∈ [0, +∞[. a. déterminer l'expression de F. b. calculer lim_{x→+∞} F(x).
+  c. représenter F.
+- **Activité 4** (p.200) : X suit une loi exponentielle de paramètre λ ; on donne la représentation de la fonction de
+  répartition de X. 1. déterminer une valeur approchée à 10⁻¹ près du paramètre λ. 2. calculer p(X ≥ 2). **(Figure
+  p.200 : courbe de la fonction de répartition passant par ≈ (1, 0.85).)**
+
+**Exercice résolu 1** (p.183–184) : « Un appareil, fabriqué en très grande série, peut présenter deux sortes de défauts
+désignés par D₁ et D₂. Dans un lot de 1000 appareils, on constate que 60 ont le défaut D₁, 50 ont le défaut D₂ et 20
+ont les deux défauts. Un client achète un appareil (au hasard). Déterminer les probabilités de A "les deux défauts",
+B "au moins un défaut", C "pas de défaut", D₁′ "défaut D₁ et pas D₂", D₂′ "défaut D₂ et pas D₁", D "un seul défaut". »
+Solution résumée : A = D₁ ∩ D₂ donne p(A) = 20/1000 = 0.02 ; B = D₁ ∪ D₂ donne
+p(B) = 60/1000 + 50/1000 − 20/1000 = 0.09 ; C = B̅ donne p(C) = 1 − 0.09 = 0.91 ;
+p(D₁′) = p(D₁) − p(D₁ ∩ D₂) = 0.04 ; p(D₂′) = 0.03 ; D = D₁′ ∪ D₂′ (incompatibles) donne p(D) = 0.07. **(Figure p.184 :
+diagramme de Venn D₁, D₂, D₁ ∩ D₂.)**
+
+**Exercice résolu 2** (p.184) : « On jette deux dés équilibrés de couleurs rouge et verte, faces numérotées de 1 à 6.
+
+1. déterminer l'univers E et son cardinal. 2. probabilité d'obtenir le même chiffre sur les deux dés. 3. probabilité
+   d'obtenir deux chiffres distincts. » Solution résumée : les dés sont discernables par leur couleur, donc
+   E = {(i, j) ; 1 ≤ i ≤ 6 et 1 ≤ j ≤ 6}, card(E) = 36 ; A = {(i, i), 1 ≤ i ≤ 6}, card A = 6, p(A) = 6/36 = 1/6 ;
+   p(A̅) = 1 − p(A) = 5/6.
+
+**Exercice résolu 3** (p.187–188) : « Un centre de santé se propose de dépister une maladie auprès d'une population de
+1000 individus. La proportion des personnes malades est de 10 %. Sur 100 personnes malades, 98 ont un test positif.
+Sur 100 personnes non malades, une seule a un test positif. On choisit une personne au hasard. M "la personne est
+malade", T "a un test positif". 1. p(T/M) et p(T̅/M). 2. p(T/M̅) et p(T̅/M̅). 3. à l'aide d'un arbre, p(M ∩ T),
+p(M ∩ T̅), p(M̅ ∩ T), p(M̅ ∩ T̅). 4. p(T) et p(M/T̅). » Solution résumée : p(T/M) = 0.98, p(T̅/M) = 0.02, p(T/M̅) = 0.01,
+p(T̅/M̅) = 0.99 ; l'arbre donne p(T ∩ M) = 0.098, p(T̅ ∩ M) = 0.002, p(T ∩ M̅) = 0.009, p(T̅ ∩ M̅) = 0.891 ;
+T = (T ∩ M) ∪ (T ∩ M̅) (incompatibles) donne p(T) = 0.107 ; p(M/T̅) = p(T̅ ∩ M)/(1 − p(T)) = 0.002/0.893 ≈ 0.0022.
+**(Figure p.187 : arbre pondéré p(M) = 0.1, p(M̅) = 0.9 et branches conditionnelles 0.98/0.02/0.01/0.99.)**
+
+**Exercice résolu 4** (p.189–191) : « Une urne U₁ contient sept boules noires et trois boules vertes ; une urne U₂
+contient deux boules noires et huit boules vertes. On effectue une suite de tirages en remettant à chaque fois la
+boule tirée dans l'urne, suivant la règle : si au (n−1)ᵉ tirage on a obtenu une boule noire, le nᵉ tirage s'effectue
+dans U₁ ; si une boule verte, dans U₂. 1. on choisit une urne au hasard et on fait le premier tirage ; déterminer la
+probabilité p₁ d'obtenir une boule noire. 2. pₙ = probabilité de tirer une boule noire au nᵉ tirage. a. calculer p₂.
+b. montrer que pₙ = (1/2)p_{n−1} + 1/5, n ≥ 2. 3.a. montrer que la suite (qₙ), qₙ = pₙ − 2/5 (n ≥ 1), est géométrique.
+b. déterminer pₙ en fonction de n et en déduire lim pₙ. » Solution résumée : avec p(U₁) = p(U₂) = 0.5, p(E₁/U₁) = 7/10,
+p(E₁/U₂) = 2/10 donne p₁ = 9/20 ; puis p₂ = (7/10)p₁ + (2/10)(1 − p₁) = (1/2)p₁ + 1/5 = 17/40 ; la relation générale
+pₙ = (1/2)p_{n−1} + 1/5 ; (qₙ) est géométrique de raison 0.5 et de premier terme q₁ = 1/20, d'où
+pₙ = 2/5 + (1/20)(0.5)^{n−1} et lim_{n→+∞} pₙ = 2/5.
+
+### Cours — Résultats / définitions / théorèmes à retenir (VERBATIM)
+
+> **Définition (dénombrement)** (p.181, encadré) — « Soit E = {a₁, a₂, ..., aₙ} un ensemble à n éléments et p un entier
+> naturel non nul. * Le nombre des p-uplets d'éléments de E est l'entier nᵖ. * Le nombre de n-uplets d'éléments de E
+> deux à deux distincts est l'entier n!. * Si 1 ≤ p ≤ n alors • le nombre des p-uplets d'éléments de E deux à deux
+> distincts est l'entier A_n^p = n!/(n − p)!, • le nombre de parties à p éléments de E est l'entier
+> C_n^p = n!/((n − p)!p!). (L'entier C_n^p est aussi noté (n parmi p) et on convient que C_n^0 = 1). »
+
+> **Définition (expérience aléatoire, univers)** (p.182, encadré) — « Une expérience aléatoire est une expérience dont
+> le résultat est soumis au hasard et est donc imprévisible. L'ensemble E des issues d'une expérience aléatoire est
+> appelé univers. Les éléments de E sont appelés événements élémentaires. Une partie A de E est appelée événement. »
+
+> **Définition (probabilité)** (p.182, encadré) — « Soit E l'univers d'une expérience aléatoire et 𝒫(E) l'ensemble des
+> événements de E. On appelle probabilité sur E, toute application p, de 𝒫(E) dans [0, 1] vérifiant les conditions
+> ci-dessous. • L'image p(E) de E est égale à 1. • L'image p(∅) de l'ensemble vide est égale à 0. • L'image p(A) d'un
+> événement A, est la somme des images des événements élémentaires de A, c'est-à-dire p(A) = Σ_{aᵢ ∈ A} p(aᵢ). »
+
+Vocabulaire (p.182) : « Le triplet (E, 𝒫(E), p) est appelé espace probabilisé fini. L'événement E est appelé certain.
+L'événement vide est appelé événement impossible. L'événement contraire d'un événement A est noté A̅. Deux événements
+sont dits incompatibles si leur intersection est vide. »
+
+> **Propriétés** (p.183, encadré) — « Soit (E, 𝒫(E), p) un espace probabilisé et A et B deux événements de E.
+> • p(A̅) = 1 − p(A). • p(A ∪ B) = p(A) + p(B) − p(A ∩ B). • Si A ∩ B = ∅ alors p(A ∪ B) = p(A) + p(B). • Si
+> A₁, A₂, ..., A_k sont des événements deux à deux incompatibles, alors
+> p(A₁ ∪ A₂ ∪ ... ∪ A_k) = p(A₁) + p(A₂) + ... + p(A_k). »
+
+> **Définition et théorème (équiprobabilité)** (p.184, encadré) — « Soit E l'univers d'une expérience aléatoire dans
+> une situation d'équiprobabilité et 𝒫(E) l'ensemble des parties de E. L'application p définie de 𝒫(E) dans [0, 1] par
+> p(a) = 1/card(E), pour tout événement élémentaire a de E est une probabilité sur E, appelée probabilité uniforme. »
+
+> **Propriété (probabilité uniforme)** (p.184, encadré) — « Si (E, 𝒫(E), p) est un espace probabilisé tel que la
+> probabilité p est uniforme, alors p(A) = card(A)/card(E), pour tout événement A de E. »
+
+> **Théorème (probabilité conditionnelle)** (p.185, encadré) — « Soit (E, 𝒫(E), p) un espace probabilisé et B un
+> événement tel que p(B) ≠ 0. L'application p_B de 𝒫(E) dans [0, 1], définie par p_B(A) = p(A ∩ B)/p(B), pour tout
+> événement A, est une probabilité sur E. »
+
+> **Définition (probabilité B-conditionnelle)** (p.186, encadré) — « Soit (E, 𝒫(E), p) un espace probabilisé et B un
+> événement tel que p(B) ≠ 0. L'application p_B ainsi définie s'appelle probabilité B-conditionnelle. Le réel p_B(A)
+> est noté p(A/B) (on lit "probabilité de A, sachant B"). »
+
+> **Définition (événements indépendants)** (p.188, encadré) — « On dit que deux événements A et B sont indépendants
+> lorsque p(A ∩ B) = p(A) × p(B). Dans le cas où p(B) ≠ 0, la réalisation de B n'influence pas celle de A, c'est-à-dire
+> p(A/B) = p(A). »
+
+> **Définition (partition)** (p.189, encadré) — « Soit E un ensemble fini, les parties B₁, B₂, ..., Bₙ forment une
+> partition de E lorsqu'ils sont deux à deux disjoints et leur réunion est E. »
+
+> **Théorème (formule des probabilités totales)** (p.189, encadré) — « Soit (E, 𝒫(E), p) un espace probabilisé,
+> B₁, B₂, ..., Bₙ des événements formant une partition de E tels que pour tout i, p(Bᵢ) ≠ 0. Alors pour tout événement
+> A, p(A) = Σ_{i=1}^{n} p(A ∩ Bᵢ) = Σ_{i=1}^{n} p(Bᵢ)·p_{Bᵢ}(A). » **(Figure p.189 : partition B₁, B₂, B₃, B₄ de E
+> et événement A.)**
+
+> **Définition (aléa numérique / variable aléatoire)** (p.191, encadré) — « Soit (E, 𝒫(E), p) un espace probabilisé.
+> On appelle aléa numérique ou variable aléatoire toute application X : E → ℝ. » Notation (p.191) : « L'événement
+> {a ∈ E ; X(a) = xᵢ} est noté (X = xᵢ). L'ensemble X(E) désigne l'ensemble des valeurs prises par X. »
+
+> **Définition (loi de probabilité)** (p.192, encadré) — « Soit (E, 𝒫(E), p) un espace probabilisé et X une variable
+> aléatoire. On appelle loi de probabilité de X ou distribution de X, l'application P_X : X(E) → [0, 1],
+> xᵢ ↦ p(X = xᵢ). »
+
+> **Conséquences** (p.192, encadré) — « Soit (E, 𝒫(E), p) un espace probabilisé. Si X est une variable aléatoire sur E
+> telle que X(E) = {x₁, x₂, ..., xₙ}, alors Σ_{i=1}^{n} p(X = xᵢ) = 1. »
+
+> **Définition (espérance)** (p.192, encadré) — « Soit (E, 𝒫(E), p) un espace probabilisé et X une variable aléatoire
+> sur E telle que X(E) = {x₁, x₂, ..., xₙ}. On appelle espérance mathématique ou moyenne de X le nombre
+> E(X) = Σ_{i=1}^{n} xᵢ pᵢ. »
+
+> **Théorème (linéarité de l'espérance)** (p.193, encadré) — « Soit (E, 𝒫(E), p) un espace probabilisé et X, Y deux
+> variables aléatoires sur E. Alors • Pour tout réel α, E(αX) = α E(X). • E(X + Y) = E(X) + E(Y). »
+
+> **Définition (variance, écart-type)** (p.193, encadré) — « Soit (E, 𝒫(E), p) un espace probabilisé et X une variable
+> aléatoire sur E. On appelle variance de X le nombre V(X) = E((X − E(X))²). On appelle écart-type de X le nombre
+> σ(X) = √(V(X)). »
+
+> **Propriété (variance)** (p.193, encadré) — « Soit (E, 𝒫(E), p) un espace probabilisé. Si X est une variable
+> aléatoire sur E alors V(X) = E(X²) − (E(X))². »
+
+> **Définition (fonction de répartition)** (p.194, encadré) — « Soit (E, 𝒫(E), p) un espace probabilisé et X une
+> variable aléatoire sur E. On appelle fonction de répartition de X, l'application définie de ℝ dans [0, 1] par
+> F : x ↦ p(X ≤ x). »
+
+> **Théorème et définition (loi binomiale)** (p.195, encadré) — « Soit une expérience aléatoire constituée de n
+> épreuves identiques, indépendantes et n'ayant que deux issues : succès ou échec. Soit p la probabilité de
+> l'événement succès. On considère la variable aléatoire X associant à cette expérience le nombre de succès réalisés
+> au cours des n épreuves. Alors la loi de probabilité de X est donnée par p(X = k) = C_n^k pᵏ (1 − p)^{n−k},
+> k ∈ {0, 1, ..., n}. On dit que X suit une loi binomiale de paramètre (n, p). » Notation (p.195) : « La loi binomiale
+> de paramètre (n, p) est notée B(n, p). Lorsque n = 1, on dit que X suit une loi de Bernoulli. »
+
+> **Espérance et variance (loi binomiale)** (p.196, encadré) — « Soit X une variable aléatoire suivant à une loi
+> binomiale B(n, p). On a E(X) = np, V(X) = np(1 − p) et σ(X) = √(np(1 − p)). »
+
+> **Définition (densité de la loi uniforme)** (p.196, encadré) — « Soit un intervalle [a, b] (a < b). La fonction f
+> définie sur [a, b] par f(x) = 1/(b − a) est appelée densité de la loi de probabilité uniforme sur [a, b]. On appelle
+> probabilité uniforme sur [a, b] l'application qui à tout intervalle [c, d] inclus dans [a, b] associe le réel
+> P([c, d]) = ∫_c^d f(x) dx. »
+
+> **Conséquences (loi uniforme)** (p.197, encadré) — « Pour tout réel c de [a, b], P({c}) = ∫_c^c f(x) dx = 0. Si on
+> désigne par [c, d]‾ le complémentaire de [c, d] dans [a, b], alors P([c, d]‾) = 1 − P([c, d]). » **(Figure p.197 :
+> aire de la densité 1/(b − a) sur [c, d].)**
+
+> **Définition (loi uniforme)** (p.197, encadré) — « On dit qu'une variable aléatoire X à valeurs dans un intervalle
+> [a, b] suit la loi de probabilité uniforme P si P(c ≤ X ≤ d) = (d − c)/(b − a). »
+
+> **Définition (fonction de répartition, loi uniforme)** (p.198, encadré) — « Soit X une variable aléatoire qui suit la
+> loi de probabilité uniforme P sur l'intervalle [a, b]. On appelle fonction de répartition de X, l'application
+> F : ℝ → [0, 1] définie par F(x) = 0 si x < a, P(a ≤ X ≤ x) si x ∈ [a, b], 1 si x > b. » **(Figure p.198 : rampe
+> linéaire de 0 à 1 entre a et b.)**
+
+> **Définition (densité de la loi exponentielle)** (p.198, encadré) — « Soit λ un réel strictement positif. La fonction
+> f définie sur [0, +∞[ par f(t) = λe^{−λt} est appelée densité de loi exponentielle. On appelle loi de probabilité
+> exponentielle de paramètre λ, l'application P qui • à tout intervalle [c, d] inclus dans [0, +∞[ associe le réel
+> P([c, d]) = ∫_c^d λe^{−λx} dx. • à tout intervalle [c, +∞[ inclus dans [0, +∞[ associe le réel
+> P([c, +∞[) = e^{−λc}. »
+
+> **Conséquences (loi exponentielle)** (p.199, encadré) — « 1. Pour tout réel c > 0, P({c}) = ∫_c^c f(x) dx = 0. 2. Pour tout réel c > 0, P([0, c]) = ∫_0^c f(x) dx = 1 − e^{−λc}. 3. P([c, +∞[) = 1 − P([0, c]). »
+
+> **Définition (loi exponentielle)** (p.199, encadré) — « On dit qu'une variable aléatoire X suit la loi exponentielle
+> de paramètre λ, si P(c ≤ X ≤ d) = ∫_c^d λe^{−λx} dx = e^{−λc} − e^{−λd} et P(X ≥ c) = e^{−λc}. »
+
+> **Définition (fonction de répartition, loi exponentielle)** (p.200, encadré) — « Soit X une variable aléatoire qui
+> suit la loi de probabilité exponentielle P de paramètre λ. On appelle fonction de répartition de X, l'application
+> F : ℝ → [0, 1] définie par F(x) = 0 si x < 0, P(0 ≤ X ≤ x) si x ∈ [0, +∞[. » **(Figure p.200 : courbe concave
+> croissant de 0 vers l'asymptote 1.)**
+
+### QCM (p.201) — « Cocher la réponse exacte. » (réponses non fournies)
+
+1. On représente une expérience aléatoire par l'arbre de probabilité ci-contre (branches : A avec p = 0.9 puis B/A avec
+   0.1 et B̅/A avec 0.9 ; A̅ avec p = 0.1 puis A̅ ∩ B avec 0.9 et A̅ ∩ B̅ avec 0.1). a. La probabilité de B sachant A
+   est égale à (☐ 0.9 / ☐ 0.1 / ☐ 0.09). b. La probabilité de l'événement A̅ ∩ B̅ est égale à (☐ 0.01 / ☐ 0.1 /
+   ☐ 0.2). c. La probabilité de l'événement A sachant B est égale à (☐ 0.09 / ☐ 0.5 / ☐ 0.9). **(Figure p.201 : arbre
+   de probabilité à deux niveaux.)**
+2. Si X est une variable aléatoire qui suit la loi exponentielle de paramètre 0.1 alors l'arrondi au centième de
+   p(X > 10) est (☐ 0.63 / ☐ 0.37 / ☐ 0.91).
+3. Une variable aléatoire X suit la loi binomiale de paramètre 3 et 1/3. La probabilité de l'événement X > 2 est
+   (☐ (1/3)³ / ☐ (2/3)³ / ☐ C₃² (1/3)(2/3)²).
+
+### Vrai ou faux (p.201) — « Répondre par vrai ou faux en justifiant la réponse. » (réponses non fournies)
+
+1. Si deux événements A et B sont indépendants alors p(A ∪ B) = p(A) + p(B).
+2. Si A ∪ B est l'événement certain alors pour tout événement C, p(C) = p(A ∩ C) + p(B ∩ C).
+3. Dans une expérience aléatoire, la probabilité d'un événement A est égale à 0.2. On répète huit fois cette
+   expérience de façon indépendante. La probabilité que l'événement A se réalise au moins une fois est égale à
+   1 − (0.8)⁸.
+4. Les situations de tirages sans remise obéissent à une loi binomiale.
+5. La probabilité de choisir au hasard un réel entre 0 et 0.0000001 est égale à 0.
+
+### Exercices et problèmes (p.202–207) — 31 exercices
+
+- **Ex. 1** (p.202) : dans une urne, une boule est numérotée 1, deux boules numérotées 2, trois numérotées 3, quatre
+  numérotées 4, ... et enfin neuf boules numérotées 9. 1. combien de boules dans l'urne ? 2. on tire deux boules
+  simultanément et au hasard. a. probabilité que les deux numéros soient pairs ? b. que la somme des deux numéros soit
+  ≥ 3 ? c. que la somme soit ≤ 15 ? 3. on tire quatre boules successivement, sans remise, et on les aligne dans l'ordre
+  ; la probabilité d'obtenir 1983 est-elle la même que celle d'obtenir 1389 ? 4. même question avec remise.
+- **Ex. 2** (p.202) : un élève effectue un sondage dans sa classe (40 élèves) sur les questions « Aimez-vous les
+  mathématiques ? », « la philosophie ? », « le sport ? ». La 1ʳᵉ a obtenu 31 « oui », la 2ᵉ un « oui », la 3ᵉ 9 « oui ».
+  Enquête complémentaire : 1 élève aime seulement la philosophie, 3 seulement le sport, 25 seulement les mathématiques.
+  Probabilité qu'un élève interrogé au hasard : 1. aime les trois matières ? 2. aime les maths et n'aime pas le sport ? 3. n'aime pas la philosophie et les mathématiques ? 4. n'aime aucune matière ? 5. aime au moins une matière ?
+- **Ex. 3** (p.202) : le programme d'une épreuve d'examen comporte 100 questions ; un candidat n'en étudie que 80. Lors
+  de l'examen, le candidat tire au sort trois questions ; probabilité qu'il ait étudié 1. les trois questions ? 2. deux
+  questions seulement ? 3. une seule question ? 4. aucune des trois ? 5. au moins une des trois ?
+- **Ex. 4** (p.202) : lors d'un concours, la 1ʳᵉ épreuve est de mathématiques, la 2ᵉ de sciences physiques. Un élève a
+  80 % de chance de réussir la 1ʳᵉ ; s'il la réussit il a 75 % de réussir la 2ᵉ ; sinon 40 %. M « réussit la 1ʳᵉ »,
+  S « réussit la 2ᵉ ». Déterminer p(M), p(S/M), p(S/M̅) et p(S).
+- **Ex. 5** (p.202) : le personnel d'une grande entreprise est réparti en ingénieurs, techniciens et administratifs.
+  10 % sont ingénieurs, 80 % techniciens. 80 % des employés sont des femmes, 60 % des ingénieurs sont des hommes, 90 %
+  des techniciens sont des femmes. On interroge un employé au hasard. 1.a. probabilité d'interroger une femme ingénieur
+  ? b. un homme technicien ? c. une femme administrative ? 2. l'employé interrogé est une femme : a. probabilité
+  qu'elle soit technicienne ? b. ingénieur ? 3. l'employé interrogé est un ingénieur : a. probabilité que ce soit une
+  femme ? b. un homme ?
+- **Ex. 6** (p.202–203) : un magasin vend deux types de téléphones portables (marque A et marque B) et propose deux
+  types d'abonnement (I et II) ; enquête sur 2000 clients ayant acheté un seul téléphone et un seul abonnement. Sur
+  2000, 1200 ont acheté le modèle A, 960 l'abonnement I. S « avoir acheté le modèle A », C « avoir choisi l'abonnement
+  I ». 1. probabilité qu'il ait acheté A ? 2. parmi les clients A, 32 % ont choisi I : a. probabilité modèle A et
+  abonnement I ? b. probabilité modèle B et abonnement II ?
+- **Ex. 7** (p.203) : une urne contient huit jetons (trois noirs n° 1, trois noirs n° 2, un vert n° 1, un vert n° 2). On
+  extrait deux jetons selon le lancer d'une pièce truquée : si pile, deux jetons simultanément ; si face, deux jetons
+  successivement sans remise. La probabilité d'obtenir pile est 7/15. P « obtenir pile », F « obtenir face », A « même
+  numéro ou même couleur », B « même numéro et même couleur », C « même couleur », D « même numéro ». 1. déterminer
+  p(C/P), p(D/P), p(B/P) et p(A/P). 2. déterminer p(A/F) et en déduire p(A).
+- **Ex. 8** (p.203) : deux joueurs X et Y s'entraînent au tir à la cible ; X est expérimenté et atteint sa cible 9 fois
+  sur 10, Y est débutant et l'atteint 4 fois sur 10. X laisse Y s'entraîner et n'effectue qu'un tir sur trois. Un des
+  joueurs tire et la cible est atteinte ; probabilité que ce soit Y ?
+- **Ex. 9** (p.203) : un joueur est en présence de deux urnes A et B. Urne A : trois boules blanches et cinq rouges ;
+  urne B : sept blanches et cinq rouges. Le joueur lance deux dés non pipés de couleurs différentes une fois ; si le
+  total ≤ 7, il choisit A ; si > 7, il choisit B. Il tire alors successivement quatre boules sans remise. 1. probabilité
+  d'obtenir 2 blanches et 2 rouges ? 2. probabilité de n'obtenir que des rouges ? 3. il n'obtient que des rouges ;
+  probabilité que ce soit l'urne B qui ait été choisie ?
+- **Ex. 10** (p.203) : deux amis se rendent indépendamment sur un lieu de vacances ; jours d'arrivée possibles numérotés
+  de 1 à 8 ; chacun choisit son jour au hasard, reste trois jours à attendre l'autre puis repart ; séjours au cours des
+  journées 1 à 10. 1. probabilité qu'ils arrivent le même jour ? 2. avec un jour d'écart ? 3. qu'ils puissent se
+  rencontrer ? 4. ils se sont rencontrés ; probabilité qu'ils aient pu passer ensemble au moins deux jours ?
+- **Ex. 11** (p.203–204) : un individu réduisant sa consommation de cigarettes applique : C₁ s'il reste un jour sans
+  fumer, la probabilité qu'il fume le lendemain est 0.2 ; C₂ s'il cède et fume un jour, la probabilité qu'il fume le
+  lendemain est 0.7. Fₙ « l'individu fume le nᵉ jour », pₙ = probabilité de Fₙ. 1. à l'aide d'un arbre, déterminer
+  p(F_{n+1}/Fₙ), p(F_{n+1}‾/Fₙ), p(F_{n+1}/Fₙ‾), p(F_{n+1}‾/Fₙ‾). 2. en déduire que pour tout n ≥ 1,
+  p_{n+1} = 0.5 pₙ + 0.2. 3. soit (aₙ), aₙ = pₙ − 0.4, n ≥ 1. a. montrer que (aₙ) est géométrique (raison et limite).
+  b. en déduire lim pₙ ; interpréter.
+- **Ex. 12** (p.204) : des personnes P₁, P₂, ..., Pₙ, ... se transmettent une information dans cet ordre ; chaque
+  personne la transmet fidèlement avec probabilité 0.9 ou la change en son contraire avec probabilité 0.1 ; la 1ʳᵉ
+  possède l'information non déformée. Aₙ « la nᵉ personne possède l'information non déformée », pₙ sa probabilité.
+  1. calculer p₁ et p₂. 2. calculer p₃ par un arbre. 3. montrer que p_{n+1} = 0.8pₙ + 0.1. 4.a. soit (qₙ),
+     qₙ = pₙ − 1/2, n ≥ 1 ; montrer que (qₙ) est géométrique. b. exprimer pₙ en fonction de n. 5. probabilité que la 20ᵉ
+     personne possède l'information non déformée ? 6. calculer lim pₙ.
+- **Ex. 13** (p.204) : un dé cubique a trois faces portant le n° 1, deux faces le n° 2 et une face le n° 3. On lance le
+  dé deux fois ; X = somme des nombres obtenus. 1. déterminer la loi de X. 2. calculer E(X) et V(X). 3. déterminer la
+  fonction de répartition F de X et tracer sa courbe.
+- **Ex. 14** (p.204) : un sac contient 10 jetons (quatre rouges et six blancs) ; on extrait les jetons un à un sans
+  remise ; X = rang d'apparition du premier jeton rouge. Trouver la loi de X, son espérance et sa variance.
+- **Ex. 15** (p.204) : on lance deux dés identiques bien équilibrés ; X = plus grand des nombres obtenus, Y = plus petit.
+  1. déterminer les lois de X et Y. 2. calculer l'espérance de X et celle de Y, ainsi que leurs variances.
+- **Ex. 16** (p.204) : on jette 20 fois une pièce de monnaie. 1. nombre moyen de faces obtenus ? 2. probabilité d'obtenir
+  un nombre de faces égal à 10 ? 3. compris entre 9 et 11 ? 4. entre 8 et 12 ? 5. entre 7 et 13 ?
+- **Ex. 17** (p.204) : dans une production d'ampoules, la probabilité qu'une ampoule soit défectueuse est 0.1. Dans un
+  lot de 400 ampoules, déterminer la moyenne et l'écart-type de la distribution des pièces défectueuses.
+- **Ex. 18** (p.204–205) : on dispose de trois tétraèdres parfaitement équilibrés ; chacun a une face peinte en bleu,
+  une en jaune et deux en rouge. On lance simultanément les trois tétraèdres. 1. probabilité qu'aucune face rouge ne
+  soit visible ? 2. qu'aucune face bleue ne soit visible ? 3. A « les six faces rouges sont visibles » ; calculer p(A). 4. on répète n fois l'expérience ; calculer la probabilité pₙ que A soit réalisé une et une seule fois.
+- **Ex. 19** (p.205) : 1. on lance 2 dés non pipés ; A₂ « le total des numéros amenés est pair » ; calculer p(A₂). 2. on
+  lance 3 dés non pipés ; A₃ « le total est pair » ; calculer p(A₃). 3. on lance n dés non pipés ; Aₙ « le total est
+  pair » ; montrer par récurrence sur n que la suite (p(Aₙ)) est constante.
+- **Ex. 20** (p.205) : un gène peut avoir deux états A « allèle dominant » ou a « allèle récessif » ; génotypes « AA »,
+  « Aa », « aa » ; un enfant récupère un allèle de chacun de ses deux parents. 1. un parent « AA » et l'autre « Aa » :
+  a. probabilité que l'enfant soit « AA » ? b. « Aa » ? 2. les deux parents « Aa » : a. « AA » ? b. « Aa » ? c. « aa » ? 3. pₙ, qₙ, rₙ = probabilités qu'un individu de la nᵉ génération soit « AA », « Aa » ou « aa ». À l'aide d'un arbre,
+  montrer a. p_{n+1} = (pₙ + qₙ/2)². b. r_{n+1} = (qₙ/2 + rₙ)². c. q_{n+1} = 1 − (pₙ + qₙ/2)² − (qₙ/2 + rₙ)². 4. soit
+  α = p₀ − r₀. a. montrer que pour tout n, pₙ − rₙ = α. b. montrer que 2rₙ + qₙ = 1 − α. 5. en déduire que les suites
+  (pₙ), (qₙ) et (rₙ) sont constantes.
+- **Ex. 21** (p.205) : une publicité annonce « Un billet sur deux est gagnant, achetez deux billets » ; on suppose
+  qu'exactement un billet sur deux est gagnant. 1. cent billets en vente, un promeneur en achète deux ; probabilité
+  qu'il ait au moins un billet gagnant ? 2. 2n billets en vente, il en achète deux ; pₙ = probabilité d'au moins un
+  gagnant. a. montrer que pₙ = (3n − 1)/(4n − 2). b. calculer p₁ et expliquer. c. montrer que pour tout n non nul,
+  3/4 ≤ pₙ ≤ 1. 3. chaque jour 2n billets en vente ; un promeneur revient trois jours acheter deux billets. a. qₙ =
+  probabilité qu'il obtienne au cours des 3 jours au moins un billet gagnant ? b. étudier la limite de (qₙ).
+- **Ex. 22** (p.205) : dans une loterie, chaque billet a une chance sur 100 d'être gagnant. 1. on achète n billets, A
+  « avoir au moins un billet gagnant » ; exprimer p(A) en fonction de n. 2. combien de billets faut-il acheter pour que
+  p(A) > 0.5 ?
+- **Ex. 23** (p.206) : un sac contient n boules rouges et 2n boules noires indiscernables, chacune ayant la même
+  probabilité d'être tirée ; on tire simultanément trois boules. 1. pₙ = probabilité d'une seule rouge ; en déduire que
+  (pₙ) possède une limite finie p. 2. qₙ = probabilité d'au moins une rouge ; en déduire que (qₙ) possède une limite
+  finie q. 3. on effectue trois tirages successifs d'une seule boule avec remise. a. montrer que la probabilité d'une
+  seule boule rouge est p. b. la probabilité d'au moins une boule rouge est q.
+- **Ex. 24** (p.206) : un lot de n pièces contient une pièce défectueuse. 1. une machine teste les pièces une par une
+  jusqu'à détecter la défectueuse ; elle effectue le nᵉ test dans le cas où il ne reste que la pièce défectueuse ; X =
+  nombre de tests effectués. a. probabilité d'un seul test ? b. exactement deux tests ? c. loi de X. d. espérance et
+  variance de X. (On rappelle Σ_{k=1}^{n} k² = n(n + 1)(2n + 1)/6.) 2. les tests sont effectués par un homme qui, s'il
+  ne reste que deux pièces, fait un test supplémentaire ; Y = nombre de tests. a. un seul test ? b. exactement n − 1
+  tests ? c. loi de Y. d. espérance et variance de Y.
+- **Ex. 25** (p.206) : un joueur joue à pile ou face : il gagne dès que le nombre de piles dépasse de deux le nombre de
+  faces ; il perd dès que le nombre de faces dépasse de deux le nombre de piles. La pièce amène pile avec probabilité
+  5/12 et face avec 7/12. 1. montrer que le joueur doit jouer un nombre pair de lancers pour gagner. 2. probabilité de
+  gagner au plus au bout de 2 lancers. 3. au plus 4 lancers. 4. au plus n lancers. 5. au plus 20 lancers.
+- **Ex. 26** (p.206) : on choisit un nombre x au hasard dans l'intervalle [0, 1]. 1. probabilité que x soit égal à 0.1 ?
+  0.0005 ? 0.99999 ? 2. probabilité que x appartienne à [0.5, 1] ? 3. à [0.001, 0.002] ? 4. que x soit plus petit que
+  0.99999 ? 5. plus grand que 0.99999 ?
+- **Ex. 27** (p.206–207) : dans la journée, un bus passe toutes les 20 minutes à une station ; X = temps d'attente d'une
+  personne ; on suppose que X suit une loi uniforme sur [0, 20]. 1. probabilité d'attendre entre 2 et 5 minutes ? 2.
+  entre 10 et 13 minutes ? 3. exactement 3 minutes ? 4. moins de 3 minutes ? 5. plus de 3 minutes ?
+- **Ex. 28** (p.207) : la durée de vie X, exprimée en années d'une machine, suit une loi exponentielle de paramètre 0.2.
+  1.a. calculer p(X = 10). b. p(X ≤ 10). c. p(X ≥ 10). 2. déterminer le réel c tel que P(X ≤ c) = P(X ≥ c).
+- **Ex. 29** (p.207) : la durée de vie (en années) d'un robot, jusqu'à ce que survienne la première panne, suit une loi
+  exponentielle de paramètre 0.0005. 1. probabilité qu'un robot ait une durée de vie comprise entre 5 et 8 ans ? 2.
+  qu'un robot dépasse 5 ans ? 3. qu'un robot dépasse 8 ans ?
+- **Ex. 30** (p.207) : une machine fabrique des cylindres ; on mesure l'écart X, en dixièmes de millimètres, entre le
+  diamètre des cylindres et la valeur de réglage ; X suit une loi exponentielle de paramètre 1.5. 1. calculer à 10⁻³
+  près P(X ≤ 1), P(X ≥ 2) et P(1 ≤ X ≤ 2). Si l'écart < 1, le cylindre est accepté ; entre 1 et 2, une rectification
+  permet de l'accepter dans 80 % des cas ; > 2, il est refusé. 2. on prélève au hasard un cylindre. a. probabilité
+  qu'il soit accepté ? b. il est accepté ; probabilité qu'il ait subi une rectification ?
+- **Ex. 31** (p.207) : la durée de vie d'une machine (en années), jusqu'à la première panne, est une variable aléatoire
+  X suivant une loi exponentielle de paramètre λ. 1. déterminer λ à 10⁻¹ près pour que P(X > 6) = 0.3 ; dans la suite on
+  prendra λ = 0.2. 2. à quel instant t, à un mois près, la probabilité qu'une machine tombe en panne pour la première
+  fois est-elle de 0.5 ? 3. probabilité qu'une machine n'ait pas de panne au cours des deux premières années ? 4. lot
+  de cinq machines fonctionnant indépendamment ; probabilité qu'au moins une n'ait pas eu de panne au cours des deux
+  premières années ?
+
+### Bornes de scope observées (chapitre 18)
+
+- ✅ INCLUS : **Dénombrement** (p-uplets nᵖ, permutations n!, arrangements A_n^p = n!/(n − p)!, combinaisons
+  C_n^p = n!/((n − p)!p!) avec C_n^0 = 1, formule de Pascal C_n^p = C_{n−2}^{p−2} + 2C_{n−2}^{p−1} + C_{n−2}^p, somme
+  Σ C_n^k = 2ⁿ) ; **probabilité sur un ensemble fini** (univers, événement, événement élémentaire/certain/impossible,
+  événements contraires et incompatibles, axiomes p(E) = 1, p(∅) = 0, additivité ; propriétés p(A̅) = 1 − p(A),
+  p(A ∪ B) = p(A) + p(B) − p(A ∩ B)) ; **équiprobabilité** (probabilité uniforme p(A) = card A / card E) ; **probabilité
+  conditionnelle** (p_B(A) = p(A ∩ B)/p(B), notation p(A/B), arbre pondéré) ; **événements indépendants**
+  (p(A ∩ B) = p(A)p(B), p(A/B) = p(A)) ; **partition et formule des probabilités totales**
+  (p(A) = Σ p(Bᵢ)p_{Bᵢ}(A)) — et implicitement les probabilités des causes (Bayes) via les exercices résolus ;
+  **variables aléatoires** (aléa numérique X : E → ℝ, événement (X = xᵢ), loi de probabilité, Σ p(X = xᵢ) = 1) ;
+  **espérance et variance** (E(X) = Σ xᵢpᵢ, linéarité E(αX) = αE(X), E(X + Y) = E(X) + E(Y), V(X) = E((X − E(X))²) =
+  E(X²) − (E(X))², écart-type σ = √V) ; **fonction de répartition** (F : x ↦ p(X ≤ x), en escalier pour une v.a.
+  discrète) ; **loi binomiale** B(n, p) (p(X = k) = C_n^k pᵏ(1 − p)^{n−k}, loi de Bernoulli n = 1, E(X) = np,
+  V(X) = np(1 − p)) ; **lois continues** — **loi uniforme** sur [a, b] (densité 1/(b − a), P(c ≤ X ≤ d) = (d − c)/(b − a),
+  fonction de répartition en rampe) et **loi exponentielle** de paramètre λ (densité λe^{−λt}, P(0 ≤ X ≤ c) = 1 − e^{−λc},
+  P(X ≥ c) = e^{−λc}, fonction de répartition). Le chapitre réinvestit le **calcul intégral** (chap. 6) pour les lois
+  continues et les **suites** (arithmético-géométriques, récurrence, limites) dans de nombreux exercices de modélisation
+  probabiliste (chaînes à deux états : ex. 11, 12, 20).
+- ⛔ NON traité / supposé acquis : l'**intégration** et le **calcul de primitives** (établis aux chapitres 5–6, ici
+  réutilisés pour les densités continues) ; les **suites géométriques et arithmético-géométriques** et le **raisonnement
+  par récurrence** (chap. 2, ici réinvestis) ; la **loi de Poisson**, la **loi normale** et les **théorèmes limites**
+  (loi des grands nombres, théorème central limite) ne sont **pas** abordés ; l'**espérance et la variance d'une loi
+  continue** (uniforme/exponentielle) ne sont pas définies (seules les probabilités d'intervalles le sont) ; la
+  **formule de Bayes** n'est pas énoncée comme théorème (les probabilités des causes sont calculées cas par cas via
+  l'arbre et la formule des probabilités totales) ; l'**indépendance mutuelle** de plus de deux événements n'est pas
+  formalisée. Le chapitre suppose acquises la **manipulation des ensembles** (réunion, intersection, complémentaire) et
+  la **combinatoire** de base ; il clôt le programme de probabilités du bac Math (chap. 18) avant les statistiques
+  (chap. 19).
+
+## 2.19 Chapitre 19 — Statistiques (manuel 222446, p.208–230)
+
+**Page de garde (p.208)** — Titre de couverture : « Statistiques », Chapitre 10 (numérotation interne du tome 2 ;
+c'est le chapitre 19 dans la numérotation content ; le bandeau courant écrit « Statistiques »). Encart historique
+(titre : « Huygens (1669) : Espérance de vie. ») : « "Par les observations faites à Londres avec beaucoup d'exactitude.
+De 100 personnes conçues, il en meurt […]. Donc, de 100 personnes, ceux qui atteignent l'âge de 6 ans sont 64, de
+16 ans sont 40, de 26 ans sont 25, de 36 ans sont 16, de 46 ans sont 10, de 56 ans sont 6, de 66 ans sont 3, de 76 ans
+est 1 et de 86 ans est 0. Qui gagerait qu'un enfant conçu virait jusqu'à 6 ans, peut mettre 64 contre 36 ou 16 contre 9.
+Et qui gagerait […]. De 100 enfants conçus, il en meurt 36 avant l'age de 6 ans, lesquels on peut dire ont vécu l'un
+portant l'autre 3 ans. Des 64 restants, il en meurt 24 avant l'âge de 16 ans […]." Une correspondance de Huygens sur la
+statistique démographique. Huygens aboutit au total 1822 en multipliant 36 par 3, 24 par 11, jusqu'à 1 par 81 et en
+ajoutant tous les produits ainsi obtenus puis calcul le quotient de 1822 par 100 et déclare :" Et le quotient qui est
+ici 18 ans et environ 2 mois et demi, ce n'est pas à dire qu'il soit apparent qu'il vivra si longtemps, car il est
+beaucoup plus apparent qu'il mourra avant ces termes." » Référence : « (J Dhombres et al, Mathématiques au fil des âges,
+1987). » Le chapitre porte sur les **séries statistiques doubles** et est structuré en trois grandes parties
+**I. Distributions marginales**, **II. Covariance d'une série statistique double** (**II.1 Cas d'un échantillon
+simple**, **II.2 Cas d'un échantillon groupé**) et **III. Ajustement d'une série statistique double** (**III.1 Méthode
+de Mayer**, **III.2 Méthode d'ajustement par les moindres carrés**, **III.3 Coefficient de corrélation linéaire**,
+**III.4 Exemple d'ajustement non affine**), ponctuées d'activités, d'encadrés (définitions / propriétés / théorème),
+d'exercices résolus et de rubriques « Utilisation d'une calculatrice », suivies d'une rubrique « Exercices et problèmes ».
+**Ce chapitre comporte 3 « exercices résolus »** intégrés au cours (p.213–215, p.222–223 et un « Activité » terminal
+p.224). Texte liminaire (p.209) : « Il arrive que l'on soit amené à effectuer deux séries de mesure X et Y sur un même
+échantillon composé de n individus et que l'on s'interroge sur les relations possibles entre ces mesures. On dit alors
+que l'on a une série statistique double (X, Y). » Notation du manuel : X̄, Ȳ pour les moyennes marginales, σ_X, σ_Y pour
+les écart-types, V(X) pour la variance, cov(X, Y) pour la covariance, ρ_XY pour le coefficient de corrélation linéaire.
+
+### Cours — Activités
+
+**I. Distributions marginales** (p.209)
+
+- **Activité 1** (p.209) : on a relevé dans un tableau à double entrée l'intensité de travail X (en kilojoules par
+  minute ; valeurs 9.6, 12.8, 18.4, 31.2, 36.8, 47.2, 49.6, 56.8) et la fréquence cardiaque Y (valeurs 70, 86, 90, 104)
+  de 100 personnes ; effectifs marginaux Total X = (9, 13, 30, 21, 13, 6, 4, 4) et Total Y = (6, 21, 28, 45) ; le nombre
+  12 est encadré dans le tableau à la case (Y = 104, X = 18.4). 1.a. quelle est la signification du nombre 12 encadré
+  dans le tableau ? b. nombre d'individus dont la fréquence cardiaque est supérieure à 100 ? c. nombre d'individus qui
+  ont fourni un travail d'intensité supérieure à 49 ? d. nombre d'individus ayant un travail d'intensité supérieure à 49
+  et une fréquence cardiaque supérieure à 100 ? 2. déterminer la distribution marginale de X, puis calculer la moyenne X̄
+  et l'écart-type σ_X. 3. déterminer la distribution marginale de Y, puis calculer la moyenne Ȳ et l'écart-type σ_Y.
+  **(Tableau p.209 : série double à double entrée X × Y, 8 × 4 cases + totaux.)**
+- **Activité 2** (p.210) : on a recueilli dans un tableau la distance parcourue X (en mille km) avant la première grande
+  panne et la puissance Y (en chevaux) de 20 voitures (couples (42, 4), (55, 5), (57, 6), (81, 6), (64, 4), (70, 7),
+  (75, 6), (58, 5), (61, 4), (65, 5), (48, 4), (58, 4), (65, 4), (72, 6), (75, 4), (80, 7), (65, 7), (73, 5), (43, 6),
+  (61, 5)). 1.a. quelles sont les valeurs prises par Y ? b. calculer la moyenne Ȳ et l'écart-type σ_Y. 2. compléter le
+  tableau donnant la répartition des 20 voitures suivant la distance parcourue (classes : « Moins de 50 », [50, 60[,
+  [60, 70[, « 70 et plus »). 3. déterminer le pourcentage des voitures ayant parcouru une distance inférieure à 60 000 km
+  et qui ont une puissance supérieure ou égale à 6 chevaux. **(Deux tableaux p.210.)**
+- **Activité 3** (p.211) : on a reproduit dans un tableau à double entrée les effectifs d'individus d'un échantillon
+  selon leur poids X (en kg ; classes [40, 45[, [45, 50[, [50, 55[, [55, 60[) et leur taille Y (en cm ; classes
+  [120, 155[, [155, 160[, [160, 165[, [165, 170[), avec effectifs et fréquences marginaux (effectifs selon la taille :
+  30, 25, 23, 22 ; fréquences 0.30, 0.25, 0.23, 0.22 ; effectifs selon le poids : 22, 33, 24, 21 ; fréquences 0.22, 0.23,
+  0.24, 0.21 ; total 100). 1. déterminer la distribution marginale de X et celle de Y. 2. calculer la moyenne X̄ et
+  l'écart-type σ_X de la variable X. 3. calculer la moyenne Ȳ et l'écart-type σ_Y de la variable Y. **(Tableau p.211 :
+  série double 4 × 4 + marges effectifs/fréquences.)**
+
+**II. Covariance d'une série statistique double** — **II.1 Cas d'un échantillon simple** (p.211)
+
+- **Activité 1** (p.211–212) : on a relevé dans un tableau les exportations X (en million de dinars) et les importations
+  Y (en million de dinars) mensuelles de la Tunisie pour l'année 2006 (Janvier (1081.1 ; 1312.1), Février (1225.6 ;
+  1367.6), Mars (1378.6 ; 1641.6), Avril (1193.7 ; 1613.1), Mai (1205.8 ; 1827.3), Juin (1374.6 ; 1705.8), Juillet
+  (1283.8 ; 1713.4), Août (1157.8 ; 1494.1), Septembre (1349.4 ; 1859.8), Octobre (1230.1 ; 1668.1), Novembre (1488.5 ;
+  1902.6), Décembre (1347.3 ; 1660.6)). 1. déterminer la taille de l'échantillon étudié. 2.a. calculer la moyenne X̄ et
+  l'écart-type σ_X de X. b. calculer la moyenne Ȳ et l'écart-type σ_Y de Y. 3. calculer (1/12)Σ_{i=1}^{12} xᵢyᵢ − X̄·Ȳ.
+  **(Tableau p.211 : 12 mois × (X, Y).)**
+- **Activité 2** (p.212) : on a relevé le nombre de logements X (en milliers) et le nombre de logements modernes (villa,
+  appartement) Y durant quelques années (1984 (1313.1 ; 265.2), 1989 (1512.3 ; 343.3), 1994 (1870.1 ; 630.2), 1999
+  (2204.3 ; 848.7), 2004 (2501.0 ; 1128.0)). 1. représenter le nuage de points de la série (X, Y). 2.a. calculer X̄ et Ȳ.
+  b. calculer cov(X, Y) ; interpréter le résultat. **(Tableau p.212.)**
+- **Activité 3** (p.213) : dans un graphique on a représenté les points M(X, Y), où X désigne le nombre de logements (en
+  milliers) et Y le pourcentage des logements traditionnels pour la même année (abscisses 1313, 1512.3, 1870.1, 2204.3,
+  2501.0 ; ordonnées ≈ 71, 72.4, 63.6, 60.3, 54.1). Quel est le signe de cov(X, Y) ? **(Figure p.213 : nuage de 5 points
+  décroissant.)**
+
+**II.2 Cas d'un échantillon groupé** (p.213)
+
+- **Exercice résolu** (p.213–215) : un tableau à double entrée donne le poids Y (en kg ; classes ]1.5, 2.5], ]2.5, 3.5],
+  ]3.5, 4.5]) de 63 nouveaux-nés ainsi que le poids maternel X (classes ]40, 50], ]50, 60], ]60, 70], ]70, 80]) ;
+  effectifs (ligne ]1.5, 2.5] : 1, 0, 1, 0 ; ligne ]2.5, 3.5] : 11, 17, 13, 2 ; ligne ]3.5, 4.5] : 4, 4, 8, 2 ; totaux
+  colonnes 16, 21, 22, 4 ; total 63). 1. calculer X̄ et σ_X, ainsi que Ȳ et σ_Y. 2. déterminer la covariance de X et Y ;
+  interpréter. **Solution résumée** (p.214–215) : centres des classes de X : (45, 55, 65, 75) d'effectifs (16, 21, 22, 4),
+  Σnᵢxᵢ = 3605, Σnᵢxᵢ² = 211375, X̄ ≈ 57.2222, V(X) ≈ 80.776, σ_X ≈ 8.9875 ; centres de Y : (2, 3, 4) d'effectifs
+  (2, 43, 18), Σnⱼyⱼ = 205, Σnⱼyⱼ² = 683, Ȳ ≈ 3.2539, V(Y) ≈ 0.2529, σ_Y ≈ 0.5029 ; couples distincts (xᵢ, yⱼ) et leurs
+  effectifs nᵢⱼ (10 couples, ΣΣnᵢⱼxᵢyⱼ = 11775) donnent cov(X, Y) = (1/63)×11775 − X̄·Ȳ ≈ 0.7. **Interprétation** : la
+  covariance est positive donc X et Y ont tendance à varier dans le même sens. **(Tableaux de calcul p.214–215.)**
+- **Utilisation d'une calculatrice** (p.215) : mode d'emploi d'une calculatrice pour retrouver les résultats précédents
+  (MODE 1 puis 1 pour le sous-mode statistique à deux variables ; saisie xᵢ STO yⱼ STO nᵢⱼ M+ ; par exemple pour le
+  couple (55, 3) : 55 STO 3 STO 17 M+ ; RCL n → 63 ; RCL Σx → 3605 ; RCL Σx² → 211375 ; RCL X̄ → 57.22222222 ;
+  RCL σ_X → 8.987547725 ; RCL σ_X x² → 80.77601411 (valeur de V(X)) ; RCL Σxy → 11775 ; RCL Σxy ÷ 63 − RCL X̄ × RCL Ȳ →
+  0.705467372 (valeur de cov(X, Y))).
+- **Activité 1** (p.216) : dans une population de 100 ménages, on a considéré le nombre d'enfants X (valeurs 0, 1, 2, 3,
+  4, 5) et le revenu du chef de famille Y (en DT ; classes « Moins de 200 », [200, 400[, [400, 600[, [600, 800[), rangés
+  dans un tableau à double entrée (ligne « Moins de 200 » : 6, 4, 1, 0, 0, 0, total 11 ; ligne [200, 400[ : 3, 11, 10, 5,
+  1, 0, total 30 ; ligne [400, 600[ : 1, 3, 16, 13, 4, 1, total 38 ; ligne [600, 800[ : 0, 1, 3, 5, 8, 4, total 21 ;
+  totaux colonnes 10, 19, 30, 23, 13, 5). 1.a. déterminer le nombre de ménages qui ont 4 enfants et dont le revenu est
+  supérieur à 600 dinars. b. nombre de ménages sans enfants ayant un revenu inférieur à 200 dinars. c. nombre de ménages
+  qui ont moins de 4 enfants et dont le revenu est compris entre 400 et 600 dinars. 2.a. calculer X̄ et σ_X. b. calculer
+  Ȳ et σ_Y. 3.a. peut-on prévoir le signe de la covariance de X et Y ? b. calculer la covariance de X et Y. **(Tableau
+  p.216.)**
+
+**III. Ajustement d'une série statistique double** (p.216) — texte liminaire : « Lorsqu'un statisticien étudie une série
+statistique double. L'une des questions qu'il se pose est : peut-on prévoir la valeur de Y lorsqu'on connaît la variable
+X ? Pour répondre à une telle question, le statisticien essaiera de trouver une fonction f qui modélise le phénomène
+étudié, grâce à la relation Y = f(X). Dans ce cas, on dit que X est la variable explicative et Y est la variable
+expliquée. […] Par conséquent faire un ajustement affine consiste à déterminer deux réels a et b tels que Y = aX + b soit
+un modèle acceptable du phénomène étudié. La droite d'équation y = ax + b sera appelée droite d'ajustement affine de Y
+en X. »
+
+**III.1 Méthode de Mayer** (p.217)
+
+- **Activité 1** (p.217) : on a relevé le montant total (en million de dinars) du commerce extérieur en Tunisie
+  (importations X et exportations Y) de 1990 à 2004 (15 années : 1990 (4826.4 ; 3087.4), 1991 (4788.9 ; 3417.1),
+  1992 (5688.8 ; 3549.7), 1993 (6172.1 ; 3760), 1994 (6647.3 ; 4696.6), 1995 (7464.3 ; 5172.5), 1996 (7498.8 ; 5372),
+  1997 (8793.5 ; 6147.9), 1998 (9489.5 ; 6518.3), 1999 (10070.5 ; 6966.9), 2000 (11738 ; 8004.8), 2001 (13697.3 ;
+  9536.2), 2002 (13510.9 ; 9748.6), 2003 (14038.9 ; 10342.6), 2004 (15960.3 ; 12054.9)). 1.a. calculer X̄ et σ_X. b.
+  calculer Ȳ et σ_Y. 2. on a représenté le nuage de points de la série double (X, Y) ; placer le point G(X̄, Ȳ). 3. on
+  scinde l'ensemble des 15 points du nuage en deux parties : la partie (I) correspond aux valeurs observées entre 1990 et
+  1997 et la partie (II) entre 1998 et 2004 ; G₁ et G₂ sont les points moyens respectifs de (I) et (II). a. déterminer
+  les coordonnées de G₁ et G₂ ; vérifier que G, G₁ et G₂ sont alignés et tracer la droite (G₁G₂). b. comment semblent se
+  répartir les points du nuage autour de la droite (G₁G₂) ? c. donner alors un ajustement affine de la série double
+  (X, Y). d. donner une estimation du montant des exportations si le montant de l'importation est égal à 17000 millions
+  de dinars. **(Tableau p.217 + figure p.217 : nuage de 15 points croissant.)**
+- **Activité 2** (p.218) : le mur d'une habitation est constitué par une couche de béton et une couche de polystyrène
+  d'épaisseur variable X (en cm) ; on a mesuré la résistance thermique R (en m²·°C/W) de ce mur pour divers valeurs de X
+  (couples (2 ; 0.83), (4 ; 1.34), (6 ; 1.63), (8 ; 2.3), (10 ; 2.44), (12 ; 2.93), (14 ; 3.44), (16 ; 3.85),
+  (18 ; 4.28)). 1. tracer le nuage de la série (X, R). 2. déterminer un ajustement affine de R en X par la méthode de
+  Mayer. 3. quelle résistance thermique peut-on espérer obtenir avec une épaisseur de polystyrène de 25 cm ? **(Tableau
+  p.218.)**
+
+**III.2 Méthode d'ajustement par les moindres carrés** (p.218) — texte liminaire (p.218) : « Nous avons représenté […] le
+nuage de points Mᵢ(xᵢ, yᵢ), 1 ≤ i ≤ n, d'une série statistique double, ainsi qu'une droite D d'équation y = ax + b. Pour
+tout entier 1 ≤ i ≤ n, on note Hᵢ(xᵢ, zᵢ) le point de la droite D de même abscisse que Mᵢ. » Puis (p.219) : « Le principe
+de la méthode d'ajustement par la méthode des moindres carrés consiste à déterminer les réels a et b tels que la somme
+Σ_{i=1}^{n} MᵢHᵢ² soit minimale. Dans ce cas, le statisticien pourra faire des prévisions en remplaçant la valeur
+observée yᵢ par la valeur théorique zᵢ = axᵢ + b. » **(Figure p.218 : droite D = ax + b et points Mᵢ, Hᵢ projetés
+verticalement.)**
+
+- **Activité 1** (p.219) : le tableau donne le chiffre d'affaire annuel en mille DT d'une société pendant huit années
+  consécutives (rang de l'année X = 1..8 ; chiffre d'affaires (13.6, 15, 15.8, 17, 18, 20, 19, 20)). 1.a. représenter le
+  nuage de points de la série (X, Y). b. un ajustement affine de cette série est-il justifié ? 2. déterminer les
+  coordonnées du point moyen G de ce nuage. 3.a. tracer dans le même repère la droite D d'équation y = 1.6x + 10.1.
+  b. calculer la somme S_D = Σ_{i=1}^{8} [yᵢ − (1.6xᵢ + 10.1)]². 4. on considère une droite Δ d'ajustement de Y par
+  rapport à X obtenue par la méthode de Mayer. a. déterminer l'équation de Δ sous la forme y = ax + b (a et b à 10⁻¹
+  près). b. calculer la somme S_Δ = Σ_{i=1}^{8} [yᵢ − (axᵢ + b)]². 5. comparer S_D et S_Δ. 6. estimer le chiffre
+  d'affaires de cette société à sa dixième année. **(Tableau p.219.)**
+- **Activité 2** (p.220–221) : dans le tableau on a relevé le poids (en kg) et la surface corporelle (en m²) de 15 sujets
+  (couples (15 ; 0.58), (20 ; 0.7), (25 ; 0.8), (29 ; 0.9), (34 ; 1), (39 ; 1.1), (44 ; 1.2), (50 ; 1.3), (55 ; 1.4),
+  (60 ; 1.5), (65 ; 1.56), (70 ; 1.64), (74 ; 1.74), (80 ; 1.8), (85 ; 1.9)). 1.a. calculer X̄ et σ_X. b. calculer Ȳ et
+  σ_Y. 2. déterminer la covariance de la série (X, Y). 3. on a représenté le nuage de la série (X, Y). a. placer le point
+  G(X̄, Ȳ). b. comment semblent se répartir les points du nuage ? c. donner alors un ajustement affine par les moindres
+  carrés de la série double (X, Y). 4. donner une estimation de la surface corporelle d'un sujet qui pèse 62 kg.
+  **(Tableau p.220 + figure p.221 : nuage de 15 points croissant.)**
+
+**III.3 Coefficient de corrélation linéaire** (p.221) — texte liminaire : « On peut toujours au vu des formules
+précédentes construire une droite de régression. Mais parfois cette dernière n'est d'aucune efficacité, dans la mesure
+où les prédictions que l'on fait à partir de cette droite ne sont pas raisonnables. Pour savoir s'il est pertinent
+d'ajuster un nuage de point par les moindres carrés, on calcule un réel appelé coefficient de corrélation linéaire. »
+
+- **Activité 1** (p.222) : le tableau donne l'effectif de la population scolaire de la 3ᵉ année de l'enseignement
+  secondaire du mois d'octobre 1997 au mois d'octobre 2002 (année X = 1997..2002 ; population Y = (67755, 74581, 79266,
+  76138, 80123, 90087)). 1. calculer le coefficient de corrélation linéaire. 2. déterminer un ajustement par les moindres
+  carrés de la série double (X, Y) puis donner une estimation de la population scolaire en 3ᵉ année secondaire au mois
+  d'octobre 2010. **(Tableau p.222.)**
+- **Activité 2** (p.222) : on donne la série double (à double entrée) relative aux voitures selon leur puissance Y (20,
+  25, 30) et la durée des pneumatiques X (2, 3, 4, en millier de kilomètres) ; effectifs (ligne Y = 20 : 0, 8, 30,
+  total 38 ; ligne Y = 25 : 5, 20, 7, total 32 ; ligne Y = 30 : 25, 3, 2, total 30 ; totaux colonnes 30, 31, 39 ;
+  total 100). 1. calculer le coefficient de corrélation linéaire. 2. un ajustement par les moindres carrés est-il
+  justifié ? **(Tableau p.222 : série double 3 × 3 + marges.)**
+
+**III.4 Exemple d'ajustement non affine** (p.222)
+
+- **Exercice résolu** (p.222–223) : le tableau indique l'évolution du personnel paramédical tunisien dans le secteur
+  public (techniciens supérieurs, infirmiers, auxiliaires de santé) de 1990 à 2005 (Paramédicaux : 1990 → 23743, 1991 →
+  24555, 1992 → 25070, 1993 → 25291, 1994 → 25466, 1995 → 25874, 1996 → 26130, 1997 → 26369, 1998 [imprimé « 19989 »
+  [sic]] → 26676, 1999 → 27050, 2000 → 27392, 2001 → 30292, 2002 → 28629, 2003 → 29976, 2004 → 29584, 2005 → 29607).
+  1. en numérotant les années de 0 à 15, déterminer les valeurs de la série double (X, ln Y), où X est le rang de l'année
+     et Y le nombre de paramédicaux. 2. on pose Z = ln Y. a. calculer le coefficient de corrélation et justifier que l'on
+     peut procéder à un ajustement affine par les moindres carrés de la série (X, Z). b. donner la droite de régression de Z
+     en X. 3. quel sera le nombre de paramédicaux en 2010 ? **Solution résumée** (p.223) : tableau des xᵢ, yᵢ, zᵢ = ln(yᵢ),
+     xᵢ², zᵢ², xᵢzᵢ ; X̄ = 7.5, σ_X ≈ 4.6, Z̄ ≈ 10.199, σ_Z ≈ 0.074, Cov(X, Z) ≈ 0.326, ρ_XZ ≈ 0.960 (« Le coefficient de
+     corrélation est très proche de 1 ; l'ajustement est donc justifié ») ; droite de régression z = [0.326/(4.61)²](x − 7.5)
+  - 10.199, soit z = 0.015(x − 7.5) + 10.199 ; le nombre de paramédicaux en 2010 sera de e^{0.015(20−7.5)+10.199} ≈ 32419.
+    **(Tableaux de calcul p.222–223.)**
+- **Utilisation d'une calculatrice** (p.223) : dans cet exercice la série est à données simples ; saisie xᵢ STO yᵢ M+ ;
+  RCL r pour le coefficient de corrélation ; RCL b pour la pente de la droite de régression de Y en X ; RCL a pour
+  l'ordonnée à l'origine de la droite de régression de Y en X.
+- **Activité** (p.224) : la résistance à l'avancement d'un poids lourd est une fonction de la vitesse ; on cherche la
+  meilleure expression possible de cette fonction dans un intervalle de vitesse compris entre 10 km/h et 100 km/h ; cette
+  résistance est mesurée en kW (couples V (km/h) → R (kW) : 10 → 2.6, 20 → 5.8, 30 → 9.9, 40 → 15.4, 50 → 23.6, 60 → 34.5,
+  70 → 49, 80 → 67.2, 90 → 89.1). 1. dresser le tableau des valeurs de la série (X, Y) où X = V² et Y = R/V. 2. donner le
+  coefficient de corrélation linéaire entre X et Y et une équation de la droite de régression de Y en X. 3. en déduire une
+  relation entre R et V. 4. donner une évaluation de la valeur de R pour une vitesse de 100 km/h. **(Tableau p.224.)**
+
+### Cours — Résultats / définitions / théorèmes à retenir (VERBATIM)
+
+> **Définitions (série double, distributions marginales)** (p.210, encadré) — « Soit (X, Y) une série statistique double
+> sur un échantillon de taille n et soit (xᵢ, yᵢ)_{1≤i≤n} les valeurs numériques prises respectivement par les variables
+> X et Y. La distribution marginale de la variable X est la distribution des valeurs (xᵢ)_{1≤i≤n} prises par la variable
+> X. La distribution marginale de la variable Y est la distribution des valeurs (yᵢ)_{1≤i≤n} prises par la variable Y. »
+
+> **Définition (moyenne, variance, écart-type d'une série simple)** (p.210, encadré) — « Soit X une série statistique sur
+> un échantillon de taille n. Si X̄, V(X) et σ_X désignent respectivement la moyenne, la variance et l'écart-type de la
+> série, alors X̄ = (1/n)Σ_{i=1}^{p} nᵢxᵢ, V(X) = (1/n)Σ_{i=1}^{p} nᵢ(xᵢ − X̄)², σ_X = √(V(X)), où les valeurs x₁, x₂,
+> ..., x_p désignent les valeurs distinctes prise par la variable X si elle est discrète, ou les centres des classes si la
+> variable X est continue. L'entier nᵢ désigne l'effectif de la valeur xᵢ. »
+
+> **Définition (covariance, échantillon simple)** (p.212, encadré) — « Soit (X, Y) une série statistique double sur un
+> échantillon de taille n. On appelle covariance de (X, Y) le réel, noté cov(X, Y) défini par
+> cov(X, Y) = (1/n)Σ_{i=1}^{n} xᵢyᵢ − X̄·Ȳ, où (xᵢ, yᵢ) est la valeur observée pour l'individu i si X et Y sont discrètes,
+> ou le centre de la classe si l'une des variables est continue. » Remarque (p.212) : « Il découle de la définition que
+> cov(X, Y) = cov(Y, X). »
+
+Interprétation de la covariance (p.212) : « La covariance mesure la tendance qu'ont les variables X et Y à varier
+ensemble. La covariance est positive si X et Y ont tendance à varier dans le même sens. La covariance est négative si X
+et Y ont tendance à varier en sens contraire. »
+
+> **Définition (covariance, échantillon groupé)** (p.213, encadré) — « Soit (X, Y) une série statistique double de taille
+> n. Soit nᵢⱼ le nombre de fois qu'apparaît le couple (xᵢ, yⱼ). Alors
+> cov(X, Y) = (1/n)Σ_{j=1}^{q}Σ_{i=1}^{p} nᵢⱼxᵢyⱼ − X̄·Ȳ. »
+
+> **Définition (nuage de points, point moyen)** (p.218, encadré) — « Soit (X, Y) une série statistique double de valeurs
+> (xᵢ, yᵢ)_{1≤i≤n}. L'ensemble des points Mᵢ de coordonnées (xᵢ, yᵢ) dans un repère orthogonal est appelé nuage de points
+> représentant la série statistique. Le point moyen du nuage est le point dont les coordonnées sont les moyennes X̄ et
+> Ȳ. »
+
+> **Principe de la méthode de Mayer** (p.218, encadré) — « Soit un nuage de points représentant une série statistique
+> double (X, Y) et G son point moyen. On scinde le nuage de points de (X, Y) en deux parties contenant à peu prés le même
+> nombre de points. On considère alors les points moyens G₁ et G₂ des deux nuages obtenus. La droite (G₁G₂) définit un
+> ajustement affine du nuage de points représentant la série statistique double (X, Y). La droite (G₁G₂) est appelée
+> droite de Mayer et passe par le point moyen G du nuage global. »
+
+> **Théorème (admis)** (p.219, encadré) — « Soit (X, Y) une série statistique double sur un échantillon de taille n et
+> telle que σ_X ≠ 0. Soit (xᵢ, yᵢ)_{1≤i≤n} les valeurs observées de la série. Alors la somme Σ_{i=1}^{n} (axᵢ + b − yᵢ)²
+> est minimale pour le couple (a₀, b₀) tel que a₀ = cov(X, Y)/σ_X² et b₀ = (Ȳ − (cov(X, Y)/σ_X²)·X̄). »
+
+> **Définition (droites de régression / moindres carrés)** (p.220, encadré) — « Soit (X, Y) une série statistique double
+> sur un échantillon de taille n. La droite d'équation y = (cov(X, Y)/σ_X²)(x − X̄) + Ȳ est appelée droite des moindres
+> carrés de Y en X, ou droite de régression de Y en X. La droite d'équation x = (cov(X, Y)/σ_Y²)(y − Ȳ) + X̄ est appelée
+> droite des moindres carrés de X en Y, ou droite de régression de X en Y. »
+
+> **Conséquence** (p.220, encadré) — « Les droites des moindres carrés de Y en X et de X en Y passent par le point moyen G
+> du nuage associé à la série (X, Y). »
+
+> **Définition (coefficient de corrélation linéaire)** (p.221, encadré) — « Soit (X, Y) une série statistique double. On
+> appelle coefficient de corrélation linéaire le réel noté ρ_XY défini par ρ_XY = cov(X, Y)/(σ_X σ_Y). »
+
+> **Propriétés (coefficient de corrélation)** (p.221, encadré) — « Soit (X, Y) une série statistique double. Alors
+> −1 ≤ ρ_XY ≤ 1. Le coefficient de corrélation linéaire est invariant par changement d'unité ou d'origine. »
+
+Interprétation du coefficient de corrélation linéaire (p.221, encadré) : « Les statisticiens conviennent que lorsque
+|ρ_XY| > √3/2, l'ajustement affine est justifié et les prédictions faites au moyen de cet ajustement sont raisonnables. »
+
+### Exercices et problèmes (p.225–230)
+
+> **Note de transcription** : la numérotation imprimée des exercices passe de l'**exercice 12** (p.229) à l'**exercice
+> 15** (p.230) ; les **exercices 13 et 14 n'apparaissent pas** dans les pages rendues (p.225–230, contiguës) — les pages
+> du chapitre transcrites vont de la 208 à la 230.
+
+- **Ex. 1** (p.225) : pour chacun de quatre graphiques (nuages de points), indiquer si le nuage justifie la recherche
+  d'un ajustement affine. **(Figure p.225 : 4 nuages de points — 1. en « V », 2. décroissant, 3. croissant incurvé, 4. décroissant hyperbolique.)**
+- **Ex. 2** (p.225) : on a relevé les poids (en kg) respectif de 12 pères (X) et de leurs fils aînés (Y) : (65, 63),
+  (63, 61), (67, 66), (64, 62), (68, 67), (62, 60), (70, 69), (66, 65), (68, 67), (67, 67), (69, 66), (71, 70).
+  1. tracer le nuage de la série (X, Y). 2. déterminer un ajustement affine par la méthode de Mayer. 3. quel poids devrait
+     avoir le fils aîné d'un homme qui pèse 77 kg ? **(Tableau p.225.)**
+- **Ex. 3** (p.225–226) : le tableau indique l'évolution du nombre de médecins en Tunisie de 1990 à 2003 (rang de l'année
+  X = 1..14 ; nombre de médecins Y = 4425, 4500, 5099, 5257, 5344, 5965, 6177, 6464, 6819, 7149, 7444, 7767, 7964, 8189).
+  1. tracer le nuage de la série (X, Y). 2. déterminer le point moyen G(X̄, Ȳ). 3. déterminer un ajustement affine par la
+     méthode de Mayer. 4. donner une estimation du nombre de médecin en Tunisie dans l'année 2010 ? **(Tableau p.225.)**
+- **Ex. 4** (p.226) : le tableau (à double entrée) donne la répartition d'une population de 100 ménages selon les deux
+  caractères X (nombre de pièces habitées, valeurs 1, 2, 3, 4) et Y (nombre d'enfants, valeurs 0, 1, 2, 3, 4) ;
+  effectifs (ligne X = 1 : 6, 2, 1, 0, 0, total 9 ; ligne X = 2 : 5, 12, 8, 1, 1, total 27 ; ligne X = 3 : 2, 7, 15, 11,
+  3, total 38 ; ligne X = 4 : 0, 1, 8, 14, 3, total 26 ; totaux colonnes 13, 22, 32, 26, 7). 1.a. calculer X̄ et σ_X de X.
+  b. calculer Ȳ et σ_Y de Y. 2.a. calculer le coefficient de corrélation entre X et Y. b. un ajustement affine de la série
+  (X, Y) est-il justifié ? **(Tableau p.226 : série double 4 × 5 + marges.)**
+- **Ex. 5** (p.226) : le tableau donne la charge maximale Y, en tonnes, qu'une grue peut lever pour une longueur X, en
+  mètres, de la flèche (couples (9 ; 1.4), (10 ; 1.25), (12 ; 1), (14 ; 0.84), (16 ; 0.7), (18 ; 0.62), (20 ; 0.55),
+  (22 ; 0.5)). 1. les réponses numériques à cette question seront données à 10⁻² près. a. représenter le nuage de points
+  dans un repère orthogonal. b. déterminer le coefficient de corrélation linéaire entre X et Y. c. déterminer une équation
+  de la droite de régression de Y en X ; construire cette droite sur le graphique précédent. d. utiliser cette équation
+  pour déterminer la charge maximale que peut lever la grue avec une flèche de 23 mètres. **(Tableau p.226.)**
+- **Ex. 6** (p.226–227) : le tableau recense par clinique le nombre de postes du personnel non médical (Y) en fonction du
+  nombre de lits (X) de la clinique (C₁ (122 ; 185), C₂ (177 ; 221), C₃ (77 ; 114), C₄ (135 ; 164), C₅ (109 ; 125),
+  C₆ (88 ; 118), C₇ (185 ; 193), C₈ (128 ; 160), C₉ (120 ; 151), C₁₀ (146 ; 172), C₁₁ (100 ; 150)). 1. représenter le
+  nuage de points associé à la série (X, Y) dans un repère orthogonal. 2. déterminer le coefficient de corrélation
+  linéaire entre X et Y. 3. donner une équation de la droite de régression de Y en X (coefficients arrondis à 10⁻¹ près) ;
+  tracer cette droite. 4. une clinique possède 35 lits : combien devrait-elle embaucher de personnel occupant un poste non
+  médical ? **(Tableau p.226.)**
+- **Ex. 7** (p.227) : A/ un club sportif a été créé en 1999, à l'origine le nombre d'adhérents était égal à 600 ; le
+  tableau donne le nombre d'adhérents Y de 1999 à 2005 (rang X = 0..6 ; Y = 600, 690, 794, 913, 1045, 1207, 1380). On pose
+  Z = ln Y. 1.a. vérifier qu'on peut réaliser un ajustement affine par la méthode des moindres carrés de la série (X, Z).
+  b. déterminer une prévision du nombre d'adhérents en 2006. 2. justifier que Y ≈ 602 × (1.15)^X. B/ en fait le club a
+  compté 2400 adhérents lors de l'année 2006 ; soit f la fonction définie sur ℝ₊ par f(x) = 3600/(1 + 0.5e^{−x}) ; on
+  suppose que le nombre d'adhérents en (2006 + n) est égal à f(n) où n est un entier naturel. 1. déterminer la limite de
+  f(n) lorsque n tend vers +∞ et interpréter le résultat. 2.a. reproduire et compléter le tableau (Année 2007..2011,
+  n = 1..5, f(n) ; f(1) = 3040). b. calculer la moyenne M du nombre prévisionnel d'adhérents entre 2007 et 2011. 3. calculer la valeur moyenne f̄ de f sur l'intervalle [0.5, 5.5]. **(Tableaux p.227.)**
+- **Ex. 8** (p.227) : on a relevé la taille (X, en cm) et le poids (Y, en kg) de 16 jeunes filles (couples (160, 46),
+  (165, 48), (167, 48), (160, 46), (168, 49), (170, 51), (160, 45), (162, 45), (165, 48), (170, 49), (170, 51),
+  (168, 50), (172, 50), (165, 48), (165, 47), (170, 50)). 1.a. construire, dans un repère orthogonal, le nuage de points
+  de la série (X, Y). b. un ajustement affine est-il justifié ? 2.a. déterminer le coefficient de corrélation entre X et Y.
+  b. écrire une droite de régression de Y en X. c. donner une estimation de la masse d'une jeune fille mesurant 180 cm. 3. un journal de santé publie la loi de Lorentz qui donne une relation entre le poids M et la taille T pour une jeune
+  fille, M = (T − 100) − (T − 130)/2 ; utiliser cette relation pour estimer la masse d'une jeune fille mesurant 180 cm.
+  **(Tableau p.227.)**
+- **Ex. 9** (p.228) : onze élèves de 7ᵉ année de base travaillent sur la proportionnalité ; ils mesurent le rayon d'un
+  disque (série X, en cm) puis évaluent l'aire de ce disque (série Y, en cm²) — couples (2 ; 12), (2.5 ; 20), (3 ; 28),
+  (3.5 ; 38), (4 ; 50), (4.5 ; 64), (5 ; 78), (5.5 ; 95), (6 ; 113), (6.5 ; 133), (7 ; 154). 1. les deux séries sont-elles
+  proportionnelles ? 2. on pose Z = √Y. a. construire, dans un repère orthogonal, le nuage de points de la série (X, Z)
+  (valeurs de Z arrondies à 10⁻¹ près). b. calculer le coefficient de corrélation ρ_XZ ; interpréter le résultat.
+  c. déterminer une équation de la droite de régression de Z en X (coefficients arrondis à 10⁻¹ près). d. en déduire une
+  valeur approchée de π. **(Tableau p.228.)**
+- **Ex. 10** (p.228–229) : une entreprise envisage la fabrication d'un nouveau produit ; une étude a permis d'établir un
+  tableau où, pour différentes observations, X désigne la quantité de produit que la clientèle est disposée à acheter et Y
+  le prix de vente (en DT) d'une unité (couples (350 ; 140), (400 ; 120), (450 ; 100), (500 ; 95), (550 ; 85), (600 ; 70)).
+  1. calculer le coefficient de corrélation ρ_XY. 2. déterminer une équation de la droite de régression de Y en X
+     (coefficients arrondis à 10⁻¹ près). 3. soit r(x) la recette correspondant à la vente de x articles au prix unitaire y.
+     a. montrer que r(x) = (226.5 − 0.3x)x. b. étudier les variations de la fonction f définie sur ℝ₊ par
+     f(x) = −0.3x² + 226.5. c. en déduire le prix de vente pour lequel la recette est maximale ; calculer cette recette
+     maximale. **(Tableau p.228.)**
+- **Ex. 11** (p.228–229) : le tableau donne la population d'une ville entre les années 1975 et 2005 (Année, rang X, P (en
+  milliers d'habitants) : 1975 (0 ; 18), 1980 (5 ; 21), 1985 (10 ; 25), 1990 (15 ; 30), 1995 (20 ; 36), 2000 (25 ; 42),
+  2005 (30 ; 50)) ; le nuage de points associé est représenté graphiquement. **A/** 1. calculer le coefficient de
+  corrélation entre X et Y. 2.a. déterminer une équation de la droite de régression de Y en X. b. tracer cette droite sur
+  le graphique. c. en déduire une estimation de la population en 2008 à un millier prés. **B/** 1. l'allure du nuage
+  suggère à chercher un ajustement par une fonction f définie sur [0, +∞[ par f(x) = ae^{bx} où a et b sont des réels ;
+  déterminer a et b tels que f(0) = 18 et f(30) = 50 (valeur arrondie de b au millième). 2. déduire de cet ajustement une
+  estimation de la population en 2008 à un millier prés. 3. tracer la courbe de f sur le même graphique. 4. la population
+  en 2008 était de 55 milliers ; lequel des deux ajustement vous semble le plus pertinent ? justifier. **C/** on considère
+  maintenant que la population est donnée en fonction du rang x par f(x) = 18e^{0.034x}. 1. calculer la valeur moyenne f̄
+  de la fonction f sur [0, 30] (résultat arrondi au dixième). 2. à l'aide d'une lecture graphique, déterminer l'année au
+  cours de laquelle la population atteint cette valeur moyenne. **(Tableau + figure p.228 : nuage de 7 points croissant.)**
+- **Ex. 12** (p.229) : le tableau donne l'évolution de la population d'un pays de 1965 à 2000 ; T désigne le rang de
+  l'année et P la population en millions d'habitants (1965 (0 ; 8), 1970 (5 ; 8.9), 1975 (10 ; 9.9), 1980 (15 ; 11),
+  1985 (20 ; 12), 1990 (25 ; 13.5), 1995 (30 ; 15), 2000 (35 ; 16.6)). **A/** 1. représenter le nuage de points associé à
+  la série (T, P) dans un repère orthogonal (2 cm pour 5 unités sur l'axe des abscisses ; 8 à l'origine puis 2 cm pour une
+  unité — 1 million d'habitants — sur l'axe des ordonnées). 2. on cherche à modéliser l'évolution par une fonction f dont
+  la courbe est voisine du nuage ; on pose Y = ln P. a. donner une valeur approchée à 10⁻³ près par défaut du coefficient
+  de corrélation linéaire de la série (T, Y). b. déterminer une équation de la droite de régression de Y en T
+  (coefficients arrondis à 10⁻³ près). c. en déduire l'expression de la population P en fonction du rang T de l'année.
+  **B/** on admet que la fonction f définie sur [0, 35] par f(t) = 8·e^{0.02t} est une modélisation satisfaisante de
+  l'évolution de la population (en millions d'habitants) de 1965 à 2000. 1. étudier le sens de variation de f sur [0, 35]
+  et dresser son tableau de variation. 2. construire la courbe représentative de f, notée (C), dans le repère de la partie
+  A. 3. on pose I = ∫_0^{35} f(t) dt. a. donner une valeur approchée de I arrondie à 10⁻² près. b. en déduire la population
+  moyenne m du pays durant ces 35 années et la représenter sur le graphique. 4. calculer le rapport (f(t + 1) − f(t))/f(t)
+  et en donner une interprétation en terme de pourcentage. 5. si le modèle exponentiel étudié dans la partie B restait
+  valable après 2000, en quelle année la population aurait-elle dépassé les 19 millions d'habitants ? **(Tableau p.229.)**
+- **Ex. 15** (p.230) : on étudie la croissance d'une plante à partir d'un instant considéré comme initial ; le tableau
+  indique le diamètre D de la tige (en centimètres) après T semaines (Temps T → Diamètre D : 0 → 0.4, 2 → 1.2, 6 → 5.4,
+  8 → 5.8, 10 → 6.4, 12 → 6.9). 1. représenter le nuage de points associé à cette série statistique. 2. on pose
+  U = ln(8/D − 1). a. calculer le coefficient de corrélation linéaire de la série (T, U). b. déterminer par les moindres
+  carrés une équation de la droite d'ajustement de U en T. c. vérifier que pour cette plante, le diamètre de sa tige
+  principale est donné par une relation de la forme D(t) = 8/(1 + ce^{−at}) où a et c sont deux réels que l'on précisera.
+  3.a. pour les valeurs de a et c trouvées, tracer dans le repère précédent la fonction f : t ↦ D(t) pour t ≥ 0. b. le
+  diamètre de la plante dépassera-t-il 8 cm ? **(Tableau p.230.)**
+
+### Bornes de scope observées (chapitre 19)
+
+- ✅ INCLUS : **séries statistiques doubles** (X, Y) et **distributions marginales** (distribution des xᵢ, des yⱼ,
+  moyennes marginales X̄, Ȳ, écart-types σ_X, σ_Y — rappel du cours de série simple : moyenne, variance
+  V(X) = (1/n)Σnᵢ(xᵢ − X̄)², écart-type) ; **covariance** cov(X, Y) = (1/n)Σxᵢyᵢ − X̄·Ȳ dans le cas d'un échantillon
+  simple et cov(X, Y) = (1/n)ΣΣnᵢⱼxᵢyⱼ − X̄·Ȳ dans le cas groupé, symétrie cov(X, Y) = cov(Y, X), interprétation du signe
+  (variation dans le même sens / en sens contraire) ; **nuage de points** et **point moyen** G(X̄, Ȳ) ; **ajustement
+  affine** — **méthode de Mayer** (scinder le nuage en deux, droite (G₁G₂) passant par G) et **méthode des moindres
+  carrés** (minimisation de Σ MᵢHᵢ², théorème admis a₀ = cov(X, Y)/σ_X², b₀ = Ȳ − a₀X̄) ; **droites de régression** de Y
+  en X (y = (cov/σ_X²)(x − X̄) + Ȳ) et de X en Y (x = (cov/σ_Y²)(y − Ȳ) + X̄), toutes deux passant par G ; **coefficient
+  de corrélation linéaire** ρ_XY = cov(X, Y)/(σ_X σ_Y), propriétés −1 ≤ ρ_XY ≤ 1 et invariance par changement d'unité ou
+  d'origine, seuil d'ajustement |ρ_XY| > √3/2 ; **ajustements non affines par changement de variable** (Z = ln Y,
+  Z = √Y, U = ln(8/D − 1), X = V², Y = R/V) ramenés à un ajustement affine puis réinvestis via les fonctions exponentielle
+  et logarithme et le **calcul intégral** (valeur moyenne, intégrale I) dans les exercices de modélisation. Le manuel
+  décrit aussi l'**usage d'une calculatrice** en mode statistique à deux variables (Σx, Σx², Σxy, X̄, σ_X, r, a, b).
+- ⛔ NON traité / supposé acquis : la **moyenne, variance et écart-type d'une série simple** (rappelés en encadré mais
+  établis en amont) et la manipulation des **classes / centres de classe / effectifs et fréquences** ; les **fonctions
+  exponentielle et logarithme** (chap. 3–4) et le **calcul intégral / valeur moyenne** (chap. 5–6), ici réinvestis pour
+  les ajustements non affines ; la **variance et la covariance ne sont pas démontrées** comme formes développées (les
+  formules V(X) = E(X²) − (E(X))² et la covariance sont admises / posées) ; aucune **inférence statistique** (estimation,
+  intervalle de confiance, test d'hypothèse), aucune **régression multiple**, ni justification théorique du seuil √3/2
+  (« les statisticiens conviennent que… ») ne sont abordées ; le lien covariance ↔ probabilités (v.a. couplées) n'est pas
+  fait — le chapitre est purement descriptif et **clôt le manuel** (dernier chapitre du tome 2, après les probabilités —
+  chap. 18).
 
 ## 3. Notes pédagogiques / méthode
 

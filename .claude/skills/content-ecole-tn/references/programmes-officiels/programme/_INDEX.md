@@ -116,7 +116,7 @@
 
 | statut | matière | profondeur | sources (couverture calculée) | R-7 | maj | notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| 🚧 partielle — ⛔ génération interdite | **mathematiques** | mixte | `222445` 100 % · `222446` 63 % (manque p.147–230) | — | 2026-07-18 (bejimed) | Campagne LOT A (METHODE-GENERATION-CONTENU) raccrochée au corpus : tome 1 Analyse (222445, 9 ch.) + tome 2 (222446, 10 ch.) = 19 chapitres ; manuel eleve seul (pas de guide enseignant au corpus) => fait reference. Paliers 1-5 : TOME 1 COMPLET (chapitres 1-9, p.5-207) transcrit a profondeur de generation ; 222445 couvert a 100%. R-7 independant CONFORME sur ch.1/2/3/5/6/8/9 ; CORRECTIONS MINEURES appliquees sur ch.4 (VF-5 f'->f) et ch.7 (Activite 2 p.140 ajoutee + note Ex.28). Paliers 6-8 : tome 2 ch.10-15 (222446 p.5-146) transcrits a profondeur de generation. R-7 independant CONFORME sur ch.10/11/12/13/14 ; ch.15 CORRECTIONS MINEURES appliquees (V.2 Propriete caracteristique p.134 ajoutee a l'inventaire). Ch.16-19 restent en 'bloc'. Reste tome 2 (derniere tranche) : ch.16 (divisibilite dans Z, p.147-160) + ch.17 (Bezout, p.161-178) + ch.18 (probabilites, p.179-207) + ch.19 (statistiques, p.208-230). A l'issue : 222446 couvert a 100% => passer la fiche en complete => LOT B debloque. Generation LOT B interdite tant que statut != complete. |
+| ✅ validée R-7 | **mathematiques** | generation | `222445` 100 % · `222446` 100 % | 2026-07-19 (sondage, CONFORME sur les 19 chapitres (R-7 independant par chapitre, contexte vierge, contre les PDF sources, sondage dirige T-8 souvent porte a 100% des pages) ; corrections mineures appliquees (ch.1/4/7/11/15), 8 corr.) | 2026-07-19 (bejimed) | LOT A COMPLET : manuel officiel CNP 4eme Math section Mathematiques (Bac) integralement transcrit a profondeur de generation. Tome 1 Analyse (222445, 207 p., ch.1-9) + tome 2 Algebre/Geometrie/Probabilites (222446, 230 p., ch.10-19) = 19 chapitres, manuel eleve seul (pas de guide au corpus) => fait reference. Livre en 9 paliers/PR (auto-merge) sur 2026-07-18/19. R-7 independant par chapitre : CONFORME partout, corrections mineures appliquees ch.1 (3 forme), ch.4 (VF-5 f'->f), ch.7 (Activite 2 p.140 + note Ex.28), ch.11 (etiquette page), ch.15 (V.2 ajoutee inventaire). Statut validee-r7 (PAS promue : reserve a l'humain). => LOT B (generation du contenu content/math-bac-math) desormais AUTORISE. |
 
 ## À transcrire (dérivé du corpus — PDF `principale` non rattachés à une fiche)
 
@@ -144,4 +144,4 @@
 - **enrichissement** : 21 PDF
   - décisions en attente (`differee`) : `128703`, `128803`, `128903`, `228103`, `228233`, `228362`, `228363`, `228461`, `228462`
 
-**Totaux (calculés)** : 49 fiches suivies (20 partielle · 25 complete · 4 validee-r7) · 346 PDF au corpus · 165 œuvres principales restant à rattacher.
+**Totaux (calculés)** : 49 fiches suivies (19 partielle · 25 complete · 5 validee-r7) · 346 PDF au corpus · 165 œuvres principales restant à rattacher.
