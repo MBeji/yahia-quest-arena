@@ -1,0 +1,197 @@
+{
+  "title": "Test de compréhension ⭐ : Suites réelles",
+  "questions": [
+    {
+      "prompt": "Pour démontrer par récurrence qu'une propriété P(n) est vraie pour tout entier n ≥ n₀, après avoir vérifié l'initialisation, en quoi consiste l'étape d'hérédité ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Supposer P(n) vraie pour un entier n ≥ n₀, puis démontrer P(n + 1)"
+        },
+        {
+          "id": "b",
+          "text": "Vérifier que P(n₀) est vraie"
+        },
+        {
+          "id": "c",
+          "text": "Supposer P(n) vraie pour tout entier n, puis conclure"
+        },
+        {
+          "id": "d",
+          "text": "Vérifier P(n) pour n = n₀ et pour n = n₀ + 1"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "L'hérédité consiste à supposer P(n) vraie pour un entier n ≥ n₀ quelconque (l'hypothèse de récurrence) et à en déduire P(n + 1). Vérifier P(n₀) est l'initialisation, pas l'hérédité ; supposer P(n) vraie « pour tout n » revient à supposer déjà ce qu'on veut prouver ; tester deux cas particuliers ne démontre rien pour tous les entiers.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Par définition, une suite (Uₙ) est bornée lorsque :",
+      "options": [
+        {
+          "id": "a",
+          "text": "il existe un réel M tel que Uₙ ≤ M pour tout n"
+        },
+        {
+          "id": "b",
+          "text": "il existe deux réels m et M tels que m ≤ Uₙ ≤ M pour tout n"
+        },
+        {
+          "id": "c",
+          "text": "elle est croissante"
+        },
+        {
+          "id": "d",
+          "text": "elle est convergente"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "(Uₙ) est bornée si elle est à la fois majorée et minorée : il existe m et M tels que m ≤ Uₙ ≤ M pour tout n. L'option a ne décrit qu'une suite majorée. La croissance n'a aucun rapport avec le fait d'être bornée. Toute suite convergente est bornée, mais la réciproque est fausse (Uₙ = (−1)ⁿ est bornée sans converger), donc « convergente » n'est pas la définition.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Que peut-on dire de la suite de terme général Uₙ = (−3/2)ⁿ ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Elle converge vers 0"
+        },
+        {
+          "id": "b",
+          "text": "Elle tend vers +∞"
+        },
+        {
+          "id": "c",
+          "text": "Elle tend vers −∞"
+        },
+        {
+          "id": "d",
+          "text": "Elle n'a pas de limite"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Ici q = −3/2 vérifie |q| = 3/2 > 1 et q ≤ −1 : d'après le théorème sur (qⁿ), la suite n'a pas de limite, car ses termes changent de signe tout en grandissant en valeur absolue. Répondre 0 confond q < 1 avec |q| < 1 (le piège classique) ; +∞ ou −∞ oublie que la base négative fait alterner le signe, ce qui interdit toute limite.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Parmi ces situations rencontrées dans un calcul de limite de suites, laquelle est une forme indéterminée ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "(+∞) + (+∞)"
+        },
+        {
+          "id": "b",
+          "text": "(+∞) × 2"
+        },
+        {
+          "id": "c",
+          "text": "(+∞) − (+∞)"
+        },
+        {
+          "id": "d",
+          "text": "2 / (+∞)"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "La différence de deux limites infinies de même signe est la forme indéterminée ∞ − ∞ : on ne peut pas conclure sans transformer l'expression. En revanche (+∞) + (+∞) = +∞, (+∞) × 2 = +∞ et 2/(+∞) = 0 sont des résultats déterminés par les règles d'opérations.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Une suite (Uₙ) vérifie −1/n ≤ Uₙ ≤ 1/n pour tout n ≥ 1. Que peut-on conclure ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "(Uₙ) est croissante"
+        },
+        {
+          "id": "b",
+          "text": "lim Uₙ = 0"
+        },
+        {
+          "id": "c",
+          "text": "lim Uₙ = 1"
+        },
+        {
+          "id": "d",
+          "text": "On ne peut rien conclure sur la limite"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Les deux suites qui encadrent (Uₙ) sont −1/n et 1/n : elles tendent toutes deux vers 0. D'après le théorème des gendarmes, lim Uₙ = 0. L'encadrement ne renseigne pas sur la monotonie (a est infondé). La valeur 1 est la limite de n × (1/n), pas de Uₙ. Enfin, l'encadrement suffit précisément à conclure : d ignore le théorème des gendarmes.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Que peut-on affirmer d'une suite (Uₙ) croissante et majorée ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Elle tend vers +∞"
+        },
+        {
+          "id": "b",
+          "text": "Elle converge vers son majorant"
+        },
+        {
+          "id": "c",
+          "text": "Elle converge vers un réel"
+        },
+        {
+          "id": "d",
+          "text": "Elle est constante"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Le théorème de la convergence des suites monotones affirme qu'une suite croissante et majorée converge vers un réel. Elle ne tend pas vers +∞ (c'est le cas d'une suite croissante NON majorée). Elle ne converge pas forcément vers son majorant : Uₙ = 1 − 1/n est majorée par 100 mais converge vers 1 — le théorème donne l'existence de la limite, pas sa valeur. Une suite croissante n'a aucune raison d'être constante.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Une suite (Uₙ) est définie par Uₙ₊₁ = f(Uₙ), où f est une fonction continue. On sait que (Uₙ) converge vers un réel ℓ. Quelle égalité vérifie ℓ ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "ℓ = 0"
+        },
+        {
+          "id": "b",
+          "text": "ℓ = f(ℓ)"
+        },
+        {
+          "id": "c",
+          "text": "f(ℓ) = 0"
+        },
+        {
+          "id": "d",
+          "text": "ℓ = f(ℓ + 1)"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "D'après le théorème du point fixe, si (Uₙ) converge vers ℓ et si f est continue en ℓ, alors ℓ = f(ℓ) : la limite est un point fixe de f. Les autres égalités sont inventées : rien n'impose ℓ = 0 ni f(ℓ) = 0, et ℓ = f(ℓ + 1) n'a pas de sens (on passe à la limite dans Uₙ₊₁ = f(Uₙ), les deux membres tendent vers ℓ et f(ℓ)).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Deux suites (Uₙ) et (Vₙ) sont adjacentes. Que peut-on en déduire ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Elles convergent vers une même limite"
+        },
+        {
+          "id": "b",
+          "text": "Elles convergent vers deux limites différentes"
+        },
+        {
+          "id": "c",
+          "text": "L'une converge et l'autre diverge"
+        },
+        {
+          "id": "d",
+          "text": "Elles sont toutes deux constantes"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Par définition, deux suites adjacentes vérifient Uₙ ≤ Vₙ, (Uₙ) croissante, (Vₙ) décroissante et Vₙ − Uₙ → 0 ; le théorème garantit alors qu'elles convergent vers une même limite. Elles ne peuvent donc pas avoir deux limites distinctes, ni l'une converger sans l'autre. Le caractère strictement croissant/décroissant interdit justement qu'elles soient constantes.",
+      "difficulty": 2
+    }
+  ]
+}
