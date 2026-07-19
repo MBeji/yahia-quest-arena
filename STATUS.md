@@ -122,7 +122,15 @@ Source de vérité : [FableEtudes/README.md](./FableEtudes/README.md) (index) + 
   énergie/quotas ; première intégration LLM runtime du produit (socle lot 0 : adaptateur,
   comptabilité `ai_usage_events`, kill-switch) ; principe « le déterministe décide, le LLM
   rédige » ; ne dépend plus de l'étude 01 — coût borné par énergie + budget/jour, chiffré en
-  annexe A ; 8 lots ; Q-1…Q-9 ouvertes)**.
+  annexe A ; 8 lots ; Q-1…Q-9 ouvertes)** · **26 (doctrine verticale : profondeur avant
+  largeur — le mandat « qualité avant expansion » du 2026-07-19 rendu opérationnel : grille de
+  maturité M0-M4 + Definition of Excellence (pendant produit du DoD d'AGENTS.md), règle
+  « approfondir avant d'ouvrir », doctrine IA-native produit, scorecard mesurée sur le code —
+  dont 3 boucles collectées mais jamais surfacées : SM-2/`pendingSpacedReps` calculé puis
+  jeté, `user_misconceptions` écrit par trigger et lu par personne, `difficulty_adaptation`
+  jamais consommée par un sélecteur — et re-séquencement du portefeuille en verticales, V1 =
+  boucle d'apprentissage (é22 → é04-A1.1 → correction riche → é07 → é04-A2 → é20 → é23 → é19
+  → é11) ; 2 lots documentaires ; Q-1…Q-5 ouvertes)**.
 - **Gelées (pivot gratuité)** : 01 (paiement en ligne). — 11 (tuteur IA) n'y est plus : sortie
   du gel **côté conception** le 2026-07-17 (v2, voir Brouillons ci-dessus) ; son exécution
   reste suspendue à l'arbitrage humain de ses Q-1…Q-9.
