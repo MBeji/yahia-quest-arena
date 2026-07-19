@@ -12,6 +12,7 @@ import { logger } from "@/shared/lib/logger";
 import type { UnlockedBadge } from "@/shared/types/gamification";
 import type { Database } from "@/shared/integrations/supabase/types";
 import type { CompiledVideo } from "@/shared/content/schema";
+import { resolveCorrectionVideo } from "./correction-video";
 import {
   RECALL_LOCKED_MESSAGE,
   RECALL_NOT_ELIGIBLE_MESSAGE,
@@ -799,6 +800,9 @@ export const getExercise = createServerFn({ method: "GET" })
       hintCharges,
       chapterQuizId,
       quizGated,
+      // Review video for the failure screen (étude 23 R-6) — server-resolved
+      // here so BOTH registers (connected + anonymous) receive it.
+      correctionVideo: await resolveCorrectionVideo(supabase, ex.data),
       variant: data.variant,
     };
   });

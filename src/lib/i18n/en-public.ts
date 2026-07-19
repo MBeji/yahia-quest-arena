@@ -152,6 +152,7 @@ export const enPublic: TranslationKeys["public"] = {
     videoHostedBy: "Video hosted by {host}",
     videoDuration: "{m} min",
     videoLoadHint: "By tapping, you load a YouTube video (Google).",
+    videoReviewTitle: "Review the notion on video",
   },
   subject: {
     chapter: "Chapter {n}",
