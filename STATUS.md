@@ -122,7 +122,14 @@ Source de vérité : [FableEtudes/README.md](./FableEtudes/README.md) (index) + 
   énergie/quotas ; première intégration LLM runtime du produit (socle lot 0 : adaptateur,
   comptabilité `ai_usage_events`, kill-switch) ; principe « le déterministe décide, le LLM
   rédige » ; ne dépend plus de l'étude 01 — coût borné par énergie + budget/jour, chiffré en
-  annexe A ; 8 lots ; Q-1…Q-9 ouvertes)**.
+  annexe A ; 8 lots ; Q-1…Q-9 ouvertes)** · **25 (harness AI-native & model-agnostic —
+  benchmark complet de l'écosystème 2026 (AGENTS.md/AAIF, standard Agent Skills, MCP, incidents
+  sécurité) + bascule AGENTS.md canonique avec CLAUDE.md pointeur `@AGENTS.md`, miroir
+  `.agents/skills/` des 45 skills, rôles de modèles `harness/models.json` (zéro id en dur),
+  politique d'exécution déclarative, gate `harness:check` (dérive + Unicode invisible),
+  gardes CI à fournisseur interchangeable, mémoire process rapatriée dans `docs/agents/` ;
+  7 lots documentaires/outillage, zéro runtime produit ; Q-1…Q-6 ouvertes, Q-1 = GO/NO-GO de
+  la bascule)**.
 - **Gelées (pivot gratuité)** : 01 (paiement en ligne). — 11 (tuteur IA) n'y est plus : sortie
   du gel **côté conception** le 2026-07-17 (v2, voir Brouillons ci-dessus) ; son exécution
   reste suspendue à l'arbitrage humain de ses Q-1…Q-9.
