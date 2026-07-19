@@ -264,7 +264,32 @@
           "slug": "17-hist-muqawamat-al-isti3mar",
           "notion": "التجربة التونسيّة في مقاومة الاستعمار"
         },
-        { "slug": "18-hist-ta3sir-ad-dawla", "notion": "تعصير الدولة وتحديث المجتمع" }
+        { "slug": "18-hist-ta3sir-ad-dawla", "notion": "تعصير الدولة وتحديث المجتمع" },
+        { "slug": "19-geo-tawzi3-sukkan", "notion": "التوزّع الجغرافي للسكّان في العالم" },
+        { "slug": "20-geo-haraka-dimughrafiyya", "notion": "الحركة الديمغرافية للسكّان" },
+        {
+          "slug": "21-geo-hijrat-al-3amal",
+          "notion": "الحركيّة المجاليّة للسكّان : مثال هجرات العمل"
+        },
+        { "slug": "22-geo-infijar-hadari", "notion": "الانفجار الحضري" },
+        { "slug": "23-geo-tarkibat-al-madina", "notion": "تركيبة المدينة : دراسة حالة : القاهرة" },
+        { "slug": "24-geo-mawarid-ma2iyya", "notion": "الموارد المائيّة" },
+        { "slug": "25-geo-ta3bi2at-al-miyah", "notion": "تعبئة المياه" },
+        { "slug": "26-geo-rihanat-al-ma2", "notion": "رهانات الماء" },
+        {
+          "slug": "27-geo-mawarid-naftiyya",
+          "notion": "الموارد النفطيّة : الإنتاج والاستهلاك والمبادلات"
+        },
+        { "slug": "28-geo-rihanat-an-naft", "notion": "رهانات النفط" },
+        { "slug": "29-geo-al-insan-wal-wasat", "notion": "الإنسان والوسط الطّبيعي" },
+        {
+          "slug": "30-geo-zalazil-barakin",
+          "notion": "من المخاطر الطبيعيّة إلى الكوارث : الزّلازل والبراكين"
+        },
+        { "slug": "31-geo-fayadanat", "notion": "من المخاطر الطبيعيّة إلى الكوارث : الفيضانات" },
+        { "slug": "32-geo-tasahhur", "notion": "تدهور الأوساط الطّبيعية : مثال التّصحّر" },
+        { "slug": "33-geo-tadahwur-ghabi", "notion": "تدهور وسط غابي : مثال الغابة المتوسّطيّة" },
+        { "slug": "34-geo-ta3riyat-sawahil", "notion": "تدهور الأوساط الطّبيعية : تعرية السّواحل" }
       ]
     }
   ]
