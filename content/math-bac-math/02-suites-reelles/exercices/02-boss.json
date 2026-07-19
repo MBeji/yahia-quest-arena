@@ -1,0 +1,154 @@
+{
+  "title": "⚔️ Boss du chapitre ⭐⭐⭐ : Le dompteur de l'infini",
+  "difficulty": 3,
+  "mode": "boss",
+  "xpReward": 120,
+  "rewardCoins": 30,
+  "displayOrder": 2,
+  "questions": [
+    {
+      "prompt": "Soit (Uₙ) définie par U₀ = 3 et Uₙ₊₁ = 2Uₙ − 1. On pose Vₙ = Uₙ − 1. Déterminer la nature de (Vₙ), puis l'expression de Uₙ en fonction de n.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Uₙ = 3 × 2ⁿ"
+        },
+        {
+          "id": "b",
+          "text": "Uₙ = 2ⁿ⁺¹ + 1"
+        },
+        {
+          "id": "c",
+          "text": "Uₙ = 2ⁿ + 1"
+        },
+        {
+          "id": "d",
+          "text": "Uₙ = 2ⁿ⁺¹ − 1"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "V₀ = U₀ − 1 = 2, et Vₙ₊₁ = Uₙ₊₁ − 1 = 2Uₙ − 2 = 2(Uₙ − 1) = 2Vₙ : (Vₙ) est géométrique de raison 2 et de premier terme 2, donc Vₙ = 2 × 2ⁿ = 2ⁿ⁺¹. Ainsi Uₙ = Vₙ + 1 = 2ⁿ⁺¹ + 1 ✓ (contrôle : U₀ = 2 + 1 = 3 ✓, U₁ = 2 × 3 − 1 = 5 = 2² + 1 ✓). Le piège courant : oublier que V₀ = 2 et écrire Vₙ = 2ⁿ donne 2ⁿ + 1 ; traiter (Uₙ) elle-même comme géométrique de raison 2 (la constante −1 ignorée) donne 3 × 2ⁿ ; et reconstruire Uₙ = Vₙ − 1 au lieu de Vₙ + 1 fabrique 2ⁿ⁺¹ − 1.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "On considère la suite définie pour n ≥ 0 par Uₙ = (2n − 1)/(n + 1). Étudier sa monotonie.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Strictement décroissante"
+        },
+        {
+          "id": "b",
+          "text": "Constante, égale à 2"
+        },
+        {
+          "id": "c",
+          "text": "Croissante puis décroissante"
+        },
+        {
+          "id": "d",
+          "text": "Strictement croissante"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "On calcule Uₙ₊₁ − Uₙ = (2n + 1)/(n + 2) − (2n − 1)/(n + 1). Au même dénominateur (n + 1)(n + 2), le numérateur vaut (2n + 1)(n + 1) − (2n − 1)(n + 2) = (2n² + 3n + 1) − (2n² + 3n − 2) = 3. Donc Uₙ₊₁ − Uₙ = 3/((n + 1)(n + 2)) > 0 : (Uₙ) est strictement croissante ✓ (contrôle : U₀ = −1, U₁ = 1/2, U₂ = 1, ça monte ✓). Le piège courant : une faute de signe dans la soustraction (calculer Uₙ − Uₙ₊₁) donne −3 et conclut à tort « décroissante » ; confondre la limite 2 (ou le majorant 2) avec une valeur constante donne « constante égale à 2 », alors qu'aucun terme ne vaut 2.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Déterminer la limite de la suite définie pour n ≥ 0 par Uₙ = (3n + (−1)ⁿ)/(n + 1).",
+      "options": [
+        {
+          "id": "a",
+          "text": "3"
+        },
+        {
+          "id": "b",
+          "text": "La limite n'existe pas, car (−1)ⁿ n'a pas de limite"
+        },
+        {
+          "id": "c",
+          "text": "+∞"
+        },
+        {
+          "id": "d",
+          "text": "0"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Pour tout n, −1 ≤ (−1)ⁿ ≤ 1, donc (3n − 1)/(n + 1) ≤ Uₙ ≤ (3n + 1)/(n + 1). Les deux bornes tendent vers 3 (quotient de deux polynômes de même degré, rapport des coefficients dominants 3/1). Par le théorème des gendarmes, lim Uₙ = 3 ✓. Le piège courant : croire que l'oscillation de (−1)ⁿ empêche toute limite — l'encadrement la neutralise complètement ; répondre +∞ oublie de diviser par le degré du dénominateur (le 3n est compensé par le n du bas) ; et 0 ne retient que le terme (−1)ⁿ/(n + 1) → 0 en négligeant le 3n.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Soit (Uₙ) définie par U₀ = 0 et Uₙ₊₁ = √(Uₙ + 2). Un élève rédige :\n① La fonction f : x ↦ √(x + 2) est continue sur [0 ; +∞[.\n② Si (Uₙ) converge vers ℓ ≥ 0, alors ℓ = √(ℓ + 2), soit ℓ² − ℓ − 2 = 0, d'où ℓ = 2.\n③ Conclusion : lim Uₙ = 2.\nQue penser de ce raisonnement ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Il est complet et correct"
+        },
+        {
+          "id": "b",
+          "text": "L'erreur est à l'étape ② : l'équation admet aussi la solution ℓ = −1, donc la limite est −1"
+        },
+        {
+          "id": "c",
+          "text": "L'erreur est à l'étape ③ : on affirme que (Uₙ) converge sans l'avoir démontré ; le point fixe ne donne la limite qu'après avoir prouvé la convergence (suite croissante et majorée)"
+        },
+        {
+          "id": "d",
+          "text": "L'erreur est à l'étape ① : f n'est pas continue en 2"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "L'étape ③ est irrecevable ✓ : l'étape ② n'établit la valeur de la limite que SI (Uₙ) converge. Or la convergence n'a jamais été prouvée — il faut d'abord montrer que (Uₙ) est croissante et majorée (par 2) pour garantir qu'elle converge, puis seulement identifier ℓ = 2 par le point fixe. Sauter cette étape est l'erreur la plus sanctionnée du chapitre : trouver le point fixe ne prouve jamais à lui seul la convergence. Les étapes ① et ② sont exactes (ℓ = −1 est bien racine de ℓ² − ℓ − 2 = 0, mais rejetée car Uₙ ≥ 0, donc la valeur retenue 2 est correcte ; et f est continue sur tout [0 ; +∞[). C'est donc la démarche, pas le résultat final, qu'il fallait invalider.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Soit (Uₙ) définie par U₀ = 4 et Uₙ₊₁ = √(3Uₙ). On admet que (Uₙ) est décroissante et minorée par 3. Vers quelle limite converge-t-elle ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "√3"
+        },
+        {
+          "id": "b",
+          "text": "3"
+        },
+        {
+          "id": "c",
+          "text": "0"
+        },
+        {
+          "id": "d",
+          "text": "(Uₙ) diverge : une suite décroissante finit toujours par tendre vers −∞"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "(Uₙ) étant décroissante et minorée par 3, le théorème de convergence des suites monotones garantit qu'elle converge vers un réel ℓ ≥ 3. La fonction f : x ↦ √(3x) étant continue, le point fixe donne ℓ = √(3ℓ), soit ℓ² = 3ℓ, d'où ℓ(ℓ − 3) = 0 : ℓ = 0 ou ℓ = 3. Comme ℓ ≥ 3, on retient ℓ = 3 ✓. Le piège courant : garder la racine parasite ℓ = 0, incompatible avec la minoration Uₙ ≥ 3 ; résoudre ℓ = √(3ℓ) comme ℓ² = 3 (au lieu de 3ℓ) fabrique √3 ; et croire qu'une suite décroissante tend nécessairement vers −∞ ignore l'hypothèse « minorée », qui interdit précisément cela.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Une seule des affirmations suivantes est vraie. Laquelle ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Toute suite bornée est convergente"
+        },
+        {
+          "id": "b",
+          "text": "Si (Uₙ) est croissante et majorée, alors elle converge et sa limite est égale à son majorant"
+        },
+        {
+          "id": "c",
+          "text": "Si ℓ est un point fixe de f (ℓ = f(ℓ)), alors toute suite définie par Uₙ₊₁ = f(Uₙ) converge vers ℓ"
+        },
+        {
+          "id": "d",
+          "text": "Si (Uₙ) converge vers ℓ et vérifie Uₙ₊₁ = f(Uₙ) avec f continue en ℓ, alors ℓ = f(ℓ)"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Seule d est vraie ✓ : c'est le théorème du point fixe (si la suite converge et f est continue en la limite, alors la limite vérifie ℓ = f(ℓ)). a est fausse : Uₙ = (−1)ⁿ est bornée (−1 ≤ Uₙ ≤ 1) mais ne converge pas (U₂ₙ → 1, U₂ₙ₊₁ → −1). b est fausse : « croissante et majorée » garantit l'existence d'une limite, jamais qu'elle vaille le majorant — Uₙ = 1 − 1/n est majorée par 100 et converge vers 1. c est fausse : c'est la réciproque illusoire du point fixe — l'existence d'un point fixe ne force aucune convergence (il faut prouver monotonie + bornée). Le piège courant : mémoriser le point fixe « dans les deux sens », alors qu'il ne fonctionne que de la convergence vers l'équation ℓ = f(ℓ).",
+      "difficulty": 3
+    }
+  ]
+}
