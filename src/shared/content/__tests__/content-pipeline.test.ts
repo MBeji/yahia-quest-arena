@@ -11,8 +11,10 @@ import {
 } from "../schema.ts";
 import { ContentValidationError, loadAllSubjects, loadSubject } from "../loader.ts";
 import {
+  COMPETENCES_SQL_FILE_NAME,
   buildMigrationSql,
   chapterId,
+  contentSqlFileName,
   exerciseId,
   questionId,
   sqlJson,
@@ -293,6 +295,23 @@ describe("deterministic ids", () => {
     const q1 = questionId("math", "01-foo", "ex1", 1);
     const q2 = questionId("math", "01-foo", "ex1", 2);
     expect(new Set([ch, ex, q1, q2]).size).toBe(4);
+  });
+});
+
+describe("content channel file names (étude 24 D-3)", () => {
+  it("names a subject's SQL after the subject, with no timestamp", () => {
+    expect(contentSqlFileName("math")).toBe("math.sql");
+    expect(contentSqlFileName("math-bac-math")).toBe("math-bac-math.sql");
+    // The whole point of the channel: no 14-digit prefix to order or collide.
+    expect(contentSqlFileName("math")).not.toMatch(/^\d{14}_/);
+  });
+
+  it("is stable across calls, so a subject regenerates in place", () => {
+    expect(contentSqlFileName("svt")).toBe(contentSqlFileName("svt"));
+  });
+
+  it("keeps the registry from colliding with a subject of the same name", () => {
+    expect(COMPETENCES_SQL_FILE_NAME).not.toBe(contentSqlFileName("competences"));
   });
 });
 
