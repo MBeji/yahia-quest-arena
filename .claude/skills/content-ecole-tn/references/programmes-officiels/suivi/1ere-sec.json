@@ -167,7 +167,7 @@
           "pagesTotal": 224,
           "pagesLues": [
             [2, 5],
-            [11, 41],
+            [11, 56],
             [221, 224]
           ]
         },
@@ -186,9 +186,9 @@
       ],
       "sourcesLibres": [],
       "r7": null,
-      "maj": "2026-07-18",
+      "maj": "2026-07-19",
       "par": "bejimed",
-      "notes": "⛔ GÉNÉRATION INTERDITE (statut partielle / profondeur mixte). Sujet COMBINÉ histoire+géographie (subject id cible histoire-geo-1ere-sec ; overlay prof-histoire-geo-lycee). Deux manuels élève arabes (pas de guide au corpus) → font référence. Langue CONSTATÉE : arabe (conforme lycee-architecture §4). PALIER 1 (STRUCTURE) : histoire chapitrée 18 leçons / 3 وحدات (vérifié au فهرس p.221-223 + crédits p.224), codifié au manifeste ; géo structuré en 3 modules (الإنسان يعمّر الأرض ~p.5-44 · الإنسان يستثمر الموارد الطبيعيّة ~p.45-112 · الإنسان والأوساط الطبيعيّة ~p.113-117) — pas de فهرس, leçons internes à établir (hors manifeste). PALIERS 2-4 (2026-07-18) : histoire leçons 1-5 = TOUT LE محور 1 de la وحدة 1 (p.11-43) transcrites à PROFONDEUR DE GÉNÉRATION (fiche §2bis : المدخل, وثائق+sources, تعليمات, معطيات مكمّلة, أدعّم مكتسباتي verbatim ; leçons = المؤسّسات السياسيّة, الديانة, الميناء والتوسّع التّجاري, موسوعة ماغون, عبقريّة حنبعل). RESTE : histoire leçons 6-18 + géo entier, à transcrire par vision (couche-texte cassée ; figures décrites d'après légende ; أطالع/lecture résumée R-2). Reprise (R-4) : suite = leçon 6 (الازدهار العمراني, و1/م2 قرطاج الرّومانيّة, p.45). Pas de R-7 (fiche non complète)."
+      "notes": "⛔ GÉNÉRATION INTERDITE (statut partielle / profondeur mixte). Sujet COMBINÉ histoire+géographie (subject id cible histoire-geo-1ere-sec ; overlay prof-histoire-geo-lycee). Deux manuels élève arabes (pas de guide au corpus) → font référence. Langue CONSTATÉE : arabe (conforme lycee-architecture §4). PALIER 1 (STRUCTURE) : histoire chapitrée 18 leçons / 3 وحدات (vérifié au فهرس p.221-223 + crédits p.224), codifié au manifeste ; géo structuré en 3 modules (الإنسان يعمّر الأرض ~p.5-44 · الإنسان يستثمر الموارد الطبيعيّة ~p.45-112 · الإنسان والأوساط الطبيعيّة ~p.113-117) — pas de فهرس, leçons internes à établir (hors manifeste). PALIERS 2-5 (2026-07-18/19) : histoire leçons 1-6 (p.11-56) transcrites à PROFONDEUR DE GÉNÉRATION (fiche §2bis : المدخل, وثائق+sources, تعليمات, معطيات مكمّلة, أدعّم مكتسباتي verbatim). Fait = TOUT le محور 1 (leçons 1-5 : المؤسّسات السياسيّة, الديانة, الميناء, موسوعة ماغون, عبقريّة حنبعل) + leçon 6 du محور 2 (الازدهار العمراني : Afrique proconsulaire romaine, El Jem, mosaïques). RESTE : histoire leçons 7-18 + géo entier, à transcrire par vision (couche-texte cassée ; figures décrites d'après légende ; أطالع/lecture résumée R-2). Reprise (R-4) : suite = leçon 7 (الازدهار الاقتصادي الفلاحة, p.57). Pas de R-7 (fiche non complète)."
     }
   ]
 }
