@@ -593,17 +593,28 @@ export type VideoRegistry = z.infer<typeof videoRegistrySchema>;
  * this boundary (étude 23 D-10): `provider` (enum) + `videoId` (validated) are
  * all the embed needs; the client builds the URL by template.
  */
-export type CompiledVideo = {
-  id: string;
-  provider: VideoProvider;
-  videoId: string;
-  title: string;
-  channel: string;
-  lang: ContentLanguage;
-  durationSec: number;
-  startSec?: number;
-  endSec?: number;
-};
+export const compiledVideoSchema = z
+  .object({
+    id: z.string().min(1),
+    provider: videoProviderSchema,
+    videoId: z.string().min(1),
+    title: z.string().min(1),
+    channel: z.string().min(1),
+    lang: z.enum(CONTENT_LANGUAGES),
+    durationSec: z.number().int().positive(),
+    startSec: z.number().int().nonnegative().optional(),
+    endSec: z.number().int().positive().optional(),
+  })
+  .superRefine((v, ctx) => {
+    if (!VIDEO_ID_PATTERNS[v.provider].test(v.videoId)) {
+      ctx.addIssue({
+        code: "custom",
+        message: `videoId "${v.videoId}" is not a valid ${v.provider} id`,
+        path: ["videoId"],
+      });
+    }
+  });
+export type CompiledVideo = z.infer<typeof compiledVideoSchema>;
 
 /** Project a registry entry onto its compiled display subset (étude 23 §3). */
 export function toCompiledVideo(id: string, entry: VideoEntry): CompiledVideo {
