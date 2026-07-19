@@ -707,6 +707,21 @@ les tests XSS de `markdown.test.ts` ne sont pas touchés (le renderer non plus).
 
 ## 7. Questions ouvertes (pour l'humain)
 
+> **Arbitrages rendus par Mohamed le 2026-07-19** — les questions ci-dessous
+> gardent leur énoncé d'origine ; voici les décisions :
+>
+> | question | décision                                                                                                                                                                                                       |
+> | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+> | **Q-1**  | ✅ **Allowlist validée telle que proposée** (annexe A.4 → `content-videos/references/video-sources.md`). La campagne du lot 5 est débloquée côté chaînes.                                                      |
+> | **Q-2**  | ✅ **Pubs YouTube acceptées** en phase gratuite. À notion égale, préférer une source sans pub (Khan Academy, chaîne du ministère).                                                                             |
+> | **Q-3**  | ⏳ **Les deux actions prises en charge par Mohamed, échéance libre.** Texte prêt à coller pour (b) en **annexe C**. Ne bloque pas la curation ; (a) reste une obligation de conformité à ne pas laisser filer. |
+> | **Q-4**  | — Non tranchée volontairement : attendre le bilan d'usage `video_open` du pilote.                                                                                                                              |
+> | **Q-5**  | ✅ **Derja admise au primaire**, la terminologie officielle en فصحى restant portée par le cours écrit. À consigner : `notes: "explication en derja"`.                                                          |
+>
+> **Ce que Q-1 ne débloque PAS** : R-3 reste entier — une entrée n'est mergeable
+> qu'après **visionnage intégral par un humain** (`verifiedOn` + `verifiedBy`).
+> L'allowlist autorise une **chaîne**, jamais une **vidéo**.
+
 - **Q-1 — L'allowlist initiale des chaînes** (la décision de curation n° 1). L'annexe A propose,
   par cycle × matière × langue, les chaînes candidates avec leur fiche (volume, durée, alignement
   programme tunisien, risques). À valider/amender par Mohamed — idéalement en vérifiant depuis la
@@ -735,13 +750,14 @@ les tests XSS de `markdown.test.ts` ne sont pas touchés (le renderer non plus).
 
 ## 8. Journal d'exécution
 
-| date       | lot | PR   | écarts acceptés / dettes notées                                                                                                                                                                                                                                                                                                                                                                                                               |
-| ---------- | --- | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-07-17 | —   | —    | Étude rédigée (Fable 5). Q-1…Q-5 ouvertes ; statut `brouillon`.                                                                                                                                                                                                                                                                                                                                                                               |
-| 2026-07-19 | 1   | #507 | Socle données conforme. Registre livré vide ; no-op prouvé (chapitre sans vidéo → `'[]'`, exercice → NULL). Les contrôles « active sans verifiedOn » et « endSec » sont posés dans `content:qa` (comme spécifié §3), pas en zod.                                                                                                                                                                                                              |
-| 2026-07-19 | 2   | #510 | Conforme. **Dette** : la colonne `chapters.videos` manque aux types Supabase générés (`supabase gen types` impossible hors ligne, hook anti-édition) → narrowing local dans `getChapterLesson` ; régénérer les types au prochain accès DB. Budget bundle i18n bumpé 118→120 KB (pattern documenté du fichier).                                                                                                                                |
-| 2026-07-19 | 3   | —    | Résolution R-6 placée dans `getExercise` (et non `startExerciseSession`) : c'est le payload que lisent **les deux** registres (connecté + anonyme) — `startExerciseSession` ne porte aucune donnée d'exercice. **Écart assumé** : la spec e2e auth est **reportée au lot 5** — aucune vidéo n'existe au registre avant la campagne, donc aucun seed TEST ne peut la rendre verte ; à écrire avec les données du pilote.                       |
-| 2026-07-19 | 4   | —    | Outillage conforme : skill `content-videos` (+ `references/video-sources.md` = allowlist **proposée**, en attente Q-1), `check-videos.mjs` (oEmbed anonyme throttlé ; `unknown` sur échec réseau — jamais de faux `broken` ; ne modifie JAMAIS le registre), workflow hebdo `video-health.yml` (issue listant vidéos mortes **et sujets à rebâtir**, auto-close au vert), script `content:videos:check`. No-op vert prouvé sur registre vide. |
+| date       | lot | PR   | écarts acceptés / dettes notées                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| ---------- | --- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-07-17 | —   | —    | Étude rédigée (Fable 5). Q-1…Q-5 ouvertes ; statut `brouillon`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| 2026-07-19 | 1   | #507 | Socle données conforme. Registre livré vide ; no-op prouvé (chapitre sans vidéo → `'[]'`, exercice → NULL). Les contrôles « active sans verifiedOn » et « endSec » sont posés dans `content:qa` (comme spécifié §3), pas en zod.                                                                                                                                                                                                                                                                                                                                                           |
+| 2026-07-19 | 2   | #510 | Conforme. **Dette** : la colonne `chapters.videos` manque aux types Supabase générés (`supabase gen types` impossible hors ligne, hook anti-édition) → narrowing local dans `getChapterLesson` ; régénérer les types au prochain accès DB. Budget bundle i18n bumpé 118→120 KB (pattern documenté du fichier).                                                                                                                                                                                                                                                                             |
+| 2026-07-19 | 3   | —    | Résolution R-6 placée dans `getExercise` (et non `startExerciseSession`) : c'est le payload que lisent **les deux** registres (connecté + anonyme) — `startExerciseSession` ne porte aucune donnée d'exercice. **Écart assumé** : la spec e2e auth est **reportée au lot 5** — aucune vidéo n'existe au registre avant la campagne, donc aucun seed TEST ne peut la rendre verte ; à écrire avec les données du pilote.                                                                                                                                                                    |
+| 2026-07-19 | 4   | —    | Outillage conforme : skill `content-videos` (+ `references/video-sources.md` = allowlist **proposée**, en attente Q-1), `check-videos.mjs` (oEmbed anonyme throttlé ; `unknown` sur échec réseau — jamais de faux `broken` ; ne modifie JAMAIS le registre), workflow hebdo `video-health.yml` (issue listant vidéos mortes **et sujets à rebâtir**, auto-close au vert), script `content:videos:check`. No-op vert prouvé sur registre vide.                                                                                                                                              |
+| 2026-07-19 | —   | #527 | **Arbitrages Q-1 / Q-2 / Q-5 rendus** (allowlist validée, pubs acceptées, derja admise) → §7. Q-3 : les deux actions ops prises en charge par Mohamed, échéance libre — **dette ouverte**, texte prêt en annexe C. **Constat** : aucune page « politique de confidentialité » n'existe (seulement les mentions légales) alors que la mitigation RISK-8 la supposait — la surface est à créer avant de publier le paragraphe. Q-4 volontairement non tranchée (attendre le bilan `video_open`). Lot 5 débloqué **côté chaînes uniquement** : R-3 (visionnage intégral humain) reste entier. |
 
 ---
 
@@ -869,3 +885,57 @@ des campagnes.
 8. **Alternatives** : PeerTube = plan C sans pub crédible (auto-hébergé) ; Vimeo Free marginal
    (1 GB à vie, watermark) ; Dailymotion exclu (pubs stitchées) ; Internet Archive = domaine
    public seulement.
+
+## Annexe C — Texte proposé pour la politique de confidentialité (livrable Q-3b)
+
+> Livrable dû par l'exécuteur (§7 Q-3). Mohamed a pris les deux actions ops en
+> charge le 2026-07-19, échéance libre — ce texte est prêt à coller le moment venu.
+>
+> **Constat à traiter en même temps** : l'app n'expose aujourd'hui **aucune page
+> « politique de confidentialité »** — seulement une boîte « Mentions légales »
+> (`src/components/public/legal-notice-dialog.tsx`, 56 lignes, sans section
+> données/traceurs). La mitigation de RISK-8 supposait cette page existante.
+> Publier le paragraphe suppose donc de créer la surface qui l'accueille (ou
+> d'étendre les mentions légales d'une section « Données et services tiers »).
+
+### Version française (à destination des parents)
+
+> **Vidéos YouTube intégrées**
+>
+> Certains chapitres proposent des vidéos explicatives gratuites, choisies une par
+> une par notre équipe et hébergées par YouTube (Google). Nous n'hébergeons ni ne
+> produisons ces vidéos.
+>
+> **Rien n'est chargé depuis YouTube tant que votre enfant n'a pas appuyé sur
+> « lecture ».** Avant ce geste, la vignette affichée est une image stockée sur
+> notre propre serveur : aucune donnée n'est transmise à Google, aucun cookie ni
+> traceur n'est déposé. La carte annonce clairement, dans des mots compréhensibles
+> par un enfant, qu'appuyer chargera une vidéo YouTube.
+>
+> Lorsque votre enfant appuie sur « lecture », la vidéo est chargée depuis le
+> domaine `youtube-nocookie.com`, le mode « confidentialité renforcée » de YouTube :
+> aucun cookie publicitaire n'est déposé avant la lecture. Google peut néanmoins
+> recevoir à ce moment l'adresse IP et des informations techniques sur l'appareil,
+> et déposer des données de stockage local — c'est précisément la raison pour
+> laquelle rien ne se charge sans cette action volontaire.
+>
+> Des publicités peuvent apparaître avant ou pendant ces vidéos : elles sont
+> diffusées par YouTube et nous n'avons aucun moyen de les désactiver sur une
+> vidéo que nous n'hébergeons pas. Notre application est déclarée auprès de Google
+> comme **destinée aux enfants**, ce qui limite la publicité à des annonces non
+> personnalisées.
+>
+> Aucune donnée de visionnage n'est associée au compte de votre enfant chez nous :
+> regarder ou non une vidéo ne change ni ses points, ni sa progression, ni aucun
+> élément de son profil.
+>
+> Vous pouvez à tout moment demander le retrait d'une vidéo ou nous signaler un
+> problème via le bouton de signalement de l'application.
+
+### Notes de publication
+
+- Le paragraphe **suppose l'action Q-3a faite** (« déclarée auprès de Google comme
+  destinée aux enfants »). Publier (b) **avant** (a) rendrait la phrase inexacte :
+  faire (a) d'abord, ou retirer cette phrase jusqu'à ce que (a) soit fait.
+- Traduire en EN/AR au moment de la publication si la page légale est trilingue.
+- À revisiter si un jour un provider autre que YouTube entre dans la CSP (D-6).
