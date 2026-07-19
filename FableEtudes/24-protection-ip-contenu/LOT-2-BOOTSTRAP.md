@@ -26,11 +26,11 @@ copier depuis un clone à jour de `yahia-quest-arena` (branche `main`) :
 | ------------------------------------------ | ------------------------------------------------------------- | ------------------------------------------ |
 | `content/` (intégral, registres inclus)    | `content/`                                                    | 36 Mo                                      |
 | `FableEtudes/` (études + METHODE + guides) | `FableEtudes/`                                                | arbitrage Q-3                              |
-| les **39 skills pédagogiques** ci-dessous  | `.claude/skills/…`                                            | les 5 skills techniques restent au public  |
+| les **40 skills pédagogiques** ci-dessous  | `.claude/skills/…`                                            | les 5 skills techniques restent au public  |
 | `.github/workflows/content-audit.yml`      | idem                                                          | adapté : double checkout + symlink (ét. 2) |
 | — (seed, contenus verbatim au §3)          | `CLAUDE.md`, `.gitignore`, `.github/workflows/content-ci.yml` |                                            |
 
-**Skills à copier (39)** — tout sauf `code-review`, `regression-guard`, `report-triage`,
+**Skills à copier (40)** — tout sauf `code-review`, `regression-guard`, `report-triage`,
 `upgrade-guard`, `verify` :
 `content-audit`, `content-cours`, `content-culture-generale`, `content-ecole-tn`,
 `content-engine`, `content-ingest`, `content-interactif`, `content-iq-training`,

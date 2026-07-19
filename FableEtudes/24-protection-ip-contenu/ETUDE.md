@@ -330,7 +330,7 @@ Détail et stop-points :
 Cases à cocher :
 
 - [x] Lot 1 — armement juridique (LICENSE + notices) — livré le 2026-07-19
-- [ ] Lot 2 — repo privé + CI contenu
+- [x] Lot 2 — repo privé + CI contenu — livré le 2026-07-19
 - [ ] Lot 3 — découplage SQL contenu + nettoyage historique migrations
 - [ ] Lot 4 — dégraissage du repo public + gate anti-fuite
 - [ ] Lot 5 — purge de l'historique public (si Q-2)
@@ -419,3 +419,11 @@ Cases à cocher :
   `yahia-quest-content` + secrets), puis import + CI privée exécutables en une passe par
   n'importe quelle session. **D-4 amendée** : symlink du corpus dans le checkout moteur au
   lieu du patch `--content-dir` (zéro modification du moteur).
+- **2026-07-19 — lot 2 livré** : repo privé `MBeji/yahia-quest-content` créé (étape humaine),
+  import initial `d67177a` = miroir de `yahia-quest-arena@ef43487` — `content/` (36 Mo),
+  `FableEtudes/`, **40 skills pédagogiques** (l'annexe en comptait 39 par erreur ; les 5
+  skills techniques restent au public), seeds (CLAUDE.md privé, README, .gitignore),
+  `content-ci.yml` (double checkout + symlink) et `content-audit.yml` adapté (s'active avec
+  le secret `CLAUDE_CODE_OAUTH_TOKEN`, recommandé au lot 4). Critère d'acceptation : run
+  « Content CI » #1 vert sur le corpus réel. Règle de transition active : le contenu s'édite
+  encore au public, le privé est un miroir jusqu'au lot 4.
