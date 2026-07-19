@@ -18,12 +18,16 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useT } from "@/lib/i18n";
 import { exerciseRouteFor } from "../exercise-route";
 import { ManuelPagesSection } from "./manuel-pages-section";
+import { ChapterVideosSection } from "./chapter-videos-section";
+import type { CompiledVideo } from "./video-embed";
 
 export type LessonReaderChapter = {
   title: string;
   lesson_content: string | null;
   summary: string | null;
   subject_id: string;
+  /** Curated explainer videos (étude 23) — compiled display objects, 0–3. */
+  videos: CompiledVideo[] | null;
   /** Joined subject row; loosely typed (Supabase relation) — narrowed below. */
   subjects: unknown;
 };
@@ -293,6 +297,8 @@ export function LessonReader({
           )}
         </DialogContent>
       </Dialog>
+
+      <ChapterVideosSection videos={chapter.videos ?? []} subjectId={chapter.subject_id} />
 
       <ManuelPagesSection chapterId={chapterId} isAuthenticated={isAuthenticated} />
 

@@ -12,6 +12,9 @@ vi.mock("@tanstack/react-router", () => ({
 // so the presentational reader can be tested without a QueryClient. It has its own
 // test (manuel-pages-section.test.tsx).
 vi.mock("../components/manuel-pages-section", () => ({ ManuelPagesSection: () => null }));
+// The « En vidéo » section (étude 23) has its own test (chapter-videos-section.test.tsx);
+// stub it here so the reader test stays focused on the lesson body.
+vi.mock("../components/chapter-videos-section", () => ({ ChapterVideosSection: () => null }));
 
 import { LessonReader, type LessonReaderChapter } from "../components/lesson-reader";
 
@@ -20,6 +23,7 @@ const chapter: LessonReaderChapter = {
   lesson_content: "## Section A\nLe verbe être.\n## Section B\nLe verbe avoir.",
   summary: "Résumé : être et avoir au présent.",
   subject_id: "francais-a1",
+  videos: null,
   subjects: { name_fr: "Français", content_language: "fr" },
 };
 

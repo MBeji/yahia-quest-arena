@@ -147,6 +147,11 @@ export const frPublic: TranslationKeys["public"] = {
     manuelOpen: "Agrandir la page",
     manuelPrev: "Précédente",
     manuelNext: "Suivante",
+    videoSectionTitle: "En vidéo",
+    videoPlay: "Regarder : {title} ({m} min)",
+    videoHostedBy: "Vidéo hébergée par {host}",
+    videoDuration: "{m} min",
+    videoLoadHint: "En appuyant, tu charges une vidéo YouTube (Google).",
   },
   subject: {
     chapter: "Chapitre {n}",

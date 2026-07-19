@@ -162,3 +162,26 @@ export function trackPageview(path: string): void {
     page_title: typeof document !== "undefined" ? document.title : undefined,
   });
 }
+
+/** Where a curated explainer video was opened (étude 23 observability). */
+export type VideoOpenContext = "lesson" | "result";
+
+/**
+ * Report a curated-video play (étude 23 R-13): the single product metric of the
+ * feature — real usage before extending the curation campaign. No-op unless
+ * analytics is enabled and gtag is present; never throws. Fired when the facade
+ * is clicked and the iframe is mounted (never before — no third-party request
+ * happens until this point, R-4).
+ */
+export function trackVideoOpen(params: {
+  videoId: string;
+  context: VideoOpenContext;
+  subjectId: string;
+}): void {
+  if (!isAnalyticsEnabled() || typeof window.gtag !== "function") return;
+  safeGtag("event", "video_open", {
+    video_id: params.videoId,
+    context: params.context,
+    subject_id: params.subjectId,
+  });
+}
