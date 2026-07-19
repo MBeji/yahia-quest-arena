@@ -2,6 +2,7 @@
   "name": "tanstack_start_ts",
   "version": "0.1.0",
   "private": true,
+  "license": "SEE LICENSE IN LICENSE.md",
   "sideEffects": false,
   "type": "module",
   "scripts": {
