@@ -29,6 +29,8 @@
     "format": "prettier --write .",
     "content:check": "node --experimental-strip-types scripts/content/build.ts --check",
     "content:build": "node --experimental-strip-types scripts/content/build.ts",
+    "content:emit": "node --experimental-strip-types scripts/content/build.ts --sql-dir sql/content",
+    "db:inventory-content": "node scripts/db/inventory-content-migrations.mjs",
     "content:qa": "node --experimental-strip-types scripts/content/qa.ts",
     "content:qa:strict": "node --experimental-strip-types scripts/content/qa.ts --strict",
     "content:audit": "node --experimental-strip-types scripts/content/audit-program.ts",
