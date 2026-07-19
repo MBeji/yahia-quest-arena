@@ -2,10 +2,10 @@
 
 > **Sources** (deux manuels élève CNP combinés — pas de guide enseignant au corpus) :
 >
-> - **Manuel élève — التاريخ (Histoire)** : `207103P00.pdf` (`cnp-officiel/manuels/secondaire/c1/eleve/`) — 224 p. **Pages lues** : p.2–5 (© + مقدمة + ouverture module), **p.11–41 (leçons 1–5 = tout le محور 1 de la وحدة 1, à profondeur de génération, §2bis)**, p.221–224 (فهرس + تأليف الدّروس). **⛔ leçons 6–18 NON encore transcrites à profondeur de génération.**
+> - **Manuel élève — التاريخ (Histoire)** : `207103P00.pdf` (`cnp-officiel/manuels/secondaire/c1/eleve/`) — 224 p. **Pages lues** : p.2–5 (© + مقدمة + ouverture module), **p.11–56 (leçons 1–6 à profondeur de génération, §2bis : tout le محور 1 + leçon 6 du محور 2)**, p.221–224 (فهرس + تأليف الدّروس). **⛔ leçons 7–18 NON encore transcrites à profondeur de génération.**
 > - **Manuel élève — الجغرافيا (Géographie)** : `206103P00.pdf` (`…/eleve/`) — 120 p. **Pages lues** : p.2–5 (© + التقديم + خريطة الكتاب + ouverture module 1), p.25, p.45 (ouvreurs de modules), p.116–117 (module 3). **Pas de فهرس dans ce manuel** ; structure établie au niveau **module** (les bornes fines des leçons restent à établir en transcription profonde).
 >
-> **Transcrit le** : 2026-07-18 (palier 1 STRUCTURE, puis paliers 2–4 : histoire leçons 1–5 = tout le محور 1 de la وحدة 1, à profondeur de génération). **Statut** : `partielle` · profondeur `mixte` (leçons 1–5 en `generation`, reste en `first-pass`) → **⛔ GÉNÉRATION INTERDITE** tant que la matière n'est pas complète à profondeur de génération (R-5).
+> **Transcrit le** : 2026-07-18/19 (palier 1 STRUCTURE, puis paliers 2–5 : histoire leçons 1–6 à profondeur de génération — tout le محور 1 + leçon 6 du محور 2 de la وحدة 1). **Statut** : `partielle` · profondeur `mixte` (leçons 1–6 en `generation`, reste en `first-pass`) → **⛔ GÉNÉRATION INTERDITE** tant que la matière n'est pas complète à profondeur de génération (R-5).
 > **Langue d'enseignement** : `ar` (constatée : manuels intégralement en arabe ; conforme à `docs/lycee-architecture.md` §4 — matière `ar`, pas de bascule fr). **gradeSlug** : `1ere-sec`. **subject id** attendu : `histoire-geo-1ere-sec` (sujet combiné histoire+géographie — cf. overlay `prof-histoire-geo-lycee`).
 > **Provenance / droits** : corpus officiel CNP (المركز الوطني البيداغوجي, © p.2 des deux manuels) — R-2 OK. Manuels « مطابق للبرنامج الرّسمي في صيغته الجديدة » (préface, 2003) → font référence (aucun guide enseignant au corpus).
 
@@ -73,7 +73,7 @@ _Le manuel géo **ne comporte pas de فهرس** ; structure établie à partir d
 
 ## 2bis. Contenu détaillé des leçons transcrites (profondeur de génération)
 
-> Transcription **fidèle** des leçons déjà lues intégralement en vision. Chaque activité/document décrit individuellement, encadrés (`تعريف بمفهوم` / `معطيات مكمّلة` / `أدعّم مكتسباتي`) restitués verbatim, sources citées. **État** : histoire leçons 1–5 (p.11–43 = tout le محور 1 de la وحدة 1) transcrites 2026-07-18 ; le reste (leçons 6–18 + géo) demeure en `first-pass` (structure du §2). Chiffres occidentaux (source, respectée).
+> Transcription **fidèle** des leçons déjà lues intégralement en vision. Chaque activité/document décrit individuellement, encadrés (`تعريف بمفهوم` / `معطيات مكمّلة` / `أدعّم مكتسباتي`) restitués verbatim, sources citées. **État** : histoire leçons 1–6 (p.11–56 : tout le محور 1 + leçon 6 du محور 2 de la وحدة 1) transcrites 2026-07-18/19 ; le reste (leçons 7–18 + géo) demeure en `first-pass` (structure du §2). Chiffres occidentaux (source, respectée).
 
 ### الوحدة الأولى — المحور الأول : قرطاج البونيّة وإشعاعها في المتوسّط
 
@@ -208,6 +208,42 @@ _Le manuel géo **ne comporte pas de فهرس** ; structure établie à partir d
 
 > **أطالع (p.41–43)** : texte(s) de lecture/enrichissement complétant l'exemple de Trasimène (récit détaillé de l'embuscade, ruse d'Hannibal, présomption de Flaminius) — **hors cœur de leçon** ; résumé ici, non transcrit verbatim (R-2). _(Le محور 1 de la وحدة 1 se clôt p.43 ; p.44 blanche ; la leçon 6 — قرطاج الرّومانيّة — ouvre p.45.)_
 
+### الوحدة الأولى — المحور الثاني : قرطاج وإسهاماتها في الحضارة الرّومانيّة
+
+#### درس 6 — الازدهار العمراني (`06-hist-al-izdihar-al-3umrani`) · p.45–56
+
+**المدخل (objectif)** : أتعرّف مظاهر الازدهار العمراني de l'Afrique romaine et ses facteurs, à travers : les caractéristiques de la ville africaine à l'époque romaine (via Carthage) ; un monument archéologique (l'amphithéâtre de **تيسدروس/El Jem**) ; des chefs-d'œuvre de la **mosaïque** (art florissant surtout aux IIe–IIIe s. ap. J.-C.).
+
+**النشاط الأوّل** : _أتبيّن مظاهر الازدهار العمراني وعوامله._
+
+- **الوثيقة عدد 1** (texte) — source : **بلينيوس الأصغر، رسائل (Trajan → Pline) 29–44**. Instructions de l'empereur Trajan à Pline le Jeune (gouverneur) : contrôler les fonds publics, envoyer des architectes, mener à bien l'**adduction d'eau** vers la capitale de la province. Gloses : Pline le Jeune (62–114) ; les aqueducs comptent parmi les plus importantes réalisations romaines.
+- **الوثيقة عدد 2** (image) : **الحنايا (aqueduc) de Zaghouan → Carthage**, bâti sous **Hadrien**. _معطيات_ : Trajan (98–117, 2e des Antonins) ; الحنايا = canal d'adduction sur arcs de hauteur variable ; Hadrien (117–138) visita deux fois l'Afrique proconsulaire (≈ Tunisie actuelle + Tripolitaine + est algérien).
+- **الوثيقة عدد 3** (carte) : villes d'Afrique proconsulaire à l'époque romaine (Utique, Carthage, Hadrumète, Thysdrus, Gabès…).
+- **التعليمات** : degré d'urbanisation atteint vs l'époque antérieure ; facteurs de la prospérité urbaine.
+
+**النشاط الثّاني** : _مكوّنات المدينة الرّومانيّة في إفريقيا البروقنصليّة وخصائصها._
+
+- **الوثيقة عدد 4** (plan) : Carthage romaine (colonie fondée par **Auguste**) — aqueduc, cimetières, théâtre, citernes, **thermes d'Antonin**, **forum**, **capitole**, **amphithéâtre**, cirque, entrepôts, lac de Tunis. _معطيات (dates)_ : 146 av. J.-C. destruction de Carthage ; 123 tentative (échouée) de Caius Gracchus ; 44 décision de Jules César (mort avant réalisation) ; **29 av. J.-C. Octavien/Auguste refonde Carthage**, future capitale d'Africa. Définitions : **الفوروم** = place publique au cœur de la cité (assemblées civiques, élections municipales, rôle culturel) ; **القابتليوم** = temple de la religion officielle abritant la **triade** Jupiter/Minerve/Junon.
+- **الوثيقة عدد 5** (plan) : quartier du forum (capitole, place, marché).
+- **الوثيقة عدد 6** (plan) : **thermes de Dougga** (IIIe s.) — salles chaude/tiède/froide, vestiaire, palestre.
+- **الوثيقة عدد 7** (image) : **capitole de Dougga**, style gréco-romain.
+- **التعليمات** : caractéristiques du plan de Carthage romaine ; énumérer les bâtiments publics des villes romaines d'Afrique.
+
+**النشاط الثّالث** : _دراسة معلم المسرح الدّائري بالجم (تيسدروس)._
+
+- **الوثيقة عدد 8–9** (images) : vues extérieure/intérieure de l'**amphithéâtre d'El Jem**. _معطيات_ : bâti sur le modèle du Colisée ; **148 × 122 m**, arène 65 × 39 m, hauteur 36 m, 3 étages sur 60 arcs, **capacité ~30 000 spectateurs**, début du IIIe s. ; fonction : combats de bêtes féroces et de gladiateurs (professionnels ou condamnés).
+- **الوثيقة عدد 10** (mosaïque de **Magerius/Smirat**, musée de Sousse) : scènes de combats de bêtes.
+- **التعليمات** : parties de l'amphithéâtre et leur fonction ; rôle culturel des édifices dans l'intégration des habitants au mode de vie romain.
+
+**النشاط الرّابع** : _دراسة نماذج من الفسيفساء._
+
+- **الوثيقة عدد 11** (mosaïque du **Seigneur Julius / Dominus Julius**, grand domaine près de Carthage, IVe s., musée du **Bardo**). _معطيات (fنّ الفسيفساء)_ : origine grecque (IVe s. av. J.-C.), diffusée en Méditerranée, adoptée par les Puniques ; écoles d'Alexandrie (polychrome) et de Rome (bichrome noir/blanc) ; essor dans les provinces africaines dès le IIe s., école d'Afrique proconsulaire remarquable par sa richesse et sa variété.
+- **الوثيقة عدد 12** (pavement punique de **Kerkouane**, IIIe s. av. J.-C., symbole de **Tanit**).
+- **الوثيقة عدد 13** (**Triomphe de Neptune et les Quatre Saisons**, Chebba, IIe s., Bardo).
+- **التعليمات** : sujet et parties des mosaïques 11 et 13 ; motivations du choix des sujets.
+
+**أدعّم مكتسباتي (synthèse)** : l'Afrique proconsulaire connaît sous l'époque romaine (surtout **IIe–IIIe s.**) un essor urbain remarquable, dû à plusieurs facteurs : diffusion des villes depuis l'époque carthaginoise et numide ; **politique impériale** encourageant la fondation et l'aménagement des villes à la romaine pour intégrer les habitants (**romanisation**) ; adhésion des habitants, surtout des notables (الأعيان), attirés par l'ascension sociale et la **citoyenneté romaine**, qui rivalisent dans l'édification de monuments publics. La ville africaine, comme Rome, s'équipe de bâtiments publics (forum, capitole, thermes, théâtres, amphithéâtres, cirques) ; maisons et édifices se parent de **mosaïques** aux sujets variés. L'art de la mosaïque atteint en Afrique un niveau distingué — les riches ornent le sol de leurs demeures de tableaux qui sont de précieux documents sur leur mode de vie, croyances et goût artistique. Le raffinement atteint est attesté par les trésors des musées tunisiens et les sites archéologiques.
+
 ## 3. Notes pédagogiques / méthode
 
 - Démarche **documentaire et intégrative** : toute leçon part de `وثائق` numérotées (texte, carte, image, tableau, statistique) exploitées par des `نشاط` avec consignes, puis structuration (`هيكلة`) sur le cahier. Reproduire fidèlement, à la génération, ce registre « étude de document » (c'est la signature de l'histoire-géo — cf. `prof-histoire-geo-lycee`).
@@ -254,5 +290,5 @@ _Le manuel géo **ne comporte pas de فهرس** ; structure établie à partir d
 - **Histoire — pages de fin** : dérivées des pages de départ du فهرس (fin de leçon = départ suivant − 1) ; la leçon 18 (p.195–220) englobe d'éventuels نصوص للمطالعة de fin d'ouvrage — à confirmer en lecture.
 - **Géographie — pas de فهرس** : bornes de modules approximatives (sondage p.5/25/45/116) ; le découpage fin en leçons et les **intitulés officiels** doivent être relevés sur les ouvreurs/titres du manuel `206103` (aucune invention — R-5).
 - **Couche-texte cassée** (mojibake) sur les deux manuels : transcription **par vision** obligatoire ; cartes/figures à décrire (pdftotext ne les rend pas).
-- **Reprise (R-4)** : compléter cette fiche sans refaire l'existant. **Fait** : structure (§2, §4) + histoire leçons 1–5 à profondeur (§2bis = tout le محور 1 de la وحدة 1). **Suite** : و1/م2 (leçons 6–9 — قرطاج الرّومانيّة : الازدهار العمراني p.45 → القدّيس أوغسطينوس p.75) → و2 (leçons 10–15) → و3 (leçons 16–18), puis géo module par module — par tranches, écriture immédiate au format final (T-2). Rendu vision : `pdftoppm -png -r 150 -f <p1> -l <p2> 207103P00.pdf`.
+- **Reprise (R-4)** : compléter cette fiche sans refaire l'existant. **Fait** : structure (§2, §4) + histoire leçons 1–6 à profondeur (§2bis = tout le محور 1 + leçon 6 du محور 2). **Suite** : leçons 7–9 (و1/م2 : الازدهار الاقتصادي الفلاحة p.57 · أبوليوس p.65 · القدّيس أوغسطينوس p.75) → و2 (leçons 10–15) → و3 (leçons 16–18), puis géo module par module — par tranches, écriture immédiate au format final (T-2). Rendu vision : `pdftoppm -png -r 150 -f <p1> -l <p2> 207103P00.pdf`.
 - **Cartes/figures histoire non levées** : les وثائق-images (ex. leçon 2 : بعل حمّون, تانيت, معبد التوفاة, نقيشة, رسم كركوان) sont **décrites** d'après leur légende, non redessinées — à illustrer (SVG/description) au LOT B si la mission les mobilise (axe 5).
