@@ -459,6 +459,114 @@ export function auditCompetencyRefs(
   return flags;
 }
 
+/** Minimal view of a `content/videos.json` entry the QA cross-checks need (étude 23). */
+export type QAVideoEntry = {
+  lang: string;
+  status: string;
+  durationSec: number;
+  startSec?: number;
+  endSec?: number;
+  verifiedOn?: string;
+  competencies?: string[];
+};
+export type QAVideoRegistry = Readonly<Record<string, QAVideoEntry>>;
+
+/**
+ * Registry-level checks on `content/videos.json` itself (étude 23 §3), run once.
+ * The Zod schema already guarantees the SHAPE (id, videoId regex, dates, status
+ * enum); these add the semantic invariants it cannot: an `active` entry MUST be
+ * verified (R-3), a defined extract must be well-formed (`endSec` needs a
+ * `startSec` and must exceed it), a video longer than 15 min is a [warn] (R-2.4),
+ * and any evaluated competency must exist in the étude-07 registries.
+ */
+export function auditVideoRegistry(
+  registry: QAVideoRegistry,
+  knownCompetencies: ReadonlySet<string>,
+): Flag[] {
+  const flags: Flag[] = [];
+  for (const [id, v] of Object.entries(registry)) {
+    const where = `content/videos.json · ${id}`;
+    if (v.status === "active" && !v.verifiedOn) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `status "active" requires verifiedOn after full viewing (étude 23 R-3)`,
+      });
+    }
+    if (v.endSec !== undefined && v.startSec === undefined) {
+      flags.push({ level: "error", where, msg: `endSec is set without a startSec` });
+    }
+    if (v.endSec !== undefined && v.startSec !== undefined && v.endSec <= v.startSec) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `endSec (${v.endSec}) must be greater than startSec (${v.startSec})`,
+      });
+    }
+    if (v.durationSec > 900) {
+      flags.push({
+        level: "warn",
+        where,
+        msg: `durationSec ${v.durationSec} exceeds 15 min — prefer a shorter clip or an extract (étude 23 R-2.4)`,
+      });
+    }
+    for (const cid of v.competencies ?? []) {
+      const family = cid.split(".")[0] ?? cid;
+      if (!knownCompetencies.has(cid)) {
+        flags.push({
+          level: "error",
+          where,
+          msg: `references competency "${cid}" not declared in content/competences/${family}.json`,
+        });
+      }
+    }
+  }
+  return flags;
+}
+
+/**
+ * Cross-check the video refs of ONE chapter or exercise against the registry
+ * (étude 23 R-1/R-8/R-12): a ref must resolve to a declared entry, that entry
+ * must be `active` (referencing a `broken`/`retired` video is an error — the fix
+ * is to drop the ref or swap the video), and its `lang` must equal the subject's
+ * language of instruction (a video in the "other" language breaks the exam
+ * terminology the app teaches).
+ */
+export function auditVideoRefs(
+  refs: readonly string[],
+  registry: QAVideoRegistry,
+  contentLanguage: string,
+  where: string,
+): Flag[] {
+  const flags: Flag[] = [];
+  for (const ref of refs) {
+    const entry = registry[ref];
+    if (!entry) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `references video "${ref}" not declared in content/videos.json`,
+      });
+      continue;
+    }
+    if (entry.status !== "active") {
+      flags.push({
+        level: "error",
+        where,
+        msg: `references video "${ref}" whose status is "${entry.status}" (only active videos may be referenced — étude 23 R-12)`,
+      });
+    }
+    if (entry.lang !== contentLanguage) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `video "${ref}" is in "${entry.lang}" but the subject's contentLanguage is "${contentLanguage}" (étude 23 R-8)`,
+      });
+    }
+  }
+  return flags;
+}
+
 /**
  * Per-question heuristics for the native board/checklist questions
  * (`ordering` / `matching` / `multi` — Tier B, phases B2–B3). Their

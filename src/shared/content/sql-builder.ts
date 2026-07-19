@@ -1,6 +1,12 @@
 import { createHash } from "node:crypto";
-import { parseManuelPages } from "./schema.ts";
-import type { CompetencyRegistry, ContentQuestion, LoadedSubject } from "./schema.ts";
+import { parseManuelPages, toCompiledVideo } from "./schema.ts";
+import type {
+  CompetencyRegistry,
+  CompiledVideo,
+  ContentQuestion,
+  LoadedSubject,
+  VideoRegistry,
+} from "./schema.ts";
 
 /**
  * Pure helpers that turn a {@link LoadedSubject} into an idempotent SQL
@@ -70,9 +76,20 @@ const sqlIdList = (ids: string[]): string => ids.map(sqlString).join(", ");
  *  - admin-authored rows for the subject that are no longer present are
  *    pruned (parent-authored exercises are never touched).
  */
-export function buildMigrationSql(subject: LoadedSubject): string {
+export function buildMigrationSql(subject: LoadedSubject, videos: VideoRegistry = {}): string {
   const { meta, chapters } = subject;
   const subjectId = meta.id;
+
+  // Resolve chapter/exercise video refs (étude 23) → compiled display objects.
+  // Only `active` entries are compiled (R-12): a ref to an unknown or non-active
+  // video is dropped here and reported as an error by content:qa — so passing a
+  // video to `broken` and rebuilding the referencing subjects removes it from the
+  // DB. The compiled shape carries no free URL (D-10).
+  const resolveVideos = (refs: readonly string[] | undefined): CompiledVideo[] =>
+    (refs ?? []).flatMap((ref) => {
+      const entry = videos[ref];
+      return entry && entry.status === "active" ? [toCompiledVideo(ref, entry)] : [];
+    });
 
   const chapterIds: string[] = [];
   const exerciseIds: string[] = [];
@@ -220,11 +237,14 @@ export function buildMigrationSql(subject: LoadedSubject): string {
           pageNumbers: parseManuelPages(manuel.pages),
         })
       : "NULL";
+    // Curated explainer videos (étude 23): an ordered array of compiled display
+    // objects, always present ('[]' when none — the column is NOT NULL DEFAULT '[]').
+    const videosSql = sqlJson(resolveVideos(chapter.meta.videos));
     out.push(
-      "INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order, manuel_ref) VALUES",
+      "INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order, manuel_ref, videos) VALUES",
       `  (${sqlString(id)}, ${sqlString(subjectId)}, ${sqlString(chapter.meta.title)}, ${sqlString(
         chapter.meta.description,
-      )}, ${sqlString(chapter.lesson)}, ${sqlString(chapter.summary)}, ${chapter.meta.displayOrder}, ${manuelSql})`,
+      )}, ${sqlString(chapter.lesson)}, ${sqlString(chapter.summary)}, ${chapter.meta.displayOrder}, ${manuelSql}, ${videosSql})`,
       "ON CONFLICT (id) DO UPDATE SET",
       "  subject_id = EXCLUDED.subject_id,",
       "  title = EXCLUDED.title,",
@@ -232,7 +252,8 @@ export function buildMigrationSql(subject: LoadedSubject): string {
       "  lesson_content = EXCLUDED.lesson_content,",
       "  summary = EXCLUDED.summary,",
       "  display_order = EXCLUDED.display_order,",
-      "  manuel_ref = EXCLUDED.manuel_ref;",
+      "  manuel_ref = EXCLUDED.manuel_ref,",
+      "  videos = EXCLUDED.videos;",
       "",
     );
   }
@@ -250,12 +271,13 @@ export function buildMigrationSql(subject: LoadedSubject): string {
     mode: string,
     displayOrder: number,
     questions: ContentQuestion[],
+    correctionVideoSql: string,
   ) => {
     out.push(
-      "INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES",
+      "INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order, correction_video) VALUES",
       `  (${sqlString(exId)}, ${sqlString(chId)}, ${sqlString(subjectId)}, ${sqlString(title)}, ${difficulty}, ${xpReward}, ${rewardCoins}, ${sqlString(
         mode,
-      )}, 'admin', ${displayOrder})`,
+      )}, 'admin', ${displayOrder}, ${correctionVideoSql})`,
       "ON CONFLICT (id) DO UPDATE SET",
       "  chapter_id = EXCLUDED.chapter_id,",
       "  subject_id = EXCLUDED.subject_id,",
@@ -264,7 +286,8 @@ export function buildMigrationSql(subject: LoadedSubject): string {
       "  xp_reward = EXCLUDED.xp_reward,",
       "  reward_coins = EXCLUDED.reward_coins,",
       "  mode = EXCLUDED.mode,",
-      "  display_order = EXCLUDED.display_order;",
+      "  display_order = EXCLUDED.display_order,",
+      "  correction_video = EXCLUDED.correction_video;",
       "",
     );
     // Order questions from easiest to hardest (stable; untagged = medium).
@@ -357,9 +380,13 @@ export function buildMigrationSql(subject: LoadedSubject): string {
       "quiz",
       0,
       chapter.quiz.questions,
+      "NULL",
     );
     for (const exercise of chapter.exercises) {
       const ex = exercise.data;
+      // Dedicated correction video (étude 23 R-6): overrides the chapter fallback
+      // on the failure screen. NULL when unset or the ref is unknown/non-active.
+      const [correctionVideo] = resolveVideos(ex.correctionVideo ? [ex.correctionVideo] : []);
       emitExercise(
         chId,
         exerciseId(subjectId, chapter.slug, exercise.slug),
@@ -372,6 +399,7 @@ export function buildMigrationSql(subject: LoadedSubject): string {
         ex.mode,
         ex.displayOrder,
         ex.questions,
+        correctionVideo ? sqlJson(correctionVideo) : "NULL",
       );
     }
   }

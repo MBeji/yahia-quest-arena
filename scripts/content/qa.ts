@@ -17,6 +17,7 @@ import {
   loadCompetencyRegistries,
   loadMisconceptionRegistry,
   loadSubject,
+  loadVideosRegistry,
 } from "../../src/shared/content/loader.ts";
 import {
   auditBoardQuestion,
@@ -25,6 +26,8 @@ import {
   auditMisconceptionTags,
   auditNumericQuestion,
   auditQuestion,
+  auditVideoRefs,
+  auditVideoRegistry,
   isSpatialChapter,
   type CompetencyVocabulary,
   type Flag,
@@ -54,7 +57,12 @@ function main(): void {
     subjectPrefixes: new Map(registries.map((r) => [r.family, r.subjectPrefixes])),
   };
 
+  // Curated-video registry (étude 23): registry-level invariants once, then
+  // per-chapter / per-exercise ref cross-checks against it.
+  const videos = loadVideosRegistry(contentDir);
+
   const flags: Flag[] = [];
+  flags.push(...auditVideoRegistry(videos, competencyVocab.ids));
 
   for (const subject of subjects) {
     for (const chapter of subject.chapters) {
@@ -68,6 +76,30 @@ function main(): void {
         ...auditLesson(chapter.lesson, `${subject.meta.id}/${chapter.slug}/cours`, { spatial }),
         ...auditLesson(chapter.summary, `${subject.meta.id}/${chapter.slug}/resume`),
       );
+
+      // Video refs (étude 23): chapter section + per-exercise correction video,
+      // checked against the subject's language of instruction.
+      const lang = subject.meta.contentLanguage;
+      flags.push(
+        ...auditVideoRefs(
+          chapter.meta.videos ?? [],
+          videos,
+          lang,
+          `${subject.meta.id}/${chapter.slug}`,
+        ),
+      );
+      for (const ex of chapter.exercises) {
+        if (ex.data.correctionVideo) {
+          flags.push(
+            ...auditVideoRefs(
+              [ex.data.correctionVideo],
+              videos,
+              lang,
+              `${subject.meta.id}/${chapter.slug}/${ex.slug}`,
+            ),
+          );
+        }
+      }
 
       // Check the chapter quiz too (its questions also have answer keys).
       const groups: Array<{ slug: string; questions: typeof chapter.quiz.questions }> = [

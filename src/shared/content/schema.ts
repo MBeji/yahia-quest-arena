@@ -247,6 +247,21 @@ const gradeSlugsSubsetSchema = z
   .refine((a) => new Set(a).size === a.length, "gradeSlugs must be unique")
   .optional();
 
+/**
+ * A curated-video registry id — namespaced `famille.slug` (étude 23 R-1), e.g.
+ * `math.thales-configuration`: lowercase dotted segments, the first being the
+ * subject family. Same identity rule as misconception tags and slugs — STABLE
+ * for life (create/retire, never rename). Never free text: every ref used in a
+ * chapter/exercise must exist in the versioned registry `content/videos.json`
+ * (cross-checked by `content:qa`; an unknown ref is an error). A ref IS an id.
+ */
+export const videoIdSchema = z
+  .string()
+  .regex(
+    /^[a-z][a-z0-9]*(?:\.[a-z0-9]+(?:-[a-z0-9]+)*){1,}$/,
+    "a video id must be namespaced lowercase segments (e.g. 'math.thales-configuration')",
+  );
+
 /** `chapter.json` — maps onto a row in `chapters`. */
 export const chapterMetaSchema = z.object({
   title: z.string().min(1),
@@ -282,6 +297,18 @@ export const chapterMetaSchema = z.object({
         path: ["pages"],
       },
     )
+    .optional(),
+  /**
+   * Optional curated explainer videos for this chapter (étude 23 R-11): 0–3
+   * registry ids, in display order (the first is the chapter's default review
+   * video — R-6). Each id must resolve to an `active` entry in
+   * `content/videos.json` whose `lang` matches the subject's `contentLanguage`
+   * (cross-checked by `content:qa`). Compiled into `chapters.videos` JSONB.
+   */
+  videos: z
+    .array(videoIdSchema)
+    .max(3, "a chapter may reference at most 3 videos (étude 23 R-11)")
+    .refine((a) => new Set(a).size === a.length, "chapter videos must be unique")
     .optional(),
 });
 export type ChapterMeta = z.infer<typeof chapterMetaSchema>;
@@ -475,6 +502,123 @@ export const competencyRegistrySchema = z
     }
   });
 export type CompetencyRegistry = z.infer<typeof competencyRegistrySchema>;
+
+/** Closed set of video providers (étude 23 D-6/D-10). v1 implements only youtube. */
+export const VIDEO_PROVIDERS = ["youtube"] as const;
+export const videoProviderSchema = z.enum(VIDEO_PROVIDERS);
+export type VideoProvider = (typeof VIDEO_PROVIDERS)[number];
+
+/** Per-provider video-id shape (étude 23 §3): the ONLY field used to build the embed URL. */
+const VIDEO_ID_PATTERNS: Record<VideoProvider, RegExp> = {
+  youtube: /^[A-Za-z0-9_-]{11}$/,
+};
+
+/** Lifecycle status of a registry entry (étude 23 R-12). Only `active` is compiled. */
+export const VIDEO_STATUSES = ["active", "broken", "retired"] as const;
+export const videoStatusSchema = z.enum(VIDEO_STATUSES);
+
+/** Provenance of a video (étude 23 §3): external teacher, official channel, or AI (phase B). */
+export const VIDEO_KINDS = ["teacher", "official", "ai"] as const;
+export const videoKindSchema = z.enum(VIDEO_KINDS);
+
+const isoDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "must be an ISO date (YYYY-MM-DD)");
+
+/**
+ * One entry of the curated-video registry (`content/videos.json`, étude 23 D-2).
+ * The full curation record: what to embed (`provider` + `videoId` — the only
+ * fields that reach the client, D-10), display metadata (title/channel/lang/
+ * duration), the curation trail (`kind`, `grades`, `notions`, `verifiedOn`/
+ * `verifiedBy`, `notes`, `status`) and platform-compliance data (`madeForKids`,
+ * R-14). `channelUrl`/`notes`/`verifiedBy`… stay in the registry — never compiled.
+ */
+export const videoEntrySchema = z
+  .object({
+    provider: videoProviderSchema,
+    videoId: z.string().min(1),
+    /** Title in the video's own `lang` (registry data, shown with dir=auto). */
+    title: z.string().min(1),
+    channel: z.string().min(1),
+    /** Registry-only (never compiled to the client, D-10). */
+    channelUrl: z.string().url().optional(),
+    lang: z.enum(CONTENT_LANGUAGES),
+    /** Duration of the played segment (the extract when start/end are set). */
+    durationSec: z.number().int().positive(),
+    kind: videoKindSchema,
+    /** Curation hints — canonical grade slugs (informative, étude 23 §3). */
+    grades: z
+      .array(z.string().min(1))
+      .default([])
+      .refine(
+        (a) => a.every((s) => knownGradeSlugs.has(s)),
+        "grades must be canonical grade slugs (KNOWN_GRADE_SLUGS)",
+      ),
+    notions: z.array(z.string().min(1)).default([]),
+    /** Optional evaluated competencies (étude 07 ids) — cross-checked by content:qa. */
+    competencies: z.array(competencyIdSchema).optional(),
+    /** Optional extract of a longer format: emitted as ?start= / ?end=. */
+    startSec: z.number().int().nonnegative().optional(),
+    endSec: z.number().int().positive().optional(),
+    /** Relevé à la curation (R-14): a made-for-kids video only gets non-personalised ads. */
+    madeForKids: z.boolean(),
+    addedOn: isoDateSchema,
+    /** Required for `status: active` (R-3) — enforced by content:qa. */
+    verifiedOn: isoDateSchema.optional(),
+    verifiedBy: z.string().min(1).optional(),
+    status: videoStatusSchema,
+    notes: z.string().optional(),
+  })
+  .superRefine((v, ctx) => {
+    if (!VIDEO_ID_PATTERNS[v.provider].test(v.videoId)) {
+      ctx.addIssue({
+        code: "custom",
+        message: `videoId "${v.videoId}" is not a valid ${v.provider} id`,
+        path: ["videoId"],
+      });
+    }
+  });
+export type VideoEntry = z.infer<typeof videoEntrySchema>;
+
+/**
+ * `content/videos.json` — the versioned, closed registry of curated explainer
+ * videos (étude 23 D-2), keyed by stable namespaced id. Content (`chapter.json`,
+ * `exercices/*.json`) references only these ids; the compiled DB columns carry
+ * only a display subset (see `CompiledVideo`).
+ */
+export const videoRegistrySchema = z.record(videoIdSchema, videoEntrySchema);
+export type VideoRegistry = z.infer<typeof videoRegistrySchema>;
+
+/**
+ * The display subset of a registry entry that reaches the client (compiled into
+ * `chapters.videos` / `exercises.correction_video`). No free URL ever crosses
+ * this boundary (étude 23 D-10): `provider` (enum) + `videoId` (validated) are
+ * all the embed needs; the client builds the URL by template.
+ */
+export type CompiledVideo = {
+  id: string;
+  provider: VideoProvider;
+  videoId: string;
+  title: string;
+  channel: string;
+  lang: ContentLanguage;
+  durationSec: number;
+  startSec?: number;
+  endSec?: number;
+};
+
+/** Project a registry entry onto its compiled display subset (étude 23 §3). */
+export function toCompiledVideo(id: string, entry: VideoEntry): CompiledVideo {
+  return {
+    id,
+    provider: entry.provider,
+    videoId: entry.videoId,
+    title: entry.title,
+    channel: entry.channel,
+    lang: entry.lang,
+    durationSec: entry.durationSec,
+    ...(entry.startSec !== undefined ? { startSec: entry.startSec } : {}),
+    ...(entry.endSec !== undefined ? { endSec: entry.endSec } : {}),
+  };
+}
 
 const questionCoreSchema = z.object({
   prompt: z.string().min(1),
@@ -732,6 +876,13 @@ export const exerciseSchema = z.object({
    * targets; absent = all. Never emitted to SQL (the builder reads named fields).
    */
   gradeSlugs: gradeSlugsSubsetSchema,
+  /**
+   * Optional dedicated correction video (étude 23 R-6): a registry id that
+   * overrides the chapter fallback on this exercise's failure screen. Must
+   * resolve to an `active` entry in `content/videos.json` (content:qa).
+   * Compiled into `exercises.correction_video` JSONB.
+   */
+  correctionVideo: videoIdSchema.optional(),
   questions: z.array(questionSchema).min(1).max(50),
 });
 export type ContentExercise = z.infer<typeof exerciseSchema>;
