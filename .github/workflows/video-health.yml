@@ -94,6 +94,12 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BODY: ${{ steps.report.outputs.body }}
         run: |
+          # Self-healing: the label is repo metadata nobody has to provision by
+          # hand (--force = create, or update in place if it already exists).
+          gh label create video-health \
+            --color BFD4F2 \
+            --description "Vidéo curée indisponible (étude 23 health-check)" \
+            --force
           TITLE="Vidéos indisponibles — health-check hebdomadaire"
           EXISTING=$(gh issue list --label video-health --state open --limit 1 --json number --jq '.[0].number')
           FULL="$BODY
