@@ -17,7 +17,7 @@
 > lots, les gates, l'économie de tokens. Les règles d'**authoring** (schéma, barre de qualité,
 > récompenses, notation, sélection des skills) restent chez les skills — carte canonique :
 > `.claude/skills/content-engine/references/generation-pipeline.md`, consommée par le LOT B.
-> Hiérarchie en cas de désaccord : **CLAUDE.md → skills & docs normatifs → cette méthode**.
+> Hiérarchie en cas de désaccord : **AGENTS.md → skills & docs normatifs → cette méthode**.
 >
 > **Pour qui ?** Un agent IA avec vision + accès fichiers + git (Claude Code ou équivalent),
 > piloté par un contributeur qui peut ne rien connaître du projet : copier ce document **en
@@ -552,5 +552,5 @@ ne s'estime pas.
 ---
 
 _Cette méthode applique les règles du skill `content-ingest` (R-1…R-7), la « Recette » de
-`programmes-officiels/README.md` et les études 12/13. En cas de désaccord : **CLAUDE.md**
+`programmes-officiels/README.md` et les études 12/13. En cas de désaccord : **AGENTS.md**
 (racine du dépôt) gagne, puis les skills et docs normatifs, puis cette méthode._

@@ -7,7 +7,7 @@
 > qui reprend le travail.
 >
 > Ce fichier est un **résumé narratif avec schémas** — la source de vérité normative reste
-> [`CLAUDE.md`](../CLAUDE.md) (§ "Content pipeline"), [`content/README.md`](../content/README.md)
+> [`AGENTS.md`](../AGENTS.md) (§ "Content pipeline"), [`content/README.md`](../content/README.md)
 > et [`.claude/skills/content-engine/references/generation-pipeline.md`](../.claude/skills/content-engine/references/generation-pipeline.md).
 > En cas de désaccord, ces trois-là gagnent — corrige ce fichier.
 
@@ -416,7 +416,7 @@ le contenu tout seul, il signale.
 
 ## 15. Pour aller plus loin
 
-- [`CLAUDE.md`](../CLAUDE.md) — vue d'ensemble du projet, section "Content pipeline" et "Definition
+- [`AGENTS.md`](../AGENTS.md) — vue d'ensemble du projet, section "Content pipeline" et "Definition
   of Done" §7 (coordination DB ↔ code).
 - [`content/README.md`](../content/README.md) — format exact des fichiers, commandes.
 - [`.claude/skills/content-engine/references/generation-pipeline.md`](../.claude/skills/content-engine/references/generation-pipeline.md) —

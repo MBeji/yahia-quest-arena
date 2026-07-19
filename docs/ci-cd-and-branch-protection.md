@@ -2,7 +2,7 @@
 
 This repo auto-deploys: **pushing to `main` deploys to Vercel production.** Therefore
 `main` must only ever receive code that passed CI and whose DB migrations are already
-applied. The guardrails below enforce that. (Background: CLAUDE.md §7; the full
+applied. The guardrails below enforce that. (Background: AGENTS.md §7; the full
 end-of-dev → production walkthrough lives in [passation.md](./passation.md).)
 
 ## Merge automation (push → PR → checks → merge — zéro geste humain)
@@ -10,7 +10,7 @@ end-of-dev → production walkthrough lives in [passation.md](./passation.md).)
 - **`auto-pr.yml`** — pushing any non-`main` branch auto-opens its PR **ready with
   auto-merge armed** (squash + delete branch): it merges alone once the ruleset's
   required checks are green on an up-to-date head. Nobody marks ready, nobody merges
-  by hand (décision 2026-07-12 — CLAUDE.md DoD §8: the session that pushed watches
+  by hand (décision 2026-07-12 — AGENTS.md DoD §8: the session that pushed watches
   its checks until the merge lands). Deliberate WIP opts out: `[wip]` / `[draft]` /
   `[no-automerge]` in the head-commit subject, or a `wip/` / `draft/` / `rescue/`
   branch prefix, opens a **draft** instead (promote with `gh pr ready`). A repeat
@@ -27,7 +27,7 @@ end-of-dev → production walkthrough lives in [passation.md](./passation.md).)
   lazily after a push to `main` and reads stale/UNKNOWN in the very seconds the job
   runs, which stranded armed PRs before 2026-07-12. If update-branch fails (merge
   conflict), the PR is labelled **`needs-rebase`**: the next working session rebases
-  it (CLAUDE.md DoD §8) — never Mohamed.
+  it (AGENTS.md DoD §8) — never Mohamed.
 - Repo-settings prerequisites (one-time, all in place): "Allow GitHub Actions to create
   and approve pull requests" (Settings → Actions → General), "Allow auto-merge"
   (Settings → General), and the `GH_AUTOMATION_PAT` secret (since 2026-07-06 — see
@@ -105,7 +105,7 @@ settings (include administrators) · ✅ Block force pushes · ✅ Restrict dele
 
 ## The deploy-ordering workflow (how a migration PR flows)
 
-Prod migrations **auto-apply** on merge — nobody runs SQL by hand (CLAUDE.md §7).
+Prod migrations **auto-apply** on merge — nobody runs SQL by hand (AGENTS.md §7).
 
 1. Open the PR. The `Migration presence` check lists any `supabase/migrations/*.sql`
    it adds (informational, always green); the `pgTAP suite` check proves they apply

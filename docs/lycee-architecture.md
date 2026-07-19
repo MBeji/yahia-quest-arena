@@ -11,7 +11,7 @@
 > opened free by `20260705100000`/`20260705120000`). The opening itself — UI year→section
 > grouping, grade i18n, the shared-content `compileTo` mechanism and the wave plan — is specified
 > in [`FableEtudes/16-ouverture-lycee/ETUDE.md`](../FableEtudes/16-ouverture-lycee/ETUDE.md).
-> Defers to CLAUDE.md (DoD §7) and to `content-engine/references/generation-pipeline.md` for
+> Defers to AGENTS.md (DoD §7) and to `content-engine/references/generation-pipeline.md` for
 > anything that overlaps.
 
 ## 1. The two structural facts
