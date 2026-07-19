@@ -152,6 +152,7 @@ export const frPublic: TranslationKeys["public"] = {
     videoHostedBy: "Vidéo hébergée par {host}",
     videoDuration: "{m} min",
     videoLoadHint: "En appuyant, tu charges une vidéo YouTube (Google).",
+    videoReviewTitle: "Revoir la notion en vidéo",
   },
   subject: {
     chapter: "Chapitre {n}",

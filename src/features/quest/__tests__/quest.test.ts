@@ -185,6 +185,8 @@ describe("gamification.quest — getExercise", () => {
       chapterQuizId: null,
       // No chapter quiz + no grade → the exercise is not quiz-gated.
       quizGated: false,
+      // No correction_video and no chapter → no review video (étude 23 R-6).
+      correctionVideo: null,
       // Default variant (étude 17): classic behaviour is unchanged.
       variant: "classic",
     });

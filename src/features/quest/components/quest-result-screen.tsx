@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { type ReactNode } from "react";
-import { Trophy, BookOpen } from "lucide-react";
+import { Trophy, BookOpen, Clapperboard } from "lucide-react";
 import { PASS_THRESHOLD_PCT, QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
 import { noXpReason } from "@/features/quest/no-xp-reason";
 import { QuestRewardGrid } from "@/features/quest/components/quest-reward-grid";
@@ -13,6 +13,7 @@ import { ExplainHint } from "@/components/ui/explain-hint";
 import { useT } from "@/lib/i18n";
 import { PageShell } from "@/components/ui/page-shell";
 import { useEntrance } from "@/shared/lib/motion";
+import { VideoEmbed, type CompiledVideo } from "@/features/quest/components/video-embed";
 import type { PlayerResult } from "@/features/quest/components/exercise-player";
 
 // =============================================================================
@@ -33,6 +34,7 @@ export function QuestResultScreen({
   qlang,
   chapterId,
   subjectId,
+  correctionVideo,
   exerciseId,
   nextExerciseId,
   showConfetti,
@@ -52,6 +54,8 @@ export function QuestResultScreen({
   qlang: QuestContentLang;
   chapterId: string | null;
   subjectId: string | null;
+  /** Review video offered on failure (étude 23 R-6) — resolved server-side. */
+  correctionVideo: CompiledVideo | null;
   exerciseId: string;
   nextExerciseId: string | null;
   showConfetti: boolean;
@@ -73,6 +77,20 @@ export function QuestResultScreen({
   const QL = buildQuestLabels(qlang);
   const passed = result.scorePct >= (isQuiz ? QUIZ_PASS_THRESHOLD_PCT : PASS_THRESHOLD_PCT);
   const resultLevel = Number(result.profile?.level ?? 1);
+
+  // « Revoir la notion en vidéo » (étude 23 US-2/US-3): offered ONLY on a failed
+  // run — the moment the motivation to understand peaks — and never during a
+  // question (R-7). Watching changes no server state and grants nothing (R-10).
+  const reviewVideo =
+    !passed && correctionVideo ? (
+      <div className="mt-4" data-testid="correction-video">
+        <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold text-foreground">
+          <Clapperboard className="h-4 w-4 text-primary" aria-hidden="true" />
+          {t.public.reader.videoReviewTitle}
+        </h3>
+        <VideoEmbed video={correctionVideo} context="result" subjectId={subjectId ?? ""} />
+      </div>
+    ) : null;
 
   return (
     <PageShell width="narrow" className="py-12" dir={isRtl ? "rtl" : undefined}>
@@ -149,6 +167,9 @@ export function QuestResultScreen({
               )}
             </div>
           )}
+          {/* Failed comprehension quiz: the video sits under the existing banner,
+              which keeps its own « revoir le cours » CTA (US-3). */}
+          {isQuiz && reviewVideo}
           {rewards && result.xpEarned === 0 && (
             <div className="mt-6 rounded-xl border border-gold/30 bg-gold/5 p-3 text-center text-xs text-gold">
               {noXpReason(result)}
@@ -227,6 +248,9 @@ export function QuestResultScreen({
             onReplay,
             result,
           })}
+
+          {/* Failed exercise: the video sits ABOVE the per-question correction. */}
+          {!isQuiz && reviewVideo}
 
           {!isQuiz && !result.reviewHidden && result.review.length > 0 && (
             <QuestReviewList

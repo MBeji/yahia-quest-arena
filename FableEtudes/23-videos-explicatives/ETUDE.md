@@ -735,9 +735,12 @@ les tests XSS de `markdown.test.ts` ne sont pas touchés (le renderer non plus).
 
 ## 8. Journal d'exécution
 
-| date       | lot | PR  | écarts acceptés / dettes notées                                 |
-| ---------- | --- | --- | --------------------------------------------------------------- |
-| 2026-07-17 | —   | —   | Étude rédigée (Fable 5). Q-1…Q-5 ouvertes ; statut `brouillon`. |
+| date       | lot | PR   | écarts acceptés / dettes notées                                                                                                                                                                                                                                                                                                                                                                                         |
+| ---------- | --- | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-07-17 | —   | —    | Étude rédigée (Fable 5). Q-1…Q-5 ouvertes ; statut `brouillon`.                                                                                                                                                                                                                                                                                                                                                         |
+| 2026-07-19 | 1   | #507 | Socle données conforme. Registre livré vide ; no-op prouvé (chapitre sans vidéo → `'[]'`, exercice → NULL). Les contrôles « active sans verifiedOn » et « endSec » sont posés dans `content:qa` (comme spécifié §3), pas en zod.                                                                                                                                                                                        |
+| 2026-07-19 | 2   | #510 | Conforme. **Dette** : la colonne `chapters.videos` manque aux types Supabase générés (`supabase gen types` impossible hors ligne, hook anti-édition) → narrowing local dans `getChapterLesson` ; régénérer les types au prochain accès DB. Budget bundle i18n bumpé 118→120 KB (pattern documenté du fichier).                                                                                                          |
+| 2026-07-19 | 3   | —    | Résolution R-6 placée dans `getExercise` (et non `startExerciseSession`) : c'est le payload que lisent **les deux** registres (connecté + anonyme) — `startExerciseSession` ne porte aucune donnée d'exercice. **Écart assumé** : la spec e2e auth est **reportée au lot 5** — aucune vidéo n'existe au registre avant la campagne, donc aucun seed TEST ne peut la rendre verte ; à écrire avec les données du pilote. |
 
 ---
 
