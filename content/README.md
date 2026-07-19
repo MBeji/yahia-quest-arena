@@ -1,5 +1,9 @@
 # `content/` — pipeline de contenu pédagogique
 
+> **Propriété intellectuelle** : le contenu de ce dossier (cours, résumés, quiz, exercices,
+> corrigés, registres) est protégé — **tous droits réservés**, aucune réutilisation ni
+> rediffusion sans autorisation écrite. Voir [`../LICENSE-CONTENT.md`](../LICENSE-CONTENT.md).
+
 Le contenu (matières, chapitres, cours, résumés, exercices) vit ici sous forme
 de **fichiers versionnés**. Un générateur les valide puis les compile en
 **migrations Supabase idempotentes**. On peut donc compléter / améliorer le

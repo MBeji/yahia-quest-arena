@@ -236,6 +236,15 @@ sécurité est toujours un STOP + escalade.
 | Les variables d'environnement                   | [`../docs/environment-variables.md`](../docs/environment-variables.md)             |
 | Les specs normatives par sujet                  | [`../docs/`](../docs)                                                              |
 
+## Licence & cession des contributions
+
+Le code du dépôt est sous [PolyForm Noncommercial 1.0.0](../LICENSE.md) ; le contenu
+pédagogique, les skills de génération et les études sont **tous droits réservés**
+([`../LICENSE-CONTENT.md`](../LICENSE-CONTENT.md)). En ouvrant une PR, tu acceptes que ta
+contribution (code, contenu, documentation) soit **cédée au projet** (titulaire : Mohamed
+Beji) et intégrée sous ces licences — condition pour que le projet puisse défendre et, le cas
+échéant, re-licencier l'ensemble.
+
 ## Check-list avant d'ouvrir ta PR
 
 - [ ] J'ai lu CLAUDE.md, STATUS.md, l'`ETUDE.md` entier et la section de mon lot.

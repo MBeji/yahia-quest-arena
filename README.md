@@ -33,3 +33,13 @@ npm run ci:verify  # gate complet (coverage + build + audit + QA contenu)
 ```
 
 La règle du jeu complète (gate, contenu, migrations, PRs) est dans [CLAUDE.md](./CLAUDE.md).
+
+## Licence & propriété intellectuelle
+
+- **Code source** (moteur) : [PolyForm Noncommercial 1.0.0](./LICENSE.md) — lecture et usage
+  non commercial autorisés ; tout usage commercial par des tiers est interdit.
+- **Contenu pédagogique, skills de génération, études** :
+  [tous droits réservés](./LICENSE-CONTENT.md) — aucune réutilisation ni rediffusion sans
+  autorisation écrite (étude 24).
+
+© 2026 Mohamed Beji — « Na9ra Nal3ab ».

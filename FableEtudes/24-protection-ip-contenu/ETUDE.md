@@ -1,6 +1,6 @@
 # Étude 24 — Protection de la propriété intellectuelle du contenu (licences + scission corpus privé), repo moteur public conservé
 
-> **Statut** : brouillon
+> **Statut** : en exécution — Q-1/Q-2/Q-3/Q-5 arbitrées le 2026-07-19 (Q-4 reste ouverte, démarche humaine)
 > **Priorité** : 24 · **Valeur** : 🔒 le corpus corrigé (566 chapitres, ~18 700 questions avec
 > clés de réponse) et l'usine de génération (skills prof-\*, taxonomies) cessent d'être clonables
 > en un `git clone` — **sans perdre** les avantages gratuits du repo public (Actions illimitées,
@@ -329,7 +329,7 @@ Détail et stop-points :
 
 Cases à cocher :
 
-- [ ] Lot 1 — armement juridique (LICENSE + notices)
+- [x] Lot 1 — armement juridique (LICENSE + notices) — livré le 2026-07-19
 - [ ] Lot 2 — repo privé + CI contenu
 - [ ] Lot 3 — découplage SQL contenu + nettoyage historique migrations
 - [ ] Lot 4 — dégraissage du repo public + gate anti-fuite
@@ -376,27 +376,40 @@ Cases à cocher :
 - **RISK-8** — Une session future re-commit du corpus au public par habitude. Prob. moyenne /
   impact fort → gate anti-fuite CI (échec dur) + note en tête de CLAUDE.md § contenu.
 
-## 8. Questions ouvertes (pour l'humain)
+## 8. Questions ouvertes (pour l'humain) — Q-1/Q-2/Q-3/Q-5 arbitrées le 2026-07-19
 
 - **Q-1** — **Licence du code public** : PolyForm Noncommercial 1.0.0 (**reco** — interdit tout
   usage commercial tiers) vs Elastic License 2.0 (permet l'usage interne, interdit le service
   concurrent) ? Rester sans licence est déconseillé (aucune signalisation).
+  **Arbitré (2026-07-19) : PolyForm Noncommercial 1.0.0.**
 - **Q-2** — **Purge de l'historique public** (lot 5) : oui (**reco** — 0 fork, fenêtre unique,
   archive préalable) ou non (accepter que le corpus de juillet 2026 reste lisible à jamais dans
   l'historique, la scission ne protégeant alors que le futur) ?
+  **Arbitré (2026-07-19) : oui — purge (lot 5), archive miroir préalable.**
 - **Q-3** — **Périmètre privé exact** : `FableEtudes/` + METHODE au privé (**reco** — c'est le
   savoir-faire) ou maintien public (valeur vitrine / onboarding de collaborateurs externes,
   qui devraient sinon être invités nominativement) ? STATUS.md reste public dans les deux cas
   (état produit, déjà public via l'app).
+  **Arbitré (2026-07-19) : FableEtudes + METHODE au privé ; STATUS.md reste public.**
 - **Q-4** — **Volet juridique tunisien** (démarches humaines, hors lots) : dépôt du corpus à
   l'OTDAV (préconstitution de preuve de titularité et d'antériorité) et dépôt de la marque
   « Na9ra Nal3ab » à l'INNORPI (classe 41 — éducation) ? Budget de l'ordre de quelques
   centaines de TND (à confirmer auprès des organismes), idéalement avant tout lancement
-  marketing (Porte 1, sept. 2026).
+  marketing (Porte 1, sept. 2026). **Reste ouverte — démarche humaine, hors lots.**
 - **Q-5** — **Fenêtre d'exécution** : reco = lot 1 immédiatement après arbitrage de Q-1 ;
   lots 2-6 **avant** la prochaine campagne massive de contenu (vague A lycée / corpus CNP),
   pour que le nouveau corpus naisse directement au privé et que la purge (Q-2) reste petite.
+  **Arbitré (2026-07-19) : conforme à la reco — lot 1 immédiat, scission enchaînée dans la foulée.**
 
 ## 9. Journal d'exécution
 
-_(vide — rempli lot par lot par l'exécuteur)_
+- **2026-07-19 — arbitrages humains** : Q-1 = PolyForm Noncommercial 1.0.0 · Q-2 = purge oui ·
+  Q-3 = FableEtudes + METHODE au privé · Q-5 = lot 1 immédiat puis scission enchaînée. Q-4
+  (OTDAV/INNORPI) reste ouverte (démarche humaine). Statut → en exécution.
+- **2026-07-19 — lot 1 livré** (branche `claude/ip-protection-public-repo-10qu8a`) :
+  `LICENSE.md` (PolyForm-NC 1.0.0, texte canonique SPDX + Required Notice), `LICENSE-CONTENT.md`
+  (tous droits réservés, FR/EN), § licence dans README, notices en tête de `content/README.md`
+  et `FableEtudes/README.md`, § « Licence & cession des contributions » dans CONTRIBUER.md,
+  `package.json` → `"license": "SEE LICENSE IN LICENSE.md"`. Écart accepté : le © applicatif
+  existait déjà (meta `copyright` dans `__root.tsx` + clé i18n `copyrightNotice`) — aucun code
+  applicatif touché, lot purement documentaire.
