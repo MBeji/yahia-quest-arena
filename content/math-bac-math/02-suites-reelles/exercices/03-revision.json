@@ -1,0 +1,154 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Limites de suites",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Calculer la limite de la suite de terme général Uₙ = (4n + 3)/(2n − 1) (n ≥ 1).",
+      "options": [
+        {
+          "id": "a",
+          "text": "0"
+        },
+        {
+          "id": "b",
+          "text": "2"
+        },
+        {
+          "id": "c",
+          "text": "4"
+        },
+        {
+          "id": "d",
+          "text": "+∞"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "On divise numérateur et dénominateur par n : Uₙ = (4 + 3/n)/(2 − 1/n) → (4 + 0)/(2 − 0) = 2 ✓. Répondre 4 ne garde que le coefficient du numérateur ; 0 confond avec la limite des restes 3/n et 1/n ; +∞ laisse la forme ∞/∞ sans la lever.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Calculer la limite de la suite de terme général Uₙ = n² − n (n ≥ 0).",
+      "options": [
+        {
+          "id": "a",
+          "text": "−∞"
+        },
+        {
+          "id": "b",
+          "text": "0"
+        },
+        {
+          "id": "c",
+          "text": "1"
+        },
+        {
+          "id": "d",
+          "text": "+∞"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Face à la forme indéterminée ∞ − ∞, on factorise le terme dominant : n² − n = n²(1 − 1/n). Comme n² → +∞ et 1 − 1/n → 1, le produit tend vers +∞ ✓. Répondre 0 « annule » illégalement les deux infinis ; 1 s'arrête à la limite de la parenthèse ; −∞ prend le signe du terme −n en oubliant que n² domine.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Calculer la limite de la suite de terme général Uₙ = 2ⁿ/(2ⁿ + 1) (n ≥ 0).",
+      "options": [
+        {
+          "id": "a",
+          "text": "0"
+        },
+        {
+          "id": "b",
+          "text": "1/2"
+        },
+        {
+          "id": "c",
+          "text": "1"
+        },
+        {
+          "id": "d",
+          "text": "+∞"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "On divise haut et bas par 2ⁿ : Uₙ = 1/(1 + (1/2)ⁿ). Comme (1/2)ⁿ → 0, la limite vaut 1/(1 + 0) = 1 ✓. Répondre 0 suppose à tort que le numérateur devient négligeable ; 1/2 vient du rapport des coefficients ; +∞ laisse la forme ∞/∞ non levée.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Calculer la limite de la suite de terme général Uₙ = sin(n)/n (n ≥ 1).",
+      "options": [
+        {
+          "id": "a",
+          "text": "0"
+        },
+        {
+          "id": "b",
+          "text": "1"
+        },
+        {
+          "id": "c",
+          "text": "−1"
+        },
+        {
+          "id": "d",
+          "text": "Pas de limite"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Comme −1 ≤ sin(n) ≤ 1, on a |Uₙ| = |sin(n)|/n ≤ 1/n. Or 1/n → 0, donc par le corollaire de la valeur absolue lim Uₙ = 0 ✓. Répondre « pas de limite » retient l'oscillation de sin(n) en oubliant le facteur 1/n qui l'écrase ; 1 et −1 confondent la limite avec les bornes de sin(n).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Soit la suite définie par U₀ = 1 et Uₙ₊₁ = √(Uₙ + 1). On admet que (Uₙ) converge vers un réel ℓ ≥ 0. Que vaut ℓ ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "1"
+        },
+        {
+          "id": "b",
+          "text": "(1 + √5)/2"
+        },
+        {
+          "id": "c",
+          "text": "(1 − √5)/2"
+        },
+        {
+          "id": "d",
+          "text": "2"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "La fonction f : x ↦ √(x + 1) est continue, donc le point fixe donne ℓ = √(ℓ + 1), soit ℓ² = ℓ + 1, c'est-à-dire ℓ² − ℓ − 1 = 0. Les racines sont (1 + √5)/2 et (1 − √5)/2 ; comme ℓ ≥ 0, on garde ℓ = (1 + √5)/2 ✓. La racine (1 − √5)/2 est négative, donc rejetée. Les valeurs 1 et 2 ne vérifient pas ℓ² = ℓ + 1.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Calculer la limite de la suite de terme général Uₙ = √(n + 1) − √n (n ≥ 0).",
+      "options": [
+        {
+          "id": "a",
+          "text": "0"
+        },
+        {
+          "id": "b",
+          "text": "1/2"
+        },
+        {
+          "id": "c",
+          "text": "1"
+        },
+        {
+          "id": "d",
+          "text": "+∞"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Forme indéterminée ∞ − ∞ : on multiplie par la quantité conjuguée. √(n + 1) − √n = ((n + 1) − n)/(√(n + 1) + √n) = 1/(√(n + 1) + √n). Le dénominateur tend vers +∞, donc la limite vaut 0 ✓. Répondre +∞ compare mal deux termes qui se rapprochent ; 1 oublie le dénominateur ; 1/2 confond avec un autre encadrement.",
+      "difficulty": 3
+    }
+  ]
+}

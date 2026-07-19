@@ -1,0 +1,154 @@
+{
+  "title": "👑 Défi élite ⭐⭐⭐⭐ : L'étau des suites adjacentes",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 4,
+  "questions": [
+    {
+      "prompt": "Soit Uₙ = 2 − 1/n et Vₙ = 2 + 1/n² pour n ≥ 1. Que peut-on affirmer sur ces deux suites ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Elles ne sont pas adjacentes, car (Vₙ) est croissante"
+        },
+        {
+          "id": "b",
+          "text": "Elles sont adjacentes, mais convergent vers deux limites différentes"
+        },
+        {
+          "id": "c",
+          "text": "Elles sont adjacentes et convergent toutes deux vers 2"
+        },
+        {
+          "id": "d",
+          "text": "Elles ne sont pas adjacentes, car on n'a jamais Uₙ = Vₙ"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Vérifions les trois conditions : (i) Uₙ ≤ Vₙ car 2 − 1/n ≤ 2 + 1/n² ✓ ; (ii) (Uₙ) est croissante (Uₙ₊₁ − Uₙ = 1/n − 1/(n + 1) > 0) et (Vₙ) est décroissante (1/n² décroît) ✓ ; (iii) Vₙ − Uₙ = 1/n² + 1/n → 0 ✓. Les suites sont donc adjacentes, et par définition elles convergent vers la MÊME limite ; comme Uₙ → 2, cette limite commune est 2 ✓. Le piège courant : croire que deux suites adjacentes peuvent avoir des limites différentes — la définition impose exactement l'inverse ; exiger Uₙ = Vₙ confond « adjacentes » avec « égales » ; et lire (Vₙ) comme croissante inverse le signe de Vₙ₊₁ − Vₙ.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Deux suites adjacentes (Uₙ) et (Vₙ) vérifient Vₙ − Uₙ = 1/2ⁿ. À partir de quel rang n est-on certain que leur limite commune est encadrée à moins de 10⁻³ près, c'est-à-dire Vₙ − Uₙ ≤ 10⁻³ ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "n ≥ 10"
+        },
+        {
+          "id": "b",
+          "text": "n ≥ 9"
+        },
+        {
+          "id": "c",
+          "text": "n ≥ 3"
+        },
+        {
+          "id": "d",
+          "text": "n ≥ 1000"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "On cherche le plus petit n tel que 1/2ⁿ ≤ 10⁻³, soit 2ⁿ ≥ 1000. Or 2⁹ = 512 < 1000 et 2¹⁰ = 1024 ≥ 1000 : la condition est vérifiée dès n ≥ 10 ✓. Comme (Uₙ) croît vers la limite ℓ et (Vₙ) décroît vers ℓ, on a Uₙ ≤ ℓ ≤ Vₙ, donc Vₙ − Uₙ ≤ 10⁻³ garantit bien un encadrement de ℓ à 10⁻³ près. Le piège courant : s'arrêter à n ≥ 9 sans vérifier que 2⁹ = 512 est insuffisant (erreur classique du « à un rang près ») ; lire l'exposant 3 de 10⁻³ comme le rang cherché donne n ≥ 3 ; et n ≥ 1000 confond la valeur seuil 1000 = 2ⁿ avec n lui-même.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Pour n ≥ 1, on pose Wₙ = 1/(1 × 2) + 1/(2 × 3) + … + 1/(n(n + 1)). Sachant que 1/(k(k + 1)) = 1/k − 1/(k + 1), déterminer lim Wₙ.",
+      "options": [
+        {
+          "id": "a",
+          "text": "0"
+        },
+        {
+          "id": "b",
+          "text": "+∞"
+        },
+        {
+          "id": "c",
+          "text": "2"
+        },
+        {
+          "id": "d",
+          "text": "1"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "La somme est télescopique : Wₙ = (1 − 1/2) + (1/2 − 1/3) + … + (1/n − 1/(n + 1)) = 1 − 1/(n + 1), tous les termes intermédiaires se simplifient deux à deux. Comme 1/(n + 1) → 0, on obtient lim Wₙ = 1 ✓ (contrôle : W₁ = 1/2 = 1 − 1/2 ✓, W₂ = 1/2 + 1/6 = 2/3 = 1 − 1/3 ✓). Le piège courant : croire qu'une somme dont les termes tendent vers 0 tend elle-même vers 0 (faux : le nombre de termes croît) ; croire qu'une somme infinie de termes positifs vaut toujours +∞ (faux ici, elle est majorée par 1) ; et une erreur de signe dans le télescopage (sommer 1/k + 1/(k + 1)) laisse deux termes de bord et conduit à la valeur erronée 2.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Pour n ≥ 1, on pose Vₙ = n/(n² + 1) + n/(n² + 2) + … + n/(n² + n) (somme de n termes). Déterminer lim Vₙ.",
+      "options": [
+        {
+          "id": "a",
+          "text": "0"
+        },
+        {
+          "id": "b",
+          "text": "1"
+        },
+        {
+          "id": "c",
+          "text": "+∞"
+        },
+        {
+          "id": "d",
+          "text": "La limite n'existe pas"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Chacun des n termes est compris entre le plus petit, n/(n² + n), et le plus grand, n/(n² + 1). En sommant les n termes : n × n/(n² + n) ≤ Vₙ ≤ n × n/(n² + 1), soit n²/(n² + n) ≤ Vₙ ≤ n²/(n² + 1). Les deux bornes tendent vers 1 (polynômes de même degré), donc par le théorème des gendarmes lim Vₙ = 1 ✓. Le piège courant : croire que Vₙ → 0 parce que chaque terme tend vers 0 — c'est faux, car le nombre de termes augmente en même temps (indétermination 0 × ∞ cachée) ; répondre +∞ surestime la somme ; et « pas de limite » ignore l'encadrement qui la fixe précisément.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Les suites Uₙ = 1 + 1/1! + 1/2! + … + 1/n! et Vₙ = Uₙ + 1/(n × n!) sont adjacentes, de limite commune e. On donne U₃ = 8/3 et V₃ = 49/18. Quel encadrement de e en découle ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "8/3 ≤ e ≤ 49/18"
+        },
+        {
+          "id": "b",
+          "text": "49/18 ≤ e ≤ 8/3"
+        },
+        {
+          "id": "c",
+          "text": "e ≤ 8/3"
+        },
+        {
+          "id": "d",
+          "text": "e ≥ 49/18"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "(Uₙ) est croissante et converge vers e, donc Uₙ ≤ e pour tout n : en particulier 8/3 ≤ e. (Vₙ) est décroissante et converge vers e, donc e ≤ Vₙ : en particulier e ≤ 49/18. D'où 8/3 ≤ e ≤ 49/18 ✓ (soit 2,667 ≤ e ≤ 2,722, cohérent avec e ≈ 2,718 ✓). Le piège courant : inverser les rôles en écrivant 49/18 ≤ e ≤ 8/3 — cela revient à croire que la suite croissante majore e et la décroissante le minore, exactement l'inverse ; ne garder qu'une seule des deux inégalités (c ou d) perd la moitié de l'encadrement.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Soit (Uₙ) et (Vₙ) définies par U₀ = 1, V₀ = 2 et, pour n ≥ 0, Uₙ₊₁ = (2Uₙ + Vₙ)/3 et Vₙ₊₁ = (Uₙ + 2Vₙ)/3. On admet qu'elles sont adjacentes. En remarquant que la suite (Uₙ + Vₙ) est constante, déterminer leur limite commune α.",
+      "options": [
+        {
+          "id": "a",
+          "text": "3"
+        },
+        {
+          "id": "b",
+          "text": "1"
+        },
+        {
+          "id": "c",
+          "text": "3/2"
+        },
+        {
+          "id": "d",
+          "text": "2"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "Calculons Uₙ₊₁ + Vₙ₊₁ = (2Uₙ + Vₙ)/3 + (Uₙ + 2Vₙ)/3 = (3Uₙ + 3Vₙ)/3 = Uₙ + Vₙ : la suite (Uₙ + Vₙ) est constante, égale à U₀ + V₀ = 3. Les deux suites étant adjacentes, elles convergent vers la même limite α ; en passant à la limite dans Uₙ + Vₙ = 3, on obtient α + α = 3, soit 2α = 3, d'où α = 3/2 ✓. Le piège courant : confondre la constante Uₙ + Vₙ = 3 avec la limite elle-même (oubli du facteur 2) ; prendre α = U₀ = 1 ou α = V₀ = 2, comme si la limite était l'une des valeurs initiales — or les termes convergent l'un vers l'autre, strictement entre 1 et 2.",
+      "difficulty": 3
+    }
+  ]
+}

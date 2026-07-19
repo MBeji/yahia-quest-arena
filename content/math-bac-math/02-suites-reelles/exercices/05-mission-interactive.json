@@ -1,0 +1,115 @@
+{
+  "title": "🧩 Mission interactive ⭐⭐ : L'atelier des suites",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 5,
+  "questions": [
+    {
+      "prompt": "Chasse à l'erreur — la suite est définie par U₀ = 2 et Uₙ₊₁ = 2Uₙ − 1. Un élève démontre par récurrence que Uₙ = 2ⁿ + 1 pour tout n ≥ 0 :\n① Initialisation : U₀ = 2 et 2⁰ + 1 = 1 + 1 = 2, la propriété est vraie au rang 0.\n② Hérédité : on suppose Uₙ = 2ⁿ + 1 pour un entier n ≥ 0.\n③ Alors Uₙ₊₁ = 2Uₙ − 1 = 2(2ⁿ + 1) − 1 = 2ⁿ⁺¹ + 1 − 1 = 2ⁿ⁺¹.\n④ Conclusion : la propriété est héréditaire, donc vraie pour tout n ≥ 0.\nUne seule étape contient une erreur : laquelle ?",
+      "options": [
+        { "id": "a", "text": "L'étape ①" },
+        { "id": "b", "text": "L'étape ②" },
+        { "id": "c", "text": "L'étape ③" },
+        { "id": "d", "text": "L'étape ④" }
+      ],
+      "correctOption": "c",
+      "explanation": "L'erreur est à l'étape ③ : dans 2(2ⁿ + 1), le facteur 2 doit multiplier AUSSI le terme 1, donc 2(2ⁿ + 1) = 2ⁿ⁺¹ + 2 (et non 2ⁿ⁺¹ + 1). Étape corrigée : 2(2ⁿ + 1) − 1 = 2ⁿ⁺¹ + 2 − 1 = 2ⁿ⁺¹ + 1 ✓, ce qui est exactement 2ⁿ⁺¹ + 1, la formule au rang n + 1 : l'hérédité est en réalité vérifiée. L'initialisation ① est exacte (U₀ = 2), l'hypothèse ② est correctement posée, et ④ ne fait que dérouler la conclusion : le seul défaut est la distributivité mal appliquée en ③ (2 × 1 = 2, pas 1).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Remise en ordre — on veut prouver que la suite U₀ = 1, Uₙ₊₁ = √(Uₙ + 1) converge, puis trouver sa limite. Quatre étapes sont données dans le désordre :\n① Par le théorème des suites monotones, (Uₙ) est croissante et majorée par 2 : elle converge vers un réel ℓ.\n② Montrer par récurrence que 1 ≤ Uₙ ≤ 2 pour tout n.\n③ Comme f : x ↦ √(x + 1) est continue, ℓ vérifie ℓ = √(ℓ + 1), soit ℓ² − ℓ − 1 = 0 ; avec ℓ ≥ 0, ℓ = (1 + √5)/2.\n④ En utilisant l'encadrement 1 ≤ Uₙ ≤ 2, montrer que Uₙ₊₁ − Uₙ ≥ 0 : (Uₙ) est croissante.\nQuel est l'ordre correct des étapes ?",
+      "options": [
+        { "id": "a", "text": "② → ④ → ① → ③" },
+        { "id": "b", "text": "③ → ② → ④ → ①" },
+        { "id": "c", "text": "② → ① → ④ → ③" },
+        { "id": "d", "text": "② → ④ → ③ → ①" }
+      ],
+      "correctOption": "a",
+      "explanation": "L'ordre correct est ② → ④ → ① → ③ ✓ : on établit d'abord l'encadrement 1 ≤ Uₙ ≤ 2 par récurrence (②), qui SERT ensuite à prouver la monotonie (④) ; croissante et majorée, la suite converge vers ℓ (①), et seulement alors le point fixe donne sa valeur (③). L'ordre ③ → … place la recherche du point fixe en tête : c'est l'erreur la plus sanctionnée du chapitre — trouver ℓ ne prouve jamais que (Uₙ) converge. L'ordre ② → ① → ④ → ③ conclut à la convergence (①) avant d'avoir montré la monotonie (④). Et ② → ④ → ③ → ① calcule la limite (③) avant même d'avoir conclu la convergence (①).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Appariement — associe chaque suite (①②③) à sa limite (a, b, c, d) :\n① Uₙ = (1/3)ⁿ\n② Uₙ = (2n² − n)/(n² + 3)\n③ Uₙ = (−1)ⁿ\na. 0\nb. 2\nc. n'a pas de limite\nd. +∞\nQuel appariement est entièrement correct ?",
+      "options": [
+        { "id": "a", "text": "①-a · ②-b · ③-c" },
+        { "id": "b", "text": "①-b · ②-a · ③-c" },
+        { "id": "c", "text": "①-a · ②-d · ③-c" },
+        { "id": "d", "text": "①-a · ②-b · ③-d" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le bon appariement est ①-a · ②-b · ③-c ✓ : (1/3)ⁿ → 0 car |1/3| < 1 ; pour (2n² − n)/(n² + 3), on divise par le terme dominant n² → (2 − 1/n)/(1 + 3/n²) → 2 ; et (−1)ⁿ alterne entre 1 et −1, donc n'a pas de limite (U₂ₙ → 1 mais U₂ₙ₊₁ → −1). Échanger les deux limites finies (①-b · ②-a) confond une géométrique de raison 1/3 et une fraction rationnelle. Envoyer ② vers +∞ (②-d) traite un ∞/∞ à degrés ÉGAUX comme s'il divergeait, alors que les termes dominants se simplifient en 2. Et envoyer (−1)ⁿ vers +∞ (③-d) confond « bornée qui alterne » et « qui grandit ». La limite d proposée (+∞) n'est atteinte par aucune de ces trois suites.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Texte à trous — on démontre par récurrence que 1 + 3 + 5 + … + (2n − 1) = n² pour tout n ≥ 1. À l'hérédité, on suppose l'égalité vraie au rang n et l'on ajoute aux deux membres le terme suivant de la somme, qui est (2n + 1). Le membre de droite devient alors ____, ce qui doit être égal à (n + 1)².",
+      "options": [
+        { "id": "a", "text": "n² + (2n + 1)" },
+        { "id": "b", "text": "n² + (2n − 1)" },
+        { "id": "c", "text": "(n + 1)² + (2n + 1)" },
+        { "id": "d", "text": "n² × (2n + 1)" }
+      ],
+      "correctOption": "a",
+      "explanation": "On ajoute le terme suivant (2n + 1) au membre de droite n², ce qui donne n² + (2n + 1) = n² + 2n + 1 = (n + 1)² ✓ : l'hérédité est établie. Le terme (2n − 1) est le DERNIER terme au rang n, pas le suivant — le rang n + 1 ajoute le nombre impair 2(n + 1) − 1 = 2n + 1. Partir de (n + 1)² revient à ajouter le terme à la cible que l'on cherche justement à atteindre. Et multiplier (n² × (2n + 1)) confond la somme des termes avec un produit : à l'hérédité, on AJOUTE le terme suivant aux deux membres, on ne multiplie pas.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Vrai ou faux ? On considère l'affirmation : « Soit (Uₙ) définie par Uₙ₊₁ = f(Uₙ) avec f continue. Si l'équation f(x) = x admet une unique solution ℓ, alors (Uₙ) converge vers ℓ. » Choisis le verdict accompagné de la justification correcte.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Faux : l'existence d'un point fixe ne prouve jamais la convergence ; il faut d'abord établir que (Uₙ) converge (monotone + bornée) avant d'identifier sa limite"
+        },
+        {
+          "id": "b",
+          "text": "Vrai : le théorème du point fixe garantit que Uₙ tend vers l'unique solution de f(x) = x"
+        },
+        {
+          "id": "c",
+          "text": "Vrai : une équation f(x) = x à solution unique force la suite à s'accumuler en ℓ"
+        },
+        {
+          "id": "d",
+          "text": "Faux : il faudrait que f(x) = x possède au moins deux solutions pour pouvoir conclure"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "L'affirmation est FAUSSE, et la bonne raison est celle du cours : le théorème du point fixe dit « SI (Uₙ) converge vers ℓ et si f est continue en ℓ, ALORS ℓ = f(ℓ) » — il donne la valeur de la limite une fois la convergence acquise, il ne la crée pas. On peut avoir un unique point fixe sans que la suite converge (elle peut diverger ou osciller). Les verdicts « Vrai » inversent le sens de l'implication du théorème. Et exiger deux solutions (verdict d) n'a aucun fondement : le nombre de points fixes ne décide pas de la convergence, qui s'établit par monotonie + bornée.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "QCM visuel — le graphique porte les premiers termes d'une suite (Uₙ) : ils croissent tout en restant sous la droite d'équation y = 3. Que peut-on affirmer ? <svg viewBox=\"0 0 280 200\"><path d=\"M40 170 H258\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.4\"/><path d=\"M258 170 l-6 -3 l0 6 z\" fill=\"#0f172a\"/><path d=\"M40 170 V22\" fill=\"none\" stroke=\"#0f172a\" stroke-width=\"1.4\"/><path d=\"M40 22 l-3 6 l6 0 z\" fill=\"#0f172a\"/><line x1=\"40\" y1=\"55\" x2=\"250\" y2=\"55\" stroke=\"#b45309\" stroke-width=\"1.4\" stroke-dasharray=\"6 4\"/><text x=\"246\" y=\"49\" text-anchor=\"end\" font-size=\"12\" font-weight=\"700\" fill=\"#b45309\">y = 3</text><text x=\"250\" y=\"186\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"700\" fill=\"#0f172a\">n</text><circle cx=\"58\" cy=\"150\" r=\"3\" fill=\"#0f172a\"/><circle cx=\"88\" cy=\"118\" r=\"3\" fill=\"#0f172a\"/><circle cx=\"118\" cy=\"96\" r=\"3\" fill=\"#0f172a\"/><circle cx=\"148\" cy=\"82\" r=\"3\" fill=\"#0f172a\"/><circle cx=\"178\" cy=\"73\" r=\"3\" fill=\"#0f172a\"/><circle cx=\"208\" cy=\"67\" r=\"3\" fill=\"#0f172a\"/><circle cx=\"238\" cy=\"63\" r=\"3\" fill=\"#0f172a\"/></svg>",
+      "options": [
+        {
+          "id": "a",
+          "text": "(Uₙ) est croissante et majorée : elle converge vers un réel ℓ, avec ℓ ≤ 3"
+        },
+        { "id": "b", "text": "(Uₙ) converge vers 3, car 3 est le majorant lu sur le graphique" },
+        { "id": "c", "text": "(Uₙ) tend vers +∞, puisqu'elle est croissante" },
+        { "id": "d", "text": "On ne peut rien conclure sans l'expression de Uₙ" }
+      ],
+      "correctOption": "a",
+      "explanation": "Le graphique montre une suite croissante (les points montent) et majorée (ils restent sous y = 3). Le théorème des suites monotones garantit alors qu'elle converge vers un réel ℓ, et le passage à la limite dans Uₙ ≤ 3 donne ℓ ≤ 3 ✓. Attention au piège du cours : « croissante et majorée » assure l'EXISTENCE de la limite, pas que celle-ci vaille le majorant — ℓ peut être strictement inférieur à 3, donc « converge vers 3 » (b) est faux. Une suite croissante ne tend vers +∞ que si elle n'est PAS majorée (c faux). Et le théorème conclut précisément sans avoir besoin de l'expression de Uₙ (d faux) : c'est tout son intérêt.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Lecture de document — une suite (Uₙ) vérifie Uₙ₊₁ = f(Uₙ). On dresse le tableau de ses premières valeurs :\nn : 0 · 1 · 2 · 3 · 4\nUₙ : 1 · 1,5 · 1,75 · 1,875 · 1,9375\nOn sait de plus que Uₙ < 2 pour tout n. Quelle conclusion est correcte ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "La suite paraît croissante et est majorée par 2 : ces observations suggèrent qu'elle converge vers un réel ℓ ≤ 2"
+        },
+        { "id": "b", "text": "La suite converge vers 1,9375, sa dernière valeur calculée" },
+        {
+          "id": "c",
+          "text": "La suite est décroissante, car les écarts entre termes successifs diminuent"
+        },
+        { "id": "d", "text": "La suite diverge vers +∞, car ses termes ne cessent de croître" }
+      ],
+      "correctOption": "a",
+      "explanation": "Les termes augmentent (1 < 1,5 < 1,75 < 1,875 < 1,9375) et l'énoncé garantit Uₙ < 2 pour tout n : la suite est croissante et majorée par 2, donc elle converge vers un réel ℓ ≤ 2 ✓ (ici on reconnaît d'ailleurs Uₙ = 2 − (1/2)ⁿ, de limite 2). Une valeur calculée du tableau n'est jamais la limite (b) : la limite ne dépend que des grandes valeurs de n. Des écarts qui diminuent ne rendent pas la suite décroissante (c) : les termes montent toujours, seule leur progression ralentit. Et « croissante » n'implique « +∞ » (d) que sans majorant — or ici Uₙ < 2 borne la suite.",
+      "difficulty": 2
+    }
+  ]
+}
