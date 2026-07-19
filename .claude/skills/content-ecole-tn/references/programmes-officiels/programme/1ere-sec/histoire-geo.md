@@ -3,7 +3,7 @@
 > **Sources** (deux manuels élève CNP combinés — pas de guide enseignant au corpus) :
 >
 > - **Manuel élève — التاريخ (Histoire)** : `207103P00.pdf` (`cnp-officiel/manuels/secondaire/c1/eleve/`) — 224 p. **Pages lues** : p.2–5 (© + مقدمة), **p.11–220 (leçons 1–18 = HISTOIRE COMPLÈTE à profondeur de génération, §2bis)**, p.221–224 (فهرس). Provenance des leçons 7–18 : voir ci-dessous.
-> - **Manuel élève — الجغرافيا (Géographie)** : `206103P00.pdf` (`…/eleve/`) — 120 p. **Pages lues** : p.2–5 (© + التقديم + خريطة الكتاب + ouverture module 1), p.25, p.45 (ouvreurs de modules), p.116–117 (module 3). **Pas de فهرس dans ce manuel** ; structure établie au niveau **module** (les bornes fines des leçons restent à établir en transcription profonde).
+> - **Manuel élève — الجغرافيا (Géographie)** : `206103P00.pdf` (`…/eleve/`) — 120 p. **Pas de فهرس** ; le **chapitrage est établi et codifié** (16 leçons / 3 modules — §2, §4, manifest) par **reconnaissance vision (workflow, 2026-07-19)**. ⚠️ **Contenu des 16 leçons NON transcrit** : la recon a survolé les pages pour en tirer la structure — **les pages géo restent à lire à profondeur de génération** (`pagesLues` géo volontairement non gonflées).
 >
 > **Transcrit le** : 2026-07-18/19. **Statut** : `partielle` · profondeur `mixte` → **⛔ GÉNÉRATION INTERDITE** tant que la matière n'est pas complète (R-5).
 > **Provenance des transcriptions (histoire = complète 18/18)** : leçons **1–6** en vision directe (orchestrateur) ; leçons **7–18** par **sous-agents vision (workflows parallèles, 2026-07-19 — lots de 4)** — fidèles (sources citées verbatim, chiffres occidentaux, figures décrites d'après légende, أطالع/تقويم résumés R-2), **R-7 indépendante à faire** sur les leçons **7–18** avant promotion. **Reste pour la matière : la GÉOGRAPHIE entière** (3 modules, `first-pass` — chapitrage à établir, pas de فهرس).
@@ -54,23 +54,36 @@ _إضاءات حول تاريخ تونس في العصر الحديث_
 
 ### مادة الجغرافيا (Géographie) — 3 modules (محاور)
 
-_Le manuel géo **ne comporte pas de فهرس** ; structure établie à partir des **pages-ouvreuses de modules** (bannière colorée) et confirmée par sondage. Bornes de pages **approximatives** (à confirmer/affiner en transcription profonde), leçons internes **à établir**._
+_Le manuel géo **ne comporte pas de فهرس** ; le chapitrage ci-dessous (16 leçons / 3 modules) a été **établi par reconnaissance vision (workflow, 2026-07-19)** — chaque module s'ouvre par une **page-titre listant ses leçons** (bannière « الوحدة N »). Bornes de pages **fiables** (numéros occidentaux en bas de page). Contenu des leçons **NON encore transcrit** (à faire — profil sans-source impossible, transcription requise)._
 
-#### المحور 1 : الإنسان يعمّر الأرض (l'Homme peuple la Terre) — p.5 → ~44
+#### المحور 1 : الإنسان يعمّر الأرض (l'Homme peuple la Terre) — p.6 → 40 · 5 leçons
 
-- Peuplement, répartition et dynamique de la population, migrations (النزوح الريفي, هجرة العمّال إلى الخارج, عودة المهاجرين…). Documents observés : cartes, textes, photos, tableaux statistiques.
+- **د1** التوزّع الجغرافي للسكّان في العالم (p.7–16) — répartition/densités, foyers de peuplement (étude de cas Brésil ; cartes Égypte/Inde/Europe ; carte anamorphique).
+- **د2** الحركة الديمغرافية للسكّان (p.17–21) — natalité/mortalité/accroissement/fécondité/structure par âge ; transition démographique (Kenya vs Suède ; pyramides des âges).
+- **د3** الحركيّة المجاليّة للسكّان : مثال هجرات العمل (p.22–28) — migrations de travail internes (Tunisie) et internationales ; نشاط تقييمي p.27–28 (Méditerranée).
+- **د4** الانفجار الحضري (p.29–32) — ville & urbanisation, croissance urbaine mondiale (Mexico), étalement de la capitale tunisienne.
+- **د5** تركيبة المدينة : دراسة حالة : القاهرة (p.33–40) — structure interne de la ville (modèles zones/secteurs/noyaux) ; نشاط تقييمي p.39–40 (Casablanca).
 
-#### المحور 2 : الإنسان يستثمر الموارد الطبيعيّة (l'Homme exploite les ressources naturelles) — p.~45 → ~112
+#### المحور 2 : الإنسان يستثمر الموارد الطبيعيّة (l'Homme exploite les ressources naturelles) — p.42 → 76 · 5 leçons
 
-- Ressources et leur exploitation : الموارد المائيّة (توزّع الموارد المائيّة في العالم), الموارد النفطيّة (الإنتاج والاستهلاك والمبادلات), الفلاحة… Documents : planisphères thématiques, tableaux, définitions (تعريف بمفهوم : النفط الخام…).
+- **د6** الموارد المائيّة (p.43–46) — cycle de l'eau, eau douce/salée, répartition (monde, Tunisie).
+- **د7** تعبئة المياه (p.47–49) — mobilisation (puits, barrages, forages, dessalement).
+- **د8** رهانات الماء (p.50–55) — enjeux : demande par secteurs, tensions/conflits (Tigre-Euphrate).
+- **د9** الموارد النفطيّة : الإنتاج والاستهلاك والمبادلات (p.56–68) — production/réserves/consommation/échanges (OPEP, raffinage, prix).
+- **د10** رهانات النفط (p.69–74) — enjeux géopolitiques, réserves, énergies alternatives. _(نشاط تقييمي de fin de module p.75–76.)_
 
-#### المحور 3 : الإنسان والأوساط الطبيعيّة (l'Homme et les milieux naturels) — p.~113 → 117
+#### المحور 3 : الإنسان والأوساط الطبيعيّة (l'Homme et les milieux naturels) — p.78 → 117 · 6 leçons
 
-- Rapports aux milieux, littoral et sa protection (تعرية السواحل, مصدّات التيّارات, التصخير…). Exemples tunisiens (الزّهراء الجنوبيّة, حمّام الأنف, شاطئ المهديّة).
+- **د11** الإنسان والوسط الطّبيعي (p.79–86) — milieu naturel & domaine géographique, éléments vivants/non-vivants, interactions Homme/milieu.
+- **د12** من المخاطر الطبيعيّة إلى الكوارث : الزّلازل والبراكين (p.87–93) — séismes/volcans (Kobe, Nevado del Ruiz), tectonique des plaques, échelles.
+- **د13** من المخاطر الطبيعيّة إلى الكوارث : الفيضانات (p.94–98) — inondations (Tunisie, Bangladesh), causes, lutte.
+- **د14** تدهور الأوساط الطّبيعية : مثال التّصحّر (p.99–103) — désertification (Sahel, Tunisie), causes & lutte.
+- **د15** تدهور وسط غابي : مثال الغابة المتوسّطيّة (p.104–110) — forêt méditerranéenne, dégradation ; نشاط تقييمي p.109–110 (Amazonie).
+- **د16** تدهور الأوساط الطّبيعية : تعرية السّواحل (p.111–117) — érosion côtière (jorf/plage), montée de la mer, protection (brise-lames, enrochement) ; exemples tunisiens (المنستير, رواد, حلق الوادي, حمّام الأنف, الزهراء, المهديّة).
 
 - **Bornes de scope (géo)** :
-  - ✅ INCLUS : géographie thématique mondiale de la relation Homme/espace (peuplement, ressources, milieux), avec exemples tunisiens.
-  - ⛔ EXCLU / **à confirmer** : découpage fin en leçons et intitulés officiels — non disponibles faute de فهرس (à relever sur les ouvreurs/titres lors de la transcription profonde).
+  - ✅ INCLUS : géographie thématique mondiale de la relation Homme/espace (peuplement, ressources eau & pétrole, milieux naturels & risques), avec études de cas mondiales et exemples tunisiens.
+  - ⛔ EXCLU : ce qui n'est pas au manuel `206103` de 1ère sec.
 
 ## 2bis. Contenu détaillé des leçons transcrites (profondeur de génération)
 
@@ -1114,28 +1127,44 @@ _إضاءات حول تاريخ تونس في العصر الحديث._
 
 > Histoire : 18 chapitres, pages **dérivées des pages de départ du فهرس** (la page de fin de chaque leçon = page de départ de la suivante − 1 ; approximatives pour la dernière). Géo : chapitrage **non encore codifié** (pas de فهرس ; à établir en transcription profonde) — laissé hors manifeste pour l'instant (⚠️ à compléter).
 
-| #   | slug                              | notion (وحدة · محور)                                         | manuel élève (code · pages) |
-| --- | --------------------------------- | ------------------------------------------------------------ | --------------------------- |
-| 1   | `01-hist-mu2assasat-siyasiyya`    | المؤسّسات السّياسيّة (و1 · م1 — قرطاج البونيّة)              | `207103` · p.11–16          |
-| 2   | `02-hist-ad-diyana`               | الديانة (و1 · م1)                                            | `207103` · p.17–20          |
-| 3   | `03-hist-al-mina2-at-tijara`      | الميناء والتوسّع التّجاري (و1 · م1)                          | `207103` · p.21–28          |
-| 4   | `04-hist-mawsu3at-maghun`         | موسوعة ماغون (و1 · م1)                                       | `207103` · p.29–32          |
-| 5   | `05-hist-3abqariyyat-hannibal`    | عبقريّة حنبعل (و1 · م1)                                      | `207103` · p.33–44          |
-| 6   | `06-hist-al-izdihar-al-3umrani`   | الازدهار العمراني (و1 · م2 — قرطاج الرّومانيّة)              | `207103` · p.45–56          |
-| 7   | `07-hist-al-izdihar-al-filaha`    | الازدهار الاقتصادي : الفلاحة (و1 · م2)                       | `207103` · p.57–64          |
-| 8   | `08-hist-abulius`                 | أبوليوس (و1 · م2)                                            | `207103` · p.65–74          |
-| 9   | `09-hist-augustinus`              | القدّيس أوغسطينوس (و1 · م2)                                  | `207103` · p.75–86          |
-| 10  | `10-hist-al-qayrawan-al-intishar` | القيروان قاعدة الانتشار العربي الإسلامي (و2 · م1)            | `207103` · p.87–92          |
-| 11  | `11-hist-an-nashat-at-tijari`     | الدور الاقتصادي للقيروان : أهميّة النّشاط التّجاري (و2 · م1) | `207103` · p.93–98          |
-| 12  | `12-hist-khasa2is-al-3imara`      | خصائص العمارة (و2 · م1)                                      | `207103` · p.99–110         |
-| 13  | `13-hist-al-ish3a3-al-fikri`      | الإشعاع الفكري (و2 · م1)                                     | `207103` · p.111–122        |
-| 14  | `14-hist-3imarat-madinat-tunis`   | عمارة مدينة تونس (و2 · م2 — العهد الحفصي)                    | `207103` · p.123–136        |
-| 15  | `15-hist-ibn-khaldun`             | عبد الرحمان بن خلدون (و2 · م2)                               | `207103` · p.137–152        |
-| 16  | `16-hist-al-fikr-al-islahi`       | الفكر الإصلاحي (و3 — من الإصلاح إلى التحديث)                 | `207103` · p.153–166        |
-| 17  | `17-hist-muqawamat-al-isti3mar`   | التجربة التونسيّة في مقاومة الاستعمار (و3)                   | `207103` · p.167–194        |
-| 18  | `18-hist-ta3sir-ad-dawla`         | تعصير الدولة وتحديث المجتمع (و3)                             | `207103` · p.195–220        |
+| #   | slug                              | notion (وحدة · محور)                                           | manuel élève (code · pages) |
+| --- | --------------------------------- | -------------------------------------------------------------- | --------------------------- |
+| 1   | `01-hist-mu2assasat-siyasiyya`    | المؤسّسات السّياسيّة (و1 · م1 — قرطاج البونيّة)                | `207103` · p.11–16          |
+| 2   | `02-hist-ad-diyana`               | الديانة (و1 · م1)                                              | `207103` · p.17–20          |
+| 3   | `03-hist-al-mina2-at-tijara`      | الميناء والتوسّع التّجاري (و1 · م1)                            | `207103` · p.21–28          |
+| 4   | `04-hist-mawsu3at-maghun`         | موسوعة ماغون (و1 · م1)                                         | `207103` · p.29–32          |
+| 5   | `05-hist-3abqariyyat-hannibal`    | عبقريّة حنبعل (و1 · م1)                                        | `207103` · p.33–44          |
+| 6   | `06-hist-al-izdihar-al-3umrani`   | الازدهار العمراني (و1 · م2 — قرطاج الرّومانيّة)                | `207103` · p.45–56          |
+| 7   | `07-hist-al-izdihar-al-filaha`    | الازدهار الاقتصادي : الفلاحة (و1 · م2)                         | `207103` · p.57–64          |
+| 8   | `08-hist-abulius`                 | أبوليوس (و1 · م2)                                              | `207103` · p.65–74          |
+| 9   | `09-hist-augustinus`              | القدّيس أوغسطينوس (و1 · م2)                                    | `207103` · p.75–86          |
+| 10  | `10-hist-al-qayrawan-al-intishar` | القيروان قاعدة الانتشار العربي الإسلامي (و2 · م1)              | `207103` · p.87–92          |
+| 11  | `11-hist-an-nashat-at-tijari`     | الدور الاقتصادي للقيروان : أهميّة النّشاط التّجاري (و2 · م1)   | `207103` · p.93–98          |
+| 12  | `12-hist-khasa2is-al-3imara`      | خصائص العمارة (و2 · م1)                                        | `207103` · p.99–110         |
+| 13  | `13-hist-al-ish3a3-al-fikri`      | الإشعاع الفكري (و2 · م1)                                       | `207103` · p.111–122        |
+| 14  | `14-hist-3imarat-madinat-tunis`   | عمارة مدينة تونس (و2 · م2 — العهد الحفصي)                      | `207103` · p.123–136        |
+| 15  | `15-hist-ibn-khaldun`             | عبد الرحمان بن خلدون (و2 · م2)                                 | `207103` · p.137–152        |
+| 16  | `16-hist-al-fikr-al-islahi`       | الفكر الإصلاحي (و3 — من الإصلاح إلى التحديث)                   | `207103` · p.153–166        |
+| 17  | `17-hist-muqawamat-al-isti3mar`   | التجربة التونسيّة في مقاومة الاستعمار (و3)                     | `207103` · p.167–194        |
+| 18  | `18-hist-ta3sir-ad-dawla`         | تعصير الدولة وتحديث المجتمع (و3)                               | `207103` · p.195–220        |
+| 19  | `19-geo-tawzi3-sukkan`            | التوزّع الجغرافي للسكّان في العالم (جغرافيا · محور 1)          | `206103` · p.7–16           |
+| 20  | `20-geo-haraka-dimughrafiyya`     | الحركة الديمغرافية للسكّان (محور 1)                            | `206103` · p.17–21          |
+| 21  | `21-geo-hijrat-al-3amal`          | الحركيّة المجاليّة للسكّان : مثال هجرات العمل (محور 1)         | `206103` · p.22–28          |
+| 22  | `22-geo-infijar-hadari`           | الانفجار الحضري (محور 1)                                       | `206103` · p.29–32          |
+| 23  | `23-geo-tarkibat-al-madina`       | تركيبة المدينة : دراسة حالة : القاهرة (محور 1)                 | `206103` · p.33–40          |
+| 24  | `24-geo-mawarid-ma2iyya`          | الموارد المائيّة (محور 2)                                      | `206103` · p.43–46          |
+| 25  | `25-geo-ta3bi2at-al-miyah`        | تعبئة المياه (محور 2)                                          | `206103` · p.47–49          |
+| 26  | `26-geo-rihanat-al-ma2`           | رهانات الماء (محور 2)                                          | `206103` · p.50–55          |
+| 27  | `27-geo-mawarid-naftiyya`         | الموارد النفطيّة : الإنتاج والاستهلاك والمبادلات (محور 2)      | `206103` · p.56–68          |
+| 28  | `28-geo-rihanat-an-naft`          | رهانات النفط (محور 2)                                          | `206103` · p.69–74          |
+| 29  | `29-geo-al-insan-wal-wasat`       | الإنسان والوسط الطّبيعي (محور 3)                               | `206103` · p.79–86          |
+| 30  | `30-geo-zalazil-barakin`          | من المخاطر الطبيعيّة إلى الكوارث : الزّلازل والبراكين (محور 3) | `206103` · p.87–93          |
+| 31  | `31-geo-fayadanat`                | من المخاطر الطبيعيّة إلى الكوارث : الفيضانات (محور 3)          | `206103` · p.94–98          |
+| 32  | `32-geo-tasahhur`                 | تدهور الأوساط الطّبيعية : مثال التّصحّر (محور 3)               | `206103` · p.99–103         |
+| 33  | `33-geo-tadahwur-ghabi`           | تدهور وسط غابي : مثال الغابة المتوسّطيّة (محور 3)              | `206103` · p.104–110        |
+| 34  | `34-geo-ta3riyat-sawahil`         | تدهور الأوساط الطّبيعية : تعرية السّواحل (محور 3)              | `206103` · p.111–117        |
 
-> **Géographie — à codifier** (pas encore dans le manifeste) : المحور 1 « الإنسان يعمّر الأرض » (`206103` · ~p.5–44) · المحور 2 « الإنسان يستثمر الموارد الطبيعيّة » (`206103` · ~p.45–112) · المحور 3 « الإنسان والأوساط الطبيعيّة » (`206103` · ~p.113–117). Découper en leçons + intitulés officiels lors de la transcription profonde, puis ajouter au manifeste.
+> **Géographie — chapitrage CODIFIÉ** (2026-07-19, reconnaissance vision par workflow) : 16 leçons / 3 modules, désormais dans `manifest/1ere-sec.json`. ⚠️ Le **contenu** de ces 16 leçons reste **à transcrire** à profondeur de génération (la structure seule ne permet pas de générer — R-5).
 
 ## 5. Sources croisées
 
