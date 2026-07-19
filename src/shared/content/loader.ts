@@ -8,12 +8,14 @@ import {
   misconceptionRegistrySchema,
   quizSchema,
   subjectMetaWithCompileToSchema,
+  videoRegistrySchema,
   type CompetencyRegistry,
   type LoadedChapter,
   type LoadedSubject,
   type LoadedExercise,
   type MisconceptionRegistry,
   type SubjectMeta,
+  type VideoRegistry,
 } from "./schema.ts";
 
 /** Thrown when a content file is missing or fails schema validation. */
@@ -32,6 +34,7 @@ const QUIZ_FILE = "quiz.json";
 const EXERCISES_DIR = "exercices";
 const MISCONCEPTION_REGISTRY = "misconceptions.json";
 const COMPETENCES_DIR = "competences";
+const VIDEO_REGISTRY = "videos.json";
 
 function readJson(filePath: string): unknown {
   if (!existsSync(filePath)) {
@@ -155,6 +158,19 @@ export function loadCompetencyRegistries(contentRoot: string): CompetencyRegistr
     }
     return registry;
   });
+}
+
+/**
+ * Load and validate the curated-video registry (`content/videos.json`, étude 23
+ * D-2). Absent → an empty registry (videos roll out progressively); present →
+ * validated against the schema so a malformed registry fails `content:check`.
+ * Usage of unknown / non-active / language-mismatched refs is cross-checked by
+ * `content:qa`.
+ */
+export function loadVideosRegistry(contentRoot: string): VideoRegistry {
+  const filePath = join(contentRoot, VIDEO_REGISTRY);
+  if (!existsSync(filePath)) return {};
+  return parseOrThrow(videoRegistrySchema, readJson(filePath), filePath);
 }
 
 /** Discover and load every subject under a content root directory. */

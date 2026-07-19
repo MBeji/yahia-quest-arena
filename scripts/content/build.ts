@@ -40,6 +40,7 @@ import {
   loadCompetencyRegistries,
   loadMisconceptionRegistry,
   loadSubject,
+  loadVideosRegistry,
 } from "../../src/shared/content/loader.ts";
 
 function getFlag(name: string): string | undefined {
@@ -92,6 +93,12 @@ function main(): void {
   // content:check; usage of unknown ids is cross-checked by content:qa.
   const competencyRegistries = loadCompetencyRegistries(contentDir);
 
+  // Curated-video registry (étude 23 D-2): validate its structure up front (a
+  // malformed content/videos.json fails content:check) and resolve chapter/
+  // exercise refs into the compiled JSONB columns; unknown/non-active/lang
+  // mismatches are cross-checked by content:qa.
+  const videosRegistry = loadVideosRegistry(contentDir);
+
   // Expansion (étude 16 D-4): shared `compileTo` dirs become their compiled
   // per-section subjects here; everything downstream keys on compiled ids.
   // In all-subjects mode expandSubjects proves global id uniqueness by itself;
@@ -139,7 +146,7 @@ function main(): void {
     // (they still count in the summary) but their migrations stay untouched.
     if (checkOnly || competencesOnly) return;
 
-    const sql = buildMigrationSql(subject);
+    const sql = buildMigrationSql(subject, videosRegistry);
     const stamp = bumpTimestamp(baseStamp, index);
     const fileName = `${stamp}_generated_${subject.meta.id}_content.sql`;
     mkdirSync(outDir, { recursive: true });
