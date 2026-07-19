@@ -1,0 +1,154 @@
+{
+  "title": "⭐⭐ Révision (type examen) : Dérivabilité",
+  "difficulty": 2,
+  "mode": "practice",
+  "xpReward": 75,
+  "rewardCoins": 15,
+  "displayOrder": 3,
+  "questions": [
+    {
+      "prompt": "Soit f(x) = (x + 1)/(x − 2) sur ]2, +∞[. Quelle est la dérivée f′(x) ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "−3/(x − 2)²"
+        },
+        {
+          "id": "b",
+          "text": "3/(x − 2)²"
+        },
+        {
+          "id": "c",
+          "text": "1"
+        },
+        {
+          "id": "d",
+          "text": "(2x − 1)/(x − 2)²"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "Avec (f/g)′ = (f′g − g′f)/g², où f′ = 1 et g′ = 1 : f′(x) = (1 × (x − 2) − 1 × (x + 1))/(x − 2)² = (x − 2 − x − 1)/(x − 2)² = −3/(x − 2)² ✓. La dérivée est donc strictement négative : f est décroissante sur ]2, +∞[. L'option b oublie le signe moins du numérateur. L'option c divise les dérivées entre elles (1/1), ce qui n'est pas la règle du quotient. L'option d additionne au lieu de soustraire au numérateur : (x − 2) + (x + 1) = 2x − 1.",
+      "difficulty": 1
+    },
+    {
+      "prompt": "Soit h(x) = √(x² + 3) sur ℝ. Quelle est la dérivée h′(x) ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "1/(2√(x² + 3))"
+        },
+        {
+          "id": "b",
+          "text": "2x/√(x² + 3)"
+        },
+        {
+          "id": "c",
+          "text": "x/(2√(x² + 3))"
+        },
+        {
+          "id": "d",
+          "text": "x/√(x² + 3)"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "On pose u(x) = x² + 3 (strictement positive), donc u′(x) = 2x, et (√u)′ = u′/(2√u) : h′(x) = 2x/(2√(x² + 3)) = x/√(x² + 3) ✓. L'option a oublie la dérivée intérieure u′ = 2x. L'option b oublie le 2 du dénominateur de la formule. L'option c simplifie mal : elle divise le numérateur par 2 sans supprimer le 2 du dénominateur.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Soit f(x) = x⁴ − 6x² + 1 sur ℝ. Quelles sont les abscisses des points d'inflexion de C_f ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "−1 et 1"
+        },
+        {
+          "id": "b",
+          "text": "0 seulement"
+        },
+        {
+          "id": "c",
+          "text": "−√6 et √6"
+        },
+        {
+          "id": "d",
+          "text": "Aucune : une fonction du quatrième degré n'a pas de point d'inflexion"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "On calcule f′(x) = 4x³ − 12x puis f″(x) = 12x² − 12 = 12(x² − 1) = 12(x − 1)(x + 1). La dérivée seconde s'annule en −1 et en 1, et elle y change de signe : f″ est positive sur ]−∞, −1[, négative sur ]−1, 1[, puis de nouveau positive sur ]1, +∞[. La courbe change donc de courbure en chacun de ces deux points : les abscisses des points d'inflexion sont −1 et 1 ✓. L'option « 0 seulement » vient de f′(x) = 4x(x² − 3), qui s'annule en 0 : c'est une racine de la dérivée PREMIÈRE (elle donne un extremum, pas une inflexion) — la confusion classique entre f′ et f″. L'option −√6 et √6 lit le coefficient 6 de l'énoncé et résout x⁴ − 6x² = 0, c'est-à-dire x²(x² − 6) = 0 : ce sont les racines de f privée de son terme constant, pas celles de f″. L'option « aucune » croit qu'une quartique garde une courbure constante ; ici f″ est un polynôme du second degré à deux racines simples, donc elle change bien de signe deux fois.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Soit f(x) = x² sur [0, 3]. Le théorème des accroissements finis garantit l'existence d'un réel c de ]0, 3[ tel que f(3) − f(0) = f′(c)(3 − 0). Que vaut c ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "3"
+        },
+        {
+          "id": "b",
+          "text": "9/2"
+        },
+        {
+          "id": "c",
+          "text": "3/2"
+        },
+        {
+          "id": "d",
+          "text": "9"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "On a f(3) − f(0) = 9 − 0 = 9 et f′(x) = 2x, donc l'égalité s'écrit 9 = 2c × 3 = 6c, d'où c = 3/2 ✓, qui appartient bien à ]0, 3[. L'option a donne la pente de la corde, c'est-à-dire f′(c) = 9/3 = 3, et non c lui-même. L'option b oublie le facteur (b − a) et résout 9 = 2c. L'option d confond c avec l'accroissement f(3) − f(0) = 9. On peut d'ailleurs vérifier que 9/2 et 9 sortent de l'intervalle ]0, 3[.",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Soit f(x) = x³ − 3x sur ℝ. Quels sont ses extrema locaux ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Un minimum local égal à −2 en −1 et un maximum local égal à 2 en 1"
+        },
+        {
+          "id": "b",
+          "text": "Un maximum local égal à 2 en −1 et un minimum local égal à −2 en 1"
+        },
+        {
+          "id": "c",
+          "text": "Un minimum local égal à 0 en 0"
+        },
+        {
+          "id": "d",
+          "text": "Aucun extremum : f est strictement croissante sur ℝ"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "On a f′(x) = 3x² − 3 = 3(x − 1)(x + 1). Donc f′ > 0 sur ]−∞, −1[, f′ < 0 sur ]−1, 1[ et f′ > 0 sur ]1, +∞[. En −1, f′ passe du positif au négatif : maximum local f(−1) = −1 + 3 = 2. En 1, f′ passe du négatif au positif : minimum local f(1) = 1 − 3 = −2 ✓. L'option a lit le signe de f′ à l'envers et échange donc maximum et minimum. L'option c applique le raisonnement de x ↦ x², alors qu'ici f′(0) = −3 ≠ 0. L'option d est le comportement de x ↦ x³, dont la dérivée 3x² ne change jamais de signe ; ce n'est pas le cas ici.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Soit f(x) = √x sur [4, 9], de dérivée f′(x) = 1/(2√x), qui vérifie 1/6 ≤ f′(x) ≤ 1/4 sur ]4, 9[. Quel encadrement de √9 − √4 l'inégalité des accroissements finis fournit-elle ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "1/6 ≤ √9 − √4 ≤ 1/4"
+        },
+        {
+          "id": "b",
+          "text": "4/6 ≤ √9 − √4 ≤ 1"
+        },
+        {
+          "id": "c",
+          "text": "1/30 ≤ √9 − √4 ≤ 1/20"
+        },
+        {
+          "id": "d",
+          "text": "5/6 ≤ √9 − √4 ≤ 5/4"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "L'inégalité m(b − a) ≤ f(b) − f(a) ≤ M(b − a) s'applique avec m = 1/6, M = 1/4 et b − a = 9 − 4 = 5 : (1/6) × 5 ≤ √9 − √4 ≤ (1/4) × 5, soit 5/6 ≤ √9 − √4 ≤ 5/4 ✓. La valeur exacte est 3 − 2 = 1, bien comprise entre 5/6 ≈ 0,833 et 5/4 = 1,25. L'option a oublie de multiplier par (b − a). L'option b multiplie par a = 4 au lieu de b − a = 5. L'option c divise par 5 au lieu de multiplier.",
+      "difficulty": 3
+    }
+  ]
+}

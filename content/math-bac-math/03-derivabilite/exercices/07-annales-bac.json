@@ -1,0 +1,154 @@
+{
+  "title": "🏛️ Annales Bac ⭐⭐⭐⭐ : Session principale — Étude complète d'une fonction rationnelle",
+  "difficulty": 4,
+  "mode": "challenge",
+  "xpReward": 300,
+  "rewardCoins": 60,
+  "displayOrder": 7,
+  "questions": [
+    {
+      "prompt": "Partie A. Soit g la fonction définie sur ℝ par g(x) = x³ + 3x + 2. Que peut-on affirmer sur l'équation g(x) = 0 ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Elle admet trois solutions réelles, puisque g est de degré 3"
+        },
+        {
+          "id": "b",
+          "text": "Elle admet une unique solution α, et α appartient à ]0 ; 1["
+        },
+        {
+          "id": "c",
+          "text": "Elle admet une unique solution α, et α appartient à ]−1 ; 0["
+        },
+        {
+          "id": "d",
+          "text": "Elle admet deux solutions, car g′ s'annule en −1"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "g est polynomiale, donc continue et dérivable sur ℝ, et g′(x) = 3x² + 3 = 3(x² + 1) > 0 pour tout réel x : g est strictement croissante sur ℝ. Ses limites sont −∞ en −∞ et +∞ en +∞, donc g réalise une bijection de ℝ sur ℝ et l'équation g(x) = 0 admet une unique solution α. On localise : g(−1) = −1 − 3 + 2 = −2 < 0 et g(0) = 2 > 0, donc α ∈ ]−1 ; 0[ ✓. Le piège courant : croire qu'un polynôme de degré 3 a toujours trois racines réelles — il en a trois comptées dans ℂ, mais ici la stricte croissance en impose exactement une ; chercher α dans ]0 ; 1[ oublie que g(0) = 2 est déjà positif, donc que le changement de signe est à gauche de 0 ; et « g′ s'annule en −1 » résout mal 3x² + 3 = 0, équation qui n'a aucune solution réelle (x² = −1).",
+      "difficulty": 2
+    },
+    {
+      "prompt": "Toujours pour g(x) = x³ + 3x + 2, donner un encadrement de α d'amplitude 10⁻¹.",
+      "options": [
+        {
+          "id": "a",
+          "text": "−0,6 < α < −0,5"
+        },
+        {
+          "id": "b",
+          "text": "−0,5 < α < −0,4"
+        },
+        {
+          "id": "c",
+          "text": "−0,7 < α < −0,6"
+        },
+        {
+          "id": "d",
+          "text": "−0,8 < α < −0,7"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "g étant strictement croissante, α est encadré par deux valeurs entre lesquelles g CHANGE de signe. On calcule : g(−0,8) = −0,512 − 2,4 + 2 = −0,912 ; g(−0,7) = −0,343 − 2,1 + 2 = −0,443 ; g(−0,6) = −0,216 − 1,8 + 2 = −0,016 ; g(−0,5) = −0,125 − 1,5 + 2 = 0,375 ; g(−0,4) = −0,064 − 1,2 + 2 = 0,736. Le seul changement de signe se produit entre −0,6 (négatif) et −0,5 (positif), donc −0,6 < α < −0,5 ✓ (contrôle : g(−0,6) ≈ −0,016 est très proche de 0, α est donc juste au-dessus de −0,6 ✓). Le piège courant : choisir un intervalle sur lequel g garde le MÊME signe — sur [−0,7 ; −0,6] les deux valeurs sont négatives, sur [−0,5 ; −0,4] les deux sont positives, et sur [−0,8 ; −0,7] les deux sont négatives : aucun de ces intervalles ne peut contenir α. C'est la vérification du changement de signe, et non la simple proximité de 0, qui localise la racine.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Partie B. Soit f définie sur ℝ par f(x) = (x³ − 1)/(x² + 1). Exprimer f′(x) à l'aide de la fonction g de la partie A.",
+      "options": [
+        {
+          "id": "a",
+          "text": "f′(x) = g(x)/(x² + 1)²"
+        },
+        {
+          "id": "b",
+          "text": "f′(x) = x(5x³ + 3x − 2)/(x² + 1)²"
+        },
+        {
+          "id": "c",
+          "text": "f′(x) = 3x²/(2x)"
+        },
+        {
+          "id": "d",
+          "text": "f′(x) = x g(x)/(x² + 1)²"
+        }
+      ],
+      "correctOption": "d",
+      "explanation": "Le dénominateur x² + 1 ne s'annule jamais, donc f est dérivable sur ℝ. Avec u(x) = x³ − 1 (u′ = 3x²) et v(x) = x² + 1 (v′ = 2x), la formule (u/v)′ = (u′v − v′u)/v² donne au numérateur 3x²(x² + 1) − 2x(x³ − 1) = 3x⁴ + 3x² − 2x⁴ + 2x = x⁴ + 3x² + 2x = x(x³ + 3x + 2) = x g(x). Donc f′(x) = x g(x)/(x² + 1)² ✓ (contrôle en x = 1 : f′(1) = 1 × g(1)/4 = 6/4 = 1,5 ; par le calcul direct, (3 × 2 − 2 × 0)/4 = 1,5 ✓). Le piège courant : oublier le facteur x mis en évidence donne g(x)/(x² + 1)², ce qui fausse tout le tableau de signe ; écrire la formule du quotient avec un « + » au numérateur donne 5x⁴ + 3x² − 2x = x(5x³ + 3x − 2), un polynôme qui n'est plus g ; et dériver numérateur et dénominateur séparément (3x²/(2x)) applique une règle qui n'existe pas.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Sachant que f′(x) = x g(x)/(x² + 1)², que g est strictement négative sur ]−∞ ; α[ et strictement positive sur ]α ; +∞[, avec −1 < α < 0, dresser le sens de variation de f.",
+      "options": [
+        {
+          "id": "a",
+          "text": "f est croissante sur ]−∞ ; α] puis décroissante sur [α ; +∞["
+        },
+        {
+          "id": "b",
+          "text": "f est croissante sur ]−∞ ; α], décroissante sur [α ; 0], croissante sur [0 ; +∞["
+        },
+        {
+          "id": "c",
+          "text": "f est décroissante sur ]−∞ ; α], croissante sur [α ; 0], décroissante sur [0 ; +∞["
+        },
+        {
+          "id": "d",
+          "text": "f est décroissante sur ]−∞ ; 0] puis croissante sur [0 ; +∞[, avec un unique minimum en α"
+        }
+      ],
+      "correctOption": "b",
+      "explanation": "Le dénominateur (x² + 1)² est strictement positif, donc f′(x) a le signe du PRODUIT x g(x), qui change de signe en DEUX points : α et 0 (avec α < 0). Sur ]−∞ ; α[ : x < 0 et g(x) < 0, le produit est positif, f croît. Sur ]α ; 0[ : x < 0 et g(x) > 0, le produit est négatif, f décroît. Sur ]0 ; +∞[ : x > 0 et g(x) > 0, le produit est positif, f croît ✓ (contrôle numérique : f′(−2) = (−2)g(−2)/25 = (−2)(−12)/25 = 0,96 > 0 ✓ ; f′(−0,2) = (−0,2)(1,392)/1,0816 ≈ −0,257 < 0 ✓ ; f′(1) = 1,5 > 0 ✓). Le piège courant : ne retenir que le signe de g et oublier le facteur x ne produit qu'un seul changement de signe, en α (réponses a et d) ; et lire le tableau de signe à l'envers échange systématiquement croissance et décroissance (réponse c). Un produit de deux facteurs impose de croiser DEUX lignes de signe, pas une.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "Toujours pour f(x) = (x³ − 1)/(x² + 1). Que peut-on dire du point de C_f d'abscisse 0 ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "f y admet un maximum local égal à −1"
+        },
+        {
+          "id": "b",
+          "text": "C'est un point d'inflexion, puisque f′(0) = 0"
+        },
+        {
+          "id": "c",
+          "text": "f y admet un minimum local égal à −1"
+        },
+        {
+          "id": "d",
+          "text": "Ce n'est ni un extremum ni un point d'inflexion"
+        }
+      ],
+      "correctOption": "c",
+      "explanation": "On a f′(0) = 0 × g(0)/1 = 0, la tangente en ce point est donc horizontale. D'après le tableau de variation, f′ est strictement négative juste avant 0 (sur ]α ; 0[) et strictement positive juste après : f′ s'annule en 0 EN CHANGEANT DE SIGNE, de − à +, ce qui caractérise un MINIMUM local. Sa valeur est f(0) = (0 − 1)/(0 + 1) = −1 ✓ (contrôle : f(−0,2) ≈ (−1,008)/1,04 ≈ −0,969 > −1 et f(0,2) ≈ (−0,992)/1,04 ≈ −0,954 > −1 : les valeurs voisines sont bien supérieures ✓). Le piège courant : lire le changement de signe à l'envers (+ puis −) conclut à un maximum ; croire que f′(a) = 0 signale un point d'inflexion confond les deux critères — l'inflexion se lit sur le changement de signe de f″, jamais sur l'annulation de f′ ; et « ni l'un ni l'autre » serait le cas de x ↦ x³ en 0, où f′ NE change PAS de signe, ce qui n'est pas la situation ici.",
+      "difficulty": 3
+    },
+    {
+      "prompt": "On note D la droite d'équation y = x. Étudier la nature de D pour C_f et la position relative de C_f et de D.",
+      "options": [
+        {
+          "id": "a",
+          "text": "D est asymptote oblique à C_f en −∞ et en +∞ ; C_f est au-dessus de D sur ]−∞ ; −1[ et au-dessous sur ]−1 ; +∞["
+        },
+        {
+          "id": "b",
+          "text": "D est asymptote oblique ; C_f est au-dessous de D sur ]−∞ ; −1[ et au-dessus sur ]−1 ; +∞["
+        },
+        {
+          "id": "c",
+          "text": "C_f n'admet pas d'asymptote oblique : elle admet l'asymptote horizontale y = 0"
+        },
+        {
+          "id": "d",
+          "text": "D est asymptote oblique et C_f reste toujours strictement au-dessous de D"
+        }
+      ],
+      "correctOption": "a",
+      "explanation": "On calcule la différence : f(x) − x = (x³ − 1 − x(x² + 1))/(x² + 1) = (x³ − 1 − x³ − x)/(x² + 1) = −(x + 1)/(x² + 1). Son numérateur est de degré 1 et son dénominateur de degré 2, donc f(x) − x → 0 en −∞ comme en +∞ : D est bien asymptote oblique à C_f aux deux infinis ✓. Pour la position, le dénominateur x² + 1 est toujours positif, donc f(x) − x a le signe de −(x + 1) : positif pour x < −1 (C_f au-dessus de D) et négatif pour x > −1 (C_f au-dessous), les deux courbes se coupant au point d'abscisse −1, où f(−1) = −2/2 = −1 = (−1) ✓ (contrôle en x = −3 : f(−3) = −28/10 = −2,8 > −3 ✓ ; en x = 2 : f(2) = 7/5 = 1,4 < 2 ✓). Le piège courant : oublier le signe « − » devant (x + 1) retourne toute la position relative ; conclure à une asymptote horizontale y = 0 compare mal les degrés — le numérateur de f est de degré 3 et le dénominateur de degré 2, l'écart de 1 annonce précisément une asymptote OBLIQUE ; et affirmer que C_f reste d'un seul côté de D ignore que f(x) − x s'annule en −1 en changeant de signe : la courbe traverse son asymptote.",
+      "difficulty": 3
+    }
+  ]
+}
