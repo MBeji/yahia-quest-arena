@@ -855,6 +855,16 @@ export type TranslationKeys = {
       manuelOpen: string;
       manuelPrev: string;
       manuelNext: string;
+      /** Étude 23 — « En vidéo » section of the course reader. */
+      videoSectionTitle: string;
+      /** aria-label of the play facade — {title} + {m} minutes. */
+      videoPlay: string;
+      /** Hosting attribution on the facade — {host}. */
+      videoHostedBy: string;
+      /** Duration badge — {m} minutes (Western digits). */
+      videoDuration: string;
+      /** Child-readable two-click consent micro-label (étude 23 R-4). */
+      videoLoadHint: string;
     };
     subject: {
       chapter: string;

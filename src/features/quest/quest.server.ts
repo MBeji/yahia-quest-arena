@@ -11,6 +11,7 @@ import { findAnswerFormatViolation, MAX_CHOICE_LENGTH } from "@/shared/lib/answe
 import { logger } from "@/shared/lib/logger";
 import type { UnlockedBadge } from "@/shared/types/gamification";
 import type { Database } from "@/shared/integrations/supabase/types";
+import type { CompiledVideo } from "@/shared/content/schema";
 import {
   RECALL_LOCKED_MESSAGE,
   RECALL_NOT_ELIGIBLE_MESSAGE,
@@ -370,21 +371,41 @@ export const getSubject = createServerFn({ method: "GET" })
   });
 
 // ---------- Get chapter lesson content ----------
+/** Narrowed chapter row for the reader — adds the étude-23 `videos` column the generated types lack. */
+type ChapterLessonRow = {
+  id: string;
+  title: string;
+  description: string | null;
+  lesson_content: string | null;
+  summary: string | null;
+  subject_id: string;
+  display_order: number;
+  videos: CompiledVideo[] | null;
+  subjects: { grade_id?: string | null; name_fr: string; content_language?: string } | null;
+};
+
 export const getChapterLesson = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
   .inputValidator((d) => z.object({ chapterId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const { data: chapter, error } = await supabase
+    const { data: chapterRow, error } = await supabase
       .from("chapters")
       .select(
-        "id, title, description, lesson_content, summary, subject_id, display_order, subjects(id, name_fr, color_token, icon, content_language, grade_id)",
+        "id, title, description, lesson_content, summary, subject_id, display_order, videos, subjects(id, name_fr, color_token, icon, content_language, grade_id)",
       )
       .eq("id", data.chapterId)
       .single();
     if (error) {
       failWithClientError("quest.getChapterLesson", error, "Impossible de charger la leçon.");
     }
+
+    // Selecting the étude-23 `videos` column (absent from the pre-existing
+    // generated types) makes the row loosely typed — narrow it once, the same
+    // posture the joined `subjects` relation already uses. The compiled `videos`
+    // JSONB (0–3 display objects) flows straight to the public reader.
+    const chapter = chapterRow as unknown as ChapterLessonRow;
+    const videos: CompiledVideo[] = chapter.videos ?? [];
 
     // Fetch all sibling chapters for navigation. We only need each sibling's
     // metadata + whether it HAS a lesson — never the lesson body itself. Pulling
@@ -449,7 +470,14 @@ export const getChapterLesson = createServerFn({ method: "GET" })
       );
     }
 
-    return { chapter, allChapters, practiceExerciseId, quizExerciseId, quizGated, quizPassed };
+    return {
+      chapter: { ...chapter, videos },
+      allChapters,
+      practiceExerciseId,
+      quizExerciseId,
+      quizGated,
+      quizPassed,
+    };
   });
 
 // ---------- Manuel élève pages (login-gated) ----------
