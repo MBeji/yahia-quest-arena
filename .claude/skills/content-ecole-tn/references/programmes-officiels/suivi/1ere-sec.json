@@ -167,8 +167,7 @@
           "pagesTotal": 224,
           "pagesLues": [
             [2, 5],
-            [11, 136],
-            [221, 224]
+            [11, 224]
           ]
         },
         {
@@ -188,7 +187,7 @@
       "r7": null,
       "maj": "2026-07-19",
       "par": "bejimed",
-      "notes": "⛔ GÉNÉRATION INTERDITE (statut partielle / profondeur mixte). Sujet COMBINÉ histoire+géographie (subject id cible histoire-geo-1ere-sec ; overlay prof-histoire-geo-lycee). Deux manuels élève arabes (pas de guide au corpus) → font référence. Langue CONSTATÉE : arabe (conforme lycee-architecture §4). PALIER 1 (STRUCTURE) : histoire chapitrée 18 leçons / 3 وحدات (vérifié au فهرس p.221-223 + crédits p.224), codifié au manifeste ; géo structuré en 3 modules (الإنسان يعمّر الأرض ~p.5-44 · الإنسان يستثمر الموارد الطبيعيّة ~p.45-112 · الإنسان والأوساط الطبيعيّة ~p.113-117) — pas de فهرس, leçons internes à établir (hors manifeste). PALIERS 2-7 (2026-07-18/19) : histoire leçons 1-14 transcrites à PROFONDEUR DE GÉNÉRATION (fiche §2bis, pages 11-136 contiguës = وحدة 1 complète + وحدة 2 محور 1 + leçon 14). PROVENANCE : leçons 1-6 en vision directe (orchestrateur) ; leçons 7-14 par SOUS-AGENTS vision (workflows parallèles 2026-07-19, lots de 4 : une leçon = un agent, PNG pré-rendus) — fidèles (sources verbatim, chiffres occidentaux, figures décrites, أطالع résumé R-2) mais R-7 INDÉPENDANTE À FAIRE sur 7-14 avant promotion. Leçon = un workflow-lot de ~4 agents (un lot de 12 avait heurté la limite d'usage de session — cf. mémoire). RESTE en first-pass : histoire leçons 15 (p.137-152), 16 (p.153-166), 17 (p.167-194), 18 (p.195-220) + géo entier (3 modules, chapitrage à établir). Reprise (R-4) : suite = leçon 15 (ابن خلدون). Pas de R-7 (fiche non complète)."
+      "notes": "⛔ GÉNÉRATION INTERDITE (statut partielle / profondeur mixte). Sujet COMBINÉ histoire+géographie (subject id cible histoire-geo-1ere-sec ; overlay prof-histoire-geo-lycee). Deux manuels élève arabes (pas de guide au corpus) → font référence. Langue CONSTATÉE : arabe (conforme lycee-architecture §4). PALIER 1 (STRUCTURE) : histoire chapitrée 18 leçons / 3 وحدات (vérifié au فهرس p.221-223 + crédits p.224), codifié au manifeste ; géo structuré en 3 modules (الإنسان يعمّر الأرض ~p.5-44 · الإنسان يستثمر الموارد الطبيعيّة ~p.45-112 · الإنسان والأوساط الطبيعيّة ~p.113-117) — pas de فهرس, leçons internes à établir (hors manifeste). PALIERS 2-8 (2026-07-18/19) : HISTOIRE COMPLÈTE 18/18 leçons transcrites à PROFONDEUR DE GÉNÉRATION (fiche §2bis, pages 11-220 = 3 وحدات). PROVENANCE : leçons 1-6 en vision directe (orchestrateur) ; leçons 7-18 par SOUS-AGENTS vision (workflows parallèles 2026-07-19, lots de 4 : une leçon = un agent, PNG pré-rendus) — fidèles (sources verbatim, chiffres occidentaux, figures décrites, أطالع/تقويم résumés R-2) mais R-7 INDÉPENDANTE À FAIRE sur leçons 7-18 avant promotion. Workflow lotti ~4 agents/lot (un lot de 12 avait heurté la limite d'usage de session — cf. mémoire workflow-transcription-parallele). RESTE POUR LA MATIÈRE : la GÉOGRAPHIE entière (206103, 120 p., 3 modules) — chapitrage à établir (pas de فهرس) puis transcription. Statut reste 'partielle' (géo manquante) / profondeur 'mixte'. GÉNÉRATION TOUJOURS INTERDITE. Reprise (R-4) : (a) géo ; (b) R-7 histoire 7-18."
     }
   ]
 }
