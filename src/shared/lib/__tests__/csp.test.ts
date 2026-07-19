@@ -59,6 +59,16 @@ describe("buildContentSecurityPolicy", () => {
     }
   });
 
+  it("pins exactly one embeddable video host via frame-src (étude 23)", () => {
+    for (const csp of [buildContentSecurityPolicy(), buildContentSecurityPolicy("n")]) {
+      const frameSrc = csp.split("; ").filter((d) => d.startsWith("frame-src "));
+      expect(frameSrc).toHaveLength(1);
+      expect(frameSrc[0]).toBe("frame-src https://www.youtube-nocookie.com");
+      // frame-src (what WE embed) is distinct from frame-ancestors (who embeds US).
+      expect(csp).toContain("frame-ancestors 'none'");
+    }
+  });
+
   it("is a single well-formed header value (directives joined by '; ')", () => {
     const csp = buildContentSecurityPolicy("n");
     expect(csp).not.toContain(";;");

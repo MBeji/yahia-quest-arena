@@ -145,6 +145,11 @@ export const arPublic: TranslationKeys["public"] = {
     manuelOpen: "تكبير الصفحة",
     manuelPrev: "السابقة",
     manuelNext: "التالية",
+    videoSectionTitle: "بالفيديو",
+    videoPlay: "شاهد: {title} ({m} دقيقة)",
+    videoHostedBy: "الفيديو مُستضاف على {host}",
+    videoDuration: "{m} دقيقة",
+    videoLoadHint: "بالضغط، تُحمِّل فيديو يوتيوب (Google).",
   },
   subject: {
     chapter: "الفصل {n}",

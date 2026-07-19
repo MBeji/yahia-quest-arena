@@ -147,6 +147,11 @@ export const enPublic: TranslationKeys["public"] = {
     manuelOpen: "Enlarge page",
     manuelPrev: "Previous",
     manuelNext: "Next",
+    videoSectionTitle: "On video",
+    videoPlay: "Watch: {title} ({m} min)",
+    videoHostedBy: "Video hosted by {host}",
+    videoDuration: "{m} min",
+    videoLoadHint: "By tapping, you load a YouTube video (Google).",
   },
   subject: {
     chapter: "Chapter {n}",

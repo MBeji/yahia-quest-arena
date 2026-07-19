@@ -45,6 +45,13 @@ export function buildContentSecurityPolicy(nonce?: string): string {
     // Supabase API/realtime + the GA4 collect endpoints (gtag.js beacons the
     // measurement protocol to the regional google-analytics.com hosts).
     "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com",
+    // Curated explainer videos (étude 23): the ONLY host we embed in an iframe,
+    // and only after the user clicks the privacy facade (no iframe exists in the
+    // DOM before then — étude 23 R-4/D-6). This directive is the technical proof
+    // that no other video host can ever appear; adding a provider is a reviewed
+    // code change here, never a data change. `youtube-nocookie` sets no cookie
+    // before Play. No `enablejsapi`, so `connect-src`/`script-src` stay untouched.
+    "frame-src https://www.youtube-nocookie.com",
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",
