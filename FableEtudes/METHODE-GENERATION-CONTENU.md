@@ -74,6 +74,13 @@ Règles de boucle (non négociables) :
 - **Resynchroniser à chaque lot** : branche fraîche depuis `origin/main` fetchée (commandes
   exactes en A1 / B1), puis relire **depuis main** la ligne `_INDEX.md` du couple — un autre
   contributeur a pu avancer pendant le lot précédent.
+- **Ouverture en production dès le premier lot** (règle de mise en prod, révisée 2026-07-19) : on
+  **n'attend plus la matière complète** pour rendre la classe visible aux utilisateurs — dès que le
+  **premier lot de chapitres complet** (première tranche : cours + résumé + quiz + d1 + d2 par
+  chapitre) est mergé, on ouvre la classe/section en production ; les chapitres suivants, d3/d4 et
+  annales s'ajoutent en continu sans bloquer. Détail et bascule `coming_soon → available` : **R-8**
+  de [`FableEtudes/16-ouverture-lycee/ETUDE.md`](./16-ouverture-lycee/ETUDE.md). Applicable à toute
+  session de génération, en cours ou future.
 - **Attendre le merge réel** d'un lot avant d'entamer le suivant (le LOT B dépend de la fiche
   mergée ; deux PR simultanées sur `_INDEX.md` se marchent dessus). ⚠️ Ce dépôt **auto-merge** :
   pousser une branche ouvre une PR **prête, auto-merge armé**, qui se merge seule quand les

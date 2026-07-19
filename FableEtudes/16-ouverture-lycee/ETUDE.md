@@ -132,12 +132,14 @@ parent, visiteur anonyme, admin (priorisation des vagues).
 - **R-7** — **Fork sans perte** : retirer une section d'un dossier partagé pour lui donner son
   dossier dédié DOIT conserver l'id de subject compilé (`<matière>-<gradeSlug>`) et les slugs de
   chapitres/exercices → mêmes UUIDv5, progression élève intacte (garanti par D-4.a ; test dédié).
-- **R-8** — **Seuil d'ouverture d'une section** (bascule `coming_soon → available`, une migration
-  `open_*` par section) — **arbitré Q-1 : UNE matière complète ouvre la section.** « Complète » =
-  tous les chapitres du programme officiel (transcription L1) avec le socle par chapitre
-  (cours + résumé + quiz + d1 + d2). En pratique la première matière complète est la dominante
-  n°1 (ordre d'authoring des vagues) ; d3/d4 et `NN-annales-bac` arrivent derrière (overlay
-  L3/L4) sans bloquer l'ouverture ; les autres matières de la classe s'ajoutent en continu.
+- **R-8** — **Seuil d'ouverture d'une section/classe** (bascule `coming_soon → available`, une
+  migration `open_*` par section) — **arbitré (révisé 2026-07-19) : le PREMIER LOT de chapitres
+  complet ouvre la classe en production, visible aux utilisateurs** (plus besoin d'attendre la
+  matière entière). « Lot complet » = les chapitres de la première tranche avec le socle par
+  chapitre (cours + résumé + quiz + d1 + d2). On ouvre dès cette première tranche mergée ; les
+  chapitres suivants, d3/d4 et `NN-annales-bac` (overlay L3/L4) s'ajoutent en continu sans bloquer
+  l'ouverture, de même que les autres matières de la classe. **Applicable à toute session de
+  génération, en cours ou future.**
 - **R-9** — Les nouvelles sections seedées ou re-ciblées par `compileTo` référencent uniquement
   des `gradeSlug` du référentiel canonique (liste fermée validée au build, D-4) — un slug
   inconnu = échec de `content:check`, jamais un subject à `grade_id` NULL silencieux.
@@ -308,8 +310,8 @@ US-7 é15). Le vote (`toggle_parcours_interest`) reste authenticated-only, incha
 ### D-6 — Ouverture par vagues, pilotée par la demande
 
 Une vague = un jalon de contenu (§4bis) clôturé par une migration `open_*_parcours` **par
-section** dès que R-8 est atteint (une matière complète — les sections d'une même vague ouvrent
-donc au fil de l'eau, pas d'un bloc). Ordre **arbitré Q-2** (aligné doc lycée §8) :
+section** dès que R-8 est atteint (le premier lot de chapitres complet — les sections d'une même
+vague ouvrent donc au fil de l'eau, pas d'un bloc). Ordre **arbitré Q-2** (aligné doc lycée §8) :
 **A** `1ere-sec` (tronc commun : sert les 15 sections d'aval + porte la bascule ar→fr en
 génération native fr) →
 **B** `bac-math` + `bac-sciences-exp` (années d'examen, audience max ; le tronc `*-bac` compilé
@@ -368,7 +370,7 @@ supprimé).
 
 **Vague A — `1ere-sec` (5 dossiers → 5 subjects)**
 `math-1ere-sec`, `physique-1ere-sec`, `svt-1ere-sec` (fr natif — jargon des manuels officiels,
-sans traduction), `francais-1ere-sec`, `arabe-1ere-sec`. Ouvre `ecole-1ere-sec` dès la première matière complète
+sans traduction), `francais-1ere-sec`, `arabe-1ere-sec`. Ouvre `ecole-1ere-sec` dès le premier lot de chapitres complet
 (R-8).
 
 > **Journal 2026-07-13 — vague A, 1ʳᵉ matière livrée → section ouverte.** `math-1ere-sec`
@@ -474,10 +476,10 @@ L'ordre A→E est re-priorisable par les votes (D-6, arbitrage humain).
 
 Toutes arbitrées le 2026-07-11 — l'étude passe « validée ». Décisions consignées :
 
-- **Q-1 — ARBITRÉ : une matière complète ouvre la section.** R-8 réécrit en conséquence
-  (« complète » = tous les chapitres officiels avec cours + résumé + quiz + d1 + d2 ; d3/d4 et
-  annales suivent en overlay sans bloquer). Les migrations `open_*` partent au fil de l'eau,
-  section par section.
+- **Q-1 — ARBITRÉ (révisé 2026-07-19) : le premier lot de chapitres complet ouvre la classe.**
+  R-8 réécrit en conséquence (« lot complet » = les chapitres de la première tranche avec cours +
+  résumé + quiz + d1 + d2 ; chapitres suivants, d3/d4 et annales suivent en overlay sans bloquer).
+  Les migrations `open_*` partent au fil de l'eau, section par section.
 - **Q-2 — ARBITRÉ : 1ère année d'abord.** Ordre A→E confirmé (1ère sec → bac math/sc-exp →
   autres bacs → 3ème → 2ème), re-priorisable par les votes au sein des vagues.
 - **Q-3 — ARBITRÉ : resserrer aux 4-5 matières vraiment cœur par classe.** Nouvelle règle R-10 ;
@@ -504,7 +506,8 @@ proposés sont abandonnés).
   périmée) dans la même PR. Maquette HTML de l'arborescence (onboarding + catalogue) jointe :
   [`maquette-arborescence.html`](./maquette-arborescence.html).
 - 2026-07-11 — Arbitrages humains Q-1…Q-5 rendus (§7) + directive UX drill-down, statut →
-  **validée**. Impacts intégrés : R-8 (une matière complète ouvre), R-10 (cap 4-5 matières
+  **validée**. Impacts intégrés : R-8 (le premier lot de chapitres complet ouvre — révisé
+  2026-07-19), R-10 (cap 4-5 matières
   cœur), D-5 réécrit (pages légères, nouvelle route `/programme/lycee/$annee`), D-7 ajouté
   (compteur public — RPC au lot 2), §4bis resserré (~44 dossiers → ~82 subjects, anglais/philo
   3ème → pack v1.1), maquette refaite en drill-down.
