@@ -2,9 +2,9 @@
 
 Ce document décrit **le parcours complet d'une demande** dans `yahia-quest-arena`, depuis
 le moment où le développement est terminé jusqu'à la production, avec chaque garde-fou
-(harness) rencontré en chemin. Il complète [CLAUDE.md](../CLAUDE.md) (source canonique)
+(harness) rencontré en chemin. Il complète [AGENTS.md](../AGENTS.md) (source canonique)
 et [ci-cd-and-branch-protection.md](./ci-cd-and-branch-protection.md) (détail des checks
-et du ruleset) — en cas de divergence, CLAUDE.md gagne.
+et du ruleset) — en cas de divergence, AGENTS.md gagne.
 
 ## Vue d'ensemble
 
@@ -36,7 +36,7 @@ Dev local ──► git commit ──► git push (branche)
 **Aucun geste humain** entre « j'ai fini de coder » et « c'est en prod » (décision
 2026-07-12) : la PR s'ouvre **ready, auto-merge armé**, et merge seule quand les checks
 requis sont verts sur une tête à jour. La session qui a poussé surveille ses checks
-jusqu'au merge et corrige tout rouge (CLAUDE.md, DoD §8). Pour un savepoint volontaire :
+jusqu'au merge et corrige tout rouge (AGENTS.md, DoD §8). Pour un savepoint volontaire :
 `[wip]` / `[draft]` dans le sujet du commit de tête (ou une branche `wip/`, `draft/`,
 `rescue/`) → PR **draft**, à promouvoir plus tard avec `gh pr ready`. Le label
 **`no-automerge`** gèle une PR qu'on veut retenir.
@@ -49,7 +49,7 @@ Avant même que le code quitte la machine (husky, installé par `npm install`) :
   aucun commit mal formaté ne peut exister.
 - **`pre-push`** : `npm run verify` complet (ESLint zéro-warning + `tsc --noEmit` strict
   - la suite Vitest). Un push avec un gate rouge est refusé localement.
-- Jamais de `--no-verify` sans raison explicitement documentée (CLAUDE.md, DoD §2).
+- Jamais de `--no-verify` sans raison explicitement documentée (AGENTS.md, DoD §2).
 
 ## 2. Push de la branche — inscription automatique en PR
 
@@ -115,7 +115,7 @@ Trois automatismes se déclenchent :
 2. **`db-migrate-prod.yml`** applique les nouvelles `supabase/migrations/**` à la
    **base de prod** : backup `pg_dump` préalable, garde anti-mauvaise-cible, issue
    `prod-migration-failure` ouverte le jour même en cas d'échec. **Jamais de SQL
-   manuel** (CLAUDE.md §7). Règle d'or : migration **additive avant** le code qui
+   manuel** (AGENTS.md §7). Règle d'or : migration **additive avant** le code qui
    l'utilise ; migration **destructive** dans un merge séparé, **après** que le code
    qui utilisait l'ancienne forme est parti.
 3. **`release.yml`** : si la version de `package.json` a changé, tag SemVer annoté +

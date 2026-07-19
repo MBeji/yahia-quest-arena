@@ -12,7 +12,7 @@ sans compte. Détails, décisions et état des features : [STATUS.md](./STATUS.m
 | Besoin                                                      | Document                                                 |
 | ----------------------------------------------------------- | -------------------------------------------------------- |
 | État du projet (phase, décisions, features, travaux en vol) | [STATUS.md](./STATUS.md)                                 |
-| Conventions, commandes, Definition of Done — **canonique**  | [CLAUDE.md](./CLAUDE.md)                                 |
+| Conventions, commandes, Definition of Done — **canonique**  | [AGENTS.md](./AGENTS.md)                                 |
 | Architecture (stack, flux, modèle de données, sécurité)     | [ARCHITECTURE.md](./ARCHITECTURE.md)                     |
 | Études d'architecture des epics                             | [FableEtudes/](./FableEtudes/README.md)                  |
 | **Contribuer à une étude** (collaborateur / dév)            | [FableEtudes/CONTRIBUER.md](./FableEtudes/CONTRIBUER.md) |
@@ -32,7 +32,7 @@ npm run verify     # lint + typecheck + tests — le gate local
 npm run ci:verify  # gate complet (coverage + build + audit + QA contenu)
 ```
 
-La règle du jeu complète (gate, contenu, migrations, PRs) est dans [CLAUDE.md](./CLAUDE.md).
+La règle du jeu complète (gate, contenu, migrations, PRs) est dans [AGENTS.md](./AGENTS.md).
 
 ## Licence & propriété intellectuelle
 

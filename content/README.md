@@ -141,7 +141,7 @@ réponse — sinon rester en texte. Détails + `svglib.mjs` : voir le README de 
 ## Workflow DB ↔ code
 
 Le SQL généré est **appliqué automatiquement à la prod au merge sur `main`**
-(workflow `db-migrate-prod.yml`, voir `CLAUDE.md` §7) — on n'applique **jamais**
+(workflow `db-migrate-prod.yml`, voir `AGENTS.md` §7) — on n'applique **jamais**
 à la main. Ordre : `content:build` → relire le SQL → ouvrir la PR → merge (la
 migration part en prod toute seule) → le code dépendant suit.
 

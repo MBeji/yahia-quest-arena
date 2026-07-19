@@ -780,7 +780,7 @@ Détail des points durs par lot :
   frictions, temps) est le juge de paix des KPI. Il nécessite l'humain (installation d'une 2ᵉ
   tête, compte éventuel) — c'est assumé : la portabilité se **mesure**, elle ne se décrète pas.
 
-- [ ] Lot 1 — Bascule AGENTS.md canonique + pointeurs
+- [x] Lot 1 — Bascule AGENTS.md canonique + pointeurs (2026-07-19)
 - [ ] Lot 2 — Outillage & gate `harness:check` + `models.json`
 - [ ] Lot 3 — Skills : conformité spec + miroir `.agents/skills/`
 - [ ] Lot 4 — Politique d'exécution déclarative + hook externalisé
@@ -878,6 +878,47 @@ Détail des points durs par lot :
   l'architecte. Statut passé à `validée`. Aucun ADR (§4.2) n'a nécessité de révision : les
   décisions D-1…D-9 encodaient déjà le chemin recommandé. Lot 1 démarré dans la foulée (même
   session).
+- **2026-07-19 — Lot 1 livré (D-1/D-1b).** `AGENTS.md` créé à la racine (168 lignes, 11,0 Kio —
+  sous le budget ≤250 l. / ≤24 Kio de D-1b) en condensant les ~515 lignes de l'ancien
+  `CLAUDE.md` ; `CLAUDE.md` réduit à l'import `@AGENTS.md` + appendice Claude-only (~14 l.,
+  modèle cloudflare/workers-sdk). Correspondance section-à-section (rien ne se perd, D-1b) :
+  - « What this is », « Essential commands », « Conventions », « Definition of Done »,
+    « Known gotchas » → portés dans AGENTS.md, condensés sans perte de substance.
+  - « Data model (Supabase) » (73 l.) → condensé à ~10 l. dans AGENTS.md ; le détail complet
+    vit déjà dans `ARCHITECTURE.md` §8/§8a (vérifié avant condensation, aucun contenu unique
+    perdu) — AGENTS.md pointe désormais vers ARCHITECTURE.md.
+  - « Content pipeline » (79 l.) → condensé à ~15 l. ; le détail vit déjà dans
+    `content/README.md` et `content-engine/references/generation-pipeline.md`.
+  - « Subsystems & further docs » (97 l., incl. le paragraphe « Merge automation » qui
+    dupliquait `docs/ci-cd-and-branch-protection.md`) → remplacé par la section « Documentation
+    map » (tableau, ~10 l.) qui pointe vers les mêmes docs sans répéter leur contenu.
+  - Nouvelles sections (n'existaient pas dans CLAUDE.md, ajoutées par l'architecture cible) :
+    « Execution policy » (pointeur `harness/policy.json`, encore à créer — lot 4) et
+    « Multi-agent collaboration » (préfixes de branche, un lot = une PR, mémoire → repo).
+  - Dérive documentaire corrigée en passant : le gotcha « The Copilot guide still references
+    `@/shared/ui/`… » était **obsolète** (vérifié : `.github/copilot-instructions.md` dit déjà
+    correctement qu'il n'y a pas de `@/shared/ui`) — non reporté dans AGENTS.md.
+  - `.github/copilot-instructions.md` réduit à un pointeur vers AGENTS.md (Copilot le lit
+    nativement depuis VS Code ≥ 1.104 + coding agent + CLI) ; `.gemini/settings.json` créé
+    (`context.fileName: ["AGENTS.md"]`).
+  - Références canoniques recâblées : `README.md`, `ARCHITECTURE.md`, `STATUS.md` (§7 + intro),
+    `FableEtudes/README.md`, `FableEtudes/_TEMPLATE.md`, `FableEtudes/CONTRIBUER.md` (9
+    occurrences), `FableEtudes/METHODE-GENERATION-CONTENU.md`, `content/README.md`,
+    `docs/passation.md`, `docs/ci-cd-and-branch-protection.md`, `docs/interactive-question-types.md`,
+    `docs/content-voice-and-composition.md`, `docs/guide-duels-et-ligues.md`,
+    `docs/guide-rappel-actif.md`, `docs/lycee-architecture.md`, `docs/content-generation-pipeline.md`,
+    `.github/pull_request_template.md`. **Volontairement non touchés** (historique, ne se
+    réécrit pas) : les 24 `FableEtudes/NN-*/ETUDE.md` individuels (leur mention de CLAUDE.md
+    comme doc normatif reste vraie — CLAUDE.md existe toujours), `docs/audits/codebase-audit.md`
+    (audit daté 2026-06-30, commit-pinné), l'entrée de journal STATUS.md du 2026-07-12
+    (référence datée). **Hors périmètre de ce lot** (prévu aux lots 3/5) : `.claude/skills/**`,
+    `.github/workflows/**`.
+  - **Vérification empirique de l'import** (au lieu d'une simple lecture de la doc Anthropic) :
+    sous-agent frais lancé dans ce repo, sans autorisation d'utiliser Read sur CLAUDE.md ou
+    AGENTS.md — il a correctement restitué la mission du produit, les 3 premières commandes et
+    la règle DoD n°7 depuis son contexte système auto-injecté, et confirmé que son bloc
+    `CLAUDE.md` ne contenait que l'import. Verdict : **IMPORT FONCTIONNEL**.
+  - Gate : `npm run verify` vert avant push (voir PR). Aucun écart accepté.
 
 ---
 

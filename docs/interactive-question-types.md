@@ -10,7 +10,7 @@
 > **Tier A** — interactive formats encoded inside the existing QCM schema — is live and
 > canonically documented in `.claude/skills/content-engine/references/interactive-formats.md`;
 > author those freely via the `content-interactif` skill. Tier B adds _native_ input types and
-> requires the coordinated DB + RPC + UI + pipeline changes mapped here. Defers to CLAUDE.md
+> requires the coordinated DB + RPC + UI + pipeline changes mapped here. Defers to AGENTS.md
 > (DoD §7 migration ordering) and ARCHITECTURE.md where they overlap.
 
 ## Why (and why not sooner)
@@ -26,7 +26,7 @@ manipulation (drag-&-drop), and multi-select judgment.
 ## Target data model (additive, mcq-compatible)
 
 - `questions.question_type text NOT NULL DEFAULT 'mcq'` — new column, additive migration
-  (**ships with its own `GRANT`s** — see CLAUDE.md gotcha on baseline table grants).
+  (**ships with its own `GRANT`s** — see AGENTS.md gotcha on baseline table grants).
 - `questions.answer_key jsonb NULL` — the typed key for non-mcq types; `correct_option` remains
   the key for `'mcq'` (untouched rows keep working unchanged).
 - `options` keeps `[{id, text}]` for every type (items to order/match/select); unused for

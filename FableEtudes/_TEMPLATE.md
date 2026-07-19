@@ -4,7 +4,7 @@
 > **Priorité** : NN · **Valeur** : <1 phrase> · **Complexité** : <faible/moyenne/haute/très haute>
 > **Architecte** : <modèle/date> · **Exécuteur cible** : Sonnet (ou équiv.)
 > **Dépend de** : <études/décisions/contenu préalables> · **Bloque** : <le cas échéant>
-> **Docs normatifs liés** : CLAUDE.md, ARCHITECTURE.md, <docs/\*.md concernés>
+> **Docs normatifs liés** : AGENTS.md, ARCHITECTURE.md, <docs/\*.md concernés>
 
 ## 1. Contexte & objectif produit
 
