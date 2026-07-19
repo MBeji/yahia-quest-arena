@@ -61,6 +61,12 @@ jobs:
       - name: Programme transcription registry
         run: npm run programme:check
 
+      # Harness anti-drift gate (étude 25): CLAUDE.md stays a thin @AGENTS.md
+      # pointer, AGENTS.md stays in budget, no hidden Unicode, no model id
+      # hardcoded outside harness/models.json.
+      - name: Harness check
+        run: npm run harness:check
+
       # Keep the k6 load harness (perf/) from rotting: every scenario must parse,
       # and its constants must still mirror the product hot paths (LEADERBOARD_LIMIT,
       # submit rate-limit budget). No k6 binary / Supabase secrets needed.

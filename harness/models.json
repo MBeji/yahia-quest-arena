@@ -1,0 +1,38 @@
+{
+  "$comment": "The only place in this repo where a model identifier may appear (outside historical docs — FableEtudes/, docs/archive/, STATUS.md's dated journal, which are never rewritten). Consumed by the CI guard workflows (wired in étude 25 lot 5) and the pre-commit hook (lot 4). Bumping a model for a role = editing this file only. Values below are iso-current: extracted from the workflows/hook that already hardcode them, no behavior change on creation (étude 25 lot 2).",
+  "roles": {
+    "architecte": {
+      "provider": "anthropic",
+      "model": "claude-fable-5"
+    },
+    "executeur": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-6"
+    },
+    "hook-precommit": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-6"
+    },
+    "garde-tests": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-6"
+    },
+    "garde-contenu": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-6"
+    },
+    "garde-deps": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-6"
+    },
+    "garde-triage": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-6"
+    },
+    "second-avis": {
+      "provider": null,
+      "model": null,
+      "status": "dormant — Q-3 différée le 2026-07-19 (étude 25) ; activer = renseigner provider/model + secret CI"
+    }
+  }
+}

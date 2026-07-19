@@ -781,7 +781,7 @@ Détail des points durs par lot :
   tête, compte éventuel) — c'est assumé : la portabilité se **mesure**, elle ne se décrète pas.
 
 - [x] Lot 1 — Bascule AGENTS.md canonique + pointeurs (2026-07-19)
-- [ ] Lot 2 — Outillage & gate `harness:check` + `models.json`
+- [x] Lot 2 — Outillage & gate `harness:check` + `models.json` (2026-07-19)
 - [ ] Lot 3 — Skills : conformité spec + miroir `.agents/skills/`
 - [ ] Lot 4 — Politique d'exécution déclarative + hook externalisé
 - [ ] Lot 5 — Gardes CI portables + épinglage SHA
@@ -919,6 +919,29 @@ Détail des points durs par lot :
     la règle DoD n°7 depuis son contexte système auto-injecté, et confirmé que son bloc
     `CLAUDE.md` ne contenait que l'import. Verdict : **IMPORT FONCTIONNEL**.
   - Gate : `npm run verify` vert avant push (voir PR). Aucun écart accepté.
+- **2026-07-19 — Lot 2 livré (D-5).** `harness/models.json` créé avec les 8 rôles (architecte,
+  exécuteur, hook-precommit, 4 gardes, second-avis) à **iso-valeurs** — toutes les occurrences
+  réelles de `claude-sonnet-4-6` extraites des 4 workflows + du hook agent
+  (`.claude/settings.json`) recopiées telles quelles, `second-avis` marqué `dormant` (Q-3).
+  Aucun changement de comportement (les workflows ne consomment pas encore ce fichier — c'est
+  L5). `scripts/harness/check.mjs` (v1) + 26 tests Vitest (`scripts/harness/__tests__/check.test.mjs`,
+  style aligné sur `scripts/db/check-migration-order.mjs` : fonctions pures exportées + `main()`
+  gardé) implémentent les 5 invariants du gate : pointeur CLAUDE.md↔AGENTS.md, budget de taille
+  AGENTS.md, Unicode invisible/bidi (AGENTS.md, CLAUDE.md, `harness/**`, frontmatters des 45
+  skills), ids de modèles hors `harness/models.json`, validité JSON de `harness/*.json`.
+  **Écart documenté (implémentation, pas redesign)** : le scan « ids de modèles » est scopé à
+  `AGENTS.md`/`CLAUDE.md`/`harness/**` à ce lot — PAS encore `.claude/settings.json` (contient
+  toujours `"model": "claude-sonnet-4-6"` en dur dans le hook) ni `.github/workflows/**` (4
+  occurrences en dur) : les inclure maintenant ferait échouer le gate avant que L4/L5 ne les
+  rewire pour consommer `models.json`. La table des lots elle-même le confirme (le critère de
+  succès « harness:check : zéro id de modèle en dur » est explicitement attaché à L5, pas L2).
+  Le scan s'élargira mécaniquement à ces deux surfaces quand L4 et L5 atterriront. `guard-generated.mjs`
+  étendu pour bloquer par avance l'édition manuelle du futur miroir `.agents/skills/**` (L3).
+  `npm run harness:check` ajouté, câblé dans `ci:verify` et comme étape CI (`ci.yml`, job
+  `verify`, après `programme:check`) — **pas** dans le `verify` local rapide (reste
+  lint+typecheck+test, tel que documenté dans AGENTS.md). AGENTS.md mis à jour (commande
+  `harness:check` + composition `ci:verify`) ; toujours dans le budget (169 lignes, 12,8 Kio).
+  Gate : `npm run ci:verify` intégral vert avant push (harness:check inclus).
 
 ---
 

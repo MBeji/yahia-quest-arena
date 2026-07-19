@@ -42,9 +42,10 @@
     "perf:check": "node scripts/perf/check-harness.mjs",
     "reports:export": "node scripts/reports/export-reports.mjs",
     "reports:resolve": "node scripts/reports/resolve-reports.mjs",
+    "harness:check": "node scripts/harness/check.mjs",
     "verify": "npm run lint && npm run typecheck && npm run test",
     "audit:deps": "npm audit --omit=dev --audit-level=high --registry=https://registry.npmjs.org",
-    "ci:verify": "npm run lint && npm run typecheck && npm run test:coverage && npm run build:check && npm run audit:deps && npm run content:qa:strict && npm run content:audit:strict && npm run programme:check",
+    "ci:verify": "npm run lint && npm run typecheck && npm run test:coverage && npm run build:check && npm run audit:deps && npm run content:qa:strict && npm run content:audit:strict && npm run programme:check && npm run harness:check",
     "prepare": "husky"
   },
   "lint-staged": {
