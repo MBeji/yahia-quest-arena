@@ -1,5 +1,9 @@
 # `content/` — pipeline de contenu pédagogique
 
+> **Propriété intellectuelle** : le contenu de ce dossier (cours, résumés, quiz, exercices,
+> corrigés, registres) est protégé — **tous droits réservés**, aucune réutilisation ni
+> rediffusion sans autorisation écrite. Voir [`../LICENSE-CONTENT.md`](../LICENSE-CONTENT.md).
+
 Le contenu (matières, chapitres, cours, résumés, exercices) vit ici sous forme
 de **fichiers versionnés**. Un générateur les valide puis les compile en
 **migrations Supabase idempotentes**. On peut donc compléter / améliorer le
@@ -137,7 +141,7 @@ réponse — sinon rester en texte. Détails + `svglib.mjs` : voir le README de 
 ## Workflow DB ↔ code
 
 Le SQL généré est **appliqué automatiquement à la prod au merge sur `main`**
-(workflow `db-migrate-prod.yml`, voir `CLAUDE.md` §7) — on n'applique **jamais**
+(workflow `db-migrate-prod.yml`, voir `AGENTS.md` §7) — on n'applique **jamais**
 à la main. Ordre : `content:build` → relire le SQL → ouvrir la PR → merge (la
 migration part en prod toute seule) → le code dépendant suit.
 

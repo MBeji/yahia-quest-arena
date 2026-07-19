@@ -3,8 +3,8 @@
 > **Instantané daté du 2026-07-12.** Ce fichier est le **point d'entrée unique** pour savoir
 > où en est le projet : phase produit, décisions structurantes, état réel des features,
 > études, chantiers, travaux en vol. Il complète — sans les dupliquer — les documents
-> normatifs : [CLAUDE.md](./CLAUDE.md) (conventions, gagne en cas de conflit),
-> [ARCHITECTURE.md](./ARCHITECTURE.md) (architecture), l'index des études
+> normatifs : [AGENTS.md](./AGENTS.md) (conventions, gagne en cas de conflit — CLAUDE.md
+> est un pointeur Claude Code vers ce fichier), [ARCHITECTURE.md](./ARCHITECTURE.md), l'index des études
 > ([FableEtudes/README.md](./FableEtudes/README.md)) et le programme go-live
 > (`../go-live/00-MASTER-PLAN.md`, hors repo).
 >
@@ -112,7 +112,7 @@ Source de vérité : [FableEtudes/README.md](./FableEtudes/README.md) (index) + 
 > campagne), mais le rendu existe déjà (`SvgFigure`) et la détection est par-question, à l'échelle
 > de 18 708 items dont 780 illustrés (4,2 %). Ne pas confondre les deux backlogs.
 
-- **En exécution** : 04 (adaptatif — A0 fait, A1+ à venir) · 15 (contenu & composition — lots 0-6 livrés / 14) · 16 (ouverture lycée — lots 0-3 livrés, PRs #367/#369/#371/#375 ; campagne §4bis vague A **en cours : `math-1ere-sec` complète 16/16 et parcours `ecole-1ere-sec` OUVERT le 2026-07-13** — PRs #397/#398/#402/#404 + migration `20260713180000_open_ecole_1ere_sec_parcours` ; reste 4 autres matières 1ère sec ; génération native fr sans traduction, décision 2026-07-13)
+- **En exécution** : 04 (adaptatif — A0 fait, A1+ à venir) · 15 (contenu & composition — lots 0-6 livrés / 14) · 16 (ouverture lycée — lots 0-3 livrés, PRs #367/#369/#371/#375 ; campagne §4bis vague A **en cours : `math-1ere-sec` complète 16/16 et parcours `ecole-1ere-sec` OUVERT le 2026-07-13** — PRs #397/#398/#402/#404 + migration `20260713180000_open_ecole_1ere_sec_parcours` ; reste 4 autres matières 1ère sec ; génération native fr sans traduction, décision 2026-07-13) · **25 (harness AI-native & model-agnostic — validée puis lot 1 livré le 2026-07-19, Q-1…Q-6 arbitrées sur les recommandations : GO immédiat, miroir `.agents/skills/` complet, second avis cross-modèle différé, générateur maison, mémoire auto conservée en cache, CODEOWNERS sur `workflows`+`harness` ; **lot 1/7 livré** : `AGENTS.md` canonique créé (168 l.), `CLAUDE.md` réduit à un pointeur `@AGENTS.md` vérifié fonctionnel par sous-agent, pointeurs Copilot/Gemini, références canoniques recâblées dans 17 docs ; reste lots 2-7 : gate `harness:check`, miroir skills, politique déclarative, gardes CI portables, mémoire process, drill de portabilité)**
 - **Validées (prêtes à exécuter)** : **22 (parcours élève & progression — doctrine « ancre + liberté + guidage » ; validée le 2026-07-18, Q-1…Q-5 arbitrées sur les recommandations : onglet « Ma classe » par défaut dès ≥ 10 classés, donjon scopé au parcours (fallback cycle → catalogue), bannière de rentrée 1ᵉʳ sept → 31 oct, extensions « mode discipline » et « ligues par classe » différées ; 6 lots indépendants prêts — carte réparée, boucle SM-2 refermée, rentrée, cohorte de classe, donjon scopé, « prochaine action » unifiée ; mandate 04-A1 comme brique suivante)** · **20 (réponses acceptées — rappel tolérant & questions libres natives ; validée le 2026-07-16, Q-1…Q-5 arbitrées ; corrige les faux négatifs du mode Rappel constatés en prod le 2026-07-15 via un scoring ensembliste + champ contenu `acceptedAnswers` server-only, et ouvre le type natif `short_answer` — la question sans réponses proposées devient authorable (seam `score_answer`, étude 03) ; arbitrages : zéro question exclue · Tier B = exécuteur + double-solve · pas de conversion de QCM en v1 ; lot 1 = socle scoring ensembliste)**. (17 rappel actif livrée le 2026-07-14.)
 - **Brouillons** (non validées) : 02 (examen blanc*) · 06 (PWA) · 07 (knowledge graph*) · 08 (analytics familles*) · 09 (économie du jeu) · 10 (anti-fraude) · 12 (studio d'ingestion) · **23 (vidéos explicatives dans les cours et les corrections — embed externe curé : registre `content/videos.json`, façade zéro-traceur, YouTube nocookie, health-check oEmbed ; 5 lots ; Q-1 allowlist de chaînes requise avant le lot 5)** · **19 (questions & exercices illustrés — pendant de l'étude 18 côté questions ; le rendu existe déjà (`SvgFigure`), l'enjeu est la détection par-question à l'échelle : 780/18 708 questions illustrées (4,2 %) ; lot 1 = doctrine + gate signalant les questions spatiales sans figure, exécutable dès sa Q-1 tranchée ; Q-1…Q-4 ouvertes)** · **21 (valorisation des manuels élèves officiels — doctrine de mapping « type de contenu du manuel → format app » : exercices → missions tracées (`exercises.manuel_ref` + badge 📘), figures → SVG redessiné, encadrés de savoir → blocs + cartes, cours → complétude notionnelle ; rapport de couverture par manuel ; pilote recommandé `math-1ere-sec` ; Q-1…Q-4 ouvertes, dont Q-1 verbatim/droits qui conditionne le lot 1)** · **11 (tuteur IA « Prof Yahia » —
   **v2 réécrite le 2026-07-17** sur commande humaine : mode d'accompagnement personnalisé
@@ -175,20 +175,21 @@ Entrée : `go-live/00-MASTER-PLAN.md`. État au 2026-07-11 :
 
 ## 7. Carte de la documentation (qui fait foi pour quoi)
 
-| Document                                 | Rôle                                                                           | Statut                       |
-| ---------------------------------------- | ------------------------------------------------------------------------------ | ---------------------------- |
-| [CLAUDE.md](./CLAUDE.md)                 | **Canonique** : commandes, conventions, DoD, gotchas. Gagne sur tout autre doc | vivant                       |
-| [ARCHITECTURE.md](./ARCHITECTURE.md)     | Compagnon architecture (stack, flux, modèle de données)                        | vivant                       |
-| **STATUS.md** (ce fichier)               | Topo central : phase, décisions, état features/études/chantiers                | vivant, daté                 |
-| [FableEtudes/](./FableEtudes/README.md)  | Études d'architecture des epics (contrats d'exécution architecte → exécuteur)  | vivant                       |
-| [docs/](./docs)                          | Specs normatives + guides + runbooks par sujet (voir la liste dans CLAUDE.md)  | vivant                       |
-| [docs/archive/](./docs/archive)          | Audits one-shot dépassés (conservés pour l'historique)                         | archive                      |
-| [content/README.md](./content/README.md) | Spec du pipeline de contenu (FR)                                               | vivant                       |
-| [e2e/README.md](./e2e/README.md)         | Runbook Playwright (projet TEST dédié)                                         | vivant                       |
-| `../go-live/00-MASTER-PLAN.md`           | Programme POC → production (chantiers, Go/No-Go, journal) — **hors repo**      | vivant                       |
-| `../go-live/PASSATION.md`                | Dossier de passation global                                                    | vivant (réaligné 2026-07-11) |
-| `../go-live/90-backlog-remediation.md`   | Backlog transverse GAP-NNN                                                     | vivant                       |
-| `../ScribeKit/`                          | Moteur de transcription (étude 13) — **repo git autonome**                     | vivant                       |
+| Document                                 | Rôle                                                                                                                        | Statut                       |
+| ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| [AGENTS.md](./AGENTS.md)                 | **Canonique** : commandes, conventions, DoD, gotchas. Gagne sur tout autre doc — lu nativement par la plupart des outils IA | vivant                       |
+| [CLAUDE.md](./CLAUDE.md)                 | Pointeur Claude Code (`@AGENTS.md`) + machinerie propre à cet outil                                                         | vivant                       |
+| [ARCHITECTURE.md](./ARCHITECTURE.md)     | Compagnon architecture (stack, flux, modèle de données)                                                                     | vivant                       |
+| **STATUS.md** (ce fichier)               | Topo central : phase, décisions, état features/études/chantiers                                                             | vivant, daté                 |
+| [FableEtudes/](./FableEtudes/README.md)  | Études d'architecture des epics (contrats d'exécution architecte → exécuteur)                                               | vivant                       |
+| [docs/](./docs)                          | Specs normatives + guides + runbooks par sujet (voir la liste dans AGENTS.md)                                               | vivant                       |
+| [docs/archive/](./docs/archive)          | Audits one-shot dépassés (conservés pour l'historique)                                                                      | archive                      |
+| [content/README.md](./content/README.md) | Spec du pipeline de contenu (FR)                                                                                            | vivant                       |
+| [e2e/README.md](./e2e/README.md)         | Runbook Playwright (projet TEST dédié)                                                                                      | vivant                       |
+| `../go-live/00-MASTER-PLAN.md`           | Programme POC → production (chantiers, Go/No-Go, journal) — **hors repo**                                                   | vivant                       |
+| `../go-live/PASSATION.md`                | Dossier de passation global                                                                                                 | vivant (réaligné 2026-07-11) |
+| `../go-live/90-backlog-remediation.md`   | Backlog transverse GAP-NNN                                                                                                  | vivant                       |
+| `../ScribeKit/`                          | Moteur de transcription (étude 13) — **repo git autonome**                                                                  | vivant                       |
 
 ---
 

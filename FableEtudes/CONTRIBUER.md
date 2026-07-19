@@ -4,8 +4,10 @@
 > `FableEtudes/` et l'implémenter, lot par lot**. Tu joues le rôle **Exécuteur** (voir
 > [`README.md`](./README.md) « Rôles ») : tu livres ce que l'étude spécifie, tu ne re-designes
 > pas. Ce guide te met en route et te donne les règles du dépôt ; il ne remplace pas
-> [`../CLAUDE.md`](../CLAUDE.md), qui reste **la source canonique** (commandes, conventions,
-> Definition of Done). En cas de désaccord entre ce guide et CLAUDE.md, **CLAUDE.md gagne**.
+> [`../AGENTS.md`](../AGENTS.md), qui reste **la source canonique** (commandes, conventions,
+> Definition of Done — lu nativement par la plupart des outils IA ; `CLAUDE.md` en est un
+> pointeur pour Claude Code). En cas de désaccord entre ce guide et AGENTS.md, **AGENTS.md
+> gagne**.
 >
 > Tu veux plutôt **transcrire des sources (CNP, manuels du secondaire, document libre) et
 > générer leur contenu** avec ton agent IA, sans rien connaître du projet ? Suis la méthode de
@@ -16,7 +18,7 @@
 ## TL;DR (à lire en entier avant de commencer)
 
 1. **Setup** : `npm install` (Node 22), crée ton `.env`, vérifie avec `npm run verify`.
-2. **Lis, dans l'ordre** : [`../CLAUDE.md`](../CLAUDE.md) entier → [`../STATUS.md`](../STATUS.md) →
+2. **Lis, dans l'ordre** : [`../AGENTS.md`](../AGENTS.md) entier → [`../STATUS.md`](../STATUS.md) →
    l'`ETUDE.md` de ton epic entier → la section du lot qu'on te confie.
 3. **Prends une étude `validée`** (pas un `brouillon` ni une `gelée`), **réserve-la** (§4).
 4. **Un lot = une PR.** Tu pousses une branche → **une PR s'ouvre et se merge toute seule**
@@ -75,7 +77,7 @@ npm run test:watch # tests en watch pendant que tu codes
 
 `npm run verify` tourne **sans Supabase** (les tests sont mockés) — c'est le minimum avant chaque
 push. La liste complète des commandes (contenu, e2e, migrations) est dans
-[`../CLAUDE.md`](../CLAUDE.md) « Essential commands ».
+[`../AGENTS.md`](../AGENTS.md) « Essential commands ».
 
 > **Ne contourne jamais les hooks git** (`--no-verify`) sans raison écrite : le `pre-commit`
 > formate/lint les fichiers stagés, le `pre-push` rejoue `npm run verify`. Ils t'évitent de
@@ -85,7 +87,7 @@ push. La liste complète des commandes (contenu, e2e, migrations) est dans
 
 Avant d'écrire une ligne de code, dans cet ordre :
 
-1. [`../CLAUDE.md`](../CLAUDE.md) **en entier** — conventions, frontières features/shared,
+1. [`../AGENTS.md`](../AGENTS.md) **en entier** — conventions, frontières features/shared,
    Definition of Done, pièges connus. Non négociable.
 2. [`../STATUS.md`](../STATUS.md) — l'état réel du projet (phase gratuite, ce qui est live,
    travaux en vol). Ne fais confiance à aucune affirmation « est-ce que X est en prod ? » sans lui.
@@ -168,7 +170,7 @@ Détail complet du dispositif : [`../docs/ci-cd-and-branch-protection.md`](../do
 ## 6. Base de données ↔ code (piège classique)
 
 Si ton lot touche la base (nouvelle table, colonne, RPC), respecte l'ordre de
-[`../CLAUDE.md`](../CLAUDE.md) « Definition of Done » §7 :
+[`../AGENTS.md`](../AGENTS.md) « Definition of Done » §7 :
 
 - Les migrations vivent dans `supabase/migrations/**` et **s'appliquent en prod au merge** (ne les
   applique **jamais** à la main — pas de SQL editor, pas de `db push` local sur la prod).
@@ -185,7 +187,7 @@ Si ton lot touche la base (nouvelle table, colonne, RPC), respecte l'ordre de
 
 ## 7. Definition of Done (le minimum pour qu'un lot soit « fini »)
 
-Résumé de [`../CLAUDE.md`](../CLAUDE.md) — lis la version complète, elle fait foi :
+Résumé de [`../AGENTS.md`](../AGENTS.md) — lis la version complète, elle fait foi :
 
 - ✅ **Gate verte** : `npm run verify` (et `ci:verify` pour un lot release-grade). Jamais « fini »
   sur un gate rouge.
@@ -226,7 +228,7 @@ sécurité est toujours un STOP + escalade.
 
 | tu cherches…                                    | va voir                                                                            |
 | ----------------------------------------------- | ---------------------------------------------------------------------------------- |
-| Conventions, commandes, DoD (**canonique**)     | [`../CLAUDE.md`](../CLAUDE.md)                                                     |
+| Conventions, commandes, DoD (**canonique**)     | [`../AGENTS.md`](../AGENTS.md)                                                     |
 | État réel du projet (phase, features, en-cours) | [`../STATUS.md`](../STATUS.md)                                                     |
 | Architecture (stack, flux, modèle de données)   | [`../ARCHITECTURE.md`](../ARCHITECTURE.md)                                         |
 | L'index des études + les rôles                  | [`README.md`](./README.md)                                                         |
@@ -236,9 +238,18 @@ sécurité est toujours un STOP + escalade.
 | Les variables d'environnement                   | [`../docs/environment-variables.md`](../docs/environment-variables.md)             |
 | Les specs normatives par sujet                  | [`../docs/`](../docs)                                                              |
 
+## Licence & cession des contributions
+
+Le code du dépôt est sous [PolyForm Noncommercial 1.0.0](../LICENSE.md) ; le contenu
+pédagogique, les skills de génération et les études sont **tous droits réservés**
+([`../LICENSE-CONTENT.md`](../LICENSE-CONTENT.md)). En ouvrant une PR, tu acceptes que ta
+contribution (code, contenu, documentation) soit **cédée au projet** (titulaire : Mohamed
+Beji) et intégrée sous ces licences — condition pour que le projet puisse défendre et, le cas
+échéant, re-licencier l'ensemble.
+
 ## Check-list avant d'ouvrir ta PR
 
-- [ ] J'ai lu CLAUDE.md, STATUS.md, l'`ETUDE.md` entier et la section de mon lot.
+- [ ] J'ai lu AGENTS.md, STATUS.md, l'`ETUDE.md` entier et la section de mon lot.
 - [ ] Mon périmètre = **exactement** ce lot (ni plus, ni moins) ; aucun écart silencieux.
 - [ ] `npm run verify` est **vert** en local (`ci:verify` si lot release-grade).
 - [ ] Tests co-localisés ajoutés/à jour ; la coverage ne régresse pas.

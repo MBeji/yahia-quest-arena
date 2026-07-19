@@ -1,8 +1,9 @@
 # Architecture — Na9ra Nal3ab (yahia-quest-arena)
 
-> **Purpose**: architecture companion to [`CLAUDE.md`](./CLAUDE.md) (which wins on any conflict).
-> Read this file before making structural changes. Project state (phase, dated decisions,
-> feature status) lives in [`STATUS.md`](./STATUS.md).
+> **Purpose**: architecture companion to [`AGENTS.md`](./AGENTS.md) (which wins on any
+> conflict — `CLAUDE.md` is a Claude Code pointer to it). Read this file before making
+> structural changes. Project state (phase, dated decisions, feature status) lives in
+> [`STATUS.md`](./STATUS.md).
 
 ---
 
@@ -159,7 +160,7 @@ The middleware injects `supabase` (authenticated client) and `userId` into conte
   generated files, and SSR glue are excluded by design.
 - **End-to-end**: Playwright specs under `/e2e` (config `playwright.config.ts` at the repo
   root), run via `npm run test:e2e` / `test:e2e:auth`; separate from the Vitest gate. See
-  CLAUDE.md "Subsystems & further docs".
+  [`e2e/README.md`](./e2e/README.md).
 
 Run tests: `npm test` (run it for the current test/file count)
 Run with coverage: `npm run test:coverage`
