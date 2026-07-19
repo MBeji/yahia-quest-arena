@@ -35,6 +35,11 @@ Content generation is **a planning layer + two authoring layers**, not competing
      `content-culture-generale`, `content-muscle-cerveau`, `content-iq-training`,
      `content-langue-anglais` / `content-langue-francais` / `content-langue-arabe`.
    - `content-cours` — course/summary text only (`cours.md`/`resume.md`), in place.
+   - `content-videos` — **curated external explainer videos** (étude 23): picks free YouTube
+     videos for a chapter from an arbitrated channel allowlist, applies the R-2 relevance grid
+     - a full viewing (R-3), and records them in the versioned registry `content/videos.json`
+       (chapters/exercises reference ids only). Feeds the course's « En vidéo » section and the
+       failed-run review block. Never hosts or generates a video.
    - `content-interactif` — **interactive/innovative missions** beyond the classic QCM (cloze,
      chasse à l'erreur, appariement, remise en ordre, QCM visuel SVG, lecture de document,
      histoire-problème, vrai/faux motivé, sprint chrono), encoded in the current QCM engine —
@@ -84,6 +89,7 @@ ceiling tier (the dormant premium gate).
 | Write/rewrite **only the quiz** or add **free d1–2** practice                                  | the program wrapper (or `content-engine` base)              |
 | Add **interactive/innovative missions** (cloze, appariement, ordre, visuel, histoire, sprint…) | `content-interactif`                                        |
 | Add **hard/elite d3–4** exercises for a school matière × niveau                                | the matching **`prof-*`** skill                             |
+| Add **explainer videos** to a chapter (« En vidéo », vidéo de correction)                      | `content-videos`                                            |
 | **Audit / fix** existing content (wrong keys, weak distractors, …)                             | `content-audit`                                             |
 | Understand schema / quality bar / rewards / notation                                           | `content-engine` `references/*`                             |
 
