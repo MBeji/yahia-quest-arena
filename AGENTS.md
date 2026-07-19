@@ -38,9 +38,10 @@ npm test              # vitest run
 npm run lint          # eslint src --max-warnings=0  (zero-warning policy)
 npm run typecheck     # tsc --noEmit (strict)
 npm run verify         # lint + typecheck + test                    (fast local gate / pre-push)
-npm run ci:verify      # verify + coverage + build:check + audit:deps + content:qa:strict + content:audit:strict
+npm run ci:verify      # verify + coverage + build:check + audit:deps + content:qa:strict + content:audit:strict + harness:check
 npm run content:check                    # validate all content, write nothing
 npm run content:build -- --subject <id>  # regenerate the migration for ONE subject only
+npm run harness:check                    # harness anti-drift gate (pointers, size, hidden Unicode, model ids)
 ```
 
 ⚠️ Never run bare `npm run content:build` — it regenerates **all ~60 subjects** with fresh
