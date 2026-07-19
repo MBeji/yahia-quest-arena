@@ -1,8 +1,9 @@
 # Annexe lot 2 — Bootstrap du repo privé `yahia-quest-content`
 
 > **Préparée le 2026-07-19** (session du lot 1). La création d'un repo est **impossible depuis
-> une session** (l'intégration GitHub est scopée à `yahia-quest-arena` : `403 Resource not
-accessible by integration`, constaté) → **l'étape 0 est humaine (~3 min)** ; tout le reste
+> une session** (l'intégration GitHub est scopée à `yahia-quest-arena` : erreur 403
+> « Resource not accessible by integration », constatée) → **l'étape 0 est humaine (~3 min)**
+> ; tout le reste
 > est exécutable par une session en une seule passe, sans re-décision, en suivant cette annexe.
 
 ## Étape 0 — humaine (une fois, ~3 min)
