@@ -57,6 +57,20 @@ export const questionId = (
 /** Deterministic id of a competency, derived from its stable slug (étude 07 R-1). */
 export const competencyId = (slug: string): string => uuidV5(`competency/${slug}`);
 
+/**
+ * File name of a subject's content SQL on the content channel (étude 24 D-3).
+ *
+ * Deliberately STABLE — no timestamp: outside the migration framework the SQL is
+ * regenerated in place and replayed idempotently (UUIDv5 upsert + subject-scoped
+ * prune), so the same subject always owns the same file. That kills the
+ * timestamp-ordering bug class (#97 → #227 → #229) for content and keeps the
+ * per-subject diff readable.
+ */
+export const contentSqlFileName = (subjectId: string): string => `${subjectId}.sql`;
+
+/** Stable file name of the competency registry on the same channel (D-6). */
+export const COMPETENCES_SQL_FILE_NAME = "_competences_registry.sql";
+
 /** Single-quote a string literal for SQL, escaping embedded quotes. */
 export function sqlString(value: string): string {
   return `'${value.replace(/'/g, "''")}'`;
