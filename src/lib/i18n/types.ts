@@ -141,6 +141,17 @@ export type TranslationKeys = {
     reviseGateway: string;
     reviseGatewayHint: string;
     reviewTitle: string;
+    /**
+     * Étude 04 A1.1 — « Révision du jour ». La raison a trois formes parce que le retard se
+     * dit différemment à 0, 1 et n jours ; `{chapter}` et `{n}` sont substitués côté client
+     * (le serveur ne renvoie que des faits, jamais une phrase).
+     */
+    dailyPlanEmpty: string;
+    dailyPlanReason: string;
+    dailyPlanReasonOneDay: string;
+    dailyPlanReasonToday: string;
+    dailyPlanWeak: string;
+    dailyPlanCta: string;
     continueLabel: string;
     dungeonDesc: string;
     dailyQuests: string;
@@ -638,7 +649,6 @@ export type TranslationKeys = {
     loading: string;
     youChip: string;
     lvl: string;
-    emptyGlobal: string;
     coldStartTitle: string;
     coldStartDesc: string;
     coldStartCta: string;

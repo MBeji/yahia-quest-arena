@@ -136,8 +136,15 @@ export class QuestPage {
    * (the radiogroup's aria-label) to its correct option text from the answer key
    * (the UI shuffles options, so matching by text is the only stable way). Paces
    * each answer to clear the server's "too fast" anti-farm gate (≥4s/question),
-   * so a passing attempt actually awards XP/coins. Falls back to the first option
-   * if a prompt isn't in the key (e.g. a figure-only question).
+   * so a passing attempt actually awards XP/coins.
+   *
+   * This helper NEVER guesses. If a rendered prompt is missing from the key, its
+   * correct text is empty, or the correct option can't be uniquely identified, it
+   * THROWS with the offending prompt + the rendered options. It used to fall back
+   * to clicking `this.options.first()` — a blind guess that turned a broken answer
+   * key into a non-deterministic sub-100% score (right by luck some of the time,
+   * because the UI reshuffles options every render) instead of a self-diagnosing
+   * failure. See issue #363.
    */
   async answerAllCorrectly(
     answerKey: { prompt: string; correctText: string }[],
@@ -148,11 +155,29 @@ export class QuestPage {
     for (let i = 0; i < maxQuestions; i += 1) {
       if (!(await this.questionReady())) return;
       const prompt = (await this.radioGroup.getAttribute("aria-label")) ?? "";
-      const correctText = byPrompt.get(prompt);
-      const option =
-        correctText && correctText.length > 0
-          ? this.options.nth(await this.correctOptionIndex(correctText))
-          : this.options.first();
+      if (!byPrompt.has(prompt)) {
+        throw new Error(
+          [
+            "answerAllCorrectly: the rendered question is not in the answer key, so it",
+            "cannot be answered correctly (the classic run must reach 100%).",
+            `  rendered prompt: ${JSON.stringify(prompt)}`,
+            "  answer-key prompts:",
+            ...answerKey.map((k) => `    ${JSON.stringify(k.prompt)}`),
+          ].join("\n"),
+        );
+      }
+      const correctText = (byPrompt.get(prompt) ?? "").trim();
+      if (correctText.length === 0) {
+        throw new Error(
+          [
+            "answerAllCorrectly: the answer key has no correct text for this question,",
+            "so the right option can't be chosen. Likely `correct_option` matches no",
+            "option id, or the correct option is figure-only (see e2e/helpers/db.ts).",
+            `  prompt: ${JSON.stringify(prompt)}`,
+          ].join("\n"),
+        );
+      }
+      const option = this.options.nth(await this.correctOptionIndex(prompt, correctText));
       // Pause before selecting so per-question time exceeds
       // MIN_SECONDS_PER_QUESTION (4s) → attempt isn't void. Validation is manual
       // now (no auto-advance), so the whole budget must come from this pause.
@@ -161,23 +186,61 @@ export class QuestPage {
   }
 
   /**
-   * Index of the rendered option matching the answer-key text. Arabic options
-   * isolate their inline LTR math runs with Unicode directional isolates
-   * (U+2066 LRI … U+2069 PDI — see src/shared/lib/bidi.ts), so the rendered text
-   * no longer contains the raw answer-key string as a contiguous substring (e.g.
-   * "ax + b = 0 حيث a ≠ 0" renders as "⁦ax + b = 0 ⁩حيث⁦ a ≠ 0⁩"). Strip the
-   * isolates before matching; fall back to the first option when none match.
+   * Index of the rendered option whose text matches the answer-key `correctText`.
+   * The match is exact-first and NEVER guesses (issue #363):
+   *
+   *  - Each rendered radio reads as "<displayId> <option text>" (the A/B/C badge
+   *    then the text). We strip the leading display-id token and compare the rest
+   *    to `correctText` for EQUALITY — so a short answer like "3" matches the "3"
+   *    option and not the "13"/"30" distractors. The previous `.includes()`
+   *    substring match picked the FIRST option that merely contained the text,
+   *    which the per-render option shuffle made non-deterministic — the varying
+   *    sub-100% score in #363.
+   *  - Arabic options isolate their inline LTR math runs with Unicode directional
+   *    isolates (U+2066 LRI … U+2069 PDI — see src/shared/lib/bidi.ts), e.g.
+   *    "ax + b = 0 حيث a ≠ 0" renders as "⁦ax + b = 0 ⁩حيث⁦ a ≠ 0⁩". We strip the
+   *    isolates before comparing.
+   *  - A UNIQUE substring match is still accepted (a figure/whitespace safety
+   *    valve), but ambiguity or no match THROWS with the prompt, the expected text
+   *    and every rendered option — a self-diagnosing failure, never a blind
+   *    `options.first()` guess.
    */
-  private async correctOptionIndex(correctText: string): Promise<number> {
+  private async correctOptionIndex(prompt: string, correctText: string): Promise<number> {
     // Directional isolates are U+2066 (LRI) … U+2069 (PDI). Matched by code
     // point rather than a literal-char regex so no invisible chars live in source.
     const stripIsolates = (s: string): string =>
       [...s]
         .filter((c) => (c.codePointAt(0) ?? 0) < 0x2066 || (c.codePointAt(0) ?? 0) > 0x2069)
         .join("");
-    const texts = await this.options.allInnerTexts();
-    const idx = texts.findIndex((t) => stripIsolates(t).includes(correctText));
-    return idx >= 0 ? idx : 0;
+    // Collapse whitespace (the radio's flex layout can insert a newline between
+    // the display-id badge and the text) and trim, on both sides of every compare.
+    const norm = (s: string): string => stripIsolates(s).replace(/\s+/g, " ").trim();
+    const target = norm(correctText);
+    const rawTexts = await this.options.allInnerTexts();
+    const options = rawTexts.map((raw) => {
+      const normalized = norm(raw);
+      // Drop the leading "A "/"B "… display-id badge to isolate the option's own text.
+      return { raw, normalized, body: normalized.replace(/^\S+\s+/, "") };
+    });
+    const exact = options
+      .map((o, idx) => ({ o, idx }))
+      .filter(({ o }) => o.body === target || o.normalized === target);
+    if (exact.length === 1) return exact[0].idx;
+    const substring = options
+      .map((o, idx) => ({ o, idx }))
+      .filter(({ o }) => o.normalized.includes(target));
+    if (exact.length === 0 && substring.length === 1) return substring[0].idx;
+    throw new Error(
+      [
+        "correctOptionIndex: cannot uniquely identify the correct option — refusing",
+        "to guess (a blind pick yields a non-deterministic score, issue #363).",
+        `  prompt: ${JSON.stringify(prompt)}`,
+        `  correctText: ${JSON.stringify(target)}`,
+        `  exact/display-id matches: ${exact.length} · substring matches: ${substring.length}`,
+        "  rendered options:",
+        ...options.map((o, i) => `    [${i}] ${JSON.stringify(o.normalized)}`),
+      ].join("\n"),
+    );
   }
 
   /**

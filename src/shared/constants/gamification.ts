@@ -183,3 +183,13 @@ export const RECALL_UNLOCK_SCORE_PCT = 100;
  * stays `MAX_CHOICE_LENGTH` (512). Purely a UI guard against runaway input.
  */
 export const RECALL_MAX_ANSWER_LENGTH = 120;
+
+// --- Révision du jour (étude 04, lot A1.1) ---
+
+/**
+ * Nombre maximum d'exercices dans la « Révision du jour » (R-4). La révision est un
+ * SÉLECTEUR, pas une nouvelle économie : trois missions, c'est une séance qu'on finit —
+ * au-delà, la recommandation devient une liste de corvées. `get_daily_plan` replafonne
+ * côté serveur, cette constante n'est donc pas la garde, seulement la demande.
+ */
+export const DAILY_PLAN_MAX_ITEMS = 3;
