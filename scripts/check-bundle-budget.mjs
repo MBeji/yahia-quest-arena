@@ -27,7 +27,12 @@ const BUDGETS = {
   // badge/unlock + hub chip copy) — a handful of short keys, restores the headroom.
   // Then 118→120 KB for the trilingual « En vidéo » reader keys (étude 23 lot 2: section
   // title, play aria-label, hosting attribution, duration badge, two-click consent hint).
-  "i18n-": 120 * 1024,
+  // Then 120→128 KB for étude 22 (parcours élève) : nœud « recommandé » de la carte, jalon
+  // « chapitre terminé », libellés de pool du donjon, onglet + état creux « Ma classe »,
+  // overline/titre de la révision du jour, et le libellé `beat_2_bosses` qui manquait aux
+  // trois dictionnaires. Le lot 4 laissait 0,36 KB de marge : la réserve est reconstituée
+  // pour le lot 3 (bannière de rentrée), sinon la CI casserait sur la première clé suivante.
+  "i18n-": 128 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
   // @dnd-kit (core+sortable+utilities) powering the B2 ordering/matching

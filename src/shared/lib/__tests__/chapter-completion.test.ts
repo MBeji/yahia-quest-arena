@@ -7,7 +7,7 @@ import {
   isMissionPassed,
   subjectProgression,
   type CompletionExercise,
-} from "../completion";
+} from "../chapter-completion";
 
 const mission = (id: string, over: Partial<CompletionExercise> = {}): CompletionExercise => ({
   id,

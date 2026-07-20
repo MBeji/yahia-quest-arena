@@ -120,6 +120,8 @@ export const ar: TranslationKeys = {
     streakLostDesc: "استرجع سلسلتك مقابل 15 عملة (كان لديك {n} أيام)",
     streakRecover: "🔥 استرجع",
     retryTitle: "آخر تمرين لك",
+    reviewOverline: "للمراجعة",
+    reviewTitle: "مراجعة اليوم",
     continueLabel: "متابعة",
     dungeonDesc: "جميع المواد مختلطة",
     dailyQuests: "المهام اليومية",
@@ -130,6 +132,7 @@ export const ar: TranslationKeys = {
       perfect_score: "حقّق علامة كاملة",
     },
     questTypes: {
+      beat_2_bosses: "اهزم زعيمين",
       "5_day_streak": "حافظ على سلسلة 5 أيام",
       "2_boss_exercises": "اهزم زعيمين",
       "10_exercises": "أكمل 10 تمارين",

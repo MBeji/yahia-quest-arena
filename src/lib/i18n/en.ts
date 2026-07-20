@@ -120,6 +120,8 @@ export const en: TranslationKeys = {
     streakLostDesc: "Recover your streak for 15 Coins (you had {n} days)",
     streakRecover: "🔥 Recover",
     retryTitle: "Your last exercise",
+    reviewOverline: "To review",
+    reviewTitle: "Your review for today",
     continueLabel: "Continue",
     dungeonDesc: "All subjects mixed",
     dailyQuests: "Daily Quests",
@@ -130,6 +132,7 @@ export const en: TranslationKeys = {
       perfect_score: "Get a perfect score",
     },
     questTypes: {
+      beat_2_bosses: "Beat 2 bosses",
       "5_day_streak": "Keep a 5-day streak",
       "2_boss_exercises": "Beat 2 bosses",
       "10_exercises": "Complete 10 exercises",

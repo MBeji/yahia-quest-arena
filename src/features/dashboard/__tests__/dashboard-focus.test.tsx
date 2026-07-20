@@ -16,7 +16,7 @@ describe("DashboardFocus", () => {
   it("promotes the unfinished exercise as the primary 'Reprendre' action", () => {
     render(
       <DashboardFocus
-        nextExerciseId="ex-1"
+        nextAction={{ kind: "retry", exerciseId: "ex-1" }}
         continueSubject={subject}
         xpToday={65}
         dailyGoal={100}
@@ -30,10 +30,10 @@ describe("DashboardFocus", () => {
     expect(cta).toHaveAttribute("href", "/quest/$exerciseId");
   });
 
-  it("falls back to 'Continuer <subject>' when there is no unfinished exercise", () => {
+  it("renders 'Continuer <matière>' when the engine delegates the path to a subject", () => {
     render(
       <DashboardFocus
-        nextExerciseId={null}
+        nextAction={{ kind: "continue-subject", subjectId: "math" }}
         continueSubject={subject}
         xpToday={0}
         dailyGoal={100}
@@ -45,10 +45,26 @@ describe("DashboardFocus", () => {
     expect(cta).toHaveAttribute("href", "/matiere/$subjectId");
   });
 
+  it("stays silent rather than inventing a target when the engine has nothing (R-31)", () => {
+    // L'ancienne bande retombait sur « la première matière du parcours » — un CTA que rien ne
+    // justifiait. Un écran qui n'a rien à proposer doit le dire, pas meubler.
+    render(
+      <DashboardFocus
+        nextAction={null}
+        continueSubject={subject}
+        xpToday={0}
+        dailyGoal={100}
+        streak={0}
+      />,
+    );
+    expect(screen.queryByText("Continuer")).not.toBeInTheDocument();
+    expect(screen.queryByText("Mathématiques")).not.toBeInTheDocument();
+  });
+
   it("renders the Donjon and Duel secondary tiles", () => {
     render(
       <DashboardFocus
-        nextExerciseId={null}
+        nextAction={null}
         continueSubject={subject}
         xpToday={0}
         dailyGoal={100}
@@ -64,7 +80,7 @@ describe("DashboardFocus", () => {
   it("shows the daily-objective ring percentage", () => {
     render(
       <DashboardFocus
-        nextExerciseId="ex-1"
+        nextAction={{ kind: "retry", exerciseId: "ex-1" }}
         continueSubject={subject}
         xpToday={65}
         dailyGoal={100}

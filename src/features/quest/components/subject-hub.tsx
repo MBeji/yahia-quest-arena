@@ -16,7 +16,12 @@ import { parcoursName } from "@/shared/lib/parcours-locale";
 import { PageShell } from "@/components/ui/page-shell";
 import { DifficultyStars } from "@/components/game/difficulty-stars";
 import { QUIZ_PASS_THRESHOLD_PCT, RECALL_MIN_QUESTIONS } from "@/shared/constants/gamification";
-import { chapterMissionCounts, isChapterComplete, isMissionPassed } from "../completion";
+import {
+  chapterMissionCounts,
+  isChapterComplete,
+  isMissionPassed,
+} from "@/shared/lib/chapter-completion";
+import { resolveNextAction } from "@/shared/lib/next-action";
 import { hasPassedChapterQuiz } from "../anon-quiz-gate";
 import { exerciseRouteFor } from "../exercise-route";
 import { ManuelEleveCard } from "./manuel-eleve-card";
@@ -161,13 +166,25 @@ export function SubjectHub({
     });
   }, [chapters, exercises, bestByExercise, quizPassedByChapter, anonPassed]);
 
-  // « Reprendre ici » (signed-in): furthest chapter with progress but not done;
-  // fallback: first unfinished chapter with anything to do.
+  // « Reprendre ici » (connecté) — étude 22 R-31. La cible ne se décide plus ici : elle sort du
+  // moteur partagé `resolveNextAction`, celui-là même qui alimente la bande focus du dashboard.
+  // Les deux écrans désignaient auparavant des cibles pouvant différer au même instant.
+  // Vu depuis une matière, seule la priorité 3 (« la prochaine mission du chemin ») s'applique :
+  // les révisions dues et le dernier échec sont des notions de parcours, pas de matière, et
+  // c'est le dashboard qui les porte.
   const resume = useMemo(() => {
     if (!isAuthenticated) return null;
-    const started = [...rows].reverse().find((r) => r.done > 0 && !r.allDone && r.next);
-    return started ?? rows.find((r) => !r.allDone && r.next) ?? null;
-  }, [rows, isAuthenticated]);
+    const action = resolveNextAction({
+      chapters,
+      exercises,
+      bestByExercise,
+      quizSatisfiedByChapter: Object.fromEntries(rows.map((r) => [r.chapter.id, r.unlocked])),
+    });
+    if (action?.kind !== "continue") return null;
+    const row = rows.find((r) => r.chapter.id === action.chapterId) ?? null;
+    const next = row?.chapEx.find((e) => e.id === action.exerciseId) ?? null;
+    return row && next ? { ...row, next } : null;
+  }, [rows, chapters, exercises, bestByExercise, isAuthenticated]);
 
   // Accordions: everything collapsed except the resume chapter (or the first).
   const [openIds, setOpenIds] = useState<Set<string>>(
