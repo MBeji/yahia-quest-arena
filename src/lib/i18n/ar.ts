@@ -661,7 +661,6 @@ export const ar: TranslationKeys = {
     loading: "جاري تحميل الترتيب…",
     youChip: "أنت",
     lvl: "مستوى",
-    emptyGlobal: "لا أبطال مسجّلين بعد.",
     coldStartTitle: "الترتيب ينطلق الآن!",
     coldStartDesc: "اربح أولى نقاط خبرتك لتظهر هنا — كل مهمة ناجحة ترفعك.",
     coldStartCta: "ابدأ مهمة",
