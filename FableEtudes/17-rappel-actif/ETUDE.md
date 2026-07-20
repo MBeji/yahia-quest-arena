@@ -1,6 +1,6 @@
 # Étude 17 — Rappel actif (rejouer les QCM en saisie libre)
 
-> **Statut** : validée (Q-1…Q-4 arbitrées par Mohamed le 2026-07-13)
+> **Statut** : **livrée** (validée le 2026-07-13, Q-1…Q-4 arbitrées par Mohamed ; les 5 lots livrés — clôture 2026-07-15 — PRs #412/#414/#416/#427/#430 ; R-9 amendée le 2026-07-15, PR #431)
 > **Priorité** : 17 · **Valeur** : ~2 000 missions « doublées » à coût de génération zéro — chaque QCM maîtrisé devient un exercice de mémorisation réelle (active recall) · **Complexité** : moyenne
 > **Architecte** : Fable 5 / 2026-07-13 · **Exécuteur cible** : Sonnet (ou équiv.)
 > **Dépend de** : rien (le contenu QCM existant suffit) — s'articule avec l'étude 03 (seam `score_answer`, livrée) et l'étude 04-A1 (« Révision du jour », non livrée, voir §1) · **Bloque** : —

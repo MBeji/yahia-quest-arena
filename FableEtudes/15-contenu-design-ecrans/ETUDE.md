@@ -1,6 +1,6 @@
 # Étude 15 — Contenu & composition des écrans
 
-> **Statut** : en exécution (validée le 2026-07-10, arbitrages Q-1…Q-6 ; lots 0–6 livrés — PRs #355/#361/#362/#364/#365/#368/#370)
+> **Statut** : **livrée** (validée le 2026-07-10, arbitrages Q-1…Q-6 ; les 14 lots 0 → 13 livrés — clôture 2026-07-14 — PRs #355/#361/#362/#364/#365/#368/#370/#373/#395/#400/#403/#408/#413/#415)
 > **Priorité** : transverse · **Valeur** : conversion, rétention J1, confiance parent, lisibilité de l'offre · **Complexité** : moyenne+ (large surface, risque unitaire faible)
 > **Architecte** : Fable / 2026-07-10 · **Exécuteur cible** : Sonnet (ou équiv.) — sauf charte & maquettes (architecte)
 > **Dépend de** : étude 14 (lots 1-2 mergés ; dépendances par écran, §4) · **Bloque** : rien
