@@ -25,7 +25,7 @@ import {
   resolveDailyAction,
   resolveWeeklyAction,
 } from "@/features/dashboard";
-import { recoverStreak } from "@/features/progression";
+import { DailyReviewPanel, recoverStreak } from "@/features/progression";
 import { EnablePushCard } from "@/features/notifications";
 import { SubjectPathCard } from "@/features/dashboard/components/subject-path-card";
 import { FamilyGoalCard } from "@/features/dashboard/components/family-goal-card";
@@ -283,6 +283,12 @@ function Dashboard() {
           dailyGoal={100}
           streak={profile.current_streak}
         />
+
+        {/* « Révision du jour » (étude 04, lot A1.1) — juste sous la bande focus, parce que
+            c'est la même urgence détaillée : la bande promeut UNE action (la tête du plan),
+            le panneau montre les trois. Le composant vit dans la feature `progression` et ses
+            données viennent de `getDashboard`, qui n'appelle `get_daily_plan` qu'une fois. */}
+        <DailyReviewPanel items={data.dailyPlan ?? []} />
 
         {/* Push opt-in — self-hides when push is unavailable in this browser. */}
         <EnablePushCard />

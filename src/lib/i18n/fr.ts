@@ -135,6 +135,13 @@ export const fr: TranslationKeys = {
     reviseGateway: "Réviser la {name}",
     reviseGatewayHint: "Tes acquis y sont intacts.",
     reviewTitle: "Ta révision du jour",
+    // Étude 04 A1.1 : être à jour est une VICTOIRE, pas un écran vide.
+    dailyPlanEmpty: "Rien à réviser aujourd'hui — ta mémoire tient bon. Continue !",
+    dailyPlanReason: "Tu n'as pas revu {chapter} depuis {n} jours",
+    dailyPlanReasonOneDay: "Tu n'as pas revu {chapter} depuis 1 jour",
+    dailyPlanReasonToday: "{chapter} est à revoir aujourd'hui",
+    dailyPlanWeak: "Un point faible repéré ici",
+    dailyPlanCta: "Réviser",
     continueLabel: "Continuer",
     dungeonDesc: "Toutes matières mélangées",
     dailyQuests: "Quêtes Quotidiennes",

@@ -3,11 +3,13 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { optionalSupabaseAuth } from "@/shared/integrations/supabase/optional-auth-middleware";
 import {
+  DAILY_PLAN_MAX_ITEMS,
   DASHBOARD_RECENT_LIMIT,
   LEADERBOARD_LIMIT,
   PASS_THRESHOLD_PCT,
 } from "@/shared/constants/gamification";
 import type { BadgeRow, DashboardShopItem, InventoryRow } from "@/shared/types/gamification";
+import type { DailyPlanItem } from "@/shared/types/daily-plan";
 import { getCurrentWeekStartUtc, getTodayUtc } from "@/shared/lib/dates";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
@@ -68,6 +70,45 @@ type GradeLeaderboardRpcClient = {
     args: { p_limit: number },
   ) => PromiseLike<{ data: GradeLeaderboardRow[] | null; error: { message: string } | null }>;
 };
+
+/**
+ * « Révision du jour » — étude 04, lot A1.1. Même raison d'être que les deux vues étroites
+ * ci-dessus : `get_daily_plan` (migration `20260721120000`) est postérieure aux types Supabase
+ * générés, qui ne peuvent être régénérés sans accès DB. Le contrat est figé par la migration.
+ */
+type DailyPlanRpcClient = {
+  rpc: (
+    fn: "get_daily_plan",
+    args: { p_limit: number },
+  ) => PromiseLike<{ data: DailyPlanItem[] | null; error: { message: string } | null }>;
+};
+
+/**
+ * Le plan de révision du jour — LA source de la priorité 1 de `resolveNextAction` (étude 22,
+ * R-18/D-8), et la matière du panneau « Révision du jour ».
+ *
+ * Une seule lecture pour les deux usages : la bande focus et le panneau ne peuvent donc pas
+ * désigner deux exercices différents au même instant, ce qui est exactement ce que D-8
+ * interdit. Elle remplace la requête directe sur `spaced_repetition_schedule` qui tenait ce
+ * rôle depuis le lot 6 de l'étude 22 — la RPC sait en plus arbitrer par les misconceptions
+ * (D-3) et passer la porte d'accès (R-3), ce qu'une requête cliente ne peut pas faire.
+ *
+ * Dégradation gracieuse comme `stats` et `progress` : si la RPC manque (déploiement en cours,
+ * migration pas encore appliquée), le tableau de bord s'affiche sans révision plutôt que de
+ * casser. Le pire cas est une priorité 1 muette, pas une page blanche.
+ */
+async function fetchDailyPlan(supabase: unknown, limit: number): Promise<DailyPlanItem[]> {
+  const client = supabase as DailyPlanRpcClient;
+  const res = await client.rpc("get_daily_plan", { p_limit: limit });
+
+  if (res.error) {
+    logger.warn("getDashboard.dailyPlan: daily-plan RPC failed, defaulting to empty", {
+      error: res.error.message,
+    });
+    return [];
+  }
+  return res.data ?? [];
+}
 
 async function fetchParcoursProgress(
   supabase: unknown,
@@ -310,19 +351,12 @@ export const getDashboard = createServerFn({ method: "GET" })
       }
     }
 
-    // Révision due la plus ancienne (étude 22, R-31 priorité 1). Une seule ligne, bornée par
-    // l'index (user_id, status, scheduled_for) : c'est le minimum pour savoir s'il y a quelque
-    // chose à réviser MAINTENANT. Quand `get_daily_plan` (étude 04-A1) arrivera, elle
-    // remplacera cette source — pas le moteur de priorité qui la consomme (R-18, D-8).
-    const { data: dueReview } = await supabase
-      .from("spaced_repetition_schedule")
-      .select("exercise_id")
-      .eq("user_id", userId)
-      .eq("status", "pending")
-      .lte("scheduled_for", new Date().toISOString())
-      .order("scheduled_for", { ascending: true })
-      .limit(1)
-      .maybeSingle();
+    // « Révision du jour » (étude 04, lot A1.1). Elle a remplacé la requête directe sur
+    // `spaced_repetition_schedule` qui tenait la priorité 1 depuis le lot 6 de l'étude 22 :
+    // même rôle, meilleure réponse — le plan arbitre par les misconceptions actives (D-3) et
+    // ne propose que des exercices réellement jouables (R-3). Le moteur de priorité, lui,
+    // n'a pas bougé d'une ligne (R-18, D-8) : il change de SOURCE, pas de règle.
+    const dailyPlan = await fetchDailyPlan(supabase, DAILY_PLAN_MAX_ITEMS);
 
     // Progression officielle par matière (étude 22 R-16) — bornée aux matières du parcours
     // actif, une seule requête. Alimente l'état `done` de la carte `/parcours`.
@@ -336,7 +370,9 @@ export const getDashboard = createServerFn({ method: "GET" })
     // matière du chemin — qui la résoudra avec ce même moteur. Un seul CTA en sortira.
     const lastWorkedSubjectId = recentRes.data?.[0]?.subject_id ?? null;
     const nextAction = resolveNextAction({
-      dueReviewExerciseId: dueReview?.exercise_id ?? null,
+      // La tête du plan EST la priorité 1 : le plan est déjà trié par urgence, donc le premier
+      // élément est la révision que le moteur doit promouvoir.
+      dueReviewExerciseId: dailyPlan[0]?.exercise_id ?? null,
       failedExerciseId: nextExerciseId,
       pathSubjectId: subjects.some((s) => s.id === lastWorkedSubjectId)
         ? lastWorkedSubjectId
@@ -353,6 +389,7 @@ export const getDashboard = createServerFn({ method: "GET" })
       recent: recentRes.data ?? [],
       nextExerciseId,
       nextAction,
+      dailyPlan,
       promotionSuggestion,
       reviseGateway,
       currentParcoursName,
