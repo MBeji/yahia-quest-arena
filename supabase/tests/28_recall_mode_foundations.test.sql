@@ -62,91 +62,91 @@ INSERT INTO public.subjects (id, name_fr, attribute, color_token, icon, theme_id
 VALUES ('recall-subj', 'Recall Test', 'Esprit', 'subject-math', 'Brain', 'ecole-tn');
 
 INSERT INTO public.chapters (id, subject_id, title)
-VALUES ('e1000000-0000-0000-0000-000000000001', 'recall-subj', 'Recall Chapter');
+VALUES ('fa000000-0000-0000-0000-000000000001', 'recall-subj', 'Recall Chapter');
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, xp_reward, reward_coins, source, mode)
-VALUES ('e2000000-0000-0000-0000-000000000001',
-        'e1000000-0000-0000-0000-000000000001', 'recall-subj',
+VALUES ('fb000000-0000-0000-0000-000000000001',
+        'fa000000-0000-0000-0000-000000000001', 'recall-subj',
         'Recall Exercise', 100, 20, 'admin', 'practice');
 
 -- E1 — éligible (réponse courte, énoncé auto-suffisant).
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-000000000001', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('fc000000-0000-0000-0000-000000000001', 'fb000000-0000-0000-0000-000000000001',
         'Capitale de la France ?',
         '[{"id":"a","text":"Paris"},{"id":"b","text":"Lyon"},{"id":"c","text":"Marseille"},{"id":"d","text":"Nice"}]'::jsonb,
         'a', 1);
 
 -- E2 — (b) seulement 2 options.
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-000000000002', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('fc000000-0000-0000-0000-000000000002', 'fb000000-0000-0000-0000-000000000001',
         'Vrai ou faux ?',
         '[{"id":"a","text":"Vrai"},{"id":"b","text":"Faux"}]'::jsonb,
         'a', 2);
 
 -- E3 — (c) réponse > 6 mots.
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-000000000003', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('fc000000-0000-0000-0000-000000000003', 'fb000000-0000-0000-0000-000000000001',
         'Compter ?',
         '[{"id":"a","text":"un deux trois quatre cinq six sept"},{"id":"b","text":"huit"},{"id":"c","text":"neuf"}]'::jsonb,
         'a', 3);
 
 -- E4 — (c) réponse > 60 caractères.
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-000000000004', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('fc000000-0000-0000-0000-000000000004', 'fb000000-0000-0000-0000-000000000001',
         'Long ?',
         '[{"id":"a","text":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},{"id":"b","text":"court"},{"id":"c","text":"bref"}]'::jsonb,
         'a', 4);
 
 -- E5 — (d) contenu riche (URL).
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-000000000005', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('fc000000-0000-0000-0000-000000000005', 'fb000000-0000-0000-0000-000000000001',
         'Site ?',
         '[{"id":"a","text":"http://x.test"},{"id":"b","text":"un"},{"id":"c","text":"deux"}]'::jsonb,
         'a', 5);
 
 -- E6 — (e) symbole mathématique de structure.
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-000000000006', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('fc000000-0000-0000-0000-000000000006', 'fb000000-0000-0000-0000-000000000001',
         'Solution ?',
         '[{"id":"a","text":"x = 5"},{"id":"b","text":"six"},{"id":"c","text":"sept"}]'::jsonb,
         'a', 6);
 
 -- E7 — (f) marqueur composite (slash).
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-000000000007', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('fc000000-0000-0000-0000-000000000007', 'fb000000-0000-0000-0000-000000000001',
         'Fraction ?',
         '[{"id":"a","text":"3/4"},{"id":"b","text":"deux"},{"id":"c","text":"trois"}]'::jsonb,
         'a', 7);
 
 -- E8 — (g) énoncé dépendant des options.
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-000000000008', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('fc000000-0000-0000-0000-000000000008', 'fb000000-0000-0000-0000-000000000001',
         'Laquelle de ces villes est la capitale ?',
         '[{"id":"a","text":"Paris"},{"id":"b","text":"Lyon"},{"id":"c","text":"Nice"}]'::jsonb,
         'a', 8);
 
 -- E9 — (h) collision : la bonne réponse normalisée égale un distracteur normalisé.
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-000000000009', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('e3000000-0000-0000-0000-000000000009', 'fb000000-0000-0000-0000-000000000001',
         'Combien ?',
         '[{"id":"a","text":"Deux"},{"id":"b","text":"deux"},{"id":"c","text":"trois"}]'::jsonb,
         'a', 9);
 
 -- E10 — (i) réponse qui se normalise en vide (charset hors clavier).
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-00000000000a', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('e3000000-0000-0000-0000-00000000000a', 'fb000000-0000-0000-0000-000000000001',
         'Constante ?',
         '[{"id":"a","text":"π"},{"id":"b","text":"un"},{"id":"c","text":"deux"}]'::jsonb,
         'a', 10);
 
 -- E11 — non-mcq (numeric) : jamais éligible.
 INSERT INTO public.questions (id, exercise_id, prompt, options, question_type, answer_key, display_order)
-VALUES ('e3000000-0000-0000-0000-00000000000b', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('e3000000-0000-0000-0000-00000000000b', 'fb000000-0000-0000-0000-000000000001',
         'Combien font 6×7 ?', '[]'::jsonb, 'numeric', '{"value": 42}'::jsonb, 11);
 
 -- E12 — éligible en arabe.
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-00000000000c', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('e3000000-0000-0000-0000-00000000000c', 'fb000000-0000-0000-0000-000000000001',
         'عاصمة فرنسا؟',
         '[{"id":"a","text":"باريس"},{"id":"b","text":"لندن"},{"id":"c","text":"روما"}]'::jsonb,
         'a', 12);
@@ -155,28 +155,28 @@ VALUES ('e3000000-0000-0000-0000-00000000000c', 'e2000000-0000-0000-0000-0000000
 -- 2. Éligibilité (R-2 a–i).
 -- =========================================================
 SELECT is(public.is_question_recall_eligible(
-  (SELECT q FROM public.questions q WHERE q.id = 'e3000000-0000-0000-0000-000000000001')),
+  (SELECT q FROM public.questions q WHERE q.id = 'fc000000-0000-0000-0000-000000000001')),
   true, 'E1: QCM à réponse courte auto-suffisant est éligible');
 SELECT is(public.is_question_recall_eligible(
-  (SELECT q FROM public.questions q WHERE q.id = 'e3000000-0000-0000-0000-000000000002')),
+  (SELECT q FROM public.questions q WHERE q.id = 'fc000000-0000-0000-0000-000000000002')),
   false, 'E2 (b): moins de 3 options → inéligible');
 SELECT is(public.is_question_recall_eligible(
-  (SELECT q FROM public.questions q WHERE q.id = 'e3000000-0000-0000-0000-000000000003')),
+  (SELECT q FROM public.questions q WHERE q.id = 'fc000000-0000-0000-0000-000000000003')),
   false, 'E3 (c): réponse de plus de 6 mots → inéligible');
 SELECT is(public.is_question_recall_eligible(
-  (SELECT q FROM public.questions q WHERE q.id = 'e3000000-0000-0000-0000-000000000004')),
+  (SELECT q FROM public.questions q WHERE q.id = 'fc000000-0000-0000-0000-000000000004')),
   false, 'E4 (c): réponse de plus de 60 caractères → inéligible');
 SELECT is(public.is_question_recall_eligible(
-  (SELECT q FROM public.questions q WHERE q.id = 'e3000000-0000-0000-0000-000000000005')),
+  (SELECT q FROM public.questions q WHERE q.id = 'fc000000-0000-0000-0000-000000000005')),
   false, 'E5 (d): contenu riche (URL) → inéligible');
 SELECT is(public.is_question_recall_eligible(
-  (SELECT q FROM public.questions q WHERE q.id = 'e3000000-0000-0000-0000-000000000006')),
+  (SELECT q FROM public.questions q WHERE q.id = 'fc000000-0000-0000-0000-000000000006')),
   false, 'E6 (e): symbole mathématique de structure → inéligible');
 SELECT is(public.is_question_recall_eligible(
-  (SELECT q FROM public.questions q WHERE q.id = 'e3000000-0000-0000-0000-000000000007')),
+  (SELECT q FROM public.questions q WHERE q.id = 'fc000000-0000-0000-0000-000000000007')),
   false, 'E7 (f): marqueur composite (slash) → inéligible');
 SELECT is(public.is_question_recall_eligible(
-  (SELECT q FROM public.questions q WHERE q.id = 'e3000000-0000-0000-0000-000000000008')),
+  (SELECT q FROM public.questions q WHERE q.id = 'fc000000-0000-0000-0000-000000000008')),
   false, 'E8 (g): énoncé dépendant des options → inéligible');
 SELECT is(public.is_question_recall_eligible(
   (SELECT q FROM public.questions q WHERE q.id = 'e3000000-0000-0000-0000-000000000009')),
@@ -195,19 +195,19 @@ SELECT is(public.is_question_recall_eligible(
 -- 3. Scoring Rappel (R-4) — comparaison normalisée stricte, tout-ou-rien.
 -- =========================================================
 SELECT is(public.score_recall_answer(
-  (SELECT q FROM public.questions q WHERE q.id = 'e3000000-0000-0000-0000-000000000001'), 'Paris'),
+  (SELECT q FROM public.questions q WHERE q.id = 'fc000000-0000-0000-0000-000000000001'), 'Paris'),
   true, 'scorer: la bonne réponse exacte score vrai');
 SELECT is(public.score_recall_answer(
-  (SELECT q FROM public.questions q WHERE q.id = 'e3000000-0000-0000-0000-000000000001'), '  paris '),
+  (SELECT q FROM public.questions q WHERE q.id = 'fc000000-0000-0000-0000-000000000001'), '  paris '),
   true, 'scorer: casse et espaces sont normalisés');
 SELECT is(public.score_recall_answer(
-  (SELECT q FROM public.questions q WHERE q.id = 'e3000000-0000-0000-0000-000000000001'), 'Lyon'),
+  (SELECT q FROM public.questions q WHERE q.id = 'fc000000-0000-0000-0000-000000000001'), 'Lyon'),
   false, 'scorer: une mauvaise réponse score faux');
 SELECT is(public.score_recall_answer(
-  (SELECT q FROM public.questions q WHERE q.id = 'e3000000-0000-0000-0000-000000000001'), ''),
+  (SELECT q FROM public.questions q WHERE q.id = 'fc000000-0000-0000-0000-000000000001'), ''),
   false, 'scorer: une réponse vide score faux');
 SELECT is(public.score_recall_answer(
-  (SELECT q FROM public.questions q WHERE q.id = 'e3000000-0000-0000-0000-000000000001'), NULL),
+  (SELECT q FROM public.questions q WHERE q.id = 'fc000000-0000-0000-0000-000000000001'), NULL),
   false, 'scorer: une réponse NULL score faux');
 
 -- =========================================================

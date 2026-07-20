@@ -32,11 +32,11 @@ INSERT INTO public.subjects (id, name_fr, attribute, color_token, icon, theme_id
 VALUES ('start-sess-subj', 'Start Session Subject', 'Esprit', 'subject-math', 'Brain', 'start-sess-theme');
 
 INSERT INTO public.chapters (id, subject_id, title)
-VALUES ('c5000000-0000-0000-0000-000000000001', 'start-sess-subj', 'Start Session Chapter');
+VALUES ('f9000000-0000-0000-0000-000000000001', 'start-sess-subj', 'Start Session Chapter');
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, xp_reward, reward_coins, mode)
 VALUES ('c6000000-0000-0000-0000-000000000001',
-        'c5000000-0000-0000-0000-000000000001', 'start-sess-subj',
+        'f9000000-0000-0000-0000-000000000001', 'start-sess-subj',
         'Start Session Exercise', 100, 20, 'practice');
 
 INSERT INTO auth.users (id, email)

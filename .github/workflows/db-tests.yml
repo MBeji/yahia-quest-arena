@@ -12,9 +12,33 @@ name: DB integration tests
 # roles match production exactly — which is precisely what these tests assert
 # against. A bare postgres service would need hand-rolled shims for all of that.
 
-# Slow pgTAP suite (Docker + ~60 migrations, ~5-8 min). No longer per-commit: it
-# runs in the nightly build (see nightly.yml) and on demand from the Actions tab.
+# Slow pgTAP suite (Docker + ~120 migrations, ~5-8 min). Not per-commit: it runs
+# in the nightly build (see nightly.yml), on demand from the Actions tab, and —
+# since 2026-07-20 — on any PR that touches `supabase/migrations/**`.
+#
+# Why the PR trigger exists. Étude 24 removed the generated content migrations
+# from this repo (#544). Four migrations that STAYED silently depended on them —
+# on parent rows they created (subjects, chapters, exercises) and on the widening
+# of `exercises_mode_check` their idempotent guard carried. A database rebuilt
+# from this repo alone stopped applying at all, which killed the pgTAP suite and
+# blocked provisioning a fresh TEST project. It took three follow-up PRs to sort
+# out (#548, #549, #552).
+#
+# None of it was caught at PR time: `ci:verify` proves runtime decoupling, NOT
+# that the migration chain still applies from scratch, and this workflow only ran
+# nightly and on demand — so the breakage surfaced after the merge, by hand. A PR
+# touching migrations is exactly the case worth 5-8 minutes.
+#
+# NOTE: this is a REPORTING check, not a required one. The `main-protection`
+# ruleset lists `verify`, `Migration presence`, `Migration order` and `CodeQL`;
+# auto-merge waits only on those, so a red pgTAP here surfaces the problem but
+# does not block the merge. Promoting it to required is a deliberate call — it
+# adds 5-8 min to every migration PR.
 on:
+  pull_request:
+    # Les deux moities de ce que la suite prouve : la chaine de migrations
+    # s'applique encore depuis zero, et les tests eux-memes tiennent.
+    paths: ["supabase/migrations/**", "supabase/tests/**"]
   workflow_call:
     inputs:
       ref:

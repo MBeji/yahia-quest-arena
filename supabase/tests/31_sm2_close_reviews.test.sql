@@ -67,11 +67,11 @@ SET LOCAL ROLE authenticated;
 SELECT public.submit_exercise_attempt(
   'c4000000-0000-0000-0000-0000000000a1',
   'c2000000-0000-0000-0000-0000000000a1',
-  '[{"questionId":"c3000000-0000-0000-0000-000000000001","choice":"b"},
-    {"questionId":"c3000000-0000-0000-0000-000000000002","choice":"b"},
-    {"questionId":"c3000000-0000-0000-0000-000000000003","choice":"b"},
-    {"questionId":"c3000000-0000-0000-0000-000000000004","choice":"b"},
-    {"questionId":"c3000000-0000-0000-0000-000000000005","choice":"b"}]'::jsonb
+  '[{"questionId":"fe000000-0000-0000-0000-000000000001","choice":"b"},
+    {"questionId":"fe000000-0000-0000-0000-000000000002","choice":"b"},
+    {"questionId":"fe000000-0000-0000-0000-000000000003","choice":"b"},
+    {"questionId":"fe000000-0000-0000-0000-000000000004","choice":"b"},
+    {"questionId":"fe000000-0000-0000-0000-000000000005","choice":"b"}]'::jsonb
 );
 
 SELECT is(
@@ -96,11 +96,11 @@ SET LOCAL ROLE authenticated;
 SELECT public.submit_exercise_attempt(
   'c4000000-0000-0000-0000-0000000000a2',
   'c2000000-0000-0000-0000-0000000000a1',
-  '[{"questionId":"c3000000-0000-0000-0000-000000000001","choice":"a"},
-    {"questionId":"c3000000-0000-0000-0000-000000000002","choice":"a"},
-    {"questionId":"c3000000-0000-0000-0000-000000000003","choice":"a"},
-    {"questionId":"c3000000-0000-0000-0000-000000000004","choice":"a"},
-    {"questionId":"c3000000-0000-0000-0000-000000000005","choice":"a"}]'::jsonb
+  '[{"questionId":"fe000000-0000-0000-0000-000000000001","choice":"a"},
+    {"questionId":"fe000000-0000-0000-0000-000000000002","choice":"a"},
+    {"questionId":"fe000000-0000-0000-0000-000000000003","choice":"a"},
+    {"questionId":"fe000000-0000-0000-0000-000000000004","choice":"a"},
+    {"questionId":"fe000000-0000-0000-0000-000000000005","choice":"a"}]'::jsonb
 );
 
 SELECT is(
@@ -146,11 +146,11 @@ SET LOCAL ROLE authenticated;
 SELECT public.submit_exercise_attempt(
   'c4000000-0000-0000-0000-0000000000b1',
   'c2000000-0000-0000-0000-0000000000a1',
-  '[{"questionId":"c3000000-0000-0000-0000-000000000001","choice":"b"},
-    {"questionId":"c3000000-0000-0000-0000-000000000002","choice":"b"},
-    {"questionId":"c3000000-0000-0000-0000-000000000003","choice":"b"},
-    {"questionId":"c3000000-0000-0000-0000-000000000004","choice":"b"},
-    {"questionId":"c3000000-0000-0000-0000-000000000005","choice":"b"}]'::jsonb
+  '[{"questionId":"fe000000-0000-0000-0000-000000000001","choice":"b"},
+    {"questionId":"fe000000-0000-0000-0000-000000000002","choice":"b"},
+    {"questionId":"fe000000-0000-0000-0000-000000000003","choice":"b"},
+    {"questionId":"fe000000-0000-0000-0000-000000000004","choice":"b"},
+    {"questionId":"fe000000-0000-0000-0000-000000000005","choice":"b"}]'::jsonb
 );
 
 RESET ROLE;
@@ -168,11 +168,11 @@ SET LOCAL ROLE authenticated;
 SELECT public.submit_exercise_attempt(
   'c4000000-0000-0000-0000-0000000000b2',
   'c2000000-0000-0000-0000-0000000000a1',
-  '[{"questionId":"c3000000-0000-0000-0000-000000000001","choice":"a"},
-    {"questionId":"c3000000-0000-0000-0000-000000000002","choice":"a"},
-    {"questionId":"c3000000-0000-0000-0000-000000000003","choice":"a"},
-    {"questionId":"c3000000-0000-0000-0000-000000000004","choice":"a"},
-    {"questionId":"c3000000-0000-0000-0000-000000000005","choice":"a"}]'::jsonb
+  '[{"questionId":"fe000000-0000-0000-0000-000000000001","choice":"a"},
+    {"questionId":"fe000000-0000-0000-0000-000000000002","choice":"a"},
+    {"questionId":"fe000000-0000-0000-0000-000000000003","choice":"a"},
+    {"questionId":"fe000000-0000-0000-0000-000000000004","choice":"a"},
+    {"questionId":"fe000000-0000-0000-0000-000000000005","choice":"a"}]'::jsonb
 );
 
 SELECT is(
@@ -199,11 +199,11 @@ SET LOCAL ROLE authenticated;
 SELECT public.submit_exercise_attempt(
   'c4000000-0000-0000-0000-0000000000a3',
   'c2000000-0000-0000-0000-0000000000a1',
-  '[{"questionId":"c3000000-0000-0000-0000-000000000001","choice":"b"},
-    {"questionId":"c3000000-0000-0000-0000-000000000002","choice":"b"},
-    {"questionId":"c3000000-0000-0000-0000-000000000003","choice":"b"},
-    {"questionId":"c3000000-0000-0000-0000-000000000004","choice":"b"},
-    {"questionId":"c3000000-0000-0000-0000-000000000005","choice":"b"}]'::jsonb
+  '[{"questionId":"fe000000-0000-0000-0000-000000000001","choice":"b"},
+    {"questionId":"fe000000-0000-0000-0000-000000000002","choice":"b"},
+    {"questionId":"fe000000-0000-0000-0000-000000000003","choice":"b"},
+    {"questionId":"fe000000-0000-0000-0000-000000000004","choice":"b"},
+    {"questionId":"fe000000-0000-0000-0000-000000000005","choice":"b"}]'::jsonb
 );
 
 SELECT is(
@@ -240,11 +240,11 @@ SET LOCAL ROLE authenticated;
 SELECT public.submit_exercise_attempt(
   'c4000000-0000-0000-0000-0000000000c1',
   'c2000000-0000-0000-0000-0000000000a1',
-  '[{"questionId":"c3000000-0000-0000-0000-000000000001","choice":"b"},
-    {"questionId":"c3000000-0000-0000-0000-000000000002","choice":"b"},
-    {"questionId":"c3000000-0000-0000-0000-000000000003","choice":"b"},
-    {"questionId":"c3000000-0000-0000-0000-000000000004","choice":"b"},
-    {"questionId":"c3000000-0000-0000-0000-000000000005","choice":"b"}]'::jsonb
+  '[{"questionId":"fe000000-0000-0000-0000-000000000001","choice":"b"},
+    {"questionId":"fe000000-0000-0000-0000-000000000002","choice":"b"},
+    {"questionId":"fe000000-0000-0000-0000-000000000003","choice":"b"},
+    {"questionId":"fe000000-0000-0000-0000-000000000004","choice":"b"},
+    {"questionId":"fe000000-0000-0000-0000-000000000005","choice":"b"}]'::jsonb
 );
 
 SELECT results_eq(

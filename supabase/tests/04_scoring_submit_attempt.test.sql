@@ -33,18 +33,18 @@ INSERT INTO public.subjects (id, name_fr, attribute, color_token, icon, theme_id
 VALUES ('score-subj', 'Scoring Test', 'Esprit', 'subject-math', 'Brain', 'ecole-tn');
 
 INSERT INTO public.chapters (id, subject_id, title)
-VALUES ('e1000000-0000-0000-0000-000000000001', 'score-subj', 'Scoring Chapter');
+VALUES ('fa000000-0000-0000-0000-000000000001', 'score-subj', 'Scoring Chapter');
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, xp_reward, reward_coins, mode)
-VALUES ('e2000000-0000-0000-0000-000000000001',
-        'e1000000-0000-0000-0000-000000000001', 'score-subj',
+VALUES ('fb000000-0000-0000-0000-000000000001',
+        'fa000000-0000-0000-0000-000000000001', 'score-subj',
         'Scoring Exercise', 100, 20, 'practice');
 
 -- 5 QCM questions, correct answer 'a' for all.
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
 SELECT
   ('e3000000-0000-0000-0000-00000000000' || g)::uuid,
-  'e2000000-0000-0000-0000-000000000001',
+  'fb000000-0000-0000-0000-000000000001',
   'Q' || g,
   '[{"id":"a","text":"right"},{"id":"b","text":"wrong"},{"id":"c","text":"x"},{"id":"d","text":"y"}]'::jsonb,
   'a',
@@ -63,7 +63,7 @@ VALUES ('f1111111-1111-1111-1111-111111111111', 'score-good@test.local');
 INSERT INTO public.exercise_sessions (id, user_id, exercise_id, started_at)
 VALUES ('a1000000-0000-0000-0000-000000000001',
         'f1111111-1111-1111-1111-111111111111',
-        'e2000000-0000-0000-0000-000000000001',
+        'fb000000-0000-0000-0000-000000000001',
         -- 5 questions * 4s = 20s gate; 120s ago clears it comfortably.
         clock_timestamp() - INTERVAL '120 seconds');
 
@@ -74,12 +74,12 @@ SELECT is(
   (
     SELECT (public.submit_exercise_attempt(
       'a1000000-0000-0000-0000-000000000001',
-      'e2000000-0000-0000-0000-000000000001',
-      '[{"questionId":"e3000000-0000-0000-0000-000000000001","choice":"a"},
-        {"questionId":"e3000000-0000-0000-0000-000000000002","choice":"a"},
-        {"questionId":"e3000000-0000-0000-0000-000000000003","choice":"a"},
-        {"questionId":"e3000000-0000-0000-0000-000000000004","choice":"a"},
-        {"questionId":"e3000000-0000-0000-0000-000000000005","choice":"a"}]'::jsonb
+      'fb000000-0000-0000-0000-000000000001',
+      '[{"questionId":"fc000000-0000-0000-0000-000000000001","choice":"a"},
+        {"questionId":"fc000000-0000-0000-0000-000000000002","choice":"a"},
+        {"questionId":"fc000000-0000-0000-0000-000000000003","choice":"a"},
+        {"questionId":"fc000000-0000-0000-0000-000000000004","choice":"a"},
+        {"questionId":"fc000000-0000-0000-0000-000000000005","choice":"a"}]'::jsonb
     ) ->> 'xpEarned')::int
   ),
   100,  -- round(100 * 100/100) = 100
@@ -120,7 +120,7 @@ VALUES ('f2222222-2222-2222-2222-222222222222', 'score-fast@test.local');
 INSERT INTO public.exercise_sessions (id, user_id, exercise_id, started_at)
 VALUES ('a2000000-0000-0000-0000-000000000002',
         'f2222222-2222-2222-2222-222222222222',
-        'e2000000-0000-0000-0000-000000000001',
+        'fb000000-0000-0000-0000-000000000001',
         -- Only 2s ago: well under the 5*4 = 20s gate → tooFast.
         clock_timestamp() - INTERVAL '2 seconds');
 
@@ -134,12 +134,12 @@ SELECT set_config(
   'test.fast_result',
   public.submit_exercise_attempt(
     'a2000000-0000-0000-0000-000000000002',
-    'e2000000-0000-0000-0000-000000000001',
-    '[{"questionId":"e3000000-0000-0000-0000-000000000001","choice":"a"},
-      {"questionId":"e3000000-0000-0000-0000-000000000002","choice":"a"},
-      {"questionId":"e3000000-0000-0000-0000-000000000003","choice":"a"},
-      {"questionId":"e3000000-0000-0000-0000-000000000004","choice":"a"},
-      {"questionId":"e3000000-0000-0000-0000-000000000005","choice":"a"}]'::jsonb
+    'fb000000-0000-0000-0000-000000000001',
+    '[{"questionId":"fc000000-0000-0000-0000-000000000001","choice":"a"},
+      {"questionId":"fc000000-0000-0000-0000-000000000002","choice":"a"},
+      {"questionId":"fc000000-0000-0000-0000-000000000003","choice":"a"},
+      {"questionId":"fc000000-0000-0000-0000-000000000004","choice":"a"},
+      {"questionId":"fc000000-0000-0000-0000-000000000005","choice":"a"}]'::jsonb
   )::text,
   true  -- is_local: cleared at transaction end
 );
@@ -174,7 +174,7 @@ VALUES ('f3333333-3333-3333-3333-333333333333', 'score-fail@test.local');
 INSERT INTO public.exercise_sessions (id, user_id, exercise_id, started_at)
 VALUES ('a3000000-0000-0000-0000-000000000003',
         'f3333333-3333-3333-3333-333333333333',
-        'e2000000-0000-0000-0000-000000000001',
+        'fb000000-0000-0000-0000-000000000001',
         clock_timestamp() - INTERVAL '120 seconds');
 
 SET LOCAL "request.jwt.claims" = '{"sub":"f3333333-3333-3333-3333-333333333333","role":"authenticated"}';
@@ -184,18 +184,18 @@ SET LOCAL ROLE authenticated;
 -- top level we discard the JSONB result with a plain SELECT.
 SELECT public.submit_exercise_attempt(
   'a3000000-0000-0000-0000-000000000003',
-  'e2000000-0000-0000-0000-000000000001',
-  '[{"questionId":"e3000000-0000-0000-0000-000000000001","choice":"b"},
-    {"questionId":"e3000000-0000-0000-0000-000000000002","choice":"b"},
-    {"questionId":"e3000000-0000-0000-0000-000000000003","choice":"b"},
-    {"questionId":"e3000000-0000-0000-0000-000000000004","choice":"b"},
-    {"questionId":"e3000000-0000-0000-0000-000000000005","choice":"b"}]'::jsonb
+  'fb000000-0000-0000-0000-000000000001',
+  '[{"questionId":"fc000000-0000-0000-0000-000000000001","choice":"b"},
+    {"questionId":"fc000000-0000-0000-0000-000000000002","choice":"b"},
+    {"questionId":"fc000000-0000-0000-0000-000000000003","choice":"b"},
+    {"questionId":"fc000000-0000-0000-0000-000000000004","choice":"b"},
+    {"questionId":"fc000000-0000-0000-0000-000000000005","choice":"b"}]'::jsonb
 );
 
 SELECT is(
   (SELECT count(*)::int FROM public.spaced_repetition_schedule
      WHERE user_id = 'f3333333-3333-3333-3333-333333333333'
-       AND exercise_id = 'e2000000-0000-0000-0000-000000000001'
+       AND exercise_id = 'fb000000-0000-0000-0000-000000000001'
        AND status = 'pending'),
   3,
   'a <60% fail schedules the 3 spaced-repetition retries (1/3/7 days)'
@@ -222,7 +222,7 @@ VALUES ('f4444444-4444-4444-4444-444444444444',
 INSERT INTO public.exercise_sessions (id, user_id, exercise_id, started_at)
 VALUES ('a4000000-0000-0000-0000-000000000004',
         'f4444444-4444-4444-4444-444444444444',
-        'e2000000-0000-0000-0000-000000000001',
+        'fb000000-0000-0000-0000-000000000001',
         clock_timestamp() - INTERVAL '120 seconds');
 
 SET LOCAL "request.jwt.claims" = '{"sub":"f4444444-4444-4444-4444-444444444444","role":"authenticated"}';
@@ -233,12 +233,12 @@ SELECT is(
   (
     SELECT (public.submit_exercise_attempt(
       'a4000000-0000-0000-0000-000000000004',
-      'e2000000-0000-0000-0000-000000000001',
-      '[{"questionId":"e3000000-0000-0000-0000-000000000001","choice":"b"},
-        {"questionId":"e3000000-0000-0000-0000-000000000002","choice":"b"},
-        {"questionId":"e3000000-0000-0000-0000-000000000003","choice":"b"},
-        {"questionId":"e3000000-0000-0000-0000-000000000004","choice":"b"},
-        {"questionId":"e3000000-0000-0000-0000-000000000005","choice":"b"}]'::jsonb
+      'fb000000-0000-0000-0000-000000000001',
+      '[{"questionId":"fc000000-0000-0000-0000-000000000001","choice":"b"},
+        {"questionId":"fc000000-0000-0000-0000-000000000002","choice":"b"},
+        {"questionId":"fc000000-0000-0000-0000-000000000003","choice":"b"},
+        {"questionId":"fc000000-0000-0000-0000-000000000004","choice":"b"},
+        {"questionId":"fc000000-0000-0000-0000-000000000005","choice":"b"}]'::jsonb
     ) ->> 'retryShieldUsed')::boolean
   ),
   true,
@@ -248,7 +248,7 @@ SELECT is(
 SELECT is_empty(
   $$ SELECT 1 FROM public.spaced_repetition_schedule
        WHERE user_id = 'f4444444-4444-4444-4444-444444444444'
-         AND exercise_id = 'e2000000-0000-0000-0000-000000000001'
+         AND exercise_id = 'fb000000-0000-0000-0000-000000000001'
          AND status = 'pending' $$,
   'retry shield: the spaced-repetition penalty is SUPPRESSED (no rows scheduled)'
 );
@@ -269,11 +269,11 @@ VALUES ('f5555555-5555-5555-5555-555555555555', 'score-first@test.local');
 INSERT INTO public.exercise_sessions (id, user_id, exercise_id, started_at)
 VALUES ('a5000000-0000-0000-0000-000000000051',
         'f5555555-5555-5555-5555-555555555555',
-        'e2000000-0000-0000-0000-000000000001',
+        'fb000000-0000-0000-0000-000000000001',
         clock_timestamp() - INTERVAL '120 seconds'),
        ('a5000000-0000-0000-0000-000000000052',
         'f5555555-5555-5555-5555-555555555555',
-        'e2000000-0000-0000-0000-000000000001',
+        'fb000000-0000-0000-0000-000000000001',
         clock_timestamp() - INTERVAL '120 seconds');
 
 SET LOCAL "request.jwt.claims" = '{"sub":"f5555555-5555-5555-5555-555555555555","role":"authenticated"}';
@@ -282,12 +282,12 @@ SET LOCAL ROLE authenticated;
 SELECT ok(
   (public.submit_exercise_attempt(
     'a5000000-0000-0000-0000-000000000051',
-    'e2000000-0000-0000-0000-000000000001',
-    '[{"questionId":"e3000000-0000-0000-0000-000000000001","choice":"a"},
-      {"questionId":"e3000000-0000-0000-0000-000000000002","choice":"a"},
-      {"questionId":"e3000000-0000-0000-0000-000000000003","choice":"a"},
-      {"questionId":"e3000000-0000-0000-0000-000000000004","choice":"a"},
-      {"questionId":"e3000000-0000-0000-0000-000000000005","choice":"a"}]'::jsonb
+    'fb000000-0000-0000-0000-000000000001',
+    '[{"questionId":"fc000000-0000-0000-0000-000000000001","choice":"a"},
+      {"questionId":"fc000000-0000-0000-0000-000000000002","choice":"a"},
+      {"questionId":"fc000000-0000-0000-0000-000000000003","choice":"a"},
+      {"questionId":"fc000000-0000-0000-0000-000000000004","choice":"a"},
+      {"questionId":"fc000000-0000-0000-0000-000000000005","choice":"a"}]'::jsonb
   ) ->> 'unlockedBadges') LIKE '%first_quest%',
   'first attempt unlocks the first_quest badge'
 );
@@ -295,12 +295,12 @@ SELECT ok(
 SELECT ok(
   (public.submit_exercise_attempt(
     'a5000000-0000-0000-0000-000000000052',
-    'e2000000-0000-0000-0000-000000000001',
-    '[{"questionId":"e3000000-0000-0000-0000-000000000001","choice":"b"},
-      {"questionId":"e3000000-0000-0000-0000-000000000002","choice":"b"},
-      {"questionId":"e3000000-0000-0000-0000-000000000003","choice":"b"},
-      {"questionId":"e3000000-0000-0000-0000-000000000004","choice":"b"},
-      {"questionId":"e3000000-0000-0000-0000-000000000005","choice":"b"}]'::jsonb
+    'fb000000-0000-0000-0000-000000000001',
+    '[{"questionId":"fc000000-0000-0000-0000-000000000001","choice":"b"},
+      {"questionId":"fc000000-0000-0000-0000-000000000002","choice":"b"},
+      {"questionId":"fc000000-0000-0000-0000-000000000003","choice":"b"},
+      {"questionId":"fc000000-0000-0000-0000-000000000004","choice":"b"},
+      {"questionId":"fc000000-0000-0000-0000-000000000005","choice":"b"}]'::jsonb
   ) ->> 'unlockedBadges') NOT LIKE '%first_quest%',
   'a second attempt does NOT re-award first_quest'
 );
