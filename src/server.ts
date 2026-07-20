@@ -6,6 +6,7 @@ import { logger } from "@/shared/lib/logger";
 import { handlePushCron } from "@/features/notifications/notifications.cron.server";
 import { guardRequest } from "@/shared/lib/bot-guard";
 import { generateSitemap } from "@/shared/lib/sitemap";
+import { handleHealthRequest } from "@/shared/lib/health";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -103,6 +104,29 @@ export default {
       } catch (error) {
         logger.error("Sitemap generation failed", { error });
         return new Response("error", { status: 500 });
+      }
+    }
+
+    // Liveness probe for an external uptime monitor. Handled BEFORE the bot
+    // guard, for two reasons that both produce a FALSE outage otherwise:
+    //   • monitors commonly ride on `python-requests`/`httpx`-class agents,
+    //     which the guard answers with a 403;
+    //   • a monitor polling on a schedule from one IP is exactly the shape the
+    //     guard's per-IP burst cap answers with a 429.
+    // Cheap, cached nowhere, and it never discloses more than ok/fail.
+    if (new URL(request.url).pathname === "/api/health") {
+      try {
+        return await handleHealthRequest();
+      } catch (error) {
+        // The handler already degrades gracefully; this is the last resort.
+        logger.error("Health endpoint failed", { error });
+        return new Response('{"status":"degraded"}', {
+          status: 503,
+          headers: {
+            "content-type": "application/json; charset=utf-8",
+            "cache-control": "no-store, max-age=0",
+          },
+        });
       }
     }
 

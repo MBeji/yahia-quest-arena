@@ -175,6 +175,17 @@ jobs:
             sleep 10
           done
           echo "healthy=$ok" >> "$GITHUB_OUTPUT"
+
+          # Informational only, NEVER fatal: /api/health tells which commit is
+          # actually being served and whether Postgres answers — but a
+          # deployment predating the probe returns 404, and that must not be
+          # read as a failed rollback.
+          probe="$(curl -s --max-time 15 "$PROD_URL/api/health" || echo '')"
+          case "$probe" in
+            *'"status"'*) echo "Sonde : $probe" ;;
+            *) probe=""; echo "Sonde /api/health indisponible (déploiement antérieur à la sonde ?) — non bloquant." ;;
+          esac
+          echo "probe=$probe" >> "$GITHUB_OUTPUT"
           if [ "$ok" != "true" ]; then
             echo "::error title=Prod toujours KO après rollback::$PROD_URL ne répond pas correctement. Le problème n'est probablement PAS dans le code déployé — regardez la base (migration destructive appliquée ?) et Supabase. Voir docs/prod-rollback-runbook.md § « Si le rollback ne suffit pas »."
           fi
@@ -209,11 +220,13 @@ jobs:
           FROZEN: ${{ steps.freeze.outputs.frozen }}
           BEFORE: ${{ steps.before.outputs.deployment }}
           HEALTHY: ${{ steps.verify.outputs.healthy }}
+          PROBE: ${{ steps.verify.outputs.probe }}
           JOB_STATUS: ${{ job.status }}
         with:
           script: |
             const LABEL = 'prod-incident';
-            const { MODE, REASON, TARGET, PROD_URL, FROZEN, BEFORE, HEALTHY, JOB_STATUS } = process.env;
+            const { MODE, REASON, TARGET, PROD_URL, FROZEN, BEFORE, HEALTHY, PROBE, JOB_STATUS } =
+              process.env;
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
             const stamp = new Date().toISOString().replace('T', ' ').slice(0, 16);
 
@@ -228,6 +241,9 @@ jobs:
               body += `| Déploiement avant | ${BEFORE || 'inconnu'} |\n`;
               body += `| Cible | ${TARGET || 'déploiement production précédent'} |\n`;
               body += `| ${PROD_URL} | ${HEALTHY === 'true' ? '✅ répond' : '❌ ne répond pas'} |\n`;
+              // Says WHICH commit is live and whether Postgres answers — the two
+              // things an HTTP 200 does not prove.
+              body += `| Sonde \`/api/health\` | ${PROBE ? `\`${PROBE}\`` : '— indisponible (déploiement antérieur à la sonde)'} |\n`;
             }
             body += `\n[Voir le run](${runUrl})\n`;
 
