@@ -44,12 +44,19 @@ end-of-dev → production walkthrough lives in [passation.md](./passation.md).)
 
 ## Required status checks
 
-| Check                | Workflow / job                                                    | What it guarantees                                                                                                                                                                                  |
-| -------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `verify`             | `.github/workflows/ci.yml` → job `verify`                         | lint + typecheck + tests&nbsp;+ coverage + content gate (`content:check` + `content:qa:strict`) + perf-harness sync + build + bundle budget + prod-shell browser smoke + runtime dep audit all pass |
-| `Migration presence` | `.github/workflows/migration-gate.yml` → job `migration-presence` | informational: surfaces which `supabase/migrations/*.sql` a PR adds — they **auto-apply** to prod on merge via `db-migrate-prod.yml`. Always green                                                  |
-| `Migration order`    | `.github/workflows/migration-gate.yml` → job `migration-order`    | **blocking**: rejects a migration whose timestamp sorts at/before one already on `main` — a back-dated file silently jams `db-migrate-prod` and leaves prod behind code (#97 → #227 → #229)         |
-| `CodeQL`             | `.github/workflows/codeql.yml` → job `analyze` (name `CodeQL`)    | static security analysis (SAST, `security-extended` suite) of the JS/TS codebase — the code-level complement to `audit:deps` (packages) and pgTAP (SQL grants/RLS)                                  |
+| Check                | Workflow / job                                                    | What it guarantees                                                                                                                                                                                                                |
+| -------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `verify`             | `.github/workflows/ci.yml` → job `verify`                         | lint + typecheck + tests&nbsp;+ coverage + anti-leak (`leak:check`) + migration chain (`db:check-chain`) + harness anti-drift + perf-harness sync + build + bundle budget + prod-shell browser smoke + runtime dep audit all pass |
+| `Migration presence` | `.github/workflows/migration-gate.yml` → job `migration-presence` | informational: surfaces which `supabase/migrations/*.sql` a PR adds — they **auto-apply** to prod on merge via `db-migrate-prod.yml`. Always green                                                                                |
+| `Migration order`    | `.github/workflows/migration-gate.yml` → job `migration-order`    | **blocking**: rejects a migration whose timestamp sorts at/before one already on `main` — a back-dated file silently jams `db-migrate-prod` and leaves prod behind code (#97 → #227 → #229)                                       |
+| `CodeQL`             | `.github/workflows/codeql.yml` → job `analyze` (name `CodeQL`)    | static security analysis (SAST, `security-extended` suite) of the JS/TS codebase — the code-level complement to `audit:deps` (packages) and pgTAP (SQL grants/RLS)                                                                |
+
+> The **content** gates (`content:check`, `content:qa:strict`, `content:audit:strict`) and the
+> transcription registry gate (`programme:check`) are **no longer part of `verify`**: since
+> étude 24 they run in the private repo's Content CI, which checks this repo out for the engine.
+
+> **`Second opinion`** (`second-opinion.yml`) runs on PRs but is **not** a required check — a
+> red there does not block the merge.
 
 > **Check names are the values GitHub actually reports** (verified via the checks API), which
 > may differ from the lowercase job key — e.g. the job `migration-presence` surfaces as the

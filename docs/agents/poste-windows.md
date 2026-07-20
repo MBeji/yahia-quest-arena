@@ -65,7 +65,25 @@ vraie dérive).
 
 ## `npm run verify` local ≠ CI
 
-`verify` = lint + typecheck + tests + `leak:check` + `db:check-chain`. La CI ajoute `content:check`, `content:qa:strict`,
-`build:check` (**budgets de bundle**), `smoke:shell`, `programme:check`, `harness:check`.
-Conséquence concrète : ajouter des clés i18n passe en local et **casse la CI** sur le budget.
-Avant de pousser un changement qui touche le bundle ou le contenu : lancer `npm run ci:verify`.
+`verify` = `lint` + `typecheck` + `test` + `leak:check` + `db:check-chain`. Le job `verify` de
+`ci.yml` en fait un **surensemble** : il passe par `test:coverage` (donc les **seuils de
+couverture**, que `test` seul n'applique pas) et ajoute `harness:check`, `perf:check`,
+`build:check` (**budgets de bundle**), `smoke:shell` et `audit:deps`.
+
+Conséquence concrète : ajouter des clés i18n passe en local et **casse la CI** sur le budget de
+bundle. Avant de pousser un changement qui touche le bundle : `npm run ci:verify`.
+
+⚠️ Même `ci:verify` ne rejoue pas tout : `perf:check` et `smoke:shell` n'en font **pas** partie —
+`smoke:shell` est le seul étage qui charge le vrai bundle de prod dans Chromium, donc le seul qui
+exécute le code client gardé par `import.meta.env.PROD`. Pour les lancer avant de pousser :
+`npm run perf:check && npm run smoke:shell`.
+
+Les gates **contenu** (`content:check`, `content:qa:strict`, `content:audit:strict`) et le registre
+de transcription (`programme:check`) ne tournent plus ici depuis l'étude 24 : ils sont partis avec
+le corpus dans la Content CI du repo privé. Ne pas les attendre dans cette CI-ci.
+
+Enfin, `main` exige **quatre** checks (ruleset, pas branch protection) : `verify` — le job de
+`ci.yml` — plus `Migration order`, `Migration presence` (`migration-gate.yml`) et `CodeQL`
+(`codeql.yml`). Ces trois-là vivent **hors** de `ci.yml` : aucun `npm run` ne les reproduit en
+local. `Second opinion` (`second-opinion.yml`) tourne aussi sur les PR mais n'est **pas** requis —
+c'est une garde dormante, un rouge de sa part ne bloque pas le merge.
