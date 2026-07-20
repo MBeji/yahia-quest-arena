@@ -13,6 +13,7 @@ import {
   Check,
   ShoppingBag,
   Compass,
+  History,
   ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -30,6 +31,7 @@ import { SubjectPathCard } from "@/features/dashboard/components/subject-path-ca
 import { FamilyGoalCard } from "@/features/dashboard/components/family-goal-card";
 import { MotivationalQuote } from "@/features/dashboard/components/motivational-quote";
 import { DashboardFocus } from "@/features/dashboard/components/dashboard-focus";
+import { BackToSchoolBanner } from "@/features/dashboard/components/back-to-school-banner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useReducedMotion } from "motion/react";
 import { entrance } from "@/shared/lib/motion";
@@ -259,6 +261,16 @@ function Dashboard() {
           </div>
         </motion.div>
 
+        {/* Bannière de rentrée (étude 22, R-4) — proposée, jamais imposée : elle n'apparaît que
+            dans la fenêtre du 1ᵉʳ septembre au 31 octobre, et seulement si le choix de classe
+            précède cette rentrée. Aucune promotion automatique n'existe (D-6). */}
+        {data.promotionSuggestion && (
+          <BackToSchoolBanner
+            suggestion={data.promotionSuggestion}
+            currentClassName={data.currentParcoursName ?? ""}
+          />
+        )}
+
         {/* FOCUS BAND — the redesign's centrepiece: promote ONE prioritised action
             ("Reprendre") to hero prominence beside the daily-objective ring, then two
             calm secondary tiles (Donjon · Duel). Replaces the old stacked Quick Start. */}
@@ -464,6 +476,28 @@ function Dashboard() {
             </div>
             <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground transition group-hover:text-[color:var(--gold)] rtl:-scale-x-100" />
           </Link>
+          {/* Passerelle « Réviser » (étude 22, R-17) — un LIEN vers la classe précédente, pas un
+              changement de parcours : l'ancre ne bouge pas (R-1), et les acquis y sont intacts
+              puisque la progression par matière n'est jamais effacée (R-3). */}
+          {data.reviseGateway && (
+            <Link
+              to="/niveau/$parcoursId"
+              params={{ parcoursId: data.reviseGateway.parcoursId }}
+              data-testid="revise-gateway"
+              className="group flex items-center gap-4 rounded-2xl border border-border bg-card/60 p-4 backdrop-blur-md transition hover:border-[color:var(--gold)]/40 [@media(pointer:coarse)]:min-h-11"
+            >
+              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[color:var(--gold)]/10">
+                <History className="h-6 w-6 text-[color:var(--gold)]" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="font-display text-base font-bold">
+                  {t.dashboard.reviseGateway.replace("{name}", data.reviseGateway.name)}
+                </div>
+                <p className="text-sm text-muted-foreground">{t.dashboard.reviseGatewayHint}</p>
+              </div>
+              <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground transition group-hover:text-[color:var(--gold)] rtl:-scale-x-100" />
+            </Link>
+          )}
         </div>
       </PageShell>
     </>

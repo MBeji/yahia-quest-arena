@@ -144,8 +144,12 @@ describe("END-TO-END: new student signs up", () => {
           current_grade_id: "g9",
           current_parcours_id: "concours-9eme",
         });
+      // Liste depuis l'étude 22 lot 3 : le catalogue des parcours est lu une seule fois pour
+      // le scoping, la bannière de rentrée et la passerelle « Réviser ».
       if (table === "parcours")
-        return mockQuery({ theme_id: "ecole-tn", grade_id: "g9", is_premium: false });
+        return mockQuery([
+          { id: "concours-9eme", theme_id: "ecole-tn", grade_id: "g9", is_premium: false },
+        ]);
       if (table === "subjects")
         return mockQuery([
           {

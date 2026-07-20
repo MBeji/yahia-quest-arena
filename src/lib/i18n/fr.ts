@@ -123,6 +123,17 @@ export const fr: TranslationKeys = {
     retryTitle: "Ton dernier exercice",
     // Priorité 1 de R-31 : une révision espacée est échue. Elle passe avant tout le reste.
     reviewOverline: "À réviser",
+    // Étude 22 R-4 : la bannière de rentrée. « Je reste » ferme pour la saison, sans rien
+    // écrire côté serveur — un refus d'une année ne doit pas peser sur la suivante.
+    backToSchool: {
+      title: "C'est la rentrée !",
+      body: "Tu prépares toujours la {current} ? Si tu passes en {next}, ton XP, tes badges et ta série te suivent — et tu retrouveras la {current} quand tu voudras réviser.",
+      cta: "Passer en {next}",
+      ctaSection: "Choisir ma section de {next}",
+      stay: "Je reste en {current}",
+    },
+    reviseGateway: "Réviser la {name}",
+    reviseGatewayHint: "Tes acquis y sont intacts.",
     reviewTitle: "Ta révision du jour",
     continueLabel: "Continuer",
     dungeonDesc: "Toutes matières mélangées",
@@ -558,10 +569,10 @@ export const fr: TranslationKeys = {
     concoursDesc: "Trouve ta classe, de la 1ère année de base au Baccalauréat.",
     exploreTitle: "J'explore librement",
     exploreDesc: "Découvre les thèmes à ton rythme, sans pression.",
-    parcoursTitleConcours: "Quelle est ta classe ?",
+    parcoursTitleConcours: "Quelle classe prépares-tu cette année ?",
     parcoursTitleLibre: "Quel thème veux-tu explorer ?",
     parcoursSubtitleConcours:
-      "Choisis ton niveau. Les classes en construction arrivent bientôt — dis-nous lesquelles t'intéressent en priorité.",
+      "Tu pourras réviser les classes précédentes à tout moment, et changer quand tu veux sans rien perdre. Les classes en construction arrivent bientôt — dis-nous lesquelles t'intéressent en priorité.",
     parcoursSubtitleLibre: "Lance-toi dans l'aventure de ton choix.",
     saving: "Enregistrement…",
     saveError: "Impossible d'enregistrer ton parcours. Réessaie.",

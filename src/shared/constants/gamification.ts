@@ -65,6 +65,22 @@ export const GRADE_TAB_DEFAULT_MIN_RANKED = 10;
 /** Dashboard recent attempts limit */
 export const DASHBOARD_RECENT_LIMIT = 50;
 
+/**
+ * Étude 22 R-4 (Q-3, arbitrée) — fenêtre d'affichage de la bannière de rentrée : du 1ᵉʳ
+ * septembre au 31 octobre inclus.
+ *
+ * Assez tôt pour accompagner la vraie rentrée, assez court pour que la bannière ne devienne pas
+ * un meuble qu'on ne voit plus. La logique qui l'exploite vit dans `shared/lib/back-to-school`
+ * (fenêtre, année scolaire, condition de proposition) — la promotion reste PROPOSÉE, jamais
+ * imposée : il n'existe aucun batch de septembre (D-6).
+ */
+export const BACK_TO_SCHOOL_WINDOW = {
+  startMonth: 9,
+  startDay: 1,
+  endMonth: 10,
+  endDay: 31,
+} as const;
+
 /** Boss mode: time per question in seconds */
 export const BOSS_TIME_PER_QUESTION_S = 20;
 

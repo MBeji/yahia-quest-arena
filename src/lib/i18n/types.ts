@@ -129,6 +129,17 @@ export type TranslationKeys = {
     retryTitle: string;
     /** Étude 22 R-31 — bande focus, priorité 1 (révision due). */
     reviewOverline: string;
+    /** Étude 22 R-4 — bannière de rentrée (proposée, jamais imposée). */
+    backToSchool: {
+      title: string;
+      body: string;
+      cta: string;
+      ctaSection: string;
+      stay: string;
+    };
+    /** Étude 22 R-17 — passerelle vers la classe précédente. */
+    reviseGateway: string;
+    reviseGatewayHint: string;
     reviewTitle: string;
     continueLabel: string;
     dungeonDesc: string;

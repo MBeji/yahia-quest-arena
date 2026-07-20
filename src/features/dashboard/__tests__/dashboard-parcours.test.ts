@@ -100,8 +100,12 @@ describe("dashboard.parcours — getDashboard scoping", () => {
 
     mockFrom.mockImplementation((table: string) => {
       if (table === "profiles") return mockQuery(profile);
+      // Le catalogue des parcours est lu comme une LISTE depuis l'étude 22 lot 3 : une seule
+      // requête sert au scoping, à la bannière de rentrée et à la passerelle « Réviser ».
       if (table === "parcours")
-        return mockQuery({ theme_id: "ecole-tn", grade_id: "g9", is_premium: false });
+        return mockQuery([
+          { id: "concours-9eme", theme_id: "ecole-tn", grade_id: "g9", is_premium: false },
+        ]);
       if (table === "subjects") return mockQuery([inParcours, wrongGrade, free]);
       return mockQuery([]);
     });
@@ -144,7 +148,9 @@ describe("dashboard.parcours — getDashboard scoping", () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "profiles") return mockQuery(profile);
       if (table === "parcours")
-        return mockQuery({ theme_id: "ecole-tn", grade_id: "g9", is_premium: true });
+        return mockQuery([
+          { id: "concours-9eme", theme_id: "ecole-tn", grade_id: "g9", is_premium: true },
+        ]);
       if (table === "subjects") return mockQuery([s1]);
       return mockQuery([]);
     });
@@ -164,7 +170,9 @@ describe("dashboard.parcours — getDashboard scoping", () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "profiles") return mockQuery(profile);
       if (table === "parcours")
-        return mockQuery({ theme_id: "ecole-tn", grade_id: "g9", is_premium: true });
+        return mockQuery([
+          { id: "concours-9eme", theme_id: "ecole-tn", grade_id: "g9", is_premium: true },
+        ]);
       if (table === "subjects") return mockQuery([s1]);
       return mockQuery([]);
     });
