@@ -1,8 +1,0 @@
-# 📜 Résumé : La Terre et l'univers
-
-- **Corps célestes.** Les **étoiles** scintillent et produisent leur lumière (le **Soleil** est une étoile) ; les **planètes** ne scintillent pas et renvoient la lumière du Soleil (la **Terre** est une planète) ; la **Lune** est un **satellite** naturel. Les **météores** (étoiles filantes) sont des astéroïdes qui brûlent dans l'atmosphère ; ceux qui atteignent le sol sont des **météorites**.
-- **Constellations.** Un **groupement d'étoiles** vu dans une même région du ciel est une **constellation**. Le **nord** est indiqué par l'**étoile Polaire**, repérée grâce à la **Grande Ourse**.
-- **Année-lumière.** L'**année-lumière (a.l)** est la **distance** parcourue par la lumière en une année (célérité c = 3×10⁸ m·s⁻¹) : **1 a.l ≈ 9,46×10¹² km**. C'est une distance, pas une durée : une étoile à 4,22 a.l est vue telle qu'elle était il y a 4,22 ans.
-- **Galaxies.** La **Voie Lactée** est notre **Galaxie** (≈ 200 milliards d'étoiles) ; les galaxies sont regroupées en **amas** (l'**Amas Local**).
-- **Système solaire.** Le **Soleil**, les **planètes**, leurs **satellites**, la **ceinture d'astéroïdes** et les **comètes**. Deux familles séparées par la ceinture d'astéroïdes : **telluriques** (Mercure, Vénus, Terre, Mars — denses, surface solide, peu de satellites) et **gazeuses** (Jupiter, Saturne, Uranus, Neptune — peu denses, anneaux, nombreux satellites).
-- **Jours, nuits et saisons.** La **rotation** de la Terre sur son axe (≈ 23 h 56 min) donne la **succession des jours et des nuits** ; sa **révolution** autour du Soleil (≈ 365,25 jours) avec l'**inclinaison** de l'axe donne les **saisons**.

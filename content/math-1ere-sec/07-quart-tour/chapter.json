@@ -1,9 +1,0 @@
-{
-  "title": "Quart de tour",
-  "description": "Quart de tour direct et indirect de centre donné (rotation de 90°) : définition par égalité des distances au centre et angle droit, sens direct et indirect, lien avec le triangle rectangle isocèle, conservation des distances, de l'alignement et des angles, image d'un segment (isométrique), d'une droite (perpendiculaire à la droite de départ), d'un cercle (même rayon) et d'un polygone (superposable), et emploi du quart de tour pour démontrer et construire",
-  "displayOrder": 7,
-  "sources": [
-    "Programme officiel — Mathématiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 222104P02 (chapitre 7, p.101–116)",
-    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/mathematiques.md (§2.7)"
-  ]
-}

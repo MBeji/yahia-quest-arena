@@ -1,9 +1,0 @@
-{
-  "title": "Angles — droites parallèles et cercle",
-  "description": "Somme des angles et angle extérieur d'un triangle, angles formés par une sécante avec deux droites parallèles (correspondants, alternes-internes, intérieurs d'un même côté) et les critères directs et réciproques de parallélisme, angle inscrit et angle au centre associés à un même arc, triangle rectangle inscrit dans un demi-cercle et lieu des points voyant un segment sous un angle droit, tangentes à un cercle issues d'un point",
-  "displayOrder": 1,
-  "sources": [
-    "Programme officiel — Mathématiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 222104P01 (chapitre 1, p.9–22)",
-    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/mathematiques.md (§2.1)"
-  ]
-}

@@ -9,16 +9,14 @@ sans compte. Détails, décisions et état des features : [STATUS.md](./STATUS.m
 
 ## Par où commencer
 
-| Besoin                                                      | Document                                                 |
-| ----------------------------------------------------------- | -------------------------------------------------------- |
-| État du projet (phase, décisions, features, travaux en vol) | [STATUS.md](./STATUS.md)                                 |
-| Conventions, commandes, Definition of Done — **canonique**  | [AGENTS.md](./AGENTS.md)                                 |
-| Architecture (stack, flux, modèle de données, sécurité)     | [ARCHITECTURE.md](./ARCHITECTURE.md)                     |
-| Études d'architecture des epics                             | [FableEtudes/](./FableEtudes/README.md)                  |
-| **Contribuer à une étude** (collaborateur / dév)            | [FableEtudes/CONTRIBUER.md](./FableEtudes/CONTRIBUER.md) |
-| Specs normatives, guides et runbooks                        | [docs/](./docs)                                          |
-| Pipeline de contenu pédagogique (fichiers → migrations SQL) | [content/README.md](./content/README.md)                 |
-| Tests end-to-end (Playwright, projet TEST dédié)            | [e2e/README.md](./e2e/README.md)                         |
+| Besoin                                                             | Document                                                                     |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| État du projet (phase, décisions, features, travaux en vol)        | [STATUS.md](./STATUS.md)                                                     |
+| Conventions, commandes, Definition of Done — **canonique**         | [AGENTS.md](./AGENTS.md)                                                     |
+| Architecture (stack, flux, modèle de données, sécurité)            | [ARCHITECTURE.md](./ARCHITECTURE.md)                                         |
+| Specs normatives, guides et runbooks                               | [docs/](./docs)                                                              |
+| Pipeline de contenu pédagogique (où vit quoi, canal d'application) | [docs/content-generation-pipeline.md](./docs/content-generation-pipeline.md) |
+| Tests end-to-end (Playwright, projet TEST dédié)                   | [e2e/README.md](./e2e/README.md)                                             |
 
 ## Stack & commandes essentielles
 
@@ -28,18 +26,30 @@ Package manager : **npm** (Node 22).
 
 ```bash
 npm run dev        # serveur de dev (SSR)
-npm run verify     # lint + typecheck + tests — le gate local
-npm run ci:verify  # gate complet (coverage + build + audit + QA contenu)
+npm run verify     # lint + typecheck + tests + gate anti-fuite — le gate local
+npm run ci:verify  # gate complet (coverage + build + audit + harness + anti-fuite)
 ```
 
 La règle du jeu complète (gate, contenu, migrations, PRs) est dans [AGENTS.md](./AGENTS.md).
+
+## Où vit le contenu pédagogique
+
+Depuis l'**étude 24** (2026-07-20), le corpus pédagogique, les skills de génération et les études
+ne sont plus dans ce dépôt : ils vivent dans le dépôt **privé** `MBeji/yahia-quest-content` (accès
+sur invitation). Ce dépôt-ci ne garde que le **moteur** — générique et sans corpus :
+`scripts/content/` + `src/shared/content/` (validation Zod, compilation SQL), que la CI du dépôt
+privé invoque via un double checkout. Un gate `npm run leak:check` échoue si du corpus ou un skill
+pédagogique réapparaît ici.
+
+👉 Le détail complet (répartition public/privé, boucle auteur, canal d'application en prod) est
+dans [docs/content-generation-pipeline.md](./docs/content-generation-pipeline.md).
 
 ## Licence & propriété intellectuelle
 
 - **Code source** (moteur) : [PolyForm Noncommercial 1.0.0](./LICENSE.md) — lecture et usage
   non commercial autorisés ; tout usage commercial par des tiers est interdit.
-- **Contenu pédagogique, skills de génération, études** :
-  [tous droits réservés](./LICENSE-CONTENT.md) — aucune réutilisation ni rediffusion sans
-  autorisation écrite (étude 24).
+- **Contenu pédagogique, skills de génération, études** (désormais dans le dépôt privé, et sous
+  toute forme historique restée ici) : [tous droits réservés](./LICENSE-CONTENT.md) — aucune
+  réutilisation ni rediffusion sans autorisation écrite (étude 24).
 
 © 2026 Mohamed Beji — « Na9ra Nal3ab ».

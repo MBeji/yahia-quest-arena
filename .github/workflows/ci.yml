@@ -44,22 +44,19 @@ jobs:
       - name: Unit tests + coverage
         run: npm run test:coverage
 
-      # Content gate (was local-only via ci:verify; now enforced on every PR).
-      # content:check proves the authored content/ still compiles to the committed
-      # migrations (catches an edit that forgot `content:build`); content:qa:strict
-      # runs the correctness heuristics (key/explanation agreement, RTL/notation,
-      # meta-option distractors) and fails on any [error].
-      - name: Content build is in sync
-        run: npm run content:check
-
-      - name: Content quality (strict)
-        run: npm run content:qa:strict
-
-      # Transcription registry gate: the CNP corpus snapshot + suivi/*.json must be
-      # coherent (every PDF categorised, one fiche per source — anti double-transcription,
-      # page-range coverage consistent with declared status, generated _INDEX.md in sync).
-      - name: Programme transcription registry
-        run: npm run programme:check
+      # Anti-leak gate (étude 24, lot 4). Since the corpus split, the pedagogical
+      # corpus, the generation factory (content-*/prof-* skills) and the compiled
+      # content SQL live in the PRIVATE repo MBeji/yahia-quest-content. This step
+      # fails the build if any of them reappears here — the failure mode RISK-8
+      # predicts: a future session re-committing corpus out of habit.
+      #
+      # The content gates that used to run here (content:check, content:qa:strict,
+      # content:audit:strict) and the transcription registry gate (programme:check)
+      # moved WITH their data: they now run in the private repo's Content CI, which
+      # checks this repo out for the engine. The engine itself — scripts/content/,
+      # src/shared/content/ — stays here and stays covered by the unit gate.
+      - name: Anti-leak gate (no corpus in the public repo)
+        run: npm run leak:check
 
       # Harness anti-drift gate (étude 25): CLAUDE.md stays a thin @AGENTS.md
       # pointer, AGENTS.md stays in budget, no hidden Unicode, no model id
@@ -90,31 +87,8 @@ jobs:
       - name: Runtime dependency audit
         run: npm run audit:deps
 
-  # Content quality gate — these run ONLY in the local `ci:verify` script otherwise,
-  # so without this job a PR that breaks content QA/audit (or ships content whose
-  # generated SQL is out of sync) goes green and can auto-deploy to prod. Runs in
-  # parallel with `verify` (no `needs:`).
-  content:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Setup Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci --no-audit --no-fund
-
-      - name: Validate content (Zod schema)
-        run: npm run content:check
-
-      - name: Content QA (answer-key heuristics, fail on warnings)
-        run: npm run content:qa:strict
-
-      - name: Content audit (program conformity, fail on warnings)
-        run: npm run content:audit:strict
+  # The `content` job lived here until étude 24 lot 3b. It ran content:check /
+  # content:qa:strict / content:audit:strict against the corpus; the corpus now
+  # lives in the private repo, so the job moved there (Content CI, double checkout:
+  # private corpus + this repo for the engine). Removing it here is deliberate —
+  # see the anti-leak gate in `verify` above and docs/content-generation-pipeline.md.

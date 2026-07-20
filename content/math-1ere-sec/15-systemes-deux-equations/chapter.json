@@ -1,9 +1,0 @@
-{
-  "title": "Systèmes de deux équations à deux inconnues",
-  "description": "Équation du premier degré à deux inconnues ax + by + c = 0 et ses couples solutions, système de deux équations à deux inconnues, résolution par substitution et par élimination (combinaison linéaire), interprétation graphique (intersection de deux droites, cas des droites parallèles sans solution) et mise en système d'un problème concret",
-  "displayOrder": 15,
-  "sources": [
-    "Programme officiel — Mathématiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 222104P02 (chapitre 15, p.227–240)",
-    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/mathematiques.md (§2.15)"
-  ]
-}

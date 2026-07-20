@@ -47,9 +47,10 @@
     "reports:resolve": "node scripts/reports/resolve-reports.mjs",
     "harness:sync": "node scripts/harness/sync.mjs",
     "harness:check": "node scripts/harness/check.mjs",
-    "verify": "npm run lint && npm run typecheck && npm run test",
+    "leak:check": "node scripts/ci/check-content-leak.mjs",
+    "verify": "npm run lint && npm run typecheck && npm run test && npm run leak:check",
     "audit:deps": "npm audit --omit=dev --audit-level=high --registry=https://registry.npmjs.org",
-    "ci:verify": "npm run lint && npm run typecheck && npm run test:coverage && npm run build:check && npm run audit:deps && npm run content:qa:strict && npm run content:audit:strict && npm run programme:check && npm run harness:check",
+    "ci:verify": "npm run lint && npm run typecheck && npm run test:coverage && npm run build:check && npm run audit:deps && npm run harness:check && npm run leak:check",
     "prepare": "husky"
   },
   "lint-staged": {

@@ -7,12 +7,19 @@
 > **L0 live, build-out governed by étude 16** — the §6 seed migration is **merged and applied**
 > (`20260704235000_lycee_section_grades_seed.sql`, PR #285: 16 section nodes + `coming_soon`
 > parcours + `grades.is_selectable`), and a pilot unit runs the full pipeline end-to-end on
-> `bac-math` × mathématiques (chapter `content/math-bac-math/01-continuite-limites`; parcours
+> `bac-math` × mathématiques (chapter `math-bac-math/01-continuite-limites`; parcours
 > opened free by `20260705100000`/`20260705120000`). The opening itself — UI year→section
 > grouping, grade i18n, the shared-content `compileTo` mechanism and the wave plan — is specified
-> in [`FableEtudes/16-ouverture-lycee/ETUDE.md`](../FableEtudes/16-ouverture-lycee/ETUDE.md).
+> in `FableEtudes/16-ouverture-lycee/ETUDE.md`.
 > Defers to AGENTS.md (DoD §7) and to `content-engine/references/generation-pipeline.md` for
 > anything that overlaps.
+>
+> ⚠️ **Since étude 24 (2026-07-20) every path and skill named below lives in the PRIVATE repo
+> `MBeji/yahia-quest-content`** — the corpus (`content/`), the `programmes-officiels/`
+> transcriptions, the `content-*`/`prof-*`/`curriculum-architect` skills, and the études. Only the
+> generic engine stays in this public repo. Read
+> [`docs/content-generation-pipeline.md`](./content-generation-pipeline.md) §2 before following
+> any instruction here.
 
 ## 1. The two structural facts
 
@@ -80,8 +87,9 @@ lors de la transcription — station L1) :
 | techniques   | technologie/sciences techniques, mathématiques, physique  | informatique                |
 | info         | informatique (algorithmique, programmation, BD, systèmes) | mathématiques, physique     |
 
-The stable per-grade detail lives in `curriculum-architect/references/programme-map.md`; the
-authoritative scope will live in the **secondary programme transcriptions** (station L1).
+The stable per-grade detail lives in `curriculum-architect/references/programme-map.md` (**private
+repo**); the authoritative scope will live in the **secondary programme transcriptions**
+(station L1).
 
 ## 4. Language policy — native-French generation for the switched subjects (the major change)
 
@@ -101,8 +109,8 @@ the **base layer** (`content-ecole-tn`) and enforced by `content-audit`:
    The pre-2026-07-13 "transition bridge" apparatus formerly specified here is **withdrawn**.
 2. **Official jargon**: the terminology is that of the official French documentation — the CNP
    manuels élève, captured verbatim by the L1 transcriptions
-   (`programmes-officiels/programme/<gradeSlug>/`), which are the terminology reference at
-   authoring time.
+   (`programmes-officiels/programme/<gradeSlug>/`, **private repo**), which are the terminology
+   reference at authoring time.
 3. **Notation unchanged**: digits/equations were already standard LTR in the Arabic years — the
    deliberate payoff of `math-and-notation.md`; they carry over untouched.
 4. **Prose discipline**: a `fr` subject is written in French only — no code-switching in
@@ -167,14 +175,14 @@ SVG** (courbes, schémas expérimentaux, géométrie de l'espace).
 
 The five stations of `curriculum-architect` §2 apply, with lycée-specific content:
 
-| station              | lycée instantiation                                                                                                                                                                                                                | executing skill / actor                                                                     |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| **L0 — product/DB**  | §6 seed migration + onboarding/section UI follow-up                                                                                                                                                                                | human + normal dev flow                                                                     |
-| **L1 — persistence** | transcribe the **official secondary programmes** per (section-grade × matière) into `programmes-officiels/programme/<gradeSlug>/` (extend the corpus: secondary sources are ministry programmes + manuels scolaires du secondaire) | dedicated persistence session                                                               |
-| **L2 — base**        | `content-ecole-tn`: cours + resume + quiz + d1/d2 ladder (fr subjects: native French, official jargon — §4)                                                                                                                        | `content-ecole-tn` (+ `content-cours`)                                                      |
-| **L3 — ceiling**     | d3 boss / d4 défi / `NN-annales-bac` on existing chapters                                                                                                                                                                          | `prof-{math,physique,svt,francais,anglais,arabe,philo,histoire-geo,eco-gestion,info}-lycee` |
-| **L4 — interactive** | missions interactives, sprints, histoires, documents                                                                                                                                                                               | `content-interactif`                                                                        |
-| **L5 — audit**       | re-solve + language-purity check (no ar/fr code-switching outside the bridge) + program conformance                                                                                                                                | `content-audit`                                                                             |
+| station              | lycée instantiation                                                                                                                                                                                                                                  | executing skill / actor                                                                     |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| **L0 — product/DB**  | §6 seed migration + onboarding/section UI follow-up                                                                                                                                                                                                  | human + normal dev flow                                                                     |
+| **L1 — persistence** | transcribe the **official secondary programmes** per (section-grade × matière) into `programmes-officiels/programme/<gradeSlug>/` (**private repo**; extend the corpus: secondary sources are ministry programmes + manuels scolaires du secondaire) | dedicated persistence session                                                               |
+| **L2 — base**        | `content-ecole-tn`: cours + resume + quiz + d1/d2 ladder (fr subjects: native French, official jargon — §4)                                                                                                                                          | `content-ecole-tn` (+ `content-cours`)                                                      |
+| **L3 — ceiling**     | d3 boss / d4 défi / `NN-annales-bac` on existing chapters                                                                                                                                                                                            | `prof-{math,physique,svt,francais,anglais,arabe,philo,histoire-geo,eco-gestion,info}-lycee` |
+| **L4 — interactive** | missions interactives, sprints, histoires, documents                                                                                                                                                                                                 | `content-interactif`                                                                        |
+| **L5 — audit**       | re-solve + language-purity check (no ar/fr code-switching outside the bridge) + program conformance                                                                                                                                                  | `content-audit`                                                                             |
 
 **Build priority** (defaults — `curriculum-architect` arbitrates live): ① L0 migration; ② L1+L2 for
 **`1ere-sec`** (tronc commun: one subject set serves every future section — highest leverage, and

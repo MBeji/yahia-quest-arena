@@ -1,9 +1,0 @@
-{
-  "title": "Rapports trigonométriques et relations métriques",
-  "description": "Cosinus, sinus et tangente d'un angle aigu dans un triangle rectangle (rapports de longueurs), relations trigonométriques (sin²+cos²=1, tan=sin/cos, angles complémentaires), valeurs remarquables 30°/45°/60°, usage de la calculatrice pour trouver un angle ou une longueur, et relations métriques dans le triangle rectangle (théorème de Pythagore, produit des côtés = hauteur × hypoténuse, relations de la hauteur et des projections)",
-  "displayOrder": 3,
-  "sources": [
-    "Programme officiel — Mathématiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 222104P01 (chapitre 3, p.37–50)",
-    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/mathematiques.md (§2.3)"
-  ]
-}

@@ -14,6 +14,7 @@
       "Bash(npm run format)",
       "Bash(npm run audit:deps)",
       "Bash(npm run harness:check)",
+      "Bash(npm run leak:check)",
       "Bash(npm test)",
       "Bash(npm run content:check)",
       "Bash(npm run content:qa)",

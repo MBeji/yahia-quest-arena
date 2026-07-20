@@ -6,6 +6,11 @@
 > scoring, sécurité) reste [`docs/interactive-question-types.md`](./interactive-question-types.md) ;
 > les formes exactes des champs sont dans le skill `content-engine`
 > (`references/content-schema.md`). En cas de contradiction, ces deux documents priment.
+>
+> 📦 **Où écrire** : depuis l'étude 24 (2026-07-20), le corpus (`content/`) et le skill
+> `content-engine` vivent dans le dépôt **privé** `MBeji/yahia-quest-content` ; ce dépôt public
+> ne garde que le moteur (`src/shared/content/`, `scripts/content/`). Voir
+> [content-generation-pipeline.md](./content-generation-pipeline.md).
 
 ## Ce que ça apporte
 
@@ -29,8 +34,8 @@ ne sont jamais lus par le client — même posture pour tous les types).
 
 ## Comment les utiliser (auteur de contenu)
 
-Les types natifs s'écrivent **dans les fichiers d'exercices** (`content/<sujet>/NN-<slug>/exercices/*.json`),
-comme tout le reste du contenu — jamais en SQL. Le champ `type` par question sélectionne la mécanique ;
+Les types natifs s'écrivent **dans les fichiers d'exercices** (`content/<sujet>/NN-<slug>/exercices/*.json`,
+**dépôt privé**), comme tout le reste du contenu — jamais en SQL. Le champ `type` par question sélectionne la mécanique ;
 **omettre `type` reste un `mcq`** (donc tous les fichiers existants restent valides sans édition).
 
 ### `numeric` — saisie numérique libre
@@ -105,17 +110,21 @@ comme tout le reste du contenu — jamais en SQL. Le champ `type` par question s
 - La consigne doit dire explicitement « coche TOUTES les bonnes réponses » (déjà porté par l'UI, mais
   le libellé pédagogique reste à la charge de l'auteur).
 
-### Le workflow reste identique
+### Le workflow (dépôt privé)
 
-1. Éditer les fichiers `content/…`.
-2. `npm run content:check` puis `npm run content:qa:strict` (lints par type : sanité de tolérance
-   numérique, intégrité des ids ordering/matching, clé multi ≥ 2 — un id inconnu = **erreur**).
-3. `npm run content:build -- --subject <id>` (jamais le build global) → migration idempotente.
-4. Relire le SQL généré, merger : la migration s'applique en prod automatiquement.
+1. Éditer les fichiers `content/…` **dans le dépôt privé** `MBeji/yahia-quest-content`.
+2. Ouvrir la PR là-bas : la **Content CI** joue `content:check` puis `content:qa:strict` (lints par
+   type : sanité de tolérance numérique, intégrité des ids ordering/matching, clé multi ≥ 2 — un id
+   inconnu = **erreur**) en récupérant le moteur depuis ce dépôt public.
+3. Merger : `apply-content.yml` compile le SQL de la matière (`content:emit`) et l'applique en
+   prod, avec une ligne de journal dans `content_releases`.
+
+> Le contenu **n'est plus livré en migrations Supabase** — voir
+> [content-generation-pipeline.md](./content-generation-pipeline.md) §11.
 
 > **Conseil de choix** : préférer ces types natifs aux formats « encodés » Tier-A (permutation/
 > multi-select simulés dans un QCM) pour le **nouveau** contenu. Les formats encodés existants
-> restent valides — pas de migration de contenu à faire.
+> restent valides — aucune reprise du contenu déjà écrit n'est nécessaire.
 
 ## Où vit le code (pour le produit / la maintenance)
 
