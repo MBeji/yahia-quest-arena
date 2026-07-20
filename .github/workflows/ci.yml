@@ -58,6 +58,22 @@ jobs:
       - name: Anti-leak gate (no corpus in the public repo)
         run: npm run leak:check
 
+      # Migration-chain reconstructibility (2026-07-20). pgTAP (db-tests.yml) is
+      # the only tier that actually rebuilds a blank database, and it does NOT
+      # run on PRs — nightly and workflow_dispatch only. So after étude 24 lot 4
+      # (#544) took the generated content migrations out of this repo, FOUR
+      # breakages (#548, #549, #552, #557) reached main unseen and were dug out
+      # one at a time by hand-dispatching the nightly, ~4 min a round.
+      #
+      # This step replays the chain statically — accumulating the ids each
+      # migration creates, evaluating the WHERE EXISTS guards — and fails on any
+      # orphan FK, any pgTAP fixture id colliding with a migration id, and any
+      # duplicate migration version. Validated against the four revisions above:
+      # it flags three of them (the fourth, #549, is a CHECK constraint, out of
+      # reach of an FK replay). ~0.2 s, no database needed.
+      - name: Migration chain (blank DB rebuilds)
+        run: npm run db:check-chain
+
       # Harness anti-drift gate (étude 25): CLAUDE.md stays a thin @AGENTS.md
       # pointer, AGENTS.md stays in budget, no hidden Unicode, no model id
       # hardcoded outside harness/models.json.

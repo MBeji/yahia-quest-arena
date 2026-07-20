@@ -42,6 +42,7 @@ npm run verify         # lint + typecheck + test + leak:check       (fast local 
 npm run ci:verify      # verify + coverage + build:check + audit:deps + harness:check + leak:check
 npm run harness:check                    # harness anti-drift gate (pointers, size, hidden Unicode, model ids)
 npm run leak:check                       # gate anti-fuite : aucun corpus ni skill pédago au tip (étude 24)
+npm run db:check-chain                   # rejeu statique des migrations : une base VIERGE se reconstruit
 npm run db:inventory-content             # inventaire des migrations de contenu (provenance)
 ```
 
@@ -192,6 +193,16 @@ this repo (this file, `STATUS.md`, `docs/agents/`) — not only in a tool's priv
 - **Migrations must sort after the newest one already on `main`** — a back-dated timestamp
   jams `supabase db push` and silently strands prod behind code. The `Migration order` PR
   check catches this pre-merge.
+- **La prod n'est PAS le juge de la reconstructibilité.** Une migration peut passer en prod
+  (où ses parents existent de longue date) et rendre impossible la construction d'une base
+  vierge — donc la suite pgTAP et tout provisionnement d'un projet TEST neuf. C'est ce qui a
+  produit quatre pannes en cascade après l'étude 24 lot 4 (#548, #549, #552, #557), invisibles
+  pour les checks requis parce que `db-tests.yml` ne tourne **pas** sur les PR (nightly +
+  `workflow_dispatch`). `npm run db:check-chain` rejoue désormais la chaîne statiquement dans
+  `verify`/`ci:verify` et en CI : FK de contenu orphelines, ids de fixtures pgTAP en collision
+  avec le contenu des migrations, doublons de version. Un INSERT de contenu qui dépend de
+  lignes absentes du repo public doit être gardé par
+  `WHERE EXISTS (SELECT 1 FROM public.<parent> p WHERE p.id = v.<fk>)`.
 - **E2E ≠ unit gate.** Playwright hits a dedicated TEST Supabase project, not unit-test mocks;
   not part of `verify`/`ci:verify`; never point it at prod.
 - **CI runs a superset of local `verify`**: adds `build:check`, `perf:check` and `smoke:shell`

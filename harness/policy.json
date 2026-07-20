@@ -15,6 +15,7 @@
       "Bash(npm run audit:deps)",
       "Bash(npm run harness:check)",
       "Bash(npm run leak:check)",
+      "Bash(npm run db:check-chain)",
       "Bash(npm test)"
     ],
     "content-pipeline": [

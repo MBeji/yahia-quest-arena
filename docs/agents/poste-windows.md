@@ -48,9 +48,24 @@ branches, `stash`, `reflog` et `node_modules` (jonction) sont **communs**.
 - Dépendances incohérentes après un changement de branche : `npm install` (jamais `npm ci`, qui
   efface `node_modules` pour tout le monde).
 
+## `harness:check` rouge en local sur un checkout propre (fins de ligne)
+
+Sur ce poste, `npm run harness:check` peut signaler les **5 miroirs** `.agents/skills/*/SKILL.md`
+comme « drifted » alors que rien n'a été modifié — `git status` est propre pour la source **et**
+pour le miroir. Cause : `.gitattributes` impose `* text=auto eol=lf`, donc git normalise en LF et
+ne voit aucune différence, mais sur le disque la source `.claude/skills/` porte des **CRLF**
+(réécrite par Prettier, dont le miroir est exclu depuis #558) tandis que le miroir reste en LF.
+`harness:check` compare octet à octet → dérive. La CI (Linux, tout en LF) ne la voit jamais.
+
+**Ne pas « corriger » en committant le résultat de `npm run harness:sync`** : le diff git est vide
+(git renormalise), donc on ajoute 5 fichiers fantômes à la PR pour rien. Si un `harness:sync` a
+déjà réécrit le miroir : `git checkout -- .agents/skills/`. Vérifier avec
+`file .claude/skills/verify/SKILL.md` (`with CRLF line terminators` = c'est ce piège, pas une
+vraie dérive).
+
 ## `npm run verify` local ≠ CI
 
-`verify` = lint + typecheck + tests. La CI ajoute `content:check`, `content:qa:strict`,
+`verify` = lint + typecheck + tests + `leak:check` + `db:check-chain`. La CI ajoute `content:check`, `content:qa:strict`,
 `build:check` (**budgets de bundle**), `smoke:shell`, `programme:check`, `harness:check`.
 Conséquence concrète : ajouter des clés i18n passe en local et **casse la CI** sur le budget.
 Avant de pousser un changement qui touche le bundle ou le contenu : lancer `npm run ci:verify`.
