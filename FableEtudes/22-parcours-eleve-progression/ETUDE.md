@@ -1,7 +1,7 @@
 # Étude 22 — Parcours élève & progression pédagogique (doctrine de navigation, déblocage, cohortes)
 
 > **Statut** : en exécution — Q-1…Q-5 arbitrées le 2026-07-18 par Mohamed, toutes sur les
-> recommandations (§7) ; **lot 1 livré le 2026-07-20**, lots 2–6 exécutables
+> recommandations (§7) ; **lots 1 et 2 livrés le 2026-07-20**, lots 3–6 exécutables
 > **Priorité** : 22 · **Valeur** : un parcours élève cohérent, lisible et motivant — la doctrine
 > unique qui répond à « qu'est-ce qui est ouvert, qu'est-ce qui est verrouillé, et pourquoi » ·
 > **Complexité** : moyenne
@@ -526,7 +526,7 @@ cycle/all — mesure la profondeur réelle des pools) ; `leaderboard.grade_tab_v
 | 6   | Moteur « prochaine action » unifié (R-31) + hygiène (R-29)                                                                                               | `quest/next-action.ts`, `dashboard.server.ts`, `quest.server.ts`, purge `gamification.ts`      | unit (priorités 1–4, purge sans référence morte)                       | lots 1–2 (états qu'il consomme) |
 
 - [x] Lot 1 — Doctrine visible (carte + hub + complétion)
-- [ ] Lot 2 — Boucle SM-2 refermée
+- [x] Lot 2 — Boucle SM-2 refermée
 - [ ] Lot 3 — Rentrée & copy d'ancrage
 - [ ] Lot 4 — Cohorte de classe
 - [ ] Lot 5 — Donjon scopé au parcours
@@ -653,6 +653,25 @@ d'ordonnancement à l'index FableEtudes, pas un lot de cette étude.
   migration (carte) : toute évolution doit toucher les deux dans le même lot.
   (c) `db-tests.yml` (pgTAP) ne tourne **pas** sur les PR — la migration a donc été validée par
   un `workflow_dispatch` explicite sur la branche avant promotion de la PR.
+- **2026-07-20 — Lot 2 (boucle SM-2 refermée, R-19).** `submit_exercise_attempt` ferme désormais
+  les révisions : à la **réussite** (≥ 60 %) **non précipitée** (≥ 4 s/question), les lignes
+  `spaced_repetition_schedule` encore `pending` sur l'exercice passent à `completed`
+  (`completed_at`, `retry_score_pct`, `updated_at`). Migration
+  `20260720170000_sm2_close_reviews_on_pass`, **recopie verbatim** de la dernière définition
+  active (`20260714130000_recall_mode_rpcs`, lignes 168-685, huit redéfinitions au compteur) :
+  le `diff` avec l'original ne contient **que** la branche `ELSIF` ajoutée — vérifié avant le
+  commit, conformément au stop-point du lot.
+  **Deux choix de mise en œuvre, notés parce qu'ils ne se lisent pas dans R-19** : (i) la
+  condition est `score ≥ 60 ET non précipité`, délibérément **pas** `v_eligible` — celui-ci
+  exige en plus « strictement meilleur que le précédent record », un critère anti-farm pour
+  l'XP et non une définition de la réussite ; un élève déjà monté à 90 % qui repasse à 70 % a
+  bel et bien réussi sa révision. (ii) Aucun filtre sur la variante, par symétrie exacte avec
+  l'insertion à l'échec, qui n'en pose pas non plus.
+  **Tests** : `supabase/tests/31_sm2_close_reviews.test.sql` (8 assertions) — clôture horodatée
+  et portant le score · un 100 % précipité ne ferme rien · un échec ultérieur ré-ouvre un cycle
+  et les lignes closes le restent · l'échec planifie toujours les paliers 1/3/7 jours. La
+  non-régression du bouclier de re-tentative reste couverte par `04_scoring_submit_attempt`
+  (CASE 4), qui s'exécute contre la RPC remplacée.
 
 _(à remplir par l'exécuteur, lot par lot : date, lot, PR, écarts acceptés, dettes notées)_
 
