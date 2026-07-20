@@ -67,13 +67,24 @@ export function normalizeSupabaseUrl(raw) {
  * collect `--status reverted` versions (safe: drops an orphan history row so a
  * renamed migration can re-apply); never `--status applied`, which would mask
  * genuinely missing DDL. Returns a de-duplicated list (order preserved).
+ *
+ * The CLI puts EVERY drifted version on a SINGLE line, space-separated:
+ *   supabase migration repair --status reverted 20260602142000 20260602143000 …
+ * so the trailing run must be captured whole. Capturing only the first version
+ * left the other ~200 behind after the étude 24 corpus scission dropped the
+ * generated content migrations: each run repaired one version, retried once,
+ * and failed again — blocking e2e-auth before a single test could run.
+ * `[ \t]` (not `\s`) keeps the run on its own line so digits from following
+ * lines can never be harvested.
  */
 export function parseDriftedRevertVersions(output) {
   if (!output) return [];
   const versions = new Set();
-  const re = /migration\s+repair\s+--status\s+reverted\s+(\d{6,})/gi;
+  const re = /migration\s+repair\s+--status\s+reverted\s+((?:\d{6,}[ \t]*)+)/gi;
   let m;
-  while ((m = re.exec(output))) versions.add(m[1]);
+  while ((m = re.exec(output))) {
+    for (const version of m[1].trim().split(/[ \t]+/)) versions.add(version);
+  }
   return [...versions];
 }
 
