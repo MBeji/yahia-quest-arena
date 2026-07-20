@@ -22,8 +22,8 @@
  *   node scripts/harness/sync.mjs            # write the views
  *   node scripts/harness/sync.mjs --check    # report drift, write nothing
  */
-import { readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from "node:fs";
+import { join, dirname } from "node:path";
 import { pathToFileURL } from "node:url";
 
 const ROOT = join(import.meta.dirname, "..", "..");
@@ -102,10 +102,53 @@ export function readSources(root = ROOT) {
   };
 }
 
+/**
+ * Mirrors `.claude/skills/**` into `.agents/skills/**` — the neutral path that
+ * Codex, Gemini CLI, Cursor, Copilot and Amp all discover (étude 25 D-2). The
+ * files are copied verbatim: SKILL.md is an open standard (agentskills.io), so
+ * no translation is needed, only a second location.
+ *
+ * No exclusion manifest: since the étude 24 split, the only skills left in this
+ * repo are the technical ones (verify, code-review and the guards) and all of
+ * them are meant to be portable. An empty "just in case" config would be dead
+ * weight — add one the day a skill must stay Claude-only.
+ */
+export function buildSkillMirror(root = ROOT) {
+  const source = join(root, ".claude", "skills");
+  if (!existsSync(source)) return [];
+
+  const views = [];
+  for (const skill of readdirSync(source, { withFileTypes: true })) {
+    if (!skill.isDirectory()) continue;
+    for (const file of walkFiles(join(source, skill.name))) {
+      const relative = file
+        .slice(join(source, skill.name).length + 1)
+        .split("\\")
+        .join("/");
+      views.push([`.agents/skills/${skill.name}/${relative}`, readFileSync(file, "utf8")]);
+    }
+  }
+  return views;
+}
+
+/** Every file under `dir`, recursively. */
+function walkFiles(dir) {
+  const out = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) out.push(...walkFiles(full));
+    else out.push(full);
+  }
+  return out;
+}
+
 /** The full list of generated views: [relative path, expected content]. */
 export function buildViews(root = ROOT) {
   const sources = readSources(root);
-  return [[".claude/settings.json", serialise(buildClaudeSettings(sources))]];
+  return [
+    [".claude/settings.json", serialise(buildClaudeSettings(sources))],
+    ...buildSkillMirror(root),
+  ];
 }
 
 function main() {
@@ -131,6 +174,7 @@ function main() {
       continue;
     }
 
+    mkdirSync(dirname(absPath), { recursive: true });
     writeFileSync(absPath, expected);
     console.log(`[harness:sync] ${relPath} — ${actual === null ? "created" : "updated"}.`);
   }

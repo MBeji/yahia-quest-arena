@@ -11,3 +11,9 @@
 *.bat text eol=crlf
 *.cmd text eol=crlf
 *.ps1 text eol=crlf
+
+# Miroir généré des skills (étude 25 lot 3) : copie verbatim de .claude/skills/
+# vers le chemin neutre que lisent Codex, Gemini CLI, Cursor, Copilot et Amp.
+# `linguist-generated` replie le diff sur GitHub — on relit la source, pas la copie.
+# Éditer la source puis `npm run harness:sync` ; `harness:check` échoue sur dérive.
+.agents/skills/** linguist-generated=true

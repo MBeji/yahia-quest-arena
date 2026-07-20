@@ -80,6 +80,12 @@ METHODE, et les workflows `content-audit.yml` / `video-health.yml`. Ne restent i
 **5 skills techniques** (`verify`, `code-review`, `regression-guard`, `upgrade-guard`,
 `report-triage`). `STATUS.md` reste public.
 
+Ces 5 skills sont **mirrorés en `.agents/skills/`** (généré par `npm run harness:sync`,
+jamais édité à la main) — le chemin neutre que découvrent Codex, Gemini CLI, Cursor, Copilot
+et Amp. Éditer la source `.claude/skills/`, relancer le sync ; `harness:check` échoue sur
+dérive et vérifie au passage la conformité à la spec Agent Skills (`name` = dossier,
+`description` ≤ 1 024 caractères).
+
 **Pour écrire du contenu** : ouvrir la session sur le repo **privé** et y ajouter celui-ci
 pour le moteur (`add_repo` / second checkout). La boucle d'auteur ne change pas — éditer
 `content/<subject>/NN-<slug>/`, validé par Zod — mais elle se déroule là-bas, et les gates
