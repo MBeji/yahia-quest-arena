@@ -3,6 +3,7 @@ import { Flame, ChevronRight, Skull, Gamepad2 } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 
 import { useT } from "@/lib/i18n";
+import type { NextAction } from "@/shared/lib/next-action";
 
 interface ContinueSubject {
   id: string;
@@ -17,13 +18,15 @@ interface ContinueSubject {
  * all three themes — the premium gold-on-black look is what the dark theme yields.
  */
 export function DashboardFocus({
-  nextExerciseId,
+  nextAction,
   continueSubject,
   xpToday,
   dailyGoal,
   streak,
 }: {
-  nextExerciseId: string | null | undefined;
+  /** L'action unique résolue par le moteur partagé (étude 22, R-31). */
+  nextAction: NextAction | null | undefined;
+  /** Sert à nommer la matière quand l'action désigne une matière plutôt qu'un exercice. */
   continueSubject: ContinueSubject | undefined;
   xpToday: number;
   dailyGoal: number;
@@ -31,25 +34,41 @@ export function DashboardFocus({
 }) {
   const t = useT();
 
-  // Resolve the single "reprendre" target: the unfinished exercise first, else the
-  // best subject to continue. Retry keeps the "Reprendre" verb; a fresh subject
-  // reads as "Continuer".
-  const target =
-    nextExerciseId != null
+  // La bande focus ne DÉCIDE plus : elle rend. La priorité est tranchée en amont par
+  // `resolveNextAction` (R-31), le même moteur que le « Reprendre ici » du hub matière — les
+  // deux écrans ne peuvent donc plus désigner deux cibles différentes au même instant.
+  // Ici, il ne reste qu'à choisir le verbe : réviser, reprendre, continuer, découvrir.
+  const target = !nextAction
+    ? null
+    : nextAction.kind === "review"
       ? {
           to: "/quest/$exerciseId" as const,
-          params: { exerciseId: nextExerciseId },
-          overline: t.duel.resume,
-          title: t.dashboard.retryTitle,
+          params: { exerciseId: nextAction.exerciseId },
+          overline: t.dashboard.reviewOverline,
+          title: t.dashboard.reviewTitle,
         }
-      : continueSubject
+      : nextAction.kind === "retry"
         ? {
-            to: "/matiere/$subjectId" as const,
-            params: { subjectId: continueSubject.id },
-            overline: t.dashboard.continueLabel,
-            title: continueSubject.name_fr,
+            to: "/quest/$exerciseId" as const,
+            params: { exerciseId: nextAction.exerciseId },
+            overline: t.duel.resume,
+            title: t.dashboard.retryTitle,
           }
-        : null;
+        : nextAction.kind === "continue"
+          ? {
+              to: "/quest/$exerciseId" as const,
+              params: { exerciseId: nextAction.exerciseId },
+              overline: t.dashboard.continueLabel,
+              title: t.dashboard.retryTitle,
+            }
+          : continueSubject
+            ? {
+                to: "/matiere/$subjectId" as const,
+                params: { subjectId: continueSubject.id },
+                overline: t.dashboard.continueLabel,
+                title: continueSubject.name_fr,
+              }
+            : null;
 
   return (
     <div className="mt-6 space-y-4">
