@@ -335,7 +335,15 @@ function Dashboard() {
                       </div>
                       <div className="text-xs text-[color:var(--gold)]">{obj.xp_reward} XP</div>
                     </div>
-                    <GoldProgress value={pct} size="sm" className="mt-2" />
+                    <GoldProgress
+                      value={pct}
+                      size="sm"
+                      className="mt-2"
+                      aria-label={formatObjectiveType(
+                        obj.objective_type,
+                        t.dashboard.objectiveTypes,
+                      )}
+                    />
                     <div className="mt-1 text-xs text-muted-foreground">
                       {obj.current_value}/{obj.target_value} {done ? "✓" : ""}
                     </div>
@@ -382,7 +390,12 @@ function Dashboard() {
                       </div>
                       <div className="text-xs text-[color:var(--neon-gold)]">{q.xp_reward} XP</div>
                     </div>
-                    <GoldProgress value={pct} size="sm" className="mt-2" />
+                    <GoldProgress
+                      value={pct}
+                      size="sm"
+                      className="mt-2"
+                      aria-label={formatQuestType(q.quest_type, t.dashboard.questTypes)}
+                    />
                     <div className="mt-1 text-xs text-muted-foreground">
                       {q.current_value}/{q.target_value} {done ? "✓" : ""}
                     </div>

@@ -38,14 +38,12 @@ test.describe("Native question types (B1 — numeric)", () => {
           await expect(practice.submitButton).toBeDisabled();
         }
         await practice.numericInput.fill("42");
-        await practice.submitButton.click();
       } else {
         const group = practice.questionGroups.first();
         if (!(await group.isVisible().catch(() => false))) break;
         await group.getByRole("radio").first().click();
-        await practice.submitButton.click();
       }
-      await page.waitForTimeout(200);
+      await practice.submitAndSettle();
     }
 
     expect(sawNumeric).toBe(true);

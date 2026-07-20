@@ -1,4 +1,4 @@
-import { type Page, type Locator } from "@playwright/test";
+import { type Page, type Locator, expect } from "@playwright/test";
 
 /**
  * Public practice/quiz screen (`/exercice/$exerciseId`) — now the SAME
@@ -39,6 +39,10 @@ export class PracticePage {
   get score(): Locator {
     return this.page.getByTestId("quest-score");
   }
+  /** The "Question X / Y" counter — changes exactly when the run advances. */
+  get progressCounter(): Locator {
+    return this.page.getByTestId("quest-progress");
+  }
   /** End-of-run account invitation shown to an anonymous visitor. */
   get accountInvite(): Locator {
     return this.page.locator('main a[href="/signup"]');
@@ -54,6 +58,40 @@ export class PracticePage {
 
   async goto(exerciseId: string): Promise<void> {
     await this.page.goto(`/exercice/${exerciseId}`);
+  }
+
+  /**
+   * Tick the first multi checkbox **idempotently**. `click()` toggles, so on a
+   * question the loop revisits (the player keeps the LAST question mounted while
+   * its submit RPC is in flight) a blind re-click UNCHECKS the answer and
+   * disables submission — the flake behind the nightly's public-anon failures.
+   */
+  async checkFirstMultiBox(): Promise<void> {
+    const box = this.multiCheckboxes.first();
+    if ((await box.getAttribute("aria-checked")) !== "true") {
+      await box.click();
+    }
+  }
+
+  /**
+   * Submit the current question and wait for a REAL transition — the counter
+   * changing (next question mounted) or the result screen. Replaces a fixed
+   * sleep, which raced `submit_exercise_attempt` (200–800 ms from a CI runner)
+   * and let the loop act on a question that was already answered.
+   */
+  async submitAndSettle(): Promise<void> {
+    const before = await this.progressCounter.textContent().catch(() => null);
+    await this.submitButton.click();
+    await expect
+      .poll(
+        async () => {
+          if (await this.score.isVisible().catch(() => false)) return "settled";
+          const now = await this.progressCounter.textContent().catch(() => null);
+          return now === before ? "pending" : "settled";
+        },
+        { timeout: 15_000 },
+      )
+      .toBe("settled");
   }
 
   /** Waits for the first question so a play step isn't racing the content fetch. */
@@ -95,15 +133,13 @@ export class PracticePage {
           .isVisible()
           .catch(() => false)
       ) {
-        await this.multiCheckboxes.first().click();
+        await this.checkFirstMultiBox();
       } else {
         const group = this.questionGroups.first();
         if (!(await group.isVisible().catch(() => false))) break;
         await group.getByRole("radio").first().click();
       }
-      await this.submitButton.click();
-      // Let the next question mount or the result screen settle.
-      await this.page.waitForTimeout(200);
+      await this.submitAndSettle();
     }
     await this.score.waitFor({ state: "visible", timeout: 15_000 });
   }

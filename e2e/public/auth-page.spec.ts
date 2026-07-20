@@ -7,18 +7,18 @@ import { test, expect } from "../fixtures";
 test.describe("Auth page", () => {
   test("renders login and toggles to signup and back", async ({ auth, page }) => {
     await auth.goto("login");
-    await expect(auth.heading).toHaveText(/bon retour, guerrier|welcome back, warrior/i);
-    await expect(auth.submit).toHaveText(/entrer dans l['’]arène|enter the arena/i);
+    await expect(auth.heading).toHaveText(/ravi de te revoir|good to see you again/i);
+    await expect(auth.submit).toHaveText(/se connecter|sign in/i);
     await expect(auth.nameField).toHaveCount(0);
 
     await auth.toggleModeLink.click();
     await expect(page).toHaveURL(/mode=signup/);
-    await expect(auth.heading).toHaveText(/forge (ton héros|your hero)/i);
+    await expect(auth.heading).toHaveText(/crée ton compte|create your account/i);
     await expect(auth.nameField).toBeVisible();
-    await expect(auth.submit).toHaveText(/forger mon héros|forge my hero/i);
+    await expect(auth.submit).toHaveText(/créer mon compte|create my account/i);
 
     await auth.toggleModeLink.click();
     await expect(page).toHaveURL(/mode=login/);
-    await expect(auth.heading).toHaveText(/bon retour, guerrier|welcome back, warrior/i);
+    await expect(auth.heading).toHaveText(/ravi de te revoir|good to see you again/i);
   });
 });

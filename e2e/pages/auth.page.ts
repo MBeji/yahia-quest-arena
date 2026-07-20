@@ -16,7 +16,7 @@ export class AuthPage {
   get google(): Locator {
     return this.page.getByRole("button", { name: /google/i });
   }
-  /** Page heading ("Bon retour, guerrier" / "Forge ton héros"). */
+  /** Page heading ("Ravi de te revoir" / "Crée ton compte" since auth v2). */
   get heading(): Locator {
     return this.page.getByRole("heading", { level: 1 });
   }
