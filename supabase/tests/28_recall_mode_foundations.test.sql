@@ -5,6 +5,12 @@
 -- par un client — pas d'oracle de réponse).
 -- =========================================================
 
+-- Espace de noms des fixtures : le prefixe `7e57…` est reserve aux tests et n'apparait
+-- dans aucune migration. Ces ids ont ete deplaces le 2026-07-20 : ils entraient en
+-- collision avec des lignes de contenu HERITEES que les migrations generees effacaient
+-- autrefois par leur prune par matiere. Ces migrations ayant quitte le repo public
+-- (etude 24 lot 4), les lignes heritees survivent sur une base fraiche et la fixture
+-- se cognait dedans (duplicate key).
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
 SELECT plan(38);
@@ -62,91 +68,91 @@ INSERT INTO public.subjects (id, name_fr, attribute, color_token, icon, theme_id
 VALUES ('recall-subj', 'Recall Test', 'Esprit', 'subject-math', 'Brain', 'ecole-tn');
 
 INSERT INTO public.chapters (id, subject_id, title)
-VALUES ('e1000000-0000-0000-0000-000000000001', 'recall-subj', 'Recall Chapter');
+VALUES ('7e572801-0000-0000-0000-000000000001', 'recall-subj', 'Recall Chapter');
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, xp_reward, reward_coins, source, mode)
-VALUES ('e2000000-0000-0000-0000-000000000001',
-        'e1000000-0000-0000-0000-000000000001', 'recall-subj',
+VALUES ('7e572802-0000-0000-0000-000000000001',
+        '7e572801-0000-0000-0000-000000000001', 'recall-subj',
         'Recall Exercise', 100, 20, 'admin', 'practice');
 
 -- E1 — éligible (réponse courte, énoncé auto-suffisant).
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-000000000001', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('e3000000-0000-0000-0000-000000000001', '7e572802-0000-0000-0000-000000000001',
         'Capitale de la France ?',
         '[{"id":"a","text":"Paris"},{"id":"b","text":"Lyon"},{"id":"c","text":"Marseille"},{"id":"d","text":"Nice"}]'::jsonb,
         'a', 1);
 
 -- E2 — (b) seulement 2 options.
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-000000000002', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('e3000000-0000-0000-0000-000000000002', '7e572802-0000-0000-0000-000000000001',
         'Vrai ou faux ?',
         '[{"id":"a","text":"Vrai"},{"id":"b","text":"Faux"}]'::jsonb,
         'a', 2);
 
 -- E3 — (c) réponse > 6 mots.
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-000000000003', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('e3000000-0000-0000-0000-000000000003', '7e572802-0000-0000-0000-000000000001',
         'Compter ?',
         '[{"id":"a","text":"un deux trois quatre cinq six sept"},{"id":"b","text":"huit"},{"id":"c","text":"neuf"}]'::jsonb,
         'a', 3);
 
 -- E4 — (c) réponse > 60 caractères.
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-000000000004', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('e3000000-0000-0000-0000-000000000004', '7e572802-0000-0000-0000-000000000001',
         'Long ?',
         '[{"id":"a","text":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},{"id":"b","text":"court"},{"id":"c","text":"bref"}]'::jsonb,
         'a', 4);
 
 -- E5 — (d) contenu riche (URL).
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-000000000005', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('e3000000-0000-0000-0000-000000000005', '7e572802-0000-0000-0000-000000000001',
         'Site ?',
         '[{"id":"a","text":"http://x.test"},{"id":"b","text":"un"},{"id":"c","text":"deux"}]'::jsonb,
         'a', 5);
 
 -- E6 — (e) symbole mathématique de structure.
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-000000000006', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('e3000000-0000-0000-0000-000000000006', '7e572802-0000-0000-0000-000000000001',
         'Solution ?',
         '[{"id":"a","text":"x = 5"},{"id":"b","text":"six"},{"id":"c","text":"sept"}]'::jsonb,
         'a', 6);
 
 -- E7 — (f) marqueur composite (slash).
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-000000000007', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('e3000000-0000-0000-0000-000000000007', '7e572802-0000-0000-0000-000000000001',
         'Fraction ?',
         '[{"id":"a","text":"3/4"},{"id":"b","text":"deux"},{"id":"c","text":"trois"}]'::jsonb,
         'a', 7);
 
 -- E8 — (g) énoncé dépendant des options.
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-000000000008', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('e3000000-0000-0000-0000-000000000008', '7e572802-0000-0000-0000-000000000001',
         'Laquelle de ces villes est la capitale ?',
         '[{"id":"a","text":"Paris"},{"id":"b","text":"Lyon"},{"id":"c","text":"Nice"}]'::jsonb,
         'a', 8);
 
 -- E9 — (h) collision : la bonne réponse normalisée égale un distracteur normalisé.
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-000000000009', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('e3000000-0000-0000-0000-000000000009', '7e572802-0000-0000-0000-000000000001',
         'Combien ?',
         '[{"id":"a","text":"Deux"},{"id":"b","text":"deux"},{"id":"c","text":"trois"}]'::jsonb,
         'a', 9);
 
 -- E10 — (i) réponse qui se normalise en vide (charset hors clavier).
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-00000000000a', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('e3000000-0000-0000-0000-00000000000a', '7e572802-0000-0000-0000-000000000001',
         'Constante ?',
         '[{"id":"a","text":"π"},{"id":"b","text":"un"},{"id":"c","text":"deux"}]'::jsonb,
         'a', 10);
 
 -- E11 — non-mcq (numeric) : jamais éligible.
 INSERT INTO public.questions (id, exercise_id, prompt, options, question_type, answer_key, display_order)
-VALUES ('e3000000-0000-0000-0000-00000000000b', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('e3000000-0000-0000-0000-00000000000b', '7e572802-0000-0000-0000-000000000001',
         'Combien font 6×7 ?', '[]'::jsonb, 'numeric', '{"value": 42}'::jsonb, 11);
 
 -- E12 — éligible en arabe.
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, display_order)
-VALUES ('e3000000-0000-0000-0000-00000000000c', 'e2000000-0000-0000-0000-000000000001',
+VALUES ('e3000000-0000-0000-0000-00000000000c', '7e572802-0000-0000-0000-000000000001',
         'عاصمة فرنسا؟',
         '[{"id":"a","text":"باريس"},{"id":"b","text":"لندن"},{"id":"c","text":"روما"}]'::jsonb,
         'a', 12);
