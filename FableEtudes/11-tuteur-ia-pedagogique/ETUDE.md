@@ -1,9 +1,11 @@
-# Étude 11 — Tuteur IA pédagogique « Prof Yahia » (v2 — mode d'accompagnement personnalisé)
+# Étude 11 — Tuteur IA pédagogique « El Ostedh » (v2 — mode d'accompagnement personnalisé)
 
-> **Statut** : **brouillon (v2)** — réécriture complète commandée par l'humain le 2026-07-17.
-> Remplace la v1 du 2026-07-04 (gelée le 2026-07-11 avec l'étude 01). Le **dégel de la
-> conception** est acté par cette commande ; le **dégel de l'exécution** est conditionné à
-> l'arbitrage des questions ouvertes (§7), en particulier Q-1 (périmètre pilote) et Q-3 (budget).
+> **Statut** : validée — Q-1…Q-9 arbitrées le 2026-07-20 par Mohamed (§7 ; huit sur les
+> recommandations, **Q-4 écartée** : le tuteur s'appelle « El Ostedh »). Réécriture v2 du
+> 2026-07-17 commandée par l'humain, remplaçant la v1 du 2026-07-04 (gelée le 2026-07-11 avec
+> l'étude 01). Le **dégel de la conception** était acté par cette commande ; **la condition
+> posée sur l'exécution est levée — l'exécution est dégelée pour les lots 0-2** (pilote math
+> 9ème, Q-1), les lots 3-7 restant subordonnés aux KPI du pilote.
 > **Priorité** : 11 · **Valeur** : le rêve produit — un accompagnement individualisé piloté par
 > l'IA : chaque élève a un tuteur qui connaît son niveau, ses erreurs récurrentes, son rythme,
 > et qui explique, reformule, vérifie la compréhension, planifie les révisions et entraîne sur
@@ -11,9 +13,11 @@
 > produit, coût récurrent, sécurité mineurs, anti-triche)
 > **Architecte** : Fable (claude-fable-5), 2026-07-17 (v1 : 2026-07-04) · **Exécuteur cible** : Sonnet (ou équiv.)
 > **Dépend de** : étude 04 lot A0 ✅ (télémétrie + tags de misconception — livré) · étude 07
-> lot 1 ✅ (graphe de compétences — livré) ; **recommandés, avec dégradation prévue** : étude 04
-> A1.1 (`get_daily_plan`, gate de volume, voir Q-9) et étude 07 lots 2/4
-> (`user_competency_mastery` EWMA + `get_competency_blockers`) · **Ne dépend plus de l'étude
+> lot 1 ✅ (graphe de compétences — livré) ; **étude 04 A1.1** (`get_daily_plan`) : dépendance
+> **ferme depuis l'arbitrage Q-9 du 2026-07-20** — GO coordonné, le lot 2 s'y branche sans
+> fallback (`get_tutor_plan_v0` n'est pas écrit) ; **recommandés, avec dégradation prévue** :
+> étude 07 lots 2/4 (`user_competency_mastery` EWMA + `get_competency_blockers`) · **Ne dépend
+> plus de l'étude
 > 01** : en phase gratuite le coût est borné par l'énergie/quotas (§2.4 R-12, annexe A) ;
 > l'étude 01 reste le véhicule d'une future offre « tuteur illimité » (dormant, §3.11 D-14)
 > **Bloque** : rien (mais fournit à l'étude 08 le compteur d'aide par matière du rapport parent)
@@ -45,7 +49,8 @@ avant toute feature visible.
 
 ### 1.2 La vision v2 — un mode d'accompagnement personnalisé
 
-Un tuteur nommé (nom de travail : **« Prof Yahia »**, Q-4) qui accompagne chaque élève :
+Un tuteur nommé (**« El Ostedh »** — arabe الأستاذ, « le professeur » ; Q-4 arbitrée le
+2026-07-20) qui accompagne chaque élève :
 
 1. **Il sait qui est l'élève** — un profil d'apprentissage dynamique (§2.2) compilé depuis la
    télémétrie existante : niveau et classe, maîtrise par compétence, misconceptions actives,
@@ -330,8 +335,8 @@ sait ce que le tuteur « savait » quand il a répondu.
   (posture API par défaut) ; registre de traitement mis à jour (backlog GAP-003 INPDP).
 - **R-15 — Dégradé gracieux** : API down, budget atteint, énergie épuisée → l'UI retombe sur
   l'existant : explication canonique (`consume_hint`), plan sans phrase de coach, messages
-  bibliothèque ; un état « le Prof revient demain 😴 » (énergie) ou « le Prof est en pause »
-  (incident) — jamais d'erreur brute, jamais de quota décompté sans réponse servie.
+  bibliothèque ; un état « El Ostedh revient demain 😴 » (énergie) ou « El Ostedh est en
+  pause » (incident) — jamais d'erreur brute, jamais de quota décompté sans réponse servie.
 - **R-16 — Anti-fuite par construction** : tant qu'une question n'est pas soumise (mode
   Socratique futur, micro-vérifications en cours de fil), le contexte transmis au modèle ne
   contient **ni** `correct_option`/`answer_key`, **ni** `explanation`, **ni** `distractor_tags`
@@ -860,37 +865,98 @@ Q-1), puis 3 → 4, et seulement ensuite 5/6/7 selon les KPI et les arbitrages Q
   purges), registre de traitement INPDP (GAP-003, à mettre à jour au lot 1), transcripts
   visibles par l'élève, politique parent Q-5/Q-6 arbitrée par l'humain avant le lot 3.
 
-## 7. Questions ouvertes (pour l'humain — l'étude passe `validée` quand cette section est arbitrée)
+## 7. Questions ouvertes (pour l'humain)
+
+> **Section arbitrée le 2026-07-20 (Mohamed).** Huit questions sur neuf sont tranchées **sur la
+> recommandation** de l'architecte ; **Q-4 (nom du tuteur) s'en écarte** — le tuteur s'appelle
+> désormais « El Ostedh ». Les deux volets laissés sans recommandation (Q-4 personnage, Q-6
+> opt-in parental) sont tranchés ci-dessous. L'étude est passée `validée` ; aucune question
+> n'est plus ouverte et l'exécution est dégelée pour les lots 0-2.
 
 - **Q-1 — Dégel & périmètre pilote.** Proposition : dégeler l'exécution pour les lots 0–2
   immédiatement, pilote sur **math 9ème** (misconceptions seedées, contenu riche, année
   concours) avec `TUTOR_ENABLED` global mais entrée UI limitée au pilote ; extension après 2–4
   semaines de mesures. Alternative : tout ouvrir d'emblée (plus de signal, plus de coût).
+  **Arbitrage : proposition retenue** — l'exécution est **dégelée pour les lots 0-2**, pilote
+  **math 9ème** (misconceptions seedées, contenu le plus riche, année concours) ;
+  `TUTOR_ENABLED` reste global mais l'**entrée UI est limitée au pilote** ; extension aux
+  autres matières et classes après **2-4 semaines de mesures**. Les lots 0 et 1 sont fermes ;
+  le lot 2 est dégelé mais se branche sur 04-A1.1 (Q-9) ; les lots 3-7 restent subordonnés aux
+  KPI d'adoption du pilote (RISK-8).
 - **Q-2 — Barème d'énergie.** Proposition : 10/jour gratuit, coûts (explication 1, message 1,
   exercice généré 2), recharge +3 par item `hints` consommé, plafond dur 30/jour. À calibrer
   après 2 semaines de pilote.
+  **Arbitrage : proposition retenue** — `TUTOR_DAILY_ENERGY = 10` par jour ; barème serveur
+  inchangé (explication 1, reformulation 1, message de chat 1, exercice généré 2 ; mini-checks,
+  plan, coaching, bilans : 0) ; `TUTOR_ENERGY_PER_HINT = +3` ; `TUTOR_HARD_DAILY_CAP = 30` par
+  jour. Ce sont des **valeurs de constantes, pas une décision structurelle** : elles sont
+  explicitement révisables après deux semaines de pilote **sans rouvrir l'étude** — la
+  mécanique R-12 (décompte atomique, recharge par item `hints`, refund sur échec API), elle,
+  n'est pas révisable de cette façon.
 - **Q-3 — Budget plateforme.** Proposition : `TUTOR_DAILY_BUDGET_USD=5` en pilote (≈ 150 $/mois
   max), à réviser avec l'adoption réelle (annexe A). Quel plafond mensuel est acceptable ?
+  **Arbitrage : proposition retenue** — `TUTOR_DAILY_BUDGET_USD = 5` en pilote, soit
+  **≤ 150 $/mois mathématiquement** quelle que soit l'adoption (annexe A) ; le plafond sera
+  révisé avec l'adoption réelle, pas avant. La coupure reste **dans le chemin de requête**
+  (R-13 : vérification atomique du budget du jour avant l'appel API, bascule en dégradé R-15)
+  et non dans un job d'alerte a posteriori — un dépassement doit être impossible, pas signalé.
 - **Q-4 — Nom & personnage.** « Prof Yahia » (AR : الأستاذ يحيى) ? Mascotte dédiée ou
   déclinaison de l'identité existante ? (Impacte i18n, assets, lexique étude 15 §2 — l'entrée
   lexique est ajoutée au lot 1.)
+  **Arbitrage : la proposition de travail n'est PAS retenue** — seul écart de cette section aux
+  recommandations. **Nom arbitré : « El Ostedh »** — arabe الأستاذ, littéralement « le
+  professeur », tel qu'un élève tunisien nomme son enseignant. Rendu par langue : FR
+  « El Ostedh » · EN « El Ostedh » · AR « الأستاذ ». Sur le second volet (laissé sans
+  recommandation) : **déclinaison de l'identité visuelle existante, pas de mascotte dédiée** —
+  aucun asset nouveau n'est à produire avant le lot 1. Le nom part directement dans le **prompt
+  système** (annexe B), dans la microcopy trilingue `tutor.*` et dans l'entrée de lexique de
+  l'étude 15 §2, ajoutée au lot 1.
 - **Q-5 — Visibilité parent.** Proposition (v1 reconduite) : compteur + thèmes agrégés + digest
   hebdo ; **pas** de verbatim des conversations (confiance de l'élève). Alternative :
   transcript consultable par le parent lié (transparence totale).
+  **Arbitrage : proposition retenue (v1 reconduite)** — compteur d'usage 7 j / 30 j, top 3 des
+  thèmes agrégés, digest hebdomadaire ; **jamais le verbatim des conversations** : la confiance
+  de l'élève prime sur la transparence totale. `get_tutor_parent_counters` garde ce contrat
+  (agrégats seuls, lien parent actif requis) et R-6 conserve l'absence de signal parent
+  automatique. Impacte les lots 4 (compteur) et 6 (digest parent).
 - **Q-6 — Champ libre & âge.** Proposition : intentions fermées **seules** en primaire
   (1ère–5ème) ; champ libre à partir du collège (12+). Faut-il un opt-in parental explicite
   pour le champ libre (au-delà du cadre INPDP) ?
+  **Arbitrage : proposition retenue sur le seuil d'âge** — **intentions fermées seules en
+  primaire (1ère-5ème)**, **champ libre cadré à partir du collège (12+)**. Sur la sous-question
+  laissée sans recommandation : **pas d'opt-in parental explicite** — le cadre INPDP fait foi,
+  aucun consentement supplémentaire n'est ajouté (R-14, registre GAP-003). Rappel de périmètre :
+  le champ libre n'arrive qu'au **lot 3**, et RISK-4 (surface d'injection) reste mitigée par les
+  intentions fermées par défaut, le bornage R-5 et le validateur de sortie.
 - **Q-7 — Mode Socratique in-mission.** Activer (dans une v2.1) le tuteur pendant une mission
   classique **sans clé dans le contexte** (indices only, R-16) ? Proposition : non pour
   l'instant — post-review uniquement jusqu'aux premières mesures du pilote ; re-poser la
   question avec les données.
+  **Arbitrage : non pour l'instant** — le tuteur reste **post-review uniquement** jusqu'aux
+  premières mesures du pilote ; la question se re-pose **avec les données**, et son activation
+  exigerait une **révision de l'étude (v2.1)**, jamais une simple réponse en séance. R-1 et
+  R-16 ne sont jamais assouplis (stop-point §4). Invariant non négociable rappelé ici : **jamais
+  de tuteur sur une épreuve notée** — donjon, duel, futur examen blanc.
 - **Q-8 — Génération d'exercices (lot 5).** GO pour la génération éphémère avec la chaîne §3.8
   (évolution assumée de la ligne v1 « sélection seulement ») ? Proposition : GO, mais activée
   seulement quand la sélection ne trouve pas ≥ 3 questions fraîches sur le tag ciblé.
+  **Arbitrage : GO, en fallback conditionnel** — la génération ne s'active **que si la sélection
+  ne trouve pas ≥ 3 questions fraîches sur le tag ciblé** ; la sélection reste la voie par
+  défaut du lot 5. La ligne rouge de l'étude 12 reste intacte : items **éphémères 30 j**, non
+  notés, **0 XP**, jamais promus au catalogue, n'écrivant jamais `question_attempts` (D-10,
+  R-11). La chaîne §3.8 est obligatoire dans son intégralité : schéma zod strict, règles
+  déterministes, **double-résolution indépendante** (désaccord ⇒ `discarded`), alerte si le taux
+  de discard dépasse **20 % sur 7 j** — auquel cas la génération est coupée et la sélection
+  continue seule.
 - **Q-9 — Déclenchement de 04-A1.1 (« Révision du jour »).** La gate de l'étude 04 (≥ 4
   semaines de télémétrie, GO humain) sera temporellement atteinte début août 2026. Proposition :
   GO coordonné — livrer 04-A1.1 (dans le cadre de l'étude 04), puis le lot 2 d'ici sans
   fallback ; sinon le lot 2 livre `get_tutor_plan_v0` (supprimé au branchement de 04-A1.1).
+  **Arbitrage : GO coordonné** — `get_daily_plan` (é04-A1.1) est livrée **dans le cadre de
+  l'étude 04**, puis le lot 2 de la présente étude s'y branche **sans fallback** :
+  `get_tutor_plan_v0` n'est pas écrit. Cohérent avec le pipeline V1 de l'étude 26 (arbitré le
+  même jour), où é04-A1.1 est l'**étape 2**. Le stop-point « pas de double moteur de reco »
+  (§4) est respecté par construction, puisqu'aucun second moteur n'aura jamais existé.
 
 ## 8. Journal d'exécution
 
@@ -900,6 +966,16 @@ Q-1), puis 3 → 4, et seulement ensuite 5/6/7 selon les KPI et les arbitrages Q
   révision, chat cadré, génération d'exercices gated, bilans, économie d'énergie). La v1
   (2026-07-04, gelée 2026-07-11) est remplacée ; ses décisions D-1…D-5 et sa règle R-1 sont
   conservées et référencées. Évolutions vs revue 2026-07 tracées en §1.3, à valider via §7.
+- **2026-07-20 — Validation.** Q-1…Q-9 arbitrées par Mohamed (§7) : exécution **dégelée pour
+  les lots 0-2** (pilote math 9ème, entrée UI restreinte) ; barème d'énergie 10/+3/30 et budget
+  pilote 5 $/jour fixés, révisables sans rouvrir l'étude ; visibilité parent agrégée seulement
+  (jamais de verbatim) ; champ libre à partir du collège, sans opt-in parental supplémentaire ;
+  Socratique in-mission refusé (post-review seul, réactivation = v2.1) ; génération d'exercices
+  GO en fallback conditionnel sous la chaîne §3.8 ; `get_daily_plan` livrée par l'étude 04, le
+  lot 2 s'y branche sans fallback (`get_tutor_plan_v0` abandonné). **Seul écart aux
+  recommandations : Q-4** — le tuteur est renommé **« El Ostedh »** (arabe الأستاذ), identité
+  visuelle existante déclinée, pas de mascotte ; renommage propagé dans cette étude (titre,
+  §1.2, R-15, annexe B). Statut `brouillon (v2)` → `validée`. Aucun lot commencé.
 - _(la suite est remplie par l'exécuteur, lot par lot : date, lot, PR, écarts acceptés)_
 
 ---
@@ -958,7 +1034,7 @@ réfléchit… ») · chat TTFB < 1,5 s (streaming).
 **Système — explication (FR ; les versions EN/AR sont rédigées nativement, pas traduites)** :
 
 ```text
-Tu es « Prof Yahia », professeur particulier bienveillant d'une académie RPG tunisienne.
+Tu es « El Ostedh », professeur particulier bienveillant d'une académie RPG tunisienne.
 Élève : bande d'âge {age_band}, classe {grade_label}. Adapte vocabulaire et longueur de
 phrase à cet âge ({age_band=6-8 : phrases très courtes, mots concrets, un seul concept à
 la fois ; 15-19 : registre lycée précis}).

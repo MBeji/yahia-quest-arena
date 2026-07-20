@@ -1,6 +1,7 @@
 # Étude 26 — Doctrine verticale : profondeur avant largeur (briques d'excellence, IA-native)
 
-> **Statut** : brouillon
+> **Statut** : validée — Q-1…Q-5 arbitrées le 2026-07-20 par Mohamed, toutes sur les
+> recommandations (§8) ; les lots 1 et 2 sont exécutables
 > **Priorité** : transverse (gouvernance de portefeuille — elle séquence les autres études) ·
 > **Valeur** : 🎯 chaque capacité livrée devient une **brique d'excellence** — complète, robuste,
 > mesurée, cohérente, différenciante — au lieu d'un front de plus ; les trois boucles
@@ -495,10 +496,23 @@ porter la fiche D-2 (contrôle à la validation humaine).
 
 ## 8. Questions ouvertes (pour l'humain)
 
+> **Section arbitrée le 2026-07-20 (Mohamed) — toutes les décisions ont suivi les
+> recommandations ; Q-2 y ajoute la cible de couverture rentrée, que la recommandation
+> laissait ouverte.** L'étude est passée `validée` ; aucune question n'est plus ouverte.
+
 - **Q-1 — Les verticales et leur ordre.** Valider le découpage V1→V4 + fondations (§3.2) et
   **V1 en priorité absolue** avec son pipeline mandaté (é22 → é04-A1.1 → correction riche →
   é07 → é04-A2 → é20 → é23 → é19 → é11). _Recommandation : oui — c'est la traduction directe
   du mandat sur l'état mesuré du code._
+  **Arbitrage : recommandation retenue, telle quelle** — le découpage V1→V4 + fondations
+  (§3.2) est validé, V1 « Apprendre & maîtriser » est la priorité absolue, et le pipeline V1
+  est adopté sans variante : é22 lots 1-6 → é04-A1.1 → correction riche → é07 lots 2-5 →
+  é04-A2 → é20 lot 1+ → é23 lots 1-4 → é19 lot 1 → é11. Le lot 1 est ferme. La variante
+  « sortir é11 lot 0 de la file comme fondation transverse » a été examinée puis **écartée** :
+  é11 conserve son rang final dans le pipeline V1. Conséquence : la cible « é11 lots 0-1 à la
+  rentrée » de la ROADMAP §7 n'est donc **pas** portée par la file V1 — elle dépend du dégel
+  propre de é11 (arbitré le même jour, voir é11 Q-1) et bascule sur la cible octobre si le
+  rang du pipeline la retarde.
 - **Q-2 — L'objectif rentrée (largeur catalogue).** Quelle couverture de classes est
   **non négociable** pour septembre 2026 (statu quo : primaire + collège + 9ᵉ complets, 1ère
   sec ouverte, reste du lycée en cours) — et quelle part de l'effort de sessions va au fil
@@ -506,22 +520,50 @@ porter la fiche D-2 (contrôle à la validation humaine).
   contenu continue en parallèle au rythme des sessions de campagne dédiées (les deux ne se
   cannibalisent que sur le budget de sessions) ; pas de nouvelle classe « vitrine » si sa
   qualité ne tient pas la barre é18._
+  **Arbitrage : les deux volets sont tranchés.** (i) La cible de couverture **non négociable
+  au 1ᵉʳ septembre 2026 est le statu quo consolidé à la barre é18** : primaire, collège et 9ᵉ
+  complets **et** tenus à la barre de qualité é18 ; 1ère secondaire complète (les 5 matières,
+  vague A de é16) ; le reste du lycée reste « en cours » et est assumé comme tel. **Aucune
+  nouvelle classe « vitrine »** n'est ouverte. (ii) Répartition d'effort : **recommandation
+  retenue** — V1 prioritaire côté ingénierie produit, le fil contenu continue en parallèle au
+  rythme de sessions de campagne dédiées, avec la clause ferme qu'aucune classe nouvelle
+  n'ouvre si sa qualité ne tient pas la barre é18. C'est la mitigation datée de RISK-4.
 - **Q-3 — Les gels.** Acter `gelée (doctrine verticale)` pour é06 (PWA), é10 (anti-fraude),
   é12 (studio in-app) — réversible par arbitrage. _Recommandation : oui pour les trois ; é10
   se dégèle d'elle-même quand V3 a du volume réel._
+  **Arbitrage : oui pour les trois** — é06 (PWA offline), é10 (anti-fraude) et é12 (studio
+  in-app) passent `gelée (doctrine verticale)`, réversible par arbitrage humain uniquement ;
+  é10 se dégèle d'elle-même quand V3 a du volume réel. é01 reste gelée au titre de la phase
+  gratuite (inchangé). Le lot 2 est ferme sur ce périmètre.
 - **Q-4 — Le propriétaire de la « correction riche à l'échec ».** Le trou n° 1 de la boucle
   cœur (feedback in-session, lien cours par erreur, misconception affichée) n'a pas d'étude
   propriétaire. Options : (a) **amendement de l'étude 04** (nouvelle phase A1.2 « correction
   riche », rédigée par l'architecte à la validation — recommandé : c'est le même socle
   télémétrie/tags et la même surface que A1.1) ; (b) mini-étude dédiée. _Recommandation : (a)._
+  **Arbitrage : option (a)** — l'étude 04 est amendée d'une nouvelle phase **A1.2 « correction
+  riche »**, rédigée par l'architecte ; pas de mini-étude dédiée. L'amendement emporte le
+  traitement des deux tensions que la présente étude lui transfère (annexe A.2) :
+  (i) l'explication vendue en cours de run comme indice payant (`consume_hint`) alors que
+  l'explication **après** l'erreur relève de la pédagogie ; (ii) le cas anonyme où
+  `check_answers` renvoie `explanation: null`.
 - **Q-5 — Les capacités signature (M4).** Valider la liste D-7 : correction-révision, tuteur
   (é11), examen blanc (é02, à terme). _Recommandation : oui ; tout le reste s'arrête à M3._
+  **Arbitrage : recommandation retenue** — la liste D-7 est fermée à trois entrées :
+  correction-révision (V1), tuteur é11 (V1), examen blanc é02 (V2, à terme). Tout le reste
+  vise M3 et s'y arrête.
 
 Une étude passe `validée` quand cette section est arbitrée. Les Q-1…Q-9 de l'étude 11 et les
-questions propres de é23/é19/é21 restent à arbitrer **dans leurs études** — cette étude ne les
-court-circuite pas, elle fixe seulement leur rang.
+questions propres de é23/é19/é21 s'arbitrent **dans leurs études** — cette étude ne les
+court-circuite pas, elle fixe seulement leur rang. _Mise à jour du 2026-07-20_ : la même session
+de décision les a toutes rendues — é23 le 2026-07-19 (#531), é19/é21/é11 le 2026-07-20 en même
+temps que la présente section. Il ne reste donc aucune question ouverte sur le pipeline V1.
 
 ## 9. Journal d'exécution
+
+- **2026-07-20 — Validation.** Q-1…Q-5 arbitrées par Mohamed : recommandations retenues,
+  Q-2 fixant en outre la cible de couverture rentrée (statu quo consolidé à la barre é18) et
+  Q-1 écartant la variante « é11 lot 0 sorti de la file en fondation transverse » ; statut
+  `brouillon` → `validée`. Lots 1 et 2 débloqués, aucun commencé.
 
 _(rempli au fil des lots)_
 
