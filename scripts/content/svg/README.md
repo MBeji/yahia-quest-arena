@@ -8,6 +8,12 @@ Il a servi à produire et auditer ~315 figures lors de la campagne « schémas
 explicatifs » (cours + questions). Zéro dépendance pour la génération ; le rendu
 utilise Playwright (déjà dans les devDeps) + le Chromium pré-installé.
 
+> 📦 **Cet outillage est le moteur, il reste public — le corpus qu'il traite, non.** Depuis
+> l'étude 24 (2026-07-20), les fichiers `content/…` cités plus bas vivent dans le dépôt **privé**
+> `MBeji/yahia-quest-content` : les chemins d'exemple s'entendent relativement à ce dépôt-là.
+> Ne recopie jamais de corpus ici pour tester — `npm run leak:check` fait échouer le build.
+> Voir [`docs/content-generation-pipeline.md`](../../../docs/content-generation-pipeline.md).
+
 ## Les trois outils
 
 | Fichier             | Rôle                                                                                                                                                                |
@@ -50,7 +56,8 @@ node scripts/content/svg/preview.mjs content/<sujet>/<chap>/quiz.json /tmp/verif
 # 5. Lint structurel + gate contenu
 npm run content:figures:check
 npm run content:check && npm run content:qa:strict
-# puis regénérer la migration du sujet : npm run content:build -- --subject <id>
+# puis PR dans le dépôt privé : la Content CI rejoue ces gates, et le merge
+# déclenche apply-content.yml (compilation + application en prod).
 ```
 
 > ⚠️ Pour vérifier une figure embarquée dans un `.json`, **passe le `.json` à `preview.mjs`**
@@ -125,6 +132,8 @@ choix pédagogique, pas un manque.
 ## Voir aussi
 
 - `src/shared/lib/figure.ts` — l'extraction + sanitizer (source de vérité des contraintes)
-- `.claude/skills/content-engine/references/interactive-formats.md` — QCM visuel / figures
-- `.claude/skills/content-engine/references/math-and-notation.md` — notation standard, chiffres
-- `content/README.md` — pipeline de contenu (fichiers → migrations)
+- [`docs/content-generation-pipeline.md`](../../../docs/content-generation-pipeline.md) — le
+  pipeline de contenu de bout en bout (répartition public/privé, boucle auteur, application)
+- Dans le **dépôt privé** `MBeji/yahia-quest-content` :
+  `content-engine/references/interactive-formats.md` (QCM visuel / figures) et
+  `content-engine/references/math-and-notation.md` (notation standard, chiffres)

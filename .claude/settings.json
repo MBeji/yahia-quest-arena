@@ -18,6 +18,8 @@
       "Bash(npm run content:audit:strict)",
       "Bash(npm run content:build)",
       "Bash(npm run content:catalogue)",
+      "Bash(npm run leak:check)",
+      "Bash(npm run harness:check)",
       "Bash(npm run audit:deps)",
       "Bash(npm test)",
       "Bash(npm outdated:*)",

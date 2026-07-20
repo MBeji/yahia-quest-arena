@@ -67,10 +67,14 @@ the load harness (`perf/`) against a seeded test project to put numbers on each.
   subjects, plus the standalone tracks) → order **150k–400k question rows**, and a
   media library of audio (language tracks + Qur'an recitation), images, and later
   video.
-- **Today's footprint (baseline).** `content/` = 24 MB on disk; 61 subjects, 408
-  chapters, ~1,911 exercise files, **~13,546 questions**; 202 migrations. Lesson
-  markdown totals 2.38 MB, exercise JSON 9.0 MB. 439 content files carry inline
-  `<svg>` (heaviest IQ/geometry exercises ≈ 15–21 KB each).
+- **Footprint at audit time (baseline, 2026-06-30).** The corpus measured 24 MB on
+  disk; 61 subjects, 408 chapters, ~1,911 exercise files, **~13,546 questions**; 202
+  migrations. Lesson markdown totalled 2.38 MB, exercise JSON 9.0 MB. 439 content
+  files carried inline `<svg>` (heaviest IQ/geometry exercises ≈ 15–21 KB each).
+  _Note (étude 24, 2026-07-20): the corpus has since moved to the private repo
+  `MBeji/yahia-quest-content` and is no longer shipped as Supabase migrations — the
+  figures above describe the catalogue, which the runtime still serves identically,
+  not this repo's current disk contents._
 
 ---
 

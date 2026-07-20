@@ -188,13 +188,8 @@ describe("loadMisconceptionRegistry", () => {
     expect(() => loadMisconceptionRegistry(dir)).toThrow(ContentValidationError);
   });
 
-  it("loads and validates the real content/misconceptions.json", () => {
-    const registry = loadMisconceptionRegistry(join(process.cwd(), "content"));
-    expect(Object.keys(registry).length).toBeGreaterThan(0);
-    for (const entry of Object.values(registry)) {
-      expect(entry.labels.fr.length).toBeGreaterThan(0);
-      expect(entry.labels.en.length).toBeGreaterThan(0);
-      expect(entry.labels.ar.length).toBeGreaterThan(0);
-    }
-  });
+  // The assertion on the REAL content/misconceptions.json moved to the private repo
+  // with the corpus (étude 24, lot 3b): it guarded corpus integrity, not loader
+  // behaviour, and `content:check` re-runs this very loader over the real registry
+  // on every private PR. The loader itself stays covered by the fixtures above.
 });

@@ -48,7 +48,7 @@ src/
 │   ├── lib/            ← Utilities (cn, logger, error-capture, markdown, rate-limit)
 │   ├── constants/      ← Global gameplay constants
 │   ├── types/          ← Shared TypeScript types
-│   ├── content/        ← Subject content schema/loader/sql-builder (content → SQL migrations)
+│   ├── content/        ← Content ENGINE: schema/loader/sql-builder (corpus files → SQL). Corpus itself is private
 │   └── integrations/   ← Supabase client, auth middleware
 │
 ├── components/         ← Non-feature React components
@@ -345,19 +345,31 @@ npm run test         # Run all tests (run it for the current count)
 npm run test:watch   # Watch mode
 npm run test:e2e     # Playwright E2E (public projects); :auth for authed
 npm run lint         # ESLint (zero warnings)
-npm run content:build  # Regenerate subject SQL migrations from content/
-npm run content:qa     # Content QA checks (:strict in ci:verify)
-npm run ci:verify    # Full CI pipeline (lint + typecheck + coverage + build + audit + content:qa:strict)
+npm run content:emit # Compile a corpus into sql/content/*.sql (needs the private corpus)
+npm run content:qa   # Content QA checks (run by the private repo's Content CI)
+npm run leak:check   # Anti-leak gate: no corpus / pedagogical skill may reappear here
+npm run ci:verify    # Full CI pipeline (lint + typecheck + coverage + build + audit + harness + leak)
 ```
 
 ### Adding subject content (not a feature)
 
-Authored content lives under `content/` (one dir per subject). To add or change
-subjects/chapters/exercises, **edit `content/` and regenerate** — do not hand-write content
-migrations. `src/shared/content/{schema,loader,sql-builder}.ts` validates the tree (zod)
-and emits one idempotent Supabase migration per subject (stable v5 UUIDs). Run
-`npm run content:build` to write migrations, `npm run content:check` to validate without
-writing, and `npm run content:qa` for QA.
+**Authored content no longer lives in this repo.** Since étude 24 (2026-07-20) the corpus, the
+generation skills and the studies live in the PRIVATE repo `MBeji/yahia-quest-content`; this repo
+keeps only the **engine**, which is generic and corpus-free. To add or change
+subjects/chapters/exercises, work there — do not hand-write content migrations, and never
+re-commit corpus here (`npm run leak:check` fails the build if you do).
+
+The engine is `src/shared/content/{schema,loader,sql-builder}.ts` + `scripts/content/**`: it
+validates the tree (zod) and compiles it to stable per-subject SQL (`sql/content/<subject>.sql`,
+idempotent, stable v5 UUIDs). The private repo's Content CI checks THIS repo out to get it, so a
+schema change here changes what that CI accepts.
+
+Content is **not shipped as Supabase migrations** any more: a database can host only one
+migration history, so the private repo's `apply-content.yml` applies the compiled SQL with `psql`
+and journals each run into the `content_releases` table. The 17 hand-written content migrations
+under `supabase/migrations/` stay public on purpose (`content:emit` cannot reproduce them, and
+three also seed non-content data). Full picture:
+[`docs/content-generation-pipeline.md`](./docs/content-generation-pipeline.md).
 
 ---
 

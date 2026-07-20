@@ -266,16 +266,11 @@ describe("loadCompetencyRegistries", () => {
     expect(() => loadCompetencyRegistries(dir)).toThrow(ContentValidationError);
   });
 
-  it("loads and validates the real content/competences registries (Q-1: 55-70 for math)", () => {
-    const registries = loadCompetencyRegistries(join(process.cwd(), "content"));
-    const math = registries.find((r) => r.family === "math");
-    expect(math).toBeDefined();
-    expect(math!.competencies.length).toBeGreaterThanOrEqual(55);
-    expect(math!.competencies.length).toBeLessThanOrEqual(70);
-    // Flagship cross-chapter edge: Thalès depends on proportionality (§1).
-    const thales = math!.competencies.find((c) => c.id === "math.geo.thales-direct");
-    expect(thales!.prereqs).toContain("math.prop.situations");
-  });
+  // The assertion on the REAL content/competences registries (55-70 math competencies,
+  // the Thalès→proportionality edge) moved to the private repo with the corpus
+  // (étude 24, lot 3b): those are corpus invariants, not loader behaviour, and a
+  // fixture restating them would assert nothing. `content:check` re-runs this loader
+  // over the real registries on every private PR.
 });
 
 describe("auditCompetencyRefs (content:qa vocabulary + family coverage)", () => {

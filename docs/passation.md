@@ -84,12 +84,12 @@ comportement non déterministe tant que le secret n'est pas configuré).
 
 ## 3. La PR — le gate complet (4 checks requis + previews)
 
-| Check requis         | Workflow             | Ce qu'il prouve                                                                                                                                                                                                                         |
-| -------------------- | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `verify`             | `ci.yml`             | lint, typecheck, tests + couverture (seuils 80 %), `content:check` (contenu ↔ migrations synchrones), `content:qa:strict`, `perf:check`, build + budgets de bundle, **`smoke:shell`** (le vrai bundle prod dans Chromium), `audit:deps` |
-| `Migration presence` | `migration-gate.yml` | liste les migrations qui s'auto-appliqueront à la prod au merge (aucune surprise) — informatif, toujours vert                                                                                                                           |
-| `Migration order`    | `migration-gate.yml` | **bloque** une migration antidatée qui coincerait silencieusement l'auto-apply prod (leçon des incidents #97 → #227 → #229)                                                                                                             |
-| `CodeQL`             | `codeql.yml`         | analyse statique de sécurité (SAST, suite `security-extended`) de tout le code JS/TS                                                                                                                                                    |
+| Check requis         | Workflow             | Ce qu'il prouve                                                                                                                                                                                                                                                            |
+| -------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `verify`             | `ci.yml`             | lint, typecheck, tests + couverture (seuils 80 %), **gate anti-fuite** (`leak:check` : aucun corpus ni skill pédagogique ne réapparaît ici), `harness:check`, `perf:check`, build + budgets de bundle, **`smoke:shell`** (le vrai bundle prod dans Chromium), `audit:deps` |
+| `Migration presence` | `migration-gate.yml` | liste les migrations qui s'auto-appliqueront à la prod au merge (aucune surprise) — informatif, toujours vert                                                                                                                                                              |
+| `Migration order`    | `migration-gate.yml` | **bloque** une migration antidatée qui coincerait silencieusement l'auto-apply prod (leçon des incidents #97 → #227 → #229)                                                                                                                                                |
+| `CodeQL`             | `codeql.yml`         | analyse statique de sécurité (SAST, suite `security-extended`) de tout le code JS/TS                                                                                                                                                                                       |
 
 En parallèle, non bloquants : la **preview Vercel** (URL de test par PR) et les
 annotations Code Scanning. Les suites lentes (**pgTAP**, **E2E Playwright**) ne sont pas
@@ -131,10 +131,18 @@ Trois automatismes se déclenchent :
 - **`upgrade-guard.yml`** (mar + ven, après une nightly verte) : montées de version —
   lot patch/minor auto-mergé seulement si gate complet + E2E + pgTAP verts, une PR par
   major (voir [dependency-maintenance.md](./dependency-maintenance.md)).
-- **`content-audit.yml`** (mer + sam) : re-résout chaque question du contenu modifié —
-  le seul filet contre une _mauvaise réponse_, invisible aux checks déterministes.
 - **`db-backup.yml`** (sauvegardes prod), **CodeQL hebdomadaire**, **Dependabot**
   (alertes de sécurité uniquement).
+
+> 📦 **Le contenu pédagogique ne se passe plus dans ce dépôt.** Depuis l'étude 24 (2026-07-20),
+> le corpus, les skills de génération et les études vivent dans le dépôt **privé**
+> `MBeji/yahia-quest-content` ; les gates contenu (`content:check`, `content:qa:strict`,
+> `content:audit:strict`, `programme:check`) et l'audit planifié `content-audit.yml` y ont
+> déménagé, tout comme `video-health.yml`. La Content CI privée fait un **double checkout** —
+> son corpus + ce dépôt-ci pour le moteur. Le contenu n'est plus livré en migrations Supabase :
+> il est appliqué par `apply-content.yml` (dépôt privé) et journalisé dans `content_releases`.
+> Le passage de relais côté contenu se fait donc **là-bas** — voir
+> [content-generation-pipeline.md](./content-generation-pipeline.md).
 
 ## Prérequis côté réglages GitHub (une seule fois)
 

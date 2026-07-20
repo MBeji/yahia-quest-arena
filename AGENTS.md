@@ -3,8 +3,9 @@
 > **This file is the single canonical source of truth for every contributor — human or AI
 > agent, whichever tool.** When it disagrees with any other doc, this file wins — fix the
 > other doc. [`ARCHITECTURE.md`](./ARCHITECTURE.md) is the deeper architecture companion;
-> `docs/*.md` are topic-specific normative specs; `FableEtudes/` holds epic-level design
-> studies; per-tool files (`CLAUDE.md`, `.github/copilot-instructions.md`, `.gemini/settings.json`)
+> `docs/*.md` are topic-specific normative specs; the epic design studies (`FableEtudes/`)
+> moved to the private content repo with the corpus (étude 24); per-tool files (`CLAUDE.md`,
+> `.github/copilot-instructions.md`, `.gemini/settings.json`)
 > are thin pointers to this one — never duplicate rules there. **Project state** (current
 > phase, dated decisions, real feature/étude status) lives in [`STATUS.md`](./STATUS.md) —
 > read it before trusting any "is X live?" claim.
@@ -37,17 +38,19 @@ npm run smoke:shell  # prod-bundle browser smoke: public shell must render crash
 npm test              # vitest run
 npm run lint          # eslint src --max-warnings=0  (zero-warning policy)
 npm run typecheck     # tsc --noEmit (strict)
-npm run verify         # lint + typecheck + test                    (fast local gate / pre-push)
-npm run ci:verify      # verify + coverage + build:check + audit:deps + content:qa:strict + content:audit:strict + harness:check
-npm run content:check                    # validate all content, write nothing
-npm run content:build -- --subject <id>  # regenerate the migration for ONE subject only
+npm run verify         # lint + typecheck + test + leak:check       (fast local gate / pre-push)
+npm run ci:verify      # verify + coverage + build:check + audit:deps + harness:check + leak:check
 npm run harness:check                    # harness anti-drift gate (pointers, size, hidden Unicode, model ids)
+npm run leak:check                       # gate anti-fuite : aucun corpus ni skill pédago au tip (étude 24)
+npm run db:inventory-content             # inventaire des migrations de contenu (provenance)
 ```
 
-⚠️ Never run bare `npm run content:build` — it regenerates **all ~60 subjects** with fresh
-timestamps. Always scope with `--subject <id>`. E2E needs a dedicated TEST Supabase project —
-see [`e2e/README.md`](./e2e/README.md); never point it at prod. Git hooks (husky): `pre-commit`
-runs lint-staged, `pre-push` runs `npm run verify` — never bypass with `--no-verify`.
+⚠️ Les commandes `content:*` / `programme:*` existent toujours (le **moteur** est ici) mais
+n'ont plus de données dans ce repo — elles s'exécutent depuis le repo **privé**, qui checkout
+celui-ci pour le moteur. Voir « Content pipeline » ci-dessous. E2E needs a dedicated TEST
+Supabase project — see [`e2e/README.md`](./e2e/README.md); never point it at prod. Git hooks
+(husky): `pre-commit` runs lint-staged, `pre-push` runs `npm run verify` — never bypass with
+`--no-verify`.
 
 ## Data model & access
 
@@ -62,24 +65,39 @@ Full model: [`ARCHITECTURE.md`](./ARCHITECTURE.md) §8. Core tables: `profiles`,
 (`correct_option`, `distractor_tags`) is **never** sent to the client, in the free phase or
 otherwise. Gameplay thresholds: `src/shared/constants/gamification.ts` (change rules there).
 
-## Content pipeline (`content/`)
+## Content pipeline — le corpus n'est PAS dans ce repo (étude 24)
 
-Pedagogical content (subjects, chapters, courses, quizzes, exercises) is **never** hand-written
-SQL — it lives as versioned files under `content/<subject>/NN-<slug>/`, validated by Zod, then
-compiled into idempotent Supabase migrations (deterministic UUIDv5 ids — rebuilding updates
-rows in place, no dupes). Edit `content/` → `content:build --subject <id>` → review the SQL →
-apply to the DB **before** deploying dependent code (DoD §7). Full spec:
-[`content/README.md`](./content/README.md) (French).
+Depuis la scission du 2026-07-20, **le corpus pédagogique et l'usine qui le produit vivent
+dans le repo privé [`MBeji/yahia-quest-content`](https://github.com/MBeji/yahia-quest-content)**
+(sur invitation). Ce repo-ci ne garde que le **moteur**, qui est générique et sans corpus :
+`scripts/content/**` (build, qa, audit, suivi, catalogue) et `src/shared/content/**`
+(loader, schema, sql-builder, qa-checks). Le moteur reste public **et testé ici** ; c'est lui
+que la CI privée checkout.
 
-**Generating content — use the skills.** Authoring is industrialized via
-[`.claude/skills/`](./.claude/skills/) (also mirrored at `.agents/skills/` for non-Claude
-tools) — start at `content-engine/references/generation-pipeline.md` for the full
-skill-selection map: `curriculum-architect` (plans coverage, never authors),
-`content-engine` (shared schema/quality-bar/rewards core) with per-program wrappers
-(`content-ecole-tn`, `content-culture-generale`, `content-langue-*`, …), `content-cours`
-(lesson texts), `content-interactif` (non-QCM formats), `content-audit` (re-solves &
-grades existing content), and the `prof-*` professor overlays (one per matière × niveau,
-hard/elite d3-4 exercises). Skills produce **files only**, never SQL.
+Sont partis au privé : `content/` (566 chapitres, ~18 700 questions et leurs clés), les
+**41 skills pédagogiques** (`content-*`, `prof-*`, `curriculum-architect`), `FableEtudes/` +
+METHODE, et les workflows `content-audit.yml` / `video-health.yml`. Ne restent ici que les
+**5 skills techniques** (`verify`, `code-review`, `regression-guard`, `upgrade-guard`,
+`report-triage`). `STATUS.md` reste public.
+
+**Pour écrire du contenu** : ouvrir la session sur le repo **privé** et y ajouter celui-ci
+pour le moteur (`add_repo` / second checkout). La boucle d'auteur ne change pas — éditer
+`content/<subject>/NN-<slug>/`, validé par Zod — mais elle se déroule là-bas, et les gates
+contenu (`content:check`, `content:qa:strict`, `content:audit:strict`, `programme:check`)
+tournent dans la **Content CI privée**, plus dans la CI d'ici.
+
+**Le contenu ne voyage plus en migrations.** Il est compilé en `sql/content/<subject>.sql`
+(`content:emit`, nom de fichier stable, régénéré en place) et appliqué par le workflow privé
+`apply-content.yml`, qui journalise chaque application dans la table `content_releases`.
+Les **17 migrations de contenu écrites à la main** restent ici : `content:emit` ne les
+reproduit pas et trois d'entre elles seedent aussi des données hors contenu
+(`badges`/`shop_items`, `grades`/`themes`, `parcours`/`profiles`).
+
+⚠️ **Ne re-commite jamais de corpus ici.** `npm run leak:check`
+([`scripts/ci/check-content-leak.mjs`](./scripts/ci/check-content-leak.mjs)) fait **échouer**
+le gate si `content/**`, `sql/content/**`, un skill `content-*`/`prof-*` ou une migration de
+contenu **générée** réapparaît au tip. Il tourne dans `verify`, dans `ci:verify` et en CI.
+Détail du flux : [`docs/content-generation-pipeline.md`](./docs/content-generation-pipeline.md).
 
 ## Conventions
 
@@ -133,27 +151,28 @@ by `npm run harness:sync`, checked by `npm run harness:check`).
 
 Several AI agents (and humans) may work this repo concurrently. Branch prefix identifies the
 author (`claude/…`, `codex/…`, `humain/<pseudo>/…`); one lot/task = one PR touching a distinct
-file set — see [`FableEtudes/CONTRIBUER.md`](./FableEtudes/CONTRIBUER.md) for the reservation
+file set — see `FableEtudes/CONTRIBUER.md` **in the private content repo** for the reservation
 protocol. The PR is the only coordination point: no side-channel memory, no private state.
 Any project-relevant knowledge discovered in a session (a gotcha, a process rule) belongs in
 this repo (this file, `STATUS.md`, `docs/agents/`) — not only in a tool's private memory.
 
 ## Documentation map
 
-| Doc                                        | Role                                                                                                                                                                                                     |
-| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`ARCHITECTURE.md`](./ARCHITECTURE.md)     | Stack, directory structure, data model, deployment — the deep companion to this file                                                                                                                     |
-| [`STATUS.md`](./STATUS.md)                 | Central topo: phase, dated decisions, real feature/étude status                                                                                                                                          |
-| [`FableEtudes/`](./FableEtudes/README.md)  | Epic design studies (architect → executor contracts)                                                                                                                                                     |
-| [`content/README.md`](./content/README.md) | Content pipeline spec (French)                                                                                                                                                                           |
-| [`e2e/README.md`](./e2e/README.md)         | Playwright runbook (dedicated TEST project)                                                                                                                                                              |
-| `docs/*.md`                                | Topic specs: CI/CD, dependency cadence, env vars, logging, XSS policy, content voice, release tagging, lycée architecture, interactive question types, passation, `docs/agents/` (operational playbooks) |
-| `harness/*.json`                           | Model roles, execution policy, sync manifest (source of truth for generated per-tool views)                                                                                                              |
+| Doc                                                                            | Role                                                                                                                                                                                                     |
+| ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`ARCHITECTURE.md`](./ARCHITECTURE.md)                                         | Stack, directory structure, data model, deployment — the deep companion to this file                                                                                                                     |
+| [`STATUS.md`](./STATUS.md)                                                     | Central topo: phase, dated decisions, real feature/étude status                                                                                                                                          |
+| `FableEtudes/` (repo **privé**)                                                | Epic design studies (architect → executor contracts) — parties au privé avec le corpus (étude 24)                                                                                                        |
+| [`docs/content-generation-pipeline.md`](./docs/content-generation-pipeline.md) | Content pipeline spec (French) — le moteur est ici, le corpus est au privé                                                                                                                               |
+| [`e2e/README.md`](./e2e/README.md)                                             | Playwright runbook (dedicated TEST project)                                                                                                                                                              |
+| `docs/*.md`                                                                    | Topic specs: CI/CD, dependency cadence, env vars, logging, XSS policy, content voice, release tagging, lycée architecture, interactive question types, passation, `docs/agents/` (operational playbooks) |
+| `harness/*.json`                                                               | Model roles, execution policy, sync manifest (source of truth for generated per-tool views)                                                                                                              |
 
 ## Known gotchas / traps
 
-- `src/routeTree.gen.ts`, `src/shared/integrations/supabase/types.ts`, and content-generated
-  migrations (`supabase/migrations/*_generated_*_content.sql`) are **generated — never hand-edit**.
+- `src/routeTree.gen.ts` and `src/shared/integrations/supabase/types.ts` are
+  **generated — never hand-edit**. (Content-generated migrations no longer live here: since
+  étude 24 the corpus compiles to `sql/content/*.sql` in the private repo.)
 - **New tables need EXPLICIT grants** — `CREATE TABLE` without its own
   `GRANT SELECT … TO authenticated` works on cloud but breaks the nightly pgTAP suite on a
   fresh DB (baseline: `20260612221000_baseline_table_grants.sql`).
@@ -162,8 +181,9 @@ this repo (this file, `STATUS.md`, `docs/agents/`) — not only in a tool's priv
   check catches this pre-merge.
 - **E2E ≠ unit gate.** Playwright hits a dedicated TEST Supabase project, not unit-test mocks;
   not part of `verify`/`ci:verify`; never point it at prod.
-- **CI runs a superset of local `verify`**: adds `content:check`/`content:qa:strict`,
-  `build:check`, and `smoke:shell` (loads the real prod bundle in Chromium — the only tier
-  that executes prod-gated client code). A green local gate does not guarantee a green CI.
+- **CI runs a superset of local `verify`**: adds `build:check`, `perf:check` and `smoke:shell`
+  (loads the real prod bundle in Chromium — the only tier that executes prod-gated client
+  code). A green local gate does not guarantee a green CI. The **content** gates are no longer
+  part of it: they run in the private repo's Content CI (étude 24).
 - Coverage is scoped to owned code (`features/`, `shared/`, `lib/`, `hooks/`) — vendored UI,
   route glue, and generated files are excluded by design; don't widen `include` to dilute it.

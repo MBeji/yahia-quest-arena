@@ -8,10 +8,16 @@
 > `references/content-schema.md`). This spec is fully executed — no more Tier-B types are
 > planned; further engine evolution needs a new spec.
 > **Tier A** — interactive formats encoded inside the existing QCM schema — is live and
-> canonically documented in `.claude/skills/content-engine/references/interactive-formats.md`;
+> canonically documented in `content-engine/references/interactive-formats.md`;
 > author those freely via the `content-interactif` skill. Tier B adds _native_ input types and
 > requires the coordinated DB + RPC + UI + pipeline changes mapped here. Defers to AGENTS.md
 > (DoD §7 migration ordering) and ARCHITECTURE.md where they overlap.
+>
+> 📦 **Since étude 24 (2026-07-20)** the corpus, the `content-*`/`prof-*` skills (hence every
+> `content-engine/references/*` file cited below) and the études live in the PRIVATE repo
+> `MBeji/yahia-quest-content`. The engine described here — `src/shared/content/`, `scripts/content/`,
+> the SQL functions and the UI — stays in this public repo. See
+> [`docs/content-generation-pipeline.md`](./content-generation-pipeline.md).
 
 ## Why (and why not sooner)
 
