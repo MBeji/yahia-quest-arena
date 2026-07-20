@@ -1,9 +1,0 @@
-{
-  "title": "Suites réelles — apprivoiser l'infini pas à pas",
-  "description": "Rappels sur les suites arithmétiques et géométriques, raisonnement par récurrence, suites majorées, minorées et bornées, limite d'une suite et sous-suites paire/impaire, opérations sur les limites, limites des suites géométriques, suites du type Vₙ = f(Uₙ), théorèmes de comparaison, des gendarmes et de la valeur absolue, convergence des suites monotones, suites récurrentes Uₙ₊₁ = f(Uₙ) et point fixe, suites adjacentes",
-  "displayOrder": 2,
-  "sources": [
-    "Fiche du programme officiel (transcription CNP validée R-7) — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/bac-math/mathematiques.md (§2.2, Chapitre 2 — Suites réelles, manuel 222445 p.28–52)",
-    "Programme officiel de mathématiques — 4ème année de l'enseignement secondaire, section Mathématiques (ministère de l'Éducation, Tunisie)"
-  ]
-}

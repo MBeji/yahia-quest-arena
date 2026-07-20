@@ -1,9 +1,0 @@
-{
-  "title": "Dérivabilité — la pente qui trahit la fonction",
-  "description": "Nombre dérivé et tangente, approximation affine, dérivabilité à gauche et à droite, dérivabilité sur un intervalle, dérivées des fonctions usuelles et opérations, dérivée d'une fonction composée, dérivées successives, théorème de Rolle, théorème et inégalité des accroissements finis, sens de variation par le signe de la dérivée, extrema, point d'inflexion et centre de symétrie",
-  "displayOrder": 3,
-  "sources": [
-    "Fiche du programme officiel (transcription CNP validée R-7) — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/bac-math/mathematiques.md (§2.3, Chapitre 3 — Dérivabilité, manuel 222445 p.53–76)",
-    "Programme officiel de mathématiques — 4ème année de l'enseignement secondaire, section Mathématiques (ministère de l'Éducation, Tunisie)"
-  ]
-}

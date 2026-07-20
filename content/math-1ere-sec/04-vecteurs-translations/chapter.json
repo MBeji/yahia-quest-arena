@@ -1,9 +1,0 @@
-{
-  "title": "Vecteurs et translations",
-  "description": "Définition du vecteur par équipollence des bipoints (AB = CD lorsque [AD] et [BC] ont le même milieu), vecteur nul, égalité vectorielle et ses caractérisations (parallélogramme, permutation AC = BD, milieu), translation et image d'un point, d'une droite, d'un segment, d'un cercle et d'un polygone, conservation des distances, des aires, des périmètres et des angles par une translation",
-  "displayOrder": 4,
-  "sources": [
-    "Programme officiel — Mathématiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 222104P01 (chapitre 4, p.51–68)",
-    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/mathematiques.md (§2.4)"
-  ]
-}

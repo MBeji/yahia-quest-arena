@@ -1,9 +1,0 @@
-{
-  "title": "Activités numériques I — arithmétique et ensembles de nombres",
-  "description": "Division euclidienne (a = bq + r avec 0 ≤ r < b), divisibilité, nombres premiers et décomposition en facteurs premiers, plus grand commun diviseur (PGCD) et plus petit commun multiple (PPCM) avec l'algorithme d'Euclide et la relation PGCD × PPCM = a × b, entiers premiers entre eux et fractions irréductibles, ensembles de nombres emboîtés (IN ⊂ ℤ ⊂ D ⊂ Q ⊂ R), et notation scientifique avec ordre de grandeur",
-  "displayOrder": 9,
-  "sources": [
-    "Programme officiel — Mathématiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 222104P02 (chapitre 9, p.133–152)",
-    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/mathematiques.md (§2.9)"
-  ]
-}

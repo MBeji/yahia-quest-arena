@@ -1,9 +1,0 @@
-{
-  "title": "Activités algébriques — développer, factoriser, identités remarquables",
-  "description": "Calcul littéral (mise en expression et substitution numérique), développement et réduction par la distributivité (a+b)(c+d) = ac+ad+bc+bd, identités remarquables (carré d'une somme et d'une différence, cube d'une somme et d'une différence, différence de deux carrés, somme et différence de deux cubes), factorisation (facteur commun et identités), et notion d'égalité de deux expressions valable pour tout réel ou seulement pour certaines valeurs",
-  "displayOrder": 11,
-  "sources": [
-    "Programme officiel — Mathématiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 222104P02 (chapitre 11, p.169–184)",
-    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/mathematiques.md (§2.11)"
-  ]
-}

@@ -1,9 +1,0 @@
-{
-  "title": "Continuité et limites — la porte de l'Analyse",
-  "description": "Continuité en un point et sur un intervalle, opérations et composées, calcul de limites et formes indéterminées, théorèmes de comparaison et d'encadrement, asymptotes verticales et horizontales, image d'un intervalle, théorème des valeurs intermédiaires et son corollaire, prolongement par continuité et dichotomie",
-  "displayOrder": 1,
-  "sources": [
-    "Transcription pilote du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/bac-math/mathematiques.md (§2.1)",
-    "Programme officiel de mathématiques — 4ème année de l'enseignement secondaire, section Mathématiques (ministère de l'Éducation, Tunisie)"
-  ]
-}

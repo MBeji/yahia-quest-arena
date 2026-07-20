@@ -1,9 +1,0 @@
-{
-  "title": "Sections planes d'un solide",
-  "description": "Solides usuels (parallélépipède rectangle, cylindre, prisme droit, pyramide, cône de révolution, sphère et boule) et leurs volumes, sections planes : d'un parallélépipède droit (par un plan parallèle à une face → rectangle isométrique, par un plan contenant une arête → rectangle), d'une pyramide et d'un cône par un plan parallèle à la base (polygone de même nature réduit, cercle), d'un cylindre (cercle de même rayon), d'une sphère (cercle, grand cercle si le plan passe par le centre), et propriétés des plans parallèles et de la perpendicularité droite-plan",
-  "displayOrder": 8,
-  "sources": [
-    "Programme officiel — Mathématiques, 1ère année de l'enseignement secondaire (tronc commun), CNP Tunisie ; manuel élève 222104P02 (chapitre 8, p.117–130)",
-    "Transcription du programme officiel — .claude/skills/content-ecole-tn/references/programmes-officiels/programme/1ere-sec/mathematiques.md (§2.8)"
-  ]
-}

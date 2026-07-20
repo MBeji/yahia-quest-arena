@@ -1,9 +1,0 @@
-{
-  "title": "Reported Speech",
-  "description": "Transform direct speech into reported speech: backshift tenses, shift pronouns and time expressions, and master the difference between say and tell.",
-  "displayOrder": 3,
-  "sources": [
-    "CEFR B2 descriptors (Council of Europe, Common European Framework of Reference)",
-    "Raymond Murphy, English Grammar in Use (reported speech; backshift of tenses)"
-  ]
-}
