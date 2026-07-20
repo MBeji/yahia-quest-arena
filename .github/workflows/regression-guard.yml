@@ -70,6 +70,17 @@ jobs:
         if: steps.guard.outputs.configured == 'true'
         run: npm ci --no-audit --no-fund
 
+      # Le modèle de ce garde n'est pas écrit ici : il vient de harness/models.json via
+      # son rôle (étude 25 D-5/D-6). Changer de modèle = une ligne dans ce JSON, et
+      # harness:check échoue si un identifiant réapparaît en dur dans un workflow.
+      - name: Resolve the model for role garde-tests
+        id: model
+        if: steps.guard.outputs.configured == 'true'
+        run: |
+          model="$(node -p "require('./harness/models.json').roles['garde-tests'].model")"
+          echo "model=$model" >> "$GITHUB_OUTPUT"
+          echo "Role garde-tests -> $model (source: harness/models.json)"
+
       - name: Run the regression-guard sweep
         if: steps.guard.outputs.configured == 'true'
         uses: anthropics/claude-code-action@v1
@@ -97,7 +108,7 @@ jobs:
             it as a real bug and report it. If everything is already green and covered,
             open no PR and post a short "all green" summary in the job log instead.
           claude_args: |
-            --model claude-sonnet-4-6
+            --model ${{ steps.model.outputs.model }}
             --max-turns 40
             --allowedTools "Bash,Read,Edit,Write,Glob,Grep"
 
