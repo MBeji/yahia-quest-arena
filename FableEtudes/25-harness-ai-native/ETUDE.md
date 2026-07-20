@@ -785,7 +785,7 @@ Détail des points durs par lot :
 - [ ] Lot 3 — Skills : conformité spec + miroir `.agents/skills/`
 - [x] Lot 4 — Politique d'exécution déclarative + hook externalisé (2026-07-20)
 - [ ] Lot 5 — Gardes CI portables + épinglage SHA
-- [ ] Lot 6 — Mémoire & collaboration multi-têtes
+- [x] Lot 6 — Mémoire & collaboration multi-têtes (2026-07-20)
 - [ ] Lot 7 — Drill de portabilité (avec l'humain)
 
 ## 7. Stratégie de test
@@ -974,6 +974,34 @@ Détail des points durs par lot :
   Gate : `npm run ci:verify` intégral vert.
   _Reste_ : L3 (après é24 3b), L5 (gardes CI + SHA + CODEOWNERS de Q-6), L6 (mémoire process),
   L7 (drill, avec Mohamed).
+- **2026-07-20 — Lot 6 livré (D-7).** `docs/agents/` créé — le savoir opérationnel qui ne vivait
+  que dans la mémoire privée d'un outil (donc mono-poste, mono-tête, invisible du 2ᵉ
+  collaborateur) est désormais **dans le dépôt**, lisible par n'importe quelle tête :
+  - `poste-windows.md` — pathconv MSYS sur `git show <rev>:<path>` (chemin mutilé), `jq` absent
+    (rend du **vide silencieux** → faux signaux de moniteur), pas de `/tmp`, symlinks git
+    désactivés par défaut (le fichier de 9 octets qui casse silencieusement un pointeur —
+    justification de fond du choix `@AGENTS.md` en D-1), checkout **partagé** entre worktrees
+    (branches/stash/reflog/`node_modules` communs : ne pas supprimer ce qu'on n'a pas créé),
+    `verify` local ⊂ CI.
+  - `collaboration.md` — préfixes de branche par tête, un lot = une PR sur un jeu de fichiers
+    disjoint, **vérifier l'ordre réel avant de prendre un lot** (l'étude prime sur le raccourci
+    de la ROADMAP ; cas vécu L3/é24 documenté), congestion `main` et ce qu'`automerge.yml` fait
+    tout seul (merge de `main`, PR refermée/rouverte sous un **nouveau numéro**, label
+    `needs-rebase`), doublons de sauvetage, fichiers à contention (index/STATUS/ROADMAP :
+    prendre `main` + réappliquer sa ligne), numéro d'étude réservé au merge, et le **protocole
+    du drill L7**.
+  - `campagnes-contenu.md` — corpus hors dépôt (donc session locale), budget ≈ 4 chapitres/session
+    et lotissement en petites PR, lecture PDF par rendu image (couche texte trompeuse en maths),
+    registre `suivi/` à consulter **avant** de générer (`[~]` = déjà fait), et ce que les gates
+    ne voient pas (une clé fausse passe `content:qa:strict`).
+  - `README.md` d'index + entrée dédiée dans la carte des docs d'AGENTS.md (la référence
+    `docs/agents/` y était **morte** depuis le lot 1) + renvoi depuis `CONTRIBUER.md`.
+    Deux leçons proviennent directement des incidents de cette session : la boucle d'attente
+    `until [ "$(gh …)" != "null" ]` qui **sort aussi sur une réponse vide** (a produit un faux
+    « mergé » annoncé à l'humain — d'où la règle « prouver un merge par `git ls-tree origin/main`,
+    jamais par un champ d'API ») et la course-poursuite rebase/automerge sous congestion.
+    Gate : `npm run ci:verify` vert.
+    _Reste_ : L5 (gardes CI + SHA + CODEOWNERS de Q-6), L3 (après é24 3b), L7 (drill, avec Mohamed).
 
 ---
 
