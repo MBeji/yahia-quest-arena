@@ -47,10 +47,22 @@ peut être porté sur une autre action (`openai/codex-action`, `jules-action`…
 **deux choses** : l'action `uses:` et le secret d'authentification. Le prompt (« exécute le skill
 X, livre une PR/issue ») et le skill lui-même sont déjà agnostiques.
 
-Un garde « second avis » d'une autre famille de modèles est **spécifié mais dormant** (Q-3
-différée le 2026-07-19) : rôle `second-avis` réservé dans `models.json`. Règle de gouvernance si
-on l'active un jour : **son avis est un commentaire, jamais une approbation requise** — on ne
-promeut un check d'agent en « required » qu'après avoir mesuré son taux de faux positifs.
+Un garde « second avis » d'une autre famille de modèles existe et est **dormant** (Q-3 différée
+le 2026-07-19) : [`second-opinion.yml`](../../.github/workflows/second-opinion.yml), rôle
+`second-avis` réservé dans `models.json`. Il ne s'exécute que si **deux** verrous sont levés —
+le secret `OPENAI_API_KEY` existe **et** le rôle porte un `model` non nul ; sinon il skippe en
+vert. Le secret dit « on paie », `models.json` dit « avec quoi » : il faut les deux.
+
+**Pourquoi ce garde existe** : tous nos gardes tournent sur la même famille de modèles, donc un
+angle mort partagé reste invisible quel que soit leur nombre. Une seconde famille le révèle.
+
+**Règle de gouvernance, non négociable** : son avis est un **commentaire**, jamais une
+approbation ni un check requis. On ne promeut un check d'agent en « required » qu'après avoir
+mesuré son taux de faux positifs sur la durée.
+
+⚠️ **Jamais exécuté à ce jour**, par construction (aucun secret). Le squelette suit ce contrat
+et les entrées de `openai/codex-action` telles que documentées ; **les vérifier est le premier
+geste de qui l'allumera** — ne pas supposer qu'il fonctionne parce qu'il est committé.
 
 ## Cadence
 
