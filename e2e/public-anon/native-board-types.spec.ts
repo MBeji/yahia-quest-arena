@@ -52,8 +52,7 @@ test.describe("Native question types (B2 — ordering/matching)", () => {
         if (!(await group.isVisible().catch(() => false))) break;
         await group.getByRole("radio").first().click();
       }
-      await practice.submitButton.click();
-      await page.waitForTimeout(200);
+      await practice.submitAndSettle();
     }
 
     expect(sawBoard).toBe(true);
