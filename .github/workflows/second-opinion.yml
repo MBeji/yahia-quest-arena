@@ -1,0 +1,99 @@
+name: Second opinion (dormant)
+
+# Garde « second avis » d'une AUTRE famille de modèles — étude 25, D-6 / Q-3.
+#
+# POURQUOI : tous les gardes de ce dépôt tournent sur la même famille de modèles.
+# Un angle mort partagé (une classe de bug qu'un modèle ne voit pas) reste donc
+# invisible quel que soit le nombre de gardes. Une seconde famille le révèle.
+#
+# ÉTAT : DORMANT. Q-3 a été différée le 2026-07-19 — la mécanique est prête, la
+# dépense ne l'est pas. Ce workflow ne s'exécute que si DEUX conditions sont
+# réunies :
+#   1. le secret `OPENAI_API_KEY` existe sur le dépôt ;
+#   2. le rôle `second-avis` de harness/models.json porte un `model` non nul.
+# Sans ça il skippe en VERT, comme les autres gardes sans leur secret.
+#
+# ⚠️ NON TESTÉ DE BOUT EN BOUT, par construction : sans secret il n'a jamais pu
+# s'exécuter. Le squelette suit le contrat des gardes (docs/agents/gardes.md) et
+# les entrées de `openai/codex-action` telles que documentées à ce jour ; les
+# vérifier à l'activation, c'est le premier geste de qui l'allumera.
+#
+# GOUVERNANCE (non négociable, étude 25 §3.6) : son avis est un COMMENTAIRE,
+# jamais une approbation ni un check requis. On ne promeut un check d'agent en
+# « required » qu'après avoir mesuré son taux de faux positifs sur la durée.
+# Pour l'activer : renseigner le rôle dans models.json, poser le secret, et
+# lire docs/agents/gardes.md § « Changer de fournisseur ».
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  workflow_dispatch:
+
+concurrency:
+  group: second-opinion-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  second-opinion:
+    name: Second opinion
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+
+      # Deux verrous plutôt qu'un : le secret dit « on paie », models.json dit
+      # « voici avec quoi ». Il faut les deux, sinon on skippe en vert.
+      - name: Check whether this guard is armed
+        id: guard
+        env:
+          HAS_SECRET: ${{ secrets.OPENAI_API_KEY != '' }}
+        run: |
+          set -euo pipefail
+          model="$(node -p "require('./harness/models.json').roles['second-avis'].model ?? ''")"
+
+          if [ "$HAS_SECRET" != "true" ]; then
+            echo "Secret OPENAI_API_KEY absent — garde dormant, skip (vert)."
+            echo "armed=false" >> "$GITHUB_OUTPUT"
+          elif [ -z "$model" ]; then
+            echo "Rôle 'second-avis' sans modèle dans harness/models.json — garde dormant, skip (vert)."
+            echo "armed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Garde armé — rôle second-avis -> $model (source: harness/models.json)."
+            echo "armed=true" >> "$GITHUB_OUTPUT"
+            echo "model=$model" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Cross-family review
+        if: steps.guard.outputs.armed == 'true'
+        uses: openai/codex-action@52fe01ec70a42f454c9d2ebd47598f9fd6893d56 # v1
+        with:
+          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+          model: ${{ steps.guard.outputs.model }}
+          prompt: |
+            Tu donnes un SECOND AVIS sur cette pull request de yahia-quest-arena.
+            Un autre agent l'a peut-être déjà relue : ton intérêt est justement
+            d'appartenir à une autre famille de modèles, donc de voir ce qu'elle
+            ne voit pas.
+
+            Lis AGENTS.md (source canonique du dépôt) puis le diff de la PR.
+
+            Signale UNIQUEMENT ce qui est à fort signal :
+            - un bug de correction que les tests ne couvrent pas ;
+            - un affaiblissement du gate (seuil abaissé, test supprimé, check
+              rendu conditionnel, règle lint désactivée) ;
+            - une clé de réponse ou un secret qui fuiterait côté client ;
+            - une migration destructive livrée avec le code qui l'utilise encore.
+
+            N'ouvre AUCUNE discussion de style : le formatage et les conventions
+            ont déjà leurs gates déterministes. Si tu ne trouves rien de
+            substantiel, dis-le en une phrase — un commentaire vide vaut mieux
+            qu'un commentaire inventé.
+
+            Tu postes un COMMENTAIRE. Tu n'approuves pas, tu ne bloques pas, tu
+            ne pousses rien.

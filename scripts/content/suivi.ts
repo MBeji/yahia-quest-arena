@@ -114,9 +114,33 @@ function buildCorpus(): Corpus {
 // Loading (shared by --check / --index)
 // --------------------------------------------------------------------------
 
+/**
+ * Depuis la scission (étude 24, 2026-07-20), l'arbre `programmes-officiels/` vit
+ * dans le repo PRIVÉ avec le corpus ; seul le moteur est resté ici. Lancer ce
+ * gate depuis le repo public échoue donc légitimement — mais le message ne doit
+ * pas envoyer sur une fausse piste : `--corpus` recréerait un registre vide ICI,
+ * à côté de la plaque. Le registre est le garde-fou anti-double-transcription,
+ * mieux vaut refuser bruyamment que fabriquer un faux « rien à faire ».
+ */
+function failMissingRegistry(path: string, what: string): never {
+  const corpusSkillDir = join(REPO_ROOT, ".claude/skills/content-ecole-tn");
+  if (!existsSync(corpusSkillDir)) {
+    fail(
+      `${what} introuvable: ${path}\n` +
+        `  → Normal dans le repo PUBLIC : depuis l'étude 24, le registre de transcription vit\n` +
+        `    dans le repo privé MBeji/yahia-quest-content, avec le corpus qu'il décrit. Ce gate\n` +
+        `    y tourne (workflow « Content CI » : il checkout ce repo-ci pour le moteur et branche\n` +
+        `    les données par symlink).\n` +
+        `  → Ne PAS lancer --corpus ici : cela créerait un registre vide au mauvais endroit et\n` +
+        `    masquerait le vrai registre.`,
+    );
+  }
+  fail(`${what} introuvable: ${path} (lancer --corpus)`);
+}
+
 function loadInput(): SuiviCheckInput {
-  if (!existsSync(CORPUS_JSON)) fail(`registre absent: ${CORPUS_JSON} (lancer --corpus)`);
-  if (!existsSync(AFFECTATIONS_JSON)) fail(`affectations absentes: ${AFFECTATIONS_JSON}`);
+  if (!existsSync(CORPUS_JSON)) failMissingRegistry(CORPUS_JSON, "registre");
+  if (!existsSync(AFFECTATIONS_JSON)) failMissingRegistry(AFFECTATIONS_JSON, "affectations");
   const corpus = corpusSchema.parse(JSON.parse(readFileSync(CORPUS_JSON, "utf8")));
   const affectations = affectationsSchema.parse(
     JSON.parse(readFileSync(AFFECTATIONS_JSON, "utf8")),

@@ -185,3 +185,19 @@ export function trackVideoOpen(params: {
     subject_id: params.subjectId,
   });
 }
+
+/**
+ * Étude 22 R-25 — d'où viennent les questions du donjon : `grade` (la classe du parcours
+ * actif), `cycle` (repli quand la classe compte moins de 60 questions éligibles) ou `all`
+ * (catalogue entier). Émis une fois par lot servi.
+ *
+ * L'intérêt n'est pas le confort mais le diagnostic de CONTENU : si `all` domine sur une
+ * classe donnée, c'est que son catalogue est trop mince pour nourrir une arène — un signal à
+ * remonter au fil contenu, pas un réglage à faire côté produit.
+ */
+export function trackDungeonPoolScope(params: { scope: "grade" | "cycle" | "all" }): void {
+  if (!isAnalyticsEnabled() || typeof window.gtag !== "function") return;
+  safeGtag("event", "dungeon_pool_scope", {
+    pool_scope: params.scope,
+  });
+}

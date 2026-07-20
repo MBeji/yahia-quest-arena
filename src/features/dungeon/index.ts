@@ -9,4 +9,5 @@ export {
   submitDungeonRun,
   DUNGEON_XP_PER_FLOOR,
   DUNGEON_COINS_PER_5_FLOORS,
+  type DungeonPoolScope,
 } from "./dungeon.server";
