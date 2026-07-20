@@ -141,11 +141,16 @@ Full detail on §7/§8: [`docs/ci-cd-and-branch-protection.md`](./docs/ci-cd-and
 
 ## Execution policy
 
-Always allowed: `npm run {dev,build,build:check,verify,ci:verify,lint,typecheck,test,format,
-content:*,audit:deps}`, read-only `git`/`gh` commands. **Never**: `supabase db push`/`db reset`
-against any project (prod migrates only via `db-migrate-prod.yml`; local dev uses its own
-scoped flow). Full declarative policy: `harness/policy.json` (source; per-tool views generated
-by `npm run harness:sync`, checked by `npm run harness:check`).
+Always allowed: the project's own gates (`npm run {lint,typecheck,test,test:*,verify,ci:verify,
+build,build:*,format,audit:deps,harness:check}`), the content pipeline (`npm run content:*`),
+read-only `git`/`gh`/`ls` inspection, and read-only `supabase migration list`/`db diff`/`test db`.
+**Never**: `supabase db push`/`db reset` against any project (prod migrates only via
+`db-migrate-prod.yml`, DoD §7). Anything else falls back to asking.
+Source of truth: **`harness/policy.json`** (with a reason on every deny) — `npm run harness:sync`
+compiles it into each tool's view (today `.claude/settings.json`, never hand-edited) and
+`npm run harness:check` fails CI on drift. Tools without a repo-level permission file read this
+section as guidance; the hard net stays the husky hooks, the required CI checks, and the absence
+of prod credentials locally.
 
 ## Multi-agent collaboration
 
