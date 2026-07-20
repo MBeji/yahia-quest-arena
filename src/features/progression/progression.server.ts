@@ -1,9 +1,24 @@
 import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { STREAK_RECOVERY_COST } from "@/shared/constants/gamification";
 import { getTodayUtc, getYesterdayUtc } from "@/shared/lib/dates";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { isRateLimited } from "@/shared/lib/rate-limit";
+import { logger } from "@/shared/lib/logger";
+import type { CompetencyExercise } from "@/shared/types/competency";
+
+/**
+ * `get_exercises_for_competency` (étude 07 lot 4) est postérieure aux types Supabase générés,
+ * qui ne peuvent être régénérés sans accès DB : on fige son contrat ici (même patron que les
+ * RPC de `dashboard.server.ts`). L'accès est arbitré côté SQL par `resolve_exercise_access`.
+ */
+type CompetencyExercisesRpcClient = {
+  rpc: (
+    fn: "get_exercises_for_competency",
+    args: { p_competency: string },
+  ) => PromiseLike<{ data: CompetencyExercise[] | null; error: { message: string } | null }>;
+};
 
 // ---------- Streak Recovery (buy back streak with coins) ----------
 export const recoverStreak = createServerFn({ method: "POST" })
@@ -73,4 +88,24 @@ export const recoverStreak = createServerFn({ method: "POST" })
       coinsSpent: STREAK_RECOVERY_COST,
       remainingCoins: (profile.yahia_coins ?? 0) - STREAK_RECOVERY_COST,
     };
+  });
+
+// ---------- « S'entraîner » sur une compétence faible (étude 07 lot 4, US-2) ----------
+// Les exercices EXISTANTS qui évaluent la compétence, déjà filtrés par la porte d'accès (R-3)
+// côté SQL. On-demand : le panneau l'appelle quand l'élève clique « S'entraîner », puis route
+// vers le premier exercice rendu. Dégradation gracieuse : une RPC absente rend une liste vide
+// (le bouton ne mène nulle part) plutôt que de casser la page.
+export const getCompetencyExercises = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ competency: z.string().min(1) }).parse(d))
+  .handler(async ({ data, context }): Promise<CompetencyExercise[]> => {
+    const client = context.supabase as unknown as CompetencyExercisesRpcClient;
+    const res = await client.rpc("get_exercises_for_competency", { p_competency: data.competency });
+    if (res.error) {
+      logger.warn("getCompetencyExercises: RPC failed, defaulting to empty", {
+        error: res.error.message,
+      });
+      return [];
+    }
+    return res.data ?? [];
   });

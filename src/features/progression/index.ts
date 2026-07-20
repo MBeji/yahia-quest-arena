@@ -1,7 +1,11 @@
 // Feature: Progression (streak recovery, révision du jour)
 // Public API — import from "@/features/progression"
 
-export { recoverStreak } from "./progression.server";
+export { recoverStreak, getCompetencyExercises } from "./progression.server";
+// « Carte de compétences » (étude 07, lot 4). Comme le panneau de révision, il vit dans la
+// progression et ses données arrivent par `getDashboard` (get_my_competency_map +
+// get_competency_blockers), lu une seule fois. La route dashboard compose.
+export { CompetencyMapPanel } from "./components/competency-map-panel";
 // « Révision du jour » (étude 04, lot A1.1). Le panneau vit ici — la révision est de la
 // progression — mais ses DONNÉES arrivent par `getDashboard`, qui appelle `get_daily_plan`
 // une seule fois pour alimenter à la fois la bande focus et ce panneau (étude 22, D-8).
