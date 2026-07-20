@@ -639,6 +639,11 @@ export const fr: TranslationKeys = {
     titleGradient: "Classement",
     titleRest: "de l'Académie",
     globalTab: "🌍 Global",
+    myClassTab: "🎓 Ma classe",
+    subtitleMyClass: "Les héros de ta classe",
+    myClassEmptyTitle: "Sois le premier de ta classe",
+    myClassEmptyDesc:
+      "Personne de ta classe n'a encore marqué de points. Joue une mission et prends la tête.",
     subtitleGlobal: "Les héros les plus puissants de l'Académie",
     subtitleSubject: "Classement par XP · {subject}",
     loading: "Chargement du classement…",

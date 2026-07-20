@@ -42,6 +42,30 @@ type ParcoursProgressRpcClient = {
   ) => PromiseLike<{ data: ParcoursProgressRow[] | null; error: { message: string } | null }>;
 };
 
+/**
+ * Ligne du classement de cohorte — étude 22 R-23. Même contrat que `get_global_leaderboard`.
+ * `get_grade_leaderboard` (migration `20260720210000`) manque aux types Supabase générés pour
+ * la même raison que la RPC de progression ci-dessus : `supabase gen types` exige un accès DB
+ * et le fichier est généré. Le contrat est figé par la migration, pas par ce type.
+ */
+type GradeLeaderboardRow = {
+  rank: number;
+  display_name: string;
+  hero_class: string;
+  level: number;
+  xp: number;
+  current_streak: number;
+  avatar_tier: number;
+  is_me: boolean;
+};
+
+type GradeLeaderboardRpcClient = {
+  rpc: (
+    fn: "get_grade_leaderboard",
+    args: { p_limit: number },
+  ) => PromiseLike<{ data: GradeLeaderboardRow[] | null; error: { message: string } | null }>;
+};
+
 async function fetchParcoursProgress(
   supabase: unknown,
   subjectIds: string[],
@@ -391,6 +415,66 @@ export const getLeaderboard = createServerFn({ method: "GET" })
     const myRank = ranked.find((r) => r.isMe) ?? null;
 
     return { leaderboard, myRank };
+  });
+
+// ---------- Grade cohort leaderboard (étude 22, R-23) ----------
+// « Ma classe » : la même lecture que le classement global, ramenée aux élèves de MÊME
+// `current_grade_id` — la cohorte scolaire, pas le parcours (D-5 : un « Concours 9ème » et un
+// « 9ème » sont des pairs). Un élève sans grade (parcours libre) n'a pas de cohorte : la RPC
+// renvoie vide et `hasCohort` dit au client de masquer l'onglet plutôt que d'afficher un
+// classement vide sans raison.
+//
+// `rankedCount` porte la décision d'onglet par défaut (R-23/Q-1) : c'est le nombre d'élèves
+// réellement classés dans la cohorte, pas la taille du top affiché — c'est lui que le seuil
+// GRADE_TAB_DEFAULT_MIN_RANKED interroge.
+export const getGradeLeaderboard = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("current_grade_id")
+      .eq("id", userId)
+      .maybeSingle();
+    const hasCohort = Boolean(profile?.current_grade_id);
+    if (!hasCohort) {
+      return { leaderboard: [], myRank: null, hasCohort: false, rankedCount: 0 };
+    }
+
+    const { data: rows, error } = await (supabase as unknown as GradeLeaderboardRpcClient).rpc(
+      "get_grade_leaderboard",
+      { p_limit: LEADERBOARD_LIMIT },
+    );
+    if (error) failWithClientError("getGradeLeaderboard", error, DASHBOARD_ERROR_FR);
+
+    const mapped = (rows ?? []).map((r) => ({
+      rank: Number(r.rank),
+      displayName: r.display_name,
+      heroClass: r.hero_class,
+      level: r.level,
+      xp: Number(r.xp),
+      streak: r.current_streak,
+      avatarTier: r.avatar_tier,
+      isMe: r.is_me,
+    }));
+
+    // La RPC filtre déjà `xp > 0` ; on garde le même filet que le global par symétrie.
+    const ranked = mapped.filter((r) => r.xp > 0);
+    const leaderboard = ranked.filter((r) => r.rank <= LEADERBOARD_LIMIT);
+    const myRank = ranked.find((r) => r.isMe) ?? null;
+
+    // Minorant du nombre de classés dans la cohorte. Deux sources, dont on prend le max :
+    // le NOMBRE de lignes remontées (exact tant que la cohorte tient sous la limite, et seul
+    // fiable en cas d'ex aequo — `rank()` partage le rang, donc dix élèves à égalité sont tous
+    // rang 1), et le RANG le plus élevé vu (seul à révéler la profondeur réelle quand
+    // l'appelant se situe au-delà du top remonté).
+    const rankedCount = Math.max(
+      ranked.length,
+      ranked.reduce((max, r) => Math.max(max, r.rank), 0),
+    );
+
+    return { leaderboard, myRank, hasCohort: true, rankedCount };
   });
 
 // ---------- Parcours catalogue (sellable journeys: concours + free libre tracks) ----------
