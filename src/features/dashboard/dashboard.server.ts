@@ -14,6 +14,62 @@ import { logger } from "@/shared/lib/logger";
 
 const DASHBOARD_ERROR_FR = "Impossible de charger le tableau de bord. Veuillez réessayer.";
 
+/**
+ * Progression par matière — étude 22 R-16 (chapitres complétés / chapitres publiés).
+ *
+ * La RPC `get_user_parcours_progress` (migration `20260720120000`) n'est pas encore dans les
+ * types Supabase générés : `supabase gen types` exige un accès DB indisponible en session et
+ * le fichier est généré (hook anti-édition). Même précédent que la colonne `chapters.videos`
+ * de l'étude 23 (lot 2) — narrowing local ici, types régénérés au prochain accès DB. Le
+ * contrat est figé par la migration, pas par ce type.
+ */
+type ParcoursProgressRow = {
+  subject_id: string;
+  chapters_total: number;
+  chapters_completed: number;
+};
+
+/**
+ * Vue étroite du client Supabase, limitée à cette seule RPC. Les types générés n'exposent que
+ * les fonctions qu'ils connaissent, donc `rpc` refuse un nom inconnu : c'est l'unique point de
+ * cast de ce fichier, et il disparaîtra à la prochaine régénération des types. L'appel reste
+ * une méthode de l'objet pour ne pas perdre son `this`.
+ */
+type ParcoursProgressRpcClient = {
+  rpc: (
+    fn: "get_user_parcours_progress",
+    args: { p_subject_ids: string[] },
+  ) => PromiseLike<{ data: ParcoursProgressRow[] | null; error: { message: string } | null }>;
+};
+
+async function fetchParcoursProgress(
+  supabase: unknown,
+  subjectIds: string[],
+): Promise<Record<string, { total: number; completed: number }>> {
+  const progress: Record<string, { total: number; completed: number }> = {};
+  if (subjectIds.length === 0) return progress;
+
+  const client = supabase as ParcoursProgressRpcClient;
+  const res = await client.rpc("get_user_parcours_progress", { p_subject_ids: subjectIds });
+
+  // Dégradation gracieuse, comme `stats` : si la RPC échoue (migration pas encore appliquée
+  // pendant un déploiement), la carte s'affiche sans progression plutôt que de casser la page.
+  if (res.error) {
+    logger.warn("getDashboard.progress: parcours-progress RPC failed, defaulting to empty", {
+      error: res.error.message,
+    });
+    return progress;
+  }
+
+  for (const row of res.data ?? []) {
+    progress[row.subject_id] = {
+      total: Number(row.chapters_total),
+      completed: Number(row.chapters_completed),
+    };
+  }
+  return progress;
+}
+
 function resolveFallbackDisplayName(claims: Record<string, unknown>): string {
   const userMetadata = claims.user_metadata;
   if (userMetadata && typeof userMetadata === "object") {
@@ -139,11 +195,19 @@ export const getDashboard = createServerFn({ method: "GET" })
     const activeIds = new Set(subjects.map((s) => s.id));
     const otherSubjects = allSubjects.filter((s) => s.grade_id == null && !activeIds.has(s.id));
 
+    // Progression officielle par matière (étude 22 R-16) — bornée aux matières du parcours
+    // actif, une seule requête. Alimente l'état `done` de la carte `/parcours`.
+    const progress = await fetchParcoursProgress(
+      supabase,
+      subjects.map((s) => s.id),
+    );
+
     return {
       profile,
       subjects,
       otherSubjects,
       stats: bySubject,
+      progress,
       recent: recentRes.data ?? [],
       nextExerciseId,
       premiumLockedSubjectIds,

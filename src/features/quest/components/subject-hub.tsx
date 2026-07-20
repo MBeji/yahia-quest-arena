@@ -14,7 +14,9 @@ import { useI18n, useT } from "@/lib/i18n";
 import { isRtlText } from "@/shared/lib/utils";
 import { parcoursName } from "@/shared/lib/parcours-locale";
 import { PageShell } from "@/components/ui/page-shell";
+import { DifficultyStars } from "@/components/game/difficulty-stars";
 import { QUIZ_PASS_THRESHOLD_PCT, RECALL_MIN_QUESTIONS } from "@/shared/constants/gamification";
+import { chapterMissionCounts, isChapterComplete, isMissionPassed } from "../completion";
 import { hasPassedChapterQuiz } from "../anon-quiz-gate";
 import { exerciseRouteFor } from "../exercise-route";
 import { ManuelEleveCard } from "./manuel-eleve-card";
@@ -41,6 +43,14 @@ export type SubjectHubExercise = {
   title: string;
   difficulty: number;
   xp_reward: number;
+  /**
+   * `admin` (catalogue) ou `parent` (mission familiale). Déjà servi par `getSubject`
+   * (`select("*")`) ; déclaré depuis l'étude 22 R-15, qui exclut les missions `parent` de la
+   * complétion d'un chapitre. Absent ⇒ `admin` (valeur par défaut de la colonne).
+   */
+  source?: string | null;
+  /** Rang d'affichage dans le chapitre (R-13 : tri quiz d'abord, puis difficulté, puis ordre). */
+  display_order?: number | null;
 };
 
 export type SubjectHubParcours = {
@@ -124,17 +134,29 @@ export function SubjectHub({
 
   const rows = useMemo(() => {
     return chapters.map((c, ci) => {
-      const chapEx = exercises.filter((e) => e.chapter_id === c.id);
+      // R-13 : le quiz d'abord, puis les missions par (difficulté, ordre d'affichage) — la
+      // progression recommandée ⭐ → ⭐⭐ → ⭐⭐⭐ (boss) → ⭐⭐⭐⭐ (défi) se lit dans la liste.
+      const chapEx = exercises
+        .filter((e) => e.chapter_id === c.id)
+        .sort((a, b) => {
+          if ((a.mode === "quiz") !== (b.mode === "quiz")) return a.mode === "quiz" ? -1 : 1;
+          if (a.difficulty !== b.difficulty) return a.difficulty - b.difficulty;
+          return (a.display_order ?? 0) - (b.display_order ?? 0);
+        });
       const quiz = chapEx.find((e) => e.mode === "quiz") ?? null;
-      const done = chapEx.filter((e) => bestByExercise[e.id] != null).length;
-      const total = chapEx.length;
       // No quiz (or a non-gated theme: the server pre-marks those chapters true)
       // means the chapter is open; anonymous session passes merge on top.
       const unlocked = !quiz || quizPassedByChapter[c.id] === true || anonPassed[c.id] === true;
-      const allDone = total > 0 && done === total;
-      // Next actionable mission: the first not-done row that is clickable in the
+      // R-14/R-15 : « réussie » vaut ≥ 60 %, pas « tentée » ; seules les missions de catalogue
+      // comptent (hors quiz, hors `source='parent'`). Le compteur disait auparavant « fait »
+      // pour un exercice raté à 10 %, et incluait le quiz et les missions familiales.
+      const { done, total } = chapterMissionCounts(chapEx, bestByExercise);
+      const allDone = isChapterComplete(chapEx, bestByExercise, unlocked);
+      // Next actionable mission: the first not-passed row that is clickable in the
       // current lock state (the quiz when locked, any mission otherwise).
-      const next = !unlocked ? quiz : (chapEx.find((e) => bestByExercise[e.id] == null) ?? null);
+      const next = !unlocked
+        ? quiz
+        : (chapEx.find((e) => !isMissionPassed(bestByExercise[e.id])) ?? null);
       return { chapter: c, index: ci, chapEx, quiz, done, total, unlocked, allDone, next };
     });
   }, [chapters, exercises, bestByExercise, quizPassedByChapter, anonPassed]);
@@ -223,7 +245,10 @@ export function SubjectHub({
         {rows.map(({ chapter: c, index: ci, chapEx, quiz, done, total, unlocked, allDone }) => {
           const open = openIds.has(c.id);
           const chip = allDone
-            ? { cls: "bg-success/12 text-success", text: `${done}/${total} ✓` }
+            ? {
+                cls: "bg-success/12 text-success",
+                text: `${t.public.subject.chapterComplete} ✓`,
+              }
             : !unlocked
               ? {
                   cls: "bg-[color:var(--flame)]/12 text-[color:var(--flame)]",
@@ -317,15 +342,26 @@ export function SubjectHub({
                               params={{ exerciseId: ex.id }}
                               className="flex items-center gap-2 py-2.5 text-sm transition hover:text-primary [@media(pointer:coarse)]:min-h-11"
                             >
-                              {best != null ? (
+                              {isMissionPassed(best) ? (
                                 <Check className="h-4 w-4 shrink-0 text-success" />
                               ) : (
                                 <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground rtl:-scale-x-100" />
                               )}
                               {title}
+                              {/* R-13 : la difficulté se lit en ⭐, pas dans le titre. Le quiz
+                                  n'en a pas — ce n'est pas une mission mais la porte du chapitre. */}
+                              {!isQuiz && (
+                                <DifficultyStars level={ex.difficulty} className="shrink-0" />
+                              )}
                               <span className="shrink-0 text-xs text-muted-foreground">
                                 {best != null ? (
-                                  <span className="font-bold text-success">
+                                  <span
+                                    className={
+                                      isMissionPassed(best)
+                                        ? "font-bold text-success"
+                                        : "font-bold text-muted-foreground"
+                                    }
+                                  >
                                     {Math.round(best)}%
                                   </span>
                                 ) : isQuiz && !unlocked ? (

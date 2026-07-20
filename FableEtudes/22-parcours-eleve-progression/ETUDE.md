@@ -1,7 +1,7 @@
 # Étude 22 — Parcours élève & progression pédagogique (doctrine de navigation, déblocage, cohortes)
 
-> **Statut** : validée — Q-1…Q-5 arbitrées le 2026-07-18 par Mohamed, toutes sur les
-> recommandations (§7) ; les lots 1–6 sont exécutables
+> **Statut** : en exécution — Q-1…Q-5 arbitrées le 2026-07-18 par Mohamed, toutes sur les
+> recommandations (§7) ; **lot 1 livré le 2026-07-20**, lots 2–6 exécutables
 > **Priorité** : 22 · **Valeur** : un parcours élève cohérent, lisible et motivant — la doctrine
 > unique qui répond à « qu'est-ce qui est ouvert, qu'est-ce qui est verrouillé, et pourquoi » ·
 > **Complexité** : moyenne
@@ -525,7 +525,7 @@ cycle/all — mesure la profondeur réelle des pools) ; `leaderboard.grade_tab_v
 | 5   | Donjon scopé (R-25) : patch `get_dungeon_questions` + fallback + libellé lobby                                                                           | migration RPC, `dungeon.tsx`, i18n                                                             | pgTAP (scoping, fallbacks 60/30, `pool_scope`)                         | —                               |
 | 6   | Moteur « prochaine action » unifié (R-31) + hygiène (R-29)                                                                                               | `quest/next-action.ts`, `dashboard.server.ts`, `quest.server.ts`, purge `gamification.ts`      | unit (priorités 1–4, purge sans référence morte)                       | lots 1–2 (états qu'il consomme) |
 
-- [ ] Lot 1 — Doctrine visible (carte + hub + complétion)
+- [x] Lot 1 — Doctrine visible (carte + hub + complétion)
 - [ ] Lot 2 — Boucle SM-2 refermée
 - [ ] Lot 3 — Rentrée & copy d'ancrage
 - [ ] Lot 4 — Cohorte de classe
@@ -623,6 +623,36 @@ d'ordonnancement à l'index FableEtudes, pas un lot de cette étude.
 
 - **2026-07-18 — Validation.** Q-1…Q-5 arbitrées par Mohamed (toutes sur les
   recommandations) ; statut `brouillon` → `validée`. Aucun lot commencé.
+- **2026-07-20 — Lot 1 (doctrine visible).** Le faux verrou séquentiel de `/parcours` est
+  supprimé (R-11) : plus d'état `locked`, plus de cadenas hors premium, tous les nœuds
+  cliquables ; états `done`/`current`/`next`/`open`, sous-libellé = progression R-16. Hub :
+  ⭐ `DifficultyStars` par mission et tri quiz → (difficulté, ordre) (R-13), jalon
+  « Chapitre terminé ✓ » (R-15), helpers purs `src/features/quest/completion.ts`.
+  **Écart accepté n° 1 — le stop-point « le lot 1 ne touche pas au serveur » est levé.**
+  R-16 définit `done` par « progression = 100 % des chapitres complétés », or aucune donnée de
+  complétion par chapitre n'existait côté carte : `get_user_subject_stats` n'agrège que des
+  tentatives, et la seule voie 100 % client (fan-out de `getSubject` sur toutes les matières)
+  rapatriait le cours complet de chaque chapitre — plusieurs Mo et ~50 requêtes pour un
+  pourcentage, l'inverse de l'audit M4. Arbitré par Mohamed le 2026-07-20 : la règle est encodée
+  **une fois**, côté serveur, dans la migration additive `20260720120000_user_parcours_progress_rpc`
+  (`get_user_parcours_progress(p_subject_ids)`), consommée par `getDashboard`. Les seuils y sont
+  recopiés des portes existantes, jamais réinventés (quiz ≥ 80 % et ≥ 4 s/question depuis
+  `start_exercise_session` ; `variant = 'classic'` depuis `get_best_scores_by_exercise`).
+  **Écart accepté n° 2 — définition de « chapitre publié » (R-16).** Aucune colonne
+  `is_published`/`status` n'existe sur `chapters`. Arbitré : un chapitre compte au dénominateur
+  s'il porte **au moins une mission `source='admin'` hors quiz** (donc s'il est jouable). Sans
+  cela un chapitre sans mission serait « complété » par vacuité, ou plafonnerait la progression
+  sous 100 % à jamais.
+  **Correction de fond au passage** : le compteur `x/y` du hub comptait « tenté » et non
+  « réussi ≥ 60 % », incluait le quiz et incluait les missions `source='parent'` — les trois
+  divergeaient de R-14/R-15 et sont corrigées (tests dédiés).
+  **Dettes notées** : (a) `get_user_parcours_progress` manque aux types Supabase générés
+  (`supabase gen types` exige un accès DB) → narrowing local dans `dashboard.server.ts`, même
+  précédent que `chapters.videos` (étude 23 lot 2) ; régénérer au prochain accès DB.
+  (b) La règle de complétion vit maintenant à deux endroits — `completion.ts` (hub) et la
+  migration (carte) : toute évolution doit toucher les deux dans le même lot.
+  (c) `db-tests.yml` (pgTAP) ne tourne **pas** sur les PR — la migration a donc été validée par
+  un `workflow_dispatch` explicite sur la branche avant promotion de la PR.
 
 _(à remplir par l'exécuteur, lot par lot : date, lot, PR, écarts acceptés, dettes notées)_
 

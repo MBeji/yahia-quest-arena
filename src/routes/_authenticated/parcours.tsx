@@ -30,10 +30,14 @@ function ParcoursPage() {
   }
 
   const profile = data.profile as ProfileRow | null;
+  // `recent` arrive trié par `completed_at` décroissant : sa première ligne désigne la matière
+  // la plus récemment travaillée, donc le nœud `current` (étude 22, R-11).
+  const lastActivitySubjectId = data.recent?.[0]?.subject_id ?? null;
   const nodes = buildSubjectNodes(
     data.subjects,
     data.stats,
     new Set(data.premiumLockedSubjectIds ?? []),
+    { progressBySubject: data.progress, lastActivitySubjectId },
   );
 
   return (
