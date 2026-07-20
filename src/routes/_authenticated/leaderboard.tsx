@@ -10,9 +10,11 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import {
   getLeaderboard,
+  getGradeLeaderboard,
   getLeaderboardSubjects,
   getSubjectLeaderboard,
 } from "@/features/dashboard";
+import { GRADE_TAB_DEFAULT_MIN_RANKED } from "@/shared/constants/gamification";
 import { isRtlText } from "@/shared/lib/utils";
 import { entrance } from "@/shared/lib/motion";
 import { useT } from "@/lib/i18n";
@@ -23,6 +25,8 @@ export const Route = createFileRoute("/_authenticated/leaderboard")({
 });
 
 const GLOBAL = "global";
+/** Onglet cohorte de classe (étude 22, R-23). */
+const MY_CLASS = "my-class";
 
 // SECURITY: rows carry no peer `user_id` (UUID-leak fix). They are keyed by
 // `rank` (unique per board) and the self row is flagged by `isMe` server-side.
@@ -41,10 +45,11 @@ function LeaderboardPage() {
   const t = useT();
   const reduced = useReducedMotion();
   const fetchLeaderboard = useServerFn(getLeaderboard);
+  const fetchGradeLeaderboard = useServerFn(getGradeLeaderboard);
   const fetchSubjects = useServerFn(getLeaderboardSubjects);
   const fetchSubjectLeaderboard = useServerFn(getSubjectLeaderboard);
 
-  const [tab, setTab] = useState<string>(GLOBAL);
+  const [tab, setTab] = useState<string | null>(null);
 
   // Tabs are scoped to the ACTIVE parcours' subjects (GAP-018) — not the whole
   // academy catalogue — so the row stays short and homonym subjects across grades
@@ -57,18 +62,40 @@ function LeaderboardPage() {
     queryKey: ["leaderboard", GLOBAL],
     queryFn: () => fetchLeaderboard(),
   });
+  const gradeQuery = useQuery({
+    queryKey: ["leaderboard", MY_CLASS],
+    queryFn: () => fetchGradeLeaderboard(),
+  });
+
+  // R-23 : la cohorte de classe n'existe que pour un élève rattaché à un grade. Un parcours
+  // libre n'en a pas — on masque l'onglet plutôt que de proposer un classement vide.
+  const hasCohort = gradeQuery.data?.hasCohort === true;
+  const rankedCount = gradeQuery.data?.rankedCount ?? 0;
+
+  // Onglet par défaut (R-23, Q-1 arbitrée) : « Ma classe » dès que la cohorte compte assez de
+  // classés pour qu'un rang veuille dire quelque chose, « Global » sinon. Bascule silencieuse
+  // — jamais un réglage à faire, ni un message à lire. Tant que la requête n'a pas répondu,
+  // `tab` reste null et l'écran n'affiche pas un onglet qu'il devrait changer juste après.
+  const defaultTab = hasCohort && rankedCount >= GRADE_TAB_DEFAULT_MIN_RANKED ? MY_CLASS : GLOBAL;
+  const activeTab = tab ?? (gradeQuery.isLoading ? null : defaultTab);
+
+  const isGlobal = activeTab === GLOBAL;
+  const isMyClass = activeTab === MY_CLASS;
+  const isSubjectTab = activeTab !== null && !isGlobal && !isMyClass;
+
   const subjectQuery = useQuery({
-    queryKey: ["leaderboard", "subject", tab],
-    queryFn: () => fetchSubjectLeaderboard({ data: { subjectId: tab } }),
-    enabled: tab !== GLOBAL,
+    queryKey: ["leaderboard", "subject", activeTab],
+    queryFn: () => fetchSubjectLeaderboard({ data: { subjectId: activeTab as string } }),
+    enabled: isSubjectTab,
   });
 
   const subjects = subjectsQuery.data?.subjects ?? [];
-  const activeSubject = subjects.find((s) => s.id === tab) ?? null;
-  const isGlobal = tab === GLOBAL;
+  const activeSubject = subjects.find((s) => s.id === activeTab) ?? null;
 
-  const data = isGlobal ? globalQuery.data : subjectQuery.data;
-  const isLoading = isGlobal ? globalQuery.isLoading : subjectQuery.isLoading;
+  const data = isGlobal ? globalQuery.data : isMyClass ? gradeQuery.data : subjectQuery.data;
+  const isLoading =
+    activeTab === null ||
+    (isGlobal ? globalQuery.isLoading : isMyClass ? gradeQuery.isLoading : subjectQuery.isLoading);
 
   const leaderboard = (data?.leaderboard ?? []) as Player[];
   const myRank = (data?.myRank ?? null) as Player | null;
@@ -85,7 +112,9 @@ function LeaderboardPage() {
         <p className="mt-2 text-muted-foreground">
           {isGlobal
             ? t.leaderboard.subtitleGlobal
-            : t.leaderboard.subtitleSubject.replace("{subject}", activeSubject?.name_fr ?? "")}
+            : isMyClass
+              ? t.leaderboard.subtitleMyClass
+              : t.leaderboard.subtitleSubject.replace("{subject}", activeSubject?.name_fr ?? "")}
         </p>
       </div>
 
@@ -102,8 +131,21 @@ function LeaderboardPage() {
         >
           {t.leaderboard.globalTab}
         </button>
+        {hasCohort && (
+          <button
+            onClick={() => setTab(MY_CLASS)}
+            data-testid="leaderboard-my-class-tab"
+            className={`inline-flex min-h-11 items-center rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
+              isMyClass
+                ? "border-gold/60 bg-gold/15 text-gold"
+                : "border-border/50 bg-black/40 text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {t.leaderboard.myClassTab}
+          </button>
+        )}
         {subjects.map((s) => {
-          const active = s.id === tab;
+          const active = s.id === activeTab;
           return (
             <button
               key={s.id}
@@ -268,10 +310,22 @@ function LeaderboardPage() {
             <EmptyState
               icon={Medal}
               className="mt-12"
-              title={isGlobal ? t.leaderboard.coldStartTitle : t.leaderboard.emptySubject}
-              description={isGlobal ? t.leaderboard.coldStartDesc : undefined}
+              title={
+                isGlobal
+                  ? t.leaderboard.coldStartTitle
+                  : isMyClass
+                    ? t.leaderboard.myClassEmptyTitle
+                    : t.leaderboard.emptySubject
+              }
+              description={
+                isGlobal
+                  ? t.leaderboard.coldStartDesc
+                  : isMyClass
+                    ? t.leaderboard.myClassEmptyDesc
+                    : undefined
+              }
               action={
-                isGlobal ? (
+                isGlobal || isMyClass ? (
                   <Link
                     to="/dashboard"
                     className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-gold transition hover:opacity-90"

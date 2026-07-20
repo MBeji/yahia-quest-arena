@@ -614,6 +614,11 @@ export type TranslationKeys = {
     titleGradient: string;
     titleRest: string;
     globalTab: string;
+    /** Étude 22 R-23 — cohorte de classe. */
+    myClassTab: string;
+    subtitleMyClass: string;
+    myClassEmptyTitle: string;
+    myClassEmptyDesc: string;
     subtitleGlobal: string;
     subtitleSubject: string;
     loading: string;

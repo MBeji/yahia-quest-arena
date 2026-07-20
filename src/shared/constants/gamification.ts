@@ -65,6 +65,16 @@ export const RECENT_ATTEMPTS_WINDOW = 10;
 /** Leaderboard max entries */
 export const LEADERBOARD_LIMIT = 50;
 
+/**
+ * Étude 22 R-23 (Q-1, arbitrée) — seuil à partir duquel l'onglet « Ma classe » devient
+ * l'onglet PAR DÉFAUT du classement, silencieusement.
+ *
+ * Sous ce seuil la cohorte est trop maigre pour être motivante : arriver 2ᵉ sur 3 ne dit rien.
+ * On reste alors sur « Global », et l'onglet classe montre son état d'invitation plutôt qu'un
+ * podium famélique.
+ */
+export const GRADE_TAB_DEFAULT_MIN_RANKED = 10;
+
 /** Dashboard recent attempts limit */
 export const DASHBOARD_RECENT_LIMIT = 50;
 
