@@ -203,6 +203,10 @@ Entrée : `go-live/00-MASTER-PLAN.md`. État au 2026-07-11 :
 
 ## 8. Prochaines actions recommandées (priorisées)
 
+> **Roadmap consolidée** (reste-à-faire études/lots/contenu en 3 files ordonnées + jalon
+> rentrée, déclinée de l'étude 26) : [FableEtudes/ROADMAP.md](./FableEtudes/ROADMAP.md).
+> Les points ci-dessous en sont le sommet.
+
 1. **Corriger le contenu `french-8eme`** (2 BLOCKER + 6 MAJOR ouverts) — qualité pédagogique visible.
 2. **Reverdir `main`** : e2e-auth (#363, 12 échecs) + nightly (#250).
 3. **C4 / mise en prod sérieuse** : câbler le domaine `na9ranal3ab.tn`, monitoring + ruleset (~45 min Mohamed), puis soumettre le sitemap.
