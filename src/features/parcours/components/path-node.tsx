@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Lock,
   Crown,
   Check,
   Sword,
@@ -31,38 +30,33 @@ export type PathNodeProps = {
   icon?: string;
   /** Accent colour (CSS value). Defaults to gold. */
   color?: string;
-  clickable?: boolean;
 };
 
 const GOLD = "var(--gold)";
 
-/** Pure visual node (circle + label). Links/layout are handled by the parent. */
-export function PathNode({
-  state,
-  title,
-  sublabel,
-  badge,
-  icon,
-  color = GOLD,
-  clickable,
-}: PathNodeProps) {
+/**
+ * Pure visual node (circle + label). Links/layout are handled by the parent.
+ *
+ * Tous les nœuds sont cliquables (étude 22, R-11) : il n'existe plus d'état `locked` et le
+ * cadenas a disparu. Seul `premium-locked` porte encore une couronne — dormante en phase
+ * gratuite —, et il reste cliquable : c'est la page matière qui explique, pas la carte.
+ */
+export function PathNode({ state, title, sublabel, badge, icon, color = GOLD }: PathNodeProps) {
   const Icon = (icon && ICONS[icon]) || Sword;
-  const isLocked = state === "locked";
   const isPremium = state === "premium-locked";
   const isDone = state === "done";
   const isCurrent = state === "current";
+  const isNext = state === "next";
 
-  const ring = isLocked
-    ? "border-border/40 bg-black/40 text-muted-foreground"
-    : isPremium
-      ? "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/10 text-[color:var(--gold)]"
-      : isDone
-        ? "border-transparent bg-[image:var(--gradient-gold)] text-black shadow-gold"
+  const ring = isPremium
+    ? "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/10 text-[color:var(--gold)]"
+    : isDone
+      ? "border-transparent bg-[image:var(--gradient-gold)] text-black shadow-gold"
+      : isNext
+        ? "border-[color:var(--gold)] bg-black/50 ring-2 ring-[color:var(--gold)]/35 ring-offset-2 ring-offset-transparent"
         : "border-[color:var(--gold)]/50 bg-black/50";
 
-  const glyph = isLocked ? (
-    <Lock className="h-7 w-7" />
-  ) : isPremium ? (
+  const glyph = isPremium ? (
     <Crown className="h-7 w-7" />
   ) : isDone ? (
     <Check className="h-8 w-8" />
@@ -71,11 +65,7 @@ export function PathNode({
   );
 
   return (
-    <div
-      className={`group flex w-40 flex-col items-center ${
-        clickable ? "cursor-pointer" : isLocked ? "cursor-not-allowed" : ""
-      }`}
-    >
+    <div className="group flex w-40 cursor-pointer flex-col items-center">
       <div className="relative">
         {isCurrent && (
           <span
@@ -91,7 +81,7 @@ export function PathNode({
           {glyph}
         </div>
       </div>
-      <div className={`mt-2 max-w-[10rem] text-center ${isLocked ? "opacity-60" : ""}`}>
+      <div className="mt-2 max-w-[10rem] text-center">
         <div className="flex items-center justify-center gap-1 text-sm font-bold">
           {title}
           {badge && (

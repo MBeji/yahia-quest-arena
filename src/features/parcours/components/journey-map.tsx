@@ -29,27 +29,21 @@ export function JourneyMap({ nodes, profile }: JourneyMapProps) {
       <JourneyTrack>
         {nodes.map((n, i) => {
           const color = `var(--subject-${n.colorToken.replace(/^subject-/, "")})`;
-          const sublabel =
-            n.state === "locked" ? t.parcours.lockedHint : n.attempts > 0 ? `${n.avg}%` : undefined;
-          const node = (
-            <PathNode
-              state={n.state}
-              title={n.nameFr}
-              sublabel={sublabel}
-              icon={n.icon}
-              color={color}
-              clickable={n.state !== "locked"}
-            />
-          );
+          // Sous-libellé = la progression officielle R-16, pas la moyenne des scores : « 40 % »
+          // veut dire « 40 % des chapitres terminés », ce que l'élève peut vérifier au hub.
+          const sublabel = n.progressionPct != null ? `${n.progressionPct}%` : undefined;
           return (
             <TrackRow key={n.id} side={nodeSide(i)} index={i}>
-              {n.state === "locked" ? (
-                node
-              ) : (
-                <Link to="/matiere/$subjectId" params={{ subjectId: n.id }} aria-label={n.nameFr}>
-                  {node}
-                </Link>
-              )}
+              <Link to="/matiere/$subjectId" params={{ subjectId: n.id }} aria-label={n.nameFr}>
+                <PathNode
+                  state={n.state}
+                  title={n.nameFr}
+                  sublabel={sublabel}
+                  badge={n.state === "next" ? t.parcours.nodeNext : undefined}
+                  icon={n.icon}
+                  color={color}
+                />
+              </Link>
             </TrackRow>
           );
         })}

@@ -483,8 +483,8 @@ export type TranslationKeys = {
     start: string;
     continueLabel: string;
     review: string;
-    locked: string;
-    lockedHint: string;
+    /** Badge du nœud « recommandé » sur la carte (étude 22, R-11). */
+    nodeNext: string;
     done: string;
     current: string;
     xpToEarn: string;
@@ -874,6 +874,8 @@ export type TranslationKeys = {
       resumeHere: string;
       missionsProgress: string;
       quizToPass: string;
+      /** Jalon « chapitre complété » (étude 22, R-15). */
+      chapterComplete: string;
       todo: string;
       unlocksChapter: string;
       quizContract: string;

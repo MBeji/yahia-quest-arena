@@ -158,6 +158,7 @@ export const arPublic: TranslationKeys["public"] = {
     resumeHere: "واصل من هنا",
     missionsProgress: "{done}/{total} مهمة",
     quizToPass: "اجتز الاختبار أولًا",
+    chapterComplete: "فصل مكتمل",
     todo: "لم يبدأ",
     unlocksChapter: "يفتح الفصل",
     quizContract: "انجح في الاختبار (≥ {pct}٪) لفتح مهمات هذا الفصل.",

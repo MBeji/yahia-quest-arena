@@ -29,7 +29,7 @@ vi.mock("@/lib/i18n", () => ({
       xpToNext: "to next",
       maxLevel: "max",
       premium: "Premium",
-      lockedHint: "locked",
+      nodeNext: "Suggested",
       xpToEarn: "XP",
       backToMap: "back",
       empty: "empty",
@@ -49,6 +49,7 @@ const nodes: SubjectNode[] = [
     isPremium: false,
     attempts: 5,
     avg: 90,
+    progressionPct: 100,
     state: "done",
   },
   {
@@ -59,6 +60,7 @@ const nodes: SubjectNode[] = [
     isPremium: false,
     attempts: 2,
     avg: 50,
+    progressionPct: 40,
     state: "current",
   },
   {
@@ -69,7 +71,8 @@ const nodes: SubjectNode[] = [
     isPremium: false,
     attempts: 0,
     avg: 0,
-    state: "locked",
+    progressionPct: 0,
+    state: "next",
   },
   {
     id: "frm",
@@ -79,6 +82,7 @@ const nodes: SubjectNode[] = [
     isPremium: true,
     attempts: 0,
     avg: 0,
+    progressionPct: null,
     state: "premium-locked",
   },
 ];
@@ -94,15 +98,29 @@ describe("JourneyMap", () => {
     }
   });
 
-  it("links every non-locked subject to the unified subject screen, leaving locked unlinked", () => {
+  it("links EVERY subject to the unified subject screen (R-11: no node is unclickable)", () => {
     const { container } = render(
       <JourneyMap nodes={nodes} profile={{ level: 1, xp: 0, heroClass: "Novice" }} />,
     );
     const hrefs = Array.from(container.querySelectorAll("a")).map((a) => a.getAttribute("href"));
-    // After the F1 merge there is a single chapter screen: all non-locked nodes
-    // (done/current/open AND premium-locked) point to /matiere/$subjectId; the
-    // locked node ("Arabe") renders no link.
-    expect(hrefs).toEqual(["/matiere/$subjectId", "/matiere/$subjectId", "/matiere/$subjectId"]);
+    // La carte ne verrouille plus : les quatre nœuds — y compris `premium-locked`, dont la
+    // page explique le cas — pointent vers /matiere/$subjectId. Aucun nœud muet.
+    expect(hrefs).toEqual(Array(nodes.length).fill("/matiere/$subjectId"));
     expect(hrefs).not.toContain("/parcours/$subjectId");
+  });
+
+  it("shows the R-16 progression as sublabel and badges the recommended node", () => {
+    render(<JourneyMap nodes={nodes} profile={{ level: 1, xp: 0, heroClass: "Novice" }} />);
+    // Sous-libellé = progression en chapitres, pas la moyenne des scores (avg 90 ≠ 100 %).
+    expect(screen.getByText("40%")).toBeInTheDocument();
+    // Le badge « recommandé » ne s'affiche que sur le nœud `next`.
+    expect(screen.getAllByText("Suggested")).toHaveLength(1);
+  });
+
+  it("omits the sublabel when progression is unknown rather than showing 100%", () => {
+    render(<JourneyMap nodes={nodes} profile={{ level: 1, xp: 0, heroClass: "Novice" }} />);
+    // « Maîtrise » a progressionPct null : aucun pourcentage ne lui est accolé.
+    expect(screen.queryByText("null%")).not.toBeInTheDocument();
+    expect(screen.getAllByText(/^\d+%$/).length).toBe(3);
   });
 });

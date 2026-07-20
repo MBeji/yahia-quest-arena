@@ -37,12 +37,57 @@ describe("buildSubjectNodes", () => {
     { id: "svt", name_fr: "SVT", color_token: "subject-svt", icon: "Leaf" },
   ];
 
-  it("marks mastery as done, started as current, gates the rest", () => {
-    const nodes = buildSubjectNodes(subjects, {
-      math: { count: 5, avg: 90 },
-      french: { count: 3, avg: 50 },
+  // R-11 — LA régression que ce lot répare : la carte verrouillait chaque matière tant que la
+  // précédente n'avait pas été commencée, alors que le serveur laissait tout jouer.
+  it("never locks a subject behind another (R-11)", () => {
+    const nodes = buildSubjectNodes(subjects, {});
+    expect(nodes.map((n) => n.state)).not.toContain("locked");
+    // Une seule matière est « recommandée » : la première du chemin.
+    expect(nodes.map((n) => n.state)).toEqual(["next", "open", "open", "open"]);
+  });
+
+  it("marks done from R-16 progression, not from the score average", () => {
+    const nodes = buildSubjectNodes(subjects, { math: { count: 5, avg: 95 } }, new Set(), {
+      progressBySubject: {
+        // Moyenne excellente mais un seul chapitre sur quatre terminé : ce n'est PAS « done ».
+        math: { total: 4, completed: 1 },
+        french: { total: 2, completed: 2 },
+      },
     });
-    expect(nodes.map((n) => n.state)).toEqual(["done", "current", "open", "locked"]);
+    expect(nodes[0].state).not.toBe("done");
+    expect(nodes[0].progressionPct).toBe(25);
+    expect(nodes[1].state).toBe("done");
+    expect(nodes[1].progressionPct).toBe(100);
+  });
+
+  it("never reports 100% for a subject with no published chapter", () => {
+    const nodes = buildSubjectNodes(subjects, {}, new Set(), {
+      progressBySubject: { math: { total: 0, completed: 0 } },
+    });
+    // 0/0 ne doit surtout pas valoir 100 % — sinon une matière vide s'affiche « terminée ».
+    expect(nodes[0].progressionPct).toBeNull();
+    expect(nodes[0].state).not.toBe("done");
+  });
+
+  it("gives `current` to the most recently worked subject", () => {
+    const nodes = buildSubjectNodes(
+      subjects,
+      { math: { count: 5, avg: 70 }, french: { count: 2, avg: 80 } },
+      new Set(),
+      { lastActivitySubjectId: "french" },
+    );
+    expect(nodes.find((n) => n.id === "french")?.state).toBe("current");
+    expect(nodes.find((n) => n.id === "math")?.state).toBe("open");
+    // `next` reste la première matière encore jamais tentée.
+    expect(nodes.find((n) => n.id === "arabic")?.state).toBe("next");
+  });
+
+  it("prefers done over current when a finished subject is also the latest one", () => {
+    const nodes = buildSubjectNodes(subjects, { math: { count: 9, avg: 88 } }, new Set(), {
+      progressBySubject: { math: { total: 3, completed: 3 } },
+      lastActivitySubjectId: "math",
+    });
+    expect(nodes[0].state).toBe("done");
   });
 
   it("flags premium-locked subjects from the locked-id set", () => {
@@ -59,7 +104,7 @@ describe("buildSubjectNodes", () => {
     const stats = { math: { count: 1, avg: 60 } };
     // Locked when its id is in the set (premium parcours without entitlement)…
     expect(buildSubjectNodes(subj, stats, new Set(["frm"]))[1].state).toBe("premium-locked");
-    // …and not locked when the set is empty (entitled / free).
-    expect(buildSubjectNodes(subj, stats, new Set())[1].state).toBe("open");
+    // …and not locked when the set is empty (entitled / free) — it becomes the recommended one.
+    expect(buildSubjectNodes(subj, stats, new Set())[1].state).toBe("next");
   });
 });

@@ -149,8 +149,8 @@ describe("SubjectHub", () => {
         isAuthenticated={true}
       />,
     );
-    // c1 fully done → chip "2/2 ✓" on its header (visible even collapsed).
-    expect(screen.getByText("2/2 ✓")).toBeInTheDocument();
+    // c1 complété (R-15 : quiz passé + toutes ses missions de catalogue réussies) → jalon ✓.
+    expect(screen.getByText("Chapitre terminé ✓")).toBeInTheDocument();
     expandAll(container);
     expect(screen.getByText("92%")).toBeInTheDocument();
   });
@@ -169,7 +169,38 @@ describe("SubjectHub", () => {
     const resume = container.querySelector('[data-testid="hub-resume"]');
     expect(resume).not.toBeNull();
     expect(screen.getByText("Reprendre ici")).toBeInTheDocument();
-    expect(screen.getByText(/1\/2 missions/)).toBeInTheDocument();
+    // R-15 : le quiz n'est PAS une mission. c1 porte une seule mission de catalogue (e2), pas
+    // encore réussie — donc 0/1, là où l'ancien compteur annonçait « 1/2 » en comptant le quiz.
+    expect(screen.getByText(/0\/1 missions/)).toBeInTheDocument();
+  });
+
+  it("counts only catalogue missions passed at >= 60% (R-14/R-15)", () => {
+    const withParent = [
+      ...exercises,
+      // Une mission familiale sur c1 : hors catalogue, elle ne doit peser sur aucun compteur.
+      {
+        id: "p1",
+        chapter_id: "c1",
+        mode: "normal",
+        title: "Devoir de maman",
+        difficulty: 1,
+        xp_reward: 5,
+        source: "parent",
+      },
+    ];
+    render(
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={withParent}
+        // e2 tentée mais ratée (30 %) : « tentée » ne vaut pas « réussie ».
+        bestByExercise={{ e1: 92, e2: 30, p1: 100 }}
+        quizPassedByChapter={{ c1: true, c2: true }}
+        isAuthenticated={true}
+      />,
+    );
+    expect(screen.getByText(/0\/1 missions/)).toBeInTheDocument();
+    expect(screen.queryByText("Chapitre terminé ✓")).not.toBeInTheDocument();
   });
 
   it("anonymous: no resume band", () => {
