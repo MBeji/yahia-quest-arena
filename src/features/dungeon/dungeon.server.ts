@@ -26,8 +26,18 @@ type DungeonQuestionPayload = {
   };
 };
 
+/** Niveau de pool réellement servi par le donjon (étude 22, R-25). */
+export type DungeonPoolScope = "grade" | "cycle" | "all";
+
 type DungeonQuestionsResponse = {
   currentFloor: number;
+  /**
+   * D'où viennent les questions : la classe du parcours actif, son cycle (repli quand la
+   * classe compte moins de 60 questions éligibles), ou le catalogue entier (repli ultime, et
+   * seul état possible pour un élève sans parcours actif). Le lobby l'énonce — R-30 : jamais
+   * de pool muet — et le client le journalise pour repérer les classes trop minces.
+   */
+  poolScope: DungeonPoolScope;
   questions: DungeonQuestionPayload[];
 };
 
@@ -75,8 +85,15 @@ function parseDungeonQuestionsPayload(value: unknown): DungeonQuestionsResponse 
     }))
     .filter((q) => q.id.length > 0 && q.prompt.length > 0);
 
+  // Une charge utile émise avant 20260720190000 ne porte pas de scope : c'était alors le
+  // catalogue entier, donc `all` est la valeur de repli exacte, pas un défaut arbitraire.
+  const rawScope = row.poolScope;
+  const poolScope: DungeonPoolScope =
+    rawScope === "grade" || rawScope === "cycle" ? rawScope : "all";
+
   return {
     currentFloor: Number(row.currentFloor ?? 1),
+    poolScope,
     questions,
   };
 }
