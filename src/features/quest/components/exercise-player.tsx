@@ -646,10 +646,7 @@ export function ExercisePlayer({
 
       <div className="mb-6">
         <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-widest text-muted-foreground">
-          {/* Stable e2e hook: on the LAST question the player keeps the question
-              mounted while the submit RPC is in flight, so a fixed sleep can't
-              tell "advanced" from "still submitting". Specs watch this counter. */}
-          <span data-testid="quest-progress">
+          <span>
             {t.quest.questionOf
               .replace("{current}", String(idx + 1))
               .replace("{total}", String(total))}
@@ -680,6 +677,13 @@ export function ExercisePlayer({
       <AnimatePresence mode="wait">
         <motion.div
           key={current.id}
+          // Stable e2e hook — it must live HERE, on the animated card, not on
+          // the progress counter outside AnimatePresence: `setIdx` flips that
+          // counter in ~16ms while this card is only swapped once its 0.3s exit
+          // finishes (~430ms). A spec that treats the counter as "the question
+          // advanced" acts on the OUTGOING card — reading its stale checkbox,
+          // clicking its stale submit — and then stalls on the real one.
+          data-question-id={current.id}
           {...questionSlide(reduced)}
           className={`rounded-3xl border p-6 backdrop-blur-xl sm:p-8 ${bossMode ? "border-destructive/30 bg-destructive/5" : "border-border/50 bg-black/60"}`}
         >
