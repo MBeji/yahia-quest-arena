@@ -67,4 +67,16 @@ Détail et jours exacts : `docs/dependency-maintenance.md`.
   la classe d'attaque « instructions cachées dans un fichier lu par l'agent » est réelle
   (`harness:check` scanne l'Unicode invisible du harness pour cette raison).
 - Les actions sont **épinglées au SHA** : un tag mouvant (`@v1`) laisserait un tiers modifier ce
-  qui s'exécute dans notre CI (leçon de l'incident Amazon Q, 2025).
+  qui s'exécute dans notre CI (leçon de l'incident Amazon Q, 2025). Depuis l'étude 25 lot 5b,
+  **les 46 `uses:` du dépôt** portent un SHA de commit + la version en commentaire
+  (`@9c091bb… # v7`) — la version reste lisible pour un humain et pour `upgrade-guard`.
+
+  **Monter une action de version** = remplacer le SHA **et** le commentaire, jamais l'un sans
+  l'autre. Le SHA se résout ainsi :
+
+  ```bash
+  gh api repos/actions/checkout/commits/v8 --jq .sha
+  ```
+
+  Un `uses:` qui repasserait à un tag mouvant est un retour en arrière : c'est un point de
+  vigilance en revue (le dépôt n'en contient plus aucun).

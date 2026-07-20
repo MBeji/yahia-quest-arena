@@ -59,3 +59,9 @@ it the workflow skips gracefully.
 - Never merge dependency updates without CI green.
 - For major upgrades, require explicit changelog review.
 - Keep lockfile committed and reviewed.
+- **GitHub Actions are pinned to a commit SHA** (étude 25 lot 5b), with the version kept as a
+  trailing comment — `uses: actions/checkout@9c091bb… # v7`. npm deps and Actions are two
+  separate supply chains: Dependabot/`upgrade-guard` cover the first, this rule the second.
+  Bumping an Action means replacing **both** the SHA and its comment; resolve the new SHA with
+  `gh api repos/<owner>/<repo>/commits/<tag> --jq .sha`. Never revert a `uses:` to a moving tag
+  — the repo currently contains none, so any reappearance is a regression to flag in review.

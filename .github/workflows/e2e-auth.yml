@@ -43,7 +43,7 @@ jobs:
       ran: ${{ steps.guard.outputs.configured }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           # Empty (the default) checks out the triggering ref, so existing callers
           # (nightly.yml) are unaffected; the upgrade guard passes its branch here.
@@ -68,7 +68,7 @@ jobs:
 
       - name: Setup Node
         if: steps.guard.outputs.configured == 'true'
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 22
           cache: npm
@@ -97,7 +97,7 @@ jobs:
 
       - name: Cache Playwright browsers
         if: steps.guard.outputs.configured == 'true'
-        uses: actions/cache@v5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
@@ -110,7 +110,7 @@ jobs:
       # connection string is available. Idempotent — only pushes new migrations.
       - name: Set up Supabase CLI
         if: steps.guard.outputs.configured == 'true' && steps.guard.outputs.has_db_url == 'true'
-        uses: supabase/setup-cli@v2
+        uses: supabase/setup-cli@3c2f5e2ae34c34e428e8e206e2c4d21fa2d20fbf # v2
         with:
           # Pinned: an unpinned "latest" bump (17.6.1.132 → .134 image) silently
           # broke the local-stack grants on 2026-06-07. Bump deliberately.
@@ -163,7 +163,7 @@ jobs:
 
       - name: Upload Playwright report
         if: ${{ steps.guard.outputs.configured == 'true' && !cancelled() }}
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: playwright-report-auth
           path: playwright-report/

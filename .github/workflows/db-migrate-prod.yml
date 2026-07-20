@@ -67,17 +67,17 @@ jobs:
           echo "Mode: ${MODE}"
 
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
       - name: Setup Node 22
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 22
 
       - name: Install the Supabase CLI
         # Pinned to the same version as db-tests.yml / e2e-auth.yml for a
         # deterministic toolchain. Bump deliberately, with a green run.
-        uses: supabase/setup-cli@v2
+        uses: supabase/setup-cli@3c2f5e2ae34c34e428e8e206e2c4d21fa2d20fbf # v2
         with:
           version: 2.108.0
 
@@ -130,7 +130,7 @@ jobs:
 
       - name: Upload pre-migration backup (retention 14 j)
         if: ${{ env.MODE != 'list' && (github.event_name != 'schedule' || steps.recon.outputs.pending == 'true') }}
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: prod-pre-migration-${{ env.STAMP }}
           path: ${{ env.FILE }}
@@ -170,7 +170,7 @@ jobs:
       # dispatch has a human watching.
       - name: Report apply outcome on a tracking issue
         if: ${{ always() && (github.event_name == 'push' || github.event_name == 'schedule') }}
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         env:
           JOB_STATUS: ${{ job.status }}
         with:
