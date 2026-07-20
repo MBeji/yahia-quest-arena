@@ -140,8 +140,10 @@ A change is **done** only when ALL of these hold — non-negotiable:
 8. **A pushed branch is the session's PR to land.** The push opens the PR ready with auto-merge
    armed; it merges alone once required checks are green on an up-to-date head — nobody reads,
    readies, or merges by hand. The session that pushed **stays on duty until the merge is
-   real**: watch checks, fix reds, confirm the merge, clean up. Savepoint: `[wip]`/`[draft]` in
-   the commit subject (or a `wip/`/`draft/`/`rescue/` branch).
+   real**: watch checks, fix reds, confirm the merge, clean up. Savepoint: prefix the **branch**
+   `wip/`/`draft/`/`rescue/`. Do NOT rely on `[wip]`/`[draft]` in the commit subject — it leaks
+   into `main` (twice on 2026-07-20): a single-commit branch squashes on the commit subject, and
+   auto-merge freezes the message when it arms, so fixing the PR title afterwards is too late.
 
 Full detail on §7/§8: [`docs/ci-cd-and-branch-protection.md`](./docs/ci-cd-and-branch-protection.md),
 [`docs/passation.md`](./docs/passation.md).
