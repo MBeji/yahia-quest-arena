@@ -12,6 +12,8 @@ import { getCurrentWeekStartUtc, getTodayUtc } from "@/shared/lib/dates";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
 import { resolveNextAction } from "@/shared/lib/next-action";
+import { resolvePromotionTarget, shouldOfferPromotion } from "@/shared/lib/back-to-school";
+import { lyceeYearOf } from "./program-families";
 
 const DASHBOARD_ERROR_FR = "Impossible de charger le tableau de bord. Veuillez réessayer.";
 
@@ -193,14 +195,19 @@ export const getDashboard = createServerFn({ method: "GET" })
     // lock badges in the UI).
     const allSubjects = subjectsRes.data ?? [];
     const parcoursId = profile?.current_parcours_id ?? null;
+
+    // Le catalogue des parcours est lu UNE fois : il sert au scoping des matières, à la
+    // bannière de rentrée (R-4) et à la passerelle « Réviser » (R-17). Une trentaine de lignes,
+    // donc on filtre ici plutôt que de refaire un aller-retour par usage.
+    const { data: parcoursRows } = await supabase
+      .from("parcours")
+      .select("id,name_fr,theme_id,grade_id,is_premium,status");
+    const parcoursList = parcoursRows ?? [];
+
     let subjects: typeof allSubjects = [];
     let premiumLockedSubjectIds: string[] = [];
     if (parcoursId) {
-      const { data: par } = await supabase
-        .from("parcours")
-        .select("theme_id,grade_id,is_premium")
-        .eq("id", parcoursId)
-        .maybeSingle();
+      const par = parcoursList.find((p) => p.id === parcoursId) ?? null;
       if (par) {
         subjects = allSubjects.filter(
           (s) =>
@@ -219,6 +226,89 @@ export const getDashboard = createServerFn({ method: "GET" })
     // Other free parcours to discover (free-theme subjects not in the active parcours).
     const activeIds = new Set(subjects.map((s) => s.id));
     const otherSubjects = allSubjects.filter((s) => s.grade_id == null && !activeIds.has(s.id));
+
+    // ---- Rentrée (étude 22, R-4 + R-17) ----------------------------------------------
+    // Deux surfaces adossées aux mêmes données. La lecture des `grades` (une trentaine de
+    // lignes, statiques) a lieu dès que l'élève a une classe, toute l'année : la passerelle
+    // « Réviser » en dépend en permanence. La suggestion de promotion, elle, n'est calculée que
+    // dans la fenêtre de rentrée — donc deux mois sur douze.
+    let promotionSuggestion: {
+      gradeName: string;
+      /** Promotion directe : le parcours à rejoindre en un clic. */
+      parcoursId: string | null;
+      /**
+       * Choix de section : la clé d'année de la page `/programme/lycee/$annee` (« 2eme »,
+       * « 3eme », « bac »). Exclusif de `parcoursId` — l'un OU l'autre porte l'action.
+       */
+      drilldownYear: string | null;
+    } | null = null;
+    let reviseGateway: { parcoursId: string; name: string } | null = null;
+    // Nom de la classe courante — la copie de la bannière l'interpelle (« tu prépares toujours
+    // la 7ᵉ ? »), et un id ne se lit pas.
+    let currentParcoursName: string | null = null;
+
+    if (profile?.current_grade_id) {
+      const { data: gradeRows } = await supabase
+        .from("grades")
+        .select("id,slug,name_fr,theme_id,display_order,is_selectable");
+      const grades = gradeRows ?? [];
+      const parcours = parcoursList;
+      currentParcoursName = parcours.find((p) => p.id === parcoursId)?.name_fr ?? null;
+
+      // R-4 : proposée, jamais imposée. La condition combine la fenêtre (1ᵉʳ sept → 31 oct) et
+      // « le choix de classe précède cette rentrée » — sans quoi on proposerait de changer de
+      // classe à quelqu'un qui vient précisément de la choisir.
+      // `current_parcours_set_at` est créée par la migration `20260721090000` et manque donc
+      // aux types Supabase générés (`supabase gen types` exige un accès DB, et le fichier est
+      // généré). Même précédent que la RPC de progression du lot 1 : narrowing local ici,
+      // types régénérés au prochain accès DB.
+      const parcoursSetAt = (profile as { current_parcours_set_at?: string | null })
+        .current_parcours_set_at;
+      if (shouldOfferPromotion({ parcoursSetAt: parcoursSetAt ?? null })) {
+        // `resolvePromotionTarget` renvoie null pour une classe terminale (bac — Q-3), et
+        // signale les années à sections au lieu d'en choisir une d'office.
+        const target = resolvePromotionTarget(grades, profile.current_grade_id);
+        if (target) {
+          // Une année à sections n'a pas de parcours propre : la bannière emmène sur la page
+          // de l'année, et c'est l'élève qui choisit sa section. `lyceeYearOf` est la seule
+          // traduction slug → clé d'année du projet ; on ne la réinvente pas ici.
+          const drilldownYear = target.isSectionDrilldown
+            ? (lyceeYearOf(target.gradeSlug) ?? null)
+            : null;
+          // Nommé `targetParcoursId` et non `parcoursId` : ce dernier désigne le parcours ACTIF
+          // dans toute cette fonction, et le masquer ici tendrait un piège au prochain lecteur.
+          const targetParcoursId = target.isSectionDrilldown
+            ? null
+            : (parcours.find((p) => p.grade_id === target.gradeId)?.id ?? null);
+          // Sans action possible (ni parcours, ni page d'année), on ne propose rien plutôt que
+          // d'afficher une bannière dont le bouton ne mène nulle part.
+          if (targetParcoursId || drilldownYear) {
+            promotionSuggestion = {
+              gradeName: target.gradeName,
+              parcoursId: targetParcoursId,
+              drilldownYear,
+            };
+          }
+        }
+      }
+
+      // R-17 : la passerelle « Réviser » pointe vers la classe PRÉCÉDENTE quand elle existe et
+      // qu'elle a du contenu. C'est un lien, pas un changement de parcours (R-1) : l'ancre ne
+      // bouge pas, on va simplement réviser à côté.
+      const current = grades.find((g) => g.id === profile.current_grade_id);
+      if (current) {
+        const previous = grades
+          .filter((g) => g.theme_id === current.theme_id && g.display_order < current.display_order)
+          .filter((g) => g.is_selectable !== false)
+          .sort((a, b) => b.display_order - a.display_order)[0];
+        const previousParcours = previous
+          ? parcours.find((p) => p.grade_id === previous.id && p.status === "available")
+          : undefined;
+        if (previousParcours) {
+          reviseGateway = { parcoursId: previousParcours.id, name: previousParcours.name_fr };
+        }
+      }
+    }
 
     // Révision due la plus ancienne (étude 22, R-31 priorité 1). Une seule ligne, bornée par
     // l'index (user_id, status, scheduled_for) : c'est le minimum pour savoir s'il y a quelque
@@ -263,6 +353,9 @@ export const getDashboard = createServerFn({ method: "GET" })
       recent: recentRes.data ?? [],
       nextExerciseId,
       nextAction,
+      promotionSuggestion,
+      reviseGateway,
+      currentParcoursName,
       premiumLockedSubjectIds,
       currentParcoursId: parcoursId,
     };
