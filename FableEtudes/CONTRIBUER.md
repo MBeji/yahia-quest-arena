@@ -160,6 +160,13 @@ ou `[no-automerge]` dans le sujet du commit de tête, **ou** préfixe ta branche
 `rescue/` → la PR s'ouvre en **draft**. Tu la promeus plus tard avec `gh pr ready`. Le label
 `no-automerge` gèle une PR.
 
+> ⚠️ **Piège du squash, constaté le 2026-07-20 (#540).** Si tu as marqué le **sujet du commit**,
+> `gh pr edit --title` ne suffit **pas** à nettoyer l'historique : sur une branche à **un seul
+> commit**, le squash reprend le sujet du commit et non le titre de la PR — le `[wip]` atterrit
+> sur `main` (il n'y atterrit pas si la branche a plusieurs commits, d'où un faux sentiment de
+> sécurité). Avant `gh pr ready`, fais donc `git commit --amend` sur le sujet et force-push, ou
+> préfère l'opt-out par **préfixe de branche** (`wip/…`), qui ne touche jamais au message.
+
 **`needs-rebase`** : si `main` avance et que la mise à jour auto de ta branche échoue sur un
 conflit, ta PR est étiquetée `needs-rebase` — rebase-la (`git rebase origin/main`, résous, force-push)
 et re-pousse. Avant de finir ta session, balaie `gh pr list` pour rattraper une PR `needs-rebase`
