@@ -261,6 +261,34 @@ Le levier 1 n'a rien changé ⇒ la panne n'est pas dans le code déployé. Rega
 
 ---
 
+## Vérifier l'état, jamais le signal
+
+En incident, chaque « c'est fait » doit être **relu à la source**. Les signaux mentent, et
+presque toujours dans le sens rassurant — on croit avoir agi, on n'a rien fait, et on
+continue la procédure sur une prémisse fausse.
+
+| Piège                   | Ce qu'on croit lire     | La vérité                                                                                                                                                 |
+| ----------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `commande \| tail`      | le succès de `commande` | le code de sortie est celui de `tail`. Un `git push` **rejeté** par le hook `pre-push` ressort ainsi en succès. `set -o pipefail`, ou pas de pipe du tout |
+| `… \| jq`               | un filtre               | `jq` n'est pas installé sur ce poste : la sortie est **vide en silence**. Utiliser `gh --jq`                                                              |
+| `mergeStateStatus`      | l'état réel de la PR    | recalculé paresseusement après un push sur `main` : lit `UNKNOWN`/périmé pendant les secondes qui suivent. Trancher avec l'API compare (`behind_by`)      |
+| HTTP 200 après rollback | « la prod remarche »    | prouve que l'alias sert quelque chose, pas que l'app fonctionne. Cliquer le parcours de fumée                                                             |
+| « le job est vert »     | l'effet est obtenu      | un job réussit aussi quand ses étapes ont été **sautées** (`if:` non satisfait). Lire le résumé du run, pas la pastille                                   |
+
+Les vérifications qui coûtent dix secondes et évitent une fausse route :
+
+```bash
+git ls-remote origin <branche>          # la poussée a-t-elle vraiment atterri ?
+gh pr view <n> --json state,mergedAt    # la PR est-elle vraiment mergée ?
+gh variable list                        # MERGE_FREEZE est-il vraiment posé ?
+gh run view <id> --log-failed           # qu'est-ce qui a VRAIMENT échoué ?
+```
+
+> Corollaire pour qui rédige le compte-rendu d'incident : ne jamais écrire « c'est rétabli »
+> sur la foi d'un code de sortie. On l'écrit après avoir relu l'état.
+
+---
+
 ## Détection — le trou connu
 
 **Il n'y a aujourd'hui ni endpoint de santé, ni monitor d'uptime, ni Sentry** (suivi au backlog
