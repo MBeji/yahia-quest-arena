@@ -32,6 +32,17 @@ name: Auto PR
 # it, this workflow still works via the GITHUB_TOKEN fallback below, using
 # the `gh workflow run` dispatch as a workaround for the gated native runs
 # (best-effort, not fully deterministic — see the diagnosis above).
+#
+# MERGE FREEZE (incident en cours). The repository variable `MERGE_FREEZE`
+# (Settings > Secrets and variables > Actions > Variables) is the kill-switch
+# for this whole chain: set to `1`, every pushed branch opens as a DRAFT and
+# nothing arms, so no merge can reach `main` — and therefore no deploy can
+# undo a production rollback. Without it, rolling production back on Vercel
+# lasts exactly until the next PR merges itself (docs/prod-rollback-runbook.md).
+# `hotfix/` and `revert/` branches are EXEMPT: the fix that ENDS the incident
+# must still be able to ship, and it still passes the full required-check gate.
+# Set/clear it with `gh variable set MERGE_FREEZE --body 1|0`, or via the
+# `rollback-prod.yml` workflow (modes `freeze-only` / `unfreeze`).
 
 on:
   push:
@@ -64,9 +75,11 @@ jobs:
       # the header for what that costs (gated native pull_request runs).
       GH_TOKEN: ${{ secrets.GH_AUTOMATION_PAT || secrets.GITHUB_TOKEN }}
       USING_PAT: ${{ secrets.GH_AUTOMATION_PAT != '' }}
+      # Kill-switch for the automatic chain — see the header. Unset = normal.
+      MERGE_FREEZE: ${{ vars.MERGE_FREEZE }}
     steps:
       - name: Checkout (PR template + head commit subject)
-        uses: actions/checkout@v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
       - name: Create the PR if none is open
         id: pr
@@ -99,6 +112,24 @@ jobs:
             wip/*|draft/*|rescue/*) draft_flag="--draft" ;;
           esac
 
+          # Gel des merges (incident) — voir l'en-tête. Rien ne doit pouvoir
+          # atteindre `main`, donc rien ne peut redéployer par-dessus un
+          # rollback ; hotfix/ et revert/ restent exemptés pour que le
+          # correctif qui clôt l'incident puisse passer le gate normalement.
+          case "${MERGE_FREEZE:-}" in
+            1|true|TRUE|yes|on)
+              case "$BRANCH" in
+                hotfix/*|revert/*)
+                  echo "MERGE_FREEZE actif mais '$BRANCH' est exemptée (branche de correctif) — PR ouverte normalement."
+                  ;;
+                *)
+                  draft_flag="--draft"
+                  echo "::warning title=Merges gelés::MERGE_FREEZE actif — PR ouverte en DRAFT et non armée. Voir docs/prod-rollback-runbook.md ; utilisez une branche hotfix/ ou revert/ pour livrer le correctif."
+                  ;;
+              esac
+              ;;
+          esac
+
           body_file="$(mktemp)"
           {
             cat .github/pull_request_template.md
@@ -127,9 +158,26 @@ jobs:
       - name: Arm auto-merge (default — drafts & no-automerge opt out)
         env:
           REPO: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
           TARGET: ${{ steps.pr.outputs.target }}
         run: |
           set -euo pipefail
+
+          # Gel des merges : ne pas armer, et DÉSARMER une PR qui l'était déjà
+          # (elle a pu être armée avant que le gel ne soit posé).
+          case "${MERGE_FREEZE:-}" in
+            1|true|TRUE|yes|on)
+              case "$BRANCH" in
+                hotfix/*|revert/*) ;;
+                *)
+                  gh pr merge "$TARGET" --repo "$REPO" --disable-auto >/dev/null 2>&1 \
+                    && echo "MERGE_FREEZE actif — auto-merge désarmé sur $TARGET." \
+                    || echo "MERGE_FREEZE actif — rien à désarmer sur $TARGET."
+                  exit 0
+                  ;;
+              esac
+              ;;
+          esac
 
           # Runs for the fresh PR AND for repeat pushes on an existing one —
           # self-healing: a ready-but-unarmed PR gets armed by its next push.

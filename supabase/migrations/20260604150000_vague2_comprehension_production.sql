@@ -2,7 +2,13 @@
 -- Idempotent forward migration for already-migrated databases. Inserts the new
 -- chapters, their exercises and questions (FK-safe order). Safe to re-run.
 
-INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order) VALUES
+-- Garde de reconstruction sur base VIERGE (2026-07-20, suite a l'etude 24 lot 4) :
+-- chaque ligne n'est inseree que si son parent existe. Sur la prod tous les parents sont
+-- la et le comportement est identique ; sur une base reconstruite depuis le seul repo
+-- public, le corpus genere est absent et ces lignes n'ont plus d'objet.
+INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order)
+SELECT v.id::uuid, v.subject_id, v.title, v.description, v.lesson_content, v.summary, v.display_order
+FROM (VALUES
   ('7dfc8206-be90-514b-9490-54149fa1f43d', 'french', 'Compréhension de texte & production écrite', 'Lire activement un texte (idée directrice, type de texte, connecteurs, ton, inférence, lexique en contexte) et maîtriser les bases de la production écrite : phrase de thèse, amorce, paragraphe argumentatif et enchaînement logique.', '# Compréhension de texte & production écrite
 
 > « Bien lire, c''est interroger un texte ; bien écrire, c''est répondre avec ordre. »
@@ -425,6 +431,8 @@ Notice the structure: a clear **topic sentence**, **supporting ideas** linked wi
 - **Linking words** join ideas smoothly; choose them by meaning (don''t use "therefore" for a contrast).
 - **Irrelevant sentence** = one that does not support the topic — remove it.
 - **Coherent continuation** = the next sentence must follow logically from the ones before.', 9)
+) AS v(id, subject_id, title, description, lesson_content, summary, display_order)
+WHERE EXISTS (SELECT 1 FROM public.subjects p WHERE p.id = v.subject_id)
 ON CONFLICT (id) DO UPDATE SET
   subject_id = EXCLUDED.subject_id,
   title = EXCLUDED.title,
@@ -433,7 +441,13 @@ ON CONFLICT (id) DO UPDATE SET
   summary = EXCLUDED.summary,
   display_order = EXCLUDED.display_order;
 
-INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+-- Garde de reconstruction sur base VIERGE (2026-07-20, suite a l'etude 24 lot 4) :
+-- chaque ligne n'est inseree que si son parent existe. Sur la prod tous les parents sont
+-- la et le comportement est identique ; sur une base reconstruite depuis le seul repo
+-- public, le corpus genere est absent et ces lignes n'ont plus d'objet.
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order)
+SELECT v.id::uuid, v.chapter_id::uuid, v.subject_id, v.title, v.difficulty, v.xp_reward, v.reward_coins, v.mode, v.source, v.display_order
+FROM (VALUES
   ('357f5e8d-e17d-5fd3-a688-7a04622ccff7', '7dfc8206-be90-514b-9490-54149fa1f43d', 'french', 'Diagnostic — Compréhension & production', 1, 20, 5, 'quiz', 'admin', 0),
   ('09b2c180-a0bd-5852-9b7d-18c86c4d4167', '7dfc8206-be90-514b-9490-54149fa1f43d', 'french', 'Exercice 1 — Lire et repérer', 2, 50, 10, 'practice', 'admin', 1),
   ('f7331495-eabf-5d6b-b33b-4d012d11c3c3', '7dfc8206-be90-514b-9490-54149fa1f43d', 'french', 'Exercice 2 — Vers la production écrite', 2, 50, 10, 'practice', 'admin', 2),
@@ -449,6 +463,8 @@ INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_
   ('1b387c5d-e284-59e9-a936-4be304908ee3', 'ebaeff35-fd0d-5802-8371-0e5c708f825d', 'english', 'Practice: building good paragraphs (2)', 2, 50, 10, 'practice', 'admin', 2),
   ('7a76fb51-3640-57fa-bff6-25ef94248cfb', 'ebaeff35-fd0d-5802-8371-0e5c708f825d', 'english', '⚔️ Boss: read deeply, write tightly', 3, 120, 30, 'boss', 'admin', 3),
   ('ce27ac89-a4f2-5563-b490-a0acb4caeb60', 'ebaeff35-fd0d-5802-8371-0e5c708f825d', 'english', '👑 Elite Challenge: Master Reader & Writer', 4, 300, 60, 'challenge', 'admin', 4)
+) AS v(id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order)
+WHERE EXISTS (SELECT 1 FROM public.chapters p WHERE p.id = v.chapter_id::uuid) AND EXISTS (SELECT 1 FROM public.subjects p WHERE p.id = v.subject_id)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
   subject_id = EXCLUDED.subject_id,
@@ -459,7 +475,13 @@ ON CONFLICT (id) DO UPDATE SET
   mode = EXCLUDED.mode,
   display_order = EXCLUDED.display_order;
 
-INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+-- Garde de reconstruction sur base VIERGE (2026-07-20, suite a l'etude 24 lot 4) :
+-- chaque ligne n'est inseree que si son parent existe. Sur la prod tous les parents sont
+-- la et le comportement est identique ; sur une base reconstruite depuis le seul repo
+-- public, le corpus genere est absent et ces lignes n'ont plus d'objet.
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order)
+SELECT v.id::uuid, v.exercise_id::uuid, v.prompt, v.options, v.correct_option, v.explanation, v.display_order
+FROM (VALUES
   ('88c1f48a-2a35-5d6c-874a-6cec41778111', '357f5e8d-e17d-5fd3-a688-7a04622ccff7', 'Lisez ce passage :
 
 « La lecture n''est pas un simple passe-temps. En ouvrant un livre, l''élève enrichit son vocabulaire, voyage dans d''autres mondes et apprend à mieux comprendre les autres. Voilà pourquoi lire devrait accompagner chaque jeune tout au long de ses études. »
@@ -908,6 +930,8 @@ What does the word "cumbersome" most probably mean here?', '[{"id":"a","text":"c
 "Civility is the oil that keeps a society running smoothly. When people are rude, even small disagreements turn into conflicts."
 
 Which sentence is the most coherent AND best-linked continuation?', '[{"id":"a","text":"On the other hand, when people are courteous, tense situations are quickly calmed."},{"id":"b","text":"For example, the bus arrives at eight every morning."},{"id":"c","text":"Therefore, my favourite season is winter."},{"id":"d","text":"Although oil is used to cook many delicious meals."}]'::jsonb, 'a', 'The passage contrasts the effect of rudeness with that of courtesy, so the best continuation balances the two with a contrast connector: ''On the other hand…'' (a). Option (b) misuses ''For example'' for an unrelated fact; (c) draws an illogical conclusion; (d) takes the word ''oil'' literally and derails the paragraph.', 6)
+) AS v(id, exercise_id, prompt, options, correct_option, explanation, display_order)
+WHERE EXISTS (SELECT 1 FROM public.exercises p WHERE p.id = v.exercise_id::uuid)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
