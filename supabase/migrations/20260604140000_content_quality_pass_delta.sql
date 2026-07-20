@@ -3,7 +3,24 @@
 -- (deepened explanations + correctness fixes). Deterministic ids; safe to
 -- re-run. Multi-line prompts handled correctly.
 
-INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+-- Garde de reconstruction sur base VIERGE (ajoutee le 2026-07-20, suite a l'etude 24 lot 4).
+--
+-- Cette migration est, de son propre aveu, un DELTA pour bases deja migrees : elle re-upsert
+-- des questions dont les exercices parents etaient crees par les migrations de contenu
+-- GENEREES. Depuis que celles-ci ont quitte le repo public (#544), une base reconstruite a
+-- partir du seul repo public n'a plus ces exercices, et l'insert violait
+-- questions_exercise_id_fkey : plus aucune base fraiche ne pouvait etre bati, ce qui tuait la
+-- suite pgTAP et tout provisionnement d'un projet TEST neuf. La prod, elle, n'a jamais ete
+-- affectee (la migration y est appliquee de longue date, et ses exercices existent).
+--
+-- Le correctif ne retire aucune donnee : chaque ligne n'est inseree QUE si son exercice
+-- parent existe. Sur la prod les 41 exercices sont la, le comportement est donc identique ;
+-- sur une base fraiche la migration ne fait simplement rien -- ce qui est exactement le sens
+-- d'un delta : il n'y a rien a corriger la ou rien n'a encore ete pose.
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order)
+SELECT v.id::uuid, v.exercise_id::uuid, v.prompt, v.options::jsonb, v.correct_option,
+       v.explanation, v.display_order::int
+FROM (VALUES
   ('1bc63cf6-4649-5021-927c-19dbd169687b', '5680c5e9-d223-542e-9db3-4c3e770da622', 'ما قيمة √64 ؟', '[{"id":"a","text":"8"},{"id":"b","text":"6"},{"id":"c","text":"32"},{"id":"d","text":"16"}]'::jsonb, 'a', 'الجذر التربيعي لعدد موجب a هو العدد الموجب الذي مربّعه يساوي a. نبحث عن العدد الذي مربّعه 64: بما أنّ 8² = 8 × 8 = 64 فإنّ √64 = 8. تحقّق: 8² = 64 ✓ (وليس 6 لأنّ 6²=36، ولا 32 أو 16 لأنّ مربّعهما أكبر بكثير).', 1),
   ('d73efe27-cd2b-5ade-b536-f505689746d4', '5680c5e9-d223-542e-9db3-4c3e770da622', 'ما هو الشكل المبسّط للعدد √50 ؟', '[{"id":"a","text":"5√2"},{"id":"b","text":"2√5"},{"id":"c","text":"25√2"},{"id":"d","text":"10√5"}]'::jsonb, 'a', 'لتبسيط الجذر نُخرج أكبر مربّع كامل عاملًا للعدد: 50 = 25 × 2 حيث 25 مربّع كامل. نطبّق خاصيّة جذر الجداء √(a×b) = √a × √b: √50 = √(25 × 2) = √25 × √2 = 5√2. الخيار (b) حلّل 50 خطأً، و(c) لم يُخرج الجذر من 25.', 3),
   ('0e1a8e5a-8a8b-5f8d-abb9-846f550be28f', '5680c5e9-d223-542e-9db3-4c3e770da622', 'ما ناتج √3 × √12 ؟', '[{"id":"a","text":"6"},{"id":"b","text":"√15"},{"id":"c","text":"36"},{"id":"d","text":"√36"}]'::jsonb, 'a', 'نطبّق خاصيّة جذر الجداء √a × √b = √(a×b): √3 × √12 = √(3 × 12) = √36. وبما أنّ 6² = 36 فإنّ √36 = 6. تحقّق: الناتج عدد ناطق لأنّ 3 × 12 = 36 مربّع كامل.', 4),
@@ -114,6 +131,8 @@ Elle demanda ___.', '[{"id":"a","text":"ce que faisait ce bruit"},{"id":"b","tex
   ('a387198b-d83b-52a6-9faf-fd4740453fb6', 'f9d67f42-c6fd-52d1-b4d8-658c24c4069e', 'Choose the correct comparative: "A cheetah is ___ a lion."', '[{"id":"a","text":"more fast than"},{"id":"b","text":"fastest than"},{"id":"c","text":"as fast than"},{"id":"d","text":"faster than"}]'::jsonb, 'd', '"fast" is a short (one-syllable) adjective, so the comparative adds -er + than: faster than. "more fast" is wrong because "more" is only for long adjectives; "fastest than" is a superlative form (and superlatives never take "than"); "as fast than" mixes the "as...as" pattern with "than".', 3),
   ('53788e4f-8c7e-5bbf-86e1-f3ffc3ebb034', 'f9d67f42-c6fd-52d1-b4d8-658c24c4069e', 'Complete: "Mount Everest is ___ mountain in the world."', '[{"id":"a","text":"more high"},{"id":"b","text":"the most high"},{"id":"c","text":"higher"},{"id":"d","text":"the highest"}]'::jsonb, 'd', 'Comparing one mountain to all others needs a superlative. "high" is a short adjective, so the superlative adds -est and requires "the": the highest. "the most high" is wrong because "most" is only for long adjectives; "more high" and "higher" are comparatives (for two things), not superlatives.', 4),
   ('684457b0-f151-5355-b7de-b1cc7331c8e0', '2cbeb6e5-2960-512e-9f42-e5cbe625a305', 'Choose the correct relative pronoun: "The scientist ___ research won the Nobel Prize gave a lecture."', '[{"id":"a","text":"who"},{"id":"b","text":"which"},{"id":"c","text":"whose"},{"id":"d","text":"that"}]'::jsonb, 'c', 'The research belongs to the scientist, so we need the possessive relative pronoun "whose": the scientist whose research won the Nobel Prize (= the scientist''s research). "who" replaces a person as subject/object, not a possessor; "which"/"that" refer to things and cannot show possession here.', 1)
+) AS v(id, exercise_id, prompt, options, correct_option, explanation, display_order)
+WHERE EXISTS (SELECT 1 FROM public.exercises e WHERE e.id = v.exercise_id::uuid)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
