@@ -48,6 +48,36 @@ branches, `stash`, `reflog` et `node_modules` (jonction) sont **communs**.
 - Dépendances incohérentes après un changement de branche : `npm install` (jamais `npm ci`, qui
   efface `node_modules` pour tout le monde).
 
+## Le gate rougit à tort sous contention CPU
+
+Quand plusieurs sessions lancent leur gate en même temps (constaté 2026-07-20 : 45 → 53 processus
+node simultanés), `npm run verify` et le hook `pre-push` échouent sur du code qui n'a rien cassé.
+Signature :
+
+```
+[vitest-pool]: Failed to start forks worker for test files …
+Caused by: [vitest-pool-runner]: Timeout waiting for worker to respond
+```
+
+… durée doublée (199 s → 440 s), **moins de fichiers découverts** qu'à l'ordinaire (165 au lieu de
+167), et — le plus trompeur — des échecs **nommés** dans des fichiers **sans rapport avec le diff**.
+Ça ressemble trait pour trait à une régression.
+
+**Trancher avant d'accuser le code** : relancer les fichiers nommés en isolation.
+
+```bash
+npx vitest run --maxWorkers=1 <fichiers-en-échec>
+```
+
+Vert en isolation = contention, pas régression. (`--poolOptions` n'existe plus en CLI vitest 4.)
+Ce test est **obligatoire** avant de conclure à une régression quand on vient de brancher sur un
+`main` plus récent : sans lui, « contention » et « vraie régression » sont indiscernables.
+
+**Ne pas tuer les processus node** — le checkout est partagé, ce sont ceux des sessions sœurs. Si
+le poste reste chargé, le vrai gate est la CI (le ruleset bloque le merge sans `verify`) :
+demander l'accord explicite pour `--no-verify` (DoD §2) plutôt que de reboucler des tentatives à
+~6 minutes.
+
 ## `harness:check` rouge en local sur un checkout propre (fins de ligne)
 
 Sur ce poste, `npm run harness:check` peut signaler les **5 miroirs** `.agents/skills/*/SKILL.md`
