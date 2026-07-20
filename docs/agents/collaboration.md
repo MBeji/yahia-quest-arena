@@ -11,13 +11,14 @@
   auto-PR est agnostique au préfixe (seuls `wip/`, `draft/`, `rescue/` changent le comportement,
   en ouvrant une PR _draft_).
 - **Réservation d'une étude** : la cellule « statut » de l'index porte `en exécution (<pseudo>)`
-  — procédure dans [`FableEtudes/CONTRIBUER.md`](../../FableEtudes/CONTRIBUER.md) §4.
+  — procédure dans `FableEtudes/CONTRIBUER.md` §4, **dans le dépôt privé** `yahia-quest-content`
+  (les études y ont migré avec le corpus, étude 24).
 - **Un lot = une session = une PR**, sur un jeu de fichiers **disjoint** des lots actifs. Si deux
   lots doivent toucher les mêmes fichiers, ils ne sont pas parallélisables : en séquencer un.
 
 ## Vérifier l'ordre réel avant de prendre un lot
 
-L'ordre écrit dans [`FableEtudes/ROADMAP.md`](../../FableEtudes/ROADMAP.md) est un **raccourci**.
+L'ordre écrit dans `FableEtudes/ROADMAP.md` (dépôt privé) est un **raccourci**.
 L'étude fait foi sur les dépendances entre ses lots. Avant de démarrer :
 
 1. lire le §« plan d'exécution » de l'étude (quels lots sont réellement indépendants) ;
@@ -63,10 +64,15 @@ le doublon devient un diff vide et se ferme seul.
 
 ## Fichiers à forte contention
 
-`FableEtudes/README.md` (index), `STATUS.md` et `FableEtudes/ROADMAP.md` sont modifiés par presque
-toutes les sessions → conflit fréquent. Résolution type : **prendre la version de `main`**
-(structure à jour, lignes des autres études) et **y réappliquer sa seule ligne**. Ne jamais
-écraser le bloc entier avec sa propre version.
+Ici : **`STATUS.md`**. Dans le dépôt privé : `FableEtudes/README.md` (index) et
+`FableEtudes/ROADMAP.md`. Presque toutes les sessions les modifient → conflit fréquent.
+Résolution type : **prendre la version de `main`** (structure à jour, lignes des autres études)
+et **y réappliquer sa seule ligne**. Ne jamais écraser le bloc entier avec sa propre version.
+
+⚠️ **Depuis la scission (étude 24), le suivi d'une étude et le code qu'elle produit peuvent vivre
+dans deux dépôts différents.** Un lot de l'étude 25, par exemple, livre du harness **ici** mais
+coche sa case et écrit son journal **là-bas**. Prévoir les deux gestes, et dire dans la PR
+publique où est allé le suivi — sinon le travail paraît non tracé.
 
 ## Le numéro d'étude se réserve au merge
 

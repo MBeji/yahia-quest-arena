@@ -106,6 +106,17 @@ jobs:
           echo "count=$count" >> "$GITHUB_OUTPUT"
           echo "$count open report(s) in the queue."
 
+      # Le modèle de ce garde n'est pas écrit ici : il vient de harness/models.json via
+      # son rôle (étude 25 D-5/D-6). Changer de modèle = une ligne dans ce JSON, et
+      # harness:check échoue si un identifiant réapparaît en dur dans un workflow.
+      - name: Resolve the model for role garde-triage
+        id: model
+        if: steps.guard.outputs.configured == 'true'
+        run: |
+          model="$(node -p "require('./harness/models.json').roles['garde-triage'].model")"
+          echo "model=$model" >> "$GITHUB_OUTPUT"
+          echo "Role garde-triage -> $model (source: harness/models.json)"
+
       - name: Run the report-triage agent
         if: steps.guard.outputs.configured == 'true' && steps.fetch.outputs.count != '0'
         uses: anthropics/claude-code-action@v1
@@ -167,7 +178,7 @@ jobs:
             it. If the queue only contains non-actionable reports, open no PR —
             the tracking issue is the only output.
           claude_args: |
-            --model claude-sonnet-4-6
+            --model ${{ steps.model.outputs.model }}
             --max-turns 60
             --allowedTools "Bash,Read,Edit,Write,Glob,Grep"
 

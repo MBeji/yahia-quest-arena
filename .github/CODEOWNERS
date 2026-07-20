@@ -1,0 +1,27 @@
+# CODEOWNERS — revue humaine obligatoire sur les chemins qui JUGENT le code
+#
+# Arbitrage Q-6 de l'étude 25 (2026-07-19). Dérogation assumée et volontairement
+# étroite au « zéro geste humain » (décision 2026-07-12) : tout le reste du dépôt
+# garde la chaîne push → PR → checks → merge entièrement automatique.
+#
+# Pourquoi ces deux chemins et pas d'autres : le red flag n° 1 documenté sur les PR
+# d'agents est le « CI gaming » — affaiblir le gate qui juge le travail (seuil de
+# couverture baissé, test supprimé, check rendu conditionnel, politique d'exécution
+# élargie). Un agent ne doit pas pouvoir éditer son propre juge sans qu'un humain
+# le voie. Ce fichier est le seul moyen mécanique de garantir ça.
+#
+# Effet concret : une PR qui touche ces chemins attend l'approbation de @MBeji.
+# Volume attendu : ~2 PR/mois. Si ça devient bloquant, la réponse n'est pas de
+# supprimer ce fichier mais de re-discuter le périmètre (étude 25 §9, Q-6).
+#
+# Note : GitHub n'applique CODEOWNERS que si « Require review from Code Owners »
+# est coché dans le ruleset `main-protection` (Settings → Rules). Sans ça, ce
+# fichier ne fait que suggérer un relecteur.
+
+# La machinerie CI/CD : workflows, ruleset, scripts qu'ils appellent.
+/.github/workflows/    @MBeji
+/.github/rulesets/     @MBeji
+
+# Le harness : politique d'exécution, rôles de modèles, prompts des gardes.
+/harness/              @MBeji
+/scripts/harness/      @MBeji
