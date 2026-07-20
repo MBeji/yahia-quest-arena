@@ -62,14 +62,14 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           # Empty (the default) checks out the triggering ref, so existing callers
           # (nightly.yml) are unaffected; the upgrade guard passes its branch here.
           ref: ${{ inputs.ref }}
 
       - name: Install the Supabase CLI
-        uses: supabase/setup-cli@v2
+        uses: supabase/setup-cli@3c2f5e2ae34c34e428e8e206e2c4d21fa2d20fbf # v2
         with:
           # Pinned: an unpinned "latest" bump (supabase/postgres 17.6.1.132 → .134,
           # 2026-06-07) silently dropped the default table privileges on the local
