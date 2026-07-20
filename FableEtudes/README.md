@@ -104,6 +104,9 @@ dès validation ; elle **mandate 04-A1 (« Révision du jour ») comme brique su
 é07 lots 2-5 → é04-A2 → é20 → é23 → é19 lot 1 → é11), fondations en parallèle (é09, C4,
 é24/é25), fil contenu continu (é16/é18/é21), et gels doctrine proposés pour 06/10/12. L'ordre
 ci-dessus reste la référence tant que ses Q-1…Q-5 ne sont pas arbitrées.
+**La roadmap opérationnelle** — tout le reste-à-faire (études, lots, campagnes de contenu,
+fondations) ordonné en 3 files parallèles avec la vue jalon rentrée : [`ROADMAP.md`](./ROADMAP.md)
+(instantané daté, décliné de l'étude 26 ; les entrées ⚖️ attendent leur arbitrage).
 L'étude `01` reste **gelée** tant que dure la phase gratuite (sortie de gel = décision humaine).
 L'étude `11` (tuteur IA) est sortie du gel **côté conception** le 2026-07-17 : sa **v2**
 (commande humaine) ne dépend plus du financement de `01` — le coût est borné par énergie/quotas
