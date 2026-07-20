@@ -14,6 +14,7 @@ import {
   Loader2,
   Lock,
   Flame,
+  Compass,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -24,7 +25,9 @@ import {
   submitDungeonRun,
   DUNGEON_XP_PER_FLOOR,
   DUNGEON_COINS_PER_5_FLOORS,
+  type DungeonPoolScope,
 } from "@/features/dungeon";
+import { trackDungeonPoolScope } from "@/shared/lib/analytics";
 // Deep component imports (route→feature convention, like quest.$exerciseId):
 // the barrel would drag quest.server.ts into this route's module graph.
 import { QuestionInput, type McqOptionRender } from "@/features/quest/components/question-input";
@@ -79,6 +82,9 @@ function DungeonPage() {
   const [state, setState] = useState<GameState>("lobby");
   const [runId, setRunId] = useState<string | null>(null);
   const [floor, setFloor] = useState(0);
+  // R-25 : d'où sort le pool réellement servi. Le lobby promet « ta classe » ; si le repli a
+  // élargi, l'arène le DIT plutôt que de laisser croire le contraire (R-30).
+  const [poolScope, setPoolScope] = useState<DungeonPoolScope>("all");
   const [questions, setQuestions] = useState<DungeonQuestion[]>([]);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
@@ -130,6 +136,8 @@ function DungeonPage() {
       try {
         const res = await fetchQuestions({ data: { runId: activeRunId, batchSize: 5 } });
         setFloor(res.currentFloor);
+        setPoolScope(res.poolScope);
+        trackDungeonPoolScope({ scope: res.poolScope });
         const newQuestions = res.questions ?? [];
         if (newQuestions.length === 0) {
           toast.error(t.dungeon.noMoreQuestions);
@@ -523,6 +531,14 @@ function DungeonPage() {
           </AnimatePresence>
           <div className="flex items-center gap-1.5 rounded-full bg-gold/20 px-3 py-1 text-sm font-bold text-gold">
             <Layers className="h-3.5 w-3.5" /> {t.dungeon.floor.replace("{n}", String(floor))}
+          </div>
+          <div className="flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1 text-sm font-bold text-muted-foreground">
+            <Compass className="h-3.5 w-3.5" />
+            {poolScope === "grade"
+              ? t.dungeon.poolGrade
+              : poolScope === "cycle"
+                ? t.dungeon.poolCycle
+                : t.dungeon.poolAll}
           </div>
           <div className="flex items-center gap-1.5 rounded-full bg-destructive/20 px-3 py-1 text-sm font-bold text-destructive">
             <Skull className="h-3.5 w-3.5" /> {t.dungeon.oneHp}

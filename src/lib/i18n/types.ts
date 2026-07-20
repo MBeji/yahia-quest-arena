@@ -251,6 +251,10 @@ export type TranslationKeys = {
     heroesHall: string;
     title: string;
     desc: string;
+    /** Étude 22 R-25/R-30 — d'où vient le pool servi par l'arène. */
+    poolGrade: string;
+    poolCycle: string;
+    poolAll: string;
     xpPerFloor: string;
     coinsPerFloors: string;
     life: string;
