@@ -1,12 +1,22 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { mockRenderErrorPage, mockConsumeLastCapturedError, mockLoggerError, mockServerFetch } =
-  vi.hoisted(() => ({
-    mockRenderErrorPage: vi.fn(() => "<html>fallback</html>"),
-    mockConsumeLastCapturedError: vi.fn((): unknown => undefined),
-    mockLoggerError: vi.fn(),
-    mockServerFetch: vi.fn(),
-  }));
+const {
+  mockRenderErrorPage,
+  mockConsumeLastCapturedError,
+  mockLoggerError,
+  mockServerFetch,
+  mockHandleHealthRequest,
+} = vi.hoisted(() => ({
+  mockRenderErrorPage: vi.fn(() => "<html>fallback</html>"),
+  mockConsumeLastCapturedError: vi.fn((): unknown => undefined),
+  mockLoggerError: vi.fn(),
+  mockServerFetch: vi.fn(),
+  mockHandleHealthRequest: vi.fn(),
+}));
+
+vi.mock("@/shared/lib/health", () => ({
+  handleHealthRequest: mockHandleHealthRequest,
+}));
 
 vi.mock("@tanstack/react-start/server-entry", () => ({
   default: {
@@ -36,6 +46,43 @@ describe("server fetch wrapper", () => {
     mockConsumeLastCapturedError.mockReset();
     mockRenderErrorPage.mockReset();
     mockRenderErrorPage.mockReturnValue("<html>fallback</html>");
+    mockHandleHealthRequest.mockReset();
+  });
+
+  it("serves /api/health BEFORE the bot guard, so a monitor is never refused", async () => {
+    mockHandleHealthRequest.mockResolvedValue(
+      new Response('{"status":"ok"}', {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }),
+    );
+
+    const server = (await import("@/server")).default;
+    // `python-requests` is on the guard's block list (403) — and it is exactly
+    // the kind of agent a real uptime monitor announces itself with. If this
+    // ever regresses to running after the guard, the monitor reports a
+    // permanent outage that does not exist.
+    const request = new Request("https://app.local/api/health", {
+      headers: { "user-agent": "python-requests/2.31.0" },
+    });
+
+    const response = await server.fetch(request, {}, {});
+
+    expect(response.status).toBe(200);
+    expect(mockHandleHealthRequest).toHaveBeenCalled();
+    expect(mockServerFetch).not.toHaveBeenCalled();
+  });
+
+  it("answers 503 JSON — not the branded HTML page — when the probe itself throws", async () => {
+    mockHandleHealthRequest.mockRejectedValue(new Error("boom"));
+
+    const server = (await import("@/server")).default;
+    const response = await server.fetch(new Request("https://app.local/api/health"), {}, {});
+
+    expect(response.status).toBe(503);
+    expect(response.headers.get("content-type")).toContain("application/json");
+    expect(response.headers.get("cache-control")).toContain("no-store");
+    expect(mockLoggerError).toHaveBeenCalledWith("Health endpoint failed", expect.anything());
   });
 
   it("returns branded HTML response when server entry throws", async () => {

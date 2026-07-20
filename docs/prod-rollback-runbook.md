@@ -17,7 +17,11 @@ gh workflow run rollback-prod.yml -f mode=rollback -f reason="<ce qui est cassé
 # 2. Regarder ce que ça a donné (le workflow ouvre une issue d'incident avec la suite à faire)
 gh run watch "$(gh run list --workflow rollback-prod.yml --limit 1 --json databaseId --jq '.[0].databaseId')"
 
-# 3. Vérifier à la main : page d'accueil, une matière, un exercice soumis
+# 3. Vérifier : la sonde dit quel code tourne et si la base répond
+curl -s https://na9ranal3ab.vercel.app/api/health
+
+# 4. Puis à la main, ce que la sonde ne voit pas : page d'accueil, une matière,
+#    un exercice soumis (un crash CLIENT laisse la sonde serveur au vert)
 ```
 
 Pas de secrets Vercel configurés, ou le workflow échoue ? **Dashboard Vercel → Deployments →
@@ -267,13 +271,13 @@ En incident, chaque « c'est fait » doit être **relu à la source**. Les signa
 presque toujours dans le sens rassurant — on croit avoir agi, on n'a rien fait, et on
 continue la procédure sur une prémisse fausse.
 
-| Piège                   | Ce qu'on croit lire     | La vérité                                                                                                                                                 |
-| ----------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `commande \| tail`      | le succès de `commande` | le code de sortie est celui de `tail`. Un `git push` **rejeté** par le hook `pre-push` ressort ainsi en succès. `set -o pipefail`, ou pas de pipe du tout |
-| `… \| jq`               | un filtre               | `jq` n'est pas installé sur ce poste : la sortie est **vide en silence**. Utiliser `gh --jq`                                                              |
-| `mergeStateStatus`      | l'état réel de la PR    | recalculé paresseusement après un push sur `main` : lit `UNKNOWN`/périmé pendant les secondes qui suivent. Trancher avec l'API compare (`behind_by`)      |
-| HTTP 200 après rollback | « la prod remarche »    | prouve que l'alias sert quelque chose, pas que l'app fonctionne. Cliquer le parcours de fumée                                                             |
-| « le job est vert »     | l'effet est obtenu      | un job réussit aussi quand ses étapes ont été **sautées** (`if:` non satisfait). Lire le résumé du run, pas la pastille                                   |
+| Piège                   | Ce qu'on croit lire     | La vérité                                                                                                                                                                     |
+| ----------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `commande \| tail`      | le succès de `commande` | le code de sortie est celui de `tail`. Un `git push` **rejeté** par le hook `pre-push` ressort ainsi en succès. `set -o pipefail`, ou pas de pipe du tout                     |
+| `… \| jq`               | un filtre               | `jq` n'est pas installé sur ce poste : la sortie est **vide en silence**. Utiliser `gh --jq`                                                                                  |
+| `mergeStateStatus`      | l'état réel de la PR    | recalculé paresseusement après un push sur `main` : lit `UNKNOWN`/périmé pendant les secondes qui suivent. Trancher avec l'API compare (`behind_by`)                          |
+| HTTP 200 après rollback | « la prod remarche »    | prouve que l'alias sert quelque chose, pas que l'app fonctionne ni **quel code** elle sert. Lire `curl /api/health` (`commit` + état base), puis cliquer le parcours de fumée |
+| « le job est vert »     | l'effet est obtenu      | un job réussit aussi quand ses étapes ont été **sautées** (`if:` non satisfait). Lire le résumé du run, pas la pastille                                                       |
 
 Les vérifications qui coûtent dix secondes et évitent une fausse route :
 
@@ -289,16 +293,41 @@ gh run view <id> --log-failed           # qu'est-ce qui a VRAIMENT échoué ?
 
 ---
 
-## Détection — le trou connu
+## Détection
 
-**Il n'y a aujourd'hui ni endpoint de santé, ni monitor d'uptime, ni Sentry** (suivi au backlog
-qualité, voir `ci-cd-and-branch-protection.md`). En pratique la panne se découvre par un
-signalement, ou parce que quelqu'un ouvre le site.
+### `GET /api/health` — la sonde
 
-Ce que ça implique : **le délai de détection domine le RTO**, et aucun outil ne le raccourcit
-aujourd'hui. La contre-mesure disponible est de regarder la prod après chaque merge notable
-(le `smoke:shell` de la CI attrape déjà la classe de panne du 2026-07-01, mais sur le bundle,
-pas sur la prod réelle).
+```bash
+curl -s -o /dev/null -w '%{http_code}\n' https://na9ranal3ab.vercel.app/api/health   # 200 ou 503
+curl -s https://na9ranal3ab.vercel.app/api/health
+# {"status":"ok","checks":{"database":"ok"},"commit":"4eb36f9","ts":"…"}
+```
+
+**200** si la base répond, **503** sinon — un monitor bête suffit, le code HTTP porte tout.
+Elle répond deux questions qu'une page d'accueil en 200 ne répond pas :
+
+- **la base est-elle vivante ?** L'app peut servir du HTML pendant que Postgres est parti :
+  c'est exactement la panne qu'un rollback de code **ne répare pas** (§ « Si le rollback ne
+  suffit pas »).
+- **quel code tourne ?** `commit` est le SHA court du déploiement réellement servi — la
+  vérification à faire **après** un rollback, où un 200 ne prouve rien (§ « Vérifier l'état,
+  jamais le signal »).
+
+La sonde est traitée **avant le bot guard** ([`src/server.ts`](../src/server.ts)) : les monitors
+s'annoncent souvent en `python-requests`/`httpx`, que le guard refuse en 403, et un appel
+périodique depuis une IP fixe est précisément ce que son plafond de rafale répond en 429. Les
+deux produiraient une fausse panne. Un test épingle cet ordre.
+
+### Ce qui manque encore
+
+**Personne n'interroge la sonde.** Il n'y a ni monitor d'uptime, ni Sentry — la panne se
+découvre toujours par un signalement ou parce que quelqu'un ouvre le site, et **le délai de
+détection domine donc le RTO**.
+
+Pour fermer : brancher un monitor gratuit (UptimeRobot, Better Stack) sur `/api/health`, toutes
+les 1–5 min, alerte e-mail/SMS — c'est un compte externe à créer, pas du code. Sentry reste le
+seul moyen d'attraper un crash **client** (la classe de panne du 2026-07-01), que la sonde
+serveur ne voit pas : elle dirait « ok » pendant que le navigateur montre une page blanche.
 
 ---
 
@@ -306,7 +335,7 @@ pas sur la prod réelle).
 
 | Étape                                       | Cible                                                           |
 | ------------------------------------------- | --------------------------------------------------------------- |
-| Détection                                   | non outillée — voir ci-dessus                                   |
+| Détection                                   | sonde prête, **personne ne l'interroge** — voir « Détection »   |
 | Décision → prod restaurée (levier 1)        | **< 5 min**                                                     |
 | `main` == prod (levier 2, cycle CI complet) | **< 30 min**                                                    |
 | Restauration base (levier 4)                | ~1 h, RPO ≈ 24 h ([runbook dédié](./backup-restore-runbook.md)) |
