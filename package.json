@@ -31,6 +31,7 @@
     "content:build": "node --experimental-strip-types scripts/content/build.ts",
     "content:emit": "node --experimental-strip-types scripts/content/build.ts --sql-dir sql/content",
     "db:inventory-content": "node scripts/db/inventory-content-migrations.mjs",
+    "db:check-chain": "node scripts/db/check-migration-chain.mjs",
     "content:qa": "node --experimental-strip-types scripts/content/qa.ts",
     "content:qa:strict": "node --experimental-strip-types scripts/content/qa.ts --strict",
     "content:audit": "node --experimental-strip-types scripts/content/audit-program.ts",
@@ -48,9 +49,9 @@
     "harness:sync": "node scripts/harness/sync.mjs",
     "harness:check": "node scripts/harness/check.mjs",
     "leak:check": "node scripts/ci/check-content-leak.mjs",
-    "verify": "npm run lint && npm run typecheck && npm run test && npm run leak:check",
+    "verify": "npm run lint && npm run typecheck && npm run test && npm run leak:check && npm run db:check-chain",
     "audit:deps": "npm audit --omit=dev --audit-level=high --registry=https://registry.npmjs.org",
-    "ci:verify": "npm run lint && npm run typecheck && npm run test:coverage && npm run build:check && npm run audit:deps && npm run harness:check && npm run leak:check",
+    "ci:verify": "npm run lint && npm run typecheck && npm run test:coverage && npm run build:check && npm run audit:deps && npm run harness:check && npm run leak:check && npm run db:check-chain",
     "prepare": "husky"
   },
   "lint-staged": {
