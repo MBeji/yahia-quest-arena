@@ -783,7 +783,7 @@ Détail des points durs par lot :
 - [x] Lot 1 — Bascule AGENTS.md canonique + pointeurs (2026-07-19)
 - [x] Lot 2 — Outillage & gate `harness:check` + `models.json` (2026-07-19)
 - [ ] Lot 3 — Skills : conformité spec + miroir `.agents/skills/`
-- [ ] Lot 4 — Politique d'exécution déclarative + hook externalisé
+- [x] Lot 4 — Politique d'exécution déclarative + hook externalisé (2026-07-20)
 - [ ] Lot 5 — Gardes CI portables + épinglage SHA
 - [ ] Lot 6 — Mémoire & collaboration multi-têtes
 - [ ] Lot 7 — Drill de portabilité (avec l'humain)
@@ -942,6 +942,38 @@ Détail des points durs par lot :
   lint+typecheck+test, tel que documenté dans AGENTS.md). AGENTS.md mis à jour (commande
   `harness:check` + composition `ci:verify`) ; toujours dans le budget (169 lignes, 12,8 Kio).
   Gate : `npm run ci:verify` intégral vert avant push (harness:check inclus).
+- **2026-07-20 — Lot 4 livré (D-4). ⚠️ Écart d'ordre assumé : L4 exécuté AVANT L3.**
+  _Raison_ : la roadmap (#535) place é25 en file FONDATIONS « lots 3 → 7 dans l'ordre », mais
+  **F2 = é24 lots 3b→6 (« dégraissage public » : sortir les skills `prof-*`/`content-*` du repo
+  public) est en cours en parallèle**. Créer maintenant le miroir `.agents/skills/` des 45 skills
+  reviendrait à **dupliquer dans le repo public l'actif que é24 est en train d'en retirer** —
+  une contradiction de doctrine, pas un simple conflit de fichiers. §6 de cette étude déclare
+  L3/L4/L5/L6 **indépendants** (l'étude prime sur le raccourci d'écriture de la roadmap), donc
+  L4 est pris sans dérogation. **L3 reste à faire APRÈS é24 lot 3b**, sur le périmètre de skills
+  qui subsistera — et la ROADMAP est amendée en ce sens dans cette PR.
+  _Livré_ : `harness/policy.json` — politique déclarative, **45 règles allow d'origine
+  préservées à l'identique** (regroupées par intention : gates / content-pipeline / tooling /
+  db-readonly / git-readonly / gh-readonly, pour qu'une revue voie le POURQUOI d'une règle) +
+  4 deny **chacun avec sa `reason`** ; seule addition : `Bash(npm run harness:check)` (le gate
+  né au lot 2). `harness/prompts/pre-commit-guard.md` — prompt du hook agent externalisé
+  (markdown lisible et diffable au lieu d'une string JSON à `\n` échappés ; **fond identique**,
+  vérifié par comparaison normalisée). `scripts/harness/sync.mjs` — compile
+  policy+models+prompt → `.claude/settings.json`, idempotent, sortie **byte-compatible
+  Prettier** (sinon lint-staged reformaterait le généré et créerait une dérive à chaque
+  commit — piège vérifié explicitement). `check.mjs` gagne l'**invariant 6** (« toute vue
+  générée est exactement ce que `harness:sync` produirait ») : c'est lui qui rend sûre
+  l'exemption du scan d'ids de modèles sur les fichiers générés — leur `claude-sonnet-4-6`
+  vient légitimement de `models.json`, et un bump fait à la main dans le généré est détecté
+  comme dérive (testé en simulant l'édition sauvage : gate rouge, message actionnable).
+  `guard-generated.mjs` bloque désormais l'édition manuelle de `.claude/settings.json` en
+  pointant la bonne source selon ce qu'on voulait changer. `npm run harness:sync` ajouté.
+  _Dérive corrigée au passage_ : la section « Execution policy » d'AGENTS.md (écrite au lot 1,
+  par anticipation) annonçait `npm run dev` comme toujours autorisé — **c'était faux**, la
+  politique réelle ne l'a jamais contenu — et omettait `harness:check` ; réécrite pour refléter
+  `policy.json` exactement. 12 tests Vitest ajoutés (38 au total sur `scripts/harness/`).
+  Gate : `npm run ci:verify` intégral vert.
+  _Reste_ : L3 (après é24 3b), L5 (gardes CI + SHA + CODEOWNERS de Q-6), L6 (mémoire process),
+  L7 (drill, avec Mohamed).
 
 ---
 
