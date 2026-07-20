@@ -650,6 +650,21 @@ const questionCoreSchema = z.object({
    * never blocking). Unknown ids are flagged by content:qa (vocabulary check).
    */
   competencies: z.array(competencyIdSchema).min(1).max(3).optional(),
+  /**
+   * Réponses acceptées EN PLUS de la réponse canonique (étude 20, R-2) —
+   * paraphrases, synonymes exacts, formes morphologiques (avec/sans article),
+   * positions équivalentes, translittérations latines de l'arabe. Compilées
+   * dans la colonne SERVER-ONLY `questions.accepted_answers` : jamais envoyées
+   * au client, comme la clé elle-même (R-1).
+   *
+   * Optionnel — absent ⇒ la canonique seule, soit le comportement de l'étude 17
+   * (jamais une régression). Le texte reste LISIBLE dans le fichier (relecture
+   * humaine) : c'est le SQL qui normalise au scoring, source unique (D-3).
+   * Consommé par le mode Rappel (`mcq` éligible) et, au lot 7, par le type
+   * natif `short_answer` ; `content:qa` refuse un ensemble qui collisionne avec
+   * un élément déclaré faux (R-4) ou sort du charset tapable (R-5).
+   */
+  acceptedAnswers: z.array(z.string().min(1).max(512)).max(24).optional(),
 });
 
 /** The classic QCM — `type` may be omitted in files (defaulted to 'mcq'). */

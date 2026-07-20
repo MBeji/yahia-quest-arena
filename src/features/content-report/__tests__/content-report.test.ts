@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 const mockInsert = vi.fn();
 const builder = {
-  insert: () => mockInsert(),
+  insert: (row: unknown) => mockInsert(row),
   select: () => builder,
   eq: () => builder,
 };
@@ -65,6 +65,41 @@ describe("contentReport — reportContentError", () => {
     })) as { ok: boolean };
     expect(res.ok).toBe(true);
     expect(mockInsert).toHaveBeenCalledTimes(1);
+  });
+
+  // Étude 20 Q-3 — le lot 1 se contente de rendre le « refus contesté »
+  // DISTINGUABLE (US-5) ; la file admin dédiée est le lot 6.
+  it("defaults kind to content_error, so existing callers are unchanged", async () => {
+    mockInsert.mockResolvedValue({ error: null });
+    const { reportContentError } = await import("@/features/content-report");
+    await (reportContentError as unknown as AnyFn)({ data: { message: "wrong answer key" } });
+    expect(mockInsert).toHaveBeenCalledWith(expect.objectContaining({ kind: "content_error" }));
+  });
+
+  it("accepts a recall_false_negative report", async () => {
+    mockInsert.mockResolvedValue({ error: null });
+    const { reportContentError } = await import("@/features/content-report");
+    const res = (await (reportContentError as unknown as AnyFn)({
+      data: {
+        questionId: "22222222-2222-2222-2222-222222222222",
+        message: "j'ai écrit « فوق الشجرة » et c'était juste",
+        kind: "recall_false_negative",
+      },
+    })) as { ok: boolean };
+    expect(res.ok).toBe(true);
+    expect(mockInsert).toHaveBeenCalledWith(
+      expect.objectContaining({ kind: "recall_false_negative", status: "open" }),
+    );
+  });
+
+  it("rejects an unknown kind (the enum is closed, mirroring the CHECK)", async () => {
+    const { reportContentError } = await import("@/features/content-report");
+    await expect(
+      (reportContentError as unknown as AnyFn)({
+        data: { message: "message assez long", kind: "invented_kind" },
+      }),
+    ).rejects.toBeTruthy();
+    expect(mockInsert).not.toHaveBeenCalled();
   });
 
   it("rejects when rate-limited", async () => {

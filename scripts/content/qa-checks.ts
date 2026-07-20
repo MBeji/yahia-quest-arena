@@ -36,7 +36,18 @@
  *           A *substantive* "nothing/zero" answer (`لا شيء`, `aucun jour`) is
  *           legitimate and NOT flagged. Deep grammatical coherence is the
  *           `content-audit` (human/LLM) pass; this only catches the lexical slice.
+ *   [error] acceptedAnswers collision/charset   → étude 20 R-4/R-5: an accepted
+ *           variant that equals a DECLARED-WRONG option would make cheating
+ *           correct, and one outside the typable charset could never be entered.
+ *           These are the only guard the runtime has — SQL trusts the compiled
+ *           set blindly (étude §5) — so they are errors, never warnings.
  */
+
+import {
+  isRecallEligible,
+  normalizeRecallText,
+  TYPABLE_CHARSET,
+} from "../../src/shared/content/free-answer.ts";
 
 export type QAOption = { id: string; text: string; misconceptionTag?: string };
 export type QAQuestion = {
@@ -810,4 +821,128 @@ export function auditLesson(md: string, where: string, opts: { spatial?: boolean
 /** Le chapitre relève-t-il d'une famille où la figure est exigible ? (axe 5) */
 export function isSpatialChapter(slug: string): boolean {
   return SPATIAL_CHAPTER.test(slug) || GRAPHICAL_CHAPTER.test(slug);
+}
+
+/* ============================================================================
+   Réponses acceptées (`acceptedAnswers`) — étude 20, lot 1.
+
+   Le scoring SQL fait confiance à l'ensemble compilé : il n'existe AUCUNE
+   défense runtime contre un ensemble empoisonné (étude §5). Cette passe est
+   donc la seule garde, et elle est bloquante (`content:qa:strict` en CI).
+
+   Elle raisonne avec la MÊME normalisation que la base — le miroir TS de
+   `normalize_recall_text`, dont la parité est prouvée des deux côtés par
+   `PARITY_CORPUS` (src/shared/content/free-answer.ts, RISK-2).
+
+   La borne de taille (≤ 24 entrées) n'est pas revérifiée ici : le schéma zod
+   la porte (`content:check`), un gate qui s'exécute avant celui-ci.
+   ========================================================================== */
+
+/** Une question vue par la garde des réponses acceptées (tous types). */
+export type QAAcceptedAnswersQuestion = {
+  type: string;
+  prompt: string;
+  options?: ReadonlyArray<{ id: string; text: string }>;
+  correctOption?: string;
+  acceptedAnswers?: ReadonlyArray<string>;
+};
+
+export function auditAcceptedAnswers(q: QAAcceptedAnswersQuestion, where: string): Flag[] {
+  const flags: Flag[] = [];
+  const set = q.acceptedAnswers ?? [];
+  if (set.length === 0) return flags;
+
+  // Seule une question qui CONSOMME l'ensemble a le droit d'en porter un
+  // (étude §3, QA 3). Au lot 1 le seul consommateur est le mode Rappel, donc
+  // les `mcq` ; `short_answer` rejoint la liste au lot 7.
+  if (q.type !== "mcq") {
+    flags.push({
+      level: "error",
+      where,
+      msg: `acceptedAnswers on a '${q.type}' question — no scorer reads it (only recall-eligible mcq does today)`,
+    });
+    return flags;
+  }
+
+  const options = q.options ?? [];
+  if (
+    !isRecallEligible({
+      type: q.type,
+      prompt: q.prompt,
+      options,
+      correctOption: q.correctOption,
+    })
+  ) {
+    // Warning, pas erreur : la question reste valide et jouable, seul
+    // l'ensemble dort. R-6 interdit de RETIRER de l'éligibilité, donc un
+    // ensemble en avance de phase n'est pas une faute d'autorat.
+    flags.push({
+      level: "warn",
+      where,
+      msg: "acceptedAnswers on a question that is not recall-eligible — the set is ignored at scoring",
+    });
+  }
+
+  const canonicalText = options.find((o) => o.id === q.correctOption)?.text ?? "";
+  const canonical = normalizeRecallText(canonicalText);
+  // Les éléments DÉCLARÉS FAUX de la question : les distracteurs (R-4). Le lot 7
+  // y ajoutera les `expectedMistakes` d'une `short_answer`.
+  const declaredWrong = new Map<string, string>();
+  for (const o of options) {
+    if (o.id !== q.correctOption) declaredWrong.set(normalizeRecallText(o.text), o.text);
+  }
+
+  const seen = new Set<string>();
+  for (const entry of set) {
+    const n = normalizeRecallText(entry);
+
+    // R-5 — typabilité : un membre intapable ne peut jamais être saisi.
+    if (n === "") {
+      flags.push({
+        level: "error",
+        where,
+        msg: `accepted answer "${entry}" normalises to nothing — it could never be typed`,
+      });
+      continue;
+    }
+    if (!TYPABLE_CHARSET.test(n)) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `accepted answer "${entry}" leaves the typable charset once normalised ("${n}")`,
+      });
+      continue;
+    }
+
+    // R-4 — anti-collision. La précision prime le rappel : mieux vaut refuser
+    // une paraphrase rare qu'accepter une réponse déclarée fausse (US-4).
+    const collision = declaredWrong.get(n);
+    if (collision !== undefined) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `accepted answer "${entry}" collides with the distractor "${collision}" — it would score a declared-wrong answer as correct`,
+      });
+      continue;
+    }
+    if (n === canonical) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `accepted answer "${entry}" duplicates the canonical answer "${canonicalText}" (always accepted — R-2)`,
+      });
+      continue;
+    }
+    if (seen.has(n)) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `accepted answer "${entry}" duplicates an earlier entry once normalised`,
+      });
+      continue;
+    }
+    seen.add(n);
+  }
+
+  return flags;
 }
