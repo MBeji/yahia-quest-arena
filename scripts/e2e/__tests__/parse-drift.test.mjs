@@ -31,6 +31,31 @@ describe("parseDriftedRevertVersions", () => {
     expect(parseDriftedRevertVersions(out)).toEqual(["20260628094836", "20260629093204"]);
   });
 
+  // The case the suite missed until the étude 24 corpus scission: the CLI lists
+  // EVERY drifted version on ONE line. Capturing only the first left ~200
+  // behind, so each run repaired one, retried once, and failed again — e2e-auth
+  // could not reach a single test.
+  it("extracts every version when the CLI lists them all on ONE line", () => {
+    const out = [
+      "Remote migration versions not found in local migrations directory.",
+      "supabase migration repair --status reverted 20260602142000 20260602143000 20260602144000",
+      "supabase db pull",
+    ].join("\n");
+    expect(parseDriftedRevertVersions(out)).toEqual([
+      "20260602142000",
+      "20260602143000",
+      "20260602144000",
+    ]);
+  });
+
+  it("never harvests digits from the line AFTER a one-line version run", () => {
+    const out = [
+      "supabase migration repair --status reverted 20260602142000",
+      "20260602143000",
+    ].join("\n");
+    expect(parseDriftedRevertVersions(out)).toEqual(["20260602142000"]);
+  });
+
   it("tolerates extra whitespace between tokens", () => {
     const out = "supabase migration repair   --status    reverted   20260628094836";
     expect(parseDriftedRevertVersions(out)).toEqual(["20260628094836"]);
