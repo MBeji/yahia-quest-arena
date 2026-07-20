@@ -332,6 +332,9 @@ Cases à cocher :
 - [x] Lot 1 — armement juridique (LICENSE + notices) — livré le 2026-07-19
 - [x] Lot 2 — repo privé + CI contenu — livré le 2026-07-19
 - [ ] Lot 3 — découplage SQL contenu + nettoyage historique migrations
+      → **3a livré le 2026-07-19** (outillage & canal, zéro prod : émetteur, inventaire,
+      `content_releases`, workflows privés désarmés) · **3b** (runbook §4.3 : TEST puis prod)
+      **bloqué** tant que les 4 écarts du journal ne sont pas arbitrés
 - [ ] Lot 4 — dégraissage du repo public + gate anti-fuite
 - [ ] Lot 5 — purge de l'historique public (si Q-2)
 - [ ] Lot 6 — e2e TEST + régularisation documentaire
@@ -419,6 +422,47 @@ Cases à cocher :
   `yahia-quest-content` + secrets), puis import + CI privée exécutables en une passe par
   n'importe quelle session. **D-4 amendée** : symlink du corpus dans le checkout moteur au
   lieu du patch `--content-dir` (zéro modification du moteur).
+- **2026-07-19 — lot 3a livré** (outillage & canal, **zéro opération sur une base**) —
+  arbitrage humain du jour : livrer d'abord ce qui ne touche pas la prod, l'opération DB (3b)
+  attendant la correction du §4.3. Livré côté **public** : l'émetteur du canal contenu
+  (`build.ts --sql-dir` → `sql/content/<subject>.sql`, nom stable ; helper canonique
+  `contentSqlFileName` + `COMPETENCES_SQL_FILE_NAME` dans `sql-builder.ts` ; script
+  `content:emit` ; `sql/content/` gitignoré en attendant le gate anti-fuite du lot 4), le script
+  d'inventaire `scripts/db/inventory-content-migrations.mjs` (`db:inventory-content`, remplace
+  le critère inopérant du §4.3-1), la migration `content_releases` (ops-private : RLS **sans
+  aucune policy**, `REVOKE` anon/authenticated, `GRANT ALL` service_role) et son test pgTAP
+  `30_content_releases.test.sql`. Côté **privé** (PR `yahia-quest-content#1`) :
+  `apply-content.yml` (prod) et `apply-content-test.yml` (TEST), en `workflow_dispatch`
+  **uniquement** — déclencheur automatique volontairement **désarmé** jusqu'au 3b, pour qu'aucun
+  merge ne puisse appliquer du contenu. Vérifié : SQL émis **identique** à celui du canal
+  migration (même builder), ré-émission stable au même octet, `verify` vert (1 482 tests),
+  `content:check` vert (77 sujets / 16 302 questions).
+- **2026-07-19 — lot 3b : STOP, 4 écarts étude ↔ code réel à arbitrer** (règle d'exécution n° 3 —
+  l'exécuteur ne re-designe pas). Le §4.3 doit être corrigé par l'architecte avant toute
+  opération sur une base :
+  1. **Volumétrie** — l'étude annonce 267 migrations de contenu et 78 restantes ; l'inventaire
+     réel donne **227 générées** (révocables), **17 de contenu écrites à la main** et
+     **102 schéma/ops**.
+  2. **Critère du §4.3-1 inopérant** — « n'insèrent que dans subjects/chapters/exercises/
+     questions sans DDL » ne sélectionne **aucune** migration générée : toutes embarquent un
+     garde de contrainte idempotent (`DO $$ … exercises_mode_check … END $$`), toutes purgent
+     `dungeon_run_questions` (cascade) et écrivent `question_competencies` (sortie du
+     compilateur, étude 07). Critère retenu à la place : la **provenance** (`_generated_*_content`),
+     exactement l'ensemble que `content:emit` reproduit. Corollaire de sûreté : les 17 migrations
+     manuelles ne sont **jamais** révocables en masse — `20260522170000_seed_content.sql` seede
+     aussi `badges` et `shop_items`.
+  3. **Effet de bord schéma** — le garde de contrainte voyage avec le corpus vers le privé ;
+     une base **fraîche** reconstruite depuis le seul repo public ne le porterait donc plus
+     (le pgTAP nightly rejoue tout sur base vierge). À trancher : reposer la contrainte dans une
+     migration de schéma publique, ou l'assumer côté canal contenu.
+  4. **Ordre du runbook incompatible avec le canal prod** — le §4.3 prescrit « repair reverted (2)
+     puis retrait des fichiers (3) », mais le seul canal sanctionné (`db-migrate-prod.yml` mode
+     `repair-revert`) enchaîne `repair --status reverted` **puis `db push`** : appliqué dans cet
+     ordre, il **ré-appliquerait les 227 migrations**. Le mode est conçu pour des _phantoms_
+     distants dont le fichier est déjà retiré — donc l'ordre inverse, avec l'échec attendu (et
+     donc à annoncer) de l'auto-apply entre le merge et le dispatch. S'y ajoute le chevauchement
+     lot 3/lot 4 : retirer les 227 fichiers tant que `content/` et le job `content` de `ci.yml`
+     vivent encore casse `content:check`.
 - **2026-07-19 — lot 2 livré** : repo privé `MBeji/yahia-quest-content` créé (étape humaine),
   import initial `d67177a` = miroir de `yahia-quest-arena@ef43487` — `content/` (36 Mo),
   `FableEtudes/`, **40 skills pédagogiques** (l'annexe en comptait 39 par erreur ; les 5

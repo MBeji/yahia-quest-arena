@@ -1,8 +1,18 @@
 # Sources vidéo — allowlist des chaînes
 
-> **Statut : PROPOSÉE, en attente de l'arbitrage Q-1 de Mohamed.**
-> Tant que Q-1 n'est pas tranchée, ce fichier est de la **matière première**, pas
-> une autorisation. Aucune campagne (lot 5) ne démarre avant.
+> **Statut : VALIDÉE par Mohamed le 2026-07-19 (arbitrage Q-1), telle que proposée.**
+> Les chaînes ci-dessous sont donc autorisées ; la campagne (lot 5) peut démarrer.
+>
+> Décisions liées, prises le même jour :
+>
+> - **Q-2 — publicités YouTube : ACCEPTÉES** en phase gratuite. Elles sont
+>   impossibles à couper sur un embed ; la mention hébergeur reste visible sur la
+>   façade. À notion égale, **préférer quand même une source sans pub**
+>   (Khan Academy — ONG, chaîne du ministère).
+> - **Q-5 — derja au primaire : ADMISE.** C'est la langue réelle d'enseignement
+>   oral en Tunisie et un facteur majeur de compréhension pour les 6-12 ans ; la
+>   terminologie officielle en فصحى reste portée par le cours écrit de l'app.
+>   Le noter dans la fiche : `notes: "explication en derja"`.
 >
 > Rappel structurant : **l'allowlist autorise une CHAÎNE, jamais une VIDÉO.**
 > Chaque vidéo passe la grille R-2 + un visionnage intégral (R-3), sans exception.
@@ -78,13 +88,20 @@ Culture générale en **ar/en** ; éveil scientifique 1ʳᵉ-5ᵉ hors Saboura ;
 scolaire aligné sur les manuels TN. Le thème `muscle-cerveau` **n'a besoin
 d'aucune vidéo** (son format est l'exercice).
 
-## Questions ouvertes qui conditionnent l'usage
+## Questions tranchées (2026-07-19)
 
-- **Q-1** — validation/amendement de cette allowlist (idéalement en vérifiant la
-  disponibilité réelle depuis la Tunisie).
-- **Q-2** — acceptation des publicités YouTube (impossibles à couper sur un
-  embed ; seule une chaîne YPP monétisation-désactivée les garantit absentes).
-- **Q-5** — admissibilité de la **derja** au primaire (recommandation de l'étude :
-  oui, c'est la langue réelle d'enseignement oral ; la terminologie officielle en
-  فصحى reste portée par le cours écrit). Noter alors
-  `notes: "explication en derja"`.
+- **Q-1 — allowlist : VALIDÉE** telle que proposée.
+- **Q-2 — pubs YouTube : ACCEPTÉES** (voir l'en-tête).
+- **Q-5 — derja au primaire : ADMISE** (voir l'en-tête).
+
+## Reste ouvert
+
+- **Q-3 — deux actions ops, à la charge de Mohamed** (prises en charge, échéance
+  libre) : (a) auto-désigner l'app **child-directed** auprès de Google
+  (obligation développeur, R-14) ; (b) publier le paragraphe « vidéos YouTube
+  intégrées » à destination des parents. Le texte prêt à coller est en annexe C
+  de l'étude. **Aucune des deux ne bloque la curation**, mais (a) est une
+  obligation de conformité de la plateforme : à ne pas laisser filer.
+- **Q-4 — phase B** (chaîne YouTube officielle du projet pour des vidéos
+  propres) : non tranchée, volontairement — la recommandation de l'étude est
+  d'attendre le bilan d'usage `video_open` du pilote.
