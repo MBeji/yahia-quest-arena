@@ -79,13 +79,13 @@ jobs:
 
       - name: Checkout (full history for branch/PR context)
         if: steps.guard.outputs.configured == 'true'
-        uses: actions/checkout@v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           fetch-depth: 0
 
       - name: Setup Node
         if: steps.guard.outputs.configured == 'true'
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 22
           cache: npm
@@ -106,9 +106,20 @@ jobs:
           echo "count=$count" >> "$GITHUB_OUTPUT"
           echo "$count open report(s) in the queue."
 
+      # Le modèle de ce garde n'est pas écrit ici : il vient de harness/models.json via
+      # son rôle (étude 25 D-5/D-6). Changer de modèle = une ligne dans ce JSON, et
+      # harness:check échoue si un identifiant réapparaît en dur dans un workflow.
+      - name: Resolve the model for role garde-triage
+        id: model
+        if: steps.guard.outputs.configured == 'true'
+        run: |
+          model="$(node -p "require('./harness/models.json').roles['garde-triage'].model")"
+          echo "model=$model" >> "$GITHUB_OUTPUT"
+          echo "Role garde-triage -> $model (source: harness/models.json)"
+
       - name: Run the report-triage agent
         if: steps.guard.outputs.configured == 'true' && steps.fetch.outputs.count != '0'
-        uses: anthropics/claude-code-action@v1
+        uses: anthropics/claude-code-action@af0559ee4f514d1ef21826982bed13f7edc3c35e # v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -167,7 +178,7 @@ jobs:
             it. If the queue only contains non-actionable reports, open no PR —
             the tracking issue is the only output.
           claude_args: |
-            --model claude-sonnet-4-6
+            --model ${{ steps.model.outputs.model }}
             --max-turns 60
             --allowedTools "Bash,Read,Edit,Write,Glob,Grep"
 

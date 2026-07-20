@@ -136,6 +136,23 @@ describe("findModelIds", () => {
     expect(findModelIds("no1 component, options, io2ring")).toEqual([]);
   });
 
+  // Real false positives found when the scan reached .github/workflows/** (lot 5):
+  // all three are vendor-prefixed but none is a model.
+  it("does not match the claude-code-action GitHub Action", () => {
+    expect(findModelIds("uses: anthropics/claude-code-action@v1")).toEqual([]);
+  });
+
+  it("does not match claude-prefixed filenames", () => {
+    expect(findModelIds("python3 .github/scripts/check-claude-result.py")).toEqual([]);
+    expect(findModelIds('"$RUNNER_TEMP/claude-execution-output.json"')).toEqual([]);
+  });
+
+  it("still catches every real Claude family", () => {
+    expect(
+      findModelIds("claude-sonnet-4-6 claude-opus-4-8 claude-haiku-4-5 claude-fable-5"),
+    ).toEqual(["claude-sonnet-4-6", "claude-opus-4-8", "claude-haiku-4-5", "claude-fable-5"]);
+  });
+
   it("returns [] on content with nothing to flag", () => {
     expect(findModelIds("# AGENTS.md\n\nGeneric prose, zero model ids.")).toEqual([]);
   });

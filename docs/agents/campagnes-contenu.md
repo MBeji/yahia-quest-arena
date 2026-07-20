@@ -1,10 +1,14 @@
 # Campagnes de contenu — conduite de session
 
-> Playbook (étude 25 D-7). La **méthode** de génération vit dans
-> [`FableEtudes/METHODE-GENERATION-CONTENU.md`](../../FableEtudes/METHODE-GENERATION-CONTENU.md)
-> (source → fiche → contenu → prod, charte tokens T-1…T-10) et les **règles d'écriture** dans les
-> skills `content-*`/`prof-*`. Ce fichier ne les répète pas : il note ce qui ne vit nulle part
-> ailleurs — la conduite d'une session de campagne, apprise à l'usage.
+> Playbook (étude 25 D-7). ⚠️ **Depuis la scission de l'étude 24 (2026-07-20), une campagne de
+> contenu ne se lance plus depuis ce dépôt** : le corpus, les 41 skills `content-*`/`prof-*`, la
+> méthode (`METHODE-GENERATION-CONTENU.md`) et les études vivent dans le dépôt **privé**
+> `MBeji/yahia-quest-content`. Ce dépôt-ci ne garde que le **moteur** (`scripts/content/**`,
+> `src/shared/content/**`), que la CI privée invoque par double checkout.
+>
+> Ce fichier reste ici parce que ce qu'il décrit — la **conduite** d'une session de campagne — est
+> une leçon de process, pas du contenu : elle vaut quel que soit le dépôt où tourne la session.
+> Les règles d'écriture, elles, vivent avec les skills, au privé.
 
 ## Le corpus source est hors dépôt
 
