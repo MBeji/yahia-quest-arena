@@ -6,6 +6,12 @@
 -- under a real authenticated role and stays self-scoped.
 -- =========================================================
 
+-- Espace de noms des fixtures : le prefixe `7e57…` est reserve aux tests et n'apparait
+-- dans aucune migration. Ces ids ont ete deplaces le 2026-07-20 : ils entraient en
+-- collision avec des lignes de contenu HERITEES que les migrations generees effacaient
+-- autrefois par leur prune par matiere. Ces migrations ayant quitte le repo public
+-- (etude 24 lot 4), les lignes heritees survivent sur une base fraiche et la fixture
+-- se cognait dedans (duplicate key).
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
 SELECT plan(4);
@@ -20,21 +26,21 @@ INSERT INTO public.subjects (id, name_fr, attribute, color_token, icon, theme_id
   ('stats-s2', 'S2', 'Esprit', 'subject-math', 'Brain', 'ecole-tn');
 
 INSERT INTO public.chapters (id, subject_id, title) VALUES
-  ('c5000000-0000-0000-0000-000000000001', 'stats-s1', 'Ch1'),
-  ('c5000000-0000-0000-0000-000000000002', 'stats-s2', 'Ch2');
+  ('7e571301-0000-0000-0000-000000000001', 'stats-s1', 'Ch1'),
+  ('7e571302-0000-0000-0000-000000000002', 'stats-s2', 'Ch2');
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, xp_reward) VALUES
-  ('e5000000-0000-0000-0000-000000000001', 'c5000000-0000-0000-0000-000000000001', 'stats-s1', 'E1', 50),
-  ('e5000000-0000-0000-0000-000000000002', 'c5000000-0000-0000-0000-000000000002', 'stats-s2', 'E2', 50);
+  ('7e571303-0000-0000-0000-000000000001', '7e571301-0000-0000-0000-000000000001', 'stats-s1', 'E1', 50),
+  ('7e571304-0000-0000-0000-000000000002', '7e571302-0000-0000-0000-000000000002', 'stats-s2', 'E2', 50);
 
 INSERT INTO public.attempts
   (user_id, exercise_id, subject_id, correct_count, total_count, score_pct, duration_seconds, xp_earned)
 VALUES
-  ('e5555555-5555-5555-5555-555555555555', 'e5000000-0000-0000-0000-000000000001', 'stats-s1', 4, 5, 80, 120, 50),
-  ('e5555555-5555-5555-5555-555555555555', 'e5000000-0000-0000-0000-000000000001', 'stats-s1', 3, 5, 60, 120, 30),
-  ('e5555555-5555-5555-5555-555555555555', 'e5000000-0000-0000-0000-000000000002', 'stats-s2', 5, 5, 100, 120, 40),
+  ('e5555555-5555-5555-5555-555555555555', '7e571303-0000-0000-0000-000000000001', 'stats-s1', 4, 5, 80, 120, 50),
+  ('e5555555-5555-5555-5555-555555555555', '7e571303-0000-0000-0000-000000000001', 'stats-s1', 3, 5, 60, 120, 30),
+  ('e5555555-5555-5555-5555-555555555555', '7e571304-0000-0000-0000-000000000002', 'stats-s2', 5, 5, 100, 120, 40),
   -- A different user's attempt must NOT leak into A's stats.
-  ('e6666666-6666-6666-6666-666666666666', 'e5000000-0000-0000-0000-000000000001', 'stats-s1', 5, 5, 100, 120, 99);
+  ('e6666666-6666-6666-6666-666666666666', '7e571303-0000-0000-0000-000000000001', 'stats-s1', 5, 5, 100, 120, 99);
 
 SET LOCAL "request.jwt.claims" = '{"sub":"e5555555-5555-5555-5555-555555555555","role":"authenticated"}';
 SET LOCAL ROLE authenticated;
