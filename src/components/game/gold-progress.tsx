@@ -22,7 +22,13 @@ export function GoldProgress({
   value: number;
   size?: keyof typeof SIZES;
   className?: string;
-  "aria-label"?: string;
+  /**
+   * Required: `role="progressbar"` below is unconditional, and an ARIA widget
+   * without an accessible name is a serious axe violation (WCAG 1.1.1). Two
+   * dashboard bars shipped unnamed when this primitive replaced plain divs, so
+   * the compiler now enforces it. Echo the visible label next to the bar.
+   */
+  "aria-label": string;
 }) {
   const clamped = Math.min(100, Math.max(0, value));
   return (

@@ -9,8 +9,13 @@
 --   * resolve_exercise_access: free -> open; premium d1/quiz -> free preview;
 --     premium d>=2 without a grant -> PARCOURS_LOCKED; with a grant -> open;
 --   * admin_grant_parcours is is_admin()-guarded.
--- The 8 seeded parcours (2 concours premium + 6 free) come from
--- 20260608120000; fixtures only add users/subjects/exercises/grants.
+-- The 8 seeded parcours come from 20260608120000. Since the free-phase switch
+-- (20260711100000) they are ALL is_premium=false, so the fixtures below restore
+-- the flag on `concours-9eme` inside the transaction: these tests cover the
+-- DORMANT paywall machinery that étude 01 re-activates, and without the restore
+-- every premium assertion here passes vacuously through the "free parcours is
+-- always open" short-circuit. Fixtures otherwise only add
+-- users/subjects/exercises/grants.
 -- =========================================================
 
 BEGIN;
@@ -78,6 +83,14 @@ INSERT INTO public.parcours_entitlements (user_id, parcours_id, source, expires_
 INSERT INTO public.parent_student_links (parent_user_id, student_user_id, is_active) VALUES
   ('55555555-5555-5555-5555-555555555555', '66666666-6666-6666-6666-666666666666', true),
   ('55555555-5555-5555-5555-555555555555', '77777777-7777-7777-7777-777777777777', false);
+
+-- Free phase (20260711100000) set every parcours to is_premium=false. This suite
+-- asserts the DORMANT per-parcours paywall, so re-arm the flag on the parcours
+-- under test — inside the transaction, undone by the final ROLLBACK. Without it
+-- has_parcours_entitlement short-circuits on `NOT is_premium` and the negative
+-- assertions (no grant / expired / revoked / inactive link) all go green for the
+-- wrong reason. `culture-generale` stays free: it backs the "free is open" cases.
+UPDATE public.parcours SET is_premium = true WHERE id = 'concours-9eme';
 
 -- ---------------------------------------------------------
 -- Resolver + entitlement-state assertions (callable as superuser: explicit args).

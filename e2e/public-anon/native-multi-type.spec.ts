@@ -38,7 +38,7 @@ test.describe("Native question types (B3 — multi)", () => {
           // Submission is blocked with nothing checked (no partial answer).
           await expect(practice.submitButton).toBeDisabled();
         }
-        await practice.multiCheckboxes.first().click();
+        await practice.checkFirstMultiBox();
         await expect(practice.submitButton).toBeEnabled();
       } else if (await practice.numericInput.isVisible().catch(() => false)) {
         await practice.numericInput.fill("42");
@@ -52,8 +52,7 @@ test.describe("Native question types (B3 — multi)", () => {
         if (!(await group.isVisible().catch(() => false))) break;
         await group.getByRole("radio").first().click();
       }
-      await practice.submitButton.click();
-      await page.waitForTimeout(200);
+      await practice.submitAndSettle();
     }
 
     expect(sawMulti).toBe(true);

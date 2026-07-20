@@ -646,7 +646,10 @@ export function ExercisePlayer({
 
       <div className="mb-6">
         <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-widest text-muted-foreground">
-          <span>
+          {/* Stable e2e hook: on the LAST question the player keeps the question
+              mounted while the submit RPC is in flight, so a fixed sleep can't
+              tell "advanced" from "still submitting". Specs watch this counter. */}
+          <span data-testid="quest-progress">
             {t.quest.questionOf
               .replace("{current}", String(idx + 1))
               .replace("{total}", String(total))}

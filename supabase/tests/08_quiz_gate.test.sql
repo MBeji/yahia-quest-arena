@@ -37,6 +37,13 @@ INSERT INTO auth.users (id, email) VALUES
   ('f6666666-6666-6666-6666-666666666666', 'qg-student@test.local'),
   ('f7777777-7777-7777-7777-777777777777', 'qg-rusher@test.local');
 
+-- Free phase (20260711100000) set every parcours to is_premium=false. The last
+-- assertion below covers the DORMANT entitlement gate, so re-arm the flag on the
+-- parcours under test — inside the transaction, undone by the final ROLLBACK.
+-- Without it start_exercise_session allows the d3 mission and never raises
+-- PARCOURS_LOCKED. The quiz gate itself is independent of this flag.
+UPDATE public.parcours SET is_premium = true WHERE id = 'concours-9eme';
+
 -- ---------------------------------------------------------
 -- Student WITHOUT a quiz pass: practice locked, quiz itself open.
 -- ---------------------------------------------------------
