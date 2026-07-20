@@ -1,0 +1,82 @@
+{
+  "$comment": "Declarative execution policy — the SINGLE source of truth for what an agent may run in this repo (étude 25 D-4). `npm run harness:sync` compiles it into per-tool views (today: .claude/settings.json); `npm run harness:check` fails CI if a view drifts from this file. Tools with no repo-level permission file (Codex, Cursor, …) read the human-readable summary in AGENTS.md § Execution policy instead — for them it is guidance, not enforcement; the hard net stays the husky hooks + required CI checks + the absence of prod credentials locally (étude 25 P-3/P-4).",
+  "allow": {
+    "$comment": "Always allowed — read-only inspection or the project's own gates. Grouped by intent so a reviewer sees WHY a rule exists, not just a flat list.",
+    "gates": [
+      "Bash(npm run lint)",
+      "Bash(npm run typecheck)",
+      "Bash(npm run test)",
+      "Bash(npm run test:*)",
+      "Bash(npm run verify)",
+      "Bash(npm run ci:verify)",
+      "Bash(npm run build)",
+      "Bash(npm run build:*)",
+      "Bash(npm run format)",
+      "Bash(npm run audit:deps)",
+      "Bash(npm run harness:check)",
+      "Bash(npm test)"
+    ],
+    "content-pipeline": [
+      "Bash(npm run content:check)",
+      "Bash(npm run content:qa)",
+      "Bash(npm run content:qa:strict)",
+      "Bash(npm run content:audit)",
+      "Bash(npm run content:audit:strict)",
+      "Bash(npm run content:build)",
+      "Bash(npm run content:catalogue)"
+    ],
+    "tooling": [
+      "Bash(npm outdated:*)",
+      "Bash(npx vitest:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx eslint:*)",
+      "Bash(npx prettier:*)"
+    ],
+    "db-readonly": [
+      "Bash(npx supabase migration list:*)",
+      "Bash(npx supabase db diff:*)",
+      "Bash(npx supabase test db)"
+    ],
+    "git-readonly": [
+      "Bash(git status)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(git fetch:*)",
+      "Bash(git remote:*)",
+      "Bash(git ls-files:*)",
+      "Bash(ls:*)"
+    ],
+    "gh-readonly": [
+      "Bash(gh pr view:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr checks:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh workflow list:*)"
+    ]
+  },
+  "deny": [
+    {
+      "rule": "Bash(npx supabase db push:*)",
+      "reason": "Prod migrates ONLY via db-migrate-prod.yml on merge (DoD §7) — a manual push strands prod behind code or applies unreviewed SQL."
+    },
+    {
+      "rule": "Bash(npx supabase db reset:*)",
+      "reason": "Destructive: drops and recreates the database."
+    },
+    {
+      "rule": "Bash(supabase db push:*)",
+      "reason": "Same as the npx form — prod migrates only via db-migrate-prod.yml (DoD §7)."
+    },
+    {
+      "rule": "Bash(supabase db reset:*)",
+      "reason": "Same as the npx form — destructive."
+    }
+  ]
+}

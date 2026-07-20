@@ -11,11 +11,13 @@
  *      instruction/harness surface — the "Rules File Backdoor" class of attack
  *      (invisible instructions smuggled into a rules file a human reviews visually).
  *   4. No model identifier hardcoded outside `harness/models.json` — the one file
- *      a model bump should ever touch. Scope is deliberately narrower than the
- *      final architecture at this lot: `.claude/settings.json`'s hook config joins
- *      the scan in lot 4, `.github/workflows/**` in lot 5, once those are rewired
- *      to resolve their model from `models.json` instead of hardcoding it.
+ *      a model bump should ever touch. GENERATED views are exempt from this scan:
+ *      the id they contain is compiled from `models.json`, and invariant 6 proves
+ *      it was not hand-edited. `.github/workflows/**` still hardcodes its model and
+ *      joins the scan in lot 5, once rewired to resolve it from `models.json`.
  *   5. Every `harness/*.json` file parses as JSON.
+ *   6. Every generated view matches what `harness:sync` would produce from the
+ *      sources — the anti-drift guarantee that makes invariant 4's exemption safe.
  *
  * Driven by `.github/workflows/ci.yml` (job `verify`) and `npm run ci:verify`.
  * Pure helpers are exported and unit-tested; `main()` does the filesystem walk and
@@ -23,9 +25,10 @@
  *
  *   node scripts/harness/check.mjs
  */
-import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
 import { pathToFileURL } from "node:url";
+import { buildViews } from "./sync.mjs";
 
 const ROOT = join(import.meta.dirname, "..", "..");
 
@@ -143,12 +146,12 @@ function main() {
   }
 
   // Harness surface scanned for BOTH invisible Unicode and stray model ids.
-  // Scope is deliberately the harness's own new surface at this lot — see the
-  // file header for why .claude/settings.json and .github/workflows/** join
-  // later (lots 4 and 5).
+  // `.github/workflows/**` still hardcodes its model and joins in lot 5.
+  const generatedViews = new Set(buildViews(ROOT).map(([relPath]) => relPath));
   const surface = [
     ["AGENTS.md", agentsMd],
     ["CLAUDE.md", claudeMd],
+    ...[...generatedViews].map((relPath) => [relPath, readIfExists(join(ROOT, relPath))]),
     ...walk(join(ROOT, "harness"), /\.(json|md)$/).map((p) => [rel(p), readIfExists(p)]),
   ].filter(([, content]) => content !== null);
 
@@ -156,8 +159,9 @@ function main() {
     for (const hit of findInvisibleChars(content)) {
       problems.push(`${label}: hidden Unicode ${hit.codePoint} at offset ${hit.index}.`);
     }
-    // models.json is the declared source of truth for model ids — exempt.
-    if (label !== "harness/models.json") {
+    // Exempt: models.json declares the ids, and generated views merely compile
+    // them (invariant 6 catches a hand-edit).
+    if (label !== "harness/models.json" && !generatedViews.has(label)) {
       for (const id of findModelIds(content)) {
         problems.push(
           `${label}: hardcoded model id "${id}" — resolve it via harness/models.json instead.`,
@@ -186,9 +190,25 @@ function main() {
     }
   }
 
+  // 5. Generated views must match their harness sources (lot 4). This is what
+  // lets the model id inside a GENERATED file be legitimate: it is not
+  // hand-written, it is compiled from harness/models.json — and any hand-edit
+  // (including a model bumped only here) shows up as drift below.
+  for (const [relPath, expected] of buildViews(ROOT)) {
+    const actual = readIfExists(join(ROOT, relPath));
+    if (actual === null) {
+      problems.push(`${relPath} is missing — run \`npm run harness:sync\`.`);
+    } else if (actual !== expected) {
+      problems.push(
+        `${relPath} drifted from its harness sources — run \`npm run harness:sync\` and commit the result.`,
+      );
+    }
+  }
+
   if (problems.length === 0) {
     console.log(
-      "[harness:check] OK — pointers intact, AGENTS.md in budget, no hidden Unicode, no stray model ids.",
+      "[harness:check] OK — pointers intact, AGENTS.md in budget, no hidden Unicode, " +
+        "no stray model ids, generated views in sync.",
     );
     return;
   }
