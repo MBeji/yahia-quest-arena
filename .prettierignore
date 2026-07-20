@@ -9,3 +9,8 @@ routeTree.gen.ts
 
 # Generated view — byte-compared against renderIndex() by programme:check; Prettier must not touch it
 **/programmes-officiels/programme/_INDEX.md
+
+# Miroir généré des skills (étude 25 lot 3) — copie verbatim de .claude/skills/.
+# Prettier ne doit pas le reformater indépendamment de sa source, sinon la copie
+# diverge de l'original et harness:check passe au rouge. Formater la SOURCE.
+.agents/skills/
