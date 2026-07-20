@@ -11,6 +11,7 @@ import type { BadgeRow, DashboardShopItem, InventoryRow } from "@/shared/types/g
 import { getCurrentWeekStartUtc, getTodayUtc } from "@/shared/lib/dates";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
+import { resolveNextAction } from "@/shared/lib/next-action";
 
 const DASHBOARD_ERROR_FR = "Impossible de charger le tableau de bord. Veuillez réessayer.";
 
@@ -219,12 +220,39 @@ export const getDashboard = createServerFn({ method: "GET" })
     const activeIds = new Set(subjects.map((s) => s.id));
     const otherSubjects = allSubjects.filter((s) => s.grade_id == null && !activeIds.has(s.id));
 
+    // Révision due la plus ancienne (étude 22, R-31 priorité 1). Une seule ligne, bornée par
+    // l'index (user_id, status, scheduled_for) : c'est le minimum pour savoir s'il y a quelque
+    // chose à réviser MAINTENANT. Quand `get_daily_plan` (étude 04-A1) arrivera, elle
+    // remplacera cette source — pas le moteur de priorité qui la consomme (R-18, D-8).
+    const { data: dueReview } = await supabase
+      .from("spaced_repetition_schedule")
+      .select("exercise_id")
+      .eq("user_id", userId)
+      .eq("status", "pending")
+      .lte("scheduled_for", new Date().toISOString())
+      .order("scheduled_for", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+
     // Progression officielle par matière (étude 22 R-16) — bornée aux matières du parcours
     // actif, une seule requête. Alimente l'état `done` de la carte `/parcours`.
     const progress = await fetchParcoursProgress(
       supabase,
       subjects.map((s) => s.id),
     );
+
+    // « Prochaine action » unifiée (R-31). Le dashboard ne charge ni chapitres ni exercices :
+    // il résout donc les priorités 1, 2 et 4, et DÉLÈGUE la 3 au hub matière en désignant la
+    // matière du chemin — qui la résoudra avec ce même moteur. Un seul CTA en sortira.
+    const lastWorkedSubjectId = recentRes.data?.[0]?.subject_id ?? null;
+    const nextAction = resolveNextAction({
+      dueReviewExerciseId: dueReview?.exercise_id ?? null,
+      failedExerciseId: nextExerciseId,
+      pathSubjectId: subjects.some((s) => s.id === lastWorkedSubjectId)
+        ? lastWorkedSubjectId
+        : null,
+      untouchedSubjectId: subjects.find((s) => !bySubject[s.id])?.id ?? null,
+    });
 
     return {
       profile,
@@ -234,6 +262,7 @@ export const getDashboard = createServerFn({ method: "GET" })
       progress,
       recent: recentRes.data ?? [],
       nextExerciseId,
+      nextAction,
       premiumLockedSubjectIds,
       currentParcoursId: parcoursId,
     };

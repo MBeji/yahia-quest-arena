@@ -144,12 +144,14 @@ function Dashboard() {
   const xpToNext = xpToNextLevel(profile.xp);
   const xpPct = (xpInLevel / (xpInLevel + xpToNext)) * 100;
 
-  // Find the best "continue" target: last attempted subject or first subject with no attempts
-  const lastSubjectId = data.recent?.[0]?.subject_id;
-  const continueSubject =
-    subjects.find((s) => s.id === lastSubjectId) ??
-    subjects.find((s) => !stats[s.id]) ??
-    subjects[0];
+  // La cible est désormais choisie par `resolveNextAction` (R-31) côté serveur. Il ne reste ici
+  // qu'à NOMMER la matière quand l'action en désigne une (chemin délégué ou découverte) : le
+  // moteur renvoie un id, l'écran a besoin d'un libellé.
+  const actionSubjectId =
+    data.nextAction?.kind === "continue-subject" || data.nextAction?.kind === "discover"
+      ? data.nextAction.subjectId
+      : null;
+  const continueSubject = subjects.find((s) => s.id === actionSubjectId) ?? undefined;
 
   function runQuestAction(action: "retry" | "subject" | "dungeon") {
     if (action === "dungeon") {
@@ -261,7 +263,7 @@ function Dashboard() {
             ("Reprendre") to hero prominence beside the daily-objective ring, then two
             calm secondary tiles (Donjon · Duel). Replaces the old stacked Quick Start. */}
         <DashboardFocus
-          nextExerciseId={nextExerciseId}
+          nextAction={data.nextAction}
           continueSubject={continueSubject}
           xpToday={(sprint2?.dailyObjectives ?? [])
             .filter((o) => o.status === "completed")

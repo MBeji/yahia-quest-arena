@@ -121,6 +121,9 @@ export const fr: TranslationKeys = {
     streakLostDesc: "Récupère ta série pour 15 pièces (tu avais {n} jours)",
     streakRecover: "🔥 Récupérer",
     retryTitle: "Ton dernier exercice",
+    // Priorité 1 de R-31 : une révision espacée est échue. Elle passe avant tout le reste.
+    reviewOverline: "À réviser",
+    reviewTitle: "Ta révision du jour",
     continueLabel: "Continuer",
     dungeonDesc: "Toutes matières mélangées",
     dailyQuests: "Quêtes Quotidiennes",
@@ -131,6 +134,10 @@ export const fr: TranslationKeys = {
       perfect_score: "Réussis un sans-faute",
     },
     questTypes: {
+      // `beat_2_bosses` est le SEUL type de quête hebdo que la base crée réellement
+      // (20260604200000) ; sans ce libellé l'élève lisait le repli brut « beat 2 bosses »,
+      // en anglais, dans les trois langues. Les autres clés couvrent des codes hérités.
+      beat_2_bosses: "Bats 2 boss",
       "5_day_streak": "Tiens une série de 5 jours",
       "2_boss_exercises": "Bats 2 boss",
       "10_exercises": "Complète 10 exercices",

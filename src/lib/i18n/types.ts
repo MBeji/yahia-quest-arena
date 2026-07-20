@@ -127,6 +127,9 @@ export type TranslationKeys = {
     streakLostDesc: string;
     streakRecover: string;
     retryTitle: string;
+    /** Étude 22 R-31 — bande focus, priorité 1 (révision due). */
+    reviewOverline: string;
+    reviewTitle: string;
     continueLabel: string;
     dungeonDesc: string;
     dailyQuests: string;
