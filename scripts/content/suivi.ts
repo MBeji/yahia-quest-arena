@@ -149,6 +149,20 @@ function loadInput(): SuiviCheckInput {
 
 const args = new Set(process.argv.slice(2));
 
+// Depuis la scission (étude 24), le corpus et le skill qui l'héberge vivent dans le
+// dépôt privé : ce moteur est ici, ses données non. On le dit avant d'échouer sur un
+// fichier manquant, sinon le message oriente vers `--corpus` — donc vers une
+// reconstitution du corpus ICI, que `leak:check` refuserait ensuite au commit.
+if (!existsSync(PROGRAMMES_DIR)) {
+  fail(
+    `corpus de transcription absent de ce dépôt (${PROGRAMMES_DIR}).\n` +
+      `  C'est attendu : depuis l'étude 24 le registre CNP vit dans le dépôt privé\n` +
+      `  MBeji/yahia-quest-content, et le gate programme:check y tourne (Content CI,\n` +
+      `  qui checkout ce dépôt-ci pour le moteur). Lance-le depuis le dépôt privé.\n` +
+      `  Ne recrée pas le corpus ici : leak:check fait échouer le gate.`,
+  );
+}
+
 if (args.has("--corpus")) {
   const corpus = buildCorpus();
   writeFileSync(CORPUS_JSON, `${JSON.stringify(corpus, null, 2)}\n`, "utf8");
