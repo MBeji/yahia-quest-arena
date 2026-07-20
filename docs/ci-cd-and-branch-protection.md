@@ -28,10 +28,19 @@ end-of-dev → production walkthrough lives in [passation.md](./passation.md).)
   runs, which stranded armed PRs before 2026-07-12. If update-branch fails (merge
   conflict), the PR is labelled **`needs-rebase`**: the next working session rebases
   it (AGENTS.md DoD §8) — never Mohamed.
+- **`MERGE_FREEZE`** (repository **variable**) — the kill-switch for this whole chain. Set to
+  `1`, every pushed branch opens as a **draft**, nothing arms, armed PRs get disarmed and
+  `keep-up-to-date` stops advancing them: no merge can reach `main`, so no deploy can undo a
+  production rollback. `hotfix/` and `revert/` branches are **exempt** (the fix that ends an
+  incident must still ship — through the same required checks as ever). Set/cleared by
+  `rollback-prod.yml` (modes `freeze-only` / `unfreeze`) or by hand
+  (`gh variable set MERGE_FREEZE --body 1|0`). Why it exists and when to use it:
+  [prod-rollback-runbook.md](./prod-rollback-runbook.md).
 - Repo-settings prerequisites (one-time, all in place): "Allow GitHub Actions to create
   and approve pull requests" (Settings → Actions → General), "Allow auto-merge"
   (Settings → General), and the `GH_AUTOMATION_PAT` secret (since 2026-07-06 — see
-  [passation.md](./passation.md), « Le piège du bot non-collaborateur »).
+  [passation.md](./passation.md), « Le piège du bot non-collaborateur »). For the freeze,
+  that PAT also needs the repository **Variables: read and write** permission.
 
 ## Required status checks
 
@@ -119,6 +128,30 @@ Prod migrations **auto-apply** on merge — nobody runs SQL by hand (AGENTS.md �
 4. Manual control when needed: `gh workflow run db-migrate-prod.yml` (or the Actions
    tab) with mode `push` / read-only `list` / one-time `repair-all`.
 
+## When the chain ships something broken (rollback)
+
+The same automation that makes shipping free makes an outage self-perpetuating: a rollback
+performed on Vercel is undone by the next PR that merges itself. So the recovery path is
+**freeze first, then roll back** — both driven by `rollback-prod.yml`, with the full decision
+tree, the database caveat and the drill in
+[prod-rollback-runbook.md](./prod-rollback-runbook.md).
+
+- **`checkpoint-tag.yml`** — every Monday 06:00 UTC, tags the newest commit on `main` that has
+  BOTH a green `verify` and a green nightly (E2E + pgTAP) **on that exact commit**, as
+  `checkpoint/YYYY-Www`. The tip of `main` only ever proves `verify`; the suites that catch a
+  dead browser or an unappliable migration run at night. No qualifying commit ⇒ **no tag** and a
+  `checkpoint-missing` issue. Selection logic: `scripts/release/pick-checkpoint.mjs` (unit-tested).
+- **`rollback-prod.yml`** — manual dispatch, modes `rollback` / `freeze-only` / `unfreeze`. Sets
+  `MERGE_FREEZE`, disarms armed PRs, re-promotes the previous (or a named) Vercel production
+  deployment, re-checks that prod answers, and opens a `prod-incident` issue carrying the rest
+  of the checklist. Needs `VERCEL_TOKEN` / `VERCEL_PROJECT_ID` / `VERCEL_ORG_ID`; without them
+  it fails with the dashboard instructions rather than half-acting.
+
+> **Rolling the code back never rolls the schema back.** Migrations are forward-only and
+> `db-migrate-prod.yml` has already applied them. Additive ones are safe under older code by
+> construction (that's why DoD §7 orders them that way); a destructive one needs the
+> pre-migration dump artifact. Runbook, § « L'axe base de données ».
+
 ## Authenticated E2E (remaining human action)
 
 The public `e2e` check is reliable and gates every PR. To also enable the **authenticated**
@@ -133,6 +166,9 @@ at the **dedicated TEST** Supabase project, never production:
 Until they are set, `e2e-auth.yml` skips green (it never blocks). Full details and the
 anti-prod guard are documented in `e2e/README.md`.
 
-_Observability (health endpoint + Sentry + uptime monitor) remains tracked for the next
+_Observability (health endpoint + Sentry + uptime monitor) remains the largest hole in the
+recovery loop: with none of them, an outage is discovered by a human opening the site, and that
+detection delay dominates the RTO (see the rollback runbook, § « Détection — le trou connu »).
+It remains tracked for the next
 quality-sprint wave. The DB-integration test job is already live — it is the `pgTAP suite`
 check above._

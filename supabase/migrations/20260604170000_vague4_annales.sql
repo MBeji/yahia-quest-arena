@@ -1,7 +1,13 @@
 -- Vague 4 — Annales / sujets types (Maths, Arabe, Français, Anglais, SVT).
 -- Idempotent forward migration: new annales chapters + exercises + questions (FK-safe).
 
-INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order) VALUES
+-- Garde de reconstruction sur base VIERGE (2026-07-20, suite a l'etude 24 lot 4) :
+-- chaque ligne n'est inseree que si son parent existe. Sur la prod tous les parents sont
+-- la et le comportement est identique ; sur une base reconstruite depuis le seul repo
+-- public, le corpus genere est absent et ces lignes n'ont plus d'objet.
+INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order)
+SELECT v.id::uuid, v.subject_id, v.title, v.description, v.lesson_content, v.summary, v.display_order
+FROM (VALUES
   ('0d636faa-337f-57db-a256-88d4ec85ca49', 'math', 'سُبُر نموذجيّة ومراجعة شاملة', 'تمارين على شاكلة سُبُر امتحان ختم التعليم الأساسي: مسائل مركّبة تمزج عدّة دروس (أعداد، حساب حرفي، معادلات وجُمل، طاليس، فيثاغورس، النسب المثلّثية، الدوال، الإحصاء) مفكّكة إلى أسئلة QCM متسلسلة، مع منهجيّة مقاربة السبر.', '# 🏯 سُبُر نموذجيّة — منهجيّة الزعيم النهائيّ
 
 > 💡 «سبر الامتحان الوطني ليس امتحانًا في درس واحد، بل ساحة معركة نهائيّة تُختبر فيها كلّ أسلحتك دفعةً واحدة. مَن يُتقن المنهجيّة يربح قبل أن يبدأ.»
@@ -442,6 +448,8 @@ on. That is exactly how marks are won on exam day.', '# 📜 Summary: Exam-Style
 - **الوراثة**: النواة ← الصبغيّ ← ADN ← المورّثة؛ سائد يظهر دائمًا، متنحٍّ بـ a//a فقط؛ الأب يحدّد الجنس.
 - **الجيولوجيا**: الشدّة تختلف بالمكان والمقدار قيمة واحدة؛ البراكين الانفجارية صهارتها لزجة؛ الزلازل والبراكين نتاج حركة الصفائح.
 - ⚠️ لا تستنتج إلّا ما تدعمه الوثيقة، ولا تخلط بين **الشدّة** و**المقدار**، ولا بين **الصبغيّ** و**المورّثة**.', 7)
+) AS v(id, subject_id, title, description, lesson_content, summary, display_order)
+WHERE EXISTS (SELECT 1 FROM public.subjects p WHERE p.id = v.subject_id)
 ON CONFLICT (id) DO UPDATE SET
   subject_id = EXCLUDED.subject_id,
   title = EXCLUDED.title,
@@ -450,7 +458,13 @@ ON CONFLICT (id) DO UPDATE SET
   summary = EXCLUDED.summary,
   display_order = EXCLUDED.display_order;
 
-INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+-- Garde de reconstruction sur base VIERGE (2026-07-20, suite a l'etude 24 lot 4) :
+-- chaque ligne n'est inseree que si son parent existe. Sur la prod tous les parents sont
+-- la et le comportement est identique ; sur une base reconstruite depuis le seul repo
+-- public, le corpus genere est absent et ces lignes n'ont plus d'objet.
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order)
+SELECT v.id::uuid, v.chapter_id::uuid, v.subject_id, v.title, v.difficulty, v.xp_reward, v.reward_coins, v.mode, v.source, v.display_order
+FROM (VALUES
   ('524341c8-b06e-56ea-8f79-09a4cf281ab8', '0d636faa-337f-57db-a256-88d4ec85ca49', 'math', 'اختبار المراجعة الشاملة', 1, 20, 5, 'quiz', 'admin', 0),
   ('192ab383-a349-5ce8-bef9-fc37ad988a0d', '0d636faa-337f-57db-a256-88d4ec85ca49', 'math', '📝 سبر تطبيقي: مسألة هندسية ومسألة واقعية', 2, 50, 10, 'practice', 'admin', 1),
   ('29558798-6563-5fdb-9042-5374b54145be', '0d636faa-337f-57db-a256-88d4ec85ca49', 'math', '⚔️ زعيم السبر: مسألة هندسية مركّبة ومسألة جملة', 3, 120, 30, 'boss', 'admin', 2),
@@ -471,6 +485,8 @@ INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_
   ('d0a4b9c1-9dc9-5933-90b6-0440e41cf134', 'e544d74c-e24f-5d7d-83af-3c29e0d74bc1', 'sciences-vie-terre', '📝 سبر تطبيقي: تحليل وثائق (أحياء وجيولوجيا)', 1, 50, 10, 'practice', 'admin', 1),
   ('f75aa5c8-b6f1-5b2a-a974-53c289576c9e', 'e544d74c-e24f-5d7d-83af-3c29e0d74bc1', 'sciences-vie-terre', '👹 سبر زعيم: تحليل معمّق واستنتاج', 3, 120, 30, 'boss', 'admin', 2),
   ('0487af90-2509-5724-a5e0-eb0262698181', 'e544d74c-e24f-5d7d-83af-3c29e0d74bc1', 'sciences-vie-terre', '🏆 تحدّي النخبة: سبر شامل وتركيب المفاهيم', 4, 300, 60, 'challenge', 'admin', 3)
+) AS v(id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order)
+WHERE EXISTS (SELECT 1 FROM public.chapters p WHERE p.id = v.chapter_id::uuid) AND EXISTS (SELECT 1 FROM public.subjects p WHERE p.id = v.subject_id)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
   subject_id = EXCLUDED.subject_id,
@@ -481,7 +497,13 @@ ON CONFLICT (id) DO UPDATE SET
   mode = EXCLUDED.mode,
   display_order = EXCLUDED.display_order;
 
-INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+-- Garde de reconstruction sur base VIERGE (2026-07-20, suite a l'etude 24 lot 4) :
+-- chaque ligne n'est inseree que si son parent existe. Sur la prod tous les parents sont
+-- la et le comportement est identique ; sur une base reconstruite depuis le seul repo
+-- public, le corpus genere est absent et ces lignes n'ont plus d'objet.
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order)
+SELECT v.id::uuid, v.exercise_id::uuid, v.prompt, v.options, v.correct_option, v.explanation, v.display_order
+FROM (VALUES
   ('043b6c57-2efe-5f16-a63d-35c6a2219be7', '524341c8-b06e-56ea-8f79-09a4cf281ab8', 'احسب العدد $A = -2 + 3 \times (-4)$.', '[{"id":"a","text":"−14"},{"id":"b","text":"−20"},{"id":"c","text":"−10"},{"id":"d","text":"4"}]'::jsonb, 'a', 'نطبّق أولويّة العمليّات: الضرب قبل الجمع. $3 \times (-4) = -12$، ثمّ $A = -2 + (-12) = -14$. الخطأ الشائع: حساب $(-2+3)\times(-4) = -4$ بإهمال الأولويّة.', 1),
   ('8d480a2b-5fe3-5f4e-9fb7-2b7b02ff7b6c', '524341c8-b06e-56ea-8f79-09a4cf281ab8', 'حلّ المعادلة $3(x - 2) = 2x + 1$.', '[{"id":"a","text":"$x = 5$"},{"id":"b","text":"$x = 7$"},{"id":"c","text":"$x = -7$"},{"id":"d","text":"$x = 1$"}]'::jsonb, 'b', 'ننشر الطرف الأيسر: $3x - 6 = 2x + 1$. ننقل: $3x - 2x = 1 + 6$، أي $x = 7$. التحقّق: $3(7-2) = 15$ و$2(7)+1 = 15$ ✓.', 2),
   ('9b849ffc-3cac-5d7c-8784-162dc3b498e6', '524341c8-b06e-56ea-8f79-09a4cf281ab8', 'مثلّث قائم في B، ضلعاه القائمان AB = 6 cm وBC = 8 cm. ما طول الوتر AC؟', '[{"id":"a","text":"10 cm"},{"id":"b","text":"14 cm"},{"id":"c","text":"$\\sqrt{28}$ cm"},{"id":"d","text":"48 cm"}]'::jsonb, 'a', 'بنظرية فيثاغورس: $AC^2 = AB^2 + BC^2 = 6^2 + 8^2 = 36 + 64 = 100$. إذن $AC = \sqrt{100} = 10$ cm. الخطأ الشائع (b): جمع الضلعين مباشرةً $6+8$.', 3),
@@ -911,6 +933,8 @@ Writing: what is the best order to form a well-organised paragraph?', '[{"id":"a
   ('54f8ca79-ef53-5d24-886e-63fe510c18ce', '0487af90-2509-5724-a5e0-eb0262698181', 'وثيقة 4 (ربط جيولوجي شامل): سجّلت منطقة زلازل متكرّرة وبراكين نشطة معًا، وهي تقع على حدّ بين صفيحتين متقاربتين. ما التفسير الموحِّد لاجتماع الظاهرتين؟', '[{"id":"a","text":"صدفة جغرافية لا تفسير لها"},{"id":"b","text":"حركة الصفائح عند الحدّ المتقارب تولّد الزلازل وتُنتج صهارة تغذّي البراكين"},{"id":"c","text":"الزلازل تمنع البراكين فلا يجتمعان عادةً"},{"id":"d","text":"مناخ المنطقة هو سبب الظاهرتين"}]'::jsonb, 'b', 'عند الحدّ **المتقارب** تحتكّ الصفيحتان وتغوص إحداهما؛ فالاحتكاك والتكسّر يولّدان **الزلازل**، والانصهار في العمق يُنتج **صهارة** تغذّي **البراكين**. فالظاهرتان نتاج العامل نفسه (حركة الصفائح) لا صدفة ولا مناخ، وهما تجتمعان عند هذه الحدود لا تتنافيان.', 4),
   ('206bcfff-bd62-505d-8053-b84a7be77070', '0487af90-2509-5724-a5e0-eb0262698181', 'وثيقة 5 (شدّة ومقدار وخريطة): زلزال واحد مقداره 7؛ سُجّلت أعلى شدّة قرب المركز السطحي وأقلّ شدّة في مدينة بعيدة ذات تربة صخرية صلبة. ما الاستنتاج المركّب الصحيح؟', '[{"id":"a","text":"المقدار يتغيّر بين المدينتين تبعًا للشدّة"},{"id":"b","text":"المقدار واحد للزلزال، والشدّة تقلّ بالابتعاد وتتأثّر بنوع التربة"},{"id":"c","text":"الشدّة ثابتة في كلّ مكان والمقدار هو المتغيّر"},{"id":"d","text":"التربة الصلبة ترفع الشدّة دائمًا"}]'::jsonb, 'b', '**المقدار** قيمة واحدة للزلزال (7) تقيس طاقة البؤرة، بينما **الشدّة** تقيس الآثار فتقلّ بالابتعاد عن المركز وتتأثّر بنوع التربة؛ والتربة الصخرية الصلبة تقلّل الاهتزاز فتخفّض الشدّة. فالمقدار لا يتغيّر، والشدّة هي المتغيّرة، والتربة الصلبة تخفّض الشدّة لا ترفعها.', 5),
   ('8acacd40-bb84-5042-9994-b598af9f5a55', '0487af90-2509-5724-a5e0-eb0262698181', 'وثيقة 6 (تركيب الوراثة والصبغيّات): نمط نووي يُظهر 47 صبغيًّا، مع ثلاث نسخ من الصبغيّ رقم 21 وزوج جنسي XX. ما التشخيص والاستنتاج عن أصل الخلل؟', '[{"id":"a","text":"ذكر مصاب بمرض متنحٍّ في حليل واحد"},{"id":"b","text":"أنثى مصابة بمتلازمة داون بسبب خلل في عدد الصبغيّات (تثلّث 21)"},{"id":"c","text":"أنثى سليمة عدد صبغيّاتها طبيعي"},{"id":"d","text":"مشيج به طفرة في حليل"}]'::jsonb, 'b', 'العدد **47** مع **ثلاث نسخ من الصبغيّ 21** = **متلازمة داون (التثلّث 21)**، والزوج **XX** يدلّ على **أنثى**؛ والخلل في **عدد الصبغيّات** لا في حليل مفرد. فالزوج XX لا يدلّ على ذكر، والعدد 47 ليس طبيعيًّا، والمشيج يحمل 23 لا 47، والسبب اختلال عددي لا طفرة حليل.', 6)
+) AS v(id, exercise_id, prompt, options, correct_option, explanation, display_order)
+WHERE EXISTS (SELECT 1 FROM public.exercises p WHERE p.id = v.exercise_id::uuid)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,

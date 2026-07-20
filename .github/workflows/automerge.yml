@@ -17,6 +17,12 @@ name: Auto-merge
 #     auto-pr.yml, or the scheduled guards' review drafts). Whoever drafted it
 #     promotes it (`gh pr ready`) when it must ship.
 #   • The `no-automerge` label opts a PR out (and disarms it if already armed).
+#   • The `MERGE_FREEZE` repository variable is the GLOBAL kill-switch (incident
+#     in progress): set to `1`, nothing arms and armed PRs are disarmed, so no
+#     merge can reach `main` and no deploy can undo a production rollback.
+#     `hotfix/` and `revert/` branches are exempt — the fix that ends the
+#     incident must still ship, through the same required checks as ever.
+#     See docs/prod-rollback-runbook.md and rollback-prod.yml.
 #   • The actual merge is enforced by the main-protection ruleset: all required
 #     status checks green on an up-to-date head (strict policy). This workflow
 #     cannot bypass any of that — it only flips the auto-merge bit.
@@ -86,10 +92,30 @@ jobs:
       IS_DRAFT: ${{ github.event.pull_request.draft }}
       OPTED_OUT: ${{ contains(github.event.pull_request.labels.*.name, 'no-automerge') }}
       USING_PAT: ${{ secrets.GH_AUTOMATION_PAT != '' }}
+      MERGE_FREEZE: ${{ vars.MERGE_FREEZE }}
     steps:
       - name: Arm (or disarm) native auto-merge
         run: |
           set -euo pipefail
+
+          # Gel global (incident) — voir l'en-tête. Traité AVANT tout le reste :
+          # pendant un gel, aucune PR ne doit rester armée, hotfix/ et revert/
+          # exceptés (le correctif doit pouvoir clore l'incident).
+          case "${MERGE_FREEZE:-}" in
+            1|true|TRUE|yes|on)
+              case "$BRANCH" in
+                hotfix/*|revert/*)
+                  echo "MERGE_FREEZE actif — '$BRANCH' exemptée (branche de correctif), on continue."
+                  ;;
+                *)
+                  gh pr merge "$PR" --repo "$REPO" --disable-auto >/dev/null 2>&1 \
+                    && echo "MERGE_FREEZE actif — auto-merge désarmé sur #$PR." \
+                    || echo "MERGE_FREEZE actif — rien à désarmer sur #$PR."
+                  exit 0
+                  ;;
+              esac
+              ;;
+          esac
 
           if [ "$OPTED_OUT" = "true" ]; then
             # Disarm idempotently: fails harmlessly when nothing was armed.
@@ -152,6 +178,7 @@ jobs:
       GH_TOKEN: ${{ secrets.GH_AUTOMATION_PAT || secrets.GITHUB_TOKEN }}
       REPO: ${{ github.repository }}
       USING_PAT: ${{ secrets.GH_AUTOMATION_PAT != '' }}
+      MERGE_FREEZE: ${{ vars.MERGE_FREEZE }}
     steps:
       - name: Update branch + re-dispatch required checks
         run: |
@@ -174,6 +201,21 @@ jobs:
           fi
 
           while read -r pr branch; do
+            # Gel global : ne pas rafraîchir (donc ne pas rapprocher du merge)
+            # une PR ordinaire. Une PR armée AVANT la pose du gel n'a reçu aucun
+            # `pull_request` event depuis, donc le job `arm` ne l'a pas désarmée.
+            case "${MERGE_FREEZE:-}" in
+              1|true|TRUE|yes|on)
+                case "$branch" in
+                  hotfix/*|revert/*) ;;
+                  *)
+                    echo "MERGE_FREEZE actif — PR #$pr ($branch) laissée en l'état."
+                    continue
+                    ;;
+                esac
+                ;;
+            esac
+
             behind="$(gh api "repos/$REPO/compare/main...$branch" --jq .behind_by || echo 0)"
             if [ "${behind:-0}" -eq 0 ]; then
               echo "PR #$pr ($branch) is up to date with main — nothing to do."

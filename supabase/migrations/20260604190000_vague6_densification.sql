@@ -1,7 +1,13 @@
 -- Vague 6 — Densification: one extra training exercise per chapter (all subjects).
 -- Idempotent forward migration: new exercises + questions (FK-safe).
 
-INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+-- Garde de reconstruction sur base VIERGE (2026-07-20, suite a l'etude 24 lot 4) :
+-- chaque ligne n'est inseree que si son parent existe. Sur la prod tous les parents sont
+-- la et le comportement est identique ; sur une base reconstruite depuis le seul repo
+-- public, le corpus genere est absent et ces lignes n'ont plus d'objet.
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order)
+SELECT v.id::uuid, v.chapter_id::uuid, v.subject_id, v.title, v.difficulty, v.xp_reward, v.reward_coins, v.mode, v.source, v.display_order
+FROM (VALUES
   ('5a3f4734-6b04-5f4d-b50e-a9e60566ce77', 'ed9bf3b9-7306-587f-b615-6a98b0f855a5', 'math', 'تمرين تدريبي: الأعداد الحقيقية (مراجعة شاملة)', 3, 120, 30, 'boss', 'admin', 5),
   ('35382d30-ed80-5e0e-b5ce-46da877152cf', '65871a90-e921-55ff-b1fe-5483ab510aad', 'math', 'تمرين تدريبي: الجذور التربيعية (مراجعة شاملة)', 3, 120, 30, 'boss', 'admin', 5),
   ('8ff9339c-4dff-5e50-8d90-19f86c7e2709', 'ddbe302b-6317-5fa9-a93d-9eddd64651fe', 'math', 'تمرين تدريبي: الحساب الحرفي والمتطابقات (مراجعة شاملة)', 3, 120, 30, 'boss', 'admin', 5),
@@ -61,6 +67,8 @@ INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_
   ('6a153e25-c76a-52ac-8403-bfee61662c58', 'ca61212e-8e45-50b3-82cb-ec086f3a39dd', 'sciences-vie-terre', '🛡️ تدرّب على الفصل: مراجعة الزلازل', 3, 120, 30, 'boss', 'admin', 5),
   ('4b02b0fb-e1da-5f9c-b8f5-b734cbfc6801', '43b4902b-3f94-5a0b-98f9-019bf0a28685', 'sciences-vie-terre', '🛡️ تدرّب على الفصل: مراجعة البراكين', 3, 120, 30, 'boss', 'admin', 5),
   ('cb1b85d9-22fb-5894-9543-b68c3ba9aa54', '19515433-2bba-541b-9762-67c03842195a', 'sciences-vie-terre', '🛡️ تدرّب على الفصل: مراجعة تكتونية الصفائح', 3, 120, 30, 'boss', 'admin', 5)
+) AS v(id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order)
+WHERE EXISTS (SELECT 1 FROM public.chapters p WHERE p.id = v.chapter_id::uuid) AND EXISTS (SELECT 1 FROM public.subjects p WHERE p.id = v.subject_id)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
   subject_id = EXCLUDED.subject_id,
@@ -71,7 +79,13 @@ ON CONFLICT (id) DO UPDATE SET
   mode = EXCLUDED.mode,
   display_order = EXCLUDED.display_order;
 
-INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+-- Garde de reconstruction sur base VIERGE (2026-07-20, suite a l'etude 24 lot 4) :
+-- chaque ligne n'est inseree que si son parent existe. Sur la prod tous les parents sont
+-- la et le comportement est identique ; sur une base reconstruite depuis le seul repo
+-- public, le corpus genere est absent et ces lignes n'ont plus d'objet.
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order)
+SELECT v.id::uuid, v.exercise_id::uuid, v.prompt, v.options, v.correct_option, v.explanation, v.display_order
+FROM (VALUES
   ('0f463adf-346b-56d6-9071-457cd9bd6c0a', '5a3f4734-6b04-5f4d-b50e-a9e60566ce77', 'أيّ من الأعداد التالية عددٌ صمّاء (غير ناطق)؟', '[{"id":"a","text":"√16"},{"id":"b","text":"√7"},{"id":"c","text":"0.25"},{"id":"d","text":"−4/3"}]'::jsonb, 'b', '√16 = 4 عدد ناطق، و0.25 = 1/4 ناطق، و−4/3 كسر ناطق. أمّا √7 فجذر عدد ليس مربّعًا كاملًا، إذن هو عدد صمّاء.', 1),
   ('6fbcfc1b-1b2d-58d7-b16b-bdf0c6069898', '5a3f4734-6b04-5f4d-b50e-a9e60566ce77', 'ما ناتج العملية: (−2)³ + (−5) × (−3) ؟', '[{"id":"a","text":"7"},{"id":"b","text":"23"},{"id":"c","text":"−23"},{"id":"d","text":"1"}]'::jsonb, 'a', 'نحسب القوّة أوّلًا: (−2)³ = −8، ثمّ الضرب: (−5) × (−3) = 15. أخيرًا الجمع: −8 + 15 = 7. التحقّق: −8 + 15 = 7 ✓.', 2),
   ('35e76788-e657-5be4-b93d-43064799b43d', '5a3f4734-6b04-5f4d-b50e-a9e60566ce77', 'ما قيمة |2 − 9| + |−3| ؟', '[{"id":"a","text":"10"},{"id":"b","text":"4"},{"id":"c","text":"−4"},{"id":"d","text":"−10"}]'::jsonb, 'a', '2 − 9 = −7 إذن |2 − 9| = 7، و|−3| = 3. المجموع = 7 + 3 = 10. القيمة المطلقة دائمًا موجبة أو معدومة.', 3),
@@ -540,6 +554,8 @@ Quelle est l''intention principale de l''auteur dans ce passage ?', '[{"id":"a",
   ('437ac1a1-b49e-5e32-bf73-75081e9bb4b5', 'cb1b85d9-22fb-5894-9543-b68c3ba9aa54', 'صفيحة تحمل قشرة محيطية اقتربت من صفيحة تحمل قشرة قارّية. ماذا يحدث عند الحدّ بينهما؟', '[{"id":"a","text":"تغوص القشرة المحيطية الأثقل تحت القارّية في منطقة طمر (اندساس)"},{"id":"b","text":"تغوص القشرة القارّية الأخفّ تحت المحيطية"},{"id":"c","text":"تتباعدان وتتكوّن ظهرة جديدة"},{"id":"d","text":"لا يحدث أيّ تفاعل بينهما"}]'::jsonb, 'a', 'القشرة المحيطية أكثف وأثقل من القارّية، فعند تقاربهما تغوص المحيطية تحت القارّية في منطقة طمر (اندساس) مصحوبة بزلازل وبراكين. فلا تغوص القارّية الأخفّ، وهذا حدّ متقارب لا متباعد، والتفاعل واضح لا منعدم.', 4),
   ('c6005ff6-2e9b-57a8-b869-4ee7ec9899fb', 'cb1b85d9-22fb-5894-9543-b68c3ba9aa54', 'وُجدت متحجّرات لكائن واحد على سواحل إفريقيا وأمريكا الجنوبية معًا. ما أفضل تفسير لذلك؟', '[{"id":"a","text":"أنّ القارّتين كانتا متّصلتين سابقًا ثمّ تباعدتا بانجراف القارّات"},{"id":"b","text":"أنّ الكائن كان يطير ويعبر المحيط الأطلسي"},{"id":"c","text":"أنّها صدفة لا دلالة لها"},{"id":"d","text":"أنّ القارّتين ثابتتان تمامًا منذ نشأة الأرض"}]'::jsonb, 'a', 'وجود متحجّرات الكائن نفسه على ضفّتي المحيط دليل قدّمه فاجنر على أنّ القارّتين كانتا متّصلتين ثمّ تباعدتا بانجراف القارّات (حركة الصفائح). تفسير الطيران أو الصدفة لا يصمد، والقارّات ليست ثابتة بل تتحرّك مع صفائحها.', 5),
   ('b0398a51-656f-5a9a-963b-f07a8c0c947d', 'cb1b85d9-22fb-5894-9543-b68c3ba9aa54', 'ما العلاقة بين حركة الصفائح والزلازل والبراكين؟', '[{"id":"a","text":"تتركّز الزلازل والبراكين غالبًا عند حدود الصفائح حيث يكثر النشاط الباطني"},{"id":"b","text":"لا علاقة بين حركة الصفائح والزلازل والبراكين"},{"id":"c","text":"تتركّز الزلازل والبراكين في مراكز الصفائح بعيدًا عن حدودها"},{"id":"d","text":"تحدث الزلازل فقط حيث لا توجد براكين أبدًا"}]'::jsonb, 'a', 'تتركّز الزلازل والبراكين عند حدود الصفائح (تباعد أو تقارب أو انزلاق) لأنّ حركتها هناك تحرّر طاقةً وتتيح صعود الصهارة، ولذلك يتراصفان في الأحزمة نفسها مثل حزام النار. فالعلاقة وثيقة، والنشاط يكثر عند الحدود لا في مراكز الصفائح، والزلازل والبراكين كثيرًا ما يجتمعان في المنطقة نفسها.', 6)
+) AS v(id, exercise_id, prompt, options, correct_option, explanation, display_order)
+WHERE EXISTS (SELECT 1 FROM public.exercises p WHERE p.id = v.exercise_id::uuid)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
