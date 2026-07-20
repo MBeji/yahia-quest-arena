@@ -649,7 +649,6 @@ export type TranslationKeys = {
     loading: string;
     youChip: string;
     lvl: string;
-    emptyGlobal: string;
     coldStartTitle: string;
     coldStartDesc: string;
     coldStartCta: string;

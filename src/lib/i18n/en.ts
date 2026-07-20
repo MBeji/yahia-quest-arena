@@ -663,7 +663,6 @@ export const en: TranslationKeys = {
     loading: "Loading leaderboard…",
     youChip: "You",
     lvl: "Lvl",
-    emptyGlobal: "No heroes registered yet.",
     coldStartTitle: "The leaderboard is just starting!",
     coldStartDesc: "Earn your first XP to appear here — every quest you clear moves you up.",
     coldStartCta: "Start a quest",

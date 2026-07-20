@@ -674,7 +674,6 @@ export const fr: TranslationKeys = {
     loading: "Chargement du classement…",
     youChip: "Toi",
     lvl: "Niv.",
-    emptyGlobal: "Aucun héros inscrit pour l'instant.",
     coldStartTitle: "Le classement démarre !",
     coldStartDesc:
       "Gagne tes premiers XP pour apparaître ici — chaque quête réussie te fait grimper.",
