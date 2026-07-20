@@ -1,0 +1,270 @@
+name: Rollback prod
+
+# THE break-glass lever when a merge takes production down. Full procedure,
+# decision tree and the database caveat: docs/prod-rollback-runbook.md
+#
+# It does, in this order, the two things a human under stress forgets:
+#
+#   1. FREEZE the merge chain (repository variable `MERGE_FREEZE=1`) and disarm
+#      every armed PR. Non-negotiable and FIRST: this repo merges and deploys
+#      with zero human steps (auto-pr.yml + automerge.yml), so a rollback that
+#      doesn't freeze lasts exactly until the next PR merges itself and Vercel
+#      redeploys the broken code. `hotfix/` and `revert/` branches stay exempt —
+#      the fix that ends the incident must still ship, through the same gate.
+#   2. ROLL BACK the Vercel production alias to the previous (or a named)
+#      deployment — seconds, no build, no CI cycle.
+#
+# Then it verifies production answers again and opens an incident issue carrying
+# the checklist of what remains: land the revert, check the schema delta, unfreeze.
+#
+# ⚠️ WHAT THIS DOES NOT DO — the trap that governs every rollback here:
+# migrations are FORWARD-ONLY and already applied to prod by db-migrate-prod.yml
+# (it auto-applies on merge). Rolling the CODE back does NOT roll the SCHEMA
+# back. Additive migrations are safe under older code by construction; a
+# DESTRUCTIVE one (DROP/REVOKE) is not, and needs the pre-migration dump this
+# repo keeps as an artifact. See the runbook, § « L'axe base de données ».
+#
+# Required secrets (Settings > Secrets and variables > Actions):
+#   VERCEL_TOKEN       — account/team token with deploy rights on the project
+#   VERCEL_PROJECT_ID  — Vercel project settings > Project ID
+#   VERCEL_ORG_ID      — Vercel team/personal account ID (team scope)
+# Optional: `GH_AUTOMATION_PAT` (already used by auto-pr.yml) needs the
+# repository "Variables: read and write" permission to set MERGE_FREEZE — the
+# job says so and prints the manual command if it can't.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "rollback = gel + retour arrière Vercel · freeze-only = gel seul · unfreeze = fin d'incident"
+        type: choice
+        options: [rollback, freeze-only, unfreeze]
+        default: rollback
+      reason:
+        description: "Ce qui est cassé, en une phrase (va dans l'issue d'incident)"
+        type: string
+        required: true
+      target:
+        description: "rollback : URL/ID d'un déploiement précis (vide = le déploiement production précédent)"
+        type: string
+        default: ""
+
+# Never let two rollbacks race each other.
+concurrency:
+  group: rollback-prod
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  # Disarm auto-merge on open PRs while frozen (and re-arm on unfreeze).
+  pull-requests: write
+  # Open/comment the incident issue.
+  issues: write
+
+jobs:
+  rollback:
+    name: ${{ inputs.mode }} — production
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ secrets.GH_AUTOMATION_PAT || github.token }}
+      REPO: ${{ github.repository }}
+      MODE: ${{ inputs.mode }}
+      REASON: ${{ inputs.reason }}
+      TARGET: ${{ inputs.target }}
+      PROD_URL: ${{ vars.PROD_URL || 'https://na9ranal3ab.vercel.app' }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_CLI_VERSION: ${{ vars.VERCEL_CLI_VERSION || 'latest' }}
+    steps:
+      - name: Guard — Vercel credentials present
+        if: inputs.mode == 'rollback'
+        run: |
+          set -euo pipefail
+          missing=""
+          [ -n "${VERCEL_TOKEN:-}" ]      || missing="$missing VERCEL_TOKEN"
+          [ -n "${VERCEL_PROJECT_ID:-}" ] || missing="$missing VERCEL_PROJECT_ID"
+          if [ -n "$missing" ]; then
+            echo "::error title=Secrets Vercel manquants::Secret(s) absent(s) :$missing. Settings > Secrets and variables > Actions. Sans eux le retour arrière automatique est impossible — passez par le dashboard Vercel (Deployments > … > Promote to Production), voir docs/prod-rollback-runbook.md."
+            exit 1
+          fi
+
+      # --- 1. FREEZE FIRST. Always, before touching production. ---
+      - name: Freeze the merge chain
+        if: inputs.mode != 'unfreeze'
+        id: freeze
+        run: |
+          set -euo pipefail
+          if gh variable set MERGE_FREEZE --repo "$REPO" --body 1; then
+            echo "MERGE_FREEZE=1 posé — plus aucune PR ordinaire ne peut merger."
+            echo "frozen=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "frozen=false" >> "$GITHUB_OUTPUT"
+            echo "::error title=Gel non posé::Impossible d'écrire la variable MERGE_FREEZE (le token n'a probablement pas la permission 'Variables: read and write'). POSEZ-LA À LA MAIN TOUT DE SUITE : gh variable set MERGE_FREEZE --repo $REPO --body 1 — sinon la prochaine PR mergera seule et redéploiera le code cassé."
+          fi
+
+      - name: Disarm every armed PR
+        if: inputs.mode != 'unfreeze'
+        run: |
+          set -euo pipefail
+          # The freeze variable stops FUTURE arming; PRs armed before it was set
+          # receive no event and would still merge on their own. Disarm them now.
+          # hotfix/ and revert/ are left armed on purpose (see the header).
+          prs="$(gh pr list --repo "$REPO" --base main --state open \
+            --json number,headRefName,autoMergeRequest \
+            --jq '.[] | select(.autoMergeRequest != null) | "\(.number) \(.headRefName)"')"
+          if [ -z "$prs" ]; then
+            echo "Aucune PR armée — rien à désarmer."
+            exit 0
+          fi
+          while read -r pr branch; do
+            case "$branch" in
+              hotfix/*|revert/*)
+                echo "PR #$pr ($branch) exemptée — laissée armée."
+                continue
+                ;;
+            esac
+            gh pr merge "$pr" --repo "$REPO" --disable-auto >/dev/null 2>&1 \
+              && echo "PR #$pr ($branch) désarmée." \
+              || echo "::warning::PR #$pr ($branch) : désarmement refusé — à vérifier à la main."
+          done <<< "$prs"
+
+      # --- 2. Roll production back ---
+      - name: Record the production deployment BEFORE rolling back
+        if: inputs.mode == 'rollback'
+        id: before
+        run: |
+          set -euo pipefail
+          team=""
+          [ -n "${VERCEL_ORG_ID:-}" ] && team="&teamId=${VERCEL_ORG_ID}"
+          current="$(curl -sf --max-time 30 -H "Authorization: Bearer ${VERCEL_TOKEN}" \
+            "https://api.vercel.com/v6/deployments?projectId=${VERCEL_PROJECT_ID}&target=production&state=READY&limit=1${team}" \
+            | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{
+                const d=(JSON.parse(s).deployments||[])[0];
+                process.stdout.write(d ? `https://${d.url} (${d.uid}, commit ${d?.meta?.githubCommitSha??"?"})` : "inconnu");
+              })' || echo inconnu)"
+          echo "Déploiement production actuel : $current"
+          echo "deployment=$current" >> "$GITHUB_OUTPUT"
+
+      - name: Roll the production alias back
+        if: inputs.mode == 'rollback'
+        run: |
+          set -euo pipefail
+          npx --yes "vercel@${VERCEL_CLI_VERSION}" --version
+          # VERCEL_ORG_ID / VERCEL_PROJECT_ID link the project without `vercel link`.
+          # No argument = the previous production deployment.
+          echo "Commande : vercel rollback ${TARGET:-<précédent>} --yes"
+          npx --yes "vercel@${VERCEL_CLI_VERSION}" rollback ${TARGET:+"$TARGET"} \
+            --token "$VERCEL_TOKEN" --yes
+
+      - name: Verify production answers again
+        if: inputs.mode == 'rollback'
+        id: verify
+        run: |
+          set -euo pipefail
+          # Deliberately shallow: HTTP 200 + a non-trivial body proves the alias
+          # serves something. It does NOT prove the app works — the runbook makes
+          # a human click through the smoke path before closing the incident.
+          ok=false
+          for attempt in 1 2 3 4 5 6; do
+            code="$(curl -s -o body.html -w '%{http_code}' --max-time 20 "$PROD_URL" || echo 000)"
+            size="$(wc -c < body.html 2>/dev/null || echo 0)"
+            echo "Essai $attempt : HTTP $code, ${size} octets"
+            if [ "$code" = "200" ] && [ "$size" -gt 500 ]; then ok=true; break; fi
+            sleep 10
+          done
+          echo "healthy=$ok" >> "$GITHUB_OUTPUT"
+          if [ "$ok" != "true" ]; then
+            echo "::error title=Prod toujours KO après rollback::$PROD_URL ne répond pas correctement. Le problème n'est probablement PAS dans le code déployé — regardez la base (migration destructive appliquée ?) et Supabase. Voir docs/prod-rollback-runbook.md § « Si le rollback ne suffit pas »."
+          fi
+
+      # --- 3. Or: end of incident ---
+      - name: Unfreeze the merge chain
+        if: inputs.mode == 'unfreeze'
+        run: |
+          set -euo pipefail
+          gh variable set MERGE_FREEZE --repo "$REPO" --body 0 \
+            || echo "::warning title=Dégel non appliqué::Faites-le à la main : gh variable set MERGE_FREEZE --repo $REPO --body 0"
+          echo "MERGE_FREEZE=0."
+
+          # PRs disarmed by the freeze get no event when it lifts — re-arm the
+          # eligible ones (ready, not opted out) so the chain resumes by itself.
+          prs="$(gh pr list --repo "$REPO" --base main --state open \
+            --json number,isDraft,labels,autoMergeRequest \
+            --jq '.[] | select(.autoMergeRequest == null and .isDraft == false
+                               and (any(.labels[]; .name == "no-automerge") | not))
+                      | .number')"
+          for pr in $prs; do
+            gh pr merge "$pr" --repo "$REPO" --auto --squash --delete-branch >/dev/null 2>&1 \
+              && echo "PR #$pr réarmée." \
+              || echo "::warning::PR #$pr : réarmement refusé — à reprendre par la prochaine session."
+          done
+
+      # --- 4. Leave a trace that carries the remaining work ---
+      - name: Open or update the incident issue
+        if: always()
+        uses: actions/github-script@v9
+        env:
+          FROZEN: ${{ steps.freeze.outputs.frozen }}
+          BEFORE: ${{ steps.before.outputs.deployment }}
+          HEALTHY: ${{ steps.verify.outputs.healthy }}
+          JOB_STATUS: ${{ job.status }}
+        with:
+          script: |
+            const LABEL = 'prod-incident';
+            const { MODE, REASON, TARGET, PROD_URL, FROZEN, BEFORE, HEALTHY, JOB_STATUS } = process.env;
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const stamp = new Date().toISOString().replace('T', ' ').slice(0, 16);
+
+            let body = `### \`${MODE}\` — ${stamp} UTC\n\n`;
+            body += `**Motif** : ${REASON}\n\n`;
+            body += `| | |\n| --- | --- |\n`;
+            body += `| Résultat du job | ${JOB_STATUS === 'success' ? '✅' : '❌'} ${JOB_STATUS} |\n`;
+            if (MODE !== 'unfreeze') {
+              body += `| Gel des merges | ${FROZEN === 'true' ? '✅ MERGE_FREEZE=1' : '❌ NON POSÉ — à faire à la main'} |\n`;
+            }
+            if (MODE === 'rollback') {
+              body += `| Déploiement avant | ${BEFORE || 'inconnu'} |\n`;
+              body += `| Cible | ${TARGET || 'déploiement production précédent'} |\n`;
+              body += `| ${PROD_URL} | ${HEALTHY === 'true' ? '✅ répond' : '❌ ne répond pas'} |\n`;
+            }
+            body += `\n[Voir le run](${runUrl})\n`;
+
+            if (MODE === 'rollback') {
+              body += `\n**Reste à faire** (docs/prod-rollback-runbook.md)\n\n`;
+              body += `- [ ] Vérifier la prod à la main : page d'accueil, une matière, un exercice soumis\n`;
+              body += `- [ ] Identifier le merge fautif et ouvrir le revert sur une branche \`revert/…\` (exemptée du gel)\n`;
+              body += `- [ ] **Vérifier l'axe base** : le merge fautif contenait-il une migration ? destructive ?\n`;
+              body += `- [ ] Une fois le revert mergé, \`main\` == prod : relancer ce workflow en mode \`unfreeze\`\n`;
+              body += `- [ ] Ajouter le test de non-régression qui aurait attrapé la panne\n`;
+            }
+            if (MODE === 'unfreeze') {
+              body += `\n✅ Chaîne de merge réouverte. Pensez à clore cette issue si l'incident est terminé.\n`;
+            }
+
+            await core.summary.addRaw(body).write();
+
+            try {
+              await github.rest.issues.getLabel({ ...context.repo, name: LABEL });
+            } catch {
+              await github.rest.issues.createLabel({
+                ...context.repo, name: LABEL, color: 'b60205',
+                description: 'Incident de production (rollback / gel des merges)',
+              });
+            }
+
+            const existing = await github.rest.issues.listForRepo({
+              ...context.repo, state: 'open', labels: LABEL,
+            });
+            if (existing.data.length > 0) {
+              await github.rest.issues.createComment({
+                ...context.repo, issue_number: existing.data[0].number, body,
+              });
+            } else {
+              await github.rest.issues.create({
+                ...context.repo,
+                title: `🛑 Incident production — ${stamp} UTC`,
+                body, labels: [LABEL],
+              });
+            }

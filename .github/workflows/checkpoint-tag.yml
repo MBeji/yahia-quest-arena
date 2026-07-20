@@ -1,0 +1,276 @@
+name: Checkpoint hebdo
+
+# Cuts the weekly PROD ROLLBACK CHECKPOINT: an annotated `checkpoint/YYYY-Www`
+# tag on the most recent commit of `main` that is PROVEN to work — green
+# `verify` AND a green nightly (Playwright E2E + pgTAP) on that exact commit.
+#
+# Why not simply tag Monday's tip: the tip only ever proves `verify` (lint +
+# types + unit + build + shell smoke). The suites that would actually catch "the
+# app is dead in a browser" or "a migration doesn't apply" run in nightly.yml,
+# hours later, on whatever `main` pointed at 01:00 UTC. A rollback target backed
+# by half the evidence is a guess wearing a tag, so the selection walks recent
+# nightly runs newest-first and keeps the first commit both signals agree on
+# (scripts/release/pick-checkpoint.mjs — pure logic, unit-tested).
+#
+# When nothing qualifies, NO tag is minted and a tracking issue says why. A week
+# without a checkpoint is a fact worth seeing; a checkpoint that lies is a second
+# outage during the first one.
+#
+# The tag's annotation is the artifact an operator reads mid-incident: commit,
+# package version, SCHEMA HEAD at that commit, the Vercel deployment (when
+# VERCEL_TOKEN is configured), per-suite evidence, and the trap that governs
+# every rollback here — reverting code does NOT revert the database.
+#
+# Procedure that consumes these tags: docs/prod-rollback-runbook.md
+
+on:
+  schedule:
+    # Monday 06:00 UTC — after Monday 01:00 UTC's nightly has reported, so the
+    # freshest possible evidence is on the table.
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: checkpoint-tag
+  cancel-in-progress: false
+
+permissions:
+  # Push the annotated tag.
+  contents: write
+  # Open/update the "no checkpoint this week" tracking issue.
+  issues: write
+  # Read nightly runs and their per-suite job conclusions.
+  actions: read
+
+jobs:
+  checkpoint:
+    name: Tag the last proven-green commit on main
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      # How many recent nightly runs to consider before giving up.
+      CANDIDATES: "8"
+    steps:
+      - name: Checkout (full history + existing tags)
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Gather nightly candidates and their evidence
+        run: |
+          set -euo pipefail
+
+          gh run list --repo "$REPO" --workflow nightly.yml --branch main \
+            --limit "$CANDIDATES" \
+            --json databaseId,headSha,conclusion,createdAt,url \
+            --jq '.[] | [.databaseId, .headSha, (.conclusion // "in_progress"), .createdAt, .url] | @tsv' \
+            > runs.tsv || : > runs.tsv
+
+          : > candidates.ndjson
+          while IFS=$'\t' read -r id sha conclusion created url; do
+            [ -n "${sha:-}" ] || continue
+
+            jobs="$(gh api "repos/$REPO/actions/runs/$id/jobs" --paginate \
+              --jq '[.jobs[] | {name: .name, conclusion: .conclusion}]' 2>/dev/null || echo '[]')"
+
+            # `verify` on the commit itself: ci.yml runs on push to main, but its
+            # `cancel-in-progress` cancels the earlier run when two merges land
+            # back to back — so a main commit can genuinely carry a CANCELLED
+            # verify. Prefer any success among re-runs, else report what we saw.
+            verify="$(gh api "repos/$REPO/commits/$sha/check-runs?check_name=verify" \
+              --jq '[.check_runs[].conclusion] | if any(. == "success") then "success" else (.[0] // "absent") end' \
+              2>/dev/null || echo absent)"
+
+            node -e 'const [id,sha,c,created,url,jobs,verify]=process.argv.slice(1);
+              process.stdout.write(JSON.stringify({runId:Number(id),headSha:sha,conclusion:c,createdAt:created,runUrl:url,jobs:JSON.parse(jobs),verify})+"\n")' \
+              "$id" "$sha" "$conclusion" "$created" "$url" "$jobs" "$verify" >> candidates.ndjson
+          done < runs.tsv
+
+          echo "Candidats examinés : $(wc -l < candidates.ndjson)"
+
+      - name: Assemble the selection payload
+        run: |
+          set -euo pipefail
+          git tag --list 'checkpoint/*' > existing-tags.txt || : > existing-tags.txt
+          # Annotated tags point at a tag object: %(*objectname) dereferences to
+          # the commit; lightweight tags leave it empty and %(objectname) is it.
+          git for-each-ref --format='%(objectname) %(*objectname)' 'refs/tags/checkpoint/*' \
+            | awk '{ print ($2 != "" ? $2 : $1) }' > tagged-shas.txt || : > tagged-shas.txt
+
+          node - <<'EOF' > payload.json
+          const fs = require("node:fs");
+          const lines = (f) =>
+            fs.existsSync(f)
+              ? fs.readFileSync(f, "utf8").split("\n").map((s) => s.trim()).filter(Boolean)
+              : [];
+          process.stdout.write(
+            JSON.stringify({
+              now: new Date().toISOString(),
+              candidates: lines("candidates.ndjson").map((l) => JSON.parse(l)),
+              existingTags: lines("existing-tags.txt"),
+              taggedShas: lines("tagged-shas.txt"),
+            }),
+          );
+          EOF
+
+      - name: Pick the checkpoint
+        id: pick
+        run: node scripts/release/pick-checkpoint.mjs --payload payload.json
+
+      # --- From here on: only when a commit qualified ---
+
+      - name: Resolve the schema head, version and deployment of that commit
+        id: facts
+        if: steps.pick.outputs.found == 'true'
+        env:
+          SHA: ${{ steps.pick.outputs.sha }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+        run: |
+          set -euo pipefail
+
+          # Schema head AT THAT COMMIT — the number the runbook compares against
+          # prod before deciding a rollback is safe.
+          head="$(git ls-tree --name-only "$SHA" supabase/migrations/ \
+            | grep -oE '[0-9]{14}' | sort | tail -1 || true)"
+          echo "migration_head=${head:-aucune}" >> "$GITHUB_OUTPUT"
+
+          git show "$SHA:package.json" > pkg.json
+          echo "version=$(node -p "require('./pkg.json').version")" >> "$GITHUB_OUTPUT"
+
+          # Best effort: pin the exact Vercel production deployment built from
+          # this commit, so a rollback promotes a known artifact instead of
+          # hunting the dashboard. Absent token → the annotation says so.
+          deployment=""
+          if [ -n "${VERCEL_TOKEN:-}" ] && [ -n "${VERCEL_PROJECT_ID:-}" ]; then
+            team=""
+            [ -n "${VERCEL_ORG_ID:-}" ] && team="&teamId=${VERCEL_ORG_ID}"
+            deployment="$(curl -sf --max-time 30 -H "Authorization: Bearer ${VERCEL_TOKEN}" \
+              "https://api.vercel.com/v6/deployments?projectId=${VERCEL_PROJECT_ID}&target=production&state=READY&limit=50${team}" \
+              | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{
+                  const sha=process.argv[1];
+                  const d=(JSON.parse(s).deployments||[]).find(x=>x?.meta?.githubCommitSha===sha);
+                  process.stdout.write(d ? `https://${d.url} (${d.uid})` : "");
+                })' "$SHA" || true)"
+          fi
+          echo "deployment=${deployment}" >> "$GITHUB_OUTPUT"
+
+      - name: Render the tag annotation
+        id: annotate
+        if: steps.pick.outputs.found == 'true'
+        env:
+          TAG: ${{ steps.pick.outputs.tag }}
+          SHA: ${{ steps.pick.outputs.sha }}
+          RUN_URL: ${{ steps.pick.outputs.run_url }}
+          RUN_DATE: ${{ steps.pick.outputs.run_date }}
+          SUITES: ${{ steps.pick.outputs.suites }}
+          VERSION: ${{ steps.facts.outputs.version }}
+          MIGRATION_HEAD: ${{ steps.facts.outputs.migration_head }}
+          DEPLOYMENT: ${{ steps.facts.outputs.deployment }}
+        run: |
+          set -euo pipefail
+          node -e 'const e=process.env;
+            process.stdout.write(JSON.stringify({
+              tag:e.TAG, headSha:e.SHA, runUrl:e.RUN_URL, runDate:e.RUN_DATE,
+              suites:JSON.parse(e.SUITES||"{}"), version:e.VERSION,
+              migrationHead:e.MIGRATION_HEAD, deployment:e.DEPLOYMENT || undefined,
+            }))' > annotate.json
+          node scripts/release/pick-checkpoint.mjs --annotate annotate.json
+
+      - name: Create and push the annotated tag
+        if: steps.pick.outputs.found == 'true'
+        env:
+          TAG: ${{ steps.pick.outputs.tag }}
+          SHA: ${{ steps.pick.outputs.sha }}
+          ANNOTATION: ${{ steps.annotate.outputs.annotation }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          printf '%s\n' "$ANNOTATION" | git tag -a "$TAG" "$SHA" -F -
+          git push origin "refs/tags/$TAG"
+          {
+            echo "### ✅ Checkpoint \`$TAG\` → \`${SHA:0:7}\`"
+            echo ""
+            echo '```'
+            printf '%s\n' "$ANNOTATION"
+            echo '```'
+            echo ""
+            echo "Retour arrière : \`docs/prod-rollback-runbook.md\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Close a previous "no checkpoint" alert
+        if: steps.pick.outputs.found == 'true'
+        uses: actions/github-script@v9
+        env:
+          TAG: ${{ steps.pick.outputs.tag }}
+        with:
+          script: |
+            const LABEL = 'checkpoint-missing';
+            const open = await github.rest.issues.listForRepo({
+              ...context.repo, state: 'open', labels: LABEL,
+            }).catch(() => ({ data: [] }));
+            for (const issue of open.data) {
+              await github.rest.issues.createComment({
+                ...context.repo,
+                issue_number: issue.number,
+                body: `✅ Checkpoint \`${process.env.TAG}\` coupé — fermeture automatique.`,
+              });
+              await github.rest.issues.update({
+                ...context.repo, issue_number: issue.number, state: 'closed',
+              });
+            }
+
+      # --- Or: nothing qualified. Say so loudly instead of silently skipping. ---
+
+      - name: Report a week with no checkpoint
+        if: steps.pick.outputs.found != 'true'
+        uses: actions/github-script@v9
+        env:
+          WHY: ${{ steps.pick.outputs.why }}
+        with:
+          script: |
+            const LABEL = 'checkpoint-missing';
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const date = new Date().toISOString().slice(0, 10);
+
+            let body = `### ⚠️ Aucun checkpoint de rollback cette semaine — ${date}\n\n`;
+            body += `Aucun commit récent de \`main\` ne réunit **verify vert + nightly vert**. `;
+            body += `Tant que ça dure, le dernier point de retour arrière vérifié vieillit : `;
+            body += `un rollback annulerait d'autant plus de travail mergé.\n\n`;
+            body += `**Candidats écartés**\n\n${process.env.WHY || '_aucun_'}\n\n`;
+            body += `**À faire** : réparer le nightly (voir l'issue \`nightly-failure\`), puis `;
+            body += `relancer \`checkpoint-tag.yml\` à la main — le tag sera coupé sur le commit `;
+            body += `redevenu vert.\n\n[Voir le run](${runUrl})\n`;
+
+            await core.summary.addRaw(body).write();
+
+            try {
+              await github.rest.issues.getLabel({ ...context.repo, name: LABEL });
+            } catch {
+              await github.rest.issues.createLabel({
+                ...context.repo,
+                name: LABEL,
+                color: 'fbca04',
+                description: "Semaine sans checkpoint de rollback vérifié",
+              });
+            }
+
+            const existing = await github.rest.issues.listForRepo({
+              ...context.repo,
+              state: 'open',
+              labels: LABEL,
+            });
+            const title = '⚠️ Pas de checkpoint de rollback vérifié';
+            if (existing.data.length > 0) {
+              await github.rest.issues.createComment({
+                ...context.repo,
+                issue_number: existing.data[0].number,
+                body,
+              });
+            } else {
+              await github.rest.issues.create({ ...context.repo, title, body, labels: [LABEL] });
+            }
