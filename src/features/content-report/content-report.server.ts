@@ -1,10 +1,41 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import type { TablesInsert } from "@/shared/integrations/supabase/types";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
 import { failWithClientError } from "@/shared/lib/safe-error";
 
 export type ContentReportStatus = "open" | "resolved" | "dismissed";
+
+/**
+ * What the student is reporting (étude 20, Q-3 — cadrage du type au lot 1).
+ *
+ * `recall_false_negative` = « ma réponse était juste et le Rappel l'a refusée »
+ * (US-5). Le lot 1 se contente de rendre ces signalements DISTINGUABLES dès
+ * maintenant, pour que la file existante ne les noie pas ; la file admin dédiée
+ * et la procédure d'ajout de variante sont le lot 6, quand le volume réel sera
+ * connu. Enum fermé, miroir du CHECK `content_reports_kind_check`.
+ */
+export type ContentReportKind = "content_error" | "recall_false_negative";
+
+const CONTENT_REPORT_KINDS = ["content_error", "recall_false_negative"] as const;
+
+/**
+ * Ligne d'insertion élargie à la colonne `kind` de l'étude 20, que les types
+ * Supabase GÉNÉRÉS ignorent encore (ils datent d'avant la migration de ce lot).
+ * Même posture que le narrowing `ChapterLessonRow` de `quest.server.ts` pour la
+ * colonne `videos` : on décrit la ligne localement plutôt que d'éditer à la main
+ * `src/shared/integrations/supabase/types.ts`, qui est généré. Dette : la
+ * prochaine régénération des types rend ce type superflu.
+ */
+type ContentReportInsert = {
+  user_id: string;
+  exercise_id: string | null;
+  question_id: string | null;
+  message: string;
+  status: ContentReportStatus;
+  kind: ContentReportKind;
+};
 
 /** A content error report, as exposed to the admin queue. */
 export type ContentReport = {
@@ -29,6 +60,9 @@ export const reportContentError = createServerFn({ method: "POST" })
         exerciseId: z.guid().optional(),
         questionId: z.guid().optional(),
         message: z.string().trim().min(5).max(1000),
+        // Étude 20 Q-3: omis = le signalement de contenu historique, donc les
+        // appelants existants sont inchangés.
+        kind: z.enum(CONTENT_REPORT_KINDS).optional(),
       })
       .parse(d),
   )
@@ -39,13 +73,21 @@ export const reportContentError = createServerFn({ method: "POST" })
       throw new Error("Trop de signalements. Réessaie dans une minute.");
     }
 
-    const { error } = await supabase.from("content_reports").insert({
+    const row: ContentReportInsert = {
       user_id: userId,
       exercise_id: data.exerciseId ?? null,
       question_id: data.questionId ?? null,
       message: data.message,
       status: "open",
-    });
+      kind: data.kind ?? "content_error",
+    };
+    // Le client rejette toute propriété excédentaire, et `kind` n'existe pas
+    // encore dans les types générés. Le cast ne porte QUE là-dessus : `row` est
+    // vérifié juste au-dessus contre `ContentReportInsert`, donc les colonnes
+    // historiques restent typées, et `kind` part bien sur le fil.
+    const { error } = await supabase
+      .from("content_reports")
+      .insert(row as TablesInsert<"content_reports">);
     if (error)
       failWithClientError(
         "contentReport.reportContentError",

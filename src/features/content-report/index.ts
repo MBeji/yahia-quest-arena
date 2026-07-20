@@ -8,6 +8,7 @@ export {
   resolveContentReport,
   type ContentReport,
   type ContentReportStatus,
+  type ContentReportKind,
 } from "./content-report.server";
 export { ReportErrorButton } from "./components/report-error-button";
 export { ContentReportsAdmin } from "./components/content-reports-admin";
