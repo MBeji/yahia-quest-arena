@@ -1,6 +1,7 @@
 # Étude 19 — Questions & exercices illustrés : doctrine visuelle & campagne
 
-> **Statut** : brouillon
+> **Statut** : validée — Q-1…Q-4 arbitrées le 2026-07-20 par Mohamed (§7) : trois tranchées sur
+> les recommandations, Q-4 déléguée au démarrage du lot 3 ; le lot 1 est immédiatement exécutable
 > **Priorité** : 19 · **Valeur** : une question de géométrie sans figure est aussi bancale qu'un cours de géométrie sans figure — l'étude 18 a réglé les cours, celle-ci règle les 18 708 questions · **Complexité** : moyenne (le rendu existe déjà) — mais **campagne longue**
 > **Architecte** : Opus 4.8 / 2026-07-14 · **Exécuteur cible** : Sonnet (ou équiv.)
 > **Dépend de** : é18 (cours vivants, livrée — doctrine d'illustration + axe 5 + `course-figures.md`) · **Bloque** : rien
@@ -345,25 +346,48 @@ fuit pas par la figure (R-4) — vérifié par `content-audit`, pas par un gate 
 
 ## 7. Questions ouvertes (pour l'humain)
 
+> **Section arbitrée le 2026-07-20 (Mohamed) — les trois décisions de périmètre ont suivi les
+> recommandations.** Q-4 n'est pas laissée ouverte : elle est explicitement **déléguée** à la
+> session qui ouvrira le lot 3, dans le cadre fermé par Q-2. L'étude est passée `validée`.
+
 - **Q-1 — Médium & cadrage.** Confirmer que les arbitrages de l'étude 18 se transposent : **SVG
   inline seul** (pas de bitmap) et **étude→lots** (une PR par lot). _Défaut proposé : oui aux deux._
+  **Arbitrage : oui aux deux, recommandation retenue** — **SVG inline seul** (aucun bitmap, aucune
+  photo) : la D-5 est confirmée comme héritage direct de la D-8 de l'étude 18 ; et cadrage **étude
+  → lots, une PR par lot**. Conséquence : le **lot 1** (doctrine + gate, **0 fichier de contenu**)
+  est ferme et immédiatement exécutable.
 - **Q-2 — Ambition de la campagne.** Jusqu'où va-t-on ? _Recommandation architecte : (a) années de
   concours d'abord (9ᵉ, 6ᵉ, bac quand il existera), (b) puis matières intrinsèquement spatiales
   (maths, physique, SVT) collège→lycée, (c) STOP sur les matières non spatiales._ La cible n'est pas
   « 18 708 » mais « les questions spatiales des parcours prioritaires ».
+  **Arbitrage : recommandation retenue** — (a) années de concours d'abord (9ᵉ, 6ᵉ, bac quand il
+  existera), (b) puis matières intrinsèquement spatiales (maths, physique, SVT) collège→lycée,
+  (c) **STOP** sur les matières non spatiales. La cible n'est **pas** « 18 708 » mais « les
+  questions spatiales des parcours prioritaires » : la campagne s'arrête quand le backlog `[warn]`
+  des matières prioritaires est résorbé, le reste étant laissé et **documenté** (R-7). Cet
+  arbitrage **est** la mitigation de RISK-1.
 - **Q-3 — Profondeur de vérification à l'échelle.** Le contrôle visuel + double-résolution de chaque
   figure est incompressible (D-3) et borne le débit. Accepte-t-on ce coût (garant du « 0 figure
   fausse »), ou tolère-t-on un échantillonnage au-delà d'un certain volume par lot ? _Recommandation :
   vérification intégrale tant que les lots restent bornés ; si un lot dépasse ~40 figures, le scinder
   plutôt que d'échantillonner._
+  **Arbitrage : recommandation retenue** — **vérification intégrale** (contrôle visuel +
+  double-résolution de chaque figure) tant que les lots restent bornés ; **si un lot dépasse ~40
+  figures, il est scindé — jamais échantillonné**. Le KPI « 0 figure fausse » est tenu tel quel :
+  le débit s'ajuste par la **taille des lots**, pas par la profondeur du contrôle. Cet arbitrage
+  fixe le DoD de vérification des lots 2 et 3+.
 - **Q-4 — Ordre exact des matières** (dépend de Q-2) : à figer au démarrage du lot 3.
+  **Arbitrage : différée par construction**, comme l'étude le prévoit — elle dépend de Q-2
+  (désormais tranchée) et se fige **au démarrage du lot 3**. Ce n'est pas une question laissée
+  ouverte : c'est une décision d'**exécution déléguée** à la session qui ouvrira le lot 3, dans le
+  cadre fixé par Q-2 (concours d'abord). Elle ne bloque **ni le lot 1 ni le lot 2**.
 
-Une étude passe `validée` quand cette section est arbitrée. En l'état : **brouillon** (le lot 1 —
-doctrine + gate, sans toucher au contenu — peut néanmoins démarrer dès Q-1 tranchée, car il ne
-dépend d'aucune décision de périmètre de campagne).
+Une étude passe `validée` quand cette section est arbitrée : c'est fait le **2026-07-20**. Les
+lots 1 et 2 sont exécutables ; l'ordre des matières du lot 3+ se fige à son démarrage (Q-4).
 
 ## 8. Journal d'exécution
 
-| date       | lot | PR  | écarts acceptés / dettes notées                                                                                                                                                                                                                 |
-| ---------- | --- | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-07-14 | —   | —   | Étude rédigée (Opus 4.8), adossée à l'étude 18 livrée. État mesuré : 780 / 18 708 questions illustrées (4,2 %). Différence clé vs é18 : le rendu existe (SvgFigure), la difficulté est la détection par-question à l'échelle. Q-1…Q-4 ouvertes. |
+| date       | lot | PR  | écarts acceptés / dettes notées                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| ---------- | --- | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-07-14 | —   | —   | Étude rédigée (Opus 4.8), adossée à l'étude 18 livrée. État mesuré : 780 / 18 708 questions illustrées (4,2 %). Différence clé vs é18 : le rendu existe (SvgFigure), la difficulté est la détection par-question à l'échelle. Q-1…Q-4 ouvertes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| 2026-07-20 | —   | —   | **Validation — Q-1…Q-4 arbitrées** (Mohamed) → §7, sur les recommandations. Q-1 : SVG inline seul (D-5 = héritage de é18 D-8) + cadrage étude→lots, une PR par lot → le **lot 1 est ferme**. Q-2 : campagne bornée aux parcours prioritaires (concours d'abord, puis matières spatiales, **STOP** ailleurs), cible = « les questions spatiales des parcours prioritaires », pas « 18 708 » — c'est la mitigation de RISK-1. Q-3 : **vérification intégrale**, un lot > ~40 figures est **scindé, jamais échantillonné** — fixe le DoD de vérification des lots 2 et 3+. Q-4 : ordre des matières **délégué** au démarrage du lot 3, dans le cadre fixé par Q-2. Statut `brouillon` → `validée`. Aucun lot commencé. |

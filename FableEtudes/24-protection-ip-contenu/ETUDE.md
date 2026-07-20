@@ -1,6 +1,7 @@
 # Étude 24 — Protection de la propriété intellectuelle du contenu (licences + scission corpus privé), repo moteur public conservé
 
-> **Statut** : en exécution — Q-1/Q-2/Q-3/Q-5 arbitrées le 2026-07-19 (Q-4 reste ouverte, démarche humaine)
+> **Statut** : en exécution — Q-1/Q-2/Q-3/Q-5 arbitrées le 2026-07-19, les 4 écarts du lot 3b
+> arbitrés le 2026-07-20 (§9) (Q-4 reste ouverte, démarche humaine)
 > **Priorité** : 24 · **Valeur** : 🔒 le corpus corrigé (566 chapitres, ~18 700 questions avec
 > clés de réponse) et l'usine de génération (skills prof-\*, taxonomies) cessent d'être clonables
 > en un `git clone` — **sans perdre** les avantages gratuits du repo public (Actions illimitées,
@@ -31,8 +32,9 @@ code + corpus + corrigés + usine — en quelques heures avec son propre projet 
 Cas aggravant, indépendant de la concurrence : **les clés de réponse sont lisibles par les
 élèves**. L'app applique rigoureusement l'invariant « la clé ne quitte jamais le serveur »
 (`correct_option` et `distractor_tags` ne sont jamais envoyés au client), mais les mêmes clés
-sont mondialement lisibles sur github.com — dans les fichiers `content/` **et** dans 267 des
-345 migrations SQL. L'invariant anti-triche est respecté par l'app et annulé par le repo.
+sont mondialement lisibles sur github.com — dans les fichiers `content/` **et** dans la
+majorité des migrations SQL (245 sur 348 au 2026-07-20 : 228 générées + 17 écrites à la main).
+L'invariant anti-triche est respecté par l'app et annulé par le repo.
 
 **Nuance de cadrage honnête** : en phase gratuite, l'app elle-même montre les cours et les
 questions à tout visiteur (choix produit assumé, STATUS §1). Cette étude ne cherche donc pas à
@@ -44,7 +46,10 @@ attaquable**, pas métaphysiquement impossible.
 **Résultat attendu (KPI)** :
 
 - après exécution, un clone du repo public contient **0 question, 0 corrigé, 0 skill
-  pédagogique, 0 migration de contenu** (tip **et** historique si Q-2 = oui) ;
+  pédagogique, 0 migration de contenu générée** (tip **et** historique si Q-2 = oui) —
+  **exclusion explicite et nommée** : les **17 migrations de contenu écrites à la main**
+  restent au public (non reproductibles par l'émetteur, plusieurs seedent des données hors
+  contenu ; liste et motifs au §4.4) ;
 - la chaîne CI/automerge/déploiement/migrations du repo public reste **inchangée et verte**
   (Actions illimitées, CodeQL, ruleset intacts) ;
 - le flux de production de contenu (METHODE-GENERATION-CONTENU) fonctionne à friction
@@ -59,16 +64,16 @@ moteur reste public — c'est la contrainte posée), changer de stack/hébergeur
 
 ### 2.1 Actifs exposés dans le repo public
 
-| actif                                | où                                                                                         | volume                                                                | sensibilité                                                                                        |
-| ------------------------------------ | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Corpus pédagogique **avec corrigés** | `content/`                                                                                 | 36 Mo · 566 `cours.md` · 566 `quiz.json` · 2 713 fichiers d'exercices | **maximale** — clés de réponse, explications, `misconceptionTag` par distracteur                   |
-| Le même corpus **compilé en SQL**    | `supabase/migrations/`                                                                     | 267 fichiers sur 345 insèrent dans `questions`                        | **maximale** — `correct_option`, `distractor_tags`, `explanation` en clair (double exposition)     |
-| Usine de génération                  | `.claude/skills/` (`content-engine`, 12 `content-*`, ~25 `prof-*`, `curriculum-architect`) | 6,1 Mo                                                                | **maximale** — le savoir-faire qui permet de _régénérer_ un corpus concurrent, pas juste le copier |
-| Registres taxonomiques               | `content/misconceptions.json`, `content/competences/`, `content/videos.json`               | —                                                                     | haute — server-only à l'exécution, publics dans le repo                                            |
-| Études & stratégie produit           | `FableEtudes/` (23 études + METHODE)                                                       | 1,2 Mo                                                                | haute — arbitrages, roadmap, méthode complète                                                      |
-| Code applicatif & pipeline           | `src/`, `scripts/`                                                                         | —                                                                     | moyenne — générique, différenciation faible                                                        |
-| Marque                               | « Na9ra Nal3ab »                                                                           | —                                                                     | moyenne — aucune trace de dépôt (Q-4)                                                              |
-| Corpus sources CNP / go-live         | wrapper `YahiaAcademy/` **hors git**                                                       | —                                                                     | ✅ déjà hors exposition                                                                            |
+| actif                                | où                                                                                         | volume                                                                                                                                              | sensibilité                                                                                        |
+| ------------------------------------ | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Corpus pédagogique **avec corrigés** | `content/`                                                                                 | 36 Mo · 566 `cours.md` · 566 `quiz.json` · 2 713 fichiers d'exercices                                                                               | **maximale** — clés de réponse, explications, `misconceptionTag` par distracteur                   |
+| Le même corpus **compilé en SQL**    | `supabase/migrations/`                                                                     | 228 **générées** + 17 écrites à la main, sur 348 (instantané 2026-07-20 — population recomptée par `npm run db:inventory-content`, jamais recopiée) | **maximale** — `correct_option`, `distractor_tags`, `explanation` en clair (double exposition)     |
+| Usine de génération                  | `.claude/skills/` (`content-engine`, 12 `content-*`, ~25 `prof-*`, `curriculum-architect`) | 6,1 Mo                                                                                                                                              | **maximale** — le savoir-faire qui permet de _régénérer_ un corpus concurrent, pas juste le copier |
+| Registres taxonomiques               | `content/misconceptions.json`, `content/competences/`, `content/videos.json`               | —                                                                                                                                                   | haute — server-only à l'exécution, publics dans le repo                                            |
+| Études & stratégie produit           | `FableEtudes/` (23 études + METHODE)                                                       | 1,2 Mo                                                                                                                                              | haute — arbitrages, roadmap, méthode complète                                                      |
+| Code applicatif & pipeline           | `src/`, `scripts/`                                                                         | —                                                                                                                                                   | moyenne — générique, différenciation faible                                                        |
+| Marque                               | « Na9ra Nal3ab »                                                                           | —                                                                                                                                                   | moyenne — aucune trace de dépôt (Q-4)                                                              |
+| Corpus sources CNP / go-live         | wrapper `YahiaAcademy/` **hors git**                                                       | —                                                                                                                                                   | ✅ déjà hors exposition                                                                            |
 
 ### 2.2 Situation juridique actuelle
 
@@ -199,9 +204,11 @@ impossibles à rapatrier proprement, historique divergent).
   Prérequis : paramétrer le répertoire corpus (`--content-dir`, aujourd'hui `cwd()/content` en
   dur) — petit patch du moteur, rétro-compatible.
 - **D-5** — **Réécriture de l'historique public** (`git filter-repo`) pour purger le corpus,
-  les skills pédagogiques, les études et les 267 migrations de contenu du passé, précédée d'une
-  **archive miroir privée** (`yahia-quest-arena-archive`). Conditionnée à Q-2
-  (recommandation : oui — 0 fork, ~2 mois d'âge).
+  les skills pédagogiques, les études et les migrations de contenu **générées** du passé
+  (≈ 228 au 2026-07-20 — population recomptée par le script, §4.3 ; les 17 manuelles restent
+  au public et ne sont donc pas purgeables), précédée d'une **archive miroir privée**
+  (`yahia-quest-arena-archive`). Conditionnée à Q-2 (recommandation : oui — 0 fork,
+  ~2 mois d'âge).
 - **D-6** — Les registres (`misconceptions.json`, `competences/`, `videos.json`) suivent le
   corpus au privé ; les 2 tests unitaires du moteur qui les lisent basculent sur fixtures.
 - **D-7** — Marque et préconstitution de preuve (INNORPI, OTDAV) : piste **humaine** parallèle
@@ -211,17 +218,17 @@ impossibles à rapatrier proprement, historique divergent).
 
 ### 4.1 Répartition des artefacts
 
-| artefact                                                                                                       | repo                            | notes                                                                                      |
-| -------------------------------------------------------------------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------ |
-| `src/`, `scripts/` (dont `scripts/content/` — moteur générique), `e2e/`, `docs/`, CLAUDE/ARCHITECTURE/STATUS   | **public** `yahia-quest-arena`  | inchangé                                                                                   |
-| `supabase/migrations/` — **schéma + ops uniquement** (78 fichiers restants)                                    | **public**                      | les 267 migrations de contenu sont retirées (lot 3)                                        |
-| Skills techniques (`verify`, `code-review`, `regression-guard`, `upgrade-guard`, `report-triage`, …)           | **public**                      | inchangé                                                                                   |
-| Workflows CI/CD (moins `content-audit.yml`)                                                                    | **public**                      | `ci.yml` amaigri + **gate anti-fuite** (§4.4)                                              |
-| `content/` complet (registres inclus)                                                                          | **privé** `yahia-quest-content` | 36 Mo, arborescence inchangée                                                              |
-| `sql/content/<subject>.sql` **générés**                                                                        | **privé**                       | remplacent les migrations de contenu ; un fichier par sujet, régénéré en place             |
-| Skills pédagogiques (`content-engine`, `content-*`, `prof-*`, `curriculum-architect`, `content-ingest`, …)     | **privé**                       | déplacés sous `.claude/skills/` du privé                                                   |
-| `FableEtudes/` + `METHODE-GENERATION-CONTENU.md`                                                               | **privé** (Q-3)                 | reco : privé (stratégie) ; STATUS.md reste public (état produit, déjà public via l'app)    |
-| Workflows privés : `content-ci.yml`, `apply-content.yml` (prod), `apply-content-test.yml`, `content-audit.yml` | **privé**                       | secrets : `PROD_SUPABASE_DB_URL` (copie), URL DB du projet TEST, `CLAUDE_CODE_OAUTH_TOKEN` |
+| artefact                                                                                                       | repo                            | notes                                                                                                                                                                              |
+| -------------------------------------------------------------------------------------------------------------- | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/`, `scripts/` (dont `scripts/content/` — moteur générique), `e2e/`, `docs/`, CLAUDE/ARCHITECTURE/STATUS   | **public** `yahia-quest-arena`  | inchangé                                                                                                                                                                           |
+| `supabase/migrations/` — **schéma + ops + les 17 migrations de contenu manuelles**                             | **public**                      | seules les migrations **générées** sont retirées (lot 3b) ; population recomptée par `npm run db:inventory-content` — ≈ 228 générées / 17 manuelles / 103 schéma-ops au 2026-07-20 |
+| Skills techniques (`verify`, `code-review`, `regression-guard`, `upgrade-guard`, `report-triage`, …)           | **public**                      | inchangé                                                                                                                                                                           |
+| Workflows CI/CD (moins `content-audit.yml`)                                                                    | **public**                      | `ci.yml` amaigri + **gate anti-fuite** (§4.4)                                                                                                                                      |
+| `content/` complet (registres inclus)                                                                          | **privé** `yahia-quest-content` | 36 Mo, arborescence inchangée                                                                                                                                                      |
+| `sql/content/<subject>.sql` **générés**                                                                        | **privé**                       | remplacent les migrations de contenu ; un fichier par sujet, régénéré en place                                                                                                     |
+| Skills pédagogiques (`content-engine`, `content-*`, `prof-*`, `curriculum-architect`, `content-ingest`, …)     | **privé**                       | déplacés sous `.claude/skills/` du privé                                                                                                                                           |
+| `FableEtudes/` + `METHODE-GENERATION-CONTENU.md`                                                               | **privé** (Q-3)                 | reco : privé (stratégie) ; STATUS.md reste public (état produit, déjà public via l'app)                                                                                            |
+| Workflows privés : `content-ci.yml`, `apply-content.yml` (prod), `apply-content-test.yml`, `content-audit.yml` | **privé**                       | secrets : `PROD_SUPABASE_DB_URL` (copie), URL DB du projet TEST, `CLAUDE_CODE_OAUTH_TOKEN`                                                                                         |
 
 ### 4.2 Pipeline de contenu après scission (le fond du flux METHODE ne change pas)
 
@@ -250,26 +257,115 @@ auteur (session Claude ouverte sur le repo PRIVÉ, moteur public ajouté via add
   `id, applied_at, git_sha, subjects text[], actor` — le pendant du journal
   `supabase_migrations` que le contenu quitte.
 
-### 4.3 Nettoyage one-shot de l'historique de migrations prod (lot 3 — runbook)
+### 4.3 Nettoyage one-shot de l'historique de migrations prod (lot 3b — runbook)
 
-1. Inventorier les versions de contenu (script : migrations qui n'insèrent que dans
-   `subjects/chapters/exercises/questions` sans DDL) — attendu ≈ 267.
-2. `supabase migration repair --status reverted <versions>` sur prod : ne touche **que** la
-   table d'historique `supabase_migrations.schema_migrations` — les données de contenu en base
-   restent intactes.
-3. Retirer les fichiers correspondants du repo public (tip).
-4. Vérifier : `supabase db push --dry-run` (public) = clean ; `db-migrate-prod.yml` inchangé,
-   réconciliation horaire comprise.
-5. Répéter 1-4 sur le projet TEST **d'abord** (répétition générale), prod ensuite, fenêtre
+> Section réécrite le **2026-07-20** après arbitrage des 4 écarts relevés par l'exécuteur du
+> lot 3b (§9). Elle est normative : le lot 3b s'exécute **à la lettre**, dans cet ordre.
+
+**Critère d'inventaire — la provenance, pas la sémantique.** Le critère sémantique d'origine
+(« migrations qui n'insèrent que dans `subjects/chapters/exercises/questions` sans DDL »)
+sélectionne **zéro** migration : toutes les générées embarquent un garde de contrainte
+idempotent (`DO $$ … exercises_mode_check … END $$`), purgent `dungeon_run_questions` par
+cascade et écrivent `question_competencies` (sortie du compilateur, étude 07). Il est
+**remplacé définitivement** par le critère de **provenance** — le motif `_generated_*_content`,
+exactement l'ensemble que `content:emit` reproduit. Implémentation de référence, livrée au
+lot 3a : `scripts/db/inventory-content-migrations.mjs` (`npm run db:inventory-content`).
+
+**Les chiffres de cette étude sont un instantané daté, pas une constante** : 227 générées /
+17 manuelles / 102 schéma-ops au 2026-07-19, **228 / 17 / 103 au 2026-07-20**, et la population
+croît à chaque campagne de contenu. **Règle** : la liste passée à `--versions` se **régénère par
+le script au moment de l'exécution** — elle n'est **jamais** recopiée depuis cette étude, une PR
+ou un journal. Tout nombre cité ici est un ordre de grandeur daté, à usage de relecture seule.
+
+**Les 17 migrations de contenu écrites à la main restent dans le repo public.** Elles ne sont
+ni révocables en masse ni migrables vers le canal privé : l'émetteur ne les reproduit pas, et
+plusieurs seedent des données **hors contenu** que la révocation ferait silencieusement tomber
+de l'historique — `20260522170000_seed_content.sql` (aussi `badges`, `shop_items`),
+`20260605120000_themes_and_grades.sql` (`grades`, `themes`),
+`20260608120000_parcours_entity.sql` (`parcours`, `parcours_entitlements`, `profiles`).
+Conséquence normative : le **KPI §1** et le **gate anti-fuite du lot 4** (§4.4) les **excluent
+nommément** — sans cet amendement, le gate échouerait sur le tip que le lot 4 produit lui-même.
+
+**Garde de contrainte orpheline (`exercises_mode_check`) — la contrainte est reposée au
+public.** Le garde idempotent voyage avec le corpus vers le privé ; une base **fraîche**
+reconstruite depuis le seul repo public ne le porterait donc plus, alors que le pgTAP nightly
+rejoue tout sur base vierge. Décision : **une migration de schéma publique dédiée repose la
+contrainte** — livrable du lot 3b. Le repo public redevient **auto-suffisant** pour reconstruire
+le schéma et le nightly reste représentatif du schéma réel. Cette migration est un **no-op sur
+prod** (qui porte déjà la contrainte) et suit le canal `db-migrate-prod` habituel. Le garde côté
+canal contenu devient redondant mais reste inoffensif : **on ne le retire pas**.
+
+**Ordre des opérations — retrait des fichiers AVANT le `repair`.** Le seul canal sanctionné pour
+la prod (`db-migrate-prod.yml`, mode `repair-revert`) enchaîne `migration repair --status
+reverted` **puis `db push`** : exécuté dans l'ordre naïf « repair d'abord », le `db push`
+**ré-appliquerait** toutes les migrations générées et annulerait l'opération. Ce mode est conçu
+pour des _phantoms_ distants dont le fichier local a **déjà** disparu. D'où le runbook :
+
+1. **Inventorier** par le script (`npm run db:inventory-content`) et capturer la liste
+   `--versions` **du jour**. Aucune liste recopiée d'ailleurs.
+2. **Retirer du repo public les fichiers de migration générées — _d'abord_.** Dans la **même
+   PR**, parce qu'ils sont indissociables (cf. frontière 3b/4, §5) : retrait de `content/`, du
+   job `content` et des steps `content:check`/`qa:strict` de `ci.yml`, et pose de la migration
+   de schéma `exercises_mode_check`.
+3. **Dispatcher `db-migrate-prod.yml` en mode `repair-revert` — _ensuite_.** Le `repair --status
+reverted` purge l'historique distant des versions désormais absentes en local ; le `db push`
+   qui suit n'a plus rien à ré-appliquer. Aucune donnée de contenu n'est touchée : seule la
+   table d'historique `supabase_migrations.schema_migrations` change.
+4. **Vérifier** : `supabase db push --dry-run` (public) = clean ; réconciliation horaire de
+   `db-migrate-prod.yml` verte au cycle suivant ; pgTAP nightly vert (contrainte reposée).
+5. **Répéter 1-4 sur le projet TEST _d'abord_** (répétition générale), prod ensuite, fenêtre
    calme, backup `pg_dump` frais.
+
+**Fenêtre de bruit — attendue, courte, surveillée, annoncée.** Entre le merge qui retire les
+fichiers (2) et le dispatch manuel (3), `db-migrate-prod.yml` — déclenché sur push touchant
+`supabase/migrations/**` **et** par le cron horaire de réconciliation (`7 * * * *`) —
+**échouera** sur « Remote migration versions not found in local migrations directory » et
+**ouvrira des issues de suivi**. Ce bruit est **attendu** : ce n'est pas un incident et il ne
+doit pas déclencher de remédiation réflexe. Contreparties obligatoires : annoncer la fenêtre
+**avant** le merge, la tenir la plus courte possible (dispatcher dans la foulée), la surveiller,
+refermer les issues ouvertes pendant, et **bloquer toute autre migration de schéma pendante**
+pour toute sa durée.
+
+**Réversibilité** : ré-insérer les versions dans l'historique (`repair --status applied`) et
+restaurer les fichiers depuis le commit parent (ou l'archive miroir).
 
 ### 4.4 Adaptations du repo public (lot 4)
 
-- `ci.yml` : retirer le job `content` et les steps `content:check`/`qa:strict` du job
-  principal ; ajouter un **gate anti-fuite** — step qui **échoue** si le tip contient
-  `content/**`, `sql/content/**`, un skill `content-*`/`prof-*`, ou une migration insérant dans
-  `questions` (protège contre une future session qui re-commiterait du corpus au public par
-  réflexe).
+- `ci.yml` : le retrait du job `content` et des steps `content:check`/`qa:strict` a **migré au
+  lot 3b** — il est indissociable du retrait des fichiers (frontière 3b/4, §4.3-2 et §5). Reste
+  au lot 4 le **gate anti-fuite** — step qui **échoue** si le tip contient `content/**`,
+  `sql/content/**`, un skill `content-*`/`prof-*`, ou une migration de contenu **générée**
+  (critère de provenance `_generated_*_content`, le même que l'inventaire §4.3) — il protège
+  contre une future session qui re-commiterait du corpus au public par réflexe.
+- **Liste d'exclusion du gate — et du KPI §1 : les 17 migrations de contenu écrites à la
+  main.** Elles restent au public (§4.3) et ne doivent **jamais** faire échouer le gate ; sans
+  cette exclusion, le gate échouerait sur le tip que le lot 4 produit lui-même. Motif commun :
+  non reproductibles par `content:emit`. Motif aggravant, marqué **(+)** : seedent aussi des
+  données **hors contenu**, que révoquer ferait tomber silencieusement de l'historique.
+  - `20260522170000_seed_content.sql` **(+ `badges`, `shop_items`)**
+  - `20260526180000_arabic_statistics_content.sql`
+  - `20260526190000_lesson_content_all_chapters.sql`
+  - `20260526200000_complete_math_program.sql`
+  - `20260526210000_french_complete_content.sql`
+  - `20260526211000_french_titles_resume.sql`
+  - `20260526240000_french_extended_quizzes.sql`
+  - `20260601120000_rebalance_question_option_positions.sql`
+  - `20260604130000_fix_french_passive_explanation.sql`
+  - `20260604140000_content_quality_pass_delta.sql`
+  - `20260604150000_vague2_comprehension_production.sql`
+  - `20260604170000_vague4_annales.sql`
+  - `20260604180000_vague5_annales_physique_frmastery.sql`
+  - `20260604190000_vague6_densification.sql`
+  - `20260605120000_themes_and_grades.sql` **(+ `grades`, `themes`)**
+  - `20260608120000_parcours_entity.sql` **(+ `parcours`, `parcours_entitlements`, `profiles`)**
+  - `20260622120000_fix_subject_titles_arabic.sql`
+
+  La liste est **fermée** (aucune nouvelle migration de contenu manuelle n'a de raison d'être
+  écrite : le canal est `content:emit`) — l'implémenter en dur dans le gate est donc correct.
+  Conséquence assumée : les clés de réponse portées par ces 17 fichiers restent lisibles au
+  public et le lot 5 ne les purge pas — résiduel de même nature que RISK-2, borné à la période
+  mai-juin 2026.
+
 - Tests : fixtures pour les 2 tests registres (D-6) ; le reste du harnais de tests du moteur
   utilise déjà des fixtures temporaires.
 - Docs : CLAUDE.md (section « Content pipeline » réécrite : le corpus est privé, le moteur est
@@ -292,14 +388,14 @@ auteur (session Claude ouverte sur le repo PRIVÉ, moteur public ajouté via add
 
 ## 5. Plan d'exécution en lots
 
-| lot | contenu (résumé)                            | fichiers/objets créés                                                                                                  | tests exigés                                                              | dépend de  |
-| --- | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ---------- |
-| 1   | Armement juridique (public, 1 PR, immédiat) | `LICENSE.md`, `LICENSE-CONTENT.md`, notices README/content/FableEtudes, § cession CONTRIBUER.md, `package.json`        | gate verte (docs only) ; vérif © footer app (i18n ×3 si ajouté)           | Q-1        |
-| 2   | Repo privé + CI contenu                     | repo `yahia-quest-content`, copie corpus+skills(+études Q-3), CLAUDE.md privé, `content-ci.yml`, patch `--content-dir` | `content:check`/`qa:strict`/`audit:strict` verts au privé sur corpus réel | lot 1, Q-3 |
-| 3   | Découplage SQL contenu + prod               | émetteur → `sql/content/`, `apply-content.yml`, `apply-content-test.yml`, table `content_releases`, runbook §4.3       | répétition TEST verte, dry-run public clean, apply prod no-op vérifié     | lot 2      |
-| 4   | Dégraissage du public                       | retrait tip : `content/`, skills pédago, études (Q-3), 267 migrations ; `ci.yml` + gate anti-fuite ; fixtures ; docs   | `npm run ci:verify` vert SANS corpus ; smoke:shell vert                   | lot 3      |
-| 5   | Purge de l'historique public (si Q-2 = oui) | archive miroir privée, exécution `git filter-repo`, force-push, re-tags, runbook post-op                               | PR témoin automerge verte, Vercel OK, `db-migrate` no-op, CI verte        | lot 4, Q-2 |
-| 6   | E2E + régularisation                        | apply contenu TEST, vérif tier auth, STATUS.md § décisions (journal daté), index études                                | nightly verte 2 nuits consécutives                                        | lot 3      |
+| lot | contenu (résumé)                            | fichiers/objets créés                                                                                                                                                                                                                  | tests exigés                                                                                                              | dépend de  |
+| --- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| 1   | Armement juridique (public, 1 PR, immédiat) | `LICENSE.md`, `LICENSE-CONTENT.md`, notices README/content/FableEtudes, § cession CONTRIBUER.md, `package.json`                                                                                                                        | gate verte (docs only) ; vérif © footer app (i18n ×3 si ajouté)                                                           | Q-1        |
+| 2   | Repo privé + CI contenu                     | repo `yahia-quest-content`, copie corpus+skills(+études Q-3), CLAUDE.md privé, `content-ci.yml`, patch `--content-dir`                                                                                                                 | `content:check`/`qa:strict`/`audit:strict` verts au privé sur corpus réel                                                 | lot 1, Q-3 |
+| 3   | Découplage SQL contenu + prod               | **3a** émetteur → `sql/content/`, inventaire, `content_releases`, workflows privés · **3b** retrait tip des migrations **générées** + `content/` + job `content` de `ci.yml`, migration de schéma `exercises_mode_check`, runbook §4.3 | répétition TEST verte, dry-run public clean, `repair-revert` prod passé, réconciliation horaire verte, pgTAP nightly vert | lot 2      |
+| 4   | Dégraissage du public (reste)               | retrait tip : skills pédago, études (Q-3) ; **gate anti-fuite** + liste d'exclusion des 17 (§4.4) ; fixtures registres ; docs                                                                                                          | `npm run ci:verify` vert SANS corpus ; smoke:shell vert ; gate testé par PR d'essai (doit échouer)                        | lot 3b     |
+| 5   | Purge de l'historique public (si Q-2 = oui) | archive miroir privée, exécution `git filter-repo`, force-push, re-tags, runbook post-op                                                                                                                                               | PR témoin automerge verte, Vercel OK, `db-migrate` no-op, CI verte                                                        | lot 4, Q-2 |
+| 6   | E2E + régularisation                        | apply contenu TEST, vérif tier auth, STATUS.md § décisions (journal daté), index études                                                                                                                                                | nightly verte 2 nuits consécutives                                                                                        | lot 3      |
 
 Détail et stop-points :
 
@@ -315,11 +411,21 @@ Détail et stop-points :
   jamais casser la CI publique). Critère d'acceptation : les trois gates contenu passent au
   privé contre le corpus réel via le moteur public checkouté. Stop-point : ne pas toucher à
   la prod ni aux migrations.
-- **Lot 3** — LE lot délicat (prod). Suivre §4.3 : TEST d'abord, backup, fenêtre calme, PR
-  avec runbook exécuté pas à pas. Réversibilité : ré-insérer les versions dans l'historique
-  (`repair --status applied`) et restaurer les fichiers depuis l'archive.
-- **Lot 4** — après ce lot, le clone public est « propre » au tip. Le gate anti-fuite est
-  obligatoire dans la même PR (il protège l'état qu'elle crée).
+- **Lot 3** — LE lot délicat (prod). **3a livré** : outillage et canal, zéro opération sur une
+  base. **3b** : suivre §4.3 **à la lettre** — inventaire régénéré par le script, **retrait des
+  fichiers d'abord**, dispatch `repair-revert` **ensuite**, TEST avant prod, backup, fenêtre
+  calme, PR portant le runbook exécuté pas à pas. **Frontière 3b/4 déplacée (2026-07-20)** : le
+  retrait de `content/` et du job `content` de `ci.yml` appartient au **3b**, pas au 4 — les
+  laisser vivre pendant que les migrations générées disparaissent casse `content:check`, donc
+  PR rouge, donc non mergeable sous `main-protection`, donc l'ordre corrigé serait lui-même
+  inapplicable. Livrable supplémentaire du 3b : la migration de schéma qui repose
+  `exercises_mode_check`. La fenêtre de bruit `db-migrate-prod` (§4.3) est **annoncée avant le
+  merge** et aucune autre migration de schéma ne circule pendant. Réversibilité :
+  `repair --status applied` + restauration des fichiers depuis le commit parent ou l'archive.
+- **Lot 4** — à la sortie du 3b, le tip est déjà sans corpus ni migration générée ; le lot 4
+  **achève** le dégraissage (skills pédagogiques, études Q-3), pose le **gate anti-fuite** avec
+  sa liste d'exclusion des 17 manuelles (§4.4) et régularise fixtures et docs. Le gate est
+  obligatoire dans la même PR que le dernier retrait (il protège l'état qu'elle crée).
 - **Lot 5** — uniquement si Q-2 = oui. Archive miroir **avant tout** ; prévenir que tous les
   clones locaux/sessions doivent re-cloner ; re-taguer le tip (release-tagging-policy) ;
   demander à GitHub Support la purge des vues en cache (les objets orphelins peuvent rester
@@ -333,9 +439,11 @@ Cases à cocher :
 - [x] Lot 2 — repo privé + CI contenu — livré le 2026-07-19
 - [ ] Lot 3 — découplage SQL contenu + nettoyage historique migrations
       → **3a livré le 2026-07-19** (outillage & canal, zéro prod : émetteur, inventaire,
-      `content_releases`, workflows privés désarmés) · **3b** (runbook §4.3 : TEST puis prod)
-      **bloqué** tant que les 4 écarts du journal ne sont pas arbitrés
-- [ ] Lot 4 — dégraissage du repo public + gate anti-fuite
+      `content_releases`, workflows privés désarmés) · **3b débloqué le 2026-07-20** par
+      l'arbitrage des 4 écarts (§9) — **exécutable** selon le runbook §4.3 corrigé (retrait des
+      fichiers d'abord, `repair-revert` ensuite ; TEST puis prod), périmètre élargi au retrait
+      de `content/` + du job `content` de `ci.yml` et à la migration `exercises_mode_check`
+- [ ] Lot 4 — fin du dégraissage public + gate anti-fuite (avec exclusion des 17, §4.4)
 - [ ] Lot 5 — purge de l'historique public (si Q-2)
 - [ ] Lot 6 — e2e TEST + régularisation documentaire
 
@@ -471,3 +579,45 @@ Cases à cocher :
   le secret `CLAUDE_CODE_OAUTH_TOKEN`, recommandé au lot 4). Critère d'acceptation : run
   « Content CI » #1 vert sur le corpus réel. Règle de transition active : le contenu s'édite
   encore au public, le privé est un miroir jusqu'au lot 4.
+- **2026-07-20 — Arbitrage des 4 écarts (Mohamed).** Les quatre écarts du STOP du 2026-07-19
+  sont tranchés, le §4.3 est réécrit en conséquence : **le lot 3b cesse d'être bloqué et
+  redevient exécutable**. Corollaire de la décision 4 : la règle de transition ci-dessus se lit
+  désormais « le privé est un miroir jusqu'au **lot 3b** » (c'est lui qui retire `content/` du
+  public). Sections corrigées : §1 (KPI), §2.1, §3 (D-5), §4.1, **§4.3 (réécriture)**, §4.4,
+  §5 (tableau, détails lots 3/4, cases à cocher).
+  1. **Volumétrie & critère d'inventaire — ratifiés.** Le critère de **provenance**
+     (`_generated_*_content`, exactement l'ensemble que `content:emit` reproduit) **remplace
+     définitivement** le critère sémantique du §4.3-1, qui sélectionnait zéro migration ;
+     `scripts/db/inventory-content-migrations.mjs` (`npm run db:inventory-content`, livré au
+     lot 3a) en est l'implémentation de référence. Les chiffres de l'étude sont un **instantané
+     daté** — 227/17/102 au 2026-07-19, **228/17/103 au 2026-07-20** — et non une constante :
+     la liste `--versions` se **régénère par le script au moment de l'exécution**, jamais
+     recopiée. Les nombres figés ont été remplacés par la population correcte (générées =
+     révocables) + renvoi au script aux §1, §2.1, §3 (D-5), §4.1, §4.3 et §5.
+  2. **Les 17 migrations de contenu écrites à la main restent au public.** Ni révocables en
+     masse ni migrables : l'émetteur ne les reproduit pas, et trois d'entre elles seedent des
+     données hors contenu (`badges`/`shop_items` ; `grades`/`themes` ;
+     `parcours`/`parcours_entitlements`/`profiles`) que la révocation ferait silencieusement
+     tomber de l'historique. **Amendement obligatoire** : le KPI §1 devient « 0 migration de
+     contenu **générée** » et le **gate anti-fuite du lot 4 les exclut nommément** (liste des
+     17 au §4.4) — sans quoi le gate échouerait sur le tip que le lot 4 produit lui-même, la
+     contradiction interne relevée par l'exécuteur.
+  3. **Garde de contrainte orpheline — branche (a).** `exercises_mode_check` est **reposée dans
+     une migration de schéma publique dédiée**, livrable du lot 3b : le repo public redevient
+     **auto-suffisant** pour reconstruire le schéma et le pgTAP nightly, qui rejoue tout sur
+     base vierge, reste représentatif du schéma réel. No-op sur prod (qui porte déjà la
+     contrainte), canal `db-migrate-prod` habituel. Le garde idempotent côté contenu devient
+     redondant mais reste inoffensif — **pas de retrait demandé**.
+  4. **Ordre repair-revert inversé + frontière 3b/4 déplacée.** Runbook corrigé : inventaire
+     par le script → **retrait des fichiers de migration générées d'abord** → dispatch
+     `repair-revert` **ensuite**. Motif : ce mode enchaîne `repair --status reverted` **puis
+     `db push`** — dans l'ordre original, le push ré-appliquerait toutes les migrations
+     générées et annulerait l'opération ; le mode vise des _phantoms_ distants dont le fichier
+     local a déjà disparu. Le **dégraissage remonte dans la PR du lot 3b** (retrait de
+     `content/` + du job `content` de `ci.yml`) : les retirer plus tard casserait
+     `content:check` → PR rouge → non mergeable sous `main-protection` → ordre corrigé
+     inapplicable. **Fenêtre de bruit attendue et annoncée** entre le merge et le dispatch :
+     `db-migrate-prod.yml` (push sur `supabase/migrations/**` **et** cron de réconciliation
+     `7 * * * *`) échouera sur « Remote migration versions not found in local migrations
+     directory » et ouvrira des issues de suivi — fenêtre courte, surveillée, annoncée, toute
+     autre migration de schéma bloquée pendant sa durée.
