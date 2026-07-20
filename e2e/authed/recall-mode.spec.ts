@@ -19,7 +19,10 @@ test.describe("Active recall (étude 17)", () => {
     test.setTimeout(120_000);
 
     const seed = await adminDb.recallReadyExercise();
-    test.skip(seed === null, "No recall-eligible mission in the test catalogue.");
+    expect(
+      seed,
+      `recall-eligible mission missing — run \`npm run e2e:seed-content\``,
+    ).not.toBeNull();
     const { subjectId, exerciseId, answerKey } = seed!;
     const userId = await adminDb.userIdByEmail(TEST_USERS.free.email);
 

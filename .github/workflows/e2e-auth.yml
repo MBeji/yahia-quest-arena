@@ -11,7 +11,11 @@ name: E2E (authenticated)
 #   TEST_SUPABASE_SERVICE_ROLE_KEY   – its service-role key (for seeding/reset)
 #   E2E_USER_PASSWORD                – password for the seeded test accounts
 #
-# Prereq: run all DB migrations + content on the test project once.
+# Prereq: when TEST_SUPABASE_DB_URL is set, this workflow self-provisions the
+# schema (migrations) and the e2e fixture catalogue; otherwise apply the
+# migrations once by hand. Either way the fixture step below (npm run
+# e2e:seed-content) reseeds the question-type/family coverage the suite needs —
+# the pedagogical corpus no longer travels in migrations (étude 24, #544).
 
 on:
   workflow_call:
@@ -59,7 +63,8 @@ jobs:
             echo "configured=true" >> "$GITHUB_OUTPUT"
           fi
           # Optional: if a DB connection string is provided, this workflow can
-          # self-provision the TEST schema + content (otherwise it's a prereq).
+          # self-provision the TEST schema via migrations (otherwise it's a
+          # prereq). The e2e fixture content is always (re)seeded below.
           if [ -z "${{ secrets.TEST_SUPABASE_DB_URL }}" ]; then
             echo "has_db_url=false" >> "$GITHUB_OUTPUT"
           else
@@ -106,8 +111,9 @@ jobs:
         if: steps.guard.outputs.configured == 'true'
         run: npx playwright install --with-deps chromium
 
-      # Self-provision the TEST database (schema + generated content) when a DB
-      # connection string is available. Idempotent — only pushes new migrations.
+      # Self-provision the TEST database SCHEMA (migrations only — the corpus left
+      # the repo in étude 24) when a DB connection string is available. Idempotent
+      # — only pushes new migrations. Fixture content is seeded in the next step.
       - name: Set up Supabase CLI
         if: steps.guard.outputs.configured == 'true' && steps.guard.outputs.has_db_url == 'true'
         uses: supabase/setup-cli@3c2f5e2ae34c34e428e8e206e2c4d21fa2d20fbf # v2
@@ -119,11 +125,23 @@ jobs:
       # Goes through the e2e script (not raw `supabase db push`) so the DB URL is
       # normalized first: a raw password with special characters used to fail with
       # "invalid userinfo". The script also re-checks the prod-ref safety net.
-      - name: Apply migrations + content to TEST project
+      - name: Apply migrations (schema) to TEST project
         if: steps.guard.outputs.configured == 'true' && steps.guard.outputs.has_db_url == 'true'
         env:
           TEST_SUPABASE_DB_URL: ${{ secrets.TEST_SUPABASE_DB_URL }}
         run: npm run e2e:db:push
+
+      # Seed the committed e2e fixture catalogue (every question type + the
+      # non-school families the suite covers). Runs on service-role, needs only
+      # the schema — so it runs in BOTH provisioning modes (self-provisioned or
+      # pre-applied). Without it, catalogue-coverage.spec.ts fails loudly rather
+      # than letting a thin catalogue masquerade as a green suite.
+      - name: Seed e2e fixture content
+        if: steps.guard.outputs.configured == 'true'
+        env:
+          SUPABASE_URL: ${{ env.TEST_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.TEST_SUPABASE_SERVICE_ROLE_KEY }}
+        run: npm run e2e:seed-content
 
       - name: Seed test users
         if: steps.guard.outputs.configured == 'true'

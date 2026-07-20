@@ -10,7 +10,9 @@ import { PracticePage } from "../pages/public-practice.page";
  * arrows works, and the run completes to a result screen (R-3: never a
  * crashed session).
  *
- * Skips cleanly while the TEST catalogue has no board mission yet.
+ * The board mission is reproducible from the committed e2e fixtures
+ * (scripts/e2e/seed-fixture-content.mjs); a missing one is a LOUD failure, not a
+ * silent skip (see e2e/public-anon/catalogue-coverage.spec.ts).
  */
 test.describe("Native question types (B2 — ordering/matching)", () => {
   test("a board mission renders, rearranges via arrows and completes anonymously", async ({
@@ -18,7 +20,10 @@ test.describe("Native question types (B2 — ordering/matching)", () => {
     adminDb,
   }) => {
     const exerciseId = await adminDb.boardExerciseId();
-    test.skip(!exerciseId, "No board mission in the TEST catalogue yet (lot B2.4 seeds one).");
+    expect(
+      exerciseId,
+      `ordering/matching mission missing — run \`npm run e2e:seed-content\``,
+    ).toBeTruthy();
 
     const practice = new PracticePage(page);
     await practice.goto(exerciseId!);
