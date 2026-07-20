@@ -245,7 +245,10 @@ export const en: TranslationKeys = {
   dungeon: {
     heroesHall: "Heroes Hall",
     title: "The Infinite Dungeon",
-    desc: "Descend floor by floor. Questions from all subjects, increasingly difficult. One wrong answer and it's over. How deep can you go?",
+    desc: "Descend floor by floor. Questions come from your class, increasingly difficult. One wrong answer and it's over. How deep can you go?",
+    poolGrade: "Questions from your class",
+    poolCycle: "Questions from your cycle",
+    poolAll: "Questions from the whole catalogue",
     xpPerFloor: "XP / floor",
     coinsPerFloors: "Coins / 5 floors",
     life: "Life",

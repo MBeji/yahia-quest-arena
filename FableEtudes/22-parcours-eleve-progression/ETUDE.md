@@ -1,7 +1,7 @@
 # Étude 22 — Parcours élève & progression pédagogique (doctrine de navigation, déblocage, cohortes)
 
 > **Statut** : en exécution — Q-1…Q-5 arbitrées le 2026-07-18 par Mohamed, toutes sur les
-> recommandations (§7) ; **lots 1 et 2 livrés le 2026-07-20**, lots 3–6 exécutables
+> recommandations (§7) ; **lots 1, 2 et 5 livrés le 2026-07-20**, lots 3, 4 et 6 exécutables
 > **Priorité** : 22 · **Valeur** : un parcours élève cohérent, lisible et motivant — la doctrine
 > unique qui répond à « qu'est-ce qui est ouvert, qu'est-ce qui est verrouillé, et pourquoi » ·
 > **Complexité** : moyenne
@@ -529,7 +529,7 @@ cycle/all — mesure la profondeur réelle des pools) ; `leaderboard.grade_tab_v
 - [x] Lot 2 — Boucle SM-2 refermée
 - [ ] Lot 3 — Rentrée & copy d'ancrage
 - [ ] Lot 4 — Cohorte de classe
-- [ ] Lot 5 — Donjon scopé au parcours
+- [x] Lot 5 — Donjon scopé au parcours
 - [ ] Lot 6 — Prochaine action unifiée + hygiène
 
 Chaque lot : périmètre fermé ci-dessus, critères d'acceptation = les R-x référencées, DoD
@@ -672,6 +672,36 @@ d'ordonnancement à l'index FableEtudes, pas un lot de cette étude.
   et les lignes closes le restent · l'échec planifie toujours les paliers 1/3/7 jours. La
   non-régression du bouclier de re-tentative reste couverte par `04_scoring_submit_attempt`
   (CASE 4), qui s'exécute contre la RPC remplacée.
+
+- **2026-07-20 — Lot 5 (donjon scopé, R-25).** `get_dungeon_questions` tirait dans le
+  **catalogue entier**, filtré sur la seule difficulté du palier : un élève de primaire pouvait
+  recevoir des questions de bac en pleine arène. Le pool est désormais celui du parcours actif
+  (résolu serveur, comme `match_duel`), avec les deux replis de profondeur de R-25 — `< 60`
+  questions éligibles → cycle, `< 30` → catalogue. Le niveau servi remonte en `poolScope`
+  (`grade|cycle|all`), l'arène l'affiche (R-30) et le client l'émet en `dungeon_pool_scope`.
+  Migration `20260720190000_dungeon_scoped_to_parcours` ; `get_dungeon_access` **non touchée**
+  (stop-point respecté).
+  **Deux écarts assumés, tous deux resserrant le pool :**
+  (i) le cycle est lu dans **`grades.cycle`**, qui existe déjà en base, au lieu d'être re-dérivé
+  de plages de `display_order` comme le §3 le proposait — re-dériver aurait dupliqué une vérité
+  déjà stockée et cassé silencieusement au premier `display_order` déplacé ;
+  (ii) le pool exclut désormais **`source = 'parent'`** en plus des quiz. La fonction est
+  `SECURITY DEFINER`, donc elle contourne la RLS d'`exercises` qui réserve les missions
+  familiales à leur auteur, à l'élève ciblé et à son parent : **une mission qu'un parent
+  écrivait pour son enfant pouvait être tirée dans le donjon de n'importe quel autre élève.**
+  C'est une fuite préexistante, corrigée ici parce que le lot réécrit précisément cette requête.
+  **Copie du lobby corrigée** : « Questions de toutes les matières » était devenu faux — c'est
+  l'annonce même que R-25 invalide (fr/en/ar).
+  **Tests** : `supabase/tests/32_dungeon_pool_scope.test.sql` (8 assertions). Fixtures isolées
+  dans un **thème dédié** : la base de test applique toutes les migrations, corpus compris, donc
+  des grades sous `ecole-tn` auraient partagé leur cycle avec les vraies classes et franchi les
+  seuils pour de mauvaises raisons. L'exclusion quiz/parent est vérifiée par le **compteur de
+  scope** (59 admin + 20 exclus : 59 < 60 → `cycle` ; sans exclusion, 79 → `grade`) plutôt que
+  par un tirage aléatoire, qui aurait été flaky.
+  **Dette notée** : le scope est recalculé **à chaque lot** sur les questions non encore
+  assignées dans la run, donc une run profonde élargit naturellement son pool. C'est conforme à
+  la lettre de R-25 (« questions distinctes non vues ») mais mérite d'être confirmé au vu des
+  premières mesures de `dungeon_pool_scope`.
 
 _(à remplir par l'exécuteur, lot par lot : date, lot, PR, écarts acceptés, dettes notées)_
 

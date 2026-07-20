@@ -247,7 +247,10 @@ export const fr: TranslationKeys = {
   dungeon: {
     heroesHall: "Hall des Héros",
     title: "Le Donjon Infini",
-    desc: "Descends étage par étage. Questions de toutes les matières, de plus en plus difficiles. Une mauvaise réponse et c'est fini. Jusqu'où peux-tu aller ?",
+    desc: "Descends étage par étage. Les questions viennent de ta classe, de plus en plus difficiles. Une mauvaise réponse et c'est fini. Jusqu'où peux-tu aller ?",
+    poolGrade: "Questions de ta classe",
+    poolCycle: "Questions de ton cycle",
+    poolAll: "Questions de tout le catalogue",
     xpPerFloor: "XP / étage",
     coinsPerFloors: "Pièces / 5 étages",
     life: "Vie",
