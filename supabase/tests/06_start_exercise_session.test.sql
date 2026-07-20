@@ -19,6 +19,12 @@
 -- skipped) — the minimal setup that reaches the INSERT ... RETURNING. Rolls back.
 -- =========================================================
 
+-- Espace de noms des fixtures : le prefixe `7e57…` est reserve aux tests et n'apparait
+-- dans aucune migration. Ces ids ont ete deplaces le 2026-07-20 : ils entraient en
+-- collision avec des lignes de contenu HERITEES que les migrations generees effacaient
+-- autrefois par leur prune par matiere. Ces migrations ayant quitte le repo public
+-- (etude 24 lot 4), les lignes heritees survivent sur une base fraiche et la fixture
+-- se cognait dedans (duplicate key).
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
 SELECT plan(3);
@@ -32,11 +38,11 @@ INSERT INTO public.subjects (id, name_fr, attribute, color_token, icon, theme_id
 VALUES ('start-sess-subj', 'Start Session Subject', 'Esprit', 'subject-math', 'Brain', 'start-sess-theme');
 
 INSERT INTO public.chapters (id, subject_id, title)
-VALUES ('c5000000-0000-0000-0000-000000000001', 'start-sess-subj', 'Start Session Chapter');
+VALUES ('7e570601-0000-0000-0000-000000000001', 'start-sess-subj', 'Start Session Chapter');
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, xp_reward, reward_coins, mode)
 VALUES ('c6000000-0000-0000-0000-000000000001',
-        'c5000000-0000-0000-0000-000000000001', 'start-sess-subj',
+        '7e570601-0000-0000-0000-000000000001', 'start-sess-subj',
         'Start Session Exercise', 100, 20, 'practice');
 
 INSERT INTO auth.users (id, email)
