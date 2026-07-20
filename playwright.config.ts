@@ -97,6 +97,14 @@ export default defineConfig({
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
+    // Play the app in its reduced-motion register. Not a test crutch: it is a
+    // real, shipped accessibility path — `useReducedMotion()` (motion/react)
+    // makes `questionSlide` return `{ initial: false }`, so a question mounts
+    // in place instead of sliding for 0.3s. Without it Playwright's
+    // actionability check keeps reporting "element is not stable" while a
+    // question animates in, and every click into a freshly-mounted question is
+    // a coin toss — the flake behind the public-anon timeouts.
+    reducedMotion: "reduce",
   },
   projects: [
     // ---- Public (no backend) ----
