@@ -39,9 +39,13 @@ export class PracticePage {
   get score(): Locator {
     return this.page.getByTestId("quest-score");
   }
-  /** The "Question X / Y" counter — changes exactly when the run advances. */
-  get progressCounter(): Locator {
-    return this.page.getByTestId("quest-progress");
+  /**
+   * The animated question card. Its `data-question-id` is the ONLY honest
+   * "which question am I on" signal: the visible counter sits outside
+   * AnimatePresence and flips ~400ms before the card is actually swapped.
+   */
+  get questionCard(): Locator {
+    return this.page.locator("[data-question-id]");
   }
   /** End-of-run account invitation shown to an anonymous visitor. */
   get accountInvite(): Locator {
@@ -74,20 +78,26 @@ export class PracticePage {
   }
 
   /**
-   * Submit the current question and wait for a REAL transition — the counter
-   * changing (next question mounted) or the result screen. Replaces a fixed
-   * sleep, which raced `submit_exercise_attempt` (200–800 ms from a CI runner)
-   * and let the loop act on a question that was already answered.
+   * Submit the current question and wait until the CARD is really swapped (or
+   * the result screen shows). Gating on the visible counter was not enough:
+   * `setIdx` flips it in ~16ms whereas AnimatePresence only replaces the card
+   * after its 0.3s exit. In that ~400ms window the outgoing question is still
+   * mounted and fully interactive, so a loop would read its already-ticked
+   * checkbox (and skip answering), assert on its already-enabled submit, then
+   * click a button that detaches under it — after which the REAL question sits
+   * unanswered and its submit stays disabled until the test times out.
+   * `mode="wait"` keeps exactly one card mounted, so a strict locator never
+   * flags the ambiguity: it silently resolves the stale node.
    */
   async submitAndSettle(): Promise<void> {
-    const before = await this.progressCounter.textContent().catch(() => null);
+    const before = await this.questionCard.getAttribute("data-question-id").catch(() => null);
     await this.submitButton.click();
     await expect
       .poll(
         async () => {
           if (await this.score.isVisible().catch(() => false)) return "settled";
-          const now = await this.progressCounter.textContent().catch(() => null);
-          return now === before ? "pending" : "settled";
+          const now = await this.questionCard.getAttribute("data-question-id").catch(() => null);
+          return now === null || now === before ? "pending" : "settled";
         },
         { timeout: 15_000 },
       )
