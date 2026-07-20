@@ -268,7 +268,11 @@ export function SubjectHub({
               }
             : !unlocked
               ? {
-                  cls: "bg-[color:var(--flame)]/12 text-[color:var(--flame)]",
+                  // Opaque card surface + flame BORDER rather than a flame tint
+                  // behind flame ink: at 11px bold the tinted variant measured
+                  // 3.36:1 (#e54a00 on #fce9e0) under Référence and failed WCAG
+                  // AA. Same remedy as the leaderboard "Toi" pill (GAP-047).
+                  cls: "border border-[color:var(--flame)]/40 bg-card text-foreground",
                   text: `🔒 ${t.public.subject.quizToPass}`,
                 }
               : done > 0
@@ -344,7 +348,11 @@ export function SubjectHub({
                           return (
                             <li
                               key={ex.id}
-                              className="flex items-center gap-2 py-2.5 text-sm text-muted-foreground/60"
+                              // No opacity modifier on muted-foreground: the token
+                              // IS the muted step already, and diluting it drove
+                              // 14px body text to 2.66:1 on white (WCAG AA needs
+                              // 4.5:1). Locked rows read "muted" via the padlock.
+                              className="flex items-center gap-2 py-2.5 text-sm text-muted-foreground"
                             >
                               <Lock className="h-3.5 w-3.5 shrink-0" />
                               {title}
@@ -462,12 +470,14 @@ function RecallMissionRow({
     const hint = isAuthenticated ? t.quest.recallLockedHint : t.quest.recallLockedHintAnon;
     return (
       <div
-        className="flex items-center gap-2 border-t border-dashed border-border/50 py-2.5 text-sm text-muted-foreground/70"
+        // Undiluted muted-foreground — see the locked-mission row above: stacking
+        // an opacity modifier on the muted token fails WCAG AA on white.
+        className="flex items-center gap-2 border-t border-dashed border-border/50 py-2.5 text-sm text-muted-foreground"
         data-testid="recall-chip-locked"
       >
         <Lock className="h-4 w-4 shrink-0" />
         {label}
-        <span className="shrink-0 text-xs text-muted-foreground/60">{hint}</span>
+        <span className="shrink-0 text-xs text-muted-foreground">{hint}</span>
       </div>
     );
   }
