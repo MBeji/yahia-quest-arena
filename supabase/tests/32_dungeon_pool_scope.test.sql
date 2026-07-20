@@ -231,8 +231,8 @@ VALUES ('d1000000-0000-0000-0000-0000000000c4', 'dj-limite', 'Ch limite');
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, mode, source, target_student_id)
 VALUES
   ('d2000000-0000-0000-0000-0000000000e4', 'd1000000-0000-0000-0000-0000000000c4', 'dj-limite', 'Ex limite', 1, 'practice', 'admin', NULL),
-  ('d2000000-0000-0000-0000-0000000000q1', 'd1000000-0000-0000-0000-0000000000c4', 'dj-limite', 'Quiz limite', 1, 'quiz', 'admin', NULL),
-  ('d2000000-0000-0000-0000-0000000000p1', 'd1000000-0000-0000-0000-0000000000c4', 'dj-limite', 'Devoir de maman', 1, 'practice', 'parent',
+  ('d2000000-0000-0000-0000-0000000000f2', 'd1000000-0000-0000-0000-0000000000c4', 'dj-limite', 'Quiz limite', 1, 'quiz', 'admin', NULL),
+  ('d2000000-0000-0000-0000-0000000000f1', 'd1000000-0000-0000-0000-0000000000c4', 'dj-limite', 'Devoir de maman', 1, 'practice', 'parent',
    'd3333333-0000-0000-0000-000000000001');
 
 -- 59 admin non-quiz : un cran SOUS le seuil de 60.
@@ -243,12 +243,12 @@ FROM generate_series(1, 59) AS g;
 
 -- 10 + 10 items qui NE DOIVENT PAS compter. S'ils comptaient, le total ferait 79.
 INSERT INTO public.questions (exercise_id, prompt, options, correct_option, display_order)
-SELECT 'd2000000-0000-0000-0000-0000000000q1', 'Quiz ' || g,
+SELECT 'd2000000-0000-0000-0000-0000000000f2', 'Quiz ' || g,
        '[{"id":"a","text":"a"},{"id":"b","text":"b"}]'::jsonb, 'a', g
 FROM generate_series(1, 10) AS g;
 
 INSERT INTO public.questions (exercise_id, prompt, options, correct_option, display_order)
-SELECT 'd2000000-0000-0000-0000-0000000000p1', 'Familial ' || g,
+SELECT 'd2000000-0000-0000-0000-0000000000f1', 'Familial ' || g,
        '[{"id":"a","text":"a"},{"id":"b","text":"b"}]'::jsonb, 'a', g
 FROM generate_series(1, 10) AS g;
 
