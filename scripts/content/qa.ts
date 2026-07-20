@@ -20,6 +20,7 @@ import {
   loadVideosRegistry,
 } from "../../src/shared/content/loader.ts";
 import {
+  auditAcceptedAnswers,
   auditBoardQuestion,
   auditCompetencyRefs,
   auditLesson,
@@ -120,6 +121,19 @@ function main(): void {
                 : [...auditQuestion(q, where), ...auditMisconceptionTags(q, knownTags, where)]),
             // Competency refs apply to EVERY question type (étude 07 R-2).
             ...auditCompetencyRefs(q, subject.meta.id, competencyVocab, where),
+            // Accepted-answer set (étude 20 R-4/R-5): also every type — the
+            // guard's first job is to REJECT the field on a type that has no
+            // scorer for it.
+            ...auditAcceptedAnswers(
+              {
+                type: q.type,
+                prompt: q.prompt,
+                options: "options" in q ? q.options : [],
+                correctOption: q.type === "mcq" ? q.correctOption : undefined,
+                acceptedAnswers: q.acceptedAnswers,
+              },
+              where,
+            ),
           );
         });
       }

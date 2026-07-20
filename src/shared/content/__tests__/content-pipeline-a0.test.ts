@@ -163,8 +163,9 @@ describe("sql-builder — tags routed server-side, stripped from options", () =>
       { id: "b", text: "2/5" },
       { id: "c", text: "1/6" },
     ]);
-    // The questions INSERT ends with the question_type, answer_key, distractor_tags triple.
-    expect(sql).toContain("'mcq', NULL, NULL)");
+    // The questions INSERT ends with question_type, answer_key, distractor_tags
+    // and — since étude 20 lot 1 — the accepted-answer set (default '[]').
+    expect(sql).toContain("'mcq', NULL, NULL, '[]'::jsonb)");
   });
 });
 

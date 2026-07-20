@@ -359,11 +359,19 @@ export function buildMigrationSql(subject: LoadedSubject, videos: VideoRegistry 
               : q.type === "multi"
                 ? sqlJson({ correct: q.answerKey.correct })
                 : "NULL";
+      // accepted_answers (étude 20 R-2): the accepted-answer SET, server-only
+      // like the key itself. The authored text is emitted RAW and readable —
+      // normalisation happens in SQL at scoring time (D-3), so there is a
+      // single source of truth for it. Absent ⇒ '[]' = canonical answer only,
+      // i.e. étude 17 behaviour unchanged.
+      const acceptedAnswersSql = q.acceptedAnswers?.length
+        ? sqlJson(q.acceptedAnswers)
+        : "'[]'::jsonb";
       out.push(
-        "INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES",
+        "INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags, accepted_answers) VALUES",
         `  (${sqlString(qId)}, ${sqlString(exId)}, ${sqlString(q.prompt)}, ${optionsSql}, ${correctOptionSql}, ${sqlString(
           q.explanation,
-        )}, ${i + 1}, ${sqlString(q.type)}, ${answerKeySql}, ${distractorTagsSql})`,
+        )}, ${i + 1}, ${sqlString(q.type)}, ${answerKeySql}, ${distractorTagsSql}, ${acceptedAnswersSql})`,
         "ON CONFLICT (id) DO UPDATE SET",
         "  exercise_id = EXCLUDED.exercise_id,",
         "  prompt = EXCLUDED.prompt,",
@@ -373,7 +381,8 @@ export function buildMigrationSql(subject: LoadedSubject, videos: VideoRegistry 
         "  display_order = EXCLUDED.display_order,",
         "  question_type = EXCLUDED.question_type,",
         "  answer_key = EXCLUDED.answer_key,",
-        "  distractor_tags = EXCLUDED.distractor_tags;",
+        "  distractor_tags = EXCLUDED.distractor_tags,",
+        "  accepted_answers = EXCLUDED.accepted_answers;",
         "",
       );
     });

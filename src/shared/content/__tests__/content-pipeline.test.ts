@@ -544,13 +544,15 @@ describe("buildMigrationSql", () => {
 
   it("emits per-type columns: mcq keeps its historical key, numeric carries answer_key", () => {
     expect(sql).toContain(
-      "prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags) VALUES",
+      "prompt, options, correct_option, explanation, display_order, question_type, answer_key, distractor_tags, accepted_answers) VALUES",
     );
     expect(sql).toContain("question_type = EXCLUDED.question_type");
     expect(sql).toContain("answer_key = EXCLUDED.answer_key");
     expect(sql).toContain("distractor_tags = EXCLUDED.distractor_tags");
-    // mcq: typed 'mcq', no answer_key, no distractor_tags.
-    expect(sql).toContain("'mcq', NULL, NULL)");
+    expect(sql).toContain("accepted_answers = EXCLUDED.accepted_answers");
+    // mcq: typed 'mcq', no answer_key, no distractor_tags, empty accepted set
+    // (étude 20 R-2: absent ⇒ canonical answer only, i.e. étude 17 behaviour).
+    expect(sql).toContain("'mcq', NULL, NULL, '[]'::jsonb)");
     // numeric: empty options, NULL correct_option, its typed jsonb key.
     expect(sql).toContain(`'numeric', '{"value":42,"tolerance":0}'::jsonb`);
     expect(sql).toContain("'[]'::jsonb, NULL");
