@@ -1,7 +1,13 @@
 -- Vague 5 — Annales (physique-chimie + Maitrise du francais).
 -- Idempotent forward migration: new annales chapters + exercises + questions (FK-safe).
 
-INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order) VALUES
+-- Garde de reconstruction sur base VIERGE (2026-07-20, suite a l'etude 24 lot 4) :
+-- chaque ligne n'est inseree que si son parent existe. Sur la prod tous les parents sont
+-- la et le comportement est identique ; sur une base reconstruite depuis le seul repo
+-- public, le corpus genere est absent et ces lignes n'ont plus d'objet.
+INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order)
+SELECT v.id::uuid, v.subject_id, v.title, v.description, v.lesson_content, v.summary, v.display_order
+FROM (VALUES
   ('b2e35220-fa37-5041-9ccc-4f6185e73e37', 'svt', 'سُبُر نموذجيّة ومراجعة شاملة', 'سُبُر على شاكلة امتحان الفيزياء–الكيمياء (الشعبة التقنية): تحليل وضعيّات وتجارب وتطبيق القوانين، مفكّكة إلى أسئلة QCM تمزج محاور السنة الثلاثة — الضوء (الانتشار والانعكاس والانكسار والعدسات)، والكهرباء (التيار المستمر وقانون أوم)، والكيمياء (الذرّات والجزيئات والتفاعل الكيميائي وموازنة المعادلات وانحفاظ الكتلة وpH والمحاليل).', '# 🏆 سُبُر نموذجيّة: منهجيّة امتحان الفيزياء–الكيمياء
 
 > 🎯 «السبر ليس استظهارًا للقوانين، بل تطبيقها على وضعيّة جديدة بدقّة — أتقن المنهجيّة تتقن الامتحان!»
@@ -148,6 +154,8 @@ Le lexique exigeant départage des candidats par des **nuances fines**.
 - **Grammaire** : maîtriser les accords délicats (participe passé avec _avoir_ et COD antéposé, verbes pronominaux) ; choisir le mode et le temps d''après le déclencheur (subjonctif après doute/volonté/concession, conditionnel d''hypothèse) ; respecter la concordance des temps.
 - **Lexique de précision** : éviter les paronymes (_influer/influencer_, _éminent/imminent_, _conjecture/conjoncture_, _collision/collusion_) ; ajuster le registre au ton du texte ; identifier le sens figuré ou la connotation activée par le contexte.
 - **Démarche** : lire deux fois → résumer la thèse en une phrase → traiter chaque question selon son axe → traquer les pièges fins (paronyme caché, fausse régularité, mode plausible mais non commandé) → justifier la clé ET réfuter chaque distracteur.', 5)
+) AS v(id, subject_id, title, description, lesson_content, summary, display_order)
+WHERE EXISTS (SELECT 1 FROM public.subjects p WHERE p.id = v.subject_id)
 ON CONFLICT (id) DO UPDATE SET
   subject_id = EXCLUDED.subject_id,
   title = EXCLUDED.title,
@@ -156,7 +164,13 @@ ON CONFLICT (id) DO UPDATE SET
   summary = EXCLUDED.summary,
   display_order = EXCLUDED.display_order;
 
-INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order) VALUES
+-- Garde de reconstruction sur base VIERGE (2026-07-20, suite a l'etude 24 lot 4) :
+-- chaque ligne n'est inseree que si son parent existe. Sur la prod tous les parents sont
+-- la et le comportement est identique ; sur une base reconstruite depuis le seul repo
+-- public, le corpus genere est absent et ces lignes n'ont plus d'objet.
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order)
+SELECT v.id::uuid, v.chapter_id::uuid, v.subject_id, v.title, v.difficulty, v.xp_reward, v.reward_coins, v.mode, v.source, v.display_order
+FROM (VALUES
   ('e4664661-53c0-52a7-b2b1-1195c085ebcb', 'b2e35220-fa37-5041-9ccc-4f6185e73e37', 'svt', 'اختبار مراجعة شاملة: ضوء + كهرباء + كيمياء', 1, 20, 5, 'quiz', 'admin', 0),
   ('1e96ef97-b150-58ae-aa74-945473352b23', 'b2e35220-fa37-5041-9ccc-4f6185e73e37', 'svt', '📝 سبر نموذجي 1: وضعيّات تطبيقية (تدريب)', 2, 50, 10, 'practice', 'admin', 1),
   ('e2a437e0-aeea-5e14-ae20-8a53cb85c225', 'b2e35220-fa37-5041-9ccc-4f6185e73e37', 'svt', '⚔️ سبر نموذجي 2: تحليل وضعيّات (زعيم الفصل)', 3, 120, 30, 'boss', 'admin', 2),
@@ -165,6 +179,8 @@ INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_
   ('38655883-4f78-5df4-b448-466ffb2dd3b2', '2567b64f-bd7c-5121-8690-413031a1ac80', 'fr-mastery', 'Palier 1 — Épreuve de synthèse : un portrait en demi-teinte', 2, 50, 10, 'practice', 'admin', 1),
   ('6419b53e-71ab-5c5e-9801-72544a707d1a', '2567b64f-bd7c-5121-8690-413031a1ac80', 'fr-mastery', 'Palier 2 — Épreuve de synthèse : la rumeur (Boss)', 3, 120, 25, 'boss', 'admin', 2),
   ('29169835-f5bb-546d-b09a-54a5fc7e260f', '2567b64f-bd7c-5121-8690-413031a1ac80', 'fr-mastery', '🔥 Palier 3 — Épreuve de synthèse : l''éloge ambigu (Défi)', 4, 300, 60, 'challenge', 'admin', 3)
+) AS v(id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order)
+WHERE EXISTS (SELECT 1 FROM public.chapters p WHERE p.id = v.chapter_id::uuid) AND EXISTS (SELECT 1 FROM public.subjects p WHERE p.id = v.subject_id)
 ON CONFLICT (id) DO UPDATE SET
   chapter_id = EXCLUDED.chapter_id,
   subject_id = EXCLUDED.subject_id,
@@ -175,7 +191,13 @@ ON CONFLICT (id) DO UPDATE SET
   mode = EXCLUDED.mode,
   display_order = EXCLUDED.display_order;
 
-INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order) VALUES
+-- Garde de reconstruction sur base VIERGE (2026-07-20, suite a l'etude 24 lot 4) :
+-- chaque ligne n'est inseree que si son parent existe. Sur la prod tous les parents sont
+-- la et le comportement est identique ; sur une base reconstruite depuis le seul repo
+-- public, le corpus genere est absent et ces lignes n'ont plus d'objet.
+INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order)
+SELECT v.id::uuid, v.exercise_id::uuid, v.prompt, v.options, v.correct_option, v.explanation, v.display_order
+FROM (VALUES
   ('11b0e0e2-c4f7-526a-ad0a-d4ca7e65ceb2', 'e4664661-53c0-52a7-b2b1-1195c085ebcb', 'في دارة كهربائية تسلسلية، يمرّ تيار I = 0,3 A في مقاومة R = 40 Ω. ما التوتر U على طرفَيها؟', '[{"id":"a","text":"133,3 V"},{"id":"b","text":"12 V"},{"id":"c","text":"40,3 V"},{"id":"d","text":"1,2 V"}]'::jsonb, 'b', 'نطبّق قانون أوم بالشكل المناسب للمجهول U: U = R × I = 40 × 0,3 = 12 V. الخيار 133,3 V خطأ ناتج عن قلب القانون (40 ÷ 0,3)، وهو خطأ شائع.', 1),
   ('aa1d367b-3e60-5b20-8904-2c469bf25380', 'e4664661-53c0-52a7-b2b1-1195c085ebcb', 'المعادلة التالية تمثّل احتراق الكربون: C + O₂ → CO₂. هل هي موزونة؟', '[{"id":"a","text":"نعم، عدد ذرّات كلّ عنصر متساوٍ في الطرفين"},{"id":"b","text":"لا، يجب أن تصبح 2C + O₂ → CO₂"},{"id":"c","text":"لا، يجب أن تصبح C + 2O₂ → CO₂"},{"id":"d","text":"لا يمكن معرفة ذلك دون معرفة الكتل"}]'::jsonb, 'a', 'نحصي ذرّات كلّ عنصر: الكربون 1 يسارًا (C) و1 يمينًا (CO₂) ✓؛ الأكسجين 2 يسارًا (O₂) و2 يمينًا (CO₂) ✓. بما أنّ عدد ذرّات كلّ عنصر متساوٍ في الطرفين فالمعادلة موزونة فعلًا.', 2),
   ('3a0a3dca-8a63-5182-bac1-d2e8aaa1ffcf', 'e4664661-53c0-52a7-b2b1-1195c085ebcb', 'محلول قيمة pH فيه تساوي 3. كيف نصنّفه؟', '[{"id":"a","text":"قاعدي"},{"id":"b","text":"محايد"},{"id":"c","text":"حمضي"},{"id":"d","text":"نقيّ خالٍ من الأيونات"}]'::jsonb, 'c', 'سلّم pH يمتدّ من 0 إلى 14: pH < 7 محلول حمضي، pH = 7 محايد، pH > 7 قاعدي. وبما أنّ 3 < 7 فالمحلول حمضي.', 3),
@@ -252,6 +274,8 @@ Quel mot ou groupe de mots porte le plus nettement la prise de position critique
   ('ff3d65f3-a07b-5787-8931-694b37d358e9', '29169835-f5bb-546d-b09a-54a5fc7e260f', '[SYNTAXE — subordination et logique] La proposition « de sorte qu''on ne pût lui reprocher ni l''échec… ni le succès… » : quelle est sa valeur, et qu''apporte le mode du verbe « pût » ?', '[{"id":"a","text":"Conséquence visée : le subjonctif « pût » marque que ce résultat était recherché, presque un but que le personnage s''assignait."},{"id":"b","text":"Cause réelle : le subjonctif indique un fait certain et accompli."},{"id":"c","text":"Comparaison : la subordonnée met deux situations en parallèle."},{"id":"d","text":"Temps : la subordonnée situe l''action dans la durée."}]'::jsonb, 'a', '« De sorte que » suivi du subjonctif (« pût ») exprime une conséquence voulue, teintée de finalité : le personnage agissait à demi afin qu''on ne pût rien lui reprocher. Le subjonctif souligne précisément ce caractère recherché (par opposition à « de sorte qu''on ne pouvait », indicatif, qui signalerait une simple conséquence de fait). Il ne s''agit ni d''une cause (b), ni d''une comparaison (c), ni d''une circonstancielle de temps (d).', 4),
   ('a4021c34-6085-5253-a2df-13d29fdee570', '29169835-f5bb-546d-b09a-54a5fc7e260f', '[GRAMMAIRE — accord du participe passé] Choisissez la phrase dont l''accord est rigoureusement correct.', '[{"id":"a","text":"Les retraites qu''il s''était toujours ménagées le protégeaient de tout reproche."},{"id":"b","text":"Les retraites qu''il s''était toujours ménagé le protégeaient de tout reproche."},{"id":"c","text":"Les retraites qu''il s''était toujours ménagés le protégeaient de tout reproche."},{"id":"d","text":"Les retraites qu''il s''était toujours ménager le protégeaient de tout reproche."}]'::jsonb, 'a', 'Avec un verbe pronominal comme « se ménager », le participe passé s''accorde avec le COD s''il précède le verbe. Ici « se » est COI (ménager quelque chose à soi) et le COD est « qu'' », mis pour « les retraites » (féminin pluriel), antéposé → « ménagées ». (b) et (c) faussent le genre ou le nombre de l''accord. (d) emploie un infinitif à la place du participe : faute majeure.', 5),
   ('bd984a6b-8d79-5b8b-9bcb-e48edf379300', '29169835-f5bb-546d-b09a-54a5fc7e260f', '[LEXIQUE + COMPRÉHENSION] La chute « il préféra qu''on l''estimât, ce qui coûte moins » repose sur une distinction fine entre « admirer » et « estimer ». Quelle interprétation est la plus juste ?', '[{"id":"a","text":"« Admirer » suppose l''éclat d''un acte risqué, tandis qu''« estimer » se contente d''un mérite tranquille ; le personnage choisit la reconnaissance la moins exigeante."},{"id":"b","text":"« Admirer » et « estimer » sont strictement synonymes ; la phrase ne fait que les répéter."},{"id":"c","text":"« Estimer » implique plus d''enthousiasme qu''« admirer » ; le personnage vise donc le sentiment le plus fort."},{"id":"d","text":"« Estimer » signifie ici « évaluer une quantité » ; la phrase porte sur un calcul chiffré."}]'::jsonb, 'a', 'L''admiration naît d''un éclat, d''un exploit qui force l''enthousiasme ; l''estime, plus mesurée, reconnaît un mérite sans transport. La chute ironique (« ce qui coûte moins ») confirme que le personnage préfère cette reconnaissance modeste, qui n''exige aucun risque. (b) nie une nuance que le texte exploite précisément. (c) intervertit l''intensité des deux termes. (d) confond le sens moral d''« estimer » avec son sens d''évaluation quantitative, hors contexte ici.', 6)
+) AS v(id, exercise_id, prompt, options, correct_option, explanation, display_order)
+WHERE EXISTS (SELECT 1 FROM public.exercises p WHERE p.id = v.exercise_id::uuid)
 ON CONFLICT (id) DO UPDATE SET
   exercise_id = EXCLUDED.exercise_id,
   prompt = EXCLUDED.prompt,
