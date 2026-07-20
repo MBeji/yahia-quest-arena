@@ -201,7 +201,13 @@ function ActionTile({
   return (
     <Link
       to={to}
-      className="group flex items-center gap-3.5 rounded-2xl border border-[color:var(--gold)]/25 bg-black/40 p-4 backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[color:var(--gold)]/50 sm:p-5"
+      // `min-w-0` is load-bearing: as a GRID ITEM this tile defaults to
+      // `min-width:auto`, so its track cannot shrink below the tile's own
+      // min-content and the tile renders 479px wide inside a 343px column on a
+      // 375px phone — pushing the document to scrollWidth 495 (the horizontal
+      // overflow the responsive suite reports). The inner `min-w-0 flex-1` only
+      // lets the LABEL shrink; the item itself needs its own floor removed.
+      className="group flex min-w-0 items-center gap-3.5 rounded-2xl border border-[color:var(--gold)]/25 bg-black/40 p-4 backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[color:var(--gold)]/50 sm:p-5"
     >
       <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[color:var(--gold)]/12">
         <Icon className="h-5 w-5 text-[color:var(--gold)]" />

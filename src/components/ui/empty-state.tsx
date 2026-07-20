@@ -21,6 +21,11 @@ export function EmptyState({
 }) {
   return (
     <div
+      // Stable hook for the e2e suites. Empty-state COPY is product-owned and
+      // drifts (the leaderboard's flat "aucun héros inscrit" became the étude-15
+      // cold-start invitation), which silently un-finds any locator written
+      // against the wording. The grammar is shared, so the hook belongs here once.
+      data-testid="empty-state"
       className={cn(
         "rounded-2xl border border-dashed border-border/50 bg-card/40 p-6 text-center",
         className,
