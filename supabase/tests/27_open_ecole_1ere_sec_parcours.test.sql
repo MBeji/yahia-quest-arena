@@ -3,13 +3,14 @@
 -- vague A, seuil R-8 (« une matière complète ouvre la section »).
 -- Sur une DB fraîche (toutes les migrations appliquées, y compris
 -- 20260713180000_open_ecole_1ere_sec_parcours), le parcours `ecole-1ere-sec`
--- doit être 'available', gratuit, et adossé à la matière mathématiques complète
--- (16 chapitres). C'est la migration d'ouverture qui rend la classe visible.
+-- doit être 'available' et gratuit. C'est la migration d'ouverture qui rend la
+-- classe visible — et c'est tout ce qui se vérifie ici depuis l'étude 24 : la
+-- matière et ses 16 chapitres sont du corpus, parti au repo privé (#574).
 -- =========================================================
 
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(5);
+SELECT plan(3);
 
 -- 1) La migration d'ouverture a bien fait passer le parcours en 'available'.
 SELECT is(
@@ -30,20 +31,13 @@ SELECT ok(
   'ecole-1ere-sec est gratuit (is_premium = false)'
 );
 
--- 3) La matière mathématiques existe et est rattachée au grade 1ere-sec
---    d'ecole-tn (le contenu qui justifie l'ouverture).
-SELECT is(
-  (SELECT grade_id FROM public.subjects WHERE id = 'math-1ere-sec'),
-  (SELECT id FROM public.grades WHERE theme_id = 'ecole-tn' AND slug = '1ere-sec'),
-  'le sujet math-1ere-sec est rattaché au grade 1ere-sec'
-);
-
--- 4) Les 16 chapitres du manuel officiel sont présents (matière complète).
-SELECT is(
-  (SELECT COUNT(*)::int FROM public.chapters WHERE subject_id = 'math-1ere-sec'),
-  16,
-  'math-1ere-sec compte bien 16 chapitres'
-);
+-- 3) Le CONTENU qui justifie l'ouverture — rattachement de `math-1ere-sec` au
+--    grade 1ere-sec et ses 16 chapitres — n'est plus vérifiable ici : depuis
+--    l'étude 24 le corpus ne voyage plus en migrations, et `db-tests.yml` monte
+--    la base avec `supabase db start`, qui n'applique que supabase/migrations/.
+--    Ces deux assertions sont portées à la Content CI privée (#574). Ce qui
+--    reste ci-dessus porte sur la MIGRATION d'ouverture, pas sur le corpus, et
+--    tient donc sur une base vierge.
 
 SELECT * FROM finish();
 ROLLBACK;

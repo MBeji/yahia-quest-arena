@@ -5,14 +5,16 @@
 --      (writes are compiled-migration-only), invisible to anon;
 --   2. RLS is enabled on all 3 tables (and the read policy actually lets an
 --      authenticated role read the catalogue);
---   3. The compiled math registry is seeded: ≥50 competencies, ≥60 prereq
---      edges, trilingual labels all non-empty, flagship slug present;
---   4. Defensive integrity: self-prereq CHECK, junction FK to the registry.
+--   3. Defensive integrity: self-prereq CHECK, junction FK to the registry.
+--
+-- Schema only — the compiled registry's CONTENT (how many competencies, which
+-- slugs) left with the corpus in étude 24 and is tracked for the private
+-- Content CI in #574. Fixtures here seed whatever they need.
 -- =========================================================
 
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(20);
+SELECT plan(16);
 
 -- =========================================================
 -- 1–9. Grants (CLAUDE.md gotcha: explicit end-state on every stack).
@@ -99,43 +101,29 @@ SELECT is(
 );
 
 -- =========================================================
--- 13–16. Compiled math registry is seeded and trilingual (Q-1: ~55-70).
+-- 13–14. Defensive integrity: self-edge CHECK, junction FK.
+-- ---------------------------------------------------------
+-- The compiled-registry assertions that used to sit here (≥50 math
+-- competencies, ≥60 prereq edges, the `math.geo.thales-direct` flagship, no
+-- empty label) left with the corpus in étude 24 — tracked for the private
+-- Content CI in #574. They could never pass here again: `db-tests.yml` boots
+-- the stack with `supabase db start`, which applies supabase/migrations/ ONLY,
+-- and content now compiles to sql/content/*.sql applied by the private repo.
+-- The "no empty label" one had already rotted into a vacuous pass — a count of
+-- 0 over an EMPTY table — which is why it stayed green while its four
+-- neighbours went red.
+--
+-- What belongs here is the SCHEMA, and it now seeds its own competency instead
+-- of borrowing a registry row: the CHECK constraint and the read policy are
+-- exercised for real, corpus or no corpus.
 -- =========================================================
-SELECT cmp_ok(
-  (SELECT count(*)::int FROM public.competencies WHERE family = 'math'),
-  '>=',
-  50,
-  'registry: the math family ships ≥50 competencies (medium granularity — Q-1)'
-);
+INSERT INTO public.competencies (id, slug, family, label_fr, label_en, label_ar)
+VALUES ('c9000000-0000-0000-0000-000000000001', 'kg.test.self-edge', 'math',
+        'Compétence de test', 'Test competency', 'كفاءة اختبار');
 
-SELECT cmp_ok(
-  (SELECT count(*)::int FROM public.competency_prereqs),
-  '>=',
-  60,
-  'registry: the prerequisite DAG ships ≥60 edges'
-);
-
-SELECT is(
-  (SELECT count(*)::int FROM public.competencies
-     WHERE slug = 'math.geo.thales-direct'
-       AND length(label_fr) > 0 AND length(label_en) > 0 AND length(label_ar) > 0),
-  1,
-  'registry: flagship competency math.geo.thales-direct exists with trilingual labels'
-);
-
-SELECT is(
-  (SELECT count(*)::int FROM public.competencies
-     WHERE label_fr = '' OR label_en = '' OR label_ar = ''),
-  0,
-  'registry: no empty label in any language (R-6)'
-);
-
--- =========================================================
--- 17–18. Defensive integrity: self-edge CHECK, junction FK.
--- =========================================================
 SELECT throws_ok(
   $$ INSERT INTO public.competency_prereqs (competency_id, prereq_id)
-     SELECT id, id FROM public.competencies WHERE slug = 'math.geo.thales-direct' $$,
+     SELECT id, id FROM public.competencies WHERE slug = 'kg.test.self-edge' $$,
   '23514',
   NULL,
   'competency_prereqs: a competency cannot be its own prerequisite (CHECK)'
@@ -167,17 +155,18 @@ SELECT throws_ok(
 );
 
 -- =========================================================
--- 19–20. The read policy actually serves an authenticated role; anon is
+-- 15–16. The read policy actually serves an authenticated role; anon is
 -- rejected at the grant layer.
 -- =========================================================
 SET LOCAL "request.jwt.claims" = '{"sub":"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa","role":"authenticated"}';
 SET LOCAL ROLE authenticated;
 
-SELECT cmp_ok(
-  (SELECT count(*)::int FROM public.competencies),
-  '>=',
-  50,
-  'RLS: an authenticated user reads the whole competency catalogue'
+-- Asserts the POLICY (a seeded row is readable under RLS), not the registry
+-- size: the old `>= 50` measured the corpus, which no longer ships here.
+SELECT is(
+  (SELECT count(*)::int FROM public.competencies WHERE slug = 'kg.test.self-edge'),
+  1,
+  'RLS: an authenticated user reads the competency catalogue'
 );
 
 RESET ROLE;
