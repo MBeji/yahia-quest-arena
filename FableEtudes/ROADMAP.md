@@ -22,9 +22,9 @@
 
 ## 1. En vol aujourd'hui (à finir avant d'ouvrir autre chose)
 
-- [ ] **PR #530 — étude 25 lot 2** (gate `harness:check` + rôles de modèles) : portée par sa
-      session d'origine, auto-merge armé, checks en cours (les doublons de sauvetage
-      #523/#529/#534 sont fermés).
+- [x] **Étude 25 lot 2** (gate `harness:check` + rôles de modèles) : **mergé le 2026-07-20**
+      (#530, porté par sa session d'origine ; les doublons de sauvetage #523/#529/#534 sont
+      fermés).
 - [ ] **Session « resynchroniser l'index (é15, é17) »** — lancée le 2026-07-20 (chip). À
       étendre ou compléter : l'**étude 23 est aussi désynchronisée** (en-tête « brouillon »
       alors que ses lots 1-4 sont mergés — #507/#510/#524/#527 — et Q-1/Q-2/Q-5 arbitrées
@@ -87,7 +87,7 @@
 
 ## 4. FILE FONDATIONS (parallèle — ne bloque pas la file produit)
 
-- [ ] F1. **é25 lot 2** = PR #529 (en vol, §1) puis **lots 3 → 7** dans l'ordre : miroir skills `.agents/skills/` · politique déclarative + hook externalisé · gardes CI portables + épinglage SHA · mémoire multi-têtes · drill de portabilité (lot 7 **avec Mohamed**)
+- [ ] F1. **é25 lots 3 → 7** dans l'ordre (lot 2 livré, #530) : miroir skills `.agents/skills/` · politique déclarative + hook externalisé · gardes CI portables + épinglage SHA · mémoire multi-têtes · drill de portabilité (lot 7 **avec Mohamed**)
 - [ ] F2. ⚖️(A2) **é24 lots 3b → 4 → 5 → 6** (découplage SQL + dégraissage public + gate anti-fuite + purge d'historique + e2e TEST/régularisation) — **prérequis de la campagne lycée massive** (§5-C9)
 - [ ] F3. **é09 lots 1-2 — la mesure** (page admin « Économie » + simulateur `economy:check`) — condition du KPI-4 é26 (« excellent » mesurable) ; lot 3 conditionnel ensuite
 - [ ] F4. **C4 côté Mohamed (~45 min + suivi)** : câbler le domaine `na9ranal3ab.tn` · monitoring (UptimeRobot/Sentry/PostHog) · ruleset — puis soumettre le sitemap (débloque le SEO, 🟠 depuis juin)
