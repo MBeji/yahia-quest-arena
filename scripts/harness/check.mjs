@@ -11,10 +11,10 @@
  *      instruction/harness surface — the "Rules File Backdoor" class of attack
  *      (invisible instructions smuggled into a rules file a human reviews visually).
  *   4. No model identifier hardcoded outside `harness/models.json` — the one file
- *      a model bump should ever touch. GENERATED views are exempt from this scan:
- *      the id they contain is compiled from `models.json`, and invariant 6 proves
- *      it was not hand-edited. `.github/workflows/**` still hardcodes its model and
- *      joins the scan in lot 5, once rewired to resolve it from `models.json`.
+ *      a model bump should ever touch. Covers AGENTS.md/CLAUDE.md, `harness/**` and
+ *      (since lot 5) `.github/workflows/**`, whose guards resolve their model from
+ *      `models.json` at run time. GENERATED views are exempt: the id they contain is
+ *      compiled from `models.json`, and invariant 6 proves it was not hand-edited.
  *   5. Every `harness/*.json` file parses as JSON.
  *   6. Every generated view matches what `harness:sync` would produce from the
  *      sources — the anti-drift guarantee that makes invariant 4's exemption safe.
@@ -86,11 +86,13 @@ export function extractFrontmatter(skillMdContent) {
   return match ? match[1] : null;
 }
 
-// Deliberately narrow to the vendor-prefixed families this repo's harness
-// actually names (CLAUDE.md, workflows, hooks) — not a general "any word that
-// looks like a model" scanner, which would false-positive on ordinary prose.
+// Matches a model IDENTIFIER, keyed on the model FAMILY — not on the vendor
+// prefix alone. Anchoring on `claude-*` was too loose once the scan reached
+// `.github/workflows/**`: `claude-code-action` (a GitHub Action), and the
+// `claude-result.py` / `claude-execution-output.json` filenames all matched,
+// none of which is a model. Families are cheap to extend when a new one ships.
 const MODEL_ID_RE =
-  /\bclaude-[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?\b|\bgpt-[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?\b|\bgemini-[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?\b|\bo[0-9](?:-[a-z0-9-]+)?\b/gi;
+  /\bclaude-(?:sonnet|opus|haiku|fable|instant)[a-z0-9.-]*\b|\bgpt-[0-9][a-z0-9.-]*\b|\bgemini-[0-9][a-z0-9.-]*\b|\bo[0-9](?:-[a-z]+)?\b/gi;
 
 /** Returns every model-id-shaped token found in text (deduped). */
 export function findModelIds(text) {
@@ -146,13 +148,16 @@ function main() {
   }
 
   // Harness surface scanned for BOTH invisible Unicode and stray model ids.
-  // `.github/workflows/**` still hardcodes its model and joins in lot 5.
+  // Since lot 5 the guard workflows resolve their model from harness/models.json,
+  // so `.github/workflows/**` is in scope too — this is what makes the study's
+  // "zero hardcoded model id" KPI actually enforced rather than aspirational.
   const generatedViews = new Set(buildViews(ROOT).map(([relPath]) => relPath));
   const surface = [
     ["AGENTS.md", agentsMd],
     ["CLAUDE.md", claudeMd],
     ...[...generatedViews].map((relPath) => [relPath, readIfExists(join(ROOT, relPath))]),
     ...walk(join(ROOT, "harness"), /\.(json|md)$/).map((p) => [rel(p), readIfExists(p)]),
+    ...walk(join(ROOT, ".github", "workflows"), /\.ya?ml$/).map((p) => [rel(p), readIfExists(p)]),
   ].filter(([, content]) => content !== null);
 
   for (const [label, content] of surface) {

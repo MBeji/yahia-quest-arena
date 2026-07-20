@@ -79,7 +79,7 @@ jobs:
       MERGE_FREEZE: ${{ vars.MERGE_FREEZE }}
     steps:
       - name: Checkout (PR template + head commit subject)
-        uses: actions/checkout@v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
       - name: Create the PR if none is open
         id: pr
