@@ -54,7 +54,7 @@ jobs:
       CANDIDATES: "8"
     steps:
       - name: Checkout (full history + existing tags)
-        uses: actions/checkout@v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           fetch-depth: 0
 
@@ -204,7 +204,7 @@ jobs:
 
       - name: Close a previous "no checkpoint" alert
         if: steps.pick.outputs.found == 'true'
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         env:
           TAG: ${{ steps.pick.outputs.tag }}
         with:
@@ -228,7 +228,7 @@ jobs:
 
       - name: Report a week with no checkpoint
         if: steps.pick.outputs.found != 'true'
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         env:
           WHY: ${{ steps.pick.outputs.why }}
         with:
