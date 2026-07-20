@@ -20,7 +20,10 @@ test.describe("XP & coins progression", () => {
     test.setTimeout(150_000);
     // Use culture-générale (plain-text questions) for reliable text matching.
     const subjectId = await adminDb.subjectIdByTheme("culture-generale");
-    test.skip(!subjectId, "culture-générale content not applied to the test project.");
+    expect(
+      subjectId,
+      `culture-generale subject missing — run \`npm run e2e:seed-content\``,
+    ).toBeTruthy();
     const exerciseId = await adminDb.freeExerciseId(subjectId as string);
     const key = await adminDb.answerKey(exerciseId);
 

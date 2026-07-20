@@ -9,7 +9,9 @@ import { PracticePage } from "../pages/public-practice.page";
  * submission, and the run completes to a result screen (R-3: never a crashed
  * session).
  *
- * Skips cleanly while the TEST catalogue has no multi mission yet.
+ * The multi mission is reproducible from the committed e2e fixtures
+ * (scripts/e2e/seed-fixture-content.mjs); a missing one is a LOUD failure, not a
+ * silent skip (see e2e/public-anon/catalogue-coverage.spec.ts).
  */
 test.describe("Native question types (B3 — multi)", () => {
   test("a multi mission renders checkboxes and completes anonymously", async ({
@@ -17,7 +19,7 @@ test.describe("Native question types (B3 — multi)", () => {
     adminDb,
   }) => {
     const exerciseId = await adminDb.multiExerciseId();
-    test.skip(!exerciseId, "No multi mission in the TEST catalogue yet (lot B3.4 seeds one).");
+    expect(exerciseId, `multi mission missing — run \`npm run e2e:seed-content\``).toBeTruthy();
 
     const practice = new PracticePage(page);
     await practice.goto(exerciseId!);

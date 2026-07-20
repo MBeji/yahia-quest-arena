@@ -21,7 +21,10 @@ test.describe("Content families", () => {
 
   test("a non-school family subject lists its missions", async ({ subject, adminDb }) => {
     const cultureId = await adminDb.subjectIdByTheme("culture-generale");
-    test.skip(!cultureId, "culture-générale content not applied to the test project.");
+    expect(
+      cultureId,
+      `culture-generale subject missing — run \`npm run e2e:seed-content\``,
+    ).toBeTruthy();
 
     await subject.goto(cultureId as string);
     // The hub lists the subject's missions. That non-school missions have NO quiz

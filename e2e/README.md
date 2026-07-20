@@ -31,7 +31,8 @@ e2e/
 scripts/e2e/
   _env.mjs             # loads .env.test + refuses to ever touch the prod project
   check-env.mjs        # doctor: is the TEST env complete?    (npm run e2e:doctor)
-  setup-test-db.mjs    # apply migrations+content to TEST     (npm run e2e:db:push)
+  setup-test-db.mjs    # apply migrations (schema) to TEST    (npm run e2e:db:push)
+  seed-fixture-content.mjs # seed the e2e fixture catalogue   (npm run e2e:seed-content)
   seed-test-users.mjs  # create/refresh the 4 test accounts   (npm run e2e:seed)
   reset-gameplay.mjs   # wipe gameplay state to a clean slate (npm run e2e:reset)
 .env.test.example      # copy → .env.test, fill with TEST project creds (gitignored)
@@ -87,16 +88,20 @@ cp .env.test.example .env.test           # then fill in TEST project values
 # 1. verify the env is complete (secrets masked)
 npm run e2e:doctor
 
-# 2. provision the TEST project: migrations+content, accounts, clean slate
+# 2. provision the TEST project: schema, e2e fixture catalogue, accounts, reset
 #    (needs TEST_SUPABASE_DB_URL in .env.test for the db push step)
-npm run e2e:setup                        # = e2e:db:push && e2e:seed && e2e:reset
+npm run e2e:setup            # = e2e:db:push && e2e:seed-content && e2e:seed && e2e:reset
 
 # 3. run the authenticated journeys
 npm run test:e2e:auth
 ```
 
-Individual steps are also available: `npm run e2e:db:push`, `e2e:seed`, `e2e:reset`.
-Re-run `e2e:reset` before a fresh pass to get a deterministic starting point.
+Individual steps are also available: `npm run e2e:db:push`, `e2e:seed-content`,
+`e2e:seed`, `e2e:reset`. Re-run `e2e:reset` before a fresh pass to get a
+deterministic starting point. `e2e:seed-content` seeds the committed fixture
+catalogue (every question type + the non-school families the suite covers) —
+since étude 24 the corpus no longer travels in migrations, so `e2e:db:push`
+alone yields only the legacy `mcq` seed.
 
 ### CI
 
@@ -111,8 +116,10 @@ workflow skips green until they exist):
 | `E2E_USER_PASSWORD`              | password for the 4 seeded accounts                  |
 | `TEST_SUPABASE_DB_URL`           | _optional_ — Postgres URI; lets CI `db push` itself |
 
-With `TEST_SUPABASE_DB_URL` set, the workflow self-provisions the schema+content
+With `TEST_SUPABASE_DB_URL` set, the workflow self-provisions the schema (migrations)
 each run; without it, applying migrations to the TEST project is a one-time prereq.
+The e2e fixture catalogue is (re)seeded every run regardless (`e2e:seed-content`,
+service-role only), so a fresh TEST project reaches full coverage.
 A raw (un-encoded) password in the URI is fine: `e2e:db:push` percent-encodes the
 userinfo automatically before calling the Supabase CLI (`normalizeDbUrl` in
 `scripts/e2e/_env.mjs`) — a malformed URI used to fail CI with "invalid userinfo".

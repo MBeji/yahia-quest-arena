@@ -8,8 +8,9 @@ import { PracticePage } from "../pages/public-practice.page";
  * mobile keyboard (R-4), a malformed value cannot be validated, and the run
  * completes to a result screen (R-3: never a crashed session).
  *
- * Skips cleanly while the TEST catalogue has no numeric mission yet — the
- * content lot (B1.4) lifts the authoring ban and seeds the first one.
+ * The numeric mission is reproducible from the committed e2e fixtures
+ * (scripts/e2e/seed-fixture-content.mjs); a missing one is a LOUD failure, not a
+ * silent skip (see e2e/public-anon/catalogue-coverage.spec.ts).
  */
 test.describe("Native question types (B1 — numeric)", () => {
   test("a numeric mission renders the LTR numeric entry and completes anonymously", async ({
@@ -17,7 +18,7 @@ test.describe("Native question types (B1 — numeric)", () => {
     adminDb,
   }) => {
     const exerciseId = await adminDb.numericExerciseId();
-    test.skip(!exerciseId, "No numeric mission in the TEST catalogue yet (lot B1.4 seeds one).");
+    expect(exerciseId, `numeric mission missing — run \`npm run e2e:seed-content\``).toBeTruthy();
 
     const practice = new PracticePage(page);
     await practice.goto(exerciseId!);
