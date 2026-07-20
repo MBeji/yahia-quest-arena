@@ -63,5 +63,9 @@ it the workflow skips gracefully.
   trailing comment — `uses: actions/checkout@9c091bb… # v7`. npm deps and Actions are two
   separate supply chains: Dependabot/`upgrade-guard` cover the first, this rule the second.
   Bumping an Action means replacing **both** the SHA and its comment; resolve the new SHA with
-  `gh api repos/<owner>/<repo>/commits/<tag> --jq .sha`. Never revert a `uses:` to a moving tag
-  — the repo currently contains none, so any reappearance is a regression to flag in review.
+  `gh api repos/<owner>/<repo>/commits/<tag> --jq .sha`. Never revert a `uses:` to a moving tag.
+  **Enforced mechanically** since 2026-07-20 by `harness:check` (invariant 7, in the CI `verify`
+  job): any `uses:` that is not a 40-hex commit SHA fails the gate. Local reusable workflows
+  (`./.github/workflows/…`) and `docker://` refs are exempt. The gate exists because the rule
+  alone was not enough — two workflows added hours after the pinning landed reintroduced four
+  moving tags and merged green (#553 → fixed in #554).

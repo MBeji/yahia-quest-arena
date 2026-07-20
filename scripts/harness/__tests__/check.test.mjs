@@ -5,6 +5,7 @@ import {
   findInvisibleChars,
   extractFrontmatter,
   findModelIds,
+  findUnpinnedActions,
   isJsonValid,
   checkSkillFrontmatter,
   AGENTS_MD_MAX_LINES,
@@ -206,5 +207,68 @@ describe("isJsonValid", () => {
 
   it("rejects malformed JSON", () => {
     expect(isJsonValid("{not: valid,}")).toBe(false);
+  });
+});
+
+describe("findUnpinnedActions", () => {
+  const SHA = "9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0";
+
+  it("accepts an action pinned to a commit SHA with its version comment", () => {
+    expect(findUnpinnedActions(`      - uses: actions/checkout@${SHA} # v7`)).toEqual([]);
+  });
+
+  it("flags a moving version tag — the regression that merged green on 2026-07-20", () => {
+    const hits = findUnpinnedActions("      - uses: actions/checkout@v7");
+    expect(hits).toHaveLength(1);
+    expect(hits[0].uses).toBe("actions/checkout@v7");
+    expect(hits[0].reason).toMatch(/moving ref/);
+  });
+
+  it("flags a branch ref and a semver ref — neither is immovable", () => {
+    expect(findUnpinnedActions("      - uses: foo/bar@main")).toHaveLength(1);
+    expect(findUnpinnedActions("      - uses: foo/bar@1.2.3")).toHaveLength(1);
+  });
+
+  it("flags an action with no ref at all", () => {
+    const hits = findUnpinnedActions("      - uses: foo/bar");
+    expect(hits).toHaveLength(1);
+    expect(hits[0].ref).toBeNull();
+    expect(hits[0].reason).toMatch(/default branch/);
+  });
+
+  it("exempts a local reusable workflow — this repo's own code at its own commit", () => {
+    expect(findUnpinnedActions("    uses: ./.github/workflows/e2e.yml")).toEqual([]);
+  });
+
+  it("exempts a docker:// ref — pinned by digest, a different rule", () => {
+    expect(findUnpinnedActions("      - uses: docker://alpine:3.20")).toEqual([]);
+  });
+
+  it("ignores a commented-out uses: line", () => {
+    expect(findUnpinnedActions("      # uses: actions/checkout@v7")).toEqual([]);
+  });
+
+  it("catches a job-level `uses:` too, not just list items", () => {
+    expect(findUnpinnedActions("    uses: some/reusable@v3")).toHaveLength(1);
+  });
+
+  it("scans a whole workflow and reports only the offenders", () => {
+    const workflow = [
+      "jobs:",
+      "  a:",
+      "    steps:",
+      `      - uses: actions/checkout@${SHA} # v7`,
+      "      - uses: actions/setup-node@v6",
+      `      - uses: actions/github-script@${SHA} # v9`,
+      "  b:",
+      "    uses: ./.github/workflows/e2e.yml",
+    ].join("\n");
+    const hits = findUnpinnedActions(workflow);
+    expect(hits.map((h) => h.uses)).toEqual(["actions/setup-node@v6"]);
+  });
+
+  it("survives a non-string input", () => {
+    expect(findUnpinnedActions(undefined)).toEqual([]);
+    expect(findUnpinnedActions(null)).toEqual([]);
   });
 });

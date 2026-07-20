@@ -18,6 +18,9 @@
  *   5. Every `harness/*.json` file parses as JSON.
  *   6. Every generated view matches what `harness:sync` would produce from the
  *      sources — the anti-drift guarantee that makes invariant 4's exemption safe.
+ *   7. Every GitHub Action in `.github/workflows/**` is pinned to a commit SHA,
+ *      never a moving tag (étude 25 lot 5b). A tag's owner decides what runs with
+ *      this repo's secrets; Dependabot covers npm, this covers Actions.
  *
  * Driven by `.github/workflows/ci.yml` (job `verify`) and `npm run ci:verify`.
  * Pure helpers are exported and unit-tested; `main()` does the filesystem walk and
@@ -134,6 +137,48 @@ export function findModelIds(text) {
   return [...new Set([...text.matchAll(MODEL_ID_RE)].map((m) => m[0]))];
 }
 
+/** A pinned action ref is a full 40-hex commit SHA. Nothing else is immovable. */
+const PINNED_REF_RE = /^[0-9a-f]{40}$/;
+
+// `uses:` at the start of a (possibly list-item) line. Deliberately anchored so
+// a `#`-commented line never matches. A literal `uses:` inside a `run: |` block
+// would be a false positive; none exists in this repo and the gate's own run
+// over `.github/workflows/**` is what proves it — revisit if one ever lands.
+const USES_RE = /^[^\S\n]*(?:-[^\S\n]+)?uses:[^\S\n]*(\S+)/gm;
+
+/**
+ * Returns every `uses:` that is NOT pinned to a commit SHA.
+ *
+ * A moving tag (`@v7`, `@main`) means whoever controls that tag decides what
+ * code runs with this repo's secrets — the supply-chain half that Dependabot
+ * does not cover. Étude 25 lot 5b pinned the whole repo and wrote the rule down,
+ * but shipped NO gate: on 2026-07-20 two workflows added hours later
+ * reintroduced four moving tags and merged green. This closes that hole.
+ *
+ * Exempt: local reusable workflows (`./.github/workflows/x.yml` — this repo's
+ * own code at this repo's own commit) and `docker://` refs (pinned by digest,
+ * a different rule; the repo uses none).
+ */
+export function findUnpinnedActions(text) {
+  if (typeof text !== "string") return [];
+  const out = [];
+  for (const match of text.matchAll(USES_RE)) {
+    const uses = match[1];
+    if (uses.startsWith("./") || uses.startsWith("../") || uses.startsWith("docker://")) continue;
+
+    const at = uses.lastIndexOf("@");
+    if (at === -1) {
+      out.push({ uses, ref: null, reason: "no ref at all — resolves to the default branch" });
+      continue;
+    }
+    const ref = uses.slice(at + 1);
+    if (!PINNED_REF_RE.test(ref)) {
+      out.push({ uses, ref, reason: `moving ref \`${ref}\`` });
+    }
+  }
+  return out;
+}
+
 export function isJsonValid(text) {
   try {
     JSON.parse(text);
@@ -229,7 +274,23 @@ function main() {
     }
   }
 
-  // 4. JSON validity of every harness/*.json file.
+  // 4. Every GitHub Action pinned to a commit SHA (étude 25 lot 5b). The policy
+  // was written in docs/dependency-maintenance.md but never enforced — see
+  // findUnpinnedActions' header for the regression that proved a documented rule
+  // without a gate is a suggestion.
+  for (const workflow of walk(join(ROOT, ".github", "workflows"), /\.ya?ml$/)) {
+    const content = readIfExists(workflow);
+    if (content === null) continue;
+    for (const hit of findUnpinnedActions(content)) {
+      problems.push(
+        `${rel(workflow)}: \`uses: ${hit.uses}\` is not pinned to a commit SHA (${hit.reason}) — ` +
+          "resolve it with `gh api repos/<owner>/<repo>/commits/<tag> --jq .sha` and keep the " +
+          "version as a trailing comment (docs/dependency-maintenance.md).",
+      );
+    }
+  }
+
+  // 5. JSON validity of every harness/*.json file.
   for (const jsonFile of walk(join(ROOT, "harness"), /\.json$/)) {
     const content = readIfExists(jsonFile);
     if (content !== null && !isJsonValid(content)) {
@@ -237,7 +298,7 @@ function main() {
     }
   }
 
-  // 5. Generated views must match their harness sources (lot 4). This is what
+  // 6. Generated views must match their harness sources (lot 4). This is what
   // lets the model id inside a GENERATED file be legitimate: it is not
   // hand-written, it is compiled from harness/models.json — and any hand-edit
   // (including a model bumped only here) shows up as drift below.
@@ -255,7 +316,7 @@ function main() {
   if (problems.length === 0) {
     console.log(
       "[harness:check] OK — pointers intact, AGENTS.md in budget, no hidden Unicode, " +
-        "no stray model ids, generated views in sync.",
+        "no stray model ids, Actions pinned to SHAs, generated views in sync.",
     );
     return;
   }
