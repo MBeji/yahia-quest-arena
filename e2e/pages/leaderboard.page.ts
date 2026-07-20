@@ -19,9 +19,20 @@ export class LeaderboardPage {
   get meBadge(): Locator {
     return this.page.getByText("You", { exact: true });
   }
-  /** Empty-state message shown when no hero has any XP yet. */
+  /**
+   * The empty-state block, shown when the active board has no ranked hero yet.
+   *
+   * Matched on the shared EmptyState hook, NOT on copy. The previous locator
+   * looked for "aucun héros inscrit" (`leaderboard.emptyGlobal`), which stopped
+   * being rendered when étude 15 lot 11 replaced the flat message with the
+   * cold-start invitation ("Le classement démarre !"); étude 22 lot 4 then added
+   * a third wording for the "Ma classe" cohort. Since `reset-gameplay` wipes all
+   * XP before every run, the board is ALWAYS empty in CI — so the dead copy made
+   * this locator match nothing at all, and the test failed on a board that was in
+   * fact rendering correctly.
+   */
   get emptyState(): Locator {
-    return this.page.getByText(/aucun héros inscrit|aucun score|no heroes registered yet/i);
+    return this.page.getByTestId("empty-state");
   }
   /** All subject tabs — scoped to the active parcours' subjects (GAP-018). */
   get subjectTabs(): Locator {
