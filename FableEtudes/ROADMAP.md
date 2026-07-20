@@ -36,6 +36,18 @@
       (#250) échoue **tous les jours** (dernier run 2026-07-20 04:38, rouge au moins depuis le
       18/07) et `E2E (authenticated)` (#363, 12 échecs préexistants) n'a plus tourné vert sur
       `main` depuis le 2026-07-11.
+      **Diagnostic du volet pgTAP de #250** (constaté le 2026-07-20 en lançant `db-tests.yml`
+      sur une branche de lot) : ce sont **7 tests d'entitlements premium**, tous dormants depuis
+      le pivot gratuit — `05_parcours_entitlements` (4, 6-7, 9, 11-12) et `08_quiz_gate` (5).
+      Ils vérifient qu'un parcours premium sans grant est refusé, alors que
+      `20260711100000_free_phase_all_parcours` a mis `is_premium = false` partout. Ce n'est pas
+      une régression : ce sont des tests devenus faux par la décision produit. La session
+      « reverdir » doit donc les **re-scoper** (fixtures qui posent explicitement leur premium),
+      pas « réparer » du code. Le volet e2e (#363) reste, lui, à instruire.
+      ⚠️ **Au passage** : `db-tests.yml` (pgTAP) ne tourne **pas** sur les PR — nightly et
+      `workflow_dispatch` seulement. Toute PR portant une migration doit la dispatcher sur sa
+      branche AVANT de promouvoir, sinon rien ne prouve qu'elle s'applique avant que le merge ne
+      la pousse en prod.
 - [x] ~~**Trancher les PRs legacy**~~ — **sans objet** : vérifié le 2026-07-20, #374 (français
       3ᵉ), #376 (transcription 2ᵉ sec) et #348 (transcriptions ScribeKit) sont **toutes les
       trois mergées** les 12-13/07. Le contenu « coffre-fort » qu'elles ont sauvé est sur `main` ;
