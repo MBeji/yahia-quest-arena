@@ -6,8 +6,10 @@ import {
   extractFrontmatter,
   findModelIds,
   isJsonValid,
+  checkSkillFrontmatter,
   AGENTS_MD_MAX_LINES,
   AGENTS_MD_MAX_BYTES,
+  SKILL_DESCRIPTION_MAX,
 } from "../check.mjs";
 
 describe("checkPointer", () => {
@@ -155,6 +157,45 @@ describe("findModelIds", () => {
 
   it("returns [] on content with nothing to flag", () => {
     expect(findModelIds("# AGENTS.md\n\nGeneric prose, zero model ids.")).toEqual([]);
+  });
+});
+
+describe("checkSkillFrontmatter", () => {
+  const valid = `name: verify\ndescription: >-\n  Runs the local quality gate before declaring a task done.`;
+
+  it("accepts a conforming skill", () => {
+    expect(checkSkillFrontmatter("verify", valid)).toEqual([]);
+  });
+
+  it("flags a name that does not match its folder (breaks discovery in other tools)", () => {
+    const problems = checkSkillFrontmatter("other-folder", valid);
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toMatch(/≠ folder/);
+  });
+
+  it("flags a description over the spec's 1024-char budget", () => {
+    const long = `name: verify\ndescription: >-\n  ${"x".repeat(SKILL_DESCRIPTION_MAX + 50)}`;
+    const problems = checkSkillFrontmatter("verify", long);
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toMatch(/> spec max 1024/);
+  });
+
+  it("reads a multi-line block-scalar description as one string", () => {
+    const multi = `name: verify\ndescription: >-\n  first line\n  second line\nlicense: MIT`;
+    expect(checkSkillFrontmatter("verify", multi)).toEqual([]);
+  });
+
+  it("flags a missing description", () => {
+    expect(checkSkillFrontmatter("verify", "name: verify")).toEqual(["missing `description`"]);
+  });
+
+  it("flags a missing frontmatter entirely", () => {
+    expect(checkSkillFrontmatter("verify", null)).toEqual(["no YAML frontmatter"]);
+  });
+
+  it("flags a non-kebab-case name", () => {
+    const problems = checkSkillFrontmatter("Verify_Gate", `name: Verify_Gate\ndescription: x`);
+    expect(problems.some((p) => p.includes("kebab-case"))).toBe(true);
   });
 });
 

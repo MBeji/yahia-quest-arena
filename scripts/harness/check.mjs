@@ -86,6 +86,40 @@ export function extractFrontmatter(skillMdContent) {
   return match ? match[1] : null;
 }
 
+/** Max description length imposed by the open Agent Skills spec (agentskills.io). */
+export const SKILL_DESCRIPTION_MAX = 1024;
+
+/**
+ * Validates a skill against the portable parts of the Agent Skills spec — the
+ * ones another tool will actually enforce when it reads `.agents/skills/`:
+ * `name` must equal the folder name and match the charset, and `description`
+ * must fit the 1024-character budget (it is injected into every session's
+ * system prompt, which is why the spec caps it).
+ */
+export function checkSkillFrontmatter(folderName, frontmatter) {
+  const problems = [];
+  if (frontmatter === null) return ["no YAML frontmatter"];
+
+  const name = /^name:\s*(.+)$/m.exec(frontmatter)?.[1]?.trim();
+  if (!name) problems.push("missing `name`");
+  else if (name !== folderName) problems.push(`name "${name}" ≠ folder "${folderName}"`);
+  else if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(name))
+    problems.push(`name "${name}" is not kebab-case`);
+
+  // `description` is usually a YAML block scalar (`>-`), so take everything up
+  // to the next top-level key rather than a single line.
+  const raw = /^description:\s*(?:>-|>|\|-|\|)?\s*\n?([\s\S]*?)(?=\n[a-zA-Z-]+:|$)/m.exec(
+    frontmatter,
+  )?.[1];
+  const description = raw?.replace(/\s+/g, " ").trim() ?? "";
+  if (!description) problems.push("missing `description`");
+  else if (description.length > SKILL_DESCRIPTION_MAX) {
+    problems.push(`description is ${description.length} chars > spec max ${SKILL_DESCRIPTION_MAX}`);
+  }
+
+  return problems;
+}
+
 // Matches a model IDENTIFIER, keyed on the model FAMILY — not on the vendor
 // prefix alone. Anchoring on `claude-*` was too loose once the scan reached
 // `.github/workflows/**`: `claude-code-action` (a GitHub Action), and the
@@ -175,10 +209,18 @@ function main() {
     }
   }
 
-  // 3. Skill frontmatters — invisible Unicode only (model ids are not a
-  // meaningful signal inside skill prose).
+  // 3. Skill frontmatters — hidden Unicode, plus conformance to the portable
+  // parts of the Agent Skills spec (lot 3): the mirror at `.agents/skills/` is
+  // read by tools that DO enforce them, so a skill that drifts here silently
+  // stops working there.
   for (const skillMd of walk(join(ROOT, ".claude", "skills"), /^SKILL\.md$/)) {
     const frontmatter = extractFrontmatter(readIfExists(skillMd));
+    const folderName = rel(skillMd).split("/").at(-2);
+
+    for (const problem of checkSkillFrontmatter(folderName, frontmatter)) {
+      problems.push(`${rel(skillMd)}: ${problem} (Agent Skills spec).`);
+    }
+
     if (frontmatter === null) continue;
     for (const hit of findInvisibleChars(frontmatter)) {
       problems.push(
