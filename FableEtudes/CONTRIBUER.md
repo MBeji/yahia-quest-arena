@@ -235,6 +235,7 @@ sécurité est toujours un STOP + escalade.
 | Le contrat d'exécution de ton epic              | `NN-<slug>/ETUDE.md`                                                               |
 | Le format d'une étude                           | [`_TEMPLATE.md`](./_TEMPLATE.md)                                                   |
 | Le dispositif CI/CD & auto-merge en détail      | [`../docs/ci-cd-and-branch-protection.md`](../docs/ci-cd-and-branch-protection.md) |
+| Les pièges du poste & du travail à plusieurs    | [`../docs/agents/`](../docs/agents/README.md) (playbooks opérationnels)            |
 | Les variables d'environnement                   | [`../docs/environment-variables.md`](../docs/environment-variables.md)             |
 | Les specs normatives par sujet                  | [`../docs/`](../docs)                                                              |
 

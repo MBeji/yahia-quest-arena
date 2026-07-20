@@ -145,15 +145,16 @@ this repo (this file, `STATUS.md`, `docs/agents/`) — not only in a tool's priv
 
 ## Documentation map
 
-| Doc                                        | Role                                                                                                                                                                                                     |
-| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`ARCHITECTURE.md`](./ARCHITECTURE.md)     | Stack, directory structure, data model, deployment — the deep companion to this file                                                                                                                     |
-| [`STATUS.md`](./STATUS.md)                 | Central topo: phase, dated decisions, real feature/étude status                                                                                                                                          |
-| [`FableEtudes/`](./FableEtudes/README.md)  | Epic design studies (architect → executor contracts)                                                                                                                                                     |
-| [`content/README.md`](./content/README.md) | Content pipeline spec (French)                                                                                                                                                                           |
-| [`e2e/README.md`](./e2e/README.md)         | Playwright runbook (dedicated TEST project)                                                                                                                                                              |
-| `docs/*.md`                                | Topic specs: CI/CD, dependency cadence, env vars, logging, XSS policy, content voice, release tagging, lycée architecture, interactive question types, passation, `docs/agents/` (operational playbooks) |
-| `harness/*.json`                           | Model roles, execution policy, sync manifest (source of truth for generated per-tool views)                                                                                                              |
+| Doc                                        | Role                                                                                                                                                             |
+| ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`ARCHITECTURE.md`](./ARCHITECTURE.md)     | Stack, directory structure, data model, deployment — the deep companion to this file                                                                             |
+| [`STATUS.md`](./STATUS.md)                 | Central topo: phase, dated decisions, real feature/étude status                                                                                                  |
+| [`FableEtudes/`](./FableEtudes/README.md)  | Epic design studies (architect → executor contracts)                                                                                                             |
+| [`content/README.md`](./content/README.md) | Content pipeline spec (French)                                                                                                                                   |
+| [`e2e/README.md`](./e2e/README.md)         | Playwright runbook (dedicated TEST project)                                                                                                                      |
+| `docs/*.md`                                | Topic specs: CI/CD, dependency cadence, env vars, logging, XSS policy, content voice, release tagging, lycée architecture, interactive question types, passation |
+| [`docs/agents/`](./docs/agents/README.md)  | **Operational playbooks**: Windows-workstation traps, multi-agent collaboration (branch prefixes, congestion, contended files), content-campaign conduct         |
+| `harness/*.json`                           | Model roles, execution policy (source of truth for the generated per-tool views)                                                                                 |
 
 ## Known gotchas / traps
 
