@@ -26,7 +26,11 @@ name: Second opinion (dormant)
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    # `labeled` lets someone request a second opinion on demand via the `second-avis`
+    # label (see the scope pre-gate below). The path/label/dispatch scoping is decided
+    # in-job, not with a trigger-level `paths:` filter — a `paths:` filter would also
+    # drop the label event on a non-risky PR, so "chemins ET/OU label" couldn't both hold.
+    types: [opened, synchronize, labeled]
   workflow_dispatch:
 
 concurrency:
@@ -46,6 +50,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          # Full history so the scope pre-gate can diff base...head for the PR's files.
+          fetch-depth: 0
 
       # Deux verrous plutôt qu'un : le secret dit « on paie », models.json dit
       # « voici avec quoi ». Il faut les deux, sinon on skippe en vert.
@@ -69,8 +76,24 @@ jobs:
             echo "model=$model" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Cross-family review
+      # Deterministic scope pre-gate (étude "IA → déterministe", lot L5): bound the
+      # cross-family review to PRs where a missed defect would actually ship — app code
+      # (non-test), a DB migration, or CI/automation — or an explicit `second-avis` label
+      # / manual dispatch. Docs-only, test-only and config-only PRs skip it. This puts the
+      # economy in the mechanics, before the guard is ever armed. Any error reports
+      # run=false; rapid-push debounce stays handled by `concurrency: cancel-in-progress`.
+      - name: Scope pre-gate - is this PR in scope?
+        id: scope
         if: steps.guard.outputs.armed == 'true'
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: node scripts/ci/second-opinion-pregate.mjs
+
+      - name: Cross-family review
+        if: steps.guard.outputs.armed == 'true' && steps.scope.outputs.run == 'true'
         uses: openai/codex-action@52fe01ec70a42f454c9d2ebd47598f9fd6893d56 # v1
         with:
           openai_api_key: ${{ secrets.OPENAI_API_KEY }}
