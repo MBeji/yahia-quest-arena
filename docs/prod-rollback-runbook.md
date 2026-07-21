@@ -4,7 +4,8 @@
 > les trois premières minutes sont en haut, le raisonnement en dessous.
 > Compagnons : [`backup-restore-runbook.md`](./backup-restore-runbook.md) (l'axe données),
 > [`ci-cd-and-branch-protection.md`](./ci-cd-and-branch-protection.md) (la chaîne qui déploie),
-> [`release-tagging-policy.md`](./release-tagging-policy.md) (les tags).
+> [`release-tagging-policy.md`](./release-tagging-policy.md) (les tags),
+> [`baseline-snapshot-runbook.md`](./baseline-snapshot-runbook.md) (poser un point de bascule).
 
 ---
 

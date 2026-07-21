@@ -1,11 +1,12 @@
 # Politique de tags
 
-Deux familles de tags coexistent, avec des rôles distincts — ne pas les confondre.
+Trois familles de tags coexistent, avec des rôles distincts — ne pas les confondre.
 
-| Famille        | Exemple               | Coupé par            | Répond à                          |
-| -------------- | --------------------- | -------------------- | --------------------------------- |
-| **Release**    | `v0.2.0`              | `release.yml`        | « quelle version est-ce ? »       |
-| **Checkpoint** | `checkpoint/2026-W30` | `checkpoint-tag.yml` | « où revenir si la prod tombe ? » |
+| Famille        | Exemple               | Coupé par            | Répond à                           |
+| -------------- | --------------------- | -------------------- | ---------------------------------- |
+| **Release**    | `v0.2.0`              | `release.yml`        | « quelle version est-ce ? »        |
+| **Checkpoint** | `checkpoint/2026-W30` | `checkpoint-tag.yml` | « où revenir si la prod tombe ? »  |
+| **Baseline**   | `baseline/2026-07-21` | manuel (runbook)     | « figer les 3 dépôts + la base ? » |
 
 Un tag de release marque une **intention** (on a décidé de sortir cette version). Un checkpoint
 marque une **preuve** (ce commit a passé toutes les suites). C'est le second qu'on utilise en
@@ -55,6 +56,19 @@ Usage en incident : [`prod-rollback-runbook.md`](./prod-rollback-runbook.md).
   puis merger. Rien d'autre à faire à la main.
 - Correctif urgent : brancher sur `hotfix/…` (exempté du gel des merges), correction minimale,
   bump de correctif.
+
+---
+
+## Baselines — la bascule système complète
+
+Release et checkpoint ne concernent que **ce** dépôt. Un **baseline** coordonne les **trois**
+dépôts (`yahia-quest-arena`, `yahia-quest-content`, `ScribeKit`) **et** l'état vivant de la prod
+(base, déploiement, configuration) en un point de retour daté `baseline/AAAA-MM-JJ`. On le pose à
+la main, quand tout est vert, avant un chantier à risque.
+
+Un tag ne suffit pas : le bundle complet (dump de base hors git, tête de migration,
+`content_releases.git_sha`, déploiement Vercel, inventaire env) et sa procédure vivent dans
+[`baseline-snapshot-runbook.md`](./baseline-snapshot-runbook.md).
 
 ---
 
