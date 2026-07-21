@@ -66,8 +66,21 @@ jobs:
           node-version: 22
           cache: npm
 
+      # Deterministic pre-gate (étude "IA → déterministe", lot L3): only wake the agent
+      # when the last ~26 h on `main` merged something a test suite could care about. An
+      # empty or documentation-only window is provably an "all green" run, so we skip the
+      # agent — and the npm ci + model + sweep below — staying green. Scheduled runs only;
+      # a manual "Run workflow" always sweeps (the operator asked for it). Any pre-gate
+      # error reports skip=false, so on doubt the agent runs exactly as before.
+      - name: Pre-gate - is there test-relevant work?
+        id: pregate
+        if: steps.guard.outputs.configured == 'true' && github.event_name == 'schedule'
+        env:
+          WINDOW_HOURS: "26"
+        run: node scripts/ci/regression-guard-pregate.mjs
+
       - name: Install dependencies
-        if: steps.guard.outputs.configured == 'true'
+        if: steps.guard.outputs.configured == 'true' && steps.pregate.outputs.skip != 'true'
         run: npm ci --no-audit --no-fund
 
       # Le modèle de ce garde n'est pas écrit ici : il vient de harness/models.json via
@@ -75,14 +88,14 @@ jobs:
       # harness:check échoue si un identifiant réapparaît en dur dans un workflow.
       - name: Resolve the model for role garde-tests
         id: model
-        if: steps.guard.outputs.configured == 'true'
+        if: steps.guard.outputs.configured == 'true' && steps.pregate.outputs.skip != 'true'
         run: |
           model="$(node -p "require('./harness/models.json').roles['garde-tests'].model")"
           echo "model=$model" >> "$GITHUB_OUTPUT"
           echo "Role garde-tests -> $model (source: harness/models.json)"
 
       - name: Run the regression-guard sweep
-        if: steps.guard.outputs.configured == 'true'
+        if: steps.guard.outputs.configured == 'true' && steps.pregate.outputs.skip != 'true'
         uses: anthropics/claude-code-action@af0559ee4f514d1ef21826982bed13f7edc3c35e # v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
@@ -119,5 +132,5 @@ jobs:
       # (which broke the earlier inline `jq -s`). Skips with the rest when the
       # token is absent (graceful-skip path stays green).
       - name: Fail loudly if the sweep errored
-        if: ${{ always() && steps.guard.outputs.configured == 'true' }}
+        if: ${{ always() && steps.guard.outputs.configured == 'true' && steps.pregate.outputs.skip != 'true' }}
         run: python3 .github/scripts/check-claude-result.py "$RUNNER_TEMP/claude-execution-output.json"
