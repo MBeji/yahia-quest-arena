@@ -1,7 +1,16 @@
 /**
- * Provision the TEST Supabase project: apply ALL migrations (schema + generated
- * content + shop items + RPCs) via the Supabase CLI. Idempotent — the CLI tracks
+ * Provision the TEST Supabase project's SCHEMA: apply ALL migrations (tables,
+ * RLS, RPCs, and the hand-written seed migrations — badges/shop items plus the
+ * legacy `mcq` seed catalogue) via the Supabase CLI. Idempotent — the CLI tracks
  * applied migrations, so re-running only pushes what's new.
+ *
+ * ⚠️ This does NOT provision the pedagogical corpus. Since étude 24 (#544) the
+ * generated content left this repo for the private one and no longer travels in
+ * migrations, so `db push` alone yields only the legacy `mcq` seed — no native
+ * question types (numeric/ordering/matching/multi), no culture-générale family.
+ * The self-contained e2e fixture catalogue that the suite's coverage depends on
+ * is seeded SEPARATELY by `npm run e2e:seed-content`
+ * (scripts/e2e/seed-fixture-content.mjs), run right after this in `e2e:setup`.
  *
  * Needs the TEST database connection string (NOT the API URL):
  *   Supabase → Project Settings → Database → Connection string → URI.
