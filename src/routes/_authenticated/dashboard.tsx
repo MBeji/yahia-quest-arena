@@ -39,6 +39,14 @@ import { PageShell } from "@/components/ui/page-shell";
 import { GoldProgress } from "@/components/game/gold-progress";
 
 const GoldAmbientCanvas = lazy(() => import("@/components/visual/gold-ambient-canvas"));
+// « Carte de compétences » (étude 07 lot 4) : lazy comme les sections lourdes du dashboard —
+// son code (groupement + interaction « S'entraîner ») et le glue de la server fn sortent ainsi
+// du chunk eager, qui reste sous budget. Les données, elles, sont déjà chargées par getDashboard.
+const CompetencyMapPanel = lazy(() =>
+  import("@/features/progression/components/competency-map-panel").then((m) => ({
+    default: m.CompetencyMapPanel,
+  })),
+);
 import { formatStudentAllianceCode } from "@/features/parent-report";
 import { useT } from "@/lib/i18n";
 import { xpToNextLevel, xpWithinLevel } from "@/shared/lib/level";
@@ -289,6 +297,18 @@ function Dashboard() {
             le panneau montre les trois. Le composant vit dans la feature `progression` et ses
             données viennent de `getDashboard`, qui n'appelle `get_daily_plan` qu'une fois. */}
         <DailyReviewPanel items={data.dailyPlan ?? []} />
+
+        {/* « Carte de compétences » (étude 07, lot 4) — la progression PÉDAGOGIQUE sous la
+            révision : où en est vraiment l'élève, par compétence, et ce qui le bloque (R-5).
+            Données via `getDashboard` (une lecture de la carte, une des blocages) ; le composant
+            est lazy (voir le budget bundle du dashboard). */}
+        <Suspense fallback={null}>
+          <CompetencyMapPanel
+            map={data.competencyMap ?? []}
+            blockers={data.competencyBlockers ?? []}
+            blockedSlug={data.competencyBlockedSlug ?? null}
+          />
+        </Suspense>
 
         {/* Push opt-in — self-hides when push is unavailable in this browser. */}
         <EnablePushCard />

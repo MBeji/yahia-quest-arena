@@ -137,6 +137,13 @@ export const ar: TranslationKeys = {
     dailyPlanReasonToday: "{chapter} يحتاج مراجعة اليوم",
     dailyPlanWeak: "رُصدت هنا نقطة ضعف",
     dailyPlanCta: "راجع",
+    // خريطة الكفاءات (الدراسة 07، الدفعة 4). الحالة الفارغة دعوة لا لوم.
+    competencyTitle: "خريطة كفاءاتك",
+    competencyEmpty: "أنجز بعض التمارين وستُضيء خريطة كفاءاتك هنا.",
+    competencyEvaluating: "قيد التقييم",
+    competencyBlockersTitle: "ما الذي يعيقك في {competency}",
+    competencyBlockersTitleGeneric: "ما الذي يعيقك",
+    competencyTrainCta: "تدرّب",
     continueLabel: "متابعة",
     dungeonDesc: "جميع المواد مختلطة",
     dailyQuests: "المهام اليومية",
