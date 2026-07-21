@@ -116,23 +116,32 @@ export const requireServerFnAuth = {
           return;
         }
 
-        // Collect identifiers from statically-analyzable array-literal arguments.
-        let sawArrayLiteral = false;
+        // Inspect the middleware array(s). We only ever report when we can PROVE no
+        // recognized auth middleware is present — i.e. every argument is an array
+        // literal of plain identifiers, none of them recognized. Anything we cannot
+        // resolve statically (a `.middleware(variable)`, a `[...spread]`, or a
+        // non-identifier element like `[obj.authMw]`) marks the chain unverifiable and
+        // we stay silent, guaranteeing zero false positives.
+        let unresolvable = false;
         const found = [];
         for (const call of middlewareCalls) {
           const arg = call.arguments[0];
-          if (!arg || arg.type !== "ArrayExpression") continue;
-          sawArrayLiteral = true;
+          if (!arg || arg.type !== "ArrayExpression") {
+            unresolvable = true;
+            continue;
+          }
           for (const element of arg.elements) {
-            if (element && element.type === "Identifier") {
+            if (!element) continue; // array hole (elision) — ignore
+            if (element.type === "Identifier") {
               found.push(element.name);
               if (allowed.has(element.name)) return; // recognized auth middleware present → OK
+            } else {
+              unresolvable = true; // spread / call / member expression — cannot resolve
             }
           }
         }
 
-        // A `.middleware(variable)` / spread we cannot inspect → unverifiable, stay silent.
-        if (!sawArrayLiteral) return;
+        if (unresolvable) return;
 
         context.report({
           node,

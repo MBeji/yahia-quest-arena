@@ -12,13 +12,13 @@ chaîne `auto-pr`/`automerge`/`report-close`) et l'app **ne consomme aucun token
 Mais **cinq surfaces** font encore travailler un agent là où tout ou partie du travail est
 mécanique :
 
-| #   | Surface                                | Fréquence                 | Part remplaçable par du déterministe                 | Priorité |
-| --- | -------------------------------------- | ------------------------- | ---------------------------------------------------- | -------- |
-| 1   | Hook agent pré-commit                  | **chaque `git commit`**   | ~4 checks sur 5 (patterns/AST/diff)                  | **P1**   |
-| 2   | `report-triage.yml`                    | 6×/jour + dispatch        | le re-run sur file inchangée + dédup + pré-screening | **P1**   |
-| 3   | `regression-guard.yml`                 | 2×/semaine                | le chemin « tout est vert, rien à faire »            | P2       |
-| 4   | `upgrade-guard.yml`                    | 2×/semaine                | tout le lot patch/minor (Renovate ou script)         | P2       |
-| 5   | `second-opinion.yml` (dormant)         | à l'activation            | le déclenchement (filtre de chemins)                 | P3       |
+| #   | Surface                        | Fréquence               | Part remplaçable par du déterministe                 | Priorité |
+| --- | ------------------------------ | ----------------------- | ---------------------------------------------------- | -------- |
+| 1   | Hook agent pré-commit          | **chaque `git commit`** | ~4 checks sur 5 (patterns/AST/diff)                  | **P1**   |
+| 2   | `report-triage.yml`            | 6×/jour + dispatch      | le re-run sur file inchangée + dédup + pré-screening | **P1**   |
+| 3   | `regression-guard.yml`         | 2×/semaine              | le chemin « tout est vert, rien à faire »            | P2       |
+| 4   | `upgrade-guard.yml`            | 2×/semaine              | tout le lot patch/minor (Renovate ou script)         | P2       |
+| 5   | `second-opinion.yml` (dormant) | à l'activation          | le déclenchement (filtre de chemins)                 | P3       |
 
 Le principe : **l'IA écrit le script une fois ; le script tourne ensuite gratuitement,
 instantanément et à l'identique pour toujours.** L'agent ne doit rester que là où il faut un
@@ -57,13 +57,13 @@ Constats d'abord, pour cadrer :
 
 Les surfaces qui consomment, elles :
 
-| Surface                       | Déclencheur                          | Modèle (rôle)                     | Ce qu'elle fait                                                                     |
-| ----------------------------- | ------------------------------------ | --------------------------------- | ----------------------------------------------------------------------------------- |
-| Hook agent pré-commit         | chaque `git commit` (PreToolUse)     | `hook-precommit` (Sonnet)         | passe rapide sur le diff indexé : secrets, affaiblissement du gate, server fn nue…   |
-| `regression-guard.yml`        | lun + jeu 23:00 UTC                  | `garde-tests` (Sonnet), ≤40 tours | réconcilie les suites de tests avec les changements du jour                          |
-| `upgrade-guard.yml`           | mar + ven après nightly vert         | `garde-deps` (Sonnet), ≤60 tours  | détecte + applique les montées de version, PR patch/minor + PR par major             |
-| `report-triage.yml`           | cron `*/4h` + dispatch + manuel      | `garde-triage` (Sonnet), ≤60 tours| screening sécurité, triage, dédup, reproduction, fix, PR + issue de clôture          |
-| `second-opinion.yml`          | chaque push de chaque PR (dormant)   | `second-avis` (null)              | second avis d'une autre famille de modèles — coût nul tant que dormant               |
+| Surface                | Déclencheur                        | Modèle (rôle)                      | Ce qu'elle fait                                                                    |
+| ---------------------- | ---------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------- |
+| Hook agent pré-commit  | chaque `git commit` (PreToolUse)   | `hook-precommit` (Sonnet)          | passe rapide sur le diff indexé : secrets, affaiblissement du gate, server fn nue… |
+| `regression-guard.yml` | lun + jeu 23:00 UTC                | `garde-tests` (Sonnet), ≤40 tours  | réconcilie les suites de tests avec les changements du jour                        |
+| `upgrade-guard.yml`    | mar + ven après nightly vert       | `garde-deps` (Sonnet), ≤60 tours   | détecte + applique les montées de version, PR patch/minor + PR par major           |
+| `report-triage.yml`    | cron `*/4h` + dispatch + manuel    | `garde-triage` (Sonnet), ≤60 tours | screening sécurité, triage, dédup, reproduction, fix, PR + issue de clôture        |
+| `second-opinion.yml`   | chaque push de chaque PR (dormant) | `second-avis` (null)               | second avis d'une autre famille de modèles — coût nul tant que dormant             |
 
 ## 3. Grille de décision (quand IA, quand script)
 
@@ -87,13 +87,13 @@ et ne réveille l'agent que s'il y en a.** C'est déjà le pattern de `report-tr
 C'est la surface la plus fréquente : **chaque commit de chaque session**, jusqu'à 180 s de
 latence + tokens, pour cinq checks dont quatre sont des patterns :
 
-| Check du prompt actuel                                              | Remplaçable ? | Par quoi                                                                                                                                       |
-| ------------------------------------------------------------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| Secret/clé/token en dur                                             | ✅            | scan du diff indexé par regex à haute précision (patterns `sk-`, `eyJ`, PEM, URL avec credentials…) — ou `gitleaks protect --staged` si l'on accepte la dépendance |
-| `@ts-ignore`, `as any`, eslint-disable inline, `--no-verify`, seuils | ✅            | grep des **lignes ajoutées** du diff indexé (`git diff --cached -U0`) — signal exact, zéro faux positif sur du code existant                     |
-| Server fn sans `requireSupabaseAuth` / sans `.inputValidator`        | ✅ et mieux   | **règle ESLint maison (AST)** sur `createServerFn` — tourne alors dans `npm run lint`, donc au pre-push et en CI aussi, pas seulement au commit  |
-| Migration destructive (DROP/REVOKE) + code dans le même commit       | ✅            | check d'ensemble de fichiers : si le diff indexé contient une migration matchant `DROP\|REVOKE` **et** des fichiers `src/**` → bloquer (DoD §7) |
-| Contournement d'une gate anti-triche/premium/RLS                     | ❌ sémantique | reste couvert par `/code-review` à la PR + la revue humaine — c'est déjà sa place selon le prompt lui-même (« PAS une revue d'architecture »)   |
+| Check du prompt actuel                                               | Remplaçable ? | Par quoi                                                                                                                                                           |
+| -------------------------------------------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Secret/clé/token en dur                                              | ✅            | scan du diff indexé par regex à haute précision (patterns `sk-`, `eyJ`, PEM, URL avec credentials…) — ou `gitleaks protect --staged` si l'on accepte la dépendance |
+| `@ts-ignore`, `as any`, eslint-disable inline, `--no-verify`, seuils | ✅            | grep des **lignes ajoutées** du diff indexé (`git diff --cached -U0`) — signal exact, zéro faux positif sur du code existant                                       |
+| Server fn sans `requireSupabaseAuth` / sans `.inputValidator`        | ✅ et mieux   | **règle ESLint maison (AST)** sur `createServerFn` — tourne alors dans `npm run lint`, donc au pre-push et en CI aussi, pas seulement au commit                    |
+| Migration destructive (DROP/REVOKE) + code dans le même commit       | ✅            | check d'ensemble de fichiers : si le diff indexé contient une migration matchant `DROP\|REVOKE` **et** des fichiers `src/**` → bloquer (DoD §7)                    |
+| Contournement d'une gate anti-triche/premium/RLS                     | ❌ sémantique | reste couvert par `/code-review` à la PR + la revue humaine — c'est déjà sa place selon le prompt lui-même (« PAS une revue d'architecture »)                      |
 
 **Proposition** : remplacer le hook agent par `node .claude/hooks/precommit-checks.mjs`
 (type `command`, comme `guard-generated.mjs`), testé unitairement dans
@@ -204,14 +204,14 @@ vérifie l'agent, pas l'inverse — le bon sens de la relation).
 
 ## 6. Plan par lots proposé
 
-| Lot     | Contenu                                                                                                | Effort | Gain tokens/latence                        | Risque                                                                 |
-| ------- | ------------------------------------------------------------------------------------------------------ | ------ | ------------------------------------------ | ---------------------------------------------------------------------- |
-| **L1**  | Hook pré-commit déterministe (`precommit-checks.mjs` + tests) ; retirer le hook agent de `policy.json`/sync | S      | **le plus gros** (chaque commit)           | faux négatifs sémantiques → assumés, couverts par PR review            |
-| **L1b** | Règle ESLint `createServerFn` (auth middleware + inputValidator obligatoires)                          | S      | indirect (check partout, plus au commit)   | faible ; à calibrer sur les server fns publiques légitimes si il y en a |
-| **L2**  | `report-triage` : gate « nouveaux IDs », dédup par empreinte, pré-screening regex                      | M      | ~majorité des 42 runs/semaine → no-op      | rater un « nouveau » cas — mitigé par le dispatch instantané inchangé  |
-| **L3**  | `regression-guard` : pré-gate fenêtre vide + verify vert + couverture stable                           | S      | ~la moitié des runs (les jours calmes)     | faible (le pré-gate ne peut que skipper un run qui aurait dit « vert ») |
-| **L4**  | `upgrade-guard` : Renovate (ou script) pour patch/minor ; agent en mode réparation de major rouge      | M-L    | le job le plus cher → token-free nominal   | migration de process ; à faire en gardant l'automerge existant          |
-| **L5**  | `second-opinion` : filtre chemins + label + debounce (avant toute activation)                          | S      | préventif                                  | nul (dormant)                                                          |
+| Lot     | Contenu                                                                                                     | Effort | Gain tokens/latence                      | Risque                                                                  |
+| ------- | ----------------------------------------------------------------------------------------------------------- | ------ | ---------------------------------------- | ----------------------------------------------------------------------- |
+| **L1**  | Hook pré-commit déterministe (`precommit-checks.mjs` + tests) ; retirer le hook agent de `policy.json`/sync | S      | **le plus gros** (chaque commit)         | faux négatifs sémantiques → assumés, couverts par PR review             |
+| **L1b** | Règle ESLint `createServerFn` (auth middleware + inputValidator obligatoires)                               | S      | indirect (check partout, plus au commit) | faible ; à calibrer sur les server fns publiques légitimes si il y en a |
+| **L2**  | `report-triage` : gate « nouveaux IDs », dédup par empreinte, pré-screening regex                           | M      | ~majorité des 42 runs/semaine → no-op    | rater un « nouveau » cas — mitigé par le dispatch instantané inchangé   |
+| **L3**  | `regression-guard` : pré-gate fenêtre vide + verify vert + couverture stable                                | S      | ~la moitié des runs (les jours calmes)   | faible (le pré-gate ne peut que skipper un run qui aurait dit « vert ») |
+| **L4**  | `upgrade-guard` : Renovate (ou script) pour patch/minor ; agent en mode réparation de major rouge           | M-L    | le job le plus cher → token-free nominal | migration de process ; à faire en gardant l'automerge existant          |
+| **L5**  | `second-opinion` : filtre chemins + label + debounce (avant toute activation)                               | S      | préventif                                | nul (dormant)                                                           |
 
 Chaque lot = une PR, gate vert, conforme DoD. L1 et L2 d'abord : fréquence maximale, risque
 minimal. Après L1-L4, la consommation nominale de tokens du dépôt tend vers **zéro hors

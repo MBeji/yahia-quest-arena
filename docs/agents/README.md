@@ -6,12 +6,12 @@
 > lisible par n'importe quelle tête d'exécution et par n'importe quel humain — au lieu de rester
 > dans le cache privé d'un outil ou dans la tête de celui qui l'a appris.
 
-| Playbook                                         | Quand le lire                                                                                       |
-| ------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
-| [`poste-windows.md`](./poste-windows.md)         | Une commande se comporte bizarrement en local (chemins git, `jq`, `/tmp`, symlinks, `node_modules`) |
-| [`collaboration.md`](./collaboration.md)         | Avant de prendre un lot, et dès qu'une PR est en `needs-rebase`, dupliquée ou « bloquée »           |
-| [`campagnes-contenu.md`](./campagnes-contenu.md) | Avant de lancer une session de transcription ou de génération de contenu                            |
-| [`gardes.md`](./gardes.md)                       | Avant de toucher un workflow de garde CI, ou pour en porter un sur un autre fournisseur             |
+| Playbook                                                       | Quand le lire                                                                                               |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| [`poste-windows.md`](./poste-windows.md)                       | Une commande se comporte bizarrement en local (chemins git, `jq`, `/tmp`, symlinks, `node_modules`)         |
+| [`collaboration.md`](./collaboration.md)                       | Avant de prendre un lot, et dès qu'une PR est en `needs-rebase`, dupliquée ou « bloquée »                   |
+| [`campagnes-contenu.md`](./campagnes-contenu.md)               | Avant de lancer une session de transcription ou de génération de contenu                                    |
+| [`gardes.md`](./gardes.md)                                     | Avant de toucher un workflow de garde CI, ou pour en porter un sur un autre fournisseur                     |
 | [`etude-ia-vs-deterministe.md`](./etude-ia-vs-deterministe.md) | **Étude (proposition)** : quelles surfaces IA du dépôt remplacer par des scripts déterministes, lot par lot |
 
 **Règle de maintenance** (AGENTS.md § Multi-agent collaboration) : un savoir projet découvert en
