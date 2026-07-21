@@ -1,15 +1,11 @@
 {
-  "$comment": "The only place in this repo where a model identifier may appear (outside historical docs — FableEtudes/, docs/archive/, STATUS.md's dated journal, which are never rewritten). Consumed by the CI guard workflows (wired in étude 25 lot 5) and the pre-commit hook (lot 4). Bumping a model for a role = editing this file only. Values below are iso-current: extracted from the workflows/hook that already hardcode them, no behavior change on creation (étude 25 lot 2).",
+  "$comment": "The only place in this repo where a model identifier may appear (outside historical docs — FableEtudes/, docs/archive/, STATUS.md's dated journal, which are never rewritten). Consumed by the CI guard workflows (wired in étude 25 lot 5). Bumping a model for a role = editing this file only. The pre-commit hook stopped consuming this file when it became a deterministic script (étude « IA → déterministe » lot L1).",
   "roles": {
     "architecte": {
       "provider": "anthropic",
       "model": "claude-fable-5"
     },
     "executeur": {
-      "provider": "anthropic",
-      "model": "claude-sonnet-4-6"
-    },
-    "hook-precommit": {
       "provider": "anthropic",
       "model": "claude-sonnet-4-6"
     },
