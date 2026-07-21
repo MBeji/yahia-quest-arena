@@ -142,6 +142,13 @@ export const fr: TranslationKeys = {
     dailyPlanReasonToday: "{chapter} est à revoir aujourd'hui",
     dailyPlanWeak: "Un point faible repéré ici",
     dailyPlanCta: "Réviser",
+    // Carte de compétences (étude 07, lot 4). L'état vide invite, il ne reproche pas.
+    competencyTitle: "Ta carte de compétences",
+    competencyEmpty: "Joue quelques exercices et ta carte de compétences s'allumera ici.",
+    competencyEvaluating: "en cours d'évaluation",
+    competencyBlockersTitle: "Ce qui te bloque en {competency}",
+    competencyBlockersTitleGeneric: "Ce qui te bloque",
+    competencyTrainCta: "S'entraîner",
     continueLabel: "Continuer",
     dungeonDesc: "Toutes matières mélangées",
     dailyQuests: "Quêtes Quotidiennes",
