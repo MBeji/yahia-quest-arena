@@ -9,50 +9,48 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SignupRouteImport } from './routes/signup'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
-import { Route as PublicIndexRouteImport } from './routes/_public/index'
-import { Route as AuthResetRouteImport } from './routes/auth_.reset'
-import { Route as PublicSuiviRouteImport } from './routes/_public/suivi'
-import { Route as PublicProgrammeRouteImport } from './routes/_public/programme'
-import { Route as PublicExtrasRouteImport } from './routes/_public/extras'
-import { Route as AuthenticatedThemesRouteImport } from './routes/_authenticated/themes'
-import { Route as AuthenticatedParentReportRouteImport } from './routes/_authenticated/parent-report'
-import { Route as AuthenticatedParcoursRouteImport } from './routes/_authenticated/parcours'
-import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
-import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
-import { Route as AuthenticatedDungeonRouteImport } from './routes/_authenticated/dungeon'
-import { Route as AuthenticatedDuelRouteImport } from './routes/_authenticated/duel'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedBoutiqueRouteImport } from './routes/_authenticated/boutique'
+import { Route as PublicRouteImport } from './routes/_public'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as AuthenticatedAreneRouteImport } from './routes/_authenticated/arene'
-import { Route as PublicNiveauParcoursIdRouteImport } from './routes/_public/niveau.$parcoursId'
-import { Route as PublicMatiereSubjectIdRouteImport } from './routes/_public/matiere.$subjectId'
-import { Route as PublicExerciceExerciseIdRouteImport } from './routes/_public/exercice.$exerciseId'
-import { Route as PublicChapitreChapterIdRouteImport } from './routes/_public/chapitre.$chapterId'
-import { Route as AuthenticatedThemesFamilyIdRouteImport } from './routes/_authenticated/themes_.$familyId'
-import { Route as AuthenticatedSubjectSubjectIdRouteImport } from './routes/_authenticated/subject.$subjectId'
-import { Route as AuthenticatedQuestExerciseIdRouteImport } from './routes/_authenticated/quest.$exerciseId'
-import { Route as AuthenticatedLessonChapterIdRouteImport } from './routes/_authenticated/lesson.$chapterId'
-import { Route as AuthenticatedDuelDuelIdRouteImport } from './routes/_authenticated/duel.$duelId'
-import { Route as AuthenticatedAdminSubscriptionsRouteImport } from './routes/_authenticated/admin.subscriptions'
-import { Route as AuthenticatedAdminParcoursInterestRouteImport } from './routes/_authenticated/admin.parcours-interest'
-import { Route as AuthenticatedAdminContentReportsRouteImport } from './routes/_authenticated/admin.content-reports'
-import { Route as AuthenticatedAdminBugReportsRouteImport } from './routes/_authenticated/admin.bug-reports'
+import { Route as AuthenticatedBoutiqueRouteImport } from './routes/_authenticated/boutique'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedDuelRouteImport } from './routes/_authenticated/duel'
+import { Route as AuthenticatedDungeonRouteImport } from './routes/_authenticated/dungeon'
+import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
+import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
+import { Route as AuthenticatedParcoursRouteImport } from './routes/_authenticated/parcours'
+import { Route as AuthenticatedParentReportRouteImport } from './routes/_authenticated/parent-report'
+import { Route as AuthenticatedThemesRouteImport } from './routes/_authenticated/themes'
+import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as PublicExtrasRouteImport } from './routes/_public/extras'
+import { Route as PublicProgrammeRouteImport } from './routes/_public/programme'
+import { Route as PublicSuiviRouteImport } from './routes/_public/suivi'
+import { Route as AuthResetRouteImport } from './routes/auth_.reset'
 import { Route as AuthenticatedAdminBetaRequestsRouteImport } from './routes/_authenticated/admin.beta-requests'
+import { Route as AuthenticatedAdminBugReportsRouteImport } from './routes/_authenticated/admin.bug-reports'
+import { Route as AuthenticatedAdminContentReportsRouteImport } from './routes/_authenticated/admin.content-reports'
+import { Route as AuthenticatedAdminParcoursInterestRouteImport } from './routes/_authenticated/admin.parcours-interest'
+import { Route as AuthenticatedAdminSubscriptionsRouteImport } from './routes/_authenticated/admin.subscriptions'
+import { Route as AuthenticatedDuelDuelIdRouteImport } from './routes/_authenticated/duel.$duelId'
+import { Route as AuthenticatedLessonChapterIdRouteImport } from './routes/_authenticated/lesson.$chapterId'
+import { Route as AuthenticatedQuestExerciseIdRouteImport } from './routes/_authenticated/quest.$exerciseId'
+import { Route as AuthenticatedSubjectSubjectIdRouteImport } from './routes/_authenticated/subject.$subjectId'
+import { Route as AuthenticatedThemesFamilyIdRouteImport } from './routes/_authenticated/themes_.$familyId'
+import { Route as PublicChapitreChapterIdRouteImport } from './routes/_public/chapitre.$chapterId'
+import { Route as PublicExerciceExerciseIdRouteImport } from './routes/_public/exercice.$exerciseId'
+import { Route as PublicMatiereSubjectIdRouteImport } from './routes/_public/matiere.$subjectId'
+import { Route as PublicNiveauParcoursIdRouteImport } from './routes/_public/niveau.$parcoursId'
 import { Route as PublicProgrammeLyceeAnneeRouteImport } from './routes/_public/programme_.lycee.$annee'
 
-const SignupRoute = SignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -60,58 +58,39 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PublicRoute = PublicRouteImport.update({
-  id: '/_public',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRoute = AuthenticatedRouteImport.update({
-  id: '/_authenticated',
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PublicIndexRoute = PublicIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => PublicRoute,
-} as any)
-const AuthResetRoute = AuthResetRouteImport.update({
-  id: '/auth_/reset',
-  path: '/auth/reset',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PublicSuiviRoute = PublicSuiviRouteImport.update({
-  id: '/suivi',
-  path: '/suivi',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicProgrammeRoute = PublicProgrammeRouteImport.update({
-  id: '/programme',
-  path: '/programme',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicExtrasRoute = PublicExtrasRouteImport.update({
-  id: '/extras',
-  path: '/extras',
-  getParentRoute: () => PublicRoute,
-} as any)
-const AuthenticatedThemesRoute = AuthenticatedThemesRouteImport.update({
-  id: '/themes',
-  path: '/themes',
+const AuthenticatedAreneRoute = AuthenticatedAreneRouteImport.update({
+  id: '/arene',
+  path: '/arene',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
-const AuthenticatedParentReportRoute =
-  AuthenticatedParentReportRouteImport.update({
-    id: '/parent-report',
-    path: '/parent-report',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
-const AuthenticatedParcoursRoute = AuthenticatedParcoursRouteImport.update({
-  id: '/parcours',
-  path: '/parcours',
+const AuthenticatedBoutiqueRoute = AuthenticatedBoutiqueRouteImport.update({
+  id: '/boutique',
+  path: '/boutique',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
-const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
-  id: '/onboarding',
-  path: '/onboarding',
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedDuelRoute = AuthenticatedDuelRouteImport.update({
+  id: '/duel',
+  path: '/duel',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedDungeonRoute = AuthenticatedDungeonRouteImport.update({
+  id: '/dungeon',
+  path: '/dungeon',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedLeaderboardRoute =
@@ -120,97 +99,56 @@ const AuthenticatedLeaderboardRoute =
     path: '/leaderboard',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
-const AuthenticatedDungeonRoute = AuthenticatedDungeonRouteImport.update({
-  id: '/dungeon',
-  path: '/dungeon',
+const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
-const AuthenticatedDuelRoute = AuthenticatedDuelRouteImport.update({
-  id: '/duel',
-  path: '/duel',
+const AuthenticatedParcoursRoute = AuthenticatedParcoursRouteImport.update({
+  id: '/parcours',
+  path: '/parcours',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
-const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+const AuthenticatedParentReportRoute =
+  AuthenticatedParentReportRouteImport.update({
+    id: '/parent-report',
+    path: '/parent-report',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedThemesRoute = AuthenticatedThemesRouteImport.update({
+  id: '/themes',
+  path: '/themes',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
-const AuthenticatedBoutiqueRoute = AuthenticatedBoutiqueRouteImport.update({
-  id: '/boutique',
-  path: '/boutique',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedAreneRoute = AuthenticatedAreneRouteImport.update({
-  id: '/arene',
-  path: '/arene',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const PublicNiveauParcoursIdRoute = PublicNiveauParcoursIdRouteImport.update({
-  id: '/niveau/$parcoursId',
-  path: '/niveau/$parcoursId',
+const PublicIndexRoute = PublicIndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => PublicRoute,
 } as any)
-const PublicMatiereSubjectIdRoute = PublicMatiereSubjectIdRouteImport.update({
-  id: '/matiere/$subjectId',
-  path: '/matiere/$subjectId',
+const PublicExtrasRoute = PublicExtrasRouteImport.update({
+  id: '/extras',
+  path: '/extras',
   getParentRoute: () => PublicRoute,
 } as any)
-const PublicExerciceExerciseIdRoute =
-  PublicExerciceExerciseIdRouteImport.update({
-    id: '/exercice/$exerciseId',
-    path: '/exercice/$exerciseId',
-    getParentRoute: () => PublicRoute,
-  } as any)
-const PublicChapitreChapterIdRoute = PublicChapitreChapterIdRouteImport.update({
-  id: '/chapitre/$chapterId',
-  path: '/chapitre/$chapterId',
+const PublicProgrammeRoute = PublicProgrammeRouteImport.update({
+  id: '/programme',
+  path: '/programme',
   getParentRoute: () => PublicRoute,
 } as any)
-const AuthenticatedThemesFamilyIdRoute =
-  AuthenticatedThemesFamilyIdRouteImport.update({
-    id: '/themes_/$familyId',
-    path: '/themes/$familyId',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
-const AuthenticatedSubjectSubjectIdRoute =
-  AuthenticatedSubjectSubjectIdRouteImport.update({
-    id: '/subject/$subjectId',
-    path: '/subject/$subjectId',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
-const AuthenticatedQuestExerciseIdRoute =
-  AuthenticatedQuestExerciseIdRouteImport.update({
-    id: '/quest/$exerciseId',
-    path: '/quest/$exerciseId',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
-const AuthenticatedLessonChapterIdRoute =
-  AuthenticatedLessonChapterIdRouteImport.update({
-    id: '/lesson/$chapterId',
-    path: '/lesson/$chapterId',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
-const AuthenticatedDuelDuelIdRoute = AuthenticatedDuelDuelIdRouteImport.update({
-  id: '/$duelId',
-  path: '/$duelId',
-  getParentRoute: () => AuthenticatedDuelRoute,
+const PublicSuiviRoute = PublicSuiviRouteImport.update({
+  id: '/suivi',
+  path: '/suivi',
+  getParentRoute: () => PublicRoute,
 } as any)
-const AuthenticatedAdminSubscriptionsRoute =
-  AuthenticatedAdminSubscriptionsRouteImport.update({
-    id: '/admin/subscriptions',
-    path: '/admin/subscriptions',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
-const AuthenticatedAdminParcoursInterestRoute =
-  AuthenticatedAdminParcoursInterestRouteImport.update({
-    id: '/admin/parcours-interest',
-    path: '/admin/parcours-interest',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any)
-const AuthenticatedAdminContentReportsRoute =
-  AuthenticatedAdminContentReportsRouteImport.update({
-    id: '/admin/content-reports',
-    path: '/admin/content-reports',
+const AuthResetRoute = AuthResetRouteImport.update({
+  id: '/auth_/reset',
+  path: '/auth/reset',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminBetaRequestsRoute =
+  AuthenticatedAdminBetaRequestsRouteImport.update({
+    id: '/admin/beta-requests',
+    path: '/admin/beta-requests',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedAdminBugReportsRoute =
@@ -219,12 +157,74 @@ const AuthenticatedAdminBugReportsRoute =
     path: '/admin/bug-reports',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
-const AuthenticatedAdminBetaRequestsRoute =
-  AuthenticatedAdminBetaRequestsRouteImport.update({
-    id: '/admin/beta-requests',
-    path: '/admin/beta-requests',
+const AuthenticatedAdminContentReportsRoute =
+  AuthenticatedAdminContentReportsRouteImport.update({
+    id: '/admin/content-reports',
+    path: '/admin/content-reports',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedAdminParcoursInterestRoute =
+  AuthenticatedAdminParcoursInterestRouteImport.update({
+    id: '/admin/parcours-interest',
+    path: '/admin/parcours-interest',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedAdminSubscriptionsRoute =
+  AuthenticatedAdminSubscriptionsRouteImport.update({
+    id: '/admin/subscriptions',
+    path: '/admin/subscriptions',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedDuelDuelIdRoute = AuthenticatedDuelDuelIdRouteImport.update({
+  id: '/$duelId',
+  path: '/$duelId',
+  getParentRoute: () => AuthenticatedDuelRoute,
+} as any)
+const AuthenticatedLessonChapterIdRoute =
+  AuthenticatedLessonChapterIdRouteImport.update({
+    id: '/lesson/$chapterId',
+    path: '/lesson/$chapterId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedQuestExerciseIdRoute =
+  AuthenticatedQuestExerciseIdRouteImport.update({
+    id: '/quest/$exerciseId',
+    path: '/quest/$exerciseId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedSubjectSubjectIdRoute =
+  AuthenticatedSubjectSubjectIdRouteImport.update({
+    id: '/subject/$subjectId',
+    path: '/subject/$subjectId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedThemesFamilyIdRoute =
+  AuthenticatedThemesFamilyIdRouteImport.update({
+    id: '/themes_/$familyId',
+    path: '/themes/$familyId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const PublicChapitreChapterIdRoute = PublicChapitreChapterIdRouteImport.update({
+  id: '/chapitre/$chapterId',
+  path: '/chapitre/$chapterId',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicExerciceExerciseIdRoute =
+  PublicExerciceExerciseIdRouteImport.update({
+    id: '/exercice/$exerciseId',
+    path: '/exercice/$exerciseId',
+    getParentRoute: () => PublicRoute,
+  } as any)
+const PublicMatiereSubjectIdRoute = PublicMatiereSubjectIdRouteImport.update({
+  id: '/matiere/$subjectId',
+  path: '/matiere/$subjectId',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicNiveauParcoursIdRoute = PublicNiveauParcoursIdRouteImport.update({
+  id: '/niveau/$parcoursId',
+  path: '/niveau/$parcoursId',
+  getParentRoute: () => PublicRoute,
+} as any)
 const PublicProgrammeLyceeAnneeRoute =
   PublicProgrammeLyceeAnneeRouteImport.update({
     id: '/programme_/lycee/$annee',
@@ -461,25 +461,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_public': {
@@ -489,102 +475,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_public/': {
-      id: '/_public/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof PublicIndexRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/auth_/reset': {
-      id: '/auth_/reset'
-      path: '/auth/reset'
-      fullPath: '/auth/reset'
-      preLoaderRoute: typeof AuthResetRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_public/suivi': {
-      id: '/_public/suivi'
-      path: '/suivi'
-      fullPath: '/suivi'
-      preLoaderRoute: typeof PublicSuiviRouteImport
-      parentRoute: typeof PublicRoute
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_public/programme': {
-      id: '/_public/programme'
-      path: '/programme'
-      fullPath: '/programme'
-      preLoaderRoute: typeof PublicProgrammeRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/extras': {
-      id: '/_public/extras'
-      path: '/extras'
-      fullPath: '/extras'
-      preLoaderRoute: typeof PublicExtrasRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_authenticated/themes': {
-      id: '/_authenticated/themes'
-      path: '/themes'
-      fullPath: '/themes'
-      preLoaderRoute: typeof AuthenticatedThemesRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/parent-report': {
-      id: '/_authenticated/parent-report'
-      path: '/parent-report'
-      fullPath: '/parent-report'
-      preLoaderRoute: typeof AuthenticatedParentReportRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/parcours': {
-      id: '/_authenticated/parcours'
-      path: '/parcours'
-      fullPath: '/parcours'
-      preLoaderRoute: typeof AuthenticatedParcoursRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/onboarding': {
-      id: '/_authenticated/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/leaderboard': {
-      id: '/_authenticated/leaderboard'
-      path: '/leaderboard'
-      fullPath: '/leaderboard'
-      preLoaderRoute: typeof AuthenticatedLeaderboardRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/dungeon': {
-      id: '/_authenticated/dungeon'
-      path: '/dungeon'
-      fullPath: '/dungeon'
-      preLoaderRoute: typeof AuthenticatedDungeonRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/duel': {
-      id: '/_authenticated/duel'
-      path: '/duel'
-      fullPath: '/duel'
-      preLoaderRoute: typeof AuthenticatedDuelRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+    '/_authenticated/arene': {
+      id: '/_authenticated/arene'
+      path: '/arene'
+      fullPath: '/arene'
+      preLoaderRoute: typeof AuthenticatedAreneRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/boutique': {
@@ -594,95 +510,102 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBoutiqueRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/arene': {
-      id: '/_authenticated/arene'
-      path: '/arene'
-      fullPath: '/arene'
-      preLoaderRoute: typeof AuthenticatedAreneRouteImport
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_public/niveau/$parcoursId': {
-      id: '/_public/niveau/$parcoursId'
-      path: '/niveau/$parcoursId'
-      fullPath: '/niveau/$parcoursId'
-      preLoaderRoute: typeof PublicNiveauParcoursIdRouteImport
+    '/_authenticated/duel': {
+      id: '/_authenticated/duel'
+      path: '/duel'
+      fullPath: '/duel'
+      preLoaderRoute: typeof AuthenticatedDuelRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/dungeon': {
+      id: '/_authenticated/dungeon'
+      path: '/dungeon'
+      fullPath: '/dungeon'
+      preLoaderRoute: typeof AuthenticatedDungeonRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/leaderboard': {
+      id: '/_authenticated/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leaderboard'
+      preLoaderRoute: typeof AuthenticatedLeaderboardRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/onboarding': {
+      id: '/_authenticated/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/parcours': {
+      id: '/_authenticated/parcours'
+      path: '/parcours'
+      fullPath: '/parcours'
+      preLoaderRoute: typeof AuthenticatedParcoursRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/parent-report': {
+      id: '/_authenticated/parent-report'
+      path: '/parent-report'
+      fullPath: '/parent-report'
+      preLoaderRoute: typeof AuthenticatedParentReportRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/themes': {
+      id: '/_authenticated/themes'
+      path: '/themes'
+      fullPath: '/themes'
+      preLoaderRoute: typeof AuthenticatedThemesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_public/': {
+      id: '/_public/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof PublicIndexRouteImport
       parentRoute: typeof PublicRoute
     }
-    '/_public/matiere/$subjectId': {
-      id: '/_public/matiere/$subjectId'
-      path: '/matiere/$subjectId'
-      fullPath: '/matiere/$subjectId'
-      preLoaderRoute: typeof PublicMatiereSubjectIdRouteImport
+    '/_public/extras': {
+      id: '/_public/extras'
+      path: '/extras'
+      fullPath: '/extras'
+      preLoaderRoute: typeof PublicExtrasRouteImport
       parentRoute: typeof PublicRoute
     }
-    '/_public/exercice/$exerciseId': {
-      id: '/_public/exercice/$exerciseId'
-      path: '/exercice/$exerciseId'
-      fullPath: '/exercice/$exerciseId'
-      preLoaderRoute: typeof PublicExerciceExerciseIdRouteImport
+    '/_public/programme': {
+      id: '/_public/programme'
+      path: '/programme'
+      fullPath: '/programme'
+      preLoaderRoute: typeof PublicProgrammeRouteImport
       parentRoute: typeof PublicRoute
     }
-    '/_public/chapitre/$chapterId': {
-      id: '/_public/chapitre/$chapterId'
-      path: '/chapitre/$chapterId'
-      fullPath: '/chapitre/$chapterId'
-      preLoaderRoute: typeof PublicChapitreChapterIdRouteImport
+    '/_public/suivi': {
+      id: '/_public/suivi'
+      path: '/suivi'
+      fullPath: '/suivi'
+      preLoaderRoute: typeof PublicSuiviRouteImport
       parentRoute: typeof PublicRoute
     }
-    '/_authenticated/themes_/$familyId': {
-      id: '/_authenticated/themes_/$familyId'
-      path: '/themes/$familyId'
-      fullPath: '/themes/$familyId'
-      preLoaderRoute: typeof AuthenticatedThemesFamilyIdRouteImport
-      parentRoute: typeof AuthenticatedRoute
+    '/auth_/reset': {
+      id: '/auth_/reset'
+      path: '/auth/reset'
+      fullPath: '/auth/reset'
+      preLoaderRoute: typeof AuthResetRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/subject/$subjectId': {
-      id: '/_authenticated/subject/$subjectId'
-      path: '/subject/$subjectId'
-      fullPath: '/subject/$subjectId'
-      preLoaderRoute: typeof AuthenticatedSubjectSubjectIdRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/quest/$exerciseId': {
-      id: '/_authenticated/quest/$exerciseId'
-      path: '/quest/$exerciseId'
-      fullPath: '/quest/$exerciseId'
-      preLoaderRoute: typeof AuthenticatedQuestExerciseIdRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/lesson/$chapterId': {
-      id: '/_authenticated/lesson/$chapterId'
-      path: '/lesson/$chapterId'
-      fullPath: '/lesson/$chapterId'
-      preLoaderRoute: typeof AuthenticatedLessonChapterIdRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/duel/$duelId': {
-      id: '/_authenticated/duel/$duelId'
-      path: '/$duelId'
-      fullPath: '/duel/$duelId'
-      preLoaderRoute: typeof AuthenticatedDuelDuelIdRouteImport
-      parentRoute: typeof AuthenticatedDuelRoute
-    }
-    '/_authenticated/admin/subscriptions': {
-      id: '/_authenticated/admin/subscriptions'
-      path: '/admin/subscriptions'
-      fullPath: '/admin/subscriptions'
-      preLoaderRoute: typeof AuthenticatedAdminSubscriptionsRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/admin/parcours-interest': {
-      id: '/_authenticated/admin/parcours-interest'
-      path: '/admin/parcours-interest'
-      fullPath: '/admin/parcours-interest'
-      preLoaderRoute: typeof AuthenticatedAdminParcoursInterestRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/admin/content-reports': {
-      id: '/_authenticated/admin/content-reports'
-      path: '/admin/content-reports'
-      fullPath: '/admin/content-reports'
-      preLoaderRoute: typeof AuthenticatedAdminContentReportsRouteImport
+    '/_authenticated/admin/beta-requests': {
+      id: '/_authenticated/admin/beta-requests'
+      path: '/admin/beta-requests'
+      fullPath: '/admin/beta-requests'
+      preLoaderRoute: typeof AuthenticatedAdminBetaRequestsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/admin/bug-reports': {
@@ -692,12 +615,89 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminBugReportsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/admin/beta-requests': {
-      id: '/_authenticated/admin/beta-requests'
-      path: '/admin/beta-requests'
-      fullPath: '/admin/beta-requests'
-      preLoaderRoute: typeof AuthenticatedAdminBetaRequestsRouteImport
+    '/_authenticated/admin/content-reports': {
+      id: '/_authenticated/admin/content-reports'
+      path: '/admin/content-reports'
+      fullPath: '/admin/content-reports'
+      preLoaderRoute: typeof AuthenticatedAdminContentReportsRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin/parcours-interest': {
+      id: '/_authenticated/admin/parcours-interest'
+      path: '/admin/parcours-interest'
+      fullPath: '/admin/parcours-interest'
+      preLoaderRoute: typeof AuthenticatedAdminParcoursInterestRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin/subscriptions': {
+      id: '/_authenticated/admin/subscriptions'
+      path: '/admin/subscriptions'
+      fullPath: '/admin/subscriptions'
+      preLoaderRoute: typeof AuthenticatedAdminSubscriptionsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/duel/$duelId': {
+      id: '/_authenticated/duel/$duelId'
+      path: '/$duelId'
+      fullPath: '/duel/$duelId'
+      preLoaderRoute: typeof AuthenticatedDuelDuelIdRouteImport
+      parentRoute: typeof AuthenticatedDuelRoute
+    }
+    '/_authenticated/lesson/$chapterId': {
+      id: '/_authenticated/lesson/$chapterId'
+      path: '/lesson/$chapterId'
+      fullPath: '/lesson/$chapterId'
+      preLoaderRoute: typeof AuthenticatedLessonChapterIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/quest/$exerciseId': {
+      id: '/_authenticated/quest/$exerciseId'
+      path: '/quest/$exerciseId'
+      fullPath: '/quest/$exerciseId'
+      preLoaderRoute: typeof AuthenticatedQuestExerciseIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/subject/$subjectId': {
+      id: '/_authenticated/subject/$subjectId'
+      path: '/subject/$subjectId'
+      fullPath: '/subject/$subjectId'
+      preLoaderRoute: typeof AuthenticatedSubjectSubjectIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/themes_/$familyId': {
+      id: '/_authenticated/themes_/$familyId'
+      path: '/themes/$familyId'
+      fullPath: '/themes/$familyId'
+      preLoaderRoute: typeof AuthenticatedThemesFamilyIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_public/chapitre/$chapterId': {
+      id: '/_public/chapitre/$chapterId'
+      path: '/chapitre/$chapterId'
+      fullPath: '/chapitre/$chapterId'
+      preLoaderRoute: typeof PublicChapitreChapterIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/exercice/$exerciseId': {
+      id: '/_public/exercice/$exerciseId'
+      path: '/exercice/$exerciseId'
+      fullPath: '/exercice/$exerciseId'
+      preLoaderRoute: typeof PublicExerciceExerciseIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/matiere/$subjectId': {
+      id: '/_public/matiere/$subjectId'
+      path: '/matiere/$subjectId'
+      fullPath: '/matiere/$subjectId'
+      preLoaderRoute: typeof PublicMatiereSubjectIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/niveau/$parcoursId': {
+      id: '/_public/niveau/$parcoursId'
+      path: '/niveau/$parcoursId'
+      fullPath: '/niveau/$parcoursId'
+      preLoaderRoute: typeof PublicNiveauParcoursIdRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/_public/programme_/lycee/$annee': {
       id: '/_public/programme_/lycee/$annee'
