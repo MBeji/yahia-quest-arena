@@ -137,6 +137,13 @@ export const en: TranslationKeys = {
     dailyPlanReasonToday: "{chapter} is due for review today",
     dailyPlanWeak: "A weak spot was spotted here",
     dailyPlanCta: "Review",
+    // Competency map (étude 07, lot 4). The empty state invites, it never scolds.
+    competencyTitle: "Your competency map",
+    competencyEmpty: "Play a few exercises and your competency map will light up here.",
+    competencyEvaluating: "still assessing",
+    competencyBlockersTitle: "What's holding you back in {competency}",
+    competencyBlockersTitleGeneric: "What's holding you back",
+    competencyTrainCta: "Practice",
     continueLabel: "Continue",
     dungeonDesc: "All subjects mixed",
     dailyQuests: "Daily Quests",

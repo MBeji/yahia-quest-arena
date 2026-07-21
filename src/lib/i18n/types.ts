@@ -152,6 +152,13 @@ export type TranslationKeys = {
     dailyPlanReasonToday: string;
     dailyPlanWeak: string;
     dailyPlanCta: string;
+    // Carte de compétences (étude 07, lot 4)
+    competencyTitle: string;
+    competencyEmpty: string;
+    competencyEvaluating: string;
+    competencyBlockersTitle: string;
+    competencyBlockersTitleGeneric: string;
+    competencyTrainCta: string;
     continueLabel: string;
     dungeonDesc: string;
     dailyQuests: string;
