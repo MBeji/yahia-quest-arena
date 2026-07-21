@@ -12,6 +12,7 @@
 | [`collaboration.md`](./collaboration.md)         | Avant de prendre un lot, et dès qu'une PR est en `needs-rebase`, dupliquée ou « bloquée »           |
 | [`campagnes-contenu.md`](./campagnes-contenu.md) | Avant de lancer une session de transcription ou de génération de contenu                            |
 | [`gardes.md`](./gardes.md)                       | Avant de toucher un workflow de garde CI, ou pour en porter un sur un autre fournisseur             |
+| [`etude-ia-vs-deterministe.md`](./etude-ia-vs-deterministe.md) | **Étude (proposition)** : quelles surfaces IA du dépôt remplacer par des scripts déterministes, lot par lot |
 
 **Règle de maintenance** (AGENTS.md § Multi-agent collaboration) : un savoir projet découvert en
 session finit **ici, dans `STATUS.md` ou dans l'étude concernée** — pas seulement dans la mémoire
