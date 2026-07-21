@@ -10,6 +10,7 @@ import {
 } from "@/shared/constants/gamification";
 import type { BadgeRow, DashboardShopItem, InventoryRow } from "@/shared/types/gamification";
 import type { DailyPlanItem } from "@/shared/types/daily-plan";
+import type { CompetencyBlocker, CompetencyMasteryRow } from "@/shared/types/competency";
 import { getCurrentWeekStartUtc, getTodayUtc } from "@/shared/lib/dates";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
@@ -108,6 +109,69 @@ async function fetchDailyPlan(supabase: unknown, limit: number): Promise<DailyPl
     return [];
   }
   return res.data ?? [];
+}
+
+/**
+ * Carte de compétences (étude 07 lot 4, US-1) + « ce qui te bloque » (R-5). Deux RPC
+ * postérieures aux types Supabase générés — contrat figé ici, comme `get_daily_plan`.
+ */
+type CompetencyMapRpcClient = {
+  rpc: (
+    fn: "get_my_competency_map",
+    args: { p_subject_family: string | null },
+  ) => PromiseLike<{ data: CompetencyMasteryRow[] | null; error: { message: string } | null }>;
+};
+type CompetencyBlockersRpcClient = {
+  rpc: (
+    fn: "get_competency_blockers",
+    args: { p_competency: string },
+  ) => PromiseLike<{ data: CompetencyBlocker[] | null; error: { message: string } | null }>;
+};
+
+/** Seuil « compétence en échec » (R-5) : sous 50, on cherche ses prérequis faibles. */
+const COMPETENCY_FAILING_THRESHOLD = 50;
+
+/**
+ * La carte de compétences de l'élève, toutes familles confondues (le panneau la groupe par
+ * matière puis domaine). Une seule lecture ; dégradation gracieuse comme `stats`/`dailyPlan` :
+ * une RPC absente (migration en cours de déploiement) laisse le tableau de bord s'afficher sans
+ * la carte plutôt que de casser la page.
+ */
+async function fetchCompetencyMap(supabase: unknown): Promise<CompetencyMasteryRow[]> {
+  const client = supabase as CompetencyMapRpcClient;
+  const res = await client.rpc("get_my_competency_map", { p_subject_family: null });
+  if (res.error) {
+    logger.warn("getDashboard.competencyMap: RPC failed, defaulting to empty", {
+      error: res.error.message,
+    });
+    return [];
+  }
+  return res.data ?? [];
+}
+
+/**
+ * Les prérequis faibles de la compétence en échec la PLUS faible (R-5). On borne le tableau de
+ * bord à UN appel supplémentaire : la compétence la plus basse sous 50 est celle dont l'élève a
+ * le plus besoin de comprendre le blocage. Rien sous le seuil → pas d'appel, pas de bloc.
+ */
+async function fetchWeakestBlockers(
+  supabase: unknown,
+  map: CompetencyMasteryRow[],
+): Promise<{ blockedSlug: string | null; blockers: CompetencyBlocker[] }> {
+  const weakest = map
+    .filter((c) => c.mastery < COMPETENCY_FAILING_THRESHOLD)
+    .sort((a, b) => a.mastery - b.mastery)[0];
+  if (!weakest) return { blockedSlug: null, blockers: [] };
+
+  const client = supabase as CompetencyBlockersRpcClient;
+  const res = await client.rpc("get_competency_blockers", { p_competency: weakest.slug });
+  if (res.error) {
+    logger.warn("getDashboard.competencyBlockers: RPC failed, defaulting to empty", {
+      error: res.error.message,
+    });
+    return { blockedSlug: weakest.slug, blockers: [] };
+  }
+  return { blockedSlug: weakest.slug, blockers: res.data ?? [] };
 }
 
 async function fetchParcoursProgress(
@@ -358,6 +422,12 @@ export const getDashboard = createServerFn({ method: "GET" })
     // n'a pas bougé d'une ligne (R-18, D-8) : il change de SOURCE, pas de règle.
     const dailyPlan = await fetchDailyPlan(supabase, DAILY_PLAN_MAX_ITEMS);
 
+    // Carte de compétences (étude 07 lot 4, US-1) + « ce qui te bloque » (R-5). La carte en une
+    // lecture ; les blocages en une seconde, seulement s'il existe une compétence en échec.
+    const competencyMap = await fetchCompetencyMap(supabase);
+    const { blockedSlug: competencyBlockedSlug, blockers: competencyBlockers } =
+      await fetchWeakestBlockers(supabase, competencyMap);
+
     // Progression officielle par matière (étude 22 R-16) — bornée aux matières du parcours
     // actif, une seule requête. Alimente l'état `done` de la carte `/parcours`.
     const progress = await fetchParcoursProgress(
@@ -390,6 +460,9 @@ export const getDashboard = createServerFn({ method: "GET" })
       nextExerciseId,
       nextAction,
       dailyPlan,
+      competencyMap,
+      competencyBlockers,
+      competencyBlockedSlug,
       promotionSuggestion,
       reviseGateway,
       currentParcoursName,
