@@ -12,7 +12,7 @@
 //                                                        harness:sync`. Pre-armed in lot 2, ahead
 //                                                        of the mirror itself landing in lot 3.)
 //   - .claude/settings.json                           (compiled from harness/policy.json +
-//                                                        models.json + prompts/ — étude 25 lot 4)
+//                                                        the hooks wired in scripts/harness/sync.mjs)
 //
 // Hand-authored migrations (e.g. 20260610_revoke_*.sql) are NOT blocked — only the
 // content-generated ones the build owns. To block, the hook exits with code 2 and
@@ -70,8 +70,8 @@ process.stdin.on("end", () => {
       `Blocked: "${filePath}" is GENERATED from the harness sources (étude 25 D-4).\n` +
         `Edit the source instead, then run \`npm run harness:sync\`:\n` +
         `  - permissions (allow/deny) → harness/policy.json\n` +
-        `  - the pre-commit hook's model → harness/models.json (role "hook-precommit")\n` +
-        `  - the pre-commit hook's prompt → harness/prompts/pre-commit-guard.md\n`,
+        `  - the hooks wiring → scripts/harness/sync.mjs (buildClaudeSettings)\n` +
+        `  - the pre-commit checks themselves → .claude/hooks/precommit-checks.mjs\n`,
     );
     process.exit(2);
   }

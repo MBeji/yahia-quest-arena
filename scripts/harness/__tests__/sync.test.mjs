@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { flattenAllow, buildClaudeSettings, serialise } from "../sync.mjs";
 
-const MODELS = { roles: { "hook-precommit": { provider: "anthropic", model: "test-model-1" } } };
 const POLICY = {
   allow: {
     $comment: "ignored — not a rule group",
@@ -13,7 +12,6 @@ const POLICY = {
     { rule: "Bash(supabase db reset:*)", reason: "destructive" },
   ],
 };
-const PROMPT = "Tu es le garde pré-commit.";
 
 describe("flattenAllow", () => {
   it("flattens intent groups into a single ordered list", () => {
@@ -39,15 +37,7 @@ describe("flattenAllow", () => {
 });
 
 describe("buildClaudeSettings", () => {
-  const settings = buildClaudeSettings({ policy: POLICY, models: MODELS, preCommitPrompt: PROMPT });
-
-  it("resolves the hook model from models.json, never hardcoded", () => {
-    expect(settings.hooks.PreToolUse[1].hooks[0].model).toBe("test-model-1");
-  });
-
-  it("injects the externalised prompt verbatim", () => {
-    expect(settings.hooks.PreToolUse[1].hooks[0].prompt).toBe(PROMPT);
-  });
+  const settings = buildClaudeSettings({ policy: POLICY });
 
   it("reduces deny entries to their rule (the reason stays documentation)", () => {
     expect(settings.permissions.deny).toEqual([
@@ -61,19 +51,23 @@ describe("buildClaudeSettings", () => {
     expect(settings.$comment).toMatch(/harness:sync/);
   });
 
-  it("keeps the deterministic command hooks wired", () => {
+  it("wires the three deterministic command hooks, including the pre-commit guard", () => {
     expect(settings.hooks.PreToolUse[0].hooks[0].command).toContain("guard-generated.mjs");
+    const preCommit = settings.hooks.PreToolUse[1].hooks[0];
+    expect(preCommit).toMatchObject({ type: "command", if: "Bash(git commit*)" });
+    expect(preCommit.command).toContain("precommit-checks.mjs");
     expect(settings.hooks.PostToolUse[0].hooks[0].command).toContain("format-changed.mjs");
   });
 
-  it("throws a explicit error when the hook-precommit role has no model", () => {
-    expect(() =>
-      buildClaudeSettings({ policy: POLICY, models: { roles: {} }, preCommitPrompt: PROMPT }),
-    ).toThrow(/hook-precommit/);
+  it("no longer emits an agent hook or a hardcoded model (étude IA→déterministe, L1)", () => {
+    const json = serialise(settings);
+    expect(json).not.toContain('"type": "agent"');
+    expect(json).not.toContain('"model"');
+    expect(json).not.toContain('"prompt"');
   });
 
   it("is deterministic — same sources produce a byte-identical object", () => {
-    const again = buildClaudeSettings({ policy: POLICY, models: MODELS, preCommitPrompt: PROMPT });
+    const again = buildClaudeSettings({ policy: POLICY });
     expect(serialise(again)).toBe(serialise(settings));
   });
 });
