@@ -172,17 +172,18 @@ this repo (this file, `STATUS.md`, `docs/agents/`) — not only in a tool's priv
 
 ## Documentation map
 
-| Doc                                                                            | Role                                                                                                                                                             |
-| ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`ARCHITECTURE.md`](./ARCHITECTURE.md)                                         | Stack, directory structure, data model, deployment — the deep companion to this file                                                                             |
-| [`STATUS.md`](./STATUS.md)                                                     | Central topo: phase, dated decisions, real feature/étude status                                                                                                  |
-| `FableEtudes/` (repo **privé**)                                                | Epic design studies (architect → executor contracts) — parties au privé avec le corpus (étude 24)                                                                |
-| [`docs/content-generation-pipeline.md`](./docs/content-generation-pipeline.md) | Content pipeline spec (French) — le moteur est ici, le corpus est au privé                                                                                       |
-| [`e2e/README.md`](./e2e/README.md)                                             | Playwright runbook (dedicated TEST project)                                                                                                                      |
-| [`docs/prod-rollback-runbook.md`](./docs/prod-rollback-runbook.md)             | **Incident prod**: geler la chaîne (`MERGE_FREEZE`), rollback Vercel, revert, checkpoints hebdo, l'axe base de données                                           |
-| `docs/*.md`                                                                    | Topic specs: CI/CD, dependency cadence, env vars, logging, XSS policy, content voice, release tagging, lycée architecture, interactive question types, passation |
-| [`docs/agents/`](./docs/agents/README.md)                                      | **Operational playbooks**: Windows-workstation traps, multi-agent collaboration (branch prefixes, congestion, contended files), content-campaign conduct         |
-| `harness/*.json`                                                               | Model roles, execution policy (source of truth for the generated per-tool views)                                                                                 |
+| Doc                                                                            | Role                                                                                                                                                         |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [`ARCHITECTURE.md`](./ARCHITECTURE.md)                                         | Stack, directory structure, data model, deployment — the deep companion to this file                                                                         |
+| [`STATUS.md`](./STATUS.md)                                                     | Central topo: phase, dated decisions, real feature/étude status                                                                                              |
+| `FableEtudes/` (repo **privé**)                                                | Epic design studies (architect → executor contracts) — parties au privé avec le corpus (étude 24)                                                            |
+| [`docs/content-generation-pipeline.md`](./docs/content-generation-pipeline.md) | Content pipeline spec (French) — le moteur est ici, le corpus est au privé                                                                                   |
+| [`e2e/README.md`](./e2e/README.md)                                             | Playwright runbook (dedicated TEST project)                                                                                                                  |
+| [`docs/prod-rollback-runbook.md`](./docs/prod-rollback-runbook.md)             | **Incident prod**: geler la chaîne (`MERGE_FREEZE`), rollback Vercel, revert, checkpoints hebdo, l'axe base de données                                       |
+| [`docs/baseline-snapshot-runbook.md`](./docs/baseline-snapshot-runbook.md)     | **Bascule système**: figer les 3 dépôts + l'état vivant (base, déploiement, config) en un point de retour daté `baseline/*`                                  |
+| `docs/*.md`                                                                    | Topic specs: CI/CD, dependency cadence, env vars, logging, XSS policy, content voice, release tagging, baseline snapshot, lycée architecture, question types |
+| [`docs/agents/`](./docs/agents/README.md)                                      | **Operational playbooks**: Windows-workstation traps, multi-agent collaboration (branch prefixes, congestion, contended files), content-campaign conduct     |
+| `harness/*.json`                                                               | Model roles, execution policy (source of truth for the generated per-tool views)                                                                             |
 
 ## Known gotchas / traps
 
