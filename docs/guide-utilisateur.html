@@ -1,0 +1,2673 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Na9ra Nal3ab — Guide utilisateur complet</title>
+    <meta
+      name="description"
+      content="Guide utilisateur illustré de Na9ra Nal3ab : comment jouer, apprendre, progresser, les parcours, les conditions de passage et le suivi parental."
+    />
+    <style>
+      :root {
+        --bg: #f5f6fc;
+        --surface: #ffffff;
+        --surface-2: #f0f1fb;
+        --surface-3: #e9ebf8;
+        --text: #191a2e;
+        --muted: #565877;
+        --border: #e3e5f2;
+        --border-strong: #cfd2ea;
+        --primary: #7c3aed;
+        --primary-ink: #5b21b6;
+        --primary-soft: #efe7fe;
+        --accent: #ec4899;
+        --accent-soft: #fde4f1;
+        --gold: #f59e0b;
+        --gold-soft: #fef1d8;
+        --coin: #d99e00;
+        --coin-soft: #fbf0c9;
+        --fire: #f43f5e;
+        --fire-soft: #ffe1e7;
+        --success: #15a34a;
+        --success-soft: #dcf7e6;
+        --info: #2563eb;
+        --info-soft: #dbe7ff;
+        --danger: #dc2626;
+        --danger-soft: #fde0e0;
+        --shadow: 0 1px 2px rgba(20, 20, 50, 0.06), 0 8px 24px rgba(20, 20, 50, 0.06);
+        --shadow-lg: 0 10px 40px rgba(60, 20, 120, 0.14);
+        --radius: 16px;
+        --radius-sm: 10px;
+        --font:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+          "Noto Sans", sans-serif;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0e0f1e;
+          --surface: #191b30;
+          --surface-2: #20223c;
+          --surface-3: #282a49;
+          --text: #edeef8;
+          --muted: #a7a9cd;
+          --border: #2c2e4e;
+          --border-strong: #3a3c63;
+          --primary: #a586f6;
+          --primary-ink: #c9b6fb;
+          --primary-soft: #241f45;
+          --accent: #f472b6;
+          --accent-soft: #3a1f33;
+          --gold: #fbbf24;
+          --gold-soft: #3a2e12;
+          --coin: #f6cf4f;
+          --coin-soft: #38300f;
+          --fire: #fb7185;
+          --fire-soft: #3a1f26;
+          --success: #4ade80;
+          --success-soft: #12321f;
+          --info: #7aa5ff;
+          --info-soft: #182642;
+          --danger: #f87171;
+          --danger-soft: #3a1c1c;
+          --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3);
+          --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font);
+        line-height: 1.65;
+        font-size: 16px;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      a {
+        color: var(--primary-ink);
+        text-underline-offset: 2px;
+      }
+      h1,
+      h2,
+      h3,
+      h4 {
+        line-height: 1.25;
+        margin: 0;
+      }
+      section {
+        scroll-margin-top: 20px;
+      }
+
+      /* ---------- HERO ---------- */
+      .hero {
+        position: relative;
+        overflow: hidden;
+        color: #fff;
+        background:
+          radial-gradient(1200px 400px at 80% -10%, rgba(236, 72, 153, 0.55), transparent 60%),
+          radial-gradient(900px 500px at 0% 110%, rgba(245, 158, 11, 0.35), transparent 55%),
+          linear-gradient(135deg, #5b21b6, #7c3aed 45%, #9333ea 75%, #c026d3);
+      }
+      .hero .wrap {
+        padding-top: 56px;
+        padding-bottom: 60px;
+      }
+      .hero .kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: 12px;
+        background: rgba(255, 255, 255, 0.16);
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        padding: 6px 12px;
+        border-radius: 999px;
+        margin-bottom: 18px;
+      }
+      .hero h1 {
+        font-size: clamp(30px, 5vw, 50px);
+        font-weight: 800;
+        margin-bottom: 10px;
+        letter-spacing: -0.01em;
+      }
+      .hero .tag {
+        font-size: clamp(17px, 2.4vw, 22px);
+        font-weight: 600;
+        opacity: 0.96;
+        margin-bottom: 6px;
+      }
+      .hero p.lead {
+        font-size: 16px;
+        max-width: 640px;
+        opacity: 0.92;
+        margin: 14px 0 0;
+      }
+      .hero-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+      .hero-badges span {
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.26);
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 600;
+        backdrop-filter: blur(4px);
+      }
+      .free-ribbon {
+        margin-top: 26px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        max-width: 660px;
+      }
+      .free-ribbon .big {
+        font-size: 30px;
+      }
+      .free-ribbon b {
+        font-size: 16px;
+      }
+      .free-ribbon small {
+        opacity: 0.9;
+        font-size: 13.5px;
+      }
+
+      /* ---------- LAYOUT BLOCKS ---------- */
+      .section {
+        padding: 52px 0 8px;
+      }
+      .section-head {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 8px;
+      }
+      .section-head .ic {
+        flex: 0 0 auto;
+        width: 46px;
+        height: 46px;
+        border-radius: 13px;
+        display: grid;
+        place-items: center;
+        font-size: 24px;
+        background: var(--primary-soft);
+        border: 1px solid var(--border);
+      }
+      .section-head h2 {
+        font-size: clamp(22px, 3vw, 30px);
+        font-weight: 800;
+        letter-spacing: -0.01em;
+      }
+      .section-sub {
+        color: var(--muted);
+        margin: 2px 0 26px;
+        font-size: 15.5px;
+        max-width: 760px;
+      }
+      .divider {
+        height: 1px;
+        background: var(--border);
+        margin: 44px 0 0;
+      }
+      .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 12px;
+        font-weight: 800;
+        color: var(--primary-ink);
+        margin: 30px 0 12px;
+      }
+
+      /* ---------- CARDS / GRID ---------- */
+      .grid {
+        display: grid;
+        gap: 16px;
+      }
+      .g2 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .g3 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      @media (max-width: 820px) {
+        .g2,
+        .g3 {
+          grid-template-columns: 1fr;
+        }
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px 20px;
+        box-shadow: var(--shadow);
+      }
+      .card h3 {
+        font-size: 17.5px;
+        font-weight: 750;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+      }
+      .card h3 .e {
+        font-size: 20px;
+      }
+      .card p {
+        margin: 6px 0;
+        color: var(--muted);
+        font-size: 15px;
+      }
+      .card .tiny {
+        font-size: 13px;
+      }
+      .feature-card {
+        position: relative;
+      }
+      .feature-card .cap {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.03em;
+        padding: 3px 9px;
+        border-radius: 999px;
+        text-transform: uppercase;
+      }
+      .cap-live {
+        background: var(--success-soft);
+        color: var(--success);
+      }
+      .cap-login {
+        background: var(--info-soft);
+        color: var(--info);
+      }
+
+      /* ---------- CALLOUTS ---------- */
+      .callout {
+        border-radius: var(--radius);
+        padding: 16px 18px;
+        margin: 18px 0;
+        border: 1px solid var(--border);
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        background: var(--surface);
+      }
+      .callout .ci {
+        font-size: 22px;
+        flex: 0 0 auto;
+        line-height: 1.3;
+      }
+      .callout h4 {
+        font-size: 15.5px;
+        margin-bottom: 3px;
+        font-weight: 750;
+      }
+      .callout p {
+        margin: 2px 0;
+        font-size: 14.5px;
+        color: var(--muted);
+      }
+      .callout.info {
+        background: var(--info-soft);
+        border-color: transparent;
+      }
+      .callout.info h4 {
+        color: var(--info);
+      }
+      .callout.tip {
+        background: var(--success-soft);
+        border-color: transparent;
+      }
+      .callout.tip h4 {
+        color: var(--success);
+      }
+      .callout.warn {
+        background: var(--gold-soft);
+        border-color: transparent;
+      }
+      .callout.warn h4 {
+        color: #a86a00;
+      }
+      .callout.gate {
+        background: var(--primary-soft);
+        border-color: transparent;
+      }
+      .callout.gate h4 {
+        color: var(--primary-ink);
+      }
+      @media (prefers-color-scheme: dark) {
+        .callout.warn h4 {
+          color: var(--gold);
+        }
+      }
+      .callout p b,
+      .callout p strong {
+        color: var(--text);
+      }
+
+      /* ---------- TABLE ---------- */
+      .table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+      }
+      table.tbl {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 520px;
+        background: var(--surface);
+        font-size: 14.5px;
+      }
+      table.tbl th,
+      table.tbl td {
+        padding: 11px 14px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+      table.tbl thead th {
+        background: var(--surface-2);
+        font-weight: 750;
+        color: var(--text);
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+      }
+      table.tbl tr:last-child td {
+        border-bottom: none;
+      }
+      table.tbl td b {
+        color: var(--text);
+      }
+      .num {
+        font-variant-numeric: tabular-nums;
+        font-weight: 700;
+        color: var(--primary-ink);
+        white-space: nowrap;
+      }
+
+      /* ---------- PILLS ---------- */
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 3px 10px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+        border: 1px solid var(--border);
+      }
+      .pill.xp {
+        background: var(--gold-soft);
+        color: #a86a00;
+      }
+      .pill.coin {
+        background: var(--coin-soft);
+        color: #8a6a00;
+      }
+      .pill.fire {
+        background: var(--fire-soft);
+        color: #b8203a;
+      }
+      .pill.ok {
+        background: var(--success-soft);
+        color: var(--success);
+      }
+      @media (prefers-color-scheme: dark) {
+        .pill.xp {
+          color: var(--gold);
+        }
+        .pill.coin {
+          color: var(--coin);
+        }
+        .pill.fire {
+          color: var(--fire);
+        }
+      }
+
+      /* ---------- FLOW / STEPS ---------- */
+      .flow {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        margin: 8px 0;
+      }
+      .flow-step {
+        background: var(--surface);
+        border: 1px solid var(--border-strong);
+        border-radius: 14px;
+        padding: 14px 18px;
+        box-shadow: var(--shadow);
+        position: relative;
+      }
+      .flow-step .fs-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .flow-step .fs-num {
+        width: 30px;
+        height: 30px;
+        border-radius: 9px;
+        background: var(--primary);
+        color: #fff;
+        font-weight: 800;
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        font-size: 15px;
+      }
+      .flow-step h4 {
+        font-size: 16px;
+        font-weight: 750;
+      }
+      .flow-step .fs-body {
+        margin: 8px 0 0 42px;
+        color: var(--muted);
+        font-size: 14.5px;
+      }
+      .flow-arrow {
+        display: grid;
+        place-items: center;
+        color: var(--primary);
+        font-size: 22px;
+        height: 26px;
+        line-height: 1;
+      }
+      .flow-cond {
+        margin: 8px 0 8px 42px;
+        font-size: 13.5px;
+        font-weight: 700;
+        color: var(--primary-ink);
+        background: var(--primary-soft);
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 999px;
+      }
+
+      /* numbered process (horizontal-ish) */
+      .steps {
+        counter-reset: step;
+        display: grid;
+        gap: 14px;
+      }
+      .steps .step {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+      }
+      .steps .step .dot {
+        counter-increment: step;
+        flex: 0 0 auto;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: #fff;
+        font-weight: 800;
+        display: grid;
+        place-items: center;
+        box-shadow: var(--shadow);
+      }
+      .steps .step .dot::before {
+        content: counter(step);
+      }
+      .steps .step .st-b {
+        padding-top: 3px;
+      }
+      .steps .step h4 {
+        font-size: 15.5px;
+        font-weight: 750;
+        margin-bottom: 2px;
+      }
+      .steps .step p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14.5px;
+      }
+
+      /* ---------- MOCKUPS ---------- */
+      .mock {
+        background: linear-gradient(135deg, #241a4d, #3a2270);
+        border-radius: var(--radius);
+        padding: 18px;
+        color: #fff;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .mock .m-label {
+        font-size: 11.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        opacity: 0.7;
+        margin-bottom: 12px;
+        font-weight: 700;
+      }
+      .m-hero {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .m-ava {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #f59e0b, #ec4899);
+        display: grid;
+        place-items: center;
+        font-size: 28px;
+        flex: 0 0 auto;
+      }
+      .m-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 12px;
+      }
+      .m-chip {
+        background: rgba(255, 255, 255, 0.13);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 999px;
+        padding: 5px 11px;
+        font-size: 12.5px;
+        font-weight: 700;
+        display: inline-flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .m-bar {
+        margin-top: 14px;
+        height: 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.16);
+        overflow: hidden;
+      }
+      .m-bar > i {
+        display: block;
+        height: 100%;
+        width: 62%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #f59e0b, #fbbf24);
+      }
+      .m-cap {
+        font-size: 12px;
+        opacity: 0.8;
+        margin-top: 6px;
+      }
+
+      .chip-demo {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 6px;
+      }
+      .rchip {
+        border-radius: 999px;
+        padding: 7px 13px;
+        font-size: 13.5px;
+        font-weight: 750;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        border: 1px solid var(--border);
+      }
+      .rchip.locked {
+        background: var(--surface-2);
+        color: var(--muted);
+      }
+      .rchip.open {
+        background: var(--primary-soft);
+        color: var(--primary-ink);
+        border-color: transparent;
+      }
+      .rchip.done {
+        background: var(--success-soft);
+        color: var(--success);
+        border-color: transparent;
+      }
+
+      /* chapter lock illustration */
+      .chapmap {
+        display: grid;
+        gap: 12px;
+      }
+      .chaprow {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px 16px;
+        box-shadow: var(--shadow);
+      }
+      .chaprow .ci2 {
+        font-size: 24px;
+        width: 40px;
+        text-align: center;
+        flex: 0 0 auto;
+      }
+      .chaprow .cbody {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+      .chaprow h4 {
+        font-size: 15.5px;
+        font-weight: 750;
+      }
+      .chaprow p {
+        margin: 2px 0 0;
+        font-size: 13.5px;
+        color: var(--muted);
+      }
+      .chaprow .state {
+        font-size: 12px;
+        font-weight: 800;
+        padding: 4px 10px;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+      .st-open {
+        background: var(--success-soft);
+        color: var(--success);
+      }
+      .st-lock {
+        background: var(--surface-3);
+        color: var(--muted);
+      }
+      .st-key {
+        background: var(--gold-soft);
+        color: #a86a00;
+      }
+      @media (prefers-color-scheme: dark) {
+        .st-key {
+          color: var(--gold);
+        }
+      }
+      .stars {
+        color: var(--gold);
+        letter-spacing: 1px;
+        font-size: 13px;
+      }
+      .stars .off {
+        color: var(--border-strong);
+      }
+
+      /* ---------- PERSONAS ---------- */
+      .persona {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 0;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        margin-bottom: 18px;
+      }
+      .persona .p-head {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        padding: 16px 20px;
+        background: var(--surface-2);
+        border-bottom: 1px solid var(--border);
+      }
+      .persona .p-emoji {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        font-size: 26px;
+        flex: 0 0 auto;
+        background: var(--surface);
+        border: 1px solid var(--border);
+      }
+      .persona .p-head h3 {
+        font-size: 17px;
+        font-weight: 800;
+      }
+      .persona .p-head .p-goal {
+        font-size: 13.5px;
+        color: var(--muted);
+        margin-top: 1px;
+      }
+      .persona .p-body {
+        padding: 16px 20px 20px;
+      }
+      .journey {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        counter-reset: j;
+      }
+      .journey li {
+        position: relative;
+        padding: 0 0 14px 30px;
+        color: var(--muted);
+        font-size: 14.5px;
+      }
+      .journey li:last-child {
+        padding-bottom: 0;
+      }
+      .journey li::before {
+        counter-increment: j;
+        content: counter(j);
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 800;
+        display: grid;
+        place-items: center;
+      }
+      .journey li::after {
+        content: "";
+        position: absolute;
+        left: 9.5px;
+        top: 22px;
+        bottom: 2px;
+        width: 1.5px;
+        background: var(--border-strong);
+      }
+      .journey li:last-child::after {
+        display: none;
+      }
+      .journey li b {
+        color: var(--text);
+      }
+
+      /* ---------- TOC ---------- */
+      .toc {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 22px 24px;
+        box-shadow: var(--shadow);
+        margin-top: -40px;
+        position: relative;
+        z-index: 2;
+      }
+      .toc h2 {
+        font-size: 17px;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+      }
+      .toc-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px 22px;
+      }
+      @media (max-width: 820px) {
+        .toc-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 520px) {
+        .toc-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .toc a {
+        display: flex;
+        gap: 9px;
+        align-items: baseline;
+        text-decoration: none;
+        color: var(--text);
+        padding: 6px 8px;
+        border-radius: 8px;
+        font-size: 14.5px;
+        font-weight: 600;
+      }
+      .toc a:hover {
+        background: var(--surface-2);
+      }
+      .toc a .n {
+        color: var(--primary);
+        font-weight: 800;
+        font-size: 13px;
+        width: 20px;
+        flex: 0 0 auto;
+      }
+
+      /* legend */
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .legend .lg {
+        display: inline-flex;
+        gap: 7px;
+        align-items: center;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 7px 11px;
+        font-size: 13.5px;
+        font-weight: 600;
+      }
+      .legend .lg b {
+        color: var(--text);
+      }
+
+      ul.clean {
+        margin: 8px 0;
+        padding-left: 20px;
+      }
+      ul.clean li {
+        margin: 5px 0;
+        color: var(--muted);
+        font-size: 14.5px;
+      }
+      ul.clean li b,
+      ul.clean li strong {
+        color: var(--text);
+      }
+      .yes {
+        color: var(--success);
+        font-weight: 800;
+      }
+      .no {
+        color: var(--danger);
+        font-weight: 800;
+      }
+
+      .kbd {
+        font-family: ui-monospace, Menlo, Consolas, monospace;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-bottom-width: 2px;
+        border-radius: 6px;
+        padding: 1px 7px;
+        font-size: 12.5px;
+        font-weight: 600;
+      }
+
+      /* footer */
+      footer {
+        margin-top: 60px;
+        background: var(--surface-2);
+        border-top: 1px solid var(--border);
+      }
+      footer .wrap {
+        padding: 30px 20px 44px;
+      }
+      footer p {
+        color: var(--muted);
+        font-size: 13.5px;
+        margin: 6px 0;
+      }
+      .backtop {
+        display: inline-block;
+        margin-top: 8px;
+        font-size: 13.5px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      @media (max-width: 520px) {
+        body {
+          font-size: 15.5px;
+        }
+        .flow-step .fs-body,
+        .flow-cond {
+          margin-left: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ============ HERO ============ -->
+    <header class="hero">
+      <div class="wrap">
+        <span class="kicker">🎮 Guide utilisateur · Bêta publique</span>
+        <div class="tag">Na9ra Nal3ab · نقرا نلعب</div>
+        <h1>Apprendre en jouant, comme dans un manga</h1>
+        <p class="lead">
+          L'académie d'apprentissage gamifiée du programme scolaire tunisien. On lit des cours, on
+          relève des quêtes, on gagne de l'XP et des pièces, on monte de niveau, on affronte des
+          donjons et des duels — et on progresse pour de vrai, de la 1ᵉ année de base jusqu'au
+          Baccalauréat.
+        </p>
+        <div class="hero-badges">
+          <span>📚 Programme officiel</span>
+          <span>🏆 Concours 6ᵉ · 9ᵉ · Bac</span>
+          <span>🌍 Trilingue FR · EN · AR</span>
+          <span>👪 Suivi parental</span>
+        </div>
+        <div class="free-ribbon">
+          <div class="big">🎁</div>
+          <div>
+            <b>Tout est 100 % gratuit.</b><br />
+            <small
+              >Aucun abonnement, aucun paiement, aucune carte bancaire. Les « pièces » du jeu se
+              gagnent en jouant — ce n'est pas de l'argent réel.</small
+            >
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="wrap">
+      <!-- ============ TOC ============ -->
+      <nav class="toc" aria-label="Sommaire">
+        <h2>🧭 Sommaire</h2>
+        <div class="toc-grid">
+          <a href="#c-intro"><span class="n">1</span> C'est quoi Na9ra Nal3ab&nbsp;?</a>
+          <a href="#c-start"><span class="n">2</span> Premiers pas &amp; inscription</a>
+          <a href="#c-catalogue"><span class="n">3</span> Le catalogue &amp; les parcours</a>
+          <a href="#c-loop"><span class="n">4</span> La boucle d'apprentissage</a>
+          <a href="#c-gate"><span class="n">5</span> Conditions de passage</a>
+          <a href="#c-questions"><span class="n">6</span> Les types de questions</a>
+          <a href="#c-progress"><span class="n">7</span> Progression &amp; récompenses</a>
+          <a href="#c-shop"><span class="n">8</span> Pièces, boutique &amp; badges</a>
+          <a href="#c-arena"><span class="n">9</span> L'Arène : donjon, duels, classement</a>
+          <a href="#c-learn"><span class="n">10</span> Mieux mémoriser</a>
+          <a href="#c-parent"><span class="n">11</span> Espace parent &amp; famille</a>
+          <a href="#c-report"><span class="n">12</span> Signaler un problème</a>
+          <a href="#c-cases"><span class="n">13</span> Parcours utilisateurs types</a>
+          <a href="#c-faq"><span class="n">14</span> Questions fréquentes</a>
+          <a href="#c-ref"><span class="n">15</span> Aide-mémoire des chiffres</a>
+        </div>
+      </nav>
+
+      <!-- ============ 1. INTRO ============ -->
+      <section class="section" id="c-intro">
+        <div class="section-head">
+          <div class="ic">✨</div>
+          <h2>1 · C'est quoi Na9ra Nal3ab&nbsp;?</h2>
+        </div>
+        <p class="section-sub">
+          Une <b>académie d'apprentissage</b> — pas un simple cours — habillée d'un univers manga /
+          RPG. On y apprend en relevant des « quêtes » (des exercices), et chaque effort rapporte
+          des récompenses qui donnent envie de continuer.
+        </p>
+
+        <div class="grid g3">
+          <div class="card">
+            <h3><span class="e">📖</span> On apprend</h3>
+            <p>
+              Chaque chapitre commence par un <b>cours</b> et un <b>résumé</b> en cartes. C'est le
+              vrai programme scolaire tunisien, dans les trois langues.
+            </p>
+          </div>
+          <div class="card">
+            <h3><span class="e">⚔️</span> On joue</h3>
+            <p>
+              On répond à des <b>quêtes</b>, on gagne de l'<span class="pill xp">⚡ XP</span> et des
+              <span class="pill coin">🪙 pièces</span>, on monte de niveau, on garde sa
+              <span class="pill fire">🔥 série</span>.
+            </p>
+          </div>
+          <div class="card">
+            <h3><span class="e">📈</span> On progresse</h3>
+            <p>
+              Badges, classement, donjon, duels, révisions intelligentes… tout est pensé pour
+              <b>revenir chaque jour</b> et retenir durablement.
+            </p>
+          </div>
+        </div>
+
+        <div class="eyebrow">Pour qui&nbsp;?</div>
+        <div class="grid g2">
+          <div class="card">
+            <h3><span class="e">🧑‍🎓</span> Les élèves</h3>
+            <p>
+              Du <b>primaire</b> (dès 6 ans) au <b>lycée</b>, et pour les
+              <b>concours nationaux</b> (6ᵉ, 9ᵉ, Bac). Aussi des pistes « libres » : culture
+              générale, langues, jeux de logique.
+            </p>
+          </div>
+          <div class="card">
+            <h3><span class="e">👪</span> Les parents</h3>
+            <p>
+              Suivez les progrès de votre enfant avec un simple <b>Code Alliance</b>, recevez un
+              <b>bilan hebdomadaire</b>, et fixez-lui un objectif de la semaine.
+            </p>
+          </div>
+        </div>
+
+        <div class="callout tip">
+          <div class="ci">🎁</div>
+          <div>
+            <h4>Phase de lancement : gratuité totale</h4>
+            <p>
+              L'application est en <b>bêta publique 100 % gratuite</b>. Tout le contenu et toutes
+              les fonctionnalités de jeu sont accessibles sans payer. Les <b>pièces</b> et l'<b
+                >XP</b
+              >
+              sont des récompenses de jeu — jamais de l'argent réel.
+            </p>
+          </div>
+        </div>
+
+        <div class="eyebrow">Les icônes de ce guide</div>
+        <div class="legend">
+          <span class="lg">⚡ <b>XP</b> · expérience</span>
+          <span class="lg">🪙 <b>Pièces</b> · monnaie du jeu</span>
+          <span class="lg">🔥 <b>Série</b> · jours d'affilée</span>
+          <span class="lg">⭐ <b>Difficulté</b> · 1 à 4</span>
+          <span class="lg">🧠 <b>Quiz / Rappel</b></span>
+          <span class="lg">🏰 <b>Donjon</b></span>
+          <span class="lg">⚔️ <b>Duel</b></span>
+          <span class="lg">🏆 <b>Classement / Concours</b></span>
+          <span class="lg">🛡️ <b>Bouclier</b> · objet</span>
+        </div>
+      </section>
+      <div class="divider"></div>
+
+      <!-- ============ 2. START ============ -->
+      <section class="section" id="c-start">
+        <div class="section-head">
+          <div class="ic">🚪</div>
+          <h2>2 · Premiers pas &amp; inscription</h2>
+        </div>
+        <p class="section-sub">
+          Bonne nouvelle : on peut <b>découvrir toute la plateforme sans créer de compte</b>. Le
+          compte sert à <b>enregistrer sa progression</b> et à débloquer le jeu (XP, niveaux,
+          badges, arène…).
+        </p>
+
+        <div class="eyebrow">Option A — Sans compte (visiteur)</div>
+        <div class="grid g2">
+          <div class="card feature-card">
+            <span class="cap cap-live">Accessible</span>
+            <h3><span class="e">✅</span> Ce que vous pouvez faire</h3>
+            <ul class="clean">
+              <li>
+                <span class="yes">✔</span> Parcourir tout le <b>catalogue</b> (menu
+                <b>Programme</b> et <b>Extras</b>)
+              </li>
+              <li>
+                <span class="yes">✔</span> Lire les <b>cours</b> et les <b>résumés</b> de chaque
+                chapitre
+              </li>
+              <li>
+                <span class="yes">✔</span> <b>S'entraîner</b> sur les exercices et voir la
+                correction
+              </li>
+              <li>
+                <span class="yes">✔</span> Suivre un enfant via <b>Suivi parent</b> + un Code
+                Alliance
+              </li>
+            </ul>
+          </div>
+          <div class="card feature-card">
+            <span class="cap cap-login">Compte requis</span>
+            <h3><span class="e">🔒</span> Ce qui demande un compte</h3>
+            <ul class="clean">
+              <li>
+                <span class="no">✘</span> Gagner de l'<b>XP</b>, des <b>pièces</b>, des
+                <b>badges</b>, garder sa <b>série</b>
+              </li>
+              <li>
+                <span class="no">✘</span> <b>Enregistrer</b> sa progression d'une session à l'autre
+              </li>
+              <li>
+                <span class="no">✘</span> L'<b>Arène</b> (donjon, duels, classement) et la
+                <b>boutique</b>
+              </li>
+              <li>
+                <span class="no">✘</span> Le <b>Mode Rappel</b> et le <b>Manuel officiel</b> (PDF)
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout info">
+          <div class="ci">💡</div>
+          <div>
+            <h4>Sans compte, l'entraînement ne « compte » pas</h4>
+            <p>
+              En visiteur, vous répondez aux questions et vous vous corrigez, mais
+              <b>rien n'est enregistré et aucune XP n'est gagnée</b>. C'est parfait pour tester ;
+              créez un compte quand vous voulez que vos efforts soient récompensés et sauvegardés.
+            </p>
+          </div>
+        </div>
+
+        <div class="eyebrow">Option B — Créer un compte</div>
+        <div class="steps">
+          <div class="step">
+            <div class="dot"></div>
+            <div class="st-b">
+              <h4>Choisir « Créer mon compte »</h4>
+              <p>
+                Avec une <b>adresse e-mail + mot de passe</b> (8 caractères minimum), ou en un clic
+                avec <b>« Continuer avec Google »</b>.
+              </p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="dot"></div>
+            <div class="st-b">
+              <h4>Indiquer si on est Élève ou Parent</h4>
+              <p>
+                Le rôle <b>Élève</b> ou <b>Parent</b> adapte l'expérience. Un parent peut déjà
+                coller le <b>Code Alliance</b> de son enfant pour le relier tout de suite.
+              </p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="dot"></div>
+            <div class="st-b">
+              <h4>Choisir son prénom ou pseudo</h4>
+              <p>
+                C'est le nom de héros affiché dans le jeu et le classement. On peut le changer plus
+                tard.
+              </p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="dot"></div>
+            <div class="st-b">
+              <h4>Choisir son parcours (élève)</h4>
+              <p>
+                Un petit assistant en 3 étapes propose de suivre le <b>programme scolaire</b> ou
+                d'<b>explorer librement</b> — voir la section suivante. Les parents, eux, arrivent
+                directement sur leur espace de suivi.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout tip">
+          <div class="ci">🦸</div>
+          <div>
+            <h4>Pas de « classe de héros » à choisir</h4>
+            <p>
+              Votre <b>classe de héros</b> (Candidat Civil, Guerrier des Équations, S-Rank Legend…)
+              n'est pas un choix : elle <b>évolue toute seule</b> à mesure que vous montez de
+              niveau. Rien à configurer.
+            </p>
+          </div>
+        </div>
+      </section>
+      <div class="divider"></div>
+
+      <!-- ============ 3. CATALOGUE ============ -->
+      <section class="section" id="c-catalogue">
+        <div class="section-head">
+          <div class="ic">🗺️</div>
+          <h2>3 · Le catalogue &amp; les parcours</h2>
+        </div>
+        <p class="section-sub">
+          Tout le contenu est rangé du plus général au plus précis. On descend cette échelle jusqu'à
+          l'exercice à faire.
+        </p>
+
+        <div class="table-scroll" style="margin-bottom: 22px">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Niveau</th>
+                <th>C'est quoi&nbsp;?</th>
+                <th>Exemple</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Thème</b></td>
+                <td>La grande famille de contenu</td>
+                <td>École · Culture générale · Langues</td>
+              </tr>
+              <tr>
+                <td><b>Classe (niveau)</b></td>
+                <td>L'année scolaire, 13 niveaux</td>
+                <td>7ᵉ année · 9ᵉ année · Bac</td>
+              </tr>
+              <tr>
+                <td><b>Matière</b></td>
+                <td>La discipline</td>
+                <td>Mathématiques · Français · Sciences</td>
+              </tr>
+              <tr>
+                <td><b>Chapitre</b></td>
+                <td>Une notion, avec son cours</td>
+                <td>Le théorème de Thalès</td>
+              </tr>
+              <tr>
+                <td><b>Exercice / Mission</b></td>
+                <td>Un ensemble de questions à relever</td>
+                <td>Quiz · Entraînement · Boss</td>
+              </tr>
+              <tr>
+                <td><b>Question</b></td>
+                <td>L'unité de jeu</td>
+                <td>Un QCM, un calcul, un tri…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="eyebrow">Le « parcours » : votre voie</div>
+        <p style="color: var(--muted); font-size: 15px; margin-top: 0">
+          Un <b>parcours</b> est la voie dans laquelle vous êtes inscrit·e — la paire
+          <b>(thème + classe)</b>. C'est lui qui décide des matières affichées sur votre tableau de
+          bord. Il existe trois genres&nbsp;:
+        </p>
+        <div class="grid g3">
+          <div class="card">
+            <h3><span class="e">🏆</span> Concours</h3>
+            <p>
+              Préparation aux <b>examens nationaux</b> : Concours 6ᵉ, Concours 9ᵉ, Baccalauréat.
+              Objectif : réussir l'épreuve.
+            </p>
+          </div>
+          <div class="card">
+            <h3><span class="e">🎒</span> Scolaire</h3>
+            <p>
+              Une <b>année scolaire classique</b>, de la 1ᵉ année de base à la Terminale. On suit le
+              programme au fil de l'année.
+            </p>
+          </div>
+          <div class="card">
+            <h3><span class="e">🧭</span> Libre</h3>
+            <p>
+              Des <b>thèmes transversaux</b> hors programme (culture générale, muscle ton cerveau,
+              langues). Ce sont les <b>« Extras »</b>, sans pression de note.
+            </p>
+          </div>
+        </div>
+
+        <div class="eyebrow">L'assistant de démarrage (élève)</div>
+        <div class="flow">
+          <div class="flow-step">
+            <div class="fs-top">
+              <span class="fs-num">1</span>
+              <h4>« Que veux-tu faire&nbsp;? »</h4>
+            </div>
+            <div class="fs-body">
+              Deux chemins : <b>« Suis le programme scolaire »</b> (ta classe, de la 1ᵉ année au
+              Bac) ou <b>« J'explore librement »</b> (les thèmes à ton rythme).
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="fs-top">
+              <span class="fs-num">2</span>
+              <h4>Choisir sa classe / son thème</h4>
+            </div>
+            <div class="fs-body">
+              Les classes sont rangées par cycle — <b>Primaire · Collège · Secondaire</b> — de la
+              plus petite à la plus grande.
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="fs-top">
+              <span class="fs-num">3</span>
+              <h4>C'est parti&nbsp;!</h4>
+            </div>
+            <div class="fs-body">
+              On arrive sur le <b>tableau de bord</b> (« Hall des Héros ») avec les matières à
+              conquérir.
+            </div>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <div class="ci">🔄</div>
+          <div>
+            <h4>Changer de parcours quand on veut</h4>
+            <p>
+              On peut changer de classe à tout moment (bouton <b>« Choisir ce parcours »</b> sur
+              n'importe quelle page de niveau). Votre
+              <b>XP, pièces, badges et série sont conservés</b> — seule la progression
+              <b>par matière</b> reste propre à chaque classe.
+            </p>
+          </div>
+        </div>
+
+        <div class="eyebrow">Le tableau de bord : « Hall des Héros »</div>
+        <div class="grid g2" style="align-items: start">
+          <div class="mock">
+            <div class="m-label">Aperçu du tableau de bord</div>
+            <div class="m-hero">
+              <div class="m-ava">🦸</div>
+              <div>
+                <div style="font-weight: 800; font-size: 18px">Bon retour, Yassine&nbsp;!</div>
+                <div style="opacity: 0.8; font-size: 13px">Guerrier des Équations</div>
+              </div>
+            </div>
+            <div class="m-chips">
+              <span class="m-chip">⭐ Niveau 12</span>
+              <span class="m-chip">🔥 Série 8</span>
+              <span class="m-chip">⚡ 2 340 XP</span>
+              <span class="m-chip">🪙 415</span>
+            </div>
+            <div class="m-bar"><i></i></div>
+            <div class="m-cap">Plus que 60 XP avant le niveau 13</div>
+          </div>
+          <div class="card">
+            <h3><span class="e">👀</span> Ce que l'élève y voit</h3>
+            <ul class="clean">
+              <li>
+                <b>En-tête héros</b> : niveau, série 🔥, XP, pièces, classe de héros et barre de
+                progression.
+              </li>
+              <li><b>Code Alliance</b> à partager avec un parent.</li>
+              <li><b>« Ta révision du jour »</b> : jusqu'à 3 révisions à faire.</li>
+              <li>
+                <b>Quêtes quotidiennes &amp; hebdomadaires</b> (avec récompenses), et l'<b
+                  >objectif famille</b
+                >
+                s'il y en a un.
+              </li>
+              <li><b>« Voies à conquérir »</b> : une carte par matière, avec sa progression.</li>
+              <li>Accès rapide à la <b>Boutique &amp; badges</b> et au <b>catalogue</b>.</li>
+            </ul>
+          </div>
+        </div>
+        <p class="tiny" style="color: var(--muted); margin-top: 12px; font-size: 13.5px">
+          Navigation une fois connecté : <b>Hall des Héros</b> (tableau de bord) ·
+          <b>Parcours</b> (la carte-aventure de votre classe) · <b>Découvrir</b> (le catalogue) ·
+          <b>Arène</b> (donjon, duels, classement).
+        </p>
+      </section>
+      <div class="divider"></div>
+
+      <!-- ============ 4. LOOP ============ -->
+      <section class="section" id="c-loop">
+        <div class="section-head">
+          <div class="ic">🔁</div>
+          <h2>4 · La boucle d'apprentissage</h2>
+        </div>
+        <p class="section-sub">
+          C'est le cœur de l'app. Pour chaque chapitre, on suit toujours le même rythme :
+          <b>on lit, on valide, on s'entraîne, on se corrige.</b>
+        </p>
+
+        <div class="flow">
+          <div class="flow-step">
+            <div class="fs-top">
+              <span class="fs-num">1</span>
+              <h4>📖 Lire le cours &amp; le résumé</h4>
+            </div>
+            <div class="fs-body">
+              Le cours explique la notion (souvent illustré de figures). Le <b>résumé</b> est un jeu
+              de cartes pour réviser vite l'essentiel.
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="fs-top">
+              <span class="fs-num">2</span>
+              <h4>🧠 Passer le quiz de compréhension</h4>
+            </div>
+            <div class="fs-body">
+              Une petite épreuve qui vérifie que le cours est compris.
+              <b>C'est la porte du chapitre</b> : tant qu'elle n'est pas réussie, les missions
+              restent verrouillées.
+            </div>
+            <span class="flow-cond">Réussir à ≥ 80 %, sans se précipiter</span>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="fs-top">
+              <span class="fs-num">3</span>
+              <h4>⚔️ Relever les missions</h4>
+            </div>
+            <div class="fs-body">
+              Les <b>missions</b> s'ouvrent : <b>Entraînement</b> (⭐) et <b>Boss</b> (avec points
+              de vie et chrono). C'est là qu'on gagne l'XP et les pièces.
+            </div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="fs-top">
+              <span class="fs-num">4</span>
+              <h4>✅ Voir la correction</h4>
+            </div>
+            <div class="fs-body">
+              Après une mission : score, récompenses, badges, puis la
+              <b>correction question par question</b> avec la bonne réponse et l'explication.
+            </div>
+          </div>
+        </div>
+
+        <div class="eyebrow">Les 3 types de missions</div>
+        <div class="grid g3">
+          <div class="card">
+            <h3><span class="e">🧠</span> Le Quiz</h3>
+            <p>
+              La « porte » du chapitre. <b>Pas d'étoiles</b> de difficulté. On voit seulement
+              <b>réussi / échoué + score</b> — jamais la correction détaillée (pour ne pas mémoriser
+              bêtement).
+            </p>
+          </div>
+          <div class="card">
+            <h3><span class="e">⭐</span> L'Entraînement</h3>
+            <p>
+              La mission standard. Question par question, puis correction complète. Difficulté
+              affichée en <b>étoiles ⭐ (1 à 4)</b>.
+            </p>
+          </div>
+          <div class="card">
+            <h3><span class="e">👹</span> Le Boss</h3>
+            <p>
+              Une mission « défi » : une fois connecté, elle ajoute une <b>barre de vie</b> et un
+              <b>chrono de 20 s par question</b>. Un boss réussi fait avancer une quête hebdo.
+            </p>
+          </div>
+        </div>
+
+        <div class="callout warn">
+          <div class="ci">⏱️</div>
+          <div>
+            <h4>Répondre trop vite ne rapporte rien</h4>
+            <p>
+              Pour éviter le clic au hasard, une réponse plus rapide que
+              <b>4 secondes par question</b> donne <b>0 XP et 0 pièce</b>, et
+              <b>ne valide pas</b> le quiz. Prenez le temps de lire.
+            </p>
+          </div>
+        </div>
+      </section>
+      <div class="divider"></div>
+
+      <!-- ============ 5. GATE / CONDITIONS DE PASSAGE ============ -->
+      <section class="section" id="c-gate">
+        <div class="section-head">
+          <div class="ic">🔑</div>
+          <h2>5 · Conditions de passage</h2>
+        </div>
+        <p class="section-sub">
+          Ici, on ne débloque rien au hasard : chaque étape s'ouvre parce qu'on a montré qu'on
+          maîtrise la précédente. Voici toutes les règles, très clairement.
+        </p>
+
+        <div class="callout gate">
+          <div class="ci">🚪</div>
+          <div>
+            <h4>La règle-reine : le quiz déverrouille le chapitre</h4>
+            <p>
+              Dans une matière scolaire, les <b>missions d'un chapitre restent fermées</b> tant que
+              vous n'avez pas <b>réussi le quiz de compréhension à 80 %</b> (et sans vous
+              précipiter). Réussir le quiz ouvre <b>toutes</b> les missions du chapitre d'un coup.
+            </p>
+          </div>
+        </div>
+
+        <div class="eyebrow">Le parcours d'un chapitre, étape par étape</div>
+        <div class="flow">
+          <div class="flow-step">
+            <div class="fs-top">
+              <span class="fs-num">A</span>
+              <h4>📖 Cours &amp; résumé — toujours ouverts</h4>
+            </div>
+            <div class="fs-body">On peut lire le cours autant qu'on veut, aucune condition.</div>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="fs-top">
+              <span class="fs-num">B</span>
+              <h4>🧠 Quiz de compréhension</h4>
+            </div>
+            <div class="fs-body">
+              Toujours accessible. Il faut le <b>réussir</b> pour ouvrir la suite.
+            </div>
+            <span class="flow-cond">Condition : score ≥ 80 % ET temps ≥ 4 s/question</span>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="fs-top">
+              <span class="fs-num">C</span>
+              <h4>⭐ Missions du chapitre (Entraînement + Boss)</h4>
+            </div>
+            <div class="fs-body">
+              Déverrouillées dès que le quiz est validé. On y gagne XP et pièces.
+            </div>
+            <span class="flow-cond">Réussir une mission : score ≥ 60 %</span>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step">
+            <div class="fs-top">
+              <span class="fs-num">D</span>
+              <h4>🧠 Mode Rappel</h4>
+            </div>
+            <div class="fs-body">
+              Le « niveau expert » d'une mission : la rejouer <b>sans les options</b>, en tapant la
+              réponse, pour <b>1,5× d'XP</b>.
+            </div>
+            <span class="flow-cond">Se débloque après un run classique à 100 %</span>
+          </div>
+        </div>
+
+        <div class="eyebrow">À quoi ça ressemble sur l'écran</div>
+        <div class="chapmap">
+          <div class="chaprow">
+            <div class="ci2">🧠</div>
+            <div class="cbody">
+              <h4>Quiz de compréhension</h4>
+              <p>La porte — réussis-le pour ouvrir les missions</p>
+            </div>
+            <span class="state st-key">🔑 À réussir</span>
+          </div>
+          <div class="chaprow">
+            <div class="ci2">⚔️</div>
+            <div class="cbody">
+              <h4>
+                Entraînement · Les triangles semblables
+                <span class="stars">★★<span class="off">★★</span></span>
+              </h4>
+              <p>Ouvert car le quiz est validé</p>
+            </div>
+            <span class="state st-open">Ouvert</span>
+          </div>
+          <div class="chaprow">
+            <div class="ci2">🔒</div>
+            <div class="cbody">
+              <h4>Entraînement · Applications de Thalès</h4>
+              <p>Se débloque quand le quiz du chapitre est réussi</p>
+            </div>
+            <span class="state st-lock">Verrouillé</span>
+          </div>
+          <div class="chaprow">
+            <div class="ci2">🧠</div>
+            <div class="cbody">
+              <h4>Rappel · Les triangles semblables</h4>
+              <p>« Termine d'abord la mission à 100 % »</p>
+            </div>
+            <span class="state st-lock">Verrouillé</span>
+          </div>
+        </div>
+
+        <div class="grid g2" style="margin-top: 22px">
+          <div class="card">
+            <h3><span class="e">🎯</span> Réussir vs. gagner de l'XP</h3>
+            <p>Ce sont deux seuils différents :</p>
+            <ul class="clean">
+              <li><b>Valider le quiz</b> → il faut <b>≥ 80 %</b>.</li>
+              <li><b>Réussir une mission</b> → il faut <b>≥ 60 %</b>.</li>
+              <li>
+                <b>Gagner de l'XP sur une mission</b> → il faut réussir (≥ 60 %), ne pas se
+                précipiter, <b>et battre son meilleur score</b> précédent.
+              </li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3><span class="e">🌿</span> Pas de porte partout</h3>
+            <p>
+              Le verrou du quiz ne concerne que les <b>matières scolaires</b> qui ont un quiz. Les
+              thèmes <b>libres</b> (culture générale, jeux de logique, langues) n'ont pas de théorie
+              à valider : on y joue <b>directement</b>.
+            </p>
+          </div>
+        </div>
+
+        <div class="eyebrow">Les autres conditions de déblocage</div>
+        <div class="grid g2">
+          <div class="card feature-card">
+            <span class="cap cap-live">🏰 Donjon</span>
+            <h3 style="margin-top: 6px"><span class="e">🏰</span> Débloquer le Donjon</h3>
+            <p>Le Donjon s'ouvre quand vous avez <b>vraiment commencé à jouer</b> :</p>
+            <ul class="clean">
+              <li>Avoir tenté des exercices dans <b>≥ 2 matières différentes</b></li>
+              <li>…répartis sur <b>≥ 3 chapitres différents</b></li>
+            </ul>
+            <p>
+              Ensuite, le nombre de <b>parties par jour</b> = votre <b>niveau</b>, plafonné à
+              <b>5</b>. (Niveau 1 → 1 partie/jour ; niveau 5 et + → 5/jour.)
+            </p>
+          </div>
+          <div class="card feature-card">
+            <span class="cap cap-live">⚔️ Duel</span>
+            <h3 style="margin-top: 6px"><span class="e">⚔️</span> Lancer un Duel</h3>
+            <p>Il faut simplement&nbsp;:</p>
+            <ul class="clean">
+              <li>Avoir un <b>parcours actif</b> (une classe choisie)</li>
+              <li>Ne pas déjà avoir <b>3 duels en cours</b> (le maximum)</li>
+            </ul>
+            <p>
+              Les questions du duel sont tirées de votre parcours, donc identiques et équitables
+              pour les deux joueurs.
+            </p>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <div class="ci">⬆️</div>
+          <div>
+            <h4>Monter de niveau</h4>
+            <p>
+              C'est linéaire et sans limite : <b>chaque niveau demande 200 XP</b>. Le niveau ne «
+              ferme » aucun contenu — sa seule vraie utilité mécanique est d'augmenter le nombre de
+              parties de donjon par jour.
+            </p>
+          </div>
+        </div>
+      </section>
+      <div class="divider"></div>
+
+      <!-- ============ 6. QUESTION TYPES ============ -->
+      <section class="section" id="c-questions">
+        <div class="section-head">
+          <div class="ic">❓</div>
+          <h2>6 · Les types de questions</h2>
+        </div>
+        <p class="section-sub">
+          Les quêtes ne sont pas que des QCM. Cinq formats natifs rendent l'entraînement varié — et
+          un sixième mode, le <b>Rappel</b>, fait taper la réponse au clavier.
+        </p>
+
+        <div class="table-scroll">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Ce que vous faites</th>
+                <th>Comment c'est corrigé</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>🔘 <b>QCM</b></td>
+                <td>Choisir <b>une</b> réponse parmi plusieurs (A, B, C, D).</td>
+                <td>La bonne option, tout simplement.</td>
+              </tr>
+              <tr>
+                <td>🔢 <b>Numérique</b></td>
+                <td>Taper un <b>nombre</b> (la virgule ou le point marchent).</td>
+                <td>Le bon nombre (avec une éventuelle tolérance).</td>
+              </tr>
+              <tr>
+                <td>↕️ <b>Remise en ordre</b></td>
+                <td><b>Glisser-déposer</b> pour ranger les éléments dans le bon ordre.</td>
+                <td>La séquence exacte — tout ou rien.</td>
+              </tr>
+              <tr>
+                <td>🔗 <b>Association</b></td>
+                <td>Relier chaque élément à son <b>partenaire</b> (les paires).</td>
+                <td>Toutes les paires justes — tout ou rien.</td>
+              </tr>
+              <tr>
+                <td>☑️ <b>Choix multiples</b></td>
+                <td>Cocher <b>toutes</b> les bonnes réponses (il peut y en avoir plusieurs).</td>
+                <td>L'ensemble exact — <b>pas de demi-point</b>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout warn" style="margin-top: 18px">
+          <div class="ci">☑️</div>
+          <div>
+            <h4>Attention aux « choix multiples »</h4>
+            <p>
+              Un bandeau vous prévient : <b>« Sélectionne TOUTES les bonnes réponses »</b>. En
+              oublier une, ou en cocher une de trop, compte comme une erreur — il n'y a pas de
+              crédit partiel.
+            </p>
+          </div>
+        </div>
+
+        <div class="callout gate">
+          <div class="ci">🧠</div>
+          <div>
+            <h4>Le Mode Rappel : taper au lieu de cocher</h4>
+            <p>
+              Quand vous maîtrisez une mission (100 %), vous pouvez la rejouer en
+              <b>Mode Rappel</b> : les questions arrivent <b>sans les options</b> et vous
+              <b>écrivez</b> la réponse. C'est plus dur, donc ça rapporte <b>1,5× d'XP</b>. Une
+              barre de lettres accentuées (é, à, ç… ou أ, إ, آ…) aide à la saisie.
+            </p>
+          </div>
+        </div>
+      </section>
+      <div class="divider"></div>
+
+      <!-- ============ 7. PROGRESS / REWARDS ============ -->
+      <section class="section" id="c-progress">
+        <div class="section-head">
+          <div class="ic">📈</div>
+          <h2>7 · Progression &amp; récompenses</h2>
+        </div>
+        <p class="section-sub">
+          Chaque effort réussi rapporte. Voici comment on gagne, ce que ça change, et comment on
+          monte dans la hiérarchie des héros.
+        </p>
+
+        <div class="grid g2">
+          <div class="card">
+            <h3><span class="e">⚡</span> XP &amp; niveaux</h3>
+            <ul class="clean">
+              <li><b>200 XP par niveau</b>, sans plafond.</li>
+              <li>
+                XP d'une mission = <b>récompense de l'exercice × votre score</b> (donc mieux vous
+                répondez, plus vous gagnez).
+              </li>
+              <li>
+                On ne regagne de l'XP sur une mission que si l'on <b>bat son meilleur score</b> —
+                inutile de refarmer le facile.
+              </li>
+              <li>Un exercice complet vaut environ <b>75 XP</b> à titre de repère.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3><span class="e">🪙</span> Pièces</h3>
+            <ul class="clean">
+              <li>Gagnées sur les missions, le donjon, les duels et les ligues.</li>
+              <li>
+                Montant <b>fixe</b> par exercice (pas proportionnel au score, contrairement à l'XP).
+              </li>
+              <li>
+                Servent à la <b>boutique</b> et à <b>racheter une série perdue</b> (15 pièces).
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="eyebrow">Les classes de héros (évoluent avec le niveau)</div>
+        <div class="table-scroll">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Niveau</th>
+                <th>Classe de héros</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">Début</td>
+                <td>Novice</td>
+              </tr>
+              <tr>
+                <td class="num">1 – 5</td>
+                <td>Candidat Civil</td>
+              </tr>
+              <tr>
+                <td class="num">6 – 10</td>
+                <td>Aspirant Académicien</td>
+              </tr>
+              <tr>
+                <td class="num">11 – 20</td>
+                <td>Guerrier des Équations</td>
+              </tr>
+              <tr>
+                <td class="num">21 – 30</td>
+                <td>Maître des Langues</td>
+              </tr>
+              <tr>
+                <td class="num">31 – 49</td>
+                <td>Élite du Concours</td>
+              </tr>
+              <tr>
+                <td class="num">50 +</td>
+                <td>🏅 S-Rank Legend</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="tiny" style="color: var(--muted); font-size: 13.5px; margin-top: 10px">
+          Les classes de héros sont <b>décoratives</b> : c'est un titre de prestige qui change tout
+          seul, sans bonus de jeu.
+        </p>
+
+        <div class="eyebrow">La série 🔥 (streak)</div>
+        <div class="grid g2">
+          <div class="card">
+            <h3><span class="e">🔥</span> Comment ça marche</h3>
+            <p>
+              Votre <b>série</b> compte les <b>jours d'affilée</b> où vous avez gagné de l'XP. Un
+              jour sans activité et… elle repart à 1.
+            </p>
+          </div>
+          <div class="card">
+            <h3><span class="e">🛡️</span> La sauver</h3>
+            <ul class="clean">
+              <li>
+                Un <b>Bouclier de Flamme</b> (objet) la protège automatiquement si vous n'avez
+                manqué <b>qu'un seul jour</b>.
+              </li>
+              <li>Sinon, on peut la <b>racheter pour 15 pièces</b> juste après l'avoir cassée.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout tip">
+          <div class="ci">🏅</div>
+          <div>
+            <h4>Les badges qui se gagnent aujourd'hui</h4>
+            <p>
+              <b>Première quête</b> (votre tout premier exercice), <b>Score parfait</b> (100 %),
+              <b>Éclair</b> (fini en moins de 60 s avec ≥ 60 %) et <b>Série de 7</b> (7 jours
+              d'affilée). D'autres badges existent en vitrine mais ne se déclenchent pas encore.
+            </p>
+          </div>
+        </div>
+      </section>
+      <div class="divider"></div>
+
+      <!-- ============ 8. SHOP ============ -->
+      <section class="section" id="c-shop">
+        <div class="section-head">
+          <div class="ic">🛒</div>
+          <h2>8 · Pièces, boutique &amp; badges</h2>
+        </div>
+        <p class="section-sub">
+          La boutique (<b>« Boutique &amp; badges »</b>) transforme vos pièces en avantages. Rappel
+          : les pièces se gagnent en jouant, <b>rien ne s'achète avec de l'argent réel</b>.
+        </p>
+
+        <div class="table-scroll">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Objet</th>
+                <th>Prix</th>
+                <th>Effet</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>🥷 <b>Skins d'avatar</b> (Ninja, Samouraï, Mage, Pharaon, Dragon, Néon…)</td>
+                <td class="num">80 – 500</td>
+                <td>Décoratif : change l'apparence de votre héros. Aucun effet de jeu.</td>
+              </tr>
+              <tr>
+                <td>🧪 <b>Potion XP ×2</b> / <b>Méga Potion XP ×3</b></td>
+                <td class="num">50 / 120</td>
+                <td>À armer : votre <b>prochaine quête réussie</b> rapporte 2× ou 3× l'XP.</td>
+              </tr>
+              <tr>
+                <td>💎 <b>Pierre Philosophale</b></td>
+                <td class="num">40</td>
+                <td>À armer : double les <b>pièces</b> de la prochaine quête réussie.</td>
+              </tr>
+              <tr>
+                <td>🛡️ <b>Bouclier de Réessai</b></td>
+                <td class="num">60</td>
+                <td>
+                  À armer : en cas d'échec, évite la pénalité de révision (on repart sans « punition
+                  »).
+                </td>
+              </tr>
+              <tr>
+                <td>🔥 <b>Bouclier de Flamme</b></td>
+                <td class="num">250</td>
+                <td>
+                  Passif : sauve votre <b>série</b> automatiquement après un seul jour manqué.
+                </td>
+              </tr>
+              <tr>
+                <td>💡 <b>Indice Mystique</b> (3 charges) / <b>Potion de Rappel</b></td>
+                <td class="num">30 / 120</td>
+                <td>
+                  À la demande, pendant une question : révèle l'<b>explication</b> pour vous aider.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout info" style="margin-top: 18px">
+          <div class="ci">🎒</div>
+          <div>
+            <h4>Comment « armer » un objet</h4>
+            <p>
+              Les potions et boucliers d'action se rangent dans un emplacement
+              <b>« prochaine quête »</b> (un seul à la fois). Le Bouclier de Flamme, lui, est
+              <b>passif</b> et veille en arrière-plan. Astuce : un objet n'est
+              <b>consommé que s'il sert vraiment</b> — une potion armée sur une quête qui ne
+              rapporte pas d'XP n'est pas gaspillée.
+            </p>
+          </div>
+        </div>
+      </section>
+      <div class="divider"></div>
+
+      <!-- ============ 9. ARENA ============ -->
+      <section class="section" id="c-arena">
+        <div class="section-head">
+          <div class="ic">⚔️</div>
+          <h2>9 · L'Arène : donjon, duels, classement</h2>
+        </div>
+        <p class="section-sub">
+          L'onglet <b>Arène</b> regroupe tout le côté compétitif. C'est là qu'on teste ses réflexes
+          et qu'on se compare aux autres héros.
+        </p>
+
+        <!-- Donjon -->
+        <div class="card" style="margin-bottom: 16px">
+          <h3><span class="e">🏰</span> Le Donjon Infini</h3>
+          <p>
+            Une descente <b>étage par étage</b> : une question par étage, tirée du vivier de votre
+            classe. La difficulté monte tous les 5 étages. Le twist : vous n'avez qu'<b
+              >1 point de vie</b
+            >
+            — <b>une seule mauvaise réponse et la partie s'arrête</b>. Jusqu'où irez-vous&nbsp;?
+          </p>
+          <div class="grid g3" style="margin-top: 6px">
+            <div>
+              <div class="eyebrow" style="margin: 0 0 4px">Pour y entrer</div>
+              <p style="margin: 0; font-size: 14px; color: var(--muted)">
+                ≥ 2 matières et ≥ 3 chapitres déjà tentés.
+              </p>
+            </div>
+            <div>
+              <div class="eyebrow" style="margin: 0 0 4px">Parties/jour</div>
+              <p style="margin: 0; font-size: 14px; color: var(--muted)">
+                = votre niveau, jusqu'à 5 maximum.
+              </p>
+            </div>
+            <div>
+              <div class="eyebrow" style="margin: 0 0 4px">Récompense</div>
+              <p style="margin: 0; font-size: 14px; color: var(--muted)">
+                <b>15 XP par étage</b> + 5 🪙 tous les 5 étages.
+              </p>
+            </div>
+          </div>
+          <div class="callout tip" style="margin: 14px 0 0">
+            <div class="ci">💪</div>
+            <div>
+              <h4>Même en tombant, on gagne</h4>
+              <p>
+                Les récompenses des étages déjà franchis sont <b>conservées</b> — chaque étage
+                compte.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Duels -->
+        <div class="card" style="margin-bottom: 16px">
+          <h3><span class="e">⚔️</span> Les Duels 1 contre 1</h3>
+          <p>
+            Un affrontement sur <b>5 questions identiques</b> pour les deux joueurs. On rejoint une
+            <b>file d'attente</b> et l'app trouve un adversaire de votre parcours. On répond dans
+            l'ordre — et là aussi, répondre en moins de 4 s compte comme faux.
+          </p>
+          <div class="table-scroll" style="margin-top: 12px">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Résultat</th>
+                  <th>XP</th>
+                  <th>Pièces</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>🏆 <b>Victoire</b></td>
+                  <td class="num">60</td>
+                  <td class="num">12</td>
+                </tr>
+                <tr>
+                  <td>🤝 <b>Match nul</b></td>
+                  <td class="num">40</td>
+                  <td class="num">8</td>
+                </tr>
+                <tr>
+                  <td>💙 <b>Participation</b> (défaite)</td>
+                  <td class="num">20</td>
+                  <td class="num">4</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ul class="clean" style="margin-top: 12px">
+            <li>On <b>gagne de l'XP même en perdant</b> — participer paie toujours.</li>
+            <li>
+              Au maximum <b>3 duels en cours</b> à la fois ; seuls les
+              <b>5 premiers duels récompensés du jour</b> rapportent.
+            </li>
+            <li>Un duel sans réponse <b>expire après 24 h</b>.</li>
+          </ul>
+        </div>
+
+        <!-- Ligues -->
+        <div class="card" style="margin-bottom: 16px">
+          <h3><span class="e">🏆</span> Les Ligues hebdomadaires</h3>
+          <p>
+            Chaque semaine, vos duels rapportent des <b>points de championnat</b> : victoire
+            <b>3 pts</b>, nul <b>1 pt</b>, défaite <b>0</b>. Le lundi, on est classé dans une ligue
+            et récompensé selon son rang.
+          </p>
+          <div class="table-scroll" style="margin-top: 12px">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Ligue</th>
+                  <th>Position</th>
+                  <th>Récompense</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>💎 Diamant</td>
+                  <td>Top 10 %</td>
+                  <td class="num">100 🪙</td>
+                </tr>
+                <tr>
+                  <td>🥈 Platine</td>
+                  <td>Top 25 %</td>
+                  <td class="num">60 🪙</td>
+                </tr>
+                <tr>
+                  <td>🥇 Or</td>
+                  <td>Top 50 %</td>
+                  <td class="num">30 🪙</td>
+                </tr>
+                <tr>
+                  <td>⚪ Argent</td>
+                  <td>Top 75 %</td>
+                  <td class="num">15 🪙</td>
+                </tr>
+                <tr>
+                  <td>🟤 Bronze</td>
+                  <td>Le reste</td>
+                  <td class="num">5 🪙</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Classement -->
+        <div class="card">
+          <h3><span class="e">📊</span> Le Classement</h3>
+          <p>Tout le monde est classé à l'<b>XP</b>. Trois familles d'onglets :</p>
+          <ul class="clean">
+            <li>🌍 <b>Global</b> — tous les héros de la plateforme.</li>
+            <li>
+              🎓 <b>Ma classe</b> — les élèves de votre niveau scolaire. Cet onglet
+              <b>devient l'onglet par défaut</b> dès qu'il y a au moins
+              <b>10 élèves classés</b> (avant, une mini-cohorte n'aurait pas de sens).
+            </li>
+            <li>📚 <b>Par matière</b> — le classement matière par matière de votre parcours.</li>
+          </ul>
+          <p class="tiny" style="font-size: 13.5px">
+            On voit le <b>Top 50</b>, et votre propre ligne est <b>toujours affichée</b> même hors
+            du top. Les noms des autres restent anonymisés côté données.
+          </p>
+        </div>
+      </section>
+      <div class="divider"></div>
+
+      <!-- ============ 10. LEARN / MEMORY ============ -->
+      <section class="section" id="c-learn">
+        <div class="section-head">
+          <div class="ic">🧠</div>
+          <h2>10 · Mieux mémoriser</h2>
+        </div>
+        <p class="section-sub">
+          Au-delà du jeu, l'app aide à <b>retenir dans la durée</b> grâce à deux outils fondés sur
+          les sciences de l'apprentissage.
+        </p>
+
+        <div class="grid g2" style="align-items: start">
+          <div class="card feature-card">
+            <span class="cap cap-live">En ligne</span>
+            <h3><span class="e">🧠</span> Le Mode Rappel</h3>
+            <p>
+              Rejouer une mission <b>maîtrisée</b> en écrivant les réponses (sans les options), pour
+              <b>1,5× d'XP</b>. C'est le meilleur moyen d'ancrer une notion. Chaque mission affiche
+              une petite pastille « Rappel » à trois états :
+            </p>
+            <div class="chip-demo">
+              <span class="rchip locked">🔒 Rappel</span>
+              <span class="rchip open">🧠 Jouer en Rappel</span>
+              <span class="rchip done">🧠 Rappel · 100 %</span>
+            </div>
+            <p class="tiny" style="margin-top: 10px; font-size: 13.5px">
+              Verrouillé tant qu'on n'a pas fait <b>100 %</b> en QCM. Message : « Termine d'abord la
+              mission à 100 % ».
+            </p>
+          </div>
+          <div class="card feature-card">
+            <span class="cap cap-live">En ligne</span>
+            <h3><span class="e">📅</span> La Révision du jour</h3>
+            <p>
+              Sur le tableau de bord, un panneau <b>« Ta révision du jour »</b> propose jusqu'à
+              <b>3 missions</b> à revoir, choisies pour vous au bon moment (juste avant que la
+              mémoire ne s'efface).
+            </p>
+            <ul class="clean">
+              <li>« Tu n'as pas revu <b>{chapitre}</b> depuis X jours »</li>
+              <li>« <b>{chapitre}</b> est à revoir aujourd'hui »</li>
+              <li>Parfois : « <b>Un point faible repéré ici</b> »</li>
+            </ul>
+            <p class="tiny" style="font-size: 13.5px">
+              Rien à réviser&nbsp;? C'est bon signe : « <b>ta mémoire tient bon</b> ».
+            </p>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <div class="ci">🔬</div>
+          <div>
+            <h4>Comment l'app choisit vos révisions</h4>
+            <p>
+              Quand vous <b>échouez</b> une mission, elle est reprogrammée pour révision à
+              <b>1, 3 puis 7 jours</b> (répétition espacée). Quand vous la <b>réussissez</b>, ces
+              révisions se referment. En coulisses, l'app repère aussi vos erreurs récurrentes pour
+              prioriser les bons chapitres.
+            </p>
+          </div>
+        </div>
+      </section>
+      <div class="divider"></div>
+
+      <!-- ============ 11. PARENT ============ -->
+      <section class="section" id="c-parent">
+        <div class="section-head">
+          <div class="ic">👪</div>
+          <h2>11 · Espace parent &amp; famille</h2>
+        </div>
+        <p class="section-sub">
+          Les parents suivent la progression sans effort — <b>même sans créer de compte</b> — grâce
+          au Code Alliance de l'enfant.
+        </p>
+
+        <div class="eyebrow">Le Code Alliance</div>
+        <div class="callout gate">
+          <div class="ci">🔑</div>
+          <div>
+            <h4>Une clé unique par élève</h4>
+            <p>
+              Chaque élève a un <b>Code Alliance</b> affiché sur son tableau de bord (format
+              <span class="kbd">XXXX-XXXX-…</span>). Il le partage avec son parent. Ce code donne
+              accès au bilan — <b>à garder en famille</b>.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid g2">
+          <div class="card">
+            <h3><span class="e">🔗</span> Méthode A — Sans compte</h3>
+            <p>
+              Le parent va sur <b>« Suivi parent »</b>, colle le Code Alliance, et voit le bilan
+              immédiatement. Idéal pour un parent qui ne veut rien installer.
+            </p>
+          </div>
+          <div class="card">
+            <h3><span class="e">👤</span> Méthode B — Avec un compte parent</h3>
+            <p>
+              Le parent crée un compte <b>Parent</b> et <b>associe l'élève</b> via son code. Il
+              retrouve tous ses enfants reliés sur son espace de suivi, et peut leur fixer un
+              objectif.
+            </p>
+          </div>
+        </div>
+
+        <div class="eyebrow">Ce que montre le bilan</div>
+        <div class="grid g3">
+          <div class="card tiny">
+            <h3 style="font-size: 15.5px"><span class="e">🧭</span> Un verdict</h3>
+            <p>
+              Excellent · Bien · Moyen · À améliorer · Inactif, avec la <b>comparaison</b> à la
+              semaine précédente.
+            </p>
+          </div>
+          <div class="card tiny">
+            <h3 style="font-size: 15.5px"><span class="e">📚</span> Le détail</h3>
+            <p>
+              Statistiques <b>par matière</b>, activité au jour le jour, <b>Points forts</b> et
+              chapitres <b>À renforcer</b>.
+            </p>
+          </div>
+          <div class="card tiny">
+            <h3 style="font-size: 15.5px"><span class="e">💬</span> Un conseil</h3>
+            <p>
+              « Le conseil de la semaine », et un partage en un clic (<b>WhatsApp</b>, ou
+              impression).
+            </p>
+          </div>
+        </div>
+
+        <div class="callout tip">
+          <div class="ci">🎯</div>
+          <div>
+            <h4>L'objectif famille</h4>
+            <p>
+              Le parent peut fixer une <b>cible de la semaine</b>. L'enfant la voit apparaître comme
+              une <b>« Quête famille »</b> parmi ses quêtes hebdomadaires — une motivation partagée.
+            </p>
+          </div>
+        </div>
+
+        <div class="eyebrow">Les notifications 🔔</div>
+        <div class="card">
+          <h3><span class="e">🔔</span> Rester dans la boucle</h3>
+          <p>
+            En activant les notifications (carte cloche sur le tableau de bord ou l'espace parent),
+            on reçoit&nbsp;:
+          </p>
+          <ul class="clean">
+            <li>
+              🔥 <b>« Ton streak est en danger&nbsp;! »</b> — un rappel du soir si la série n'a pas
+              encore été entretenue.
+            </li>
+            <li>
+              📋 <b>« Le bilan famille de la semaine est prêt »</b> — le dimanche soir, pour les
+              parents.
+            </li>
+          </ul>
+          <p class="tiny" style="font-size: 13.5px">
+            Sur iPhone, il faut d'abord <b>installer l'app sur l'écran d'accueil</b> pour recevoir
+            les notifications.
+          </p>
+        </div>
+      </section>
+      <div class="divider"></div>
+
+      <!-- ============ 12. REPORT ============ -->
+      <section class="section" id="c-report">
+        <div class="section-head">
+          <div class="ic">🚩</div>
+          <h2>12 · Signaler un problème</h2>
+        </div>
+        <p class="section-sub">
+          L'app est en test : votre aide est précieuse. Deux boutons, deux usages différents.
+        </p>
+        <div class="grid g2">
+          <div class="card">
+            <h3><span class="e">🐞</span> « Signaler un bug »</h3>
+            <p>
+              Un <b>bouton flottant</b> présent partout une fois connecté. Pour tout
+              <b>souci technique</b> : page bloquée, bouton qui ne répond pas, affichage cassé… La
+              page où vous êtes est jointe automatiquement.
+            </p>
+            <p class="tiny" style="font-size: 13.5px">
+              Confirmation : « <b>Merci&nbsp;! Bug signalé.</b> »
+            </p>
+          </div>
+          <div class="card">
+            <h3><span class="e">✍️</span> « Signaler une erreur »</h3>
+            <p>
+              À la <b>fin d'une quête</b>. Pour une <b>erreur de contenu</b> : mauvaise réponse
+              indiquée, question ambiguë, faute… Décrivez ce qui cloche.
+            </p>
+            <p class="tiny" style="font-size: 13.5px">
+              Confirmation : « <b>Merci&nbsp;! Signalement envoyé.</b> »
+            </p>
+          </div>
+        </div>
+      </section>
+      <div class="divider"></div>
+
+      <!-- ============ 13. USE CASES ============ -->
+      <section class="section" id="c-cases">
+        <div class="section-head">
+          <div class="ic">🧩</div>
+          <h2>13 · Parcours utilisateurs types</h2>
+        </div>
+        <p class="section-sub">
+          Cinq situations concrètes, du premier clic à l'habitude quotidienne.
+        </p>
+
+        <div class="persona">
+          <div class="p-head">
+            <div class="p-emoji">🎯</div>
+            <div>
+              <h3>Yassine, 15 ans — prépare le Concours 9ᵉ</h3>
+              <div class="p-goal">Objectif : réviser sérieusement et se mesurer aux autres.</div>
+            </div>
+          </div>
+          <div class="p-body">
+            <ul class="journey">
+              <li>
+                Crée un compte <b>Élève</b>, choisit « Suis le programme scolaire », puis
+                <b>Concours 9ᵉ</b>.
+              </li>
+              <li>
+                Ouvre une matière, <b>lit le cours</b> d'un chapitre, puis passe le
+                <b>quiz de compréhension</b>.
+              </li>
+              <li>
+                Réussit le quiz à <b>≥ 80 %</b> → les <b>missions se déverrouillent</b>. Il enchaîne
+                l'entraînement et les boss, gagne XP et pièces.
+              </li>
+              <li>
+                Refait ses missions clés à <b>100 %</b>, ce qui ouvre le <b>Mode Rappel</b> pour
+                ancrer les notions (1,5× XP).
+              </li>
+              <li>
+                Une fois 2 matières / 3 chapitres entamés, débloque le <b>Donjon</b> et lance des
+                <b>duels</b> pour grimper au <b>classement de sa classe</b>.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="persona">
+          <div class="p-head">
+            <div class="p-emoji">🧸</div>
+            <div>
+              <h3>Lina, 7 ans — 2ᵉ année de base</h3>
+              <div class="p-goal">Objectif : apprendre en s'amusant, accompagnée d'un parent.</div>
+            </div>
+          </div>
+          <div class="p-body">
+            <ul class="journey">
+              <li>Un parent crée le compte et choisit la classe <b>2ᵉ année</b>.</li>
+              <li>
+                Lina suit des cours <b>très illustrés</b> (l'app soigne particulièrement les petites
+                classes).
+              </li>
+              <li>
+                Elle joue des quêtes courtes ; les <b>récompenses</b> (pièces, badges, avatar)
+                entretiennent l'envie.
+              </li>
+              <li>
+                Le parent relie l'enfant via le <b>Code Alliance</b> et lui fixe un petit
+                <b>objectif famille</b>.
+              </li>
+              <li>
+                Chaque jour, la <b>série 🔥</b> et la <b>révision du jour</b> créent une petite
+                routine.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="persona">
+          <div class="p-head">
+            <div class="p-emoji">👨‍👩‍👧</div>
+            <div>
+              <h3>Un parent — veut suivre sans se compliquer</h3>
+              <div class="p-goal">Objectif : savoir où en est son enfant, chaque semaine.</div>
+            </div>
+          </div>
+          <div class="p-body">
+            <ul class="journey">
+              <li>Récupère le <b>Code Alliance</b> affiché sur le tableau de bord de l'enfant.</li>
+              <li>
+                Va sur <b>« Suivi parent »</b> et colle le code — <b>aucun compte nécessaire</b>.
+              </li>
+              <li>
+                Lit le <b>bilan</b> : verdict, progrès de la semaine, points forts et points à
+                renforcer.
+              </li>
+              <li>
+                (Option) Crée un compte <b>Parent</b> pour fixer un <b>objectif</b> et activer le
+                <b>bilan hebdo par notification</b>.
+              </li>
+              <li>Partage le bilan sur <b>WhatsApp</b> avec l'autre parent.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="persona">
+          <div class="p-head">
+            <div class="p-emoji">🕵️</div>
+            <div>
+              <h3>Un visiteur curieux — sans compte</h3>
+              <div class="p-goal">
+                Objectif : voir ce que vaut la plateforme avant de s'inscrire.
+              </div>
+            </div>
+          </div>
+          <div class="p-body">
+            <ul class="journey">
+              <li>Arrive sur l'accueil et ouvre <b>Programme</b> ou <b>Extras</b>.</li>
+              <li>Descend jusqu'à un chapitre, <b>lit le cours</b> librement.</li>
+              <li><b>S'entraîne</b> sur des exercices et se corrige — sans note enregistrée.</li>
+              <li>
+                Constate que le <b>quiz</b> garde bien la porte du chapitre, même en visiteur.
+              </li>
+              <li>
+                Décide de <b>créer un compte</b> pour gagner de l'XP et sauvegarder ses progrès.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="persona">
+          <div class="p-head">
+            <div class="p-emoji">🏆</div>
+            <div>
+              <h3>La compétitrice — vit pour l'Arène</h3>
+              <div class="p-goal">Objectif : dominer le donjon, les duels et la ligue.</div>
+            </div>
+          </div>
+          <div class="p-body">
+            <ul class="journey">
+              <li>
+                Entretient sa <b>série 🔥</b> tous les jours (avec un <b>Bouclier de Flamme</b> en
+                sécurité).
+              </li>
+              <li>
+                Utilise ses <b>parties de donjon</b> quotidiennes pour battre son record d'étages.
+              </li>
+              <li>
+                Enchaîne les <b>duels</b> (jusqu'à 5 récompensés/jour) pour accumuler des points de
+                ligue.
+              </li>
+              <li>Arme une <b>Potion XP</b> avant une grosse mission pour bondir de niveau.</li>
+              <li>Le lundi, encaisse la <b>récompense de ligue</b> et vise le rang au-dessus.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      <div class="divider"></div>
+
+      <!-- ============ 14. FAQ ============ -->
+      <section class="section" id="c-faq">
+        <div class="section-head">
+          <div class="ic">💬</div>
+          <h2>14 · Questions fréquentes</h2>
+        </div>
+        <div class="grid g2">
+          <div class="card">
+            <h3 style="font-size: 15.5px">Est-ce vraiment gratuit&nbsp;?</h3>
+            <p>Oui, entièrement. Aucun abonnement ni paiement. Les pièces se gagnent en jouant.</p>
+          </div>
+          <div class="card">
+            <h3 style="font-size: 15.5px">Puis-je utiliser l'app sans compte&nbsp;?</h3>
+            <p>
+              Oui pour lire et s'entraîner. Le compte sert à gagner de l'XP et sauvegarder la
+              progression.
+            </p>
+          </div>
+          <div class="card">
+            <h3 style="font-size: 15.5px">Pourquoi mes missions sont verrouillées&nbsp;?</h3>
+            <p>
+              Il faut d'abord <b>réussir le quiz</b> du chapitre à ≥ 80 %. Relisez le cours puis
+              réessayez.
+            </p>
+          </div>
+          <div class="card">
+            <h3 style="font-size: 15.5px">J'ai bien répondu mais 0 XP&nbsp;?</h3>
+            <p>
+              Soit vous avez répondu <b>trop vite</b> (&lt; 4 s/question), soit vous n'avez pas
+              <b>battu votre meilleur score</b>.
+            </p>
+          </div>
+          <div class="card">
+            <h3 style="font-size: 15.5px">Comment débloquer le Donjon&nbsp;?</h3>
+            <p>
+              Tentez des exercices dans <b>≥ 2 matières</b> et <b>≥ 3 chapitres</b>. Le nombre de
+              parties/jour suit votre niveau.
+            </p>
+          </div>
+          <div class="card">
+            <h3 style="font-size: 15.5px">J'ai perdu ma série&nbsp;!</h3>
+            <p>
+              Rachetez-la pour <b>15 pièces</b> juste après, ou protégez-la à l'avance avec un
+              <b>Bouclier de Flamme</b>.
+            </p>
+          </div>
+          <div class="card">
+            <h3 style="font-size: 15.5px">C'est quoi le Mode Rappel&nbsp;?</h3>
+            <p>
+              Rejouer une mission maîtrisée en <b>tapant</b> la réponse, sans options, pour
+              <b>1,5× d'XP</b>.
+            </p>
+          </div>
+          <div class="card">
+            <h3 style="font-size: 15.5px">Comment un parent me suit&nbsp;?</h3>
+            <p>
+              Donnez-lui votre <b>Code Alliance</b> (sur votre tableau de bord). Il le colle dans «
+              Suivi parent ».
+            </p>
+          </div>
+          <div class="card">
+            <h3 style="font-size: 15.5px">En quelles langues&nbsp;?</h3>
+            <p>Français, anglais et arabe (avec la lecture de droite à gauche).</p>
+          </div>
+          <div class="card">
+            <h3 style="font-size: 15.5px">Je vois une faute dans une question&nbsp;?</h3>
+            <p>En fin de quête, cliquez <b>« Signaler une erreur »</b> et décrivez le souci.</p>
+          </div>
+        </div>
+      </section>
+      <div class="divider"></div>
+
+      <!-- ============ 15. REF ============ -->
+      <section class="section" id="c-ref">
+        <div class="section-head">
+          <div class="ic">📌</div>
+          <h2>15 · Aide-mémoire des chiffres</h2>
+        </div>
+        <p class="section-sub">Toutes les règles chiffrées, réunies pour référence.</p>
+        <div class="table-scroll">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Règle</th>
+                <th>Valeur</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Réussir le quiz de compréhension (porte du chapitre)</td>
+                <td class="num">≥ 80 %</td>
+              </tr>
+              <tr>
+                <td>Réussir une mission</td>
+                <td class="num">≥ 60 %</td>
+              </tr>
+              <tr>
+                <td>Temps minimum pour compter (anti-clic)</td>
+                <td class="num">4 s / question</td>
+              </tr>
+              <tr>
+                <td>XP par niveau</td>
+                <td class="num">200 XP</td>
+              </tr>
+              <tr>
+                <td>Difficulté d'un exercice</td>
+                <td class="num">⭐ 1 à 4</td>
+              </tr>
+              <tr>
+                <td>Multiplicateur d'XP du Mode Rappel</td>
+                <td class="num">× 1,5</td>
+              </tr>
+              <tr>
+                <td>Débloquer le Rappel d'une mission</td>
+                <td class="num">100 % en QCM</td>
+              </tr>
+              <tr>
+                <td>Débloquer le Donjon</td>
+                <td class="num">2 matières · 3 chapitres</td>
+              </tr>
+              <tr>
+                <td>Parties de Donjon par jour</td>
+                <td class="num">= niveau (max 5)</td>
+              </tr>
+              <tr>
+                <td>Récompense de Donjon</td>
+                <td class="num">15 XP/étage · 5 🪙 / 5 étages</td>
+              </tr>
+              <tr>
+                <td>Chrono d'un Boss (connecté)</td>
+                <td class="num">20 s / question</td>
+              </tr>
+              <tr>
+                <td>Questions par duel</td>
+                <td class="num">5</td>
+              </tr>
+              <tr>
+                <td>Duels en cours max</td>
+                <td class="num">3</td>
+              </tr>
+              <tr>
+                <td>Duels récompensés par jour</td>
+                <td class="num">5</td>
+              </tr>
+              <tr>
+                <td>Récompenses de duel (victoire / nul / défaite)</td>
+                <td class="num">60·12 / 40·8 / 20·4</td>
+              </tr>
+              <tr>
+                <td>Points de ligue (victoire / nul / défaite)</td>
+                <td class="num">3 / 1 / 0</td>
+              </tr>
+              <tr>
+                <td>Classement affiché</td>
+                <td class="num">Top 50 + votre ligne</td>
+              </tr>
+              <tr>
+                <td>Onglet « Ma classe » par défaut dès</td>
+                <td class="num">10 élèves classés</td>
+              </tr>
+              <tr>
+                <td>Racheter une série perdue</td>
+                <td class="num">15 🪙</td>
+              </tr>
+              <tr>
+                <td>Badge « Série de 7 »</td>
+                <td class="num">7 jours</td>
+              </tr>
+              <tr>
+                <td>Révisions programmées après un échec</td>
+                <td class="num">1 · 3 · 7 jours</td>
+              </tr>
+              <tr>
+                <td>Missions dans « Ta révision du jour »</td>
+                <td class="num">jusqu'à 3</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============ FOOTER ============ -->
+    <footer>
+      <div class="wrap">
+        <p><b>Na9ra Nal3ab · نقرا نلعب</b> — Guide utilisateur.</p>
+        <p>
+          Document mis à jour le 21 juillet 2026. L'application est en bêta publique
+          <b>100 % gratuite</b> ; les fonctionnalités et les chiffres peuvent évoluer. Les « pièces
+          » et l'« XP » sont des récompenses de jeu, sans valeur monétaire.
+        </p>
+        <a class="backtop" href="#">↑ Revenir en haut</a>
+      </div>
+    </footer>
+  </body>
+</html>
