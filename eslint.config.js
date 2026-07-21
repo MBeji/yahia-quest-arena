@@ -4,6 +4,7 @@ import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
+import local from "./scripts/lint/eslint-rules/index.mjs";
 
 export default tseslint.config(
   {
@@ -82,6 +83,18 @@ export default tseslint.config(
     files: ["src/routes/**/*.{ts,tsx}"],
     rules: {
       "react-refresh/only-export-components": "off",
+    },
+  },
+  {
+    // Deterministic security invariant (étude "IA → déterministe", lot L1b): a
+    // server fn must never be exposed without a server-side auth gate. This used
+    // to be an agent check on the staged diff (tokens + up to 180 s per commit);
+    // as an AST rule it runs for free in lint → pre-push → CI. See the rule's
+    // header for why it enforces the auth middleware but not `.inputValidator`.
+    files: ["**/*.{ts,tsx}"],
+    plugins: { local },
+    rules: {
+      "local/require-server-fn-auth": "error",
     },
   },
   eslintPluginPrettier,
