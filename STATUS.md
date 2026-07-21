@@ -228,6 +228,27 @@ après é22 + é04-A1.1 livrés) : prochaines briques **é04-A1.2** (correction 
 **é07 lot 3**, **é23 lot 5** (pilote vidéos maths 9ᵉ), campagnes d'illustration **é19 / é21**,
 **é11 lots 0-2** (tuteur « El Ostedh », pilote math 9ᵉ). Ordre détaillé dans la ROADMAP privée.
 
+> **▶ Reprise pour une session vierge** (main vert à **#605**, aucune PR en vol au 2026-07-21).
+> Pour compléter l'exécution de la roadmap sans ambiguïté :
+>
+> 1. **Les contrats d'exécution sont au privé.** La ROADMAP ordonnée et les `ETUDE.md`
+>    (requirements R-N, décisions D-N, stop-points par lot) vivent dans
+>    **`MBeji/yahia-quest-content`** (partis avec l'étude 24). Démarrer la session **sur ce
+>    dépôt privé** et y ajouter celui-ci en second checkout pour le moteur/le code — même
+>    point de départ que les campagnes de contenu (AGENTS.md § Content pipeline). Ce STATUS.md
+>    donne **l'état** ; le privé donne le **« comment »** de chaque lot.
+> 2. **Prochaine brique V1** : **é04-A1.2** « correction riche à l'échec » (`FableEtudes/04-*/ETUDE.md`,
+>    phase A1.2), puis é07 lot 3, é23 lot 5, campagnes é19/é21, é11 lots 0-2 — dans l'ordre du
+>    pipeline é26 (§4).
+> 3. **Réservé — ne pas empiéter** : les études **24** (lot 5, purge de l'historique git) et
+>    **25** (lots 3-7, harness portable — dont le miroir `.agents/skills/`) sont **en cours dans
+>    d'autres sessions**. Une session V1 ne touche ni au harness/skills ni à l'historique git.
+> 4. **Discipline** (AGENTS.md, DoD) : un lot = une PR à file set distinct ; migration additive
+>    avant le code, destructive dans un merge séparé ; pgTAP/e2e ne sont pas des gates de PR —
+>    dispatcher `db-tests.yml` / `e2e-auth.yml` pour valider une migration ou un test ; savepoint =
+>    **préfixe de branche** `wip/` (jamais `[wip]` dans le sujet, ça fuit dans `main`) ; suivre ses
+>    checks jusqu'au merge réel puis faire le sweep.
+
 1. **Corriger le contenu `french-8eme`** (2 BLOCKER + 6 MAJOR ouverts) — qualité pédagogique visible.
 2. **Reverdir `main`** : e2e-auth (#363) **fait le 2026-07-21** (12 → 0, run vert) ; reste le **nightly #250**.
 3. **C4 / mise en prod sérieuse** : câbler le domaine `na9ranal3ab.tn`, monitoring + ruleset (~45 min Mohamed), puis soumettre le sitemap.
