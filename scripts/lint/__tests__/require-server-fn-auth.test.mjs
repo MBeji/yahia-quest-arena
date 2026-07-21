@@ -69,6 +69,14 @@ ruleTester.run("require-server-fn-auth", requireServerFnAuth, {
       name: "non-literal middleware argument is unverifiable → skipped",
       code: `createServerFn({ method: "POST" }).middleware(mws).handler(async () => 1);`,
     },
+    {
+      name: "spread element in middleware array is unverifiable → skipped",
+      code: `createServerFn({ method: "POST" }).middleware([...baseMiddleware]).handler(async () => 1);`,
+    },
+    {
+      name: "non-identifier element (member expression) is unverifiable → skipped",
+      code: `createServerFn({ method: "GET" }).middleware([mw.auth]).handler(async () => 1);`,
+    },
     // Unrelated calls must never trip the rule.
     {
       name: "unrelated call expression",
