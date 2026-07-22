@@ -8,7 +8,7 @@ En 7ème, tu racontais au **passé composé**. En 8ème, tu entres dans le **ré
 
 L'imparfait se forme à partir du **radical de la 1re personne du pluriel du présent** (_nous …-ons_), auquel on ajoute les terminaisons **-ais, -ais, -ait, -ions, -iez, -aient** — les **mêmes pour tous les verbes**.
 
-$$ \text{radical du « nous » au présent} + \text{-ais · -ais · -ait · -ions · -iez · -aient} $$
+**radical du « nous » au présent** + **-ais · -ais · -ait · -ions · -iez · -aient**
 
 - _nous chant**ons** → je chant**ais**, tu chant**ais**, il chant**ait**, nous chant**ions**, vous chant**iez**, ils chant**aient**_
 - _nous finiss**ons** → je finiss**ais**_ · _nous pren**ons** → je pren**ais**_ · _nous fais**ons** → je fais**ais**_
@@ -36,7 +36,7 @@ Contrairement à l'imparfait, ses terminaisons **changent selon le groupe** du v
 
 ### 1er groupe (verbes en -er) et _aller_
 
-$$ \text{-ai · -as · -a · -âmes · -âtes · -èrent} $$
+**-ai · -as · -a · -âmes · -âtes · -èrent**
 
 | Personne | chanter        | aller        |
 | -------- | -------------- | ------------ |
@@ -51,7 +51,7 @@ $$ \text{-ai · -as · -a · -âmes · -âtes · -èrent} $$
 
 ### 2e groupe (verbes en -ir comme _finir_) et beaucoup de verbes du 3e groupe
 
-$$ \text{-is · -is · -it · -îmes · -îtes · -irent} $$
+**-is · -is · -it · -îmes · -îtes · -irent**
 
 - _finir → je fin**is**, il fin**it**, ils fin**irent**_
 - _partir → il part**it**, ils part**irent**_ · _prendre → il **prit**, ils **prirent**_ · _voir → il **vit**, ils **virent**_ · _faire → il **fit**, ils **firent**_ · _dire → il **dit**, ils **dirent**_
@@ -60,7 +60,7 @@ $$ \text{-is · -is · -it · -îmes · -îtes · -irent} $$
 
 ### 3e groupe en -u
 
-$$ \text{-us · -us · -ut · -ûmes · -ûtes · -urent} $$
+**-us · -us · -ut · -ûmes · -ûtes · -urent**
 
 - _vouloir → il voul**ut**, ils voul**urent**_ · _pouvoir → il **put**, ils **purent**_ · _courir → il cour**ut**_
 - Deux incontournables : **avoir → il eut, ils eurent** · **être → il fut, ils furent**.

@@ -23,7 +23,7 @@ Deux moments passés, mais pas au même niveau :
 
 Le plus-que-parfait est un **temps composé** : il se forme en **deux morceaux**.
 
-$$ \text{auxiliaire } \textbf{être} \text{ ou } \textbf{avoir} \text{ à l'} \textbf{imparfait} + \text{participe passé} $$
+**être** ou **avoir** à l'**imparfait** + participe passé
 
 Tout se joue sur l'auxiliaire : il est **à l'imparfait**. C'est ce qui distingue le plus-que-parfait du passé composé.
 

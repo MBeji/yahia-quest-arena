@@ -24,7 +24,7 @@ Cette racine, c'est le **radical** : la partie commune que l'on retrouve dans ch
 
 **Dériver** un mot, c'est ajouter au radical un petit élément : un **préfixe** devant, un **suffixe** derrière — ou les deux.
 
-$$ mot dérivé = préfixe + radical + suffixe $$
+**mot dérivé** = **préfixe** + **radical** + **suffixe**
 
 _impensable_ = **im-** (préfixe) + **pens-** (radical) + **-able** (suffixe). Un seul radical, encadré par deux affixes.
 
