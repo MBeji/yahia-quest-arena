@@ -1,16 +1,24 @@
 name: Upgrade guard (nightly stack upgrade)
 
-# Autonomous nightly STACK-UPGRADE sweep, driven by the repo skill
-# .claude/skills/upgrade-guard. It detects available upgrades across the whole
-# stack (npm runtime + dev deps, TypeScript, the Node toolchain, the pinned
-# Supabase CLI, GitHub Actions), then:
-#   * applies PATCH + MINOR as ONE lot on a branch, runs the in-session gate, and
-#     opens a PR — which THIS workflow then validates with the full slow suite
-#     (E2E public + E2E authed + pgTAP) and AUTO-MERGES if all green;
-#   * applies each MAJOR in isolation (one PR per major, never bundled), or opens
-#     a tracking issue when a major's gate stays red — majors are NEVER auto-merged.
-# It NEVER weakens the gate and NEVER merges by itself (the deterministic
-# `automerge` job does that, only for a fully-green patch/minor PR).
+# Autonomous nightly STACK-UPGRADE sweep. Since the étude "IA → déterministe"
+# (lot L4) the work is SPLIT by nature, not bundled into one agent:
+#
+#   * the PATCH + MINOR lot is a CLOSED procedure, so it is a SCRIPT
+#     (scripts/deps/apply-patch-minor.mjs): `npm outdated` → `npm update` inside
+#     the declared ranges → full lockfile install → `npm run ci:verify` → one PR
+#     labelled `dependencies`. Zero token, no Claude secret needed, same verdict
+#     every time. THIS workflow then validates that branch with the full slow
+#     suite (E2E public + E2E authed + pgTAP) and AUTO-MERGES if all green.
+#   * the MAJORS and a RED patch/minor lot need judgement (read the changelog,
+#     migrate the breaking change, decide fix-vs-hold-back), so the agent — driven
+#     by the repo skill .claude/skills/upgrade-guard — is woken ONLY for those.
+#     One PR per major group (never bundled), or a tracking issue when a major's
+#     gate stays red; majors are NEVER auto-merged.
+#
+# A nominal night — a few in-range bumps, gate green, no major — therefore spends
+# no token at all. Nothing here ever weakens the gate, and nothing merges by
+# itself except the deterministic `automerge` job below, only for a fully-green
+# patch/minor PR.
 #
 # Trigger: it runs *after* the Nightly tests workflow finishes SUCCESSFULLY, so it
 # only ever upgrades from a known-green baseline ("juste après la CI + E2E
@@ -18,11 +26,13 @@ name: Upgrade guard (nightly stack upgrade)
 # (main) — takes effect once this file is merged to main. Use the "Run workflow"
 # button (workflow_dispatch) any time to launch it manually.
 #
-# Prereq: repository secret CLAUDE_CODE_OAUTH_TOKEN (same one regression-guard
-# uses — `claude setup-token`). Without it the job SKIPS gracefully (stays green).
-# The TEST_SUPABASE_* / E2E_USER_PASSWORD secrets let the authed E2E + pgTAP gate
-# the auto-merge; when absent those suites skip and the patch/minor PR is simply
-# left for manual merge (the safe default).
+# Prereqs: NONE for the patch/minor lot — it is a script, so it works with no
+# Claude secret at all (that is the L4 gain). The repository secret
+# CLAUDE_CODE_OAUTH_TOKEN (same one regression-guard uses — `claude setup-token`)
+# is needed only for the agent part; without it the majors are simply reported and
+# the agent part skips gracefully. The TEST_SUPABASE_* / E2E_USER_PASSWORD secrets
+# let the authed E2E + pgTAP gate the auto-merge; when absent those suites skip and
+# the patch/minor PR is simply left for manual merge (the safe default).
 
 on:
   workflow_run:
@@ -50,73 +60,170 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    # Headroom for: changelog reading + applying the patch/minor lot + each major,
-    # each running `npm run ci:verify` in-session. The slow E2E/pgTAP suites are
-    # SEPARATE jobs, so they don't count against this.
+    # Headroom for: the deterministic lot + its full gate, then (only if needed) the
+    # agent reading changelogs and migrating each major, each running `npm run
+    # ci:verify` in-session. The slow E2E/pgTAP suites are SEPARATE jobs, so they
+    # don't count against this.
     timeout-minutes: 60
     outputs:
-      configured: ${{ steps.guard.outputs.configured }}
-      has_patch_minor: ${{ steps.out.outputs.has_patch_minor }}
-      patch_minor_branch: ${{ steps.out.outputs.patch_minor_branch }}
-      patch_minor_pr: ${{ steps.out.outputs.patch_minor_pr }}
+      has_patch_minor: ${{ steps.consolidate.outputs.has_patch_minor }}
+      patch_minor_branch: ${{ steps.consolidate.outputs.patch_minor_branch }}
+      patch_minor_pr: ${{ steps.consolidate.outputs.patch_minor_pr }}
     steps:
-      # Token gate + cadence gate. The nightly completes every night, but this
-      # sweep is the most expensive job in the repo (a Claude agent holds a runner
-      # for many minutes), so we throttle it to 2×/week — Tue + Fri (UTC), the
-      # mornings after the regression guard's Mon/Thu 23:00 → nightly 01:00 chain.
-      # A manual workflow_dispatch always runs. Off-day runs stop here in seconds,
-      # before any costly step. Skipped == configured=false (same path as a missing
-      # token): the downstream e2e/pgtap/automerge jobs already gate on it.
-      - name: Check token + upgrade cadence
-        id: guard
+      # Cadence gate — NO token dependency any more (étude "IA → déterministe", lot L4).
+      # The nightly completes every night; this sweep is throttled to 2×/week (Tue + Fri
+      # UTC, the mornings after the regression guard's Mon/Thu 23:00 → nightly 01:00
+      # chain) because each run opens a PR and runs the slow suites — the constraint is
+      # noise, not tokens. A manual workflow_dispatch always runs. Off-day runs stop here
+      # in seconds, before any costly step.
+      - name: Check the upgrade cadence
+        id: cadence
         run: |
-          if [ -z "${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}" ]; then
-            echo "CLAUDE_CODE_OAUTH_TOKEN not set — skipping the upgrade guard."
-            echo "configured=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
           dow="$(date -u +%u)"  # 1=Mon … 7=Sun
           if [ "${{ github.event_name }}" != "workflow_dispatch" ] && [ "$dow" != "2" ] && [ "$dow" != "5" ]; then
             echo "Not a scheduled upgrade day (UTC dow=$dow; sweep runs Tue/Fri) — skipping. Use 'Run workflow' to force it."
-            echo "configured=false" >> "$GITHUB_OUTPUT"
-            exit 0
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
           fi
-          echo "configured=true" >> "$GITHUB_OUTPUT"
 
       - name: Checkout main (full history for branch/diff context)
-        if: steps.guard.outputs.configured == 'true'
+        if: steps.cadence.outputs.run == 'true'
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           fetch-depth: 0
 
       - name: Setup Node
-        if: steps.guard.outputs.configured == 'true'
+        if: steps.cadence.outputs.run == 'true'
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 22
           cache: npm
 
       - name: Install dependencies (validate the current lockfile)
-        if: steps.guard.outputs.configured == 'true'
+        if: steps.cadence.outputs.run == 'true'
         run: npm ci --no-audit --no-fund
+
+      # --- The patch/minor lot: a closed procedure, so a script, not an agent (§4.4) -----
+      # `npm outdated` → the in-range lot on one side, the out-of-range majors (grouped:
+      # the TanStack set moves as ONE) on the other. Writes the plan + a ready-to-post PR
+      # body. Costs nothing and always runs, so the majors are known even when the lot is
+      # empty.
+      - name: Detect available upgrades
+        id: detect
+        if: steps.cadence.outputs.run == 'true'
+        run: |
+          node scripts/deps/apply-patch-minor.mjs detect \
+            --out "$RUNNER_TEMP/upgrade-plan.json" \
+            --pr-body "$RUNNER_TEMP/upgrade-pr-body.md" \
+            --date "$(date -u +%F)"
+
+      # `npm update` inside the declared ranges + a full install to normalise the
+      # lockfile. The script itself refuses to run under npm 11 and aborts if the
+      # `overrides` block (the global esbuild security pin) moved — the two lockfile traps
+      # are now enforced, not merely written in the skill.
+      - name: Apply the patch/minor lot
+        if: steps.cadence.outputs.run == 'true' && steps.detect.outputs.has_patch_minor == 'true'
+        run: node scripts/deps/apply-patch-minor.mjs apply --plan "$RUNNER_TEMP/upgrade-plan.json"
+
+      # The gate decides, exactly as it does for a human PR. Non-blocking here: a red gate
+      # is a legitimate outcome (draft PR + the agent's repair mode below), not a job crash.
+      - name: Full gate on the lot
+        id: gate
+        if: steps.cadence.outputs.run == 'true' && steps.detect.outputs.has_patch_minor == 'true'
+        continue-on-error: true
+        run: npm run ci:verify
+
+      # Green → a ready PR that the slow suites below can auto-merge. Red → the same branch
+      # as a DRAFT labelled `needs-review`, has_patch_minor=false so nothing auto-merges,
+      # and the agent gets it as repair work. This is the skill's own decision tree, applied
+      # deterministically. A push from this job does NOT trigger auto-pr.yml (GitHub's
+      # workflow-loop protection), so the PR is opened here explicitly.
+      - name: Open the patch/minor PR
+        id: pr
+        if: steps.cadence.outputs.run == 'true' && steps.detect.outputs.has_patch_minor == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GATE: ${{ steps.gate.outcome }}
+        run: |
+          set -euo pipefail
+          date="$(date -u +%F)"
+          branch="claude/upgrade-patch-minor-$date"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add package.json package-lock.json
+          git commit -m "chore(deps): patch & minor upgrades $date" \
+            -m "Lot déterministe monté dans les ranges par scripts/deps/apply-patch-minor.mjs (étude IA → déterministe, L4)." \
+            -m "Co-Authored-By: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+          git push -u origin "$branch"
+
+          body="$RUNNER_TEMP/upgrade-pr-body.md"
+          if [ "$GATE" = "success" ]; then
+            printf '\n---\n\n✅ `npm run ci:verify` vert sur la branche.\n' >> "$body"
+            gh pr create --title "chore(deps): patch & minor upgrades $date" --body-file "$body" \
+              --label dependencies --head "$branch" --base main
+            echo "has_patch_minor=true" >> "$GITHUB_OUTPUT"
+          else
+            printf '\n---\n\n❌ `npm run ci:verify` **rouge** sur ce lot. PR laissée en **draft** : le garde agent\nreprend la main (corriger proprement, ou écarter le paquet fautif avec `--hold` et relancer).\nAucun auto-merge.\n' >> "$body"
+            gh pr create --draft --title "chore(deps): patch & minor upgrades $date" --body-file "$body" \
+              --label dependencies --label needs-review --head "$branch" --base main
+            echo "has_patch_minor=false" >> "$GITHUB_OUTPUT"
+          fi
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+          echo "number=$(gh pr view "$branch" --json number --jq .number)" >> "$GITHUB_OUTPUT"
+          # Back to a clean main so the agent step below starts from the same baseline it
+          # always had (each major branches off main).
+          git checkout main
+
+      # --- What still needs judgement: the majors, and a red lot (§4.4/§4.6) ------------
+      # The agent is woken ONLY when there is real work for it: at least one major to read
+      # a changelog for and migrate, or a patch/minor lot the gate rejected. The nominal
+      # night — some in-range bumps, gate green, no major — never spends a token.
+      - name: Check the Claude OAuth token is configured
+        id: token
+        if: steps.cadence.outputs.run == 'true'
+        run: |
+          if [ -z "${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}" ]; then
+            echo "CLAUDE_CODE_OAUTH_TOKEN not set — the deterministic lot still ran; skipping the agent part."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Decide whether the agent has work
+        id: agentwork
+        if: steps.cadence.outputs.run == 'true'
+        env:
+          HAS_MAJORS: ${{ steps.detect.outputs.has_majors }}
+          GATE: ${{ steps.gate.outcome }}
+        run: |
+          if [ "$HAS_MAJORS" = "true" ] || [ "$GATE" = "failure" ]; then
+            echo "needed=true" >> "$GITHUB_OUTPUT"
+            echo "Agent needed (majors=$HAS_MAJORS, patch/minor gate=$GATE)."
+          else
+            echo "needed=false" >> "$GITHUB_OUTPUT"
+            echo "No major available and the patch/minor lot is green — no agent this run (lot L4)."
+          fi
 
       # Le modèle de ce garde n'est pas écrit ici : il vient de harness/models.json via
       # son rôle (étude 25 D-5/D-6). Changer de modèle = une ligne dans ce JSON, et
       # harness:check échoue si un identifiant réapparaît en dur dans un workflow.
       - name: Resolve the model for role garde-deps
         id: model
-        if: steps.guard.outputs.configured == 'true'
+        if: steps.token.outputs.configured == 'true' && steps.agentwork.outputs.needed == 'true'
         run: |
           model="$(node -p "require('./harness/models.json').roles['garde-deps'].model")"
           echo "model=$model" >> "$GITHUB_OUTPUT"
           echo "Role garde-deps -> $model (source: harness/models.json)"
 
-      - name: Run the upgrade-guard sweep
-        if: steps.guard.outputs.configured == 'true'
+      - name: Run the upgrade-guard agent (majors + repair only)
+        id: agent
+        if: steps.token.outputs.configured == 'true' && steps.agentwork.outputs.needed == 'true'
         uses: anthropics/claude-code-action@af0559ee4f514d1ef21826982bed13f7edc3c35e # v1
         env:
-          # The skill writes its machine-readable verdict here; the next step turns
-          # it into job outputs that gate the slow suites + auto-merge.
+          # The skill writes its machine-readable verdict here; the next step merges it
+          # with the deterministic outputs.
           UPGRADE_GUARD_RESULT: ${{ runner.temp }}/upgrade-guard-result.json
           # Authenticates Claude's `gh` calls (open PRs / issues, push branches).
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -124,72 +231,109 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           prompt: |
-            Run the /upgrade-guard skill for yahia-quest-arena.
+            Run the /upgrade-guard skill for yahia-quest-arena — the MAJORS and REPAIR
+            parts only. The patch/minor lot is NOT your job any more: a deterministic
+            script already ran it (étude IA → déterministe, lot L4).
 
-            You are on a clean `main`, immediately after a GREEN nightly build, so
-            the baseline is trustworthy. Detect available upgrades across the whole
-            stack (npm runtime + dev deps, TypeScript, the Node toolchain, the
-            pinned Supabase CLI, and the GitHub Actions), then act per the skill:
+            You are on a clean `main`, immediately after a GREEN nightly build, so the
+            baseline is trustworthy. Read the plan the script wrote:
+              ${{ runner.temp }}/upgrade-plan.json
+            `majorGroups` lists every out-of-range major, ALREADY GROUPED (a group moves
+            as one PR — the TanStack set, a runtime with its @types). `patchMinor` and
+            `excluded` are for context only.
 
-              1. PATCH + MINOR as ONE lot on branch `claude/upgrade-patch-minor-<date>`:
-                 `npm update` within ranges, full lockfile install (npm 10, NEVER 11),
-                 then `npm run ci:verify` in-session. If green, open ONE PR (label
-                 `dependencies`) and record has_patch_minor=true + the branch + PR
-                 number in the result file. If you cannot make the whole lot green,
-                 hold the offending package back (record it) or open a DRAFT
-                 `needs-review` PR and set has_patch_minor=false — never weaken the gate.
+            State from this run:
+              • in-range lot applied: ${{ steps.detect.outputs.has_patch_minor }}
+              • its `npm run ci:verify`: ${{ steps.gate.outcome }}
+              • its branch / PR: ${{ steps.pr.outputs.branch }} / #${{ steps.pr.outputs.number }}
 
-              2. Each MAJOR in ISOLATION on its own branch (NEVER bundle two majors;
-                 the TanStack router/start/router-plugin/react-query set counts as ONE
-                 major). Read its changelog first. If you make it green, open ONE PR
-                 labelled `dependencies` + `major` + `needs-review` (NOT auto-merged).
-                 If it stays red after a reasonable effort, open a tracking ISSUE
-                 describing the breaking change + what failed — do NOT open a broken PR.
+            Do, in this order:
 
-            Honour every repo trap in the skill (npm 10 lockfile, global esbuild
-            override on Vite 8, react-hooks 7 recommended, react-refresh on
-            src/routes/**, do-not-touch motion/LazyMotion, the inline Vite/TanStack
-            config, Supabase CLI pin → validate pgTAP).
+              1. IF the patch/minor gate above is `failure`: REPAIR that lot. Check out its
+                 branch, reproduce the failure, and either fix it properly when the fix is
+                 a correct changelog-prescribed adjustment, or drop the offending package
+                 from the lot by re-running
+                   `node scripts/deps/apply-patch-minor.mjs detect --out <plan> --hold <pkg>`
+                 then `… apply --plan <plan>` on a clean tree — recording the hold-back and
+                 its reason in the PR body. Push, and when `npm run ci:verify` is green mark
+                 the PR ready for review (`gh pr ready`), remove `needs-review`, and record
+                 has_patch_minor=true + the branch + PR number in the result file so the slow
+                 suites and the auto-merge can take over. Never weaken the gate to go green.
 
-            HARD RULES: NEVER weaken/disable a test, lower coverage, or `--no-verify`
-            to go green. NEVER merge or push to `main` — only push `claude/upgrade-*`
-            branches and open PRs/issues; the workflow auto-merges the patch/minor PR
-            itself once the slow suites pass. Use conventional-commit messages with the
-            `Co-Authored-By` trailer. WRITE the result file to the path in the
-            `UPGRADE_GUARD_RESULT` env var (schema in the skill). If the stack is
-            already up to date, open nothing, set has_patch_minor=false, and post a
-            short "already up to date — here's what I checked" summary.
+              2. For EACH major group in the plan, in ISOLATION on its own branch (NEVER
+                 bundle two groups): read its changelog/migration notes first (WebFetch /
+                 WebSearch), apply it, run `npm run ci:verify`. Green → ONE PR labelled
+                 `dependencies` + `major` + `needs-review` (NOT auto-merged), body =
+                 the breaking changes and what you changed. Still red after a reasonable
+                 effort → a tracking ISSUE describing the breaking change and what failed;
+                 do NOT open a broken PR. Don't upgrade a major whose notes you cannot find.
+
+              3. The stack beyond npm is also yours, and is major-class by the skill's rules:
+                 the CI Node line, the pinned Supabase CLI (a bump must show a green pgTAP
+                 run), and the GitHub Actions SHAs. One PR each, per the skill.
+
+            Honour every repo trap in the skill (npm 10 lockfile — NEVER 11, global esbuild
+            override on Vite 8, react-hooks 7 recommended, react-refresh on src/routes/**,
+            do-not-touch motion/LazyMotion, the inline Vite/TanStack config).
+
+            HARD RULES: NEVER weaken/disable a test, lower coverage, or `--no-verify` to go
+            green. NEVER merge or push to `main` — only `claude/upgrade-*` branches, PRs and
+            issues. Use conventional-commit messages with the `Co-Authored-By` trailer. WRITE
+            the result file to the path in `UPGRADE_GUARD_RESULT` (schema in the skill); set
+            has_patch_minor ONLY if you repaired the lot to green in step 1. If there is
+            nothing you can do, say so in the job log and open nothing.
           claude_args: |
             --model ${{ steps.model.outputs.model }}
             --max-turns 60
             --allowedTools "Bash,Read,Edit,Write,Glob,Grep,WebFetch,WebSearch"
 
-      # Turn the skill's result file into job outputs. Runs even if the sweep
-      # errored (so downstream skips cleanly); absence of the file => nothing to do.
-      - name: Export sweep outputs
-        id: out
-        if: ${{ always() && steps.guard.outputs.configured == 'true' }}
+      # Consolidate the deterministic outputs with the agent's result file. The
+      # deterministic lot is authoritative when it produced a green PR; otherwise the agent
+      # may have repaired the same branch (step 1 of its prompt) and says so in its file.
+      # Runs even if a step above errored, so downstream jobs skip cleanly.
+      - name: Consolidate sweep outputs
+        id: consolidate
+        if: ${{ always() && steps.cadence.outputs.run == 'true' }}
+        env:
+          DET_HAS: ${{ steps.pr.outputs.has_patch_minor }}
+          DET_BRANCH: ${{ steps.pr.outputs.branch }}
+          DET_PR: ${{ steps.pr.outputs.number }}
         run: |
           set -euo pipefail
+          if [ "${DET_HAS:-false}" = "true" ]; then
+            echo "Deterministic patch/minor lot is green — validating $DET_BRANCH (PR #$DET_PR)."
+            echo "has_patch_minor=true" >> "$GITHUB_OUTPUT"
+            echo "patch_minor_branch=$DET_BRANCH" >> "$GITHUB_OUTPUT"
+            echo "patch_minor_pr=$DET_PR" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           f="$RUNNER_TEMP/upgrade-guard-result.json"
           if [ -f "$f" ] && jq -e . "$f" >/dev/null 2>&1; then
             echo "has_patch_minor=$(jq -r '.has_patch_minor // false' "$f")" >> "$GITHUB_OUTPUT"
             echo "patch_minor_branch=$(jq -r '.patch_minor_branch // ""' "$f")" >> "$GITHUB_OUTPUT"
             echo "patch_minor_pr=$(jq -r '.patch_minor_pr // ""' "$f")" >> "$GITHUB_OUTPUT"
-            echo "Sweep result:"; jq '{has_patch_minor, patch_minor_branch, patch_minor_pr, summary}' "$f"
+            echo "Agent result:"; jq '{has_patch_minor, patch_minor_branch, patch_minor_pr, summary}' "$f"
           else
-            echo "No (valid) result file — treating as nothing to validate/merge."
+            echo "Nothing to validate or merge this run."
             echo "has_patch_minor=false" >> "$GITHUB_OUTPUT"
           fi
 
       # No silent green AND no false red: the action step exits 0 even when Claude
       # itself errored (e.g. a 401 → is_error=true at 1 turn). The shared parser
       # inspects ONLY the final result event's is_error. (Same guard as
-      # regression-guard.yml.)
+      # regression-guard.yml.) Skipped when the agent didn't run at all.
       - name: Fail loudly if the sweep errored
-        if: ${{ always() && steps.guard.outputs.configured == 'true' }}
+        if: ${{ always() && steps.token.outputs.configured == 'true' && steps.agentwork.outputs.needed == 'true' }}
         run: python3 .github/scripts/check-claude-result.py "$RUNNER_TEMP/claude-execution-output.json"
 
+      # A red patch/minor gate must not pass unnoticed just because the agent was skipped
+      # (no token) or could not fix it: the draft PR exists, but the JOB stays red so the
+      # night is visibly not clean.
+      - name: Fail if the patch/minor lot stayed red
+        if: ${{ always() && steps.gate.outcome == 'failure' && steps.consolidate.outputs.has_patch_minor != 'true' }}
+        run: |
+          echo "::error title=Lot patch/minor rouge::npm run ci:verify a échoué sur le lot patch/minor ; PR draft ${{ steps.pr.outputs.branch }} (#${{ steps.pr.outputs.number }}) laissée en needs-review."
+          exit 1
   # --- Validate the patch/minor branch with the full slow suite -----------------
   # These reuse the canonical suite workflows, pointed at the upgrade branch via
   # their `ref` input. They run ONLY when the sweep produced a green patch/minor lot.

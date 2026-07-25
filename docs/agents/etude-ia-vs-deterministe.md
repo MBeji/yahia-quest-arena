@@ -1,8 +1,8 @@
 # Étude — IA → déterministe : ne dépenser des tokens que là où le jugement compte
 
-> **Statut : étude en exécution** (ouverte le 2026-07-21). Cinq lots sur six sont livrés —
-> **L1, L1b, L3, L5** le 2026-07-21, **L2** le 2026-07-25 ; il reste **L4** (`upgrade-guard`),
-> qui est encore un arbitrage à rendre (Renovate vs script maison). État par lot : §6.
+> **Statut : étude CLOSE** (ouverte le 2026-07-21, close le 2026-07-25). Les **six lots sont
+> livrés** — L1, L1b, L3, L5 le 2026-07-21, puis **L2** et **L4** le 2026-07-25. Plus aucune
+> surface du dépôt ne dépense un agent sur un chemin nominal mécanique. État par lot : §6.
 > Périmètre : ce dépôt (moteur + harness + CI). Le pipeline de contenu vit au privé
 > (étude 24) et n'est traité qu'en renvoi (§4.6).
 
@@ -68,10 +68,11 @@ Les surfaces qui consomment, elles :
 | `second-opinion.yml`   | chaque push de chaque PR (dormant) | `second-avis` (null)               | second avis d'une autre famille de modèles — coût nul tant que dormant             |
 
 > Ce tableau est l'**inventaire d'ouverture** (2026-07-21), conservé tel quel comme état de
-> départ. Ce qui a changé depuis est au §6 : le hook pré-commit agent a été **retiré** (L1,
-> remplacé par `precommit-checks.mjs` + la règle ESLint L1b), et `regression-guard`,
-> `report-triage` et `second-opinion` sont désormais bornés par un filtre déterministe
-> (L3, L2, L5). Seul `upgrade-guard` est encore décrit ici tel qu'il tourne (L4 à faire).
+> départ. **Aucune de ses lignes ne décrit plus le présent** — voir le §6 : le hook pré-commit
+> agent a été **retiré** (L1, remplacé par `precommit-checks.mjs` + la règle ESLint L1b) ;
+> `regression-guard`, `report-triage` et `second-opinion` sont bornés par un filtre
+> déterministe (L3, L2, L5) ; et le lot patch/minor d'`upgrade-guard` est devenu un script,
+> l'agent n'y gardant que les majors et la réparation d'un lot rouge (L4).
 
 ## 3. Grille de décision (quand IA, quand script)
 
@@ -164,6 +165,17 @@ se pose vraiment. **Cette question-là reste IA** : c'est le cœur légitime du 
 
 ### 4.4 `upgrade-guard.yml` — le lot patch/minor n'a pas besoin d'un agent (P2)
 
+> **Livré le 2026-07-25 — variante « script maison » retenue** (arbitrage rendu par Mohamed :
+> pas de tiers dans la chaîne, même régime que les autres scripts du harness).
+> `scripts/deps/apply-patch-minor.mjs` (18 tests unitaires) fait `detect` (split lot in-range
+> vs majors **déjà groupées**) puis `apply` (`npm update` + install complet) ; le workflow passe
+> le gate et ouvre la PR — ready si vert, draft `needs-review` si rouge, exactement l'arbre de
+> décision que le skill décrivait. L'agent n'est réveillé que s'il y a une **major** ou si le
+> lot est **rouge**. Deux gains que l'étude n'avait pas prévus : le chemin nominal ne dépend
+> plus du **jeton Claude** du tout, et les deux pièges de lockfile (**npm 10 jamais 11**, bloc
+> `overrides` intact) sont devenus des **assertions** au lieu de consignes de prompt — un piège
+> qui ne tient que si l'agent s'en souvient n'est pas un garde-fou.
+
 Le lot patch/minor est, par construction du skill, une procédure fermée :
 `npm outdated` → `npm update` dans les ranges → `npm ci` (npm 10) → `npm run ci:verify` →
 PR labellée `dependencies`. **C'est un script** — ou, mieux, **Renovate**, qui fait
@@ -220,26 +232,35 @@ vérifie l'agent, pas l'inverse — le bon sens de la relation).
 
 ## 6. Plan par lots proposé
 
-| Lot     | Contenu                                                                                                     | Effort | Gain tokens/latence                      | État                                                                                                                                                           |
-| ------- | ----------------------------------------------------------------------------------------------------------- | ------ | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **L1**  | Hook pré-commit déterministe (`precommit-checks.mjs` + tests) ; retirer le hook agent de `policy.json`/sync | S      | **le plus gros** (chaque commit)         | ✅ livré 2026-07-21 (PR #608) — faux négatifs sémantiques assumés, couverts par la revue de PR                                                                 |
-| **L1b** | Règle ESLint `createServerFn` (auth middleware + inputValidator obligatoires)                               | S      | indirect (check partout, plus au commit) | ✅ livré 2026-07-21 (PRs #600, #601) — zéro faux positif par construction                                                                                      |
-| **L2**  | `report-triage` : gate « nouveaux IDs », dédup par empreinte, pré-screening regex                           | M      | ~majorité des 42 runs/semaine → no-op    | ✅ livré 2026-07-25 (`scripts/ci/report-triage-pregate.mjs`) — le dispatch instantané et la soupape « déjà trié mais vieux » évitent le risque de rater un cas |
-| **L3**  | `regression-guard` : pré-gate fenêtre vide + verify vert + couverture stable                                | S      | ~la moitié des runs (les jours calmes)   | ✅ livré 2026-07-21 (PR #604) — variante « fenêtre vide / docs-only » seule ; la comparaison de couverture n'a pas été retenue (le gate reste le juge)         |
-| **L4**  | `upgrade-guard` : Renovate (ou script) pour patch/minor ; agent en mode réparation de major rouge           | M-L    | le job le plus cher → token-free nominal | ⏳ **reste à faire** — arbitrage Renovate vs script maison ouvert ; migration de process, à mener en gardant l'automerge existant                              |
-| **L5**  | `second-opinion` : filtre chemins + label + debounce (avant toute activation)                               | S      | préventif                                | ✅ livré 2026-07-21 (PR #606) — borné avant toute activation                                                                                                   |
+| Lot     | Contenu                                                                                                     | Effort | Gain tokens/latence                      | État                                                                                                                                                                                          |
+| ------- | ----------------------------------------------------------------------------------------------------------- | ------ | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **L1**  | Hook pré-commit déterministe (`precommit-checks.mjs` + tests) ; retirer le hook agent de `policy.json`/sync | S      | **le plus gros** (chaque commit)         | ✅ livré 2026-07-21 (PR #608) — faux négatifs sémantiques assumés, couverts par la revue de PR                                                                                                |
+| **L1b** | Règle ESLint `createServerFn` (auth middleware + inputValidator obligatoires)                               | S      | indirect (check partout, plus au commit) | ✅ livré 2026-07-21 (PRs #600, #601) — zéro faux positif par construction                                                                                                                     |
+| **L2**  | `report-triage` : gate « nouveaux IDs », dédup par empreinte, pré-screening regex                           | M      | ~majorité des 42 runs/semaine → no-op    | ✅ livré 2026-07-25 (`scripts/ci/report-triage-pregate.mjs`) — le dispatch instantané et la soupape « déjà trié mais vieux » évitent le risque de rater un cas                                |
+| **L3**  | `regression-guard` : pré-gate fenêtre vide + verify vert + couverture stable                                | S      | ~la moitié des runs (les jours calmes)   | ✅ livré 2026-07-21 (PR #604) — variante « fenêtre vide / docs-only » seule ; la comparaison de couverture n'a pas été retenue (le gate reste le juge)                                        |
+| **L4**  | `upgrade-guard` : Renovate (ou script) pour patch/minor ; agent en mode réparation de major rouge           | M-L    | le job le plus cher → token-free nominal | ✅ livré 2026-07-25 (`scripts/deps/apply-patch-minor.mjs`) — **script maison retenu** (pas de tiers) ; l'automerge existant est inchangé, l'agent ne paie plus que les majors et un lot rouge |
+| **L5**  | `second-opinion` : filtre chemins + label + debounce (avant toute activation)                               | S      | préventif                                | ✅ livré 2026-07-21 (PR #606) — borné avant toute activation                                                                                                                                  |
 
-Chaque lot = une PR, gate vert, conforme DoD. L1 et L2 étaient les prioritaires (fréquence
-maximale, risque minimal) et sont faits. Avec L4, la consommation nominale de tokens du dépôt
-tend vers **zéro hors travail réel** (un fix à écrire, un major à migrer, un arbitrage de
-test) — exactement là où l'IA a une valeur que le script n'a pas.
+Chaque lot = une PR, gate vert, conforme DoD. **Les six sont livrés.** La consommation
+nominale de tokens du dépôt tend désormais vers **zéro hors travail réel** (un fix à écrire,
+un major à migrer, un arbitrage de test) — exactement là où l'IA a une valeur que le script
+n'a pas.
 
-**Mesure après L2** (§7, la métrique de l'étude) : sur les 5 surfaces inventoriées, il ne
-reste plus un seul run d'agent _nominal_ périodique. Le hook pré-commit ne coûte plus rien à
-chaque commit (L1), `regression-guard` dort les jours calmes (L3), `report-triage` ne se
-réveille plus que sur un signalement jamais trié (L2, les ~42 crons hebdo devenant des no-ops
-verts entre deux vrais signalements), `second-opinion` est borné avant allumage (L5). Seul
-`upgrade-guard` paie encore un agent 2×/semaine pour un lot patch/minor mécanique (L4).
+**Mesure de clôture** (§7, la métrique de l'étude) : sur les 5 surfaces inventoriées, **plus
+une seule ne dépense un agent sur son chemin nominal**.
+
+| Surface                | Avant                                  | Après                                                                   |
+| ---------------------- | -------------------------------------- | ----------------------------------------------------------------------- |
+| Hook pré-commit        | 1 agent à **chaque commit** (≤ 180 s)  | script < 1 s, 0 token (L1) + règle ESLint partout (L1b)                 |
+| `regression-guard.yml` | 2 agents/semaine, même les jours vides | agent seulement si la fenêtre de 26 h contient du non-documentaire (L3) |
+| `report-triage.yml`    | jusqu'à **42 agents/semaine**          | agent seulement sur un signalement jamais trié (L2)                     |
+| `upgrade-guard.yml`    | 2 agents/semaine, lot mécanique        | script sans jeton ; agent seulement sur une major ou un lot rouge (L4)  |
+| `second-opinion.yml`   | dormant, mais câblé sur chaque push    | borné (chemins à risque + label + debounce) avant allumage (L5)         |
+
+Ce qui reste de l'IA est exactement ce que l'étude visait à préserver : le verdict « test
+périmé vs vrai bug », le screening d'un texte hostile, la lecture d'un changelog, l'écriture
+d'un correctif. **Prochain candidat, s'il en faut un** : appliquer la même grille au pipeline
+de contenu — mais cet arbitrage se rend dans le dépôt privé (§4.6).
 
 ## 7. Risques et garde-fous
 
