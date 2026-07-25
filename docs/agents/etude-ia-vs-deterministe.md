@@ -175,6 +175,21 @@ se pose vraiment. **Cette question-là reste IA** : c'est le cœur légitime du 
 > plus du **jeton Claude** du tout, et les deux pièges de lockfile (**npm 10 jamais 11**, bloc
 > `overrides` intact) sont devenus des **assertions** au lieu de consignes de prompt — un piège
 > qui ne tient que si l'agent s'en souvient n'est pas un garde-fou.
+>
+> **Durci le 2026-07-25, après clôture.** Le premier jet ne remontait à l'agent que les
+> franchissements de **major**. Or npm borne `^0.185.0` à `< 0.186.0` : les quatre paquets 0.x
+> du dépôt (`three`, `@types/three`, `class-variance-authority`, `eslint-plugin-react-refresh`)
+> n'étaient dans **aucune** des deux listes — hors du lot, que le range n'atteint pas, et hors
+> des majors, faute de franchissement — donc gelés sans que personne ne le voie, puisque
+> l'agent ne lit plus `npm outdated` lui-même. Le critère est devenu **« hors du range
+> déclaré »** (`latest > wanted`), qui couvre du même coup les ranges `~` et les pins exacts,
+> chaque entrée portant son `boundary`. C'est le risque propre au passage IA → script, et il
+> mérite d'être nommé : **le script ne voit que ce qu'on lui a dit de voir, et son silence
+> ressemble à un « rien à faire »**. Deux corollaires du même défaut, corrigés au même endroit :
+> un paquet déclaré mais **absent de l'arbre** est signalé au lieu d'être ignoré, et un
+> `npm outdated` qui **n'a pas pu tourner** lève désormais au lieu de se lire « stack à jour »
+> (le cas était réel hors CI : sous Windows npm est un `.cmd` que `execFile` ne lance pas, donc
+> le pilotage local du script que le skill invite à faire renvoyait un stack vide et muet).
 
 Le lot patch/minor est, par construction du skill, une procédure fermée :
 `npm outdated` → `npm update` dans les ranges → `npm ci` (npm 10) → `npm run ci:verify` →
