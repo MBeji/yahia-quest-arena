@@ -65,6 +65,21 @@ In CI the workflow exports a result file (`$UPGRADE_GUARD_RESULT`, JSON) that
 downstream jobs read to decide what to validate and auto-merge — write it (schema
 at the end). When the env var is unset (local run), skip the file.
 
+> **En CI, le lot patch/minor ne t'appartient plus** (étude « IA → déterministe »,
+> lot L4). C'est une procédure fermée, donc un **script** :
+> `scripts/deps/apply-patch-minor.mjs` détecte, applique dans les ranges, passe le
+> gate et ouvre la PR — sans agent et sans jeton. Le workflow ne te réveille que
+> pour ce qui demande un jugement :
+>
+> 1. **les majors** — lire un changelog, migrer un breaking change (§3, §5) ;
+> 2. **un lot patch/minor rouge** — corriger proprement _ou_ écarter le paquet
+>    fautif (`--hold`), l'arbitrage que le script ne peut pas rendre (§4).
+>
+> Le script écrit un **plan** (`upgrade-plan.json`) : `majorGroups` te donne les
+> majors **déjà groupées** (le set TanStack = un groupe, un runtime avec ses
+> `@types`), `patchMinor`/`excluded` sont du contexte. En session locale, tu peux
+> piloter le script toi-même (§4) — c'est le même chemin.
+
 ## Workflow (do these in order)
 
 ### 1. Confirm the baseline is green and clean
@@ -81,14 +96,17 @@ at the end). When the env var is unset (local run), skip the file.
 
 Gather, don't apply yet. Classify each into **patch**, **minor**, or **major**.
 
-- **npm dependencies (runtime + dev) — the bulk.** `npm outdated --json || true`
-  (it exits non-zero when anything is outdated — tolerate that). For each package it
-  reports `current`, `wanted` (max allowed by the `^` range = latest patch/minor),
-  and `latest` (absolute newest):
-  - **patch/minor lot** = bringing everything up to `wanted` — that is exactly what
-    `npm update` does within the existing ranges.
-  - **majors** = every package where `latest` > `wanted` across a major boundary
-    (the `^` range can't reach it without editing `package.json`).
+- **npm dependencies (runtime + dev) — the bulk.** In CI, **déjà fait** : lis
+  `upgrade-plan.json`, écrit par le script (§4). La sémantique, pour la comprendre ou
+  la refaire en local (`npm outdated --json || true` — il sort non-zéro dès qu'un
+  paquet est en retard, c'est normal) : chaque paquet reporte `current`, `wanted` (le
+  max autorisé par le range `^` = dernier patch/minor) et `latest` (le plus récent
+  dans l'absolu) :
+  - **patch/minor lot** = tout amener à `wanted` — exactement ce que fait
+    `npm update` dans les ranges existants. **C'est le périmètre du script.**
+  - **majors** = tout paquet dont `latest` franchit une frontière de major au-delà de
+    `wanted` (le range `^` ne peut pas l'atteindre sans éditer `package.json`).
+    **C'est ton périmètre**, et le script te les livre groupées.
 - **Language — TypeScript.** It's the `typescript` devDep, so it rides the npm
   grouping above (a TS minor is in the patch/minor lot; a TS major is its own major PR).
 - **Node toolchain.** Compare the CI `node-version: 22` (in the workflows) and any
@@ -109,7 +127,8 @@ Gather, don't apply yet. Classify each into **patch**, **minor**, or **major**.
 
 If nothing is outdated anywhere: write `has_patch_minor=false`, open nothing, and
 emit a short "stack already up to date — here's what was checked" summary. Silence
-is not a pass.
+is not a pass. (En CI, le script émet déjà ce constat dans le résumé du job pour le
+périmètre npm — reste à ta charge le hors-npm : Node, CLI Supabase, Actions.)
 
 ### 3. Read the changelogs before you touch anything risky
 
@@ -119,30 +138,47 @@ breaking changes and prescribed codemods. You will paste that summary into the P
 (or the issue, if it ends up red). Don't upgrade a major you can't find notes for —
 report it for human review instead.
 
-### 4. Apply the patch/minor lot → one branch, green fast-gate, PR
+### 4. Le lot patch/minor : un script, pas toi
 
-- Branch `claude/upgrade-patch-minor-$(date +%F)` off `main`.
-- `npm update` (moves everything to `wanted`, within ranges — no major crossings),
-  then a **full** `npm install` to normalise `package-lock.json` (NOT
-  `--package-lock-only` — the lockfile trap). Keep the `overrides` block intact (the
-  global esbuild security pin).
-- **Type-defs travel with their runtime in the same lot** (`react`+`react-dom`+
-  `@types/react`+`@types/react-dom`; `three`+`@types/three`) — `npm update` keeps
-  them aligned; verify they didn't split.
-- Run the **fast gate in-session**: `npm run ci:verify`
-  (lint, typecheck, coverage, build:check, audit:deps, content:qa:strict). If a single
-  patch/minor breaks it, triage it: if it's a correct, changelog-prescribed adjustment,
-  **fix it properly**; if it's risky or unclear, **pin that one package back** out of the
-  lot (record it in the PR body as "held back: <pkg>, reason") and keep the rest. Never
-  weaken the gate.
-- **Green →** commit (conventional: `chore(deps): patch & minor upgrades $(date +%F)`,
-  with the `Co-Authored-By` trailer), push, open a PR titled the same, labelled
-  `dependencies`, body = a table of every bump (`name old → new`), anything held back,
-  and a one-line "🤖 auto-merge si le gate complet + E2E + pgTAP sont verts (guard
-  nocturne)". Record `has_patch_minor=true` + the branch + PR number in the result file.
-- **Can't make the whole lot green** (and backing packages out isn't enough) → open
-  the PR as **draft, labelled `needs-review`**, explain what's failing, and set
-  `has_patch_minor=false` so the workflow does **not** auto-merge it. A human takes over.
+**En CI, cette étape est déjà faite quand tu démarres** — par
+`scripts/deps/apply-patch-minor.mjs` (lot L4). Ce qu'il fait, à l'identique chaque
+nuit : `npm outdated` → `npm update` vers `wanted` (dans les ranges, aucun
+franchissement de major) → **full** `npm install` pour normaliser
+`package-lock.json` (jamais `--package-lock-only`) → `npm run ci:verify` → une PR
+titrée `chore(deps): patch & minor upgrades <date>`, labellée `dependencies`, avec
+le tableau de tous les bumps.
+
+Deux pièges du dépôt ne sont plus des consignes mais des **assertions** dans le
+script (il s'arrête plutôt que de produire un lockfile cassé) : **npm 10, jamais
+11**, et le bloc `overrides` (le pin de sécurité esbuild global) **inchangé**.
+
+En **session locale**, pilote-le au lieu de refaire les gestes à la main :
+
+```bash
+node scripts/deps/apply-patch-minor.mjs detect --out /tmp/plan.json --pr-body /tmp/body.md --date $(date +%F)
+node scripts/deps/apply-patch-minor.mjs apply --plan /tmp/plan.json
+npm run ci:verify
+```
+
+**Ce qui reste ton arbitrage — le lot rouge.** Si `ci:verify` échoue sur le lot, le
+workflow a poussé la branche en **PR draft `needs-review`** (`has_patch_minor=false`,
+donc aucun auto-merge) et t'a réveillé. Deux issues, jamais une troisième :
+
+- l'ajustement est correct et prescrit par le changelog → **corrige proprement**,
+  pousse, puis `gh pr ready` + retire `needs-review` et écris
+  `has_patch_minor=true` + branche + PR dans le fichier de résultat (les suites
+  lentes et l'auto-merge reprennent la main) ;
+- le paquet est risqué ou incompris → **écarte-le du lot** et garde le reste :
+  `detect --hold <pkg>` puis `apply` sur un arbre propre, en consignant
+  « held back: <pkg>, raison » dans le corps de la PR.
+
+Ne jamais affaiblir le gate pour passer au vert. Si même en écartant des paquets le
+lot ne passe pas, laisse la PR en draft `needs-review` avec l'explication : un humain
+reprend.
+
+> **Type-defs** : `npm update` garde `react`+`react-dom`+`@types/react`(+`-dom`) et
+> `three`+`@types/three` alignés dans le même lot ; le script les groupe aussi côté
+> majors (`majorGroupOf`). Vérifie quand même qu'ils ne se sont pas séparés.
 
 ### 5. Apply each major in isolation → one PR each, or an issue
 
@@ -218,9 +254,14 @@ These are paid-for lessons; violating them re-breaks production or the gate.
 
 ## Division of labour (skill vs workflow)
 
-- **You (the skill):** detect, split, apply, run the **fast** gate (`ci:verify`),
-  open PRs/issues, write the result file. You never run the slow suites in CI and you
-  never merge.
+- **Le script (`scripts/deps/apply-patch-minor.mjs`)** : tout le lot patch/minor —
+  détection, split patch/minor vs majors groupées, application dans les ranges, plan
+  - corps de PR. Zéro token, zéro jeton Claude requis, verdict identique à chaque
+    exécution (lot L4).
+- **You (the skill):** the parts that need judgement — the **majors** (changelog,
+  migration, one PR per group) and a **red patch/minor lot** (fix properly vs hold
+  back). You run the **fast** gate (`ci:verify`), open PRs/issues, write the result
+  file. You never run the slow suites in CI and you never merge.
 - **The workflow (`upgrade-guard.yml`):** on the patch/minor branch you produced, runs
   **E2E (public) + E2E (authenticated) + pgTAP** by reusing `e2e.yml` / `e2e-auth.yml` /
   `db-tests.yml`, then the `automerge` job squash-merges the patch/minor PR **only if all

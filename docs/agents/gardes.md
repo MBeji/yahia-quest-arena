@@ -74,18 +74,24 @@ Détail et jours exacts : `docs/dependency-maintenance.md`.
 `report-triage.yml` est l'exception : il est aussi câblé sur un cron de 4 h (et sur le dispatch
 d'un signalement inséré), donc **la cadence n'y suffisait pas** comme garde-fou de bruit.
 
+⚠️ « Trois gardes Claude » décrit la **minuterie**, plus la dépense : depuis l'étude
+« IA → déterministe » (close le 2026-07-25), un garde qui se déclenche ne réveille un agent que
+s'il y a du travail de jugement. `upgrade-guard` va plus loin — son lot nominal (patch/minor)
+est un **script** qui tourne **sans jeton Claude** ; l'agent n'entre en scène que pour une
+major ou un lot rouge.
+
 ## Un pré-gate déterministe avant chaque garde
 
 Un garde ne doit pas dépenser un agent pour conclure « rien à faire ». Chaque déclencheur
 périodique passe d'abord un **script** qui décide s'il y a du travail (étude
 [IA → déterministe](./etude-ia-vs-deterministe.md)) :
 
-| Garde                  | Pré-gate                          | Skippe quand…                                                                         |
-| ---------------------- | --------------------------------- | ------------------------------------------------------------------------------------- |
-| `regression-guard.yml` | `ci/regression-guard-pregate.mjs` | la fenêtre de ~26 h est vide ou purement documentaire (L3)                            |
-| `report-triage.yml`    | `ci/report-triage-pregate.mjs`    | toute la file `open` a déjà été triée (trailers `Report-Id:` + issues de triage) (L2) |
-| `second-opinion.yml`   | `ci/second-opinion-pregate.mjs`   | la PR ne touche aucun chemin à risque (L5, dormant)                                   |
-| `upgrade-guard.yml`    | —                                 | (L4 à faire : le lot patch/minor est encore joué par un agent)                        |
+| Garde                  | Pré-gate                              | Skippe quand…                                                                                                  |
+| ---------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `regression-guard.yml` | `ci/regression-guard-pregate.mjs`     | la fenêtre de ~26 h est vide ou purement documentaire (L3)                                                     |
+| `report-triage.yml`    | `ci/report-triage-pregate.mjs`        | toute la file `open` a déjà été triée (trailers `Report-Id:` + issues de triage) (L2)                          |
+| `second-opinion.yml`   | `ci/second-opinion-pregate.mjs`       | la PR ne touche aucun chemin à risque (L5, dormant)                                                            |
+| `upgrade-guard.yml`    | `deps/apply-patch-minor.mjs` (detect) | tout le lot patch/minor est joué par le script ; l'agent n'est réveillé que sur une major ou un lot rouge (L4) |
 
 Trois invariants communs, à respecter pour tout futur pré-gate :
 
@@ -96,6 +102,13 @@ Trois invariants communs, à respecter pour tout futur pré-gate :
 3. **le script pré-filtre, il ne juge pas** — il ne rend aucun verdict sémantique (test périmé
    vs vrai bug, signalement malveillant ou non) ; ce qu'il calcule est explicitement une
    **indication** pour l'agent.
+
+Corollaire, quand un garde a une procédure **fermée** (une suite de commandes sans arbitrage) :
+ce n'est plus un pré-gate qu'il faut, c'est le **remplacement** de cette partie par un script,
+l'agent gardant les branches qui demandent un jugement. C'est ce que fait `upgrade-guard`
+(`scripts/deps/apply-patch-minor.mjs` pour le lot patch/minor, l'agent pour les majors et la
+réparation) — et au passage, un piège du dépôt encodé en assertion de script (npm 10 jamais 11,
+bloc `overrides` intact) vaut mieux que le même piège écrit dans un prompt.
 
 ## Sécurité
 
