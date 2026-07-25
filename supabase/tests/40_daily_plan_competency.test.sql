@@ -3,9 +3,10 @@
 -- ---------------------------------------------------------
 -- `get_daily_plan` ordonnait par retard SM-2, arbitré par les misconceptions du chapitre
 -- (pgTAP 35, qui reste la référence de CE comportement). Ce fichier ne le rejoue pas : il
--- prouve les cinq choses que le troisième terme du score peut casser, plus la seule qui
+-- prouve les choses que le troisième terme du score peut casser, plus la seule qui
 -- compte vraiment aujourd'hui — la NON-RÉGRESSION sur un corpus non taggé.
 --
+--   0. le DROIT : `authenticated` peut exécuter le helper d'oubli que la fonction appelle ;
 --   1. non-régression : contenu taggé mais élève sans maîtrise → le plan d'avant, à l'identique ;
 --   2. arbitrage : à retard égal, l'exercice dont une compétence est effondrée passe devant ;
 --   3. neutralité du seuil : une maîtrise à 50 (la valeur d'INITIALISATION) ne pousse rien ;
@@ -32,7 +33,7 @@
 
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(7);
+SELECT plan(8);
 
 -- ---------------------------------------------------------
 -- Catalogue : un parcours gratuit en aperçu total — la porte R-3 est déjà couverte par le
@@ -116,6 +117,23 @@ INSERT INTO auth.users (id, email) VALUES
   ('ea000000-0000-0000-0000-000000000005', 'dpq-u5@test.local'),
   ('ea000000-0000-0000-0000-000000000006', 'dpq-u6@test.local'),
   ('ea000000-0000-0000-0000-000000000007', 'dpq-u7@test.local');
+
+-- =========================================================
+-- CASE 0 — le DROIT d'exécuter le helper d'oubli (la panne que ce lot a dû réparer).
+-- `get_daily_plan` est SECURITY INVOKER : elle appelle `competency_mastery_with_decay` avec les
+-- droits de l'élève, alors que le lot 2 l'avait révoqué à `authenticated` (« server-side only »,
+-- vrai tant que seules les RPC DEFINER du lot 4 l'appelaient). Sans ce droit, TOUT appel au plan
+-- lève `permission denied` — y compris le plan d'avant ce lot. On l'assure donc explicitement,
+-- pour qu'une révocation future casse ce test plutôt que la « Révision du jour ».
+-- =========================================================
+SELECT ok(
+  has_function_privilege(
+    'authenticated',
+    'public.competency_mastery_with_decay(numeric, timestamptz)',
+    'EXECUTE'
+  ),
+  'authenticated peut EXECUTER le helper d''oubli — get_daily_plan est INVOKER et l''appelle avec ses droits'
+);
 
 -- =========================================================
 -- CASE 1 — NON-RÉGRESSION : le contenu est taggé, l'élève n'a aucune maîtrise.
