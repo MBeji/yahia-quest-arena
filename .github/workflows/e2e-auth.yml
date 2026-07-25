@@ -116,11 +116,11 @@ jobs:
       # — only pushes new migrations. Fixture content is seeded in the next step.
       - name: Set up Supabase CLI
         if: steps.guard.outputs.configured == 'true' && steps.guard.outputs.has_db_url == 'true'
-        uses: supabase/setup-cli@3c2f5e2ae34c34e428e8e206e2c4d21fa2d20fbf # v2
+        uses: supabase/setup-cli@46f7f98c7f948ad727d22c1e67fab04c223a0520 # v3.0.0
         with:
           # Pinned: an unpinned "latest" bump (17.6.1.132 → .134 image) silently
           # broke the local-stack grants on 2026-06-07. Bump deliberately.
-          version: 2.108.0
+          version: 2.109.1
 
       # Goes through the e2e script (not raw `supabase db push`) so the DB URL is
       # normalized first: a raw password with special characters used to fail with
