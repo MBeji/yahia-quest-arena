@@ -10,7 +10,10 @@
 import { fail } from "k6";
 
 // Known production project ref — the suite refuses to run against it.
-// Mirrors PROD_REFS in scripts/e2e/_env.mjs; keep in sync.
+// k6 runs outside Node, so this is the ONE copy that cannot import
+// scripts/shared/prod-targets.mjs. It is not kept in sync by hand either: the
+// unit test `scripts/e2e/__tests__/prod-targets.test.mjs` asserts this literal
+// equals the canonical `PROD_SUPABASE_REF`.
 const PROD_REF = "fasrenmmrkqjoobrztbp";
 
 export const SUPABASE_URL = (__ENV.LOAD_SUPABASE_URL || "").replace(/\/+$/, "");

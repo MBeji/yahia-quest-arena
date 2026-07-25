@@ -14,6 +14,7 @@
  */
 import "./_env.mjs";
 import { createClient } from "@supabase/supabase-js";
+import { findProdTarget, prodRefusalMessage } from "../shared/prod-targets.mjs";
 import { GAMEPLAY_TABLES } from "./gameplay-tables.mjs";
 
 const URL =
@@ -26,9 +27,9 @@ if (!URL || !SERVICE_KEY) {
 }
 
 // Safety net: never wipe the known production project, even if misconfigured.
-const PROD_REFS = ["fasrenmmrkqjoobrztbp"];
-if (PROD_REFS.some((ref) => URL.includes(ref))) {
-  console.error(`Refusing to reset: ${URL} is the production project. Use the TEST project.`);
+const prodTarget = findProdTarget([URL]);
+if (prodTarget) {
+  console.error(`Refusing to reset: ${prodRefusalMessage(prodTarget)} Use the TEST project.`);
   process.exit(1);
 }
 

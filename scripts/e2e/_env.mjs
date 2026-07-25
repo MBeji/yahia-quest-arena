@@ -4,8 +4,9 @@
  * - Loads `.env.test` (repo root) for LOCAL runs so you don't have to export the
  *   TEST project vars by hand. In CI the file is absent and the workflow provides
  *   env directly, so `override: false` never clobbers the CI-provided values.
- * - Hard safety net: refuses to run if any resolved Supabase URL points at the
- *   known PRODUCTION project. e2e tooling must only ever touch the TEST project.
+ * - Hard safety net: refuses to run if anything resolved here points at
+ *   production — the Supabase project or the deployed app. e2e tooling must only
+ *   ever touch the TEST project.
  *
  * Import this for its side effects FIRST, before reading any SUPABASE_* var:
  *   import "./_env.mjs";
@@ -15,6 +16,8 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
 
+import { findProdTarget, prodRefusalMessage } from "../shared/prod-targets.mjs";
+
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const envTestPath = resolve(repoRoot, ".env.test");
 
@@ -22,8 +25,8 @@ if (existsSync(envTestPath)) {
   dotenv.config({ path: envTestPath, override: false });
 }
 
-/** Project refs that must NEVER be touched by e2e tooling. */
-export const PROD_REFS = ["fasrenmmrkqjoobrztbp"];
+// What production looks like — Supabase ref AND app hosts — lives in one place
+// (`scripts/shared/prod-targets.mjs`), so no guard can drift from another.
 
 /**
  * Normalize a Supabase API URL pasted from the dashboard: trim whitespace and
@@ -101,22 +104,26 @@ for (const key of ["SUPABASE_URL", "TEST_SUPABASE_URL", "VITE_SUPABASE_URL"]) {
 // and the regression test — keep resolving it from here.
 export { normalizeDbUrl } from "../shared/db-url.mjs";
 
-/** Throw-and-exit if any configured Supabase URL targets production. */
+/**
+ * Throw-and-exit if anything configured here targets production — the Supabase
+ * project OR the deployed app. `PLAYWRIGHT_BASE_URL` counts: the prod deployment
+ * serves with its own prod secrets, so a browser pointed at it writes to prod
+ * even when every Supabase var below is TEST (#614).
+ */
 export function assertNotProd() {
-  const urls = [
+  const hit = findProdTarget([
     process.env.SUPABASE_URL,
     process.env.TEST_SUPABASE_URL,
     process.env.VITE_SUPABASE_URL,
     process.env.TEST_SUPABASE_DB_URL,
     process.env.SUPABASE_DB_URL,
-  ].filter(Boolean);
-  for (const url of urls) {
-    if (PROD_REFS.some((ref) => url.includes(ref))) {
-      console.error(
-        `[e2e] Refusing to run: ${url} targets the PRODUCTION project. Use a dedicated TEST project.`,
-      );
-      process.exit(1);
-    }
+    process.env.PLAYWRIGHT_BASE_URL,
+  ]);
+  if (hit) {
+    console.error(
+      `[e2e] Refusing to run: ${prodRefusalMessage(hit)} Use a dedicated TEST project.`,
+    );
+    process.exit(1);
   }
 }
 
