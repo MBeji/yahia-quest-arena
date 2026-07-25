@@ -238,9 +238,12 @@ jobs:
             You are on a clean `main`, immediately after a GREEN nightly build, so the
             baseline is trustworthy. Read the plan the script wrote:
               ${{ runner.temp }}/upgrade-plan.json
-            `majorGroups` lists every out-of-range major, ALREADY GROUPED (a group moves
-            as one PR — the TanStack set, a runtime with its @types). `patchMinor` and
-            `excluded` are for context only.
+            `majorGroups` lists everything the declared ranges CANNOT reach, ALREADY
+            GROUPED (a group moves as one PR — the TanStack set, a runtime with its
+            @types). Read each package's `boundary`: `major` is a v1→v2, `minor`/`patch`
+            is a 0.x line or a pinned range whose next release is out of reach
+            (`^0.185.0` cannot reach 0.186.0) — same treatment, its own PR after its
+            changelog. `patchMinor` and `excluded` are for context only.
 
             State from this run:
               • in-range lot applied: ${{ steps.detect.outputs.has_patch_minor }}

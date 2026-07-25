@@ -44,6 +44,7 @@
     "programme:corpus": "node --experimental-strip-types scripts/content/suivi.ts --corpus",
     "content:figures:check": "node scripts/content/svg/check-figures.mjs content",
     "content:figures:preview": "node scripts/content/svg/preview.mjs",
+    "content:figures:import": "node scripts/content/svg/import.mjs",
     "perf:check": "node scripts/perf/check-harness.mjs",
     "reports:export": "node scripts/reports/export-reports.mjs",
     "reports:resolve": "node scripts/reports/resolve-reports.mjs",

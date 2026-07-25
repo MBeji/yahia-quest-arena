@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   assertLockfileSafeNpm,
   assertOverridesUnchanged,
+  assertSafePackageNames,
   buildPlan,
   bumpKind,
   classifyOutdated,
@@ -132,6 +133,49 @@ describe("classifyOutdated", () => {
     expect(excluded[0]).toMatchObject({ name: "loose", kind: "major" });
   });
 
+  // The hole L4 shipped with: `^0.185.0` cannot reach 0.186.0 (npm caret rule on a 0.x
+  // line), so three/@types/three, class-variance-authority and eslint-plugin-react-refresh
+  // were in NEITHER list — not in the lot, not handed to the agent, upgraded by nobody.
+  it("hands the agent a 0.x line the declared range cannot reach", () => {
+    const { patchMinor, majors } = classifyOutdated({
+      three: { current: "0.185.0", wanted: "0.185.1", latest: "0.186.0" },
+    });
+    // The in-range patch still rides the lot…
+    expect(patchMinor).toEqual([{ name: "three", from: "0.185.0", to: "0.185.1", kind: "patch" }]);
+    // …and the unreachable 0.186.0 goes to the agent, tagged with the boundary it crosses.
+    expect(majors).toEqual([
+      { name: "three", from: "0.185.1", to: "0.186.0", group: "three", boundary: "minor" },
+    ]);
+  });
+
+  it("hands the agent an out-of-range patch (an exact pin or a ~ range)", () => {
+    const { patchMinor, majors } = classifyOutdated({
+      pinned: { current: "1.2.3", wanted: "1.2.3", latest: "1.2.4" },
+    });
+    expect(patchMinor).toEqual([]);
+    expect(majors).toEqual([
+      { name: "pinned", from: "1.2.3", to: "1.2.4", group: null, boundary: "patch" },
+    ]);
+  });
+
+  it("tags a real major crossing as such", () => {
+    const { majors } = classifyOutdated({
+      zod: { current: "3.9.0", wanted: "3.9.0", latest: "4.0.0" },
+    });
+    expect(majors[0]).toMatchObject({ boundary: "major" });
+  });
+
+  it("reports a declared-but-uninstalled package instead of silently dropping it", () => {
+    const { patchMinor, majors, excluded } = classifyOutdated({
+      ghost: { wanted: "6.3.1", latest: "6.3.1" },
+    });
+    expect(patchMinor).toEqual([]);
+    expect(majors).toEqual([]);
+    expect(excluded).toEqual([
+      { name: "ghost", current: null, wanted: "6.3.1", kind: "unknown", reason: "not installed" },
+    ]);
+  });
+
   it("ignores an up-to-date package entirely", () => {
     const { patchMinor, majors, excluded } = classifyOutdated({
       fine: { current: "1.0.0", wanted: "1.0.0", latest: "1.0.0" },
@@ -172,6 +216,21 @@ describe("buildPlan / renderPrBody", () => {
     const empty = buildPlan({ fine: { current: "1.0.0", wanted: "1.0.0", latest: "1.0.0" } });
     expect(renderPrBody(empty, "2026-07-25")).toContain("Aucune montée dans les ranges");
   });
+
+  it("groups a 0.x runtime with its @types and says why they are out of the lot", () => {
+    const zerox = buildPlan({
+      three: { current: "0.185.1", wanted: "0.185.1", latest: "0.186.0" },
+      "@types/three": { current: "0.185.1", wanted: "0.185.1", latest: "0.186.0" },
+      ghost: { wanted: "1.0.0", latest: "1.0.0" },
+    });
+    expect(zerox.counts).toEqual({ patchMinor: 0, excluded: 1, majors: 2, majorGroups: 1 });
+
+    const body = renderPrBody(zerox, "2026-07-25");
+    expect(body).toContain("Hors des ranges déclarés");
+    expect(body).toContain("`three` 0.185.1 → 0.186.0 (hors range, saut minor)");
+    expect(body).toContain("`@types/three` 0.185.1 → 0.186.0 (hors range, saut minor)");
+    expect(body).toContain("- `ghost` (absent → 1.0.0) — not installed");
+  });
 });
 
 describe("repo traps, enforced instead of remembered", () => {
@@ -194,6 +253,7 @@ describe("readOutdated", () => {
   it("parses the JSON npm prints even though it exits non-zero when outdated", () => {
     const run = () => {
       const err = new Error("exit 1");
+      err.status = 1;
       err.stdout = '{"vite":{"current":"8.0.1","wanted":"8.0.3","latest":"8.0.3"}}';
       throw err;
     };
@@ -205,5 +265,38 @@ describe("readOutdated", () => {
   it("treats empty output as an up-to-date stack", () => {
     expect(readOutdated(() => "")).toEqual({});
     expect(readOutdated(() => "\n")).toEqual({});
+  });
+
+  // A spawn failure has no exit status: `npm` missing from PATH, or Windows refusing to run
+  // `npm.cmd` without a shell. Swallowing it reported a perfectly up-to-date stack.
+  it("rethrows a spawn failure instead of reporting an empty stack", () => {
+    const run = () => {
+      const err = new Error("spawn npm ENOENT");
+      err.code = "ENOENT";
+      err.status = null;
+      throw err;
+    };
+    expect(() => readOutdated(run)).toThrow(/ENOENT/);
+  });
+
+  it("rethrows a non-zero exit that produced no output", () => {
+    const run = () => {
+      const err = new Error("EJSONPARSE");
+      err.status = 1;
+      err.stdout = "";
+      throw err;
+    };
+    expect(() => readOutdated(run)).toThrow(/EJSONPARSE/);
+  });
+});
+
+describe("assertSafePackageNames", () => {
+  it("accepts the scoped and plain names npm actually reports", () => {
+    expect(assertSafePackageNames(["vite", "@tanstack/react-router", "@types/three"])).toBe(true);
+  });
+
+  it("refuses anything that could reach a shell as something else", () => {
+    expect(() => assertSafePackageNames(["vite", "zod && rm -rf /"])).toThrow(/non-package-name/);
+    expect(() => assertSafePackageNames(["--registry=http://evil"])).toThrow(/non-package-name/);
   });
 });
