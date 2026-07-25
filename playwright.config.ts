@@ -2,6 +2,8 @@ import { defineConfig, devices } from "@playwright/test";
 import { existsSync } from "node:fs";
 import dotenv from "dotenv";
 
+import { findProdTarget, prodRefusalMessage } from "./scripts/shared/prod-targets.mjs";
+
 // --- TEST-project env (local convenience) ------------------------------------
 // Load `.env.test` (repo root) so a LOCAL run — and the dev server we spawn via
 // `webServer` — targets the dedicated TEST Supabase project, never your `.env`
@@ -30,14 +32,20 @@ if (existsSync(".env.test")) {
   }
 }
 
-// Hard safety net: never run e2e against the production project.
-const PROD_REFS = ["fasrenmmrkqjoobrztbp"];
-for (const maybeUrl of [process.env.SUPABASE_URL, process.env.VITE_SUPABASE_URL]) {
-  if (maybeUrl && PROD_REFS.some((ref) => maybeUrl.includes(ref))) {
-    throw new Error(
-      `[e2e] Refusing to run: ${maybeUrl} is the PRODUCTION project. Point .env.test at the TEST project.`,
-    );
-  }
+// Hard safety net: never run e2e against production — by EITHER route.
+// `PLAYWRIGHT_BASE_URL` is in the list because pointing the browser at the prod
+// deployment writes to the prod database through its SSR secrets, however clean
+// the local Supabase env is. That is the hole #614 fell through: a test filed a
+// real `content_reports` row in production while this check saw only TEST URLs.
+const prodTarget = findProdTarget([
+  process.env.SUPABASE_URL,
+  process.env.VITE_SUPABASE_URL,
+  process.env.PLAYWRIGHT_BASE_URL,
+]);
+if (prodTarget) {
+  throw new Error(
+    `[e2e] Refusing to run: ${prodRefusalMessage(prodTarget)} Point .env.test (and PLAYWRIGHT_BASE_URL) at the TEST project.`,
+  );
 }
 
 /**
