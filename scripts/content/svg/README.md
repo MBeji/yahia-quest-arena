@@ -16,11 +16,13 @@ utilise Playwright (déjà dans les devDeps) + le Chromium pré-installé.
 
 ## Les trois outils
 
-| Fichier             | Rôle                                                                                                                                                                |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `svglib.mjs`        | mini-builder SVG sans dépendance — calcule la géométrie (flèches, arcs, ticks, angle droit) et n'émet que les primitives autorisées par le sanitizer                |
-| `preview.mjs`       | rend les figures d'un fichier en **grille PNG** pour relecture visuelle ; pour un `.json` il **décode** les SVG depuis les chaînes (ce qui part réellement en prod) |
-| `check-figures.mjs` | lint structurel de toutes les figures de `content/` (whitelist sanitizer, viewBox, chiffres occidentaux, un `<svg>` par champ) — `npm run content:figures:check`    |
+| Fichier                  | Rôle                                                                                                                                                                |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `svglib.mjs`             | mini-builder SVG sans dépendance — calcule la géométrie (flèches, arcs, ticks, angle droit) et n'émet que les primitives autorisées par le sanitizer                |
+| `preview.mjs`            | rend les figures d'un fichier en **grille PNG** pour relecture visuelle ; pour un `.json` il **décode** les SVG depuis les chaînes (ce qui part réellement en prod) |
+| `check-figures.mjs`      | lint structurel de toutes les figures de `content/` (whitelist sanitizer, viewBox, chiffres occidentaux, un `<svg>` par champ) — `npm run content:figures:check`    |
+| `import.mjs`             | **importe une illustration libre du net** et la rend embarquable — voir § « Importer une illustration libre » — `npm run content:figures:import`                    |
+| `sanitizer-contract.mjs` | la source unique du contrat (liste blanche, interdits, miroir de la config DOMPurify) — importée par `check-figures.mjs` et `import.mjs`                            |
 
 ## Contraintes (le sanitizer décide)
 
@@ -111,6 +113,76 @@ const body =
   ]);
 const figure = svg(200, 150, "Triangle ABC : (IJ) parallèle à (BC)", body);
 ```
+
+## Importer une illustration libre
+
+`svglib.mjs` sert à dessiner des **schémas** (géométrie, optique, droite graduée) — et c'est
+là qu'il est imbattable. Il est en revanche le mauvais outil pour représenter un **objet du
+monde réel** : une vache, un oiseau, une plante codés à la main à coups d'ellipses donnent
+des taches non identifiables. Pour ceux-là, on part d'une illustration libre existante et on
+l'importe.
+
+### Le piège que l'import supprime
+
+Coller un SVG du net dans le contenu **n'échoue pas bruyamment, il échoue en silence**. Le
+sanitizer retire `<style>`, `<use>` et `<image>` : la figure « s'affiche » toujours, mais
+décolorée ou amputée. Mesuré sur le vrai sanitizer :
+
+| ce que porte le fichier | ce qui arrive à l'écran                                                          |
+| ----------------------- | -------------------------------------------------------------------------------- |
+| un bloc `<style>` CSS   | **toutes les couleurs sautent** — les formes retombent en noir par défaut        |
+| des `<defs>` + `<use>`  | **les formes réutilisées disparaissent** (le `<defs>`, lui, reste dans le poids) |
+| un bitmap `<image>`     | **figure vide**                                                                  |
+| un `<linearGradient>`   | toléré par le sanitizer, mais refusé par le lint maison                          |
+
+`import.mjs` résout ces constructions **avant** que le sanitizer puisse les manger : il aplatit
+la cascade CSS en attributs de présentation (résolue par Chromium lui-même, pas par un moteur
+CSS maison), inline les `<use>`, aplatit les dégradés en aplat, jette le reste, puis **prouve**
+le résultat.
+
+### Trois preuves, pas une promesse
+
+1. **le sanitizer rejoué** — la vraie config DOMPurify de `src/shared/lib/figure.ts` est
+   appliquée à la sortie ; s'il ampute encore quoi que ce soit, l'import échoue en nommant
+   l'élément ou l'attribut perdu ;
+2. **les pixels** — l'original et la figure assainie sont rendus et comparés sur deux axes :
+   les **formes** (une patte disparue = échec, seuil 4 %) et la **couleur** (un dégradé aplati
+   déplace légitimement beaucoup de couleur : c'est reporté, pas jugé) ;
+3. **le contrat maison** — le même `lintSvg` que le gate.
+
+```bash
+npm run content:figures:import -- vache.svg --title "Une vache dans un pré" \
+  --out figure.svg --proof preuve.png
+```
+
+`--proof` écrit un PNG « original | normalisé + assaini » côte à côte : **regarde-le**. La
+doctrine de vérification intégrale (étude 19, Q-3) vaut pour les figures importées comme pour
+les figures dessinées. Options : `--max-bytes` (défaut 12 000 — une figure voyage dans chaque
+ligne de contenu qui l'utilise).
+
+### Provenance et licence — la seule chose que l'outil ne peut pas vérifier
+
+`import.mjs` ne sait pas d'où vient le fichier. **Noter la source et sa licence est le travail
+de l'auteur**, dans le dépôt privé, au moment de l'intégration.
+
+| source                | licence                        | à savoir                                                  |
+| --------------------- | ------------------------------ | --------------------------------------------------------- |
+| **Openclipart**       | CC0                            | domaine public, aucune attribution — le défaut à préférer |
+| **SVG Repo**          | variable (CC0, MIT, CC-BY…)    | **à vérifier collection par collection**                  |
+| **Wikimedia Commons** | variable (PD, CC0, CC-BY, -SA) | **à vérifier fichier par fichier**                        |
+| **OpenMoji**          | CC BY-SA 4.0                   | attribution **et** partage à l'identique                  |
+| **unDraw**            | licence propre, libre          | pas d'attribution exigée                                  |
+
+⚠️ **Préférer CC0 par défaut.** L'application n'a aujourd'hui **aucune surface de crédits** :
+une illustration CC-BY / CC-BY-SA créerait une obligation d'attribution que rien ne remplit.
+Tant que cette surface n'existe pas, une figure sous attribution obligatoire ne s'intègre pas.
+
+### La frontière du médium
+
+`import.mjs` **refuse** un fichier qui embarque un bitmap. Une vraie photographie n'est pas
+un problème d'outillage mais un **changement de médium** — il faudrait un bucket, un cache
+hors ligne et un cadre de licence. C'est la décision D-8 de l'étude 18 (« SVG seul »,
+2026-07-14), reconduite par la Q-1 de l'étude 19 : un chantier séparé, pas cet outil.
 
 ## Règle d'or pour les figures de **questions** : _answer-safe_
 

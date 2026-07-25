@@ -15,23 +15,7 @@
 //   • one <svg> per field (the renderer extracts a single figure per field)
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
-
-const ALLOWED = new Set([
-  "svg",
-  "title",
-  "g",
-  "line",
-  "path",
-  "polygon",
-  "polyline",
-  "rect",
-  "circle",
-  "ellipse",
-  "text",
-  "tspan",
-]);
-const FORBIDDEN = /<(image|use|foreignObject|script|style|marker|defs)\b|(?:xlink:)?href\s*=/i;
-const INDIC = /[٠-٩۰-۹]/;
+import { lintSvg } from "./sanitizer-contract.mjs";
 
 const root = process.argv[2] || "content";
 const issues = [];
@@ -46,23 +30,7 @@ function walk(dir) {
 }
 
 function checkSvg(where, svg) {
-  const opens = (svg.match(/<svg[\s>]/g) || []).length;
-  const closes = (svg.match(/<\/svg>/g) || []).length;
-  if (opens !== 1 || closes !== 1)
-    issues.push(`${where}: malformed <svg> (${opens} open / ${closes} close)`);
-  const openTag = svg.match(/<svg[^>]*>/i)?.[0] || "";
-  if (!/viewBox/i.test(openTag) && !(/\bwidth=/i.test(openTag) && /\bheight=/i.test(openTag)))
-    issues.push(`${where}: <svg> has no viewBox (nor width+height) — will not scale`);
-  if (FORBIDDEN.test(svg))
-    issues.push(
-      `${where}: forbidden element/attr (image/use/foreignObject/script/style/marker/defs/href)`,
-    );
-  for (const tag of svg.match(/<\/?([a-zA-Z][\w:-]*)/g) || []) {
-    const name = tag.replace(/[<\/]/g, "");
-    if (!ALLOWED.has(name)) issues.push(`${where}: disallowed element <${name}>`);
-  }
-  if (INDIC.test(svg))
-    issues.push(`${where}: Arabic-Indic/Persian digits in figure — use Western digits (0-9)`);
+  issues.push(...lintSvg(svg, where));
 }
 
 function checkField(where, s) {
