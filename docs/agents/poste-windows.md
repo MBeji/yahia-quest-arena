@@ -29,6 +29,20 @@ produit donc de **faux signaux** (« aucune PR », « aucun check ») au lieu d'
 
 `/tmp/fichier` échoue (`D:\tmp\...`). Utiliser `"$TEMP"` ou le répertoire de scratch de la session.
 
+## `execFile("npm", …)` ne lance rien (ENOENT)
+
+Ici npm est `npm.cmd`, que `child_process.execFile`/`spawn` **ne résout pas** — et Node refuse
+depuis CVE-2024-27980 de lancer un `.cmd` sans shell. Un script Node qui appelle npm (ou tout
+binaire livré en `.cmd`/`.bat` : `npx`, `tsc`, `prettier`…) lève donc `ENOENT` **sur ce poste et
+pas en CI**, où l'exécutable existe.
+
+- Passer `shell: process.platform === "win32"` — et alors **valider les arguments**, puisqu'ils
+  traversent un shell (cf. `assertSafePackageNames` dans `scripts/deps/apply-patch-minor.mjs`).
+- Le vrai piège n'est pas l'échec, c'est le `catch` qui l'absorbe : un `spawn` raté n'a **pas**
+  de `status`, contrairement à une commande qui a tourné et rendu un code non nul. Ne tolérer
+  que le second, sinon un outil qui n'a jamais démarré se lit « rien à faire » (le cas s'est
+  produit sur le lot L4 de l'étude [IA → déterministe](./etude-ia-vs-deterministe.md)).
+
 ## Symlinks git
 
 Git for Windows **désactive les symlinks par défaut**. Un `CLAUDE.md` committé en symlink se
