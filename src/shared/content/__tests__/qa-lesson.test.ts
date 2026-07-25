@@ -139,3 +139,20 @@ describe("auditLesson", () => {
     });
   });
 });
+
+/**
+ * Lot LC1 (étude « IA → déterministe », volet contenu) : la leçon est le champ où le trou a
+ * fait le plus de dégâts — l'app n'a pas de moteur de rendu, donc `\dfrac{BC}{2}` est
+ * littéralement ce que l'élève lit.
+ */
+describe("auditLesson — notation non rendue (lot LC1)", () => {
+  it("errors sur une commande LaTeX dans un cours", () => {
+    const flags = auditLesson("# Titre\n\n$$ R = \\dfrac{BC}{2} $$\n", "math-8eme/12");
+    expect(flags.some((f) => f.level === "error" && /LaTeX command/.test(f.msg))).toBe(true);
+  });
+
+  it("laisse passer le même cours réécrit en Unicode", () => {
+    const flags = auditLesson("# Titre\n\n$$ R = BC/2 $$\n", "math-8eme/12");
+    expect(flags.some((f) => /LaTeX command|inline math|Arabic-Indic/.test(f.msg))).toBe(false);
+  });
+});

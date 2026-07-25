@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   auditBoardQuestion,
+  auditMathNotation,
   auditMisconceptionTags,
   auditNumericQuestion,
   auditQuestion,
@@ -535,5 +536,61 @@ describe("auditBoardQuestion — ordering/matching lints (Tier B, B2)", () => {
       "w",
     );
     expect(flags.some((f) => f.level === "error" && /viewBox/.test(f.msg))).toBe(true);
+  });
+});
+
+/**
+ * Lot LC1 de l'étude « IA → déterministe » (volet contenu) : deux règles que le skill
+ * `content-audit` énonçait EN REGEX, et que personne n'exécutait — 7 chapitres de math-8ème
+ * ont livré des cours pleins de `\dfrac` avant que la sonde ne les trouve.
+ */
+describe("auditMathNotation — le rendu n'interprète rien (lot LC1)", () => {
+  it("errors on a LaTeX command, quel que soit le champ", () => {
+    const flags = auditMathNotation("$$ R = \\dfrac{BC}{2} $$", "lesson", "w");
+    expect(flags.some((f) => f.level === "error" && /LaTeX command/.test(f.msg))).toBe(true);
+  });
+
+  it("ne flague PAS un bloc $$ … $$ écrit en Unicode — c'est la notation de la maison", () => {
+    expect(auditMathNotation("$$ R = BC/2 $$", "lesson", "w")).toEqual([]);
+    expect(auditMathNotation("$$ قياس Â + قياس B̂ = 180° $$", "lesson", "w")).toEqual([]);
+    expect(auditMathNotation("$$ 36/60 = 3/5 $$ et $$ 2² × 3 = 12 $$", "lesson", "w")).toEqual([]);
+  });
+
+  it("ne flague PAS un bloc collé à ses $$ — le piège qui a produit 40 faux positifs", () => {
+    // Première version du regex : `\S` matche aussi `$`, donc le contenu avalait le premier
+    // dollar de la fermeture et tout le primaire (`$$24 + 13 = 37$$`) passait pour du inline.
+    // Attrapé en passant le gate sur le vrai corpus AVANT de le livrer.
+    expect(auditMathNotation("$$24 + 13 = 37$$", "lesson", "w")).toEqual([]);
+    expect(auditMathNotation("$$1 m = 100 cm$$\n\n$$1 kg = 1000 g$$", "lesson", "w")).toEqual([]);
+    expect(auditMathNotation("$$47 ÷ 6 = 7 والباقي 5$$", "lesson", "w")).toEqual([]);
+  });
+
+  it("errors on inline $…$, qui s'affiche littéralement", () => {
+    const flags = auditMathNotation("on pose $x+1$ puis on conclut", "lesson", "w");
+    expect(flags.some((f) => f.level === "error" && /inline math/.test(f.msg))).toBe(true);
+  });
+
+  it("ne prend PAS un symbole monétaire pour des maths en ligne", () => {
+    // La seule occurrence de `$` isolé du corpus, dans un tableau de vocabulaire anglais.
+    const flags = auditMathNotation("| A price | £ / $ / % or number + noun |", "lesson", "w");
+    expect(flags).toEqual([]);
+  });
+
+  it("errors sur un chiffre arabo-indien", () => {
+    const flags = auditMathNotation("العدد ٥ أكبر من 3", "prompt", "w");
+    expect(flags.some((f) => f.level === "error" && /Arabic-Indic/.test(f.msg))).toBe(true);
+  });
+
+  it("ne flague PAS un antislash dans du code — une leçon d'informatique en montre", () => {
+    expect(auditMathNotation("utilise `\\d+` pour un nombre", "lesson", "w")).toEqual([]);
+    expect(auditMathNotation("```python\nprint('a\\nb')\n```", "lesson", "w")).toEqual([]);
+  });
+
+  it("remonte jusque dans auditQuestion, sur n'importe quel champ", () => {
+    const flags = auditQuestion(
+      base({ explanation: "On applique la formule $$ a = \\sqrt{b} $$ pour conclure ici." }),
+      "w",
+    );
+    expect(flags.some((f) => f.level === "error" && /LaTeX command/.test(f.msg))).toBe(true);
   });
 });

@@ -29,6 +29,13 @@
  *           `]−1 ، 4[` — breaks the LTR run in RTL and renders scrambled. Must use
  *           «;» (preferred) or a Latin «,». A bracket group containing real Arabic
  *           prose is not notation and is left alone.
+ *   [error] LaTeX in content                   → the app has NO math renderer, so a
+ *           `\command` or an inline `$…$` reaches the student verbatim
+ *           (`\dfrac{BC}{2}` is what they read). `$$ … $$` display blocks stay
+ *           legal — the renderer wraps them in an LTR div — as long as they hold
+ *           plain Unicode.
+ *   [error] Arabic-Indic digit [٠-٩]           → the corpus writes Western digits
+ *           in every language, Arabic included.
  *   [warn]  meta-option / "none" calque       → an option that defers to the
  *           other options ("none of the above" / "aucune de ces réponses" /
  *           "لا شيء ممّا سبق") breaks the four-independent-candidates rule, and the
@@ -202,11 +209,86 @@ export function classifyOption(text: string): "meta" | "calque" | null {
   return null;
 }
 
+/* --------------------------------------------------------------------------
+ * Notation the renderer cannot honour — étude « IA → déterministe », volet contenu,
+ * lot LC1. Both rules below were spelled out IN REGEX in the `content-audit` skill and
+ * implemented nowhere: the only thing that could catch them was a weekly agent sweep,
+ * scoped to recently-changed subjects. It let 7 chapters of `math-8eme` ship courses
+ * full of raw `\dfrac` / `\text` / `\widehat`. A rule one can write as a regex belongs
+ * in the gate, not in a prompt.
+ * ------------------------------------------------------------------------ */
+
+/** Code a student is meant to read verbatim — an IT lesson legitimately shows `\d`, `\n`. */
+const CODE_SPAN = /```[\s\S]*?```|`[^`\n]*`/g;
+
+/** A LaTeX control sequence: `\dfrac`, `\text`, `\widehat`, `\Longrightarrow`… */
+const LATEX_COMMAND = /\\[a-zA-Z]+/;
+
+/** A legal `$$ … $$` display block — removed before looking for inline math. */
+const DISPLAY_MATH = /\$\$[^$]*\$\$/g;
+
+/**
+ * Inline `$…$`, on what is left once the display blocks are gone. The content must be
+ * dollar-free AND touch both delimiters (`$x+1$`) — the shape money never takes. Calibrated on
+ * the corpus (2026-07-25): 494 legal `$$ … $$` blocks, zero inline math, and a single lone `$`,
+ * the currency symbol of an English vocabulary table (`| A price | £ / $ / % or … |`).
+ *
+ * Note the `[^$\s]` rather than `\S` on the edges: `\S` matches `$` too, so it let the regex
+ * swallow the first dollar of a closing `$$` and flag 40+ perfectly legal primary-school
+ * courses (`$$24 + 13 = 37$$`). Caught by running the gate on the real corpus before shipping.
+ */
+const INLINE_MATH = /\$(?!\$)[^$\s](?:[^$\n]*[^$\s])?\$(?!\$)/;
+
+/** Eastern-Arabic digits — the corpus writes Western digits in every language. */
+const ARABIC_INDIC_DIGIT = /[٠-٩]/;
+
+/**
+ * The app has NO math renderer (`src/shared/lib/markdown.ts`): `$$ … $$` becomes a
+ * `<div class="lesson-math">` whose content is displayed as-is, and nothing else is
+ * interpreted. So `\dfrac{BC}{2}` is literally what the student reads. Plain Unicode is the
+ * house notation, and the compliant chapters already write it that way: `BC/2`, `√2`, `∥`,
+ * `⟹`, `Â` (U+0302 combining circumflex), `2²`.
+ */
+export function auditMathNotation(raw: string, field: string, where: string): Flag[] {
+  const flags: Flag[] = [];
+  const prose = raw.replace(CODE_SPAN, " ");
+
+  const command = LATEX_COMMAND.exec(prose);
+  if (command) {
+    flags.push({
+      level: "error",
+      where,
+      msg: `LaTeX command «${command[0]}» in ${field} — the app has no math renderer, so the student reads the command itself; write plain Unicode (BC/2, √2, ∥, ⟹, Â, 2²)`,
+    });
+  }
+
+  const inline = INLINE_MATH.exec(prose.replace(DISPLAY_MATH, " "));
+  if (inline) {
+    const sample = inline[0].length > 40 ? `${inline[0].slice(0, 37)}…` : inline[0];
+    flags.push({
+      level: "error",
+      where,
+      msg: `inline math «${sample}» in ${field} — single dollars are displayed literally; use a «$$ … $$» display block, or no delimiter at all`,
+    });
+  }
+
+  if (ARABIC_INDIC_DIGIT.test(raw)) {
+    flags.push({
+      level: "error",
+      where,
+      msg: `Arabic-Indic digit in ${field} — the corpus writes Western digits in every language, Arabic included`,
+    });
+  }
+
+  return flags;
+}
+
 /**
  * Field-level rendering checks shared by every question type:
  *   [error] <svg> without a viewBox (collapses on the fixed-width surface);
  *   [error] Arabic radicand of a radical / Arabic comma in math notation
- *           (both break the LTR isolate in RTL — see the header).
+ *           (both break the LTR isolate in RTL — see the header);
+ *   [error] LaTeX / inline `$…$` / Arabic-Indic digits (see `auditMathNotation`).
  */
 export function auditRenderedFields(
   fields: ReadonlyArray<readonly [string, string]>,
@@ -238,6 +320,7 @@ export function auditRenderedFields(
       });
     }
     flags.push(...auditRtlNotation(raw, field, where));
+    flags.push(...auditMathNotation(raw, field, where));
   }
   return flags;
 }
@@ -742,8 +825,8 @@ const GRAPHICAL_CHAPTER =
  *  - directives `:::` : type inconnu, non fermée, `:::` orphelin, `::: figure` sans légende ;
  *  - la leçon DÉSIGNE une figure (« ci-dessous », « الشكل المجاور »…) mais n'en porte aucune ;
  *  - chapitre spatial sans la moindre figure ;
- *  - notation (viewBox, bidi, virgule arabe) — via `auditRenderedFields`, dont c'est le
- *    tout premier passage sur des leçons.
+ *  - notation (viewBox, bidi, virgule arabe, LaTeX, chiffres arabo-indiens) — via
+ *    `auditRenderedFields`, dont c'est le tout premier passage sur des leçons.
  */
 export function auditLesson(md: string, where: string, opts: { spatial?: boolean } = {}): Flag[] {
   const flags: Flag[] = [];
