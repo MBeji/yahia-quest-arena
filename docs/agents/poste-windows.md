@@ -78,24 +78,43 @@ le poste reste chargé, le vrai gate est la CI (le ruleset bloque le merge sans 
 demander l'accord explicite pour `--no-verify` (DoD §2) plutôt que de reboucler des tentatives à
 ~6 minutes.
 
-## `harness:check` rouge en local sur un checkout propre (fins de ligne)
+## Des CRLF invisibles dans l'arbre de travail (`npm run eol:fix`)
 
-Sur ce poste, `npm run harness:check` peut signaler les **5 miroirs** `.agents/skills/*/SKILL.md`
-comme « drifted » alors que rien n'a été modifié — `git status` est propre pour la source **et**
-pour le miroir. Cause : `.gitattributes` impose `* text=auto eol=lf`, donc git normalise en LF et
-ne voit aucune différence, mais sur le disque la source `.claude/skills/` porte des **CRLF**
-(réécrite par Prettier, dont le miroir est exclu depuis #558) tandis que le miroir reste en LF.
-`harness:check` compare octet à octet → dérive. La CI (Linux, tout en LF) ne la voit jamais.
+`.gitattributes` impose `* text=auto eol=lf`. Mais `text=auto` veut aussi dire que git
+**normalise à la comparaison** : un fichier réécrit en CRLF sur le disque **après** le checkout
+est différent octet à octet, alors que `git status` et `git diff` le déclarent parfaitement
+propre. Le piège est invisible et il survit à chaque `pull`.
 
-**Ne pas « corriger » en committant le résultat de `npm run harness:sync`** : le diff git est vide
-(git renormalise), donc on ajoute 5 fichiers fantômes à la PR pour rien. Si un `harness:sync` a
-déjà réécrit le miroir : `git checkout -- .agents/skills/`. Vérifier avec
-`file .claude/skills/verify/SKILL.md` (`with CRLF line terminators` = c'est ce piège, pas une
-vraie dérive).
+Ce n'est pas cosmétique — constaté le 2026-07-25, un même CRLF produisait **trois** symptômes
+sans rapport apparent :
+
+1. **`npm test` rouge** avec une erreur de parsing rolldown pointant dans `node_modules` : la
+   transformation SSR de Vite injecte l'interop CJS **devant le shebang** d'un module CRLF, puis
+   n'arrive plus à relire sa propre sortie (`.claude/hooks/precommit-checks.mjs`). `verify` étant
+   le hook de pré-push, tout le gate local était rouge — la situation qui pousse au `--no-verify`
+   que le DoD §2 interdit.
+2. **`harness:check` « drifted »** sur les 5 miroirs `.agents/skills/*/SKILL.md` : la source
+   `.claude/skills/` est en CRLF, le miroir en LF, la comparaison est octet à octet.
+3. **`git rebase` refuse de démarrer** (« you have unstaged changes ») : après réécriture, git
+   garde une entrée de cache stat qu'il ne sait plus confirmer.
+
+**Ce n'est pas Prettier** (`.prettierrc` est en `endOfLine: "lf"`) : les 9 fichiers touchés sont
+tous sous `.claude/` plus `CLAUDE.md`, c'est-à-dire ceux qu'écrit l'outillage agent lui-même,
+qui écrit aux fins de ligne de la plateforme.
+
+**Le remède** — `npm run eol:fix`. Il renormalise en LF **et** rafraîchit l'index
+(`git add --renormalize`), donc l'arbre redevient réellement propre et rien n'est staged : le
+contenu normalisé est déjà celui du blob. `npm run eol:check` (dans `verify` et `ci:verify`)
+échoue désormais **avant** les tests, avec la liste des fichiers, au lieu de laisser chercher
+dans une trace rolldown. Sur Linux/CI c'est un no-op.
+
+Corollaire : ne plus committer le résultat d'un `npm run harness:sync` lancé pour « corriger »
+une dérive de miroir sur ce poste — lancer `eol:fix` d'abord ; s'il ne reste plus de dérive,
+c'était ce piège. Si un `harness:sync` a déjà réécrit le miroir : `git checkout -- .agents/skills/`.
 
 ## `npm run verify` local ≠ CI
 
-`verify` = `lint` + `typecheck` + `test` + `leak:check` + `db:check-chain`. Le job `verify` de
+`verify` = `lint` + `typecheck` + `test` + `leak:check` + `db:check-chain` + `eol:check`. Le job `verify` de
 `ci.yml` en fait un **surensemble** : il passe par `test:coverage` (donc les **seuils de
 couverture**, que `test` seul n'applique pas) et ajoute `harness:check`, `perf:check`,
 `build:check` (**budgets de bundle**), `smoke:shell` et `audit:deps`.
