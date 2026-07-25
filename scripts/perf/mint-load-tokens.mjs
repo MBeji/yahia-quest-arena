@@ -17,12 +17,14 @@
  */
 import { createClient } from "@supabase/supabase-js";
 
+import { PROD_SUPABASE_REF } from "../shared/prod-targets.mjs";
+
 const URL = process.env.SUPABASE_URL;
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const ANON_KEY = process.env.SUPABASE_PUBLISHABLE_KEY;
 const COUNT = Number(process.env.LOAD_USER_COUNT ?? 50);
 const PASSWORD = process.env.LOAD_USER_PASSWORD ?? "Load-Test-Passw0rd!";
-const PROD_REF = "fasrenmmrkqjoobrztbp"; // mirrors PROD_REFS in scripts/e2e/_env.mjs
+const PROD_REF = PROD_SUPABASE_REF;
 
 if (!URL || !SERVICE_KEY || !ANON_KEY) {
   console.error("Missing SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY / SUPABASE_PUBLISHABLE_KEY.");

@@ -27,9 +27,14 @@ import { readdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { normalizeDbUrl } from "../shared/db-url.mjs";
+import { PROD_SUPABASE_REF } from "../shared/prod-targets.mjs";
 
-/** The prod project ref the URL MUST contain (mirror of e2e `PROD_REFS`). */
-export const PROD_REF = "fasrenmmrkqjoobrztbp";
+/**
+ * The prod project ref the URL MUST contain. This is the ONE tool that requires
+ * production; it reads the same constant every other guard refuses, so the two
+ * directions can never disagree about which project is prod.
+ */
+export const PROD_REF = PROD_SUPABASE_REF;
 /** The TEST project ref the URL must NEVER contain. */
 export const TEST_REF = "pqegdnwdtbjtplcthxyp";
 
