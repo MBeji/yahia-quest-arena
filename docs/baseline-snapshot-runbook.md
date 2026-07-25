@@ -65,19 +65,17 @@ garantie.
 sur toute Action non épinglée (`findUnpinnedActions`, étude 25 lot 5b, PR #568). Rejouer la CI
 d'arena au tag est donc déterministe.
 
-**⚠️ Angle mort 1 — le moteur n'est pas épinglé côté contenu.** Dans le repo `yahia-quest-content`,
-`apply-content.yml`, `content-ci.yml` et `content-audit.yml` checkout `MBeji/yahia-quest-arena`
-**sans `ref:`** (branche flottante, `path: engine`). Reconstruire le contenu au baseline impose
-donc de **forcer le moteur à `arena@baseline`** à la main (§7).
+**Le moteur reste `@main`, à dessein.** Dans le repo `yahia-quest-content`, `apply-content.yml`,
+`content-ci.yml` et `content-audit.yml` checkout `MBeji/yahia-quest-arena` **sans `ref:`** (branche
+flottante, `path: engine`). Ce n'est **pas** un défaut à corriger : la CI de contenu doit valider le
+corpus contre le moteur **à jour** — figer le moteur casserait cette validation. La reproductibilité
+d'un baseline ne repose donc pas sur un moteur figé mais sur la **restauration**, qui force
+`arena@baseline` comme moteur (§7). Renforcement possible : un `engine_sha` dans `content_releases`
+pour tracer quel moteur a produit une application (pertinent quand `apply-content` sera armé).
 
-**⚠️ Angle mort 2 — les Actions du repo content ne sont pas épinglées** (leurs `uses:` sont en
-`@vN`). Le gate `harness:check` est un script d'arena : il ne franchit pas la frontière du repo
-privé.
-
-> **Reco** (dans l'esprit du gate #568) : épingler le `ref:` du moteur au commit dans les trois
-> workflows contenu, et porter un gate d'épinglage côté `yahia-quest-content`. Tant que ce n'est
-> pas fait, le manifeste **doit** noter le SHA du moteur, faute de quoi le contenu n'est pas
-> reproductible par construction.
+**✅ Les Actions du repo content sont épinglées** (PR content #14) : les 17 `uses:` sont cloués à un
+SHA, et un gate autonome `pin-check.yml` échoue si l'un redevient flottant — le pendant, côté corpus,
+de la politique #568 (le gate `harness:check` du moteur ne franchissant pas la frontière du repo privé).
 
 ---
 
@@ -103,7 +101,7 @@ BASE (état vivant — hors git)
     archivé : <emplacement durable, accès restreint — PII>
 
 RUNTIME
-  déploiement Vercel servi : https://na9ranal3ab-XXXX.vercel.app (commit <sha>)
+  prod servie              : https://www.na9ranal3ab.tn (commit <sha>)
   env (noms uniquement)    : environment-variables.md @ tag + snapshot `vercel env ls`
 
 PREUVES (au gel)
@@ -127,7 +125,7 @@ normale (après dégel) — mais **l'autorité reste l'annotation**.
 Discipline #554 : **chaque case se coche en relisant l'état à la source, jamais un signal** (§8).
 
 - [ ] Les 3 arbres de travail sont **propres et à jour** (`git fetch && git status`).
-- [ ] **`main == prod`** : `curl -s https://na9ranal3ab.vercel.app/api/health` → `status:"ok"`,
+- [ ] **`main == prod`** : `curl -s https://www.na9ranal3ab.tn/api/health` → `status:"ok"`,
       `checks.database:"ok"`, et `commit` == SHA arena visé.
 - [ ] `npm run ci:verify` **vert** sur ce commit d'arena (ou un run CI vert y existe déjà).
 - [ ] `npm run harness:check` **vert** — l'épinglage des Actions tient (garantie de repro, §3).
@@ -170,7 +168,7 @@ gh workflow run db-migrate-prod.yml -f mode=list           # tête de migration 
 #   + dernier content_releases.git_sha (log du dernier apply-content, ou SELECT en lecture)
 
 # 5. Relever le runtime servi + inventaire env (noms)
-curl -s https://na9ranal3ab.vercel.app/api/health          # status / database / commit
+curl -s https://www.na9ranal3ab.tn/api/health              # status / database / commit
 vercel env ls                                              # NOMS uniquement, jamais les valeurs
 
 # 6. Tag annoté (même nom, annotation = manifeste §4) au BON sha de chaque repo
@@ -205,7 +203,7 @@ On combine les leviers existants, **axe par axe** — détail dans
 | **Code servi** (le + rapide) | Repromouvoir le déploiement Vercel noté au manifeste                                                        | rollback levier 1 (~30 s)      |
 | **`main` == baseline**       | `git revert baseline/AAAA-MM-JJ..origin/main` sur `revert/…` (jamais de force-push)                         | rollback levier 2/3            |
 | **Base — schéma**            | Comparer tête de migration courante vs baseline : additif depuis → rien ; destructif/données → dump archivé | backup-restore A ; rebuild = B |
-| **Base — contenu**           | Ré-appliquer le contenu au tag content, **moteur forcé à `arena@baseline`** (§3 angle mort 1)               | `apply-content.yml`            |
+| **Base — contenu**           | Ré-appliquer le contenu au tag content, **moteur forcé à `arena@baseline`** (§3)                            | `apply-content.yml`            |
 | **Configuration**            | Remettre les env Vercel à l'inventaire figé, **redéployer sans cache** (`VITE_*` inlinées)                  | manifeste + doc env            |
 | **Vérification**             | `/api/health` `commit` == baseline + parcours de fumée (accueil, une matière, un exercice soumis)           | sonde #569                     |
 
@@ -228,10 +226,9 @@ mentent, presque toujours dans le sens rassurant.
 
 ## 9. Ce qui reste à outiller
 
-| Gap                                       | Effet sur le baseline                                           | Piste                                               |
-| ----------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------- |
-| Dumps `db-backup` en rétention **14 j**   | l'axe données d'un baseline plus vieux repose sur le schéma git | archiver le dump hors GitHub à la pose (§6 étape 3) |
-| **Moteur non épinglé** dans la CI contenu | contenu non reproductible par construction                      | épingler le `ref:` au commit (esprit #568)          |
-| **Actions du repo content** non épinglées | chaîne contenu non déterministe                                 | gate d'épinglage côté `yahia-quest-content`         |
-| **Aucun `checkpoint/*` posé** à ce jour   | pas encore de filet de retour automatique                       | laisser `checkpoint-tag.yml` tourner                |
-| **Personne n'interroge `/api/health`**    | le délai de détection domine le RTO                             | monitor externe (UptimeRobot / Better Stack)        |
+| Gap                                     | Effet sur le baseline                                           | Piste                                                                  |
+| --------------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Dumps `db-backup` en rétention **14 j** | l'axe données d'un baseline plus vieux repose sur le schéma git | archiver le dump hors GitHub à la pose (§6 étape 3)                    |
+| **Traçabilité du moteur** côté contenu  | on ignore quel moteur (arena SHA) a produit une application     | `engine_sha` dans `content_releases` (quand `apply-content` sera armé) |
+| **Aucun `checkpoint/*` posé** à ce jour | pas encore de filet de retour automatique                       | laisser `checkpoint-tag.yml` tourner                                   |
+| **Personne n'interroge `/api/health`**  | le délai de détection domine le RTO                             | monitor externe (UptimeRobot / Better Stack)                           |
