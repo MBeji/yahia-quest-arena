@@ -6,9 +6,12 @@ import { describe, expect, it } from "vitest";
 
 import {
   findProdTarget,
+  isBackendProject,
+  needsTestBackend,
   PROD_APP_HOSTS,
   PROD_SUPABASE_REF,
   prodTargetReason,
+  selectedProjects,
 } from "../../shared/prod-targets.mjs";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
@@ -120,5 +123,67 @@ describe("PROD_APP_HOSTS", () => {
 
   it("already covers the custom domain, wired or not", () => {
     expect(PROD_APP_HOSTS).toContain("na9ranal3ab.tn");
+  });
+});
+
+describe("selectedProjects", () => {
+  it("reads both --project spellings", () => {
+    expect(selectedProjects(["test", "--project=authed-chromium"])).toEqual(["authed-chromium"]);
+    expect(selectedProjects(["test", "--project", "authed-chromium"])).toEqual(["authed-chromium"]);
+    expect(
+      selectedProjects(["test", "--project=public-anon-chromium", "--project", "authed-chromium"]),
+    ).toEqual(["public-anon-chromium", "authed-chromium"]);
+  });
+
+  it("returns null when none was passed — Playwright then runs every project", () => {
+    expect(selectedProjects(["test"])).toBeNull();
+    expect(selectedProjects(["test", "--reporter=list"])).toBeNull();
+  });
+});
+
+describe("needsTestBackend — which runs may not start without a TEST backend", () => {
+  it("is true for every tier that talks to the real backend", () => {
+    expect(needsTestBackend(["test", "--project=authed-chromium"])).toBe(true);
+    expect(needsTestBackend(["test", "--project=public-anon-chromium"])).toBe(true);
+    expect(needsTestBackend(["test", "--project=setup"])).toBe(true);
+    // No --project at all means EVERY project, the authed tier included.
+    expect(needsTestBackend(["test"])).toBe(true);
+  });
+
+  it("is false for the backendless public tier", () => {
+    expect(needsTestBackend(["test", "--project=public-chromium", "--project=public-mobile"])).toBe(
+      false,
+    );
+  });
+
+  it("is false for commands that run no spec but load the same config", () => {
+    // `show-report` / `codegen` / `--help` must not be refused for a missing TEST env.
+    expect(needsTestBackend(["show-report"])).toBe(false);
+    expect(needsTestBackend(["codegen", "http://localhost:8080"])).toBe(false);
+    expect(needsTestBackend(["--help"])).toBe(false);
+  });
+});
+
+describe("no Playwright project escapes the tier classification", () => {
+  it("classifies EVERY project declared in playwright.config.ts", () => {
+    const declared = [
+      ...readFileSync(resolve(repoRoot, "playwright.config.ts"), "utf8").matchAll(
+        /name: "([^"]+)"/g,
+      ),
+    ].map((m) => m[1]);
+    expect(declared.length).toBeGreaterThan(0);
+    // A backendless tier is `public-` WITHOUT the `-anon` infix; anything else must
+    // be a backend tier. A new project matching neither convention lands here
+    // instead of running unguarded.
+    const isBackendlessProject = (name) => /^public-(?!anon-)/.test(name);
+    for (const name of declared) {
+      expect(
+        isBackendProject(name) || isBackendlessProject(name),
+        `project "${name}" matches no known e2e tier`,
+      ).toBe(true);
+    }
+    // Both tiers must stay represented, so a rename can't quietly collapse the split.
+    expect(declared.some(isBackendProject)).toBe(true);
+    expect(declared.some(isBackendlessProject)).toBe(true);
   });
 });

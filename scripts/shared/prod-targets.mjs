@@ -74,3 +74,43 @@ export function prodRefusalMessage({ value, reason }) {
     ? `${value} is the PRODUCTION Supabase project.`
     : `${value} is the PRODUCTION app — its server writes to the prod database.`;
 }
+
+/**
+ * Does this Playwright project talk to the real (TEST) Supabase backend?
+ *
+ * Matched by tier PREFIX, not against a closed list, so a new browser variant of
+ * an existing tier (`authed-firefox`, `public-anon-mobile`) is guarded the day it
+ * is added. Every project declared in `playwright.config.ts` must fall in a known
+ * tier — asserted by `scripts/e2e/__tests__/prod-targets.test.mjs`, so an
+ * unrecognised tier fails the unit gate instead of running unguarded.
+ */
+export function isBackendProject(name) {
+  return name === "setup" || name.startsWith("authed-") || name.startsWith("public-anon-");
+}
+
+/**
+ * The `--project` values an argv selects.
+ * `null` means none was passed — Playwright then runs EVERY project.
+ */
+export function selectedProjects(argv) {
+  const picked = [];
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg === "--project" && argv[i + 1]) picked.push(argv[++i]);
+    else if (arg.startsWith("--project=")) picked.push(arg.slice("--project=".length));
+  }
+  return picked.length > 0 ? picked : null;
+}
+
+/**
+ * Will this argv run anything that needs the TEST backend?
+ *
+ * Only `playwright test` runs specs: `show-report`, `codegen` and `--help` load
+ * the same config and must not be refused for a missing TEST env.
+ */
+export function needsTestBackend(argv) {
+  if (!argv.includes("test")) return false;
+  const picked = selectedProjects(argv);
+  if (picked === null) return true; // every project — the authed tier included
+  return picked.some(isBackendProject);
+}
