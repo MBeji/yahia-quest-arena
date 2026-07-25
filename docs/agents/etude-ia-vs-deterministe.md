@@ -274,8 +274,19 @@ une seule ne dépense un agent sur son chemin nominal**.
 
 Ce qui reste de l'IA est exactement ce que l'étude visait à préserver : le verdict « test
 périmé vs vrai bug », le screening d'un texte hostile, la lecture d'un changelog, l'écriture
-d'un correctif. **Prochain candidat, s'il en faut un** : appliquer la même grille au pipeline
-de contenu — mais cet arbitrage se rend dans le dépôt privé (§4.6).
+d'un correctif.
+
+**Suite donnée le 2026-07-25 — la même grille a été appliquée au pipeline de contenu**, et
+l'arbitrage a bien été rendu là où il devait l'être : le dépôt privé (§4.6), dans
+`FableEtudes/ETUDE-IA-VS-DETERMINISTE-CONTENU.md` (5 lots, livrés le jour même). Deux
+retombées visibles **ici**, parce que le moteur est public : la règle QA qui attrape le LaTeX
+et les chiffres arabo-indiens (#628) et le pré-gate `content-audit-pregate.mjs` (#629), 5ᵉ du
+dépôt. Le constat qui a le plus compté n'était pas une économie de tokens mais un **trou** :
+deux règles que le skill d'audit énonçait en regex n'étaient implémentées nulle part, et
+7 chapitres de `math-8eme` livraient des cours que l'élève lisait en LaTeX brut. Corollaire
+pour tout futur lot de gate, consigné là-bas : **une sonde de calibration ne vaut que si elle
+exécute le même regex que le gate**, et on valide en deux passes — sur l'état fautif, puis sur
+l'état corrigé.
 
 ## 7. Risques et garde-fous
 
