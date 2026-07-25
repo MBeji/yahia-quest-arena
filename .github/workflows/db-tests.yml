@@ -76,14 +76,19 @@ jobs:
           ref: ${{ inputs.ref }}
 
       - name: Install the Supabase CLI
-        uses: supabase/setup-cli@3c2f5e2ae34c34e428e8e206e2c4d21fa2d20fbf # v2
+        uses: supabase/setup-cli@46f7f98c7f948ad727d22c1e67fab04c223a0520 # v3.0.0
         with:
           # Pinned: an unpinned "latest" bump (supabase/postgres 17.6.1.132 → .134,
           # 2026-06-07) silently dropped the default table privileges on the local
           # stack and broke this suite for 5 nights. The schema now carries explicit
           # grants (20260612221000_baseline_table_grants), but keep the toolchain
           # deterministic anyway. Bump deliberately, with a green run.
-          version: 2.108.0
+          #
+          # Action v3 (2026-07-07) installs the CLI from **npm** instead of GitHub
+          # Releases and drops the `github-token` input — none of the three
+          # workflows pinning this action ever passed it, so the migration is the
+          # SHA + this version string (2.109.1 is published on npm).
+          version: 2.109.1
 
       - name: Start the local stack (applies all migrations)
         # `supabase db start` boots just Postgres + applies every migration in
