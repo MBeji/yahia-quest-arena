@@ -9,9 +9,10 @@
  *
  * This script owns exactly that lot, in two phases:
  *
- *   detect  → reads `npm outdated --json`, splits it into the in-range patch/minor lot and the
- *             out-of-range majors, groups the majors that MUST move together, and writes a
- *             machine-readable plan (+ a ready-to-post PR body).
+ *   detect  → reads `npm outdated --json`, splits it into the in-range patch/minor lot and
+ *             everything the declared ranges cannot reach (major boundaries AND 0.x lines),
+ *             groups what MUST move together, and writes a machine-readable plan (+ a
+ *             ready-to-post PR body).
  *   apply   → `npm update <planned…>` then a full `npm install` to normalise the lockfile.
  *
  * WHAT STAYS IA (§4.4/§4.6), and why:
@@ -39,7 +40,9 @@ import { pathToFileURL } from "node:url";
 /**
  * Packages that must move as ONE major: upgrading half a set leaves the app in a state no
  * changelog describes. The skill names the TanStack set explicitly; type-defs travel with
- * their runtime for the same reason.
+ * their runtime for the same reason. `three` ships its breaking releases on a 0.x line
+ * (0.185 → 0.186), which is why "out of the declared range" — not "crosses a major" — is the
+ * criterion in `classifyOutdated`: with the narrower rule this group could never fire.
  */
 export const MAJOR_GROUPS = [
   {
@@ -95,11 +98,19 @@ export function majorGroupOf(name) {
 }
 
 /**
- * Split `npm outdated` into the in-range patch/minor lot and the out-of-range majors.
+ * Split `npm outdated` into the in-range patch/minor lot and everything the declared range
+ * cannot reach.
  *
  * `current` → `wanted` is what `npm update` does (inside the declared `^` range).
- * `wanted` → `latest` crossing a major boundary is a major: it needs a `package.json` edit,
- * a changelog read, and its own PR — i.e. the agent.
+ * `wanted` → `latest` is, by construction of `npm outdated`, **out of that range**: reaching
+ * it means editing `package.json`, reading a changelog and shipping its own PR — i.e. the
+ * agent. That holds whatever the numeric distance, and counting only major boundaries left a
+ * silent hole: under npm's caret rule `^0.185.0` can no more reach 0.186.0 than `^1.9.0` can
+ * reach 2.0.0, so every 0.x package of the repo (`three`, `@types/three`,
+ * `class-variance-authority`, `eslint-plugin-react-refresh`) landed in NEITHER list — frozen,
+ * with nobody left to notice since the agent no longer reads `npm outdated` itself. Same hole
+ * for a `~` range or an exact pin. `boundary` keeps the distinction the agent needs to size
+ * its changelog read.
  *
  * @param {object} raw            parsed `npm outdated --json`
  * @param {string[]} heldBack     packages to exclude from the lot (an earlier red gate)
@@ -114,31 +125,39 @@ export function classifyOutdated(raw, heldBack = []) {
   for (const name of Object.keys(outdated).sort()) {
     const { current, wanted, latest } = outdated[name];
 
-    // In-range step (what `npm update` will do).
-    const inRange = bumpKind(current, wanted);
-    if (inRange === "patch" || inRange === "minor") {
-      if (held.has(name)) {
-        excluded.push({ name, current, wanted, kind: inRange, reason: "held back" });
-      } else {
-        patchMinor.push({ name, from: current, to: wanted, kind: inRange });
+    if (!current) {
+      // Declared but absent from the tree (npm reports no `current`): there is nothing to
+      // update FROM. Reported rather than dropped — a lot that concludes "nothing to do"
+      // because the tree is broken is exactly the silent no-op this étude exists to prevent.
+      excluded.push({ name, current: null, wanted, kind: "unknown", reason: "not installed" });
+    } else {
+      // In-range step (what `npm update` will do).
+      const inRange = bumpKind(current, wanted);
+      if (inRange === "patch" || inRange === "minor") {
+        if (held.has(name)) {
+          excluded.push({ name, current, wanted, kind: inRange, reason: "held back" });
+        } else {
+          patchMinor.push({ name, from: current, to: wanted, kind: inRange });
+        }
+      } else if (inRange === null && wanted && current !== wanted) {
+        // Unparseable versions (git/file/alias specs): never guessed at, always reported.
+        excluded.push({ name, current, wanted, kind: "unknown", reason: "unparseable version" });
+      } else if (inRange === "major") {
+        // Defensive: a range that can reach a major (e.g. `*`) is NOT a patch/minor lot item.
+        excluded.push({
+          name,
+          current,
+          wanted,
+          kind: "major",
+          reason: "in-range major — needs review",
+        });
       }
-    } else if (inRange === null && current && wanted && current !== wanted) {
-      // Unparseable versions (git/file/alias specs): never guessed at, always reported.
-      excluded.push({ name, current, wanted, kind: "unknown", reason: "unparseable version" });
-    } else if (inRange === "major") {
-      // Defensive: a range that can reach a major (e.g. `*`) is NOT a patch/minor lot item.
-      excluded.push({
-        name,
-        current,
-        wanted,
-        kind: "major",
-        reason: "in-range major — needs review",
-      });
     }
 
-    // Out-of-range major (reported for the agent, never applied here).
-    if (bumpKind(wanted, latest) === "major") {
-      majors.push({ name, from: wanted, to: latest, group: majorGroupOf(name) });
+    // Out of the declared range: handed to the agent, never applied here.
+    const boundary = bumpKind(wanted, latest);
+    if (boundary && boundary !== "none") {
+      majors.push({ name, from: wanted, to: latest, group: majorGroupOf(name), boundary });
     }
   }
   return { patchMinor, majors, excluded };
@@ -194,20 +213,28 @@ export function renderPrBody(plan, date) {
   if (plan.excluded.length > 0) {
     lines.push("### Écartés du lot", "");
     for (const e of plan.excluded)
-      lines.push(`- \`${e.name}\` (${e.current} → ${e.wanted}) — ${e.reason}`);
+      lines.push(`- \`${e.name}\` (${e.current ?? "absent"} → ${e.wanted}) — ${e.reason}`);
     lines.push("");
   }
 
   if (plan.majorGroups.length > 0) {
     lines.push(
-      "### Majors détectées (hors de ce lot)",
+      "### Hors des ranges déclarés (chacune sa PR)",
       "",
-      "Chacune part dans **sa propre PR**, après lecture de son changelog — c'est le rôle que le",
-      "garde agent conserve (§4.4 de l'étude).",
+      "Ces montées demandent une **édition de `package.json`** : le range déclaré ne les atteint",
+      "pas — franchissement de major, ou ligne 0.x (`^0.185.0` n'atteint pas 0.186.0). Chacune",
+      "part dans **sa propre PR**, après lecture de son changelog — c'est le rôle que le garde",
+      "agent conserve (§4.4 de l'étude).",
       "",
     );
     for (const g of plan.majorGroups) {
-      const pkgs = g.packages.map((p) => `\`${p.name}\` ${p.from} → ${p.to}`).join(", ");
+      const pkgs = g.packages
+        .map(
+          (p) =>
+            `\`${p.name}\` ${p.from} → ${p.to}` +
+            (p.boundary && p.boundary !== "major" ? ` (hors range, saut ${p.boundary})` : ""),
+        )
+        .join(", ");
       lines.push(`- **${g.group}** : ${pkgs}`);
     }
     lines.push("");
@@ -260,16 +287,46 @@ function argValue(flag) {
   return i !== -1 ? process.argv[i + 1] : null;
 }
 
+/**
+ * npm ships as `npm.cmd` on Windows, which `execFile` does not resolve — and Node refuses to
+ * spawn a `.cmd` without a shell since CVE-2024-27980. CI is Linux, but the skill invites
+ * driving this script by hand in a local session, where the spawn failure used to be read as
+ * "the stack is up to date" (see `readOutdated`). Args are package names, validated by
+ * `assertSafePackageNames` before they ever reach a shell.
+ */
 const npm = (args) =>
-  execFileSync("npm", args, { encoding: "utf8", stdio: ["ignore", "pipe", "inherit"] });
+  execFileSync("npm", args, {
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "inherit"],
+    shell: process.platform === "win32",
+  });
 
-/** `npm outdated` exits non-zero as soon as anything is outdated — that is not an error. */
+/** npm's own package-name grammar — the only thing this script ever passes to `npm update`. */
+const SAFE_PACKAGE_NAME = /^(?:@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/;
+
+/** Nothing but a real package name reaches the command line (Windows runs it through a shell). */
+export function assertSafePackageNames(names) {
+  const bad = names.filter((n) => !SAFE_PACKAGE_NAME.test(n));
+  if (bad.length > 0) {
+    throw new Error(`refusing to pass a non-package-name to npm: ${bad.join(", ")}`);
+  }
+  return true;
+}
+
+/**
+ * `npm outdated` exits non-zero as soon as anything is outdated — that is not an error, and
+ * the JSON is still on stdout. Everything else IS an error: a spawn failure (npm missing, a
+ * `.cmd` refused) or a genuine npm crash has no usable output, and swallowing it would report
+ * an empty, perfectly up-to-date stack — the exact silent no-op this lot exists to avoid.
+ */
 export function readOutdated(run = npm) {
   let stdout = "";
   try {
     stdout = run(["outdated", "--json"]);
   } catch (err) {
-    stdout = err?.stdout ?? "";
+    const out = String(err?.stdout ?? "");
+    if (typeof err?.status !== "number" || out.trim() === "") throw err;
+    stdout = out;
   }
   const text = String(stdout).trim();
   return text ? JSON.parse(text) : {};
@@ -288,28 +345,34 @@ function detect() {
   if (bodyPath) writeFileSync(bodyPath, renderPrBody(plan, argValue("--date") ?? "—"), "utf8");
 
   console.log(
-    `[deps] patch/minor=${plan.counts.patchMinor} majors=${plan.counts.majors} (${plan.counts.majorGroups} group(s)) excluded=${plan.counts.excluded}`,
+    `[deps] patch/minor=${plan.counts.patchMinor} hors-range=${plan.counts.majors} (${plan.counts.majorGroups} group(s)) excluded=${plan.counts.excluded}`,
   );
   for (const p of plan.patchMinor)
     console.log(`[deps]   ${p.name} ${p.from} → ${p.to} (${p.kind})`);
   for (const g of plan.majorGroups)
-    console.log(`[deps]   MAJOR ${g.group}: ${g.packages.map((p) => p.name).join(", ")}`);
+    console.log(
+      `[deps]   OUT-OF-RANGE ${g.group}: ${g.packages
+        .map((p) => `${p.name} ${p.from}→${p.to} (${p.boundary})`)
+        .join(", ")}`,
+    );
+  for (const e of plan.excluded) console.log(`[deps]   excluded ${e.name}: ${e.reason}`);
 
   emitOutput("has_patch_minor", String(plan.counts.patchMinor > 0));
   emitOutput("has_majors", String(plan.counts.majors > 0));
   emitOutput("patch_minor_count", String(plan.counts.patchMinor));
   emitOutput("major_group_count", String(plan.counts.majorGroups));
   emitSummary(
-    plan.counts.patchMinor > 0
+    (plan.counts.patchMinor > 0
       ? `⬆️ **Lot patch/minor** : ${plan.counts.patchMinor} paquet(s) dans les ranges` +
-          (plan.counts.majors > 0
-            ? `, plus ${plan.counts.majors} major(s) laissée(s) à l'agent`
-            : "") +
-          "."
+        (plan.counts.majors > 0
+          ? `, plus ${plan.counts.majors} montée(s) hors range laissée(s) à l'agent`
+          : "") +
+        "."
       : `✅ **Rien à monter dans les ranges.**` +
-          (plan.counts.majors > 0
-            ? ` ${plan.counts.majors} major(s) détectée(s) — traitée(s) hors lot.`
-            : ""),
+        (plan.counts.majors > 0
+          ? ` ${plan.counts.majors} montée(s) hors range détectée(s) — traitée(s) hors lot.`
+          : "")) +
+      (plan.counts.excluded > 0 ? ` ${plan.counts.excluded} paquet(s) écarté(s) du lot.` : ""),
   );
   return plan;
 }
@@ -324,6 +387,7 @@ function apply() {
     return plan;
   }
 
+  assertSafePackageNames(names);
   assertLockfileSafeNpm(npm(["--version"]).trim());
   const overridesBefore = JSON.parse(readFileSync("package.json", "utf8")).overrides;
 

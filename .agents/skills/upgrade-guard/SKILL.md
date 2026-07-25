@@ -75,10 +75,12 @@ at the end). When the env var is unset (local run), skip the file.
 > 2. **un lot patch/minor rouge** — corriger proprement _ou_ écarter le paquet
 >    fautif (`--hold`), l'arbitrage que le script ne peut pas rendre (§4).
 >
-> Le script écrit un **plan** (`upgrade-plan.json`) : `majorGroups` te donne les
-> majors **déjà groupées** (le set TanStack = un groupe, un runtime avec ses
-> `@types`), `patchMinor`/`excluded` sont du contexte. En session locale, tu peux
-> piloter le script toi-même (§4) — c'est le même chemin.
+> Le script écrit un **plan** (`upgrade-plan.json`) : `majorGroups` te donne tout ce
+> que les ranges déclarés n'atteignent pas, **déjà groupé** (le set TanStack = un
+> groupe, un runtime avec ses `@types`) — majors franches comme lignes 0.x, le champ
+> `boundary` de chaque paquet fait la différence ; `patchMinor`/`excluded` sont du
+> contexte. En session locale, tu peux piloter le script toi-même (§4) — c'est le
+> même chemin.
 
 ## Workflow (do these in order)
 
@@ -104,9 +106,13 @@ Gather, don't apply yet. Classify each into **patch**, **minor**, or **major**.
   dans l'absolu) :
   - **patch/minor lot** = tout amener à `wanted` — exactement ce que fait
     `npm update` dans les ranges existants. **C'est le périmètre du script.**
-  - **majors** = tout paquet dont `latest` franchit une frontière de major au-delà de
-    `wanted` (le range `^` ne peut pas l'atteindre sans éditer `package.json`).
-    **C'est ton périmètre**, et le script te les livre groupées.
+  - **majors** = tout paquet dont `latest` dépasse `wanted`, c'est-à-dire que le range
+    déclaré ne peut pas l'atteindre sans éditer `package.json` : franchissement de major
+    (`^1.9.0` n'atteint pas 2.0.0) **ou ligne 0.x** — la règle caret de npm borne
+    `^0.185.0` à `<0.186.0`, donc un `three` 0.186 est major-class malgré son numéro de
+    minor (idem pour un range `~` ou un pin exact). **C'est ton périmètre**, et le script
+    te les livre groupées, chacune avec son `boundary` (`major`/`minor`/`patch`) pour
+    dimensionner la lecture du changelog.
 - **Language — TypeScript.** It's the `typescript` devDep, so it rides the npm
   grouping above (a TS minor is in the patch/minor lot; a TS major is its own major PR).
 - **Node toolchain.** Compare the CI `node-version: 22` (in the workflows) and any
