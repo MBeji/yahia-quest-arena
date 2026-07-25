@@ -255,9 +255,9 @@ These are paid-for lessons; violating them re-breaks production or the gate.
 ## Division of labour (skill vs workflow)
 
 - **Le script (`scripts/deps/apply-patch-minor.mjs`)** : tout le lot patch/minor —
-  détection, split patch/minor vs majors groupées, application dans les ranges, plan
-  - corps de PR. Zéro token, zéro jeton Claude requis, verdict identique à chaque
-    exécution (lot L4).
+  détection, split patch/minor vs majors groupées, application dans les ranges, puis le
+  plan et le corps de PR. Zéro token, aucun jeton Claude requis, verdict identique à
+  chaque exécution (lot L4).
 - **You (the skill):** the parts that need judgement — the **majors** (changelog,
   migration, one PR per group) and a **red patch/minor lot** (fix properly vs hold
   back). You run the **fast** gate (`ci:verify`), open PRs/issues, write the result
