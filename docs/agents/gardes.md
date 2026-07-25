@@ -71,6 +71,32 @@ le nightly E2E/pgTAP tourne **toutes les nuits**. Le dépôt étant public, les 
 gratuites et illimitées — la contrainte est le **bruit** (PR/issues ouvertes), pas le coût.
 Détail et jours exacts : `docs/dependency-maintenance.md`.
 
+`report-triage.yml` est l'exception : il est aussi câblé sur un cron de 4 h (et sur le dispatch
+d'un signalement inséré), donc **la cadence n'y suffisait pas** comme garde-fou de bruit.
+
+## Un pré-gate déterministe avant chaque garde
+
+Un garde ne doit pas dépenser un agent pour conclure « rien à faire ». Chaque déclencheur
+périodique passe d'abord un **script** qui décide s'il y a du travail (étude
+[IA → déterministe](./etude-ia-vs-deterministe.md)) :
+
+| Garde                  | Pré-gate                          | Skippe quand…                                                                         |
+| ---------------------- | --------------------------------- | ------------------------------------------------------------------------------------- |
+| `regression-guard.yml` | `ci/regression-guard-pregate.mjs` | la fenêtre de ~26 h est vide ou purement documentaire (L3)                            |
+| `report-triage.yml`    | `ci/report-triage-pregate.mjs`    | toute la file `open` a déjà été triée (trailers `Report-Id:` + issues de triage) (L2) |
+| `second-opinion.yml`   | `ci/second-opinion-pregate.mjs`   | la PR ne touche aucun chemin à risque (L5, dormant)                                   |
+| `upgrade-guard.yml`    | —                                 | (L4 à faire : le lot patch/minor est encore joué par un agent)                        |
+
+Trois invariants communs, à respecter pour tout futur pré-gate :
+
+1. **le doute réveille l'agent** — une erreur du script sort `skip=false` et exit 0, jamais un
+   skip silencieux ;
+2. **le déclenchement manuel/instantané n'est jamais skippé** — `workflow_dispatch` et
+   `repository_dispatch` passent outre : l'opérateur (ou un vrai événement) a demandé la passe ;
+3. **le script pré-filtre, il ne juge pas** — il ne rend aucun verdict sémantique (test périmé
+   vs vrai bug, signalement malveillant ou non) ; ce qu'il calcule est explicitement une
+   **indication** pour l'agent.
+
 ## Sécurité
 
 - Les gardes n'ont que `GITHUB_TOKEN` (scopé au dépôt) et le jeton d'abonnement. **Jamais** de

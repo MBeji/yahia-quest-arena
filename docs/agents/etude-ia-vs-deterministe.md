@@ -1,8 +1,10 @@
 # Étude — IA → déterministe : ne dépenser des tokens que là où le jugement compte
 
-> **Statut : étude / proposition** (2026-07-21). Rien ici n'est appliqué ; chaque lot du §6
-> est un arbitrage à rendre. Périmètre : ce dépôt (moteur + harness + CI). Le pipeline de
-> contenu vit au privé (étude 24) et n'est traité qu'en renvoi (§4.6).
+> **Statut : étude en exécution** (ouverte le 2026-07-21). Cinq lots sur six sont livrés —
+> **L1, L1b, L3, L5** le 2026-07-21, **L2** le 2026-07-25 ; il reste **L4** (`upgrade-guard`),
+> qui est encore un arbitrage à rendre (Renovate vs script maison). État par lot : §6.
+> Périmètre : ce dépôt (moteur + harness + CI). Le pipeline de contenu vit au privé
+> (étude 24) et n'est traité qu'en renvoi (§4.6).
 
 ## 0. TL;DR
 
@@ -65,6 +67,12 @@ Les surfaces qui consomment, elles :
 | `report-triage.yml`    | cron `*/4h` + dispatch + manuel    | `garde-triage` (Sonnet), ≤60 tours | screening sécurité, triage, dédup, reproduction, fix, PR + issue de clôture        |
 | `second-opinion.yml`   | chaque push de chaque PR (dormant) | `second-avis` (null)               | second avis d'une autre famille de modèles — coût nul tant que dormant             |
 
+> Ce tableau est l'**inventaire d'ouverture** (2026-07-21), conservé tel quel comme état de
+> départ. Ce qui a changé depuis est au §6 : le hook pré-commit agent a été **retiré** (L1,
+> remplacé par `precommit-checks.mjs` + la règle ESLint L1b), et `regression-guard`,
+> `report-triage` et `second-opinion` sont désormais bornés par un filtre déterministe
+> (L3, L2, L5). Seul `upgrade-guard` est encore décrit ici tel qu'il tourne (L4 à faire).
+
 ## 3. Grille de décision (quand IA, quand script)
 
 Un check **doit** être un script quand sa règle s'exprime en pattern, AST, diff de fichiers
@@ -106,6 +114,14 @@ latence + tokens, pour cinq checks dont quatre sont des patterns :
 180 s, autorise par défaut).
 
 ### 4.2 `report-triage.yml` — ne réveiller l'agent que sur du NOUVEAU (P1)
+
+> **Livré le 2026-07-25** — les trois points ci-dessous sont implémentés dans
+> `scripts/ci/report-triage-pregate.mjs` (29 tests unitaires), câblé dans
+> `report-triage.yml` avant l'étape agent. Deux ajouts en cours de route : une **soupape**
+> (un signalement déjà trié mais encore `open` au-delà de `TRIAGE_STALE_DAYS` = 14 j réveille
+> l'agent, pour qu'une clôture oubliée ne soit pas skippée en silence), et l'`userId` ajouté
+> à l'export — sans lui la détection de rafale et la section « Abus » que le skill exige
+> depuis toujours étaient littéralement incalculables.
 
 Le gate `count != 0` existe déjà, mais il a un angle mort coûteux : **un signalement `open`
 non actionnable (ou en attente de `dismissed` par l'opérateur) fait re-tourner l'agent
@@ -204,19 +220,26 @@ vérifie l'agent, pas l'inverse — le bon sens de la relation).
 
 ## 6. Plan par lots proposé
 
-| Lot     | Contenu                                                                                                     | Effort | Gain tokens/latence                      | Risque                                                                  |
-| ------- | ----------------------------------------------------------------------------------------------------------- | ------ | ---------------------------------------- | ----------------------------------------------------------------------- |
-| **L1**  | Hook pré-commit déterministe (`precommit-checks.mjs` + tests) ; retirer le hook agent de `policy.json`/sync | S      | **le plus gros** (chaque commit)         | faux négatifs sémantiques → assumés, couverts par PR review             |
-| **L1b** | Règle ESLint `createServerFn` (auth middleware + inputValidator obligatoires)                               | S      | indirect (check partout, plus au commit) | faible ; à calibrer sur les server fns publiques légitimes si il y en a |
-| **L2**  | `report-triage` : gate « nouveaux IDs », dédup par empreinte, pré-screening regex                           | M      | ~majorité des 42 runs/semaine → no-op    | rater un « nouveau » cas — mitigé par le dispatch instantané inchangé   |
-| **L3**  | `regression-guard` : pré-gate fenêtre vide + verify vert + couverture stable                                | S      | ~la moitié des runs (les jours calmes)   | faible (le pré-gate ne peut que skipper un run qui aurait dit « vert ») |
-| **L4**  | `upgrade-guard` : Renovate (ou script) pour patch/minor ; agent en mode réparation de major rouge           | M-L    | le job le plus cher → token-free nominal | migration de process ; à faire en gardant l'automerge existant          |
-| **L5**  | `second-opinion` : filtre chemins + label + debounce (avant toute activation)                               | S      | préventif                                | nul (dormant)                                                           |
+| Lot     | Contenu                                                                                                     | Effort | Gain tokens/latence                      | État                                                                                                                                                           |
+| ------- | ----------------------------------------------------------------------------------------------------------- | ------ | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **L1**  | Hook pré-commit déterministe (`precommit-checks.mjs` + tests) ; retirer le hook agent de `policy.json`/sync | S      | **le plus gros** (chaque commit)         | ✅ livré 2026-07-21 (PR #608) — faux négatifs sémantiques assumés, couverts par la revue de PR                                                                 |
+| **L1b** | Règle ESLint `createServerFn` (auth middleware + inputValidator obligatoires)                               | S      | indirect (check partout, plus au commit) | ✅ livré 2026-07-21 (PRs #600, #601) — zéro faux positif par construction                                                                                      |
+| **L2**  | `report-triage` : gate « nouveaux IDs », dédup par empreinte, pré-screening regex                           | M      | ~majorité des 42 runs/semaine → no-op    | ✅ livré 2026-07-25 (`scripts/ci/report-triage-pregate.mjs`) — le dispatch instantané et la soupape « déjà trié mais vieux » évitent le risque de rater un cas |
+| **L3**  | `regression-guard` : pré-gate fenêtre vide + verify vert + couverture stable                                | S      | ~la moitié des runs (les jours calmes)   | ✅ livré 2026-07-21 (PR #604) — variante « fenêtre vide / docs-only » seule ; la comparaison de couverture n'a pas été retenue (le gate reste le juge)         |
+| **L4**  | `upgrade-guard` : Renovate (ou script) pour patch/minor ; agent en mode réparation de major rouge           | M-L    | le job le plus cher → token-free nominal | ⏳ **reste à faire** — arbitrage Renovate vs script maison ouvert ; migration de process, à mener en gardant l'automerge existant                              |
+| **L5**  | `second-opinion` : filtre chemins + label + debounce (avant toute activation)                               | S      | préventif                                | ✅ livré 2026-07-21 (PR #606) — borné avant toute activation                                                                                                   |
 
-Chaque lot = une PR, gate vert, conforme DoD. L1 et L2 d'abord : fréquence maximale, risque
-minimal. Après L1-L4, la consommation nominale de tokens du dépôt tend vers **zéro hors
-travail réel** (un fix à écrire, un major à migrer, un arbitrage de test) — exactement là où
-l'IA a une valeur que le script n'a pas.
+Chaque lot = une PR, gate vert, conforme DoD. L1 et L2 étaient les prioritaires (fréquence
+maximale, risque minimal) et sont faits. Avec L4, la consommation nominale de tokens du dépôt
+tend vers **zéro hors travail réel** (un fix à écrire, un major à migrer, un arbitrage de
+test) — exactement là où l'IA a une valeur que le script n'a pas.
+
+**Mesure après L2** (§7, la métrique de l'étude) : sur les 5 surfaces inventoriées, il ne
+reste plus un seul run d'agent _nominal_ périodique. Le hook pré-commit ne coûte plus rien à
+chaque commit (L1), `regression-guard` dort les jours calmes (L3), `report-triage` ne se
+réveille plus que sur un signalement jamais trié (L2, les ~42 crons hebdo devenant des no-ops
+verts entre deux vrais signalements), `second-opinion` est borné avant allumage (L5). Seul
+`upgrade-guard` paie encore un agent 2×/semaine pour un lot patch/minor mécanique (L4).
 
 ## 7. Risques et garde-fous
 
