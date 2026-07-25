@@ -28,6 +28,11 @@ export function flattenContentReport(row) {
   return {
     id: row.id,
     createdAt: row.created_at,
+    // Account identity, needed for the two abuse duties the skill already states but the
+    // export could not support: the deterministic burst detection of the triage pre-gate
+    // (scripts/ci/report-triage-pregate.mjs) and the "Abus / récidive" section of the Phase 5
+    // report. It is an opaque auth UUID — never surfaced to a student, never a display name.
+    userId: row.user_id ?? null,
     message: row.message,
     exerciseId: row.exercise_id ?? null,
     exerciseTitle: row.exercises?.title ?? null,
@@ -42,6 +47,7 @@ export function flattenBugReport(row) {
   return {
     id: row.id,
     createdAt: row.created_at,
+    userId: row.user_id ?? null, // see flattenContentReport
     message: row.message,
     page: row.page ?? null,
     status: row.status,
@@ -86,13 +92,13 @@ async function main() {
   const [bugs, contents] = await Promise.all([
     supabase
       .from("bug_reports")
-      .select("id, created_at, message, page, status")
+      .select("id, created_at, user_id, message, page, status")
       .eq("status", "open")
       .order("created_at", { ascending: true }),
     supabase
       .from("content_reports")
       .select(
-        "id, created_at, message, exercise_id, question_id, status, exercises(title, subject_id)",
+        "id, created_at, user_id, message, exercise_id, question_id, status, exercises(title, subject_id)",
       )
       .eq("status", "open")
       .order("created_at", { ascending: true }),

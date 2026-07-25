@@ -2,11 +2,12 @@ import { describe, expect, it } from "vitest";
 import { buildExport, flattenBugReport, flattenContentReport } from "../export-reports.mjs";
 
 describe("flattenBugReport", () => {
-  it("keeps id/message/page/status and maps created_at to createdAt", () => {
+  it("keeps id/user/message/page/status and maps created_at to createdAt", () => {
     expect(
       flattenBugReport({
         id: "b1",
         created_at: "2026-07-01T10:00:00Z",
+        user_id: "u1",
         message: "Le bouton valider ne répond pas",
         page: "/quest/abc",
         status: "open",
@@ -14,14 +15,17 @@ describe("flattenBugReport", () => {
     ).toEqual({
       id: "b1",
       createdAt: "2026-07-01T10:00:00Z",
+      userId: "u1",
       message: "Le bouton valider ne répond pas",
       page: "/quest/abc",
       status: "open",
     });
   });
 
-  it("normalizes a missing page to null", () => {
-    expect(flattenBugReport({ id: "b2", message: "m", status: "open" }).page).toBeNull();
+  it("normalizes a missing page or user to null", () => {
+    const flat = flattenBugReport({ id: "b2", message: "m", status: "open" });
+    expect(flat.page).toBeNull();
+    expect(flat.userId).toBeNull();
   });
 });
 
@@ -31,6 +35,7 @@ describe("flattenContentReport", () => {
       flattenContentReport({
         id: "c1",
         created_at: "2026-07-01T11:00:00Z",
+        user_id: "u2",
         message: "La réponse B semble fausse",
         exercise_id: "ex1",
         question_id: "q1",
@@ -40,6 +45,7 @@ describe("flattenContentReport", () => {
     ).toEqual({
       id: "c1",
       createdAt: "2026-07-01T11:00:00Z",
+      userId: "u2",
       message: "La réponse B semble fausse",
       exerciseId: "ex1",
       exerciseTitle: "Mission ⭐⭐ Thalès",
@@ -51,6 +57,7 @@ describe("flattenContentReport", () => {
 
   it("tolerates a deleted/unjoined exercise (all context fields null)", () => {
     const flat = flattenContentReport({ id: "c2", message: "m", status: "open" });
+    expect(flat.userId).toBeNull();
     expect(flat.exerciseId).toBeNull();
     expect(flat.exerciseTitle).toBeNull();
     expect(flat.subjectId).toBeNull();
