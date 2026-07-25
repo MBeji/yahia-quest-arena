@@ -116,6 +116,24 @@ describe("lintSvg", () => {
   });
 });
 
+describe("SVG déclaré sous préfixe de namespace", () => {
+  // Rencontré sur un fichier réel de Wikimedia Commons (Raptor Silhouette, NIH BioArt) :
+  // il déclare `xmlns:ns0="…/svg"` et écrit `<ns0:svg><ns0:path>`. Inkscape et plusieurs
+  // exportateurs font pareil. Une figure sortie ainsi n'est dessinée par rien, et le
+  // sérialiseur XML conserve fidèlement le préfixe si on ne le retire pas à la structure.
+  const prefixed = '<ns0:svg viewBox="0 0 10 10"><ns0:path d="M0 0 L5 5"/></ns0:svg>';
+
+  it("est refusé par le lint — c'est ce qui rend le dé-préfixage obligatoire", () => {
+    const issues = lintSvg(prefixed).join(" ");
+    expect(issues).toMatch(/disallowed element <ns0:svg>/);
+    expect(issues).toMatch(/disallowed element <ns0:path>/);
+  });
+
+  it("la même figure sans préfixe passe", () => {
+    expect(lintSvg('<svg viewBox="0 0 10 10"><path d="M0 0 L5 5"/></svg>')).toEqual([]);
+  });
+});
+
 describe("NON_RENDERING — les conteneurs qui ne se déplient jamais", () => {
   // Le bug que cette liste empêche : un <clipPath> n'a pas besoin d'être dans <defs>.
   // Déplié au lieu d'être supprimé, son rectangle de découpe — invisible dans l'original —

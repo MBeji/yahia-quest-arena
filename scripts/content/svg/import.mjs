@@ -106,7 +106,7 @@ function normalizeInPage({ source, title, allowed, nonRendering }) {
   const host = document.createElement("div");
   host.style.cssText = "position:absolute;left:-9999px;top:0";
   document.body.appendChild(host);
-  const live = document.importNode(root, true);
+  let live = document.importNode(root, true);
   host.appendChild(live);
 
   const svgNS = "http://www.w3.org/2000/svg";
@@ -307,6 +307,26 @@ function normalizeInPage({ source, title, allowed, nonRendering }) {
     if (bare && g.parentElement) g.replaceWith(...g.childNodes);
     else if (onlyChildGroup) g.children[0].replaceWith(...g.children[0].childNodes);
   }
+
+  // 5c ── Drop namespace PREFIXES. A file may declare SVG under a prefix — `<ns0:svg>`,
+  // `<ns0:path>` — which Inkscape and several exporters do. XMLSerializer would faithfully
+  // keep the prefix, and the figure would ship as `<ns0:path>`: rejected by the contract,
+  // and drawn by nothing. Rebuilding each node in the default SVG namespace fixes it at the
+  // structure, not with a regex over the serialized string.
+  const dePrefix = (el) => {
+    for (const child of [...el.children]) dePrefix(child);
+    if (!el.prefix) return el;
+    const fresh = doc.createElementNS(svgNS, el.localName);
+    for (const a of [...el.attributes]) {
+      if (a.name === "xmlns" || a.name.startsWith("xmlns:")) continue;
+      fresh.setAttribute(a.localName, a.value);
+    }
+    while (el.firstChild) fresh.appendChild(el.firstChild);
+    el.replaceWith(fresh);
+    return fresh;
+  };
+  // The root is replaced too, so the reference has to follow it.
+  live = dePrefix(live);
 
   // 6 ── Root: a viewBox drives the size (the renderer gives the figure its width), so an
   // intrinsic width/height would fight it. See svg-figure.tsx.
