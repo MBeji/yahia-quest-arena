@@ -38,11 +38,12 @@ npm run smoke:shell  # prod-bundle browser smoke: public shell must render crash
 npm test              # vitest run
 npm run lint          # eslint src --max-warnings=0  (zero-warning policy)
 npm run typecheck     # tsc --noEmit (strict)
-npm run verify         # lint + typecheck + test + leak:check       (fast local gate / pre-push)
-npm run ci:verify      # verify + coverage + build:check + audit:deps + harness:check + leak:check
+npm run verify         # lint + typecheck + test + leak:check + db:check-chain + eol:check  (pre-push)
+npm run ci:verify      # verify, en surensemble : coverage + build:check + audit:deps + harness:check
 npm run harness:check                    # harness anti-drift gate (pointers, size, hidden Unicode, model ids)
 npm run leak:check                       # gate anti-fuite : aucun corpus ni skill pédago au tip (étude 24)
 npm run db:check-chain                   # rejeu statique des migrations : une base VIERGE se reconstruit
+npm run eol:check / eol:fix              # CRLF invisibles dans l'arbre (piège Windows, docs/agents/poste-windows.md)
 npm run db:inventory-content             # inventaire des migrations de contenu (provenance)
 ```
 

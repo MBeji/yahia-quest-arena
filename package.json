@@ -50,9 +50,11 @@
     "harness:sync": "node scripts/harness/sync.mjs",
     "harness:check": "node scripts/harness/check.mjs",
     "leak:check": "node scripts/ci/check-content-leak.mjs",
-    "verify": "npm run lint && npm run typecheck && npm run test && npm run leak:check && npm run db:check-chain",
+    "eol:check": "node scripts/ci/check-worktree-eol.mjs",
+    "eol:fix": "node scripts/ci/check-worktree-eol.mjs --fix",
+    "verify": "npm run lint && npm run typecheck && npm run test && npm run leak:check && npm run db:check-chain && npm run eol:check",
     "audit:deps": "npm audit --omit=dev --audit-level=high --registry=https://registry.npmjs.org",
-    "ci:verify": "npm run lint && npm run typecheck && npm run test:coverage && npm run build:check && npm run audit:deps && npm run harness:check && npm run leak:check && npm run db:check-chain",
+    "ci:verify": "npm run lint && npm run typecheck && npm run test:coverage && npm run build:check && npm run audit:deps && npm run harness:check && npm run leak:check && npm run db:check-chain && npm run eol:check",
     "prepare": "husky"
   },
   "lint-staged": {
