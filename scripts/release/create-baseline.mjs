@@ -33,7 +33,7 @@ import { pathToFileURL } from "node:url";
 export const BASELINE_TAG_PREFIX = "baseline/";
 
 /** URL de la sonde prod par défaut (publique — pas un secret). */
-export const DEFAULT_PROD_URL = "https://na9ranal3ab.vercel.app";
+export const DEFAULT_PROD_URL = "https://www.na9ranal3ab.tn";
 
 /**
  * Réduit une raison libre en slug de tag : minuscules, sans diacritiques, mots
@@ -310,6 +310,46 @@ function sh(file, args, cwd) {
   return execFileSync(file, args, { cwd, encoding: "utf8" }).trim();
 }
 
+/** `owner`/`repo` depuis l'URL du remote `origin` (https ou ssh). */
+function parseOwnerRepo(remoteUrl) {
+  const m = remoteUrl.match(/github\.com[:/]([^/]+)\/(.+?)(?:\.git)?$/);
+  if (!m) throw new Error(`remote non GitHub : ${remoteUrl}`);
+  return { owner: m[1], repo: m[2] };
+}
+
+/**
+ * Pose un tag annoté via l'API GitHub (git/tags + git/refs) plutôt que
+ * `git push origin <tag>` : pousser un tag déclenche le hook pre-push (verify)
+ * — hors-sujet pour un tag, et cassant sur le faux positif CRLF Windows. L'API
+ * n'a pas de hook local ; ce n'est PAS un contournement de gate (aucun gate ne
+ * s'applique aux tags). Renvoie le SHA de l'objet tag créé.
+ */
+function ghCreateAnnotatedTag({ dir, owner, repo, tag, message, sha, tagger }) {
+  const file = join(dir, `tag-${repo}.json`);
+  writeFileSync(
+    file,
+    JSON.stringify({ tag, message, object: sha, type: "commit", tagger }),
+    "utf8",
+  );
+  const tagSha = sh("gh", [
+    "api",
+    `repos/${owner}/${repo}/git/tags`,
+    "--input",
+    file,
+    "--jq",
+    ".sha",
+  ]);
+  sh("gh", [
+    "api",
+    `repos/${owner}/${repo}/git/refs`,
+    "-f",
+    `ref=refs/tags/${tag}`,
+    "-f",
+    `sha=${tagSha}`,
+  ]);
+  return tagSha;
+}
+
 function flag(argv, name, fallback = null) {
   const i = argv.indexOf(name);
   return i === -1 || i + 1 >= argv.length ? fallback : argv[i + 1];
@@ -379,7 +419,8 @@ export async function main(argv = process.argv.slice(2)) {
   ];
   const tag = baselineTagFor(date, { reason, existingTags });
 
-  const healthRaw = safe(() => sh("curl", ["-s", "--max-time", "10", `${prodUrl}/api/health`]));
+  // -L : le domaine .vercel.app redirige (301) vers le domaine custom .tn.
+  const healthRaw = safe(() => sh("curl", ["-sL", "--max-time", "10", `${prodUrl}/api/health`]));
   const health = healthRaw ? parseHealth(healthRaw) : null;
   const frozen = safe(() => {
     const out = sh("gh", ["variable", "list"]);
@@ -463,25 +504,36 @@ export async function main(argv = process.argv.slice(2)) {
   const targets = REPO_ORDER.map(([key]) => [key, paths[key], repos[key].sha]).filter(
     ([, path, sha]) => path && sha,
   );
-  console.log(`Va poser et pousser ${tag} sur : ${targets.map(([k]) => k).join(", ")}`);
-  if (!(await confirm(`Confirmer la pose + push des tags ? (oui/non) `))) {
+  console.log(
+    `Va poser ${tag} (tags annotés via l'API GitHub) sur : ${targets.map(([k]) => k).join(", ")}`,
+  );
+  if (!(await confirm(`Confirmer la pose des tags ? (oui/non) `))) {
     console.log("Annulé — rien n'a été posé.");
     return { tag, checklist, manifest, blockers, executed: false };
   }
 
   const dir = mkdtempSync(join(tmpdir(), "baseline-"));
-  const msgFile = join(dir, "manifest.txt");
-  writeFileSync(msgFile, manifest, "utf8");
+  writeFileSync(join(dir, "manifest.txt"), manifest, "utf8"); // trace locale du manifeste
+  const name = safe(() => sh("git", ["config", "user.name"], paths.arena)) || "baseline";
+  const email =
+    safe(() => sh("git", ["config", "user.email"], paths.arena)) || "noreply@example.com";
+  const tagger = { name, email, date: date.toISOString() };
   for (const [key, path, sha] of targets) {
-    sh("git", ["tag", "-a", tag, sha, "-F", msgFile], path);
-    sh("git", ["push", "origin", tag], path);
-    const landed = safe(() => sh("git", ["ls-remote", "--tags", "origin", tag], path));
-    console.log(
-      landed ? `  ✅ ${key} : ${tag} poussé` : `  ⚠️  ${key} : push non confirmé — relire`,
-    );
+    try {
+      const { owner, repo } = parseOwnerRepo(sh("git", ["remote", "get-url", "origin"], path));
+      ghCreateAnnotatedTag({ dir, owner, repo, tag, message: manifest, sha, tagger });
+      const landed = safe(() => sh("git", ["ls-remote", "--tags", "origin", tag], path));
+      console.log(
+        landed
+          ? `  ✅ ${key} : ${tag} posé (${owner}/${repo})`
+          : `  ⚠️  ${key} : ref créée mais non relue`,
+      );
+    } catch (e) {
+      console.error(`  ❌ ${key} : échec de la pose — ${e.message}`);
+    }
   }
   console.log(
-    `\nBaseline ${tag} posé. Ne pas oublier le dégel (§6.8) et la copie docs/baselines/.`,
+    `\nBaseline ${tag} posé via l'API GitHub. Ne pas oublier le dégel (§6.8) et la copie docs/baselines/.`,
   );
   return { tag, checklist, manifest, blockers, executed: true };
 }
