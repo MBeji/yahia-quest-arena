@@ -1,0 +1,35 @@
+-- HOTFIX de la migration précédente (étude 07 lot 5) — le droit qui lui manquait.
+--
+-- LA PANNE. `20260725140000_daily_plan_competency_aware.sql` a fait appeler
+-- `public.competency_mastery_with_decay` par `get_daily_plan`. Or le lot 2
+-- (`20260721100000_competency_mastery.sql`) avait RÉVOQUÉ EXECUTE de ce helper à
+-- `authenticated`, avec son motif écrit noir sur blanc : « Helpers and the maintainer are
+-- server-side only. Lot 4's client-facing RPCs are SECURITY DEFINER and call them as owner, so
+-- no client EXECUTE is needed. » C'était vrai — jusqu'à ce lot. `get_daily_plan` est SECURITY
+-- INVOKER (délibérément, étude 04 : chaque table lue porte déjà sa policy self-scopée), donc
+-- elle appelle le helper AVEC les droits de l'élève, et la prémisse tombe.
+--
+-- Résultat sans ce GRANT : **tout** appel au plan lève `permission denied for function
+-- competency_mastery_with_decay` — y compris le plan d'avant le lot 5, puisque c'est la fonction
+-- elle-même qui devient inappelable. La suite pgTAP l'avait attrapé sur la PR #616 (elle a fait
+-- tomber le pgTAP 35 autant que le 40), mais elle n'est pas un check REQUIS : l'auto-merge a
+-- promu la PR sur les checks requis verts pendant que le correctif s'écrivait.
+--
+-- POURQUOI UNE NOUVELLE MIGRATION, et pas une correction de la précédente : les migrations sont
+-- forward-only et celle de 14:00 est **déjà appliquée** en prod (db-migrate-prod au merge).
+-- Éditer son fichier ne rejouerait rien et ferait diverger le dépôt de l'état réel de la base.
+--
+-- POURQUOI CE DROIT NE VIOLE RIEN. La fonction ne lit AUCUNE table : c'est de l'arithmétique sur
+-- les deux valeurs qu'on lui passe (une maîtrise, une date). Un élève qui l'appellerait à la main
+-- ne pourrait que faire décayer des nombres qu'il fournit lui-même. L'accès à la maîtrise reste
+-- gardé là où il l'était : la RLS self-scopée de `user_competency_mastery` (lot 2). Les deux
+-- autres helpers restent révoqués — `competency_mastery_alpha` et `record_competency_mastery`
+-- sont du côté ÉCRITURE, aucun chemin de lecture n'en a besoin.
+--
+-- Alternative écartée : recopier la formule d'oubli dans `get_daily_plan`. Elle créerait une
+-- seconde définition de « la maîtrise aujourd'hui », divergente le jour où l'une des deux bouge —
+-- ce que le lot 5 cherchait justement à éviter en réutilisant le helper de l'affichage.
+--
+-- Idempotent : un GRANT déjà accordé est un no-op.
+
+GRANT EXECUTE ON FUNCTION public.competency_mastery_with_decay(NUMERIC, TIMESTAMPTZ) TO authenticated;
