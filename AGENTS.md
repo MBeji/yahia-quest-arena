@@ -100,6 +100,14 @@ Les **17 migrations de contenu écrites à la main** restent ici : `content:emit
 reproduit pas et trois d'entre elles seedent aussi des données hors contenu
 (`badges`/`shop_items`, `grades`/`themes`, `parcours`/`profiles`).
 
+**La ROADMAP est au privé, les lots se livrent ici** — donc sa règle « cocher la case dans la
+même PR » n'est plus applicable : aucune PR ne touche les deux dépôts. L'invariant est vérifié
+au lieu d'être promis, par un gate du moteur que la Content CI appelle avec le chemin du corpus :
+`node scripts/ci/check-roadmap-sync.mjs --roadmap ../corpus/FableEtudes/ROADMAP.md`. Il échoue
+si un lot livré sur `main` après la PR de référence déclarée par la roadmap n'y est **cité nulle
+part**. Citer suffit — coché, reporté ou sans objet : le gate a un avis sur la **connaissance**,
+jamais sur le statut.
+
 ⚠️ **Ne re-commite jamais de corpus ici.** `npm run leak:check`
 ([`scripts/ci/check-content-leak.mjs`](./scripts/ci/check-content-leak.mjs)) fait **échouer**
 le gate si `content/**`, `sql/content/**`, un skill `content-*`/`prof-*` ou une migration de
