@@ -77,6 +77,16 @@ npm run test:e2e           # public/*.spec.ts
 > `_env.mjs` and `playwright.config.ts` each refuse the known prod ref as a safety
 > net, and `playwright.config.ts` loads `.env.test` so the spawned dev server also
 > targets the TEST project (not your `.env`).
+>
+> Two consequences worth knowing before a local run:
+>
+> - the **authed / public-anon tiers refuse to start** without an explicit TEST
+>   backend. An unset `SUPABASE_URL` is not "no backend" — it let the dev server
+>   resolve one from the repo-root `.env` (production) through Vite's `loadEnv`
+>   file fallback, so absent is now as fatal as wrong;
+> - the **backendless public tier** (`npm run test:e2e`) runs on the same dummy
+>   pair CI injects, so it can't reach a real backend at all — with or without
+>   `.env.test`.
 
 ### Local — turnkey
 

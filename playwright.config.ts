@@ -2,7 +2,11 @@ import { defineConfig, devices } from "@playwright/test";
 import { existsSync } from "node:fs";
 import dotenv from "dotenv";
 
-import { findProdTarget, prodRefusalMessage } from "./scripts/shared/prod-targets.mjs";
+import {
+  findProdTarget,
+  needsTestBackend,
+  prodRefusalMessage,
+} from "./scripts/shared/prod-targets.mjs";
 
 // --- TEST-project env (local convenience) ------------------------------------
 // Load `.env.test` (repo root) so a LOCAL run — and the dev server we spawn via
@@ -48,6 +52,34 @@ if (prodTarget) {
   );
 }
 
+// …and the other half of the same hole: a backend tier with NO Supabase env at all
+// slipped through, because the check above has nothing to reject when both vars are
+// `undefined`. `npm run dev` then resolved them from the repo-root `.env` —
+// production — through Vite's loadEnv file fallback. ABSENT is as fatal as WRONG.
+const backendRun = needsTestBackend(process.argv);
+if (backendRun && !(process.env.SUPABASE_URL && process.env.VITE_SUPABASE_URL)) {
+  throw new Error(
+    "[e2e] Refusing to run the authenticated / public-anon tier without an explicit TEST backend: " +
+      "SUPABASE_URL and VITE_SUPABASE_URL are unset, so the dev server would resolve them from the " +
+      "repo-root `.env` (potentially PRODUCTION). Create `.env.test` from `.env.test.example` (TEST " +
+      "project only), or run `npm run test:e2e` for the backendless public tier.",
+  );
+}
+
+// The backendless public tier never calls Supabase — pin it to the same dummy pair
+// CI injects (.github/workflows/e2e.yml) so a LOCAL run behaves like CI instead of
+// silently rendering production, and so the spawned dev server has nothing left to
+// resolve from a file either.
+const DUMMY_BACKEND: Record<string, string> = {
+  VITE_SUPABASE_URL: "https://example.supabase.co",
+  VITE_SUPABASE_PUBLISHABLE_KEY: "e2e-dummy-key",
+  SUPABASE_URL: "https://example.supabase.co",
+  SUPABASE_PUBLISHABLE_KEY: "e2e-dummy-key",
+};
+if (!backendRun && !existsSync(".env.test")) {
+  for (const [key, value] of Object.entries(DUMMY_BACKEND)) process.env[key] ??= value;
+}
+
 /**
  * Playwright end-to-end config — runs REAL browser journeys against the app.
  * NOT runnable in the restricted build sandbox (it blocks the browser download).
@@ -73,6 +105,24 @@ if (prodTarget) {
 // The dev server (inline TanStack Start config, see vite.config.ts) serves on 8080 by
 // default, not Vite's 5173. Override with PORT or PLAYWRIGHT_BASE_URL if a run needs to.
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${process.env.PORT ?? 8080}`;
+
+// The backend the spawned dev server must use — handed over EXPLICITLY. Inheriting
+// process.env is not enough: Vite's loadEnv fills any VITE_* var still missing from
+// the repo-root `.env`, and the SSR layer reads `process.env.SUPABASE_URL` directly.
+// Resolved above (TEST project, or the dummy pair for the backendless tier), so
+// nothing is left to resolve from a file. Only configured values are forwarded — an
+// unset optional stays unset, so the app's own "missing env" error still names it.
+const webServerEnv = Object.fromEntries(
+  [
+    "VITE_SUPABASE_URL",
+    "VITE_SUPABASE_PUBLISHABLE_KEY",
+    "SUPABASE_URL",
+    "SUPABASE_PUBLISHABLE_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+  ]
+    .map((key) => [key, process.env[key]] as const)
+    .filter((pair): pair is readonly [string, string] => !!pair[1]),
+);
 
 // Folder-based convention: drop a spec in the right folder and it's picked up
 // automatically — no config change needed.
@@ -144,6 +194,8 @@ export default defineConfig({
     : {
         command: "npm run dev",
         url: baseURL,
+        // Explicit, never file-resolved — see webServerEnv above.
+        env: webServerEnv,
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,
       },
