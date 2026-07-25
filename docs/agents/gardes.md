@@ -86,12 +86,17 @@ Un garde ne doit pas dépenser un agent pour conclure « rien à faire ». Chaqu
 périodique passe d'abord un **script** qui décide s'il y a du travail (étude
 [IA → déterministe](./etude-ia-vs-deterministe.md)) :
 
-| Garde                  | Pré-gate                              | Skippe quand…                                                                                                  |
-| ---------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `regression-guard.yml` | `ci/regression-guard-pregate.mjs`     | la fenêtre de ~26 h est vide ou purement documentaire (L3)                                                     |
-| `report-triage.yml`    | `ci/report-triage-pregate.mjs`        | toute la file `open` a déjà été triée (trailers `Report-Id:` + issues de triage) (L2)                          |
-| `second-opinion.yml`   | `ci/second-opinion-pregate.mjs`       | la PR ne touche aucun chemin à risque (L5, dormant)                                                            |
-| `upgrade-guard.yml`    | `deps/apply-patch-minor.mjs` (detect) | tout le lot patch/minor est joué par le script ; l'agent n'est réveillé que sur une major ou un lot rouge (L4) |
+| Garde                  | Pré-gate                              | Skippe quand…                                                                                                        |
+| ---------------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `regression-guard.yml` | `ci/regression-guard-pregate.mjs`     | la fenêtre de ~26 h est vide ou purement documentaire (L3)                                                           |
+| `report-triage.yml`    | `ci/report-triage-pregate.mjs`        | toute la file `open` a déjà été triée (trailers `Report-Id:` + issues de triage) (L2)                                |
+| `second-opinion.yml`   | `ci/second-opinion-pregate.mjs`       | la PR ne touche aucun chemin à risque (L5, dormant)                                                                  |
+| `upgrade-guard.yml`    | `deps/apply-patch-minor.mjs` (detect) | tout le lot patch/minor est joué par le script ; l'agent n'est réveillé que sur une major ou un lot rouge (L4)       |
+| `content-audit.yml` ¹  | `ci/content-audit-pregate.mjs`        | aucun sujet de `content/` n'a bougé dans la fenêtre ; sinon il livre le périmètre + les locators déjà signalés (LC2) |
+
+¹ Ce garde-là tourne dans le **dépôt privé** (le corpus), mais son pré-gate vit ici : c'est du
+moteur, générique et testé avec les autres. La CI privée checkout ce dépôt et l'appelle
+(volet contenu de l'étude, lot LC2).
 
 Trois invariants communs, à respecter pour tout futur pré-gate :
 
