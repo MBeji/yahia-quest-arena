@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { buildEtat, renderEtat, type EtatInput } from "../etat-campagne.ts";
 import type { GradeAudit, SubjectAudit } from "../program-manifest.ts";
 import type { Affectations, Corpus, FicheEntry, SuiviGrade } from "../transcription-suivi.ts";
+import type { OuvertureLue } from "../parcours-ouverture.ts";
 
 const corpus: Corpus = {
   generatedFrom: "test",
@@ -83,7 +84,12 @@ function audit(overrides: Partial<GradeAudit> = {}): GradeAudit {
   return { grade: "4eme-base", sealed: false, subjects: [sujet()], findingCount: 0, ...overrides };
 }
 
-function input(suivis: SuiviGrade[], audits: GradeAudit[], onlyGrade?: string): EtatInput {
+function input(
+  suivis: SuiviGrade[],
+  audits: GradeAudit[],
+  onlyGrade?: string,
+  ouvertures?: OuvertureLue,
+): EtatInput {
   return {
     corpus,
     affectations,
@@ -91,6 +97,17 @@ function input(suivis: SuiviGrade[], audits: GradeAudit[], onlyGrade?: string): 
     fichesOnDisk: suivis.flatMap((s) => s.fiches.map((f) => `${s.grade}/${f.matiere}`)),
     audits,
     onlyGrade,
+    ouvertures,
+  };
+}
+
+/** Ouverture d'un seul parcours, telle que `readOuvertures` la rendrait. */
+function ouverture(statut: "available" | "coming_soon" | null): OuvertureLue {
+  return {
+    parcours: [
+      { id: "ecole-4eme-base", grade: "4eme-base", statut, migration: "20260101000000_seed.sql" },
+    ],
+    ouvertsSansSeed: [],
   };
 }
 
@@ -363,5 +380,100 @@ describe("prochaineEtape — la méthode appliquée à un couple, jamais un rang
     expect(rendu).not.toContain("[LOT A");
     expect(rendu).not.toContain("[LOT B");
     expect(rendu).toContain("pas de le choisir");
+  });
+});
+
+describe("buildEtat — volet prod : l'ouverture des parcours (R-8)", () => {
+  it("ne dit rien quand les migrations ne sont pas fournies", () => {
+    const etat = buildEtat(input([gradeSuivi([fiche({})])], [audit()]));
+    // `null` ≠ « pas ouvert » : la question n'a pas été posée.
+    expect(etat.grades[0].ouverture).toBeNull();
+    expect(etat.grades[0].constats).toEqual([]);
+    expect(etat.totaux.parcoursANouvrir).toBe(0);
+  });
+
+  it("signale un contenu complet derrière un parcours resté coming_soon", () => {
+    const etat = buildEtat(
+      input([gradeSuivi([fiche({})])], [audit()], undefined, ouverture("coming_soon")),
+    );
+    const grade = etat.grades[0];
+    expect(grade.ouverture).toEqual([
+      expect.objectContaining({ id: "ecole-4eme-base", statut: "coming_soon" }),
+    ]);
+    expect(grade.constats).toHaveLength(1);
+    expect(grade.constats[0]).toContain("R-8 : 4 chapitre(s) complet(s)");
+    expect(grade.constats[0]).toContain("invisible aux élèves");
+    expect(etat.totaux.parcoursANouvrir).toBe(1);
+  });
+
+  it("ne signale rien quand le parcours est ouvert", () => {
+    const etat = buildEtat(
+      input([gradeSuivi([fiche({})])], [audit()], undefined, ouverture("available")),
+    );
+    expect(etat.grades[0].constats).toEqual([]);
+    expect(etat.totaux.parcoursANouvrir).toBe(0);
+  });
+
+  it("attend un chapitre COMPLET : des chapitres tous incomplets n'ouvrent rien", () => {
+    const incomplets = audit({
+      subjects: [
+        sujet({
+          chapterCompleteness: [
+            {
+              slug: "01-a",
+              hasCourse: true,
+              hasSummary: true,
+              hasQuiz: false,
+              exerciseCount: 0,
+              hasBoss: false,
+              complete: false,
+              issues: ["quiz manquant"],
+            },
+            {
+              slug: "02-b",
+              hasCourse: true,
+              hasSummary: true,
+              hasQuiz: false,
+              exerciseCount: 0,
+              hasBoss: false,
+              complete: false,
+              issues: ["quiz manquant"],
+            },
+            {
+              slug: "03-c",
+              hasCourse: true,
+              hasSummary: true,
+              hasQuiz: false,
+              exerciseCount: 0,
+              hasBoss: false,
+              complete: false,
+              issues: ["quiz manquant"],
+            },
+            {
+              slug: "04-d",
+              hasCourse: true,
+              hasSummary: true,
+              hasQuiz: false,
+              exerciseCount: 0,
+              hasBoss: false,
+              complete: false,
+              issues: ["quiz manquant"],
+            },
+          ],
+        }),
+      ],
+    });
+    const etat = buildEtat(
+      input([gradeSuivi([fiche({})])], [incomplets], undefined, ouverture("coming_soon")),
+    );
+    expect(etat.grades[0].constats).toEqual([]);
+  });
+
+  it("dit « statut inconnu » plutôt que de trancher, et le rend visible", () => {
+    const etat = buildEtat(input([gradeSuivi([fiche({})])], [audit()], undefined, ouverture(null)));
+    expect(etat.grades[0].constats[0]).toContain("statut illisible");
+    const rendu = renderEtat(etat);
+    expect(rendu).toContain("prod — ecole-4eme-base : statut inconnu");
+    expect(rendu).toContain("1 parcours à ouvrir");
   });
 });
