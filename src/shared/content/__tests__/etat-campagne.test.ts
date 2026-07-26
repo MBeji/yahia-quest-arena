@@ -248,3 +248,120 @@ describe("renderEtat", () => {
     expect(rendu).toContain("sujet sans fiche déclarée — math-4eme");
   });
 });
+
+describe("prochaineEtape — la méthode appliquée à un couple, jamais un rang", () => {
+  const etapeDe = (suivis: SuiviGrade[], audits: GradeAudit[], i = 0) =>
+    buildEtat(input(suivis, audits)).grades[0].couples[i].prochaineEtape;
+
+  it("bloque un couple réservé par une autre session", () => {
+    const e = etapeDe(
+      [gradeSuivi([fiche({ statut: "en-cours", profondeur: "first-pass" })])],
+      [audit()],
+    );
+    expect(e).toMatchObject({ lot: null, bloquant: true });
+    expect(e.action).toContain("réservé");
+  });
+
+  it("renvoie en A3 tant que la barre R-5 n'est pas franchie — et le marque bloquant", () => {
+    const e = etapeDe(
+      [
+        gradeSuivi([
+          fiche({
+            statut: "partielle",
+            profondeur: "mixte",
+            sources: [
+              {
+                code: "502304",
+                tomes: ["P00"],
+                role: "enseignant",
+                pagesTotal: 100,
+                pagesLues: [[1, 40]],
+              },
+            ],
+          }),
+        ]),
+      ],
+      [audit()],
+    );
+    expect(e).toMatchObject({ lot: "A", etape: "A3", bloquant: true });
+    expect(e.motif).toContain("40 %");
+  });
+
+  it("demande le lien avant de statuer sur le contenu", () => {
+    const e = etapeDe([gradeSuivi([fiche({ sujets: [] })])], [audit()]);
+    expect(e).toMatchObject({ lot: "A", etape: "A5.4", bloquant: false });
+  });
+
+  it("envoie en B1 quand la fiche est exploitable et le sujet absent", () => {
+    const e = etapeDe(
+      [gradeSuivi([fiche({})])],
+      [audit({ subjects: [sujet({ present: false })] })],
+    );
+    expect(e).toMatchObject({ lot: "B", etape: "B1" });
+    expect(e.action).toContain("math-4eme");
+  });
+
+  it("envoie en B2 sur les chapitres manquants, puis sur les incomplets", () => {
+    const manquants = etapeDe(
+      [gradeSuivi([fiche({})])],
+      [audit({ subjects: [sujet({ presentExpected: 2, missingChapters: ["03-a", "04-b"] })] })],
+    );
+    expect(manquants).toMatchObject({ lot: "B", etape: "B2" });
+    expect(manquants.action).toContain("03-a");
+
+    const incomplets = etapeDe(
+      [gradeSuivi([fiche({})])],
+      [
+        audit({
+          subjects: [
+            sujet({
+              chapterCompleteness: [
+                {
+                  slug: "01-x",
+                  hasCourse: true,
+                  hasSummary: false,
+                  hasQuiz: true,
+                  exerciseCount: 1,
+                  hasBoss: false,
+                  complete: false,
+                  issues: ["résumé manquant"],
+                },
+              ],
+            }),
+          ],
+        }),
+      ],
+    );
+    expect(incomplets.action).toContain("01-x");
+  });
+
+  it("ne prescrit rien quand la fiche est exploitable et le contenu complet", () => {
+    const e = etapeDe([gradeSuivi([fiche({})])], [audit()]);
+    expect(e).toMatchObject({ lot: null, etape: null, bloquant: false });
+    expect(e.action).toContain("rien à faire");
+  });
+
+  it("rattache un sujet orphelin selon qu'il a du contenu ou non", () => {
+    // Sujet présent dans content/ mais qu'aucune fiche ne déclare : le scope
+    // existe quelque part, il n'est pas tracé — on rattache (A5.4).
+    const avecContenu = buildEtat(input([gradeSuivi([])], [audit()]));
+    expect(avecContenu.grades[0].couples[0].prochaineEtape).toMatchObject({
+      lot: "A",
+      etape: "A5.4",
+    });
+    // Ni fiche ni contenu : il faut transcrire la source (A1).
+    const vierge = buildEtat(
+      input([gradeSuivi([])], [audit({ subjects: [sujet({ present: false })] })]),
+    );
+    expect(vierge.grades[0].couples[0].prochaineEtape).toMatchObject({ lot: "A", etape: "A1" });
+  });
+
+  it("n'apparaît pas dans le rendu quand il n'y a rien à faire", () => {
+    const rendu = renderEtat(buildEtat(input([gradeSuivi([fiche({})])], [audit()])));
+    // L'en-tête cite « [LOT …] » pour expliquer la notation : c'est une étape
+    // RÉELLE (A/B) qu'on ne doit pas voir.
+    expect(rendu).not.toContain("[LOT A");
+    expect(rendu).not.toContain("[LOT B");
+    expect(rendu).toContain("pas de le choisir");
+  });
+});
