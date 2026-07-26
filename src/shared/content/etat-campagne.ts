@@ -61,12 +61,36 @@ export interface EtatFiche {
   generationAutorisee: boolean;
 }
 
+/**
+ * What the method prescribes for ONE couple, if a human chooses to work it.
+ *
+ * This is a RULE APPLICATION, not a choice: the method already states, per
+ * fiche status and content state, which lot and which step come next (LOT A
+ * from A3 when the fiche has holes, LOT B from B1 when the fiche is usable and
+ * the subject is absent, …). Deriving it is deterministic; deciding WHICH
+ * couple to work is not, and stays with the human (see the module header).
+ */
+export interface EtapeMethode {
+  /** `A` = la fiche, `B` = le contenu, `null` = rien à faire ou couple bloqué. */
+  lot: "A" | "B" | null;
+  /** Ancre dans la méthode : `A1`, `A3`, `A5.4`, `B1`, `B2`… */
+  etape: string | null;
+  /** Ce que la méthode prescrit, en une phrase. */
+  action: string;
+  /** Le fait mesuré qui déclenche la règle. */
+  motif: string;
+  /** Le couple ne doit pas être lancé tel quel (réservé, ou barre R-5 non franchie). */
+  bloquant: boolean;
+}
+
 export interface EtatCouple {
   grade: string;
   /** Fiche basename; null for a manifest subject no fiche declares. */
   matiere: string | null;
   fiche: EtatFiche | null;
   sujets: EtatSujet[];
+  /** Ce que la méthode prescrit POUR CE COUPLE — jamais un rang, jamais un choix. */
+  prochaineEtape: EtapeMethode;
   /**
    * The fiche declares which subjects it feeds. Structured rather than a
    * sentence in `constats`: it is the most frequent state today, and a consumer
@@ -109,6 +133,116 @@ export interface EtatInput extends SuiviCheckInput {
    * works look unattached that another grade's fiche already claims.
    */
   onlyGrade?: string;
+}
+
+/**
+ * The method's own decision table, applied to one couple. First match wins.
+ * Ordered by what BLOCKS first: a reserved couple, then the R-5 bar, then the
+ * missing link (without it nothing can be said about the content), then the
+ * content itself. No priority is expressed — this answers "if you pick this
+ * couple, what does the method say to do?", never "pick this couple".
+ */
+function prochaineEtapeOf(
+  fiche: EtatFiche | null,
+  sujets: EtatSujet[],
+  lienDeclare: boolean,
+): EtapeMethode {
+  if (!fiche) {
+    const present = sujets.some((s) => s.present);
+    return {
+      lot: "A",
+      etape: present ? "A5.4" : "A1",
+      action: present
+        ? "rattacher ce sujet à la fiche qui porte son scope (`sujets`), ou transcrire la source"
+        : "transcrire la source du couple — aucune fiche ne porte ce sujet du programme",
+      motif: present
+        ? "sujet présent dans content/ mais aucune fiche ne le déclare : scope non tracé"
+        : "sujet attendu par le manifeste, ni fiche ni contenu",
+      bloquant: false,
+    };
+  }
+
+  if (fiche.statut === "en-cours") {
+    return {
+      lot: null,
+      etape: null,
+      action: "ne pas lancer — le couple est réservé par une session en cours",
+      motif: 'statut "en-cours" au registre',
+      bloquant: true,
+    };
+  }
+
+  if (!fiche.generationAutorisee) {
+    const couverture =
+      fiche.couverturePct === null ? "couverture inconnue" : `${fiche.couverturePct} %`;
+    return {
+      lot: "A",
+      etape: "A3",
+      action: "compléter la fiche (lecture des plages manquantes puis profondeur R-5)",
+      motif: `${fiche.statut}/${fiche.profondeur}, ${couverture}${
+        fiche.trous.length > 0 ? `, ${fiche.trous.length} source(s) à trous` : ""
+      } — la génération reste interdite`,
+      bloquant: true,
+    };
+  }
+
+  if (!lienDeclare) {
+    return {
+      lot: "A",
+      etape: "A5.4",
+      action: "déclarer `sujets` dans le registre avant de statuer sur le contenu",
+      motif: "fiche exploitable mais lien fiche → contenu non déclaré",
+      bloquant: false,
+    };
+  }
+
+  const absents = sujets.filter((s) => !s.present);
+  if (sujets.length > 0 && absents.length === sujets.length) {
+    return {
+      lot: "B",
+      etape: "B1",
+      action: `générer le contenu depuis la fiche (profil sans-source) : ${absents
+        .map((s) => s.id)
+        .join(", ")}`,
+      motif: "fiche exploitable, aucun sujet correspondant sous content/",
+      bloquant: false,
+    };
+  }
+
+  const manquants = sujets.flatMap((s) => s.chapitresManquants);
+  if (manquants.length > 0) {
+    const apercu = manquants.slice(0, 3).join(", ");
+    return {
+      lot: "B",
+      etape: "B2",
+      action: `générer les chapitres manquants par tranches (${manquants.length}) : ${apercu}${
+        manquants.length > 3 ? ", …" : ""
+      }`,
+      motif: "sujet présent, chapitrage du manifeste incomplet",
+      bloquant: false,
+    };
+  }
+
+  const incomplets = sujets.flatMap((s) => s.chapitresIncomplets);
+  if (incomplets.length > 0) {
+    return {
+      lot: "B",
+      etape: "B2",
+      action: `compléter les chapitres incomplets (${incomplets.length}) : ${incomplets
+        .slice(0, 3)
+        .join(", ")}${incomplets.length > 3 ? ", …" : ""}`,
+      motif: "chapitres présents mais sans cours, résumé, quiz ou mission",
+      bloquant: false,
+    };
+  }
+
+  return {
+    lot: null,
+    etape: null,
+    action: "rien à faire sur ce couple",
+    motif: "fiche exploitable et contenu complet vis-à-vis du manifeste",
+    bloquant: false,
+  };
 }
 
 function couvertureOf(entry: FicheEntry): number | null {
@@ -208,11 +342,13 @@ export function buildEtat(input: EtatInput): EtatDesLieux {
         );
       }
 
+      const etatFiche = toEtatFiche(entry);
       couples.push({
         grade,
         matiere: entry.matiere,
-        fiche: toEtatFiche(entry),
+        fiche: etatFiche,
         sujets,
+        prochaineEtape: prochaineEtapeOf(etatFiche, sujets, lienDeclare),
         lienDeclare,
         constats,
       });
@@ -220,11 +356,13 @@ export function buildEtat(input: EtatInput): EtatDesLieux {
 
     for (const subject of audit?.subjects ?? []) {
       if (declared.has(subject.id)) continue;
+      const sujets = [toEtatSujet(subject)];
       couples.push({
         grade,
         matiere: null,
         fiche: null,
-        sujets: [toEtatSujet(subject)],
+        sujets,
+        prochaineEtape: prochaineEtapeOf(null, sujets, true),
         lienDeclare: true,
         constats: [],
       });
@@ -280,12 +418,22 @@ function renderSujet(sujet: EtatSujet): string {
   return `${sujet.present ? sujet.id : `${sujet.id} — ABSENT de content/`} : ${bits.join(" · ")}`;
 }
 
+/** `null` when the method prescribes nothing — silence is the readable form. */
+function renderEtape(etape: EtapeMethode): string | null {
+  if (etape.bloquant) return `⛔ ${etape.action} — ${etape.motif}`;
+  if (!etape.lot) return null;
+  return `→ [LOT ${etape.lot} ${etape.etape}] ${etape.action}`;
+}
+
 /** Human-readable report. Deterministic: no date, no ordering by priority. */
 export function renderEtat(etat: EtatDesLieux): string {
   const lines: string[] = [];
   lines.push("État des lieux — registre de transcription × programme codifié × contenu.");
   lines.push(
     "Aucune priorité n'est calculée ici : le choix de ce qu'on lance reste humain (méthode, Phase 0.4).",
+  );
+  lines.push(
+    "Le « → [LOT …] » d'un couple dit ce que la méthode prescrit SI on le choisit — pas de le choisir.",
   );
 
   for (const grade of etat.grades) {
@@ -296,17 +444,13 @@ export function renderEtat(etat: EtatDesLieux): string {
     lines.push(`━━ ${grade.grade} — ${manifeste} ━━`);
     if (grade.couples.length === 0) lines.push("  (aucune fiche, aucun sujet attendu)");
 
-    // Les deux états les plus fréquents (lien non déclaré, sujet sans fiche) se
-    // regroupent en fin de niveau : répétés ligne à ligne, ils noieraient les
-    // faits propres à chaque fiche.
+    // Le « lien non déclaré », de loin l'état le plus fréquent aujourd'hui, se
+    // regroupe en fin de niveau : répété ligne à ligne, il noierait les faits
+    // propres à chaque fiche. Les sujets sans fiche passent après les fiches.
     const sansLien: string[] = [];
-    const orphelins: EtatSujet[] = [];
 
     for (const couple of grade.couples) {
-      if (!couple.fiche) {
-        orphelins.push(...couple.sujets);
-        continue;
-      }
+      if (!couple.fiche) continue;
       const f = couple.fiche;
       const bits = [`${f.statut} / ${f.profondeur}`];
       bits.push(f.couverturePct === null ? "couverture ?" : `couverture ${f.couverturePct} %`);
@@ -316,11 +460,19 @@ export function renderEtat(etat: EtatDesLieux): string {
       lines.push(`  fiche ${couple.matiere} — ${bits.join(" · ")}`);
       for (const sujet of couple.sujets) lines.push(`      └ ${renderSujet(sujet)}`);
       for (const constat of couple.constats) lines.push(`      ! ${constat}`);
+      const etape = renderEtape(couple.prochaineEtape);
+      if (etape) lines.push(`      ${etape}`);
       if (!couple.lienDeclare && couple.matiere) sansLien.push(couple.matiere);
     }
 
-    for (const sujet of orphelins) {
-      lines.push(`  sujet sans fiche déclarée — ${renderSujet(sujet)}`);
+    for (const couple of grade.couples) {
+      if (couple.fiche) continue;
+      for (const sujet of couple.sujets) {
+        const etape = renderEtape(couple.prochaineEtape);
+        lines.push(
+          `  sujet sans fiche déclarée — ${renderSujet(sujet)}${etape ? `  ${etape}` : ""}`,
+        );
+      }
     }
     if (sansLien.length > 0) {
       lines.push(`  ! lien fiche → sujets non déclaré (\`sujets: []\`) : ${sansLien.join(", ")}`);
