@@ -8,10 +8,12 @@
  *   --json                 Sortie machine (l'objet `EtatDesLieux`), pour un autre outil.
  *   --manifest-dir <path>  Racine des manifestes (défaut : l'arbre programmes-officiels).
  *   --content-dir <path>   Racine du contenu (défaut : content).
+ *   --migrations-dir <path> Migrations à rejouer pour l'ouverture (défaut : supabase/migrations).
  *
- * Ce que la commande fait : joindre les deux moitiés de la chaîne — le registre
- * de transcription (où en est la FICHE) et l'audit de programme (où en est le
- * CONTENU) — et n'en rapporter que des faits vérifiés.
+ * Ce que la commande fait : joindre les trois volets de la chaîne — le registre
+ * de transcription (où en est la FICHE), l'audit de programme (où en est le
+ * CONTENU) et l'ouverture des parcours rejouée depuis les migrations (est-ce
+ * VISIBLE des élèves) — et n'en rapporter que des faits vérifiés.
  *
  * Ce qu'elle ne fait PAS, par décision (2026-07-26) : classer, recommander,
  * désigner « le prochain couple ». La priorité de campagne reste une décision
@@ -22,7 +24,8 @@
  * manifeste invalide) — jamais parce qu'un constat déplaît : ce n'est pas un
  * gate, c'est un rapport. Le gate, c'est `programme:check`.
  */
-import { resolve } from "node:path";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { join, resolve } from "node:path";
 import { argv, cwd, exit, stderr, stdout } from "node:process";
 import { auditGrade } from "../../src/shared/content/program-manifest.ts";
 import { buildEtat, renderEtat } from "../../src/shared/content/etat-campagne.ts";
@@ -31,11 +34,25 @@ import {
   expandSubjects,
   loadAllSubjects,
 } from "../../src/shared/content/loader.ts";
+import { readOuvertures, type OuvertureLue } from "../../src/shared/content/parcours-ouverture.ts";
 import { MANIFEST_DIR, loadManifests, loadRegistryInput } from "./programmes-io.ts";
 
 function getFlag(name: string): string | undefined {
   const i = argv.indexOf(`--${name}`);
   return i !== -1 ? argv[i + 1] : undefined;
+}
+
+/**
+ * Volet prod : l'ouverture des parcours, rejouée depuis les migrations du
+ * moteur. Répertoire absent (checkout partiel) ⇒ `undefined`, et le rapport dit
+ * « non renseigné » au lieu d'affirmer « pas ouvert ».
+ */
+function loadOuvertures(dir: string): OuvertureLue | undefined {
+  if (!existsSync(dir)) return undefined;
+  const files = readdirSync(dir)
+    .filter((name) => name.endsWith(".sql"))
+    .map((name) => ({ name, sql: readFileSync(join(dir, name), "utf8") }));
+  return files.length > 0 ? readOuvertures(files) : undefined;
 }
 
 function main(): void {
@@ -51,7 +68,11 @@ function main(): void {
   const subjects = expandSubjects(loadAllSubjects(contentDir));
   const audits = manifests.map(({ manifest }) => auditGrade(manifest, subjects));
 
-  const etat = buildEtat({ ...registry, audits, onlyGrade });
+  const ouvertures = loadOuvertures(
+    resolve(cwd(), getFlag("migrations-dir") ?? "supabase/migrations"),
+  );
+
+  const etat = buildEtat({ ...registry, audits, onlyGrade, ouvertures });
 
   if (argv.includes("--json")) {
     stdout.write(`${JSON.stringify(etat, null, 2)}\n`);

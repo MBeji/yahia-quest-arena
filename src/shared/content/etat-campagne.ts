@@ -22,6 +22,11 @@
  */
 import type { GradeAudit, SubjectAudit } from "./program-manifest.ts";
 import {
+  parcoursDuGrade,
+  type OuvertureLue,
+  type ParcoursOuverture,
+} from "./parcours-ouverture.ts";
+import {
   GRADE_ORDER,
   coveragePct,
   deriveBacklog,
@@ -108,6 +113,14 @@ export interface EtatGrade {
   manifeste: boolean;
   scelle: boolean | null;
   couples: EtatCouple[];
+  /**
+   * Ouverture en prod des parcours du niveau, rejouée depuis les migrations
+   * (`parcours-ouverture.ts`). `null` = migrations non fournies à `buildEtat`,
+   * donc question non posée — jamais « pas ouvert ».
+   */
+  ouverture: ParcoursOuverture[] | null;
+  /** Faits vérifiés au niveau du GRADE (l'ouverture n'est pas par matière). */
+  constats: string[];
 }
 
 export interface EtatDesLieux {
@@ -121,6 +134,8 @@ export interface EtatDesLieux {
     sujetsPresents: number;
     fichesSansLien: number;
     oeuvresARattacher: number;
+    /** Parcours à ouvrir : contenu complet derrière un parcours non `available`. */
+    parcoursANouvrir: number;
   };
 }
 
@@ -133,6 +148,49 @@ export interface EtatInput extends SuiviCheckInput {
    * works look unattached that another grade's fiche already claims.
    */
   onlyGrade?: string;
+  /**
+   * Ouverture des parcours rejouée depuis `supabase/migrations`. Optionnel : le
+   * rapport reste valable sans (le volet ouverture est alors `null`, pas faux).
+   */
+  ouvertures?: OuvertureLue;
+}
+
+/**
+ * R-8 (étude 16) : le premier lot de chapitres complet ouvre la classe. Le fait
+ * mesurable ici est donc « au moins un chapitre complet existe » — un chapitre
+ * présent mais incomplet ne déclenche pas le seuil.
+ */
+function chapitresComplets(couples: EtatCouple[]): number {
+  let total = 0;
+  for (const couple of couples) {
+    for (const sujet of couple.sujets) {
+      if (!sujet.present) continue;
+      total += Math.max(0, sujet.chapitresPresents - sujet.chapitresIncomplets.length);
+    }
+  }
+  return total;
+}
+
+/**
+ * Le seul constat que rien d'autre ne porte : du contenu publiable derrière un
+ * parcours qui n'est pas `available`. Ni les gates de contenu ni la Content CI
+ * ne le voient — c'est un fait sur les migrations du moteur, pas sur le corpus.
+ */
+function constatsOuverture(parcours: ParcoursOuverture[], complets: number): string[] {
+  if (complets === 0) return [];
+  const out: string[] = [];
+  for (const p of parcours) {
+    if (p.statut === "available") continue;
+    const etat =
+      p.statut === "coming_soon"
+        ? `resté \`coming_soon\` (${p.migration})`
+        : `de statut illisible dans les migrations (${p.migration})`;
+    out.push(
+      `R-8 : ${complets} chapitre(s) complet(s) mais parcours \`${p.id}\` ${etat} — ` +
+        "la classe est invisible aux élèves jusqu'à la migration d'ouverture (PR du dépôt moteur)",
+    );
+  }
+  return out;
 }
 
 /**
@@ -287,7 +345,7 @@ function toEtatSujet(audit: SubjectAudit): EtatSujet {
 }
 
 export function buildEtat(input: EtatInput): EtatDesLieux {
-  const { corpus, affectations, suivis, audits, onlyGrade } = input;
+  const { corpus, affectations, suivis, audits, onlyGrade, ouvertures } = input;
   const auditByGrade = new Map(audits.map((a) => [a.grade, a]));
   const suiviByGrade = new Map(suivis.map((s) => [s.grade, s]));
 
@@ -368,7 +426,15 @@ export function buildEtat(input: EtatInput): EtatDesLieux {
       });
     }
 
-    return { grade, manifeste: audit !== undefined, scelle: audit?.sealed ?? null, couples };
+    const ouverture = ouvertures ? parcoursDuGrade(ouvertures, grade) : null;
+    return {
+      grade,
+      manifeste: audit !== undefined,
+      scelle: audit?.sealed ?? null,
+      couples,
+      ouverture,
+      constats: ouverture ? constatsOuverture(ouverture, chapitresComplets(couples)) : [],
+    };
   });
 
   const backlog = deriveBacklog(corpus, affectations, suivis);
@@ -400,6 +466,7 @@ export function buildEtat(input: EtatInput): EtatDesLieux {
       sujetsPresents: allSubjects.filter((s) => s.present).length,
       fichesSansLien,
       oeuvresARattacher,
+      parcoursANouvrir: grades.reduce((n, g) => n + g.constats.length, 0),
     },
   };
 }
@@ -477,6 +544,11 @@ export function renderEtat(etat: EtatDesLieux): string {
     if (sansLien.length > 0) {
       lines.push(`  ! lien fiche → sujets non déclaré (\`sujets: []\`) : ${sansLien.join(", ")}`);
     }
+    if (grade.ouverture && grade.ouverture.length > 0) {
+      const parts = grade.ouverture.map((p) => `${p.id} : ${p.statut ?? "statut inconnu"}`);
+      lines.push(`  prod — ${parts.join(" · ")}`);
+    }
+    for (const constat of grade.constats) lines.push(`  ! ${constat}`);
   }
 
   if (etat.aRattacher.length > 0) {
@@ -494,7 +566,8 @@ export function renderEtat(etat: EtatDesLieux): string {
     `Totaux : ${t.fiches} fiche(s) dont ${t.fichesGenerables} exploitable(s) · ` +
       `${t.sujetsPresents}/${t.sujetsAttendus} sujet(s) du programme présents · ` +
       `${t.fichesSansLien} fiche(s) sans lien déclaré · ` +
-      `${t.oeuvresARattacher} œuvre(s) à rattacher.`,
+      `${t.oeuvresARattacher} œuvre(s) à rattacher · ` +
+      `${t.parcoursANouvrir} parcours à ouvrir.`,
   );
   return `${lines.join("\n")}\n`;
 }
