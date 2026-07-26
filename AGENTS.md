@@ -45,7 +45,7 @@ npm run leak:check                       # gate anti-fuite : aucun corpus ni ski
 npm run db:check-chain                   # rejeu statique des migrations : une base VIERGE se reconstruit
 npm run eol:check / eol:fix              # CRLF invisibles dans l'arbre (piège Windows, docs/agents/poste-windows.md)
 npm run db:inventory-content             # inventaire des migrations de contenu (provenance)
-npm run programme:etat                   # état des lieux campagne : fiche × programme × contenu (rapport, pas un gate)
+npm run programme:etat                   # état des lieux campagne : fiche × programme × contenu × ouverture prod (rapport, pas un gate)
 ```
 
 ⚠️ Les commandes `content:*` / `programme:*` existent toujours (le **moteur** est ici) mais

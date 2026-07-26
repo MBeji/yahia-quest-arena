@@ -398,7 +398,17 @@ chaque couple niveau × matière, l'état de la **fiche** (statut, profondeur, c
 plages non lues, verdict R-7, génération autorisée ou non) et l'état du **contenu** (sujet
 présent, chapitres couverts/attendus, incomplets), plus le corpus principal encore non rattaché.
 
-Deux propriétés voulues :
+**Et un troisième volet, l'ouverture en prod** — parce que du contenu appliqué en base reste
+**invisible aux élèves** tant que le parcours du niveau est `coming_soon` : la bascule est une
+migration `UPDATE public.parcours SET status = 'available'` (seuil R-8, étude 16), un geste séparé
+du contenu que ni les gates de contenu ni la Content CI ne réclament. Le rapport le mesure en
+**rejouant statiquement** `supabase/migrations` (`src/shared/content/parcours-ouverture.ts`) : seeds
+puis bascules, dans l'ordre des versions, dernier statut gagnant — même principe que
+`db:check-chain`, et pour la même raison qu'il n'y a pas d'accès prod local. Un niveau qui a au moins
+un chapitre **complet** derrière un parcours non `available` ressort en constat, et le total
+`parcours à ouvrir` le compte.
+
+Trois propriétés voulues :
 
 - **Le lien fiche → contenu est déclaré, jamais deviné** (`sujets` d'une entrée de suivi). Les
   noms ne concordent pas — `mathematiques` alimente `math-1ere-sec`, `chimie` n'alimente aucun
@@ -407,6 +417,10 @@ Deux propriétés voulues :
 - **Aucune priorité n'est calculée.** Décider quoi lancer reste humain (méthode, Phase 0.4) ;
   l'outil fournit les faits, pas le classement. C'est une contrainte de conception, pas un
   manque : un tri par priorité contredirait la décision du 2026-07-26.
+- **L'inconnu se dit inconnu.** Migrations non fournies ⇒ le volet ouverture vaut `null` (question
+  non posée), pas « pas ouvert » ; un statut illisible ou un parcours basculé qu'aucun seed ne crée
+  se rapportent tels quels. Un faux « pas ouvert » ferait écrire une migration inutile, un faux
+  « ouvert » laisserait la classe invisible.
 
 Ce n'est pas un gate : il ne sort en erreur que si l'état n'a pas pu être établi (registre
 absent, manifeste invalide) — jamais parce qu'un constat déplaît.
