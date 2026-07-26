@@ -385,6 +385,32 @@ c'est : `lint` + `typecheck` + `test:coverage` + `build:check` + `audit:deps` + 
 > dépréciées : c'est précisément ce que la CI privée invoque depuis ce checkout. Simplement,
 > lancées ici **sans corpus**, elles n'ont rien à traiter.
 
+### `programme:etat` — l'état des lieux (un rapport, pas une porte)
+
+```bash
+npm run programme:etat -- --grade 1ere-sec     # un niveau ; --json pour un autre outil
+```
+
+Les portes ci-dessus disent **oui ou non**. Avant d'ouvrir une campagne, la question est autre :
+_où en est-on ?_ — et la réponse était jusqu'ici reconstituée à la main, en croisant `_INDEX.md`,
+`CATALOGUE.md` et l'audit de programme. `programme:etat` la **calcule et la vérifie** : pour
+chaque couple niveau × matière, l'état de la **fiche** (statut, profondeur, couverture calculée,
+plages non lues, verdict R-7, génération autorisée ou non) et l'état du **contenu** (sujet
+présent, chapitres couverts/attendus, incomplets), plus le corpus principal encore non rattaché.
+
+Deux propriétés voulues :
+
+- **Le lien fiche → contenu est déclaré, jamais deviné** (`sujets` d'une entrée de suivi). Les
+  noms ne concordent pas — `mathematiques` alimente `math-1ere-sec`, `chimie` n'alimente aucun
+  sujet propre — donc une jointure heuristique se tromperait une fois sur deux. Non déclaré, le
+  rapport le dit ; déclaré, `programme:check` vérifie que l'id existe au manifeste du niveau.
+- **Aucune priorité n'est calculée.** Décider quoi lancer reste humain (méthode, Phase 0.4) ;
+  l'outil fournit les faits, pas le classement. C'est une contrainte de conception, pas un
+  manque : un tri par priorité contredirait la décision du 2026-07-26.
+
+Ce n'est pas un gate : il ne sort en erreur que si l'état n'a pas pu être établi (registre
+absent, manifeste invalide) — jamais parce qu'un constat déplaît.
+
 ---
 
 ## 10. Le gate anti-fuite (`leak:check`)
