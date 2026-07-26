@@ -21,12 +21,10 @@
  *   --manifest-dir <path>  Manifests root (default: the skill references path).
  *   --content-dir <path>   Content root (default: content).
  */
-import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { basename, join, resolve } from "node:path";
+import { resolve } from "node:path";
 import { argv, cwd, exit, stderr, stdout } from "node:process";
 import {
   auditGrade,
-  programManifestSchema,
   type GradeAudit,
   type SubjectAudit,
 } from "../../src/shared/content/program-manifest.ts";
@@ -35,6 +33,7 @@ import {
   expandSubjects,
   loadAllSubjects,
 } from "../../src/shared/content/loader.ts";
+import { loadManifests } from "./programmes-io.ts";
 
 const DEFAULT_MANIFEST_DIR =
   ".claude/skills/content-ecole-tn/references/programmes-officiels/manifest";
@@ -44,33 +43,6 @@ function getFlag(name: string): string | undefined {
   return i !== -1 ? argv[i + 1] : undefined;
 }
 const hasFlag = (name: string): boolean => argv.includes(`--${name}`);
-
-function loadManifests(dir: string, onlyGrade?: string) {
-  if (!existsSync(dir)) {
-    throw new ContentValidationError(`Manifest directory does not exist: ${dir}`);
-  }
-  return readdirSync(dir)
-    .filter((f) => f.endsWith(".json"))
-    .sort()
-    .map((f) => {
-      const filePath = join(dir, f);
-      let raw: unknown;
-      try {
-        raw = JSON.parse(readFileSync(filePath, "utf8"));
-      } catch (err) {
-        throw new ContentValidationError(`Invalid JSON in ${filePath}: ${(err as Error).message}`);
-      }
-      const parsed = programManifestSchema.safeParse(raw);
-      if (!parsed.success) {
-        const issues = parsed.error.issues
-          .map((i) => `  • ${i.path.join(".") || "<root>"}: ${i.message}`)
-          .join("\n");
-        throw new ContentValidationError(`Invalid manifest ${filePath}:\n${issues}`);
-      }
-      return { file: basename(f), manifest: parsed.data };
-    })
-    .filter(({ manifest }) => !onlyGrade || manifest.grade === onlyGrade);
-}
 
 /** ✓/✗/• status glyph for a subject line. */
 function subjectGlyph(s: SubjectAudit): string {

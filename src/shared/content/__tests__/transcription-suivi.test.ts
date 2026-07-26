@@ -74,6 +74,7 @@ function entry(overrides: Partial<FicheEntry>): FicheEntry {
       },
     ],
     sourcesLibres: [],
+    sujets: [],
     r7: null,
     maj: "2026-07-17",
     par: "test",
@@ -230,5 +231,54 @@ describe("renderIndex", () => {
     // EPS is annexe → counted as excluded, never in the backlog.
     expect(index).not.toContain("`512101`");
     expect(index).toContain("**Totaux (calculés)**");
+  });
+});
+
+describe("checkSuivi — lien fiche → sujets (déclaré, jamais deviné)", () => {
+  const manifestSubjectsByGrade = { "1ere-base": ["arabe-1ere", "math-1ere"] };
+
+  it("accepte un sujet déclaré qui existe au manifeste du niveau", () => {
+    const { errors } = checkSuivi({
+      ...input([entry({ sujets: ["arabe-1ere"] })]),
+      manifestSubjectsByGrade,
+    });
+    expect(errors).toEqual([]);
+  });
+
+  it("rejette un sujet déclaré absent du manifeste", () => {
+    const { errors } = checkSuivi({
+      ...input([entry({ sujets: ["arabe-9eme"] })]),
+      manifestSubjectsByGrade,
+    });
+    expect(errors.some((e) => e.includes("arabe-9eme") && e.includes("absent du manifeste"))).toBe(
+      true,
+    );
+  });
+
+  it("ne vérifie rien quand les manifestes ne sont pas chargés", () => {
+    const { errors } = checkSuivi(input([entry({ sujets: ["nimporte-quoi"] })]));
+    expect(errors).toEqual([]);
+  });
+
+  it("rejette un sujet déclaré deux fois dans la même fiche", () => {
+    const { errors } = checkSuivi(input([entry({ sujets: ["arabe-1ere", "arabe-1ere"] })]));
+    expect(errors.some((e) => e.includes("sujet déclaré en double"))).toBe(true);
+  });
+
+  it("avertit — sans bloquer — quand deux fiches déclarent le même sujet", () => {
+    const result = checkSuivi({
+      corpus,
+      affectations,
+      suivis: [
+        { grade: "1ere-base", fiches: [entry({ sujets: ["arabe-1ere"] })] },
+        {
+          grade: "2eme-base",
+          fiches: [entry({ matiere: "arabe2", sources: [], sujets: ["arabe-1ere"] })],
+        },
+      ],
+      fichesOnDisk: ["1ere-base/arabe", "2eme-base/arabe2"],
+    });
+    expect(result.warnings.some((w) => w.includes("est déclaré par"))).toBe(true);
+    expect(result.errors.some((e) => e.includes("arabe-1ere"))).toBe(false);
   });
 });

@@ -157,6 +157,16 @@ export const ficheEntrySchema = z.object({
   statut: ficheStatutSchema,
   profondeur: ficheProfondeurSchema,
   sources: z.array(ficheSourceSchema),
+  /**
+   * Compiled content subject ids this fiche is the scope source of
+   * (e.g. `math-1ere-sec`). DECLARED, never inferred: the fiche basename and
+   * the subject id do not match by convention (`mathematiques` feeds
+   * `math-1ere-sec`; `chimie` feeds no subject of its own), so guessing the
+   * link would be wrong about half the time. Left empty, the couple simply
+   * reports "lien non déclaré" in `programme:etat` — a gap, not an error.
+   * When declared, `checkSuivi` verifies each id exists in the grade manifest.
+   */
+  sujets: z.array(z.string().regex(/^[a-z][a-z0-9-]*$/)).default([]),
   /** Sources outside the CNP corpus (free text), e.g. a ministry programme booklet. */
   sourcesLibres: z.array(z.string().min(1)).default([]),
   r7: z
@@ -189,6 +199,12 @@ export interface SuiviCheckInput {
   suivis: SuiviGrade[];
   /** Fiches actually present on disk, as `<grade>/<matiere>` (no extension). */
   fichesOnDisk: string[];
+  /**
+   * Subject ids declared by each grade manifest, when the manifests are
+   * available. Only used to verify the `sujets` link of a fiche; omitted, that
+   * check is simply skipped (the registry stays checkable on its own).
+   */
+  manifestSubjectsByGrade?: Record<string, string[]>;
 }
 
 export interface SuiviCheckResult {
@@ -236,7 +252,7 @@ export function generationAutorisee(entry: FicheEntry): boolean {
 export function checkSuivi(input: SuiviCheckInput): SuiviCheckResult {
   const errors: string[] = [];
   const warnings: string[] = [];
-  const { corpus, affectations, suivis, fichesOnDisk } = input;
+  const { corpus, affectations, suivis, fichesOnDisk, manifestSubjectsByGrade } = input;
 
   // 1. Every corpus PDF resolves to a category.
   const corpusByCode = new Map<string, CorpusDocument[]>();
@@ -257,6 +273,7 @@ export function checkSuivi(input: SuiviCheckInput): SuiviCheckResult {
 
   // 2-7. Per-fiche invariants + anti-double-transcription.
   const claimedBy = new Map<string, string>(); // source code → "<grade>/<matiere>"
+  const claimedSujetBy = new Map<string, string>(); // subject id → "<grade>/<matiere>"
   const entriesByPath = new Map<string, FicheEntry>();
   for (const suivi of suivis) {
     const seenMatieres = new Set<string>();
@@ -365,6 +382,39 @@ export function checkSuivi(input: SuiviCheckInput): SuiviCheckResult {
         }
       }
 
+      // 8. A DECLARED fiche → content link must resolve in that grade's manifest.
+      //    (Only when the manifests were loaded; the registry stays checkable alone.)
+      const manifestSubjects = manifestSubjectsByGrade?.[suivi.grade];
+      if (manifestSubjects) {
+        for (const sujet of entry.sujets) {
+          if (!manifestSubjects.includes(sujet)) {
+            errors.push(
+              `suivi ${path}: sujet déclaré "${sujet}" absent du manifeste ${suivi.grade} — ` +
+                `le lien fiche → contenu doit désigner un sujet du programme codifié`,
+            );
+          }
+        }
+      }
+      const dupSujets = entry.sujets.filter((s, i) => entry.sujets.indexOf(s) !== i);
+      if (dupSujets.length > 0) {
+        errors.push(
+          `suivi ${path}: sujet déclaré en double (${[...new Set(dupSujets)].join(", ")})`,
+        );
+      }
+      for (const sujet of entry.sujets) {
+        // Warning and not error: a compiled section id could conceivably be fed
+        // by two fiches, and a mis-calibrated rule here would block a campaign.
+        const claimant = claimedSujetBy.get(sujet);
+        if (claimant && claimant !== path) {
+          warnings.push(
+            `suivi: le sujet ${sujet} est déclaré par "${claimant}" ET "${path}" — ` +
+              `une seule fiche devrait porter le scope d'un sujet`,
+          );
+        } else {
+          claimedSujetBy.set(sujet, path);
+        }
+      }
+
       // 7. R-7 consistency.
       if ((entry.statut === "validee-r7" || entry.statut === "promue") && entry.r7 === null) {
         errors.push(`suivi ${path}: statut "${entry.statut}" sans verdict r7 enregistré`);
@@ -448,7 +498,7 @@ function formatCoverage(entry: FicheEntry): string {
     .join(" · ");
 }
 
-function missingRanges(source: FicheSource): Array<[number, number]> {
+export function missingRanges(source: FicheSource): Array<[number, number]> {
   if (!Array.isArray(source.pagesLues) || source.pagesTotal === null) return [];
   const holes: Array<[number, number]> = [];
   let next = 1;
@@ -460,7 +510,7 @@ function missingRanges(source: FicheSource): Array<[number, number]> {
   return holes;
 }
 
-const GRADE_ORDER = [
+export const GRADE_ORDER = [
   "1ere-base",
   "2eme-base",
   "3eme-base",
@@ -476,7 +526,7 @@ const GRADE_ORDER = [
   "bac",
 ];
 
-function gradeSortKey(grade: string): number {
+export function gradeSortKey(grade: string): number {
   const exact = GRADE_ORDER.indexOf(grade);
   if (exact >= 0) return exact * 10;
   // Section grades (e.g. bac-math, 2eme-sec-sciences) sort right after their year.
@@ -484,8 +534,38 @@ function gradeSortKey(grade: string): number {
   return year >= 0 ? year * 10 + 1 : 999;
 }
 
+/**
+ * Corpus works of category `principale` that no fiche claims, grouped by grade
+ * slot then matière id. Shared by the generated `_INDEX.md` and the état des
+ * lieux — one derivation, never two that could disagree.
+ */
+export function deriveBacklog(
+  corpus: Corpus,
+  affectations: Affectations,
+  suivis: SuiviGrade[],
+): Map<string, Map<string, CorpusDocument[]>> {
+  const coveredCodes = new Set<string>();
+  for (const suivi of suivis)
+    for (const f of suivi.fiches) for (const s of f.sources) coveredCodes.add(s.code);
+
+  const backlog = new Map<string, Map<string, CorpusDocument[]>>();
+  for (const doc of corpus.documents) {
+    if (resolveCategorie(doc, affectations) !== "principale") continue;
+    if (coveredCodes.has(doc.code)) continue;
+    const slot = gradeSlotOf(doc);
+    if (slot === null) continue;
+    const matiereId = affectations.matieres[doc.matiere]?.id ?? doc.matiere;
+    const bySubject = backlog.get(slot) ?? new Map<string, CorpusDocument[]>();
+    const docs = bySubject.get(matiereId) ?? [];
+    docs.push(doc);
+    bySubject.set(matiereId, docs);
+    backlog.set(slot, bySubject);
+  }
+  return backlog;
+}
+
 export function renderIndex(input: SuiviCheckInput): string {
-  const { corpus, affectations, suivis, fichesOnDisk } = input;
+  const { corpus, affectations, suivis } = input;
   const lines: string[] = [];
   lines.push("# `_INDEX.md` — suivi de transcription du programme CNP (GÉNÉRÉ)");
   lines.push("");
@@ -539,35 +619,13 @@ export function renderIndex(input: SuiviCheckInput): string {
   }
 
   // Derived backlog: principale PDFs whose grade-slot × matière has no fiche at all.
-  const coveredCodes = new Set<string>();
-  for (const suivi of suivis)
-    for (const f of suivi.fiches) for (const s of f.sources) coveredCodes.add(s.code);
-  const fichesByGradePrefix = new Map<string, Set<string>>();
-  for (const path of fichesOnDisk) {
-    const [grade] = path.split("/");
-    const year = GRADE_ORDER.find((g) => grade === g || grade.startsWith(`${g}-`)) ?? grade;
-    const set = fichesByGradePrefix.get(year) ?? new Set<string>();
-    set.add(path);
-    fichesByGradePrefix.set(year, set);
-  }
-  const backlog = new Map<string, Map<string, CorpusDocument[]>>(); // slot → matiereId → docs
+  const backlog = deriveBacklog(corpus, affectations, suivis);
   const excluded = new Map<AffectationCategory, number>();
   for (const doc of corpus.documents) {
     const cat = resolveCategorie(doc, affectations);
-    if (cat === null) continue;
-    if (cat !== "principale") {
+    if (cat !== null && cat !== "principale") {
       excluded.set(cat, (excluded.get(cat) ?? 0) + 1);
-      continue;
     }
-    if (coveredCodes.has(doc.code)) continue;
-    const slot = gradeSlotOf(doc);
-    if (slot === null) continue;
-    const matiereId = affectations.matieres[doc.matiere]?.id ?? doc.matiere;
-    const bySubject = backlog.get(slot) ?? new Map<string, CorpusDocument[]>();
-    const docs = bySubject.get(matiereId) ?? [];
-    docs.push(doc);
-    bySubject.set(matiereId, docs);
-    backlog.set(slot, bySubject);
   }
 
   lines.push("## À transcrire (dérivé du corpus — PDF `principale` non rattachés à une fiche)");
