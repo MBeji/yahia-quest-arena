@@ -41,6 +41,7 @@
     "content:videos:check": "node scripts/content/check-videos.mjs",
     "programme:check": "node --experimental-strip-types scripts/content/suivi.ts",
     "programme:index": "node --experimental-strip-types scripts/content/suivi.ts --index",
+    "programme:etat": "node --experimental-strip-types scripts/content/etat.ts",
     "programme:corpus": "node --experimental-strip-types scripts/content/suivi.ts --corpus",
     "content:figures:check": "node scripts/content/svg/check-figures.mjs content",
     "content:figures:preview": "node scripts/content/svg/preview.mjs",
