@@ -10,40 +10,30 @@
  * including anti-double-transcription) AND fails if the committed _INDEX.md
  * is out of date with the registry — so the human view can never drift again.
  */
-import { readdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { resolve } from "node:path";
 import {
-  affectationsSchema,
   checkSuivi,
   corpusSchema,
   renderIndex,
-  suiviGradeSchema,
   type Corpus,
   type CorpusDocument,
-  type SuiviCheckInput,
-  type SuiviGrade,
 } from "../../src/shared/content/transcription-suivi.ts";
-
-const REPO_ROOT = resolve(import.meta.dirname, "../..");
-const PROGRAMMES_DIR = join(
+import {
+  CORPUS_JSON,
+  INDEX_PATH,
+  MANIFEST_DIR,
   REPO_ROOT,
-  ".claude/skills/content-ecole-tn/references/programmes-officiels",
-);
-const SUIVI_DIR = join(PROGRAMMES_DIR, "suivi");
-const PROGRAMME_DIR = join(PROGRAMMES_DIR, "programme");
-const INDEX_PATH = join(PROGRAMME_DIR, "_INDEX.md");
-const CORPUS_JSON = join(SUIVI_DIR, "corpus-cnp.json");
-const AFFECTATIONS_JSON = join(SUIVI_DIR, "affectations.json");
+  fail,
+  loadRegistryInput,
+  manifestSubjectsByGrade,
+} from "./programmes-io.ts";
+
 const catalogueArgIdx = process.argv.indexOf("--catalogue");
 const CATALOGUE_CSV =
   catalogueArgIdx >= 0 && process.argv[catalogueArgIdx + 1]
     ? resolve(process.argv[catalogueArgIdx + 1])
-    : join(REPO_ROOT, "../cnp-officiel/catalogue.csv");
-
-function fail(message: string): never {
-  console.error(`\n✖ ${message}`);
-  process.exit(1);
-}
+    : resolve(REPO_ROOT, "../cnp-officiel/catalogue.csv");
 
 // --------------------------------------------------------------------------
 // --corpus: catalogue.csv → suivi/corpus-cnp.json
@@ -111,63 +101,6 @@ function buildCorpus(): Corpus {
 }
 
 // --------------------------------------------------------------------------
-// Loading (shared by --check / --index)
-// --------------------------------------------------------------------------
-
-/**
- * Depuis la scission (étude 24, 2026-07-20), l'arbre `programmes-officiels/` vit
- * dans le repo PRIVÉ avec le corpus ; seul le moteur est resté ici. Lancer ce
- * gate depuis le repo public échoue donc légitimement — mais le message ne doit
- * pas envoyer sur une fausse piste : `--corpus` recréerait un registre vide ICI,
- * à côté de la plaque. Le registre est le garde-fou anti-double-transcription,
- * mieux vaut refuser bruyamment que fabriquer un faux « rien à faire ».
- */
-function failMissingRegistry(path: string, what: string): never {
-  const corpusSkillDir = join(REPO_ROOT, ".claude/skills/content-ecole-tn");
-  if (!existsSync(corpusSkillDir)) {
-    fail(
-      `${what} introuvable: ${path}\n` +
-        `  → Normal dans le repo PUBLIC : depuis l'étude 24, le registre de transcription vit\n` +
-        `    dans le repo privé MBeji/yahia-quest-content, avec le corpus qu'il décrit. Ce gate\n` +
-        `    y tourne (workflow « Content CI » : il checkout ce repo-ci pour le moteur et branche\n` +
-        `    les données par symlink).\n` +
-        `  → Ne PAS lancer --corpus ici : cela créerait un registre vide au mauvais endroit et\n` +
-        `    masquerait le vrai registre.`,
-    );
-  }
-  fail(`${what} introuvable: ${path} (lancer --corpus)`);
-}
-
-function loadInput(): SuiviCheckInput {
-  if (!existsSync(CORPUS_JSON)) failMissingRegistry(CORPUS_JSON, "registre");
-  if (!existsSync(AFFECTATIONS_JSON)) failMissingRegistry(AFFECTATIONS_JSON, "affectations");
-  const corpus = corpusSchema.parse(JSON.parse(readFileSync(CORPUS_JSON, "utf8")));
-  const affectations = affectationsSchema.parse(
-    JSON.parse(readFileSync(AFFECTATIONS_JSON, "utf8")),
-  );
-
-  const suivis: SuiviGrade[] = readdirSync(SUIVI_DIR)
-    .filter((f) => f.endsWith(".json") && f !== "corpus-cnp.json" && f !== "affectations.json")
-    .sort()
-    .map((f) => {
-      const parsed = suiviGradeSchema.parse(JSON.parse(readFileSync(join(SUIVI_DIR, f), "utf8")));
-      if (`${parsed.grade}.json` !== f) {
-        fail(`suivi/${f}: le champ grade="${parsed.grade}" ne correspond pas au nom du fichier`);
-      }
-      return parsed;
-    });
-
-  const fichesOnDisk: string[] = [];
-  for (const gradeDir of readdirSync(PROGRAMME_DIR, { withFileTypes: true })) {
-    if (!gradeDir.isDirectory()) continue;
-    for (const file of readdirSync(join(PROGRAMME_DIR, gradeDir.name))) {
-      if (file.endsWith(".md")) fichesOnDisk.push(`${gradeDir.name}/${file.replace(/\.md$/, "")}`);
-    }
-  }
-  return { corpus, affectations, suivis, fichesOnDisk };
-}
-
-// --------------------------------------------------------------------------
 // Main
 // --------------------------------------------------------------------------
 
@@ -180,7 +113,10 @@ if (args.has("--corpus")) {
   process.exit(0);
 }
 
-const input = loadInput();
+const input = {
+  ...loadRegistryInput(),
+  manifestSubjectsByGrade: manifestSubjectsByGrade(MANIFEST_DIR),
+};
 
 if (args.has("--index")) {
   writeFileSync(INDEX_PATH, renderIndex(input), "utf8");
