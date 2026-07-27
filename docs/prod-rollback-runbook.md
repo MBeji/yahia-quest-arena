@@ -328,6 +328,12 @@ curl -sL https://www.na9ranal3ab.tn/api/health
 et l'apex en 308 (constat 2026-07-20, reconfirmé 2026-07-27). D'où le `-L` : sans lui, on lit
 la redirection et on conclut à une panne qui n'existe pas.
 
+⚠️ **Depuis un poste Windows**, ajouter `--ssl-no-revoke` : le `curl` de schannel échoue en
+`HTTP 000` / exit 35 sur l'une des deux IP d'edge, prod parfaitement saine — un faux négatif
+qui ressemble trait pour trait à une panne totale
+([`docs/agents/poste-windows.md`](./agents/poste-windows.md)). Confirmer toujours dans un
+navigateur ou sur le monitor avant de déclencher quoi que ce soit.
+
 ⚠️ Sur une page HTML (pas sur la sonde), il faut **aussi** un `-A` : le bot guard refuse les
 User-Agent `curl/` en **403** ([`src/shared/lib/bot-guard.ts`](../src/shared/lib/bot-guard.ts)).
 `curl -sL -A 'yahia-quest-arena-rollback-check' https://www.na9ranal3ab.tn` → 200. La sonde,
@@ -348,16 +354,29 @@ s'annoncent souvent en `python-requests`/`httpx`, que le guard refuse en 403, et
 périodique depuis une IP fixe est précisément ce que son plafond de rafale répond en 429. Les
 deux produiraient une fausse panne. Un test épingle cet ordre.
 
+### Le monitor externe — qui interroge la sonde
+
+Un monitor **UptimeRobot** (type HTTP/S) appelle `https://www.na9ranal3ab.tn/api/health` toutes
+les **5 minutes** et alerte par e-mail/push (constat 2026-07-27 : statut Up, 100 % sur 7 jours,
+99,988 % sur 30 jours). C'est lui qui transforme « on s'en aperçoit quand quelqu'un ouvre le
+site » en « alerte en 5 minutes » — et donc ce qui rend utile tout le reste de ce runbook :
+un rollback en 30 secondes ne vaut rien si la panne est découverte le lendemain matin.
+
+⚠️ **Un monitor qui détecte sans notifier ne sert à rien**, et ça ne se voit pas sur son tableau
+de bord : un contact d'alerte déjà existant n'est **pas** coché par défaut sur un monitor. Le
+bouton **Test Notification** est la seule preuve que l'alerte part réellement — à rejouer après
+toute modification du monitor, du contact, ou de l'URL surveillée.
+
+Viser `/api/health`, jamais une page HTML : la sonde est traitée avant le bot guard (voir
+ci-dessus), elle vérifie la base, et son code HTTP porte déjà le verdict.
+
 ### Ce qui manque encore
 
-**Personne n'interroge la sonde.** Il n'y a ni monitor d'uptime, ni Sentry — la panne se
-découvre toujours par un signalement ou parce que quelqu'un ouvre le site, et **le délai de
-détection domine donc le RTO**.
-
-Pour fermer : brancher un monitor gratuit (UptimeRobot, Better Stack) sur `/api/health`, toutes
-les 1–5 min, alerte e-mail/SMS — c'est un compte externe à créer, pas du code. Sentry reste le
-seul moyen d'attraper un crash **client** (la classe de panne du 2026-07-01), que la sonde
-serveur ne voit pas : elle dirait « ok » pendant que le navigateur montre une page blanche.
+**Sentry**, ou tout collecteur d'erreurs **côté client**. La sonde est serveur : un crash dans
+le navigateur la laisse au vert pendant que l'élève voit une page blanche. C'est exactement la
+forme de la panne du 2026-07-01 (un effet GA4 cassant le rendu client) — ni la sonde ni le
+monitor ne l'auraient vue. `smoke:shell` en CI couvre cette classe **avant** le merge ; rien ne
+la couvre encore **en production**.
 
 ---
 

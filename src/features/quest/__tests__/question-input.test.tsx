@@ -21,6 +21,8 @@ const labels: QuestionInputLabels = {
   recallPlaceholder: "Tape ta réponse",
   recallHint: "Tape ta réponse, puis Entrée pour valider.",
   recallInsertChar: "insérer {char}",
+  recallKeypadShow: "Clavier arabe",
+  recallKeypadHide: "Masquer le clavier",
 };
 
 const options = [
@@ -264,5 +266,60 @@ describe("QuestionInput — unsupported types (R-3 fallback)", () => {
       value: UNSUPPORTED_ANSWER_CHOICE,
     });
     expect(onChange).not.toHaveBeenCalled();
+  });
+});
+
+// Étude 20 lot 5 — le clavier d'appoint arabe.
+//
+// Il ne s'adresse pas à celui qui a déjà un clavier arabe, mais à l'enfant qui
+// n'en a AUCUN : sans les 28 lettres, il tape sa réponse en lettres latines et
+// se la voit refuser, quoi qu'il sache. D'où « proposé, jamais imposé » —
+// replié par défaut, et absent des langues qui n'en ont pas besoin.
+
+const AR_ROWS = [
+  ["ا", "ب", "ت"],
+  ["ن", "م", "ل"],
+];
+
+describe("QuestionInput — clavier d'appoint (étude 20 lot 5)", () => {
+  it("ne s'affiche pas quand la langue n'a pas de clavier", () => {
+    renderInput({ variant: "recall", recallKeypadRows: [] });
+    expect(screen.queryByTestId("assist-keypad")).not.toBeInTheDocument();
+  });
+
+  it("est REPLIÉ par défaut — il propose, il n'impose pas", () => {
+    renderInput({ variant: "recall", recallKeypadRows: AR_ROWS, rtl: true });
+    expect(screen.getByTestId("assist-keypad-toggle")).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByRole("button", { name: /ا/ })).not.toBeInTheDocument();
+  });
+
+  it("déplie l'alphabet au clic", () => {
+    renderInput({ variant: "recall", recallKeypadRows: AR_ROWS, rtl: true });
+    fireEvent.click(screen.getByTestId("assist-keypad-toggle"));
+    expect(screen.getByTestId("assist-keypad-toggle")).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByLabelText("insérer ا")).toBeInTheDocument();
+    expect(screen.getByLabelText("insérer ل")).toBeInTheDocument();
+  });
+
+  it("insère la lettre tapée dans la réponse", () => {
+    const { onChange } = renderInput({
+      variant: "recall",
+      recallKeypadRows: AR_ROWS,
+      rtl: true,
+      value: "نم",
+    });
+    fireEvent.click(screen.getByTestId("assist-keypad-toggle"));
+    fireEvent.click(screen.getByLabelText("insérer ل"));
+    expect(onChange).toHaveBeenCalledWith("نمل");
+  });
+
+  it("sert aussi le type natif `short_answer`, pas seulement le mode Rappel", () => {
+    renderInput({ questionType: "short_answer", recallKeypadRows: AR_ROWS, rtl: true });
+    expect(screen.getByTestId("assist-keypad")).toBeInTheDocument();
+  });
+
+  it("reste hors de portée quand la saisie est désactivée", () => {
+    renderInput({ variant: "recall", recallKeypadRows: AR_ROWS, rtl: true, disabled: true });
+    expect(screen.getByTestId("assist-keypad-toggle")).toBeDisabled();
   });
 });

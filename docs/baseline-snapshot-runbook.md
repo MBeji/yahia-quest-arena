@@ -226,9 +226,8 @@ mentent, presque toujours dans le sens rassurant.
 
 ## 9. Ce qui reste à outiller
 
-| Gap                                     | Effet sur le baseline                                           | Piste                                                                  |
-| --------------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| Dumps `db-backup` en rétention **14 j** | l'axe données d'un baseline plus vieux repose sur le schéma git | archiver le dump hors GitHub à la pose (§6 étape 3)                    |
-| **Traçabilité du moteur** côté contenu  | on ignore quel moteur (arena SHA) a produit une application     | `engine_sha` dans `content_releases` (quand `apply-content` sera armé) |
-| **Aucun `checkpoint/*` posé** à ce jour | pas encore de filet de retour automatique                       | laisser `checkpoint-tag.yml` tourner                                   |
-| **Personne n'interroge `/api/health`**  | le délai de détection domine le RTO                             | monitor externe (UptimeRobot / Better Stack)                           |
+| Gap                                     | Effet sur le baseline                                                                                                      | Piste                                                                  |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Dumps `db-backup` en rétention **14 j** | l'axe données d'un baseline plus vieux repose sur le schéma git                                                            | archiver le dump hors GitHub à la pose (§6 étape 3)                    |
+| **Traçabilité du moteur** côté contenu  | on ignore quel moteur (arena SHA) a produit une application                                                                | `engine_sha` dans `content_releases` (quand `apply-content` sera armé) |
+| **Crash CLIENT invisible en prod**      | la sonde est serveur : elle reste verte pendant qu'un navigateur montre une page blanche (forme de la panne du 2026-07-01) | Sentry ou tout collecteur d'erreurs client                             |
