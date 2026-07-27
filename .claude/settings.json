@@ -50,13 +50,19 @@
       "Bash(gh issue list:*)",
       "Bash(gh run list:*)",
       "Bash(gh run view:*)",
-      "Bash(gh workflow list:*)"
+      "Bash(gh workflow list:*)",
+      "Bash(gh workflow run rollback-prod.yml:*)",
+      "Bash(gh workflow run db-backup.yml:*)",
+      "Bash(gh workflow run db-tests.yml:*)"
     ],
     "deny": [
       "Bash(npx supabase db push:*)",
       "Bash(npx supabase db reset:*)",
       "Bash(supabase db push:*)",
-      "Bash(supabase db reset:*)"
+      "Bash(supabase db reset:*)",
+      "Bash(gh workflow run db-migrate-prod.yml:*)",
+      "Bash(gh workflow run e2e-auth.yml:*)",
+      "Bash(gh workflow run release.yml:*)"
     ]
   },
   "hooks": {
