@@ -66,10 +66,12 @@ let lastTrackedPath: string | null = null;
 export type TrafficType = "developer" | "production";
 
 /**
- * The Vercel default domain that serves REAL production traffic today — the
- * custom `na9ranal3ab.tn` domain is bought but not wired yet (STATUS.md), so
- * this one hostname must never be tagged `developer`, unlike every other
- * `*.vercel.app` host (per-branch/per-deploy previews).
+ * The Vercel default domain, kept as a LIVE ALIAS of production. Since the
+ * `na9ranal3ab.tn` domain was wired (constat 2026-07-27, `www` serves 200 and
+ * the apex 308s to it), the canonical host is the custom domain — which needs
+ * no entry here, being neither local nor `*.vercel.app`. This one hostname must
+ * still never be tagged `developer`: it keeps serving real users who bookmarked
+ * it, unlike every other `*.vercel.app` host (per-branch/per-deploy previews).
  */
 const PRODUCTION_VERCEL_HOSTNAME = "na9ranal3ab.vercel.app";
 
