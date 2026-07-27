@@ -22,6 +22,8 @@
  * primitives inject inline <style>, and inline styles are not nonce-covered the
  * way scripts are. Tightening styles is out of scope for GAP-022.
  */
+import { POSTHOG_HOST } from "@/shared/lib/product-analytics";
+
 export function buildContentSecurityPolicy(nonce?: string): string {
   // Google Analytics 4 (gtag.js) loads from this host as an external <script>.
   // We do NOT use 'strict-dynamic', so listing the host alongside the nonce keeps
@@ -44,7 +46,11 @@ export function buildContentSecurityPolicy(nonce?: string): string {
     "font-src 'self' data: https://fonts.gstatic.com",
     // Supabase API/realtime + the GA4 collect endpoints (gtag.js beacons the
     // measurement protocol to the regional google-analytics.com hosts).
-    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com",
+    // …and the PostHog ingest origin (product analytics — plain `fetch`, no SDK
+    // and no external <script>, so `script-src` stays untouched; see
+    // src/shared/lib/product-analytics.ts). Read from the SAME constant the
+    // sender uses, so an env override can never leave the policy behind.
+    `connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com ${POSTHOG_HOST}`,
     // Curated explainer videos (étude 23): the ONLY host we embed in an iframe,
     // and only after the user clicks the privacy facade (no iframe exists in the
     // DOM before then — étude 23 R-4/D-6). This directive is the technical proof

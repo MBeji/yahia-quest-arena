@@ -59,6 +59,16 @@ describe("buildContentSecurityPolicy", () => {
     }
   });
 
+  it("allows the PostHog ingest origin in connect-src only (no SDK, no script host)", () => {
+    for (const csp of [buildContentSecurityPolicy(), buildContentSecurityPolicy("n")]) {
+      const scriptSrc = csp.split("; ").find((d) => d.startsWith("script-src "));
+      const connectSrc = csp.split("; ").find((d) => d.startsWith("connect-src "));
+      expect(connectSrc).toContain("https://eu.i.posthog.com");
+      // We post capture payloads with `fetch` — nothing is ever loaded as a script.
+      expect(scriptSrc).not.toContain("posthog");
+    }
+  });
+
   it("pins exactly one embeddable video host via frame-src (étude 23)", () => {
     for (const csp of [buildContentSecurityPolicy(), buildContentSecurityPolicy("n")]) {
       const frameSrc = csp.split("; ").filter((d) => d.startsWith("frame-src "));

@@ -1,6 +1,13 @@
 /**
  * Google Analytics 4 (gtag.js) — client-only, dependency-free.
  *
+ * This module is also the **single call site** for product analytics: every
+ * `track*` function below fans out to PostHog first (see
+ * `product-analytics.ts`), then reports to GA4. The two sinks answer different
+ * questions — GA4 acquisition/SEO, PostHog funnels/retention — and each carries
+ * its own enablement gate, so removing or disabling one never silences the
+ * other. Callers keep calling one function.
+ *
  * Loads Google's gtag.js and reports a `page_view` on every SPA navigation.
  * Mirrors the `monitoring.ts` philosophy: no npm dependency (the client bundle
  * has a hard size budget), a no-op unless enabled, and it never throws —
@@ -26,6 +33,8 @@
  * "Internal traffic" data filter on the value `developer` can permanently
  * exclude those sessions from reports (see `resolveTrafficType`).
  */
+
+import { capturePageview, captureProductEvent } from "@/shared/lib/product-analytics";
 
 declare global {
   interface Window {
@@ -153,6 +162,9 @@ export function initAnalytics(): void {
  * consecutive identical paths (the router can resolve the same location twice).
  */
 export function trackPageview(path: string): void {
+  if (typeof window !== "undefined") {
+    capturePageview(path, resolveTrafficType(window.location.hostname));
+  }
   if (!isAnalyticsEnabled() || typeof window.gtag !== "function") return;
   if (path === lastTrackedPath) return;
   lastTrackedPath = path;
@@ -178,6 +190,11 @@ export function trackVideoOpen(params: {
   context: VideoOpenContext;
   subjectId: string;
 }): void {
+  captureProductEvent("video_open", {
+    video_id: params.videoId,
+    context: params.context,
+    subject_id: params.subjectId,
+  });
   if (!isAnalyticsEnabled() || typeof window.gtag !== "function") return;
   safeGtag("event", "video_open", {
     video_id: params.videoId,
@@ -196,6 +213,7 @@ export function trackVideoOpen(params: {
  * remonter au fil contenu, pas un réglage à faire côté produit.
  */
 export function trackDungeonPoolScope(params: { scope: "grade" | "cycle" | "all" }): void {
+  captureProductEvent("dungeon_pool_scope", { pool_scope: params.scope });
   if (!isAnalyticsEnabled() || typeof window.gtag !== "function") return;
   safeGtag("event", "dungeon_pool_scope", {
     pool_scope: params.scope,
