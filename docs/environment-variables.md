@@ -104,8 +104,10 @@ is an external `<script>` and every gtag call is plain JS, so no CSP nonce is in
 runtime from `window.location.hostname` (`resolveTrafficType` in `analytics.ts`):
 `developer` on local hosts (`localhost`, loopback — e.g. `vite preview`/smoke runs of the
 prod bundle) and on Vercel **preview** deployments (`*.vercel.app`), `production` everywhere
-else. ⚠️ `na9ranal3ab.vercel.app` is exempt: it serves **real production traffic** while the
-`.tn` domain stays unwired — if the canonical domain ever changes, update
+else. ⚠️ `na9ranal3ab.vercel.app` is exempt: since the `.tn` domain was wired (2026-07-27) it is
+no longer canonical, but it stays a **live alias** serving real users who bookmarked it — so it
+must not be tagged `developer`. The canonical `www.na9ranal3ab.tn` needs no entry, being neither
+local nor `*.vercel.app`. If the canonical domain changes again, revisit
 `PRODUCTION_VERCEL_HOSTNAME` there. To actually drop those sessions from reports, create the
 GA4 data filter once: **Admin → Data collection and modification → Data filters → Create
 filter → Internal traffic**, parameter value `developer`, operation **Exclude** — try it in
