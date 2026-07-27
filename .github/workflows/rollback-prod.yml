@@ -72,7 +72,11 @@ jobs:
       MODE: ${{ inputs.mode }}
       REASON: ${{ inputs.reason }}
       TARGET: ${{ inputs.target }}
-      PROD_URL: ${{ vars.PROD_URL || 'https://na9ranal3ab.vercel.app' }}
+      # `https://www.na9ranal3ab.tn` est le SEUL hôte qui répond 200 : le
+      # `.vercel.app` y redirige en 301 et l'apex en 308 (constat 2026-07-20,
+      # reconfirmé 2026-07-27). Tous les curl d'ici passent `-L` pour rester
+      # corrects si l'hôte canonique bouge.
+      PROD_URL: ${{ vars.PROD_URL || 'https://www.na9ranal3ab.tn' }}
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -166,9 +170,19 @@ jobs:
           # Deliberately shallow: HTTP 200 + a non-trivial body proves the alias
           # serves something. It does NOT prove the app works — the runbook makes
           # a human click through the smoke path before closing the incident.
+          #
+          # Two things this call MUST do, or it invents an outage at the worst
+          # possible moment — the one where we decide whether the incident goes on:
+          #   -L : sans lui, une redirection de l'hôte canonique (301 depuis le
+          #        `.vercel.app`, 308 depuis l'apex) se lit comme « prod down ».
+          #   -A : le bot guard refuse « curl/ » en 403 (src/shared/lib/bot-guard.ts).
+          #        On s'annonce donc pour ce qu'on est — un UA honnête, hors liste
+          #        de blocage — au lieu d'usurper un navigateur. Le plafond de
+          #        rafale (600 req/min par IP) est hors d'atteinte de ces 6 essais.
+          ua="yahia-quest-arena-rollback-check"
           ok=false
           for attempt in 1 2 3 4 5 6; do
-            code="$(curl -s -o body.html -w '%{http_code}' --max-time 20 "$PROD_URL" || echo 000)"
+            code="$(curl -sL -A "$ua" -o body.html -w '%{http_code}' --max-time 20 "$PROD_URL" || echo 000)"
             size="$(wc -c < body.html 2>/dev/null || echo 0)"
             echo "Essai $attempt : HTTP $code, ${size} octets"
             if [ "$code" = "200" ] && [ "$size" -gt 500 ]; then ok=true; break; fi
@@ -180,7 +194,9 @@ jobs:
           # actually being served and whether Postgres answers — but a
           # deployment predating the probe returns 404, and that must not be
           # read as a failed rollback.
-          probe="$(curl -s --max-time 15 "$PROD_URL/api/health" || echo '')"
+          # `-L` pour la même raison que ci-dessus. `-A` n'est pas requis ici (la
+          # sonde est traitée AVANT le bot guard, exprès) mais reste cohérent.
+          probe="$(curl -sL -A "$ua" --max-time 15 "$PROD_URL/api/health" || echo '')"
           case "$probe" in
             *'"status"'*) echo "Sonde : $probe" ;;
             *) probe=""; echo "Sonde /api/health indisponible (déploiement antérieur à la sonde ?) — non bloquant." ;;
