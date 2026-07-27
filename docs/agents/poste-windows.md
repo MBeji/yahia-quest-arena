@@ -62,6 +62,39 @@ branches, `stash`, `reflog` et `node_modules` (jonction) sont **communs**.
 - Dépendances incohérentes après un changement de branche : `npm install` (jamais `npm ci`, qui
   efface `node_modules` pour tout le monde).
 
+## `curl` déclare la prod morte alors qu'elle va bien (révocation TLS, schannel)
+
+Depuis ce poste, `curl https://www.na9ranal3ab.tn` peut échouer en **`HTTP 000`, code de sortie
+35** (erreur TLS) alors que **la production est parfaitement saine** — le site répond dans le
+navigateur et le monitor externe reste au vert. Constaté 2026-07-27, après quarante minutes
+pendant lesquelles la même commande passait : de quoi conclure à une panne et déclencher un
+rollback pour rien.
+
+Cause : le `curl` de Windows utilise **schannel**, qui vérifie la révocation du certificat
+(CRL/OCSP). Le DNS renvoie **deux IP d'edge** en alternance ; pour l'une des deux, cette
+vérification échoue et curl abandonne **avant tout échange HTTP**. D'où un `000` qui ressemble
+à une prod morte, une fois sur deux, au tirage DNS.
+
+```bash
+curl -s -o /dev/null -w '%{http_code}\n' https://www.na9ranal3ab.tn/                 # → 000, exit 35
+curl -s --ssl-no-revoke -o /dev/null -w '%{http_code}\n' https://www.na9ranal3ab.tn/ # → 403 (bot guard : normal)
+```
+
+**La forme correcte depuis ce poste** réunit trois options, chacune pour une raison distincte —
+les oublier produit trois faux négatifs différents :
+
+```bash
+curl -sL --ssl-no-revoke -A 'yahia-quest-arena-rollback-check' https://www.na9ranal3ab.tn/
+#     │└──────────────── suit la redirection de l'hôte canonique (sinon on lit un 301/308)
+#     └───────────────── (Windows) neutralise la vérification de révocation schannel
+#        et -A ────────── le bot guard refuse les User-Agent « curl/ » en 403
+```
+
+Ne concerne **que** ce poste : les workflows tournent sur des runners Linux (OpenSSL, pas de
+schannel), et le monitor externe n'est pas affecté. ⚠️ **Avant de déclarer la prod morte depuis
+une ligne de commande Windows, confirmer dans un navigateur ou sur UptimeRobot** — deux
+observateurs indépendants, dont l'un n'est pas sur cette machine.
+
 ## Le gate rougit à tort sous contention CPU
 
 Quand plusieurs sessions lancent leur gate en même temps (constaté 2026-07-20 : 45 → 53 processus
