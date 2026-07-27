@@ -18,6 +18,7 @@ import { QuestHintButton } from "@/features/quest/components/quest-hint-button";
 import { BossCountdown } from "@/features/quest/components/boss-countdown";
 import {
   buildQuestLabels,
+  KEYPAD_BY_LANG,
   RECALL_CHAR_BAR,
   type QuestContentLang,
 } from "@/features/quest/quest-labels";
@@ -723,6 +724,7 @@ export function ExercisePlayer({
             rtl={isRtlSubject}
             labels={QL}
             recallChars={RECALL_CHAR_BAR[qlang]}
+            recallKeypadRows={KEYPAD_BY_LANG[qlang]}
             optionClassName={({ isSelected }: McqOptionRender) =>
               `active:scale-[0.97] ${
                 isSelected

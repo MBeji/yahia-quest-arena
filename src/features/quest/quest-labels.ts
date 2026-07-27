@@ -17,6 +17,34 @@ export const RECALL_CHAR_BAR: Record<QuestContentLang, string[]> = {
   en: [],
 };
 
+/**
+ * Clavier d'appoint arabe (étude 20 lot 5) — l'alphabet ENTIER, pas seulement
+ * les caractères rares de la barre ci-dessus.
+ *
+ * Pourquoi il existe : la barre de caractères suppose qu'on a déjà un clavier
+ * arabe et qu'il ne manque que la hamza. La session de production du
+ * 2026-07-15 a montré l'inverse — un enfant de 6 ans tapait « NAMLA » en
+ * lettres latines parce qu'il n'avait AUCUN clavier arabe. Sans les 28 lettres,
+ * la question lui reste inaccessible quoi qu'il sache.
+ *
+ * Il est proposé, jamais imposé : replié par défaut, il n'encombre pas celui
+ * qui a déjà son clavier. Statique par construction — jamais dérivé de la
+ * réponse, qu'il trahirait.
+ */
+export const AR_KEYPAD_ROWS: string[][] = [
+  ["ا", "ب", "ت", "ث", "ج", "ح", "خ", "د"],
+  ["ذ", "ر", "ز", "س", "ش", "ص", "ض", "ط"],
+  ["ظ", "ع", "غ", "ف", "ق", "ك", "ل", "م"],
+  ["ن", "ه", "و", "ي", "ة", "ى", "ء", "أ"],
+];
+
+/** Langues qui reçoivent le clavier d'appoint (aujourd'hui : l'arabe seul). */
+export const KEYPAD_BY_LANG: Record<QuestContentLang, string[][]> = {
+  ar: AR_KEYPAD_ROWS,
+  fr: [],
+  en: [],
+};
+
 export type QuestLabels = {
   lockedTitle: string;
   lockedBody: string;
@@ -43,6 +71,8 @@ export type QuestLabels = {
   recallBanner: string;
   recallPlaceholder: string;
   recallHint: string;
+  recallKeypadShow: string;
+  recallKeypadHide: string;
   recallInsertChar: string;
   recallLockedTitle: string;
   recallLockedBody: string;
@@ -169,6 +199,16 @@ export function buildQuestLabels(qlang: QuestContentLang): QuestLabels {
       en: "Type your answer, then press Enter to validate.",
     }[qlang],
     // {char} is the character inserted by the tapped chip.
+    recallKeypadShow: {
+      ar: "لوحة المفاتيح العربية",
+      fr: "Clavier arabe",
+      en: "Arabic keyboard",
+    }[qlang],
+    recallKeypadHide: {
+      ar: "إخفاء لوحة المفاتيح",
+      fr: "Masquer le clavier",
+      en: "Hide the keyboard",
+    }[qlang],
     recallInsertChar: {
       ar: "إدراج {char}",
       fr: "insérer {char}",

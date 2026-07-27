@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Check } from "lucide-react";
 import { isMathExpression, isRtlText } from "@/shared/lib/utils";
 import { isValidAnswerFormat, UNSUPPORTED_ANSWER_CHOICE } from "@/shared/lib/answer-formats";
@@ -41,6 +41,9 @@ export type QuestionInputLabels = {
   recallPlaceholder: string;
   recallHint: string;
   recallInsertChar: string;
+  /** Clavier d'appoint (étude 20 lot 5) : libellés du repli/dépli. */
+  recallKeypadShow: string;
+  recallKeypadHide: string;
 };
 
 export type McqOptionRender = { option: DisplayOption; isSelected: boolean };
@@ -69,6 +72,8 @@ export type QuestionInputProps = {
   labels: QuestionInputLabels;
   /** Recall (étude 17, R-12): the static per-language "extra characters" palette. */
   recallChars?: string[];
+  /** Clavier d'appoint (étude 20 lot 5) : lignes de touches, vide = pas de clavier. */
+  recallKeypadRows?: string[][];
   /** Per-surface mcq option styling (quest vs boss vs dungeon feedback). */
   optionClassName: (state: McqOptionRender) => string;
   /** Per-surface trailing indicator (check / correct / wrong icons). */
@@ -184,6 +189,7 @@ function FreeTextInput({
   rtl,
   labels,
   recallChars = [],
+  recallKeypadRows = [],
   prompt,
 }: QuestionInputProps) {
   const raw = value ?? "";
@@ -226,6 +232,17 @@ function FreeTextInput({
         value={raw}
         onChange={onChange}
       />
+      <AssistKeypad
+        rows={recallKeypadRows}
+        rtl={rtl}
+        disabled={disabled}
+        insertLabel={labels.recallInsertChar}
+        showLabel={labels.recallKeypadShow}
+        hideLabel={labels.recallKeypadHide}
+        inputRef={inputRef}
+        value={raw}
+        onChange={onChange}
+      />
       <p className="mt-2 text-xs text-muted-foreground/60" dir={rtl ? "rtl" : undefined}>
         {labels.recallHint}
       </p>
@@ -239,6 +256,101 @@ function FreeTextInput({
  * focus on the input. The palette is STATIC (never derived from the answer —
  * that would leak it). Empty palette (e.g. English) → renders nothing.
  */
+/**
+ * Insère un caractère à la position du curseur et y replace le caret.
+ * Partagé par la barre de caractères et le clavier d'appoint : les deux
+ * écrivent dans le même champ, il n'y a aucune raison d'en avoir deux copies.
+ */
+function makeInserter(
+  inputRef: React.RefObject<HTMLInputElement | null>,
+  value: string,
+  onChange: (choice: string) => void,
+) {
+  return (char: string) => {
+    const el = inputRef.current;
+    const start = el?.selectionStart ?? value.length;
+    const end = el?.selectionEnd ?? value.length;
+    onChange(value.slice(0, start) + char + value.slice(end));
+    // Restore focus and place the caret after the inserted character once React
+    // has committed the new value.
+    const caret = start + char.length;
+    requestAnimationFrame(() => {
+      const node = inputRef.current;
+      if (!node) return;
+      node.focus();
+      node.setSelectionRange(caret, caret);
+    });
+  };
+}
+
+/**
+ * Clavier d'appoint (étude 20 lot 5) — l'alphabet entier, replié par défaut.
+ *
+ * Il ne s'adresse pas à celui qui a déjà un clavier arabe : il s'adresse à
+ * l'enfant qui n'en a AUCUN et qui, sans lui, tape sa réponse en lettres
+ * latines et se la voit refuser. D'où le repli par défaut — proposé, jamais
+ * imposé — et l'absence totale de lien avec la réponse attendue.
+ */
+export function AssistKeypad({
+  rows,
+  rtl,
+  disabled,
+  insertLabel,
+  showLabel,
+  hideLabel,
+  inputRef,
+  value,
+  onChange,
+}: {
+  rows: string[][];
+  rtl?: boolean;
+  disabled?: boolean;
+  insertLabel: string;
+  showLabel: string;
+  hideLabel: string;
+  inputRef: React.RefObject<HTMLInputElement | null>;
+  value: string;
+  onChange: (choice: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  if (rows.length === 0) return null;
+  const insert = makeInserter(inputRef, value, onChange);
+  return (
+    <div className="mt-3" dir={rtl ? "rtl" : "ltr"} data-testid="assist-keypad">
+      <button
+        type="button"
+        disabled={disabled}
+        aria-expanded={open}
+        onClick={() => setOpen((v: boolean) => !v)}
+        data-testid="assist-keypad-toggle"
+        className="rounded-lg border border-border bg-black/30 px-3 py-1.5 text-xs text-muted-foreground transition hover:border-(--gold)/60 hover:text-foreground disabled:opacity-50 [@media(pointer:coarse)]:min-h-11"
+      >
+        {open ? hideLabel : showLabel}
+      </button>
+      {open && (
+        <div className="mt-2 space-y-1.5">
+          {rows.map((row) => (
+            <div key={row.join("")} className="flex flex-wrap gap-1.5">
+              {row.map((char) => (
+                <button
+                  key={char}
+                  type="button"
+                  disabled={disabled}
+                  aria-label={insertLabel.replace("{char}", char)}
+                  onClick={() => insert(char)}
+                  className="min-w-9 flex-1 rounded-lg border border-border bg-black/40 px-2 py-2 text-base transition hover:border-(--gold)/60 hover:bg-black/70 disabled:opacity-50 [@media(pointer:coarse)]:min-h-11"
+                >
+                  {char}
+                </button>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function RecallCharBar({
   chars,
   rtl,
@@ -257,22 +369,7 @@ export function RecallCharBar({
   onChange: (choice: string) => void;
 }) {
   if (chars.length === 0) return null;
-  const insert = (char: string) => {
-    const el = inputRef.current;
-    const start = el?.selectionStart ?? value.length;
-    const end = el?.selectionEnd ?? value.length;
-    const next = value.slice(0, start) + char + value.slice(end);
-    onChange(next);
-    // Restore focus and place the caret after the inserted character once React
-    // has committed the new value.
-    const caret = start + char.length;
-    requestAnimationFrame(() => {
-      const node = inputRef.current;
-      if (!node) return;
-      node.focus();
-      node.setSelectionRange(caret, caret);
-    });
-  };
+  const insert = makeInserter(inputRef, value, onChange);
   return (
     <div
       className="mt-3 flex flex-wrap gap-2"
