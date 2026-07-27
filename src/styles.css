@@ -1148,6 +1148,14 @@ html:not(.reference) .lesson-figure__plate {
   .app-shell nav {
     display: none !important;
   }
+  /* Cours imprimé depuis l'app authentifiée — le thème sombre donne un premier-plan
+     quasi-blanc (--foreground ≈ oklch(0.965)) qui devient invisible sur fond blanc.
+     .public-shell avait color:#000 ; .app-shell n'avait rien (C4, d526f658). */
+  .app-shell .lesson-content,
+  .app-shell .lesson-content * {
+    color: #000 !important;
+    background: transparent !important;
+  }
   .family-report,
   .family-report * {
     color: #000 !important;

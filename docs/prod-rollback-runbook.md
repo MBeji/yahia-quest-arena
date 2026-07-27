@@ -58,6 +58,25 @@ Le gel est la variable de dépôt **`MERGE_FREEZE`**. À `1` :
 à l'incident. Ces branches passent **le même gate complet** que d'habitude — on gèle le flux
 ordinaire, on n'affaiblit aucun contrôle.
 
+### ⚠️ Le gel n'est PAS opposable — il désarme, il n'interdit pas
+
+Constaté le 2026-07-27. Le gel agit sur **l'armement** de l'auto-merge, pas sur le ruleset :
+une PR dont les checks requis sont verts reste **mergeable**. Il suffit d'un
+`gh pr merge --auto` à la main pour qu'elle parte immédiatement — ce jour-là, deux PR
+ordinaires (#652, #654) ont mergé pendant un gel actif depuis trois heures, sans rien
+contourner d'autre que l'intention.
+
+Ce n'est pas un trou de sécurité — le gate complet reste passé — mais c'est une garantie
+**de discipline, pas de mécanisme**. Deux conséquences :
+
+- **avant d'armer une PR à la main, vérifier l'état du gel** : `gh variable list` (ou le
+  tableau du §« Vérifier l'état » plus bas). Le symptôme d'un gel oublié est trompeur : la PR
+  affiche `CLEAN`, tous les checks verts, `mergeable=MERGEABLE` — et ne merge jamais, parce
+  qu'`automerge.yml` la désarme derrière vous ;
+- si l'on veut un gel **opposable**, il faut un check requis qui échoue tant que
+  `MERGE_FREEZE=1` (et exempte `hotfix/*`/`revert/*`). Non fait à ce jour : arbitrage à
+  rendre, parce que cela met un gel d'exploitation sur le chemin critique de tout merge.
+
 ---
 
 ## L'invariant à garder en tête
@@ -396,7 +415,12 @@ Un runbook non répété est une fiction. Le cycle complet, hors incident :
    qu'une branche ordinaire poussée ouvre bien une PR **draft**, et qu'une branche `revert/…`
    s'ouvre bien ready et armée.
 2. `gh workflow run rollback-prod.yml -f mode=unfreeze -f reason="fin d'exercice"` — vérifier
-   que les PR éligibles se réarment.
+   que les PR éligibles se réarment, **et que `MERGE_FREEZE` est bien retombée à `0`**.
+   ⚠️ **L'étape 2 fait partie de l'exercice, pas de la conclusion.** Le 2026-07-27, un exercice
+   a laissé le gel posé à 15:08 UTC ; il a été découvert **trois heures plus tard**, parce
+   qu'une PR verte refusait de merger. Rien n'alerte sur un gel oublié : la chaîne se contente
+   de ne plus rien merger, silencieusement. Tant que le gel n'est pas opposable (voir §gel),
+   la seule protection est de **finir l'exercice**.
 3. Vérifier qu'un `checkpoint/*` récent existe et que `git show` affiche bien sa tête de schéma.
 4. Le rollback Vercel lui-même se répète sur une fenêtre calme : repromouvoir le déploiement
    précédent, vérifier la prod, repromouvoir le courant.
