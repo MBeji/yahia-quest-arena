@@ -24,7 +24,7 @@ export const Route = createFileRoute("/_public/chapitre/$chapterId")({
 
 function ChapitrePage() {
   const { chapterId } = Route.useParams();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const fetchLesson = useServerFn(getChapterLesson);
   const t = useT();
   const { data, isLoading, isError, refetch } = useQuery({
@@ -76,6 +76,7 @@ function ChapitrePage() {
       practiceExerciseId={data.practiceExerciseId}
       quizCta={quizCta}
       isAuthenticated={!!user}
+      authLoading={authLoading}
     />
   );
 }
