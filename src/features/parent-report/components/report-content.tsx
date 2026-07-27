@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useI18n, useT } from "@/lib/i18n";
 import { useEntrance } from "@/shared/lib/motion";
+import { isolateLtrRuns } from "@/shared/lib/bidi";
 import { buildWeeklyAdvice, type ReportData } from "../report-share";
 export type { ReportData } from "../report-share";
 
@@ -249,7 +250,9 @@ export function ReportContent({ report }: { report: ReportData }) {
               <div key={s.subjectId} className="flex items-center gap-2 sm:gap-3">
                 {/* Fixed columns shrink on phones so the progress bar keeps a usable
                     width down to 360px (multi-device audit — layout). */}
-                <div className="w-16 truncate text-sm text-muted-foreground sm:w-28">{s.name}</div>
+                <div className="w-16 truncate text-sm text-muted-foreground sm:w-28">
+                  {isolateLtrRuns(s.name)}
+                </div>
                 <div className="h-4 min-w-0 flex-1 overflow-hidden rounded-full bg-muted/50">
                   <div
                     className="print-fill h-full rounded-full bg-[image:var(--gradient-gold)] transition-all"
@@ -479,9 +482,9 @@ function InsightList({
             const inner = (
               <>
                 <div className="min-w-0">
-                  <div className="truncate text-foreground">{c.chapterTitle}</div>
+                  <div className="truncate text-foreground">{isolateLtrRuns(c.chapterTitle)}</div>
                   <div className="text-xs text-muted-foreground">
-                    {c.subjectName} ·{" "}
+                    {isolateLtrRuns(c.subjectName)} ·{" "}
                     {t.parentReport.insightAttempts.replace("{n}", String(c.attempts))}
                   </div>
                 </div>
