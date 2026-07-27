@@ -7,6 +7,7 @@ import {
 } from "../sql-builder.ts";
 import {
   auditAcceptedAnswers,
+  auditShortAnswerQuestion,
   type QAAcceptedAnswersQuestion,
 } from "../../../../scripts/content/qa-checks.ts";
 
@@ -372,5 +373,173 @@ describe("withMorphologicalVariants — Tier A au build (étude 20 lot 2)", () =
     );
     expect(variants).toEqual(authored);
     expect(variants.length).toBe(ACCEPTED_ANSWERS_MAX);
+  });
+});
+
+// Étude 20 lot 7 — le type natif `short_answer`, côté pipeline.
+//
+// La garde d'autorat R-12 est la seule chose entre une question INJOUABLE et la
+// base : le scoring SQL fait confiance à la clé compilée. Une réponse de douze
+// mots, une formule, un énoncé qui renvoie à des options inexistantes — l'élève
+// ne peut tout simplement pas répondre. D'où des erreurs, jamais des warnings.
+
+const shortAnswerBase = {
+  type: "short_answer" as const,
+  prompt: "أين الطائر ؟",
+  answerKey: { text: "فوق الشجرة" },
+  explanation: "الطائر يقف على الغصن، أي فوق الشجرة.",
+};
+
+describe("schema — short_answer (étude 20 R-11)", () => {
+  it("accepte une question libre minimale", () => {
+    expect(questionSchema.safeParse(shortAnswerBase).success).toBe(true);
+  });
+
+  it("accepte ses erreurs attendues taguées", () => {
+    expect(
+      questionSchema.safeParse({
+        ...shortAnswerBase,
+        expectedMistakes: [{ text: "تحت الشجرة", misconceptionTag: "ar.espace.sur-sous" }],
+      }).success,
+    ).toBe(true);
+  });
+
+  it("borne la canonique à 60 caractères — au-delà, ce n'est plus tapable", () => {
+    expect(
+      questionSchema.safeParse({ ...shortAnswerBase, answerKey: { text: "x".repeat(61) } }).success,
+    ).toBe(false);
+  });
+
+  it("borne les erreurs attendues à 6", () => {
+    const mistakes = (n: number) =>
+      Array.from({ length: n }, (_, i) => ({ text: `faux ${i}`, misconceptionTag: "t.a.b" }));
+    expect(
+      questionSchema.safeParse({ ...shortAnswerBase, expectedMistakes: mistakes(6) }).success,
+    ).toBe(true);
+    expect(
+      questionSchema.safeParse({ ...shortAnswerBase, expectedMistakes: mistakes(7) }).success,
+    ).toBe(false);
+  });
+
+  it("n'exige aucune option — c'est tout le principe du type", () => {
+    expect(questionSchema.safeParse({ ...shortAnswerBase, options: undefined }).success).toBe(true);
+  });
+});
+
+describe("sql-builder — short_answer (étude 20 lot 7)", () => {
+  const q = questionSchema.parse({
+    ...shortAnswerBase,
+    expectedMistakes: [{ text: "تحت الشجرة", misconceptionTag: "ar.espace.sur-sous" }],
+    acceptedAnswers: ["فوقها"],
+  });
+
+  it("émet la clé typée : canonique + erreurs attendues", () => {
+    const variants = withMorphologicalVariants(q, "ar");
+    expect(variants).toContain("فوقها");
+  });
+
+  it("applique Tier A à la canonique d'une question libre", () => {
+    // Le même filet mécanique que pour le Rappel : « فوق الشجرة » sans article.
+    expect(withMorphologicalVariants(questionSchema.parse(shortAnswerBase), "ar")).toContain(
+      "فوق شجرة",
+    );
+  });
+
+  it("écarte la variante qui égale une ERREUR ATTENDUE — R-4 généralisé", () => {
+    const piege = questionSchema.parse({
+      ...shortAnswerBase,
+      answerKey: { text: "النملة" },
+      expectedMistakes: [{ text: "نملة", misconceptionTag: "ar.lex.article" }],
+    });
+    expect(withMorphologicalVariants(piege, "ar")).not.toContain("نملة");
+  });
+});
+
+describe("auditShortAnswerQuestion — R-12, les contraintes d'autorat", () => {
+  const tags = new Set(["ar.espace.sur-sous"]);
+  const msgs = (over: Partial<Parameters<typeof auditShortAnswerQuestion>[0]>) =>
+    auditShortAnswerQuestion({ ...shortAnswerBase, ...over }, tags, "w").map((f) => f.msg);
+
+  it("laisse passer une question bien écrite", () => {
+    expect(msgs({})).toEqual([]);
+  });
+
+  it("refuse une réponse de plus de 6 mots", () => {
+    expect(msgs({ answerKey: { text: "un deux trois quatre cinq six sept" } }).join()).toContain(
+      "6 max",
+    );
+  });
+
+  it("refuse une réponse qui porte une formule", () => {
+    expect(msgs({ answerKey: { text: "x = 2" } }).join()).toContain("structural math");
+  });
+
+  it("renvoie vers `numeric` quand la réponse est un nombre nu", () => {
+    expect(msgs({ answerKey: { text: "42" } }).join()).toContain("'numeric'");
+  });
+
+  it("refuse un énoncé qui renvoie à des options inexistantes", () => {
+    expect(msgs({ prompt: "Lequel des suivants est correct ?" }).join()).toContain(
+      "options that do not exist",
+    );
+  });
+
+  it("refuse une réponse intapable", () => {
+    expect(msgs({ answerKey: { text: "π" } }).join()).toContain("normalises to nothing");
+  });
+
+  it("refuse un tag d'erreur hors registre", () => {
+    expect(
+      msgs({
+        expectedMistakes: [{ text: "تحت الشجرة", misconceptionTag: "pas.dans.le.registre" }],
+      }).join(),
+    ).toContain("not declared in content/misconceptions.json");
+  });
+
+  it("refuse une « erreur » attendue qui est en fait la bonne réponse", () => {
+    expect(
+      msgs({
+        expectedMistakes: [{ text: "فوق الشجرة", misconceptionTag: "ar.espace.sur-sous" }],
+      }).join(),
+    ).toContain("equals the canonical answer");
+  });
+});
+
+describe("auditAcceptedAnswers — short_answer devient un porteur légitime (lot 7)", () => {
+  it("n'erre plus sur une question libre qui porte un ensemble", () => {
+    const flags = auditAcceptedAnswers(
+      {
+        type: "short_answer",
+        prompt: shortAnswerBase.prompt,
+        answerKey: shortAnswerBase.answerKey,
+        acceptedAnswers: ["فوقها"],
+      },
+      "w",
+    );
+    expect(flags).toEqual([]);
+  });
+
+  it("applique R-4 contre les ERREURS ATTENDUES, pas contre des distracteurs", () => {
+    const flags = auditAcceptedAnswers(
+      {
+        type: "short_answer",
+        prompt: shortAnswerBase.prompt,
+        answerKey: shortAnswerBase.answerKey,
+        expectedMistakes: [{ text: "تحت الشجرة", misconceptionTag: "ar.espace.sur-sous" }],
+        acceptedAnswers: ["تحت الشجرة"],
+      },
+      "w",
+    );
+    expect(flags).toHaveLength(1);
+    expect(flags[0].level).toBe("error");
+    expect(flags[0].msg).toContain("collides");
+  });
+
+  it("refuse toujours l'ensemble sur un type qui n'a aucun scorer pour lui", () => {
+    const flags = auditAcceptedAnswers(
+      { type: "numeric", prompt: "2+2 ?", acceptedAnswers: ["quatre"] },
+      "w",
+    );
+    expect(flags[0].msg).toContain("no scorer reads it");
   });
 });
