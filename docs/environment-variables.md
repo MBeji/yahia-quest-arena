@@ -112,6 +112,47 @@ filter → Internal traffic**, parameter value `developer`, operation **Exclude*
 **Testing** state first, then switch to **Active** (exclusion is permanent, never
 retroactive).
 
+## Product analytics (PostHog) — optional
+
+GA4 above answers _how much traffic and from where_. PostHog
+(`src/shared/lib/product-analytics.ts`) answers what GA4 cannot: **funnels**
+(landing → chapitre → exercice corrigé → compte créé) and **retention** per cohort. Both
+sinks share one call site — the `track*` functions of `analytics.ts` fan out to PostHog first,
+then to GA4 — and each has its own gate, so disabling one never silences the other.
+
+| Variable            | Scope               | Notes                                                           |
+| ------------------- | ------------------- | --------------------------------------------------------------- |
+| `VITE_POSTHOG_KEY`  | client (build time) | PostHog **project** key (`phc_…`). Unset ⇒ inert. No default.   |
+| `VITE_POSTHOG_HOST` | client (build time) | Ingest origin override. Defaults to `https://eu.i.posthog.com`. |
+
+Set the key in **Vercel → Settings → Environment Variables → Production**, then redeploy
+**without build cache** so the value re-inlines. Unlike the GA4 Measurement ID there is no
+hard-coded fallback: the key stays out of the repo, so no branch or fork build can ship it by
+accident and rotating it is a Vercel change, not a code change. Find it in **PostHog →
+Settings → Project → Project API Key**.
+
+**Deliberately not used: `posthog-js`.** The SDK costs ~60 kB against a 450 kB index budget
+(`scripts/check-bundle-budget.mjs`, ~437 kB used today), so events are POSTed straight to
+`<host>/i/v0/e/` like Sentry envelopes are. The trade-off is explicit: no autocapture, no
+heatmaps and **no session replay** — the last one is a data-protection decision, not an
+oversight (recording the screens of minors needs the INPDP groundwork of GAP-003 and a privacy
+policy that does not exist yet, GAP-024).
+
+**No PII, by construction.** No e-mail, no name, no Supabase user id ever leaves the browser.
+The `distinct_id` is a random UUID kept in `localStorage` (`na9ra.ph_did`), and every event
+carries `$process_person_profile: false` — the wire equivalent of the snippet's
+`person_profiles: 'identified_only'`: PostHog counts the event without building a person
+profile.
+
+**Developer traffic.** PostHog has no built-in internal-traffic filter, so each `$pageview`
+carries the same `traffic_type` property as GA4 (`developer` on localhost and Vercel previews,
+`production` elsewhere — `resolveTrafficType`). Filter on it in PostHog, or build the insights
+on a cohort restricted to `traffic_type = production`.
+
+The CSP allow-lists the ingest origin in **`connect-src` only** (`src/shared/lib/csp.ts`,
+read from the same `POSTHOG_HOST` constant the sender uses). Nothing is added to `script-src`:
+there is no external script to load.
+
 ## Error monitoring (Sentry) — optional
 
 Error reporting (`src/shared/lib/monitoring.ts`, hooked into `logger.error` + browser
