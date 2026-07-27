@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
+  expandMorphologicalVariants,
   isRecallEligible,
   normalizeRecallText,
   PARITY_CORPUS,
@@ -234,5 +235,81 @@ describe("TYPABLE_CHARSET — R-5", () => {
     expect(TYPABLE_CHARSET.test("")).toBe(false);
     expect(TYPABLE_CHARSET.test("π")).toBe(false);
     expect(TYPABLE_CHARSET.test("a b")).toBe(false);
+  });
+});
+
+// Étude 20 lot 2 — Tier A, l'expansion morphologique déterministe.
+//
+// Le gisement mesuré n'est pas sémantique : c'est l'article (21,4 % des
+// éligibles arabes). Ces tests fixent ce que la fonction PURE produit ; la
+// garde anti-collision R-4, elle, appartient à l'appelant (sql-builder) et est
+// prouvée dans content-pipeline-etude20.test.ts.
+
+describe("expandMorphologicalVariants — Tier A (étude 20 lot 2)", () => {
+  it("plie l'article défini arabe dans les deux sens", () => {
+    expect(expandMorphologicalVariants("النملة", "ar")).toContain("نملة");
+    expect(expandMorphologicalVariants("نملة", "ar")).toContain("النملة");
+  });
+
+  it("retire l'article de CHAQUE mot d'une réponse arabe composée", () => {
+    // L'exemple de l'étude §3 : « النبات الأخضر » ⇄ « نبات أخضر ».
+    expect(expandMorphologicalVariants("النبات الأخضر", "ar")).toContain("نبات أخضر");
+  });
+
+  it("n'ajoute l'article arabe qu'en tête — jamais sur chaque mot", () => {
+    const variants = expandMorphologicalVariants("فوق الشجرة", "ar");
+    expect(variants).toContain("الفوق الشجرة");
+    expect(variants.some((v) => v.startsWith("الفوق الالشجرة"))).toBe(false);
+  });
+
+  it("retire l'article français, élidé compris", () => {
+    expect(expandMorphologicalVariants("l'Afrique", "fr")).toContain("Afrique");
+    expect(expandMorphologicalVariants("Les Alpes", "fr")).toContain("Alpes");
+  });
+
+  it("propose les articles français plausibles quand la réponse n'en a pas", () => {
+    // Le genre est indécidable sans la langue déclarée : on émet les candidats,
+    // l'élève en tape un, les autres sont des chaînes mortes.
+    const variants = expandMorphologicalVariants("Afrique", "fr");
+    expect(variants).toContain("l'Afrique");
+    expect(variants).toContain("la Afrique");
+  });
+
+  it("déplie et replie les contractions anglaises", () => {
+    expect(expandMorphologicalVariants("they're", "en")).toContain("they are");
+    expect(expandMorphologicalVariants("cannot", "en")).toContain("can't");
+    expect(expandMorphologicalVariants("the sun", "en")).toContain("sun");
+  });
+
+  it("ne rend jamais la canonique elle-même", () => {
+    for (const [canonical, lang] of [
+      ["النملة", "ar"],
+      ["l'Afrique", "fr"],
+      ["the sun", "en"],
+      ["Afrique", "fr"],
+    ] as const) {
+      const canon = normalizeRecallText(canonical);
+      expect(expandMorphologicalVariants(canonical, lang).map(normalizeRecallText)).not.toContain(
+        canon,
+      );
+    }
+  });
+
+  it("ne rend jamais deux formes qui se normalisent pareil", () => {
+    const variants = expandMorphologicalVariants("Afrique", "fr").map(normalizeRecallText);
+    expect(new Set(variants).size).toBe(variants.length);
+  });
+
+  it("ne rend aucune variante intapable, ni sur une entrée vide", () => {
+    expect(expandMorphologicalVariants("", "fr")).toEqual([]);
+    expect(expandMorphologicalVariants("   ", "fr")).toEqual([]);
+    for (const v of expandMorphologicalVariants("π le π", "fr")) {
+      expect(TYPABLE_CHARSET.test(normalizeRecallText(v))).toBe(true);
+    }
+  });
+
+  it("ne produit AUCUNE paraphrase — le stop-point du lot 2", () => {
+    // « فوقها » ↔ « فوق الشجرة » est du Tier B : sémantique, donc hors de ce tier.
+    expect(expandMorphologicalVariants("فوقها", "ar")).not.toContain("فوق الشجرة");
   });
 });
