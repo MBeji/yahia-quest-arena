@@ -928,6 +928,10 @@ export type QAAcceptedAnswersQuestion = {
   options?: ReadonlyArray<{ id: string; text: string }>;
   correctOption?: string;
   acceptedAnswers?: ReadonlyArray<string>;
+  /** `short_answer` (lot 7) : la canonique n'est pas une option, c'est la clé. */
+  answerKey?: { text?: string };
+  /** `short_answer` (lot 7) : le pendant des distracteurs pour R-4. */
+  expectedMistakes?: ReadonlyArray<{ text: string; misconceptionTag: string }>;
 };
 
 export function auditAcceptedAnswers(q: QAAcceptedAnswersQuestion, where: string): Flag[] {
@@ -936,44 +940,50 @@ export function auditAcceptedAnswers(q: QAAcceptedAnswersQuestion, where: string
   if (set.length === 0) return flags;
 
   // Seule une question qui CONSOMME l'ensemble a le droit d'en porter un
-  // (étude §3, QA 3). Au lot 1 le seul consommateur est le mode Rappel, donc
-  // les `mcq` ; `short_answer` rejoint la liste au lot 7.
-  if (q.type !== "mcq") {
+  // (étude §3, QA 3) : les `mcq` (mode Rappel) et, depuis le lot 7, les
+  // `short_answer` — pour qui l'ensemble est actif en permanence.
+  if (q.type !== "mcq" && q.type !== "short_answer") {
     flags.push({
       level: "error",
       where,
-      msg: `acceptedAnswers on a '${q.type}' question — no scorer reads it (only recall-eligible mcq does today)`,
+      msg: `acceptedAnswers on a '${q.type}' question — no scorer reads it (only recall-eligible mcq and short_answer do)`,
     });
     return flags;
   }
 
-  const options = q.options ?? [];
-  if (
-    !isRecallEligible({
-      type: q.type,
-      prompt: q.prompt,
-      options,
-      correctOption: q.correctOption,
-    })
-  ) {
-    // Warning, pas erreur : la question reste valide et jouable, seul
-    // l'ensemble dort. R-6 interdit de RETIRER de l'éligibilité, donc un
-    // ensemble en avance de phase n'est pas une faute d'autorat.
-    flags.push({
-      level: "warn",
-      where,
-      msg: "acceptedAnswers on a question that is not recall-eligible — the set is ignored at scoring",
-    });
-  }
-
-  const canonicalText = options.find((o) => o.id === q.correctOption)?.text ?? "";
-  const canonical = normalizeRecallText(canonicalText);
-  // Les éléments DÉCLARÉS FAUX de la question : les distracteurs (R-4). Le lot 7
-  // y ajoutera les `expectedMistakes` d'une `short_answer`.
+  // La canonique et les éléments DÉCLARÉS FAUX, par type (R-4) : distracteurs
+  // pour un QCM rejoué en Rappel, erreurs attendues pour une question libre.
   const declaredWrong = new Map<string, string>();
-  for (const o of options) {
-    if (o.id !== q.correctOption) declaredWrong.set(normalizeRecallText(o.text), o.text);
+  let canonicalText: string;
+  if (q.type === "short_answer") {
+    canonicalText = q.answerKey?.text ?? "";
+    for (const m of q.expectedMistakes ?? [])
+      declaredWrong.set(normalizeRecallText(m.text), m.text);
+  } else {
+    const options = q.options ?? [];
+    if (
+      !isRecallEligible({
+        type: q.type,
+        prompt: q.prompt,
+        options,
+        correctOption: q.correctOption,
+      })
+    ) {
+      // Warning, pas erreur : la question reste valide et jouable, seul
+      // l'ensemble dort. R-6 interdit de RETIRER de l'éligibilité, donc un
+      // ensemble en avance de phase n'est pas une faute d'autorat.
+      flags.push({
+        level: "warn",
+        where,
+        msg: "acceptedAnswers on a question that is not recall-eligible — the set is ignored at scoring",
+      });
+    }
+    canonicalText = options.find((o) => o.id === q.correctOption)?.text ?? "";
+    for (const o of options) {
+      if (o.id !== q.correctOption) declaredWrong.set(normalizeRecallText(o.text), o.text);
+    }
   }
+  const canonical = normalizeRecallText(canonicalText);
 
   const seen = new Set<string>();
   for (const entry of set) {
@@ -1027,5 +1037,93 @@ export function auditAcceptedAnswers(q: QAAcceptedAnswersQuestion, where: string
     seen.add(n);
   }
 
+  return flags;
+}
+
+/* ============================================================================
+   Contraintes d'autorat de `short_answer` (étude 20 R-12, lot 7).
+
+   Miroir, côté NAISSANCE, des critères d'éligibilité au Rappel de l'étude 17 —
+   qui, eux, filtraient le stock au rejeu. La logique est la même : une question
+   corrigée par comparaison de texte n'a de sens que si la réponse attendue est
+   courte, tapable, et si l'énoncé se suffit à lui-même.
+
+   Pourquoi c'est bloquant : le scoring SQL fait confiance à la clé. Une
+   `short_answer` dont la réponse tient en 12 mots ou contient une formule
+   n'est pas « imparfaite », elle est INJOUABLE — l'élève ne peut pas la taper.
+   ========================================================================== */
+
+/** Une `short_answer` vue par la garde d'autorat. */
+export type QAShortAnswerQuestion = {
+  type: string;
+  prompt: string;
+  explanation?: string;
+  answerKey?: { text?: string };
+  expectedMistakes?: ReadonlyArray<{ text: string; misconceptionTag: string }>;
+};
+
+export function auditShortAnswerQuestion(
+  q: QAShortAnswerQuestion,
+  knownTags: ReadonlySet<string>,
+  where: string,
+): Flag[] {
+  const flags: Flag[] = [];
+  if (q.type !== "short_answer") return flags;
+
+  const text = q.answerKey?.text ?? "";
+  const err = (msg: string) => flags.push({ level: "error" as const, where, msg });
+
+  // Longueur / forme : les bornes de l'éligibilité R-2(c) de l'étude 17.
+  if (/[\n\r]/.test(text)) err("short_answer: answerKey.text must be a single line");
+  const words = text.trim().split(/\s+/).filter(Boolean).length;
+  if (words > 6) err(`short_answer: answerKey.text has ${words} words — 6 max, it must be typable`);
+
+  // Contenu riche et symboles de structure : intapables au clavier.
+  if (/(<svg|<img|!\[|\$\$|http)/i.test(text))
+    err("short_answer: answerKey.text carries rich content — a student cannot type it");
+  if (/[=<>^√×÷±≤≥≠≈→∈∪∩²³¹⁰-⁹₀-₉]/.test(text))
+    err("short_answer: answerKey.text carries structural math — use another type");
+
+  // Charset tapable (R-5) : même règle que les membres de l'ensemble accepté.
+  const norm = normalizeRecallText(text);
+  if (norm === "")
+    err("short_answer: answerKey.text normalises to nothing — it could never be typed");
+  else if (!TYPABLE_CHARSET.test(norm))
+    err(`short_answer: answerKey.text leaves the typable charset once normalised ("${norm}")`);
+  // Un nombre pur a déjà son type, avec sa tolérance et son clavier numérique.
+  else if (/^[0-9]+(\.[0-9]+)?$/.test(norm))
+    err("short_answer: the answer is a plain number — use the 'numeric' type (tolerance, unit)");
+
+  // Énoncé auto-suffisant : « lequel des suivants » n'a aucun sens sans options.
+  if (
+    /(lequel|laquelle|lesquel|parmi|suivante?s?|ci-dessous|ci-dessus|intrus|which of|following|below|مما يلي|من بين|أي من)/i.test(
+      q.prompt ?? "",
+    )
+  )
+    err(
+      "short_answer: the prompt depends on options that do not exist — rewrite it as self-sufficient",
+    );
+
+  // L'explication ne doit pas livrer la réponse mot pour mot avant l'élève.
+  // (Garde légère : on ne compare que la forme normalisée exacte.)
+  for (const m of q.expectedMistakes ?? []) {
+    if (!knownTags.has(m.misconceptionTag))
+      err(
+        `short_answer: expected mistake "${m.text}" uses tag "${m.misconceptionTag}" not declared in content/misconceptions.json`,
+      );
+    const mn = normalizeRecallText(m.text);
+    if (mn === "") err(`short_answer: expected mistake "${m.text}" normalises to nothing`);
+    else if (mn === norm)
+      err(
+        `short_answer: expected mistake "${m.text}" equals the canonical answer — it is not wrong`,
+      );
+  }
+  const seen = new Set<string>();
+  for (const m of q.expectedMistakes ?? []) {
+    const mn = normalizeRecallText(m.text);
+    if (mn !== "" && seen.has(mn))
+      err(`short_answer: expected mistake "${m.text}" duplicates another once normalised`);
+    seen.add(mn);
+  }
   return flags;
 }
