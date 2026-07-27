@@ -19,7 +19,7 @@ gh workflow run rollback-prod.yml -f mode=rollback -f reason="<ce qui est cassé
 gh run watch "$(gh run list --workflow rollback-prod.yml --limit 1 --json databaseId --jq '.[0].databaseId')"
 
 # 3. Vérifier : la sonde dit quel code tourne et si la base répond
-curl -s https://na9ranal3ab.vercel.app/api/health
+curl -sL https://www.na9ranal3ab.tn/api/health
 
 # 4. Puis à la main, ce que la sonde ne voit pas : page d'accueil, une matière,
 #    un exercice soumis (un crash CLIENT laisse la sonde serveur au vert)
@@ -299,10 +299,19 @@ gh run view <id> --log-failed           # qu'est-ce qui a VRAIMENT échoué ?
 ### `GET /api/health` — la sonde
 
 ```bash
-curl -s -o /dev/null -w '%{http_code}\n' https://na9ranal3ab.vercel.app/api/health   # 200 ou 503
-curl -s https://na9ranal3ab.vercel.app/api/health
+curl -sL -o /dev/null -w '%{http_code}\n' https://www.na9ranal3ab.tn/api/health   # 200 ou 503
+curl -sL https://www.na9ranal3ab.tn/api/health
 # {"status":"ok","checks":{"database":"ok"},"commit":"4eb36f9","ts":"…"}
 ```
+
+`www.na9ranal3ab.tn` est le **seul hôte qui répond 200** : le `.vercel.app` y redirige en 301
+et l'apex en 308 (constat 2026-07-20, reconfirmé 2026-07-27). D'où le `-L` : sans lui, on lit
+la redirection et on conclut à une panne qui n'existe pas.
+
+⚠️ Sur une page HTML (pas sur la sonde), il faut **aussi** un `-A` : le bot guard refuse les
+User-Agent `curl/` en **403** ([`src/shared/lib/bot-guard.ts`](../src/shared/lib/bot-guard.ts)).
+`curl -sL -A 'yahia-quest-arena-rollback-check' https://www.na9ranal3ab.tn` → 200. La sonde,
+elle, est traitée **avant** le guard exprès, et répond à un client nu.
 
 **200** si la base répond, **503** sinon — un monitor bête suffit, le code HTTP porte tout.
 Elle répond deux questions qu'une page d'accueil en 200 ne répond pas :
@@ -347,12 +356,12 @@ serveur ne voit pas : elle dirait « ok » pendant que le navigateur montre une 
 
 | Élément             | Où                  | Rôle                                                                       | État                              |
 | ------------------- | ------------------- | -------------------------------------------------------------------------- | --------------------------------- |
-| `VERCEL_TOKEN`      | Secrets → Actions   | rollback scripté                                                           | **à créer**                       |
-| `VERCEL_PROJECT_ID` | Secrets → Actions   | idem (Vercel → Project Settings → Project ID)                              | **à créer**                       |
-| `VERCEL_ORG_ID`     | Secrets → Actions   | idem, scope équipe                                                         | **à créer**                       |
+| `VERCEL_TOKEN`      | Secrets → Actions   | rollback scripté                                                           | ✅ posé le 2026-07-27             |
+| `VERCEL_PROJECT_ID` | Secrets → Actions   | idem (Vercel → Project Settings → Project ID)                              | ✅ posé le 2026-07-27             |
+| `VERCEL_ORG_ID`     | Secrets → Actions   | idem, scope équipe                                                         | ✅ posé le 2026-07-27             |
 | `GH_AUTOMATION_PAT` | Secrets → Actions   | doit aussi porter **Variables: read and write** pour écrire `MERGE_FREEZE` | ✅ existe (permission à vérifier) |
 | `MERGE_FREEZE`      | Variables → Actions | le gel. Absente = normal                                                   | créée à la volée par le workflow  |
-| `PROD_URL`          | Variables → Actions | facultatif, défaut `https://na9ranal3ab.vercel.app`                        | —                                 |
+| `PROD_URL`          | Variables → Actions | facultatif, défaut `https://www.na9ranal3ab.tn` — seul hôte qui répond 200 | —                                 |
 
 Sans les secrets Vercel, `rollback-prod.yml` **échoue avec le mode d'emploi du dashboard** : le
 levier manuel reste disponible, mais il n'est plus mesuré en secondes.
