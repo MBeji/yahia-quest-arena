@@ -1,7 +1,7 @@
 {
   "$comment": "Declarative execution policy — the SINGLE source of truth for what an agent may run in this repo (étude 25 D-4). `npm run harness:sync` compiles it into per-tool views (today: .claude/settings.json); `npm run harness:check` fails CI if a view drifts from this file. Tools with no repo-level permission file (Codex, Cursor, …) read the human-readable summary in AGENTS.md § Execution policy instead — for them it is guidance, not enforcement; the hard net stays the husky hooks + required CI checks + the absence of prod credentials locally (étude 25 P-3/P-4).",
   "allow": {
-    "$comment": "Always allowed — read-only inspection or the project's own gates. Grouped by intent so a reviewer sees WHY a rule exists, not just a flat list.",
+    "$comment": "Always allowed — read-only inspection, the project's own gates, and (group `ops-dispatch`) the short list of workflows an agent may TRIGGER. That last group is the exception to `gh-readonly`, granted PER WORKFLOW and never as `gh workflow run:*`: each entry is reversible (rollback-prod's freeze/unfreeze) or read-only on prod (db-backup dumps, db-tests runs pgTAP on a throwaway database). Anything that WRITES prod — the schema (db-migrate-prod), the corpus, or e2e pointed at a deployment holding prod secrets — stays out, and is denied by name below so the reasoning survives the next reader. Adding a workflow here is a review decision, not a convenience. Grouped by intent so a reviewer sees WHY a rule exists, not just a flat list.",
     "gates": [
       "Bash(npm run lint)",
       "Bash(npm run typecheck)",
@@ -61,6 +61,11 @@
       "Bash(gh run list:*)",
       "Bash(gh run view:*)",
       "Bash(gh workflow list:*)"
+    ],
+    "ops-dispatch": [
+      "Bash(gh workflow run rollback-prod.yml:*)",
+      "Bash(gh workflow run db-backup.yml:*)",
+      "Bash(gh workflow run db-tests.yml:*)"
     ]
   },
   "deny": [
@@ -79,6 +84,18 @@
     {
       "rule": "Bash(supabase db reset:*)",
       "reason": "Same as the npx form — destructive."
+    },
+    {
+      "rule": "Bash(gh workflow run db-migrate-prod.yml:*)",
+      "reason": "Applies migrations to PROD. It runs on merge to `main` and nowhere else (DoD §7) — a manual dispatch would push schema that no PR gate ever saw."
+    },
+    {
+      "rule": "Bash(gh workflow run e2e-auth.yml:*)",
+      "reason": "Drives a browser against a deployment that serves with PROD secrets, so the suite WRITES to the production database (issue #614, and again #638). A human dispatches it, after checking where PLAYWRIGHT_BASE_URL points."
+    },
+    {
+      "rule": "Bash(gh workflow run release.yml:*)",
+      "reason": "Publishes a release/tag — outward-facing and hard to walk back. Tagging policy is a human call (docs/release-tagging-policy.md)."
     }
   ]
 }

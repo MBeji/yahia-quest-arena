@@ -163,8 +163,13 @@ Full detail on §7/§8: [`docs/ci-cd-and-branch-protection.md`](./docs/ci-cd-and
 Always allowed: the project's own gates (`npm run {lint,typecheck,test,test:*,verify,ci:verify,
 build,build:*,format,audit:deps,harness:check}`), the content pipeline (`npm run content:*`),
 read-only `git`/`gh`/`ls` inspection, and read-only `supabase migration list`/`db diff`/`test db`.
+Plus a short list of workflows an agent may **déclencher**, nommés un par un (jamais
+`gh workflow run:*`) : `rollback-prod.yml` (gel/dégel réversibles), `db-backup.yml` (dump +
+drill, lecture seule sur la prod) et `db-tests.yml` (pgTAP sur une base jetable).
 **Never**: `supabase db push`/`db reset` against any project (prod migrates only via
-`db-migrate-prod.yml`, DoD §7). Anything else falls back to asking.
+`db-migrate-prod.yml`, DoD §7), ni le dispatch de `db-migrate-prod.yml` (schéma prod),
+`e2e-auth.yml` (écrit en prod via les secrets SSR du déploiement — #614, #638) ou
+`release.yml` (publication). Anything else falls back to asking.
 Source of truth: **`harness/policy.json`** (with a reason on every deny) — `npm run harness:sync`
 compiles it into each tool's view (today `.claude/settings.json`, never hand-edited) and
 `npm run harness:check` fails CI on drift. Tools without a repo-level permission file read this
