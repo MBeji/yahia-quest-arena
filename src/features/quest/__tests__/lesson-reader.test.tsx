@@ -164,6 +164,23 @@ describe("LessonReader", () => {
     expect(container.querySelector('a[href="/signup"]')).toBeNull();
   });
 
+  it("hides the account invite while auth is still loading — no stale sign-up CTA (C2 fix)", () => {
+    // authLoading=true means we have not yet resolved the session (user=null, loading=true).
+    // Without the authLoading guard the reader would show the sign-up CTA to a
+    // logged-in visitor during the async getSession() window.
+    const { container } = render(
+      <LessonReader
+        chapterId="c1"
+        chapter={chapter}
+        allChapters={siblings}
+        isAuthenticated={false}
+        authLoading={true}
+      />,
+    );
+    expect(container.querySelector('a[href="/signup"]')).toBeNull();
+    expect(screen.queryByText(/Apprends en jouant/)).not.toBeInTheDocument();
+  });
+
   it("routes the single CTA to the comprehension quiz while the gate is closed", () => {
     const { container } = render(
       <LessonReader
