@@ -173,9 +173,12 @@ at the **dedicated TEST** Supabase project, never production:
 Until they are set, `e2e-auth.yml` skips green (it never blocks). Full details and the
 anti-prod guard are documented in `e2e/README.md`.
 
-_Observability (health endpoint + Sentry + uptime monitor) remains the largest hole in the
-recovery loop: with none of them, an outage is discovered by a human opening the site, and that
-detection delay dominates the RTO (see the rollback runbook, § « Détection — le trou connu »).
-It remains tracked for the next
-quality-sprint wave. The DB-integration test job is already live — it is the `pgTAP suite`
-check above._
+_Observability: the **`/api/health` probe** is live (200 ok / 503 degraded, checks the database,
+served **before** the bot guard so a monitor is never 403'd), and an external **UptimeRobot**
+monitor polls it every 5 minutes with e-mail/push alerting — detection no longer waits for a
+human to open the site (verified 2026-07-27). Caveat worth re-testing periodically: a monitor
+that detects without notifying is useless, and that failure is invisible on its dashboard — use
+its "Test Notification" button. What remains is **Sentry** (or any client-side error collector):
+a browser crash leaves the server probe green, which is precisely the shape of the 2026-07-01
+outage. See the rollback runbook, § « Détection ». The DB-integration test job is already live —
+it is the `pgTAP suite` check above._
