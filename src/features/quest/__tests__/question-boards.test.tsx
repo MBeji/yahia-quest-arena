@@ -19,6 +19,8 @@ const labels: QuestionInputLabels = {
   recallPlaceholder: "Tape ta réponse",
   recallHint: "Tape ta réponse, puis Entrée pour valider.",
   recallInsertChar: "insérer {char}",
+  recallKeypadShow: "Clavier arabe",
+  recallKeypadHide: "Masquer le clavier",
 };
 
 const steps = [

@@ -186,3 +186,152 @@ export const PARITY_CORPUS: ReadonlyArray<{ input: string; expected: string; why
   { input: "etc.", expected: "etc", why: "trailing dot dropped (not interdigit)" },
   { input: "π", expected: "", why: "off-keyboard char dropped" },
 ];
+
+/* ============================================================================
+   Tier A — expansion morphologique déterministe (étude 20 lot 2).
+
+   Le plus gros gisement mesuré de faux négatifs n'est pas sémantique : c'est
+   l'ARTICLE (21,4 % des éligibles arabes, plus ses équivalents fr/en). Un élève
+   qui tape « نملة » là où la clé dit « النملة » a raison ; le moteur refusait.
+   Ce gisement ne demande aucun modèle — d'où ce tier purement mécanique, qui
+   s'exécute au BUILD (§3 « exécutable au build ou pré-généré en fichiers »).
+
+   Pourquoi au build et non écrit dans le corpus : la variante est une DÉRIVÉE
+   de la clé, pas une décision d'auteur. La stocker dupliquerait 12 349 fois une
+   règle de trois lignes, gèlerait un état de la normalisation dans des fichiers,
+   et noierait les paraphrases du Tier B — celles-là, humaines, restent authorées.
+
+   Ce tier ne produit QUE des variantes morphologiques (stop-point du lot 2) :
+   aucune paraphrase, aucun synonyme, aucune translittération — Tier B.
+
+   La langue est un PARAMÈTRE, pas une devinette : chaque matière déclare son
+   `contentLanguage`. Appliquer les règles des trois langues à la fois
+   produirait des formes qu'aucun élève ne tape (« an Afrique »), et les
+   valider serait pédagogiquement faux dans un mode destiné à des enfants qui
+   apprennent justement à écrire.
+   ========================================================================== */
+
+/** Article défini arabe, en tête de mot. */
+const AR_ARTICLE = /^ال(?=.)/u;
+
+/** Articles français de tête, forme élidée incluse. */
+const FR_ARTICLES = ["le ", "la ", "les ", "l'", "l’"];
+
+/** Formes ajoutées quand la réponse n'a pas d'article : l'élève tapera la bonne. */
+const FR_ARTICLE_PREFIXES = ["le ", "la ", "les ", "l'"];
+
+/** Articles anglais de tête. */
+const EN_ARTICLES = ["the ", "a ", "an "];
+const EN_ARTICLE_PREFIXES = ["the ", "a ", "an "];
+
+/**
+ * Contractions anglaises usuelles. La normalisation supprime apostrophes ET
+ * espaces, donc « they're » → `theyre` et « they are » → `theyare` restent bien
+ * deux formes distinctes : la paire vaut la peine d'être générée.
+ */
+const EN_CONTRACTIONS: ReadonlyArray<readonly [string, string]> = [
+  // Les deux irrégulières d'abord : la règle générique « n't » → « not »
+  // rendrait « can not » là où l'anglais écrit « cannot », et ne saurait pas
+  // remonter de « will not » à « won't ».
+  ["can't", "cannot"],
+  ["won't", "will not"],
+  ["'re", " are"],
+  ["'ve", " have"],
+  ["'ll", " will"],
+  ["'m", " am"],
+  ["n't", " not"],
+  ["'s", " is"],
+];
+
+function expandArabic(text: string): string[] {
+  const words = text.split(/\s+/).filter(Boolean);
+  const out: string[] = [];
+
+  // Sans article : « النبات الأخضر » → « نبات أخضر » (tous les mots, cf. §3).
+  const stripped = words.map((w) => w.replace(AR_ARTICLE, "")).join(" ");
+  if (stripped !== text && stripped.trim() !== "") out.push(stripped);
+
+  // Avec article, sur le mot de tête seulement : ajouter « ال » à chaque mot
+  // produirait des formes qu'aucun élève ne tape (« الفوق الشجرة »).
+  if (!AR_ARTICLE.test(words[0] ?? "")) {
+    out.push([`ال${words[0]}`, ...words.slice(1)].join(" "));
+  }
+  return out;
+}
+
+function expandLatin(text: string, articles: readonly string[], prefixes: readonly string[]) {
+  const out: string[] = [];
+  const lower = text.toLowerCase();
+
+  // Article de tête retiré.
+  let stripped: string | undefined;
+  for (const article of articles) {
+    if (lower.startsWith(article)) {
+      stripped = text.slice(article.length).trim();
+      break;
+    }
+  }
+  if (stripped) out.push(stripped);
+
+  // Article de tête ajouté. Le GENRE reste indécidable (« le » ou « la » ?) :
+  // on émet les candidats de la langue, l'élève en tapera un. Les autres sont
+  // des chaînes mortes, et R-4 écarte celle qui collisionnerait.
+  if (stripped === undefined) {
+    for (const prefix of prefixes) out.push(`${prefix}${text}`);
+  }
+
+  return out;
+}
+
+function expandEnglish(text: string): string[] {
+  const out = expandLatin(text, EN_ARTICLES, EN_ARTICLE_PREFIXES);
+  const lower = text.toLowerCase();
+  // Contractions, dans les deux sens. La PREMIÈRE règle qui matche gagne :
+  // « can't » doit donner « cannot », pas « can not » par la règle générique.
+  // Une réponse de Rappel fait ≤ 6 mots — une seule contraction.
+  for (const [short, long] of EN_CONTRACTIONS) {
+    if (lower.includes(short)) {
+      out.push(text.replaceAll(short, long));
+      break;
+    }
+    if (lower.includes(long)) {
+      out.push(text.replaceAll(long, short));
+      break;
+    }
+  }
+  return out;
+}
+
+/**
+ * Variantes morphologiques mécaniques d'une réponse canonique — fonction PURE.
+ *
+ * Ne rend jamais la canonique elle-même, ni deux formes qui se normalisent
+ * pareil. L'appelant reste responsable de la garde anti-collision R-4 (une
+ * variante égale à un élément déclaré faux doit être ÉCARTÉE, la question
+ * restant jouable — c'est ce qui préserve le « zéro exclusion », D-2).
+ */
+export function expandMorphologicalVariants(
+  canonical: string,
+  language: "ar" | "fr" | "en",
+): string[] {
+  const text = canonical.trim();
+  if (text === "") return [];
+
+  const raw =
+    language === "ar"
+      ? expandArabic(text)
+      : language === "en"
+        ? expandEnglish(text)
+        : expandLatin(text, FR_ARTICLES, FR_ARTICLE_PREFIXES);
+
+  const seen = new Set([normalizeRecallText(text)]);
+  const out: string[] = [];
+  for (const variant of raw) {
+    const n = normalizeRecallText(variant);
+    // Intapable ou identique à une forme déjà retenue : sans valeur.
+    if (n === "" || !TYPABLE_CHARSET.test(n) || seen.has(n)) continue;
+    seen.add(n);
+    out.push(variant.trim());
+  }
+  return out;
+}
