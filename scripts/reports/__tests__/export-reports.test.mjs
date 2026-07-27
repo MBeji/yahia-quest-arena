@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { buildExport, flattenBugReport, flattenContentReport } from "../export-reports.mjs";
+import {
+  assertProdReportSource,
+  buildExport,
+  flattenBugReport,
+  flattenContentReport,
+} from "../export-reports.mjs";
+import { PROD_SUPABASE_REF } from "../../shared/prod-targets.mjs";
 
 describe("flattenBugReport", () => {
   it("keeps id/user/message/page/status and maps created_at to createdAt", () => {
@@ -100,5 +106,34 @@ describe("buildExport", () => {
     const json = JSON.stringify(doc);
     expect(json).not.toContain(""); // terminal escape neutralized
     expect(JSON.parse(json).bugReports[0].message).toContain("<script>"); // data preserved, not executed
+  });
+});
+
+describe("assertProdReportSource", () => {
+  const PROD = `https://${PROD_SUPABASE_REF}.supabase.co`;
+
+  it("accepts the production project and returns the url unchanged", () => {
+    expect(assertProdReportSource(PROD)).toBe(PROD);
+  });
+
+  it("refuses the TEST project — the failure that made the triage blind for ten days", () => {
+    // A well-formed export of the wrong database is worse than no export: the
+    // nightly e2e files one report there and reset-gameplay wipes it, which
+    // reads exactly like a fresh production report every morning (#638).
+    expect(() => assertProdReportSource("https://pqegdnwdtbjtplcthxyp.supabase.co")).toThrow(
+      /does not point at PRODUCTION/,
+    );
+  });
+
+  it("refuses an empty or malformed value rather than guessing", () => {
+    for (const value of ["", "   ", "not-a-url", "https://example.com"]) {
+      expect(() => assertProdReportSource(value)).toThrow(/PRODUCTION/);
+    }
+  });
+
+  it("names the expected project ref, so the fix is obvious from the error alone", () => {
+    expect(() => assertProdReportSource("https://other.supabase.co")).toThrow(
+      new RegExp(PROD_SUPABASE_REF),
+    );
   });
 });
