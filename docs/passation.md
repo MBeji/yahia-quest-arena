@@ -144,6 +144,63 @@ Trois automatismes se déclenchent :
 > Le passage de relais côté contenu se fait donc **là-bas** — voir
 > [content-generation-pipeline.md](./content-generation-pipeline.md).
 
+## 7. Quand ça casse — le retour arrière
+
+L'automatisation qui rend la livraison gratuite rend aussi la panne **auto-entretenue** : un
+rollback posé sur Vercel ne tient que jusqu'au prochain merge, qui redéploie `main` — toujours
+porteur du code fautif. D'où l'ordre **non négociable** : geler la chaîne d'abord, rollbacker
+ensuite.
+
+```bash
+gh workflow run rollback-prod.yml -f mode=rollback -f reason="<ce qui est cassé>"
+```
+
+Le workflow pose `MERGE_FREEZE=1`, désarme les PR déjà armées, repromeut le déploiement de
+production précédent, revérifie que la prod répond, puis ouvre une issue **`prod-incident`**
+portant la checklist du reste. Trois modes : `rollback`, `freeze-only`, `unfreeze`.
+
+Quatre leviers, à **combiner** — le premier arrête l'hémorragie, le second referme l'invariant :
+
+| Levier                                                         | Délai     | Ce qu'il répare                  |
+| -------------------------------------------------------------- | --------- | -------------------------------- |
+| **Rollback Vercel** (`rollback-prod.yml`)                      | ~30 s     | le code servi en prod            |
+| **Revert git** (branche `revert/…`)                            | 15–25 min | l'invariant `main` == prod       |
+| **Checkpoint** `checkpoint/AAAA-Wnn`                           | idem      | ramène à un état **prouvé** vert |
+| **Restauration base** ([runbook](./backup-restore-runbook.md)) | ~1 h      | données / schéma                 |
+
+Les checkpoints sont coupés **chaque lundi 06:00 UTC** (`checkpoint-tag.yml`) sur le commit de
+`main` le plus récent réunissant `verify` vert **et** une nightly verte (E2E + pgTAP) — jamais
+le tip du calendrier, qui ne prouve que `verify`. Aucune semaine verte ⇒ **aucun tag**, plus une
+issue `checkpoint-missing` : un point de retour qui ment coûte plus cher qu'un point de retour
+manquant.
+
+Procédure complète, arbre de décision et exercice à répéter :
+**[prod-rollback-runbook.md](./prod-rollback-runbook.md)**.
+
+### Points de vigilance
+
+1. **Geler avant de rollbacker.** Sans `MERGE_FREEZE=1`, la prochaine PR merge seule et
+   redéploie le code fautif — sans que personne n'ait rien fait. C'est le piège n°1 ici.
+2. **Reculer le code ne recule pas le schéma.** Les migrations sont _forward-only_ et déjà
+   appliquées par `db-migrate-prod.yml` **au merge**. Une migration additive est sûre sous
+   l'ancien code (c'est pourquoi la DoD §7 impose cet ordre) ; une **destructive** ne l'est pas
+   et exige le dump pré-migration conservé 14 jours en artifact.
+3. **Vérifier l'état, jamais le signal.** Un run vert ne prouve pas que le gel est posé :
+   `gh variable list` doit montrer `MERGE_FREEZE`. Le 2026-07-20, cinq runs « success »
+   d'affilée n'avaient rien posé (403 sur le PAT) — depuis, le pas `Verdict` fait échouer le
+   job, mais le réflexe de regarder l'état reste le bon.
+4. **`git revert` SANS `-m 1`.** Ce dépôt _squash-merge_ : les commits de `main` sont
+   ordinaires, pas des commits de merge. Le `-m 1` échoue et fait perdre dix minutes sous
+   stress.
+5. **La sonde `/api/health` ne voit pas tout.** Elle est serveur : un crash **client** la
+   laisse au vert pendant que l'élève voit une page blanche. Après tout rollback, cliquer
+   à la main l'accueil, une matière, un exercice soumis.
+6. **Ne pas dégeler avant que le revert soit mergé.** Tant que `main` ≠ prod, `MERGE_FREEZE`
+   est la seule chose qui empêche la panne de revenir.
+7. **`hotfix/` et `revert/` traversent le gel** — volontairement : le correctif qui clôt
+   l'incident doit pouvoir passer, et il passe **le même gate complet** que d'habitude. On gèle
+   le flux ordinaire, on n'affaiblit aucun contrôle.
+
 ## Prérequis côté réglages GitHub (une seule fois)
 
 La configuration est versionnée dans le repo, mais l'application vit dans GitHub :
@@ -160,6 +217,20 @@ La configuration est versionnée dans le repo, mais l'application vit dans GitHu
    la chaîne fonctionne mais **n'est pas déterministe** : voir « Le piège du bot
    non-collaborateur » plus haut — parfois un clic « Approve and run » reste
    nécessaire.
+
+   Ce PAT doit **aussi** porter **`Variables` : Read and write** (« Manage Actions repository
+   variables ») — c'est ce qui permet d'écrire `MERGE_FREEZE`, donc de **geler la chaîne**
+   pendant un incident (§7). ⚠️ Ne pas confondre avec **« Agent variables »** (agents Copilot),
+   voisine dans la liste et sans aucun rapport : la méprise rend `gh variable set` en
+   `HTTP 403: Resource not accessible by personal access token` alors que tout paraît
+   configuré. Ni le `GITHUB_TOKEN` par défaut ni aucune portée de workflow ne peuvent écrire
+   une variable Actions — ce PAT est le seul chemin.
+
+5. **Surveiller l'expiration du PAT.** Un PAT _fine-grained_ expire (le nôtre : **4 octobre
+   2026**). Le jour venu, `auto-pr.yml` et `automerge.yml` retombent silencieusement sur le
+   `GITHUB_TOKEN` : les PR redeviennent ouvertes par `github-actions[bot]`, non collaborateur,
+   et **tous les checks requis repassent en « Approve and run » manuel**. Le symptôme (des PR
+   figées en attente d'approbation) ne désigne pas du tout sa cause — poser un rappel.
 
 _Les réglages 1 à 3 ont été activés le 2026-07-02 ; la chaîne a été validée en
 conditions réelles sur la PR #270 (qui l'a elle-même installée). Le réglage 4

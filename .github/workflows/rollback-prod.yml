@@ -209,11 +209,16 @@ jobs:
       # --- 3. Or: end of incident ---
       - name: Unfreeze the merge chain
         if: inputs.mode == 'unfreeze'
+        id: unfreeze
         run: |
           set -euo pipefail
-          gh variable set MERGE_FREEZE --repo "$REPO" --body 0 \
-            || echo "::warning title=Dégel non appliqué::Faites-le à la main : gh variable set MERGE_FREEZE --repo $REPO --body 0"
-          echo "MERGE_FREEZE=0."
+          if gh variable set MERGE_FREEZE --repo "$REPO" --body 0; then
+            echo "lifted=true" >> "$GITHUB_OUTPUT"
+            echo "MERGE_FREEZE=0."
+          else
+            echo "lifted=false" >> "$GITHUB_OUTPUT"
+            echo "::error title=Dégel non appliqué::Écriture de MERGE_FREEZE refusée — la chaîne reste GELÉE et les PR continueront de s'ouvrir en draft. Faites-le à la main : gh variable set MERGE_FREEZE --repo $REPO --body 0"
+          fi
 
           # PRs disarmed by the freeze get no event when it lifts — re-arm the
           # eligible ones (ready, not opted out) so the chain resumes by itself.
@@ -300,3 +305,31 @@ jobs:
                 body, labels: [LABEL],
               });
             }
+
+      # --- 5. VERDICT — ne JAMAIS afficher vert un gel qui n'a pas eu lieu ---
+      # Le pas de gel avale volontairement son échec (`if`/`else`) pour que le
+      # rollback Vercel se fasse quand même : entre « geler » et « remettre la
+      # prod debout », la seconde ne doit pas être bloquée par la première.
+      # Mais avaler l'échec rendait le JOB vert alors que la chaîne de merge
+      # restait grande ouverte — le pire mensonge possible, puisqu'on ferme
+      # l'incident en croyant la prod protégée. Constaté en vrai le 2026-07-20 :
+      # 5 runs « success » d'affilée, dont 3 gels, alors que CHAQUE écriture
+      # échouait en `HTTP 403: Resource not accessible by personal access token`.
+      # Ce pas final fait donc échouer le job — après l'issue d'incident, pour
+      # qu'elle porte quand même la trace et la suite à faire.
+      - name: Verdict — l'état de la variable doit être réel
+        if: always()
+        env:
+          FROZEN: ${{ steps.freeze.outputs.frozen }}
+          LIFTED: ${{ steps.unfreeze.outputs.lifted }}
+        run: |
+          set -euo pipefail
+          hint="Le PAT GH_AUTOMATION_PAT doit porter la permission « Variables » (Manage Actions repository variables) en Read and write. ATTENTION : « Agent variables » est une AUTRE permission (agents Copilot) et ne convient pas — la confusion a déjà coûté un exercice complet."
+          if [ "$MODE" = "unfreeze" ]; then
+            if [ "$LIFTED" = "true" ]; then echo "✅ Dégel confirmé — MERGE_FREEZE=0."; exit 0; fi
+            echo "::error title=Dégel NON appliqué::La chaîne reste gelée : toute branche poussée continuera d'ouvrir une PR en draft. $hint"
+            exit 1
+          fi
+          if [ "$FROZEN" = "true" ]; then echo "✅ Gel confirmé — MERGE_FREEZE=1."; exit 0; fi
+          echo "::error title=Gel NON appliqué — la prod n'est PAS protégée::Le rollback a pu se faire, mais la chaîne de merge est restée OUVERTE : la prochaine PR mergera seule et redéploiera le code fautif. Posez le gel à la main IMMÉDIATEMENT : gh variable set MERGE_FREEZE --repo $REPO --body 1 — puis $hint"
+          exit 1
