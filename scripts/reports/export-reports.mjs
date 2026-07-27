@@ -22,6 +22,38 @@ import { existsSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { PROD_SUPABASE_REF, prodTargetReason } from "../shared/prod-targets.mjs";
+
+/**
+ * Refuse to export from anything but PRODUCTION.
+ *
+ * This is the mirror image of the e2e guard: those tools must NEVER touch prod,
+ * this one must ONLY touch prod — same posture as `scripts/db/push-prod.mjs`.
+ *
+ * Why it exists: pointed at the TEST project, this script produces a perfectly
+ * well-formed export of the wrong database. Nothing fails, nothing warns — the
+ * triage loop simply goes blind to real users while looking busy. That happened:
+ * from 2026-07-17 to 2026-07-27 the triage read TEST, where the nightly e2e
+ * suite files one `content_reports` row and `reset-gameplay` wipes it before the
+ * next run. The result reads exactly like a daily write to production
+ * (a new report id every morning, always the same message) — and was reported as
+ * such in #614 and #638. An empty file would have been noticed; a plausible one
+ * was not. Hence the assertion: a silent wrong answer is worse than a loud stop.
+ *
+ * @param {string} url the `SUPABASE_URL` this run would read
+ * @returns {string} the same url, when it is production
+ * @throws {Error} when it is not
+ */
+export function assertProdReportSource(url) {
+  if (prodTargetReason(url) === "supabase") return url;
+  throw new Error(
+    `[reports] Refusing to export: SUPABASE_URL does not point at PRODUCTION ` +
+      `(expected the project ref ${PROD_SUPABASE_REF}, got ${url}). ` +
+      `The triage file must describe the reports REAL users filed — reading any ` +
+      `other project yields a plausible export of the wrong database. ` +
+      `In CI, check the PROD_SUPABASE_URL / PROD_SUPABASE_SERVICE_ROLE_KEY secrets.`,
+  );
+}
 
 /** Shape a raw content_reports row (with its joined exercise) for the export. */
 export function flattenContentReport(row) {
@@ -83,6 +115,13 @@ async function main() {
       "[reports] Missing SUPABASE_URL and/or SUPABASE_SERVICE_ROLE_KEY. " +
         "Both are required to read the RLS-protected report tables (read-only).",
     );
+    process.exit(1);
+  }
+
+  try {
+    assertProdReportSource(url);
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
     process.exit(1);
   }
 
