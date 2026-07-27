@@ -35,7 +35,7 @@ export const Route = createFileRoute("/_public/exercice/$exerciseId")({
 
 function ExercicePage() {
   const { exerciseId } = Route.useParams();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const isAuthenticated = !!user;
   const t = useT();
   const check = useServerFn(checkAnswersPublic);
@@ -164,30 +164,33 @@ function ExercicePage() {
             )}
           </div>
 
-          {isAuthenticated ? (
-            <Link
-              to="/quest/$exerciseId"
-              params={{ exerciseId: exId }}
-              className="flex items-center justify-center gap-2 rounded-2xl border border-primary/30 bg-primary/[0.04] p-4 text-sm font-semibold text-primary transition hover:bg-primary/10"
-            >
-              <Zap className="h-4 w-4" /> {t.public.practice.questCta}
-            </Link>
-          ) : (
-            <div className="rounded-2xl border border-primary/30 bg-primary/[0.04] p-5 text-center">
-              <Sparkles className="mx-auto h-6 w-6 text-primary" />
-              <p className="mt-2 text-sm font-semibold">{t.public.practice.inviteDesc}</p>
+          {/* Suppress both CTAs while the session is still resolving — an
+              authenticated visitor must never see a stale "create account" card. */}
+          {!loading &&
+            (isAuthenticated ? (
               <Link
-                to="/signup"
-                className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+                to="/quest/$exerciseId"
+                params={{ exerciseId: exId }}
+                className="flex items-center justify-center gap-2 rounded-2xl border border-primary/30 bg-primary/[0.04] p-4 text-sm font-semibold text-primary transition hover:bg-primary/10"
               >
-                {t.public.practice.inviteCta}
+                <Zap className="h-4 w-4" /> {t.public.practice.questCta}
               </Link>
-            </div>
-          )}
+            ) : (
+              <div className="rounded-2xl border border-primary/30 bg-primary/[0.04] p-5 text-center">
+                <Sparkles className="mx-auto h-6 w-6 text-primary" />
+                <p className="mt-2 text-sm font-semibold">{t.public.practice.inviteDesc}</p>
+                <Link
+                  to="/signup"
+                  className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+                >
+                  {t.public.practice.inviteCta}
+                </Link>
+              </div>
+            ))}
         </div>
       ),
     }),
-    [check, score, fetchLesson, isAuthenticated, t],
+    [check, score, fetchLesson, isAuthenticated, loading, t],
   );
 
   // `game-surface` carries the immersive player's light-theme remap (black→white

@@ -25,6 +25,7 @@ import {
   auditCompetencyRefs,
   auditLesson,
   auditMisconceptionTags,
+  auditShortAnswerQuestion,
   auditNumericQuestion,
   auditQuestion,
   auditVideoRefs,
@@ -118,7 +119,9 @@ function main(): void {
               ? auditNumericQuestion(q, where)
               : q.type === "ordering" || q.type === "matching" || q.type === "multi"
                 ? auditBoardQuestion(q, where)
-                : [...auditQuestion(q, where), ...auditMisconceptionTags(q, knownTags, where)]),
+                : q.type === "short_answer"
+                  ? auditShortAnswerQuestion(q, knownTags, where)
+                  : [...auditQuestion(q, where), ...auditMisconceptionTags(q, knownTags, where)]),
             // Competency refs apply to EVERY question type (étude 07 R-2).
             ...auditCompetencyRefs(q, subject.meta.id, competencyVocab, where),
             // Accepted-answer set (étude 20 R-4/R-5): also every type — the
@@ -131,6 +134,8 @@ function main(): void {
                 options: "options" in q ? q.options : [],
                 correctOption: q.type === "mcq" ? q.correctOption : undefined,
                 acceptedAnswers: q.acceptedAnswers,
+                answerKey: q.type === "short_answer" ? q.answerKey : undefined,
+                expectedMistakes: q.type === "short_answer" ? q.expectedMistakes : undefined,
               },
               where,
             ),

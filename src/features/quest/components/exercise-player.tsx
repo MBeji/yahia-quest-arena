@@ -18,6 +18,7 @@ import { QuestHintButton } from "@/features/quest/components/quest-hint-button";
 import { BossCountdown } from "@/features/quest/components/boss-countdown";
 import {
   buildQuestLabels,
+  KEYPAD_BY_LANG,
   RECALL_CHAR_BAR,
   type QuestContentLang,
 } from "@/features/quest/quest-labels";
@@ -274,9 +275,26 @@ export function ExercisePlayer({
     );
   }, [questions]);
 
+  /** type par question — la correction en a besoin, pas seulement la question courante. */
+  const typeByQuestionId = useMemo(
+    () =>
+      new Map(
+        questions.map((q) => [
+          q.id,
+          (q as { question_type?: string | null }).question_type ?? "mcq",
+        ]),
+      ),
+    [questions],
+  );
+
   const getDisplayChoice = useCallback(
     (questionId: string, choice: string) => {
       if (!choice) return "-";
+      // `short_answer` (étude 20 lot 7) : réponse tapée, aucune option — même
+      // chemin d'affichage que le Rappel. Sans ce court-circuit, une réponse
+      // contenant une virgule tomberait dans la branche CSV des types B2 et
+      // s'afficherait découpée.
+      if (typeByQuestionId.get(questionId) === "short_answer") return isolateLtrRuns(choice);
       // Recall (étude 17): the answer is free text, options are empty by
       // construction — show the raw typed/expected text, LTR-isolated. Skipping
       // the option/CSV lookups avoids a comma/colon in the text hitting the B2
@@ -308,7 +326,7 @@ export function ExercisePlayer({
       // Otherwise (numeric value, give-up sentinel): the raw answer, LTR-isolated.
       return isolateLtrRuns(choice);
     },
-    [shuffledOptionsByQuestionId, isRecall],
+    [shuffledOptionsByQuestionId, isRecall, typeByQuestionId],
   );
 
   const total = questions.length;
@@ -706,6 +724,7 @@ export function ExercisePlayer({
             rtl={isRtlSubject}
             labels={QL}
             recallChars={RECALL_CHAR_BAR[qlang]}
+            recallKeypadRows={KEYPAD_BY_LANG[qlang]}
             optionClassName={({ isSelected }: McqOptionRender) =>
               `active:scale-[0.97] ${
                 isSelected

@@ -56,6 +56,7 @@ export function LessonReader({
   practiceExerciseId = null,
   quizCta = null,
   isAuthenticated = false,
+  authLoading = false,
 }: {
   chapterId: string;
   chapter: LessonReaderChapter;
@@ -65,6 +66,9 @@ export function LessonReader({
    *  targets the comprehension quiz instead of a locked exercise (audit §D-4). */
   quizCta?: { exerciseId: string } | null;
   isAuthenticated?: boolean;
+  /** True while the Supabase session is still resolving — suppresses the
+   *  sign-up invite so authenticated users never see a stale "create account" CTA. */
+  authLoading?: boolean;
 }) {
   const t = useT();
   const [showSummary, setShowSummary] = useState(false);
@@ -356,8 +360,10 @@ export function LessonReader({
       </nav>
 
       {/* Soft account invite — anonymous readers only: a signed-in student must
-          never be told to create the account they already have (audit §B-4). */}
-      {!isAuthenticated && (
+          never be told to create the account they already have (audit §B-4).
+          Also suppressed while the session is still resolving (authLoading) to
+          avoid a stale CTA flash for authenticated visitors on cold loads. */}
+      {!authLoading && !isAuthenticated && (
         <aside className="mt-12 rounded-2xl border border-primary/20 bg-secondary px-6 py-7 text-center print:hidden">
           <FileText className="mx-auto h-6 w-6 text-primary" />
           <h2 className="mt-2 font-display text-lg font-bold text-foreground">

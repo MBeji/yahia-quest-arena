@@ -748,6 +748,30 @@ const multiQuestionSchema = questionCoreSchema.extend({
 });
 
 /**
+ * Native free-TEXT question (étude 20 lot 7, volet B) — la question dont la
+ * forme naturelle est la production, pas le choix : aucune proposition à
+ * éliminer, l'élève tape sa réponse.
+ *
+ * `answerKey.text` est la réponse canonique — toujours acceptée sans avoir à la
+ * répéter (R-2) ; les autres formulations justes vivent dans `acceptedAnswers`,
+ * LA MÊME colonne que le mode Rappel (D-8 : une source, un jeu de règles QA).
+ * `expectedMistakes` est le pendant du distracteur tagué : une erreur qu'on
+ * SAIT fréquente, nommée, pour que la télémétrie la diagnostique (R-9).
+ *
+ * Les contraintes d'autorat (longueur, mots, charset tapable, énoncé
+ * auto-suffisant, « nombre pur ⇒ utiliser `numeric` ») vivent dans `content:qa`
+ * (R-12) et non ici : zod garde la forme, la QA garde le sens.
+ */
+const shortAnswerQuestionSchema = questionCoreSchema.extend({
+  type: z.literal("short_answer"),
+  answerKey: z.object({ text: z.string().min(1).max(60) }),
+  expectedMistakes: z
+    .array(z.object({ text: z.string().min(1).max(512), misconceptionTag: z.string().min(1) }))
+    .max(6)
+    .optional(),
+});
+
+/**
  * A question file entry — discriminated on `type`, defaulting to `'mcq'` so
  * every pre-existing content file stays valid without edits (spec D-4).
  */
@@ -763,6 +787,7 @@ export const questionSchema = z
       orderingQuestionSchema,
       matchingQuestionSchema,
       multiQuestionSchema,
+      shortAnswerQuestionSchema,
     ]),
   )
   .superRefine((q, ctx) => {
@@ -774,7 +799,7 @@ export const questionSchema = z
         path: ["competencies"],
       });
     }
-    if (q.type === "numeric") return;
+    if (q.type === "numeric" || q.type === "short_answer") return;
     if (new Set(q.options.map((o) => o.id)).size !== q.options.length) {
       ctx.addIssue({ code: "custom", message: "option ids must be unique", path: ["options"] });
     }
