@@ -97,8 +97,9 @@ export const ACCEPTED_ANSWERS_MAX = 24;
  * plus les variantes morphologiques mécaniques (Tier A, étude 20 lot 2).
  *
  * Trois gardes, dans cet ordre :
- *  - seules les `mcq` ÉLIGIBLES au Rappel consomment l'ensemble — sur les
- *    autres, en ajouter serait du bruit que personne ne lit ;
+ *  - seules les questions qui CONSOMMENT l'ensemble en reçoivent : les `mcq`
+ *    éligibles au Rappel, et les `short_answer` (toujours actives — lot 7).
+ *    Ailleurs, en ajouter serait du bruit que personne ne lit ;
  *  - R-4 : une variante égale (après normalisation) à un élément DÉCLARÉ FAUX
  *    est écartée. La question reste jouable, seule la variante tombe — c'est
  *    ce qui préserve le « zéro exclusion » (D-2) ;
@@ -109,18 +110,28 @@ export function withMorphologicalVariants(
   language: "ar" | "fr" | "en",
 ): string[] {
   const authored = q.acceptedAnswers ?? [];
-  if (q.type !== "mcq") return [...authored];
 
-  const options = q.options ?? [];
-  if (
-    !isRecallEligible({ type: q.type, prompt: q.prompt, options, correctOption: q.correctOption })
-  )
+  // Les deux consommateurs de l'ensemble accepté, et leurs « éléments déclarés
+  // faux » respectifs : les distracteurs d'un QCM rejoué en Rappel, les erreurs
+  // attendues d'une question libre (étude 20 R-4, généralisé au lot 7).
+  let canonical: string;
+  let declaredWrong: Set<string>;
+  if (q.type === "short_answer") {
+    canonical = q.answerKey.text;
+    declaredWrong = new Set((q.expectedMistakes ?? []).map((m) => normalizeRecallText(m.text)));
+  } else if (q.type === "mcq") {
+    const options = q.options ?? [];
+    if (
+      !isRecallEligible({ type: q.type, prompt: q.prompt, options, correctOption: q.correctOption })
+    )
+      return [...authored];
+    canonical = options.find((o) => o.id === q.correctOption)?.text ?? "";
+    declaredWrong = new Set(
+      options.filter((o) => o.id !== q.correctOption).map((o) => normalizeRecallText(o.text)),
+    );
+  } else {
     return [...authored];
-
-  const canonical = options.find((o) => o.id === q.correctOption)?.text ?? "";
-  const declaredWrong = new Set(
-    options.filter((o) => o.id !== q.correctOption).map((o) => normalizeRecallText(o.text)),
-  );
+  }
   const seen = new Set([normalizeRecallText(canonical), ...authored.map(normalizeRecallText)]);
 
   const out = [...authored];
@@ -380,8 +391,10 @@ export function buildMigrationSql(subject: LoadedSubject, videos: VideoRegistry 
       // Client options carry only {id, text}: any server-only misconceptionTag
       // (mcq distractors, étude 04 D-4) is STRIPPED here and routed into the
       // server-only distractor_tags map below — never sent to the client.
+      // `short_answer` rejoint `numeric` : aucune proposition à rendre (étude 20
+      // R-11) — l'élève tape, il ne choisit pas.
       const optionsSql =
-        q.type === "numeric"
+        q.type === "numeric" || q.type === "short_answer"
           ? "'[]'::jsonb"
           : sqlJson(q.options.map((o) => ({ id: o.id, text: o.text })));
       const correctOptionSql = q.type === "mcq" ? sqlString(q.correctOption) : "NULL";
@@ -410,7 +423,23 @@ export function buildMigrationSql(subject: LoadedSubject, videos: VideoRegistry 
               ? sqlJson({ pairs: q.answerKey.pairs })
               : q.type === "multi"
                 ? sqlJson({ correct: q.answerKey.correct })
-                : "NULL";
+                : // `short_answer` (étude 20 R-11) : la canonique, et les erreurs
+                  // attendues — le pendant des distracteurs tagués, server-only
+                  // comme le reste de la clé. Les autres formulations JUSTES ne
+                  // sont pas ici : elles vont dans `accepted_answers` (D-8).
+                  q.type === "short_answer"
+                  ? sqlJson({
+                      text: q.answerKey.text,
+                      ...(q.expectedMistakes?.length
+                        ? {
+                            mistakes: q.expectedMistakes.map((m) => ({
+                              text: m.text,
+                              tag: m.misconceptionTag,
+                            })),
+                          }
+                        : {}),
+                    })
+                  : "NULL";
       // accepted_answers (étude 20 R-2): the accepted-answer SET, server-only
       // like the key itself. The authored text is emitted RAW and readable —
       // normalisation happens in SQL at scoring time (D-3), so there is a

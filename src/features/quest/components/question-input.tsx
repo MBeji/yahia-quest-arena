@@ -78,8 +78,11 @@ export type QuestionInputProps = {
 export function QuestionInput(props: QuestionInputProps) {
   // Recall (étude 17) overrides the per-type input: a mastered QCM is replayed
   // as free text, so the variant wins over questionType.
-  if (props.variant === "recall") return <RecallInput {...props} />;
+  if (props.variant === "recall") return <FreeTextInput {...props} />;
   const type = props.questionType ?? "mcq";
+  // `short_answer` (étude 20 R-11) : MÊME champ que le Rappel, sans bandeau ni
+  // multiplicateur — c'est une question normale de la mission, pas un mode.
+  if (type === "short_answer") return <FreeTextInput {...props} />;
   if (type === "numeric") return <NumericInput {...props} />;
   if (type === "ordering") return <OrderingBoard {...props} />;
   if (type === "matching") return <MatchingBoard {...props} />;
@@ -166,7 +169,14 @@ function NumericInput({ value, onChange, onSubmit, disabled, rtl, labels }: Ques
   );
 }
 
-function RecallInput({
+/**
+ * Champ de saisie libre — partagé par le mode Rappel (étude 17) et le type
+ * natif `short_answer` (étude 20 lot 7). Un seul composant, donc un seul jeu
+ * d'attributs : direction suivant la langue du CONTENU, autocomplétion et
+ * correcteur coupés (le clavier du téléphone ne doit pas souffler la réponse),
+ * Entrée = valider, et la même barre de caractères d'appoint par langue.
+ */
+function FreeTextInput({
   value,
   onChange,
   onSubmit,
@@ -180,7 +190,7 @@ function RecallInput({
   const inputRef = useRef<HTMLInputElement>(null);
   return (
     <div className="mt-6">
-      {/* Recall (étude 17): a free-text answer replaces the options. Unlike
+      {/* A free-text answer replaces the options. Unlike
           `numeric`, the field follows the CONTENT language's direction (R-8) —
           Arabic answers are typed RTL. Autocomplete/correct/spellcheck are off
           so the phone keyboard can't suggest the answer. */}

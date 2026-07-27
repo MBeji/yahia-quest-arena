@@ -5,8 +5,13 @@
 > validation, unified `<QuestionInput>` (`NumericInput`, @dnd-kit `OrderingBoard`/
 > `MatchingBoard`, `MultiSelect`), pipeline union schema + QA lints. **`numeric`, `ordering`,
 > `matching` and `multi` are ALL authorable now** (shapes: content-engine
-> `references/content-schema.md`). This spec is fully executed — no more Tier-B types are
-> planned; further engine evolution needs a new spec.
+> `references/content-schema.md`). This spec is fully executed.
+>
+> **La clôture « no more Tier-B types » est LEVÉE par l'étude 20** (volet B, lot 7, 2026-07-27) :
+> un sixième type natif, `short_answer`, a rejoint le cadre — la question libre SANS
+> propositions, corrigée par appartenance à un ensemble de réponses acceptées. Elle n'a demandé
+> aucune colonne nouvelle et aucun écran nouveau : c'est la démonstration que la seam tient. Toute
+> évolution ULTÉRIEURE du moteur demande, elle, une nouvelle étude.
 > **Tier A** — interactive formats encoded inside the existing QCM schema — is live and
 > canonically documented in `content-engine/references/interactive-formats.md`;
 > author those freely via the `content-interactif` skill. Tier B adds _native_ input types and
@@ -38,13 +43,14 @@ manipulation (drag-&-drop), and multi-select judgment.
 - `options` keeps `[{id, text}]` for every type (items to order/match/select); unused for
   `numeric`.
 
-| type       | options carry                    | answer_key                   | answer payload (client → RPC)   | scoring                                    |
-| ---------- | -------------------------------- | ---------------------------- | ------------------------------- | ------------------------------------------ |
-| `mcq`      | 2–6 choices                      | — (`correct_option`)         | `choice: "<optionId>"`          | id equality (unchanged)                    |
-| `numeric`  | — (optional unit hint in prompt) | `{value, tolerance?, unit?}` | `choice: "<number as string>"`  | `abs(x − value) ≤ tolerance` (default 0)   |
-| `ordering` | 3–6 steps (ids)                  | `{order: ["b","a","d","c"]}` | `choice: "b,a,d,c"` (id CSV)    | exact sequence match; no partial credit v1 |
-| `matching` | left+right items (`l1…`, `r1…`)  | `{pairs: [["l1","r2"], …]}`  | `choice: "l1:r2,l2:r1,…"`       | set equality of pairs                      |
-| `multi`    | 2–6 choices                      | `{correct: ["a","c"]}`       | `choice: "a,c"` (sorted id CSV) | set equality; no partial credit v1         |
+| type           | options carry                    | answer_key                   | answer payload (client → RPC)   | scoring                                                                  |
+| -------------- | -------------------------------- | ---------------------------- | ------------------------------- | ------------------------------------------------------------------------ |
+| `mcq`          | 2–6 choices                      | — (`correct_option`)         | `choice: "<optionId>"`          | id equality (unchanged)                                                  |
+| `numeric`      | — (optional unit hint in prompt) | `{value, tolerance?, unit?}` | `choice: "<number as string>"`  | `abs(x − value) ≤ tolerance` (default 0)                                 |
+| `ordering`     | 3–6 steps (ids)                  | `{order: ["b","a","d","c"]}` | `choice: "b,a,d,c"` (id CSV)    | exact sequence match; no partial credit v1                               |
+| `matching`     | left+right items (`l1…`, `r1…`)  | `{pairs: [["l1","r2"], …]}`  | `choice: "l1:r2,l2:r1,…"`       | set equality of pairs                                                    |
+| `multi`        | 2–6 choices                      | `{correct: ["a","c"]}`       | `choice: "a,c"` (sorted id CSV) | set equality; no partial credit v1                                       |
+| `short_answer` | — (aucune proposition)           | `{text, mistakes?}`          | `choice: "<texte tapé>"`        | appartenance à { canonique } ∪ `accepted_answers`, normalisée (étude 20) |
 
 Design invariants: answers stay a single string (`choice`) so the existing
 `answers: [{questionId, choice}]` wire shape, rate limiting, and attempt persistence survive;

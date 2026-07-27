@@ -83,8 +83,9 @@ function isValidMultiChoice(value: string): boolean {
  * - `ordering` → the arranged sequence as a unique-id CSV ("b,a,d,c");
  * - `matching` → the associations as a unique "left:right" pair CSV;
  * - `multi` → the checked ids as a unique-id CSV ("a,c");
- * - `recall` → any non-empty string, capped tighter (≤ RECALL_MAX_ANSWER_LENGTH)
- *   than the wire bound — the typed free-text answer (étude 17);
+ * - `recall` et `short_answer` → any non-empty string, capped tighter
+ *   (≤ RECALL_MAX_ANSWER_LENGTH) than the wire bound : les deux sont la même
+ *   saisie libre, l'une comme MODE (étude 17), l'autre comme TYPE (étude 20) ;
  * - `mcq` → any non-empty bounded string, the historical contract.
  */
 export function isValidAnswerFormat(
@@ -98,7 +99,8 @@ export function isValidAnswerFormat(
   if (questionType === "ordering") return isValidOrderingChoice(value);
   if (questionType === "matching") return isValidMatchingChoice(value);
   if (questionType === "multi") return isValidMultiChoice(value);
-  if (questionType === "recall") return value.length <= RECALL_MAX_ANSWER_LENGTH;
+  if (questionType === "recall" || questionType === "short_answer")
+    return value.length <= RECALL_MAX_ANSWER_LENGTH;
   return true;
 }
 
