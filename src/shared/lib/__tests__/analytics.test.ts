@@ -1,5 +1,11 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 
+// Stub the PostHog sink so delegation tests can verify calls without network.
+vi.mock("@/shared/lib/product-analytics", () => ({
+  capturePageview: vi.fn(),
+  captureProductEvent: vi.fn(),
+}));
+
 /**
  * The analytics module reads `import.meta.env` and mutates module-level state
  * (`installed`, `lastTrackedPath`), so each test re-imports it fresh after
@@ -208,5 +214,37 @@ describe("trackPageview", () => {
       "page_view",
       expect.objectContaining({ page_path: "/shop" }),
     );
+  });
+});
+
+// Feat d18e75b2 — analytics.ts fans out to PostHog regardless of the GA4 gate.
+// Each track* function calls product-analytics before the GA4 guard, so disabling
+// GA4 (no key, not PROD) must never silence PostHog, and vice-versa.
+describe("PostHog delegation (independent of GA4 gate)", () => {
+  it("trackPageview calls capturePageview even when GA4 is disabled", async () => {
+    // product-analytics module instance must be imported BEFORE analytics so both
+    // share the same module cache entry after vi.resetModules().
+    const { capturePageview } = await import("@/shared/lib/product-analytics");
+    const { trackPageview } = await loadModule();
+    trackPageview("/dashboard");
+    expect(capturePageview).toHaveBeenCalledWith("/dashboard", expect.any(String));
+  });
+
+  it("trackVideoOpen calls captureProductEvent with the right event shape", async () => {
+    const { captureProductEvent } = await import("@/shared/lib/product-analytics");
+    const { trackVideoOpen } = await loadModule();
+    trackVideoOpen({ videoId: "v123", context: "lesson", subjectId: "math-3" });
+    expect(captureProductEvent).toHaveBeenCalledWith("video_open", {
+      video_id: "v123",
+      context: "lesson",
+      subject_id: "math-3",
+    });
+  });
+
+  it("trackDungeonPoolScope calls captureProductEvent with the pool_scope", async () => {
+    const { captureProductEvent } = await import("@/shared/lib/product-analytics");
+    const { trackDungeonPoolScope } = await loadModule();
+    trackDungeonPoolScope({ scope: "grade" });
+    expect(captureProductEvent).toHaveBeenCalledWith("dungeon_pool_scope", { pool_scope: "grade" });
   });
 });
