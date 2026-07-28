@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import React from "react";
 
@@ -34,6 +34,9 @@ vi.mock("@/lib/i18n", () => ({ useI18n: () => ({ t, locale: "fr" }), useT: () =>
 
 import { ReportContent } from "../components/report-content";
 
+const LRI = "⁦";
+const PDI = "⁩";
+
 const report = {
   student: {
     displayName: "Yahia",
@@ -52,7 +55,7 @@ const report = {
     daysActiveThisWeek: 4,
     scoreTrend: 5,
   },
-  subjectStats: [],
+  subjectStats: [{ subjectId: "s-ar", name: "الرياضيات (الجبر)", avgScore: 72, attempts: 15 }],
   dailyActivity: [{ date: "2026-07-13", exercises: 2, minutes: 10, avgScore: 80 }],
   weekComparison: {
     thisWeek: { exercises: 5, minutes: 30, avgScore: 75 },
@@ -63,9 +66,9 @@ const report = {
     weaknesses: [
       {
         chapterId: "chap-frac",
-        chapterTitle: "Fractions",
+        chapterTitle: "الكسور (الجزء الأول)",
         subjectId: "s-math",
-        subjectName: "Maths",
+        subjectName: "الرياضيات (كلاسيكي)",
         attempts: 3,
         avgScore: 40,
       },
@@ -76,8 +79,31 @@ const report = {
 describe("ReportContent — actionable weak points (étude 15 lot 12, D-9)", () => {
   it("links each weak chapter — and the weekly advice — into its /chapitre reader", () => {
     const { container } = render(<ReportContent report={report as never} />);
-    expect(screen.getByText("Fractions")).toBeInTheDocument();
     // Two clickable paths to the same weak chapter: the insight row + the advice CTA.
     expect(container.querySelectorAll('a[href="/chapitre/chap-frac"]')).toHaveLength(2);
+  });
+
+  it("wraps parentheses in Arabic chapter titles with LRI/PDI isolates (RTL bidi fix)", () => {
+    const { container } = render(<ReportContent report={report as never} />);
+    // chapterTitle "الكسور (الجزء الأول)" — the ( and ) each become ⁦(⁩ / ⁦)⁩
+    const titleEl = container.querySelector(".truncate.text-foreground");
+    expect(titleEl?.textContent).toContain(LRI);
+    expect(titleEl?.textContent).toContain(PDI);
+  });
+
+  it("wraps parentheses in Arabic subject names with LRI/PDI isolates (RTL bidi fix)", () => {
+    const { container } = render(<ReportContent report={report as never} />);
+    // subjectName "الرياضيات (كلاسيكي)" in the insight row
+    const subjectEls = Array.from(container.querySelectorAll(".text-xs.text-muted-foreground"));
+    const withParens = subjectEls.find((el) => el.textContent?.includes(LRI));
+    expect(withParens).toBeTruthy();
+  });
+
+  it("wraps parentheses in Arabic subject stat names with LRI/PDI isolates (RTL bidi fix)", () => {
+    const { container } = render(<ReportContent report={report as never} />);
+    // subjectStats[0].name "الرياضيات (الجبر)"
+    const nameEl = container.querySelector(".w-16.truncate.text-sm");
+    expect(nameEl?.textContent).toContain(LRI);
+    expect(nameEl?.textContent).toContain(PDI);
   });
 });
