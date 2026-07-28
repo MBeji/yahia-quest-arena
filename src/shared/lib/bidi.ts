@@ -61,6 +61,25 @@ const SEGMENT_RE = new RegExp(`[${ARABIC_CHARS}]+|[^${ARABIC_CHARS}]+`, "gu");
 const BIDI_FLIP_SIGNAL = /[√∛∜()[\]{}⟨⟩⌊⌋⌈⌉<>≤≥≮≯∈∉⊂⊃⊆⊇←→⟵⟶⟸⟹⟺∑∏∫|‖]|&lt;|&gt;|&le;|&ge;/u;
 
 /**
+ * A segment that is **only** whitespace and paired bracket characters with no
+ * other LTR-anchoring content.  The browser's native bidi algorithm mirrors
+ * paired brackets correctly inside RTL prose (`(` ↔ `)`), so isolating them
+ * as LTR reverses their visual order — the close bracket appears before the
+ * open bracket in reading order (bug reported: C5/C6/C7, parenthesised Arabic
+ * diacritics and chapter titles).  We skip isolation for these segments and let
+ * the natural bidi-mirror apply.
+ */
+const SOLO_BRACKETS_RE = /^[\s()[\]{}⟨⟩⌊⌋⌈⌉]+$/u;
+
+/**
+ * Subset of {@link BIDI_FLIP_SIGNAL} that mandates isolation **even when the
+ * segment is bracket-only**: radicals (`√`…), comparison / set relations
+ * (`< > ≤ ≥ ∈ ⊂`…), arrows, large operators and grouping bars.  These glyphs
+ * do not benefit from bidi-mirroring and must be forced LTR.
+ */
+const STRONG_FLIP_SIGNAL = /[√∛∜<>≤≥≮≯∈∉⊂⊃⊆⊇←→⟵⟶⟸⟹⟺∑∏∫|‖]|&lt;|&gt;|&le;|&ge;/u;
+
+/**
  * A **tight signed number** — a `+`/`−` glued directly to a digit (`−5`, `+90`,
  * `−2x`), *not* following an operand. This is the one direction-sensitive form
  * `BIDI_FLIP_SIGNAL` misses: a bare negative like `−5` dropped into RTL prose
@@ -89,9 +108,11 @@ export function isolateLtrRuns(text: string): string {
   if (!text || !ARABIC_RE.test(text)) return text;
   return text.replace(SEGMENT_RE, (segment) => {
     if (ARABIC_RE.test(segment)) return segment;
-    return BIDI_FLIP_SIGNAL.test(segment) || SIGNED_NUMBER.test(segment)
-      ? `${LRI}${segment}${PDI}`
-      : segment;
+    const hasBidiSignal =
+      (BIDI_FLIP_SIGNAL.test(segment) &&
+        (!SOLO_BRACKETS_RE.test(segment) || STRONG_FLIP_SIGNAL.test(segment))) ||
+      SIGNED_NUMBER.test(segment);
+    return hasBidiSignal ? `${LRI}${segment}${PDI}` : segment;
   });
 }
 

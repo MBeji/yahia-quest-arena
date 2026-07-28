@@ -83,27 +83,32 @@ describe("ReportContent — actionable weak points (étude 15 lot 12, D-9)", () 
     expect(container.querySelectorAll('a[href="/chapitre/chap-frac"]')).toHaveLength(2);
   });
 
-  it("wraps parentheses in Arabic chapter titles with LRI/PDI isolates (RTL bidi fix)", () => {
+  it("does NOT add LRI/PDI isolates around parentheses in Arabic chapter titles", () => {
     const { container } = render(<ReportContent report={report as never} />);
-    // chapterTitle "الكسور (الجزء الأول)" — the ( and ) each become ⁦(⁩ / ⁦)⁩
+    // chapterTitle "الكسور (الجزء الأول)": standalone brackets around Arabic content
+    // must NOT be wrapped in LTR isolates — the browser's bidi-mirror already flips
+    // them correctly, and isolation would reverse their visual order (C5/C6/C7 bug).
     const titleEl = container.querySelector(".truncate.text-foreground");
-    expect(titleEl?.textContent).toContain(LRI);
-    expect(titleEl?.textContent).toContain(PDI);
+    expect(titleEl?.textContent).toContain("الكسور (الجزء الأول)");
+    expect(titleEl?.textContent).not.toContain(LRI);
+    expect(titleEl?.textContent).not.toContain(PDI);
   });
 
-  it("wraps parentheses in Arabic subject names with LRI/PDI isolates (RTL bidi fix)", () => {
+  it("does NOT add LRI/PDI isolates around parentheses in Arabic subject names", () => {
     const { container } = render(<ReportContent report={report as never} />);
-    // subjectName "الرياضيات (كلاسيكي)" in the insight row
+    // subjectName "الرياضيات (كلاسيكي)" — brackets around Arabic must not be isolated
     const subjectEls = Array.from(container.querySelectorAll(".text-xs.text-muted-foreground"));
-    const withParens = subjectEls.find((el) => el.textContent?.includes(LRI));
+    const withParens = subjectEls.find((el) => el.textContent?.includes("الرياضيات (كلاسيكي)"));
     expect(withParens).toBeTruthy();
+    expect(withParens?.textContent).not.toContain(LRI);
   });
 
-  it("wraps parentheses in Arabic subject stat names with LRI/PDI isolates (RTL bidi fix)", () => {
+  it("does NOT add LRI/PDI isolates around parentheses in Arabic subject stat names", () => {
     const { container } = render(<ReportContent report={report as never} />);
-    // subjectStats[0].name "الرياضيات (الجبر)"
+    // subjectStats[0].name "الرياضيات (الجبر)" — same bidi rule
     const nameEl = container.querySelector(".w-16.truncate.text-sm");
-    expect(nameEl?.textContent).toContain(LRI);
-    expect(nameEl?.textContent).toContain(PDI);
+    expect(nameEl?.textContent).toContain("الرياضيات (الجبر)");
+    expect(nameEl?.textContent).not.toContain(LRI);
+    expect(nameEl?.textContent).not.toContain(PDI);
   });
 });
