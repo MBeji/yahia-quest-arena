@@ -92,6 +92,14 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           fetch-depth: 0
+          # Persisted credentials for the branch push below. GITHUB_TOKEN pushes as
+          # `github-actions[bot]`, which is NOT a repo collaborator: GitHub then gates
+          # every `pull_request` run on the resulting PR behind "Approve and run"
+          # (conclusion `action_required`), so no required check ever runs and nothing
+          # auto-merges — PRs #657/#659/#661/#662 sat frozen this way. The PAT belongs to
+          # a collaborator, so the events it raises are never gated. Same reasoning, and
+          # the same secret, as auto-pr.yml's header.
+          token: ${{ secrets.GH_AUTOMATION_PAT || secrets.GITHUB_TOKEN }}
 
       - name: Setup Node
         if: steps.cadence.outputs.run == 'true'
@@ -137,13 +145,19 @@ jobs:
       # Green → a ready PR that the slow suites below can auto-merge. Red → the same branch
       # as a DRAFT labelled `needs-review`, has_patch_minor=false so nothing auto-merges,
       # and the agent gets it as repair work. This is the skill's own decision tree, applied
-      # deterministically. A push from this job does NOT trigger auto-pr.yml (GitHub's
-      # workflow-loop protection), so the PR is opened here explicitly.
+      # deterministically. This branch is excluded from auto-pr.yml (see its `branches-ignore`)
+      # precisely so that decision stays here, and the PR is opened below explicitly.
+      #
+      # `no-automerge` on the green path is not cosmetic: automerge.yml arms native
+      # auto-merge on every non-draft PR it sees opened, which would merge this lot as soon
+      # as the four REQUIRED checks are green — i.e. before the E2E and pgTAP jobs this
+      # workflow deliberately waits for. The label keeps the merge decision in the `merge`
+      # job below, which squash-merges once those slow suites are green too.
       - name: Open the patch/minor PR
         id: pr
         if: steps.cadence.outputs.run == 'true' && steps.detect.outputs.has_patch_minor == 'true'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_AUTOMATION_PAT || secrets.GITHUB_TOKEN }}
           GATE: ${{ steps.gate.outcome }}
         run: |
           set -euo pipefail
@@ -162,7 +176,7 @@ jobs:
           if [ "$GATE" = "success" ]; then
             printf '\n---\n\n✅ `npm run ci:verify` vert sur la branche.\n' >> "$body"
             gh pr create --title "chore(deps): patch & minor upgrades $date" --body-file "$body" \
-              --label dependencies --head "$branch" --base main
+              --label dependencies --label no-automerge --head "$branch" --base main
             echo "has_patch_minor=true" >> "$GITHUB_OUTPUT"
           else
             printf '\n---\n\n❌ `npm run ci:verify` **rouge** sur ce lot. PR laissée en **draft** : le garde agent\nreprend la main (corriger proprement, ou écarter le paquet fautif avec `--hold` et relancer).\nAucun auto-merge.\n' >> "$body"
@@ -225,11 +239,14 @@ jobs:
           # The skill writes its machine-readable verdict here; the next step merges it
           # with the deterministic outputs.
           UPGRADE_GUARD_RESULT: ${{ runner.temp }}/upgrade-guard-result.json
-          # Authenticates Claude's `gh` calls (open PRs / issues, push branches).
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Authenticates Claude's `gh` calls (open PRs / issues, push branches). The PAT
+          # first: a major branch pushed as `github-actions[bot]` opens a PR whose every
+          # `pull_request` run is gated behind "Approve and run" (`action_required`), so no
+          # required check runs and the PR freezes — #661/#662 did exactly that.
+          GH_TOKEN: ${{ secrets.GH_AUTOMATION_PAT || secrets.GITHUB_TOKEN }}
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GH_AUTOMATION_PAT || secrets.GITHUB_TOKEN }}
           prompt: |
             Run the /upgrade-guard skill for yahia-quest-arena — the MAJORS and REPAIR
             parts only. The patch/minor lot is NOT your job any more: a deterministic
