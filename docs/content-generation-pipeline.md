@@ -114,8 +114,8 @@ flowchart TD
 - Une IA (skill) ou un humain n'écrit **que des fichiers** — jamais de SQL à la main.
 - Les portes de qualité tournent désormais **dans la CI du dépôt privé** (c'est là que vit le
   corpus à valider), mais elles exécutent **le moteur de ce dépôt-ci**.
-- Le SQL compilé est **appliqué automatiquement** à la prod au merge — personne ne clique
-  « exécuter » sur la base de prod.
+- Le SQL compilé est appliqué à la prod par **un lancement explicite** d'`apply-content.yml`
+  (`workflow_dispatch`, `dry_run=true` par défaut) — le merge seul ne publie rien.
 - Le contenu **ne passe plus par `supabase/migrations/`** : il a son propre canal et son propre
   journal (`content_releases`).
 
@@ -314,7 +314,18 @@ Points clés de ce cycle :
    demande explicitement (« stop and report »).
 3. **La compilation est faite par la CI**, pas à la main : `content:emit` produit un fichier SQL
    **stable par matière** (`sql/content/<subject>.sql`), pas une migration horodatée.
-4. **Le déploiement est automatique** une fois le merge fait — pas d'étape manuelle en prod.
+4. **Le déploiement N'EST PAS automatique** : `apply-content.yml` n'a pas de déclencheur `push`, il
+   est `workflow_dispatch` seul et son `dry_run` vaut **`true`** par défaut. Après le merge, le
+   contenu est dans le dépôt mais **pas encore en base** — il faut lancer le workflow, d'abord à
+   blanc puis avec `dry_run=false` :
+
+   ```bash
+   gh workflow run apply-content.yml -R MBeji/yahia-quest-content -f subjects=<sujet> -f dry_run=false
+   ```
+
+   _(Corrigé le 2026-07-28 : ce point affirmait l'inverse — « déploiement automatique, pas d'étape
+   manuelle en prod ». Une campagne s'était crue publiée alors que rien n'était appliqué.)_
+
 5. **Chaque application laisse une trace** dans la table `content_releases` (§11).
 
 ---
@@ -477,7 +488,7 @@ qui la repose au niveau du schéma (no-op en prod, qui la porte déjà).
 
 ---
 
-## 11. L'application en prod (automatique, jamais manuelle)
+## 11. L'application en prod (par workflow, jamais à la main)
 
 Il y a maintenant **deux canaux distincts**, à ne pas confondre :
 
@@ -492,7 +503,7 @@ flowchart TD
     end
 
     subgraph S2["Canal CONTENU (dépôt privé)"]
-        A2["Merge dans le dépôt privé"] --> C2["apply-content.yml"]
+        A2["Merge dans le dépôt privé,\npuis lancement explicite"] --> C2["apply-content.yml\n(workflow_dispatch, dry_run=false)"]
         C2 --> D2["content:emit →\nsql/content/(matière).sql"]
         D2 --> E2["psql applique le SQL"]
         E2 --> F2["INSERT content_releases\n(git_sha, subjects, actor)"]
