@@ -96,6 +96,23 @@ describe("isolateLtrRuns", () => {
     }
   });
 
+  // Standalone brackets flanking purely-Arabic content must NOT be isolated.
+  // The browser's bidi algorithm mirrors ( and ) correctly in RTL prose; wrapping
+  // them in LTR isolates reverses their visual order — close-paren appears before
+  // open-paren in reading order.  Reproduction of user reports C5/C6/C7 (parenthesised
+  // Arabic diacritics in Quran-diacritics lesson and Arabic chapter/subject titles).
+  it("does NOT isolate standalone brackets around purely-Arabic content", () => {
+    // C7 reproduction: diacritical mark shown in parentheses inside Arabic prose
+    const sukun = "السُّكون ( ْ ) علامةٌ صغيرةٌ فوق الحرف";
+    expect(isolateLtrRuns(sukun)).toBe(sukun);
+    // Arabic chapter title with parenthetical Arabic subtitle (C5/C6 pattern)
+    const chapter = "الكسور (الجزء الأول)";
+    expect(isolateLtrRuns(chapter)).toBe(chapter);
+    expect(isolateLtrRuns("الرياضيات (الجبر)")).toBe("الرياضيات (الجبر)");
+    // Parentheses that DO contain LTR math content must still be isolated
+    expect(isolateLtrRuns("احسب (2√3 + 5) ثم")).toContain(`${LRI} (2√3 + 5) ${PDI}`);
+  });
+
   // The three concours-défi énoncés from the reported screenshots now render as
   // contiguous LTR runs (no scramble): abs-value inequality, difference of
   // squares, and the signed-number find-the-error prompt.
