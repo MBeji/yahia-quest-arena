@@ -18,6 +18,19 @@ end-of-dev → production walkthrough lives in [passation.md](./passation.md).)
   draft. Without `GH_AUTOMATION_PAT`, the workflow also dispatches the required-check
   workflows on the branch (a PR created with the Actions token fires no
   `pull_request` events, so its checks would otherwise never report).
+- **Un workflow qui _pousse_ une branche doit se checkouter avec le PAT** —
+  `actions/checkout` avec `token: ${{ secrets.GH_AUTOMATION_PAT || secrets.GITHUB_TOKEN }}`.
+  Le piège du bot non-collaborateur ne se joue pas à l'ouverture de la PR mais **au push** :
+  une branche poussée sous l'identité `github-actions[bot]` produit une PR dont **tous** les
+  runs `pull_request` (CI, CodeQL, Migration gate, Auto-merge) restent en conclusion
+  `action_required`, en attente d'un « Approve and run » manuel. Aucun check requis ne
+  rapporte, l'auto-merge ne s'arme jamais, et la PR est gelée sans que rien ne soit rouge.
+  Constaté le 2026-07-28 : #657/#659/#661/#662 immobilisées, et un `report-triage` non
+  déterministe (#647 gelée, #653 passée). Les quatre gardes nocturnes
+  (`upgrade-guard`, `regression-guard`, `report-triage`) sont câblés ainsi depuis.
+  Corollaire : leur push **déclenche** désormais `auto-pr.yml` — une branche qui doit rester
+  draft prend un préfixe `draft/`, et `claude/upgrade-patch-minor-*` est explicitement
+  exclue de `auto-pr.yml` parce qu'`upgrade-guard` ouvre cette PR lui-même.
 - **`automerge.yml`** — (re)arms GitHub native auto-merge on every ready, same-repo
   PR; the `no-automerge` label opts out (and disarms). Its `keep-up-to-date` job
   runs on every push to `main` and updates armed PRs left behind (the ruleset's strict
