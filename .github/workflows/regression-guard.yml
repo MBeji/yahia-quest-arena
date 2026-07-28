@@ -58,6 +58,11 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           fetch-depth: 0
+          # Push as a collaborator, not as `github-actions[bot]` — a bot-pushed branch
+          # opens a PR whose `pull_request` runs all sit at `action_required` (manual
+          # "Approve and run"), so no required check ever reports. #657 froze that way.
+          # Same secret and same reasoning as auto-pr.yml's header.
+          token: ${{ secrets.GH_AUTOMATION_PAT || secrets.GITHUB_TOKEN }}
 
       - name: Setup Node
         if: steps.guard.outputs.configured == 'true'
@@ -99,7 +104,8 @@ jobs:
         uses: anthropics/claude-code-action@af0559ee4f514d1ef21826982bed13f7edc3c35e # v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # PAT first — see the checkout step above for why a bot identity freezes the PR.
+          github_token: ${{ secrets.GH_AUTOMATION_PAT || secrets.GITHUB_TOKEN }}
           prompt: |
             Run the /regression-guard skill for yahia-quest-arena.
 
@@ -108,9 +114,12 @@ jobs:
 
             Then produce two SEPARATE outputs, per the skill:
               1. Test updates and added coverage -> open ONE draft pull request
-                 against `main` (branch `claude/regression-guard-<date>`), with a body
-                 that explains, per change, which commit it tracks and shows the gate
-                 is green. Use conventional-commit messages (test:, fix(test):).
+                 against `main` (branch `draft/regression-guard-<date>` — the `draft/`
+                 prefix is REQUIRED: auto-pr.yml opens any other branch READY with
+                 auto-merge armed, and these test updates must stay a draft until a
+                 human promotes them), with a body that explains, per change, which
+                 commit it tracks and shows the gate is green. Use conventional-commit
+                 messages (test:, fix(test):).
               2. Each genuine bug (a test correctly catching wrong behaviour) -> open a
                  tracking GitHub issue (one per bug) with repro, expected vs actual, the
                  failing assertion, and the suspected commit. Do NOT edit/skip/relax a

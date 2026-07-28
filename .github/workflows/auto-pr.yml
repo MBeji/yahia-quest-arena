@@ -46,7 +46,13 @@ name: Auto PR
 
 on:
   push:
-    branches-ignore: [main]
+    branches-ignore:
+      - main
+      # upgrade-guard.yml opens this one itself, and its draft/ready choice encodes the
+      # gate result (`ci:verify` green → ready, red → draft + needs-review) while the
+      # `no-automerge` label holds the merge back until E2E + pgTAP are green too. Letting
+      # this workflow race it would open the PR ready and armed whatever the gate said.
+      - "claude/upgrade-patch-minor-*"
 
 # One run per branch; a rapid second push supersedes the first.
 concurrency:
