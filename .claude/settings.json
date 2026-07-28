@@ -53,7 +53,9 @@
       "Bash(gh workflow list:*)",
       "Bash(gh workflow run rollback-prod.yml:*)",
       "Bash(gh workflow run db-backup.yml:*)",
-      "Bash(gh workflow run db-tests.yml:*)"
+      "Bash(gh workflow run db-tests.yml:*)",
+      "Bash(gh workflow run apply-content.yml:*)",
+      "Bash(gh workflow run apply-content-test.yml:*)"
     ],
     "deny": [
       "Bash(npx supabase db push:*)",

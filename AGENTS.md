@@ -165,7 +165,11 @@ build,build:*,format,audit:deps,harness:check}`), the content pipeline (`npm run
 read-only `git`/`gh`/`ls` inspection, and read-only `supabase migration list`/`db diff`/`test db`.
 Plus a short list of workflows an agent may **déclencher**, nommés un par un (jamais
 `gh workflow run:*`) : `rollback-prod.yml` (gel/dégel réversibles), `db-backup.yml` (dump +
-drill, lecture seule sur la prod) et `db-tests.yml` (pgTAP sur une base jetable).
+drill, lecture seule sur la prod), `db-tests.yml` (pgTAP sur une base jetable) et
+`apply-content.yml` / `apply-content-test.yml` — les seuls de la liste qui **écrivent** en prod,
+et l'exception assumée : ils ne publient rien de neuf, seulement le SQL compilé d'un corpus déjà
+mergé et validé par la Content CI (idempotent, journalisé dans `content_releases`, zéro
+migration). Sans eux une campagne de contenu s'arrête à une marche de la fin.
 **Never**: `supabase db push`/`db reset` against any project (prod migrates only via
 `db-migrate-prod.yml`, DoD §7), ni le dispatch de `db-migrate-prod.yml` (schéma prod),
 `e2e-auth.yml` (écrit en prod via les secrets SSR du déploiement — #614, #638) ou
