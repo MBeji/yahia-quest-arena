@@ -26,6 +26,7 @@ import {
   REPO_ROOT,
   fail,
   loadRegistryInput,
+  manifestChaptersByGrade,
   manifestSubjectsByGrade,
 } from "./programmes-io.ts";
 
@@ -116,6 +117,7 @@ if (args.has("--corpus")) {
 const input = {
   ...loadRegistryInput(),
   manifestSubjectsByGrade: manifestSubjectsByGrade(MANIFEST_DIR),
+  manifestChaptersByGrade: manifestChaptersByGrade(MANIFEST_DIR),
 };
 
 if (args.has("--index")) {

@@ -167,6 +167,27 @@ export const ficheEntrySchema = z.object({
    * When declared, `checkSuivi` verifies each id exists in the grade manifest.
    */
   sujets: z.array(z.string().regex(/^[a-z][a-z0-9-]*$/)).default([]),
+  /**
+   * Chapters of this fiche whose section IS at generation depth, on a fiche
+   * whose global status is still `partielle` — the chapter-scoped reading of
+   * R-5 (décision Mohamed, 2026-07-29).
+   *
+   * R-5 forbids generating from a fiche with holes, and that stays true: a
+   * chapter written from a thin or unread section would be invented. But the
+   * bar applies to what a chapter's generation actually CONSUMES — its own
+   * section — not to the fiche as a whole. A fiche read 12/19 at generation
+   * depth (tome 1 integral) blocked all 19 chapters, including the 12 that had
+   * nothing missing. That kept classes closed on transcription already paid for.
+   *
+   * DECLARED by the transcriber, never inferred: only the person who read the
+   * source knows whether a section reaches generation depth, and page ranges
+   * cannot tell (a fiche read 100 % but restituted thin is the 2026-07 collège
+   * vice). Each slug must be a chapter of the manifest of one of `sujets` —
+   * `checkSuivi` rejects the rest, so the list cannot name a chapter that does
+   * not exist. Meaningless once the fiche is `complete` (everything is then
+   * generable): `checkSuivi` warns instead of silently ignoring it.
+   */
+  chapitresGeneration: z.array(z.string().regex(/^\d{2}-[a-z0-9-]+$/)).default([]),
   /** Sources outside the CNP corpus (free text), e.g. a ministry programme booklet. */
   sourcesLibres: z.array(z.string().min(1)).default([]),
   r7: z
@@ -205,6 +226,12 @@ export interface SuiviCheckInput {
    * check is simply skipped (the registry stays checkable on its own).
    */
   manifestSubjectsByGrade?: Record<string, string[]>;
+  /**
+   * Chapter slugs per grade, then per subject id — used to verify that every
+   * slug of `chapitresGeneration` designates a real chapter of the codified
+   * program. Same contract as above: omitted, the check is skipped.
+   */
+  manifestChaptersByGrade?: Record<string, Record<string, string[]>>;
 }
 
 export interface SuiviCheckResult {
@@ -244,15 +271,36 @@ export function coveragePct(source: FicheSource): number | null {
 
 const GENERATION_ALLOWED: readonly FicheStatut[] = ["complete", "validee-r7", "promue"];
 
-/** Whether pedagogical generation may consume this fiche (derived, never stored). */
+/** Whether pedagogical generation may consume this fiche WHOLE (derived, never stored). */
 export function generationAutorisee(entry: FicheEntry): boolean {
   return GENERATION_ALLOWED.includes(entry.statut);
+}
+
+/**
+ * Chapters generable from this fiche when the fiche as a whole is NOT (R-5,
+ * chapter-scoped reading — see `chapitresGeneration`).
+ *
+ * Empty when the fiche is generable whole (the caller then has no restriction
+ * to apply) and empty when nothing is declared — so a non-empty result always
+ * means "this fiche is under the bar, and exactly these chapters are usable".
+ */
+export function chapitresGenerables(entry: FicheEntry): string[] {
+  if (generationAutorisee(entry)) return [];
+  if (entry.statut === "en-cours") return [];
+  return entry.chapitresGeneration;
 }
 
 export function checkSuivi(input: SuiviCheckInput): SuiviCheckResult {
   const errors: string[] = [];
   const warnings: string[] = [];
-  const { corpus, affectations, suivis, fichesOnDisk, manifestSubjectsByGrade } = input;
+  const {
+    corpus,
+    affectations,
+    suivis,
+    fichesOnDisk,
+    manifestSubjectsByGrade,
+    manifestChaptersByGrade,
+  } = input;
 
   // 1. Every corpus PDF resolves to a category.
   const corpusByCode = new Map<string, CorpusDocument[]>();
@@ -412,6 +460,55 @@ export function checkSuivi(input: SuiviCheckInput): SuiviCheckResult {
           );
         } else {
           claimedSujetBy.set(sujet, path);
+        }
+      }
+
+      // 8b. `chapitresGeneration` — the chapter-scoped R-5 exemption. It lets a
+      //     `partielle` fiche feed the chapters it DID transcribe in depth, so
+      //     it is exactly the field a hurried session would be tempted to pad.
+      //     Three guards make padding it useless: it means nothing above the
+      //     bar, it needs a declared link to be checkable at all, and every
+      //     slug must exist in the codified program.
+      if (entry.chapitresGeneration.length > 0) {
+        if (GENERATION_ALLOWED.includes(entry.statut)) {
+          warnings.push(
+            `suivi ${path}: chapitresGeneration est renseigné sur un statut "${entry.statut}" — ` +
+              `sans effet (toute la fiche est déjà générable), à vider`,
+          );
+        } else if (entry.statut === "en-cours") {
+          errors.push(
+            `suivi ${path}: chapitresGeneration sur un statut "en-cours" — ` +
+              `une fiche réservée par une session ne se consomme pas`,
+          );
+        } else if (entry.sujets.length === 0) {
+          errors.push(
+            `suivi ${path}: chapitresGeneration déclaré sans \`sujets\` — ` +
+              `sans lien fiche → contenu, les slugs ne sont vérifiables contre aucun manifeste`,
+          );
+        }
+
+        const dupChapitres = entry.chapitresGeneration.filter(
+          (c, i) => entry.chapitresGeneration.indexOf(c) !== i,
+        );
+        if (dupChapitres.length > 0) {
+          errors.push(
+            `suivi ${path}: chapitre déclaré en double dans chapitresGeneration ` +
+              `(${[...new Set(dupChapitres)].join(", ")})`,
+          );
+        }
+
+        const chaptersBySujet = manifestChaptersByGrade?.[suivi.grade];
+        if (chaptersBySujet && entry.sujets.length > 0) {
+          const connus = new Set(entry.sujets.flatMap((s) => chaptersBySujet[s] ?? []));
+          for (const chapitre of entry.chapitresGeneration) {
+            if (!connus.has(chapitre)) {
+              errors.push(
+                `suivi ${path}: chapitre "${chapitre}" de chapitresGeneration absent du chapitrage ` +
+                  `de ${entry.sujets.join(", ")} (manifeste ${suivi.grade}) — ` +
+                  `la levée R-5 ne peut désigner qu'un chapitre du programme codifié`,
+              );
+            }
+          }
         }
       }
 

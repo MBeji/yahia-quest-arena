@@ -75,6 +75,7 @@ function entry(overrides: Partial<FicheEntry>): FicheEntry {
     ],
     sourcesLibres: [],
     sujets: [],
+    chapitresGeneration: [],
     r7: null,
     maj: "2026-07-17",
     par: "test",
@@ -263,6 +264,99 @@ describe("checkSuivi — lien fiche → sujets (déclaré, jamais deviné)", () 
   it("rejette un sujet déclaré deux fois dans la même fiche", () => {
     const { errors } = checkSuivi(input([entry({ sujets: ["arabe-1ere", "arabe-1ere"] })]));
     expect(errors.some((e) => e.includes("sujet déclaré en double"))).toBe(true);
+  });
+
+  describe("chapitresGeneration — la levée R-5 au chapitre ne peut pas être bluffée", () => {
+    const manifestChaptersByGrade = {
+      "1ere-base": { "arabe-1ere": ["01-alphabet", "02-syllabes"] },
+    };
+    // Une fiche sous la barre, ce que la levée suppose.
+    const trouee = (chapitresGeneration: string[]) =>
+      entry({
+        statut: "partielle",
+        profondeur: "mixte",
+        sujets: ["arabe-1ere"],
+        chapitresGeneration,
+        sources: [
+          {
+            code: "501109",
+            tomes: ["P00"],
+            role: "enseignant",
+            pagesTotal: 100,
+            pagesLues: [[1, 40]],
+          },
+        ],
+      });
+
+    it("accepte des chapitres qui existent au chapitrage du sujet déclaré", () => {
+      const { errors } = checkSuivi({
+        ...input([trouee(["01-alphabet"])]),
+        manifestSubjectsByGrade,
+        manifestChaptersByGrade,
+      });
+      expect(errors).toEqual([]);
+    });
+
+    it("rejette un chapitre absent du chapitrage — on ne s'exempte pas sur une fiction", () => {
+      const { errors } = checkSuivi({
+        ...input([trouee(["99-inventé"])]),
+        manifestSubjectsByGrade,
+        manifestChaptersByGrade,
+      });
+      expect(
+        errors.some((e) => e.includes("99-invent") && e.includes("absent du chapitrage")),
+      ).toBe(true);
+    });
+
+    it("rejette une levée déclarée sans lien fiche → contenu", () => {
+      const { errors } = checkSuivi(
+        input([
+          entry({
+            statut: "partielle",
+            profondeur: "mixte",
+            sujets: [],
+            chapitresGeneration: ["01-alphabet"],
+            sources: [
+              {
+                code: "501109",
+                tomes: ["P00"],
+                role: "enseignant",
+                pagesTotal: 100,
+                pagesLues: [[1, 40]],
+              },
+            ],
+          }),
+        ]),
+      );
+      expect(errors.some((e) => e.includes("sans `sujets`"))).toBe(true);
+    });
+
+    it("rejette un chapitre déclaré en double", () => {
+      const { errors } = checkSuivi(input([trouee(["01-alphabet", "01-alphabet"])]));
+      expect(errors.some((e) => e.includes("double dans chapitresGeneration"))).toBe(true);
+    });
+
+    it("rejette une levée sur une fiche réservée par une session", () => {
+      const { errors } = checkSuivi(
+        input([
+          entry({
+            statut: "en-cours",
+            profondeur: "mixte",
+            sujets: ["arabe-1ere"],
+            chapitresGeneration: ["01-alphabet"],
+          }),
+        ]),
+      );
+      expect(errors.some((e) => e.includes('statut "en-cours"'))).toBe(true);
+    });
+
+    it("avertit — sans bloquer — quand la levée est renseignée au-dessus de la barre", () => {
+      const { errors, warnings } = checkSuivi(
+        input([entry({ chapitresGeneration: ["01-alphabet"], sujets: ["arabe-1ere"] })]),
+      );
+      expect(errors).toEqual([]);
+      expect(warnings.some((w) => w.includes("sans effet"))).toBe(true);
+    });
   });
 
   it("avertit — sans bloquer — quand deux fiches déclarent le même sujet", () => {

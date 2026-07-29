@@ -137,3 +137,22 @@ export function manifestSubjectsByGrade(dir: string): Record<string, string[]> |
   }
   return out;
 }
+
+/**
+ * Chapter slugs per grade, then per subject id — what `checkSuivi` needs to
+ * verify a `chapitresGeneration` list against the codified program.
+ */
+export function manifestChaptersByGrade(
+  dir: string,
+): Record<string, Record<string, string[]>> | undefined {
+  if (!existsSync(dir)) return undefined;
+  const out: Record<string, Record<string, string[]>> = {};
+  for (const { manifest } of loadManifests(dir)) {
+    const bySubject: Record<string, string[]> = {};
+    for (const subject of manifest.subjects) {
+      bySubject[subject.id] = subject.chapters.map((c) => c.slug);
+    }
+    out[manifest.grade] = bySubject;
+  }
+  return out;
+}
