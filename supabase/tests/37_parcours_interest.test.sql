@@ -7,8 +7,12 @@
 --   * it is allowed ONLY on a coming_soon parcours (rejected on an available one);
 --   * parcours_interest_counts reports the live aggregate count;
 --   * RLS: a user cannot read another user's vote rows.
--- The school parcours (concours-9eme available, ecole-7eme-base coming_soon) come
--- from 20260605120000 + 20260617120000; fixtures only add users.
+-- Le parcours AVAILABLE utilisé comme repoussoir (concours-9eme) vient du
+-- catalogue (20260605120000). Le parcours COMING_SOON, lui, est une fixture
+-- propre au test : le catalogue n'en fournit aucun de façon stable — chaque
+-- campagne de contenu en ouvre (R-8), et s'appuyer sur l'un d'eux fait tomber
+-- ce test le jour de son ouverture (ce qu'a fait ecole-7eme-base, ouvert par
+-- 20260729120000). La fixture est annulée par le ROLLBACK final.
 -- =========================================================
 
 BEGIN;
@@ -22,6 +26,14 @@ INSERT INTO auth.users (id, email) VALUES
   ('a1111111-1111-1111-1111-111111111111', 'pi-a@test.local'),
   ('b2222222-2222-2222-2222-222222222222', 'pi-b@test.local');
 
+-- Parcours coming_soon dédié au test (voir l'en-tête). theme_id existant +
+-- grade_id NULL : ne heurte pas l'index unique (theme_id, COALESCE(grade)).
+INSERT INTO public.parcours
+  (id, name_fr, kind, theme_id, grade_id, is_premium, preview_policy, display_order, icon, color, status)
+VALUES
+  ('pi-test-coming-soon', 'Fixture — classe en construction', 'libre', 'ecole-tn', NULL,
+   false, 'full', 999, 'GraduationCap', 'subject-math', 'coming_soon');
+
 INSERT INTO public.profiles (id, display_name) VALUES
   ('a1111111-1111-1111-1111-111111111111', 'InterestA'),
   ('b2222222-2222-2222-2222-222222222222', 'InterestB')
@@ -34,17 +46,17 @@ SET LOCAL "request.jwt.claims" = '{"sub":"a1111111-1111-1111-1111-111111111111",
 SET LOCAL ROLE authenticated;
 
 SELECT is(
-  public.toggle_parcours_interest('ecole-7eme-base'), true,
+  public.toggle_parcours_interest('pi-test-coming-soon'), true,
   'toggle: first call on a coming_soon parcours registers interest (true)');
 
 SELECT is(
   (SELECT count(*)::int FROM public.parcours_interest
      WHERE user_id = 'a1111111-1111-1111-1111-111111111111'
-       AND parcours_id = 'ecole-7eme-base'),
+       AND parcours_id = 'pi-test-coming-soon'),
   1, 'toggle: the caller sees their own vote row (RLS read own)');
 
 SELECT is(
-  public.toggle_parcours_interest('ecole-7eme-base'), false,
+  public.toggle_parcours_interest('pi-test-coming-soon'), false,
   'toggle: second call removes the vote (false)');
 
 SELECT is(
@@ -54,7 +66,7 @@ SELECT is(
 
 -- Re-arm a live vote for the counts + isolation checks below.
 SELECT is(
-  public.toggle_parcours_interest('ecole-7eme-base'), true,
+  public.toggle_parcours_interest('pi-test-coming-soon'), true,
   'toggle: re-registering interest returns true again');
 
 SELECT throws_ok(
@@ -64,7 +76,7 @@ SELECT throws_ok(
 
 SELECT is(
   (SELECT interest_count FROM public.parcours_interest_counts()
-     WHERE parcours_id = 'ecole-7eme-base'),
+     WHERE parcours_id = 'pi-test-coming-soon'),
   1::bigint, 'counts: the aggregate reflects the live vote');
 
 RESET ROLE;
@@ -98,7 +110,7 @@ SELECT ok(
 SET LOCAL ROLE anon;
 SELECT is(
   (SELECT interest_count FROM public.parcours_interest_counts()
-     WHERE parcours_id = 'ecole-7eme-base'),
+     WHERE parcours_id = 'pi-test-coming-soon'),
   1::bigint, 'counts: an anonymous visitor reads the same PII-free aggregate');
 RESET ROLE;
 
