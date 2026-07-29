@@ -558,7 +558,13 @@ export function renderEtat(etat: EtatDesLieux): string {
       bits.push(f.couverturePct === null ? "couverture ?" : `couverture ${f.couverturePct} %`);
       if (f.trous.length > 0) bits.push(`trous ${f.trous.join(" · ")}`);
       if (f.r7) bits.push(`R-7 ${f.r7}`);
-      bits.push(f.generationAutorisee ? "génération autorisée" : "⛔ génération interdite");
+      bits.push(
+        f.generationAutorisee
+          ? "génération autorisée"
+          : f.chapitresGenerables.length > 0
+            ? `génération restreinte à ${f.chapitresGenerables.length} ch. (R-5 au chapitre)`
+            : "⛔ génération interdite",
+      );
       lines.push(`  fiche ${couple.matiere} — ${bits.join(" · ")}`);
       for (const sujet of couple.sujets) lines.push(`      └ ${renderSujet(sujet)}`);
       for (const constat of couple.constats) lines.push(`      ! ${constat}`);
