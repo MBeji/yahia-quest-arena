@@ -28,6 +28,7 @@ import {
 } from "./parcours-ouverture.ts";
 import {
   GRADE_ORDER,
+  chapitresGenerables,
   coveragePct,
   deriveBacklog,
   generationAutorisee,
@@ -64,6 +65,11 @@ export interface EtatFiche {
   r7: string | null;
   /** Derived from the status: a fiche under the R-5 bar must not be generated. */
   generationAutorisee: boolean;
+  /**
+   * Chapters usable despite the bar (R-5 lu au chapitre) — empty when the fiche
+   * is generable whole, so a non-empty list always means "restricted lot".
+   */
+  chapitresGenerables: string[];
 }
 
 /**
@@ -233,13 +239,41 @@ function prochaineEtapeOf(
   if (!fiche.generationAutorisee) {
     const couverture =
       fiche.couverturePct === null ? "couverture inconnue" : `${fiche.couverturePct} %`;
+    const etat = `${fiche.statut}/${fiche.profondeur}, ${couverture}${
+      fiche.trous.length > 0 ? `, ${fiche.trous.length} source(s) à trous` : ""
+    }`;
+
+    // R-5 lu au chapitre (décision 2026-07-29) : la barre porte sur ce qu'une
+    // génération CONSOMME — la section de son chapitre — pas sur la fiche
+    // entière. Une fiche trouée dont certaines sections sont transcrites en
+    // profondeur les rend générables ; le reste attend toujours le LOT A.
+    // Non bloquant, donc : il y a un lot livrable ici, restreint et nommé.
+    const restreint = fiche.chapitresGenerables;
+    if (restreint.length > 0) {
+      const aFaire = sujets.flatMap((s) => [...s.chapitresManquants, ...s.chapitresIncomplets]);
+      const cibles = aFaire.length > 0 ? restreint.filter((c) => aFaire.includes(c)) : restreint;
+      if (cibles.length > 0) {
+        return {
+          lot: "B",
+          etape: "B2",
+          action:
+            `générer uniquement les chapitres dont la fiche est en profondeur ` +
+            `(${cibles.length}) : ${cibles.slice(0, 3).join(", ")}${cibles.length > 3 ? ", …" : ""}`,
+          motif:
+            `${etat} — la fiche entière reste sous la barre, mais ces chapitres y sont ` +
+            `déclarés en profondeur (chapitresGeneration)`,
+          bloquant: false,
+        };
+      }
+    }
+
     return {
       lot: "A",
       etape: "A3",
       action: "compléter la fiche (lecture des plages manquantes puis profondeur R-5)",
-      motif: `${fiche.statut}/${fiche.profondeur}, ${couverture}${
-        fiche.trous.length > 0 ? `, ${fiche.trous.length} source(s) à trous` : ""
-      } — la génération reste interdite`,
+      motif: `${etat} — la génération reste interdite${
+        restreint.length > 0 ? " (les chapitres déjà en profondeur sont tous couverts)" : ""
+      }`,
       bloquant: true,
     };
   }
@@ -328,6 +362,7 @@ function toEtatFiche(entry: FicheEntry): EtatFiche {
     trous: trousOf(entry),
     r7: entry.r7 ? `${entry.r7.date} (${entry.r7.portee}, ${entry.r7.corrections} corr.)` : null,
     generationAutorisee: generationAutorisee(entry),
+    chapitresGenerables: chapitresGenerables(entry),
   };
 }
 

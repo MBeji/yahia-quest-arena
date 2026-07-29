@@ -55,6 +55,7 @@ function fiche(overrides: Partial<FicheEntry>): FicheEntry {
     ],
     sourcesLibres: [],
     sujets: ["math-4eme"],
+    chapitresGeneration: [],
     r7: null,
     maj: "2026-07-26",
     par: "test",
@@ -302,6 +303,70 @@ describe("prochaineEtape — la méthode appliquée à un couple, jamais un rang
     );
     expect(e).toMatchObject({ lot: "A", etape: "A3", bloquant: true });
     expect(e.motif).toContain("40 %");
+  });
+
+  // R-5 lu au chapitre (décision 2026-07-29). La fiche entière reste sous la
+  // barre ; ce qu'elle a transcrit en profondeur devient exploitable.
+  const ficheTrouee = (chapitresGeneration: string[]) =>
+    fiche({
+      statut: "partielle",
+      profondeur: "mixte",
+      chapitresGeneration,
+      sources: [
+        {
+          code: "502304",
+          tomes: ["P00"],
+          role: "enseignant",
+          pagesTotal: 100,
+          pagesLues: [[1, 40]],
+        },
+      ],
+    });
+
+  it("prescrit un LOT B RESTREINT quand la fiche trouée déclare des chapitres en profondeur", () => {
+    const e = etapeDe(
+      [gradeSuivi([ficheTrouee(["01-fractions", "02-decimaux"])])],
+      [audit({ subjects: [sujet({ missingChapters: ["01-fractions", "09-symetrie"] })] })],
+    );
+    // Restreint des deux côtés : ce que la fiche autorise ∩ ce qui manque.
+    expect(e).toMatchObject({ lot: "B", etape: "B2", bloquant: false });
+    expect(e.action).toContain("01-fractions");
+    expect(e.action).not.toContain("09-symetrie"); // manquant, mais fiche non transcrite
+    expect(e.action).not.toContain("02-decimaux"); // autorisé, mais déjà généré
+    expect(e.motif).toContain("chapitresGeneration");
+  });
+
+  it("retombe en A3 bloquant quand les chapitres autorisés sont tous déjà générés", () => {
+    const e = etapeDe(
+      [gradeSuivi([ficheTrouee(["01-fractions"])])],
+      [audit({ subjects: [sujet({ missingChapters: ["09-symetrie"] })] })],
+    );
+    expect(e).toMatchObject({ lot: "A", etape: "A3", bloquant: true });
+    expect(e.motif).toContain("déjà en profondeur sont tous couverts");
+  });
+
+  it("reste bloquant sur une fiche trouée qui ne déclare aucun chapitre", () => {
+    const e = etapeDe(
+      [gradeSuivi([ficheTrouee([])])],
+      [audit({ subjects: [sujet({ missingChapters: ["01-fractions"] })] })],
+    );
+    expect(e).toMatchObject({ lot: "A", etape: "A3", bloquant: true });
+  });
+
+  it("n'exempte jamais une fiche réservée par une session (en-cours)", () => {
+    const e = etapeDe(
+      [
+        gradeSuivi([
+          fiche({
+            statut: "en-cours",
+            profondeur: "mixte",
+            chapitresGeneration: ["01-fractions"],
+          }),
+        ]),
+      ],
+      [audit({ subjects: [sujet({ missingChapters: ["01-fractions"] })] })],
+    );
+    expect(e).toMatchObject({ lot: null, bloquant: true });
   });
 
   it("demande le lien avant de statuer sur le contenu", () => {
