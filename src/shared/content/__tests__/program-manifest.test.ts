@@ -179,6 +179,86 @@ describe("auditGrade", () => {
     expect(g.findingCount).toBe(0);
   });
 
+  // `optional` doit affranchir la couverture, pas seulement les findings :
+  // sinon il déplace le reproche d'un finding vers un pourcentage qui plafonne
+  // à jamais, et une matière complète n'est jamais annonçable comme telle.
+  it("mesure la couverture sur les chapitres REQUIS, en excluant les optionnels", () => {
+    const m = manifest({
+      subjects: [
+        {
+          id: "math-1ere",
+          contentLanguage: "ar",
+          chapters: [
+            { slug: "01-a", notion: "A", optional: false },
+            { slug: "02-b", notion: "B", optional: false },
+            { slug: "03-c", notion: "C", optional: true },
+            { slug: "04-d", notion: "D", optional: true },
+          ],
+        },
+      ],
+    });
+    const subjects = [subject("math-1ere", "ar", [chapter("01-a"), chapter("02-b")])];
+    const s = auditGrade(m, subjects).subjects[0];
+    // Les 2 requis sont là → 100 %, malgré 2 optionnels absents…
+    expect(s.coveragePct).toBe(100);
+    // …et le décompte brut du chapitrage reste honnête : 2 présents sur 4 codifiés.
+    expect(s.presentExpected).toBe(2);
+    expect(s.expectedChapters).toBe(4);
+    expect(s.missingChapters).toHaveLength(0);
+  });
+
+  it("compte un optionnel présent en bonus, sans dépasser 100 %", () => {
+    const m = manifest({
+      subjects: [
+        {
+          id: "math-1ere",
+          contentLanguage: "ar",
+          chapters: [
+            { slug: "01-a", notion: "A", optional: false },
+            { slug: "02-b", notion: "B", optional: true },
+          ],
+        },
+      ],
+    });
+    const subjects = [subject("math-1ere", "ar", [chapter("01-a"), chapter("02-b")])];
+    const s = auditGrade(m, subjects).subjects[0];
+    expect(s.coveragePct).toBe(100);
+    expect(s.presentExpected).toBe(2);
+  });
+
+  it("reste à 0 % quand un chapitre requis manque, optionnels présents ou non", () => {
+    const m = manifest({
+      subjects: [
+        {
+          id: "math-1ere",
+          contentLanguage: "ar",
+          chapters: [
+            { slug: "01-a", notion: "A", optional: false },
+            { slug: "02-b", notion: "B", optional: true },
+          ],
+        },
+      ],
+    });
+    const subjects = [subject("math-1ere", "ar", [chapter("02-b")])];
+    const s = auditGrade(m, subjects).subjects[0];
+    expect(s.coveragePct).toBe(0);
+  });
+
+  it("rend 100 % quand tout le chapitrage est optionnel (rien de requis ne manque)", () => {
+    const m = manifest({
+      subjects: [
+        {
+          id: "math-1ere",
+          contentLanguage: "ar",
+          chapters: [{ slug: "01-a", notion: "A", optional: true }],
+        },
+      ],
+    });
+    const subjects = [subject("math-1ere", "ar", [])];
+    const s = auditGrade(m, subjects).subjects[0];
+    expect(s.coveragePct).toBe(100);
+  });
+
   it("flags an off-program chapter", () => {
     const subjects = [
       subject("math-1ere", "ar", [chapter("01-a"), chapter("02-b"), chapter("99-extra")]),
