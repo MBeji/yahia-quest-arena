@@ -104,7 +104,13 @@ export type SubjectAudit = {
   offProgramChapters: string[];
   /** Every present chapter that is incomplete or carries a ladder note. */
   chapterCompleteness: ChapterCompleteness[];
-  /** Expected chapters present / expected, or null when not codified. */
+  /**
+   * REQUIRED chapters present / required, or null when not codified. Optional
+   * chapters are excluded from both sides: they are codified to stay traceable
+   * to the official programme, not to hold the subject below 100 % forever.
+   * 100 when every codified chapter is optional (nothing required is missing).
+   * For the raw codified count, read `presentExpected`/`expectedChapters`.
+   */
   coveragePct: number | null;
   findings: Finding[];
 };
@@ -238,9 +244,21 @@ export function auditGrade(manifest: ProgramManifest, subjects: LoadedSubject[])
     const presentExpected = chaptersCodified
       ? ms.chapters.filter((c) => contentSlugs.has(c.slug)).length
       : found.chapters.length;
-    const coveragePct = chaptersCodified
-      ? Math.round((presentExpected / ms.chapters.length) * 100)
-      : null;
+    // La couverture se mesure sur les chapitres REQUIS. Un chapitre `optional`
+    // est codifié pour rester traçable au programme officiel, mais la matière
+    // doit pouvoir être déclarée complète sans lui — sinon `optional` ne ferait
+    // que déplacer le reproche : plus de finding `missing-chapter`, mais un
+    // pourcentage qui plafonne à jamais (9/13 ≈ 69 % en arabe 2ème sec lettres,
+    // dont 4 chapitres d'oral et de fiches de langue se prêtent mal au QCM).
+    // `presentExpected`/`expectedChapters` gardent, eux, le décompte de TOUT le
+    // chapitrage : « 9/13 ch. » reste l'affichage honnête de ce qui est codifié.
+    const requiredChapters = ms.chapters.filter((c) => !c.optional);
+    const presentRequired = requiredChapters.filter((c) => contentSlugs.has(c.slug)).length;
+    const coveragePct = !chaptersCodified
+      ? null
+      : requiredChapters.length === 0
+        ? 100
+        : Math.round((presentRequired / requiredChapters.length) * 100);
 
     return {
       id: ms.id,
