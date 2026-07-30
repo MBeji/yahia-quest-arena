@@ -381,6 +381,20 @@ Les niveaux de filtrage, chacun attrapant un type d'erreur différent :
 > ces outils vérifient la **structure**, pas la **vérité**. C'est pour ça que `content-audit`
 > existe : un balayage planifié qui re-résout chaque question.
 
+#### Une explication ne désigne jamais une option par sa lettre ni son rang
+
+`shuffleOptions` (`src/shared/lib/question-utils.ts`) mélange l'ordre des options au rendu, dans
+les trois surfaces qui affichent un QCM (`exercise-player`, `duel-arena`, donjon). Une explication
+qui dit « la réponse **b** se trompe de signe » ou « la **dernière** réponse intervertit la somme
+et le produit » désigne donc une position que l'élève ne voit jamais : au mieux elle est inutile,
+au pire elle accuse une option au hasard. Le bon patron cite la **valeur** ou l'**expression** —
+« la réponse −25 vient d'une erreur de signe », « 3 et 10 respecte le produit mais pas la somme ».
+
+`content:qa` le signale (`auditOptionReference`, dans `scripts/content/qa-checks.ts`), en
+**[warn]** tant que la campagne de réécriture du corpus n'est pas finie : au 2026-07-30 l'état des
+lieux comptait ~6 100 occurrences sur 715 fichiers et 48 matières. La bascule en **[error]** se
+fait via `OPTION_REFERENCE_LEVEL` quand la QA ne remonte plus rien.
+
 ### Qui exécute quoi, depuis la scission
 
 | Gate                                                                                             | S'exécute dans                                     |
