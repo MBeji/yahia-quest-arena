@@ -143,6 +143,65 @@ describe("buildEtat — jointure fiche × contenu", () => {
     expect(etat.grades[0].couples[0].constats).toContain("fiche exploitable, aucun contenu généré");
   });
 
+  it("ne crie plus au loup quand le contenu tient dans la levée R-5", () => {
+    // 4 chapitres attendus, 4 présents, et les 4 sont déclarés en profondeur :
+    // c'est le cas nominal d'une classe ouverte par la levée, pas un abus.
+    const etat = buildEtat(
+      input(
+        [
+          gradeSuivi([
+            fiche({
+              statut: "partielle",
+              profondeur: "mixte",
+              chapitresGeneration: ["01-a", "02-b", "03-c", "04-d"],
+              sources: [
+                {
+                  code: "502304",
+                  tomes: ["P00"],
+                  role: "enseignant",
+                  pagesTotal: 100,
+                  pagesLues: [[1, 40]],
+                },
+              ],
+            }),
+          ]),
+        ],
+        [audit()],
+      ),
+    );
+    expect(etat.grades[0].couples[0].constats).toEqual([]);
+  });
+
+  it("signale les chapitres générés HORS de la levée R-5, et les compte", () => {
+    // 4 présents mais 2 seulement sont levés → 2 viennent d'une section non lue.
+    const etat = buildEtat(
+      input(
+        [
+          gradeSuivi([
+            fiche({
+              statut: "partielle",
+              profondeur: "mixte",
+              chapitresGeneration: ["01-a", "02-b"],
+              sources: [
+                {
+                  code: "502304",
+                  tomes: ["P00"],
+                  role: "enseignant",
+                  pagesTotal: 100,
+                  pagesLues: [[1, 40]],
+                },
+              ],
+            }),
+          ]),
+        ],
+        [audit()],
+      ),
+    );
+    const constats = etat.grades[0].couples[0].constats.join(" ");
+    expect(constats).toContain("2 chapitre(s) hors de la levée R-5");
+    expect(constats).toContain("2 chapitre(s) levé(s)");
+  });
+
   it("signale du contenu généré sur une fiche sous la barre R-5", () => {
     const etat = buildEtat(
       input([gradeSuivi([fiche({ statut: "partielle", profondeur: "first-pass" })])], [audit()]),

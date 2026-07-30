@@ -428,11 +428,36 @@ export function buildEtat(input: EtatInput): EtatDesLieux {
       if (generable && sujets.length > 0 && !contenuPresent) {
         constats.push("fiche exploitable, aucun contenu généré");
       }
+      // Ce constat dénonce une génération faite depuis une section non transcrite.
+      // Depuis que R-5 se lit AU CHAPITRE, du contenu sous une fiche `partielle`
+      // n'est plus anormal en soi : il l'est seulement si un chapitre présent
+      // n'est PAS dans la levée déclarée. Sans ce filtre, le constat se
+      // déclencherait sur chaque classe ouverte par la levée — et un avertisseur
+      // qui crie toujours n'avertit plus de rien.
       if (!generable && contenuPresent) {
-        constats.push(
-          `contenu présent alors que la fiche est ${entry.statut}/${entry.profondeur} — ` +
-            `la génération a consommé une fiche sous la barre R-5`,
-        );
+        const leves = chapitresGenerables(entry);
+        if (leves.length === 0) {
+          constats.push(
+            `contenu présent alors que la fiche est ${entry.statut}/${entry.profondeur} — ` +
+              `la génération a consommé une fiche sous la barre R-5`,
+          );
+        } else {
+          // Combien de chapitres présents sortent de la levée ? Par différence,
+          // faute de liste des slugs présents dans `EtatSujet` : les chapitres
+          // levés ET présents sont ceux de la levée que le contenu ne rate pas,
+          // donc tout présent au-delà de ce compte a été généré hors levée.
+          const horsLevee = sujets.reduce((n, s) => {
+            const levesPresents = leves.filter((c) => !s.chapitresManquants.includes(c)).length;
+            return n + Math.max(0, s.chapitresPresents - levesPresents);
+          }, 0);
+          if (horsLevee > 0) {
+            constats.push(
+              `contenu présent sur ${horsLevee} chapitre(s) hors de la levée R-5 ` +
+                `(fiche ${entry.statut}/${entry.profondeur}, ${leves.length} chapitre(s) levé(s)) — ` +
+                `générés depuis une section non transcrite en profondeur`,
+            );
+          }
+        }
       }
 
       const etatFiche = toEtatFiche(entry);
