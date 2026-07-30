@@ -1,0 +1,31 @@
+-- Ouvrir le parcours 2ème année secondaire — section Lettres :
+-- « coming_soon » → « available ».
+--
+-- Seuil R-8 : une PREMIÈRE TRANCHE complète ouvre la classe — on n'attend pas
+-- la matière complète, les chapitres suivants s'ajoutent sous un parcours déjà
+-- ouvert. La tranche qui la déclenche : les 3 premiers chapitres de
+-- `arabic-2eme-sec-lettres` (الغرض الشعريّ, غرض الفخر, غرض المدح — 9 exercices,
+-- 69 questions), compilés et appliqués par le canal contenu avant cette
+-- migration, run `apply-content.yml` vert et release journalisée dans
+-- `content_releases`.
+--
+-- Ces 3 chapitres sont générés sous la lecture AU CHAPITRE de R-5 : la fiche
+-- arabe de ce niveau est transcrite 5 chapitres sur 13 à profondeur de
+-- génération (le محور الأوّل, عيون الأدب tome 1 p.5–83, intégral), et les 3
+-- livrés en sortent tous. Les 8 autres chapitres attendent la transcription du
+-- reste des deux tomes. La classe s'ouvre donc sur du contenu entièrement
+-- adossé à la source.
+--
+-- Le parcours a été seedé `coming_soon` par
+-- 20260704235000_lycee_section_grades_seed.sql avant tout contenu : la classe
+-- affichait le teaser « En construction » et `resolve_exercise_access` refusait
+-- l'entrée (PARCOURS_COMING_SOON).
+--
+-- Parcours `scolaire` GRATUIT (is_premium = false, preview_policy = 'full') :
+-- passer à 'available' l'ouvre entièrement, sans entitlement.
+--
+-- Idempotent : re-jouer est un no-op une fois le statut déjà 'available'.
+-- Miroir de 20260730120000_open_ecole_2eme_sec_sciences_parcours.sql.
+UPDATE public.parcours
+SET status = 'available'
+WHERE id = 'ecole-2eme-sec-lettres';
