@@ -43,6 +43,10 @@
  *           A *substantive* "nothing/zero" answer (`لا شيء`, `aucun jour`) is
  *           legitimate and NOT flagged. Deep grammatical coherence is the
  *           `content-audit` (human/LLM) pass; this only catches the lexical slice.
+ *   [warn]  option designated by letter/rank    → `shuffleOptions` reorders the
+ *           options at render, so « la réponse b » / « la dernière option » points
+ *           at a position the student never sees. Cite the option's VALUE instead.
+ *           Warn until the corpus is rewritten — see `OPTION_REFERENCE_LEVEL`.
  *   [error] acceptedAnswers collision/charset   → étude 20 R-4/R-5: an accepted
  *           variant that equals a DECLARED-WRONG option would make cheating
  *           correct, and one outside the typable charset could never be entered.
@@ -55,6 +59,16 @@ import {
   normalizeRecallText,
   TYPABLE_CHARSET,
 } from "../../src/shared/content/free-answer.ts";
+import { auditOptionReference } from "./qa-option-reference.ts";
+
+// La règle « option désignée par lettre/rang » vit dans son propre module (elle
+// pèse ~110 lignes de regex calibrées), mais reste exposée d'ici : `qa.ts` et les
+// tests ne connaissent qu'une seule porte d'entrée.
+export {
+  auditOptionReference,
+  optionReferences,
+  OPTION_REFERENCE_LEVEL,
+} from "./qa-option-reference.ts";
 
 export type QAOption = { id: string; text: string; misconceptionTag?: string };
 export type QAQuestion = {
@@ -478,6 +492,10 @@ export function auditQuestion(q: QAQuestion, where: string): Flag[] {
       });
     }
   }
+
+  // 9) explication qui désigne une option par sa lettre ou son rang — les options
+  //    sont mélangées au rendu, la position n'est jamais celle que l'élève voit.
+  flags.push(...auditOptionReference(q, where));
 
   return flags;
 }

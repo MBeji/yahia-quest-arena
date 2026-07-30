@@ -4,7 +4,10 @@ import {
   auditMathNotation,
   auditMisconceptionTags,
   auditNumericQuestion,
+  auditOptionReference,
   auditQuestion,
+  optionReferences,
+  OPTION_REFERENCE_LEVEL,
   auditRtlNotation,
   classifyOption,
   hasArabicCommaInMath,
@@ -592,5 +595,94 @@ describe("auditMathNotation — le rendu n'interprète rien (lot LC1)", () => {
       "w",
     );
     expect(flags.some((f) => f.level === "error" && /LaTeX command/.test(f.msg))).toBe(true);
+  });
+});
+
+describe("auditOptionReference — une option ne se désigne pas par sa lettre ni son rang", () => {
+  const hits = (s: string) => optionReferences(s);
+
+  it("attrape le nom d'option suivi d'une lettre, nu ou entre délimiteurs", () => {
+    expect(hits("La réponse b se trompe de signe.")).toEqual(["réponse b"]);
+    expect(hits("L'option (c) ne dérive pas −2x.")).toEqual(["option (c)"]);
+    expect(hits("Only option D keeps the auxiliary.")).toEqual(["option D"]);
+    expect(hits("L'option « d » garde la constante.")).toEqual(["option « d »"]);
+    expect(hits("الخيار (b) يناقض النصّ صراحةً.")).toEqual(["الخيار (b)"]);
+    expect(hits("الجواب أ نتيجة لا شعور قلبيّ.")).toEqual(["الجواب أ"]);
+  });
+
+  it("attrape la lettre entre parenthèses, mais seulement corroborée", () => {
+    // Deux lettres différentes : personne n'aligne deux unités pour parler d'autre chose.
+    expect(hits("Sentences (a), (b) and (c) are all correct.")).toEqual(["(a)", "(b)", "(c)"]);
+    // Corroborée par une option nommée en toutes lettres.
+    expect(hits("L'option b oublie le signe, et (c) divise les dérivées.")).toEqual([
+      "option b",
+      "(c)",
+    ]);
+    // Isolée, elle reste ambiguë : l'ampère (A), la droite (d), la brique (B).
+    expect(hits("L'intensité s'exprime en ampère (A).")).toEqual([]);
+    expect(hits("A′ est sur le même perpendiculaire à (d), à égale distance de (d).")).toEqual([]);
+  });
+
+  it("laisse l'énoncé étiqueter ses propres cas (A) … (D) sans crier au loup", () => {
+    const prompt = "Quatre cas : (A) une roche gelée. (B) un plateau. (C) une côte. (D) une dune.";
+    const explanation =
+      "Le gel donne (A) ; l'amplitude thermique (B) ; les vagues (C) ; le vent (D).";
+    expect(optionReferences(explanation, prompt)).toEqual([]);
+    // Sans l'énoncé pour les expliquer, les mêmes lettres restent suspectes.
+    expect(optionReferences(explanation)).toHaveLength(4);
+  });
+
+  it("attrape le rang, dans les deux ordres et dans les trois langues", () => {
+    expect(hits("La dernière réponse confond composée et bissectrice.")).toEqual([
+      "dernière réponse",
+    ]);
+    expect(hits("Et la troisième option vérifie bien f(0) = 0.")).toEqual(["troisième option"]);
+    expect(hits("The first option adds a wrong to after will.")).toEqual(["first option"]);
+    expect(hits("La réponse n° 2 additionne les degrés.")).toEqual(["réponse n° 2"]);
+    expect(hits("الخيار الأخير يخلط المضارع بالماضي.")).toEqual(["الخيار الأخير"]);
+  });
+
+  it("laisse passer le bon patron : l'explication cite la VALEUR de l'option", () => {
+    expect(hits("La réponse −25 vient d'une erreur de signe.")).toEqual([]);
+    expect(hits("3 et 10 respecte le produit mais pas la somme.")).toEqual([]);
+    // Une valeur numérique n'est pas un rang : `réponse 4` désigne la réponse « 4 ».
+    expect(hits("La réponse 4 donne le coefficient dominant.")).toEqual([]);
+    expect(hits("La réponse 1/16 oublie le facteur n = 5.")).toEqual([]);
+  });
+
+  it("ne prend pas une variable mathématique pour une option", () => {
+    // La lettre est suivie d'une relation : c'est la valeur de l'option, citée.
+    expect(hits("La réponse « b = −5 et c = 0 » place −5 au mauvais endroit.")).toEqual([]);
+    expect(hits("Le choix D = 3 se trompe de rapport.")).toEqual([]);
+    // Application de fonction et radicande d'un radical.
+    expect(hits("On calcule f(a) puis f(b) pour conclure.")).toEqual([]);
+    expect(hits("Le piège : √(a) + √(b) ≠ √(a+b).")).toEqual([]);
+  });
+
+  it("ne prend pas « la réponse de … » ni l'auxiliaire avoir pour une lettre", () => {
+    expect(hits("La réponse de Marie est incomplète.")).toEqual([]);
+    expect(hits("La réponse d'un élève pressé.")).toEqual([]);
+    expect(hits("L'option a été retenue par le jury.")).toEqual([]);
+  });
+
+  it("remonte un seul flag par question, au niveau documenté", () => {
+    const flags = auditOptionReference(
+      { prompt: "Question ?", explanation: "La réponse b oublie le signe ; l’option (c) aussi." },
+      "w",
+    );
+    expect(flags).toHaveLength(1);
+    expect(flags[0].level).toBe(OPTION_REFERENCE_LEVEL);
+    expect(flags[0].msg).toContain('"réponse b"');
+    expect(flags[0].msg).toContain('"option (c)"');
+  });
+
+  it("remonte depuis auditQuestion, sur l'explication d'un QCM", () => {
+    const flags = auditQuestion(
+      base({ explanation: "La dernière réponse intervertit la somme et le produit du trinôme." }),
+      "w",
+    );
+    expect(
+      flags.some((f) => f.level === OPTION_REFERENCE_LEVEL && /designates an option/.test(f.msg)),
+    ).toBe(true);
   });
 });
