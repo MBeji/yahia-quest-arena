@@ -26,6 +26,16 @@ export function PublicFooter() {
             {t.public.header.parentTracking}
           </Link>
           <span aria-hidden="true">·</span>
+          {/* Libellés en dur, comme le contenu des pages : trois pages légales
+              en trois langues feraient sortir le chunk i18n de son budget. */}
+          <Link to="/confidentialite" className="hover:underline">
+            Confidentialité
+          </Link>
+          <span aria-hidden="true">·</span>
+          <Link to="/conditions" className="hover:underline">
+            Conditions
+          </Link>
+          <span aria-hidden="true">·</span>
           <LegalNoticeDialog />
         </p>
       </div>
