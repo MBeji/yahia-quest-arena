@@ -118,9 +118,9 @@ SELECT matches(
   'chapter_id uuid',
   'A1.2a: le résultat porte chapter_id (D-A1.2-4, lien « revoir le cours »)');
 
-SELECT unlike(
+SELECT doesnt_match(
   pg_get_function_result('public.get_attempt_review(uuid,jsonb)'::regprocedure),
-  '%distractor_tags%',
+  'distractor_tags',
   'D-A1.2-2: la MAP distractor_tags n''est pas dans la signature de sortie');
 
 -- =========================================================
