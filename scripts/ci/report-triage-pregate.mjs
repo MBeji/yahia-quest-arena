@@ -350,17 +350,23 @@ export function decide({
   // recommendations that no automation will ever close). Anchoring on the last triage issue
   // instead makes it what it was meant to be: one reminder every `staleDays`, self-clearing
   // because each reminder moves the anchor forward.
+  // `Number.isFinite`, not `=== null`: a caller that dates the anchor itself — the natural
+  // refactor is `remindedAt: Date.parse(issue.createdAt)` — hands us NaN on a malformed date,
+  // and every comparison against NaN is false. That would fall through to `skip: true` and
+  // silence the valve for good, which is the very failure this function exists to prevent.
+  // Unknown, unparseable and absent all mean the same thing here: we cannot prove we reminded
+  // anyone, so we remind.
   const cutoff = now.getTime() - staleDays * 24 * 60 * 60 * 1000;
-  if (remindedAt === null || remindedAt < cutoff) {
+  const known = Number.isFinite(remindedAt);
+  if (!known || remindedAt < cutoff) {
     return {
       ...base,
       skip: false,
       reminder: true,
       reason: "stale-handled",
-      detail:
-        remindedAt === null
-          ? `${handledStillOpen.length} already-triaged report(s) still open, no previous triage issue to date the last reminder`
-          : `${handledStillOpen.length} already-triaged report(s) still open, last reminded ${Math.floor((now.getTime() - remindedAt) / 86_400_000)} days ago (>${staleDays})`,
+      detail: !known
+        ? `${handledStillOpen.length} already-triaged report(s) still open, no previous triage issue to date the last reminder`
+        : `${handledStillOpen.length} already-triaged report(s) still open, last reminded ${Math.floor((now.getTime() - remindedAt) / 86_400_000)} days ago (>${staleDays})`,
     };
   }
   return {

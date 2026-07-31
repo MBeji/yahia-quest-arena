@@ -306,6 +306,21 @@ describe("decide", () => {
     ).toMatchObject({ skip: false, reason: "stale-handled", reminder: true });
   });
 
+  // An anchor we cannot read is an anchor we do not have. NaN is what a call site dating the
+  // anchor itself would produce on a malformed date (`Date.parse(issue.createdAt)`), and every
+  // comparison against NaN is false — guarding on `=== null` alone would silence the valve.
+  it.each([
+    ["NaN", Number.NaN],
+    ["undefined", undefined],
+  ])("treats a %s anchor as unknown rather than as recent", (_label, remindedAt) => {
+    const reports = [screened({ id: uuid(1) })];
+    expect(decide({ reports, handledIds: new Set([uuid(1)]), now, remindedAt })).toMatchObject({
+      skip: false,
+      reason: "stale-handled",
+      reminder: true,
+    });
+  });
+
   // Regression — the loop behind #651, #658, #669, #670, #671, #672 and #673: staleness used to
   // be measured on `report.createdAt`, a date that only recedes. A report awaiting a `dismissed`
   // the operator never applies therefore stayed "stale" forever and re-woke the agent on all six
