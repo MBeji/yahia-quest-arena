@@ -376,7 +376,7 @@ export function auditRtlNotation(raw: string, field: string, where: string): Fla
   }
 
   for (const chunk of raw.split(/<svg[\s\S]*?<\/svg>/i)) {
-    for (const line of chunk.split("\n")) {
+    for (const line of chunk.split(/\r?\n/)) {
       if (SPLIT_NUMBER_RE.test(line)) report(line);
     }
   }
@@ -848,7 +848,14 @@ const GRAPHICAL_CHAPTER =
  */
 export function auditLesson(md: string, where: string, opts: { spatial?: boolean } = {}): Flag[] {
   const flags: Flag[] = [];
-  const lines = md.split("\n");
+  // `\r?\n` et non `\n` : un checkout Windows matérialise le corpus en CRLF, et
+  // un `split("\n")` laisse alors un `\r` en fin de chaque ligne. Les directives
+  // sont reconnues par des regex ancrées sur `$` (`::: figure …`, `:::`), qui
+  // cessent toutes de matcher — l'ouverture n'est plus vue, et la fermeture est
+  // rapportée « stray `:::` closes nothing ». Le gate inventait donc deux
+  // erreurs par chapitre à figure, en local seulement : la CI (Linux, checkout
+  // LF) restait verte, ce qui rendait l'écart incompréhensible côté auteur.
+  const lines = md.split(/\r?\n/);
 
   let open: { type: string; line: number } | null = null;
   for (let i = 0; i < lines.length; i++) {
