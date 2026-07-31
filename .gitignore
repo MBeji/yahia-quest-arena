@@ -70,3 +70,17 @@ bun.lock
 # fine (the engine is generic), committing it is not. The lot-4 anti-leak CI gate
 # is the hard stop; this is the cheap one that keeps an accident out of a commit.
 sql/content/
+
+# Jonctions locales vers le corpus privé. Pour faire tourner le moteur (content:*,
+# programme:*) il faut monter le corpus à l'emplacement que le loader attend —
+# en pratique un lien/junction `content` et `.claude/skills/content-ecole-tn`
+# pointant vers un checkout de yahia-quest-content. Sans ces deux lignes, un
+# `git add -A` embarque des milliers de fichiers de corpus dans un dépôt PUBLIC :
+# constaté le 2026-07-31 sur trois worktrees, 5 499 fichiers exposés.
+# `leak:check` garde le tip, pas l'arbre de travail — il n'aurait rien vu avant
+# le commit. Ces lignes sont la ceinture bon marché qui rend l'accident
+# impossible ; le gate reste le filet.
+# Le dépôt public n'a plus de `content/` à lui depuis l'étude 24 : ignorer ce
+# chemin ne masque donc rien de légitime.
+/content
+/.claude/skills/content-ecole-tn
