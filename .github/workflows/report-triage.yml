@@ -115,15 +115,25 @@ jobs:
       # produced a fix, open or merged) and the ids cited in the open triage issues (Phase 5's
       # closure table). A failing query yields an empty context — then nothing counts as
       # handled and the agent runs, which is the safe direction.
+      #
+      # `triage_dates` answers a different question — WHEN did we last surface the pending
+      # closures? — and so reads ALL triage issues, open or closed: the operator closing a
+      # reminder must not license a fresh one on the next cron. It is what dates the pre-gate's
+      # stale escape valve; without it that valve re-fired 6×/day forever (see the pre-gate
+      # header, and issues #651…#673).
       - name: Collect the already-triaged report ids
         if: steps.guard.outputs.configured == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           pr_bodies="$(gh pr list --label report-fix --state all --limit 100 --json body 2>/dev/null || echo '[]')"
-          issue_bodies="$(gh issue list --state open --search 'Triage des signalements in:title' --limit 50 --json body 2>/dev/null || echo '[]')"
-          jq -n --argjson prs "$pr_bodies" --argjson issues "$issue_bodies" \
-            '{prBodies: [$prs[].body // ""], issueBodies: [$issues[].body // ""]}' \
+          open_issues="$(gh issue list --state open --search 'Triage des signalements in:title' --limit 50 --json body,number 2>/dev/null || echo '[]')"
+          triage_dates="$(gh issue list --state all --search 'Triage des signalements in:title' --limit 50 --json createdAt 2>/dev/null || echo '[]')"
+          jq -n --argjson prs "$pr_bodies" --argjson issues "$open_issues" --argjson dates "$triage_dates" \
+            '{prBodies: [$prs[].body // ""],
+              issueBodies: [$issues[].body // ""],
+              openTriageIssues: [$issues[].number],
+              triageIssueDates: [$dates[].createdAt // empty]}' \
             > "$RUNNER_TEMP/handled-context.json"
 
       # Deterministic pre-pass (étude "IA → déterministe", lot L2): gate on NEW ids only,
@@ -230,12 +240,28 @@ jobs:
                  those cases leave the PR as a DRAFT with the `needs-review`
                  label instead.
 
-            Finally open ONE tracking issue titled
-            "🛎️ Triage des signalements <date>" containing the skill's Phase 5
-            closure table (report id, canal, verdict sécurité, classification,
-            sévérité, action, statut recommandé, motif) covering EVERY report in
-            the export — including quarantined ⛔ ones (quote the detected
-            pattern, truncated) — plus an "Abus" section for repeat offenders.
+            Finally, report the outcome in ONE place — and only one:
+              • `pregate.reminder: true` means the queue holds NOTHING new: every
+                open report was already triaged and is only waiting on a manual
+                closure. Do NOT open another issue. Add a short COMMENT to the
+                tracking issue(s) listed in `pregate.openTriageIssues` restating
+                the closures still pending and how long they have been waiting.
+                Open a new issue only if that list is empty.
+              • Otherwise open ONE tracking issue titled
+                "🛎️ Triage des signalements <date>" containing the skill's
+                Phase 5 closure table (report id, canal, verdict sécurité,
+                classification, sévérité, action, statut recommandé, motif)
+                covering EVERY report in the export — including quarantined ⛔
+                ones (quote the detected pattern, truncated) — plus an "Abus"
+                section for repeat offenders.
+
+            In that table, write each report id as its FULL canonical UUID
+            (`f6aed6b2-24fc-47b2-9ace-e219b1fd2da2`), never truncated to its
+            first block. The pre-gate proves a report was already triaged by
+            scanning open triage issues for canonical UUIDs: a table of short
+            ids is invisible to it, and the whole queue then reads as fresh on
+            every single run.
+
             Reports fixed by a PR resolve automatically at merge; `dismissed`
             recommendations stay for the operator to apply from the admin
             consoles.

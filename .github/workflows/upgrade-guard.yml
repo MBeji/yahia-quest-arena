@@ -288,6 +288,15 @@ jobs:
                  effort → a tracking ISSUE describing the breaking change and what failed;
                  do NOT open a broken PR. Don't upgrade a major whose notes you cannot find.
 
+                 BEFORE filing that issue, look for one already covering the same package:
+                 `gh issue list --state open --search '<package> in:title'`. A major blocked
+                 upstream stays blocked for weeks, and this guard runs nightly — filing a
+                 fresh issue each time buries the tracker in copies (#593, #660 and #685 were
+                 three issues for one TypeScript 7 blocker). If a tracker exists, COMMENT on
+                 it with what changed since (new upstream version, still-red gate, revised
+                 ETA) and file nothing. Match on the package, not the title: the same blocker
+                 gets described differently from one run to the next.
+
               3. The stack beyond npm is also yours, and is major-class by the skill's rules:
                  the CI Node line, the pinned Supabase CLI (a bump must show a green pgTAP
                  run), and the GitHub Actions SHAs. One PR each, per the skill.
