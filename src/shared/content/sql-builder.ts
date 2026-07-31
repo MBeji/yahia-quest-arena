@@ -11,6 +11,7 @@ import type {
   CompiledVideo,
   ContentQuestion,
   LoadedSubject,
+  MisconceptionRegistry,
   VideoRegistry,
 } from "./schema.ts";
 
@@ -616,6 +617,70 @@ export function buildCompetencyRegistryMigrationSql(registries: CompetencyRegist
     }
     out.push("");
   }
+
+  return out.join("\n");
+}
+
+/** Stable file name of the misconception registry on the same channel (D-6). */
+export const MISCONCEPTIONS_SQL_FILE_NAME = "_misconceptions_registry.sql";
+
+/**
+ * Compile `content/misconceptions.json` into the vocabulary the student actually
+ * reads (étude 04 lot A1.2b).
+ *
+ * `get_attempt_review` rend un TAG ; cette table porte la phrase. Le tag reste
+ * l'identité — il est la clé primaire, et il est STABLE à vie (on déprécie, on ne
+ * renomme jamais, même règle que les slugs et les ids de compétences).
+ *
+ * Idempotent et rejouable, comme tout ce qui passe par `apply-content.yml` : upsert
+ * de chaque entrée, puis purge des tags que le registre ne déclare plus. La purge
+ * est **globale** et non scopée par matière — contrairement aux compétences, dont
+ * chaque famille a son propre fichier : ici il n'y a qu'UN registre, donc ce qui
+ * n'y est plus n'existe plus. Rien n'y a de FK entrante ; une question qui porterait
+ * encore un tag purgé se dégrade en « erreur non nommée » (R-A1.2-3), elle ne casse
+ * pas — et `content:qa` refuse de toute façon un tag hors registre.
+ *
+ * Régénérer avec `npm run content:build -- --misconceptions`.
+ */
+export function buildMisconceptionRegistryMigrationSql(registry: MisconceptionRegistry): string {
+  const tags = Object.keys(registry).sort();
+  const out: string[] = [
+    "-- =========================================================",
+    "-- GENERATED FILE — do not edit by hand.",
+    `-- Misconception registry (étude 04 A1.2b) — ${tags.length} tag(s)`,
+    "-- Regenerate with: npm run content:build -- --misconceptions",
+    "-- Source of truth: content/misconceptions.json",
+    "-- =========================================================",
+    "",
+  ];
+
+  if (tags.length === 0) {
+    // Un registre vide ne doit pas produire un DELETE sans garde qui viderait la
+    // table : « rien à dire » n'est pas « tout effacer ».
+    out.push("-- Registre vide : rien à écrire, et surtout rien à purger.", "");
+    return out.join("\n");
+  }
+
+  out.push(
+    "INSERT INTO public.misconceptions (tag, subject, label_fr, label_en, label_ar) VALUES",
+    tags
+      .map((tag) => {
+        const entry = registry[tag]!;
+        return `  (${sqlString(tag)}, ${sqlString(entry.subject)}, ${sqlString(
+          entry.labels.fr,
+        )}, ${sqlString(entry.labels.en)}, ${sqlString(entry.labels.ar)})`;
+      })
+      .join(",\n"),
+    "ON CONFLICT (tag) DO UPDATE SET",
+    "  subject = EXCLUDED.subject,",
+    "  label_fr = EXCLUDED.label_fr,",
+    "  label_en = EXCLUDED.label_en,",
+    "  label_ar = EXCLUDED.label_ar;",
+    "",
+    "-- Purge des tags que le registre ne déclare plus (dépréciation, jamais renommage).",
+    `DELETE FROM public.misconceptions WHERE tag NOT IN (${sqlIdList(tags)});`,
+    "",
+  );
 
   return out.join("\n");
 }

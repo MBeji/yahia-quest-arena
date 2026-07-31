@@ -35,18 +35,19 @@ vi.mock("../components/video-embed", () => ({
 // only the key under test carries real text.
 vi.mock("@/lib/i18n", () => {
   const keysAsStrings = new Proxy({}, { get: (_t, k) => String(k) });
-  return {
-    useT: () =>
-      new Proxy(
-        {},
-        {
-          get: (_t, ns) =>
-            ns === "public"
-              ? { reader: { videoReviewTitle: "Revoir la notion en vidéo" } }
-              : keysAsStrings,
-        },
-      ),
-  };
+  const t = new Proxy(
+    {},
+    {
+      get: (_t, ns) =>
+        ns === "public"
+          ? { reader: { videoReviewTitle: "Revoir la notion en vidéo" } }
+          : keysAsStrings,
+    },
+  );
+  // L'écran lit aussi la LANGUE depuis A1.2b (mettre une misconception en mots
+  // est une décision de rendu) — le mock doit donc exposer `useI18n`, pas
+  // seulement `useT`.
+  return { useT: () => t, useI18n: () => ({ t, locale: "fr" }) };
 });
 
 import { QuestResultScreen } from "../components/quest-result-screen";

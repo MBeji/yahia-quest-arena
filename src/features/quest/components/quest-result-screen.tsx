@@ -10,7 +10,7 @@ import { buildQuestLabels, type QuestContentLang } from "@/features/quest/quest-
 import { Confetti } from "@/features/quest/components/confetti";
 import { LevelUpCelebration } from "@/components/ui/level-up-celebration";
 import { ExplainHint } from "@/components/ui/explain-hint";
-import { useT } from "@/lib/i18n";
+import { useI18n } from "@/lib/i18n";
 import { PageShell } from "@/components/ui/page-shell";
 import { useEntrance } from "@/shared/lib/motion";
 import { VideoEmbed, type CompiledVideo } from "@/features/quest/components/video-embed";
@@ -72,7 +72,22 @@ export function QuestResultScreen({
   resolvePrompt: (questionId: string) => string;
   getDisplayChoice: (questionId: string, choice: string) => string;
 }) {
-  const t = useT();
+  const { t, locale } = useI18n();
+  // Le serveur rend les trois langues ; mettre en langue est une décision de
+  // rendu (é07 `pickLabel`). Un tag inconnu du vocabulaire rend `null` — le bloc
+  // se tait alors sur l'erreur sans rien casser autour (R-A1.2-3).
+  const misconceptionLabelByTag = new Map(
+    result.review.flatMap((item) =>
+      item.misconceptionTag && item.misconceptionLabels
+        ? ([[item.misconceptionTag, item.misconceptionLabels]] as const)
+        : [],
+    ),
+  );
+  const resolveMisconceptionLabel = (tag: string): string | null => {
+    const labels = misconceptionLabelByTag.get(tag);
+    if (!labels) return null;
+    return locale === "ar" ? labels.ar : locale === "en" ? labels.en : labels.fr;
+  };
   const scaleIn = useEntrance("scale");
   const QL = buildQuestLabels(qlang);
   const passed = result.scorePct >= (isQuiz ? QUIZ_PASS_THRESHOLD_PCT : PASS_THRESHOLD_PCT);
@@ -267,6 +282,7 @@ export function QuestResultScreen({
               }}
               resolvePrompt={resolvePrompt}
               getDisplayChoice={getDisplayChoice}
+              resolveMisconceptionLabel={resolveMisconceptionLabel}
             />
           )}
         </div>

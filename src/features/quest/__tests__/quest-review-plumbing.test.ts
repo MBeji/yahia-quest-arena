@@ -106,6 +106,15 @@ describe("submitAttempt — remontée de l'erreur nommée (A1.2b)", () => {
 
     mockFrom.mockImplementation((table: string) => {
       if (table === "exercises") return mockQuery({ mode: "practice" });
+      if (table === "misconceptions")
+        return mockQuery([
+          {
+            tag: "math.frac.add-denominators",
+            label_fr: "Tu additionnes les dénominateurs",
+            label_en: "You add the denominators",
+            label_ar: "تجمع المقامات",
+          },
+        ]);
       return mockQuery([]);
     });
     mockRpc.mockImplementation((name: string) => {
@@ -133,6 +142,97 @@ describe("submitAttempt — remontée de l'erreur nommée (A1.2b)", () => {
     expect(review[0].misconceptionTag).toBe("math.frac.add-denominators");
     expect(review[0].chapterId).toBe("chap-1");
     expect(review[1].misconceptionTag).toBeNull();
+  });
+
+  // A1.2b — le tag devient une phrase. Les TROIS langues remontent : mettre en
+  // langue est une décision de rendu, pas de serveur (même règle qu'é07).
+  it("met le tag en mots depuis le vocabulaire versionné (A1.2b)", async () => {
+    const reviewRows = [
+      {
+        question_id: Q1_ID,
+        prompt: "1/2 + 1/3 ?",
+        correct_option: "a",
+        explanation: null,
+        is_correct: false,
+        misconception_tag: "math.frac.add-denominators",
+        chapter_id: "chap-1",
+      },
+    ];
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") return mockQuery({ mode: "practice" });
+      if (table === "misconceptions")
+        return mockQuery([
+          {
+            tag: "math.frac.add-denominators",
+            label_fr: "Tu additionnes les dénominateurs",
+            label_en: "You add the denominators",
+            label_ar: "تجمع المقامات",
+          },
+        ]);
+      return mockQuery([]);
+    });
+    mockRpc.mockImplementation((name: string) => {
+      if (name === "get_attempt_review") return { data: reviewRows, error: null };
+      return { data: { correct: 0, total: 1, scorePct: 0 }, error: null };
+    });
+
+    const { submitAttempt } = await import("@/features/quest");
+    const result = await (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
+      sessionId: SESSION_ID,
+      exerciseId: EXERCISE_ID,
+      answers: [{ questionId: Q1_ID, choice: "b" }],
+    });
+
+    const review = (result as Record<string, unknown>).review as Array<{
+      misconceptionLabels: { fr: string; en: string; ar: string } | null;
+    }>;
+    expect(review[0].misconceptionLabels).toEqual({
+      fr: "Tu additionnes les dénominateurs",
+      en: "You add the denominators",
+      ar: "تجمع المقامات",
+    });
+  });
+
+  it("vocabulaire MUET ou illisible : la correction vit quand même (R-A1.2-3)", async () => {
+    const reviewRows = [
+      {
+        question_id: Q1_ID,
+        prompt: "1/2 + 1/3 ?",
+        correct_option: "a",
+        explanation: "Même dénominateur.",
+        is_correct: false,
+        misconception_tag: "math.frac.add-denominators",
+        chapter_id: "chap-1",
+      },
+    ];
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "exercises") return mockQuery({ mode: "practice" });
+      // La table répond en erreur (fenêtre de déploiement, droits, réseau).
+      if (table === "misconceptions")
+        return mockQuery(null, { message: "relation does not exist" });
+      return mockQuery([]);
+    });
+    mockRpc.mockImplementation((name: string) => {
+      if (name === "get_attempt_review") return { data: reviewRows, error: null };
+      return { data: { correct: 0, total: 1, scorePct: 0 }, error: null };
+    });
+
+    const { submitAttempt } = await import("@/features/quest");
+    const result = await (submitAttempt as unknown as (d: unknown) => Promise<unknown>)({
+      sessionId: SESSION_ID,
+      exerciseId: EXERCISE_ID,
+      answers: [{ questionId: Q1_ID, choice: "b" }],
+    });
+
+    const review = (result as Record<string, unknown>).review as Array<{
+      misconceptionTag: string | null;
+      misconceptionLabels: unknown;
+      explanation: string | null;
+    }>;
+    // Le tag et l'explication survivent : seule la PHRASE manque.
+    expect(review[0].misconceptionLabels).toBeNull();
+    expect(review[0].misconceptionTag).toBe("math.frac.add-denominators");
+    expect(review[0].explanation).toBe("Même dénominateur.");
   });
 
   it("une correction SANS les colonnes A1.2a ne casse pas (fenêtre de déploiement)", async () => {
