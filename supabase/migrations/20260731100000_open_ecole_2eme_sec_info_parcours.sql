@@ -1,0 +1,29 @@
+-- Ouvrir le parcours 2ème année secondaire — section Technologies de
+-- l'informatique : « coming_soon » → « available ».
+--
+-- Seuil R-8 : une première tranche complète ouvre la classe. Ici la tranche
+-- n'a coûté AUCUNE écriture de contenu — c'est une MUTUALISATION.
+--
+-- Le manuel « الرياضيات — شعبتا العلوم وتكنولوجيا الإعلامية » (222231 tome 1,
+-- 222232 tome 2) est le manuel officiel des DEUX sections, son titre les
+-- nommant. Le sujet physique `math-2eme-sec-sciences-info` compile donc vers
+-- `math-2eme-sec-sciences` ET `math-2eme-sec-info` (`compileTo`, étude 16 D-4) :
+-- les 3 chapitres déjà publiés pour la section Sciences (9 exercices, 69
+-- questions) servent la section Informatique sans duplication ni réécriture.
+-- Appliqués par `apply-content.yml` avant cette migration, release journalisée
+-- dans `content_releases`.
+--
+-- Ce qui manque à la section est nommé au manifeste plutôt que passé sous
+-- silence : la physique (223272) et la chimie (224271), propres à elle, et
+-- « Technologie — Manuel d'activités » (228233, 3 tomes), la matière
+-- emblématique de la filière, qui demandera son propre LOT A. R-8 assume
+-- l'ouverture avant la complétude.
+--
+-- Parcours `scolaire` GRATUIT (is_premium = false, preview_policy = 'full') :
+-- passer à 'available' l'ouvre entièrement, sans entitlement.
+--
+-- Idempotent : re-jouer est un no-op une fois le statut déjà 'available'.
+-- Miroir de 20260730160000_open_ecole_2eme_sec_lettres_parcours.sql.
+UPDATE public.parcours
+SET status = 'available'
+WHERE id = 'ecole-2eme-sec-info';
