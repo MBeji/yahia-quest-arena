@@ -1,0 +1,92 @@
+name: Freeze watch (un gel oublié se voit)
+
+# Le gel de la chaîne (`MERGE_FREEZE`, voir docs/prod-rollback-runbook.md) n'a
+# aucun signal de vie : quand il reste posé, la chaîne cesse simplement de
+# merger. Le symptôme est trompeur — une PR verte, `CLEAN`, `mergeable`, qui ne
+# part jamais, parce qu'`automerge.yml` la désarme derrière vous.
+#
+# C'est arrivé le 2026-07-27 : un exercice de rollback a laissé le gel posé à
+# 15:08 UTC, découvert TROIS HEURES plus tard, et seulement parce qu'une PR
+# refusait de merger sans explication.
+#
+# Ce workflow ne juge pas, il REND VISIBLE : tant que le gel est actif, une
+# issue ouverte le dit ; quand il tombe, elle se ferme. L'issue EST l'état du
+# gel — pas une alarme de plus à trier.
+#
+# Ce qu'il ne fait PAS, volontairement : il ne dégèle jamais tout seul. Un gel
+# peut être parfaitement légitime (incident en cours) ; le lever reste une
+# décision humaine, et le runbook en porte la procédure.
+
+on:
+  schedule:
+    # Toutes les 3 h : un exercice de gel dure des minutes, un incident des
+    # heures. Trois heures laissent passer le premier sans bruit et attrapent
+    # le second avant la fin de la journée.
+    - cron: "17 */3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: freeze-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    name: la chaîne est-elle gelée sans que personne le sache ?
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+      # Lu comme variable de workflow, PAS via l'API : `GITHUB_TOKEN` n'a pas la
+      # permission « Variables », alors que `vars.` est toujours disponible.
+      FROZEN: ${{ vars.MERGE_FREEZE }}
+      TITLE: "🧊 La chaîne de merge est gelée (MERGE_FREEZE)"
+    steps:
+      # Le corps de l'issue vit dans un fichier relisible plutôt qu'encastré
+      # ici : un bloc `run: |` ne tolère pas une ligne en colonne 0, et ce
+      # message a vocation à être relu et amendé comme de la doc.
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          sparse-checkout: .github/freeze-issue.md
+          sparse-checkout-cone-mode: false
+
+      # Le label est la CLÉ d'idempotence : sans lui, chaque réveil rouvrirait
+      # une issue. `gh label create` échoue quand le label existe déjà — c'est
+      # le cas nominal, donc l'échec est ignoré.
+      - name: S'assurer que le label existe
+        run: |
+          gh label create freeze --repo "$REPO" --color 1D76DB \
+            --description "État de la chaîne de merge (MERGE_FREEZE)" \
+            >/dev/null 2>&1 || true
+
+      - name: Refléter l'état du gel dans une issue
+        run: |
+          set -euo pipefail
+
+          case "${FROZEN:-}" in
+            1 | true | TRUE | yes | on) FROZEN_NOW=true ;;
+            *) FROZEN_NOW=false ;;
+          esac
+
+          EXISTING="$(gh issue list --repo "$REPO" --state open --label freeze \
+            --json number --jq '.[0].number // empty')"
+
+          if [ "$FROZEN_NOW" = "true" ]; then
+            if [ -n "$EXISTING" ]; then
+              echo "Gel actif, issue #$EXISTING déjà ouverte — rien à ajouter."
+              exit 0
+            fi
+            gh issue create --repo "$REPO" --title "$TITLE" --label freeze \
+              --body-file .github/freeze-issue.md
+            echo "Gel actif — issue ouverte."
+          elif [ -n "$EXISTING" ]; then
+            gh issue close "$EXISTING" --repo "$REPO" \
+              --comment "Dégel constaté : la chaîne remerge normalement."
+            echo "Dégel — issue #$EXISTING fermée."
+          else
+            echo "Pas de gel, pas d'issue — rien à faire."
+          fi
