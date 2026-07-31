@@ -65,7 +65,8 @@ tronc commun genuinely has no section.
 `math-1ere-sec`, `math-2eme-sec-sciences`, `math-bac-math`, `svt-bac-sciences-exp`,
 `philosophie-bac-lettres`, `informatique-bac-info`. Économie & gestion are **two official
 matières → two subjects** (`economie-*`, `gestion-*`). Where two sections share a genuinely
-identical programme for a matière (confirmed on the official transcription, station L1), the
+identical programme for a matière (relevé du catalogue CNP en §3.1, confirmé sur la
+transcription officielle, station L1), the
 content is **authored once and compiled to one subject per section** via the content pipeline's
 `compileTo` fan-out (étude 16 D-4 — the compiled ids keep this verbatim convention, so a later
 fork to a dedicated dir loses no student progress). Structural divergence (different chapter
@@ -90,6 +91,56 @@ lors de la transcription — station L1) :
 The stable per-grade detail lives in `curriculum-architect/references/programme-map.md` (**private
 repo**); the authoritative scope will live in the **secondary programme transcriptions**
 (station L1).
+
+### 3.1 Ce qui se partage vraiment entre orientations — relevé du catalogue CNP (2026-07-31)
+
+**Critère, mécanique et vérifiable : un code manuel CNP = un programme.** Le catalogue officiel
+(`cnp-officiel/catalogue.csv`, 342 manuels) nomme les sections **dans le titre du manuel** quand
+plusieurs se partagent le même — « الرياضيات (شعبتا العلوم وتكنولوجيا الإعلامية) », « التاريخ (شعبتي
+الآداب و الاقتصاد والخدمات) ». Deux sections sur un même code ⇒ candidat `compileTo` ; deux codes
+distincts ⇒ dossiers séparés, la question est close sans débat. Le relevé ci-dessous remplace les
+suppositions de planification — il reste à **confirmer chapitre par chapitre à la transcription
+L1** (D-4.b : c'est la transcription qui décide, pas le titre).
+
+**2ème sec (4 orientations)**
+
+| matière              | codes CNP                              | portée constatée                                                                                                     |
+| -------------------- | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| anglais              | `241203`                               | **les 4** — un seul manuel, aucune شعبة au titre                                                                     |
+| français             | `221203`                               | **les 4**                                                                                                            |
+| arabe (عيون الأدب)   | `201202` + `201203`                    | **les 4 sur 12 des 13 chapitres** — seul le محور الخامس est dédoublé (roman pour Lettres, théâtre pour les 3 autres) |
+| mathématiques        | `222231` + `222232`                    | **Sciences ⚭ Info** (le titre les nomme) ; Lettres `222221` et Éco-services `222261` à part                          |
+| histoire, géographie | `207202`/`206203` vs `207271`/`206271` | deux groupes : {Lettres, Éco-services} et {Sciences, Info}                                                           |
+| physique, chimie     | `223231`/`224231` vs `223272`/`224271` | aucun partage (Sciences ≠ Info)                                                                                      |
+| SVT                  | `225202` (Lettres) vs `225232`         | aucun partage                                                                                                        |
+
+**3ème sec et bac (6 sections)**
+
+| matière                                        | découpage officiel                                                                              | portée constatée                      |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------- |
+| anglais                                        | `241303` / `241403`                                                                             | **les 6** — un seul manuel par année  |
+| arabe, français, philosophie, pensée islamique | deux variantes : «شعبة الآداب» vs «الشعب العلمية»                                               | 1 dossier → **5 sections**, + Lettres |
+| histoire, géographie                           | 3ème : `…321` {Lettres, Éco} vs `…331` {4 scientifiques} · bac : `207422` = Lettres + Éco seuls | 2 groupes en 3ème, 1 seul au bac      |
+| mathématiques                                  | 6 codes distincts par année (`222322/333/343/351/362/371`, idem au bac)                         | **aucun**                             |
+| physique, chimie, SVT, technologie             | un code par section                                                                             | **aucun**                             |
+
+**La règle qui en sort** : le partage est un fait **du tronc** (langues, philosophie, histoire-géo,
+éducation civique) ; les **dominantes de section ne se partagent jamais** — l'unique exception
+relevée sur les trois années est les mathématiques de 2ème sec, déjà exploitée
+(`content/math-2eme-sec-sciences-info/` → `math-2eme-sec-sciences` + `math-2eme-sec-info`, ouverture
+`20260731130000`). Corollaire d'effort : sur le tronc des trois années, ≈ 23 dossiers sources
+couvrent ≈ 72 subjects ; sur les dominantes, c'est 1 pour 1.
+
+**Deux garde-fous d'exploitation** : (1) le registre de transcription n'autorise **qu'une fiche par
+code source** (R-4) — la classe sœur _renvoie_ à la fiche qui détient le code (`sourcesLibres`),
+elle ne le revendique pas ; (2) une divergence **structurelle** (liste de chapitres ≠, cas de
+عيون الأدب) ⇒ dossiers séparés d'emblée, **pas** de `compileTo`, même si 12 chapitres sur 13
+coïncident.
+
+**Deux points non tranchés par le catalogue seul**, à confirmer en L1 : le rattachement d'**éco-gestion**
+au groupe «الشعب العلمية» pour arabe/français/philosophie (déduit par élimination — il n'existe que
+deux variantes, et éco n'est pas آداب) ; les sections couvertes par la géographie du bac (`206422`
+n'en nomme aucune).
 
 ## 4. Language policy — native-French generation for the switched subjects (the major change)
 
@@ -193,8 +244,11 @@ Overlay (L3) and interactive (L4) run per chapter-batch behind the base, as ever
 ### Trade-offs accepted (v1)
 
 - **Tronc-commun mutualisation** _(supersedes the earlier "duplication accepted v1" trade-off)_:
-  languages/philo/histoire-géo shared across sections are authored **once per (matière × year)**
-  and compiled to one subject per section (`compileTo` fan-out — étude 16 D-4, pipeline lot 1).
+  languages/philo/histoire-géo shared across sections are authored **once per (matière × year ×
+  groupe de sections)** — rarely once per year: from 3ème, Lettres has its own official manual for
+  arabe/français/philo, so the tronc splits in two (§3.1 for the actual per-matière reading of the
+  CNP catalogue) — and compiled to one subject per section (`compileTo` fan-out — étude 16 D-4,
+  pipeline lot 1).
   Per-section depth differences stay expressible (per-exercise `gradeSlugs`); parcours scoping is
   untouched (still one subject per grade in DB); UUIDs derive from the compiled identity, so
   forking a section out later is loss-free. Share/fork doctrine: étude 16 D-4.b (decided per

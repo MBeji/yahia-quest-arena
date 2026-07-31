@@ -11,7 +11,15 @@ export const SITE_URL = "https://na9ranal3ab.tn";
 type SitemapClient = ReturnType<typeof createPublicSupabaseClient>;
 
 /** Static public pages, always present and independent of catalogue data. */
-const STATIC_PATHS = ["/", "/programme", "/extras"] as const;
+const STATIC_PATHS = [
+  "/",
+  "/programme",
+  "/extras",
+  // Pages légales : URL stables et indexables — la déclaration « child-directed »
+  // auprès de Google exige une politique de confidentialité atteignable (é23 Q-3).
+  "/confidentialite",
+  "/conditions",
+] as const;
 
 function escapeXml(value: string): string {
   return value

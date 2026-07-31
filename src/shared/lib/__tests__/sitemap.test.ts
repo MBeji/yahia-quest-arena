@@ -55,7 +55,15 @@ describe("renderSitemap", () => {
 describe("collectSitemapPaths", () => {
   it("always lists the static public pages", async () => {
     const paths = await collectSitemapPaths(mockClient(EMPTY));
-    expect(paths).toEqual(["/", "/programme", "/extras"]);
+    expect(paths).toEqual(["/", "/programme", "/extras", "/confidentialite", "/conditions"]);
+  });
+
+  // La déclaration « child-directed » auprès de Google (é23 Q-3) exige une
+  // politique de confidentialité ATTEIGNABLE : si elle sort du sitemap, la
+  // démarche tombe sans que rien d'autre ne casse.
+  it("garde la politique de confidentialité indexable, même sans catalogue", async () => {
+    const paths = await collectSitemapPaths(mockClient(EMPTY));
+    expect(paths).toContain("/confidentialite");
   });
 
   it("includes available levels and drops coming-soon ones", async () => {
