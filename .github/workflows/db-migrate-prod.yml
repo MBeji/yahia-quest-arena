@@ -72,7 +72,7 @@ jobs:
       - name: Setup Node 22
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
-          node-version: 22
+          node-version: 24
 
       - name: Install the Supabase CLI
         # Pinned to the same version as db-tests.yml / e2e-auth.yml for a
