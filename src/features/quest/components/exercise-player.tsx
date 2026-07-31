@@ -52,6 +52,15 @@ export type PlayerReviewItem = {
   correctChoice: string;
   isCorrect: boolean;
   explanation: string | null;
+  /**
+   * Étude 04 lot A1.2 — l'erreur nommée et son chapitre. OPTIONNELS à dessein :
+   * la correction anonyme (`check_answers`) n'a ni l'une ni l'autre, et le rendu
+   * dégradé est le comportement exigé (R-A1.2-3), pas un cas d'erreur.
+   */
+  misconceptionTag?: string | null;
+  chapterId?: string | null;
+  /** Les trois langues de l'erreur ; l'écran choisit la sienne (é07 `pickLabel`). */
+  misconceptionLabels?: { fr: string; en: string; ar: string } | null;
 };
 
 /** Unified result superset. Anonymous results leave the reward fields neutral. */

@@ -21,6 +21,7 @@ import {
   buildAttemptReview,
   toPerQuestion,
 } from "./quest.recall";
+import type { AttemptReviewItem } from "./quest.recall";
 
 /** Error message thrown when an exercise is locked behind its chapter quiz. */
 export const QUIZ_LOCKED_MESSAGE =
@@ -947,14 +948,10 @@ export const submitAttempt = createServerFn({ method: "POST" })
       .single();
     const isQuiz = (exerciseRow as { mode?: string } | null)?.mode === "quiz";
 
-    type ReviewItem = {
-      questionId: string;
-      prompt: string;
-      selectedChoice: string;
-      correctChoice: string;
-      isCorrect: boolean;
-      explanation: string | null;
-    };
+    // La forme de la correction est celle que `buildAttemptReview` produit — on la
+    // réutilise au lieu de la redéclarer, sinon un champ ajouté là-bas (le tag de
+    // misconception d'A1.2) se perd silencieusement ici.
+    type ReviewItem = AttemptReviewItem;
     // Ensure today's daily objective & this week's weekly quest rows exist
     // before the atomic RPC increments them (they are created on demand, so a
     // first-of-the-day submission isn't lost). Best-effort: never block a submit.

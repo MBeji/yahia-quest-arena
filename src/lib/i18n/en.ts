@@ -247,6 +247,8 @@ export const en: TranslationKeys = {
     needsWork: "Needs work",
     yourAnswer: "Your answer",
     correctAnswer: "Correct answer",
+    reviewMistakeTitle: "What tripped you up",
+    reviewCourseCta: "Review the lesson",
     resultScore: "{correct} / {total} correct answers · {pct}%",
     serverValidatedTime: "Server-validated time · {n}s",
     timeSpent: "Time · {n}s",

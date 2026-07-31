@@ -17,6 +17,7 @@
  *                           content/ — for a shared dir this regenerates every
  *                           compiled target it declares.
  *   --competences           Emit ONLY the competency-registry migration
+ *   --misconceptions        Emit ONLY the misconception-registry migration
  *                           (content/competences/*.json — étude 07 D-1);
  *                           subjects are validated but not regenerated.
  *   --content-dir <path>    Content root (default: content).
@@ -40,7 +41,9 @@ import { join, resolve } from "node:path";
 import { argv, cwd, exit, stderr, stdout } from "node:process";
 import {
   COMPETENCES_SQL_FILE_NAME,
+  MISCONCEPTIONS_SQL_FILE_NAME,
   buildCompetencyRegistryMigrationSql,
+  buildMisconceptionRegistryMigrationSql,
   buildMigrationSql,
   contentSqlFileName,
 } from "../../src/shared/content/sql-builder.ts";
@@ -95,13 +98,14 @@ function main(): void {
   const sqlDir = sqlDirFlag ? resolve(root, sqlDirFlag) : undefined;
   const checkOnly = hasFlag("check");
   const competencesOnly = hasFlag("competences");
+  const misconceptionsOnly = hasFlag("misconceptions");
   const onlySubject = getFlag("subject");
   const baseStamp = getFlag("timestamp") ?? defaultTimestamp();
 
   // Validate the misconception registry structure up front (étude 04 D-4) so a
   // malformed content/misconceptions.json fails content:check; usage of unknown
   // tags is cross-checked by content:qa.
-  loadMisconceptionRegistry(contentDir);
+  const misconceptionRegistry = loadMisconceptionRegistry(contentDir);
 
   // Same guarantee for the competency family registries (étude 07 D-1): shape,
   // trilingual labels, same-family prereqs and DAG-ness (R-3) all fail
@@ -159,7 +163,7 @@ function main(): void {
 
     // --competences regenerates the registry only: subjects are validated
     // (they still count in the summary) but their migrations stay untouched.
-    if (checkOnly || competencesOnly) return;
+    if (checkOnly || competencesOnly || misconceptionsOnly) return;
 
     const sql = buildMigrationSql(subject, videosRegistry);
     // Same SQL either way — only the destination and the naming differ: a
@@ -193,6 +197,27 @@ function main(): void {
     }
   } else if (competencesOnly) {
     stderr.write(`No competency registries found under ${join(contentDir, "competences")}\n`);
+    exit(1);
+  }
+
+  // Vocabulaire des misconceptions (étude 04 A1.2b) : le tag rendu par
+  // `get_attempt_review` n'est qu'un id — cette table porte la phrase que l'élève
+  // lit. Même canal que les compétences, pour le même besoin.
+  const misconceptionCount = Object.keys(misconceptionRegistry).length;
+  if (misconceptionCount > 0) {
+    stdout.write(`✓ misconceptions: ${misconceptionCount} tag(s)\n`);
+    if (misconceptionsOnly && !checkOnly) {
+      const sql = buildMisconceptionRegistryMigrationSql(misconceptionRegistry);
+      const dir = sqlDir ?? outDir;
+      const fileName = sqlDir
+        ? MISCONCEPTIONS_SQL_FILE_NAME
+        : `${baseStamp}_generated_misconceptions_registry.sql`;
+      mkdirSync(dir, { recursive: true });
+      writeFileSync(join(dir, fileName), `${sql}\n`, "utf8");
+      stdout.write(`  → ${fileName}\n`);
+    }
+  } else if (misconceptionsOnly) {
+    stderr.write(`No misconception registry found at ${join(contentDir, "misconceptions.json")}\n`);
     exit(1);
   }
 

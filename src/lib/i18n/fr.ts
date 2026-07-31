@@ -256,6 +256,8 @@ export const fr: TranslationKeys = {
     needsWork: "À revoir",
     yourAnswer: "Ta réponse",
     correctAnswer: "Bonne réponse",
+    reviewMistakeTitle: "Ce qui t'a fait trébucher",
+    reviewCourseCta: "Revoir le cours",
     resultScore: "{correct} / {total} bonnes réponses · {pct}%",
     serverValidatedTime: "Temps validé côté serveur · {n}s",
     timeSpent: "Temps · {n}s",

@@ -255,6 +255,10 @@ export type TranslationKeys = {
     needsWork: string;
     yourAnswer: string;
     correctAnswer: string;
+    /** Étude 04 lot A1.2b — titre du bloc de correction riche, à l'échec seulement. */
+    reviewMistakeTitle: string;
+    /** Étude 04 lot A1.2b — lien vers le cours du chapitre (D-A1.2-4). */
+    reviewCourseCta: string;
     resultScore: string;
     serverValidatedTime: string;
     timeSpent: string;

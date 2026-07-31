@@ -78,6 +78,24 @@ export type AttemptReviewItem = {
   correctChoice: string;
   isCorrect: boolean;
   explanation: string | null;
+  /**
+   * Étude 04 lot A1.2a — l'erreur nommée. Id de misconception du distracteur
+   * CHOISI, résolu server-side ; `null` dès que la réponse est juste, que la
+   * question n'est pas taguée, ou que le corpus de la matière n'a pas encore été
+   * tagué (é07 lot 3). La map `distractor_tags` n'arrive jamais ici — l'option
+   * correcte étant la seule sans tag, elle désignerait la clé par élimination.
+   */
+  misconceptionTag: string | null;
+  /** Chapitre de l'exercice — la cible du lien « revoir le cours » (D-A1.2-4). */
+  chapterId: string | null;
+  /**
+   * Les trois langues de l'erreur, lues dans le vocabulaire versionné
+   * (`public.misconceptions`). On rend les TROIS et l'écran choisit, comme les
+   * libellés de compétences (é07) : mettre en langue est une décision de rendu,
+   * pas de serveur. `null` dès que le vocabulaire ne connaît pas le tag —
+   * dégradation silencieuse (R-A1.2-3), jamais une erreur.
+   */
+  misconceptionLabels: { fr: string; en: string; ar: string } | null;
 };
 
 /**
@@ -106,11 +124,17 @@ export async function buildAttemptReview(
         correct_option: string | null;
         explanation: string | null;
         is_correct: boolean | null;
+        misconception_tag?: string | null;
+        chapter_id?: string | null;
       }>)
     : [];
   const byId = new Map(rows.map((r) => [r.question_id, r]));
   if (byId.size === 0) return [];
   const verdictById = new Map((opts.perQuestion ?? []).map((v) => [v.questionId, v.isCorrect]));
+  const labelByTag = await fetchMisconceptionLabels(
+    supabase,
+    rows.map((r) => r.misconception_tag ?? null),
+  );
   return answers.map((answer) => {
     const q = byId.get(answer.questionId);
     return {
@@ -124,8 +148,66 @@ export async function buildAttemptReview(
           ? (q.is_correct ?? q.correct_option === answer.choice)
           : false,
       explanation: q?.explanation ?? null,
+      // Le serveur ne tague que les réponses fausses (A1.2a) ; on ne re-décide
+      // rien ici — recopier son verdict, c'est garder UNE seule autorité.
+      misconceptionTag: q?.misconception_tag ?? null,
+      chapterId: q?.chapter_id ?? null,
+      misconceptionLabels: q?.misconception_tag
+        ? (labelByTag.get(q.misconception_tag) ?? null)
+        : null,
     };
   });
+}
+
+/** Une ligne du vocabulaire des erreurs, telle que l'écran la consommera. */
+type MisconceptionRow = { tag: string; label_fr: string; label_en: string; label_ar: string };
+
+/**
+ * `public.misconceptions` (étude 04 A1.2b) est postérieure aux types Supabase
+ * générés, qui ne peuvent pas être régénérés sans accès DB : on fige son contrat
+ * ici, même patron que les RPC de `progression.server.ts` et `dashboard.server.ts`.
+ * À supprimer à la prochaine régénération des types.
+ */
+type MisconceptionsTableClient = {
+  from: (table: "misconceptions") => {
+    select: (columns: string) => {
+      in: (
+        column: "tag",
+        values: string[],
+      ) => PromiseLike<{ data: MisconceptionRow[] | null; error: { message: string } | null }>;
+    };
+  };
+};
+
+/**
+ * Met les tags en mots depuis le vocabulaire versionné (étude 04 A1.2b).
+ *
+ * Ne lit QUE les tags effectivement présents dans cette correction : la table
+ * grandira avec le corpus, il n'y a aucune raison de la charger entière pour
+ * nommer deux erreurs. Une correction sans tag ne fait aucune requête.
+ *
+ * Best-effort assumé : si la lecture échoue (table absente le temps d'une fenêtre
+ * de déploiement, droits, réseau), on rend une map vide et l'écran retombe sur
+ * « erreur non nommée » — R-A1.2-3, le plancher. Une correction ne meurt pas
+ * parce qu'un libellé manque.
+ */
+async function fetchMisconceptionLabels(
+  supabase: Supabase,
+  tags: Array<string | null>,
+): Promise<Map<string, { fr: string; en: string; ar: string }>> {
+  const unique = [...new Set(tags.filter((t): t is string => Boolean(t)))];
+  if (unique.length === 0) return new Map();
+
+  const client = supabase as unknown as MisconceptionsTableClient;
+  const { data, error } = await client
+    .from("misconceptions")
+    .select("tag, label_fr, label_en, label_ar")
+    .in("tag", unique);
+  if (error || !Array.isArray(data)) return new Map();
+
+  return new Map(
+    data.map((row) => [row.tag, { fr: row.label_fr, en: row.label_en, ar: row.label_ar }]),
+  );
 }
 
 /** Per-mission recall availability for a subject hub (étude 17). */

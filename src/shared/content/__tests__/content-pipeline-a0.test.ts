@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { misconceptionRegistrySchema, questionSchema } from "../schema.ts";
-import { buildMigrationSql } from "../sql-builder.ts";
+import { buildMigrationSql, buildMisconceptionRegistryMigrationSql } from "../sql-builder.ts";
 import { ContentValidationError, loadMisconceptionRegistry } from "../loader.ts";
 
 // Adaptive-engine A0.3 (étude 04): the server-only misconception tagging path —
@@ -193,4 +193,79 @@ describe("loadMisconceptionRegistry", () => {
   // with the corpus (étude 24, lot 3b): it guarded corpus integrity, not loader
   // behaviour, and `content:check` re-runs this very loader over the real registry
   // on every private PR. The loader itself stays covered by the fixtures above.
+});
+
+/**
+ * Étude 04 lot A1.2b — le registre devient le vocabulaire que l'élève LIT.
+ *
+ * A1.2a rend un tag ; sans cette compilation, la correction n'a aucune phrase à
+ * afficher. Le SQL produit voyage par le canal de contenu (`apply-content.yml`),
+ * donc il doit être IDEMPOTENT et rejouable : c'est ce qui garantit qu'une
+ * misconception mal formulée se corrige dans le registre, sans migration.
+ */
+describe("buildMisconceptionRegistryMigrationSql", () => {
+  const registry = {
+    "math.frac.add-denominators": {
+      subject: "math",
+      labels: {
+        fr: "Tu additionnes les dénominateurs",
+        en: "You add the denominators",
+        ar: "تجمع المقامات",
+      },
+    },
+    "math.dec.compare-by-length": {
+      subject: "math",
+      labels: {
+        fr: "Tu compares par la longueur",
+        en: "You compare by length",
+        ar: "تقارن بالطول",
+      },
+    },
+  };
+
+  it("écrit les trois langues de chaque tag", () => {
+    const sql = buildMisconceptionRegistryMigrationSql(registry);
+    expect(sql).toContain("INSERT INTO public.misconceptions");
+    expect(sql).toContain("Tu additionnes les dénominateurs");
+    expect(sql).toContain("You add the denominators");
+    expect(sql).toContain("تجمع المقامات");
+  });
+
+  it("est REJOUABLE : un upsert, pas un insert qui casserait au second passage", () => {
+    const sql = buildMisconceptionRegistryMigrationSql(registry);
+    expect(sql).toContain("ON CONFLICT (tag) DO UPDATE SET");
+    expect(sql).toContain("label_fr = EXCLUDED.label_fr");
+  });
+
+  it("purge ce que le registre ne déclare plus (dépréciation, jamais renommage)", () => {
+    const sql = buildMisconceptionRegistryMigrationSql(registry);
+    expect(sql).toContain("DELETE FROM public.misconceptions WHERE tag NOT IN (");
+    expect(sql).toContain("'math.frac.add-denominators'");
+  });
+
+  it("est DÉTERMINISTE : deux appels rendent le même SQL, ordre des clés compris", () => {
+    const reversed = {
+      "math.dec.compare-by-length": registry["math.dec.compare-by-length"],
+      "math.frac.add-denominators": registry["math.frac.add-denominators"],
+    };
+    expect(buildMisconceptionRegistryMigrationSql(reversed)).toBe(
+      buildMisconceptionRegistryMigrationSql(registry),
+    );
+  });
+
+  it("un registre VIDE n'émet aucun DELETE — « rien à dire » n'est pas « tout effacer »", () => {
+    const sql = buildMisconceptionRegistryMigrationSql({});
+    expect(sql).not.toContain("DELETE");
+    expect(sql).not.toContain("INSERT");
+  });
+
+  it("échappe les apostrophes plutôt que de casser le SQL", () => {
+    const sql = buildMisconceptionRegistryMigrationSql({
+      "math.x.y": {
+        subject: "math",
+        labels: { fr: "Tu confonds l'aire et l'périmètre", en: "e", ar: "ا" },
+      },
+    });
+    expect(sql).toContain("'Tu confonds l''aire et l''périmètre'");
+  });
 });
