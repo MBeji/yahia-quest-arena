@@ -78,6 +78,16 @@ export type AttemptReviewItem = {
   correctChoice: string;
   isCorrect: boolean;
   explanation: string | null;
+  /**
+   * Étude 04 lot A1.2a — l'erreur nommée. Id de misconception du distracteur
+   * CHOISI, résolu server-side ; `null` dès que la réponse est juste, que la
+   * question n'est pas taguée, ou que le corpus de la matière n'a pas encore été
+   * tagué (é07 lot 3). La map `distractor_tags` n'arrive jamais ici — l'option
+   * correcte étant la seule sans tag, elle désignerait la clé par élimination.
+   */
+  misconceptionTag: string | null;
+  /** Chapitre de l'exercice — la cible du lien « revoir le cours » (D-A1.2-4). */
+  chapterId: string | null;
 };
 
 /**
@@ -106,6 +116,8 @@ export async function buildAttemptReview(
         correct_option: string | null;
         explanation: string | null;
         is_correct: boolean | null;
+        misconception_tag?: string | null;
+        chapter_id?: string | null;
       }>)
     : [];
   const byId = new Map(rows.map((r) => [r.question_id, r]));
@@ -124,6 +136,10 @@ export async function buildAttemptReview(
           ? (q.is_correct ?? q.correct_option === answer.choice)
           : false,
       explanation: q?.explanation ?? null,
+      // Le serveur ne tague que les réponses fausses (A1.2a) ; on ne re-décide
+      // rien ici — recopier son verdict, c'est garder UNE seule autorité.
+      misconceptionTag: q?.misconception_tag ?? null,
+      chapterId: q?.chapter_id ?? null,
     };
   });
 }

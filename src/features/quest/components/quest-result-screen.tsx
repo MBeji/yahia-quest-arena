@@ -262,6 +262,8 @@ export function QuestResultScreen({
                 needsWork: t.quest.needsWork,
                 yourAnswer: t.quest.yourAnswer,
                 correctAnswer: t.quest.correctAnswer,
+                reviewMistakeTitle: t.quest.reviewMistakeTitle,
+                reviewCourseCta: t.quest.reviewCourseCta,
               }}
               resolvePrompt={resolvePrompt}
               getDisplayChoice={getDisplayChoice}
