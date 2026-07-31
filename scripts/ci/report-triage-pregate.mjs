@@ -29,8 +29,9 @@
  *
  * SAFE BY CONSTRUCTION, like the L3 pre-gate:
  *   - the skip decision only removes runs that would have re-derived an existing verdict;
- *   - an already-handled report that stays `open` past TRIAGE_STALE_DAYS (14) re-wakes the
- *     agent anyway, so a forgotten closure surfaces instead of being skipped forever;
+ *   - a queue that is entirely already-handled still re-wakes the agent once every
+ *     TRIAGE_STALE_DAYS (14), counted from the LAST triage issue, so a forgotten closure
+ *     surfaces instead of being skipped forever — without re-firing on every cron;
  *   - the caller only honours `skip` on scheduled runs — a dispatch or a manual run always
  *     triages (report-triage's "dispatch instantané inchangé");
  *   - any error here reports skip=false and exits 0: on doubt, the agent runs as it does today.
@@ -290,12 +291,33 @@ export function detectBursts(reports, threshold = BURST_THRESHOLD) {
 }
 
 /**
+ * Most recent "🛎️ Triage des signalements" issue date, i.e. the last time the pending closures
+ * were surfaced to the operator. Read from ALL triage issues, open or closed: the operator
+ * closing a reminder is not a reason to re-emit it on the next cron.
+ *
+ * @param {{ triageIssueDates?: string[] }} context
+ * @returns {number|null} epoch ms, or null when nothing usable is known
+ */
+export function lastTriageAt(context) {
+  const stamps = (context?.triageIssueDates ?? [])
+    .map((d) => Date.parse(d ?? ""))
+    .filter((t) => Number.isFinite(t));
+  return stamps.length > 0 ? Math.max(...stamps) : null;
+}
+
+/**
  * The whole decision. `now`/`staleDays` are injected so the stale escape valve is testable.
  *
  * @returns {{ skip: boolean, reason: string, detail: string, fresh: object[], clusters: object[],
- *             handledStillOpen: object[], bursts: object[] }}
+ *             handledStillOpen: object[], bursts: object[], reminder: boolean }}
  */
-export function decide({ reports, handledIds, now = new Date(), staleDays = 14 }) {
+export function decide({
+  reports,
+  handledIds,
+  now = new Date(),
+  staleDays = 14,
+  remindedAt = null,
+}) {
   const clusters = clusterReports(reports);
   const bursts = detectBursts(reports);
   const annotated = reports.map((r) => ({
@@ -304,7 +326,7 @@ export function decide({ reports, handledIds, now = new Date(), staleDays = 14 }
   }));
   const fresh = annotated.filter((r) => !r.alreadyHandled);
   const handledStillOpen = annotated.filter((r) => r.alreadyHandled);
-  const base = { fresh, clusters, handledStillOpen, bursts };
+  const base = { fresh, clusters, handledStillOpen, bursts, reminder: false };
 
   if (reports.length === 0) {
     return { ...base, skip: true, reason: "empty-queue", detail: "no open report" };
@@ -317,32 +339,46 @@ export function decide({ reports, handledIds, now = new Date(), staleDays = 14 }
       detail: `${fresh.length}/${reports.length} report(s) never triaged, in ${clusters.length} cluster(s)`,
     };
   }
-  // Every open report was already triaged. One exception, so a forgotten closure cannot be
-  // skipped into silence forever: if one of them has been open longer than `staleDays`, wake
-  // the agent so it re-surfaces the pending closures to the operator.
+  // Every open report was already triaged, and it stays that way until the operator applies the
+  // `dismissed`/`resolved` closures by hand. So the escape valve that keeps a forgotten closure
+  // from being skipped into silence forever must measure the REMINDER, not the report.
+  //
+  // It used to measure `report.createdAt`: a date that only ever recedes, so "older than
+  // staleDays" became true once and stayed true — the valve fired on all 6 daily crons, each
+  // waking a ≤60-turn agent that filed yet another tracking issue (#651, #658, #669, #670,
+  // #671, #672, #673: seven issues for the same four reports, two of them `dismissed`
+  // recommendations that no automation will ever close). Anchoring on the last triage issue
+  // instead makes it what it was meant to be: one reminder every `staleDays`, self-clearing
+  // because each reminder moves the anchor forward.
+  // `Number.isFinite`, not `=== null`: a caller that dates the anchor itself — the natural
+  // refactor is `remindedAt: Date.parse(issue.createdAt)` — hands us NaN on a malformed date,
+  // and every comparison against NaN is false. That would fall through to `skip: true` and
+  // silence the valve for good, which is the very failure this function exists to prevent.
+  // Unknown, unparseable and absent all mean the same thing here: we cannot prove we reminded
+  // anyone, so we remind.
   const cutoff = now.getTime() - staleDays * 24 * 60 * 60 * 1000;
-  const stale = handledStillOpen.filter((r) => {
-    const at = Date.parse(r.createdAt ?? "");
-    return Number.isFinite(at) && at < cutoff;
-  });
-  if (stale.length > 0) {
+  const known = Number.isFinite(remindedAt);
+  if (!known || remindedAt < cutoff) {
     return {
       ...base,
       skip: false,
+      reminder: true,
       reason: "stale-handled",
-      detail: `${stale.length} already-triaged report(s) still open after ${staleDays} days`,
+      detail: !known
+        ? `${handledStillOpen.length} already-triaged report(s) still open, no previous triage issue to date the last reminder`
+        : `${handledStillOpen.length} already-triaged report(s) still open, last reminded ${Math.floor((now.getTime() - remindedAt) / 86_400_000)} days ago (>${staleDays})`,
     };
   }
   return {
     ...base,
     skip: true,
     reason: "already-handled",
-    detail: `all ${reports.length} open report(s) already triaged (PR trailers / open triage issue)`,
+    detail: `all ${reports.length} open report(s) already triaged (PR trailers / open triage issue), reminded ${Math.floor((now.getTime() - remindedAt) / 86_400_000)} days ago`,
   };
 }
 
 /** Build the enriched input the agent reads instead of the raw export. */
-export function buildAgentInput(exportDoc, decision, handledIds) {
+export function buildAgentInput(exportDoc, decision, handledIds, context = {}) {
   return {
     exportedAt: exportDoc?.exportedAt ?? null,
     // The pre-pass is advisory: say so IN the file the agent reads, not only in the prompt.
@@ -352,6 +388,11 @@ export function buildAgentInput(exportDoc, decision, handledIds) {
         "Clusters, prescreen flags and alreadyHandled are DETERMINISTIC HINTS. The Phase 0 verdict, the reproduction and the fix stay the agent's job; confirm every flag, and never drop a report because it carries none.",
       reason: decision.reason,
       detail: decision.detail,
+      // A reminder run has nothing new to triage: the queue is entirely already-triaged and is
+      // only waiting on manual closures. Comment on the tracker below instead of filing an
+      // eighth copy of the same table.
+      reminder: decision.reminder === true,
+      openTriageIssues: context?.openTriageIssues ?? [],
     },
     counts: {
       open: decision.fresh.length + decision.handledStillOpen.length,
@@ -388,7 +429,7 @@ export function run() {
   // The handled-context file is produced by the workflow (`gh` queries). Absent or unreadable
   // → no proven history → nothing is "already handled" → the agent runs. Safe direction.
   const contextPath = argValue("--handled");
-  let context = { prBodies: [], issueBodies: [] };
+  let context = { prBodies: [], issueBodies: [], triageIssueDates: [], openTriageIssues: [] };
   if (contextPath) {
     try {
       context = JSON.parse(readFileSync(contextPath, "utf8"));
@@ -405,13 +446,14 @@ export function run() {
     reports,
     handledIds,
     staleDays: Number(process.env.TRIAGE_STALE_DAYS || 14),
+    remindedAt: lastTriageAt(context),
   });
 
   const outPath = argValue("--out");
   if (outPath) {
     writeFileSync(
       outPath,
-      `${JSON.stringify(buildAgentInput(exportDoc, decision, handledIds), null, 2)}\n`,
+      `${JSON.stringify(buildAgentInput(exportDoc, decision, handledIds, context), null, 2)}\n`,
       "utf8",
     );
   }
@@ -424,12 +466,15 @@ export function run() {
   emitOutput("open", String(reports.length));
   emitOutput("fresh", String(decision.fresh.length));
   emitOutput("clusters", String(decision.clusters.length));
+  emitOutput("reminder", String(decision.reminder));
 
   const suspicious = decision.clusters.filter((c) => c.hint !== "none").length;
   emitSummary(
     decision.skip
       ? `✅ **Report triage — no sweep needed.** ${decision.detail}; the agent would have re-derived an existing verdict. Use **Run workflow** to force a sweep.`
-      : `🔍 **Report triage — running the sweep.** ${decision.detail}` +
+      : decision.reminder
+        ? `🔔 **Report triage — reminder sweep.** ${decision.detail}. Nothing new to triage: these closures need the operator, from the admin consoles.`
+        : `🔍 **Report triage — running the sweep.** ${decision.detail}` +
           (suspicious > 0 ? `, ${suspicious} pre-flagged by the mechanical screening` : "") +
           (decision.bursts.length > 0 ? `, ${decision.bursts.length} account(s) in burst` : "") +
           ".",
