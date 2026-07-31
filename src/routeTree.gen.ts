@@ -19,6 +19,8 @@ import { Route as AuthResetRouteImport } from './routes/auth_.reset'
 import { Route as PublicSuiviRouteImport } from './routes/_public/suivi'
 import { Route as PublicProgrammeRouteImport } from './routes/_public/programme'
 import { Route as PublicExtrasRouteImport } from './routes/_public/extras'
+import { Route as PublicConfidentialiteRouteImport } from './routes/_public/confidentialite'
+import { Route as PublicConditionsRouteImport } from './routes/_public/conditions'
 import { Route as AuthenticatedThemesRouteImport } from './routes/_authenticated/themes'
 import { Route as AuthenticatedParentReportRouteImport } from './routes/_authenticated/parent-report'
 import { Route as AuthenticatedParcoursRouteImport } from './routes/_authenticated/parcours'
@@ -91,6 +93,16 @@ const PublicProgrammeRoute = PublicProgrammeRouteImport.update({
 const PublicExtrasRoute = PublicExtrasRouteImport.update({
   id: '/extras',
   path: '/extras',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicConfidentialiteRoute = PublicConfidentialiteRouteImport.update({
+  id: '/confidentialite',
+  path: '/confidentialite',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicConditionsRoute = PublicConditionsRouteImport.update({
+  id: '/conditions',
+  path: '/conditions',
   getParentRoute: () => PublicRoute,
 } as any)
 const AuthenticatedThemesRoute = AuthenticatedThemesRouteImport.update({
@@ -247,6 +259,8 @@ export interface FileRoutesByFullPath {
   '/parcours': typeof AuthenticatedParcoursRoute
   '/parent-report': typeof AuthenticatedParentReportRoute
   '/themes': typeof AuthenticatedThemesRoute
+  '/conditions': typeof PublicConditionsRoute
+  '/confidentialite': typeof PublicConfidentialiteRoute
   '/extras': typeof PublicExtrasRoute
   '/programme': typeof PublicProgrammeRoute
   '/suivi': typeof PublicSuiviRoute
@@ -282,6 +296,8 @@ export interface FileRoutesByTo {
   '/parcours': typeof AuthenticatedParcoursRoute
   '/parent-report': typeof AuthenticatedParentReportRoute
   '/themes': typeof AuthenticatedThemesRoute
+  '/conditions': typeof PublicConditionsRoute
+  '/confidentialite': typeof PublicConfidentialiteRoute
   '/extras': typeof PublicExtrasRoute
   '/programme': typeof PublicProgrammeRoute
   '/suivi': typeof PublicSuiviRoute
@@ -319,6 +335,8 @@ export interface FileRoutesById {
   '/_authenticated/parcours': typeof AuthenticatedParcoursRoute
   '/_authenticated/parent-report': typeof AuthenticatedParentReportRoute
   '/_authenticated/themes': typeof AuthenticatedThemesRoute
+  '/_public/conditions': typeof PublicConditionsRoute
+  '/_public/confidentialite': typeof PublicConfidentialiteRoute
   '/_public/extras': typeof PublicExtrasRoute
   '/_public/programme': typeof PublicProgrammeRoute
   '/_public/suivi': typeof PublicSuiviRoute
@@ -357,6 +375,8 @@ export interface FileRouteTypes {
     | '/parcours'
     | '/parent-report'
     | '/themes'
+    | '/conditions'
+    | '/confidentialite'
     | '/extras'
     | '/programme'
     | '/suivi'
@@ -392,6 +412,8 @@ export interface FileRouteTypes {
     | '/parcours'
     | '/parent-report'
     | '/themes'
+    | '/conditions'
+    | '/confidentialite'
     | '/extras'
     | '/programme'
     | '/suivi'
@@ -428,6 +450,8 @@ export interface FileRouteTypes {
     | '/_authenticated/parcours'
     | '/_authenticated/parent-report'
     | '/_authenticated/themes'
+    | '/_public/conditions'
+    | '/_public/confidentialite'
     | '/_public/extras'
     | '/_public/programme'
     | '/_public/suivi'
@@ -529,6 +553,20 @@ declare module '@tanstack/react-router' {
       path: '/extras'
       fullPath: '/extras'
       preLoaderRoute: typeof PublicExtrasRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/confidentialite': {
+      id: '/_public/confidentialite'
+      path: '/confidentialite'
+      fullPath: '/confidentialite'
+      preLoaderRoute: typeof PublicConfidentialiteRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/conditions': {
+      id: '/_public/conditions'
+      path: '/conditions'
+      fullPath: '/conditions'
+      preLoaderRoute: typeof PublicConditionsRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_authenticated/themes': {
@@ -770,6 +808,8 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 )
 
 interface PublicRouteChildren {
+  PublicConditionsRoute: typeof PublicConditionsRoute
+  PublicConfidentialiteRoute: typeof PublicConfidentialiteRoute
   PublicExtrasRoute: typeof PublicExtrasRoute
   PublicProgrammeRoute: typeof PublicProgrammeRoute
   PublicSuiviRoute: typeof PublicSuiviRoute
@@ -782,6 +822,8 @@ interface PublicRouteChildren {
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
+  PublicConditionsRoute: PublicConditionsRoute,
+  PublicConfidentialiteRoute: PublicConfidentialiteRoute,
   PublicExtrasRoute: PublicExtrasRoute,
   PublicProgrammeRoute: PublicProgrammeRoute,
   PublicSuiviRoute: PublicSuiviRoute,
