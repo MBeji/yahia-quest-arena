@@ -7,6 +7,7 @@ import {
   collectReports,
   decide,
   detectBursts,
+  lastTriageAt,
   normalizeMessage,
   parseHandledIds,
   screenReport,
@@ -261,33 +262,87 @@ describe("decide", () => {
     expect(decision.fresh.map((r) => r.id)).toEqual([uuid(2)]);
   });
 
+  /** Last reminder is recent, so the stale escape valve stays shut. */
+  const remindedYesterday = Date.parse("2026-07-24T12:00:00.000Z");
+
   it("skips when every open report is already triaged (the 6×/day no-op this lot targets)", () => {
     const reports = [
       screened({ id: uuid(1), createdAt: "2026-07-24T08:00:00.000Z" }),
       screened({ id: uuid(2), createdAt: "2026-07-25T08:00:00.000Z" }),
     ];
-    const decision = decide({ reports, handledIds: new Set([uuid(1), uuid(2)]), now });
-    expect(decision).toMatchObject({ skip: true, reason: "already-handled" });
+    const decision = decide({
+      reports,
+      handledIds: new Set([uuid(1), uuid(2)]),
+      now,
+      remindedAt: remindedYesterday,
+    });
+    expect(decision).toMatchObject({ skip: true, reason: "already-handled", reminder: false });
     expect(decision.handledStillOpen).toHaveLength(2);
   });
 
   it("matches handled ids case-insensitively", () => {
     const reports = [screened({ id: uuid(1).toUpperCase() })];
-    expect(decide({ reports, handledIds: new Set([uuid(1)]), now })).toMatchObject({ skip: true });
+    expect(
+      decide({ reports, handledIds: new Set([uuid(1)]), now, remindedAt: remindedYesterday }),
+    ).toMatchObject({ skip: true });
   });
 
-  it("re-wakes the agent when an already-triaged report has been open too long", () => {
+  it("re-wakes the agent when the pending closures were last surfaced too long ago", () => {
     const reports = [screened({ id: uuid(1), createdAt: "2026-07-01T08:00:00.000Z" })];
-    const decision = decide({ reports, handledIds: new Set([uuid(1)]), now, staleDays: 14 });
-    expect(decision).toMatchObject({ skip: false, reason: "stale-handled" });
+    const decision = decide({
+      reports,
+      handledIds: new Set([uuid(1)]),
+      now,
+      staleDays: 14,
+      remindedAt: Date.parse("2026-07-01T12:00:00.000Z"),
+    });
+    expect(decision).toMatchObject({ skip: false, reason: "stale-handled", reminder: true });
   });
 
-  it("does not treat an unparseable createdAt as stale", () => {
-    const reports = [screened({ id: uuid(1), createdAt: "pas une date" })];
-    expect(decide({ reports, handledIds: new Set([uuid(1)]), now })).toMatchObject({
-      skip: true,
-      reason: "already-handled",
+  it("re-wakes when no triage issue dates the last reminder (safe direction)", () => {
+    const reports = [screened({ id: uuid(1) })];
+    expect(
+      decide({ reports, handledIds: new Set([uuid(1)]), now, remindedAt: null }),
+    ).toMatchObject({ skip: false, reason: "stale-handled", reminder: true });
+  });
+
+  // Regression — the loop behind #651, #658, #669, #670, #671, #672 and #673: staleness used to
+  // be measured on `report.createdAt`, a date that only recedes. A report awaiting a `dismissed`
+  // the operator never applies therefore stayed "stale" forever and re-woke the agent on all six
+  // daily crons, each run filing another copy of the same closure table. Measuring the REMINDER
+  // instead, an ancient report costs exactly one sweep per staleDays.
+  it("does not re-wake on an ancient report when the reminder itself is recent", () => {
+    const reports = [
+      screened({ id: uuid(1), createdAt: "2026-06-30T08:00:00.000Z" }), // 25 days old
+      screened({ id: uuid(2), createdAt: "2026-05-01T08:00:00.000Z" }), // 85 days old
+    ];
+    const decision = decide({
+      reports,
+      handledIds: new Set([uuid(1), uuid(2)]),
+      now,
+      staleDays: 14,
+      remindedAt: remindedYesterday,
     });
+    expect(decision).toMatchObject({ skip: true, reason: "already-handled", reminder: false });
+  });
+});
+
+describe("lastTriageAt", () => {
+  it("takes the most recent triage issue, open or closed", () => {
+    const at = lastTriageAt({
+      triageIssueDates: [
+        "2026-07-20T10:00:00.000Z",
+        "2026-07-29T10:00:00.000Z",
+        "2026-07-27T10:00:00.000Z",
+      ],
+    });
+    expect(at).toBe(Date.parse("2026-07-29T10:00:00.000Z"));
+  });
+
+  it("ignores unparseable dates and returns null when nothing is usable", () => {
+    expect(lastTriageAt({ triageIssueDates: ["pas une date", null] })).toBeNull();
+    expect(lastTriageAt({ triageIssueDates: [] })).toBeNull();
+    expect(lastTriageAt(undefined)).toBeNull();
   });
 });
 
@@ -340,5 +395,24 @@ describe("collectReports / buildAgentInput", () => {
     expect(input.pregate.contract).toMatch(/HINTS/);
     expect(input.handledIds).toEqual([uuid(1)]);
     expect(input.clusters.flatMap((c) => c.reportIds).sort()).toEqual([uuid(1), uuid(2)]);
+    expect(input.pregate).toMatchObject({ reminder: false, openTriageIssues: [] });
+  });
+
+  // On a reminder sweep the agent must comment on the existing tracker instead of filing an
+  // eighth copy of the same table — it can only do that if it knows which issues those are.
+  it("hands the open trackers to the agent on a reminder sweep", () => {
+    const reports = collectReports(exportDoc);
+    const handledIds = new Set([uuid(1), uuid(2)]);
+    const decision = decide({
+      reports,
+      handledIds,
+      now: new Date("2026-07-25T12:00:00.000Z"),
+      remindedAt: null,
+    });
+    const input = buildAgentInput(exportDoc, decision, handledIds, {
+      openTriageIssues: [673, 672],
+    });
+
+    expect(input.pregate).toMatchObject({ reminder: true, openTriageIssues: [673, 672] });
   });
 });
