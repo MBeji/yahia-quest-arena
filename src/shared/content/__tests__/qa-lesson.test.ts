@@ -23,6 +23,17 @@ describe("auditLesson", () => {
       expect(errors(`::: figure Le triangle ABC\n${SVG}\n:::`)).toEqual([]);
     });
 
+    // Un checkout Windows matérialise le corpus en CRLF. Avec un `split("\n")`,
+    // chaque ligne gardait un `\r` final et TOUTES les regex ancrées sur `$`
+    // cessaient de matcher : l'ouverture n'était plus vue, la fermeture était
+    // rapportée « stray `:::` closes nothing ». Le gate inventait deux erreurs
+    // par chapitre à figure, en local seulement — la CI (Linux, LF) restait
+    // verte, ce qui rendait l'écart incompréhensible côté auteur.
+    it("lit une leçon en CRLF comme une leçon en LF (piège du checkout Windows)", () => {
+      const lf = `::: figure Le triangle ABC\n${SVG}\n:::`;
+      expect(errors(lf.replace(/\n/g, "\r\n"))).toEqual([]);
+    });
+
     it("refuse un type inconnu", () => {
       const flags = errors("::: nawak\nDu texte.\n:::");
       expect(flags).toHaveLength(1);
