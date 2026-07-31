@@ -251,9 +251,40 @@ describe("checkSuivi — lien fiche → sujets (déclaré, jamais deviné)", () 
       ...input([entry({ sujets: ["arabe-9eme"] })]),
       manifestSubjectsByGrade,
     });
-    expect(errors.some((e) => e.includes("arabe-9eme") && e.includes("absent du manifeste"))).toBe(
-      true,
-    );
+    expect(
+      errors.some((e) => e.includes("arabe-9eme") && e.includes("absent de TOUS les manifestes")),
+    ).toBe(true);
+  });
+
+  // Mutualisation (compileTo, étude 16 D-4) : un manuel qui dessert deux
+  // sections produit un sujet compilé par section, et R-4 n'autorise qu'UNE
+  // fiche par code source — donc la fiche d'une section doit pouvoir déclarer
+  // le sujet compilé de l'autre. Le filet reste entier sur les ids fictifs.
+  it("avertit — sans bloquer — quand un sujet déclaré vit dans le manifeste d'un autre niveau", () => {
+    const { errors, warnings } = checkSuivi({
+      ...input([entry({ sujets: ["math-9eme"] })]),
+      manifestSubjectsByGrade: {
+        "1ere-base": ["arabe-1ere", "math-1ere"],
+        "9eme-base": ["math-9eme"],
+      },
+    });
+    expect(errors).toEqual([]);
+    expect(warnings.some((w) => w.includes("math-9eme") && w.includes("mutualisation"))).toBe(true);
+  });
+
+  it("rejette encore un sujet absent de TOUS les manifestes", () => {
+    const { errors } = checkSuivi({
+      ...input([entry({ sujets: ["sujet-inexistant"] })]),
+      manifestSubjectsByGrade: {
+        "1ere-base": ["arabe-1ere", "math-1ere"],
+        "9eme-base": ["math-9eme"],
+      },
+    });
+    expect(
+      errors.some(
+        (e) => e.includes("sujet-inexistant") && e.includes("absent de TOUS les manifestes"),
+      ),
+    ).toBe(true);
   });
 
   it("ne vérifie rien quand les manifestes ne sont pas chargés", () => {

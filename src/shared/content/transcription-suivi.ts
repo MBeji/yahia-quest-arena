@@ -430,15 +430,41 @@ export function checkSuivi(input: SuiviCheckInput): SuiviCheckResult {
         }
       }
 
-      // 8. A DECLARED fiche → content link must resolve in that grade's manifest.
+      // 8. A DECLARED fiche → content link must resolve in a manifest.
       //    (Only when the manifests were loaded; the registry stays checkable alone.)
+      //
+      //    Le sujet vit NORMALEMENT dans le manifeste du niveau de la fiche.
+      //    L'exception est la MUTUALISATION (`compileTo`, étude 16 D-4) : un
+      //    manuel officiel qui dessert deux sections produit un sujet compilé
+      //    par section, et une seule fiche en porte le scope — R-4 n'autorise
+      //    qu'une fiche par code source, donc la fiche de la section A doit
+      //    pouvoir déclarer le sujet compilé de la section B. Le cas réel :
+      //    « الرياضيات — شعبتي العلوم وتكنولوجيا الإعلامية » (222231/222232)
+      //    alimente `math-2eme-sec-sciences` ET `math-2eme-sec-info`.
+      //    Sans cette nuance, le loader mutualisait ce que le registre
+      //    interdisait — deux gates du même pipeline en contradiction.
+      //    Le filet reste entier : un id absent de TOUS les manifestes est
+      //    toujours une erreur (typo, sujet inventé). Hors du niveau de la
+      //    fiche, c'est un avertissement — légitime, mais assez notable pour
+      //    qu'un lecteur le voie plutôt que de le découvrir en aval.
       const manifestSubjects = manifestSubjectsByGrade?.[suivi.grade];
-      if (manifestSubjects) {
+      if (manifestSubjects && manifestSubjectsByGrade) {
         for (const sujet of entry.sujets) {
-          if (!manifestSubjects.includes(sujet)) {
+          if (manifestSubjects.includes(sujet)) continue;
+          const autresNiveaux = Object.entries(manifestSubjectsByGrade)
+            .filter(([grade, ids]) => grade !== suivi.grade && ids.includes(sujet))
+            .map(([grade]) => grade);
+          if (autresNiveaux.length === 0) {
             errors.push(
-              `suivi ${path}: sujet déclaré "${sujet}" absent du manifeste ${suivi.grade} — ` +
+              `suivi ${path}: sujet déclaré "${sujet}" absent de TOUS les manifestes — ` +
                 `le lien fiche → contenu doit désigner un sujet du programme codifié`,
+            );
+          } else {
+            warnings.push(
+              `suivi ${path}: sujet déclaré "${sujet}" appartient au manifeste ` +
+                `${autresNiveaux.join(", ")} et non à ${suivi.grade} — mutualisation ` +
+                `(un manuel desservant plusieurs sections) : légitime si le manuel le dit, ` +
+                `à corriger sinon`,
             );
           }
         }
