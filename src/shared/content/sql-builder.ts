@@ -594,10 +594,15 @@ export function buildCompetencyRegistryMigrationSql(registries: CompetencyRegist
       "  label_ar = EXCLUDED.label_ar;",
       "",
       "-- Prune competencies this family no longer declares (R-1: deprecation,",
-      "-- never rename). FK cascades clean the edges and question mappings.",
-      `DELETE FROM public.competencies WHERE family = ${sqlString(family)} AND slug NOT IN (${sqlIdList(
-        slugs,
-      )});`,
+      "-- never rename). FK cascades clean the edges and question mappings —",
+      "-- c'est précisément pourquoi la purge est GARDÉE : voir purgeGuardSql.",
+      purgeGuardSql({
+        scope: `compétences de la famille « ${family} »`,
+        table: "public.competencies",
+        where: `family = ${sqlString(family)}`,
+        doomedWhere: `family = ${sqlString(family)} AND slug NOT IN (${sqlIdList(slugs)})`,
+        collateral: "les mappings question → compétence (question_competencies) partent en CASCADE",
+      }),
       "",
       "-- Rebuild the family's prerequisite edges (R-3: same-family DAG).",
       "DELETE FROM public.competency_prereqs cp",
@@ -619,6 +624,72 @@ export function buildCompetencyRegistryMigrationSql(registries: CompetencyRegist
   }
 
   return out.join("\n");
+}
+
+/**
+ * Au-delà de cette part du périmètre effacée en une fois, la purge d'un registre
+ * REFUSE de s'appliquer. Un tiers est large pour une dépréciation ordinaire (on
+ * retire quelques ids), et étroit pour un accident (un registre tronqué en rend
+ * la quasi-totalité « non déclarée »).
+ */
+const PURGE_MAX_SHARE = 0.34;
+
+/**
+ * Une purge de registre qui refuse de se suicider (garde fail-closed).
+ *
+ * Le SQL compilé d'un registre converge la base vers le fichier : il upserte ce
+ * qui est déclaré, puis **efface ce qui ne l'est plus**. C'est correct tant que le
+ * fichier est intact — et catastrophique s'il ne l'est pas. Un registre tronqué
+ * (merge malheureux, écriture partielle, mauvais drapeau) rend presque tout
+ * « non déclaré », et `apply-content.yml` applique la purge sans broncher :
+ * idempotente, journalisée, irréprochable, et destructrice. Pour les compétences,
+ * la casse ne s'arrête pas au registre — `question_competencies` part en CASCADE,
+ * donc le tagging du corpus avec.
+ *
+ * La garde compte les lignes condamnées AVANT d'effacer et lève si elles pèsent
+ * plus de {@link PURGE_MAX_SHARE} du périmètre. Elle ne juge pas l'intention : une
+ * dépréciation massive VOULUE est légitime, elle exige seulement une main humaine
+ * plutôt qu'un `workflow_dispatch` de routine. Le message dit les deux nombres,
+ * parce qu'un refus qui n'explique pas ce qu'il a vu se contourne au hasard.
+ *
+ * Une base vide passe toujours (0 condamné) : le premier `apply` d'un registre
+ * n'est pas une purge.
+ */
+function purgeGuardSql(opts: {
+  /** Ce que la purge touche, en français, pour le message d'erreur. */
+  scope: string;
+  table: string;
+  /** Le périmètre converge par ce registre (dénominateur). */
+  where: string;
+  /** Les lignes que la purge effacerait (numérateur). */
+  doomedWhere: string;
+  /** Ce qui part en plus, par cascade — nommé dans le refus. */
+  collateral: string;
+}): string {
+  // Le message part dans un littéral SQL : toute apostrophe du français doit être
+  // doublée, sinon « qu'ils » referme la chaîne et le fichier ne compile plus.
+  // (Attrapé à l'exécution, pas à la relecture — d'où le test qui rejoue le SQL.)
+  const message =
+    `PURGE REFUSÉE — ${opts.scope} : % lignes sur % seraient effacées ` +
+    `(plus de ${Math.round(PURGE_MAX_SHARE * 100)} %%). ${opts.collateral}. ` +
+    `Un registre tronqué ressemble exactement à ça. Si la dépréciation est VOULUE, ` +
+    `appliquer en deux temps ou lever la garde sciemment.`;
+
+  return [
+    "DO $purge$",
+    "DECLARE",
+    "  v_scope INT;",
+    "  v_doomed INT;",
+    "BEGIN",
+    `  SELECT count(*) INTO v_scope FROM ${opts.table} WHERE ${opts.where};`,
+    `  SELECT count(*) INTO v_doomed FROM ${opts.table} WHERE ${opts.doomedWhere};`,
+    `  IF v_scope > 0 AND v_doomed::numeric / v_scope > ${PURGE_MAX_SHARE} THEN`,
+    `    RAISE EXCEPTION ${sqlString(message)}, v_doomed, v_scope;`,
+    "  END IF;",
+    `  DELETE FROM ${opts.table} WHERE ${opts.doomedWhere};`,
+    "END",
+    "$purge$;",
+  ].join("\n");
 }
 
 /** Stable file name of the misconception registry on the same channel (D-6). */
@@ -677,8 +748,17 @@ export function buildMisconceptionRegistryMigrationSql(registry: MisconceptionRe
     "  label_en = EXCLUDED.label_en,",
     "  label_ar = EXCLUDED.label_ar;",
     "",
-    "-- Purge des tags que le registre ne déclare plus (dépréciation, jamais renommage).",
-    `DELETE FROM public.misconceptions WHERE tag NOT IN (${sqlIdList(tags)});`,
+    "-- Purge des tags que le registre ne déclare plus (dépréciation, jamais",
+    "-- renommage), sous la même garde que les compétences : rien n'a de FK vers",
+    "-- cette table, mais un vocabulaire tronqué rend muettes toutes les erreurs",
+    "-- qu'il nommait — une panne silencieuse, donc exactement celle qu'on rate.",
+    purgeGuardSql({
+      scope: "vocabulaire des misconceptions",
+      table: "public.misconceptions",
+      where: "TRUE",
+      doomedWhere: `tag NOT IN (${sqlIdList(tags)})`,
+      collateral: "toutes les erreurs qu'ils nomment redeviennent anonymes dans la correction",
+    }),
     "",
   );
 
