@@ -14,6 +14,8 @@ export {
   getSprint2Dashboard,
   getSubjectLeaderboard,
 } from "./dashboard.server";
+export { getEconomyOverview, type EconomyOverview } from "./economy.server";
+export { EconomyAdmin } from "./components/economy-admin";
 export {
   getMyParcoursInterests,
   getParcoursInterestCounts,
