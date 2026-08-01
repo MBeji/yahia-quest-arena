@@ -3,7 +3,11 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { misconceptionRegistrySchema, questionSchema } from "../schema.ts";
-import { buildMigrationSql, buildMisconceptionRegistryMigrationSql } from "../sql-builder.ts";
+import {
+  buildCompetencyRegistryMigrationSql,
+  buildMigrationSql,
+  buildMisconceptionRegistryMigrationSql,
+} from "../sql-builder.ts";
 import { ContentValidationError, loadMisconceptionRegistry } from "../loader.ts";
 
 // Adaptive-engine A0.3 (étude 04): the server-only misconception tagging path —
@@ -240,6 +244,8 @@ describe("buildMisconceptionRegistryMigrationSql", () => {
   it("purge ce que le registre ne déclare plus (dépréciation, jamais renommage)", () => {
     const sql = buildMisconceptionRegistryMigrationSql(registry);
     expect(sql).toContain("DELETE FROM public.misconceptions WHERE tag NOT IN (");
+    // …mais jamais nue : la purge est gardée (voir la suite dédiée plus bas).
+    expect(sql).toContain("PURGE REFUSÉE");
     expect(sql).toContain("'math.frac.add-denominators'");
   });
 
@@ -267,5 +273,81 @@ describe("buildMisconceptionRegistryMigrationSql", () => {
       },
     });
     expect(sql).toContain("'Tu confonds l''aire et l''périmètre'");
+  });
+});
+
+/**
+ * La garde fail-closed des purges de registre.
+ *
+ * Le SQL d'un registre CONVERGE la base vers le fichier : il upserte ce qui est
+ * déclaré et efface ce qui ne l'est plus. Correct tant que le fichier est intact,
+ * catastrophique sinon — et `apply-content.yml` appliquerait la purge sans
+ * broncher : idempotente, journalisée, irréprochable, destructrice.
+ *
+ * Le danger n'est pas théorique et il a été mesuré sur un Postgres réel : avec
+ * 20 compétences et 1 362 mappings question → compétence (l'état d'après C4), un
+ * registre tronqué à 3 compétences effaçait **les 1 362 mappings** par cascade FK.
+ * Toute la campagne de tagging, en un `workflow_dispatch` de routine.
+ */
+describe("garde fail-closed des purges de registre", () => {
+  const misconceptions = (n: number) =>
+    Object.fromEntries(
+      Array.from({ length: n }, (_, i) => [
+        `math.dom.t${i}`,
+        { subject: "math", labels: { fr: "f", en: "e", ar: "ا" } },
+      ]),
+    );
+
+  it("compte les condamnés AVANT d'effacer, et refuse au-delà du seuil", () => {
+    const sql = buildMisconceptionRegistryMigrationSql(misconceptions(3));
+    // L'ordre compte : compter après avoir effacé ne garde rien.
+    expect(sql.indexOf("INTO v_doomed")).toBeLessThan(
+      sql.indexOf("DELETE FROM public.misconceptions"),
+    );
+    expect(sql).toContain("RAISE EXCEPTION");
+  });
+
+  it("laisse passer une base VIDE — un premier `apply` n'est pas une purge", () => {
+    const sql = buildMisconceptionRegistryMigrationSql(misconceptions(3));
+    // La garde ne mord que si le périmètre existe déjà.
+    expect(sql).toContain("IF v_scope > 0 AND");
+  });
+
+  it("nomme les DEUX nombres dans le refus — un refus muet se contourne au hasard", () => {
+    const sql = buildMisconceptionRegistryMigrationSql(misconceptions(3));
+    expect(sql).toContain("v_doomed, v_scope");
+    expect(sql).toMatch(/% lignes sur %/);
+  });
+
+  it("dit la casse COLLATÉRALE, qui est le vrai motif de la garde", () => {
+    const comp = buildCompetencyRegistryMigrationSql([
+      {
+        family: "math",
+        subjectPrefixes: ["math"],
+        competencies: [{ id: "math.dom.a", labels: { fr: "f", en: "e", ar: "ا" }, prereqs: [] }],
+      },
+    ]);
+    expect(comp).toContain("question_competencies");
+    expect(comp).toContain("CASCADE");
+  });
+
+  it("échappe les apostrophes du message — sinon le fichier ne compile plus", () => {
+    // « qu'ils nomment » terminait la chaîne SQL : attrapé à l'exécution, pas à
+    // la relecture. Le SQL doit porter l'apostrophe DOUBLÉE.
+    const sql = buildMisconceptionRegistryMigrationSql(misconceptions(3));
+    expect(sql).toContain("qu''ils nomment");
+    expect(sql).not.toMatch(/[^']'ils nomment/);
+  });
+
+  it("garde AUSSI le registre des compétences, pas seulement le vocabulaire", () => {
+    const sql = buildCompetencyRegistryMigrationSql([
+      {
+        family: "math",
+        subjectPrefixes: ["math"],
+        competencies: [{ id: "math.dom.a", labels: { fr: "f", en: "e", ar: "ا" }, prereqs: [] }],
+      },
+    ]);
+    expect(sql).toContain("PURGE REFUSÉE");
+    expect(sql).toContain("v_doomed::numeric / v_scope");
   });
 });
