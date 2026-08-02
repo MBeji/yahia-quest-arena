@@ -3,7 +3,7 @@
 > **Public** : produit, ops/infra, support, développeurs.
 > **Statut** : livré en production (5 lots, PRs #313 / #315 / #320 / #321 / #322 / #323).
 > Ce guide explique **comment ça marche pour l'élève et comment l'exploiter**. Le contrat
-> d'architecture (RPC, RLS, invariants R-x) reste [`FableEtudes/05-duels-ligues/ETUDE.md`](../FableEtudes/05-duels-ligues/ETUDE.md).
+> d'architecture (RPC, RLS, invariants R-x) reste `FableEtudes/EtudeRealisé/05-duels-ligues/ETUDE.md` (dépôt **privé**).
 > En cas de contradiction, AGENTS.md et l'ETUDE.md priment.
 
 ## Ce que c'est
