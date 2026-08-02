@@ -3,7 +3,7 @@
 > **Doc normatif** (étude 15, D-1 — lot 3). Il fait foi pour tout texte visible par un
 > utilisateur et pour la composition de tout écran refondu. Il complète AGENTS.md /
 > ARCHITECTURE.md (qui gagnent en cas de conflit) et l'étude
-> [`FableEtudes/15-contenu-design-ecrans/ETUDE.md`](../FableEtudes/15-contenu-design-ecrans/ETUDE.md)
+> `FableEtudes/EtudeRealisé/15-contenu-design-ecrans/ETUDE.md` (dépôt **privé**)
 > (US/R/lots). Le style visuel (tokens, thèmes, primitives, RTL) relève de l'étude 14 —
 > ici on norme **ce que l'écran dit, montre et fait faire**.
 

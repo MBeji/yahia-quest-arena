@@ -493,7 +493,7 @@ La contrainte `exercises_mode_check` n'était portée par **aucune** migration d
 migration de contenu générée embarquait un garde idempotent qui la reposait. En retirant ces
 migrations, le garde partait avec elles — et une base **fraîche** reconstruite depuis le seul
 dépôt public (ce que rejoue le pgTAP nightly) ne l'aurait plus portée. D'où
-[`supabase/migrations/20260720140000_exercises_mode_check.sql`](../supabase/migrations/20260720140000_exercises_mode_check.sql),
+[`supabase/migrations/20260720190000_exercises_mode_check.sql`](../supabase/migrations/20260720190000_exercises_mode_check.sql),
 qui la repose au niveau du schéma (no-op en prod, qui la porte déjà).
 
 > 🧭 **Règle générale à retenir** : tout ce dont le **schéma** a besoin doit vivre dans une

@@ -5,7 +5,7 @@
 > fns + UI + i18n×3 + e2e.
 > Ce guide explique **comment ça marche pour l'élève et comment l'exploiter**. Le contrat
 > d'architecture (RPC, RLS, invariants R-x, normalisation R-4) reste la source de vérité :
-> [`FableEtudes/17-rappel-actif/ETUDE.md`](../FableEtudes/17-rappel-actif/ETUDE.md).
+> `FableEtudes/EtudeRealisé/17-rappel-actif/ETUDE.md` (dépôt **privé**).
 > En cas de contradiction, AGENTS.md et l'ETUDE.md priment.
 
 ## Ce que c'est
