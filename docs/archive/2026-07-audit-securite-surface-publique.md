@@ -1,5 +1,10 @@
 # Audit de sécurité — surface publique (accès anonyme) — 2026-07
 
+> 🗄️ **ARCHIVÉ le 2026-08-02** — audit point-dans-le-temps, verdict « aucune faille critique
+> ni haute ». Un instantané de sécurité ne protège que la journée où il est écrit : la surface
+> publique est désormais gardée en continu par **CodeQL** (check requis sur `main`) et par le
+> skill `/security-review`. Conservé pour les acceptations de risque qu'il documente.
+
 > Audit point-dans-le-temps de la surface **anonyme** (non authentifiée) de l'app :
 > routes `_public/*`, `login`/`signup`/`auth`, rôle Postgres `anon`, RPC appelables en
 > anonyme, entrée SSR / en-têtes. Ce document **constate** ; il ne redéfinit aucune

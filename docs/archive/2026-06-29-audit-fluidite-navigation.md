@@ -1,5 +1,10 @@
 # Audit — Fluidité de navigation (mode anonyme & mode connecté)
 
+> 🗄️ **ARCHIVÉ le 2026-08-02** — audit lecture seule dont le verdict était « navigation saine ».
+> Les deux coquilles qu'il décrit ont depuis convergé (coquille adaptative, étude 15), et la
+> non-régression du routage est tenue par les specs e2e `navigation.spec.ts`, pas par ce texte.
+> Conservé pour l'historique ; ne pas s'en servir comme backlog.
+
 > **Date** : 2026-06-29 · **Périmètre** : navigation inter-écrans, logique de routage, UX
 > de transition anonyme ↔ connecté. **Type** : lecture seule, aucun code applicatif modifié.
 > **Méthode** : revue des routes (`src/routes/**`), des shells `_public` / `_authenticated`,

@@ -1,5 +1,10 @@
 # Rapport de test E2E — Na9ra Nal3ab
 
+> 🗄️ **ARCHIVÉ le 2026-08-02** — plan de non-régression rédigé à la main, et daté d'avant le
+> pivot public. Un plan de tests écrit en prose se périme dès le premier écran qui bouge ; ce
+> rôle est tenu par les suites Playwright elles-mêmes, qui s'exécutent
+> ([`e2e/README.md`](../../e2e/README.md)). Conservé pour l'historique de la démarche.
+
 > Plan de non-régression / bug-bounty couvrant les fonctionnalités majeures :
 > affichage & responsive, parcours pédagogiques, gamification, programmes hors-école,
 > i18n/RTL et autorisations. Format : **Scénario → Étapes → Résultat (passe / ne passe pas)**.
