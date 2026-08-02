@@ -1,5 +1,11 @@
 # 🛡️ Audit technique — yahia-quest-arena (XP Scholars)
 
+> 🗄️ **ARCHIVÉ le 2026-08-02** — instantané du 2026-06-30, antérieur à ~460 PRs. Son plan
+> d'action portait encore comme « ouverts » des items soldés depuis (agrégats `subject_stats`,
+> trous de tests) : la dette **re-vérifiée dans le code** vit désormais dans
+> [`docs/dette-technique.md`](../dette-technique.md). Conservé pour l'historique et pour la
+> méthode d'audit ; ne pas s'en servir comme backlog.
+
 > Audit de qualité, maintenabilité, sécurité et conformité aux bonnes pratiques.
 > **Date :** 2026-06-30 · **Commit audité :** `5fc5452` (`main`) · **Branche d'audit :** `claude/codebase-audit-93e1p5`
 > **Méthode :** analyse statique + exécution de la _gate_ réelle (lint, typecheck, couverture), revue manuelle ciblée et fan‑out d'agents de revue par axe.
@@ -377,8 +383,11 @@ relèvent du raffinement plutôt que de la correction.
 
 ### 📎 Annexes
 
-- **Métriques détaillées :** [`codebase-audit-metrics.csv`](./codebase-audit-metrics.csv)
-- **Checklist d'actions :** [`codebase-audit-action-plan.md`](./codebase-audit-action-plan.md)
+- **Métriques détaillées :** [`2026-06-30-audit-codebase-metrics.csv`](./2026-06-30-audit-codebase-metrics.csv)
+- **Checklist d'actions :** supprimée le 2026-08-02, remplacée par
+  [`docs/dette-technique.md`](../dette-technique.md) — la moitié de ses items « ouverts »
+  étaient soldés sans que la case soit cochée ; la dette y est désormais re-vérifiée dans le
+  code avant d'être inscrite.
 - **Effort :** S ≈ < 0.5 j · M ≈ 0.5–2 j · L ≈ > 2 j.
 
 > _Rapport généré dans le cadre d'un audit automatisé assisté. Les scores reflètent l'état du commit `5fc5452` ;
