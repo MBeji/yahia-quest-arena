@@ -61,6 +61,7 @@ function ParentReport() {
 
   const students = useMemo(() => studentsData?.students ?? [], [studentsData?.students]);
   const isAdmin = studentsData?.role === "admin";
+  const isParentView = studentsData?.role === "parent";
   const pagination = studentsData?.pagination;
 
   const linkMutation = useMutation({
@@ -115,12 +116,17 @@ function ParentReport() {
   return (
     <div className="min-h-[100dvh] p-4 md:p-8 max-w-6xl mx-auto">
       <motion.div {...fadeIn} className="mb-8 print:hidden">
-        <Link
-          to="/dashboard"
-          className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition hover:text-foreground"
-        >
-          <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.common.backToHall}
-        </Link>
+        {/* Le « Retour au hall » n'a de sens que pour qui a un hall : un parent est
+            renvoyé du dashboard vers ici, donc ce lien le ramenait sur cet écran —
+            une boucle visible. Cet écran EST son accueil (cf. hub-route.ts). */}
+        {!isParentView && (
+          <Link
+            to="/dashboard"
+            className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {t.common.backToHall}
+          </Link>
+        )}
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-foreground flex items-center gap-3">
