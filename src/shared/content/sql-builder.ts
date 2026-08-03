@@ -733,20 +733,24 @@ export function buildMisconceptionRegistryMigrationSql(registry: MisconceptionRe
   }
 
   out.push(
-    "INSERT INTO public.misconceptions (tag, subject, label_fr, label_en, label_ar) VALUES",
+    "INSERT INTO public.misconceptions (tag, subject, label_fr, label_en, label_ar, competency) VALUES",
     tags
       .map((tag) => {
         const entry = registry[tag]!;
+        // `competency` (A12) est optionnelle : une erreur sans compétence propre
+        // écrit NULL, et le bloc de correction se dégrade sans exercice proposé.
+        const competency = entry.competency ? sqlString(entry.competency) : "NULL";
         return `  (${sqlString(tag)}, ${sqlString(entry.subject)}, ${sqlString(
           entry.labels.fr,
-        )}, ${sqlString(entry.labels.en)}, ${sqlString(entry.labels.ar)})`;
+        )}, ${sqlString(entry.labels.en)}, ${sqlString(entry.labels.ar)}, ${competency})`;
       })
       .join(",\n"),
     "ON CONFLICT (tag) DO UPDATE SET",
     "  subject = EXCLUDED.subject,",
     "  label_fr = EXCLUDED.label_fr,",
     "  label_en = EXCLUDED.label_en,",
-    "  label_ar = EXCLUDED.label_ar;",
+    "  label_ar = EXCLUDED.label_ar,",
+    "  competency = EXCLUDED.competency;",
     "",
     "-- Purge des tags que le registre ne déclare plus (dépréciation, jamais",
     "-- renommage), sous la même garde que les compétences : rien n'a de FK vers",

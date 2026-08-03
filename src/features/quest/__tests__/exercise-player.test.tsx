@@ -7,6 +7,8 @@ import React from "react";
 vi.mock("@tanstack/react-router", () => ({
   Link: ({ children, to }: { children: React.ReactNode; to: string }) =>
     React.createElement("a", { href: to }, children),
+  // L'écran de résultat navigue depuis « m'entraîner » (A12).
+  useNavigate: () => vi.fn(),
   // BackLink (primitive du lot 1) est construit avec createLink.
   createLink:
     (Comp: React.ComponentType<Record<string, unknown>>) =>
@@ -17,6 +19,10 @@ vi.mock("@tanstack/react-router", () => ({
 vi.mock("@tanstack/react-start", () => ({
   useServerFn: (fn: unknown) => fn,
 }));
+// L'écran de résultat sait désormais mener à un entraînement (A12). La server fn
+// est stubée : la charger pour de vrai tirerait `createServerFn` et les
+// middlewares Supabase dans un test de rendu.
+vi.mock("../quest.training", () => ({ getTrainingForMisconception: vi.fn() }));
 
 const { mockGetExercise, mockGetSubject } = vi.hoisted(() => ({
   mockGetExercise: vi.fn(),

@@ -61,6 +61,8 @@ export type PlayerReviewItem = {
   chapterId?: string | null;
   /** Les trois langues de l'erreur ; l'écran choisit la sienne (é07 `pickLabel`). */
   misconceptionLabels?: { fr: string; en: string; ar: string } | null;
+  /** La compétence mise en défaut (A12) — cible du geste « m'entraîner ». */
+  misconceptionCompetency?: string | null;
 };
 
 /** Unified result superset. Anonymous results leave the reward fields neutral. */

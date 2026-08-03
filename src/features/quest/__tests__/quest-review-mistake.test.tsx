@@ -43,6 +43,7 @@ const LABELS = {
   correctAnswer: "Bonne réponse",
   reviewMistakeTitle: "Ce qui t'a fait trébucher",
   reviewCourseCta: "Revoir le cours",
+  reviewTrainCta: "S'entraîner",
 };
 
 function item(over: Partial<PlayerReviewItem> = {}): PlayerReviewItem {
@@ -55,11 +56,16 @@ function item(over: Partial<PlayerReviewItem> = {}): PlayerReviewItem {
     explanation: "On met au même dénominateur.",
     misconceptionTag: "math.frac.add-denominators",
     chapterId: "chap-1",
+    misconceptionCompetency: "math.frac.addition",
     ...over,
   };
 }
 
-function renderList(items: PlayerReviewItem[], resolve?: (tag: string) => string | null) {
+function renderList(
+  items: PlayerReviewItem[],
+  resolve?: (tag: string) => string | null,
+  onTrain?: (competency: string) => void,
+) {
   return render(
     <QuestReviewList
       review={items}
@@ -67,6 +73,8 @@ function renderList(items: PlayerReviewItem[], resolve?: (tag: string) => string
       resolvePrompt={() => "fallback"}
       getDisplayChoice={(_q, c) => c.toUpperCase()}
       resolveMisconceptionLabel={resolve}
+      onTrain={onTrain}
+      trainLabel={onTrain ? "S'entraîner" : undefined}
     />,
   );
 }
@@ -156,5 +164,41 @@ describe("QuestReviewList — bloc de correction riche (A1.2b)", () => {
     );
     // q1 seule : q2 est juste, q3 n'a rien à dire.
     expect(screen.getAllByTestId("review-mistake")).toHaveLength(1);
+  });
+
+  // --- Le geste « m'entraîner » (arbitrage A12) ---
+
+  it("propose « m'entraîner » sur la COMPÉTENCE déclarée par l'erreur", () => {
+    const onTrain = vi.fn();
+    renderList([item()], () => "Tu additionnes les dénominateurs", onTrain);
+    const btn = screen.getByTestId("review-train-button");
+    btn.click();
+    // C'est la compétence qui part, jamais le tag : la traduction est déclarée
+    // dans le registre, pas devinée par le composant.
+    expect(onTrain).toHaveBeenCalledWith("math.frac.addition");
+  });
+
+  it("pas de compétence déclarée : pas de bouton, mais le reste du bloc vit", () => {
+    renderList([item({ misconceptionCompetency: null })], () => "Tu additionnes", vi.fn());
+    expect(screen.queryByTestId("review-train-button")).toBeNull();
+    expect(screen.getByTestId("review-mistake-label")).toBeTruthy();
+    expect(screen.getByTestId("review-course-link")).toBeTruthy();
+  });
+
+  it("aucun `onTrain` injecté : le bloc reste valide, sans geste", () => {
+    renderList([item()], () => "Tu additionnes");
+    expect(screen.queryByTestId("review-train-button")).toBeNull();
+    expect(screen.getByTestId("review-mistake")).toBeTruthy();
+  });
+
+  it("compétence SEULE (ni erreur nommée ni chapitre) : le bloc s'affiche quand même", () => {
+    // Le geste vaut à lui seul un bloc — c'est l'action, pas le texte, qui aide.
+    renderList([item({ misconceptionTag: null, chapterId: null })], undefined, vi.fn());
+    expect(screen.getByTestId("review-train-button")).toBeTruthy();
+  });
+
+  it("bonne réponse : aucun geste proposé non plus (R-A1.2-2)", () => {
+    renderList([item({ isCorrect: true })], () => "Tu additionnes", vi.fn());
+    expect(screen.queryByTestId("review-train-button")).toBeNull();
   });
 });

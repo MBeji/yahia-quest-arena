@@ -12,7 +12,17 @@ import type { CompiledVideo } from "@/shared/content/schema";
 vi.mock("@tanstack/react-router", () => ({
   Link: ({ children, to }: { children: React.ReactNode; to: string }) =>
     React.createElement("a", { href: to }, children),
+  // L'écran de résultat navigue depuis « m'entraîner » (A12) — le mock doit donc
+  // exposer `useNavigate`, même si aucun test d'ici ne clique le bouton.
+  useNavigate: () => vi.fn(),
 }));
+
+vi.mock("@tanstack/react-start", () => ({
+  useServerFn: () => vi.fn(async () => ({ exerciseId: null })),
+}));
+// La server fn est stubée : la charger pour de vrai tirerait `createServerFn` et
+// les middlewares dans un test de rendu.
+vi.mock("../quest.training", () => ({ getTrainingForMisconception: vi.fn() }));
 vi.mock("motion/react", () => ({
   motion: new Proxy(
     {},

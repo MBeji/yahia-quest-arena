@@ -1,9 +1,14 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { type ReactNode } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { Trophy, BookOpen, Clapperboard } from "lucide-react";
 import { PASS_THRESHOLD_PCT, QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
 import { noXpReason } from "@/features/quest/no-xp-reason";
+// Import du module ÉTROIT, pas de `quest.server` : viser le gros module tirerait
+// tout le serveur dans le chunk client — le piège déjà documenté pour
+// `recall-messages.ts`.
+import { getTrainingForMisconception } from "@/features/quest/quest.training";
 import { QuestRewardGrid } from "@/features/quest/components/quest-reward-grid";
 import { QuestReviewList } from "@/features/quest/components/quest-review-list";
 import { buildQuestLabels, type QuestContentLang } from "@/features/quest/quest-labels";
@@ -87,6 +92,19 @@ export function QuestResultScreen({
     const labels = misconceptionLabelByTag.get(tag);
     if (!labels) return null;
     return locale === "ar" ? labels.ar : locale === "en" ? labels.en : labels.fr;
+  };
+  // « M'entraîner » (A12) : la compétence déclarée par le registre est résolue en
+  // exercice par la MÊME RPC qu'é07 lot 4 — on ne crée pas un second chemin de
+  // remédiation (R-A1.2-6). Si elle ne rend rien, on ne navigue pas : un bouton
+  // qui ne mène nulle part vaut mieux qu'une page d'erreur.
+  const navigate = useNavigate();
+  const fetchTraining = useServerFn(getTrainingForMisconception);
+  const onTrain = (competency: string) => {
+    void fetchTraining({ data: { competency } }).then((res) => {
+      if (res.exerciseId) {
+        navigate({ to: "/quest/$exerciseId", params: { exerciseId: res.exerciseId } });
+      }
+    });
   };
   const scaleIn = useEntrance("scale");
   const QL = buildQuestLabels(qlang);
@@ -283,6 +301,8 @@ export function QuestResultScreen({
               resolvePrompt={resolvePrompt}
               getDisplayChoice={getDisplayChoice}
               resolveMisconceptionLabel={resolveMisconceptionLabel}
+              onTrain={onTrain}
+              trainLabel={t.quest.reviewTrainCta}
             />
           )}
         </div>

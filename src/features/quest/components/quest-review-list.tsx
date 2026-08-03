@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Dumbbell } from "lucide-react";
 
 import { RichField } from "@/components/ui/svg-figure";
 import type { PlayerReviewItem } from "@/features/quest/components/exercise-player";
@@ -37,6 +37,8 @@ export function QuestReviewList({
   resolvePrompt,
   getDisplayChoice,
   resolveMisconceptionLabel,
+  onTrain,
+  trainLabel,
 }: {
   review: PlayerReviewItem[];
   labels: {
@@ -58,6 +60,13 @@ export function QuestReviewList({
    * Absent = aucune erreur n'est jamais nommée, ce qui reste un rendu valide.
    */
   resolveMisconceptionLabel?: (tag: string) => string | null;
+  /**
+   * Résout la compétence de l'erreur en un exercice d'entraînement, puis y mène.
+   * Injecté par l'écran : le composant ne sait pas qu'une RPC existe. Absent =
+   * pas de geste « m'entraîner », ce qui reste un rendu valide (R-A1.2-3).
+   */
+  onTrain?: (competency: string) => void;
+  trainLabel?: string;
 }) {
   return (
     <div className="mt-8 text-start">
@@ -115,6 +124,8 @@ export function QuestReviewList({
               item={item}
               labels={labels}
               resolveMisconceptionLabel={resolveMisconceptionLabel}
+              onTrain={onTrain}
+              trainLabel={trainLabel}
             />
           </div>
         ))}
@@ -131,10 +142,19 @@ function MistakeBlock({
   item,
   labels,
   resolveMisconceptionLabel,
+  onTrain,
+  trainLabel,
 }: {
   item: PlayerReviewItem;
   labels: { reviewMistakeTitle: string; reviewCourseCta: string };
   resolveMisconceptionLabel?: (tag: string) => string | null;
+  /**
+   * Résout la compétence de l'erreur en un exercice d'entraînement, puis y mène.
+   * Injecté par l'écran : le composant ne sait pas qu'une RPC existe. Absent =
+   * pas de geste « m'entraîner », ce qui reste un rendu valide (R-A1.2-3).
+   */
+  onTrain?: (competency: string) => void;
+  trainLabel?: string;
 }) {
   // R-A1.2-2 : rien sur une bonne réponse. Le serveur ne tague déjà que les
   // réponses fausses (A1.2a) ; la garde est ici aussi, pour que le composant
@@ -145,7 +165,11 @@ function MistakeBlock({
     ? (resolveMisconceptionLabel?.(item.misconceptionTag) ?? null)
     : null;
   const chapterId = item.chapterId ?? null;
-  if (!label && !chapterId) return null;
+  // « M'entraîner » (A12) n'apparaît que si l'erreur DÉCLARE une compétence : une
+  // confusion de vocabulaire n'en a pas, et proposer un exercice au hasard serait
+  // pire que de ne rien proposer.
+  const competency = onTrain && trainLabel ? (item.misconceptionCompetency ?? null) : null;
+  if (!label && !chapterId && !competency) return null;
 
   return (
     <div
@@ -162,17 +186,30 @@ function MistakeBlock({
           </p>
         </>
       )}
-      {chapterId && (
-        <Link
-          to="/lesson/$chapterId"
-          params={{ chapterId }}
-          data-testid="review-course-link"
-          className={`inline-flex items-center gap-1 rounded-lg border border-[color:var(--gold)]/30 px-2 py-1 text-xs font-bold text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/10 ${label ? "mt-2" : ""}`}
-        >
-          <BookOpen className="h-3 w-3" />
-          {labels.reviewCourseCta}
-        </Link>
-      )}
+      <div className={`flex flex-wrap items-center gap-2 ${label ? "mt-2" : ""}`}>
+        {chapterId && (
+          <Link
+            to="/lesson/$chapterId"
+            params={{ chapterId }}
+            data-testid="review-course-link"
+            className="inline-flex items-center gap-1 rounded-lg border border-[color:var(--gold)]/30 px-2 py-1 text-xs font-bold text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/10"
+          >
+            <BookOpen className="h-3 w-3" />
+            {labels.reviewCourseCta}
+          </Link>
+        )}
+        {competency && (
+          <button
+            type="button"
+            onClick={() => onTrain?.(competency)}
+            data-testid="review-train-button"
+            className="inline-flex items-center gap-1 rounded-lg border border-[color:var(--gold)]/30 px-2 py-1 text-xs font-bold text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/10"
+          >
+            <Dumbbell className="h-3 w-3" />
+            {trainLabel}
+          </button>
+        )}
+      </div>
     </div>
   );
 }
