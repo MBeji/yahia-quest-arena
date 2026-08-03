@@ -26,6 +26,7 @@ import {
   resolveWeeklyAction,
 } from "@/features/dashboard";
 import { DailyReviewPanel, recoverStreak } from "@/features/progression";
+import { hubRouteForRole, shouldLeaveDashboard } from "@/features/auth";
 import { EnablePushCard } from "@/features/notifications";
 import { SubjectPathCard } from "@/features/dashboard/components/subject-path-card";
 import { FamilyGoalCard } from "@/features/dashboard/components/family-goal-card";
@@ -80,10 +81,12 @@ function Dashboard() {
   useEffect(() => setAmbient3dReady(true), []);
   const showAmbient3d = ambient3dReady && !prefersReduced && !isMobile;
 
-  // Redirect admin/parent users to their report page
+  // A parent has no game profile — send them to their own space (Suivi). An ADMIN
+  // stays here: /dashboard is the return target of the whole shell, so bouncing
+  // them off it looped the navigation and made the Hall unreachable (hub-route.ts).
   useEffect(() => {
-    if (data?.profile?.role === "admin" || data?.profile?.role === "parent") {
-      navigate({ to: "/parent-report" });
+    if (shouldLeaveDashboard(data?.profile?.role)) {
+      navigate({ to: hubRouteForRole(data?.profile?.role) });
     }
   }, [data?.profile?.role, navigate]);
 

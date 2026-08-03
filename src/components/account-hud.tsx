@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Flame, Zap } from "lucide-react";
 
 import { useMyStats } from "@/features/auth";
+import type { HubRoute } from "@/features/auth";
 import { useT } from "@/lib/i18n";
 
 /** Compact XP formatter ("12.3k") — keeps the header chip narrow on phones. */
@@ -11,8 +12,9 @@ const COMPACT_XP = new Intl.NumberFormat("en", { notation: "compact", maximumFra
  * Persistent, compact account HUD — daily streak (🔥) + XP (⚡) — rendered for a
  * signed-in user in BOTH shells (the public « Référence » header and the connected
  * shell). It keeps the value of the account visible on shared content, not only on
- * the dashboard (audit reco #1/#6). The whole chip is the link back to the
- * dashboard, so it replaces the plain « Mon espace » button.
+ * the dashboard (audit reco #1/#6). The whole chip is the link back to the user's
+ * own hub — `to` lets the connected shell point a parent at their Suivi instead of
+ * a Hall they never reach — so it replaces the plain « Mon espace » button.
  *
  * Theme-safety (cf. GAP-047): the figures use `text-foreground` over an opaque
  * `bg-card` — the one contrast pair guaranteed readable in all three themes — and
@@ -20,7 +22,7 @@ const COMPACT_XP = new Intl.NumberFormat("en", { notation: "compact", maximumFra
  * icons. Until stats load it still renders the « Mon espace » label so the account
  * entry never flashes out.
  */
-export function AccountHud() {
+export function AccountHud({ to = "/dashboard" }: { to?: HubRoute }) {
   const t = useT();
   const { xp, currentStreak, hasStats } = useMyStats();
 
@@ -31,7 +33,7 @@ export function AccountHud() {
 
   return (
     <Link
-      to="/dashboard"
+      to={to}
       aria-label={t.public.header.account}
       data-testid="account-hud"
       className="flex min-w-0 max-w-[9rem] items-center gap-2 overflow-hidden rounded-lg border border-[color:var(--gold)]/40 bg-card px-2.5 py-1.5 text-sm font-semibold text-foreground shadow-sm transition hover:border-[color:var(--gold)]/70 sm:max-w-none sm:px-3"

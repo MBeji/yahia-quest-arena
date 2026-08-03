@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, Link, useNavigate, useLocation } from "@tansta
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useAuth, useMyRole, shouldRedirectToOnboarding } from "@/features/auth";
+import { useAuth, useMyRole, shouldRedirectToOnboarding, hubRouteForRole } from "@/features/auth";
 import { getPendingBetaCount } from "@/features/subscription";
 import { getOpenReportsCount } from "@/features/content-report";
 import { BetaBadge, BugReportLauncher, getOpenBugsCount } from "@/features/bug-report";
@@ -141,6 +141,8 @@ function AuthenticatedLayout() {
   // destination (Suivi) — never the game nav, never a crowded bottom bar.
   const isParent = userRole === "parent";
   const showPrimaryNav = !isParent;
+  // Where "home" is for this user — the logo and the account chip both aim at it.
+  const hub = hubRouteForRole(userRole);
   // Hide the bottom tab bar on immersive play/flow screens so it never overlaps
   // an in-screen sticky CTA (quiz submit, lesson nav, onboarding). The Dungeon
   // LOBBY is no longer immersive (D-4 / audit §E-1): the nav stays until a run
@@ -155,7 +157,10 @@ function AuthenticatedLayout() {
           painted on top and the dashboard grid intercepted the dropdown clicks. */}
       <header className="relative z-30 border-b border-[color:var(--gold)]/15 bg-black/40 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
-          <Link to="/dashboard" className="flex items-center gap-2">
+          {/* The logo goes to the user's OWN hub: a parent has no Heroes' Hall, and
+              pointing them at /dashboard only to bounce them back to /parent-report
+              made the header look like it looped. */}
+          <Link to={hub} className="flex items-center gap-2">
             <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[image:var(--gradient-gold)] shadow-gold">
               <Sparkles className="h-4 w-4 text-black" />
             </div>
@@ -286,7 +291,7 @@ function AuthenticatedLayout() {
               cluster never forces the whole document wider than the phone viewport
               (iPhone 13 overflow → content shifted left, gutter on the right). */}
           <div className="flex min-w-0 items-center gap-1 sm:gap-2">
-            <AccountHud />
+            <AccountHud to={hub} />
             <LanguageSwitcher />
             <ThemeSwitcher />
             <SoundSwitcher />
