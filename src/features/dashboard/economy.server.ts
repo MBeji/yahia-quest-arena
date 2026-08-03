@@ -62,12 +62,16 @@ const levelVelocitySchema = z.object({
 });
 
 /**
- * Sources RECONSTRUITES (D-5) contre puits réels. `sink_ratio` est nul quand rien
- * n'a été gagné : sur une économie à l'arrêt, « 0 % d'inflation » serait un chiffre
- * faux, pas un chiffre prudent.
+ * Sources RÉELLEMENT versées contre puits réels. La prémisse de D-5 (« les coins
+ * ne sont pas persistés, donc on estime ») est tombée : `attempts.xp_earned > 0`
+ * signe l'éligibilité et `exercises.reward_coins` donne le forfait, donc le flux
+ * se calcule. Seul un multiplicateur de potion échappe encore au compte — les
+ * sources sont un plancher, pas une approximation floue.
+ * `sink_ratio` est nul quand rien n'a été gagné : sur une économie à l'arrêt,
+ * « 0 % d'inflation » serait un chiffre faux, pas un chiffre prudent.
  */
 const coinFlowsSchema = z.object({
-  sources_estimated: z.coerce.number(),
+  sources_earned: z.coerce.number(),
   sinks_shop: z.coerce.number(),
   sink_ratio: z.coerce.number().nullable(),
 });
@@ -99,7 +103,7 @@ const overviewSchema = z.object({
   consumables: z.array(consumableSchema),
   premium_funnel: premiumFunnelSchema,
   notes: z.object({
-    coins_sources_estimated: z.boolean(),
+    coins_exclude_potion_multipliers: z.boolean(),
     xp_per_level: z.coerce.number(),
   }),
 });

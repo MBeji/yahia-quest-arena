@@ -62,14 +62,20 @@ INSERT INTO public.subjects (id, name_fr, attribute, color_token, icon, theme_id
 VALUES ('econ-subj', 'Econ', 'Esprit', 'subject-math', 'Brain', 'ecole-tn');
 INSERT INTO public.chapters (id, subject_id, title)
 VALUES ('ec000000-0001-0000-0000-000000000001', 'econ-subj', 'Ch');
-INSERT INTO public.exercises (id, chapter_id, subject_id, title, source, mode)
+INSERT INTO public.exercises (id, chapter_id, subject_id, title, source, mode, reward_coins)
 VALUES ('ec000000-0002-0000-0000-000000000001',
-        'ec000000-0001-0000-0000-000000000001', 'econ-subj', 'Ex', 'admin', 'practice');
+        'ec000000-0001-0000-0000-000000000001', 'econ-subj', 'Ex', 'admin', 'practice', 20);
 
--- Élève 1 : 100 XP à 80 % (réussi)  -> 100/5  = 20 coins
--- Élève 2 : 100 XP à 45 % (moitié)  -> 100/10 = 10 coins
--- Élève 2 : 100 XP à 30 % (rien)    ->          0 coin
--- Total attendu : 30.00 coins estimés.
+-- ⚠️ Corrigé le 2026-08-03 : le RPC de soumission n'a AUCUNE règle de demi-coins,
+-- et les coins ne dérivent pas de l'XP — c'est le forfait `exercises.reward_coins`,
+-- versé si et seulement si la tentative est éligible. `xp_earned > 0` EST la
+-- signature de cette éligibilité (le RPC met les deux à zéro ensemble).
+--
+-- L'exercice porte reward_coins = 20.
+-- Élève 1 : récompensée (xp_earned = 100) -> 20 coins
+-- Élève 2 : récompensée (xp_earned = 100) -> 20 coins
+-- Élève 2 : NON récompensée (xp_earned = 0) -> 0 coin
+-- Total attendu : 40.00 coins versés.
 INSERT INTO public.attempts
   (user_id, exercise_id, subject_id, correct_count, total_count, score_pct, duration_seconds, xp_earned, completed_at)
 VALUES
@@ -78,7 +84,7 @@ VALUES
   ('ec000000-0000-0000-0000-00000000000c', 'ec000000-0002-0000-0000-000000000001',
    'econ-subj', 4, 10, 45, 120, 100, now() - INTERVAL '1 day'),
   ('ec000000-0000-0000-0000-00000000000c', 'ec000000-0002-0000-0000-000000000001',
-   'econ-subj', 3, 10, 30, 120, 100, now() - INTERVAL '1 day');
+   'econ-subj', 3, 10, 30, 120, 0, now() - INTERVAL '1 day');
 
 -- =========================================================
 -- 6. La porte : un élève ordinaire est refusé, même avec le GRANT d'exécution.
@@ -107,18 +113,19 @@ SELECT is(
   6,
   'l''admin reçoit les six sections — une par US, plus les notes');
 
--- L'arithmétique de D-5, sur des nombres choisis : 20 + 10 + 0 = 30.
+-- Le flux CALCULÉ, sur des nombres choisis : 20 + 20 + 0 = 40.
 SELECT is(
-  ((public.admin_economy_overview() -> 'coin_flows' ->> 'sources_estimated')::numeric),
-  30.00::numeric,
-  'D-5 : les sources reconstruisent la règle canonique (1/5, demi à 40-59 %, 0 sous 40)');
+  ((public.admin_economy_overview() -> 'coin_flows' ->> 'sources_earned')::numeric),
+  40.00::numeric,
+  'les sources somment le forfait des tentatives RÉCOMPENSÉES, pas une règle dérivée');
 
--- Le plancher des 40 % : la tentative à 30 % ne rapporte RIEN. Si elle comptait,
--- le total serait 40 et l''assertion précédente le dirait — celle-ci nomme la règle.
+-- L'éligibilité est BINAIRE : une tentative non récompensée (xp_earned = 0) ne
+-- verse rien. Si elle comptait, le total serait 60 — cette assertion nomme la règle
+-- que l'étude décrivait à tort comme un « demi-coin ».
 SELECT is(
-  ((public.admin_economy_overview() -> 'coin_flows' ->> 'sources_estimated')::numeric) < 40,
+  ((public.admin_economy_overview() -> 'coin_flows' ->> 'sources_earned')::numeric) < 60,
   true,
-  'une tentative sous 40 % ne crée aucun coin — le plancher tient');
+  'une tentative non récompensée ne verse AUCUN coin — pas de demi-mesure');
 
 -- R-2 : AUCUNE donnée nominative ne sort. Les vues portent des `user_id` pour
 -- calculer par élève ; le RPC n'en laisse passer aucun.
