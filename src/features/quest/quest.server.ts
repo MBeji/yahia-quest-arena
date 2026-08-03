@@ -45,6 +45,13 @@ export const PARCOURS_COMING_SOON_MESSAGE =
  */
 export { RECALL_LOCKED_MESSAGE, RECALL_NOT_ELIGIBLE_MESSAGE } from "./quest.recall";
 
+/**
+ * Le geste « m'entraîner » (A12) vit dans son propre module : `quest.server.ts`
+ * atteignait la limite `max-lines`, et une server fn de six lignes n'avait pas à
+ * la faire sauter. Re-exporté ici pour les appelants qui visent ce chemin.
+ */
+export { getTrainingForMisconception } from "./quest.training";
+
 type ProfileSnapshot = Database["public"]["Tables"]["profiles"]["Row"];
 
 /** Thrown when an answer's wire format doesn't match its question's type. */

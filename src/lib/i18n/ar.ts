@@ -249,6 +249,7 @@ export const ar: TranslationKeys = {
     correctAnswer: "الإجابة الصحيحة",
     reviewMistakeTitle: "ما الذي أوقعك في الخطأ",
     reviewCourseCta: "مراجعة الدرس",
+    reviewTrainCta: "تدرّب على هذا",
     resultScore: "{correct} / {total} إجابات صحيحة · {pct}%",
     serverValidatedTime: "وقت مُتحقَّق منه على الخادم · {n}ث",
     timeSpent: "الوقت · {n}ث",

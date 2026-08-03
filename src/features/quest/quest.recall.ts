@@ -96,6 +96,18 @@ export type AttemptReviewItem = {
    * dégradation silencieuse (R-A1.2-3), jamais une erreur.
    */
   misconceptionLabels: { fr: string; en: string; ar: string } | null;
+  /**
+   * La compétence que cette erreur met en défaut (A12) — la cible du geste
+   * « m'entraîner ». `null` quand le registre n'en déclare pas : le bloc nomme
+   * alors l'erreur et ouvre le cours, sans proposer d'exercice (R-A1.2-3).
+   */
+  misconceptionCompetency: string | null;
+};
+
+/** Ce que le vocabulaire des erreurs porte pour un tag : la phrase, et la cible. */
+type MisconceptionEntry = {
+  labels: { fr: string; en: string; ar: string };
+  competency: string | null;
 };
 
 /**
@@ -153,14 +165,23 @@ export async function buildAttemptReview(
       misconceptionTag: q?.misconception_tag ?? null,
       chapterId: q?.chapter_id ?? null,
       misconceptionLabels: q?.misconception_tag
-        ? (labelByTag.get(q.misconception_tag) ?? null)
+        ? (labelByTag.get(q.misconception_tag)?.labels ?? null)
+        : null,
+      misconceptionCompetency: q?.misconception_tag
+        ? (labelByTag.get(q.misconception_tag)?.competency ?? null)
         : null,
     };
   });
 }
 
 /** Une ligne du vocabulaire des erreurs, telle que l'écran la consommera. */
-type MisconceptionRow = { tag: string; label_fr: string; label_en: string; label_ar: string };
+type MisconceptionRow = {
+  tag: string;
+  label_fr: string;
+  label_en: string;
+  label_ar: string;
+  competency: string | null;
+};
 
 /**
  * `public.misconceptions` (étude 04 A1.2b) est postérieure aux types Supabase
@@ -194,19 +215,25 @@ type MisconceptionsTableClient = {
 async function fetchMisconceptionLabels(
   supabase: Supabase,
   tags: Array<string | null>,
-): Promise<Map<string, { fr: string; en: string; ar: string }>> {
+): Promise<Map<string, MisconceptionEntry>> {
   const unique = [...new Set(tags.filter((t): t is string => Boolean(t)))];
   if (unique.length === 0) return new Map();
 
   const client = supabase as unknown as MisconceptionsTableClient;
   const { data, error } = await client
     .from("misconceptions")
-    .select("tag, label_fr, label_en, label_ar")
+    .select("tag, label_fr, label_en, label_ar, competency")
     .in("tag", unique);
   if (error || !Array.isArray(data)) return new Map();
 
   return new Map(
-    data.map((row) => [row.tag, { fr: row.label_fr, en: row.label_en, ar: row.label_ar }]),
+    data.map((row) => [
+      row.tag,
+      {
+        labels: { fr: row.label_fr, en: row.label_en, ar: row.label_ar },
+        competency: row.competency ?? null,
+      },
+    ]),
   );
 }
 

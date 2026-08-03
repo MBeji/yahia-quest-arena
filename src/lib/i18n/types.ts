@@ -259,6 +259,8 @@ export type TranslationKeys = {
     reviewMistakeTitle: string;
     /** Étude 04 lot A1.2b — lien vers le cours du chapitre (D-A1.2-4). */
     reviewCourseCta: string;
+    /** Étude 04 A12 — geste « m'entraîner » sur la compétence mise en défaut. */
+    reviewTrainCta: string;
     resultScore: string;
     serverValidatedTime: string;
     timeSpent: string;

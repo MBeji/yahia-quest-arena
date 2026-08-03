@@ -342,6 +342,19 @@ const optionSchema = z.object({
   misconceptionTag: misconceptionTagSchema.optional(),
 });
 
+/**
+ * A competency id — namespaced `matière.domaine.competence` (étude 07 R-1),
+ * e.g. `math.geo.thales-direct`: exactly three lowercase dotted segments.
+ * Ids are STABLE for life (create/deprecate only, never rename — same identity
+ * rule as slugs) and never displayed: the trilingual labels are.
+ */
+export const competencyIdSchema = z
+  .string()
+  .regex(
+    /^[a-z][a-z0-9]*\.[a-z0-9]+(?:-[a-z0-9]+)*\.[a-z0-9]+(?:-[a-z0-9]+)*$/,
+    "a competency id must be 'matiere.domaine.competence' lowercase segments (e.g. 'math.geo.thales-direct')",
+  );
+
 /** One entry of the misconception registry: subject + trilingual student labels. */
 export const misconceptionEntrySchema = z.object({
   subject: z.string().regex(/^[a-z][a-z0-9-]*$/, "subject must be kebab-case (e.g. 'math')"),
@@ -350,6 +363,23 @@ export const misconceptionEntrySchema = z.object({
     en: z.string().min(1),
     ar: z.string().min(1),
   }),
+  /**
+   * La compétence que cette erreur met en défaut (étude 04 A1.2, arbitrage A12).
+   *
+   * C'est ce champ qui rend le geste « m'entraîner » possible sans créer un second
+   * chemin de remédiation : R-A1.2-6 impose de réutiliser celui d'é07 lot 4, qui
+   * résout une COMPÉTENCE en exercices — une misconception n'en étant pas une, il
+   * fallait une traduction, et elle est déclarée par l'auteur plutôt que devinée.
+   *
+   * OPTIONNEL à dessein : une misconception peut n'avoir aucune compétence propre
+   * (une confusion de vocabulaire, une erreur de lecture d'énoncé). Sans elle, le
+   * bloc de correction nomme l'erreur et ouvre le cours, sans proposer d'exercice —
+   * la dégradation de R-A1.2-3, une fois de plus.
+   *
+   * L'id doit exister dans un registre `content/competences/*.json` ; le
+   * cross-check est fait par `content:qa`, comme pour les tags eux-mêmes.
+   */
+  competency: competencyIdSchema.optional(),
 });
 export type MisconceptionEntry = z.infer<typeof misconceptionEntrySchema>;
 
@@ -365,19 +395,6 @@ export const misconceptionRegistrySchema = z.record(
   misconceptionEntrySchema,
 );
 export type MisconceptionRegistry = z.infer<typeof misconceptionRegistrySchema>;
-
-/**
- * A competency id — namespaced `matière.domaine.competence` (étude 07 R-1),
- * e.g. `math.geo.thales-direct`: exactly three lowercase dotted segments.
- * Ids are STABLE for life (create/deprecate only, never rename — same identity
- * rule as slugs) and never displayed: the trilingual labels are.
- */
-export const competencyIdSchema = z
-  .string()
-  .regex(
-    /^[a-z][a-z0-9]*\.[a-z0-9]+(?:-[a-z0-9]+)*\.[a-z0-9]+(?:-[a-z0-9]+)*$/,
-    "a competency id must be 'matiere.domaine.competence' lowercase segments (e.g. 'math.geo.thales-direct')",
-  );
 
 /** One competency of a family registry: stable id + student labels + prereq edges. */
 export const competencyEntrySchema = z.object({
