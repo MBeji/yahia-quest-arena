@@ -105,10 +105,10 @@ export function EconomyAdmin({ data }: { data: EconomyOverview }) {
 
       <Card
         title="Flux de coins (30 jours)"
-        hint="⚠️ Les sources sont ESTIMÉES : les coins gagnés ne sont pas persistés par tentative, elles sont reconstruites par la règle canonique (1 coin / 5 XP, moitié entre 40 et 59 %). Les puits, eux, sont réels."
+        hint="Sources et puits sont RÉELS : une tentative récompensée (xp_earned > 0) verse le forfait de son exercice. Seul écart connu — un multiplicateur de potion n'est stocké nulle part, donc les sources sont un plancher."
       >
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3" data-testid="econ-coins">
-          <Stat label="sources (estimé)" value={fmt(coin_flows.sources_estimated)} />
+          <Stat label="sources versées" value={fmt(coin_flows.sources_earned)} />
           <Stat label="puits — boutique" value={fmt(coin_flows.sinks_shop)} />
           <Stat label="puits / sources" value={sinkPct === null ? "—" : `${fmt(sinkPct)} %`} />
         </div>

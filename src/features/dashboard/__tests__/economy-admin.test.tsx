@@ -23,7 +23,7 @@ function overview(over: Partial<EconomyOverview> = {}): EconomyOverview {
   return {
     xp_daily: { p50: 75, p90: 150, max: 300, active_days: 12 },
     level_velocity: [{ level_reached: 2, students: 4, p50_days: 3.5, p90_days: 9 }],
-    coin_flows: { sources_estimated: 500, sinks_shop: 400, sink_ratio: 0.8 },
+    coin_flows: { sources_earned: 500, sinks_shop: 400, sink_ratio: 0.8 },
     consumables: [
       {
         code: "potion_xp_boost",
@@ -42,7 +42,7 @@ function overview(over: Partial<EconomyOverview> = {}): EconomyOverview {
       active_entitled: 0,
       premium_parcours: 0,
     },
-    notes: { coins_sources_estimated: true, xp_per_level: 200 },
+    notes: { coins_exclude_potion_multipliers: true, xp_per_level: 200 },
     ...over,
   };
 }
@@ -58,17 +58,21 @@ describe("EconomyAdmin — la page ne ment pas sur ses chiffres", () => {
     expect(xp.textContent?.toLowerCase()).not.toContain("moyenne");
   });
 
-  it("dit que les sources de coins sont ESTIMÉES (D-5)", () => {
+  it("ne présente plus les sources comme une ESTIMATION — elles sont calculées", () => {
     const { container } = render(<EconomyAdmin data={overview()} />);
-    // Le mot doit être à l'écran, pas seulement dans un commentaire du code.
-    expect(container.textContent?.toLowerCase()).toContain("estim");
+    const text = container.textContent ?? "";
+    // La prémisse de D-5 est tombée : `attempts.xp_earned > 0` signe
+    // l'éligibilité, `exercises.reward_coins` donne le forfait. Le seul écart
+    // restant est la potion, et il est NOMMÉ plutôt que noyé dans « estimé ».
+    expect(text).toContain("versées");
+    expect(text.toLowerCase()).toContain("potion");
   });
 
   it("alerte quand les puits absorbent moins de 60 % des sources", () => {
     render(
       <EconomyAdmin
         data={overview({
-          coin_flows: { sources_estimated: 1000, sinks_shop: 100, sink_ratio: 0.1 },
+          coin_flows: { sources_earned: 1000, sinks_shop: 100, sink_ratio: 0.1 },
         })}
       />,
     );
@@ -84,7 +88,7 @@ describe("EconomyAdmin — la page ne ment pas sur ses chiffres", () => {
     render(
       <EconomyAdmin
         data={overview({
-          coin_flows: { sources_estimated: 0, sinks_shop: 0, sink_ratio: null },
+          coin_flows: { sources_earned: 0, sinks_shop: 0, sink_ratio: null },
         })}
       />,
     );

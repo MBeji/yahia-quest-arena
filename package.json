@@ -28,6 +28,7 @@
     "lint": "eslint src --max-warnings=0 && node scripts/lint/check-rtl-classes.mjs && node scripts/lint/check-design-tokens.mjs",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
+    "economy:check": "node --experimental-strip-types scripts/economy/check.mjs",
     "content:check": "node --experimental-strip-types scripts/content/build.ts --check",
     "content:build": "node --experimental-strip-types scripts/content/build.ts",
     "content:emit": "node --experimental-strip-types scripts/content/build.ts --sql-dir sql/content",
