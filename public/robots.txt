@@ -61,4 +61,7 @@ User-agent: SerpstatBot
 Disallow: /
 
 # Sitemap (généré dynamiquement — voir src/shared/lib/sitemap.ts) :
-Sitemap: https://na9ranal3ab.tn/sitemap.xml
+# L'hôte est `www`, celui que la prod sert réellement — l'apex répond 308 vers lui.
+# Cette ligne, `SITE_URL` et la redirection Vercel désignent le même hôte : les
+# changer ensemble ou pas du tout.
+Sitemap: https://www.na9ranal3ab.tn/sitemap.xml

@@ -2,6 +2,7 @@ import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { PublicHeader } from "@/components/public/public-header";
 import { PublicFooter } from "@/components/public/public-footer";
 import { PrintMark } from "@/components/public/print-mark";
+import { CanonicalLink } from "@/components/public/canonical-link";
 import { usePublicContentProtection } from "@/shared/lib/content-protection";
 
 /**
@@ -20,6 +21,8 @@ function PublicLayout() {
   usePublicContentProtection();
   return (
     <div className="public-shell flex min-h-[100dvh] flex-col bg-background text-foreground">
+      {/* Hoisted into <head> by React 19 — the indexable origin, stated outright. */}
+      <CanonicalLink />
       <PublicHeader />
       <main className="flex-1">
         <Outlet />

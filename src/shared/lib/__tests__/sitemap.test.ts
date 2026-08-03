@@ -47,8 +47,18 @@ describe("renderSitemap", () => {
   });
 
   it("uses the .tn custom domain, never a deployment host", () => {
-    expect(SITE_URL).toBe("https://na9ranal3ab.tn");
+    expect(SITE_URL).toBe("https://www.na9ranal3ab.tn");
     expect(renderSitemap(["/"])).not.toContain("vercel.app");
+  });
+
+  it("declares the host prod actually serves — `www`, not the redirecting apex", () => {
+    // The apex answers 308 → www (sondé le 2026-08-02). A `<loc>` on the apex
+    // costs the crawler an extra round-trip on every one of the ~1 540 URLs, and
+    // contradicts the origin we serve. Guard the host itself, not just the domain.
+    expect(new URL(SITE_URL).host).toBe("www.na9ranal3ab.tn");
+    expect(renderSitemap(["/programme"])).toContain(
+      "<loc>https://www.na9ranal3ab.tn/programme</loc>",
+    );
   });
 });
 

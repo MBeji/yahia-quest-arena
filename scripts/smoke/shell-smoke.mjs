@@ -49,6 +49,20 @@ const PAGES = {
   "/programme": "Programme",
 };
 
+/**
+ * The canonical origin, READ FROM THE SOURCE rather than repeated here — so that
+ * changing `SITE_URL` moves this check with it instead of leaving a second,
+ * quietly diverging copy. A plain .mjs cannot import the .ts module, hence the
+ * extraction; it throws rather than falls back, because a smoke that silently
+ * checks the wrong origin is worse than one that does not run.
+ */
+const CANONICAL_ORIGIN = await (async () => {
+  const src = await readFile(join(ROOT, "src/shared/constants/site.ts"), "utf8");
+  const match = src.match(/export const SITE_URL\s*=\s*["'`]([^"'`]+)["'`]/);
+  if (!match) throw new Error("shell-smoke: SITE_URL not found in src/shared/constants/site.ts");
+  return match[1].replace(/\/+$/, "");
+})();
+
 /** Substrings that flag the branded error pages (React boundary in fr/en/ar +
  *  the static server fallback). Any hit = the shell died. */
 const ERROR_MARKERS = ["s'est déchiré", "didn't load", "تمزّقت", "torn apart"];
@@ -150,6 +164,35 @@ async function probePage(browser, path, marker) {
     if (body.includes(errorMarker)) failures.push(`error page detected ("${errorMarker}")`);
   }
   if (!body.includes(marker)) failures.push(`expected content marker "${marker}" not found`);
+
+  // <link rel="canonical"> — what THIS tier proves, and what it does not.
+  //
+  // PROVES: the tag really reaches <head> in a real browser on the real bundle,
+  // exactly once, carrying the right PATH. The component is rendered deep in the
+  // public layout and relies on React hoisting the <link> up; a jsdom unit test
+  // shows the component's return value and nothing whatsoever about that
+  // hoisting. Only this tier can tell crawler-visible from merely-rendered.
+  //
+  // DOES NOT PROVE: that the origin is the right one. `CANONICAL_ORIGIN` is read
+  // from the same `SITE_URL` the tag is built from, so both move together and
+  // the comparison stays green on a wrong host — verified by deliberately
+  // flipping SITE_URL back to the apex, which this check happily accepted. The
+  // HOST is pinned by a literal in `sitemap.test.ts` ("declares the host prod
+  // actually serves"), which did fail on that flip. Two dimensions, two guards:
+  // do not merge them, and do not make that unit assertion read SITE_URL.
+  const canonicals = await page
+    .evaluate(() =>
+      [...document.head.querySelectorAll('link[rel="canonical"]')].map((l) =>
+        l.getAttribute("href"),
+      ),
+    )
+    .catch(() => []);
+  const expected = CANONICAL_ORIGIN + (path === "/" ? "" : path);
+  if (canonicals.length === 0) failures.push('no <link rel="canonical"> in <head>');
+  else if (canonicals.length > 1)
+    failures.push(`${canonicals.length} canonical tags in <head> (expected exactly 1)`);
+  else if (canonicals[0] !== expected)
+    failures.push(`canonical is "${canonicals[0]}", expected "${expected}"`);
 
   await context.close();
   return failures;

@@ -2,11 +2,13 @@ import { createPublicSupabaseClient } from "@/shared/integrations/supabase/publi
 import { logger } from "@/shared/lib/logger";
 
 /**
- * Canonical public origin for indexable URLs. Search engines must index the
- * custom domain, never the *.vercel.app deployment, so every `<loc>` is an
- * absolute na9ranal3ab.tn URL regardless of the host that served the sitemap.
+ * Canonical public origin for every `<loc>`. Defined in `shared/constants/site`
+ * (a dependency-free module, so the public shell can render its
+ * `<link rel="canonical">` without pulling this file's Supabase client into the
+ * client bundle) and re-exported here, where sitemap consumers expect it.
  */
-export const SITE_URL = "https://na9ranal3ab.tn";
+export { SITE_URL } from "@/shared/constants/site";
+import { SITE_URL } from "@/shared/constants/site";
 
 type SitemapClient = ReturnType<typeof createPublicSupabaseClient>;
 
