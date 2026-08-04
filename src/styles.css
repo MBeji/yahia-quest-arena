@@ -924,9 +924,28 @@ html:not(.reference) .lesson-figure__plate {
   unicode-bidi: isolate;
   text-align: center;
 }
-[dir="rtl"] .lesson-table {
-  direction: ltr;
-  unicode-bidi: isolate;
+/* Le tableau, lui, SUIT le sens de la page : en arabe la première colonne est à DROITE, donc
+   un lecteur ouvre la ligne sur le « # » et la ferme sur la dernière colonne. Il a porté un
+   `direction: ltr` qui inversait l'ordre des colonnes de tous les cours arabes (on lisait la
+   ligne à l'envers) et qui ne protégeait rien de plus : la notation tient par elle-même —
+   `isolateLtrRunsHtml` enveloppe déjà chaque formule en ligne dans des isolats Unicode
+   (LRI…PDI, `src/shared/lib/bidi.ts`, indépendants du CSS), les blocs `$$ … $$` gardent leur
+   propre règle ci-dessus, et la feuille de style UA isole déjà chaque cellule en bidi.
+   Ne pas réintroduire de `direction` ici — c'est l'ordre des colonnes qu'il pilote.
+
+   Reste le cas que `direction: ltr` masquait vraiment : une cellule de notation PURE
+   (`√50 = √(25 × 2)`, `5√2`) que `isolateLtrRunsHtml` ne touche pas, faute d'arabe contre
+   quoi découper un run. Sans strong character, elle héritait du RTL et se lisait à l'envers
+   (`(2 × 25)√ = 50√`). `unicode-bidi: plaintext` fait décider CHAQUE cellule par son premier
+   caractère fort : arabe → RTL, notation nue → LTR. L'ordre des colonnes, lui, reste celui
+   du tableau. */
+[dir="rtl"] .lesson-table td {
+  unicode-bidi: plaintext;
+  /* `plaintext` fait résoudre la direction cellule par cellule, donc `text-align: start` —
+     le défaut — alignerait la cellule de notation à gauche et sa voisine arabe à droite,
+     dans la même colonne. On fixe le bord : une colonne d'un tableau arabe s'aligne à
+     droite, que la cellule porte de la prose ou une formule. */
+  text-align: right;
 }
 
 /* =====================================================

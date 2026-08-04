@@ -141,6 +141,37 @@ describe("renderLesson", () => {
       const result = html(md);
       expect(result).not.toContain("<!--table-sep-->");
     });
+
+    // Le séparateur `|---|` coupait la série de `<tr>` consécutifs AVANT le wrap : l'en-tête
+    // partait dans SON propre `<table>`, le corps dans un second. Deux tables `display:block`
+    // côte à côte ne partagent aucune largeur de colonne — d'où l'en-tête ratatiné à gauche
+    // au-dessus d'un corps pleine largeur, vu en prod sur un cours (tableau des fardhs).
+    it("keeps the header row in the SAME table as the body rows", () => {
+      const md = "| H1 | H2 |\n|---|---|\n| D1 | D2 |\n| D3 | D4 |";
+      const result = html(md);
+      expect(result.match(/<table class="lesson-table">/g)).toHaveLength(1);
+      // Les trois lignes vivent dans LA table — `tbody` est ajouté par DOMPurify, pas par nous.
+      const table = result.match(/<table class="lesson-table">([\s\S]*?)<\/table>/)?.[1] ?? "";
+      expect(table).toContain("<tr><td>H1</td><td>H2</td></tr>");
+      expect(table).toContain("<tr><td>D1</td><td>D2</td></tr>");
+      expect(table).toContain("<tr><td>D3</td><td>D4</td></tr>");
+    });
+
+    // Corollaire du même défaut : `.lesson-table tr:first-child td` peint l'en-tête. Avec la
+    // table coupée en deux, la PREMIÈRE ligne de données était aussi un `tr:first-child` et
+    // héritait du fond d'en-tête (ligne « النيّة » surlignée dans la capture).
+    it("leaves a single first row to carry the header styling", () => {
+      const md = "| H1 | H2 |\n|---|---|\n| D1 | D2 |\n| D3 | D4 |";
+      const rows = html(md).split("<tr>").length - 1;
+      expect(rows).toBe(3);
+      expect(html(md).indexOf("<tr><td>D1")).toBeGreaterThan(html(md).indexOf("<tr><td>H1"));
+    });
+
+    it("still separates two tables split by a blank line", () => {
+      const md = "| A | B |\n|---|---|\n| 1 | 2 |\n\n| C | D |\n|---|---|\n| 3 | 4 |";
+      const result = html(md);
+      expect(result.match(/<table class="lesson-table">/g)).toHaveLength(2);
+    });
   });
 
   describe("Paragraphs", () => {
