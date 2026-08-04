@@ -206,8 +206,9 @@ function renderChunk(lines: string[], ctx: Ctx): string {
         .filter(Boolean)
         .map((c) => c.trim());
       if (cells.every((c) => /^[-:]+$/.test(c))) return "<!--table-sep-->";
-      const tag = "td";
-      return `<tr>${cells.map((c) => `<${tag}>${c}</${tag}>`).join("")}</tr>`;
+      // Toutes les cellules naissent `<td>` : à ce stade on traite une ligne isolée, et rien
+      // ne dit encore laquelle est l'en-tête. C'est le séparateur, plus bas, qui le désigne.
+      return `<tr>${cells.map((c) => `<td>${c}</td>`).join("")}</tr>`;
     })
     // Lists (simple)
     .replace(/^- (.+)$/gm, '<li class="lesson-li">$1</li>')
@@ -218,6 +219,18 @@ function renderChunk(lines: string[], ctx: Ctx): string {
   // dans SA propre `<table>` et le corps dans une seconde. Deux tables `display:block`
   // voisines ne partagent aucune largeur de colonne — en-tête ratatiné au-dessus d'un corps
   // pleine largeur — et `tr:first-child td` peint alors aussi la première ligne de données.
+  //
+  // Il désigne au passage la ligne qu'il suit comme l'EN-TÊTE : ses cellules deviennent des
+  // `<th scope="col">`. Sans ça un lecteur d'écran annonce un tableau sans en-tête et ne
+  // rattache aucune valeur à sa colonne — le fond violet ne parle qu'aux voyants. On s'en
+  // tient à `th` : ajouter `thead`/`tbody` obligerait à élargir l'allowlist du sanitize,
+  // alors que `scope` suffit à porter l'information (et que DOMPurify pose déjà un `tbody`).
+  html = html.replace(
+    /(<tr>.*?<\/tr>)\n?<!--table-sep-->\n?/g,
+    (_match, headerRow: string) =>
+      `${headerRow.replace(/<td>/g, '<th scope="col">').replace(/<\/td>/g, "</th>")}\n`,
+  );
+  // Un séparateur orphelin (tableau malformé, sans ligne au-dessus) disparaît quand même.
   html = html.replace(/<!--table-sep-->\n?/g, "");
   // Wrap consecutive <tr> in table
   html = html.replace(/((?:<tr>.*<\/tr>\n?)+)/g, '<table class="lesson-table">$1</table>');
@@ -320,8 +333,10 @@ function finalize(body: string, figures: string[], lang: ContentLang): string {
           "figcaption",
         ],
         // `role`/`tabindex`/`aria-label` rendent la figure agrandissable au clavier.
-        // Trois attributs INERTES : ils ne peuvent porter aucun script.
-        ALLOWED_ATTR: ["class", "id", "dir", "role", "tabindex", "aria-label"],
+        // Trois attributs INERTES : ils ne peuvent porter aucun script. `scope` rejoint la
+        // liste pour la même raison — il rattache un `<th>` à sa colonne pour les lecteurs
+        // d'écran, et ne peut rien exécuter.
+        ALLOWED_ATTR: ["class", "id", "dir", "role", "tabindex", "aria-label", "scope"],
       })
     : html;
 
