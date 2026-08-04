@@ -132,7 +132,7 @@ describe("renderLesson", () => {
       const md = "| A | B |\n|---|---|\n| 1 | 2 |";
       const result = html(md);
       expect(result).toContain('<table class="lesson-table">');
-      expect(result).toContain("<td>A</td>");
+      expect(result).toContain('<th scope="col">A</th>');
       expect(result).toContain("<td>1</td>");
     });
 
@@ -152,25 +152,51 @@ describe("renderLesson", () => {
       expect(result.match(/<table class="lesson-table">/g)).toHaveLength(1);
       // Les trois lignes vivent dans LA table — `tbody` est ajouté par DOMPurify, pas par nous.
       const table = result.match(/<table class="lesson-table">([\s\S]*?)<\/table>/)?.[1] ?? "";
-      expect(table).toContain("<tr><td>H1</td><td>H2</td></tr>");
+      expect(table).toContain('<tr><th scope="col">H1</th><th scope="col">H2</th></tr>');
       expect(table).toContain("<tr><td>D1</td><td>D2</td></tr>");
       expect(table).toContain("<tr><td>D3</td><td>D4</td></tr>");
     });
 
-    // Corollaire du même défaut : `.lesson-table tr:first-child td` peint l'en-tête. Avec la
+    // Corollaire du même défaut : le fond d'en-tête se posait sur `tr:first-child`. Avec la
     // table coupée en deux, la PREMIÈRE ligne de données était aussi un `tr:first-child` et
-    // héritait du fond d'en-tête (ligne « النيّة » surlignée dans la capture).
+    // héritait de ce fond (ligne « النيّة » surlignée dans la capture).
     it("leaves a single first row to carry the header styling", () => {
       const md = "| H1 | H2 |\n|---|---|\n| D1 | D2 |\n| D3 | D4 |";
       const rows = html(md).split("<tr>").length - 1;
       expect(rows).toBe(3);
-      expect(html(md).indexOf("<tr><td>D1")).toBeGreaterThan(html(md).indexOf("<tr><td>H1"));
+      expect(html(md).indexOf("<tr><td>D1")).toBeGreaterThan(html(md).indexOf("<tr><th scope"));
     });
 
     it("still separates two tables split by a blank line", () => {
       const md = "| A | B |\n|---|---|\n| 1 | 2 |\n\n| C | D |\n|---|---|\n| 3 | 4 |";
       const result = html(md);
       expect(result.match(/<table class="lesson-table">/g)).toHaveLength(2);
+      // Chaque table a SON en-tête — le second séparateur promeut la ligne « C | D ».
+      expect(result.match(/<th scope="col">/g)).toHaveLength(4);
+    });
+
+    // La ligne de séparation est ce qui DÉSIGNE l'en-tête. Sans elle, pas d'en-tête : la
+    // position d'une ligne ne dit pas son rôle, et un `<th>` posé au jugé mentirait au
+    // lecteur d'écran.
+    it("emits no header cell when the table has no separator row", () => {
+      const result = html("| A | B |\n| 1 | 2 |");
+      expect(result).toContain('<table class="lesson-table">');
+      expect(result).not.toContain("<th");
+      expect(result).toContain("<td>A</td>");
+    });
+
+    // `scope` rattache la colonne pour un lecteur d'écran — il ne sert à rien s'il tombe au
+    // sanitize, et l'allowlist de DOMPurify le rejetait jusqu'ici.
+    it("keeps scope through the sanitize step", () => {
+      const result = html("| H1 | H2 |\n|---|---|\n| D1 | D2 |");
+      expect(result).toContain('scope="col"');
+      expect(result.match(/<th scope="col">/g)).toHaveLength(2);
+    });
+
+    it("drops an orphan separator with no row above it", () => {
+      const result = html("|---|---|\n| 1 | 2 |");
+      expect(result).not.toContain("<!--table-sep-->");
+      expect(result).not.toContain("<th");
     });
   });
 
