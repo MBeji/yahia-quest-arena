@@ -213,9 +213,14 @@ function renderChunk(lines: string[], ctx: Ctx): string {
     .replace(/^- (.+)$/gm, '<li class="lesson-li">$1</li>')
     .replace(/^(\d+)\. (.+)$/gm, '<li class="lesson-li lesson-oli">$2</li>');
 
+  // Le séparateur d'alignement (`|---|`) tombe AVANT le wrap, et l'ordre est tout le sujet :
+  // tant qu'il reste sur sa ligne, il coupe la série de `<tr>` consécutifs, l'en-tête part
+  // dans SA propre `<table>` et le corps dans une seconde. Deux tables `display:block`
+  // voisines ne partagent aucune largeur de colonne — en-tête ratatiné au-dessus d'un corps
+  // pleine largeur — et `tr:first-child td` peint alors aussi la première ligne de données.
+  html = html.replace(/<!--table-sep-->\n?/g, "");
   // Wrap consecutive <tr> in table
   html = html.replace(/((?:<tr>.*<\/tr>\n?)+)/g, '<table class="lesson-table">$1</table>');
-  html = html.replace(/<!--table-sep-->\n?/g, "");
 
   // Wrap consecutive ordered <li> (class includes "lesson-oli") in <ol>
   html = html.replace(
