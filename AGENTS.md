@@ -234,5 +234,11 @@ this repo (this file, `STATUS.md`, `docs/agents/`) — not only in a tool's priv
   (loads the real prod bundle in Chromium — the only tier that executes prod-gated client
   code). A green local gate does not guarantee a green CI. The **content** gates are no longer
   part of it: they run in the private repo's Content CI (étude 24).
+- **`audit:deps` n'est pas hermétique** : il interroge le registre au moment du run, donc à
+  lockfile constant le même commit passe le matin et échoue l'après-midi, dès qu'un avis
+  sort. `verify` rougit alors sur une PR dont le diff n'a pas touché aux dépendances — et
+  c'est **toute la file** qui est bloquée, pas elle (2026-08-04, `fast-uri`, #712). Réflexe :
+  `git diff origin/main HEAD -- package.json package-lock.json` (vide ⇒ ce n'est pas toi),
+  puis bump minimal (`npm audit fix --package-lock-only --omit=dev`) en commit séparé.
 - Coverage is scoped to owned code (`features/`, `shared/`, `lib/`, `hooks/`) — vendored UI,
   route glue, and generated files are excluded by design; don't widen `include` to dilute it.
