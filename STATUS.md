@@ -211,8 +211,11 @@ sauvetage #374 / #376 et les transcriptions #348 sont **mergées** depuis les 12
 > La première ligne prenable de toute la roadmap est **C4bis** — le pilote de tagging des
 > misconceptions sur `math` 9ᵉ, un travail de **contenu** au dépôt privé. Il allume **quatre
 > lots déjà mergés ici** (A1.2a, A1.2b, « m'entraîner », le terme misconception d'A1.1).
-> Ensuite : é07 lot 3, é23 lot 5 (vidéos maths 9ᵉ), é16 vague A (1ère sec), campagnes
-> d'illustration é19/é21, é11 lots 0-2 (cible octobre, hors file V1).
+> Ensuite : é07 lot 3, é23 lot 5 (vidéos maths 9ᵉ), é16 vague A (1ère sec — **4 matières sur 5
+> en production au 2026-08-04** : math, physique, SVT et français ; seul l'**arabe** manque, et
+> sa fiche est `partielle`/`first-pass`, donc génération interdite tant que le محور 3 n'est pas
+> transcrit. La 1ère sec compte 6 matières en ligne, chimie et anglais s'étant ajoutés hors
+> vague A), campagnes d'illustration é19/é21, é11 lots 0-2 (cible octobre, hors file V1).
 
 **Ce qui attend un humain** (aucun agent ne peut le faire à sa place) :
 
