@@ -612,13 +612,17 @@ html.reference *:focus-visible {
   margin: 1rem 0;
   font-size: 0.9rem;
 }
-.lesson-content .lesson-table td {
+.lesson-content .lesson-table td,
+.lesson-content .lesson-table th {
   border: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
   padding: 0.5rem 0.75rem;
 }
-.lesson-content .lesson-table tr:first-child td {
+/* L'en-tête se peint sur le `<th>`, pas sur `tr:first-child` : la position ne dit pas le
+   rôle. Un tableau sans ligne de séparation n'a pas d'en-tête et ne doit pas en afficher. */
+.lesson-content .lesson-table th {
   background: color-mix(in oklab, var(--neon-violet) 12%, transparent);
   font-weight: 600;
+  text-align: inherit;
 }
 .lesson-content .lesson-math {
   display: block;
@@ -939,7 +943,8 @@ html:not(.reference) .lesson-figure__plate {
    (`(2 × 25)√ = 50√`). `unicode-bidi: plaintext` fait décider CHAQUE cellule par son premier
    caractère fort : arabe → RTL, notation nue → LTR. L'ordre des colonnes, lui, reste celui
    du tableau. */
-[dir="rtl"] .lesson-table td {
+[dir="rtl"] .lesson-table td,
+[dir="rtl"] .lesson-table th {
   unicode-bidi: plaintext;
   /* `plaintext` fait résoudre la direction cellule par cellule, donc `text-align: start` —
      le défaut — alignerait la cellule de notation à gauche et sa voisine arabe à droite,
