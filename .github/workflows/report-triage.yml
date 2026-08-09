@@ -28,7 +28,12 @@ name: Report triage (user-reported bugs)
 #     pre-gate below), which is the common case between real reports.
 #   • workflow_dispatch — manual button.
 #
-# Prereqs (the job SKIPS gracefully, staying green, while any is unset):
+# Prereqs (the job SKIPS gracefully, staying green, while any is UNSET — a
+# secret that is set but MALFORMED is a different animal and stops the run loud,
+# named by `export-reports.mjs`. The pre-flight below only tests non-emptiness,
+# which is why a `PROD_SUPABASE_URL` that had lost its `https://` walked past it
+# and left the triage red 6×/day from 2026-07-29 to 2026-08-09 behind
+# supabase-js's own message, naming neither the secret nor this workflow):
 #   • CLAUDE_CODE_OAUTH_TOKEN — same token as the other agent guards
 #     (`claude setup-token`).
 #   • PROD_SUPABASE_URL — https://<prod-ref>.supabase.co (API URL).
