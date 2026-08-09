@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Decide whether the regression-guard sweep really failed.
+"""Decide whether an agent guard's run really failed.
+
+Shared by every workflow that drives `claude-code-action`: regression-guard,
+report-triage and upgrade-guard here, plus content-audit in the private corpus
+repo, which checks this repo out for it.
 
 `anthropics/claude-code-action@v1` exits 0 even when Claude itself errored
 (e.g. a 401 auth failure: a single `result` event with is_error=true, $0, 1
@@ -52,6 +56,18 @@ def load_events(raw: str) -> list:
     return events
 
 
+def guard_name() -> str:
+    """Which guard is reporting? Four workflows share this script.
+
+    The message used to say "regression-guard sweep" no matter who called it, so
+    a broken content audit in the PRIVATE repo announced itself as a regression
+    sweep of the public one — the wrong repo, the wrong guard, and a wrong lead
+    for whoever reads the log. `GITHUB_WORKFLOW` already holds the calling
+    workflow's display name in Actions, so no caller has to pass anything.
+    """
+    return os.environ.get("GITHUB_WORKFLOW") or "the Claude guard"
+
+
 def main() -> int:
     path = sys.argv[1] if len(sys.argv) > 1 else ""
     if not path or not os.path.exists(path):
@@ -70,13 +86,13 @@ def main() -> int:
     result = results[-1]
     if result.get("is_error") is True:
         print(
-            "::error::regression-guard sweep failed at the Claude level:",
+            f"::error::{guard_name()} failed at the Claude level:",
             result.get("result", "(no message)"),
         )
         return 1
 
     print(
-        f"Sweep OK — is_error={result.get('is_error')}, "
+        f"{guard_name()} OK — is_error={result.get('is_error')}, "
         f"turns={result.get('num_turns')}, cost=${result.get('total_cost_usd')}"
     )
     return 0

@@ -55,6 +55,52 @@ export function assertProdReportSource(url) {
   );
 }
 
+/**
+ * Refuse a `SUPABASE_URL` that is not a URL at all — and say so by name.
+ *
+ * `assertProdReportSource` above answers "is this the right PROJECT?" and, by
+ * design, accepts a bare host or even the bare ref (`prodTargetReason` matches
+ * the ref as a substring). `createClient` answers a different question and is
+ * far stricter: it trims, then demands an explicit `http://`/`https://` scheme.
+ * A value can therefore clear the prod guard and still be unusable — and the
+ * only thing the operator sees is supabase-js's own message, which names
+ * neither the secret nor the workflow:
+ *
+ *     [reports] Export failed: Invalid supabaseUrl: Must be a valid HTTP or HTTPS URL.
+ *
+ * That is not hypothetical. Between 2026-07-29 14:35 and 2026-08-09 the
+ * `PROD_SUPABASE_URL` secret lost its scheme, and every scheduled triage failed
+ * on that one line — 6 runs a day, ~66 in all, on an unchanged tree (the run at
+ * 10:58 and the one at 14:35 were the SAME commit, a129d7de). The workflow's own
+ * pre-flight could not catch it: it only tests that the secret is non-empty, so
+ * a malformed value walks straight past it. Eleven days of user reports went
+ * untriaged behind an error that pointed at a library.
+ *
+ * So this check exists to name the culprit, not to repair it. Expanding a bare
+ * host into `https://…` would be guessing at the operator's intent and would
+ * paper over a misconfigured secret — the same "plausible but wrong" failure
+ * `assertProdReportSource` was written to prevent. A loud, precise stop is the
+ * whole point.
+ *
+ * The rule mirrors supabase-js's own (trim, then require the scheme) so the two
+ * cannot drift apart and re-open this exact gap.
+ *
+ * @param {string} url the `SUPABASE_URL` this run would hand to `createClient`
+ * @returns {string} the trimmed url, when it is usable
+ * @throws {Error} when it carries no http(s) scheme
+ */
+export function assertUsableSupabaseUrl(url) {
+  const trimmed = String(url).trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  throw new Error(
+    `[reports] Refusing to export: SUPABASE_URL is not a usable URL — it carries no ` +
+      `http(s):// scheme (got ${JSON.stringify(url)}). ` +
+      `Expected the full API URL, scheme included: https://${PROD_SUPABASE_REF}.supabase.co ` +
+      `— a bare host or a bare project ref clears the production guard above and then ` +
+      `dies inside supabase-js. In CI, fix the PROD_SUPABASE_URL secret of report-triage.yml.`,
+  );
+}
+
 /** Shape a raw content_reports row (with its joined exercise) for the export. */
 export function flattenContentReport(row) {
   return {
@@ -118,15 +164,19 @@ async function main() {
     process.exit(1);
   }
 
+  // Right project first (the safety property), then usable at all (well-formedness):
+  // a wrong project must be named as such whether or not it carries a scheme.
+  let apiUrl;
   try {
     assertProdReportSource(url);
+    apiUrl = assertUsableSupabaseUrl(url);
   } catch (error) {
     console.error(error instanceof Error ? error.message : String(error));
     process.exit(1);
   }
 
   const { createClient } = await import("@supabase/supabase-js");
-  const supabase = createClient(url, serviceKey, { auth: { persistSession: false } });
+  const supabase = createClient(apiUrl, serviceKey, { auth: { persistSession: false } });
 
   const [bugs, contents] = await Promise.all([
     supabase
