@@ -9,8 +9,89 @@
 > phased roadmap at the end; this doc is the source of truth for the _why_ behind
 > each one. Companion harness: [`perf/README.md`](../perf/README.md).
 >
-> **Date.** 2026-06-30. Re-run the audit when the catalogue or user base grows an
+> **Date.** Audited 2026-06-30 · **findings re-verified against the code on
+> 2026-08-10** (§0). Re-run the audit when the catalogue or user base grows an
 > order of magnitude.
+
+---
+
+## 0. Verified status — 2026-08-10 (`main` à #716)
+
+> **Read this before §3.** The audit below is the 2026-06-30 text, kept for the
+> _why_. Six weeks of delivery closed a third of it, and **one CRITICAL finding
+> turned out to rest on a false premise**. Every line here was re-read in the
+> code on 2026-08-10 — the rule `docs/dette-technique.md` already applies to code
+> debt, applied to perf: _on n'inscrit ici qu'un constat dont on a re-lu la ligne_.
+
+### Closed since the audit (verified, with the proof)
+
+| ID           | Closed by                                                                                                                |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| **H1**       | `20260630170000_global_leaderboard_materialized.sql` — the global board is materialized like the subject one             |
+| **H3**       | first-attempt `COUNT(*)` → `EXISTS`; survives the 3 later redefinitions of `submit_exercise_attempt` (…`27120000`)       |
+| **H4**       | `idx_attempts_user_exercise` created in `20260630140000_perf_attempts_index_and_first_attempt_exists.sql`                |
+| **H2-media** | `getChapterLesson` selects a `has_lesson` boolean, no longer sibling bodies (`quest.server.ts:435-437`)                  |
+| **H3-fe**    | `renderMarkdown` memoized (`lesson-reader.tsx:98`)                                                                       |
+| **M4**       | `getDashboard` aggregates moved to the `get_user_subject_stats` RPC (`GROUP BY subject_id`)                              |
+| **M1-fe**    | **closed by this pass** — `vendor-radix`/`vendor-icons`/`vendor-three` now have bundle budgets (9 chunks guarded, was 6) |
+
+### C-1 — RETIRED: the premise was wrong
+
+The audit ranked _« hoist the auth client / local JWT verify »_ as the **#1
+highest-ROI move**, on the premise that a fresh Supabase client per server
+function leaves «supabase-js's JWKS cache empty each call». **That is not true of
+the version we ship** (`@supabase/supabase-js` 2.111):
+
+- auth-js keeps the JWKS in a **module-level** map (`GLOBAL_JWKS`), keyed by
+  `storageKey`, which supabase-js derives from the project ref
+  (`sb-<ref>-auth-token`, `dist/index.mjs:680`). Every per-request client is
+  built from the same `SUPABASE_URL` → they all share **one** cache entry,
+  TTL 10 min. Creating the client costs no I/O.
+- Hoisting is also **unsafe**: the per-request client carries the caller's bearer
+  token, so a module-scope instance would leak one user's credentials into
+  another's request.
+
+Proven, not asserted: `auth-middleware.jwks-cache.test.ts` mints a real ES256
+token and verifies it through **two independently created clients** — the JWKS
+endpoint is hit **once**. If a future upgrade moves the cache back onto the
+instance, that test goes red and C-1 comes back.
+
+**What actually decides the per-request cost** is the project's JWT signing
+algorithm (`getClaims`, `GoTrueClient.js:5342-5352`):
+
+- **asymmetric** (ES256/RS256, `kid` present) → local WebCrypto verify, network
+  only on a JWKS miss (≤ 1 per 10 min per instance). Nothing to fix.
+- **symmetric** (legacy HS256 secret) → falls back to `getUser(token)`, i.e. **a
+  full Auth round-trip on every one of the ~33 server fns** — and no amount of
+  client hoisting changes that. The fix would be migrating the project to
+  asymmetric signing keys.
+
+→ **Action is a 30-second dashboard check, not code**: read the project's JWT
+signing key type in Supabase. Only if it is still symmetric does a CRITICAL
+finding exist here — and its remedy is the key migration.
+
+### Still open (re-verified 2026-08-10)
+
+| ID                  | Evidence today                                                                                               | Sev  |
+| ------------------- | ------------------------------------------------------------------------------------------------------------ | ---- |
+| **C1**              | **71** un-wrapped `auth.uid()` inside `CREATE POLICY` bodies across 10 migrations (only 12 wrapped)          | CRIT |
+| **C1-fe**           | **zero** `loader` / `ensureQueryData` / `prefetchQuery` in `src/routes/` — the waterfall is intact           | CRIT |
+| **C2-fe**           | `hero-warrior.jpg` still **245 614 B**, raw `<img>`, no dimensions/`srcset` (`public-landing.tsx:21`)        | CRIT |
+| **H2**              | dungeon pick still `ORDER BY random()` (`20260720200000_dungeon_scoped_to_parcours.sql:174`)                 | HIGH |
+| **H2-fe**           | `provider.tsx` still imports `en`/`fr`/`ar` statically — 123 KB i18n chunk ships all three                   | HIGH |
+| **H-1 / H-3 / H-2** | infra unchanged: single `arn1` serverless fn, no edge cache on the public catalogue                          | HIGH |
+| **M-1**             | still no RUM / no server-fn timing / no LCP budget — the blind spot that makes all of the above unmeasurable | MED  |
+
+**M2, M3, M5, L-\*** were not re-verified in this pass; treat their 2026-06-30
+status as unconfirmed rather than current.
+
+### New findings from this pass
+
+| ID     | Finding                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Sev  |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| **N1** | **`npm ci` fails on Node 22** — the documented dev runtime. #716 (Dependabot, undici) dropped the nested `vite-tsconfig-paths/node_modules/typescript@5.9.3` from the lock; `tsconfck` peer-needs `typescript@^5`, which root `typescript@6.0.3` does not satisfy. npm 11 resolves it, npm 10 (shipped with Node 22) dies with `EUSAGE`. `.nvmrc` says 24, CI says 24, AGENTS.md said 22. **Unverified and important: whether Vercel's _build_ image runs npm ≥ 11** — if it does not, deploys have been failing since 2026-08-09 | HIGH |
+| **N2** | `auth-middleware.ts` carried a false _"automatically generated. Do not edit it directly."_ header — nothing generates it and `guard-generated.mjs` does not list it. It sat on the hottest path in the app and deterred exactly the inspection that retired C-1. **Fixed in this pass**                                                                                                                                                                                                                                           | MED  |
+| **N3** | Current `main` (`0ea9135`) has **no `ci.yml` run at all** — the Dependabot squash landed without a post-merge CI pass                                                                                                                                                                                                                                                                                                                                                                                                             | MED  |
 
 ---
 
@@ -45,11 +126,15 @@ capture. The team currently cannot _see_ a p95 regression in production.
 
 **The three highest-ROI moves**, before any launch spike:
 
-| #   | Move                                                                        | Kills      | Effort |
-| --- | --------------------------------------------------------------------------- | ---------- | ------ |
-| 1   | Cache/local-verify the JWT (hoist the client, stop per-request `getClaims`) | C-1        | S      |
-| 2   | Materialize the global leaderboard + add `idx_attempts_user_exercise`       | H1, H4     | S–M    |
-| 3   | Edge-cache the public catalogue/landing + add SSR route loaders             | H-3, C1-fe | M      |
+> ⚠️ **Superseded on 2026-08-10 — see §0.** Move 1 rests on a premise that does
+> not hold (the JWKS cache is already shared; hoisting is useless _and_ unsafe),
+> and move 2 shipped. The current top three are in §0 / §6.
+
+| #   | Move                                                                        | Kills      | Effort | 2026-08-10      |
+| --- | --------------------------------------------------------------------------- | ---------- | ------ | --------------- |
+| 1   | Cache/local-verify the JWT (hoist the client, stop per-request `getClaims`) | C-1        | S      | ❌ retired (§0) |
+| 2   | Materialize the global leaderboard + add `idx_attempts_user_exercise`       | H1, H4     | S–M    | ✅ shipped      |
+| 3   | Edge-cache the public catalogue/landing + add SSR route loaders             | H-3, C1-fe | M      | ⬜ still open   |
 
 Plus stand up **RUM + slow-RPC timing** (M-1) so the rest is measurable, and run
 the load harness (`perf/`) against a seeded test project to put numbers on each.
@@ -184,15 +269,18 @@ gap**; CSP-nonce SSR locale shell avoids RTL FOUC.
 
 ### 3.3 Deploy / runtime / infra
 
-**C-1 · Fresh Supabase client + `getClaims` on _every_ server fn**
+**C-1 · Fresh Supabase client + `getClaims` on _every_ server fn** — ❌ **RETIRED
+2026-08-10, the premise is false. See §0 for the full account and the test that
+pins it.** _Original text, kept for the record:_
 `auth-middleware.ts:44-57`. The per-request client means supabase-js's JWKS cache
 is empty each call → `getClaims` re-bootstraps verification (JWKS fetch, or a
 legacy `GET /auth/v1/user` network round-trip) **before any business logic**, on
 ~all 33 server fns. At thousands of concurrent users this is the dominant latency
 and Auth-service load multiplier.
-→ **Fix:** hoist a module-scope client (the admin client already does this via a
-lazy Proxy in `client.server.ts:31-41`) and/or verify the JWT locally against a
-cached JWKS instead of constructing a client + calling `getClaims` per request.
+→ ~~**Fix:** hoist a module-scope client…~~ The JWKS cache is module-global and
+keyed by project ref, so per-request clients already share it; hoisting also
+leaks the caller's bearer token across requests. The real variable is the JWT
+signing algorithm — a project setting, not code (§0).
 
 **C-2 · Every write pays a second DB round-trip for the rate-limit RPC**
 `rate-limit.ts:45` → `check_rate_limit` does `advisory_xact_lock` + DELETE + COUNT
@@ -326,8 +414,13 @@ shippable and respects DoD §7 (additive migrations land before dependent code).
 ### Phase 0 — Make it measurable (do first, unblocks everything)
 
 - **M-1** RUM (web-vitals beacon) + server-fn timing logs + DB slow-query log. **M**
+  — _still the biggest gap: nothing measures p95 or LCP in production._
 - Run the load harness baseline campaign (§4) against a seeded test project. **M**
-- Add bundle budgets for the unbudgeted vendor chunks (M1-fe). **S**
+- ✅ **Done 2026-08-10** — bundle budgets for the unbudgeted vendor chunks
+  (M1-fe): `vendor-radix` 88 KB, `vendor-icons` 32 KB, `vendor-three` 900 KB,
+  set ~15 % above measured. 9 chunks guarded, was 6. ⚠️ Note the residual hole:
+  `check-bundle-budget.mjs` **skips** a budget whose chunk it cannot find, so a
+  renamed chunk silently stops being guarded.
 - ✅ **Done** — the load harness is wired into the automated suites: `perf:check`
   (harness parses + constants mirror the product) runs in the PR gate (`ci.yml`),
   and `perf.yml` runs `k6 inspect` + a `smoke` load test nightly (`nightly.yml`,
@@ -337,11 +430,21 @@ shippable and respects DoD §7 (additive migrations land before dependent code).
 
 ### Phase 1 — High-ROI, low-risk (pre-launch must-haves)
 
-- **C-1** Hoist the auth client / local JWT verify — kill per-request `getClaims`. **M**
-- **H4** Add `idx_attempts_user_exercise`; **H3** swap first-attempt `COUNT(*)`→`EXISTS`. **S**
-- **C1** Wrap `auth.uid()` → `(SELECT auth.uid())` across all RLS policies. **M**
-- **H2-media** Fix `getChapterLesson` sibling over-fetch (boolean, not body). **S**
-- **H3-fe** `useMemo` `renderMarkdown`; **C2-fe** responsive hero image. **S**
+_Status stamped 2026-08-10._
+
+- ✅ **Done** — **H4** `idx_attempts_user_exercise`; **H3** first-attempt
+  `COUNT(*)`→`EXISTS`; **H2-media** `getChapterLesson` boolean; **H3-fe**
+  `useMemo` `renderMarkdown`.
+- ❌ **Retired** — **C-1** hoist the auth client (§0: false premise, and unsafe).
+- ⬜ **Open, and now the top of the list:**
+  - **C1** Wrap `auth.uid()` → `(SELECT auth.uid())` across all RLS policies —
+    **71** occurrences still bare, across 10 migrations. **M** _(own PR: it is a
+    migration, and a wide one — DoD §7)_
+  - **C2-fe** Responsive hero image (245 KB JPG → WebP/AVIF + dimensions). **S**
+  - **N1** Settle the toolchain split (Node 22 vs 24 vs npm 11) — **verify the
+    Vercel build image first**. **S**
+  - **C-1bis** Read the project's JWT signing key type in the Supabase dashboard;
+    migrate to asymmetric keys if it is still a symmetric secret. **S** (config)
 
 ### Phase 2 — Scale the hotspots
 
@@ -369,26 +472,33 @@ shippable and respects DoD §7 (additive migrations land before dependent code).
 
 ## 7. Appendix — finding index
 
-| ID                                    | Tier    | Sev  | One-line                                                     |
-| ------------------------------------- | ------- | ---- | ------------------------------------------------------------ |
-| C1                                    | DB      | CRIT | per-row `EXISTS` + un-wrapped `auth.uid()` in `profiles` RLS |
-| C-1                                   | Infra   | CRIT | fresh client + `getClaims` per server fn                     |
-| C-2                                   | Infra   | CRIT | rate-limit DB round-trip before every write                  |
-| C1-fe                                 | FE      | CRIT | no SSR prefetch — client-side waterfall                      |
-| C2-fe                                 | FE      | CRIT | 245 KB unoptimized hero JPG, LCP                             |
-| H1                                    | DB      | HIGH | global leaderboard ranks all profiles per call               |
-| H2                                    | DB      | HIGH | dungeon `ORDER BY random()` over full join                   |
-| H3                                    | DB      | HIGH | unbounded per-user aggregates on write path                  |
-| H4                                    | DB      | HIGH | missing `attempts(user_id, exercise_id)` index               |
-| H-1                                   | Infra   | HIGH | single cold single-region SSR function                       |
-| H-2                                   | Infra   | HIGH | scaling load relocates to PostgREST/Auth                     |
-| H-3                                   | Infra   | HIGH | no edge/CDN cache for public catalogue                       |
-| H2-fe                                 | FE      | HIGH | all 3 i18n locales bundled eagerly                           |
-| H3-fe                                 | FE      | HIGH | `renderMarkdown` re-runs DOMPurify per render                |
-| H1-media                              | Content | HIGH | inline SVG ships on every question fetch                     |
-| H2-media                              | Content | HIGH | `getChapterLesson` over-fetches sibling markdown             |
-| M1–M5 (DB), M-1–M-3 (Infra), M1–M4-fe | mixed   | MED  | see §3                                                       |
-| L-\*                                  | mixed   | LOW  | see §3                                                       |
+_Status column stamped 2026-08-10 (§0). "?" = not re-verified in that pass._
+
+| ID                                        | Tier    | Sev  | One-line                                                     | Status       |
+| ----------------------------------------- | ------- | ---- | ------------------------------------------------------------ | ------------ |
+| C1                                        | DB      | CRIT | per-row `EXISTS` + un-wrapped `auth.uid()` in `profiles` RLS | ⬜ open (71) |
+| C-1                                       | Infra   | CRIT | fresh client + `getClaims` per server fn                     | ❌ retired   |
+| C-2                                       | Infra   | CRIT | rate-limit DB round-trip before every write                  | ? open       |
+| C1-fe                                     | FE      | CRIT | no SSR prefetch — client-side waterfall                      | ⬜ open      |
+| C2-fe                                     | FE      | CRIT | 245 KB unoptimized hero JPG, LCP                             | ⬜ open      |
+| H1                                        | DB      | HIGH | global leaderboard ranks all profiles per call               | ✅ closed    |
+| H2                                        | DB      | HIGH | dungeon `ORDER BY random()` over full join                   | ⬜ open      |
+| H3                                        | DB      | HIGH | unbounded per-user aggregates on write path                  | ✅ closed    |
+| H4                                        | DB      | HIGH | missing `attempts(user_id, exercise_id)` index               | ✅ closed    |
+| H-1                                       | Infra   | HIGH | single cold single-region SSR function                       | ⬜ open      |
+| H-2                                       | Infra   | HIGH | scaling load relocates to PostgREST/Auth                     | ⬜ open      |
+| H-3                                       | Infra   | HIGH | no edge/CDN cache for public catalogue                       | ⬜ open      |
+| H2-fe                                     | FE      | HIGH | all 3 i18n locales bundled eagerly                           | ⬜ open      |
+| H3-fe                                     | FE      | HIGH | `renderMarkdown` re-runs DOMPurify per render                | ✅ closed    |
+| H1-media                                  | Content | HIGH | inline SVG ships on every question fetch                     | ? open       |
+| H2-media                                  | Content | HIGH | `getChapterLesson` over-fetches sibling markdown             | ✅ closed    |
+| M1-fe                                     | FE      | MED  | vendor chunks with no bundle budget                          | ✅ closed    |
+| M4                                        | DB      | MED  | `getDashboard` aggregates a full attempt history in JS       | ✅ closed    |
+| **N1**                                    | Tooling | HIGH | `npm ci` fails on Node 22 — lock needs npm ≥ 11              | ⬜ open      |
+| **N2**                                    | Quality | MED  | false "generated" header on `auth-middleware.ts`             | ✅ closed    |
+| **N3**                                    | CI      | MED  | current `main` has no `ci.yml` run                           | ⬜ open      |
+| M1–M3, M5 (DB), M-1–M-3 (Infra), M2–M4-fe | mixed   | MED  | see §3                                                       | ? unverified |
+| L-\*                                      | mixed   | LOW  | see §3                                                       | ? unverified |
 
 _No application code was modified by the audit. Remediations ship as separate,
 reviewable changes per the roadmap._

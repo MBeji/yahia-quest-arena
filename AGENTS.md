@@ -26,7 +26,12 @@ surface may say "premium/abonnement/payant" during this phase.
 
 **Stack**: Vite 8 · TanStack Start (SSR + file routing + server fns) · React 19 · TanStack
 Query 5 · Supabase (Postgres + Auth + RLS) · Tailwind 4 / Radix-shadcn · deploys to **Vercel**
-(push to `main` = prod). npm (Node 22). Tests: Vitest 4 + Testing Library (unit), Playwright (e2e).
+(push to `main` = prod). Tests: Vitest 4 + Testing Library (unit), Playwright (e2e).
+
+⚠️ **Toolchain** (2026-08-10) : dev + CI en **Node 24** (`.nvmrc`, `ci.yml`), fonction SSR en
+prod en **`nodejs22.x`** (`build-vercel.mjs`) — trois chiffres, ne pas les confondre. Le lockfile
+**exige npm ≥ 11** : sur Node 22 (npm 10) `npm ci` meurt en `EUSAGE` (« Missing: typescript@5.9.3 »),
+`tsconfck` voulant un `typescript@^5` imbriqué. Ce fichier disait « npm (Node 22) » : c'était faux.
 
 ## Essential commands
 
