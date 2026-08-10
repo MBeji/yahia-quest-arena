@@ -153,8 +153,28 @@ mérite d'être corrigée (2026-08-03) :
 
 ## 6. Travaux en vol
 
-**Au 2026-08-03 : rien en vol.** Vérifié sur les deux dépôts — **aucune PR ouverte** ni ici ni
-au privé, arbre propre, `main` à **#709**.
+**Au 2026-08-10 : une PR en vol** — **#717**, lot 1 du **chantier qualité & performance**
+(en draft volontaire : elle touche `AGENTS.md`, canonique). `main` est à **#716**.
+
+Ce que ce lot change pour la suite, et qu'il faut savoir avant de reprendre un axe perf :
+
+- **`docs/performance-audit.md` a un §0 « Verified status » daté du 2026-08-10.** L'audit du
+  2026-06-30 servait encore de plan de route alors qu'un tiers était soldé sans que la case
+  soit cochée. **Lire le §0 avant le §3** : le corps du document reste le _pourquoi_, il n'est
+  plus l'état.
+- **Le « geste #1 le plus rentable » de l'audit (C-1) est retiré, sa prémisse était fausse** —
+  le cache JWKS de supabase-js est déjà partagé entre les clients par requête (map de module
+  clé par ref de projet), et hoister le client ferait fuiter le jeton d'un utilisateur dans la
+  requête d'un autre. Un test épingle le comportement. Ce qui reste à trancher est un **réglage
+  de console** : le type de clé de signature JWT du projet (symétrique ⇒ un aller-retour Auth
+  par server fn, qu'aucun code ne corrige).
+- ⚠️ **`npm ci` échoue sur Node 22**, le runtime que ce dépôt documentait (`.nvmrc` dit 24).
+  **À vérifier par un humain** : la version de npm de l'image de **build** Vercel — si elle est
+  < 11, les déploiements échouent depuis le 2026-08-09.
+- **Restes perf, chacun sa PR** (ce sont des migrations, DoD §7) : `C1` (71 `auth.uid()` nus
+  dans des policies), `H2` (`ORDER BY random()` du donjon). Puis `C2-fe` (JPG héros de 245 Ko),
+  `C1-fe` (zéro loader SSR), `M-1` (aucune mesure de p95/LCP en prod — le trou qui rend tout le
+  reste invérifiable).
 
 **Issues ouvertes (3 ici, 1 au privé)** :
 
