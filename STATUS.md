@@ -179,9 +179,18 @@ Ce que ce lot change pour la suite, et qu'il faut savoir avant de reprendre un a
   ⚠️ **Règle à retenir** : ce dont la vérité vit en base se compte **en base**, pas dans le SQL
   du dépôt. L'équivalence sémantique est **prouvée** (deux bases ne différant que par cette
   migration, expressions déparsées identiques au wrapper près), pas affirmée.
-- **Restes perf** : `H2` (`ORDER BY random()` du donjon, une migration → sa PR), puis `C2-fe`
-  (JPG héros de 245 Ko), `C1-fe` (zéro loader SSR), `M-1` (aucune mesure de p95/LCP en prod —
-  le trou qui rend tout le reste invérifiable).
+- **`C2-fe` est soldé** : le héros décoratif part en AVIF/WebP `<picture>`, différé et dimensionné
+  — **245 Ko → 37 Ko** sur les viewports réalistes. Au passage, l'audit se trompait de diagnostic :
+  ce n'était **pas** l'élément LCP, il est dans la **dernière** section de la page.
+- **`H2` est MESURÉ, pas corrigé** — et c'est délibéré. Le tirage du donjon coûte **~13 ms** à
+  20 k questions (≈ la prod) et **~140 ms** à 200 k, linéairement, **par lot**. Aucun index n'y
+  peut rien : `ORDER BY random()` doit lire toutes les lignes candidates. Or **chaque remède
+  change la distribution des questions vues par l'élève** (clé aléatoire statique ⇒ les mêmes
+  questions arrivent en grappe ; pool pré-mélangé par run ; tirage par exercice ⇒ sur-pondère les
+  exercices courts). C'est un **arbitrage produit**, pas une optimisation mécanique : à reprendre
+  quand le corpus dépasse ~50 k questions, en énonçant d'abord la garantie de distribution voulue.
+- **Restes perf** : `C1-fe` (zéro loader SSR), `H2-fe` (i18n : les 3 locales embarquées),
+  `M-1` (aucune mesure de p95/LCP en prod — le trou qui rend tout le reste invérifiable).
 
 **Issues ouvertes (3 ici, 1 au privé)** :
 

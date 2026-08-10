@@ -76,8 +76,8 @@ finding exist here — and its remedy is the key migration.
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ---- |
 | ~~**C1**~~          | ✅ **closed 2026-08-10** — see below; the "71" first reported here was a count over migration _text_, not the live policy set | CRIT |
 | **C1-fe**           | **zero** `loader` / `ensureQueryData` / `prefetchQuery` in `src/routes/` — the waterfall is intact                            | CRIT |
-| **C2-fe**           | `hero-warrior.jpg` still **245 614 B**, raw `<img>`, no dimensions/`srcset` (`public-landing.tsx:21`)                         | CRIT |
-| **H2**              | dungeon pick still `ORDER BY random()` (`20260720200000_dungeon_scoped_to_parcours.sql:174`)                                  | HIGH |
+| ~~**C2-fe**~~       | ✅ **closed 2026-08-10** — AVIF/WebP `<picture>`, lazy, sized; and it was never the LCP element (see below)                   | CRIT |
+| **H2**              | dungeon pick still `ORDER BY random()` — **now measured**, see below (`20260720200000_dungeon_scoped_to_parcours.sql:174`)    | HIGH |
 | **H2-fe**           | `provider.tsx` still imports `en`/`fr`/`ar` statically — 123 KB i18n chunk ships all three                                    | HIGH |
 | **H-1 / H-3 / H-2** | infra unchanged: single `arn1` serverless fn, no edge cache on the public catalogue                                           | HIGH |
 | **M-1**             | still no RUM / no server-fn timing / no LCP budget — the blind spot that makes all of the above unmeasurable                  | MED  |
@@ -122,6 +122,70 @@ proven; the magnitude needs the §4 load campaign against a seeded project.
 
 **Not touched, deliberately**: `is_admin()` (5 call sites) is hoistable the same
 way; `is_parent_of_student(uid, row_column)` is row-dependent and is not.
+
+### H2 — measured 2026-08-10, deliberately NOT fixed yet
+
+The dungeon batch pick was rated HIGH "at the target scale, not today". It is now
+a number rather than a guess. Replayed chain on a real Postgres, synthetic corpus,
+worst case (`pool_scope = 'all'`, batch of 5):
+
+| corpus            | per batch | plan                                               |
+| ----------------- | --------- | -------------------------------------------------- |
+| 20 609 questions  | ~13 ms    | Seq Scan on **all** matching rows + top-N heapsort |
+| 200 609 questions | ~140 ms   | identical shape — **linear** in corpus size        |
+
+So: tolerable today (~18 700 questions in prod ⇒ ~13 ms), genuinely bad at the
+10× catalogue the roadmap targets — and it is paid **per batch**, i.e. repeatedly
+inside one dungeon run.
+
+**No index can fix this.** `ORDER BY random()` must materialise a random value for
+every matching row by construction; the top-N heapsort already avoids the full
+sort, and the scan is the irreducible part.
+
+**Why it is not fixed in this pass:** every real remedy changes _which questions a
+player sees_, which is a gameplay decision, not a mechanical optimisation:
+
+- **random-key column + index** (`questions.sample_key`, `WHERE sample_key >= random()
+ORDER BY sample_key LIMIT n`) — O(log n) with early termination, but the key is
+  static, so the same neighbours are drawn together: the same 5 questions would
+  recur as a clump. Also a schema change on a content-owned table.
+- **per-run shuffled pool** — draw the eligible pool once per run, batch out of it.
+  Preserves uniformity exactly and touches only dungeon tables, but restructures
+  the RPC and its "already assigned" logic.
+- **sample exercises, then questions** — scans the ~10× smaller `exercises` table,
+  but over-weights questions belonging to short exercises.
+
+→ **Next step is a design decision, not a patch.** Trigger point: revisit when the
+catalogue passes ~50 k questions, or sooner if a dungeon batch shows up in the
+§4 load campaign. Whoever takes it should state the distribution guarantee they
+intend to keep before touching the SQL.
+
+### C2-fe — CLOSED 2026-08-10, and it was never the LCP element
+
+The audit called the hero "the landing LCP element on mobile". Reading the markup
+says otherwise: it lives in the **last** section of the page (« apprends en
+jouant »), inside an `aspect-square` crop at `opacity-70`, with `alt=""` — it is
+the 3D canvas's Suspense fallback on desktop and the whole visual on mobile /
+reduced motion. It was never above the fold. The waste was real, the diagnosis
+was not: **245 KB of decorative, below-the-fold image fetched eagerly**.
+
+Fixed as a `<picture>`: AVIF + WebP at 960/1920 w, `sizes="(min-width: 1024px)
+480px, 100vw"` (the box is ~472 px on desktop — `object-cover` does the cropping,
+so the browser only needs to cover the square), plus `loading="lazy"`,
+`decoding="async"` and intrinsic `width`/`height`.
+
+| variant       | bytes      | vs original |
+| ------------- | ---------- | ----------- |
+| original JPEG | 245 614    | —           |
+| WebP 960      | 63 968     | **−74 %**   |
+| **AVIF 960**  | **37 493** | **−85 %**   |
+| WebP 1920     | 163 088    | −34 %       |
+| AVIF 1920     | 102 663    | −58 %       |
+
+Realistic viewports land on the 960 variants, so a mobile visitor fetches **37 KB
+instead of 245 KB** — and only once it scrolls near the bottom. The JPEG stays as
+the final `<img>` fallback; virtually no browser will fetch it. Pinned by a test
+that fails on a plain `<img src=….jpg>` regression.
 
 ### New findings from this pass
 
@@ -280,11 +344,14 @@ round-trips. On high-latency mobile this stacks auth-RTT → profile-RTT →
 data-RTT before first paint. TanStack Start's SSR-streamed loaders are unused.
 → **Fix:** move primary queries into route loaders via `queryClient.ensureQueryData`.
 
-**C2-fe · Hero image is a 245 KB unoptimized JPG in the JS graph**
+**C2-fe · Hero image is a 245 KB unoptimized JPG in the JS graph** — ✅ **CLOSED
+2026-08-10; and "LCP element" was wrong — it is the LAST section of the page.
+See §0.** _Original text, kept for the record:_
 `public-landing.tsx:18` imports `hero-warrior.jpg` (245 KB), rendered as raw
 `<img>` with no `width`/`height` (CLS), no `loading`/`decoding`, no `srcset`, no
-WebP/AVIF — the landing LCP element on mobile.
-→ **Fix:** responsive WebP/AVIF with dimensions; part of the media pipeline (H1-media).
+~~WebP/AVIF — the landing LCP element on mobile.~~
+→ **Fixed:** AVIF/WebP `<picture>` at 960/1920 w, lazy + `decoding="async"` +
+intrinsic dimensions. 245 KB → **37 KB** on realistic viewports.
 
 **H2-fe · All three i18n catalogs (FR/EN/AR) bundled eagerly** — `i18n` chunk,
 2,176 lines, every student downloads 2 unused languages (`provider.tsx:3-5`,
@@ -478,7 +545,8 @@ _Status stamped 2026-08-10._
   - ✅ **C1 done 2026-08-10** — `(SELECT auth.uid())` across all `public` RLS
     policies (`20260810120000_rls_initplan_wrap_auth_uid.sql`); equivalence proven
     by a two-database diff, see §0.
-  - **C2-fe** Responsive hero image (245 KB JPG → WebP/AVIF + dimensions). **S**
+  - ✅ **C2-fe done 2026-08-10** — AVIF/WebP `<picture>`, lazy + sized (245 KB → 37 KB
+    on realistic viewports); the audit's "LCP element" framing was wrong, see §0.
   - **N1** Settle the toolchain split (Node 22 vs 24 vs npm 11) — **verify the
     Vercel build image first**. **S**
   - **C-1bis** Read the project's JWT signing key type in the Supabase dashboard;
@@ -518,7 +586,7 @@ _Status column stamped 2026-08-10 (§0). "?" = not re-verified in that pass._
 | C-1                                       | Infra   | CRIT | fresh client + `getClaims` per server fn                     | ❌ retired   |
 | C-2                                       | Infra   | CRIT | rate-limit DB round-trip before every write                  | ? open       |
 | C1-fe                                     | FE      | CRIT | no SSR prefetch — client-side waterfall                      | ⬜ open      |
-| C2-fe                                     | FE      | CRIT | 245 KB unoptimized hero JPG, LCP                             | ⬜ open      |
+| C2-fe                                     | FE      | CRIT | 245 KB unoptimized hero JPG, LCP                             | ✅ closed    |
 | H1                                        | DB      | HIGH | global leaderboard ranks all profiles per call               | ✅ closed    |
 | H2                                        | DB      | HIGH | dungeon `ORDER BY random()` over full join                   | ⬜ open      |
 | H3                                        | DB      | HIGH | unbounded per-user aggregates on write path                  | ✅ closed    |
