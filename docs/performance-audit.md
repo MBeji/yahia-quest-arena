@@ -80,7 +80,7 @@ finding exist here — and its remedy is the key migration.
 | **H2**              | dungeon pick still `ORDER BY random()` — **now measured**, see below (`20260720200000_dungeon_scoped_to_parcours.sql:174`)    | HIGH |
 | **H2-fe**           | `provider.tsx` still imports `en`/`fr`/`ar` statically — 123 KB i18n chunk ships all three                                    | HIGH |
 | **H-1 / H-3 / H-2** | infra unchanged: single `arn1` serverless fn, no edge cache on the public catalogue                                           | HIGH |
-| **M-1**             | still no RUM / no server-fn timing / no LCP budget — the blind spot that makes all of the above unmeasurable                  | MED  |
+| **M-1**             | 🟠 **client RUM + slow server-fn timing landed 2026-08-10** (see below); the DB slow-query log is a Supabase setting          | MED  |
 
 **M2, M3, M5, L-\*** were not re-verified in this pass; treat their 2026-06-30
 status as unconfirmed rather than current.
@@ -186,6 +186,40 @@ Realistic viewports land on the 960 variants, so a mobile visitor fetches **37 K
 instead of 245 KB** — and only once it scrolls near the bottom. The JPEG stays as
 the final `<img>` fallback; virtually no browser will fetch it. Pinned by a test
 that fails on a plain `<img src=….jpg>` regression.
+
+### M-1 — mostly CLOSED 2026-08-10 (the code half)
+
+The audit's deepest complaint was that everything above is unfalsifiable: the
+team could see 500s but not p95 growth. Two of the three parts now exist.
+
+**Client RUM** (`src/shared/lib/web-vitals.ts`, armed in `__root.tsx`) — LCP,
+CLS, INP, FCP, TTFB, each with a good / needs-improvement / poor rating, sent
+once per page view as the `web_vitals` product event through the PostHog path
+that already exists. Dependency-free for the same reason `monitoring.ts` is:
+the index chunk has a hard 450 kB budget. Cost measured: **+1.5 kB** (438.52 →
+440.02 kB), where the `web-vitals` package would have been several times that.
+
+Two details that make the numbers trustworthy rather than merely present:
+
+- **CLS is the worst _session window_, not the running sum.** Summing every
+  shift over-reports long-lived pages, and a metric that reads worse than
+  reality gets ignored — which is the same as not having it.
+- **Nothing measured ⇒ nothing sent.** A row of nulls would drag every
+  dashboard average around.
+
+**Slow server-fn timing** (`auth-middleware.ts`) — every server fn already
+passes through that middleware, so it is the one place that can time all ~33
+without touching each. Only calls ≥ 1 s are logged, with the request **path**
+(never the query string, which can carry tokens), and the timing survives a
+throwing handler.
+
+**Still missing**: the DB slow-query log — a Supabase project setting, not code.
+And there is still no _budget_ on LCP (a Lighthouse CI would close that;
+`docs/dette-technique.md` tracks it).
+
+⚠️ The beacon only reports where product analytics is enabled — no PostHog key,
+no data. Verify a `web_vitals` event actually lands before trusting an empty
+dashboard as "no problems".
 
 ### New findings from this pass
 
@@ -518,8 +552,9 @@ shippable and respects DoD §7 (additive migrations land before dependent code).
 
 ### Phase 0 — Make it measurable (do first, unblocks everything)
 
-- **M-1** RUM (web-vitals beacon) + server-fn timing logs + DB slow-query log. **M**
-  — _still the biggest gap: nothing measures p95 or LCP in production._
+- 🟠 **M-1 mostly done 2026-08-10** — client RUM (LCP/CLS/INP/FCP/TTFB → PostHog,
+  +1.5 kB) and slow server-fn timing (≥ 1 s, in the auth middleware) shipped.
+  Remaining: the **DB slow-query log** (a Supabase setting) and an LCP _budget_.
 - Run the load harness baseline campaign (§4) against a seeded test project. **M**
 - ✅ **Done 2026-08-10** — bundle budgets for the unbudgeted vendor chunks
   (M1-fe): `vendor-radix` 88 KB, `vendor-icons` 32 KB, `vendor-three` 900 KB,

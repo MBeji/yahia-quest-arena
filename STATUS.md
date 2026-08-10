@@ -189,8 +189,13 @@ Ce que ce lot change pour la suite, et qu'il faut savoir avant de reprendre un a
   questions arrivent en grappe ; pool pré-mélangé par run ; tirage par exercice ⇒ sur-pondère les
   exercices courts). C'est un **arbitrage produit**, pas une optimisation mécanique : à reprendre
   quand le corpus dépasse ~50 k questions, en énonçant d'abord la garantie de distribution voulue.
-- **Restes perf** : `C1-fe` (zéro loader SSR), `H2-fe` (i18n : les 3 locales embarquées),
-  `M-1` (aucune mesure de p95/LCP en prod — le trou qui rend tout le reste invérifiable).
+- **`M-1` : la prod n'est plus aveugle.** RUM sans dépendance (`web-vitals.ts` : LCP, CLS, INP,
+  FCP, TTFB + notation, un envoi par page via PostHog, **+1,5 Ko** de bundle) et journalisation des
+  server fns lentes (≥ 1 s, dans le middleware d'auth — le seul point de passage commun aux ~33).
+  Restent le **slow-query log** de la base (réglage Supabase) et un _budget_ LCP opposable.
+  ⚠️ Le beacon ne remonte rien sans clé PostHog : vérifier qu'un événement `web_vitals` arrive
+  avant de lire un tableau de bord vide comme « tout va bien ».
+- **Restes perf** : `C1-fe` (zéro loader SSR), `H2-fe` (i18n : les 3 locales embarquées).
 
 **Issues ouvertes (3 ici, 1 au privé)** :
 

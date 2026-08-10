@@ -19,6 +19,22 @@ import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
 import { logger } from "@/shared/lib/logger";
 
+/**
+ * Above this, a server function is worth a log line. 1 s is deliberately well
+ * clear of a healthy call (a PostgREST round-trip from the same region is tens
+ * of ms), so the log stays a signal rather than a stream.
+ */
+const SLOW_SERVER_FN_MS = 1000;
+
+/** Request path without the query string, which can carry tokens. */
+function pathOf(request: { url?: string } | undefined): string {
+  try {
+    return request?.url ? new URL(request.url).pathname : "unknown";
+  } catch {
+    return "unknown";
+  }
+}
+
 export const requireSupabaseAuth = createMiddleware({ type: "function" }).server(
   async ({ next }) => {
     const SUPABASE_URL = process.env.SUPABASE_URL;
@@ -77,12 +93,26 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
       throw new Error("Unauthorized: No user ID found in token");
     }
 
-    return next({
-      context: {
-        supabase,
-        userId: data.claims.sub,
-        claims: data.claims,
-      },
-    });
+    // Slow server-fn timing (perf audit M-1, server half). Every server fn runs
+    // through this middleware, so it is the one place that can time all ~33
+    // without touching each. Only SLOW calls are logged: a line per call would
+    // cost more than it tells, and the question being answered is "which server
+    // fn is dragging p95", not "what happened".
+    const startedAt = Date.now();
+    try {
+      return await next({
+        context: {
+          supabase,
+          userId: data.claims.sub,
+          claims: data.claims,
+        },
+      });
+    } finally {
+      const durationMs = Date.now() - startedAt;
+      if (durationMs >= SLOW_SERVER_FN_MS) {
+        // Path only — never the query string, which can carry tokens.
+        logger.warn("Slow server function", { path: pathOf(request), durationMs });
+      }
+    }
   },
 );
