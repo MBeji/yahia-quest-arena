@@ -171,10 +171,17 @@ Ce que ce lot change pour la suite, et qu'il faut savoir avant de reprendre un a
 - ⚠️ **`npm ci` échoue sur Node 22**, le runtime que ce dépôt documentait (`.nvmrc` dit 24).
   **À vérifier par un humain** : la version de npm de l'image de **build** Vercel — si elle est
   < 11, les déploiements échouent depuis le 2026-08-09.
-- **Restes perf, chacun sa PR** (ce sont des migrations, DoD §7) : `C1` (71 `auth.uid()` nus
-  dans des policies), `H2` (`ORDER BY random()` du donjon). Puis `C2-fe` (JPG héros de 245 Ko),
-  `C1-fe` (zéro loader SSR), `M-1` (aucune mesure de p95/LCP en prod — le trou qui rend tout le
-  reste invérifiable).
+- **`C1` est soldé** (migration `20260810120000_rls_initplan_wrap_auth_uid.sql`) : les
+  `auth.uid()`/`auth.role()` nus des policies `public` sont hoistés en InitPlan. Le compte
+  annoncé d'abord (« 71 ») était un artefact de méthode — il comptait le **texte** des
+  migrations, donc deux fois toute policy recréée plus tard. Le vrai chiffre, lu dans
+  `pg_policies` après rejeu complet de la chaîne : **64 occurrences sur 35 policies**.
+  ⚠️ **Règle à retenir** : ce dont la vérité vit en base se compte **en base**, pas dans le SQL
+  du dépôt. L'équivalence sémantique est **prouvée** (deux bases ne différant que par cette
+  migration, expressions déparsées identiques au wrapper près), pas affirmée.
+- **Restes perf** : `H2` (`ORDER BY random()` du donjon, une migration → sa PR), puis `C2-fe`
+  (JPG héros de 245 Ko), `C1-fe` (zéro loader SSR), `M-1` (aucune mesure de p95/LCP en prod —
+  le trou qui rend tout le reste invérifiable).
 
 **Issues ouvertes (3 ici, 1 au privé)** :
 

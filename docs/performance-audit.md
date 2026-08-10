@@ -72,18 +72,56 @@ finding exist here — and its remedy is the key migration.
 
 ### Still open (re-verified 2026-08-10)
 
-| ID                  | Evidence today                                                                                               | Sev  |
-| ------------------- | ------------------------------------------------------------------------------------------------------------ | ---- |
-| **C1**              | **71** un-wrapped `auth.uid()` inside `CREATE POLICY` bodies across 10 migrations (only 12 wrapped)          | CRIT |
-| **C1-fe**           | **zero** `loader` / `ensureQueryData` / `prefetchQuery` in `src/routes/` — the waterfall is intact           | CRIT |
-| **C2-fe**           | `hero-warrior.jpg` still **245 614 B**, raw `<img>`, no dimensions/`srcset` (`public-landing.tsx:21`)        | CRIT |
-| **H2**              | dungeon pick still `ORDER BY random()` (`20260720200000_dungeon_scoped_to_parcours.sql:174`)                 | HIGH |
-| **H2-fe**           | `provider.tsx` still imports `en`/`fr`/`ar` statically — 123 KB i18n chunk ships all three                   | HIGH |
-| **H-1 / H-3 / H-2** | infra unchanged: single `arn1` serverless fn, no edge cache on the public catalogue                          | HIGH |
-| **M-1**             | still no RUM / no server-fn timing / no LCP budget — the blind spot that makes all of the above unmeasurable | MED  |
+| ID                  | Evidence today                                                                                                                | Sev  |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ---- |
+| ~~**C1**~~          | ✅ **closed 2026-08-10** — see below; the "71" first reported here was a count over migration _text_, not the live policy set | CRIT |
+| **C1-fe**           | **zero** `loader` / `ensureQueryData` / `prefetchQuery` in `src/routes/` — the waterfall is intact                            | CRIT |
+| **C2-fe**           | `hero-warrior.jpg` still **245 614 B**, raw `<img>`, no dimensions/`srcset` (`public-landing.tsx:21`)                         | CRIT |
+| **H2**              | dungeon pick still `ORDER BY random()` (`20260720200000_dungeon_scoped_to_parcours.sql:174`)                                  | HIGH |
+| **H2-fe**           | `provider.tsx` still imports `en`/`fr`/`ar` statically — 123 KB i18n chunk ships all three                                    | HIGH |
+| **H-1 / H-3 / H-2** | infra unchanged: single `arn1` serverless fn, no edge cache on the public catalogue                                           | HIGH |
+| **M-1**             | still no RUM / no server-fn timing / no LCP budget — the blind spot that makes all of the above unmeasurable                  | MED  |
 
 **M2, M3, M5, L-\*** were not re-verified in this pass; treat their 2026-06-30
 status as unconfirmed rather than current.
+
+### C1 — CLOSED 2026-08-10, and the count was wrong
+
+`20260810120000_rls_initplan_wrap_auth_uid.sql` wraps every bare `auth.uid()` /
+`auth.role()` in a `public` RLS policy as `(SELECT …)`, so the planner hoists it
+into an **InitPlan** (evaluated once per query) instead of re-evaluating it per
+candidate row. Supabase's own documented remedy.
+
+**The reported figure was an artefact of the method.** "71 occurrences across 10
+migrations" counted `CREATE POLICY` bodies in migration _files_ — which
+double-counts every policy a later migration dropped and recreated. Replaying
+the whole chain on a real Postgres and reading `pg_policies` gives the live
+state: **64 bare occurrences over 35 policies on 19 tables** (of 65 policies
+total). _Lesson for the next pass: for anything whose truth lives in the
+database, count in the database, not in the migration text._
+
+How it was made safe — worth reusing:
+
+1. The 35 `ALTER POLICY` statements are **generated from `pg_policies`** after a
+   full chain replay, not hand-written: they cannot mistranscribe an expression
+   nor resurrect a policy a later migration dropped.
+2. `ALTER POLICY` rewrites **in place** — nothing is dropped, so no window
+   exists where a table sits unprotected.
+3. **Semantic equivalence was proven, not asserted**: the chain was applied to
+   two databases differing only by this migration; strip the wrapper from both
+   and the deparsed `qual`/`with_check` of all 65 policies are **byte-identical**.
+   Bare occurrences 64 → 0.
+4. The plan confirms the hoist — `Filter: ((NULLIF(((COALESCE(NULLIF(current_setting(…` per row
+   becomes `InitPlan 1 (returns $0)` + `Filter: ($0 = user_id)`.
+
+⚠️ **No performance _number_ is claimed.** The local A/B (200 k rows) moved
+10.1 ms → 9.5 ms, which is **not** a meaningful benchmark: the harness stubs
+`auth.uid()` as a cheap inlined SQL function, so it understates the real cost,
+and the sampled policy is also OR-ed with `is_admin()`. The structural win is
+proven; the magnitude needs the §4 load campaign against a seeded project.
+
+**Not touched, deliberately**: `is_admin()` (5 call sites) is hoistable the same
+way; `is_parent_of_student(uid, row_column)` is row-dependent and is not.
 
 ### New findings from this pass
 
@@ -437,9 +475,9 @@ _Status stamped 2026-08-10._
   `useMemo` `renderMarkdown`.
 - ❌ **Retired** — **C-1** hoist the auth client (§0: false premise, and unsafe).
 - ⬜ **Open, and now the top of the list:**
-  - **C1** Wrap `auth.uid()` → `(SELECT auth.uid())` across all RLS policies —
-    **71** occurrences still bare, across 10 migrations. **M** _(own PR: it is a
-    migration, and a wide one — DoD §7)_
+  - ✅ **C1 done 2026-08-10** — `(SELECT auth.uid())` across all `public` RLS
+    policies (`20260810120000_rls_initplan_wrap_auth_uid.sql`); equivalence proven
+    by a two-database diff, see §0.
   - **C2-fe** Responsive hero image (245 KB JPG → WebP/AVIF + dimensions). **S**
   - **N1** Settle the toolchain split (Node 22 vs 24 vs npm 11) — **verify the
     Vercel build image first**. **S**
@@ -476,7 +514,7 @@ _Status column stamped 2026-08-10 (§0). "?" = not re-verified in that pass._
 
 | ID                                        | Tier    | Sev  | One-line                                                     | Status       |
 | ----------------------------------------- | ------- | ---- | ------------------------------------------------------------ | ------------ |
-| C1                                        | DB      | CRIT | per-row `EXISTS` + un-wrapped `auth.uid()` in `profiles` RLS | ⬜ open (71) |
+| C1                                        | DB      | CRIT | per-row `EXISTS` + un-wrapped `auth.uid()` in `profiles` RLS | ✅ closed    |
 | C-1                                       | Infra   | CRIT | fresh client + `getClaims` per server fn                     | ❌ retired   |
 | C-2                                       | Infra   | CRIT | rate-limit DB round-trip before every write                  | ? open       |
 | C1-fe                                     | FE      | CRIT | no SSR prefetch — client-side waterfall                      | ⬜ open      |
