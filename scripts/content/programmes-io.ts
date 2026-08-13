@@ -12,7 +12,7 @@
  * public engine without the corpus linked in (see the Content CI workflow).
  */
 import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { basename, join, resolve } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import {
   affectationsSchema,
   corpusSchema,
@@ -25,6 +25,7 @@ import {
   type ProgramManifest,
 } from "../../src/shared/content/program-manifest.ts";
 import { ContentValidationError } from "../../src/shared/content/loader.ts";
+import { isSurveilled, parseProvenance, type SurveilledText } from "./verbatim-checks.ts";
 
 export const REPO_ROOT = resolve(import.meta.dirname, "../..");
 export const PROGRAMMES_DIR = join(
@@ -32,6 +33,8 @@ export const PROGRAMMES_DIR = join(
   ".claude/skills/content-ecole-tn/references/programmes-officiels",
 );
 export const SUIVI_DIR = join(PROGRAMMES_DIR, "suivi");
+/** Fiches de source externe du profil `source-web` (étude 27 D-2). */
+export const SOURCES_EXTERNES_DIR = join(PROGRAMMES_DIR, "sources-externes");
 export const PROGRAMME_DIR = join(PROGRAMMES_DIR, "programme");
 export const MANIFEST_DIR = join(PROGRAMMES_DIR, "manifest");
 export const INDEX_PATH = join(PROGRAMME_DIR, "_INDEX.md");
@@ -65,6 +68,38 @@ export function failMissingRegistry(path: string, what: string): never {
     );
   }
   fail(`${what} introuvable: ${path} (lancer --corpus)`);
+}
+
+/**
+ * Fiches de source EXTERNE dont les droits n'autorisent pas la reprise
+ * (étude 27 R-8, lot 2) — les deux emplacements normés par le profil `source-web` :
+ * `sources-externes/<slug>/fiche.md` pour l'école, `content/_sources/<theme>/<slug>/fiche.md`
+ * hors école.
+ *
+ * ⚠️ Contrairement aux loaders de registre ci-dessus, l'absence de l'arbre n'est
+ * **pas** une erreur ici. Dans le repo public il n'y a ni corpus ni fiches, et la
+ * garde doit alors passer en annonçant « 0 source surveillée » : un gate qui
+ * échoue là où il n'y a rien à protéger est un gate qu'on désarme à la première
+ * session pressée. Le silence, lui, est proscrit — `content:qa` imprime le
+ * compte, y compris quand il vaut zéro.
+ */
+export function loadSurveilledSources(contentDir: string): SurveilledText[] {
+  const fiches: string[] = [];
+  const walk = (dir: string, depth: number): void => {
+    if (depth < 0 || !existsSync(dir)) return;
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const path = join(dir, entry.name);
+      if (entry.isDirectory()) walk(path, depth - 1);
+      else if (entry.name === "fiche.md") fiches.push(path);
+    }
+  };
+  walk(SOURCES_EXTERNES_DIR, 2);
+  walk(join(contentDir, "_sources"), 2);
+
+  return fiches
+    .sort()
+    .map((path) => ({ slug: basename(dirname(path)), text: readFileSync(path, "utf8") }))
+    .filter(({ text }) => isSurveilled(parseProvenance(text)));
 }
 
 /** Corpus snapshot + affectations + per-grade suivi + fiches present on disk. */

@@ -34,6 +34,8 @@ import {
   type CompetencyVocabulary,
   type Flag,
 } from "./qa-checks.ts";
+import { auditVerbatim, buildVerbatimIndex, questionTextSurface } from "./verbatim-checks.ts";
+import { loadSurveilledSources } from "./programmes-io.ts";
 
 const hasFlag = (n: string) => argv.includes(`--${n}`);
 const getFlag = (n: string) => {
@@ -63,6 +65,20 @@ function main(): void {
   // per-chapter / per-exercise ref cross-checks against it.
   const videos = loadVideosRegistry(contentDir);
 
+  // Garde anti-verbatim (étude 27 R-8/D-7) : les séquences de mots des sources
+  // externes NON autorisées ne doivent réapparaître dans aucun texte généré.
+  // L'index est vide tant qu'aucune fiche `source-web` n'existe — le compte est
+  // imprimé quand même, un gate muet ne se distingue pas d'un gate absent.
+  const surveilled = loadSurveilledSources(contentDir);
+  const verbatim = buildVerbatimIndex(surveilled);
+  stdout.write(
+    surveilled.length === 0
+      ? "• garde anti-verbatim (étude 27 R-8) : 0 source sous surveillance — rien à comparer.\n"
+      : `• garde anti-verbatim (étude 27 R-8) : ${surveilled.length} source(s) surveillée(s) ` +
+          `(${surveilled.map((s) => s.slug).join(", ")}), ` +
+          `${verbatim.grams.size} séquences de ${verbatim.n} mots indexées.\n`,
+  );
+
   const flags: Flag[] = [];
   flags.push(...auditVideoRegistry(videos, competencyVocab.ids));
 
@@ -77,6 +93,10 @@ function main(): void {
       flags.push(
         ...auditLesson(chapter.lesson, `${subject.meta.id}/${chapter.slug}/cours`, { spatial }),
         ...auditLesson(chapter.summary, `${subject.meta.id}/${chapter.slug}/resume`),
+        // Le cours est la surface de copie la plus exposée : c'est là qu'un
+        // encadré « verbatim » d'une fiche source atterrirait le plus vite.
+        ...auditVerbatim(chapter.lesson, verbatim, `${subject.meta.id}/${chapter.slug}/cours`),
+        ...auditVerbatim(chapter.summary, verbatim, `${subject.meta.id}/${chapter.slug}/resume`),
       );
 
       // Video refs (étude 23): chapter section + per-exercise correction video,
@@ -137,6 +157,17 @@ function main(): void {
                 answerKey: q.type === "short_answer" ? q.answerKey : undefined,
                 expectedMistakes: q.type === "short_answer" ? q.expectedMistakes : undefined,
               },
+              where,
+            ),
+            // Anti-verbatim (étude 27 R-8) : énoncé, options et explication —
+            // les trois champs qu'un auteur pourrait transposer d'une source.
+            ...auditVerbatim(
+              questionTextSurface({
+                prompt: q.prompt,
+                options: "options" in q ? q.options : undefined,
+                explanation: q.explanation,
+              }),
+              verbatim,
               where,
             ),
           );
