@@ -156,7 +156,7 @@ describe("readOuvertures — rejeu statique de l'ouverture des parcours", () => 
     expect(lu.parcours).toEqual([]);
   });
 
-  it("rejoue les vraies migrations du dépôt : la 1ère sec est ouverte, le bac lettres non", () => {
+  it("rejoue les vraies migrations du dépôt : 1ère sec et bac lettres ouverts, 2ème sec éco-services non", () => {
     const dir = join(process.cwd(), "supabase/migrations");
     const files = readdirSync(dir)
       .filter((name) => name.endsWith(".sql"))
@@ -167,9 +167,19 @@ describe("readOuvertures — rejeu statique de l'ouverture des parcours", () => 
     expect(parcoursDuGrade(lu, "1ere-sec")).toEqual([
       expect.objectContaining({ id: "ecole-1ere-sec", statut: "available" }),
     ]);
-    // Section seedée coming_soon, jamais basculée : le contenu n'est pas là.
+    // Ouverte par 20260813120000_open_lycee_3eme_sec_bac_parcours.sql, qui
+    // bascule onze parcours d'un coup : ce cas couvre donc AUSSI la forme
+    // `WHERE id IN (…)`, que la première vague d'ouvertures (un `WHERE id = …`
+    // par migration) n'exerçait jamais.
     expect(parcoursDuGrade(lu, "bac-lettres")).toEqual([
-      expect.objectContaining({ id: "concours-bac-lettres", statut: "coming_soon" }),
+      expect.objectContaining({ id: "concours-bac-lettres", statut: "available" }),
+    ]);
+    // Le cas négatif se déplace, il ne disparaît pas : cette section-là est
+    // seedée coming_soon et n'a jamais été basculée — un test qui n'aurait plus
+    // que des parcours ouverts ne distinguerait plus un parseur juste d'un
+    // parseur qui répondrait « available » à tout.
+    expect(parcoursDuGrade(lu, "2eme-sec-eco-services")).toEqual([
+      expect.objectContaining({ id: "ecole-2eme-sec-eco-services", statut: "coming_soon" }),
     ]);
     // Le rattachement grade → parcours couvre tout ce que la chaîne ouvre.
     expect(lu.ouvertsSansSeed).toEqual([]);
