@@ -38,7 +38,7 @@ const EXCLUDED_SEGMENTS = ["/components/ui/", "/__tests__/"];
  * en clair (le remap `.game-surface` a été supprimé avec cette migration).
  * Chemins POSIX, comparés en préfixe depuis `src/`.
  */
-const MIGRATED = ["features/quest/"];
+const MIGRATED = ["features/quest/", "features/dashboard/", "routes/_authenticated/dashboard.tsx"];
 
 const PALETTE =
   "(?:red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|slate|gray|zinc|neutral|stone)";

@@ -74,7 +74,7 @@ export function BackToSchoolBanner({
   return (
     <div
       data-testid="back-to-school-banner"
-      className="mt-6 rounded-2xl border border-[color:var(--gold)]/40 bg-black/60 p-5 backdrop-blur-xl"
+      className="mt-6 rounded-2xl border border-[color:var(--gold)]/40 bg-surface-3 p-5 backdrop-blur-xl"
     >
       <div className="flex items-start gap-4">
         <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[color:var(--gold)]/15 text-[color:var(--gold)]">
