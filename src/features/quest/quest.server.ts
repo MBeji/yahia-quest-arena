@@ -195,7 +195,41 @@ export const getSubject = createServerFn({ method: "GET" })
   .inputValidator((d) => z.object({ subjectId: z.string() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const [subj, chaps, exs] = await Promise.all([
+
+    // Best scores are an account concept; anonymous visitors have none. Graceful
+    // fallback if the RPC fails, logged so a broken RPC never silently hides progress.
+    //
+    // It rides in the SAME `Promise.all` as the content queries (perf audit L1):
+    // it only needs `subjectId` + `userId`, so waiting for the subject first cost
+    // a serial round-trip on every authenticated subject page — and the SSR
+    // function is pinned to one region, so a round-trip is not free. Trade-off
+    // taken knowingly: on the rare error path where the subject does not load, we
+    // will have issued one RPC that the old code would have skipped.
+    const bestScoresPromise: Promise<unknown[]> = userId
+      ? Promise.resolve(
+          supabase.rpc("get_best_scores_by_exercise", { p_subject: data.subjectId }),
+        ).then(
+          (res) => {
+            if (res.error) {
+              logger.warn("quest.getSubject: get_best_scores_by_exercise failed", {
+                subjectId: data.subjectId,
+                error: res.error.message,
+              });
+              return [];
+            }
+            return Array.isArray(res.data) ? res.data : [];
+          },
+          (err: unknown) => {
+            logger.warn("quest.getSubject: get_best_scores_by_exercise threw", {
+              subjectId: data.subjectId,
+              error: errorMessage(err),
+            });
+            return [];
+          },
+        )
+      : Promise.resolve([]);
+
+    const [subj, chaps, exs, bestScoresData] = await Promise.all([
       supabase.from("subjects").select("*").eq("id", data.subjectId).single(),
       supabase.from("chapters").select("*").eq("subject_id", data.subjectId).order("display_order"),
       supabase
@@ -203,33 +237,10 @@ export const getSubject = createServerFn({ method: "GET" })
         .select("*")
         .eq("subject_id", data.subjectId)
         .order("display_order"),
+      bestScoresPromise,
     ]);
     if (subj.error) {
       failWithClientError("quest.getSubject", subj.error, "Impossible de charger la matière.");
-    }
-
-    // Best scores are an account concept; anonymous visitors have none. Graceful
-    // fallback if the RPC fails, logged so a broken RPC never silently hides progress.
-    let bestScoresData: unknown[] = [];
-    if (userId) {
-      try {
-        const bestScores = await supabase.rpc("get_best_scores_by_exercise", {
-          p_subject: data.subjectId,
-        });
-        if (bestScores.error) {
-          logger.warn("quest.getSubject: get_best_scores_by_exercise failed", {
-            subjectId: data.subjectId,
-            error: bestScores.error.message,
-          });
-        } else if (Array.isArray(bestScores.data)) {
-          bestScoresData = bestScores.data;
-        }
-      } catch (err) {
-        logger.warn("quest.getSubject: get_best_scores_by_exercise threw", {
-          subjectId: data.subjectId,
-          error: errorMessage(err),
-        });
-      }
     }
 
     const best: Record<string, number> = {};

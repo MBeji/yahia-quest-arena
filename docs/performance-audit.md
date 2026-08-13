@@ -82,8 +82,29 @@ finding exist here — and its remedy is the key migration.
 | **H-1 / H-3 / H-2** | infra unchanged: single `arn1` serverless fn, no edge cache on the public catalogue                                           | HIGH |
 | **M-1**             | 🟠 **client RUM + slow server-fn timing landed 2026-08-10** (see below); the DB slow-query log is a Supabase setting          | MED  |
 
-**M2, M3, M5, L-\*** were not re-verified in this pass; treat their 2026-06-30
-status as unconfirmed rather than current.
+#### The remaining findings, swept 2026-08-10 — no line left unverified
+
+The first pass left seven findings at "?". They are now all read in the code. One
+more turned out to be false, which is the **fourth** of the original audit.
+
+| ID           | Verified today                                                                                                                                                                                                  | State             |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
+| **C-2**      | `isRateLimited` still calls the `check_rate_limit` RPC **first**, at 8 feature call sites; `isRateLimitedLocal` is only an **error fallback**, not a first-gate                                                 | ⬜ open           |
+| **M2**       | `get_dungeon_access` still runs 2 × `COUNT(DISTINCT)` (latest def: `20260711100000_free_phase_all_parcours.sql`)                                                                                                | ⬜ open           |
+| **M5**       | `get_student_report` still multi-scan (`20260708120000_student_report_by_code.sql`) — admin/parent frequency, so it stays acceptable                                                                            | ⬜ open, low      |
+| **M1** (DB)  | the `FOR UPDATE` chain on `profiles` is still there, but its amplifier (H3's unbounded aggregates) is gone — window much shorter                                                                                | 🟠 mitigated      |
+| **M3** (DB)  | N+1 `has_parcours_entitlement` — inert in the free phase; already tracked as **latent** in `docs/dette-technique.md`                                                                                            | 💤 latent         |
+| **H1-media** | `getExercise` still selects `options` wholesale (`quest.server.ts:744`), so inline SVG still ships per fetch                                                                                                    | ⬜ open           |
+| **M3-fe**    | 30 `motion.*` usages; per-row animation on lists is still there                                                                                                                                                 | ⬜ open, low      |
+| **M4-fe**    | **FALSE** — "the dungeon route bundles all gameplay eagerly". The router plugin already splits it: `dungeon-*.js` is its own **15.15 kB** chunk, fetched only when a player navigates there                     | ✅ closed         |
+| **L1**       | ✅ **closed** — the 3 content queries were already parallel; the remaining serial call (`get_best_scores_by_exercise`) now rides the same `Promise.all`, removing one round-trip per authenticated subject load | ✅ closed         |
+| **L4**       | no partial index on `spaced_repetition_schedule(status)` — only `(user_id, exercise_id)` and `(user_id, scheduled_for)`                                                                                         | ⬜ open, low      |
+| **L-1**      | `isRateLimitedLocal`'s store is module-scope ⇒ per-instance; the effective cap really is × N instances                                                                                                          | ⬜ open by design |
+| **M-2**      | `waitUntil: () => {}` — still a no-op (`build-vercel.mjs:75`), so deferred work can be dropped                                                                                                                  | ⬜ open           |
+
+_Method note: the first sweep of C-2 looked clean because it grepped for
+`checkRateLimit`; the export is `isRateLimited`. A finding is only "closed" when
+the symbol that actually exists has been searched for._
 
 ### C1 — CLOSED 2026-08-10, and the count was wrong
 
@@ -615,31 +636,31 @@ _Status stamped 2026-08-10._
 
 _Status column stamped 2026-08-10 (§0). "?" = not re-verified in that pass._
 
-| ID                                        | Tier    | Sev  | One-line                                                     | Status       |
-| ----------------------------------------- | ------- | ---- | ------------------------------------------------------------ | ------------ |
-| C1                                        | DB      | CRIT | per-row `EXISTS` + un-wrapped `auth.uid()` in `profiles` RLS | ✅ closed    |
-| C-1                                       | Infra   | CRIT | fresh client + `getClaims` per server fn                     | ❌ retired   |
-| C-2                                       | Infra   | CRIT | rate-limit DB round-trip before every write                  | ? open       |
-| C1-fe                                     | FE      | CRIT | no SSR prefetch — client-side waterfall                      | ⬜ open      |
-| C2-fe                                     | FE      | CRIT | 245 KB unoptimized hero JPG, LCP                             | ✅ closed    |
-| H1                                        | DB      | HIGH | global leaderboard ranks all profiles per call               | ✅ closed    |
-| H2                                        | DB      | HIGH | dungeon `ORDER BY random()` over full join                   | ⬜ open      |
-| H3                                        | DB      | HIGH | unbounded per-user aggregates on write path                  | ✅ closed    |
-| H4                                        | DB      | HIGH | missing `attempts(user_id, exercise_id)` index               | ✅ closed    |
-| H-1                                       | Infra   | HIGH | single cold single-region SSR function                       | ⬜ open      |
-| H-2                                       | Infra   | HIGH | scaling load relocates to PostgREST/Auth                     | ⬜ open      |
-| H-3                                       | Infra   | HIGH | no edge/CDN cache for public catalogue                       | ⬜ open      |
-| H2-fe                                     | FE      | HIGH | all 3 i18n locales bundled eagerly                           | ⬜ open      |
-| H3-fe                                     | FE      | HIGH | `renderMarkdown` re-runs DOMPurify per render                | ✅ closed    |
-| H1-media                                  | Content | HIGH | inline SVG ships on every question fetch                     | ? open       |
-| H2-media                                  | Content | HIGH | `getChapterLesson` over-fetches sibling markdown             | ✅ closed    |
-| M1-fe                                     | FE      | MED  | vendor chunks with no bundle budget                          | ✅ closed    |
-| M4                                        | DB      | MED  | `getDashboard` aggregates a full attempt history in JS       | ✅ closed    |
-| **N1**                                    | Tooling | HIGH | `npm ci` fails on Node 22 — lock needs npm ≥ 11              | ⬜ open      |
-| **N2**                                    | Quality | MED  | false "generated" header on `auth-middleware.ts`             | ✅ closed    |
-| **N3**                                    | CI      | MED  | current `main` has no `ci.yml` run                           | ⬜ open      |
-| M1–M3, M5 (DB), M-1–M-3 (Infra), M2–M4-fe | mixed   | MED  | see §3                                                       | ? unverified |
-| L-\*                                      | mixed   | LOW  | see §3                                                       | ? unverified |
+| ID                                        | Tier    | Sev  | One-line                                                     | Status     |
+| ----------------------------------------- | ------- | ---- | ------------------------------------------------------------ | ---------- |
+| C1                                        | DB      | CRIT | per-row `EXISTS` + un-wrapped `auth.uid()` in `profiles` RLS | ✅ closed  |
+| C-1                                       | Infra   | CRIT | fresh client + `getClaims` per server fn                     | ❌ retired |
+| C-2                                       | Infra   | CRIT | rate-limit DB round-trip before every write                  | ⬜ open    |
+| C1-fe                                     | FE      | CRIT | no SSR prefetch — client-side waterfall                      | ⬜ open    |
+| C2-fe                                     | FE      | CRIT | 245 KB unoptimized hero JPG, LCP                             | ✅ closed  |
+| H1                                        | DB      | HIGH | global leaderboard ranks all profiles per call               | ✅ closed  |
+| H2                                        | DB      | HIGH | dungeon `ORDER BY random()` over full join                   | ⬜ open    |
+| H3                                        | DB      | HIGH | unbounded per-user aggregates on write path                  | ✅ closed  |
+| H4                                        | DB      | HIGH | missing `attempts(user_id, exercise_id)` index               | ✅ closed  |
+| H-1                                       | Infra   | HIGH | single cold single-region SSR function                       | ⬜ open    |
+| H-2                                       | Infra   | HIGH | scaling load relocates to PostgREST/Auth                     | ⬜ open    |
+| H-3                                       | Infra   | HIGH | no edge/CDN cache for public catalogue                       | ⬜ open    |
+| H2-fe                                     | FE      | HIGH | all 3 i18n locales bundled eagerly                           | ⬜ open    |
+| H3-fe                                     | FE      | HIGH | `renderMarkdown` re-runs DOMPurify per render                | ✅ closed  |
+| H1-media                                  | Content | HIGH | inline SVG ships on every question fetch                     | ⬜ open    |
+| H2-media                                  | Content | HIGH | `getChapterLesson` over-fetches sibling markdown             | ✅ closed  |
+| M1-fe                                     | FE      | MED  | vendor chunks with no bundle budget                          | ✅ closed  |
+| M4                                        | DB      | MED  | `getDashboard` aggregates a full attempt history in JS       | ✅ closed  |
+| **N1**                                    | Tooling | HIGH | `npm ci` fails on Node 22 — lock needs npm ≥ 11              | ⬜ open    |
+| **N2**                                    | Quality | MED  | false "generated" header on `auth-middleware.ts`             | ✅ closed  |
+| **N3**                                    | CI      | MED  | current `main` has no `ci.yml` run                           | ⬜ open    |
+| M1–M3, M5 (DB), M-2–M-3 (Infra), M2–M3-fe | mixed   | MED  | see §3 — all swept 2026-08-10, table in §0                   | ⬜ open    |
+| L-\*                                      | mixed   | LOW  | see §3 — L1/L4/L-1 swept 2026-08-10, table in §0             | ⬜ open    |
 
 _No application code was modified by the audit. Remediations ship as separate,
 reviewable changes per the roadmap._
