@@ -54,6 +54,45 @@ it the workflow skips gracefully.
 5. Validate with `npm run lint`, `npm run test:coverage`, `npm run build:check`.
 6. Document notable upgrades in release notes.
 
+## Le piège des deux npm (incident #716 → #718, 2026-08-09/10)
+
+**Ce dépôt et la Content CI privée ne tournent pas sur le même Node**, et cette asymétrie rend le
+gate d'ici structurellement aveugle à une classe entière de pannes de lockfile.
+
+|                                            | Node | npm    | comportement                   |
+| ------------------------------------------ | ---- | ------ | ------------------------------ |
+| moteur (ici) — `.nvmrc` + les 10 workflows | 24   | 11     | **installe** un lock incomplet |
+| Content CI (dépôt privé)                   | 22   | 10.9.8 | **refuse** ce même lock        |
+
+Un `package-lock.json` régénéré par un npm récent peut **omettre l'entrée imbriquée d'une peer
+dependency optionnelle** que npm 10 exige quand la version racine ne la satisfait pas. Le fichier
+est alors parfaitement valide pour npm 11 et mortel pour npm 10.
+
+**Ce qui s'est passé.** #716, intitulée « bump undici … `dependency-type: indirect` », faisait en
+réalité passer `@cloudflare/vite-plugin` de `^1.40.2` à `^1.51.1`, entraînant `miniflare 4 →
+5.20260801.1-alpha`, `workerd` et `wrangler` — deux majeures et une **alpha** dans la chaîne de
+build sous un titre de bump indirect. Sa régénération du lock a supprimé
+`node_modules/vite-tsconfig-paths/node_modules/typescript@5.9.3`, exigée par la peer optionnelle
+`typescript: ^5.0.0` de `tsconfck` (le `typescript@6.0.3` racine ne la satisfait pas).
+
+Résultat : `npm ci` mort sur npm 10 ⇒ **Content CI privée rouge 33 h, `main` comprise**, pendant
+que le gate d'ici serait resté vert. Aggravant : **`ci.yml` n'a pas tourné sur le commit fautif**
+(dernier run sur `main` à 07:08:53Z, merge de #716 à 07:13:09Z) — aucun signal du tout.
+
+**Réflexes à en tirer.**
+
+1. Une panne « `npm ci` ne casse que là-bas » se reproduit **avec la version de npm de l'autre
+   CI**, pas avec celle qu'on a sous la main. `npm ci --dry-run` suffit et coûte quelques secondes.
+2. **Ne pas réparer un lock désynchronisé par une simple re-synchro** sans regarder ce que le bump
+   a fait entrer. `npm install --package-lock-only` faisait repasser `npm ci` ici — en consolidant
+   l'alpha et les deux majeures que personne n'avait arbitrées. Le **revert** (#718) était la bonne
+   réponse : règle ci-dessous, une majeure = une PR isolée.
+3. **Se méfier du titre d'une PR Dependabot.** « bump `<transitive>` … indirect » peut cacher une
+   montée de majeure du parent. Lire le diff de `package.json`, pas l'intitulé.
+4. Un revert de bump n'est pas forcément une régression de sécurité : ici `undici` était une
+   transitive d'une **devDependency**, et `audit:deps` (qui tourne en `--omit=dev`) rendait
+   `0 vulnerabilities` après revert.
+
 ## Rules
 
 - Never merge dependency updates without CI green.
