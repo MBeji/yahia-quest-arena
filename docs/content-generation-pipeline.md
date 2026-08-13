@@ -368,14 +368,14 @@ flowchart TD
 
 Les niveaux de filtrage, chacun attrapant un type d'erreur différent :
 
-| Porte                      | Attrape                                                               | Ne détecte PAS                                         |
-| -------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------ |
-| `content:check` (Zod)      | champs manquants, mauvais types, contraintes de forme                 | une bonne réponse fausse                               |
-| `content:qa:strict`        | déséquilibre des clés, notation non standard, structure suspecte      | une bonne réponse fausse                               |
-| `content:audit:strict`     | conformité au programme officiel, couverture                          | une bonne réponse fausse                               |
-| `programme:check`          | cohérence du registre de transcription des programmes officiels       | la qualité du contenu lui-même                         |
-| Auto-vérification (skill)  | ce que le skill doit faire lui-même avant de rapporter                | erreurs qu'il n'a pas vues                             |
-| `content-audit` (planifié) | **ré-résout vraiment** chaque question, vérifie fidélité au programme | rien n'est garanti à 100 %, c'est un filet de sécurité |
+| Porte                      | Attrape                                                                                                           | Ne détecte PAS                                         |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `content:check` (Zod)      | champs manquants, mauvais types, contraintes de forme                                                             | une bonne réponse fausse                               |
+| `content:qa:strict`        | déséquilibre des clés, notation non standard, structure suspecte, **reprise verbatim d'une source non autorisée** | une bonne réponse fausse                               |
+| `content:audit:strict`     | conformité au programme officiel, couverture                                                                      | une bonne réponse fausse                               |
+| `programme:check`          | cohérence du registre de transcription des programmes officiels                                                   | la qualité du contenu lui-même                         |
+| Auto-vérification (skill)  | ce que le skill doit faire lui-même avant de rapporter                                                            | erreurs qu'il n'a pas vues                             |
+| `content-audit` (planifié) | **ré-résout vraiment** chaque question, vérifie fidélité au programme                                             | rien n'est garanti à 100 %, c'est un filet de sécurité |
 
 > ⚠️ Un mauvais corrigé (bonne réponse fausse) **passe** `content:check` et `content:qa:strict` —
 > ces outils vérifient la **structure**, pas la **vérité**. C'est pour ça que `content-audit`
@@ -394,6 +394,37 @@ au pire elle accuse une option au hasard. Le bon patron cite la **valeur** ou l'
 **[warn]** tant que la campagne de réécriture du corpus n'est pas finie : au 2026-07-30 l'état des
 lieux comptait ~6 100 occurrences sur 715 fichiers et 48 matières. La bascule en **[error]** se
 fait via `OPTION_REFERENCE_LEVEL` quand la QA ne remonte plus rien.
+
+#### Aucun énoncé ne reprend l'expression d'une source non autorisée
+
+Quand une campagne se **calibre** sur une source tierce — un devoir d'enseignant, un site de
+séries corrigées — la frontière légale est fine et nette : **une notion se reprend librement, une
+expression non.** « Calculer la résultante de deux forces concourantes » appartient à tout le
+monde ; la phrase de l'auteur, ses valeurs, son contexte et la formulation de son corrigé lui
+appartiennent. Cette frontière ne tient pas par bonne volonté d'un agent : `content:qa` la
+vérifie.
+
+Le contrôle (`auditVerbatim`, dans `scripts/content/verbatim-checks.ts`) indexe les séquences de
+8 mots de chaque fiche de source externe **dont les droits n'autorisent pas la reprise**, puis les
+cherche dans les cours, les résumés, les énoncés, le texte des options et les explications. Un
+recouvrement est une **[error]** — jamais un warning : un avertissement se traverse, une
+contrefaçon ne se traverse pas.
+
+Trois propriétés à connaître avant de lire un verdict :
+
+- **La notation sort du calcul.** Figures SVG, maths, LaTeX, code sont retirés, et les nombres
+  disparaissent avec (seules les suites de lettres font des jetons). « une masse de 250 g » et
+  « une masse de 45 g » se comparent donc sur le même squelette — sans quoi toute équation
+  partagée serait un faux positif. C'est bien la **prose** qu'on compare.
+- **Le défaut est sûr.** Une fiche sans en-tête de provenance, ou dont l'autorisation n'est pas
+  explicitement `accordée`, est **surveillée**. Se tromper dans ce sens coûte une reformulation.
+- **Le compte est toujours imprimé, même à zéro.** Dans le dépôt public il n'y a aucune fiche :
+  le gate annonce « 0 source sous surveillance » et passe. Un gate muet ne se distingue pas d'un
+  gate absent, et c'est ainsi qu'on le désarme sans le savoir.
+
+Les fiches vivent aux deux emplacements du profil `source-web` :
+`sources-externes/<slug>/fiche.md` (école) et `content/_sources/<theme>/<slug>/fiche.md` (hors
+école). Doctrine complète, tiers d'usage et questions ouvertes : **étude 27** (dépôt privé).
 
 ### Qui exécute quoi, depuis la scission
 
