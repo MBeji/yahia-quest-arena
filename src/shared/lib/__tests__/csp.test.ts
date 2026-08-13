@@ -23,12 +23,17 @@ describe("buildContentSecurityPolicy", () => {
     expect(csp).toContain("style-src 'self' 'unsafe-inline'");
   });
 
-  it("allows the Google Fonts origins (stylesheet + woff2 files)", () => {
+  it("n'autorise plus AUCUNE origine de fonte tierce (levier 06 : auto-hébergement)", () => {
+    // L'assertion inverse tenait tant que les fontes venaient de Google. Elle est
+    // retournée volontairement : la politique doit interdire ce que le code ne
+    // fait plus, sinon elle rouvre en silence le jour où quelqu'un recolle un
+    // <link> — et avec lui l'envoi de l'IP d'un élève mineur à un tiers.
     const csp = buildContentSecurityPolicy("n");
     const styleSrc = csp.split("; ").find((d) => d.startsWith("style-src "));
     const fontSrc = csp.split("; ").find((d) => d.startsWith("font-src "));
-    expect(styleSrc).toContain("https://fonts.googleapis.com");
-    expect(fontSrc).toContain("https://fonts.gstatic.com");
+    expect(styleSrc).not.toContain("fonts.googleapis.com");
+    expect(fontSrc).not.toContain("fonts.gstatic.com");
+    expect(fontSrc).toBe("font-src 'self' data:");
   });
 
   it("locks down the dangerous sinks regardless of nonce", () => {

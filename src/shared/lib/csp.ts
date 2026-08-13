@@ -38,12 +38,14 @@ export function buildContentSecurityPolicy(nonce?: string): string {
   return [
     "default-src 'self'",
     scriptSrc,
-    // Google Fonts: the stylesheet is served from fonts.googleapis.com and the
-    // woff2 files from fonts.gstatic.com (see the <link>s in routes/__root.tsx).
+    // Les fontes sont AUTO-HÉBERGÉES (levier 06) : plus de feuille tierce, donc
+    // `fonts.googleapis.com` sort de `style-src` et `fonts.gstatic.com` de
+    // `font-src`. La politique dit maintenant ce qui est vrai — aucune fonte ne
+    // peut plus venir d'un tiers, et l'IP d'un élève n'y voyage plus.
     // 'unsafe-inline' stays — Tailwind/charting inject inline <style> (scoped out).
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https:",
-    "font-src 'self' data: https://fonts.gstatic.com",
+    "font-src 'self' data:",
     // Supabase API/realtime + the GA4 collect endpoints (gtag.js beacons the
     // measurement protocol to the regional google-analytics.com hosts).
     // …and the PostHog ingest origin (product analytics — plain `fetch`, no SDK
