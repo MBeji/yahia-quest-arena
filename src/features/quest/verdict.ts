@@ -33,7 +33,7 @@ export function optionClassNameFor(
     if (option.id === feedback.correctChoice) return "border-success bg-success/15 text-success";
     return isSelected
       ? "border-destructive bg-destructive/15 text-destructive"
-      : "border-border/40 bg-black/20 opacity-60";
+      : "border-border/40 bg-surface-1 opacity-60";
   }
   return `active:scale-[0.97] ${
     isSelected
@@ -41,7 +41,7 @@ export function optionClassNameFor(
         ? "border-destructive bg-destructive/20"
         : "border-gold bg-gold/15"
       : bossMode
-        ? "border-destructive/20 bg-black/40 hover:border-destructive/60 hover:bg-destructive/10"
-        : "border-border bg-black/40 hover:border-gold/60 hover:bg-black/70"
+        ? "border-destructive/20 bg-surface-2 hover:border-destructive/60 hover:bg-destructive/10"
+        : "border-border bg-surface-2 hover:border-gold/60 hover:bg-surface-3"
   }`;
 }

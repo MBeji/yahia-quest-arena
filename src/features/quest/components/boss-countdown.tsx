@@ -50,7 +50,7 @@ export function BossCountdown({
   }, [active, questionIndex]);
 
   return (
-    <div className="flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5 text-sm font-bold">
+    <div className="flex items-center gap-2 rounded-full bg-surface-3 px-3 py-1.5 text-sm font-bold">
       <Timer className="h-4 w-4 text-destructive" />
       <span
         className={seconds <= 5 ? "text-destructive animate-pulse" : "text-[color:var(--gold)]"}
