@@ -15,6 +15,7 @@ import { buildQuestLabels, type QuestContentLang } from "@/features/quest/quest-
 import { Confetti } from "@/features/quest/components/confetti";
 import { LevelUpCelebration } from "@/components/ui/level-up-celebration";
 import { ExplainHint } from "@/components/ui/explain-hint";
+import { BadgeMedal } from "@/components/game/badge-medal";
 import { useI18n } from "@/lib/i18n";
 import { PageShell } from "@/components/ui/page-shell";
 import { useEntrance } from "@/shared/lib/motion";
@@ -236,10 +237,19 @@ export function QuestResultScreen({
                   </div>
                   <div className="mt-3 flex flex-wrap gap-3">
                     {result.unlockedBadges.map((badge) => (
-                      <div key={badge.code} className="rounded-xl bg-surface-3 px-4 py-3">
-                        <div className="font-display text-sm font-bold">{badge.name}</div>
-                        <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                          {badge.rarity}
+                      <div
+                        key={badge.code}
+                        className="flex items-center gap-3 rounded-xl bg-surface-3 px-4 py-3"
+                      >
+                        <BadgeMedal iconName={badge.iconName} rarity={badge.rarity} size="sm" />
+                        <div className="min-w-0 text-start">
+                          <div className="font-display text-sm font-bold">{badge.name}</div>
+                          <div
+                            className="text-xs uppercase tracking-widest"
+                            style={{ color: `var(--rarity-${badge.rarity})` }}
+                          >
+                            {badge.rarity}
+                          </div>
                         </div>
                       </div>
                     ))}

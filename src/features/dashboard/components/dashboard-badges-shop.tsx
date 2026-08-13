@@ -3,11 +3,14 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { avatarEmojiForSlug } from "@/shared/lib/avatar";
 import { useI18n } from "@/lib/i18n";
+import { BadgeMedal } from "@/components/game/badge-medal";
 
 type Badge = {
   code: string;
   name: string;
   rarity: string;
+  /** Le glyphe semé en base — déjà servi par `getDashboard`, jamais affiché. */
+  iconName?: string | null;
   awardedAt: string;
   awardedReason: string | null;
 };
@@ -75,10 +78,16 @@ export function DashboardBadgesShop({
                 className="rounded-2xl border border-border/50 bg-surface-3 p-5 backdrop-blur-md"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="font-display text-lg font-bold">{badge.name}</div>
-                    <div className="text-xs uppercase tracking-widest text-neon-gold">
-                      {rarityLabel(badge.rarity)}
+                  <div className="flex min-w-0 items-center gap-3">
+                    <BadgeMedal iconName={badge.iconName} rarity={badge.rarity} />
+                    <div className="min-w-0">
+                      <div className="font-display text-lg font-bold">{badge.name}</div>
+                      <div
+                        className="text-xs uppercase tracking-widest"
+                        style={{ color: `var(--rarity-${badge.rarity})` }}
+                      >
+                        {rarityLabel(badge.rarity)}
+                      </div>
                     </div>
                   </div>
                   <div className="rounded-full bg-neon-gold/15 px-3 py-1 text-xs font-bold text-neon-gold">
