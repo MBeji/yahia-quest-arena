@@ -162,7 +162,7 @@ function NumericInput({ value, onChange, onSubmit, disabled, rtl, labels }: Ques
             onSubmit?.();
           }
         }}
-        className="w-full rounded-xl border border-border bg-black/40 px-4 py-3.5 text-center font-mono text-lg outline-none transition focus:border-(--gold) focus:bg-black/70 disabled:opacity-50"
+        className="w-full rounded-xl border border-border bg-surface-2 px-4 py-3.5 text-center font-mono text-lg outline-none transition focus:border-(--gold) focus:bg-surface-3 disabled:opacity-50"
       />
       <p
         className={`mt-2 text-xs ${invalid ? "font-semibold text-destructive" : "text-muted-foreground/60"}`}
@@ -221,7 +221,7 @@ function FreeTextInput({
             onSubmit?.();
           }
         }}
-        className="w-full rounded-xl border border-border bg-black/40 px-4 py-3.5 text-lg outline-none transition focus:border-(--gold) focus:bg-black/70 disabled:opacity-50"
+        className="w-full rounded-xl border border-border bg-surface-2 px-4 py-3.5 text-lg outline-none transition focus:border-(--gold) focus:bg-surface-3 disabled:opacity-50"
       />
       <RecallCharBar
         chars={recallChars}
@@ -323,7 +323,7 @@ export function AssistKeypad({
         aria-expanded={open}
         onClick={() => setOpen((v: boolean) => !v)}
         data-testid="assist-keypad-toggle"
-        className="rounded-lg border border-border bg-black/30 px-3 py-1.5 text-xs text-muted-foreground transition hover:border-(--gold)/60 hover:text-foreground disabled:opacity-50 [@media(pointer:coarse)]:min-h-11"
+        className="rounded-lg border border-border bg-surface-1 px-3 py-1.5 text-xs text-muted-foreground transition hover:border-(--gold)/60 hover:text-foreground disabled:opacity-50 [@media(pointer:coarse)]:min-h-11"
       >
         {open ? hideLabel : showLabel}
       </button>
@@ -338,7 +338,7 @@ export function AssistKeypad({
                   disabled={disabled}
                   aria-label={insertLabel.replace("{char}", char)}
                   onClick={() => insert(char)}
-                  className="min-w-9 flex-1 rounded-lg border border-border bg-black/40 px-2 py-2 text-base transition hover:border-(--gold)/60 hover:bg-black/70 disabled:opacity-50 [@media(pointer:coarse)]:min-h-11"
+                  className="min-w-9 flex-1 rounded-lg border border-border bg-surface-2 px-2 py-2 text-base transition hover:border-(--gold)/60 hover:bg-surface-3 disabled:opacity-50 [@media(pointer:coarse)]:min-h-11"
                 >
                   {char}
                 </button>
@@ -383,7 +383,7 @@ export function RecallCharBar({
           disabled={disabled}
           aria-label={insertLabel.replace("{char}", char)}
           onClick={() => insert(char)}
-          className="min-w-9 rounded-lg border border-border bg-black/40 px-2.5 py-1.5 text-sm transition hover:border-(--gold)/60 hover:bg-black/70 disabled:opacity-50 [@media(pointer:coarse)]:min-h-11"
+          className="min-w-9 rounded-lg border border-border bg-surface-2 px-2.5 py-1.5 text-sm transition hover:border-(--gold)/60 hover:bg-surface-3 disabled:opacity-50 [@media(pointer:coarse)]:min-h-11"
         >
           {char}
         </button>
@@ -438,7 +438,7 @@ function MultiSelect({
               className={`flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-start text-sm transition-all duration-200 ${
                 isChecked
                   ? "border-(--gold) bg-(--gold)/15"
-                  : "border-border bg-black/40 hover:border-(--gold)/60 hover:bg-black/70"
+                  : "border-border bg-surface-2 hover:border-(--gold)/60 hover:bg-surface-3"
               }`}
             >
               <span
@@ -452,7 +452,9 @@ function MultiSelect({
                     isChecked ? "border-(--gold) bg-(--gold)" : "border-current"
                   }`}
                 >
-                  {isChecked && <Check className="h-4 w-4 text-black" aria-hidden="true" />}
+                  {isChecked && (
+                    <Check className="h-4 w-4 text-primary-foreground" aria-hidden="true" />
+                  )}
                 </span>
                 <OptionContent raw={option.text} />
               </span>

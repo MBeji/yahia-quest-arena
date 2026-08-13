@@ -94,7 +94,7 @@ export function VideoEmbed({
 
   if (isOpen) {
     return (
-      <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-black">
+      <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-media-scrim">
         <iframe
           ref={iframeRef}
           src={embedSrc(video)}
@@ -133,22 +133,27 @@ export function VideoEmbed({
         />
       )}
 
-      {/* token-ok-block: overlay posé sur un poster/scrim NOIR fixe (vidéo) —
-          le blanc est correct dans les deux thèmes, indépendant du token. */}
+      {/* Incrustation posée sur le letterbox. Elle passe par `media-scrim` /
+          `ink-on-media` — deux tokens VOLONTAIREMENT identiques dans les deux
+          thèmes : une vidéo est noire, son incrustation blanche, et ni l'une ni
+          l'autre ne doit suivre la couleur de l'interface. Ces classes sont
+          aussi hors d'atteinte du remap `--color-black` du thème clair, qui
+          rendait ce bloc illisible dans le lecteur (encre sombre sur scrim
+          sombre). */}
       {/* Play glyph — centered, direction-independent. */}
       <span aria-hidden="true" className="absolute inset-0 flex items-center justify-center">
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-black/60 text-white shadow-lg transition group-hover:scale-105 group-hover:bg-black/70">
+        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-media-scrim/60 text-ink-on-media shadow-lg transition group-hover:scale-105 group-hover:bg-media-scrim/70">
           <Play className="h-6 w-6 translate-x-[1px]" fill="currentColor" />
         </span>
       </span>
 
       {/* Duration badge — top corner, Western digits. */}
-      <span className="absolute top-2 end-2 rounded-md bg-black/70 px-1.5 py-0.5 text-xs font-medium text-white">
+      <span className="absolute top-2 end-2 rounded-md bg-media-scrim/70 px-1.5 py-0.5 text-xs font-medium text-ink-on-media">
         {durationLabel}
       </span>
 
       {/* Caption: title + channel + hosting attribution + child-readable consent hint. */}
-      <span className="absolute inset-x-0 bottom-0 flex flex-col gap-0.5 bg-gradient-to-t from-black/80 to-transparent p-3 pt-8 text-white">
+      <span className="absolute inset-x-0 bottom-0 flex flex-col gap-0.5 bg-gradient-to-t from-media-scrim/80 to-transparent p-3 pt-8 text-ink-on-media">
         <span className="line-clamp-2 text-sm font-semibold" dir="auto">
           {video.title}
         </span>
@@ -160,7 +165,6 @@ export function VideoEmbed({
           {t.public.reader.videoLoadHint}
         </span>
       </span>
-      {/* /token-ok-block */}
     </button>
   );
 }

@@ -815,7 +815,7 @@ export function ExercisePlayer({
           // clicking its stale submit — and then stalls on the real one.
           data-question-id={current.id}
           {...questionSlide(reduced)}
-          className={`rounded-3xl border p-6 backdrop-blur-xl sm:p-8 ${bossMode ? "border-destructive/30 bg-destructive/5" : "border-border/50 bg-black/60"}`}
+          className={`rounded-3xl border p-6 backdrop-blur-xl sm:p-8 ${bossMode ? "border-destructive/30 bg-destructive/5" : "border-border/50 bg-surface-3"}`}
         >
           <RichField
             raw={current.prompt}
@@ -892,7 +892,7 @@ export function ExercisePlayer({
               className={`inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-bold shadow-gold transition disabled:opacity-40 ${
                 bossMode
                   ? "bg-linear-to-r from-destructive to-gold text-primary-foreground"
-                  : "bg-[image:var(--gradient-gold)] text-black"
+                  : "bg-[image:var(--gradient-gold)] text-primary-foreground"
               }`}
             >
               {(mutation.isPending || sessionMutation.isPending || feedbackChecking) && (

@@ -5,7 +5,13 @@
  *    elles ignorent les 2 thèmes ; la couleur passe par les tokens sémantiques
  *    (`primary`, `gold`, `success`, `destructive`, `flame`…) ;
  *  - `text-white` — encre codée en dur qui casse le thème clair (utiliser
- *    `text-foreground`, `text-primary-foreground` ou un token).
+ *    `text-foreground`, `text-primary-foreground` ou un token) ;
+ *  - `bg-black` / `text-black` / `bg-white` — MAIS seulement dans les zones DÉJÀ
+ *    migrées vers les tokens de surface (`MIGRATED`, levier 03). Ailleurs ils
+ *    restent tolérés : le thème clair les rattrape encore par le remap
+ *    `html.reference .app-shell { --color-black: … }`, et on ne bloque pas un
+ *    dépôt entier sur une migration qui se fait écran par écran. Cette liste
+ *    est un CLIQUET : elle s'allonge à chaque lot, elle ne raccourcit jamais.
  *
  * Périmètre et mécanique identiques au garde-fou RTL : src/{features,routes,
  * lib,shared,components} SAUF components/ui (shadcn vendorisé) et __tests__.
@@ -26,8 +32,24 @@ const SRC = join(ROOT, "src");
 const INCLUDED = ["features", "routes", "lib", "shared", "components"];
 const EXCLUDED_SEGMENTS = ["/components/ui/", "/__tests__/"];
 
+/**
+ * Zones dont les surfaces passent par `bg-surface-{1,2,3}` : un `bg-black` qui y
+ * réapparaît est une régression, parce que plus aucune règle CSS ne le repeindra
+ * en clair (le remap `.game-surface` a été supprimé avec cette migration).
+ * Chemins POSIX, comparés en préfixe depuis `src/`.
+ */
+const MIGRATED = ["features/quest/"];
+
 const PALETTE =
   "(?:red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|slate|gray|zinc|neutral|stone)";
+const MIGRATED_RULES = [
+  {
+    name: "surface littérale dans une zone migrée",
+    re: /\b(?:bg-black|text-black|bg-white)(?:\/\d+)?\b/,
+    fix: "bg-surface-1|2|3, text-primary-foreground, ou media-scrim/ink-on-media pour du média",
+  },
+];
+
 const RULES = [
   {
     name: "palette Tailwind brute",
@@ -68,7 +90,10 @@ for (const top of INCLUDED) {
       for (let back = 0; back <= 3; back++) {
         if (lines[i - back]?.includes("token-ok")) return;
       }
-      for (const rule of RULES) {
+      const rules = MIGRATED.some((zone) => posix.includes(`/src/${zone}`))
+        ? [...RULES, ...MIGRATED_RULES]
+        : RULES;
+      for (const rule of rules) {
         if (rule.re.test(line)) {
           violations.push(
             `${relative(ROOT, file)}:${i + 1} — ${rule.name} (→ ${rule.fix})\n    ${line.trim()}`,

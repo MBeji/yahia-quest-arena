@@ -77,7 +77,7 @@ export function QuestReviewList({
             key={item.questionId}
             data-testid="review-item"
             data-correct={item.isCorrect ? "true" : "false"}
-            className="rounded-2xl border border-border/50 bg-black/30 p-4"
+            className="rounded-2xl border border-border/50 bg-surface-1 p-4"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
@@ -96,7 +96,7 @@ export function QuestReviewList({
               </div>
             </div>
             <div className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
-              <div className="rounded-xl bg-black/60 p-3">
+              <div className="rounded-xl bg-surface-3 p-3">
                 <div className="text-xs uppercase tracking-widest text-muted-foreground">
                   {labels.yourAnswer}
                 </div>
@@ -104,7 +104,7 @@ export function QuestReviewList({
                   {getDisplayChoice(item.questionId, item.selectedChoice)}
                 </div>
               </div>
-              <div className="rounded-xl bg-black/60 p-3">
+              <div className="rounded-xl bg-surface-3 p-3">
                 <div className="text-xs uppercase tracking-widest text-muted-foreground">
                   {labels.correctAnswer}
                 </div>
