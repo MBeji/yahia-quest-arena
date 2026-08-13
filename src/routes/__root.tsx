@@ -23,6 +23,7 @@ import type { Theme } from "@/lib/theme";
 import { SoundProvider, useSound } from "@/lib/sound";
 import { logger } from "@/shared/lib/logger";
 import { initAnalytics, trackPageview, pagePathFromLocation } from "@/shared/lib/analytics";
+import { initWebVitals } from "@/shared/lib/web-vitals";
 
 import appCss from "../styles.css?url";
 
@@ -221,6 +222,9 @@ function RootComponent() {
   // outside a production build (see analytics.ts).
   useEffect(() => {
     initAnalytics();
+    // Real User Monitoring (perf audit M-1): the team could see 500s but was
+    // blind to p95 / LCP growth. Dependency-free, reports once on page hide.
+    initWebVitals();
     const track = () => {
       trackPageview(pagePathFromLocation(router.state.location));
     };

@@ -121,4 +121,35 @@ describe("PublicLanding", () => {
     );
     expect(empty.querySelector('a[href^="/chapitre/"]')).toBeNull();
   });
+
+  // Perf audit C2-fe: the decorative hero used to ship the raw 245 KB JPEG for a
+  // ~472 px box, below the fold, at 70 % opacity. Keep it modern-format, sized
+  // and deferred — a plain <img src=…jpg> regression must fail here.
+  it("serves the decorative hero as deferred, modern-format, responsive art", () => {
+    const { container } = render(<PublicLanding />);
+
+    const picture = container.querySelector("picture");
+    expect(picture).not.toBeNull();
+
+    const types = Array.from(picture!.querySelectorAll("source")).map((s) =>
+      s.getAttribute("type"),
+    );
+    expect(types).toEqual(["image/avif", "image/webp"]);
+
+    for (const source of Array.from(picture!.querySelectorAll("source"))) {
+      // Two candidate widths so the browser can pick per viewport/DPR.
+      expect(source.getAttribute("srcset")).toMatch(/960w/);
+      expect(source.getAttribute("srcset")).toMatch(/1920w/);
+      expect(source.getAttribute("sizes")).toBeTruthy();
+    }
+
+    const img = picture!.querySelector("img")!;
+    expect(img.getAttribute("loading")).toBe("lazy");
+    expect(img.getAttribute("decoding")).toBe("async");
+    // Intrinsic ratio declared → no layout shift when it decodes.
+    expect(img.getAttribute("width")).toBe("1920");
+    expect(img.getAttribute("height")).toBe("1080");
+    // Decorative: it must stay out of the accessibility tree.
+    expect(img.getAttribute("alt")).toBe("");
+  });
 });

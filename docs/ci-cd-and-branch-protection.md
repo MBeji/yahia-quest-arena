@@ -31,6 +31,24 @@ end-of-dev → production walkthrough lives in [passation.md](./passation.md).)
   Corollaire : leur push **déclenche** désormais `auto-pr.yml` — une branche qui doit rester
   draft prend un préfixe `draft/`, et `claude/upgrade-patch-minor-*` est explicitement
   exclue de `auto-pr.yml` parce qu'`upgrade-guard` ouvre cette PR lui-même.
+- ⚠️ **Une PR en conflit ne déclenche PLUS aucun run `pull_request` — et gèle sans rien de rouge.**
+  Constaté le 2026-08-13 sur #717. GitHub n'exécute les workflows `pull_request` que contre la
+  **ref de merge** `refs/pull/N/merge` ; si la PR entre en **conflit** avec `main`, cette ref ne
+  peut plus être calculée et **plus aucun** check requis ne démarre. Les workflows sur `push`
+  (`auto-pr`, Vercel), eux, continuent de tourner — d'où l'illusion que « la CI marche ».
+  - **Symptôme** : sur la tête courante, 0 check requis sur 4, aucun rouge, auto-merge jamais armé.
+    Même gel que le cas `action_required` ci-dessus, cause différente.
+  - **Piège 1** : passer la PR « ready » ne répare rien — `ready_for_review` n'est pas dans les
+    types par défaut de `pull_request` (`opened`/`synchronize`/`reopened`).
+  - **Piège 2, vécu** : pousser un commit de plus **ne répare rien non plus** tant que le conflit
+    est là. La première rédaction de cette note prescrivait exactement ce remède, et il a échoué —
+    c'est ce qui a mis sur la piste de la vraie cause.
+  - **Remède** : `git fetch origin main` puis **merger `main`** dans la branche et résoudre.
+    La ref de merge redevient calculable et les checks repartent au push suivant.
+  - **Diagnostic en une ligne** : `git rev-list --count HEAD..origin/main` (retard) et
+    `git merge-tree $(git merge-base HEAD origin/main) HEAD origin/main | grep -c '^changed in both'`.
+  - **Réflexe de fin de session** : vérifier que les **4 checks requis sont présents** sur la tête,
+    pas seulement qu'aucun n'est rouge. « Pas de rouge » et « c'est vert » ne sont pas la même chose.
 - **`automerge.yml`** — (re)arms GitHub native auto-merge on every ready, same-repo
   PR; the `no-automerge` label opts out (and disarms). Its `keep-up-to-date` job
   runs on every push to `main` and updates armed PRs left behind (the ruleset's strict
