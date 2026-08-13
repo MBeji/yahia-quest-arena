@@ -138,7 +138,7 @@ export function QuestResultScreen({
       )}
       <motion.div
         {...scaleIn}
-        className="relative overflow-hidden rounded-3xl border border-gold/40 bg-black/60 p-8 text-center backdrop-blur-xl shadow-gold"
+        className="relative overflow-hidden rounded-3xl border border-gold/40 bg-surface-3 p-8 text-center backdrop-blur-xl shadow-gold"
       >
         <div className="absolute -top-20 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full bg-gold/30 blur-3xl" />
         <div className="relative">
@@ -236,7 +236,7 @@ export function QuestResultScreen({
                   </div>
                   <div className="mt-3 flex flex-wrap gap-3">
                     {result.unlockedBadges.map((badge) => (
-                      <div key={badge.code} className="rounded-xl bg-black/70 px-4 py-3">
+                      <div key={badge.code} className="rounded-xl bg-surface-3 px-4 py-3">
                         <div className="font-display text-sm font-bold">{badge.name}</div>
                         <div className="text-xs uppercase tracking-widest text-muted-foreground">
                           {badge.rarity}
@@ -267,7 +267,7 @@ export function QuestResultScreen({
                 to="/quest/$exerciseId"
                 params={{ exerciseId }}
                 search={{ variant: "recall" }}
-                className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-bold text-black shadow-gold transition hover:scale-105"
+                className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-gold transition hover:scale-105"
               >
                 {t.quest.recallPlay}
               </Link>

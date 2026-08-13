@@ -140,12 +140,8 @@ function QuestPage() {
     [startSession, submit, reveal, check, t],
   );
 
-  // `game-surface` makes the player self-contained (it carries the same light-theme
-  // remap the surrounding `.app-shell` provides), so the connected and public
-  // registers render identically.
-  return (
-    <div className="game-surface">
-      <ExercisePlayer exerciseId={exerciseId} strategy={strategy} variant={variant} />
-    </div>
-  );
+  // Plus de conteneur porteur de thème (levier 03) : le lecteur tire ses surfaces
+  // des tokens `surface-*`, donc il rend identiquement dans les deux registres
+  // sans qu'aucune classe ne doive lui repeindre le noir en blanc.
+  return <ExercisePlayer exerciseId={exerciseId} strategy={strategy} variant={variant} />;
 }

@@ -214,12 +214,7 @@ function ExercicePage() {
     [check, score, fetchLesson, isAuthenticated, loading, t],
   );
 
-  // `game-surface` carries the immersive player's light-theme remap (black→white
-  // panels + ink text) so the quiz is readable in the public shell too — the
-  // connected `.app-shell` provides the same remap, here it travels with the player.
-  return (
-    <div className="game-surface">
-      <ExercisePlayer exerciseId={exerciseId} strategy={strategy} />
-    </div>
-  );
+  // Idem registre connecté : les tokens `surface-*` suffisent, plus besoin d'une
+  // classe qui remappe le noir en blanc pour rendre le quiz lisible ici.
+  return <ExercisePlayer exerciseId={exerciseId} strategy={strategy} />;
 }

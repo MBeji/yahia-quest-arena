@@ -58,6 +58,18 @@
   --color-gold-deep: var(--gold-deep);
   --color-champagne: var(--champagne);
 
+  /* Surfaces empilées (levier 03). Trois niveaux SÉMANTIQUES qui remplacent les
+     `bg-black/<alpha>` littéraux : chaque thème décide de quoi ils sont faits —
+     du verre sur du noir en Sombre, du blanc posé sur un fond légèrement teinté
+     en Référence. Un écran demande une PROFONDEUR, plus une couleur. */
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  /* Un letterbox vidéo est noir dans les DEUX thèmes, et son incrustation
+     blanche : ce n'est pas une surface d'interface, c'est du média. */
+  --color-media-scrim: var(--media-scrim);
+  --color-ink-on-media: var(--ink-on-media);
+
   --color-subject-math: var(--subject-math);
   --color-subject-french: var(--subject-french);
   --color-subject-arabic: var(--subject-arabic);
@@ -99,6 +111,14 @@
   --border: oklch(0.36 0.035 88 / 0.5);
   --input: oklch(0.24 0.015 85);
   --ring: oklch(0.83 0.15 86);
+
+  /* Surfaces empilées — du verre teinté sur le noir : 1 = creux (blocs calmes),
+     2 = contrôles (champs, options), 3 = carte surélevée. */
+  --surface-1: oklch(0.145 0.008 85 / 0.32);
+  --surface-2: oklch(0.145 0.008 85 / 0.46);
+  --surface-3: oklch(0.145 0.008 85 / 0.62);
+  --media-scrim: oklch(0 0 0);
+  --ink-on-media: oklch(1 0 0);
 
   /* Accent palette — retinted to the gold family (names kept: they are consumed
      as SEMANTIC accents all over the code; renaming would touch every screen) */
@@ -185,6 +205,16 @@ html.reference {
   --border: oklch(0.9 0.015 168);
   --input: oklch(0.9 0.015 168);
   --ring: #0f6e56;
+
+  /* Surfaces empilées — DESSINÉES pour le clair, pas décalquées du sombre : le
+     creux est un blanc cassé légèrement teinté (il s'enfonce), les contrôles et
+     les cartes sont d'un blanc franc dont l'élévation vient du filet et de
+     l'ombre (`--shadow-card`), jamais d'un remplissage plus foncé. */
+  --surface-1: oklch(0.972 0.008 165);
+  --surface-2: oklch(1 0 0);
+  --surface-3: oklch(1 0 0);
+  --media-scrim: oklch(0 0 0);
+  --ink-on-media: oklch(1 0 0);
 
   /* Accent palette — retinted to teal, deepened to read on white */
   --neon-violet: #0f6e56;
@@ -298,21 +328,6 @@ html.reference .app-shell :is(.text-black, .text-white) {
   color: oklch(0.26 0.03 175);
 }
 
-/* ---------------------------------------------------------------
-  Immersive exercise player (light theme).
-  The unified question-by-question player renders in BOTH the connected
-  (.app-shell) and the public (.public-shell) registers. Its translucent
-  `bg-black/<alpha>` panels need the same black→white remap the app shell gets;
-  in the public shell — which is NOT .app-shell — those cards otherwise stay dark
-  while the foreground/ink stays dark, making the quiz unreadable. Carry the remap
-  on the player itself (`.game-surface`) so it looks identical in both registers.
-  --------------------------------------------------------------- */
-html.reference .game-surface {
-  --color-black: oklch(1 0 0);
-}
-html.reference .game-surface :is(.text-black, .text-white) {
-  color: oklch(0.26 0.03 175);
-}
 html.reference .glass-gold {
   background: oklch(1 0 0 / 0.66);
   border-color: color-mix(in oklab, var(--gold) 28%, transparent);

@@ -170,7 +170,7 @@ export function OrderingBoard({ options, value, onChange, disabled, rtl, labels 
               <li key={id} data-testid="ordering-item" data-option-id={id}>
                 <SortableRow id={id} disabled={disabled}>
                   {(handle) => (
-                    <div className="flex w-full items-center gap-3 rounded-xl border border-border bg-black/40 px-3 py-3 text-sm">
+                    <div className="flex w-full items-center gap-3 rounded-xl border border-border bg-surface-2 px-3 py-3 text-sm">
                       {handle}
                       <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md border border-current font-mono text-xs">
                         {index + 1}
@@ -277,14 +277,14 @@ export function MatchingBoard({ options, value, onChange, disabled, rtl, labels 
                   data-testid="matching-row"
                   data-pair={`${left.id}:${rightId}`}
                 >
-                  <div className="flex items-center gap-2 rounded-xl border border-border/60 bg-black/30 px-3 py-3 text-sm">
+                  <div className="flex items-center gap-2 rounded-xl border border-border/60 bg-surface-1 px-3 py-3 text-sm">
                     <span className="min-w-0 flex-1">
                       <OptionContent raw={left.text} />
                     </span>
                   </div>
                   <SortableRow id={rightId} disabled={disabled}>
                     {(handle) => (
-                      <div className="flex h-full w-full items-center gap-2 rounded-xl border border-border bg-black/40 px-3 py-3 text-sm">
+                      <div className="flex h-full w-full items-center gap-2 rounded-xl border border-border bg-surface-2 px-3 py-3 text-sm">
                         {handle}
                         <span className="min-w-0 flex-1">
                           <OptionContent raw={textById.get(rightId) ?? rightId} />

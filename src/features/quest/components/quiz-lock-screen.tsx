@@ -57,7 +57,7 @@ export function QuizLockScreen({
     </>
   );
   const takeQuizClass =
-    "inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-bold text-black shadow-gold hover:scale-105 [@media(pointer:coarse)]:min-h-11";
+    "inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-gold hover:scale-105 [@media(pointer:coarse)]:min-h-11";
   return (
     <div className="mx-auto max-w-md px-6 py-16 text-center" dir={rtl ? "rtl" : undefined}>
       <div className="rounded-3xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/5 p-8">
@@ -87,7 +87,7 @@ export function QuizLockScreen({
             <Link
               to="/chapitre/$chapterId"
               params={{ chapterId }}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-black/50 px-5 py-2.5 text-sm font-semibold hover:bg-black/80 [@media(pointer:coarse)]:min-h-11"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface-2 px-5 py-2.5 text-sm font-semibold hover:bg-surface-3 [@media(pointer:coarse)]:min-h-11"
             >
               <BookOpen className="h-4 w-4" /> {reviewLabel}
             </Link>
@@ -96,7 +96,7 @@ export function QuizLockScreen({
             <Link
               to="/matiere/$subjectId"
               params={{ subjectId }}
-              className="inline-flex items-center rounded-lg border border-border bg-black/50 px-5 py-2.5 text-sm font-semibold hover:bg-black/80 [@media(pointer:coarse)]:min-h-11"
+              className="inline-flex items-center rounded-lg border border-border bg-surface-2 px-5 py-2.5 text-sm font-semibold hover:bg-surface-3 [@media(pointer:coarse)]:min-h-11"
             >
               {backLabel}
             </Link>
