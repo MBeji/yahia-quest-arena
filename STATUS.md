@@ -35,6 +35,33 @@
 
 ---
 
+## 1bis. Position de référence & scorecard (étude 28, arbitrée le 2026-08-13)
+
+**La position revendiquée** — _« la plateforme où l'élève tunisien s'entraîne et mesure sa
+maîtrise »_ : **chez les autres on regarde, ici on s'entraîne.** Elle emporte un **renoncement
+acté** : on ne concurrence pas TakiAcademy sur le cours vidéo, et le canal ministériel
+(Classera) est hors cible. Ce n'est pas un choix marketing — c'est la description de ce qui est
+**déjà construit** (SM-2, 59 compétences, maîtrise EWMA, rappel actif, duels, 6 types natifs).
+Modèle de soutenabilité tranché : **B2B établissement**, l'élève reste gratuit (mise en œuvre
+suspendue au dégel de é01). Décisions **D5/D6** de `go-live/05`, dépôt privé.
+
+**Scorecard** — l'étude 28 juge la position sur 5 indicateurs. État au **2026-08-13 (J-19)** :
+
+| KPI                                  | cible                                               | état                                                                                                                                           |
+| ------------------------------------ | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1 — un canal d'acquisition actif** | ≥ 1 ouvert et mesuré dans PostHog avant le 1ᵉʳ sept | 🔴 **zéro** — D1/D2/D3 ouverts depuis le 2026-06-13. **C'est le goulot du projet**                                                             |
+| **2 — la rétention est publiée**     | métrique de retour S(N)→S(N+1) calculée et affichée | 🔴 **jamais publiée** — définie le 2026-07-19 (é26 KPI-4). Sans elle, « référence » est une opinion                                            |
+| **3 — zéro différenciateur éteint**  | `user_misconceptions` non vide en prod              | 🔴 **éteint** — 0 `misconceptionTag` sur 22 146 questions. L'**étape 0 est faite** (registre 56/56), reste le tagging des distracteurs (C4bis) |
+| **4 — classes de concours entières** | 6ᵉ 4/4 matières · 9ᵉ tenue à la barre é18           | 🟠 **6ᵉ à 3/4** — le **français manque**, fiche transcrite et zéro contenu · 9ᵉ : 6 matières                                                   |
+| **5 — verrous légaux levés**         | GAP-024 livré · GAP-003 tranché                     | 🔴 **aucun des deux** — `deleteAccount`/`export_user_data` absents de `src/`. **Bloque tout démarchage d'école** (é28 D-5)                     |
+
+> ⚠️ **Ce tableau n'est pas un reproche, c'est le diagnostic.** L'avance d'ingénierie est réelle
+> et mesurée ; elle ne rencontre personne. Les cinq lignes se lèvent dans l'ordre **M-1 → M-5**
+> de l'étude 28 (allumer C4bis · examen blanc · canal enseignant · verrous légaux ·
+> soutenabilité). Le détail vit au privé — ce bloc donne **l'état**, pas le « comment ».
+
+---
+
 ## 2. Décisions structurantes
 
 > **Le journal complet est sorti d'ici le 2026-08-02.** Les 34 entrées datées du 2026-06-13 au
