@@ -33,6 +33,7 @@ import { FamilyGoalCard } from "@/features/dashboard/components/family-goal-card
 import { MotivationalQuote } from "@/features/dashboard/components/motivational-quote";
 import { DashboardFocus } from "@/features/dashboard/components/dashboard-focus";
 import { BackToSchoolBanner } from "@/features/dashboard/components/back-to-school-banner";
+import { DashboardSkeleton } from "@/features/dashboard/components/dashboard-skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useReducedMotion } from "motion/react";
 import { entrance } from "@/shared/lib/motion";
@@ -124,20 +125,7 @@ function Dashboard() {
   }
 
   if (isLoading || !data) {
-    return (
-      <PageShell width="wide" className="space-y-6">
-        <div className="h-48 animate-pulse rounded-3xl bg-foreground/10" />
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="h-20 animate-pulse rounded-2xl bg-foreground/10" />
-          <div className="h-20 animate-pulse rounded-2xl bg-foreground/10" />
-        </div>
-        <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-5">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-28 animate-pulse rounded-2xl bg-foreground/10" />
-          ))}
-        </div>
-      </PageShell>
-    );
+    return <DashboardSkeleton />;
   }
 
   const { profile, subjects, stats, nextExerciseId } = data;

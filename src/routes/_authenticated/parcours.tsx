@@ -2,9 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getDashboard } from "@/features/dashboard";
-import { JourneyMap, buildSubjectNodes } from "@/features/parcours";
-import { useT } from "@/lib/i18n";
-import { LoadingState } from "@/components/ui/loading-state";
+import { JourneyMap, JourneySkeleton, buildSubjectNodes } from "@/features/parcours";
 
 export const Route = createFileRoute("/_authenticated/parcours")({
   head: () => ({ meta: [{ title: "Parcours · Na9ra Nal3ab" }] }),
@@ -18,7 +16,6 @@ type ProfileRow = {
 };
 
 function ParcoursPage() {
-  const t = useT();
   const fetchDashboard = useServerFn(getDashboard);
   const { data, isLoading } = useQuery({
     queryKey: ["dashboard"],
@@ -26,7 +23,7 @@ function ParcoursPage() {
   });
 
   if (isLoading || !data) {
-    return <LoadingState label={t.common.loading} className="min-h-[60dvh]" />;
+    return <JourneySkeleton />;
   }
 
   const profile = data.profile as ProfileRow | null;

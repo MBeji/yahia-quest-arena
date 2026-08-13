@@ -4,7 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { CloudOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
-import { LoadingState } from "@/components/ui/loading-state";
+import { SubjectHubSkeleton } from "@/features/quest/components/subject-hub-skeleton";
 import { useT } from "@/lib/i18n";
 import { getSubject } from "@/features/quest";
 import { useAuth } from "@/features/auth";
@@ -47,7 +47,7 @@ function MatierePage() {
   }
 
   if (isLoading || !data) {
-    return <LoadingState label={t.common.loading} className="min-h-[60dvh]" />;
+    return <SubjectHubSkeleton />;
   }
 
   return (
