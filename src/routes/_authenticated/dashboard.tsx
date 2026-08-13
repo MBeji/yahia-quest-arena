@@ -5,6 +5,7 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { motion } from "motion/react";
 import {
   Flame,
+  TrendingUp,
   Trophy,
   Swords,
   Crown,
@@ -38,6 +39,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useReducedMotion } from "motion/react";
 import { entrance } from "@/shared/lib/motion";
 import { PageShell } from "@/components/ui/page-shell";
+import { SectionHeading } from "@/components/ui/section-heading";
 import { GoldProgress } from "@/components/game/gold-progress";
 
 const GoldAmbientCanvas = lazy(() => import("@/components/visual/gold-ambient-canvas"));
@@ -186,7 +188,7 @@ function Dashboard() {
         {/* HERO HEADER */}
         <motion.div
           {...entrance(prefersReduced, "rise")}
-          className="relative overflow-hidden rounded-3xl border border-[color:var(--gold)]/30 bg-black/40 p-6 backdrop-blur-xl shadow-card sm:p-8"
+          className="relative overflow-hidden rounded-3xl border border-[color:var(--gold)]/30 bg-surface-2 p-6 backdrop-blur-xl shadow-card sm:p-8"
         >
           {/* Refined premium hairline: a single gold filet across the top edge. */}
           <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[color:var(--gold)]/50 to-transparent" />
@@ -270,6 +272,14 @@ function Dashboard() {
           />
         )}
 
+        {/* ZONE 1 — « Aujourd'hui » (levier 04). Les trois zones ne changent NI l'ordre
+            NI le contenu des blocs : elles leur donnent des points d'ancrage. Le constat
+            de l'audit n'était pas qu'il manquait ou surabondait quelque chose, c'est que
+            douze blocs de même volume se lisaient comme une liste — donc comme du travail. */}
+        <div className="mt-8">
+          <SectionHeading icon={Flame} title={t.dashboard.zoneToday} />
+        </div>
+
         {/* FOCUS BAND — the redesign's centrepiece: promote ONE prioritised action
             ("Reprendre") to hero prominence beside the daily-objective ring, then two
             calm secondary tiles (Donjon · Duel). Replaces the old stacked Quick Start. */}
@@ -289,6 +299,11 @@ function Dashboard() {
             données viennent de `getDashboard`, qui n'appelle `get_daily_plan` qu'une fois. */}
         <DailyReviewPanel items={data.dailyPlan ?? []} />
 
+        {/* ZONE 2 — « Ta progression ». */}
+        <div className="mt-8">
+          <SectionHeading icon={TrendingUp} title={t.dashboard.zoneProgress} />
+        </div>
+
         {/* « Carte de compétences » (étude 07, lot 4) — la progression PÉDAGOGIQUE sous la
             révision : où en est vraiment l'élève, par compétence, et ce qui le bloque (R-5).
             Données via `getDashboard` (une lecture de la carte, une des blocages) ; le composant
@@ -300,9 +315,6 @@ function Dashboard() {
             blockedSlug={data.competencyBlockedSlug ?? null}
           />
         </Suspense>
-
-        {/* Push opt-in — self-hides when push is unavailable in this browser. */}
-        <EnablePushCard />
 
         {/* STREAK RECOVERY BANNER */}
         {profile.current_streak === 0 && (profile.longest_streak ?? 0) > 0 && (
@@ -356,7 +368,7 @@ function Dashboard() {
                 return (
                   <div
                     key={obj.id}
-                    className={`rounded-xl bg-black/40 p-3 ${done ? "opacity-60" : ""}`}
+                    className={`rounded-xl bg-surface-2 p-3 ${done ? "opacity-60" : ""}`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="text-sm font-semibold">
@@ -411,7 +423,7 @@ function Dashboard() {
                 return (
                   <div
                     key={q.id}
-                    className={`rounded-xl bg-black/40 p-3 ${done ? "opacity-60" : ""}`}
+                    className={`rounded-xl bg-surface-2 p-3 ${done ? "opacity-60" : ""}`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="text-sm font-semibold">
@@ -443,26 +455,26 @@ function Dashboard() {
           </div>
         </motion.div>
 
-        {/* Daily rotating motivation — relocated here as a slim full-width strip so the
-            focus band above stays uncluttered. */}
-        <div className="mt-6">
-          <MotivationalQuote />
-        </div>
-
         {/* SUBJECTS GRID — now full-width (radar/inventory/badges/shop moved to
             the dedicated /boutique route, D-5 / Q-4). */}
+        {/* ZONE 3 — « Explorer ». La grille de matières portait DÉJÀ le seul intertitre
+            de l'écran ; il devient celui de la zone, et son action (classement) le suit. */}
         <section className="mt-8">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="flex items-center gap-2 font-display text-xl font-bold">
-              <Swords className="h-5 w-5 text-[color:var(--gold)]" /> {t.dashboard.pathsTitle}
-            </h2>
-            <Link
-              to="/leaderboard"
-              className="flex items-center gap-1.5 rounded-lg border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/20 [@media(pointer:coarse)]:min-h-11"
-            >
-              <Crown className="h-3.5 w-3.5" /> {t.common.leaderboard}
-            </Link>
-          </div>
+          <SectionHeading
+            icon={Swords}
+            title={t.dashboard.zoneExplore}
+            action={
+              <Link
+                to="/leaderboard"
+                className="flex shrink-0 items-center gap-1.5 rounded-lg border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/20 [@media(pointer:coarse)]:min-h-11"
+              >
+                <Crown className="h-3.5 w-3.5" /> {t.common.leaderboard}
+              </Link>
+            }
+          />
+          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            {t.dashboard.pathsTitle}
+          </h3>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {subjects.map((s, i) => (
               <motion.div key={s.id} {...entrance(prefersReduced, "rise", i * 0.05)}>
@@ -482,7 +494,7 @@ function Dashboard() {
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           <Link
             to="/boutique"
-            className="group flex items-center gap-4 rounded-2xl border border-[color:var(--gold)]/25 bg-black/40 p-4 backdrop-blur-md transition hover:border-[color:var(--gold)]/50 [@media(pointer:coarse)]:min-h-11"
+            className="group flex items-center gap-4 rounded-2xl border border-[color:var(--gold)]/25 bg-surface-2 p-4 backdrop-blur-md transition hover:border-[color:var(--gold)]/50 [@media(pointer:coarse)]:min-h-11"
           >
             <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[color:var(--gold)]/15">
               <ShoppingBag className="h-6 w-6 text-[color:var(--gold)]" />
@@ -528,6 +540,14 @@ function Dashboard() {
               <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground transition group-hover:text-[color:var(--gold)] rtl:-scale-x-100" />
             </Link>
           )}
+        </div>
+
+        {/* ZONE CALME — ce qui accompagne sans réclamer : la citation du jour et
+            l'opt-in aux notifications. L'opt-in descend d'ici (il était coincé entre
+            deux blocs de contenu) : c'est un réglage, pas une étape du parcours. */}
+        <div className="mt-8 space-y-4 opacity-90">
+          <MotivationalQuote />
+          <EnablePushCard />
         </div>
       </PageShell>
     </>

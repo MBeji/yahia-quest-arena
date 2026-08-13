@@ -77,7 +77,7 @@ export function DashboardFocus({
           <Link
             to={target.to}
             params={target.params}
-            className="group relative flex items-center justify-between gap-4 overflow-hidden rounded-2xl bg-[image:var(--gradient-gold)] p-6 text-black shadow-gold transition hover:brightness-[1.04] sm:p-7"
+            className="group relative flex items-center justify-between gap-4 overflow-hidden rounded-2xl bg-[image:var(--gradient-gold)] p-6 text-primary-foreground shadow-gold transition hover:brightness-[1.04] sm:p-7"
           >
             <div className="min-w-0">
               <div className="text-[11px] font-bold uppercase tracking-[0.18em] opacity-70">
@@ -88,12 +88,12 @@ export function DashboardFocus({
               </div>
               <div className="mt-1 truncate text-sm opacity-75">{t.dashboard.resumeSubtitle}</div>
             </div>
-            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-black/15">
+            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-primary-foreground/15">
               <ChevronRight className="h-6 w-6 transition group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5" />
             </span>
           </Link>
         ) : (
-          <div className="grid place-items-center rounded-2xl border border-[color:var(--gold)]/25 bg-black/40 p-7 text-sm text-muted-foreground backdrop-blur-md">
+          <div className="grid place-items-center rounded-2xl border border-[color:var(--gold)]/25 bg-surface-2 p-7 text-sm text-muted-foreground backdrop-blur-md">
             {t.dashboard.noQuestTarget}
           </div>
         )}
@@ -131,7 +131,7 @@ function DailyRing({
   const isComplete = pct >= 100;
 
   return (
-    <div className="flex items-center gap-5 rounded-2xl border border-[color:var(--gold)]/25 bg-black/40 p-5 backdrop-blur-md">
+    <div className="flex items-center gap-5 rounded-2xl border border-[color:var(--gold)]/25 bg-surface-2 p-5 backdrop-blur-md">
       <div className="relative h-20 w-20 shrink-0">
         <svg className="h-full w-full -rotate-90" viewBox="0 0 96 96">
           <circle
@@ -207,7 +207,7 @@ function ActionTile({
       // 375px phone — pushing the document to scrollWidth 495 (the horizontal
       // overflow the responsive suite reports). The inner `min-w-0 flex-1` only
       // lets the LABEL shrink; the item itself needs its own floor removed.
-      className="group flex min-w-0 items-center gap-3.5 rounded-2xl border border-[color:var(--gold)]/25 bg-black/40 p-4 backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[color:var(--gold)]/50 sm:p-5"
+      className="group flex min-w-0 items-center gap-3.5 rounded-2xl border border-[color:var(--gold)]/25 bg-surface-2 p-4 backdrop-blur-md transition hover:-translate-y-0.5 hover:border-[color:var(--gold)]/50 sm:p-5"
     >
       <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[color:var(--gold)]/12">
         <Icon className="h-5 w-5 text-[color:var(--gold)]" />

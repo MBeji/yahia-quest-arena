@@ -154,14 +154,14 @@ export function DashboardRadarInventory({
         </p>
       </div>
 
-      <div className="mt-6 rounded-2xl border border-border/50 bg-black/60 p-4 backdrop-blur-md">
+      <div className="mt-6 rounded-2xl border border-border/50 bg-surface-3 p-4 backdrop-blur-md">
         <div className="mb-3 flex items-center justify-between gap-2">
           <h3 className="flex items-center gap-2 font-display text-lg font-bold">
             <Backpack className="h-4 w-4 text-[color:var(--gold)]" /> {t.dashboard.inventoryTitle}
           </h3>
           <Avatar className="h-9 w-9 border border-[color:var(--gold)]/40">
             <AvatarFallback
-              className="bg-[image:var(--gradient-gold)] text-base text-black"
+              className="bg-[image:var(--gradient-gold)] text-base text-primary-foreground"
               aria-label={avatarEmoji ? (avatarSlug ?? "avatar") : "avatar"}
             >
               {avatarEmoji ?? initials}
@@ -171,7 +171,7 @@ export function DashboardRadarInventory({
         <div className="space-y-3">
           {inventory.length > 0 ? (
             inventory.slice(0, 4).map((item) => (
-              <div key={item.code} className="rounded-xl bg-black/40 p-3">
+              <div key={item.code} className="rounded-xl bg-surface-2 p-3">
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
                     <div className="truncate font-semibold">{item.name}</div>
@@ -201,7 +201,7 @@ export function DashboardRadarInventory({
                         disabled={isActivatePending}
                         onClick={() => onActivate(item.code)}
                         aria-label={`${t.dashboard.shopActivate} ${item.name}`}
-                        className="min-h-11 rounded-lg bg-[image:var(--gradient-gold)] px-3 py-1.5 text-xs font-bold text-black shadow-gold disabled:opacity-40"
+                        className="min-h-11 rounded-lg bg-[image:var(--gradient-gold)] px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-gold disabled:opacity-40"
                       >
                         {t.dashboard.shopActivate}
                       </button>

@@ -16,7 +16,7 @@ export function HeroAvatar({ avatarSlug }: { avatarSlug: string | null }) {
           {emoji}
         </span>
       ) : (
-        <Sparkles className="h-9 w-9 text-black" />
+        <Sparkles className="h-9 w-9 text-primary-foreground" />
       )}
     </div>
   );
