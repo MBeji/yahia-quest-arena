@@ -132,6 +132,15 @@
   --color-surface-3: var(--surface-3);
   /* Un letterbox vidéo est noir dans les DEUX thèmes, et son incrustation
      blanche : ce n'est pas une surface d'interface, c'est du média. */
+  /* Échelle de rareté (levier 02). Elle DOIT rompre le monochrome : même sur un
+     thème noir & or, un badge légendaire et un badge commun doivent se distinguer
+     d'un coup d'œil — c'est la convention de tout jeu, et c'est ce qui donne sa
+     valeur à la collection. Quatre crans, définis par thème. */
+  --color-rarity-common: var(--rarity-common);
+  --color-rarity-rare: var(--rarity-rare);
+  --color-rarity-epic: var(--rarity-epic);
+  --color-rarity-legendary: var(--rarity-legendary);
+
   --color-media-scrim: var(--media-scrim);
   --color-ink-on-media: var(--ink-on-media);
 
@@ -182,6 +191,11 @@
   --surface-1: oklch(0.145 0.008 85 / 0.32);
   --surface-2: oklch(0.145 0.008 85 / 0.46);
   --surface-3: oklch(0.145 0.008 85 / 0.62);
+  /* Rareté sur fond noir : assez lumineuses pour tenir seules. */
+  --rarity-common: oklch(0.72 0.02 250);
+  --rarity-rare: oklch(0.75 0.13 220);
+  --rarity-epic: oklch(0.7 0.19 300);
+  --rarity-legendary: oklch(0.85 0.16 90);
   --media-scrim: oklch(0 0 0);
   --ink-on-media: oklch(1 0 0);
 
@@ -278,6 +292,11 @@ html.reference {
   --surface-1: oklch(0.972 0.008 165);
   --surface-2: oklch(1 0 0);
   --surface-3: oklch(1 0 0);
+  /* Rareté sur fond blanc : mêmes teintes, assombries pour rester lisibles. */
+  --rarity-common: oklch(0.55 0.02 250);
+  --rarity-rare: oklch(0.52 0.14 240);
+  --rarity-epic: oklch(0.48 0.2 300);
+  --rarity-legendary: oklch(0.58 0.13 75);
   --media-scrim: oklch(0 0 0);
   --ink-on-media: oklch(1 0 0);
 
