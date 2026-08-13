@@ -95,6 +95,10 @@ export class QuestPage {
     }).toPass({ timeout: 15_000 });
     // Validation is the only way to advance: click "Valider".
     await this.submit.click();
+    // Instant feedback (levier 01): on a corrigible exercise, validating reveals
+    // the verdict instead of advancing — the SAME button then reads "Continuer".
+    // Quiz and recall runs have no verdict, so this is a no-op there.
+    await this.continuePastFeedback();
     // Wait for the advance: the prompt changes, or the results screen appears.
     await expect
       .poll(
@@ -113,6 +117,18 @@ export class QuestPage {
    * skipping the "preparing" screen shown while the secure session is created and
    * the inter-question transitions. Returns false once the score screen is up.
    */
+  /**
+   * If the per-question verdict panel is up, click through it. The player keeps
+   * one hook (`quest-submit`) across "Valider" and "Continuer", so advancing is
+   * a second click on the same button — never a different locator.
+   */
+  private async continuePastFeedback(): Promise<void> {
+    const feedback = this.page.getByTestId("quest-feedback");
+    if (!(await feedback.isVisible({ timeout: 3_000 }).catch(() => false))) return;
+    await expect(this.submit).toBeEnabled({ timeout: 5_000 });
+    await this.submit.click();
+  }
+
   private async questionReady(): Promise<boolean> {
     await expect(this.options.first().or(this.score)).toBeVisible({ timeout: 20_000 });
     return !(await this.score.isVisible().catch(() => false));

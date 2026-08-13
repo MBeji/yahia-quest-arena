@@ -1,13 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
-import type { SupabaseClient } from "@supabase/supabase-js";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { optionalSupabaseAuth } from "@/shared/integrations/supabase/optional-auth-middleware";
 import { isRateLimited, isRateLimitedLocal } from "@/shared/lib/rate-limit";
 import { MIN_SECONDS_PER_QUESTION, QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
 import { errorMessage, failWithClientError } from "@/shared/lib/safe-error";
-import { findAnswerFormatViolation, MAX_CHOICE_LENGTH } from "@/shared/lib/answer-formats";
+import { MAX_CHOICE_LENGTH } from "@/shared/lib/answer-formats";
+import { assertAnswerFormats } from "@/features/quest/answer-format-guard";
 import { logger } from "@/shared/lib/logger";
 import type { UnlockedBadge } from "@/shared/types/gamification";
 import type { Database } from "@/shared/integrations/supabase/types";
@@ -53,42 +53,6 @@ export { RECALL_LOCKED_MESSAGE, RECALL_NOT_ELIGIBLE_MESSAGE } from "./quest.reca
 export { getTrainingForMisconception } from "./quest.training";
 
 type ProfileSnapshot = Database["public"]["Tables"]["profiles"]["Row"];
-
-/** Thrown when an answer's wire format doesn't match its question's type. */
-export const ANSWER_FORMAT_MESSAGE = "Réponse invalide pour ce type de question.";
-
-/**
- * Per-type wire-format validation (docs/interactive-question-types.md): fetch
- * the exercise's (client-readable) question types and reject any answer whose
- * `choice` doesn't match its question's expected format — e.g. a non-numeric
- * string for a `numeric` question. Degrades open when the fetch itself fails:
- * the scoring RPCs are garbage-safe either way, this only improves the error.
- */
-async function assertAnswerFormats(
-  supabase: SupabaseClient<Database>,
-  scope: string,
-  exerciseId: string,
-  answers: ReadonlyArray<{ questionId: string; choice: string }>,
-): Promise<void> {
-  const { data: rows, error } = await supabase
-    .from("questions")
-    .select("id,question_type")
-    .eq("exercise_id", exerciseId);
-  if (error || !rows) {
-    logger.warn(`${scope}: question_type fetch failed — skipping format validation`, {
-      exerciseId,
-      error: error?.message,
-    });
-    return;
-  }
-  const violation = findAnswerFormatViolation(
-    new Map(rows.map((row) => [row.id, row.question_type])),
-    answers,
-  );
-  if (violation) {
-    failWithClientError(scope, null, ANSWER_FORMAT_MESSAGE);
-  }
-}
 
 /** Multiplier potion applied to a reward-earning attempt (null when none armed). */
 export type PotionApplied = {

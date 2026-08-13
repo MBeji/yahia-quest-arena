@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Loader2, Skull, Heart, Check } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { computeNextExerciseId, getExercise, getSubject } from "@/features/quest";
 import { PASS_THRESHOLD_PCT, RECALL_MIN_QUESTIONS } from "@/shared/constants/gamification";
@@ -15,7 +15,7 @@ import { levelForXp } from "@/shared/lib/level";
 import { QuestResultScreen } from "@/features/quest/components/quest-result-screen";
 import { QuizContractHint, QuizLockScreen } from "@/features/quest/components/quiz-lock-screen";
 import { QuestHintButton } from "@/features/quest/components/quest-hint-button";
-import { BossCountdown } from "@/features/quest/components/boss-countdown";
+import { BossBanner } from "@/features/quest/components/boss-countdown";
 import {
   buildQuestLabels,
   KEYPAD_BY_LANG,
@@ -29,6 +29,13 @@ import { PageShell } from "@/components/ui/page-shell";
 import { GoldProgress } from "@/components/game/gold-progress";
 import { questionSlide, useEntrance } from "@/shared/lib/motion";
 import { useSound } from "@/lib/sound";
+import {
+  ComboStrip,
+  OptionVerdictMark,
+  QuestionVerdictPanel,
+} from "@/features/quest/components/question-verdict";
+import { optionClassNameFor, type QuestionVerdict } from "@/features/quest/verdict";
+import { useInstantFeedback } from "@/features/quest/components/use-instant-feedback";
 import type { UnlockedBadge } from "@/shared/types/gamification";
 
 // =============================================================================
@@ -41,9 +48,28 @@ import type { UnlockedBadge } from "@/shared/types/gamification";
 // comprehension-quiz gate's pass source, the result CTA) is injected via a
 // `strategy`, so there is exactly one implementation of the play loop — no more
 // drift between the two modes.
+//
+// RETOUR IMMÉDIAT (levier 01) — pourquoi c'est tenable. Corriger une question en
+// cours de partie révèle la bonne réponse avant que le score final ne soit
+// calculé : il faut donc que la réponse ne puisse plus bouger. Deux verrous, et
+// ce qu'ils ne couvrent pas :
+//   1. La réponse est figée AVANT l'appel (`answeredQuestionRef` + `committedChoiceRef`),
+//      la liste passe en `disabled`, les raccourcis clavier de sélection se taisent,
+//      et « Continuer » rejoue la réponse figée — pas la sélection courante.
+//   2. Le verdict ne vient jamais du client : c'est la RPC `check_answers`, qui
+//      refuse le quiz de compréhension et tout exercice hors catalogue `admin`.
+// Ce que ça ne prétend pas être : une garantie contre un client modifié. Cette
+// même RPC est ouverte à `authenticated` depuis l'étude « types natifs » — la clé
+// d'un exercice d'entraînement est donc déjà atteignable depuis une console, avec
+// ou sans ce lot. Le modèle anti-triche du score repose sur le serveur
+// (`submit_exercise_attempt`, anti-rush, session à usage unique), pas sur le
+// secret de la clé côté navigateur. Ce lot n'ajoute aucune capacité — il rend
+// visible dans l'UI ce que la plateforme sert déjà.
 // =============================================================================
 
 export type PlayerAnswer = { questionId: string; choice: string };
+
+export type { QuestionVerdict };
 
 export type PlayerReviewItem = {
   questionId: string;
@@ -96,7 +122,14 @@ export type StartOutcome =
   | { ok: false; kind: "recall"; reason: "locked" | "not-eligible" };
 
 export type ExercisePlayerStrategy = {
-  capabilities: { rewards: boolean; hints: boolean; boss: boolean; next: boolean };
+  capabilities: {
+    rewards: boolean;
+    hints: boolean;
+    boss: boolean;
+    next: boolean;
+    /** Retour immédiat par question — exige `checkAnswer` pour s'activer. */
+    instantFeedback: boolean;
+  };
   /** Where the quiz-lock "take the quiz" CTA routes. */
   quizExerciseTo: "/quest/$exerciseId" | "/exercice/$exerciseId";
   /** Fallback "leave" destination when the exercise has no subject. */
@@ -120,6 +153,16 @@ export type ExercisePlayerStrategy = {
   revealHint?: (
     questionId: string,
   ) => Promise<{ questionId: string; hint: string | null; consumed: boolean }>;
+  /**
+   * Corrige la question qui vient d'être validée. Appelée APRÈS le verrouillage
+   * de la réponse, jamais avant : le verdict ne doit pouvoir changer aucune
+   * réponse déjà donnée.
+   */
+  checkAnswer?: (args: {
+    exerciseId: string;
+    questionId: string;
+    choice: string;
+  }) => Promise<QuestionVerdict | null>;
   /** Premium paywall (connected only). */
   renderPremiumLock?: (ctx: {
     message: string;
@@ -193,6 +236,30 @@ export function ExercisePlayer({
   const [result, setResult] = useState<PlayerResult | null>(null);
   const [hintsRemaining, setHintsRemaining] = useState(0);
   const [revealedHints, setRevealedHints] = useState<Record<string, string | null>>({});
+
+  // Retour immédiat (levier 01). Jamais sur le quiz de compréhension (l'élève
+  // s'y valide seul, la clé n'y est pas rendue) ni en Rappel (réponse libre :
+  // `check_answers` la confronterait à la clé du QCM et rendrait des verdicts
+  // faux). La machine à états vit dans son hook ; ici on décide quand l'appeler.
+  const feedbackEnabled =
+    capabilities.instantFeedback &&
+    Boolean(strategy.checkAnswer) &&
+    !isRecall &&
+    data?.exercise?.mode !== "quiz";
+  const {
+    verdict: feedback,
+    checking: feedbackChecking,
+    streak: comboStreak,
+    encouragement,
+    check: checkAnswerNow,
+    clear: clearFeedback,
+    reset: resetFeedback,
+  } = useInstantFeedback({
+    enabled: feedbackEnabled,
+    exerciseId,
+    labels: t.encouragement,
+    checkAnswer: strategy.checkAnswer,
+  });
 
   // Wall-clock start of the run, used to measure the answer duration the anon
   // strategy needs for its anti-rush check (connected scoring is server-timed).
@@ -365,6 +432,8 @@ export function ExercisePlayer({
   const QL = useMemo(() => buildQuestLabels(qlang), [qlang]);
 
   const answeredQuestionRef = useRef<string | null>(null);
+  /** La réponse figée au moment de la correction, rejouée à « Continuer ». */
+  const committedChoiceRef = useRef<string | null>(null);
   const sessionStartedForRef = useRef<string | null>(null);
   const selectedRef = useRef(selected);
   const answersRef = useRef(answers);
@@ -443,8 +512,13 @@ export function ExercisePlayer({
     setShowLevelUp(false);
     setSessionId(null);
     setRevealedHints({});
+    // On dépend des CALLBACKS du hook, jamais de l'objet `instant` : il est neuf
+    // à chaque rendu, donc en dépendre relancerait `resetRun` à chaque changement
+    // d'état — et effacerait le verdict à l'instant même où il paraît.
+    resetFeedback();
+    committedChoiceRef.current = null;
     setHintsRemaining(capabilities.hints ? hintCharges : 0);
-  }, [resetSessionMutation, hintCharges, capabilities.hints]);
+  }, [resetSessionMutation, hintCharges, capabilities.hints, resetFeedback]);
 
   useEffect(() => {
     resetRun();
@@ -482,15 +556,64 @@ export function ExercisePlayer({
     [answers, current?.id, idx, sessionId, total, submitRun],
   );
 
+  const continueAfterFeedback = useCallback(() => {
+    const choice = committedChoiceRef.current;
+    if (!choice) return;
+    committedChoiceRef.current = null;
+    clearFeedback();
+    // `advanceWithChoice` refuse une question déjà marquée répondue : on lève le
+    // verrou posé à la correction, la réponse étant désormais figée.
+    answeredQuestionRef.current = null;
+    advanceWithChoice(choice);
+  }, [advanceWithChoice, clearFeedback]);
+
   const validate = useCallback(() => {
     if (!selected || !canValidate || !sessionId) return;
-    advanceWithChoice(selected);
-  }, [advanceWithChoice, selected, canValidate, sessionId]);
+    if (feedback || feedbackChecking) return;
+    if (!feedbackEnabled || !current?.id) {
+      advanceWithChoice(selected);
+      return;
+    }
+    // La réponse est VERROUILLÉE avant que la demande de verdict ne parte : à
+    // partir d'ici elle ne peut plus changer, et c'est ce qui rend la correction
+    // en cours de partie compatible avec le score calculé à la fin.
+    if (answeredQuestionRef.current === current.id) return;
+    answeredQuestionRef.current = current.id;
+    committedChoiceRef.current = selected;
+    const committed = selected;
+    void checkAnswerNow(current.id, committed).then((held) => {
+      if (held) return;
+      // Pas de verdict à montrer (exercice non corrigible, panne) : on enchaîne
+      // exactement comme avant ce lot, avec la réponse que l'élève a donnée.
+      answeredQuestionRef.current = null;
+      committedChoiceRef.current = null;
+      advanceWithChoice(committed);
+    });
+  }, [
+    advanceWithChoice,
+    selected,
+    canValidate,
+    sessionId,
+    feedback,
+    feedbackEnabled,
+    checkAnswerNow,
+    feedbackChecking,
+    current?.id,
+  ]);
 
   useEffect(() => {
     if (result) return;
     function handleKeyDown(e: KeyboardEvent) {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      // Verdict à l'écran : la seule touche qui agit est celle qui enchaîne. Les
+      // raccourcis de sélection sont muets — la réponse est déjà figée.
+      if (feedback) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          continueAfterFeedback();
+        }
+        return;
+      }
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
         validate();
@@ -601,6 +724,9 @@ export function ExercisePlayer({
   if (!sessionId && !sessionMutation.isError) return preparingScreen;
 
   function handleSelect(optId: string) {
+    // Une fois la question corrigée (ou en cours de correction), la réponse est
+    // figée : plus aucune sélection n'est acceptée.
+    if (feedback || feedbackChecking) return;
     // Discrete taps get a blip; typed input (numeric, recall free text) would
     // fire on every keystroke, so it stays silent.
     if (!isRecall && (currentType === "mcq" || currentType === "multi")) play("select");
@@ -632,45 +758,16 @@ export function ExercisePlayer({
       )}
 
       {bossMode && (
-        <motion.div
-          {...scaleIn}
-          className="mb-6 rounded-2xl border border-destructive/40 bg-destructive/10 p-4 backdrop-blur-md"
-        >
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex min-w-0 items-center gap-3">
-              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-linear-to-br from-destructive to-gold shadow-lg animate-pulse">
-                <Skull className="h-5 w-5 text-primary-foreground" />
-              </div>
-              <div className="min-w-0">
-                <div className="text-xs uppercase tracking-[0.3em] text-destructive font-bold">
-                  {t.quest.bossFight}
-                </div>
-                <div className="truncate font-display text-lg font-bold">{data.exercise.title}</div>
-              </div>
-            </div>
-            <BossCountdown
-              active={bossMode && Boolean(sessionId) && !result}
-              questionIndex={idx}
-              onTimeout={handleBossTimeout}
-            />
-          </div>
-          <div className="mt-4">
-            <div className="mb-1 flex items-center justify-between text-xs">
-              <span className="flex items-center gap-1 font-bold text-destructive">
-                <Heart className="h-3 w-3" /> {t.quest.bossHp}
-              </span>
-              <span className="text-muted-foreground">{bossHp}%</span>
-            </div>
-            <div className="h-3 overflow-hidden rounded-full bg-secondary/80">
-              <motion.div
-                className="h-full rounded-full bg-linear-to-r from-destructive to-gold"
-                initial={reduced ? false : { width: "100%" }}
-                animate={{ width: `${bossHp}%` }}
-                transition={{ duration: reduced ? 0 : 0.5 }}
-              />
-            </div>
-          </div>
-        </motion.div>
+        <BossBanner
+          title={data.exercise.title}
+          hp={bossHp}
+          questionIndex={idx}
+          countdownActive={Boolean(sessionId) && !result && !feedback && !feedbackChecking}
+          onTimeout={handleBossTimeout}
+          entrance={scaleIn}
+          reduced={Boolean(reduced)}
+          labels={{ fight: t.quest.bossFight, hp: t.quest.bossHp }}
+        />
       )}
 
       <div className="mb-6">
@@ -702,6 +799,10 @@ export function ExercisePlayer({
         )}
         {isQuiz && <QuizContractHint className="mt-2" />}
       </div>
+
+      {feedbackEnabled && (
+        <ComboStrip streak={comboStreak} encouragement={encouragement} entrance={scaleIn} />
+      )}
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -736,26 +837,26 @@ export function ExercisePlayer({
             labels={QL}
             recallChars={RECALL_CHAR_BAR[qlang]}
             recallKeypadRows={KEYPAD_BY_LANG[qlang]}
-            optionClassName={({ isSelected }: McqOptionRender) =>
-              `active:scale-[0.97] ${
-                isSelected
-                  ? bossMode
-                    ? "border-destructive bg-destructive/20"
-                    : "border-gold bg-gold/15"
-                  : bossMode
-                    ? "border-destructive/20 bg-black/40 hover:border-destructive/60 hover:bg-destructive/10"
-                    : "border-border bg-black/40 hover:border-gold/60 hover:bg-black/70"
-              }`
+            disabled={Boolean(feedback) || feedbackChecking}
+            optionClassName={(state: McqOptionRender) =>
+              optionClassNameFor(feedback, bossMode, state)
             }
-            optionTrailing={({ isSelected }: McqOptionRender) =>
-              isSelected ? (
-                <span className="flex shrink-0 items-center gap-1">
-                  <Check className="h-5 w-5" aria-hidden="true" />
-                  <span className="sr-only">{t.quest.selectedAnswer}</span>
-                </span>
-              ) : null
-            }
+            optionTrailing={(state: McqOptionRender) => (
+              <OptionVerdictMark feedback={feedback} state={state} labels={t.quest} />
+            )}
           />
+
+          {feedback && (
+            <QuestionVerdictPanel
+              feedback={feedback}
+              labels={QL}
+              showAnswerInText={!feedback.isCorrect && currentType !== "mcq"}
+              answerText={
+                feedback.correctChoice ? getDisplayChoice(current.id, feedback.correctChoice) : null
+              }
+              rtl={isRtlSubject}
+            />
+          )}
 
           {currentType === "mcq" && !isRecall && (
             <div className="mt-3 text-center text-xs text-muted-foreground/60 hidden sm:block">
@@ -779,24 +880,35 @@ export function ExercisePlayer({
           <div className="mt-6 flex justify-end">
             <button
               data-testid="quest-submit"
-              disabled={!canValidate || mutation.isPending || sessionMutation.isPending}
-              onClick={validate}
+              disabled={
+                feedback
+                  ? mutation.isPending
+                  : !canValidate ||
+                    feedbackChecking ||
+                    mutation.isPending ||
+                    sessionMutation.isPending
+              }
+              onClick={feedback ? continueAfterFeedback : validate}
               className={`inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-bold shadow-gold transition disabled:opacity-40 ${
                 bossMode
                   ? "bg-linear-to-r from-destructive to-gold text-primary-foreground"
                   : "bg-[image:var(--gradient-gold)] text-black"
               }`}
             >
-              {(mutation.isPending || sessionMutation.isPending) && (
+              {(mutation.isPending || sessionMutation.isPending || feedbackChecking) && (
                 <Loader2 className="h-4 w-4 animate-spin" />
               )}
-              {bossMode
+              {feedback
                 ? idx + 1 >= total
-                  ? t.quest.bossFinalBlow
-                  : t.quest.bossAttack
-                : idx + 1 >= total
-                  ? t.quest.finishQuest
-                  : t.quest.nextQuestion}
+                  ? QL.feedbackFinish
+                  : QL.feedbackContinue
+                : bossMode
+                  ? idx + 1 >= total
+                    ? t.quest.bossFinalBlow
+                    : t.quest.bossAttack
+                  : idx + 1 >= total
+                    ? t.quest.finishQuest
+                    : t.quest.nextQuestion}
             </button>
           </div>
         </motion.div>
