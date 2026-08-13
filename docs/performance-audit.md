@@ -9,9 +9,10 @@
 > phased roadmap at the end; this doc is the source of truth for the _why_ behind
 > each one. Companion harness: [`perf/README.md`](../perf/README.md).
 >
-> **Date.** Audited 2026-06-30 · **findings re-verified against the code on
-> 2026-08-10** (§0). Re-run the audit when the catalogue or user base grows an
-> order of magnitude.
+> **Date.** Audited 2026-06-30 · **findings re-verified against the code from
+> 2026-08-10 to 2026-08-13** (§0 — the last sweep, which closed the remaining
+> "?" lines, ran on the 13th). Re-run the audit when the catalogue or user base
+> grows an order of magnitude.
 
 ---
 
@@ -84,8 +85,9 @@ finding exist here — and its remedy is the key migration.
 
 #### The remaining findings, swept 2026-08-10 — no line left unverified
 
-The first pass left seven findings at "?". They are now all read in the code. One
-more turned out to be false, which is the **fourth** of the original audit.
+The first pass left seven findings at "?". They are now all read in the code
+(**swept 2026-08-13**). One more turned out to be false, which is the **fourth**
+of the original audit.
 
 | ID           | Verified today                                                                                                                                                                                                  | State             |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
