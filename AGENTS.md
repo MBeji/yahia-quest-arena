@@ -241,9 +241,9 @@ this repo (this file, `STATUS.md`, `docs/agents/`) — not only in a tool's priv
   c'est **toute la file** qui est bloquée, pas elle (2026-08-04, `fast-uri`, #712). Réflexe :
   `git diff origin/main HEAD -- package.json package-lock.json` (vide ⇒ ce n'est pas toi),
   puis bump minimal (`npm audit fix --package-lock-only --omit=dev`) en commit séparé.
-- **Deux Node, deux npm — ce gate-ci est aveugle à ce que la Content CI privée refuse.** Ici
-  Node 24 / npm 11, là-bas Node 22 / npm 10, qui rejette des locks que npm 11 installe : un
-  `npm ci` cassé d'un seul côté se sonde **avec le npm de l'autre**. Incident #716/#718 (33 h de
-  Content CI rouge) : [`docs/dependency-maintenance.md`](./docs/dependency-maintenance.md).
+- **Le titre d'une PR Dependabot peut mentir sur son diff, et ce gate-ci ne l'a pas vu.** #716,
+  « bump undici · indirect », montait une **majeure** et entrait une **alpha** dans la chaîne de
+  build ; son lockfile a cassé `npm ci` **hors d'ici** (33 h de Content CI privée rouge) pendant
+  que ce gate restait vert. Lire le diff : [`docs/dependency-maintenance.md`](./docs/dependency-maintenance.md).
 - Coverage is scoped to owned code (`features/`, `shared/`, `lib/`, `hooks/`) — vendored UI,
   route glue, and generated files are excluded by design; don't widen `include` to dilute it.
