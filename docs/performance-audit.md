@@ -16,13 +16,14 @@
 
 ---
 
-## 0. Verified status — 2026-08-10 (`main` à #716)
+## 0. Verified status — 2026-08-10 → 2026-08-13 (`main` à #721)
 
 > **Read this before §3.** The audit below is the 2026-06-30 text, kept for the
 > _why_. Six weeks of delivery closed a third of it, and **one CRITICAL finding
 > turned out to rest on a false premise**. Every line here was re-read in the
-> code on 2026-08-10 — the rule `docs/dette-technique.md` already applies to code
-> debt, applied to perf: _on n'inscrit ici qu'un constat dont on a re-lu la ligne_.
+> code between 2026-08-10 and 2026-08-13 — the rule `docs/dette-technique.md`
+> already applies to code debt, applied to perf: _on n'inscrit ici qu'un constat
+> dont on a re-lu la ligne_.
 
 ### Closed since the audit (verified, with the proof)
 
@@ -83,7 +84,7 @@ finding exist here — and its remedy is the key migration.
 | **H-1 / H-3 / H-2** | infra unchanged: single `arn1` serverless fn, no edge cache on the public catalogue                                           | HIGH |
 | **M-1**             | 🟠 **client RUM + slow server-fn timing landed 2026-08-10** (see below); the DB slow-query log is a Supabase setting          | MED  |
 
-#### The remaining findings, swept 2026-08-10 — no line left unverified
+#### The remaining findings, swept 2026-08-13 — no line left unverified
 
 The first pass left seven findings at "?". They are now all read in the code
 (**swept 2026-08-13**). One more turned out to be false, which is the **fourth**
@@ -92,7 +93,7 @@ of the original audit.
 | ID           | Verified today                                                                                                                                                                                                  | State             |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
 | **C-2**      | `isRateLimited` still calls the `check_rate_limit` RPC **first**, at 8 feature call sites; `isRateLimitedLocal` is only an **error fallback**, not a first-gate                                                 | ⬜ open           |
-| **M2**       | `get_dungeon_access` still runs 2 × `COUNT(DISTINCT)` (latest def: `20260711100000_free_phase_all_parcours.sql`)                                                                                                | ⬜ open           |
+| **M2**       | `get_dungeon_access` still runs 2 × `COUNT(DISTINCT)` — **measured 2026-08-13**, see below                                                                                                                      | ⬜ open, chiffré  |
 | **M5**       | `get_student_report` still multi-scan (`20260708120000_student_report_by_code.sql`) — admin/parent frequency, so it stays acceptable                                                                            | ⬜ open, low      |
 | **M1** (DB)  | the `FOR UPDATE` chain on `profiles` is still there, but its amplifier (H3's unbounded aggregates) is gone — window much shorter                                                                                | 🟠 mitigated      |
 | **M3** (DB)  | N+1 `has_parcours_entitlement` — inert in the free phase; already tracked as **latent** in `docs/dette-technique.md`                                                                                            | 💤 latent         |
@@ -243,6 +244,30 @@ And there is still no _budget_ on LCP (a Lighthouse CI would close that;
 ⚠️ The beacon only reports where product analytics is enabled — no PostHog key,
 no data. Verify a `web_vitals` event actually lands before trusting an empty
 dashboard as "no problems".
+
+### M2 — measured 2026-08-13, transformation ready, deliberately not shipped
+
+`get_dungeon_access` computes two `COUNT(DISTINCT)` over the caller's **entire**
+attempt history, then compares them to constants (2 subjects, 3 chapters). It is
+called on every dungeon load **and twice more inside `start_dungeon_run`**.
+
+Measured on the replica, one user with 5 000 attempts:
+
+| variant                                            | per call    | shape                      |
+| -------------------------------------------------- | ----------- | -------------------------- |
+| current `COUNT(DISTINCT e.chapter_id)`             | **~4.8 ms** | O(user's lifetime history) |
+| `SELECT COUNT(*) FROM (SELECT DISTINCT … LIMIT 3)` | **~1.9 ms** | O(threshold) — stops early |
+
+**The transformation is provably safe for the gate.** Capping at the requirement
+leaves the comparison identical: `min(n, 2) < 2 ⟺ n < 2`. Same for chapters.
+
+**But it is NOT purely internal**, which is why it is not in this pass: the counts
+are also OUT columns, rendered by `dungeon.tsx` — only when `reason = 'PREREQ'`,
+so _usually_ below the threshold and unaffected. The exception: a student with
+5 subjects but only 1 chapter is still `PREREQ`, and the panel would go from
+« Matières entamées : **5**/2 » to « **2**/2 ». Arguably an improvement (5/2 reads
+oddly), but it is a **product decision about a gameplay gate**, not a side effect
+to slip into a perf patch. Ship it as its own change, with that as the headline.
 
 ### New findings from this pass
 
