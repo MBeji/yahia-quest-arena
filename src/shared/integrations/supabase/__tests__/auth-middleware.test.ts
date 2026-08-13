@@ -1,13 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const { mockGetRequest, mockCreateClient, mockGetClaims, mockLoggerError } = vi.hoisted(() => {
-  return {
-    mockGetRequest: vi.fn(),
-    mockCreateClient: vi.fn(),
-    mockGetClaims: vi.fn(),
-    mockLoggerError: vi.fn(),
-  };
-});
+const { mockGetRequest, mockCreateClient, mockGetClaims, mockLoggerError, mockLoggerWarn } =
+  vi.hoisted(() => {
+    return {
+      mockGetRequest: vi.fn(),
+      mockCreateClient: vi.fn(),
+      mockGetClaims: vi.fn(),
+      mockLoggerError: vi.fn(),
+      mockLoggerWarn: vi.fn(),
+    };
+  });
 
 vi.mock("@tanstack/react-start", () => ({
   createMiddleware: () => ({
@@ -26,6 +28,7 @@ vi.mock("@supabase/supabase-js", () => ({
 vi.mock("@/shared/lib/logger", () => ({
   logger: {
     error: mockLoggerError,
+    warn: mockLoggerWarn,
   },
 }));
 
@@ -47,6 +50,7 @@ describe("requireSupabaseAuth", () => {
     mockCreateClient.mockReset();
     mockGetClaims.mockReset();
     mockLoggerError.mockReset();
+    mockLoggerWarn.mockReset();
 
     mockCreateClient.mockReturnValue({
       auth: {
@@ -181,5 +185,57 @@ describe("requireSupabaseAuth", () => {
         }),
       }),
     );
+  });
+
+  // Perf audit M-1 (server half): this middleware is the only place every server
+  // fn passes through, so it is where slow calls get named.
+  describe("slow server-function timing", () => {
+    function validRequest() {
+      mockGetRequest.mockReturnValue({
+        url: "https://app.example/_serverFn/getDashboard?token=secret",
+        headers: new Headers({ authorization: "Bearer token-123" }),
+      });
+      mockGetClaims.mockResolvedValue({ data: { claims: { sub: "user-1" } }, error: null });
+    }
+
+    it("names a server fn that crosses the slow threshold", async () => {
+      validRequest();
+      const nowSpy = vi.spyOn(Date, "now");
+      nowSpy.mockReturnValueOnce(0).mockReturnValueOnce(1500);
+
+      await callMiddleware({ next: vi.fn().mockResolvedValue("ok") } as never);
+
+      expect(mockLoggerWarn).toHaveBeenCalledWith("Slow server function", {
+        path: "/_serverFn/getDashboard",
+        durationMs: 1500,
+      });
+      nowSpy.mockRestore();
+    });
+
+    it("stays silent for a healthy call", async () => {
+      validRequest();
+      const nowSpy = vi.spyOn(Date, "now");
+      nowSpy.mockReturnValueOnce(0).mockReturnValueOnce(40);
+
+      await callMiddleware({ next: vi.fn().mockResolvedValue("ok") } as never);
+
+      expect(mockLoggerWarn).not.toHaveBeenCalled();
+      nowSpy.mockRestore();
+    });
+
+    it("still times a call that threw, and never leaks the query string", async () => {
+      validRequest();
+      const nowSpy = vi.spyOn(Date, "now");
+      nowSpy.mockReturnValueOnce(0).mockReturnValueOnce(2000);
+
+      await expect(
+        callMiddleware({ next: vi.fn().mockRejectedValue(new Error("boom")) } as never),
+      ).rejects.toThrow("boom");
+
+      const [, meta] = mockLoggerWarn.mock.calls[0] as [string, { path: string }];
+      expect(meta.path).toBe("/_serverFn/getDashboard");
+      expect(meta.path).not.toContain("secret");
+      nowSpy.mockRestore();
+    });
   });
 });

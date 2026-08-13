@@ -23,6 +23,7 @@ import type { Theme } from "@/lib/theme";
 import { SoundProvider, useSound } from "@/lib/sound";
 import { logger } from "@/shared/lib/logger";
 import { initAnalytics, trackPageview, pagePathFromLocation } from "@/shared/lib/analytics";
+import { initWebVitals } from "@/shared/lib/web-vitals";
 
 import appCss from "../styles.css?url";
 
@@ -130,11 +131,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
         { rel: "icon", href: "/icons/icon-192.png", type: "image/png", sizes: "192x192" },
         { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
-        { rel: "preconnect", href: "https://fonts.googleapis.com" },
-        { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+        // Fontes auto-hébergées (levier 06) : les @font-face vivent dans
+        // styles.css, il ne reste ici que le préchargement des DEUX faces
+        // latines — celles que tout premier écran utilise. L'arabe n'est pas
+        // préchargé : son `unicode-range` le déclenche seulement sur du contenu
+        // arabe, et le précharger ferait payer 124 ko à tous les autres.
+        // `crossOrigin` est requis même en same-origin : une fonte se récupère
+        // en mode CORS, et sans lui le navigateur télécharge le fichier DEUX
+        // fois (le préchargement ne matche pas la requête de la fonte).
         {
-          rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@600;700&family=Orbitron:wght@500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap",
+          rel: "preload",
+          href: "/fonts/space-grotesk-latin-var.woff2",
+          as: "font",
+          type: "font/woff2",
+          crossOrigin: "anonymous",
+        },
+        {
+          rel: "preload",
+          href: "/fonts/orbitron-latin-var.woff2",
+          as: "font",
+          type: "font/woff2",
+          crossOrigin: "anonymous",
         },
       ],
     };
@@ -221,6 +238,9 @@ function RootComponent() {
   // outside a production build (see analytics.ts).
   useEffect(() => {
     initAnalytics();
+    // Real User Monitoring (perf audit M-1): the team could see 500s but was
+    // blind to p95 / LCP growth. Dependency-free, reports once on page hide.
+    initWebVitals();
     const track = () => {
       trackPageview(pagePathFromLocation(router.state.location));
     };

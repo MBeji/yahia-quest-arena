@@ -80,7 +80,7 @@ describe("handlePushCron", () => {
   });
 
   it("sends to at-risk users and prunes dead endpoints (410)", async () => {
-    const deleteEq = vi.fn().mockResolvedValue({ error: null });
+    const deleteIn = vi.fn().mockResolvedValue({ error: null });
     mockFrom.mockImplementation((table: string) => {
       if (table === "profiles")
         return {
@@ -105,7 +105,7 @@ describe("handlePushCron", () => {
                 error: null,
               }),
           }),
-          delete: () => ({ eq: deleteEq }),
+          delete: () => ({ in: deleteIn }),
         };
       throw new Error(`unexpected table ${table}`);
     });
@@ -118,7 +118,82 @@ describe("handlePushCron", () => {
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ audience: 1, sent: 1, pruned: 1, parentDigest: null });
     expect(mockSetVapid).toHaveBeenCalledWith("mailto:a@b.c", "pub", "priv");
-    expect(deleteEq).toHaveBeenCalledWith("id", "s2");
+    expect(deleteIn).toHaveBeenCalledWith("id", ["s2"]);
+  });
+
+  it("prunes a burst of dead endpoints in ONE delete round-trip, not one per subscriber", async () => {
+    const deleteIn = vi.fn().mockResolvedValue({ error: null });
+    // 5 subscribers, every one of them gone: the old per-row DELETE issued 5
+    // round-trips. The bulk prune must issue exactly one.
+    const subs = Array.from({ length: 5 }, (_, i) => ({
+      id: `s${i}`,
+      endpoint: `https://push/${i}`,
+      p256dh: `k${i}`,
+      auth: `a${i}`,
+    }));
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "profiles")
+        return {
+          select: () => ({
+            gt: () =>
+              Promise.resolve({
+                data: [{ id: "u1", current_streak: 3, last_active_date: "2000-01-01" }],
+                error: null,
+              }),
+          }),
+        };
+      if (table === "push_subscriptions")
+        return {
+          select: () => ({ in: () => Promise.resolve({ data: subs, error: null }) }),
+          delete: () => ({ in: deleteIn }),
+        };
+      throw new Error(`unexpected table ${table}`);
+    });
+    mockSend.mockRejectedValue(new WebPushError("gone", 410));
+
+    const handle = await loadHandler();
+    const res = await handle(cronRequest("Bearer secret"), WEDNESDAY);
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ audience: 1, sent: 0, pruned: 5, parentDigest: null });
+    expect(deleteIn).toHaveBeenCalledTimes(1);
+    expect(deleteIn).toHaveBeenCalledWith("id", ["s0", "s1", "s2", "s3", "s4"]);
+  });
+
+  it("keeps the cron green — and does not over-report — when pruning fails", async () => {
+    const deleteIn = vi.fn().mockResolvedValue({ error: { message: "boom" } });
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "profiles")
+        return {
+          select: () => ({
+            gt: () =>
+              Promise.resolve({
+                data: [{ id: "u1", current_streak: 3, last_active_date: "2000-01-01" }],
+                error: null,
+              }),
+          }),
+        };
+      if (table === "push_subscriptions")
+        return {
+          select: () => ({
+            in: () =>
+              Promise.resolve({
+                data: [{ id: "s1", endpoint: "https://push/1", p256dh: "k1", auth: "a1" }],
+                error: null,
+              }),
+          }),
+          delete: () => ({ in: deleteIn }),
+        };
+      throw new Error(`unexpected table ${table}`);
+    });
+    mockSend.mockRejectedValueOnce(new WebPushError("gone", 410));
+
+    const handle = await loadHandler();
+    const res = await handle(cronRequest("Bearer secret"), WEDNESDAY);
+
+    // The notification work already happened; a failed cleanup must not 500.
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ audience: 1, sent: 0, pruned: 0, parentDigest: null });
   });
 
   it("on Sunday, also sends the weekly family digest to distinct linked parents", async () => {

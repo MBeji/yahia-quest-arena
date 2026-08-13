@@ -180,8 +180,50 @@ mérite d'être corrigée (2026-08-03) :
 
 ## 6. Travaux en vol
 
-**Au 2026-08-03 : rien en vol.** Vérifié sur les deux dépôts — **aucune PR ouverte** ni ici ni
-au privé, arbre propre, `main` à **#709**.
+**Au 2026-08-10 : une PR en vol** — **#717**, lot 1 du **chantier qualité & performance**
+(en draft volontaire : elle touche `AGENTS.md`, canonique). `main` est à **#716**.
+
+Ce que ce lot change pour la suite, et qu'il faut savoir avant de reprendre un axe perf :
+
+- **`docs/performance-audit.md` a un §0 « Verified status » daté du 2026-08-10.** L'audit du
+  2026-06-30 servait encore de plan de route alors qu'un tiers était soldé sans que la case
+  soit cochée. **Lire le §0 avant le §3** : le corps du document reste le _pourquoi_, il n'est
+  plus l'état.
+- **Le « geste #1 le plus rentable » de l'audit (C-1) est retiré, sa prémisse était fausse** —
+  le cache JWKS de supabase-js est déjà partagé entre les clients par requête (map de module
+  clé par ref de projet), et hoister le client ferait fuiter le jeton d'un utilisateur dans la
+  requête d'un autre. Un test épingle le comportement. Ce qui reste à trancher est un **réglage
+  de console** : le type de clé de signature JWT du projet (symétrique ⇒ un aller-retour Auth
+  par server fn, qu'aucun code ne corrige).
+- **`npm ci` cassé sur `main`** — diagnostiqué ici, **corrigé en amont le même jour par le
+  revert #718** (le bump undici de #716 embarquait un miniflare 5 alpha et vidait le lock du
+  `typescript@5.9.3` imbriqué). La question « quelle version de npm sur l'image de build Vercel ? »
+  tombe avec.
+- **`C1` est soldé** (migration `20260810120000_rls_initplan_wrap_auth_uid.sql`) : les
+  `auth.uid()`/`auth.role()` nus des policies `public` sont hoistés en InitPlan. Le compte
+  annoncé d'abord (« 71 ») était un artefact de méthode — il comptait le **texte** des
+  migrations, donc deux fois toute policy recréée plus tard. Le vrai chiffre, lu dans
+  `pg_policies` après rejeu complet de la chaîne : **64 occurrences sur 35 policies**.
+  ⚠️ **Règle à retenir** : ce dont la vérité vit en base se compte **en base**, pas dans le SQL
+  du dépôt. L'équivalence sémantique est **prouvée** (deux bases ne différant que par cette
+  migration, expressions déparsées identiques au wrapper près), pas affirmée.
+- **`C2-fe` est soldé** : le héros décoratif part en AVIF/WebP `<picture>`, différé et dimensionné
+  — **245 Ko → 37 Ko** sur les viewports réalistes. Au passage, l'audit se trompait de diagnostic :
+  ce n'était **pas** l'élément LCP, il est dans la **dernière** section de la page.
+- **`H2` est MESURÉ, pas corrigé** — et c'est délibéré. Le tirage du donjon coûte **~13 ms** à
+  20 k questions (≈ la prod) et **~140 ms** à 200 k, linéairement, **par lot**. Aucun index n'y
+  peut rien : `ORDER BY random()` doit lire toutes les lignes candidates. Or **chaque remède
+  change la distribution des questions vues par l'élève** (clé aléatoire statique ⇒ les mêmes
+  questions arrivent en grappe ; pool pré-mélangé par run ; tirage par exercice ⇒ sur-pondère les
+  exercices courts). C'est un **arbitrage produit**, pas une optimisation mécanique : à reprendre
+  quand le corpus dépasse ~50 k questions, en énonçant d'abord la garantie de distribution voulue.
+- **`M-1` : la prod n'est plus aveugle.** RUM sans dépendance (`web-vitals.ts` : LCP, CLS, INP,
+  FCP, TTFB + notation, un envoi par page via PostHog, **+1,5 Ko** de bundle) et journalisation des
+  server fns lentes (≥ 1 s, dans le middleware d'auth — le seul point de passage commun aux ~33).
+  Restent le **slow-query log** de la base (réglage Supabase) et un _budget_ LCP opposable.
+  ⚠️ Le beacon ne remonte rien sans clé PostHog : vérifier qu'un événement `web_vitals` arrive
+  avant de lire un tableau de bord vide comme « tout va bien ».
+- **Restes perf** : `C1-fe` (zéro loader SSR), `H2-fe` (i18n : les 3 locales embarquées).
 
 **Issues ouvertes (3 ici, 1 au privé)** :
 

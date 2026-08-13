@@ -9,8 +9,273 @@
 > phased roadmap at the end; this doc is the source of truth for the _why_ behind
 > each one. Companion harness: [`perf/README.md`](../perf/README.md).
 >
-> **Date.** 2026-06-30. Re-run the audit when the catalogue or user base grows an
-> order of magnitude.
+> **Date.** Audited 2026-06-30 · **findings re-verified against the code from
+> 2026-08-10 to 2026-08-13** (§0 — the last sweep, which closed the remaining
+> "?" lines, ran on the 13th). Re-run the audit when the catalogue or user base
+> grows an order of magnitude.
+
+---
+
+## 0. Verified status — 2026-08-10 → 2026-08-13 (`main` à #721)
+
+> **Read this before §3.** The audit below is the 2026-06-30 text, kept for the
+> _why_. Six weeks of delivery closed a third of it, and **one CRITICAL finding
+> turned out to rest on a false premise**. Every line here was re-read in the
+> code between 2026-08-10 and 2026-08-13 — the rule `docs/dette-technique.md`
+> already applies to code debt, applied to perf: _on n'inscrit ici qu'un constat
+> dont on a re-lu la ligne_.
+
+### Closed since the audit (verified, with the proof)
+
+| ID           | Closed by                                                                                                                |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| **H1**       | `20260630170000_global_leaderboard_materialized.sql` — the global board is materialized like the subject one             |
+| **H3**       | first-attempt `COUNT(*)` → `EXISTS`; survives the 3 later redefinitions of `submit_exercise_attempt` (…`27120000`)       |
+| **H4**       | `idx_attempts_user_exercise` created in `20260630140000_perf_attempts_index_and_first_attempt_exists.sql`                |
+| **H2-media** | `getChapterLesson` selects a `has_lesson` boolean, no longer sibling bodies (`quest.server.ts:435-437`)                  |
+| **H3-fe**    | `renderMarkdown` memoized (`lesson-reader.tsx:98`)                                                                       |
+| **M4**       | `getDashboard` aggregates moved to the `get_user_subject_stats` RPC (`GROUP BY subject_id`)                              |
+| **M1-fe**    | **closed by this pass** — `vendor-radix`/`vendor-icons`/`vendor-three` now have bundle budgets (9 chunks guarded, was 6) |
+
+### C-1 — RETIRED: the premise was wrong
+
+The audit ranked _« hoist the auth client / local JWT verify »_ as the **#1
+highest-ROI move**, on the premise that a fresh Supabase client per server
+function leaves «supabase-js's JWKS cache empty each call». **That is not true of
+the version we ship** (`@supabase/supabase-js` 2.111):
+
+- auth-js keeps the JWKS in a **module-level** map (`GLOBAL_JWKS`), keyed by
+  `storageKey`, which supabase-js derives from the project ref
+  (`sb-<ref>-auth-token`, `dist/index.mjs:680`). Every per-request client is
+  built from the same `SUPABASE_URL` → they all share **one** cache entry,
+  TTL 10 min. Creating the client costs no I/O.
+- Hoisting is also **unsafe**: the per-request client carries the caller's bearer
+  token, so a module-scope instance would leak one user's credentials into
+  another's request.
+
+Proven, not asserted: `auth-middleware.jwks-cache.test.ts` mints a real ES256
+token and verifies it through **two independently created clients** — the JWKS
+endpoint is hit **once**. If a future upgrade moves the cache back onto the
+instance, that test goes red and C-1 comes back.
+
+**What actually decides the per-request cost** is the project's JWT signing
+algorithm (`getClaims`, `GoTrueClient.js:5342-5352`):
+
+- **asymmetric** (ES256/RS256, `kid` present) → local WebCrypto verify, network
+  only on a JWKS miss (≤ 1 per 10 min per instance). Nothing to fix.
+- **symmetric** (legacy HS256 secret) → falls back to `getUser(token)`, i.e. **a
+  full Auth round-trip on every one of the ~33 server fns** — and no amount of
+  client hoisting changes that. The fix would be migrating the project to
+  asymmetric signing keys.
+
+→ **Action is a 30-second dashboard check, not code**: read the project's JWT
+signing key type in Supabase. Only if it is still symmetric does a CRITICAL
+finding exist here — and its remedy is the key migration.
+
+### Still open (re-verified 2026-08-10)
+
+| ID                  | Evidence today                                                                                                                | Sev  |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ---- |
+| ~~**C1**~~          | ✅ **closed 2026-08-10** — see below; the "71" first reported here was a count over migration _text_, not the live policy set | CRIT |
+| **C1-fe**           | **zero** `loader` / `ensureQueryData` / `prefetchQuery` in `src/routes/` — the waterfall is intact                            | CRIT |
+| ~~**C2-fe**~~       | ✅ **closed 2026-08-10** — AVIF/WebP `<picture>`, lazy, sized; and it was never the LCP element (see below)                   | CRIT |
+| **H2**              | dungeon pick still `ORDER BY random()` — **now measured**, see below (`20260720200000_dungeon_scoped_to_parcours.sql:174`)    | HIGH |
+| **H2-fe**           | `provider.tsx` still imports `en`/`fr`/`ar` statically — 123 KB i18n chunk ships all three                                    | HIGH |
+| **H-1 / H-3 / H-2** | infra unchanged: single `arn1` serverless fn, no edge cache on the public catalogue                                           | HIGH |
+| **M-1**             | 🟠 **client RUM + slow server-fn timing landed 2026-08-10** (see below); the DB slow-query log is a Supabase setting          | MED  |
+
+#### The remaining findings, swept 2026-08-13 — no line left unverified
+
+The first pass left seven findings at "?". They are now all read in the code
+(**swept 2026-08-13**). One more turned out to be false, which is the **fourth**
+of the original audit.
+
+| ID           | Verified today                                                                                                                                                                                                  | State             |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
+| **C-2**      | `isRateLimited` still calls the `check_rate_limit` RPC **first**, at 8 feature call sites; `isRateLimitedLocal` is only an **error fallback**, not a first-gate                                                 | ⬜ open           |
+| **M2**       | `get_dungeon_access` still runs 2 × `COUNT(DISTINCT)` — **measured 2026-08-13**, see below                                                                                                                      | ⬜ open, chiffré  |
+| **M5**       | `get_student_report` still multi-scan (`20260708120000_student_report_by_code.sql`) — admin/parent frequency, so it stays acceptable                                                                            | ⬜ open, low      |
+| **M1** (DB)  | the `FOR UPDATE` chain on `profiles` is still there, but its amplifier (H3's unbounded aggregates) is gone — window much shorter                                                                                | 🟠 mitigated      |
+| **M3** (DB)  | N+1 `has_parcours_entitlement` — inert in the free phase; already tracked as **latent** in `docs/dette-technique.md`                                                                                            | 💤 latent         |
+| **H1-media** | `getExercise` still selects `options` wholesale (`quest.server.ts:744`), so inline SVG still ships per fetch                                                                                                    | ⬜ open           |
+| **M3-fe**    | 30 `motion.*` usages; per-row animation on lists is still there                                                                                                                                                 | ⬜ open, low      |
+| **M4-fe**    | **FALSE** — "the dungeon route bundles all gameplay eagerly". The router plugin already splits it: `dungeon-*.js` is its own **15.15 kB** chunk, fetched only when a player navigates there                     | ✅ closed         |
+| **L1**       | ✅ **closed** — the 3 content queries were already parallel; the remaining serial call (`get_best_scores_by_exercise`) now rides the same `Promise.all`, removing one round-trip per authenticated subject load | ✅ closed         |
+| **L4**       | no partial index on `spaced_repetition_schedule(status)` — only `(user_id, exercise_id)` and `(user_id, scheduled_for)`                                                                                         | ⬜ open, low      |
+| **L-1**      | `isRateLimitedLocal`'s store is module-scope ⇒ per-instance; the effective cap really is × N instances                                                                                                          | ⬜ open by design |
+| **M-2**      | `waitUntil: () => {}` — still a no-op (`build-vercel.mjs:75`), so deferred work can be dropped                                                                                                                  | ⬜ open           |
+
+_Method note: the first sweep of C-2 looked clean because it grepped for
+`checkRateLimit`; the export is `isRateLimited`. A finding is only "closed" when
+the symbol that actually exists has been searched for._
+
+### C1 — CLOSED 2026-08-10, and the count was wrong
+
+`20260810120000_rls_initplan_wrap_auth_uid.sql` wraps every bare `auth.uid()` /
+`auth.role()` in a `public` RLS policy as `(SELECT …)`, so the planner hoists it
+into an **InitPlan** (evaluated once per query) instead of re-evaluating it per
+candidate row. Supabase's own documented remedy.
+
+**The reported figure was an artefact of the method.** "71 occurrences across 10
+migrations" counted `CREATE POLICY` bodies in migration _files_ — which
+double-counts every policy a later migration dropped and recreated. Replaying
+the whole chain on a real Postgres and reading `pg_policies` gives the live
+state: **64 bare occurrences over 35 policies on 19 tables** (of 65 policies
+total). _Lesson for the next pass: for anything whose truth lives in the
+database, count in the database, not in the migration text._
+
+How it was made safe — worth reusing:
+
+1. The 35 `ALTER POLICY` statements are **generated from `pg_policies`** after a
+   full chain replay, not hand-written: they cannot mistranscribe an expression
+   nor resurrect a policy a later migration dropped.
+2. `ALTER POLICY` rewrites **in place** — nothing is dropped, so no window
+   exists where a table sits unprotected.
+3. **Semantic equivalence was proven, not asserted**: the chain was applied to
+   two databases differing only by this migration; strip the wrapper from both
+   and the deparsed `qual`/`with_check` of all 65 policies are **byte-identical**.
+   Bare occurrences 64 → 0.
+4. The plan confirms the hoist — `Filter: ((NULLIF(((COALESCE(NULLIF(current_setting(…` per row
+   becomes `InitPlan 1 (returns $0)` + `Filter: ($0 = user_id)`.
+
+⚠️ **No performance _number_ is claimed.** The local A/B (200 k rows) moved
+10.1 ms → 9.5 ms, which is **not** a meaningful benchmark: the harness stubs
+`auth.uid()` as a cheap inlined SQL function, so it understates the real cost,
+and the sampled policy is also OR-ed with `is_admin()`. The structural win is
+proven; the magnitude needs the §4 load campaign against a seeded project.
+
+**Not touched, deliberately**: `is_admin()` (5 call sites) is hoistable the same
+way; `is_parent_of_student(uid, row_column)` is row-dependent and is not.
+
+### H2 — measured 2026-08-10, deliberately NOT fixed yet
+
+The dungeon batch pick was rated HIGH "at the target scale, not today". It is now
+a number rather than a guess. Replayed chain on a real Postgres, synthetic corpus,
+worst case (`pool_scope = 'all'`, batch of 5):
+
+| corpus            | per batch | plan                                               |
+| ----------------- | --------- | -------------------------------------------------- |
+| 20 609 questions  | ~13 ms    | Seq Scan on **all** matching rows + top-N heapsort |
+| 200 609 questions | ~140 ms   | identical shape — **linear** in corpus size        |
+
+So: tolerable today (~18 700 questions in prod ⇒ ~13 ms), genuinely bad at the
+10× catalogue the roadmap targets — and it is paid **per batch**, i.e. repeatedly
+inside one dungeon run.
+
+**No index can fix this.** `ORDER BY random()` must materialise a random value for
+every matching row by construction; the top-N heapsort already avoids the full
+sort, and the scan is the irreducible part.
+
+**Why it is not fixed in this pass:** every real remedy changes _which questions a
+player sees_, which is a gameplay decision, not a mechanical optimisation:
+
+- **random-key column + index** (`questions.sample_key`, `WHERE sample_key >= random()
+ORDER BY sample_key LIMIT n`) — O(log n) with early termination, but the key is
+  static, so the same neighbours are drawn together: the same 5 questions would
+  recur as a clump. Also a schema change on a content-owned table.
+- **per-run shuffled pool** — draw the eligible pool once per run, batch out of it.
+  Preserves uniformity exactly and touches only dungeon tables, but restructures
+  the RPC and its "already assigned" logic.
+- **sample exercises, then questions** — scans the ~10× smaller `exercises` table,
+  but over-weights questions belonging to short exercises.
+
+→ **Next step is a design decision, not a patch.** Trigger point: revisit when the
+catalogue passes ~50 k questions, or sooner if a dungeon batch shows up in the
+§4 load campaign. Whoever takes it should state the distribution guarantee they
+intend to keep before touching the SQL.
+
+### C2-fe — CLOSED 2026-08-10, and it was never the LCP element
+
+The audit called the hero "the landing LCP element on mobile". Reading the markup
+says otherwise: it lives in the **last** section of the page (« apprends en
+jouant »), inside an `aspect-square` crop at `opacity-70`, with `alt=""` — it is
+the 3D canvas's Suspense fallback on desktop and the whole visual on mobile /
+reduced motion. It was never above the fold. The waste was real, the diagnosis
+was not: **245 KB of decorative, below-the-fold image fetched eagerly**.
+
+Fixed as a `<picture>`: AVIF + WebP at 960/1920 w, `sizes="(min-width: 1024px)
+480px, 100vw"` (the box is ~472 px on desktop — `object-cover` does the cropping,
+so the browser only needs to cover the square), plus `loading="lazy"`,
+`decoding="async"` and intrinsic `width`/`height`.
+
+| variant       | bytes      | vs original |
+| ------------- | ---------- | ----------- |
+| original JPEG | 245 614    | —           |
+| WebP 960      | 63 968     | **−74 %**   |
+| **AVIF 960**  | **37 493** | **−85 %**   |
+| WebP 1920     | 163 088    | −34 %       |
+| AVIF 1920     | 102 663    | −58 %       |
+
+Realistic viewports land on the 960 variants, so a mobile visitor fetches **37 KB
+instead of 245 KB** — and only once it scrolls near the bottom. The JPEG stays as
+the final `<img>` fallback; virtually no browser will fetch it. Pinned by a test
+that fails on a plain `<img src=….jpg>` regression.
+
+### M-1 — mostly CLOSED 2026-08-10 (the code half)
+
+The audit's deepest complaint was that everything above is unfalsifiable: the
+team could see 500s but not p95 growth. Two of the three parts now exist.
+
+**Client RUM** (`src/shared/lib/web-vitals.ts`, armed in `__root.tsx`) — LCP,
+CLS, INP, FCP, TTFB, each with a good / needs-improvement / poor rating, sent
+once per page view as the `web_vitals` product event through the PostHog path
+that already exists. Dependency-free for the same reason `monitoring.ts` is:
+the index chunk has a hard 450 kB budget. Cost measured: **+1.5 kB** (438.52 →
+440.02 kB), where the `web-vitals` package would have been several times that.
+
+Two details that make the numbers trustworthy rather than merely present:
+
+- **CLS is the worst _session window_, not the running sum.** Summing every
+  shift over-reports long-lived pages, and a metric that reads worse than
+  reality gets ignored — which is the same as not having it.
+- **Nothing measured ⇒ nothing sent.** A row of nulls would drag every
+  dashboard average around.
+
+**Slow server-fn timing** (`auth-middleware.ts`) — every server fn already
+passes through that middleware, so it is the one place that can time all ~33
+without touching each. Only calls ≥ 1 s are logged, with the request **path**
+(never the query string, which can carry tokens), and the timing survives a
+throwing handler.
+
+**Still missing**: the DB slow-query log — a Supabase project setting, not code.
+And there is still no _budget_ on LCP (a Lighthouse CI would close that;
+`docs/dette-technique.md` tracks it).
+
+⚠️ The beacon only reports where product analytics is enabled — no PostHog key,
+no data. Verify a `web_vitals` event actually lands before trusting an empty
+dashboard as "no problems".
+
+### M2 — measured 2026-08-13, transformation ready, deliberately not shipped
+
+`get_dungeon_access` computes two `COUNT(DISTINCT)` over the caller's **entire**
+attempt history, then compares them to constants (2 subjects, 3 chapters). It is
+called on every dungeon load **and twice more inside `start_dungeon_run`**.
+
+Measured on the replica, one user with 5 000 attempts:
+
+| variant                                            | per call    | shape                      |
+| -------------------------------------------------- | ----------- | -------------------------- |
+| current `COUNT(DISTINCT e.chapter_id)`             | **~4.8 ms** | O(user's lifetime history) |
+| `SELECT COUNT(*) FROM (SELECT DISTINCT … LIMIT 3)` | **~1.9 ms** | O(threshold) — stops early |
+
+**The transformation is provably safe for the gate.** Capping at the requirement
+leaves the comparison identical: `min(n, 2) < 2 ⟺ n < 2`. Same for chapters.
+
+**But it is NOT purely internal**, which is why it is not in this pass: the counts
+are also OUT columns, rendered by `dungeon.tsx` — only when `reason = 'PREREQ'`,
+so _usually_ below the threshold and unaffected. The exception: a student with
+5 subjects but only 1 chapter is still `PREREQ`, and the panel would go from
+« Matières entamées : **5**/2 » to « **2**/2 ». Arguably an improvement (5/2 reads
+oddly), but it is a **product decision about a gameplay gate**, not a side effect
+to slip into a perf patch. Ship it as its own change, with that as the headline.
+
+### New findings from this pass
+
+| ID     | Finding                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Sev  |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| **N1** | ✅ **corrigé sur `main` le 2026-08-10 par le revert #718** — diagnostiqué ici le même jour : #716 (Dependabot, undici) avait retiré du lock le `vite-tsconfig-paths/node_modules/typescript@5.9.3` dont `tsconfck` a besoin, et npm 10 mourait en `EUSAGE`. Le revert cite la même erreur ; la cause profonde était un miniflare 5 alpha embarqué par le bump. La question « quelle version de npm sur l'image de build Vercel ? » **tombe donc** : `main` est de nouveau installable partout | HIGH |
+| **N2** | `auth-middleware.ts` carried a false _"automatically generated. Do not edit it directly."_ header — nothing generates it and `guard-generated.mjs` does not list it. It sat on the hottest path in the app and deterred exactly the inspection that retired C-1. **Fixed in this pass**                                                                                                                                                                                                       | MED  |
+| **N3** | Current `main` (`0ea9135`) has **no `ci.yml` run at all** — the Dependabot squash landed without a post-merge CI pass                                                                                                                                                                                                                                                                                                                                                                         | MED  |
 
 ---
 
@@ -45,11 +310,15 @@ capture. The team currently cannot _see_ a p95 regression in production.
 
 **The three highest-ROI moves**, before any launch spike:
 
-| #   | Move                                                                        | Kills      | Effort |
-| --- | --------------------------------------------------------------------------- | ---------- | ------ |
-| 1   | Cache/local-verify the JWT (hoist the client, stop per-request `getClaims`) | C-1        | S      |
-| 2   | Materialize the global leaderboard + add `idx_attempts_user_exercise`       | H1, H4     | S–M    |
-| 3   | Edge-cache the public catalogue/landing + add SSR route loaders             | H-3, C1-fe | M      |
+> ⚠️ **Superseded on 2026-08-10 — see §0.** Move 1 rests on a premise that does
+> not hold (the JWKS cache is already shared; hoisting is useless _and_ unsafe),
+> and move 2 shipped. The current top three are in §0 / §6.
+
+| #   | Move                                                                        | Kills      | Effort | 2026-08-10      |
+| --- | --------------------------------------------------------------------------- | ---------- | ------ | --------------- |
+| 1   | Cache/local-verify the JWT (hoist the client, stop per-request `getClaims`) | C-1        | S      | ❌ retired (§0) |
+| 2   | Materialize the global leaderboard + add `idx_attempts_user_exercise`       | H1, H4     | S–M    | ✅ shipped      |
+| 3   | Edge-cache the public catalogue/landing + add SSR route loaders             | H-3, C1-fe | M      | ⬜ still open   |
 
 Plus stand up **RUM + slow-RPC timing** (M-1) so the rest is measurable, and run
 the load harness (`perf/`) against a seeded test project to put numbers on each.
@@ -157,11 +426,14 @@ round-trips. On high-latency mobile this stacks auth-RTT → profile-RTT →
 data-RTT before first paint. TanStack Start's SSR-streamed loaders are unused.
 → **Fix:** move primary queries into route loaders via `queryClient.ensureQueryData`.
 
-**C2-fe · Hero image is a 245 KB unoptimized JPG in the JS graph**
+**C2-fe · Hero image is a 245 KB unoptimized JPG in the JS graph** — ✅ **CLOSED
+2026-08-10; and "LCP element" was wrong — it is the LAST section of the page.
+See §0.** _Original text, kept for the record:_
 `public-landing.tsx:18` imports `hero-warrior.jpg` (245 KB), rendered as raw
 `<img>` with no `width`/`height` (CLS), no `loading`/`decoding`, no `srcset`, no
-WebP/AVIF — the landing LCP element on mobile.
-→ **Fix:** responsive WebP/AVIF with dimensions; part of the media pipeline (H1-media).
+~~WebP/AVIF — the landing LCP element on mobile.~~
+→ **Fixed:** AVIF/WebP `<picture>` at 960/1920 w, lazy + `decoding="async"` +
+intrinsic dimensions. 245 KB → **37 KB** on realistic viewports.
 
 **H2-fe · All three i18n catalogs (FR/EN/AR) bundled eagerly** — `i18n` chunk,
 2,176 lines, every student downloads 2 unused languages (`provider.tsx:3-5`,
@@ -184,15 +456,18 @@ gap**; CSP-nonce SSR locale shell avoids RTL FOUC.
 
 ### 3.3 Deploy / runtime / infra
 
-**C-1 · Fresh Supabase client + `getClaims` on _every_ server fn**
+**C-1 · Fresh Supabase client + `getClaims` on _every_ server fn** — ❌ **RETIRED
+2026-08-10, the premise is false. See §0 for the full account and the test that
+pins it.** _Original text, kept for the record:_
 `auth-middleware.ts:44-57`. The per-request client means supabase-js's JWKS cache
 is empty each call → `getClaims` re-bootstraps verification (JWKS fetch, or a
 legacy `GET /auth/v1/user` network round-trip) **before any business logic**, on
 ~all 33 server fns. At thousands of concurrent users this is the dominant latency
 and Auth-service load multiplier.
-→ **Fix:** hoist a module-scope client (the admin client already does this via a
-lazy Proxy in `client.server.ts:31-41`) and/or verify the JWT locally against a
-cached JWKS instead of constructing a client + calling `getClaims` per request.
+→ ~~**Fix:** hoist a module-scope client…~~ The JWKS cache is module-global and
+keyed by project ref, so per-request clients already share it; hoisting also
+leaks the caller's bearer token across requests. The real variable is the JWT
+signing algorithm — a project setting, not code (§0).
 
 **C-2 · Every write pays a second DB round-trip for the rate-limit RPC**
 `rate-limit.ts:45` → `check_rate_limit` does `advisory_xact_lock` + DELETE + COUNT
@@ -325,9 +600,15 @@ shippable and respects DoD §7 (additive migrations land before dependent code).
 
 ### Phase 0 — Make it measurable (do first, unblocks everything)
 
-- **M-1** RUM (web-vitals beacon) + server-fn timing logs + DB slow-query log. **M**
+- 🟠 **M-1 mostly done 2026-08-10** — client RUM (LCP/CLS/INP/FCP/TTFB → PostHog,
+  +1.5 kB) and slow server-fn timing (≥ 1 s, in the auth middleware) shipped.
+  Remaining: the **DB slow-query log** (a Supabase setting) and an LCP _budget_.
 - Run the load harness baseline campaign (§4) against a seeded test project. **M**
-- Add bundle budgets for the unbudgeted vendor chunks (M1-fe). **S**
+- ✅ **Done 2026-08-10** — bundle budgets for the unbudgeted vendor chunks
+  (M1-fe): `vendor-radix` 88 KB, `vendor-icons` 32 KB, `vendor-three` 900 KB,
+  set ~15 % above measured. 9 chunks guarded, was 6. ⚠️ Note the residual hole:
+  `check-bundle-budget.mjs` **skips** a budget whose chunk it cannot find, so a
+  renamed chunk silently stops being guarded.
 - ✅ **Done** — the load harness is wired into the automated suites: `perf:check`
   (harness parses + constants mirror the product) runs in the PR gate (`ci.yml`),
   and `perf.yml` runs `k6 inspect` + a `smoke` load test nightly (`nightly.yml`,
@@ -337,11 +618,22 @@ shippable and respects DoD §7 (additive migrations land before dependent code).
 
 ### Phase 1 — High-ROI, low-risk (pre-launch must-haves)
 
-- **C-1** Hoist the auth client / local JWT verify — kill per-request `getClaims`. **M**
-- **H4** Add `idx_attempts_user_exercise`; **H3** swap first-attempt `COUNT(*)`→`EXISTS`. **S**
-- **C1** Wrap `auth.uid()` → `(SELECT auth.uid())` across all RLS policies. **M**
-- **H2-media** Fix `getChapterLesson` sibling over-fetch (boolean, not body). **S**
-- **H3-fe** `useMemo` `renderMarkdown`; **C2-fe** responsive hero image. **S**
+_Status stamped 2026-08-10._
+
+- ✅ **Done** — **H4** `idx_attempts_user_exercise`; **H3** first-attempt
+  `COUNT(*)`→`EXISTS`; **H2-media** `getChapterLesson` boolean; **H3-fe**
+  `useMemo` `renderMarkdown`.
+- ❌ **Retired** — **C-1** hoist the auth client (§0: false premise, and unsafe).
+- ⬜ **Open, and now the top of the list:**
+  - ✅ **C1 done 2026-08-10** — `(SELECT auth.uid())` across all `public` RLS
+    policies (`20260810120000_rls_initplan_wrap_auth_uid.sql`); equivalence proven
+    by a two-database diff, see §0.
+  - ✅ **C2-fe done 2026-08-10** — AVIF/WebP `<picture>`, lazy + sized (245 KB → 37 KB
+    on realistic viewports); the audit's "LCP element" framing was wrong, see §0.
+  - ✅ **N1 réglé en amont** — le revert #718 a rendu `main` installable de nouveau
+    (2026-08-10). Rien à faire de ce côté.
+  - **C-1bis** Read the project's JWT signing key type in the Supabase dashboard;
+    migrate to asymmetric keys if it is still a symmetric secret. **S** (config)
 
 ### Phase 2 — Scale the hotspots
 
@@ -369,26 +661,33 @@ shippable and respects DoD §7 (additive migrations land before dependent code).
 
 ## 7. Appendix — finding index
 
-| ID                                    | Tier    | Sev  | One-line                                                     |
-| ------------------------------------- | ------- | ---- | ------------------------------------------------------------ |
-| C1                                    | DB      | CRIT | per-row `EXISTS` + un-wrapped `auth.uid()` in `profiles` RLS |
-| C-1                                   | Infra   | CRIT | fresh client + `getClaims` per server fn                     |
-| C-2                                   | Infra   | CRIT | rate-limit DB round-trip before every write                  |
-| C1-fe                                 | FE      | CRIT | no SSR prefetch — client-side waterfall                      |
-| C2-fe                                 | FE      | CRIT | 245 KB unoptimized hero JPG, LCP                             |
-| H1                                    | DB      | HIGH | global leaderboard ranks all profiles per call               |
-| H2                                    | DB      | HIGH | dungeon `ORDER BY random()` over full join                   |
-| H3                                    | DB      | HIGH | unbounded per-user aggregates on write path                  |
-| H4                                    | DB      | HIGH | missing `attempts(user_id, exercise_id)` index               |
-| H-1                                   | Infra   | HIGH | single cold single-region SSR function                       |
-| H-2                                   | Infra   | HIGH | scaling load relocates to PostgREST/Auth                     |
-| H-3                                   | Infra   | HIGH | no edge/CDN cache for public catalogue                       |
-| H2-fe                                 | FE      | HIGH | all 3 i18n locales bundled eagerly                           |
-| H3-fe                                 | FE      | HIGH | `renderMarkdown` re-runs DOMPurify per render                |
-| H1-media                              | Content | HIGH | inline SVG ships on every question fetch                     |
-| H2-media                              | Content | HIGH | `getChapterLesson` over-fetches sibling markdown             |
-| M1–M5 (DB), M-1–M-3 (Infra), M1–M4-fe | mixed   | MED  | see §3                                                       |
-| L-\*                                  | mixed   | LOW  | see §3                                                       |
+_Status column stamped 2026-08-10 (§0). "?" = not re-verified in that pass._
+
+| ID                                        | Tier    | Sev  | One-line                                                     | Status           |
+| ----------------------------------------- | ------- | ---- | ------------------------------------------------------------ | ---------------- |
+| C1                                        | DB      | CRIT | per-row `EXISTS` + un-wrapped `auth.uid()` in `profiles` RLS | ✅ closed        |
+| C-1                                       | Infra   | CRIT | fresh client + `getClaims` per server fn                     | ❌ retired       |
+| C-2                                       | Infra   | CRIT | rate-limit DB round-trip before every write                  | ⬜ open          |
+| C1-fe                                     | FE      | CRIT | no SSR prefetch — client-side waterfall                      | ⬜ open          |
+| C2-fe                                     | FE      | CRIT | 245 KB unoptimized hero JPG, LCP                             | ✅ closed        |
+| H1                                        | DB      | HIGH | global leaderboard ranks all profiles per call               | ✅ closed        |
+| H2                                        | DB      | HIGH | dungeon `ORDER BY random()` over full join                   | ⬜ open          |
+| H3                                        | DB      | HIGH | unbounded per-user aggregates on write path                  | ✅ closed        |
+| H4                                        | DB      | HIGH | missing `attempts(user_id, exercise_id)` index               | ✅ closed        |
+| H-1                                       | Infra   | HIGH | single cold single-region SSR function                       | ⬜ open          |
+| H-2                                       | Infra   | HIGH | scaling load relocates to PostgREST/Auth                     | ⬜ open          |
+| H-3                                       | Infra   | HIGH | no edge/CDN cache for public catalogue                       | ⬜ open          |
+| H2-fe                                     | FE      | HIGH | all 3 i18n locales bundled eagerly                           | ⬜ open          |
+| H3-fe                                     | FE      | HIGH | `renderMarkdown` re-runs DOMPurify per render                | ✅ closed        |
+| H1-media                                  | Content | HIGH | inline SVG ships on every question fetch                     | ⬜ open          |
+| H2-media                                  | Content | HIGH | `getChapterLesson` over-fetches sibling markdown             | ✅ closed        |
+| M1-fe                                     | FE      | MED  | vendor chunks with no bundle budget                          | ✅ closed        |
+| M4                                        | DB      | MED  | `getDashboard` aggregates a full attempt history in JS       | ✅ closed        |
+| **N1**                                    | Tooling | HIGH | `npm ci` fails on Node 22 — lock needs npm ≥ 11              | ✅ closed (#718) |
+| **N2**                                    | Quality | MED  | false "generated" header on `auth-middleware.ts`             | ✅ closed        |
+| **N3**                                    | CI      | MED  | current `main` has no `ci.yml` run                           | ⬜ open          |
+| M1–M3, M5 (DB), M-2–M-3 (Infra), M2–M3-fe | mixed   | MED  | see §3 — all swept 2026-08-10, table in §0                   | ⬜ open          |
+| L-\*                                      | mixed   | LOW  | see §3 — L1/L4/L-1 swept 2026-08-10, table in §0             | ⬜ open          |
 
 _No application code was modified by the audit. Remediations ship as separate,
 reviewable changes per the roadmap._
