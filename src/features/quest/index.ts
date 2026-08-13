@@ -13,6 +13,9 @@ export {
   scoreQuizPublic,
 } from "./quest.server";
 export type { ManuelPage } from "./quest.server";
+// Module ÉTROIT (comme `quest.training`) : le verdict par question ne doit pas
+// tirer tout `quest.server` dans le chunk qui l'importe.
+export { checkQuestion } from "./quest.check.server";
 export { getSubjectManuels } from "./manuel.server";
 export type { SubjectManuel } from "./manuel.server";
 // Zero-import module — importing these plain strings must NOT pull the server

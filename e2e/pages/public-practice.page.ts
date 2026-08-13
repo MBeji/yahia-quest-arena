@@ -92,6 +92,13 @@ export class PracticePage {
   async submitAndSettle(): Promise<void> {
     const before = await this.questionCard.getAttribute("data-question-id").catch(() => null);
     await this.submitButton.click();
+    // Instant feedback (levier 01): the first click reveals the verdict on the
+    // SAME card; the same button then continues. Quiz runs show no verdict.
+    const feedback = this.page.getByTestId("quest-feedback");
+    if (await feedback.isVisible({ timeout: 3_000 }).catch(() => false)) {
+      await expect(this.submitButton).toBeEnabled({ timeout: 5_000 });
+      await this.submitButton.click();
+    }
     await expect
       .poll(
         async () => {
