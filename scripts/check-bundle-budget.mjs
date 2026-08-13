@@ -42,6 +42,22 @@ const BUDGETS = {
   // integration (the banner trio is lazy-loaded into its own chunk; only the
   // small lazy glue lands here). Heavy sections (radar/3D, badges/shop) stay lazy.
   "dashboard-": 32 * 1024,
+  // --- Vendor chunks that had NO budget until the 2026-08-10 perf/quality pass
+  // (finding M1-fe). They were free to grow uncaught: every Radix primitive or
+  // Lucide icon added anywhere in the app lands here, and nothing complained.
+  // Ceilings are set ~15 % above the measured size at that date, so they catch a
+  // real regression without tripping on ordinary churn.
+  //
+  // Radix primitives (measured 76.03 KB). Shared by every screen — it is on the
+  // critical path, so growth here is felt everywhere.
+  "vendor-radix-": 88 * 1024,
+  // Lucide icons (measured 23.27 KB). Tree-shaken per import: a jump usually
+  // means a barrel/namespace import (`import * as Icons`) slipped in.
+  "vendor-icons-": 32 * 1024,
+  // three.js landing scene (measured 856.85 KB). Lazy, desktop-only and
+  // reduced-motion gated, so it never blocks first paint — but it is by far the
+  // largest asset we ship, and it deserves a ceiling like everything else.
+  "vendor-three-": 900 * 1024,
 };
 
 function bytesToKb(bytes) {

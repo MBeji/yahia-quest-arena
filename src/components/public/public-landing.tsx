@@ -19,6 +19,10 @@ import {
   Zap,
 } from "lucide-react";
 import heroImg from "@/assets/hero-warrior.jpg";
+import heroAvif960 from "@/assets/hero-warrior-960.avif";
+import heroAvif1920 from "@/assets/hero-warrior-1920.avif";
+import heroWebp960 from "@/assets/hero-warrior-960.webp";
+import heroWebp1920 from "@/assets/hero-warrior-1920.webp";
 import { useAuth } from "@/features/auth";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useT } from "@/lib/i18n";
@@ -34,6 +38,46 @@ import { useT } from "@/lib/i18n";
 
 // three.js loads only here, only on desktop with motion enabled (the one game block).
 const GoldenHeroCanvas = lazy(() => import("@/components/landing/golden-hero-canvas"));
+
+/**
+ * Decorative hero of the « apprends en jouant » block — the 3D canvas's Suspense
+ * fallback on desktop, and the whole visual on mobile / reduced motion.
+ *
+ * It used to ship the raw 1920×1080 JPEG (245 KB) for a box that is ~472 px wide
+ * on desktop, cropped square, at 70 % opacity — and it sits in the LAST section
+ * of the page, so it was never the LCP element the perf audit assumed (C2-fe);
+ * it was simply 245 KB of below-the-fold decoration fetched eagerly. AVIF/WebP
+ * at 960 px covers every realistic viewport (37 KB / 64 KB), with the original
+ * JPEG left as the final fallback.
+ *
+ * `sizes` describes the BOX, not the source: `object-cover` does the cropping,
+ * so the browser only needs enough pixels to cover the square.
+ */
+function HeroFallbackImage() {
+  return (
+    <picture>
+      <source
+        type="image/avif"
+        srcSet={`${heroAvif960} 960w, ${heroAvif1920} 1920w`}
+        sizes="(min-width: 1024px) 480px, 100vw"
+      />
+      <source
+        type="image/webp"
+        srcSet={`${heroWebp960} 960w, ${heroWebp1920} 1920w`}
+        sizes="(min-width: 1024px) 480px, 100vw"
+      />
+      <img
+        src={heroImg}
+        alt=""
+        width={1920}
+        height={1080}
+        loading="lazy"
+        decoding="async"
+        className="h-full w-full object-cover opacity-70"
+      />
+    </picture>
+  );
+}
 
 /** The CEFR ladder (Common European Framework) shared by both language tracks. */
 const CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"];
@@ -453,15 +497,11 @@ export function PublicLanding({ stats }: { stats?: CatalogueStats | null }) {
           </div>
           <div className="relative aspect-square overflow-hidden rounded-3xl border border-amber-400/20 bg-black/40">
             {show3D ? (
-              <Suspense
-                fallback={
-                  <img src={heroImg} alt="" className="h-full w-full object-cover opacity-70" />
-                }
-              >
+              <Suspense fallback={<HeroFallbackImage />}>
                 <GoldenHeroCanvas />
               </Suspense>
             ) : (
-              <img src={heroImg} alt="" className="h-full w-full object-cover opacity-70" />
+              <HeroFallbackImage />
             )}
           </div>
         </div>

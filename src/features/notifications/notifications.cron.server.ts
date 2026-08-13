@@ -52,7 +52,7 @@ async function sendToUsers(userIds: string[], payload: PushPayload): Promise<Sen
 
   const body = JSON.stringify(payload);
   let sent = 0;
-  let pruned = 0;
+  const deadIds: string[] = [];
 
   await Promise.all(
     (subs ?? []).map(async (s) => {
@@ -65,9 +65,8 @@ async function sendToUsers(userIds: string[], payload: PushPayload): Promise<Sen
       } catch (err) {
         const status = err instanceof WebPushError ? err.statusCode : undefined;
         if (status === 404 || status === 410) {
-          // Endpoint is gone (unsubscribed / expired) — prune it.
-          await supabaseAdmin.from("push_subscriptions").delete().eq("id", s.id);
-          pruned++;
+          // Endpoint is gone (unsubscribed / expired) — collect it, prune in bulk below.
+          deadIds.push(s.id);
         } else {
           logger.warn("Push cron: send failed", { status });
         }
@@ -75,7 +74,40 @@ async function sendToUsers(userIds: string[], payload: PushPayload): Promise<Sen
     }),
   );
 
+  const pruned = await pruneSubscriptions(deadIds);
+
   return { audience: userIds.length, sent, pruned };
+}
+
+/**
+ * Delete dead subscriptions in bulk. A per-row `DELETE` cost one round-trip per
+ * lost subscriber, so a burst of expired endpoints (a browser release, a mass
+ * unsubscribe) hammered PostgREST in proportion to the damage. Chunked because
+ * `.in()` travels in the URL, which has a length ceiling.
+ *
+ * Pruning is best-effort: the notifications are already sent, so a failed
+ * cleanup must not fail the cron — the next run retries it.
+ */
+async function pruneSubscriptions(ids: string[]): Promise<number> {
+  if (ids.length === 0) return 0;
+
+  const CHUNK_SIZE = 200;
+  let pruned = 0;
+
+  for (let i = 0; i < ids.length; i += CHUNK_SIZE) {
+    const chunk = ids.slice(i, i + CHUNK_SIZE);
+    const { error } = await supabaseAdmin.from("push_subscriptions").delete().in("id", chunk);
+    if (error) {
+      logger.error("Push cron: failed to prune dead subscriptions", {
+        error,
+        count: chunk.length,
+      });
+      continue;
+    }
+    pruned += chunk.length;
+  }
+
+  return pruned;
 }
 
 /** Audience: users with a live streak who have not been active *today* (Tunis-local). */
