@@ -6,7 +6,6 @@ import { motion } from "motion/react";
 import {
   Flame,
   TrendingUp,
-  Trophy,
   Swords,
   Crown,
   Skull,
@@ -18,20 +17,13 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
-import {
-  getDashboard,
-  getSprint2Dashboard,
-  formatObjectiveType,
-  formatQuestType,
-  resolveDailyAction,
-  resolveWeeklyAction,
-} from "@/features/dashboard";
+import { getDashboard, getSprint2Dashboard } from "@/features/dashboard";
 import { DailyReviewPanel, recoverStreak } from "@/features/progression";
 import { hubRouteForRole, shouldLeaveDashboard } from "@/features/auth";
 import { EnablePushCard } from "@/features/notifications";
 import { SubjectPathCard } from "@/features/dashboard/components/subject-path-card";
-import { FamilyGoalCard } from "@/features/dashboard/components/family-goal-card";
 import { MotivationalQuote } from "@/features/dashboard/components/motivational-quote";
+import { DashboardGoalsSkeleton } from "@/features/dashboard/components/dashboard-goals-skeleton";
 import { DashboardFocus } from "@/features/dashboard/components/dashboard-focus";
 import { BackToSchoolBanner } from "@/features/dashboard/components/back-to-school-banner";
 import { DashboardSkeleton } from "@/features/dashboard/components/dashboard-skeleton";
@@ -49,6 +41,13 @@ const GoldAmbientCanvas = lazy(() => import("@/components/visual/gold-ambient-ca
 const CompetencyMapPanel = lazy(() =>
   import("@/features/progression/components/competency-map-panel").then((m) => ({
     default: m.CompetencyMapPanel,
+  })),
+);
+// Objectifs & quêtes : même raison, budget de chunk. Voir l'en-tête du composant —
+// c'est le `lazy()` qui déplace les octets, pas l'extraction seule.
+const DashboardGoals = lazy(() =>
+  import("@/features/dashboard/components/dashboard-goals").then((m) => ({
+    default: m.DashboardGoals,
   })),
 );
 import { formatStudentAllianceCode } from "@/features/parent-report";
@@ -344,116 +343,17 @@ function Dashboard() {
           </motion.div>
         )}
 
-        {/* DAILY OBJECTIVES & WEEKLY QUESTS SECTION */}
-        <motion.div
-          {...entrance(prefersReduced, "rise", 0.2)}
-          className="mt-8 grid gap-6 sm:grid-cols-2"
-        >
-          {/* Daily Objectives */}
-          <div className="rounded-2xl border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-5 backdrop-blur-md">
-            <div className="mb-4 flex items-center gap-2 font-display text-lg font-bold">
-              <Trophy className="h-5 w-5 text-[color:var(--gold)]" /> {t.dashboard.dailyQuests}
-            </div>
-            <div className="space-y-3">
-              {(sprint2?.dailyObjectives ?? []).length === 0 && (
-                <p className="text-xs text-muted-foreground">{t.dashboard.dailyEmpty}</p>
-              )}
-              {(sprint2?.dailyObjectives ?? []).map((obj) => {
-                const pct =
-                  obj.target_value > 0
-                    ? Math.min(100, Math.round((obj.current_value / obj.target_value) * 100))
-                    : 0;
-                const done = obj.status === "completed";
-                const action = resolveDailyAction(obj.objective_type);
-                return (
-                  <div
-                    key={obj.id}
-                    className={`rounded-xl bg-surface-2 p-3 ${done ? "opacity-60" : ""}`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm font-semibold">
-                        {formatObjectiveType(obj.objective_type, t.dashboard.objectiveTypes)}
-                      </div>
-                      <div className="text-xs text-[color:var(--gold)]">{obj.xp_reward} XP</div>
-                    </div>
-                    <GoldProgress
-                      value={pct}
-                      size="sm"
-                      className="mt-2"
-                      aria-label={formatObjectiveType(
-                        obj.objective_type,
-                        t.dashboard.objectiveTypes,
-                      )}
-                    />
-                    <div className="mt-1 text-xs text-muted-foreground">
-                      {obj.current_value}/{obj.target_value} {done ? "✓" : ""}
-                    </div>
-                    <button
-                      type="button"
-                      disabled={done}
-                      onClick={() => runQuestAction(action)}
-                      className="mt-2 rounded-md border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/15 px-2.5 py-1 text-xs font-semibold text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/25 disabled:cursor-not-allowed disabled:opacity-50 [@media(pointer:coarse)]:min-h-11"
-                    >
-                      {done ? t.common.completed : t.common.continue}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Weekly Quests */}
-          <div className="rounded-2xl border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/5 p-5 backdrop-blur-md">
-            <div className="mb-4 flex items-center gap-2 font-display text-lg font-bold">
-              <Flame className="h-5 w-5 text-[color:var(--neon-gold)]" /> {t.dashboard.weeklyQuests}
-            </div>
-            <div className="space-y-3">
-              {/* Quête famille — l'objectif fixé par le parent lié (null sinon). */}
-              <FamilyGoalCard />
-              {(sprint2?.weeklyQuests ?? []).length === 0 && (
-                <p className="text-xs text-muted-foreground">{t.dashboard.weeklyEmpty}</p>
-              )}
-              {(sprint2?.weeklyQuests ?? []).map((q) => {
-                const pct =
-                  q.target_value > 0
-                    ? Math.min(100, Math.round((q.current_value / q.target_value) * 100))
-                    : 0;
-                const done = q.status === "completed";
-                const action = resolveWeeklyAction(q.quest_type);
-                return (
-                  <div
-                    key={q.id}
-                    className={`rounded-xl bg-surface-2 p-3 ${done ? "opacity-60" : ""}`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm font-semibold">
-                        {formatQuestType(q.quest_type, t.dashboard.questTypes)}
-                      </div>
-                      <div className="text-xs text-[color:var(--neon-gold)]">{q.xp_reward} XP</div>
-                    </div>
-                    <GoldProgress
-                      value={pct}
-                      size="sm"
-                      className="mt-2"
-                      aria-label={formatQuestType(q.quest_type, t.dashboard.questTypes)}
-                    />
-                    <div className="mt-1 text-xs text-muted-foreground">
-                      {q.current_value}/{q.target_value} {done ? "✓" : ""}
-                    </div>
-                    <button
-                      type="button"
-                      disabled={done}
-                      onClick={() => runQuestAction(action)}
-                      className="mt-2 rounded-md border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/15 px-2.5 py-1 text-xs font-semibold text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/25 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      {done ? t.common.completed : t.common.continue}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </motion.div>
+        {/* Objectifs & quêtes — extrait ET chargé paresseusement (le budget du chunk
+            `dashboard` n'avait plus que 0,24 ko de marge). Le repli est une
+            silhouette de la vraie section, pas `null` : un `null` ferait sauter la
+            page au moment où la section arrive. */}
+        <Suspense fallback={<DashboardGoalsSkeleton />}>
+          <DashboardGoals
+            dailyObjectives={sprint2?.dailyObjectives ?? []}
+            weeklyQuests={sprint2?.weeklyQuests ?? []}
+            onAction={runQuestAction}
+          />
+        </Suspense>
 
         {/* SUBJECTS GRID — now full-width (radar/inventory/badges/shop moved to
             the dedicated /boutique route, D-5 / Q-4). */}
