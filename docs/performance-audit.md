@@ -77,7 +77,7 @@ finding exist here — and its remedy is the key migration.
 | ID                  | Evidence today                                                                                                                | Sev  |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ---- |
 | ~~**C1**~~          | ✅ **closed 2026-08-10** — see below; the "71" first reported here was a count over migration _text_, not the live policy set | CRIT |
-| **C1-fe**           | **zero** `loader` / `ensureQueryData` / `prefetchQuery` in `src/routes/` — the waterfall is intact                            | CRIT |
+| **C1-fe**           | waterfall intact — but the stated remedy is **blocked by the auth architecture**, see below (2026-08-13)                      | CRIT |
 | ~~**C2-fe**~~       | ✅ **closed 2026-08-10** — AVIF/WebP `<picture>`, lazy, sized; and it was never the LCP element (see below)                   | CRIT |
 | **H2**              | dungeon pick still `ORDER BY random()` — **now measured**, see below (`20260720200000_dungeon_scoped_to_parcours.sql:174`)    | HIGH |
 | **H2-fe**           | `provider.tsx` still imports `en`/`fr`/`ar` statically — 123 KB i18n chunk ships all three                                    | HIGH |
@@ -268,6 +268,40 @@ so _usually_ below the threshold and unaffected. The exception: a student with
 « Matières entamées : **5**/2 » to « **2**/2 ». Arguably an improvement (5/2 reads
 oddly), but it is a **product decision about a gameplay gate**, not a side effect
 to slip into a perf patch. Ship it as its own change, with that as the headline.
+
+### C1-fe — the remedy does not hold as written (2026-08-13)
+
+The audit says: _« move primary queries into route loaders via
+`queryClient.ensureQueryData` »_ to kill the auth → profile → data waterfall
+before first paint. The router is ready for it — `createRouter` already passes
+`context: { queryClient }`. **The auth architecture is not.**
+
+- The browser client persists its session in **localStorage**
+  (`client.ts`: `storage: localStorage`, `persistSession: true`).
+- `auth-attacher.ts` is a **`.client()`** middleware: it reads `getSession()` in
+  the browser and puts `Authorization: Bearer …` on each server-fn call. Its own
+  comment says it plainly — without it "the browser never attaches the bearer
+  token to serverFn RPCs".
+- `_authenticated.tsx` gates with the `useAuth()` hook, not `beforeLoad`.
+- No `@supabase/ssr`, no cookie-borne session anywhere.
+
+→ **At SSR the server holds no session.** A route `loader` calling an
+authenticated server fn would be rejected as unauthorized. So the recommendation
+cannot deliver _SSR_ prefetching; it is not a matter of effort.
+
+What is actually available, and worth separating:
+
+1. **Client-side loaders** (what `ensureQueryData` in a loader would really buy
+   here): the fetch starts when a _navigation_ begins instead of after the
+   component mounts. A real gain between screens — but it does **not** touch the
+   first-paint waterfall the audit describes.
+2. **True SSR prefetching** requires moving the session into a **cookie**
+   (`@supabase/ssr`-style) so the server can read it. That is an architectural
+   change with a security review attached (cookie flags, CSRF, refresh
+   rotation), not a perf patch. Price it as such.
+
+**Sixth finding of this audit whose premise or remedy does not survive reading
+the code** — after C-1, C1's count, C2-fe, M4-fe, and one note of my own.
 
 ### New findings from this pass
 
