@@ -246,11 +246,11 @@ dashboard as "no problems".
 
 ### New findings from this pass
 
-| ID     | Finding                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Sev  |
-| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
-| **N1** | **`npm ci` fails on Node 22** — the documented dev runtime. #716 (Dependabot, undici) dropped the nested `vite-tsconfig-paths/node_modules/typescript@5.9.3` from the lock; `tsconfck` peer-needs `typescript@^5`, which root `typescript@6.0.3` does not satisfy. npm 11 resolves it, npm 10 (shipped with Node 22) dies with `EUSAGE`. `.nvmrc` says 24, CI says 24, AGENTS.md said 22. **Unverified and important: whether Vercel's _build_ image runs npm ≥ 11** — if it does not, deploys have been failing since 2026-08-09 | HIGH |
-| **N2** | `auth-middleware.ts` carried a false _"automatically generated. Do not edit it directly."_ header — nothing generates it and `guard-generated.mjs` does not list it. It sat on the hottest path in the app and deterred exactly the inspection that retired C-1. **Fixed in this pass**                                                                                                                                                                                                                                           | MED  |
-| **N3** | Current `main` (`0ea9135`) has **no `ci.yml` run at all** — the Dependabot squash landed without a post-merge CI pass                                                                                                                                                                                                                                                                                                                                                                                                             | MED  |
+| ID     | Finding                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Sev  |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| **N1** | ✅ **corrigé sur `main` le 2026-08-10 par le revert #718** — diagnostiqué ici le même jour : #716 (Dependabot, undici) avait retiré du lock le `vite-tsconfig-paths/node_modules/typescript@5.9.3` dont `tsconfck` a besoin, et npm 10 mourait en `EUSAGE`. Le revert cite la même erreur ; la cause profonde était un miniflare 5 alpha embarqué par le bump. La question « quelle version de npm sur l'image de build Vercel ? » **tombe donc** : `main` est de nouveau installable partout | HIGH |
+| **N2** | `auth-middleware.ts` carried a false _"automatically generated. Do not edit it directly."_ header — nothing generates it and `guard-generated.mjs` does not list it. It sat on the hottest path in the app and deterred exactly the inspection that retired C-1. **Fixed in this pass**                                                                                                                                                                                                       | MED  |
+| **N3** | Current `main` (`0ea9135`) has **no `ci.yml` run at all** — the Dependabot squash landed without a post-merge CI pass                                                                                                                                                                                                                                                                                                                                                                         | MED  |
 
 ---
 
@@ -605,8 +605,8 @@ _Status stamped 2026-08-10._
     by a two-database diff, see §0.
   - ✅ **C2-fe done 2026-08-10** — AVIF/WebP `<picture>`, lazy + sized (245 KB → 37 KB
     on realistic viewports); the audit's "LCP element" framing was wrong, see §0.
-  - **N1** Settle the toolchain split (Node 22 vs 24 vs npm 11) — **verify the
-    Vercel build image first**. **S**
+  - ✅ **N1 réglé en amont** — le revert #718 a rendu `main` installable de nouveau
+    (2026-08-10). Rien à faire de ce côté.
   - **C-1bis** Read the project's JWT signing key type in the Supabase dashboard;
     migrate to asymmetric keys if it is still a symmetric secret. **S** (config)
 
@@ -638,31 +638,31 @@ _Status stamped 2026-08-10._
 
 _Status column stamped 2026-08-10 (§0). "?" = not re-verified in that pass._
 
-| ID                                        | Tier    | Sev  | One-line                                                     | Status     |
-| ----------------------------------------- | ------- | ---- | ------------------------------------------------------------ | ---------- |
-| C1                                        | DB      | CRIT | per-row `EXISTS` + un-wrapped `auth.uid()` in `profiles` RLS | ✅ closed  |
-| C-1                                       | Infra   | CRIT | fresh client + `getClaims` per server fn                     | ❌ retired |
-| C-2                                       | Infra   | CRIT | rate-limit DB round-trip before every write                  | ⬜ open    |
-| C1-fe                                     | FE      | CRIT | no SSR prefetch — client-side waterfall                      | ⬜ open    |
-| C2-fe                                     | FE      | CRIT | 245 KB unoptimized hero JPG, LCP                             | ✅ closed  |
-| H1                                        | DB      | HIGH | global leaderboard ranks all profiles per call               | ✅ closed  |
-| H2                                        | DB      | HIGH | dungeon `ORDER BY random()` over full join                   | ⬜ open    |
-| H3                                        | DB      | HIGH | unbounded per-user aggregates on write path                  | ✅ closed  |
-| H4                                        | DB      | HIGH | missing `attempts(user_id, exercise_id)` index               | ✅ closed  |
-| H-1                                       | Infra   | HIGH | single cold single-region SSR function                       | ⬜ open    |
-| H-2                                       | Infra   | HIGH | scaling load relocates to PostgREST/Auth                     | ⬜ open    |
-| H-3                                       | Infra   | HIGH | no edge/CDN cache for public catalogue                       | ⬜ open    |
-| H2-fe                                     | FE      | HIGH | all 3 i18n locales bundled eagerly                           | ⬜ open    |
-| H3-fe                                     | FE      | HIGH | `renderMarkdown` re-runs DOMPurify per render                | ✅ closed  |
-| H1-media                                  | Content | HIGH | inline SVG ships on every question fetch                     | ⬜ open    |
-| H2-media                                  | Content | HIGH | `getChapterLesson` over-fetches sibling markdown             | ✅ closed  |
-| M1-fe                                     | FE      | MED  | vendor chunks with no bundle budget                          | ✅ closed  |
-| M4                                        | DB      | MED  | `getDashboard` aggregates a full attempt history in JS       | ✅ closed  |
-| **N1**                                    | Tooling | HIGH | `npm ci` fails on Node 22 — lock needs npm ≥ 11              | ⬜ open    |
-| **N2**                                    | Quality | MED  | false "generated" header on `auth-middleware.ts`             | ✅ closed  |
-| **N3**                                    | CI      | MED  | current `main` has no `ci.yml` run                           | ⬜ open    |
-| M1–M3, M5 (DB), M-2–M-3 (Infra), M2–M3-fe | mixed   | MED  | see §3 — all swept 2026-08-10, table in §0                   | ⬜ open    |
-| L-\*                                      | mixed   | LOW  | see §3 — L1/L4/L-1 swept 2026-08-10, table in §0             | ⬜ open    |
+| ID                                        | Tier    | Sev  | One-line                                                     | Status           |
+| ----------------------------------------- | ------- | ---- | ------------------------------------------------------------ | ---------------- |
+| C1                                        | DB      | CRIT | per-row `EXISTS` + un-wrapped `auth.uid()` in `profiles` RLS | ✅ closed        |
+| C-1                                       | Infra   | CRIT | fresh client + `getClaims` per server fn                     | ❌ retired       |
+| C-2                                       | Infra   | CRIT | rate-limit DB round-trip before every write                  | ⬜ open          |
+| C1-fe                                     | FE      | CRIT | no SSR prefetch — client-side waterfall                      | ⬜ open          |
+| C2-fe                                     | FE      | CRIT | 245 KB unoptimized hero JPG, LCP                             | ✅ closed        |
+| H1                                        | DB      | HIGH | global leaderboard ranks all profiles per call               | ✅ closed        |
+| H2                                        | DB      | HIGH | dungeon `ORDER BY random()` over full join                   | ⬜ open          |
+| H3                                        | DB      | HIGH | unbounded per-user aggregates on write path                  | ✅ closed        |
+| H4                                        | DB      | HIGH | missing `attempts(user_id, exercise_id)` index               | ✅ closed        |
+| H-1                                       | Infra   | HIGH | single cold single-region SSR function                       | ⬜ open          |
+| H-2                                       | Infra   | HIGH | scaling load relocates to PostgREST/Auth                     | ⬜ open          |
+| H-3                                       | Infra   | HIGH | no edge/CDN cache for public catalogue                       | ⬜ open          |
+| H2-fe                                     | FE      | HIGH | all 3 i18n locales bundled eagerly                           | ⬜ open          |
+| H3-fe                                     | FE      | HIGH | `renderMarkdown` re-runs DOMPurify per render                | ✅ closed        |
+| H1-media                                  | Content | HIGH | inline SVG ships on every question fetch                     | ⬜ open          |
+| H2-media                                  | Content | HIGH | `getChapterLesson` over-fetches sibling markdown             | ✅ closed        |
+| M1-fe                                     | FE      | MED  | vendor chunks with no bundle budget                          | ✅ closed        |
+| M4                                        | DB      | MED  | `getDashboard` aggregates a full attempt history in JS       | ✅ closed        |
+| **N1**                                    | Tooling | HIGH | `npm ci` fails on Node 22 — lock needs npm ≥ 11              | ✅ closed (#718) |
+| **N2**                                    | Quality | MED  | false "generated" header on `auth-middleware.ts`             | ✅ closed        |
+| **N3**                                    | CI      | MED  | current `main` has no `ci.yml` run                           | ⬜ open          |
+| M1–M3, M5 (DB), M-2–M-3 (Infra), M2–M3-fe | mixed   | MED  | see §3 — all swept 2026-08-10, table in §0                   | ⬜ open          |
+| L-\*                                      | mixed   | LOW  | see §3 — L1/L4/L-1 swept 2026-08-10, table in §0             | ⬜ open          |
 
 _No application code was modified by the audit. Remediations ship as separate,
 reviewable changes per the roadmap._

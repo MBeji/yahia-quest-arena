@@ -5,6 +5,7 @@ import { ArrowLeft, Crown } from "lucide-react";
 import {
   RECALL_LOCKED_MESSAGE,
   RECALL_NOT_ELIGIBLE_MESSAGE,
+  checkQuestion,
   revealHint,
   startExerciseSession,
   submitAttempt,
@@ -48,10 +49,11 @@ function QuestPage() {
   const startSession = useServerFn(startExerciseSession);
   const submit = useServerFn(submitAttempt);
   const reveal = useServerFn(revealHint);
+  const check = useServerFn(checkQuestion);
 
   const strategy = useMemo<ExercisePlayerStrategy>(
     () => ({
-      capabilities: { rewards: true, hints: true, boss: true, next: true },
+      capabilities: { rewards: true, hints: true, boss: true, next: true, instantFeedback: true },
       quizExerciseTo: "/quest/$exerciseId",
       homeTo: "/dashboard",
       startSession: async ({ exerciseId: exId, variant: v }): Promise<StartOutcome> => {
@@ -100,6 +102,8 @@ function QuestPage() {
         const r = await reveal({ data: { questionId } });
         return { questionId: r.questionId, hint: r.hint, consumed: r.consumed };
       },
+      checkAnswer: ({ exerciseId: exId, questionId, choice }) =>
+        check({ data: { exerciseId: exId, questionId, choice } }),
       renderPremiumLock: ({ message, subjectId, contentLang }) => {
         const QL = buildQuestLabels(contentLang);
         return (
@@ -133,7 +137,7 @@ function QuestPage() {
         </>
       ),
     }),
-    [startSession, submit, reveal, t],
+    [startSession, submit, reveal, check, t],
   );
 
   // `game-surface` makes the player self-contained (it carries the same light-theme

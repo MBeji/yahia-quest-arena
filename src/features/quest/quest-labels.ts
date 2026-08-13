@@ -79,6 +79,15 @@ export type QuestLabels = {
   recallNotEligibleTitle: string;
   recallNotEligibleBody: string;
   recallReplayQcm: string;
+  // Retour immédiat par question (levier 01). Registre de la LANGUE DE CONTENU,
+  // comme les bannières de quiz : le verdict s'affiche contre la question, pas
+  // dans la chrome de l'UI (une matière arabe corrige en arabe, UI française).
+  feedbackCorrect: string;
+  feedbackWrong: string;
+  /** « Bonne réponse : {answer} » — {answer} est rendu par `getDisplayChoice`. */
+  feedbackAnswerIs: string;
+  feedbackContinue: string;
+  feedbackFinish: string;
 };
 
 export function buildQuestLabels(qlang: QuestContentLang): QuestLabels {
@@ -238,6 +247,31 @@ export function buildQuestLabels(qlang: QuestContentLang): QuestLabels {
       ar: "أعِد لعب المهمّة في نمط الاختيار من متعدّد",
       fr: "Rejouer la mission en QCM",
       en: "Replay the mission in multiple-choice",
+    }[qlang],
+    feedbackCorrect: {
+      ar: "✅ إجابة صحيحة !",
+      fr: "✅ Bonne réponse !",
+      en: "✅ Correct!",
+    }[qlang],
+    feedbackWrong: {
+      ar: "❌ ليس تمامًا.",
+      fr: "❌ Pas tout à fait.",
+      en: "❌ Not quite.",
+    }[qlang],
+    feedbackAnswerIs: {
+      ar: "الإجابة الصحيحة : {answer}",
+      fr: "Bonne réponse : {answer}",
+      en: "Correct answer: {answer}",
+    }[qlang],
+    feedbackContinue: {
+      ar: "متابعة",
+      fr: "Continuer",
+      en: "Continue",
+    }[qlang],
+    feedbackFinish: {
+      ar: "إنهاء المهمة",
+      fr: "Terminer la quête",
+      en: "Finish the quest",
     }[qlang],
   };
 }

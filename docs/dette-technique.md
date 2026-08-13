@@ -13,11 +13,10 @@
 
 ## Ouvert
 
-| Dette                                                                                                                                                                                                                                                                                                                                                                                                | Où                                                                              | Effort | Axe          |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------ | ------------ |
-| **Deux gros fichiers** — `quest.server.ts` (1 008 l.) mêle session, contenu et surface publique ; `dashboard.tsx` (547 l.) gagnerait à extraire ses sous-composants                                                                                                                                                                                                                                  | `src/features/quest/quest.server.ts`, `src/routes/_authenticated/dashboard.tsx` | M      | 📝 Qualité   |
-| **Pas de _budget_ de perf runtime** — le LCP réel est désormais **mesuré** (RUM `web-vitals.ts` → PostHog, depuis le 2026-08-10) et les server fns lentes sont journalisées (≥ 1 s), mais rien ne **bloque** une régression : le budget **bundle** existe (`build:check`, 9 chunks) et le harnais de charge aussi (`perf:check`), pas de gate sur le LCP. Un Lighthouse CI comblerait le trou        | CI                                                                              | M      | 🧪 Tests     |
-| **`npm ci` échoue sur Node 22** — le runtime que documentait AGENTS.md. #716 a retiré du lock le `typescript@5.9.3` imbriqué dont `tsconfck` a besoin ; npm 11 s'en sort, npm 10 (celui de Node 22) meurt en `EUSAGE`. `.nvmrc` dit 24, la CI dit 24. **À vérifier en priorité : la version de npm de l'image de _build_ Vercel** — si elle est < 11, les déploiements échouent depuis le 2026-08-09 | `package-lock.json`, `.nvmrc`, `scripts/build-vercel.mjs:107`                   | S      | 🔧 Outillage |
+| Dette                                                                                                                                                                                                                                                                                                                                                                                         | Où                                                                              | Effort | Axe        |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------ | ---------- |
+| **Deux gros fichiers** — `quest.server.ts` (1 008 l.) mêle session, contenu et surface publique ; `dashboard.tsx` (547 l.) gagnerait à extraire ses sous-composants                                                                                                                                                                                                                           | `src/features/quest/quest.server.ts`, `src/routes/_authenticated/dashboard.tsx` | M      | 📝 Qualité |
+| **Pas de _budget_ de perf runtime** — le LCP réel est désormais **mesuré** (RUM `web-vitals.ts` → PostHog, depuis le 2026-08-10) et les server fns lentes sont journalisées (≥ 1 s), mais rien ne **bloque** une régression : le budget **bundle** existe (`build:check`, 9 chunks) et le harnais de charge aussi (`perf:check`), pas de gate sur le LCP. Un Lighthouse CI comblerait le trou | CI                                                                              | M      | 🧪 Tests   |
 
 ## Latent — réveillé seulement par un retour du premium
 
@@ -25,7 +24,14 @@
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
 | **N+1 sur `has_parcours_entitlement`** — un appel RPC par parcours. **Ne se déclenche pas aujourd'hui** : les deux sites d'appel court-circuitent sur `!p.is_premium`, et la phase gratuite met `is_premium = false` partout. À batcher **avant** tout dégel du premium (étude 01) | `src/features/dashboard/dashboard.server.ts:323, :769` |
 
-## Soldé depuis l'audit (2026-06-30 → 2026-08-10)
+## Soldé depuis l'audit (2026-06-30 → 2026-08-13)
+
+- **`npm ci` cassé sur `main`** — diagnostiqué ici le 2026-08-10 (#716 avait retiré du lock le
+  `typescript@5.9.3` imbriqué dont `tsconfck` a besoin ; npm 10 mourait en `EUSAGE`), **corrigé
+  sur `main` le 2026-08-10 par le revert #718**, qui cite la même erreur — la cause profonde
+  était que le bump undici embarquait un miniflare 5 alpha. Reste vrai, et sans gravité : dev+CI
+  tournent en **Node 24** (`.nvmrc`), la fonction SSR en prod en **`nodejs22.x`**
+  (`build-vercel.mjs`) — deux chiffres qui cohabitent légitimement.
 
 - **Élagage push ligne à ligne** — soldé le 2026-08-10 : les endpoints morts sont
   collectés puis supprimés en **un** `DELETE … IN (…)` par lot de 200 (l'`.in()`

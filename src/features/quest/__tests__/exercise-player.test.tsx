@@ -120,7 +120,13 @@ const neutralResult: PlayerResult = {
 
 function anonStrategy(overrides: Partial<ExercisePlayerStrategy> = {}): ExercisePlayerStrategy {
   return {
-    capabilities: { rewards: false, hints: false, boss: false, next: false },
+    capabilities: {
+      rewards: false,
+      hints: false,
+      boss: false,
+      next: false,
+      instantFeedback: false,
+    },
     quizExerciseTo: "/exercice/$exerciseId",
     homeTo: "/",
     startSession: vi.fn().mockResolvedValue({ ok: true, sessionId: "anon" }),
@@ -191,7 +197,13 @@ describe("ExercisePlayer", () => {
       profile: { level: 5, xp: 1000, current_streak: 3, hero_class: "Mage" },
     };
     const strategy = anonStrategy({
-      capabilities: { rewards: true, hints: false, boss: false, next: false },
+      capabilities: {
+        rewards: true,
+        hints: false,
+        boss: false,
+        next: false,
+        instantFeedback: false,
+      },
       submit: vi.fn().mockResolvedValue(rewardResult),
     });
     renderPlayer(strategy);
@@ -213,7 +225,13 @@ describe("ExercisePlayer — recall variant (étude 17)", () => {
 
   it("replays a mastered mission as free text: banner shown, options gone, no hint button", async () => {
     const strategy = anonStrategy({
-      capabilities: { rewards: true, hints: true, boss: false, next: false },
+      capabilities: {
+        rewards: true,
+        hints: true,
+        boss: false,
+        next: false,
+        instantFeedback: false,
+      },
     });
     renderPlayer(strategy, "recall");
 
