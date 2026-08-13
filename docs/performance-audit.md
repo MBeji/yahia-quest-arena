@@ -90,20 +90,20 @@ The first pass left seven findings at "?". They are now all read in the code
 (**swept 2026-08-13**). One more turned out to be false, which is the **fourth**
 of the original audit.
 
-| ID           | Verified today                                                                                                                                                                                                  | State             |
-| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
-| **C-2**      | `isRateLimited` still calls the `check_rate_limit` RPC **first**, at 8 feature call sites; `isRateLimitedLocal` is only an **error fallback**, not a first-gate                                                 | ⬜ open           |
-| **M2**       | `get_dungeon_access` still runs 2 × `COUNT(DISTINCT)` — **measured 2026-08-13**, see below                                                                                                                      | ⬜ open, chiffré  |
-| **M5**       | `get_student_report` still multi-scan (`20260708120000_student_report_by_code.sql`) — admin/parent frequency, so it stays acceptable                                                                            | ⬜ open, low      |
-| **M1** (DB)  | the `FOR UPDATE` chain on `profiles` is still there, but its amplifier (H3's unbounded aggregates) is gone — window much shorter                                                                                | 🟠 mitigated      |
-| **M3** (DB)  | N+1 `has_parcours_entitlement` — inert in the free phase; already tracked as **latent** in `docs/dette-technique.md`                                                                                            | 💤 latent         |
-| **H1-media** | `getExercise` still selects `options` wholesale (`quest.server.ts:744`), so inline SVG still ships per fetch                                                                                                    | ⬜ open           |
-| **M3-fe**    | 30 `motion.*` usages; per-row animation on lists is still there                                                                                                                                                 | ⬜ open, low      |
-| **M4-fe**    | **FALSE** — "the dungeon route bundles all gameplay eagerly". The router plugin already splits it: `dungeon-*.js` is its own **15.15 kB** chunk, fetched only when a player navigates there                     | ✅ closed         |
-| **L1**       | ✅ **closed** — the 3 content queries were already parallel; the remaining serial call (`get_best_scores_by_exercise`) now rides the same `Promise.all`, removing one round-trip per authenticated subject load | ✅ closed         |
-| **L4**       | no partial index on `spaced_repetition_schedule(status)` — only `(user_id, exercise_id)` and `(user_id, scheduled_for)`                                                                                         | ⬜ open, low      |
-| **L-1**      | `isRateLimitedLocal`'s store is module-scope ⇒ per-instance; the effective cap really is × N instances                                                                                                          | ⬜ open by design |
-| **M-2**      | `waitUntil: () => {}` — still a no-op (`build-vercel.mjs:75`), so deferred work can be dropped                                                                                                                  | ⬜ open           |
+| ID           | Verified today                                                                                                                                                                                                  | State                 |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| **C-2**      | `isRateLimited` still calls the `check_rate_limit` RPC **first**, at 8 feature call sites; `isRateLimitedLocal` is only an **error fallback**, not a first-gate                                                 | ⬜ open               |
+| **M2**       | `get_dungeon_access` still runs 2 × `COUNT(DISTINCT)` — **measured 2026-08-13**, see below                                                                                                                      | ⬜ open, chiffré      |
+| **M5**       | `get_student_report` still multi-scan (`20260708120000_student_report_by_code.sql`) — admin/parent frequency, so it stays acceptable                                                                            | ⬜ open, low          |
+| **M1** (DB)  | the `FOR UPDATE` chain on `profiles` is still there, but its amplifier (H3's unbounded aggregates) is gone — window much shorter                                                                                | 🟠 mitigated          |
+| **M3** (DB)  | N+1 `has_parcours_entitlement` — inert in the free phase; already tracked as **latent** in `docs/dette-technique.md`                                                                                            | 💤 latent             |
+| **H1-media** | `getExercise` still selects `options` wholesale (`quest.server.ts:744`), so inline SVG still ships per fetch                                                                                                    | ⬜ open               |
+| **M3-fe**    | 30 `motion.*` usages; per-row animation on lists is still there                                                                                                                                                 | ⬜ open, low          |
+| **M4-fe**    | **FALSE** — "the dungeon route bundles all gameplay eagerly". The router plugin already splits it: `dungeon-*.js` is its own **15.15 kB** chunk, fetched only when a player navigates there                     | ✅ closed             |
+| **L1**       | ✅ **closed** — the 3 content queries were already parallel; the remaining serial call (`get_best_scores_by_exercise`) now rides the same `Promise.all`, removing one round-trip per authenticated subject load | ✅ closed             |
+| **L4**       | ✅ **mesuré 2026-08-13 : n'en vaut pas la peine** — l'index `(user_id, scheduled_for)` existant suffit, voir ci-dessous                                                                                         | ✅ clos (sans action) |
+| **L-1**      | `isRateLimitedLocal`'s store is module-scope ⇒ per-instance; the effective cap really is × N instances                                                                                                          | ⬜ open by design     |
+| **M-2**      | `waitUntil: () => {}` — still a no-op (`build-vercel.mjs:75`), so deferred work can be dropped                                                                                                                  | ⬜ open               |
 
 _Method note: the first sweep of C-2 looked clean because it grepped for
 `checkRateLimit`; the export is `isRateLimited`. A finding is only "closed" when
@@ -302,6 +302,33 @@ What is actually available, and worth separating:
 
 **Sixth finding of this audit whose premise or remedy does not survive reading
 the code** — after C-1, C1's count, C2-fe, M4-fe, and one note of my own.
+
+### L4 — measured 2026-08-13: **not worth an index**, and that is the answer
+
+The audit suggested a partial index on `spaced_repetition_schedule(status)`. The
+real query (`get_daily_plan`) is:
+
+```sql
+WHERE s.user_id = (SELECT auth.uid()) AND s.status = 'pending' AND s.scheduled_for <= now()
+ORDER BY s.scheduled_for LIMIT 3
+```
+
+Measured on the replica, one user with 5 000 schedule rows:
+
+| case                                           | existing index only                | + partial index |
+| ---------------------------------------------- | ---------------------------------- | --------------- |
+| realistic (100 `pending` among 5 000)          | **0.09 ms**                        | 0.07 ms         |
+| pathological (3 `pending`, last in date order) | **1.06 ms** (4 997 rows discarded) | 0.49 ms         |
+
+`idx_spaced_rep_scheduled_for (user_id, scheduled_for)` already does the work:
+the query is **per user** and `ORDER BY … LIMIT 3`, so the index supplies the
+order and the scan **stops early** — it only skipped 147 entries in the
+realistic case. Even the contrived worst case costs ~1 ms.
+
+→ **Closed with no action.** Adding the index would buy ~0.5 ms in a case that
+does not occur, at the price of a migration and a write-path cost on every
+insert/update of the table. Recorded here so the suggestion is not re-proposed:
+_the index is missing on purpose, and here is the number._
 
 ### New findings from this pass
 
