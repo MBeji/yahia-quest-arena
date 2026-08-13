@@ -49,7 +49,13 @@ function ExercicePage() {
 
   const strategy = useMemo<ExercisePlayerStrategy>(
     () => ({
-      capabilities: { rewards: false, hints: false, boss: false, next: false },
+      capabilities: {
+        rewards: false,
+        hints: false,
+        boss: false,
+        next: false,
+        instantFeedback: true,
+      },
       quizExerciseTo: "/exercice/$exerciseId",
       homeTo: "/",
       startSession: async ({ quizGated, chapterId, mode }): Promise<StartOutcome> => {
@@ -130,6 +136,21 @@ function ExercicePage() {
           })),
           tooFast: false,
           ...neutral,
+        };
+      },
+      // Même retour immédiat que le registre connecté, servi par la correction
+      // publique déjà en place (`check_answers`) : une seule réponse à la fois.
+      // Elle rend `null` sur un exercice non corrigible — le lecteur enchaîne alors
+      // sans verdict.
+      checkAnswer: async ({ exerciseId: exId, questionId, choice }) => {
+        const res = await check({ data: { exerciseId: exId, answers: [{ questionId, choice }] } });
+        const item = res.review.find((entry) => entry.questionId === questionId);
+        if (!item) return null;
+        return {
+          questionId,
+          isCorrect: item.isCorrect,
+          correctChoice: item.correctChoice,
+          explanation: item.explanation,
         };
       },
       renderResultFooter: ({ exerciseId: exId, subjectId, onReplay }) => (
