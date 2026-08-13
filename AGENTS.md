@@ -26,7 +26,8 @@ surface may say "premium/abonnement/payant" during this phase.
 
 **Stack**: Vite 8 · TanStack Start (SSR + file routing + server fns) · React 19 · TanStack
 Query 5 · Supabase (Postgres + Auth + RLS) · Tailwind 4 / Radix-shadcn · deploys to **Vercel**
-(push to `main` = prod). npm (Node 22). Tests: Vitest 4 + Testing Library (unit), Playwright (e2e).
+(push to `main` = prod). npm (**Node 24** — `.nvmrc` + les 10 workflows ; ce fichier a longtemps
+annoncé 22, et la Content CI privée l'a suivi). Tests: Vitest 4 + Testing Library, Playwright (e2e).
 
 ## Essential commands
 
@@ -77,8 +78,8 @@ dans le repo privé [`MBeji/yahia-quest-content`](https://github.com/MBeji/yahia
 (loader, schema, sql-builder, qa-checks). Le moteur reste public **et testé ici** ; c'est lui
 que la CI privée checkout.
 
-Sont partis au privé : `content/` (566 chapitres, ~18 700 questions et leurs clés), les
-**41 skills pédagogiques** (`content-*`, `prof-*`, `curriculum-architect`), `FableEtudes/` +
+Sont partis au privé : `content/` (**659 chapitres, 22 146 questions** et leurs clés, mesuré le
+2026-08-10), les **41 skills pédagogiques** (`content-*`, `prof-*`, `curriculum-architect`), `FableEtudes/` +
 METHODE, et les workflows `content-audit.yml` / `video-health.yml`. Ne restent ici que les
 **5 skills techniques** (`verify`, `code-review`, `regression-guard`, `upgrade-guard`,
 `report-triage`). `STATUS.md` reste public.
@@ -240,5 +241,9 @@ this repo (this file, `STATUS.md`, `docs/agents/`) — not only in a tool's priv
   c'est **toute la file** qui est bloquée, pas elle (2026-08-04, `fast-uri`, #712). Réflexe :
   `git diff origin/main HEAD -- package.json package-lock.json` (vide ⇒ ce n'est pas toi),
   puis bump minimal (`npm audit fix --package-lock-only --omit=dev`) en commit séparé.
+- **Deux Node, deux npm — ce gate-ci est aveugle à ce que la Content CI privée refuse.** Ici
+  Node 24 / npm 11, là-bas Node 22 / npm 10, qui rejette des locks que npm 11 installe : un
+  `npm ci` cassé d'un seul côté se sonde **avec le npm de l'autre**. Incident #716/#718 (33 h de
+  Content CI rouge) : [`docs/dependency-maintenance.md`](./docs/dependency-maintenance.md).
 - Coverage is scoped to owned code (`features/`, `shared/`, `lib/`, `hooks/`) — vendored UI,
   route glue, and generated files are excluded by design; don't widen `include` to dilute it.
