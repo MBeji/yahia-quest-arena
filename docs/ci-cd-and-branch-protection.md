@@ -31,6 +31,22 @@ end-of-dev → production walkthrough lives in [passation.md](./passation.md).)
   Corollaire : leur push **déclenche** désormais `auto-pr.yml` — une branche qui doit rester
   draft prend un préfixe `draft/`, et `claude/upgrade-patch-minor-*` est explicitement
   exclue de `auto-pr.yml` parce qu'`upgrade-guard` ouvre cette PR lui-même.
+- ⚠️ **Un push peut ne déclencher AUCUN run `pull_request` — et la PR gèle sans rien de rouge.**
+  Constaté le 2026-08-13 sur #717 : un push de documentation seule a produit uniquement les
+  workflows sur `push` (`auto-pr`, Vercel) ; **aucun** des quatre checks requis (`verify`,
+  `Migration presence`, `Migration order`, `CodeQL`) n'a rapporté sur la nouvelle tête, alors
+  que les six pushes précédents de la même branche, par la même identité, avaient tous produit
+  un run `pull_request`. `ci.yml` n'a pourtant ni filtre `paths` ni `if` de job — la cause
+  exacte n'est pas établie, ne pas la deviner. Ce qui compte est le **symptôme et le remède** :
+  - **Symptôme** : sur la tête courante, 0 check requis sur 4, tout est vert, et l'auto-merge
+    ne s'armera jamais. Même famille que le gel `action_required` ci-dessus, cause différente.
+  - **Piège** : passer la PR « ready » ne répare rien — `ready_for_review` n'est pas dans les
+    types par défaut de `pull_request` (`opened`/`synchronize`/`reopened`), donc `ci.yml` ne
+    se déclenche pas davantage.
+  - **Remède** : pousser un commit de plus (une vraie modification, pas un commit vide) pour
+    provoquer un `synchronize` neuf. Réflexe de fin de session : **vérifier que les 4 checks
+    requis sont présents sur la tête**, pas seulement qu'aucun n'est rouge — « pas de rouge »
+    et « c'est vert » ne sont pas la même chose.
 - **`automerge.yml`** — (re)arms GitHub native auto-merge on every ready, same-repo
   PR; the `no-automerge` label opts out (and disarms). Its `keep-up-to-date` job
   runs on every push to `main` and updates armed PRs left behind (the ruleset's strict
