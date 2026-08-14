@@ -180,7 +180,10 @@ mérite d'être corrigée (2026-08-03) :
 
 ## 6. Travaux en vol
 
-**Au 2026-08-14 : rien en vol.** `main` est à **#734**, arbre propre, aucune PR ouverte ici.
+**Au 2026-08-14 : une PR en vol** — **#728** (draft), second lot du **chantier qualité & perf** :
+docs + commentaires, aucune migration. `main` est à **#734**. (#735 annonçait « rien en vol » —
+#728 était déjà ouverte ; deux chantiers ont tourné en parallèle et chacun a écrit ce qu'il
+voyait.)
 
 Le chantier **graphique & UX** livré entre le 2026-08-13 et le 2026-08-14 (huit PR, #720 → #734)
 laisse trois règles qui gouvernent la suite — le détail est dans les corps de PR, pas ici :
@@ -196,6 +199,23 @@ laisse trois règles qui gouvernent la suite — le détail est dans les corps d
   un d'un seul côté et de servir l'encre d'un thème sur le fond de l'autre.
 - **La boucle de quête corrige à la validation** (#720), en réutilisant la RPC `check_answers` et
   le motif déjà en production dans le donjon. Aucune migration, aucun changement du scoring.
+
+**Chantier qualité & performance** (#717 mergé, #728 en vol) — ce qu'il faut savoir avant de
+reprendre un axe perf, le détail étant dans `docs/performance-audit.md` :
+
+- **Le §0 de l'audit EST l'état ; le corps du document n'est que le _pourquoi_.** Rien n'y est
+  ouvert sans être chiffré ou qualifié. **Six** affirmations d'origine étaient fausses — dont
+  `C-1`, classé « geste #1 le plus rentable », dont la prémisse ne tenait pas.
+- **Trois constats se sont refermés par la MESURE, pas par du code** (`H2`, `M2`, `L4` — ce
+  dernier clos **sans** index, chiffres à l'appui). Un backlog perf se vide aussi en retirant des
+  lignes.
+- **Ce qui reste ouvert attend un arbitrage, pas du travail** : `H2`/`M2` (produit — ils changent
+  ce que l'élève voit), `C-2` (sécurité), `H2-fe` (flash RTL au SSR), `C1-fe` (exige la session en
+  **cookie** : le serveur n'en a aucune aujourd'hui), `H1-media`, `M-2`.
+- ⚠️ **Deux gestes de console restent dus, et le premier est piégeux** : vérifier qu'un événement
+  `web_vitals` **arrive réellement** dans PostHog — sans clé le beacon n'émet rien, et un tableau
+  de bord vide se lit à tort « aucun problème » — et lire le **type de clé de signature JWT** du
+  projet (symétrique ⇒ un aller-retour Auth par server fn, qu'aucun code ne corrige).
 
 ⚠️ **Non vérifié**, et à faire avant de considérer le chantier clos : personne n'a **regardé** les
 écrans de la coquille en thème clair après #734 (ils demandent une session authentifiée). La
