@@ -59,3 +59,32 @@ describe("Tokens de surface (levier 03)", () => {
     expect(light).toContain("--surface-3: oklch(1 0 0)");
   });
 });
+
+describe("Échelle de rareté (levier 02)", () => {
+  const RARITIES = ["common", "rare", "epic", "legendary"];
+
+  /** La teinte OKLCH d'un token de rareté (3e composante), ou null s'il manque. */
+  function hueOf(theme: string, rarity: string): string | null {
+    const match = themeBody(theme).match(new RegExp(`--rarity-${rarity}: oklch\\(([^)]+)\\)`));
+    return match ? (match[1].trim().split(/\s+/)[2] ?? null) : null;
+  }
+
+  it.each(RARITIES)("--rarity-%s est défini dans le thème SOMBRE", (r) => {
+    expect(themeBody(":root")).toContain(`--rarity-${r}:`);
+  });
+
+  it.each(RARITIES)("--rarity-%s est défini dans le thème RÉFÉRENCE", (r) => {
+    expect(themeBody("html.reference")).toContain(`--rarity-${r}:`);
+  });
+
+  it.each([":root", "html.reference"])(
+    "rompt le monochrome dans %s : quatre crans, quatre teintes",
+    (theme) => {
+      // Une échelle de rareté qui se lit d'un coup d'œil est ce qui donne sa
+      // valeur à la collection ; la décliner en quatre ors la supprimerait.
+      const hues = RARITIES.map((r) => hueOf(theme, r));
+      expect(hues.every(Boolean)).toBe(true);
+      expect(new Set(hues).size).toBe(4);
+    },
+  );
+});

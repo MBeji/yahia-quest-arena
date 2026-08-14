@@ -60,7 +60,7 @@ export function SubjectPathCard(props: {
     <Link
       to="/matiere/$subjectId"
       params={{ subjectId: subject.id }}
-      className={`group relative block overflow-hidden rounded-2xl border bg-black/60 p-5 backdrop-blur-md transition hover:-translate-y-1 ${
+      className={`group relative block overflow-hidden rounded-2xl border bg-surface-3 p-5 backdrop-blur-md transition hover:-translate-y-1 ${
         premiumLocked
           ? "border-[color:var(--neon-gold)]/50 hover:border-[color:var(--neon-gold)]/80"
           : "border-border/50 hover:border-[color:var(--gold)]/60"

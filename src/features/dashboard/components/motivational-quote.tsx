@@ -7,7 +7,7 @@ export function MotivationalQuote() {
   const quote = t.quotes[dayIndex];
 
   return (
-    <div className="flex flex-col justify-center rounded-2xl border border-[color:var(--gold)]/20 bg-black/40 p-5 backdrop-blur-md">
+    <div className="flex flex-col justify-center rounded-2xl border border-[color:var(--gold)]/20 bg-surface-2 p-5 backdrop-blur-md">
       <div className="text-xs uppercase tracking-[0.2em] text-[color:var(--gold)] mb-3">
         {t.dashboard.quoteLabel}
       </div>

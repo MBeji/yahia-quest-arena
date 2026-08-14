@@ -5,7 +5,7 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { motion } from "motion/react";
 import {
   Flame,
-  Trophy,
+  TrendingUp,
   Swords,
   Crown,
   Skull,
@@ -17,20 +17,13 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
-import {
-  getDashboard,
-  getSprint2Dashboard,
-  formatObjectiveType,
-  formatQuestType,
-  resolveDailyAction,
-  resolveWeeklyAction,
-} from "@/features/dashboard";
+import { getDashboard, getSprint2Dashboard } from "@/features/dashboard";
 import { DailyReviewPanel, recoverStreak } from "@/features/progression";
 import { hubRouteForRole, shouldLeaveDashboard } from "@/features/auth";
 import { EnablePushCard } from "@/features/notifications";
 import { SubjectPathCard } from "@/features/dashboard/components/subject-path-card";
-import { FamilyGoalCard } from "@/features/dashboard/components/family-goal-card";
 import { MotivationalQuote } from "@/features/dashboard/components/motivational-quote";
+import { DashboardGoalsSkeleton } from "@/features/dashboard/components/dashboard-goals-skeleton";
 import { DashboardFocus } from "@/features/dashboard/components/dashboard-focus";
 import { BackToSchoolBanner } from "@/features/dashboard/components/back-to-school-banner";
 import { DashboardSkeleton } from "@/features/dashboard/components/dashboard-skeleton";
@@ -38,6 +31,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useReducedMotion } from "motion/react";
 import { entrance } from "@/shared/lib/motion";
 import { PageShell } from "@/components/ui/page-shell";
+import { SectionHeading } from "@/components/ui/section-heading";
 import { GoldProgress } from "@/components/game/gold-progress";
 
 const GoldAmbientCanvas = lazy(() => import("@/components/visual/gold-ambient-canvas"));
@@ -47,6 +41,13 @@ const GoldAmbientCanvas = lazy(() => import("@/components/visual/gold-ambient-ca
 const CompetencyMapPanel = lazy(() =>
   import("@/features/progression/components/competency-map-panel").then((m) => ({
     default: m.CompetencyMapPanel,
+  })),
+);
+// Objectifs & quêtes : même raison, budget de chunk. Voir l'en-tête du composant —
+// c'est le `lazy()` qui déplace les octets, pas l'extraction seule.
+const DashboardGoals = lazy(() =>
+  import("@/features/dashboard/components/dashboard-goals").then((m) => ({
+    default: m.DashboardGoals,
   })),
 );
 import { formatStudentAllianceCode } from "@/features/parent-report";
@@ -186,7 +187,7 @@ function Dashboard() {
         {/* HERO HEADER */}
         <motion.div
           {...entrance(prefersReduced, "rise")}
-          className="relative overflow-hidden rounded-3xl border border-[color:var(--gold)]/30 bg-black/40 p-6 backdrop-blur-xl shadow-card sm:p-8"
+          className="relative overflow-hidden rounded-3xl border border-[color:var(--gold)]/30 bg-surface-2 p-6 backdrop-blur-xl shadow-card sm:p-8"
         >
           {/* Refined premium hairline: a single gold filet across the top edge. */}
           <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[color:var(--gold)]/50 to-transparent" />
@@ -270,6 +271,14 @@ function Dashboard() {
           />
         )}
 
+        {/* ZONE 1 — « Aujourd'hui » (levier 04). Les trois zones ne changent NI l'ordre
+            NI le contenu des blocs : elles leur donnent des points d'ancrage. Le constat
+            de l'audit n'était pas qu'il manquait ou surabondait quelque chose, c'est que
+            douze blocs de même volume se lisaient comme une liste — donc comme du travail. */}
+        <div className="mt-8">
+          <SectionHeading icon={Flame} title={t.dashboard.zoneToday} />
+        </div>
+
         {/* FOCUS BAND — the redesign's centrepiece: promote ONE prioritised action
             ("Reprendre") to hero prominence beside the daily-objective ring, then two
             calm secondary tiles (Donjon · Duel). Replaces the old stacked Quick Start. */}
@@ -289,6 +298,11 @@ function Dashboard() {
             données viennent de `getDashboard`, qui n'appelle `get_daily_plan` qu'une fois. */}
         <DailyReviewPanel items={data.dailyPlan ?? []} />
 
+        {/* ZONE 2 — « Ta progression ». */}
+        <div className="mt-8">
+          <SectionHeading icon={TrendingUp} title={t.dashboard.zoneProgress} />
+        </div>
+
         {/* « Carte de compétences » (étude 07, lot 4) — la progression PÉDAGOGIQUE sous la
             révision : où en est vraiment l'élève, par compétence, et ce qui le bloque (R-5).
             Données via `getDashboard` (une lecture de la carte, une des blocages) ; le composant
@@ -300,9 +314,6 @@ function Dashboard() {
             blockedSlug={data.competencyBlockedSlug ?? null}
           />
         </Suspense>
-
-        {/* Push opt-in — self-hides when push is unavailable in this browser. */}
-        <EnablePushCard />
 
         {/* STREAK RECOVERY BANNER */}
         {profile.current_streak === 0 && (profile.longest_streak ?? 0) > 0 && (
@@ -332,137 +343,38 @@ function Dashboard() {
           </motion.div>
         )}
 
-        {/* DAILY OBJECTIVES & WEEKLY QUESTS SECTION */}
-        <motion.div
-          {...entrance(prefersReduced, "rise", 0.2)}
-          className="mt-8 grid gap-6 sm:grid-cols-2"
-        >
-          {/* Daily Objectives */}
-          <div className="rounded-2xl border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 p-5 backdrop-blur-md">
-            <div className="mb-4 flex items-center gap-2 font-display text-lg font-bold">
-              <Trophy className="h-5 w-5 text-[color:var(--gold)]" /> {t.dashboard.dailyQuests}
-            </div>
-            <div className="space-y-3">
-              {(sprint2?.dailyObjectives ?? []).length === 0 && (
-                <p className="text-xs text-muted-foreground">{t.dashboard.dailyEmpty}</p>
-              )}
-              {(sprint2?.dailyObjectives ?? []).map((obj) => {
-                const pct =
-                  obj.target_value > 0
-                    ? Math.min(100, Math.round((obj.current_value / obj.target_value) * 100))
-                    : 0;
-                const done = obj.status === "completed";
-                const action = resolveDailyAction(obj.objective_type);
-                return (
-                  <div
-                    key={obj.id}
-                    className={`rounded-xl bg-black/40 p-3 ${done ? "opacity-60" : ""}`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm font-semibold">
-                        {formatObjectiveType(obj.objective_type, t.dashboard.objectiveTypes)}
-                      </div>
-                      <div className="text-xs text-[color:var(--gold)]">{obj.xp_reward} XP</div>
-                    </div>
-                    <GoldProgress
-                      value={pct}
-                      size="sm"
-                      className="mt-2"
-                      aria-label={formatObjectiveType(
-                        obj.objective_type,
-                        t.dashboard.objectiveTypes,
-                      )}
-                    />
-                    <div className="mt-1 text-xs text-muted-foreground">
-                      {obj.current_value}/{obj.target_value} {done ? "✓" : ""}
-                    </div>
-                    <button
-                      type="button"
-                      disabled={done}
-                      onClick={() => runQuestAction(action)}
-                      className="mt-2 rounded-md border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/15 px-2.5 py-1 text-xs font-semibold text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/25 disabled:cursor-not-allowed disabled:opacity-50 [@media(pointer:coarse)]:min-h-11"
-                    >
-                      {done ? t.common.completed : t.common.continue}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Weekly Quests */}
-          <div className="rounded-2xl border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/5 p-5 backdrop-blur-md">
-            <div className="mb-4 flex items-center gap-2 font-display text-lg font-bold">
-              <Flame className="h-5 w-5 text-[color:var(--neon-gold)]" /> {t.dashboard.weeklyQuests}
-            </div>
-            <div className="space-y-3">
-              {/* Quête famille — l'objectif fixé par le parent lié (null sinon). */}
-              <FamilyGoalCard />
-              {(sprint2?.weeklyQuests ?? []).length === 0 && (
-                <p className="text-xs text-muted-foreground">{t.dashboard.weeklyEmpty}</p>
-              )}
-              {(sprint2?.weeklyQuests ?? []).map((q) => {
-                const pct =
-                  q.target_value > 0
-                    ? Math.min(100, Math.round((q.current_value / q.target_value) * 100))
-                    : 0;
-                const done = q.status === "completed";
-                const action = resolveWeeklyAction(q.quest_type);
-                return (
-                  <div
-                    key={q.id}
-                    className={`rounded-xl bg-black/40 p-3 ${done ? "opacity-60" : ""}`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm font-semibold">
-                        {formatQuestType(q.quest_type, t.dashboard.questTypes)}
-                      </div>
-                      <div className="text-xs text-[color:var(--neon-gold)]">{q.xp_reward} XP</div>
-                    </div>
-                    <GoldProgress
-                      value={pct}
-                      size="sm"
-                      className="mt-2"
-                      aria-label={formatQuestType(q.quest_type, t.dashboard.questTypes)}
-                    />
-                    <div className="mt-1 text-xs text-muted-foreground">
-                      {q.current_value}/{q.target_value} {done ? "✓" : ""}
-                    </div>
-                    <button
-                      type="button"
-                      disabled={done}
-                      onClick={() => runQuestAction(action)}
-                      className="mt-2 rounded-md border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/15 px-2.5 py-1 text-xs font-semibold text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/25 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      {done ? t.common.completed : t.common.continue}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Daily rotating motivation — relocated here as a slim full-width strip so the
-            focus band above stays uncluttered. */}
-        <div className="mt-6">
-          <MotivationalQuote />
-        </div>
+        {/* Objectifs & quêtes — extrait ET chargé paresseusement (le budget du chunk
+            `dashboard` n'avait plus que 0,24 ko de marge). Le repli est une
+            silhouette de la vraie section, pas `null` : un `null` ferait sauter la
+            page au moment où la section arrive. */}
+        <Suspense fallback={<DashboardGoalsSkeleton />}>
+          <DashboardGoals
+            dailyObjectives={sprint2?.dailyObjectives ?? []}
+            weeklyQuests={sprint2?.weeklyQuests ?? []}
+            onAction={runQuestAction}
+          />
+        </Suspense>
 
         {/* SUBJECTS GRID — now full-width (radar/inventory/badges/shop moved to
             the dedicated /boutique route, D-5 / Q-4). */}
+        {/* ZONE 3 — « Explorer ». La grille de matières portait DÉJÀ le seul intertitre
+            de l'écran ; il devient celui de la zone, et son action (classement) le suit. */}
         <section className="mt-8">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="flex items-center gap-2 font-display text-xl font-bold">
-              <Swords className="h-5 w-5 text-[color:var(--gold)]" /> {t.dashboard.pathsTitle}
-            </h2>
-            <Link
-              to="/leaderboard"
-              className="flex items-center gap-1.5 rounded-lg border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/20 [@media(pointer:coarse)]:min-h-11"
-            >
-              <Crown className="h-3.5 w-3.5" /> {t.common.leaderboard}
-            </Link>
-          </div>
+          <SectionHeading
+            icon={Swords}
+            title={t.dashboard.zoneExplore}
+            action={
+              <Link
+                to="/leaderboard"
+                className="flex shrink-0 items-center gap-1.5 rounded-lg border border-[color:var(--neon-gold)]/30 bg-[color:var(--neon-gold)]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[color:var(--neon-gold)] transition hover:bg-[color:var(--neon-gold)]/20 [@media(pointer:coarse)]:min-h-11"
+              >
+                <Crown className="h-3.5 w-3.5" /> {t.common.leaderboard}
+              </Link>
+            }
+          />
+          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            {t.dashboard.pathsTitle}
+          </h3>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {subjects.map((s, i) => (
               <motion.div key={s.id} {...entrance(prefersReduced, "rise", i * 0.05)}>
@@ -482,7 +394,7 @@ function Dashboard() {
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           <Link
             to="/boutique"
-            className="group flex items-center gap-4 rounded-2xl border border-[color:var(--gold)]/25 bg-black/40 p-4 backdrop-blur-md transition hover:border-[color:var(--gold)]/50 [@media(pointer:coarse)]:min-h-11"
+            className="group flex items-center gap-4 rounded-2xl border border-[color:var(--gold)]/25 bg-surface-2 p-4 backdrop-blur-md transition hover:border-[color:var(--gold)]/50 [@media(pointer:coarse)]:min-h-11"
           >
             <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[color:var(--gold)]/15">
               <ShoppingBag className="h-6 w-6 text-[color:var(--gold)]" />
@@ -528,6 +440,14 @@ function Dashboard() {
               <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground transition group-hover:text-[color:var(--gold)] rtl:-scale-x-100" />
             </Link>
           )}
+        </div>
+
+        {/* ZONE CALME — ce qui accompagne sans réclamer : la citation du jour et
+            l'opt-in aux notifications. L'opt-in descend d'ici (il était coincé entre
+            deux blocs de contenu) : c'est un réglage, pas une étape du parcours. */}
+        <div className="mt-8 space-y-4 opacity-90">
+          <MotivationalQuote />
+          <EnablePushCard />
         </div>
       </PageShell>
     </>

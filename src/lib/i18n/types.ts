@@ -168,6 +168,10 @@ export type TranslationKeys = {
     questTypes: Record<string, string>;
     dailyEmpty: string;
     weeklyEmpty: string;
+    /** Intertitres des trois zones du tableau de bord (levier 04). */
+    zoneToday: string;
+    zoneProgress: string;
+    zoneExplore: string;
     pathsTitle: string;
     boutiqueTitle: string;
     boutiqueSubtitle: string;

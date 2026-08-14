@@ -23,7 +23,7 @@ export function FamilyGoalCard() {
   const pct = Math.min(100, Math.round((goal.done / Math.max(1, goal.target)) * 100));
 
   return (
-    <div className="rounded-xl border border-[color:var(--gold)]/40 bg-black/40 p-3">
+    <div className="rounded-xl border border-[color:var(--gold)]/40 bg-surface-2 p-3">
       <div className="flex items-center justify-between">
         <div className="text-sm font-semibold">👨‍👩‍👧 {t.dashboard.familyGoalTitle}</div>
         {goal.done >= goal.target && (

@@ -56,13 +56,25 @@ it the workflow skips gracefully.
 
 ## Le piège des deux npm (incident #716 → #718, 2026-08-09/10)
 
-**Ce dépôt et la Content CI privée ne tournent pas sur le même Node**, et cette asymétrie rend le
-gate d'ici structurellement aveugle à une classe entière de pannes de lockfile.
+⚠️ **Correction du 2026-08-13 — cette section (et le gotcha d'AGENTS.md qui y renvoie)
+décrivait l'asymétrie au présent. Elle n'existe plus, et la formulation inversait la leçon.**
+Au moment de l'incident, ce dépôt était sur **Node 24 / npm 11** et la Content CI privée sur
+**Node 22 / npm 10.9.8**. La PR **#150 du dépôt privé a aligné ses six workflows sur Node 24** :
+les deux côtés tournent désormais sur le même Node.
 
-|                                            | Node | npm    | comportement                   |
-| ------------------------------------------ | ---- | ------ | ------------------------------ |
-| moteur (ici) — `.nvmrc` + les 10 workflows | 24   | 11     | **installe** un lock incomplet |
-| Content CI (dépôt privé)                   | 22   | 10.9.8 | **refuse** ce même lock        |
+|                                                           | Node (pendant l'incident) | npm    | face au lock de #716                                    |
+| --------------------------------------------------------- | ------------------------- | ------ | ------------------------------------------------------- |
+| moteur (ici) — `.nvmrc` + les 10 workflows                | 24                        | 11     | **installe** un lock incomplet → gate **vert**          |
+| Content CI (privée) — **alignée sur 24 depuis leur #150** | 22                        | 10.9.8 | **refuse** ce même lock → **seul détecteur du système** |
+
+**Et c'est l'inverse d'une cause.** Le côté strict n'était pas mal configuré : il avait raison.
+En alignant les deux, #150 a **supprimé le seul détecteur** qui ait attrapé une majeure et une
+alpha entrées sous un titre de bump indirect. L'alignement se défend pour lui-même — exécuter les
+scripts du moteur sur un Node qu'il n'utilise pas est un risque, et le `.nvmrc` dit 24 — et la
+propriété perdue était **accidentelle** (la sévérité de npm 10, pas une intention) : s'y fier
+était fragile. Mais elle a coûté quelque chose, et l'arbitrage **A17** de la roadmap privée
+tranche ce qui la remplace. Le vrai manque n'est pas une version de Node, c'est **une garde qui
+refuse une PR de dépendance dont le diff dépasse ce que son titre annonce**.
 
 Un `package-lock.json` régénéré par un npm récent peut **omettre l'entrée imbriquée d'une peer
 dependency optionnelle** que npm 10 exige quand la version racine ne la satisfait pas. Le fichier

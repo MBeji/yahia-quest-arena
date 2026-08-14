@@ -30,7 +30,7 @@ function Card({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-border/50 bg-black/30 p-5">
+    <section className="rounded-2xl border border-border/50 bg-surface-1 p-5">
       <h2 className="font-display text-lg font-bold">{title}</h2>
       {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
       <div className="mt-4">{children}</div>
@@ -40,7 +40,7 @@ function Card({
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl bg-black/50 p-3">
+    <div className="rounded-xl bg-surface-2 p-3">
       <div className="text-xs uppercase tracking-widest text-muted-foreground">{label}</div>
       <div className="mt-1 font-mono text-lg tabular-nums">{value}</div>
     </div>
