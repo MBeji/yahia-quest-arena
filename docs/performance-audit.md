@@ -98,12 +98,12 @@ of the original audit.
 | **M1** (DB)  | the `FOR UPDATE` chain on `profiles` is still there, but its amplifier (H3's unbounded aggregates) is gone — window much shorter                                                                                | 🟠 mitigated          |
 | **M3** (DB)  | N+1 `has_parcours_entitlement` — inert in the free phase; already tracked as **latent** in `docs/dette-technique.md`                                                                                            | 💤 latent             |
 | **H1-media** | `getExercise` still selects `options` wholesale (`quest.server.ts:744`), so inline SVG still ships per fetch                                                                                                    | ⬜ open               |
-| **M3-fe**    | 30 `motion.*` usages; per-row animation on lists is still there                                                                                                                                                 | ⬜ open, low          |
+| **M3-fe**    | réel (50 `motion.div`, `leaderboard.tsx:253`) mais **déjà atténué** trois fois — voir ci-dessous                                                                                                                | 🟠 atténué            |
 | **M4-fe**    | **FALSE** — "the dungeon route bundles all gameplay eagerly". The router plugin already splits it: `dungeon-*.js` is its own **15.15 kB** chunk, fetched only when a player navigates there                     | ✅ closed             |
 | **L1**       | ✅ **closed** — the 3 content queries were already parallel; the remaining serial call (`get_best_scores_by_exercise`) now rides the same `Promise.all`, removing one round-trip per authenticated subject load | ✅ closed             |
 | **L4**       | ✅ **mesuré 2026-08-13 : n'en vaut pas la peine** — l'index `(user_id, scheduled_for)` existant suffit, voir ci-dessous                                                                                         | ✅ clos (sans action) |
 | **L-1**      | `isRateLimitedLocal`'s store is module-scope ⇒ per-instance; the effective cap really is × N instances                                                                                                          | ⬜ open by design     |
-| **M-2**      | `waitUntil: () => {}` — still a no-op (`build-vercel.mjs:75`), so deferred work can be dropped                                                                                                                  | ⬜ open               |
+| **M-2**      | `waitUntil` est bien un no-op, mais **aucun code de `src/` ne l'appelle** — piège latent, pas défaut actif                                                                                                      | 🟠 latent             |
 
 _Method note: the first sweep of C-2 looked clean because it grepped for
 `checkRateLimit`; the export is `isRateLimited`. A finding is only "closed" when
@@ -329,6 +329,32 @@ realistic case. Even the contrived worst case costs ~1 ms.
 does not occur, at the price of a migration and a write-path cost on every
 insert/update of the table. Recorded here so the suggestion is not re-proposed:
 _the index is missing on purpose, and here is the number._
+
+### M3-fe et M-2 — re-qualifiés 2026-08-13 : réels, mais pas ce qu'on croyait
+
+Les deux étaient classés « ouverts » sur un **comptage**, pas sur une lecture. Relus :
+
+**M3-fe — un `motion.div` par ligne sur une liste de 50 : vrai, et déjà atténué trois fois.**
+`leaderboard.tsx:253` anime bien chaque ligne, et `LEADERBOARD_LIMIT = 50`. Mais le code porte
+déjà les trois parades, chacune commentée :
+
+1. **`content-visibility: auto`** (`.list-row-cv` + `contain-intrinsic-size: auto 72px`) — le
+   navigateur **ne rend pas** les lignes hors écran. C'est la parade principale pour une longue
+   liste, et elle rend l'essentiel du grief caduc : une ligne non rendue n'est pas animée.
+2. **Reduced-motion** — `entrance(reduced, …)` renvoie `{ initial: false }` : aucune animation.
+3. **Stagger plafonné** — `Math.min(i, 12) * 0.02`, commenté « so a long board doesn't cascade
+   for seconds ».
+
+→ Le remède implicite de l'audit (« ne pas animer par ligne ») n'achèterait presque rien
+au-dessus de `content-visibility`. **Atténué, pas ouvert.**
+
+**M-2 — le no-op `waitUntil` : personne ne s'en sert.**
+`build-vercel.mjs:75` passe bien `waitUntil: () => {}` à `worker.fetch`, donc un travail différé
+serait perdu. Sauf qu'**aucun fichier de `src/` n'appelle `waitUntil`** — les autres occurrences
+du dépôt sont l'option Playwright de `page.goto`, sans rapport. Le défaut est donc **latent** :
+il ne perd rien aujourd'hui, il mordra le jour où quelqu'un différera du travail en croyant que
+la plateforme le terminera. À traiter le jour où un besoin apparaît — et à ne pas découvrir ce
+jour-là.
 
 ### New findings from this pass
 
