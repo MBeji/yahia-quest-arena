@@ -26,7 +26,7 @@ export function DailyReviewPanel({ items }: { items: DailyPlanItem[] }) {
   return (
     <section
       aria-label={t.dashboard.reviewTitle}
-      className="mt-4 rounded-2xl border border-[color:var(--gold)]/25 bg-black/40 p-5 backdrop-blur-md"
+      className="mt-4 rounded-2xl border border-[color:var(--gold)]/25 bg-surface-2 p-5 backdrop-blur-md"
     >
       <div className="flex items-center gap-2 font-display text-lg font-bold">
         <RotateCcw className="h-5 w-5 text-[color:var(--gold)]" />

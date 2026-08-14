@@ -393,23 +393,27 @@ html.reference .bg-black-deep {
 }
 
 /* ---------------------------------------------------------------
-  Authenticated app shell (light theme).
-  The app builds most of its panels from translucent `bg-black/<alpha>`
-  glasses. Remap Tailwind's `black` token to white *inside the shell only*
-  so those panels become bright white cards — the landing, auth screen and
-  portaled modal scrims (all outside .app-shell) keep their dark surfaces.
-  Ink-on-gold (`text-black`) and headings (`text-white`) are re-pinned to a
-  deep ink so they stay readable on the now-light cards, and the canvas is
-  deepened a touch so the white cards read as elevated.
+  Coquille applicative en thème clair — le remap a été SUPPRIMÉ.
+
+  Pendant longtemps, `html.reference .app-shell { --color-black: white }`
+  repeignait le noir de Tailwind en blanc pour que les panneaux écrits en
+  `bg-black/<alpha>` deviennent des cartes claires. C'était une rustine à trois
+  défauts : elle ne couvrait que ce qui vivait sous `.app-shell` (le lecteur
+  public a dû recevoir sa copie, puis un bug d'incrustation vidéo), elle
+  empêchait le thème clair d'avoir sa propre élévation — « noir → blanc » ne
+  produit ni ombre ni filet —, et elle rendait toute couleur littérale
+  invisible à la revue puisqu'une règle la rattrapait plus loin.
+
+  Tout ce qui s'affiche dans la coquille passe désormais par les tokens
+  `--surface-1/2/3`, définis séparément par thème. Le seul fond encore nommé
+  ici est `.bg-black-deep`, qui EST un token (`--black-deep`) et garde son
+  override clair juste en dessous.
+
+  Restent volontairement sombres, hors coquille : la landing et l'écran d'auth,
+  dont le registre noir est un choix, pas un oubli.
   --------------------------------------------------------------- */
-html.reference .app-shell {
-  --color-black: oklch(1 0 0);
-}
 html.reference .app-shell.bg-black-deep {
   background-color: oklch(0.965 0.01 165);
-}
-html.reference .app-shell :is(.text-black, .text-white) {
-  color: oklch(0.26 0.03 175);
 }
 
 html.reference .glass-gold {

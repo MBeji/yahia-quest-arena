@@ -20,7 +20,7 @@ export function DuelQueueCard({
   labels: DuelLabels;
 }) {
   return (
-    <div className="rounded-2xl border border-gold/30 bg-black/60 p-6 text-center backdrop-blur-md">
+    <div className="rounded-2xl border border-gold/30 bg-surface-3 p-6 text-center backdrop-blur-md">
       <p className="mb-4 text-sm text-muted-foreground">{labels.subtitle}</p>
       {searching ? (
         <div className="space-y-3">

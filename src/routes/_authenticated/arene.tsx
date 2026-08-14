@@ -58,7 +58,7 @@ function ArenePage() {
           <Link
             key={to}
             to={to}
-            className="group flex items-center gap-4 rounded-2xl border border-[color:var(--gold)]/25 bg-black/40 p-4 backdrop-blur-md transition hover:border-[color:var(--gold)]/50 hover:bg-black/50 [@media(pointer:coarse)]:min-h-11"
+            className="group flex items-center gap-4 rounded-2xl border border-[color:var(--gold)]/25 bg-surface-2 p-4 backdrop-blur-md transition hover:border-[color:var(--gold)]/50 hover:bg-surface-2 [@media(pointer:coarse)]:min-h-11"
           >
             <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[color:var(--gold)]/15">
               <Icon className="h-6 w-6 text-[color:var(--gold)]" />

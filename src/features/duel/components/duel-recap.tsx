@@ -39,7 +39,7 @@ export function DuelRecap({ state, labels }: { state: DuelState; labels: DuelLab
           {state.review.map((r) => (
             <div
               key={r.questionId}
-              className="rounded-xl border border-border/50 bg-black/40 p-3 text-sm backdrop-blur-md"
+              className="rounded-xl border border-border/50 bg-surface-2 p-3 text-sm backdrop-blur-md"
             >
               <p className="font-medium">{r.prompt}</p>
               <p className="text-success">

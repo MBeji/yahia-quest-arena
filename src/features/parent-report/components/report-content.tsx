@@ -56,7 +56,7 @@ export function ReportContent({ report }: { report: ReportData }) {
         </p>
       </div>
       {/* Student Header */}
-      <motion.div {...riseIn} className="bg-black/50 border border-gold/40 rounded-xl p-6">
+      <motion.div {...riseIn} className="bg-surface-2 border border-gold/40 rounded-xl p-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h2 className="text-xl font-bold text-foreground">{student.displayName}</h2>
@@ -129,7 +129,7 @@ export function ReportContent({ report }: { report: ReportData }) {
       </div>
 
       {/* Cette semaine vs la précédente */}
-      <div className="bg-black/50 border border-border/50 rounded-xl p-4">
+      <div className="bg-surface-2 border border-border/50 rounded-xl p-4">
         <h3 className="text-foreground font-semibold mb-4 flex items-center gap-2">
           <Calendar className="w-5 h-5 text-gold" />
           {t.parentReport.weekCompareTitle}
@@ -155,7 +155,7 @@ export function ReportContent({ report }: { report: ReportData }) {
       </div>
 
       {/* Points forts & à renforcer (chapitres, 30 j) */}
-      <div className="bg-black/50 border border-border/50 rounded-xl p-4">
+      <div className="bg-surface-2 border border-border/50 rounded-xl p-4">
         <h3 className="text-foreground font-semibold flex items-center gap-2">
           <Target className="w-5 h-5 text-gold" />
           {t.parentReport.insightsTitle}
@@ -180,7 +180,7 @@ export function ReportContent({ report }: { report: ReportData }) {
       </div>
 
       {/* Score trend */}
-      <div className="bg-black/50 border border-border/50 rounded-xl p-4 flex items-center gap-3">
+      <div className="bg-surface-2 border border-border/50 rounded-xl p-4 flex items-center gap-3">
         {summary.scoreTrend > 0 ? (
           <TrendingUp className="w-5 h-5 text-success" />
         ) : summary.scoreTrend < 0 ? (
@@ -207,7 +207,7 @@ export function ReportContent({ report }: { report: ReportData }) {
       </div>
 
       {/* Activity chart (simple bar chart) */}
-      <div className="bg-black/50 border border-border/50 rounded-xl p-4">
+      <div className="bg-surface-2 border border-border/50 rounded-xl p-4">
         <h3 className="text-foreground font-semibold mb-4 flex items-center gap-2">
           <Calendar className="w-5 h-5 text-gold" />
           {t.parentReport.activityTitle}
@@ -240,7 +240,7 @@ export function ReportContent({ report }: { report: ReportData }) {
 
       {/* Subject breakdown */}
       {subjectStats.length > 0 && (
-        <div className="bg-black/50 border border-border/50 rounded-xl p-4">
+        <div className="bg-surface-2 border border-border/50 rounded-xl p-4">
           <h3 className="text-foreground font-semibold mb-4 flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-success" />
             {t.parentReport.perSubjectTitle}
@@ -379,7 +379,7 @@ function MetricCard({
   value: string;
 }) {
   return (
-    <div className="bg-black/50 border border-border/50 rounded-xl p-4 text-center">
+    <div className="bg-surface-2 border border-border/50 rounded-xl p-4 text-center">
       <div className="flex justify-center mb-2">{icon}</div>
       <div className="text-xl font-bold text-foreground">{value}</div>
       <div className="text-xs text-muted-foreground mt-1">{label}</div>
@@ -397,7 +397,7 @@ function StatBadge({
   value: string | number;
 }) {
   return (
-    <div className="flex items-center gap-2 bg-black/60 rounded-lg px-3 py-2 border border-gold/30">
+    <div className="flex items-center gap-2 bg-surface-3 rounded-lg px-3 py-2 border border-gold/30">
       {icon}
       <div>
         <div className="text-xs text-muted-foreground">{label}</div>
@@ -420,7 +420,7 @@ function WeekCompareCell({
 }) {
   const delta = current - previous;
   return (
-    <div className="rounded-lg border border-border/50 bg-black/40 p-3 text-center">
+    <div className="rounded-lg border border-border/50 bg-surface-2 p-3 text-center">
       <div className="text-xl font-bold text-foreground">
         {current}
         {suffix}
@@ -508,7 +508,7 @@ function InsightList({
                   <Link
                     to="/chapitre/$chapterId"
                     params={{ chapterId: c.chapterId }}
-                    className="flex items-center justify-between gap-2 rounded-md text-sm transition hover:bg-white/5"
+                    className="flex items-center justify-between gap-2 rounded-md text-sm transition hover:bg-foreground/5"
                   >
                     {inner}
                   </Link>

@@ -126,7 +126,7 @@ function LeaderboardPage() {
           className={`inline-flex min-h-11 items-center rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
             isGlobal
               ? "border-gold/60 bg-gold/15 text-gold"
-              : "border-border/50 bg-black/40 text-muted-foreground hover:text-foreground"
+              : "border-border/50 bg-surface-2 text-muted-foreground hover:text-foreground"
           }`}
         >
           {t.leaderboard.globalTab}
@@ -138,7 +138,7 @@ function LeaderboardPage() {
             className={`inline-flex min-h-11 items-center rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
               isMyClass
                 ? "border-gold/60 bg-gold/15 text-gold"
-                : "border-border/50 bg-black/40 text-muted-foreground hover:text-foreground"
+                : "border-border/50 bg-surface-2 text-muted-foreground hover:text-foreground"
             }`}
           >
             {t.leaderboard.myClassTab}
@@ -155,7 +155,7 @@ function LeaderboardPage() {
               className={`inline-flex min-h-11 items-center rounded-full border px-4 py-1.5 text-sm font-semibold transition ${
                 active
                   ? "border-gold/60 bg-gold/15 text-gold"
-                  : "border-border/50 bg-black/40 text-muted-foreground hover:text-foreground"
+                  : "border-border/50 bg-surface-2 text-muted-foreground hover:text-foreground"
               }`}
             >
               {s.name_fr}
@@ -172,11 +172,11 @@ function LeaderboardPage() {
           {myRank && (
             <motion.div
               {...entrance(reduced)}
-              className="mb-6 rounded-2xl border border-gold/40 bg-black/60 p-5 backdrop-blur-xl shadow-gold"
+              className="mb-6 rounded-2xl border border-gold/40 bg-surface-3 p-5 backdrop-blur-xl shadow-gold"
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="flex min-w-0 items-center gap-4">
-                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[image:var(--gradient-gold)] font-display text-xl font-bold text-black shadow-gold">
+                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[image:var(--gradient-gold)] font-display text-xl font-bold text-primary-foreground shadow-gold">
                     #{myRank.rank}
                   </div>
                   <div className="min-w-0">
@@ -260,7 +260,7 @@ function LeaderboardPage() {
                 className={`list-row-cv flex items-center gap-4 rounded-xl border p-4 transition ${
                   player.isMe
                     ? "border-gold/50 bg-gold/10"
-                    : "border-border/50 bg-black/40 hover:bg-black/60"
+                    : "border-border/50 bg-surface-2 hover:bg-surface-3"
                 }`}
               >
                 <div

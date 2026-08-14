@@ -104,7 +104,7 @@ export function ContentReportsAdmin() {
     <div>
       <div className="mb-6 flex items-center gap-3">
         <div className="grid h-11 w-11 place-items-center rounded-xl bg-[image:var(--gradient-gold)] shadow-gold">
-          <Flag className="h-5 w-5 text-black" />
+          <Flag className="h-5 w-5 text-primary-foreground" />
         </div>
         <div>
           <h1 className="flex items-center gap-2 font-display text-2xl font-bold">
@@ -170,7 +170,7 @@ export function ContentReportsAdmin() {
                                 mutation.mutate({ reportId: r.id, status: "resolved" })
                               }
                               disabled={busy}
-                              className="inline-flex min-h-11 items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-3 py-1.5 text-sm font-bold text-black shadow-gold transition hover:scale-105 disabled:opacity-50"
+                              className="inline-flex min-h-11 items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-3 py-1.5 text-sm font-bold text-primary-foreground shadow-gold transition hover:scale-105 disabled:opacity-50"
                             >
                               {busy ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />
