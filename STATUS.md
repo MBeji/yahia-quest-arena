@@ -180,10 +180,15 @@ mérite d'être corrigée (2026-08-03) :
 
 ## 6. Travaux en vol
 
-**Au 2026-08-10 : une PR en vol** — **#717**, lot 1 du **chantier qualité & performance**
-(en draft volontaire : elle touche `AGENTS.md`, canonique). `main` est à **#716**.
+**Au 2026-08-14 : une PR en vol** — **#728**, second lot du **chantier qualité & performance**
+(draft volontaire ; docs + commentaires, aucune migration). Le premier lot, **#717, est MERGÉ** :
+sa migration RLS est appliquée en prod, CI verte sur `main`.
 
-Ce que ce lot change pour la suite, et qu'il faut savoir avant de reprendre un axe perf :
+⚠️ Cette section annonçait encore « #717 en vol » et « `main` à #716 » **trois jours après le
+merge** — écrit par la session qui a mergé. Le pourrissement que ce chantier documente ne prévient
+pas : il commence par une ligne exacte le jour où on l'écrit.
+
+Ce que le chantier change pour la suite, et qu'il faut savoir avant de reprendre un axe perf :
 
 - **`docs/performance-audit.md` a un §0 « Verified status » daté du 2026-08-10.** L'audit du
   2026-06-30 servait encore de plan de route alors qu'un tiers était soldé sans que la case
@@ -223,7 +228,22 @@ Ce que ce lot change pour la suite, et qu'il faut savoir avant de reprendre un a
   Restent le **slow-query log** de la base (réglage Supabase) et un _budget_ LCP opposable.
   ⚠️ Le beacon ne remonte rien sans clé PostHog : vérifier qu'un événement `web_vitals` arrive
   avant de lire un tableau de bord vide comme « tout va bien ».
-- **Restes perf** : `C1-fe` (zéro loader SSR), `H2-fe` (i18n : les 3 locales embarquées).
+- **L'audit est dans un état terminal : rien d'ouvert qui ne soit chiffré ou qualifié.** Sur les
+  constats d'origine, **six affirmations étaient fausses** (dont deux écrites par la session
+  elle-même), **trois se sont refermées par la mesure** (`H2`, `M2`, `L4` — ce dernier clos SANS
+  index, chiffres à l'appui) et **deux par la relecture** (`M3-fe` déjà atténué par
+  `content-visibility`, `M-2` latent car rien n'appelle `waitUntil`).
+- **`C1-fe` ne tient pas tel qu'écrit** : la session vit en localStorage et `auth-attacher` est un
+  middleware `.client()`, donc **le serveur n'a pas de session** — un route loader SSR ne peut pas
+  appeler une server fn authentifiée. Le vrai préchargement SSR exige la session en **cookie**,
+  avec revue de sécurité. À chiffrer comme une évolution d'architecture, pas comme un patch.
+- **Restes perf, chacun sur un arbitrage et non sur du travail** : `H2`/`M2` (produit — ils
+  changent ce que l'élève voit), `C-2` (sécurité), `H2-fe` (flash RTL au SSR), `H1-media` (corpus),
+  `M-2` (infra).
+- ⚠️ **Deux gestes de console restent à faire, et le premier est piégeux** : vérifier qu'un
+  événement `web_vitals` **arrive réellement** dans PostHog (sans clé le beacon n'émet rien, et un
+  tableau de bord vide se lit à tort comme « aucun problème »), et lire le **type de clé de
+  signature JWT** du projet.
 
 **Issues ouvertes (3 ici, 1 au privé)** :
 
