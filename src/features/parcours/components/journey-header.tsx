@@ -17,7 +17,7 @@ export function JourneyHeader({ title, subtitle, level, xp, heroClass }: Journey
   const p = xpProgress(xp, level);
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-gold/20 bg-black/50 p-6 backdrop-blur-xl">
+    <div className="relative overflow-hidden rounded-3xl border border-gold/20 bg-surface-2 p-6 backdrop-blur-xl">
       <div className="relative flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="font-display text-3xl font-bold sm:text-4xl">
@@ -26,7 +26,7 @@ export function JourneyHeader({ title, subtitle, level, xp, heroClass }: Journey
           {subtitle && <p className="mt-1 max-w-xl text-sm text-muted-foreground">{subtitle}</p>}
         </div>
         <div className="flex items-center gap-3 rounded-2xl border border-gold/30 bg-gold/10 px-4 py-2">
-          <div className="grid h-11 w-11 place-items-center rounded-xl bg-[image:var(--gradient-gold)] text-black shadow-gold">
+          <div className="grid h-11 w-11 place-items-center rounded-xl bg-[image:var(--gradient-gold)] text-primary-foreground shadow-gold">
             <Trophy className="h-5 w-5" />
           </div>
           <div>

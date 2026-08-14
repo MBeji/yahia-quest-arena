@@ -87,7 +87,7 @@ export function CompetencyMapPanel({
   return (
     <section
       aria-label={t.dashboard.competencyTitle}
-      className="mt-4 rounded-2xl border border-[color:var(--gold)]/25 bg-black/40 p-5 backdrop-blur-md"
+      className="mt-4 rounded-2xl border border-[color:var(--gold)]/25 bg-surface-2 p-5 backdrop-blur-md"
     >
       <div className="flex items-center gap-2 font-display text-lg font-bold">
         <Compass className="h-5 w-5 text-[color:var(--gold)]" />
@@ -115,7 +115,7 @@ export function CompetencyMapPanel({
                             : `${Math.round(c.mastery)}%`}
                         </span>
                       </div>
-                      <div className="mt-1 h-2 overflow-hidden rounded-full bg-white/10">
+                      <div className="mt-1 h-2 overflow-hidden rounded-full bg-foreground/10">
                         <div
                           className="h-full rounded-full bg-[color:var(--gold)]"
                           style={{ width: `${Math.round(c.mastery)}%` }}

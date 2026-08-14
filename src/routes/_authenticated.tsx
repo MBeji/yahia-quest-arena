@@ -155,14 +155,14 @@ function AuthenticatedLayout() {
       {/* z-30 (above <main>'s z-10): the header hosts inline pop-overs (language
           menu) that open over the page content. At equal z-index the later <main>
           painted on top and the dashboard grid intercepted the dropdown clicks. */}
-      <header className="relative z-30 border-b border-[color:var(--gold)]/15 bg-black/40 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
+      <header className="relative z-30 border-b border-[color:var(--gold)]/15 bg-surface-2 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           {/* The logo goes to the user's OWN hub: a parent has no Heroes' Hall, and
               pointing them at /dashboard only to bounce them back to /parent-report
               made the header look like it looped. */}
           <Link to={hub} className="flex items-center gap-2">
             <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[image:var(--gradient-gold)] shadow-gold">
-              <Sparkles className="h-4 w-4 text-black" />
+              <Sparkles className="h-4 w-4 text-primary-foreground" />
             </div>
             <span className="hidden font-display text-base font-bold tracking-wider sm:inline">
               Na9ra <span className="text-gradient-gold">Nal3ab</span>
@@ -235,7 +235,7 @@ function AuthenticatedLayout() {
                   <FlaskConical className="h-4 w-4 shrink-0" />{" "}
                   <span className="hidden lg:inline">{t.layout.betaRequests}</span>
                   {pendingBeta > 0 && (
-                    <span className="ms-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-black">
+                    <span className="ms-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground">
                       {pendingBeta}
                     </span>
                   )}
@@ -250,7 +250,7 @@ function AuthenticatedLayout() {
                   <Flag className="h-4 w-4 shrink-0" />{" "}
                   <span className="hidden lg:inline">{t.layout.contentReports}</span>
                   {openReports > 0 && (
-                    <span className="ms-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-black">
+                    <span className="ms-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground">
                       {openReports}
                     </span>
                   )}
@@ -265,7 +265,7 @@ function AuthenticatedLayout() {
                   <Bug className="h-4 w-4 shrink-0" />{" "}
                   <span className="hidden lg:inline">{t.layout.bugReports}</span>
                   {openBugs > 0 && (
-                    <span className="ms-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-black">
+                    <span className="ms-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground">
                       {openBugs}
                     </span>
                   )}
@@ -320,7 +320,7 @@ function AuthenticatedLayout() {
           immersive screens to avoid overlapping their in-screen CTAs, and for
           parents (their Suivi-only shell lives in the top bar — D-4). */}
       {!immersive && showPrimaryNav && (
-        <nav className="fixed inset-x-0 bottom-0 z-30 flex items-stretch justify-around border-t border-[color:var(--gold)]/15 bg-black/80 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden">
+        <nav className="fixed inset-x-0 bottom-0 z-30 flex items-stretch justify-around border-t border-[color:var(--gold)]/15 bg-surface-3 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden">
           {primaryNav.map(({ to, Icon, label }) => (
             <Link
               key={to}

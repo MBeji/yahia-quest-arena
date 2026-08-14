@@ -51,10 +51,10 @@ export function PathNode({ state, title, sublabel, badge, icon, color = GOLD }: 
   const ring = isPremium
     ? "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/10 text-[color:var(--gold)]"
     : isDone
-      ? "border-transparent bg-[image:var(--gradient-gold)] text-black shadow-gold"
+      ? "border-transparent bg-[image:var(--gradient-gold)] text-primary-foreground shadow-gold"
       : isNext
-        ? "border-[color:var(--gold)] bg-black/50 ring-2 ring-[color:var(--gold)]/35 ring-offset-2 ring-offset-transparent"
-        : "border-[color:var(--gold)]/50 bg-black/50";
+        ? "border-[color:var(--gold)] bg-surface-2 ring-2 ring-[color:var(--gold)]/35 ring-offset-2 ring-offset-transparent"
+        : "border-[color:var(--gold)]/50 bg-surface-2";
 
   const glyph = isPremium ? (
     <Crown className="h-7 w-7" />

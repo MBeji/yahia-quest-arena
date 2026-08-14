@@ -107,7 +107,7 @@ function DuelPlayPage() {
       {settled ? (
         <DuelRecap state={state} labels={t.duel} />
       ) : iFinished || !currentQuestion ? (
-        <div className="space-y-4 rounded-2xl border border-gold/30 bg-black/60 p-6 text-center backdrop-blur-md">
+        <div className="space-y-4 rounded-2xl border border-gold/30 bg-surface-3 p-6 text-center backdrop-blur-md">
           <p className="font-medium" role="status">
             {t.duel.waitingOpponent}
           </p>

@@ -38,11 +38,14 @@ describe("Tokens de surface (levier 03)", () => {
     }
   });
 
-  it("ne remappe plus le noir de Tailwind pour le lecteur : `.game-surface` a disparu", () => {
-    // La rustine existait parce que le lecteur était écrit en `bg-black/<alpha>`.
-    // Elle avait un effet de bord : elle repeignait aussi l'incrustation vidéo,
-    // qui devenait de l'encre sombre sur un scrim sombre.
+  it("ne remappe plus JAMAIS le noir de Tailwind — ni pour le lecteur, ni pour la coquille", () => {
+    // Les deux rustines existaient parce que les écrans étaient écrits en
+    // `bg-black/<alpha>`. Celle du lecteur avait un effet de bord : elle
+    // repeignait aussi l'incrustation vidéo, devenue encre sombre sur scrim
+    // sombre. Leur disparition est la preuve que la migration est finie : plus
+    // rien ne rattrapera un littéral qui reviendrait.
     expect(CSS).not.toContain(".game-surface");
+    expect(CSS.replace(/\/\*[\s\S]*?\*\//g, "")).not.toContain("--color-black");
   });
 
   it("garde le scrim vidéo NOIR dans les deux thèmes — une vidéo n'est pas une surface d'UI", () => {

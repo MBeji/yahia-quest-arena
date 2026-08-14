@@ -6,12 +6,12 @@
  *    (`primary`, `gold`, `success`, `destructive`, `flame`…) ;
  *  - `text-white` — encre codée en dur qui casse le thème clair (utiliser
  *    `text-foreground`, `text-primary-foreground` ou un token) ;
- *  - `bg-black` / `text-black` / `bg-white` — MAIS seulement dans les zones DÉJÀ
- *    migrées vers les tokens de surface (`MIGRATED`, levier 03). Ailleurs ils
- *    restent tolérés : le thème clair les rattrape encore par le remap
- *    `html.reference .app-shell { --color-black: … }`, et on ne bloque pas un
- *    dépôt entier sur une migration qui se fait écran par écran. Cette liste
- *    est un CLIQUET : elle s'allonge à chaque lot, elle ne raccourcit jamais.
+ *  - `bg-black` / `text-black` / `bg-white` dans les zones `MIGRATED` — c'est-à-
+ *    dire, depuis la fin de la migration des surfaces, TOUTE la coquille
+ *    applicative. Le remap `html.reference .app-shell { --color-black: … }` qui
+ *    les rattrapait n'existe plus : un littéral qui y réapparaît reste noir sur
+ *    un thème clair, personne ne le repeindra. Restent hors liste la landing et
+ *    l'écran d'auth, dont le registre sombre est un choix assumé.
  *
  * Périmètre et mécanique identiques au garde-fou RTL : src/{features,routes,
  * lib,shared,components} SAUF components/ui (shadcn vendorisé) et __tests__.
@@ -38,14 +38,21 @@ const EXCLUDED_SEGMENTS = ["/components/ui/", "/__tests__/"];
  * en clair (le remap `.game-surface` a été supprimé avec cette migration).
  * Chemins POSIX, comparés en préfixe depuis `src/`.
  */
-const MIGRATED = ["features/quest/", "features/dashboard/", "routes/_authenticated/dashboard.tsx"];
+const MIGRATED = [
+  // Toute la coquille applicative : plus aucune règle CSS ne rattrape un noir
+  // littéral qui y réapparaîtrait, le remap `.app-shell` ayant été supprimé.
+  "features/",
+  "routes/_authenticated",
+];
 
 const PALETTE =
   "(?:red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|slate|gray|zinc|neutral|stone)";
 const MIGRATED_RULES = [
   {
     name: "surface littérale dans une zone migrée",
-    re: /\b(?:bg-black|text-black|bg-white)(?:\/\d+)?\b/,
+    // Le `(?!-)` écarte `bg-black-deep`, qui est une UTILITAIRE adossée au token
+    // `--black-deep` (et surchargée par thème), pas une couleur codée en dur.
+    re: /\b(?:bg-black|text-black|bg-white)(?:\/\d+)?\b(?!-)/,
     fix: "bg-surface-1|2|3, text-primary-foreground, ou media-scrim/ink-on-media pour du média",
   },
 ];

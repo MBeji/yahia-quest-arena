@@ -61,7 +61,7 @@ export function EnablePushCard({ title, desc }: { title?: string; desc?: string 
                 type="button"
                 onClick={onEnable}
                 disabled={busy || state === "denied"}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-3 py-1.5 text-xs font-bold text-black shadow-gold transition hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-gold transition hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
               >
                 {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
                 {busy ? t.pushNotifications.enabling : t.pushNotifications.enable}
