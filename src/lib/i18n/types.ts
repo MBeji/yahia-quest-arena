@@ -870,6 +870,7 @@ export type TranslationKeys = {
       themeDescFrancais: string;
       themeDescCultureGenerale: string;
       themeDescMuscleCerveau: string;
+      themeDescEducationIslamique: string;
       /** Sober description of a lycée year page (public register). */
       lyceeYearDesc: string;
     };
