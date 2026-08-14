@@ -33,7 +33,7 @@ export function DuelLeague({
       {rows.length === 0 ? (
         <p className="text-sm text-muted-foreground">{labels.leagueEmpty}</p>
       ) : (
-        <ul className="divide-y divide-border/50 rounded-xl border border-border/50 bg-black/40 backdrop-blur-md">
+        <ul className="divide-y divide-border/50 rounded-xl border border-border/50 bg-surface-2 backdrop-blur-md">
           {rows.map((r) => (
             <li
               key={`${r.rank}-${r.displayName ?? "?"}`}

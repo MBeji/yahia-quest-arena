@@ -123,7 +123,7 @@ function DuelHubPage() {
 
       {/* Pre-match narration (étude 15 lot 11, D-7): tell the rule and show the reward
           tiers BEFORE the click — participation always pays. Constants from gamification.ts. */}
-      <div className="rounded-2xl border border-gold/25 bg-black/40 p-4 backdrop-blur-md">
+      <div className="rounded-2xl border border-gold/25 bg-surface-2 p-4 backdrop-blur-md">
         <p className="text-sm text-muted-foreground">{t.duel.rulesFirstDone}</p>
         <div className="mt-3 flex flex-wrap gap-2">
           {[
@@ -156,7 +156,7 @@ function DuelHubPage() {
           {active.map((e) => (
             <div
               key={e.duelId}
-              className="flex items-center justify-between gap-2 rounded-xl border border-border/50 bg-black/40 p-3 backdrop-blur-md"
+              className="flex items-center justify-between gap-2 rounded-xl border border-border/50 bg-surface-2 p-3 backdrop-blur-md"
             >
               <span>{t.duel[STATUS_KEY[e.status]]}</span>
               <div className="flex items-center gap-4">
@@ -190,7 +190,7 @@ function DuelHubPage() {
             {past.map((e) => (
               <li
                 key={e.duelId}
-                className="flex items-center justify-between rounded-xl border border-border/50 bg-black/40 p-3 text-sm backdrop-blur-md"
+                className="flex items-center justify-between rounded-xl border border-border/50 bg-surface-2 p-3 text-sm backdrop-blur-md"
               >
                 <span className="text-muted-foreground">{t.duel[STATUS_KEY[e.status]]}</span>
                 <Link

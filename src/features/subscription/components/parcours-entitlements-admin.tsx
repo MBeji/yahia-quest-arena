@@ -148,7 +148,7 @@ export function ParcoursEntitlementsAdmin({
         <button
           type="submit"
           disabled={!canGrant}
-          className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2 text-sm font-bold text-black shadow-gold transition hover:scale-105 disabled:opacity-50"
+          className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-2 text-sm font-bold text-primary-foreground shadow-gold transition hover:scale-105 disabled:opacity-50"
         >
           {isGranting ? (
             <Loader2 className="h-4 w-4 animate-spin" />

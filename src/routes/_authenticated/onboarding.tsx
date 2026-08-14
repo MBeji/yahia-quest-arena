@@ -140,7 +140,7 @@ function IntentStep({ onSelect }: { onSelect: (intent: Intent) => void }) {
             onClick={() => onSelect(choice.id)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-6 text-start transition-all hover:border-[color:var(--gold)]/60"
+            className="rounded-2xl border-2 border-[color:var(--gold)]/30 bg-surface-2 p-6 text-start transition-all hover:border-[color:var(--gold)]/60"
           >
             <div className="flex items-center gap-4">
               <div
@@ -211,7 +211,7 @@ function ParcoursCard({
   // markup — a real button can't nest inside the selectable motion.button).
   if (isComingSoon) {
     return (
-      <div className="relative rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-6 text-start">
+      <div className="relative rounded-2xl border-2 border-[color:var(--gold)]/30 bg-surface-2 p-6 text-start">
         {header}
         {interest && (
           <ParcoursInterestButton
@@ -242,7 +242,7 @@ function ParcoursCard({
       whileHover={isSaving ? undefined : { scale: 1.02 }}
       whileTap={isSaving ? undefined : { scale: 0.98 }}
       aria-label={label}
-      className="relative w-full rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-6 text-start transition-all hover:border-[color:var(--gold)]/60 disabled:opacity-60"
+      className="relative w-full rounded-2xl border-2 border-[color:var(--gold)]/30 bg-surface-2 p-6 text-start transition-all hover:border-[color:var(--gold)]/60 disabled:opacity-60"
     >
       {header}
     </motion.button>
@@ -265,7 +265,7 @@ function LyceeYearCard({ group, onOpen }: { group: LyceeYearGroup; onOpen: () =>
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       aria-label={label}
-      className="w-full rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-6 text-start transition-all hover:border-[color:var(--gold)]/60"
+      className="w-full rounded-2xl border-2 border-[color:var(--gold)]/30 bg-surface-2 p-6 text-start transition-all hover:border-[color:var(--gold)]/60"
     >
       <div className="flex items-center gap-4">
         <div className="rounded-xl bg-[color:var(--gold)]/15 p-3">
@@ -358,16 +358,16 @@ function ParcoursStep({
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              className="h-[88px] animate-pulse rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50"
+              className="h-[88px] animate-pulse rounded-2xl border-2 border-[color:var(--gold)]/30 bg-surface-2"
             />
           ))}
         </div>
       ) : isError ? (
-        <div className="rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-8 text-center text-sm text-muted-foreground">
+        <div className="rounded-2xl border-2 border-[color:var(--gold)]/30 bg-surface-2 p-8 text-center text-sm text-muted-foreground">
           {t.explorer.failedLoad}
         </div>
       ) : visible.length === 0 ? (
-        <div className="rounded-2xl border-2 border-[color:var(--gold)]/30 bg-black/50 p-8 text-center text-sm text-muted-foreground">
+        <div className="rounded-2xl border-2 border-[color:var(--gold)]/30 bg-surface-2 p-8 text-center text-sm text-muted-foreground">
           {t.explorer.empty}
         </div>
       ) : isSchool && lyceeGroup ? (

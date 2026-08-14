@@ -52,7 +52,7 @@ function AdminParcoursInterestPage() {
 
       <div className="mb-6 flex items-center gap-3">
         <div className="grid h-11 w-11 place-items-center rounded-xl bg-[image:var(--gradient-gold)] shadow-gold">
-          <TrendingUp className="h-5 w-5 text-black" />
+          <TrendingUp className="h-5 w-5 text-primary-foreground" />
         </div>
         <div>
           <h1 className="font-display text-2xl font-bold">{t.parcoursInterest.adminTitle}</h1>

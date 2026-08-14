@@ -295,7 +295,7 @@ function DungeonPage() {
 
         <motion.div
           {...riseIn}
-          className="relative overflow-hidden rounded-3xl border border-gold/40 bg-black/60 p-5 text-center backdrop-blur-xl sm:p-8"
+          className="relative overflow-hidden rounded-3xl border border-gold/40 bg-surface-3 p-5 text-center backdrop-blur-xl sm:p-8"
         >
           <div className="absolute -top-16 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-gold/30 blur-3xl" />
           <div className="relative">
@@ -325,7 +325,7 @@ function DungeonPage() {
                 <button
                   onClick={() => accessQuery.refetch()}
                   disabled={accessQuery.isFetching}
-                  className="mt-4 inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-border/50 px-4 py-2 text-sm font-semibold text-foreground hover:bg-black/60 disabled:opacity-50"
+                  className="mt-4 inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-border/50 px-4 py-2 text-sm font-semibold text-foreground hover:bg-surface-3 disabled:opacity-50"
                 >
                   {accessQuery.isFetching && <Loader2 className="h-4 w-4 animate-spin" />}
                   {t.common.retry}
@@ -361,7 +361,7 @@ function DungeonPage() {
                 )}
                 <Link
                   to="/dashboard"
-                  className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-border/50 px-4 py-2 text-sm font-semibold text-foreground hover:bg-black/60"
+                  className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-border/50 px-4 py-2 text-sm font-semibold text-foreground hover:bg-surface-3"
                 >
                   {t.dungeon.keepTraining}
                 </Link>
@@ -395,7 +395,7 @@ function DungeonPage() {
       <PageShell width="narrow" className="py-12">
         <motion.div
           {...scaleIn}
-          className="relative overflow-hidden rounded-3xl border border-destructive/40 bg-black/60 p-5 text-center backdrop-blur-xl sm:p-8"
+          className="relative overflow-hidden rounded-3xl border border-destructive/40 bg-surface-3 p-5 text-center backdrop-blur-xl sm:p-8"
         >
           <div className="absolute -top-16 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-destructive/30 blur-3xl" />
           <div className="relative">
@@ -587,7 +587,7 @@ function DungeonPage() {
         <motion.div
           key={currentQuestion.id}
           {...questionSlide(reduced)}
-          className="rounded-3xl border border-gold/30 bg-black/60 p-6 backdrop-blur-xl sm:p-8"
+          className="rounded-3xl border border-gold/30 bg-surface-3 p-6 backdrop-blur-xl sm:p-8"
           // Only Arabic content is RTL. Math uses standard LTR notation (project
           // rule), so it must NOT be forced RTL. Full unification on the subject's
           // content_language is pending a get_dungeon_questions RPC change to carry
