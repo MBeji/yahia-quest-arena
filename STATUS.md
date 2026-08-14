@@ -1,7 +1,8 @@
 # STATUS — état du projet (topo central)
 
-> **Instantané daté du 2026-08-03** (`main` à **#709** ; exécution V1 « Apprendre & maîtriser » de
-> la doctrine verticale, é26 — **J-29** avant la rentrée). Ce fichier est le **point d'entrée unique** pour savoir où en est
+> **Instantané daté du 2026-08-14** (`main` à **#734** ; exécution V1 « Apprendre & maîtriser » de
+> la doctrine verticale, é26 — **J-18** avant la rentrée). Depuis le 2026-08-13, la **position de
+> marché** est tranchée et mesurée : voir **§1bis**. Ce fichier est le **point d'entrée unique** pour savoir où en est
 > le projet : phase produit, décisions qui gouvernent, état réel des features, études,
 > chantiers, travaux en vol. Il complète — sans les dupliquer — les documents normatifs :
 > [AGENTS.md](./AGENTS.md) (conventions, gagne en cas de conflit — CLAUDE.md est un pointeur
@@ -125,14 +126,14 @@ suspendue au dégel de é01). Décisions **D5/D6** de `go-live/05`, dépôt priv
 > **Ne pas recopier le détail des lots ici** : c'est ce qui a fait diverger ce fichier de la
 > réalité (constat du 2026-08-02 — il annonçait `main` à #641 quand elle était à #703).
 
-| État               | Études                                                                                                                                                                                                                                                                            |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Livrées**        | **03** types de questions natifs · **05** duels & ligues · **13** moteur de transcription (**ScribeKit**, dépôt autonome) · **14** refonte UX/design · **15** contenu & composition des écrans · **17** rappel actif · **18** cours vivants · **22** parcours élève & progression |
-| **Scission faite** | **24** protection IP du contenu — le corpus, les 41 skills pédagogiques et `FableEtudes/` sont partis au privé ; le gate anti-fuite tient l'invariant                                                                                                                             |
-| **En exécution**   | **04** moteur adaptatif (**phase A1.2 close**, #707) · **07** knowledge graph / compétences · **09** économie du jeu (**lots 1 et 2**, #703/#708) · **16** ouverture lycée · **20** réponses acceptées · **23** vidéos explicatives · **25** harness AI-native & model-agnostic   |
-| **Validées**       | **11** tuteur IA « El Ostedh » (exécution dégelée pour les lots 0-2) · **19** questions & exercices illustrés · **21** valorisation des manuels officiels · **26** doctrine verticale                                                                                             |
-| **Brouillons**     | **02** examen blanc\* · **08** analytics familles\*                                                                                                                                                                                                                               |
-| **Gelées**         | **01** paiement en ligne (pivot gratuité — véhicule de dégel du premium) · **06** PWA offline, **10** anti-fraude, **12** studio d'ingestion (doctrine verticale é26, réversible ; 10 se dégèle au volume réel de V3)                                                             |
+| État               | Études                                                                                                                                                                                                                                                                                                                                                     |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Livrées**        | **03** types de questions natifs · **05** duels & ligues · **13** moteur de transcription (**ScribeKit**, dépôt autonome) · **14** refonte UX/design · **15** contenu & composition des écrans · **17** rappel actif · **18** cours vivants · **22** parcours élève & progression · **28** stratégie de référence (position de marché, 3 lots, 2026-08-13) |
+| **Scission faite** | **24** protection IP du contenu — le corpus, les 41 skills pédagogiques et `FableEtudes/` sont partis au privé ; le gate anti-fuite tient l'invariant                                                                                                                                                                                                      |
+| **En exécution**   | **04** moteur adaptatif (**phase A1.2 close**, #707) · **07** knowledge graph / compétences · **09** économie du jeu (**lots 1 et 2**, #703/#708) · **16** ouverture lycée · **20** réponses acceptées · **23** vidéos explicatives · **25** harness AI-native & model-agnostic                                                                            |
+| **Validées**       | **11** tuteur IA « El Ostedh » (exécution dégelée pour les lots 0-2) · **19** questions & exercices illustrés · **21** valorisation des manuels officiels · **26** doctrine verticale                                                                                                                                                                      |
+| **Brouillons**     | **02** examen blanc\* · **08** analytics familles\*                                                                                                                                                                                                                                                                                                        |
+| **Gelées**         | **01** paiement en ligne (pivot gratuité — véhicule de dégel du premium) · **06** PWA offline, **10** anti-fraude, **12** studio d'ingestion (doctrine verticale é26, réversible ; 10 se dégèle au volume réel de V3)                                                                                                                                      |
 
 \* 02 et 08 gardent une justification rédigée « premium », à re-scoper au moment de leur validation.
 
@@ -180,10 +181,22 @@ mérite d'être corrigée (2026-08-03) :
 
 ## 6. Travaux en vol
 
-**Au 2026-08-10 : une PR en vol** — **#717**, lot 1 du **chantier qualité & performance**
-(en draft volontaire : elle touche `AGENTS.md`, canonique). `main` est à **#716**.
+**Au 2026-08-14 : rien en vol de cette session.** `main` est à **#734**. La PR #717 (chantier
+qualité & performance) que ce §6 annonçait « en vol » est **mergée** depuis (`279e228`), comme
+#725 (fontes auto-hébergées), #732 et #734.
 
-Ce que ce lot change pour la suite, et qu'il faut savoir avant de reprendre un axe perf :
+🔴 **Un rouge ouvert, et il n'est pas documentaire** — **[#733](https://github.com/MBeji/yahia-quest-arena/issues/733), nightly du 2026-08-14** :
+**9 tests E2E échouent**, dans les deux projets (anonyme **et** authentifié), tous sauf un sur le
+même geste — répondre à une question. `expect(...).not.toBe("wait")` expire à
+`e2e/pages/quest.page.ts:112`, juste après `continuePastFeedback()`. Suspect désigné par le code
+lui-même : **#720** (« corriger chaque question à l'instant où elle est validée »), qui a changé le
+flux du player **et** les deux page objects. ⚠️ **Rien ne pouvait l'attraper avant le merge** :
+l'E2E n'est pas dans `verify`/`ci:verify`. Reste à départager, et le rapport Playwright du run le
+fait en quelques minutes : page objects désynchronisés (test-only) **ou** régression produit sur la
+boucle de jeu cœur. Le 9ᵉ échec (`a11y › dashboard`) ne passe pas par le player — probablement l'une
+des trois PR UI de la même fenêtre (#729, #732, #734), à instruire à part.
+
+Ce que le chantier perf change pour la suite, et qu'il faut savoir avant d'en reprendre un axe :
 
 - **`docs/performance-audit.md` a un §0 « Verified status » daté du 2026-08-10.** L'audit du
   2026-06-30 servait encore de plan de route alors qu'un tiers était soldé sans que la case
@@ -225,14 +238,15 @@ Ce que ce lot change pour la suite, et qu'il faut savoir avant de reprendre un a
   avant de lire un tableau de bord vide comme « tout va bien ».
 - **Restes perf** : `C1-fe` (zéro loader SSR), `H2-fe` (i18n : les 3 locales embarquées).
 
-**Issues ouvertes (3 ici, 1 au privé)** :
+**Issues ouvertes (4 ici, 0 au privé)** — re-sondées le 2026-08-14 :
 
 | Issue            | Quoi                                                                                                                                                                             |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **#673** (arena) | Triage des signalements du 2026-07-29. ⚠️ **Ne pas la fermer sans traiter la file** : ses UUID canoniques tiennent les signalements hors du chemin « fresh reports » du pré-gate |
 | **#660** (arena) | Major `typescript` v7.0.2 — gate rouge, `typescript-eslint` bloquant (remplace #593)                                                                                             |
 | **#595** (arena) | Aligner `@types/node` (v26) sur le runtime CI (Node 24)                                                                                                                          |
-| **#81** (privé)  | Garde d'audit de contenu en panne                                                                                                                                                |
+| **#733** (arena) | 🔴 **Nightly E2E rouge** — 9 tests, la boucle de jeu cœur. Diagnostic complet en commentaire de l'issue ; voir l'encart ci-dessus                                                |
+| ~~#81~~ (privé)  | **Close** — plus aucune issue ouverte au dépôt privé au 2026-08-14, garde `content-drift` comprise                                                                               |
 
 **Soldé** — pour couper court à la relecture des vieilles alertes de ce fichier : les PRs de
 sauvetage #374 / #376 et les transcriptions #348 sont **mergées** depuis les 12-13/07 ; #366
