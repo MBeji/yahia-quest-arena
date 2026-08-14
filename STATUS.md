@@ -1,6 +1,6 @@
 # STATUS — état du projet (topo central)
 
-> **Instantané daté du 2026-08-03** (`main` à **#709** ; exécution V1 « Apprendre & maîtriser » de
+> **Instantané daté du 2026-08-14** (`main` à **#734** ; exécution V1 « Apprendre & maîtriser » de
 > la doctrine verticale, é26 — **J-29** avant la rentrée). Ce fichier est le **point d'entrée unique** pour savoir où en est
 > le projet : phase produit, décisions qui gouvernent, état réel des features, études,
 > chantiers, travaux en vol. Il complète — sans les dupliquer — les documents normatifs :
@@ -180,68 +180,29 @@ mérite d'être corrigée (2026-08-03) :
 
 ## 6. Travaux en vol
 
-**Au 2026-08-10 : une PR en vol** — **#717**, lot 1 du **chantier qualité & performance**
-(en draft volontaire : elle touche `AGENTS.md`, canonique). `main` est à **#716**.
+**Au 2026-08-14 : rien en vol.** `main` est à **#734**, arbre propre, aucune PR ouverte ici.
 
-Ce que ce lot change pour la suite, et qu'il faut savoir avant de reprendre un axe perf :
+Le chantier **graphique & UX** livré entre le 2026-08-13 et le 2026-08-14 (huit PR, #720 → #734)
+laisse trois règles qui gouvernent la suite — le détail est dans les corps de PR, pas ici :
 
-- **`docs/performance-audit.md` a un §0 « Verified status » daté du 2026-08-10.** L'audit du
-  2026-06-30 servait encore de plan de route alors qu'un tiers était soldé sans que la case
-  soit cochée. **Lire le §0 avant le §3** : le corps du document reste le _pourquoi_, il n'est
-  plus l'état.
-- **Le « geste #1 le plus rentable » de l'audit (C-1) est retiré, sa prémisse était fausse** —
-  le cache JWKS de supabase-js est déjà partagé entre les clients par requête (map de module
-  clé par ref de projet), et hoister le client ferait fuiter le jeton d'un utilisateur dans la
-  requête d'un autre. Un test épingle le comportement. Ce qui reste à trancher est un **réglage
-  de console** : le type de clé de signature JWT du projet (symétrique ⇒ un aller-retour Auth
-  par server fn, qu'aucun code ne corrige).
-- **`npm ci` cassé sur `main`** — diagnostiqué ici, **corrigé en amont le même jour par le
-  revert #718** (le bump undici de #716 embarquait un miniflare 5 alpha et vidait le lock du
-  `typescript@5.9.3` imbriqué). La question « quelle version de npm sur l'image de build Vercel ? »
-  tombe avec.
-- **`C1` est soldé** (migration `20260810120000_rls_initplan_wrap_auth_uid.sql`) : les
-  `auth.uid()`/`auth.role()` nus des policies `public` sont hoistés en InitPlan. Le compte
-  annoncé d'abord (« 71 ») était un artefact de méthode — il comptait le **texte** des
-  migrations, donc deux fois toute policy recréée plus tard. Le vrai chiffre, lu dans
-  `pg_policies` après rejeu complet de la chaîne : **64 occurrences sur 35 policies**.
-  ⚠️ **Règle à retenir** : ce dont la vérité vit en base se compte **en base**, pas dans le SQL
-  du dépôt. L'équivalence sémantique est **prouvée** (deux bases ne différant que par cette
-  migration, expressions déparsées identiques au wrapper près), pas affirmée.
-- **`C2-fe` est soldé** : le héros décoratif part en AVIF/WebP `<picture>`, différé et dimensionné
-  — **245 Ko → 37 Ko** sur les viewports réalistes. Au passage, l'audit se trompait de diagnostic :
-  ce n'était **pas** l'élément LCP, il est dans la **dernière** section de la page.
-- **`H2` est MESURÉ, pas corrigé** — et c'est délibéré. Le tirage du donjon coûte **~13 ms** à
-  20 k questions (≈ la prod) et **~140 ms** à 200 k, linéairement, **par lot**. Aucun index n'y
-  peut rien : `ORDER BY random()` doit lire toutes les lignes candidates. Or **chaque remède
-  change la distribution des questions vues par l'élève** (clé aléatoire statique ⇒ les mêmes
-  questions arrivent en grappe ; pool pré-mélangé par run ; tirage par exercice ⇒ sur-pondère les
-  exercices courts). C'est un **arbitrage produit**, pas une optimisation mécanique : à reprendre
-  quand le corpus dépasse ~50 k questions, en énonçant d'abord la garantie de distribution voulue.
-- **`M-1` : la prod n'est plus aveugle.** RUM sans dépendance (`web-vitals.ts` : LCP, CLS, INP,
-  FCP, TTFB + notation, un envoi par page via PostHog, **+1,5 Ko** de bundle) et journalisation des
-  server fns lentes (≥ 1 s, dans le middleware d'auth — le seul point de passage commun aux ~33).
-  Restent le **slow-query log** de la base (réglage Supabase) et un _budget_ LCP opposable.
-  ⚠️ Le beacon ne remonte rien sans clé PostHog : vérifier qu'un événement `web_vitals` arrive
-  avant de lire un tableau de bord vide comme « tout va bien ».
-- **Restes perf** : `C1-fe` (zéro loader SSR), `H2-fe` (i18n : les 3 locales embarquées).
+- **Les surfaces passent par des tokens, et plus rien ne rattrape un littéral.** Le remap
+  `html.reference .app-shell { --color-black: white }` — et son doublon `.game-surface` — sont
+  **supprimés** (#724, #734). Un `bg-black` qui reviendrait dans `features/` ou
+  `routes/_authenticated` resterait noir sur le thème clair, qui est le thème **par défaut** ;
+  le garde-fou `check-design-tokens.mjs` le refuse désormais. Convention en tête d'AGENTS.md.
+- **Le thème clair est dessiné, plus décalqué.** `--surface-1/2/3` sont définis séparément dans
+  chaque thème ; l'élévation y vient du filet et de l'ombre, jamais d'un remplissage plus foncé.
+  Un test épingle chaque token dans les **deux** thèmes — le piège classique étant d'en définir
+  un d'un seul côté et de servir l'encre d'un thème sur le fond de l'autre.
+- **La boucle de quête corrige à la validation** (#720), en réutilisant la RPC `check_answers` et
+  le motif déjà en production dans le donjon. Aucune migration, aucun changement du scoring.
 
-**Issues ouvertes (3 ici, 1 au privé)** :
+⚠️ **Non vérifié**, et à faire avant de considérer le chantier clos : personne n'a **regardé** les
+écrans de la coquille en thème clair après #734 (ils demandent une session authentifiée). La
+garantie acquise est structurelle — chaque surface vient d'un token défini des deux côtés — pas
+visuelle.
 
-| Issue            | Quoi                                                                                                                                                                             |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **#673** (arena) | Triage des signalements du 2026-07-29. ⚠️ **Ne pas la fermer sans traiter la file** : ses UUID canoniques tiennent les signalements hors du chemin « fresh reports » du pré-gate |
-| **#660** (arena) | Major `typescript` v7.0.2 — gate rouge, `typescript-eslint` bloquant (remplace #593)                                                                                             |
-| **#595** (arena) | Aligner `@types/node` (v26) sur le runtime CI (Node 24)                                                                                                                          |
-| **#81** (privé)  | Garde d'audit de contenu en panne                                                                                                                                                |
-
-**Soldé** — pour couper court à la relecture des vieilles alertes de ce fichier : les PRs de
-sauvetage #374 / #376 et les transcriptions #348 sont **mergées** depuis les 12-13/07 ; #366
-(étude 07 lot 1) est résolu depuis le 2026-07-21 ; les 9 issues de contenu, #363 (e2e-auth),
-#250 (nightly), #614, #574 et #293 sont **closes**. L'inventaire de la passe du 2026-07-11
-(checkout sale, ~150 branches, WIP non commités) est entièrement traité — son détail est au
-[journal](./docs/journal-decisions.md), il n'a plus à occuper le topo.
-
----
+**Issues ouvertes** : inchangées depuis le 2026-08-03, ce chantier n'en a ouvert ni fermé aucune.
 
 ## 7. Carte de la documentation (qui fait foi pour quoi)
 
