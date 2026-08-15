@@ -1,13 +1,16 @@
 import { describe, it, expect } from "vitest";
 import {
   auditBoardQuestion,
+  auditLesson,
   auditMathNotation,
   auditMisconceptionTags,
   auditNumericQuestion,
   auditOptionReference,
   auditQuestion,
+  auditQuestionMarkup,
   optionReferences,
   OPTION_REFERENCE_LEVEL,
+  QUESTION_MARKUP_LEVEL,
   auditRtlNotation,
   classifyOption,
   hasArabicCommaInMath,
@@ -595,6 +598,94 @@ describe("auditMathNotation — le rendu n'interprète rien (lot LC1)", () => {
       "w",
     );
     expect(flags.some((f) => f.level === "error" && /LaTeX command/.test(f.msg))).toBe(true);
+  });
+});
+
+/**
+ * « Piège n°6 » : les champs d'une question ne sont PAS du Markdown. `RichField` en
+ * extrait la figure `<svg>` et passe tout le reste en nœud de texte brut, donc
+ * `**mot**` arrive chez l'élève avec ses astérisques. Relevé le 2026-08-14 sur `fiqh`
+ * (22 champs, 6 chapitres, 6 auteurs) — rien ne le disait nulle part.
+ */
+describe("auditQuestionMarkup — un champ de question n'est pas du Markdown (piège n°6)", () => {
+  it("errors sur du gras, dans n'importe quel champ", () => {
+    for (const raw of ["أيّ عبارةٍ **خاطئة**؟", "le **complément** d'objet", "**that**"]) {
+      const flags = auditQuestionMarkup(raw, "prompt", "w");
+      expect(flags).toHaveLength(1);
+      expect(flags[0].level).toBe(QUESTION_MARKUP_LEVEL);
+      expect(flags[0].msg).toMatch(/Markdown markup/);
+    }
+  });
+
+  it("errors sur `__gras__` et sur un titre en début de ligne", () => {
+    // Le cas réel du corpus : l'auteur voulait SOULIGNER (« the underlined words »).
+    expect(
+      auditQuestionMarkup("They watched __a documentary__ on Sunday.", "prompt", "w"),
+    ).toHaveLength(1);
+    expect(auditQuestionMarkup("## Consigne\nComplète la phrase.", "prompt", "w")).toHaveLength(1);
+    expect(auditQuestionMarkup("# Titre", "prompt", "w")).toHaveLength(1);
+  });
+
+  it("ne prend PAS un trou à compléter pour du gras — les 13 faux positifs du corpus", () => {
+    // Convention des matières de langue : le trou s'écrit `___`. Une première version
+    // du regex appariait la fin d'un trou avec le début du suivant.
+    const cloze = [
+      'Complete: "The blue car is expensive, the red car is ___, but the black car is ___ of all."',
+      "Complétez : « ___, la mesure coûte cher ; ___ elle sauve des vies. » (concession puis opposition)",
+      "Il promit qu'avant ___, il ___ tout réparé.",
+    ];
+    for (const raw of cloze) expect(auditQuestionMarkup(raw, "prompt", "w")).toEqual([]);
+  });
+
+  it("ne flague pas une étoile ou un dièse qui ne balise rien", () => {
+    expect(auditQuestionMarkup("Calcule 3 * 4 puis 2 * 5.", "prompt", "w")).toEqual([]);
+    // Un `**` seul (puissance) n'a pas de paire : le corpus n'en compte aucun, mais la
+    // règle ne doit pas inventer une paire là où il n'y en a pas.
+    expect(auditQuestionMarkup("En Python, 2**3 vaut 8.", "prompt", "w")).toEqual([]);
+    // Un dièse sans espace n'ouvre pas un titre (mot-dièse, numéro).
+    expect(auditQuestionMarkup("Le vol #317 décolle à 8 h.", "prompt", "w")).toEqual([]);
+  });
+
+  it("remonte depuis les trois audits de question, sur les trois champs", () => {
+    const fromPrompt = auditQuestion(base({ prompt: "Quelle est la **bonne** forme ?" }), "w");
+    const fromOption = auditQuestion(
+      base({
+        options: [
+          { id: "a", text: "**Alpha**" },
+          { id: "b", text: "Beta" },
+        ],
+      }),
+      "w",
+    );
+    const fromNumeric = auditNumericQuestion(
+      {
+        prompt: "Calcule l'aire du carré de côté 6 cm.",
+        answerKey: { value: 36 },
+        explanation: "Aire = côté × côté = **36** cm² au total pour ce carré.",
+      },
+      "w",
+    );
+    const fromBoard = auditBoardQuestion(
+      {
+        prompt: "Remets les étapes dans l'ordre.",
+        options: [
+          { id: "a", text: "**Mesurer** le côté" },
+          { id: "b", text: "Multiplier" },
+        ],
+        explanation: "On mesure d'abord, puis on multiplie le côté par lui-même.",
+      },
+      "w",
+    );
+    for (const flags of [fromPrompt, fromOption, fromNumeric, fromBoard]) {
+      expect(flags.some((f) => /Markdown markup/.test(f.msg))).toBe(true);
+    }
+  });
+
+  it("laisse une LEÇON tranquille — `cours.md` et `resume.md`, eux, sont du Markdown", () => {
+    // markdown.ts rend bien `**gras**` en <strong> et `# Titre` en <h1> : sur cette
+    // surface-là le balisage est la notation attendue, pas un défaut.
+    const lesson = "# Les fractions\n\nUne fraction **simplifiée** a un dénominateur minimal.\n";
+    expect(auditLesson(lesson, "w").some((f) => /Markdown markup/.test(f.msg))).toBe(false);
   });
 });
 

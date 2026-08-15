@@ -36,6 +36,11 @@
  *           plain Unicode.
  *   [error] Arabic-Indic digit [٠-٩]           → the corpus writes Western digits
  *           in every language, Arabic included.
+ *   [error] Markdown markup in a question field → `prompt`, `explanation` and an
+ *           option's `text` are NOT Markdown (piège n°6). `RichField` extracts the
+ *           `<svg>` and passes the rest through as a PLAIN TEXT node, so `**mot**`
+ *           reaches the student with its asterisks. Only `cours.md`/`resume.md` are
+ *           Markdown — hence the `markdown` opt-out on `auditRenderedFields`.
  *   [warn]  meta-option / "none" calque       → an option that defers to the
  *           other options ("none of the above" / "aucune de ces réponses" /
  *           "لا شيء ممّا سبق") breaks the four-independent-candidates rule, and the
@@ -297,19 +302,103 @@ export function auditMathNotation(raw: string, field: string, where: string): Fl
   return flags;
 }
 
+/* --------------------------------------------------------------------------
+ * Le balisage Markdown dans un champ de QUESTION — « piège n°6 ».
+ *
+ * `cours.md` et `resume.md` sont du Markdown ; les champs d'une question ne le sont
+ * pas. `prompt`, `explanation` et le `text` d'une option sont rendus par `RichField`
+ * (`src/components/ui/svg-figure.tsx`), qui extrait la figure `<svg>` et passe TOUT
+ * le reste en nœud de texte React — aucun parseur Markdown sur ce chemin. Un
+ * `**mot**` arrive donc chez l'élève avec ses astérisques.
+ *
+ * Relevé le 2026-08-14 en écrivant la matière `fiqh` : 22 champs, sur 6 chapitres
+ * écrits par 6 auteurs différents. Personne ne l'avait deviné parce que rien ne le
+ * disait — exactement le profil d'une règle qui doit vivre dans le gate.
+ * Documenté depuis en « piège n°6 » dans `docs/content-generation-pipeline.md`.
+ *
+ * Pourquoi aucun `CODE_SPAN` ici, contrairement à `auditMathNotation` : une leçon
+ * peut montrer `` `\d+` `` à lire au premier degré, mais dans un nœud de texte brut
+ * le backtick n'échappe rien — il s'afficherait lui aussi. Il n'existe pas de code
+ * span sur cette surface, donc rien à retrancher. (Le corpus le confirme : zéro
+ * backtick dans les 137 138 champs de question, mesuré le 2026-08-15.)
+ * ------------------------------------------------------------------------ */
+
+/**
+ * Sévérité de la règle « balisage Markdown dans un champ de question ».
+ *
+ * ERROR, comme demandé : la règle est sans faux positif connu sur le corpus. Mais
+ * l'état des lieux du 2026-08-15 compte **358 champs sur 30 matières** déjà porteurs
+ * de `**gras**` (0 pour `fiqh`, corrigée depuis) — donc la bascule fait rougir la
+ * Content CI privée tant que la campagne de réécriture n'est pas passée. Basculer en
+ * `"warn"` ici est le levier d'une ligne si le moteur doit atterrir avant elle
+ * (précédent : {@link OPTION_REFERENCE_LEVEL}).
+ */
+export const QUESTION_MARKUP_LEVEL: Flag["level"] = "error";
+
+/**
+ * `**gras**` — la paire doit encadrer du contenu (`(?=[^\s*])` à l'ouverture,
+ * `[^\s*]` juste avant la fermeture) et tenir sur UNE ligne, sinon deux `**` sans
+ * rapport, à dix lignes d'écart, se retrouveraient appariés. Calibré sur le corpus :
+ * les 876 délimiteurs relevés forment 358 paires — pas une seule occurrence
+ * impaire, donc aucun `**` n'y joue un autre rôle (puissance `2**3`, etc.).
+ */
+const MARKDOWN_BOLD_STAR = /\*\*(?=[^\s*])[^\n]*?[^\s*]\*\*/;
+
+/**
+ * `__gras__`, en exigeant une suite d'EXACTEMENT deux tirets bas de chaque côté.
+ * C'est ce qui sépare le balisage du **trou à compléter**, la convention des
+ * matières de langue : « the red car is ___, but the black car is ___ of all. »
+ * Une première version sans les gardes `(?<!_)`/`(?!_)` appariait la fin d'un trou
+ * avec le début du suivant et flaguait 13 énoncés parfaitement légitimes ; avec
+ * elles il ne reste que les 3 vrais cas du corpus (`__Mr Rahal__` & co., où l'auteur
+ * voulait SOULIGNER — le prompt dit « the underlined words »).
+ */
+const MARKDOWN_BOLD_UNDERSCORE = /(?<!_)__(?=[^\s_])[^\n]*?[^\s_]__(?!_)/;
+
+/** `# Titre` en début de ligne (jusqu'à 3 espaces d'indentation, comme CommonMark). */
+const MARKDOWN_HEADING = /^[ \t]{0,3}#{1,6}[ \t]+\S/m;
+
+/**
+ * Balisage Markdown dans un champ rendu en TEXTE BRUT (piège n°6). Un seul flag par
+ * champ : un énoncé qui met quatre mots en gras a un seul défaut à corriger, pas quatre.
+ */
+export function auditQuestionMarkup(raw: string, field: string, where: string): Flag[] {
+  const hit =
+    MARKDOWN_BOLD_STAR.exec(raw) ??
+    MARKDOWN_BOLD_UNDERSCORE.exec(raw) ??
+    MARKDOWN_HEADING.exec(raw);
+  if (!hit) return [];
+  const one = hit[0].trim().replace(/\s+/g, " ");
+  const sample = one.length > 48 ? `${one.slice(0, 45)}…` : one;
+  return [
+    {
+      level: QUESTION_MARKUP_LEVEL,
+      where,
+      msg: `Markdown markup «${sample}» in ${field} — a question field is NOT Markdown: RichField renders it as a plain text node, so the student reads the markers themselves. Drop them (only cours.md / resume.md are Markdown).`,
+    },
+  ];
+}
+
 /**
  * Field-level rendering checks shared by every question type:
  *   [error] <svg> without a viewBox (collapses on the fixed-width surface);
  *   [error] Arabic radicand of a radical / Arabic comma in math notation
  *           (both break the LTR isolate in RTL — see the header);
- *   [error] LaTeX / inline `$…$` / Arabic-Indic digits (see `auditMathNotation`).
+ *   [error] LaTeX / inline `$…$` / Arabic-Indic digits (see `auditMathNotation`);
+ *   [error] Markdown markup (see `auditQuestionMarkup`).
+ *
+ * `opts.markdown` déclare que les champs passés SONT du Markdown — le cas des seules
+ * leçons (`cours.md`, `resume.md`), où `**gras**` et `## Titre` sont la notation
+ * attendue. Tout le reste est rendu en texte brut, d'où le défaut par défaut.
  */
 export function auditRenderedFields(
   fields: ReadonlyArray<readonly [string, string]>,
   where: string,
+  opts: { markdown?: boolean } = {},
 ): Flag[] {
   const flags: Flag[] = [];
   for (const [field, raw] of fields) {
+    if (!opts.markdown) flags.push(...auditQuestionMarkup(raw, field, where));
     for (const tag of raw.match(/<svg\b[^>]*>/gi) ?? []) {
       if (!/\bviewBox=/i.test(tag)) {
         flags.push({
@@ -921,7 +1010,10 @@ export function auditLesson(md: string, where: string, opts: { spatial?: boolean
     });
   }
 
-  flags.push(...auditRenderedFields([["lesson", md]], where));
+  // `markdown: true` : une leçon EST du Markdown (`src/shared/lib/markdown.ts` la
+  // parse), donc `**gras**` et `## Titre` y sont la notation attendue — la garde
+  // « piège n°6 » ne vaut que pour les champs rendus en texte brut.
+  flags.push(...auditRenderedFields([["lesson", md]], where, { markdown: true }));
 
   return flags;
 }
