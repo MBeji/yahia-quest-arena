@@ -604,7 +604,20 @@ flowchart TD
 > passe **tout le reste en nœud de texte**. Un `**mot**` s'affiche donc littéralement,
 > astérisques comprises, dans le player. Relevé le 2026-08-14 sur la matière `fiqh` :
 > 22 champs concernés, sur 6 chapitres écrits par 6 auteurs différents — personne ne l'avait
-> deviné, parce que rien ne le disait. Aucun gate ne l'attrape encore.
+> deviné, parce que rien ne le disait.
+>
+> **Depuis, `content:qa` l'attrape** (`auditQuestionMarkup`, `scripts/content/qa-checks.ts`) :
+> `**gras**`, `__gras__` et un titre `#` en début de ligne sont des `[error]` sur `prompt`,
+> `explanation` et le `text` d'une option — les leçons, elles, gardent leur Markdown. Le trou à
+> compléter des matières de langue (`___`) n'est **pas** du balisage et n'est pas flagué.
+> ⚠️ **Dette de corpus, mesurée le 2026-08-15 sur le corpus commité : 361 champs déjà porteurs
+> du défaut, sur 31 matières** (197 énoncés, 160 explications, 4 options ; en tête
+> `education-islamique-5eme` 59, `sciences-vie-terre` 58, `math-7eme` 27 — `fiqh` est à 0,
+> corrigée). Le corpus n'ayant par ailleurs **aucune** autre erreur `content:qa:strict`, ces 361
+> champs sont à eux seuls ce qui sépare la Content CI privée du vert : la campagne de réécriture
+> doit passer avec — ou juste après — la bascule. Le levier est
+> `QUESTION_MARKUP_LEVEL` (une ligne, `"error"` → `"warn"`), sur le modèle de
+> `OPTION_REFERENCE_LEVEL`.
 
 ---
 
