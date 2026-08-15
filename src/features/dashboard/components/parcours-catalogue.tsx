@@ -8,6 +8,7 @@ import {
   Globe,
   GraduationCap,
   Languages,
+  MoonStar,
   Sparkles,
   Trophy,
   type LucideIcon,
@@ -47,6 +48,7 @@ const THEME_ICON: Record<string, LucideIcon> = {
   arabe: Languages,
   "culture-generale": Globe,
   "muscle-cerveau": Brain,
+  "education-islamique": MoonStar,
   ib: Award,
 };
 
@@ -398,6 +400,7 @@ export function ExtrasCatalogue({ parcours }: { parcours: CatalogueParcours[] })
     francais: t.public.catalogue.themeDescFrancais,
     "culture-generale": t.public.catalogue.themeDescCultureGenerale,
     "muscle-cerveau": t.public.catalogue.themeDescMuscleCerveau,
+    "education-islamique": t.public.catalogue.themeDescEducationIslamique,
   };
 
   return (

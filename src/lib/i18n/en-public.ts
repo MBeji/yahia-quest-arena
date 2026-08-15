@@ -111,6 +111,8 @@ export const enPublic: TranslationKeys["public"] = {
     themeDescFrancais: "From A1 to C2: grammar, conjugation, vocabulary — CEFR-aligned.",
     themeDescCultureGenerale: "History, geography, science, arts — in three languages.",
     themeDescMuscleCerveau: "Logic, mental arithmetic, riddles — zero rote learning.",
+    themeDescEducationIslamique:
+      "Maliki fiqh from Kairouan's « Risâla » — worship, values, everyday life.",
     lyceeYearDesc:
       "The official sections of this secondary-school year. Lessons, summaries and exercises, free to access.",
   },

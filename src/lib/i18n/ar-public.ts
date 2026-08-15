@@ -109,6 +109,8 @@ export const arPublic: TranslationKeys["public"] = {
     themeDescFrancais: "من A1 إلى C2: القواعد والتصريف والمفردات — متوافق مع الإطار الأوروبي.",
     themeDescCultureGenerale: "تاريخ وجغرافيا وعلوم وفنون — بثلاث لغات.",
     themeDescMuscleCerveau: "منطق وحساب ذهني وألغاز — بلا حفظ.",
+    themeDescEducationIslamique:
+      "الفقه المالكي من «رسالة» القيرواني — العبادات والقيم والحياة اليومية.",
     lyceeYearDesc:
       "الشُّعب الرسمية لهذه السنة من التعليم الثانوي. دروس وملخّصات وتمارين في متناول الجميع.",
   },

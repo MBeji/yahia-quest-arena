@@ -249,4 +249,30 @@ describe("ExtrasCatalogue", () => {
     // the generic « Cours · résumés · exercices » subtext is gone for these cards.
     expect(screen.queryByText("Cours · résumés · exercices")).not.toBeInTheDocument();
   });
+
+  /** The Islamic-education rubric (theme `education-islamique`, subject فقه). */
+  const islamique = p({
+    id: "education-islamique",
+    name_fr: "Éducation islamique",
+    kind: "libre",
+    theme_id: "education-islamique",
+    grade_cycle: null,
+    grade_order: null,
+  });
+
+  it("carries the Islamic-education rubric with its own descriptor", () => {
+    render(<ExtrasCatalogue parcours={[...parcours, islamique]} />);
+    expect(screen.getByText("Éducation islamique")).toBeInTheDocument();
+    // Its own subtext, not the generic one — the descriptor map covers the theme.
+    expect(screen.getByText(/fiqh malikite/)).toBeInTheDocument();
+  });
+
+  it("keeps the Islamic-education rubric non-navigable while it is coming_soon", () => {
+    const { container } = render(
+      <ExtrasCatalogue parcours={[...parcours, { ...islamique, status: "coming_soon" }]} />,
+    );
+    expect(screen.getByText("Éducation islamique")).toBeInTheDocument();
+    // Still 2 links: a coming_soon card renders the « Bientôt » badge, never a link.
+    expect(container.querySelectorAll('a[href="/niveau/$parcoursId"]')).toHaveLength(2);
+  });
 });

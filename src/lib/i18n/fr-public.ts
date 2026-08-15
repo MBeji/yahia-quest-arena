@@ -111,6 +111,8 @@ export const frPublic: TranslationKeys["public"] = {
     themeDescFrancais: "Du A1 au C2 : grammaire, conjugaison, vocabulaire — aligné CECRL.",
     themeDescCultureGenerale: "Histoire, géographie, sciences, arts — en trois langues.",
     themeDescMuscleCerveau: "Logique, calcul mental, énigmes — zéro par-cœur.",
+    themeDescEducationIslamique:
+      "Le fiqh malikite d'après « La Risâla » de Kairouan — culte, valeurs, vie quotidienne.",
     lyceeYearDesc:
       "Les sections officielles de cette année du lycée. Cours, résumés et exercices en accès libre.",
   },
