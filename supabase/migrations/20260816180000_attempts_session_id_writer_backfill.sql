@@ -18,23 +18,40 @@
 -- ligne ; l'ajout de `session_id` à l'INSERT est signalé sur place, et c'est la
 -- seule différence.
 --
--- D-2 — LE BACKFILL APPARIE PAR PLUS PROCHE VOISIN MUTUEL, pas par « le plus
--- proche ». La résolution naïve (pour chaque tentative, la session terminée la plus
--- proche) peut donner la MÊME session à deux tentatives — précisément le cas des
--- deux onglets ouverts sur le même exercice, qui a motivé tout ce lot. On
--- n'apparie donc que lorsque le choix est réciproque : la session la plus proche de
--- la tentative doit aussi avoir cette tentative pour plus proche. Une paire
--- ambiguë reste NULL — mieux vaut une session inconnue qu'une session fausse,
--- puisqu'une session fausse afficherait au parent les réponses d'une AUTRE partie.
+-- D-2 — LE BACKFILL N'APPARIE QUE L'INAMBIGU. Ni « la session la plus proche », ni
+-- même « le plus proche voisin MUTUEL » : les deux se trompent.
 --
--- D-3 — FENÊTRE ASYMÉTRIQUE. Les deux écritures ont toujours eu lieu dans la même
--- transaction, dans cet ordre : l'INSERT de la tentative prend `now()` (horodatage
--- de DÉBUT de transaction) puis la session est close par `clock_timestamp()`
--- (l'instant réel) — vérifié sur les six révisions successives de la RPC. La
--- session d'une tentative est donc close APRÈS elle, jamais avant, et au plus tard
--- à la fin de la transaction. On borne à cinq minutes : très au-delà de toute
--- transaction plausible (le `statement_timeout` du rôle `authenticated` se compte
--- en secondes), et assez serré pour exclure une partie d'un autre moment.
+-- La résolution naïve (pour chaque tentative, la session terminée la plus proche)
+-- donne la MÊME session à deux tentatives — précisément le cas des deux onglets qui
+-- a motivé tout ce lot. Exiger la réciprocité ne suffit pas non plus, et c'est
+-- contre-intuitif : soit A1 (10:00:00,00) et A2 (10:00:00,05) dans deux onglets,
+-- dont les sessions se ferment à 10:00:00,15 et 10:00:00,25. S1 est plus proche de
+-- A2 (0,10 s) que de A1 (0,15 s), et A2 n'a rien de plus proche que S1 — la paire
+-- (A2, S1) est donc réciproque, et FAUSSE. Le raffinement aurait rendu le défaut
+-- plus rare sans le supprimer, ce qui est la pire des situations : plus rare, donc
+-- plus difficile à voir.
+--
+-- La règle retenue ne classe rien. Elle n'apparie que ce qui n'a qu'UNE lecture
+-- possible : la tentative n'a qu'une seule session candidate dans la fenêtre, ET
+-- cette session n'a que cette tentative pour candidate. Dès qu'il y a la moindre
+-- ambiguïté, les deux côtés restent NULL. On abstient donc parfois, on ne se trompe
+-- jamais — parce qu'une session fausse afficherait au parent les réponses d'une
+-- AUTRE partie, ce qui est bien pire qu'un détail manquant.
+--
+-- D-3 — FENÊTRE ASYMÉTRIQUE ET COURTE (30 s). Les deux écritures ont toujours eu
+-- lieu dans la même transaction, dans cet ordre : l'INSERT de la tentative prend
+-- `now()` (horodatage de DÉBUT de transaction) puis la session est close par
+-- `clock_timestamp()` (l'instant réel) — vérifié sur les six révisions successives
+-- de la RPC, qui sont aussi les six seuls endroits du dépôt où
+-- `exercise_sessions.completed_at` s'écrit. La session d'une tentative est donc
+-- close APRÈS elle et avant la fin de la transaction, laquelle est bornée par le
+-- `statement_timeout` du rôle `authenticated` (quelques secondes) : la RPC est UNE
+-- seule instruction. 30 s couvre donc largement la vraie paire.
+--
+-- La brièveté est ce qui rend D-2 utile. Avec une fenêtre de cinq minutes, deux
+-- parties séparées de trois minutes se retrouvent candidates l'une de l'autre et
+-- l'appariement s'abstient partout ; avec 30 s, seules les parties réellement
+-- simultanées — celles qu'on ne SAIT pas départager — sont écartées.
 --
 -- Les tentatives antérieures à `exercise_sessions` (la table est née quelques
 -- heures après `attempts`, le 2026-05-22) n'ont aucune session à trouver et
@@ -619,25 +636,19 @@ GRANT EXECUTE ON FUNCTION public.submit_exercise_attempt(uuid, uuid, jsonb) TO a
 -- `NOT EXISTS` et le filtre `session_id IS NULL` rendent la passe rejouable :
 -- relancée, elle ne défait ni ne réattribue rien.
 -- ---------------------------------------------------------------------------
-WITH paire AS (
+WITH candidat AS (
   SELECT
     a.id AS attempt_id,
     s.id AS session_id,
-    ROW_NUMBER() OVER (
-      PARTITION BY a.id
-      ORDER BY s.completed_at - a.completed_at, s.id
-    ) AS rang_pour_la_tentative,
-    ROW_NUMBER() OVER (
-      PARTITION BY s.id
-      ORDER BY s.completed_at - a.completed_at, a.id
-    ) AS rang_pour_la_session
+    COUNT(*) OVER (PARTITION BY a.id) AS sessions_candidates,
+    COUNT(*) OVER (PARTITION BY s.id) AS tentatives_candidates
   FROM public.attempts a
   JOIN public.exercise_sessions s
     ON s.user_id = a.user_id
    AND s.exercise_id = a.exercise_id
    AND s.completed_at IS NOT NULL
    AND s.completed_at >= a.completed_at
-   AND s.completed_at < a.completed_at + INTERVAL '5 minutes'
+   AND s.completed_at < a.completed_at + INTERVAL '30 seconds'
   WHERE a.session_id IS NULL
     AND NOT EXISTS (
       SELECT 1
@@ -646,11 +657,12 @@ WITH paire AS (
     )
 )
 UPDATE public.attempts a
-   SET session_id = paire.session_id
-  FROM paire
- WHERE paire.attempt_id = a.id
-   AND paire.rang_pour_la_tentative = 1
-   AND paire.rang_pour_la_session = 1;
+   SET session_id = candidat.session_id
+  FROM candidat
+ WHERE candidat.attempt_id = a.id
+   -- Une seule lecture possible, des DEUX côtés. Rien d'autre n'est apparié.
+   AND candidat.sessions_candidates = 1
+   AND candidat.tentatives_candidates = 1;
 
 -- ---------------------------------------------------------------------------
 -- Le RÉSIDU, journalisé — parce que « retirer le repli » est une mesure, pas une
