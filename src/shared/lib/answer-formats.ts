@@ -16,7 +16,13 @@ import { RECALL_MAX_ANSWER_LENGTH } from "@/shared/constants/gamification";
 /** Upper bound for any answer string — generous for the B2/B3 CSV encodings. */
 export const MAX_CHOICE_LENGTH = 512;
 
-/** Boss-timer expiry sentinel: submitted when time runs out with no answer. */
+/**
+ * Sentinelle HÉRITÉE du compte à rebours de boss : elle était envoyée à la place
+ * de l'élève quand les 20 s tombaient. Plus aucun code ne l'émet depuis que le
+ * chronomètre est ouvert (`features/quest/boss-speed.ts`) — elle reste ACCEPTÉE,
+ * car elle dort dans les tentatives déjà enregistrées et qu'un onglet resté
+ * ouvert sur l'ancien bundle peut encore la poster après un déploiement.
+ */
 export const TIMEOUT_ANSWER_CHOICE = "__timeout__";
 /**
  * R-3 sentinel: submitted for a question type this client cannot render, so the

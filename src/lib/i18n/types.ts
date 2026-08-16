@@ -230,6 +230,11 @@ export type TranslationKeys = {
     bossFight: string;
     bossHp: string;
     bossStrike: string;
+    bossRankCritical: string;
+    bossRankFast: string;
+    bossRankSteady: string;
+    bossResultHp: string;
+    bossRankHint: string;
     questionOf: string;
     feedbackMsg: string;
     selectedAnswer: string;

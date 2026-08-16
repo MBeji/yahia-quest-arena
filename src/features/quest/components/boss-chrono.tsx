@@ -1,77 +1,66 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { Skull, Heart } from "lucide-react";
 import { Timer } from "lucide-react";
-import { BOSS_TIME_PER_QUESTION_S } from "@/shared/constants/gamification";
+import { BOSS_PAR_SECONDS_PER_QUESTION } from "@/shared/constants/gamification";
+import { formatChrono } from "@/features/quest/boss-speed";
 import { useSound } from "@/lib/sound";
 
-/** Play a tick from this many seconds down to 1 — the tense final stretch. */
-const TICK_FROM_SECONDS = 5;
-
 /**
- * Boss-mode per-question countdown. Owns its own 1 Hz state so the ticking
- * re-renders only this chip, not the (large) QuestPage tree. Resets whenever the
- * question changes; fires `onTimeout` at zero (the parent auto-submits). The
- * callback is read through a ref so its identity can change every render without
- * restarting the interval.
+ * Chronomètre OUVERT du mode boss, par question. Il compte à l'endroit, sans
+ * plafond, et n'a aucun rappel de fin : il ne valide rien, n'avance rien, ne
+ * coupe personne. Ce qu'il fait, c'est afficher le temps qui décide des dégâts
+ * (`boss-speed.ts`) — sous le temps de référence, le coup est critique ; au-delà
+ * il s'atténue, jamais jusqu'à zéro.
+ *
+ * Il garde son propre état à 1 Hz pour que le tic-tac ne re-rende que cette
+ * pastille, et pas l'arbre (large) de la page de quête. La MESURE qui note
+ * réellement la réponse vit chez le parent (un `Date.now()` pris à la
+ * validation) : même événement de départ — le changement de question — donc
+ * aucune dérive qui compte aux paliers de 20 s et 40 s.
  */
-export function BossCountdown({
-  active,
-  questionIndex,
-  onTimeout,
-}: {
-  active: boolean;
-  questionIndex: number;
-  onTimeout: () => void;
-}) {
-  const [seconds, setSeconds] = useState(BOSS_TIME_PER_QUESTION_S);
-  const onTimeoutRef = useRef(onTimeout);
-  onTimeoutRef.current = onTimeout;
+export function BossChrono({ active, questionIndex }: { active: boolean; questionIndex: number }) {
+  const [seconds, setSeconds] = useState(0);
   const { play } = useSound();
+  const withinPar = seconds < BOSS_PAR_SECONDS_PER_QUESTION;
 
-  // Tense tick over the final seconds (no-op when sound is muted).
+  // Un seul repère sonore par question, à l'instant où la fenêtre du coup
+  // critique se referme. Ce n'est pas un compte à rebours : rien ne se passe
+  // après, l'élève garde la main aussi longtemps qu'il le faut.
   useEffect(() => {
-    if (active && seconds > 0 && seconds <= TICK_FROM_SECONDS) play("tick");
+    if (active && seconds === BOSS_PAR_SECONDS_PER_QUESTION) play("tick");
   }, [active, seconds, play]);
 
   useEffect(() => {
     if (!active) return;
-    setSeconds(BOSS_TIME_PER_QUESTION_S);
-    const id = setInterval(() => {
-      setSeconds((s) => {
-        if (s <= 1) {
-          onTimeoutRef.current();
-          return BOSS_TIME_PER_QUESTION_S;
-        }
-        return s - 1;
-      });
-    }, 1000);
+    setSeconds(0);
+    const id = setInterval(() => setSeconds((s) => s + 1), 1000);
     return () => clearInterval(id);
   }, [active, questionIndex]);
 
   return (
-    <div className="flex items-center gap-2 rounded-full bg-surface-3 px-3 py-1.5 text-sm font-bold">
-      <Timer className="h-4 w-4 text-destructive" />
-      <span
-        className={seconds <= 5 ? "text-destructive animate-pulse" : "text-[color:var(--gold)]"}
-      >
-        {seconds}s
+    <div
+      className="flex items-center gap-2 rounded-full bg-surface-3 px-3 py-1.5 text-sm font-bold"
+      data-testid="boss-chrono"
+    >
+      <Timer className="h-4 w-4 text-[color:var(--gold)]" />
+      <span className={withinPar ? "text-[color:var(--gold)]" : "text-muted-foreground"}>
+        {formatChrono(seconds)}
       </span>
     </div>
   );
 }
 
 /**
- * Boss chrome: the skull header, the HP bar and the countdown, as one block.
- * Lives beside the countdown it hosts — extracted from the play loop to keep
+ * Boss chrome: the skull header, the HP bar and the chrono, as one block.
+ * Lives beside the chrono it hosts — extracted from the play loop to keep
  * that file under the max-lines cap, exactly as <QuestResultScreen> was.
  */
 export function BossBanner({
   title,
   hp,
   questionIndex,
-  countdownActive,
-  onTimeout,
+  chronoActive,
   entrance,
   reduced,
   labels,
@@ -79,8 +68,7 @@ export function BossBanner({
   title: string;
   hp: number;
   questionIndex: number;
-  countdownActive: boolean;
-  onTimeout: () => void;
+  chronoActive: boolean;
   entrance: Record<string, unknown>;
   reduced: boolean;
   labels: { fight: string; hp: string };
@@ -102,11 +90,7 @@ export function BossBanner({
             <div className="truncate font-display text-lg font-bold">{title}</div>
           </div>
         </div>
-        <BossCountdown
-          active={countdownActive}
-          questionIndex={questionIndex}
-          onTimeout={onTimeout}
-        />
+        <BossChrono active={chronoActive} questionIndex={questionIndex} />
       </div>
       <div className="mt-4">
         <div className="mb-1 flex items-center justify-between text-xs">
