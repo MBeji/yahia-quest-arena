@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Skull, Swords, Crown, ChevronRight } from "lucide-react";
+import { Skull, Swords, Crown, ChevronRight, ClipboardCheck } from "lucide-react";
 import { PageShell } from "@/components/ui/page-shell";
 import { useT } from "@/lib/i18n";
 import { DUNGEON_XP_PER_FLOOR } from "@/features/dungeon";
-import { DUEL_REWARDS } from "@/shared/constants/gamification";
+import { DUEL_REWARDS, EXAM_MAX_COINS, EXAM_MAX_XP } from "@/shared/constants/gamification";
 
 /**
  * Arène — le pôle compétitif (étude 15, lot 5 / D-4). Regroupe Donjon · Duels ·
@@ -43,6 +43,17 @@ function ArenePage() {
       title: t.leaderboard.titleGradient,
       desc: t.arena.rankingDesc,
       reward: t.arena.rankingReward,
+    },
+    // L'examen blanc entre PAR ICI et pas par une 5ᵉ entrée de nav : la barre
+    // primaire est volontairement retombée à 4 (elle débordait à 6, audit §E-4).
+    {
+      to: "/examens" as const,
+      Icon: ClipboardCheck,
+      title: t.exam.title,
+      desc: t.exam.subtitle,
+      reward: t.exam.rewards
+        .replace("{xp}", String(EXAM_MAX_XP))
+        .replace("{coins}", String(EXAM_MAX_COINS)),
     },
   ];
 
