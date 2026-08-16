@@ -92,6 +92,13 @@ The stable per-grade detail lives in `curriculum-architect/references/programme-
 repo**); the authoritative scope will live in the **secondary programme transcriptions**
 (station L1).
 
+**Côté produit, cette matrice est déclarée dans le moteur** :
+[`src/shared/constants/programme-officiel.ts`](../src/shared/constants/programme-officiel.ts)
+liste, pour chacun des 26 niveaux scolaires, les matières officielles avec l'id que chacune porte
+(ou portera) au catalogue. La page niveau affiche en « bientôt » celles qui manquent au catalogue,
+pour que le menu d'une classe soit celui du **programme** et non celui du contenu déjà écrit. Une
+matière qui s'ouvre doit y apparaître sous **son id compilé** — sinon elle s'affiche deux fois.
+
 ### 3.1 Ce qui se partage vraiment entre orientations — relevé du catalogue CNP (2026-07-31)
 
 **Critère, mécanique et vérifiable : un code manuel CNP = un programme.** Le catalogue officiel

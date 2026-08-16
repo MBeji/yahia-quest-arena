@@ -54,4 +54,34 @@ describe("ParcoursSubjects", () => {
     );
     expect(screen.getByText(/Contenu bientôt disponible/)).toBeInTheDocument();
   });
+
+  it("annonce le reste du programme en cartes « bientôt », jamais cliquables", () => {
+    const { container } = render(
+      <ParcoursSubjects
+        parcours={{ name_fr: "9ème année de base", status: "available", kind: "scolaire" }}
+        subjects={subjects}
+        soon={[
+          { id: "histoire-geo-9eme", name: "المواد الاجتماعية", contentLanguage: "ar" },
+          { id: "informatique-9eme", name: "الإعلامية", contentLanguage: "ar" },
+        ]}
+      />,
+    );
+    expect(screen.getByText("المواد الاجتماعية")).toBeInTheDocument();
+    expect(screen.getByText("الإعلامية")).toBeInTheDocument();
+    // Les deux matières ouvertes restent les seuls liens de la page.
+    expect(container.querySelectorAll('a[href="/matiere/$subjectId"]')).toHaveLength(2);
+    expect(container.querySelectorAll('[aria-disabled="true"]')).toHaveLength(2);
+  });
+
+  it("annonce le programme même quand la classe n'a encore aucune matière ouverte", () => {
+    render(
+      <ParcoursSubjects
+        parcours={{ name_fr: "2ème Lettres", status: "coming_soon", kind: "scolaire" }}
+        subjects={[]}
+        soon={[{ id: "math-2eme-sec-lettres", name: "Mathématiques", contentLanguage: "fr" }]}
+      />,
+    );
+    expect(screen.getByText(/Contenu bientôt disponible/)).toBeInTheDocument();
+    expect(screen.getByText("Mathématiques")).toBeInTheDocument();
+  });
 });

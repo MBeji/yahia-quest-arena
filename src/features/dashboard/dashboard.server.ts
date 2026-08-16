@@ -11,6 +11,7 @@ import {
 import type { BadgeRow, DashboardShopItem, InventoryRow } from "@/shared/types/gamification";
 import type { DailyPlanItem } from "@/shared/types/daily-plan";
 import type { CompetencyBlocker, CompetencyMasteryRow } from "@/shared/types/competency";
+import { comingSoonSubjects, type OfficialSubject } from "@/shared/constants/programme-officiel";
 import { getCurrentWeekStartUtc, getTodayUtc } from "@/shared/lib/dates";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
@@ -837,6 +838,9 @@ export const getCatalogueStats = createServerFn({ method: "GET" })
 // filtered exactly like getDashboard's active-parcours scoping. No gameplay and no
 // premium lock here (free pivot); the server gate stays authoritative on `/quest`. A
 // `coming_soon` parcours simply has no subjects yet → the page shows its "bientôt" state.
+// `soon` complète la liste : le RESTE du programme officiel de la classe
+// (`@/shared/constants/programme-officiel`), pour que le menu d'un niveau soit celui du
+// programme et non celui du catalogue — matières non ouvertes comprises.
 export const getParcoursSubjects = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
   .inputValidator((d) => z.object({ parcoursId: z.string().min(1) }).parse(d))
@@ -862,7 +866,25 @@ export const getParcoursSubjects = createServerFn({ method: "GET" })
     const { data: subjects, error } = await query;
     if (error) failWithClientError("getParcoursSubjects.subjects", error, DASHBOARD_ERROR_FR);
 
-    return { parcours, subjects: subjects ?? [] };
+    // Le reste du programme officiel de la classe — les matières que le catalogue ne
+    // sert pas encore, affichées en « bientôt » (jamais cliquables). La table de
+    // référence est indexée par `grades.slug`, que le parcours ne porte pas : une
+    // lecture d'une ligne. Un parcours `libre` (grade null) n'a pas de programme
+    // officiel → aucune matière à venir.
+    let soon: OfficialSubject[] = [];
+    if (parcours.grade_id) {
+      const { data: grade } = await supabase
+        .from("grades")
+        .select("slug")
+        .eq("id", parcours.grade_id)
+        .maybeSingle();
+      soon = comingSoonSubjects(
+        grade?.slug,
+        (subjects ?? []).map((s) => s.id),
+      );
+    }
+
+    return { parcours, subjects: subjects ?? [], soon };
   });
 
 // ---------- Subjects of the caller's ACTIVE parcours (leaderboard tabs) ----------
