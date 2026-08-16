@@ -256,3 +256,33 @@ export const RECALL_MAX_ANSWER_LENGTH = 120;
  * côté serveur, cette constante n'est donc pas la garde, seulement la demande.
  */
 export const DAILY_PLAN_MAX_ITEMS = 3;
+
+// ---------------------------------------------------------------------------
+// Examen blanc (étude 02) — la simulation du concours. Ces valeurs sont
+// MIRRORÉES en SQL (`finish_mock_exam`, `get_mock_exam_percentile`) : la RPC est
+// la garde, celles-ci pilotent l'affichage. Même discipline que les duels.
+// ---------------------------------------------------------------------------
+
+/**
+ * Récompense d'une session CLASSÉE, au prorata du score. Ancrage sur l'économie
+ * d'entraînement (un exercice complet ≈ 75 XP / 15 pièces) : un blanc vaut cinq
+ * à six exercices, il est plus long, plus dur, et ne se joue qu'une fois. Une
+ * session d'ENTRAÎNEMENT ne paie rien — sinon l'examen cesse d'être une mesure
+ * pour devenir une ferme à XP, exactement le travers que l'étude 09 traque.
+ * (Répond à la Q-1 de l'étude 02 par sa propre proposition, faute d'arbitrage
+ * humain rendu ; chiffre fait pour être re-tranché sur la première lecture réelle.)
+ */
+export const EXAM_MAX_XP = 300;
+export const EXAM_MAX_COINS = 60;
+
+// Le seuil d'affichage du percentile (R-6 : 20 copies classées) n'est PAS
+// mirroré ici volontairement — `get_mock_exam_percentile` le renvoie dans son
+// payload (`minCandidates`), et l'écran affiche ce que le serveur dit. Un
+// miroir de plus serait une valeur à garder synchrone pour rien.
+
+/**
+ * Cadence de la sauvegarde au fil de l'eau (R-8) : assez court pour qu'un onglet
+ * fermé ne coûte presque rien, assez long pour rester loin de la limite de débit
+ * serveur (120 appels/minute).
+ */
+export const EXAM_AUTOSAVE_INTERVAL_MS = 5000;
