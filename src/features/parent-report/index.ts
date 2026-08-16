@@ -11,5 +11,11 @@ export {
 } from "./parent-report.server";
 export { formatStudentAllianceCode, parseStudentAllianceCode } from "./family-link";
 export { parentCodeErrorLabel, type ParentCodeErrorCode } from "./parent-code-errors";
+export {
+  forgetRememberedCode,
+  readRememberedCode,
+  rememberCode,
+  SUIVI_CODE_STORAGE_KEY,
+} from "./remembered-code";
 export { ReportContent } from "./components/report-content";
 export { buildFamilyReportShareText, buildWeeklyAdvice } from "./report-share";

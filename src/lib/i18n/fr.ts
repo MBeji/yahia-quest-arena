@@ -747,6 +747,9 @@ export const fr: TranslationKeys = {
     linkCta: "Associer",
     linking: "Liaison…",
     linkHint: "L'élève trouve son code dans son dashboard.",
+    rememberCode: "Se souvenir de ce code sur cet appareil",
+    rememberHint: "Évitez sur un ordinateur partagé : ce code ouvre le bilan de votre enfant.",
+    forgetCode: "Oublier ce code",
     linkSuccess: "Alliance réussie avec {name}.",
     linkFailed: "Échec de la liaison.",
     // Erreurs de code d'alliance (codes stables du serveur, registre parent = vouvoiement).

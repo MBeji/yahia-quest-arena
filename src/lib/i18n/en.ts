@@ -735,6 +735,9 @@ export const en: TranslationKeys = {
     linkCta: "Link",
     linking: "Linking…",
     linkHint: "The student finds their code on their dashboard.",
+    rememberCode: "Remember this code on this device",
+    rememberHint: "Avoid on a shared computer: this code opens your child's report.",
+    forgetCode: "Forget this code",
     linkSuccess: "Alliance formed with {name}.",
     linkFailed: "Linking failed.",
     // Alliance-code errors (stable server codes; parent register).
