@@ -92,7 +92,7 @@ export const BACK_TO_SCHOOL_WINDOW = {
 //
 // Ce qu'il pilote, ce sont les DÉGÂTS infligés au boss — donc la barre de HP que
 // l'élève regarde pendant le combat et le rang affiché à la fin — et, depuis
-// `20260816120000_boss_speed_xp_bonus.sql`, une PRIME sur les XP du boss.
+// `20260816140000_boss_speed_xp_bonus.sql`, une PRIME sur les XP du boss.
 //
 // Il ne touche jamais la CORRECTION : une réponse juste reste juste, quel qu'ait
 // été le temps mis à la donner.
@@ -127,7 +127,7 @@ export const BOSS_RANK_MIN_DAMAGE = {
 
 // --- Prime de rapidité sur les XP du boss ---------------------------------
 // ⚠️ MIROIRS DE SQL : ces deux valeurs sont dupliquées en dur dans
-// `submit_exercise_attempt` (20260816120000_boss_speed_xp_bonus.sql), qui est
+// `submit_exercise_attempt` (20260816140000_boss_speed_xp_bonus.sql), qui est
 // SEUL juge — la durée y est mesurée serveur, `p_duration_seconds` envoyé par
 // le client n'a jamais été lu. Ce qui vit ici ne sert qu'à expliquer la prime à
 // l'élève ; toucher l'une sans l'autre fait mentir l'explication, pas le calcul.

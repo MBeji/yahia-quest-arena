@@ -1,5 +1,5 @@
 -- =========================================================
--- Prime de rapidité du mode BOSS — 20260816120000_boss_speed_xp_bonus.sql
+-- Prime de rapidité du mode BOSS — 20260816140000_boss_speed_xp_bonus.sql
 -- ---------------------------------------------------------
 -- Le chronomètre du combat de boss est ouvert (il ne coupe plus personne) et
 -- il NOTE : ici, sa lecture sur les XP. Ce fichier verrouille les quatre choses
