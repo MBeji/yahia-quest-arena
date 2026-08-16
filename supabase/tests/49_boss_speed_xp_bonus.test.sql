@@ -165,10 +165,13 @@ SELECT is(
     SELECT (public.submit_exercise_attempt(
       'a4900000-0000-0000-0000-000000000003',
       '7e574902-0000-0000-0000-000000000002',
-      '[{"questionId":"e4900000-0000-0000-0000-000000000010","choice":"a"},
-        {"questionId":"e4900000-0000-0000-0000-000000000011","choice":"a"},
+      -- `…001' || g` avec g de 1 à 4 ⇒ …011 à …014. Répondre à partir de …010
+      -- ratait la 4ᵉ question : 75 % au lieu de 100, et le cas mesurait alors
+      -- une note, pas une prime.
+      '[{"questionId":"e4900000-0000-0000-0000-000000000011","choice":"a"},
         {"questionId":"e4900000-0000-0000-0000-000000000012","choice":"a"},
-        {"questionId":"e4900000-0000-0000-0000-000000000013","choice":"a"}]'::jsonb
+        {"questionId":"e4900000-0000-0000-0000-000000000013","choice":"a"},
+        {"questionId":"e4900000-0000-0000-0000-000000000014","choice":"a"}]'::jsonb
     ) ->> 'xpEarned')::int
   ),
   100,
