@@ -690,6 +690,9 @@ export const ar: TranslationKeys = {
     linkCta: "ربط",
     linking: "جاري الربط…",
     linkHint: "يجد التلميذ رمزه في لوحته.",
+    rememberCode: "تذكّر هذا الرمز على هذا الجهاز",
+    rememberHint: "تجنّبوه على جهاز مشترك: هذا الرمز يفتح تقرير طفلكم.",
+    forgetCode: "نسيان هذا الرمز",
     linkSuccess: "تم التحالف مع {name}.",
     linkFailed: "فشل الربط.",
     // أخطاء رمز التحالف (رموز ثابتة من الخادم؛ سجلّ وليّ الأمر).
