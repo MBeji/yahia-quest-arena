@@ -693,6 +693,10 @@ export type TranslationKeys = {
     linkCta: string;
     linking: string;
     linkHint: string;
+    // Mémoire locale du code sur la page publique /suivi (sans compte, sans session).
+    rememberCode: string;
+    rememberHint: string;
+    forgetCode: string;
     linkSuccess: string;
     linkFailed: string;
     // Alliance-code errors, keyed by the server's stable ParentCodeErrorCode
