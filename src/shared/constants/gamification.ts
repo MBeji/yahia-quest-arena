@@ -81,8 +81,49 @@ export const BACK_TO_SCHOOL_WINDOW = {
   endDay: 31,
 } as const;
 
-/** Boss mode: time per question in seconds */
-export const BOSS_TIME_PER_QUESTION_S = 20;
+// ---------------------------------------------------------------------------
+// Boss mode — le chronomètre NOTE, il ne coupe jamais la parole.
+//
+// Jusqu'à ce lot, ce nombre armait un compte à rebours qui, à zéro, répondait à
+// la place de l'élève (réponse fausse d'office) et passait à la question
+// suivante : 20 s ne suffisent pas pour une question de boss, et se faire couper
+// au milieu d'un raisonnement n'apprend rien. Le chronomètre est désormais
+// OUVERT — il compte à l'endroit, sans plafond, et ne valide jamais rien seul.
+//
+// Ce qu'il pilote, ce sont les DÉGÂTS infligés au boss, donc la barre de HP que
+// l'élève regarde pendant le combat et le rang affiché à la fin. Il ne touche
+// NI la correction (une réponse juste reste juste, quel qu'ait été le temps) NI
+// les XP : la prime de vitesse sur les XP a été retirée le 2026-06-04 par la
+// migration anti-rush `20260604220000_harden_scoring_anti_rush.sql`, et ce lot
+// ne la réintroduit pas.
+// ---------------------------------------------------------------------------
+
+/**
+ * Boss mode: temps de RÉFÉRENCE par question, en secondes — plus une échéance.
+ * Répondre en deçà porte un coup critique ; au-delà le coup s'atténue par
+ * paliers, sans jamais tomber à zéro.
+ */
+export const BOSS_PAR_SECONDS_PER_QUESTION = 20;
+
+/**
+ * Part des dégâts d'une question selon le palier de rapidité. Aucun palier ne
+ * vaut 0 : quel que soit le temps mis, une question répondue avance le combat —
+ * c'est la garantie « on ne bloque pas l'élève », lue en dégâts.
+ */
+export const BOSS_SPEED_WEIGHTS = {
+  /** ≤ 1× le temps de référence. */
+  critical: 1,
+  /** ≤ 2× le temps de référence. */
+  fast: 0.75,
+  /** au-delà. */
+  steady: 0.5,
+} as const;
+
+/** Dégâts cumulés (sur 100) à partir desquels le combat vaut tel rang final. */
+export const BOSS_RANK_MIN_DAMAGE = {
+  critical: 90,
+  fast: 65,
+} as const;
 
 // ---------------------------------------------------------------------------
 // Dungeon access gate — the Dungeon requires real prior progress, and the
