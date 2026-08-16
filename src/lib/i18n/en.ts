@@ -219,7 +219,12 @@ export const en: TranslationKeys = {
     leaveQuest: "Leave quest",
     bossFight: "⚔️ Boss Fight",
     bossHp: "Boss HP",
-    bossStrike: "Strike fast and true to deal damage to the Boss!",
+    bossStrike: "Take the time you need — the clock sets the damage, not the deadline!",
+    bossRankCritical: "☄️ Critical hit — the Boss is down!",
+    bossRankFast: "⚔️ Solid strike",
+    bossRankSteady: "🛡️ Fought all the way through",
+    bossResultHp: "Boss at {hp}% HP",
+    bossRankHint: "The clock sets the damage, never the marking.",
     questionOf: "Question {current} / {total}",
     feedbackMsg:
       "Pick your answer — you can change it — then click Validate. The detailed correction appears at the end of the quest.",

@@ -93,6 +93,7 @@ function renderScreen(over: Partial<Parameters<typeof QuestResultScreen>[0]> = {
     isQuiz: false,
     isRtl: false,
     isRecall: false,
+    boss: null,
     rewards: false,
     recallUnlockable: false,
     qlang: "fr" as const,

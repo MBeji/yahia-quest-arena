@@ -219,7 +219,12 @@ export const ar: TranslationKeys = {
     leaveQuest: "مغادرة المهمة",
     bossFight: "⚔️ قتال البوس",
     bossHp: "HP البوس",
-    bossStrike: "اضرب بسرعة ودقة لإلحاق الضرر بالبوس!",
+    bossStrike: "خذ وقتك الكافي: المؤقّت يحدّد قوة الضربة، لا نهاية السؤال!",
+    bossRankCritical: "☄️ ضربة قاضية — سقط البوس!",
+    bossRankFast: "⚔️ ضربة قوية",
+    bossRankSteady: "🛡️ خضت المعركة إلى آخرها",
+    bossResultHp: "البوس عند {hp}٪ من نقاط الحياة",
+    bossRankHint: "المؤقّت يحدّد قوة الضربة، ولا يحدّد أبدًا صحّة الإجابة.",
     questionOf: "سؤال {current} / {total}",
     feedbackMsg:
       "اختر إجابتك — يمكنك تغييرها — ثم اضغط على تحقّق. يظهر التصحيح المفصّل في نهاية المهمة.",
