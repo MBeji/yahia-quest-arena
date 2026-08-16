@@ -114,6 +114,11 @@ export type PlayerResult = {
   retryShieldUsed: boolean;
   tooFast: boolean;
   improved: boolean;
+  /**
+   * Prime de rapidité appliquée aux XP du boss (1 = aucune). Décidée serveur ;
+   * le registre anonyme, qui ne gagne pas d'XP, la laisse toujours à 1.
+   */
+  speedBonus: number;
   /** Anon quiz only: reached the score but rushed, so the chapter stays locked. */
   quizTooFast?: boolean;
 };

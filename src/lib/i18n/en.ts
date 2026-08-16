@@ -224,6 +224,7 @@ export const en: TranslationKeys = {
     bossRankFast: "⚔️ Solid strike",
     bossRankSteady: "🛡️ Fought all the way through",
     bossResultHp: "Boss at {hp}% HP",
+    bossSpeedBonus: "⚡ Speed bonus: +{pct}% XP",
     bossRankHint: "The clock sets the damage, never the marking.",
     questionOf: "Question {current} / {total}",
     feedbackMsg:
