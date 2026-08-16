@@ -73,6 +73,8 @@ export type TranslationKeys = {
     errorInvalidLogin: string;
     errorEmailNotConfirmed: string;
     errorAccountExists: string;
+    errorAccountExistsSignup: string;
+    errorMailerDown: string;
     errorRateLimit: string;
     errorSignupDisabled: string;
     errorGeneric: string;
@@ -84,6 +86,9 @@ export type TranslationKeys = {
     emailSentBody2: string;
     emailSentSpam: string;
     emailSentEdit: string;
+    emailSentResend: string;
+    emailSentResendWait: string;
+    emailSentResendDone: string;
     // Password reset (étude 15 lot 9) — forgot-password request + /auth/reset
     forgotCta: string;
     forgotTitle: string;

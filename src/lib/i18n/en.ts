@@ -68,6 +68,10 @@ export const en: TranslationKeys = {
     errorInvalidLogin: "Incorrect email or password.",
     errorEmailNotConfirmed: "Check your inbox to confirm your account.",
     errorAccountExists: "This account already exists. Sign in instead.",
+    errorAccountExistsSignup:
+      "This address already has an account — no email was sent. Sign in, or use “Forgot password?”.",
+    errorMailerDown:
+      "Your account is created, but the confirmation email could not be sent. Try again in a few minutes.",
     errorRateLimit: "Too many attempts. Try again in a few minutes.",
     errorSignupDisabled: "Sign-ups are temporarily disabled.",
     errorGeneric: "Authentication error. Try again.",
@@ -79,6 +83,9 @@ export const en: TranslationKeys = {
     emailSentBody2: "Click the link to activate your account and access your space.",
     emailSentSpam: "📬 Also check your spam folder if you don't see the email in your inbox.",
     emailSentEdit: "← Edit the email address",
+    emailSentResend: "Resend the email",
+    emailSentResendWait: "Resend in {s}s",
+    emailSentResendDone: "Email sent again — check your inbox (and spam).",
     forgotCta: "Forgot password?",
     forgotTitle: "Reset your password",
     forgotSubtitle: "Enter your email: we'll send a link to choose a new one.",

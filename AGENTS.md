@@ -245,5 +245,19 @@ this repo (this file, `STATUS.md`, `docs/agents/`) — not only in a tool's priv
   « bump undici · indirect », montait une **majeure** et entrait une **alpha** dans la chaîne de
   build ; son lockfile a cassé `npm ci` **hors d'ici** (33 h de Content CI privée rouge) pendant
   que ce gate restait vert. Lire le diff : [`docs/dependency-maintenance.md`](./docs/dependency-maintenance.md).
+- **Exporter le composant d'une route défait le code-splitting.** Un `export function MaPage()`
+  dans `src/routes/*.tsx` — souvent ajouté « juste pour le test » — fait remonter tout le graphe
+  d'imports de la page (motion, icônes, primitives de formulaire) dans le chunk d'entrée :
+  **mesuré +80 kB** sur `/auth` (439 → 520 kB pour un budget de 450), alors que le diff faisait
+  150 lignes. Invisible en local, `build:check` n'étant pas dans `verify`. Pour tester la page,
+  lire `Route.component` avec `createFileRoute` mocké
+  ([`auth-signup.test.tsx`](./src/routes/__tests__/auth-signup.test.tsx)) ; n'exporter du fichier
+  de route que des helpers **purs** (eux ne coûtent rien, mesuré aussi).
+- **Une inscription Supabase peut réussir sans qu'aucun mail ne parte.** Sur une adresse qui a
+  déjà un compte, la protection anti-énumération répond **200** avec un utilisateur **factice**
+  (id aléatoire, `role` vide, `confirmation_sent_at` horodaté à l'instant) et n'envoie **rien**.
+  Le seul indice honnête est un tableau `identities` **vide** — `confirmation_sent_at` ment.
+  Sans ce test, l'écran « confirme ton email » promet un mail qui ne viendra jamais et l'adresse
+  est murée (constaté en prod le 2026-08-16, corrigé dans [`auth.tsx`](./src/routes/auth.tsx)).
 - Coverage is scoped to owned code (`features/`, `shared/`, `lib/`, `hooks/`) — vendored UI,
   route glue, and generated files are excluded by design; don't widen `include` to dilute it.

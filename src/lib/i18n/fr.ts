@@ -68,6 +68,10 @@ export const fr: TranslationKeys = {
     errorInvalidLogin: "Email ou mot de passe incorrect.",
     errorEmailNotConfirmed: "Vérifie ta boîte mail pour confirmer ton compte.",
     errorAccountExists: "Ce compte existe déjà. Connecte-toi.",
+    errorAccountExistsSignup:
+      "Cette adresse a déjà un compte — aucun email n'a été envoyé. Connecte-toi, ou utilise « Mot de passe oublié ? ».",
+    errorMailerDown:
+      "Ton compte est créé, mais l'email de confirmation n'a pas pu partir. Réessaie dans quelques minutes.",
     errorRateLimit: "Trop de tentatives. Réessaie dans quelques minutes.",
     errorSignupDisabled: "L'inscription est temporairement désactivée.",
     errorGeneric: "Erreur d'authentification. Réessaie.",
@@ -79,6 +83,9 @@ export const fr: TranslationKeys = {
     emailSentBody2: "Clique sur le lien pour activer ton compte et accéder à ton espace.",
     emailSentSpam: "📬 Vérifie aussi tes spams si tu ne vois pas l'email dans ta boîte principale.",
     emailSentEdit: "← Modifier l'adresse email",
+    emailSentResend: "Renvoyer l'email",
+    emailSentResendWait: "Renvoyer dans {s} s",
+    emailSentResendDone: "Email renvoyé — vérifie ta boîte (et tes spams).",
     forgotCta: "Mot de passe oublié ?",
     forgotTitle: "Réinitialiser le mot de passe",
     forgotSubtitle: "Saisis ton email : on t'envoie un lien pour en choisir un nouveau.",
