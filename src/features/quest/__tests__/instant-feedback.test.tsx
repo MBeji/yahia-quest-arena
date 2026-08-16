@@ -113,6 +113,7 @@ const neutralResult: PlayerResult = {
   retryShieldUsed: false,
   tooFast: false,
   improved: false,
+  speedBonus: 1,
 };
 
 function strategyWith(overrides: Partial<ExercisePlayerStrategy> = {}): ExercisePlayerStrategy {

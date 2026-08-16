@@ -116,6 +116,7 @@ const neutralResult: PlayerResult = {
   retryShieldUsed: false,
   tooFast: false,
   improved: false,
+  speedBonus: 1,
 };
 
 function anonStrategy(overrides: Partial<ExercisePlayerStrategy> = {}): ExercisePlayerStrategy {

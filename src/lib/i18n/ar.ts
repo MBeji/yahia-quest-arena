@@ -224,6 +224,7 @@ export const ar: TranslationKeys = {
     bossRankFast: "⚔️ ضربة قوية",
     bossRankSteady: "🛡️ خضت المعركة إلى آخرها",
     bossResultHp: "البوس عند {hp}٪ من نقاط الحياة",
+    bossSpeedBonus: "⚡ مكافأة السرعة: +{pct}٪ من نقاط الخبرة",
     bossRankHint: "المؤقّت يحدّد قوة الضربة، ولا يحدّد أبدًا صحّة الإجابة.",
     questionOf: "سؤال {current} / {total}",
     feedbackMsg:

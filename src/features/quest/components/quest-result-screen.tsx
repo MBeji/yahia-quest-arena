@@ -199,6 +199,20 @@ export function QuestResultScreen({
               <p className="mt-1 text-sm font-semibold">
                 {t.quest.bossResultHp.replace("{hp}", String(boss.hp))}
               </p>
+              {/* L'autre lecture du même chronomètre : la prime sur les XP,
+                  décidée serveur. On n'affiche que ce qui a été accordé — pas
+                  de « tu aurais pu avoir », qui ne serait qu'un reproche. */}
+              {rewards && result.speedBonus > 1 && (
+                <p
+                  className="mt-2 text-sm font-bold text-[color:var(--gold)]"
+                  data-testid="boss-speed-bonus"
+                >
+                  {t.quest.bossSpeedBonus.replace(
+                    "{pct}",
+                    String(Math.round((result.speedBonus - 1) * 100)),
+                  )}
+                </p>
+              )}
               <p className="mt-2 text-xs text-muted-foreground">{t.quest.bossRankHint}</p>
             </div>
           )}

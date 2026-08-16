@@ -10,7 +10,9 @@
 --
 -- Reward math (20260604220000_harden_scoring_anti_rush + consumables):
 --   eligible := NOT tooFast AND score >= 60 AND score > prev_best
---   xp       := round(xp_reward * score/100)   (no speed multiplier)
+--   xp       := round(xp_reward * score/100)   (no speed multiplier — the boss
+--              speed bonus of 20260816120000 applies to mode='boss' ONLY, and
+--              every exercise here is mode='practice'; see 49_boss_speed_xp_bonus)
 --   coins    := reward_coins (full) when eligible, else 0
 -- We backdate exercise_sessions.started_at so duration clears the 4s/question
 -- gate for the "good" attempt and stays under it for the "too fast" case.

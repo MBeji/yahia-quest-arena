@@ -90,12 +90,12 @@ export const BACK_TO_SCHOOL_WINDOW = {
 // au milieu d'un raisonnement n'apprend rien. Le chronomètre est désormais
 // OUVERT — il compte à l'endroit, sans plafond, et ne valide jamais rien seul.
 //
-// Ce qu'il pilote, ce sont les DÉGÂTS infligés au boss, donc la barre de HP que
-// l'élève regarde pendant le combat et le rang affiché à la fin. Il ne touche
-// NI la correction (une réponse juste reste juste, quel qu'ait été le temps) NI
-// les XP : la prime de vitesse sur les XP a été retirée le 2026-06-04 par la
-// migration anti-rush `20260604220000_harden_scoring_anti_rush.sql`, et ce lot
-// ne la réintroduit pas.
+// Ce qu'il pilote, ce sont les DÉGÂTS infligés au boss — donc la barre de HP que
+// l'élève regarde pendant le combat et le rang affiché à la fin — et, depuis
+// `20260816120000_boss_speed_xp_bonus.sql`, une PRIME sur les XP du boss.
+//
+// Il ne touche jamais la CORRECTION : une réponse juste reste juste, quel qu'ait
+// été le temps mis à la donner.
 // ---------------------------------------------------------------------------
 
 /**
@@ -124,6 +124,28 @@ export const BOSS_RANK_MIN_DAMAGE = {
   critical: 90,
   fast: 65,
 } as const;
+
+// --- Prime de rapidité sur les XP du boss ---------------------------------
+// ⚠️ MIROIRS DE SQL : ces deux valeurs sont dupliquées en dur dans
+// `submit_exercise_attempt` (20260816120000_boss_speed_xp_bonus.sql), qui est
+// SEUL juge — la durée y est mesurée serveur, `p_duration_seconds` envoyé par
+// le client n'a jamais été lu. Ce qui vit ici ne sert qu'à expliquer la prime à
+// l'élève ; toucher l'une sans l'autre fait mentir l'explication, pas le calcul.
+
+/**
+ * Temps de référence par question POUR LA PRIME D'XP, en secondes. Plus large
+ * que `BOSS_PAR_SECONDS_PER_QUESTION` (qui note les dégâts d'une réponse) parce
+ * que la durée serveur court de bout en bout de la session : elle inclut la
+ * lecture des corrections entre les questions, pas seulement la réflexion.
+ */
+export const BOSS_XP_PAR_SECONDS_PER_QUESTION = 35;
+
+/**
+ * Prime maximale, atteinte sous le temps de référence puis décroissant
+ * linéairement jusqu'à zéro au double. C'est une PRIME : jouer lentement ne
+ * rapporte jamais moins qu'avant ce lot.
+ */
+export const BOSS_XP_MAX_SPEED_BONUS = 0.5;
 
 // ---------------------------------------------------------------------------
 // Dungeon access gate — the Dungeon requires real prior progress, and the

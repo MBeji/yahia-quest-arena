@@ -234,6 +234,7 @@ export type TranslationKeys = {
     bossRankFast: string;
     bossRankSteady: string;
     bossResultHp: string;
+    bossSpeedBonus: string;
     bossRankHint: string;
     questionOf: string;
     feedbackMsg: string;

@@ -233,6 +233,7 @@ export const fr: TranslationKeys = {
     bossRankFast: "⚔️ Frappe solide",
     bossRankSteady: "🛡️ Combat mené jusqu'au bout",
     bossResultHp: "Boss à {hp} % de HP",
+    bossSpeedBonus: "⚡ Prime de rapidité : +{pct} % d'XP",
     bossRankHint: "Le chronomètre décide des dégâts, jamais de la correction.",
     questionOf: "Question {current} / {total}",
     feedbackMsg:
