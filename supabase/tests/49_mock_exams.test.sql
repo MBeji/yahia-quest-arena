@@ -267,8 +267,14 @@ SELECT set_config(
   true);
 
 RESET ROLE;
+-- On recule la fenêtre ENTIÈRE, pas la seule deadline : la contrainte
+-- `mock_exam_sessions_deadline_after_start` (lot 1) refuse une échéance
+-- antérieure au départ, et elle a raison — une session dont la deadline précède
+-- le début n'existe pas. Le premier jet de ce test l'ignorait ; la contrainte
+-- l'a attrapé en CI.
 UPDATE public.mock_exam_sessions
-   SET deadline = now() - INTERVAL '1 minute'
+   SET started_at = now() - INTERVAL '2 hours',
+       deadline   = now() - INTERVAL '1 minute'
  WHERE id = current_setting('test.practice')::uuid;
 
 SET LOCAL "request.jwt.claims" = '{"sub":"e9a20000-0000-4000-8000-00000000000a","role":"authenticated"}';
