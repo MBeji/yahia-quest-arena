@@ -14,6 +14,7 @@ import { useDuelChannel } from "@/features/duel/use-duel-channel";
 import { useAuth } from "@/features/auth";
 import { buildQuestLabels } from "@/features/quest/quest-labels";
 import { useI18n, useT } from "@/lib/i18n";
+import { useLearningPulse } from "@/hooks/use-learning-pulse";
 
 export const Route = createFileRoute("/_authenticated/duel/$duelId")({
   head: () => ({ meta: [{ title: "Duel · Na9ra Nal3ab" }] }),
@@ -29,6 +30,9 @@ function DuelPlayPage() {
   const fetchState = useServerFn(getDuelState);
   const fetchQuestions = useServerFn(getDuelQuestions);
   const submit = useServerFn(submitDuelAnswer);
+
+  // Un duel est du temps d'apprentissage : il compte dans le suivi parental.
+  useLearningPulse({ surface: "duel" });
 
   const stateQuery = useQuery({
     queryKey: ["duel-state", duelId],

@@ -34,6 +34,7 @@ import { BackLink } from "@/components/ui/back-link";
 import { PageShell } from "@/components/ui/page-shell";
 import { GoldProgress } from "@/components/game/gold-progress";
 import { questionSlide, useEntrance } from "@/shared/lib/motion";
+import { useQuestPulse } from "@/features/quest/quest-pulse";
 import { useSound } from "@/lib/sound";
 import {
   ComboStrip,
@@ -441,6 +442,12 @@ export function ExercisePlayer({
   const isRtlSubject = subjectInfo?.content_language === "ar";
   const qlang = (subjectInfo?.content_language ?? "fr") as QuestContentLang;
   const QL = useMemo(() => buildQuestLabels(qlang), [qlang]);
+
+  // Temps réellement passé sur la mission, abandons compris — ce que
+  // `attempts.duration_seconds` (écrit à la soumission) ne voit jamais. Gate :
+  // `capabilities.rewards` n'est vrai que dans le registre CONNECTÉ ; le registre
+  // public `/exercice` joue en anonyme et n'a aucun suivi à alimenter.
+  useQuestPulse(data?.exercise ?? null, exerciseId, isRecall, capabilities.rewards);
 
   const answeredQuestionRef = useRef<string | null>(null);
   /** La réponse figée au moment de la correction, rejouée à « Continuer ». */

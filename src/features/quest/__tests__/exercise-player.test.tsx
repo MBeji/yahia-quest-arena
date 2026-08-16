@@ -19,6 +19,10 @@ vi.mock("@tanstack/react-router", () => ({
 vi.mock("@tanstack/react-start", () => ({
   useServerFn: (fn: unknown) => fn,
 }));
+// La mesure du temps d'apprentissage est stubée pour la même raison que
+// `quest.training` juste dessous : la charger tirerait `createServerFn` et les
+// middlewares Supabase dans un test de rendu.
+vi.mock("@/hooks/use-learning-pulse", () => ({ useLearningPulse: () => {} }));
 // L'écran de résultat sait désormais mener à un entraînement (A12). La server fn
 // est stubée : la charger pour de vrai tirerait `createServerFn` et les
 // middlewares Supabase dans un test de rendu.
