@@ -32,7 +32,13 @@ const BUDGETS = {
   // overline/titre de la révision du jour, et le libellé `beat_2_bosses` qui manquait aux
   // trois dictionnaires. Le lot 4 laissait 0,36 KB de marge : la réserve est reconstituée
   // pour le lot 3 (bannière de rentrée), sinon la CI casserait sur la première clé suivante.
-  "i18n-": 128 * 1024,
+  // Puis 128→136 KB pour l'étude 02 (examen blanc) : un namespace `exam.*` complet — catalogue,
+  // passation (chrono, navigation entre épreuves, état de sauvegarde), et copie corrigée
+  // (note /20, barème par épreuve, percentile, corrigé question par question). 35 clés payées
+  // ×3 langues, l'arabe étant le plus lourd en octets : le seuil sautait de 0,89 KB. On reprend
+  // 7 KB de marge plutôt que le strict nécessaire, sinon la clé suivante casse la CI d'une PR
+  // qui n'y sera pour rien.
+  "i18n-": 136 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
   // @dnd-kit (core+sortable+utilities) powering the B2 ordering/matching
