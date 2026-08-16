@@ -177,27 +177,40 @@ describe("dashboard.parcours — anonymous (optionalSupabaseAuth)", () => {
       grade_id: "g9",
     };
     const math = {
-      id: "s1",
-      name_fr: "Mathématiques",
+      id: "math",
+      name_fr: "الرياضيات",
       attribute: null,
       description: null,
-      content_language: "fr",
+      content_language: "ar",
     };
     const subjectsChain = mockQuery([math]);
     mockFrom.mockImplementation((table: string) =>
-      table === "parcours" ? mockQuery(parcours) : subjectsChain,
+      table === "parcours"
+        ? mockQuery(parcours)
+        : table === "grades"
+          ? mockQuery({ slug: "9eme-base" })
+          : subjectsChain,
     );
 
     const { getParcoursSubjects } = await import("@/features/dashboard");
     const result = (await (getParcoursSubjects as unknown as Fn)({
       parcoursId: "concours-9eme",
-    })) as { parcours: Record<string, unknown> | null; subjects: unknown[] };
+    })) as {
+      parcours: Record<string, unknown> | null;
+      subjects: unknown[];
+      soon: Array<{ id: string }>;
+    };
 
     expect(result.parcours).toMatchObject({ id: "concours-9eme" });
     expect(result.subjects).toEqual([math]);
     // grade-bound parcours filters subjects by grade_id (eq), not the null branch (is).
     expect(subjectsChain.eq).toHaveBeenCalledWith("grade_id", "g9");
     expect(subjectsChain.is).not.toHaveBeenCalled();
+    // Le reste du programme officiel de la 9ème complète le menu, sans jamais répéter
+    // une matière déjà servie par le catalogue.
+    const soonIds = result.soon.map((s) => s.id);
+    expect(soonIds).not.toContain("math");
+    expect(soonIds).toContain("histoire-geo-9eme");
   });
 
   it("getParcoursSubjects: a libre (grade-null) track filters subjects by grade IS NULL", async () => {
@@ -225,10 +238,14 @@ describe("dashboard.parcours — anonymous (optionalSupabaseAuth)", () => {
     const { getParcoursSubjects } = await import("@/features/dashboard");
     const result = (await (getParcoursSubjects as unknown as Fn)({
       parcoursId: "anglais",
-    })) as { subjects: unknown[] };
+    })) as { subjects: unknown[]; soon: unknown[] };
 
     expect(result.subjects).toEqual([a1]);
     expect(subjectsChain.is).toHaveBeenCalledWith("grade_id", null);
+    // Un parcours `libre` n'a pas de programme officiel : aucune matière « bientôt »,
+    // et pas de lecture de `grades` (il n'a pas de niveau).
+    expect(result.soon).toEqual([]);
+    expect(mockFrom).not.toHaveBeenCalledWith("grades");
   });
 
   it("getParcoursSubjects: an unknown parcours returns an empty result", async () => {

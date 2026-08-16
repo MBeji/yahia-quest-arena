@@ -937,6 +937,10 @@ export type TranslationKeys = {
       choosing: string;
       /** R-6 étude 16 — honest note under the « choose » switch button. */
       switchNote: string;
+      /** Titre du bloc listant le reste du programme officiel de la classe. */
+      soonHeading: string;
+      /** Note sous ce titre : ces matières sont au programme, pas encore ouvertes. */
+      soonNote: string;
     };
     reader: {
       defaultSubject: string;

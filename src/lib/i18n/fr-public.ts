@@ -126,6 +126,8 @@ export const frPublic: TranslationKeys["public"] = {
     choosing: "Sélection…",
     switchNote:
       "Tes XP, pièces, badges et ta série te suivent ; ta progression par matière reste propre à chaque classe.",
+    soonHeading: "Le reste du programme",
+    soonNote: "Ces matières officielles de la classe ne sont pas encore ouvertes.",
   },
   reader: {
     defaultSubject: "Cours",

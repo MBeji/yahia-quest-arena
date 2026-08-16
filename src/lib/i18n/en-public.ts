@@ -126,6 +126,8 @@ export const enPublic: TranslationKeys["public"] = {
     choosing: "Selecting…",
     switchNote:
       "Your XP, coins, badges and streak carry over; your per-subject progress stays specific to each class.",
+    soonHeading: "The rest of the programme",
+    soonNote: "These official subjects of the class are not open yet.",
   },
   reader: {
     defaultSubject: "Lesson",
