@@ -810,6 +810,164 @@ export type TranslationKeys = {
     goalProgress: string;
     goalUnit: string;
   };
+  // Suivi parental « jour par jour » — tableau de bord d'activité quotidienne.
+  // Les libellés d'alerte portent des paramètres entre accolades, remplis par
+  // `alertMessage` depuis les règles pures de `insights/alerts.ts`.
+  parentDaily: {
+    tabSummary: string;
+    tabDaily: string;
+    // Sélecteur de période
+    periodToday: string;
+    periodYesterday: string;
+    periodLast7: string;
+    periodThisWeek: string;
+    periodLast30: string;
+    periodThisMonth: string;
+    periodCustom: string;
+    periodFrom: string;
+    periodTo: string;
+    periodMaxHint: string;
+    // Les quatre questions (§11)
+    q1Works: string;
+    q1Yes: string;
+    q1No: string;
+    q2Serious: string;
+    q3Progress: string;
+    q3Answer: string;
+    q4Efficient: string;
+    unknown: string;
+    noComparison: string;
+    none: string;
+    measuredSinceNotice: string;
+    // Résumé de la journée / période
+    summaryTitleDay: string;
+    summaryTitlePeriod: string;
+    appTime: string;
+    appTimeHint: string;
+    learningTime: string;
+    learningTimeHint: string;
+    activities: string;
+    firstActivity: string;
+    lastActivity: string;
+    sessions: string;
+    activeDays: string;
+    // Répartition du temps par type d'activité
+    breakdownTitle: string;
+    breakdownSubtitle: string;
+    breakdownEmpty: string;
+    typeLesson: string;
+    typeExercise: string;
+    typeQuiz: string;
+    typeRecall: string;
+    typeArena: string;
+    typeBrowse: string;
+    // Cours consultés
+    lessonsTitle: string;
+    lessonsSubtitle: string;
+    lessonsEmpty: string;
+    lessonStudied: string;
+    lessonOpened: string;
+    lessonViews: string;
+    lessonProgressAria: string;
+    // Exercices réalisés
+    exercisesTitle: string;
+    exercisesSubtitle: string;
+    exercisesEmpty: string;
+    attemptNo: string;
+    rightWrong: string;
+    showMore: string;
+    modePractice: string;
+    modeQuiz: string;
+    modeBoss: string;
+    modeRecall: string;
+    // Détail d'une tentative
+    attemptDetailTitle: string;
+    attemptDetailFailed: string;
+    attemptReviewHidden: string;
+    attemptNoAnswers: string;
+    questionLabel: string;
+    childAnswer: string;
+    expectedAnswer: string;
+    // KPI
+    performanceTitle: string;
+    performanceSubtitle: string;
+    kpiAccuracy: string;
+    kpiSuccess: string;
+    kpiTriesToPass: string;
+    kpiPerQuestion: string;
+    kpiPerExercise: string;
+    kpiLessonCompletion: string;
+    kpiExerciseCompletion: string;
+    kpiRegularity: string;
+    kpiStreak: string;
+    // Progression
+    progressionTitle: string;
+    progressionByTime: string;
+    progressionByActivity: string;
+    dayTooltip: string;
+    compareHint: string;
+    // Indices explicables
+    engagementTitle: string;
+    engagementSubtitle: string;
+    efficiencyTitle: string;
+    efficiencySubtitle: string;
+    indexNotEnoughData: string;
+    indexScoreOutOf: string;
+    indexDrivers: string;
+    indexHolders: string;
+    bandExcellent: string;
+    bandGood: string;
+    bandFair: string;
+    bandWeak: string;
+    factorRegularity: string;
+    factorLearningTime: string;
+    factorActivityVolume: string;
+    factorLessonCompletion: string;
+    factorPerseverance: string;
+    factorProgress: string;
+    factorRevision: string;
+    factorAccuracy: string;
+    factorTimeToResult: string;
+    factorRetrySuccess: string;
+    factorPace: string;
+    factorRevisionGain: string;
+    unitDays: string;
+    unitPoints: string;
+    unitTries: string;
+    unitMinutesPerSuccess: string;
+    unitSecondsPerQuestion: string;
+    // Matières
+    subjectsTitle: string;
+    subjectsSubtitle: string;
+    subjectsEmpty: string;
+    colSubject: string;
+    colTime: string;
+    colLessons: string;
+    colExercises: string;
+    colSuccess: string;
+    colProgress: string;
+    colLevel: string;
+    subjectsStrong: string;
+    subjectsFragile: string;
+    subjectsNeglected: string;
+    subjectsImproving: string;
+    // Alertes et recommandations
+    alertsTitle: string;
+    alertsSubtitle: string;
+    alertsEmpty: string;
+    alertNoActivity: string;
+    alertPerformanceDrop: string;
+    alertTimeWithoutProgress: string;
+    alertTimeLowYield: string;
+    alertChapterStruggle: string;
+    alertSubjectNeglected: string;
+    alertAbandonedExercises: string;
+    alertLowRegularity: string;
+    alertRevisionNeeded: string;
+    alertImprovement: string;
+    alertGoalReached: string;
+    alertStrongSubject: string;
+  };
   // Playful explainability hover hints
   explain: {
     xp: string;

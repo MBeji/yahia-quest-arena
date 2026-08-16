@@ -15,6 +15,16 @@
 | [`pieges-du-code.md`](./pieges-du-code.md)                     | Le gate local est vert mais la CI rougit, ou une API tierce répond « OK » sans rien faire                                           |
 | [`etude-ia-vs-deterministe.md`](./etude-ia-vs-deterministe.md) | **Étude close** (6/6 lots, 2026-07-25) : quelles surfaces IA du dépôt ont été remplacées par des scripts déterministes, lot par lot |
 
+**Piège transverse à connaître avant d'écrire une RPC** : `src/shared/integrations/supabase/types.ts`
+est **généré depuis une base réelle**, jamais depuis `supabase/migrations/**`. Une fonction créée
+par une migration non encore appliquée n'est donc pas typée — `supabase.rpc('<nom>')` fait rougir
+`typecheck`, et le fichier est bloqué à l'édition manuelle (`guard-generated.mjs`, à raison). Sans
+Docker en local il n'y a **pas de raccourci** : c'est le cas d'usage exact de la DoD §7, en deux
+PR (migration, puis code après `supabase gen types`). Parade pour ne pas envoyer du PL/pgSQL non
+exécuté en prod entre les deux : le rejouer dans un Postgres WASM jetable **hors dépôt**
+(`@electric-sql/pglite`) — détail dans
+[`../suivi-parental-quotidien.md`](../suivi-parental-quotidien.md#livrer-en-deux-temps).
+
 **Règle de maintenance** (AGENTS.md § Multi-agent collaboration) : un savoir projet découvert en
 session finit **ici, dans `STATUS.md` ou dans l'étude concernée** — pas seulement dans la mémoire
 d'un outil. Ces fichiers sont normatifs sur leur sujet ; en cas de conflit, `AGENTS.md` gagne.

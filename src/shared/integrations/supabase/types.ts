@@ -1,4 +1,4 @@
-﻿export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
@@ -6,118 +6,51 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.5";
   };
+  graphql_public: {
+    Tables: {
+      [_ in never]: never;
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json;
+          operationName?: string;
+          query?: string;
+          variables?: Json;
+        };
+        Returns: Json;
+      };
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
+    };
+  };
   public: {
     Tables: {
-      // NOTE (étude 05 duels): the three duel_* tables + the duel RPCs below were
-      // hand-added to this generated file — the schema landed in migrations
-      // 20260706160000/20260706170000 but `supabase gen types` was not re-run in
-      // this offline session (DoD §4 permits a minimal, noted hand-edit). Keep in
-      // sync if the generator is re-run.
-      duel_queue: {
+      _backup_subscriptions_20260609: {
         Row: {
-          enqueued_at: string;
-          grade_id: string | null;
-          parcours_id: string;
-          user_id: string;
+          id: string | null;
+          subscription_activated_at: string | null;
+          subscription_expires_at: string | null;
+          subscription_type: string | null;
         };
         Insert: {
-          enqueued_at?: string;
-          grade_id?: string | null;
-          parcours_id: string;
-          user_id: string;
+          id?: string | null;
+          subscription_activated_at?: string | null;
+          subscription_expires_at?: string | null;
+          subscription_type?: string | null;
         };
         Update: {
-          enqueued_at?: string;
-          grade_id?: string | null;
-          parcours_id?: string;
-          user_id?: string;
-        };
-        Relationships: [];
-      };
-      duels: {
-        Row: {
-          created_at: string;
-          exercise_source: string;
-          expires_at: string;
-          id: string;
-          parcours_id: string;
-          question_ids: string[];
-          status: string;
-        };
-        Insert: {
-          created_at?: string;
-          exercise_source?: string;
-          expires_at: string;
-          id?: string;
-          parcours_id: string;
-          question_ids: string[];
-          status?: string;
-        };
-        Update: {
-          created_at?: string;
-          exercise_source?: string;
-          expires_at?: string;
-          id?: string;
-          parcours_id?: string;
-          question_ids?: string[];
-          status?: string;
-        };
-        Relationships: [];
-      };
-      duel_league_awards: {
-        Row: {
-          awarded_at: string;
-          coins_awarded: number;
-          points: number;
-          rank: number;
-          tier: string;
-          user_id: string;
-          week_start: string;
-        };
-        Insert: {
-          awarded_at?: string;
-          coins_awarded: number;
-          points: number;
-          rank: number;
-          tier: string;
-          user_id: string;
-          week_start: string;
-        };
-        Update: {
-          awarded_at?: string;
-          coins_awarded?: number;
-          points?: number;
-          rank?: number;
-          tier?: string;
-          user_id?: string;
-          week_start?: string;
-        };
-        Relationships: [];
-      };
-      duel_participants: {
-        Row: {
-          answers_submitted_at: string[];
-          duel_id: string;
-          finished_at: string | null;
-          rewarded_at: string | null;
-          score: number;
-          user_id: string;
-        };
-        Insert: {
-          answers_submitted_at?: string[];
-          duel_id: string;
-          finished_at?: string | null;
-          rewarded_at?: string | null;
-          score?: number;
-          user_id: string;
-        };
-        Update: {
-          answers_submitted_at?: string[];
-          duel_id?: string;
-          finished_at?: string | null;
-          rewarded_at?: string | null;
-          score?: number;
-          user_id?: string;
+          id?: string | null;
+          subscription_activated_at?: string | null;
+          subscription_expires_at?: string | null;
+          subscription_type?: string | null;
         };
         Relationships: [];
       };
@@ -129,9 +62,11 @@ export type Database = {
           exercise_id: string;
           id: string;
           score_pct: number;
+          session_id: string | null;
           subject_id: string;
           total_count: number;
           user_id: string;
+          variant: string;
           xp_earned: number;
         };
         Insert: {
@@ -141,9 +76,11 @@ export type Database = {
           exercise_id: string;
           id?: string;
           score_pct: number;
+          session_id?: string | null;
           subject_id: string;
           total_count: number;
           user_id: string;
+          variant?: string;
           xp_earned: number;
         };
         Update: {
@@ -153,9 +90,11 @@ export type Database = {
           exercise_id?: string;
           id?: string;
           score_pct?: number;
+          session_id?: string | null;
           subject_id?: string;
           total_count?: number;
           user_id?: string;
+          variant?: string;
           xp_earned?: number;
         };
         Relationships: [
@@ -164,6 +103,13 @@ export type Database = {
             columns: ["exercise_id"];
             isOneToOne: false;
             referencedRelation: "exercises";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "attempts_session_id_fkey";
+            columns: ["session_id"];
+            isOneToOne: false;
+            referencedRelation: "exercise_sessions";
             referencedColumns: ["id"];
           },
           {
@@ -287,6 +233,7 @@ export type Database = {
           subject_id: string;
           summary: string | null;
           title: string;
+          videos: Json;
         };
         Insert: {
           description?: string | null;
@@ -297,6 +244,7 @@ export type Database = {
           subject_id: string;
           summary?: string | null;
           title: string;
+          videos?: Json;
         };
         Update: {
           description?: string | null;
@@ -307,6 +255,7 @@ export type Database = {
           subject_id?: string;
           summary?: string | null;
           title?: string;
+          videos?: Json;
         };
         Relationships: [
           {
@@ -318,11 +267,93 @@ export type Database = {
           },
         ];
       };
+      competencies: {
+        Row: {
+          family: string;
+          id: string;
+          label_ar: string;
+          label_en: string;
+          label_fr: string;
+          slug: string;
+        };
+        Insert: {
+          family: string;
+          id: string;
+          label_ar: string;
+          label_en: string;
+          label_fr: string;
+          slug: string;
+        };
+        Update: {
+          family?: string;
+          id?: string;
+          label_ar?: string;
+          label_en?: string;
+          label_fr?: string;
+          slug?: string;
+        };
+        Relationships: [];
+      };
+      competency_prereqs: {
+        Row: {
+          competency_id: string;
+          prereq_id: string;
+        };
+        Insert: {
+          competency_id: string;
+          prereq_id: string;
+        };
+        Update: {
+          competency_id?: string;
+          prereq_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "competency_prereqs_competency_id_fkey";
+            columns: ["competency_id"];
+            isOneToOne: false;
+            referencedRelation: "competencies";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "competency_prereqs_prereq_id_fkey";
+            columns: ["prereq_id"];
+            isOneToOne: false;
+            referencedRelation: "competencies";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      content_releases: {
+        Row: {
+          actor: string;
+          applied_at: string;
+          git_sha: string;
+          id: string;
+          subjects: string[];
+        };
+        Insert: {
+          actor: string;
+          applied_at?: string;
+          git_sha: string;
+          id?: string;
+          subjects?: string[];
+        };
+        Update: {
+          actor?: string;
+          applied_at?: string;
+          git_sha?: string;
+          id?: string;
+          subjects?: string[];
+        };
+        Relationships: [];
+      };
       content_reports: {
         Row: {
           created_at: string;
           exercise_id: string | null;
           id: string;
+          kind: string;
           message: string;
           question_id: string | null;
           resolved_at: string | null;
@@ -334,6 +365,7 @@ export type Database = {
           created_at?: string;
           exercise_id?: string | null;
           id?: string;
+          kind?: string;
           message: string;
           question_id?: string | null;
           resolved_at?: string | null;
@@ -345,6 +377,7 @@ export type Database = {
           created_at?: string;
           exercise_id?: string | null;
           id?: string;
+          kind?: string;
           message?: string;
           question_id?: string | null;
           resolved_at?: string | null;
@@ -454,6 +487,145 @@ export type Database = {
             columns: ["subject_id"];
             isOneToOne: false;
             referencedRelation: "subjects";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      duel_league_awards: {
+        Row: {
+          awarded_at: string;
+          coins_awarded: number;
+          points: number;
+          rank: number;
+          tier: string;
+          user_id: string;
+          week_start: string;
+        };
+        Insert: {
+          awarded_at?: string;
+          coins_awarded: number;
+          points: number;
+          rank: number;
+          tier: string;
+          user_id: string;
+          week_start: string;
+        };
+        Update: {
+          awarded_at?: string;
+          coins_awarded?: number;
+          points?: number;
+          rank?: number;
+          tier?: string;
+          user_id?: string;
+          week_start?: string;
+        };
+        Relationships: [];
+      };
+      duel_participants: {
+        Row: {
+          answers_submitted_at: string[];
+          duel_id: string;
+          finished_at: string | null;
+          rewarded_at: string | null;
+          score: number;
+          user_id: string;
+        };
+        Insert: {
+          answers_submitted_at?: string[];
+          duel_id: string;
+          finished_at?: string | null;
+          rewarded_at?: string | null;
+          score?: number;
+          user_id: string;
+        };
+        Update: {
+          answers_submitted_at?: string[];
+          duel_id?: string;
+          finished_at?: string | null;
+          rewarded_at?: string | null;
+          score?: number;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "duel_participants_duel_id_fkey";
+            columns: ["duel_id"];
+            isOneToOne: false;
+            referencedRelation: "duels";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      duel_queue: {
+        Row: {
+          enqueued_at: string;
+          grade_id: string | null;
+          parcours_id: string;
+          user_id: string;
+        };
+        Insert: {
+          enqueued_at?: string;
+          grade_id?: string | null;
+          parcours_id: string;
+          user_id: string;
+        };
+        Update: {
+          enqueued_at?: string;
+          grade_id?: string | null;
+          parcours_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "duel_queue_grade_id_fkey";
+            columns: ["grade_id"];
+            isOneToOne: false;
+            referencedRelation: "grades";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "duel_queue_parcours_id_fkey";
+            columns: ["parcours_id"];
+            isOneToOne: false;
+            referencedRelation: "parcours";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      duels: {
+        Row: {
+          created_at: string;
+          exercise_source: string;
+          expires_at: string;
+          id: string;
+          parcours_id: string;
+          question_ids: string[];
+          status: string;
+        };
+        Insert: {
+          created_at?: string;
+          exercise_source?: string;
+          expires_at: string;
+          id?: string;
+          parcours_id: string;
+          question_ids: string[];
+          status?: string;
+        };
+        Update: {
+          created_at?: string;
+          exercise_source?: string;
+          expires_at?: string;
+          id?: string;
+          parcours_id?: string;
+          question_ids?: string[];
+          status?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "duels_parcours_id_fkey";
+            columns: ["parcours_id"];
+            isOneToOne: false;
+            referencedRelation: "parcours";
             referencedColumns: ["id"];
           },
         ];
@@ -600,6 +772,7 @@ export type Database = {
           id: string;
           started_at: string;
           user_id: string;
+          variant: string;
         };
         Insert: {
           completed_at?: string | null;
@@ -608,6 +781,7 @@ export type Database = {
           id?: string;
           started_at?: string;
           user_id: string;
+          variant?: string;
         };
         Update: {
           completed_at?: string | null;
@@ -616,6 +790,7 @@ export type Database = {
           id?: string;
           started_at?: string;
           user_id?: string;
+          variant?: string;
         };
         Relationships: [
           {
@@ -630,6 +805,7 @@ export type Database = {
       exercises: {
         Row: {
           chapter_id: string;
+          correction_video: Json | null;
           created_by: string | null;
           difficulty: number;
           display_order: number;
@@ -644,6 +820,7 @@ export type Database = {
         };
         Insert: {
           chapter_id: string;
+          correction_video?: Json | null;
           created_by?: string | null;
           difficulty?: number;
           display_order?: number;
@@ -658,6 +835,7 @@ export type Database = {
         };
         Update: {
           chapter_id?: string;
+          correction_video?: Json | null;
           created_by?: string | null;
           difficulty?: number;
           display_order?: number;
@@ -762,6 +940,205 @@ export type Database = {
             columns: ["shop_item_id"];
             isOneToOne: false;
             referencedRelation: "shop_items";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      learning_pulses: {
+        Row: {
+          active_seconds: number;
+          chapter_id: string | null;
+          exercise_id: string | null;
+          id: number;
+          occurred_at: string;
+          progress_pct: number | null;
+          subject_id: string | null;
+          surface: string;
+          user_id: string;
+        };
+        Insert: {
+          active_seconds: number;
+          chapter_id?: string | null;
+          exercise_id?: string | null;
+          id?: never;
+          occurred_at?: string;
+          progress_pct?: number | null;
+          subject_id?: string | null;
+          surface: string;
+          user_id: string;
+        };
+        Update: {
+          active_seconds?: number;
+          chapter_id?: string | null;
+          exercise_id?: string | null;
+          id?: never;
+          occurred_at?: string;
+          progress_pct?: number | null;
+          subject_id?: string | null;
+          surface?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      misconceptions: {
+        Row: {
+          competency: string | null;
+          label_ar: string;
+          label_en: string;
+          label_fr: string;
+          subject: string;
+          tag: string;
+        };
+        Insert: {
+          competency?: string | null;
+          label_ar: string;
+          label_en: string;
+          label_fr: string;
+          subject: string;
+          tag: string;
+        };
+        Update: {
+          competency?: string | null;
+          label_ar?: string;
+          label_en?: string;
+          label_fr?: string;
+          subject?: string;
+          tag?: string;
+        };
+        Relationships: [];
+      };
+      mock_exam_papers: {
+        Row: {
+          display_order: number;
+          exam_id: string;
+          exercise_id: string;
+          label_ar: string | null;
+          label_en: string | null;
+          label_fr: string;
+          points: number;
+        };
+        Insert: {
+          display_order: number;
+          exam_id: string;
+          exercise_id: string;
+          label_ar?: string | null;
+          label_en?: string | null;
+          label_fr: string;
+          points: number;
+        };
+        Update: {
+          display_order?: number;
+          exam_id?: string;
+          exercise_id?: string;
+          label_ar?: string | null;
+          label_en?: string | null;
+          label_fr?: string;
+          points?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "mock_exam_papers_exam_id_fkey";
+            columns: ["exam_id"];
+            isOneToOne: false;
+            referencedRelation: "mock_exams";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "mock_exam_papers_exercise_id_fkey";
+            columns: ["exercise_id"];
+            isOneToOne: false;
+            referencedRelation: "exercises";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      mock_exam_sessions: {
+        Row: {
+          answers: Json;
+          deadline: string;
+          exam_id: string;
+          finished_at: string | null;
+          id: string;
+          kind: string;
+          max_points: number | null;
+          score_points: number | null;
+          started_at: string;
+          user_id: string;
+        };
+        Insert: {
+          answers?: Json;
+          deadline: string;
+          exam_id: string;
+          finished_at?: string | null;
+          id?: string;
+          kind?: string;
+          max_points?: number | null;
+          score_points?: number | null;
+          started_at?: string;
+          user_id: string;
+        };
+        Update: {
+          answers?: Json;
+          deadline?: string;
+          exam_id?: string;
+          finished_at?: string | null;
+          id?: string;
+          kind?: string;
+          max_points?: number | null;
+          score_points?: number | null;
+          started_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "mock_exam_sessions_exam_id_fkey";
+            columns: ["exam_id"];
+            isOneToOne: false;
+            referencedRelation: "mock_exams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      mock_exams: {
+        Row: {
+          created_at: string;
+          display_order: number;
+          duration_minutes: number;
+          id: string;
+          parcours_id: string;
+          status: string;
+          title_ar: string | null;
+          title_en: string | null;
+          title_fr: string;
+        };
+        Insert: {
+          created_at?: string;
+          display_order?: number;
+          duration_minutes: number;
+          id?: string;
+          parcours_id: string;
+          status?: string;
+          title_ar?: string | null;
+          title_en?: string | null;
+          title_fr: string;
+        };
+        Update: {
+          created_at?: string;
+          display_order?: number;
+          duration_minutes?: number;
+          id?: string;
+          parcours_id?: string;
+          status?: string;
+          title_ar?: string | null;
+          title_en?: string | null;
+          title_fr?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "mock_exams_parcours_id_fkey";
+            columns: ["parcours_id"];
+            isOneToOne: false;
+            referencedRelation: "parcours";
             referencedColumns: ["id"];
           },
         ];
@@ -926,6 +1303,36 @@ export type Database = {
         };
         Relationships: [];
       };
+      parent_weekly_goals: {
+        Row: {
+          created_at: string;
+          id: string;
+          parent_user_id: string;
+          student_user_id: string;
+          target_exercises: number;
+          updated_at: string;
+          week_start: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          parent_user_id: string;
+          student_user_id: string;
+          target_exercises: number;
+          updated_at?: string;
+          week_start: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          parent_user_id?: string;
+          student_user_id?: string;
+          target_exercises?: number;
+          updated_at?: string;
+          week_start?: string;
+        };
+        Relationships: [];
+      };
       profiles: {
         Row: {
           avatar_slug: string | null;
@@ -934,6 +1341,7 @@ export type Database = {
           created_at: string;
           current_grade_id: string | null;
           current_parcours_id: string | null;
+          current_parcours_set_at: string | null;
           current_streak: number;
           display_name: string;
           hero_class: string;
@@ -954,6 +1362,7 @@ export type Database = {
           created_at?: string;
           current_grade_id?: string | null;
           current_parcours_id?: string | null;
+          current_parcours_set_at?: string | null;
           current_streak?: number;
           display_name?: string;
           hero_class?: string;
@@ -974,6 +1383,7 @@ export type Database = {
           created_at?: string;
           current_grade_id?: string | null;
           current_parcours_id?: string | null;
+          current_parcours_set_at?: string | null;
           current_streak?: number;
           display_name?: string;
           hero_class?: string;
@@ -1003,68 +1413,6 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
-      };
-      questions: {
-        Row: {
-          answer_key: Json | null;
-          correct_option: string | null;
-          display_order: number;
-          exercise_id: string;
-          explanation: string | null;
-          id: string;
-          options: Json;
-          prompt: string;
-          question_type: string;
-        };
-        Insert: {
-          answer_key?: Json | null;
-          correct_option?: string | null;
-          display_order?: number;
-          exercise_id: string;
-          explanation?: string | null;
-          id?: string;
-          options: Json;
-          prompt: string;
-          question_type?: string;
-        };
-        Update: {
-          answer_key?: Json | null;
-          correct_option?: string | null;
-          display_order?: number;
-          exercise_id?: string;
-          explanation?: string | null;
-          id?: string;
-          options?: Json;
-          prompt?: string;
-          question_type?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "questions_exercise_id_fkey";
-            columns: ["exercise_id"];
-            isOneToOne: false;
-            referencedRelation: "exercises";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      rate_limit_events: {
-        Row: {
-          created_at: string;
-          id: number;
-          scope_key: string;
-        };
-        Insert: {
-          created_at?: string;
-          id?: number;
-          scope_key: string;
-        };
-        Update: {
-          created_at?: string;
-          id?: number;
-          scope_key?: string;
-        };
-        Relationships: [];
       };
       push_subscriptions: {
         Row: {
@@ -1099,6 +1447,154 @@ export type Database = {
           p256dh?: string;
           user_agent?: string | null;
           user_id?: string;
+        };
+        Relationships: [];
+      };
+      question_attempts: {
+        Row: {
+          chapter_id: string;
+          choice: string;
+          created_at: string;
+          id: number;
+          is_correct: boolean;
+          misconception_tag: string | null;
+          question_id: string;
+          session_id: string;
+          source: string;
+          user_id: string;
+        };
+        Insert: {
+          chapter_id: string;
+          choice: string;
+          created_at?: string;
+          id?: never;
+          is_correct: boolean;
+          misconception_tag?: string | null;
+          question_id: string;
+          session_id: string;
+          source: string;
+          user_id: string;
+        };
+        Update: {
+          chapter_id?: string;
+          choice?: string;
+          created_at?: string;
+          id?: never;
+          is_correct?: boolean;
+          misconception_tag?: string | null;
+          question_id?: string;
+          session_id?: string;
+          source?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "question_attempts_question_id_fkey";
+            columns: ["question_id"];
+            isOneToOne: false;
+            referencedRelation: "questions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      question_competencies: {
+        Row: {
+          competency_id: string;
+          is_primary: boolean;
+          question_id: string;
+        };
+        Insert: {
+          competency_id: string;
+          is_primary?: boolean;
+          question_id: string;
+        };
+        Update: {
+          competency_id?: string;
+          is_primary?: boolean;
+          question_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "question_competencies_competency_id_fkey";
+            columns: ["competency_id"];
+            isOneToOne: false;
+            referencedRelation: "competencies";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "question_competencies_question_id_fkey";
+            columns: ["question_id"];
+            isOneToOne: false;
+            referencedRelation: "questions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      questions: {
+        Row: {
+          accepted_answers: Json;
+          answer_key: Json | null;
+          correct_option: string | null;
+          display_order: number;
+          distractor_tags: Json | null;
+          exercise_id: string;
+          explanation: string | null;
+          id: string;
+          options: Json;
+          prompt: string;
+          question_type: string;
+        };
+        Insert: {
+          accepted_answers?: Json;
+          answer_key?: Json | null;
+          correct_option?: string | null;
+          display_order?: number;
+          distractor_tags?: Json | null;
+          exercise_id: string;
+          explanation?: string | null;
+          id?: string;
+          options: Json;
+          prompt: string;
+          question_type?: string;
+        };
+        Update: {
+          accepted_answers?: Json;
+          answer_key?: Json | null;
+          correct_option?: string | null;
+          display_order?: number;
+          distractor_tags?: Json | null;
+          exercise_id?: string;
+          explanation?: string | null;
+          id?: string;
+          options?: Json;
+          prompt?: string;
+          question_type?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "questions_exercise_id_fkey";
+            columns: ["exercise_id"];
+            isOneToOne: false;
+            referencedRelation: "exercises";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      rate_limit_events: {
+        Row: {
+          created_at: string;
+          id: number;
+          scope_key: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: number;
+          scope_key: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: number;
+          scope_key?: string;
         };
         Relationships: [];
       };
@@ -1251,6 +1747,7 @@ export type Database = {
           icon: string;
           id: string;
           is_premium: boolean;
+          manuel_refs: Json | null;
           name_fr: string;
           theme_id: string;
         };
@@ -1264,6 +1761,7 @@ export type Database = {
           icon: string;
           id: string;
           is_premium?: boolean;
+          manuel_refs?: Json | null;
           name_fr: string;
           theme_id: string;
         };
@@ -1277,6 +1775,7 @@ export type Database = {
           icon?: string;
           id?: string;
           is_premium?: boolean;
+          manuel_refs?: Json | null;
           name_fr?: string;
           theme_id?: string;
         };
@@ -1390,6 +1889,62 @@ export type Database = {
           },
         ];
       };
+      user_competency_mastery: {
+        Row: {
+          attempts: number;
+          competency_id: string;
+          last_attempt_at: string;
+          mastery: number;
+          user_id: string;
+        };
+        Insert: {
+          attempts?: number;
+          competency_id: string;
+          last_attempt_at: string;
+          mastery?: number;
+          user_id: string;
+        };
+        Update: {
+          attempts?: number;
+          competency_id?: string;
+          last_attempt_at?: string;
+          mastery?: number;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_competency_mastery_competency_id_fkey";
+            columns: ["competency_id"];
+            isOneToOne: false;
+            referencedRelation: "competencies";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      user_misconceptions: {
+        Row: {
+          last_seen_at: string;
+          occurrences: number;
+          sessions_seen: number;
+          tag: string;
+          user_id: string;
+        };
+        Insert: {
+          last_seen_at: string;
+          occurrences?: number;
+          sessions_seen?: number;
+          tag: string;
+          user_id: string;
+        };
+        Update: {
+          last_seen_at?: string;
+          occurrences?: number;
+          sessions_seen?: number;
+          tag?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       weekly_quests: {
         Row: {
           coin_reward: number;
@@ -1455,6 +2010,60 @@ export type Database = {
         };
         Relationships: [];
       };
+      econ_coin_flows_30d: {
+        Row: {
+          sink_ratio: number | null;
+          sinks_shop: number | null;
+          sources_earned: number | null;
+        };
+        Relationships: [];
+      };
+      econ_consumables: {
+        Row: {
+          acquired: number | null;
+          code: string | null;
+          consumed: number | null;
+          holders: number | null;
+          item_type: string | null;
+          name: string | null;
+          price_coins: number | null;
+          still_armed: number | null;
+        };
+        Relationships: [];
+      };
+      econ_level_velocity: {
+        Row: {
+          days_to_reach: number | null;
+          level_reached: number | null;
+          user_id: string | null;
+        };
+        Relationships: [];
+      };
+      econ_premium_funnel: {
+        Row: {
+          active_30d: number | null;
+          active_entitled: number | null;
+          entitled_total: number | null;
+          premium_parcours: number | null;
+        };
+        Relationships: [];
+      };
+      econ_xp_daily: {
+        Row: {
+          attempts: number | null;
+          day: string | null;
+          user_id: string | null;
+          xp_earned: number | null;
+        };
+        Relationships: [];
+      };
+      global_leaderboard_ranked: {
+        Row: {
+          rank: number | null;
+          user_id: string | null;
+        };
+        Relationships: [];
+      };
       subject_leaderboard_totals: {
         Row: {
           subject_id: string | null;
@@ -1483,17 +2092,9 @@ export type Database = {
       };
     };
     Functions: {
-      delete_push_subscription: { Args: { p_endpoint: string }; Returns: undefined };
-      save_push_subscription: {
-        Args: {
-          p_auth: string;
-          p_endpoint: string;
-          p_p256dh: string;
-          p_user_agent?: string;
-        };
-        Returns: undefined;
-      };
+      _student_report_json: { Args: { p_student: string }; Returns: Json };
       activate_inventory_item: { Args: { p_item_code: string }; Returns: Json };
+      admin_economy_overview: { Args: never; Returns: Json };
       admin_grant_parcours: {
         Args: {
           p_expires_at?: string;
@@ -1572,17 +2173,14 @@ export type Database = {
         Args: { p_parcours: string; p_user: string };
         Returns: undefined;
       };
-      parcours_interest_counts: {
-        Args: never;
-        Returns: {
-          interest_count: number;
-          name_fr: string;
-          parcours_id: string;
-        }[];
+      answer_key_display: {
+        Args: { q: Database["public"]["Tables"]["questions"]["Row"] };
+        Returns: string;
       };
-      toggle_parcours_interest: {
-        Args: { p_parcours: string };
-        Returns: boolean;
+      app_current_week_start: { Args: never; Returns: string };
+      assert_can_read_student_activity: {
+        Args: { p_student: string };
+        Returns: undefined;
       };
       award_badge_if_new: {
         Args: { p_badge_code: string; p_reason: string; p_user: string };
@@ -1597,6 +2195,7 @@ export type Database = {
           created_at: string;
           current_grade_id: string | null;
           current_parcours_id: string | null;
+          current_parcours_set_at: string | null;
           current_streak: number;
           display_name: string;
           hero_class: string;
@@ -1617,6 +2216,11 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      award_duel_league_week: { Args: { p_week?: string }; Returns: number };
+      award_duel_rewards: {
+        Args: { p_coins: number; p_user: string; p_xp: number };
+        Returns: undefined;
+      };
       award_xp: {
         Args: { p_user: string; p_xp: number };
         Returns: {
@@ -1626,6 +2230,7 @@ export type Database = {
           created_at: string;
           current_grade_id: string | null;
           current_parcours_id: string | null;
+          current_parcours_set_at: string | null;
           current_streak: number;
           display_name: string;
           hero_class: string;
@@ -1649,8 +2254,8 @@ export type Database = {
       check_answers: {
         Args: { p_answers: Json; p_exercise_id: string };
         Returns: {
-          correct_option: string | null;
-          explanation: string | null;
+          correct_option: string;
+          explanation: string;
           is_correct: boolean;
           question_id: string;
         }[];
@@ -1663,22 +2268,56 @@ export type Database = {
         Args: { p_retention_hours?: number };
         Returns: number;
       };
+      competency_mastery_alpha: {
+        Args: { p_difficulty: number };
+        Returns: number;
+      };
+      competency_mastery_with_decay: {
+        Args: { p_last_attempt_at: string; p_mastery: number };
+        Returns: number;
+      };
       consume_hint: { Args: { p_question_id: string }; Returns: Json };
+      delete_push_subscription: {
+        Args: { p_endpoint: string };
+        Returns: undefined;
+      };
+      duel_league_standings: {
+        Args: { p_week: string };
+        Returns: {
+          played: number;
+          points: number;
+          rank: number;
+          total: number;
+          user_id: string;
+          wins: number;
+        }[];
+      };
+      duel_league_tier: {
+        Args: { p_rank: number; p_total: number };
+        Returns: string;
+      };
+      duel_league_tier_coins: { Args: { p_tier: string }; Returns: number };
       ensure_daily_weekly_goals: {
         Args: { p_user: string };
         Returns: undefined;
       };
       equip_inventory_skin: { Args: { p_item_code: string }; Returns: Json };
+      expire_duels: { Args: never; Returns: number };
+      finalize_duel: { Args: { p_duel: string }; Returns: undefined };
       finalize_dungeon_run: {
         Args: { p_duration_seconds: number; p_run_id: string };
         Returns: Json;
       };
+      finish_mock_exam: { Args: { p_session_id: string }; Returns: Json };
+      forfeit_duel: { Args: { p_duel: string }; Returns: undefined };
       get_attempt_review: {
         Args: { p_answers?: Json; p_session_id: string };
         Returns: {
-          correct_option: string | null;
-          explanation: string | null;
-          is_correct: boolean | null;
+          chapter_id: string;
+          correct_option: string;
+          explanation: string;
+          is_correct: boolean;
+          misconception_tag: string;
           prompt: string;
           question_id: string;
         }[];
@@ -1690,6 +2329,46 @@ export type Database = {
           exercise_id: string;
         }[];
       };
+      get_competency_blockers: {
+        Args: { p_competency: string };
+        Returns: {
+          competency_id: string;
+          depth: number;
+          label_ar: string;
+          label_en: string;
+          label_fr: string;
+          mastery: number;
+          slug: string;
+        }[];
+      };
+      get_daily_plan: {
+        Args: { p_limit?: number };
+        Returns: {
+          chapter_id: string;
+          chapter_title: string;
+          days_overdue: number;
+          exercise_id: string;
+          exercise_title: string;
+          is_fallback: boolean;
+          subject_id: string;
+          weak_tags: number;
+        }[];
+      };
+      get_duel_league: {
+        Args: { p_limit?: number };
+        Returns: {
+          avatar_tier: number;
+          display_name: string;
+          hero_class: string;
+          is_me: boolean;
+          played: number;
+          points: number;
+          rank: number;
+          tier: string;
+          wins: number;
+        }[];
+      };
+      get_duel_state: { Args: { p_duel: string }; Returns: Json };
       get_dungeon_access: {
         Args: never;
         Returns: {
@@ -1709,6 +2388,17 @@ export type Database = {
         Args: { p_batch_size?: number; p_run_id: string };
         Returns: Json;
       };
+      get_exercises_for_competency: {
+        Args: { p_competency: string };
+        Returns: {
+          chapter_id: string;
+          difficulty: number;
+          exercise_id: string;
+          exercise_title: string;
+          subject_id: string;
+        }[];
+      };
+      get_family_weekly_goal: { Args: { p_student: string }; Returns: Json };
       get_global_leaderboard: {
         Args: { p_limit?: number };
         Returns: {
@@ -1722,12 +2412,43 @@ export type Database = {
           xp: number;
         }[];
       };
-      // Hand-added offline for 20260714130000_recall_mode_rpcs (étude 17 lot 2/3 —
-      // regenerate via `supabase gen types` on the next sync).
+      get_grade_leaderboard: {
+        Args: { p_limit?: number };
+        Returns: {
+          avatar_tier: number;
+          current_streak: number;
+          display_name: string;
+          hero_class: string;
+          is_me: boolean;
+          level: number;
+          rank: number;
+          xp: number;
+        }[];
+      };
+      get_mock_exam_percentile: {
+        Args: { p_session_id: string };
+        Returns: Json;
+      };
+      get_mock_exam_review: { Args: { p_session_id: string }; Returns: Json };
+      get_my_competency_map: {
+        Args: { p_subject_family?: string };
+        Returns: {
+          attempts: number;
+          competency_id: string;
+          domain: string;
+          family: string;
+          label_ar: string;
+          label_en: string;
+          label_fr: string;
+          mastery: number;
+          recent_result: number;
+          slug: string;
+        }[];
+      };
       get_recall_availability: {
         Args: { p_subject_id: string };
         Returns: {
-          best_recall_pct: number | null;
+          best_recall_pct: number;
           eligible_count: number;
           exercise_id: string;
           unlocked: boolean;
@@ -1741,15 +2462,16 @@ export type Database = {
           prompt: string;
         }[];
       };
-      // Hand-added offline for 20260701100000_parent_weekly_goals (regenerate via
-      // `supabase gen types` on the next sync).
-      get_family_weekly_goal: { Args: { p_student: string }; Returns: Json };
-      get_student_report: { Args: { p_student: string }; Returns: Json };
-      get_student_report_by_code: { Args: { p_code: string }; Returns: Json };
-      set_parent_weekly_goal: {
-        Args: { p_student: string; p_target: number };
+      get_student_attempt_detail: {
+        Args: { p_attempt: string; p_student: string };
         Returns: Json;
       };
+      get_student_daily_report: {
+        Args: { p_from: string; p_student: string; p_to: string };
+        Returns: Json;
+      };
+      get_student_report: { Args: { p_student: string }; Returns: Json };
+      get_student_report_by_code: { Args: { p_code: string }; Returns: Json };
       get_subject_leaderboard: {
         Args: { p_limit?: number; p_subject: string };
         Returns: {
@@ -1761,6 +2483,14 @@ export type Database = {
           level: number;
           rank: number;
           subject_xp: number;
+        }[];
+      };
+      get_user_parcours_progress: {
+        Args: { p_subject_ids?: string[] };
+        Returns: {
+          chapters_completed: number;
+          chapters_total: number;
+          subject_id: string;
         }[];
       };
       get_user_subject_stats: {
@@ -1780,16 +2510,55 @@ export type Database = {
         Args: { p_subject: string; p_user: string };
         Returns: boolean;
       };
+      is_accepted_free_answer: {
+        Args: {
+          p_choice: string;
+          q: Database["public"]["Tables"]["questions"]["Row"];
+        };
+        Returns: boolean;
+      };
       is_admin: { Args: never; Returns: boolean };
+      is_duel_participant: {
+        Args: { p_duel: string; p_user: string };
+        Returns: boolean;
+      };
       is_parent_of_student: {
         Args: { p_parent: string; p_student: string };
+        Returns: boolean;
+      };
+      is_question_recall_eligible: {
+        Args: { q: Database["public"]["Tables"]["questions"]["Row"] };
         Returns: boolean;
       };
       link_student_by_code: {
         Args: { p_code: string; p_relation?: string };
         Returns: Json;
       };
+      list_mock_exams: { Args: { p_parcours_id?: string }; Returns: Json };
+      match_duel: { Args: never; Returns: string };
+      normalize_recall_text: { Args: { p: string }; Returns: string };
+      parcours_interest_counts: {
+        Args: never;
+        Returns: {
+          interest_count: number;
+          name_fr: string;
+          parcours_id: string;
+        }[];
+      };
       purchase_shop_item: { Args: { p_item_code: string }; Returns: Json };
+      purge_learning_pulses: { Args: never; Returns: undefined };
+      purge_question_attempts: { Args: never; Returns: number };
+      record_learning_pulse: {
+        Args: {
+          p_active_seconds: number;
+          p_chapter?: string;
+          p_exercise?: string;
+          p_progress_pct?: number;
+          p_subject?: string;
+          p_surface: string;
+        };
+        Returns: number;
+      };
       resolve_exercise_access: {
         Args: { p_exercise: string };
         Returns: {
@@ -1802,9 +2571,37 @@ export type Database = {
           reason: string;
         }[];
       };
+      resolve_misconception_tag: {
+        Args: {
+          p_choice: string;
+          p_variant?: string;
+          q: Database["public"]["Tables"]["questions"]["Row"];
+        };
+        Returns: string;
+      };
       resolve_subject_parcours: {
         Args: { p_grade: string; p_theme: string };
         Returns: string;
+      };
+      save_mock_answers: {
+        Args: { p_answers: Json; p_session_id: string };
+        Returns: Json;
+      };
+      save_push_subscription: {
+        Args: {
+          p_auth: string;
+          p_endpoint: string;
+          p_p256dh: string;
+          p_user_agent?: string;
+        };
+        Returns: undefined;
+      };
+      score_answer: {
+        Args: {
+          p_choice: string;
+          q: Database["public"]["Tables"]["questions"]["Row"];
+        };
+        Returns: boolean;
       };
       score_quiz: {
         Args: { p_answers: Json; p_exercise_id: string };
@@ -1812,6 +2609,13 @@ export type Database = {
           correct: number;
           total: number;
         }[];
+      };
+      score_recall_answer: {
+        Args: {
+          p_choice: string;
+          q: Database["public"]["Tables"]["questions"]["Row"];
+        };
+        Returns: boolean;
       };
       set_current_parcours: {
         Args: { p_parcours: string };
@@ -1822,6 +2626,7 @@ export type Database = {
           created_at: string;
           current_grade_id: string | null;
           current_parcours_id: string | null;
+          current_parcours_set_at: string | null;
           current_streak: number;
           display_name: string;
           hero_class: string;
@@ -1842,6 +2647,10 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      set_parent_weekly_goal: {
+        Args: { p_student: string; p_target: number };
+        Returns: Json;
+      };
       set_profile_role: {
         Args: { p_role: string };
         Returns: {
@@ -1851,6 +2660,7 @@ export type Database = {
           created_at: string;
           current_grade_id: string | null;
           current_parcours_id: string | null;
+          current_parcours_set_at: string | null;
           current_streak: number;
           display_name: string;
           hero_class: string;
@@ -1880,6 +2690,7 @@ export type Database = {
           created_at: string;
           current_grade_id: string | null;
           current_parcours_id: string | null;
+          current_parcours_set_at: string | null;
           current_streak: number;
           display_name: string;
           hero_class: string;
@@ -1900,31 +2711,34 @@ export type Database = {
           isSetofReturn: false;
         };
       };
-      get_duel_league: {
-        Args: { p_limit: number };
-        Returns: {
-          rank: number;
-          display_name: string;
-          hero_class: string;
-          avatar_tier: number;
-          points: number;
-          wins: number;
-          played: number;
-          tier: string;
-          is_me: boolean;
-        }[];
-      };
-      forfeit_duel: { Args: { p_duel: string }; Returns: undefined };
-      get_duel_state: { Args: { p_duel: string }; Returns: Json };
-      match_duel: { Args: never; Returns: string };
-      submit_duel_answer: {
-        Args: { p_choice: string; p_duel: string; p_question: string };
-        Returns: Json;
-      };
       start_dungeon_run: { Args: never; Returns: string };
       start_exercise_session: {
         Args: { p_exercise_id: string; p_variant?: string };
-        Returns: { session_id: string; started_at: string }[];
+        Returns: {
+          session_id: string;
+          started_at: string;
+        }[];
+      };
+      start_mock_exam: {
+        Args: { p_exam_id: string; p_kind?: string };
+        Returns: Json;
+      };
+      student_activity_totals: {
+        Args: {
+          p_from: string;
+          p_pass_pct: number;
+          p_session_gap: string;
+          p_student: string;
+          p_studied_pct: number;
+          p_studied_seconds: number;
+          p_to: string;
+          p_tz: string;
+        };
+        Returns: Json;
+      };
+      submit_duel_answer: {
+        Args: { p_choice: string; p_duel: string; p_question: string };
+        Returns: Json;
       };
       submit_dungeon_answer: {
         Args: { p_choice: string; p_question_id: string; p_run_id: string };
@@ -1933,6 +2747,10 @@ export type Database = {
       submit_exercise_attempt: {
         Args: { p_answers: Json; p_exercise_id: string; p_session_id: string };
         Returns: Json;
+      };
+      toggle_parcours_interest: {
+        Args: { p_parcours: string };
+        Returns: boolean;
       };
     };
     Enums: {
@@ -2056,6 +2874,9 @@ export type CompositeTypes<
     : never;
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {},
   },

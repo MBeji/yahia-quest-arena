@@ -29,6 +29,10 @@ vi.mock("@tanstack/react-router", () => ({
 vi.mock("@tanstack/react-start", () => ({
   useServerFn: (fn: unknown) => fn,
 }));
+// Le donjon mesure son temps d'apprentissage : hors sujet ici, et le charger
+// pour de vrai tirerait `createServerFn` + les middlewares Supabase dans un test
+// de rendu.
+vi.mock("@/hooks/use-learning-pulse", () => ({ useLearningPulse: () => {} }));
 
 // The access server fn is the unit under test — it rejects to simulate a failed
 // get_dungeon_access RPC. The others are unused on the lobby error path.

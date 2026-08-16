@@ -212,6 +212,11 @@ export function ReportContent({ report }: { report: ReportData }) {
           <Calendar className="w-5 h-5 text-gold" />
           {t.parentReport.activityTitle}
         </h3>
+        {/* La colonne DOIT porter `h-full`. Sans hauteur définie, le pourcentage
+            de la barre se résout contre un parent auto — donc contre rien : le
+            graphe rendait 0 px de haut sur toute sa largeur, et le parent voyait
+            « Activité des 30 derniers jours » vide même avec des données.
+            Mesuré dans Chromium : colonne 0 px → 128 px après correctif. */}
         <div className="flex items-end gap-[2px] h-32 overflow-x-auto">
           {dailyActivity.map((day) => {
             const maxExercises = Math.max(...dailyActivity.map((d) => d.exercises), 1);
@@ -219,7 +224,7 @@ export function ReportContent({ report }: { report: ReportData }) {
             return (
               <div
                 key={day.date}
-                className="flex-1 min-w-[6px] group relative"
+                className="flex h-full min-w-[6px] flex-1 items-end"
                 title={`${day.date}: ${day.exercises} exercice(s), ${day.minutes} min, ${day.avgScore}%`}
               >
                 <div

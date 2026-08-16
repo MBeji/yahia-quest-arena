@@ -14,6 +14,10 @@ vi.mock("@tanstack/react-router", () => ({
       React.createElement(Comp, { ...rest, href: to }),
 }));
 vi.mock("@tanstack/react-start", () => ({ useServerFn: (fn: unknown) => fn }));
+// La mesure du temps d'apprentissage n'a rien à voir avec le retour immédiat, et
+// la charger pour de vrai tirerait `createServerFn` + les middlewares Supabase
+// dans un test de rendu — même raison que le stub de `quest.training` ci-dessous.
+vi.mock("@/hooks/use-learning-pulse", () => ({ useLearningPulse: () => {} }));
 vi.mock("../quest.training", () => ({ getTrainingForMisconception: vi.fn() }));
 
 const { mockGetExercise, mockGetSubject } = vi.hoisted(() => ({

@@ -13,6 +13,7 @@ import {
   REPORT_CODE_ERROR_PREFIX,
   parentCodeErrorCode,
 } from "./parent-code-errors";
+import { parseAttemptDetail, parseDailyReport } from "./insights/daily-report";
 
 type ParentStudent = {
   id: string;
@@ -311,6 +312,78 @@ export const getStudentReport = createServerFn({ method: "GET" })
     }
 
     return parseStudentReportPayload(reportData);
+  });
+
+// Une date de calendrier, telle que la RPC l'attend et que le sélecteur de
+// période la produit (`YYYY-MM-DD`).
+const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Expected YYYY-MM-DD");
+
+/**
+ * Le tableau de bord « jour par jour » : tout ce qui est MESURÉ sur une période.
+ *
+ * Les règles de jugement (engagement, efficacité, alertes) ne sont pas ici :
+ * elles vivent dans `./insights`, en TypeScript pur et testé. Le serveur ne rend
+ * que des faits — c'est aussi ce qui permettra d'y brancher une couche
+ * d'insights IA sans retoucher le SQL.
+ *
+ * L'accès (admin, ou parent réellement lié à l'élève) est vérifié dans la RPC
+ * SECURITY DEFINER. Rien de ceci n'est joignable par le chemin public au code
+ * alliance : l'activité détaillée d'un mineur ne passe pas derrière une capacité
+ * au porteur.
+ */
+export const getStudentDailyReport = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ studentId: z.guid(), from: isoDate, to: isoDate }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+
+    const { data: payload, error } = await supabase.rpc("get_student_daily_report", {
+      p_student: data.studentId,
+      p_from: data.from,
+      p_to: data.to,
+    });
+
+    if (error) {
+      failWithClientError(
+        "parentReport.getStudentDailyReport: RPC failed",
+        error,
+        "Impossible de charger l'activité de l'élève.",
+      );
+    }
+
+    return parseDailyReport(payload);
+  });
+
+/**
+ * Le détail d'une tentative : les questions posées et ce que l'enfant a répondu.
+ *
+ * La bonne réponse et l'explication sont volontairement absentes pour un quiz de
+ * compréhension — la RPC les met à `null` et lève `reviewHidden`. Sans cette
+ * règle, il suffirait à un élève d'ouvrir un compte parent et de s'y lier avec
+ * son propre code pour lire la correction d'un quiz qu'il doit repasser.
+ */
+export const getStudentAttemptDetail = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ studentId: z.guid(), attemptId: z.guid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+
+    const { data: payload, error } = await supabase.rpc("get_student_attempt_detail", {
+      p_student: data.studentId,
+      p_attempt: data.attemptId,
+    });
+
+    if (error) {
+      failWithClientError(
+        "parentReport.getStudentAttemptDetail: RPC failed",
+        error,
+        "Impossible de charger le détail de cet exercice.",
+      );
+    }
+
+    return parseAttemptDetail(payload);
   });
 
 // Objectif hebdo : payload de get_family_weekly_goal (null si aucun objectif posé).

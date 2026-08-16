@@ -196,6 +196,7 @@ Run with coverage: `npm run test:coverage`
 | bug_reports                            | User bug reports + admin triage                                                       |
 | question_attempts                      | Append-only per-question telemetry (adaptive engine A0)                               |
 | user_misconceptions                    | Per-(user, misconception-tag) aggregate, trigger-maintained                           |
+| learning_pulses                        | Append-only time-on-task pulses (parent daily dashboard) — `docs/suivi-parental-quotidien.md` |
 | themes                                 | Top-level content tracks (école-tn, culture-générale…)                                |
 | grades                                 | Grade levels (e.g. 9th grade; incl. lycée section nodes)                              |
 
