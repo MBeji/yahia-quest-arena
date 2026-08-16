@@ -32,6 +32,8 @@ const subject = (over: Record<string, unknown> = {}) => ({
   previousExercises: 8,
   avgScore: 58,
   scoreDelta: null,
+  chaptersTotal: 0,
+  chaptersCompleted: 0,
   ...over,
 });
 

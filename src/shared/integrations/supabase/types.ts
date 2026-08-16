@@ -2092,6 +2092,18 @@ export type Database = {
       };
     };
     Functions: {
+      _student_attempt_detail_json: {
+        Args: { p_attempt: string; p_student: string };
+        Returns: Json;
+      };
+      _student_daily_report_json: {
+        Args: { p_from: string; p_student: string; p_to: string };
+        Returns: Json;
+      };
+      _student_id_from_alliance_code: {
+        Args: { p_code: string };
+        Returns: string;
+      };
       _student_report_json: { Args: { p_student: string }; Returns: Json };
       activate_inventory_item: { Args: { p_item_code: string }; Returns: Json };
       admin_economy_overview: { Args: never; Returns: Json };
@@ -2466,8 +2478,16 @@ export type Database = {
         Args: { p_attempt: string; p_student: string };
         Returns: Json;
       };
+      get_student_attempt_detail_by_code: {
+        Args: { p_attempt: string; p_code: string };
+        Returns: Json;
+      };
       get_student_daily_report: {
         Args: { p_from: string; p_student: string; p_to: string };
+        Returns: Json;
+      };
+      get_student_daily_report_by_code: {
+        Args: { p_code: string; p_from: string; p_to: string };
         Returns: Json;
       };
       get_student_report: { Args: { p_student: string }; Returns: Json };
@@ -2735,6 +2755,14 @@ export type Database = {
           p_tz: string;
         };
         Returns: Json;
+      };
+      student_parcours_progress: {
+        Args: { p_subject_ids?: string[]; p_user: string };
+        Returns: {
+          chapters_completed: number;
+          chapters_total: number;
+          subject_id: string;
+        }[];
       };
       submit_duel_answer: {
         Args: { p_choice: string; p_duel: string; p_question: string };

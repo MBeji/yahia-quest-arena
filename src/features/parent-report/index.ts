@@ -4,7 +4,9 @@
 export {
   getLinkedStudents,
   getStudentAttemptDetail,
+  getStudentAttemptDetailByCode,
   getStudentDailyReport,
+  getStudentDailyReportByCode,
   getStudentReport,
   getStudentReportByCode,
   getStudentWeeklyGoal,
@@ -21,6 +23,7 @@ export {
 } from "./remembered-code";
 export { ReportContent } from "./components/report-content";
 export { DailyDashboard } from "./components/daily-dashboard";
+export { reportSourceKey, type ReportSource } from "./report-source";
 export { buildFamilyReportShareText, buildWeeklyAdvice } from "./report-share";
 // Le moteur d'analyse (pur) reste importable à part pour les tests et pour une
 // future couche d'insights : `@/features/parent-report/insights`.

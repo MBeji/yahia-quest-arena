@@ -383,7 +383,7 @@ function DailyDashboardPanel({ studentId }: { studentId: string }) {
 
   return (
     <DailyDashboard
-      studentId={studentId}
+      source={{ kind: "student", studentId }}
       weeklyGoal={goal ? { target: goal.target, done: goal.done } : null}
     />
   );

@@ -98,10 +98,16 @@ const studentReportSchema = z.object({
       z.object({
         subjectId: z.string().catch(""),
         name: z.string().catch(""),
+        // Le NIVEAU : une matière appartient à un niveau scolaire, et sans lui le
+        // bilan listait « Mathématiques » quatre fois sans rien pour les séparer.
+        gradeName: z.string().nullable().catch(null),
         colorToken: z.string().nullable().catch(null),
         attempts: numberish,
         avgScore: numberish,
         totalTimeMinutes: numberish,
+        // Couverture du programme — même règle que la carte `/parcours`.
+        chaptersTotal: numberish,
+        chaptersCompleted: numberish,
       }),
     )
     .catch([]),
@@ -357,6 +363,37 @@ export const getStudentDailyReport = createServerFn({ method: "GET" })
   });
 
 /**
+ * Le même tableau de bord, ouvert au PORTEUR DU CODE alliance — sans compte.
+ *
+ * Décision produit du 2026-08-16 : le parent qui ouvre `/suivi` avec le code voit
+ * exactement ce que voit le parent connecté. C'est un accès au porteur assumé,
+ * comme le bilan depuis étude 15 : quiconque détient le code voit tout. Le
+ * décodage du code et la vérification « c'est bien un élève » vivent dans la RPC.
+ */
+export const getStudentDailyReportByCode = createServerFn({ method: "GET" })
+  .middleware([optionalSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ studentCode: z.string().min(8).max(64), from: isoDate, to: isoDate }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+
+    const { data: payload, error } = await supabase.rpc("get_student_daily_report_by_code", {
+      p_code: data.studentCode,
+      p_from: data.from,
+      p_to: data.to,
+    });
+
+    if (error) {
+      const raw = errorMessage(error);
+      logger.error("parentReport.getStudentDailyReportByCode: RPC failed", { error: raw });
+      throw new Error(REPORT_CODE_ERROR_PREFIX + parentCodeErrorCode(raw));
+    }
+
+    return parseDailyReport(payload);
+  });
+
+/**
  * Le détail d'une tentative : les questions posées et ce que l'enfant a répondu.
  *
  * La bonne réponse et l'explication sont volontairement absentes pour un quiz de
@@ -381,6 +418,29 @@ export const getStudentAttemptDetail = createServerFn({ method: "GET" })
         error,
         "Impossible de charger le détail de cet exercice.",
       );
+    }
+
+    return parseAttemptDetail(payload);
+  });
+
+/** Le même détail, ouvert au porteur du code alliance (cf. ci-dessus). */
+export const getStudentAttemptDetailByCode = createServerFn({ method: "GET" })
+  .middleware([optionalSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ studentCode: z.string().min(8).max(64), attemptId: z.guid() }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+
+    const { data: payload, error } = await supabase.rpc("get_student_attempt_detail_by_code", {
+      p_code: data.studentCode,
+      p_attempt: data.attemptId,
+    });
+
+    if (error) {
+      const raw = errorMessage(error);
+      logger.error("parentReport.getStudentAttemptDetailByCode: RPC failed", { error: raw });
+      throw new Error(REPORT_CODE_ERROR_PREFIX + parentCodeErrorCode(raw));
     }
 
     return parseAttemptDetail(payload);

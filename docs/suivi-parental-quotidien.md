@@ -166,6 +166,54 @@ Une alerte n'est utile que si elle est **rare** : les seuils sont posés haut (c
 ≥ 60 min de travail pour « temps sans progrès », ≥ 4 sessions pour l'abandon), et la liste est
 plafonnée à 6, avertissements d'abord.
 
+## Couverture du programme — une règle, jamais deux
+
+La colonne « Programme » du tableau des matières rend **chapitres terminés / chapitres publiés**.
+Elle ne définit rien : elle réutilise la règle qui fait déjà autorité pour la carte `/parcours`
+que l'élève voit, et pour le hub matière.
+
+- un chapitre est **publié** s'il porte au moins une mission de catalogue (`source = 'admin'`,
+  hors quiz) — sinon il serait « terminé » par vacuité ou bloquerait le taux à jamais ;
+- une mission est **réussie** à partir de 60 % (meilleur score en variante classique — une
+  reprise en Rappel ne termine jamais un chapitre) ;
+- en scolaire, le **quiz de compréhension** doit en plus être passé à 80 % sans rush.
+
+La règle vivait en double : `get_user_parcours_progress` (SQL) et `chapter-completion.ts`
+(client), avec la consigne de les garder d'accord. La migration `20260816200000` l'a **extraite**
+dans `student_parcours_progress(p_user, …)` et rebranché la RPC de l'élève dessus. Parent et
+enfant lisent donc le même chiffre **par construction**, pas par vigilance. Toucher à la règle,
+c'est toucher à cette fonction — et aux deux écrans à la fois.
+
+Une matière sans chapitre publié affiche « — », pas « 0 % » : la fraction n'existe pas.
+
+## Le niveau scolaire, sans lequel rien ne se distingue
+
+Une matière appartient à un niveau (`math-6`, `math-9`, `math-2sec-sciences`…). Le bilan
+affichait `subjects.name_fr` seul : un élève inscrit à plusieurs niveaux voyait **quatre lignes
+« Mathématiques » identiques**, sans rien pour les relier à quoi que ce soit (signalé en
+production le 2026-08-16). `grades.name_fr` accompagne désormais chaque matière, partout.
+
+## Deux surfaces, le même tableau de bord
+
+| Surface          | Qui                          | Ce qu'on y voit                      |
+| ---------------- | ---------------------------- | ------------------------------------ |
+| `/parent-report` | parent connecté **et lié**   | tout                                 |
+| `/suivi`         | **porteur du code alliance** | tout, réponses de l'enfant comprises |
+
+Décision produit du 2026-08-16, prise en connaissance de cause : le rapport public par code
+reçoit l'intégralité du tableau de bord. C'est un accès **au porteur** assumé — le code fait
+122 bits aléatoires, c'est l'élève qui le transmet, et quiconque l'obtient voit tout. Le même
+choix gouvernait déjà le bilan depuis l'étude 15.
+
+⚠️ **Une seule chose reste masquée, et ce n'est pas de la confidentialité** : la correction d'un
+quiz de compréhension. C'est l'anti-mémorisation du verrou de chapitre. Sans elle, un élève
+ouvrirait la correction de son propre quiz avec son propre code et repasserait le verrou de tête.
+Le parent voit quand même ce que son enfant a répondu, et si c'était juste.
+
+Côté code, un seul écran sert les deux : `ReportSource` (`report-source.ts`) choisit la RPC, et
+**aucun droit** — le contrôle d'accès est entièrement serveur (lien famille d'un côté, décodage
+du code et « c'est bien un élève » de l'autre).
+
 ## Livrer en deux temps
 
 Les trois RPC de ce module (`record_learning_pulse`, `get_student_daily_report`,
