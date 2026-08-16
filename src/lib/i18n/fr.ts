@@ -228,7 +228,12 @@ export const fr: TranslationKeys = {
     leaveQuest: "Quitter la quête",
     bossFight: "⚔️ Combat de Boss",
     bossHp: "HP du Boss",
-    bossStrike: "Frappe vite et bien pour infliger des dégâts au Boss !",
+    bossStrike: "Prends le temps qu'il te faut : le chrono décide des dégâts, pas de la fin !",
+    bossRankCritical: "☄️ Coup critique — le Boss est à terre !",
+    bossRankFast: "⚔️ Frappe solide",
+    bossRankSteady: "🛡️ Combat mené jusqu'au bout",
+    bossResultHp: "Boss à {hp} % de HP",
+    bossRankHint: "Le chronomètre décide des dégâts, jamais de la correction.",
     questionOf: "Question {current} / {total}",
     feedbackMsg:
       "Choisis ta réponse — tu peux en changer — puis clique sur Valider. La correction détaillée apparaît à la fin de la quête.",

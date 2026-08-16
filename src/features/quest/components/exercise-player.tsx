@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { computeNextExerciseId, getExercise, getSubject } from "@/features/quest";
 import { PASS_THRESHOLD_PCT, RECALL_MIN_QUESTIONS } from "@/shared/constants/gamification";
 import { shuffleOptions, type BaseOption } from "@/shared/lib/question-utils";
-import { isValidAnswerFormat, TIMEOUT_ANSWER_CHOICE } from "@/shared/lib/answer-formats";
+import { isValidAnswerFormat } from "@/shared/lib/answer-formats";
 import { isolateLtrRuns } from "@/shared/lib/bidi";
 import { RichField } from "@/components/ui/svg-figure";
 import { QuestionInput, type McqOptionRender } from "@/features/quest/components/question-input";
@@ -15,7 +15,13 @@ import { levelForXp } from "@/shared/lib/level";
 import { QuestResultScreen } from "@/features/quest/components/quest-result-screen";
 import { QuizContractHint, QuizLockScreen } from "@/features/quest/components/quiz-lock-screen";
 import { QuestHintButton } from "@/features/quest/components/quest-hint-button";
-import { BossBanner } from "@/features/quest/components/boss-countdown";
+import { BossBanner } from "@/features/quest/components/boss-chrono";
+import {
+  bossDamageFor,
+  bossHpForDamage,
+  bossRankForDamage,
+  type BossSpeedTier,
+} from "@/features/quest/boss-speed";
 import {
   buildQuestLabels,
   KEYPAD_BY_LANG,
@@ -435,17 +441,12 @@ export function ExercisePlayer({
   /** La réponse figée au moment de la correction, rejouée à « Continuer ». */
   const committedChoiceRef = useRef<string | null>(null);
   const sessionStartedForRef = useRef<string | null>(null);
-  const selectedRef = useRef(selected);
-  const answersRef = useRef(answers);
-  const idxRef = useRef(idx);
+  // Miroirs en ref des seuls états lus depuis un callback dont l'identité ne doit
+  // pas changer. Les quatre autres (selected/answers/idx/current) n'existaient
+  // que pour l'auto-réponse au buzzer, disparue avec le compte à rebours.
   const totalRef = useRef(total);
-  const currentRef = useRef(current);
   const sessionIdRef = useRef(sessionId);
-  selectedRef.current = selected;
-  answersRef.current = answers;
-  idxRef.current = idx;
   totalRef.current = total;
-  currentRef.current = current;
   sessionIdRef.current = sessionId;
 
   const durationSeconds = useCallback(
@@ -468,43 +469,49 @@ export function ExercisePlayer({
     [mutation, exerciseId, durationSeconds, data?.exercise?.mode, data?.exercise?.chapter_id],
   );
 
-  const handleBossTimeout = useCallback(() => {
-    if (answeredQuestionRef.current === currentRef.current?.id) return;
-    answeredQuestionRef.current = currentRef.current?.id ?? null;
-    // A half-typed numeric answer at the buzzer must not fail the submission's
-    // server-side format validation — fall back to the (always-valid) sentinel.
-    const timeoutType =
-      (currentRef.current as { question_type?: string | null } | undefined)?.question_type ?? "mcq";
-    const timedSelection = selectedRef.current;
-    const autoAnswer: PlayerAnswer = {
-      questionId: currentRef.current?.id ?? "",
-      choice:
-        timedSelection && isValidAnswerFormat(timeoutType, timedSelection)
-          ? timedSelection
-          : TIMEOUT_ANSWER_CHOICE,
-    };
-    const nextAnswers = [...answersRef.current, autoAnswer];
-    if (idxRef.current + 1 >= totalRef.current) {
-      submitRun(nextAnswers);
-    } else {
-      setAnswers(nextAnswers);
-      setIdx((i) => i + 1);
-      setSelected(null);
-      answeredQuestionRef.current = null;
-    }
-  }, [submitRun]);
+  // Chronomètre du combat de boss. Il ne coupe rien : la seule chose qu'il
+  // décide, ce sont les dégâts de la question qu'on vient de répondre. La mesure
+  // est prise ICI, à la validation — pas dans la pastille qui l'affiche, et pas
+  // après l'écran de correction, qui n'est plus du temps de réflexion.
+  const questionStartedAtRef = useRef<number>(0);
+  const bossTimedQuestionRef = useRef<string | null>(null);
+  const [bossDamage, setBossDamage] = useState(0);
 
-  const bossHp = useMemo(() => {
-    if (!bossMode || total === 0) return 100;
-    return Math.max(0, Math.round(((total - idx) / total) * 100));
-  }, [bossMode, total, idx]);
+  useEffect(() => {
+    if (!bossMode || !sessionId) return;
+    questionStartedAtRef.current = Date.now();
+    bossTimedQuestionRef.current = null;
+  }, [bossMode, sessionId, idx]);
+
+  const commitBossTiming = useCallback(
+    (questionId: string) => {
+      if (!bossMode || bossTimedQuestionRef.current === questionId) return;
+      bossTimedQuestionRef.current = questionId;
+      const elapsed = (Date.now() - questionStartedAtRef.current) / 1000;
+      setBossDamage((d) => d + bossDamageFor(elapsed, totalRef.current));
+    },
+    [bossMode],
+  );
+
+  // La barre de HP EST le score du chronomètre : elle ne suit plus l'avancement
+  // (« question 3 sur 5 », qui ne disait rien), elle suit les dégâts cumulés.
+  const bossHp = useMemo(
+    () => (bossMode ? bossHpForDamage(bossDamage) : 100),
+    [bossMode, bossDamage],
+  );
+  const bossSummary = useMemo<{ hp: number; rank: BossSpeedTier } | null>(
+    () => (bossMode ? { hp: bossHp, rank: bossRankForDamage(bossDamage) } : null),
+    [bossMode, bossHp, bossDamage],
+  );
 
   const resetRun = useCallback(() => {
     answeredQuestionRef.current = null;
     sessionStartedForRef.current = null;
+    bossTimedQuestionRef.current = null;
     resetSessionMutation();
     setResult(null);
     setStartGate(null);
+    setBossDamage(0);
     setIdx(0);
     setAnswers([]);
     setSelected(null);
@@ -570,6 +577,10 @@ export function ExercisePlayer({
   const validate = useCallback(() => {
     if (!selected || !canValidate || !sessionId) return;
     if (feedback || feedbackChecking) return;
+    // Point de passage UNIQUE d'une réponse d'élève (les deux branches ci-dessous
+    // en découlent, correction immédiate comprise) : c'est donc ici, et une seule
+    // fois par question, que le chronomètre est lu.
+    if (current?.id) commitBossTiming(current.id);
     if (!feedbackEnabled || !current?.id) {
       advanceWithChoice(selected);
       return;
@@ -599,6 +610,7 @@ export function ExercisePlayer({
     checkAnswerNow,
     feedbackChecking,
     current?.id,
+    commitBossTiming,
   ]);
 
   useEffect(() => {
@@ -702,6 +714,7 @@ export function ExercisePlayer({
         isQuiz={isQuiz}
         isRtl={isRtlSubject}
         isRecall={isRecall}
+        boss={bossSummary}
         rewards={capabilities.rewards}
         recallUnlockable={recallUnlockable}
         qlang={qlang}
@@ -762,8 +775,7 @@ export function ExercisePlayer({
           title={data.exercise.title}
           hp={bossHp}
           questionIndex={idx}
-          countdownActive={Boolean(sessionId) && !result && !feedback && !feedbackChecking}
-          onTimeout={handleBossTimeout}
+          chronoActive={Boolean(sessionId) && !result && !feedback && !feedbackChecking}
           entrance={scaleIn}
           reduced={Boolean(reduced)}
           labels={{ fight: t.quest.bossFight, hp: t.quest.bossHp }}
