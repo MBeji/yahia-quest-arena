@@ -124,6 +124,8 @@ export const arPublic: TranslationKeys["public"] = {
     choosing: "جارٍ الاختيار…",
     switchNote:
       "نقاط الخبرة والقطع والشارات وسلسلتك تبقى معك؛ أمّا تقدّمك في المواد فيخصّ كل قسم على حدة.",
+    soonHeading: "بقيّة البرنامج",
+    soonNote: "هذه المواد الرسميّة للقسم لم تُفتح بعد.",
   },
   reader: {
     defaultSubject: "درس",

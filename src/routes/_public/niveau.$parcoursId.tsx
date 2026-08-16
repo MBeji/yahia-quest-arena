@@ -83,6 +83,7 @@ function NiveauPage() {
     <ParcoursSubjects
       parcours={data.parcours}
       subjects={data.subjects}
+      soon={data.soon}
       isAuthenticated={user != null}
       onChoose={() => chooseMutation.mutate()}
       isChoosing={chooseMutation.isPending}
