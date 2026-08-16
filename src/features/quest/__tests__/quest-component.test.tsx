@@ -33,7 +33,9 @@ vi.mock("@/features/quest", () => ({
 }));
 
 vi.mock("@/shared/constants/gamification", () => ({
-  BOSS_TIME_PER_QUESTION_S: 10,
+  BOSS_PAR_SECONDS_PER_QUESTION: 10,
+  BOSS_SPEED_WEIGHTS: { critical: 1, fast: 0.75, steady: 0.5 },
+  BOSS_RANK_MIN_DAMAGE: { critical: 90, fast: 65 },
   PASS_THRESHOLD_PCT: 60,
 }));
 
