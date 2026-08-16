@@ -69,6 +69,12 @@ type AtomicSubmitResponse = {
   xpEarned: number;
   coinsEarned: number;
   durationSeconds: number;
+  /**
+   * Prime de rapidité appliquée aux XP (mode boss uniquement) : 1 = aucune,
+   * 1.5 = maximale. Décidée SERVEUR d'après sa propre mesure de durée — le
+   * client ne fait que l'afficher.
+   */
+  speedBonus: number;
   tooFast: boolean;
   improved: boolean;
   profile: ProfileSnapshot | null;
@@ -140,6 +146,9 @@ function parseAtomicSubmitResponse(payload: unknown): AtomicSubmitResponse {
     xpEarned: Number(row.xpEarned ?? 0),
     coinsEarned: Number(row.coinsEarned ?? 0),
     durationSeconds: Number(row.durationSeconds ?? 0),
+    // Une RPC antérieure à 20260816140000 ne renvoie pas le champ : 1, donc
+    // « aucune prime », est exactement ce qu'elle faisait.
+    speedBonus: Number(row.speedBonus ?? 1),
     tooFast: row.tooFast === true,
     improved: row.improved === true,
     profile:
@@ -970,6 +979,7 @@ export const submitAttempt = createServerFn({ method: "POST" })
       xpEarned: atomic.xpEarned,
       coinsEarned: atomic.coinsEarned,
       durationSeconds: atomic.durationSeconds,
+      speedBonus: atomic.speedBonus,
       tooFast: atomic.tooFast,
       improved: atomic.improved,
       profile: atomic.profile,

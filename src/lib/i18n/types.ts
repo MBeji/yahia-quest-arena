@@ -239,6 +239,7 @@ export type TranslationKeys = {
     bossRankFast: string;
     bossRankSteady: string;
     bossResultHp: string;
+    bossSpeedBonus: string;
     bossRankHint: string;
     questionOf: string;
     feedbackMsg: string;
@@ -297,6 +298,44 @@ export type TranslationKeys = {
   levelUp: {
     title: string;
     tapContinue: string;
+  };
+  // Examen blanc (étude 02)
+  exam: {
+    title: string;
+    subtitle: string;
+    none: string;
+    loading: string;
+    notFound: string;
+    back: string;
+    duration: string;
+    papers: string;
+    maxPoints: string;
+    startRanked: string;
+    startPractice: string;
+    resume: string;
+    done: string;
+    noHelp: string;
+    byPaper: string;
+    coefficient: string;
+    questionOf: string;
+    previous: string;
+    next: string;
+    answered: string;
+    saving: string;
+    saveFailed: string;
+    submit: string;
+    resultTitle: string;
+    scoreOn20: string;
+    scorePoints: string;
+    rewards: string;
+    practiceNoRank: string;
+    percentile: string;
+    percentilePending: string;
+    review: string;
+    yourAnswer: string;
+    correctAnswer: string;
+    noAnswer: string;
+    retryPractice: string;
   };
   // Dungeon
   dungeon: {

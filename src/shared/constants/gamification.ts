@@ -90,12 +90,12 @@ export const BACK_TO_SCHOOL_WINDOW = {
 // au milieu d'un raisonnement n'apprend rien. Le chronomètre est désormais
 // OUVERT — il compte à l'endroit, sans plafond, et ne valide jamais rien seul.
 //
-// Ce qu'il pilote, ce sont les DÉGÂTS infligés au boss, donc la barre de HP que
-// l'élève regarde pendant le combat et le rang affiché à la fin. Il ne touche
-// NI la correction (une réponse juste reste juste, quel qu'ait été le temps) NI
-// les XP : la prime de vitesse sur les XP a été retirée le 2026-06-04 par la
-// migration anti-rush `20260604220000_harden_scoring_anti_rush.sql`, et ce lot
-// ne la réintroduit pas.
+// Ce qu'il pilote, ce sont les DÉGÂTS infligés au boss — donc la barre de HP que
+// l'élève regarde pendant le combat et le rang affiché à la fin — et, depuis
+// `20260816140000_boss_speed_xp_bonus.sql`, une PRIME sur les XP du boss.
+//
+// Il ne touche jamais la CORRECTION : une réponse juste reste juste, quel qu'ait
+// été le temps mis à la donner.
 // ---------------------------------------------------------------------------
 
 /**
@@ -124,6 +124,28 @@ export const BOSS_RANK_MIN_DAMAGE = {
   critical: 90,
   fast: 65,
 } as const;
+
+// --- Prime de rapidité sur les XP du boss ---------------------------------
+// ⚠️ MIROIRS DE SQL : ces deux valeurs sont dupliquées en dur dans
+// `submit_exercise_attempt` (20260816140000_boss_speed_xp_bonus.sql), qui est
+// SEUL juge — la durée y est mesurée serveur, `p_duration_seconds` envoyé par
+// le client n'a jamais été lu. Ce qui vit ici ne sert qu'à expliquer la prime à
+// l'élève ; toucher l'une sans l'autre fait mentir l'explication, pas le calcul.
+
+/**
+ * Temps de référence par question POUR LA PRIME D'XP, en secondes. Plus large
+ * que `BOSS_PAR_SECONDS_PER_QUESTION` (qui note les dégâts d'une réponse) parce
+ * que la durée serveur court de bout en bout de la session : elle inclut la
+ * lecture des corrections entre les questions, pas seulement la réflexion.
+ */
+export const BOSS_XP_PAR_SECONDS_PER_QUESTION = 35;
+
+/**
+ * Prime maximale, atteinte sous le temps de référence puis décroissant
+ * linéairement jusqu'à zéro au double. C'est une PRIME : jouer lentement ne
+ * rapporte jamais moins qu'avant ce lot.
+ */
+export const BOSS_XP_MAX_SPEED_BONUS = 0.5;
 
 // ---------------------------------------------------------------------------
 // Dungeon access gate — the Dungeon requires real prior progress, and the
@@ -234,3 +256,33 @@ export const RECALL_MAX_ANSWER_LENGTH = 120;
  * côté serveur, cette constante n'est donc pas la garde, seulement la demande.
  */
 export const DAILY_PLAN_MAX_ITEMS = 3;
+
+// ---------------------------------------------------------------------------
+// Examen blanc (étude 02) — la simulation du concours. Ces valeurs sont
+// MIRRORÉES en SQL (`finish_mock_exam`, `get_mock_exam_percentile`) : la RPC est
+// la garde, celles-ci pilotent l'affichage. Même discipline que les duels.
+// ---------------------------------------------------------------------------
+
+/**
+ * Récompense d'une session CLASSÉE, au prorata du score. Ancrage sur l'économie
+ * d'entraînement (un exercice complet ≈ 75 XP / 15 pièces) : un blanc vaut cinq
+ * à six exercices, il est plus long, plus dur, et ne se joue qu'une fois. Une
+ * session d'ENTRAÎNEMENT ne paie rien — sinon l'examen cesse d'être une mesure
+ * pour devenir une ferme à XP, exactement le travers que l'étude 09 traque.
+ * (Répond à la Q-1 de l'étude 02 par sa propre proposition, faute d'arbitrage
+ * humain rendu ; chiffre fait pour être re-tranché sur la première lecture réelle.)
+ */
+export const EXAM_MAX_XP = 300;
+export const EXAM_MAX_COINS = 60;
+
+// Le seuil d'affichage du percentile (R-6 : 20 copies classées) n'est PAS
+// mirroré ici volontairement — `get_mock_exam_percentile` le renvoie dans son
+// payload (`minCandidates`), et l'écran affiche ce que le serveur dit. Un
+// miroir de plus serait une valeur à garder synchrone pour rien.
+
+/**
+ * Cadence de la sauvegarde au fil de l'eau (R-8) : assez court pour qu'un onglet
+ * fermé ne coûte presque rien, assez long pour rester loin de la limite de débit
+ * serveur (120 appels/minute).
+ */
+export const EXAM_AUTOSAVE_INTERVAL_MS = 5000;

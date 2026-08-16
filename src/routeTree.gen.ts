@@ -26,6 +26,7 @@ import { Route as AuthenticatedParentReportRouteImport } from './routes/_authent
 import { Route as AuthenticatedParcoursRouteImport } from './routes/_authenticated/parcours'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
+import { Route as AuthenticatedExamensRouteImport } from './routes/_authenticated/examens'
 import { Route as AuthenticatedDungeonRouteImport } from './routes/_authenticated/dungeon'
 import { Route as AuthenticatedDuelRouteImport } from './routes/_authenticated/duel'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -39,6 +40,7 @@ import { Route as AuthenticatedThemesFamilyIdRouteImport } from './routes/_authe
 import { Route as AuthenticatedSubjectSubjectIdRouteImport } from './routes/_authenticated/subject.$subjectId'
 import { Route as AuthenticatedQuestExerciseIdRouteImport } from './routes/_authenticated/quest.$exerciseId'
 import { Route as AuthenticatedLessonChapterIdRouteImport } from './routes/_authenticated/lesson.$chapterId'
+import { Route as AuthenticatedExamenExamIdRouteImport } from './routes/_authenticated/examen.$examId'
 import { Route as AuthenticatedDuelDuelIdRouteImport } from './routes/_authenticated/duel.$duelId'
 import { Route as AuthenticatedAdminSubscriptionsRouteImport } from './routes/_authenticated/admin.subscriptions'
 import { Route as AuthenticatedAdminParcoursInterestRouteImport } from './routes/_authenticated/admin.parcours-interest'
@@ -133,6 +135,11 @@ const AuthenticatedLeaderboardRoute =
     path: '/leaderboard',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedExamensRoute = AuthenticatedExamensRouteImport.update({
+  id: '/examens',
+  path: '/examens',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedDungeonRoute = AuthenticatedDungeonRouteImport.update({
   id: '/dungeon',
   path: '/dungeon',
@@ -203,6 +210,12 @@ const AuthenticatedLessonChapterIdRoute =
     path: '/lesson/$chapterId',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedExamenExamIdRoute =
+  AuthenticatedExamenExamIdRouteImport.update({
+    id: '/examen/$examId',
+    path: '/examen/$examId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedDuelDuelIdRoute = AuthenticatedDuelDuelIdRouteImport.update({
   id: '/$duelId',
   path: '/$duelId',
@@ -261,6 +274,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/duel': typeof AuthenticatedDuelRouteWithChildren
   '/dungeon': typeof AuthenticatedDungeonRoute
+  '/examens': typeof AuthenticatedExamensRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/parcours': typeof AuthenticatedParcoursRoute
@@ -279,6 +293,7 @@ export interface FileRoutesByFullPath {
   '/admin/parcours-interest': typeof AuthenticatedAdminParcoursInterestRoute
   '/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
   '/duel/$duelId': typeof AuthenticatedDuelDuelIdRoute
+  '/examen/$examId': typeof AuthenticatedExamenExamIdRoute
   '/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
@@ -299,6 +314,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/duel': typeof AuthenticatedDuelRouteWithChildren
   '/dungeon': typeof AuthenticatedDungeonRoute
+  '/examens': typeof AuthenticatedExamensRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/parcours': typeof AuthenticatedParcoursRoute
@@ -317,6 +333,7 @@ export interface FileRoutesByTo {
   '/admin/parcours-interest': typeof AuthenticatedAdminParcoursInterestRoute
   '/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
   '/duel/$duelId': typeof AuthenticatedDuelDuelIdRoute
+  '/examen/$examId': typeof AuthenticatedExamenExamIdRoute
   '/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
@@ -339,6 +356,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/duel': typeof AuthenticatedDuelRouteWithChildren
   '/_authenticated/dungeon': typeof AuthenticatedDungeonRoute
+  '/_authenticated/examens': typeof AuthenticatedExamensRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/parcours': typeof AuthenticatedParcoursRoute
@@ -358,6 +376,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/parcours-interest': typeof AuthenticatedAdminParcoursInterestRoute
   '/_authenticated/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
   '/_authenticated/duel/$duelId': typeof AuthenticatedDuelDuelIdRoute
+  '/_authenticated/examen/$examId': typeof AuthenticatedExamenExamIdRoute
   '/_authenticated/lesson/$chapterId': typeof AuthenticatedLessonChapterIdRoute
   '/_authenticated/quest/$exerciseId': typeof AuthenticatedQuestExerciseIdRoute
   '/_authenticated/subject/$subjectId': typeof AuthenticatedSubjectSubjectIdRoute
@@ -380,6 +399,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/duel'
     | '/dungeon'
+    | '/examens'
     | '/leaderboard'
     | '/onboarding'
     | '/parcours'
@@ -398,6 +418,7 @@ export interface FileRouteTypes {
     | '/admin/parcours-interest'
     | '/admin/subscriptions'
     | '/duel/$duelId'
+    | '/examen/$examId'
     | '/lesson/$chapterId'
     | '/quest/$exerciseId'
     | '/subject/$subjectId'
@@ -418,6 +439,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/duel'
     | '/dungeon'
+    | '/examens'
     | '/leaderboard'
     | '/onboarding'
     | '/parcours'
@@ -436,6 +458,7 @@ export interface FileRouteTypes {
     | '/admin/parcours-interest'
     | '/admin/subscriptions'
     | '/duel/$duelId'
+    | '/examen/$examId'
     | '/lesson/$chapterId'
     | '/quest/$exerciseId'
     | '/subject/$subjectId'
@@ -457,6 +480,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/duel'
     | '/_authenticated/dungeon'
+    | '/_authenticated/examens'
     | '/_authenticated/leaderboard'
     | '/_authenticated/onboarding'
     | '/_authenticated/parcours'
@@ -476,6 +500,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/parcours-interest'
     | '/_authenticated/admin/subscriptions'
     | '/_authenticated/duel/$duelId'
+    | '/_authenticated/examen/$examId'
     | '/_authenticated/lesson/$chapterId'
     | '/_authenticated/quest/$exerciseId'
     | '/_authenticated/subject/$subjectId'
@@ -617,6 +642,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLeaderboardRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/examens': {
+      id: '/_authenticated/examens'
+      path: '/examens'
+      fullPath: '/examens'
+      preLoaderRoute: typeof AuthenticatedExamensRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/dungeon': {
       id: '/_authenticated/dungeon'
       path: '/dungeon'
@@ -708,6 +740,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLessonChapterIdRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/examen/$examId': {
+      id: '/_authenticated/examen/$examId'
+      path: '/examen/$examId'
+      fullPath: '/examen/$examId'
+      preLoaderRoute: typeof AuthenticatedExamenExamIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/duel/$duelId': {
       id: '/_authenticated/duel/$duelId'
       path: '/$duelId'
@@ -784,6 +823,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDuelRoute: typeof AuthenticatedDuelRouteWithChildren
   AuthenticatedDungeonRoute: typeof AuthenticatedDungeonRoute
+  AuthenticatedExamensRoute: typeof AuthenticatedExamensRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedParcoursRoute: typeof AuthenticatedParcoursRoute
@@ -795,6 +835,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAdminEconomieRoute: typeof AuthenticatedAdminEconomieRoute
   AuthenticatedAdminParcoursInterestRoute: typeof AuthenticatedAdminParcoursInterestRoute
   AuthenticatedAdminSubscriptionsRoute: typeof AuthenticatedAdminSubscriptionsRoute
+  AuthenticatedExamenExamIdRoute: typeof AuthenticatedExamenExamIdRoute
   AuthenticatedLessonChapterIdRoute: typeof AuthenticatedLessonChapterIdRoute
   AuthenticatedQuestExerciseIdRoute: typeof AuthenticatedQuestExerciseIdRoute
   AuthenticatedSubjectSubjectIdRoute: typeof AuthenticatedSubjectSubjectIdRoute
@@ -807,6 +848,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDuelRoute: AuthenticatedDuelRouteWithChildren,
   AuthenticatedDungeonRoute: AuthenticatedDungeonRoute,
+  AuthenticatedExamensRoute: AuthenticatedExamensRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedParcoursRoute: AuthenticatedParcoursRoute,
@@ -819,6 +861,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminParcoursInterestRoute:
     AuthenticatedAdminParcoursInterestRoute,
   AuthenticatedAdminSubscriptionsRoute: AuthenticatedAdminSubscriptionsRoute,
+  AuthenticatedExamenExamIdRoute: AuthenticatedExamenExamIdRoute,
   AuthenticatedLessonChapterIdRoute: AuthenticatedLessonChapterIdRoute,
   AuthenticatedQuestExerciseIdRoute: AuthenticatedQuestExerciseIdRoute,
   AuthenticatedSubjectSubjectIdRoute: AuthenticatedSubjectSubjectIdRoute,
