@@ -7,7 +7,8 @@ import { RichField } from "@/components/ui/svg-figure";
 import { DifficultyStars } from "@/components/game/difficulty-stars";
 import { useT } from "@/lib/i18n";
 import { isolateLtrRuns } from "@/shared/lib/bidi";
-import { getStudentAttemptDetail } from "../parent-report.server";
+import { getStudentAttemptDetail, getStudentAttemptDetailByCode } from "../parent-report.server";
+import { reportSourceKey, type ReportSource } from "../report-source";
 import { answerLabel, formatSeconds, type AttemptQuestion } from "../insights";
 import { EmptyRow } from "./daily-primitives";
 
@@ -23,20 +24,26 @@ import { EmptyRow } from "./daily-primitives";
  *     que le parent lirait comme un bug.
  */
 export function AttemptDetailDialog({
-  studentId,
+  source,
   attemptId,
   onClose,
 }: {
-  studentId: string;
+  source: ReportSource;
   attemptId: string | null;
   onClose: () => void;
 }) {
   const t = useT();
-  const fetchDetail = useServerFn(getStudentAttemptDetail);
+  const fetchById = useServerFn(getStudentAttemptDetail);
+  const fetchByCode = useServerFn(getStudentAttemptDetailByCode);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["attempt-detail", studentId, attemptId],
-    queryFn: () => fetchDetail({ data: { studentId, attemptId: attemptId as string } }),
+    queryKey: ["attempt-detail", reportSourceKey(source), attemptId],
+    queryFn: () =>
+      source.kind === "student"
+        ? fetchById({ data: { studentId: source.studentId, attemptId: attemptId as string } })
+        : fetchByCode({
+            data: { studentCode: source.studentCode, attemptId: attemptId as string },
+          }),
     enabled: Boolean(attemptId),
   });
 

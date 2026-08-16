@@ -816,6 +816,7 @@ export const ar: TranslationKeys = {
     goalSaved: "تم حفظ الهدف: {n} مهمّة هذا الأسبوع.",
     goalProgress: "{done}/{target} مهمّة هذا الأسبوع",
     goalUnit: "مهمّة / أسبوع",
+    coverageShort: "{done}/{total} فصل",
   },
   parentDaily: {
     tabSummary: "الحصيلة",
@@ -936,6 +937,8 @@ export const ar: TranslationKeys = {
     subjectsSubtitle: "أين يذهب الوقت، وما الذي يعود به، مادّةً مادّةً.",
     subjectsEmpty: "لم تُشتغل أيّ مادّة في هذه الفترة.",
     colSubject: "المادّة",
+    colCoverage: "البرنامج",
+    coverageAria: "{done} فصلًا مُنجزًا من أصل {total}",
     colTime: "الوقت",
     colLessons: "دروس",
     colExercises: "تمارين",

@@ -15,7 +15,8 @@ import {
 } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { LoadingState } from "@/components/ui/loading-state";
-import { getStudentDailyReport } from "../parent-report.server";
+import { getStudentDailyReport, getStudentDailyReportByCode } from "../parent-report.server";
+import { reportSourceKey, type ReportSource } from "../report-source";
 import {
   buildAlerts,
   computeEfficiency,
@@ -57,15 +58,16 @@ const PRESETS: PeriodPresetKey[] = [
 ];
 
 export function DailyDashboard({
-  studentId,
+  source,
   weeklyGoal = null,
 }: {
-  studentId: string;
+  source: ReportSource;
   /** Objectif famille de la semaine, quand le parent en a posé un (§5). */
   weeklyGoal?: { target: number; done: number } | null;
 }) {
   const t = useT();
-  const fetchReport = useServerFn(getStudentDailyReport);
+  const fetchById = useServerFn(getStudentDailyReport);
+  const fetchByCode = useServerFn(getStudentDailyReportByCode);
 
   const today = useMemo(() => todayInReportTz(), []);
   const [preset, setPreset] = useState<PeriodPresetKey>("today");
@@ -75,8 +77,13 @@ export function DailyDashboard({
   const range = useMemo(() => resolvePeriod(preset, { today, custom }), [preset, today, custom]);
 
   const { data: report, isLoading } = useQuery({
-    queryKey: ["parent-daily-report", studentId, range.from, range.to],
-    queryFn: () => fetchReport({ data: { studentId, from: range.from, to: range.to } }),
+    queryKey: ["parent-daily-report", reportSourceKey(source), range.from, range.to],
+    queryFn: () =>
+      source.kind === "student"
+        ? fetchById({ data: { studentId: source.studentId, from: range.from, to: range.to } })
+        : fetchByCode({
+            data: { studentCode: source.studentCode, from: range.from, to: range.to },
+          }),
   });
 
   return (
@@ -103,7 +110,7 @@ export function DailyDashboard({
       )}
 
       <AttemptDetailDialog
-        studentId={studentId}
+        source={source}
         attemptId={openAttempt}
         onClose={() => setOpenAttempt(null)}
       />

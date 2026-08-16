@@ -47,7 +47,12 @@ vi.mock("@/shared/lib/logger", () => ({
   logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn(), debug: vi.fn() },
 }));
 
-import { getStudentAttemptDetail, getStudentDailyReport } from "../parent-report.server";
+import {
+  getStudentAttemptDetail,
+  getStudentAttemptDetailByCode,
+  getStudentDailyReport,
+  getStudentDailyReportByCode,
+} from "../parent-report.server";
 
 const STUDENT = "22222222-2222-4222-8222-222222222222";
 const ATTEMPT = "33333333-3333-4333-8333-333333333333";
@@ -177,6 +182,62 @@ describe("getStudentAttemptDetail", () => {
 
   it("refuse un identifiant de tentative mal formé", async () => {
     await expect(attemptDetail({ studentId: STUDENT, attemptId: "42" })).rejects.toThrow();
+    expect(mockRpc).not.toHaveBeenCalled();
+  });
+});
+
+/**
+ * Le chemin PUBLIC par code alliance (décision produit du 2026-08-16). Ce qui se
+ * teste ici est le CÂBLAGE : le code part bien tel quel vers la RPC, qui porte
+ * seule le décodage et la vérification « c'est bien un élève ». Rien du contrôle
+ * d'accès n'est côté client — c'est précisément l'invariant.
+ */
+describe("les variantes par code alliance", () => {
+  beforeEach(() => mockRpc.mockReset());
+
+  const dailyByCode = getStudentDailyReportByCode as unknown as Call;
+  const detailByCode = getStudentAttemptDetailByCode as unknown as Call;
+  const CODE = "1111111111114111811111111111111A";
+
+  it("transmet le code et la période sans les réinterpréter", async () => {
+    mockRpc.mockResolvedValue({ data: {}, error: null });
+
+    await dailyByCode({ studentCode: CODE, from: "2026-08-01", to: "2026-08-07" });
+
+    expect(mockRpc).toHaveBeenCalledWith("get_student_daily_report_by_code", {
+      p_code: CODE,
+      p_from: "2026-08-01",
+      p_to: "2026-08-07",
+    });
+  });
+
+  it("remonte l'échec du code en code d'erreur stable, traduisible côté client", async () => {
+    mockRpc.mockResolvedValue({
+      data: null,
+      error: { message: "This code does not belong to a student account." },
+    });
+
+    await expect(
+      dailyByCode({ studentCode: CODE, from: "2026-08-01", to: "2026-08-07" }),
+    ).rejects.toThrow(/REPORT_CODE_/);
+  });
+
+  it("sert aussi le détail d'une tentative", async () => {
+    mockRpc.mockResolvedValue({ data: { attemptId: ATTEMPT, questions: [] }, error: null });
+
+    const detail = await detailByCode({ studentCode: CODE, attemptId: ATTEMPT });
+
+    expect(mockRpc).toHaveBeenCalledWith("get_student_attempt_detail_by_code", {
+      p_code: CODE,
+      p_attempt: ATTEMPT,
+    });
+    expect(detail.questions).toEqual([]);
+  });
+
+  it("refuse un code trop court avant tout appel", async () => {
+    await expect(
+      dailyByCode({ studentCode: "abc", from: "2026-08-01", to: "2026-08-07" }),
+    ).rejects.toThrow();
     expect(mockRpc).not.toHaveBeenCalled();
   });
 });

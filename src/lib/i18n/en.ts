@@ -823,6 +823,7 @@ export const en: TranslationKeys = {
     goalSaved: "Goal saved: {n} mission(s) this week.",
     goalProgress: "{done}/{target} missions this week",
     goalUnit: "missions / week",
+    coverageShort: "{done}/{total} ch.",
   },
   parentDaily: {
     tabSummary: "Overview",
@@ -943,6 +944,8 @@ export const en: TranslationKeys = {
     subjectsSubtitle: "Where the time goes, and what it returns, subject by subject.",
     subjectsEmpty: "No subject worked in this period.",
     colSubject: "Subject",
+    colCoverage: "Syllabus",
+    coverageAria: "{done} chapters completed out of {total}",
     colTime: "Time",
     colLessons: "Lessons",
     colExercises: "Exercises",

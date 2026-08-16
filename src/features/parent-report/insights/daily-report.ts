@@ -83,6 +83,7 @@ const subjectSliceSchema = z.object({
   subjectId: text,
   name: text,
   colorToken: nullableText,
+  /** Le niveau scolaire — sans lui, « Mathématiques » s'affiche quatre fois. */
   gradeName: nullableText,
   minutes: numberish,
   lessons: numberish,
@@ -90,6 +91,12 @@ const subjectSliceSchema = z.object({
   previousExercises: numberish,
   avgScore: numberish,
   scoreDelta: nullableNumber,
+  /**
+   * Couverture du programme — chapitres du catalogue publiés dans la matière, et
+   * ceux que l'élève a terminés. Même règle que la carte `/parcours` qu'il voit.
+   */
+  chaptersTotal: numberish,
+  chaptersCompleted: numberish,
 });
 
 const chapterSliceSchema = z.object({

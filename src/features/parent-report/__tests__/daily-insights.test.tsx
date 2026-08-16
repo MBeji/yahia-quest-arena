@@ -46,6 +46,8 @@ const subject = (over: Record<string, unknown> = {}) => ({
   previousExercises: 6,
   avgScore: 84,
   scoreDelta: 6,
+  chaptersTotal: 0,
+  chaptersCompleted: 0,
   ...over,
 });
 
@@ -66,6 +68,50 @@ describe("SubjectsSection", () => {
     expect(screen.getAllByText("2 h 15")).toHaveLength(2);
     expect(screen.getByText("84%")).toBeTruthy();
     expect(screen.getByText("48%")).toBeTruthy();
+  });
+
+  // Le défaut signalé en production : quatre lignes « Mathématiques » identiques,
+  // parce qu'une matière appartient à un NIVEAU et que le niveau n'était pas rendu.
+  it("distingue deux matières homonymes par leur niveau", () => {
+    const { container } = render(
+      <SubjectsSection
+        report={makeReport({
+          subjects: [
+            subject({ subjectId: "math-6", gradeName: "6ème année" }),
+            subject({ subjectId: "math-9", gradeName: "9ème année", avgScore: 41 }),
+          ],
+        })}
+      />,
+    );
+
+    // Deux lignes du TABLEAU (le nom réapparaît aussi dans les listes de lecture
+    // « matières fortes / fragiles » — on ne compte donc pas globalement).
+    const firstCells = Array.from(container.querySelectorAll("tbody tr")).map(
+      (row) => row.querySelector("td")?.textContent ?? "",
+    );
+    expect(firstCells).toHaveLength(2);
+    // Chaque ligne porte son nom ET son niveau : c'est ce qui les sépare.
+    expect(firstCells[0]).toContain("Mathématiques");
+    expect(firstCells[0]).toContain("6ème année");
+    expect(firstCells[1]).toContain("9ème année");
+  });
+
+  it("rend la couverture du programme en fraction, et un tiret sans chapitre publié", () => {
+    render(
+      <SubjectsSection
+        report={makeReport({
+          subjects: [
+            subject({ subjectId: "math-6", chaptersTotal: 24, chaptersCompleted: 7 }),
+            subject({ subjectId: "libre", name: "Culture G", chaptersTotal: 0 }),
+          ],
+        })}
+      />,
+    );
+
+    expect(screen.getByText("7/24")).toBeTruthy();
+    expect(screen.getByText("29%")).toBeTruthy();
+    // Aucun chapitre publié : la fraction n'existe pas, elle ne vaut pas 0 %.
+    expect(screen.queryByText("0%")).toBeNull();
   });
 
   it("affiche un tiret, jamais un verdict, quand la matière n'a pas assez de tentatives", () => {

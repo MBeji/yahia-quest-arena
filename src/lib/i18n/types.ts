@@ -809,6 +809,7 @@ export type TranslationKeys = {
     goalSaved: string;
     goalProgress: string;
     goalUnit: string;
+    coverageShort: string;
   };
   // Suivi parental « jour par jour » — tableau de bord d'activité quotidienne.
   // Les libellés d'alerte portent des paramètres entre accolades, remplis par
@@ -941,6 +942,8 @@ export type TranslationKeys = {
     subjectsSubtitle: string;
     subjectsEmpty: string;
     colSubject: string;
+    colCoverage: string;
+    coverageAria: string;
     colTime: string;
     colLessons: string;
     colExercises: string;
