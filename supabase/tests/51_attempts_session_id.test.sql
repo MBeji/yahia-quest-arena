@@ -6,7 +6,7 @@
 -- par une CLÉ et non par proximité temporelle.
 --   1. le contrat de schéma de la colonne (20260816170000) ;
 --   2. le comportement de `submit_exercise_attempt`, qui la renseigne
---      (20260816180000), et le cas des deux onglets qui a motivé tout ceci.
+--      (20260816190000), et le cas des deux onglets qui a motivé tout ceci.
 -- =========================================================
 
 BEGIN;
