@@ -72,3 +72,38 @@ réinscrire répète le mensonge, se connecter répond « confirme d'abord ton c
 qui dit « on t'a envoyé un lien » doit donc offrir un **renvoi** (`auth.resend`), et un échec
 d'envoi (`Error sending confirmation email`) doit se distinguer d'une erreur d'identifiants :
 le compte, lui, existe. Voir [`auth.tsx`](../../src/routes/auth.tsx).
+
+## Un `CREATE OR REPLACE` peut effacer trois lots sans qu'aucun gate ne bronche
+
+**Symptôme** : aucun. La migration s'applique, la fonction compile, `verify` et la suite pgTAP
+sont vertes — et une fonctionnalité livrée deux semaines plus tôt a disparu du jeu.
+
+**Cause** : une fonction SQL n'a pas de « fichier propriétaire ». Sa définition **vivante** est
+le **dernier** `CREATE OR REPLACE` dans l'ordre des migrations, et il atterrit dans la migration
+du lot qui l'a touchée en dernier — un nom qui ne dit rien d'elle. Recopier une révision plus
+ancienne pour y ajouter une ligne réécrit donc la fonction **sans** les lots intermédiaires.
+Rien ne le signale : le gate vérifie que le SQL est valide, pas qu'il est à jour.
+
+**Mesuré le 2026-08-16** sur `submit_exercise_attempt` — la fonction la plus disputée du dépôt,
+six révisions, dont deux dans la même heure :
+
+| Migration                                      | Ce qu'elle a ajouté        |
+| ---------------------------------------------- | -------------------------- |
+| `20260706130000_adaptive_telemetry_a0_capture` | télémétrie par question    |
+| `20260714130000_recall_mode_rpcs`              | variante Rappel            |
+| `20260720170000_sm2_close_reviews_on_pass`     | clôture des révisions SM-2 |
+| `20260727120000_short_answer_native_type`      | scoring `short_answer`     |
+| `20260816140000_boss_speed_xp_bonus`           | bonus de vitesse du boss   |
+
+Repartir de la première (celle que désignait le brief) aurait effacé les quatre suivantes.
+
+**Le réflexe**, au moment d'écrire **et** juste avant de committer — `main` bouge :
+
+```bash
+git grep -n "CREATE OR REPLACE FUNCTION public.<nom>" origin/main -- supabase/migrations | sort | tail -1
+```
+
+Puis : extraire le corps (`sed -n 'D,Fp'`), appliquer la modification **par script** avec une
+assertion sur le nombre d'occurrences, et `diff` le résultat contre l'extrait — le diff doit ne
+montrer **que** les lignes voulues. C'est l'audit qui remplace la relecture de 500 lignes, et
+c'est ce qui rend la PR relisable.

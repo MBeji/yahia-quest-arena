@@ -176,7 +176,7 @@ Run with coverage: `npm run test:coverage`
 | chapters                               | Chapters within a subject                                                             |
 | exercises                              | Exercises within a chapter                                                            |
 | questions                              | Multiple-choice questions within an exercise                                          |
-| attempts                               | Student exercise attempt results (`variant` classic/recall — étude 17)                |
+| attempts                               | Student exercise attempt results (`variant` classic/recall, `session_id`)             |
 | student_badges                         | Awarded badges                                                                        |
 | shop_items                             | Purchasable items                                                                     |
 | inventory_items                        | Student-owned items                                                                   |
