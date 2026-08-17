@@ -25,6 +25,16 @@ exécuté en prod entre les deux : le rejouer dans un Postgres WASM jetable **ho
 (`@electric-sql/pglite`) — détail dans
 [`../suivi-parental-quotidien.md`](../suivi-parental-quotidien.md#livrer-en-deux-temps).
 
+**Le ref à passer à `--project-id` est celui de la PROD : `fasrenmmrkqjoobrztbp`** — source de
+vérité [`scripts/shared/prod-targets.mjs`](../../scripts/shared/prod-targets.mjs)
+(`PROD_SUPABASE_REF`) ; le projet TEST/e2e est `pqegdnwdtbjtplcthxyp`
+([`scripts/db/push-prod.mjs`](../../scripts/db/push-prod.mjs)), à ne jamais confondre. Il n'est
+en revanche **jamais** à lire dans `supabase/config.toml` : le `project_id` de ce fichier est un
+identifiant purement **local** (préfixe des conteneurs `supabase start`), et il a porté jusqu'au
+2026-08-17 un ref mort du scaffolding initial qui ne correspondait à aucun projet du compte. Le
+CLI répond alors `Unauthorized` — un message qui accuse le jeton alors que c'est le ref qui est
+faux : le piège a déjà coûté une session (2026-08-16).
+
 **Règle de maintenance** (AGENTS.md § Multi-agent collaboration) : un savoir projet découvert en
 session finit **ici, dans `STATUS.md` ou dans l'étude concernée** — pas seulement dans la mémoire
 d'un outil. Ces fichiers sont normatifs sur leur sujet ; en cas de conflit, `AGENTS.md` gagne.
