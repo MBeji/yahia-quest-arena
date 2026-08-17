@@ -93,11 +93,26 @@ export class PracticePage {
     const before = await this.questionCard.getAttribute("data-question-id").catch(() => null);
     await this.submitButton.click();
     // Instant feedback (levier 01): the first click reveals the verdict on the
-    // SAME card; the same button then continues. Quiz runs show no verdict.
+    // SAME card; the same button then continues. Quiz runs show no verdict, so
+    // wait for WHICHEVER lands — verdict or a swapped card.
+    //
+    // ⚠️ POLLED on purpose: `isVisible({ timeout })` ignores its timeout (so say
+    // Playwright's own typings) and answers immediately, i.e. before the
+    // verdict's server round-trip. That is what left this loop staring at an
+    // unchanged card for 12 s in the 2026-08-14 nightly.
     const feedback = this.page.getByTestId("quest-feedback");
-    if (await feedback.isVisible({ timeout: 3_000 }).catch(() => false)) {
-      await expect(this.submitButton).toBeEnabled({ timeout: 5_000 });
-      await this.submitButton.click();
+    const cardMoved = async () =>
+      (await this.questionCard.getAttribute("data-question-id").catch(() => null)) !== before ||
+      (await this.score.isVisible().catch(() => false));
+    const deadline = Date.now() + 8_000;
+    while (Date.now() < deadline) {
+      if (await feedback.isVisible().catch(() => false)) {
+        await expect(this.submitButton).toBeEnabled({ timeout: 5_000 });
+        await this.submitButton.click();
+        break;
+      }
+      if (await cardMoved()) break;
+      await this.page.waitForTimeout(100);
     }
     await expect
       .poll(

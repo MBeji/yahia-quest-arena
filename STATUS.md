@@ -200,11 +200,17 @@ laisse trois règles qui gouvernent la suite — le détail est dans les corps d
 même geste — répondre à une question. `expect(...).not.toBe("wait")` expire à
 `e2e/pages/quest.page.ts:112`, juste après `continuePastFeedback()`. Suspect désigné par le code
 lui-même : **#720**, qui a changé le flux du player **et** les deux page objects. ⚠️ **Rien ne
-pouvait l'attraper avant le merge** : l'E2E n'est pas dans `verify`/`ci:verify`. Reste à
-départager, et le rapport Playwright du run le fait en quelques minutes : page objects
-désynchronisés (test-only) **ou** régression produit sur la boucle de jeu cœur. Le 9ᵉ échec
-(`a11y › dashboard`) ne passe pas par le player — probablement l'une des trois PR UI de la même
-fenêtre (#729, #732, #734), à instruire à part.
+pouvait l'attraper avant le merge** : l'E2E n'est pas dans `verify`/`ci:verify`.
+
+**Départagé le 2026-08-17 (#755) : c'est TEST-ONLY, la boucle de jeu n'est pas cassée.** Le page
+object appelait `feedback.isVisible({ timeout })`, dont les typings de Playwright disent
+« @deprecated This option is ignored » — `isVisible()` n'attend jamais. Le test regardait donc
+avant l'aller-retour serveur du verdict, concluait « pas de verdict », et scrutait 12 s une avance
+que le player n'avait aucune raison de faire tant que « Continuer » n'était pas cliqué. Les deux
+page objects scrutent désormais. ⚠️ **Non vérifié en session** — l'E2E exige le projet Supabase de
+TEST : le prochain nightly est le seul juge. Le 9ᵉ échec (`a11y › dashboard`) reste **ouvert et non
+diagnostiqué** : il ne passe pas par le player, suit trois PR UI de la même fenêtre (#729, #732,
+#734), et son verdict axe n'est lisible que dans l'artefact `playwright-report-auth` du run.
 
 - **Les surfaces passent par des tokens, et plus rien ne rattrape un littéral.** Le remap
   `html.reference .app-shell { --color-black: white }` — et son doublon `.game-surface` — sont
