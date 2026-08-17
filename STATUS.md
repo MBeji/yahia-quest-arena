@@ -202,7 +202,13 @@ laisse trois règles qui gouvernent la suite — le détail est dans les corps d
 garantie acquise est structurelle — chaque surface vient d'un token défini des deux côtés — pas
 visuelle.
 
-**Issues ouvertes** : inchangées depuis le 2026-08-03, ce chantier n'en a ouvert ni fermé aucune.
+⚠️ **Une issue OUVERTE appartient à ce chantier** : **#733 « Nightly tests en échec »**, rouge
+depuis le 2026-08-14. La PR #720 a changé la boucle de jeu **et** adapté les page objects
+Playwright, mais l'adaptation était fautive (`isVisible({ timeout })` n'attend pas — l'option est
+ignorée par Playwright). L'E2E ne fait pas partie de `verify`/`ci:verify` : #720 a donc mergé sur
+un gate vert en cassant 8 tests du parcours réel. Corrigé depuis ; le nightly est le seul juge.
+Le 9ᵉ échec (`a11y.spec.ts › dashboard`) reste **non diagnostiqué** — il ne passe pas par le
+lecteur et suit trois PR d'UI (#729, #732, #734).
 
 ## 7. Carte de la documentation (qui fait foi pour quoi)
 
