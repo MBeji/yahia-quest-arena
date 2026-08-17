@@ -345,7 +345,14 @@ export const getStudentDailyReport = createServerFn({ method: "GET" })
         studentId: z.guid(),
         from: isoDate,
         to: isoDate,
-        scope: z.enum(["all", "class"]).default("all"),
+        // Le périmètre n'est plus un jeu fermé — les niveaux et les thèmes sont
+        // des données, pas une énumération. Sa FORME, elle, l'est : la RPC
+        // dégrade vers « tout » sur une clé inconnue, ici on refuse simplement
+        // ce qui n'a pas la bonne tête.
+        scope: z
+          .string()
+          .regex(/^(all|class|grade:[0-9a-fA-F-]{36}|theme:[a-z0-9-]{1,64})$/)
+          .default("all"),
       })
       .parse(d),
   )
@@ -386,7 +393,14 @@ export const getStudentDailyReportByCode = createServerFn({ method: "GET" })
         studentCode: z.string().min(8).max(64),
         from: isoDate,
         to: isoDate,
-        scope: z.enum(["all", "class"]).default("all"),
+        // Le périmètre n'est plus un jeu fermé — les niveaux et les thèmes sont
+        // des données, pas une énumération. Sa FORME, elle, l'est : la RPC
+        // dégrade vers « tout » sur une clé inconnue, ici on refuse simplement
+        // ce qui n'a pas la bonne tête.
+        scope: z
+          .string()
+          .regex(/^(all|class|grade:[0-9a-fA-F-]{36}|theme:[a-z0-9-]{1,64})$/)
+          .default("all"),
       })
       .parse(d),
   )

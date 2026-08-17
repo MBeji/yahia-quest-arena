@@ -940,6 +940,7 @@ export const ar: TranslationKeys = {
     colCoverage: "البرنامج",
     scopeLabel: "العرض:",
     scopeClass: "قسمه",
+    scopeClassHint: "(قسمه)",
     scopeAll: "الكلّ",
     scopeExcluded:
       "خارج قسمه في هذه الفترة: {time} و{exercises} تمرينًا — مراجعات مستويات أخرى، وإضافات، وزنزانة ومبارزات. بدّل إلى «الكلّ» لإدراجها.",

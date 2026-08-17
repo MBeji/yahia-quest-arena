@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { LoadingState } from "@/components/ui/loading-state";
+import { isolateLtrRuns } from "@/shared/lib/bidi";
 import { getStudentDailyReport, getStudentDailyReportByCode } from "../parent-report.server";
 import { reportSourceKey, type ReportSource } from "../report-source";
 import {
@@ -77,7 +78,7 @@ export function DailyDashboard({
   // (« où en est-il de son programme ? »), et les révisions d'autres niveaux ou
   // les extras y sont du bruit. Un élève sans classe retombe côté serveur sur
   // « tout », et le sélecteur disparaît — il n'aurait rien à sélectionner.
-  const [scope, setScope] = useState<"class" | "all">("class");
+  const [scope, setScope] = useState<string>("class");
 
   const range = useMemo(() => resolvePeriod(preset, { today, custom }), [preset, today, custom]);
 
@@ -106,8 +107,8 @@ export function DailyDashboard({
         }}
       />
 
-      {report?.scope.hasClass && (
-        <ScopePicker scope={scope} onScope={setScope} gradeName={report.scope.gradeName} />
+      {report && (
+        <ScopePicker scopes={report.scopes} applied={report.scope.applied} onScope={setScope} />
       )}
 
       {isLoading || !report ? (
@@ -156,7 +157,7 @@ function DailyDashboardBody({
 
       {/* Ce que le filtre a écarté. Sans cette ligne, un parent lirait la baisse
           des totaux comme une baisse d'activité de son enfant. */}
-      {report.scope.applied === "class" &&
+      {report.scope.applied !== "all" &&
         (report.scope.excludedMinutes > 0 || report.scope.excludedExercises > 0) && (
           <p className="flex items-start gap-2 rounded-lg border border-border/50 bg-surface-2 p-3 text-xs text-muted-foreground">
             <Info className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
@@ -587,34 +588,50 @@ function CompareCell({
  * « sa classe » n'offrirait qu'un écran vide et une question sans réponse.
  */
 function ScopePicker({
-  scope,
+  scopes,
+  applied,
   onScope,
-  gradeName,
 }: {
-  scope: "class" | "all";
-  onScope: (next: "class" | "all") => void;
-  gradeName: string | null;
+  scopes: DailyReport["scopes"];
+  /** La clé RÉELLEMENT appliquée par le serveur — la seule qu'on surligne. */
+  applied: string;
+  onScope: (next: string) => void;
 }) {
   const t = useT();
+
+  // Rien à choisir tant que l'élève n'a touché qu'une seule piste.
+  if (scopes.length < 2) return null;
+
   return (
     <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border/50 bg-surface-2 p-3 print:hidden">
       <span className="text-xs text-muted-foreground">{t.parentDaily.scopeLabel}</span>
-      <div className="inline-flex rounded-lg border border-border/60 bg-surface-3 p-0.5">
-        {(["class", "all"] as const).map((key) => (
-          <button
-            key={key}
-            type="button"
-            onClick={() => onScope(key)}
-            aria-pressed={scope === key}
-            className={`rounded-md px-3 py-1.5 text-sm font-medium transition [@media(pointer:coarse)]:min-h-11 ${
-              scope === key
-                ? "bg-[image:var(--gradient-gold)] text-primary-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {key === "class" ? (gradeName ?? t.parentDaily.scopeClass) : t.parentDaily.scopeAll}
-          </button>
-        ))}
+      <div className="flex flex-wrap gap-1.5">
+        {[{ key: "all", label: t.parentDaily.scopeAll, isCurrent: false }, ...scopes].map(
+          (entry) => {
+            // On surligne ce que le SERVEUR dit avoir appliqué, pas ce qui a été
+            // cliqué : une clé périmée retombe sur « tout », et le bouton doit
+            // alors suivre les chiffres affichés.
+            const active = applied === entry.key;
+            return (
+              <button
+                key={entry.key}
+                type="button"
+                onClick={() => onScope(entry.key)}
+                aria-pressed={active}
+                className={`rounded-lg px-3 py-1.5 text-sm font-medium transition [@media(pointer:coarse)]:min-h-11 ${
+                  active
+                    ? "bg-[image:var(--gradient-gold)] text-primary-foreground"
+                    : "border border-border/60 bg-surface-3 text-muted-foreground hover:border-gold/60"
+                }`}
+              >
+                {isolateLtrRuns(entry.label)}
+                {entry.isCurrent && (
+                  <span className="ms-1.5 text-2xs opacity-80">{t.parentDaily.scopeClassHint}</span>
+                )}
+              </button>
+            );
+          },
+        )}
       </div>
     </div>
   );

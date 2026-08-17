@@ -947,6 +947,7 @@ export const en: TranslationKeys = {
     colCoverage: "Syllabus",
     scopeLabel: "Showing:",
     scopeClass: "Their class",
+    scopeClassHint: "(their class)",
     scopeAll: "Everything",
     scopeExcluded:
       "Outside their class this period: {time} and {exercises} exercise(s) — other-year revision, extras, dungeon and duels. Switch to “Everything” to include them.",

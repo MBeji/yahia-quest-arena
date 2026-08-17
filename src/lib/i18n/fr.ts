@@ -962,6 +962,7 @@ export const fr: TranslationKeys = {
     colCoverage: "Programme",
     scopeLabel: "Afficher :",
     scopeClass: "Sa classe",
+    scopeClassHint: "(sa classe)",
     scopeAll: "Tout",
     scopeExcluded:
       "Hors de sa classe sur cette période : {time} et {exercises} exercice(s) — révisions d’autres niveaux, extras, donjon et duels. Bascule sur « Tout » pour les inclure.",

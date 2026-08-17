@@ -945,6 +945,7 @@ export type TranslationKeys = {
     colCoverage: string;
     scopeLabel: string;
     scopeClass: string;
+    scopeClassHint: string;
     scopeAll: string;
     scopeExcluded: string;
     coverageAria: string;

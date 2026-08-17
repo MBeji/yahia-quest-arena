@@ -2092,6 +2092,19 @@ export type Database = {
       };
     };
     Functions: {
+      _daily_report_with_scopes: {
+        Args: {
+          p_from: string;
+          p_scope: string;
+          p_student: string;
+          p_to: string;
+        };
+        Returns: Json;
+      };
+      _scope_subject_ids: {
+        Args: { p_scope: string; p_student: string };
+        Returns: string[];
+      };
       _scoped_attempts: {
         Args: { p_student: string; p_subject_ids: string[] };
         Returns: {
@@ -2135,6 +2148,7 @@ export type Database = {
           isSetofReturn: true;
         };
       };
+      _student_activity_scopes: { Args: { p_student: string }; Returns: Json };
       _student_attempt_detail_json: {
         Args: { p_attempt: string; p_student: string };
         Returns: Json;
