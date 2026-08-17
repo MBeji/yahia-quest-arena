@@ -1,1 +1,17 @@
-project_id = "wvgeyonsdddwihviucyb"
+# Identifiant LOCAL, et lui seul. Doc Supabase : « a string used to distinguish different
+# Supabase projects on the same host », avec pour défaut le nom du dossier de travail. C'est
+# le préfixe des conteneurs Docker de `supabase start` — ce n'est PAS le ref d'un projet
+# distant, et rien dans le dépôt ne le lit comme tel (aucun script, aucun workflow).
+#
+# ⚠️ Les refs distants ne sont pas dans ce fichier. Source de vérité :
+#   • PROD      → `scripts/shared/prod-targets.mjs` (PROD_SUPABASE_REF = fasrenmmrkqjoobrztbp)
+#   • TEST/e2e  → `scripts/db/push-prod.mjs` (TEST_REF = pqegdnwdtbjtplcthxyp)
+# Aucun ref distant n'est versionné dans `supabase/` : ce fichier est le seul du dossier hors
+# `migrations/` et `tests/`, et `supabase/.temp/` (état de `supabase link`) est gitignoré.
+#
+# Piège homonyme, qui a déjà coûté une session : le flag du CLI
+# `supabase gen types typescript --project-id <ref>` attend, lui, un ref DISTANT. Ce champ
+# portait `wvgeyonsdddwihviucyb` — hérité du scaffolding initial (2026-05-22) et ne
+# correspondant à aucun projet du compte (vérifié le 2026-08-16). Le CLI répondait alors
+# `Unauthorized`, ce qui masque la vraie cause : le ref était simplement faux.
+project_id = "yahia-quest-arena"

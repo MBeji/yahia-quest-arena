@@ -81,6 +81,7 @@ function QuestPage() {
           total: res.total,
           scorePct: res.scorePct,
           durationSeconds: res.durationSeconds,
+          speedBonus: res.speedBonus,
           reviewHidden: res.reviewHidden,
           review: res.review,
           xpEarned: res.xpEarned,

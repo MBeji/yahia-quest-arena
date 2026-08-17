@@ -13,6 +13,7 @@ import {
   REPORT_CODE_ERROR_PREFIX,
   parentCodeErrorCode,
 } from "./parent-code-errors";
+import { parseAttemptDetail, parseDailyReport } from "./insights/daily-report";
 
 type ParentStudent = {
   id: string;
@@ -97,10 +98,16 @@ const studentReportSchema = z.object({
       z.object({
         subjectId: z.string().catch(""),
         name: z.string().catch(""),
+        // Le NIVEAU : une matière appartient à un niveau scolaire, et sans lui le
+        // bilan listait « Mathématiques » quatre fois sans rien pour les séparer.
+        gradeName: z.string().nullable().catch(null),
         colorToken: z.string().nullable().catch(null),
         attempts: numberish,
         avgScore: numberish,
         totalTimeMinutes: numberish,
+        // Couverture du programme — même règle que la carte `/parcours`.
+        chaptersTotal: numberish,
+        chaptersCompleted: numberish,
       }),
     )
     .catch([]),
@@ -311,6 +318,132 @@ export const getStudentReport = createServerFn({ method: "GET" })
     }
 
     return parseStudentReportPayload(reportData);
+  });
+
+// Une date de calendrier, telle que la RPC l'attend et que le sélecteur de
+// période la produit (`YYYY-MM-DD`).
+const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Expected YYYY-MM-DD");
+
+/**
+ * Le tableau de bord « jour par jour » : tout ce qui est MESURÉ sur une période.
+ *
+ * Les règles de jugement (engagement, efficacité, alertes) ne sont pas ici :
+ * elles vivent dans `./insights`, en TypeScript pur et testé. Le serveur ne rend
+ * que des faits — c'est aussi ce qui permettra d'y brancher une couche
+ * d'insights IA sans retoucher le SQL.
+ *
+ * L'accès (admin, ou parent réellement lié à l'élève) est vérifié dans la RPC
+ * SECURITY DEFINER. Rien de ceci n'est joignable par le chemin public au code
+ * alliance : l'activité détaillée d'un mineur ne passe pas derrière une capacité
+ * au porteur.
+ */
+export const getStudentDailyReport = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ studentId: z.guid(), from: isoDate, to: isoDate }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+
+    const { data: payload, error } = await supabase.rpc("get_student_daily_report", {
+      p_student: data.studentId,
+      p_from: data.from,
+      p_to: data.to,
+    });
+
+    if (error) {
+      failWithClientError(
+        "parentReport.getStudentDailyReport: RPC failed",
+        error,
+        "Impossible de charger l'activité de l'élève.",
+      );
+    }
+
+    return parseDailyReport(payload);
+  });
+
+/**
+ * Le même tableau de bord, ouvert au PORTEUR DU CODE alliance — sans compte.
+ *
+ * Décision produit du 2026-08-16 : le parent qui ouvre `/suivi` avec le code voit
+ * exactement ce que voit le parent connecté. C'est un accès au porteur assumé,
+ * comme le bilan depuis étude 15 : quiconque détient le code voit tout. Le
+ * décodage du code et la vérification « c'est bien un élève » vivent dans la RPC.
+ */
+export const getStudentDailyReportByCode = createServerFn({ method: "GET" })
+  .middleware([optionalSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ studentCode: z.string().min(8).max(64), from: isoDate, to: isoDate }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+
+    const { data: payload, error } = await supabase.rpc("get_student_daily_report_by_code", {
+      p_code: data.studentCode,
+      p_from: data.from,
+      p_to: data.to,
+    });
+
+    if (error) {
+      const raw = errorMessage(error);
+      logger.error("parentReport.getStudentDailyReportByCode: RPC failed", { error: raw });
+      throw new Error(REPORT_CODE_ERROR_PREFIX + parentCodeErrorCode(raw));
+    }
+
+    return parseDailyReport(payload);
+  });
+
+/**
+ * Le détail d'une tentative : les questions posées et ce que l'enfant a répondu.
+ *
+ * La bonne réponse et l'explication sont volontairement absentes pour un quiz de
+ * compréhension — la RPC les met à `null` et lève `reviewHidden`. Sans cette
+ * règle, il suffirait à un élève d'ouvrir un compte parent et de s'y lier avec
+ * son propre code pour lire la correction d'un quiz qu'il doit repasser.
+ */
+export const getStudentAttemptDetail = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ studentId: z.guid(), attemptId: z.guid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+
+    const { data: payload, error } = await supabase.rpc("get_student_attempt_detail", {
+      p_student: data.studentId,
+      p_attempt: data.attemptId,
+    });
+
+    if (error) {
+      failWithClientError(
+        "parentReport.getStudentAttemptDetail: RPC failed",
+        error,
+        "Impossible de charger le détail de cet exercice.",
+      );
+    }
+
+    return parseAttemptDetail(payload);
+  });
+
+/** Le même détail, ouvert au porteur du code alliance (cf. ci-dessus). */
+export const getStudentAttemptDetailByCode = createServerFn({ method: "GET" })
+  .middleware([optionalSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ studentCode: z.string().min(8).max(64), attemptId: z.guid() }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+
+    const { data: payload, error } = await supabase.rpc("get_student_attempt_detail_by_code", {
+      p_code: data.studentCode,
+      p_attempt: data.attemptId,
+    });
+
+    if (error) {
+      const raw = errorMessage(error);
+      logger.error("parentReport.getStudentAttemptDetailByCode: RPC failed", { error: raw });
+      throw new Error(REPORT_CODE_ERROR_PREFIX + parentCodeErrorCode(raw));
+    }
+
+    return parseAttemptDetail(payload);
   });
 
 // Objectif hebdo : payload de get_family_weekly_goal (null si aucun objectif posé).

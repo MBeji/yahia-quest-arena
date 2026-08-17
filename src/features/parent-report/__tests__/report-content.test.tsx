@@ -105,10 +105,32 @@ describe("ReportContent — actionable weak points (étude 15 lot 12, D-9)", () 
 
   it("does NOT add LRI/PDI isolates around parentheses in Arabic subject stat names", () => {
     const { container } = render(<ReportContent report={report as never} />);
-    // subjectStats[0].name "الرياضيات (الجبر)" — same bidi rule
-    const nameEl = container.querySelector(".w-16.truncate.text-sm");
+    // subjectStats[0].name "الرياضيات (الجبر)" — same bidi rule.
+    // Le nom vit désormais dans un enfant du bloc `.w-16`, qui porte aussi le
+    // niveau scolaire sous lui (« Mathématiques » apparaissait sinon plusieurs
+    // fois à l'identique) — d'où le sélecteur descendant.
+    const nameEl = container.querySelector(".w-16 .truncate.text-sm");
     expect(nameEl?.textContent).toContain("الرياضيات (الجبر)");
     expect(nameEl?.textContent).not.toContain(LRI);
     expect(nameEl?.textContent).not.toContain(PDI);
+  });
+
+  // Le graphe « Activité 30 jours » a rendu 0 px de haut sur toute sa largeur —
+  // le parent voyait une bande vide alors que les données étaient là. Cause :
+  // la barre porte une hauteur en POURCENTAGE, et sa colonne n'avait aucune
+  // hauteur définie (`flex-1` ne dimensionne que l'axe principal, et
+  // `items-end` laisse la hauteur en `auto`), donc le pourcentage se résolvait
+  // contre rien. Mesuré dans Chromium : colonne 0 px, barre 0 px.
+  // jsdom ne fait pas de layout : ce test épingle l'invariant STRUCTUREL qui
+  // rend le pourcentage résoluble — la colonne doit avoir une hauteur définie.
+  it("gives each activity bar a column with a DEFINITE height (percent heights need one)", () => {
+    const { container } = render(<ReportContent report={report as never} />);
+    const bar = container.querySelector<HTMLElement>('[style*="height"].rounded-t');
+    expect(bar).toBeTruthy();
+
+    const column = bar?.parentElement;
+    expect(column?.className).toContain("h-full");
+    // Et la barre reste ancrée en bas de sa colonne.
+    expect(column?.className).toContain("items-end");
   });
 });

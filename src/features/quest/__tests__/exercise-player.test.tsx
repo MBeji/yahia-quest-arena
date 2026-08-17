@@ -1,5 +1,5 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
 
@@ -19,6 +19,10 @@ vi.mock("@tanstack/react-router", () => ({
 vi.mock("@tanstack/react-start", () => ({
   useServerFn: (fn: unknown) => fn,
 }));
+// La mesure du temps d'apprentissage est stubée pour la même raison que
+// `quest.training` juste dessous : la charger tirerait `createServerFn` et les
+// middlewares Supabase dans un test de rendu.
+vi.mock("@/hooks/use-learning-pulse", () => ({ useLearningPulse: () => {} }));
 // L'écran de résultat sait désormais mener à un entraînement (A12). La server fn
 // est stubée : la charger pour de vrai tirerait `createServerFn` et les
 // middlewares Supabase dans un test de rendu.
@@ -116,6 +120,7 @@ const neutralResult: PlayerResult = {
   retryShieldUsed: false,
   tooFast: false,
   improved: false,
+  speedBonus: 1,
 };
 
 function anonStrategy(overrides: Partial<ExercisePlayerStrategy> = {}): ExercisePlayerStrategy {
@@ -255,5 +260,78 @@ describe("ExercisePlayer — recall variant (étude 17)", () => {
       expect(container.querySelector('a[href="/exercice/$exerciseId"]')).not.toBeNull(),
     );
     expect(screen.queryByTestId("recall-answer-input")).not.toBeInTheDocument();
+  });
+});
+
+describe("ExercisePlayer — combat de boss : le chrono note, il ne coupe pas", () => {
+  beforeEach(() => {
+    mockGetExercise.mockReset().mockResolvedValue(exerciseData("boss"));
+    mockGetSubject.mockReset().mockResolvedValue({ chapters: [], exercises: [] });
+    // `shouldAdvanceTime` garde les promesses (donc `findBy*`) vivantes tout en
+    // laissant sauter le chronomètre à la demande.
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  function bossStrategy(overrides: Partial<ExercisePlayerStrategy> = {}) {
+    return anonStrategy({
+      capabilities: {
+        rewards: false,
+        hints: false,
+        boss: true,
+        next: false,
+        instantFeedback: false,
+      },
+      ...overrides,
+    });
+  }
+
+  it("laisse la main à l'élève bien au-delà du temps de référence : rien n'est validé pour lui", async () => {
+    const submit = vi.fn().mockResolvedValue(neutralResult);
+    renderPlayer(bossStrategy({ submit }));
+    expect(await screen.findByText("1 + 1 ?")).toBeInTheDocument();
+
+    // Six fois le temps de référence : sous l'ancien compte à rebours, la question
+    // avait été répondue d'office (fausse) et la manche envoyée depuis longtemps.
+    await act(async () => {
+      vi.advanceTimersByTime(120_000);
+    });
+
+    expect(submit).not.toHaveBeenCalled();
+    expect(screen.getByText("1 + 1 ?")).toBeInTheDocument();
+    expect(screen.queryByTestId("quest-score")).not.toBeInTheDocument();
+    // Et le chronomètre, lui, continue de tourner.
+    expect(screen.getByTestId("boss-chrono").textContent).toContain("2:00");
+  });
+
+  it("met le boss à terre quand la réponse arrive sous le temps de référence", async () => {
+    renderPlayer(bossStrategy());
+    fireEvent.click(await screen.findByText("2"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+
+    const summary = await screen.findByTestId("boss-result");
+    expect(summary.textContent).toMatch(/\b0\s*%/);
+  });
+
+  it("laisse le boss debout après une réponse lente — mais la manche est finie et notée", async () => {
+    const submit = vi.fn().mockResolvedValue(neutralResult);
+    renderPlayer(bossStrategy({ submit }));
+    await screen.findByText("1 + 1 ?");
+
+    await act(async () => {
+      vi.advanceTimersByTime(90_000);
+    });
+    fireEvent.click(screen.getByText("2"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+
+    const summary = await screen.findByTestId("boss-result");
+    expect(summary.textContent).toMatch(/\b50\s*%/);
+    // La lenteur coûte des dégâts, jamais la réponse : elle part telle quelle.
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({ answers: [{ questionId: "q1", choice: "a" }] }),
+    );
   });
 });

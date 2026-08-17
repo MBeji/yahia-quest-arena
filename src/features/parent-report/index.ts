@@ -3,6 +3,10 @@
 
 export {
   getLinkedStudents,
+  getStudentAttemptDetail,
+  getStudentAttemptDetailByCode,
+  getStudentDailyReport,
+  getStudentDailyReportByCode,
   getStudentReport,
   getStudentReportByCode,
   getStudentWeeklyGoal,
@@ -11,5 +15,25 @@ export {
 } from "./parent-report.server";
 export { formatStudentAllianceCode, parseStudentAllianceCode } from "./family-link";
 export { parentCodeErrorLabel, type ParentCodeErrorCode } from "./parent-code-errors";
+export {
+  forgetRememberedCode,
+  readRememberedCode,
+  rememberCode,
+  SUIVI_CODE_STORAGE_KEY,
+} from "./remembered-code";
 export { ReportContent } from "./components/report-content";
+export { DailyDashboard } from "./components/daily-dashboard";
+export { reportSourceKey, type ReportSource } from "./report-source";
 export { buildFamilyReportShareText, buildWeeklyAdvice } from "./report-share";
+// Le moteur d'analyse (pur) reste importable à part pour les tests et pour une
+// future couche d'insights : `@/features/parent-report/insights`.
+export {
+  buildAlerts,
+  computeEfficiency,
+  computeEngagement,
+  deriveKpis,
+  resolvePeriod,
+  type DailyReport,
+  type ParentAlert,
+  type PeriodPresetKey,
+} from "./insights";

@@ -593,7 +593,31 @@ flowchart TD
 
     T5["🪤 Piège n°5 :\nmodifier le moteur ici sans\npenser à la CI privée"] --> C5["le schéma Zod change →\nla Content CI privée refuse\nou accepte autre chose"]
     C5 --> S5["✅ Solution : un changement de\nschéma moteur = vérifier l'impact\nsur le corpus privé"]
+
+    T6["🪤 Piège n°6 :\nécrire du Markdown dans\nprompt / explanation /\ntexte d'une option"] --> C6["ces champs passent par RichField,\nqui rend un nœud de TEXTE BRUT\n→ l'élève voit **les astérisques**"]
+    C6 --> S6["✅ Solution : aucun balisage dans\nles champs de question.\nLe Markdown ne vaut que pour\ncours.md et resume.md"]
 ```
+
+> **Piège n°6, en clair.** `cours.md` et `resume.md` sont du Markdown ; **les champs d'une
+> question ne le sont pas**. `prompt`, `explanation` et le `text` d'une option sont rendus par
+> [`RichField`](../src/components/ui/svg-figure.tsx), qui n'extrait qu'une figure `<svg>` et
+> passe **tout le reste en nœud de texte**. Un `**mot**` s'affiche donc littéralement,
+> astérisques comprises, dans le player. Relevé le 2026-08-14 sur la matière `fiqh` :
+> 22 champs concernés, sur 6 chapitres écrits par 6 auteurs différents — personne ne l'avait
+> deviné, parce que rien ne le disait.
+>
+> **Depuis, `content:qa` l'attrape** (`auditQuestionMarkup`, `scripts/content/qa-checks.ts`) :
+> `**gras**`, `__gras__` et un titre `#` en début de ligne sont des `[error]` sur `prompt`,
+> `explanation` et le `text` d'une option — les leçons, elles, gardent leur Markdown. Le trou à
+> compléter des matières de langue (`___`) n'est **pas** du balisage et n'est pas flagué.
+> ⚠️ **Dette de corpus, mesurée le 2026-08-15 sur le corpus commité : 361 champs déjà porteurs
+> du défaut, sur 31 matières** (197 énoncés, 160 explications, 4 options ; en tête
+> `education-islamique-5eme` 59, `sciences-vie-terre` 58, `math-7eme` 27 — `fiqh` est à 0,
+> corrigée). Le corpus n'ayant par ailleurs **aucune** autre erreur `content:qa:strict`, ces 361
+> champs sont à eux seuls ce qui sépare la Content CI privée du vert : la campagne de réécriture
+> doit passer avec — ou juste après — la bascule. Le levier est
+> `QUESTION_MARKUP_LEVEL` (une ligne, `"error"` → `"warn"`), sur le modèle de
+> `OPTION_REFERENCE_LEVEL`.
 
 ---
 

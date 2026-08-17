@@ -147,7 +147,10 @@ function AuthenticatedLayout() {
   // an in-screen sticky CTA (quiz submit, lesson nav, onboarding). The Dungeon
   // LOBBY is no longer immersive (D-4 / audit §E-1): the nav stays until a run
   // actually starts — consistent with duel matches, which already keep the nav.
-  const immersive = /^\/(quest|lesson|onboarding)/.test(location.pathname);
+  // `examen/` porte sa barre oblique à dessein : seule la PASSATION
+  // (`/examen/$examId`, avec sa barre de rendu collée en bas) est immersive.
+  // Sans elle, `/examens` — la liste — perdrait aussi ses onglets de navigation.
+  const immersive = /^\/(quest|lesson|onboarding|examen\/)/.test(location.pathname);
 
   return (
     <div className="app-shell relative min-h-[100dvh] bg-black-deep">

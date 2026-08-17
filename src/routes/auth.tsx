@@ -13,16 +13,49 @@ import { useT } from "@/lib/i18n";
 import { useEntrance } from "@/shared/lib/motion";
 import type { TranslationKeys } from "@/lib/i18n/types";
 
-/** Map a raw Supabase auth error to a localized, user-actionable message. */
-function friendlyAuthError(t: TranslationKeys, err: unknown): string {
+/** `AuthError.code` when supabase-js exposes one (it is absent on plain Errors). */
+function authCode(err: unknown): string {
+  const code = (err as { code?: unknown } | null)?.code;
+  return typeof code === "string" ? code : "";
+}
+
+/** GoTrue refuses an unconfirmed sign-in with « Email not confirmed ». */
+export function isEmailNotConfirmed(err: unknown): boolean {
   const msg = err instanceof Error ? err.message.toLowerCase() : "";
+  return msg.includes("email not confirmed") || authCode(err) === "email_not_confirmed";
+}
+
+/** Map a raw Supabase auth error to a localized, user-actionable message. */
+export function friendlyAuthError(t: TranslationKeys, err: unknown): string {
+  const msg = err instanceof Error ? err.message.toLowerCase() : "";
+  const code = authCode(err);
   if (msg.includes("invalid login")) return t.auth.errorInvalidLogin;
-  if (msg.includes("email not confirmed")) return t.auth.errorEmailNotConfirmed;
-  if (msg.includes("user already registered")) return t.auth.errorAccountExists;
-  if (msg.includes("rate limit") || msg.includes("too many")) return t.auth.errorRateLimit;
+  if (isEmailNotConfirmed(err)) return t.auth.errorEmailNotConfirmed;
+  if (msg.includes("user already registered") || code === "user_already_exists")
+    return t.auth.errorAccountExists;
+  // A mailer failure is not a credentials problem: the account exists, only the mail
+  // never left. Answering « authentication error » sends the user back to a form that
+  // will then tell them the account already exists — the dead end this branch closes.
+  if (msg.includes("error sending")) return t.auth.errorMailerDown;
+  // GoTrue's per-address cooldown reads « For security purposes, you can only request
+  // this after N seconds » — neither « rate limit » nor « too many » appears in it.
+  if (
+    msg.includes("rate limit") ||
+    msg.includes("too many") ||
+    msg.includes("for security purposes") ||
+    code === "over_email_send_rate_limit"
+  )
+    return t.auth.errorRateLimit;
   if (msg.includes("password")) return t.auth.passwordTooShort;
-  if (msg.includes("signup_disabled")) return t.auth.errorSignupDisabled;
+  if (msg.includes("signup_disabled") || code === "signup_disabled")
+    return t.auth.errorSignupDisabled;
   return t.auth.errorGeneric;
+}
+
+/** Seconds GoTrue asks us to wait, parsed from its cooldown message. */
+function cooldownFromError(err: unknown): number {
+  const m = err instanceof Error ? /after (\d+) seconds?/i.exec(err.message) : null;
+  return m ? Number(m[1]) : 0;
 }
 
 export const Route = createFileRoute("/auth")({
@@ -59,6 +92,13 @@ function AuthPage() {
   const [emailSent, setEmailSent] = useState(false);
   const [forgotSent, setForgotSent] = useState(false);
   const [sentTo, setSentTo] = useState("");
+  // Confirmation resend: the interstitial used to be a one-way door — a mail lost in
+  // spam or refused by the mailer left no way to ask for another one.
+  const [resendBusy, setResendBusy] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [resendNote, setResendNote] = useState("");
+  // Set when a sign-in fails on an unconfirmed address, to offer the same resend there.
+  const [unconfirmedEmail, setUnconfirmedEmail] = useState("");
   // Inline, screen-reader-announced form error (see #23). `passwordError` is the
   // specific min-length validation surfaced on the password field.
   const [formError, setFormError] = useState("");
@@ -120,9 +160,45 @@ function AuthPage() {
     };
   }, [navigate, t]);
 
+  // Cooldown ticker — mirrors GoTrue's own per-address throttle so the button says
+  // when it will work again instead of failing on every click.
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const id = setTimeout(() => setResendCooldown((s) => s - 1), 1000);
+    return () => clearTimeout(id);
+  }, [resendCooldown]);
+
+  /** Ask Supabase for a fresh confirmation link, from the interstitial or the login form. */
+  async function resendConfirmation(target: string) {
+    setResendNote("");
+    setFormError("");
+    setResendBusy(true);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email: target,
+        options: { emailRedirectTo: `${window.location.origin}/dashboard` },
+      });
+      if (error) throw error;
+      setSentTo(target);
+      setEmailSent(true);
+      setResendNote(t.auth.emailSentResendDone);
+      setResendCooldown(60);
+    } catch (err) {
+      const message = friendlyAuthError(t, err);
+      setFormError(message);
+      toast.error(message);
+      setResendCooldown(cooldownFromError(err));
+    } finally {
+      setResendBusy(false);
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setFormError("");
+    setResendNote("");
+    setUnconfirmedEmail("");
     if (password.length < 8) {
       const msg = t.auth.passwordTooShort;
       setPasswordError(msg);
@@ -146,6 +222,22 @@ function AuthPage() {
           },
         });
         if (error) throw error;
+
+        // Email-enumeration protection: on an address that already has an account,
+        // GoTrue answers 200 with an OBFUSCATED user — fresh random id, empty role,
+        // a `confirmation_sent_at` stamped now — and sends NOTHING. The only honest
+        // tell is an EMPTY `identities` array (verified against prod, 2026-08-16).
+        // Without this branch the interstitial promises a mail that never comes and
+        // the address is stuck: signing up again repeats the lie, signing in answers
+        // « confirm your account first ». `undefined` identities ≠ empty: only an
+        // actual empty array means « nothing was created here ».
+        const identities = data.user?.identities;
+        if (!data.session && Array.isArray(identities) && identities.length === 0) {
+          const message = t.auth.errorAccountExistsSignup;
+          setFormError(message);
+          toast.error(message);
+          return;
+        }
 
         // Profile bootstrap (display name + role) is extracted to the
         // `bootstrapProfile` server fn (review #19). It is authenticated, so it can
@@ -185,6 +277,9 @@ function AuthPage() {
       const message = friendlyAuthError(t, err);
       setFormError(message);
       toast.error(message);
+      // « Confirm your account first » was a dead end for anyone whose mail was lost:
+      // offer the resend right where they are told to check their inbox.
+      if (isEmailNotConfirmed(err)) setUnconfirmedEmail(email);
     } finally {
       setBusy(false);
     }
@@ -293,11 +388,34 @@ function AuthPage() {
             </div>
             <button
               type="button"
+              disabled={resendBusy || resendCooldown > 0}
+              onClick={() => void resendConfirmation(sentTo)}
+              className="mt-5 flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-gold/40 bg-gold/10 py-2.5 text-sm font-bold text-gold transition hover:bg-gold/20 disabled:opacity-60"
+            >
+              {resendBusy && <Loader2 className="h-4 w-4 animate-spin" />}
+              {resendCooldown > 0
+                ? t.auth.emailSentResendWait.replace("{s}", String(resendCooldown))
+                : t.auth.emailSentResend}
+            </button>
+            <div role="status" aria-live="polite">
+              {resendNote && <p className="mt-3 text-xs text-gold">{resendNote}</p>}
+            </div>
+            <div role="alert" aria-live="polite">
+              {formError && (
+                <p className="mt-3 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-xs text-gold">
+                  {formError}
+                </p>
+              )}
+            </div>
+            <button
+              type="button"
               onClick={() => {
                 setEmailSent(false);
                 setSentTo("");
+                setResendNote("");
+                setFormError("");
               }}
-              className="mt-6 inline-flex min-h-11 items-center text-xs text-gold hover:underline"
+              className="mt-4 inline-flex min-h-11 items-center text-xs text-gold hover:underline"
             >
               {t.auth.emailSentEdit}
             </button>
@@ -539,6 +657,19 @@ function AuthPage() {
                     </p>
                   )}
                 </div>
+                {unconfirmedEmail && (
+                  <button
+                    type="button"
+                    disabled={resendBusy || resendCooldown > 0}
+                    onClick={() => void resendConfirmation(unconfirmedEmail)}
+                    className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-gold/40 bg-gold/10 py-2.5 text-sm font-bold text-gold transition hover:bg-gold/20 disabled:opacity-60"
+                  >
+                    {resendBusy && <Loader2 className="h-4 w-4 animate-spin" />}
+                    {resendCooldown > 0
+                      ? t.auth.emailSentResendWait.replace("{s}", String(resendCooldown))
+                      : t.auth.emailSentResend}
+                  </button>
+                )}
                 <button
                   type="submit"
                   disabled={busy}

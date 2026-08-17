@@ -212,6 +212,11 @@ export function ReportContent({ report }: { report: ReportData }) {
           <Calendar className="w-5 h-5 text-gold" />
           {t.parentReport.activityTitle}
         </h3>
+        {/* La colonne DOIT porter `h-full`. Sans hauteur définie, le pourcentage
+            de la barre se résout contre un parent auto — donc contre rien : le
+            graphe rendait 0 px de haut sur toute sa largeur, et le parent voyait
+            « Activité des 30 derniers jours » vide même avec des données.
+            Mesuré dans Chromium : colonne 0 px → 128 px après correctif. */}
         <div className="flex items-end gap-[2px] h-32 overflow-x-auto">
           {dailyActivity.map((day) => {
             const maxExercises = Math.max(...dailyActivity.map((d) => d.exercises), 1);
@@ -219,7 +224,7 @@ export function ReportContent({ report }: { report: ReportData }) {
             return (
               <div
                 key={day.date}
-                className="flex-1 min-w-[6px] group relative"
+                className="flex h-full min-w-[6px] flex-1 items-end"
                 title={`${day.date}: ${day.exercises} exercice(s), ${day.minutes} min, ${day.avgScore}%`}
               >
                 <div
@@ -249,9 +254,19 @@ export function ReportContent({ report }: { report: ReportData }) {
             {subjectStats.map((s) => (
               <div key={s.subjectId} className="flex items-center gap-2 sm:gap-3">
                 {/* Fixed columns shrink on phones so the progress bar keeps a usable
-                    width down to 360px (multi-device audit — layout). */}
-                <div className="w-16 truncate text-sm text-muted-foreground sm:w-28">
-                  {isolateLtrRuns(s.name)}
+                    width down to 360px (multi-device audit — layout).
+                    Le NIVEAU est indispensable : une matière appartient à un niveau,
+                    et sans lui cette liste affichait « Mathématiques » quatre fois
+                    de suite sans que rien ne permette de les distinguer. */}
+                <div className="w-16 sm:w-28">
+                  <div className="truncate text-sm text-muted-foreground">
+                    {isolateLtrRuns(s.name)}
+                  </div>
+                  {s.gradeName && (
+                    <div className="truncate text-2xs text-muted-foreground/80">
+                      {isolateLtrRuns(s.gradeName)}
+                    </div>
+                  )}
                 </div>
                 <div className="h-4 min-w-0 flex-1 overflow-hidden rounded-full bg-muted/50">
                   <div
@@ -264,6 +279,16 @@ export function ReportContent({ report }: { report: ReportData }) {
                 </div>
                 <div className="w-12 text-end text-xs text-muted-foreground sm:w-20">
                   {s.attempts} {t.parentReport.exSuffix}
+                  {/* Couverture du programme — même règle que la carte /parcours
+                      de l'élève. Absente quand la matière n'a aucun chapitre
+                      publié : la fraction n'existe pas, elle ne vaut pas 0 %. */}
+                  {s.chaptersTotal > 0 && (
+                    <div className="tabular-nums text-2xs text-muted-foreground/80">
+                      {t.parentReport.coverageShort
+                        .replace("{done}", String(s.chaptersCompleted))
+                        .replace("{total}", String(s.chaptersTotal))}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

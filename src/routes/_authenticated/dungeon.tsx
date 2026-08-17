@@ -36,6 +36,7 @@ import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/li
 import { isValidAnswerFormat } from "@/shared/lib/answer-formats";
 import { RichField } from "@/components/ui/svg-figure";
 import { useT } from "@/lib/i18n";
+import { useLearningPulse } from "@/hooks/use-learning-pulse";
 import { LoadingState } from "@/components/ui/loading-state";
 import { BackLink } from "@/components/ui/back-link";
 import { PageShell } from "@/components/ui/page-shell";
@@ -72,6 +73,10 @@ function DungeonPage() {
   const submitAnswer = useServerFn(submitDungeonAnswer);
   const submitRun = useServerFn(submitDungeonRun);
   const fetchAccess = useServerFn(getDungeonAccess);
+
+  // Le donjon compte dans le temps d'apprentissage du suivi parental (route
+  // `_authenticated` : le visiteur est toujours connecté ici).
+  useLearningPulse({ surface: "dungeon" });
 
   const accessQuery = useQuery({
     queryKey: ["dungeon-access"],

@@ -85,6 +85,8 @@ function ExercicePage() {
           potionApplied: null,
           retryShieldUsed: false,
           improved: false,
+          // Le visiteur anonyme ne gagne pas d'XP : il n'y a rien à primer.
+          speedBonus: 1,
         };
         if (isQuiz) {
           const { correct, total, scorePct } = await score({

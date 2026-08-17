@@ -73,6 +73,8 @@ export type TranslationKeys = {
     errorInvalidLogin: string;
     errorEmailNotConfirmed: string;
     errorAccountExists: string;
+    errorAccountExistsSignup: string;
+    errorMailerDown: string;
     errorRateLimit: string;
     errorSignupDisabled: string;
     errorGeneric: string;
@@ -84,6 +86,9 @@ export type TranslationKeys = {
     emailSentBody2: string;
     emailSentSpam: string;
     emailSentEdit: string;
+    emailSentResend: string;
+    emailSentResendWait: string;
+    emailSentResendDone: string;
     // Password reset (étude 15 lot 9) — forgot-password request + /auth/reset
     forgotCta: string;
     forgotTitle: string;
@@ -230,6 +235,12 @@ export type TranslationKeys = {
     bossFight: string;
     bossHp: string;
     bossStrike: string;
+    bossRankCritical: string;
+    bossRankFast: string;
+    bossRankSteady: string;
+    bossResultHp: string;
+    bossSpeedBonus: string;
+    bossRankHint: string;
     questionOf: string;
     feedbackMsg: string;
     selectedAnswer: string;
@@ -287,6 +298,44 @@ export type TranslationKeys = {
   levelUp: {
     title: string;
     tapContinue: string;
+  };
+  // Examen blanc (étude 02)
+  exam: {
+    title: string;
+    subtitle: string;
+    none: string;
+    loading: string;
+    notFound: string;
+    back: string;
+    duration: string;
+    papers: string;
+    maxPoints: string;
+    startRanked: string;
+    startPractice: string;
+    resume: string;
+    done: string;
+    noHelp: string;
+    byPaper: string;
+    coefficient: string;
+    questionOf: string;
+    previous: string;
+    next: string;
+    answered: string;
+    saving: string;
+    saveFailed: string;
+    submit: string;
+    resultTitle: string;
+    scoreOn20: string;
+    scorePoints: string;
+    rewards: string;
+    practiceNoRank: string;
+    percentile: string;
+    percentilePending: string;
+    review: string;
+    yourAnswer: string;
+    correctAnswer: string;
+    noAnswer: string;
+    retryPractice: string;
   };
   // Dungeon
   dungeon: {
@@ -683,6 +732,10 @@ export type TranslationKeys = {
     linkCta: string;
     linking: string;
     linkHint: string;
+    // Mémoire locale du code sur la page publique /suivi (sans compte, sans session).
+    rememberCode: string;
+    rememberHint: string;
+    forgetCode: string;
     linkSuccess: string;
     linkFailed: string;
     // Alliance-code errors, keyed by the server's stable ParentCodeErrorCode
@@ -756,6 +809,167 @@ export type TranslationKeys = {
     goalSaved: string;
     goalProgress: string;
     goalUnit: string;
+    coverageShort: string;
+  };
+  // Suivi parental « jour par jour » — tableau de bord d'activité quotidienne.
+  // Les libellés d'alerte portent des paramètres entre accolades, remplis par
+  // `alertMessage` depuis les règles pures de `insights/alerts.ts`.
+  parentDaily: {
+    tabSummary: string;
+    tabDaily: string;
+    // Sélecteur de période
+    periodToday: string;
+    periodYesterday: string;
+    periodLast7: string;
+    periodThisWeek: string;
+    periodLast30: string;
+    periodThisMonth: string;
+    periodCustom: string;
+    periodFrom: string;
+    periodTo: string;
+    periodMaxHint: string;
+    // Les quatre questions (§11)
+    q1Works: string;
+    q1Yes: string;
+    q1No: string;
+    q2Serious: string;
+    q3Progress: string;
+    q3Answer: string;
+    q4Efficient: string;
+    unknown: string;
+    noComparison: string;
+    none: string;
+    measuredSinceNotice: string;
+    // Résumé de la journée / période
+    summaryTitleDay: string;
+    summaryTitlePeriod: string;
+    appTime: string;
+    appTimeHint: string;
+    learningTime: string;
+    learningTimeHint: string;
+    activities: string;
+    firstActivity: string;
+    lastActivity: string;
+    sessions: string;
+    activeDays: string;
+    // Répartition du temps par type d'activité
+    breakdownTitle: string;
+    breakdownSubtitle: string;
+    breakdownEmpty: string;
+    typeLesson: string;
+    typeExercise: string;
+    typeQuiz: string;
+    typeRecall: string;
+    typeArena: string;
+    typeBrowse: string;
+    // Cours consultés
+    lessonsTitle: string;
+    lessonsSubtitle: string;
+    lessonsEmpty: string;
+    lessonStudied: string;
+    lessonOpened: string;
+    lessonViews: string;
+    lessonProgressAria: string;
+    // Exercices réalisés
+    exercisesTitle: string;
+    exercisesSubtitle: string;
+    exercisesEmpty: string;
+    attemptNo: string;
+    rightWrong: string;
+    showMore: string;
+    modePractice: string;
+    modeQuiz: string;
+    modeBoss: string;
+    modeRecall: string;
+    // Détail d'une tentative
+    attemptDetailTitle: string;
+    attemptDetailFailed: string;
+    attemptReviewHidden: string;
+    attemptNoAnswers: string;
+    questionLabel: string;
+    childAnswer: string;
+    expectedAnswer: string;
+    // KPI
+    performanceTitle: string;
+    performanceSubtitle: string;
+    kpiAccuracy: string;
+    kpiSuccess: string;
+    kpiTriesToPass: string;
+    kpiPerQuestion: string;
+    kpiPerExercise: string;
+    kpiLessonCompletion: string;
+    kpiExerciseCompletion: string;
+    kpiRegularity: string;
+    kpiStreak: string;
+    // Progression
+    progressionTitle: string;
+    progressionByTime: string;
+    progressionByActivity: string;
+    dayTooltip: string;
+    compareHint: string;
+    // Indices explicables
+    engagementTitle: string;
+    engagementSubtitle: string;
+    efficiencyTitle: string;
+    efficiencySubtitle: string;
+    indexNotEnoughData: string;
+    indexScoreOutOf: string;
+    indexDrivers: string;
+    indexHolders: string;
+    bandExcellent: string;
+    bandGood: string;
+    bandFair: string;
+    bandWeak: string;
+    factorRegularity: string;
+    factorLearningTime: string;
+    factorActivityVolume: string;
+    factorLessonCompletion: string;
+    factorPerseverance: string;
+    factorProgress: string;
+    factorRevision: string;
+    factorAccuracy: string;
+    factorTimeToResult: string;
+    factorRetrySuccess: string;
+    factorPace: string;
+    factorRevisionGain: string;
+    unitDays: string;
+    unitPoints: string;
+    unitTries: string;
+    unitMinutesPerSuccess: string;
+    unitSecondsPerQuestion: string;
+    // Matières
+    subjectsTitle: string;
+    subjectsSubtitle: string;
+    subjectsEmpty: string;
+    colSubject: string;
+    colCoverage: string;
+    coverageAria: string;
+    colTime: string;
+    colLessons: string;
+    colExercises: string;
+    colSuccess: string;
+    colProgress: string;
+    colLevel: string;
+    subjectsStrong: string;
+    subjectsFragile: string;
+    subjectsNeglected: string;
+    subjectsImproving: string;
+    // Alertes et recommandations
+    alertsTitle: string;
+    alertsSubtitle: string;
+    alertsEmpty: string;
+    alertNoActivity: string;
+    alertPerformanceDrop: string;
+    alertTimeWithoutProgress: string;
+    alertTimeLowYield: string;
+    alertChapterStruggle: string;
+    alertSubjectNeglected: string;
+    alertAbandonedExercises: string;
+    alertLowRegularity: string;
+    alertRevisionNeeded: string;
+    alertImprovement: string;
+    alertGoalReached: string;
+    alertStrongSubject: string;
   };
   // Playful explainability hover hints
   explain: {
@@ -870,6 +1084,7 @@ export type TranslationKeys = {
       themeDescFrancais: string;
       themeDescCultureGenerale: string;
       themeDescMuscleCerveau: string;
+      themeDescEducationIslamique: string;
       /** Sober description of a lycée year page (public register). */
       lyceeYearDesc: string;
     };
@@ -883,6 +1098,10 @@ export type TranslationKeys = {
       choosing: string;
       /** R-6 étude 16 — honest note under the « choose » switch button. */
       switchNote: string;
+      /** Titre du bloc listant le reste du programme officiel de la classe. */
+      soonHeading: string;
+      /** Note sous ce titre : ces matières sont au programme, pas encore ouvertes. */
+      soonNote: string;
     };
     reader: {
       defaultSubject: string;

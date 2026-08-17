@@ -12,6 +12,7 @@ import { getTrainingForMisconception } from "@/features/quest/quest.training";
 import { QuestRewardGrid } from "@/features/quest/components/quest-reward-grid";
 import { QuestReviewList } from "@/features/quest/components/quest-review-list";
 import { buildQuestLabels, type QuestContentLang } from "@/features/quest/quest-labels";
+import type { BossSpeedTier } from "@/features/quest/boss-speed";
 import { Confetti } from "@/features/quest/components/confetti";
 import { LevelUpCelebration } from "@/components/ui/level-up-celebration";
 import { ExplainHint } from "@/components/ui/explain-hint";
@@ -35,6 +36,7 @@ export function QuestResultScreen({
   isQuiz,
   isRtl,
   isRecall,
+  boss,
   rewards,
   recallUnlockable,
   qlang,
@@ -55,6 +57,8 @@ export function QuestResultScreen({
   isQuiz: boolean;
   isRtl: boolean;
   isRecall: boolean;
+  /** Bilan du chronomètre en mode boss — `null` hors combat de boss. */
+  boss: { hp: number; rank: BossSpeedTier } | null;
   rewards: boolean;
   recallUnlockable: boolean;
   qlang: QuestContentLang;
@@ -176,6 +180,42 @@ export function QuestResultScreen({
               String(result.durationSeconds),
             )}
           </p>
+          {/* Combat de boss : le bilan du CHRONOMÈTRE, distinct du score de la
+              correction juste au-dessus. Le temps décide des dégâts, jamais de la
+              justesse — et jamais de la fin de la question. */}
+          {boss && (
+            <div
+              className="mt-4 rounded-2xl border border-destructive/40 bg-destructive/10 p-4"
+              data-testid="boss-result"
+              dir={isRtl ? "rtl" : undefined}
+            >
+              <div className="font-display text-lg font-bold text-destructive">
+                {boss.rank === "critical"
+                  ? t.quest.bossRankCritical
+                  : boss.rank === "fast"
+                    ? t.quest.bossRankFast
+                    : t.quest.bossRankSteady}
+              </div>
+              <p className="mt-1 text-sm font-semibold">
+                {t.quest.bossResultHp.replace("{hp}", String(boss.hp))}
+              </p>
+              {/* L'autre lecture du même chronomètre : la prime sur les XP,
+                  décidée serveur. On n'affiche que ce qui a été accordé — pas
+                  de « tu aurais pu avoir », qui ne serait qu'un reproche. */}
+              {rewards && result.speedBonus > 1 && (
+                <p
+                  className="mt-2 text-sm font-bold text-[color:var(--gold)]"
+                  data-testid="boss-speed-bonus"
+                >
+                  {t.quest.bossSpeedBonus.replace(
+                    "{pct}",
+                    String(Math.round((result.speedBonus - 1) * 100)),
+                  )}
+                </p>
+              )}
+              <p className="mt-2 text-xs text-muted-foreground">{t.quest.bossRankHint}</p>
+            </div>
+          )}
           {isQuiz && (
             <div
               className={`mt-4 rounded-2xl border p-4 text-sm font-semibold ${

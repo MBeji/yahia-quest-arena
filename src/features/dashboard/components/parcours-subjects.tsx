@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, BookOpen, ChevronRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, ChevronRight, Clock } from "lucide-react";
 import { useI18n, useT } from "@/lib/i18n";
 import { isRtlText } from "@/shared/lib/utils";
 import { parcoursName } from "@/shared/lib/parcours-locale";
+import type { OfficialSubject } from "@/shared/constants/programme-officiel";
 
 /**
  * Public level page — « Référence » register (chantier C8, L1.3). Presentational: the
@@ -10,6 +11,11 @@ import { parcoursName } from "@/shared/lib/parcours-locale";
  * subjects of one level/track, each → its public subject hub (`/matiere/$subjectId`).
  * A `coming_soon` (or otherwise empty) parcours shows a "bientôt" state. No gameplay
  * and no premium lock (free pivot). Copy is i18n (fr/en/ar).
+ *
+ * Le menu est celui du PROGRAMME, pas celui du catalogue : sous les matières ouvertes,
+ * `soon` liste le reste des matières officielles de la classe, en cartes « bientôt »
+ * non cliquables (aucune page ne les servirait). Une classe entièrement vide garde son
+ * état « contenu bientôt disponible » ET annonce ses matières à venir.
  */
 
 export type ParcoursSubjectsParcours = {
@@ -31,12 +37,15 @@ export type ParcoursSubjectsSubject = {
 export function ParcoursSubjects({
   parcours,
   subjects,
+  soon = [],
   isAuthenticated = false,
   onChoose,
   isChoosing = false,
 }: {
   parcours: ParcoursSubjectsParcours;
   subjects: ParcoursSubjectsSubject[];
+  /** Le reste du programme officiel de la classe — matières annoncées, pas encore ouvertes. */
+  soon?: readonly OfficialSubject[];
   /** When signed in, offer to make this the active parcours (replaces the old /themes switch). */
   isAuthenticated?: boolean;
   onChoose?: () => void;
@@ -119,6 +128,38 @@ export function ParcoursSubjects({
             </li>
           ))}
         </ul>
+      )}
+
+      {soon.length > 0 && (
+        <section className="mt-10">
+          <h2 className="font-display text-lg font-bold">{t.public.niveau.soonHeading}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">{t.public.niveau.soonNote}</p>
+          <ul className="mt-3 grid gap-3 sm:grid-cols-2">
+            {soon.map((s) => (
+              <li key={s.id}>
+                <div
+                  className="flex h-full items-center gap-3 rounded-2xl border border-dashed border-border bg-card p-4 opacity-70"
+                  aria-disabled="true"
+                >
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-secondary text-muted-foreground">
+                    <Clock className="h-5 w-5" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span
+                      className="block truncate font-display text-base font-bold"
+                      dir={isRtlText(s.name) ? "rtl" : "ltr"}
+                    >
+                      {s.name}
+                    </span>
+                    <span className="mt-0.5 block text-xs text-muted-foreground">
+                      {t.public.catalogue.cardComingSoon}
+                    </span>
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
     </div>
   );

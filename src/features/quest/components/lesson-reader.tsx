@@ -14,6 +14,8 @@ import { renderLesson, renderSummary } from "@/shared/lib/markdown";
 import { asContentLang } from "@/shared/lib/lesson-blocks";
 import { sanitizeSvg } from "@/shared/lib/figure";
 import { isRtlText } from "@/shared/lib/utils";
+import { readingProgressPct } from "@/shared/lib/learning-pulse";
+import { useLearningPulse } from "@/hooks/use-learning-pulse";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useT } from "@/lib/i18n";
 import { exerciseRouteFor } from "../exercise-route";
@@ -74,6 +76,10 @@ export function LessonReader({
   const [showSummary, setShowSummary] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [zoomedFigure, setZoomedFigure] = useState<{ svg: string; label: string } | null>(null);
+  // Le plus loin descendu dans le cours, pas la position courante : remonter en
+  // haut ne « dé-lit » rien. C'est le « % du cours consulté » du suivi parental,
+  // et avec la durée, ce qui distingue un cours étudié d'une page ouverte.
+  const [readPct, setReadPct] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
 
   const content = chapter.lesson_content;
@@ -124,6 +130,45 @@ export function LessonReader({
     headings.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, [rendered, showToc, sections]);
+
+  // Profondeur de lecture. L'écouteur est passif et ne provoque un rendu que par
+  // paliers de 5 points (une vingtaine de fois sur un cours entier, pas à chaque
+  // pixel) : `setReadPct` renvoyant `prev` inchangé, React court-circuite.
+  useEffect(() => {
+    if (typeof window === "undefined" || !rendered) return;
+
+    const compute = () => {
+      const el = contentRef.current;
+      if (!el) return;
+      const pct = readingProgressPct({
+        contentTop: el.getBoundingClientRect().top + window.scrollY,
+        contentHeight: el.offsetHeight,
+        viewportHeight: window.innerHeight,
+        scrollY: window.scrollY,
+      });
+      setReadPct((prev) => (pct >= prev + 5 || (pct >= 100 && prev < 100) ? pct : prev));
+    };
+
+    compute();
+    window.addEventListener("scroll", compute, { passive: true });
+    window.addEventListener("resize", compute, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", compute);
+      window.removeEventListener("resize", compute);
+    };
+  }, [rendered]);
+
+  // Le temps de lecture d'un cours n'était mesuré NULLE PART : ouvrir un
+  // chapitre ne laissait aucune trace. Sans ce pouls, le tableau de bord parental
+  // ne pourrait pas distinguer « a lu le cours » de « a ouvert la page ».
+  // Réservé aux élèves connectés : un lecteur anonyme n'a pas de suivi.
+  useLearningPulse({
+    surface: "lesson",
+    chapterId,
+    subjectId: chapter.subject_id,
+    progressPct: readPct,
+    enabled: isAuthenticated,
+  });
 
   // Agrandissement des figures (US-3). L'écouteur est DÉLÉGUÉ sur le conteneur : les
   // figures sont du HTML injecté, il n'existe aucun nœud React où accrocher un handler.

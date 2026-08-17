@@ -39,6 +39,11 @@ vi.mock("@/lib/i18n", () => ({
     dungeon: { title: "Le Donjon Infini", desc: "Descends le plus bas possible." },
     duel: { title: "Duels", subtitle: "Défie un adversaire." },
     leaderboard: { titleGradient: "Classement" },
+    exam: {
+      title: "Examens blancs",
+      subtitle: "L'épreuve en conditions réelles.",
+      rewards: "+{xp} XP · +{coins} pièces",
+    },
   }),
 }));
 
@@ -49,11 +54,13 @@ async function renderArene() {
 }
 
 describe("Arène hub", () => {
-  it("links to the three competitive screens", async () => {
+  it("links to the four competitive screens", async () => {
     const { container } = await renderArene();
     expect(container.querySelector('a[href="/dungeon"]')).not.toBeNull();
     expect(container.querySelector('a[href="/duel"]')).not.toBeNull();
     expect(container.querySelector('a[href="/leaderboard"]')).not.toBeNull();
+    // L'examen blanc (étude 02) entre par le hub, pas par une 5ᵉ entrée de nav.
+    expect(container.querySelector('a[href="/examens"]')).not.toBeNull();
   });
 
   it("shows each mode's reward from the game constants (interpolated, not literal)", async () => {

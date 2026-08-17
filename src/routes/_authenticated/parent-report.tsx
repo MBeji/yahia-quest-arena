@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import {
   buildFamilyReportShareText,
+  DailyDashboard,
   getLinkedStudents,
   getStudentReport,
   getStudentWeeklyGoal,
@@ -46,6 +47,11 @@ function ParentReport() {
   const [studentCode, setStudentCode] = useState("");
   const [relationLabel, setRelationLabel] = useState("parent");
   const [adminPage, setAdminPage] = useState(1);
+  // Deux lectures du même élève : la synthèse historique (« Bilan ») et le suivi
+  // jour par jour. Elles ne répondent pas aux mêmes questions et n'ont pas la
+  // même densité — les empiler sur un seul écran les rendrait toutes deux
+  // illisibles, d'où l'onglet.
+  const [view, setView] = useState<"summary" | "daily">("summary");
   const ADMIN_PAGE_SIZE = 100;
 
   const { data: studentsData, isLoading: loadingStudents } = useQuery({
@@ -312,12 +318,74 @@ function ParentReport() {
       {/* Objectif de la semaine — le parent fixe la quête famille de l'enfant. */}
       {!isAdmin && selectedStudent && <WeeklyGoalCard studentId={selectedStudent} />}
 
-      {loadingReport ? (
+      {selectedStudent && (
+        <div className="mb-4 inline-flex rounded-lg border border-border/60 bg-surface-2 p-0.5 print:hidden">
+          <ViewTab
+            active={view === "summary"}
+            label={t.parentDaily.tabSummary}
+            onClick={() => setView("summary")}
+          />
+          <ViewTab
+            active={view === "daily"}
+            label={t.parentDaily.tabDaily}
+            onClick={() => setView("daily")}
+          />
+        </div>
+      )}
+
+      {view === "daily" && selectedStudent ? (
+        <DailyDashboardPanel studentId={selectedStudent} />
+      ) : loadingReport ? (
         <LoadingState label={t.common.loading} className="py-20" />
       ) : report ? (
         <ReportContent report={report} />
       ) : null}
     </div>
+  );
+}
+
+function ViewTab({
+  active,
+  label,
+  onClick,
+}: {
+  active: boolean;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={`rounded-md px-4 py-2 text-sm font-semibold transition [@media(pointer:coarse)]:min-h-11 ${
+        active
+          ? "bg-[image:var(--gradient-gold)] text-primary-foreground"
+          : "text-muted-foreground hover:text-foreground"
+      }`}
+    >
+      {label}
+    </button>
+  );
+}
+
+/**
+ * L'objectif de la semaine alimente une alerte positive du tableau de bord
+ * (« objectif atteint »). La requête partage la clé de `WeeklyGoalCard` :
+ * TanStack Query la dédoublonne, il n'y a pas d'aller-retour supplémentaire.
+ */
+function DailyDashboardPanel({ studentId }: { studentId: string }) {
+  const getGoalFn = useServerFn(getStudentWeeklyGoal);
+  const { data: goal } = useQuery({
+    queryKey: ["weekly-goal", studentId],
+    queryFn: () => getGoalFn({ data: { studentId } }),
+  });
+
+  return (
+    <DailyDashboard
+      source={{ kind: "student", studentId }}
+      weeklyGoal={goal ? { target: goal.target, done: goal.done } : null}
+    />
   );
 }
 
