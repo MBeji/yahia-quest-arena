@@ -98,18 +98,46 @@ export class QuestPage {
     // Instant feedback (levier 01): on a corrigible exercise, validating reveals
     // the verdict instead of advancing — the SAME button then reads "Continuer".
     // Quiz and recall runs have no verdict, so this is a no-op there.
-    await this.continuePastFeedback();
+    await this.continuePastFeedback(before);
     // Wait for the advance: the prompt changes, or the results screen appears.
     await expect
-      .poll(
-        async () => {
-          if (await this.score.isVisible().catch(() => false)) return "done";
-          const now = await this.radioGroup.getAttribute("aria-label").catch(() => null);
-          return now && now !== before ? "next" : "wait";
-        },
-        { timeout: 12_000 },
-      )
+      .poll(async () => ((await this.hasAdvanced(before)) ? "moved" : "wait"), { timeout: 12_000 })
       .not.toBe("wait");
+  }
+
+  /** True once the run left `before` — next question mounted, or score screen up. */
+  private async hasAdvanced(before: string): Promise<boolean> {
+    if (await this.score.isVisible().catch(() => false)) return true;
+    const now = await this.radioGroup.getAttribute("aria-label").catch(() => null);
+    return Boolean(now && now !== before);
+  }
+
+  /**
+   * After validating, the run goes one of two ways: the per-question verdict
+   * appears (corrigible exercise — the SAME `quest-submit` hook then reads
+   * « Continuer », so advancing is a second click), or it advances straight away
+   * (comprehension quiz and recall have no verdict). Wait for whichever comes.
+   *
+   * ⚠️ This POLLS on purpose. The first version asked
+   * `feedback.isVisible({ timeout: 3_000 })` — and Playwright's own typings mark
+   * that option `@deprecated This option is ignored`: `isVisible()` never waits,
+   * it answers immediately. So it always ran BEFORE the verdict's server
+   * round-trip landed, returned false, and left the player sitting on « Continuer »
+   * while the caller polled 12 s for an advance that could not come. Eight of the
+   * nine nightly failures of 2026-08-14 came from that single word.
+   */
+  private async continuePastFeedback(before: string): Promise<void> {
+    const feedback = this.page.getByTestId("quest-feedback");
+    const deadline = Date.now() + 8_000;
+    while (Date.now() < deadline) {
+      if (await feedback.isVisible().catch(() => false)) {
+        await expect(this.submit).toBeEnabled({ timeout: 5_000 });
+        await this.submit.click();
+        return;
+      }
+      if (await this.hasAdvanced(before)) return;
+      await this.page.waitForTimeout(100);
+    }
   }
 
   /**
@@ -117,17 +145,6 @@ export class QuestPage {
    * skipping the "preparing" screen shown while the secure session is created and
    * the inter-question transitions. Returns false once the score screen is up.
    */
-  /**
-   * If the per-question verdict panel is up, click through it. The player keeps
-   * one hook (`quest-submit`) across "Valider" and "Continuer", so advancing is
-   * a second click on the same button — never a different locator.
-   */
-  private async continuePastFeedback(): Promise<void> {
-    const feedback = this.page.getByTestId("quest-feedback");
-    if (!(await feedback.isVisible({ timeout: 3_000 }).catch(() => false))) return;
-    await expect(this.submit).toBeEnabled({ timeout: 5_000 });
-    await this.submit.click();
-  }
 
   private async questionReady(): Promise<boolean> {
     await expect(this.options.first().or(this.score)).toBeVisible({ timeout: 20_000 });
