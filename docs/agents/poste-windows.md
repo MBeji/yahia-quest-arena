@@ -61,6 +61,11 @@ branches, `stash`, `reflog` et `node_modules` (jonction) sont **communs**.
   pas un bug.
 - Dépendances incohérentes après un changement de branche : `npm install` (jamais `npm ci`, qui
   efface `node_modules` pour tout le monde).
+- ⚠️ **`git worktree remove --force` suit les jonctions et détruit leurs CIBLES** — pas le lien,
+  le dossier pointé : `node_modules` partagé, corpus monté depuis le dépôt privé. Délier
+  (`rmdir` du seul lien, jamais `rm -rf`) **avant** de retirer le worktree, et vérifier les
+  cibles après. Un worktree laissé en place ne coûte rien ; une cible détruite coûte une
+  réinstallation complète.
 
 ## `curl` déclare la prod morte alors qu'elle va bien (révocation TLS, schannel)
 
