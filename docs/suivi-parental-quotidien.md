@@ -233,8 +233,15 @@ that uses them ») :
 2. **Régénérer les types**, une fois la prod migrée :
 
    ```bash
-   npx supabase gen types typescript --project-id <ref-prod> > src/shared/integrations/supabase/types.ts
+   npx supabase gen types typescript --project-id fasrenmmrkqjoobrztbp > types.new.ts
    ```
+
+   Le ref est celui de la **prod** — source de vérité
+   [`scripts/shared/prod-targets.mjs`](../scripts/shared/prod-targets.mjs), **jamais** le
+   `project_id` de `supabase/config.toml`, qui est un identifiant purement local
+   ([`agents/README.md`](./agents/README.md)). Générer dans un fichier temporaire puis le
+   déplacer : rediriger droit dans la cible la **tronque avant** que l'échec ne soit constaté,
+   et un `Unauthorized` laisse alors du JSON d'erreur à la place des types.
 
 3. **PR 2 — le code.** Instrumentation, moteur d'indices, UI, i18n, tests.
 
