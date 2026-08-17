@@ -144,7 +144,44 @@ Trois automatismes se déclenchent :
 > Le passage de relais côté contenu se fait donc **là-bas** — voir
 > [content-generation-pipeline.md](./content-generation-pipeline.md).
 
-## 7. Quand ça casse — le retour arrière
+## 7. Clôture de session — ce qu'on laisse derrière soi
+
+Le merge n'est pas la fin de la session : une session finie **proprement** ne laisse ni
+demi-état, ni processus vivant, ni savoir enfermé dans la tête d'un agent. Les neuf points
+ci-dessous se déroulent **après** que le merge est réel, dans cet ordre. Ils ne remplacent
+aucun gate — aucun n'est automatisable, c'est justement pourquoi ils sont écrits.
+
+1. **Le merge est réel, pas seulement affiché.**
+   `git merge-base --is-ancestor <sha> origin/main` — le statut `MERGED` d'une PR dont la
+   base était une autre branche ment (merge fantôme, 2026-08 : 23 figures perdues sans
+   aucune alerte).
+2. **La prod sert vraiment le changement.** Un workflow vert prouve qu'il s'est exécuté,
+   pas que la surface a bougé : ouvrir la page publique concernée, ou comparer l'état
+   avant/après. Un déploiement vert sur une page inchangée est un faux positif.
+3. **L'arbre de travail est propre.** `git status --short` vide. Attention aux fichiers
+   **générés** salis en route : `src/routeTree.gen.ts` (réordonné par un simple
+   `npm run dev`), les types Supabase, `_INDEX.md` côté corpus — les restaurer, jamais les
+   committer.
+4. **Aucun secret recopié ne survit.** Tout `.env` copié dans un worktree pour un essai est
+   supprimé ; on n'y recopie de toute façon que les clés **publiques**, jamais
+   `SUPABASE_SERVICE_ROLE_KEY`.
+5. **Aucun processus laissé en vie** : serveur de dev arrêté, tâches de fond terminées et
+   leur sortie lue (une tâche tuée en silence a pu échouer **ou** avoir déjà tout mergé).
+6. **Les branches.** La branche distante est supprimée au merge ; ramener la locale sur
+   `origin/main` plutôt que la laisser pointer un commit pré-squash. Aucune branche
+   `wip/`/`rescue/` orpheline oubliée derrière soi.
+7. **Le savoir découvert est écrit dans le dépôt** — un piège, une règle de conduite, un
+   invariant : AGENTS.md, `STATUS.md` ou `docs/agents/`. La mémoire privée d'un outil ne se
+   partage pas (AGENTS.md § Multi-agent collaboration).
+8. **Ce qui reste ouvert est dit** : arbitrage à valider, périmètre volontairement non
+   couvert, mesure impossible depuis le poste. Dans la réponse finale — et en **issue** si
+   ça doit survivre à la session.
+9. **Ne jamais supprimer un worktree à l'aveugle.** `git worktree remove --force` suit les
+   jonctions Windows et détruit leurs **cibles** (voir
+   [agents/poste-windows.md](./agents/poste-windows.md)). Un worktree qu'on laisse en place
+   ne coûte rien ; un `node_modules` ou un corpus partagé détruit coûte une réinstallation.
+
+## 8. Quand ça casse — le retour arrière
 
 L'automatisation qui rend la livraison gratuite rend aussi la panne **auto-entretenue** : un
 rollback posé sur Vercel ne tient que jusqu'au prochain merge, qui redéploie `main` — toujours
@@ -220,7 +257,7 @@ La configuration est versionnée dans le repo, mais l'application vit dans GitHu
 
    Ce PAT doit **aussi** porter **`Variables` : Read and write** (« Manage Actions repository
    variables ») — c'est ce qui permet d'écrire `MERGE_FREEZE`, donc de **geler la chaîne**
-   pendant un incident (§7). ⚠️ Ne pas confondre avec **« Agent variables »** (agents Copilot),
+   pendant un incident (§8). ⚠️ Ne pas confondre avec **« Agent variables »** (agents Copilot),
    voisine dans la liste et sans aucun rapport : la méprise rend `gh variable set` en
    `HTTP 403: Resource not accessible by personal access token` alors que tout paraît
    configuré. Ni le `GITHUB_TOKEN` par défaut ni aucune portée de workflow ne peuvent écrire
