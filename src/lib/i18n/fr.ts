@@ -960,6 +960,11 @@ export const fr: TranslationKeys = {
     subjectsEmpty: "Aucune matière travaillée sur cette période.",
     colSubject: "Matière",
     colCoverage: "Programme",
+    scopeLabel: "Afficher :",
+    scopeClass: "Sa classe",
+    scopeAll: "Tout",
+    scopeExcluded:
+      "Hors de sa classe sur cette période : {time} et {exercises} exercice(s) — révisions d’autres niveaux, extras, donjon et duels. Bascule sur « Tout » pour les inclure.",
     coverageAria: "{done} chapitres terminés sur {total}",
     colTime: "Temps",
     colLessons: "Cours",

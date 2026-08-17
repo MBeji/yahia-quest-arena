@@ -943,6 +943,10 @@ export type TranslationKeys = {
     subjectsEmpty: string;
     colSubject: string;
     colCoverage: string;
+    scopeLabel: string;
+    scopeClass: string;
+    scopeAll: string;
+    scopeExcluded: string;
     coverageAria: string;
     colTime: string;
     colLessons: string;

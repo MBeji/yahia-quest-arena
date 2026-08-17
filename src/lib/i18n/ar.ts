@@ -938,6 +938,11 @@ export const ar: TranslationKeys = {
     subjectsEmpty: "لم تُشتغل أيّ مادّة في هذه الفترة.",
     colSubject: "المادّة",
     colCoverage: "البرنامج",
+    scopeLabel: "العرض:",
+    scopeClass: "قسمه",
+    scopeAll: "الكلّ",
+    scopeExcluded:
+      "خارج قسمه في هذه الفترة: {time} و{exercises} تمرينًا — مراجعات مستويات أخرى، وإضافات، وزنزانة ومبارزات. بدّل إلى «الكلّ» لإدراجها.",
     coverageAria: "{done} فصلًا مُنجزًا من أصل {total}",
     colTime: "الوقت",
     colLessons: "دروس",

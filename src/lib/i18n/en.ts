@@ -945,6 +945,11 @@ export const en: TranslationKeys = {
     subjectsEmpty: "No subject worked in this period.",
     colSubject: "Subject",
     colCoverage: "Syllabus",
+    scopeLabel: "Showing:",
+    scopeClass: "Their class",
+    scopeAll: "Everything",
+    scopeExcluded:
+      "Outside their class this period: {time} and {exercises} exercise(s) — other-year revision, extras, dungeon and duels. Switch to “Everything” to include them.",
     coverageAria: "{done} chapters completed out of {total}",
     colTime: "Time",
     colLessons: "Lessons",
