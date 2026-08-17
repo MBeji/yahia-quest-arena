@@ -186,9 +186,29 @@ export const dailyReportSchema = z.object({
    * Le périmètre appliqué — et surtout ce qu'il a mis de côté. Un filtre qui
    * cache sans le dire se lirait comme une chute d'activité.
    */
+  /**
+   * Les parcours et niveaux que l'élève utilise RÉELLEMENT — calculés sur tout
+   * son historique, pas sur la période affichée : un sélecteur qui se vide quand
+   * on choisit « aujourd'hui » serait inutilisable.
+   */
+  scopes: z
+    .array(
+      z.object({
+        /** `all`, `grade:<uuid>` ou `theme:<slug>`. */
+        key: text,
+        kind: z.enum(["grade", "theme"]).catch("grade"),
+        label: text,
+        /** Sa classe — mise en tête par l'écran. */
+        isCurrent: z.boolean().catch(false),
+      }),
+    )
+    .catch([]),
   scope: z
     .object({
-      applied: z.enum(["all", "class"]).catch("all"),
+      /** La clé RÉELLEMENT appliquée : « all » si le filtre n'a rien restreint. */
+      applied: text,
+      /** Le libellé du périmètre appliqué, `null` pour « tout ». */
+      label: nullableText,
       gradeId: nullableText,
       gradeName: nullableText,
       /** Faux quand l'élève n'a pas de classe (parcours libre) : rien à filtrer. */
@@ -199,6 +219,7 @@ export const dailyReportSchema = z.object({
     })
     .catch({
       applied: "all",
+      label: null,
       gradeId: null,
       gradeName: null,
       hasClass: false,

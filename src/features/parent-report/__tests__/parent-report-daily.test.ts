@@ -97,11 +97,35 @@ describe("getStudentDailyReport", () => {
     expect(mockRpc.mock.calls[0][1]).toMatchObject({ p_scope: "class" });
   });
 
-  it("refuse un périmètre inventé plutôt que de le laisser filer au serveur", async () => {
-    await expect(
-      dailyReport({ studentId: STUDENT, from: "2026-08-01", to: "2026-08-07", scope: "9eme" }),
-    ).rejects.toThrow();
-    expect(mockRpc).not.toHaveBeenCalled();
+  // Le périmètre n'est plus un jeu fermé — les niveaux et les thèmes sont des
+  // données. C'est sa FORME qui est contrôlée ici ; la RPC, elle, dégrade vers
+  // « tout » sur une clé qui ne désigne plus rien.
+  it.each([
+    ["all", true],
+    ["class", true],
+    ["grade:99999999-9999-4999-8999-999999999991", true],
+    ["theme:education-islamique", true],
+    ["9eme", false],
+    ["grade:pas-un-uuid", false],
+    ["theme:MAJUSCULES", false],
+    ["grade:99999999-9999-4999-8999-999999999991; DROP TABLE attempts", false],
+  ])("périmètre « %s » accepté ? %s", async (scope, accepted) => {
+    mockRpc.mockResolvedValue({ data: {}, error: null });
+
+    const run = dailyReport({
+      studentId: STUDENT,
+      from: "2026-08-01",
+      to: "2026-08-07",
+      scope,
+    });
+
+    if (accepted) {
+      await run;
+      expect(mockRpc.mock.calls[0][1]).toMatchObject({ p_scope: scope });
+    } else {
+      await expect(run).rejects.toThrow();
+      expect(mockRpc).not.toHaveBeenCalled();
+    }
   });
 
   it("refuse une date qui n'est pas une date de calendrier", async () => {

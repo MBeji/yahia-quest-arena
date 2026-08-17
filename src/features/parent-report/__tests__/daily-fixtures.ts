@@ -106,12 +106,14 @@ export function makeReport(overrides: Partial<DailyReport> = {}): DailyReport {
     // tests qui veulent l'inverse le déclarent explicitement.
     scope: {
       applied: "all",
+      label: null,
       gradeId: null,
       gradeName: null,
       hasClass: true,
       excludedMinutes: 0,
       excludedExercises: 0,
     },
+    scopes: [],
     thresholds: { passPct: 60, studiedSeconds: 120, studiedPct: 60, sessionGapMinutes: 30 },
     days: [],
     lessons: [],
