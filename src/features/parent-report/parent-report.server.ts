@@ -340,7 +340,14 @@ const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Expected YYYY-MM-DD");
 export const getStudentDailyReport = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) =>
-    z.object({ studentId: z.guid(), from: isoDate, to: isoDate }).parse(d),
+    z
+      .object({
+        studentId: z.guid(),
+        from: isoDate,
+        to: isoDate,
+        scope: z.enum(["all", "class"]).default("all"),
+      })
+      .parse(d),
   )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
@@ -349,6 +356,7 @@ export const getStudentDailyReport = createServerFn({ method: "GET" })
       p_student: data.studentId,
       p_from: data.from,
       p_to: data.to,
+      p_scope: data.scope,
     });
 
     if (error) {
@@ -373,7 +381,14 @@ export const getStudentDailyReport = createServerFn({ method: "GET" })
 export const getStudentDailyReportByCode = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
   .inputValidator((d: unknown) =>
-    z.object({ studentCode: z.string().min(8).max(64), from: isoDate, to: isoDate }).parse(d),
+    z
+      .object({
+        studentCode: z.string().min(8).max(64),
+        from: isoDate,
+        to: isoDate,
+        scope: z.enum(["all", "class"]).default("all"),
+      })
+      .parse(d),
   )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
@@ -382,6 +397,7 @@ export const getStudentDailyReportByCode = createServerFn({ method: "GET" })
       p_code: data.studentCode,
       p_from: data.from,
       p_to: data.to,
+      p_scope: data.scope,
     });
 
     if (error) {

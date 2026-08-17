@@ -2092,12 +2092,64 @@ export type Database = {
       };
     };
     Functions: {
+      _scoped_attempts: {
+        Args: { p_student: string; p_subject_ids: string[] };
+        Returns: {
+          completed_at: string;
+          correct_count: number;
+          duration_seconds: number;
+          exercise_id: string;
+          id: string;
+          score_pct: number;
+          session_id: string | null;
+          subject_id: string;
+          total_count: number;
+          user_id: string;
+          variant: string;
+          xp_earned: number;
+        }[];
+        SetofOptions: {
+          from: "*";
+          to: "attempts";
+          isOneToOne: false;
+          isSetofReturn: true;
+        };
+      };
+      _scoped_pulses: {
+        Args: { p_student: string; p_subject_ids: string[] };
+        Returns: {
+          active_seconds: number;
+          chapter_id: string | null;
+          exercise_id: string | null;
+          id: number;
+          occurred_at: string;
+          progress_pct: number | null;
+          subject_id: string | null;
+          surface: string;
+          user_id: string;
+        }[];
+        SetofOptions: {
+          from: "*";
+          to: "learning_pulses";
+          isOneToOne: false;
+          isSetofReturn: true;
+        };
+      };
       _student_attempt_detail_json: {
         Args: { p_attempt: string; p_student: string };
         Returns: Json;
       };
+      _student_class_subject_ids: {
+        Args: { p_student: string };
+        Returns: string[];
+      };
       _student_daily_report_json: {
-        Args: { p_from: string; p_student: string; p_to: string };
+        Args: {
+          p_from: string;
+          p_student: string;
+          p_subject_ids?: string[];
+          p_to: string;
+        };
         Returns: Json;
       };
       _student_id_from_alliance_code: {
@@ -2482,14 +2534,34 @@ export type Database = {
         Args: { p_attempt: string; p_code: string };
         Returns: Json;
       };
-      get_student_daily_report: {
-        Args: { p_from: string; p_student: string; p_to: string };
-        Returns: Json;
-      };
-      get_student_daily_report_by_code: {
-        Args: { p_code: string; p_from: string; p_to: string };
-        Returns: Json;
-      };
+      get_student_daily_report:
+        | {
+            Args: { p_from: string; p_student: string; p_to: string };
+            Returns: Json;
+          }
+        | {
+            Args: {
+              p_from: string;
+              p_scope: string;
+              p_student: string;
+              p_to: string;
+            };
+            Returns: Json;
+          };
+      get_student_daily_report_by_code:
+        | {
+            Args: { p_code: string; p_from: string; p_to: string };
+            Returns: Json;
+          }
+        | {
+            Args: {
+              p_code: string;
+              p_from: string;
+              p_scope: string;
+              p_to: string;
+            };
+            Returns: Json;
+          };
       get_student_report: { Args: { p_student: string }; Returns: Json };
       get_student_report_by_code: { Args: { p_code: string }; Returns: Json };
       get_subject_leaderboard: {
@@ -2751,6 +2823,7 @@ export type Database = {
           p_student: string;
           p_studied_pct: number;
           p_studied_seconds: number;
+          p_subject_ids?: string[];
           p_to: string;
           p_tz: string;
         };

@@ -182,6 +182,29 @@ export const dailyReportSchema = z.object({
       measuredSince: nullableText,
     })
     .catch({ from: "", to: "", days: 0, timezone: "UTC", measuredSince: null }),
+  /**
+   * Le périmètre appliqué — et surtout ce qu'il a mis de côté. Un filtre qui
+   * cache sans le dire se lirait comme une chute d'activité.
+   */
+  scope: z
+    .object({
+      applied: z.enum(["all", "class"]).catch("all"),
+      gradeId: nullableText,
+      gradeName: nullableText,
+      /** Faux quand l'élève n'a pas de classe (parcours libre) : rien à filtrer. */
+      hasClass: z.boolean().catch(false),
+      /** Minutes écartées : autres niveaux, extras, et activité sans matière. */
+      excludedMinutes: numberish,
+      excludedExercises: numberish,
+    })
+    .catch({
+      applied: "all",
+      gradeId: null,
+      gradeName: null,
+      hasClass: false,
+      excludedMinutes: 0,
+      excludedExercises: 0,
+    }),
   thresholds: z
     .object({
       passPct: numberish,

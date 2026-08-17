@@ -102,6 +102,16 @@ export function makeReport(overrides: Partial<DailyReport> = {}): DailyReport {
       // veulent l'inverse le déclarent explicitement.
       measuredSince: "2026-01-01",
     },
+    // Par défaut : aucun périmètre appliqué, et l'élève a bien une classe — les
+    // tests qui veulent l'inverse le déclarent explicitement.
+    scope: {
+      applied: "all",
+      gradeId: null,
+      gradeName: null,
+      hasClass: true,
+      excludedMinutes: 0,
+      excludedExercises: 0,
+    },
     thresholds: { passPct: 60, studiedSeconds: 120, studiedPct: 60, sessionGapMinutes: 30 },
     days: [],
     lessons: [],

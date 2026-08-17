@@ -73,16 +73,23 @@ export function DailyDashboard({
   const [preset, setPreset] = useState<PeriodPresetKey>("today");
   const [custom, setCustom] = useState<DateRange>({ from: shiftDays(today, -13), to: today });
   const [openAttempt, setOpenAttempt] = useState<string | null>(null);
+  // Par défaut on montre SA CLASSE : c'est la question que le parent se pose
+  // (« où en est-il de son programme ? »), et les révisions d'autres niveaux ou
+  // les extras y sont du bruit. Un élève sans classe retombe côté serveur sur
+  // « tout », et le sélecteur disparaît — il n'aurait rien à sélectionner.
+  const [scope, setScope] = useState<"class" | "all">("class");
 
   const range = useMemo(() => resolvePeriod(preset, { today, custom }), [preset, today, custom]);
 
   const { data: report, isLoading } = useQuery({
-    queryKey: ["parent-daily-report", reportSourceKey(source), range.from, range.to],
+    queryKey: ["parent-daily-report", reportSourceKey(source), range.from, range.to, scope],
     queryFn: () =>
       source.kind === "student"
-        ? fetchById({ data: { studentId: source.studentId, from: range.from, to: range.to } })
+        ? fetchById({
+            data: { studentId: source.studentId, from: range.from, to: range.to, scope },
+          })
         : fetchByCode({
-            data: { studentCode: source.studentCode, from: range.from, to: range.to },
+            data: { studentCode: source.studentCode, from: range.from, to: range.to, scope },
           }),
   });
 
@@ -98,6 +105,10 @@ export function DailyDashboard({
           setPreset("custom");
         }}
       />
+
+      {report?.scope.hasClass && (
+        <ScopePicker scope={scope} onScope={setScope} gradeName={report.scope.gradeName} />
+      )}
 
       {isLoading || !report ? (
         <LoadingState label={t.common.loading} className="py-16" />
@@ -142,6 +153,18 @@ function DailyDashboardBody({
   return (
     <>
       <FourQuestions report={report} engagement={engagement} efficiency={efficiency} kpis={kpis} />
+
+      {/* Ce que le filtre a écarté. Sans cette ligne, un parent lirait la baisse
+          des totaux comme une baisse d'activité de son enfant. */}
+      {report.scope.applied === "class" &&
+        (report.scope.excludedMinutes > 0 || report.scope.excludedExercises > 0) && (
+          <p className="flex items-start gap-2 rounded-lg border border-border/50 bg-surface-2 p-3 text-xs text-muted-foreground">
+            <Info className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+            {t.parentDaily.scopeExcluded
+              .replace("{time}", formatMinutes(report.scope.excludedMinutes, "0 min"))
+              .replace("{exercises}", String(report.scope.excludedExercises))}
+          </p>
+        )}
 
       {partiallyMeasured && (
         <p className="flex items-start gap-2 rounded-lg border border-border/50 bg-surface-2 p-3 text-xs text-muted-foreground">
@@ -552,6 +575,46 @@ function CompareCell({
       <div className="mt-0.5 text-xs text-muted-foreground">{label}</div>
       <div className="mt-1">
         <DeltaChip value={delta} suffix={suffix} />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Le périmètre : sa classe, ou tout.
+ *
+ * Il ne s'affiche que si l'élève A une classe. Sur un parcours libre, proposer
+ * « sa classe » n'offrirait qu'un écran vide et une question sans réponse.
+ */
+function ScopePicker({
+  scope,
+  onScope,
+  gradeName,
+}: {
+  scope: "class" | "all";
+  onScope: (next: "class" | "all") => void;
+  gradeName: string | null;
+}) {
+  const t = useT();
+  return (
+    <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border/50 bg-surface-2 p-3 print:hidden">
+      <span className="text-xs text-muted-foreground">{t.parentDaily.scopeLabel}</span>
+      <div className="inline-flex rounded-lg border border-border/60 bg-surface-3 p-0.5">
+        {(["class", "all"] as const).map((key) => (
+          <button
+            key={key}
+            type="button"
+            onClick={() => onScope(key)}
+            aria-pressed={scope === key}
+            className={`rounded-md px-3 py-1.5 text-sm font-medium transition [@media(pointer:coarse)]:min-h-11 ${
+              scope === key
+                ? "bg-[image:var(--gradient-gold)] text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {key === "class" ? (gradeName ?? t.parentDaily.scopeClass) : t.parentDaily.scopeAll}
+          </button>
+        ))}
       </div>
     </div>
   );

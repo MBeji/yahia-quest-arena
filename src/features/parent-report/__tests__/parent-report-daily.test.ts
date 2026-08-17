@@ -75,7 +75,33 @@ describe("getStudentDailyReport", () => {
       p_student: STUDENT,
       p_from: "2026-08-01",
       p_to: "2026-08-07",
+      // Le périmètre par défaut, explicite : le typage de .rpc() ne contrôle PAS
+      // les noms d arguments, ces assertions sont le seul filet.
+      p_scope: "all",
     });
+  });
+
+  // Le filtre demandé en production : « si mon fils est en 9ème, je veux voir son
+  // activité par rapport à sa classe uniquement ». Le périmètre voyage jusqu'à la
+  // RPC, qui seule sait quelles matières composent sa classe.
+  it("transmet le périmètre « sa classe » quand il est demandé", async () => {
+    mockRpc.mockResolvedValue({ data: {}, error: null });
+
+    await dailyReport({
+      studentId: STUDENT,
+      from: "2026-08-01",
+      to: "2026-08-07",
+      scope: "class",
+    });
+
+    expect(mockRpc.mock.calls[0][1]).toMatchObject({ p_scope: "class" });
+  });
+
+  it("refuse un périmètre inventé plutôt que de le laisser filer au serveur", async () => {
+    await expect(
+      dailyReport({ studentId: STUDENT, from: "2026-08-01", to: "2026-08-07", scope: "9eme" }),
+    ).rejects.toThrow();
+    expect(mockRpc).not.toHaveBeenCalled();
   });
 
   it("refuse une date qui n'est pas une date de calendrier", async () => {
@@ -208,6 +234,7 @@ describe("les variantes par code alliance", () => {
       p_code: CODE,
       p_from: "2026-08-01",
       p_to: "2026-08-07",
+      p_scope: "all",
     });
   });
 
