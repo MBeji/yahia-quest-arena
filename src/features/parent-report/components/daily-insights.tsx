@@ -23,6 +23,7 @@ import {
   type IndexResult,
   type ParentAlert,
   type ScoredFactor,
+  type SubjectSlice,
 } from "../insights";
 import { alertMessage } from "./alert-message";
 import { BAND_STYLES, useBandLabel } from "./daily-band";
@@ -242,6 +243,7 @@ export function SubjectsSection({ report }: { report: DailyReport }) {
               <thead>
                 <tr className="border-b border-border/50 text-start text-2xs uppercase tracking-wider text-muted-foreground">
                   <th className="py-2 text-start font-semibold">{t.parentDaily.colSubject}</th>
+                  <th className="py-2 text-start font-semibold">{t.parentDaily.colCoverage}</th>
                   <th className="py-2 text-end font-semibold">{t.parentDaily.colTime}</th>
                   <th className="py-2 text-end font-semibold">{t.parentDaily.colLessons}</th>
                   <th className="py-2 text-end font-semibold">{t.parentDaily.colExercises}</th>
@@ -255,8 +257,21 @@ export function SubjectsSection({ report }: { report: DailyReport }) {
                   const level = subjectLevel(subject);
                   return (
                     <tr key={subject.subjectId} className="border-b border-border/30 last:border-0">
-                      <td className="max-w-[10rem] truncate py-2 pe-2 text-foreground">
-                        {isolateLtrRuns(subject.name)}
+                      {/* Le NIVEAU sous le nom : sans lui, « Mathématiques »
+                          apparaît autant de fois que l'élève suit de niveaux,
+                          et le parent ne peut relier aucune ligne à rien. */}
+                      <td className="max-w-[11rem] py-2 pe-2">
+                        <div className="truncate text-foreground">
+                          {isolateLtrRuns(subject.name)}
+                        </div>
+                        {subject.gradeName && (
+                          <div className="truncate text-2xs text-muted-foreground">
+                            {isolateLtrRuns(subject.gradeName)}
+                          </div>
+                        )}
+                      </td>
+                      <td className="py-2 pe-2">
+                        <CoverageCell subject={subject} />
                       </td>
                       <td className="py-2 text-end tabular-nums text-muted-foreground">
                         {formatMinutes(subject.minutes)}
@@ -314,6 +329,47 @@ export function SubjectsSection({ report }: { report: DailyReport }) {
         </>
       )}
     </SectionCard>
+  );
+}
+
+/**
+ * La couverture du programme d'une matière : chapitres terminés sur chapitres
+ * publiés. La règle est celle de la carte `/parcours` que l'élève voit — un
+ * chapitre compte quand toutes ses missions de catalogue sont réussies (et, en
+ * scolaire, son quiz de compréhension passé). Le parent et l'enfant lisent donc
+ * le même chiffre.
+ *
+ * Une matière sans chapitre publié affiche « — » : la fraction n'existe pas,
+ * elle ne vaut pas 0 %.
+ */
+function CoverageCell({ subject }: { subject: SubjectSlice }) {
+  const t = useT();
+
+  if (subject.chaptersTotal <= 0) {
+    return <span className="text-xs text-muted-foreground">—</span>;
+  }
+
+  const pctDone = Math.round((subject.chaptersCompleted / subject.chaptersTotal) * 100);
+
+  return (
+    <div className="min-w-[5.5rem]">
+      <div className="flex items-baseline justify-between gap-2 text-2xs text-muted-foreground">
+        <span className="tabular-nums">
+          {subject.chaptersCompleted}/{subject.chaptersTotal}
+        </span>
+        <span className="tabular-nums">{pctDone}%</span>
+      </div>
+      <div className="mt-1">
+        <Meter
+          value={subject.chaptersCompleted}
+          max={subject.chaptersTotal}
+          className="bg-primary"
+          label={t.parentDaily.coverageAria
+            .replace("{done}", String(subject.chaptersCompleted))
+            .replace("{total}", String(subject.chaptersTotal))}
+        />
+      </div>
+    </div>
   );
 }
 

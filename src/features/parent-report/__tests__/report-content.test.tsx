@@ -105,8 +105,11 @@ describe("ReportContent — actionable weak points (étude 15 lot 12, D-9)", () 
 
   it("does NOT add LRI/PDI isolates around parentheses in Arabic subject stat names", () => {
     const { container } = render(<ReportContent report={report as never} />);
-    // subjectStats[0].name "الرياضيات (الجبر)" — same bidi rule
-    const nameEl = container.querySelector(".w-16.truncate.text-sm");
+    // subjectStats[0].name "الرياضيات (الجبر)" — same bidi rule.
+    // Le nom vit désormais dans un enfant du bloc `.w-16`, qui porte aussi le
+    // niveau scolaire sous lui (« Mathématiques » apparaissait sinon plusieurs
+    // fois à l'identique) — d'où le sélecteur descendant.
+    const nameEl = container.querySelector(".w-16 .truncate.text-sm");
     expect(nameEl?.textContent).toContain("الرياضيات (الجبر)");
     expect(nameEl?.textContent).not.toContain(LRI);
     expect(nameEl?.textContent).not.toContain(PDI);

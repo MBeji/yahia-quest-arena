@@ -6,6 +6,7 @@ import { Activity, Link as LinkIcon, Printer, Share2, Trash2 } from "lucide-reac
 import { LoadingState } from "@/components/ui/loading-state";
 import {
   buildFamilyReportShareText,
+  DailyDashboard,
   forgetRememberedCode,
   getStudentReportByCode,
   parentCodeErrorLabel,
@@ -51,6 +52,7 @@ function SuiviPublicPage() {
   // option. Le choix reste sous les yeux (label + bouton d'oubli dès qu'un code
   // est retenu), donc l'écriture n'a rien de silencieux.
   const [remember, setRemember] = useState(true);
+  const [view, setView] = useState<"summary" | "daily">("summary");
   const [hasStoredCode, setHasStoredCode] = useState(false);
   // Dernier code demandé : le submit pousse le code dans l'URL, ce qui réveille
   // l'effet d'auto-chargement — sans ce garde-fou la requête part deux fois.
@@ -92,6 +94,7 @@ function SuiviPublicPage() {
   }, [codeParam]);
 
   const report = reportMutation.data;
+  const submittedCode = reportMutation.variables ?? null;
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -214,12 +217,60 @@ function SuiviPublicPage() {
               <Printer className="h-4 w-4" /> {t.parentReport.printCta}
             </button>
           </div>
-          <ReportContent report={report} />
+
+          {/* Deux lectures du même enfant. Le « Bilan » répond « où en est-il »,
+              le « Jour par jour » répond « qu'a-t-il fait, et est-ce sérieux ».
+              Empilées, elles seraient illisibles toutes les deux. */}
+          <div className="mb-4 inline-flex rounded-lg border border-border bg-card p-0.5 print:hidden">
+            <ViewTab
+              active={view === "summary"}
+              label={t.parentDaily.tabSummary}
+              onClick={() => setView("summary")}
+            />
+            <ViewTab
+              active={view === "daily"}
+              label={t.parentDaily.tabDaily}
+              onClick={() => setView("daily")}
+            />
+          </div>
+
+          {view === "daily" && submittedCode ? (
+            // Le code qui a RÉELLEMENT produit ce rapport, pas la saisie courante :
+            // le champ reste éditable après coup.
+            <DailyDashboard source={{ kind: "code", studentCode: submittedCode }} />
+          ) : (
+            <ReportContent report={report} />
+          )}
         </>
       )}
 
       {reportMutation.isPending && <LoadingState label={t.common.loading} className="py-20" />}
     </div>
+  );
+}
+
+function ViewTab({
+  active,
+  label,
+  onClick,
+}: {
+  active: boolean;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={`rounded-md px-4 py-2 text-sm font-semibold transition [@media(pointer:coarse)]:min-h-11 ${
+        active
+          ? "bg-primary text-primary-foreground"
+          : "text-muted-foreground hover:text-foreground"
+      }`}
+    >
+      {label}
+    </button>
   );
 }
 

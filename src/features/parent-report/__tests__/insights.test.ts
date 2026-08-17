@@ -274,6 +274,8 @@ describe("analyzeSubjects", () => {
     previousExercises: 0,
     avgScore: 0,
     scoreDelta: null,
+    chaptersTotal: 0,
+    chaptersCompleted: 0,
     ...over,
   });
 
@@ -289,6 +291,8 @@ describe("analyzeSubjects", () => {
           exercises: 3,
           avgScore: 70,
           scoreDelta: 12,
+          chaptersTotal: 0,
+          chaptersCompleted: 0,
         }),
       ],
       chapters: [
