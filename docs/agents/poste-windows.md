@@ -130,6 +130,37 @@ le poste reste chargé, le vrai gate est la CI (le ruleset bloque le merge sans 
 demander l'accord explicite pour `--no-verify` (DoD §2) plutôt que de reboucler des tentatives à
 ~6 minutes.
 
+## Le gate annoncé vert alors qu'il est rouge (tâche de fond)
+
+Le code de sortie d'une tâche de fond est celui de la **dernière commande de la chaîne**, pas
+celui du gate. Cette forme annonce donc `exit code 0` quand `verify` a rendu 1 :
+
+```bash
+npm run verify > out.txt 2>&1; echo "EXIT=$?"; tail -25 out.txt   # ← ment
+```
+
+C'est `tail` (toujours 0) qui fixe le verdict affiché, et le `EXIT=1` utile part dans le fichier
+que personne ne relit. Constaté 2026-08-17 : deux fichiers de test échouaient et `leak:check`,
+`db:check-chain`, `eol:check` n'avaient **jamais tourné** — le `&&` qui chaîne les six étapes de
+`verify` court-circuite au premier rouge — et la session a pourtant déclaré le gate vert.
+
+Même famille que `commande | tail` (table « Vérifier l'état, jamais le signal » du
+[prod-rollback-runbook](../prod-rollback-runbook.md)), à une nuance près qui compte : **ici il
+n'y a pas de pipe**. La parade « pas de pipe du tout » ne suffit donc pas.
+
+**Mettre le gate en dernière position, rien après** :
+
+```bash
+npm run verify > out.txt 2>&1     # le code de sortie de la tâche est le sien
+```
+
+… puis lire le fichier pour le détail. Et vérifier que les six étapes ont réellement tourné —
+un `&&` court-circuité laisse les dernières muettes, ce qui ressemble à un gate complet :
+
+```bash
+grep -E "^> tanstack_start_ts@[0-9.]+ (lint|typecheck|test|leak:check|db:check-chain|eol:check)$" out.txt
+```
+
 ## Des CRLF invisibles dans l'arbre de travail (`npm run eol:fix`)
 
 `.gitattributes` impose `* text=auto eol=lf`. Mais `text=auto` veut aussi dire que git
