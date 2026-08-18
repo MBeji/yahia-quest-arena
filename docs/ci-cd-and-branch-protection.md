@@ -163,6 +163,26 @@ Prod migrations **auto-apply** on merge — nobody runs SQL by hand (AGENTS.md �
 3. Additive migrations are safe ahead of their code, so this order holds. Ship a
    **destructive** migration (DROP/REVOKE) in a separate merge **after** the
    dependent code is gone.
+
+   ⚠️ « Safe ahead » vaut pour la MIGRATION, pas automatiquement pour le code livré
+   avec elle. L'étape 2 le dit sans en tirer la conséquence : Vercel et
+   `db-migrate-prod` partent **en parallèle**, donc il existe une fenêtre — le temps
+   d'un `pg_dump` de sauvegarde, soit plusieurs minutes — où le code est déployé et
+   la colonne n'existe pas encore. Ce que le code y fait dépend de la façon dont il
+   lit :
+
+   | Lecture                  | Colonne absente                       | Verdict                                        |
+   | ------------------------ | ------------------------------------- | ---------------------------------------------- |
+   | `select("*")`            | la ligne revient sans le champ        | tolérant — peut voyager avec sa migration      |
+   | `select("a, b, domain")` | PostgREST rend **42703**, donc un 500 | exige que la migration soit **déjà appliquée** |
+
+   Une liste de colonnes explicite n'est donc pas un détail de style : elle décide
+   si le lot peut partir avec sa migration ou doit attendre le merge suivant. Cas
+   réel : `chapters.domain` (#766) a livré colonne + hub d'un coup — le hub lit
+   `select("*")` — mais le lecteur de cours, en liste explicite, a été **découpé
+   dans un second lot** (#767) plutôt que de risquer un 500 sur tous les
+   `/chapitre/*` pendant la fenêtre.
+
 4. Manual control when needed: `gh workflow run db-migrate-prod.yml` (or the Actions
    tab) with mode `push` / read-only `list` / one-time `repair-all`.
 
