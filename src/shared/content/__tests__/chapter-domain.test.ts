@@ -156,12 +156,13 @@ describe("auditChapterDomains", () => {
           { slug: "03", domain: "Algèbre" },
         ],
         where,
+        "9eme-base",
       ),
     ).toEqual([]);
   });
 
   it("ne dit rien d'une matière sans aucun domaine — l'état du corpus au jour de la colonne", () => {
-    expect(auditChapterDomains([{ slug: "01" }, { slug: "02" }], where)).toEqual([]);
+    expect(auditChapterDomains([{ slug: "01" }, { slug: "02" }], where, "9eme-base")).toEqual([]);
   });
 
   it("refuse deux graphies d'un même domaine, et nomme celle qui survivra", () => {
@@ -172,6 +173,7 @@ describe("auditChapterDomains", () => {
         { slug: "03", domain: "Algèbre" },
       ],
       where,
+      "9eme-base",
     );
     expect(flags).toHaveLength(1);
     expect(flags[0]?.level).toBe("error");
@@ -187,6 +189,7 @@ describe("auditChapterDomains", () => {
         { slug: "03" },
       ],
       where,
+      "9eme-base",
     );
     expect(flags).toHaveLength(1);
     expect(flags[0]?.level).toBe("warn");
@@ -200,13 +203,36 @@ describe("auditChapterDomains", () => {
         { slug: "02", domain: "Grammaire" },
       ],
       where,
+      "9eme-base",
     );
     expect(flags).toHaveLength(1);
     expect(flags[0]?.level).toBe("warn");
     expect(flags[0]?.msg).toContain("Grammaire");
   });
 
+  it("refuse un domaine sur une matière HORS programme scolaire", () => {
+    // Une matière sans niveau (parcours libre) n'a pas de programme officiel dont
+    // tirer des sections : ce qu'on y écrirait serait un découpage inventé.
+    const flags = auditChapterDomains(
+      [
+        { slug: "01", domain: "العبادات" },
+        { slug: "02", domain: "المعاملات" },
+      ],
+      where,
+      null,
+    );
+    expect(flags).toHaveLength(1);
+    expect(flags[0]?.level).toBe("error");
+    expect(flags[0]?.msg).toContain("no grade");
+  });
+
+  it("laisse tranquille une matière hors programme qui ne déclare rien", () => {
+    expect(auditChapterDomains([{ slug: "01" }, { slug: "02" }], where, null)).toEqual([]);
+  });
+
   it("ne signale rien sur une matière à chapitre unique", () => {
-    expect(auditChapterDomains([{ slug: "01", domain: "Grammaire" }], where)).toEqual([]);
+    expect(auditChapterDomains([{ slug: "01", domain: "Grammaire" }], where, "9eme-base")).toEqual(
+      [],
+    );
   });
 });
