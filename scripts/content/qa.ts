@@ -91,6 +91,7 @@ function main(): void {
       ...auditChapterDomains(
         subject.chapters.map((c) => ({ slug: c.slug, domain: c.meta.domain })),
         `${subject.meta.id}/domaines`,
+        subject.meta.gradeSlug,
       ),
     );
 

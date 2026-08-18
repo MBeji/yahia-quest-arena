@@ -21,8 +21,13 @@ import type { Flag } from "./qa-checks.ts";
 export type QADomainChapter = { slug: string; domain?: string };
 
 /**
- * Les trois constats, sur les chapitres d'UNE matière :
+ * Les quatre constats, sur les chapitres d'UNE matière :
  *
+ *   [error] domaine sur une matière HORS PROGRAMME → une section est une notion
+ *           de PROGRAMME scolaire. Une matière sans niveau (`gradeSlug` nul :
+ *           parcours libre, entraînement, culture générale) n'a pas de programme
+ *           officiel dont on pourrait tirer des domaines — ce qu'on y écrirait
+ *           serait un découpage inventé. Arbitrage du 2026-08-18.
  *   [error] deux orthographes d'un même domaine → le hub regroupe par identité
  *           (accents, casse, tashkil pliés), donc l'une des deux graphies
  *           disparaît de l'écran sans que personne ne le voie. Précision totale :
@@ -33,8 +38,26 @@ export type QADomainChapter = { slug: string; domain?: string };
  *           n'affiche des en-têtes qu'à partir de deux groupes. Le champ est
  *           écrit, il ne produit rien — l'auteur doit le savoir.
  */
-export function auditChapterDomains(chapters: QADomainChapter[], where: string): Flag[] {
+export function auditChapterDomains(
+  chapters: QADomainChapter[],
+  where: string,
+  /** Niveau de la matière — `null` pour une matière hors programme scolaire. */
+  gradeSlug: string | null,
+): Flag[] {
   const flags: Flag[] = [];
+  const declared = chapters.filter((c) => c.domain);
+  if (gradeSlug === null && declared.length > 0) {
+    return [
+      {
+        level: "error",
+        where,
+        msg:
+          `${declared.length} chapter(s) declare a domain, but this subject has no grade — ` +
+          `a domain is a notion of the SCHOOL PROGRAM, and a free track has no official program ` +
+          `to take its sections from`,
+      },
+    ];
+  }
   // Insertion order = program order: the first spelling met is the one the hub
   // will display, so it is also the one the message tells the author to keep.
   const spellings = new Map<string, string[]>();
