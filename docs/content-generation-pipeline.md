@@ -360,6 +360,24 @@ Points clés de ce cycle :
    _(Corrigé le 2026-07-28 : ce point affirmait l'inverse — « déploiement automatique, pas d'étape
    manuelle en prod ». Une campagne s'était crue publiée alors que rien n'était appliqué.)_
 
+   ⚠️ **`subjects` VIDE N'EST PAS UN DÉFAUT ANODIN — c'est une opération de maintenance.**
+   Laisser le champ vide applique **tout le corpus** : ~45 min d'écriture CONTINUE sur la base de
+   production, contre ~2 min pour un sujet ciblé. Deux propriétés à ne pas confondre :
+
+   - **Intégrité** — sûre dans les deux cas. Chaque fichier passe en `psql --single-transaction` :
+     un sujet est appliqué en entier ou pas du tout, même si le job est interrompu.
+   - **Charge** — PAS la même. Une application intégrale tient la base sous écriture assez
+     longtemps pour dégrader les lectures de l'app. Vécu le 2026-08-18 : un corpus complet lancé
+     à 18:39 UTC, en pleine utilisation, a fait tomber le tableau de bord des élèves sur
+     « Failed to load dashboard » ; l'annulation du run a suffi à tout rétablir, sans perte.
+
+   Donc : **cibler `subjects`** dès qu'on sait quoi publier — c'est le geste courant, celui d'une
+   fin de campagne. Le corpus complet se réserve à une réconciliation, **hors des heures
+   d'usage**, et en sachant qu'on ouvre une fenêtre de dégradation. L'annulation reste toujours
+   possible et propre : les sujets déjà passés sont committés, celui en cours est annulé, la
+   trace `content_releases` (écrite en fin de job) est simplement perdue — une reprise
+   ultérieure la rétablit.
+
 5. **Chaque application laisse une trace** dans la table `content_releases` (§11).
 
 ---
