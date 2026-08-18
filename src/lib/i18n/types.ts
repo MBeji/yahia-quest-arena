@@ -145,6 +145,8 @@ export type TranslationKeys = {
     /** Étude 22 R-17 — passerelle vers la classe précédente. */
     reviseGateway: string;
     reviseGatewayHint: string;
+    changeClass: string;
+    changeClassHint: string;
     reviewTitle: string;
     /**
      * Étude 04 A1.1 — « Révision du jour ». La raison a trois formes parce que le retard se
