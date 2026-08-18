@@ -28,6 +28,13 @@ export type LessonReaderChapter = {
   lesson_content: string | null;
   summary: string | null;
   subject_id: string;
+  /**
+   * Domaine du programme auquel ce chapitre appartient — la « section » de la
+   * matière (Algèbre, Géométrie, قواعد اللغة…), dans la langue de la matière.
+   * Optionnel : nul tant que le contenu ne rattache pas ce chapitre, et le fil
+   * se lit alors comme avant, sans le maillon du milieu.
+   */
+  domain?: string | null;
   /** Curated explainer videos (étude 23) — compiled display objects, 0–3. */
   videos: CompiledVideo[] | null;
   /** Joined subject row; loosely typed (Supabase relation) — narrowed below. */
@@ -219,6 +226,19 @@ export function LessonReader({
           >
             {subjectData?.name_fr ?? t.public.reader.defaultSubject}
           </Link>
+          {/* Le domaine se lit ENTRE la matière et le rang du chapitre : « Maths ·
+              Géométrie · 4/12 ». C'est le découpage que le hub affiche en en-têtes —
+              l'élève arrivé ici par un lien direct sait dans quelle section de son
+              programme il vient d'atterrir, sans remonter d'un écran. */}
+          {chapter.domain && (
+            <span
+              className="truncate text-muted-foreground"
+              dir={isRtlText(chapter.domain) ? "rtl" : "ltr"}
+              data-testid="reader-domain"
+            >
+              · {chapter.domain}
+            </span>
+          )}
           {allChapters.length > 0 && (
             <span className="text-muted-foreground">
               · {currentIdx + 1}/{allChapters.length}

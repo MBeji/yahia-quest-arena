@@ -364,7 +364,7 @@ export const getSubject = createServerFn({ method: "GET" })
   });
 
 // ---------- Get chapter lesson content ----------
-/** Narrowed chapter row for the reader — adds the étude-23 `videos` column the generated types lack. */
+/** Narrowed chapter row for the reader — adds the `videos` and `domain` columns the generated types lack. */
 type ChapterLessonRow = {
   id: string;
   title: string;
@@ -373,6 +373,12 @@ type ChapterLessonRow = {
   summary: string | null;
   subject_id: string;
   display_order: number;
+  /**
+   * Domaine du programme auquel ce chapitre appartient — la « section » de la
+   * matière (Algèbre, Géométrie, قواعد اللغة…). NULL tant que le contenu ne l'a
+   * pas rattaché : c'est l'état de tout le corpus au moment où la colonne arrive.
+   */
+  domain: string | null;
   videos: CompiledVideo[] | null;
   subjects: { grade_id?: string | null; name_fr: string; content_language?: string } | null;
 };
@@ -385,7 +391,7 @@ export const getChapterLesson = createServerFn({ method: "GET" })
     const { data: chapterRow, error } = await supabase
       .from("chapters")
       .select(
-        "id, title, description, lesson_content, summary, subject_id, display_order, videos, subjects(id, name_fr, color_token, icon, content_language, grade_id)",
+        "id, title, description, lesson_content, summary, subject_id, display_order, domain, videos, subjects(id, name_fr, color_token, icon, content_language, grade_id)",
       )
       .eq("id", data.chapterId)
       .single();
@@ -393,10 +399,16 @@ export const getChapterLesson = createServerFn({ method: "GET" })
       failWithClientError("quest.getChapterLesson", error, "Impossible de charger la leçon.");
     }
 
-    // Selecting the étude-23 `videos` column (absent from the pre-existing
-    // generated types) makes the row loosely typed — narrow it once, the same
-    // posture the joined `subjects` relation already uses. The compiled `videos`
-    // JSONB (0–3 display objects) flows straight to the public reader.
+    // Selecting the étude-23 `videos` column and `domain` (both absent from the
+    // pre-existing generated types) makes the row loosely typed — narrow it once,
+    // the same posture the joined `subjects` relation already uses. The compiled
+    // `videos` JSONB (0–3 display objects) flows straight to the public reader,
+    // and `domain` names the section of the program this chapter sits in.
+    //
+    // Cette liste de colonnes est EXPLICITE : elle exige que `domain` existe en
+    // base. C'est pourquoi ce lot arrive APRÈS le merge de sa migration
+    // (`20260818120000`, appliquée en prod le 2026-08-18) et non avec elle — le
+    // hub, lui, lit `select("*")` et tolérait son absence (DoD §7).
     const chapter = chapterRow as unknown as ChapterLessonRow;
     const videos: CompiledVideo[] = chapter.videos ?? [];
 
