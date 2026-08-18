@@ -15,6 +15,7 @@ import { levelForXp } from "@/shared/lib/level";
 import { QuestResultScreen } from "@/features/quest/components/quest-result-screen";
 import { QuizContractHint, QuizLockScreen } from "@/features/quest/components/quiz-lock-screen";
 import { QuestHintButton } from "@/features/quest/components/quest-hint-button";
+import { QuestSessionError } from "@/features/quest/components/quest-session-error";
 import { BossBanner } from "@/features/quest/components/boss-chrono";
 import {
   bossDamageFor,
@@ -43,6 +44,7 @@ import {
 } from "@/features/quest/components/question-verdict";
 import { optionClassNameFor, type QuestionVerdict } from "@/features/quest/verdict";
 import { useInstantFeedback } from "@/features/quest/components/use-instant-feedback";
+import { useExerciseSession } from "@/features/quest/components/use-exercise-session";
 import type { UnlockedBadge } from "@/shared/types/gamification";
 
 // =============================================================================
@@ -243,8 +245,6 @@ export function ExercisePlayer({
   const [selected, setSelected] = useState<string | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
   const [showLevelUp, setShowLevelUp] = useState(false);
-  const [sessionId, setSessionId] = useState<string | null>(null);
-  const [startGate, setStartGate] = useState<Exclude<StartOutcome, { ok: true }> | null>(null);
   const [result, setResult] = useState<PlayerResult | null>(null);
   const [hintsRemaining, setHintsRemaining] = useState(0);
   const [revealedHints, setRevealedHints] = useState<Record<string, string | null>>({});
@@ -277,26 +277,17 @@ export function ExercisePlayer({
   // strategy needs for its anti-rush check (connected scoring is server-timed).
   const runStartedAtRef = useRef<number>(0);
 
-  const sessionMutation = useMutation({
-    mutationFn: (payload: {
-      exerciseId: string;
-      quizGated: boolean;
-      chapterId: string | null;
-      mode: string;
-      variant: "classic" | "recall";
-    }) => strategy.startSession(payload),
-    onSuccess: (outcome) => {
-      if (outcome.ok) {
-        setSessionId(outcome.sessionId);
-        runStartedAtRef.current = Date.now();
-        play("start");
-      } else {
-        setStartGate(outcome);
-      }
+  const session = useExerciseSession({
+    data,
+    paused: Boolean(result),
+    variant,
+    startSession: strategy.startSession,
+    onStarted: () => {
+      runStartedAtRef.current = Date.now();
+      play("start");
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Unable to start the quest"),
   });
-  const { mutate: startSessionMutate, reset: resetSessionMutation } = sessionMutation;
+  const { sessionId, startGate, reset: resetSession } = session;
 
   const mutation = useMutation({
     mutationFn: (payload: {
@@ -452,7 +443,6 @@ export function ExercisePlayer({
   const answeredQuestionRef = useRef<string | null>(null);
   /** La réponse figée au moment de la correction, rejouée à « Continuer ». */
   const committedChoiceRef = useRef<string | null>(null);
-  const sessionStartedForRef = useRef<string | null>(null);
   // Miroirs en ref des seuls états lus depuis un callback dont l'identité ne doit
   // pas changer. Les quatre autres (selected/answers/idx/current) n'existaient
   // que pour l'auto-réponse au buzzer, disparue avec le compte à rebours.
@@ -468,15 +458,28 @@ export function ExercisePlayer({
 
   const submitRun = useCallback(
     (finalAnswers: PlayerAnswer[]) => {
-      mutation.mutate({
-        sessionId: sessionIdRef.current!,
-        exerciseId,
-        chapterId: (data?.exercise?.chapter_id as string | null) ?? null,
-        answers: finalAnswers,
-        durationSeconds: durationSeconds(),
-        isQuiz: data?.exercise?.mode === "quiz",
-        totalQuestions: totalRef.current,
-      });
+      mutation.mutate(
+        {
+          sessionId: sessionIdRef.current!,
+          exerciseId,
+          chapterId: (data?.exercise?.chapter_id as string | null) ?? null,
+          answers: finalAnswers,
+          durationSeconds: durationSeconds(),
+          isQuiz: data?.exercise?.mode === "quiz",
+          totalQuestions: totalRef.current,
+        },
+        {
+          // La soumission a ÉCHOUÉ : rien n'est enregistré, et l'élève est encore
+          // devant sa dernière question. Sans ce relâchement, le verrou posé par
+          // `advanceWithChoice` reste sur cette question — « Valider » redevient
+          // cliquable mais ne fait PLUS RIEN, définitivement (seul un rechargement
+          // en sort). C'est exactement ce que voyait un élève dont la RPC de
+          // soumission rendait une erreur : il sélectionne, il valide, rien.
+          onError: () => {
+            answeredQuestionRef.current = null;
+          },
+        },
+      );
     },
     [mutation, exerciseId, durationSeconds, data?.exercise?.mode, data?.exercise?.chapter_id],
   );
@@ -518,18 +521,15 @@ export function ExercisePlayer({
 
   const resetRun = useCallback(() => {
     answeredQuestionRef.current = null;
-    sessionStartedForRef.current = null;
     bossTimedQuestionRef.current = null;
-    resetSessionMutation();
+    resetSession();
     setResult(null);
-    setStartGate(null);
     setBossDamage(0);
     setIdx(0);
     setAnswers([]);
     setSelected(null);
     setShowConfetti(false);
     setShowLevelUp(false);
-    setSessionId(null);
     setRevealedHints({});
     // On dépend des CALLBACKS du hook, jamais de l'objet `instant` : il est neuf
     // à chaque rendu, donc en dépendre relancerait `resetRun` à chaque changement
@@ -537,25 +537,11 @@ export function ExercisePlayer({
     resetFeedback();
     committedChoiceRef.current = null;
     setHintsRemaining(capabilities.hints ? hintCharges : 0);
-  }, [resetSessionMutation, hintCharges, capabilities.hints, resetFeedback]);
+  }, [resetSession, hintCharges, capabilities.hints, resetFeedback]);
 
   useEffect(() => {
     resetRun();
   }, [exerciseId, resetRun]);
-
-  useEffect(() => {
-    const ex = data?.exercise;
-    if (!ex?.id || sessionId || result || startGate) return;
-    if (sessionStartedForRef.current === ex.id) return;
-    sessionStartedForRef.current = ex.id;
-    startSessionMutate({
-      exerciseId: ex.id,
-      quizGated: data?.quizGated ?? false,
-      chapterId: (ex.chapter_id as string | null) ?? null,
-      mode: (ex.mode as string | null) ?? "",
-      variant,
-    });
-  }, [data, result, sessionId, startGate, startSessionMutate, variant]);
 
   const advanceWithChoice = useCallback(
     (choice: string) => {
@@ -746,7 +732,23 @@ export function ExercisePlayer({
     );
   }
 
-  if (!sessionId && !sessionMutation.isError) return preparingScreen;
+  // Pas de session = pas de partie jouable (`QuestSessionError` dit pourquoi).
+  if (!sessionId) {
+    if (!session.isError) return preparingScreen;
+    const failure = session.error;
+    return (
+      <QuestSessionError
+        title={t.errors.errorTitle}
+        message={
+          failure instanceof Error && failure.message
+            ? failure.message
+            : t.errors.sessionStartFailed
+        }
+        retryLabel={t.common.retry}
+        onRetry={session.retry}
+      />
+    );
+  }
 
   function handleSelect(optId: string) {
     // Une fois la question corrigée (ou en cours de correction), la réponse est
@@ -907,10 +909,7 @@ export function ExercisePlayer({
               disabled={
                 feedback
                   ? mutation.isPending
-                  : !canValidate ||
-                    feedbackChecking ||
-                    mutation.isPending ||
-                    sessionMutation.isPending
+                  : !canValidate || feedbackChecking || mutation.isPending || session.isPending
               }
               onClick={feedback ? continueAfterFeedback : validate}
               className={`inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-bold shadow-gold transition disabled:opacity-40 ${
@@ -919,7 +918,7 @@ export function ExercisePlayer({
                   : "bg-[image:var(--gradient-gold)] text-primary-foreground"
               }`}
             >
-              {(mutation.isPending || sessionMutation.isPending || feedbackChecking) && (
+              {(mutation.isPending || session.isPending || feedbackChecking) && (
                 <Loader2 className="h-4 w-4 animate-spin" />
               )}
               {feedback

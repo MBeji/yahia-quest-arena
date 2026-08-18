@@ -335,3 +335,65 @@ describe("ExercisePlayer — combat de boss : le chrono note, il ne coupe pas", 
     );
   });
 });
+
+// =============================================================================
+// « Je sélectionne une réponse, je valide, et rien ne se passe. »
+//
+// Les deux SEULS chemins du lecteur qui produisent ce symptôme, tous deux
+// signalés depuis la prod. Dans les deux cas le bouton « Valider » était ACTIF
+// et sans effet, définitivement : le toast d'erreur passe, l'écran ne dit rien,
+// et seul un rechargement de page en sortait.
+// =============================================================================
+describe("ExercisePlayer — une panne ne doit jamais laisser un bouton mort", () => {
+  beforeEach(() => {
+    mockGetExercise.mockReset().mockResolvedValue(exerciseData());
+    mockGetSubject.mockReset().mockResolvedValue({ chapters: [], exercises: [] });
+  });
+
+  it("démarrage de session en échec : l'écran le DIT, et « Réessayer » relance vraiment la partie", async () => {
+    const startSession = vi
+      .fn()
+      // Le premier appel échoue (la server fn relaie toute erreur non reconnue
+      // comme un gate) ; le second réussit, comme une panne passagère.
+      .mockRejectedValueOnce(new Error("Impossible de démarrer la session."))
+      .mockResolvedValue({ ok: true, sessionId: "anon" });
+    const submit = vi.fn().mockResolvedValue(neutralResult);
+    renderPlayer(anonStrategy({ startSession, submit }));
+
+    // L'échec est à l'écran — et surtout : AUCUN lecteur jouable n'est rendu,
+    // puisqu'il n'y aurait rien derrière le bouton.
+    const retry = await screen.findByTestId("quest-session-retry");
+    expect(screen.queryByTestId("quest-submit")).not.toBeInTheDocument();
+
+    fireEvent.click(retry);
+
+    // Et la partie se joue normalement jusqu'au score.
+    expect(await screen.findByText("1 + 1 ?")).toBeInTheDocument();
+    fireEvent.click(screen.getByText("2"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+    expect(await screen.findByTestId("quest-score")).toBeInTheDocument();
+    expect(startSession).toHaveBeenCalledTimes(2);
+  });
+
+  it("soumission en échec : l'élève peut re-valider sa dernière question", async () => {
+    const submit = vi
+      .fn()
+      .mockRejectedValueOnce(new Error("Too many submissions. Please slow down."))
+      .mockResolvedValue(neutralResult);
+    renderPlayer(anonStrategy({ submit }));
+    await screen.findByText("1 + 1 ?");
+
+    fireEvent.click(screen.getByText("2"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+
+    // La première soumission a échoué : pas d'écran de score, l'élève est encore
+    // sur sa question. Le verrou de réponse DOIT avoir été relâché.
+    await waitFor(() => expect(submit).toHaveBeenCalledTimes(1));
+    expect(screen.queryByTestId("quest-score")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId("quest-submit"));
+
+    expect(await screen.findByTestId("quest-score")).toBeInTheDocument();
+    expect(submit).toHaveBeenCalledTimes(2);
+  });
+});
