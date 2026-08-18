@@ -5,6 +5,18 @@ const LRI = "⁦";
 const PDI = "⁩";
 
 describe("isolateLtrRuns", () => {
+  // Un exposant NÉGATIF n'a ni parenthèse ni relation pour l'ancrer : sans isolation,
+  // `10⁻⁴` seul dans une phrase arabe se rend `⁴⁻10`. Le moins en exposant (U+207B) n'est
+  // jamais un opérateur binaire, il n'y a donc pas de soustraction à protéger ici.
+  it("isolates a bare negative exponent in Arabic prose", () => {
+    expect(isolateLtrRuns("الدليل هو 10⁻⁴ هنا")).toContain(LRI);
+    expect(isolateLtrRuns("القوة 2⁻³ سالبة الدليل")).toContain(LRI);
+  });
+
+  it("leaves a plain positive exponent alone (no scramble to fix)", () => {
+    expect(isolateLtrRuns("المساحة 10² متر")).not.toContain(LRI);
+  });
+
   it("wraps a square-root expression embedded in Arabic prose", () => {
     // The space + formula form one non-Arabic run; the radical stays left of 64.
     expect(isolateLtrRuns("ما قيمة √64 ؟")).toBe(`ما قيمة${LRI} √64 ${PDI}؟`);

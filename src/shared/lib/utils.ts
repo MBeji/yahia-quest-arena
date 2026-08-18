@@ -23,7 +23,7 @@ export function isRtlText(text: string): boolean {
  * `content-engine` math-and-notation.md), not `،`.
  */
 export function isMathExpression(text: string): boolean {
-  return /^[\s0-9a-zA-Z+\-−*/=²³¹⁰⁴⁵⁶⁷⁸⁹₀₁₂₃₄₅₆₇₈₉√×÷(){}[\]<>≤≥≠≈≡±∞π°′″.,;:|^_%∈∉⊂⊃⊆⊇∪∩∅ℝℕℤℚℂ∥⊥∠→⟶⟵⟹⟺Ωµ∆∑∏∫]+$/u.test(
+  return /^[\s0-9a-zA-Z+\-−*/=²³¹⁰⁴⁵⁶⁷⁸⁹⁺⁻₀₁₂₃₄₅₆₇₈₉₊₋√×÷(){}[\]<>≤≥≠≈≡±∞π°′″.,;:|^_%∈∉⊂⊃⊆⊇∪∩∅ℝℕℤℚℂ∥⊥∠→⟶⟵⟹⟺Ωµ∆∑∏∫]+$/u.test(
     text.trim(),
   );
 }

@@ -71,6 +71,22 @@ describe("isMathExpression", () => {
     expect(isMathExpression("√(16) = 4")).toBe(true);
   });
 
+  // Exposants et indices SIGNÉS — U+207B/U+207A et U+208B/U+208A. Sans eux, une option de QCM
+  // comme `(√3)⁻⁸` échoue ce test, retombe sur le `dir` hérité (RTL) et se rend `⁸⁻(3√)` :
+  // la bonne réponse s'affiche à l'envers. Trouvé sur le chapitre des puissances de maths 9ème.
+  it("detects a negative exponent (superscript minus)", () => {
+    expect(isMathExpression("10⁻⁴")).toBe(true);
+    expect(isMathExpression("(√3)⁻⁸")).toBe(true);
+    expect(isMathExpression("(−√5)⁻⁶")).toBe(true);
+    expect(isMathExpression("(3/5)⁻² = (5/3)²")).toBe(true);
+  });
+
+  it("detects a positive exponent and signed subscripts", () => {
+    expect(isMathExpression("2⁺³")).toBe(true);
+    expect(isMathExpression("u₋₁")).toBe(true);
+    expect(isMathExpression("a₊₂")).toBe(true);
+  });
+
   it("returns false for Arabic text", () => {
     expect(isMathExpression("حل المعادلة التالية")).toBe(false);
   });
