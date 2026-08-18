@@ -86,6 +86,16 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
     const authHeader = request.headers.get("authorization");
 
     if (!authHeader) {
+      // PAS auto-évident, contrairement à ce que la place de ce refus suggère.
+      // Une server fn authentifiée n'est jamais appelée sans en-tête « par
+      // accident » : `attachSupabaseAuth` en pose un dès qu'une session existe.
+      // Arriver ici signifie donc que le CLIENT n'a pas pu produire de jeton —
+      // typiquement un rafraîchissement qui a échoué (voir `auth-attacher.ts`).
+      // C'est exactement la panne du 2026-08-18 (« Failed to load dashboard »
+      // que seule une reconnexion levait), et elle était INVISIBLE : ce refus-ci
+      // précède le bloc de journalisation ajouté par #773, donc rien n'en
+      // sortait. Une ligne ici, et la prochaine occurrence se nomme toute seule.
+      logger.warn("Server fn called without a bearer token", { path: pathOf(request) });
       throw new Error("Unauthorized: No authorization header provided");
     }
 
