@@ -92,8 +92,16 @@ const STRONG_FLIP_SIGNAL = /[√∛∜<>≤≥≮≯∈∉⊂⊃⊆⊇←→⟵�
  * by convention (`5 − 3`, `10 مي + 2 مي`, `0 د − 1`) — the native bidi algorithm
  * already lays them out correctly, and the space means the sign is not glued to a
  * digit, so this pattern never matches them. Only the tight, unary sign is caught.
+ *
+ * The two extra alternatives cover **signed exponents and indices** (superscript or
+ * subscript minus/plus glued to its digit). They deliberately carry **no lookbehind**:
+ * a superscript minus (U+207B) or subscript minus (U+208B) is never a binary operator,
+ * so there is no subtraction to protect, and the sign always *follows* its base digit.
+ * Without them a bare negative exponent dropped into Arabic prose renders reversed.
+ * Found on the 9eme maths powers chapter, where the sibling gap in isMathExpression
+ * (utils.ts) was flipping whole QCM options — including two correct answers.
  */
-const SIGNED_NUMBER = /(?<![\d)])[−–+][0-9]/u;
+const SIGNED_NUMBER = /(?<![\d)])[−–+][0-9]|[⁻⁺][⁰¹²³⁴⁵⁶⁷⁸⁹]|[₋₊][₀₁₂₃₄₅₆₇₈₉]/u;
 
 /**
  * Wrap every non-Arabic run that carries a bidi-flipping glyph (see
