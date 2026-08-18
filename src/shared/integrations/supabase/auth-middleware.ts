@@ -15,7 +15,7 @@
 // finding C-1.
 import { createMiddleware } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, isAuthRetryableFetchError } from "@supabase/supabase-js";
 import type { Database } from "./types";
 import { logger } from "@/shared/lib/logger";
 
@@ -25,6 +25,33 @@ import { logger } from "@/shared/lib/logger";
  * of ms), so the log stays a signal rather than a stream.
  */
 const SLOW_SERVER_FN_MS = 1000;
+
+/**
+ * Did the Auth service fail to ANSWER, rather than answer "this token is bad"?
+ *
+ * `getClaims` collapses two very different outcomes into one `error`:
+ *
+ * - the JWT is **rejected** (expired, malformed, signed by another key) — the
+ *   caller must sign in again, and retrying can only fail identically;
+ * - the **verification could not be carried out** (network failure, Auth 5xx,
+ *   rate limit) — the token may be perfectly good, and retrying is the correct
+ *   response.
+ *
+ * Telling them apart is not academic here. On the legacy SYMMETRIC signing key
+ * (perf audit C-1bis, still open), `getClaims` cannot verify locally and falls
+ * back to `getUser(token)` — a full Auth round-trip on EVERY one of the ~33
+ * server fns. The second case is therefore this middleware's expected failure
+ * mode under load, not a corner case.
+ *
+ * `AuthRetryableFetchError` is auth-js's own label for a transport failure
+ * (network, 5xx, Cloudflare 52x). A 429 is not filed there — auth-js returns it
+ * as a plain API error — but a rate limit is just as much "we could not check",
+ * so it joins the same branch.
+ */
+function isVerificationUnavailable(error: unknown): boolean {
+  if (isAuthRetryableFetchError(error)) return true;
+  return (error as { status?: unknown } | null | undefined)?.status === 429;
+}
 
 /** Request path without the query string, which can carry tokens. */
 function pathOf(request: { url?: string } | undefined): string {
@@ -86,6 +113,25 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
 
     const { data, error } = await supabase.auth.getClaims(token);
     if (error || !data?.claims) {
+      // Every other refusal in this file is self-evident from the request; this
+      // one is the only one that depends on a REMOTE service answering, and it
+      // used to be thrown away unlogged. That silence is what made the prod
+      // failure behind #772 impossible to name from the outside: the app knew
+      // why it had refused and said nothing.
+      // `error` and not `reason`: `logger.error` forwards THAT key to the
+      // monitoring sink (see logger.ts), and `failWithClientError` already
+      // spells the reason the same way everywhere else in the app.
+      const meta = { path: pathOf(request), error: error?.message ?? "no claims" };
+      if (isVerificationUnavailable(error)) {
+        // `error` (not `warn`): this is an incident, and only `error` reaches
+        // the monitoring sink. Naming it "Unauthorized" would be a lie that
+        // sends the next reader hunting for a bad token.
+        logger.error("Auth verification unavailable", meta);
+        throw new Error("Auth verification unavailable. Please try again.");
+      }
+      // A rejected token is ROUTINE (every session expires), so it stays a
+      // warning — an error line here would drown the incident above in noise.
+      logger.warn("Bearer token rejected", meta);
       throw new Error("Unauthorized: Invalid token");
     }
 

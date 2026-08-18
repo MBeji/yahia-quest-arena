@@ -721,6 +721,12 @@ _Status stamped 2026-08-10._
     (2026-08-10). Rien à faire de ce côté.
   - **C-1bis** Read the project's JWT signing key type in the Supabase dashboard;
     migrate to asymmetric keys if it is still a symmetric secret. **S** (config)
+    — **now observable, 2026-08-18**: `requireSupabaseAuth` used to flatten every
+    `getClaims` failure into an unlogged `Unauthorized: Invalid token`, so the
+    symmetric path's extra Auth round-trip had no failure signature at all. It now
+    logs `Auth verification unavailable` (error level → monitoring) when the Auth
+    service is what failed, and `Bearer token rejected` (warn) when the token is.
+    A run of the first line in prod logs answers this finding from the outside.
 
 ### Phase 2 — Scale the hotspots
 
