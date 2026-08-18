@@ -318,11 +318,15 @@ export function buildMigrationSql(subject: LoadedSubject, videos: VideoRegistry 
     // Curated explainer videos (étude 23): an ordered array of compiled display
     // objects, always present ('[]' when none — the column is NOT NULL DEFAULT '[]').
     const videosSql = sqlJson(resolveVideos(chapter.meta.videos));
+    // Domain (« section » of the program: Algèbre, Géométrie, قواعد اللغة…): a
+    // label in the subject's language, NULL when the chapter declares none — so
+    // un-declaring a domain clears it on the next apply, like the manuel link.
+    const domainSql = chapter.meta.domain ? sqlString(chapter.meta.domain) : "NULL";
     out.push(
-      "INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order, manuel_ref, videos) VALUES",
+      "INSERT INTO public.chapters (id, subject_id, title, description, lesson_content, summary, display_order, domain, manuel_ref, videos) VALUES",
       `  (${sqlString(id)}, ${sqlString(subjectId)}, ${sqlString(chapter.meta.title)}, ${sqlString(
         chapter.meta.description,
-      )}, ${sqlString(chapter.lesson)}, ${sqlString(chapter.summary)}, ${chapter.meta.displayOrder}, ${manuelSql}, ${videosSql})`,
+      )}, ${sqlString(chapter.lesson)}, ${sqlString(chapter.summary)}, ${chapter.meta.displayOrder}, ${domainSql}, ${manuelSql}, ${videosSql})`,
       "ON CONFLICT (id) DO UPDATE SET",
       "  subject_id = EXCLUDED.subject_id,",
       "  title = EXCLUDED.title,",
@@ -330,6 +334,7 @@ export function buildMigrationSql(subject: LoadedSubject, videos: VideoRegistry 
       "  lesson_content = EXCLUDED.lesson_content,",
       "  summary = EXCLUDED.summary,",
       "  display_order = EXCLUDED.display_order,",
+      "  domain = EXCLUDED.domain,",
       "  manuel_ref = EXCLUDED.manuel_ref,",
       "  videos = EXCLUDED.videos;",
       "",

@@ -164,7 +164,7 @@ content/                        ← dépôt PRIVÉ yahia-quest-content
 └── math/                       ← un dossier = une SUBJECT (contient subject.json)
     ├── subject.json            ← méta : id, nom natif, thème, niveau, langue…
     └── 03-equations/           ← un dossier = un CHAPTER (contient chapter.json)
-        ├── chapter.json        ← titre, description, ordre, sources[]
+        ├── chapter.json        ← titre, description, ordre, domaine, sources[]
         ├── cours.md            ← le cours complet (markdown, style RPG)
         ├── resume.md           ← résumé du cours (bullet points)
         ├── quiz.json           ← quiz de compréhension OBLIGATOIRE (verrou)
@@ -187,6 +187,36 @@ flowchart LR
 C'est pourquoi la règle absolue est : **on ne renomme jamais** un `id` de matière, un dossier de
 chapitre ou un fichier d'exercice une fois publié. On ajoute toujours du contenu **nouveau** à côté
 (le prochain `NN` libre), on ne renumérote/réordonne jamais l'existant.
+
+---
+
+### Les domaines d'une matière (« sections »)
+
+Un programme officiel n'est pas une liste plate de chapitres : les maths alternent **algèbre** et
+**géométrie**, l'arabe et les langues séparent **grammaire**, **conjugaison** et **compréhension**.
+Le champ **facultatif** `domain` de `chapter.json` porte ce découpage :
+
+```json
+{ "title": "Théorème de Thalès", "description": "…", "displayOrder": 4, "domain": "Géométrie" }
+```
+
+Quatre règles, et rien d'autre :
+
+1. **C'est un libellé, pas une clé.** Il s'écrit dans la langue de la matière
+   (`contentLanguage`), comme le titre — « Géométrie » sous une matière française,
+   « قواعد اللغة » sous une matière arabe. Il n'y a pas de table de domaines à tenir.
+2. **Le texte EST l'identité.** Deux graphies d'un même domaine dans une matière
+   (« Géométrie » / « geometrie », avec ou sans tashkil) sont une **erreur** de `content:qa` :
+   le hub les regrouperait en n'en gardant qu'une, sans que personne ne le voie.
+3. **L'ordre des domaines ne s'écrit pas** — il se lit dans les `displayOrder` des chapitres,
+   à la première apparition. Un programme qui entrelace ses domaines garde sa progression.
+4. **Tout ou rien par matière, à terme.** Rattacher la moitié des chapitres est un **warn** :
+   les autres tombent sous « Autres chapitres » dans le hub. Et un domaine unique pour toute
+   la matière ne groupe rien — le hub n'affiche des en-têtes qu'à partir de deux.
+
+Une matière dont le programme n'a pas de domaines n'écrit simplement rien : son hub garde la
+liste plate. La colonne compilée est `chapters.domain`
+([`20260818120000_chapter_domain.sql`](../supabase/migrations/20260818120000_chapter_domain.sql)).
 
 ---
 

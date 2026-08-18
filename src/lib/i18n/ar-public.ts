@@ -165,6 +165,8 @@ export const arPublic: TranslationKeys["public"] = {
     chapterComplete: "فصل مكتمل",
     todo: "لم يبدأ",
     unlocksChapter: "يفتح الفصل",
+    otherChapters: "فصول أخرى",
+    chaptersProgress: "{done}/{total} فصول",
     quizContract: "انجح في الاختبار (≥ {pct}٪) لفتح مهمات هذا الفصل.",
     manuelTitle: "الكتاب المدرسي الرسمي",
     manuelHint: "كتاب التلميذ الرسمي (CNP) لهذه المادة بصيغة PDF.",

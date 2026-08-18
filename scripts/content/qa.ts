@@ -22,6 +22,7 @@ import {
 import {
   auditAcceptedAnswers,
   auditBoardQuestion,
+  auditChapterDomains,
   auditCompetencyRefs,
   auditLesson,
   auditMisconceptionTags,
@@ -83,6 +84,16 @@ function main(): void {
   flags.push(...auditVideoRegistry(videos, competencyVocab.ids));
 
   for (const subject of subjects) {
+    // Domaines de programme (« sections » de la matière) — une passe par MATIÈRE,
+    // pas par chapitre : la faute qu'on cherche (deux graphies d'un même domaine,
+    // moitié des chapitres non rattachés) n'existe qu'entre chapitres frères.
+    flags.push(
+      ...auditChapterDomains(
+        subject.chapters.map((c) => ({ slug: c.slug, domain: c.meta.domain })),
+        `${subject.meta.id}/domaines`,
+      ),
+    );
+
     for (const chapter of subject.chapters) {
       // Les LEÇONS entrent enfin dans le gate (étude 18, lot 4). Jusqu'ici la QA ne
       // parcourait que les questions : les 541 `cours.md` / `resume.md` n'avaient jamais

@@ -1153,6 +1153,10 @@ export type TranslationKeys = {
       todo: string;
       unlocksChapter: string;
       quizContract: string;
+      /** En-tête du groupe fourre-tout quand une matière n'a rattaché qu'une partie de ses chapitres à un domaine. */
+      otherChapters: string;
+      /** Avancement d'un domaine, en chapitres terminés — `{done}`, `{total}`. */
+      chaptersProgress: string;
       manuelTitle: string;
       manuelHint: string;
       manuelOpen: string;

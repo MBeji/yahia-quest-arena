@@ -251,7 +251,7 @@ describe("étude 23 — sql-builder compilation", () => {
 
   it("compiles an active chapter video into chapters.videos with the display shape", () => {
     const sql = buildMigrationSql(makeSubject(["math.active", "math.extract"]), registry);
-    expect(sql).toContain("display_order, manuel_ref, videos) VALUES");
+    expect(sql).toContain("display_order, domain, manuel_ref, videos) VALUES");
     expect(sql).toContain("videos = EXCLUDED.videos");
     expect(sql).toContain('"id":"math.active"');
     expect(sql).toContain('"videoId":"AAAAAAAAAAA"');
@@ -275,7 +275,7 @@ describe("étude 23 — sql-builder compilation", () => {
 
   it("emits an empty videos array and NULL correction_video with no refs / empty registry", () => {
     const sql = buildMigrationSql(makeSubject([]), {});
-    expect(sql).toContain("display_order, manuel_ref, videos) VALUES");
+    expect(sql).toContain("display_order, domain, manuel_ref, videos) VALUES");
     expect(sql).toContain("'[]'::jsonb)"); // chapter videos default
     expect(sql).toContain("source, display_order, correction_video) VALUES");
     // The exercise row ends with a NULL correction_video.

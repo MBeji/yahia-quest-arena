@@ -167,6 +167,8 @@ export const frPublic: TranslationKeys["public"] = {
     chapterComplete: "Chapitre terminé",
     todo: "à faire",
     unlocksChapter: "déverrouille le chapitre",
+    otherChapters: "Autres chapitres",
+    chaptersProgress: "{done}/{total} chapitres",
     quizContract: "Réussis le quiz (≥ {pct} %) pour déverrouiller les missions de ce chapitre.",
     manuelTitle: "Manuel officiel",
     manuelHint: "Le manuel élève officiel (CNP) de la matière, en PDF.",

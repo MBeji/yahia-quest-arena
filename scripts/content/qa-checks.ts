@@ -52,6 +52,10 @@
  *           options at render, so « la réponse b » / « la dernière option » points
  *           at a position the student never sees. Cite the option's VALUE instead.
  *           Warn until the corpus is rewritten — see `OPTION_REFERENCE_LEVEL`.
+ *   [error] two spellings of one domain          → `chapters.domain` (the
+ *           « sections » of a subject: Algèbre / Géométrie, قواعد اللغة…) is a
+ *           LABEL with no reference table, so a second spelling of one domain is
+ *           silently swallowed by the hub's grouping. Subject-level check.
  *   [error] acceptedAnswers collision/charset   → étude 20 R-4/R-5: an accepted
  *           variant that equals a DECLARED-WRONG option would make cheating
  *           correct, and one outside the typable charset could never be entered.
@@ -69,6 +73,7 @@ import { auditOptionReference } from "./qa-option-reference.ts";
 // La règle « option désignée par lettre/rang » vit dans son propre module (elle
 // pèse ~110 lignes de regex calibrées), mais reste exposée d'ici : `qa.ts` et les
 // tests ne connaissent qu'une seule porte d'entrée.
+export { auditChapterDomains, type QADomainChapter } from "./qa-chapter-domains.ts";
 export {
   auditOptionReference,
   optionReferences,
