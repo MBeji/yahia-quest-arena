@@ -422,7 +422,7 @@ describe("buildMigrationSql", () => {
   });
 
   it("emits the chapter manuel_ref as jsonb with expanded page numbers", () => {
-    expect(sql).toContain("display_order, manuel_ref, videos) VALUES");
+    expect(sql).toContain("display_order, domain, manuel_ref, videos) VALUES");
     expect(sql).toContain('"code":"103304"');
     expect(sql).toContain('"pages":"12-15"');
     expect(sql).toContain('"pageNumbers":[12,13,14,15]');
@@ -440,9 +440,10 @@ describe("buildMigrationSql", () => {
       ],
     });
     // Column is always present; the value is the SQL literal NULL (no payload).
+    // Two NULLs in a row: the chapter declares neither a domain nor a manuel.
     // The trailing '[]'::jsonb is the videos column default (étude 23).
-    expect(noManuel).toContain("display_order, manuel_ref, videos) VALUES");
-    expect(noManuel).toMatch(/, 1, NULL, '\[\]'::jsonb\)/);
+    expect(noManuel).toContain("display_order, domain, manuel_ref, videos) VALUES");
+    expect(noManuel).toMatch(/, 1, NULL, NULL, '\[\]'::jsonb\)/);
     expect(noManuel).not.toContain('"code":');
   });
 

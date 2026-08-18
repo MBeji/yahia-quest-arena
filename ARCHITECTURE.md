@@ -169,36 +169,36 @@ Run with coverage: `npm run test:coverage`
 
 ## 8. Key data model (Supabase tables)
 
-| Table                                  | Purpose                                                                               |
-| -------------------------------------- | ------------------------------------------------------------------------------------- |
-| profiles                               | Student profile (XP, level, streak, coins, hero_class, current_parcours_id)           |
-| subjects                               | Math, Science, etc.                                                                   |
-| chapters                               | Chapters within a subject                                                             |
-| exercises                              | Exercises within a chapter                                                            |
-| questions                              | Multiple-choice questions within an exercise                                          |
-| attempts                               | Student exercise attempt results (`variant` classic/recall, `session_id`)             |
-| student_badges                         | Awarded badges                                                                        |
-| shop_items                             | Purchasable items                                                                     |
-| inventory_items                        | Student-owned items                                                                   |
-| daily_objectives                       | Daily goals (auto-created)                                                            |
-| weekly_quests                          | Weekly challenges                                                                     |
-| spaced_repetition_schedule             | SM-2 style review schedule                                                            |
-| dungeon_runs                           | Boss mode run state                                                                   |
-| exercise_sessions                      | Server-authoritative quest sessions (`variant` classic/recall; direct writes REVOKEd) |
-| duel_queue / duels / duel_participants | Real-time duels + weekly leagues (étude 05)                                           |
-| parent_student_links                   | Parent-student linking                                                                |
-| parcours                               | Tracks — kinds concours/scolaire/libre; **all free in the current phase**             |
-| parcours_entitlements                  | Per-parcours grants (purchase/beta/gift/family) — dormant                             |
-| parcours_interest                      | Interest votes on `coming_soon` parcours                                              |
-| subscriptions (DEPRECATED)             | Removed in migration 20260609000000 → parcours_entitlements                           |
-| beta_access_requests                   | Beta-access requests + admin review                                                   |
-| content_reports                        | User-flagged content errors ("Signaler une erreur")                                   |
-| bug_reports                            | User bug reports + admin triage                                                       |
-| question_attempts                      | Append-only per-question telemetry (adaptive engine A0)                               |
-| user_misconceptions                    | Per-(user, misconception-tag) aggregate, trigger-maintained                           |
+| Table                                  | Purpose                                                                                       |
+| -------------------------------------- | --------------------------------------------------------------------------------------------- |
+| profiles                               | Student profile (XP, level, streak, coins, hero_class, current_parcours_id)                   |
+| subjects                               | Math, Science, etc.                                                                           |
+| chapters                               | Chapters within a subject (`domain` = its « section » of the program, nullable)               |
+| exercises                              | Exercises within a chapter                                                                    |
+| questions                              | Multiple-choice questions within an exercise                                                  |
+| attempts                               | Student exercise attempt results (`variant` classic/recall, `session_id`)                     |
+| student_badges                         | Awarded badges                                                                                |
+| shop_items                             | Purchasable items                                                                             |
+| inventory_items                        | Student-owned items                                                                           |
+| daily_objectives                       | Daily goals (auto-created)                                                                    |
+| weekly_quests                          | Weekly challenges                                                                             |
+| spaced_repetition_schedule             | SM-2 style review schedule                                                                    |
+| dungeon_runs                           | Boss mode run state                                                                           |
+| exercise_sessions                      | Server-authoritative quest sessions (`variant` classic/recall; direct writes REVOKEd)         |
+| duel_queue / duels / duel_participants | Real-time duels + weekly leagues (étude 05)                                                   |
+| parent_student_links                   | Parent-student linking                                                                        |
+| parcours                               | Tracks — kinds concours/scolaire/libre; **all free in the current phase**                     |
+| parcours_entitlements                  | Per-parcours grants (purchase/beta/gift/family) — dormant                                     |
+| parcours_interest                      | Interest votes on `coming_soon` parcours                                                      |
+| subscriptions (DEPRECATED)             | Removed in migration 20260609000000 → parcours_entitlements                                   |
+| beta_access_requests                   | Beta-access requests + admin review                                                           |
+| content_reports                        | User-flagged content errors ("Signaler une erreur")                                           |
+| bug_reports                            | User bug reports + admin triage                                                               |
+| question_attempts                      | Append-only per-question telemetry (adaptive engine A0)                                       |
+| user_misconceptions                    | Per-(user, misconception-tag) aggregate, trigger-maintained                                   |
 | learning_pulses                        | Append-only time-on-task pulses (parent daily dashboard) — `docs/suivi-parental-quotidien.md` |
-| themes                                 | Top-level content tracks (école-tn, culture-générale…)                                |
-| grades                                 | Grade levels (e.g. 9th grade; incl. lycée section nodes)                              |
+| themes                                 | Top-level content tracks (école-tn, culture-générale…)                                        |
+| grades                                 | Grade levels (e.g. 9th grade; incl. lycée section nodes)                                      |
 
 ### 8a. Access model (parcours + entitlements) — premium DORMANT in the free phase
 

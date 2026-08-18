@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { DOMAIN_LABEL_MAX } from "./chapter-domain.ts";
 
 /**
  * Validation schemas for the versioned content pipeline.
@@ -269,6 +270,31 @@ export const chapterMetaSchema = z.object({
   displayOrder: z.number().int().positive(),
   /** Shared-subject narrowing: sections this chapter is compiled for (étude 16). */
   gradeSlugs: gradeSlugsSubsetSchema,
+  /**
+   * Optional domain of the official program this chapter belongs to — the
+   * « section » a student reads under the subject: `Algèbre` / `Géométrie` in
+   * maths, `قواعد اللغة` / `فهم المقروء` in Arabic and the languages.
+   *
+   * A LABEL, not a key, written in the subject's `contentLanguage` — the corpus
+   * is monolingual per subject, so the domain follows `title`/`description`
+   * exactly (compiled into `chapters.domain`). Optional: a subject whose program
+   * has no domains leaves it out everywhere and its hub keeps the flat list.
+   *
+   * The domain ORDER is never declared: it is read from the chapters themselves
+   * (first `displayOrder` at which the domain appears), so a program that
+   * interleaves its domains keeps its own progression. Labels are their own
+   * identity — `content:qa` refuses two spellings of one domain inside a
+   * subject, and partial coverage (some chapters rattached, others not).
+   */
+  domain: z
+    .string()
+    .min(1)
+    .max(
+      DOMAIN_LABEL_MAX,
+      `a chapter domain is a heading, not a sentence (${DOMAIN_LABEL_MAX} characters max)`,
+    )
+    .refine((d) => d === d.trim(), "a chapter domain must not have leading/trailing spaces")
+    .optional(),
   /** Provenance: URLs / repos / books the chapter was built from. */
   sources: z.array(sourceRefSchema).default([]),
   /**

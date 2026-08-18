@@ -22,6 +22,7 @@ import {
   isMissionPassed,
 } from "@/shared/lib/chapter-completion";
 import { resolveNextAction } from "@/shared/lib/next-action";
+import { groupChaptersByDomain } from "@/shared/lib/subject-domains";
 import { hasPassedChapterQuiz } from "../anon-quiz-gate";
 import { exerciseRouteFor } from "../exercise-route";
 import { ManuelEleveCard } from "./manuel-eleve-card";
@@ -39,6 +40,15 @@ export type SubjectHubChapter = {
   id: string;
   title: string;
   description: string | null;
+  /**
+   * Domaine du programme auquel ce chapitre appartient — la « section » de la
+   * matière (Algèbre / Géométrie, قواعد اللغة / فهم المقروء). Écrit par l'auteur
+   * du contenu, dans la langue de la matière. Déjà servi par `getSubject`
+   * (`select("*")`) ; optionnel côté type parce que la colonne est nullable ET
+   * parce qu'une matière non sectionnée n'en déclare aucun — le hub retombe alors
+   * sur sa liste à plat (`groupChaptersByDomain` rend `null`).
+   */
+  domain?: string | null;
 };
 
 export type SubjectHubExercise = {
@@ -162,7 +172,20 @@ export function SubjectHub({
       const next = !unlocked
         ? quiz
         : (chapEx.find((e) => !isMissionPassed(bestByExercise[e.id])) ?? null);
-      return { chapter: c, index: ci, chapEx, quiz, done, total, unlocked, allDone, next };
+      return {
+        chapter: c,
+        index: ci,
+        // Porté à plat sur la ligne pour que le regroupement par domaine lise la
+        // même donnée que l'affichage, sans re-projeter les chapitres.
+        domain: c.domain ?? null,
+        chapEx,
+        quiz,
+        done,
+        total,
+        unlocked,
+        allDone,
+        next,
+      };
     });
   }, [chapters, exercises, bestByExercise, quizPassedByChapter, anonPassed]);
 
@@ -203,6 +226,184 @@ export function SubjectHub({
     "{pct}",
     String(QUIZ_PASS_THRESHOLD_PCT),
   );
+
+  // Une matière est « sectionnée » dès que son contenu déclare des domaines de
+  // programme : le hub pose alors un en-tête par domaine (Algèbre, Géométrie,
+  // قواعد اللغة…) au lieu d'aligner douze chapitres à la suite. `null` — aucun
+  // domaine déclaré, ou un seul pour toute la matière — et la liste reste
+  // exactement celle d'avant : la bascule se fait matière par matière, au rythme
+  // où le contenu est rattaché.
+  const domainGroups = useMemo(() => groupChaptersByDomain(rows), [rows]);
+
+  // Une carte de chapitre, rendue à l'identique dans les deux dispositions — la
+  // liste plate et les groupes. Les dupliquer serait le meilleur moyen de les
+  // laisser diverger.
+  const renderChapter = ({
+    chapter: c,
+    index: ci,
+    chapEx,
+    quiz,
+    done,
+    total,
+    unlocked,
+    allDone,
+  }: (typeof rows)[number]) => {
+    const open = openIds.has(c.id);
+    const chip = allDone
+      ? {
+          cls: "bg-success/12 text-success",
+          text: `${t.public.subject.chapterComplete} ✓`,
+        }
+      : !unlocked
+        ? {
+            // Opaque card surface + flame BORDER rather than a flame tint
+            // behind flame ink: at 11px bold the tinted variant measured
+            // 3.36:1 (#e54a00 on #fce9e0) under Référence and failed WCAG
+            // AA. Same remedy as the leaderboard "Toi" pill (GAP-047).
+            cls: "border border-[color:var(--flame)]/40 bg-card text-foreground",
+            text: `🔒 ${t.public.subject.quizToPass}`,
+          }
+        : done > 0
+          ? {
+              cls: "bg-success/12 text-success",
+              text: quiz ? `quiz ✓ · ${done}/${total}` : `${done}/${total}`,
+            }
+          : { cls: "bg-muted text-muted-foreground", text: t.public.subject.todo };
+    return (
+      <section key={c.id} className="overflow-hidden rounded-2xl border border-border bg-card">
+        <button
+          type="button"
+          onClick={() => toggle(c.id)}
+          aria-expanded={open}
+          className="flex w-full items-center gap-3 px-4 py-3 text-start transition hover:bg-secondary/50 [@media(pointer:coarse)]:min-h-11"
+        >
+          <span className="shrink-0 text-2xs font-bold uppercase tracking-wider text-muted-foreground">
+            {t.public.subject.chapter.replace("{n}", String(ci + 1))}
+          </span>
+          <span
+            className="min-w-0 flex-1 truncate font-display text-base font-bold"
+            dir={isRtlText(c.title) ? "rtl" : "ltr"}
+          >
+            {c.title}
+          </span>
+          <span className={`shrink-0 rounded-full px-2 py-0.5 text-2xs font-bold ${chip.cls}`}>
+            {chip.text}
+          </span>
+          <ChevronDown
+            className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
+          />
+        </button>
+
+        {open && (
+          <div className="border-t border-border px-4 pb-3">
+            {c.description && (
+              <p
+                className="mt-2 text-sm text-muted-foreground"
+                dir={isRtlText(c.description) ? "rtl" : "ltr"}
+              >
+                {c.description}
+              </p>
+            )}
+            <Link
+              to="/chapitre/$chapterId"
+              params={{ chapterId: c.id }}
+              className="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-primary transition hover:opacity-80 [@media(pointer:coarse)]:min-h-11"
+            >
+              <BookOpen className="h-4 w-4" /> {t.public.subject.readCourse}
+            </Link>
+
+            {chapEx.length > 0 && (
+              <ul className="mt-1 divide-y divide-border/60 border-t border-border/60">
+                {chapEx.map((ex) => {
+                  const best = bestByExercise[ex.id];
+                  const isQuiz = ex.mode === "quiz";
+                  const lockedRow = !unlocked && !isQuiz;
+                  const title = (
+                    <span
+                      className="min-w-0 flex-1 truncate"
+                      dir={isRtlText(ex.title) ? "rtl" : "ltr"}
+                    >
+                      {isQuiz ? "🧠 " : ""}
+                      {ex.title}
+                    </span>
+                  );
+                  if (lockedRow) {
+                    return (
+                      <li
+                        key={ex.id}
+                        // No opacity modifier on muted-foreground: the token
+                        // IS the muted step already, and diluting it drove
+                        // 14px body text to 2.66:1 on white (WCAG AA needs
+                        // 4.5:1). Locked rows read "muted" via the padlock.
+                        className="flex items-center gap-2 py-2.5 text-sm text-muted-foreground"
+                      >
+                        <Lock className="h-3.5 w-3.5 shrink-0" />
+                        {title}
+                        <span className="shrink-0 text-xs">—</span>
+                      </li>
+                    );
+                  }
+                  return (
+                    <li key={ex.id}>
+                      <Link
+                        to={exerciseTo}
+                        params={{ exerciseId: ex.id }}
+                        className="flex items-center gap-2 py-2.5 text-sm transition hover:text-primary [@media(pointer:coarse)]:min-h-11"
+                      >
+                        {isMissionPassed(best) ? (
+                          <Check className="h-4 w-4 shrink-0 text-success" />
+                        ) : (
+                          <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground rtl:-scale-x-100" />
+                        )}
+                        {title}
+                        {/* R-13 : la difficulté se lit en ⭐, pas dans le titre. Le quiz
+                                  n'en a pas — ce n'est pas une mission mais la porte du chapitre. */}
+                        {!isQuiz && <DifficultyStars level={ex.difficulty} className="shrink-0" />}
+                        <span className="shrink-0 text-xs text-muted-foreground">
+                          {best != null ? (
+                            <span
+                              className={
+                                isMissionPassed(best)
+                                  ? "font-bold text-success"
+                                  : "font-bold text-muted-foreground"
+                              }
+                            >
+                              {Math.round(best)}%
+                            </span>
+                          ) : isQuiz && !unlocked ? (
+                            <span className="font-semibold text-primary">
+                              {t.public.subject.unlocksChapter}
+                            </span>
+                          ) : isAuthenticated ? (
+                            <span className="flex items-center gap-0.5 font-semibold text-primary">
+                              <Zap className="h-3 w-3" />+{ex.xp_reward} XP
+                            </span>
+                          ) : null}
+                        </span>
+                      </Link>
+                      <RecallMissionRow
+                        exerciseId={ex.id}
+                        title={ex.title}
+                        isQuiz={isQuiz}
+                        isAuthenticated={isAuthenticated}
+                        recall={recall}
+                      />
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+
+            {!unlocked && (
+              <p className="mt-2 rounded-lg border border-[color:var(--flame)]/25 bg-[color:var(--flame)]/8 px-3 py-2 text-xs text-foreground/80">
+                🧠 {quizContract}
+              </p>
+            )}
+          </div>
+        )}
+      </section>
+    );
+  };
 
   return (
     <PageShell dir={isRtl ? "rtl" : "ltr"}>
@@ -258,172 +459,46 @@ export function SubjectHub({
         </Link>
       )}
 
-      <div className="space-y-3">
-        {rows.map(({ chapter: c, index: ci, chapEx, quiz, done, total, unlocked, allDone }) => {
-          const open = openIds.has(c.id);
-          const chip = allDone
-            ? {
-                cls: "bg-success/12 text-success",
-                text: `${t.public.subject.chapterComplete} ✓`,
-              }
-            : !unlocked
-              ? {
-                  // Opaque card surface + flame BORDER rather than a flame tint
-                  // behind flame ink: at 11px bold the tinted variant measured
-                  // 3.36:1 (#e54a00 on #fce9e0) under Référence and failed WCAG
-                  // AA. Same remedy as the leaderboard "Toi" pill (GAP-047).
-                  cls: "border border-[color:var(--flame)]/40 bg-card text-foreground",
-                  text: `🔒 ${t.public.subject.quizToPass}`,
-                }
-              : done > 0
-                ? {
-                    cls: "bg-success/12 text-success",
-                    text: quiz ? `quiz ✓ · ${done}/${total}` : `${done}/${total}`,
-                  }
-                : { cls: "bg-muted text-muted-foreground", text: t.public.subject.todo };
-          return (
-            <section
-              key={c.id}
-              className="overflow-hidden rounded-2xl border border-border bg-card"
-            >
-              <button
-                type="button"
-                onClick={() => toggle(c.id)}
-                aria-expanded={open}
-                className="flex w-full items-center gap-3 px-4 py-3 text-start transition hover:bg-secondary/50 [@media(pointer:coarse)]:min-h-11"
-              >
-                <span className="shrink-0 text-2xs font-bold uppercase tracking-wider text-muted-foreground">
-                  {t.public.subject.chapter.replace("{n}", String(ci + 1))}
-                </span>
-                <span
-                  className="min-w-0 flex-1 truncate font-display text-base font-bold"
-                  dir={isRtlText(c.title) ? "rtl" : "ltr"}
-                >
-                  {c.title}
-                </span>
-                <span
-                  className={`shrink-0 rounded-full px-2 py-0.5 text-2xs font-bold ${chip.cls}`}
-                >
-                  {chip.text}
-                </span>
-                <ChevronDown
-                  className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
-                />
-              </button>
-
-              {open && (
-                <div className="border-t border-border px-4 pb-3">
-                  {c.description && (
-                    <p
-                      className="mt-2 text-sm text-muted-foreground"
-                      dir={isRtlText(c.description) ? "rtl" : "ltr"}
-                    >
-                      {c.description}
-                    </p>
-                  )}
-                  <Link
-                    to="/chapitre/$chapterId"
-                    params={{ chapterId: c.id }}
-                    className="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-primary transition hover:opacity-80 [@media(pointer:coarse)]:min-h-11"
+      {domainGroups ? (
+        <div className="space-y-7">
+          {domainGroups.map((group) => {
+            // L'en-tête ne porte que ce qu'un élève cherche du regard : le nom du
+            // domaine, et où il en est dedans. Le détail par chapitre est déjà
+            // dans les cartes, il n'a pas à être répété deux fois.
+            const label = group.label ?? t.public.subject.otherChapters;
+            const doneChapters = group.chapters.filter((r) => r.allDone).length;
+            // La clé porte des espaces (et « : » pour le fourre-tout) : un id
+            // doit rester utilisable tel quel, aussi comme sélecteur.
+            const headingId = `domain-${group.key.replace(/[^\p{L}\p{N}]+/gu, "-")}`;
+            return (
+              <section key={group.key} aria-labelledby={headingId} data-testid="domain-group">
+                <div className="mb-3 flex items-center gap-3">
+                  <h2
+                    id={headingId}
+                    // Le fourre-tout n'est pas un domaine : il se lit en encre
+                    // sourde, sans l'accent que portent les vrais en-têtes.
+                    className={`font-display text-sm font-bold uppercase tracking-[0.14em] ${
+                      group.label ? "text-primary" : "text-muted-foreground"
+                    }`}
+                    dir={isRtlText(label) ? "rtl" : "ltr"}
                   >
-                    <BookOpen className="h-4 w-4" /> {t.public.subject.readCourse}
-                  </Link>
-
-                  {chapEx.length > 0 && (
-                    <ul className="mt-1 divide-y divide-border/60 border-t border-border/60">
-                      {chapEx.map((ex) => {
-                        const best = bestByExercise[ex.id];
-                        const isQuiz = ex.mode === "quiz";
-                        const lockedRow = !unlocked && !isQuiz;
-                        const title = (
-                          <span
-                            className="min-w-0 flex-1 truncate"
-                            dir={isRtlText(ex.title) ? "rtl" : "ltr"}
-                          >
-                            {isQuiz ? "🧠 " : ""}
-                            {ex.title}
-                          </span>
-                        );
-                        if (lockedRow) {
-                          return (
-                            <li
-                              key={ex.id}
-                              // No opacity modifier on muted-foreground: the token
-                              // IS the muted step already, and diluting it drove
-                              // 14px body text to 2.66:1 on white (WCAG AA needs
-                              // 4.5:1). Locked rows read "muted" via the padlock.
-                              className="flex items-center gap-2 py-2.5 text-sm text-muted-foreground"
-                            >
-                              <Lock className="h-3.5 w-3.5 shrink-0" />
-                              {title}
-                              <span className="shrink-0 text-xs">—</span>
-                            </li>
-                          );
-                        }
-                        return (
-                          <li key={ex.id}>
-                            <Link
-                              to={exerciseTo}
-                              params={{ exerciseId: ex.id }}
-                              className="flex items-center gap-2 py-2.5 text-sm transition hover:text-primary [@media(pointer:coarse)]:min-h-11"
-                            >
-                              {isMissionPassed(best) ? (
-                                <Check className="h-4 w-4 shrink-0 text-success" />
-                              ) : (
-                                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground rtl:-scale-x-100" />
-                              )}
-                              {title}
-                              {/* R-13 : la difficulté se lit en ⭐, pas dans le titre. Le quiz
-                                  n'en a pas — ce n'est pas une mission mais la porte du chapitre. */}
-                              {!isQuiz && (
-                                <DifficultyStars level={ex.difficulty} className="shrink-0" />
-                              )}
-                              <span className="shrink-0 text-xs text-muted-foreground">
-                                {best != null ? (
-                                  <span
-                                    className={
-                                      isMissionPassed(best)
-                                        ? "font-bold text-success"
-                                        : "font-bold text-muted-foreground"
-                                    }
-                                  >
-                                    {Math.round(best)}%
-                                  </span>
-                                ) : isQuiz && !unlocked ? (
-                                  <span className="font-semibold text-primary">
-                                    {t.public.subject.unlocksChapter}
-                                  </span>
-                                ) : isAuthenticated ? (
-                                  <span className="flex items-center gap-0.5 font-semibold text-primary">
-                                    <Zap className="h-3 w-3" />+{ex.xp_reward} XP
-                                  </span>
-                                ) : null}
-                              </span>
-                            </Link>
-                            <RecallMissionRow
-                              exerciseId={ex.id}
-                              title={ex.title}
-                              isQuiz={isQuiz}
-                              isAuthenticated={isAuthenticated}
-                              recall={recall}
-                            />
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  )}
-
-                  {!unlocked && (
-                    <p className="mt-2 rounded-lg border border-[color:var(--flame)]/25 bg-[color:var(--flame)]/8 px-3 py-2 text-xs text-foreground/80">
-                      🧠 {quizContract}
-                    </p>
-                  )}
+                    {label}
+                  </h2>
+                  <span className="h-px flex-1 bg-border" aria-hidden="true" />
+                  <span className="shrink-0 text-2xs font-bold text-muted-foreground">
+                    {t.public.subject.chaptersProgress
+                      .replace("{done}", String(doneChapters))
+                      .replace("{total}", String(group.chapters.length))}
+                  </span>
                 </div>
-              )}
-            </section>
-          );
-        })}
-      </div>
+                <div className="space-y-3">{group.chapters.map(renderChapter)}</div>
+              </section>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="space-y-3">{rows.map(renderChapter)}</div>
+      )}
     </PageShell>
   );
 }

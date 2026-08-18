@@ -340,3 +340,125 @@ describe("SubjectHub — recall mission row (étude 17, US-6 + override R-9)", (
     expect(screen.queryByTestId("recall-chip-locked")).not.toBeInTheDocument();
   });
 });
+
+/**
+ * Domaines de programme — les « sections » d'une matière (Algèbre / Géométrie,
+ * قواعد اللغة / فهم المقروء). Le hub ne les invente pas : il lit `chapters.domain`
+ * et retombe sur sa liste plate dès qu'il n'y a pas deux groupes à montrer.
+ */
+describe("SubjectHub — domaines de programme", () => {
+  const sectioned = [
+    { id: "c1", title: "Les nombres", description: null, domain: "Algèbre" },
+    { id: "c2", title: "Thalès", description: null, domain: "Géométrie" },
+    { id: "c3", title: "Les fractions", description: null, domain: "Algèbre" },
+  ];
+
+  it("pose un en-tête par domaine, dans l'ordre du programme", () => {
+    render(
+      <SubjectHub subject={subject} chapters={sectioned} exercises={[]} isAuthenticated={false} />,
+    );
+    const headings = screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent);
+    expect(headings).toEqual(["Algèbre", "Géométrie"]);
+  });
+
+  it("range chaque chapitre sous son domaine", () => {
+    render(
+      <SubjectHub subject={subject} chapters={sectioned} exercises={[]} isAuthenticated={false} />,
+    );
+    const groups = screen.getAllByTestId("domain-group");
+    expect(groups[0]?.textContent).toContain("Les nombres");
+    expect(groups[0]?.textContent).toContain("Les fractions");
+    expect(groups[0]?.textContent).not.toContain("Thalès");
+    expect(groups[1]?.textContent).toContain("Thalès");
+  });
+
+  it("compte les chapitres terminés du domaine, pas ses missions", () => {
+    render(
+      <SubjectHub
+        subject={subject}
+        chapters={sectioned}
+        exercises={[
+          { id: "e1", chapter_id: "c1", mode: "normal", title: "M1", difficulty: 1, xp_reward: 10 },
+          { id: "e2", chapter_id: "c3", mode: "normal", title: "M2", difficulty: 1, xp_reward: 10 },
+        ]}
+        // c1 terminé, c3 raté : 1 chapitre sur 2 pour Algèbre.
+        bestByExercise={{ e1: 100, e2: 20 }}
+        quizPassedByChapter={{ c1: true, c3: true }}
+        isAuthenticated={true}
+      />,
+    );
+    expect(screen.getByText("1/2 chapitres")).toBeInTheDocument();
+    expect(screen.getByText("0/1 chapitres")).toBeInTheDocument();
+  });
+
+  it("regroupe les chapitres sans domaine sous « Autres chapitres »", () => {
+    render(
+      <SubjectHub
+        subject={subject}
+        chapters={[
+          { id: "c1", title: "Les nombres", description: null, domain: "Algèbre" },
+          { id: "c2", title: "Divers", description: null },
+        ]}
+        exercises={[]}
+        isAuthenticated={false}
+      />,
+    );
+    const headings = screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent);
+    expect(headings).toEqual(["Algèbre", fr.public.subject.otherChapters]);
+  });
+
+  it("garde la liste plate quand aucun chapitre n'est rattaché", () => {
+    render(
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        isAuthenticated={false}
+      />,
+    );
+    expect(screen.queryAllByTestId("domain-group")).toHaveLength(0);
+    expect(screen.queryAllByRole("heading", { level: 2 })).toHaveLength(0);
+    // Les chapitres restent affichés — la bascule ne coûte rien à une matière
+    // que le contenu n'a pas encore sectionnée.
+    expect(screen.getByText("Les nombres")).toBeInTheDocument();
+    expect(screen.getByText("Les fractions")).toBeInTheDocument();
+  });
+
+  it("garde la liste plate quand un domaine unique couvre toute la matière", () => {
+    render(
+      <SubjectHub
+        subject={subject}
+        chapters={[
+          { id: "c1", title: "Les nombres", description: null, domain: "Algèbre" },
+          { id: "c2", title: "Les fractions", description: null, domain: "Algèbre" },
+        ]}
+        exercises={[]}
+        isAuthenticated={false}
+      />,
+    );
+    expect(screen.queryAllByTestId("domain-group")).toHaveLength(0);
+  });
+
+  it("les chapitres restent dépliables une fois groupés", () => {
+    const { container } = render(
+      <SubjectHub
+        subject={subject}
+        chapters={sectioned}
+        exercises={[
+          {
+            id: "e1",
+            chapter_id: "c2",
+            mode: "normal",
+            title: "Config",
+            difficulty: 1,
+            xp_reward: 10,
+          },
+        ]}
+        quizPassedByChapter={{ c2: true }}
+        isAuthenticated={false}
+      />,
+    );
+    expandAll(container);
+    expect(screen.getByText("Config")).toBeInTheDocument();
+  });
+});
