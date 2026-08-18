@@ -36,7 +36,12 @@ export const optionalSupabaseAuth = createMiddleware({ type: "function" }).serve
           const context: OptionalAuthContext = { supabase, userId: data.claims.sub };
           return next({ context });
         }
-        logger.warn("optionalSupabaseAuth: invalid bearer token, continuing as anonymous");
+        // Carry the REASON, not just the verdict. This path degrades a signed-in
+        // visitor to anonymous, so when an Auth outage (not a bad token) is what
+        // triggered it, the line that says so is the only trace left.
+        logger.warn("optionalSupabaseAuth: invalid bearer token, continuing as anonymous", {
+          error: error?.message ?? "no subject claim",
+        });
       }
     }
 

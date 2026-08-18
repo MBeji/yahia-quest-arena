@@ -21,7 +21,11 @@ vi.mock("@tanstack/react-start/server", () => ({
   getRequest: mockGetRequest,
 }));
 
-vi.mock("@supabase/supabase-js", () => ({
+// Only `createClient` is stubbed: the middleware also asks the library to
+// classify its own errors (`isAuthRetryableFetchError`), and a hand-written
+// stand-in would test our idea of auth-js instead of auth-js.
+vi.mock("@supabase/supabase-js", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@supabase/supabase-js")>()),
   createClient: mockCreateClient,
 }));
 
@@ -31,6 +35,8 @@ vi.mock("@/shared/lib/logger", () => ({
     warn: mockLoggerWarn,
   },
 }));
+
+import { AuthRetryableFetchError } from "@supabase/supabase-js";
 
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 
@@ -185,6 +191,88 @@ describe("requireSupabaseAuth", () => {
         }),
       }),
     );
+  });
+
+  // `getClaims` is the ONLY refusal in this middleware that depends on a remote
+  // service answering — and it used to throw its reason away. #772 (« une panne
+  // ne laisse plus Valider actif et sans effet ») shipped saying in as many
+  // words that identifying the SERVER failure behind the prod report needed the
+  // prod database: the app knew why it had refused, and logged nothing.
+  describe("a refused token says WHY it was refused", () => {
+    function bearerRequest() {
+      mockGetRequest.mockReturnValue({
+        url: "https://app.example/_serverFn/getDashboard?token=secret",
+        headers: new Headers({ authorization: "Bearer token-123" }),
+      });
+    }
+
+    it("logs a rejected token as a warning, and keeps the Unauthorized verdict", async () => {
+      bearerRequest();
+      mockGetClaims.mockResolvedValue({
+        data: null,
+        error: { message: "invalid JWT: token is expired", status: 401 },
+      });
+
+      await expect(callMiddleware({ next: vi.fn() } as never)).rejects.toThrow(
+        "Unauthorized: Invalid token",
+      );
+
+      expect(mockLoggerWarn).toHaveBeenCalledWith("Bearer token rejected", {
+        path: "/_serverFn/getDashboard",
+        error: "invalid JWT: token is expired",
+      });
+      // An expiring session is routine. Filing it as an error would drown the
+      // incident below — the case this whole suite exists to make visible.
+      expect(mockLoggerError).not.toHaveBeenCalled();
+    });
+
+    it("calls an unreachable Auth service an incident, not a bad token", async () => {
+      bearerRequest();
+      mockGetClaims.mockResolvedValue({
+        data: null,
+        error: new AuthRetryableFetchError("request failed", 503),
+      });
+
+      await expect(callMiddleware({ next: vi.fn() } as never)).rejects.toThrow(
+        "Auth verification unavailable",
+      );
+
+      expect(mockLoggerError).toHaveBeenCalledWith("Auth verification unavailable", {
+        path: "/_serverFn/getDashboard",
+        error: "request failed",
+      });
+      expect(mockLoggerWarn).not.toHaveBeenCalled();
+    });
+
+    it("treats a rate-limited Auth service the same way", async () => {
+      // auth-js does NOT file a 429 as retryable, but "we could not check" is
+      // exactly what it means — and on the symmetric-key path (C-1bis) every
+      // server fn spends one Auth call, so this is the shape a busy hour takes.
+      bearerRequest();
+      mockGetClaims.mockResolvedValue({
+        data: null,
+        error: { message: "rate limit exceeded", status: 429 },
+      });
+
+      await expect(callMiddleware({ next: vi.fn() } as never)).rejects.toThrow(
+        "Auth verification unavailable",
+      );
+
+      expect(mockLoggerError).toHaveBeenCalledWith("Auth verification unavailable", {
+        path: "/_serverFn/getDashboard",
+        error: "rate limit exceeded",
+      });
+    });
+
+    it("never lets the query string into the log line", async () => {
+      bearerRequest();
+      mockGetClaims.mockResolvedValue({ data: null, error: { message: "boom" } });
+
+      await expect(callMiddleware({ next: vi.fn() } as never)).rejects.toThrow("Unauthorized");
+
+      const [, meta] = mockLoggerWarn.mock.calls[0] as [string, { path: string }];
+      expect(meta.path).not.toContain("secret");
+    });
   });
 
   // Perf audit M-1 (server half): this middleware is the only place every server
