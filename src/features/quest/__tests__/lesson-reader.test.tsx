@@ -61,6 +61,37 @@ describe("LessonReader", () => {
     expect(backLink?.textContent).toContain("Français");
   });
 
+  it("names the program domain between the subject and the chapter rank", () => {
+    // Le même découpage que les en-têtes du hub matière : l'élève arrivé ici par
+    // un lien direct sait dans quelle section de son programme il atterrit.
+    render(
+      <LessonReader
+        chapterId="c1"
+        chapter={{ ...chapter, domain: "Grammaire" }}
+        allChapters={siblings}
+      />,
+    );
+    expect(screen.getByTestId("reader-domain").textContent).toContain("Grammaire");
+  });
+
+  it("omits the domain entirely when the chapter is not attached to one", () => {
+    // L'état de tout le corpus tant que la campagne de contenu n'a pas tourné :
+    // le fil se lit « Matière · 2/3 », exactement comme avant la colonne.
+    render(<LessonReader chapterId="c1" chapter={chapter} allChapters={siblings} />);
+    expect(screen.queryByTestId("reader-domain")).not.toBeInTheDocument();
+  });
+
+  it("reads the domain RTL under an Arabic subject", () => {
+    render(
+      <LessonReader
+        chapterId="c1"
+        chapter={{ ...chapter, domain: "قواعد اللغة" }}
+        allChapters={siblings}
+      />,
+    );
+    expect(screen.getByTestId("reader-domain").getAttribute("dir")).toBe("rtl");
+  });
+
   it("toggles between Cours and Résumé", () => {
     const { container } = render(
       <LessonReader chapterId="c1" chapter={chapter} allChapters={siblings} />,
