@@ -136,6 +136,8 @@ export const ar: TranslationKeys = {
     },
     reviseGateway: "مراجعة {name}",
     reviseGatewayHint: "كلّ ما حقّقته هناك سليم.",
+    changeClass: "تغيير القسم",
+    changeClassHint: "أنت في {name}. نقاطك وقطعك وأوسمتك تتبعك.",
     reviewTitle: "مراجعة اليوم",
     dailyPlanEmpty: "لا شيء للمراجعة اليوم — ذاكرتك في أحسن حال. واصل!",
     dailyPlanReason: "لم تراجع {chapter} منذ {n} أيام",

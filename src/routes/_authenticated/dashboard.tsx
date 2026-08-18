@@ -14,6 +14,7 @@ import {
   ShoppingBag,
   Compass,
   History,
+  GraduationCap,
   ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -418,6 +419,29 @@ function Dashboard() {
             </div>
             <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground transition group-hover:text-[color:var(--gold)] rtl:-scale-x-100" />
           </Link>
+          {/* « Changer de classe » — la seule porte PERMANENTE vers son vrai niveau (#776).
+              La bannière de rentrée ne s'ouvre que du 1ᵉʳ septembre au 31 octobre (R-4) et le
+              catalogue, lui, s'appelle « Découvrir d'autres thèmes » : hors fenêtre, un élève
+              inscrit en 8ᵉ qui veut rejoindre sa 9ᵉ n'avait plus aucun libellé à suivre. Un
+              LIEN, pas une promotion automatique : l'élève choisit toujours (D-6). */}
+          {data.currentParcoursName && (
+            <Link
+              to="/programme"
+              data-testid="change-class"
+              className="group flex items-center gap-4 rounded-2xl border border-border bg-card/60 p-4 backdrop-blur-md transition hover:border-[color:var(--gold)]/40 [@media(pointer:coarse)]:min-h-11"
+            >
+              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[color:var(--gold)]/10">
+                <GraduationCap className="h-6 w-6 text-[color:var(--gold)]" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="font-display text-base font-bold">{t.dashboard.changeClass}</div>
+                <p className="text-sm text-muted-foreground">
+                  {t.dashboard.changeClassHint.replace("{name}", data.currentParcoursName)}
+                </p>
+              </div>
+              <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground transition group-hover:text-[color:var(--gold)] rtl:-scale-x-100" />
+            </Link>
+          )}
           {/* Passerelle « Réviser » (étude 22, R-17) — un LIEN vers la classe précédente, pas un
               changement de parcours : l'ancre ne bouge pas (R-1), et les acquis y sont intacts
               puisque la progression par matière n'est jamais effacée (R-3). */}

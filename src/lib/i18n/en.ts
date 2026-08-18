@@ -137,6 +137,8 @@ export const en: TranslationKeys = {
     },
     reviseGateway: "Revise {name}",
     reviseGatewayHint: "Everything you earned there is intact.",
+    changeClass: "Change class",
+    changeClassHint: "You are in {name}. Your XP, coins and badges follow you.",
     reviewTitle: "Your review for today",
     dailyPlanEmpty: "Nothing to review today — your memory is holding up. Keep going!",
     dailyPlanReason: "You haven't revisited {chapter} in {n} days",

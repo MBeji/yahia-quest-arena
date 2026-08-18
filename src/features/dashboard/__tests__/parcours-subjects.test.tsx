@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 import React from "react";
 
@@ -83,5 +84,33 @@ describe("ParcoursSubjects", () => {
     );
     expect(screen.getByText(/Contenu bientôt disponible/)).toBeInTheDocument();
     expect(screen.getByText("Mathématiques")).toBeInTheDocument();
+  });
+
+  // Le geste que l'élève de 8ᵉ vient chercher pour rejoindre sa 9ᵉ (#776) : hors fenêtre de
+  // rentrée, cette page est la SEULE à porter le changement de classe. Elle n'était pas testée.
+  it("offre de basculer sur ce parcours quand on est connecté", async () => {
+    const onChoose = vi.fn();
+    render(
+      <ParcoursSubjects
+        parcours={{ name_fr: "Préparation Concours 9ème", status: "available", kind: "concours" }}
+        subjects={subjects}
+        isAuthenticated
+        onChoose={onChoose}
+      />,
+    );
+    const cta = screen.getByRole("button", { name: /Choisir ce parcours/ });
+    await userEvent.click(cta);
+    expect(onChoose).toHaveBeenCalledTimes(1);
+  });
+
+  it("ne propose pas la bascule à un visiteur anonyme", () => {
+    render(
+      <ParcoursSubjects
+        parcours={{ name_fr: "Préparation Concours 9ème", status: "available", kind: "concours" }}
+        subjects={subjects}
+        onChoose={vi.fn()}
+      />,
+    );
+    expect(screen.queryByRole("button", { name: /Choisir ce parcours/ })).toBeNull();
   });
 });

@@ -141,6 +141,8 @@ export const fr: TranslationKeys = {
     },
     reviseGateway: "Réviser la {name}",
     reviseGatewayHint: "Tes acquis y sont intacts.",
+    changeClass: "Changer de classe",
+    changeClassHint: "Tu es en {name}. Tes XP, pièces et badges te suivent.",
     reviewTitle: "Ta révision du jour",
     // Étude 04 A1.1 : être à jour est une VICTOIRE, pas un écran vide.
     dailyPlanEmpty: "Rien à réviser aujourd'hui — ta mémoire tient bon. Continue !",
