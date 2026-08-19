@@ -56,7 +56,7 @@ function PrivacyPage() {
       <div className="mx-auto max-w-3xl px-4 pb-16 text-start" dir="ltr">
         <h1 className="font-display text-3xl font-bold">Politique de confidentialité</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Dernière mise à jour : 31 juillet 2026. Cette page décrit ce que Na9ra Nal3ab collecte,
+          Dernière mise à jour : 19 août 2026. Cette page décrit ce que Na9ra Nal3ab collecte,
           pourquoi, et avec qui ces données sont partagées.
         </p>
 
