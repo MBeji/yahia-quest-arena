@@ -21,6 +21,13 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    # Sans plafond, le défaut de GitHub est SIX HEURES. Le 2026-08-19, le miroir
+    # Azure d'Ubuntu est tombé : `apt-get` s'est figé dans l'installation des
+    # dépendances de Chromium et TROIS runs (dont un sur main) ont gelé un runner
+    # chacun pendant plus d'une heure, sans qu'aucun n'échoue jamais. 25 min
+    # couvrent largement le job (12 étapes en ~5 min) et transforment un blocage
+    # d'infrastructure en échec lisible.
+    timeout-minutes: 25
 
     steps:
       - name: Checkout
@@ -94,8 +101,21 @@ jobs:
       # page. The only tier that exercises prod-gated client code
       # (`import.meta.env.PROD`) — tsc, the unit gate, SSR checks and the
       # dev-server e2e all miss that class of crash.
+      # `--with-deps` RETIRÉ (2026-08-19). Il lançait `apt-get` à chaque PR pour
+      # installer les bibliothèques système de Chromium — que l'image
+      # `ubuntu-latest` embarque déjà. Le jour où le miroir Ubuntu du runner est
+      # tombé, cette dépendance inutile a gelé toute la CI du dépôt : apt attendait
+      # `archive.ubuntu.com` indéfiniment, et le téléchargement du navigateur n'a
+      # même jamais commencé. S'il manquait vraiment une lib, le smoke échouerait
+      # en quelques secondes et le dirait — au lieu de pendre.
+      - name: Cache Playwright browsers
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
       - name: Install Chromium (shell smoke)
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
 
       - name: Production shell smoke (real browser)
         run: npm run smoke:shell
