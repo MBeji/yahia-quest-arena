@@ -61,6 +61,17 @@ describe("useMyRole", () => {
     expect(result.current.currentParcoursId).toBe("concours-9eme");
   });
 
+  it("carries the pseudo, which /parametrage renames and then reads back here", async () => {
+    mockSingle.mockResolvedValue({
+      data: { role: "student", current_parcours_id: null, display_name: "Yahia" },
+    });
+
+    const { result } = renderHook(() => useMyRole(), { wrapper: makeWrapper() });
+
+    await waitFor(() => expect(result.current.isLoaded).toBe(true));
+    expect(result.current.displayName).toBe("Yahia");
+  });
+
   it("distinguishes a missing profile row from a not-yet-onboarded one", async () => {
     mockSingle.mockResolvedValue({ data: null });
 
@@ -70,6 +81,8 @@ describe("useMyRole", () => {
     expect(result.current.role).toBeNull();
     expect(result.current.hasProfile).toBe(false);
     expect(result.current.isAdmin).toBe(false);
+    // Null, not "": an empty string would render as a nameless dashboard hero.
+    expect(result.current.displayName).toBeNull();
   });
 
   // Regression — GAP-017. The authenticated layout and every /admin guard read the

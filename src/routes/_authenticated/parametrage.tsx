@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, type ReactNode } from "react";
 import {
@@ -11,6 +11,7 @@ import {
   LogOut,
   Map,
   Monitor,
+  Pencil,
   ScrollText,
   Shield,
   Sparkles,
@@ -21,7 +22,13 @@ import { toast } from "sonner";
 
 import { PageShell } from "@/components/ui/page-shell";
 import { ThemeChoice, LocaleChoice, SoundToggles } from "@/components/ui/settings-controls";
-import { useAuth, useMyRole } from "@/features/auth";
+import {
+  DISPLAY_NAME_MAX_LENGTH,
+  isValidDisplayName,
+  updateDisplayName,
+  useAuth,
+  useMyRole,
+} from "@/features/auth";
 import { getParcours } from "@/features/dashboard";
 import { EnablePushCard } from "@/features/notifications";
 import { formatStudentAllianceCode } from "@/features/parent-report";
@@ -89,6 +96,132 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
 const ACTION_CLASS =
   "inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-[color:var(--gold)]/40 px-3 py-1.5 text-xs font-semibold text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/10";
 
+/**
+ * Le pseudo — le seul réglage de cette page qui s'écrit au lieu de se choisir.
+ *
+ * Il était jusqu'ici fixé une fois pour toutes à l'inscription : aucun écran ne
+ * le reprenait, alors que le tableau de bord, la Boutique et le suivi parent
+ * l'affichent tous les trois. Édition en place plutôt qu'en boîte de dialogue :
+ * une modale pour un champ de texte coûterait plus d'attention qu'elle n'en
+ * économise, et la ligne garde ainsi la même maille que ses voisines.
+ *
+ * La validation est celle de l'inscription — littéralement la même, importée de
+ * `@/features/auth` — donc l'écran ne peut pas refuser un pseudo que la création
+ * de compte, elle, aurait accepté.
+ */
+function PseudoRow() {
+  const t = useT();
+  const { user } = useAuth();
+  const { displayName } = useMyRole();
+  const queryClient = useQueryClient();
+  const rename = useServerFn(updateDisplayName);
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const valid = isValidDisplayName(draft);
+
+  async function save() {
+    if (!valid || saving) return;
+    setSaving(true);
+    try {
+      await rename({ data: { displayName: draft } });
+      // Le pseudo se lit à deux endroits : la ligne ci-dessus (`me-role`) et le
+      // profil complet que le tableau de bord ET la Boutique partagent sous la
+      // clé `dashboard`. Sans cette seconde invalidation, la page de réglages
+      // affiche le nouveau nom pendant que le hall montre encore l'ancien.
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["me-role", user?.id] }),
+        queryClient.invalidateQueries({ queryKey: ["dashboard"] }),
+      ]);
+      toast.success(t.settings.pseudoSaved);
+      setEditing(false);
+    } catch {
+      toast.error(t.settings.pseudoError);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (!editing) {
+    return (
+      <Row label={t.auth.heroNameLabel}>
+        <span className="truncate" data-testid="settings-pseudo">
+          {displayName ?? "—"}
+        </span>
+        <button
+          type="button"
+          onClick={() => {
+            setDraft(displayName ?? "");
+            setEditing(true);
+          }}
+          data-testid="settings-pseudo-edit"
+          className={ACTION_CLASS}
+        >
+          <Pencil className="h-3.5 w-3.5" />
+          {t.settings.pseudoAction}
+        </button>
+      </Row>
+    );
+  }
+
+  return (
+    <Row label={t.auth.heroNameLabel}>
+      <span className="flex flex-wrap items-center justify-end gap-2">
+        <input
+          type="text"
+          autoFocus
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          // Entrée valide, Échap annule : le champ vit dans une ligne, pas dans un
+          // <form> — celui-ci ne serait pas du contenu valide à l'intérieur du
+          // <span> de la ligne, et une modale coûterait plus qu'elle ne rapporte.
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              void save();
+            } else if (e.key === "Escape") {
+              setEditing(false);
+            }
+          }}
+          maxLength={DISPLAY_NAME_MAX_LENGTH}
+          disabled={saving}
+          aria-label={t.auth.heroNameLabel}
+          aria-invalid={!valid}
+          aria-describedby="settings-pseudo-rule"
+          data-testid="settings-pseudo-input"
+          className="min-h-11 w-40 rounded-lg border border-input bg-background/60 px-3 py-1.5 text-sm focus:border-gold focus:outline-none sm:w-56"
+        />
+        <button
+          type="button"
+          onClick={() => void save()}
+          disabled={!valid || saving}
+          data-testid="settings-pseudo-save"
+          className={`${ACTION_CLASS} disabled:opacity-50`}
+        >
+          <Check className="h-3.5 w-3.5" />
+          {t.settings.pseudoSave}
+        </button>
+        <button
+          type="button"
+          onClick={() => setEditing(false)}
+          disabled={saving}
+          data-testid="settings-pseudo-cancel"
+          className={`${ACTION_CLASS} disabled:opacity-50`}
+        >
+          {t.settings.pseudoCancel}
+        </button>
+        <span
+          id="settings-pseudo-rule"
+          className="basis-full text-end text-xs font-normal text-muted-foreground"
+        >
+          {t.settings.pseudoRule.replace("{max}", String(DISPLAY_NAME_MAX_LENGTH))}
+        </span>
+      </span>
+    </Row>
+  );
+}
+
 function ParametragePage() {
   const t = useT();
   const { locale } = useI18n();
@@ -146,6 +279,7 @@ function ParametragePage() {
 
       <div className="grid gap-3">
         <Section Icon={UserCircle} title={t.settings.accountTitle} desc={t.settings.accountDesc}>
+          <PseudoRow />
           <Row label={t.settings.email}>
             <span className="truncate">{user?.email ?? "—"}</span>
           </Row>
