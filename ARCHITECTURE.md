@@ -376,7 +376,7 @@ three also seed non-content data). Full picture:
 
 ## 11. Deployment
 
-- **Platform**: **Vercel** — push to `main` auto-deploys prod (`na9ranal3ab.vercel.app`) and
+- **Platform**: **Vercel** — push to `main` auto-deploys prod (`www.na9ranal3ab.tn`) and
   auto-applies new `supabase/migrations/**` via `db-migrate-prod.yml` (backup + guard + push,
   with hourly reconciliation).
 - **Build**: `scripts/build-vercel.mjs` wraps `vite build` into the Vercel output layout.

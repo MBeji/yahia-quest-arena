@@ -134,9 +134,9 @@ describe("resolveTrafficType", () => {
     expect(resolveTrafficType("na9ranal3ab-abc123.vercel.app")).toBe("developer");
   });
 
-  it("NEVER tags the default Vercel production domain as developer — it serves real traffic while the .tn domain is unwired", async () => {
+  it("tags the former prod alias as developer too — it 301s away, so no session runs there", async () => {
     const { resolveTrafficType } = await loadModule();
-    expect(resolveTrafficType("na9ranal3ab.vercel.app")).toBe("production");
+    expect(resolveTrafficType("na9ranal3ab.vercel.app")).toBe("developer");
   });
 
   it("tags the custom production domain and unrelated hosts as production", async () => {
