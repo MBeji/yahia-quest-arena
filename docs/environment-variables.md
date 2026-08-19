@@ -96,10 +96,21 @@ Variables to point a build (e.g. a staging property) at a different GA4 stream, 
 without build cache so the value re-inlines. Find the ID in **GA4 → Admin → Data Streams →
 your web stream**.
 
-The Content-Security-Policy already allow-lists the required origins
-(`src/shared/lib/csp.ts`): `https://www.googletagmanager.com` in `script-src` for the loader,
-and the `google-analytics.com` collect endpoints in `connect-src` for the beacons. The loader
-is an external `<script>` and every gtag call is plain JS, so no CSP nonce is involved.
+The Content-Security-Policy allow-lists the required origins (`src/shared/lib/csp.ts`):
+`https://www.googletagmanager.com` in `script-src` for the loader, and in `connect-src` the
+**five** hosts gtag.js actually beacons `/g/collect` to — `www.google-analytics.com`,
+`*.google-analytics.com`, `analytics.google.com`, `*.analytics.google.com` and
+`www.google.com`. The loader is an external `<script>` and every gtag call is plain JS, so no
+CSP nonce is involved.
+
+⚠️ **Un joker d'hôte CSP ne couvre pas le domaine nu.** `https://*.analytics.google.com` ne
+matche que des sous-domaines (au moins un label) — `https://analytics.google.com` doit être
+listé **en plus**, et `www.google.com` reçoit lui aussi des `/g/collect` (signaux Google,
+endpoints régionaux). C'est ce piège qui a bloqué en silence une partie des `page_view` et des
+`scroll` en prod (constat navigateur du 2026-08-19) : le défaut est **invisible côté serveur**
+— rien ne rougit, aucun gate ne le voit, il ne se lit que dans la console du navigateur. Le
+test `src/shared/lib/__tests__/csp.test.ts` assert désormais **un hôte à la fois**, sur le
+jeton exact. Rester étroit : ne jamais élargir en `https://*.google.com`.
 
 **Developer-traffic tagging.** Every hit carries a `traffic_type` parameter, resolved at
 runtime from `window.location.hostname` (`resolveTrafficType` in `analytics.ts`):
