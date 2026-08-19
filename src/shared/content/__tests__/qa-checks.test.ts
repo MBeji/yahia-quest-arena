@@ -21,6 +21,7 @@ import {
   type QANumericQuestion,
   type QAQuestion,
 } from "../../../../scripts/content/qa-checks.ts";
+import { auditManuelRefs } from "../../../../scripts/content/qa-manuel-refs.ts";
 
 const base = (over: Partial<QAQuestion>): QAQuestion => ({
   prompt: "Question ?",
@@ -775,5 +776,35 @@ describe("auditOptionReference — une option ne se désigne pas par sa lettre n
     expect(
       flags.some((f) => f.level === OPTION_REFERENCE_LEVEL && /designates an option/.test(f.msg)),
     ).toBe(true);
+  });
+});
+
+describe("auditManuelRefs", () => {
+  // The registry keys documents by their file name — `<code><tome>.pdf`.
+  const corpus = new Set(["102905P00.pdf", "102105P01.pdf", "102105P02.pdf"]);
+
+  it("accepts a bare code whose only volume is P00", () => {
+    expect(auditManuelRefs(["102905"], corpus, "math")).toEqual([]);
+  });
+
+  it("accepts a code that spells its volume out", () => {
+    expect(auditManuelRefs(["102105P01", "102105P02"], corpus, "math-1ere")).toEqual([]);
+  });
+
+  it("errors on a code absent from the corpus — that link would 404", () => {
+    const flags = auditManuelRefs(["102906"], corpus, "math");
+    expect(flags).toHaveLength(1);
+    expect(flags[0].level).toBe("error");
+    expect(flags[0].msg).toContain("102906P00.pdf");
+  });
+
+  it("errors on a code no link can be built from", () => {
+    const flags = auditManuelRefs(["../evil"], corpus, "math");
+    expect(flags).toHaveLength(1);
+    expect(flags[0].level).toBe("error");
+  });
+
+  it("stands down — silently — when the corpus is not linked in", () => {
+    expect(auditManuelRefs(["nope"], null, "math")).toEqual([]);
   });
 });

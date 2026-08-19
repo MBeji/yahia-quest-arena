@@ -20,6 +20,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useT } from "@/lib/i18n";
 import { exerciseRouteFor } from "../exercise-route";
 import { ManuelPagesSection } from "./manuel-pages-section";
+import { ManuelCnpCard } from "./manuel-cnp-card";
 import { ChapterVideosSection } from "./chapter-videos-section";
 import type { CompiledVideo } from "./video-embed";
 
@@ -37,6 +38,9 @@ export type LessonReaderChapter = {
   domain?: string | null;
   /** Curated explainer videos (étude 23) — compiled display objects, 0–3. */
   videos: CompiledVideo[] | null;
+  /** `chapters.manuel_ref` JSONB — the official-textbook page range covering
+   *  this chapter; parsed defensively by ManuelCnpCard. */
+  manuel_ref?: unknown;
   /** Joined subject row; loosely typed (Supabase relation) — narrowed below. */
   subjects: unknown;
 };
@@ -91,7 +95,11 @@ export function LessonReader({
 
   const content = chapter.lesson_content;
   const summary = chapter.summary;
-  const subjectData = chapter.subjects as { name_fr: string; content_language?: string } | null;
+  const subjectData = chapter.subjects as {
+    name_fr: string;
+    content_language?: string;
+    manuel_refs?: unknown;
+  } | null;
   const isRtl = subjectData?.content_language === "ar" || (content ? isRtlText(content) : false);
   // Les libellés des blocs pédagogiques suivent la langue du CONTENU, pas celle de
   // l'interface (étude 18, R-8) : un chip « PIÈGE » français dans une prose arabe RTL
@@ -370,6 +378,12 @@ export function LessonReader({
       <ChapterVideosSection videos={chapter.videos ?? []} subjectId={chapter.subject_id} />
 
       <ManuelPagesSection chapterId={chapterId} isAuthenticated={isAuthenticated} />
+
+      {/* Le manuel officiel en LIEN, chez son éditeur — pas une copie de plus.
+          La galerie ci-dessus montre les pages que NOUS hébergeons (bucket privé,
+          connexion requise) ; celle-ci ouvre le document là où il est déjà publié,
+          donc sans compte, sans upload et sans stockage à tenir à jour. */}
+      <ManuelCnpCard manuelRef={chapter.manuel_ref} subjectManuelRefs={subjectData?.manuel_refs} />
 
       {(quizCta || practiceExerciseId) && (
         <div className="mt-10 print:hidden">

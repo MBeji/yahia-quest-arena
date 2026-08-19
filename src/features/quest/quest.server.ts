@@ -12,6 +12,7 @@ import { logger } from "@/shared/lib/logger";
 import type { UnlockedBadge } from "@/shared/types/gamification";
 import type { Database } from "@/shared/integrations/supabase/types";
 import type { CompiledVideo } from "@/shared/content/schema";
+import type { ChapterManuelRef, ManuelRef } from "./manuel-refs";
 import { resolveCorrectionVideo } from "./correction-video";
 import {
   RECALL_LOCKED_MESSAGE,
@@ -380,7 +381,27 @@ type ChapterLessonRow = {
    */
   domain: string | null;
   videos: CompiledVideo[] | null;
-  subjects: { grade_id?: string | null; name_fr: string; content_language?: string } | null;
+  /**
+   * `chapters.manuel_ref` — the official-textbook page range covering this
+   * chapter, or null. Public metadata (the `chapters` row is world-readable):
+   * it names PAGES, never a file. The reader turns it into a link to the CNP's
+   * own copy; the login gate stays on the page IMAGES we host
+   * (getManuelPageUrls), which is a different thing entirely.
+   *
+   * Narrowed like `videos` above — the JSONB is written by our own build, and
+   * the reader re-checks it defensively (`parseChapterManuelRef`) anyway. Typed
+   * rather than `unknown` because a server fn's return must be provably
+   * serializable.
+   */
+  manuel_ref: ChapterManuelRef | null;
+  subjects: {
+    grade_id?: string | null;
+    name_fr: string;
+    content_language?: string;
+    /** `subjects.manuel_refs` — volume list, the reader's fallback when the
+     *  chapter itself declares no page range. */
+    manuel_refs?: ManuelRef[] | null;
+  } | null;
 };
 
 export const getChapterLesson = createServerFn({ method: "GET" })
@@ -391,7 +412,7 @@ export const getChapterLesson = createServerFn({ method: "GET" })
     const { data: chapterRow, error } = await supabase
       .from("chapters")
       .select(
-        "id, title, description, lesson_content, summary, subject_id, display_order, domain, videos, subjects(id, name_fr, color_token, icon, content_language, grade_id)",
+        "id, title, description, lesson_content, summary, subject_id, display_order, domain, videos, manuel_ref, subjects(id, name_fr, color_token, icon, content_language, grade_id, manuel_refs)",
       )
       .eq("id", data.chapterId)
       .single();

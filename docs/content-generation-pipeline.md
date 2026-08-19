@@ -222,6 +222,41 @@ Une matière dont le programme n'a pas de domaines n'écrit simplement rien : so
 liste plate. La colonne compilée est `chapters.domain`
 ([`20260818120000_chapter_domain.sql`](../supabase/migrations/20260818120000_chapter_domain.sql)).
 
+### Le manuel officiel, en lien plutôt qu'en copie
+
+Trois surfaces portent le manuel élève, et elles ne coûtent pas la même chose :
+
+| Surface                                      | Déclaré par                  | Le fichier vient de…        | Compte requis |
+| -------------------------------------------- | ---------------------------- | --------------------------- | ------------- |
+| Carte « Manuel officiel » (page matière)     | `subject.json` → `manuels[]` | bucket privé `manuel-eleve` | oui           |
+| Galerie « Pages du manuel » (sous le cours)  | `chapter.json` → `manuel`    | bucket privé `manuel-pages` | oui           |
+| **Lien « Manuel officiel » (sous le cours)** | **les MÊMES champs**         | **le CNP, chez lui**        | **non**       |
+
+La troisième n'héberge rien. Elle reconstruit l'adresse du document à partir du `code` que le
+contenu déclare déjà — `src/shared/content/manuel-cnp.ts` — donc **aucun champ nouveau à écrire,
+aucun PDF à téléverser, aucun stockage à tenir à jour**. Elle s'allume seule partout où un `code`
+existe : le chapitre s'il porte son `manuel` (le lien ouvre alors le PDF **à ses pages**, via le
+fragment `#page=`), sinon la matière et ses volumes, ouverts à la couverture.
+
+Trois propriétés à ne pas perdre en y touchant :
+
+1. **Aucune URL libre ne traverse le pipeline** — c'est la doctrine de l'étude 23 (D-10) pour les
+   vidéos, appliquée telle quelle. Le contenu déclare un `code`, jamais une adresse ; le lien se
+   rebâtit par gabarit. Une coquille ne peut donc produire qu'un document manquant, jamais une
+   destination arbitraire dans le navigateur d'un élève.
+2. **Le nom de fichier se déduit du code.** Le registre CNP nomme ses documents
+   `<code><tome>.pdf` : un code qui épelle déjà son tome (`102105P01`) est pris tel quel, un code
+   nu (`102905`) reçoit `P00` — le seul tome que le corpus lui connaisse.
+3. **`content:qa` vérifie que le document existe.** Chaque code est confronté à
+   `suivi/corpus-cnp.json` (`auditManuelRefs`) : absent du corpus ⇒ **erreur**. Sans ce contrôle,
+   une coquille ne se voyait qu'à une carte restée vide ; elle se verrait maintenant à un lien qui
+   tombe en 404 devant l'élève. Le contrôle se met en veille — en l'annonçant — quand le corpus
+   n'est pas branché, comme la garde anti-verbatim.
+
+⚠️ **La seule valeur à re-pointer si le CNP déplace son dépôt** est `CNP_MANUEL_BASE_URL`
+(`src/shared/content/manuel-cnp.ts`). Tout le reste se dérive des codes déjà présents dans
+`content/`.
+
 ---
 
 ## 6. Qui écrit quoi ? La couche de planification + les deux couches de skills
