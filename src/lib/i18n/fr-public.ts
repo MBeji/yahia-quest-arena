@@ -171,11 +171,9 @@ export const frPublic: TranslationKeys["public"] = {
     chaptersProgress: "{done}/{total} chapitres",
     quizContract: "Réussis le quiz (≥ {pct} %) pour déverrouiller les missions de ce chapitre.",
     manuelTitle: "Manuel officiel",
-    manuelHint: "Le manuel élève officiel (CNP) de la matière, en PDF.",
+    manuelHint: "Le manuel élève officiel de cette matière, à consulter en ligne.",
     manuelOpen: "Ouvrir le manuel",
     manuelTome: "Tome {n}",
-    manuelLockedHint: "Connecte-toi pour consulter le manuel officiel.",
-    manuelLoginCta: "Se connecter",
   },
   practice: {
     back: "Retour à la matière",

@@ -102,6 +102,24 @@ export function loadSurveilledSources(contentDir: string): SurveilledText[] {
     .filter(({ text }) => isSurveilled(parseProvenance(text)));
 }
 
+/**
+ * Les noms de fichiers du corpus CNP (`<code><tome>.pdf`) — la seule vérité sur
+ * ce que le CNP publie, donc sur ce qu'un lien « Manuel officiel » peut
+ * atteindre (`auditManuelRefs`).
+ *
+ * ⚠️ Même posture que `loadSurveilledSources`, et pour la même raison : l'absence
+ * de l'arbre n'est **pas** une erreur. Dans le repo public il n'y a pas de
+ * corpus, et un gate qui échoue là où il n'y a rien à protéger est un gate qu'on
+ * désarme à la première session pressée. `null` = contrôle désarmé — et
+ * `content:qa` l'ANNONCE, parce qu'un gate muet ne se distingue pas d'un gate
+ * absent.
+ */
+export function loadCnpCorpusFiles(): Set<string> | null {
+  if (!existsSync(CORPUS_JSON)) return null;
+  const corpus = corpusSchema.parse(JSON.parse(readFileSync(CORPUS_JSON, "utf8")));
+  return new Set(corpus.documents.map((d) => d.fichier));
+}
+
 /** Corpus snapshot + affectations + per-grade suivi + fiches present on disk. */
 export function loadRegistryInput(): SuiviCheckInput {
   if (!existsSync(CORPUS_JSON)) failMissingRegistry(CORPUS_JSON, "registre");

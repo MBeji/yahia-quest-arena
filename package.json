@@ -40,6 +40,7 @@
     "content:audit:strict": "node --experimental-strip-types scripts/content/audit-program.ts --strict",
     "content:catalogue": "node scripts/content/catalogue.mjs",
     "content:videos:check": "node scripts/content/check-videos.mjs",
+    "content:manuel:check": "node --experimental-strip-types scripts/content/check-manuel-links.ts",
     "programme:check": "node --experimental-strip-types scripts/content/suivi.ts",
     "programme:index": "node --experimental-strip-types scripts/content/suivi.ts --index",
     "programme:etat": "node --experimental-strip-types scripts/content/etat.ts",

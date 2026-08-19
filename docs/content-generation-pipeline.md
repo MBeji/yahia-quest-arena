@@ -222,6 +222,68 @@ Une matière dont le programme n'a pas de domaines n'écrit simplement rien : so
 liste plate. La colonne compilée est `chapters.domain`
 ([`20260818120000_chapter_domain.sql`](../supabase/migrations/20260818120000_chapter_domain.sql)).
 
+### Le manuel officiel, en lien plutôt qu'en copie
+
+Le manuel élève est **le livre de la MATIÈRE** : une œuvre couvre l'année entière. Il se nomme
+donc une fois, sur la page matière, et pas sous chacun de ses vingt chapitres (arbitrage du
+2026-08-19). Deux surfaces le portent, et elles ne coûtent pas la même chose :
+
+| Surface                                      | Déclarée par                 | Le fichier vient de…        | Compte requis |
+| -------------------------------------------- | ---------------------------- | --------------------------- | ------------- |
+| **Carte « Manuel officiel » (page matière)** | `subject.json` → `manuels[]` | **le CNP, chez lui**        | **non**       |
+| Galerie « Pages du manuel » (sous le cours)  | `chapter.json` → `manuel`    | bucket privé `manuel-pages` | oui           |
+
+La carte n'héberge **rien**. Elle reconstruit l'adresse du document à partir du `code` que le
+contenu déclare déjà — `src/shared/content/manuel-cnp.ts` — donc **aucun champ nouveau à écrire,
+aucun PDF à téléverser, aucun stockage à tenir à jour**. Un volume par entrée de `manuels[]`,
+ouvert à sa couverture.
+
+Elle servait auparavant un PDF que nous hébergions nous-mêmes (bucket privé `manuel-eleve`,
+server fn à URL signée, connexion requise). Tout cela est retiré : demander un compte pour un
+document public à la source ne se justifiait pas. Le bucket et sa migration restent en base, à
+démonter dans un second temps (DoD §7) ; plus aucun code ne les lit.
+
+La galerie de pages, elle, garde son sens et son verrou : ce sont des images que **nous**
+hébergeons, chapitre par chapitre.
+
+Trois propriétés à ne pas perdre en y touchant :
+
+1. **Aucune URL libre ne traverse le pipeline** — c'est la doctrine de l'étude 23 (D-10) pour les
+   vidéos, appliquée telle quelle. Le contenu déclare un `code`, jamais une adresse ; le lien se
+   rebâtit par gabarit. Une coquille ne peut donc produire qu'un document manquant, jamais une
+   destination arbitraire dans le navigateur d'un élève.
+2. **Le nom de fichier se déduit du code.** Le registre CNP nomme ses documents
+   `<code><tome>.pdf` : un code qui épelle déjà son tome (`102105P01`) est pris tel quel, un code
+   nu (`102905`) reçoit `P00` — le seul tome que le corpus lui connaisse.
+3. **`content:qa` vérifie que le document existe.** Chaque code — de matière comme de chapitre —
+   est confronté à `suivi/corpus-cnp.json` (`auditManuelRefs`) : absent du corpus ⇒ **erreur**.
+   Sans ce contrôle, une coquille ne se voyait qu'à une carte restée vide ; elle se verrait
+   maintenant à un lien qui tombe en 404 devant l'élève. Le contrôle se met en veille — en
+   l'annonçant — quand le corpus n'est pas branché, comme la garde anti-verbatim.
+
+⚠️ **La seule valeur à re-pointer si le CNP déplace son dépôt** est `CNP_MANUEL_BASE_URL`
+(`src/shared/content/manuel-cnp.ts`). Tout le reste se dérive des codes déjà présents dans
+`content/`.
+
+**Et si l'éditeur bouge quand même ?** `content:qa` prouve qu'un code EXISTE au registre, pas que
+le document répond encore aujourd'hui. C'est le rôle de `npm run content:manuel:check`
+([`scripts/content/check-manuel-links.ts`](../scripts/content/check-manuel-links.ts)), sonde
+hebdomadaire branchée en non-régression par le workflow privé `manuel-health.yml` :
+
+- **elle ne télécharge aucun manuel** — un `HEAD` par code DISTINCT (14 aujourd'hui), quelques
+  secondes. Le statut dit si le document est là ; `Content-Length` dit sa taille, que le registre
+  connaît déjà (`octets`). Même taille ⇒ même document. Repli sur un GET d'UN octet
+  (`Range: bytes=0-0`) quand le serveur refuse `HEAD` ou tait sa taille ;
+- **`broken` UNIQUEMENT sur 404/410**, les deux seuls statuts où le serveur affirme que la
+  ressource n'est plus là. 401/403 (proxy, WAF, blocage géographique), 5xx, corps non-PDF et
+  pannes réseau tombent en `unknown`. Ce n'est pas de la timidité : lancée depuis un réseau dont
+  la passerelle refuse le domaine, une première version déclarait morts les 14 manuels d'un coup ;
+- **`blind: true`** quand RIEN n'a pu être vérifié — sans ce drapeau, un tel passage se lirait
+  « 0 broken », donc « tout va bien », alors qu'il n'a rien prouvé ;
+- **jamais dans `verify` ni dans les checks requis** : la disponibilité d'un site tiers ne doit
+  pas bloquer la file de merge (leçon `audit:deps`). Elle ouvre une issue de suivi, refermée
+  d'elle-même au premier passage propre, et n'écrit jamais dans `content/`.
+
 ---
 
 ## 6. Qui écrit quoi ? La couche de planification + les deux couches de skills
