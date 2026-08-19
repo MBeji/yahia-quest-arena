@@ -63,7 +63,7 @@ function TermsPage() {
           </p>
           <p>
             La création d'un compte par un enfant suppose l'accord de ses parents ou de son tuteur,
-            qui peuvent en demander la suppression à tout moment.
+            qui peuvent le supprimer à tout moment depuis la page Paramétrage du compte.
           </p>
         </Section>
 

@@ -56,7 +56,7 @@ test.describe("Primary navigation", () => {
     await expect(page).toHaveURL(/parametrage/);
   });
 
-  test("le pôle Paramétrage porte les cinq sections", async ({ page }) => {
+  test("le pôle Paramétrage porte ses six sections", async ({ page }) => {
     await page.goto("/parametrage");
     // Les réglages rapides du menu s'y retrouvent en entier…
     await expect(page.getByRole("switch")).toHaveCount(2, { timeout: 15_000 });
@@ -66,6 +66,30 @@ test.describe("Primary navigation", () => {
     for (const href of ["/boutique", "/programme", "/conditions", "/confidentialite"]) {
       await expect(page.locator(`main a[href="${href}"]`).first()).toBeVisible();
     }
+    // …et la sixième, arrivée avec la suppression de compte (GAP-024).
+    await expect(page.getByTestId("settings-delete-account")).toBeVisible();
+  });
+
+  // ⚠️ CE TEST NE CONFIRME JAMAIS LA SUPPRESSION, et ne le doit jamais : il tourne
+  // sous le compte partagé `STORAGE_STATE.free`, dont l'état d'authentification est
+  // réutilisé par toute la suite. Aller au bout effacerait la fixture — la suite
+  // entière deviendrait rouge, et rien ne dirait pourquoi. Ce qui est vérifié ici
+  // est exactement la garde : que le bouton REFUSE de s'armer.
+  test("la suppression de compte ne s'arme que sur la bonne adresse", async ({ page }) => {
+    await page.goto("/parametrage");
+    await page.getByTestId("settings-delete-account").click();
+
+    const confirm = page.getByTestId("settings-delete-confirm");
+    await expect(confirm).toBeVisible({ timeout: 15_000 });
+    // Boîte ouverte, champ vide : le geste destructeur est hors de portée.
+    await expect(confirm).toBeDisabled();
+
+    // Une adresse plausible mais autre ne l'arme pas davantage.
+    await page.getByTestId("settings-delete-confirm-email").fill("quelquun-dautre@example.tn");
+    await expect(confirm).toBeDisabled();
+
+    await page.getByRole("button", { name: /annuler|cancel|إلغاء/i }).click();
+    await expect(confirm).toBeHidden();
   });
 });
 

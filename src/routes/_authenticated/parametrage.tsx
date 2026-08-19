@@ -14,14 +14,33 @@ import {
   ScrollText,
   Shield,
   Sparkles,
+  Trash2,
+  TriangleAlert,
   UserCircle,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { toast } from "sonner";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Input } from "@/components/ui/input";
 import { PageShell } from "@/components/ui/page-shell";
 import { ThemeChoice, LocaleChoice, SoundToggles } from "@/components/ui/settings-controls";
-import { useAuth, useMyRole } from "@/features/auth";
+import {
+  accountDeleteErrorLabel,
+  confirmsAccountEmail,
+  deleteAccount,
+  useAuth,
+  useMyRole,
+} from "@/features/auth";
 import { getParcours } from "@/features/dashboard";
 import { EnablePushCard } from "@/features/notifications";
 import { formatStudentAllianceCode } from "@/features/parent-report";
@@ -97,6 +116,10 @@ function ParametragePage() {
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   const [sendingReset, setSendingReset] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [typedEmail, setTypedEmail] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const runDeleteAccount = useServerFn(deleteAccount);
 
   // Le nom du parcours actif se lit dans le catalogue (requête anonyme déjà en
   // cache pour tout visiteur du programme) — pas de requête dédiée.
@@ -134,6 +157,30 @@ function ParametragePage() {
       toast.error(t.settings.passwordError);
     } finally {
       setSendingReset(false);
+    }
+  }
+
+  // La MÊME fonction pure que la garde serveur (`confirmsAccountEmail`) : le bouton
+  // ne peut pas s'armer sur une saisie que le serveur refuserait, ni l'inverse.
+  const confirmed = confirmsAccountEmail(typedEmail, user?.email ?? null);
+
+  async function confirmDeleteAccount() {
+    if (!confirmed || deleting) return;
+    setDeleting(true);
+    try {
+      await runDeleteAccount({ data: { confirmEmail: typedEmail } });
+      // Le compte n'existe plus : la session locale ne pointe vers rien. On la
+      // vide AVANT de naviguer, sinon le garde d'authentification renverrait vers
+      // un tableau de bord que plus aucune requête ne peut servir.
+      await supabase.auth.signOut();
+      setDeleteOpen(false);
+      toast.success(t.settings.deleteDone);
+      navigate({ to: "/" });
+    } catch (error) {
+      toast.error(
+        accountDeleteErrorLabel(error instanceof Error ? error.message : String(error), t),
+      );
+      setDeleting(false);
     }
   }
 
@@ -240,7 +287,90 @@ function ParametragePage() {
             </Link>
           </Row>
         </Section>
+
+        {/* La suppression de compte ferme la moitié « droits des personnes » de
+            GAP-024. Elle est en DERNIÈRE section, et la seule à porter la couleur
+            destructive : une action irréversible ne se présente pas comme un
+            réglage parmi d'autres. La page confidentialité promettait déjà cet
+            effacement — c'est ici qu'il devient un geste. */}
+        <Section Icon={TriangleAlert} title={t.settings.dangerTitle} desc={t.settings.dangerDesc}>
+          {/* L'intitulé nomme l'EFFET, le bouton nomme le geste — comme partout
+              ailleurs sur cette page (« Mot de passe » → « Recevoir un lien »).
+              Répéter « Supprimer mon compte » des deux côtés aurait fait de la
+              ligne un écho, et perdu la seule chose qu'elle a à ajouter : que
+              l'effacement est définitif. */}
+          <Row label={t.settings.deleteRowLabel}>
+            <button
+              type="button"
+              onClick={() => {
+                setTypedEmail("");
+                setDeleteOpen(true);
+              }}
+              data-testid="settings-delete-account"
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-destructive/50 px-3 py-1.5 text-xs font-semibold text-destructive transition hover:bg-destructive/10"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              {t.settings.deleteAccount}
+            </button>
+          </Row>
+        </Section>
       </div>
+
+      <AlertDialog
+        open={deleteOpen}
+        onOpenChange={(next) => {
+          // Pendant l'appel, la boîte reste : la fermer laisserait croire à une
+          // annulation alors que la suppression est déjà partie.
+          if (deleting) return;
+          setDeleteOpen(next);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t.settings.deleteDialogTitle}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {/* Un parent n'a ni XP, ni séries, ni duels : lui lire l'inventaire
+                  d'un élève inventerait une perte qu'il ne subit pas, et tairait
+                  la seule qui le concerne — le lien avec ses enfants. Même règle
+                  que la section « Mon parcours », masquée pour lui plus haut. */}
+              {role === "parent" ? t.settings.deleteDialogWhatParent : t.settings.deleteDialogWhat}{" "}
+              <strong className="text-destructive">{t.settings.deleteDialogFinal}</strong>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <label className="block text-sm">
+            <span className="text-muted-foreground">{t.settings.deleteConfirmLabel}</span>
+            <Input
+              type="email"
+              autoComplete="off"
+              value={typedEmail}
+              disabled={deleting}
+              onChange={(e) => setTypedEmail(e.target.value)}
+              placeholder={user?.email ?? ""}
+              data-testid="settings-delete-confirm-email"
+              className="mt-1.5"
+              dir="ltr"
+            />
+          </label>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>{t.settings.deleteCancel}</AlertDialogCancel>
+            <AlertDialogAction
+              // Radix ferme la boîte au clic : on l'en empêche, sinon elle
+              // disparaîtrait pendant l'appel et une erreur n'aurait plus où s'afficher.
+              onClick={(e) => {
+                e.preventDefault();
+                void confirmDeleteAccount();
+              }}
+              disabled={!confirmed || deleting}
+              data-testid="settings-delete-confirm"
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleting ? t.settings.deleteBusy : t.settings.deleteConfirm}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </PageShell>
   );
 }
