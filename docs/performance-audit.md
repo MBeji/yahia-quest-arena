@@ -11,8 +11,9 @@
 >
 > **Date.** Audited 2026-06-30 · **findings re-verified against the code from
 > 2026-08-10 to 2026-08-13** (§0 — the last sweep, which closed the remaining
-> "?" lines, ran on the 13th). Re-run the audit when the catalogue or user base
-> grows an order of magnitude.
+> "?" lines, ran on the 13th) · **§0-bis : suivi parental mesuré sur la prod le
+> 2026-08-19**. Re-run the audit when the catalogue or user base grows an order
+> of magnitude.
 
 ---
 
@@ -363,6 +364,143 @@ jour-là.
 | **N1** | ✅ **corrigé sur `main` le 2026-08-10 par le revert #718** — diagnostiqué ici le même jour : #716 (Dependabot, undici) avait retiré du lock le `vite-tsconfig-paths/node_modules/typescript@5.9.3` dont `tsconfck` a besoin, et npm 10 mourait en `EUSAGE`. Le revert cite la même erreur ; la cause profonde était un miniflare 5 alpha embarqué par le bump. La question « quelle version de npm sur l'image de build Vercel ? » **tombe donc** : `main` est de nouveau installable partout | HIGH |
 | **N2** | `auth-middleware.ts` carried a false _"automatically generated. Do not edit it directly."_ header — nothing generates it and `guard-generated.mjs` does not list it. It sat on the hottest path in the app and deterred exactly the inspection that retired C-1. **Fixed in this pass**                                                                                                                                                                                                       | MED  |
 | **N3** | Current `main` (`0ea9135`) has **no `ci.yml` run at all** — the Dependabot squash landed without a post-merge CI pass                                                                                                                                                                                                                                                                                                                                                                         | MED  |
+
+---
+
+## 0-bis. Suivi parental — les sources scopées, mesurées le 2026-08-19 (`main` à #776)
+
+> Même règle qu'au §0 : rien ici qui n'ait été mesuré. Tout vient d'`EXPLAIN
+(ANALYZE, BUFFERS)` sur la **prod**, le 2026-08-19, sur l'élève le plus chargé
+> (163 tentatives, 43 pouls). Contexte de volume : `attempts` = 270 lignes sur
+> **8 pages**, `learning_pulses` = 107 lignes sur **2 pages**.
+
+### Le soupçon, et ce qu'il avait de juste
+
+`_scoped_attempts` / `_scoped_pulses` (`20260817120000_parent_report_class_scope.sql`)
+sont `SECURITY DEFINER` **et** portent un `SET search_path`. Chacune de ces deux
+propriétés suffit à faire refuser l'inlining d'une fonction SQL à retour
+ensembliste (`inline_set_returning_function`, prosecdef / proconfig) — le même
+mécanisme que #769 avait établi pour `student_parcours_progress`. Conséquence
+vérifiée dans les plans : **les prédicats de date restent en `Filter:` au-dessus
+du `Function Scan`**, jamais poussés dedans (`Rows Removed by Filter` jusqu'à
+141), donc `idx_attempts_user_completed_at` ne travaille pas. Chaque appel rend
+tout l'historique de l'élève, puis jette.
+
+L'en-tête de cette migration affirme pourtant l'inverse — « Postgres sait les
+inliner, le plan reste celui d'un accès direct aux index ». C'est faux, et c'est
+la phrase qui décourage l'inspection : même classe de défaut que **N2**.
+Corrigé par `20260819093000_scoped_sources_inlining_truth.sql`, qui pose la
+vérité en `COMMENT ON FUNCTION` — là où le prochain lecteur regardera.
+
+### Ce que ça coûte : le diagnostic est juste, l'ordre de grandeur ne l'était pas
+
+`_student_daily_report_json` appelle ces deux fonctions **22 fois** par rapport :
+10 dans son corps, plus 6 par appel de `student_activity_totals`, elle-même
+appelée deux fois (période courante + période précédente).
+
+Les 10 lectures du corps, rejouées à l'identique dans une seule requête :
+
+| variante                                            | buffers | temps  |
+| --------------------------------------------------- | ------- | ------ |
+| telles qu'écrites — 10 `Function Scan`              | **731** | 4,9 ms |
+| historique matérialisé une fois — 2 `Function Scan` | **686** | 3,0 ms |
+| accès direct aux tables (plancher théorique)        | **334** | 3,0 ms |
+
+Et le rapport entier, pour situer :
+
+| appel                                     | buffers   | temps (plan chaud) |
+| ----------------------------------------- | --------- | ------------------ |
+| 30 jours, périmètre « tout »              | **4 780** | 32 ms              |
+| 30 jours, périmètre « sa classe »         | 3 836     | 29 ms              |
+| 92 jours, périmètre « tout »              | 9 299     | 48 ms              |
+| `student_activity_totals` seule, 30 jours | 1 552     | 8,4 ms             |
+
+→ **La réécriture en CTE partagée achète 45 buffers sur 4 780 : 0,9 %.** Elle ne
+vaut pas une migration, et elle est nettement plus invasive qu'il n'y paraît
+(voir « la contrainte plpgsql » ci-dessous). **Fermé sans action**, et consigné
+ici pour que la piste ne soit pas re-proposée : _elle est écartée exprès, et
+voici le nombre._
+
+### Pourquoi si peu : le surcoût est par INSTRUCTION, pas par appel
+
+Le détail des `Function Scan` explique l'écart entre l'intuition et la mesure :
+
+- premier appel de `_scoped_attempts` dans une instruction : **217 buffers** ;
+  chaque appel **supplémentaire** : **9**. Côté pouls : **94** puis **3**.
+- un appel isolé, seul dans sa requête : **356 buffers**, stable sur deux
+  exécutions consécutives — ce n'est donc pas un réchauffement de cache.
+
+Autrement dit la boîte noire coûte une mise en place fixe, payée une fois par
+instruction, et presque rien par appel répété — parce qu'un parcours complet de
+`attempts` ne fait que 8 pages. **Il n'y a rien qu'un index puisse économiser
+aujourd'hui** : c'est la même conclusion que **L4**, pour la même raison.
+
+### Où va vraiment le coût du rapport
+
+La couverture du programme, pas les sources scopées. Dans la requête
+« matières » (2 435 buffers sur 30 jours), `student_parcours_progress` en pèse
+**1 818 — 75 %**, à `loops=5` ; sur 92 jours, **3 346 à `loops=10`**, soit
+~350 buffers par matière travaillée. C'est ce qui fait passer le rapport de
+4 780 à 9 299 buffers quand la fenêtre passe de 30 à 92 jours : **le coût suit le
+nombre de matières, pas l'historique**.
+
+#769 a mesuré que la réécriture en passe unique n'y devient gagnante qu'au-delà
+de ~23 appels. Sur 92 jours on est à 10. **Ne pas y toucher** — la mesure du
+2026-08-19 confirme celle du 18.
+
+Un point mérite plus d'attention que les buffers : le **premier** appel du
+rapport, plan froid, coûte **262 ms** (330 ms en périmètre « classe ») contre
+~30 ms ensuite. `/suivi` s'exécute en rôle `anon`, dont le statement timeout
+Supabase est de **3 s** (contre 8 s pour `authenticated`) : le plan froid mange
+donc ~9 % du budget, la charge utile en mange 1 %.
+
+### Le seuil de bascule, et le remède à appliquer ce jour-là
+
+Le gaspillage suit l'historique de l'élève : un appel redondant relit toutes ses
+lignes, soit ~N/34 pages (`attempts` : 270 lignes sur 8 pages). Sur les 22
+appels, **4 ont réellement besoin de tout l'historique** — `measuredSince`, la
+numérotation des tentatives, et `first_pass` qui compte double puisque
+`student_activity_totals` est appelée deux fois. Les **18 autres** sont
+logiquement bornés à la fenêtre et relisent pourtant tout, soit ~18·N/34 buffers
+jetés :
+
+| historique de l'élève | buffers gaspillés | verdict                                  |
+| --------------------- | ----------------- | ---------------------------------------- |
+| N = 163 (aujourd'hui) | ~90               | négligeable                              |
+| N ≈ 2 000             | ~1 060            | un cinquième du rapport actuel           |
+| N ≈ 7 000             | ~3 700            | à parité avec la couverture du programme |
+
+**Le remède à appliquer alors n'est pas la CTE** — elle matérialise encore tout
+l'historique, deux fois. Ce sont des **bornes de date sur les deux fonctions** :
+`p_from` / `p_to` avec sentinelles `-infinity` / `infinity` plutôt que `NULL`,
+pour rester sargable. `attempts.completed_at` et `learning_pulses.occurred_at`
+sont `NOT NULL`, donc les sentinelles sont strictement équivalentes à l'absence
+de prédicat — aucune ligne ne change de camp. Les 18 appels bornés redeviennent
+des `Index Cond` ; les 4 autres restent des parcours complets, et c'est inhérent.
+Le plancher mesuré pour cette voie est **334 buffers contre 731**, soit −54 % sur
+les lectures du corps, quand la CTE ne rend que −6 %.
+
+### La contrainte plpgsql qui rend la CTE plus chère qu'elle n'en a l'air
+
+« Matérialiser une fois en tête de la fonction » n'est pas réalisable tel quel :
+**une CTE ne vit que le temps d'une instruction SQL**. Les 10 lectures du corps
+sont réparties sur **6 instructions** distinctes (`measuredSince`, jours, cours,
+exercices, matières, chapitres), et les 12 autres sur les 5 instructions de
+`student_activity_totals`. Mutualiser à l'intérieur de chaque instruction ne fait
+tomber que 10 → 8. Atteindre les 2 lectures du banc d'essai suppose de **fusionner
+les instructions** en un seul `SELECT … INTO` — un remaniement de ~400 lignes
+pour 0,9 %. C'est la seconde raison du refus.
+
+### Méthode, pour que ce soit rejouable
+
+Aucun accès direct à la base prod n'existe depuis le poste de dev (pas de
+`psql`, `db.<ref>.supabase.co` en IPv6 seul, identifiants confinés au secret
+GitHub `PROD_SUPABASE_DB_URL`). Les mesures ci-dessus ont été prises dans
+l'**éditeur SQL du dashboard**, en `EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)` —
+le format JSON rend un plan en une seule ligne, ce qui évite la troncature de la
+grille de résultats. Lecture seule, aucun DDL. Les plans internes d'une fonction
+plpgsql n'apparaissent pas : le nœud `Result` de l'appel en agrège en revanche
+tous les buffers, ce qui suffit pour un avant/après.
 
 ---
 
