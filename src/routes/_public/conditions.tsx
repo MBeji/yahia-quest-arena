@@ -41,9 +41,7 @@ function TermsPage() {
     <PageShell>
       <div className="mx-auto max-w-3xl px-4 pb-16 text-start" dir="ltr">
         <h1 className="font-display text-3xl font-bold">Conditions d'utilisation</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Dernière mise à jour : 31 juillet 2026.
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground">Dernière mise à jour : 19 août 2026.</p>
 
         <Section title="Le service">
           <p>
