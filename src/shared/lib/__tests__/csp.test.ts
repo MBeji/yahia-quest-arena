@@ -52,15 +52,36 @@ describe("buildContentSecurityPolicy", () => {
   });
 
   it("allows the Google Analytics 4 origins (gtag.js loader + collect beacons)", () => {
+    // Une assertion PAR HÔTE, et sur le jeton exact — pas un `toContain` sur la
+    // chaîne entière. Ce test a longtemps affirmé `https://*.analytics.google.com`
+    // sans rien dire du domaine nu : il restait vert sur un défaut bien réel.
+    //
+    // ⚠️ `https://*.analytics.google.com` ne couvre PAS `https://analytics.google.com`.
+    // En CSP, un joker d'hôte exige au moins un label de sous-domaine : le motif
+    // `*.example.com` matche `a.example.com`, jamais `example.com`. Les deux
+    // entrées sont donc nécessaires — ne « simplifiez » pas en n'en gardant qu'une,
+    // cela rouvre exactement le défaut que ce test verrouille (constat prod du
+    // 2026-08-19 : des `page_view` et des `scroll` bloqués en silence, invisibles
+    // côté serveur — aucun gate ne les voit, ça ne se lit qu'en console navigateur).
+    const collectHosts = [
+      "https://www.google-analytics.com",
+      "https://*.google-analytics.com",
+      "https://analytics.google.com",
+      "https://*.analytics.google.com",
+      // gtag émet aussi vers /g/collect sur ce domaine (signaux Google / régions).
+      "https://www.google.com",
+    ];
     for (const csp of [buildContentSecurityPolicy(), buildContentSecurityPolicy("n")]) {
       const scriptSrc = csp.split("; ").find((d) => d.startsWith("script-src "));
       const connectSrc = csp.split("; ").find((d) => d.startsWith("connect-src "));
       // gtag.js loads as an external script from the tag-manager host…
       expect(scriptSrc).toContain("https://www.googletagmanager.com");
-      // …and beacons the measurement protocol to the google-analytics.com hosts.
-      expect(connectSrc).toContain("https://www.google-analytics.com");
-      expect(connectSrc).toContain("https://*.google-analytics.com");
-      expect(connectSrc).toContain("https://*.analytics.google.com");
+      // …and beacons the measurement protocol to each collect host below.
+      const sources = connectSrc?.split(" ").slice(1) ?? [];
+      for (const host of collectHosts) expect(sources).toContain(host);
+      // Rester étroit : couvrir `www.google.com` ne doit jamais devenir un joker
+      // sur toute propriété Google.
+      expect(sources).not.toContain("https://*.google.com");
     }
   });
 
