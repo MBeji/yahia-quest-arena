@@ -454,7 +454,7 @@ rapport, plan froid, coûte **262 ms** (330 ms en périmètre « classe ») cont
 Supabase est de **3 s** (contre 8 s pour `authenticated`) : le plan froid mange
 donc ~9 % du budget, la charge utile en mange 1 %.
 
-### Le seuil de bascule, et le remède à appliquer ce jour-là
+### Le seuil de bascule, et le remède — finalement livré par anticipation (#779)
 
 Le gaspillage suit l'historique de l'élève : un appel redondant relit toutes ses
 lignes, soit ~N/34 pages (`attempts` : 270 lignes sur 8 pages). Sur les 22
@@ -477,8 +477,52 @@ pour rester sargable. `attempts.completed_at` et `learning_pulses.occurred_at`
 sont `NOT NULL`, donc les sentinelles sont strictement équivalentes à l'absence
 de prédicat — aucune ligne ne change de camp. Les 18 appels bornés redeviennent
 des `Index Cond` ; les 4 autres restent des parcours complets, et c'est inhérent.
-Le plancher mesuré pour cette voie est **334 buffers contre 731**, soit −54 % sur
-les lectures du corps, quand la CTE ne rend que −6 %.
+Le plancher mesuré pour cette voie était **334 buffers contre 731**, soit −54 %
+sur les lectures du corps, quand la CTE ne rend que −6 %. ⚠️ Ce −54 % **n'a pas
+été tenu** : voir « Après livraison » ci-dessous, où le lot est mesuré pour de
+vrai à −20 %. Le 334 était un plancher inatteignable, et il faut savoir pourquoi.
+
+### Après livraison — ce que le lot a réellement rendu (#779, 2026-08-19)
+
+Le lot est parti (`20260819113000_scoped_sources_date_bounds.sql`). Deux choses
+méritent d'être écrites, parce qu'elles corrigent les chiffres ci-dessus.
+
+**1. Le « plancher » de 334 buffers était un mirage.** Il avait été mesuré en
+accès DIRECT aux tables, dix lectures fusionnées dans une seule requête : cette
+forme supprime non seulement le prédicat mal placé, mais **tout le coût d'appel
+de fonction**, que la version paramétrée continue évidemment de payer. Comparer
+une fonction bornée à du SQL sans fonction, c'est mesurer autre chose. La leçon
+est la même qu'en #769 sous un autre angle : _on ne généralise pas depuis une
+variante qu'on n'a pas mesurée dans sa forme livrable._
+
+**2. La ligne de base de 731 s'est périmée en une heure.** Remesurée l'après-midi
+sur les mêmes données logiques, l'ancienne forme coûtait **1 329** buffers et non
+731 : le planificateur avait basculé le plan interne des sources scopées du
+`Seq Scan` vers l'`Index Scan`, les statistiques ayant bougé avec quelques
+dizaines de lignes. Sur une table de 8 pages, **aucune ligne de base n'est valable
+au-delà de quelques minutes** — un avant/après ne vaut que pris au même instant.
+
+**Le vrai A/B**, même instant, mêmes données, l'ancien comportement reproduit par
+les sentinelles (strictement équivalentes, cf. la preuve d'égalité) :
+
+| forme                         | buffers   | temps, 3 exécutions    |
+| ----------------------------- | --------- | ---------------------- |
+| ancienne (sentinelles)        | 1 329     | 62,2 / 5,5 / 9,7 ms    |
+| **nouvelle (bornes passées)** | **1 058** | **4,7 / 5,0 / 4,8 ms** |
+
+→ **−20 % de buffers**, et surtout une latence plus basse **et beaucoup plus
+stable** : l'ancienne forme varie d'un facteur 2 d'une exécution à l'autre, la
+nouvelle tient dans 0,4 ms. C'est moins que les −54 % annoncés, et c'est réel.
+
+**Égalité vérifiée après application, pas seulement avant.** Les 24 empreintes
+`md5` prises avant la migration ont été recalculées après. Le total global
+diffère — et c'est légitime : l'élève `10e49c7d` utilisait l'application pendant
+la mesure (dernière tentative 5 secondes avant la requête), et la charge utile
+porte `level`, `currentStreak`, `lastActiveDate`, `measuredSince` et la couverture
+du programme, tous **hors fenêtre**. Restreint aux **trois élèves inactifs depuis
+juin/juillet**, dont aucune donnée ne peut avoir bougé : **18 empreintes sur 18
+identiques, zéro écart**. C'est la preuve de bout en bout, sur les données de
+prod, de part et d'autre d'une migration réellement appliquée.
 
 ### La contrainte plpgsql qui rend la CTE plus chère qu'elle n'en a l'air
 
