@@ -265,6 +265,25 @@ Trois propriétés à ne pas perdre en y touchant :
 (`src/shared/content/manuel-cnp.ts`). Tout le reste se dérive des codes déjà présents dans
 `content/`.
 
+**Et si l'éditeur bouge quand même ?** `content:qa` prouve qu'un code EXISTE au registre, pas que
+le document répond encore aujourd'hui. C'est le rôle de `npm run content:manuel:check`
+([`scripts/content/check-manuel-links.ts`](../scripts/content/check-manuel-links.ts)), sonde
+hebdomadaire branchée en non-régression par le workflow privé `manuel-health.yml` :
+
+- **elle ne télécharge aucun manuel** — un `HEAD` par code DISTINCT (14 aujourd'hui), quelques
+  secondes. Le statut dit si le document est là ; `Content-Length` dit sa taille, que le registre
+  connaît déjà (`octets`). Même taille ⇒ même document. Repli sur un GET d'UN octet
+  (`Range: bytes=0-0`) quand le serveur refuse `HEAD` ou tait sa taille ;
+- **`broken` UNIQUEMENT sur 404/410**, les deux seuls statuts où le serveur affirme que la
+  ressource n'est plus là. 401/403 (proxy, WAF, blocage géographique), 5xx, corps non-PDF et
+  pannes réseau tombent en `unknown`. Ce n'est pas de la timidité : lancée depuis un réseau dont
+  la passerelle refuse le domaine, une première version déclarait morts les 14 manuels d'un coup ;
+- **`blind: true`** quand RIEN n'a pu être vérifié — sans ce drapeau, un tel passage se lirait
+  « 0 broken », donc « tout va bien », alors qu'il n'a rien prouvé ;
+- **jamais dans `verify` ni dans les checks requis** : la disponibilité d'un site tiers ne doit
+  pas bloquer la file de merge (leçon `audit:deps`). Elle ouvre une issue de suivi, refermée
+  d'elle-même au premier passage propre, et n'écrit jamais dans `content/`.
+
 ---
 
 ## 6. Qui écrit quoi ? La couche de planification + les deux couches de skills
