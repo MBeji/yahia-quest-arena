@@ -130,6 +130,35 @@ le poste reste chargé, le vrai gate est la CI (le ruleset bloque le merge sans 
 demander l'accord explicite pour `--no-verify` (DoD §2) plutôt que de reboucler des tentatives à
 ~6 minutes.
 
+### La même signature a une SECONDE cause : la mémoire libre, sans aucune session sœur
+
+Constaté 2026-08-19 (#791) : signature identique — `Failed to start forks worker`, 30 puis 45
+erreurs, **209 fichiers découverts sur 240** — mais **zéro processus node vivant**. Le conseil
+ci-dessus (« ne pas les tuer, ce sont ceux des sessions sœurs ») ne s'applique alors pas, et on
+cherche une contention qui n'existe pas. La cause était la **RAM libre** : ~2,7 Go, après une
+session de builds. Le pool `forks` lance **un processus par worker** ; sous ce seuil ils ne
+démarrent plus. Le symptôme s'aggrave au fil de la session (4 erreurs le matin, 45 le soir) parce
+que la mémoire, elle, ne se rend pas.
+
+**Discriminer en une mesure** — deux chiffres, pas une hypothèse :
+
+```bash
+tasklist //FI "IMAGENAME eq node.exe" //FO CSV | tail -n +2 | wc -l   # sessions sœurs ?
+wmic OS get FreePhysicalMemory //value                                 # Ko libres
+```
+
+0 processus + mémoire basse ⇒ RAM, pas contention. Et le test qui tranche pour de bon, parce que
+le pool `threads` partage **un seul** processus :
+
+```bash
+npx vitest run --pool=threads     # vert ici ⇒ ni régression, ni contention : mémoire
+```
+
+Ce jour-là : 239 fichiers / 2 699 tests verts en `threads`, quand `forks` n'en démarrait que 209.
+Fermer le navigateur du panneau d'aperçu ne rend presque rien (2 764 → 2 726 Mo) : la mémoire est
+prise ailleurs, hors de portée de la session. La sortie reste la même qu'au paragraphe précédent —
+`--no-verify` avec accord explicite, la CI faisant foi.
+
 ## Le gate annoncé vert alors qu'il est rouge (tâche de fond)
 
 Le code de sortie d'une tâche de fond est celui de la **dernière commande de la chaîne**, pas
