@@ -28,13 +28,16 @@ export const PROD_SUPABASE_REF = "fasrenmmrkqjoobrztbp";
  * substring: Vercel preview deployments (`na9ranal3ab-<hash>.vercel.app`) are
  * legitimate e2e targets and must keep passing.
  *
- * All three entries reach production. `www.na9ranal3ab.tn` is the canonical host
- * and the only one that answers 200; the apex `na9ranal3ab.tn` redirects to it
- * (308) and `na9ranal3ab.vercel.app` still does too (301) — a live alias serving
- * users who bookmarked it, not a leftover. A redirect is not a shield: a client
- * that follows it (Playwright does) lands on prod all the same, so the guard has
- * to name the three. The domain is wired and `www` was arbitrated canonical in
- * #706 — STATUS.md §1 carries the soundings (re-probed 2026-08-19).
+ * All three entries reach production. The official domain is the `.tn`:
+ * `www.na9ranal3ab.tn` is canonical and the only host that answers 200, the apex
+ * 308s to it, and `na9ranal3ab.vercel.app` 301s to it — a temporary courtesy for
+ * whoever bookmarked the Vercel URL, meant to be cut.
+ *
+ * That last entry stays listed until it actually is, and not out of nostalgia:
+ * the 301 preserves the path on every route (sondé 2026-08-19), so any client
+ * that follows redirects — Playwright does — lands on PRODUCTION. Dropping it
+ * while the redirect lives re-opens #614 through the door #614 came in. The day
+ * the alias is cut, this entry goes with it.
  */
 export const PROD_APP_HOSTS = ["na9ranal3ab.vercel.app", "na9ranal3ab.tn", "www.na9ranal3ab.tn"];
 

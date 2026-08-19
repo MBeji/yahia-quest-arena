@@ -54,15 +54,16 @@ is missing from Redirect URLs.
 
 **Fix:** Supabase Dashboard → **Authentication → URL Configuration**:
 
-1. **Site URL** → the live production domain (e.g. `https://<app>.vercel.app`).
+1. **Site URL** → `https://www.na9ranal3ab.tn` — the canonical production host, the one
+   that answers 200. Never a `*.vercel.app` URL.
 2. **Redirect URLs** → add a pattern for every domain that must work:
-   - `https://<app>.vercel.app/**` (production)
+   - `https://www.na9ranal3ab.tn/**` (production)
    - `http://localhost:8080/**` (local dev — the dev/Playwright port, see `playwright.config.ts`)
-   - any preview/custom domain you also sign in from.
+   - any Vercel **preview** deployment you also sign in from (`https://<project>-<hash>.vercel.app/**`).
 
 > The Google OAuth client's **Authorized redirect URI** is the Supabase callback
 > (`https://<project-ref>.supabase.co/auth/v1/callback`), which does **not** change
-> when the Vercel domain changes — only the two Supabase settings above do.
+> when the production domain changes — only the two Supabase settings above do.
 
 This config lives in the hosted project (it is **not** in `supabase/config.toml`),
 so it must be updated in the Dashboard whenever the production domain changes.
@@ -103,12 +104,11 @@ is an external `<script>` and every gtag call is plain JS, so no CSP nonce is in
 **Developer-traffic tagging.** Every hit carries a `traffic_type` parameter, resolved at
 runtime from `window.location.hostname` (`resolveTrafficType` in `analytics.ts`):
 `developer` on local hosts (`localhost`, loopback — e.g. `vite preview`/smoke runs of the
-prod bundle) and on Vercel **preview** deployments (`*.vercel.app`), `production` everywhere
-else. ⚠️ `na9ranal3ab.vercel.app` is exempt: since the `.tn` domain was wired (2026-07-27) it is
-no longer canonical, but it stays a **live alias** serving real users who bookmarked it — so it
-must not be tagged `developer`. The canonical `www.na9ranal3ab.tn` needs no entry, being neither
-local nor `*.vercel.app`. If the canonical domain changes again, revisit
-`PRODUCTION_VERCEL_HOSTNAME` there. To actually drop those sessions from reports, create the
+prod bundle) and on **every** `*.vercel.app` host, `production` everywhere else. The canonical
+`www.na9ranal3ab.tn` needs no entry, being neither local nor `*.vercel.app`.
+`na9ranal3ab.vercel.app` was carved out while it counted as production; it answers 301 to the
+canonical host on every route (sondé 2026-08-19), so no session runs analytics there — the
+carve-out is gone. To actually drop those sessions from reports, create the
 GA4 data filter once: **Admin → Data collection and modification → Data filters → Create
 filter → Internal traffic**, parameter value `developer`, operation **Exclude** — try it in
 **Testing** state first, then switch to **Active** (exclusion is permanent, never

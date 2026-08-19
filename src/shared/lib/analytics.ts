@@ -66,21 +66,17 @@ let lastTrackedPath: string | null = null;
 export type TrafficType = "developer" | "production";
 
 /**
- * The Vercel default domain, kept as a LIVE ALIAS of production. Since the
- * `na9ranal3ab.tn` domain was wired (constat 2026-07-27, `www` serves 200 and
- * the apex 308s to it), the canonical host is the custom domain — which needs
- * no entry here, being neither local nor `*.vercel.app`. This one hostname must
- * still never be tagged `developer`: it keeps serving real users who bookmarked
- * it, unlike every other `*.vercel.app` host (per-branch/per-deploy previews).
- */
-const PRODUCTION_VERCEL_HOSTNAME = "na9ranal3ab.vercel.app";
-
-/**
  * Classify a hostname for GA4 data filters: `developer` for local hosts
  * (localhost/loopback — covers `vite preview` and smoke runs of the prod
- * bundle) and Vercel preview deployments, `production` for everything else.
+ * bundle) and for EVERY `*.vercel.app` host, `production` for everything else.
  * Suffix match, not `includes`, so a hostname like `vercel.app.example.com`
  * is never mis-tagged. Pure — exported for tests.
+ *
+ * The canonical host `www.na9ranal3ab.tn` needs no entry here, being neither
+ * local nor `*.vercel.app`. `na9ranal3ab.vercel.app` was carved out of the
+ * `*.vercel.app` rule while it counted as production; it 301s to the canonical
+ * host on every route (sondé 2026-08-19), so a browser never runs analytics
+ * there — it runs them after the redirect. Do not bring the carve-out back.
  */
 export function resolveTrafficType(hostname: string): TrafficType {
   const host = hostname.toLowerCase();
@@ -90,8 +86,8 @@ export function resolveTrafficType(hostname: string): TrafficType {
     host === "::1" ||
     host === "[::1]" ||
     host.endsWith(".localhost");
-  const isVercelPreview = host.endsWith(".vercel.app") && host !== PRODUCTION_VERCEL_HOSTNAME;
-  return isLocalHost || isVercelPreview ? "developer" : "production";
+  const isVercelHost = host.endsWith(".vercel.app");
+  return isLocalHost || isVercelHost ? "developer" : "production";
 }
 
 /**
