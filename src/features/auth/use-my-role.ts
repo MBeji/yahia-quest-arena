@@ -3,7 +3,7 @@ import { supabase } from "@/shared/integrations/supabase/client";
 import { useAuth } from "./use-auth";
 
 /**
- * Single source of truth for the signed-in user's role + active parcours.
+ * Single source of truth for the signed-in user's role, active parcours and pseudo.
  *
  * Every consumer — the authenticated layout (conditional nav + onboarding guard)
  * and all `/admin/*` route guards — MUST use this hook rather than rolling its own
@@ -16,6 +16,12 @@ import { useAuth } from "./use-auth";
  * object, and the admin routes then read that object where they expected a string →
  * `role === "admin"` was always false → admins were locked out of every console.
  * One definition, one shape, no collision.
+ *
+ * `display_name` rides along on that same row (added with the settings rename, lot
+ * pseudo) rather than on a key of its own: the lesson above is about DIVERGING
+ * SHAPES under one key, not about one column per key, and every consumer of this
+ * hook already pays for the round-trip. `updateDisplayName` invalidates
+ * `["me-role", userId]` so the new pseudo is read back here.
  */
 export function useMyRole() {
   const { user } = useAuth();
@@ -27,7 +33,7 @@ export function useMyRole() {
     queryFn: async () => {
       const { data } = await supabase
         .from("profiles")
-        .select("role,current_parcours_id")
+        .select("role,current_parcours_id,display_name")
         .eq("id", user!.id)
         .single();
       return data ?? null;
@@ -41,6 +47,8 @@ export function useMyRole() {
     role: profile?.role ?? null,
     /** The active parcours id (null = not onboarded yet). */
     currentParcoursId: profile?.current_parcours_id ?? null,
+    /** The pseudo shown across the app, or null while loading / if the row is missing. */
+    displayName: profile?.display_name ?? null,
     /** True once a profile row has actually been read (distinguishes "no row" from "loading"). */
     hasProfile: profile != null,
     /** Convenience flag for admin-gated UI. */
