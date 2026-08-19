@@ -26,9 +26,15 @@ export const PROD_SUPABASE_REF = "fasrenmmrkqjoobrztbp";
 /**
  * Hosts that serve the PRODUCTION app. Matched on the exact host, never as a
  * substring: Vercel preview deployments (`na9ranal3ab-<hash>.vercel.app`) are
- * legitimate e2e targets and must keep passing. `na9ranal3ab.tn` is listed even
- * though the domain is not wired yet (STATUS.md) — the day it is, the guard is
- * already right.
+ * legitimate e2e targets and must keep passing.
+ *
+ * All three entries reach production. `www.na9ranal3ab.tn` is the canonical host
+ * and the only one that answers 200; the apex `na9ranal3ab.tn` redirects to it
+ * (308) and `na9ranal3ab.vercel.app` still does too (301) — a live alias serving
+ * users who bookmarked it, not a leftover. A redirect is not a shield: a client
+ * that follows it (Playwright does) lands on prod all the same, so the guard has
+ * to name the three. The domain is wired and `www` was arbitrated canonical in
+ * #706 — STATUS.md §1 carries the soundings (re-probed 2026-08-19).
  */
 export const PROD_APP_HOSTS = ["na9ranal3ab.vercel.app", "na9ranal3ab.tn", "www.na9ranal3ab.tn"];
 
