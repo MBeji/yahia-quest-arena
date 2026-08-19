@@ -109,7 +109,7 @@ jobs:
 
       - name: Install Playwright browser (chromium)
         if: steps.guard.outputs.configured == 'true'
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
 
       # Self-provision the TEST database SCHEMA (migrations only — the corpus left
       # the repo in étude 24) when a DB connection string is available. Idempotent
