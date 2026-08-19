@@ -224,19 +224,27 @@ liste plate. La colonne compilée est `chapters.domain`
 
 ### Le manuel officiel, en lien plutôt qu'en copie
 
-Trois surfaces portent le manuel élève, et elles ne coûtent pas la même chose :
+Le manuel élève est **le livre de la MATIÈRE** : une œuvre couvre l'année entière. Il se nomme
+donc une fois, sur la page matière, et pas sous chacun de ses vingt chapitres (arbitrage du
+2026-08-19). Deux surfaces le portent, et elles ne coûtent pas la même chose :
 
-| Surface                                      | Déclaré par                  | Le fichier vient de…        | Compte requis |
+| Surface                                      | Déclarée par                 | Le fichier vient de…        | Compte requis |
 | -------------------------------------------- | ---------------------------- | --------------------------- | ------------- |
-| Carte « Manuel officiel » (page matière)     | `subject.json` → `manuels[]` | bucket privé `manuel-eleve` | oui           |
+| **Carte « Manuel officiel » (page matière)** | `subject.json` → `manuels[]` | **le CNP, chez lui**        | **non**       |
 | Galerie « Pages du manuel » (sous le cours)  | `chapter.json` → `manuel`    | bucket privé `manuel-pages` | oui           |
-| **Lien « Manuel officiel » (sous le cours)** | **les MÊMES champs**         | **le CNP, chez lui**        | **non**       |
 
-La troisième n'héberge rien. Elle reconstruit l'adresse du document à partir du `code` que le
+La carte n'héberge **rien**. Elle reconstruit l'adresse du document à partir du `code` que le
 contenu déclare déjà — `src/shared/content/manuel-cnp.ts` — donc **aucun champ nouveau à écrire,
-aucun PDF à téléverser, aucun stockage à tenir à jour**. Elle s'allume seule partout où un `code`
-existe : le chapitre s'il porte son `manuel` (le lien ouvre alors le PDF **à ses pages**, via le
-fragment `#page=`), sinon la matière et ses volumes, ouverts à la couverture.
+aucun PDF à téléverser, aucun stockage à tenir à jour**. Un volume par entrée de `manuels[]`,
+ouvert à sa couverture.
+
+Elle servait auparavant un PDF que nous hébergions nous-mêmes (bucket privé `manuel-eleve`,
+server fn à URL signée, connexion requise). Tout cela est retiré : demander un compte pour un
+document public à la source ne se justifiait pas. Le bucket et sa migration restent en base, à
+démonter dans un second temps (DoD §7) ; plus aucun code ne les lit.
+
+La galerie de pages, elle, garde son sens et son verrou : ce sont des images que **nous**
+hébergeons, chapitre par chapitre.
 
 Trois propriétés à ne pas perdre en y touchant :
 
@@ -247,11 +255,11 @@ Trois propriétés à ne pas perdre en y touchant :
 2. **Le nom de fichier se déduit du code.** Le registre CNP nomme ses documents
    `<code><tome>.pdf` : un code qui épelle déjà son tome (`102105P01`) est pris tel quel, un code
    nu (`102905`) reçoit `P00` — le seul tome que le corpus lui connaisse.
-3. **`content:qa` vérifie que le document existe.** Chaque code est confronté à
-   `suivi/corpus-cnp.json` (`auditManuelRefs`) : absent du corpus ⇒ **erreur**. Sans ce contrôle,
-   une coquille ne se voyait qu'à une carte restée vide ; elle se verrait maintenant à un lien qui
-   tombe en 404 devant l'élève. Le contrôle se met en veille — en l'annonçant — quand le corpus
-   n'est pas branché, comme la garde anti-verbatim.
+3. **`content:qa` vérifie que le document existe.** Chaque code — de matière comme de chapitre —
+   est confronté à `suivi/corpus-cnp.json` (`auditManuelRefs`) : absent du corpus ⇒ **erreur**.
+   Sans ce contrôle, une coquille ne se voyait qu'à une carte restée vide ; elle se verrait
+   maintenant à un lien qui tombe en 404 devant l'élève. Le contrôle se met en veille — en
+   l'annonçant — quand le corpus n'est pas branché, comme la garde anti-verbatim.
 
 ⚠️ **La seule valeur à re-pointer si le CNP déplace son dépôt** est `CNP_MANUEL_BASE_URL`
 (`src/shared/content/manuel-cnp.ts`). Tout le reste se dérive des codes déjà présents dans

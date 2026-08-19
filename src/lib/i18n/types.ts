@@ -1131,11 +1131,6 @@ export type TranslationKeys = {
       manuelOpen: string;
       manuelPrev: string;
       manuelNext: string;
-      manuelBookTitle: string;
-      manuelBookHint: string;
-      manuelBookOpen: string;
-      manuelBookTome: string;
-      manuelBookPages: string;
       /** Étude 23 — « En vidéo » section of the course reader. */
       videoSectionTitle: string;
       /** aria-label of the play facade — {title} + {m} minutes. */
@@ -1168,8 +1163,6 @@ export type TranslationKeys = {
       manuelHint: string;
       manuelOpen: string;
       manuelTome: string;
-      manuelLockedHint: string;
-      manuelLoginCta: string;
     };
     practice: {
       back: string;
