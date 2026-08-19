@@ -13,9 +13,11 @@ import { PageShell } from "@/components/ui/page-shell";
  *
  * ⚠️ Rédigé à partir de ce que le code fait RÉELLEMENT (inventaire du
  * 2026-07-31 : `analytics.ts`, `product-analytics.ts`, `monitoring.ts`,
- * `video-embed.tsx`, `csp.ts`) — pas d'un modèle générique. Toute nouvelle
- * destination de données doit être ajoutée ici DANS LA MÊME PR que le code
- * qui l'introduit, sinon cette page devient un mensonge.
+ * `video-embed.tsx`, `csp.ts` ; révisé le 2026-08-19, quand la suppression de
+ * compte a cessé d'être une promesse pour devenir un bouton — `deleteAccount`
+ * et `/parametrage`, section « Zone sensible ») — pas d'un modèle générique.
+ * Toute nouvelle destination de données doit être ajoutée ici DANS LA MÊME PR
+ * que le code qui l'introduit, sinon cette page devient un mensonge.
  *
  * Ce n'est pas un avis juridique. La page n'affirme QUE ce que le code prouve :
  * elle ne nomme aucune région d'hébergement qu'on n'a pas vérifiée, ne promet
@@ -81,8 +83,8 @@ function PrivacyPage() {
           </ul>
           <p>
             La création d'un compte par un enfant suppose l'accord de ses parents ou de son tuteur.
-            Un parent peut à tout moment demander la suppression du compte de son enfant à l'adresse
-            ci-dessous.
+            Un parent peut à tout moment supprimer le compte de son enfant depuis la page
+            Paramétrage de ce compte, ou en demander la suppression à l'adresse ci-dessous.
           </p>
         </Section>
 
@@ -186,7 +188,14 @@ function PrivacyPage() {
             son tuteur.
           </p>
           <p>
-            Il suffit d'écrire à{" "}
+            <strong>La suppression se fait sans nous écrire</strong> : depuis un compte connecté,
+            page <strong>Paramétrage</strong>, section « Zone sensible ». Elle est immédiate et
+            définitive — le compte et toute la progression qui s'y rattache sont effacés, et rien ne
+            peut être restauré ensuite.
+          </p>
+          <p>
+            Pour l'accès et la rectification, ou si vous ne pouvez plus vous connecter au compte,
+            écrivez à{" "}
             <a
               className="underline underline-offset-2 hover:text-foreground"
               href="mailto:contact@na9ranal3ab.tn"

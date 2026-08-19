@@ -7,5 +7,17 @@ export { useMyStats } from "./use-my-stats";
 export { shouldRedirectToOnboarding } from "./onboarding-guard";
 export { hubRouteForRole, shouldLeaveDashboard } from "./hub-route";
 export type { HubRoute } from "./hub-route";
-export { bootstrapProfile, setCurrentParcours, updateDisplayName } from "./auth.server";
+export {
+  bootstrapProfile,
+  setCurrentParcours,
+  updateDisplayName,
+  deleteAccount,
+} from "./auth.server";
 export { displayNameSchema, isValidDisplayName, DISPLAY_NAME_MAX_LENGTH } from "./display-name";
+export {
+  ACCOUNT_DELETE_ERROR_PREFIX,
+  accountDeleteErrorLabel,
+  confirmsAccountEmail,
+  normalizeAccountEmail,
+} from "./account-deletion";
+export type { AccountDeleteErrorCode } from "./account-deletion";

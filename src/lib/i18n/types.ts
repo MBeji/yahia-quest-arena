@@ -599,6 +599,23 @@ export type TranslationKeys = {
     helpDesc: string;
     helpTerms: string;
     helpPrivacy: string;
+    dangerTitle: string;
+    dangerDesc: string;
+    deleteAccount: string;
+    deleteRowLabel: string;
+    deleteDialogTitle: string;
+    deleteDialogWhat: string;
+    deleteDialogWhatParent: string;
+    deleteDialogFinal: string;
+    deleteConfirmLabel: string;
+    deleteCancel: string;
+    deleteConfirm: string;
+    deleteBusy: string;
+    deleteDone: string;
+    deleteErrors: {
+      email_mismatch: string;
+      generic: string;
+    };
   };
   adminHub: {
     title: string;

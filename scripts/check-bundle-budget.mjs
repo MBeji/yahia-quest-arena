@@ -49,7 +49,18 @@ const BUDGETS = {
   // nomme ses cinq sections et ce que chacune règle, ce qu'aucune chaîne existante ne disait. On
   // reprend ~3 KB de réserve plutôt que le strict nécessaire, par la même raison qu'au lot
   // précédent : sinon la clé suivante casse la CI d'une PR qui n'y sera pour rien.
-  "i18n-": 160 * 1024,
+  // Puis 160→164 KB pour la **suppression de compte** (GAP-024) : 15 clés `settings.delete*`
+  // ×3 langues + un `not_found` reformulé, soit 160,03 KB pour un plafond à 160,00 — DEUX
+  // CENTIÈMES de kilo-octet de dépassement. C'est le dixième relèvement documenté, et le
+  // troisième d'affilée où la réserve laissée par le lot précédent est mangée à l'unité près :
+  // les ~3 KB repris la dernière fois n'ont tenu qu'une PR. Aucune clé n'est superflue — le
+  // typecheck l'exige, et deux d'entre elles existent pour ne PAS mentir (`deleteDialogWhatParent`,
+  // parce qu'un parent n'a ni XP ni séries à perdre ; `deleteRowLabel`, parce que l'intitulé et
+  // le bouton diraient sinon la même phrase). On reprend 4 KB.
+  // ⚠️ Ce plafond n'est plus une garde, c'est un métronome : à ce rythme, le vrai correctif est
+  // le découpage du catalogue i18n par surface — le namespace `parentReport.*` (~110 clés, comptes
+  // PARENT uniquement) le justifie à lui seul, comme noté au relèvement 136→156.
+  "i18n-": 164 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
   // @dnd-kit (core+sortable+utilities) powering the B2 ordering/matching
