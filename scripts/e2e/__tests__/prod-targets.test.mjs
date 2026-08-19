@@ -117,11 +117,11 @@ describe("no guard keeps its own copy of what production is", () => {
 });
 
 describe("PROD_APP_HOSTS", () => {
-  it("covers the deployment that serves production today", () => {
+  it("covers the vercel.app alias, which redirects into production", () => {
     expect(PROD_APP_HOSTS).toContain("na9ranal3ab.vercel.app");
   });
 
-  it("already covers the custom domain, wired or not", () => {
+  it("covers the apex, which redirects to the canonical www host", () => {
     expect(PROD_APP_HOSTS).toContain("na9ranal3ab.tn");
   });
 });
