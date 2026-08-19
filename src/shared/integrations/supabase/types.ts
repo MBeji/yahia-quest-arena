@@ -227,6 +227,7 @@ export type Database = {
         Row: {
           description: string | null;
           display_order: number;
+          domain: string | null;
           id: string;
           lesson_content: string | null;
           manuel_ref: Json | null;
@@ -238,6 +239,7 @@ export type Database = {
         Insert: {
           description?: string | null;
           display_order?: number;
+          domain?: string | null;
           id?: string;
           lesson_content?: string | null;
           manuel_ref?: Json | null;
@@ -249,6 +251,7 @@ export type Database = {
         Update: {
           description?: string | null;
           display_order?: number;
+          domain?: string | null;
           id?: string;
           lesson_content?: string | null;
           manuel_ref?: Json | null;
@@ -2106,7 +2109,12 @@ export type Database = {
         Returns: string[];
       };
       _scoped_attempts: {
-        Args: { p_student: string; p_subject_ids: string[] };
+        Args: {
+          p_from: string;
+          p_student: string;
+          p_subject_ids: string[];
+          p_to: string;
+        };
         Returns: {
           completed_at: string;
           correct_count: number;
@@ -2129,7 +2137,12 @@ export type Database = {
         };
       };
       _scoped_pulses: {
-        Args: { p_student: string; p_subject_ids: string[] };
+        Args: {
+          p_from: string;
+          p_student: string;
+          p_subject_ids: string[];
+          p_to: string;
+        };
         Returns: {
           active_seconds: number;
           chapter_id: string | null;

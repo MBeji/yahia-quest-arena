@@ -452,7 +452,8 @@ Un point mérite plus d'attention que les buffers : le **premier** appel du
 rapport, plan froid, coûte **262 ms** (330 ms en périmètre « classe ») contre
 ~30 ms ensuite. `/suivi` s'exécute en rôle `anon`, dont le statement timeout
 Supabase est de **3 s** (contre 8 s pour `authenticated`) : le plan froid mange
-donc ~9 % du budget, la charge utile en mange 1 %.
+donc ~9 % du budget, la charge utile en mange 1 %. → Mesuré depuis la page
+publique et **fermé sans action**, voir « Le plan froid » plus bas.
 
 ### Le seuil de bascule, et le remède — finalement livré par anticipation (#779)
 
@@ -523,6 +524,28 @@ du programme, tous **hors fenêtre**. Restreint aux **trois élèves inactifs de
 juin/juillet**, dont aucune donnée ne peut avoir bougé : **18 empreintes sur 18
 identiques, zéro écart**. C'est la preuve de bout en bout, sur les données de
 prod, de part et d'autre d'une migration réellement appliquée.
+
+### Le plan froid — mesuré côté parent, et **fermé sans action**
+
+Les 262 ms du premier appel (330 ms en périmètre « classe ») avaient été signalés
+plus haut comme plus inquiétants que les buffers. Ils ont été mesurés là où ça
+compte : **depuis la page publique `/suivi` en production**, en relevant la durée
+de l'appel `_serverFn` — réseau, SSR Vercel et RPC Supabase compris, c'est-à-dire
+ce que le parent attend vraiment.
+
+| appel                          | latence de bout en bout        |
+| ------------------------------ | ------------------------------ |
+| premier (tout à froid)         | **629 ms**                     |
+| les cinq suivants (5 fenêtres) | 375 · 306 · 262 · 244 · 216 ms |
+
+→ **Fermé sans action.** Le pire cas observé est 629 ms de bout en bout, dont le
+statement timeout `anon` ne couvre que la part base — au pire ~262 ms, soit **9 %
+des 3 s**. Et ce coût est payé une fois par **backend**, pas par requête : le
+cache de plans d'une fonction plpgsql vit sur la connexion, que Supavisor réutilise
+(runs 2 et 3 de la même session : 32 ms). Le seul levier qui le réduirait
+vraiment — fusionner les 16 instructions du corps en une seule — est le
+remaniement de ~400 lignes déjà écarté ci-dessous pour un autre motif. On ne paie
+pas ça pour 9 % d'un budget qu'on n'approche jamais.
 
 ### La contrainte plpgsql qui rend la CTE plus chère qu'elle n'en a l'air
 
