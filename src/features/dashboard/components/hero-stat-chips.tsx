@@ -47,7 +47,7 @@ export function HeroStatChips({ level, currentStreak, xp, coins, heroClass }: He
         >
           <span
             data-testid="stat-streak"
-            className="flex items-center gap-1 rounded-full bg-[color:var(--flame)]/20 px-3 py-1 text-sm font-bold text-[color:var(--flame)]"
+            className="flex items-center gap-1 rounded-full bg-[color:var(--flame)]/20 px-3 py-1 text-sm font-bold text-flame-ink"
           >
             <Flame className="h-4 w-4 animate-flame" /> {currentStreak}{" "}
             {currentStreak > 1 ? t.dashboard.days : t.dashboard.day}

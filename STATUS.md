@@ -209,10 +209,22 @@ object appelait `feedback.isVisible({ timeout })`, dont les typings de Playwrigh
 « @deprecated This option is ignored » — `isVisible()` n'attend jamais. Le test regardait donc
 avant l'aller-retour serveur du verdict, concluait « pas de verdict », et scrutait 12 s une avance
 que le player n'avait aucune raison de faire tant que « Continuer » n'était pas cliqué. Les deux
-page objects scrutent désormais. ⚠️ **Non vérifié en session** — l'E2E exige le projet Supabase de
-TEST : le prochain nightly est le seul juge. Le 9ᵉ échec (`a11y › dashboard`) reste **ouvert et non
-diagnostiqué** : il ne passe pas par le player, suit trois PR UI de la même fenêtre (#729, #732,
-#734), et son verdict axe n'est lisible que dans l'artefact `playwright-report-auth` du run.
+page objects scrutent désormais. **Le nightly du 2026-08-18 a tranché : 78 passés, 1 échoué** — les
+huit sont éteints.
+
+**Le 9ᵉ, diagnostiqué et corrigé le 2026-08-19 : `--flame` n'a jamais été assombri pour le thème
+clair.** Le verdict axe se lit dans le log du run, sans ouvrir l'artefact : `color-contrast`
+(serious), **un** nœud — la puce de série du tableau de bord, texte `#e54a00` sur sa propre teinte
+`/20` `#fadbcc`, **3,02:1** contre une barre AA à 4,5. Le bloc `html.reference` annonce pourtant
+« Accent palette — retinted to teal, deepened to read on white » : tous ses voisins sont descendus
+à L≈0,52, `--flame` est resté à L=0,62 — sous AA sur blanc aussi (3,95:1), donc dans **six**
+endroits, dont cinq qu'axe ne visite pas. Le token est scindé : `--flame` reste vif (icônes,
+dégradés, fonds teintés), `--flame-ink` (L=0,50) porte le texte — 4,92:1 sur la teinte, 6,42:1 sur
+blanc. ⚠️ **Et la mesure entre dans `verify`** : `src/__tests__/theme-contrast.test.ts` lit la
+feuille de style et calcule ; remis à l'ancienne valeur il rend **3,0256** là où axe mesurait
+**3,02**. Un contraste de token devient opposable AVANT le merge — l'a11y ne tournait qu'en
+nightly, sur deux pages. ⚠️ **L'e2e reste non vérifiée en session** (elle exige le projet Supabase
+de TEST) : le prochain nightly est le juge.
 
 - **Les surfaces passent par des tokens, et plus rien ne rattrape un littéral.** Le remap
   `html.reference .app-shell { --color-black: white }` — et son doublon `.game-surface` — sont
@@ -251,13 +263,13 @@ visuelle.
 **Issues ouvertes (4 ici, 0 au privé)** — re-sondées le 2026-08-14. ⚠️ La formule « inchangées
 depuis le 2026-08-03 » n'est plus vraie : **#733 a été ouverte cette nuit** et **#81 est close**.
 
-| Issue            | Quoi                                                                                                                                                                             |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **#733** (arena) | 🔴 **Nightly E2E rouge** — 9 tests, la boucle de jeu cœur. Diagnostic complet en commentaire de l'issue ; voir l'encart du §6                                                    |
-| **#673** (arena) | Triage des signalements du 2026-07-29. ⚠️ **Ne pas la fermer sans traiter la file** : ses UUID canoniques tiennent les signalements hors du chemin « fresh reports » du pré-gate |
-| **#660** (arena) | Major `typescript` v7.0.2 — gate rouge, `typescript-eslint` bloquant (remplace #593)                                                                                             |
-| **#595** (arena) | Aligner `@types/node` (v26) sur le runtime CI (Node 24)                                                                                                                          |
-| ~~#81~~ (privé)  | **Close** — plus aucune issue ouverte au dépôt privé, garde `content-drift` comprise                                                                                             |
+| Issue            | Quoi                                                                                                                                                                                  |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **#733** (arena) | 🟠 **Nightly E2E** — les 9 échecs sont traités (#755 pour 8, le contraste `--flame` pour le 9ᵉ), aucun vérifié en session : **ne la fermer qu'au vu d'un nightly vert**. Encart du §6 |
+| **#673** (arena) | Triage des signalements du 2026-07-29. ⚠️ **Ne pas la fermer sans traiter la file** : ses UUID canoniques tiennent les signalements hors du chemin « fresh reports » du pré-gate      |
+| **#660** (arena) | Major `typescript` v7.0.2 — gate rouge, `typescript-eslint` bloquant (remplace #593)                                                                                                  |
+| **#595** (arena) | Aligner `@types/node` (v26) sur le runtime CI (Node 24)                                                                                                                               |
+| ~~#81~~ (privé)  | **Close** — plus aucune issue ouverte au dépôt privé, garde `content-drift` comprise                                                                                                  |
 
 ## 7. Carte de la documentation (qui fait foi pour quoi)
 

@@ -178,7 +178,7 @@ function MistakeBlock({
     >
       {label && (
         <>
-          <div className="text-xs font-bold uppercase tracking-widest text-[color:var(--flame)]">
+          <div className="text-xs font-bold uppercase tracking-widest text-flame-ink">
             {labels.reviewMistakeTitle}
           </div>
           <p data-testid="review-mistake-label" className="mt-1 text-sm">

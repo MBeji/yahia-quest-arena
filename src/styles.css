@@ -115,6 +115,7 @@
   --color-neon-magenta: var(--neon-magenta);
   --color-neon-gold: var(--neon-gold);
   --color-flame: var(--flame);
+  --color-flame-ink: var(--flame-ink);
   --color-success: var(--success);
 
   /* Premium black & gold palette (landing) */
@@ -206,6 +207,10 @@
   --neon-magenta: oklch(0.66 0.13 70); /* gold-deep */
   --neon-gold: oklch(0.85 0.16 90);
   --flame: oklch(0.74 0.22 45);
+  /* Flame as TEXT. On the dark canvas the accent itself is already readable, so
+     the two tokens are deliberately identical here — the split only pays off in
+     the light theme, where the accent is far too bright to carry type. */
+  --flame-ink: var(--flame);
   --success: oklch(0.78 0.21 150);
 
   /* Subject colors */
@@ -306,6 +311,13 @@ html.reference {
   --neon-magenta: #15876a;
   --neon-gold: #0b5a47;
   --flame: oklch(0.62 0.21 45);
+  /* Flamme en TEXTE : l'accent est resté à L=0,62 quand tous ses voisins de ce bloc
+     ont été assombris « to read on white » — 3,95:1 sur blanc et 3,02:1 sur sa propre
+     teinte /20 (la puce de série du tableau de bord), sous la barre AA de 4,5:1. Le
+     flame décoratif (icônes, dégradés, fonds /5 et /20) ne bouge pas ; seul le texte
+     descend dans la bande de luminosité de ses voisins : 4,92:1 sur la teinte, 6,42:1
+     sur blanc. */
+  --flame-ink: oklch(0.5 0.18 45);
   --success: oklch(0.55 0.13 165);
 
   /* Subject colours, darkened for contrast on white */

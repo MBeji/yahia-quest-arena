@@ -50,7 +50,7 @@ export function DailyReviewPanel({ items }: { items: DailyPlanItem[] }) {
                     {reviewReason(item, t)}
                   </div>
                   {item.weak_tags > 0 && (
-                    <div className="mt-1 flex items-center gap-1 text-xs text-[color:var(--flame)]">
+                    <div className="mt-1 flex items-center gap-1 text-xs text-flame-ink">
                       <Target className="h-3 w-3" /> {t.dashboard.dailyPlanWeak}
                     </div>
                   )}
