@@ -35,8 +35,9 @@ import {
   type CompetencyVocabulary,
   type Flag,
 } from "./qa-checks.ts";
+import { auditManuelRefs } from "./qa-manuel-refs.ts";
 import { auditVerbatim, buildVerbatimIndex, questionTextSurface } from "./verbatim-checks.ts";
-import { loadSurveilledSources } from "./programmes-io.ts";
+import { loadCnpCorpusFiles, loadSurveilledSources } from "./programmes-io.ts";
 
 const hasFlag = (n: string) => argv.includes(`--${n}`);
 const getFlag = (n: string) => {
@@ -65,6 +66,16 @@ function main(): void {
   // Curated-video registry (étude 23): registry-level invariants once, then
   // per-chapter / per-exercise ref cross-checks against it.
   const videos = loadVideosRegistry(contentDir);
+
+  // Codes manuel (liens « Manuel officiel ») : le registre CNP dit quels
+  // documents existent vraiment. Le compte est imprimé même quand le contrôle
+  // se met en veille — un gate muet ne se distingue pas d'un gate absent.
+  const corpusFiles = loadCnpCorpusFiles();
+  stdout.write(
+    corpusFiles === null
+      ? "• codes manuel : corpus CNP non branché — contrôle des liens « Manuel officiel » désarmé.\n"
+      : `• codes manuel : ${corpusFiles.size} document(s) au corpus CNP — liens « Manuel officiel » contrôlés.\n`,
+  );
 
   // Garde anti-verbatim (étude 27 R-8/D-7) : les séquences de mots des sources
   // externes NON autorisées ne doivent réapparaître dans aucun texte généré.
@@ -95,6 +106,16 @@ function main(): void {
       ),
     );
 
+    // Volumes du manuel déclarés par la MATIÈRE — repli du lecteur quand le
+    // chapitre ne porte pas ses propres pages.
+    flags.push(
+      ...auditManuelRefs(
+        (subject.meta.manuels ?? []).map((m) => m.code),
+        corpusFiles,
+        `${subject.meta.id}/manuels`,
+      ),
+    );
+
     for (const chapter of subject.chapters) {
       // Les LEÇONS entrent enfin dans le gate (étude 18, lot 4). Jusqu'ici la QA ne
       // parcourait que les questions : les 541 `cours.md` / `resume.md` n'avaient jamais
@@ -115,6 +136,11 @@ function main(): void {
       // checked against the subject's language of instruction.
       const lang = subject.meta.contentLanguage;
       flags.push(
+        ...auditManuelRefs(
+          chapter.meta.manuel ? [chapter.meta.manuel.code] : [],
+          corpusFiles,
+          `${subject.meta.id}/${chapter.slug}`,
+        ),
         ...auditVideoRefs(
           chapter.meta.videos ?? [],
           videos,

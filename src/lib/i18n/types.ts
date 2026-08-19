@@ -1163,8 +1163,6 @@ export type TranslationKeys = {
       manuelHint: string;
       manuelOpen: string;
       manuelTome: string;
-      manuelLockedHint: string;
-      manuelLoginCta: string;
     };
     practice: {
       back: string;

@@ -431,7 +431,7 @@ export function SubjectHub({
         {subject.description && <p className="mt-2 text-muted-foreground">{subject.description}</p>}
       </header>
 
-      <ManuelEleveCard manuelRefs={subject.manuel_refs} isAuthenticated={isAuthenticated} />
+      <ManuelEleveCard manuelRefs={subject.manuel_refs} />
 
       {resume && resume.next && (
         <Link
