@@ -16,12 +16,13 @@
 /**
  * Where the CNP serves its textbook PDFs — a flat store keyed by the official
  * file name, so `102905` (maths, 9ème année de base) resolves to
- * `<base>/102905P00.pdf`.
+ * `<base>/102905P00.pdf`. Confirmed against the live store by Mohamed on
+ * 2026-08-19.
  *
  * ⚠️ **The single value to re-point if the CNP moves its store.** Everything
  * else in the manuel-link chain derives from the codes already in `content/`.
  */
-export const CNP_MANUEL_BASE_URL = "https://www.cnp.com.tn/cnp.tn/arabic/PDF";
+export const CNP_MANUEL_BASE_URL = "https://www.cnp.com.tn/arabic/PDF";
 
 /**
  * Charset of a book code — deliberately the SAME as the authoring schema's
