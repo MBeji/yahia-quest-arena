@@ -139,7 +139,7 @@ export function CompetencyMapPanel({
           basse. N'apparaît que s'il y a des blocages diagnostiqués — sinon, silence. */}
       {blockers.length > 0 && (
         <div className="mt-5 rounded-xl border border-[color:var(--flame)]/25 bg-[color:var(--flame)]/5 p-4">
-          <div className="flex items-center gap-2 text-sm font-bold text-[color:var(--flame)]">
+          <div className="flex items-center gap-2 text-sm font-bold text-flame-ink">
             {blockedRow
               ? t.dashboard.competencyBlockersTitle.replace(
                   "{competency}",

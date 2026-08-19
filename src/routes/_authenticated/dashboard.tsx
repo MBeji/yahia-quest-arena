@@ -255,7 +255,7 @@ function Dashboard() {
               <div className="text-end text-xs uppercase tracking-widest text-muted-foreground">
                 {t.dashboard.longestStreak}
               </div>
-              <div className="text-end font-display text-2xl font-bold text-[color:var(--flame)]">
+              <div className="text-end font-display text-2xl font-bold text-flame-ink">
                 {profile.longest_streak}d
               </div>
             </div>

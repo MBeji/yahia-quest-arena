@@ -113,10 +113,7 @@ export function EconomyAdmin({ data }: { data: EconomyOverview }) {
           <Stat label="puits / sources" value={sinkPct === null ? "—" : `${fmt(sinkPct)} %`} />
         </div>
         {sinkPct !== null && sinkPct < 60 && (
-          <p
-            className="mt-3 text-xs text-[color:var(--flame)]"
-            data-testid="econ-inflation-warning"
-          >
+          <p className="mt-3 text-xs text-flame-ink" data-testid="econ-inflation-warning">
             Les puits absorbent moins de 60 % des sources : les coins s'accumulent, la boutique perd
             de sa valeur.
           </p>

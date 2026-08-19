@@ -177,7 +177,7 @@ function DailyRing({
           </div>
         )}
         {streak > 0 && (
-          <div className="mt-1.5 flex items-center gap-1 text-xs text-[color:var(--flame)]">
+          <div className="mt-1.5 flex items-center gap-1 text-xs text-flame-ink">
             <Flame className="h-3 w-3 animate-flame" /> {streak} {t.dashboard.consecutiveDays}
           </div>
         )}
