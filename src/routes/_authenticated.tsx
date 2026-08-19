@@ -11,21 +11,14 @@ import {
   LayoutDashboard,
   Map,
   Compass,
-  LogOut,
   Swords,
   ClipboardList,
-  CreditCard,
-  FlaskConical,
-  Flag,
-  Bug,
-  TrendingUp,
+  Shield,
 } from "lucide-react";
 import { supabase } from "@/shared/integrations/supabase/client";
 import { toast } from "sonner";
 import { useT } from "@/lib/i18n";
-import { LanguageSwitcher } from "@/components/ui/language-switcher";
-import { ThemeSwitcher } from "@/components/ui/theme-switcher";
-import { SoundSwitcher } from "@/components/ui/sound-switcher";
+import { SettingsMenu } from "@/components/ui/settings-menu";
 import { GoldAmbient } from "@/components/visual/gold-ambient";
 import { AccountHud } from "@/components/account-hud";
 
@@ -78,6 +71,9 @@ function AuthenticatedLayout() {
     queryFn: () => fetchBugsCount(),
   });
   const openBugs = bugsCount?.count ?? 0;
+  // Une seule pastille pour les trois files : l'entrée « Console » remplace six
+  // liens, elle doit porter leur signal cumulé sans le détailler.
+  const adminPending = pendingBeta + openReports + openBugs;
 
   // Redirect unauthenticated users via effect (not during render)
   useEffect(() => {
@@ -207,101 +203,35 @@ function AuthenticatedLayout() {
               </Link>
             )}
             {userRole === "admin" && (
-              <>
-                <Link
-                  to="/parent-report"
-                  className={NAV_LINK}
-                  activeProps={NAV_ACTIVE}
-                  aria-label={t.layout.admin}
-                  title={t.layout.admin}
-                >
-                  <ClipboardList className="h-4 w-4 shrink-0" />{" "}
-                  <span className="hidden lg:inline">{t.layout.admin}</span>
-                </Link>
-                <Link
-                  to="/admin/subscriptions"
-                  className={NAV_LINK}
-                  activeProps={NAV_ACTIVE}
-                  aria-label={t.layout.subscriptions}
-                  title={t.layout.subscriptions}
-                >
-                  <CreditCard className="h-4 w-4 shrink-0" />{" "}
-                  <span className="hidden lg:inline">{t.layout.subscriptions}</span>
-                </Link>
-                <Link
-                  to="/admin/beta-requests"
-                  className={NAV_LINK}
-                  activeProps={NAV_ACTIVE}
-                  aria-label={t.layout.betaRequests}
-                  title={t.layout.betaRequests}
-                >
-                  <FlaskConical className="h-4 w-4 shrink-0" />{" "}
-                  <span className="hidden lg:inline">{t.layout.betaRequests}</span>
-                  {pendingBeta > 0 && (
-                    <span className="ms-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground">
-                      {pendingBeta}
-                    </span>
-                  )}
-                </Link>
-                <Link
-                  to="/admin/content-reports"
-                  className={NAV_LINK}
-                  activeProps={NAV_ACTIVE}
-                  aria-label={t.layout.contentReports}
-                  title={t.layout.contentReports}
-                >
-                  <Flag className="h-4 w-4 shrink-0" />{" "}
-                  <span className="hidden lg:inline">{t.layout.contentReports}</span>
-                  {openReports > 0 && (
-                    <span className="ms-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground">
-                      {openReports}
-                    </span>
-                  )}
-                </Link>
-                <Link
-                  to="/admin/bug-reports"
-                  className={NAV_LINK}
-                  activeProps={NAV_ACTIVE}
-                  aria-label={t.layout.bugReports}
-                  title={t.layout.bugReports}
-                >
-                  <Bug className="h-4 w-4 shrink-0" />{" "}
-                  <span className="hidden lg:inline">{t.layout.bugReports}</span>
-                  {openBugs > 0 && (
-                    <span className="ms-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground">
-                      {openBugs}
-                    </span>
-                  )}
-                </Link>
-                <Link
-                  to="/admin/parcours-interest"
-                  className={NAV_LINK}
-                  activeProps={NAV_ACTIVE}
-                  aria-label={t.layout.parcoursInterest}
-                  title={t.layout.parcoursInterest}
-                >
-                  <TrendingUp className="h-4 w-4 shrink-0" />{" "}
-                  <span className="hidden lg:inline">{t.layout.parcoursInterest}</span>
-                </Link>
-              </>
+              // Les six consoles (+ « Économie », que rien ne liait) vivent
+              // désormais dans le pôle /console. La pastille agrège leurs files
+              // d'attente : l'admin garde le signal d'un coup d'œil, pour une
+              // entrée au lieu de six.
+              <Link
+                to="/console"
+                className={NAV_LINK}
+                activeProps={NAV_ACTIVE}
+                aria-label={t.layout.console}
+                title={t.layout.console}
+              >
+                <Shield className="h-4 w-4 shrink-0" />{" "}
+                <span className="hidden lg:inline">{t.layout.console}</span>
+                {adminPending > 0 && (
+                  <span className="ms-1 rounded-full bg-[image:var(--gradient-gold)] px-1.5 py-0.5 text-[10px] font-bold text-primary-foreground">
+                    {adminPending}
+                  </span>
+                )}
+              </Link>
             )}
           </nav>
-          {/* Account actions are pinned OUTSIDE the scrollable nav so the language /
-              theme / sign-out controls stay in view even when the link list overflows
-              — e.g. the admin nav, where sign-out used to scroll off the right edge.
-              `min-w-0` (not `shrink-0`): the fixed-size icon buttons keep their touch
-              targets, but the AccountHud chip is allowed to shrink/truncate so the
-              cluster never forces the whole document wider than the phone viewport
-              (iPhone 13 overflow → content shifted left, gutter on the right). */}
+          {/* Compte + réglages, épinglés HORS de la nav scrollable. Langue, thème,
+              son et déconnexion — quatre contrôles permanents — ont fondu dans UN
+              engrenage : le cluster ne peut plus élargir le document sur un
+              téléphone de 360 px (débordement iPhone 13), et le réglage reste à un
+              tap. `min-w-0` : la puce AccountHud garde le droit de se tronquer. */}
           <div className="flex min-w-0 items-center gap-1 sm:gap-2">
             <AccountHud to={hub} />
-            <LanguageSwitcher />
-            <ThemeSwitcher />
-            <SoundSwitcher />
-            <button onClick={signOut} className={NAV_LINK} aria-label={t.layout.signOut}>
-              <LogOut className="h-4 w-4 shrink-0" />{" "}
-              <span className="hidden lg:inline">{t.layout.signOut}</span>
-            </button>
+            <SettingsMenu onSignOut={signOut} />
           </div>
         </div>
       </header>

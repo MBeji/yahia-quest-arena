@@ -17,7 +17,7 @@ test.describe("In-app language switch + RTL (authenticated)", () => {
     await nav.changeLanguage("العربية");
     await expect(page.locator("html")).toHaveAttribute("lang", "ar");
     await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
-    await expect(nav.languageTrigger).toContainText("AR");
+    await nav.expectActiveLanguage("العربية");
     // Session is intact: the catalogue is still rendered after the switch.
     await expect(dashboard.subjectCards.first()).toBeVisible();
 

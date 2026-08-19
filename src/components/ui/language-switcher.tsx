@@ -1,12 +1,8 @@
-import { useI18n, type Locale } from "@/lib/i18n";
+import { useI18n } from "@/lib/i18n";
 import { Globe } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
-const LOCALES: { code: Locale; label: string; short: string }[] = [
-  { code: "en", label: "English", short: "EN" },
-  { code: "fr", label: "Français", short: "FR" },
-  { code: "ar", label: "العربية", short: "AR" },
-];
+import { LOCALES } from "@/components/ui/settings-controls";
 
 export function LanguageSwitcher({ className = "" }: { className?: string }) {
   const { locale, setLocale } = useI18n();

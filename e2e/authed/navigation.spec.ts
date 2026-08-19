@@ -45,4 +45,57 @@ test.describe("Primary navigation", () => {
       await expect(page.locator(`main a[href="${href}"]`).first()).toBeVisible({ timeout: 15_000 });
     }
   });
+
+  // Le menu est le SEUL chemin vers la page de paramétrage : il n'y a pas
+  // d'entrée « Paramétrage » dans la barre du bas (arbitrage : les onglets
+  // restent réservés aux destinations fréquentes).
+  test("l'engrenage mène à la page de paramétrage", async ({ leaderboard, page, nav }) => {
+    await leaderboard.goto();
+    await nav.openSettings();
+    await nav.settingsMenu.getByRole("link").click();
+    await expect(page).toHaveURL(/parametrage/);
+  });
+
+  test("le pôle Paramétrage porte les cinq sections", async ({ page }) => {
+    await page.goto("/parametrage");
+    // Les réglages rapides du menu s'y retrouvent en entier…
+    await expect(page.getByRole("switch")).toHaveCount(2, { timeout: 15_000 });
+    await expect(page.getByRole("menuitemradio")).toHaveCount(5);
+    // …plus ce que le menu ne porte pas : compte, parcours, mentions.
+    await expect(page.getByTestId("settings-sign-out")).toBeVisible();
+    for (const href of ["/boutique", "/programme", "/conditions", "/confidentialite"]) {
+      await expect(page.locator(`main a[href="${href}"]`).first()).toBeVisible();
+    }
+  });
+});
+
+// La nav de l'admin passait de dix liens à cinq : les six consoles (plus
+// « Économie », que RIEN ne liait) vivent dans le pôle /console.
+test.describe("Console — le pôle d'administration", () => {
+  test.use({ storageState: STORAGE_STATE.admin });
+  test.describe.configure({ timeout: 60_000 });
+
+  test("le pôle liste les sept consoles, dont l'orpheline « Économie »", async ({ page }) => {
+    await page.goto("/console");
+    for (const href of [
+      "/parent-report",
+      "/admin/subscriptions",
+      "/admin/beta-requests",
+      "/admin/content-reports",
+      "/admin/bug-reports",
+      "/admin/parcours-interest",
+      "/admin/economie",
+    ]) {
+      await expect(page.locator(`main a[href="${href}"]`).first()).toBeVisible({ timeout: 15_000 });
+    }
+  });
+
+  test("la nav ne porte plus les six liens admin, seulement l'entrée Console", async ({ page }) => {
+    await page.goto("/leaderboard");
+    const banner = page.getByRole("banner");
+    await expect(banner.locator('a[href="/console"]')).toBeVisible();
+    for (const href of ["/admin/subscriptions", "/admin/beta-requests", "/admin/bug-reports"]) {
+      await expect(banner.locator(`a[href="${href}"]`)).toHaveCount(0);
+    }
+  });
 });
