@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { failWithClientError } from "@/shared/lib/safe-error";
+import { displayNameSchema } from "./display-name";
 
 /**
  * Bootstrap the freshly-signed-up user's profile (display name + role).
@@ -26,7 +27,7 @@ export const bootstrapProfile = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) =>
     z
       .object({
-        displayName: z.string().trim().min(1).max(80),
+        displayName: displayNameSchema,
         role: z.enum(["student", "parent"]),
       })
       .parse(d),
@@ -87,4 +88,50 @@ export const setCurrentParcours = createServerFn({ method: "POST" })
       );
     }
     return { profile };
+  });
+
+/**
+ * Rename the signed-in user — the only way to change a pseudo after signup.
+ *
+ * Until now `display_name` was written once, at signup, and never again: no screen
+ * in the app could touch it, while the dashboard, the Shop and the parent report
+ * all showed it.
+ *
+ * NO migration was needed for this, and that is worth stating rather than
+ * re-deriving: `display_name` is ALREADY writable by its owner, through the two
+ * halves the app requires — the RLS policy « Users can update own profile »
+ * (`FOR UPDATE USING ((SELECT auth.uid()) = id)`) and the column grant
+ * `GRANT UPDATE (display_name, …) ON public.profiles TO authenticated` from
+ * 20260606150000_security_p0_hardening.sql. That same pair is what `bootstrapProfile`
+ * above has been writing through since signup. Unlike `role`, the pseudo was never
+ * revoked from the client-writable set, so no SECURITY DEFINER RPC is warranted here
+ * — adding one would buy nothing and hide the RLS path that actually guards the row.
+ *
+ * The `.eq("id", userId)` is therefore not what makes the write safe (RLS does), but
+ * it keeps the statement self-scoped at the call site, the way every other write in
+ * this codebase reads.
+ */
+export const updateDisplayName = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ displayName: displayNameSchema }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    const { data: profile, error } = await supabase
+      .from("profiles")
+      .update({ display_name: data.displayName })
+      .eq("id", userId)
+      .select("display_name")
+      .single();
+
+    // `!profile` cannot happen without `error` — `.single()` turns a zero-row match
+    // into PGRST116 — but the two are destructured apart, so only testing both lets
+    // the compiler see the row as present below.
+    if (error || !profile) {
+      failWithClientError("auth.updateDisplayName", error, "display_name_update_failed");
+    }
+
+    // The persisted (trimmed) value, so the caller renders what the database holds
+    // rather than what the user typed.
+    return { displayName: profile.display_name };
   });

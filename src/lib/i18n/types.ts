@@ -573,6 +573,12 @@ export type TranslationKeys = {
     accountTitle: string;
     accountDesc: string;
     email: string;
+    pseudoAction: string;
+    pseudoSave: string;
+    pseudoCancel: string;
+    pseudoSaved: string;
+    pseudoError: string;
+    pseudoRule: string;
     avatar: string;
     avatarAction: string;
     password: string;
