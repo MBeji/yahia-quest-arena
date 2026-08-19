@@ -23,7 +23,7 @@ test.describe("Dynamic language switch + RTL", () => {
     await expect(html).toHaveAttribute("lang", "fr");
     await expect(html).toHaveAttribute("dir", "ltr");
     await expect(landing.signupCta).toContainText(/créer mon compte/i);
-    await expect(nav.languageTrigger).toContainText("FR");
+    await nav.expectActiveLanguage("Français");
 
     // → Arabic: document flips to RTL and the CTA shows Arabic text.
     await nav.changeLanguage("العربية");

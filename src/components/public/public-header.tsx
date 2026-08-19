@@ -1,8 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useT } from "@/lib/i18n";
 import { useAuth } from "@/features/auth";
-import { LanguageSwitcher } from "@/components/ui/language-switcher";
-import { ThemeSwitcher } from "@/components/ui/theme-switcher";
+import { SettingsMenu } from "@/components/ui/settings-menu";
 import { AccountHud } from "@/components/account-hud";
 
 /**
@@ -69,8 +68,10 @@ export function PublicHeader() {
           </nav>
         </div>
         <div className="flex items-center gap-1 sm:gap-2">
-          <LanguageSwitcher />
-          <ThemeSwitcher />
+          {/* Même engrenage que la coquille connectée, sans le bloc compte : un
+              visiteur anonyme règle thème, langue ET son — les trois providers
+              vivent à la racine, mais l'ancien header public n'offrait pas le son. */}
+          <SettingsMenu />
           {isAuthed ? (
             <AccountHud />
           ) : (

@@ -545,6 +545,8 @@ export type TranslationKeys = {
     contentReports: string;
     bugReports: string;
     parcoursInterest: string;
+    economy: string;
+    console: string;
     signOut: string;
     logoutToast: string;
   };
@@ -561,6 +563,40 @@ export type TranslationKeys = {
     music: string;
     enable: string;
     disable: string;
+  };
+  settings: {
+    title: string;
+    subtitle: string;
+    menuAria: string;
+    quickTitle: string;
+    allSettings: string;
+    accountTitle: string;
+    accountDesc: string;
+    email: string;
+    avatar: string;
+    avatarAction: string;
+    password: string;
+    passwordAction: string;
+    passwordSent: string;
+    passwordError: string;
+    parcoursTitle: string;
+    parcoursDesc: string;
+    parcoursCurrent: string;
+    parcoursNone: string;
+    parcoursChange: string;
+    displayTitle: string;
+    languageLabel: string;
+    displayDesc: string;
+    soundTitle: string;
+    soundDesc: string;
+    helpTitle: string;
+    helpDesc: string;
+    helpTerms: string;
+    helpPrivacy: string;
+  };
+  adminHub: {
+    title: string;
+    subtitle: string;
   };
   // Encouraging combo / streak micro-messages
   encouragement: {

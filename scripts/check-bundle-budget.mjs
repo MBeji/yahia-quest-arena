@@ -43,7 +43,13 @@ const BUDGETS = {
   // matières, 12 gabarits d'alerte). C'est de loin le plus gros namespace ajouté d'un coup, et
   // il ne sert qu'aux comptes PARENT : si le catalogue i18n doit un jour être découpé par
   // surface plutôt que chargé en bloc, c'est ce namespace-là qui le justifiera en premier.
-  "i18n-": 156 * 1024,
+  // Puis 156→160 KB pour le **menu « Paramétrage » unique** : 29 clés (namespace `settings.*`
+  // + `adminHub.*` + deux libellés de nav) ×3 langues, soit 0,96 KB de dépassement — le lot
+  // précédent ne laissait qu'un kilo-octet de marge. Toutes les clés sont utilisées : la page-pôle
+  // nomme ses cinq sections et ce que chacune règle, ce qu'aucune chaîne existante ne disait. On
+  // reprend ~3 KB de réserve plutôt que le strict nécessaire, par la même raison qu'au lot
+  // précédent : sinon la clé suivante casse la CI d'une PR qui n'y sera pour rien.
+  "i18n-": 160 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
   // @dnd-kit (core+sortable+utilities) powering the B2 ordering/matching

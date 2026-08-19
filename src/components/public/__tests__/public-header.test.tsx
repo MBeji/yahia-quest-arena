@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 
@@ -35,10 +36,29 @@ describe("PublicHeader", () => {
     mockUseAuth.mockReturnValue({ user: null, session: null, loading: false });
   });
 
-  it("exposes the language switcher so the public (no-login) pages are switchable fr/en/ar", () => {
+  it("exposes the settings menu so the public (no-login) pages are switchable fr/en/ar", async () => {
     renderHeader();
-    // The shared LanguageSwitcher trigger (aria-label is what the e2e nav targets too).
-    expect(screen.getByRole("button", { name: /change language/i })).toBeInTheDocument();
+    // Un seul déclencheur pour tous les réglages (l'engrenage), là où le header
+    // portait deux boutons distincts (langue, thème). Ciblé par testid : son
+    // aria-label est traduit, et le défaut est le français (GAP-010).
+    await userEvent.click(screen.getByTestId("settings-trigger"));
+    for (const label of ["English", "Français", "العربية"]) {
+      expect(screen.getByRole("menuitemradio", { name: label })).toBeInTheDocument();
+    }
+  });
+
+  it("le visiteur anonyme peut aussi couper le son — ce que l'ancien header public n'offrait pas", async () => {
+    renderHeader();
+    await userEvent.click(screen.getByTestId("settings-trigger"));
+    expect(screen.getByRole("switch", { name: /effets sonores/i })).toBeInTheDocument();
+    expect(screen.getByRole("switch", { name: /musique/i })).toBeInTheDocument();
+  });
+
+  it("n'expose NI la page de paramétrage NI la déconnexion : le bloc compte est réservé à la coquille connectée", async () => {
+    renderHeader();
+    await userEvent.click(screen.getByTestId("settings-trigger"));
+    expect(screen.queryByRole("link", { name: /param/i })).toBeNull();
+    expect(screen.queryByRole("button", { name: /déconnexion|sign out/i })).toBeNull();
   });
 
   it("logged out: links to the catalogue + the login/signup CTAs (no account link)", () => {
