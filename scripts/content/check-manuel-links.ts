@@ -48,6 +48,7 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { argv, cwd, exit, stdout } from "node:process";
+import { pathToFileURL } from "node:url";
 import { cnpManuelFileName, cnpManuelUrl } from "../../src/shared/content/manuel-cnp.ts";
 
 /** Le registre CNP, dans le corpus privé — branché dans le moteur par la CI. */
@@ -157,8 +158,18 @@ export async function probe(
       expectedOctets,
     );
   } catch (err) {
+    // « fetch failed » tout seul n'est pas diagnosticable : undici range la vraie
+    // raison (ENOTFOUND, ECONNREFUSED, CERT_HAS_EXPIRED, délai dépassé…) dans
+    // `cause`. Sans elle, un passage tout-`unknown` ne dit pas s'il faut aller
+    // voir le CNP, le DNS, ou la passerelle de sortie — et la sonde ne sert alors
+    // qu'à dire « je n'ai rien vu », sans dire pourquoi.
     const msg = err instanceof Error ? err.message : String(err);
-    return { verdict: "unknown", reason: `échec réseau: ${msg}` };
+    const cause = err instanceof Error ? err.cause : undefined;
+    const detail =
+      cause instanceof Error
+        ? `${(cause as NodeJS.ErrnoException).code ?? cause.name}: ${cause.message}`
+        : undefined;
+    return { verdict: "unknown", reason: `échec réseau: ${msg}${detail ? ` — ${detail}` : ""}` };
   }
 }
 
@@ -244,4 +255,4 @@ async function main() {
 }
 
 // Exécuté en CLI seulement — les tests importent les fonctions pures.
-if (import.meta.url === `file://${process.argv[1]}`) await main();
+if (argv[1] && pathToFileURL(argv[1]).href === import.meta.url) await main();
