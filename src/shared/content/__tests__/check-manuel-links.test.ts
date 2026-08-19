@@ -141,6 +141,26 @@ describe("probe", () => {
     expect(v.verdict).toBe("unknown");
     expect(v.reason).toContain("ETIMEDOUT");
   });
+
+  // « fetch failed » est le message que undici met sur TOUTES ses pannes : DNS,
+  // connexion refusée, certificat, délai. Un passage tout-`unknown` qui ne dit
+  // que ça n'oriente vers rien — or c'est précisément le passage où il faut
+  // savoir s'il faut aller voir le CNP ou son propre réseau. Éprouvé le
+  // 2026-08-19 : les 82 codes en échec, et la cause (un certificat auto-signé
+  // dans la chaîne, donc un intermédiaire TLS local) était la seule information
+  // qui distinguait « le CNP est tombé » de « ma sortie réseau est filtrée ».
+  it("rapporte la CAUSE d'un échec réseau, pas seulement « fetch failed »", async () => {
+    const cause = Object.assign(new Error("self-signed certificate in certificate chain"), {
+      code: "SELF_SIGNED_CERT_IN_CHAIN",
+    });
+    const fetchImpl = vi.fn(async () => {
+      throw new Error("fetch failed", { cause });
+    });
+    const v = await probe("https://example.test/x.pdf", OCTETS, { fetchImpl: fetchImpl as never });
+    expect(v.verdict).toBe("unknown");
+    expect(v.reason).toContain("fetch failed");
+    expect(v.reason).toContain("SELF_SIGNED_CERT_IN_CHAIN");
+  });
 });
 
 describe("collectManuelCodes", () => {
