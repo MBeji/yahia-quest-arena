@@ -119,9 +119,12 @@ vi.mock("@/lib/i18n", () => ({
       helpDesc: "",
       helpTerms: "Conditions",
       helpPrivacy: "Confidentialité",
+      allianceCode: "Code",
+      allianceCopy: "Copier",
+      allianceCopied: "Copié",
+      allianceHint: "Partage ce code avec ton parent.",
     },
     layout: { signOut: "Déconnexion", logoutToast: "" },
-    dashboard: { allianceCode: "Code", allianceCopy: "Copier", allianceCopied: "Copié" },
     auth: { heroNameLabel: "Prénom ou pseudo" },
   }),
 }));
