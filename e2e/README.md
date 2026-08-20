@@ -41,9 +41,15 @@ scripts/e2e/
 ## Conventions (keep the suite clean & extensible)
 
 - **Selectors live in Page Objects** (`pages/`), never inline in specs. Prefer
-  locale-independent locators: ARIA roles/labels, field ids (`#auth-email`),
-  route hrefs (`a[href^="/subject/"]`), and the few hardcoded English literals.
-  UI copy is i18n (default `en`) — don't assert translated strings.
+  locale-independent locators: `data-testid`, field ids (`#auth-email`), route hrefs
+  (`a[href^="/matiere/"]`). ⚠️ An **`aria-label` is not one** — it is translated like
+  the rest, and the app's default locale is **French** (GAP-010), not English. A
+  `getByRole("button", { name: /english copy/i })` then matches nobody.
+- **Every negative assertion needs a paired positive one**, on the SAME Page Object
+  getter. A selector used only in `toHaveCount(0)` reports green when it has gone
+  stale — it measures a void, not an absence. That is issue #733: `dashboard.adminNavLink`
+  (fixed in #796) and `dungeon.enterButton` after it were both false greens for that
+  exact reason.
 - **Specs read like scenarios**: `await dashboard.goto(); await expect(...)`. No
   raw `page.locator(...)` chains in specs — add a Page Object method/getter instead.
 - **Auth** is declared per spec: `test.use({ storageState: STORAGE_STATE.<role> })`.

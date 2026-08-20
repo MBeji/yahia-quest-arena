@@ -374,6 +374,8 @@ function DungeonPage() {
             ) : (
               <>
                 <button
+                  type="button"
+                  data-testid="dungeon-enter"
                   onClick={startDungeon}
                   aria-label={t.dungeon.enterDungeonAria}
                   className="mt-8 inline-flex items-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] px-8 py-3.5 text-base font-bold text-primary-foreground shadow-gold transition-transform hover:scale-105"
