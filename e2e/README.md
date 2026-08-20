@@ -53,9 +53,20 @@ scripts/e2e/
   `getByRole("button", { name: /english copy/i })` then matches nobody.
 - **Every negative assertion needs a paired positive one**, on the SAME Page Object
   getter. A selector used only in `toHaveCount(0)` reports green when it has gone
-  stale — it measures a void, not an absence. That is issue #733: `dashboard.adminNavLink`
-  (fixed in #796) and `dungeon.enterButton` after it were both false greens for that
-  exact reason.
+  stale — it measures a void, not an absence. That is issue #733, and it has bitten
+  **three** times so far: `dashboard.adminNavLink` (fixed in #796), `dungeon.enterButton`
+  after it (#797), and the `/admin/subscriptions` refusal notice. That last one was
+  written `/access denied|accès refusé/i` while the rendered copy comes from
+  `t.subscription.accessDenied` — « Accès réservé aux administrateurs. » in French, the
+  app default — so it could match nobody in any of the three languages. Each fix pairs
+  the getter BOTH ways: `adminSubscriptions.accessDenied` is proven matchable by
+  `authorization.spec` and proven absent by `admin-and-parent.spec`; `consolePanel` is
+  the mirror.
+- **A negative with no observable surface can't be paired — so don't write one.**
+  `/parent-report` refuses server-side (`getLinkedStudents` throws) and the route has no
+  `isError` branch, so no refusal copy ever reaches the page. The third `toHaveCount(0)`
+  of #733 was therefore dropped, not re-aimed: what IS observable there — a student
+  landing on the alliance-link UI with nobody linked — is what `authorization.spec` pins.
 - **Specs read like scenarios**: `await dashboard.goto(); await expect(...)`. No
   raw `page.locator(...)` chains in specs — add a Page Object method/getter instead.
 - **Auth** is declared per spec: `test.use({ storageState: STORAGE_STATE.<role> })`.
