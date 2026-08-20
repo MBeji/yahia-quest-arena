@@ -13,9 +13,15 @@ export class DashboardPage {
   get dailyGoal(): Locator {
     return this.page.getByText(/\/\s*3/).first();
   }
-  /** Admin-only nav entry (absent for non-admins). */
+  /**
+   * Admin-only nav entry (absent for non-admins). Depuis la consolidation du menu
+   * (#787), les six consoles ont quitté la nav pour le pôle `/console` : l'entrée
+   * gardée par le rôle est celle-là, et plus `/admin/subscriptions`. Le sélecteur
+   * périmé ne cassait qu'UN des deux tests — l'autre, `authorization.spec`, vérifie
+   * une ABSENCE et passait donc à vide (issue #733).
+   */
   get adminNavLink(): Locator {
-    return this.page.locator('a[href="/admin/subscriptions"]').first();
+    return this.page.locator('a[href="/console"]').first();
   }
   /** Hero-header stat chips. */
   get statCoins(): Locator {
