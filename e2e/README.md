@@ -54,8 +54,21 @@ scripts/e2e/
 - **Every negative assertion needs a paired positive one**, on the SAME Page Object
   getter. A selector used only in `toHaveCount(0)` reports green when it has gone
   stale — it measures a void, not an absence. That is issue #733: `dashboard.adminNavLink`
-  (fixed in #796) and `dungeon.enterButton` after it were both false greens for that
-  exact reason.
+  (fixed in #796) and `dungeon.enterButton` after it (#797) were both false greens for
+  that exact reason.
+- **And when no positive is WRITABLE, the negative doesn't belong in this tier at all.**
+  A surface the current phase makes structurally unreachable cannot be paired: the quest
+  paywall (`SubscriptionPaywall`) only mounts on a `resolve_exercise_access` refusal, and
+  no account can provoke one while every `parcours.is_premium` is false. Its two getters
+  — `paywallPremiumText` and the `betaCta` living _inside_ it — carried five negatives
+  that nothing could ever turn red; both are deleted. The rule they leave behind:
+  **assert the cause, not the absence of its consequence.** The free-phase invariant is
+  now `adminDb.premiumParcoursIds()` being empty (`premium-gate.spec.ts`) — one row
+  flipped back to premium turns it red, and the failure names the parcours. The dormant
+  UI keeps its _paired_ coverage at the **unit** tier
+  (`src/features/subscription/__tests__/`), the only tier that can render it on demand.
+  Do **not** stage the positive by flipping a global catalogue flag: the suite runs
+  `fullyParallel` and the neighbouring specs read that same row.
 - **Specs read like scenarios**: `await dashboard.goto(); await expect(...)`. No
   raw `page.locator(...)` chains in specs — add a Page Object method/getter instead.
 - **Auth** is declared per spec: `test.use({ storageState: STORAGE_STATE.<role> })`.
