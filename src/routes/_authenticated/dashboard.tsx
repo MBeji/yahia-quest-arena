@@ -9,8 +9,6 @@ import {
   Swords,
   Crown,
   Skull,
-  Copy,
-  Check,
   ShoppingBag,
   Compass,
   History,
@@ -51,7 +49,6 @@ const DashboardGoals = lazy(() =>
     default: m.DashboardGoals,
   })),
 );
-import { formatStudentAllianceCode } from "@/features/parent-report";
 import { useT } from "@/lib/i18n";
 import { xpToNextLevel, xpWithinLevel } from "@/shared/lib/level";
 // (subject-locale filtering moved out with the « Autres thèmes » grid — lot 6.)
@@ -74,7 +71,6 @@ function Dashboard() {
     queryFn: () => fetchDashboard(),
   });
   const { data: sprint2 } = useQuery({ queryKey: ["sprint2"], queryFn: () => fetchSprint2() });
-  const [copiedCode, setCopiedCode] = useState(false);
 
   // Light 3D gold ambient — only after mount, never on mobile or reduced-motion
   // (the CSS gold ambient from the shell remains as the fallback).
@@ -135,8 +131,6 @@ function Dashboard() {
   const lockedSet = new Set(data.premiumLockedSubjectIds ?? []);
   if (!profile)
     return <div className="p-8 text-center text-muted-foreground">Profile not found.</div>;
-  const studentAllianceCode =
-    profile.role === "student" ? formatStudentAllianceCode(profile.id) : "";
   // First-run (D-7 / audit §A-5): a brand-new account (no attempt yet) is welcomed,
   // not greeted with « Bon retour » over a column of zeros. `recent` is the
   // attempts feed — empty means the student has never played.
@@ -221,35 +215,6 @@ function Dashboard() {
                 </div>
                 <GoldProgress value={xpPct} aria-label={t.dashboard.xpProgress} />
               </div>
-              {studentAllianceCode && (
-                <div className="mt-4 rounded-xl border border-[color:var(--gold)]/35 bg-[color:var(--gold)]/8 p-3">
-                  <div className="text-2xs uppercase tracking-[0.2em] text-[color:var(--gold)]">
-                    {t.dashboard.allianceCode}
-                  </div>
-                  <div className="mt-1 flex items-center justify-between gap-2">
-                    <div className="font-mono text-xs sm:text-sm text-foreground/90">
-                      {studentAllianceCode}
-                    </div>
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        await navigator.clipboard.writeText(studentAllianceCode);
-                        setCopiedCode(true);
-                        setTimeout(() => setCopiedCode(false), 1200);
-                      }}
-                      className="inline-flex min-h-11 shrink-0 items-center gap-1 rounded-md border border-[color:var(--gold)]/40 px-2.5 py-1 text-xs text-[color:var(--gold)] hover:bg-[color:var(--gold)]/10"
-                    >
-                      {copiedCode ? (
-                        <Check className="h-3.5 w-3.5" />
-                      ) : (
-                        <Copy className="h-3.5 w-3.5" />
-                      )}
-                      {copiedCode ? t.dashboard.allianceCopied : t.dashboard.allianceCopy}
-                    </button>
-                  </div>
-                  <p className="mt-1 text-xs text-muted-foreground">{t.dashboard.allianceHint}</p>
-                </div>
-              )}
             </div>
             <div className="hidden sm:block">
               <div className="text-end text-xs uppercase tracking-widest text-muted-foreground">

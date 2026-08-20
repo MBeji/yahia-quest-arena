@@ -119,10 +119,6 @@ export type TranslationKeys = {
     levelLabel: string;
     noQuestTarget: string;
     xpProgress: string;
-    allianceCode: string;
-    allianceCopy: string;
-    allianceCopied: string;
-    allianceHint: string;
     dailyGoalLabel: string;
     dailyGoalReached: string;
     dailyGoalRemaining: string;
@@ -581,6 +577,10 @@ export type TranslationKeys = {
     pseudoRule: string;
     avatar: string;
     avatarAction: string;
+    allianceCode: string;
+    allianceCopy: string;
+    allianceCopied: string;
+    allianceHint: string;
     password: string;
     passwordAction: string;
     passwordSent: string;
