@@ -6,16 +6,20 @@ import { DEVICE_VIEWPORTS, expectNoHorizontalOverflow } from "../helpers/viewpor
 // controls of the Référence public header stay visible at every size.
 test.describe("Responsive — public pages", () => {
   for (const vp of DEVICE_VIEWPORTS) {
-    test(`${vp.name} (${vp.width}×${vp.height})`, async ({ page, landing, auth }) => {
+    test(`${vp.name} (${vp.width}×${vp.height})`, async ({ page, landing, auth, nav }) => {
       await page.setViewportSize({ width: vp.width, height: vp.height });
 
       // --- Landing ---
       await landing.goto();
       await expect(landing.brand).toBeVisible();
-      // Always-visible key controls at every size: the account CTA + the language
-      // switcher (the login link is a ≥sm enhancement, hidden on phones by design).
+      // Always-visible key controls at every size: the account CTA + the settings
+      // gear (the login link is a ≥sm enhancement, hidden on phones by design).
+      // L'engrenage a remplacé le globe à la consolidation du menu (#787) : c'est
+      // lui qui porte désormais la langue, le thème et le son. On passe par la page
+      // object — la copie en clair du sélecteur de langue faite ici est précisément
+      // ce qui a survécu au renommage et cassé le nightly (issue #733).
       await expect(landing.signupCta).toBeVisible();
-      await expect(page.getByRole("button", { name: /change language/i })).toBeVisible();
+      await expect(nav.settingsTrigger).toBeVisible();
       await expectNoHorizontalOverflow(page);
 
       // The Référence header keeps Programme reachable at every size: the inline
