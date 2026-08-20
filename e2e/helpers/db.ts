@@ -620,8 +620,11 @@ export function createAdminDb(): AdminDb {
           total_count: 1,
           score_pct: 100,
           duration_seconds: 30,
-          // Aucun XP : la porte compte des tentatives DISTINCTES, elle ne lit pas le
-          // score. En laisser sortirait le compte de la progression que le reset pose.
+          // Aucun XP. La porte ne lit ni le score ni la récompense — elle COMPTE des
+          // tentatives distinctes. Et `xp_earned > 0` est justement le signal qui fait
+          // d'une tentative une SOURCE dans la console Économie (economy.server.ts) :
+          // en prêter à des tentatives fabriquées gonflerait ce chiffre sans qu'aucun
+          // XP n'ait été gagné.
           xp_earned: 0,
         })),
       );
