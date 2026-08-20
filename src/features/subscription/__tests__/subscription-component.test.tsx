@@ -30,6 +30,19 @@ describe("SubscriptionPaywall", () => {
     expect(screen.getByText(ADMIN_CONTACT_PHONE)).toBeInTheDocument();
     expect(screen.queryByText(/\b19\b|\b40\b|\b99\b/)).not.toBeInTheDocument();
   });
+
+  // L'USAGE POSITIF de `subscription-paywall`, sans lequel les `toHaveCount(0)` de
+  // `quest.paywall` (e2e) ne mesureraient qu'un vide. La convention d'`e2e/README.md`
+  // veut ce positif sur le même sélecteur ; il ne peut PAS vivre en e2e, parce que la
+  // phase gratuite rend ce mur inatteignable par construction — `is_premium = false`
+  // partout, donc `resolve_exercise_access` ne refuse jamais pour cause d'abonnement
+  // (voir l'en-tête de `e2e/authed/premium-gate.spec.ts`). Le seul étage qui sait rendre
+  // ce composant est celui-ci, et c'est donc ici que le crochet est tenu honnête. Le jour
+  // où l'étude 01 réactive le premium, le positif pourra remonter en e2e.
+  it("carries the data-testid the e2e suite asserts the ABSENCE of", () => {
+    render(<SubscriptionPaywall />);
+    expect(screen.getByTestId("subscription-paywall")).toBeInTheDocument();
+  });
 });
 
 const PARCOURS_OPTIONS: AdminParcoursOption[] = [

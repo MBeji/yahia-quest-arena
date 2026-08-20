@@ -15,7 +15,16 @@ export function SubscriptionPaywall() {
   const t = useT();
 
   return (
-    <div className="mx-auto mt-8 max-w-md rounded-2xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/5 p-6 text-start">
+    // `data-testid` — le seul point d'accroche stable pour affirmer que ce mur ne
+    // s'affiche PAS. Les specs e2e le cherchaient par le mot « premium » quelque part
+    // dans la page : une preuve trop large (elle rougissait sur une infobulle qui aurait
+    // dit « premium ») et trop faible (elle ne désignait pas ce composant-ci). Comme la
+    // phase gratuite rend ce mur inatteignable, c'est le test de composant qui prouve que
+    // le crochet existe — voir `__tests__/subscription-component.test.tsx`.
+    <div
+      data-testid="subscription-paywall"
+      className="mx-auto mt-8 max-w-md rounded-2xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/5 p-6 text-start"
+    >
       <div className="flex items-center gap-2 font-display text-lg font-bold text-[color:var(--neon-gold)]">
         <Crown className="h-5 w-5" /> {t.subscription.premiumTitle}
       </div>

@@ -31,9 +31,10 @@ test.describe("Premium student", () => {
 
     // The entitlement gate is passed → the session resolves to the QCM or, since
     // concours parcours are SCHOOL subjects, the chapter quiz-lock (a separate gate).
-    // Neither is the "Parcours premium" paywall, and there's no beta CTA.
+    // Neither is the "Parcours premium" paywall — and the beta CTA travels with it
+    // (`BetaAccessRequest` is mounted nowhere but inside the paywall), so the single
+    // assertion below covers what two used to claim.
     await expect(quest.options.first().or(quest.quizLock)).toBeVisible({ timeout: 20_000 });
-    await expect(quest.paywallPremiumText).toHaveCount(0);
-    await expect(quest.betaCta).toHaveCount(0);
+    await expect(quest.paywall).toHaveCount(0);
   });
 });

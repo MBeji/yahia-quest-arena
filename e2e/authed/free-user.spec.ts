@@ -26,6 +26,6 @@ test.describe("Free student", () => {
     const { exerciseId } = await adminDb.premiumParcoursExercise();
     await quest.goto(exerciseId);
     await expect(quest.options.first().or(quest.quizLock)).toBeVisible({ timeout: 20_000 });
-    await expect(quest.paywallPremiumText).toHaveCount(0);
+    await expect(quest.paywall).toHaveCount(0);
   });
 });

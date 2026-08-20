@@ -22,7 +22,7 @@ test.describe("Phase gratuite — student WITHOUT an entitlement", () => {
     // parcours are SCHOOL subjects — the chapter comprehension quiz-lock (a
     // SEPARATE, pedagogical gate). Never the premium paywall.
     await expect(quest.options.first().or(quest.quizLock)).toBeVisible({ timeout: 20_000 });
-    await expect(quest.paywallPremiumText).toHaveCount(0);
+    await expect(quest.paywall).toHaveCount(0);
   });
 });
 
@@ -34,6 +34,6 @@ test.describe("Phase gratuite — student WITH a (dormant) entitlement", () => {
 
     await quest.goto(exerciseId);
     await expect(quest.options.first().or(quest.quizLock)).toBeVisible({ timeout: 20_000 });
-    await expect(quest.paywallPremiumText).toHaveCount(0);
+    await expect(quest.paywall).toHaveCount(0);
   });
 });

@@ -4,14 +4,29 @@ import { type Page, type Locator, expect } from "@playwright/test";
 export class QuestPage {
   constructor(private readonly page: Page) {}
 
-  // Premium paywall (SubscriptionPaywall) — shown when a user without an entitlement
-  // opens a premium-parcours mission outside the free preview. Matches both the
-  // "Parcours premium" denial copy and the paywall's "Premium Feature" title.
-  get paywallPremiumText(): Locator {
-    return this.page.getByText(/premium/i).first();
-  }
-  get betaCta(): Locator {
-    return this.page.getByRole("button", { name: /bêta|beta/i });
+  /**
+   * Le mur premium (`SubscriptionPaywall`), affiché à qui ouvre une mission de parcours
+   * premium sans droit. Il n'a que des usages NÉGATIFS — la phase gratuite le rend
+   * inatteignable et c'est précisément ce que les specs épinglent.
+   *
+   * Il visait `getByText(/premium/i).first()` : le mot « premium » n'importe où dans la
+   * page. Trop large — n'importe quelle infobulle contenant ce mot aurait fait rougir un
+   * bon build — et trop faible : rien ne le rattachait au composant, donc rien ne prouvait
+   * qu'il sache le désigner. C'est la famille de l'issue #733 vue par l'autre bout : pas un
+   * sélecteur cassé par la locale, mais un sélecteur qu'aucun test positif ne tient.
+   *
+   * Le positif appairé qu'exige `e2e/README.md` ne peut pas vivre ici : en phase gratuite
+   * `is_premium = false` partout, donc `resolve_exercise_access` ne refuse jamais pour
+   * abonnement et aucune spec ne peut faire apparaître ce mur. Il vit à l'étage qui sait
+   * rendre le composant — `src/features/subscription/__tests__/subscription-component.test.tsx`.
+   * Le jour où l'étude 01 réactive le premium, il pourra remonter ici.
+   *
+   * (L'ancien getter `betaCta` a disparu avec ce changement : le CTA « bêta testeur » est
+   * rendu par `BetaAccessRequest`, monté nulle part ailleurs que DANS ce mur. Son
+   * `toHaveCount(0)` répétait donc celui-ci, sans rien prouver de plus.)
+   */
+  get paywall(): Locator {
+    return this.page.getByTestId("subscription-paywall");
   }
   /** Chapter comprehension-quiz lock screen (school subjects): shown when the
    * mission is reachable (entitlement OK) but the chapter quiz isn't passed yet.
