@@ -6,16 +6,19 @@ import { DEVICE_VIEWPORTS, expectNoHorizontalOverflow } from "../helpers/viewpor
 // controls of the Référence public header stay visible at every size.
 test.describe("Responsive — public pages", () => {
   for (const vp of DEVICE_VIEWPORTS) {
-    test(`${vp.name} (${vp.width}×${vp.height})`, async ({ page, landing, auth }) => {
+    test(`${vp.name} (${vp.width}×${vp.height})`, async ({ page, landing, auth, nav }) => {
       await page.setViewportSize({ width: vp.width, height: vp.height });
 
       // --- Landing ---
       await landing.goto();
       await expect(landing.brand).toBeVisible();
-      // Always-visible key controls at every size: the account CTA + the language
-      // switcher (the login link is a ≥sm enhancement, hidden on phones by design).
+      // Always-visible key controls at every size: the account CTA + the settings
+      // menu (the login link is a ≥sm enhancement, hidden on phones by design).
+      // Reach the gear through the page object, whose selector is a `data-testid`:
+      // a hardcoded aria-label here is exactly what broke when #787 folded the
+      // three pop-overs (language, theme, sound) into a single settings menu.
       await expect(landing.signupCta).toBeVisible();
-      await expect(page.getByRole("button", { name: /change language/i })).toBeVisible();
+      await expect(nav.settingsTrigger).toBeVisible();
       await expectNoHorizontalOverflow(page);
 
       // The Référence header keeps Programme reachable at every size: the inline
