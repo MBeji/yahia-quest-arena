@@ -97,14 +97,21 @@ function Section({
   );
 }
 
-/** Une ligne « intitulé → valeur/action », la maille de base des sections. */
-function Row({ label, children }: { label: string; children: ReactNode }) {
+/**
+ * Une ligne « intitulé → valeur/action », la maille de base des sections.
+ *
+ * `hint` est la note qui passe sous la ligne, sur toute sa largeur : une valeur
+ * que l'élève doit COMPRENDRE avant d'en faire quelque chose (le code d'alliance)
+ * ne peut pas tenir dans l'intitulé sans écraser la maille des voisines.
+ */
+function Row({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) {
   return (
     <div className="flex min-h-11 flex-wrap items-center justify-between gap-2 border-t border-border/50 py-2.5 first:border-t-0">
       <span className="text-sm text-muted-foreground">{label}</span>
       <span className="flex min-w-0 items-center gap-2 text-sm font-semibold text-foreground">
         {children}
       </span>
+      {hint && <span className="basis-full text-xs font-normal text-muted-foreground">{hint}</span>}
     </div>
   );
 }
@@ -261,7 +268,11 @@ function ParametragePage() {
   });
   const current = catalogue?.parcours.find((p) => p.id === currentParcoursId) ?? null;
 
-  // Le code d'alliance est une pure fonction de l'identifiant : rien à charger.
+  // Le code d'alliance est une pure fonction de l'identifiant : rien à charger — et c'est
+  // précisément pourquoi il n'a pas besoin du tableau de bord. Il s'y affichait en double,
+  // en position 2 du bloc héros, à CHAQUE session d'un élève, pour un geste qui se fait une
+  // fois et qui appartient au parent (audit étude 15, constat [MOYEN] de C-1). Le hall n'en
+  // porte plus de copie : cette ligne est le seul endroit où un élève lit son code.
   const allianceCode = role === "student" && user ? formatStudentAllianceCode(user.id) : "";
 
   async function signOut() {
@@ -334,7 +345,7 @@ function ParametragePage() {
             </Link>
           </Row>
           {allianceCode && (
-            <Row label={t.dashboard.allianceCode}>
+            <Row label={t.settings.allianceCode} hint={t.settings.allianceHint}>
               <span className="font-mono text-xs">{allianceCode}</span>
               <button
                 type="button"
@@ -346,7 +357,7 @@ function ParametragePage() {
                 className={ACTION_CLASS}
               >
                 {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                {copied ? t.dashboard.allianceCopied : t.dashboard.allianceCopy}
+                {copied ? t.settings.allianceCopied : t.settings.allianceCopy}
               </button>
             </Row>
           )}
