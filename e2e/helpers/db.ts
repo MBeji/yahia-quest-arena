@@ -59,6 +59,14 @@ export interface AdminDb {
   premiumParcoursExercise(): Promise<{ exerciseId: string; subjectId: string }>;
   /** A PREMIUM concours parcours: its id + the (theme_id, grade_id) its subjects share. */
   premiumConcoursParcours(): Promise<{ id: string; theme: string; grade: string }>;
+  /**
+   * Ids of every parcours still flagged `is_premium = true`. La phase gratuite
+   * (étude 15, lot 2) veut cette liste VIDE, et c'est le seul fait qui la garantit :
+   * `resolve_exercise_access` court-circuite à « ouvert » dès que le drapeau est faux,
+   * donc rien d'autre ne peut faire apparaître le paywall. Rend les ids plutôt qu'un
+   * compte pour qu'un échec NOMME le parcours fautif (issue #733, `premium-gate.spec`).
+   */
+  premiumParcoursIds(): Promise<string[]>;
   /** First non-premium subject under a theme slug (e.g. "culture-generale"). */
   subjectIdByTheme(themeSlug: string): Promise<string | null>;
   /** Theme slugs that currently have at least one subject in the catalogue. */
@@ -320,6 +328,15 @@ export function createAdminDb(): AdminDb {
         theme: data.theme_id as string,
         grade: data.grade_id as string,
       };
+    },
+    async premiumParcoursIds() {
+      const { data, error } = await client
+        .from("parcours")
+        .select("id")
+        .eq("is_premium", true)
+        .order("id");
+      if (error) throw new Error(`premiumParcoursIds: ${error.message}`);
+      return (data ?? []).map((p) => p.id as string);
     },
     async subjectIdByTheme(themeSlug: string) {
       // themes.id IS the slug ('ecole-tn', 'culture-generale'…), and subjects.theme_id
