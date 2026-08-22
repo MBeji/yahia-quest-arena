@@ -23,7 +23,8 @@ test.describe("Admin", () => {
     await adminSubscriptions.goto();
     await expect(page).toHaveURL(/\/admin\/subscriptions/);
     // Le garde ne refuse qu'une fois le rôle CONNU (`role !== null`) : avant ça la route
-    // rend la console pour tout le monde, refus compris. L'entrée « Console » de la nav
+    // rend la console à tout le monde — y compris à qui sera refusé une seconde plus
+    // tard, et l'avis de refus, lui, n'est alors nulle part. L'entrée « Console » de la nav
     // n'existe que pour un admin — c'est donc elle qui prouve que le rôle est résolu, ET
     // résolu admin. Sans cette attente, le `toHaveCount(0)` d'en dessous serait vrai au
     // premier paint, avant que le refus ait eu la moindre chance de paraître : un vert
