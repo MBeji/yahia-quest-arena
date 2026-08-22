@@ -50,6 +50,7 @@ export function QuestResultScreen({
   onLevelUpComplete,
   onReplay,
   renderResultFooter,
+  renderTutor,
   resolvePrompt,
   getDisplayChoice,
 }: {
@@ -72,6 +73,8 @@ export function QuestResultScreen({
   showLevelUp: boolean;
   onLevelUpComplete: () => void;
   onReplay: () => void;
+  /** Étude 11 lot 1 — le slot du tuteur, traversant depuis la route. */
+  renderTutor?: (questionId: string) => ReactNode;
   renderResultFooter: (ctx: {
     exerciseId: string;
     subjectId: string | null;
@@ -353,6 +356,7 @@ export function QuestResultScreen({
               resolveMisconceptionLabel={resolveMisconceptionLabel}
               onTrain={onTrain}
               trainLabel={t.quest.reviewTrainCta}
+              renderTutor={renderTutor}
             />
           )}
         </div>

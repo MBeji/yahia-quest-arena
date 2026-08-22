@@ -1,4 +1,5 @@
 import type { DuelTranslations } from "./duel.types";
+import type { TutorTranslations } from "./tutor.types";
 
 export type Locale = "en" | "fr" | "ar";
 
@@ -387,6 +388,9 @@ export type TranslationKeys = {
   };
   // Duels 1v1 (étude 05) — keys in ./duel.types.ts (keeps this file under max-lines).
   duel: DuelTranslations;
+
+  // Tuteur « El Ostedh » (étude 11 lot 1) — clés dans ./tutor.types.ts.
+  tutor: TutorTranslations;
   // Subscription / premium
   subscription: {
     premiumTitle: string;

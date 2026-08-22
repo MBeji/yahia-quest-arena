@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { BookOpen, Dumbbell } from "lucide-react";
 
@@ -39,6 +40,7 @@ export function QuestReviewList({
   resolveMisconceptionLabel,
   onTrain,
   trainLabel,
+  renderTutor,
 }: {
   review: PlayerReviewItem[];
   labels: {
@@ -67,6 +69,13 @@ export function QuestReviewList({
    */
   onTrain?: (competency: string) => void;
   trainLabel?: string;
+  /**
+   * Étude 11 lot 1 — le slot du tuteur, injecté par la ROUTE. Le composant ne
+   * sait pas qu'une IA existe : il reçoit un nœud et le pose sous le bloc
+   * d'erreur. Absent = aucun tuteur, ce qui reste un rendu valide — c'est le
+   * mode NORMAL tant qu'aucune famille n'a branché de clé (é29 R-1).
+   */
+  renderTutor?: (questionId: string) => ReactNode;
 }) {
   return (
     <div className="mt-8 text-start">
@@ -126,6 +135,7 @@ export function QuestReviewList({
               resolveMisconceptionLabel={resolveMisconceptionLabel}
               onTrain={onTrain}
               trainLabel={trainLabel}
+              tutor={renderTutor?.(item.questionId) ?? null}
             />
           </div>
         ))}
@@ -144,6 +154,7 @@ function MistakeBlock({
   resolveMisconceptionLabel,
   onTrain,
   trainLabel,
+  tutor,
 }: {
   item: PlayerReviewItem;
   labels: { reviewMistakeTitle: string; reviewCourseCta: string };
@@ -155,6 +166,8 @@ function MistakeBlock({
    */
   onTrain?: (competency: string) => void;
   trainLabel?: string;
+  /** Le panneau du tuteur, déjà construit par la route (étude 11 lot 1). */
+  tutor?: ReactNode;
 }) {
   // R-A1.2-2 : rien sur une bonne réponse. Le serveur ne tague déjà que les
   // réponses fausses (A1.2a) ; la garde est ici aussi, pour que le composant
@@ -169,7 +182,9 @@ function MistakeBlock({
   // confusion de vocabulaire n'en a pas, et proposer un exercice au hasard serait
   // pire que de ne rien proposer.
   const competency = onTrain && trainLabel ? (item.misconceptionCompetency ?? null) : null;
-  if (!label && !chapterId && !competency) return null;
+  // Le tuteur compte comme une chose à dire : une question NON taguée n'a ni
+  // libellé ni compétence, et pourtant « Demander au Prof » y a tout son sens.
+  if (!label && !chapterId && !competency && !tutor) return null;
 
   return (
     <div
@@ -210,6 +225,7 @@ function MistakeBlock({
           </button>
         )}
       </div>
+      {tutor}
     </div>
   );
 }
