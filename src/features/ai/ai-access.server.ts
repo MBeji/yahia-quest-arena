@@ -21,6 +21,22 @@ import { failWithClientError } from "@/shared/lib/safe-error";
 import { AI_FEATURES, TUTOR_HARD_DAILY_CAP } from "@/shared/constants/ai";
 import { AI_MODE_ERROR_PREFIX } from "./ai-mode-status";
 
+type AiSurfacesReader = {
+  from: (table: "ai_student_access") => {
+    select: (columns: string) => {
+      eq: (
+        column: string,
+        value: string,
+      ) => {
+        maybeSingle: () => PromiseLike<{
+          data: { enabled: boolean; features: string[] } | null;
+          error: { message: string } | null;
+        }>;
+      };
+    };
+  };
+};
+
 type AiAccessRpcClient = {
   rpc: (
     fn: "get_ai_students" | "set_ai_student_access" | "resolve_ai_access",
@@ -123,4 +139,30 @@ export const setAiStudentAccess = createServerFn({ method: "POST" })
 
     logger.info("ai.access", { action: "set", enabled: data.enabled, count: data.features.length });
     return { ok: true } as const;
+  });
+
+/**
+ * Les surfaces IA actives POUR L'APPELANT — la lecture que fait un élève, pas
+ * son porteur de clé.
+ *
+ * C'est la requête de R-1 côté élève : une surface qui n'est pas dans cette
+ * liste ne s'affiche pas du tout. Elle lit `ai_student_access` sous la RLS de
+ * l'élève (sa propre ligne), donc elle ne révèle rien d'un autre compte — et
+ * surtout, elle ne porte AUCUN montant (R-14a).
+ */
+export const getAiStudentSurfaces = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<{ enabled: boolean; features: string[] }> => {
+    // La table est postérieure aux types Supabase générés : contrat figé ici,
+    // même patron que `exam.server.ts`. Deux colonnes, jamais une de plus — et
+    // surtout jamais `owner_user_id`, qui n'a rien à faire chez l'élève.
+    const client = context.supabase as unknown as AiSurfacesReader;
+    const { data: row, error } = await client
+      .from("ai_student_access")
+      .select("enabled, features")
+      .eq("student_user_id", context.userId)
+      .maybeSingle();
+
+    if (error || !row) return { enabled: false, features: [] };
+    return { enabled: row.enabled === true, features: row.features ?? [] };
   });

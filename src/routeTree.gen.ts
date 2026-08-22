@@ -21,6 +21,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedDuelRouteImport } from './routes/_authenticated/duel'
 import { Route as AuthenticatedDungeonRouteImport } from './routes/_authenticated/dungeon'
 import { Route as AuthenticatedExamensRouteImport } from './routes/_authenticated/examens'
+import { Route as AuthenticatedForgeRouteImport } from './routes/_authenticated/forge'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedParametrageRouteImport } from './routes/_authenticated/parametrage'
@@ -108,6 +109,11 @@ const AuthenticatedDungeonRoute = AuthenticatedDungeonRouteImport.update({
 const AuthenticatedExamensRoute = AuthenticatedExamensRouteImport.update({
   id: '/examens',
   path: '/examens',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedForgeRoute = AuthenticatedForgeRouteImport.update({
+  id: '/forge',
+  path: '/forge',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedLeaderboardRoute =
@@ -289,6 +295,7 @@ export interface FileRoutesByFullPath {
   '/duel': typeof AuthenticatedDuelRouteWithChildren
   '/dungeon': typeof AuthenticatedDungeonRoute
   '/examens': typeof AuthenticatedExamensRoute
+  '/forge': typeof AuthenticatedForgeRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/parametrage': typeof AuthenticatedParametrageRoute
@@ -331,6 +338,7 @@ export interface FileRoutesByTo {
   '/duel': typeof AuthenticatedDuelRouteWithChildren
   '/dungeon': typeof AuthenticatedDungeonRoute
   '/examens': typeof AuthenticatedExamensRoute
+  '/forge': typeof AuthenticatedForgeRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/parametrage': typeof AuthenticatedParametrageRoute
@@ -375,6 +383,7 @@ export interface FileRoutesById {
   '/_authenticated/duel': typeof AuthenticatedDuelRouteWithChildren
   '/_authenticated/dungeon': typeof AuthenticatedDungeonRoute
   '/_authenticated/examens': typeof AuthenticatedExamensRoute
+  '/_authenticated/forge': typeof AuthenticatedForgeRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/parametrage': typeof AuthenticatedParametrageRoute
@@ -420,6 +429,7 @@ export interface FileRouteTypes {
     | '/duel'
     | '/dungeon'
     | '/examens'
+    | '/forge'
     | '/leaderboard'
     | '/onboarding'
     | '/parametrage'
@@ -462,6 +472,7 @@ export interface FileRouteTypes {
     | '/duel'
     | '/dungeon'
     | '/examens'
+    | '/forge'
     | '/leaderboard'
     | '/onboarding'
     | '/parametrage'
@@ -505,6 +516,7 @@ export interface FileRouteTypes {
     | '/_authenticated/duel'
     | '/_authenticated/dungeon'
     | '/_authenticated/examens'
+    | '/_authenticated/forge'
     | '/_authenticated/leaderboard'
     | '/_authenticated/onboarding'
     | '/_authenticated/parametrage'
@@ -630,6 +642,13 @@ declare module '@tanstack/react-router' {
       path: '/examens'
       fullPath: '/examens'
       preLoaderRoute: typeof AuthenticatedExamensRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/forge': {
+      id: '/_authenticated/forge'
+      path: '/forge'
+      fullPath: '/forge'
+      preLoaderRoute: typeof AuthenticatedForgeRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/leaderboard': {
@@ -864,6 +883,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedDuelRoute: typeof AuthenticatedDuelRouteWithChildren
   AuthenticatedDungeonRoute: typeof AuthenticatedDungeonRoute
   AuthenticatedExamensRoute: typeof AuthenticatedExamensRoute
+  AuthenticatedForgeRoute: typeof AuthenticatedForgeRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedParametrageRoute: typeof AuthenticatedParametrageRoute
@@ -891,6 +911,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDuelRoute: AuthenticatedDuelRouteWithChildren,
   AuthenticatedDungeonRoute: AuthenticatedDungeonRoute,
   AuthenticatedExamensRoute: AuthenticatedExamensRoute,
+  AuthenticatedForgeRoute: AuthenticatedForgeRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedParametrageRoute: AuthenticatedParametrageRoute,

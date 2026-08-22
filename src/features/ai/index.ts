@@ -9,10 +9,25 @@
 
 export {
   AI_ACTIVATABLE_FEATURES,
+  getAiStudentSurfaces,
   getAiStudents,
   setAiStudentAccess,
   type AiStudentAccess,
 } from "./ai-access.server";
+
+export {
+  forgeQuiz,
+  getForgedQuiz,
+  gradeForgedQuiz,
+  listForgedQuizzes,
+  type ForgedQuizResult,
+  type ForgedQuizSummary,
+  type ForgeResult,
+  type ServedForgedQuiz,
+} from "./forge.server";
+
+export { ForgeEntry } from "./components/forge-entry";
+export { ForgePanel } from "./components/forge-panel";
 
 export { callAi, type AiCallOutcome, type AiCallRequest } from "./ai-call.server";
 

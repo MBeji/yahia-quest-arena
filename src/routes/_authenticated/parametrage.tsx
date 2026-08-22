@@ -48,7 +48,7 @@ import {
 } from "@/features/auth";
 import { getParcours } from "@/features/dashboard";
 import { EnablePushCard } from "@/features/notifications";
-import { AiModeSection } from "@/features/ai";
+import { AiModeSection } from "@/features/ai/components/ai-mode-section";
 import { formatStudentAllianceCode } from "@/features/parent-report";
 import { useI18n, useT } from "@/lib/i18n";
 import { parcoursName } from "@/shared/lib/parcours-locale";

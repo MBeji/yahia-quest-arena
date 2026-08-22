@@ -55,3 +55,24 @@ test.describe("Mode IA — le porteur de clé doit pouvoir atteindre l'écran", 
     await expect(page.getByText(/access denied|accès refusé/i)).toHaveCount(0);
   });
 });
+
+test.describe("La Forge — invisible tant qu'elle n'est pas activée (R-1)", () => {
+  test.use({ storageState: STORAGE_STATE.free });
+
+  test("aucune entrée de Forge sur le tableau de bord sans activation", async ({ page }) => {
+    await page.goto("/dashboard");
+    await page.waitForLoadState("networkidle");
+    // Le tableau de bord est bien rendu — c'est l'ABSENCE qu'on mesure.
+    await expect(page.getByTestId("forge-entry")).toHaveCount(0);
+  });
+
+  test("/forge renvoie l'élève chez lui plutôt que de lui montrer un écran vide", async ({
+    page,
+  }) => {
+    await page.goto("/forge");
+    await page.waitForLoadState("networkidle");
+    // R-1 : la page n'existe pas pour qui n'a pas la Forge. Pas de « demande à
+    // tes parents », pas de bouton grisé — une redirection.
+    await expect(page).toHaveURL(/\/dashboard/);
+  });
+});

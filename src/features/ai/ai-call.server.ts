@@ -125,6 +125,19 @@ export type AiCallRequest = {
    * entier plutôt qu'une fois par candidat.
    */
   readonly energyCost?: number;
+  /**
+   * La surface contre laquelle l'ACCÈS est résolu, quand elle diffère de celle
+   * qui est journalisée. Absent ⇒ `feature`.
+   *
+   * Un seul cas aujourd'hui, et il est structurel : la double résolution de la
+   * Forge se journalise en `forge_solve` — pour que la comptabilité distingue
+   * les deux moitiés de la dépense (annexe A) — mais elle s'autorise sur
+   * `forge`, parce que le porteur active « la Forge », pas « la seconde moitié
+   * de la Forge ». Sans cette distinction, `forge_solve` devrait figurer dans
+   * l'écran d'activation, et un porteur pourrait activer la génération sans sa
+   * vérification : exactement ce que R-18bis interdit.
+   */
+  readonly accessFeature?: AiFeature;
 };
 
 export type AiCallOutcome =
@@ -233,7 +246,7 @@ export async function callAi(request: AiCallRequest): Promise<AiCallOutcome> {
   // 1. La résolution — R-1/R-2/R-3/R-9, décidées en SQL.
   const { data: rows, error: resolveError } = await rpc().rpc("resolve_ai_access", {
     p_student: studentUserId,
-    p_feature: feature,
+    p_feature: request.accessFeature ?? feature,
   });
   if (resolveError) {
     logger.error("ai.resolve", { error: errorMessage(resolveError), feature });
