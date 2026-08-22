@@ -1089,6 +1089,7 @@ export const ar: TranslationKeys = {
     monthlyBudget: "السقف الشهري ($)",
     budgetHint: "بعد السقف لا يُرسل أي طلب، ويعود التلميذ إلى التطبيق دون ذكاء اصطناعي.",
     dailyReference: "مرجع يومي ($)",
+    spendRefShort: "مرجع",
     monthlyReference: "مرجع شهري ($)",
     budgetReferenceHint:
       "هذه المبالغ لا توقف شيئًا: إنها المرجع الذي تستعمله التنبيهات. فعّل الأسقف أعلاه لكي توقف الطلبات فعلًا.",

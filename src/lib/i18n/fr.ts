@@ -1117,6 +1117,7 @@ export const fr: TranslationKeys = {
     monthlyBudget: "Plafond par mois ($)",
     budgetHint: "Au-delà, aucun appel n'est émis et l'élève retrouve l'application sans IA.",
     dailyReference: "Repère par jour ($)",
+    spendRefShort: "repère",
     monthlyReference: "Repère par mois ($)",
     budgetReferenceHint:
       "Ces montants ne coupent rien : ils servent de repère aux alertes. Armez les plafonds ci-dessus pour qu'ils interrompent les appels.",
