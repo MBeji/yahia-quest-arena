@@ -10,8 +10,9 @@ import { type Page, type Locator } from "@playwright/test";
  * (`mission-locked`), per-parcours premium locks ("à débloquer"), and the chapter
  * "✓ passed" badge — is NOT rendered on this Référence hub. That gameplay layer is
  * deferred to L2 (re-enrichment of the connected hub); meanwhile the quiz + premium
- * gates remain enforced SERVER-SIDE on `/quest` (asserted by quiz-gate / premium-gate
- * via the QuestPage's quizLock / paywall).
+ * gates remain enforced SERVER-SIDE on `/quest`: quiz-gate asserts the quiz lock via
+ * `QuestPage.quizLock`, et premium-gate vérifie la phase gratuite à sa source — aucun
+ * parcours n'est premium — puisque le paywall lui-même est inatteignable (issue #733).
  */
 export class SubjectPage {
   constructor(private readonly page: Page) {}

@@ -54,19 +54,35 @@ scripts/e2e/
 - **Every negative assertion needs a paired positive one**, on the SAME Page Object
   getter. A selector used only in `toHaveCount(0)` reports green when it has gone
   stale — it measures a void, not an absence. That is issue #733, and it has bitten
-  **three** times so far: `dashboard.adminNavLink` (fixed in #796), `dungeon.enterButton`
-  after it (#797), and the `/admin/subscriptions` refusal notice (#805). That last was
-  written `/access denied|accès refusé/i` while the rendered copy comes from
-  `t.subscription.accessDenied` — « Accès réservé aux administrateurs. » in French, the
-  app default — so it could match nobody in any of the three languages. Each fix pairs
-  the getter BOTH ways: `adminSubscriptions.accessDenied` is proven matchable by
-  `authorization.spec` and proven absent by `admin-and-parent.spec`; `consolePanel` is
-  the mirror.
-- **A negative with no observable surface can't be paired — so don't write one.**
+  **three** times: `dashboard.adminNavLink` (fixed in #796), `dungeon.enterButton` after
+  it (#797), and the `/admin/subscriptions` refusal notice (#805) — that last one written
+  `/access denied|accès refusé/i` while the rendered copy comes from
+  `t.subscription.accessDenied`, « Accès réservé aux administrateurs. » in French, the app
+  default, so it could match nobody in any of the three languages. Each fix pairs the
+  getter BOTH ways: `adminSubscriptions.accessDenied` is proven matchable by
+  `authorization.spec` and proven absent by `admin-and-parent.spec`; `consolePanel` is the
+  mirror.
+- **And when no positive is WRITABLE, the negative doesn't belong in this tier at all.**
+  A surface the current phase makes structurally unreachable cannot be paired: the quest
+  paywall (`SubscriptionPaywall`) only mounts on a `resolve_exercise_access` refusal, and
+  no account can provoke one while every `parcours.is_premium` is false. Its two getters
+  — `paywallPremiumText` and the `betaCta` living _inside_ it — carried five negatives
+  that nothing could ever turn red; both are deleted. The rule they leave behind:
+  **assert the cause, not the absence of its consequence.** The free-phase invariant is
+  now `adminDb.premiumParcoursIds()` being empty (`premium-gate.spec.ts`) — one row
+  flipped back to premium turns it red, and the failure names the parcours. The dormant
+  UI keeps its _paired_ coverage at the **unit** tier
+  (`src/features/subscription/__tests__/`), the only tier that can render it on demand.
+  Do **not** stage the positive by flipping a global catalogue flag: the suite runs
+  `fullyParallel` and the neighbouring specs read that same row.
+
+  Same verdict, other shape (#805): a surface that is never RENDERED at all.
   `/parent-report` refuses server-side (`getLinkedStudents` throws) and the route has no
-  `isError` branch, so no refusal copy ever reaches the page. The third `toHaveCount(0)`
-  of #733 was therefore dropped, not re-aimed: what IS observable there — a student
-  landing on the alliance-link UI with nobody linked — is what `authorization.spec` pins.
+  `isError` branch, so no refusal copy ever reaches the page — a `toHaveCount(0)` aimed at
+  one measures a void by construction. Dropped, not re-aimed: what IS observable there,
+  a student landing on the alliance-link UI with nobody linked, is what
+  `authorization.spec` pins.
+
 - **Specs read like scenarios**: `await dashboard.goto(); await expect(...)`. No
   raw `page.locator(...)` chains in specs — add a Page Object method/getter instead.
 - **Auth** is declared per spec: `test.use({ storageState: STORAGE_STATE.<role> })`.
