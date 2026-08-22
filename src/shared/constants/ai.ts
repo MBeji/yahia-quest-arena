@@ -46,6 +46,41 @@ export const AI_FEATURES = [
 
 export type AiFeature = (typeof AI_FEATURES)[number];
 
+/**
+ * Surfaces INTERNES : le produit les émet lui-même, un parent ne les active
+ * jamais. `verify` vérifie une clé à sa saisie ; `forge_solve` est la seconde
+ * moitié de la Forge, pas une fonctionnalité qu'on choisit.
+ */
+export const AI_INTERNAL_FEATURES = ["verify", "forge_solve"] as const;
+
+/**
+ * LES SURFACES QUI ONT RÉELLEMENT UN ÉCRAN — la seule liste qu'un parent voit.
+ * ---------------------------------------------------------------------------
+ * `AI_FEATURES` énumère le vocabulaire de l'étude, é11 compris ; il sert à la
+ * comptabilité, aux bornes de tokens et au CHECK en base. Il ne dit RIEN de ce
+ * qui est jouable.
+ *
+ * La distinction n'est pas cosmétique : proposer « Explication » à un parent
+ * alors qu'aucun écran ne la consomme lui fait cocher un interrupteur qui
+ * n'allume rien, puis conclure que le mode est cassé. C'est la même faute que
+ * l'écran qui n'annonçait que deux fournisseurs quand le moteur en acceptait
+ * n'importe lequel — un écran qui promet ce que le moteur ne fait pas.
+ *
+ * ⚠️ AJOUTER UNE ENTRÉE ICI EST LA DERNIÈRE ÉTAPE DU LOT QUI LIVRE SON ÉCRAN,
+ * jamais la première. Tant qu'une surface n'est pas dans cette liste, elle
+ * n'est ni proposée à l'écran ni acceptée par le serveur — donc aucune ligne
+ * d'activation morte ne peut entrer en base.
+ *
+ * État au 2026-08-22 : seule la Forge (étude 29 lot 4) est livrée. Les sept
+ * autres attendent leurs lots de l'étude 11.
+ */
+export const AI_LIVE_FEATURES = ["forge"] as const satisfies readonly Exclude<
+  AiFeature,
+  (typeof AI_INTERNAL_FEATURES)[number]
+>[];
+
+export type AiLiveFeature = (typeof AI_LIVE_FEATURES)[number];
+
 /** Qui paie l'appel. Miroir du CHECK de `ai_usage_events.payer` (R-7). */
 export const AI_PAYERS = ["family", "platform"] as const;
 export type AiPayer = (typeof AI_PAYERS)[number];

@@ -18,7 +18,7 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { logger } from "@/shared/lib/logger";
 import { failWithClientError } from "@/shared/lib/safe-error";
-import { AI_FEATURES, TUTOR_HARD_DAILY_CAP } from "@/shared/constants/ai";
+import { AI_LIVE_FEATURES, TUTOR_HARD_DAILY_CAP } from "@/shared/constants/ai";
 import { AI_MODE_ERROR_PREFIX } from "./ai-mode-status";
 
 type AiSurfacesReader = {
@@ -90,13 +90,13 @@ export const getAiStudents = createServerFn({ method: "GET" })
   });
 
 /**
- * Les surfaces activables par le porteur. Sous-ensemble de `AI_FEATURES` : on
- * n'active pas `verify` (c'est le geste du porteur lui-même) ni `forge_solve`
- * (c'est la seconde moitié de `forge`, pas un choix).
+ * Ce qu'un parent peut activer : les surfaces qui ont un écran, et elles seules
+ * ({@link AI_LIVE_FEATURES}). Le serveur applique la même liste que l'écran —
+ * sans quoi une requête forgée pourrait inscrire en base l'activation d'une
+ * surface qui n'existe pas, et `resolve_ai_access` accorderait un accès vers
+ * nulle part.
  */
-export const AI_ACTIVATABLE_FEATURES = AI_FEATURES.filter(
-  (f) => f !== "verify" && f !== "forge_solve",
-);
+export const AI_ACTIVATABLE_FEATURES = AI_LIVE_FEATURES;
 
 export const setAiStudentAccess = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
