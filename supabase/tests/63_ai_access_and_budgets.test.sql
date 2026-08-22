@@ -23,7 +23,7 @@
 
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(30);
+SELECT plan(36);
 
 -- ---------------------------------------------------------
 -- Fixtures : un porteur (parent), son élève lié, un élève NON lié.
@@ -205,6 +205,14 @@ DELETE FROM public.ai_energy_ledger
 -- ---------------------------------------------------------
 -- 4. LA COUPURE — R-11, et son atomicité.
 -- ---------------------------------------------------------
+-- ⚠️ Depuis le 2026-08-22, `limits_enforced` vaut false PAR DÉFAUT : les
+-- plafonds mesurent et alertent, ils ne coupent plus. Cette section teste la
+-- coupure, donc elle l'ARME explicitement. Sans cette ligne, chaque assertion
+-- de refus ci-dessous passerait au vert pour la mauvaise raison — l'appel
+-- serait accordé et le test le lirait comme « pas de dépassement ».
+UPDATE public.ai_credentials SET limits_enforced = true
+ WHERE owner_user_id = 'c9000000-0000-4000-8000-000000000001';
+
 -- Un appel sous le plafond passe.
 SELECT is(
   (SELECT granted FROM public.reserve_ai_spend(
@@ -274,6 +282,93 @@ SELECT is(
 
 DELETE FROM public.ai_spend_ledger
  WHERE owner_user_id = 'c9000000-0000-4000-8000-000000000001' AND day = CURRENT_DATE - 1;
+
+-- ---------------------------------------------------------
+-- 4bis. LE NOUVEAU DÉFAUT — on compte, on alerte, on ne coupe pas.
+--
+-- Décision du 2026-08-22 : `limits_enforced` est false à la création. Ce qui
+-- suit garde les DEUX moitiés de cette décision, parce qu'une seule ne vaut
+-- rien : le dépassement passe, ET il reste inscrit au grand livre. Une version
+-- qui cesserait d'écrire rendrait la console (R-12), `/admin/ia` et l'alerte
+-- d'anomalie aveugles — or l'anomalie est le dernier garde-fou quand plus rien
+-- ne coupe.
+-- ---------------------------------------------------------
+UPDATE public.ai_credentials SET limits_enforced = false
+ WHERE owner_user_id = 'c9000000-0000-4000-8000-000000000001';
+
+DELETE FROM public.ai_spend_ledger
+ WHERE owner_user_id = 'c9000000-0000-4000-8000-000000000001';
+DELETE FROM public.ai_energy_ledger
+ WHERE student_user_id = 'c9000000-0000-4000-8000-000000000002';
+
+SELECT is(
+  (SELECT granted FROM public.reserve_ai_spend(
+     'c9000000-0000-4000-8000-000000000001'::uuid,
+     'c9000000-0000-4000-8000-000000000002'::uuid,
+     9000000, 1)),
+  true,
+  'plafonds désarmés : 9 $ sur un repère de 2 $/jour PASSE — plus de coupure'
+);
+
+SELECT is(
+  (SELECT reserved_micros FROM public.ai_spend_ledger
+    WHERE owner_user_id = 'c9000000-0000-4000-8000-000000000001' AND day = CURRENT_DATE),
+  9000000::BIGINT,
+  '… et la dépense est quand même COMPTÉE : sans elle, l''alerte d''anomalie serait aveugle'
+);
+
+SELECT is(
+  (SELECT granted FROM public.reserve_ai_spend(
+     'c9000000-0000-4000-8000-000000000001'::uuid,
+     'c9000000-0000-4000-8000-000000000002'::uuid,
+     0, 99)),
+  true,
+  'l''énergie ne coupe plus non plus (99 quiz d''un coup) — la décision portait sur les DEUX'
+);
+
+SELECT is(
+  (SELECT spent FROM public.ai_energy_ledger
+    WHERE student_user_id = 'c9000000-0000-4000-8000-000000000002' AND day = CURRENT_DATE),
+  100,
+  '… et le compteur d''énergie tourne toujours'
+);
+
+-- L'ACTIVATION, elle, reste opposable. Ce n'est pas un plafond : un élève que
+-- personne n'a activé ne passe pas, plafonds armés ou non (R-3).
+SELECT is(
+  (SELECT reason FROM public.reserve_ai_spend(
+     'c9000000-0000-4000-8000-000000000001'::uuid,
+     '00000000-0000-4000-8000-0000000000ff'::uuid,
+     100, 1)),
+  'AI_MODE_OFF',
+  'désarmer les plafonds n''ouvre PAS le mode : un élève non activé reste refusé'
+);
+
+-- Et le frein se réarme, sans redéploiement : c'est tout l'intérêt d'en avoir
+-- fait une colonne plutôt qu'une suppression de code.
+UPDATE public.ai_credentials SET limits_enforced = true
+ WHERE owner_user_id = 'c9000000-0000-4000-8000-000000000001';
+
+SELECT is(
+  (SELECT reason FROM public.reserve_ai_spend(
+     'c9000000-0000-4000-8000-000000000001'::uuid,
+     'c9000000-0000-4000-8000-000000000002'::uuid,
+     100, 1)),
+  'AI_BUDGET_REACHED',
+  'réarmé, le plafond coupe de nouveau — le frein est resté là, à un interrupteur près'
+);
+
+DELETE FROM public.ai_spend_ledger
+ WHERE owner_user_id = 'c9000000-0000-4000-8000-000000000001';
+DELETE FROM public.ai_energy_ledger
+ WHERE student_user_id = 'c9000000-0000-4000-8000-000000000002';
+
+-- La suite reprend l'état que la section 4 avait laissé : une réservation de
+-- 0,50 $ et 1 point d'énergie, que la section 5 solde puis rembourse.
+SELECT public.reserve_ai_spend(
+  'c9000000-0000-4000-8000-000000000001'::uuid,
+  'c9000000-0000-4000-8000-000000000002'::uuid,
+  500000, 1);
 
 -- ---------------------------------------------------------
 -- 5. Solde et remboursement.

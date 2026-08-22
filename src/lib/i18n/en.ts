@@ -1083,6 +1083,8 @@ export const en: TranslationKeys = {
     revoked: "Key revoked.",
     provider: "Provider",
     providerAnthropic: "Anthropic",
+    providerHint:
+      'These shortcuts fill in the address and the models — you can change everything afterwards. "Other" accepts any OpenAI-compatible API (Mistral, OpenRouter, Groq, Qwen…), as long as it is https and publicly reachable.',
     providerCompatible: "OpenAI-compatible",
     baseUrl: "API address",
     baseUrlHint: "Must be https, on port 443, and publicly reachable.",
@@ -1097,6 +1099,15 @@ export const en: TranslationKeys = {
     dailyBudget: "Daily cap ($)",
     monthlyBudget: "Monthly cap ($)",
     budgetHint: "Past the cap no call is made, and the student gets the app back without AI.",
+    dailyReference: "Daily reference ($)",
+    monthlyReference: "Monthly reference ($)",
+    budgetReferenceHint:
+      "These amounts cut nothing: they are the reference the alerts use. Arm the caps above to make them stop calls.",
+    limitsTitle: "Consumption caps",
+    limitsOnHint:
+      "Past the cap no call is made — neither for money, nor for the number of quizzes per day.",
+    limitsOffHint:
+      "No automatic cut-off. Spending is still counted and you are still alerted (50 / 80 / 100 % of the reference, and as soon as a day exceeds 3× the usual), but nothing stops on its own — it is your bill at the provider.",
     estimateNotice: "Estimate — the bill that counts is your provider's. We take nothing.",
     pricesAsOf: "Price list as of {date}.",
     doubleSolve: "Double-check every generated question",

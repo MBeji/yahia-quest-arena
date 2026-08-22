@@ -37,6 +37,12 @@ export type AiCredentialView = {
   readonly doubleSolve: boolean;
   /** R-20 : le texte de consentement a changé depuis la signature — il faut le redemander. */
   readonly consentStale: boolean;
+  /**
+   * Les plafonds argent + énergie COUPENT-ILS ? Défaut `false` depuis le
+   * 2026-08-22 : ils sont mesurés et alertés, ils n'interrompent plus. Le
+   * porteur peut les réarmer depuis les Réglages, sans redéploiement.
+   */
+  readonly limitsEnforced: boolean;
 };
 
 export type AiModeStatus = {

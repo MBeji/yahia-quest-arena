@@ -113,9 +113,18 @@ export type AiModelPrice = {
  * Grille des modèles connus, relevée le {@link AI_MODEL_PRICES_AS_OF}.
  *
  * ⚠️ Ce n'est PAS une liste d'autorisation : une famille peut brancher un modèle
- * absent d'ici (Q-4). Un modèle inconnu est facturé au tarif de repli de son
- * fournisseur ({@link AI_UNKNOWN_MODEL_PRICE}), jamais à zéro — un prix inconnu
- * ne doit pas ouvrir une vanne (§3.7).
+ * absent d'ici (Q-4). Un modèle inconnu est facturé au tarif de repli
+ * ({@link AI_UNKNOWN_MODEL_PRICE}), jamais à zéro — un prix inconnu ne doit pas
+ * ouvrir une vanne (§3.7).
+ *
+ * MAIS LE REPLI N'EST PAS GRATUIT, ET C'EST POURQUOI CETTE GRILLE DOIT ÊTRE LARGE
+ * -------------------------------------------------------------------------
+ * `reserve_ai_spend` coupe sur l'ESTIMATION, avant l'appel (D-8). Un fournisseur
+ * bon marché absent d'ici est donc estimé au tarif Opus et coupé bien avant son
+ * plafond réel : DeepSeek V4-Flash à 0,22 $/Mtok estimé à 5 $/Mtok, c'est une
+ * famille coupée après ~4 % de sa dépense. Le repli protège du dépassement ; il
+ * ne remplace pas un tarif connu. Tout fournisseur qu'on NOMME dans
+ * {@link AI_PROVIDER_PRESETS} doit avoir ses modèles ici.
  */
 export const AI_MODEL_PRICES: Readonly<Record<string, AiModelPrice>> = {
   // — Anthropic (grille API première partie) —
@@ -129,6 +138,29 @@ export const AI_MODEL_PRICES: Readonly<Record<string, AiModelPrice>> = {
   //   dit (R-12). La facture qui fait foi reste celle du fournisseur.
   "gpt-5-mini": { inputPerMTokUsd: 0.25, outputPerMTokUsd: 2, cachedInputPerMTokUsd: 0.03 },
   "gpt-5": { inputPerMTokUsd: 1.25, outputPerMTokUsd: 10, cachedInputPerMTokUsd: 0.13 },
+  // — DeepSeek. Tarif HEURES PLEINES, délibérément : DeepSeek facture moitié
+  //   prix hors des créneaux 01:00-04:00 et 06:00-10:00 UTC, et une grille
+  //   statique ne sait pas quelle heure il est au moment de la RÉSERVATION.
+  //   Prendre le haut des deux surestime d'un facteur 2 au pire ; prendre le bas
+  //   livrerait la facture surprise que RISK-2 interdit.
+  "deepseek-v4-flash": {
+    inputPerMTokUsd: 0.44,
+    outputPerMTokUsd: 1.32,
+    cachedInputPerMTokUsd: 0.007,
+  },
+  "deepseek-v4-pro": {
+    inputPerMTokUsd: 1.32,
+    outputPerMTokUsd: 3.96,
+    cachedInputPerMTokUsd: 0.022,
+  },
+  // — Moonshot (Kimi) —
+  "kimi-k3": { inputPerMTokUsd: 3, outputPerMTokUsd: 15, cachedInputPerMTokUsd: 0.3 },
+  // — Z.ai (GLM). `glm-5.3` est volontairement ABSENT : aucun tarif par token
+  //   n'est publié à ce jour, et inventer un chiffre serait pire que le repli
+  //   haut, qui au moins ne ment pas dans le sens dangereux.
+  "glm-5.2": { inputPerMTokUsd: 1.4, outputPerMTokUsd: 4.4, cachedInputPerMTokUsd: 0.26 },
+  "glm-4.5": { inputPerMTokUsd: 0.6, outputPerMTokUsd: 2.2, cachedInputPerMTokUsd: 0.06 },
+  "glm-4.5-air": { inputPerMTokUsd: 0.2, outputPerMTokUsd: 1.1, cachedInputPerMTokUsd: 0.03 },
 } as const;
 
 /**
@@ -164,6 +196,130 @@ export const AI_DEFAULT_MODELS: Readonly<
   anthropic: { fast: "claude-haiku-4-5", rich: "claude-sonnet-5" },
   openai_compatible: { fast: "gpt-5-mini", rich: "gpt-5" },
 } as const;
+
+// ---------------------------------------------------------------------------
+// 3bis. Préréglages — NOMMER ce que le protocole accepte déjà
+// ---------------------------------------------------------------------------
+
+/**
+ * POURQUOI CES PRÉRÉGLAGES EXISTENT
+ * -------------------------------------------------------------------------
+ * Le moteur accepte depuis le premier jour n'importe quelle adresse compatible
+ * OpenAI (Q-4) et n'importe quel identifiant de modèle : DeepSeek, Kimi et GLM
+ * étaient branchables sans qu'une ligne change. Mais l'écran n'affichait que
+ * « Compatible OpenAI » et ne suggérait que des modèles OpenAI — un porteur y
+ * lisait, à raison, que le produit ne connaissait que deux fournisseurs.
+ *
+ * Un préréglage ne restreint rien : il NOMME. « Autre » reste la porte ouverte
+ * de Q-4, et l'adresse saisie passe les sept conditions de R-6 dans tous les cas.
+ *
+ * ⚠️ On ne nomme un fournisseur que si ses modèles ont un tarif dans
+ * {@link AI_MODEL_PRICES} — sinon le préréglage inviterait le porteur vers une
+ * estimation au tarif de repli, et la coupure tomberait bien avant son plafond.
+ * Adresses relevées le {@link AI_MODEL_PRICES_AS_OF}.
+ */
+export type AiProviderPreset = {
+  readonly id: string;
+  /** Nom affiché. Ce n'est pas une traduction : c'est une marque. */
+  readonly label: string;
+  readonly provider: AiProviderId;
+  /** `null` pour Anthropic (adresse fixe dans le SDK) et pour « Autre » (saisie libre). */
+  readonly baseUrl: string | null;
+  /** `true` ⇒ l'écran laisse l'adresse et les modèles entièrement à la saisie. */
+  readonly freeform: boolean;
+  readonly models: { readonly fast: string; readonly rich: string } | null;
+  /**
+   * Modèles PROPOSÉS à la saisie pour ce fournisseur, et base des suggestions
+   * de R-19. À ne PAS confondre avec {@link AI_CURATED_MODELS}, qui est la
+   * condition d'entrée du cache mutualisé (R-15.2) : y verser un modèle bon
+   * marché laisserait la clé la moins chère du parc fixer la qualité servie à
+   * tous les enfants. Deux notions, deux listes, volontairement.
+   */
+  readonly suggested: readonly string[];
+};
+
+export const AI_PROVIDER_PRESETS: readonly AiProviderPreset[] = [
+  {
+    id: "anthropic",
+    label: "Anthropic (Claude)",
+    provider: "anthropic",
+    baseUrl: null,
+    freeform: false,
+    models: AI_DEFAULT_MODELS.anthropic,
+    suggested: AI_CURATED_MODELS.anthropic,
+  },
+  {
+    id: "openai",
+    label: "OpenAI",
+    provider: "openai_compatible",
+    baseUrl: "https://api.openai.com/v1",
+    freeform: false,
+    models: { fast: "gpt-5-mini", rich: "gpt-5" },
+    suggested: ["gpt-5", "gpt-5-mini"],
+  },
+  {
+    id: "deepseek",
+    label: "DeepSeek",
+    provider: "openai_compatible",
+    baseUrl: "https://api.deepseek.com",
+    freeform: false,
+    models: { fast: "deepseek-v4-flash", rich: "deepseek-v4-pro" },
+    suggested: ["deepseek-v4-flash", "deepseek-v4-pro"],
+  },
+  {
+    id: "moonshot",
+    label: "Kimi (Moonshot)",
+    provider: "openai_compatible",
+    baseUrl: "https://api.moonshot.ai/v1",
+    freeform: false,
+    models: { fast: "kimi-k3", rich: "kimi-k3" },
+    suggested: ["kimi-k3"],
+  },
+  {
+    id: "zai",
+    label: "GLM (Z.ai)",
+    provider: "openai_compatible",
+    baseUrl: "https://api.z.ai/api/openai/v1",
+    freeform: false,
+    models: { fast: "glm-4.5-air", rich: "glm-5.2" },
+    suggested: ["glm-5.2", "glm-4.5", "glm-4.5-air"],
+  },
+  {
+    // La porte de Q-4, explicitement. Sans cette entrée, l'écran redeviendrait
+    // une liste blanche déguisée — ce que l'arbitrage a précisément refusé.
+    id: "custom",
+    label: "Autre — adresse compatible OpenAI",
+    provider: "openai_compatible",
+    baseUrl: null,
+    freeform: true,
+    models: null,
+    suggested: [],
+  },
+] as const;
+
+/** Le préréglage d'un identifiant, ou `undefined` s'il n'existe plus. */
+export function presetById(id: string): AiProviderPreset | undefined {
+  return AI_PROVIDER_PRESETS.find((p) => p.id === id);
+}
+
+/**
+ * Le préréglage correspondant à un crédential enregistré, déduit de son adresse.
+ *
+ * C'est ce qui permet à R-19 de suggérer les modèles du BON fournisseur : avant,
+ * l'avis se déduisait du protocole, et conseillait `gpt-5` à un porteur DeepSeek
+ * — un identifiant qui n'existe pas sur son endpoint.
+ */
+export function presetForCredential(
+  provider: AiProviderId,
+  baseUrl: string | null,
+): AiProviderPreset | undefined {
+  if (provider === "anthropic") return presetById("anthropic");
+  if (!baseUrl) return undefined;
+  const normalized = baseUrl.replace(/\/+$/, "").toLowerCase();
+  return AI_PROVIDER_PRESETS.find(
+    (p) => p.baseUrl !== null && p.baseUrl.replace(/\/+$/, "").toLowerCase() === normalized,
+  );
+}
 
 /** Un modèle est-il dans la liste curée de son fournisseur ? (R-15.2) */
 export function isCuratedModel(provider: AiProviderId, model: string): boolean {

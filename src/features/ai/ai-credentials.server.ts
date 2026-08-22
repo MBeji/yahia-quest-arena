@@ -90,6 +90,11 @@ const credentialRowSchema = z.object({
   monthly_budget_usd: z.coerce.number(),
   double_solve: z.boolean(),
   consent_version: z.string(),
+  // Ajoutée le 2026-08-22. `.catch(false)` et non `.optional()` : pendant la
+  // fenêtre où le code neuf tourne contre la base d'avant la migration, la
+  // colonne manque — et l'absence doit se lire « plafonds non armés », qui est
+  // le nouveau défaut, jamais « armés » (ce qui couperait des familles à tort).
+  limits_enforced: z.boolean().catch(false),
 });
 
 /**
@@ -152,6 +157,7 @@ export const getAiModeStatus = createServerFn({ method: "GET" })
             monthlyBudgetUsd: row.monthly_budget_usd,
             doubleSolve: row.double_solve,
             consentStale: row.consent_version !== AI_CONSENT_VERSION,
+            limitsEnforced: row.limits_enforced,
           }
         : null,
     };
@@ -322,6 +328,9 @@ export const setAiPreferences = createServerFn({ method: "POST" })
           .min(AI_BUDGET_LIMITS.minMonthlyUsd)
           .max(AI_BUDGET_LIMITS.maxMonthlyUsd),
         doubleSolve: z.boolean(),
+        // R-11 devenue optionnelle (2026-08-22) : le porteur arme ou désarme la
+        // coupure. `undefined` ⇒ la RPC laisse le réglage en place.
+        limitsEnforced: z.boolean().optional(),
       })
       .parse(d),
   )
@@ -331,6 +340,7 @@ export const setAiPreferences = createServerFn({ method: "POST" })
       p_daily_budget_usd: data.dailyBudgetUsd,
       p_monthly_budget_usd: data.monthlyBudgetUsd,
       p_double_solve: data.doubleSolve,
+      p_limits_enforced: data.limitsEnforced ?? null,
     });
     if (error) {
       failWithClientError("ai.setAiPreferences", error, "Impossible d'enregistrer les réglages.");
