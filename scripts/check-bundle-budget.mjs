@@ -60,7 +60,19 @@ const BUDGETS = {
   // ⚠️ Ce plafond n'est plus une garde, c'est un métronome : à ce rythme, le vrai correctif est
   // le découpage du catalogue i18n par surface — le namespace `parentReport.*` (~110 clés, comptes
   // PARENT uniquement) le justifie à lui seul, comme noté au relèvement 136→156.
-  "i18n-": 164 * 1024,
+  // Puis 164→192 KB pour le **mode IA « à la clé de la famille »** (étude 29 lot 2) : le namespace
+  // `ai.*`, ~63 clés ×3 langues, mesuré à 171,89 KB — 7,89 KB au-dessus du plafond. Il porte
+  // beaucoup de PHRASES et non des étiquettes, et ce n'est pas un travers de rédaction : R-20 exige
+  // un texte de consentement qui liste ce qui part et ce qui ne part pas, R-2a un avertissement
+  // calibré, R-12 une mention de renvoi au fournisseur PERMANENTE, R-18bis le risque de la
+  // vérification coupée énoncé en une phrase, et l'annexe C neuf codes d'erreur traduits. Raccourcir
+  // ces chaînes, c'est retirer la mitigation, pas de la graisse.
+  // On reprend 20 KB de marge plutôt que les 8 nécessaires : les lots 3 à 5 de la même étude
+  // (activation par élève, Forge, console de dépense) ajouteront leurs propres clés, et le
+  // relèvement suivant tomberait sur la PR qui n'y sera pour rien — le motif exact des trois
+  // derniers. Ce namespace-ci rejoint `parentReport.*` sur la liste de ce qui justifiera le
+  // découpage : il ne sert qu'aux comptes ayant branché une clé, c'est-à-dire à presque personne.
+  "i18n-": 192 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
   // @dnd-kit (core+sortable+utilities) powering the B2 ordering/matching

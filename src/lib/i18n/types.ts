@@ -1048,6 +1048,73 @@ export type TranslationKeys = {
     questResultScore: string;
     lockedChapter: string;
   };
+  // Mode IA « à la clé de la famille » (étude 29). Registre PARENT (vouvoiement,
+  // é15) : la section vit dans les Réglages, et son lecteur est celui qui engage
+  // de l'argent. Aucune de ces chaînes ne dit « premium », « abonnement » ni
+  // « payant » — la famille ne paie pas l'app, elle paie son fournisseur (D-12).
+  ai: {
+    sectionTitle: string;
+    sectionDesc: string;
+    unavailable: string;
+    stateNone: string;
+    stateActive: string;
+    stateInvalid: string;
+    stateUnverified: string;
+    keyMasked: string;
+    lastVerified: string;
+    attach: string;
+    replace: string;
+    revoke: string;
+    revokeTitle: string;
+    revokeBody: string;
+    revokeAtProvider: string;
+    revokeCancel: string;
+    revokeConfirm: string;
+    revoked: string;
+    provider: string;
+    providerAnthropic: string;
+    providerCompatible: string;
+    baseUrl: string;
+    baseUrlHint: string;
+    localModelWarning: string;
+    modelFast: string;
+    modelRich: string;
+    modelCurated: string;
+    modelFree: string;
+    keyLabel: string;
+    keyHint: string;
+    dailyBudget: string;
+    monthlyBudget: string;
+    budgetHint: string;
+    estimateNotice: string;
+    pricesAsOf: string;
+    doubleSolve: string;
+    doubleSolveHint: string;
+    doubleSolveWarning: string;
+    consentTitle: string;
+    consentSent: string;
+    consentNotSent: string;
+    consentShared: string;
+    consentProvider: string;
+    consentMoney: string;
+    consentAccept: string;
+    adultTitle: string;
+    adultConfirm: string;
+    save: string;
+    saving: string;
+    saved: string;
+    cancel: string;
+    prefsSaved: string;
+    errKeyInvalid: string;
+    errModelUnknown: string;
+    errCreditExhausted: string;
+    errRateLimited: string;
+    errProviderDown: string;
+    errHostNotAllowed: string;
+    errBudgetReached: string;
+    errModeOff: string;
+    errGeneric: string;
+  };
   // Public « Référence » register (chantier C8): landing, catalogue, level page,
   // course reader, subject hub, anonymous practice + shared public chrome.
   public: {

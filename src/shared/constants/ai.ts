@@ -314,10 +314,15 @@ export const AI_HOST_DENYLIST: readonly string[] = [
 export const AI_CONSENT_VERSION = "2026-08-22" as const;
 
 /**
- * Sous ce niveau scolaire (rang du parcours dans les 13 niveaux tunisiens), la
- * saisie d'une clé exige une confirmation explicite qu'un adulte responsable est
- * présent (R-2a). 11 = 4ᵉ année secondaire ; un compte sans niveau renseigné est
- * traité comme mineur — c'est la consigne du §7 (« dans ce cas, traiter comme
- * mineur »).
+ * Rang (`grades.display_order`) à partir duquel la saisie d'une clé N'EXIGE PLUS
+ * de confirmation qu'un adulte responsable est présent (R-2a).
+ *
+ * 13 = Baccalauréat, la 4ᵉ année secondaire tunisienne. L'étude dit « sous la
+ * 4ᵉ année secondaire » : un compte de rang strictement inférieur doit confirmer.
+ *
+ * Un compte **sans niveau renseigné** — parcours libre, compte ancien, parent —
+ * est traité comme MINEUR : c'est la consigne explicite du §7 (« dans ce cas,
+ * traiter comme mineur »). Se tromper dans ce sens coûte une case à cocher ; se
+ * tromper dans l'autre laisse un enfant engager de l'argent sans un mot.
  */
-export const AI_ADULT_CONFIRM_GRADE_RANK = 11 as const;
+export const AI_ADULT_CONFIRM_GRADE_RANK = 13 as const;

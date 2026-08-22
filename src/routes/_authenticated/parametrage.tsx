@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState, type ReactNode } from "react";
 import {
   Bell,
+  BrainCircuit,
   Check,
   ChevronRight,
   Copy,
@@ -47,6 +48,7 @@ import {
 } from "@/features/auth";
 import { getParcours } from "@/features/dashboard";
 import { EnablePushCard } from "@/features/notifications";
+import { AiModeSection } from "@/features/ai";
 import { formatStudentAllianceCode } from "@/features/parent-report";
 import { useI18n, useT } from "@/lib/i18n";
 import { parcoursName } from "@/shared/lib/parcours-locale";
@@ -414,6 +416,23 @@ function ParametragePage() {
           <SoundToggles />
           <EnablePushCard />
         </Section>
+
+        {/* Mode IA (étude 29 lot 2, D-16) : la clé d'API est un réglage de compte,
+            et c'est ici qu'elle se saisit — pas sur une page à elle, introuvable
+            pour qui ne sait pas déjà qu'elle existe.
+
+            La section se rend elle-même INVISIBLE quand le mode famille n'est pas
+            disponible (R-1) : pas de bouton grisé, pas de « bientôt ». Le
+            <Section> qui l'enveloppe disparaît donc avec elle — sinon un
+            en-tête vide annoncerait une fonctionnalité absente, ce qui est
+            exactement ce que R-1 interdit. */}
+        <AiModeSection
+          render={(children) => (
+            <Section Icon={BrainCircuit} title={t.ai.sectionTitle} desc={t.ai.sectionDesc}>
+              {children}
+            </Section>
+          )}
+        />
 
         <Section Icon={ScrollText} title={t.settings.helpTitle} desc={t.settings.helpDesc}>
           <Row label={t.settings.helpTerms}>

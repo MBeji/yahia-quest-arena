@@ -215,10 +215,14 @@ describe("l'ordre des blocs sert le cache de prompt (é11 §3.4)", () => {
 });
 
 describe("le secret est opaque (D-3)", () => {
-  it("ne se sérialise pas, ne s'imprime pas", () => {
+  it("ne se sérialise pas, ne s'imprime pas, ne se journalise pas", () => {
     const secret = sealSecret("sk-live-tres-secret");
     expect(String(secret)).toBe("[secret]");
     expect(`${secret}`).not.toContain("sk-live");
+    // La porte la plus dangereuse : `logger` sérialise sa méta en JSON, et son
+    // rédacteur ne rédige que sur le NOM du champ.
+    expect(JSON.stringify({ meta: secret })).not.toContain("sk-live");
+    expect(Object.keys(secret as unknown as object)).not.toContain("value");
   });
 
   it("ne se rend qu'au travers d'un appel NOMMÉ, donc cherchable en revue", () => {

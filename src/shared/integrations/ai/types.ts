@@ -21,9 +21,34 @@ import type { AiFeature, AiProviderId, AiTier } from "@/shared/constants/ai";
 declare const OPAQUE: unique symbol;
 export type OpaqueSecret = { readonly [OPAQUE]: "ai-secret"; readonly __brand: never };
 
+/**
+ * Le clair vit derrière une clé SYMBOLE non énumérable. Ce n'est pas une
+ * coquetterie : `JSON.stringify` ignore les clés symboles, `Object.keys` ne les
+ * voit pas, et `logger` sérialise sa méta en JSON. Une première version stockait
+ * le clair dans une propriété `value` ordinaire — un secret passé par mégarde
+ * dans la méta d'un log en serait ressorti EN CLAIR, parce que le rédacteur du
+ * logger ne rédige que sur le NOM du champ, et `value` n'est pas un nom suspect.
+ * Le test « le secret ouvert est OPAQUE » garde cette propriété.
+ *
+ * `Symbol.for` et non `Symbol()` : le symbole doit être le MÊME d'une instance
+ * de module à l'autre. Un `Symbol()` local casse dès que le graphe est dupliqué
+ * — un `vi.resetModules()` suffit à le prouver, et un bundler peut faire pareil
+ * en production. Le registre global ne réduit pas la protection : le but est
+ * qu'une fuite se voie en revue, pas qu'elle soit cryptographiquement empêchée.
+ */
+const SECRET_VALUE = Symbol.for("na9ra.ai.secret");
+
 /** Emballe une clé en clair. Appelé UNIQUEMENT par le coffre, après déchiffrement. */
 export function sealSecret(clear: string): OpaqueSecret {
-  return { toString: () => "[secret]", value: clear } as unknown as OpaqueSecret;
+  const holder = {
+    toString: () => "[secret]",
+    // Les trois portes par lesquelles une valeur sort d'un objet sans qu'on l'ait
+    // demandé : concaténation, sérialisation JSON, inspection Node (`console.log`).
+    toJSON: () => "[secret]",
+    [Symbol.for("nodejs.util.inspect.custom")]: () => "[secret]",
+  };
+  Object.defineProperty(holder, SECRET_VALUE, { value: clear, enumerable: false });
+  return holder as unknown as OpaqueSecret;
 }
 
 /**
@@ -32,7 +57,7 @@ export function sealSecret(clear: string): OpaqueSecret {
  * revue — et il se voit, parce que ce nom est cherchable.
  */
 export function revealSecret(secret: OpaqueSecret): string {
-  return (secret as unknown as { value: string }).value;
+  return (secret as unknown as Record<symbol, string>)[SECRET_VALUE];
 }
 
 /**
