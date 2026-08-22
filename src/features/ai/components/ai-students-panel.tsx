@@ -6,7 +6,7 @@ import { Users } from "lucide-react";
 
 import { Switch } from "@/components/ui/switch";
 import { useT, type TranslationKeys } from "@/lib/i18n";
-import { TUTOR_HARD_DAILY_CAP, type AiFeature } from "@/shared/constants/ai";
+import { AI_LIVE_FEATURES, TUTOR_HARD_DAILY_CAP, type AiFeature } from "@/shared/constants/ai";
 import {
   AI_ACTIVATABLE_FEATURES,
   getAiStudents,
@@ -163,7 +163,10 @@ function StudentRow({ student, onChanged }: { student: AiStudentAccess; onChange
       {student.enabled && (
         <>
           <div className="mt-2 flex flex-wrap gap-1.5">
-            {AI_ACTIVATABLE_FEATURES.map((feature) => {
+            {/* Seules les surfaces qui ont un ÉCRAN sont proposées. Un
+                interrupteur qui n'allume rien fait conclure que le mode est
+                cassé — voir AI_LIVE_FEATURES. */}
+            {AI_LIVE_FEATURES.map((feature) => {
               const label = featureLabel(feature, t);
               if (!label) return null;
               const on = student.features.includes(feature);
