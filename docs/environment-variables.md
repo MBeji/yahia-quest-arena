@@ -202,3 +202,63 @@ Scheduled push (streak reminders) needs a VAPID keypair and a cron secret:
 3. The cron route is declared in `vercel.json` (`crons`); Vercel automatically
    sends `Authorization: Bearer $CRON_SECRET` on each scheduled run, which
    `src/server.ts` → `handlePushCron` verifies.
+
+## Mode IA — la porte (étude 29)
+
+L'étage IA a **deux payeurs derrière une seule porte** (étude 29 §1.3) : la clé
+d'une famille (BYOK) ou la clé plateforme. Le mode « éteint » est l'état par
+défaut de tout le monde, et le produit y est complet — aucune variable ci-dessous
+n'est requise pour faire tourner l'application.
+
+| Variable                       | Scope                 | Notes                                                                                                                       |
+| ------------------------------ | --------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `AI_KEY_ENC_KEY`               | server only (runtime) | **secret** — KEK du coffre, 32 octets en base64. Absente ⇒ le chemin **famille** est éteint ; le chemin plateforme continue |
+| `AI_KEY_ENC_KEY_PREVIOUS`      | server only (runtime) | **secret** — KEK précédente pendant une rotation (optionnelle, retirée après)                                               |
+| `AI_MODE_ENABLED`              | server (runtime)      | Kill-switch **global** de la porte IA. Défaut `true` ; `0`/`false` éteint les deux payeurs                                  |
+| `AI_BYOK_ENABLED`              | server (runtime)      | Kill-switch du **seul** chemin famille. Défaut `true` si `AI_KEY_ENC_KEY` est là                                            |
+| `AI_FAKE_PROVIDER`             | server (runtime)      | `1` ⇒ fournisseur factice (CI, e2e, dev). Court-circuite tout appel réel                                                    |
+| `ANTHROPIC_API_KEY`            | server only (runtime) | **secret** — clé **plateforme** (chemin étude 11, budget A5). Absente ⇒ seul le BYOK fonctionne                             |
+| `AI_PLATFORM_DAILY_BUDGET_USD` | server (runtime)      | Plafond plateforme par jour (défaut `5`). Ne s'applique **jamais** au payeur `family`                                       |
+
+⚠️ **Aucune de ces variables n'est préfixée `VITE_`, et aucune ne doit l'être.**
+Un préfixe `VITE_` inline la valeur dans le bundle client au build : ce serait la
+clé plateforme en clair dans le navigateur de chaque élève.
+
+Générer la KEK du coffre (32 octets, base64) :
+
+```bash
+node -e "console.log(require('node:crypto').randomBytes(32).toString('base64'))"
+```
+
+**Rotation de la KEK** : poser la nouvelle valeur dans `AI_KEY_ENC_KEY`, l'ancienne
+dans `AI_KEY_ENC_KEY_PREVIOUS`, redéployer. La lecture essaie la version courante
+puis la précédente et **ré-écrit** en version courante au passage (rotation
+paresseuse : pas de migration de données, pas de fenêtre de panne). Retirer
+`AI_KEY_ENC_KEY_PREVIOUS` une fois toutes les lignes ré-écrites.
+
+**Perte de la KEK** (RISK-10) : aucune donnée d'apprentissage n'est perdue — seules
+les clés deviennent illisibles. Les crédentiaux passent en `invalid` et leurs
+porteurs sont invités à re-saisir.
+
+Tout le reste — identifiants de modèles, grille de prix **datée**, plafonds par
+défaut, bornes de tokens, conditions de sortie réseau — est une **constante de
+code**, dans [`src/shared/constants/ai.ts`](../src/shared/constants/ai.ts) et
+nulle part ailleurs (étude 29 §3.10, étude 11 D-2 étendu).
+
+### Runbook — couper le mode IA
+
+Trois interrupteurs, du plus large au plus ciblé. Les deux premiers exigent un
+redéploiement (variables d'environnement), le troisième non (données) :
+
+| Geste                      | Où                                                 | Effet                                           |
+| -------------------------- | -------------------------------------------------- | ----------------------------------------------- |
+| Tout couper, tout de suite | `/admin/ia` → « Mode IA global »                   | Immédiat, sans redéploiement, journalisé        |
+| Couper une famille         | RPC `set_ai_owner_suspension(owner, true, raison)` | Immédiat ; ses élèves retombent en déterministe |
+| Couper la porte entière    | `AI_MODE_ENABLED=0` puis redéploiement             | Les deux payeurs, avant toute requête base      |
+| Couper le seul BYOK        | `AI_BYOK_ENABLED=0` puis redéploiement             | Le chemin plateforme (étude 11) continue        |
+
+⚠️ En cas de **suspicion de fuite de clé** (RISK-1), l'ordre compte : couper la
+famille d'abord (elle cesse d'émettre), puis demander au porteur de révoquer sa
+clé **chez son fournisseur** — c'est le seul geste qui l'invalide vraiment, et
+nous ne pouvons pas le faire à sa place. Supprimer notre copie chiffrée
+(`revoke_ai_credential`) vient après, pas avant.

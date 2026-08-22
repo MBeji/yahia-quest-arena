@@ -1,0 +1,582 @@
+import { useState, type ReactNode } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
+import { Check, KeyRound, ShieldAlert, Trash2, TriangleAlert } from "lucide-react";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { useT } from "@/lib/i18n";
+import {
+  AI_CURATED_MODELS,
+  AI_DEFAULT_BUDGETS,
+  AI_DEFAULT_MODELS,
+  AI_MODEL_PRICES_AS_OF,
+  AI_PROVIDERS,
+  type AiProviderId,
+} from "@/shared/constants/ai";
+import {
+  getAiModeStatus,
+  revokeAiCredential,
+  setAiCredential,
+  setAiPreferences,
+} from "../ai-credentials.server";
+import { aiErrorLabel, aiModeErrorCode, type AiModeStatus } from "../ai-mode-status";
+import { AiStudentsPanel } from "./ai-students-panel";
+import { AiSpendPanel } from "./ai-spend-panel";
+
+/**
+ * La section « Mode IA » des Réglages (étude 29 lot 2, D-16).
+ *
+ * POURQUOI ELLE VIT DANS `/parametrage` ET PAS SUR UNE PAGE À ELLE
+ * -------------------------------------------------------------------------
+ * Une clé d'API est un réglage de compte, au même titre que la langue ou le
+ * thème : elle appartient à la rubrique où l'on va quand on cherche « où est-ce
+ * que je change ça ? ». Une route `/ia` dédiée serait introuvable pour qui ne
+ * sait pas déjà qu'elle existe (D-16).
+ *
+ * R-1 — LE PRODUIT SANS CLÉ EST LE PRODUIT D'AUJOURD'HUI
+ * -------------------------------------------------------------------------
+ * Quand le mode famille n'est pas disponible (kill-switch, coffre sans clé
+ * maîtresse), cette section **ne rend rien du tout**. Pas de bouton grisé, pas
+ * d'appel à l'action, pas de « bientôt ». C'est la règle, et c'est aussi ce qui
+ * rend le test de non-régression possible : mode éteint, l'écran est identique.
+ *
+ * R-4 — la clé ne réapparaît jamais. On affiche `sk-…4f2a`, en `dir="ltr"` :
+ * un masque de clé lu de droite à gauche dans une interface arabe se lit à
+ * l'envers (piège déjà payé sur les tableaux de cours, arena#712).
+ */
+
+const ACTION_CLASS =
+  "inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-[color:var(--gold)]/40 px-3 py-1.5 text-xs font-semibold text-[color:var(--gold)] transition hover:bg-[color:var(--gold)]/10 disabled:opacity-50";
+
+const FIELD_CLASS = "mt-1 w-full";
+
+function Field({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="mt-3 block text-sm">
+      <span className="font-semibold text-foreground">{label}</span>
+      {children}
+      {hint && <span className="mt-1 block text-xs text-muted-foreground">{hint}</span>}
+    </label>
+  );
+}
+
+/**
+ * `render` reçoit le corps de la section et l'enveloppe dans le chrome de la
+ * page appelante (l'en-tête à icône de `/parametrage`).
+ *
+ * Ce détour existe pour R-1, et pour rien d'autre : quand le mode famille n'est
+ * pas disponible, le composant rend `null` — donc l'EN-TÊTE disparaît avec le
+ * corps. Si la page enveloppait elle-même, un cartouche « Mode IA » vide
+ * resterait à l'écran, ce qui est exactement le « teasing » que R-1 interdit.
+ */
+export function AiModeSection({ render }: { render: (children: ReactNode) => ReactNode }) {
+  const queryClient = useQueryClient();
+  const fetchStatus = useServerFn(getAiModeStatus);
+
+  const { data: status } = useQuery<AiModeStatus>({
+    queryKey: ["ai-mode-status"],
+    queryFn: () => fetchStatus(),
+    staleTime: 30_000,
+  });
+
+  // R-1 : tant qu'on ne SAIT PAS que le mode est disponible, on ne rend rien.
+  // Un état de chargement visible serait déjà un « bientôt ».
+  if (!status?.available) return null;
+
+  return render(
+    <AiModeBody
+      status={status}
+      onChanged={() => queryClient.invalidateQueries({ queryKey: ["ai-mode-status"] })}
+    />,
+  );
+}
+
+function AiModeBody({ status, onChanged }: { status: AiModeStatus; onChanged: () => void }) {
+  const t = useT();
+  const [editing, setEditing] = useState(false);
+  const credential = status.credential;
+
+  return (
+    <div>
+      {credential ? (
+        <SavedKey status={status} onChanged={onChanged} onReplace={() => setEditing(true)} />
+      ) : (
+        !editing && (
+          <div className="flex flex-wrap items-center justify-between gap-2 py-2">
+            <span className="text-sm text-muted-foreground">{t.ai.stateNone}</span>
+            <button
+              type="button"
+              onClick={() => setEditing(true)}
+              className={ACTION_CLASS}
+              data-testid="ai-attach"
+            >
+              <KeyRound className="h-3.5 w-3.5" />
+              {t.ai.attach}
+            </button>
+          </div>
+        )
+      )}
+
+      {editing && (
+        <AttachForm
+          status={status}
+          onDone={() => {
+            setEditing(false);
+            onChanged();
+          }}
+          onCancel={() => setEditing(false)}
+        />
+      )}
+    </div>
+  );
+}
+
+/** L'état d'une clé enregistrée : `last4`, statut, plafonds réglables, révocation. */
+function SavedKey({
+  status,
+  onChanged,
+  onReplace,
+}: {
+  status: AiModeStatus;
+  onChanged: () => void;
+  onReplace: () => void;
+}) {
+  const t = useT();
+  const credential = status.credential!;
+  const savePrefs = useServerFn(setAiPreferences);
+  const revoke = useServerFn(revokeAiCredential);
+
+  const [daily, setDaily] = useState(String(credential.dailyBudgetUsd));
+  const [monthly, setMonthly] = useState(String(credential.monthlyBudgetUsd));
+  const [doubleSolve, setDoubleSolve] = useState(credential.doubleSolve);
+  const [busy, setBusy] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
+  const stateLabel =
+    credential.status === "active"
+      ? t.ai.stateActive
+      : credential.status === "invalid"
+        ? t.ai.stateInvalid
+        : t.ai.stateUnverified;
+
+  async function persist(next: { doubleSolve?: boolean } = {}) {
+    setBusy(true);
+    try {
+      await savePrefs({
+        data: {
+          dailyBudgetUsd: Number(daily),
+          monthlyBudgetUsd: Number(monthly),
+          doubleSolve: next.doubleSolve ?? doubleSolve,
+        },
+      });
+      toast.success(t.ai.prefsSaved);
+      onChanged();
+    } catch {
+      toast.error(t.ai.errGeneric);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="text-sm">
+      <div className="flex flex-wrap items-center justify-between gap-2 py-2">
+        <span className="flex items-center gap-2">
+          {credential.status === "active" ? (
+            <Check className="h-4 w-4 text-[color:var(--gold)]" />
+          ) : (
+            <ShieldAlert className="h-4 w-4 text-destructive" />
+          )}
+          <span className="font-semibold">{stateLabel}</span>
+          {/* Le masque de clé est du contenu LTR dans un contexte RTL (é29 §2.5). */}
+          <span dir="ltr" className="font-mono text-xs text-muted-foreground">
+            {t.ai.keyMasked.replace("{last4}", `sk-…${credential.last4}`)}
+          </span>
+        </span>
+        <span className="flex gap-2">
+          <button type="button" onClick={onReplace} className={ACTION_CLASS}>
+            {t.ai.replace}
+          </button>
+          <button
+            type="button"
+            onClick={() => setConfirmOpen(true)}
+            data-testid="ai-revoke"
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-destructive/50 px-3 py-1.5 text-xs font-semibold text-destructive transition hover:bg-destructive/10"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+            {t.ai.revoke}
+          </button>
+        </span>
+      </div>
+
+      {/* Annexe C : un code stable, traduit ici. Jamais le message du fournisseur. */}
+      {credential.hasError && (
+        <p className="rounded-lg border border-destructive/40 bg-destructive/5 px-3 py-2 text-xs text-destructive">
+          {aiErrorLabel(credential.lastErrorCode, t)}
+        </p>
+      )}
+
+      <div className="grid gap-x-4 sm:grid-cols-2">
+        <Field label={t.ai.dailyBudget}>
+          <Input
+            type="number"
+            inputMode="decimal"
+            dir="ltr"
+            min={0.01}
+            step={0.5}
+            value={daily}
+            onChange={(e) => setDaily(e.target.value)}
+            onBlur={() => void persist()}
+            disabled={busy}
+            data-testid="ai-daily-budget"
+            className={FIELD_CLASS}
+          />
+        </Field>
+        <Field label={t.ai.monthlyBudget} hint={t.ai.budgetHint}>
+          <Input
+            type="number"
+            inputMode="decimal"
+            dir="ltr"
+            min={0.01}
+            step={1}
+            value={monthly}
+            onChange={(e) => setMonthly(e.target.value)}
+            onBlur={() => void persist()}
+            disabled={busy}
+            data-testid="ai-monthly-budget"
+            className={FIELD_CLASS}
+          />
+        </Field>
+      </div>
+
+      {/* R-12 : la mention de renvoi au fournisseur est PERMANENTE, pas une note
+          de bas de page. Elle est ici, sous les montants, pas en fin d'écran. */}
+      <p className="mt-2 text-xs text-muted-foreground">
+        {t.ai.estimateNotice} {t.ai.pricesAsOf.replace("{date}", AI_MODEL_PRICES_AS_OF)}
+      </p>
+
+      {/* R-18bis : couper la double résolution est un geste délibéré, et le
+          risque est énoncé en UNE phrase, à côté de l'interrupteur. */}
+      <div className="mt-4 flex items-start justify-between gap-3 border-t border-border/50 pt-3">
+        <span>
+          <span className="block font-semibold">{t.ai.doubleSolve}</span>
+          <span className="block text-xs text-muted-foreground">
+            {doubleSolve ? t.ai.doubleSolveHint : t.ai.doubleSolveWarning}
+          </span>
+        </span>
+        <Switch
+          checked={doubleSolve}
+          disabled={busy}
+          data-testid="ai-double-solve"
+          onCheckedChange={(next) => {
+            setDoubleSolve(next);
+            void persist({ doubleSolve: next });
+          }}
+          aria-label={t.ai.doubleSolve}
+        />
+      </div>
+
+      {/* US-7 : la dépense, réservée au PORTEUR (R-14b). Elle vient AVANT les
+          activations : « combien ça me coûte » est la question qu'on se pose en
+          ouvrant cet écran, « qui y a droit » celle qu'on règle une fois. */}
+      {credential.status === "active" && <AiSpendPanel />}
+
+      {/* US-3 : l'activation par élève. Elle n'apparaît qu'une fois la clé
+          ACTIVE — activer un élève sur une clé refusée produirait une surface
+          qui échoue au premier clic, ce que é11 R-15 interdit. */}
+      {credential.status === "active" && <AiStudentsPanel />}
+
+      <AlertDialog open={confirmOpen} onOpenChange={(next) => !busy && setConfirmOpen(next)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t.ai.revokeTitle}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t.ai.revokeBody} {/* US-8 : l'écran rappelle le geste qui compte vraiment. */}
+              <strong className="text-destructive">{t.ai.revokeAtProvider}</strong>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={busy}>{t.ai.revokeCancel}</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={busy}
+              data-testid="ai-revoke-confirm"
+              onClick={(e) => {
+                e.preventDefault();
+                setBusy(true);
+                void revoke()
+                  .then(() => {
+                    toast.success(t.ai.revoked);
+                    setConfirmOpen(false);
+                    onChanged();
+                  })
+                  .catch(() => toast.error(t.ai.errGeneric))
+                  .finally(() => setBusy(false));
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {t.ai.revokeConfirm}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}
+
+/** US-1 : consentement → fournisseur → clé → modèles → plafonds → « Vérifier et enregistrer ». */
+function AttachForm({
+  status,
+  onDone,
+  onCancel,
+}: {
+  status: AiModeStatus;
+  onDone: () => void;
+  onCancel: () => void;
+}) {
+  const t = useT();
+  const save = useServerFn(setAiCredential);
+
+  const [provider, setProvider] = useState<AiProviderId>("anthropic");
+  const [baseUrl, setBaseUrl] = useState("");
+  const [secret, setSecret] = useState("");
+  const [modelFast, setModelFast] = useState(AI_DEFAULT_MODELS.anthropic.fast);
+  const [modelRich, setModelRich] = useState(AI_DEFAULT_MODELS.anthropic.rich);
+  const [daily, setDaily] = useState(String(AI_DEFAULT_BUDGETS.dailyUsd));
+  const [monthly, setMonthly] = useState(String(AI_DEFAULT_BUDGETS.monthlyUsd));
+  const [consent, setConsent] = useState(false);
+  const [adult, setAdult] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  function pickProvider(next: AiProviderId) {
+    setProvider(next);
+    setModelFast(AI_DEFAULT_MODELS[next].fast);
+    setModelRich(AI_DEFAULT_MODELS[next].rich);
+    if (next === "anthropic") setBaseUrl("");
+  }
+
+  // R-20 : le consentement est PRÉALABLE. R-2a : la confirmation d'adulte l'est
+  // aussi quand le niveau du compte l'exige. Le bouton ne s'arme pas avant.
+  const ready =
+    consent &&
+    (!status.requiresAdultConfirmation || adult) &&
+    secret.length >= 8 &&
+    (provider === "anthropic" || baseUrl.startsWith("https://"));
+
+  async function submit() {
+    if (!ready || busy) return;
+    setBusy(true);
+    try {
+      await save({
+        data: {
+          provider,
+          baseUrl: provider === "openai_compatible" ? baseUrl : null,
+          modelFast,
+          modelRich,
+          secret,
+          dailyBudgetUsd: Number(daily),
+          monthlyBudgetUsd: Number(monthly),
+          doubleSolve: true,
+          consentVersion: status.consentVersion,
+          adultPresent: adult,
+        },
+      });
+      toast.success(t.ai.saved);
+      setSecret("");
+      onDone();
+    } catch (error) {
+      const code = aiModeErrorCode(error instanceof Error ? error.message : String(error));
+      toast.error(aiErrorLabel(code, t));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div
+      className="mt-2 rounded-xl border border-border/60 bg-background/40 p-3"
+      data-testid="ai-form"
+    >
+      {/* R-20 : le texte est versionné, et il vise un lecteur de 15 ans — depuis
+          Q-2, celui qui signe peut être mineur (registre é15). */}
+      <p className="text-sm font-semibold">{t.ai.consentTitle}</p>
+      <ul className="mt-1 list-disc space-y-1 ps-5 text-xs text-muted-foreground">
+        <li>{t.ai.consentSent}</li>
+        <li>{t.ai.consentNotSent}</li>
+        <li>{t.ai.consentShared}</li>
+        <li>{t.ai.consentProvider}</li>
+        <li className="font-semibold text-foreground">{t.ai.consentMoney}</li>
+      </ul>
+      <label className="mt-2 flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          checked={consent}
+          onChange={(e) => setConsent(e.target.checked)}
+          data-testid="ai-consent"
+          className="h-4 w-4"
+        />
+        {t.ai.consentAccept}
+      </label>
+
+      {/* R-2a — l'avertissement est calibré sur le niveau scolaire RÉEL du compte,
+          pas sur une case « je certifie être majeur » que personne ne lit. */}
+      {status.requiresAdultConfirmation && (
+        <div className="mt-3 rounded-lg border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/5 p-2">
+          <p className="flex items-center gap-1.5 text-xs font-semibold">
+            <TriangleAlert className="h-3.5 w-3.5 text-[color:var(--gold)]" />
+            {t.ai.adultTitle}
+          </p>
+          <label className="mt-1 flex items-center gap-2 text-xs">
+            <input
+              type="checkbox"
+              checked={adult}
+              onChange={(e) => setAdult(e.target.checked)}
+              data-testid="ai-adult"
+              className="h-4 w-4"
+            />
+            {t.ai.adultConfirm}
+          </label>
+        </div>
+      )}
+
+      <Field label={t.ai.provider}>
+        <span className="mt-1 flex gap-2">
+          {AI_PROVIDERS.map((id) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => pickProvider(id)}
+              className={`min-h-11 flex-1 rounded-lg border px-3 py-1.5 text-xs font-semibold transition ${
+                provider === id
+                  ? "border-[color:var(--gold)] bg-[color:var(--gold)]/15 text-[color:var(--gold)]"
+                  : "border-border/60 text-muted-foreground hover:bg-accent"
+              }`}
+            >
+              {id === "anthropic" ? t.ai.providerAnthropic : t.ai.providerCompatible}
+            </button>
+          ))}
+        </span>
+      </Field>
+
+      {provider === "openai_compatible" && (
+        <Field label={t.ai.baseUrl} hint={`${t.ai.baseUrlHint} ${t.ai.localModelWarning}`}>
+          <Input
+            type="url"
+            dir="ltr"
+            value={baseUrl}
+            onChange={(e) => setBaseUrl(e.target.value)}
+            placeholder="https://api.example.com/v1"
+            data-testid="ai-base-url"
+            className={FIELD_CLASS}
+          />
+        </Field>
+      )}
+
+      <Field label={t.ai.keyLabel} hint={t.ai.keyHint}>
+        <Input
+          type="password"
+          dir="ltr"
+          autoComplete="off"
+          value={secret}
+          onChange={(e) => setSecret(e.target.value)}
+          data-testid="ai-secret"
+          className={FIELD_CLASS}
+        />
+      </Field>
+
+      <div className="grid gap-x-4 sm:grid-cols-2">
+        <Field label={t.ai.modelFast} hint={`${t.ai.modelCurated} · ${t.ai.modelFree}`}>
+          <Input
+            list="ai-models"
+            dir="ltr"
+            value={modelFast}
+            onChange={(e) => setModelFast(e.target.value)}
+            data-testid="ai-model-fast"
+            className={FIELD_CLASS}
+          />
+        </Field>
+        <Field label={t.ai.modelRich}>
+          <Input
+            list="ai-models"
+            dir="ltr"
+            value={modelRich}
+            onChange={(e) => setModelRich(e.target.value)}
+            data-testid="ai-model-rich"
+            className={FIELD_CLASS}
+          />
+        </Field>
+      </div>
+      {/* D-11 : la liste curée est une PROPOSITION. La saisie libre reste ouverte
+          — c'est sa clé, son choix (et Q-4 a ouvert l'adresse en conséquence). */}
+      <datalist id="ai-models">
+        {AI_CURATED_MODELS[provider].map((model) => (
+          <option key={model} value={model} />
+        ))}
+      </datalist>
+
+      <div className="grid gap-x-4 sm:grid-cols-2">
+        <Field label={t.ai.dailyBudget}>
+          <Input
+            type="number"
+            dir="ltr"
+            inputMode="decimal"
+            min={0.01}
+            step={0.5}
+            value={daily}
+            onChange={(e) => setDaily(e.target.value)}
+            className={FIELD_CLASS}
+          />
+        </Field>
+        <Field label={t.ai.monthlyBudget} hint={t.ai.budgetHint}>
+          <Input
+            type="number"
+            dir="ltr"
+            inputMode="decimal"
+            min={0.01}
+            step={1}
+            value={monthly}
+            onChange={(e) => setMonthly(e.target.value)}
+            className={FIELD_CLASS}
+          />
+        </Field>
+      </div>
+
+      <p className="mt-2 text-xs text-muted-foreground">{t.ai.estimateNotice}</p>
+
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={() => void submit()}
+          disabled={!ready || busy}
+          data-testid="ai-save"
+          className={ACTION_CLASS}
+        >
+          <KeyRound className="h-3.5 w-3.5" />
+          {busy ? t.ai.saving : t.ai.save}
+        </button>
+        <button type="button" onClick={onCancel} disabled={busy} className={ACTION_CLASS}>
+          {t.ai.cancel}
+        </button>
+      </div>
+    </div>
+  );
+}
