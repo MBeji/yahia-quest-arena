@@ -13,6 +13,7 @@
 // qualité du pipeline contenu (`content-engine`, `math-and-notation.md`).
 
 import { AI_FORGE_LIMITS } from "@/shared/constants/ai";
+import { violatesNotation as violatesNotationText } from "@/shared/integrations/ai/notation";
 import { forgedQuestionSchema, type ForgedQuestion } from "./schema";
 
 /** Pourquoi un candidat a été jeté. Le vocabulaire est fermé : il alimente le taux de rebut. */
@@ -46,18 +47,10 @@ export function normalizePrompt(text: string): string {
     .trim();
 }
 
-/**
- * Chiffres NON occidentaux. `math-and-notation.md` impose 0-9 partout, y compris
- * en arabe : un élève tunisien lit ٤ dans un manuel et 4 dans une calculatrice,
- * et mélanger les deux dans un quiz est une charge gratuite.
- */
-const NON_WESTERN_DIGITS = /[٠-٩۰-۹]/;
-
-/** LaTeX : le lecteur ne le rend pas — l'élève verrait `\frac{1}{2}` en clair. */
-const LATEX = /(\\[a-zA-Z]+\s*\{)|(\$\$?[^$]+\$\$?)/;
-
-/** Aucune URL dans une sortie de modèle (RISK-6 : une adresse inventée est un piège). */
-const URL_LIKE = /(https?:\/\/)|(\bwww\.)/i;
+// Les trois règles de notation vivent dans `@/shared/integrations/ai/notation` :
+// l'étude 11 lot 1 en a besoin sur de la PROSE (une explication rendue à un
+// élève), et deux copies auraient dérivé au premier cas limite corrigé d'un
+// seul côté.
 
 /**
  * Les options fourre-tout. Elles cassent le QCM : « aucune des réponses » rend
@@ -101,8 +94,7 @@ function textOf(candidate: ForgedQuestion): string {
 
 /** La notation : chiffres occidentaux, pas de LaTeX, pas d'URL. */
 export function violatesNotation(candidate: ForgedQuestion): boolean {
-  const all = textOf(candidate);
-  return NON_WESTERN_DIGITS.test(all) || LATEX.test(all) || URL_LIKE.test(all);
+  return violatesNotationText(textOf(candidate));
 }
 
 export function hasCatchAllOption(candidate: ForgedQuestion): boolean {

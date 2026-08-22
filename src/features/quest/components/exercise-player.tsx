@@ -184,6 +184,13 @@ export type ExercisePlayerStrategy = {
     contentLang: QuestContentLang;
   }) => ReactNode;
   /** Result-screen call-to-action (next/replay vs signup upsell). */
+  /**
+   * Étude 11 lot 1 — le panneau « Demander au Prof », sous une question ratée de
+   * la correction. Fourni par la route CONNECTÉE seulement : le registre anonyme
+   * (/exercice) n'a ni compte, ni clé de famille, ni tuteur. Absent = aucune
+   * surface IA, ce qui est le mode NORMAL tant qu'aucune clé n'est branchée.
+   */
+  renderTutor?: (questionId: string) => ReactNode;
   renderResultFooter: (ctx: {
     exerciseId: string;
     subjectId: string | null;
@@ -726,6 +733,7 @@ export function ExercisePlayer({
         onLevelUpComplete={() => setShowLevelUp(false)}
         onReplay={resetRun}
         renderResultFooter={strategy.renderResultFooter}
+        renderTutor={strategy.renderTutor}
         resolvePrompt={(questionId) => promptByQuestionId.get(questionId) ?? ""}
         getDisplayChoice={getDisplayChoice}
       />
