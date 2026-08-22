@@ -24,7 +24,7 @@
 
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(16);
+SELECT plan(17);
 
 -- ---------------------------------------------------------
 -- Fixtures : un porteur de clé (le parent) et l'élève qu'il paie.
@@ -162,10 +162,13 @@ SELECT is(
 );
 
 -- Écrire directement, sans passer par la RPC : refusé par l'absence de GRANT.
+-- `throws_ok` à QUATRE arguments : passer un SQLSTATE en 2ᵉ position fait du
+-- 3ᵉ argument le MESSAGE attendu, pas la description. Le NULL le dit — on juge
+-- le code d'erreur, pas la phrase de PostgreSQL (qui est localisable).
 SELECT throws_ok(
   $$ INSERT INTO public.ai_usage_events (payer, provider, feature, model, status)
      VALUES ('platform', 'anthropic', 'explain', 'm', 'ok') $$,
-  '42501',
+  '42501', NULL,
   'un client authentifié ne peut pas insérer une ligne de comptabilité'
 );
 

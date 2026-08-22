@@ -8,6 +8,17 @@
 // Même posture que `notifications.cron.server.ts` (é24).
 
 export {
+  AI_ACTIVATABLE_FEATURES,
+  getAiStudents,
+  setAiStudentAccess,
+  type AiStudentAccess,
+} from "./ai-access.server";
+
+export { callAi, type AiCallOutcome, type AiCallRequest } from "./ai-call.server";
+
+export { notifyBudgetAlerts } from "./ai-alerts.server";
+
+export {
   getAiModeStatus,
   markCredentialState,
   revokeAiCredential,

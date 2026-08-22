@@ -32,6 +32,7 @@ import {
   setAiPreferences,
 } from "../ai-credentials.server";
 import { aiErrorLabel, aiModeErrorCode, type AiModeStatus } from "../ai-mode-status";
+import { AiStudentsPanel } from "./ai-students-panel";
 
 /**
  * La section « Mode IA » des Réglages (étude 29 lot 2, D-16).
@@ -293,6 +294,11 @@ function SavedKey({
           aria-label={t.ai.doubleSolve}
         />
       </div>
+
+      {/* US-3 : l'activation par élève. Elle n'apparaît qu'une fois la clé
+          ACTIVE — activer un élève sur une clé refusée produirait une surface
+          qui échoue au premier clic, ce que é11 R-15 interdit. */}
+      {credential.status === "active" && <AiStudentsPanel />}
 
       <AlertDialog open={confirmOpen} onOpenChange={(next) => !busy && setConfirmOpen(next)}>
         <AlertDialogContent>

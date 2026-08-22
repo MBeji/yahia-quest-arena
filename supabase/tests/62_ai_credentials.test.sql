@@ -25,7 +25,7 @@
 
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(21);
+SELECT plan(22);
 
 -- ---------------------------------------------------------
 -- Fixtures : un ÉLÈVE (Q-2 : il a le droit de porter une clé) et un parent.
@@ -145,22 +145,16 @@ SELECT throws_ok(
         last4, daily_budget_usd, monthly_budget_usd, consent_version)
      VALUES ('b9000000-0000-4000-8000-000000000002', 'anthropic', 'm', 'm',
              '\x0011'::bytea, 'fp', 'dddd', 999, 20, '2026-08-22') $$,
-  '23514',
+  '23514', NULL,
   'un plafond journalier hors bornes est refusé par un CHECK (R-11)'
 );
 
 -- ---------------------------------------------------------
 -- 6. D-3 : la lecture ne rend NI le secret NI son empreinte.
 -- ---------------------------------------------------------
-SET LOCAL request.jwt.claims = '{"sub":"b9000000-0000-4000-8000-000000000001","role":"authenticated"}';
-SET LOCAL ROLE authenticated;
-
-SELECT is(
-  (SELECT last4 FROM public.get_ai_credential_status()),
-  'aaaa',
-  'le porteur lit `last4` — le seul fragment de clé qui existe en clair'
-);
-
+-- Lue AVANT la bascule de rôle : `information_schema` filtre par privilège, donc
+-- sous `authenticated` cette table n'a aucune colonne visible — l'assertion
+-- serait vraie pour la mauvaise raison.
 SELECT is(
   (SELECT count(*)::int
      FROM information_schema.columns
@@ -169,6 +163,15 @@ SELECT is(
       AND column_name IN ('secret_enc', 'key_fingerprint')),
   2,
   'les deux colonnes sensibles existent bien (sinon l''assertion suivante serait vide de sens)'
+);
+
+SET LOCAL request.jwt.claims = '{"sub":"b9000000-0000-4000-8000-000000000001","role":"authenticated"}';
+SET LOCAL ROLE authenticated;
+
+SELECT is(
+  (SELECT last4 FROM public.get_ai_credential_status()),
+  'aaaa',
+  'le porteur lit `last4` — le seul fragment de clé qui existe en clair'
 );
 
 -- Le contrat de sortie de la RPC : ni `secret_enc`, ni `key_fingerprint`.
@@ -185,7 +188,7 @@ SELECT is_empty(
 
 SELECT throws_ok(
   $$ SELECT secret_enc FROM public.ai_credentials $$,
-  '42501',
+  '42501', NULL,
   'un client authentifié ne peut pas lire le chiffré directement'
 );
 

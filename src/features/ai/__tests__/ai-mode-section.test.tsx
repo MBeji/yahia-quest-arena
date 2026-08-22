@@ -19,8 +19,12 @@ import type { AiModeStatus } from "../ai-mode-status";
 
 let status: AiModeStatus | undefined;
 
+// Le faux `useQuery` répond PAR CLÉ : la section et le panneau d'activation en
+// utilisent chacun un, et leur rendre le même objet ferait planter le second sur
+// un `.map` — ce qui est arrivé, et ce que ce commentaire empêche de refaire.
 vi.mock("@tanstack/react-query", () => ({
-  useQuery: () => ({ data: status }),
+  useQuery: ({ queryKey }: { queryKey: unknown[] }) =>
+    queryKey[0] === "ai-students" ? { data: [] } : { data: status },
   useQueryClient: () => ({ invalidateQueries: vi.fn() }),
 }));
 
