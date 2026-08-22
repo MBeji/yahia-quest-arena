@@ -4,12 +4,17 @@ The project's **reference test suite**: real browser journeys against the app.
 Separate from the Vitest unit/component suite and from `npm run verify` — run it
 explicitly (see below).
 
-Two tiers:
+Three tiers:
 
-| Tier              | Specs              | Backend?                                       | CI workflow                                |
-| ----------------- | ------------------ | ---------------------------------------------- | ------------------------------------------ |
-| **Public**        | `public/*.spec.ts` | No (dummy Supabase env is fine)                | `E2E` — every PR                           |
-| **Authenticated** | `authed/*.spec.ts` | Yes — a dedicated TEST Supabase + seeded users | `E2E (authenticated)` — `main` / on demand |
+| Tier              | Specs                   | Backend?                                       | CI workflow                                 |
+| ----------------- | ----------------------- | ---------------------------------------------- | ------------------------------------------- |
+| **Public**        | `public/*.spec.ts`      | No (dummy Supabase env is fine)                | `E2E` — nightly / on demand                 |
+| **Public-anon**   | `public-anon/*.spec.ts` | Yes — anon reads on the TEST project           | `E2E (authenticated)` — nightly / on demand |
+| **Authenticated** | `authed/*.spec.ts`      | Yes — a dedicated TEST Supabase + seeded users | `E2E (authenticated)` — nightly / on demand |
+
+⚠️ **No e2e tier gates a pull request.** Both workflows are `workflow_call` +
+`workflow_dispatch` only — there is no `pull_request` trigger — so a broken spec
+surfaces at the next nightly, not at review time.
 
 > ⚠️ Playwright can't run in the restricted build sandbox (browser download blocked). Run locally or in CI.
 
@@ -27,6 +32,7 @@ e2e/
     users.ts           # roles, test accounts, storageState paths
     db.ts              # service-role client + content helpers (adminDb)
   public/              # logged-out specs (no backend)
+  public-anon/         # logged-out specs that DO need the TEST backend (anon reads)
   authed/              # authenticated specs (reuse a role's stored session)
 scripts/e2e/
   _env.mjs             # loads .env.test + refuses to ever touch the prod project
@@ -41,9 +47,28 @@ scripts/e2e/
 ## Conventions (keep the suite clean & extensible)
 
 - **Selectors live in Page Objects** (`pages/`), never inline in specs. Prefer
-  locale-independent locators: ARIA roles/labels, field ids (`#auth-email`),
-  route hrefs (`a[href^="/subject/"]`), and the few hardcoded English literals.
-  UI copy is i18n (default `en`) — don't assert translated strings.
+  locale-independent locators: `data-testid`, field ids (`#auth-email`), route hrefs
+  (`a[href^="/matiere/"]`). ⚠️ An **`aria-label` is not one** — it is translated like
+  the rest, and the app's default locale is **French** (GAP-010), not English. A
+  `getByRole("button", { name: /english copy/i })` then matches nobody.
+- **Every negative assertion needs a paired positive one**, on the SAME Page Object
+  getter. A selector used only in `toHaveCount(0)` reports green when it has gone
+  stale — it measures a void, not an absence. That is issue #733: `dashboard.adminNavLink`
+  (fixed in #796) and `dungeon.enterButton` after it (#797) were both false greens for
+  that exact reason.
+- **And when no positive is WRITABLE, the negative doesn't belong in this tier at all.**
+  A surface the current phase makes structurally unreachable cannot be paired: the quest
+  paywall (`SubscriptionPaywall`) only mounts on a `resolve_exercise_access` refusal, and
+  no account can provoke one while every `parcours.is_premium` is false. Its two getters
+  — `paywallPremiumText` and the `betaCta` living _inside_ it — carried five negatives
+  that nothing could ever turn red; both are deleted. The rule they leave behind:
+  **assert the cause, not the absence of its consequence.** The free-phase invariant is
+  now `adminDb.premiumParcoursIds()` being empty (`premium-gate.spec.ts`) — one row
+  flipped back to premium turns it red, and the failure names the parcours. The dormant
+  UI keeps its _paired_ coverage at the **unit** tier
+  (`src/features/subscription/__tests__/`), the only tier that can render it on demand.
+  Do **not** stage the positive by flipping a global catalogue flag: the suite runs
+  `fullyParallel` and the neighbouring specs read that same row.
 - **Specs read like scenarios**: `await dashboard.goto(); await expect(...)`. No
   raw `page.locator(...)` chains in specs — add a Page Object method/getter instead.
 - **Auth** is declared per spec: `test.use({ storageState: STORAGE_STATE.<role> })`.
@@ -145,11 +170,21 @@ every parcours is `is_premium = false` in prod, so these seeded entitlements exe
 
 ## Maintenance / guardrails
 
-The `E2E` workflow runs these on every PR (they're not part of `npm run verify`):
+These two live inside the `E2E` workflow and are **not** part of `npm run verify`.
+Since that workflow never runs on a PR (see above), nothing runs them for you — run
+them yourself before pushing anything under `e2e/`:
 
 ```bash
 npx tsc --noEmit -p e2e/tsconfig.json    # typecheck e2e
 npx eslint e2e --max-warnings=0          # lint e2e
+```
+
+And don't leave a spec's fate to the next nightly — dispatch the tier your change
+touches on your own branch:
+
+```bash
+gh workflow run e2e.yml --ref <branch>        # public tier (needs no secret)
+gh workflow run e2e-auth.yml --ref <branch>   # public-anon + authenticated tiers
 ```
 
 Debugging: `npx playwright test --ui` (watch/time-travel), `npx playwright show-report`

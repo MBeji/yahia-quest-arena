@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import {
+  BrainCircuit,
   Bug,
   ChevronRight,
   ClipboardList,
@@ -101,6 +102,9 @@ function ConsolePage() {
       count: 0,
     },
     { to: "/admin/economie" as const, Icon: Coins, label: t.layout.economy, count: 0 },
+    // Étude 29 lot 5 : la console du mode IA. Pas de pastille — elle ne porte
+    // aucune file d'attente, seulement des agrégats et deux interrupteurs.
+    { to: "/admin/ia" as const, Icon: BrainCircuit, label: t.ai.adminTitle, count: 0 },
   ];
 
   return (

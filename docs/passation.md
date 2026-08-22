@@ -151,10 +151,32 @@ demi-état, ni processus vivant, ni savoir enfermé dans la tête d'un agent. Le
 ci-dessous se déroulent **après** que le merge est réel, dans cet ordre. Ils ne remplacent
 aucun gate — aucun n'est automatisable, c'est justement pourquoi ils sont écrits.
 
-1. **Le merge est réel, pas seulement affiché.**
-   `git merge-base --is-ancestor <sha> origin/main` — le statut `MERGED` d'une PR dont la
-   base était une autre branche ment (merge fantôme, 2026-08 : 23 figures perdues sans
-   aucune alerte).
+1. **Le merge est réel, pas seulement affiché.** Le statut `MERGED` d'une PR dont la base était
+   une autre branche ment (merge fantôme, 2026-08 : 23 figures perdues sans aucune alerte). Ce
+   qui fait foi est le **contenu sur `main`**, jamais la topologie :
+
+   ```bash
+   git fetch origin main
+   git log --oneline origin/main -1     # le squash est là, suffixé (#NNN)
+   git ls-tree origin/main <chemin>     # le fichier livré existe dans l'arbre…
+   git show origin/main:<fichier>       # …et il porte bien l'apport
+   ```
+
+   ⚠️ **Ni `git merge-base --is-ancestor`, ni `git branch --merged`.** La chaîne merge en
+   **squash** (`--auto --squash --delete-branch`) : `main` reçoit un commit **neuf**, le SHA de
+   la branche n'est donc ancêtre de rien et le test échoue sur **tous** les merges, y compris
+   parfaitement réels — une session qui l'applique se déclare en panne à chacune de ses propres
+   livraisons. La branche étant supprimée au merge, la commande peut même sortir en
+   `fatal: Not a valid commit name`. Mesuré le 2026-08-22 sur la PR #802 : tête `14dfb0ae`
+   squashée en `e6b8ae2d`, contenu bien présent sur `main`, `--is-ancestor` en échec.
+   _(Git Bash : préfixer `MSYS_NO_PATHCONV=1` dès que le chemin commence par un point — sans
+   lui, `origin/main:.github/…` part en `origin\main;.github\…` et git répond « ambiguous
+   argument ».)_
+
+   Le piège d'origine, lui, se prévient **en amont** : une PR basée sur la branche d'une autre
+   PR est squashée sur une base morte. Toujours brancher sur `main`, et le vérifier plutôt que
+   le supposer : `gh pr view <N> --json baseRefName` doit répondre `main`.
+
 2. **La prod sert vraiment le changement.** Un workflow vert prouve qu'il s'est exécuté,
    pas que la surface a bougé : ouvrir la page publique concernée, ou comparer l'état
    avant/après. Un déploiement vert sur une page inchangée est un faux positif.

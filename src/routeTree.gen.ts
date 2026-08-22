@@ -21,6 +21,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedDuelRouteImport } from './routes/_authenticated/duel'
 import { Route as AuthenticatedDungeonRouteImport } from './routes/_authenticated/dungeon'
 import { Route as AuthenticatedExamensRouteImport } from './routes/_authenticated/examens'
+import { Route as AuthenticatedForgeRouteImport } from './routes/_authenticated/forge'
 import { Route as AuthenticatedLeaderboardRouteImport } from './routes/_authenticated/leaderboard'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedParametrageRouteImport } from './routes/_authenticated/parametrage'
@@ -38,6 +39,7 @@ import { Route as AuthenticatedAdminBetaRequestsRouteImport } from './routes/_au
 import { Route as AuthenticatedAdminBugReportsRouteImport } from './routes/_authenticated/admin.bug-reports'
 import { Route as AuthenticatedAdminContentReportsRouteImport } from './routes/_authenticated/admin.content-reports'
 import { Route as AuthenticatedAdminEconomieRouteImport } from './routes/_authenticated/admin.economie'
+import { Route as AuthenticatedAdminIaRouteImport } from './routes/_authenticated/admin.ia'
 import { Route as AuthenticatedAdminParcoursInterestRouteImport } from './routes/_authenticated/admin.parcours-interest'
 import { Route as AuthenticatedAdminSubscriptionsRouteImport } from './routes/_authenticated/admin.subscriptions'
 import { Route as AuthenticatedDuelDuelIdRouteImport } from './routes/_authenticated/duel.$duelId'
@@ -108,6 +110,11 @@ const AuthenticatedDungeonRoute = AuthenticatedDungeonRouteImport.update({
 const AuthenticatedExamensRoute = AuthenticatedExamensRouteImport.update({
   id: '/examens',
   path: '/examens',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedForgeRoute = AuthenticatedForgeRouteImport.update({
+  id: '/forge',
+  path: '/forge',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedLeaderboardRoute =
@@ -202,6 +209,11 @@ const AuthenticatedAdminEconomieRoute =
     path: '/admin/economie',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedAdminIaRoute = AuthenticatedAdminIaRouteImport.update({
+  id: '/admin/ia',
+  path: '/admin/ia',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedAdminParcoursInterestRoute =
   AuthenticatedAdminParcoursInterestRouteImport.update({
     id: '/admin/parcours-interest',
@@ -289,6 +301,7 @@ export interface FileRoutesByFullPath {
   '/duel': typeof AuthenticatedDuelRouteWithChildren
   '/dungeon': typeof AuthenticatedDungeonRoute
   '/examens': typeof AuthenticatedExamensRoute
+  '/forge': typeof AuthenticatedForgeRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/parametrage': typeof AuthenticatedParametrageRoute
@@ -305,6 +318,7 @@ export interface FileRoutesByFullPath {
   '/admin/bug-reports': typeof AuthenticatedAdminBugReportsRoute
   '/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
   '/admin/economie': typeof AuthenticatedAdminEconomieRoute
+  '/admin/ia': typeof AuthenticatedAdminIaRoute
   '/admin/parcours-interest': typeof AuthenticatedAdminParcoursInterestRoute
   '/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
   '/duel/$duelId': typeof AuthenticatedDuelDuelIdRoute
@@ -331,6 +345,7 @@ export interface FileRoutesByTo {
   '/duel': typeof AuthenticatedDuelRouteWithChildren
   '/dungeon': typeof AuthenticatedDungeonRoute
   '/examens': typeof AuthenticatedExamensRoute
+  '/forge': typeof AuthenticatedForgeRoute
   '/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/parametrage': typeof AuthenticatedParametrageRoute
@@ -347,6 +362,7 @@ export interface FileRoutesByTo {
   '/admin/bug-reports': typeof AuthenticatedAdminBugReportsRoute
   '/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
   '/admin/economie': typeof AuthenticatedAdminEconomieRoute
+  '/admin/ia': typeof AuthenticatedAdminIaRoute
   '/admin/parcours-interest': typeof AuthenticatedAdminParcoursInterestRoute
   '/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
   '/duel/$duelId': typeof AuthenticatedDuelDuelIdRoute
@@ -375,6 +391,7 @@ export interface FileRoutesById {
   '/_authenticated/duel': typeof AuthenticatedDuelRouteWithChildren
   '/_authenticated/dungeon': typeof AuthenticatedDungeonRoute
   '/_authenticated/examens': typeof AuthenticatedExamensRoute
+  '/_authenticated/forge': typeof AuthenticatedForgeRoute
   '/_authenticated/leaderboard': typeof AuthenticatedLeaderboardRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/parametrage': typeof AuthenticatedParametrageRoute
@@ -392,6 +409,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/bug-reports': typeof AuthenticatedAdminBugReportsRoute
   '/_authenticated/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
   '/_authenticated/admin/economie': typeof AuthenticatedAdminEconomieRoute
+  '/_authenticated/admin/ia': typeof AuthenticatedAdminIaRoute
   '/_authenticated/admin/parcours-interest': typeof AuthenticatedAdminParcoursInterestRoute
   '/_authenticated/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
   '/_authenticated/duel/$duelId': typeof AuthenticatedDuelDuelIdRoute
@@ -420,6 +438,7 @@ export interface FileRouteTypes {
     | '/duel'
     | '/dungeon'
     | '/examens'
+    | '/forge'
     | '/leaderboard'
     | '/onboarding'
     | '/parametrage'
@@ -436,6 +455,7 @@ export interface FileRouteTypes {
     | '/admin/bug-reports'
     | '/admin/content-reports'
     | '/admin/economie'
+    | '/admin/ia'
     | '/admin/parcours-interest'
     | '/admin/subscriptions'
     | '/duel/$duelId'
@@ -462,6 +482,7 @@ export interface FileRouteTypes {
     | '/duel'
     | '/dungeon'
     | '/examens'
+    | '/forge'
     | '/leaderboard'
     | '/onboarding'
     | '/parametrage'
@@ -478,6 +499,7 @@ export interface FileRouteTypes {
     | '/admin/bug-reports'
     | '/admin/content-reports'
     | '/admin/economie'
+    | '/admin/ia'
     | '/admin/parcours-interest'
     | '/admin/subscriptions'
     | '/duel/$duelId'
@@ -505,6 +527,7 @@ export interface FileRouteTypes {
     | '/_authenticated/duel'
     | '/_authenticated/dungeon'
     | '/_authenticated/examens'
+    | '/_authenticated/forge'
     | '/_authenticated/leaderboard'
     | '/_authenticated/onboarding'
     | '/_authenticated/parametrage'
@@ -522,6 +545,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/bug-reports'
     | '/_authenticated/admin/content-reports'
     | '/_authenticated/admin/economie'
+    | '/_authenticated/admin/ia'
     | '/_authenticated/admin/parcours-interest'
     | '/_authenticated/admin/subscriptions'
     | '/_authenticated/duel/$duelId'
@@ -630,6 +654,13 @@ declare module '@tanstack/react-router' {
       path: '/examens'
       fullPath: '/examens'
       preLoaderRoute: typeof AuthenticatedExamensRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/forge': {
+      id: '/_authenticated/forge'
+      path: '/forge'
+      fullPath: '/forge'
+      preLoaderRoute: typeof AuthenticatedForgeRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/leaderboard': {
@@ -751,6 +782,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminEconomieRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/admin/ia': {
+      id: '/_authenticated/admin/ia'
+      path: '/admin/ia'
+      fullPath: '/admin/ia'
+      preLoaderRoute: typeof AuthenticatedAdminIaRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/admin/parcours-interest': {
       id: '/_authenticated/admin/parcours-interest'
       path: '/admin/parcours-interest'
@@ -864,6 +902,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedDuelRoute: typeof AuthenticatedDuelRouteWithChildren
   AuthenticatedDungeonRoute: typeof AuthenticatedDungeonRoute
   AuthenticatedExamensRoute: typeof AuthenticatedExamensRoute
+  AuthenticatedForgeRoute: typeof AuthenticatedForgeRoute
   AuthenticatedLeaderboardRoute: typeof AuthenticatedLeaderboardRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedParametrageRoute: typeof AuthenticatedParametrageRoute
@@ -874,6 +913,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAdminBugReportsRoute: typeof AuthenticatedAdminBugReportsRoute
   AuthenticatedAdminContentReportsRoute: typeof AuthenticatedAdminContentReportsRoute
   AuthenticatedAdminEconomieRoute: typeof AuthenticatedAdminEconomieRoute
+  AuthenticatedAdminIaRoute: typeof AuthenticatedAdminIaRoute
   AuthenticatedAdminParcoursInterestRoute: typeof AuthenticatedAdminParcoursInterestRoute
   AuthenticatedAdminSubscriptionsRoute: typeof AuthenticatedAdminSubscriptionsRoute
   AuthenticatedExamenExamIdRoute: typeof AuthenticatedExamenExamIdRoute
@@ -891,6 +931,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDuelRoute: AuthenticatedDuelRouteWithChildren,
   AuthenticatedDungeonRoute: AuthenticatedDungeonRoute,
   AuthenticatedExamensRoute: AuthenticatedExamensRoute,
+  AuthenticatedForgeRoute: AuthenticatedForgeRoute,
   AuthenticatedLeaderboardRoute: AuthenticatedLeaderboardRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedParametrageRoute: AuthenticatedParametrageRoute,
@@ -901,6 +942,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminBugReportsRoute: AuthenticatedAdminBugReportsRoute,
   AuthenticatedAdminContentReportsRoute: AuthenticatedAdminContentReportsRoute,
   AuthenticatedAdminEconomieRoute: AuthenticatedAdminEconomieRoute,
+  AuthenticatedAdminIaRoute: AuthenticatedAdminIaRoute,
   AuthenticatedAdminParcoursInterestRoute:
     AuthenticatedAdminParcoursInterestRoute,
   AuthenticatedAdminSubscriptionsRoute: AuthenticatedAdminSubscriptionsRoute,

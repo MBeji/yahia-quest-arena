@@ -59,6 +59,14 @@ export interface AdminDb {
   premiumParcoursExercise(): Promise<{ exerciseId: string; subjectId: string }>;
   /** A PREMIUM concours parcours: its id + the (theme_id, grade_id) its subjects share. */
   premiumConcoursParcours(): Promise<{ id: string; theme: string; grade: string }>;
+  /**
+   * Ids of every parcours still flagged `is_premium = true`. La phase gratuite
+   * (étude 15, lot 2) veut cette liste VIDE, et c'est le seul fait qui la garantit :
+   * `resolve_exercise_access` court-circuite à « ouvert » dès que le drapeau est faux,
+   * donc rien d'autre ne peut faire apparaître le paywall. Rend les ids plutôt qu'un
+   * compte pour qu'un échec NOMME le parcours fautif (issue #733, `premium-gate.spec`).
+   */
+  premiumParcoursIds(): Promise<string[]>;
   /** First non-premium subject under a theme slug (e.g. "culture-generale"). */
   subjectIdByTheme(themeSlug: string): Promise<string | null>;
   /** Theme slugs that currently have at least one subject in the catalogue. */
@@ -137,6 +145,15 @@ export interface AdminDb {
     exerciseId: string;
     answerKey: { prompt: string; correctText: string }[];
   } | null>;
+  /**
+   * Fait franchir à un compte le verrou de progression du Donjon (`get_dungeon_access`,
+   * migration 20260711100000) : des `attempts` couvrant au moins 2 matières ET 3 chapitres
+   * distincts, un niveau >= 1, et aucune run du jour. Renvoie `false` quand le catalogue de
+   * test est trop mince pour y arriver — la spec saute alors proprement, au lieu d'échouer
+   * sur une donnée absente. `attempts` et `dungeon_runs` sont dans GAMEPLAY_TABLES, donc
+   * `reset-gameplay.mjs` rend cette mise en scène au run suivant.
+   */
+  unlockDungeonPrereq(userId: string): Promise<boolean>;
 }
 
 export function createAdminDb(): AdminDb {
@@ -323,6 +340,15 @@ export function createAdminDb(): AdminDb {
         theme: data.theme_id as string,
         grade: data.grade_id as string,
       };
+    },
+    async premiumParcoursIds() {
+      const { data, error } = await client
+        .from("parcours")
+        .select("id")
+        .eq("is_premium", true)
+        .order("id");
+      if (error) throw new Error(`premiumParcoursIds: ${error.message}`);
+      return (data ?? []).map((p) => p.id as string);
     },
     async subjectIdByTheme(themeSlug: string) {
       // themes.id IS the slug ('ecole-tn', 'culture-generale'…), and subjects.theme_id
@@ -569,6 +595,86 @@ export function createAdminDb(): AdminDb {
         }
       }
       return null;
+    },
+    async unlockDungeonPrereq(userId: string) {
+      // Les deux constantes de get_dungeon_access (c_req_subjects / c_req_chapters).
+      const REQ_SUBJECTS = 2;
+      const REQ_CHAPTERS = 3;
+
+      const { data, error } = await client
+        .from("exercises")
+        .select("id, subject_id, chapter_id")
+        .eq("source", "admin")
+        .neq("mode", "quiz")
+        .order("subject_id")
+        .order("chapter_id")
+        .order("display_order")
+        .limit(500);
+      if (error) throw new Error(`unlockDungeonPrereq(exercises): ${error.message}`);
+
+      // Un exercice par chapitre distinct, rangés par matière.
+      const bySubject = new Map<string, { id: string; subjectId: string }[]>();
+      const seenChapters = new Set<string>();
+      for (const row of data ?? []) {
+        const chapterId = row.chapter_id as string;
+        if (seenChapters.has(chapterId)) continue;
+        seenChapters.add(chapterId);
+        const subjectId = row.subject_id as string;
+        const queue = bySubject.get(subjectId) ?? [];
+        queue.push({ id: row.id as string, subjectId });
+        bySubject.set(subjectId, queue);
+      }
+
+      // …servis À TOUR DE RÔLE : servir une matière jusqu'au bout donnerait bien 3
+      // chapitres, mais tous sous la même matière — le prérequis « 2 matières »
+      // resterait fermé et le test échouerait pour une raison qui n'est pas la sienne.
+      const queues = [...bySubject.values()];
+      const picked: { id: string; subjectId: string }[] = [];
+      for (let round = 0; picked.length < REQ_CHAPTERS; round += 1) {
+        let servedThisRound = 0;
+        for (const queue of queues) {
+          const candidate = queue[round];
+          if (!candidate) continue;
+          picked.push(candidate);
+          servedThisRound += 1;
+          if (picked.length >= REQ_CHAPTERS) break;
+        }
+        if (servedThisRound === 0) break;
+      }
+      const subjectsCovered = new Set(picked.map((p) => p.subjectId));
+      if (picked.length < REQ_CHAPTERS || subjectsCovered.size < REQ_SUBJECTS) return false;
+
+      // Purge d'abord : une reprise Playwright rejouerait sinon l'insertion par-dessus
+      // la précédente. Seule cette spec touche aux tentatives de ce compte.
+      const del = await client.from("attempts").delete().eq("user_id", userId);
+      if (del.error) throw new Error(`unlockDungeonPrereq(attempts.delete): ${del.error.message}`);
+      const ins = await client.from("attempts").insert(
+        picked.map((p) => ({
+          user_id: userId,
+          exercise_id: p.id,
+          subject_id: p.subjectId,
+          correct_count: 1,
+          total_count: 1,
+          score_pct: 100,
+          duration_seconds: 30,
+          // Aucun XP. La porte ne lit ni le score ni la récompense — elle COMPTE des
+          // tentatives distinctes. Et `xp_earned > 0` est justement le signal qui fait
+          // d'une tentative une SOURCE dans la console Économie (economy.server.ts) :
+          // en prêter à des tentatives fabriquées gonflerait ce chiffre sans qu'aucun
+          // XP n'ait été gagné.
+          xp_earned: 0,
+        })),
+      );
+      if (ins.error) throw new Error(`unlockDungeonPrereq(attempts.insert): ${ins.error.message}`);
+
+      // `max_runs_per_day = LEAST(level, 5)`, et `runs_today` doit rester dessous :
+      // niveau 5 + aucune run du jour laisse la porte franchement ouverte. La cascade
+      // de dungeon_run_questions emporte les questions assignées.
+      const lvl = await client.from("profiles").update({ level: 5 }).eq("id", userId);
+      if (lvl.error) throw new Error(`unlockDungeonPrereq(level): ${lvl.error.message}`);
+      const runs = await client.from("dungeon_runs").delete().eq("user_id", userId);
+      if (runs.error) throw new Error(`unlockDungeonPrereq(runs.delete): ${runs.error.message}`);
+      return true;
     },
   };
 }

@@ -1,18 +1,24 @@
 import { type Page, type Locator, expect } from "@playwright/test";
 
-/** Quest page (`/quest/$id`): the QCM runner, plus the premium paywall / quiz lock. */
+/**
+ * Quest page (`/quest/$id`): the QCM runner and the chapter quiz lock.
+ *
+ * Ni le paywall premium ni le CTA « bêta testeur » qu'il contient n'ont de getter
+ * ici, et c'est délibéré (issue #733). Tous deux n'existaient qu'en négatifs
+ * ORPHELINS, et le positif apparié n'était pas écrivable à ce palier :
+ * `SubscriptionPaywall` ne se monte que derrière `renderPremiumLock`, que
+ * `resolve_exercise_access` ne peut refuser tant que `parcours.is_premium` est faux
+ * partout — la phase gratuite. Le mettre en scène demanderait de basculer ce
+ * drapeau de catalogue GLOBAL, que les specs voisines lisent en parallèle
+ * (`fullyParallel`). L'invariant est donc vérifié à sa CAUSE, là où il est
+ * falsifiable : `premium-gate.spec.ts` via `adminDb.premiumParcoursIds()`. La
+ * machinerie dormante, elle, garde sa couverture APPARIÉE au palier unitaire
+ * (`src/features/subscription/__tests__/`), le seul qui puisse la rendre à la
+ * demande — jusqu'à l'étude 01.
+ */
 export class QuestPage {
   constructor(private readonly page: Page) {}
 
-  // Premium paywall (SubscriptionPaywall) — shown when a user without an entitlement
-  // opens a premium-parcours mission outside the free preview. Matches both the
-  // "Parcours premium" denial copy and the paywall's "Premium Feature" title.
-  get paywallPremiumText(): Locator {
-    return this.page.getByText(/premium/i).first();
-  }
-  get betaCta(): Locator {
-    return this.page.getByRole("button", { name: /bêta|beta/i });
-  }
   /** Chapter comprehension-quiz lock screen (school subjects): shown when the
    * mission is reachable (entitlement OK) but the chapter quiz isn't passed yet.
    * FR "Exercice verrouillé", EN "Exercise locked", AR "التمرين مقفل". */
