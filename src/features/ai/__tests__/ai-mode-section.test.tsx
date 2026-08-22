@@ -153,7 +153,7 @@ describe("R-6 — l'écran ne propose pas une adresse que le serveur refuserait"
     status = BASE;
     render(React.createElement(AiModeSection, { render: wrap }));
     await userEvent.click(screen.getByTestId("ai-attach"));
-    await userEvent.click(screen.getByText("ai.providerCompatible"));
+    await userEvent.click(screen.getByTestId("ai-preset-custom"));
     await userEvent.type(screen.getByTestId("ai-secret"), "sk-something-long-enough");
     await userEvent.click(screen.getByTestId("ai-consent"));
 
@@ -163,6 +163,33 @@ describe("R-6 — l'écran ne propose pas une adresse que le serveur refuserait"
     await userEvent.clear(screen.getByTestId("ai-base-url"));
     await userEvent.type(screen.getByTestId("ai-base-url"), "https://api.example.com/v1");
     expect(screen.getByTestId("ai-save")).toBeEnabled();
+  });
+
+  it("NOMME les fournisseurs compatibles, et un préréglage remplit ses champs", async () => {
+    // Le grief d'origine : le moteur acceptait déjà DeepSeek (Q-4, adresse
+    // libre), mais l'écran n'affichait que « Compatible OpenAI » — un porteur y
+    // lisait que le produit ne connaissait que deux fournisseurs.
+    status = BASE;
+    render(React.createElement(AiModeSection, { render: wrap }));
+    await userEvent.click(screen.getByTestId("ai-attach"));
+
+    expect(screen.getByTestId("ai-preset-deepseek")).toBeInTheDocument();
+    expect(screen.getByTestId("ai-preset-moonshot")).toBeInTheDocument();
+    expect(screen.getByTestId("ai-preset-zai")).toBeInTheDocument();
+
+    await userEvent.click(screen.getByTestId("ai-preset-deepseek"));
+    expect(screen.getByTestId("ai-base-url")).toHaveValue("https://api.deepseek.com");
+    expect(screen.getByTestId("ai-model-fast")).toHaveValue("deepseek-v4-flash");
+    expect(screen.getByTestId("ai-model-rich")).toHaveValue("deepseek-v4-pro");
+  });
+
+  it("laisse « Autre » entièrement libre — la porte de Q-4 reste ouverte", async () => {
+    status = BASE;
+    render(React.createElement(AiModeSection, { render: wrap }));
+    await userEvent.click(screen.getByTestId("ai-attach"));
+    await userEvent.click(screen.getByTestId("ai-preset-custom"));
+    expect(screen.getByTestId("ai-base-url")).toHaveValue("");
+    expect(screen.getByTestId("ai-model-fast")).toHaveValue("");
   });
 
   it("cache le champ d'adresse pour Anthropic — son adresse est fixe (§3.5)", async () => {
@@ -191,6 +218,7 @@ describe("R-4 — la clé ne réapparaît jamais", () => {
       monthlyBudgetUsd: 20,
       doubleSolve: true,
       consentStale: false,
+      limitsEnforced: false,
     },
   };
 

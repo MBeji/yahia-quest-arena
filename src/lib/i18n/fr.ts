@@ -1099,6 +1099,8 @@ export const fr: TranslationKeys = {
     revoked: "Clé révoquée.",
     provider: "Fournisseur",
     providerAnthropic: "Anthropic",
+    providerHint:
+      "Ces raccourcis remplissent l'adresse et les modèles — vous pouvez tout modifier ensuite. « Autre » accepte n'importe quelle API compatible OpenAI (Mistral, OpenRouter, Groq, Qwen…), pourvu qu'elle soit en https et joignable publiquement.",
     providerCompatible: "Compatible OpenAI",
     baseUrl: "Adresse de l'API",
     baseUrlHint: "Doit être en https, sur le port 443, et joignable publiquement.",
@@ -1114,6 +1116,15 @@ export const fr: TranslationKeys = {
     dailyBudget: "Plafond par jour ($)",
     monthlyBudget: "Plafond par mois ($)",
     budgetHint: "Au-delà, aucun appel n'est émis et l'élève retrouve l'application sans IA.",
+    dailyReference: "Repère par jour ($)",
+    monthlyReference: "Repère par mois ($)",
+    budgetReferenceHint:
+      "Ces montants ne coupent rien : ils servent de repère aux alertes. Armez les plafonds ci-dessus pour qu'ils interrompent les appels.",
+    limitsTitle: "Plafonds de consommation",
+    limitsOnHint:
+      "Au-delà du plafond, plus aucun appel n'est émis — ni pour l'argent, ni pour le nombre de quiz par jour.",
+    limitsOffHint:
+      "Aucune coupure automatique. La dépense reste comptée et vous êtes alerté (50 / 80 / 100 % du repère, et dès qu'une journée dépasse 3× l'ordinaire), mais rien ne s'arrête tout seul — c'est votre facture chez le fournisseur.",
     estimateNotice:
       "Estimation — la facture qui fait foi est celle de votre fournisseur. Nous ne percevons rien.",
     pricesAsOf: "Grille de prix relevée le {date}.",

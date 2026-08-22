@@ -1073,6 +1073,7 @@ export type TranslationKeys = {
     revoked: string;
     provider: string;
     providerAnthropic: string;
+    providerHint: string;
     providerCompatible: string;
     baseUrl: string;
     baseUrlHint: string;
@@ -1086,6 +1087,12 @@ export type TranslationKeys = {
     dailyBudget: string;
     monthlyBudget: string;
     budgetHint: string;
+    dailyReference: string;
+    monthlyReference: string;
+    budgetReferenceHint: string;
+    limitsTitle: string;
+    limitsOnHint: string;
+    limitsOffHint: string;
     estimateNotice: string;
     pricesAsOf: string;
     doubleSolve: string;

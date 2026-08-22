@@ -224,6 +224,15 @@ n'est requise pour faire tourner l'application.
 Un préfixe `VITE_` inline la valeur dans le bundle client au build : ce serait la
 clé plateforme en clair dans le navigateur de chaque élève.
 
+⚠️ **Les plafonds de consommation ne sont plus un garde-fou d'environnement, et
+ils ne coupent plus par défaut.** Depuis le 2026-08-22, `ai_credentials.limits_enforced`
+vaut `false` à la création : la dépense et l'énergie sont **comptées et alertées**,
+elles n'interrompent aucun appel. Le porteur réarme la coupure depuis
+`/parametrage` → « Mode IA » → « Plafonds de consommation », sans redéploiement.
+Ce qui reste actif sans elle : les seuils 50/80/100 % du repère et l'alerte
+d'anomalie (une journée au-delà de 3× la médiane des sept précédentes) — c'est
+désormais le **seul** signal automatique sur une facture qui dérape.
+
 Générer la KEK du coffre (32 octets, base64) :
 
 ```bash

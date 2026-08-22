@@ -24,10 +24,11 @@ import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middlew
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
 import {
-  AI_CURATED_MODELS,
   AI_DISCARD_ADVICE_THRESHOLD,
+  AI_PROVIDERS,
   AI_MODEL_PRICES_AS_OF,
-  type AiProviderId,
+  presetForCredential,
+  type AiProviderPreset,
 } from "@/shared/constants/ai";
 import { AI_MODE_ERROR_PREFIX } from "./ai-mode-status";
 
@@ -66,6 +67,12 @@ const consoleRowSchema = z.object({
     }),
   ),
   forge_discard_rate: z.coerce.number(),
+  // Ajoutés le 2026-08-22. `.catch(...)` couvre la fenêtre où le code neuf
+  // tourne contre la base d'avant la migration : pas de fournisseur connu ⇒
+  // aucun conseil de modèle, ce qui est le repli correct (on se tait).
+  provider: z.enum(AI_PROVIDERS).nullable().catch(null),
+  base_url: z.string().nullable().catch(null),
+  limits_enforced: z.boolean().catch(false),
 });
 
 export type AiConsole = {
@@ -91,6 +98,12 @@ export type AiConsole = {
   readonly modelAdvice: { model: string; suggestions: readonly string[] } | null;
   /** R-12 : la date de la grille, à côté du chiffre — jamais en note de bas de page. */
   readonly pricesAsOf: string;
+  /**
+   * Les plafonds coupent-ils ? Depuis le 2026-08-22 ils sont éteints par défaut.
+   * L'écran en a besoin : afficher « 1,20 $ / 2,00 $ » laisse croire à une
+   * coupure à 2 $, alors que rien ne s'arrêtera.
+   */
+  readonly limitsEnforced: boolean;
 };
 
 /**
@@ -114,13 +127,18 @@ export function dominantModel(byModel: Record<string, { calls: number }>): strin
 export function modelAdviceFor(args: {
   discardRate: number;
   byModel: Record<string, { calls: number }>;
-  provider: AiProviderId | null;
+  /** Le préréglage du crédential, ou `null` quand l'adresse n'en désigne aucun. */
+  preset: AiProviderPreset | null;
 }): { model: string; suggestions: readonly string[] } | null {
   if (args.discardRate <= AI_DISCARD_ADVICE_THRESHOLD) return null;
   const model = dominantModel(args.byModel);
   if (!model) return null;
-  const curated = args.provider ? AI_CURATED_MODELS[args.provider] : [];
-  return { model, suggestions: curated.filter((m) => m !== model) };
+  // Les suggestions viennent du FOURNISSEUR RÉEL, plus du protocole. La version
+  // d'origine déduisait « openai_compatible » de l'absence du préfixe `claude-`
+  // et conseillait `gpt-5` à un porteur DeepSeek : un identifiant qui n'existe
+  // pas sur son endpoint, donc un conseil qui casse ce qu'il prétend réparer.
+  const suggested = args.preset?.suggested ?? [];
+  return { model, suggestions: suggested.filter((m) => m !== model) };
 }
 
 export const getAiConsole = createServerFn({ method: "GET" })
@@ -152,13 +170,13 @@ export const getAiConsole = createServerFn({ method: "GET" })
       modelAdvice: modelAdviceFor({
         discardRate: row.forge_discard_rate,
         byModel: row.by_model,
-        // Le fournisseur se déduit du modèle dominant : la console ne relit pas
-        // le crédential pour ça, et n'a donc aucune raison d'y toucher.
-        provider: dominantModel(row.by_model)?.startsWith("claude-")
-          ? "anthropic"
-          : "openai_compatible",
+        // Le préréglage vient de l'ADRESSE enregistrée, que la RPC rend déjà.
+        // Adresse inconnue ⇒ aucun conseil de modèle : le constat vaut sans la
+        // suggestion, et suggérer au hasard vaut moins que se taire.
+        preset: row.provider ? (presetForCredential(row.provider, row.base_url) ?? null) : null,
       }),
       pricesAsOf: AI_MODEL_PRICES_AS_OF,
+      limitsEnforced: row.limits_enforced,
     };
   });
 

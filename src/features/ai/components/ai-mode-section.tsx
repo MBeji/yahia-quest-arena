@@ -18,12 +18,12 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { useT } from "@/lib/i18n";
 import {
-  AI_CURATED_MODELS,
   AI_DEFAULT_BUDGETS,
-  AI_DEFAULT_MODELS,
   AI_MODEL_PRICES_AS_OF,
-  AI_PROVIDERS,
+  AI_PROVIDER_PRESETS,
+  presetById,
   type AiProviderId,
+  type AiProviderPreset,
 } from "@/shared/constants/ai";
 import {
   getAiModeStatus,
@@ -169,6 +169,7 @@ function SavedKey({
   const [daily, setDaily] = useState(String(credential.dailyBudgetUsd));
   const [monthly, setMonthly] = useState(String(credential.monthlyBudgetUsd));
   const [doubleSolve, setDoubleSolve] = useState(credential.doubleSolve);
+  const [limitsEnforced, setLimitsEnforced] = useState(credential.limitsEnforced);
   const [busy, setBusy] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -179,7 +180,7 @@ function SavedKey({
         ? t.ai.stateInvalid
         : t.ai.stateUnverified;
 
-  async function persist(next: { doubleSolve?: boolean } = {}) {
+  async function persist(next: { doubleSolve?: boolean; limitsEnforced?: boolean } = {}) {
     setBusy(true);
     try {
       await savePrefs({
@@ -187,6 +188,7 @@ function SavedKey({
           dailyBudgetUsd: Number(daily),
           monthlyBudgetUsd: Number(monthly),
           doubleSolve: next.doubleSolve ?? doubleSolve,
+          limitsEnforced: next.limitsEnforced ?? limitsEnforced,
         },
       });
       toast.success(t.ai.prefsSaved);
@@ -236,8 +238,30 @@ function SavedKey({
         </p>
       )}
 
+      {/* Les plafonds de consommation. Décision du 2026-08-22 : ils ne coupent
+          plus par défaut. L'interrupteur est posé AVANT les montants parce qu'il
+          change ce que ces montants VEULENT DIRE — un plafond ou un repère. */}
+      <div className="mt-4 flex items-start justify-between gap-3 border-t border-border/50 pt-3">
+        <span>
+          <span className="block font-semibold">{t.ai.limitsTitle}</span>
+          <span className="block text-xs text-muted-foreground">
+            {limitsEnforced ? t.ai.limitsOnHint : t.ai.limitsOffHint}
+          </span>
+        </span>
+        <Switch
+          checked={limitsEnforced}
+          disabled={busy}
+          data-testid="ai-limits-enforced"
+          onCheckedChange={(next) => {
+            setLimitsEnforced(next);
+            void persist({ limitsEnforced: next });
+          }}
+          aria-label={t.ai.limitsTitle}
+        />
+      </div>
+
       <div className="grid gap-x-4 sm:grid-cols-2">
-        <Field label={t.ai.dailyBudget}>
+        <Field label={limitsEnforced ? t.ai.dailyBudget : t.ai.dailyReference}>
           <Input
             type="number"
             inputMode="decimal"
@@ -252,7 +276,10 @@ function SavedKey({
             className={FIELD_CLASS}
           />
         </Field>
-        <Field label={t.ai.monthlyBudget} hint={t.ai.budgetHint}>
+        <Field
+          label={limitsEnforced ? t.ai.monthlyBudget : t.ai.monthlyReference}
+          hint={limitsEnforced ? t.ai.budgetHint : t.ai.budgetReferenceHint}
+        >
           <Input
             type="number"
             inputMode="decimal"
@@ -356,22 +383,34 @@ function AttachForm({
   const t = useT();
   const save = useServerFn(setAiCredential);
 
-  const [provider, setProvider] = useState<AiProviderId>("anthropic");
+  const [presetId, setPresetId] = useState("anthropic");
+  const preset = presetById(presetId) ?? AI_PROVIDER_PRESETS[0];
+  const provider: AiProviderId = preset.provider;
   const [baseUrl, setBaseUrl] = useState("");
   const [secret, setSecret] = useState("");
-  const [modelFast, setModelFast] = useState(AI_DEFAULT_MODELS.anthropic.fast);
-  const [modelRich, setModelRich] = useState(AI_DEFAULT_MODELS.anthropic.rich);
+  const [modelFast, setModelFast] = useState(AI_PROVIDER_PRESETS[0].models!.fast);
+  const [modelRich, setModelRich] = useState(AI_PROVIDER_PRESETS[0].models!.rich);
   const [daily, setDaily] = useState(String(AI_DEFAULT_BUDGETS.dailyUsd));
   const [monthly, setMonthly] = useState(String(AI_DEFAULT_BUDGETS.monthlyUsd));
   const [consent, setConsent] = useState(false);
   const [adult, setAdult] = useState(false);
   const [busy, setBusy] = useState(false);
 
-  function pickProvider(next: AiProviderId) {
-    setProvider(next);
-    setModelFast(AI_DEFAULT_MODELS[next].fast);
-    setModelRich(AI_DEFAULT_MODELS[next].rich);
-    if (next === "anthropic") setBaseUrl("");
+  /**
+   * Choisir un préréglage remplit l'adresse et les modèles — il ne les VERROUILLE
+   * pas : les deux champs restent éditables juste en dessous. « Autre » ne
+   * remplit rien, et c'est la porte de Q-4 (adresse libre) restée grande ouverte.
+   */
+  function pickPreset(next: AiProviderPreset) {
+    setPresetId(next.id);
+    setBaseUrl(next.baseUrl ?? "");
+    if (next.models) {
+      setModelFast(next.models.fast);
+      setModelRich(next.models.rich);
+    } else {
+      setModelFast("");
+      setModelRich("");
+    }
   }
 
   // R-20 : le consentement est PRÉALABLE. R-2a : la confirmation d'adulte l'est
@@ -458,20 +497,26 @@ function AttachForm({
         </div>
       )}
 
-      <Field label={t.ai.provider}>
-        <span className="mt-1 flex gap-2">
-          {AI_PROVIDERS.map((id) => (
+      {/* Les fournisseurs sont NOMMÉS. Le moteur acceptait déjà n'importe quelle
+          adresse compatible (Q-4), mais l'écran n'affichait que « Compatible
+          OpenAI » : un porteur y lisait, à raison, que le produit ne connaissait
+          que deux fournisseurs. Un préréglage ne restreint rien — il montre. */}
+      <Field label={t.ai.provider} hint={t.ai.providerHint}>
+        <span className="mt-1 flex flex-wrap gap-2">
+          {AI_PROVIDER_PRESETS.map((p) => (
             <button
-              key={id}
+              key={p.id}
               type="button"
-              onClick={() => pickProvider(id)}
-              className={`min-h-11 flex-1 rounded-lg border px-3 py-1.5 text-xs font-semibold transition ${
-                provider === id
+              onClick={() => pickPreset(p)}
+              data-testid={`ai-preset-${p.id}`}
+              className={`min-h-11 rounded-lg border px-3 py-1.5 text-xs font-semibold transition ${
+                presetId === p.id
                   ? "border-[color:var(--gold)] bg-[color:var(--gold)]/15 text-[color:var(--gold)]"
                   : "border-border/60 text-muted-foreground hover:bg-accent"
               }`}
             >
-              {id === "anthropic" ? t.ai.providerAnthropic : t.ai.providerCompatible}
+              {/* Un nom de marque ne se traduit pas, et se lit LTR même en arabe. */}
+              <span dir="ltr">{p.label}</span>
             </button>
           ))}
         </span>
@@ -528,13 +573,13 @@ function AttachForm({
       {/* D-11 : la liste curée est une PROPOSITION. La saisie libre reste ouverte
           — c'est sa clé, son choix (et Q-4 a ouvert l'adresse en conséquence). */}
       <datalist id="ai-models">
-        {AI_CURATED_MODELS[provider].map((model) => (
+        {preset.suggested.map((model) => (
           <option key={model} value={model} />
         ))}
       </datalist>
 
       <div className="grid gap-x-4 sm:grid-cols-2">
-        <Field label={t.ai.dailyBudget}>
+        <Field label={t.ai.dailyReference}>
           <Input
             type="number"
             dir="ltr"
@@ -546,7 +591,7 @@ function AttachForm({
             className={FIELD_CLASS}
           />
         </Field>
-        <Field label={t.ai.monthlyBudget} hint={t.ai.budgetHint}>
+        <Field label={t.ai.monthlyReference} hint={t.ai.budgetReferenceHint}>
           <Input
             type="number"
             dir="ltr"
