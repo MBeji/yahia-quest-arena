@@ -55,7 +55,7 @@ scripts/e2e/
   getter. A selector used only in `toHaveCount(0)` reports green when it has gone
   stale — it measures a void, not an absence. That is issue #733, and it has bitten
   **three** times so far: `dashboard.adminNavLink` (fixed in #796), `dungeon.enterButton`
-  after it (#797), and the `/admin/subscriptions` refusal notice. That last one was
+  after it (#797), and the `/admin/subscriptions` refusal notice (#805). That last was
   written `/access denied|accès refusé/i` while the rendered copy comes from
   `t.subscription.accessDenied` — « Accès réservé aux administrateurs. » in French, the
   app default — so it could match nobody in any of the three languages. Each fix pairs
