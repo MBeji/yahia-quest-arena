@@ -1,5 +1,5 @@
 -- =========================================================
--- DESTRUCTIVE (DoD §7) — retire le bucket `manuel-eleve` et sa politique.
+-- DESTRUCTIVE (DoD §7) — coupe l'accès au bucket `manuel-eleve`.
 --
 -- Livrée SÉPARÉMENT et APRÈS que l'ancien chemin de code a disparu : depuis
 -- #778, la carte « Manuel officiel » ouvre le manuel CHEZ SON ÉDITEUR (le CNP),
@@ -8,17 +8,28 @@
 -- connexion ont été retirés dans ce même lot : plus AUCUN code ne lit ce
 -- bucket, ni côté serveur ni côté client.
 --
--- Ce qui a été vérifié avant d'écrire ce fichier :
---   • aucune lecture runtime — `getSubjectManuels` absent de `main` ;
---   • aucun test pgTAP n'affirme l'existence de ce bucket (sa seule mention
---     dans supabase/tests concerne son FRÈRE `manuel-pages`) ;
---   • le seul écrivain était scripts/manuel/upload-pdf.mjs, outillage
---     hors-bande devenu orphelin — supprimé dans ce même lot ;
---   • rien n'est perdu : les PDF téléversés ici n'étaient que des COPIES de
---     documents que le CNP publie lui-même. Les 82 codes déclarés par le
---     corpus ont été sondés le 2026-08-19 (un HEAD chacun, aucun
---     téléchargement) : tous répondent 200 et leur taille distante est
---     identique À L'OCTET PRÈS au PDF du corpus de référence.
+-- ⚠️ CE QUE CETTE MIGRATION NE FAIT PAS, ET POURQUOI.
+-- La première rédaction supprimait aussi les objets puis le bucket lui-même.
+-- Elle a échoué à l'identique sur la pile locale (pgTAP) ET sur la prod :
+--
+--     ERROR: Direct deletion from storage tables is not allowed.
+--            Use the Storage API instead. (SQLSTATE 42501)
+--
+-- Supabase refuse toute suppression directe dans `storage.*` depuis SQL. La
+-- garde est au niveau STATEMENT : elle se déclenche même quand le DELETE ne
+-- porterait sur aucune ligne — vérifié sur une base vierge, où le bucket vient
+-- d'être créé et est vide. Aucune migration du dépôt n'avait jamais supprimé
+-- dans `storage` : il n'existait pas de précédent qui l'aurait signalé.
+--
+-- À retenir : `npm run db:check-chain` ne pouvait PAS l'attraper — il rejoue la
+-- chaîne sur un Postgres nu, sans les gardes que Supabase installe sur
+-- `storage`. Seuls `pgTAP suite` (pile Supabase locale) et la prod le voient.
+--
+-- Ce qui reste donc à faire HORS SQL, via la Storage API (client admin ou
+-- console Supabase) : vider puis supprimer le bucket `manuel-eleve`. Ce n'est
+-- plus qu'un ménage de stockage — l'ACCÈS, lui, est coupé ici : sans politique
+-- de lecture, `authenticated` comme `anon` n'ont plus aucun droit sur ces
+-- objets, et plus une ligne de code ne les demande.
 --
 -- ⚠️ NE PAS CONFONDRE avec `manuel-pages` — bucket FRÈRE, toujours en service :
 -- il porte les images page-par-page de la galerie « Pages du manuel » sous le
@@ -26,22 +37,15 @@
 -- touché ici, et il a ses propres migration et test pgTAP.
 -- =========================================================
 
--- 1. La politique de lecture d'abord — plus rien ne doit pouvoir lire le bucket
---    pendant qu'on le vide. `IF EXISTS` : la migration reste rejouable.
+-- La politique de lecture : c'était le SEUL droit accordé sur ce bucket
+-- (aucune politique d'insertion/mise à jour/suppression n'a jamais existé, les
+-- écritures passaient par la service role, hors RLS). La retirer suffit donc à
+-- fermer l'accès. `IF EXISTS` : la migration reste rejouable.
 DROP POLICY IF EXISTS "Manuel eleve PDFs readable by authenticated users" ON storage.objects;
 
--- 2. Les objets ensuite : `storage.objects.bucket_id` référence
---    `storage.buckets.id`, donc un bucket non vide refuse de disparaître.
---    Filtre explicite sur le seul bucket visé — jamais de DELETE non qualifié
---    sur storage.objects, qui emporterait `manuel-pages` avec lui.
-DELETE FROM storage.objects WHERE bucket_id = 'manuel-eleve';
-
--- 3. Le bucket enfin.
-DELETE FROM storage.buckets WHERE id = 'manuel-eleve';
-
--- 4. Le commentaire de `subjects.manuel_refs` décrivait encore le monde d'avant
---    (« login-gated », « files live in the private manuel-eleve bucket ») —
---    deux affirmations devenues fausses. La colonne, elle, RESTE : c'est elle
---    qui porte les codes d'où le lien est rebâti.
+-- Le commentaire de `subjects.manuel_refs` décrivait encore le monde d'avant
+-- (« login-gated », « files live in the private manuel-eleve bucket ») — deux
+-- affirmations devenues fausses. La colonne, elle, RESTE : c'est elle qui porte
+-- les codes d'où le lien est rebâti.
 COMMENT ON COLUMN public.subjects.manuel_refs IS
   'Optional [{code, label}]: the official CNP manuel élève volume(s) for this subject. Set by content:build; rendered as a « Manuel officiel » card on the subject page that links to the CNP''s own copy (public, no login, nothing hosted by us — the URL is rebuilt from `code` by src/shared/content/manuel-cnp.ts).';
