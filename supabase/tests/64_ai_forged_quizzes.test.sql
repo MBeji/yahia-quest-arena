@@ -41,9 +41,17 @@ VALUES
    'authenticated', 'authenticated', '00000000-0000-0000-0000-000000000000')
 ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO public.themes (id) VALUES ('forge-theme') ON CONFLICT DO NOTHING;
-INSERT INTO public.subjects (id, theme_id, content_language)
-VALUES ('forge-subject', 'forge-theme', 'fr') ON CONFLICT DO NOTHING;
+-- ⚠️ Le catalogue porte des colonnes NOT NULL (`attribute`, `color_token`,
+-- `icon`, `name_fr`…) : une fixture qui les omet fait échouer le FICHIER ENTIER
+-- avant la première assertion — « planned 23, ran 0 ». C'est ce qui est arrivé
+-- au premier jet, vu par `pgTAP suite` (pile Supabase réelle) et pas par un
+-- Postgres nu. Les valeurs sont sans importance ; leur PRÉSENCE ne l'est pas.
+INSERT INTO public.themes (id, name_fr, icon, color_token)
+VALUES ('forge-theme', 'Forge (test)', 'hammer', 'subject-math')
+ON CONFLICT DO NOTHING;
+INSERT INTO public.subjects (id, name_fr, attribute, color_token, icon, theme_id, content_language)
+VALUES ('forge-subject', 'Forge (test)', 'Esprit', 'subject-math', 'hammer', 'forge-theme', 'fr')
+ON CONFLICT DO NOTHING;
 INSERT INTO public.chapters (id, subject_id, title, lesson_content)
 VALUES ('d9000000-0000-4000-8000-0000000000c1', 'forge-subject', 'Les fractions',
         'Une fraction représente une part d''un tout.')
