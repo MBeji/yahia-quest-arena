@@ -10,6 +10,12 @@ import { useT } from "@/lib/i18n";
 import { getChapterLesson } from "@/features/quest";
 import { hasPassedChapterQuiz } from "@/features/quest/anon-quiz-gate";
 import { useAuth } from "@/features/auth";
+// Import DIRECT, pas via le barrel : `@/features/ai` réexporte la console
+// parent et le lecteur de quiz forgé, et cette route est PUBLIQUE — passer
+// par le barrel les ferait entrer dans le chunk d'entrée, que tout visiteur
+// télécharge (budget `index-`, +58 Ko mesurés).
+import { ForgeEntry } from "@/features/ai/components/forge-entry";
+import { PageShell } from "@/components/ui/page-shell";
 import { LessonReader } from "@/features/quest/components/lesson-reader";
 
 /**
@@ -69,14 +75,25 @@ function ChapitrePage() {
       : null;
 
   return (
-    <LessonReader
-      chapterId={chapterId}
-      chapter={data.chapter}
-      allChapters={data.allChapters}
-      practiceExerciseId={data.practiceExerciseId}
-      quizCta={quizCta}
-      isAuthenticated={!!user}
-      authLoading={authLoading}
-    />
+    <>
+      <LessonReader
+        chapterId={chapterId}
+        chapter={data.chapter}
+        allChapters={data.allChapters}
+        practiceExerciseId={data.practiceExerciseId}
+        quizCta={quizCta}
+        isAuthenticated={!!user}
+        authLoading={authLoading}
+      />
+      {/* La Forge, atteignable « depuis le hub d'un chapitre » (étude 29 §2.1).
+          L'entrée est montée ici, dans la ROUTE, et non dans `LessonReader` :
+          une feature n'en importe pas une autre, et c'est la route qui sait déjà
+          qui regarde. Elle rend `null` pour un visiteur anonyme comme pour un
+          élève dont la Forge n'est pas activée (R-1) — pas de bouton grisé, pas
+          de « bientôt ». */}
+      <PageShell width="reading" className="pb-8">
+        <ForgeEntry chapterId={chapterId} authenticated={!!user} />
+      </PageShell>
+    </>
   );
 }

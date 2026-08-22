@@ -171,6 +171,49 @@ function PrivacyPage() {
           </p>
         </Section>
 
+        {/* Étude 29 lot 2, §3.8 : « À faire dans le lot 2, pas plus tard ». Cette
+            section dit aussi, explicitement, ce que nous NE POUVONS PAS garantir
+            — ce que le fournisseur choisi par la famille fait des données après
+            réception. Le taire serait la seule ligne malhonnête de cette page. */}
+        <Section title="Le mode IA (clé apportée par la famille)">
+          <p>
+            Le mode IA est <strong>éteint par défaut</strong> pour tout le monde, et l'application
+            est complète sans lui. Il ne s'allume que si un membre de la famille branche sa propre
+            clé d'API, dans <strong>Paramétrage → Mode IA</strong>, puis l'active explicitement pour
+            un élève donné. Nous ne facturons rien&nbsp;: la relation commerciale reste entre la
+            famille et son fournisseur.
+          </p>
+          <p>Quand le mode est actif, voici ce qui part chez ce fournisseur&nbsp;:</p>
+          <ul className="list-disc space-y-1 ps-5">
+            <li>
+              la question travaillée, la réponse donnée, la matière, la classe et une{" "}
+              <strong>tranche d'âge</strong> ;
+            </li>
+            <li>
+              <strong>jamais</strong> le nom, l'adresse e-mail ni l'identifiant de l'élève.
+            </li>
+          </ul>
+          <p>
+            Les explications produites peuvent être{" "}
+            <strong>réutilisées pour d'autres élèves</strong>. C'est possible parce qu'elles
+            dépendent de la question et de la réponse choisie, pas de qui les a posées&nbsp;: rien
+            de personnel n'entre dans ce fonds commun.
+          </p>
+          <p>
+            La clé elle-même est <strong>chiffrée</strong> avant d'être stockée, avec une clé de
+            chiffrement qui ne vit pas dans la même base. Elle n'est jamais réaffichée&nbsp;: ni à
+            son propriétaire, ni à nous. La révoquer depuis <strong>Paramétrage</strong> supprime
+            immédiatement notre copie — mais <strong>ne la révoque pas chez le fournisseur</strong>,
+            ce que nous ne pouvons pas faire à votre place.
+          </p>
+          <p>
+            <strong>Ce que nous ne pouvons pas garantir&nbsp;:</strong> ce que le fournisseur choisi
+            par la famille fait des données après réception. Sa politique de rétention et
+            d'entraînement lui appartient, et certaines offres gratuites entraînent leurs modèles
+            sur ce qu'on leur envoie. Nous recommandons une offre payante.
+          </p>
+        </Section>
+
         <Section title="Combien de temps nous les gardons">
           <p>
             Les données de compte et de progression sont conservées tant que le compte existe. À la

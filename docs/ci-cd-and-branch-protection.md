@@ -148,7 +148,12 @@ settings (include administrators) · ✅ Block force pushes · ✅ Restrict dele
   (e.g. the Repository **admin** role with `bypass_mode: "pull_request"`), rather than
   disabling the ruleset. Prefer fixing CI over bypassing.
 - **Merge method.** We squash-merge; you can also pin this under Settings → General →
-  Pull Requests (allow squash only) so history stays linear.
+  Pull Requests (allow squash only) so history stays linear. Consequence worth spelling out:
+  `main` receives a **brand-new commit**, never the branch’s own. So **never check that a PR
+  landed with `git merge-base --is-ancestor <head-sha> origin/main`** (nor `git branch --merged`)
+  — that test fails on every real merge. Verify the **content** on `main` instead
+  (`git log --oneline origin/main -1`, then `git show origin/main:<file>`) — see
+  [passation.md](./passation.md) § 7, point 1.
 
 ## The deploy-ordering workflow (how a migration PR flows)
 

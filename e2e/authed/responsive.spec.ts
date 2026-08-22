@@ -44,7 +44,7 @@ test.describe("Responsive — authenticated app", () => {
   }
 });
 
-// The connected header (logo + AccountHud chip + language/theme/sound switchers +
+// The connected header (logo + AccountHud chip + the settings menu gear +
 // sign-out) packs the most controls of any surface; on a ~390px phone it used to
 // overflow the viewport — pushing every in-flow element into a narrow left column
 // with a dark gutter on the right (the fixed bottom nav stayed full width, the
