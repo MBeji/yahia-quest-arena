@@ -21,7 +21,7 @@
 
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(18);
+SELECT plan(19);
 
 -- ---------------------------------------------------------
 -- Décor : un thème, une classe, une matière, un chapitre, un exercice,
@@ -130,8 +130,8 @@ SET LOCAL ROLE authenticated;
 
 SELECT throws_ok(
   $$ SELECT public.get_tutor_question_context('d7000000-0000-4000-8000-0000000000a1'::uuid) $$,
+  'P0001',
   'NOT_ATTEMPTED',
-  NULL,
   'R-16 ⭐ : un élève qui n''a pas répondu n''obtient NI la clé NI l''explication canonique'
 );
 
