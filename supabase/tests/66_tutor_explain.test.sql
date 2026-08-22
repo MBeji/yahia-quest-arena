@@ -43,7 +43,7 @@ VALUES ('d7000000-0000-4000-8000-0000000000c1'::uuid, 'tt-subj', 'TT Fractions',
 
 INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, mode, source)
 VALUES ('d7000000-0000-4000-8000-0000000000e1'::uuid,
-        'd7000000-0000-4000-8000-0000000000c1'::uuid, 'tt-subj', 'TT Ex', 1, 'practice', 'authored');
+        'd7000000-0000-4000-8000-0000000000c1'::uuid, 'tt-subj', 'TT Ex', 1, 'practice', 'admin');
 
 INSERT INTO public.questions (id, exercise_id, prompt, options, correct_option, explanation, display_order)
 VALUES
@@ -91,10 +91,10 @@ SELECT is(
 );
 
 SET LOCAL ROLE postgres;
-INSERT INTO public.exercise_sessions (id, user_id, exercise_id, variant)
+INSERT INTO public.exercise_sessions (id, user_id, exercise_id)
 VALUES ('d7000000-0000-4000-8000-0000000000b9'::uuid,
         'd7000000-0000-4000-8000-000000000001'::uuid,
-        'd7000000-0000-4000-8000-0000000000e1'::uuid, 'practice');
+        'd7000000-0000-4000-8000-0000000000e1'::uuid);
 SET LOCAL ROLE authenticated;
 
 SELECT is(
@@ -106,9 +106,9 @@ SELECT is(
 SET LOCAL ROLE postgres;
 UPDATE public.exercise_sessions SET completed_at = now()
  WHERE id = 'd7000000-0000-4000-8000-0000000000b9'::uuid;
-INSERT INTO public.dungeon_runs (id, user_id, status)
+INSERT INTO public.dungeon_runs (id, user_id, current_floor, status)
 VALUES ('d7000000-0000-4000-8000-0000000000d9'::uuid,
-        'd7000000-0000-4000-8000-000000000001'::uuid, 'active');
+        'd7000000-0000-4000-8000-000000000001'::uuid, 1, 'active');
 SET LOCAL ROLE authenticated;
 
 SELECT is(
