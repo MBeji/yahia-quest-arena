@@ -214,8 +214,12 @@ SELECT is(
   'R-16 : aucune tentative écrite — un quiz forgé ne compte pas dans la progression'
 );
 
+-- `yahia_coins`, et pas `coins` : le nom réel de la colonne, appris du pgTAP de
+-- CI. Une assertion sur une colonne inexistante avorte le fichier au lieu de
+-- vérifier quoi que ce soit — elle aurait été verte par erreur si elle avait
+-- pointé une colonne qui existe sans porter les pièces.
 SELECT is(
-  (SELECT xp + coins FROM public.profiles
+  (SELECT xp + yahia_coins FROM public.profiles
     WHERE id = 'd9000000-0000-4000-8000-000000000002'),
   0,
   'R-16 : ni XP ni pièce — jouer un quiz forgé ne rapporte rien'
