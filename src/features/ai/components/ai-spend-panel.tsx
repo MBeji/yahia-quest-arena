@@ -68,13 +68,15 @@ export function AiSpendPanel() {
         <Figure
           label={t.ai.spendToday}
           value={usd(data.dayMicros)}
-          hint={`/ ${data.dailyBudgetUsd.toFixed(2)} $`}
+          hintLabel={data.limitsEnforced ? null : t.ai.spendRefShort}
+          hint={`${data.dailyBudgetUsd.toFixed(2)} $`}
           testId="ai-spend-today"
         />
         <Figure
           label={t.ai.spendMonth}
           value={usd(data.monthMicros)}
-          hint={`/ ${data.monthlyBudgetUsd.toFixed(2)} $`}
+          hintLabel={data.limitsEnforced ? null : t.ai.spendRefShort}
+          hint={`${data.monthlyBudgetUsd.toFixed(2)} $`}
           testId="ai-spend-month"
         />
       </div>
@@ -123,11 +125,19 @@ function Figure({
   label,
   value,
   hint,
+  hintLabel,
   testId,
 }: {
   label: string;
   value: string;
   hint: string;
+  /**
+   * Mot qui qualifie le second montant. `null` ⇒ le montant est un PLAFOND, et
+   * le « / » suffit. Sinon c'est un simple repère, et il faut le DIRE : depuis
+   * le 2026-08-22 les plafonds ne coupent plus par défaut, et « 1,20 $ / 2,00 $ »
+   * laisserait croire à une coupure à 2 $ qui n'arrivera jamais.
+   */
+  hintLabel: string | null;
   testId: string;
 }) {
   return (
@@ -137,8 +147,15 @@ function Figure({
       <span className="block font-display text-lg font-bold" dir="ltr" data-testid={testId}>
         {value}
       </span>
-      <span className="block text-xs text-muted-foreground" dir="ltr">
-        {hint}
+      {/* Le MOT suit la direction de la page ; seul le MONTANT est forcé en LTR. */}
+      <span className="block text-xs text-muted-foreground">
+        {hintLabel ? (
+          <>
+            {hintLabel} <span dir="ltr">{hint}</span>
+          </>
+        ) : (
+          <span dir="ltr">/ {hint}</span>
+        )}
       </span>
     </div>
   );

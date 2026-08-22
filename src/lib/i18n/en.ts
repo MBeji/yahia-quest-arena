@@ -1100,6 +1100,7 @@ export const en: TranslationKeys = {
     monthlyBudget: "Monthly cap ($)",
     budgetHint: "Past the cap no call is made, and the student gets the app back without AI.",
     dailyReference: "Daily reference ($)",
+    spendRefShort: "reference",
     monthlyReference: "Monthly reference ($)",
     budgetReferenceHint:
       "These amounts cut nothing: they are the reference the alerts use. Arm the caps above to make them stop calls.",

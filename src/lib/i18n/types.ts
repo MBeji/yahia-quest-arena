@@ -1088,6 +1088,7 @@ export type TranslationKeys = {
     monthlyBudget: string;
     budgetHint: string;
     dailyReference: string;
+    spendRefShort: string;
     monthlyReference: string;
     budgetReferenceHint: string;
     limitsTitle: string;
