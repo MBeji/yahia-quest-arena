@@ -244,3 +244,21 @@ Tout le reste — identifiants de modèles, grille de prix **datée**, plafonds 
 défaut, bornes de tokens, conditions de sortie réseau — est une **constante de
 code**, dans [`src/shared/constants/ai.ts`](../src/shared/constants/ai.ts) et
 nulle part ailleurs (étude 29 §3.10, étude 11 D-2 étendu).
+
+### Runbook — couper le mode IA
+
+Trois interrupteurs, du plus large au plus ciblé. Les deux premiers exigent un
+redéploiement (variables d'environnement), le troisième non (données) :
+
+| Geste                      | Où                                                 | Effet                                           |
+| -------------------------- | -------------------------------------------------- | ----------------------------------------------- |
+| Tout couper, tout de suite | `/admin/ia` → « Mode IA global »                   | Immédiat, sans redéploiement, journalisé        |
+| Couper une famille         | RPC `set_ai_owner_suspension(owner, true, raison)` | Immédiat ; ses élèves retombent en déterministe |
+| Couper la porte entière    | `AI_MODE_ENABLED=0` puis redéploiement             | Les deux payeurs, avant toute requête base      |
+| Couper le seul BYOK        | `AI_BYOK_ENABLED=0` puis redéploiement             | Le chemin plateforme (étude 11) continue        |
+
+⚠️ En cas de **suspicion de fuite de clé** (RISK-1), l'ordre compte : couper la
+famille d'abord (elle cesse d'émettre), puis demander au porteur de révoquer sa
+clé **chez son fournisseur** — c'est le seul geste qui l'invalide vraiment, et
+nous ne pouvons pas le faire à sa place. Supprimer notre copie chiffrée
+(`revoke_ai_credential`) vient après, pas avant.

@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Check, Sparkles, TriangleAlert, X } from "lucide-react";
+import { Check, Sparkles, ThumbsDown, ThumbsUp, TriangleAlert, X } from "lucide-react";
 
 import { LoadingState } from "@/components/ui/loading-state";
 import { useT } from "@/lib/i18n";
 import { getForgedQuiz, gradeForgedQuiz, type ForgedQuizResult } from "../forge.server";
+import { submitAiFeedback } from "../ai-console.server";
+import { toast } from "sonner";
 
 /**
  * Le lecteur d'un quiz FORGÉ — étude 29 lot 4.
@@ -60,6 +62,7 @@ export function ForgedQuizPlayer({ quizId, onLeave }: { quizId: string; onLeave:
   if (result) {
     return (
       <ForgedQuizResultScreen
+        quizId={quizId}
         result={result}
         verified={quiz.verified}
         onReplay={() => {
@@ -168,11 +171,13 @@ function Banner({ verified }: { verified: boolean }) {
 }
 
 function ForgedQuizResultScreen({
+  quizId,
   result,
   verified,
   onReplay,
   onLeave,
 }: {
+  quizId: string;
   result: ForgedQuizResult;
   verified: boolean;
   onReplay: () => void;
@@ -213,6 +218,12 @@ function ForgedQuizResultScreen({
         ))}
       </ul>
 
+      {/* R-13/R-19 : le 👍/👎 est la matière première de la console qualité. Il
+          part avec le MODÈLE du quiz — lu côté serveur, pas déclaré par le
+          navigateur — sinon un avis pourrait être imputé au mauvais modèle et la
+          seule donnée que ce lot produit deviendrait fausse. */}
+      <FeedbackButtons quizId={quizId} />
+
       <div className="mt-4 flex gap-2">
         <button
           type="button"
@@ -230,6 +241,49 @@ function ForgedQuizResultScreen({
           {t.ai.forgeBack}
         </button>
       </div>
+    </div>
+  );
+}
+
+/**
+ * Le retour qualité — R-17 : il va au canal IA, JAMAIS dans la file
+ * `content_reports` du catalogue. Un item forgé n'est pas du catalogue : personne
+ * ne le corrigera, et noyer la file éditoriale sous des signalements de contenu
+ * éphémère la rendrait inutilisable.
+ */
+function FeedbackButtons({ quizId }: { quizId: string }) {
+  const t = useT();
+  const send = useServerFn(submitAiFeedback);
+  const [sent, setSent] = useState(false);
+
+  if (sent) return <p className="mt-3 text-xs text-muted-foreground">{t.ai.feedbackSent}</p>;
+
+  function vote(verdict: "up" | "down") {
+    void send({ data: { quizId, verdict } })
+      .then(() => setSent(true))
+      .catch(() => toast.error(t.ai.errGeneric));
+  }
+
+  return (
+    <div className="mt-3 flex gap-2">
+      <button
+        type="button"
+        onClick={() => vote("up")}
+        data-testid="forge-thumbs-up"
+        className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-border/60 px-3 py-1.5 text-xs font-semibold text-muted-foreground transition hover:text-foreground"
+      >
+        <ThumbsUp className="h-3.5 w-3.5" />
+        {t.ai.feedbackUp}
+      </button>
+      <button
+        type="button"
+        onClick={() => vote("down")}
+        data-testid="forge-thumbs-down"
+        className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-destructive/50 px-3 py-1.5 text-xs font-semibold text-destructive transition hover:bg-destructive/10"
+      >
+        <ThumbsDown className="h-3.5 w-3.5" />
+        {t.ai.feedbackDown}
+      </button>
     </div>
   );
 }

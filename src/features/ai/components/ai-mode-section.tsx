@@ -33,6 +33,7 @@ import {
 } from "../ai-credentials.server";
 import { aiErrorLabel, aiModeErrorCode, type AiModeStatus } from "../ai-mode-status";
 import { AiStudentsPanel } from "./ai-students-panel";
+import { AiSpendPanel } from "./ai-spend-panel";
 
 /**
  * La section « Mode IA » des Réglages (étude 29 lot 2, D-16).
@@ -294,6 +295,11 @@ function SavedKey({
           aria-label={t.ai.doubleSolve}
         />
       </div>
+
+      {/* US-7 : la dépense, réservée au PORTEUR (R-14b). Elle vient AVANT les
+          activations : « combien ça me coûte » est la question qu'on se pose en
+          ouvrant cet écran, « qui y a droit » celle qu'on règle une fois. */}
+      {credential.status === "active" && <AiSpendPanel />}
 
       {/* US-3 : l'activation par élève. Elle n'apparaît qu'une fois la clé
           ACTIVE — activer un élève sur une clé refusée produirait une surface

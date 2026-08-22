@@ -34,6 +34,18 @@ export { callAi, type AiCallOutcome, type AiCallRequest } from "./ai-call.server
 export { notifyBudgetAlerts } from "./ai-alerts.server";
 
 export {
+  dominantModel,
+  getAiAdminOverview,
+  getAiConsole,
+  modelAdviceFor,
+  setAiModeEnabled,
+  setAiOwnerSuspension,
+  submitAiFeedback,
+  type AiAdminOverview,
+  type AiConsole,
+} from "./ai-console.server";
+
+export {
   getAiModeStatus,
   markCredentialState,
   revokeAiCredential,

@@ -23,8 +23,13 @@ let status: AiModeStatus | undefined;
 // utilisent chacun un, et leur rendre le même objet ferait planter le second sur
 // un `.map` — ce qui est arrivé, et ce que ce commentaire empêche de refaire.
 vi.mock("@tanstack/react-query", () => ({
-  useQuery: ({ queryKey }: { queryKey: unknown[] }) =>
-    queryKey[0] === "ai-students" ? { data: [] } : { data: status },
+  useQuery: ({ queryKey }: { queryKey: unknown[] }) => {
+    if (queryKey[0] === "ai-students") return { data: [] };
+    // `ai-console` rend `null` quand il n'y a pas de clé : c'est l'état par
+    // défaut (R-1), et le panneau de dépense ne s'affiche pas.
+    if (queryKey[0] === "ai-console") return { data: null };
+    return { data: status };
+  },
   useQueryClient: () => ({ invalidateQueries: vi.fn() }),
 }));
 
