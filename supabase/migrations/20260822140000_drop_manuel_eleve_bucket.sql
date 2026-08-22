@@ -1,0 +1,51 @@
+-- =========================================================
+-- DESTRUCTIVE (DoD §7) — coupe l'accès au bucket `manuel-eleve`.
+--
+-- Livrée SÉPARÉMENT et APRÈS que l'ancien chemin de code a disparu : depuis
+-- #778, la carte « Manuel officiel » ouvre le manuel CHEZ SON ÉDITEUR (le CNP),
+-- l'adresse étant rebâtie par gabarit depuis le `code` du contenu
+-- (src/shared/content/manuel-cnp.ts). `getSubjectManuels` et le verrou de
+-- connexion ont été retirés dans ce même lot : plus AUCUN code ne lit ce
+-- bucket, ni côté serveur ni côté client.
+--
+-- ⚠️ CE QUE CETTE MIGRATION NE FAIT PAS, ET POURQUOI.
+-- La première rédaction supprimait aussi les objets puis le bucket lui-même.
+-- Elle a échoué à l'identique sur la pile locale (pgTAP) ET sur la prod :
+--
+--     ERROR: Direct deletion from storage tables is not allowed.
+--            Use the Storage API instead. (SQLSTATE 42501)
+--
+-- Supabase refuse toute suppression directe dans `storage.*` depuis SQL. La
+-- garde est au niveau STATEMENT : elle se déclenche même quand le DELETE ne
+-- porterait sur aucune ligne — vérifié sur une base vierge, où le bucket vient
+-- d'être créé et est vide. Aucune migration du dépôt n'avait jamais supprimé
+-- dans `storage` : il n'existait pas de précédent qui l'aurait signalé.
+--
+-- À retenir : `npm run db:check-chain` ne pouvait PAS l'attraper — il rejoue la
+-- chaîne sur un Postgres nu, sans les gardes que Supabase installe sur
+-- `storage`. Seuls `pgTAP suite` (pile Supabase locale) et la prod le voient.
+--
+-- Ce qui reste donc à faire HORS SQL, via la Storage API (client admin ou
+-- console Supabase) : vider puis supprimer le bucket `manuel-eleve`. Ce n'est
+-- plus qu'un ménage de stockage — l'ACCÈS, lui, est coupé ici : sans politique
+-- de lecture, `authenticated` comme `anon` n'ont plus aucun droit sur ces
+-- objets, et plus une ligne de code ne les demande.
+--
+-- ⚠️ NE PAS CONFONDRE avec `manuel-pages` — bucket FRÈRE, toujours en service :
+-- il porte les images page-par-page de la galerie « Pages du manuel » sous le
+-- cours, que NOUS hébergeons et qui reste derrière connexion. Il n'est pas
+-- touché ici, et il a ses propres migration et test pgTAP.
+-- =========================================================
+
+-- La politique de lecture : c'était le SEUL droit accordé sur ce bucket
+-- (aucune politique d'insertion/mise à jour/suppression n'a jamais existé, les
+-- écritures passaient par la service role, hors RLS). La retirer suffit donc à
+-- fermer l'accès. `IF EXISTS` : la migration reste rejouable.
+DROP POLICY IF EXISTS "Manuel eleve PDFs readable by authenticated users" ON storage.objects;
+
+-- Le commentaire de `subjects.manuel_refs` décrivait encore le monde d'avant
+-- (« login-gated », « files live in the private manuel-eleve bucket ») — deux
+-- affirmations devenues fausses. La colonne, elle, RESTE : c'est elle qui porte
+-- les codes d'où le lien est rebâti.
+COMMENT ON COLUMN public.subjects.manuel_refs IS
+  'Optional [{code, label}]: the official CNP manuel élève volume(s) for this subject. Set by content:build; rendered as a « Manuel officiel » card on the subject page that links to the CNP''s own copy (public, no login, nothing hosted by us — the URL is rebuilt from `code` by src/shared/content/manuel-cnp.ts).';
