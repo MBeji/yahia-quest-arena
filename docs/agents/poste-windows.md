@@ -173,9 +173,18 @@ Deux signes restent lisibles quand les deux chiffres ne disent rien :
   240 le matin — alors que `main` venait d'ajouter des tests entre-temps. C'est plus sûr que le
   nombre d'erreurs, qui varie. Comparer au dernier run vert de la même branche, pas à une valeur
   absolue mémorisée.
-- **Aucune assertion n'échoue.** 2 447 tests verts, zéro `FAIL` nommé : une panne d'infrastructure
-  tue des **fichiers entiers** au démarrage, une régression nomme une assertion. Si le rapport ne
-  contient pas une seule ligne d'échec de test, ce n'est pas le code.
+- **Aucune assertion n'échoue.** 2 447 tests verts, zéro `FAIL` nommé : une panne au démarrage tue
+  des **fichiers entiers**, elle ne fait pas tomber une assertion. Si le rapport ne contient pas
+  une seule ligne d'échec de test, ce n'est pas le code.
+
+⚠️ **La réciproque est fausse, et c'est le piège suivant.** Une assertion NOMMÉE peut tomber sous
+charge sans qu'il y ait la moindre régression : le 2026-08-22, `parametrage-pseudo.test.tsx` a
+échoué en 15 193 ms sur un `findBy*` — un **timeout**, pas une inégalité — dans un `pre-push` dont
+le diff ne contenait qu'un fichier Markdown. Rejoué seul : 6/6 vert. Le signe à lire n'est donc pas
+« une assertion a été nommée » mais **la forme de l'échec** : une durée qui frôle le timeout de
+Testing Library accuse la machine, une valeur reçue différente de l'attendue accuse le code.
+Dans le doute, la règle ne change pas — rejouer le fichier nommé en `--maxWorkers=1` avant
+d'accuser quoi que ce soit.
 
 Le total réel se recompose alors en additionnant les deux runs (2 447 + 480 = 2 927), et le gate
 est honnêtement vert — à condition de relancer aussi les étapes que le `&&` de `verify` n'a jamais
