@@ -6,17 +6,38 @@
 // `QuestReviewList` et `TutorPanel`, en passant le second au premier par un slot.
 
 export {
+  escalateTutorThread,
   explainMistake,
   getTutorAvailability,
+  getTutorMiniCheck,
   getTutorPrefs,
+  getTutorUnderstandingSignal,
   isCuratedModel,
   nextVariant,
   rateTutorMessage,
   setTutorPlanPush,
   setTutorPrefs,
+  submitTutorMiniCheck,
+  type TutorEscalation,
+  type TutorEscalationTarget,
   type TutorExplanation,
+  type TutorMiniCheck,
+  type TutorMiniCheckResult,
   type TutorPrefs,
 } from "./tutor.server";
+
+export {
+  escalationKey,
+  escalationLevel,
+  escalationStep,
+  escalationStepFromAction,
+  nextEscalationStep,
+  recommendedEscalation,
+  TUTOR_ESCALATION_STEPS,
+  TUTOR_MAX_ESCALATION,
+  type TutorEscalationStep,
+  type TutorUnderstandingSignals,
+} from "./escalation";
 
 export {
   dayIndexOf,

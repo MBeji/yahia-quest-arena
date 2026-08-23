@@ -134,3 +134,65 @@ describe("ReportContent — actionable weak points (étude 15 lot 12, D-9)", () 
     expect(column?.className).toContain("items-end");
   });
 });
+
+// Étude 11 lot 4 (Q-5) — l'encadré « aide d'El Ostedh ».
+//
+// L'invariant qui compte n'est pas qu'il s'affiche : c'est qu'il ne s'affiche
+// PAS sans le prop. `ReportContent` est rendu par la route authentifiée AUTANT
+// que par `_public/suivi.tsx`, qui sert un porteur de code alliance sans lien
+// parent vérifié — et ce chemin-là ne doit rien savoir de l'usage du tuteur.
+describe("ReportContent — Q-5, l'aide du tuteur", () => {
+  const counters = {
+    interactions7d: 4,
+    interactions30d: 11,
+    topThemes: [
+      {
+        tag: "math.frac.add-denominators",
+        labelFr: "Tu additionnes les dénominateurs",
+        labelEn: "You add the denominators",
+        labelAr: "تجمع المقامات",
+        count: 6,
+      },
+    ],
+  };
+
+  it("n'affiche RIEN quand le prop est absent — le chemin public au code alliance", () => {
+    const { queryByTestId } = render(<ReportContent report={report as never} />);
+    expect(queryByTestId("report-tutor-help")).toBeNull();
+  });
+
+  it("n'affiche rien non plus quand l'enfant n'a jamais demandé d'aide", () => {
+    // Un encadré « 0 demande » se lirait comme un reproche, alors qu'il ne dit
+    // que « nous n'avons pas encore assez joué ».
+    const { queryByTestId } = render(
+      <ReportContent
+        report={report as never}
+        tutorCounters={{ interactions7d: 0, interactions30d: 0, topThemes: [] }}
+      />,
+    );
+    expect(queryByTestId("report-tutor-help")).toBeNull();
+  });
+
+  it("affiche les compteurs et le LIBELLÉ du thème — jamais le tag brut", () => {
+    const { getByTestId } = render(
+      <ReportContent report={report as never} tutorCounters={counters} />,
+    );
+    const box = getByTestId("report-tutor-help");
+    expect(box).toBeTruthy();
+    // R-A1.2-1 : le tag ne sert que de clé de liste, il n'est jamais AFFICHÉ.
+    expect(box.textContent).toContain("Tu additionnes les dénominateurs");
+    expect(box.textContent).not.toContain("math.frac.add-denominators");
+  });
+
+  it("ne laisse filtrer AUCUN verbatim de conversation (Q-5)", () => {
+    // Le composant ne reçoit ni `messages` ni `summary` — la RPC ne les rend
+    // pas. Ce test épingle la surface : si quelqu'un élargit un jour le type
+    // des compteurs pour y glisser du texte de conversation, il devra passer ici.
+    const { getByTestId } = render(
+      <ReportContent report={report as never} tutorCounters={counters} />,
+    );
+    expect(Object.keys(counters)).toEqual(["interactions7d", "interactions30d", "topThemes"]);
+    expect(Object.keys(counters.topThemes[0])).not.toContain("content");
+    expect(getByTestId("report-tutor-help").textContent).not.toMatch(/messages|summary/i);
+  });
+});

@@ -642,3 +642,94 @@ export const getStudentReportByCode = createServerFn({ method: "GET" })
 
     return parseStudentReportPayload(reportData);
   });
+// ---------------------------------------------------------------------------
+// ÉTUDE 11 LOT 4 (Q-5) — CE QUE LE PARENT VOIT DE L'AIDE DU TUTEUR.
+// ---------------------------------------------------------------------------
+// Des compteurs et des THÈMES, jamais le verbatim des conversations.
+//
+// ⚠️ DEUX FRONTIÈRES SE CROISENT ICI, ET AUCUNE N'EST NÉGOCIABLE.
+//
+// 1. FRONTIÈRE DE FEATURES (AGENTS.md) : `parent-report` n'importe PAS
+//    `@/features/tutor`. La server fn appelle donc la RPC directement, comme
+//    toutes ses voisines de ce fichier. Il n'y a rien à partager entre les deux
+//    features — le contrat est en SQL.
+//
+// 2. FRONTIÈRE DE VIE PRIVÉE (Q-5) : ces compteurs ne rejoignent PAS
+//    `_student_report_json`. Cette fonction-là sert aussi
+//    `get_student_report_by_code`, qui est GRANT à **anon** — un accès au
+//    porteur du code alliance. Y greffer l'usage du tuteur le publierait à
+//    quiconque détient le code, sans aucun lien parent vérifié. D'où une RPC
+//    séparée, une server fn séparée, et un prop OPTIONNEL sur `ReportContent`
+//    que seule la route AUTHENTIFIÉE remplit.
+
+const tutorThemeSchema = z.object({
+  tag: z.string(),
+  label_fr: z.string(),
+  label_en: z.string(),
+  label_ar: z.string(),
+  count: numberish,
+});
+
+const tutorCountersSchema = z.object({
+  interactions_7d: numberish,
+  interactions_30d: numberish,
+  top_themes: z.array(tutorThemeSchema).catch([]),
+});
+
+/** Les compteurs d'aide, tels que l'écran parent les rend. Aucun verbatim. */
+export type TutorParentCounters = {
+  interactions7d: number;
+  interactions30d: number;
+  topThemes: {
+    tag: string;
+    labelFr: string;
+    labelEn: string;
+    labelAr: string;
+    count: number;
+  }[];
+};
+
+/**
+ * Q-5 — le compteur d'usage du tuteur pour un enfant LIÉ.
+ *
+ * Le lien actif est exigé par la RPC (`is_parent_of_student`), pas ici : un
+ * second contrôle côté Node donnerait deux juges du même lien, et c'est celui
+ * de Node qui oublierait `is_active` un jour.
+ *
+ * Rend `null` sur refus comme sur panne, et c'est délibéré : un encadré vide
+ * disparaît de l'écran, alors qu'une erreur ferait croire à un parent que le
+ * rapport entier est cassé. Le reste du rapport, lui, est déjà chargé.
+ */
+export const getTutorParentCounters = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ studentId: z.guid() }).parse(d))
+  .handler(async ({ data, context }): Promise<TutorParentCounters | null> => {
+    const { supabase } = context;
+
+    const { data: raw, error } = await (
+      supabase as unknown as {
+        rpc: (
+          fn: "get_tutor_parent_counters",
+          args: Record<string, unknown>,
+        ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
+      }
+    ).rpc("get_tutor_parent_counters", { p_student_id: data.studentId });
+
+    if (error) {
+      logger.warn("parentReport.tutorCounters", { error: errorMessage(error) });
+      return null;
+    }
+    const parsed = tutorCountersSchema.safeParse(raw);
+    if (!parsed.success) return null;
+    return {
+      interactions7d: parsed.data.interactions_7d,
+      interactions30d: parsed.data.interactions_30d,
+      topThemes: parsed.data.top_themes.map((theme) => ({
+        tag: theme.tag,
+        labelFr: theme.label_fr,
+        labelEn: theme.label_en,
+        labelAr: theme.label_ar,
+        count: theme.count,
+      })),
+    };
+  });

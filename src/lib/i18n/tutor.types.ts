@@ -111,4 +111,50 @@ export interface TutorTranslations {
     /** La sortie a été rejetée par le validateur en cours de flux (§3.4). */
     outputRejected: string;
   };
+
+  /**
+   * LE MINI-CHECK (lot 4, US-4) — « Vérifions ensemble ».
+   *
+   * Une question du stock, servie APRÈS une explication, sur la même erreur.
+   * Le ton de la réussite est SOBRE et celui de l'échec n'est jamais un reproche
+   * (étude 15) : le mini-check ne rapporte rien (R-11), il ne peut donc pas non
+   * plus « coûter » quelque chose. Un enfant qui se sent noté au mini-check
+   * cessera d'y répondre honnêtement, et le signal R-8 se tarira avec lui.
+   */
+  miniCheck: {
+    title: string;
+    /** Le bouton qui demande la question de vérification. */
+    start: string;
+    /** L'attente pendant la sélection. */
+    loading: string;
+    /** Valider son choix. */
+    submit: string;
+    correctTitle: string;
+    correctBody: string;
+    wrongTitle: string;
+    wrongBody: string;
+    /**
+     * Aucune question du stock ne convient (`NO_CANDIDATE`). Dit sans excuse
+     * technique : l'élève n'a pas à savoir qu'un vivier était vide.
+     */
+    unavailable: string;
+  };
+
+  /**
+   * L'ESCALADE (lot 4, R-8) — ce qu'El Ostedh propose quand ça ne passe pas.
+   *
+   * Une clé par marche, dans l'ordre de `escalation.ts`. Ce sont des PROPOSITIONS
+   * à l'élève, jamais des constats sur lui : « on va regarder le cours » et non
+   * « tu n'as pas compris ». La dernière marche est la seule qui mentionne le
+   * parent, et elle l'annonce à l'élève — on ne rapporte pas dans son dos (Q-5).
+   */
+  escalation: {
+    reteach: string;
+    lesson: string;
+    prerequisite: string;
+    plan: string;
+    parentDigest: string;
+    /** Le bouton qui suit la proposition. */
+    cta: string;
+  };
 }
