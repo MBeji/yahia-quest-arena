@@ -11,6 +11,7 @@ import {
 import type { BadgeRow, DashboardShopItem, InventoryRow } from "@/shared/types/gamification";
 import type { DailyPlanItem } from "@/shared/types/daily-plan";
 import type { CompetencyBlocker, CompetencyMasteryRow } from "@/shared/types/competency";
+import type { WeaknessRow } from "@/shared/types/weakness";
 import { comingSoonSubjects, type OfficialSubject } from "@/shared/constants/programme-officiel";
 import { getCurrentWeekStartUtc, getTodayUtc } from "@/shared/lib/dates";
 import { failWithClientError } from "@/shared/lib/safe-error";
@@ -128,6 +129,34 @@ type CompetencyBlockersRpcClient = {
     args: { p_competency: string },
   ) => PromiseLike<{ data: CompetencyBlocker[] | null; error: { message: string } | null }>;
 };
+
+/**
+ * « Tes points faibles » (étude 04 lot A2.1, US-2). Même contrat figé que les deux
+ * au-dessus, et même dégradation : sans erreur active — ce qui est le cas de tout
+ * élève qui n'a pas encore joué de question taguée — la RPC rend un tableau vide et
+ * le panneau ne s'affiche pas. Un écran vide serait un reproche ; l'absence, non.
+ */
+type WeaknessesRpcClient = {
+  rpc: (
+    fn: "get_my_weaknesses",
+    args: { p_limit: number },
+  ) => PromiseLike<{ data: WeaknessRow[] | null; error: { message: string } | null }>;
+};
+
+/** R-4, même esprit que le plan du jour : cinq au plus, décidé côté serveur ET ici. */
+const WEAKNESSES_LIMIT = 5;
+
+async function fetchWeaknesses(supabase: unknown): Promise<WeaknessRow[]> {
+  const client = supabase as WeaknessesRpcClient;
+  const res = await client.rpc("get_my_weaknesses", { p_limit: WEAKNESSES_LIMIT });
+  if (res.error) {
+    logger.warn("getDashboard.weaknesses: RPC failed, defaulting to empty", {
+      error: res.error.message,
+    });
+    return [];
+  }
+  return res.data ?? [];
+}
 
 /** Seuil « compétence en échec » (R-5) : sous 50, on cherche ses prérequis faibles. */
 const COMPETENCY_FAILING_THRESHOLD = 50;
@@ -426,6 +455,9 @@ export const getDashboard = createServerFn({ method: "GET" })
     // Carte de compétences (étude 07 lot 4, US-1) + « ce qui te bloque » (R-5). La carte en une
     // lecture ; les blocages en une seconde, seulement s'il existe une compétence en échec.
     const competencyMap = await fetchCompetencyMap(supabase);
+    // Les erreurs NOMMÉES (A2.1). Distinctes de la carte : celle-ci dit « fractions
+    // 41 % », celles-là disent « tu additionnes les dénominateurs ».
+    const weaknesses = await fetchWeaknesses(supabase);
     const { blockedSlug: competencyBlockedSlug, blockers: competencyBlockers } =
       await fetchWeakestBlockers(supabase, competencyMap);
 
@@ -462,6 +494,7 @@ export const getDashboard = createServerFn({ method: "GET" })
       nextAction,
       dailyPlan,
       competencyMap,
+      weaknesses,
       competencyBlockers,
       competencyBlockedSlug,
       promotionSuggestion,
