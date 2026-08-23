@@ -55,7 +55,8 @@
       "Bash(gh workflow run db-backup.yml:*)",
       "Bash(gh workflow run db-tests.yml:*)",
       "Bash(gh workflow run apply-content.yml:*)",
-      "Bash(gh workflow run apply-content-test.yml:*)"
+      "Bash(gh workflow run apply-content-test.yml:*)",
+      "Bash(gh workflow run e2e-auth.yml:*)"
     ],
     "deny": [
       "Bash(npx supabase db push:*)",
@@ -63,7 +64,6 @@
       "Bash(supabase db push:*)",
       "Bash(supabase db reset:*)",
       "Bash(gh workflow run db-migrate-prod.yml:*)",
-      "Bash(gh workflow run e2e-auth.yml:*)",
       "Bash(gh workflow run release.yml:*)"
     ]
   },
