@@ -45,6 +45,13 @@ const CompetencyMapPanel = lazy(() =>
     default: m.CompetencyMapPanel,
   })),
 );
+// « Tes points faibles » (étude 04 lot A2.1) : lazy pour la même raison que la carte —
+// son code embarque le geste « S'entraîner » et la glue de la server fn.
+const WeaknessesPanel = lazy(() =>
+  import("@/features/progression/components/weaknesses-panel").then((m) => ({
+    default: m.WeaknessesPanel,
+  })),
+);
 // Objectifs & quêtes : même raison, budget de chunk. Voir l'en-tête du composant —
 // c'est le `lazy()` qui déplace les octets, pas l'extraction seule.
 const DashboardGoals = lazy(() =>
@@ -282,6 +289,14 @@ function Dashboard() {
             blockers={data.competencyBlockers ?? []}
             blockedSlug={data.competencyBlockedSlug ?? null}
           />
+        </Suspense>
+
+        {/* « Tes points faibles » (étude 04, lot A2.1) — l'erreur NOMMÉE, sous la carte qui
+            dit, elle, le pourcentage. Le panneau ne rend rien tant qu'aucune erreur n'est
+            active : c'est l'état normal d'un compte neuf, et une absence vaut mieux qu'un
+            encadré vide. */}
+        <Suspense fallback={null}>
+          <WeaknessesPanel weaknesses={data.weaknesses ?? []} />
         </Suspense>
 
         {/* STREAK RECOVERY BANNER */}

@@ -29,6 +29,9 @@ function makeReport(overrides: Partial<ReportData> = {}): ReportData {
       thisWeek: { exercises: 12, minutes: 45, avgScore: 82 },
       lastWeek: { exercises: 8, minutes: 30, avgScore: 75 },
     },
+    // Étude 04 A2.2 : le défaut de la fixture est VIDE — un rapport sans erreur
+    // installée est le cas le plus courant, et le partage doit tenir sans elles.
+    misconceptionInsights: [],
     chapterInsights: {
       strengths: [
         {
