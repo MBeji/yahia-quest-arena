@@ -67,7 +67,9 @@ type TutorRpcClient = {
       | "find_tutor_explanation"
       | "store_tutor_explanation"
       | "rate_tutor_message"
-      | "set_tutor_prefs",
+      | "set_tutor_prefs"
+      | "get_tutor_prefs"
+      | "set_tutor_plan_push",
     args?: Record<string, unknown>,
   ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
 };
@@ -436,6 +438,50 @@ export const rateTutorMessage = createServerFn({ method: "POST" })
     });
     if (error) {
       logger.error("tutor.rate", { error: errorMessage(error) });
+      return { ok: false };
+    }
+    return { ok: true };
+  });
+
+/** Les préférences d'accompagnement, défauts compris (lot 2). */
+export type TutorPrefs = {
+  readonly interests: readonly string[];
+  readonly verbosity: "courte" | "normale";
+  readonly planPush: boolean;
+};
+
+const prefsSchema = z.object({
+  interests: z.array(z.string()).default([]),
+  verbosity: z.enum(["courte", "normale"]).default("normale"),
+  planPush: z.boolean().default(false),
+});
+
+const DEFAULT_PREFS: TutorPrefs = { interests: [], verbosity: "normale", planPush: false };
+
+export const getTutorPrefs = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<TutorPrefs> => {
+    const client = context.supabase as unknown as TutorRpcClient;
+    const { data, error } = await client.rpc("get_tutor_prefs");
+    if (error) {
+      // Un réglage illisible retombe sur le DÉFAUT, jamais sur une erreur : la
+      // page de paramétrage doit s'afficher même quand le tuteur est éteint.
+      logger.warn("tutor.prefs.read", { error: errorMessage(error) });
+      return DEFAULT_PREFS;
+    }
+    const parsed = prefsSchema.safeParse(data);
+    return parsed.success ? parsed.data : DEFAULT_PREFS;
+  });
+
+/** US-7 — l'élève arme ou désarme son rappel du plan du jour. */
+export const setTutorPlanPush = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ enabled: z.boolean() }).parse(d))
+  .handler(async ({ data, context }): Promise<{ ok: boolean }> => {
+    const client = context.supabase as unknown as TutorRpcClient;
+    const { error } = await client.rpc("set_tutor_plan_push", { p_enabled: data.enabled });
+    if (error) {
+      logger.error("tutor.planPush", { error: errorMessage(error) });
       return { ok: false };
     }
     return { ok: true };

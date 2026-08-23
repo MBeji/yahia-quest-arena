@@ -39,4 +39,45 @@ export interface TutorTranslations {
   lockedDungeon: string;
   lockedDuel: string;
   lockedNotAttempted: string;
+
+  /**
+   * LA BIBLIOTHÈQUE DE COACHING (lot 2, US-5 / US-15) — R-10.
+   *
+   * Ces phrases ne sont PAS générées, et c'est une décision d'architecture, pas
+   * une économie : « les phrases de coach quotidiennes viennent de la
+   * bibliothèque ; seule la rédaction des bilans hebdo est générée ». Un élève
+   * qui ouvre son tableau de bord chaque matin déclencherait sinon un appel de
+   * modèle par jour et par item — pour dire « cinq minutes et c'est réglé ».
+   *
+   * Deux variantes par registre : trois items d'affilée ne disent pas la même
+   * chose, et le choix tourne sur la POSITION (jamais sur un hasard, qui
+   * changerait à chaque re-rendu).
+   */
+  coach: {
+    /** Le nom qui signe la phrase, dans la langue de l'interface. */
+    signature: string;
+    /** Une misconception active vit dans ce chapitre : c'est ÇA qu'il faut dire. */
+    weak1: string;
+    weak2: string;
+    /** Sept jours de retard ou plus : ce n'est plus « à revoir », ça part. */
+    late1: string;
+    late2: string;
+    due1: string;
+    due2: string;
+    today1: string;
+    today2: string;
+    /** US-15 — les moments clés. Jamais culpabilisants (étude 15). */
+    comeback1: string;
+    comeback2: string;
+    streak1: string;
+    streak2: string;
+    clear1: string;
+    clear2: string;
+    steady1: string;
+    steady2: string;
+  };
+
+  /** US-7 — le rappel du plan du jour, armé par l'élève. */
+  planPushTitle: string;
+  planPushDesc: string;
 }

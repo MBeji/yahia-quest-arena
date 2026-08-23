@@ -8,12 +8,27 @@
 export {
   explainMistake,
   getTutorAvailability,
+  getTutorPrefs,
   isCuratedModel,
   nextVariant,
   rateTutorMessage,
+  setTutorPlanPush,
   setTutorPrefs,
   type TutorExplanation,
+  type TutorPrefs,
 } from "./tutor.server";
+
+export {
+  dayIndexOf,
+  daysAwayFrom,
+  momentKey,
+  momentKind,
+  planCoachKey,
+  planCoachKind,
+  type TutorMoment,
+  type TutorMomentState,
+  type TutorPlanCoachKind,
+} from "./coaching";
 
 export {
   TUTOR_AGE_BANDS,
@@ -27,3 +42,5 @@ export {
 } from "./prompt";
 
 export { TutorPanel } from "./components/tutor-panel";
+export { TutorCoachLine, TutorGreeting } from "./components/tutor-coach";
+export { TutorPlanPushCard } from "./components/tutor-plan-push-card";

@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { ChevronRight, RotateCcw, Target } from "lucide-react";
 
@@ -20,7 +21,21 @@ import type { DailyPlanItem } from "@/shared/types/daily-plan";
  * L'état vide est une bonne nouvelle et se lit comme telle : personne ne doit se sentir en
  * retard parce qu'il est à jour.
  */
-export function DailyReviewPanel({ items }: { items: DailyPlanItem[] }) {
+export function DailyReviewPanel({
+  items,
+  /**
+   * La VOIX du tuteur sur un item (étude 11 lot 2, US-5). Un SLOT, pas un
+   * import : la feature `tutor` n'est pas connue d'ici, et c'est la route qui
+   * compose — même motif que `renderTutor` sur l'écran de correction.
+   *
+   * Absent, le panneau rend exactement ce qu'il rendait avant : le tuteur est
+   * un supplément, jamais un prérequis.
+   */
+  renderCoach,
+}: {
+  items: DailyPlanItem[];
+  renderCoach?: (item: DailyPlanItem, index: number) => ReactNode;
+}) {
   const t = useT();
 
   return (
@@ -37,7 +52,7 @@ export function DailyReviewPanel({ items }: { items: DailyPlanItem[] }) {
         <p className="mt-3 text-sm text-muted-foreground">{t.dashboard.dailyPlanEmpty}</p>
       ) : (
         <ul className="mt-3 space-y-2">
-          {items.map((item) => (
+          {items.map((item, index) => (
             <li key={item.exercise_id}>
               <Link
                 to="/quest/$exerciseId"
@@ -54,6 +69,7 @@ export function DailyReviewPanel({ items }: { items: DailyPlanItem[] }) {
                       <Target className="h-3 w-3" /> {t.dashboard.dailyPlanWeak}
                     </div>
                   )}
+                  {renderCoach?.(item, index)}
                 </div>
                 <span className="shrink-0 text-xs font-bold uppercase tracking-[0.14em] text-[color:var(--gold)]">
                   {t.dashboard.dailyPlanCta}
