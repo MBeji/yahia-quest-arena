@@ -11,3 +11,7 @@ export { CompetencyMapPanel } from "./components/competency-map-panel";
 // une seule fois pour alimenter à la fois la bande focus et ce panneau (étude 22, D-8).
 // La route dashboard compose les deux ; les features ne s'importent jamais entre elles.
 export { DailyReviewPanel } from "./components/daily-review-panel";
+// « Tes points faibles » (étude 04, lot A2.1). Même motif que ses deux voisins :
+// le panneau vit ici, ses DONNÉES arrivent par `getDashboard` en une seule lecture
+// (é22 D-8), et la route dashboard compose.
+export { WeaknessesPanel } from "./components/weaknesses-panel";
