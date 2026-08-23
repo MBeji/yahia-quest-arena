@@ -136,6 +136,30 @@ const studentReportSchema = z.object({
       weaknesses: z.array(chapterInsightSchema).catch([]),
     })
     .catch({ strengths: [], weaknesses: [] }),
+  /**
+   * Étude 04 A2.2 (US-3) — les erreurs NOMMÉES, à côté des chapitres faibles.
+   *
+   * Ce n'est pas un doublon de `chapterInsights` : celui-ci dit « Fractions :
+   * 45 % » (OÙ ça coince), celui-là dit « il additionne les dénominateurs »
+   * (QUOI réviser). Le second est le seul des deux sur lequel un parent peut
+   * agir le soir même.
+   *
+   * `.catch([])` comme partout ici : un rapport doit s'afficher même si la RPC
+   * est en cours de déploiement, ou si l'élève n'a aucune erreur installée —
+   * ce qui est le cas de tout compte neuf.
+   */
+  misconceptionInsights: z
+    .array(
+      z.object({
+        tag: z.string().catch(""),
+        labelFr: z.string().catch(""),
+        labelEn: z.string().catch(""),
+        labelAr: z.string().catch(""),
+        occurrences: numberish,
+        trend: z.enum(["improving", "worsening", "stable"]).catch("stable"),
+      }),
+    )
+    .catch([]),
 });
 
 type StudentReportShape = z.infer<typeof studentReportSchema>;

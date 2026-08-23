@@ -157,6 +157,16 @@ export type TranslationKeys = {
     dailyPlanWeak: string;
     dailyPlanCta: string;
     // Carte de compétences (étude 07, lot 4)
+    // « Tes points faibles » (étude 04 lot A2.1) — l'erreur NOMMÉE, à côté de la
+    // carte de compétences qui dit, elle, où ça coince en pourcentage.
+    weakSpotsTitle: string;
+    weakSpotsSubtitle: string;
+    /** `{n}` = le nombre d'occurrences. */
+    weakSpotOccurrences: string;
+    weakSpotTrendImproving: string;
+    weakSpotTrendWorsening: string;
+    weakSpotTrendStable: string;
+    weakSpotCourseCta: string;
     competencyTitle: string;
     competencyEmpty: string;
     competencyEvaluating: string;
@@ -855,6 +865,14 @@ export type TranslationKeys = {
     weaknessesTitle: string;
     strengthsEmpty: string;
     weaknessesEmpty: string;
+    // Étude 04 A2.2 : les erreurs NOMMÉES, distinctes des chapitres « à renforcer ».
+    namedErrorsTitle: string;
+    namedErrorsSubtitle: string;
+    /** `{n}` = le nombre d'occurrences. */
+    namedErrorsCount: string;
+    namedErrorsImproving: string;
+    namedErrorsWorsening: string;
+    namedErrorsStable: string;
     insightAttempts: string;
     adviceTitle: string;
     adviceReviewCta: string;

@@ -32,7 +32,18 @@ export type { ReportData } from "../report-share";
 
 export function ReportContent({ report }: { report: ReportData }) {
   const { t, locale } = useI18n();
-  const { student, summary, subjectStats, dailyActivity, weekComparison, chapterInsights } = report;
+  const {
+    student,
+    summary,
+    subjectStats,
+    dailyActivity,
+    weekComparison,
+    chapterInsights,
+    // Défaut à vide, et ce n'est pas de la coquetterie : entre le déploiement du
+    // code et celui de la migration, un rapport ARRIVE sans cette clé. Le schéma la
+    // garantit côté serveur, ce défaut la garantit côté écran.
+    misconceptionInsights = [],
+  } = report;
   const riseIn = useEntrance("rise");
 
   const advice = buildWeeklyAdvice(report, t);
@@ -177,6 +188,56 @@ export function ReportContent({ report }: { report: ReportData }) {
             tone="weakness"
           />
         </div>
+
+        {/* Étude 04 A2.2 (US-3) — les erreurs NOMMÉES. Sous les chapitres et dans le
+            MÊME encadré : un parent qui lit « Fractions 45 % » veut savoir laquelle
+            des fractions, et c'est la ligne d'en dessous qui le lui dit.
+            Rien à dire ⇒ rien à l'écran : un encadré « aucune erreur détectée » sur
+            un compte neuf se lirait comme un satisfecit, alors qu'il ne dit que
+            « nous n'avons pas encore assez joué ». */}
+        {misconceptionInsights.length > 0 && (
+          <div className="mt-4 border-t border-border/50 pt-4" data-testid="report-misconceptions">
+            <h4 className="text-foreground text-sm font-semibold">
+              {t.parentReport.namedErrorsTitle}
+            </h4>
+            <p className="text-muted-foreground mt-1 text-xs">
+              {t.parentReport.namedErrorsSubtitle}
+            </p>
+            <ul className="mt-3 space-y-2">
+              {misconceptionInsights.map((row) => (
+                <li
+                  key={row.tag}
+                  data-testid="report-misconception"
+                  className="bg-surface-3 border-border/40 rounded-lg border p-2"
+                >
+                  <p dir="auto" className="text-sm">
+                    {locale === "ar" ? row.labelAr : locale === "en" ? row.labelEn : row.labelFr}
+                  </p>
+                  <div className="text-muted-foreground mt-1 flex flex-wrap items-center gap-3 text-xs">
+                    <span>
+                      {t.parentReport.namedErrorsCount.replace("{n}", String(row.occurrences))}
+                    </span>
+                    <span
+                      className={
+                        row.trend === "improving"
+                          ? "text-success"
+                          : row.trend === "worsening"
+                            ? "text-destructive"
+                            : undefined
+                      }
+                    >
+                      {row.trend === "improving"
+                        ? t.parentReport.namedErrorsImproving
+                        : row.trend === "worsening"
+                          ? t.parentReport.namedErrorsWorsening
+                          : t.parentReport.namedErrorsStable}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
       {/* Score trend */}
