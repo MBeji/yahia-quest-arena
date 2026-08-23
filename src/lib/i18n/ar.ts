@@ -473,6 +473,23 @@ export const ar: TranslationKeys = {
     planPushTitle: "تذكير الأستاذ",
     planPushDesc:
       "تذكير واحد في اليوم على الأكثر، وفقط إن كان لديك ما تراجعه. يمكنك إيقافه متى شئت.",
+    chat: {
+      open: "اطرح سؤالًا حول هذا الفصل",
+      title: "تحدّث عنه مع الأستاذ",
+      intentExplain: "اشرح لي هذا الفصل",
+      intentExample: "أعطِني مثالًا",
+      intentSummarize: "لخّصه في 3 نقاط",
+      placeholder: "سؤالك حول هذا الفصل…",
+      send: "إرسال",
+      tooLong: "سؤالك طويل قليلًا — اكتبه في 300 حرف على الأكثر.",
+      noLinks: "لا روابط هنا: اطرح سؤالك بكلماتك.",
+      rateLimited: "على مهلك! انتظر لحظة قبل طرح سؤال آخر.",
+      empty: "اختر سؤالًا، أو اكتب سؤالك.",
+      you: "أنت",
+      historyTitle: "محادثاتك",
+      historyEmpty: "لم تتحدّث بعد في أيّ شيء مع الأستاذ.",
+      outputRejected: "لم تكن هذه الإجابة واضحة — اطلبها بطريقة أخرى.",
+    },
   },
   subscription: {
     premiumTitle: "ميزة مميّزة",

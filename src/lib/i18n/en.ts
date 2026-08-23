@@ -474,6 +474,23 @@ export const en: TranslationKeys = {
     planPushTitle: "El Ostedh's reminder",
     planPushDesc:
       "One reminder a day at most, and only when you have something to review. You can stop it whenever you like.",
+    chat: {
+      open: "Ask about this chapter",
+      title: "Talk it over with El Ostedh",
+      intentExplain: "Explain this chapter to me",
+      intentExample: "Give me an example",
+      intentSummarize: "Sum it up in 3 points",
+      placeholder: "Your question about this chapter…",
+      send: "Send",
+      tooLong: "Your question is a bit long — keep it under 300 characters.",
+      noLinks: "No links here: ask your question in your own words.",
+      rateLimited: "Steady on! Wait a moment before asking again.",
+      empty: "Pick a question, or write your own.",
+      you: "You",
+      historyTitle: "Your conversations",
+      historyEmpty: "You have not talked about anything with El Ostedh yet.",
+      outputRejected: "That answer did not come out clean — ask for it another way.",
+    },
   },
   subscription: {
     premiumTitle: "Premium Feature",

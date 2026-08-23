@@ -50,6 +50,7 @@ import {
   type TutorQuestionContext,
   type TutorVariant,
 } from "./prompt";
+import { allowsFreeText, type TutorMessage } from "./chat";
 import { validateTutorOutput } from "./validator";
 
 // Les RPC de ce lot ne sont pas encore dans les types générés (ils se
@@ -69,7 +70,10 @@ type TutorRpcClient = {
       | "rate_tutor_message"
       | "set_tutor_prefs"
       | "get_tutor_prefs"
-      | "set_tutor_plan_push",
+      | "set_tutor_plan_push"
+      | "get_tutor_chapter_context"
+      | "list_tutor_threads"
+      | "get_tutor_thread",
     args?: Record<string, unknown>,
   ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
 };
@@ -441,6 +445,123 @@ export const rateTutorMessage = createServerFn({ method: "POST" })
       return { ok: false };
     }
     return { ok: true };
+  });
+
+/**
+ * Ce que l'écran de chapitre doit savoir AVANT d'afficher quoi que ce soit
+ * (lot 3). Un seul aller-retour, qui répond à trois questions à la fois : la
+ * porte est-elle ouverte (R-1), le champ libre est-il permis à cet âge (Q-6),
+ * et dans quelle langue le tuteur répondra (R-3).
+ *
+ * Le champ libre est décidé ICI et pas dans l'écran : un client modifié ne
+ * contourne pas un âge, et la route le re-vérifie de son côté.
+ */
+export type TutorChatEntry = {
+  readonly allowed: boolean;
+  readonly reason: string;
+  readonly freeText: boolean;
+  readonly lang: TutorLang;
+};
+
+export const getTutorChatEntry = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ chapterId: z.guid() }).parse(d))
+  .handler(async ({ data, context }): Promise<TutorChatEntry> => {
+    const client = context.supabase as unknown as TutorRpcClient;
+    const closed: TutorChatEntry = {
+      allowed: false,
+      reason: "UNKNOWN",
+      freeText: false,
+      lang: "fr",
+    };
+
+    const gate = await client.rpc("can_use_tutor", {
+      p_scope: "chapter",
+      p_chapter_id: data.chapterId,
+    });
+    const gateParsed = availabilitySchema.safeParse(gate.data);
+    if (gate.error || !gateParsed.success) {
+      // Une porte qu'on n'arrive pas à interroger est une porte FERMÉE.
+      logger.error("tutor.chat.entry", { error: gate.error ? errorMessage(gate.error) : "shape" });
+      return closed;
+    }
+    if (!gateParsed.data.allowed) return { ...closed, reason: gateParsed.data.reason };
+
+    const ctxRes = await client.rpc("get_tutor_chapter_context", {
+      p_chapter_id: data.chapterId,
+    });
+    const ctxParsed = z
+      .object({ found: z.literal(true), lang: langSchema, age_band: ageBandSchema })
+      .safeParse(ctxRes.data);
+    if (ctxRes.error || !ctxParsed.success) return closed;
+
+    return {
+      allowed: true,
+      reason: "OK",
+      freeText: allowsFreeText(ctxParsed.data.age_band),
+      lang: ctxParsed.data.lang,
+    };
+  });
+
+/** US-9 — l'historique, en lecture seule. R-14 dans l'autre sens : l'élève relit. */
+export type TutorThreadSummary = {
+  readonly threadId: string;
+  readonly scope: string;
+  readonly chapterId: string | null;
+  readonly title: string;
+  readonly messageCount: number;
+  readonly updatedAt: string;
+};
+
+export const getTutorHistory = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<TutorThreadSummary[]> => {
+    const client = context.supabase as unknown as TutorRpcClient;
+    const { data, error } = await client.rpc("list_tutor_threads", { p_limit: 20 });
+    if (error) {
+      logger.warn("tutor.history", { error: errorMessage(error) });
+      return [];
+    }
+    const parsed = z
+      .array(
+        z.object({
+          thread_id: z.string(),
+          scope: z.string(),
+          chapter_id: z.string().nullable(),
+          title: z.string(),
+          message_count: z.number(),
+          updated_at: z.string(),
+        }),
+      )
+      .safeParse(data);
+    if (!parsed.success) return [];
+    return parsed.data.map((row) => ({
+      threadId: row.thread_id,
+      scope: row.scope,
+      chapterId: row.chapter_id,
+      title: row.title,
+      messageCount: row.message_count,
+      updatedAt: row.updated_at,
+    }));
+  });
+
+export const getTutorThread = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ threadId: z.guid() }).parse(d))
+  .handler(async ({ data, context }): Promise<{ messages: TutorMessage[] }> => {
+    const client = context.supabase as unknown as TutorRpcClient;
+    const { data: raw, error } = await client.rpc("get_tutor_thread", { p_thread: data.threadId });
+    if (error) {
+      logger.warn("tutor.thread.read", { error: errorMessage(error) });
+      return { messages: [] };
+    }
+    const parsed = z
+      .object({
+        found: z.boolean(),
+        messages: z.array(z.object({ role: z.string(), content: z.string() })).default([]),
+      })
+      .safeParse(raw);
+    return { messages: parsed.success && parsed.data.found ? parsed.data.messages : [] };
   });
 
 /** Les préférences d'accompagnement, défauts compris (lot 2). */

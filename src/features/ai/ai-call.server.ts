@@ -57,7 +57,13 @@ import {
   platformDailyBudgetUsd,
 } from "@/shared/integrations/ai/provider.server";
 import { logAiUsage } from "@/shared/integrations/ai/usage.server";
-import { renderBlocks, type AiBlock, type AiCredential } from "@/shared/integrations/ai/types";
+import {
+  renderBlocks,
+  type AiBlock,
+  type AiCredential,
+  type AiRequest,
+  type AiResult,
+} from "@/shared/integrations/ai/types";
 import { AI_ENC_VERSION, openSecret, rewriteUnderCurrentKek } from "./crypto.server";
 import { markCredentialState } from "./ai-credentials.server";
 import { notifyBudgetAlerts } from "./ai-alerts.server";
@@ -241,16 +247,51 @@ async function rewriteSecret(
 }
 
 /**
- * Émet un appel IA pour un élève, ou explique pourquoi il ne part pas.
+ * LE BILLET D'APPEL — ce que la préparation a résolu, et qu'il faudra solder.
  *
- * Ne LÈVE jamais pour un refus métier : les exceptions sont réservées aux bugs.
+ * Il existe pour une raison précise : le lot 3 de é11 ouvre une seconde forme
+ * d'appel — le STREAMING — et elle doit emprunter EXACTEMENT le même chemin
+ * d'argent. Sans ce billet, `streamAi()` recopierait la résolution, la
+ * réservation, la comptabilité et le solde ; six mois plus tard l'une des deux
+ * copies aurait un plafond que l'autre n'a pas.
+ *
+ * La forme du billet dit aussi ce qui différencie les deux payeurs : un porteur
+ * (`ownerUserId`) ou personne. Tout le reste — bornes, estimation, énergie — est
+ * commun, et c'est bien ce que é29 D-7 affirmait : « le payeur est une colonne,
+ * pas un mode de déploiement ».
  */
-export async function callAi(request: AiCallRequest): Promise<AiCallOutcome> {
+type AiTicket = {
+  readonly payer: AiPayer;
+  /** `null` sur le chemin plateforme : la clé est une variable d'environnement. */
+  readonly ownerUserId: string | null;
+  readonly provider: AiProviderId;
+  readonly credential: AiCredential;
+  /** Le modèle DEMANDÉ. Celui rapporté par l'API fait foi au succès (R-13). */
+  readonly model: string;
+  readonly maxTokens: number;
+  readonly estimate: number;
+  readonly energyCost: number;
+  readonly doubleSolve: boolean;
+  readonly startedAt: number;
+};
+
+type AiPreparation =
+  | { readonly ok: true; readonly ticket: AiTicket }
+  | { readonly ok: false; readonly code: AiErrorCode };
+
+/**
+ * Étapes 1 à 4 : kill-switch, résolution, réservation, coffre.
+ *
+ * Après elle, l'argent et l'énergie sont RÉSERVÉS : tout chemin qui n'aboutit
+ * pas doit passer par `concludeFailure`, sinon la réservation reste gelée
+ * jusqu'au balayage des dix minutes.
+ */
+async function prepareAiCall(request: AiCallRequest): Promise<AiPreparation> {
   const { studentUserId, feature, tier } = request;
 
   // Kill-switch d'ENVIRONNEMENT, avant même d'interroger la base : le premier
   // geste d'un incident est de baisser un interrupteur, pas d'attendre une RPC.
-  if (!isAiModeEnabled()) return refuse(feature, "AI_MODE_OFF");
+  if (!isAiModeEnabled()) return { ok: false, code: "AI_MODE_OFF" };
 
   // 1. La résolution — R-1/R-2/R-3/R-9, décidées en SQL.
   const { data: rows, error: resolveError } = await rpc().rpc("resolve_ai_access", {
@@ -259,26 +300,32 @@ export async function callAi(request: AiCallRequest): Promise<AiCallOutcome> {
   });
   if (resolveError) {
     logger.error("ai.resolve", { error: errorMessage(resolveError), feature });
-    return refuse(feature, "AI_UNKNOWN");
+    return { ok: false, code: "AI_UNKNOWN" };
   }
 
   const access = (Array.isArray(rows) ? rows[0] : null) as AccessRow | null;
-  if (!access) return refuse(feature, "AI_MODE_OFF");
+  if (!access) return { ok: false, code: "AI_MODE_OFF" };
 
-  // Le chemin PLATEFORME : la base a dit « pas de clé de famille », Node décide
-  // si notre propre clé prend le relais (é11, budget A5). Il n'y a pas de
-  // troisième moteur — seulement un second payeur derrière la même porte.
-  const usePlatform = !access.allowed && access.payer === "platform";
   const maxTokens = AI_MAX_TOKENS[feature];
   const energyCost = request.energyCost ?? AI_ENERGY_COST[feature];
   const contextTokens = estimateTokens(`${request.system}\n${renderBlocks(request.blocks)}`);
 
-  if (usePlatform) {
-    return callOnPlatform(request, { maxTokens, contextTokens, energyCost });
+  // Le chemin PLATEFORME : la base a dit « pas de clé de famille », Node décide
+  // si notre propre clé prend le relais (é11, budget A5). Il n'y a pas de
+  // troisième moteur — seulement un second payeur derrière la même porte.
+  if (!access.allowed && access.payer === "platform") {
+    return preparePlatformCall(request, {
+      maxTokens,
+      contextTokens,
+      energyCost,
+    });
   }
 
   if (!access.allowed || !access.owner_user_id || !access.provider) {
-    return refuse(feature, (access.reason as AiErrorCode | null) ?? "AI_MODE_OFF");
+    return {
+      ok: false,
+      code: (access.reason as AiErrorCode | null) ?? "AI_MODE_OFF",
+    };
   }
 
   const ownerUserId = access.owner_user_id;
@@ -298,7 +345,7 @@ export async function callAi(request: AiCallRequest): Promise<AiCallOutcome> {
   });
   if (reserveError) {
     logger.error("ai.reserve", { error: errorMessage(reserveError), feature });
-    return refuse(feature, "AI_UNKNOWN");
+    return { ok: false, code: "AI_UNKNOWN" };
   }
 
   const grant = (Array.isArray(reservation) ? reservation[0] : null) as {
@@ -311,91 +358,31 @@ export async function callAi(request: AiCallRequest): Promise<AiCallOutcome> {
     logger.info("ai.budget", { owner: ownerUserId, action: "cut", code });
     // Le porteur est prévenu une fois — pas à chaque appel (R-11).
     void notifyBudgetAlerts(ownerUserId);
-    return refuse(feature, code);
+    return { ok: false, code };
   }
 
-  // 3-4. Le coffre, puis l'appel.
+  // 3-4. Le coffre.
   const credential = await loadCredential(ownerUserId, access);
   if (!credential) {
     await releaseReservation(ownerUserId, studentUserId, estimate, energyCost);
-    return refuse(feature, "AI_KEY_INVALID");
+    return { ok: false, code: "AI_KEY_INVALID" };
   }
 
-  const startedAt = Date.now();
-  try {
-    const result = await getAiProvider(access.provider).generate(
-      {
-        tier,
-        system: request.system,
-        blocks: request.blocks,
-        maxTokens,
-        feature,
-        responseSchema: request.responseSchema,
-      },
-      credential,
-    );
-
-    const actual = settledCostMicros({ model: result.model, ...result.usage });
-
-    // 6-7. Comptabilité, puis solde réel.
-    await Promise.all([
-      logAiUsage(supabaseAdmin as unknown as Parameters<typeof logAiUsage>[0], {
-        userId: studentUserId,
-        payer: "family",
-        credentialOwner: ownerUserId,
-        provider: access.provider,
-        feature,
-        model: result.model,
-        inputTokens: result.usage.inputTokens,
-        outputTokens: result.usage.outputTokens,
-        cachedTokens: result.usage.cachedTokens,
-        costUsdMicros: actual,
-        status: "ok",
-        latencyMs: result.latencyMs,
-      }),
-      settle(ownerUserId, estimate, actual),
-    ]);
-
-    void notifyBudgetAlerts(ownerUserId);
-
-    return {
-      ok: true,
-      text: result.text,
-      model: result.model,
+  return {
+    ok: true,
+    ticket: {
       payer: "family",
-      costUsdMicros: actual,
-      doubleSolve: access.double_solve ?? true,
-    };
-  } catch (error) {
-    const typed = toAiError(error);
-
-    // Une clé refusée le reste : la marquer évite que chaque appel suivant
-    // re-découvre la même chose sur le quota du parent (§3.5).
-    if (typed.code === "AI_KEY_INVALID") {
-      await markCredentialState(ownerUserId, "invalid", typed.code);
-    }
-
-    // L'énergie est REMBOURSÉE (é11 R-15) ; l'argent réservé est libéré, parce
-    // qu'aucun appel n'a abouti. Un appel qui échoue AVANT d'atteindre le
-    // fournisseur n'a rien coûté ; un appel qui échoue APRÈS a été facturé, mais
-    // nous n'avons alors aucun usage à solder — l'estimation resterait plus
-    // fausse que zéro, et la facture du fournisseur reste le juge (R-12).
-    await releaseReservation(ownerUserId, studentUserId, estimate, energyCost);
-
-    await logAiUsage(supabaseAdmin as unknown as Parameters<typeof logAiUsage>[0], {
-      userId: studentUserId,
-      payer: "family",
-      credentialOwner: ownerUserId,
+      ownerUserId,
       provider: access.provider,
-      feature,
+      credential,
       model,
-      status: "error",
-      errorCode: typed.code,
-      latencyMs: Date.now() - startedAt,
-    });
-
-    return refuse(feature, typed.code);
-  }
+      maxTokens,
+      estimate,
+      energyCost,
+      doubleSolve: access.double_solve ?? true,
+      startedAt: Date.now(),
+    },
+  };
 }
 
 /**
@@ -412,17 +399,14 @@ export async function callAi(request: AiCallRequest): Promise<AiCallOutcome> {
  * n'est pas un oubli de symétrie : là-bas c'est la facture d'un parent qui a
  * choisi son plafond ; ici c'est la nôtre, et R-13 est catégorique — « un
  * dépassement doit être impossible, pas signalé ».
- *
- * Comme sur l'autre chemin, la réservation précède l'appel (D-8) et l'énergie
- * est remboursée quand le fournisseur n'a rien rendu (R-15).
  */
-async function callOnPlatform(
+async function preparePlatformCall(
   request: AiCallRequest,
   bounds: { maxTokens: number; contextTokens: number; energyCost: number },
-): Promise<AiCallOutcome> {
+): Promise<AiPreparation> {
   const models = { fast: "claude-haiku-4-5", rich: "claude-sonnet-5" };
   const credential = platformCredential(models);
-  if (!credential) return refuse(request.feature, "AI_MODE_OFF");
+  if (!credential) return { ok: false, code: "AI_MODE_OFF" };
 
   const model = request.tier === "rich" ? models.rich : models.fast;
   const estimate = estimateCostMicros({
@@ -442,7 +426,7 @@ async function callOnPlatform(
       error: errorMessage(reserveError),
       feature: request.feature,
     });
-    return refuse(request.feature, "AI_UNKNOWN");
+    return { ok: false, code: "AI_UNKNOWN" };
   }
 
   const grant = (Array.isArray(reservation) ? reservation[0] : null) as {
@@ -456,74 +440,225 @@ async function callOnPlatform(
     // incident d'élève : `info` avec l'action, comme la coupure côté famille,
     // pour que la console admin puisse dire « budget atteint à HH:MM » (§3.10).
     logger.info("ai.budget", { owner: "platform", action: "cut", code });
-    return refuse(request.feature, code);
+    return { ok: false, code };
   }
 
-  const startedAt = Date.now();
-  try {
-    const result = await getAiProvider("anthropic").generate(
-      {
-        tier: request.tier,
-        system: request.system,
-        blocks: request.blocks,
-        maxTokens: bounds.maxTokens,
-        feature: request.feature,
-        responseSchema: request.responseSchema,
-      },
+  return {
+    ok: true,
+    ticket: {
+      payer: "platform",
+      ownerUserId: null,
+      provider: "anthropic",
       credential,
+      model,
+      maxTokens: bounds.maxTokens,
+      estimate,
+      energyCost: bounds.energyCost,
+      // R-18bis.4 : sur le chemin plateforme la vérification est TOUJOURS
+      // complète. C'est nous qui payons, et c'est notre nom sur le contenu.
+      doubleSolve: true,
+      startedAt: Date.now(),
+    },
+  };
+}
+
+/** La requête telle que l'adaptateur l'attend. Une seule construction, deux formes d'appel. */
+function providerRequest(request: AiCallRequest, ticket: AiTicket): AiRequest {
+  return {
+    tier: request.tier,
+    system: request.system,
+    blocks: request.blocks,
+    maxTokens: ticket.maxTokens,
+    feature: request.feature,
+    responseSchema: request.responseSchema,
+  };
+}
+
+/** Étapes 6-7 au SUCCÈS : comptabilité, puis solde réel. Rend le coût constaté. */
+async function concludeSuccess(
+  request: AiCallRequest,
+  ticket: AiTicket,
+  result: AiResult,
+): Promise<number> {
+  const actual = settledCostMicros({ model: result.model, ...result.usage });
+
+  await Promise.all([
+    logAiUsage(supabaseAdmin as unknown as Parameters<typeof logAiUsage>[0], {
+      userId: request.studentUserId,
+      payer: ticket.payer,
+      credentialOwner: ticket.ownerUserId,
+      provider: ticket.provider,
+      feature: request.feature,
+      model: result.model,
+      inputTokens: result.usage.inputTokens,
+      outputTokens: result.usage.outputTokens,
+      cachedTokens: result.usage.cachedTokens,
+      costUsdMicros: actual,
+      status: "ok",
+      latencyMs: result.latencyMs,
+    }),
+    ticket.ownerUserId
+      ? settle(ticket.ownerUserId, ticket.estimate, actual)
+      : settlePlatform(ticket.estimate, actual),
+  ]);
+
+  if (ticket.ownerUserId) void notifyBudgetAlerts(ticket.ownerUserId);
+
+  return actual;
+}
+
+/**
+ * Étapes 6-7 à l'ÉCHEC : libérer, marquer la clé si besoin, journaliser.
+ *
+ * L'énergie est REMBOURSÉE (é11 R-15) ; l'argent réservé est libéré, parce
+ * qu'aucun appel n'a abouti. Un appel qui échoue AVANT d'atteindre le
+ * fournisseur n'a rien coûté ; un appel qui échoue APRÈS a été facturé, mais
+ * nous n'avons alors aucun usage à solder — l'estimation resterait plus fausse
+ * que zéro, et la facture du fournisseur reste le juge (R-12).
+ */
+async function concludeFailure(
+  request: AiCallRequest,
+  ticket: AiTicket,
+  error: unknown,
+): Promise<AiErrorCode> {
+  const typed = toAiError(error);
+
+  // Une clé refusée le reste : la marquer évite que chaque appel suivant
+  // re-découvre la même chose sur le quota du parent (§3.5).
+  if (typed.code === "AI_KEY_INVALID" && ticket.ownerUserId) {
+    await markCredentialState(ticket.ownerUserId, "invalid", typed.code);
+  }
+
+  await (ticket.ownerUserId
+    ? releaseReservation(
+        ticket.ownerUserId,
+        request.studentUserId,
+        ticket.estimate,
+        ticket.energyCost,
+      )
+    : releasePlatformReservation(request.studentUserId, ticket.estimate, ticket.energyCost));
+
+  await logAiUsage(supabaseAdmin as unknown as Parameters<typeof logAiUsage>[0], {
+    userId: request.studentUserId,
+    payer: ticket.payer,
+    credentialOwner: ticket.ownerUserId,
+    provider: ticket.provider,
+    feature: request.feature,
+    model: ticket.model,
+    status: "error",
+    errorCode: typed.code,
+    latencyMs: Date.now() - ticket.startedAt,
+  });
+
+  return typed.code;
+}
+
+/**
+ * Émet un appel IA pour un élève, ou explique pourquoi il ne part pas.
+ *
+ * Ne LÈVE jamais pour un refus métier : les exceptions sont réservées aux bugs.
+ */
+export async function callAi(request: AiCallRequest): Promise<AiCallOutcome> {
+  const prepared = await prepareAiCall(request);
+  if (!prepared.ok) return refuse(request.feature, prepared.code);
+
+  const { ticket } = prepared;
+  try {
+    const result = await getAiProvider(ticket.provider).generate(
+      providerRequest(request, ticket),
+      ticket.credential,
     );
-    const actual = settledCostMicros({ model: result.model, ...result.usage });
-
-    await Promise.all([
-      logAiUsage(supabaseAdmin as unknown as Parameters<typeof logAiUsage>[0], {
-        userId: request.studentUserId,
-        payer: "platform",
-        credentialOwner: null,
-        provider: "anthropic",
-        feature: request.feature,
-        model: result.model,
-        inputTokens: result.usage.inputTokens,
-        outputTokens: result.usage.outputTokens,
-        cachedTokens: result.usage.cachedTokens,
-        costUsdMicros: actual,
-        status: "ok",
-        latencyMs: result.latencyMs,
-      }),
-      settlePlatform(estimate, actual),
-    ]);
-
+    const actual = await concludeSuccess(request, ticket, result);
     return {
       ok: true,
       text: result.text,
       model: result.model,
-      payer: "platform",
+      payer: ticket.payer,
       costUsdMicros: actual,
-      // R-18bis.4 : sur le chemin plateforme la vérification est TOUJOURS
-      // complète. C'est nous qui payons, et c'est notre nom sur le contenu.
-      doubleSolve: true,
+      doubleSolve: ticket.doubleSolve,
     };
   } catch (error) {
-    const typed = toAiError(error);
-
-    // R-15 : l'élève ne paie pas en énergie la panne d'un fournisseur, et la
-    // part de budget réservée pour un appel qui n'a rien rendu retourne au pot.
-    await releasePlatformReservation(request.studentUserId, estimate, bounds.energyCost);
-
-    await logAiUsage(supabaseAdmin as unknown as Parameters<typeof logAiUsage>[0], {
-      userId: request.studentUserId,
-      payer: "platform",
-      credentialOwner: null,
-      provider: "anthropic",
-      feature: request.feature,
-      model,
-      status: "error",
-      errorCode: typed.code,
-      latencyMs: Date.now() - startedAt,
-    });
-    return refuse(request.feature, typed.code);
+    return refuse(request.feature, await concludeFailure(request, ticket, error));
   }
 }
 
+/** Ce qu'un appel STREAMÉ rend, morceau par morceau (é11 lot 3). */
+export type AiStreamChunk =
+  | { readonly type: "text"; readonly text: string }
+  | {
+      readonly type: "done";
+      readonly text: string;
+      readonly model: string;
+      readonly payer: AiPayer;
+      readonly costUsdMicros: number;
+    }
+  | { readonly type: "error"; readonly code: AiErrorCode };
+
+/**
+ * La forme STREAMÉE du même appel — étude 11 lot 3 (D-7).
+ *
+ * Elle emprunte le MÊME chemin d'argent que `callAi` : même résolution, même
+ * réservation avant l'appel, même comptabilité, même solde. C'est tout l'intérêt
+ * du billet — un plafond ne peut pas exister d'un côté et manquer de l'autre.
+ *
+ * Comme sa jumelle, elle ne LÈVE jamais pour un refus métier : le refus est un
+ * dernier morceau `error`, que la route traduit en trame SSE et que l'écran
+ * traduit en phrase d'enfant (R-15).
+ *
+ * Un fournisseur sans streaming n'est pas un cas d'échec : son adaptateur rend
+ * le texte en un seul morceau (dégradation prévue, §3.5). L'appelant n'a rien à
+ * savoir de la différence.
+ */
+export async function* streamAi(request: AiCallRequest): AsyncGenerator<AiStreamChunk> {
+  const prepared = await prepareAiCall(request);
+  if (!prepared.ok) {
+    // Le refus passe par `refuse()` pour être JOURNALISÉ comme celui de
+    // `callAi`, puis ressort en morceau : la route n'a pas à connaître deux
+    // formes de refus.
+    refuse(request.feature, prepared.code);
+    yield { type: "error", code: prepared.code };
+    return;
+  }
+
+  const { ticket } = prepared;
+  let full = "";
+  try {
+    for await (const chunk of getAiProvider(ticket.provider).stream(
+      providerRequest(request, ticket),
+      ticket.credential,
+    )) {
+      if (chunk.type === "text") {
+        full += chunk.text;
+        yield { type: "text", text: chunk.text };
+        continue;
+      }
+
+      const actual = await concludeSuccess(request, ticket, chunk.result);
+      yield {
+        type: "done",
+        // Le texte du morceau final fait foi : c'est celui que l'adaptateur a
+        // reconstruit depuis la réponse, pas notre concaténation.
+        text: chunk.result.text || full,
+        model: chunk.result.model,
+        payer: ticket.payer,
+        costUsdMicros: actual,
+      };
+      return;
+    }
+
+    // Un flux qui se termine sans `done` n'a pas de comptabilité à solder ; on
+    // le traite comme une panne, pour que la réservation soit libérée.
+    yield {
+      type: "error",
+      code: await concludeFailure(request, ticket, new Error("no_done")),
+    };
+  } catch (error) {
+    yield {
+      type: "error",
+      code: await concludeFailure(request, ticket, error),
+    };
+  }
+}
 async function settlePlatform(reserved: number, actual: number): Promise<void> {
   const { error } = await rpc().rpc("settle_platform_spend", {
     p_reserved_micros: reserved,

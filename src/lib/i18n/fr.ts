@@ -483,6 +483,23 @@ export const fr: TranslationKeys = {
     planPushTitle: "Le rappel d'El Ostedh",
     planPushDesc:
       "Un seul rappel par jour, et seulement si tu as quelque chose à réviser. Tu peux l'arrêter quand tu veux.",
+    chat: {
+      open: "Poser une question sur ce chapitre",
+      title: "En parler avec El Ostedh",
+      intentExplain: "Explique-moi ce chapitre",
+      intentExample: "Donne-moi un exemple",
+      intentSummarize: "Résume-le en 3 points",
+      placeholder: "Ta question sur ce chapitre…",
+      send: "Envoyer",
+      tooLong: "Ta question est un peu longue — dis-la en 300 caractères max.",
+      noLinks: "Pas de lien ici : pose ta question avec tes mots.",
+      rateLimited: "Doucement ! Attends un instant avant de reposer une question.",
+      empty: "Choisis une question, ou écris la tienne.",
+      you: "Toi",
+      historyTitle: "Tes conversations",
+      historyEmpty: "Tu n'as encore parlé de rien avec El Ostedh.",
+      outputRejected: "Cette réponse n'était pas nette — redemande-la autrement.",
+    },
   },
   subscription: {
     premiumTitle: "Fonctionnalité Premium",

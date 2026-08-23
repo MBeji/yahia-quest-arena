@@ -425,6 +425,27 @@ export const TUTOR_HARD_DAILY_CAP = 30 as const;
  */
 export const TUTOR_ENERGY_PER_HINT = 3 as const;
 
+/**
+ * Longueur maximale d'un message libre de l'élève (é11 R-5, §3.11).
+ *
+ * Ce n'est pas un confort de saisie : c'est une borne de SURFACE D'ATTAQUE. Le
+ * champ libre est la seule entrée non fiable du système (RISK-4), et une
+ * instruction d'injection tient rarement en trois cents caractères sans se
+ * voir. Le bornage s'ajoute — il ne remplace pas — au bloc de données balisé,
+ * à la hiérarchie posée par le prompt système et au validateur de sortie.
+ */
+export const TUTOR_FREE_TEXT_MAX = 300 as const;
+
+/**
+ * Nombre de messages transmis au modèle dans un fil (§3.4, §1.5).
+ *
+ * « Pas de mémoire conversationnelle longue : fils courts par sujet + résumé
+ * roulant borné. » La borne est aussi appliquée EN BASE
+ * (`tutor_thread_window`) — la même règle des deux côtés, parce qu'elle relève
+ * de la vie privée autant que du coût.
+ */
+export const TUTOR_CHAT_WINDOW = 10 as const;
+
 /** Coût en énergie d'un appel, par surface. La Forge est l'action la plus chère du produit. */
 export const AI_ENERGY_COST: Readonly<Record<AiFeature, number>> = {
   verify: 0, // geste du porteur de clé, hors énergie élève

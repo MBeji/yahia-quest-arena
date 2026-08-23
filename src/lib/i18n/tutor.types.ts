@@ -80,4 +80,35 @@ export interface TutorTranslations {
   /** US-7 — le rappel du plan du jour, armé par l'élève. */
   planPushTitle: string;
   planPushDesc: string;
+
+  /**
+   * LE CHAT CADRÉ (lot 3, US-8 à US-10).
+   *
+   * ⚠️ Ce sont des libellés d'INTERFACE, dans la langue de l'interface. Les
+   * réponses du tuteur, elles, arrivent dans la langue de la MATIÈRE (R-3) et
+   * ne passent jamais par ce catalogue — y compris la réponse fixe de la
+   * catégorie bien-être, qui vit côté serveur pour cette raison exacte.
+   */
+  chat: {
+    open: string;
+    title: string;
+    /** Les intentions fermées — le chemin principal, et le seul en primaire (Q-6). */
+    intentExplain: string;
+    intentExample: string;
+    intentSummarize: string;
+    /** Le champ libre, à partir du collège. */
+    placeholder: string;
+    send: string;
+    /** Les refus de bornage (R-5), dits sans jargon. */
+    tooLong: string;
+    noLinks: string;
+    rateLimited: string;
+    /** Le fil vide, avant la première question. */
+    empty: string;
+    you: string;
+    historyTitle: string;
+    historyEmpty: string;
+    /** La sortie a été rejetée par le validateur en cours de flux (§3.4). */
+    outputRejected: string;
+  };
 }
