@@ -38,6 +38,7 @@ import { errorMessage } from "@/shared/lib/safe-error";
 import {
   AI_ENERGY_COST,
   AI_MAX_TOKENS,
+  MICROS_PER_USD,
   type AiFeature,
   type AiPayer,
   type AiProviderId,
@@ -53,6 +54,7 @@ import {
   getAiProvider,
   isAiModeEnabled,
   platformCredential,
+  platformDailyBudgetUsd,
 } from "@/shared/integrations/ai/provider.server";
 import { logAiUsage } from "@/shared/integrations/ai/usage.server";
 import { renderBlocks, type AiBlock, type AiCredential } from "@/shared/integrations/ai/types";
@@ -67,7 +69,14 @@ import { notifyBudgetAlerts } from "./ai-alerts.server";
  */
 type AiCallRpcClient = {
   rpc: (
-    fn: "resolve_ai_access" | "reserve_ai_spend" | "settle_ai_spend" | "release_ai_reservation",
+    fn:
+      | "resolve_ai_access"
+      | "reserve_ai_spend"
+      | "settle_ai_spend"
+      | "release_ai_reservation"
+      | "reserve_platform_spend"
+      | "settle_platform_spend"
+      | "release_platform_reservation",
     args?: Record<string, unknown>,
   ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
 };
@@ -265,7 +274,7 @@ export async function callAi(request: AiCallRequest): Promise<AiCallOutcome> {
   const contextTokens = estimateTokens(`${request.system}\n${renderBlocks(request.blocks)}`);
 
   if (usePlatform) {
-    return callOnPlatform(request, { maxTokens, contextTokens });
+    return callOnPlatform(request, { maxTokens, contextTokens, energyCost });
   }
 
   if (!access.allowed || !access.owner_user_id || !access.provider) {
@@ -390,18 +399,65 @@ export async function callAi(request: AiCallRequest): Promise<AiCallOutcome> {
 }
 
 /**
- * Le chemin PLATEFORME (é11, budget A5). Volontairement minimal ici : le lot 1
- * de é11 le complétera avec son propre plafond journalier. Ce qui compte pour
- * é29, c'est que le payeur soit écrit (R-7) et qu'aucune clé de famille ne soit
- * utilisée pour un travail qui ne sert pas ses propres élèves (R-8).
+ * Le chemin PLATEFORME — é11 R-12 (énergie) et R-13 (budget), enfin branchés.
+ *
+ * é29 avait laissé cette moitié ouverte en toutes lettres (« volontairement
+ * minimal ici : le lot 1 de é11 le complétera »), et le lot 1 ne l'a pas fermée.
+ * Tant qu'elle l'est restée, poser `ANTHROPIC_API_KEY` en production donnait un
+ * tuteur ILLIMITÉ, à nos frais, à chaque élève sans clé de famille — parce que
+ * `resolve_ai_access` renvoie `payer = 'platform'` pour tous ceux-là.
+ *
+ * La coupure est INCONDITIONNELLE, contrairement au chemin famille où le porteur
+ * arme lui-même son frein (`limits_enforced`, défaut `false`). La différence
+ * n'est pas un oubli de symétrie : là-bas c'est la facture d'un parent qui a
+ * choisi son plafond ; ici c'est la nôtre, et R-13 est catégorique — « un
+ * dépassement doit être impossible, pas signalé ».
+ *
+ * Comme sur l'autre chemin, la réservation précède l'appel (D-8) et l'énergie
+ * est remboursée quand le fournisseur n'a rien rendu (R-15).
  */
 async function callOnPlatform(
   request: AiCallRequest,
-  bounds: { maxTokens: number; contextTokens: number },
+  bounds: { maxTokens: number; contextTokens: number; energyCost: number },
 ): Promise<AiCallOutcome> {
   const models = { fast: "claude-haiku-4-5", rich: "claude-sonnet-5" };
   const credential = platformCredential(models);
   if (!credential) return refuse(request.feature, "AI_MODE_OFF");
+
+  const model = request.tier === "rich" ? models.rich : models.fast;
+  const estimate = estimateCostMicros({
+    model,
+    estimatedInputTokens: bounds.contextTokens,
+    maxOutputTokens: bounds.maxTokens,
+  });
+
+  const { data: reservation, error: reserveError } = await rpc().rpc("reserve_platform_spend", {
+    p_student: request.studentUserId,
+    p_micros: estimate,
+    p_energy: bounds.energyCost,
+    p_budget_micros: Math.round(platformDailyBudgetUsd() * MICROS_PER_USD),
+  });
+  if (reserveError) {
+    logger.error("ai.reserve.platform", {
+      error: errorMessage(reserveError),
+      feature: request.feature,
+    });
+    return refuse(request.feature, "AI_UNKNOWN");
+  }
+
+  const grant = (Array.isArray(reservation) ? reservation[0] : null) as {
+    granted: boolean;
+    reason: string | null;
+  } | null;
+
+  if (!grant?.granted) {
+    const code = (grant?.reason as AiErrorCode | null) ?? "AI_BUDGET_REACHED";
+    // Le budget plateforme atteint est un ÉVÉNEMENT D'EXPLOITATION, pas un
+    // incident d'élève : `info` avec l'action, comme la coupure côté famille,
+    // pour que la console admin puisse dire « budget atteint à HH:MM » (§3.10).
+    logger.info("ai.budget", { owner: "platform", action: "cut", code });
+    return refuse(request.feature, code);
+  }
 
   const startedAt = Date.now();
   try {
@@ -418,20 +474,23 @@ async function callOnPlatform(
     );
     const actual = settledCostMicros({ model: result.model, ...result.usage });
 
-    await logAiUsage(supabaseAdmin as unknown as Parameters<typeof logAiUsage>[0], {
-      userId: request.studentUserId,
-      payer: "platform",
-      credentialOwner: null,
-      provider: "anthropic",
-      feature: request.feature,
-      model: result.model,
-      inputTokens: result.usage.inputTokens,
-      outputTokens: result.usage.outputTokens,
-      cachedTokens: result.usage.cachedTokens,
-      costUsdMicros: actual,
-      status: "ok",
-      latencyMs: result.latencyMs,
-    });
+    await Promise.all([
+      logAiUsage(supabaseAdmin as unknown as Parameters<typeof logAiUsage>[0], {
+        userId: request.studentUserId,
+        payer: "platform",
+        credentialOwner: null,
+        provider: "anthropic",
+        feature: request.feature,
+        model: result.model,
+        inputTokens: result.usage.inputTokens,
+        outputTokens: result.usage.outputTokens,
+        cachedTokens: result.usage.cachedTokens,
+        costUsdMicros: actual,
+        status: "ok",
+        latencyMs: result.latencyMs,
+      }),
+      settlePlatform(estimate, actual),
+    ]);
 
     return {
       ok: true,
@@ -445,19 +504,45 @@ async function callOnPlatform(
     };
   } catch (error) {
     const typed = toAiError(error);
+
+    // R-15 : l'élève ne paie pas en énergie la panne d'un fournisseur, et la
+    // part de budget réservée pour un appel qui n'a rien rendu retourne au pot.
+    await releasePlatformReservation(request.studentUserId, estimate, bounds.energyCost);
+
     await logAiUsage(supabaseAdmin as unknown as Parameters<typeof logAiUsage>[0], {
       userId: request.studentUserId,
       payer: "platform",
       credentialOwner: null,
       provider: "anthropic",
       feature: request.feature,
-      model: request.tier === "rich" ? models.rich : models.fast,
+      model,
       status: "error",
       errorCode: typed.code,
       latencyMs: Date.now() - startedAt,
     });
     return refuse(request.feature, typed.code);
   }
+}
+
+async function settlePlatform(reserved: number, actual: number): Promise<void> {
+  const { error } = await rpc().rpc("settle_platform_spend", {
+    p_reserved_micros: reserved,
+    p_actual_micros: actual,
+  });
+  if (error) logger.error("ai.settle.platform", { error: errorMessage(error) });
+}
+
+async function releasePlatformReservation(
+  student: string,
+  micros: number,
+  energy: number,
+): Promise<void> {
+  const { error } = await rpc().rpc("release_platform_reservation", {
+    p_student: student,
+    p_micros: micros,
+    p_energy: energy,
+  });
+  if (error) logger.error("ai.release.platform", { error: errorMessage(error) });
 }
 
 async function settle(owner: string, reserved: number, actual: number): Promise<void> {

@@ -413,6 +413,18 @@ export const TUTOR_DAILY_ENERGY = 10 as const;
  */
 export const TUTOR_HARD_DAILY_CAP = 30 as const;
 
+/**
+ * Énergie regagnée en consommant UNE charge d'indice de l'inventaire (é11 R-12,
+ * D-9). C'est l'économie existante des indices qui finance l'usage intensif : des
+ * pièces gagnées en jouant, jamais de l'argent réel — le wording de la phase
+ * gratuite reste tenable (D-14).
+ *
+ * Miroir SQL : la constante est répétée dans `recharge_tutor_energy()`, avec le
+ * plafond dur, parce que la base doit pouvoir décider seule dans la transaction
+ * qui décrémente l'inventaire.
+ */
+export const TUTOR_ENERGY_PER_HINT = 3 as const;
+
 /** Coût en énergie d'un appel, par surface. La Forge est l'action la plus chère du produit. */
 export const AI_ENERGY_COST: Readonly<Record<AiFeature, number>> = {
   verify: 0, // geste du porteur de clé, hors énergie élève
