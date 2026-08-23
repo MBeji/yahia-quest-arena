@@ -71,7 +71,15 @@ function AdminSubscriptionsPage() {
 
   if (role !== null && !isAdmin) {
     return (
-      <div className="mx-auto max-w-2xl px-6 py-12 text-center">
+      // Le refus est ciblé par `data-testid` et JAMAIS par sa copie : celle-ci est
+      // traduite (`t.subscription.accessDenied`) et le défaut de l'application est le
+      // français (GAP-010) — « Accès réservé aux administrateurs. », qui ne contient ni
+      // « access denied » ni « accès refusé ». Un sélecteur écrit sur ces deux libellés
+      // ne désignait donc personne, dans aucune des trois langues, et son seul usage
+      // était un `toHaveCount(0)` qui passait à vide (issue #733). Contrat e2e :
+      // `adminSubscriptions.accessDenied`, appairé positif/négatif entre
+      // `authorization.spec` et `admin-and-parent.spec`.
+      <div className="mx-auto max-w-2xl px-6 py-12 text-center" data-testid="admin-access-denied">
         <h1 className="font-display text-2xl font-bold">{t.subscription.accessDenied}</h1>
         <Link
           to="/dashboard"
@@ -94,7 +102,9 @@ function AdminSubscriptionsPage() {
     : null;
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
+    // Miroir du crochet ci-dessus : `adminSubscriptions.consolePanel` prouve à
+    // `authorization.spec` que la console n'est pas rendue SOUS l'avis de refus.
+    <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6" data-testid="admin-subscriptions-console">
       <Link
         to="/dashboard"
         className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
