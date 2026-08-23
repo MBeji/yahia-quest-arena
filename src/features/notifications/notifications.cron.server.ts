@@ -1,113 +1,22 @@
-import webpush, { WebPushError } from "web-push";
 import { supabaseAdmin } from "@/shared/integrations/supabase/client.server";
 import { logger } from "@/shared/lib/logger";
+// Le TRANSPORT push vit dans `shared/` depuis l'étude 29 lot 3 : les alertes de
+// budget du mode IA en ont besoin aussi, et une feature n'en importe pas une
+// autre. Ce module garde ce qui lui appartient — QUI reçoit quoi, et quand.
+import { configureVapid, sendPushToUsers, type SendStats } from "@/shared/lib/push-sender.server";
 import {
   appLocalDate,
   isParentDigestDay,
   selectStreakAtRiskUserIds,
   streakReminderPayload,
   weeklyParentDigestPayload,
-  type PushPayload,
 } from "./push-audience";
-
-let vapidConfigured = false;
-
-/** Configure web-push from env once. Returns false if any VAPID var is missing. */
-function configureVapid(): boolean {
-  if (vapidConfigured) return true;
-  const subject = process.env.VAPID_SUBJECT;
-  const publicKey = process.env.VAPID_PUBLIC_KEY;
-  const privateKey = process.env.VAPID_PRIVATE_KEY;
-  if (!subject || !publicKey || !privateKey) return false;
-  webpush.setVapidDetails(subject, publicKey, privateKey);
-  vapidConfigured = true;
-  return true;
-}
 
 function jsonResponse(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
     status,
     headers: { "content-type": "application/json" },
   });
-}
-
-type SendStats = { audience: number; sent: number; pruned: number };
-
-/**
- * Send one payload to every push subscription of the given users, pruning dead
- * endpoints (404/410) as it goes. Shared by the streak reminder and the weekly
- * family digest.
- */
-async function sendToUsers(userIds: string[], payload: PushPayload): Promise<SendStats> {
-  if (userIds.length === 0) return { audience: 0, sent: 0, pruned: 0 };
-
-  const { data: subs, error: subsError } = await supabaseAdmin
-    .from("push_subscriptions")
-    .select("id, endpoint, p256dh, auth")
-    .in("user_id", userIds);
-  if (subsError) {
-    logger.error("Push cron: failed to load subscriptions", { error: subsError });
-    throw new Error("subscriptions");
-  }
-
-  const body = JSON.stringify(payload);
-  let sent = 0;
-  const deadIds: string[] = [];
-
-  await Promise.all(
-    (subs ?? []).map(async (s) => {
-      try {
-        await webpush.sendNotification(
-          { endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } },
-          body,
-        );
-        sent++;
-      } catch (err) {
-        const status = err instanceof WebPushError ? err.statusCode : undefined;
-        if (status === 404 || status === 410) {
-          // Endpoint is gone (unsubscribed / expired) — collect it, prune in bulk below.
-          deadIds.push(s.id);
-        } else {
-          logger.warn("Push cron: send failed", { status });
-        }
-      }
-    }),
-  );
-
-  const pruned = await pruneSubscriptions(deadIds);
-
-  return { audience: userIds.length, sent, pruned };
-}
-
-/**
- * Delete dead subscriptions in bulk. A per-row `DELETE` cost one round-trip per
- * lost subscriber, so a burst of expired endpoints (a browser release, a mass
- * unsubscribe) hammered PostgREST in proportion to the damage. Chunked because
- * `.in()` travels in the URL, which has a length ceiling.
- *
- * Pruning is best-effort: the notifications are already sent, so a failed
- * cleanup must not fail the cron — the next run retries it.
- */
-async function pruneSubscriptions(ids: string[]): Promise<number> {
-  if (ids.length === 0) return 0;
-
-  const CHUNK_SIZE = 200;
-  let pruned = 0;
-
-  for (let i = 0; i < ids.length; i += CHUNK_SIZE) {
-    const chunk = ids.slice(i, i + CHUNK_SIZE);
-    const { error } = await supabaseAdmin.from("push_subscriptions").delete().in("id", chunk);
-    if (error) {
-      logger.error("Push cron: failed to prune dead subscriptions", {
-        error,
-        count: chunk.length,
-      });
-      continue;
-    }
-    pruned += chunk.length;
-  }
-
-  return pruned;
 }
 
 /** Audience: users with a live streak who have not been active *today* (Tunis-local). */
@@ -122,7 +31,7 @@ async function dispatchStreakReminder(now: Date): Promise<SendStats> {
   }
 
   const userIds = selectStreakAtRiskUserIds(profiles ?? [], appLocalDate(now));
-  return sendToUsers(userIds, streakReminderPayload());
+  return sendPushToUsers(userIds, streakReminderPayload());
 }
 
 /**
@@ -140,7 +49,7 @@ async function dispatchParentDigest(): Promise<SendStats> {
   }
 
   const parentIds = [...new Set((links ?? []).map((l) => l.parent_user_id))];
-  return sendToUsers(parentIds, weeklyParentDigestPayload());
+  return sendPushToUsers(parentIds, weeklyParentDigestPayload());
 }
 
 /**

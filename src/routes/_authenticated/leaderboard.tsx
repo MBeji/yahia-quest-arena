@@ -282,7 +282,10 @@ function LeaderboardPage() {
                         failed WCAG AA. Mirrors the GAP-047 premium-lock badge pattern:
                         readable in all 3 themes (gold is dark teal under Référence). */}
                     {player.isMe && (
-                      <span className="rounded-full border border-gold/50 bg-card px-2 py-0.5 text-2xs font-bold uppercase tracking-wider text-foreground shadow-sm">
+                      <span
+                        data-testid="leaderboard-me-chip"
+                        className="rounded-full border border-gold/50 bg-card px-2 py-0.5 text-2xs font-bold uppercase tracking-wider text-foreground shadow-sm"
+                      >
                         {t.leaderboard.youChip}
                       </span>
                     )}

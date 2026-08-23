@@ -17,6 +17,9 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { getDashboard, getSprint2Dashboard } from "@/features/dashboard";
+// Import direct, même raison que sur le lecteur de chapitre : le barrel de
+// la feature IA tirerait la console parent et la Forge dans ce chunk.
+import { ForgeEntry } from "@/features/ai/components/forge-entry";
 import { DailyReviewPanel, recoverStreak } from "@/features/progression";
 import { hubRouteForRole, shouldLeaveDashboard } from "@/features/auth";
 import { EnablePushCard } from "@/features/notifications";
@@ -430,6 +433,12 @@ function Dashboard() {
             </Link>
           )}
         </div>
+
+        {/* La Forge, seconde porte d'entrée demandée par l'étude 29 §2.1 (« depuis
+            le hub d'un chapitre ET depuis le dashboard élève »). Sans chapitre :
+            d'ici on relit ses quiz existants, on en forge un depuis un chapitre.
+            Invisible tant que la Forge n'est pas activée pour cet élève (R-1). */}
+        <ForgeEntry chapterId={null} authenticated />
 
         {/* ZONE CALME — ce qui accompagne sans réclamer : la citation du jour et
             l'opt-in aux notifications. L'opt-in descend d'ici (il était coincé entre

@@ -17,6 +17,10 @@ import {
   type StartOutcome,
 } from "@/features/quest/components/exercise-player";
 import { QuestResultActions } from "@/features/quest/components/quest-result-actions";
+// La ROUTE compose les deux features — c'est ici, et nulle part dans ,
+// que le tuteur entre dans l'écran de correction (AGENTS.md : une feature n'en
+// importe pas une autre).
+import { TutorPanel } from "@/features/tutor";
 import { buildQuestLabels } from "@/features/quest/quest-labels";
 import { useT } from "@/lib/i18n";
 import { ReportErrorButton } from "@/features/content-report";
@@ -127,6 +131,11 @@ function QuestPage() {
           </div>
         );
       },
+      // Étude 11 lot 1 — « Demander au Prof ». La porte R-1 est tranchée par le
+      // serveur à l'appel : sur l'écran de correction, la session est terminée
+      // par construction, et un aller-retour de plus pour l'apprendre serait payé
+      // par l'élève en attente.
+      renderTutor: (questionId: string) => <TutorPanel questionId={questionId} />,
       renderResultFooter: ({ exerciseId: exId, subjectId, nextExerciseId, onReplay }) => (
         <>
           <QuestResultActions

@@ -62,6 +62,34 @@ sont identiques : en garder une (celle dont l'historique est continu), fermer l'
 commentaire qui dit où vit le travail. Souvent inutile de se précipiter — quand la jumelle merge,
 le doublon devient un diff vide et se ferme seul.
 
+## Reprendre une branche dont la PR a déjà mergé
+
+`auto-pr.yml` merge en **squash** puis **supprime la branche** (`--delete-branch`). Deux
+conséquences qui coûtent une heure quand on les découvre en direct (vécu le 2026-08-22, é29) :
+
+**1. Le nom de branche est libre, l'historique ne l'est plus.** Une session à qui on assigne une
+branche nommée (`claude/<sujet>`) et dont la PR vient de merger doit **repartir de `main`** :
+
+```bash
+git fetch origin main && git checkout -B claude/<sujet> origin/main
+```
+
+Puis pousser normalement — la branche n'existe plus côté remote, le push la recrée, `auto-pr`
+ouvre une **nouvelle** PR. Ne jamais empiler la suite sur l'ancien historique.
+
+**2. Si la branche distante existe ENCORE (suppression non faite, ou push arrivé avant le merge),
+ne pas la « réconcilier ».** Le réflexe — merger l'ancienne branche dans la nouvelle pour éviter un
+push forcé — produit une volée de conflits `add/add` : la base de fusion précède la PR mergée, donc
+git voit chaque fichier livré comme ajouté **des deux côtés**. On peut résoudre en gardant `--ours`
+partout, mais la PR qui en sort embarque tout l'ancien historique, affiche un diff énorme, et
+**retombe en conflit** au premier merge concurrent. Le bon geste est
+`git push --force-with-lease` : la branche ne contient que de l'historique déjà sur `main`, il n'y
+a rien à perdre. Si l'outil refuse le `--force-with-lease`, demander plutôt que contourner.
+
+⚠️ Et **ne jamais relancer un second `git push` par-dessus un premier encore en cours** : le hook
+`pre-push` rejoue `verify` (~2 min), deux pushes concurrents se marchent dessus et le second meurt
+sur `cannot lock ref … unable to resolve reference`, en laissant croire à un rejet du serveur.
+
 ## Fichiers à forte contention
 
 Ici : **`STATUS.md`**. Dans le dépôt privé : `FableEtudes/README.md` (index) et

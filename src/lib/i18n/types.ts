@@ -1,4 +1,5 @@
 import type { DuelTranslations } from "./duel.types";
+import type { TutorTranslations } from "./tutor.types";
 
 export type Locale = "en" | "fr" | "ar";
 
@@ -387,6 +388,9 @@ export type TranslationKeys = {
   };
   // Duels 1v1 (étude 05) — keys in ./duel.types.ts (keeps this file under max-lines).
   duel: DuelTranslations;
+
+  // Tuteur « El Ostedh » (étude 11 lot 1) — clés dans ./tutor.types.ts.
+  tutor: TutorTranslations;
   // Subscription / premium
   subscription: {
     premiumTitle: string;
@@ -1047,6 +1051,148 @@ export type TranslationKeys = {
     questResultXp: string;
     questResultScore: string;
     lockedChapter: string;
+  };
+  // Mode IA « à la clé de la famille » (étude 29). Registre PARENT (vouvoiement,
+  // é15) : la section vit dans les Réglages, et son lecteur est celui qui engage
+  // de l'argent. Aucune de ces chaînes ne dit « premium », « abonnement » ni
+  // « payant » — la famille ne paie pas l'app, elle paie son fournisseur (D-12).
+  ai: {
+    sectionTitle: string;
+    sectionDesc: string;
+    unavailable: string;
+    stateNone: string;
+    stateActive: string;
+    stateInvalid: string;
+    stateUnverified: string;
+    keyMasked: string;
+    lastVerified: string;
+    attach: string;
+    replace: string;
+    revoke: string;
+    revokeTitle: string;
+    revokeBody: string;
+    revokeAtProvider: string;
+    revokeCancel: string;
+    revokeConfirm: string;
+    revoked: string;
+    provider: string;
+    providerAnthropic: string;
+    providerHint: string;
+    providerCompatible: string;
+    baseUrl: string;
+    baseUrlHint: string;
+    localModelWarning: string;
+    modelFast: string;
+    modelRich: string;
+    modelCurated: string;
+    modelFree: string;
+    keyLabel: string;
+    keyHint: string;
+    dailyBudget: string;
+    monthlyBudget: string;
+    budgetHint: string;
+    dailyReference: string;
+    spendRefShort: string;
+    monthlyReference: string;
+    budgetReferenceHint: string;
+    limitsTitle: string;
+    limitsOnHint: string;
+    limitsOffHint: string;
+    estimateNotice: string;
+    pricesAsOf: string;
+    doubleSolve: string;
+    doubleSolveHint: string;
+    doubleSolveWarning: string;
+    consentTitle: string;
+    consentSent: string;
+    consentNotSent: string;
+    consentShared: string;
+    consentProvider: string;
+    consentMoney: string;
+    consentAccept: string;
+    adultTitle: string;
+    adultConfirm: string;
+    save: string;
+    saving: string;
+    saved: string;
+    cancel: string;
+    prefsSaved: string;
+    studentsTitle: string;
+    studentsDesc: string;
+    studentSelf: string;
+    studentNone: string;
+    studentEnabled: string;
+    energyMax: string;
+    energyToday: string;
+    featExplain: string;
+    featReformulate: string;
+    featChat: string;
+    featCheck: string;
+    featForge: string;
+    featExerciseGen: string;
+    featDigestStudent: string;
+    featDigestParent: string;
+    errNotLinked: string;
+    errNoCredential: string;
+    errEnergyCap: string;
+    forgeTitle: string;
+    forgeDesc: string;
+    forgeSize: string;
+    forgeDifficulty: string;
+    forgeStart: string;
+    forgeWorking: string;
+    forgeQuota: string;
+    forgeNoQuiz: string;
+    forgePlay: string;
+    forgeExpires: string;
+    forgeUnverified: string;
+    forgeUnverifiedWhy: string;
+    forgeNoReward: string;
+    forgeQuestion: string;
+    forgeValidate: string;
+    forgeNext: string;
+    forgeFinish: string;
+    forgeScore: string;
+    forgeReplay: string;
+    forgeBack: string;
+    errForgeQuota: string;
+    errForgeNoQuorum: string;
+    errForgeNotFound: string;
+    errForgeExpired: string;
+    errForgeNoContext: string;
+    spendTitle: string;
+    spendToday: string;
+    spendMonth: string;
+    spendCalls: string;
+    spendByFeature: string;
+    spendByStudent: string;
+    spendByModel: string;
+    spendRecent: string;
+    spendNone: string;
+    adviceTitle: string;
+    adviceBody: string;
+    adviceSuggest: string;
+    feedbackUp: string;
+    feedbackDown: string;
+    feedbackSent: string;
+    adminTitle: string;
+    adminDesc: string;
+    adminGlobal: string;
+    adminFamilies: string;
+    adminSuspended: string;
+    adminStudents: string;
+    adminCalls: string;
+    adminQuality: string;
+    adminDenied: string;
+    errKeyInvalid: string;
+    errModelUnknown: string;
+    errCreditExhausted: string;
+    errRateLimited: string;
+    errProviderDown: string;
+    errHostNotAllowed: string;
+    errBudgetReached: string;
+    errModeOff: string;
+    errGeneric: string;
   };
   // Public « Référence » register (chantier C8): landing, catalogue, level page,
   // course reader, subject hub, anonymous practice + shared public chrome.

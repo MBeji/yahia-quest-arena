@@ -75,6 +75,18 @@ export interface AdminDb {
   userIdByEmail(email: string): Promise<string>;
   /** Overwrite a user's coin balance — deterministic setup for shop tests. */
   setCoins(userId: string, coins: number): Promise<void>;
+  /**
+   * Fait entrer un compte dans le classement global, et renvoie l'XP posée pour que la
+   * spec puisse reconnaître sa propre ligne. Sans cette mise en scène le classement est
+   * TOUJOURS vide en CI : le cold-start (étude 15, D-7) écarte toute ligne à `xp = 0`, et
+   * `reset-gameplay.mjs` remet justement chaque profil à zéro avant la suite.
+   *
+   * Le compte doit avoir `role = 'student'` — `get_global_leaderboard` ne lit qu'eux, un
+   * compte admin n'y entrerait jamais. L'XP posée reste sous `XP_PER_LEVEL` (200) pour que
+   * le niveau 1 rendu par le reset reste cohérent, et `reset-gameplay.mjs` rend la
+   * progression au run suivant.
+   */
+  rankOnLeaderboard(userId: string): Promise<number>;
   /** Read a user's live gameplay counters (xp / coins / level). */
   profileStats(userId: string): Promise<{ xp: number; coins: number; level: number }>;
   /**
@@ -374,6 +386,14 @@ export function createAdminDb(): AdminDb {
         .update({ yahia_coins: coins })
         .eq("id", userId);
       if (error) throw new Error(`setCoins: ${error.message}`);
+    },
+    async rankOnLeaderboard(userId: string) {
+      // Sous XP_PER_LEVEL (200) : le niveau 1 que pose le reset reste cohérent avec l'XP,
+      // sur le classement comme sur les autres écrans du compte.
+      const RANKED_XP = 150;
+      const { error } = await client.from("profiles").update({ xp: RANKED_XP }).eq("id", userId);
+      if (error) throw new Error(`rankOnLeaderboard: ${error.message}`);
+      return RANKED_XP;
     },
     async profileStats(userId: string) {
       const { data, error } = await client
