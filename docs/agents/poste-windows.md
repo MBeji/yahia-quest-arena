@@ -159,6 +159,34 @@ Fermer le navigateur du panneau d'aperçu ne rend presque rien (2 764 → 2 726 
 prise ailleurs, hors de portée de la session. La sortie reste la même qu'au paragraphe précédent —
 `--no-verify` avec accord explicite, la CI faisant foi.
 
+### Quand les DEUX mesures reviennent vides — et ce qui reste pour trancher
+
+Constaté 2026-08-22 : même signature, 15 erreurs — mais **0 processus node ET 5,0 Go libres**
+(`FreePhysicalMemory=5250228`), soit le double du seuil de #791. Le discriminateur ci-dessus rend
+donc **deux réponses négatives**, et il serait tentant d'en conclure « ni contention ni mémoire,
+donc régression ». Ce serait faux : les 15 fichiers rejoués en `--maxWorkers=1` passaient tous
+(480 tests, exit 0).
+
+Deux signes restent lisibles quand les deux chiffres ne disent rien :
+
+- **Le compte de fichiers découverts baisse pendant que la suite GROSSIT.** Ce jour-là 237, contre
+  240 le matin — alors que `main` venait d'ajouter des tests entre-temps. C'est plus sûr que le
+  nombre d'erreurs, qui varie. Comparer au dernier run vert de la même branche, pas à une valeur
+  absolue mémorisée.
+- **Aucune assertion n'échoue.** 2 447 tests verts, zéro `FAIL` nommé : une panne d'infrastructure
+  tue des **fichiers entiers** au démarrage, une régression nomme une assertion. Si le rapport ne
+  contient pas une seule ligne d'échec de test, ce n'est pas le code.
+
+Le total réel se recompose alors en additionnant les deux runs (2 447 + 480 = 2 927), et le gate
+est honnêtement vert — à condition de relancer aussi les étapes que le `&&` de `verify` n'a jamais
+atteintes (`leak:check`, `db:check-chain`, `eol:check`), voir la section suivante.
+
+Seul événement distinctif ce jour-là : un `npm install` de **516 paquets** quelques minutes plus
+tôt (rattrapage de deux jours de dérive). Corrélation notée, **cause non établie** — l'indexation
+antivirus de milliers de fichiers fraîchement écrits est une piste plausible pour un démarrage de
+processus qui expire, rien de plus. Si la signature réapparaît après un gros `install`, laisser
+retomber le poste quelques minutes avant de rejouer.
+
 ## Le gate annoncé vert alors qu'il est rouge (tâche de fond)
 
 Le code de sortie d'une tâche de fond est celui de la **dernière commande de la chaîne**, pas
