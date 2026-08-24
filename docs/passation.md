@@ -82,6 +82,16 @@ approbation — déterministe, sans clic. Sans ce secret, les deux workflows ret
 mais qui fait courir deux runs en parallèle sous le même nom de check — d'où le
 comportement non déterministe tant que le secret n'est pas configuré).
 
+⚠️ **Ce re-dispatch tourne désormais aussi AVEC le PAT** (2026-08-24). Il était sauté
+dès qu'un PAT existait, au motif qu'une PR de collaborateur émet de vrais événements
+`pull_request`. Le 2026-08-23 ces événements ont cessé de produire le moindre run
+pendant ~9 h — PAT toujours valide, PR #823 ouverte et armée, mais ses 4 checks requis
+figés en « Expected — Waiting for status to be reported », donc merge impossible sans
+geste humain. Ce pari n'est vérifiable depuis aucun workflow (au moment de dispatcher,
+l'absence future d'un run ne se distingue pas de son retard) : la dispatch est donc
+inconditionnelle, et les deux runs en parallèle décrits ci-dessus sont le régime
+**normal** de toute PR, pas seulement des PR sans PAT.
+
 ## 3. La PR — le gate complet (4 checks requis + previews)
 
 | Check requis         | Workflow             | Ce qu'il prouve                                                                                                                                                                                                                                                            |

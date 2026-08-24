@@ -4,8 +4,10 @@ name: CodeQL
 # complement to `audit:deps` (known-vulnerable packages) and the pgTAP suite
 # (SQL grants/RLS). Runs on every PR (it is a ruleset-required check, so it
 # must always report), on pushes to main, weekly (to pick up new queries
-# against unchanged code), and on demand (auto-pr.yml dispatches it for
-# bot-created PRs, which fire no pull_request events).
+# against unchanged code), and on demand — auto-pr.yml dispatche cette voie sur
+# CHAQUE PR qu'il ouvre depuis le 2026-08-24 (voir son étape de dispatch : les
+# événements `pull_request` peuvent cesser sans prévenir, et leur absence n'est
+# pas détectable à temps). D'où deux runs par PR : le natif et le dispatché.
 
 on:
   pull_request:
