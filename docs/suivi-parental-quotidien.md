@@ -76,9 +76,13 @@ exercices réalisés, agrégats par matière et par chapitre, totaux, et les mê
 - **Fuseau** : `Africa/Tunis`. Un tableau de bord quotidien ne peut pas découper les journées
   en UTC — une révision de 22 h 30 tomberait le lendemain.
 - **Bornes** : 92 jours maximum, 300 lignes par liste.
-- **Accès** : admin, ou parent **effectivement lié**. Jamais exposé au chemin public par code
-  alliance : le code est une capacité au porteur, l'activité minute par minute d'un mineur n'a
-  rien à faire derrière.
+- **Accès** : admin ou parent **effectivement lié** (garde `assert_can_read_student_activity`)
+  — **et, depuis le 2026-08-16, le porteur du code d'alliance**. `20260816200000` a extrait le
+  calcul dans une fonction interne sans contrôle d'accès, puis lui a donné une seconde enveloppe
+  ouverte à `anon` : `get_student_daily_report_by_code`, et de même
+  `get_student_attempt_detail_by_code`. Toute leur garde est le code lui-même — décodé en UUID,
+  le profil visé devant être un élève. Accès **au porteur** assumé : le pourquoi, et la seule
+  chose qui reste masquée, sont plus bas en « Deux surfaces, le même tableau de bord ».
 
 ### Seuils portés par le SQL
 
