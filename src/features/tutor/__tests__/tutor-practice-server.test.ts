@@ -17,7 +17,15 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const { USER, mockRpc, mockMaybeSingle, mockSupabase } = vi.hoisted(() => {
   const rpc = vi.fn();
-  const maybeSingle = vi.fn(async () => ({ data: null, error: null }));
+  // Le type porte la ligne ATTENDUE (et non `null` déduit de l'implémentation
+  // par défaut) : sans lui, armer une Forge ouverte dans un test ne compile pas.
+  type AccessRow = { enabled: boolean; features: string[] } | null;
+  const maybeSingle = vi.fn(
+    async (): Promise<{ data: AccessRow; error: { message: string } | null }> => ({
+      data: null,
+      error: null,
+    }),
+  );
   return {
     USER: "11111111-1111-4111-8111-111111111111",
     mockRpc: rpc,
@@ -110,14 +118,22 @@ describe("US-11 — la sélection est la voie par DÉFAUT", () => {
   it("rend les questions du stock quand il y en a", async () => {
     const out = await startTargetedPractice({ data: { tag: TAG, chapterId: CHAPTER } });
 
-    expect(out).toMatchObject({ kind: "exercises", onTarget: true });
-    expect((out as { items: unknown[] }).items).toHaveLength(2);
+    // On NARROWE au lieu de caster : le jour où la fonction rendra `none` ici,
+    // le test doit dire « ce n'est pas la bonne branche », pas planter sur un
+    // `undefined.length` trois lignes plus bas.
+    expect(out.kind).toBe("exercises");
+    if (out.kind !== "exercises") return;
+    expect(out.onTarget).toBe(true);
+    expect(out.items).toHaveLength(2);
   });
 
   it("distingue une question SUR l'erreur d'une question de repli", async () => {
     replies.get_targeted_exercises = reply([row({ is_fallback: true })]);
     const out = await startTargetedPractice({ data: { tag: TAG, chapterId: CHAPTER } });
-    expect((out as { items: { isFallback: boolean }[] }).items[0].isFallback).toBe(true);
+
+    expect(out.kind).toBe("exercises");
+    if (out.kind !== "exercises") return;
+    expect(out.items[0].isFallback).toBe(true);
   });
 });
 
