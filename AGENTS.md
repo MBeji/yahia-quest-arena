@@ -161,20 +161,20 @@ Full detail on §7/§8: [`docs/ci-cd-and-branch-protection.md`](./docs/ci-cd-and
 
 ## Execution policy
 
-Always allowed: the project's own gates (`npm run {lint,typecheck,test,test:*,verify,ci:verify,
-build,build:*,format,audit:deps,harness:check}`), the content pipeline (`npm run content:*`),
-read-only `git`/`gh`/`ls` inspection, and read-only `supabase migration list`/`db diff`/`test db`.
-Plus a short list of workflows an agent may **déclencher**, nommés un par un (jamais
-`gh workflow run:*`) : `rollback-prod.yml` (gel/dégel réversibles), `db-backup.yml` (dump +
-drill, lecture seule), `db-tests.yml` (pgTAP, base jetable), `e2e-auth.yml` (TEST seulement) et
-`apply-content.yml` / `apply-content-test.yml` — les seuls de la liste qui **écrivent** en prod,
-et l'exception assumée : ils ne publient rien de neuf, seulement le SQL compilé d'un corpus déjà
-mergé et validé par la Content CI (idempotent, journalisé dans `content_releases`, zéro
-migration). Sans eux une campagne de contenu s'arrête à une marche de la fin.
-**Never**: `supabase db push`/`db reset` against any project (prod migrates only via
-`db-migrate-prod.yml`, DoD §7), ni le dispatch de `db-migrate-prod.yml` (schéma prod) ou
-`release.yml` (publication). `e2e-auth.yml` en est sorti le 2026-08-22 (seule règle passée de
-`deny` à `allow` ; motif et gardes dans `policy.json`). Anything else falls back to asking.
+Règle qui gouverne cette section : **zéro intervention technique du propriétaire**
+([`docs/agents/zero-intervention.md`](./docs/agents/zero-intervention.md)) — une demande de
+permission est une validation manuelle. Always allowed : les gates, le pipeline contenu,
+l'inspection en lecture seule, `supabase migration list`/`db diff` ; et depuis le 2026-08-23
+(arbitrage explicite) la **boucle de livraison** (`git add/commit/push/checkout`,
+`git merge origin/main` — `rebase` et `stash` dehors), le **cycle PR/issue**, la
+**configuration des dépôts** (`gh secret set`, `gh variable set`) et l'**outillage**
+(`npm install` — jamais `npm ci` — et `node scripts/…`). Plus les workflows déclenchables,
+nommés un par un (jamais `gh workflow run:*`) : tous les non-prod, plus `rollback-prod.yml`,
+`db-backup.yml`, `db-tests.yml`, `e2e-auth.yml` et `apply-content*.yml` — les seuls qui
+**écrivent** en prod, exception assumée : rien de neuf, le SQL d'un corpus déjà mergé.
+**Never** : `supabase db push`/`db reset` (DoD §7), le dispatch de `db-migrate-prod.yml` ou
+`release.yml`, `node scripts/db/push-prod.mjs` et `gh secret delete` ; le reste demande.
+⚠️ Ceci lève les demandes **du dépôt**, pas les refus du classifieur d'auto-mode.
 Source of truth: **`harness/policy.json`** (with a reason on every deny) — `npm run harness:sync`
 compiles it into each tool's view (today `.claude/settings.json`, never hand-edited) and
 `npm run harness:check` fails CI on drift. Tools without a repo-level permission file read this
