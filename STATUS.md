@@ -399,12 +399,17 @@ réglage hors dépôt, ou plan GitHub. Sinon c'est de l'exécution, et l'exécut
 4. **Trancher A17** — revenir à Node 22 (garder le canari) ou tenir Node 24 et poser la vraie
    garde : refuser une PR de dépendance dont le **diff dépasse ce que son titre annonce**. Ne pas
    trancher par confort : le statu quo est l'option qui a déjà coûté 33 h de Content CI rouge.
-5. **Coller les 3 gabarits d'e-mail FR** dans Supabase (console Auth) — aujourd'hui le premier
-   contact du produit avec un parent part **en anglais**.
-6. **Le geste opérateur de triage** (#673) — appliquer les `dismissed` recommandés depuis
-   `/admin/content-reports` et `/admin/bug-reports`.
-7. **Le drill de portabilité du harness** (é25 L7) — session hors file, avec Mohamed. C'est ce
+5. **Le geste opérateur de triage** (#673) — 2 signalements déjà triés restent `open` en prod,
+   en attente de la seule application de leur statut (`[triage-pregate] open=2 fresh=0 →
+stale-handled, last reminded 25 days ago`). ⚠️ Cette ligne ne cite **aucun** mur : appliquer
+   une recommandation déjà écrite, deux fois réaffirmée (#651, #658, #673), est de l'exécution.
+   Elle n'est ici que faute de mécanisme — `report-close.yml` ne sait clôturer qu'au merge d'une
+   PR portant des trailers `Report-Id:`, jamais rétroactivement.
+6. **Le drill de portabilité du harness** (é25 L7) — session hors file, avec Mohamed. C'est ce
    qui fermerait l'étude.
+
+~~**Coller les 3 gabarits d'e-mail FR**~~ — **tranché le 2026-08-24 : les e-mails restent en
+anglais.** Ne pas rouvrir, et ne pas re-signaler la langue du premier contact comme un défaut.
 
 > **▶ Reprise pour une session vierge** — `main` à **#832** au 2026-08-24, **zéro PR en vol au
 > moteur**, deux chantiers hors PR (§6).
