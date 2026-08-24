@@ -289,20 +289,18 @@ jobs:
           # PR, armer l'auto-merge sans passer par « Approve and run »), le
           # GITHUB_TOKEN donne le DROIT de déclencher. Corollaire heureux :
           # cette étape survit à l'expiration du PAT (04/10/2026).
+          #
+          # ⚠️ Cette surcharge a été écrite DEUX FOIS, par #830 puis par #832 —
+          # deux sessions, le même diagnostic, chacune ignorant que l'autre
+          # l'avait déjà appliqué. Le résultat n'était pas une redondance
+          # inoffensive : deux clés `GH_TOKEN` dans le MÊME bloc `env:` sont un
+          # doublon de clé YAML, que le parseur d'Actions refuse. Le workflow
+          # tombait en `startup_failure` — conclusion `failure`, ZÉRO job, aucun
+          # log — sur chaque poussée depuis le merge de #832. Ne pas en rajouter
+          # une troisième : la surcharge est ici, une seule fois, et elle suffit.
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
           BRANCH: ${{ github.ref_name }}
-          # ⚠️ Le GITHUB_TOKEN, PAS le PAT — et c'est la correction du
-          # 2026-08-24 (soir). Le job tourne avec `GH_TOKEN = PAT || GITHUB_TOKEN`,
-          # ce qui convient pour ouvrir la PR et armer l'auto-merge mais PAS pour
-          # dispatcher : `GH_AUTOMATION_PAT` n'a pas la portée `actions: write`,
-          # et l'API répond `HTTP 403: Resource not accessible by personal access
-          # token`. Rendre la dispatch inconditionnelle le matin même a donc
-          # transformé une étape sautée en étape TOUJOURS en échec — un rouge sur
-          # « Open PR for pushed branch » à CHAQUE poussée de branche du dépôt.
-          # Le workflow, lui, déclare `actions: write` (bloc `permissions`
-          # ci-dessus) : ce jeton-là peut dispatcher. C'est celui qu'on prend.
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -uo pipefail
           # Chaque dispatch est jugée séparément : une qui échoue ne doit pas
