@@ -72,7 +72,18 @@ const BUDGETS = {
   // relèvement suivant tomberait sur la PR qui n'y sera pour rien — le motif exact des trois
   // derniers. Ce namespace-ci rejoint `parentReport.*` sur la liste de ce qui justifiera le
   // découpage : il ne sert qu'aux comptes ayant branché une clé, c'est-à-dire à presque personne.
-  "i18n-": 192 * 1024,
+  // Puis 192→208 KB pour le **tuteur « El Ostedh »** (étude 11, lots 2 et 3) : la bibliothèque
+  // de coaching (18 phrases ×3 langues, R-10 — elles remplacent un appel de modèle par jour et
+  // par élève, donc chaque octet ici est un token qui ne part pas) et le namespace `tutor.chat.*`
+  // (15 clés ×3). Mesuré à 194,08 KB, soit 2,08 KB au-dessus.
+  // On reprend 16 KB plutôt que les 3 nécessaires, pour la raison désormais habituelle : les lots
+  // 4 à 7 de la même étude (mini-checks, escalades, bilans, énergie) ajouteront les leurs, et le
+  // relèvement suivant tomberait sur la PR qui n'y sera pour rien.
+  // ⚠️ Le constat du relèvement 164→192 tient toujours, et se renforce : c'est le SIXIÈME
+  // relèvement de ce plafond. `tutor.*` rejoint `parentReport.*` et `ai.*` sur la liste de ce qui
+  // justifie le découpage du catalogue par surface — il ne sert qu'aux comptes ayant le mode IA
+  // allumé, et il est chargé par tout le monde.
+  "i18n-": 208 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
   // @dnd-kit (core+sortable+utilities) powering the B2 ordering/matching

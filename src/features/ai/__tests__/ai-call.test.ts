@@ -18,6 +18,7 @@ import { randomBytes } from "node:crypto";
 const rpcCalls: { fn: string; args: Record<string, unknown> }[] = [];
 let resolveRow: Record<string, unknown> | null = null;
 let reserveRow: Record<string, unknown> | null = null;
+let platformReserveRow: Record<string, unknown> | null = null;
 let credentialRow: { secret_enc: string; enc_version: number; provider: string } | null = null;
 let generateImpl: () => Promise<unknown> = async () => ({
   text: "réponse",
@@ -34,6 +35,9 @@ vi.mock("@/shared/integrations/supabase/client.server", () => ({
       rpcCalls.push({ fn, args });
       if (fn === "resolve_ai_access") return { data: resolveRow ? [resolveRow] : [], error: null };
       if (fn === "reserve_ai_spend") return { data: reserveRow ? [reserveRow] : [], error: null };
+      if (fn === "reserve_platform_spend") {
+        return { data: platformReserveRow ? [platformReserveRow] : [], error: null };
+      }
       if (fn === "ai_budget_alerts_due") return { data: [], error: null };
       return { data: null, error: null };
     }),
@@ -100,6 +104,7 @@ beforeEach(() => {
   maybeSingle.mockClear();
   resolveRow = { ...ALLOWED };
   reserveRow = { granted: true, reason: null };
+  platformReserveRow = { granted: true, reason: null, day_micros: 1000, energy_left: 9 };
   credentialRow = sealedRow();
   generateImpl = async () => ({
     text: "réponse",
@@ -288,5 +293,89 @@ describe("le chemin PLATEFORME (D-2, Q-5)", () => {
     resolveRow = { ...ALLOWED, allowed: false, payer: "platform", owner_user_id: null };
     const outcome = await callAi(REQUEST);
     expect(outcome).toEqual({ ok: false, code: "AI_MODE_OFF" });
+  });
+});
+
+/**
+ * é11 R-12 / R-13 sur le chemin plateforme — la moitié que é29 avait laissée
+ * ouverte en toutes lettres, et que le lot 1 n'avait pas fermée.
+ *
+ * Tant qu'elle l'est restée, poser `ANTHROPIC_API_KEY` en production donnait un
+ * tuteur illimité, à nos frais, à chaque élève sans clé de famille. Ces quatre
+ * assertions sont la preuve que le plafond existe DANS le chemin de requête, et
+ * pas dans un job d'alerte a posteriori (Q-3 : « un dépassement doit être
+ * impossible, pas signalé »).
+ */
+describe("é11 R-12/R-13 — le chemin plateforme est borné", () => {
+  const PLATFORM = {
+    ...ALLOWED,
+    allowed: false,
+    payer: "platform",
+    owner_user_id: null,
+    reason: null,
+  };
+
+  beforeEach(() => {
+    vi.stubEnv("ANTHROPIC_API_KEY", "sk-platform");
+    resolveRow = { ...PLATFORM };
+  });
+
+  it("réserve argent ET énergie AVANT d'appeler (D-8)", async () => {
+    const outcome = await callAi(REQUEST);
+    expect(outcome.ok).toBe(true);
+
+    const reserve = called("reserve_platform_spend")[0];
+    expect(reserve.args.p_energy).toBe(1);
+    expect(reserve.args.p_micros).toBeGreaterThan(0);
+    expect(rpcCalls.indexOf(reserve)).toBeLessThan(
+      rpcCalls.findIndex((c) => c.fn === "log_ai_usage"),
+    );
+  });
+
+  it("transmet le plafond du jour lu dans l'environnement (Q-3 : 5 $ par défaut)", async () => {
+    await callAi(REQUEST);
+    expect(called("reserve_platform_spend")[0].args.p_budget_micros).toBe(5_000_000);
+
+    rpcCalls.length = 0;
+    vi.stubEnv("AI_PLATFORM_DAILY_BUDGET_USD", "2.5");
+    await callAi(REQUEST);
+    expect(called("reserve_platform_spend")[0].args.p_budget_micros).toBe(2_500_000);
+  });
+
+  it("budget du jour atteint : refus SILENCIEUX, et rien ne part chez le fournisseur", async () => {
+    platformReserveRow = { granted: false, reason: "AI_BUDGET_REACHED" };
+    const outcome = await callAi(REQUEST);
+
+    expect(outcome).toEqual({ ok: false, code: "AI_BUDGET_REACHED" });
+    expect(called("log_ai_usage")).toHaveLength(0);
+    expect(called("settle_platform_spend")).toHaveLength(0);
+  });
+
+  it("énergie épuisée : le code de la base est rendu tel quel (R-12)", async () => {
+    platformReserveRow = { granted: false, reason: "AI_ENERGY_SPENT" };
+    const outcome = await callAi(REQUEST);
+    expect(outcome).toEqual({ ok: false, code: "AI_ENERGY_SPENT" });
+  });
+
+  it("solde avec le coût réel quand l'appel aboutit", async () => {
+    const outcome = await callAi(REQUEST);
+    const settle = called("settle_platform_spend")[0].args;
+    expect(settle.p_actual_micros).toBe(outcome.ok ? outcome.costUsdMicros : -1);
+    expect(settle.p_reserved_micros).toBe(called("reserve_platform_spend")[0].args.p_micros);
+    expect(called("release_platform_reservation")).toHaveLength(0);
+  });
+
+  it("fournisseur en panne : énergie REMBOURSÉE et réservation libérée (R-15)", async () => {
+    generateImpl = async () => {
+      throw new AiError("AI_PROVIDER_DOWN");
+    };
+    const outcome = await callAi(REQUEST);
+
+    expect(outcome).toEqual({ ok: false, code: "AI_PROVIDER_DOWN" });
+    expect(called("release_platform_reservation")[0].args).toMatchObject({
+      p_student: STUDENT,
+      p_energy: 1,
+    });
+    expect(called("settle_platform_spend")).toHaveLength(0);
   });
 });

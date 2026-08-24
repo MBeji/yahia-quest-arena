@@ -6,14 +6,58 @@
 // `QuestReviewList` et `TutorPanel`, en passant le second au premier par un slot.
 
 export {
+  escalateTutorThread,
   explainMistake,
   getTutorAvailability,
+  getTutorMiniCheck,
+  getTutorPrefs,
+  getTutorUnderstandingSignal,
   isCuratedModel,
   nextVariant,
   rateTutorMessage,
+  setTutorPlanPush,
   setTutorPrefs,
+  submitTutorMiniCheck,
+  type TutorEscalation,
+  type TutorEscalationTarget,
   type TutorExplanation,
+  type TutorMiniCheck,
+  type TutorMiniCheckResult,
+  type TutorPrefs,
 } from "./tutor.server";
+
+export {
+  escalationKey,
+  escalationLevel,
+  escalationStep,
+  escalationStepFromAction,
+  nextEscalationStep,
+  recommendedEscalation,
+  TUTOR_ESCALATION_STEPS,
+  TUTOR_MAX_ESCALATION,
+  type TutorEscalationStep,
+  type TutorUnderstandingSignals,
+} from "./escalation";
+
+export {
+  startTargetedPractice,
+  type TutorPracticeItem,
+  type TutorPracticeResult,
+} from "./tutor.practice.server";
+
+export { decidePractice, type TutorPracticeFacts, type TutorPracticeIntent } from "./practice";
+
+export {
+  dayIndexOf,
+  daysAwayFrom,
+  momentKey,
+  momentKind,
+  planCoachKey,
+  planCoachKind,
+  type TutorMoment,
+  type TutorMomentState,
+  type TutorPlanCoachKind,
+} from "./coaching";
 
 export {
   TUTOR_AGE_BANDS,
@@ -27,3 +71,6 @@ export {
 } from "./prompt";
 
 export { TutorPanel } from "./components/tutor-panel";
+export { TutorPracticeEntry } from "./components/tutor-practice-entry";
+export { TutorCoachLine, TutorGreeting } from "./components/tutor-coach";
+export { TutorPlanPushCard } from "./components/tutor-plan-push-card";

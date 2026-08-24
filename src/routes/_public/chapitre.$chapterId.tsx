@@ -15,6 +15,8 @@ import { useAuth } from "@/features/auth";
 // par le barrel les ferait entrer dans le chunk d'entrée, que tout visiteur
 // télécharge (budget `index-`, +58 Ko mesurés).
 import { ForgeEntry } from "@/features/ai/components/forge-entry";
+// Même raison, même précaution : import direct du seul composant utilisé.
+import { TutorChatPanel } from "@/features/tutor/components/tutor-chat-panel";
 import { PageShell } from "@/components/ui/page-shell";
 import { LessonReader } from "@/features/quest/components/lesson-reader";
 
@@ -93,6 +95,12 @@ function ChapitrePage() {
           de « bientôt ». */}
       <PageShell width="reading" className="pb-8">
         <ForgeEntry chapterId={chapterId} authenticated={!!user} />
+        {/* Le chat du tuteur (é11 lot 3, US-8). Monté ici pour la même raison
+            que la Forge juste au-dessus : c'est la ROUTE qui sait qui regarde,
+            et une feature n'en importe pas une autre. Le panneau se rend
+            lui-même invisible quand la porte est fermée (R-1) — un visiteur
+            anonyme n'a pas de tuteur, et il n'en voit pas la trace. */}
+        {user ? <TutorChatPanel chapterId={chapterId} /> : null}
       </PageShell>
     </>
   );

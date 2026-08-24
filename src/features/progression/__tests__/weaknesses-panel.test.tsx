@@ -105,3 +105,52 @@ describe("WeaknessesPanel — étude 04 A2.1", () => {
     expect(items[0]?.textContent).toContain("Première erreur");
   });
 });
+
+/**
+ * Étude 11 lot 5 — le SLOT d'entraînement, posé par la route.
+ *
+ * Ce que ces trois cas gardent, c'est l'indépendance des deux features. Le
+ * panneau appartient à `progression` ; le geste d'El Ostedh appartient à
+ * `tutor`. Le jour où quelqu'un « simplifiera » en important le second dans le
+ * premier, le premier cas ci-dessous continuera de passer — mais le troisième
+ * dira que le panneau ne sait plus vivre sans le tuteur, ce qui est la vraie
+ * régression (AGENTS.md : une feature n'en importe jamais une autre).
+ */
+describe("WeaknessesPanel — le slot d'entraînement (étude 11 lot 5)", () => {
+  it("rend le slot que la route fournit, une fois par erreur", () => {
+    render(
+      <WeaknessesPanel
+        weaknesses={[row({ tag: "a" }), row({ tag: "b" })]}
+        renderPractice={(w) => <button data-testid="slot">slot:{w.tag}</button>}
+      />,
+    );
+    expect(screen.getAllByTestId("slot")).toHaveLength(2);
+  });
+
+  it("REMPLACE le bouton « S'entraîner » au lieu de s'y ajouter — un seul chemin (A12)", () => {
+    // Deux boutons côte à côte promettant la même chose obligeraient l'élève à
+    // choisir entre deux mots qu'il ne peut pas distinguer.
+    render(
+      <WeaknessesPanel weaknesses={[row()]} renderPractice={() => <button>Entraîne-moi</button>} />,
+    );
+    expect(screen.queryByTestId("weakness-train")).toBeNull();
+  });
+
+  it("s'affiche même SANS compétence déclarée — c'est tout l'apport du slot", () => {
+    // L'ancien bouton se taisait faute de compétence ; le tuteur, lui, cible
+    // aussi par le TAG. Sans ce cas, la régression serait silencieuse.
+    render(
+      <WeaknessesPanel
+        weaknesses={[row({ competency: null })]}
+        renderPractice={() => <button data-testid="slot">Entraîne-moi</button>}
+      />,
+    );
+    expect(screen.getByTestId("slot")).toBeTruthy();
+  });
+
+  it("reste utilisable SANS slot — le panneau ne dépend pas du tuteur", () => {
+    render(<WeaknessesPanel weaknesses={[row()]} />);
+    expect(screen.getByTestId("weakness-train")).toBeTruthy();
+    expect(screen.queryByTestId("slot")).toBeNull();
+  });
+});

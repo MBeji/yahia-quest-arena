@@ -43,8 +43,14 @@ import { supabase } from "./client";
  * `SIGNED_OUT`, et c'est le garde de `_authenticated` qui renvoie vers la
  * connexion. La zone grise entre les deux — client connecté, jeton irrécupérable
  * sans que la session soit effacée — reste ouverte.
+ *
+ * ⚠️ EXPORTÉE depuis é11 lot 3, et une seule raison le justifie : le chat du
+ * tuteur n'est pas une server fn, c'est un `fetch` vers `/api/tutor/stream`. Il
+ * doit poser le MÊME jeton, obtenu de la MÊME façon. Une seconde lecture de
+ * session, écrite « juste pour le chat », perdrait la reprise du cas 2 — et
+ * rejouerait exactement la panne du 2026-08-18.
  */
-async function resolveAccessToken(): Promise<string | null> {
+export async function resolveAccessToken(): Promise<string | null> {
   const { data, error } = await supabase.auth.getSession();
   const token = data.session?.access_token;
   if (token) return token;

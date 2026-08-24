@@ -18,17 +18,48 @@
 
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { GraduationCap, RefreshCw, ThumbsDown, ThumbsUp } from "lucide-react";
+import { CheckCircle2, GraduationCap, RefreshCw, ThumbsDown, ThumbsUp } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useT } from "@/lib/i18n";
-import { explainMistake, rateTutorMessage, type TutorExplanation } from "../tutor.server";
+import {
+  escalateTutorThread,
+  explainMistake,
+  getTutorMiniCheck,
+  getTutorUnderstandingSignal,
+  rateTutorMessage,
+  submitTutorMiniCheck,
+  type TutorExplanation,
+  type TutorMiniCheck,
+} from "../tutor.server";
+import type { TutorEscalationStep } from "../escalation";
 
 type PanelState =
   | { kind: "idle" }
   | { kind: "loading" }
   | { kind: "answer"; value: Extract<TutorExplanation, { ok: true }> }
   | { kind: "degraded"; code: string };
+
+/**
+ * Les états du MINI-CHECK (lot 4). Volontairement distincts de `PanelState` :
+ * le mini-check vit SOUS l'explication et ne la remplace jamais, donc son cycle
+ * de vie est indépendant. Les fondre en un seul état aurait fait disparaître
+ * l'explication au moment précis où l'élève en a le plus besoin — pendant qu'il
+ * répond à la question de vérification.
+ */
+type MiniCheckState =
+  | { kind: "idle" }
+  | { kind: "loading" }
+  | { kind: "asking"; check: Extract<TutorMiniCheck, { ok: true }> }
+  /** Aucun candidat, ou une correction illisible : on se tait poliment (R-15). */
+  | { kind: "unavailable" }
+  | {
+      kind: "graded";
+      correct: boolean;
+      explanation: string | null;
+      /** La marche proposée en cas d'échec. `null` quand c'est réussi. */
+      step: TutorEscalationStep | null;
+    };
 
 /**
  * R-1 — les refus de la PORTE, dits en langage d'élève. Rend `null` pour tout ce
@@ -199,6 +230,192 @@ export function TutorPanel({
           </>
         )}
       </div>
+
+      {/* US-4 — « Vérifions ensemble », SOUS l'explication et jamais à sa place.
+          Le fil est celui que l'explication vient d'ouvrir : c'est lui que
+          l'escalade fera monter d'une marche (R-8). */}
+      <TutorMiniCheckBlock questionId={questionId} threadId={answer.threadId} />
+    </div>
+  );
+}
+
+/**
+ * LE MINI-CHECK ET SON ESCALADE — étude 11 lot 4, US-4 et R-8.
+ *
+ * Rendu SOUS l'explication, jamais à sa place : l'explication reste le plancher
+ * (R-15). Trois états seulement s'ajoutent au panneau — la question servie, sa
+ * correction, et la marche proposée en cas d'échec.
+ *
+ * R-11, à l'écran comme en base : aucune célébration de récompense. « C'est
+ * ça ! » et rien d'autre — pas de +XP, pas de pièce, pas de confetti. Un enfant
+ * qui voit une récompense au mini-check apprend à s'y tromper exprès pour en
+ * refaire un, et le signal R-8 devient du bruit.
+ */
+function TutorMiniCheckBlock({
+  questionId,
+  threadId,
+}: {
+  questionId: string;
+  /** Le fil ouvert par l'explication : c'est lui qu'on escalade. */
+  threadId: string;
+}) {
+  const t = useT();
+  const fetchCheck = useServerFn(getTutorMiniCheck);
+  const submitCheck = useServerFn(submitTutorMiniCheck);
+  const readSignal = useServerFn(getTutorUnderstandingSignal);
+  const escalate = useServerFn(escalateTutorThread);
+  const [state, setState] = useState<MiniCheckState>({ kind: "idle" });
+
+  async function start() {
+    setState({ kind: "loading" });
+    const result = await fetchCheck({ data: { questionId } });
+    // R-15 : un vivier vide n'est pas une panne à annoncer. On dit une phrase
+    // neutre et on rend la main au chapitre.
+    setState(result.ok ? { kind: "asking", check: result } : { kind: "unavailable" });
+  }
+
+  async function answer(choice: string) {
+    if (state.kind !== "asking") return;
+    const check = state.check;
+    setState({ kind: "loading" });
+    const graded = await submitCheck({
+      data: { questionId: check.questionId, choice },
+    });
+    if (!graded.ok) {
+      setState({ kind: "unavailable" });
+      return;
+    }
+    if (graded.correct) {
+      setState({
+        kind: "graded",
+        correct: true,
+        explanation: graded.explanation,
+        step: null,
+      });
+      return;
+    }
+
+    // ÉCHEC — et c'est ici que R-8 décide, pas l'écran. On demande d'abord au
+    // serveur si un signal objectif est levé : rater UNE fois ne justifie pas
+    // qu'on remonte au prérequis, encore moins qu'on prévienne les parents.
+    // Sans signal, on reste sur la marche la plus douce, qui est le bouton
+    // « Explique autrement » déjà présent au-dessus.
+    const tag = graded.tag ?? check.tag;
+    if (!tag) {
+      setState({
+        kind: "graded",
+        correct: false,
+        explanation: graded.explanation,
+        step: "reteach",
+      });
+      return;
+    }
+    const signal = await readSignal({ data: { tag } });
+    if (signal.level <= 0) {
+      setState({
+        kind: "graded",
+        correct: false,
+        explanation: graded.explanation,
+        step: "reteach",
+      });
+      return;
+    }
+    const next = await escalate({ data: { threadId } });
+    setState({
+      kind: "graded",
+      correct: false,
+      explanation: graded.explanation,
+      step: next?.step ?? "reteach",
+    });
+  }
+
+  if (state.kind === "idle") {
+    return (
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        className="mt-2"
+        data-testid="tutor-minicheck-start"
+        onClick={() => void start()}
+      >
+        <CheckCircle2 className="size-4" aria-hidden="true" />
+        {t.tutor.miniCheck.start}
+      </Button>
+    );
+  }
+
+  if (state.kind === "loading") {
+    return (
+      <p className="text-muted-foreground mt-2 text-xs" role="status">
+        {t.tutor.miniCheck.loading}
+      </p>
+    );
+  }
+
+  if (state.kind === "unavailable") {
+    return (
+      <p className="text-muted-foreground mt-2 text-xs" data-testid="tutor-minicheck-unavailable">
+        {t.tutor.miniCheck.unavailable}
+      </p>
+    );
+  }
+
+  if (state.kind === "asking") {
+    return (
+      <div
+        className="border-border bg-surface-3 mt-2 rounded-lg border p-3"
+        data-testid="tutor-minicheck"
+      >
+        <p className="text-sm font-medium">{t.tutor.miniCheck.title}</p>
+        {/* `dir="auto"` : la langue de SORTIE est celle de la MATIÈRE (R-3), qui
+            peut différer de celle de l'interface. Le navigateur lit le premier
+            caractère fort et tranche mieux qu'une prop héritée. */}
+        <p dir="auto" className="mt-1 text-sm">
+          {state.check.prompt}
+        </p>
+        <div className="mt-2 flex flex-col gap-1">
+          {state.check.options.map((option) => (
+            <Button
+              key={option.id}
+              type="button"
+              variant="outline"
+              size="sm"
+              dir="auto"
+              className="justify-start text-start"
+              onClick={() => void answer(option.id)}
+            >
+              {option.text}
+            </Button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const escalationCopy = state.step ? t.tutor.escalation[state.step] : null;
+  return (
+    <div
+      className="border-border bg-surface-3 mt-2 rounded-lg border p-3"
+      data-testid="tutor-minicheck-result"
+      role="status"
+    >
+      <p className="text-sm font-medium">
+        {state.correct ? t.tutor.miniCheck.correctTitle : t.tutor.miniCheck.wrongTitle}
+      </p>
+      <p className="text-muted-foreground text-xs">
+        {state.correct ? t.tutor.miniCheck.correctBody : t.tutor.miniCheck.wrongBody}
+      </p>
+      {state.explanation ? (
+        <p dir="auto" className="mt-2 text-sm whitespace-pre-wrap">
+          {state.explanation}
+        </p>
+      ) : null}
+      {escalationCopy ? (
+        <p className="mt-2 text-sm" data-testid="tutor-escalation">
+          {escalationCopy}
+        </p>
+      ) : null}
     </div>
   );
 }

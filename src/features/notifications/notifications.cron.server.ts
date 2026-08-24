@@ -7,6 +7,7 @@ import { configureVapid, sendPushToUsers, type SendStats } from "@/shared/lib/pu
 import {
   appLocalDate,
   isParentDigestDay,
+  planReminderPayload,
   selectStreakAtRiskUserIds,
   streakReminderPayload,
   weeklyParentDigestPayload,
@@ -20,7 +21,7 @@ function jsonResponse(body: unknown, status = 200): Response {
 }
 
 /** Audience: users with a live streak who have not been active *today* (Tunis-local). */
-async function dispatchStreakReminder(now: Date): Promise<SendStats> {
+async function dispatchStreakReminder(now: Date): Promise<{ stats: SendStats; sentTo: string[] }> {
   const { data: profiles, error: profilesError } = await supabaseAdmin
     .from("profiles")
     .select("id, current_streak, last_active_date")
@@ -31,7 +32,66 @@ async function dispatchStreakReminder(now: Date): Promise<SendStats> {
   }
 
   const userIds = selectStreakAtRiskUserIds(profiles ?? [], appLocalDate(now));
-  return sendPushToUsers(userIds, streakReminderPayload());
+  return { stats: await sendPushToUsers(userIds, streakReminderPayload()), sentTo: userIds };
+}
+
+/**
+ * Le rappel du plan du jour — étude 11 US-7.
+ *
+ * `alreadyNotified` porte la promesse « au plus un par jour » : le rappel de
+ * série vise EXACTEMENT la même population (élève inactif aujourd'hui), et deux
+ * notifications le même soir pour la même raison sont la meilleure façon de
+ * faire couper les notifications. Ce n'est pas une politesse — c'est la seule
+ * chose qui tienne l'opt-in dans la durée.
+ *
+ * L'audience est calculée en SQL (`tutor_plan_push_audience`) : opt-in armé,
+ * au moins une révision due, pas encore venu. Le JOUR lui est passé, parce que
+ * la journée de l'application est celle de Tunis et qu'elle est déjà calculée
+ * ici — deux définitions de « aujourd'hui » dans le même cron divergeraient.
+ */
+async function dispatchPlanReminder(now: Date, alreadyNotified: string[]): Promise<SendStats> {
+  const { data, error } = await (
+    supabaseAdmin as unknown as {
+      rpc: (
+        fn: "tutor_plan_push_audience",
+        args: { p_today: string },
+      ) => PromiseLike<{
+        data: { user_id: string; due_count: number }[] | null;
+        error: { message: string } | null;
+      }>;
+    }
+  ).rpc("tutor_plan_push_audience", { p_today: appLocalDate(now) });
+
+  if (error) {
+    logger.error("Push cron: failed to load tutor plan audience", { error });
+    throw new Error("tutor_plan");
+  }
+
+  const skip = new Set(alreadyNotified);
+  const rows = (data ?? []).filter((r) => !skip.has(r.user_id));
+  if (rows.length === 0) return { audience: 0, sent: 0, pruned: 0 };
+
+  // Le texte dépend du NOMBRE de révisions dues : on groupe par ce nombre pour
+  // n'envoyer qu'un payload par groupe plutôt qu'un par élève.
+  const byCount = new Map<number, string[]>();
+  for (const row of rows) {
+    const bucket = byCount.get(row.due_count) ?? [];
+    bucket.push(row.user_id);
+    byCount.set(row.due_count, bucket);
+  }
+
+  const results = await Promise.all(
+    [...byCount.entries()].map(([count, ids]) => sendPushToUsers(ids, planReminderPayload(count))),
+  );
+
+  return results.reduce(
+    (total, r) => ({
+      audience: total.audience + r.audience,
+      sent: total.sent + r.sent,
+      pruned: total.pruned + r.pruned,
+    }),
+    { audience: 0, sent: 0, pruned: 0 },
+  );
 }
 
 /**
@@ -74,10 +134,22 @@ export async function handlePushCron(request: Request, now: Date = new Date()): 
   }
 
   let streak: SendStats;
+  let streakSentTo: string[];
   try {
-    streak = await dispatchStreakReminder(now);
+    const result = await dispatchStreakReminder(now);
+    streak = result.stats;
+    streakSentTo = result.sentTo;
   } catch (err) {
     return jsonResponse({ error: err instanceof Error ? err.message : "streak" }, 500);
+  }
+
+  // Étude 11 US-7. Après le rappel de série, et en l'excluant : les deux visent
+  // l'élève inactif du jour, et la promesse est « au plus un par jour ».
+  let tutorPlan: SendStats;
+  try {
+    tutorPlan = await dispatchPlanReminder(now, streakSentTo);
+  } catch (err) {
+    return jsonResponse({ error: err instanceof Error ? err.message : "tutor_plan" }, 500);
   }
 
   let parentDigest: SendStats | null = null;
@@ -89,6 +161,6 @@ export async function handlePushCron(request: Request, now: Date = new Date()): 
     }
   }
 
-  logger.info("Push cron complete", { streak, parentDigest });
-  return jsonResponse({ ...streak, parentDigest });
+  logger.info("Push cron complete", { streak, tutorPlan, parentDigest });
+  return jsonResponse({ ...streak, tutorPlan, parentDigest });
 }

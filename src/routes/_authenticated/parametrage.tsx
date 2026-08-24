@@ -47,8 +47,11 @@ import {
   useMyRole,
 } from "@/features/auth";
 import { getParcours } from "@/features/dashboard";
-import { EnablePushCard } from "@/features/notifications";
+import { EnablePushCard, usePush } from "@/features/notifications";
 import { AiModeSection } from "@/features/ai/components/ai-mode-section";
+// Import direct plutôt que par le barrel : celui de `tutor` tirerait le panneau
+// de correction et ses server fns dans le chunk du paramétrage.
+import { TutorPlanPushCard } from "@/features/tutor/components/tutor-plan-push-card";
 import { formatStudentAllianceCode } from "@/features/parent-report";
 import { useI18n, useT } from "@/lib/i18n";
 import { parcoursName } from "@/shared/lib/parcours-locale";
@@ -260,6 +263,11 @@ function ParametragePage() {
   const [deleting, setDeleting] = useState(false);
   const runDeleteAccount = useServerFn(deleteAccount);
 
+  // L'état du push sur CET appareil, lu une fois et passé au réglage du rappel
+  // du tuteur (étude 11 US-7) : `tutor` n'importe pas `notifications`, c'est la
+  // route qui compose.
+  const { state: pushState } = usePush();
+
   // Le nom du parcours actif se lit dans le catalogue (requête anonyme déjà en
   // cache pour tout visiteur du programme) — pas de requête dédiée.
   const fetchParcours = useServerFn(getParcours);
@@ -415,6 +423,11 @@ function ParametragePage() {
         <Section Icon={Bell} title={t.settings.soundTitle} desc={t.settings.soundDesc}>
           <SoundToggles />
           <EnablePushCard />
+          {/* Le rappel du plan du jour (étude 11 US-7) se règle SOUS la carte qui
+              arme le push : il en dépend, et une bascule qui n'allume rien tant
+              que la permission manque est exactement la faute corrigée par #813.
+              Le composant se cache donc tant que le push n'est pas accordé. */}
+          <TutorPlanPushCard pushReady={pushState === "granted"} />
         </Section>
 
         {/* Mode IA (étude 29 lot 2, D-16) : la clé d'API est un réglage de compte,

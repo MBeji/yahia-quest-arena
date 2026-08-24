@@ -4,8 +4,13 @@
  * is trivially unit-testable (see __tests__/push-audience.test.ts).
  */
 
-/** App timezone — all streak "day" boundaries are Tunisia-local. */
-export const APP_TIME_ZONE = "Africa/Tunis";
+// La journée de l'application a quitté ce fichier pour `shared/` (étude 11
+// lot 2) : le tableau de bord en a besoin lui aussi, pour saluer un retour après
+// absence, et une feature n'en importe pas une autre. Réexporté ici pour que les
+// appelants existants — et leurs tests — ne bougent pas.
+import { APP_TIME_ZONE } from "@/shared/lib/app-day";
+
+export { APP_TIME_ZONE, appLocalDate } from "@/shared/lib/app-day";
 
 export type PushPayload = { title: string; body: string; url: string; tag: string };
 
@@ -15,20 +20,6 @@ export type StreakProfileRow = {
   current_streak: number;
   last_active_date: string | null;
 };
-
-/**
- * The civil date (YYYY-MM-DD) in the app timezone for a given instant.
- * `en-CA` formats as ISO-style YYYY-MM-DD; `timeZone` shifts to the Tunisia-local
- * calendar day so the comparison below is correct regardless of server UTC offset.
- */
-export function appLocalDate(now: Date): string {
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: APP_TIME_ZONE,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(now);
-}
 
 /**
  * A streak is "at risk" when the user still has a live streak (> 0) but has not
@@ -57,6 +48,32 @@ export function streakReminderPayload(): PushPayload {
     body: "Reviens vite faire une quête aujourd'hui pour sauver ta série. Ne laisse pas le boss reprendre l'avantage !",
     url: "/dashboard",
     tag: "streak-at-risk",
+  };
+}
+
+/**
+ * Le rappel du plan du jour — étude 11 US-7.
+ *
+ * « 1/jour max » est tenu par la SÉLECTION, pas par cette fonction : le rappel
+ * de série vise exactement la même population (élève inactif aujourd'hui), et
+ * le cron retire donc de cette audience-ci tous ceux qui viennent d'être
+ * appelés. Deux notifications le même soir pour la même raison seraient la
+ * meilleure façon de faire couper les notifications.
+ *
+ * Même convention de copie unique en français que les deux payloads voisins :
+ * aucune locale n'est stockée côté serveur (elle vit dans un cookie). Le nombre
+ * de révisions dues est interpolé, parce qu'un rappel qui dit COMBIEN se lit
+ * comme un service, et un rappel qui dit « tu as du retard » comme un reproche.
+ */
+export function planReminderPayload(dueCount: number): PushPayload {
+  return {
+    title: "🎓 El Ostedh a préparé ton plan",
+    body:
+      dueCount === 1
+        ? "Une seule révision t'attend aujourd'hui — cinq minutes et c'est réglé."
+        : `${dueCount} révisions t'attendent aujourd'hui. On commence par la plus utile ?`,
+    url: "/dashboard",
+    tag: "tutor-daily-plan",
   };
 }
 
