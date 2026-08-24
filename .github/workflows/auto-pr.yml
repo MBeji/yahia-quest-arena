@@ -292,11 +292,43 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
           BRANCH: ${{ github.ref_name }}
+          # ⚠️ Le GITHUB_TOKEN, PAS le PAT — et c'est la correction du
+          # 2026-08-24 (soir). Le job tourne avec `GH_TOKEN = PAT || GITHUB_TOKEN`,
+          # ce qui convient pour ouvrir la PR et armer l'auto-merge mais PAS pour
+          # dispatcher : `GH_AUTOMATION_PAT` n'a pas la portée `actions: write`,
+          # et l'API répond `HTTP 403: Resource not accessible by personal access
+          # token`. Rendre la dispatch inconditionnelle le matin même a donc
+          # transformé une étape sautée en étape TOUJOURS en échec — un rouge sur
+          # « Open PR for pushed branch » à CHAQUE poussée de branche du dépôt.
+          # Le workflow, lui, déclare `actions: write` (bloc `permissions`
+          # ci-dessus) : ce jeton-là peut dispatcher. C'est celui qu'on prend.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          set -euo pipefail
-          gh workflow run ci.yml --repo "$REPO" --ref "$BRANCH"
-          gh workflow run migration-gate.yml --repo "$REPO" --ref "$BRANCH" -f base=main
-          gh workflow run codeql.yml --repo "$REPO" --ref "$BRANCH"
+          set -uo pipefail
+          # Chaque dispatch est jugée séparément : une qui échoue ne doit pas
+          # empêcher les deux autres de partir.
+          ko=""
+          for spec in "ci.yml" "migration-gate.yml -f base=main" "codeql.yml"; do
+            # shellcheck disable=SC2086
+            if ! gh workflow run $spec --repo "$REPO" --ref "$BRANCH"; then
+              ko="$ko ${spec%% *}"
+            fi
+          done
+
+          if [ -n "$ko" ]; then
+            # AVERTISSEMENT, pas erreur — et la nuance a un prix mesuré. Cette
+            # étape est le FILET : les checks requis arrivent normalement par
+            # l'événement `pull_request`, et la dispatch ne sert que le jour où
+            # ils n'arrivent pas (panne transitoire du 2026-08-23, détaillée
+            # ci-dessus). Faire rougir le job quand le filet ne se déploie pas
+            # met un rouge permanent sur toutes les PR du dépôt sans rien
+            # protéger : ce rouge n'est pas requis, donc il ne bloque aucun
+            # merge, il ne fait que bruiter — et une alarme qu'on apprend à
+            # ignorer ne vaut pas mieux qu'une alarme absente. Le vrai signal
+            # d'une PR sans checks reste ses checks requis figés en
+            # « Expected », que la session de garde voit (DoD §8).
+            echo "::warning title=Dispatch de secours indisponible::Impossible de lancer :$ko sur '$BRANCH'. Si les checks requis restent en « Expected », dispatchez-les à la main — et vérifiez la portée 'actions: write' du jeton utilisé."
+          fi
           # `USING_PAT` n'arbitre plus rien, mais reste tracé ici : c'est cette
           # ligne de log qui a permis de comprendre la PR #823 (dispatch sautée
           # alors qu'aucun run `pull_request` n'arrivait). Sans elle, le prochain
