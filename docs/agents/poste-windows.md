@@ -207,7 +207,7 @@ npm run verify > out.txt 2>&1; echo "EXIT=$?"; tail -25 out.txt   # ← ment
 
 C'est `tail` (toujours 0) qui fixe le verdict affiché, et le `EXIT=1` utile part dans le fichier
 que personne ne relit. Constaté 2026-08-17 : deux fichiers de test échouaient et `leak:check`,
-`db:check-chain`, `eol:check` n'avaient **jamais tourné** — le `&&` qui chaîne les six étapes de
+`db:check-chain`, `eol:check` n'avaient **jamais tourné** — le `&&` qui chaîne les étapes de
 `verify` court-circuite au premier rouge — et la session a pourtant déclaré le gate vert.
 
 Même famille que `commande | tail` (table « Vérifier l'état, jamais le signal » du
@@ -220,11 +220,11 @@ n'y a pas de pipe**. La parade « pas de pipe du tout » ne suffit donc pas.
 npm run verify > out.txt 2>&1     # le code de sortie de la tâche est le sien
 ```
 
-… puis lire le fichier pour le détail. Et vérifier que les six étapes ont réellement tourné —
+… puis lire le fichier pour le détail. Et vérifier que les **sept** étapes ont réellement tourné —
 un `&&` court-circuité laisse les dernières muettes, ce qui ressemble à un gate complet :
 
 ```bash
-grep -E "^> tanstack_start_ts@[0-9.]+ (lint|typecheck|test|leak:check|db:check-chain|eol:check)$" out.txt
+grep -E "^> tanstack_start_ts@[0-9.]+ (lint|typecheck|test|leak:check|db:check-chain|eol:check|harness:check)$" out.txt
 ```
 
 ## Des CRLF invisibles dans l'arbre de travail (`npm run eol:fix`)
@@ -261,12 +261,19 @@ Corollaire : ne plus committer le résultat d'un `npm run harness:sync` lancé p
 une dérive de miroir sur ce poste — lancer `eol:fix` d'abord ; s'il ne reste plus de dérive,
 c'était ce piège. Si un `harness:sync` a déjà réécrit le miroir : `git checkout -- .agents/skills/`.
 
+Depuis le 2026-08-24, `harness:check` fait partie de `verify` — et il y est placé **en dernier,
+après `eol:check`**, précisément à cause de ce piège : sur ce poste, un arbre sali par des CRLF
+fait dire « drifted from its harness sources » à `harness:check` pendant que `git diff` reste
+vide. En le faisant passer après, c'est `eol:check` qui parle le premier, avec le bon diagnostic
+et le bon remède. Sur un checkout LF neuf — la CI — l'ordre est sans effet, d'où l'ordre
+différent dans `ci:verify` : ce n'est pas une incohérence, c'est le poste qui est particulier.
+
 ## `npm run verify` local ≠ CI
 
-`verify` = `lint` + `typecheck` + `test` + `leak:check` + `db:check-chain` + `eol:check`. Le job `verify` de
-`ci.yml` en fait un **surensemble** : il passe par `test:coverage` (donc les **seuils de
-couverture**, que `test` seul n'applique pas) et ajoute `harness:check`, `perf:check`,
-`build:check` (**budgets de bundle**), `smoke:shell` et `audit:deps`.
+`verify` = `lint` + `typecheck` + `test` + `leak:check` + `db:check-chain` + `eol:check` +
+`harness:check`. Le job `verify` de `ci.yml` en fait un **surensemble** : il passe par
+`test:coverage` (donc les **seuils de couverture**, que `test` seul n'applique pas) et ajoute
+`perf:check`, `build:check` (**budgets de bundle**), `smoke:shell` et `audit:deps`.
 
 Conséquence concrète : ajouter des clés i18n passe en local et **casse la CI** sur le budget de
 bundle. Avant de pousser un changement qui touche le bundle : `npm run ci:verify`.

@@ -80,14 +80,26 @@ comptait cinq entrées : **deux étaient fausses** — le test à blanc du rollb
 par jour… en échec depuis 25 jours. Une liste de blocages ne se relit pas, elle se **constate**
 — même règle que pour les statuts d'études.
 
+Et la règle mord son auteur : le lendemain, dans ce fichier même, j'ai écrit que huit branches
+du dépôt de corpus portaient du travail « jamais livré ». C'était faux — les huit étaient
+livrées. L'erreur venait d'avoir **déduit** au lieu de constater : `git rev-list origin/main..<branche>`
+ne prouve rien sur un dépôt qui merge en **squash**, où les commits d'origine ne sont jamais des
+ancêtres de `main`, livrés ou non. Le seul test valable est le **contenu** — le fichier est-il
+sur `main`, et à quelle version. Un chiffre spectaculaire mérite une vérification proportionnée
+à ce qu'il va justifier.
+
 ## Ce que le mur « GitHub Free » coûte vraiment, et ce qu'on a construit dessous
 
 L'arbitrage du 2026-08-24 (rester en gratuit) ne rend pas le dépôt de corpus manuel : il
 interdit seulement de rendre le gate **opposable**. Tout le reste s'automatise, et l'a été.
 
-- **`auto-pr.yml`** y ouvre désormais la PR de toute branche poussée. Sans lui, une session qui
-  pousse puis s'arrête laissait sa branche sans PR : **8 branches `claude/*` étaient dans ce
-  cas, jusqu'à cinq semaines.**
+- **`auto-pr.yml`** y ouvre désormais la PR de toute branche poussée. Sans lui, une branche
+  poussée par une session qui s'arrête reste sans PR : **8 branches `claude/*` traînaient ainsi,
+  jusqu'à cinq semaines.** ⚠️ J'ai d'abord écrit qu'elles portaient du travail « jamais livré » —
+  **c'était faux**, le tri a montré que les huit étaient livrées, et elles ont été supprimées.
+  Le vrai problème n'est donc pas la perte, c'est que **rien ne permettait de distinguer** une
+  branche livrée-mais-non-nettoyée d'un lot réellement perdu : il a fallu un audit forensique un
+  mois plus tard. Une PR ouverte à la poussée rend la distinction visible sur le moment.
 - **`guard-watch.yml`** (les deux dépôts) ouvre une issue dès qu'un workflow programmé rougit.
   Il existe parce que ce dépôt-ci a laissé `report-triage.yml` mourir 26 jours en criant dans
   un onglet que personne n'ouvrait.
