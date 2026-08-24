@@ -196,7 +196,7 @@ function needsLtrIsolate(segment: string): boolean {
  * écriture arabe, guillemets typographiques…) marque de la prose et coupe le run.
  */
 const MATH_TOKEN_CHARS =
-  "0-9A-Za-z+\\-−–±*/=<>≤≥≠≈≡%‰¹²³⁰⁴-⁹⁺⁻₀-₉₊₋√∛∜×÷·^_()\\[\\]{}⟨⟩⌊⌋⌈⌉|‖πµσΩ∆°′″.,;:…!∈∉⊂⊃⊆⊇∪∩∅ℝℕℤℚℂ∥⊥∠→⟶⟵⟸⟹⟺∑∏∫∞'";
+  "0-9A-Za-z+\\-−–±*/=<>≤≥≠≈≡%‰¹²³⁰⁴-⁹⁺⁻₀-₉₊₋√∛∜×÷·^_()\\[\\]{}⟨⟩⌊⌋⌈⌉|‖πµσΩ∆°′″.,;:…!?∈∉⊂⊃⊆⊇∪∩∅ℝℕℤℚℂ∥⊥∠→⟶⟵⟸⟹⟺∑∏∫∞'";
 const MATH_TOKEN_RE = new RegExp(`^[${MATH_TOKEN_CHARS}]+$`, "u");
 /** Un opérateur, une relation ou un délimiteur — ce qui fait d'une suite de jetons une formule. */
 const MATH_OPERATOR_RE = /[+\-−–±*/=<>≤≥≠≈≡×÷·√∛∜()[\]{}⟨⟩⌊⌋⌈⌉∈∉⊂⊃⊆⊇∪∩∥⊥→⟶⟵⟸⟹⟺∑∏∫^]/u;
@@ -206,10 +206,16 @@ const MATH_RELATION_RE = /[=<>≤≥≠≈≡⟹⟺]|&lt;|&gt;|&le;|&ge;/u;
 const WORD_RE = /[A-Za-z]{3,}/gu;
 
 /**
- * Les seuls mots de trois lettres et plus qui appartiennent à une formule :
- * noms de fonctions et unités SI. Tout autre mot coupe le run — c'est ce qui
- * empêche l'atome d'avaler la phrase anglaise qui l'entoure (`(like it), so it`
- * était happé par la parenthèse avant cette liste).
+ * Les seuls mots de trois lettres et plus, TOUT EN MINUSCULES OU CAPITALISÉS, qui
+ * appartiennent à une formule : noms de fonctions et unités SI. Tout autre mot de
+ * cette forme coupe le run — c'est ce qui empêche l'atome d'avaler la phrase
+ * anglaise qui l'entoure (`(like it), so it` était happé par la parenthèse avant
+ * cette liste).
+ *
+ * Les mots à MAJUSCULE INTERNE n'ont pas besoin d'y figurer : `AlCl`, `NaOH`,
+ * `SO`, `PGCD` ne sont pas des mots de prose — aucune langue n'écrit ainsi — et
+ * {@link hasProseWord} les laisse passer sur ce seul critère. C'est ce qui rend
+ * une équation-bilan de chimie (`2Al + 3Cl₂ → 2AlCl₃`) lisible comme une formule.
  */
 const MATH_WORDS = new Set([
   "sin",
@@ -251,19 +257,31 @@ const MATH_WORDS = new Set([
 
 /**
  * Un jeton est mathématique s'il n'emprunte que le jeu de caractères ci-dessus,
- * qu'aucun de ses mots n'est de la prose, ET qu'il porte un signe
- * d'appartenance : un chiffre, un opérateur, ou une longueur ≤ 2 (`x`, `AB`,
- * `n`). Un mot de prose (`Calculer`, `solution.`, `museum)`) échoue au test des
- * mots ; un mot court sans opérateur (`the`) échoue au signe. Un nom de
- * fonction collé à sa parenthèse (`sin(x)`, `PGCD(12`) passe par la liste
- * blanche et la branche « opérateur ».
+ * qu'aucun de ses mots n'est de la prose (voir {@link hasProseWord}), ET qu'il
+ * porte un signe d'appartenance : un chiffre — indices et exposants Unicode
+ * compris, pour `SO₂` —, un opérateur, une longueur ≤ 2 (`x`, `AB`, `n`), ou un
+ * nom de fonction connu (`sin`, seul dans `n₁ sin i₁ = n₂ sin i₂`). Un mot de
+ * prose (`Calculer`, `solution.`, `museum)`) échoue au test des mots ; un mot
+ * court sans opérateur (`the`) échoue au signe.
  */
+function hasProseWord(token: string): boolean {
+  for (const word of token.match(WORD_RE) ?? []) {
+    if (MATH_WORDS.has(word.toLowerCase())) continue;
+    if (/[A-Z]/u.test(word.slice(1))) continue; // majuscule interne : formule, pas prose
+    return true;
+  }
+  return false;
+}
+
 function isMathToken(token: string): boolean {
   if (!token || !MATH_TOKEN_RE.test(token)) return false;
-  for (const word of token.match(WORD_RE) ?? []) {
-    if (!MATH_WORDS.has(word.toLowerCase())) return false;
-  }
-  return /[0-9]/u.test(token) || MATH_OPERATOR_RE.test(token) || token.length <= 2;
+  if (hasProseWord(token)) return false;
+  return (
+    /[0-9₀-₉⁰-⁹¹²³]/u.test(token) ||
+    MATH_OPERATOR_RE.test(token) ||
+    token.length <= 2 ||
+    MATH_WORDS.has(token.toLowerCase())
+  );
 }
 
 /** Vrai quand la suite de jetons forme une formule (et pas une énumération de lettres). */
@@ -273,8 +291,13 @@ function isMathPhrase(tokens: string[]): boolean {
   return tokens.length > 1 && MATH_OPERATOR_RE.test(joined);
 }
 
-/** Un jeton fait seulement de lettres latines — `x` et `AB`, mais aussi `de`, `so`, `La`. */
-const PROSE_SHAPED_RE = /^[A-Za-z]+$/u;
+/**
+ * Un jeton qu'un opérateur seul rattache à la formule : une suite de lettres
+ * latines (`x` et `AB`, mais aussi `de`, `so`, `La`) ou un `?` isolé — inconnue
+ * d'un énoncé de primaire dans `? + 250 = 700`, simple ponctuation dans
+ * `… = 0 ?`. C'est le voisinage, pas le glyphe, qui tranche.
+ */
+const PROSE_SHAPED_RE = /^(?:[A-Za-z]+|\?)$/u;
 /** Un jeton fait seulement d'opérateurs — `=`, `+`, `≤`, `→` : ce qui LIE une lettre à la formule. */
 const BARE_OPERATOR_RE = /^[+\-−–±*/=<>≤≥≠≈≡×÷·∈∉⊂⊃⊆⊇∪∩∥⊥→⟶⟵⟸⟹⟺]+$/u;
 
