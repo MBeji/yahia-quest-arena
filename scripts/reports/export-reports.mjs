@@ -68,19 +68,33 @@ export function assertProdReportSource(url) {
  *
  *     [reports] Export failed: Invalid supabaseUrl: Must be a valid HTTP or HTTPS URL.
  *
- * That is not hypothetical. Between 2026-07-29 14:35 and 2026-08-09 the
- * `PROD_SUPABASE_URL` secret lost its scheme, and every scheduled triage failed
- * on that one line — 6 runs a day, ~66 in all, on an unchanged tree (the run at
- * 10:58 and the one at 14:35 were the SAME commit, a129d7de). The workflow's own
- * pre-flight could not catch it: it only tests that the secret is non-empty, so
- * a malformed value walks straight past it. Eleven days of user reports went
- * untriaged behind an error that pointed at a library.
+ * That is not hypothetical. On 2026-07-29 14:35 the `PROD_SUPABASE_URL` secret
+ * lost its scheme, and every scheduled triage failed on that one line — 6 runs a
+ * day on an unchanged tree (the run at 10:58 and the one at 14:35 were the SAME
+ * commit, a129d7de). The workflow's own pre-flight could not catch it: it only
+ * tests that the secret is non-empty, so a malformed value walks straight past
+ * it.
+ *
+ * ⚠️ This paragraph used to end the story on 2026-08-09, at eleven days and ~66
+ * runs. It was wrong on the day it was written, and the mistake is worth more
+ * than the fix: what landed on 2026-08-09 was THIS CHECK — the diagnosis, not
+ * the repair. The secret was never corrected (`gh secret list` still dated it
+ * 2026-07-29), and the triage stayed red until 2026-08-23 — 25 days, ~150 runs,
+ * 25 days of user reports untriaged. A comment that says "was" about something
+ * still happening is how a live outage becomes invisible; the repo's own rule
+ * applies to code comments too — a status is observed, never remembered.
  *
  * So this check exists to name the culprit, not to repair it. Expanding a bare
  * host into `https://…` would be guessing at the operator's intent and would
  * paper over a misconfigured secret — the same "plausible but wrong" failure
  * `assertProdReportSource` was written to prevent. A loud, precise stop is the
  * whole point.
+ *
+ * What DID repair it was deleting the operator's part: since 2026-08-23 the two
+ * report workflows resolve the URL from `PROD_SUPABASE_API_URL`
+ * (scripts/shared/prod-targets.mjs) instead of a secret, because it never was
+ * one. This check still guards every other caller — a local run, a future
+ * workflow — where a human still types the value.
  *
  * The rule mirrors supabase-js's own (trim, then require the scheme) so the two
  * cannot drift apart and re-open this exact gap.
@@ -97,7 +111,9 @@ export function assertUsableSupabaseUrl(url) {
       `http(s):// scheme (got ${JSON.stringify(url)}). ` +
       `Expected the full API URL, scheme included: https://${PROD_SUPABASE_REF}.supabase.co ` +
       `— a bare host or a bare project ref clears the production guard above and then ` +
-      `dies inside supabase-js. In CI, fix the PROD_SUPABASE_URL secret of report-triage.yml.`,
+      `dies inside supabase-js. The report workflows no longer pass a hand-set value: ` +
+      `they resolve PROD_SUPABASE_API_URL from scripts/shared/prod-targets.mjs, so seeing ` +
+      `this in CI means that resolution was bypassed.`,
   );
 }
 

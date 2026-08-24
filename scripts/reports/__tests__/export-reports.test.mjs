@@ -6,7 +6,7 @@ import {
   flattenBugReport,
   flattenContentReport,
 } from "../export-reports.mjs";
-import { PROD_SUPABASE_REF } from "../../shared/prod-targets.mjs";
+import { PROD_SUPABASE_API_URL, PROD_SUPABASE_REF } from "../../shared/prod-targets.mjs";
 
 describe("flattenBugReport", () => {
   it("keeps id/user/message/page/status and maps created_at to createdAt", () => {
@@ -151,29 +151,32 @@ describe("assertUsableSupabaseUrl", () => {
     expect(assertUsableSupabaseUrl("http://127.0.0.1:54321")).toBe("http://127.0.0.1:54321");
   });
 
-  it("refuses the bare host that made the triage red for eleven days", () => {
-    // The real 2026-07-29 incident: the secret cleared the production guard
-    // (it does contain the ref) and then died inside createClient, so the only
-    // clue was supabase-js's own message — which names neither the secret nor
-    // the workflow. Same commit passed 3 h earlier; nothing in the tree moved.
+  it("refuses the bare host that made the triage red for twenty-five days", () => {
+    // The real 2026-07-29 → 2026-08-23 incident: the secret cleared the
+    // production guard (it does contain the ref) and then died inside
+    // createClient, so the only clue was supabase-js's own message — which names
+    // neither the secret nor the workflow. Same commit passed 3 h earlier;
+    // nothing in the tree moved. The check below landed on 2026-08-09 and made
+    // the failure legible; the secret itself was never repaired, which is why
+    // the workflows stopped taking the URL from one.
     expect(() => assertUsableSupabaseUrl(`${PROD_SUPABASE_REF}.supabase.co`)).toThrow(
       /no http\(s\):\/\/ scheme/,
     );
   });
 
   it("refuses a bare project ref rather than expanding it into a plausible URL", () => {
-    expect(() => assertUsableSupabaseUrl(PROD_SUPABASE_REF)).toThrow(/PROD_SUPABASE_URL/);
+    expect(() => assertUsableSupabaseUrl(PROD_SUPABASE_REF)).toThrow(/no http\(s\):\/\/ scheme/);
   });
 
-  it("names the secret AND the expected shape, so the error alone is the fix", () => {
+  it("names the expected shape AND where CI gets it, so the error alone is the fix", () => {
     let message = "";
     try {
-      assertUsableSupabaseUrl("fasrenmmrkqjoobrztbp.supabase.co");
+      assertUsableSupabaseUrl(`${PROD_SUPABASE_REF}.supabase.co`);
     } catch (error) {
       message = error.message;
     }
-    expect(message).toContain("PROD_SUPABASE_URL");
-    expect(message).toContain(`https://${PROD_SUPABASE_REF}.supabase.co`);
+    expect(message).toContain(PROD_SUPABASE_API_URL);
+    expect(message).toContain("prod-targets.mjs");
   });
 
   it("refuses an empty or whitespace-only value", () => {

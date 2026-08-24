@@ -30,17 +30,26 @@ name: Report triage (user-reported bugs)
 #
 # Prereqs (the job SKIPS gracefully, staying green, while any is UNSET — a
 # secret that is set but MALFORMED is a different animal and stops the run loud,
-# named by `export-reports.mjs`. The pre-flight below only tests non-emptiness,
-# which is why a `PROD_SUPABASE_URL` that had lost its `https://` walked past it
-# and left the triage red 6×/day from 2026-07-29 to 2026-08-09 behind
-# supabase-js's own message, naming neither the secret nor this workflow):
+# named by `export-reports.mjs`):
 #   • CLAUDE_CODE_OAUTH_TOKEN — same token as the other agent guards
 #     (`claude setup-token`).
-#   • PROD_SUPABASE_URL — https://<prod-ref>.supabase.co (API URL).
 #   • PROD_SUPABASE_SERVICE_ROLE_KEY — service-role key; required because the
 #     report tables are RLS-protected per user. The export is SELECT-only by
 #     construction (scripts/reports/export-reports.mjs); nothing in this
 #     workflow writes to the database.
+#
+# The API URL is NOT in that list any more, and that is the fix of 2026-08-23.
+# It used to come from a `PROD_SUPABASE_URL` secret; on 2026-07-29 that secret
+# was set without its `https://`, walked straight past a pre-flight that only
+# tests non-emptiness, and killed EVERY scheduled run from then until the day it
+# was found — 6×/day, ~150 runs, 25 days of user reports untriaged. The guard
+# added on 2026-08-09 made the failure legible but could not repair it, and its
+# own header called the incident closed while it was still running: nothing
+# inside the repository can fix a value that lives outside it. So the URL is now
+# resolved from `PROD_SUPABASE_API_URL` (scripts/shared/prod-targets.mjs) — it
+# was never a secret, it ships in every client bundle — and only the service-role
+# key stays one. Whatever is left that CAN still break silently is caught by the
+# tracking-issue step at the end of this job.
 #
 # Security note: report messages are UNTRUSTED USER TEXT. The agent's first
 # phase quarantines prompt-injection and abuse attempts; the merge itself is
@@ -77,7 +86,6 @@ jobs:
         run: |
           missing=""
           if [ -z "${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}" ]; then missing="$missing CLAUDE_CODE_OAUTH_TOKEN"; fi
-          if [ -z "${{ secrets.PROD_SUPABASE_URL }}" ]; then missing="$missing PROD_SUPABASE_URL"; fi
           if [ -z "${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}" ]; then missing="$missing PROD_SUPABASE_SERVICE_ROLE_KEY"; fi
           if [ -n "$missing" ]; then
             echo "Missing secret(s):$missing — skipping the report triage."
@@ -108,10 +116,22 @@ jobs:
         if: steps.guard.outputs.configured == 'true'
         run: npm ci --no-audit --no-fund
 
+      # Read from the repo, not from a secret — see this file's header. No npm
+      # install needed: prod-targets.mjs is dependency-free on purpose.
+      - name: Resolve the production Supabase API URL (from the repo)
+        if: steps.guard.outputs.configured == 'true'
+        run: |
+          url="$(node --input-type=module -e 'const m = await import("./scripts/shared/prod-targets.mjs"); process.stdout.write(m.PROD_SUPABASE_API_URL)')"
+          if ! printf '%s' "$url" | grep -qE '^https://[a-z0-9]+\.supabase\.co$'; then
+            echo "::error::PROD_SUPABASE_API_URL did not resolve to a Supabase API URL (got '$url') — check scripts/shared/prod-targets.mjs."
+            exit 1
+          fi
+          echo "PROD_SUPABASE_API_URL=$url" >> "$GITHUB_ENV"
+
       - name: Export the open reports (read-only)
         if: steps.guard.outputs.configured == 'true'
         env:
-          SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
+          SUPABASE_URL: ${{ env.PROD_SUPABASE_API_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
         run: node scripts/reports/export-reports.mjs --out "$RUNNER_TEMP/reports.json"
 
@@ -289,3 +309,74 @@ jobs:
           steps.pregate.outputs.open != '0' &&
           (steps.pregate.outputs.skip != 'true' || github.event_name != 'schedule') }}
         run: python3 .github/scripts/check-claude-result.py "$RUNNER_TEMP/claude-execution-output.json"
+
+      # "Fail loudly" above is loud only to whoever opens the Actions tab. Nobody
+      # does: this job failed 6×/day for 25 days (2026-07-29 → 2026-08-23) and the
+      # only reason it was ever found is that someone audited the workflow list for
+      # an unrelated reason. A scheduled guard that can go red unseen is not a
+      # guard — so a red files a tracking issue, and the next green closes it.
+      #
+      # Same shape as nightly.yml's report job on purpose: ONE issue reused per
+      # label, never one per run, or the cron turns into a spam cannon at 6/day.
+      - name: Track a red run in an issue (and close it when green again)
+        if: ${{ always() && steps.guard.outputs.configured == 'true' }}
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        env:
+          JOB_STATUS: ${{ job.status }}
+        with:
+          script: |
+            const LABEL = 'triage-failure';
+            // Three states, not two: `cancelled` must neither open an issue nor
+            // close one — a cancelled run proves nothing about the pipeline.
+            const status = process.env.JOB_STATUS;
+            if (status !== 'failure' && status !== 'success') return;
+            const failed = status === 'failure';
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const date = new Date().toISOString().slice(0, 16).replace('T', ' ');
+            const body =
+              `### 🩺 Report triage — ${date} UTC\n\n` +
+              `Déclencheur : \`${context.eventName}\` · statut : **${process.env.JOB_STATUS}**\n\n` +
+              `[Voir le run](${runUrl})\n`;
+
+            try {
+              await github.rest.issues.getLabel({ ...context.repo, name: LABEL });
+            } catch {
+              await github.rest.issues.createLabel({
+                ...context.repo,
+                name: LABEL,
+                color: 'b60205',
+                description: 'Le triage des signalements est en échec',
+              });
+            }
+
+            const existing = await github.rest.issues.listForRepo({
+              ...context.repo,
+              state: 'open',
+              labels: LABEL,
+            });
+
+            if (failed) {
+              const title = '🩺 Triage des signalements en échec';
+              if (existing.data.length > 0) {
+                await github.rest.issues.createComment({
+                  ...context.repo,
+                  issue_number: existing.data[0].number,
+                  body,
+                });
+              } else {
+                await github.rest.issues.create({ ...context.repo, title, body, labels: [LABEL] });
+              }
+            } else {
+              for (const issue of existing.data) {
+                await github.rest.issues.createComment({
+                  ...context.repo,
+                  issue_number: issue.number,
+                  body: body + '\n✅ Le triage est repassé au vert — fermeture automatique.',
+                });
+                await github.rest.issues.update({
+                  ...context.repo,
+                  issue_number: issue.number,
+                  state: 'closed',
+                });
+              }
+            }

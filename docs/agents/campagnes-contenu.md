@@ -50,3 +50,38 @@ question) et de l'audit humain. Ne jamais conclure « le contenu est bon » sur 
 
 Corollaire observé : les erreurs se logent plus souvent dans les **exemples du cours** que dans
 les clés de réponse — l'audit doit lire `cours.md`, pas seulement les quiz.
+
+## Merger ne publie pas — et un run vert ne prouve pas la publication
+
+Le contenu a quitté le framework de migrations (étude 24 D-3) : il est **appliqué** à la prod par
+le workflow privé `apply-content.yml`, en `workflow_dispatch` **seul**. Un merge ne déclenche
+rien. Une campagne mergée, auditée et verte peut donc n'atteindre **aucun élève** — c'est arrivé
+sur 18 sujets à la fois (privé #124), et sur les 1 049 tags de misconception de C4bis, restés
+invisibles entre leur merge et leur application.
+
+**Cibler un sujet.** L'entrée `subjects` vide applique **tout le corpus** : ~45 min d'écriture
+continue en prod, contre ~2 min pour un sujet. Sûr pour les données, pas pour la charge.
+Toujours un `dry_run=true` d'abord : il affiche le plan et sort.
+
+⚠️ **Et le run vert ne prouve pas que tout est arrivé.** L'étape de contrôle du workflow compte
+les **chapitres et les questions** ; elle ne regarde **aucune colonne serveur-seul** —
+`distractor_tags` (étude 04 D-1), `correct_option`, et demain tout champ exclu de la whitelist
+`SELECT` de `questions`. Un canal peut donc s'afficher vert en ayant appliqué des lignes sans le
+signal qui justifiait la campagne.
+
+Le contrôle qui tranche, depuis l'extérieur et en lecture seule (clés **publiques** du `.env`) :
+comparer le **décompte de questions du sujet en prod** au décompte du **corpus au SHA appliqué**.
+
+```bash
+# $URL / $KEY : VITE_SUPABASE_URL et VITE_SUPABASE_PUBLISHABLE_KEY du .env — publiques.
+curl -s -H "apikey: $KEY" -H "Prefer: count=exact" -H "Range: 0-0" -o /dev/null -D - "$URL/rest/v1/questions?select=id,exercises!inner(id,chapters!inner(subject_id))&exercises.chapters.subject_id=eq.math"
+# → Content-Range: 0-0/818   (à comparer au corpus au SHA appliqué)
+```
+
+Égalité ⇒ les lignes ont bien été ré-upsertées à ce SHA, et les colonnes serveur-seul voyagent
+dans le **même** upsert : elles sont là. C'est la preuve la plus forte accessible sans accès
+base. Contrôle négatif à faire une fois : demander `distractor_tags` en anon doit répondre
+`42501 permission denied` — une réponse serait une fuite, pas une bonne nouvelle.
+
+La preuve de bout en bout, elle, reste **produit** : `user_misconceptions` qui se remplit quand
+des élèves ratent des questions taguées. Elle ne s'observe pas le jour de l'application.

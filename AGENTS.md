@@ -166,15 +166,15 @@ build,build:*,format,audit:deps,harness:check}`), the content pipeline (`npm run
 read-only `git`/`gh`/`ls` inspection, and read-only `supabase migration list`/`db diff`/`test db`.
 Plus a short list of workflows an agent may **déclencher**, nommés un par un (jamais
 `gh workflow run:*`) : `rollback-prod.yml` (gel/dégel réversibles), `db-backup.yml` (dump +
-drill, lecture seule sur la prod), `db-tests.yml` (pgTAP sur une base jetable) et
+drill, lecture seule), `db-tests.yml` (pgTAP, base jetable), `e2e-auth.yml` (TEST seulement) et
 `apply-content.yml` / `apply-content-test.yml` — les seuls de la liste qui **écrivent** en prod,
 et l'exception assumée : ils ne publient rien de neuf, seulement le SQL compilé d'un corpus déjà
 mergé et validé par la Content CI (idempotent, journalisé dans `content_releases`, zéro
 migration). Sans eux une campagne de contenu s'arrête à une marche de la fin.
 **Never**: `supabase db push`/`db reset` against any project (prod migrates only via
-`db-migrate-prod.yml`, DoD §7), ni le dispatch de `db-migrate-prod.yml` (schéma prod),
-`e2e-auth.yml` (écrit en prod via les secrets SSR du déploiement — #614, #638) ou
-`release.yml` (publication). Anything else falls back to asking.
+`db-migrate-prod.yml`, DoD §7), ni le dispatch de `db-migrate-prod.yml` (schéma prod) ou
+`release.yml` (publication). `e2e-auth.yml` en est sorti le 2026-08-22 (seule règle passée de
+`deny` à `allow` ; motif et gardes dans `policy.json`). Anything else falls back to asking.
 Source of truth: **`harness/policy.json`** (with a reason on every deny) — `npm run harness:sync`
 compiles it into each tool's view (today `.claude/settings.json`, never hand-edited) and
 `npm run harness:check` fails CI on drift. Tools without a repo-level permission file read this
@@ -204,7 +204,7 @@ this repo (this file, `STATUS.md`, `docs/agents/`) — not only in a tool's priv
 | [`docs/dette-technique.md`](./docs/dette-technique.md)                         | Code debt still genuinely open — each item re-read in the code before it is listed (verified 2026-08-02)                                                                                                                                                                                                                                     |
 | [`docs/performance-audit.md`](./docs/performance-audit.md)                     | Perf findings + phased roadmap; its load harness is [`perf/README.md`](./perf/README.md)                                                                                                                                                                                                                                                     |
 | `docs/*.md`                                                                    | Topic specs: CI/CD, dependency cadence, env vars, logging, XSS policy, **surfaces & couleurs** (`design-surfaces.md`), content voice, release tagging, lycée architecture, question types, suivi parental quotidien; player guides (`guide-duels-et-ligues`, `guide-rappel-actif`, `guide-types-questions-natifs`, `guide-utilisateur.html`) |
-| [`docs/agents/`](./docs/agents/README.md)                                      | **Operational playbooks**: Windows-workstation traps, multi-agent collaboration (branch prefixes, congestion, contended files), content-campaign conduct                                                                                                                                                                                     |
+| [`docs/agents/`](./docs/agents/README.md)                                      | **Operational playbooks**: **zero manual intervention by the owner** (`zero-intervention.md` — the rule, and the walls it names), Windows-workstation traps, multi-agent collaboration, content-campaign conduct                                                                                                                             |
 | [`docs/archive/`](./docs/archive/README.md)                                    | Dated one-shot audits, kept for the record — never a backlog. A one-shot lands there the day it is handled or outdated                                                                                                                                                                                                                       |
 | `harness/*.json`                                                               | Model roles, execution policy (source of truth for the generated per-tool views)                                                                                                                                                                                                                                                             |
 
