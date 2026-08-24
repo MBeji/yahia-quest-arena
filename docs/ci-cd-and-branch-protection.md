@@ -15,9 +15,16 @@ end-of-dev → production walkthrough lives in [passation.md](./passation.md).)
   `[no-automerge]` in the head-commit subject, or a `wip/` / `draft/` / `rescue/`
   branch prefix, opens a **draft** instead (promote with `gh pr ready`). A repeat
   push re-arms a ready-but-unarmed PR (self-healing) but never promotes an existing
-  draft. Without `GH_AUTOMATION_PAT`, the workflow also dispatches the required-check
-  workflows on the branch (a PR created with the Actions token fires no
-  `pull_request` events, so its checks would otherwise never report).
+  draft. À chaque PR qu'il ouvre, le workflow **dispatche aussi** les workflows de
+  checks requis sur la branche — **inconditionnellement depuis le 2026-08-24**, PAT
+  ou pas. Le garde-fou précédent sautait cette dispatch dès qu'un PAT existait, en
+  pariant qu'une PR ouverte par un collaborateur émet de vrais événements
+  `pull_request` ; le 2026-08-23 ces événements ont cessé de produire le moindre run
+  pendant ~9 h sans que le PAT cesse de répondre, et la PR #823 est restée gelée avec
+  ses 4 checks requis en « Expected ». Le pari n'étant vérifiable depuis aucun
+  workflow, il ne garde plus la porte : on accepte **deux runs par check requis**
+  (le natif sur `refs/pull/N/merge`, le dispatché sur `refs/heads/<branche>` — les
+  groupes de concurrence sont indexés sur le ref, donc ils ne s'annulent pas).
 - **Un workflow qui _pousse_ une branche doit se checkouter avec le PAT** —
   `actions/checkout` avec `token: ${{ secrets.GH_AUTOMATION_PAT || secrets.GITHUB_TOKEN }}`.
   Le piège du bot non-collaborateur ne se joue pas à l'ouverture de la PR mais **au push** :

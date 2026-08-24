@@ -29,9 +29,10 @@ name: Auto PR
 # no manual approval, ever. Provision it as a fine-grained PAT scoped to this
 # repo only (contents:write, pull requests:write, workflows:write) stored in
 # Settings > Secrets and variables > Actions as `GH_AUTOMATION_PAT`. Without
-# it, this workflow still works via the GITHUB_TOKEN fallback below, using
-# the `gh workflow run` dispatch as a workaround for the gated native runs
-# (best-effort, not fully deterministic — see the diagnosis above).
+# it, this workflow still works via the GITHUB_TOKEN fallback below, whose
+# gated native runs are covered by the `gh workflow run` dispatch in the last
+# step. That dispatch is no longer reserved to the PAT-less path: since
+# 2026-08-24 it runs ALWAYS, for the reasons written on the step itself.
 #
 # MERGE FREEZE (incident en cours). The repository variable `MERGE_FREEZE`
 # (Settings > Secrets and variables > Actions > Variables) is the kill-switch
@@ -68,7 +69,9 @@ permissions:
   contents: write
   # Create the PR and enable auto-merge.
   pull-requests: write
-  # Dispatch the required-check workflows on the new PR's branch (fallback path).
+  # Dispatch the required-check workflows on the new PR's branch. Plus un chemin
+  # de secours : la dernière étape dispatche sur les DEUX chemins de jeton, donc
+  # cette portée est requise même quand `GH_AUTOMATION_PAT` est configuré.
   actions: write
 
 jobs:
@@ -212,11 +215,59 @@ jobs:
             echo "::warning title=Auto-merge non armé::Activez 'Allow auto-merge' dans Settings > General du repo."
           fi
 
-      - name: Dispatch the required checks on the branch (GITHUB_TOKEN fallback only)
-        # Only needed without a PAT: a PAT-opened PR fires real, non-gated
-        # `pull_request` runs for every required check on its own, so this
-        # workaround dispatch would just be a confusing, redundant duplicate.
-        if: steps.pr.outputs.created == 'true' && env.USING_PAT != 'true'
+      - name: Dispatch the required checks on the branch (toujours)
+        # INCONDITIONNEL depuis le 2026-08-24 — c'est le correctif, et le reste
+        # de ce commentaire dit pourquoi la condition d'avant était une faute de
+        # forme avant d'être une panne.
+        #
+        # Cette étape portait `env.USING_PAT != 'true'` : avec un PAT de vrai
+        # collaborateur, la PR est censée émettre de vrais événements
+        # `pull_request` non gatés, donc re-dispatcher n'aurait fait qu'un
+        # doublon. Le pari a tenu des semaines, puis a lâché sans rien signaler.
+        # Le 2026-08-23, les événements `pull_request` ont cessé de produire le
+        # moindre run entre 10:33 et 19:51 UTC alors que le PAT répondait
+        # toujours à l'API — il a bien ouvert la PR #823 et armé son auto-merge.
+        # Une heure après l'ouverture, `gh run list` sur la branche ne montrait
+        # que « Auto PR » ; les 4 checks requis (`verify`, `CodeQL`,
+        # `Migration order`, `Migration presence`) sont restés en « Expected —
+        # Waiting for status to be reported » ; la PR ne pouvait pas merger
+        # seule et il a fallu dispatcher à la main. Les runs `pull_request` sont
+        # revenus d'eux-mêmes le lendemain : la panne est TRANSITOIRE, donc
+        # invisible, sans cause locale, et reproductible n'importe quand.
+        #
+        # Le vrai défaut n'est pas la panne, c'est la nature du garde-fou :
+        # « un PAT ⇒ de vrais événements » n'est vérifiable d'AUCUNE façon
+        # depuis ici. Au moment où cette étape s'exécute, le run `pull_request`
+        # n'existe pas encore, et son absence définitive ne se distingue pas de
+        # son simple retard. Un pari non vérifiable ne doit pas garder une porte
+        # dont l'ouverture est la seule chose qui débloque une livraison.
+        #
+        # Le prix, assumé : la DUPLICATION. Les groupes de concurrence de ci.yml
+        # (`ci-<github.ref>`) et codeql.yml (`codeql-<github.ref>`) sont indexés
+        # sur le ref ; un run `pull_request` tourne sur `refs/pull/N/merge` et un
+        # run dispatché sur `refs/heads/<branche>` — ils ne s'annulent donc PAS
+        # l'un l'autre, et migration-gate.yml n'a même pas de bloc concurrency.
+        # On paie donc deux exécutions complètes par check requis. C'est le bon
+        # côté de l'échange : quelques minutes de runner en double contre une PR
+        # gelée qui coûte une livraison et que personne ne remarque avant des
+        # heures. Les deux jumeaux convergent au vert — GitHub évalue un check
+        # requis sur le run le plus RÉCENT portant ce nom pour le SHA de tête —
+        # au prix d'un bref retour en « pending » le temps que le plus lent
+        # finisse. Les deux voient le même monde : `Migration order` diffe contre
+        # `origin/main` dans les deux cas, et la ref de merge n'ajoute aucune
+        # migration à la branche.
+        #
+        # Écarté : indexer les groupes de concurrence sur la BRANCHE plutôt que
+        # sur le ref, pour que les jumeaux s'annulent proprement. Un run annulé
+        # conclut `cancelled`, que la protection de branche lit comme un échec —
+        # on troquerait un doublon inoffensif contre un rouge qui dépend de
+        # l'ordre d'arrivée, et sur TOUS les runs de ci.yml et codeql.yml, très
+        # au-delà de ce correctif.
+        #
+        # `created == 'true'` reste : on ne re-dispatche pas sur une PR déjà
+        # ouverte — ses checks ont déjà tourné, et les pushes suivants les
+        # relancent par l'événement `synchronize`.
+        if: steps.pr.outputs.created == 'true'
         env:
           REPO: ${{ github.repository }}
           BRANCH: ${{ github.ref_name }}
@@ -225,4 +276,8 @@ jobs:
           gh workflow run ci.yml --repo "$REPO" --ref "$BRANCH"
           gh workflow run migration-gate.yml --repo "$REPO" --ref "$BRANCH" -f base=main
           gh workflow run codeql.yml --repo "$REPO" --ref "$BRANCH"
-          echo "Dispatched ci.yml + migration-gate.yml + codeql.yml on $BRANCH (no GH_AUTOMATION_PAT configured)."
+          # `USING_PAT` n'arbitre plus rien, mais reste tracé ici : c'est cette
+          # ligne de log qui a permis de comprendre la PR #823 (dispatch sautée
+          # alors qu'aucun run `pull_request` n'arrivait). Sans elle, le prochain
+          # diagnostic repart de zéro.
+          echo "Dispatched ci.yml + migration-gate.yml + codeql.yml on $BRANCH (USING_PAT=$USING_PAT ; dispatch inconditionnelle)."

@@ -21,8 +21,10 @@ name: Migration gate
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-  # auto-pr.yml dispatches this on bot-created PRs (which fire no pull_request
-  # events) so the ruleset-required checks still report on the head SHA.
+  # auto-pr.yml dispatche cette voie sur CHAQUE PR qu'il ouvre (depuis le
+  # 2026-08-24), pour que les checks requis rapportent sur le SHA de tête même
+  # si aucun événement `pull_request` n'arrive — ce qui s'est produit sans
+  # prévenir le 2026-08-23. Doublon assumé quand l'événement natif arrive bien.
   workflow_dispatch:
     inputs:
       base:
