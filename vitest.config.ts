@@ -23,6 +23,19 @@ export default defineConfig({
     // vitest's 5s default and made `npm run verify` flake on random files; CI
     // is unaffected. 15s changes no assertion — only the flake threshold.
     testTimeout: 15_000,
+    // Same story one floor down: the `forks` pool starts ONE PROCESS per worker.
+    // On the Windows dev box (16 cores, but ~4 GB free late in a session) they
+    // stop STARTING at all — `Failed to start forks worker` / `Timeout waiting
+    // for worker to respond` — whole files never run, and the survivors cross
+    // the timeout above. It reads exactly like a regression on a diff that
+    // touched no code. Measured 2026-08-24 on a docs-only diff: 16 workers → 16
+    // pool errors, 4 → 3, 2 → clean (263 files, 3146 tests). Capping is NOT a
+    // trade-off: 2 workers finished in 244s where 16 took 280-374s — the
+    // contention cost more than the parallelism bought. CI has the memory and
+    // keeps the default; VITEST_MAX_WORKERS overrides this (vitest applies it
+    // after config resolution), e.g. `VITEST_MAX_WORKERS=8 npm test` on a
+    // healthy box. See docs/agents/poste-windows.md § contention.
+    ...(process.env.CI ? {} : { maxWorkers: 2 }),
     // scripts/** ships ops-critical helpers (DB-URL normalization, the TEST/PROD
     // ref guards) whose regressions only ever surfaced in the nightly — unit-test
     // them here alongside the app.
