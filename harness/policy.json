@@ -1,7 +1,7 @@
 {
   "$comment": "Declarative execution policy — the SINGLE source of truth for what an agent may run in this repo (étude 25 D-4). `npm run harness:sync` compiles it into per-tool views (today: .claude/settings.json); `npm run harness:check` fails CI if a view drifts from this file. Tools with no repo-level permission file (Codex, Cursor, …) read the human-readable summary in AGENTS.md § Execution policy instead — for them it is guidance, not enforcement; the hard net stays the husky hooks + required CI checks + the absence of prod credentials locally (étude 25 P-3/P-4).",
   "allow": {
-    "$comment": "Always allowed — read-only inspection, the project's own gates, and (group `ops-dispatch`) the short list of workflows an agent may TRIGGER. That last group is the exception to `gh-readonly`, granted PER WORKFLOW and never as `gh workflow run:*`: the wildcard form would hand over db-migrate-prod.yml too. Most entries are reversible (rollback-prod's freeze/unfreeze) or read-only on prod (db-backup dumps, db-tests runs pgTAP on a throwaway database). The two `apply-content*` entries DO write prod, and are the deliberate exception (owner decision, 2026-07-28): a content campaign is prescribed end-to-end, and publishing was the one step it could not take. What makes them acceptable is that they publish nothing new — only the SQL compiled from a corpus that a merged PR and the Content CI gates already validated — idempotently, journalised in content_releases, with zero migration. `e2e-auth` joined them on 2026-08-22, and it is the one entry that MOVED out of `deny` — so here is the whole reasoning, because the next reader will find the old one in git. It was denied for a real incident: the run used to point the browser at a Vercel preview through PLAYWRIGHT_BASE_URL, that preview's SSR layer holds PROD Supabase secrets, and a spec filed a real `content_reports` row in production three nights running (#614; #638 is the same hole seen again, closed NOT_PLANNED once #618/#621 landed). Three things closed it, and this entry rests on all three: the workflow no longer sets PLAYWRIGHT_BASE_URL at all (Playwright spawns its own localhost dev server, fed with the TEST_SUPABASE_* secrets); its `workflow_dispatch` trigger declares NO inputs, so a dispatcher cannot redirect the run; and `findProdTarget` (scripts/shared/prod-targets.mjs) refuses from three independent places — playwright.config.ts, _env.mjs, reset-gameplay.mjs — if any URL resolves to the prod ref or a prod app host, so a mis-set TEST secret fails loudly instead of writing prod. What it DOES write is the dedicated TEST project (seed + gameplay reset), which is its purpose. Note the residual risk this entry accepts, identical to the one `apply-content` already accepts: `gh workflow run --ref <branch>` runs the workflow AS DEFINED ON THAT BRANCH, and the three guards live in files that branch could also edit — the net there is PR review, not this file. Re-deny the day the workflow gains a base-URL input or is pointed at a deployment again. What stays out writes prod OUTSIDE that reviewed path: the schema (db-migrate-prod) and a release/tag. Each is denied by name below so the reasoning survives the next reader. Adding a workflow here is a review decision, not a convenience. Grouped by intent so a reviewer sees WHY a rule exists, not just a flat list.",
+    "$comment": "Always allowed — read-only inspection, the project's own gates, and (group `ops-dispatch`) the short list of workflows an agent may TRIGGER. That last group is the exception to `gh-readonly`, granted PER WORKFLOW and never as `gh workflow run:*`: the wildcard form would hand over db-migrate-prod.yml too. Most entries are reversible (rollback-prod's freeze/unfreeze) or read-only on prod (db-backup dumps, db-tests runs pgTAP on a throwaway database). The two `apply-content*` entries DO write prod, and are the deliberate exception (owner decision, 2026-07-28): a content campaign is prescribed end-to-end, and publishing was the one step it could not take. What makes them acceptable is that they publish nothing new — only the SQL compiled from a corpus that a merged PR and the Content CI gates already validated — idempotently, journalised in content_releases, with zero migration. `e2e-auth` joined them on 2026-08-22, and it is the one entry that MOVED out of `deny` — so here is the whole reasoning, because the next reader will find the old one in git. It was denied for a real incident: the run used to point the browser at a Vercel preview through PLAYWRIGHT_BASE_URL, that preview's SSR layer holds PROD Supabase secrets, and a spec filed a real `content_reports` row in production three nights running (#614; #638 is the same hole seen again, closed NOT_PLANNED once #618/#621 landed). Three things closed it, and this entry rests on all three: the workflow no longer sets PLAYWRIGHT_BASE_URL at all (Playwright spawns its own localhost dev server, fed with the TEST_SUPABASE_* secrets); its `workflow_dispatch` trigger declares NO inputs, so a dispatcher cannot redirect the run; and `findProdTarget` (scripts/shared/prod-targets.mjs) refuses from three independent places — playwright.config.ts, _env.mjs, reset-gameplay.mjs — if any URL resolves to the prod ref or a prod app host, so a mis-set TEST secret fails loudly instead of writing prod. What it DOES write is the dedicated TEST project (seed + gameplay reset), which is its purpose. Note the residual risk this entry accepts, identical to the one `apply-content` already accepts: `gh workflow run --ref <branch>` runs the workflow AS DEFINED ON THAT BRANCH, and the three guards live in files that branch could also edit — the net there is PR review, not this file. Re-deny the day the workflow gains a base-URL input or is pointed at a deployment again. What stays out writes prod OUTSIDE that reviewed path: the schema (db-migrate-prod) and a release/tag. Each is denied by name below so the reasoning survives the next reader. Adding a workflow here is a review decision, not a convenience. Grouped by intent so a reviewer sees WHY a rule exists, not just a flat list. ---- 2026-08-23, the biggest widening this file has had, and the reasoning matters more than the list. The owner's standing rule is now `zero manual technical intervention` (docs/agents/zero-intervention.md): he gives the need and the arbitrations, a session executes end to end. A permission prompt IS a manual validation, so a policy whose default is `ask` was itself the thing being ruled out. Four groups opened, after he chose the widest of three options with the trade-offs named: `git-write` (the delivery loop — add/commit/push/checkout/switch/restore, plus `git merge origin/main`, the sanctioned way to resolve a contended file; rebase and stash stay OUT, the first because the documented resolution is a merge and the second because the checkout is shared between sessions), `gh-write` (the PR/issue lifecycle a session already owns under DoD §8), `repo-config` (`gh secret set` / `gh variable set`), and `repo-scripts` (`npm install` — never `npm ci`, the checkout is shared — and `node scripts/…`). `ops-dispatch` also gained the remaining non-prod workflows, including the ci/migration-gate/codeql trio that a documented failure mode needs (auto-pr.yml skips its fallback dispatch when a PAT exists, leaving required checks stuck at `Expected` — the remedy was known and was not permitted). `repo-config` is the one that would raise an eyebrow, so here is its case: on 2026-08-23 the report triage was found dead for 25 days because a GitHub secret had lost its `https://`, and NOTHING in the repository could repair a value that lives outside it. That specific hole was closed better than by permission (the URL was never a secret — it is derived in prod-targets.mjs now), but the class remains: a secret that rots is an outage no PR can fix. Setting one is a repair with a named target; DELETING one is not, and is denied below. Two new denies keep the widening honest, because opening a family must never silently open the doors the deny list was protecting: `node scripts/db/push-prod.mjs` (prod schema, inside the family now opened) and `gh secret delete`. A third was written and then removed before shipping, and the reason is worth keeping: denying `gh pr merge` reads right — merging by hand is the human gesture the 2026-07-12 chain removed — but prefix rules cannot say `except --auto`, and `gh pr merge --auto` is how auto-merge is ARMED. The deny would have taken away the only manual repair for a PR that auto-pr failed to arm, to prevent something branch protection already prevents (a red PR does not merge, by hand or otherwise). Norm, not rule: a session watches its checks, it does not merge around them. Note what this file can and cannot do: it removes PERMISSION PROMPTS, it does not remove the tool's own auto-mode classifier, which lives outside the repo and refused `gh secret set` on the very day this group was written — an entry here is a repo-level `allow`, never a guarantee.",
     "gates": [
       "Bash(npm run lint)",
       "Bash(npm run typecheck)",
@@ -49,8 +49,37 @@
       "Bash(git fetch:*)",
       "Bash(git remote:*)",
       "Bash(git ls-files:*)",
+      "Bash(git ls-remote:*)",
+      "Bash(git worktree list)",
       "Bash(ls:*)"
     ],
+    "git-write": [
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git checkout:*)",
+      "Bash(git switch:*)",
+      "Bash(git restore:*)",
+      "Bash(git merge origin/main)"
+    ],
+    "gh-write": [
+      "Bash(gh pr create:*)",
+      "Bash(gh pr edit:*)",
+      "Bash(gh pr ready:*)",
+      "Bash(gh pr comment:*)",
+      "Bash(gh pr close:*)",
+      "Bash(gh issue create:*)",
+      "Bash(gh issue comment:*)",
+      "Bash(gh issue close:*)",
+      "Bash(gh issue edit:*)"
+    ],
+    "repo-config": [
+      "Bash(gh secret set:*)",
+      "Bash(gh secret list:*)",
+      "Bash(gh variable set:*)",
+      "Bash(gh variable list:*)"
+    ],
+    "repo-scripts": ["Bash(npm install:*)", "Bash(node scripts/:*)"],
     "gh-readonly": [
       "Bash(gh pr view:*)",
       "Bash(gh pr diff:*)",
@@ -68,7 +97,18 @@
       "Bash(gh workflow run db-tests.yml:*)",
       "Bash(gh workflow run apply-content.yml:*)",
       "Bash(gh workflow run apply-content-test.yml:*)",
-      "Bash(gh workflow run e2e-auth.yml:*)"
+      "Bash(gh workflow run e2e-auth.yml:*)",
+      "Bash(gh workflow run ci.yml:*)",
+      "Bash(gh workflow run migration-gate.yml:*)",
+      "Bash(gh workflow run codeql.yml:*)",
+      "Bash(gh workflow run nightly.yml:*)",
+      "Bash(gh workflow run e2e.yml:*)",
+      "Bash(gh workflow run perf.yml:*)",
+      "Bash(gh workflow run freeze-watch.yml:*)",
+      "Bash(gh workflow run regression-guard.yml:*)",
+      "Bash(gh workflow run report-triage.yml:*)",
+      "Bash(gh workflow run checkpoint-tag.yml:*)",
+      "Bash(gh workflow run second-opinion.yml:*)"
     ]
   },
   "deny": [
@@ -95,6 +135,14 @@
     {
       "rule": "Bash(gh workflow run release.yml:*)",
       "reason": "Publishes a release/tag — outward-facing and hard to walk back. Tagging policy is a human call (docs/release-tagging-policy.md)."
+    },
+    {
+      "rule": "Bash(node scripts/db/push-prod.mjs:*)",
+      "reason": "The `repo-scripts` group opens `node scripts/…` wholesale; this is the one script in it that writes the PROD schema. Same rule as `supabase db push` it wraps — prod migrates on merge via db-migrate-prod.yml and nowhere else (DoD §7). Denied by name so opening the family never silently re-opens this door."
+    },
+    {
+      "rule": "Bash(gh secret delete:*)",
+      "reason": "`repo-config` lets a session SET a secret (repairing a malformed one without a human — the 2026-08-23 rule); deleting one is not repair, it is an outage with no diff to review and no way to tell which workflow it silently disarmed."
     }
   ]
 }
