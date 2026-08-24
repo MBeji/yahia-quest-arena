@@ -126,9 +126,9 @@ Ce test est **obligatoire** avant de conclure à une régression quand on vient 
 `main` plus récent : sans lui, « contention » et « vraie régression » sont indiscernables.
 
 **Ne pas tuer les processus node** — le checkout est partagé, ce sont ceux des sessions sœurs. Si
-le poste reste chargé, le vrai gate est la CI (le ruleset bloque le merge sans `verify`) :
-demander l'accord explicite pour `--no-verify` (DoD §2) plutôt que de reboucler des tentatives à
-~6 minutes.
+le poste reste chargé, la sortie n'est PAS `--no-verify` : réduire le parallélisme suffit, et ne
+demande l'accord de personne (voir « La sortie qui ne dégrade rien » plus bas). `--no-verify`
+(DoD §2, accord explicite) ne reste utile que si même un worker unique n'arrive plus à démarrer.
 
 ### La même signature a une SECONDE cause : la mémoire libre, sans aucune session sœur
 
@@ -157,7 +157,41 @@ npx vitest run --pool=threads     # vert ici ⇒ ni régression, ni contention :
 Ce jour-là : 239 fichiers / 2 699 tests verts en `threads`, quand `forks` n'en démarrait que 209.
 Fermer le navigateur du panneau d'aperçu ne rend presque rien (2 764 → 2 726 Mo) : la mémoire est
 prise ailleurs, hors de portée de la session. La sortie reste la même qu'au paragraphe précédent —
-`--no-verify` avec accord explicite, la CI faisant foi.
+réduire le parallélisme, section ci-dessous.
+
+### La sortie qui ne dégrade rien : réduire le parallélisme
+
+Les trois causes ci-dessus se soignent **toutes** de la même façon, et sans toucher au gate.
+Le hook `pre-push` n'accepte pas de drapeau CLI, mais vitest 4 applique `VITEST_MAX_WORKERS`
+**après** la résolution de la config (donc elle prime sur `test.maxWorkers`), et husky hérite de
+l'environnement du `git push` :
+
+```bash
+VITEST_MAX_WORKERS=2 git push -u origin <branche>
+```
+
+Mesuré le 2026-08-24 (#842, diff de deux fichiers de commentaires, ~4 Go libres, 0 session sœur) :
+
+| Workers | Résultat                                                                  |
+| ------: | ------------------------------------------------------------------------- |
+|      16 | 16 erreurs de pool, 3 fichiers morts, 5 échecs nommés — tous des timeouts |
+|       4 | 3 erreurs de pool, 0 échec nommé                                          |
+|       2 | **263 fichiers, 3 146 tests, exit 0**                                     |
+
+⚠️ **Réduire n'est pas un compromis, c'est un gain** : 244 s à 2 workers contre 280–374 s à 16, et
+`environment` 309 s contre 2 942 s. La contention coûtait plus cher que le parallélisme ne
+rapportait — donc ne pas hésiter par crainte de la durée, ni « reboucler » à l'identique en
+espérant un run chanceux.
+
+Depuis ce jour, `vitest.config.ts` **plafonne lui-même les workers hors CI** : le cas nominal n'a
+plus besoin de la variable, qui reste le levier pour **remonter** sur un poste sain
+(`VITEST_MAX_WORKERS=8 npm test`).
+
+**Deux cascades à ne pas prendre pour des régressions.** Un test qui expire laisse son composant
+monté : le suivant tombe en `Found multiple elements by: [data-testid=…]`. Un mock laissé à
+mi-chemin donne un `expected undefined to be 'parent'`. Les deux sont des **conséquences** du
+timeout voisin, dans le même fichier, et disparaissent avec lui — les compter comme des échecs
+distincts fait chercher deux bugs qui n'existent pas.
 
 ### Quand les DEUX mesures reviennent vides — et ce qui reste pour trancher
 

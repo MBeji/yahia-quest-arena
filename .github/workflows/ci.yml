@@ -42,6 +42,64 @@ jobs:
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
 
+      # ── Canari npm 10 — arbitrage A17 du 2026-08-24 ───────────────────────
+      #
+      # Rejoue la résolution du lockfile avec la version de npm de l'AUTRE CI.
+      # Ce n'est pas une redondance : c'est le seul détecteur qui ait jamais
+      # attrapé #716.
+      #
+      # Ce qui s'était passé — une PR Dependabot intitulée « bump undici …
+      # dependency-type: indirect » faisait en réalité monter
+      # `@cloudflare/vite-plugin` de ^1.40.2 à ^1.51.1, entraînant miniflare
+      # 4 → 5-alpha, workerd et wrangler : DEUX majeures et une ALPHA dans la
+      # chaîne de build, sous un titre de bump indirect. Sa régénération du lock
+      # a supprimé un `typescript@5.9.3` imbriqué qu'exigeait une peer optionnelle.
+      # Résultat : `npm ci` mort — mais seulement sous npm 10 — donc Content CI
+      # privée rouge 33 h, `main` comprise, pendant que le gate d'ici restait
+      # vert. Aggravant : `ci.yml` n'avait même pas tourné sur le commit fautif.
+      #
+      # Le poste tournait alors en Node 22 / npm 10, dont le `npm ci` est plus
+      # sévère. C'est LUI qui a refusé le lock. L'alignement sur Node 24 (npm 11)
+      # a supprimé ce filet — une propriété ACCIDENTELLE, donc fragile, mais la
+      # seule qui ait fonctionné là où tout le reste était vert.
+      #
+      # Trois options étaient sur la table (ROADMAP privée, A17) : revenir à
+      # Node 22, poser une garde de diff sur les titres de PR, ou ceci. Arbitrage
+      # du propriétaire : ceci — parce que ça rétablit EXACTEMENT la propriété
+      # perdue, mais DÉLIBÉRÉMENT. Elle ne peut plus disparaître au prochain
+      # `.nvmrc`, et elle est écrite là où on la lira. C'est aussi, mot pour mot,
+      # le réflexe n°1 que `docs/dependency-maintenance.md` avait lui-même tiré
+      # de l'incident : « une panne "npm ci ne casse que là-bas" se reproduit
+      # avec la version de npm de l'autre CI, pas avec celle qu'on a sous la
+      # main ».
+      #
+      # Dans le job `verify`, donc dans un check REQUIS : un canari qui ne
+      # bloque pas est un canari qu'on lit après coup. Toujours joué, jamais
+      # conditionné au diff — le lock peut casser sans qu'une PR de dépendance
+      # y touche, et `--dry-run` n'écrit rien.
+      # ⚠️ `--ignore-scripts` n'est pas cosmétique : sans lui, `npm ci` rejoue le
+      # `prepare` du projet (husky) au milieu du gate, pour rien. Éprouvé avant
+      # livraison, dans les deux sens, en reproduisant #716 sur une copie du
+      # lock (suppression de l'entrée imbriquée `vite-tsconfig-paths/node_modules/
+      # typescript`, exactement ce que la régénération fautive avait fait) :
+      #   • npm 11 — « added 511 packages », VERT. C'est pourquoi ce dépôt
+      #     n'avait rien vu ;
+      #   • npm 10 — « Missing: typescript@5.9.3 from lock file », ROUGE.
+      # Le différentiel est donc réel et mesuré, pas supposé.
+      #
+      # Piège de lecture pour la prochaine session : en cas d'échec, lire le
+      # DÉBUT de la sortie de npm, pas la fin. npm affiche sa bannière d'aide
+      # après l'erreur, et un `| tail` fait croire à un drapeau refusé alors que
+      # la cause — `EUSAGE`, avec le paquet manquant nommé — est en tête.
+      - name: Canari npm 10 (le lockfile tient-il chez l'autre CI ?)
+        run: |
+          set -uo pipefail
+          echo "npm de ce job : $(npm --version) · canari : npm@10"
+          if ! npx --yes npm@10 ci --dry-run --no-audit --no-fund --ignore-scripts; then
+            echo "::error title=Lockfile refusé par npm 10::Ce lockfile s'installe sous npm 11 mais PAS sous npm 10 — c'est la panne #716, qui avait laissé la Content CI privée rouge 33 h pendant que ce gate restait vert. Lire le DÉBUT de la sortie ci-dessus (le paquet manquant y est nommé), pas la bannière d'aide en fin. Remède : ne pas re-synchroniser le lock à l'aveugle, regarder ce que le bump a fait entrer — voir docs/dependency-maintenance.md."
+            exit 1
+          fi
+
       - name: Lint
         run: npm run lint
 
