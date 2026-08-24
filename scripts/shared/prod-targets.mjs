@@ -24,6 +24,24 @@
 export const PROD_SUPABASE_REF = "fasrenmmrkqjoobrztbp";
 
 /**
+ * The production Supabase API URL. Derived, never typed twice.
+ *
+ * It is NOT a secret — it is the `VITE_SUPABASE_URL` every browser receives in
+ * the client bundle — and treating it as one cost 25 days of user-report triage
+ * (2026-07-29 → 2026-08-23). The `PROD_SUPABASE_URL` GitHub secret was pasted
+ * without its scheme; it cleared `prodTargetReason` (which matches the ref as a
+ * substring), then died inside `createClient` on every scheduled run. Nothing in
+ * the repository could fix it, because the broken value lived outside the
+ * repository.
+ *
+ * So the report workflows now resolve the URL from HERE instead of from that
+ * secret. Only the service-role key stays a secret, because only it is one.
+ * A value that is derived cannot drift, and a workflow whose inputs all live in
+ * the repo is one a reviewed PR can repair — which is the whole point.
+ */
+export const PROD_SUPABASE_API_URL = `https://${PROD_SUPABASE_REF}.supabase.co`;
+
+/**
  * Hosts that serve the PRODUCTION app. Matched on the exact host, never as a
  * substring: Vercel preview deployments (`na9ranal3ab-<hash>.vercel.app`) are
  * legitimate e2e targets and must keep passing.
