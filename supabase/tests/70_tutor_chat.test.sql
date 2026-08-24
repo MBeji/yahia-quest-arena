@@ -94,7 +94,7 @@ SELECT is(
 );
 
 SELECT is(
-  (public.get_tutor_chapter_context('a2000000-0000-4000-8000-0000000000ccc'::uuid))->>'found',
+  (public.get_tutor_chapter_context('a2000000-0000-4000-8000-0000000000cf'::uuid))->>'found',
   'false',
   'un chapitre inexistant rend un état, pas une exception'
 );
