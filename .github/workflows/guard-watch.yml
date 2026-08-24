@@ -1,0 +1,170 @@
+name: Garde des gardes (un rouge programmé se voit)
+
+# Une garde programmée qui rougit sans que personne ne le sache n'est pas une
+# garde. Ce workflow regarde périodiquement les runs des autres workflows et
+# ouvre une issue dès qu'un échec traîne.
+#
+# CE QUI L'A FAIT ÉCRIRE — le 2026-08-24, `report-triage.yml` a été trouvé en
+# échec 6×/jour DEPUIS 26 JOURS : ~150 runs rouges, autant de journées de
+# signalements utilisateurs non triés. Le workflow criait pourtant juste, en
+# nommant le secret fautif à chaque run. Mais « crier » dans l'onglet Actions
+# ne parle qu'à celui qui l'ouvre, et personne ne l'ouvrait : il n'a été trouvé
+# que par un audit fortuit, en cherchant tout autre chose. Le correctif de
+# #824 a donné un filet à CE workflow ; ce fichier-ci le donne à tous les
+# autres, y compris ceux qui n'existent pas encore.
+#
+# CE QUE L'AUDIT A TROUVÉ EN PASSANT — sur les huit workflows programmés de ce
+# dépôt, quatre n'avaient AUCUN filet : checkpoint-tag, codeql, freeze-watch
+# et surtout `db-backup.yml`. Ce dernier fait le dump de la base de production
+# ET son drill de restauration : s'il meurt en silence, on n'a plus de
+# sauvegarde et rien ne le dit — on l'apprendrait le jour où on en a besoin.
+#
+# POURQUOI UNE GARDE EXTERNE PLUTÔT QU'UN `if: failure()` PARTOUT — un filet
+# interne ne se déclenche que si le job vit assez longtemps pour l'atteindre.
+# Il est aveugle au YAML invalide, au runner perdu, au job annulé, au `npm ci`
+# qui casse à l'installation. Une garde externe voit tout ça, et surtout elle
+# n'a rien à recâbler quand on ajoute un workflow : c'est la seule forme qui
+# ne se périme pas.
+#
+# CE QU'ELLE NE FAIT PAS : juger, relancer, corriger. Elle rend un rouge
+# VISIBLE et se tait dès qu'il n'y en a plus.
+#
+# Éprouvée d'abord dans le dépôt de corpus (privé #226) : à son premier vrai
+# passage elle a relevé deux échecs et ouvert son issue avec le bon tableau.
+
+on:
+  schedule:
+    # Toutes les 6 h, à une minute décalée : les crons ronds partent en retard,
+    # GitHub lissant sa file d'ordonnancement.
+    - cron: "47 */6 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: guard-watch
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+  actions: read
+
+jobs:
+  watch:
+    name: un workflow est-il rouge sans que personne ne le sache ?
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # `gh` tourne sans checkout : sans ça il échoue sur « not a git
+      # repository ».
+      GH_REPO: ${{ github.repository }}
+      LABEL: garde-rouge
+      # Fenêtre plus large que le cron À DESSEIN : deux passages se recouvrent,
+      # donc aucun échec ne peut se glisser entre deux fenêtres. Le recouvrement
+      # ne produit pas de doublon — une seule issue est réutilisée.
+      WINDOW_HOURS: "8"
+    steps:
+      - name: Relever les runs rouges de la fenêtre
+        id: scan
+        run: |
+          set -euo pipefail
+
+          since="$(date -u -d "-${WINDOW_HOURS} hours" +%Y-%m-%dT%H:%M:%SZ)"
+          echo "Fenêtre : depuis $since (UTC)."
+
+          # Les échecs sur `pull_request` sont EXCLUS. Ici une PR rouge a
+          # déjà un propriétaire : la DoD §8 met la session qui a poussé de
+          # garde jusqu'au merge, et les checks requis empêchent le merge tout
+          # seuls. Les relever ferait de cette issue un miroir bruyant de la
+          # file de PR, et une alarme qu'on apprend à ignorer ne vaut pas mieux
+          # qu'une alarme absente. Ce qu'on cherche, ce sont les runs que
+          # PERSONNE ne regarde : les crons, les `workflow_run`, les pushes sur
+          # main. (Le dépôt de corpus, lui, les inclut : sans check requis,
+          # une PR rouge y dort sans que rien ne la bloque visiblement.)
+          # Le filtrage est fait par le SERVEUR (`--created`, `--status`), pas
+          # en local après un `--limit`. Ce n'est pas un raffinement : mesuré le
+          # 2026-08-24, les 100 runs les plus récents de ce dépôt ne couvraient
+          # qu'1 h 13 (08:48 → 10:01). Une fenêtre de 8 h filtrée en local
+          # n'aurait donc rien vu de ses 7 dernières heures — et aurait rendu
+          # « 0 rouge » d'un air parfaitement vert. Le même appel restreint à
+          # `--status failure` remonte, lui, à onze jours. Une garde qui se
+          # trompe en silence est pire que pas de garde du tout.
+          fields=workflowName,conclusion,createdAt,event,url
+          failed="$(gh run list --created ">=$since" --status failure --limit 200 --json "$fields")"
+          timed="$(gh run list --created ">=$since" --status timed_out --limit 200 --json "$fields")"
+
+          # Les deux tableaux sont concaténés, puis les échecs de `pull_request`
+          # écartés (voir plus haut).
+          all="$(printf '%s\n%s\n' "$failed" "$timed" \
+            | jq -s 'add | map(select(.event != "pull_request"))')"
+
+          count="$(echo "$all" | jq 'length')"
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          echo "Rouges dans la fenêtre : $count"
+
+          if [ "$count" = "0" ]; then
+            exit 0
+          fi
+
+          # Un résumé par WORKFLOW, pas par run : dix échecs du même cron sont
+          # UN problème, pas dix — c'est la différence entre une issue qu'on lit
+          # et une issue qu'on ferme sans lire.
+          {
+            echo "### 🚨 Gardes en échec"
+            echo ""
+            echo "Fenêtre observée : les **${WINDOW_HOURS} dernières heures** (depuis \`$since\` UTC)."
+            echo "Les échecs sur \`pull_request\` sont volontairement exclus — ils ont déjà un"
+            echo "propriétaire (DoD §8) et les checks requis les bloquent d'eux-mêmes."
+            echo ""
+            echo "| Workflow | Échecs | Dernier | Déclencheur |"
+            echo "| --- | --- | --- | --- |"
+            echo "$all" | jq -r '
+              group_by(.workflowName)
+              | map({
+                  nom: .[0].workflowName,
+                  n: length,
+                  dernier: (sort_by(.createdAt) | last)
+                })
+              | sort_by(-.n)
+              | .[]
+              | "| \(.nom) | \(.n) | [\(.dernier.createdAt[0:16])](\(.dernier.url)) | `\(.dernier.event)` |"
+            '
+            echo ""
+            echo "**Un échec répété sur un arbre qui n'a pas bougé** désigne presque toujours une"
+            echo "entrée hors dépôt (secret, variable, jeton) — donc quelque chose qu'aucune PR ne"
+            echo "répare. C'était le cas des 26 jours de \`report-triage\` : la réponse n'a pas été"
+            echo "de reposer le secret mais de **supprimer le besoin** (l'URL n'en était pas un)."
+            echo "Voir [\`docs/agents/zero-intervention.md\`](../blob/main/docs/agents/zero-intervention.md)"
+            echo "— l'échelle de traitement et le tableau des murs."
+            echo ""
+            echo "_Cette issue se referme toute seule dès qu'une fenêtre entière est verte._"
+          } > corps.md
+
+      - name: Ouvrir ou mettre à jour l'issue
+        if: steps.scan.outputs.count != '0'
+        run: |
+          set -euo pipefail
+          gh label create "$LABEL" --color b60205 \
+            --description "Une garde programmée est en échec" 2>/dev/null || true
+
+          titre="🚨 Gardes en échec (${{ steps.scan.outputs.count }} run(s) rouge(s))"
+          existing="$(gh issue list --label "$LABEL" --state open --limit 1 --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            gh issue edit "$existing" --title "$titre" --body-file corps.md >/dev/null
+            echo "Issue #$existing mise à jour."
+          else
+            gh issue create --title "$titre" --label "$LABEL" --body-file corps.md
+          fi
+
+      - name: Refermer l'issue quand la fenêtre est redevenue verte
+        if: steps.scan.outputs.count == '0'
+        run: |
+          set -euo pipefail
+          existing="$(gh issue list --label "$LABEL" --state open --limit 1 --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            gh issue close "$existing" \
+              --comment "✅ Plus aucun run rouge sur les ${WINDOW_HOURS} dernières heures — fermeture automatique." >/dev/null
+            echo "Issue #$existing refermée."
+          else
+            echo "Rien à refermer : aucune garde en échec."
+          fi
