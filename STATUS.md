@@ -391,17 +391,19 @@ réglage hors dépôt, ou plan GitHub. Sinon c'est de l'exécution, et l'exécut
 > **ne pas les rouvrir sans une raison neuve.** Ce qu'elles laissent à faire est passé côté
 > exécution, c'est-à-dire côté Claude.
 
-1. **Le geste opérateur de triage** (#673) — 2 signalements déjà triés restent `open` en prod,
-   en attente de la seule application de leur statut (`[triage-pregate] open=2 fresh=0 →
-stale-handled, last reminded 25 days ago`). ⚠️ Cette ligne ne cite **aucun** mur : appliquer
-   une recommandation déjà écrite, deux fois réaffirmée (#651, #658, #673), est de l'exécution.
-   Elle n'est ici que faute de mécanisme — `report-close.yml` ne sait clôturer qu'au merge d'une
-   PR portant des trailers `Report-Id:`, jamais rétroactivement. **À construire, pas à demander.**
-2. **Le dépôt de la déclaration INPDP** (GAP-003) — geste administratif hors dépôt. Le reste est
+1. **Le dépôt de la déclaration INPDP** (GAP-003) — geste administratif hors dépôt. Le reste est
    à Claude : inventaire factuel des traitements + projet de registre (arbitrage du 2026-08-24 —
    dossier monté en interne, sans conseil externe, contrepartie assumée au journal).
-3. **Le drill de portabilité du harness** (é25 L7) — session hors file, avec Mohamed. C'est ce
+2. **Le drill de portabilité du harness** (é25 L7) — session hors file, avec Mohamed. C'est ce
    qui fermerait l'étude.
+
+~~**Le geste opérateur de triage** (#673)~~ — **fait le 2026-08-24, et par un mécanisme, pas par
+un geste.** La ligne était irrégulière : elle ne citait aucun mur, parce qu'appliquer une
+recommandation déjà écrite et trois fois réaffirmée (#651, #658, #673) est de l'exécution. Elle
+n'existait que faute d'outil. `report-apply.yml` (#845) applique désormais les recommandations
+mûries 7 jours, en lisant le tableau de clôture du triage — il n'en juge aucune. Les deux
+signalements en souffrance sont passés `dismissed`, et le **contrôle indépendant** est net :
+`[reports] Wrote 0 bug report(s) + 0 content report(s)` — **la file de production est vide**.
 
 **Tranché le 2026-08-24, et donc plus en attente de personne :**
 
