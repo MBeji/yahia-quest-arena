@@ -17,8 +17,38 @@ import { STREAK_RECOVERY_COST, XP_PER_LEVEL } from "../../src/shared/constants/g
 /** Niveau 5 = 4 paliers franchis. */
 export const LEVEL_FIVE_XP = 4 * XP_PER_LEVEL;
 
+/**
+ * G-1 : une fenêtre PAR PROFIL (arbitrage A15, 2026-08-24).
+ *
+ * Il n'y en avait qu'une — 7 à 14 jours — et elle échouait **des deux côtés**.
+ * Mesures du 2026-08-24 : l'assidu atteignait le niveau 5 au **jour 6**, le moyen
+ * au **jour 31**, l'occasionnel **jamais** en 8 semaines. Une fenêtre unique ne
+ * peut pas décrire trois rythmes qui vont de 6 à 24 jours actifs sur la même
+ * période : à 3 séances par semaine, 800 XP demandent environ cinq semaines, donc
+ * le seuil de 14 jours était **arithmétiquement hors d'atteinte** pour le persona
+ * cible. Un garde-fou qui échoue par construction cesse d'être lu.
+ *
+ * ⚠️ **Le piège qu'on évite ici est l'image en miroir de celui de l'en-tête.**
+ * Retoucher `gamification.ts` pour faire passer le test est interdit ; caler les
+ * seuils sur la mesure du jour ne vaut pas mieux — ce serait décrire l'économie
+ * actuelle et appeler ça un garde-fou. Ces fenêtres disent donc une INTENTION
+ * sur l'expérience de chaque profil, et il se trouve qu'elles passent aujourd'hui.
+ * Elles restent des hypothèses à corriger sur données réelles, comme les autres.
+ *
+ * - `assidu` — 5 à 14 j. En deçà de 5, les paliers sont décoratifs pour qui joue
+ *   beaucoup ; au-delà de 14, même le plus engagé n'a rien touché en deux semaines.
+ * - `moyen` — 14 à 35 j. La première vraie récompense doit tomber dans le mois :
+ *   au-delà, on sort du rythme d'un trimestre scolaire.
+ * - `occasionnel` — **non jugé**, et c'est dit plutôt que tu. Une séance par
+ *   semaine sur un horizon de 8 semaines ne permet aucune conclusion : lui poser
+ *   un seuil n'encoderait que la durée de la simulation.
+ */
 export const GUARDRAILS = {
-  G1: { minDays: 7, maxDays: 14 },
+  G1: {
+    assidu: { minDays: 5, maxDays: 14 },
+    moyen: { minDays: 14, maxDays: 35 },
+    occasionnel: null,
+  },
   G2: { maxXpPerDay: 1000 },
   G3: { minSinkRatio: 0.6 },
   G4: { maxShieldCoverage: 0.2 },
@@ -33,24 +63,36 @@ export function checkGuardrails(runs) {
   const moyen = runs.moyen;
   const assidu = runs.assidu;
 
-  // ---- G-1 : la courbe n'est ni trop rapide ni décourageante ----
-  const day5 = moyen.levelFiveDay;
-  if (day5 === null) {
+  // ---- G-1 : la courbe n'est ni trop rapide ni décourageante, PAR PROFIL ----
+  for (const [persona, window] of Object.entries(GUARDRAILS.G1)) {
+    if (window === null) {
+      out.push({
+        id: `G-1/${persona}`,
+        ok: true,
+        message: `non jugé — une séance par semaine sur ${runs[persona]?.weeks.length ?? "?"} semaines ne permet aucune conclusion (voir GUARDRAILS.G1).`,
+      });
+      continue;
+    }
+    const run = runs[persona];
+    if (!run) continue;
+    const day5 = run.levelFiveDay;
+    if (day5 === null) {
+      out.push({
+        id: `G-1/${persona}`,
+        ok: false,
+        message: `n'atteint jamais le niveau 5 (${LEVEL_FIVE_XP} XP) en ${run.weeks.length} semaines — il finit à ${run.xpTotal} XP, niveau ${run.level}. Une courbe qu'on n'atteint pas décourage avant de récompenser.`,
+      });
+      continue;
+    }
+    const ok = day5 >= window.minDays && day5 <= window.maxDays;
     out.push({
-      id: "G-1",
-      ok: false,
-      message: `le persona MOYEN n'atteint jamais le niveau 5 (${LEVEL_FIVE_XP} XP) en ${moyen.weeks.length} semaines — il finit à ${moyen.xpTotal} XP, niveau ${moyen.level}. Une courbe qu'on n'atteint pas décourage avant de récompenser.`,
-    });
-  } else {
-    const ok = day5 >= GUARDRAILS.G1.minDays && day5 <= GUARDRAILS.G1.maxDays;
-    out.push({
-      id: "G-1",
+      id: `G-1/${persona}`,
       ok,
       message: ok
-        ? `niveau 5 atteint au jour ${day5} (fenêtre ${GUARDRAILS.G1.minDays}-${GUARDRAILS.G1.maxDays})`
-        : day5 < GUARDRAILS.G1.minDays
-          ? `niveau 5 atteint au jour ${day5}, soit AVANT le jour ${GUARDRAILS.G1.minDays} : la courbe monte trop vite, les paliers ne veulent plus rien dire.`
-          : `niveau 5 atteint au jour ${day5}, soit APRÈS le jour ${GUARDRAILS.G1.maxDays} : trop lent, l'élève décroche avant la première vraie récompense.`,
+        ? `niveau 5 atteint au jour ${day5} (fenêtre ${window.minDays}-${window.maxDays})`
+        : day5 < window.minDays
+          ? `niveau 5 atteint au jour ${day5}, soit AVANT le jour ${window.minDays} : la courbe monte trop vite, les paliers ne veulent plus rien dire.`
+          : `niveau 5 atteint au jour ${day5}, soit APRÈS le jour ${window.maxDays} : trop lent, l'élève décroche avant la première vraie récompense.`,
     });
   }
 
