@@ -26,6 +26,10 @@ import {
   setStudentWeeklyGoal,
 } from "@/features/parent-report";
 import { EnablePushCard } from "@/features/notifications";
+// Import DIRECT et non `@/features/tutor` : le barrel de la feature tuteur
+// réexporte toutes ses server fns (chat, forge ciblée, énergie), qui
+// atterriraient dans le chunk de cette route pour un seul composant.
+import { TutorParentDigest } from "@/features/tutor/components/tutor-digest";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
@@ -353,7 +357,25 @@ function ParentReport() {
       ) : loadingReport ? (
         <LoadingState label={t.common.loading} className="py-20" />
       ) : report ? (
-        <ReportContent report={report} tutorCounters={tutorCounters} />
+        <ReportContent
+          report={report}
+          tutorCounters={tutorCounters}
+          /* Étude 11 lot 6 (US-14) — le bilan hebdomadaire d'El Ostedh, composé
+             ICI parce que `parent-report` n'importe pas `tutor`. Il porte sa
+             propre lecture (`get_tutor_parent_digest`), qui rejuge le lien
+             parent : cette route ne lui accorde rien, elle le PLACE.
+
+             ⚠️ PAS POUR UN ADMIN, et ce n'est pas une question de droits.
+             `get_tutor_parent_digest` juge par `is_parent_of_student`, qui n'a
+             AUCUNE dérogation admin : un administrateur consultant le bilan d'un
+             élève recevrait `NOT_LINKED`, donc la phrase « rétablissez le lien »
+             — un conseil faux, adressé à quelqu'un qui n'a jamais eu de lien à
+             rétablir. Le refus serait correct ; c'est la phrase qui mentirait.
+             Même précaution que le reste de cet écran (`!isAdmin`). */
+          renderTutorDigest={
+            !isAdmin && selectedStudent ? <TutorParentDigest studentId={selectedStudent} /> : null
+          }
+        />
       ) : null}
     </div>
   );

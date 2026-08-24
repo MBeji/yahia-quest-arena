@@ -193,4 +193,120 @@ export interface TutorTranslations {
     /** On sait où, mais il n'y a rien à jouer et rien ne peut être écrit. */
     noMaterial: string;
   };
+
+  /**
+   * LE BILAN DE LA SEMAINE (lot 6, US-13 / US-14) — R-10, Q-5.
+   *
+   * ⚠️ IL N'Y A PAS DE CLÉ « SEMAINE VIDE », ET C'EST VOULU.
+   * `TutorDigestView` ne rend que quatre états : un bilan, `not-yet`,
+   * `not-linked`, `unavailable`. Une semaine sans mission ne produit AUCUNE
+   * ligne (le batch s'arrête sur `hasActivity` avant de dépenser), elle arrive
+   * donc à l'écran comme `not-yet` — la même phrase, et la bonne : « le bilan
+   * arrive dimanche » est vrai dans les deux cas. Écrire une phrase pour un
+   * état que la couche serveur ne sait pas produire, c'est de la microcopy
+   * morte qu'un traducteur entretiendra sans jamais la voir.
+   *
+   * ⚠️ LE CORPS DU BILAN N'EST PAS ICI. Il est GÉNÉRÉ, dans la langue de la
+   * matière dominante de la semaine (R-3), et il peut donc être arabe sur une
+   * interface française. Ces clés-ci sont le CADRE — titre, semaine, états
+   * dégradés — et suivent la langue de l'INTERFACE. C'est la règle
+   * « chrome-UI vs langue-contenu » du haut de ce fichier, et c'est ici qu'elle
+   * se voit le mieux.
+   */
+  digest: {
+    /** Le titre côté élève — tutoyé, c'est SON bilan. */
+    title: string;
+    /** Le titre côté parent — vouvoyé, et sobre : ce n'est pas un bulletin. */
+    parentTitle: string;
+    /** « Semaine du {date} » — la fenêtre, toujours nommée. */
+    weekLabel: string;
+    /**
+     * Pas encore écrit. Cas NOMINAL du lundi au samedi, et de tout compte neuf :
+     * le batch écrit le dimanche. Ce n'est donc jamais une panne, et la phrase
+     * ne doit pas s'en excuser.
+     */
+    notYet: string;
+    parentNotYet: string;
+    /**
+     * On n'a pas su lire (R-15). Distinct de `notYet` : il y a peut-être un
+     * bilan, on n'y accède pas. La phrase élève rassure sur ce qui compte —
+     * les progrès sont enregistrés, c'est le RÉCIT qui manque.
+     */
+    unavailable: string;
+    /**
+     * Le lien parent est coupé ou inactif. SÉPARÉ de `parentNotYet`, parce que
+     * les deux demandent des gestes opposés : rétablir le lien, ou attendre
+     * dimanche. Les confondre ferait attendre indéfiniment un parent qui n'a
+     * qu'un code à ressaisir.
+     */
+    notLinked: string;
+  };
+
+  /**
+   * LE COMPTEUR D'ÉNERGIE (lot 7) — R-12, D-14, R-11.
+   *
+   * ⚠️ D-14 EST UNE CONTRAINTE DE RÉDACTION, PAS SEULEMENT DE VOCABULAIRE.
+   * Les mots « premium », « abonnement » et « payant » sont bannis de toute
+   * surface élève — mais la règle va plus loin : AUCUNE de ces phrases ne peut
+   * laisser entendre qu'on obtiendrait de l'énergie autrement qu'en JOUANT.
+   * `noItem` doit donc nommer le seul chemin qui existe (« tu en gagnes en
+   * jouant des quêtes »), sans quoi un enfant qui n'a pas de tilmih conclura
+   * qu'il en manque une qu'on lui vend ailleurs.
+   *
+   * ⚠️ `{n}` PORTE DEUX SENS SELON LA CLÉ, et les traductions doivent le savoir :
+   * dans `rechargeCta` / `recharged` / `rechargedWithItem` c'est le GAIN d'un
+   * échange (`TUTOR_ENERGY_PER_HINT`) ; dans `bonus` c'est le CUMUL regagné
+   * aujourd'hui. Une tournure qui marche pour l'un peut mentir pour l'autre.
+   *
+   * L'état « vide » réutilise `noEnergyTitle` / `noEnergyBody` du lot 1 — les
+   * mêmes mots que le refus `AI_NO_ENERGY` servi par `degradedCopy`. Deux
+   * jumelles finiraient par diverger, et l'élève lirait deux vérités du même
+   * fait selon l'écran où il se trouve.
+   */
+  energy: {
+    title: string;
+    hint: string;
+    /** Ce que les indices échangés ont déjà rendu AUJOURD'HUI. */
+    bonus: string;
+    rechargeCta: string;
+    rechargeBusy: string;
+    recharged: string;
+    /** L'objet a été nommé par la RPC : on le cite, il a été consommé. */
+    rechargedWithItem: string;
+    /** Refus au plafond du jour — et l'indice n'a PAS été pris. Il faut le dire. */
+    atCap: string;
+    /** Aucune charge à échanger. Le seul autre chemin est le jeu (D-14). */
+    noItem: string;
+    /** Panne (R-15). Jamais un code fournisseur, jamais un reproche. */
+    failed: string;
+  };
+
+  /**
+   * LES DEUX MESURES DU CACHE ET DU REBUT (lot 7) — surface ADMIN.
+   *
+   * Elle vit sous `tutor` parce que le composant vit dans `features/tutor` et
+   * que la RPC est celle du tuteur ; le lecteur, lui, est un administrateur.
+   * C'est le seul bloc de ce fichier qui ne s'adresse pas à un enfant.
+   *
+   * ⚠️ `window` DOIT NOMMER LA NATURE DE LA FENÊTRE, pas seulement sa durée.
+   * `get_tutor_cache_stats` mesure une COHORTE — les explications *créées*
+   * dans la fenêtre — parce que `serve_count` est cumulatif et non daté. Écrire
+   * « sur 30 jours » laisserait croire à une fenêtre glissante sur les
+   * SERVICES, et ferait lire le chiffre comme une réfutation quand il
+   * sous-estime par construction.
+   */
+  cacheStats: {
+    title: string;
+    hitTitle: string;
+    /** « {hits} resservies · {misses} écrites ». */
+    hitDetail: string;
+    discardTitle: string;
+    /** « {discarded} rejetées · {kept} gardées ». */
+    discardDetail: string;
+    /** La fenêtre ET sa nature de cohorte — voir l'avertissement ci-dessus. */
+    window: string;
+    /** Repli si le SQL rebascule un jour sur le cumul à vie (`lifetimeHitRate`). */
+    lifetime: string;
+    unavailable: string;
+  };
 }

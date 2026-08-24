@@ -1,0 +1,111 @@
+# Les bilans hebdomadaires d'El Ostedh — étude 11 lot 6 (US-13, US-14, Q-5).
+#
+# CE QUE CE WORKFLOW DÉCLENCHE
+# ---------------------------------------------------------------------------
+# La production des bilans de la semaine : un texte pour l'élève (tutoyé, 4 à 6
+# phrases), un pour le parent lié (vouvoyé, sobre, 4 constats + 1 conseil). Il ne
+# les rédige pas lui-même — il frappe `POST /api/cron/digest`, la route gardée
+# par CRON_SECRET, et c'est le serveur qui appelle le modèle par `callAi()`.
+# Un script `.mjs` ne peut pas importer du code `.server` : voir l'en-tête de
+# scripts/ai/tutor-digests.mjs.
+#
+# LA CADENCE — DEUX HORLOGES POUR UN SEUL RENDEZ-VOUS, ET L'ORDRE EST LE CONTRAT
+# ---------------------------------------------------------------------------
+# Le rendez-vous dominical parent existe DÉJÀ : `vercel.json` fait frapper
+# `/api/cron/notify` chaque jour à 18:00 UTC, et le dimanche (heure de Tunis)
+# `dispatchParentDigest` pousse « ton bilan hebdo est prêt » à tout parent lié.
+# Cette promesse n'avait pas de contenu ; c'est ce lot qui le fabrique.
+#
+# Ce workflow tourne donc le dimanche à 05:00 UTC (06:00 à Tunis) — TREIZE heures
+# avant la notification. La notification ne peut plus annoncer un bilan qui
+# n'existe pas, et si ce workflow échoue le parent reçoit quand même son push et
+# l'écran lui rend l'état « bilan indisponible » (R-15), pas une page cassée.
+#
+# Pourquoi pas une seule horloge, en branchant la génération dans
+# `handlePushCron` ? Parce que la fonction SSR a 30 secondes (`maxDuration`,
+# scripts/build-vercel.mjs) : un batch de plusieurs minutes n'y tient pas, et
+# l'échec emporterait aussi l'envoi des push.
+#
+# CE QUI COÛTE DE L'ARGENT, ET COMMENT ON L'ÉCRIT
+# ---------------------------------------------------------------------------
+# Le déclenchement planifié PRODUIT (`--apply`). Un déclenchement manuel RÉPÈTE
+# par défaut : il compte ce qu'il écrirait sans appeler le modèle. L'intention de
+# dépenser se coche, elle ne se subit pas.
+#
+# Sans CRON_SECRET, le workflow saute proprement et reste VERT — motif
+# report-close.yml. Un batch qui rougit faute de configuration apprend à tout le
+# monde à ignorer ses rouges, et le jour où il rougit vraiment personne ne
+# regarde.
+
+name: Tutor weekly digests
+
+on:
+  schedule:
+    # Dimanche 05:00 UTC = 06:00 à Tunis. Treize heures avant la notification
+    # parent de 18:00 UTC, qui annonce précisément ce que ce run produit.
+    - cron: "0 5 * * 0"
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Produire réellement les bilans (sinon : répétition, sans appel de modèle)"
+        type: boolean
+        default: false
+      rounds:
+        description: "Tranches au plus (3 bilans d'élève rédigés par tranche)"
+        type: string
+        default: "120"
+
+permissions:
+  contents: read
+
+# Jamais deux batchs en vol : ils se disputeraient le même curseur et
+# paieraient deux fois la même tranche.
+concurrency:
+  group: tutor-digests
+  cancel-in-progress: false
+
+jobs:
+  digests:
+    name: Produire les bilans de la semaine
+    runs-on: ubuntu-latest
+    # Large, mais borné : 120 tranches × ~25 s tiennent dedans, et le script
+    # s'arrête tout seul dès que le SQL n'a plus d'élève à rendre.
+    timeout-minutes: 55
+    steps:
+      - name: Vérifier que le secret est configuré
+        id: guard
+        run: |
+          if [ -z "${{ secrets.CRON_SECRET }}" ]; then
+            echo "CRON_SECRET absent — aucun bilan à produire, on saute."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+
+      # Aucun `npm ci` : le script n'a que `node:url` et un module du dépôt pour
+      # dépendances. L'URL de production est résolue depuis
+      # scripts/shared/prod-targets.mjs — versionnée, donc réparable par une PR,
+      # ce qu'un secret pasté sans son schéma n'est pas (#614, 25 jours perdus).
+      - name: Setup Node
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 24
+
+      - name: Déclencher le batch
+        if: steps.guard.outputs.configured == 'true'
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          # Le planifié produit ; le manuel répète, sauf demande explicite.
+          APPLY: ${{ github.event_name == 'schedule' && 'true' || inputs.apply }}
+          ROUNDS: ${{ inputs.rounds || '120' }}
+        run: |
+          args=""
+          if [ "$APPLY" = "true" ]; then args="--apply"; fi
+          # `$ROUNDS` vient d'une saisie libre : le script la revalide et retombe
+          # sur son défaut si elle n'est pas un entier positif.
+          node scripts/ai/tutor-digests.mjs $args --rounds "$ROUNDS"

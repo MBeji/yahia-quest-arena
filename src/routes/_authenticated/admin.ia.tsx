@@ -14,6 +14,9 @@ import {
   setAiModeEnabled,
   type AiAdminOverview,
 } from "@/features/ai/ai-console.server";
+// Chemin COMPLET et non `@/features/tutor` : le barrel de la feature tuteur
+// exporte aussi ses server fns, qui atterriraient dans le chunk de cette route.
+import { TutorCachePanel } from "@/features/tutor/components/tutor-cache-stats";
 
 /**
  * Console « Mode IA » (étude 29 lot 5, §3.9) — admin seulement.
@@ -121,6 +124,25 @@ function AdminAiPage() {
 
           <Table title={t.ai.spendByModel} rows={data.by_model} />
           <Table title={t.ai.provider} rows={data.by_provider} />
+
+          {/* Étude 11 lot 7 — LES DEUX MESURES QUE LA DÉPENSE NE DONNE PAS.
+              Au-dessus, ce que l'étage IA a coûté ; ici, ce qu'il a ÉVITÉ de
+              coûter (les explications resservies depuis le pot commun) et ce
+              qu'il a jeté avant de le servir (le rebut de la Forge). Un montant
+              qui monte ne dit pas si le cache travaille ; ces deux ratios, si.
+
+              Le panneau porte sa propre requête plutôt que d'élargir
+              `getAiAdminOverview` : sa RPC est celle du TUTEUR, elle a sa propre
+              fenêtre et sa propre garde `is_admin()`. La rattacher à l'agrégat
+              IA aurait obligé à rouvrir `get_ai_admin_overview` — un DROP qui
+              emporte ses GRANT pour deux colonnes.
+
+              Le composant vit dans `features/tutor` et c'est cette ROUTE qui le
+              compose : `ai` et `tutor` ne s'importent pas. Et le masquer aux
+              non-admins est un confort d'affichage, jamais le contrôle — la
+              porte autoritaire est la RPC, qui rend `null` à qui n'a rien à y
+              voir. */}
+          <TutorCachePanel />
 
           {/* ⭐ Le tableau de §1.4. */}
           <div className="mt-4">
