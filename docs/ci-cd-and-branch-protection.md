@@ -56,6 +56,26 @@ end-of-dev → production walkthrough lives in [passation.md](./passation.md).)
     `git merge-tree $(git merge-base HEAD origin/main) HEAD origin/main | grep -c '^changed in both'`.
   - **Réflexe de fin de session** : vérifier que les **4 checks requis sont présents** sur la tête,
     pas seulement qu'aucun n'est rouge. « Pas de rouge » et « c'est vert » ne sont pas la même chose.
+- ⚠️ **Une clé YAML dupliquée tue le workflow AVANT tout job — et il n'y a rien à lire.**
+  Constaté le 2026-08-24 sur `auto-pr.yml` : conclusion `failure`, **zéro job**, et
+  `gh run view --log-failed` qui répond « log not found ». Les PR #830 et #832 avaient
+  diagnostiqué le même défaut (la dispatch tournait avec le PAT, qui n'a pas la portée
+  `actions: write`) et appliqué **deux fois** la même correction — deux `GH_TOKEN:` à treize
+  lignes d'écart dans le même bloc `env:`, chacun derrière son mur de commentaires. Le
+  parseur d'Actions refuse un doublon de clé et termine le run en `startup_failure`.
+  - **Pourquoi rien ne l'a vu** : `yaml.safe_load` et la plupart des linters **acceptent** un
+    doublon (dernière clé gagne), donc « le YAML est valide » était vrai et inutile ; la garde
+    des gardes (#831) compte les runs rouges des **crons**, or `auto-pr.yml` se déclenche sur
+    `push` ; et un run sans job ne produit **aucune annotation** à lire. Cinquième cas de la
+    série « une garde qui se tait est indistinguable d'une garde qui passe ».
+  - **Le filet** : [`scripts/ci/check-workflow-yaml.mjs`](../scripts/ci/check-workflow-yaml.mjs),
+    appelé par `npm run harness:check` (donc `ci:verify` et le check requis `verify`). Il charge
+    chaque YAML de `.github/**` avec `uniqueKeys` — la règle même qu'applique Actions — et nomme
+    fichier, clé et les **deux** lignes. Il couvre aussi `dependabot.yml`, et toute autre erreur
+    de syntaxe : elles produisent le même `startup_failure` sans log.
+  - **Corollaire de conduite** : avant d'écrire un correctif CI, chercher si une session
+    concurrente ne l'a pas déjà mergé (`git log origin/main`) — c'est la collision, pas le
+    diagnostic, qui a cassé le dépôt ce jour-là.
 - **`automerge.yml`** — (re)arms GitHub native auto-merge on every ready, same-repo
   PR; the `no-automerge` label opts out (and disarms). Its `keep-up-to-date` job
   runs on every push to `main` and updates armed PRs left behind (the ruleset's strict
@@ -82,12 +102,12 @@ end-of-dev → production walkthrough lives in [passation.md](./passation.md).)
 
 ## Required status checks
 
-| Check                | Workflow / job                                                    | What it guarantees                                                                                                                                                                                                                |
-| -------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `verify`             | `.github/workflows/ci.yml` → job `verify`                         | lint + typecheck + tests&nbsp;+ coverage + anti-leak (`leak:check`) + migration chain (`db:check-chain`) + harness anti-drift + perf-harness sync + build + bundle budget + prod-shell browser smoke + runtime dep audit all pass |
-| `Migration presence` | `.github/workflows/migration-gate.yml` → job `migration-presence` | informational: surfaces which `supabase/migrations/*.sql` a PR adds — they **auto-apply** to prod on merge via `db-migrate-prod.yml`. Always green                                                                                |
-| `Migration order`    | `.github/workflows/migration-gate.yml` → job `migration-order`    | **blocking**: rejects a migration whose timestamp sorts at/before one already on `main` — a back-dated file silently jams `db-migrate-prod` and leaves prod behind code (#97 → #227 → #229)                                       |
-| `CodeQL`             | `.github/workflows/codeql.yml` → job `analyze` (name `CodeQL`)    | static security analysis (SAST, `security-extended` suite) of the JS/TS codebase — the code-level complement to `audit:deps` (packages) and pgTAP (SQL grants/RLS)                                                                |
+| Check                | Workflow / job                                                    | What it guarantees                                                                                                                                                                                                                                                      |
+| -------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `verify`             | `.github/workflows/ci.yml` → job `verify`                         | lint + typecheck + tests&nbsp;+ coverage + anti-leak (`leak:check`) + migration chain (`db:check-chain`) + harness anti-drift (dont le YAML strict de `.github/**`) + perf-harness sync + build + bundle budget + prod-shell browser smoke + runtime dep audit all pass |
+| `Migration presence` | `.github/workflows/migration-gate.yml` → job `migration-presence` | informational: surfaces which `supabase/migrations/*.sql` a PR adds — they **auto-apply** to prod on merge via `db-migrate-prod.yml`. Always green                                                                                                                      |
+| `Migration order`    | `.github/workflows/migration-gate.yml` → job `migration-order`    | **blocking**: rejects a migration whose timestamp sorts at/before one already on `main` — a back-dated file silently jams `db-migrate-prod` and leaves prod behind code (#97 → #227 → #229)                                                                             |
+| `CodeQL`             | `.github/workflows/codeql.yml` → job `analyze` (name `CodeQL`)    | static security analysis (SAST, `security-extended` suite) of the JS/TS codebase — the code-level complement to `audit:deps` (packages) and pgTAP (SQL grants/RLS)                                                                                                      |
 
 > The **content** gates (`content:check`, `content:qa:strict`, `content:audit:strict`) and the
 > transcription registry gate (`programme:check`) are **no longer part of `verify`**: since

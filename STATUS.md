@@ -1,27 +1,30 @@
 # STATUS — état du projet (topo central)
 
-> **Instantané daté du 2026-08-23** (`main` à **#805** ; exécution V1 « Apprendre & maîtriser » de
-> la doctrine verticale, é26 — **J-9** avant la rentrée). Depuis le 2026-08-13, la **position de
-> marché** est tranchée et mesurée : voir **§1bis** — dont la **ligne 3 a basculé le 2026-08-23**,
-> C4bis livré **et appliqué en prod**. Ce fichier est le **point d'entrée unique** pour savoir où en est
-> le projet : phase produit, décisions qui gouvernent, état réel des features, études,
-> chantiers, travaux en vol. Il complète — sans les dupliquer — les documents normatifs :
-> [AGENTS.md](./AGENTS.md) (conventions, gagne en cas de conflit — CLAUDE.md est un pointeur
-> Claude Code vers ce fichier), [ARCHITECTURE.md](./ARCHITECTURE.md), l'index des études
-> (`FableEtudes/README.md`) et le programme go-live (`FableEtudes/go-live/`) — ces deux derniers
-> dans le **dépôt privé** `MBeji/yahia-quest-content`.
+> **Instantané daté du 2026-08-24** (`main` à **#832** ; exécution V1 « Apprendre & maîtriser »
+> de la doctrine verticale, é26 — **J-8** avant la rentrée). Ce fichier est le **point d'entrée
+> unique** pour savoir où en est le projet : phase produit, décisions qui gouvernent, état réel
+> des features, études, chantiers, travaux en vol. Il complète — sans les dupliquer — les
+> documents normatifs : [AGENTS.md](./AGENTS.md) (conventions, gagne en cas de conflit — CLAUDE.md
+> est un pointeur Claude Code vers ce fichier), [ARCHITECTURE.md](./ARCHITECTURE.md), l'index des
+> études (`FableEtudes/README.md`) et le programme go-live (`FableEtudes/go-live/`) — ces deux
+> derniers dans le **dépôt privé** `MBeji/yahia-quest-content`.
+>
+> ⚠️ **Ce que la passe du 2026-08-24 a corrigé, et il vaut mieux le savoir avant de lire le
+> reste.** Ce fichier annonçait `main` à **#805** quand elle était à **#832** ; son §6 « travaux
+> en vol » datait du **2026-08-14** et décrivait une PR depuis mergée et une issue depuis close ;
+> son §4 donnait **é04 « phase A1.2 close »** (elle est terminée), **é29 « en exécution »**
+> (livrée), **é11 « lots 1 à 4 »** (six sur huit) et **é07 « en exécution »** (terminée depuis
+> un mois) ; et son §8 portait un paragraphe qu'il déclarait lui-même caduc. **Trois de ces
+> statuts avaient moins de 48 h.** Un topo qui vieillit en deux jours n'en est plus un — §4, §6
+> et §8 sont réécrits **contre `main`**, pas contre la mémoire.
 >
 > **Règles de maintenance** : (1) toute session qui livre un jalon structurant met à jour ce
-> fichier (comme le master plan go-live) ; (2) en cas de doute sur l'état d'une feature, le
-> code et les migrations font foi, pas ce fichier ; (3) les décisions se **journalisent** dans
+> fichier ; (2) en cas de doute sur l'état d'une feature, le **code et les migrations font foi**,
+> pas ce fichier ; (3) les décisions se **journalisent** dans
 > [`docs/journal-decisions.md`](./docs/journal-decisions.md) (append-only), elles ne se
-> réécrivent pas — §2 ne garde que celles qui gouvernent encore.
->
-> **Ce fichier pesait 176 KB au 2026-08-02** — il en fait 40. Le journal des décisions et le
-> détail des lots d'études en occupaient les trois quarts, et il annonçait `main` à #641 quand
-> elle était à #703. Un topo se lit d'un coup d'œil ou n'en est pas un : **ne pas y recopier ce
-> qui a déjà un fichier** (les lots vivent dans la ROADMAP privée, les décisions dans le
-> journal, la dette dans `docs/dette-technique.md`).
+> réécrivent pas — §2 ne garde que celles qui gouvernent encore ; (4) **ne pas y recopier ce qui
+> a déjà un fichier** : les lots vivent dans la ROADMAP privée, les décisions dans le journal, la
+> dette dans `docs/dette-technique.md`.
 
 ---
 
@@ -48,16 +51,16 @@ fichier annonçait 59 —, maîtrise EWMA, rappel actif, duels, 6 types natifs).
 Modèle de soutenabilité tranché : **B2B établissement**, l'élève reste gratuit (mise en œuvre
 suspendue au dégel de é01). Décisions **D5/D6** de `go-live/05`, dépôt privé.
 
-**Scorecard** — l'étude 28 juge la position sur 5 indicateurs. État au **2026-08-23 (J-9)** —
-la **ligne 3 vient de basculer**, pour la première fois depuis que ce tableau existe :
+**Scorecard** — l'étude 28 juge la position sur 5 indicateurs. État au **2026-08-24 (J-8)** —
+re-sondé ligne par ligne, sans rien recopier de la passe de la veille :
 
-| KPI                                  | cible                                               | état                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| ------------------------------------ | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **1 — un canal d'acquisition actif** | ≥ 1 ouvert et mesuré dans PostHog avant le 1ᵉʳ sept | 🔴 **zéro** — D1/D2/D3 ouverts depuis le 2026-06-13. **C'est le goulot du projet**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| **2 — la rétention est publiée**     | métrique de retour S(N)→S(N+1) calculée et affichée | 🔴 **jamais publiée** — définie le 2026-07-19 (é26 KPI-4). Sans elle, « référence » est une opinion                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| **3 — zéro différenciateur éteint**  | `user_misconceptions` non vide en prod              | 🟠 **allumé, pas encore prouvé** (2026-08-23) — C4bis est livré (privé #219 : **1 049 tags** sur les 20 chapitres de `math` 9ᵉ, registre 56 → **154 entrées**) **et appliqué en prod** (`apply-content.yml` run 32629700267 ; 818 questions `math` en base = le corpus). Le tagging couvre **521 des 818 questions — 64 %**, pas 100 % : reste à trancher si les 297 autres sont légitimes (tout distracteur n'encode pas une erreur nommable) ou un reliquat. ⚠️ La cible n'est **pas** atteinte tant que `user_misconceptions` est vide : elle ne se remplira qu'avec des élèves qui ratent des questions taguées — **à re-mesurer en prod dans quelques jours** |
-| **4 — classes de concours entières** | 6ᵉ 4/4 matières · 9ᵉ tenue à la barre é18           | 🟠 **6ᵉ à 3/4** — le **français manque**, fiche transcrite et zéro contenu · 9ᵉ : 6 matières                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| **5 — verrous légaux levés**         | GAP-024 livré · GAP-003 tranché                     | 🟠 **une moitié de GAP-024 tombe** — `deleteAccount` livré (effacement dur, `/parametrage`) ; **`export_user_data` reste absent de `src/`**, et GAP-003 reste non tranché. **Bloque toujours le démarchage d'école** (é28 D-5)                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| KPI                                  | cible                                               | état                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ------------------------------------ | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1 — un canal d'acquisition actif** | ≥ 1 ouvert et mesuré dans PostHog avant le 1ᵉʳ sept | 🔴 **zéro** — D1/D2/D3 ouverts depuis le 2026-06-13. **C'est le goulot du projet**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| **2 — la rétention est publiée**     | métrique de retour S(N)→S(N+1) calculée et affichée | 🔴 **jamais publiée** — définie le 2026-07-19 (é26 KPI-4). Sans elle, « référence » est une opinion                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| **3 — zéro différenciateur éteint**  | `user_misconceptions` non vide en prod              | 🟠 **armé, toujours pas prouvé** (2026-08-24) — C4bis étape 1 est livré (privé#219 : **1 049 tags**, registre 56 → **154 entrées**) **et appliqué en prod** (`apply-content.yml`, run 32629700267). **Rien n'a bougé depuis** : aucune PR de corpus postérieure à #219 ne touche aux tags, le tagging couvre donc toujours **521 des 818 questions de `math` 9ᵉ — 64 %** et **cette seule matière**. Arbitrage Q-5 ouvert : les 297 autres sont-elles légitimes (tout distracteur n'encode pas une erreur nommable) ou un reliquat ? ⚠️ **La cible n'est PAS atteinte** tant que `user_misconceptions` est vide — elle ne se remplira qu'avec des élèves qui ratent des questions taguées, et **elle n'a pas été re-sondée en prod depuis le 2026-08-23** |
+| **4 — classes de concours entières** | 6ᵉ 4/4 matières · 9ᵉ tenue à la barre é18           | 🟠 **6ᵉ à 3/4** — le **français manque**, fiche transcrite et zéro contenu · 9ᵉ : 6 matières                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **5 — verrous légaux levés**         | GAP-024 livré · GAP-003 tranché                     | 🟠 **GAP-024 aux deux tiers** — pages légales livrées (#701) et **suppression de compte** livrée (#791, effacement dur). **`export_user_data` reste à zéro occurrence** dans `src/` et `supabase/migrations/`, re-vérifié le **2026-08-24** ; **GAP-003** non tranché. 🎯 **C'est le rang 1 du §8** : le seul verrou légal qu'un agent peut lever, et il commande D-5, é08 et tout démarchage d'école                                                                                                                                                                                                                                                                                                                                                     |
 
 > ⚠️ **Ce tableau n'est pas un reproche, c'est le diagnostic.** L'avance d'ingénierie est réelle
 > et mesurée ; elle ne rencontre personne. Les cinq lignes se lèvent dans l'ordre **M-1 → M-5**
@@ -88,7 +91,7 @@ la **ligne 3 vient de basculer**, pour la première fois depuis que ce tableau e
 | **R-5 se lit au chapitre, pas à la fiche**               | 2026-07-29              | Une fiche de programme `partielle` ne bloque plus toute la matière : on génère chapitre par chapitre, sur les sections réellement transcrites à profondeur de génération.                                                                                                                             |
 | **Sonder, pas déduire**                                  | 2026-07-27              | L'état d'une action qui se joue **hors du repo** (DNS, secret, console tierce) se vérifie de l'extérieur avant d'être écrit. « Pas écrit fait » ne vaut pas « pas fait » — quatre « à faire » l'étaient depuis des semaines.                                                                          |
 
-## 3. État réel des features (vérifié code + migrations, 2026-07-11 ; §§ features moteur/compétences/progression revues le 2026-07-21)
+## 3. État réel des features (vérifié code + migrations ; socle relu le 2026-07-11, moteur/compétences/progression le 2026-07-21, **étage IA et compétences le 2026-08-24**)
 
 **Légende** : 🟢 LIVE (en prod, fonctionnel) · 🟠 PARTIEL · 💤 DORMANT (code intact, inerte par la donnée/la phase) · ⬜ ABSENT (étude seulement).
 
@@ -115,7 +118,7 @@ la **ligne 3 vient de basculer**, pour la première fois depuis que ce tableau e
 | Paywall quête + formulaire beta-access utilisateur                                      | 💤   | `SubscriptionPaywall` câblé mais indéclenchable en phase gratuite                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | Consoles admin (entitlements, beta, content-reports, bug-reports, parcours-interest)    | 🟢   | 5 routes `/admin/*`, gardées `is_admin`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | Examen blanc / simulation concours                                                      | 🟢   | **étude 02 livrée le 2026-08-16** — lots 1-2 (schéma `mock_exams`/`mock_exam_papers`/`mock_exam_sessions` + 6 RPC, #743, pgTAP 26 assertions) puis lots 3-4 (feature `exam/`, routes `/examens` et `/examen/$examId`, entrée par le hub Arène) — **le lot 4 est partiel** : le détail est par **épreuve** (coefficient affiché), pas par chapitre, et il n'y a pas de liens de remédiation, `get_mock_exam_review` ne remontant pas le chapitre de la question. **Trois écarts assumés par rapport à l'étude, les deux premiers écrits dans les en-têtes de migration** : R-7 rescopé (l'entitlement `concours` aurait verrouillé l'écran pour tout le monde en phase gratuite — la seule condition est d'avoir un compte, la garde se repose dans `start_mock_exam` au dégel de é01) et lot 5 (console de composition) remplacé par un **assemblage par requête** (un id d'exercice du corpus ne vit pas dans ce dépôt, é24 : une FK littérale rendrait une base vierge irreconstructible). **Le barème porte les coefficients réels du concours** (maths 4, arabe 2+2, français 3, sciences 3, anglais 1) — la note /20 en dérive. Session seedée : « Concours blanc 9ᵉ — session 1 », 90 min, publiée seulement si elle a récolté ≥ 5 épreuves. **Reste ouvert** : les annales (chantier contenu au privé, repassées en « enrichissement » le 2026-08-13), la cadence éditoriale (Q-2) et le barème d'XP (Q-1, tranchée par défaut à 300 XP / 60 pièces × le score, à re-trancher sur la première lecture réelle)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| Knowledge graph / compétences                                                           | 🟢   | étude 07 **en exécution** : lot 1 graphe de compétences seedé (#366), lot 2 maîtrise EWMA + oubli entretenue à l'écriture (`user_competency_mastery`, trigger-only, #579), lot 4 carte « ce qui te bloque » + « s'entraîner » sur le dashboard (#588), **lot 5 le 2026-07-25 : « Révision du jour » priorise par compétence faible** (#616). Maîtrise 0-100 par (élève, compétence). Reste le lot 3 (tagging du corpus, chantier contenu au privé) — sans lui la priorisation du lot 5 est inerte par construction, jamais fausse                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| Knowledge graph / compétences                                                           | 🟢   | étude 07 **LIVRÉE — 5 lots sur 5**, constaté sur `main` le 2026-08-24 : lot 1 graphe seedé (#366), lot 2 maîtrise EWMA + oubli entretenue à l'écriture (`user_competency_mastery`, trigger-only, #579), **lot 3** tagging vague 1 (**1 362 questions** — `math` 557/557 et `math-6eme` 805/805), **lot 4** carte de compétences + « ce qui te bloque » (`20260721140000_competency_map_rpcs.sql`, `competency-map-panel.tsx`, #588), **lot 5** plan quotidien compétence-aware (`20260725140000_daily_plan_competency_aware.sql`, #616 + GRANT #617). ⚠️ **Son document a annoncé « en exécution » un mois après la fin de son exécution**, lots 4 et 5 décochés — corrigé le 2026-08-24, l'étude passe dans `EtudeRealisé/`. **Reste hors de l'étude** : le tagging au-delà de `math` (ligne du fil CONTENU, pas un lot de é07 ; une famille `physique`/`svt` doit être écrite par l'architecte avant tout tagging scientifique)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | Domaines de programme sous une matière (Algèbre/Géométrie, grammaire/compréhension)     | 🟠   | **code livré le 2026-08-18** : colonne `chapters.domain` (migration `20260818120000`, appliquée en prod le jour même), champ facultatif `domain` de `chapter.json`, émission SQL, garde `content:qa` (deux graphies d'un même domaine = erreur ; rattachement partiel = warn), regroupement du hub matière en en-têtes de domaine (#766), et le domaine nommé dans le fil du lecteur de cours (#767 — livré APRÈS sa migration, sa liste de colonnes étant explicite, là où le hub tolérait l'absence en `select("*")`). ⚠️ **INERTE EN PROD tant que le corpus ne déclare aucun domaine** — et ce n'est pas un bug : sous deux groupes, `groupChaptersByDomain` rend `null` et la liste reste exactement celle d'avant ; le fil du lecteur perd simplement son maillon du milieu. Le déblocage est une campagne de **contenu** (dépôt privé, une ligne `domain` par `chapter.json`), pas du code                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | Parcours élève & progression (carte honnête, cohorte « Ma classe », rentrée)            | 🟢   | étude 22 **livrée le 2026-07-21** (6 lots) : carte sans faux verrou (chapitre ✓ / mission ⭐), donjon scopé au parcours (fallback cycle → catalogue), classement « Ma classe » par niveau, « prochaine action » unifiée (révision → retry → continuer → découvrir), bannière de rentrée (promotion proposée, jamais imposée) ; boucle SM-2 refermée à la réussite                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | Réponses acceptées / saisie libre native (`short_answer`)                               | 🟢   | étude 20, **lots 1, 2, 3, 5 et 7 livrés** (2026-07-21 → 2026-08-01). Le verdict du Rappel n'est plus l'égalité stricte : **13 017 des 13 049 questions éligibles** acceptent au moins une forme de plus (Tier A, expansion morphologique **au build** — #652), et le gisement « article » arabe est couvert à **1 849 clés sur 1 851**. Le **type natif `short_answer`** existe (#654) — sixième type, sans colonne ni écran ni grant nouveau — avec un **clavier arabe d'appoint** pour l'élève qui n'en a aucun (#655). Tier B a son skill et son **pilote** sur la mission constatée en production (privé #96) : « فوق الشجرة » est enfin acceptée là où « فوقها » était attendue. **Reste** : la campagne Tier B (lot 4, à décider sur le pilote), la boucle « refus contesté » (lot 6, opt.) et le **pilote de contenu `short_answer`** (lot 8) — le type est câblé, aucune question ne l'utilise encore                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
@@ -129,32 +132,59 @@ la **ligne 3 vient de basculer**, pour la première fois depuis que ce tableau e
 ## 4. Études (FableEtudes) — instantané
 
 > **Ce tableau donne l'ÉTAT, pas le « comment ».** La source de vérité est l'index
-> `FableEtudes/README.md` + l'en-tête de chaque `ETUDE.md`, et l'ordre d'exécution est
-> `FableEtudes/ROADMAP.md` — tous **dans le dépôt privé `MBeji/yahia-quest-content`** depuis
-> l'étude 24. Les citations `FableEtudes/…` d'ici y renvoient, elles ne sont pas cliquables.
+> `FableEtudes/README.md` + l'en-tête de chaque `ETUDE.md` ; l'ordre d'exécution — avec, depuis le
+> 2026-08-24, un **graphe de dépendances** et la distinction horloges / chantiers — est
+> `FableEtudes/ROADMAP.md`. Tous **dans le dépôt privé** `MBeji/yahia-quest-content` : les
+> citations `FableEtudes/…` d'ici y renvoient, elles ne sont pas cliquables.
 > **Ne pas recopier le détail des lots ici** : c'est ce qui a fait diverger ce fichier de la
-> réalité (constat du 2026-08-02 — il annonçait `main` à #641 quand elle était à #703).
+> réalité, deux fois.
 
-| État               | Études                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Livrées**        | **02** examen blanc (2026-08-16, R-7 rescopé pour la phase gratuite) · **03** types de questions natifs · **05** duels & ligues · **13** moteur de transcription (**ScribeKit**, dépôt autonome) · **14** refonte UX/design · **15** contenu & composition des écrans · **17** rappel actif · **18** cours vivants · **22** parcours élève & progression · **28** stratégie de référence (position de marché, 3 lots, 2026-08-13) |
-| **Scission faite** | **24** protection IP du contenu — le corpus, les 41 skills pédagogiques et `FableEtudes/` sont partis au privé ; le gate anti-fuite tient l'invariant                                                                                                                                                                                                                                                                             |
-| **En exécution**   | **29** mode IA « à la clé de la famille » (**5 lots livrés**, la porte de l'étage IA) · **04** moteur adaptatif (**phase A1.2 close**, #707) · **07** knowledge graph / compétences · **09** économie du jeu (**lots 1 et 2**, #703/#708) · **16** ouverture lycée · **20** réponses acceptées · **23** vidéos explicatives · **25** harness AI-native & model-agnostic                                                           |
-| **Validées**       | **19** questions & exercices illustrés · **21** valorisation des manuels officiels · **26** doctrine verticale                                                                                                                                                                                                                                                                                                                    |
-| **Brouillons**     | **08** analytics familles\*                                                                                                                                                                                                                                                                                                                                                                                                       |
-| **Gelées**         | **01** paiement en ligne (pivot gratuité — véhicule de dégel du premium) · **06** PWA offline, **10** anti-fraude, **12** studio d'ingestion (doctrine verticale é26, réversible ; 10 se dégèle au volume réel de V3)                                                                                                                                                                                                             |
+| État                                       | Études                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Livrées** — dossier dans `EtudeRealisé/` | **11** tuteur IA « El Ostedh » (8 lots) · **02** examen blanc · **03** types de questions natifs · **04** moteur adaptatif (A0·A1.1·A1.2·A2) · **05** duels & ligues · **07** knowledge graph & maîtrise · **13** moteur de transcription (**ScribeKit**, dépôt autonome) · **14** refonte UX/design · **15** contenu & composition des écrans · **17** rappel actif · **18** cours vivants · **22** parcours élève & progression · **28** stratégie de référence · **29** mode IA « à la clé de la famille » |
+| **Scission faite**                         | **24** protection IP — lots 1-4 livrés, gate anti-fuite en place ; **lot 5 reporté** (purge de l'historique public) et lot 6 partiel, donc l'étude n'est **pas** `livrée`                                                                                                                                                                                                                                                                                                                                     |
+| **En exécution**                           | **09** économie du jeu (lots 1-2 ; lot 3 conditionnel) · **16** ouverture lycée (lots 0-3, reste la campagne) · **20** réponses acceptées (lots 1·2·3·5·7) · **23** vidéos explicatives (lots 1-4, reste le lot 5) · **25** harness AI-native (8 lots, reste L7)                                                                                                                                                                                                                                              |
+| **Validées**                               | **30** tuteur déterministe (Q-1…Q-7 arbitrées le 2026-08-23 ; périmètre 0bis→4, lots 5-9 différés) · **26** doctrine verticale (**0 lot sur 2**) · **19** questions illustrées · **21** valorisation des manuels                                                                                                                                                                                                                                                                                              |
+| **Brouillons**                             | **08** analytics familles\* · **27** sources web tierces                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| **Gelées**                                 | **01** paiement en ligne (pivot gratuité — véhicule de dégel du premium) · **06** PWA offline, **10** anti-fraude, **12** studio d'ingestion (doctrine verticale é26, réversible ; 10 se dégèle au volume réel de V3)                                                                                                                                                                                                                                                                                         |
 
-\* 08 garde une justification rédigée « premium », à re-scoper au moment de sa validation. Celle de
-l'étude 02 a été **tranchée à l'exécution** (2026-08-16) : son R-7 réservait le mode aux porteurs
-d'un entitlement `concours`, ce qui en phase gratuite aurait livré un écran verrouillé pour
-tout le monde. Le détail vit dans l'en-tête de `20260816120000_mock_exams_schema.sql` — et la
-clôture de l'étude, écarts compris, dans son `FableEtudes/EtudeRealisé/02-examen-blanc/ETUDE.md`
-au dépôt privé (content#187).
+⭐ **Trois statuts corrigés le 2026-08-24 en relisant `main`** — et le motif est le même dans les
+trois cas : **le périmètre d'une étude est livré sous d'autres numéros, et personne ne revient
+cocher ses cases.**
+
+- **é07 est TERMINÉE** — 5 lots sur 5. Ses lots 4 et 5 sont en production depuis les 2026-07-21
+  et 07-25 (#588 ; #616 + correctif de GRANT #617), preuves sur `main` :
+  `20260721140000_competency_map_rpcs.sql`, `competency-map-panel.tsx`,
+  `20260725140000_daily_plan_competency_aware.sql`. Son document portait « en exécution » et deux
+  cases vides. **Ce que la clôture n'emporte pas** : le tagging hors de `math` n'est pas un lot de
+  é07 (le lot 3 visait la vague 1, faite — 1 362 questions), c'est une ligne du fil CONTENU.
+- **é29 passe dans `EtudeRealisé/`** — son en-tête disait `LIVRÉE` depuis le 2026-08-22 sans que
+  son dossier bouge.
+- **é11 est à 6 lots sur 8** — lot 0 par **é29 lot 1**, lot 1 (#816, correctif pgTAP #817),
+  lots 2·3·4·5 (#823), **moitié du lot 7** (la console admin vient de é29 lot 5). **Restent** le
+  **lot 6** (bilans hebdo : `tutor_digests` et son workflow n'existent nulle part) et l'autre
+  moitié du 7 (compteur d'énergie côté élève, hit-rate du cache d'explications). Détail par lot :
+  ligne « Tuteur IA » du §3.
+
+🔴 **Un fait neuf, et il gêne** : **`docs/doctrine-verticale.md` n'existe pas** (vérifié le
+2026-08-24). L'étude 26 est `validée` avec **zéro lot sur deux** — on exécute depuis cinq semaines
+une doctrine que tous les autres documents citent et qui n'a **jamais été écrite normativement**.
+
+🔴 **Et un fait qu'aucun compte de lots ne dit** : **aucune clé de fournisseur n'a jamais été
+branchée.** é29 et é11 lots 0→5 sont en production, testés contre un transport factice ; le seul
+appel réel du système à ce jour est la vérification d'une clé à sa saisie. **Le pilote Q-9 de deux
+semaines n'a pas commencé.** Un étage IA livré et jamais éprouvé est une hypothèse, pas un actif.
+
+\* 08 garde une justification rédigée « premium », à re-scoper au moment de sa validation — et
+elle est désormais propriétaire du **canal enseignant** (é28 Q-3), derrière la précondition dure
+D-5 (GAP-024 + GAP-003). Celle de l'étude 02 a été **tranchée à l'exécution** (2026-08-16) : son
+R-7 réservait le mode aux porteurs d'un entitlement `concours`, ce qui en phase gratuite aurait
+livré un écran verrouillé pour tout le monde.
 
 **Deux backlogs d'illustration, à ne pas confondre** : l'étude **18** illustre les **cours**
-(`cours.md` / `resume.md`), l'étude **19** illustre les **questions & exercices**. Leurs
-campagnes — quelles classes, dans quel ordre, à quel reste-à-faire — sont suivies dans la
-**ROADMAP privée** (§5 fil contenu), pas ici : c'est un backlog de contenu, il vit avec le corpus.
+(`cours.md` / `resume.md`), l'étude **19** illustre les **questions & exercices**. Leurs campagnes
+sont suivies dans la **ROADMAP privée** (§5 fil contenu), pas ici : c'est un backlog de contenu,
+il vit avec le corpus.
 
 ---
 
@@ -177,107 +207,103 @@ campagnes — quelles classes, dans quel ordre, à quel reste-à-faire — sont 
   retour du premium.
 - **Backlog 90** : **34 ouverts / 20 soldés** sur 54 émis · **0 P0** · **3 P1**.
 
-**Ce qui bloque encore la Porte 1** — trois choses, et la formule « plus rien de technique »
-mérite d'être corrigée (2026-08-03) :
+**Ce qui bloque encore la Porte 1** — **deux choses au 2026-08-24, et une seule est du code.**
+La liste en portait trois : la troisième est tombée sans que personne ne la raye.
 
-1. **GAP-003** (conformité mineurs / INPDP) — décisions humaines, non codables, **non
-   vérifiable depuis un dépôt**.
-2. **GAP-024, aux trois quarts fait** — les pages légales sont livrées (#701), **la suppression
-   de compte l'est depuis le 2026-08-19** (branche `feat/account-deletion` : effacement dur par
-   `auth.admin.deleteUser`, confirmé par re-saisie de l'adresse, section « Zone sensible » de
-   `/parametrage`). **Reste `export_user_data`** — l'export/portabilité, toujours zéro occurrence
-   dans `src/`. ⚠️ **Ce reliquat-là EST du code**, comme l'était la suppression : c'est le seul
-   bloqueur légal qu'un agent peut lever, et le classer « humain » l'avait gelé une semaine.
-   Rappel du piège : **une PR qui cite un GAP dans son titre ne le clôt pas** — celle-ci n'en
-   ferme que la moitié, et le dit.
-3. **Le test à blanc de `rollback-prod.yml`** (`freeze-only` puis `unfreeze`), dont les secrets
-   n'ont été posés que le 2026-07-27 — donc un kill-switch encore jamais déclenché.
+1. **GAP-024, aux deux tiers** — pages légales livrées (#701) et **suppression de compte** livrée
+   le 2026-08-19 (#791 : effacement dur par `auth.admin.deleteUser`, confirmé par re-saisie de
+   l'adresse, section « Zone sensible » de `/parametrage`). **Reste `export_user_data`** —
+   l'export / portabilité, **zéro occurrence** dans `src/` et `supabase/migrations/`, re-vérifié
+   le 2026-08-24. ⚠️ **Ce reliquat-là EST du code** : c'est le **seul bloqueur légal qu'un agent
+   peut lever**, et le classer « humain » l'a gelé une semaine. C'est le rang 1 du §8.
+   Rappel du **double** piège : une PR qui **cite** un GAP dans son titre ne le clôt pas — et un
+   GAP qu'**aucune PR ne cite** peut avoir été livré quand même (#791 s'intitule « un compte peut
+   enfin être supprimé », sans un mot de GAP-024).
+2. **GAP-003** (conformité mineurs / INPDP) — décisions humaines, non codables, **non vérifiables
+   depuis un dépôt**. é29 §3.8 y ajoute une pièce : un registre de traitement INPDP pour le mode IA.
+
+~~3. Le test à blanc de `rollback-prod.yml`~~ — **fait le 2026-07-27**, et re-constaté le
+2026-08-24 : **neuf dispatches `workflow_dispatch` verts**
+(`gh run list --workflow=rollback-prod.yml`). Le kill-switch a été déclenché. La ligne a survécu
+près d'un mois à son propre accomplissement — et `gh workflow run rollback-prod.yml` est de toute
+façon dans `ops-dispatch`, donc une session peut le rejouer seule.
 
 ---
 
 ## 6. Travaux en vol
 
-**Au 2026-08-14 : une PR en vol** — **#728** (draft), second lot du **chantier qualité & perf** :
-docs + commentaires, aucune migration. `main` est à **#734**. (#735 annonçait « rien en vol » —
-#728 était déjà ouverte ; deux chantiers ont tourné en parallèle et chacun a écrit ce qu'il
-voyait.)
+**Au 2026-08-24** : `main` à **#832**, **zéro PR ouverte au moteur**, une PR au privé
+(content#232 — le nettoyage de la ROADMAP et de l'index des études).
 
-Le chantier **graphique & UX** livré entre le 2026-08-13 et le 2026-08-14 (huit PR, #720 → #734)
-laisse trois règles qui gouvernent la suite — le détail est dans les corps de PR, pas ici :
+⚠️ **Mais deux chantiers tournent hors PR, et une session qui arrive doit le savoir** :
 
-🔴 **Un rouge ouvert, et il n'est pas documentaire** — **[#733](https://github.com/MBeji/yahia-quest-arena/issues/733), nightly du 2026-08-14** :
-**9 tests E2E échouent**, dans les deux projets (anonyme **et** authentifié), tous sauf un sur le
-même geste — répondre à une question. `expect(...).not.toBe("wait")` expire à
-`e2e/pages/quest.page.ts:112`, juste après `continuePastFeedback()`. Suspect désigné par le code
-lui-même : **#720**, qui a changé le flux du player **et** les deux page objects. ⚠️ **Rien ne
-pouvait l'attraper avant le merge** : l'E2E n'est pas dans `verify`/`ci:verify`.
+- **é11 lots 6 et 7** — une session y travaille depuis ce matin (bilans hebdo batch, compteur
+  d'énergie côté élève, hit-rate du cache). Rien n'est encore poussé. **Ne pas prendre cette
+  ligne sans se coordonner.**
+- **C12 فقه — 4 أبواب** (33, 37, 43, 44) — session de campagne sur le dépôt privé. Le corpus
+  couvre 37 أبواب sur 45.
 
-**Départagé le 2026-08-17 (#755) : c'est TEST-ONLY, la boucle de jeu n'est pas cassée.** Le page
-object appelait `feedback.isVisible({ timeout })`, dont les typings de Playwright disent
-« @deprecated This option is ignored » — `isVisible()` n'attend jamais. Le test regardait donc
-avant l'aller-retour serveur du verdict, concluait « pas de verdict », et scrutait 12 s une avance
-que le player n'avait aucune raison de faire tant que « Continuer » n'était pas cliqué. Les deux
-page objects scrutent désormais. **Le nightly du 2026-08-18 a tranché : 78 passés, 1 échoué** — les
-huit sont éteints.
+### 🔴 Le rouge du jour — et c'est la garde des gardes qui l'a trouvé
 
-**Le 9ᵉ, diagnostiqué et corrigé le 2026-08-19 : `--flame` n'a jamais été assombri pour le thème
-clair.** Le verdict axe se lit dans le log du run, sans ouvrir l'artefact : `color-contrast`
-(serious), **un** nœud — la puce de série du tableau de bord, texte `#e54a00` sur sa propre teinte
-`/20` `#fadbcc`, **3,02:1** contre une barre AA à 4,5. Le bloc `html.reference` annonce pourtant
-« Accent palette — retinted to teal, deepened to read on white » : tous ses voisins sont descendus
-à L≈0,52, `--flame` est resté à L=0,62 — sous AA sur blanc aussi (3,95:1), donc dans **six**
-endroits, dont cinq qu'axe ne visite pas. Le token est scindé : `--flame` reste vif (icônes,
-dégradés, fonds teintés), `--flame-ink` (L=0,50) porte le texte — 4,92:1 sur la teinte, 6,42:1 sur
-blanc. ⚠️ **Et la mesure entre dans `verify`** : `src/__tests__/theme-contrast.test.ts` lit la
-feuille de style et calcule ; remis à l'ancienne valeur il rend **3,0256** là où axe mesurait
-**3,02**. Un contraste de token devient opposable AVANT le merge — l'a11y ne tournait qu'en
-nightly, sur deux pages. ⚠️ **L'e2e reste non vérifiée en session** (elle exige le projet Supabase
-de TEST) : le prochain nightly est le juge.
+**[#833](https://github.com/MBeji/yahia-quest-arena/issues/833), ouverte le 2026-08-24 :
+sept crons rouges.** Elle est ouverte **automatiquement** par la garde des gardes livrée deux
+jours plus tôt (#831) — elle fait exactement le travail pour lequel elle a été écrite. Son pendant
+privé est **content#229** (`auto-pr.yml` ne peut pas ouvrir de PR : le PAT n'a pas la portée
+`actions:write`, même cause que #832) — et **celui-là bloque la chaîne de livraison du corpus**,
+donc les campagnes de contenu.
 
-- **Les surfaces passent par des tokens, et plus rien ne rattrape un littéral.** Le remap
-  `html.reference .app-shell { --color-black: white }` — et son doublon `.game-surface` — sont
-  **supprimés** (#724, #734). Un `bg-black` qui reviendrait dans `features/` ou
-  `routes/_authenticated` resterait noir sur le thème clair, qui est le thème **par défaut** ;
-  le garde-fou `check-design-tokens.mjs` le refuse désormais. Convention en tête d'AGENTS.md.
+**Pourquoi ces deux-là passent avant du travail plus « intéressant »** : une garde qui échoue en
+silence est **indistinguable d'une garde qui passe**, et ce dépôt en a fait la démonstration
+**quatre fois** (garde pédagogique deux fois, `video-health.yml`, sonde des manuels — cette
+dernière ayant même **refermé son issue en affirmant que tout allait bien**). Tant qu'un cron
+rouge n'atteint personne, aucun autre signal du dépôt n'est opposable. Le détail des quatre cas
+est consigné dans l'annexe « leçons » de la ROADMAP privée (§10, L-2).
+
+### Ce que les chantiers d'août laissent comme règles
+
+Le détail vit dans les corps de PR et dans `docs/` — ici, seulement ce qui gouverne la suite.
+
+- **Les surfaces passent par des tokens, et plus rien ne rattrape un littéral** (#724, #734).
+  Le remap `html.reference .app-shell { --color-black: white }` et son doublon `.game-surface`
+  sont **supprimés** : un `bg-black` qui reviendrait dans `features/` ou `routes/_authenticated`
+  resterait noir sur le thème clair, qui est le thème **par défaut**. Le garde-fou
+  `check-design-tokens.mjs` le refuse. Convention en tête d'AGENTS.md.
 - **Le thème clair est dessiné, plus décalqué.** `--surface-1/2/3` sont définis séparément dans
-  chaque thème ; l'élévation y vient du filet et de l'ombre, jamais d'un remplissage plus foncé.
-  Un test épingle chaque token dans les **deux** thèmes — le piège classique étant d'en définir
-  un d'un seul côté et de servir l'encre d'un thème sur le fond de l'autre.
-- **La boucle de quête corrige à la validation** (#720), en réutilisant la RPC `check_answers` et
-  le motif déjà en production dans le donjon. Aucune migration, aucun changement du scoring.
+  chaque thème ; un test épingle chaque token dans les **deux**.
+- **Un contraste de token est opposable AVANT le merge** (#786).
+  `src/__tests__/theme-contrast.test.ts` lit la feuille de style et calcule : remis à l'ancienne
+  valeur, il rend **3,0256** là où axe mesurait **3,02**. L'a11y ne tournait qu'en nightly, sur
+  deux pages.
+- **Le §0 de `docs/performance-audit.md` EST l'état ; le corps du document n'est que le
+  _pourquoi_.** Six affirmations d'origine étaient fausses — dont `C-1`, classé « geste #1 le plus
+  rentable », dont la prémisse ne tenait pas. Trois constats se sont refermés **par la mesure**,
+  pas par du code. Ce qui reste ouvert attend un **arbitrage**, pas du travail.
+- **Une fonction SQL vivante se SUBSTITUE, elle ne se retape pas** (#818). `get_daily_plan`
+  retapée à la main sortait un algorithme entièrement réinventé — score normalisé, `DISTINCT ON`
+  anti-doublon et exclusion des quiz du repli perdus. C'est le `diff` contre sa révision vivante
+  qui l'a montré, **pas un test**.
 
-**Chantier qualité & performance** (#717 mergé, #728 en vol) — ce qu'il faut savoir avant de
-reprendre un axe perf, le détail étant dans `docs/performance-audit.md` :
+### Issues ouvertes — re-sondées le 2026-08-24
 
-- **Le §0 de l'audit EST l'état ; le corps du document n'est que le _pourquoi_.** Rien n'y est
-  ouvert sans être chiffré ou qualifié. **Six** affirmations d'origine étaient fausses — dont
-  `C-1`, classé « geste #1 le plus rentable », dont la prémisse ne tenait pas.
-- **Trois constats se sont refermés par la MESURE, pas par du code** (`H2`, `M2`, `L4` — ce
-  dernier clos **sans** index, chiffres à l'appui). Un backlog perf se vide aussi en retirant des
-  lignes.
-- **Ce qui reste ouvert attend un arbitrage, pas du travail** : `H2`/`M2` (produit — ils changent
-  ce que l'élève voit), `C-2` (sécurité), `H2-fe` (flash RTL au SSR), `C1-fe` (exige la session en
-  **cookie** : le serveur n'en a aucune aujourd'hui), `H1-media`, `M-2`.
-- ⚠️ **Deux gestes de console restent dus, et le premier est piégeux** : vérifier qu'un événement
-  `web_vitals` **arrive réellement** dans PostHog — sans clé le beacon n'émet rien, et un tableau
-  de bord vide se lit à tort « aucun problème » — et lire le **type de clé de signature JWT** du
-  projet (symétrique ⇒ un aller-retour Auth par server fn, qu'aucun code ne corrige).
+**5 au moteur, 2 au privé.**
 
-⚠️ **Non vérifié**, et à faire avant de considérer le chantier clos : personne n'a **regardé** les
-écrans de la coquille en thème clair après #734 (ils demandent une session authentifiée). La
-garantie acquise est structurelle — chaque surface vient d'un token défini des deux côtés — pas
-visuelle.
+| Issue            | Quoi                                                                                                                                                                                                                         |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **#833** (arena) | 🔴 **Sept crons rouges**, ouverte le 2026-08-24 par la garde des gardes (#831). Voir ci-dessus                                                                                                                               |
+| **#804** (arena) | Aucun tier de test ne voit un décalage entre la CSP et les hôtes réellement appelés par une balise tierce (ouverte le 2026-08-22 ; sans ligne de roadmap, et n'en demande pas)                                               |
+| **#673** (arena) | Triage des signalements du 2026-07-29. ⚠️ **Ne pas la fermer sans traiter la file** : ses UUID canoniques tiennent les signalements hors du chemin « fresh reports » du pré-gate. Le blocage technique, lui, est levé (#824) |
+| **#660** (arena) | Major `typescript` v7.0.2 — gate rouge, `typescript-eslint` bloquant (remplace #593). Attendre l'amont                                                                                                                       |
+| **#595** (arena) | Aligner `@types/node` (v26) sur le runtime CI (**Node 24** depuis #688, pas 26)                                                                                                                                              |
+| **#229** (privé) | 🔴 `auto-pr.yml` ne peut pas ouvrir de PR — bloque la livraison du corpus                                                                                                                                                    |
+| **#228** (privé) | 🚨 Gardes en échec (2 runs rouges) — pendant privé de #833                                                                                                                                                                   |
 
-**Issues ouvertes (4 ici, 0 au privé)** — re-sondées le 2026-08-14. ⚠️ La formule « inchangées
-depuis le 2026-08-03 » n'est plus vraie : **#733 a été ouverte cette nuit** et **#81 est close**.
+~~**#733**~~ — **close**. Les neuf échecs E2E du nightly du 2026-08-14 sont éteints : huit par
+#755 (`isVisible()` n'attend jamais — « @deprecated This option is ignored »), le neuvième par
+#786 (`--flame` jamais assombri pour le thème clair). Rappel du piège qui les a produits :
+**rien ne pouvait les attraper avant le merge**, l'E2E n'étant ni dans `verify` ni dans
+`ci:verify`.
 
-| Issue            | Quoi                                                                                                                                                                                  |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **#733** (arena) | 🟠 **Nightly E2E** — les 9 échecs sont traités (#755 pour 8, le contraste `--flame` pour le 9ᵉ), aucun vérifié en session : **ne la fermer qu'au vu d'un nightly vert**. Encart du §6 |
-| **#673** (arena) | Triage des signalements du 2026-07-29. ⚠️ **Ne pas la fermer sans traiter la file** : ses UUID canoniques tiennent les signalements hors du chemin « fresh reports » du pré-gate      |
-| **#660** (arena) | Major `typescript` v7.0.2 — gate rouge, `typescript-eslint` bloquant (remplace #593)                                                                                                  |
-| **#595** (arena) | Aligner `@types/node` (v26) sur le runtime CI (Node 24)                                                                                                                               |
-| ~~#81~~ (privé)  | **Close** — plus aucune issue ouverte au dépôt privé, garde `content-drift` comprise                                                                                                  |
+---
 
 ## 7. Carte de la documentation (qui fait foi pour quoi)
 
@@ -304,80 +330,105 @@ depuis le 2026-08-03 » n'est plus vraie : **#733 a été ouverte cette nuit** e
 
 ## 8. Prochaines actions
 
-> **L'ordre fait foi dans la ROADMAP privée** (`FableEtudes/ROADMAP.md`, 3 files déclinées de
-> l'étude 26). Ce qui suit en est le sommet, pas une seconde liste.
+> **L'ordre fait foi dans la ROADMAP privée** (`FableEtudes/ROADMAP.md` §1-§2, réécrite le
+> 2026-08-24 avec un **graphe de dépendances**). Ce qui suit en est le sommet, pas une seconde
+> liste.
 
-**Fil directeur — poursuivre V1 « Apprendre & maîtriser »** (pipeline é26). Livrés depuis :
-é22, é04-A1.1, **é04-A1.2 en entier** (a/b + « m'entraîner »), é07 lots 1/2/4/5,
-é20 lots 1/2/3/5/7, **é09 lots 1 et 2**, **é04-A2 en entier** (#818), **é29** (5 lots, #807) et
-**é11 lot 1** (#816). La file PRODUIT de la ROADMAP privée est à **18/19** : il ne reste que la
-ligne 19 (é11 lots 2 → 7).
+### Le cadrage qui a changé le 2026-08-24 : horloges ≠ chantiers
 
-> ✅ **Ce paragraphe est CADUC depuis le 2026-08-23 — les deux choses qu'il annonçait sont
-> faites le même jour.** Il disait : « la prochaine brique n'est PAS la ligne suivante de la
-> file produit ; é04-A2.1 livrerait un écran vide ; la première ligne prenable est C4bis ».
-> C4bis a été livré (privé #219, **1 049 tags**) **et appliqué en prod** le matin, et A2.1/A2.2
-> l'après-midi (#818) — l'écran n'est plus vide, et l'étude 04 est **terminée**.
-> **La ligne prenable est désormais** : finir le tagging de `math` 9ᵉ (521/818 questions, 64 % —
-> arbitrage Q-5 du 2026-08-23), puis les lots 1·2·3·4 de l'**étude 30** (Q-7).
-> Ensuite : é07 lot 3, é23 lot 5 (vidéos maths 9ᵉ), é16 vague A (1ère sec — **4 matières sur 5
-> en production au 2026-08-04** : math, physique, SVT et français ; seul l'**arabe** manque, et
-> sa fiche est `partielle`/`first-pass`, donc génération interdite tant que le محور 3 n'est pas
-> transcrit. La 1ère sec compte 6 matières en ligne, chimie et anglais s'étant ajoutés hors
-> vague A), campagnes d'illustration é19/é21, é11 lots 0-2 (cible octobre, hors file V1).
+À J-8, deux natures de travail ne se comparent pas. Une **horloge** coûte du **calendrier** : on
+la lance, elle tourne seule, et la lancer tard ne se rattrape pas. Un **chantier** coûte de
+l'**effort** : il attend son tour sans se dégrader. Les horloges passent devant, quelle que soit
+leur valeur — c'est la seule décision que le calendrier prend à notre place.
 
-**Ce qui attend un humain** — **liste auditée le 2026-08-23, deux entrées sur cinq étaient
-fausses.** Depuis la règle « zéro intervention technique » du même jour
-([`docs/agents/zero-intervention.md`](./docs/agents/zero-intervention.md)), une ligne n'entre
-ici que si elle cite un **mur** de ce fichier : décision non codable, réglage hors dépôt, ou
-plan GitHub. Sinon c'est de l'exécution, et l'exécution ne remonte pas.
+### ⏱️ Rang 0 — les horloges, à lancer aujourd'hui
 
-1. **Conformité mineurs (GAP-003)** — décisions juridiques, non codables (mur « décisions non
-   codables »). Avec **GAP-024**, les deux prérequis légaux du lancement, quel que soit le
-   modèle gratuit. ⚠️ Nuance qui change l'affectation : **le volet « droits des personnes » de
-   GAP-024 est du CODE** (les pages légales, elles, sont livrées par #701). La **suppression de
-   compte est livrée** le 2026-08-19 ; **l'export/portabilité reste à écrire** — ce n'est donc
-   pas une ligne d'attente, c'est un lot à prendre.
-2. **Trancher A15/A16 — l'équilibrage que le simulateur vient de mettre à nu** (#708) : G-1
-   (« niveau 5 en 7-14 j ») est arithmétiquement hors d'atteinte pour le persona moyen, et les
-   shields sont rachetés 38 % des jours manqués contre ≤ 20 % visés. Détail et consigne
-   (**ne pas retoucher `gamification.ts` pour faire passer un test**) dans la ROADMAP privée §2.
-3. **Coller les 3 gabarits d'e-mail FR** dans Supabase (mur « réglage hors dépôt » — console
-   Auth, pas de credentials de prod en session) — aujourd'hui le premier contact du produit avec
-   un parent part en anglais.
+1. **Brancher une vraie clé et démarrer le pilote Q-9** (é11/é29). Le pilote **précède toute
+   activation d'une famille**. Lancé aujourd'hui, il rend son verdict vers le 7 septembre ; lancé
+   après la rentrée, l'étage IA traverse le trimestre sans preuve. **C'est un geste, pas un
+   chantier.** ✅ Prérequis levés : `AI_KEY_ENC_KEY` posée en production le 2026-08-22, é29
+   déployée, é11 lot 1 en prod, coupure plateforme bornée à 5 $/j (#823). ⚠️ Une variable Vercel
+   ne prend effet qu'au **déploiement suivant sa pose**.
+2. **C4bis étape 2 — finir le tagging des misconceptions.** Il couvre **521 des 818 questions de
+   `math` 9ᵉ (64 %)** et **une seule matière**. Il alimente é30, la personnalisation d'é11 et la
+   ligne 3 de la scorecard **à la fois**. Précédent chiffré : **dix-huit jours** de file PRODUIT
+   à l'arrêt levés en deux jours par une PR de **corpus**.
+3. **C4ter — `french-6eme`.** Une classe de **concours** amputée d'une épreuve, dont la fiche est
+   transcrite depuis des semaines. Le seul motif du retard est qu'aucune session ne l'a prise.
 
-~~**Jouer le test à blanc de `rollback-prod.yml`**~~ — **fait le 2026-07-27**, huit dispatches
-`workflow_dispatch` verts (`gh run list --workflow=rollback-prod.yml`). La ligne a survécu un
-mois à son propre accomplissement ; et `gh workflow run rollback-prod.yml` est de toute façon
-dans `ops-dispatch` — une session peut le rejouer seule.
+### 🎯 Rang 1 — le chemin critique du goulot
 
-~~**Démarrer le rituel de triage hebdomadaire**~~ — il ne restait rien à démarrer :
-`report-triage.yml` tourne **6×/jour** (cron `23 */4 * * *`) et va jusqu'à la PR. ⚠️ Mais
-**il échouait à chaque run depuis le 2026-07-29** — secret `PROD_SUPABASE_URL` privé de son
-`https://`, ~150 runs rouges, 25 jours de signalements non triés, derrière une garde qui savait
-nommer le coupable mais qu'aucun mécanisme ne faisait lire. Corrigé le 2026-08-23 : l'URL vient
-désormais du dépôt (`PROD_SUPABASE_API_URL`) et non d'un secret, et un run rouge ouvre une issue
-de suivi. La seule chose qui « attendait un humain » ici, c'était de regarder l'onglet Actions.
+La scorecard (§1bis) dit depuis le 2026-08-13 que le projet bute sur **zéro canal d'acquisition**.
+Le chemin qui l'ouvre tient en quatre nœuds — et **son premier est du code sans aucun prérequis** :
 
-~~**Trancher le canonique SEO**~~ — **fait le 2026-08-03** (#706), voir §3.
+`export_user_data` **→** é28 D-5 levée **→** é08 volet enseignant **→** un canal d'acquisition.
 
-> **▶ Reprise pour une session vierge** — `main` à **#709** au 2026-08-03, **zéro PR en vol**.
+1. **`export_user_data`** — le **seul verrou légal qu'un agent peut lever**. Zéro occurrence de
+   `export_user_data` / `exportUserData` / « portabilité » dans `src/` et `supabase/migrations/`,
+   re-vérifié le 2026-08-24. Les deux autres tiers de GAP-024 sont livrés : pages légales (#701)
+   et **suppression de compte** (#791). ⚠️ **Il n'avait de ligne nulle part** — ni dans la file
+   produit, ni dans les fondations : il vivait comme « reliquat » d'une entrée F5, et é08 dormait
+   en brouillon. **Tout le reste de la file PRODUIT raffine un produit que personne n'a vu.**
+2. **Les 9 crons rouges** (#833, privé#229) — voir §6.
+3. **GAP-003 / INPDP** — humain, non codable. L'autre moitié de D-5.
+
+### 🔨 Rang 2 et au-delà
+
+**PRODUIT** : é11 lots 6-7 (🚧 en vol) → é30 lots 0bis→4 → é08 enseignant (⛔ D-5) → é20 lots 4·8·6
+→ **é26 lots 1-2** (écrire enfin la doctrine).
+**FONDATIONS** : A15/A16 (recaler G-1/G-4) → A17 (Node 22 ou garde de diff) → é25 L7 → é24 lot 5.
+**CONTENU** : C12 فقه (🚧) → محور 3 arabe 1ère sec → génération arabe 1ère sec → petites classes
+(🚧) → vidéos maths 9ᵉ (é23 lot 5, débloquée depuis le 2026-07-19 et **jamais prise**).
+
+### Ce qui attend un humain
+
+Une ligne n'entre ici que si elle cite un **mur** de
+[`docs/agents/zero-intervention.md`](./docs/agents/zero-intervention.md) : décision non codable,
+réglage hors dépôt, ou plan GitHub. Sinon c'est de l'exécution, et l'exécution ne remonte pas.
+
+1. **Brancher une clé pour le pilote Q-9** (rang 0.1) — réglage hors dépôt.
+2. **Conformité mineurs (GAP-003)** — décisions juridiques, non codables. ⚠️ Nuance qui change
+   l'affectation : **le volet « droits des personnes » de GAP-024 est du CODE**, et il en reste
+   un tiers (l'export). Ce n'est pas une ligne d'attente, c'est un lot à prendre.
+3. **Trancher A15/A16** — l'équilibrage que le simulateur a mis à nu (#708) : G-1 (« niveau 5 en
+   7-14 j ») est arithmétiquement hors d'atteinte pour le persona moyen, et les shields sont
+   rachetés 38 % des jours manqués contre ≤ 20 % visés. ⚠️ **Ne pas retoucher `gamification.ts`
+   pour faire passer un test.** ⚠️ Et A15 n'est pas neutre à laisser en attente : tant que G-1
+   reste au tableau, `economy:check` échoue **par construction** — un garde-fou qui échoue
+   toujours cesse d'être lu.
+4. **Trancher A17** — revenir à Node 22 (garder le canari) ou tenir Node 24 et poser la vraie
+   garde : refuser une PR de dépendance dont le **diff dépasse ce que son titre annonce**. Ne pas
+   trancher par confort : le statu quo est l'option qui a déjà coûté 33 h de Content CI rouge.
+5. **Le geste opérateur de triage** (#673) — 2 signalements déjà triés restent `open` en prod,
+   en attente de la seule application de leur statut (`[triage-pregate] open=2 fresh=0 →
+stale-handled, last reminded 25 days ago`). ⚠️ Cette ligne ne cite **aucun** mur : appliquer
+   une recommandation déjà écrite, deux fois réaffirmée (#651, #658, #673), est de l'exécution.
+   Elle n'est ici que faute de mécanisme — `report-close.yml` ne sait clôturer qu'au merge d'une
+   PR portant des trailers `Report-Id:`, jamais rétroactivement.
+6. **Le drill de portabilité du harness** (é25 L7) — session hors file, avec Mohamed. C'est ce
+   qui fermerait l'étude.
+
+~~**Coller les 3 gabarits d'e-mail FR**~~ — **tranché le 2026-08-24 : les e-mails restent en
+anglais.** Ne pas rouvrir, et ne pas re-signaler la langue du premier contact comme un défaut.
+
+> **▶ Reprise pour une session vierge** — `main` à **#832** au 2026-08-24, **zéro PR en vol au
+> moteur**, deux chantiers hors PR (§6).
 >
-> 1. **Les contrats d'exécution sont au privé.** La ROADMAP ordonnée et les `ETUDE.md`
->    (requirements R-N, décisions D-N, stop-points par lot) vivent dans
->    **`MBeji/yahia-quest-content`** (partis avec l'étude 24), avec désormais le programme
->    go-live. Démarrer la session **sur ce dépôt privé** et y ajouter celui-ci en second
->    checkout pour le moteur — même point de départ que les campagnes de contenu. Ce fichier
->    donne **l'état** ; le privé donne le **« comment »**.
-> 2. **Réservé — ne pas empiéter** : les études **24** (lot 5, purge de l'historique git) et
->    **25** (lots restants, harness portable) peuvent être en cours ailleurs. Une session V1 ne
->    touche ni au harness/skills ni à l'historique git.
+> 1. **Les contrats d'exécution sont au privé.** La ROADMAP ordonnée (avec son graphe) et les
+>    `ETUDE.md` (requirements R-N, décisions D-N, stop-points par lot) vivent dans
+>    **`MBeji/yahia-quest-content`**, avec le programme go-live. Démarrer la session **sur ce
+>    dépôt privé** et y ajouter celui-ci en second checkout pour le moteur. Ce fichier donne
+>    **l'état** ; le privé donne le **« comment »**.
+> 2. **Réservé — ne pas empiéter** : **é11 lots 6-7** et la campagne **فقه** ont une session
+>    chacune au 2026-08-24. Les études **24** (lot 5) et **25** (L7) peuvent être en cours
+>    ailleurs.
 > 3. **Discipline** (AGENTS.md, DoD) : un lot = une PR à file set distinct ; migration additive
 >    avant le code, destructive dans un merge séparé ; **pgTAP tourne sur les PR** touchant
->    `supabase/migrations/**` ou `supabase/tests/**` depuis #563 — mais **n'est pas requis**,
->    donc un rouge n'arrête pas l'auto-merge : il faut aller le lire (e2e-auth, lui, reste sur
->    dispatch). Savepoint = **préfixe de branche** `wip/`, jamais `[wip]` dans le sujet de
->    commit (ça fuit dans `main`). Suivre ses checks jusqu'au merge réel, puis faire le sweep.
-> 4. **Un statut se constate, il ne se déduit pas.** Avant de traiter une issue « ouverte » ou
->    un GAP « à faire », vérifier sur `main` : la passe du 2026-08-02 a trouvé trois statuts
->    d'études faux et un GAP réputé clos dont la moitié n'existait pas.
+>    `supabase/migrations/**` ou `supabase/tests/**` mais **n'est pas requis**, donc un rouge
+>    n'arrête pas l'auto-merge : il faut aller le lire (e2e-auth, lui, reste sur dispatch).
+>    Savepoint = **préfixe de branche** `wip/`, jamais `[wip]` dans le sujet de commit (ça fuit
+>    dans `main`). Suivre ses checks jusqu'au merge réel, puis faire le sweep.
+> 4. **Un statut se constate, il ne se déduit pas.** La passe du 2026-08-24 a encore trouvé
+>    **une étude entière** donnée « en exécution » un mois après la fin de son exécution (é07),
+>    et une autre à « lots 1 à 4 » quand elle en portait six (é11). Le motif est toujours le
+>    même : **le périmètre a été livré sous un autre numéro.**

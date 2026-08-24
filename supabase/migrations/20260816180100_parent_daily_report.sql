@@ -32,6 +32,15 @@
 -- (`get_student_report_by_code`) : le code est une capacité au porteur, et
 -- l'activité minute par minute d'un mineur — a fortiori ses réponses — n'a rien
 -- à faire derrière un simple code partageable.
+--
+-- ⚠️ AMENDÉ LE JOUR MÊME — ne pas lire le paragraphe ci-dessus comme l'état
+-- courant. `20260816200000_parent_report_coverage_and_public_daily.sql` (§3) a
+-- renversé cette règle sur décision produit : le rapport quotidien ET le détail
+-- des tentatives SONT exposés au chemin public par code alliance, par les
+-- enveloppes `get_student_daily_report_by_code` /
+-- `get_student_attempt_detail_by_code`. Le pourquoi est dans l'en-tête de cette
+-- migration-là et dans `docs/suivi-parental-quotidien.md`. (Note ajoutée après
+-- coup ; le SQL de ce fichier, appliqué en prod, n'a pas bougé.)
 
 -- ---------------------------------------------------------------------------
 -- 1. Garde d'accès partagée par les deux RPC.
