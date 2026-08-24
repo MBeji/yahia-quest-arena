@@ -250,6 +250,25 @@ describe("isDisplayEquation — la ligne qui ne porte QUE la formule", () => {
     expect(isDisplayEquation("sin(x) = √3/2")).toBe(true);
   });
 
+  // Une ligne-équation d'énoncé n'est pas toujours de l'algèbre : la chimie et la
+  // physique en posent aussi, et elles doivent se centrer comme les autres.
+  it("reconnaît une équation-bilan de chimie et une loi physique", () => {
+    expect(isDisplayEquation("S + O₂ → SO₂")).toBe(true);
+    expect(isDisplayEquation("2Al + 3Cl₂ → 2AlCl₃")).toBe(true);
+    expect(isDisplayEquation("n₁ sin i₁ = n₂ sin i₂")).toBe(true);
+    expect(isDisplayEquation("1/OA' − 1/OA = 1/f")).toBe(true);
+  });
+
+  // Le `?` d'un énoncé de primaire tient lieu d'inconnue quand un opérateur le
+  // rattache à la formule ; ailleurs il ferme juste la phrase.
+  it("garde le « ? » qui sert d'inconnue, écarte celui qui ferme la question", () => {
+    expect(isDisplayEquation("AB + BC = ?")).toBe(true);
+    expect(isDisplayEquation("? + 250 = 700")).toBe(true);
+    expect(splitMathRuns("Quelle est la solution de (x − 4)(x + 2) = 0 ?")[1].text.trim()).toBe(
+      "(x − 4)(x + 2) = 0",
+    );
+  });
+
   it("refuse une ligne de prose — y compris celle qu'isMathExpression accepte", () => {
     // `isMathExpression` sert à orienter une OPTION et accepte toute suite de
     // lettres latines ; promouvoir une phrase en bloc centré serait visible.
