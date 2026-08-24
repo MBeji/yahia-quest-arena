@@ -56,7 +56,7 @@
     "leak:check": "node scripts/ci/check-content-leak.mjs",
     "eol:check": "node scripts/ci/check-worktree-eol.mjs",
     "eol:fix": "node scripts/ci/check-worktree-eol.mjs --fix",
-    "verify": "npm run lint && npm run typecheck && npm run test && npm run leak:check && npm run db:check-chain && npm run eol:check",
+    "verify": "npm run lint && npm run typecheck && npm run test && npm run leak:check && npm run db:check-chain && npm run eol:check && npm run harness:check",
     "audit:deps": "npm audit --omit=dev --audit-level=high --registry=https://registry.npmjs.org",
     "ci:verify": "npm run lint && npm run typecheck && npm run test:coverage && npm run build:check && npm run audit:deps && npm run harness:check && npm run leak:check && npm run db:check-chain && npm run eol:check",
     "prepare": "husky"
