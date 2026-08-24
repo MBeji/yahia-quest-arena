@@ -21,7 +21,7 @@
 // lecture de session rejouerait la panne de rafraîchissement du 2026-08-18.
 
 import { useEffect, useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { GraduationCap, Send } from "lucide-react";
 
@@ -31,6 +31,8 @@ import { TUTOR_FREE_TEXT_MAX } from "@/shared/constants/ai";
 import { resolveAccessToken } from "@/shared/integrations/supabase/auth-attacher";
 import { getTutorChatEntry } from "../tutor.server";
 import type { TutorChatIntent } from "../chat";
+import { TUTOR_ENERGY_QUERY_KEY } from "../energy";
+import { TutorEnergyMeter } from "./tutor-energy";
 
 type Turn = { role: "student" | "tutor"; content: string };
 
@@ -47,6 +49,7 @@ function refusalCopy(code: string, t: ReturnType<typeof useT>): string | null {
 
 export function TutorChatPanel({ chapterId }: { chapterId: string }) {
   const t = useT();
+  const queryClient = useQueryClient();
   const loadEntry = useServerFn(getTutorChatEntry);
   const { data: entry } = useQuery({
     queryKey: ["tutor-chat-entry", chapterId],
@@ -138,6 +141,13 @@ export function TutorChatPanel({ chapterId }: { chapterId: string }) {
       setTurns((prev) => (prev[prev.length - 1]?.content ? prev : prev.slice(0, -1)));
     } finally {
       setStreaming(false);
+      // Le flux vient de dépenser de l'énergie (ou de se la voir refuser) : la
+      // jauge juste au-dessus doit suivre. Dans le `finally` et non dans la
+      // branche heureuse, parce qu'un refus `AI_ENERGY_SPENT` est PRÉCISÉMENT
+      // le moment où le chiffre affiché est faux. Sans cette invalidation,
+      // `staleTime` le laisserait mentir une minute entière — pile la minute où
+      // l'élève regarde le compteur pour comprendre ce qui vient de se passer.
+      void queryClient.invalidateQueries({ queryKey: TUTOR_ENERGY_QUERY_KEY });
     }
   }
 
@@ -156,6 +166,22 @@ export function TutorChatPanel({ chapterId }: { chapterId: string }) {
         <GraduationCap className="size-4 text-[color:var(--gold)]" aria-hidden="true" />
         <h3 className="text-sm font-bold">{t.tutor.chat.title}</h3>
       </div>
+
+      {/* LE COMPTEUR D'ÉNERGIE (é11 lot 7) — ici, et à un seul endroit.
+          C'est LE panneau qui dépense : chaque message coûte, et un enfant doit
+          voir sa réserve baisser au moment où il la dépense, pas sur un autre
+          écran une heure plus tard.
+
+          Pourquoi PAS dans `TutorPanel` (l'écran de correction) : celui-ci est
+          rendu UNE FOIS PAR QUESTION RATÉE. La même jauge y apparaîtrait cinq
+          fois sur une correction à cinq erreurs — cinq fois le même chiffre, et
+          cinq boutons d'échange pour un seul indice. Le panneau de chat, lui,
+          est unique par page et n'existe que pour un élève connecté qui l'a
+          ouvert : aucune lecture n'est faite pour qui ne s'en sert pas.
+
+          D-14 : le compteur est une MÉCANIQUE DE JEU. Il n'annonce aucune autre
+          porte que l'échange d'un indice gagné en jouant. */}
+      <TutorEnergyMeter />
 
       <div className="space-y-3">
         {turns.length === 0 ? (

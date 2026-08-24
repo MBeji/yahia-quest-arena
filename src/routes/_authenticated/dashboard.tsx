@@ -25,6 +25,7 @@ import { ForgeEntry } from "@/features/ai/components/forge-entry";
 // alors que ces deux composants-ci sont purs et sans appel réseau.
 import { TutorCoachLine, TutorGreeting } from "@/features/tutor/components/tutor-coach";
 import { TutorPracticeEntry } from "@/features/tutor/components/tutor-practice-entry";
+import { TutorDigestCard } from "@/features/tutor/components/tutor-digest";
 import { daysAwayFrom } from "@/features/tutor/coaching";
 import { appLocalDate } from "@/shared/lib/app-day";
 import { DailyReviewPanel, recoverStreak } from "@/features/progression";
@@ -297,6 +298,18 @@ function Dashboard() {
           items={data.dailyPlan ?? []}
           renderCoach={(item, index) => <TutorCoachLine item={item} index={index} />}
         />
+
+        {/* Le BILAN DE LA SEMAINE (étude 11 lot 6, US-13) — dernier de la voix
+            d'El Ostedh, et volontairement APRÈS le plan du jour : la journée
+            passe avant la rétrospective. Un enfant qui ouvre son hall vient
+            jouer, pas lire un bilan ; celui-ci l'attend une fois le plan lu.
+
+            La carte ne s'affiche pleine QUE le dimanche venu — les autres jours
+            elle se réduit à une ligne (« ton bilan arrive dimanche »), qui est
+            le seul endroit du produit où l'élève apprend que la chose existe.
+            C'est aussi la seule surface générée du tableau de bord : la voix du
+            coach juste au-dessus, elle, sort d'une bibliothèque (R-10). */}
+        <TutorDigestCard />
 
         {/* ZONE 2 — « Ta progression ». */}
         <div className="mt-8">

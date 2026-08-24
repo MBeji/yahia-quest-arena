@@ -1,21 +1,42 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { RATE_LIMIT_MAX_REQUESTS } from "@/shared/lib/bot-guard";
+
 const {
   mockRenderErrorPage,
   mockConsumeLastCapturedError,
   mockLoggerError,
   mockServerFetch,
   mockHandleHealthRequest,
+  mockHandleDigestCron,
 } = vi.hoisted(() => ({
   mockRenderErrorPage: vi.fn(() => "<html>fallback</html>"),
   mockConsumeLastCapturedError: vi.fn((): unknown => undefined),
   mockLoggerError: vi.fn(),
   mockServerFetch: vi.fn(),
   mockHandleHealthRequest: vi.fn(),
+  mockHandleDigestCron: vi.fn(),
 }));
 
 vi.mock("@/shared/lib/health", () => ({
   handleHealthRequest: mockHandleHealthRequest,
+}));
+
+/**
+ * Le batch des bilans hebdomadaires (é11 lot 6) est MOQUÉ, et pas seulement
+ * parce qu'aucune assertion d'ici ne le déclenche.
+ *
+ * Chaque test de ce fichier fait `vi.resetModules()` puis ré-importe `@/server`
+ * — c'est le seul moyen de rejouer le wrapper avec des collaborateurs neufs.
+ * Le vrai `digest.server.ts` traîne `callAi` (donc tout le barrel `features/ai`,
+ * son fournisseur et son crypto) et le client `service_role` : à cinq reprises,
+ * ce graphe a fait passer la phase `tests` de ce fichier de 1,4 s à 7,5 s,
+ * jusqu'à crever le `testTimeout` de 15 s dès que la machine est chargée. Le
+ * sujet du fichier est le ROUTAGE du wrapper, jamais ce que le batch rédige :
+ * ses 796 lignes de tests vivent dans `features/tutor/__tests__`.
+ */
+vi.mock("@/features/tutor/digest.server", () => ({
+  handleDigestCron: mockHandleDigestCron,
 }));
 
 vi.mock("@tanstack/react-start/server-entry", () => ({
@@ -47,6 +68,7 @@ describe("server fetch wrapper", () => {
     mockRenderErrorPage.mockReset();
     mockRenderErrorPage.mockReturnValue("<html>fallback</html>");
     mockHandleHealthRequest.mockReset();
+    mockHandleDigestCron.mockReset();
   });
 
   it("serves /api/health BEFORE the bot guard, so a monitor is never refused", async () => {
@@ -83,6 +105,59 @@ describe("server fetch wrapper", () => {
     expect(response.headers.get("content-type")).toContain("application/json");
     expect(response.headers.get("cache-control")).toContain("no-store");
     expect(mockLoggerError).toHaveBeenCalledWith("Health endpoint failed", expect.anything());
+  });
+
+  // ÉTUDE 11 LOT 6 — la porte du batch hebdomadaire, et pourquoi sa POSITION
+  // dans la chaîne est le contrat plutôt qu'un détail d'implémentation.
+  it("sert /api/cron/digest AU-DELÀ du plafond de rafale par IP, sans réveiller le SSR", async () => {
+    mockHandleDigestCron.mockResolvedValue(
+      new Response('{"done":3,"cursor":null}', {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }),
+    );
+
+    const server = (await import("@/server")).default;
+    const slice = (n: number) =>
+      new Request(`https://app.local/api/cron/digest?n=${n}`, {
+        method: "POST",
+        // Une seule IP : celle du runner GitHub qui exécute
+        // `scripts/ai/tutor-digests.mjs`, lequel rappelle la route JUSQU'À
+        // épuisement du curseur.
+        headers: { authorization: "Bearer secret", "x-forwarded-for": "203.0.113.7" },
+      });
+
+    // On dépasse volontairement le plafond : c'est le contrôle négatif de ce
+    // test. Si l'interception repassait un jour APRÈS `guardRequest`, la
+    // 601ᵉ tranche recevrait un 429 — le batch s'arrêterait au milieu, et
+    // treize heures plus tard la notification dominicale annoncerait des bilans
+    // qui n'ont jamais été écrits.
+    for (let n = 0; n < RATE_LIMIT_MAX_REQUESTS + 1; n += 1) {
+      const response = await server.fetch(slice(n), {}, {});
+      expect(response.status).toBe(200);
+    }
+
+    expect(mockHandleDigestCron).toHaveBeenCalledTimes(RATE_LIMIT_MAX_REQUESTS + 1);
+    expect(mockServerFetch).not.toHaveBeenCalled();
+  });
+
+  it("répond 500 en JSON quand le batch jette — jamais la page HTML de marque", async () => {
+    mockHandleDigestCron.mockRejectedValue(new Error("boom"));
+
+    const server = (await import("@/server")).default;
+    const response = await server.fetch(
+      new Request("https://app.local/api/cron/digest", { method: "POST" }),
+      {},
+      {},
+    );
+
+    // L'appelant est un SCRIPT, pas un navigateur : lui rendre la page d'erreur
+    // de marque le ferait boucler sur du HTML qu'il ne sait pas lire. Il doit
+    // voir un statut d'échec net, et l'incident doit être journalisé — sans quoi
+    // une semaine sans bilan passerait pour une semaine sans activité.
+    expect(response.status).toBe(500);
+    expect(mockRenderErrorPage).not.toHaveBeenCalled();
+    expect(mockLoggerError).toHaveBeenCalledWith("Digest cron dispatch failed", expect.anything());
   });
 
   it("returns branded HTML response when server entry throws", async () => {

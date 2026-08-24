@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { motion } from "motion/react";
 import { Link } from "@tanstack/react-router";
 import {
@@ -43,9 +44,21 @@ export function ReportContent({
    * commentaire — et devant `get_tutor_parent_counters`, qui refusera.
    */
   tutorCounters,
+  /**
+   * Étude 11 lot 6 (US-14) — LE BILAN HEBDOMADAIRE DU TUTEUR, EN SLOT.
+   *
+   * Même posture que `tutorCounters` juste au-dessus, pour la même raison : la
+   * route authentifiée le remplit, `_public/suivi.tsx` ne le remplit pas. Mais
+   * en `ReactNode` plutôt qu'en données, parce que le bilan vit dans
+   * `features/tutor` et qu'une feature n'en importe jamais une autre — c'est le
+   * motif `renderCoach` (tableau de bord) et `renderTutor` (écran de
+   * correction). Absent ⇒ rien à l'écran, sans branche à écrire ici.
+   */
+  renderTutorDigest,
 }: {
   report: ReportData;
   tutorCounters?: TutorParentCounters | null;
+  renderTutorDigest?: ReactNode;
 }) {
   const { t, locale } = useI18n();
   const {
@@ -306,6 +319,19 @@ export function ReportContent({
           )}
         </div>
       )}
+
+      {/* Étude 11 lot 6 (US-14, Q-5) — LE BILAN HEBDOMADAIRE, POSÉ PAR LA ROUTE.
+          Juste sous les compteurs du tuteur, parce que c'est la même voix : les
+          compteurs disent COMBIEN, le bilan dit QUOI. Et toujours en agrégat —
+          ce texte est écrit POUR le parent, il n'est pas le bilan de l'enfant
+          recopié (deux `audience` distinctes en base).
+
+          Un SLOT et non un import : `parent-report` n'importe pas `tutor` (une
+          feature n'en importe jamais une autre), et surtout ce composant reste
+          absent du chemin PUBLIC au code alliance — `_public/suivi.tsx` rend le
+          même `ReportContent` sans lien parent vérifié, et n'a rien à passer
+          ici. La même garde que `tutorCounters`, par le même moyen. */}
+      {renderTutorDigest}
 
       {/* Score trend */}
       <div className="bg-surface-2 border border-border/50 rounded-xl p-4 flex items-center gap-3">
