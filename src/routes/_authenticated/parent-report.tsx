@@ -19,6 +19,7 @@ import {
   getLinkedStudents,
   getStudentReport,
   getStudentWeeklyGoal,
+  getTutorParentCounters,
   linkStudentByCode,
   parentCodeErrorLabel,
   ReportContent,
@@ -42,6 +43,7 @@ function ParentReport() {
   const queryClient = useQueryClient();
   const getStudentsFn = useServerFn(getLinkedStudents);
   const getReportFn = useServerFn(getStudentReport);
+  const getTutorCountersFn = useServerFn(getTutorParentCounters);
   const linkByCodeFn = useServerFn(linkStudentByCode);
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
   const [studentCode, setStudentCode] = useState("");
@@ -57,6 +59,19 @@ function ParentReport() {
   const { data: studentsData, isLoading: loadingStudents } = useQuery({
     queryKey: ["parent-students", adminPage],
     queryFn: () => getStudentsFn({ data: { page: adminPage, pageSize: ADMIN_PAGE_SIZE } }),
+  });
+
+  // Étude 11 lot 4 (Q-5) — l'usage du tuteur, demandé SÉPARÉMENT du rapport.
+  //
+  // Une requête à part, et pas un champ de plus dans `get_student_report` :
+  // cette dernière sert aussi le chemin PUBLIC au code alliance
+  // (`_public/suivi.tsx`), où aucun lien parent n'est vérifié. Seule cette
+  // route-ci, authentifiée, a le droit de poser la question — et la RPC la
+  // repose de toute façon à `is_parent_of_student`.
+  const { data: tutorCounters } = useQuery({
+    queryKey: ["parent-tutor-counters", selectedStudent],
+    queryFn: () => getTutorCountersFn({ data: { studentId: selectedStudent! } }),
+    enabled: !!selectedStudent,
   });
 
   const { data: report, isLoading: loadingReport } = useQuery({
@@ -338,7 +353,7 @@ function ParentReport() {
       ) : loadingReport ? (
         <LoadingState label={t.common.loading} className="py-20" />
       ) : report ? (
-        <ReportContent report={report} />
+        <ReportContent report={report} tutorCounters={tutorCounters} />
       ) : null}
     </div>
   );

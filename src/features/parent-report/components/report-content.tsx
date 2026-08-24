@@ -21,6 +21,7 @@ import { useI18n, useT } from "@/lib/i18n";
 import { useEntrance } from "@/shared/lib/motion";
 import { isolateLtrRuns } from "@/shared/lib/bidi";
 import { buildWeeklyAdvice, type ReportData } from "../report-share";
+import type { TutorParentCounters } from "../parent-report.server";
 export type { ReportData } from "../report-share";
 
 /**
@@ -30,7 +31,22 @@ export type { ReportData } from "../report-share";
  * reste mince) ; les styles `print-fill`/`family-report` pilotent l'impression.
  */
 
-export function ReportContent({ report }: { report: ReportData }) {
+export function ReportContent({
+  report,
+  /**
+   * Étude 11 lot 4 (Q-5) — l'usage du tuteur, en AGRÉGATS seuls.
+   *
+   * OPTIONNEL, et c'est la garde : ce composant est rendu par la route
+   * authentifiée AUTANT que par `_public/suivi.tsx`, qui sert un porteur de code
+   * alliance sans lien parent vérifié. Seule la première remplit ce prop. Le
+   * jour où quelqu'un voudra l'afficher partout, il devra passer devant ce
+   * commentaire — et devant `get_tutor_parent_counters`, qui refusera.
+   */
+  tutorCounters,
+}: {
+  report: ReportData;
+  tutorCounters?: TutorParentCounters | null;
+}) {
   const { t, locale } = useI18n();
   const {
     student,
@@ -239,6 +255,57 @@ export function ReportContent({ report }: { report: ReportData }) {
           </div>
         )}
       </div>
+
+      {/* Étude 11 lot 4 (Q-5) — L'AIDE D'EL OSTEDH, EN AGRÉGATS SEULS.
+          Des compteurs et des thèmes ; jamais une phrase de la conversation. Le
+          sous-titre le DIT au parent, et ce n'est pas une précaution juridique :
+          un parent qui croit lire les échanges de son enfant les cherchera, et un
+          enfant qui se croit rapporté mot à mot se taira.
+          Absent (route publique au code alliance) ou à zéro ⇒ rien à l'écran :
+          un encadré « 0 demande » se lirait comme un reproche. */}
+      {tutorCounters && tutorCounters.interactions30d > 0 && (
+        <div
+          className="bg-surface-2 border-border/50 rounded-xl border p-4"
+          data-testid="report-tutor-help"
+        >
+          <h3 className="text-foreground text-sm font-semibold">{t.parentReport.tutorHelpTitle}</h3>
+          <p className="text-muted-foreground mt-1 text-xs">{t.parentReport.tutorHelpSubtitle}</p>
+          <div className="text-muted-foreground mt-3 flex flex-wrap items-center gap-4 text-sm">
+            <span data-testid="report-tutor-help-7d">
+              {t.parentReport.tutorHelp7d.replace("{n}", String(tutorCounters.interactions7d))}
+            </span>
+            <span>
+              {t.parentReport.tutorHelp30d.replace("{n}", String(tutorCounters.interactions30d))}
+            </span>
+          </div>
+          {tutorCounters.topThemes.length > 0 && (
+            <div className="mt-3">
+              <p className="text-foreground text-xs font-medium">
+                {t.parentReport.tutorHelpThemesTitle}
+              </p>
+              <ul className="mt-2 flex flex-wrap gap-2">
+                {tutorCounters.topThemes.map((theme) => (
+                  <li
+                    key={theme.tag}
+                    data-testid="report-tutor-theme"
+                    className="bg-surface-3 border-border/40 rounded-lg border px-2 py-1 text-xs"
+                  >
+                    {/* Le TAG n'est jamais affiché (R-A1.2-1) : il ne sert que de
+                        clé de liste. Le parent lit une phrase, pas un identifiant. */}
+                    <span dir="auto">
+                      {locale === "ar"
+                        ? theme.labelAr
+                        : locale === "en"
+                          ? theme.labelEn
+                          : theme.labelFr}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Score trend */}
       <div className="bg-surface-2 border border-border/50 rounded-xl p-4 flex items-center gap-3">

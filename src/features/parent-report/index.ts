@@ -10,8 +10,10 @@ export {
   getStudentReport,
   getStudentReportByCode,
   getStudentWeeklyGoal,
+  getTutorParentCounters,
   linkStudentByCode,
   setStudentWeeklyGoal,
+  type TutorParentCounters,
 } from "./parent-report.server";
 export { formatStudentAllianceCode, parseStudentAllianceCode } from "./family-link";
 export { parentCodeErrorLabel, type ParentCodeErrorCode } from "./parent-code-errors";

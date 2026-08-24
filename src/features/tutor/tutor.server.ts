@@ -50,6 +50,8 @@ import {
   type TutorQuestionContext,
   type TutorVariant,
 } from "./prompt";
+import { allowsFreeText, type TutorMessage } from "./chat";
+import { escalationStep, escalationStepFromAction, type TutorEscalationStep } from "./escalation";
 import { validateTutorOutput } from "./validator";
 
 // Les RPC de ce lot ne sont pas encore dans les types générés (ils se
@@ -67,7 +69,17 @@ type TutorRpcClient = {
       | "find_tutor_explanation"
       | "store_tutor_explanation"
       | "rate_tutor_message"
-      | "set_tutor_prefs",
+      | "set_tutor_prefs"
+      | "get_tutor_prefs"
+      | "set_tutor_plan_push"
+      | "get_tutor_chapter_context"
+      | "list_tutor_threads"
+      | "get_tutor_thread"
+      // Lot 4 — la boucle de compréhension (migration 20260823140000).
+      | "get_tutor_mini_check"
+      | "submit_tutor_mini_check"
+      | "tutor_understanding_signal"
+      | "escalate_tutor_thread",
     args?: Record<string, unknown>,
   ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
 };
@@ -441,6 +453,167 @@ export const rateTutorMessage = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+/**
+ * Ce que l'écran de chapitre doit savoir AVANT d'afficher quoi que ce soit
+ * (lot 3). Un seul aller-retour, qui répond à trois questions à la fois : la
+ * porte est-elle ouverte (R-1), le champ libre est-il permis à cet âge (Q-6),
+ * et dans quelle langue le tuteur répondra (R-3).
+ *
+ * Le champ libre est décidé ICI et pas dans l'écran : un client modifié ne
+ * contourne pas un âge, et la route le re-vérifie de son côté.
+ */
+export type TutorChatEntry = {
+  readonly allowed: boolean;
+  readonly reason: string;
+  readonly freeText: boolean;
+  readonly lang: TutorLang;
+};
+
+export const getTutorChatEntry = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ chapterId: z.guid() }).parse(d))
+  .handler(async ({ data, context }): Promise<TutorChatEntry> => {
+    const client = context.supabase as unknown as TutorRpcClient;
+    const closed: TutorChatEntry = {
+      allowed: false,
+      reason: "UNKNOWN",
+      freeText: false,
+      lang: "fr",
+    };
+
+    const gate = await client.rpc("can_use_tutor", {
+      p_scope: "chapter",
+      p_chapter_id: data.chapterId,
+    });
+    const gateParsed = availabilitySchema.safeParse(gate.data);
+    if (gate.error || !gateParsed.success) {
+      // Une porte qu'on n'arrive pas à interroger est une porte FERMÉE.
+      logger.error("tutor.chat.entry", { error: gate.error ? errorMessage(gate.error) : "shape" });
+      return closed;
+    }
+    if (!gateParsed.data.allowed) return { ...closed, reason: gateParsed.data.reason };
+
+    const ctxRes = await client.rpc("get_tutor_chapter_context", {
+      p_chapter_id: data.chapterId,
+    });
+    const ctxParsed = z
+      .object({ found: z.literal(true), lang: langSchema, age_band: ageBandSchema })
+      .safeParse(ctxRes.data);
+    if (ctxRes.error || !ctxParsed.success) return closed;
+
+    return {
+      allowed: true,
+      reason: "OK",
+      freeText: allowsFreeText(ctxParsed.data.age_band),
+      lang: ctxParsed.data.lang,
+    };
+  });
+
+/** US-9 — l'historique, en lecture seule. R-14 dans l'autre sens : l'élève relit. */
+export type TutorThreadSummary = {
+  readonly threadId: string;
+  readonly scope: string;
+  readonly chapterId: string | null;
+  readonly title: string;
+  readonly messageCount: number;
+  readonly updatedAt: string;
+};
+
+export const getTutorHistory = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<TutorThreadSummary[]> => {
+    const client = context.supabase as unknown as TutorRpcClient;
+    const { data, error } = await client.rpc("list_tutor_threads", { p_limit: 20 });
+    if (error) {
+      logger.warn("tutor.history", { error: errorMessage(error) });
+      return [];
+    }
+    const parsed = z
+      .array(
+        z.object({
+          thread_id: z.string(),
+          scope: z.string(),
+          chapter_id: z.string().nullable(),
+          title: z.string(),
+          message_count: z.number(),
+          updated_at: z.string(),
+        }),
+      )
+      .safeParse(data);
+    if (!parsed.success) return [];
+    return parsed.data.map((row) => ({
+      threadId: row.thread_id,
+      scope: row.scope,
+      chapterId: row.chapter_id,
+      title: row.title,
+      messageCount: row.message_count,
+      updatedAt: row.updated_at,
+    }));
+  });
+
+export const getTutorThread = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ threadId: z.guid() }).parse(d))
+  .handler(async ({ data, context }): Promise<{ messages: TutorMessage[] }> => {
+    const client = context.supabase as unknown as TutorRpcClient;
+    const { data: raw, error } = await client.rpc("get_tutor_thread", { p_thread: data.threadId });
+    if (error) {
+      logger.warn("tutor.thread.read", { error: errorMessage(error) });
+      return { messages: [] };
+    }
+    const parsed = z
+      .object({
+        found: z.boolean(),
+        messages: z.array(z.object({ role: z.string(), content: z.string() })).default([]),
+      })
+      .safeParse(raw);
+    return { messages: parsed.success && parsed.data.found ? parsed.data.messages : [] };
+  });
+
+/** Les préférences d'accompagnement, défauts compris (lot 2). */
+export type TutorPrefs = {
+  readonly interests: readonly string[];
+  readonly verbosity: "courte" | "normale";
+  readonly planPush: boolean;
+};
+
+const prefsSchema = z.object({
+  interests: z.array(z.string()).default([]),
+  verbosity: z.enum(["courte", "normale"]).default("normale"),
+  planPush: z.boolean().default(false),
+});
+
+const DEFAULT_PREFS: TutorPrefs = { interests: [], verbosity: "normale", planPush: false };
+
+export const getTutorPrefs = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<TutorPrefs> => {
+    const client = context.supabase as unknown as TutorRpcClient;
+    const { data, error } = await client.rpc("get_tutor_prefs");
+    if (error) {
+      // Un réglage illisible retombe sur le DÉFAUT, jamais sur une erreur : la
+      // page de paramétrage doit s'afficher même quand le tuteur est éteint.
+      logger.warn("tutor.prefs.read", { error: errorMessage(error) });
+      return DEFAULT_PREFS;
+    }
+    const parsed = prefsSchema.safeParse(data);
+    return parsed.success ? parsed.data : DEFAULT_PREFS;
+  });
+
+/** US-7 — l'élève arme ou désarme son rappel du plan du jour. */
+export const setTutorPlanPush = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ enabled: z.boolean() }).parse(d))
+  .handler(async ({ data, context }): Promise<{ ok: boolean }> => {
+    const client = context.supabase as unknown as TutorRpcClient;
+    const { error } = await client.rpc("set_tutor_plan_push", { p_enabled: data.enabled });
+    if (error) {
+      logger.error("tutor.planPush", { error: errorMessage(error) });
+      return { ok: false };
+    }
+    return { ok: true };
+  });
+
 export const setTutorPrefs = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) =>
@@ -462,4 +635,325 @@ export const setTutorPrefs = createServerFn({ method: "POST" })
       return { ok: false };
     }
     return { ok: true };
+  });
+// ---------------------------------------------------------------------------
+// LOT 4 — LA BOUCLE DE COMPRÉHENSION (US-4, R-8).
+// ---------------------------------------------------------------------------
+// Aucune de ces trois fonctions n'appelle `callAi()`, et c'est le fait le plus
+// important du lot : le mini-check et l'escalade sont 100 % DÉTERMINISTES.
+// R-10 le demande — « le déterministe décide, le LLM rédige » — et ici le LLM ne
+// rédige même pas : la question vient du stock, la correction de la base, et la
+// phrase d'escalade du catalogue i18n.
+//
+// Conséquence directe : la surface `check` n'entre PAS dans `AI_LIVE_FEATURES`.
+// L'y ajouter ouvrirait au parent un interrupteur qui n'allume rien — la faute
+// que le bloc de doc de cette constante décrit mot pour mot.
+
+const miniCheckSchema = z.object({
+  served: z.boolean(),
+  reason: z.string(),
+  question_id: z.string().optional(),
+  prompt: z.string().optional(),
+  options: z.array(z.object({ id: z.string(), text: z.string() })).default([]),
+  chapter_id: z.string().nullable().optional(),
+  tag: z.string().nullable().optional(),
+  lang: langSchema.optional(),
+  match: z.enum(["tag", "competency"]).optional(),
+});
+
+const miniCheckGradeSchema = z.object({
+  graded: z.boolean(),
+  reason: z.string(),
+  correct: z.boolean().optional(),
+  correct_option: z.string().nullable().optional(),
+  explanation: z.string().nullable().optional(),
+  tag: z.string().nullable().optional(),
+});
+
+const understandingSignalSchema = z.object({
+  tag: z.string(),
+  signal_a: z.boolean(),
+  signal_b: z.boolean(),
+  signal_c: z.boolean(),
+  recommended_level: z.number(),
+});
+
+const escalationSchema = z.object({
+  escalation_level: z.number(),
+  action: z.string().nullable(),
+  // Volontairement `unknown` ICI : la forme dépend de la marche, et c'est
+  // `toEscalationTarget` qui la lit avec le bon schéma.
+  target: z.unknown().nullable(),
+});
+
+/** Ce que l'écran reçoit du mini-check : une question, ou une raison de ne rien montrer. */
+export type TutorMiniCheck =
+  | {
+      ok: true;
+      questionId: string;
+      prompt: string;
+      options: { id: string; text: string }[];
+      tag: string | null;
+      lang: TutorLang;
+    }
+  | { ok: false; code: string };
+
+/** La correction d'un mini-check. Aucune récompense n'y figure — il n'y en a pas (R-11). */
+export type TutorMiniCheckResult =
+  | {
+      ok: true;
+      correct: boolean;
+      correctOption: string | null;
+      explanation: string | null;
+      tag: string | null;
+    }
+  | { ok: false; code: string };
+
+/**
+ * LA CIBLE d'une marche — une union DISCRIMINÉE, pas un sac de clés.
+ *
+ * Deux raisons, et la première est mécanique : un `Record<string, unknown>` ne
+ * franchit pas la frontière d'une server fn (le sérialiseur de TanStack Start
+ * refuse `unknown`). La seconde vaut mieux : « montre le cours » et « reprends
+ * ce prérequis » ne pointent pas vers la même chose, et un composant qui lit
+ * `target.chapterId` sur une cible de prérequis doit rougir à la compilation,
+ * pas rendre un lien mort.
+ *
+ * La marche `parentDigest` n'a PAS de cible : elle ne mène nulle part dans
+ * l'application de l'élève, c'est le digest hebdomadaire qui la porte (Q-5).
+ */
+export type TutorEscalationTarget =
+  | { kind: "lesson"; chapterId: string; chapterTitle: string; subjectId: string }
+  | { kind: "prerequisite"; competency: string; labelFr: string; labelEn: string; labelAr: string }
+  | {
+      kind: "plan";
+      exerciseId: string;
+      exerciseTitle: string;
+      chapterId: string;
+      subjectId: string;
+    };
+
+/** La marche proposée après un échec, déjà traduite en clé i18n. */
+export type TutorEscalation = {
+  level: number;
+  step: TutorEscalationStep;
+  target: TutorEscalationTarget | null;
+};
+
+const lessonTargetSchema = z.object({
+  chapter_id: z.string(),
+  chapter_title: z.string(),
+  subject_id: z.string(),
+});
+
+const prerequisiteTargetSchema = z.object({
+  competency: z.string(),
+  label_fr: z.string(),
+  label_en: z.string(),
+  label_ar: z.string(),
+});
+
+const planTargetSchema = z.object({
+  exercise_id: z.string(),
+  exercise_title: z.string(),
+  chapter_id: z.string(),
+  subject_id: z.string(),
+});
+
+/**
+ * La cible, lue selon la MARCHE et non par essais successifs.
+ *
+ * Une `z.union` serait piégeuse ici : la cible d'un item de plan porte elle
+ * aussi `chapter_id` et `subject_id`, donc le schéma « cours » l'accepterait en
+ * premier et on perdrait l'exercice en route. C'est la marche qui dit quoi lire.
+ *
+ * Une cible illisible vaut `null` : la phrase d'escalade reste affichée, seul le
+ * lien disparaît. R-15 — on dégrade, on ne plante pas.
+ */
+function toEscalationTarget(step: TutorEscalationStep, raw: unknown): TutorEscalationTarget | null {
+  if (step === "lesson") {
+    const parsed = lessonTargetSchema.safeParse(raw);
+    return parsed.success
+      ? {
+          kind: "lesson",
+          chapterId: parsed.data.chapter_id,
+          chapterTitle: parsed.data.chapter_title,
+          subjectId: parsed.data.subject_id,
+        }
+      : null;
+  }
+  if (step === "prerequisite") {
+    const parsed = prerequisiteTargetSchema.safeParse(raw);
+    return parsed.success
+      ? {
+          kind: "prerequisite",
+          competency: parsed.data.competency,
+          labelFr: parsed.data.label_fr,
+          labelEn: parsed.data.label_en,
+          labelAr: parsed.data.label_ar,
+        }
+      : null;
+  }
+  if (step === "plan") {
+    const parsed = planTargetSchema.safeParse(raw);
+    return parsed.success
+      ? {
+          kind: "plan",
+          exerciseId: parsed.data.exercise_id,
+          exerciseTitle: parsed.data.exercise_title,
+          chapterId: parsed.data.chapter_id,
+          subjectId: parsed.data.subject_id,
+        }
+      : null;
+  }
+  // `reteach` et `parentDigest` ne pointent nulle part, et c'est normal.
+  return null;
+}
+
+/**
+ * US-4 — sert la question de vérification.
+ *
+ * R-15 : jamais d'exception métier. Une porte fermée, un vivier vide ou une RPC
+ * en panne rendent tous `{ ok: false, code }`, et l'écran décide de se taire.
+ * Un mini-check absent n'est pas une panne visible — c'est l'absence d'une
+ * proposition, ce qu'un enfant ne remarque même pas.
+ */
+export const getTutorMiniCheck = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ questionId: z.guid() }).parse(d))
+  .handler(async ({ data, context }): Promise<TutorMiniCheck> => {
+    const client = context.supabase as unknown as TutorRpcClient;
+    const { data: raw, error } = await client.rpc("get_tutor_mini_check", {
+      p_question_id: data.questionId,
+    });
+    if (error) {
+      logger.error("tutor.miniCheck", { error: errorMessage(error) });
+      return { ok: false, code: "UNKNOWN" };
+    }
+    const parsed = miniCheckSchema.safeParse(raw);
+    if (!parsed.success) return { ok: false, code: "UNKNOWN" };
+    const value = parsed.data;
+    // `served: false` porte SA raison (porte fermée, vivier vide) : on la
+    // transmet telle quelle, l'écran sait déjà traduire les codes de R-1.
+    if (!value.served || !value.question_id || !value.prompt) {
+      return { ok: false, code: value.reason };
+    }
+    return {
+      ok: true,
+      questionId: value.question_id,
+      prompt: value.prompt,
+      options: value.options,
+      tag: value.tag ?? null,
+      lang: value.lang ?? "fr",
+    };
+  });
+
+/**
+ * US-4 — corrige le mini-check.
+ *
+ * ⚠️ Cette fonction ne verse RIEN et n'a aucune raison de le faire un jour :
+ * l'interdiction vit dans la RPC (R-11), pas ici. Ce qui vit ici, c'est le
+ * refus de faire croire à l'écran qu'une correction a eu lieu quand elle a
+ * échoué — d'où le `ok: false` plutôt qu'un `correct: false` par défaut, qui
+ * dirait à l'élève qu'il s'est trompé alors qu'on n'en sait rien.
+ */
+export const submitTutorMiniCheck = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z
+      .object({
+        questionId: z.guid(),
+        // Un identifiant d'option (« a », « b »…), borné : le contenu de la
+        // réponse n'est jamais du texte libre en QCM.
+        choice: z.string().min(1).max(64),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }): Promise<TutorMiniCheckResult> => {
+    const client = context.supabase as unknown as TutorRpcClient;
+    const { data: raw, error } = await client.rpc("submit_tutor_mini_check", {
+      p_question_id: data.questionId,
+      p_choice: data.choice,
+    });
+    if (error) {
+      logger.error("tutor.miniCheck.submit", { error: errorMessage(error) });
+      return { ok: false, code: "UNKNOWN" };
+    }
+    const parsed = miniCheckGradeSchema.safeParse(raw);
+    if (!parsed.success) return { ok: false, code: "UNKNOWN" };
+    const value = parsed.data;
+    if (!value.graded || typeof value.correct !== "boolean") {
+      return { ok: false, code: value.reason };
+    }
+    return {
+      ok: true,
+      correct: value.correct,
+      correctOption: value.correct_option ?? null,
+      explanation: value.explanation ?? null,
+      tag: value.tag ?? null,
+    };
+  });
+
+/**
+ * R-8 — le diagnostic. Trois signaux OBJECTIFS, calculés en base.
+ *
+ * L'écran s'en sert pour une seule décision, mais elle compte : faut-il escalader
+ * du tout ? Un enfant qui rate un mini-check sans qu'aucun des trois signaux ne
+ * soit levé n'a pas besoin qu'on remonte au prérequis — il a besoin d'une autre
+ * explication. Escalader sur la première erreur transformerait une aide en
+ * procédure.
+ *
+ * Le niveau vient du SQL ; `escalation.ts` ne fait que le nommer. Les deux
+ * portent la même matrice, et `tutor-escalation.test.ts` en fige les huit cases.
+ */
+export const getTutorUnderstandingSignal = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ tag: z.string().min(1).max(200) }).parse(d))
+  .handler(async ({ data, context }): Promise<{ level: number; step: TutorEscalationStep }> => {
+    const client = context.supabase as unknown as TutorRpcClient;
+    const { data: raw, error } = await client.rpc("tutor_understanding_signal", {
+      p_tag: data.tag,
+    });
+    if (error) {
+      // Un diagnostic illisible vaut « aucun signal » : on re-explique, ce qui
+      // est la marche la plus douce. L'inverse escaladerait sur une panne.
+      logger.warn("tutor.signal", { error: errorMessage(error) });
+      return { level: 0, step: escalationStep(0) };
+    }
+    const parsed = understandingSignalSchema.safeParse(raw);
+    if (!parsed.success) return { level: 0, step: escalationStep(0) };
+    const level = parsed.data.recommended_level;
+    return { level, step: escalationStep(level) };
+  });
+
+/**
+ * R-8 — monte le fil d'UNE marche et rend la proposition suivante.
+ *
+ * Une marche à la fois, jamais un saut : c'est le mot « ORDONNÉE » de R-8. La
+ * RPC dégrade elle-même quand une cible est introuvable (pas de compétence
+ * associée au tag, aucun prérequis mesuré) et rend le niveau réellement ATTEINT.
+ */
+export const escalateTutorThread = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ threadId: z.guid() }).parse(d))
+  .handler(async ({ data, context }): Promise<TutorEscalation | null> => {
+    const client = context.supabase as unknown as TutorRpcClient;
+    const { data: raw, error } = await client.rpc("escalate_tutor_thread", {
+      p_thread: data.threadId,
+    });
+    if (error) {
+      // `null` et non un niveau par défaut : l'écran ne doit pas annoncer une
+      // marche que la base n'a pas enregistrée. Le fil resterait au niveau
+      // précédent et la promesse faite à l'élève serait fausse.
+      logger.error("tutor.escalate", { error: errorMessage(error) });
+      return null;
+    }
+    const parsed = escalationSchema.safeParse(raw);
+    if (!parsed.success) return null;
+    const step = escalationStepFromAction(parsed.data.action);
+    return {
+      level: parsed.data.escalation_level,
+      step,
+      target: toEscalationTarget(step, parsed.data.target),
+    };
   });

@@ -20,6 +20,13 @@ import { getDashboard, getSprint2Dashboard } from "@/features/dashboard";
 // Import direct, même raison que sur le lecteur de chapitre : le barrel de
 // la feature IA tirerait la console parent et la Forge dans ce chunk.
 import { ForgeEntry } from "@/features/ai/components/forge-entry";
+// Import direct, même raison que ci-dessus : le barrel de `tutor` tirerait le
+// panneau de correction et ses server fns dans le chunk du tableau de bord,
+// alors que ces deux composants-ci sont purs et sans appel réseau.
+import { TutorCoachLine, TutorGreeting } from "@/features/tutor/components/tutor-coach";
+import { TutorPracticeEntry } from "@/features/tutor/components/tutor-practice-entry";
+import { daysAwayFrom } from "@/features/tutor/coaching";
+import { appLocalDate } from "@/shared/lib/app-day";
 import { DailyReviewPanel, recoverStreak } from "@/features/progression";
 import { hubRouteForRole, shouldLeaveDashboard } from "@/features/auth";
 import { EnablePushCard } from "@/features/notifications";
@@ -272,7 +279,24 @@ function Dashboard() {
             c'est la même urgence détaillée : la bande promeut UNE action (la tête du plan),
             le panneau montre les trois. Le composant vit dans la feature `progression` et ses
             données viennent de `getDashboard`, qui n'appelle `get_daily_plan` qu'une fois. */}
-        <DailyReviewPanel items={data.dailyPlan ?? []} />
+        {/* La VOIX d'El Ostedh sur ce plan (étude 11 lot 2, US-5 et US-15). Zéro
+            appel de modèle, zéro énergie : une clé i18n choisie par une fonction
+            pure à partir de faits déjà chargés — c'est l'étage 0 de §3.7, celui
+            qui rend gratuite l'essentiel de la personnalisation perçue (R-10).
+
+            Le tuteur ne s'importe pas depuis `progression` : c'est la route qui
+            compose, par un slot, comme `renderTutor` sur l'écran de correction. */}
+        <TutorGreeting
+          state={{
+            daysAway: daysAwayFrom(profile.last_active_date, appLocalDate(new Date())),
+            streakDays: profile.current_streak,
+            planEmpty: (data.dailyPlan ?? []).length === 0,
+          }}
+        />
+        <DailyReviewPanel
+          items={data.dailyPlan ?? []}
+          renderCoach={(item, index) => <TutorCoachLine item={item} index={index} />}
+        />
 
         {/* ZONE 2 — « Ta progression ». */}
         <div className="mt-8">
@@ -295,8 +319,18 @@ function Dashboard() {
             dit, elle, le pourcentage. Le panneau ne rend rien tant qu'aucune erreur n'est
             active : c'est l'état normal d'un compte neuf, et une absence vaut mieux qu'un
             encadré vide. */}
+        {/* Le geste d'entraînement d'El Ostedh (étude 11 lot 5, US-11/US-12),
+            posé par la ROUTE dans le panneau de `progression` : il cible par le
+            TAG autant que par la compétence, et bascule vers des questions
+            écrites pour l'occasion quand le stock ne suffit pas (Q-8). Il
+            REMPLACE le bouton « S'entraîner » du panneau — un seul chemin de
+            remédiation (A12). Même motif que `renderCoach` ci-dessus : aucune
+            feature n'en importe une autre. */}
         <Suspense fallback={null}>
-          <WeaknessesPanel weaknesses={data.weaknesses ?? []} />
+          <WeaknessesPanel
+            weaknesses={data.weaknesses ?? []}
+            renderPractice={(weakness) => <TutorPracticeEntry weakness={weakness} />}
+          />
         </Suspense>
 
         {/* STREAK RECOVERY BANNER */}

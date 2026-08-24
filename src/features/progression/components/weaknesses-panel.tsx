@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { BookOpen, Dumbbell, Minus, Target, TrendingDown, TrendingUp } from "lucide-react";
 
@@ -75,7 +75,26 @@ function TrendMark({
   );
 }
 
-export function WeaknessesPanel({ weaknesses }: { weaknesses: WeaknessRow[] }) {
+export function WeaknessesPanel({
+  weaknesses,
+  renderPractice,
+}: {
+  weaknesses: WeaknessRow[];
+  /**
+   * Le geste d'entraînement, POSÉ PAR LA ROUTE (étude 11 lot 5).
+   *
+   * Quand la route le fournit, il REMPLACE le bouton « S'entraîner » ci-dessous
+   * — il ne s'ajoute pas à lui. Deux boutons promettant la même chose
+   * obligeraient l'élève à choisir entre deux mots qu'il ne peut pas
+   * distinguer, et le produit n'a qu'UN chemin de remédiation (A12).
+   *
+   * Optionnel, et ça compte : sans slot, le panneau garde son propre bouton et
+   * reste parfaitement utilisable. Il ne dépend pas du tuteur — une feature
+   * n'en importe pas une autre (AGENTS.md), c'est la route qui compose, motif
+   * `renderCoach` (dashboard) et `renderTutor` (écran de correction).
+   */
+  renderPractice?: (weakness: WeaknessRow) => ReactNode;
+}) {
   const { t, locale } = useI18n();
   const navigate = useNavigate();
   const [training, setTraining] = useState<string | null>(null);
@@ -139,20 +158,25 @@ export function WeaknessesPanel({ weaknesses }: { weaknesses: WeaknessRow[] }) {
             </div>
 
             <div className="mt-2 flex flex-wrap items-center gap-2">
-              {/* Garde : pas de compétence déclarée ⇒ pas de bouton. Proposer un
+              {/* Le slot du tuteur d'abord quand la route le pose : il cible aussi
+                  par le TAG, donc il fonctionne là où le bouton ci-dessous se
+                  taisait faute de compétence déclarée.
+                  Garde du repli : pas de compétence ⇒ pas de bouton. Proposer un
                   exercice au hasard serait pire que ne rien proposer (A12). */}
-              {row.competency && (
-                <button
-                  type="button"
-                  data-testid="weakness-train"
-                  disabled={training === row.competency}
-                  onClick={() => void train(row.competency as string)}
-                  className="border-border inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-xs font-bold transition hover:bg-surface-2 disabled:opacity-50"
-                >
-                  <Dumbbell className="size-3" aria-hidden="true" />
-                  {t.dashboard.competencyTrainCta}
-                </button>
-              )}
+              {renderPractice
+                ? renderPractice(row)
+                : row.competency && (
+                    <button
+                      type="button"
+                      data-testid="weakness-train"
+                      disabled={training === row.competency}
+                      onClick={() => void train(row.competency as string)}
+                      className="border-border hover:bg-surface-2 inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-xs font-bold transition disabled:opacity-50"
+                    >
+                      <Dumbbell className="size-3" aria-hidden="true" />
+                      {t.dashboard.competencyTrainCta}
+                    </button>
+                  )}
               {row.chapter_id && (
                 <Link
                   to="/lesson/$chapterId"

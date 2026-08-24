@@ -29,7 +29,13 @@ export {
 export { ForgeEntry } from "./components/forge-entry";
 export { ForgePanel } from "./components/forge-panel";
 
-export { callAi, type AiCallOutcome, type AiCallRequest } from "./ai-call.server";
+export {
+  callAi,
+  streamAi,
+  type AiCallOutcome,
+  type AiCallRequest,
+  type AiStreamChunk,
+} from "./ai-call.server";
 
 export { notifyBudgetAlerts } from "./ai-alerts.server";
 

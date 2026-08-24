@@ -39,4 +39,158 @@ export interface TutorTranslations {
   lockedDungeon: string;
   lockedDuel: string;
   lockedNotAttempted: string;
+
+  /**
+   * LA BIBLIOTHÈQUE DE COACHING (lot 2, US-5 / US-15) — R-10.
+   *
+   * Ces phrases ne sont PAS générées, et c'est une décision d'architecture, pas
+   * une économie : « les phrases de coach quotidiennes viennent de la
+   * bibliothèque ; seule la rédaction des bilans hebdo est générée ». Un élève
+   * qui ouvre son tableau de bord chaque matin déclencherait sinon un appel de
+   * modèle par jour et par item — pour dire « cinq minutes et c'est réglé ».
+   *
+   * Deux variantes par registre : trois items d'affilée ne disent pas la même
+   * chose, et le choix tourne sur la POSITION (jamais sur un hasard, qui
+   * changerait à chaque re-rendu).
+   */
+  coach: {
+    /** Le nom qui signe la phrase, dans la langue de l'interface. */
+    signature: string;
+    /** Une misconception active vit dans ce chapitre : c'est ÇA qu'il faut dire. */
+    weak1: string;
+    weak2: string;
+    /** Sept jours de retard ou plus : ce n'est plus « à revoir », ça part. */
+    late1: string;
+    late2: string;
+    due1: string;
+    due2: string;
+    today1: string;
+    today2: string;
+    /** US-15 — les moments clés. Jamais culpabilisants (étude 15). */
+    comeback1: string;
+    comeback2: string;
+    streak1: string;
+    streak2: string;
+    clear1: string;
+    clear2: string;
+    steady1: string;
+    steady2: string;
+  };
+
+  /** US-7 — le rappel du plan du jour, armé par l'élève. */
+  planPushTitle: string;
+  planPushDesc: string;
+
+  /**
+   * LE CHAT CADRÉ (lot 3, US-8 à US-10).
+   *
+   * ⚠️ Ce sont des libellés d'INTERFACE, dans la langue de l'interface. Les
+   * réponses du tuteur, elles, arrivent dans la langue de la MATIÈRE (R-3) et
+   * ne passent jamais par ce catalogue — y compris la réponse fixe de la
+   * catégorie bien-être, qui vit côté serveur pour cette raison exacte.
+   */
+  chat: {
+    open: string;
+    title: string;
+    /** Les intentions fermées — le chemin principal, et le seul en primaire (Q-6). */
+    intentExplain: string;
+    intentExample: string;
+    intentSummarize: string;
+    /** Le champ libre, à partir du collège. */
+    placeholder: string;
+    send: string;
+    /** Les refus de bornage (R-5), dits sans jargon. */
+    tooLong: string;
+    noLinks: string;
+    rateLimited: string;
+    /** Le fil vide, avant la première question. */
+    empty: string;
+    you: string;
+    historyTitle: string;
+    historyEmpty: string;
+    /** La sortie a été rejetée par le validateur en cours de flux (§3.4). */
+    outputRejected: string;
+  };
+
+  /**
+   * LE MINI-CHECK (lot 4, US-4) — « Vérifions ensemble ».
+   *
+   * Une question du stock, servie APRÈS une explication, sur la même erreur.
+   * Le ton de la réussite est SOBRE et celui de l'échec n'est jamais un reproche
+   * (étude 15) : le mini-check ne rapporte rien (R-11), il ne peut donc pas non
+   * plus « coûter » quelque chose. Un enfant qui se sent noté au mini-check
+   * cessera d'y répondre honnêtement, et le signal R-8 se tarira avec lui.
+   */
+  miniCheck: {
+    title: string;
+    /** Le bouton qui demande la question de vérification. */
+    start: string;
+    /** L'attente pendant la sélection. */
+    loading: string;
+    /** Valider son choix. */
+    submit: string;
+    correctTitle: string;
+    correctBody: string;
+    wrongTitle: string;
+    wrongBody: string;
+    /**
+     * Aucune question du stock ne convient (`NO_CANDIDATE`). Dit sans excuse
+     * technique : l'élève n'a pas à savoir qu'un vivier était vide.
+     */
+    unavailable: string;
+  };
+
+  /**
+   * L'ESCALADE (lot 4, R-8) — ce qu'El Ostedh propose quand ça ne passe pas.
+   *
+   * Une clé par marche, dans l'ordre de `escalation.ts`. Ce sont des PROPOSITIONS
+   * à l'élève, jamais des constats sur lui : « on va regarder le cours » et non
+   * « tu n'as pas compris ». La dernière marche est la seule qui mentionne le
+   * parent, et elle l'annonce à l'élève — on ne rapporte pas dans son dos (Q-5).
+   */
+  escalation: {
+    reteach: string;
+    lesson: string;
+    prerequisite: string;
+    plan: string;
+    parentDigest: string;
+    /** Le bouton qui suit la proposition. */
+    cta: string;
+  };
+
+  /**
+   * L'ENTRAÎNEMENT CIBLÉ (lot 5, US-11 / US-12) — « Entraîne-moi là-dessus ».
+   *
+   * ⚠️ CES PHRASES NE DOIVENT JAMAIS PROMETTRE PLUS QUE CE QUI EST SERVI.
+   * La sélection distingue deux qualités de matériel : les questions qui
+   * portent VRAIMENT l'erreur, et le repli (même chapitre, difficulté voisine).
+   * `onTargetHint` annonce les premières, `offTargetHint` avoue les secondes.
+   * Les confondre — une seule phrase « sur ton erreur » pour les deux cas —
+   * serait le genre de petit mensonge qu'un enfant repère au premier énoncé, et
+   * qui lui apprend à ne plus croire l'écran.
+   *
+   * Le mot « Forge » n'apparaît dans AUCUNE de ces clés : l'élève ne pilote pas
+   * une usine, on lui écrit des questions. Le nom du sous-système est une
+   * affaire d'ingénierie (étude 15 — le ton élève ne nomme pas la plomberie).
+   */
+  practice: {
+    /** Le geste, sur une ligne de « Tes points faibles ». */
+    cta: string;
+    /** L'attente pendant la sélection. */
+    loading: string;
+    /** Le stock couvre l'erreur : on joue des questions du catalogue. */
+    onTargetHint: string;
+    /** Rien d'assez ciblé : on joue du proche, et on le DIT. */
+    offTargetHint: string;
+    /** Le stock ne suffit pas et on part en écrire — le renvoi vers la Forge. */
+    forgingHint: string;
+    /**
+     * On ne sait pas dans quel chapitre vit cette erreur : ni stock à cibler,
+     * ni cible à écrire. `chapter_id` est nullable dans `get_my_weaknesses` —
+     * c'est un cas réel, pas un cas limite.
+     */
+    noChapter: string;
+    /** On sait où, mais il n'y a rien à jouer et rien ne peut être écrit. */
+    noMaterial: string;
+  };
 }

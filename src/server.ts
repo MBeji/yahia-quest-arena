@@ -4,6 +4,10 @@ import { consumeLastCapturedError } from "@/shared/lib/error-capture";
 import { renderErrorPage } from "@/shared/lib/error-page";
 import { logger } from "@/shared/lib/logger";
 import { handlePushCron } from "@/features/notifications/notifications.cron.server";
+// La route SSE du tuteur (é11 lot 3, D-7). Importée directement, comme le cron :
+// elle porte sa propre auth et rend un flux, deux choses qu'une server fn ne
+// sait pas faire.
+import { handleTutorStream } from "@/features/tutor/tutor.stream.server";
 import { guardRequest } from "@/shared/lib/bot-guard";
 import { generateSitemap } from "@/shared/lib/sitemap";
 import { handleHealthRequest } from "@/shared/lib/health";
@@ -135,6 +139,26 @@ export default {
     // through (kept indexable for SEO). See src/shared/lib/bot-guard.ts.
     const guardResponse = guardRequest(request);
     if (guardResponse) return guardResponse;
+
+    // Le chat du tuteur (é11 lot 3, D-7) — la première route STREAMÉE du
+    // produit. Elle est ici, APRÈS le garde et avant le handler SSR, comme
+    // l'étude le prévoit (« guardRequest s'applique déjà dans server.ts ») :
+    // une réponse à `ReadableStream` ne peut pas sortir d'une server fn, mais
+    // elle n'a aucune raison d'être moins gardée que le reste.
+    //
+    // Pas de cookie ⇒ pas de surface CSRF. L'auth est un Bearer, vérifié par le
+    // MÊME helper que le middleware des server fns.
+    if (new URL(request.url).pathname === "/api/tutor/stream") {
+      try {
+        return await handleTutorStream(request);
+      } catch (error) {
+        logger.error("Tutor stream failed", { error });
+        return new Response('{"code":"AI_UNKNOWN"}', {
+          status: 500,
+          headers: { "content-type": "application/json; charset=utf-8" },
+        });
+      }
+    }
 
     try {
       const handler = await getServerEntry();

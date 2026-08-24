@@ -873,6 +873,21 @@ export type TranslationKeys = {
     namedErrorsImproving: string;
     namedErrorsWorsening: string;
     namedErrorsStable: string;
+    /**
+     * Étude 11 lot 4 (Q-5) — CE QUE LE PARENT VOIT DE L'AIDE DU TUTEUR.
+     *
+     * Des compteurs et des THÈMES, jamais une phrase de la conversation. Le
+     * sous-titre le DIT au parent, et ce n'est pas une précaution juridique :
+     * un parent qui croit lire les échanges de son enfant les cherchera, et un
+     * enfant qui croit être rapporté mot à mot se taira.
+     */
+    tutorHelpTitle: string;
+    tutorHelpSubtitle: string;
+    /** `{n}` = le nombre de demandes sur 7 jours. */
+    tutorHelp7d: string;
+    /** `{n}` = le nombre de demandes sur 30 jours. */
+    tutorHelp30d: string;
+    tutorHelpThemesTitle: string;
     insightAttempts: string;
     adviceTitle: string;
     adviceReviewCta: string;

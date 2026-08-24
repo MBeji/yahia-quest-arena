@@ -64,7 +64,16 @@ vi.mock("@/components/ui/settings-controls", () => ({
   SoundToggles: () => null,
 }));
 
-vi.mock("@/features/notifications", () => ({ EnablePushCard: () => null }));
+// `usePush` depuis é11 lot 3 : la page lit l'état du push pour décider si elle
+// propose le rappel du tuteur. `unsupported` ⇒ la carte se cache, et ce test-ci
+// ne parle que du pseudo.
+vi.mock("@/features/notifications", () => ({
+  EnablePushCard: () => null,
+  usePush: () => ({ state: "unsupported", busy: false, enable: vi.fn(), disable: vi.fn() }),
+}));
+vi.mock("@/features/tutor/components/tutor-plan-push-card", () => ({
+  TutorPlanPushCard: () => null,
+}));
 vi.mock("@/features/dashboard", () => ({ getParcours: vi.fn() }));
 vi.mock("@/features/parent-report", () => ({ formatStudentAllianceCode: () => "" }));
 vi.mock("@/shared/lib/parcours-locale", () => ({ parcoursName: () => "" }));
