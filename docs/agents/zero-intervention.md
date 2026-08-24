@@ -60,12 +60,12 @@ Dans l'ordre, et on ne descend d'un cran que si le précédent est impossible :
 Les nommer honnêtement fait partie de la règle : une liste de blocages faux la fait pourrir
 plus vite qu'une liste courte et vraie.
 
-| Mur                                    | Pourquoi il tient                                                                                                                                                                               | Ce qui le lèverait                                             |
-| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| **Le classifieur d'auto-mode**         | Il vit chez l'éditeur de l'outil, pas dans le dépôt : une commande peut être `allow` dans `policy.json` et refusée quand même (vécu sur `harness:sync`, puis sur `gh secret set` le 2026-08-23) | Rien côté dépôt. Une règle de permission côté poste            |
-| **Les secrets et réglages hors dépôt** | Secrets GitHub, variables Vercel, console Supabase : la session n'a pas les identifiants de prod, **par conception** — c'est le filet, pas un oubli                                             | Voir l'étape 2 : supprimer le besoin du secret                 |
-| **GitHub Free sur le dépôt privé**     | Rulesets et protection de branche sont réservés aux dépôts publics sur ce compte : aucun check _requis_, donc pas d'auto-merge natif. La Content CI privée est **indicative**                   | Un plan payant — décision de Mohamed, pas un blocage technique |
-| **Les décisions non codables**         | Conformité mineurs, équilibrage de gameplay, arbitrage éditorial : elles dépendent de choses qu'aucun registre ne porte                                                                         | Rien. C'est son métier, pas le nôtre                           |
+| Mur                                    | Pourquoi il tient                                                                                                                                                                               | Ce qui le lèverait                                                     |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| **Le classifieur d'auto-mode**         | Il vit chez l'éditeur de l'outil, pas dans le dépôt : une commande peut être `allow` dans `policy.json` et refusée quand même (vécu sur `harness:sync`, puis sur `gh secret set` le 2026-08-23) | Rien côté dépôt. Une règle de permission côté poste                    |
+| **Les secrets et réglages hors dépôt** | Secrets GitHub, variables Vercel, console Supabase : la session n'a pas les identifiants de prod, **par conception** — c'est le filet, pas un oubli                                             | Voir l'étape 2 : supprimer le besoin du secret                         |
+| **GitHub Free sur le dépôt privé**     | Rulesets et protection de branche sont réservés aux dépôts publics sur ce compte : aucun check _requis_, donc pas d'auto-merge natif. La Content CI privée est **indicative**                   | **Rien — arbitré le 2026-08-24 : on reste en gratuit.** Ne pas rouvrir |
+| **Les décisions non codables**         | Conformité mineurs, équilibrage de gameplay, arbitrage éditorial : elles dépendent de choses qu'aucun registre ne porte                                                                         | Rien. C'est son métier, pas le nôtre                                   |
 
 ## Règle de maintenance de ce fichier
 
@@ -79,6 +79,30 @@ comptait cinq entrées : **deux étaient fausses** — le test à blanc du rollb
 2026-07-27 (huit dispatches verts), et le « rituel de triage à démarrer » tournait déjà six fois
 par jour… en échec depuis 25 jours. Une liste de blocages ne se relit pas, elle se **constate**
 — même règle que pour les statuts d'études.
+
+## Ce que le mur « GitHub Free » coûte vraiment, et ce qu'on a construit dessous
+
+L'arbitrage du 2026-08-24 (rester en gratuit) ne rend pas le dépôt de corpus manuel : il
+interdit seulement de rendre le gate **opposable**. Tout le reste s'automatise, et l'a été.
+
+- **`auto-pr.yml`** y ouvre désormais la PR de toute branche poussée. Sans lui, une session qui
+  pousse puis s'arrête laissait sa branche sans PR : **8 branches `claude/*` étaient dans ce
+  cas, jusqu'à cinq semaines.**
+- **`guard-watch.yml`** (les deux dépôts) ouvre une issue dès qu'un workflow programmé rougit.
+  Il existe parce que ce dépôt-ci a laissé `report-triage.yml` mourir 26 jours en criant dans
+  un onglet que personne n'ouvrait.
+- **Trois pièges propres au gratuit**, tous rencontrés en une journée et tous documentés dans
+  les fichiers concernés : une PR ouverte par le `GITHUB_TOKEN` n'émet pas d'événement
+  `pull_request` (il faut dispatcher ses checks) ; la **fin** d'un run ainsi dispatché n'émet
+  pas de `workflow_run` (il faut réveiller `automerge` explicitement) ; et les runs
+  `pull_request` d'une PR de robot restent en `action_required`.
+- **Ce qui reste vrai** : rien n'**empêche** de merger une PR rouge au privé. La parade n'est
+  pas technique, elle est dans cette règle — personne ne merge à la main, ni Mohamed ni une
+  session.
+
+Corollaire pour les gardes : ce qui coûte cher sur un dépôt **privé**, c'est le `schedule` —
+chaque job est facturé à la minute entamée, sur 2 000 mensuelles. Un filet se branche sur
+l'événement qui manque, jamais sur un balayage périodique « au cas où ».
 
 Voir aussi [`collaboration.md`](./collaboration.md) (la PR comme seul point de coordination),
 [`gardes.md`](./gardes.md) (les workflows de garde) et la DoD §8 d'`AGENTS.md` (la session qui
