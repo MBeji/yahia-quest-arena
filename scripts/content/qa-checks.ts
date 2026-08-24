@@ -56,6 +56,14 @@
  *           « sections » of a subject: Algèbre / Géométrie, قواعد اللغة…) is a
  *           LABEL with no reference table, so a second spelling of one domain is
  *           silently swallowed by the hub's grouping. Subject-level check.
+ *   [warn]  equation mixed into the prompt's prose → in an RTL prompt, a weighty
+ *           formula (a relation + a bracket/radical, 10+ chars) must sit ALONE on
+ *           its own line, not inside the Arabic sentence. Reported 2026-08-24: the
+ *           renderer used to split `(x − 4)(x + 2) = 0` across two lines, each
+ *           re-ordered on its own, so the student read two half-formulas mixed into
+ *           the prose. `.math-run` now keeps a formula unbreakable; this rule carries
+ *           the readability half of the ask (145 prompts at 2026-08-24). Warn until
+ *           the corpus campaign lands — see `INLINE_EQUATION_LEVEL`.
  *   [error] acceptedAnswers collision/charset   → étude 20 R-4/R-5: an accepted
  *           variant that equals a DECLARED-WRONG option would make cheating
  *           correct, and one outside the typable charset could never be entered.
@@ -69,6 +77,7 @@ import {
   TYPABLE_CHARSET,
 } from "../../src/shared/content/free-answer.ts";
 import { auditOptionReference } from "./qa-option-reference.ts";
+import { auditInlineEquation } from "./qa-inline-equation.ts";
 
 // La règle « option désignée par lettre/rang » vit dans son propre module (elle
 // pèse ~110 lignes de regex calibrées), mais reste exposée d'ici : `qa.ts` et les
@@ -79,6 +88,9 @@ export {
   optionReferences,
   OPTION_REFERENCE_LEVEL,
 } from "./qa-option-reference.ts";
+// Idem pour « une formule d'énoncé se pose seule sur sa ligne » : la règle et ses
+// gardes vivent dans leur module, mais restent exposées d'ici.
+export { auditInlineEquation, INLINE_EQUATION_LEVEL } from "./qa-inline-equation.ts";
 
 export type QAOption = { id: string; text: string; misconceptionTag?: string };
 export type QAQuestion = {
@@ -429,6 +441,7 @@ export function auditRenderedFields(
     }
     flags.push(...auditRtlNotation(raw, field, where));
     flags.push(...auditMathNotation(raw, field, where));
+    flags.push(...auditInlineEquation(raw, field, where));
   }
   return flags;
 }

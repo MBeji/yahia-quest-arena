@@ -1036,9 +1036,50 @@ html:not(.reference) .lesson-figure__plate {
   margin: 0.5rem 0;
 }
 
-/* RTL subject pages (Math & Arabic): keep equations and numbers LTR */
-[dir="rtl"] .lesson-math,
-[dir="rtl"] .math-equation {
+/* =====================================================
+  Une formule ne se coupe JAMAIS en deux lignes
+  ---------------------------------------------------
+  Les isolats Unicode de `src/shared/lib/bidi.ts` corrigent l'ORDRE des glyphes, jamais le
+  RETOUR À LA LIGNE : `LRI … PDI` reste cassable à chaque espace. Un énoncé arabe un peu long
+  voyait donc son équation scindée — `(x − 4)` en fin de ligne, `(x + 2) = 0` au début de la
+  suivante — et comme l'algorithme bidi réordonne CHAQUE ligne pour elle-même, l'élève lisait
+  deux moitiés de formule mêlées à la prose. Seul le rendu peut l'empêcher, d'où ces deux
+  classes, posées par `RichField`/`OptionContent` (`src/components/ui/svg-figure.tsx`).
+
+  `.math-run` reste un inline NON atomique (pas d'`inline-block`) : la ligne de base est celle
+  du texte qui l'entoure, et une formule trop large pour la ligne bascule entière à la ligne
+  suivante au lieu d'ouvrir un conteneur de défilement au milieu d'une phrase.
+
+  L'insécable est porté par `.math-run-tight`, ajouté par le rendu SEULEMENT quand la formule
+  tient sur une ligne (seuil dans `src/shared/lib/bidi.ts`) : une chaîne de calcul de corrigé
+  rendue insécable déborderait de la carte et ouvrirait une barre de défilement horizontale sur
+  toute la page. Trop longue, la formule reste donc isolée — comme avant — mais cassable.
+   ===================================================== */
+.math-run {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+.math-run-tight {
+  white-space: nowrap;
+}
+/* Une ligne qui n'est QUE de la notation : posée seule, centrée, hors du texte de la
+   question. Même traitement du débordement que `.lesson-math` — une équation trop longue
+   défile DANS son bloc plutôt que d'élargir la page du téléphone. */
+.math-equation {
+  display: block;
+  margin: 0.6rem 0;
+  text-align: center;
+  white-space: nowrap;
+  direction: ltr;
+  unicode-bidi: isolate;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* RTL subject pages (Math & Arabic): keep equations and numbers LTR.
+   `.math-equation` n'est plus listée ici : sa règle ci-dessus vaut déjà dans les deux sens. */
+[dir="rtl"] .lesson-math {
   direction: ltr;
   unicode-bidi: isolate;
   text-align: center;

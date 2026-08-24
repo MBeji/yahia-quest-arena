@@ -1,5 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { isolateLtrRuns, isolateLtrRunsHtml } from "@/shared/lib/bidi";
+import {
+  isDisplayEquation,
+  isolateLtrRuns,
+  isolateLtrRunsHtml,
+  splitMathRuns,
+} from "@/shared/lib/bidi";
+import { isMathExpression } from "@/shared/lib/utils";
 
 const LRI = "⁦";
 const PDI = "⁩";
@@ -154,5 +160,104 @@ describe("isolateLtrRunsHtml", () => {
   it("leaves pure-LTR (non-Arabic) html untouched", () => {
     const html = "<p>√50 = 5√2</p>";
     expect(isolateLtrRunsHtml(html)).toBe(html);
+  });
+});
+
+describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", () => {
+  const mathRuns = (text: string) => splitMathRuns(text).filter((run) => run.math);
+  const rebuild = (text: string) =>
+    splitMathRuns(text)
+      .map((run) => run.text)
+      .join("");
+
+  // Le défaut signalé en capture : l'isolat Unicode laissait le navigateur couper
+  // `(x − 4)(x + 2) = 0` entre les deux facteurs, et chaque ligne était réordonnée
+  // pour elle-même — deux moitiés de formule mêlées à la prose arabe.
+  it("garde l'équation de l'énoncé signalé dans UN seul run insécable", () => {
+    const runs = mathRuns("بتطبيق مبدأ الجداء المعدوم، ما حلول المعادلة (x − 4)(x + 2) = 0 ؟");
+    expect(runs).toHaveLength(1);
+    expect(runs[0].text).toContain("(x − 4)(x + 2) = 0");
+    expect(runs[0].nowrap).toBe(true);
+  });
+
+  it("ne perd ni n'ajoute aucun caractère", () => {
+    for (const text of [
+      "بتطبيق مبدأ الجداء المعدوم، ما حلول المعادلة (x − 4)(x + 2) = 0 ؟",
+      "Solve x² + 1 = 0 for x",
+      "أمثلة: √9 = 3، √16 = 4.",
+      "",
+    ]) {
+      expect(rebuild(text)).toBe(text);
+    }
+  });
+
+  // Parité stricte avec isolateLtrRuns : le rendu doit isoler exactement les mêmes
+  // runs qu'avant — ni plus (isoler `10 مي + 2 مي` le RENVERSE) ni moins.
+  it("marque exactement les runs qu'isolateLtrRuns isole", () => {
+    for (const text of [
+      "ما قيمة √64 ؟",
+      "الناتج √50 = √(25 × 2) = 5√2 إذن",
+      "10 مي + 2 مي = ؟",
+      "المساحة 10² متر",
+      "العدد a الموجب",
+      "حيث b &gt; 0 دائمًا",
+      "الدليل هو 10⁻⁴ هنا",
+    ]) {
+      const isolated = isolateLtrRuns(text);
+      expect(mathRuns(text).length).toBe((isolated.match(new RegExp(LRI, "g")) ?? []).length);
+      for (const run of mathRuns(text)) expect(isolated).toContain(`${LRI}${run.text}${PDI}`);
+    }
+  });
+
+  // Une chaîne de calcul de corrigé ne tient sur aucune ligne : l'insécable la
+  // ferait déborder de la carte. Elle reste isolée, mais cassable.
+  it("n'exige pas l'insécable d'une formule trop longue pour une ligne", () => {
+    const long = "الحساب p(Y = 1) = 4 × 0,368 × 0,632³ ≈ 4 × 0,368 × 0,2525 ≈ 0,372 إذن";
+    const runs = mathRuns(long);
+    expect(runs).toHaveLength(1);
+    expect(runs[0].nowrap).toBe(false);
+  });
+
+  it("laisse la prose latine intacte — la parenthèse n'avale pas la phrase", () => {
+    // `(like it), so it` était happé avant la garde « mot de prose ».
+    expect(mathRuns("Use the short form (like it), so it stays natural")).toHaveLength(0);
+    expect(mathRuns("Read the text below and answer the question.")).toHaveLength(0);
+  });
+
+  it("repère la formule d'un énoncé latin sans emporter les mots autour", () => {
+    const runs = mathRuns("Quelle est la solution de (x − 4)(x + 2) = 0 ?");
+    expect(runs).toHaveLength(1);
+    expect(runs[0].text.trim()).toBe("(x − 4)(x + 2) = 0");
+    expect(runs[0].nowrap).toBe(true);
+  });
+
+  it("garde un nom de fonction collé à sa parenthèse dans la formule", () => {
+    const runs = mathRuns("On sait que PGCD(42 ; 56) = 14 donc");
+    expect(runs).toHaveLength(1);
+    expect(runs[0].text).toContain("PGCD(42 ; 56) = 14");
+  });
+
+  it("ne marque pas une énumération de lettres sans opérateur", () => {
+    expect(mathRuns("Les points A B C D sont donnés")).toHaveLength(0);
+  });
+});
+
+describe("isDisplayEquation — la ligne qui ne porte QUE la formule", () => {
+  it("reconnaît une ligne-équation", () => {
+    expect(isDisplayEquation("(x − 4)(x + 2) = 0")).toBe(true);
+    expect(isDisplayEquation("  2x + 5 = 13  ")).toBe(true);
+    expect(isDisplayEquation("√50 = √(25 × 2) = 5√2")).toBe(true);
+    expect(isDisplayEquation("sin(x) = √3/2")).toBe(true);
+  });
+
+  it("refuse une ligne de prose — y compris celle qu'isMathExpression accepte", () => {
+    // `isMathExpression` sert à orienter une OPTION et accepte toute suite de
+    // lettres latines ; promouvoir une phrase en bloc centré serait visible.
+    expect(isMathExpression("Read the text")).toBe(true);
+    expect(isDisplayEquation("Read the text")).toBe(false);
+    expect(isDisplayEquation("ما حلول المعادلة ؟")).toBe(false);
+    expect(isDisplayEquation("Quelle est la solution de (x − 4)(x + 2) = 0 ?")).toBe(false);
+    expect(isDisplayEquation("")).toBe(false);
+    expect(isDisplayEquation("A B C")).toBe(false);
   });
 });

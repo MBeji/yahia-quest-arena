@@ -45,3 +45,84 @@ describe("figure rendering — visible on a light surface", () => {
     expect(container.querySelector("rect")).not.toBeNull();
   });
 });
+
+// ---------------------------------------------------------------------------
+// Une équation ne se coupe jamais en deux lignes, et ne se mêle pas au texte.
+//
+// L'isolat Unicode posé par `isolateLtrRuns` corrige l'ORDRE des glyphes, pas le
+// RETOUR À LA LIGNE. Un énoncé arabe un peu long voyait donc son équation scindée
+// entre deux lignes, chacune réordonnée pour elle-même — la capture signalée sur
+// `(x − 4)(x + 2) = 0`. Seul le rendu peut l'empêcher : ces tests l'épinglent.
+// ---------------------------------------------------------------------------
+const PROMPT_AR = "بتطبيق مبدأ الجداء المعدوم، ما حلول المعادلة (x − 4)(x + 2) = 0 ؟";
+
+describe("rendu des formules — insécables et hors du texte", () => {
+  it("pose l'équation d'un énoncé arabe dans un seul élément insécable", () => {
+    const { container } = render(<RichField raw={PROMPT_AR} />);
+    const runs = container.querySelectorAll(".math-run");
+    expect(runs).toHaveLength(1);
+    expect(runs[0].textContent).toContain("(x − 4)(x + 2) = 0");
+    expect(runs[0].className).toContain("math-run-tight");
+  });
+
+  it("rend le texte de l'énoncé sans y glisser de caractère invisible", () => {
+    const { container } = render(<RichField raw={PROMPT_AR} />);
+    // L'isolement passe désormais par un élément, plus par des LRI/PDI insérés
+    // dans le texte : ce que lit un lecteur d'écran est l'énoncé, exactement.
+    expect(container.textContent).toBe(PROMPT_AR);
+    expect(container.textContent).not.toMatch(/[⁦-⁩]/);
+  });
+
+  it("laisse la prose sans formule exactement telle quelle", () => {
+    const { container } = render(<RichField raw="ما ينصّ عليه مبدأ الجداء المعدوم؟" />);
+    expect(container.querySelectorAll(".math-run")).toHaveLength(0);
+    expect(container.textContent).toBe("ما ينصّ عليه مبدأ الجداء المعدوم؟");
+  });
+
+  it("pose une ligne qui n'est QUE la formule en bloc centré, hors de la question", () => {
+    const { container } = render(
+      <RichField
+        raw={"بتطبيق مبدأ الجداء المعدوم، ما حلول المعادلة التالية؟\n(x − 4)(x + 2) = 0"}
+      />,
+    );
+    const equation = container.querySelector(".math-equation");
+    expect(equation?.textContent).toBe("(x − 4)(x + 2) = 0");
+    // La prose garde sa propre ligne — le saut authored n'est plus aplati en espace.
+    expect(container.querySelectorAll(".block")).toHaveLength(1);
+  });
+
+  it("garde chaque ligne authored sur sa ligne (support de lecture puis question)", () => {
+    const { container } = render(
+      <RichField raw={'Read: "Tom is from London."\nWhere is Tom from?'} as="p" />,
+    );
+    const lines = container.querySelectorAll("p > span.block");
+    expect(lines).toHaveLength(2);
+    expect(lines[1].textContent).toBe("Where is Tom from?");
+    // `as="p"` : les lignes sont des <span> en display:block, jamais des <p> imbriqués.
+    expect(container.querySelector("p p")).toBeNull();
+  });
+
+  it("garde aussi la formule d'un énoncé latin d'un seul tenant", () => {
+    const { container } = render(
+      <RichField raw="Quelle est la solution de (x − 4)(x + 2) = 0 ?" />,
+    );
+    const runs = container.querySelectorAll(".math-run");
+    expect(runs).toHaveLength(1);
+    expect(runs[0].textContent?.trim()).toBe("(x − 4)(x + 2) = 0");
+  });
+
+  it("n'exige pas l'insécable d'une chaîne de calcul trop longue pour une ligne", () => {
+    const { container } = render(
+      <RichField raw="الحساب p(Y = 1) = 4 × 0,368 × 0,632³ ≈ 4 × 0,368 ≈ 0,372 إذن" />,
+    );
+    const runs = container.querySelectorAll(".math-run");
+    expect(runs).toHaveLength(1);
+    expect(runs[0].className).not.toContain("math-run-tight");
+  });
+
+  it("isole aussi la formule d'une option de réponse", () => {
+    const { container } = render(<OptionContent raw="x = −4 و x = 2" />);
+    expect(container.querySelectorAll(".math-run").length).toBeGreaterThan(0);
+    expect(container.textContent).toBe("x = −4 و x = 2");
+  });
+});
