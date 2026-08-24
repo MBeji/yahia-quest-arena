@@ -21,6 +21,11 @@
  *   7. Every GitHub Action in `.github/workflows/**` is pinned to a commit SHA,
  *      never a moving tag (étude 25 lot 5b). A tag's owner decides what runs with
  *      this repo's secrets; Dependabot covers npm, this covers Actions.
+ *   8. Every YAML file under `.github/**` parses STRICTLY — no duplicate mapping
+ *      key, no syntax error. Delegated to `scripts/ci/check-workflow-yaml.mjs`,
+ *      whose header tells the 2026-08-24 story: a key shipped twice by two
+ *      sessions killed `auto-pr.yml` for the whole repo with zero jobs and no
+ *      log, and every lenient parser called the file valid.
  *
  * Driven by `.github/workflows/ci.yml` (job `verify`) and `npm run ci:verify`.
  * Pure helpers are exported and unit-tested; `main()` does the filesystem walk and
@@ -31,6 +36,7 @@
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
 import { pathToFileURL } from "node:url";
+import { checkYamlFiles, collectGithubYaml } from "../ci/check-workflow-yaml.mjs";
 import { buildViews } from "./sync.mjs";
 
 const ROOT = join(import.meta.dirname, "..", "..");
@@ -313,10 +319,17 @@ function main() {
     }
   }
 
+  // 7. Strict YAML under `.github/**` — a duplicate mapping key ends the run as
+  // `startup_failure`: zero jobs, no log, no annotation. Lenient parsers (last
+  // key wins) call such a file valid, so this needs a parser with `uniqueKeys`,
+  // not a convention. See check-workflow-yaml.mjs for the incident it replays.
+  problems.push(...checkYamlFiles(collectGithubYaml(ROOT)));
+
   if (problems.length === 0) {
     console.log(
       "[harness:check] OK — pointers intact, AGENTS.md in budget, no hidden Unicode, " +
-        "no stray model ids, Actions pinned to SHAs, generated views in sync.",
+        "no stray model ids, Actions pinned to SHAs, .github YAML parses strictly, " +
+        "generated views in sync.",
     );
     return;
   }
