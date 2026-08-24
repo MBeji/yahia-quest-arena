@@ -95,6 +95,16 @@ que le gate d'ici serait resté vert. Aggravant : **`ci.yml` n'a pas tourné sur
 
 1. Une panne « `npm ci` ne casse que là-bas » se reproduit **avec la version de npm de l'autre
    CI**, pas avec celle qu'on a sous la main. `npm ci --dry-run` suffit et coûte quelques secondes.
+   ✅ **Ce réflexe est devenu un gate le 2026-08-24** (arbitrage A17) : l'étape « Canari npm 10 »
+   du job `verify` rejoue la résolution du lockfile sous **npm 10** à chaque PR. Elle est dans un
+   check **requis** — un canari qui ne bloque pas est un canari qu'on lit après coup.
+   **Éprouvée dans les deux sens avant livraison**, en reproduisant cet incident sur une copie du
+   lock (suppression de l'entrée imbriquée `vite-tsconfig-paths/node_modules/typescript`, ce que
+   la régénération fautive avait fait) : **npm 11 → « added 511 packages », vert** ; **npm 10 →
+   « Missing: typescript@5.9.3 from lock file », rouge**. Le différentiel est mesuré, pas supposé.
+   ⚠️ En cas d'échec, lire le **début** de la sortie de npm : il affiche sa bannière d'aide après
+   l'erreur, et un `| tail` fait croire à un drapeau refusé alors que la cause (`EUSAGE`, avec le
+   paquet manquant nommé) est en tête. Le piège a coûté une fausse piste le jour même.
 2. **Ne pas réparer un lock désynchronisé par une simple re-synchro** sans regarder ce que le bump
    a fait entrer. `npm install --package-lock-only` faisait repasser `npm ci` ici — en consolidant
    l'alpha et les deux majeures que personne n'avait arbitrées. Le **revert** (#718) était la bonne
