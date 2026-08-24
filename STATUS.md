@@ -386,30 +386,36 @@ Une ligne n'entre ici que si elle cite un **mur** de
 [`docs/agents/zero-intervention.md`](./docs/agents/zero-intervention.md) : décision non codable,
 réglage hors dépôt, ou plan GitHub. Sinon c'est de l'exécution, et l'exécution ne remonte pas.
 
-1. **Brancher une clé pour le pilote Q-9** (rang 0.1) — réglage hors dépôt.
-2. **Conformité mineurs (GAP-003)** — décisions juridiques, non codables. ⚠️ Nuance qui change
-   l'affectation : **le volet « droits des personnes » de GAP-024 est du CODE**, et il en reste
-   un tiers (l'export). Ce n'est pas une ligne d'attente, c'est un lot à prendre.
-3. **Trancher A15/A16** — l'équilibrage que le simulateur a mis à nu (#708) : G-1 (« niveau 5 en
-   7-14 j ») est arithmétiquement hors d'atteinte pour le persona moyen, et les shields sont
-   rachetés 38 % des jours manqués contre ≤ 20 % visés. ⚠️ **Ne pas retoucher `gamification.ts`
-   pour faire passer un test.** ⚠️ Et A15 n'est pas neutre à laisser en attente : tant que G-1
-   reste au tableau, `economy:check` échoue **par construction** — un garde-fou qui échoue
-   toujours cesse d'être lu.
-4. **Trancher A17** — revenir à Node 22 (garder le canari) ou tenir Node 24 et poser la vraie
-   garde : refuser une PR de dépendance dont le **diff dépasse ce que son titre annonce**. Ne pas
-   trancher par confort : le statu quo est l'option qui a déjà coûté 33 h de Content CI rouge.
-5. **Le geste opérateur de triage** (#673) — 2 signalements déjà triés restent `open` en prod,
+> 🗳️ **Cinq lignes ont été tranchées le 2026-08-24**, une par une, avec préconisation. Le détail
+> et les contreparties assumées sont au [journal des décisions](./docs/journal-decisions.md) —
+> **ne pas les rouvrir sans une raison neuve.** Ce qu'elles laissent à faire est passé côté
+> exécution, c'est-à-dire côté Claude.
+
+1. **Le geste opérateur de triage** (#673) — 2 signalements déjà triés restent `open` en prod,
    en attente de la seule application de leur statut (`[triage-pregate] open=2 fresh=0 →
 stale-handled, last reminded 25 days ago`). ⚠️ Cette ligne ne cite **aucun** mur : appliquer
    une recommandation déjà écrite, deux fois réaffirmée (#651, #658, #673), est de l'exécution.
    Elle n'est ici que faute de mécanisme — `report-close.yml` ne sait clôturer qu'au merge d'une
-   PR portant des trailers `Report-Id:`, jamais rétroactivement.
-6. **Le drill de portabilité du harness** (é25 L7) — session hors file, avec Mohamed. C'est ce
+   PR portant des trailers `Report-Id:`, jamais rétroactivement. **À construire, pas à demander.**
+2. **Le dépôt de la déclaration INPDP** (GAP-003) — geste administratif hors dépôt. Le reste est
+   à Claude : inventaire factuel des traitements + projet de registre (arbitrage du 2026-08-24 —
+   dossier monté en interne, sans conseil externe, contrepartie assumée au journal).
+3. **Le drill de portabilité du harness** (é25 L7) — session hors file, avec Mohamed. C'est ce
    qui fermerait l'étude.
 
-~~**Coller les 3 gabarits d'e-mail FR**~~ — **tranché le 2026-08-24 : les e-mails restent en
-anglais.** Ne pas rouvrir, et ne pas re-signaler la langue du premier contact comme un défaut.
+**Tranché le 2026-08-24, et donc plus en attente de personne :**
+
+- ~~**Brancher une clé pour le pilote Q-9**~~ → **l'étage IA reste ÉTEINT.** ⚠️ Le corollaire ne
+  doit pas se perdre : é11 et é29 restent vertes au tableau alors qu'**aucune de leurs lignes n'a
+  jamais servi en vrai**, et le risque grandit à chaque lot livré par-dessus.
+- ~~**Trancher A15**~~ → **G-1 devient une fenêtre par profil** (assidu / moyen / occasionnel non
+  jugé). Mesures du jour : assidu J+6, moyen J+31, occasionnel jamais en 8 semaines. Lot à prendre
+  dans `scripts/economy/assertions.mjs`. ⚠️ **A16 (shields) n'est PAS tranché** — et son chiffre a
+  bougé : la ROADMAP dit 38 %, le simulateur dit **53 %** au 2026-08-24. Revue mensuelle (A9).
+- ~~**Trancher A17**~~ → **canari `npm ci --dry-run` sous npm 10**, Node 24 conservé. Lot à prendre.
+- ~~**Coller les 3 gabarits d'e-mail FR**~~ → **les e-mails restent en anglais.** Ne pas rouvrir,
+  et ne pas re-signaler la langue du premier contact comme un défaut.
+- ~~**Conformité mineurs : quelle voie**~~ → **dossier monté en interne** (voir ligne 2 ci-dessus).
 
 > **▶ Reprise pour une session vierge** — `main` à **#832** au 2026-08-24, **zéro PR en vol au
 > moteur**, deux chantiers hors PR (§6).
