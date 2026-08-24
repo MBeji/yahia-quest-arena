@@ -51,7 +51,9 @@ export function assertProdReportSource(url) {
       `(expected the project ref ${PROD_SUPABASE_REF}, got ${url}). ` +
       `The triage file must describe the reports REAL users filed — reading any ` +
       `other project yields a plausible export of the wrong database. ` +
-      `In CI, check the PROD_SUPABASE_URL / PROD_SUPABASE_SERVICE_ROLE_KEY secrets.`,
+      `In CI the URL is NOT a secret: report-triage.yml and report-close.yml resolve it ` +
+      `from PROD_SUPABASE_API_URL (scripts/shared/prod-targets.mjs), so this firing there ` +
+      `means that module changed — not that a secret needs fixing.`,
   );
 }
 
