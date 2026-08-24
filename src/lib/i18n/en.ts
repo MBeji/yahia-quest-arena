@@ -510,6 +510,15 @@ export const en: TranslationKeys = {
       parentDigest: "I'll mention it to your parents this week, so they can help too.",
       cta: "Okay",
     },
+    practice: {
+      cta: "Train me on this",
+      loading: "Looking for something to practise on…",
+      onTargetHint: "I found some questions that work on exactly this mistake.",
+      offTargetHint: "Nothing lands exactly on it — let's practise on nearby questions instead.",
+      forgingHint: "There's nothing fresh enough on this: I'll write you some new ones.",
+      noChapter: "I don't know yet which chapter to practise this mistake in.",
+      noMaterial: "I've got nothing to offer you on this one right now.",
+    },
   },
   subscription: {
     premiumTitle: "Premium Feature",

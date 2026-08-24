@@ -40,6 +40,14 @@ export {
 } from "./escalation";
 
 export {
+  startTargetedPractice,
+  type TutorPracticeItem,
+  type TutorPracticeResult,
+} from "./tutor.practice.server";
+
+export { decidePractice, type TutorPracticeFacts, type TutorPracticeIntent } from "./practice";
+
+export {
   dayIndexOf,
   daysAwayFrom,
   momentKey,
@@ -63,5 +71,6 @@ export {
 } from "./prompt";
 
 export { TutorPanel } from "./components/tutor-panel";
+export { TutorPracticeEntry } from "./components/tutor-practice-entry";
 export { TutorCoachLine, TutorGreeting } from "./components/tutor-coach";
 export { TutorPlanPushCard } from "./components/tutor-plan-push-card";

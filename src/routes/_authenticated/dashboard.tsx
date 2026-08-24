@@ -24,6 +24,7 @@ import { ForgeEntry } from "@/features/ai/components/forge-entry";
 // panneau de correction et ses server fns dans le chunk du tableau de bord,
 // alors que ces deux composants-ci sont purs et sans appel réseau.
 import { TutorCoachLine, TutorGreeting } from "@/features/tutor/components/tutor-coach";
+import { TutorPracticeEntry } from "@/features/tutor/components/tutor-practice-entry";
 import { daysAwayFrom } from "@/features/tutor/coaching";
 import { appLocalDate } from "@/shared/lib/app-day";
 import { DailyReviewPanel, recoverStreak } from "@/features/progression";
@@ -318,8 +319,18 @@ function Dashboard() {
             dit, elle, le pourcentage. Le panneau ne rend rien tant qu'aucune erreur n'est
             active : c'est l'état normal d'un compte neuf, et une absence vaut mieux qu'un
             encadré vide. */}
+        {/* Le geste d'entraînement d'El Ostedh (étude 11 lot 5, US-11/US-12),
+            posé par la ROUTE dans le panneau de `progression` : il cible par le
+            TAG autant que par la compétence, et bascule vers des questions
+            écrites pour l'occasion quand le stock ne suffit pas (Q-8). Il
+            REMPLACE le bouton « S'entraîner » du panneau — un seul chemin de
+            remédiation (A12). Même motif que `renderCoach` ci-dessus : aucune
+            feature n'en importe une autre. */}
         <Suspense fallback={null}>
-          <WeaknessesPanel weaknesses={data.weaknesses ?? []} />
+          <WeaknessesPanel
+            weaknesses={data.weaknesses ?? []}
+            renderPractice={(weakness) => <TutorPracticeEntry weakness={weakness} />}
+          />
         </Suspense>
 
         {/* STREAK RECOVERY BANNER */}

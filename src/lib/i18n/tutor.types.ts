@@ -157,4 +157,40 @@ export interface TutorTranslations {
     /** Le bouton qui suit la proposition. */
     cta: string;
   };
+
+  /**
+   * L'ENTRAÎNEMENT CIBLÉ (lot 5, US-11 / US-12) — « Entraîne-moi là-dessus ».
+   *
+   * ⚠️ CES PHRASES NE DOIVENT JAMAIS PROMETTRE PLUS QUE CE QUI EST SERVI.
+   * La sélection distingue deux qualités de matériel : les questions qui
+   * portent VRAIMENT l'erreur, et le repli (même chapitre, difficulté voisine).
+   * `onTargetHint` annonce les premières, `offTargetHint` avoue les secondes.
+   * Les confondre — une seule phrase « sur ton erreur » pour les deux cas —
+   * serait le genre de petit mensonge qu'un enfant repère au premier énoncé, et
+   * qui lui apprend à ne plus croire l'écran.
+   *
+   * Le mot « Forge » n'apparaît dans AUCUNE de ces clés : l'élève ne pilote pas
+   * une usine, on lui écrit des questions. Le nom du sous-système est une
+   * affaire d'ingénierie (étude 15 — le ton élève ne nomme pas la plomberie).
+   */
+  practice: {
+    /** Le geste, sur une ligne de « Tes points faibles ». */
+    cta: string;
+    /** L'attente pendant la sélection. */
+    loading: string;
+    /** Le stock couvre l'erreur : on joue des questions du catalogue. */
+    onTargetHint: string;
+    /** Rien d'assez ciblé : on joue du proche, et on le DIT. */
+    offTargetHint: string;
+    /** Le stock ne suffit pas et on part en écrire — le renvoi vers la Forge. */
+    forgingHint: string;
+    /**
+     * On ne sait pas dans quel chapitre vit cette erreur : ni stock à cibler,
+     * ni cible à écrire. `chapter_id` est nullable dans `get_my_weaknesses` —
+     * c'est un cas réel, pas un cas limite.
+     */
+    noChapter: string;
+    /** On sait où, mais il n'y a rien à jouer et rien ne peut être écrit. */
+    noMaterial: string;
+  };
 }

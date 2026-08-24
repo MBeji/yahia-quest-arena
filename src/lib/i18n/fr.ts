@@ -519,6 +519,15 @@ export const fr: TranslationKeys = {
       parentDigest: "J'en parle à tes parents cette semaine, pour qu'ils t'aident aussi.",
       cta: "D'accord",
     },
+    practice: {
+      cta: "Entraîne-moi là-dessus",
+      loading: "Je cherche de quoi t'entraîner…",
+      onTargetHint: "J'ai trouvé de quoi retravailler exactement cette erreur.",
+      offTargetHint: "Je n'ai rien d'exactement ciblé — on s'entraîne sur des questions voisines.",
+      forgingHint: "Il n'y a rien d'assez frais là-dessus : je t'en écris de nouvelles.",
+      noChapter: "Je ne sais pas encore dans quel chapitre travailler cette erreur.",
+      noMaterial: "Je n'ai rien à te proposer là-dessus pour l'instant.",
+    },
   },
   subscription: {
     premiumTitle: "Fonctionnalité Premium",
