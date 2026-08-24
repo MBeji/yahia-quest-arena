@@ -73,6 +73,21 @@ export const AI_INTERNAL_FEATURES = ["verify", "forge_solve"] as const;
  *
  * État au 2026-08-22 : seule la Forge (étude 29 lot 4) est livrée. Les sept
  * autres attendent leurs lots de l'étude 11.
+ *
+ * ⚠️ `digest_student` / `digest_parent` N'Y ENTRENT PAS, ET L'ÉCRAN EXISTE
+ * POURTANT (é11 lot 6, 2026-08-24). C'est l'exception qui précise la règle : ce
+ * qu'un parent coche ici, ce n'est pas « la surface est-elle allumée », c'est
+ * « ma clé la paie-t-elle ». Or les bilans sont produits par un BATCH
+ * hebdomadaire (`/api/cron/digest`), sur le chemin plateforme — et
+ * `resolve_ai_access` y retombe de lui-même pour toute surface non activée. Les
+ * ajouter ici ne les allumerait donc pas ; ça ferait facturer, le dimanche
+ * matin et sans geste de personne, la clé d'une famille pour un texte qu'elle
+ * n'a pas demandé — et décocher la case n'arrêterait rien, les bilans
+ * continuant d'arriver aux frais de la plateforme. Un interrupteur qui n'éteint
+ * pas est la même faute que celui qui n'allume pas, vue de l'autre côté.
+ *
+ * Le jour où l'étude voudra qu'une famille paie ses propres bilans, il faudra
+ * l'entrée ici ET un chemin qui HONORE le refus — pas seulement l'entrée.
  */
 export const AI_LIVE_FEATURES = ["forge"] as const satisfies readonly Exclude<
   AiFeature,

@@ -4,6 +4,10 @@ import { consumeLastCapturedError } from "@/shared/lib/error-capture";
 import { renderErrorPage } from "@/shared/lib/error-page";
 import { logger } from "@/shared/lib/logger";
 import { handlePushCron } from "@/features/notifications/notifications.cron.server";
+// Le batch des bilans hebdomadaires (é11 lot 6). Importé par son chemin COMPLET
+// et non par `@/features/tutor` : le barrel de la feature est tiré par du code
+// client, et ce module-ci traîne `callAi` et le client `service_role`.
+import { handleDigestCron } from "@/features/tutor/digest.server";
 // La route SSE du tuteur (é11 lot 3, D-7). Importée directement, comme le cron :
 // elle porte sa propre auth et rend un flux, deux choses qu'une server fn ne
 // sait pas faire.
@@ -88,6 +92,23 @@ export default {
         return await handlePushCron(request);
       } catch (error) {
         logger.error("Push cron dispatch failed", { error });
+        return new Response("error", { status: 500 });
+      }
+    }
+
+    // Bilans hebdomadaires (é11 lot 6) — même posture que le push ci-dessus :
+    // auth propre (CRON_SECRET), réponse JSON, interception AVANT le SSR.
+    //
+    // Une porte SÉPARÉE, et pas une branche de plus dans `/api/cron/notify` :
+    // le batch se compte en minutes quand la fonction SSR a trente secondes, et
+    // son échec emporterait les notifications push s'ils partageaient la même
+    // requête. Le tranchage vit dans `handleDigestCron` ; le script d'appel
+    // rappelle cette route jusqu'à épuisement du curseur.
+    if (new URL(request.url).pathname === "/api/cron/digest") {
+      try {
+        return await handleDigestCron(request);
+      } catch (error) {
+        logger.error("Digest cron dispatch failed", { error });
         return new Response("error", { status: 500 });
       }
     }
