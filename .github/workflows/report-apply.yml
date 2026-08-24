@@ -1,0 +1,186 @@
+name: Report apply (appliquer les recommandations mûres)
+
+# Applique les statuts que le triage a DÉJÀ recommandés, sans geste humain.
+#
+# LA LIGNE QU'IL SUPPRIME — au 2026-08-24, `STATUS.md` portait encore « le geste
+# opérateur de triage » parmi les choses en attente d'un humain : deux
+# signalements restaient `open` en production alors que leur sort était décidé,
+# écrit et réaffirmé trois fois (#651, #658, #673). Le pré-vol du triage le
+# répétait à chaque passage — `open=2 fresh=0 → stale-handled, last reminded 25
+# days ago` — sans que rien ne puisse l'appliquer : `report-close.yml` ne
+# clôture qu'au merge d'une PR portant des trailers `Report-Id:`, jamais
+# rétroactivement.
+#
+# Appliquer une recommandation déjà écrite est de l'exécution, pas une décision
+# (docs/agents/zero-intervention.md). La ligne n'attendait pas un arbitrage,
+# elle attendait un mécanisme.
+#
+# CE QU'IL NE FAIT PAS : juger. Il ne relit aucun signalement et n'invente aucun
+# statut — il exécute ce que l'agent de triage a écrit dans son issue de suivi.
+# La décision reste ailleurs, antérieure, et relisible par un humain à tout
+# moment. Les quatre gardes (maturation, préfixe unique, statuts en liste
+# blanche, idempotence) sont détaillées dans
+# `scripts/reports/apply-recommendations.mjs`.
+#
+# CE QU'IL N'ÉCRIT PAS NON PLUS : il ne ferme aucune issue. Le tableau de
+# clôture reste ouvert pour qui veut le relire, et une issue de triage fermée
+# par une machine se re-dupliquerait au passage suivant (piège vécu, #651/#658).
+# Il ajoute un commentaire disant ce qu'il a fait — et ce qu'il a refusé de
+# faire, ce qui compte davantage.
+#
+# Prérequis (le job SKIPPE en restant vert si le secret manque) :
+#   • PROD_SUPABASE_SERVICE_ROLE_KEY — les tables de signalements sont sous RLS.
+# L'URL de prod n'est PAS un secret : elle est résolue depuis le dépôt
+# (`PROD_SUPABASE_API_URL`), pour la raison écrite dans report-triage.yml.
+
+on:
+  schedule:
+    # Une fois par jour. Rien ne presse : ce qu'on applique a mûri sept jours.
+    - cron: "37 6 * * *"
+  workflow_dispatch:
+    inputs:
+      min_age_days:
+        description: "Délai de maturation avant application (jours)"
+        type: string
+        default: "7"
+      dry_run:
+        description: "Planifier sans écrire"
+        type: boolean
+        default: true
+
+concurrency:
+  group: report-apply
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  # Commenter l'issue de suivi.
+  issues: write
+
+jobs:
+  apply:
+    name: appliquer les recommandations mûres
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+      # Le cron applique pour de vrai ; une dispatch est en simulation SAUF si on
+      # décoche explicitement. Le défaut le plus sûr est celui de l'humain qui
+      # essaie, pas celui de la machine qui tourne seule depuis des semaines.
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'false' }}
+      MIN_AGE_DAYS: ${{ github.event_name == 'workflow_dispatch' && inputs.min_age_days || '7' }}
+    steps:
+      - name: Vérifier le secret
+        id: guard
+        run: |
+          if [ -z "${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}" ]; then
+            echo "PROD_SUPABASE_SERVICE_ROLE_KEY absent — rien à appliquer."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+
+      - name: Setup Node
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.guard.outputs.configured == 'true'
+        run: npm ci --no-audit --no-fund
+
+      - name: Résoudre l'URL de prod (depuis le dépôt, pas un secret)
+        if: steps.guard.outputs.configured == 'true'
+        run: |
+          url="$(node --input-type=module -e 'const m = await import("./scripts/shared/prod-targets.mjs"); process.stdout.write(m.PROD_SUPABASE_API_URL)')"
+          if ! printf '%s' "$url" | grep -qE '^https://[a-z0-9]+\.supabase\.co$'; then
+            echo "::error::PROD_SUPABASE_API_URL n'a pas résolu vers une URL Supabase (obtenu '$url')."
+            exit 1
+          fi
+          echo "PROD_SUPABASE_API_URL=$url" >> "$GITHUB_ENV"
+
+      - name: Exporter les signalements ouverts (lecture seule)
+        if: steps.guard.outputs.configured == 'true'
+        env:
+          SUPABASE_URL: ${{ env.PROD_SUPABASE_API_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
+        run: node scripts/reports/export-reports.mjs --out "$RUNNER_TEMP/open.json"
+
+      - name: Planifier (aucune écriture à cette étape)
+        id: plan
+        if: steps.guard.outputs.configured == 'true'
+        run: |
+          set -euo pipefail
+          gh issue list --state open --search 'Triage des signalements in:title' --limit 50 \
+            --json number,createdAt,body > "$RUNNER_TEMP/issues.json"
+
+          node --input-type=module -e '
+            import { readFileSync, writeFileSync } from "node:fs";
+            const m = await import("./scripts/reports/apply-recommendations.mjs");
+            const issues = JSON.parse(readFileSync(process.env.ISSUES, "utf8"));
+            const exported = JSON.parse(readFileSync(process.env.OPEN, "utf8"));
+            const plan = m.planApplications({
+              issues,
+              open: exported,
+              now: new Date().toISOString(),
+              minAgeDays: Number(process.env.MIN_AGE_DAYS),
+            });
+            writeFileSync(process.env.PLAN, JSON.stringify(plan, null, 2));
+            for (const s of ["dismissed", "resolved"]) {
+              writeFileSync(`${process.env.RUNNER_TEMP}/trailers-${s}.txt`, m.renderTrailers(plan.apply, s));
+            }
+            console.log(`[apply] à appliquer=${plan.apply.length} · écartés=${plan.skipped.length}`);
+            for (const s of plan.skipped) console.log(`[apply]   écarté ${s.channel}/${s.id} (#${s.issue}) — ${s.why}`);
+          '
+        env:
+          ISSUES: ${{ runner.temp }}/issues.json
+          OPEN: ${{ runner.temp }}/open.json
+          PLAN: ${{ runner.temp }}/plan.json
+
+      - name: Appliquer
+        if: steps.guard.outputs.configured == 'true' && env.DRY_RUN != 'true'
+        env:
+          SUPABASE_URL: ${{ env.PROD_SUPABASE_API_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          set -euo pipefail
+          for status in dismissed resolved; do
+            f="$RUNNER_TEMP/trailers-$status.txt"
+            if [ -s "$f" ]; then
+              echo "— $status —"
+              node scripts/reports/resolve-reports.mjs --body-file "$f" --status "$status"
+            fi
+          done
+
+      # Le rendu vit dans le module (donc testé), pas ici : la leçon du
+      # 2026-08-24, où du shell non éprouvé glissé dans un workflow a cassé
+      # auto-pr pour tout le dépôt. Ce pas ne fait qu'écrire des fichiers et
+      # boucler dessus.
+      - name: Dire ce qui a été fait, et ce qui a été écarté
+        if: steps.guard.outputs.configured == 'true'
+        run: |
+          set -euo pipefail
+          node --input-type=module -e '
+            import { readFileSync, writeFileSync } from "node:fs";
+            const m = await import("./scripts/reports/apply-recommendations.mjs");
+            const plan = JSON.parse(readFileSync(process.env.PLAN, "utf8"));
+            const comments = m.renderIssueComments(plan, process.env.DRY_RUN === "true");
+            for (const c of comments) {
+              writeFileSync(`${process.env.RUNNER_TEMP}/comment-${c.issue}.md`, c.body);
+            }
+            console.log(`[apply] ${comments.length} commentaire(s) à poster.`);
+          '
+          for f in "$RUNNER_TEMP"/comment-*.md; do
+            [ -e "$f" ] || continue
+            n="$(basename "$f" .md)"; n="${n#comment-}"
+            gh issue comment "$n" --body-file "$f" >/dev/null && echo "commenté #$n"
+          done
+        env:
+          PLAN: ${{ runner.temp }}/plan.json
