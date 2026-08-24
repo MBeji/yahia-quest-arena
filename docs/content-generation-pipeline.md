@@ -710,6 +710,9 @@ flowchart TD
 
     T6["🪤 Piège n°6 :\nécrire du Markdown dans\nprompt / explanation /\ntexte d'une option"] --> C6["ces champs passent par RichField,\nqui rend un nœud de TEXTE BRUT\n→ l'élève voit **les astérisques**"]
     C6 --> S6["✅ Solution : aucun balisage dans\nles champs de question.\nLe Markdown ne vaut que pour\ncours.md et resume.md"]
+
+    T7["🪤 Piège n°7 :\nlaisser une formule un peu longue\nDANS la phrase d'un énoncé arabe"] --> C7["le navigateur la coupe en deux lignes,\nchacune réordonnée pour elle-même\n→ deux moitiés d'équation\nmêlées à la prose"]
+    C7 --> S7["✅ Solution : la formule SEULE\nsur sa ligne (un \n avant, un après\nsi la phrase continue).\ncontent:qa le signale"]
 ```
 
 > **Piège n°6, en clair.** `cours.md` et `resume.md` sont du Markdown ; **les champs d'une
@@ -732,6 +735,35 @@ flowchart TD
 > doit passer avec — ou juste après — la bascule. Le levier est
 > `QUESTION_MARKUP_LEVEL` (une ligne, `"error"` → `"warn"`), sur le modèle de
 > `OPTION_REFERENCE_LEVEL`.
+
+> **Piège n°7, en clair — une formule, une ligne.** Signalé en capture le 2026-08-24 sur
+> `math/04-equations-inequations` : l'énoncé
+> `بتطبيق مبدأ الجداء المعدوم، ما حلول المعادلة (x − 4)(x + 2) = 0 ؟` s'affichait avec son
+> équation **coupée entre deux lignes** — `(x − 4)` finissant l'une, `(x + 2) = 0` ouvrant
+> l'autre. L'algorithme bidi réordonnant **chaque ligne pour elle-même**, l'élève lisait deux
+> moitiés de formule mêlées à la prose arabe. Les isolats Unicode de
+> [`bidi.ts`](../src/shared/lib/bidi.ts) n'y pouvaient rien : `LRI … PDI` corrige l'ORDRE des
+> glyphes, jamais le retour à la ligne.
+>
+> **Le rendu ne coupe plus une formule** : `RichField` pose chaque run mathématique dans un
+> élément `.math-run` insécable et isolé LTR, et une ligne qui n'est **que** de la notation
+> devient un bloc centré `.math-equation`. C'est valable partout, tout de suite, sans toucher
+> au corpus.
+>
+> **Reste la règle d'écriture** : dans un énoncé arabe, une formule d'un certain poids (une
+> relation + un délimiteur ou un radical, 10 signes ou plus) se pose **seule sur sa ligne**,
+> pas dans la phrase — `…ما حلول المعادلة التالية؟\n(x − 4)(x + 2) = 0`. `content:qa` la
+> signale (`auditInlineEquation`), en `[warn]` le temps que la campagne passe :
+> **145 énoncés** concernés au 2026-08-24 (85 `math`, 27 `math-8eme`, 25 `math-7eme`,
+> 7 `svt`, 1 `iq-training-ar`). Levier de bascule : `INLINE_EQUATION_LEVEL`.
+>
+> La règle se déclenche sur le **cadre de phrase**, pas sur la forme de la formule : elle
+> exige que l'énoncé NOMME l'objet qu'il donne à traiter (`المعادلة`, `المتراجحة`, `العبارة`,
+> `الجملة`, `الدالة`, `المجموعة`, `قانون`, `علاقة`, `الحصر`). C'est le seul discriminant
+> fiable — aucune regex ne distingue `m = 1500 g` (une masse, à sa place dans le récit du
+> problème) de `x = 5`, mais le mot qui les introduit, si. Restent donc hors visée, à dessein :
+> les données de physique-chimie (`ρ = 0.7 g/cm³`, `M(S) = 32 g/mol`), les longueurs d'une
+> figure (`BC = 10 cm`) et l'arithmétique de primaire (`في العمليّة 40 + 25 = 65، ما هما الحدّان؟`).
 
 ---
 
