@@ -92,6 +92,16 @@ l'absence future d'un run ne se distingue pas de son retard) : la dispatch est d
 inconditionnelle, et les deux runs en parallèle décrits ci-dessus sont le régime
 **normal** de toute PR, pas seulement des PR sans PAT.
 
+⚠️ **Cette étape-là utilise le `GITHUB_TOKEN`, pas le PAT** — surcharge explicite, à ne
+pas « nettoyer ». Le PAT porte `Workflows` (écrire les fichiers `.github/workflows/**`),
+**pas** `Actions` (piloter les runs) : il répond `HTTP 403: Resource not accessible by
+personal access token` sur `POST /actions/workflows/{id}/dispatches` (constaté PR #829).
+Le `GITHUB_TOKEN` porte le `actions: write` déclaré par le workflow, et `workflow_dispatch`
+est l'une des deux exceptions à la règle « un événement émis par le `GITHUB_TOKEN` ne
+déclenche aucun workflow ». Chacun son rôle : le PAT pour l'**identité** collaborateur,
+le `GITHUB_TOKEN` pour le **droit de déclencher**. Alternative écartée : ajouter `Actions`
+au PAT — ça marcherait, mais ça dépend d'un réglage hors dépôt et ça meurt avec le PAT.
+
 ## 3. La PR — le gate complet (4 checks requis + previews)
 
 | Check requis         | Workflow             | Ce qu'il prouve                                                                                                                                                                                                                                                            |
