@@ -70,8 +70,10 @@ permissions:
   # Create the PR and enable auto-merge.
   pull-requests: write
   # Dispatch the required-check workflows on the new PR's branch. Plus un chemin
-  # de secours : la dernière étape dispatche sur les DEUX chemins de jeton, donc
-  # cette portée est requise même quand `GH_AUTOMATION_PAT` est configuré.
+  # de secours : la dernière étape dispatche TOUJOURS. Et cette portée n'est pas
+  # décorative quand un PAT existe — c'est même là qu'elle sert : le PAT n'ayant
+  # pas la permission « Actions », l'étape retombe explicitement sur le
+  # `GITHUB_TOKEN`, à qui cette ligne donne le droit de déclencher.
   actions: write
 
 jobs:
@@ -269,6 +271,25 @@ jobs:
         # relancent par l'événement `synchronize`.
         if: steps.pr.outputs.created == 'true'
         env:
+          # ⚠️ On SURCHARGE ici le `GH_TOKEN` du job (le PAT) par le
+          # `GITHUB_TOKEN`, et c'est indispensable : le PAT n'a PAS la
+          # permission « Actions ». Constaté au premier run de cette étape
+          # (PR #829) — `HTTP 403: Resource not accessible by personal access
+          # token` sur POST /actions/workflows/{id}/dispatches, job en échec,
+          # zéro workflow déclenché. Ne pas confondre les deux permissions
+          # fine-grained voisines : « Workflows » (que le PAT a) autorise à
+          # ÉCRIRE les fichiers .github/workflows/**, « Actions » (qu'il n'a
+          # pas) autorise à PILOTER les runs.
+          #
+          # Le `GITHUB_TOKEN`, lui, porte le `actions: write` déclaré plus haut,
+          # et `workflow_dispatch` est précisément l'une des deux exceptions à
+          # la règle « un événement émis par le GITHUB_TOKEN ne déclenche aucun
+          # workflow » — c'est ce sur quoi reposait déjà le chemin sans PAT.
+          # Chacun son rôle : le PAT donne l'IDENTITÉ collaborateur (ouvrir la
+          # PR, armer l'auto-merge sans passer par « Approve and run »), le
+          # GITHUB_TOKEN donne le DROIT de déclencher. Corollaire heureux :
+          # cette étape survit à l'expiration du PAT (04/10/2026).
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
           BRANCH: ${{ github.ref_name }}
         run: |
