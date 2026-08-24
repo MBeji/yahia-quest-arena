@@ -391,9 +391,18 @@ réglage hors dépôt, ou plan GitHub. Sinon c'est de l'exécution, et l'exécut
 > **ne pas les rouvrir sans une raison neuve.** Ce qu'elles laissent à faire est passé côté
 > exécution, c'est-à-dire côté Claude.
 
-1. **Le dépôt de la déclaration INPDP** (GAP-003) — geste administratif hors dépôt. Le reste est
-   à Claude : inventaire factuel des traitements + projet de registre (arbitrage du 2026-08-24 —
-   dossier monté en interne, sans conseil externe, contrepartie assumée au journal).
+1. **Le dépôt de la déclaration INPDP** (GAP-003) — geste administratif hors dépôt. ✅ **La part
+   Claude est livrée** : [`docs/inventaire-traitements-inpdp.md`](./docs/inventaire-traitements-inpdp.md)
+   — inventaire dérivé du code (73 tables, sous-traitants, conservation, accès) et projet de
+   registre. **Tout ce qui se décide est isolé au §7** : identité de l'éditeur, base légale et
+   recueil du consentement parental, durées de conservation, sort de Google Analytics, sort de
+   `beta_access_requests`. ⚠️ Trois constats du §1 comptent plus que le reste : la politique de
+   confidentialité **retarde** sur le code (16 tables `ai_*`/`tutor_*` créées après son dernier
+   inventaire, dont des conversations enfant↔IA — inertes tant que l'étage IA est éteint) ;
+   l'application **ne collecte aucune date de naissance**, donc ne distingue pas techniquement
+   un mineur alors que tout son public en est un ; et **Google Analytics n'attend aucun
+   consentement**. Arbitrage du 2026-08-24 — dossier monté en interne, sans conseil externe,
+   contrepartie assumée au journal.
 2. **Le drill de portabilité du harness** (é25 L7) — session hors file, avec Mohamed. C'est ce
    qui fermerait l'étude.
 
