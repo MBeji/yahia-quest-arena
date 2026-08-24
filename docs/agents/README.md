@@ -8,6 +8,7 @@
 
 | Playbook                                                       | Quand le lire                                                                                                                       |
 | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| [`zero-intervention.md`](./zero-intervention.md)               | **À lire en premier.** Ce que la session fait elle-même, ce qui remonte au propriétaire, et les murs qu'aucun harness ne lève       |
 | [`poste-windows.md`](./poste-windows.md)                       | Une commande se comporte bizarrement en local (chemins git, `jq`, `/tmp`, symlinks, `node_modules`)                                 |
 | [`collaboration.md`](./collaboration.md)                       | Avant de prendre un lot, et dès qu'une PR est en `needs-rebase`, dupliquée ou « bloquée »                                           |
 | [`campagnes-contenu.md`](./campagnes-contenu.md)               | Avant de lancer une session de transcription ou de génération de contenu                                                            |

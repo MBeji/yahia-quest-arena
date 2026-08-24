@@ -37,8 +37,8 @@ jobs:
       - name: Check the required secrets are configured
         id: guard
         run: |
-          if [ -z "${{ secrets.PROD_SUPABASE_URL }}" ] || [ -z "${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}" ]; then
-            echo "PROD_SUPABASE_URL / PROD_SUPABASE_SERVICE_ROLE_KEY not set — skipping report closure."
+          if [ -z "${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}" ]; then
+            echo "PROD_SUPABASE_SERVICE_ROLE_KEY not set — skipping report closure."
             echo "configured=false" >> "$GITHUB_OUTPUT"
           else
             echo "configured=true" >> "$GITHUB_OUTPUT"
@@ -59,10 +59,23 @@ jobs:
         if: steps.guard.outputs.configured == 'true'
         run: npm ci --no-audit --no-fund
 
+      # The API URL comes from the repo, not from a secret — same fix and same
+      # reasoning as report-triage.yml's header (the `PROD_SUPABASE_URL` secret
+      # lost its scheme on 2026-07-29 and nothing in the repo could repair it).
+      - name: Resolve the production Supabase API URL (from the repo)
+        if: steps.guard.outputs.configured == 'true'
+        run: |
+          url="$(node --input-type=module -e 'const m = await import("./scripts/shared/prod-targets.mjs"); process.stdout.write(m.PROD_SUPABASE_API_URL)')"
+          if ! printf '%s' "$url" | grep -qE '^https://[a-z0-9]+\.supabase\.co$'; then
+            echo "::error::PROD_SUPABASE_API_URL did not resolve to a Supabase API URL (got '$url') — check scripts/shared/prod-targets.mjs."
+            exit 1
+          fi
+          echo "PROD_SUPABASE_API_URL=$url" >> "$GITHUB_ENV"
+
       - name: Resolve the reports listed in the PR body
         if: steps.guard.outputs.configured == 'true'
         env:
-          SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
+          SUPABASE_URL: ${{ env.PROD_SUPABASE_API_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
           # Via env, never interpolated into the shell line: the body is
           # untrusted text (trailers are re-validated by the script anyway).

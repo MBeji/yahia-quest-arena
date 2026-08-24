@@ -9,6 +9,7 @@ import {
   isBackendProject,
   needsTestBackend,
   PROD_APP_HOSTS,
+  PROD_SUPABASE_API_URL,
   PROD_SUPABASE_REF,
   prodTargetReason,
   selectedProjects,
@@ -16,8 +17,24 @@ import {
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
 
-const PROD_SUPABASE_URL = `https://${PROD_SUPABASE_REF}.supabase.co`;
+const PROD_SUPABASE_URL = PROD_SUPABASE_API_URL;
 const TEST_SUPABASE_URL = "https://pqegdnwdtbjtplcthxyp.supabase.co";
+
+describe("PROD_SUPABASE_API_URL — the value the report workflows resolve", () => {
+  // It replaced the `PROD_SUPABASE_URL` secret on 2026-08-23 (see the module's
+  // header). The shape matters as much as the value: report-triage.yml and
+  // report-close.yml both grep it against `^https://<ref>.supabase.co$` before
+  // handing it to supabase-js, and a value this repo derives is a value no
+  // operator can paste wrong.
+  it("carries the scheme the secret had lost", () => {
+    expect(PROD_SUPABASE_API_URL).toMatch(/^https:\/\/[a-z0-9]+\.supabase\.co$/);
+  });
+
+  it("points at the production project, and the guard agrees", () => {
+    expect(PROD_SUPABASE_API_URL).toContain(PROD_SUPABASE_REF);
+    expect(prodTargetReason(PROD_SUPABASE_API_URL)).toBe("supabase");
+  });
+});
 
 describe("prodTargetReason — the Supabase route", () => {
   it("catches the production project URL", () => {

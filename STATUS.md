@@ -326,26 +326,38 @@ ligne 19 (é11 lots 2 → 7).
 > transcrit. La 1ère sec compte 6 matières en ligne, chimie et anglais s'étant ajoutés hors
 > vague A), campagnes d'illustration é19/é21, é11 lots 0-2 (cible octobre, hors file V1).
 
-**Ce qui attend un humain** (aucun agent ne peut le faire à sa place) :
+**Ce qui attend un humain** — **liste auditée le 2026-08-23, deux entrées sur cinq étaient
+fausses.** Depuis la règle « zéro intervention technique » du même jour
+([`docs/agents/zero-intervention.md`](./docs/agents/zero-intervention.md)), une ligne n'entre
+ici que si elle cite un **mur** de ce fichier : décision non codable, réglage hors dépôt, ou
+plan GitHub. Sinon c'est de l'exécution, et l'exécution ne remonte pas.
 
-1. **Conformité mineurs (GAP-003)** — décisions juridiques, non codables. Avec **GAP-024**, les
-   deux prérequis légaux du lancement, quel que soit le modèle gratuit. ⚠️ Nuance qui change
-   l'affectation : **le volet « droits des personnes » de GAP-024 est du CODE** (les pages
-   légales, elles, sont livrées par #701). La **suppression de compte est livrée** le
-   2026-08-19 ; **l'export/portabilité reste à écrire** — c'est le dernier bloqueur légal qu'un
-   agent peut lever seul.
+1. **Conformité mineurs (GAP-003)** — décisions juridiques, non codables (mur « décisions non
+   codables »). Avec **GAP-024**, les deux prérequis légaux du lancement, quel que soit le
+   modèle gratuit. ⚠️ Nuance qui change l'affectation : **le volet « droits des personnes » de
+   GAP-024 est du CODE** (les pages légales, elles, sont livrées par #701). La **suppression de
+   compte est livrée** le 2026-08-19 ; **l'export/portabilité reste à écrire** — ce n'est donc
+   pas une ligne d'attente, c'est un lot à prendre.
 2. **Trancher A15/A16 — l'équilibrage que le simulateur vient de mettre à nu** (#708) : G-1
    (« niveau 5 en 7-14 j ») est arithmétiquement hors d'atteinte pour le persona moyen, et les
    shields sont rachetés 38 % des jours manqués contre ≤ 20 % visés. Détail et consigne
    (**ne pas retoucher `gamification.ts` pour faire passer un test**) dans la ROADMAP privée §2.
-3. **Jouer le test à blanc de `rollback-prod.yml`** (`freeze-only` puis `unfreeze`).
-4. **Démarrer le rituel de triage** hebdomadaire des signalements (`/admin/content-reports` +
-   `/admin/bug-reports`, skill `report-triage`). ⚠️ **Le motif qui le reportait est mort** :
-   arena#638 (« l'e2e écrit en prod chaque nuit ») est **close et sa prémisse réfutée** depuis
-   le 2026-07-27 — l'e2e écrivait dans TEST, et la vraie panne était l'inverse (l'export lisait
-   TEST, donc le triage était **aveugle à la production** pendant dix jours ; corrigé par #643).
-5. **Coller les 3 gabarits d'e-mail FR** dans Supabase — aujourd'hui le premier contact du
-   produit avec un parent part en anglais.
+3. **Coller les 3 gabarits d'e-mail FR** dans Supabase (mur « réglage hors dépôt » — console
+   Auth, pas de credentials de prod en session) — aujourd'hui le premier contact du produit avec
+   un parent part en anglais.
+
+~~**Jouer le test à blanc de `rollback-prod.yml`**~~ — **fait le 2026-07-27**, huit dispatches
+`workflow_dispatch` verts (`gh run list --workflow=rollback-prod.yml`). La ligne a survécu un
+mois à son propre accomplissement ; et `gh workflow run rollback-prod.yml` est de toute façon
+dans `ops-dispatch` — une session peut le rejouer seule.
+
+~~**Démarrer le rituel de triage hebdomadaire**~~ — il ne restait rien à démarrer :
+`report-triage.yml` tourne **6×/jour** (cron `23 */4 * * *`) et va jusqu'à la PR. ⚠️ Mais
+**il échouait à chaque run depuis le 2026-07-29** — secret `PROD_SUPABASE_URL` privé de son
+`https://`, ~150 runs rouges, 25 jours de signalements non triés, derrière une garde qui savait
+nommer le coupable mais qu'aucun mécanisme ne faisait lire. Corrigé le 2026-08-23 : l'URL vient
+désormais du dépôt (`PROD_SUPABASE_API_URL`) et non d'un secret, et un run rouge ouvre une issue
+de suivi. La seule chose qui « attendait un humain » ici, c'était de regarder l'onglet Actions.
 
 ~~**Trancher le canonique SEO**~~ — **fait le 2026-08-03** (#706), voir §3.
 
