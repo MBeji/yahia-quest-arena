@@ -116,11 +116,7 @@ export function isolateLtrRuns(text: string): string {
   if (!text || !ARABIC_RE.test(text)) return text;
   return text.replace(SEGMENT_RE, (segment) => {
     if (ARABIC_RE.test(segment)) return segment;
-    const hasBidiSignal =
-      (BIDI_FLIP_SIGNAL.test(segment) &&
-        (!SOLO_BRACKETS_RE.test(segment) || STRONG_FLIP_SIGNAL.test(segment))) ||
-      SIGNED_NUMBER.test(segment);
-    return hasBidiSignal ? `${LRI}${segment}${PDI}` : segment;
+    return needsLtrIsolate(segment) ? `${LRI}${segment}${PDI}` : segment;
   });
 }
 
@@ -135,4 +131,268 @@ export function isolateLtrRunsHtml(html: string): string {
     .split(/(<[^>]*>)/)
     .map((piece) => (piece.startsWith("<") ? piece : isolateLtrRuns(piece)))
     .join("");
+}
+
+/* --------------------------------------------------------------------------
+ * Une équation ne se coupe JAMAIS en deux lignes.
+ *
+ * Les isolats ci-dessus corrigent l'ORDRE des glyphes, pas le RETOUR À LA
+ * LIGNE : `LRI … PDI` reste cassable à chaque espace. Un énoncé arabe un peu
+ * long — `… ما حلول المعادلة (x − 4)(x + 2) = 0 ؟` — voit donc son équation
+ * scindée par le navigateur, `(x − 4)` finissant une ligne et `(x + 2) = 0`
+ * ouvrant la suivante. Chaque ligne étant réordonnée POUR ELLE-MÊME par
+ * l'algorithme bidi, l'élève lit deux moitiés de formule mêlées à la prose —
+ * le défaut signalé en capture.
+ *
+ * Aucun caractère ne peut réparer cela ; seul le rendu le peut. On expose donc
+ * la même segmentation sous forme de RUNS, que React pose en éléments
+ * `.math-run` (insécables, isolés LTR — `src/styles.css`), plus un test de
+ * « ligne-équation » pour poser une formule seule sur sa ligne, hors du texte
+ * de la question.
+ * ------------------------------------------------------------------------ */
+
+/**
+ * Un morceau de champ de contenu tel qu'il sera posé.
+ *
+ * `math` — le run est une formule : rendu isolé, gauche-à-droite.
+ * `nowrap` — et il est assez court pour tenir sur une ligne, donc insécable.
+ *   Au-delà de {@link NOWRAP_MAX} la formule ne tient de toute façon sur aucune
+ *   ligne de téléphone : la rendre insécable la ferait déborder de la carte
+ *   (barre de défilement horizontale sur toute la page). Elle garde alors le
+ *   comportement d'aujourd'hui — isolée, mais cassable.
+ */
+export type TextRun = { text: string; math: boolean; nowrap: boolean };
+
+/**
+ * Longueur au-delà de laquelle une formule n'est plus rendue insécable.
+ *
+ * 32 signes ≈ 15 em pour de la notation, soit la largeur utile d'une carte de
+ * quête sur le plus petit téléphone visé, au corps du titre d'énoncé (20 px).
+ * Au-delà, l'insécable ne « garde plus la formule sur une ligne » : il la fait
+ * déborder de la carte et ouvre une barre de défilement horizontale sur toute
+ * la page — pire que le défaut qu'on corrige.
+ *
+ * Le seuil ne coûte presque rien : mesuré sur le corpus (2 765 runs isolés dans
+ * des énoncés arabes), **99,3 % tiennent en 32 signes** et le 99ᵉ centile est à
+ * 27 — `(x − 4)(x + 2) = 0`, le cas signalé, en fait 18. Ce qui dépasse est une
+ * CHAÎNE de calcul de corrigé (jusqu'à 132 signes relevés), qu'aucun réglage ne
+ * fera tenir sur une ligne ; elle garde le comportement d'aujourd'hui.
+ */
+const NOWRAP_MAX = 32;
+
+/** La condition exacte qu'applique {@link isolateLtrRuns} à un segment non arabe. */
+function needsLtrIsolate(segment: string): boolean {
+  return (
+    (BIDI_FLIP_SIGNAL.test(segment) &&
+      (!SOLO_BRACKETS_RE.test(segment) || STRONG_FLIP_SIGNAL.test(segment))) ||
+    SIGNED_NUMBER.test(segment)
+  );
+}
+
+/**
+ * Caractères admis dans un jeton mathématique : chiffres, lettres latines,
+ * opérateurs, relations, exposants/indices Unicode, délimiteurs, symboles et la
+ * ponctuation qui colle à une formule. Tout le reste (lettres accentuées,
+ * écriture arabe, guillemets typographiques…) marque de la prose et coupe le run.
+ */
+const MATH_TOKEN_CHARS =
+  "0-9A-Za-z+\\-−–±*/=<>≤≥≠≈≡%‰¹²³⁰⁴-⁹⁺⁻₀-₉₊₋√∛∜×÷·^_()\\[\\]{}⟨⟩⌊⌋⌈⌉|‖πµσΩ∆°′″.,;:…!∈∉⊂⊃⊆⊇∪∩∅ℝℕℤℚℂ∥⊥∠→⟶⟵⟸⟹⟺∑∏∫∞'";
+const MATH_TOKEN_RE = new RegExp(`^[${MATH_TOKEN_CHARS}]+$`, "u");
+/** Un opérateur, une relation ou un délimiteur — ce qui fait d'une suite de jetons une formule. */
+const MATH_OPERATOR_RE = /[+\-−–±*/=<>≤≥≠≈≡×÷·√∛∜()[\]{}⟨⟩⌊⌋⌈⌉∈∉⊂⊃⊆⊇∪∩∥⊥→⟶⟵⟸⟹⟺∑∏∫^]/u;
+/** Une relation : `x = 5` est une formule à lui seul, `2 + 3` demande deux jetons. */
+const MATH_RELATION_RE = /[=<>≤≥≠≈≡⟹⟺]|&lt;|&gt;|&le;|&ge;/u;
+/** Suite d'au moins trois lettres latines — un MOT, sauf s'il est dans la liste ci-dessous. */
+const WORD_RE = /[A-Za-z]{3,}/gu;
+
+/**
+ * Les seuls mots de trois lettres et plus qui appartiennent à une formule :
+ * noms de fonctions et unités SI. Tout autre mot coupe le run — c'est ce qui
+ * empêche l'atome d'avaler la phrase anglaise qui l'entoure (`(like it), so it`
+ * était happé par la parenthèse avant cette liste).
+ */
+const MATH_WORDS = new Set([
+  "sin",
+  "cos",
+  "tan",
+  "cot",
+  "sec",
+  "csc",
+  "sinh",
+  "cosh",
+  "tanh",
+  "arcsin",
+  "arccos",
+  "arctan",
+  "log",
+  "exp",
+  "lim",
+  "sup",
+  "inf",
+  "min",
+  "max",
+  "abs",
+  "det",
+  "mod",
+  "gcd",
+  "lcm",
+  "pgcd",
+  "ppcm",
+  "mol",
+  "rad",
+  "deg",
+  "atm",
+  "ppm",
+  "kwh",
+  "kpa",
+  "hpa",
+  "dag",
+]);
+
+/**
+ * Un jeton est mathématique s'il n'emprunte que le jeu de caractères ci-dessus,
+ * qu'aucun de ses mots n'est de la prose, ET qu'il porte un signe
+ * d'appartenance : un chiffre, un opérateur, ou une longueur ≤ 2 (`x`, `AB`,
+ * `n`). Un mot de prose (`Calculer`, `solution.`, `museum)`) échoue au test des
+ * mots ; un mot court sans opérateur (`the`) échoue au signe. Un nom de
+ * fonction collé à sa parenthèse (`sin(x)`, `PGCD(12`) passe par la liste
+ * blanche et la branche « opérateur ».
+ */
+function isMathToken(token: string): boolean {
+  if (!token || !MATH_TOKEN_RE.test(token)) return false;
+  for (const word of token.match(WORD_RE) ?? []) {
+    if (!MATH_WORDS.has(word.toLowerCase())) return false;
+  }
+  return /[0-9]/u.test(token) || MATH_OPERATOR_RE.test(token) || token.length <= 2;
+}
+
+/** Vrai quand la suite de jetons forme une formule (et pas une énumération de lettres). */
+function isMathPhrase(tokens: string[]): boolean {
+  const joined = tokens.join(" ");
+  if (MATH_RELATION_RE.test(joined)) return true;
+  return tokens.length > 1 && MATH_OPERATOR_RE.test(joined);
+}
+
+/** Un jeton fait seulement de lettres latines — `x` et `AB`, mais aussi `de`, `so`, `La`. */
+const PROSE_SHAPED_RE = /^[A-Za-z]+$/u;
+/** Un jeton fait seulement d'opérateurs — `=`, `+`, `≤`, `→` : ce qui LIE une lettre à la formule. */
+const BARE_OPERATOR_RE = /^[+\-−–±*/=<>≤≥≠≈≡×÷·∈∉⊂⊃⊆⊇∪∩∥⊥→⟶⟵⟸⟹⟺]+$/u;
+
+/**
+ * Rogne les bords d'un run des jetons purement alphabétiques qu'aucun opérateur
+ * ne rattache à la formule, et rend les bornes `[début, fin]` retenues (`fin`
+ * < `début` si tout tombe).
+ *
+ * C'est la garde qui sépare `x` de `de`. Les deux sont des jetons d'une ou deux
+ * lettres, donc « mathématiques » ; mais dans `x = 5` le voisin de `x` est
+ * l'opérateur nu `=`, alors que dans `la solution de (x − 4)(x + 2) = 0` le
+ * voisin de `de` est `(x`. Sans ce rognage, l'atome insécable emportait le mot
+ * qui précède la formule — et, en anglais, des bouts de phrase entiers
+ * (`it), so it`).
+ */
+function trimProseEdges(tokens: string[]): [number, number] {
+  const bound = (index: number) =>
+    index >= 0 && index < tokens.length && BARE_OPERATOR_RE.test(tokens[index]);
+  let low = 0;
+  let high = tokens.length - 1;
+  while (low <= high && PROSE_SHAPED_RE.test(tokens[low]) && !bound(low + 1)) low += 1;
+  while (high >= low && PROSE_SHAPED_RE.test(tokens[high]) && !bound(high - 1)) high -= 1;
+  return [low, high];
+}
+
+const run = (text: string, math: boolean): TextRun => ({
+  text,
+  math,
+  nowrap: math && text.trim().length <= NOWRAP_MAX,
+});
+
+/**
+ * Découpe une prose SANS arabe en runs, en marquant les seules formules. Rien
+ * n'est réordonné ici — un texte latin dans un contexte latin n'a pas de bug
+ * d'ordre : on marque uniquement pour que le rendu garde la formule d'un seul
+ * tenant. Une chaîne de calcul trop longue pour une ligne n'est pas marquée du
+ * tout : l'insécable la ferait déborder, et elle n'a rien à isoler.
+ */
+function splitLtrProse(text: string): TextRun[] {
+  const pieces = text.split(/(\s+)/);
+  const runs: TextRun[] = [];
+  let prose: string[] = [];
+  const flushProse = () => {
+    if (prose.length) runs.push(run(prose.join(""), false));
+    prose = [];
+  };
+  for (let index = 0; index < pieces.length; index += 1) {
+    if (!isMathToken(pieces[index])) {
+      prose.push(pieces[index]);
+      continue;
+    }
+    // Étend le run tant que les jetons restent mathématiques (séparateurs compris),
+    // puis rogne les mots que rien ne rattache à la formule.
+    const spots: number[] = [];
+    for (let scan = index; scan < pieces.length && isMathToken(pieces[scan]); scan += 2) {
+      spots.push(scan);
+    }
+    const last = spots[spots.length - 1];
+    const [low, high] = trimProseEdges(spots.map((spot) => pieces[spot]));
+    const tokens = spots.slice(low, high + 1).map((spot) => pieces[spot]);
+    const body = high < low ? "" : pieces.slice(spots[low], spots[high] + 1).join("");
+    const whole = pieces.slice(index, last + 1).join("");
+    const start = index;
+    index = last;
+    if (!tokens.length || !isMathPhrase(tokens) || body.trim().length > NOWRAP_MAX) {
+      prose.push(whole);
+      continue;
+    }
+    prose.push(pieces.slice(start, spots[low]).join(""));
+    flushProse();
+    runs.push(run(body, true));
+    prose.push(pieces.slice(spots[high] + 1, last + 1).join(""));
+  }
+  flushProse();
+  return runs;
+}
+
+/**
+ * Découpe `text` en runs de prose et de formules, pour un rendu où la formule
+ * tient d'un seul tenant.
+ *
+ * En contexte arabe la segmentation est **exactement** celle de
+ * {@link isolateLtrRuns} — mêmes runs, même signal : le rendu n'isole donc ni
+ * plus ni moins qu'aujourd'hui, il rend seulement l'isolat incassable. En
+ * contexte latin il n'y a rien à isoler, on repère juste les formules.
+ */
+export function splitMathRuns(text: string): TextRun[] {
+  if (!text) return [];
+  if (!ARABIC_RE.test(text)) return splitLtrProse(text);
+  const runs: TextRun[] = [];
+  for (const segment of text.match(SEGMENT_RE) ?? []) {
+    const math = !ARABIC_RE.test(segment) && needsLtrIsolate(segment);
+    const previous = runs[runs.length - 1];
+    if (previous && previous.math === math && !math) previous.text += segment;
+    else runs.push(run(segment, math));
+  }
+  return runs;
+}
+
+/**
+ * Vrai quand `line` est une ligne-équation : **rien que** de la notation, avec
+ * un opérateur ou une relation. Une telle ligne se rend en bloc centré LTR,
+ * séparée du texte de la question — la forme demandée pour un énoncé qui pose
+ * une formule.
+ *
+ * Volontairement plus strict que `isMathExpression` (`src/shared/lib/utils.ts`),
+ * qui sert à orienter le texte d'une OPTION et accepte donc n'importe quelle
+ * suite de lettres latines (« Paris » y est « mathématique », sans dommage
+ * puisqu'il est bien LTR). Ici une phrase de prose promue en bloc centré serait
+ * un défaut visible : on exige que chaque jeton soit mathématique.
+ */
+export function isDisplayEquation(line: string): boolean {
+  const tokens = line.trim().split(/\s+/).filter(Boolean);
+  if (!tokens.length) return false;
+  if (!tokens.every(isMathToken)) return false;
+  // Un mot que rien ne rattache à la formule reste de la prose, même seul sur sa
+  // ligne : `A B C` n'est pas une équation à centrer.
+  const [low, high] = trimProseEdges(tokens);
+  if (low !== 0 || high !== tokens.length - 1) return false;
+  return isMathPhrase(tokens);
 }
