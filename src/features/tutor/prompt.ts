@@ -179,6 +179,31 @@ export type TutorQuestionContext = {
   readonly ageBand: TutorAgeBand;
 };
 
+/** Une compétence citée au pack : un état, un libellé. JAMAIS une probabilité (é30 D-1). */
+export type TutorMasteryItem = {
+  readonly slug: string;
+  readonly label: string | null;
+  /** `maitrisee` | `en-cours` | `fragile` | `lacune` | `inconnue` — l'état de é30 R-4/R-5. */
+  readonly state: string;
+};
+
+/**
+ * Ce que l'élève sait, peut attaquer, et ce qui le bloque (étude 30 lot 3bis, amendement D).
+ *
+ * Le pack de é11 savait déjà ce que l'élève RATE (les erreurs actives de é04). Il ne savait
+ * pas ce qu'il SAIT — et un tuteur qui l'ignore ré-explique l'acquis puis attaque ce qui ne
+ * l'est pas. Trois listes plafonnées (3 · 3 · 2), pas une de plus : le budget du pack est une
+ * décision de é11 (~1 200 tokens) et elle est tenue.
+ *
+ * `undefined` quand l'élève n'a aucune croyance ou que sa matière n'est pas taggée — R-6 : le
+ * bloc disparaît du prompt, qui redevient celui d'hier.
+ */
+export type TutorMasteryContext = {
+  readonly mastered: readonly TutorMasteryItem[];
+  readonly frontier: readonly TutorMasteryItem[];
+  readonly blockers: readonly TutorMasteryItem[];
+};
+
 export type TutorLearnerContext = {
   readonly gradeSlug: string | null;
   readonly goal: string;
@@ -187,6 +212,8 @@ export type TutorLearnerContext = {
   readonly activeMisconceptions: ReadonlyArray<{ tag: string; label: string | null }>;
   readonly interests: readonly string[];
   readonly verbosity: "courte" | "normale";
+  /** Étude 30 lot 3bis. Absent sans croyance — et le prompt l'est alors aussi. */
+  readonly mastery?: TutorMasteryContext;
 };
 
 /**
@@ -239,6 +266,27 @@ export function selectLessonSections(
     .sort((a, b) => a.index - b.index)
     .map((e) => e.section.trim())
     .join("\n\n");
+}
+
+/**
+ * Une ligne du bloc `mastery` (étude 30 lot 3bis), ou rien. On préfère le libellé au slug —
+ * `math.geo.thales-direct` ne se prononce pas — mais le slug reste un repli lisible plutôt
+ * qu'un trou, et il ne coûte que quelques tokens.
+ */
+function masteryLine(
+  label: string,
+  items: readonly TutorMasteryItem[] | undefined,
+  withState = false,
+): string {
+  if (!items?.length) return "";
+  return `${label}: ${items
+    .map((i) => {
+      const name = i.label ?? i.slug;
+      // L'état n'accompagne que les listes où il VARIE. Sur `acquis` il vaut toujours
+      // « maitrisee » et ne serait qu'un mot de plus à payer à chaque appel.
+      return withState ? `${name} (${i.state})` : name;
+    })
+    .join(" ; ")}`;
 }
 
 /**
@@ -304,6 +352,15 @@ export function buildExplainBlocks(
           : "",
         learner.interests.length ? `centres_interet: ${learner.interests.join(", ")}` : "",
         `longueur_souhaitee: ${learner.verbosity}`,
+        // Étude 30 lot 3bis — ce que l'élève sait, peut attaquer, et ce qui le bloque.
+        // Rendu en langage ÉLÈVE (des libellés de compétences, pas des slugs quand on les a)
+        // et sans un chiffre : le modèle peut répéter à l'élève ce qu'on lui donne, et D-1
+        // interdit qu'une probabilité de croyance atteigne un élève par ce chemin-là comme
+        // par les autres. Chaque ligne n'apparaît que si elle a de quoi être écrite — un
+        // « acquis: (aucun) » dans un prompt est une invitation à commenter le vide.
+        masteryLine("acquis", learner.mastery?.mastered),
+        masteryLine("prochaines_etapes", learner.mastery?.frontier, true),
+        masteryLine("prerequis_a_reprendre", learner.mastery?.blockers, true),
         "</profil>",
       ]
         .filter(Boolean)
