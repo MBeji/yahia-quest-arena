@@ -429,6 +429,47 @@ export const ar: TranslationKeys = {
     tierSilver: "فضّة",
     tierBronze: "برونز",
   },
+  // المعلّم الحتمي (الدراسة 30، الدفعة 3). الخادم يرسل معرّفًا، وهذه النصوص تترجمه —
+  // ولا واحد منها يعرض احتمال المعرفة (D-1).
+  adaptive: {
+    state: {
+      maitrisee: "متقنة",
+      "en-cours": "في الطريق",
+      fragile: "هشّة",
+      lacune: "ثغرة",
+      inconnue: "لم نرها بعد",
+    },
+    stateHint: {
+      maitrisee: "أثبتّها عدة مرات، وبعدة أشكال.",
+      "en-cours": "اقتربت. إثبات أو اثنان وتصبح لك.",
+      fragile: "رأيتها، لكنها لم تثبت بعد.",
+      lacune: "هذه تعرقل ما بعدها. لنعد إليها من البداية.",
+      inconnue: "لم نلتقِ بها معًا بعد.",
+    },
+    zone: {
+      interieur: "مكتسبة",
+      frontiere: "جاهز للتعلّم",
+      "hors-portee": "ينقصك أساس",
+    },
+    mapTitle: "أين وصلت",
+    mapSubtitle: "ما أتقنته، وما يمكنك خوضه، وما يعرقلك.",
+    mapEmpty: "العب بعض التمارين: ستضيء خريطتك تدريجيًا.",
+    provenBy: "أُثبتت {n} مرات، بـ {m} أشكال",
+    inferredBadge: "مُستنتَجة",
+    inferredExplain: "نجحت في {source}، لذا أعتبر هذه مكتسبة. قل لي إن كنت مخطئًا.",
+    disputeCta: "لست موافقًا",
+    disputePending: "نسجّل ذلك…",
+    disputeDone: "سُجّل — سنسألك عنها مجددًا للتأكد.",
+    suspectBadge: "للمراجعة",
+    frontierTitle: "جاهز للتعلّم",
+    frontierSubtitle: "لديك كل ما يلزم لخوض هذه الكفاءات الآن.",
+    frontierEmpty: "لا جديد لخوضه الآن — تابع ما بدأته.",
+    frontierUnlocks: "تفتح {n} تكملات",
+    frontierUnlocksNone: "على راحتك",
+    frontierStartCta: "ابدأ",
+    blockedNotice:
+      "ينقصك أساس لهذه. يمكنك المحاولة رغم ذلك — لكننا ننصحك بالعودة إلى ما قبلها أولاً.",
+  },
   tutor: {
     ask: "اسأل الأستاذ",
     panelTitle: "الأستاذ",

@@ -173,3 +173,167 @@ describe("resolveNextAction — priorité 3 déléguée", () => {
     expect(action).toMatchObject({ kind: "continue", exerciseId: "m1" });
   });
 });
+
+// =============================================================================
+// Amendement C (étude 30, §3.9) — deux priorités de plus, et rien d'autre.
+// =============================================================================
+
+/**
+ * LE TEST QUI COMPTE LE PLUS DE TOUT CE LOT.
+ *
+ * Le §4.2 exige une non-régression LITTÉRALE : « sur les fixtures existantes de
+ * `next-action.test.ts`, `resolveNextAction` rend EXACTEMENT ce qu'elle rendait ». Les
+ * dix-sept cas au-dessus le vérifient déjà un à un, mais un à un seulement — et une
+ * priorité insérée au mauvais rang peut passer entre eux.
+ *
+ * Celui-ci balaie donc l'espace : toutes les combinaisons d'entrées que les fixtures
+ * existantes permettent, comparées à la table de vérité de l'ordre d'AVANT l'amendement.
+ * Il échouerait si l'un des deux nouveaux rangs se déclenchait sans croyance — ce qui est
+ * précisément la seule façon dont cet amendement pourrait casser le produit d'aujourd'hui,
+ * sur les ~88 matières non taggées.
+ */
+describe("é30 amendement C — non-régression LITTÉRALE sur les entrées d'avant", () => {
+  it("sans croyance, l'ordre d'origine est rendu à l'identique sur TOUTES les combinaisons", () => {
+    const flags = [true, false];
+    for (const hasReview of flags) {
+      for (const hasFailed of flags) {
+        for (const hasPath of flags) {
+          for (const hasSubject of flags) {
+            for (const hasUntouched of flags) {
+              const input = {
+                dueReviewExerciseId: hasReview ? "rev" : null,
+                failedExerciseId: hasFailed ? "fail" : null,
+                chapters: hasPath ? chapters : [],
+                exercises: hasPath ? exercises : [],
+                bestByExercise: {},
+                quizSatisfiedByChapter: hasPath ? allQuizOpen : {},
+                pathSubjectId: hasSubject ? "subj" : null,
+                untouchedSubjectId: hasUntouched ? "neuf" : null,
+              };
+
+              // L'ordre d'AVANT l'amendement, réécrit ici comme oracle indépendant : review →
+              // retry → chemin → chemin délégué → découverte. Le réimplémenter plutôt que de
+              // le lire dans le module est le point du test — sinon on comparerait le code
+              // à lui-même.
+              const expected = hasReview
+                ? { kind: "review", exerciseId: "rev" }
+                : hasFailed
+                  ? { kind: "retry", exerciseId: "fail" }
+                  : hasPath
+                    ? { kind: "continue", exerciseId: "m1", chapterId: "c1" }
+                    : hasSubject
+                      ? { kind: "continue-subject", subjectId: "subj" }
+                      : hasUntouched
+                        ? { kind: "discover", subjectId: "neuf" }
+                        : null;
+
+              expect(resolveNextAction(input)).toEqual(expected);
+            }
+          }
+        }
+      }
+    }
+  });
+
+  it("les deux nouveaux rangs rendent `null` sans croyance — explicitement", () => {
+    // `undefined` (l'appelant ne sait pas encore) et `null` (l'appelant a demandé, il n'y a
+    // rien) doivent se comporter pareil : les deux existent en vrai.
+    expect(resolveNextAction({ remediation: undefined, strengthen: undefined })).toBeNull();
+    expect(resolveNextAction({ remediation: null, strengthen: null })).toBeNull();
+  });
+});
+
+describe("é30 amendement C — les deux nouveaux rangs", () => {
+  const remediation = { competencySlug: "math.num.multiples", exerciseId: "cause" };
+  const strengthen = { competencySlug: "math.frac.comparer", exerciseId: "autre-forme" };
+
+  it("2 · la remédiation passe devant le RETRY — la cause avant le symptôme", () => {
+    // C'est tout l'amendement en une assertion. Rejouer l'exercice raté sans traiter le
+    // prérequis manquant est la définition du piétinement.
+    expect(resolveNextAction({ failedExerciseId: "fail", remediation })).toEqual({
+      kind: "remediate",
+      exerciseId: "cause",
+      competencySlug: "math.num.multiples",
+    });
+  });
+
+  it("1 · mais la RÉVISION passe encore devant elle — la mémoire prime, inchangé", () => {
+    expect(resolveNextAction({ dueReviewExerciseId: "rev", remediation, strengthen })).toEqual({
+      kind: "review",
+      exerciseId: "rev",
+    });
+  });
+
+  it("4 · la consolidation passe DERRIÈRE le retry — un fait prime sur une tendance", () => {
+    // Un échec récent est un fait ; une compétence « en cours » est une tendance.
+    expect(resolveNextAction({ failedExerciseId: "fail", strengthen })).toEqual({
+      kind: "retry",
+      exerciseId: "fail",
+    });
+  });
+
+  it("4 · mais devant le CHEMIN — consolider ce qui vacille avant d'ouvrir du neuf", () => {
+    expect(
+      resolveNextAction({
+        chapters,
+        exercises,
+        bestByExercise: {},
+        quizSatisfiedByChapter: allQuizOpen,
+        strengthen,
+      }),
+    ).toEqual({
+      kind: "strengthen",
+      exerciseId: "autre-forme",
+      competencySlug: "math.frac.comparer",
+    });
+  });
+
+  it("l'ordre complet des six rangs, en une séquence", () => {
+    const full = {
+      dueReviewExerciseId: "rev",
+      failedExerciseId: "fail",
+      chapters,
+      exercises,
+      bestByExercise: {},
+      quizSatisfiedByChapter: allQuizOpen,
+      pathSubjectId: "subj",
+      untouchedSubjectId: "neuf",
+      remediation,
+      strengthen,
+    };
+    // On retire les entrées une à une, dans l'ordre des rangs : chaque retrait doit faire
+    // descendre la réponse d'exactement un cran. C'est l'ordre entier prouvé en un test.
+    expect(resolveNextAction(full)?.kind).toBe("review");
+    expect(resolveNextAction({ ...full, dueReviewExerciseId: null })?.kind).toBe("remediate");
+    expect(resolveNextAction({ ...full, dueReviewExerciseId: null, remediation: null })?.kind).toBe(
+      "retry",
+    );
+    expect(
+      resolveNextAction({
+        ...full,
+        dueReviewExerciseId: null,
+        remediation: null,
+        failedExerciseId: null,
+      })?.kind,
+    ).toBe("strengthen");
+    expect(
+      resolveNextAction({
+        ...full,
+        dueReviewExerciseId: null,
+        remediation: null,
+        failedExerciseId: null,
+        strengthen: null,
+      })?.kind,
+    ).toBe("continue");
+  });
+
+  it("chaque nouvelle action porte SA RAISON — la compétence en cause (R-14)", () => {
+    // « Toujours accompagnée de sa raison en langage élève » : le moteur ne fabrique pas la
+    // phrase (l'i18n s'en charge), mais il transporte de quoi l'écrire. Une action sans sa
+    // raison serait un ordre.
+    const a = resolveNextAction({ remediation });
+    const b = resolveNextAction({ strengthen });
+    expect(a).toMatchObject({ competencySlug: "math.num.multiples" });
+    expect(b).toMatchObject({ competencySlug: "math.frac.comparer" });
+  });
+});

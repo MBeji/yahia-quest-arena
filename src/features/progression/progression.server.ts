@@ -6,7 +6,11 @@ import { getTodayUtc, getYesterdayUtc } from "@/shared/lib/dates";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { isRateLimited } from "@/shared/lib/rate-limit";
 import { logger } from "@/shared/lib/logger";
-import type { CompetencyExercise } from "@/shared/types/competency";
+import type {
+  CompetencyExercise,
+  LearningFrontierRow,
+  LearningStateRow,
+} from "@/shared/types/competency";
 
 /**
  * `get_exercises_for_competency` (étude 07 lot 4) est postérieure aux types Supabase générés,
@@ -108,4 +112,109 @@ export const getCompetencyExercises = createServerFn({ method: "GET" })
       return [];
     }
     return res.data ?? [];
+  });
+
+// ---------- Tuteur déterministe : les lectures de croyance (étude 30 lot 3) ----------
+/**
+ * Les trois RPC du lot 3 sont, elles aussi, postérieures aux types Supabase générés (qui ne
+ * peuvent être régénérés sans accès DB) : on fige leurs contrats ici, même patron que la
+ * voisine ci-dessus. Le périmètre est `auth.uid()` EN DUR côté SQL — aucune de ces fonctions
+ * ne prend d'identifiant d'élève, et le test pgTAP le prouve par leur signature (R-6).
+ */
+type LearningRpcClient = {
+  rpc: ((
+    fn: "get_learning_state",
+    args: { p_family: string | null },
+  ) => PromiseLike<{ data: LearningStateRow[] | null; error: { message: string } | null }>) &
+    ((
+      fn: "get_learning_frontier",
+      args: { p_family: string | null; p_limit: number },
+    ) => PromiseLike<{ data: LearningFrontierRow[] | null; error: { message: string } | null }>) &
+    ((
+      fn: "dispute_inference",
+      args: { p_competency: string },
+    ) => PromiseLike<{
+      data: { competency_id: string; p_known: number; state: string }[] | null;
+      error: { message: string } | null;
+    }>);
+};
+
+/**
+ * « Où tu en es » — l'état et la zone de chaque compétence de la famille (§3.10).
+ *
+ * Dégradation gracieuse, comme sa voisine : une RPC absente rend une liste vide, donc un
+ * panneau qui ne s'affiche pas, plutôt qu'une page cassée. Sur une matière NON TAGGÉE le
+ * résultat est vide aussi — et c'est R-6 qui parle, pas une erreur : l'écran est alors
+ * exactement celui d'aujourd'hui.
+ */
+export const getLearningState = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ family: z.string().min(1).nullable().default(null) }).parse(d))
+  .handler(async ({ data, context }): Promise<LearningStateRow[]> => {
+    const client = context.supabase as unknown as LearningRpcClient;
+    const res = await client.rpc("get_learning_state", { p_family: data.family });
+    if (res.error) {
+      logger.warn("getLearningState: RPC failed, defaulting to empty", {
+        error: res.error.message,
+      });
+      return [];
+    }
+    return res.data ?? [];
+  });
+
+/** « Prêt à apprendre » — la frontière, triée par fan-out, avec son exercice d'entrée (§3.4). */
+export const getLearningFrontier = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) =>
+    z
+      .object({
+        family: z.string().min(1).nullable().default(null),
+        // Trois cartes, jamais une liste (é15 R-1 : un seul CTA à la fois, et une frontière
+        // qui déroulerait vingt compétences serait un catalogue, pas une proposition).
+        limit: z.number().int().min(1).max(10).default(3),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }): Promise<LearningFrontierRow[]> => {
+    const client = context.supabase as unknown as LearningRpcClient;
+    const res = await client.rpc("get_learning_frontier", {
+      p_family: data.family,
+      p_limit: data.limit,
+    });
+    if (res.error) {
+      logger.warn("getLearningFrontier: RPC failed, defaulting to empty", {
+        error: res.error.message,
+      });
+      return [];
+    }
+    return res.data ?? [];
+  });
+
+/**
+ * « Je ne suis pas d'accord » (US-3, R-10) — l'élève refuse une croyance DÉDUITE.
+ *
+ * Le mandat parle d'un tuteur autonome, pas d'un tuteur qui a toujours raison. Le SQL ne
+ * touche qu'une ligne `belief_source = 'inference'` : contester une croyance gagnée par la
+ * preuve n'a aucun effet, parce que ce serait effacer ce que l'élève a réellement fait.
+ * Un `false` en retour n'est donc pas une erreur — c'est « il n'y avait rien à contester ».
+ */
+export const disputeInference = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ competency: z.string().min(1) }).parse(d))
+  .handler(async ({ data, context }): Promise<{ disputed: boolean }> => {
+    const { userId } = context;
+    // Un geste d'élève, pas une API de masse : le graphe compte 62 compétences, personne n'a
+    // besoin d'en contester dix par minute.
+    if (await isRateLimited(context.supabase, `dispute_inference_${userId}`, 10, 60_000)) {
+      throw new Error("Trop de contestations d'affilée. Réessaie dans une minute.");
+    }
+    const client = context.supabase as unknown as LearningRpcClient;
+    const res = await client.rpc("dispute_inference", { p_competency: data.competency });
+    if (res.error) {
+      logger.warn("disputeInference: RPC failed", { error: res.error.message });
+      return { disputed: false };
+    }
+    const disputed = (res.data ?? []).length > 0;
+    logger.info("belief.disputed", { competency: data.competency, disputed });
+    return { disputed };
   });

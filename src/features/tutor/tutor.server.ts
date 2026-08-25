@@ -32,6 +32,8 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+// Le pack élève : validation + choix de langue, deux gestes purs sortis d'ici (é30 lot 3bis).
+import { learnerContextSchema, toLearnerContext } from "./learner-context";
 import { callAi } from "@/features/ai";
 import { AI_CURATED_MODELS } from "@/shared/constants/ai";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
@@ -46,7 +48,6 @@ import {
   TUTOR_LANGS,
   TUTOR_VARIANTS,
   type TutorLang,
-  type TutorLearnerContext,
   type TutorQuestionContext,
   type TutorVariant,
 } from "./prompt";
@@ -114,25 +115,6 @@ const questionContextSchema = z.object({
   age_band: ageBandSchema,
 });
 
-const learnerContextSchema = z.object({
-  grade_slug: z.string().nullable(),
-  goal: z.string(),
-  level_band: z.string(),
-  streak_band: z.string(),
-  active_misconceptions: z
-    .array(
-      z.object({
-        tag: z.string(),
-        label_fr: z.string().nullable().optional(),
-        label_en: z.string().nullable().optional(),
-        label_ar: z.string().nullable().optional(),
-      }),
-    )
-    .default([]),
-  interests: z.array(z.string()).default([]),
-  verbosity: z.enum(["courte", "normale"]).default("normale"),
-});
-
 const threadSchema = z.object({
   thread_id: z.string(),
   variant_served: z.number(),
@@ -192,24 +174,6 @@ function toQuestionContext(raw: z.infer<typeof questionContextSchema>): TutorQue
     lessonExcerpt: raw.lesson_excerpt,
     lang: raw.lang,
     ageBand: raw.age_band,
-  };
-}
-
-function toLearnerContext(
-  raw: z.infer<typeof learnerContextSchema>,
-  lang: TutorLang,
-): TutorLearnerContext {
-  return {
-    gradeSlug: raw.grade_slug,
-    goal: raw.goal,
-    levelBand: raw.level_band,
-    streakBand: raw.streak_band,
-    activeMisconceptions: raw.active_misconceptions.map((m) => ({
-      tag: m.tag,
-      label: (lang === "ar" ? m.label_ar : lang === "en" ? m.label_en : m.label_fr) ?? null,
-    })),
-    interests: raw.interests,
-    verbosity: raw.verbosity,
   };
 }
 
