@@ -107,3 +107,44 @@ Puis : extraire le corps (`sed -n 'D,Fp'`), appliquer la modification **par scri
 assertion sur le nombre d'occurrences, et `diff` le résultat contre l'extrait — le diff doit ne
 montrer **que** les lignes voulues. C'est l'audit qui remplace la relecture de 500 lignes, et
 c'est ce qui rend la PR relisable.
+
+## Deux plafonds de 30 s, et c'est le mauvais qui gagne la course
+
+**Symptôme** : la Forge rend un `504 Gateway Timeout` **brut** au lieu d'une erreur typée. À
+l'écran, rien — le bouton repasse de « La Forge travaille… » à son état initial, sans un mot.
+L'énergie de l'élève est débitée, et la console de dépense n'enregistre aucun appel.
+
+**Cause** : deux plafonds indépendants valaient tous les deux 30 s — la garde applicative
+(`AI_EGRESS_RULES.timeoutMs`, condition 6 de R-6) et le `maxDuration` de la fonction SSR
+(`scripts/build-vercel.mjs`). Quand l'appel dépasse, la plateforme tue le processus **avant**
+que notre garde ait pu typer l'erreur : plus personne n'est là pour écrire le message, ni pour
+solder la dépense.
+
+**Mesuré le 2026-08-25**, `grok-4.6` derrière un endpoint compatible OpenAI, quiz de 7 questions
+avec le schéma réel de la Forge :
+
+| Grandeur                      | Valeur                              |
+| ----------------------------- | ----------------------------------- |
+| durée réelle de la génération | **56 à 59 s**                       |
+| tokens de raisonnement        | 2547                                |
+| tokens de complétion          | 1052                                |
+| `finish_reason`               | `stop` — la réponse était **bonne** |
+
+Le contenu n'était pas en cause : 7 items rendus, 7 conformes au schéma Zod, 0 rejet par les
+filtres. Seule la latence tuait.
+
+**Le commentaire qui a coûté la panne.** `digest.server.ts` affirmait : « `maxDuration: 30`
+secondes (plan Hobby) — ce n'est pas un réglage qu'on remonte ». C'était vrai sous les anciennes
+limites ; depuis que `fluid compute` est le défaut, le plan Hobby plafonne à **300 s** (doc
+Vercel relevée le 2026-08-25). La contrainte avait disparu, le commentaire était resté, et il a
+été cru sur parole — au point de faire conclure qu'il fallait passer à un plan payant.
+
+**L'invariant à tenir** : toute valeur de `AI_TIMEOUT_MS` reste **strictement sous** le
+`maxDuration` de la fonction SSR. Sinon c'est la plateforme qui coupe, et l'erreur devient
+illisible pour celui qui la subit. Un test l'épingle
+([`openai-compatible.test.ts`](../../src/shared/integrations/ai/__tests__/openai-compatible.test.ts)),
+parce que les deux valeurs vivent dans deux fichiers que rien ne relie autrement.
+
+**La règle générale** : une limite d'hébergement écrite dans un commentaire se **re-vérifie chez
+le fournisseur** avant d'être crue. Les plafonds des plateformes bougent — les commentaires qui
+les citent, non.
