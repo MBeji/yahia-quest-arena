@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type Anthropic from "@anthropic-ai/sdk";
 
+import { AI_MAX_RETRIES, AI_TIMEOUT_MS } from "@/shared/constants/ai";
 import { buildAnthropicContent, makeAnthropicProvider } from "../anthropic.server";
 import { sealSecret, type AiCredential, type AiRequest } from "../types";
 
@@ -65,7 +66,20 @@ describe("l'appel", () => {
     await makeAnthropicProvider(factory).generate(req, cred);
     expect(create).toHaveBeenCalledWith(
       expect.objectContaining({ model: "claude-sonnet-5", max_tokens: 700 }),
+      expect.anything(),
     );
+  });
+
+  it("surcharge le délai et les essais PAR SURFACE, et non par client", async () => {
+    // Le client est construit une fois ; sans cette surcharge par requête, un
+    // élève attendrait deux fois moins longtemps selon la clé de sa famille.
+    const { factory, create } = fakeSdk({});
+    await makeAnthropicProvider(factory).generate({ ...req, feature: "forge" }, cred);
+
+    expect(create.mock.calls[0][1]).toMatchObject({
+      timeout: AI_TIMEOUT_MS.forge,
+      maxRetries: AI_MAX_RETRIES.forge,
+    });
   });
 
   it("cache aussi le système — premier élément du préfixe stable", async () => {

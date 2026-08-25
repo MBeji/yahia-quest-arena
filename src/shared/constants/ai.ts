@@ -530,6 +530,69 @@ export const AI_EGRESS_RULES = {
 } as const;
 
 /**
+ * Délai par SURFACE. Prime sur {@link AI_EGRESS_RULES}.timeoutMs, qui reste le
+ * défaut de tout appel qui ne passe pas de surface.
+ *
+ * POURQUOI UNE SURFACE MÉRITE PLUS DE TEMPS QUE LES AUTRES
+ * ---------------------------------------------------------------------------
+ * La condition 6 de R-6 plafonne le délai pour qu'une adresse lente ne retienne
+ * pas une fonction serverless indéfiniment. Elle protège l'HÉBERGEMENT, et
+ * l'hébergement ne distingue pas les surfaces. Elles ne se ressemblent pourtant
+ * pas : `chat` et `explain` répondent DEVANT un élève, où trente secondes sont
+ * déjà une éternité ; `forge` est une commande qu'on passe et dont on attend le
+ * résultat.
+ *
+ * Et surtout, les modèles à RAISONNEMENT consomment des milliers de tokens de
+ * réflexion avant d'écrire un caractère. Mesuré le 2026-08-25 sur `grok-4.6` :
+ * 59 s pour un quiz de sept questions, dont 2547 tokens de raisonnement. Sous
+ * trente secondes, la Forge ne peut pas fonctionner — pas « fonctionne mal » :
+ * ne peut pas.
+ *
+ * ⚠️ INVARIANT : chaque valeur doit rester STRICTEMENT INFÉRIEURE au
+ * `maxDuration` de la fonction SSR (`scripts/build-vercel.mjs`). Sinon c'est la
+ * plateforme qui tue le processus avant nous, et un 504 muet remplace l'erreur
+ * typée que le porteur peut lire — c'est exactement la panne du 2026-08-25.
+ */
+export const AI_TIMEOUT_MS: Readonly<Record<AiFeature, number>> = {
+  verify: AI_EGRESS_RULES.timeoutMs,
+  explain: AI_EGRESS_RULES.timeoutMs,
+  reformulate: AI_EGRESS_RULES.timeoutMs,
+  chat: AI_EGRESS_RULES.timeoutMs,
+  check: AI_EGRESS_RULES.timeoutMs,
+  forge: 90_000,
+  forge_solve: AI_EGRESS_RULES.timeoutMs,
+  exercise_gen: AI_EGRESS_RULES.timeoutMs,
+  digest_student: AI_EGRESS_RULES.timeoutMs,
+  digest_parent: AI_EGRESS_RULES.timeoutMs,
+} as const;
+
+/**
+ * Retries par SURFACE. Prime sur {@link AI_EGRESS_RULES}.maxRetries.
+ *
+ * `forge` est à ZÉRO, et ce n'est pas de la frilosité. Une génération qui a
+ * échoué au bout de quatre-vingt-dix secondes a presque toujours échoué pour
+ * une raison que le second essai ne change pas : un modèle trop lent le reste.
+ * Rejouer coûterait quatre minutes et demie d'attente à l'élève ET trois
+ * générations au fournisseur — qui facture ce qu'il a calculé, même quand nous
+ * raccrochons avant la fin.
+ *
+ * `forge_solve` garde ses deux essais : trois cents tokens rejoués sont sans
+ * commune mesure, et un candidat non vérifié est un candidat jeté (§3.6).
+ */
+export const AI_MAX_RETRIES: Readonly<Record<AiFeature, number>> = {
+  verify: AI_EGRESS_RULES.maxRetries,
+  explain: AI_EGRESS_RULES.maxRetries,
+  reformulate: AI_EGRESS_RULES.maxRetries,
+  chat: AI_EGRESS_RULES.maxRetries,
+  check: AI_EGRESS_RULES.maxRetries,
+  forge: 0,
+  forge_solve: AI_EGRESS_RULES.maxRetries,
+  exercise_gen: AI_EGRESS_RULES.maxRetries,
+  digest_student: AI_EGRESS_RULES.maxRetries,
+  digest_parent: AI_EGRESS_RULES.maxRetries,
+} as const;
+
+/**
  * Liste de REFUS (Q-4 : la liste blanche est écartée). Elle ne remplace aucune
  * des sept conditions de R-6 — elle s'y ajoute, pour un hôte signalé après coup.
  * Comparaison sur le nom d'hôte normalisé, sous-domaines compris.

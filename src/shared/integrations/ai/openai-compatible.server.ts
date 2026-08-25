@@ -15,7 +15,7 @@
 // UN SERVICE QUI NE RÉPOND PAS AU FORMAT ÉCHOUE PROPREMENT (D-6) : on ne devine
 // pas, on rend un code typé de l'annexe C.
 
-import { AI_EGRESS_RULES } from "@/shared/constants/ai";
+import { AI_MAX_RETRIES, AI_TIMEOUT_MS } from "@/shared/constants/ai";
 import { egressFetch, type EgressLookup, type HttpsRequestFn } from "./egress.server";
 import { AiError, aiErrorFromStatus, isRetryableStatus, toAiError } from "./errors";
 import {
@@ -104,7 +104,13 @@ export function makeOpenAiCompatibleProvider(deps: OpenAiCompatibleDeps = {}): A
 
       let lastError: AiError = new AiError("AI_UNKNOWN");
 
-      for (let attempt = 0; attempt <= AI_EGRESS_RULES.maxRetries; attempt += 1) {
+      // Le délai et le compte d'essais se lisent PAR SURFACE : une Forge et un
+      // chat n'ont pas la même patience, et un modèle à raisonnement ne rend
+      // pas un quiz en trente secondes (§3.5, mesure du 2026-08-25).
+      const timeoutMs = AI_TIMEOUT_MS[req.feature];
+      const maxRetries = AI_MAX_RETRIES[req.feature];
+
+      for (let attempt = 0; attempt <= maxRetries; attempt += 1) {
         let response;
         try {
           response = await egressFetch(
@@ -120,6 +126,7 @@ export function makeOpenAiCompatibleProvider(deps: OpenAiCompatibleDeps = {}): A
                 "content-length": String(Buffer.byteLength(body)),
               },
               body,
+              timeoutMs,
             },
             deps,
           );
@@ -128,7 +135,7 @@ export function makeOpenAiCompatibleProvider(deps: OpenAiCompatibleDeps = {}): A
           // Une adresse recalée par R-6 ne devient pas valide en réessayant, et
           // un timeout a déjà consommé 30 secondes : on ne les rejoue pas.
           if (lastError.code === "AI_HOST_NOT_ALLOWED") throw lastError;
-          if (attempt < AI_EGRESS_RULES.maxRetries && lastError.code === "AI_PROVIDER_DOWN") {
+          if (attempt < maxRetries && lastError.code === "AI_PROVIDER_DOWN") {
             await sleep(backoffMs(attempt));
             continue;
           }
@@ -142,7 +149,7 @@ export function makeOpenAiCompatibleProvider(deps: OpenAiCompatibleDeps = {}): A
         // Le corps ne sert qu'à choisir entre deux codes (429 débit vs crédit
         // épuisé), puis il est jeté : il n'entre ni dans l'erreur, ni dans un log.
         lastError = aiErrorFromStatus(response.status, response.body);
-        if (!isRetryableStatus(response.status) || attempt === AI_EGRESS_RULES.maxRetries) {
+        if (!isRetryableStatus(response.status) || attempt === maxRetries) {
           throw lastError;
         }
         // 429 « crédit épuisé » est définitif malgré son statut retentable :

@@ -107,7 +107,19 @@ writeFileSync(
       runtime: "nodejs22.x",
       handler: "index.js",
       launcherType: "Nodejs",
-      maxDuration: 30,
+      // 300 s = le maximum du plan Hobby depuis que `fluid compute` est le
+      // défaut (doc Vercel, relevée le 2026-08-25). L'ancienne valeur de 30 s
+      // datait des limites précédentes et n'était plus une contrainte du plan :
+      // elle tuait la Forge à mi-parcours et rendait un 504 muet, la fonction
+      // mourant avant que notre propre garde R-6 puisse typer l'erreur.
+      //
+      // Ce n'est PAS une réservation, c'est un plafond : sous fluid compute la
+      // facturation CPU se met en pause pendant les attentes d'entrée-sortie,
+      // et un appel de modèle est de l'attente réseau presque de bout en bout.
+      // Un plafond haut inutilisé ne coûte donc rien.
+      //
+      // ⚠️ Toute valeur de `AI_TIMEOUT_MS` doit rester strictement en dessous.
+      maxDuration: 300,
       // Pin the SSR function to Stockholm (arn1) to co-locate it with the
       // Supabase project (region eu-north-1 / AWS Stockholm). Every server fn
       // talks to Supabase over PostgREST, so same-region placement removes a
