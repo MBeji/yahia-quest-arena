@@ -765,6 +765,48 @@ flowchart TD
 > les données de physique-chimie (`ρ = 0.7 g/cm³`, `M(S) = 32 g/mol`), les longueurs d'une
 > figure (`BC = 10 cm`) et l'arithmétique de primaire (`في العمليّة 40 + 25 = 65، ما هما الحدّان؟`).
 
+### Piège n° 8 — un REGISTRE sans canal vers la prod, et le run reste VERT
+
+Le moteur sait émettre deux registres à part des sujets : `_competences_registry.sql`
+(`build.ts --competences`) et `_misconceptions_registry.sql` (`build.ts --misconceptions`).
+Chacun exige **deux** choses dans `apply-content.yml` (dépôt privé) : une **étape d'émission**,
+et une **entrée dans le plan d'application**. Il en faut une **troisième** dans l'étape de
+vérification — son propre critère —, sans quoi le registre est compté comme un SUJET, ne trouve
+ni chapitre ni question, et fait échouer le run en « appliqué sans effet ».
+
+**Ce piège s'est déclenché deux fois, à quatorze mois d'écart de conception et vingt-cinq jours
+d'écart de découverte** :
+
+| date       | registre       | ce qui manquait                            | ce que ça coûtait                                                                                     |
+| ---------- | -------------- | ------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
+| 2026-07-31 | compétences    | l'étape d'émission                         | le registre restait figé à 57 entrées ; toute compétence ajoutée depuis n'existait nulle part en prod |
+| 2026-08-25 | misconceptions | l'étape d'émission **et** l'entrée au plan | 6 entrées absentes, portant **73 des 1 244** placements de tags de `math` — dont 54 sur un seul tag   |
+
+**Pourquoi les deux ont duré : un canal muet s'affiche VERT.** Le SQL du sujet passe, le sujet se
+vérifie, la release est journalisée — seuls les libellés manquent. Côté élève, le bloc de
+correction de é04 A1.2b s'affiche **sans nommer l'erreur** : dégradé, jamais cassé, donc jamais
+signalé. Aucune migration ne sème `misconceptions` (la table est **vide** sur une base
+reconstruite à neuf) : son seul canal historique était une migration **générée**, sortie d'ici
+par l'étude 24 et interdite d'y revenir par `leak:check`.
+
+> **La règle**, valable pour tout registre futur : un artefact que le moteur sait émettre mais
+> que le workflow n'applique pas ne produit **aucun signal**. Émission + plan + **critère de
+> vérification propre** — les trois, ou le canal est muet.
+
+### Piège n° 9 — la ligne de résumé de l'émetteur ne compte PAS les quiz
+
+`content:emit` affiche, par sujet, une ligne du genre `✓ math: 20 chapters, 119 exercises,
+715 questions`. Ces compteurs portent sur `exercices/**` **seulement** : les `quiz.json` en sont
+absents. Pour `math` 9ᵉ, le corpus réel vaut **818 = 715 + 103**, et c'est bien 818 insertions
+que le SQL émis contient (son prune conserve **139** ids d'exercices = 119 + 20 quiz).
+
+Conséquence pratique, vécue le 2026-08-25 **juste avant une écriture en prod** : comparer cette
+ligne de log à un chiffre de journal (« 818 questions en base ») donne un écart de 103 qui
+ressemble à une suppression massive. Il n'en est rien — mais on ne le sait qu'en **rejouant le
+SQL émis sur une base vierge et en comptant**, jamais en réconciliant deux logs. C'est la
+recette de [`agents/pgtap-en-local.md`](./agents/pgtap-en-local.md), et c'est exactement le
+genre de vérification qu'un écart avant écriture en production justifie.
+
 ---
 
 ## 13. Les surveillances automatiques (planifiées)
