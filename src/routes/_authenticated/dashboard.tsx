@@ -48,13 +48,16 @@ const GoldAmbientCanvas = lazy(() => import("@/components/visual/gold-ambient-ca
 // « Carte de compétences » (étude 07 lot 4) : lazy comme les sections lourdes du dashboard —
 // son code (groupement + interaction « S'entraîner ») et le glue de la server fn sortent ainsi
 // du chunk eager, qui reste sous budget. Les données, elles, sont déjà chargées par getDashboard.
-const CompetencyMapPanel = lazy(() =>
-  import("@/features/progression/components/competency-map-panel").then((m) => ({
-    default: m.CompetencyMapPanel,
+// Tuteur déterministe (étude 30, lot 3) — UNE seule porte pour les deux panneaux de croyance
+// ET le repli sur la carte de é07. Le regroupement n'est pas cosmétique : trois `lazy()` et
+// deux `useQuery` posés ici poussaient le chunk eager du tableau de bord au-dessus de son
+// budget, et le choix de quelle carte montrer appartient de toute façon à la progression, pas
+// à cette route. Le composant porte le commentaire complet.
+const LearningPanels = lazy(() =>
+  import("@/features/progression").then((m) => ({
+    default: m.LearningPanels,
   })),
 );
-// « Tes points faibles » (étude 04 lot A2.1) : lazy pour la même raison que la carte —
-// son code embarque le geste « S'entraîner » et la glue de la server fn.
 const WeaknessesPanel = lazy(() =>
   import("@/features/progression/components/weaknesses-panel").then((m) => ({
     default: m.WeaknessesPanel,
@@ -320,8 +323,15 @@ function Dashboard() {
             révision : où en est vraiment l'élève, par compétence, et ce qui le bloque (R-5).
             Données via `getDashboard` (une lecture de la carte, une des blocages) ; le composant
             est lazy (voir le budget bundle du dashboard). */}
+        {/* Étude 30 lot 3 — « Prêt à apprendre » puis « Où tu en es », la carte à 4 états qui
+            REMPLACE l'affichage en pourcentage de é07 lot 4 : un état se lit comme une
+            consigne, un pourcentage se lit comme une note. Le composant décide lui-même du
+            repli sur l'ancienne carte quand la matière n'est pas taggée (R-6) — les deux
+            lectures de croyance rendent alors zéro ligne, et l'écran doit rester EXACTEMENT
+            celui d'aujourd'hui. Données via ses propres requêtes client (§3.11), donc hors du
+            chemin SSR ; `getDashboard` continue d'alimenter le repli. */}
         <Suspense fallback={null}>
-          <CompetencyMapPanel
+          <LearningPanels
             map={data.competencyMap ?? []}
             blockers={data.competencyBlockers ?? []}
             blockedSlug={data.competencyBlockedSlug ?? null}

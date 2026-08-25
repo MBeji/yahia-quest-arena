@@ -1,3 +1,4 @@
+import type { AdaptiveTranslations } from "./adaptive.types";
 import type { DuelTranslations } from "./duel.types";
 import type { TutorTranslations } from "./tutor.types";
 
@@ -401,6 +402,8 @@ export type TranslationKeys = {
 
   // Tuteur « El Ostedh » (étude 11 lot 1) — clés dans ./tutor.types.ts.
   tutor: TutorTranslations;
+  /** Tuteur déterministe (étude 30 lot 3) : les états, les zones, la frontière. */
+  adaptive: AdaptiveTranslations;
   // Subscription / premium
   subscription: {
     premiumTitle: string;

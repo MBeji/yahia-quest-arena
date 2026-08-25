@@ -430,6 +430,48 @@ export const en: TranslationKeys = {
     tierSilver: "Silver",
     tierBronze: "Bronze",
   },
+  // Deterministic tutor (study 30, lot 3). The server returns an identifier; these strings
+  // put it in language — and none of them shows a belief probability (D-1).
+  adaptive: {
+    state: {
+      maitrisee: "Mastered",
+      "en-cours": "Getting there",
+      fragile: "Shaky",
+      lacune: "Gap",
+      inconnue: "Not seen yet",
+    },
+    stateHint: {
+      maitrisee: "You proved it several times, in several ways.",
+      "en-cours": "Almost. One or two more proofs and it is yours.",
+      fragile: "You have seen it, but it does not hold yet.",
+      lacune: "This one blocks what comes next. Let us take it from the top.",
+      inconnue: "We have not run into it together yet.",
+    },
+    zone: {
+      interieur: "Secured",
+      frontiere: "Ready to learn",
+      "hors-portee": "A basic is missing",
+    },
+    mapTitle: "Where you stand",
+    mapSubtitle: "What you have mastered, what you can take on, what is blocking you.",
+    mapEmpty: "Play a few exercises — your map lights up as you go.",
+    provenBy: "proved {n} times, in {m} forms",
+    inferredBadge: "Inferred",
+    inferredExplain:
+      "You nailed {source}, so I am counting this one as yours. Tell me if I am wrong.",
+    disputeCta: "I disagree",
+    disputePending: "Noting that…",
+    disputeDone: "Noted — we will ask you about it again to be sure.",
+    suspectBadge: "To revisit",
+    frontierTitle: "Ready to learn",
+    frontierSubtitle: "You have everything you need to take these on right now.",
+    frontierEmpty: "Nothing new to take on yet — keep going with what you started.",
+    frontierUnlocks: "opens {n} more",
+    frontierUnlocksNone: "at your own pace",
+    frontierStartCta: "Start",
+    blockedNotice:
+      "You are missing a basic for this one. You can still try — but we suggest going back upstream first.",
+  },
   tutor: {
     ask: "Ask the Prof",
     panelTitle: "El Ostedh",
