@@ -439,6 +439,48 @@ export const fr: TranslationKeys = {
     tierSilver: "Argent",
     tierBronze: "Bronze",
   },
+  // Tuteur déterministe (étude 30 lot 3). Le serveur rend un identifiant, ces chaînes le
+  // mettent en langue — et aucune n'affiche une probabilité de croyance (D-1).
+  adaptive: {
+    state: {
+      maitrisee: "Maîtrisée",
+      "en-cours": "En cours",
+      fragile: "Fragile",
+      lacune: "Lacune",
+      inconnue: "Pas encore vue",
+    },
+    stateHint: {
+      maitrisee: "Tu l'as prouvée plusieurs fois, et de plusieurs façons.",
+      "en-cours": "Ça vient. Encore une ou deux preuves et c'est acquis.",
+      fragile: "Tu l'as vue, mais ça ne tient pas encore.",
+      lacune: "Celle-là bloque la suite. On la reprend depuis le début.",
+      inconnue: "On ne l'a pas encore croisée ensemble.",
+    },
+    zone: {
+      interieur: "Acquis",
+      frontiere: "Prêt à apprendre",
+      "hors-portee": "Il manque une base",
+    },
+    mapTitle: "Où tu en es",
+    mapSubtitle: "Ce que tu maîtrises, ce que tu peux attaquer, ce qui te bloque.",
+    mapEmpty: "Joue quelques exercices : ta carte s'allumera au fur et à mesure.",
+    provenBy: "prouvé {n} fois, sous {m} formes",
+    inferredBadge: "Déduit",
+    inferredExplain:
+      "Tu as réussi {source} : je considère celle-ci acquise. Dis-moi si je me trompe.",
+    disputeCta: "Je ne suis pas d'accord",
+    disputePending: "On note…",
+    disputeDone: "C'est noté — on te la reposera pour en avoir le cœur net.",
+    suspectBadge: "À revoir",
+    frontierTitle: "Prêt à apprendre",
+    frontierSubtitle: "Tu as tout ce qu'il faut pour attaquer ces compétences maintenant.",
+    frontierEmpty: "Rien de neuf à attaquer pour l'instant — continue ce que tu as commencé.",
+    frontierUnlocks: "ouvre {n} suites",
+    frontierUnlocksNone: "à ton rythme",
+    frontierStartCta: "Commencer",
+    blockedNotice:
+      "Il te manque une base pour celle-ci. Tu peux quand même essayer — mais on te conseille de reprendre en amont d'abord.",
+  },
   tutor: {
     ask: "Demander au Prof",
     panelTitle: "El Ostedh",

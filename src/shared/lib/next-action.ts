@@ -12,11 +12,26 @@
  * sont déjà chargées par les server fns appelantes, et une RPC dédiée ajouterait un aller-retour
  * et surtout un second endroit où la règle pourrait diverger.
  *
- * L'ordre de priorité est celui de R-31, et il n'est pas négociable au cas par cas :
+ * L'ordre de priorité est celui de R-31, AMENDÉ par l'étude 30 (amendement C du §3.9), et il
+ * n'est pas négociable au cas par cas :
  *   1. une RÉVISION due — ce que la mémoire est en train d'oublier prime sur tout le reste ;
- *   2. le dernier exercice RATÉ — reprendre un échec récent vaut mieux qu'avancer sur du neuf ;
- *   3. la prochaine mission du CHEMIN — le chapitre le plus avancé non terminé ;
- *   4. la DÉCOUVERTE — une matière encore jamais ouverte.
+ *   2. la REMÉDIATION — une lacune confirmée bloque la frontière, on remonte à la cause ;
+ *   3. le dernier exercice RATÉ — reprendre un échec récent vaut mieux qu'avancer sur du neuf ;
+ *   4. la CONSOLIDATION — une compétence en cours, servie sous une AUTRE forme ;
+ *   5. la prochaine mission du CHEMIN — le chapitre le plus avancé non terminé ;
+ *   6. la DÉCOUVERTE — une matière encore jamais ouverte.
+ *
+ * POURQUOI `remediate` PASSE DEVANT `retry`, ET CE QUE ÇA CORRIGE. L'ordre d'origine plaçait
+ * `retry` au rang 2 parce que « reprendre un échec récent vaut mieux qu'avancer sur du neuf » —
+ * c'était **le meilleur proxy disponible d'une cause quand aucune cause n'était connue**. É30
+ * fournit la cause. `remediate` est la même intention avec la cause à la place du symptôme, et
+ * rejouer l'exercice raté sans traiter le prérequis manquant est la définition même du
+ * piétinement. Ce n'est donc pas une priorité de plus : c'est la même, mieux renseignée.
+ *
+ * ⚠️ LES DEUX NOUVEAUX RANGS RENDENT `null` SANS CROYANCE, et c'est structurel : leurs entrées
+ * viennent de lectures qui ne rendent rien sur une matière non taggée (R-6). Sur les fixtures
+ * existantes, cette fonction rend donc EXACTEMENT ce qu'elle rendait — assertion littérale
+ * dans `next-action.test.ts`, exigée par le §4.2.
  *
  * Un seul CTA à la fois (étude 15 R-1) : la fonction renvoie UNE action, jamais une liste.
  * `null` est une réponse légitime — il n'y a rien à proposer, et l'écran doit alors se taire
@@ -35,19 +50,31 @@ import {
 export type NextAction =
   /** Une révision espacée est échue (priorité 1). */
   | { kind: "review"; exerciseId: string }
-  /** Le dernier exercice a été raté et reste rejouable (priorité 2). */
+  /**
+   * Une lacune CONFIRMÉE bloque la frontière (priorité 2, étude 30 amendement C). On remonte
+   * à la cause racine plutôt que de rejouer le symptôme. `competencySlug` voyage avec l'action
+   * parce que R-14 veut une raison en langage élève, et que la raison est cette compétence-là.
+   */
+  | { kind: "remediate"; exerciseId: string; competencySlug: string }
+  /** Le dernier exercice a été raté et reste rejouable (priorité 3). */
   | { kind: "retry"; exerciseId: string }
-  /** La mission suivante du chemin recommandé (priorité 3). */
+  /**
+   * Une compétence « en cours », servie sous une AUTRE forme (priorité 4, amendement C).
+   * « Autre forme » est le cœur : refaire le même type d'item mesurerait la mémoire de la
+   * réponse, pas la compréhension — c'est le « répétée ET variée » de R-4, côté action.
+   */
+  | { kind: "strengthen"; exerciseId: string; competencySlug: string }
+  /** La mission suivante du chemin recommandé (priorité 5). */
   | { kind: "continue"; exerciseId: string; chapterId: string }
   /**
-   * Priorité 3 DÉLÉGUÉE : l'appelant sait quelle matière porte le chemin, mais n'a pas de quoi
+   * Priorité 5 DÉLÉGUÉE : l'appelant sait quelle matière porte le chemin, mais n'a pas de quoi
    * en désigner la mission. Le dashboard est dans ce cas — il ne charge ni chapitres ni
    * exercices — et renvoie donc vers le hub, qui résout la mission avec ce même moteur.
    * Charger tout le contenu de la matière au tableau de bord pour trancher une flèche serait
    * payer très cher une décision que l'écran suivant prend gratuitement.
    */
   | { kind: "continue-subject"; subjectId: string }
-  /** Une matière encore jamais ouverte (priorité 4). */
+  /** Une matière encore jamais ouverte (priorité 6). */
   | { kind: "discover"; subjectId: string };
 
 export type NextActionExercise = CompletionExercise & {
@@ -75,6 +102,17 @@ export type NextActionInput = {
   pathSubjectId?: string | null;
   /** Matière du parcours encore jamais tentée, s'il en reste une. */
   untouchedSubjectId?: string | null;
+  /**
+   * La remontée « cause racine » (étude 30, amendement C · R-15), résolue serveur par
+   * `get_remediation_path`. `null`/absent sur une matière non taggée, sans croyance, ou quand
+   * aucune lacune confirmée n'est en amont — les trois cas où il n'y a rien à remédier.
+   */
+  remediation?: { competencySlug: string; exerciseId: string } | null;
+  /**
+   * La consolidation (amendement C) : une compétence en cours, avec un exercice d'un type
+   * d'item que l'élève n'a pas encore réussi dessus. Même posture de nullité que ci-dessus.
+   */
+  strengthen?: { competencySlug: string; exerciseId: string } | null;
 };
 
 /**
@@ -91,7 +129,7 @@ function byRecommendedOrder(a: NextActionExercise, b: NextActionExercise): numbe
 }
 
 /**
- * Priorité 3 : la prochaine mission du chemin, dans le chapitre le plus avancé qui n'est pas
+ * Priorité 5 : la prochaine mission du chemin, dans le chapitre le plus avancé qui n'est pas
  * terminé. « Le plus avancé » se lit à l'endroit où l'élève en est vraiment : on cherche
  * d'abord, en repartant de la fin, un chapitre COMMENCÉ mais non terminé — c'est là qu'il a
  * laissé son travail. À défaut seulement, on propose le premier chapitre non terminé, qui est
@@ -131,12 +169,31 @@ export function resolveNextAction(input: NextActionInput): NextAction | null {
   if (input.dueReviewExerciseId) {
     return { kind: "review", exerciseId: input.dueReviewExerciseId };
   }
+  // Rang 2 (é30 amendement C). Devant `retry` : rejouer l'exercice raté sans traiter le
+  // prérequis manquant est la définition du piétinement — et le piétinement est le KPI que
+  // cette étude cherche à faire baisser, pas un effet de bord.
+  if (input.remediation) {
+    return {
+      kind: "remediate",
+      exerciseId: input.remediation.exerciseId,
+      competencySlug: input.remediation.competencySlug,
+    };
+  }
   if (input.failedExerciseId) {
     return { kind: "retry", exerciseId: input.failedExerciseId };
   }
+  // Rang 4 (é30 amendement C). DERRIÈRE `retry` : un échec récent est un fait, une compétence
+  // « en cours » est une tendance — et un fait qui vient de se produire prime sur une tendance.
+  if (input.strengthen) {
+    return {
+      kind: "strengthen",
+      exerciseId: input.strengthen.exerciseId,
+      competencySlug: input.strengthen.competencySlug,
+    };
+  }
   const onPath = nextOnPath(input);
   if (onPath) return onPath;
-  // Priorité 3 déléguée AVANT la découverte : reprendre un chemin commencé prime toujours sur
+  // Priorité 5 déléguée AVANT la découverte : reprendre un chemin commencé prime toujours sur
   // en ouvrir un neuf. Inverser les deux enverrait un élève en plein chapitre de maths
   // découvrir une matière qu'il n'a jamais touchée.
   if (input.pathSubjectId) {

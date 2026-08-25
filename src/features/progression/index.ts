@@ -2,6 +2,10 @@
 // Public API — import from "@/features/progression"
 
 export { recoverStreak, getCompetencyExercises } from "./progression.server";
+// Tuteur déterministe (étude 30, lot 3). Les trois lectures de croyance : l'état et la zone
+// de chaque compétence, la frontière « prêt à apprendre », et le geste de contestation d'une
+// déduction (US-3/R-10).
+export { getLearningState, getLearningFrontier, disputeInference } from "./progression.server";
 // « Carte de compétences » (étude 07, lot 4). Comme le panneau de révision, il vit dans la
 // progression et ses données arrivent par `getDashboard` (get_my_competency_map +
 // get_competency_blockers), lu une seule fois. La route dashboard compose.
@@ -15,3 +19,7 @@ export { DailyReviewPanel } from "./components/daily-review-panel";
 // le panneau vit ici, ses DONNÉES arrivent par `getDashboard` en une seule lecture
 // (é22 D-8), et la route dashboard compose.
 export { WeaknessesPanel } from "./components/weaknesses-panel";
+// Tuteur déterministe (étude 30, lot 3) — la porte unique des deux panneaux de croyance
+// (« Prêt à apprendre » et la carte à 4 états), repli R-6 sur la carte de é07 compris. La
+// route ne compose plus qu'un composant ; le choix de quelle carte montrer appartient ici.
+export { LearningPanels } from "./components/learning-panels";
