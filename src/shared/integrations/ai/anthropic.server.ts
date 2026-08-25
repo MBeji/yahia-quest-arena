@@ -13,13 +13,14 @@
 // C'est le seul chemin qui exploite le prompt caching et les paliers de é11.
 //
 // CE QUE L'ADAPTATEUR GARANTIT, quel que soit le fournisseur (§3.5) :
-// timeout 30 s ; 2 retries sur 429/5xx uniquement ; **aucun retry sur 401/403**
+// timeout et retries PAR SURFACE (`AI_TIMEOUT_MS`, `AI_MAX_RETRIES` — 30 s et
+// 2 essais partout, sauf la Forge) sur 429/5xx uniquement ; **aucun retry sur 401/403**
 // (une clé invalide le reste — sinon on brûle le quota du parent) ; erreurs
 // re-typées (R-5, annexe C) ; usage rapporté ; absence du bundle client prouvée
 // par `build:check`.
 
 import Anthropic from "@anthropic-ai/sdk";
-import { AI_EGRESS_RULES } from "@/shared/constants/ai";
+import { AI_EGRESS_RULES, AI_MAX_RETRIES, AI_TIMEOUT_MS } from "@/shared/constants/ai";
 import { AiError, toAiError } from "./errors";
 import {
   cacheBoundaryIndex,
@@ -37,8 +38,12 @@ export type AnthropicFactory = (apiKey: string) => Anthropic;
 const defaultFactory: AnthropicFactory = (apiKey) =>
   new Anthropic({
     apiKey,
+    // DÉFAUTS du client, surchargés par surface à chaque appel (voir `generate`).
+    // Ils ne servent donc qu'aux chemins qui ne passent pas de surface — mais un
+    // défaut du SDK vaudrait dix minutes, alors on pose le nôtre.
+    //
     // Le SDK compte en MILLISECONDES (piège documenté : Python compte en
-    // secondes). 30 s, comme la condition 7 de R-6 pour l'autre adaptateur —
+    // secondes). 30 s, comme la condition 6 de R-6 pour l'autre adaptateur —
     // un élève ne doit pas attendre deux fois plus longtemps selon la clé de
     // sa famille.
     timeout: AI_EGRESS_RULES.timeoutMs,
@@ -96,21 +101,31 @@ export function makeAnthropicProvider(factory: AnthropicFactory = defaultFactory
       const startedAt = Date.now();
       try {
         const client = factory(revealSecret(cred.secret));
-        const message = await client.messages.create({
-          model,
-          max_tokens: req.maxTokens,
-          // Le système est STABLE d'un appel à l'autre pour une même surface :
-          // c'est le premier élément du préfixe caché (é11 §3.4).
-          system: [{ type: "text", text: req.system, cache_control: { type: "ephemeral" } }],
-          messages: [{ role: "user", content: buildAnthropicContent(req) }],
-          ...(req.responseSchema
-            ? {
-                output_config: {
-                  format: { type: "json_schema" as const, schema: req.responseSchema },
-                },
-              }
-            : {}),
-        });
+        const message = await client.messages.create(
+          {
+            model,
+            max_tokens: req.maxTokens,
+            // Le système est STABLE d'un appel à l'autre pour une même surface :
+            // c'est le premier élément du préfixe caché (é11 §3.4).
+            system: [{ type: "text", text: req.system, cache_control: { type: "ephemeral" } }],
+            messages: [{ role: "user", content: buildAnthropicContent(req) }],
+            ...(req.responseSchema
+              ? {
+                  output_config: {
+                    format: { type: "json_schema" as const, schema: req.responseSchema },
+                  },
+                }
+              : {}),
+          },
+          {
+            // Le délai et les essais se règlent PAR SURFACE, et par requête —
+            // le client, lui, est construit une fois. Sans cette surcharge, un
+            // élève attendrait deux fois moins longtemps selon la clé de sa
+            // famille, ce que le constructeur ci-dessus refuse explicitement.
+            timeout: AI_TIMEOUT_MS[req.feature],
+            maxRetries: AI_MAX_RETRIES[req.feature],
+          },
+        );
 
         if (message.stop_reason === "refusal") {
           // Le modèle a décliné. Ce n'est ni une panne ni une clé invalide :
@@ -138,12 +153,17 @@ export function makeAnthropicProvider(factory: AnthropicFactory = defaultFactory
       let stream;
       try {
         const client = factory(revealSecret(cred.secret));
-        stream = client.messages.stream({
-          model,
-          max_tokens: req.maxTokens,
-          system: [{ type: "text", text: req.system, cache_control: { type: "ephemeral" } }],
-          messages: [{ role: "user", content: buildAnthropicContent(req) }],
-        });
+        stream = client.messages.stream(
+          {
+            model,
+            max_tokens: req.maxTokens,
+            system: [{ type: "text", text: req.system, cache_control: { type: "ephemeral" } }],
+            messages: [{ role: "user", content: buildAnthropicContent(req) }],
+          },
+          // Même règle par surface que `generate` : la garantie annoncée en tête
+          // de fichier ne vaut que si les DEUX chemins l'appliquent.
+          { timeout: AI_TIMEOUT_MS[req.feature], maxRetries: AI_MAX_RETRIES[req.feature] },
+        );
       } catch (error) {
         throw toAiError(error);
       }

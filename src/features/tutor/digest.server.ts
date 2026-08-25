@@ -21,9 +21,12 @@
 //
 // POURQUOI DES TRANCHES, ET NON UN BATCH
 // ---------------------------------------------------------------------------
-// La fonction SSR est configurée à `maxDuration: 30` secondes
-// (`scripts/build-vercel.mjs`, plan Hobby) — ce n'est pas un réglage qu'on
-// remonte. Un appel de modèle se compte en secondes et un élève lié à un parent
+// La fonction SSR est configurée à `maxDuration: 300` secondes
+// (`scripts/build-vercel.mjs`). Cette valeur était à 30 s jusqu'au 2026-08-25,
+// sur la foi d'une limite du plan Hobby qui n'existe plus depuis `fluid
+// compute` — la contrainte avait disparu, le commentaire était resté, et le
+// découpage ci-dessous en avait hérité une marge inutilement serrée.
+// Un appel de modèle se compte en secondes et un élève lié à un parent
 // en coûte deux. Cette route traite donc ce qu'elle peut dans un BUDGET de
 // temps, rend un curseur, et c'est `scripts/ai/tutor-digests.mjs` qui rappelle
 // jusqu'à épuisement. Une tranche interrompue se rejoue telle quelle : les
@@ -262,10 +265,15 @@ export type TutorDigestBatchOptions = {
 export const TUTOR_DIGEST_DEFAULT_LIMIT = 3;
 
 /**
- * Le budget de temps d'une tranche. Sous les trente secondes de la plateforme,
- * avec la marge d'un appel en cours : on veut RENDRE un curseur, pas se faire
+ * Le budget de temps d'une tranche. On veut RENDRE un curseur, pas se faire
  * couper au milieu d'une écriture — un 504 perd le curseur, et le script doit
  * alors rejouer la tranche entière.
+ *
+ * La valeur date de l'époque où la plateforme coupait à trente secondes ; elle
+ * en gardait juste la marge d'un appel en cours. Le plafond est passé à 300 s
+ * le 2026-08-25 et cette tranche est donc devenue très prudente — ce qui reste
+ * SANS DANGER (des tranches plus courtes, simplement plus nombreuses) et se
+ * remonte le jour où le débit des bilans le demandera, mesures à l'appui.
  */
 const ROUND_BUDGET_MS = 20_000;
 

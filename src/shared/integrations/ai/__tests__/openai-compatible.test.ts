@@ -7,6 +7,7 @@ import {
   makeOpenAiCompatibleProvider,
   parseCompletion,
 } from "../openai-compatible.server";
+import { AI_EGRESS_RULES, AI_TIMEOUT_MS } from "@/shared/constants/ai";
 import { AiError } from "../errors";
 import { sealSecret, type AiCredential, type AiRequest } from "../types";
 import type { EgressLookup, HttpsRequestFn } from "../egress.server";
@@ -39,7 +40,7 @@ const req: AiRequest = {
 
 /** File de réponses : une par tentative, pour observer les retries. */
 function scriptedTransport(responses: { statusCode: number; body: string }[]) {
-  const calls: { headers: Record<string, string>; body: string }[] = [];
+  const calls: { headers: Record<string, string>; body: string; timeout?: number }[] = [];
   let index = 0;
   const requestFn = ((options: Record<string, unknown>, callback: (res: EventEmitter) => void) => {
     const scripted = responses[Math.min(index, responses.length - 1)];
@@ -55,7 +56,11 @@ function scriptedTransport(responses: { statusCode: number; body: string }[]) {
     };
     req_.destroy = () => {};
     req_.end = () => {
-      calls.push({ headers: options.headers as Record<string, string>, body: sent });
+      calls.push({
+        headers: options.headers as Record<string, string>,
+        body: sent,
+        timeout: options.timeout as number | undefined,
+      });
       queueMicrotask(() => {
         const res = new EventEmitter() as EventEmitter & {
           statusCode: number;
@@ -232,6 +237,58 @@ describe("R-6 dans le chemin d'appel, pas seulement à la saisie", () => {
         baseUrl: undefined,
       }),
     ).rejects.toMatchObject({ code: "AI_HOST_NOT_ALLOWED", detail: "missing_base_url" });
+  });
+});
+
+/**
+ * Le délai et les essais se lisent PAR SURFACE (2026-08-25).
+ *
+ * La panne qui l'a imposé : un modèle à raisonnement met 59 s à forger un quiz,
+ * le plafond commun était à 30 s, et la fonction SSR mourait avant que notre
+ * garde ait pu typer l'erreur — un 504 muet au lieu d'un `AI_PROVIDER_DOWN`.
+ */
+describe("délai et essais par surface", () => {
+  const forgeReq: AiRequest = { ...req, feature: "forge", tier: "rich", maxTokens: 4000 };
+
+  it("accorde à la Forge son délai propre, et non le plafond commun", async () => {
+    const { requestFn, calls } = scriptedTransport([{ statusCode: 200, body: okBody }]);
+    await makeOpenAiCompatibleProvider({ lookup, requestFn }).generate(forgeReq, cred);
+
+    expect(calls[0].timeout).toBe(AI_TIMEOUT_MS.forge);
+    expect(calls[0].timeout).toBeGreaterThan(AI_EGRESS_RULES.timeoutMs);
+  });
+
+  it("laisse les surfaces qui répondent devant un élève au plafond commun", async () => {
+    const { requestFn, calls } = scriptedTransport([{ statusCode: 200, body: okBody }]);
+    await makeOpenAiCompatibleProvider({ lookup, requestFn }).generate(req, cred);
+
+    expect(calls[0].timeout).toBe(AI_EGRESS_RULES.timeoutMs);
+  });
+
+  it("NE rejoue PAS une génération : une seule tentative, là où `explain` en fait trois", async () => {
+    vi.useFakeTimers();
+    const { requestFn, attempts } = scriptedTransport([{ statusCode: 503, body: "down" }]);
+    const promise = makeOpenAiCompatibleProvider({ lookup, requestFn })
+      .generate(forgeReq, cred)
+      .catch((e: unknown) => e);
+    await vi.runAllTimersAsync();
+
+    expect(await promise).toMatchObject({ code: "AI_PROVIDER_DOWN" });
+    // Rejouer coûterait 90 s de plus à l'élève ET une génération au fournisseur,
+    // qui facture ce qu'il a calculé même quand nous raccrochons.
+    expect(attempts()).toBe(1);
+    vi.useRealTimers();
+  });
+
+  it("garde tout délai de surface SOUS le plafond de la fonction SSR", () => {
+    // `maxDuration: 300` dans `scripts/build-vercel.mjs`. Au-dessus, c'est la
+    // plateforme qui tue le processus et l'erreur n'est plus lisible.
+    const SSR_MAX_DURATION_MS = 300_000;
+    for (const [feature, ms] of Object.entries(AI_TIMEOUT_MS)) {
+      expect(ms, `la surface ${feature} dépasse le plafond de la fonction`).toBeLessThan(
+        SSR_MAX_DURATION_MS,
+      );
+    }
   });
 });
 
