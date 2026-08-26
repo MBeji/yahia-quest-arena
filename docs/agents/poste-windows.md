@@ -287,9 +287,17 @@ qui écrit aux fins de ligne de la plateforme.
 
 **Le remède** — `npm run eol:fix`. Il renormalise en LF **et** rafraîchit l'index
 (`git add --renormalize`), donc l'arbre redevient réellement propre et rien n'est staged : le
-contenu normalisé est déjà celui du blob. `npm run eol:check` (dans `verify` et `ci:verify`)
-échoue désormais **avant** les tests, avec la liste des fichiers, au lieu de laisser chercher
-dans une trace rolldown. Sur Linux/CI c'est un no-op.
+contenu normalisé est déjà celui du blob. `npm run eol:check` est la **première** étape de
+`verify` et de `ci:verify` : il échoue avec la liste des fichiers et le remède, au lieu de
+laisser chercher dans une trace rolldown. Sur Linux/CI c'est un no-op de moins d'une seconde.
+
+⚠️ **Cette phrase a décrit une intention, pas le script, pendant un mois.** Écrite le
+2026-07-25, elle annonçait un `eol:check` « avant les tests » alors que `package.json` le
+plaçait en **sixième** position, après `test`. Le 2026-08-26, un worktree fraîchement créé a
+donc rendu `verify` rouge sur la trace rolldown de `precommit-checks.test.mjs` — et le message
+qui nomme les 11 fichiers n'est **jamais** arrivé, le `&&` s'arrêtant avant lui. Diagnostic
+refait de zéro, contrôle négatif compris. L'ordre a été corrigé le jour même ; ne pas le
+« ranger » ailleurs sous prétexte de grouper les étapes rapides.
 
 ### ⚠️ La même trace rolldown a une SECONDE cause : un Node trop vieux
 
@@ -323,16 +331,18 @@ Corollaire : ne plus committer le résultat d'un `npm run harness:sync` lancé p
 une dérive de miroir sur ce poste — lancer `eol:fix` d'abord ; s'il ne reste plus de dérive,
 c'était ce piège. Si un `harness:sync` a déjà réécrit le miroir : `git checkout -- .agents/skills/`.
 
-Depuis le 2026-08-24, `harness:check` fait partie de `verify` — et il y est placé **en dernier,
-après `eol:check`**, précisément à cause de ce piège : sur ce poste, un arbre sali par des CRLF
-fait dire « drifted from its harness sources » à `harness:check` pendant que `git diff` reste
-vide. En le faisant passer après, c'est `eol:check` qui parle le premier, avec le bon diagnostic
-et le bon remède. Sur un checkout LF neuf — la CI — l'ordre est sans effet, d'où l'ordre
-différent dans `ci:verify` : ce n'est pas une incohérence, c'est le poste qui est particulier.
+Depuis le 2026-08-24, `harness:check` fait partie de `verify`, et il y est placé **après**
+`eol:check` pour la même raison : sur ce poste, un arbre sali par des CRLF fait dire « drifted
+from its harness sources » à `harness:check` pendant que `git diff` reste vide. Depuis le
+2026-08-26 la règle est plus simple, et vaut pour les deux chaînes : **`eol:check` d'abord,
+partout**. C'est la seule étape dont l'échec explique celui de trois autres (`test`,
+`harness:check`, et un `git rebase` qui refuse de démarrer), et elle coûte moins d'une seconde.
+Sur un checkout LF neuf — la CI — l'ordre est sans effet ; il n'y a donc plus de raison qu'il
+diffère entre `verify` et `ci:verify`.
 
 ## `npm run verify` local ≠ CI
 
-`verify` = `lint` + `typecheck` + `test` + `leak:check` + `db:check-chain` + `eol:check` +
+`verify` = `eol:check` + `lint` + `typecheck` + `test` + `leak:check` + `db:check-chain` +
 `harness:check`. Le job `verify` de `ci.yml` en fait un **surensemble** : il passe par
 `test:coverage` (donc les **seuils de couverture**, que `test` seul n'applique pas) et ajoute
 `perf:check`, `build:check` (**budgets de bundle**), `smoke:shell` et `audit:deps`.
