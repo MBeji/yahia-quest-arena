@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { readFileSync } from "node:fs";
 import {
   checkPointer,
   checkAgentsSize,
@@ -8,6 +9,8 @@ import {
   findUnpinnedActions,
   isJsonValid,
   checkSkillFrontmatter,
+  checkFeatureInventory,
+  extractFeatureInventory,
   AGENTS_MD_MAX_LINES,
   AGENTS_MD_MAX_BYTES,
   SKILL_DESCRIPTION_MAX,
@@ -270,5 +273,58 @@ describe("findUnpinnedActions", () => {
   it("survives a non-string input", () => {
     expect(findUnpinnedActions(undefined)).toEqual([]);
     expect(findUnpinnedActions(null)).toEqual([]);
+  });
+});
+
+describe("checkAgentsSize — le décompte annoncé est celui d'un éditeur", () => {
+  // Le fichier réel finit par un saut de ligne : sans le retrait, `split` rendait
+  // une ligne fantôme, le plafond de 250 valait 249 et le message mentait de 1.
+  it("ne compte pas la ligne fantôme du saut final", () => {
+    expect(checkAgentsSize("a\nb\nc\n").lines).toBe(3);
+    expect(checkAgentsSize("a\nb\nc").lines).toBe(3);
+  });
+
+  it("laisse passer un fichier pile au plafond, et refuse la ligne suivante", () => {
+    const atBudget = `${Array.from({ length: AGENTS_MD_MAX_LINES }, () => "x").join("\n")}\n`;
+    expect(checkAgentsSize(atBudget).ok).toBe(true);
+    expect(checkAgentsSize(`x\n${atBudget}`).ok).toBe(false);
+  });
+});
+
+describe("checkFeatureInventory", () => {
+  const inventory = (count, names) =>
+    `- Feature-based: \`src/features/{name}/\` (${count} — ${names.join(", ")} ;\n` +
+    "  `harness:check` échoue si cette liste dérive de `src/features/`).\n";
+
+  it("accepte un inventaire exact, quel que soit l'ordre de lecture du disque", () => {
+    const md = inventory(3, ["ai", "auth", "quest"]);
+    expect(checkFeatureInventory(md, ["quest", "ai", "auth"])).toEqual([]);
+  });
+
+  it("nomme la feature qui existe sans être listée — la dérive réellement survenue", () => {
+    const md = inventory(2, ["ai", "auth"]);
+    const problems = checkFeatureInventory(md, ["ai", "auth", "tutor"]);
+    expect(problems.join(" ")).toContain("tutor");
+    expect(problems.join(" ")).toContain("(2) ≠ 3");
+  });
+
+  it("nomme la feature listée qui n'existe plus", () => {
+    const md = inventory(2, ["ai", "disparue"]);
+    expect(checkFeatureInventory(md, ["ai"]).join(" ")).toContain("disparue");
+  });
+
+  it("refuse de se taire quand la phrase a changé de forme", () => {
+    expect(checkFeatureInventory("- Feature-based: des dossiers, quoi.", ["ai"])).toHaveLength(1);
+    expect(checkFeatureInventory("", ["ai"])[0]).toContain("illisible");
+  });
+
+  it("lit l'inventaire réel d'AGENTS.md", () => {
+    // Depuis la racine du dépôt : vitest y fixe le cwd, et c'est le fichier que
+    // le gate lit réellement — le test tombe si la phrase change de forme.
+    const md = readFileSync("AGENTS.md", "utf8");
+    const declared = extractFeatureInventory(md);
+    expect(declared).not.toBeNull();
+    expect(declared.names).toContain("quest");
+    expect(declared.count).toBe(declared.names.length);
   });
 });

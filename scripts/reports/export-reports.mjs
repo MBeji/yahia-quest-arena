@@ -23,6 +23,7 @@ import { writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { PROD_SUPABASE_REF, prodTargetReason } from "../shared/prod-targets.mjs";
+import { transientHint, withTransientRetry } from "../shared/supabase-transient.mjs";
 
 /**
  * Refuse to export from anything but PRODUCTION.
@@ -196,26 +197,40 @@ async function main() {
   const { createClient } = await import("@supabase/supabase-js");
   const supabase = createClient(apiUrl, serviceKey, { auth: { persistSession: false } });
 
+  // Retried, because a scheduled read that dies on a provider blip costs a red
+  // cron and a guard issue for something no PR repairs (see supabase-transient.mjs).
   const [bugs, contents] = await Promise.all([
-    supabase
-      .from("bug_reports")
-      .select("id, created_at, user_id, message, page, status")
-      .eq("status", "open")
-      .order("created_at", { ascending: true }),
-    supabase
-      .from("content_reports")
-      .select(
-        "id, created_at, user_id, message, exercise_id, question_id, status, exercises(title, subject_id)",
-      )
-      .eq("status", "open")
-      .order("created_at", { ascending: true }),
+    withTransientRetry(
+      () =>
+        supabase
+          .from("bug_reports")
+          .select("id, created_at, user_id, message, page, status")
+          .eq("status", "open")
+          .order("created_at", { ascending: true }),
+      { label: "bug_reports" },
+    ),
+    withTransientRetry(
+      () =>
+        supabase
+          .from("content_reports")
+          .select(
+            "id, created_at, user_id, message, exercise_id, question_id, status, exercises(title, subject_id)",
+          )
+          .eq("status", "open")
+          .order("created_at", { ascending: true }),
+      { label: "content_reports" },
+    ),
   ]);
   if (bugs.error) {
-    console.error(`[reports] Failed to read bug_reports: ${bugs.error.message}`);
+    console.error(
+      `[reports] Failed to read bug_reports: ${bugs.error.message}${transientHint(bugs.error.message)}`,
+    );
     process.exit(1);
   }
   if (contents.error) {
-    console.error(`[reports] Failed to read content_reports: ${contents.error.message}`);
+    console.error(
+      `[reports] Failed to read content_reports: ${contents.error.message}${transientHint(contents.error.message)}`,
+    );
     process.exit(1);
   }
 

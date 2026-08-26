@@ -61,7 +61,12 @@ export function checkAgentsSize(
   agentsMdContent,
   { maxLines = AGENTS_MD_MAX_LINES, maxBytes = AGENTS_MD_MAX_BYTES } = {},
 ) {
-  const lines = agentsMdContent.split("\n").length;
+  // Un fichier bien formé finit par un saut de ligne : `split` rend alors un
+  // dernier élément vide qu'aucun éditeur ne compte. Sans ce retrait, le budget
+  // réel valait 249 pour un plafond annoncé à 250, et le message d'erreur
+  // donnait un nombre de lignes faux de 1 — sur le fichier qui interdit d'en
+  // écrire un faux (voir #839).
+  const lines = agentsMdContent.replace(/\n$/, "").split("\n").length;
   const bytes = Buffer.byteLength(agentsMdContent, "utf8");
   const violations = [];
   if (lines > maxLines) {
@@ -71,6 +76,57 @@ export function checkAgentsSize(
     violations.push(`${bytes} bytes > budget of ${maxBytes} (Codex truncates AGENTS.md at 32 KiB)`);
   }
   return { ok: violations.length === 0, lines, bytes, violations };
+}
+
+/**
+ * Lit l'inventaire des features déclaré par la section « Conventions »
+ * d'AGENTS.md — la forme `src/features/{name}/` (16 — ai, auth, …) —, ou rend
+ * `null` si la phrase a changé de forme. L'appelant en fait alors une
+ * violation : un inventaire qu'on ne sait plus lire ne protège plus rien.
+ */
+export function extractFeatureInventory(agentsMdContent) {
+  const flat = (agentsMdContent ?? "").replace(/\s+/g, " ");
+  const match = /`src\/features\/\{name\}\/` \((\d+)\s*—\s*([^;)]+)/u.exec(flat);
+  if (!match) return null;
+  return {
+    count: Number(match[1]),
+    names: match[2]
+      .split(",")
+      .map((name) => name.trim())
+      .filter(Boolean),
+  };
+}
+
+/**
+ * L'inventaire d'AGENTS.md doit décrire `src/features/` tel qu'il est.
+ *
+ * Pourquoi un gate plutôt qu'une relecture : ce chiffre a dérivé de trois — le
+ * fichier annonçait 13 features quand il y en avait 16, et les trois absentes
+ * (`ai`, `exam`, `tutor`) étaient exactement la pile que la roadmap allume.
+ * Une carte fausse de la codebase, dans le fichier que chaque session lit en
+ * premier, coûte une enquête à chacune d'elles ; et la règle voisine
+ * (« une feature n'en importe jamais une autre ») ne veut rien dire si on ne
+ * sait pas ce qu'est une feature.
+ */
+export function checkFeatureInventory(agentsMdContent, actualNames) {
+  const declared = extractFeatureInventory(agentsMdContent);
+  if (!declared) {
+    return [
+      "inventaire des features illisible — la phrase `src/features/{name}/ (N — a, b, …)` " +
+        "de la section Conventions a changé de forme.",
+    ];
+  }
+  const actual = [...actualNames].sort();
+  const listed = new Set(declared.names);
+  const problems = [];
+  const missing = actual.filter((name) => !listed.has(name));
+  const ghosts = declared.names.filter((name) => !actual.includes(name));
+  if (missing.length) problems.push(`features absentes de l'inventaire : ${missing.join(", ")}`);
+  if (ghosts.length) problems.push(`features listées mais inexistantes : ${ghosts.join(", ")}`);
+  if (declared.count !== actual.length) {
+    problems.push(`le compte annoncé (${declared.count}) ≠ ${actual.length} dossiers réels`);
+  }
+  return problems;
 }
 
 // Zero-width, bidi-override, and Unicode tag ranges — invisible or
@@ -135,7 +191,7 @@ export function checkSkillFrontmatter(folderName, frontmatter) {
 // `claude-result.py` / `claude-execution-output.json` filenames all matched,
 // none of which is a model. Families are cheap to extend when a new one ships.
 const MODEL_ID_RE =
-  /\bclaude-(?:sonnet|opus|haiku|fable|instant)[a-z0-9.-]*\b|\bgpt-[0-9][a-z0-9.-]*\b|\bgemini-[0-9][a-z0-9.-]*\b|\bo[0-9](?:-[a-z]+)?\b/gi;
+  /\bclaude-[0-9][a-z0-9.-]*\b|\bclaude-(?:sonnet|opus|haiku|fable|instant)[a-z0-9.-]*\b|\bgpt-[0-9][a-z0-9.-]*\b|\bgemini-[0-9][a-z0-9.-]*\b|\bo[0-9](?:-[a-z]+)?\b/gi;
 
 /** Returns every model-id-shaped token found in text (deduped). */
 export function findModelIds(text) {
@@ -230,6 +286,19 @@ function main() {
   } else {
     const size = checkAgentsSize(agentsMd);
     for (const v of size.violations) problems.push(`AGENTS.md over budget: ${v}.`);
+
+    // 2bis. L'inventaire des features décrit-il encore src/features/ ?
+    const featuresDir = join(ROOT, "src", "features");
+    const featureNames = existsSync(featuresDir)
+      ? readdirSync(featuresDir, { withFileTypes: true })
+          .filter((entry) => entry.isDirectory())
+          .map((entry) => entry.name)
+      : [];
+    if (featureNames.length) {
+      for (const problem of checkFeatureInventory(agentsMd, featureNames)) {
+        problems.push(`AGENTS.md: ${problem}.`);
+      }
+    }
   }
 
   // Harness surface scanned for BOTH invisible Unicode and stray model ids.
@@ -241,6 +310,11 @@ function main() {
     ["AGENTS.md", agentsMd],
     ["CLAUDE.md", claudeMd],
     ...[...generatedViews].map((relPath) => [relPath, readIfExists(join(ROOT, relPath))]),
+    // La SOURCE des skills, pas seulement son miroir : le miroir est exempté du
+    // scan d'identifiants (il est généré), donc sans cette ligne un id écrit à la
+    // main dans `.claude/skills/**` traversait le gate et arrivait tel quel chez
+    // Codex, Cursor et Amp.
+    ...walk(join(ROOT, ".claude", "skills"), /\.md$/).map((p) => [rel(p), readIfExists(p)]),
     ...walk(join(ROOT, "harness"), /\.(json|md)$/).map((p) => [rel(p), readIfExists(p)]),
     ...walk(join(ROOT, ".github", "workflows"), /\.ya?ml$/).map((p) => [rel(p), readIfExists(p)]),
   ].filter(([, content]) => content !== null);
@@ -327,7 +401,8 @@ function main() {
 
   if (problems.length === 0) {
     console.log(
-      "[harness:check] OK — pointers intact, AGENTS.md in budget, no hidden Unicode, " +
+      "[harness:check] OK — pointers intact, AGENTS.md in budget et son inventaire de " +
+        "features à jour, no hidden Unicode, " +
         "no stray model ids, Actions pinned to SHAs, .github YAML parses strictly, " +
         "generated views in sync.",
     );

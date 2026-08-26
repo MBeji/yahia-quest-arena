@@ -23,6 +23,7 @@
  */
 import { readFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
+import { transientHint, withTransientRetry } from "../shared/supabase-transient.mjs";
 
 export const TABLES = { bug: "bug_reports", content: "content_reports" };
 const STATUSES = ["resolved", "dismissed"];
@@ -79,14 +80,22 @@ async function main() {
   for (const [channel, table] of Object.entries(TABLES)) {
     const ids = trailers[channel];
     if (ids.length === 0) continue;
-    const { data, error } = await supabase
-      .from(table)
-      .update({ status, resolved_at: new Date().toISOString() })
-      .in("id", ids)
-      .eq("status", "open")
-      .select("id");
+    // Idempotent by construction (`.eq("status", "open")` + a fixed target status),
+    // so a retried write cannot double-close anything — see supabase-transient.mjs.
+    const { data, error } = await withTransientRetry(
+      () =>
+        supabase
+          .from(table)
+          .update({ status, resolved_at: new Date().toISOString() })
+          .in("id", ids)
+          .eq("status", "open")
+          .select("id"),
+      { label: table },
+    );
     if (error) {
-      console.error(`[reports] Failed to update ${table}: ${error.message}`);
+      console.error(
+        `[reports] Failed to update ${table}: ${error.message}${transientHint(error.message)}`,
+      );
       process.exit(1);
     }
     const touched = data?.length ?? 0;
