@@ -2,6 +2,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
+  AI_ENERGY_COST,
   AI_FEATURES,
   AI_INTERNAL_FEATURES,
   AI_LIVE_FEATURES,
@@ -14,20 +15,26 @@ import { AI_ACTIVATABLE_FEATURES } from "../ai-access.server";
 import { platformSummary } from "../ai-console.server";
 
 /**
- * UNE SURFACE PROPOSÉE EST UNE SURFACE QUI EXISTE.
+ * UNE SURFACE PROPOSÉE EST UNE SURFACE QUI EXISTE — DANS LES DEUX SENS.
  *
  * `AI_FEATURES` est le vocabulaire de l'étude, é11 compris : il sert à la
- * comptabilité, aux bornes de tokens et au CHECK en base. Le panneau
- * d'activation s'en servait pour dresser la liste des interrupteurs — et
- * proposait donc « Explication », « Chat », « Bilans », qu'aucun écran ne
- * consomme. Un parent cochait, rien ne s'allumait, et il en concluait que le
- * mode était cassé.
+ * comptabilité, aux bornes de tokens et au CHECK en base. Il ne dit pas ce qui
+ * est jouable, et les deux fautes qui en découlent coûtent la même chose — la
+ * confiance du porteur dans son propre écran :
  *
- * C'est la même faute que l'écran qui n'annonçait que deux fournisseurs quand
- * le moteur en acceptait n'importe lequel : un écran qui promet ce que le
- * moteur ne fait pas. Ces tests sont là pour qu'elle ne revienne pas par
- * l'autre bout — un lot d'é11 qui ajouterait sa surface à `AI_LIVE_FEATURES`
- * sans livrer son écran.
+ *   * PROMETTRE TROP. Le panneau d'activation dressait ses interrupteurs depuis
+ *     `AI_FEATURES` et proposait des surfaces qu'aucun appelant n'émettait. Un
+ *     parent cochait, rien ne s'allumait, il concluait que le mode était cassé.
+ *     Même faute que l'écran qui n'annonçait que deux fournisseurs quand le
+ *     moteur en acceptait n'importe lequel.
+ *   * PROMETTRE TROP PEU. La liste est ensuite restée à `["forge"]` alors que
+ *     les lots d'é11 avaient livré leurs appelants : une famille branchait sa
+ *     clé et ne voyait s'allumer qu'une surface sur cinq, le reste passant en
+ *     silence par la clé plateforme. Signalé en usage le 2026-08-26 — « j'ai mis
+ *     ma clé et rien n'a changé » — et tranché le jour même.
+ *
+ * Ces tests tiennent les deux bords : rien dans la liste sans appelant, et la
+ * liste exacte qu'un arbitrage a fixée.
  */
 
 describe("AI_LIVE_FEATURES est un sous-ensemble discipliné", () => {
@@ -53,11 +60,42 @@ describe("AI_LIVE_FEATURES est un sous-ensemble discipliné", () => {
     }
   });
 
-  it("n'annonce que la Forge au 2026-08-22", () => {
-    // Ce test échouera le jour où un lot d'é11 ajoutera sa surface — c'est
-    // voulu : le faire passer oblige à relire ce fichier, donc à vérifier que
-    // l'écran existe vraiment avant d'élargir la liste.
-    expect([...AI_LIVE_FEATURES]).toEqual(["forge"]);
+  it("porte les six surfaces que la clé d'une famille paie (arbitrage 2026-08-26)", () => {
+    // Ce test échoue au moindre ajout — c'est voulu : le faire passer oblige à
+    // relire ce fichier, donc à vérifier qu'un appelant émet vraiment la
+    // surface avant de l'ouvrir au porteur. Il a tenu `["forge"]` jusqu'au
+    // 2026-08-26, où l'arbitrage a ouvert TOUT ce qui appelle un modèle.
+    expect([...AI_LIVE_FEATURES]).toEqual([
+      "explain",
+      "reformulate",
+      "chat",
+      "forge",
+      "digest_student",
+      "digest_parent",
+    ]);
+  });
+
+  it("laisse dehors les surfaces SANS appel de modèle", () => {
+    // Les deux fautes symétriques que ce fichier existe pour empêcher.
+    //
+    // `check` : la boucle de compréhension d'é11 lot 4 est 100 % déterministe —
+    // question du stock, correction en base, escalade en i18n. L'ouvrir donnerait
+    // au porteur un interrupteur qui n'allume rien.
+    //
+    // `exercise_gen` : le vocabulaire existe, l'APPELANT non — les exercices
+    // ciblés passent par la Forge. Une activation en base pour une surface que
+    // personne n'émet est une ligne morte, et une puce de plus à décocher.
+    for (const orphan of ["check", "exercise_gen"] satisfies AiFeature[]) {
+      expect(AI_LIVE_FEATURES as readonly AiFeature[]).not.toContain(orphan);
+    }
+  });
+
+  it("chaque surface proposée porte un coût en énergie", () => {
+    // Une surface sans barème serait facturée en argent sans être comptée en
+    // énergie — donc invisible du plafond pédagogique (R-9, é09 anti-farm).
+    for (const feature of AI_LIVE_FEATURES) {
+      expect(AI_ENERGY_COST[feature]).toBeGreaterThanOrEqual(0);
+    }
   });
 });
 

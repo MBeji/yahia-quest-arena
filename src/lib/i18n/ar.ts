@@ -1043,7 +1043,8 @@ export const ar: TranslationKeys = {
     cancel: "إلغاء",
     prefsSaved: "حُفظت الإعدادات.",
     studentsTitle: "لمن فُعّل الذكاء الاصطناعي",
-    studentsDesc: "لا شيء مفعّل تلقائيا. اختر التلميذ، ثم ما يحقّ له.",
+    studentsDesc:
+      "اختر التلميذ: عندئذ يفتح له مفتاحك كلّ واجهات الذكاء الاصطناعي. يمكنك سحب ما تشاء بعد ذلك.",
     studentSelf: "أنا",
     studentNone: "لا يوجد تلميذ مرتبط بعد.",
     studentEnabled: "الوضع مفعّل",
