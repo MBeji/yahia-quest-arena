@@ -4,7 +4,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5";
+    PostgrestVersion: "14.17";
   };
   graphql_public: {
     Tables: {
@@ -51,6 +51,398 @@ export type Database = {
           subscription_activated_at?: string | null;
           subscription_expires_at?: string | null;
           subscription_type?: string | null;
+        };
+        Relationships: [];
+      };
+      ai_admin_state: {
+        Row: {
+          ai_enabled: boolean;
+          id: boolean;
+          updated_at: string;
+        };
+        Insert: {
+          ai_enabled?: boolean;
+          id?: boolean;
+          updated_at?: string;
+        };
+        Update: {
+          ai_enabled?: boolean;
+          id?: boolean;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      ai_budget_alerts: {
+        Row: {
+          kind: string;
+          notified_at: string;
+          owner_user_id: string;
+          period: string;
+        };
+        Insert: {
+          kind: string;
+          notified_at?: string;
+          owner_user_id: string;
+          period: string;
+        };
+        Update: {
+          kind?: string;
+          notified_at?: string;
+          owner_user_id?: string;
+          period?: string;
+        };
+        Relationships: [];
+      };
+      ai_credentials: {
+        Row: {
+          base_url: string | null;
+          consent_at: string;
+          consent_version: string;
+          created_at: string;
+          daily_budget_usd: number;
+          double_solve: boolean;
+          enc_version: number;
+          key_fingerprint: string;
+          last_error_code: string | null;
+          last_used_at: string | null;
+          last4: string;
+          limits_enforced: boolean;
+          model_fast: string;
+          model_rich: string;
+          monthly_budget_usd: number;
+          owner_user_id: string;
+          provider: string;
+          secret_enc: string;
+          status: string;
+          updated_at: string;
+          verified_at: string | null;
+        };
+        Insert: {
+          base_url?: string | null;
+          consent_at?: string;
+          consent_version: string;
+          created_at?: string;
+          daily_budget_usd?: number;
+          double_solve?: boolean;
+          enc_version?: number;
+          key_fingerprint: string;
+          last_error_code?: string | null;
+          last_used_at?: string | null;
+          last4: string;
+          limits_enforced?: boolean;
+          model_fast: string;
+          model_rich: string;
+          monthly_budget_usd?: number;
+          owner_user_id: string;
+          provider: string;
+          secret_enc: string;
+          status?: string;
+          updated_at?: string;
+          verified_at?: string | null;
+        };
+        Update: {
+          base_url?: string | null;
+          consent_at?: string;
+          consent_version?: string;
+          created_at?: string;
+          daily_budget_usd?: number;
+          double_solve?: boolean;
+          enc_version?: number;
+          key_fingerprint?: string;
+          last_error_code?: string | null;
+          last_used_at?: string | null;
+          last4?: string;
+          limits_enforced?: boolean;
+          model_fast?: string;
+          model_rich?: string;
+          monthly_budget_usd?: number;
+          owner_user_id?: string;
+          provider?: string;
+          secret_enc?: string;
+          status?: string;
+          updated_at?: string;
+          verified_at?: string | null;
+        };
+        Relationships: [];
+      };
+      ai_energy_ledger: {
+        Row: {
+          bonus: number;
+          day: string;
+          spent: number;
+          student_user_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          bonus?: number;
+          day: string;
+          spent?: number;
+          student_user_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          bonus?: number;
+          day?: string;
+          spent?: number;
+          student_user_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      ai_feedback: {
+        Row: {
+          created_at: string;
+          id: number;
+          model: string;
+          quiz_id: string | null;
+          reason: string | null;
+          usage_id: number | null;
+          user_id: string;
+          verdict: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: never;
+          model: string;
+          quiz_id?: string | null;
+          reason?: string | null;
+          usage_id?: number | null;
+          user_id: string;
+          verdict: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: never;
+          model?: string;
+          quiz_id?: string | null;
+          reason?: string | null;
+          usage_id?: number | null;
+          user_id?: string;
+          verdict?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ai_feedback_quiz_id_fkey";
+            columns: ["quiz_id"];
+            isOneToOne: false;
+            referencedRelation: "ai_forged_quizzes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "ai_feedback_usage_id_fkey";
+            columns: ["usage_id"];
+            isOneToOne: false;
+            referencedRelation: "ai_usage_events";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      ai_forged_quizzes: {
+        Row: {
+          chapter_id: string | null;
+          competency_id: string | null;
+          created_at: string;
+          difficulty: number;
+          discarded: number;
+          expires_at: string;
+          id: string;
+          lang: string;
+          model: string;
+          owner_user_id: string;
+          payload: Json;
+          requested: number;
+          scope: string;
+          student_user_id: string;
+          verified: boolean;
+        };
+        Insert: {
+          chapter_id?: string | null;
+          competency_id?: string | null;
+          created_at?: string;
+          difficulty: number;
+          discarded?: number;
+          expires_at?: string;
+          id?: string;
+          lang: string;
+          model: string;
+          owner_user_id: string;
+          payload: Json;
+          requested: number;
+          scope: string;
+          student_user_id: string;
+          verified?: boolean;
+        };
+        Update: {
+          chapter_id?: string | null;
+          competency_id?: string | null;
+          created_at?: string;
+          difficulty?: number;
+          discarded?: number;
+          expires_at?: string;
+          id?: string;
+          lang?: string;
+          model?: string;
+          owner_user_id?: string;
+          payload?: Json;
+          requested?: number;
+          scope?: string;
+          student_user_id?: string;
+          verified?: boolean;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ai_forged_quizzes_chapter_id_fkey";
+            columns: ["chapter_id"];
+            isOneToOne: false;
+            referencedRelation: "chapters";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      ai_owner_suspensions: {
+        Row: {
+          created_at: string;
+          owner_user_id: string;
+          reason: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          owner_user_id: string;
+          reason?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          owner_user_id?: string;
+          reason?: string | null;
+        };
+        Relationships: [];
+      };
+      ai_platform_ledger: {
+        Row: {
+          day: string;
+          reserved_micros: number;
+          spent_micros: number;
+          updated_at: string;
+        };
+        Insert: {
+          day: string;
+          reserved_micros?: number;
+          spent_micros?: number;
+          updated_at?: string;
+        };
+        Update: {
+          day?: string;
+          reserved_micros?: number;
+          spent_micros?: number;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      ai_spend_ledger: {
+        Row: {
+          day: string;
+          owner_user_id: string;
+          reserved_micros: number;
+          spent_micros: number;
+          updated_at: string;
+        };
+        Insert: {
+          day: string;
+          owner_user_id: string;
+          reserved_micros?: number;
+          spent_micros?: number;
+          updated_at?: string;
+        };
+        Update: {
+          day?: string;
+          owner_user_id?: string;
+          reserved_micros?: number;
+          spent_micros?: number;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      ai_student_access: {
+        Row: {
+          daily_energy_max: number;
+          enabled: boolean;
+          features: string[];
+          owner_user_id: string;
+          student_user_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          daily_energy_max?: number;
+          enabled?: boolean;
+          features?: string[];
+          owner_user_id: string;
+          student_user_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          daily_energy_max?: number;
+          enabled?: boolean;
+          features?: string[];
+          owner_user_id?: string;
+          student_user_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      ai_usage_events: {
+        Row: {
+          cached_tokens: number;
+          cost_usd_micros: number;
+          created_at: string;
+          credential_owner: string | null;
+          energy_cost: number;
+          error_code: string | null;
+          feature: string;
+          id: number;
+          input_tokens: number;
+          latency_ms: number | null;
+          model: string;
+          output_tokens: number;
+          payer: string;
+          provider: string;
+          status: string;
+          user_id: string | null;
+        };
+        Insert: {
+          cached_tokens?: number;
+          cost_usd_micros?: number;
+          created_at?: string;
+          credential_owner?: string | null;
+          energy_cost?: number;
+          error_code?: string | null;
+          feature: string;
+          id?: never;
+          input_tokens?: number;
+          latency_ms?: number | null;
+          model: string;
+          output_tokens?: number;
+          payer: string;
+          provider: string;
+          status: string;
+          user_id?: string | null;
+        };
+        Update: {
+          cached_tokens?: number;
+          cost_usd_micros?: number;
+          created_at?: string;
+          credential_owner?: string | null;
+          energy_cost?: number;
+          error_code?: string | null;
+          feature?: string;
+          id?: never;
+          input_tokens?: number;
+          latency_ms?: number | null;
+          model?: string;
+          output_tokens?: number;
+          payer?: string;
+          provider?: string;
+          status?: string;
+          user_id?: string | null;
         };
         Relationships: [];
       };
@@ -199,7 +591,7 @@ export type Database = {
           resolved_at: string | null;
           resolved_by: string | null;
           status: string;
-          user_id: string;
+          user_id: string | null;
         };
         Insert: {
           created_at?: string;
@@ -209,7 +601,7 @@ export type Database = {
           resolved_at?: string | null;
           resolved_by?: string | null;
           status?: string;
-          user_id: string;
+          user_id?: string | null;
         };
         Update: {
           created_at?: string;
@@ -219,7 +611,7 @@ export type Database = {
           resolved_at?: string | null;
           resolved_by?: string | null;
           status?: string;
-          user_id?: string;
+          user_id?: string | null;
         };
         Relationships: [];
       };
@@ -277,6 +669,8 @@ export type Database = {
           label_ar: string;
           label_en: string;
           label_fr: string;
+          p_init: number;
+          p_transit: number;
           slug: string;
         };
         Insert: {
@@ -285,6 +679,8 @@ export type Database = {
           label_ar: string;
           label_en: string;
           label_fr: string;
+          p_init?: number;
+          p_transit?: number;
           slug: string;
         };
         Update: {
@@ -293,6 +689,8 @@ export type Database = {
           label_ar?: string;
           label_en?: string;
           label_fr?: string;
+          p_init?: number;
+          p_transit?: number;
           slug?: string;
         };
         Relationships: [];
@@ -362,7 +760,7 @@ export type Database = {
           resolved_at: string | null;
           resolved_by: string | null;
           status: string;
-          user_id: string;
+          user_id: string | null;
         };
         Insert: {
           created_at?: string;
@@ -374,7 +772,7 @@ export type Database = {
           resolved_at?: string | null;
           resolved_by?: string | null;
           status?: string;
-          user_id: string;
+          user_id?: string | null;
         };
         Update: {
           created_at?: string;
@@ -386,7 +784,7 @@ export type Database = {
           resolved_at?: string | null;
           resolved_by?: string | null;
           status?: string;
-          user_id?: string;
+          user_id?: string | null;
         };
         Relationships: [
           {
@@ -1892,32 +2290,341 @@ export type Database = {
           },
         ];
       };
+      tutor_digests: {
+        Row: {
+          audience: string;
+          body: string;
+          created_at: string;
+          id: string;
+          lang: string;
+          model: string | null;
+          user_id: string;
+          week_start: string;
+        };
+        Insert: {
+          audience: string;
+          body: string;
+          created_at?: string;
+          id?: string;
+          lang?: string;
+          model?: string | null;
+          user_id: string;
+          week_start: string;
+        };
+        Update: {
+          audience?: string;
+          body?: string;
+          created_at?: string;
+          id?: string;
+          lang?: string;
+          model?: string | null;
+          user_id?: string;
+          week_start?: string;
+        };
+        Relationships: [];
+      };
+      tutor_explanation_servings: {
+        Row: {
+          explanation_id: string;
+          message_ix: number;
+          served_at: string;
+          thread_id: string;
+        };
+        Insert: {
+          explanation_id: string;
+          message_ix: number;
+          served_at?: string;
+          thread_id: string;
+        };
+        Update: {
+          explanation_id?: string;
+          message_ix?: number;
+          served_at?: string;
+          thread_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "tutor_explanation_servings_explanation_id_fkey";
+            columns: ["explanation_id"];
+            isOneToOne: false;
+            referencedRelation: "tutor_explanations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "tutor_explanation_servings_thread_id_fkey";
+            columns: ["thread_id"];
+            isOneToOne: false;
+            referencedRelation: "tutor_threads";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      tutor_explanations: {
+        Row: {
+          age_band: string;
+          body: string;
+          created_at: string;
+          evicted_at: string | null;
+          id: string;
+          lang: string;
+          misconception: string | null;
+          model: string;
+          owner_user_id: string | null;
+          question_id: string;
+          serve_count: number;
+          shared: boolean;
+          variant: string;
+        };
+        Insert: {
+          age_band: string;
+          body: string;
+          created_at?: string;
+          evicted_at?: string | null;
+          id?: string;
+          lang: string;
+          misconception?: string | null;
+          model: string;
+          owner_user_id?: string | null;
+          question_id: string;
+          serve_count?: number;
+          shared?: boolean;
+          variant: string;
+        };
+        Update: {
+          age_band?: string;
+          body?: string;
+          created_at?: string;
+          evicted_at?: string | null;
+          id?: string;
+          lang?: string;
+          misconception?: string | null;
+          model?: string;
+          owner_user_id?: string | null;
+          question_id?: string;
+          serve_count?: number;
+          shared?: boolean;
+          variant?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "tutor_explanations_question_id_fkey";
+            columns: ["question_id"];
+            isOneToOne: false;
+            referencedRelation: "questions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      tutor_feedback: {
+        Row: {
+          created_at: string;
+          id: number;
+          message_ix: number;
+          rating: number;
+          thread_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: never;
+          message_ix: number;
+          rating: number;
+          thread_id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: never;
+          message_ix?: number;
+          rating?: number;
+          thread_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "tutor_feedback_thread_id_fkey";
+            columns: ["thread_id"];
+            isOneToOne: false;
+            referencedRelation: "tutor_threads";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      tutor_prefs: {
+        Row: {
+          interests: string[];
+          plan_push: boolean;
+          updated_at: string;
+          user_id: string;
+          verbosity: string;
+        };
+        Insert: {
+          interests?: string[];
+          plan_push?: boolean;
+          updated_at?: string;
+          user_id: string;
+          verbosity?: string;
+        };
+        Update: {
+          interests?: string[];
+          plan_push?: boolean;
+          updated_at?: string;
+          user_id?: string;
+          verbosity?: string;
+        };
+        Relationships: [];
+      };
+      tutor_threads: {
+        Row: {
+          age_band: string;
+          attempt_id: string | null;
+          chapter_id: string | null;
+          context_snapshot: Json | null;
+          created_at: string;
+          escalation_level: number;
+          id: string;
+          lang: string;
+          messages: Json;
+          question_id: string | null;
+          resolved: boolean | null;
+          scope: string;
+          status: string;
+          summary: string | null;
+          tokens_in: number;
+          tokens_out: number;
+          updated_at: string;
+          user_id: string;
+          variant_served: number;
+        };
+        Insert: {
+          age_band: string;
+          attempt_id?: string | null;
+          chapter_id?: string | null;
+          context_snapshot?: Json | null;
+          created_at?: string;
+          escalation_level?: number;
+          id?: string;
+          lang: string;
+          messages?: Json;
+          question_id?: string | null;
+          resolved?: boolean | null;
+          scope: string;
+          status?: string;
+          summary?: string | null;
+          tokens_in?: number;
+          tokens_out?: number;
+          updated_at?: string;
+          user_id: string;
+          variant_served?: number;
+        };
+        Update: {
+          age_band?: string;
+          attempt_id?: string | null;
+          chapter_id?: string | null;
+          context_snapshot?: Json | null;
+          created_at?: string;
+          escalation_level?: number;
+          id?: string;
+          lang?: string;
+          messages?: Json;
+          question_id?: string | null;
+          resolved?: boolean | null;
+          scope?: string;
+          status?: string;
+          summary?: string | null;
+          tokens_in?: number;
+          tokens_out?: number;
+          updated_at?: string;
+          user_id?: string;
+          variant_served?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "tutor_threads_attempt_id_fkey";
+            columns: ["attempt_id"];
+            isOneToOne: false;
+            referencedRelation: "attempts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "tutor_threads_chapter_id_fkey";
+            columns: ["chapter_id"];
+            isOneToOne: false;
+            referencedRelation: "chapters";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "tutor_threads_question_id_fkey";
+            columns: ["question_id"];
+            isOneToOne: false;
+            referencedRelation: "questions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       user_competency_mastery: {
         Row: {
           attempts: number;
+          belief_source: string;
           competency_id: string;
+          disputed_at: string | null;
+          evidence_count: number;
+          forms_seen: string[];
+          inferred_from: string | null;
           last_attempt_at: string;
+          last_evidence_at: string | null;
           mastery: number;
+          p_known: number;
+          p_known_before: number | null;
+          sessions_seen: number;
+          suspect: boolean;
           user_id: string;
         };
         Insert: {
           attempts?: number;
+          belief_source?: string;
           competency_id: string;
+          disputed_at?: string | null;
+          evidence_count?: number;
+          forms_seen?: string[];
+          inferred_from?: string | null;
           last_attempt_at: string;
+          last_evidence_at?: string | null;
           mastery?: number;
+          p_known?: number;
+          p_known_before?: number | null;
+          sessions_seen?: number;
+          suspect?: boolean;
           user_id: string;
         };
         Update: {
           attempts?: number;
+          belief_source?: string;
           competency_id?: string;
+          disputed_at?: string | null;
+          evidence_count?: number;
+          forms_seen?: string[];
+          inferred_from?: string | null;
           last_attempt_at?: string;
+          last_evidence_at?: string | null;
           mastery?: number;
+          p_known?: number;
+          p_known_before?: number | null;
+          sessions_seen?: number;
+          suspect?: boolean;
           user_id?: string;
         };
         Relationships: [
           {
             foreignKeyName: "user_competency_mastery_competency_id_fkey";
             columns: ["competency_id"];
+            isOneToOne: false;
+            referencedRelation: "competencies";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "user_competency_mastery_inferred_from_fkey";
+            columns: ["inferred_from"];
             isOneToOne: false;
             referencedRelation: "competencies";
             referencedColumns: ["id"];
@@ -2104,6 +2811,21 @@ export type Database = {
         };
         Returns: Json;
       };
+      _resolve_ai_platform: {
+        Args: { p_reason: string };
+        Returns: {
+          allowed: boolean;
+          base_url: string;
+          double_solve: boolean;
+          energy_left: number;
+          model_fast: string;
+          model_rich: string;
+          owner_user_id: string;
+          payer: string;
+          provider: string;
+          reason: string;
+        }[];
+      };
       _scope_subject_ids: {
         Args: { p_scope: string; p_student: string };
         Returns: string[];
@@ -2184,7 +2906,17 @@ export type Database = {
         Returns: string;
       };
       _student_report_json: { Args: { p_student: string }; Returns: Json };
+      _student_weakness_insights: { Args: { p_student: string }; Returns: Json };
       activate_inventory_item: { Args: { p_item_code: string }; Returns: Json };
+      active_misconceptions: {
+        Args: { p_user: string };
+        Returns: {
+          last_seen_at: string;
+          occurrences: number;
+          sessions_seen: number;
+          tag: string;
+        }[];
+      };
       admin_economy_overview: { Args: never; Returns: Json };
       admin_grant_parcours: {
         Args: {
@@ -2264,11 +2996,33 @@ export type Database = {
         Args: { p_parcours: string; p_user: string };
         Returns: undefined;
       };
+      ai_budget_alerts_due: {
+        Args: { p_owner: string };
+        Returns: {
+          day_usd: number;
+          kind: string;
+          month_usd: number;
+          period: string;
+        }[];
+      };
+      ai_forge_quota_left: { Args: { p_student: string }; Returns: number };
       answer_key_display: {
         Args: { q: Database["public"]["Tables"]["questions"]["Row"] };
         Returns: string;
       };
       app_current_week_start: { Args: never; Returns: string };
+      append_tutor_message: {
+        Args: {
+          p_advance_variant?: boolean;
+          p_content: string;
+          p_kind: string;
+          p_role: string;
+          p_thread: string;
+          p_tokens_in?: number;
+          p_tokens_out?: number;
+        };
+        Returns: Json;
+      };
       assert_can_read_student_activity: {
         Args: { p_student: string };
         Returns: undefined;
@@ -2342,6 +3096,41 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      belief_evidence_weight: {
+        Args: { p_session_id: string; p_user_id: string };
+        Returns: number;
+      };
+      belief_guess: {
+        Args: {
+          p_option_count: number;
+          p_question_type: string;
+          p_variant: string;
+        };
+        Returns: number;
+      };
+      belief_slip: {
+        Args: { p_difficulty: number; p_under_load: boolean };
+        Returns: number;
+      };
+      belief_success_odds: {
+        Args: { p_guess: number; p_known: number; p_slip: number };
+        Returns: number;
+      };
+      belief_update: {
+        Args: {
+          p_correct: boolean;
+          p_guess: number;
+          p_prior: number;
+          p_slip: number;
+          p_transit: number;
+          p_weight?: number;
+        };
+        Returns: number;
+      };
+      can_use_tutor: {
+        Args: { p_chapter_id?: string; p_question_id?: string; p_scope: string };
+        Returns: Json;
+      };
       check_answers: {
         Args: { p_answers: Json; p_exercise_id: string };
         Returns: {
@@ -2367,10 +3156,45 @@ export type Database = {
         Args: { p_last_attempt_at: string; p_mastery: number };
         Returns: number;
       };
+      competency_state: {
+        Args: {
+          p_evidence_count: number;
+          p_forms_count: number;
+          p_known: number;
+          p_last_evidence: string;
+          p_sessions_seen: number;
+        };
+        Returns: string;
+      };
       consume_hint: { Args: { p_question_id: string }; Returns: Json };
+      create_forged_quiz: {
+        Args: {
+          p_chapter: string;
+          p_competency: string;
+          p_difficulty: number;
+          p_discarded: number;
+          p_lang: string;
+          p_model: string;
+          p_owner: string;
+          p_payload: Json;
+          p_requested: number;
+          p_scope: string;
+          p_student: string;
+          p_verified: boolean;
+        };
+        Returns: string;
+      };
       delete_push_subscription: {
         Args: { p_endpoint: string };
         Returns: undefined;
+      };
+      dispute_inference: {
+        Args: { p_competency: string };
+        Returns: {
+          competency_id: string;
+          p_known: number;
+          state: string;
+        }[];
       };
       duel_league_standings: {
         Args: { p_week: string };
@@ -2393,14 +3217,88 @@ export type Database = {
         Returns: undefined;
       };
       equip_inventory_skin: { Args: { p_item_code: string }; Returns: Json };
+      escalate_tutor_thread: { Args: { p_thread: string }; Returns: Json };
       expire_duels: { Args: never; Returns: number };
       finalize_duel: { Args: { p_duel: string }; Returns: undefined };
       finalize_dungeon_run: {
         Args: { p_duration_seconds: number; p_run_id: string };
         Returns: Json;
       };
+      find_tutor_explanation: {
+        Args: {
+          p_age_band: string;
+          p_lang: string;
+          p_misconception: string;
+          p_question_id: string;
+          p_variant: string;
+        };
+        Returns: Json;
+      };
       finish_mock_exam: { Args: { p_session_id: string }; Returns: Json };
       forfeit_duel: { Args: { p_duel: string }; Returns: undefined };
+      get_ai_admin_overview: {
+        Args: never;
+        Returns: {
+          ai_enabled: boolean;
+          by_model: Json;
+          by_provider: Json;
+          calls_30d: number;
+          families_suspended: number;
+          families_with_key: number;
+          micros_30d: number;
+          quality_by_model: Json;
+          students_enabled: number;
+        }[];
+      };
+      get_ai_console: {
+        Args: never;
+        Returns: {
+          base_url: string;
+          by_feature: Json;
+          by_model: Json;
+          by_student: Json;
+          calls_month: number;
+          daily_budget_usd: number;
+          day_micros: number;
+          forge_discard_rate: number;
+          limits_enforced: boolean;
+          month_micros: number;
+          monthly_budget_usd: number;
+          provider: string;
+          recent: Json;
+        }[];
+      };
+      get_ai_credential_status: {
+        Args: never;
+        Returns: {
+          base_url: string;
+          consent_version: string;
+          daily_budget_usd: number;
+          double_solve: boolean;
+          last_error_code: string;
+          last_used_at: string;
+          last4: string;
+          limits_enforced: boolean;
+          model_fast: string;
+          model_rich: string;
+          monthly_budget_usd: number;
+          provider: string;
+          status: string;
+          verified_at: string;
+        }[];
+      };
+      get_ai_students: {
+        Args: never;
+        Returns: {
+          daily_energy_max: number;
+          display_name: string;
+          enabled: boolean;
+          energy_spent_today: number;
+          features: string[];
+          is_self: boolean;
+          student_user_id: string;
+        }[];
+      };
       get_attempt_review: {
         Args: { p_answers?: Json; p_session_id: string };
         Returns: {
@@ -2490,6 +3388,18 @@ export type Database = {
         }[];
       };
       get_family_weekly_goal: { Args: { p_student: string }; Returns: Json };
+      get_forge_context: {
+        Args: { p_chapter: string };
+        Returns: {
+          chapter_title: string;
+          content_lang: string;
+          existing_prompts: string[];
+          grade_rank: number;
+          lesson_excerpt: string;
+          sample_prompts: string[];
+          subject_id: string;
+        }[];
+      };
       get_global_leaderboard: {
         Args: { p_limit?: number };
         Returns: {
@@ -2516,6 +3426,42 @@ export type Database = {
           xp: number;
         }[];
       };
+      get_learning_frontier: {
+        Args: { p_family?: string; p_limit?: number };
+        Returns: {
+          competency_id: string;
+          entry_exercise_id: string;
+          entry_odds: number;
+          entry_subject_id: string;
+          label_ar: string;
+          label_en: string;
+          label_fr: string;
+          p_known: number;
+          slug: string;
+          state: string;
+          unlocks: number;
+        }[];
+      };
+      get_learning_state: {
+        Args: { p_family?: string };
+        Returns: {
+          belief_source: string;
+          competency_id: string;
+          domain: string;
+          evidence_count: number;
+          family: string;
+          forms_count: number;
+          label_ar: string;
+          label_en: string;
+          label_fr: string;
+          p_known: number;
+          sessions_seen: number;
+          slug: string;
+          state: string;
+          suspect: boolean;
+          zone: string;
+        }[];
+      };
       get_mock_exam_percentile: {
         Args: { p_session_id: string };
         Returns: Json;
@@ -2536,6 +3482,25 @@ export type Database = {
           slug: string;
         }[];
       };
+      get_my_grade_rank: { Args: never; Returns: number };
+      get_my_weaknesses: {
+        Args: { p_limit?: number };
+        Returns: {
+          chapter_id: string;
+          chapter_title: string;
+          competency: string;
+          label_ar: string;
+          label_en: string;
+          label_fr: string;
+          last_seen_at: string;
+          occurrences: number;
+          previous_7d: number;
+          recent_7d: number;
+          subject_id: string;
+          tag: string;
+          trend: string;
+        }[];
+      };
       get_recall_availability: {
         Args: { p_subject_id: string };
         Returns: {
@@ -2551,6 +3516,20 @@ export type Database = {
           display_order: number;
           id: string;
           prompt: string;
+        }[];
+      };
+      get_remediation_path: {
+        Args: { p_competency: string };
+        Returns: {
+          competency_id: string;
+          depth: number;
+          entry_exercise_id: string;
+          is_root_cause: boolean;
+          label_ar: string;
+          label_en: string;
+          label_fr: string;
+          slug: string;
+          state: string;
         }[];
       };
       get_student_attempt_detail: {
@@ -2604,6 +3583,46 @@ export type Database = {
           subject_xp: number;
         }[];
       };
+      get_targeted_exercises: {
+        Args: { p_competency?: string; p_limit?: number; p_tag: string };
+        Returns: {
+          chapter_id: string;
+          difficulty: number;
+          exercise_id: string;
+          exercise_title: string;
+          fresh_count: number;
+          is_fallback: boolean;
+          question_id: string;
+          subject_id: string;
+        }[];
+      };
+      get_tutor_cache_stats: { Args: { p_days?: number }; Returns: Json };
+      get_tutor_chapter_context: {
+        Args: { p_chapter_id: string };
+        Returns: Json;
+      };
+      get_tutor_digest: { Args: { p_week_start?: string }; Returns: Json };
+      get_tutor_digest_inputs: {
+        Args: { p_user: string; p_week_start: string };
+        Returns: Json;
+      };
+      get_tutor_energy: { Args: never; Returns: Json };
+      get_tutor_learner_context: { Args: never; Returns: Json };
+      get_tutor_mini_check: { Args: { p_question_id: string }; Returns: Json };
+      get_tutor_parent_counters: {
+        Args: { p_student_id: string };
+        Returns: Json;
+      };
+      get_tutor_parent_digest: {
+        Args: { p_student_id: string; p_week_start?: string };
+        Returns: Json;
+      };
+      get_tutor_prefs: { Args: never; Returns: Json };
+      get_tutor_question_context: {
+        Args: { p_question_id: string };
+        Returns: Json;
+      };
+      get_tutor_thread: { Args: { p_thread: string }; Returns: Json };
       get_user_parcours_progress: {
         Args: { p_subject_ids?: string[] };
         Returns: {
@@ -2619,6 +3638,14 @@ export type Database = {
           avg_score: number;
           subject_id: string;
           total_xp: number;
+        }[];
+      };
+      grade_forged_quiz: {
+        Args: { p_answers: Json; p_quiz: string };
+        Returns: {
+          correct: number;
+          review: Json;
+          total: number;
         }[];
       };
       has_parcours_entitlement: {
@@ -2653,9 +3680,86 @@ export type Database = {
         Args: { p_code: string; p_relation?: string };
         Returns: Json;
       };
+      list_forged_quizzes: {
+        Args: never;
+        Returns: {
+          chapter_id: string;
+          chapter_title: string;
+          created_at: string;
+          difficulty: number;
+          expires_at: string;
+          id: string;
+          lang: string;
+          question_count: number;
+          scope: string;
+          verified: boolean;
+        }[];
+      };
       list_mock_exams: { Args: { p_parcours_id?: string }; Returns: Json };
+      list_tutor_threads: {
+        Args: { p_limit?: number };
+        Returns: {
+          chapter_id: string;
+          lang: string;
+          message_count: number;
+          question_id: string;
+          resolved: boolean;
+          scope: string;
+          thread_id: string;
+          title: string;
+          updated_at: string;
+        }[];
+      };
+      log_ai_usage: {
+        Args: {
+          p_cached_tokens?: number;
+          p_cost_usd_micros?: number;
+          p_credential_owner?: string;
+          p_error_code?: string;
+          p_feature: string;
+          p_input_tokens?: number;
+          p_latency_ms?: number;
+          p_model: string;
+          p_output_tokens?: number;
+          p_payer: string;
+          p_provider: string;
+          p_status: string;
+          p_user?: string;
+        };
+        Returns: number;
+      };
+      mark_ai_budget_alert: {
+        Args: { p_kind: string; p_owner: string; p_period: string };
+        Returns: undefined;
+      };
       match_duel: { Args: never; Returns: string };
+      misconception_active_thresholds: {
+        Args: never;
+        Returns: {
+          min_occurrences: number;
+          min_sessions: number;
+          window_days: number;
+        }[];
+      };
       normalize_recall_text: { Args: { p: string }; Returns: string };
+      open_tutor_chapter_thread: {
+        Args: {
+          p_age_band: string;
+          p_chapter_id: string;
+          p_lang: string;
+          p_snapshot?: Json;
+        };
+        Returns: Json;
+      };
+      open_tutor_thread: {
+        Args: {
+          p_age_band: string;
+          p_lang: string;
+          p_question_id: string;
+          p_snapshot?: Json;
+        };
+        Returns: Json;
+      };
       parcours_interest_counts: {
         Args: never;
         Returns: {
@@ -2664,9 +3768,29 @@ export type Database = {
           parcours_id: string;
         }[];
       };
+      propagate_competency_belief: {
+        Args: {
+          p_belief: number;
+          p_competency: string;
+          p_confirmed_gap?: boolean;
+          p_user: string;
+        };
+        Returns: number;
+      };
       purchase_shop_item: { Args: { p_item_code: string }; Returns: Json };
+      purge_ai_feedback: { Args: never; Returns: undefined };
+      purge_ai_forged_quizzes: { Args: never; Returns: undefined };
+      purge_ai_ledgers: { Args: never; Returns: undefined };
+      purge_ai_usage_events: { Args: never; Returns: undefined };
       purge_learning_pulses: { Args: never; Returns: undefined };
       purge_question_attempts: { Args: never; Returns: number };
+      purge_tutor_digests: { Args: never; Returns: undefined };
+      purge_tutor_threads: { Args: never; Returns: undefined };
+      rate_tutor_message: {
+        Args: { p_message_ix: number; p_rating: number; p_thread: string };
+        Returns: undefined;
+      };
+      recharge_tutor_energy: { Args: never; Returns: Json };
       record_learning_pulse: {
         Args: {
           p_active_seconds: number;
@@ -2677,6 +3801,66 @@ export type Database = {
           p_surface: string;
         };
         Returns: number;
+      };
+      record_tutor_explanation_serving: {
+        Args: { p_explanation: string; p_message_ix: number; p_thread: string };
+        Returns: undefined;
+      };
+      release_ai_reservation: {
+        Args: {
+          p_energy: number;
+          p_micros: number;
+          p_owner: string;
+          p_student: string;
+        };
+        Returns: undefined;
+      };
+      release_platform_reservation: {
+        Args: { p_energy: number; p_micros: number; p_student: string };
+        Returns: undefined;
+      };
+      reserve_ai_spend: {
+        Args: {
+          p_energy: number;
+          p_micros: number;
+          p_owner: string;
+          p_student: string;
+        };
+        Returns: {
+          day_micros: number;
+          granted: boolean;
+          month_micros: number;
+          reason: string;
+        }[];
+      };
+      reserve_platform_spend: {
+        Args: {
+          p_budget_micros: number;
+          p_energy: number;
+          p_micros: number;
+          p_student: string;
+        };
+        Returns: {
+          day_micros: number;
+          energy_left: number;
+          granted: boolean;
+          reason: string;
+        }[];
+      };
+      resolve_ai_access: {
+        Args: { p_feature: string; p_student: string };
+        Returns: {
+          allowed: boolean;
+          base_url: string;
+          double_solve: boolean;
+          energy_left: number;
+          model_fast: string;
+          model_rich: string;
+          owner_user_id: string;
+          payer: string;
+          provider: string;
+          reason: string;
+        }[];
       };
       resolve_exercise_access: {
         Args: { p_exercise: string };
@@ -2701,6 +3885,11 @@ export type Database = {
       resolve_subject_parcours: {
         Args: { p_grade: string; p_theme: string };
         Returns: string;
+      };
+      revoke_ai_credential: { Args: never; Returns: boolean };
+      rewrite_ai_credential_secret: {
+        Args: { p_enc_version: number; p_owner: string; p_secret_enc: string };
+        Returns: undefined;
       };
       save_mock_answers: {
         Args: { p_answers: Json; p_session_id: string };
@@ -2735,6 +3924,70 @@ export type Database = {
           q: Database["public"]["Tables"]["questions"]["Row"];
         };
         Returns: boolean;
+      };
+      serve_forged_quiz: {
+        Args: { p_quiz: string };
+        Returns: {
+          chapter_id: string;
+          difficulty: number;
+          expires_at: string;
+          id: string;
+          items: Json;
+          lang: string;
+          scope: string;
+          verified: boolean;
+        }[];
+      };
+      set_ai_credential: {
+        Args: {
+          p_base_url: string;
+          p_consent_version: string;
+          p_daily_budget_usd: number;
+          p_double_solve?: boolean;
+          p_enc_version: number;
+          p_key_fingerprint: string;
+          p_last4: string;
+          p_model_fast: string;
+          p_model_rich: string;
+          p_monthly_budget_usd: number;
+          p_owner: string;
+          p_provider: string;
+          p_secret_enc: string;
+          p_status?: string;
+        };
+        Returns: undefined;
+      };
+      set_ai_credential_state: {
+        Args: {
+          p_error_code?: string;
+          p_owner: string;
+          p_status: string;
+          p_touch_used?: boolean;
+        };
+        Returns: undefined;
+      };
+      set_ai_mode_enabled: { Args: { p_enabled: boolean }; Returns: boolean };
+      set_ai_owner_suspension: {
+        Args: { p_owner: string; p_reason?: string; p_suspended: boolean };
+        Returns: boolean;
+      };
+      set_ai_preferences: {
+        Args: {
+          p_daily_budget_usd: number;
+          p_double_solve: boolean;
+          p_limits_enforced?: boolean;
+          p_monthly_budget_usd: number;
+        };
+        Returns: boolean;
+      };
+      set_ai_student_access: {
+        Args: {
+          p_enabled: boolean;
+          p_energy_max: number;
+          p_features: string[];
+          p_student: string;
+        };
+        Returns: undefined;
       };
       set_current_parcours: {
         Args: { p_parcours: string };
@@ -2800,6 +4053,27 @@ export type Database = {
           isSetofReturn: false;
         };
       };
+      set_tutor_plan_push: { Args: { p_enabled: boolean }; Returns: undefined };
+      set_tutor_prefs: {
+        Args: { p_interests: string[]; p_verbosity: string };
+        Returns: undefined;
+      };
+      set_tutor_thread_summary: {
+        Args: { p_summary: string; p_thread: string };
+        Returns: undefined;
+      };
+      settle_ai_spend: {
+        Args: {
+          p_actual_micros: number;
+          p_owner: string;
+          p_reserved_micros: number;
+        };
+        Returns: undefined;
+      };
+      settle_platform_spend: {
+        Args: { p_actual_micros: number; p_reserved_micros: number };
+        Returns: undefined;
+      };
       spend_coins: {
         Args: { p_coins: number; p_user: string };
         Returns: {
@@ -2842,6 +4116,31 @@ export type Database = {
         Args: { p_exam_id: string; p_kind?: string };
         Returns: Json;
       };
+      store_tutor_digest: {
+        Args: {
+          p_audience: string;
+          p_body: string;
+          p_lang?: string;
+          p_model?: string;
+          p_user: string;
+          p_week_start: string;
+        };
+        Returns: string;
+      };
+      store_tutor_explanation: {
+        Args: {
+          p_age_band: string;
+          p_body: string;
+          p_lang: string;
+          p_misconception: string;
+          p_model: string;
+          p_owner: string;
+          p_question_id: string;
+          p_shared: boolean;
+          p_variant: string;
+        };
+        Returns: string;
+      };
       student_activity_totals: {
         Args: {
           p_from: string;
@@ -2864,6 +4163,10 @@ export type Database = {
           subject_id: string;
         }[];
       };
+      submit_ai_feedback: {
+        Args: { p_quiz: string; p_reason?: string; p_verdict: string };
+        Returns: number;
+      };
       submit_duel_answer: {
         Args: { p_choice: string; p_duel: string; p_question: string };
         Returns: Json;
@@ -2876,10 +4179,34 @@ export type Database = {
         Args: { p_answers: Json; p_exercise_id: string; p_session_id: string };
         Returns: Json;
       };
+      submit_tutor_mini_check: {
+        Args: { p_choice: string; p_question_id: string };
+        Returns: Json;
+      };
+      sweep_ai_reservations: { Args: never; Returns: undefined };
       toggle_parcours_interest: {
         Args: { p_parcours: string };
         Returns: boolean;
       };
+      tutor_age_band: { Args: { p_grade_id: string }; Returns: string };
+      tutor_daily_energy: { Args: never; Returns: number };
+      tutor_eviction_downvotes: { Args: never; Returns: number };
+      tutor_hard_daily_cap: { Args: never; Returns: number };
+      tutor_plan_push_audience: {
+        Args: { p_today: string };
+        Returns: {
+          due_count: number;
+          user_id: string;
+        }[];
+      };
+      tutor_practice_needs_generation: {
+        Args: { p_tag: string };
+        Returns: boolean;
+      };
+      tutor_thread_tag: { Args: { p_thread: string }; Returns: string };
+      tutor_thread_window: { Args: { p_messages: Json }; Returns: Json };
+      tutor_understanding_signal: { Args: { p_tag: string }; Returns: Json };
+      tutor_week_start: { Args: { p_day: string }; Returns: string };
     };
     Enums: {
       [_ in never]: never;
