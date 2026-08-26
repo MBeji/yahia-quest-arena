@@ -8,7 +8,6 @@ import {
   AI_DEFAULT_BUDGETS,
   AI_MAX_TOKENS,
   AI_FEATURES,
-  isCuratedModel,
 } from "@/shared/constants/ai";
 import {
   estimateCostMicros,
@@ -131,13 +130,8 @@ describe("le calcul lui-même", () => {
 });
 
 describe("la liste curée est la condition d'entrée du pot commun (R-15.2)", () => {
-  it("dit oui à un modèle curé, non à un modèle libre", () => {
-    expect(isCuratedModel("anthropic", "claude-sonnet-5")).toBe(true);
-    expect(isCuratedModel("anthropic", "un-modele-maison")).toBe(false);
-    // Curé chez un fournisseur ne vaut pas curé chez l'autre.
-    expect(isCuratedModel("openai_compatible", "claude-sonnet-5")).toBe(false);
-  });
-
+  // Le prédicat d'entrée, lui, vit dans `features/tutor/tutor.server.ts` et se
+  // teste là-bas : il ignore le fournisseur, et dit pourquoi.
   it("⭐ aucun id curé n'est un ALIAS — un « -latest » ne matcherait jamais l'id écho", () => {
     // Les deux adaptateurs retiennent l'id RENVOYÉ par le fournisseur, pas celui
     // qu'on lui a demandé (openai-compatible.server.ts, anthropic.server.ts :

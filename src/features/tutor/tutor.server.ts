@@ -150,6 +150,22 @@ export type TutorExplanation =
  * validateur. Un modèle hors liste ne rejoint donc pas le pot commun, qu'il soit
  * payé par une famille ou par la plateforme — sans cette barrière, le modèle le
  * moins cher fixerait la qualité servie à tous les enfants.
+ *
+ * LE FOURNISSEUR NON PLUS NE COMPTE PAS, ET C'EST DÉLIBÉRÉ. `AI_CURATED_MODELS`
+ * est indexée par fournisseur parce que l'écran s'en sert pour PROPOSER ; ce qui
+ * décide de la qualité servie à un enfant, lui, est l'identité du MODÈLE — pas
+ * le protocole qui l'a transporté. `claude-sonnet-5` servi par une passerelle
+ * compatible OpenAI reste `claude-sonnet-5`, et Q-4 ouvre l'adresse à la saisie
+ * libre exprès. Depuis #871 le chemin plateforme se configure de la même façon :
+ * un test par fournisseur y viderait le pot commun de TOUT le parc sur une
+ * question de transport — le symétrique exact du défaut fermé au §7.
+ *
+ * Ce que ce choix n'attrape pas, dit sans détour : un porteur qui pointe une
+ * adresse à lui et déclare `claude-sonnet-5` entre dans le pot. Un test par
+ * fournisseur ne l'attraperait pas davantage — il lui suffirait de déclarer
+ * `gpt-5`, curé côté `openai_compatible` où l'adresse est libre par
+ * construction. Le garde-fou contre une explication FAUSSE est ailleurs, et il
+ * s'applique déjà : `validateTutorOutput` (é11 §3.4), avant l'écriture du §7.
  */
 export function isCuratedModel(model: string): boolean {
   return Object.values(AI_CURATED_MODELS).some((models: readonly string[]) =>
