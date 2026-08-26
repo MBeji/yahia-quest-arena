@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from "vitest";
 
 import { AI_DISCARD_ADVICE_THRESHOLD, presetById } from "@/shared/constants/ai";

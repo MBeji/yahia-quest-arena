@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * Parcours-scoped dashboard (Phase 4 — premium-parcours pivot).
  *

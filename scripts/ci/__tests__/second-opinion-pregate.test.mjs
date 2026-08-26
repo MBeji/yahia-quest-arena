@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from "vitest";
 
 import { decideRun, isReviewWorthyPath, parseLabels, run } from "../second-opinion-pregate.mjs";

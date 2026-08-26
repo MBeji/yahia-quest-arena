@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * END-TO-END SCENARIO SUITE
  * =========================

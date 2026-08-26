@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, vi } from "vitest";
 import { collectSitemapPaths, renderSitemap, SITE_URL } from "@/shared/lib/sitemap";
 

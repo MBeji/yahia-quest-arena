@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * Anonymous (no userId) path of the parcours catalogue reads — switched to
  * optionalSupabaseAuth in chantier C8 (L1.3). getParcours + getParcoursSubjects must

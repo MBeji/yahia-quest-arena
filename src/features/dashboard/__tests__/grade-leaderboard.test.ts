@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * Cohorte de classe (étude 22, R-23) — `getGradeLeaderboard`.
  *

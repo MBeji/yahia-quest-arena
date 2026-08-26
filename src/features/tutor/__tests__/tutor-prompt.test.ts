@@ -1,3 +1,4 @@
+// @vitest-environment node
 // Étude 11 lot 1 — les invariants du prompt et du validateur.
 //
 // Ces tests ne vérifient pas que le tuteur est BON : aucun test ne sait faire

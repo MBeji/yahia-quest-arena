@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // revealHint is a thin wrapper over the consume_hint SECURITY DEFINER RPC, so we

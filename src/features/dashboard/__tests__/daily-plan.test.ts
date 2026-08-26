@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * « Révision du jour » côté serveur — étude 04, lot A1.1 (R-18/D-8 de l'étude 22).
  *

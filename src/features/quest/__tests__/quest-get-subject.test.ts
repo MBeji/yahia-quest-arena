@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * `getSubject` — split out of `quest.test.ts` on 2026-08-10.
  *

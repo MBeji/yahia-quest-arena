@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { RuleTester } from "eslint";
 import { afterAll, describe, it } from "vitest";
 import tseslint from "typescript-eslint";

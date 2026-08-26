@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * Pins the library behaviour that finding C-1 of docs/performance-audit.md rests on.
  *

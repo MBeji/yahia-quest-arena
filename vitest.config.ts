@@ -21,6 +21,28 @@ export default defineConfig({
   envDir: path.resolve(here, "./src/__tests__"),
   test: {
     globals: true,
+    // Le DÉFAUT est jsdom : la majorité des tests de composants en a besoin. Mais un
+    // boot DOM coûte ~1,7 s par fichier, et il pesait l'essentiel du temps mural de la
+    // suite — mesuré ici le 2026-08-26 sur 276 fichiers : `environment 475 s` pour un
+    // `Duration` de 365 s. Une bonne moitié de ces fichiers ne touche pas au DOM.
+    //
+    // Un fichier sans DOM le déclare donc en PREMIÈRE ligne :
+    //
+    //     // @vitest-environment node
+    //
+    // 163 fichiers sur 276 le font (tous les `scripts/**` sauf le contrat du sanitizer
+    // SVG, qui passe par DOMPurify). Résultat : 365 s -> 254 s, à décompte identique
+    // (276 fichiers, 3 445 tests).
+    //
+    // Vitest 4 n'a plus `environmentMatchGlobs` ; le docblock est la voie supportée, et
+    // il a l'avantage d'être lisible DANS le fichier concerné plutôt que dans un glob
+    // ici. Se tromper échoue **bruyamment** (`document is not defined`), jamais en
+    // silence — c'est ce qui rend la bascule sûre, et c'est ainsi que le seul fichier
+    // mal classé de la passe s'est signalé.
+    //
+    // ⚠️ Avant de tagger : si le module sous test branche sur `typeof window`, le test
+    // change de BRANCHE et pas seulement d'environnement. Vérifier qu'il teste encore
+    // ce qu'il croit tester.
     environment: "jsdom",
     setupFiles: ["./src/__tests__/setup.ts"],
     // Several suites `await import("@/features/…")` INSIDE the test, so the

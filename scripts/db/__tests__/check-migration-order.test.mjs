@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from "vitest";
 import { versionOf, findOrderingViolations, VERSION_RE } from "../check-migration-order.mjs";
 

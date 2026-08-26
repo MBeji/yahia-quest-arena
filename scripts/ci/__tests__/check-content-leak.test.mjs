@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from "vitest";
 
 import { MANUAL_CONTENT_MIGRATIONS, leakReason } from "../check-content-leak.mjs";

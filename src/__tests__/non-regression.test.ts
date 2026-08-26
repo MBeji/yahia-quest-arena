@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * NON-REGRESSION TEST SUITE
  * ==========================
