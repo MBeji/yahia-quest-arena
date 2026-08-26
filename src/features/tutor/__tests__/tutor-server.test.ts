@@ -84,6 +84,7 @@ vi.mock("@/shared/lib/logger", () => ({
   logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn(), debug: vi.fn() },
 }));
 
+import { AI_CURATED_MODELS } from "@/shared/constants/ai";
 import {
   escalateTutorThread,
   explainMistake,
@@ -171,6 +172,15 @@ describe("les deux fonctions pures", () => {
     // Sans cette barrière, la clé la moins chère du parc fixerait la qualité
     // servie à tous les enfants.
     expect(isCuratedModel("un-modele-que-personne-n-a-teste")).toBe(false);
+  });
+
+  it("R-15.2 : la liste est LISSE — le fournisseur ne compte pas", () => {
+    // Affirmé ici pour que personne ne « rétablisse » un test par fournisseur :
+    // un jumeau strict a vécu dans `constants/ai.ts` du 2026-08-22 au
+    // 2026-08-26, sans jamais être appelé. Le modèle décide, pas le transport.
+    for (const model of Object.values(AI_CURATED_MODELS).flat()) {
+      expect(isCuratedModel(model), model).toBe(true);
+    }
   });
 
   it("R-7 : les registres se servent dans l'ordre, et s'épuisent", () => {

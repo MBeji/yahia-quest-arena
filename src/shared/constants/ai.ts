@@ -246,6 +246,13 @@ export const AI_UNKNOWN_MODEL_PRICE: AiModelPrice = {
  *
  * La liste est une PROPOSITION, jamais une contrainte : la saisie libre d'un id
  * reste ouverte (D-11 — c'est sa clé, son choix).
+ *
+ * ⚠️ Le prédicat qui DÉCIDE vit à un seul endroit : `isCuratedModel()`, dans
+ * `src/features/tutor/tutor.server.ts`, qui explique aussi pourquoi il ignore le
+ * fournisseur. Un jumeau strict a vécu ici — né le même soir (#807, 18 h 35),
+ * trois heures et demie avant celui qui décide (#816, 22 h 07), et jamais
+ * appelé : deux réponses possibles à la même question, dont une que personne
+ * ne posait.
  */
 export const AI_CURATED_MODELS: Readonly<Record<AiProviderId, readonly string[]>> = {
   anthropic: ["claude-opus-5", "claude-sonnet-5", "claude-haiku-4-5"],
@@ -400,11 +407,6 @@ export function presetForCredential(
   return AI_PROVIDER_PRESETS.find(
     (p) => p.baseUrl !== null && p.baseUrl.replace(/\/+$/, "").toLowerCase() === normalized,
   );
-}
-
-/** Un modèle est-il dans la liste curée de son fournisseur ? (R-15.2) */
-export function isCuratedModel(provider: AiProviderId, model: string): boolean {
-  return AI_CURATED_MODELS[provider].includes(model);
 }
 
 // ---------------------------------------------------------------------------
