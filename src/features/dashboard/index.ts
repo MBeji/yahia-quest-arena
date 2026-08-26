@@ -30,9 +30,6 @@ export {
 } from "./dashboard-helpers";
 export { ParcoursInterestButton } from "./components/parcours-interest-button";
 export { ParcoursInterestAdmin } from "./components/parcours-interest-admin";
-// NOTE: ProgramHub is intentionally NOT re-exported here — it pulls in `motion`
-// (~350 kB). Import it directly from "@/features/dashboard/components/program-hub"
-// so the barrel (consumed by many server-fn callers) stays light.
 export { useParcoursInterest, type ParcoursInterestState } from "./use-parcours-interest";
 export {
   buildPrograms,

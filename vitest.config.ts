@@ -46,7 +46,7 @@ export default defineConfig({
     // ref guards) whose regressions only ever surfaced in the nightly — unit-test
     // them here alongside the app.
     include: ["src/**/*.{test,spec}.{ts,tsx}", "scripts/**/__tests__/*.test.mjs"],
-    exclude: ["src/__tests__/deprecated/**"],
+
     coverage: {
       provider: "v8",
       reporter: ["text", "json-summary", "html"],

@@ -22,12 +22,13 @@ sans compte. Détails, décisions et état des features : [STATUS.md](./STATUS.m
 
 Vite 8 · TanStack Start (SSR) · React 19 · TanStack Query 5 · Supabase (Postgres + Auth + RLS) ·
 Tailwind 4 / Radix-shadcn · déploiement Vercel (push sur `main` = prod + migrations auto).
-Package manager : **npm** (Node 22).
+Package manager : **npm** (**Node 24** — `.nvmrc`, et les workflows l'épinglent).
 
 ```bash
 npm run dev        # serveur de dev (SSR)
-npm run verify     # lint + typecheck + tests + gate anti-fuite — le gate local
-npm run ci:verify  # gate complet (coverage + build + audit + harness + anti-fuite)
+npm run verify     # gate local (pre-push) : eol, anti-fuite, chaîne de migrations,
+                   # harnais, puis lint, typecheck, tests
+npm run ci:verify  # le surensemble : + perf, coverage, build+budgets, audit des deps
 ```
 
 La règle du jeu complète (gate, contenu, migrations, PRs) est dans [AGENTS.md](./AGENTS.md).

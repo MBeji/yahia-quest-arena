@@ -43,7 +43,7 @@
 // notification. L'ordre est le contrat : la notification ne peut plus annoncer
 // un bilan qui n'existe pas. Brancher la génération DANS `handlePushCron`
 // aurait donné une horloge unique, mais aurait mis un batch de plusieurs
-// minutes dans une fonction qui a trente secondes — et son échec aurait emporté
+// minutes dans une fonction qui en a 300 — et son échec aurait emporté
 // l'envoi des push avec lui.
 //
 // R-11 — AUCUNE RÉCOMPENSE, ET RIEN QUI Y RESSEMBLE
@@ -257,7 +257,7 @@ export type TutorDigestBatchOptions = {
 /**
  * Combien d'élèves une tranche RÉDIGE au plus.
  *
- * Trois, parce que la fonction SSR a trente secondes (`maxDuration`) et qu'un
+ * Trois, parce que la fonction SSR est bornée (`maxDuration: 300`) et qu'un
  * élève lié à un parent coûte deux appels de modèle. Ce n'est pas une
  * pagination : le vrai frein est le budget de temps ci-dessous, qui s'arrête
  * même quand les appels sont lents. Celui-ci est la ceinture.

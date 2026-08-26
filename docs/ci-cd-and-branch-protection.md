@@ -242,11 +242,15 @@ tree, the database caveat and the drill in
 > construction (that's why DoD §7 orders them that way); a destructive one needs the
 > pre-migration dump artifact. Runbook, § « L'axe base de données ».
 
-## Authenticated E2E (remaining human action)
+## Authenticated E2E
 
-The public `e2e` check is reliable and gates every PR. To also enable the **authenticated**
-journeys (free / premium / admin / parent), configure these repository secrets — they point
-at the **dedicated TEST** Supabase project, never production:
+⚠️ **Aucune suite Playwright n'est un check de PR.** `e2e.yml` comme `e2e-auth.yml` n'ont que
+`workflow_call` et `workflow_dispatch` : elles tournent dans le **nightly**, jamais sur une PR —
+ce qui fait du nightly le seul filet du navigateur, et d'un nightly annulé une nuit aveugle.
+
+Les quatre secrets ci-dessous, qui pointent le projet Supabase **TEST dédié** et jamais la
+production, sont **posés depuis le 2026-06-08** ; cette section les liste pour qui reconstruit
+le dépôt, plus comme une action en attente :
 
 - `TEST_SUPABASE_URL`
 - `TEST_SUPABASE_ANON_KEY`

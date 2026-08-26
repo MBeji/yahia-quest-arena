@@ -248,8 +248,11 @@ These are paid-for lessons; violating them re-breaks production or the gate.
 - **New Supabase CLI = validate pgTAP.** Bumping `supabase/setup-cli` version can drop
   default table grants on the local stack. If you bump it, the major PR must show a
   green pgTAP run (`db-tests.yml`) and keep the explicit `baseline_table_grants` intact.
-- **`content:qa:strict` lives in `ci:verify`, not `ci.yml`.** The in-session
-  `ci:verify` you run already covers it — don't assume the PR's `ci.yml` did.
+- **`content:qa:strict` n'est plus dans `ci:verify` ni dans `ci.yml`.** Il est parti avec
+  le corpus (étude 24) et tourne dans la Content CI du dépôt privé, qui checkout celui-ci
+  pour le moteur. Conséquence pour une montée de version : un bump qui casse le moteur de
+  contenu passe **vert ici** et rougit **là-bas** — c'est arrivé (#716, 33 h de Content CI
+  rouge sur un lockfile que ce gate trouvait bon).
 - **Upgrades never re-author content.** If a bump touches the content pipeline
   (`src/shared/content/**`, `scripts/content/**`, the Zod schema), keep behaviour
   identical: the **combined-source rule** for school content — official CNP =

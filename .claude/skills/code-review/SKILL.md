@@ -180,10 +180,13 @@ seulement « c'est mal »), et propose un **correctif concret**.
 
 ### E. Cohérence avec le projet
 
-- [ ] Respecte les **10 features** et leur structure (`index.ts`,
-      `{name}.server.ts`, `components/`, `__tests__/`).
-- [ ] **Contenu sujets** : aucun ajout de chapitre/exercice par migration écrite à
-      la main — éditer `content/` puis `content:build`. `content:qa` passe.
+- [ ] Respecte l'inventaire des features d'AGENTS.md (§ Conventions — le compte y est
+      **gardé** par `harness:check`) et leur structure (`index.ts`, `{name}.server.ts`,
+      `components/`, `__tests__/`), **sans import d'une feature par une autre**.
+- [ ] **Contenu sujets** : le corpus n'est PAS dans ce dépôt depuis l'étude 24 — un
+      `content/**` ou un `sql/content/**` qui réapparaît ici fait échouer `leak:check`.
+      Un ajout de chapitre/exercice se fait au dépôt **privé**, jamais par une migration
+      écrite à la main.
 - [ ] Style de commit **conventionnel** (`feat:`, `fix:`, `test:`, `chore:`…),
       messages clairs ; commits petits et revue-ables.
 - [ ] Cohérence avec les patterns déjà présents (TanStack Query pour le cache,

@@ -16,7 +16,7 @@
  *
  * POURQUOI IL BOUCLE
  * ---------------------------------------------------------------------------
- * La fonction SSR est configurée à `maxDuration: 30` secondes
+ * La fonction SSR est configurée à `maxDuration: 300` secondes
  * (`scripts/build-vercel.mjs`, plan Hobby). Un appel de modèle se compte en
  * secondes, un élève lié à un parent en coûte deux : trois élèves tiennent dans
  * l'enveloppe, cent n'y tiennent pas. La route traite donc une TRANCHE bornée et
@@ -56,8 +56,20 @@ const DEFAULT_LIMIT = 3;
  * couvre largement la base actuelle tout en garantissant que le run se termine.
  */
 const DEFAULT_ROUNDS = 120;
-/** Un poil au-dessus du `maxDuration: 30` du serveur : on veut SA réponse, pas la nôtre. */
-const REQUEST_TIMEOUT_MS = 35_000;
+/**
+ * Un poil au-dessus du `maxDuration: 300` de la fonction SSR
+ * (`scripts/build-vercel.mjs`) : on veut SA réponse, pas la nôtre.
+ *
+ * La valeur a dit 35 s pendant que le serveur passait à 300 : on abandonnait donc
+ * une tranche que le serveur avait parfaitement le droit de finir. Le contrat du
+ * serveur n'est pas « un élève » mais `ROUND_BUDGET_MS` (20 s) testé EN TÊTE de
+ * boucle, PLUS l'élève en cours — deux élèves ordinaires suffisaient à dépasser
+ * 35 s sans qu'aucun modèle ne soit lent, et le batch s'arrêtait après un ou deux.
+ * Le seul plafond que le serveur ne peut pas franchir est celui de la plateforme :
+ * c'est lui qu'on suit, pas un budget réinventé ici. Le run reste borné par le
+ * `timeout-minutes` du workflow, et le curseur reprend au passage suivant.
+ */
+const REQUEST_TIMEOUT_MS = 310_000;
 
 /**
  * L'hôte de production, résolu depuis le DÉPÔT et non depuis un secret.

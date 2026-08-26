@@ -20,8 +20,16 @@ task complete until this gate is green.**
    npm run verify
    ```
 
-   This runs, in order:
-   - `npm run lint` — ESLint, `--max-warnings=0` (Prettier rules included).
+   This runs, in order — les quatre gates à ~2 s **d'abord**, pour qu'un invariant
+   cassé rougisse en 8 s au lieu d'attendre ~4 min de tests :
+   - `npm run eol:check` — aucun CRLF dans l'arbre (piège Windows).
+   - `npm run leak:check` — aucun corpus ni skill pédagogique au tip (étude 24).
+   - `npm run db:check-chain` — une base VIERGE se reconstruit depuis les migrations.
+   - `npm run harness:check` — anti-dérive du harnais (pointeurs, budget d'AGENTS.md et
+     son inventaire de features, Unicode invisible, ids de modèle, Actions épinglées,
+     YAML strict de `.github/**`, vues générées en phase).
+   - `npm run lint` — ESLint, `--max-warnings=0` (Prettier rules included) + les gardes
+     RTL et tokens de couleur.
    - `npm run typecheck` — `tsc --noEmit` (strict).
    - `npm run test` — Vitest (full suite).
 
@@ -39,9 +47,16 @@ task complete until this gate is green.**
    npm run ci:verify
    ```
 
-   This adds `test:coverage` (enforces coverage thresholds), `build:check`
-   (production build + bundle budget), `audit:deps`, and the content gates
-   `content:qa:strict` + `content:audit:strict`.
+   This adds `perf:check` (le harnais k6 parse et ses constantes suivent le produit),
+   `test:coverage` (enforces coverage thresholds), `build:check` (production build +
+   bundle budget) and `audit:deps` — ce dernier **en dernier**, parce qu'il interroge le
+   registre au moment du run et peut rougir sur un arbre qui n'a pas bougé.
+
+   ⚠️ **Les gates contenu n'en font plus partie.** `content:qa:strict` et
+   `content:audit:strict` sont partis avec le corpus dans le dépôt **privé** (étude 24) ;
+   ils tournent dans sa Content CI, qui checkout ce dépôt-ci pour le moteur. Et la CI
+   d'ici n'est pas non plus l'exact miroir de `ci:verify` : elle ajoute `smoke:shell`
+   (le seul étage qui exécute le bundle prod dans un vrai Chromium).
 
 ## Reporting
 
