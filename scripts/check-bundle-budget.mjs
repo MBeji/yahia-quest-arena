@@ -20,9 +20,9 @@ const BUDGETS = {
   // sorti du catalogue, avec `parentDaily.*` qui sert les deux mêmes écrans :
   //
   //   avant   i18n 207,65 KB
-  //   après   i18n 171,17 KB  +  i18n-parent 36,53 KB (chargé par les seuls parents)
+  //   après   i18n 171,27 KB  +  i18n-parent 36,53 KB (chargé par les seuls parents)
   //
-  // 36 KB rendus à chaque élève, et 12,8 KB de marge rendus au plafond app-wide.
+  // 36 KB rendus à chaque élève, et 12,7 KB de marge rendus au plafond app-wide.
   // Le mécanisme : `src/lib/i18n/parent/{fr,en,ar}.ts` (données pures, isolées par
   // `manualChunks`) + `useParentT()`, qui fusionne les deux catalogues — aucun
   // chemin de clé ne change côté écran. Détail : `src/lib/i18n/parent/index.ts`.
@@ -43,7 +43,7 @@ const BUDGETS = {
   //     /admin/ia, /parametrage) sont tous des routes paresseuses ; le seul
   //     consommateur monté par le dashboard et le lecteur de chapitre est
   //     `ForgeEntry`, et il n'utilise que `ai.forgeTitle` et `ai.forgeDesc`. Ces
-  //     deux-là restent app-wide, les 115 autres partent (117 clés comptées dans
+  //     deux-là restent app-wide, les 116 autres partent (118 clés comptées dans
   //     `fr.ts` le 2026-08-26 — l'entrée « 164→192 » en annonçait 63, le namespace a
   //     doublé depuis). C'est le prochain lot.
   //
@@ -116,8 +116,8 @@ const BUDGETS = {
 /**
  * ⚠️ Ici « kB » veut dire **KiB** (1024 octets) — les budgets ci-dessus aussi.
  * Le log de `vite build`, lui, compte en kB **décimaux** (1000 octets) : le même
- * chunk s'y affiche 2,34 % plus gros. Un `i18n-…js 175.27 kB` chez Vite est le
- * `171,17 kB` mesuré ici, et comparer les deux colonnes fait conclure à une
+ * chunk s'y affiche 2,34 % plus gros. Un `i18n-…js 175.38 kB` chez Vite est le
+ * `171,27 kB` mesuré ici, et comparer les deux colonnes fait conclure à une
  * régression de 10 KB qui n'existe pas (perdu une reconstruction complète à ce
  * piège le 2026-08-26). Pour comparer un avant/après, lire **une seule** des deux
  * sources de bout en bout.
