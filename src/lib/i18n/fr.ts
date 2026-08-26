@@ -1069,7 +1069,8 @@ export const fr: TranslationKeys = {
     cancel: "Annuler",
     prefsSaved: "Réglages enregistrés.",
     studentsTitle: "Pour qui l'IA est allumée",
-    studentsDesc: "Rien n'est allumé par défaut. Choisissez l'élève, puis ce à quoi il a droit.",
+    studentsDesc:
+      "Choisissez l'élève : votre clé lui ouvre alors toutes les surfaces IA. Vous pouvez en retirer ensuite.",
     studentSelf: "Moi",
     studentNone: "Aucun élève lié pour l'instant.",
     studentEnabled: "Mode IA allumé",

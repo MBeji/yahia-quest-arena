@@ -19,8 +19,14 @@ import { aiErrorLabel, aiModeErrorCode } from "../ai-mode-status";
  * US-3 — « Activer par enfant ». L'écran qui applique R-3.
  *
  * « La console liste les enfants liés ; pour chacun : interrupteur, sélection
- * des surfaces autorisées, plafond d'énergie quotidien. Défaut à la création :
- * TOUT ÉTEINT. »
+ * des surfaces autorisées, plafond d'énergie quotidien. »
+ *
+ * R-3 tient toujours sur ce qui compte — une clé enregistrée n'allume RIEN
+ * d'elle-même, et un élève non activé n'a aucune surface. Ce qui a changé le
+ * 2026-08-26, c'est le contenu du geste d'activation : armer l'interrupteur
+ * d'un élève ouvre désormais toutes les surfaces que la clé paie, au lieu de
+ * n'en ouvrir aucune. Le porteur restreint ensuite s'il le souhaite ; il ne
+ * part plus d'un mode allumé qui n'allume rien.
  *
  * Deux choses que cet écran ne fait PAS, et c'est délibéré :
  *
@@ -151,7 +157,21 @@ function StudentRow({ student, onChanged }: { student: AiStudentAccess; onChange
             checked={student.enabled}
             disabled={busy}
             data-testid={`ai-student-toggle-${student.studentUserId}`}
-            onCheckedChange={(on) => void persist({ enabled: on })}
+            // ARBITRAGE DU 2026-08-26 : allumer un élève ouvre TOUTES les
+            // surfaces que la clé paie — c'est l'usage nominal, pas une option.
+            // Le défaut d'avant (liste vide) obligeait le porteur à cocher
+            // chaque puce APRÈS avoir armé l'interrupteur ; celui qui s'arrêtait
+            // là avait un mode « allumé » qui n'allumait rien, et concluait que
+            // la clé ne servait à rien. On ne pré-remplit QUE sur une liste
+            // vide : un porteur qui a déjà restreint son enfant garde son choix
+            // quand il rallume.
+            onCheckedChange={(on) =>
+              void persist(
+                on && student.features.length === 0
+                  ? { enabled: true, features: [...AI_LIVE_FEATURES] }
+                  : { enabled: on },
+              )
+            }
             aria-label={t.ai.studentEnabled}
           />
         </span>

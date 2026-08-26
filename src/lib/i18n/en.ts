@@ -1051,7 +1051,8 @@ export const en: TranslationKeys = {
     cancel: "Cancel",
     prefsSaved: "Settings saved.",
     studentsTitle: "Who has AI turned on",
-    studentsDesc: "Nothing is on by default. Pick the student, then what they get.",
+    studentsDesc:
+      "Pick the student: your key then opens every AI surface for them. You can take some back afterwards.",
     studentSelf: "Me",
     studentNone: "No linked student yet.",
     studentEnabled: "AI mode on",

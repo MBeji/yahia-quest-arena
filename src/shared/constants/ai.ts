@@ -54,45 +54,63 @@ export type AiFeature = (typeof AI_FEATURES)[number];
 export const AI_INTERNAL_FEATURES = ["verify", "forge_solve"] as const;
 
 /**
- * LES SURFACES QUI ONT RÉELLEMENT UN ÉCRAN — la seule liste qu'un parent voit.
+ * LES SURFACES QUE LA CLÉ D'UNE FAMILLE PAIE — la seule liste qu'un parent voit.
  * ---------------------------------------------------------------------------
- * `AI_FEATURES` énumère le vocabulaire de l'étude, é11 compris ; il sert à la
- * comptabilité, aux bornes de tokens et au CHECK en base. Il ne dit RIEN de ce
- * qui est jouable.
+ * `AI_FEATURES` énumère le vocabulaire de l'étude ; il sert à la comptabilité,
+ * aux bornes de tokens et au CHECK en base. Il ne dit RIEN de ce qui est jouable.
  *
- * La distinction n'est pas cosmétique : proposer « Explication » à un parent
- * alors qu'aucun écran ne la consomme lui fait cocher un interrupteur qui
- * n'allume rien, puis conclure que le mode est cassé. C'est la même faute que
- * l'écran qui n'annonçait que deux fournisseurs quand le moteur en acceptait
- * n'importe lequel — un écran qui promet ce que le moteur ne fait pas.
+ * ARBITRAGE DU 2026-08-26 — LA CLÉ DE LA FAMILLE OUVRE TOUT CE QUI APPELLE UN
+ * MODÈLE, et c'est l'usage NOMINAL, pas une option. Jusqu'à cette date la liste
+ * ne contenait que `forge` : une famille branchait sa clé, activait son enfant,
+ * et ne voyait apparaître qu'une seule surface. Le tuteur, le chat, les
+ * explications et les bilans continuaient de passer par la clé PLATEFORME —
+ * donc muets tant qu'`AI_PLATFORM_API_KEY` n'est pas posée. C'était la moitié
+ * invisible du signalement « j'ai mis ma clé et rien n'a changé ».
  *
- * ⚠️ AJOUTER UNE ENTRÉE ICI EST LA DERNIÈRE ÉTAPE DU LOT QUI LIVRE SON ÉCRAN,
- * jamais la première. Tant qu'une surface n'est pas dans cette liste, elle
- * n'est ni proposée à l'écran ni acceptée par le serveur — donc aucune ligne
- * d'activation morte ne peut entrer en base.
+ * ⚠️ LA RÈGLE DE CETTE LISTE N'A PAS BOUGÉ : on n'y met que des surfaces qui
+ * appellent RÉELLEMENT un modèle. Proposer « Vérification de compréhension » à
+ * un parent alors qu'aucun `callAi()` n'est derrière lui fait cocher un
+ * interrupteur qui n'allume rien, puis conclure que le mode est cassé. C'est la
+ * même faute que l'écran qui n'annonçait que deux fournisseurs quand le moteur
+ * en acceptait n'importe lequel — un écran qui promet ce que le moteur ne fait
+ * pas. Ce qui reste dehors, et pourquoi :
  *
- * État au 2026-08-22 : seule la Forge (étude 29 lot 4) est livrée. Les sept
- * autres attendent leurs lots de l'étude 11.
+ *   * `check` — la boucle de compréhension (é11 lot 4) est 100 % DÉTERMINISTE :
+ *     question tirée du stock, correction en base, phrase d'escalade en i18n.
+ *     Aucun appel de modèle, donc rien à payer (`tutor.server.ts` le dit sur
+ *     place, à côté des trois fonctions concernées).
+ *   * `exercise_gen` — le vocabulaire existe, le PRODUCTEUR non : les exercices
+ *     ciblés d'é11 lot 5 passent par la Forge (`/forge?chapitre=`), et aucun
+ *     appelant n'émet cette surface. Elle entrera ici le jour où quelqu'un
+ *     l'émet, pas avant.
+ *   * `verify` / `forge_solve` — internes ({@link AI_INTERNAL_FEATURES}).
  *
- * ⚠️ `digest_student` / `digest_parent` N'Y ENTRENT PAS, ET L'ÉCRAN EXISTE
- * POURTANT (é11 lot 6, 2026-08-24). C'est l'exception qui précise la règle : ce
- * qu'un parent coche ici, ce n'est pas « la surface est-elle allumée », c'est
- * « ma clé la paie-t-elle ». Or les bilans sont produits par un BATCH
- * hebdomadaire (`/api/cron/digest`), sur le chemin plateforme — et
- * `resolve_ai_access` y retombe de lui-même pour toute surface non activée. Les
- * ajouter ici ne les allumerait donc pas ; ça ferait facturer, le dimanche
- * matin et sans geste de personne, la clé d'une famille pour un texte qu'elle
- * n'a pas demandé — et décocher la case n'arrêterait rien, les bilans
- * continuant d'arriver aux frais de la plateforme. Un interrupteur qui n'éteint
- * pas est la même faute que celui qui n'allume pas, vue de l'autre côté.
+ * LES ÉTUDES 04 ET 30 N'ONT RIEN À OUVRIR ICI, et c'est leur propriété la plus
+ * utile : le moteur adaptatif (« quelle erreur tu fais ») et le tuteur
+ * déterministe (« ce que tu maîtrises, ce que tu es prêt à apprendre ») sont
+ * vivants SANS clé d'IA. Aucune de leurs surfaces n'appelle un modèle.
  *
- * Le jour où l'étude voudra qu'une famille paie ses propres bilans, il faudra
- * l'entrée ici ET un chemin qui HONORE le refus — pas seulement l'entrée.
+ * ⚠️ `digest_student` / `digest_parent` Y ENTRENT, avec une asymétrie à
+ * connaître. Les bilans sont produits par un BATCH hebdomadaire
+ * (`/api/cron/digest`), et `resolve_ai_access` retombe sur le chemin plateforme
+ * pour toute surface non activée. Cocher fait donc payer la famille — ce que
+ * l'arbitrage demande ; décocher ne les arrête pas, ça les remet à la charge de
+ * la plateforme. Ce n'est pas propre aux bilans : c'est vrai de TOUTES les
+ * entrées de cette liste. Ce qu'un parent règle ici, c'est « ma clé la
+ * paie-t-elle », jamais « la surface est-elle allumée ». Un vrai interrupteur
+ * d'extinction serait un autre mécanisme, et il n'existe pas encore.
+ *
+ * ⚠️ AJOUTER UNE ENTRÉE RESTE LA DERNIÈRE ÉTAPE DU LOT QUI LIVRE SON APPELANT,
+ * jamais la première.
  */
-export const AI_LIVE_FEATURES = ["forge"] as const satisfies readonly Exclude<
-  AiFeature,
-  (typeof AI_INTERNAL_FEATURES)[number]
->[];
+export const AI_LIVE_FEATURES = [
+  "explain",
+  "reformulate",
+  "chat",
+  "forge",
+  "digest_student",
+  "digest_parent",
+] as const satisfies readonly Exclude<AiFeature, (typeof AI_INTERNAL_FEATURES)[number]>[];
 
 export type AiLiveFeature = (typeof AI_LIVE_FEATURES)[number];
 
