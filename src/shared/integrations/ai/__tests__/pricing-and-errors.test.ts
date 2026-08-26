@@ -138,6 +138,18 @@ describe("la liste curée est la condition d'entrée du pot commun (R-15.2)", ()
     expect(isCuratedModel("openai_compatible", "claude-sonnet-5")).toBe(false);
   });
 
+  it("⭐ aucun id curé n'est un ALIAS — un « -latest » ne matcherait jamais l'id écho", () => {
+    // Les deux adaptateurs retiennent l'id RENVOYÉ par le fournisseur, pas celui
+    // qu'on lui a demandé (openai-compatible.server.ts, anthropic.server.ts :
+    // « un service qui substitue un modèle doit se voir dans la console »).
+    // Curer `mistral-large-latest` serait donc un no-op SILENCIEUX : le service
+    // écho sa version concrète, la comparaison échoue, et rien ne signale que le
+    // modèle n'entre pas dans le pot commun — on le croit curé pour toujours.
+    for (const models of Object.values(AI_CURATED_MODELS)) {
+      for (const model of models) expect(model, model).not.toMatch(/-latest$/);
+    }
+  });
+
   it("chaque fournisseur a une liste NON VIDE — sinon la condition R-15 laisse tout passer", () => {
     // Le §7 le dit : « la liste curée doit exister AVANT le lot où le cache
     // devient mutualisé ; sans elle, la condition d'entrée est vide. »

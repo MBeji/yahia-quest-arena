@@ -175,6 +175,17 @@ export type AiModelPrice = {
  * famille coupée après ~4 % de sa dépense. Le repli protège du dépassement ; il
  * ne remplace pas un tarif connu. Tout fournisseur qu'on NOMME dans
  * {@link AI_PROVIDER_PRESETS} doit avoir ses modèles ici.
+ *
+ * PALIERS DE TAILLE : ON RETIENT LA TRANCHE BASSE — l'inverse de DeepSeek
+ * -------------------------------------------------------------------------
+ * Plusieurs fournisseurs doublent leur tarif au-delà de 200 000 tokens d'entrée
+ * (xAI, Gemini, Qwen). Contrairement aux créneaux HORAIRES de DeepSeek — que la
+ * réservation ne peut pas connaître, d'où la tranche haute — un palier de TAILLE
+ * est déterminé par la requête, et **aucune surface d'ici ne l'atteint** :
+ * {@link AI_MAX_TOKENS} plafonne la sortie à 4 000 tokens et les entrées se
+ * comptent en milliers. Retenir la tranche haute doublerait chaque estimation et
+ * couperait le porteur à la moitié de son plafond pour un seuil qui ne se
+ * déclenche jamais — la panne d'arena#811, prise par l'autre bout.
  */
 export const AI_MODEL_PRICES: Readonly<Record<string, AiModelPrice>> = {
   // — Anthropic (grille API première partie) —
@@ -205,19 +216,26 @@ export const AI_MODEL_PRICES: Readonly<Record<string, AiModelPrice>> = {
   },
   // — Moonshot (Kimi) —
   "kimi-k3": { inputPerMTokUsd: 3, outputPerMTokUsd: 15, cachedInputPerMTokUsd: 0.3 },
-  // — xAI (Grok). `grok-4.6` est volontairement ABSENT, pour la raison exacte de
-  //   `glm-5.3` plus bas : c'est le modèle que nous avons MESURÉ (59 s sur un
-  //   quiz de sept questions, cf. AI_TIMEOUT_MS), pas un modèle dont nous ayons
-  //   relevé un tarif par token. La saisie libre continue de l'accepter (D-11) —
-  //   il sera simplement estimé au tarif de repli, ce qui coupe tôt mais ne ment
-  //   pas dans le sens dangereux.
-  //   Les deux lignes ci-dessous sont entrées le 2026-08-26 et
-  //   {@link AI_MODEL_PRICES_AS_OF} n'a PAS bougé : le reste de la grille n'a pas
-  //   été re-relevé ce jour-là, et une date qui avancerait sans relevé serait un
-  //   fait inventé. Annoncer la grille plus vieille qu'elle n'est se trompe du
-  //   côté sûr — l'inverse pas.
+  // — xAI (Grok). `grok-4.6` était ABSENT au motif qu'aucun tarif par token
+  //   n'était publié : `docs.x.ai/docs/models` en publie un, relevé le
+  //   2026-08-26 — la note qui disait le contraire est morte avec ce relevé.
+  //   C'est aussi le modèle qui a servi à mesurer le délai de la Forge (59 s sur
+  //   un quiz de sept questions, cf. AI_TIMEOUT_MS) : il était mesuré et non
+  //   tarifé, ce qui est l'ordre inverse du normal.
+  //   Ces lignes n'ont PAS fait bouger {@link AI_MODEL_PRICES_AS_OF} : le reste
+  //   de la grille n'a pas été re-relevé ce jour-là, et une date qui avancerait
+  //   sans relevé serait un fait inventé. Annoncer la grille plus vieille
+  //   qu'elle n'est se trompe du côté sûr — l'inverse pas.
   "grok-4": { inputPerMTokUsd: 3, outputPerMTokUsd: 15, cachedInputPerMTokUsd: 0.75 },
   "grok-4-fast": { inputPerMTokUsd: 0.2, outputPerMTokUsd: 0.5, cachedInputPerMTokUsd: 0.05 },
+  "grok-4.6": { inputPerMTokUsd: 2, outputPerMTokUsd: 6, cachedInputPerMTokUsd: 0.5 },
+  // — Google (Gemini), joignable par son endpoint compatible OpenAI. Relevé le
+  //   2026-08-26 sur ai.google.dev/gemini-api/docs/pricing. Mêmes paliers de
+  //   taille que xAI, même choix de la tranche basse (voir la note ci-dessus).
+  //   Aucun préréglage ne NOMME encore Google : la grille sert ici l'estimation
+  //   d'un porteur passé par « Autre », et la condition d'entrée du pot commun.
+  "gemini-2.5-pro": { inputPerMTokUsd: 1.25, outputPerMTokUsd: 10, cachedInputPerMTokUsd: 0.125 },
+  "gemini-2.5-flash": { inputPerMTokUsd: 0.3, outputPerMTokUsd: 2.5, cachedInputPerMTokUsd: 0.03 },
   // — Z.ai (GLM). `glm-5.3` est volontairement ABSENT : aucun tarif par token
   //   n'est publié à ce jour, et inventer un chiffre serait pire que le repli
   //   haut, qui au moins ne ment pas dans le sens dangereux.
@@ -246,10 +264,37 @@ export const AI_UNKNOWN_MODEL_PRICE: AiModelPrice = {
  *
  * La liste est une PROPOSITION, jamais une contrainte : la saisie libre d'un id
  * reste ouverte (D-11 — c'est sa clé, son choix).
+ *
+ * ⚠️ CES CHAÎNES SONT CELLES QUE LE FOURNISSEUR RENVOIE, pas celles qu'on lui
+ * envoie. Les deux adaptateurs retiennent l'id ÉCHO par la réponse
+ * (`openai-compatible.server.ts`, `anthropic.server.ts` — « un service qui
+ * substitue un modèle doit se voir dans la console qualité »). Conséquence
+ * directe : un ALIAS (`…-latest`) ou un nom commercial n'a rien à faire ici. Il
+ * ne matcherait jamais, et l'entrée serait un no-op SILENCIEUX — le pire des
+ * défauts, puisqu'il laisse croire le modèle curé. Pour savoir ce qu'un
+ * fournisseur écho réellement, lire la colonne `model` d'`ai_usage_events`
+ * (R-13) : c'est cet id-là qui y est journalisé.
+ *
+ * ⚠️ Et tout modèle inscrit ici doit avoir un tarif dans {@link AI_MODEL_PRICES}
+ * — un test le vérifie. Ce n'est pas une formalité : curer, c'est encourager, et
+ * encourager vers le tarif de repli coupe le porteur à ~4 % de sa dépense.
  */
 export const AI_CURATED_MODELS: Readonly<Record<AiProviderId, readonly string[]>> = {
   anthropic: ["claude-opus-5", "claude-sonnet-5", "claude-haiku-4-5"],
-  openai_compatible: ["gpt-5", "gpt-5-mini"],
+  openai_compatible: [
+    "gpt-5",
+    "gpt-5-mini",
+    // Élargie le 2026-08-26 : la liste ne comptait que les deux modèles OpenAI,
+    // ce qui revenait à dire qu'aucun fournisseur chinois ni xAI ne pouvait
+    // alimenter le pot commun — alors que le produit les branche depuis #811.
+    // Depuis #872 cette liste gouverne AUSSI le chemin plateforme.
+    "deepseek-v4-pro",
+    "deepseek-v4-flash",
+    "kimi-k3",
+    "grok-4.6",
+    "gemini-2.5-pro",
+    "gemini-2.5-flash",
+  ],
 } as const;
 
 /** Défauts proposés à la création d'un crédential, par fournisseur. */
