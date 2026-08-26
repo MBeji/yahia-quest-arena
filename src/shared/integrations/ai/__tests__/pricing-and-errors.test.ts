@@ -8,7 +8,6 @@ import {
   AI_DEFAULT_BUDGETS,
   AI_MAX_TOKENS,
   AI_FEATURES,
-  isCuratedModel,
 } from "@/shared/constants/ai";
 import {
   estimateCostMicros,
@@ -130,14 +129,10 @@ describe("le calcul lui-même", () => {
   });
 });
 
+// Le PRÉDICAT, lui, n'est pas ici : il est agnostique au fournisseur et vit avec
+// la décision qu'il sert, dans `src/features/tutor/__tests__/tutor-server.test.ts`.
+// Ce fichier-ci ne garde que ce qui appartient à la CONSTANTE.
 describe("la liste curée est la condition d'entrée du pot commun (R-15.2)", () => {
-  it("dit oui à un modèle curé, non à un modèle libre", () => {
-    expect(isCuratedModel("anthropic", "claude-sonnet-5")).toBe(true);
-    expect(isCuratedModel("anthropic", "un-modele-maison")).toBe(false);
-    // Curé chez un fournisseur ne vaut pas curé chez l'autre.
-    expect(isCuratedModel("openai_compatible", "claude-sonnet-5")).toBe(false);
-  });
-
   it("chaque fournisseur a une liste NON VIDE — sinon la condition R-15 laisse tout passer", () => {
     // Le §7 le dit : « la liste curée doit exister AVANT le lot où le cache
     // devient mutualisé ; sans elle, la condition d'entrée est vide. »

@@ -173,6 +173,18 @@ describe("les deux fonctions pures", () => {
     expect(isCuratedModel("un-modele-que-personne-n-a-teste")).toBe(false);
   });
 
+  it("⭐ et il ignore le fournisseur — une passerelle n'est pas un autre modèle", () => {
+    // Le doublon supprimé le 2026-08-26 répondait `false` ici, pour la seule
+    // raison que `claude-sonnet-5` est rangé sous la clé `anthropic`. Une famille
+    // qui l'atteint par OpenRouter ou LiteLLM reçoit pourtant le même modèle.
+    // Ce test tient l'arbitrage : c'est l'id qui décide, pas la plomberie.
+    expect(isCuratedModel("claude-sonnet-5")).toBe(true);
+    expect(isCuratedModel("gpt-5")).toBe(true);
+    // Et la contrepartie, assumée : rien ne distingue un endpoint honnête d'un
+    // endpoint qui renvoie un id curé. La barrière est le NOM, pas la route.
+    expect(isCuratedModel("mistral-large-3-25-12")).toBe(true);
+  });
+
   it("R-7 : les registres se servent dans l'ordre, et s'épuisent", () => {
     expect(nextVariant(0)).toBe("concret");
     expect(nextVariant(1)).toBe("visuel-verbal");

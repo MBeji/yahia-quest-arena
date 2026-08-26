@@ -205,25 +205,78 @@ export const AI_MODEL_PRICES: Readonly<Record<string, AiModelPrice>> = {
   },
   // — Moonshot (Kimi) —
   "kimi-k3": { inputPerMTokUsd: 3, outputPerMTokUsd: 15, cachedInputPerMTokUsd: 0.3 },
-  // — xAI (Grok). `grok-4.6` est volontairement ABSENT, pour la raison exacte de
-  //   `glm-5.3` plus bas : c'est le modèle que nous avons MESURÉ (59 s sur un
-  //   quiz de sept questions, cf. AI_TIMEOUT_MS), pas un modèle dont nous ayons
-  //   relevé un tarif par token. La saisie libre continue de l'accepter (D-11) —
-  //   il sera simplement estimé au tarif de repli, ce qui coupe tôt mais ne ment
-  //   pas dans le sens dangereux.
-  //   Les deux lignes ci-dessous sont entrées le 2026-08-26 et
+  // — xAI (Grok). Les lignes `grok-4`/`grok-4-fast` sont entrées le 2026-08-26 et
   //   {@link AI_MODEL_PRICES_AS_OF} n'a PAS bougé : le reste de la grille n'a pas
   //   été re-relevé ce jour-là, et une date qui avancerait sans relevé serait un
   //   fait inventé. Annoncer la grille plus vieille qu'elle n'est se trompe du
-  //   côté sûr — l'inverse pas.
+  //   côté sûr — l'inverse pas. Même règle pour tout ce qui a été ajouté ensuite.
   "grok-4": { inputPerMTokUsd: 3, outputPerMTokUsd: 15, cachedInputPerMTokUsd: 0.75 },
   "grok-4-fast": { inputPerMTokUsd: 0.2, outputPerMTokUsd: 0.5, cachedInputPerMTokUsd: 0.05 },
-  // — Z.ai (GLM). `glm-5.3` est volontairement ABSENT : aucun tarif par token
-  //   n'est publié à ce jour, et inventer un chiffre serait pire que le repli
-  //   haut, qui au moins ne ment pas dans le sens dangereux.
+  //   `grok-4.6` a longtemps été absent ici FAUTE DE RELEVÉ, pas par principe :
+  //   c'était le modèle que nous avions MESURÉ (59 s sur un quiz de sept
+  //   questions, cf. AI_TIMEOUT_MS) sans jamais en lire le tarif. Relevé le
+  //   2026-08-26 sur docs.x.ai, il entre. Sa grille est à DEUX PALIERS (200 k
+  //   tokens de prompt) et on prend le HAUT, comme pour DeepSeek : le palier bas
+  //   sous-estimerait la réservation, et c'est le sens d'erreur que RISK-2
+  //   interdit.
+  "grok-4.6": { inputPerMTokUsd: 4, outputPerMTokUsd: 12, cachedInputPerMTokUsd: 1 },
+  // — Z.ai (GLM). `glm-5.3` reste volontairement ABSENT : aucun tarif par token
+  //   n'a pu être relevé à sa source (docs.z.ai est injoignable depuis le poste,
+  //   interception TLS), et les chiffres qui circulent ailleurs recopient ligne
+  //   pour ligne ceux de `glm-5.2` — ce qui les rend invérifiables plutôt que
+  //   confirmés. Inventer serait pire que le repli haut, qui au moins ne ment
+  //   pas dans le sens dangereux.
   "glm-5.2": { inputPerMTokUsd: 1.4, outputPerMTokUsd: 4.4, cachedInputPerMTokUsd: 0.26 },
   "glm-4.5": { inputPerMTokUsd: 0.6, outputPerMTokUsd: 2.2, cachedInputPerMTokUsd: 0.06 },
   "glm-4.5-air": { inputPerMTokUsd: 0.2, outputPerMTokUsd: 1.1, cachedInputPerMTokUsd: 0.03 },
+  // — Google (Gemini), via son endpoint compatible OpenAI. Relevé le 2026-08-26
+  //   sur ai.google.dev. `gemini-2.5-pro` est à deux paliers (200 k) : on prend
+  //   le haut, même règle que Grok. Pour `gemini-2.5-flash` le tarif d'entrée
+  //   retenu est celui du TEXTE (0,30 $) et non de l'audio (1 $) : aucune de nos
+  //   surfaces n'envoie d'audio, et facturer une modalité qu'on n'émet pas
+  //   couperait les familles bien avant leur plafond.
+  "gemini-2.5-pro": { inputPerMTokUsd: 2.5, outputPerMTokUsd: 15, cachedInputPerMTokUsd: 0.25 },
+  "gemini-2.5-flash": {
+    inputPerMTokUsd: 0.3,
+    outputPerMTokUsd: 2.5,
+    cachedInputPerMTokUsd: 0.03,
+  },
+  // — Mistral. Relevé le 2026-08-26 sur docs.mistral.ai. Les identifiants sont
+  //   les INSTANTANÉS DATÉS, pas les alias `-latest` : nos deux adaptateurs
+  //   lisent le `model` que le fournisseur RENVOIE (`parsed.model` /
+  //   `message.model`), et La Plateforme y résout l'alias. C'est donc
+  //   l'instantané qui arrive dans `outcome.model`, donc lui qu'il faut tarifer
+  //   — et lui que la liste curée doit nommer.
+  "mistral-large-3-25-12": {
+    inputPerMTokUsd: 0.5,
+    outputPerMTokUsd: 1.5,
+    cachedInputPerMTokUsd: 0.05,
+  },
+  "mistral-medium-3-5-26-04": {
+    inputPerMTokUsd: 1.5,
+    outputPerMTokUsd: 7.5,
+    cachedInputPerMTokUsd: 0.15,
+  },
+  "mistral-small-4-0-26-03": {
+    inputPerMTokUsd: 0.15,
+    outputPerMTokUsd: 0.6,
+    cachedInputPerMTokUsd: 0.015,
+  },
+  "ministral-3-14b-25-12": {
+    inputPerMTokUsd: 0.2,
+    outputPerMTokUsd: 0.2,
+    cachedInputPerMTokUsd: 0.02,
+  },
+  "ministral-3-8b-25-12": {
+    inputPerMTokUsd: 0.15,
+    outputPerMTokUsd: 0.15,
+    cachedInputPerMTokUsd: 0.015,
+  },
+  "ministral-3-3b-25-12": {
+    inputPerMTokUsd: 0.1,
+    outputPerMTokUsd: 0.1,
+    cachedInputPerMTokUsd: 0.01,
+  },
 } as const;
 
 /**
@@ -240,16 +293,47 @@ export const AI_UNKNOWN_MODEL_PRICE: AiModelPrice = {
 /**
  * Modèles CURÉS, proposés à la saisie et — c'est là que ça compte — **condition
  * d'entrée du cache mutualisé** (R-15.2). Une explication produite par un modèle
- * hors de cette liste est servie à son demandeur et reste privée à son payeur :
- * sans quoi la clé la moins chère du parc fixerait la qualité pour tous les
- * enfants.
+ * hors de cette liste ne rejoint pas le pot commun : côté famille elle reste
+ * privée à son payeur, côté plateforme elle n'est pas écrite du tout (le payeur
+ * plateforme n'a pas de propriétaire à qui la rendre). Sans cette barrière, un
+ * identifiant tapé dans une variable d'environnement fixerait la qualité servie
+ * à TOUS les enfants — RISK-4.
+ *
+ * ⚠️ LES CLÉS SONT UN CLASSEMENT, PAS UNE CONDITION. Le prédicat qui décide
+ * `shared` est délibérément AGNOSTIQUE au fournisseur — il vit dans
+ * `src/features/tutor/tutor.server.ts` et c'est le SEUL. Ne pas rétablir ici un
+ * `isCuratedModel(provider, model)` : il a existé, n'a jamais été appelé en
+ * production, et donnait la réponse INVERSE sur le cas qui compte (le même
+ * modèle atteint par une passerelle compatible OpenAI). Les deux clés ci-dessous
+ * disent seulement par quelle porte on s'attend à joindre le modèle.
+ *
+ * ⚠️ TOUT MODÈLE CURÉ DOIT AVOIR UN TARIF dans {@link AI_MODEL_PRICES} — un test
+ * le vérifie. Ce n'est pas de la cosmétique : le pot commun n'est rempli que par
+ * des appels qui ont passé la réservation, et un modèle sans tarif est estimé au
+ * repli haut, donc coupé bien avant son plafond réel.
  *
  * La liste est une PROPOSITION, jamais une contrainte : la saisie libre d'un id
  * reste ouverte (D-11 — c'est sa clé, son choix).
  */
 export const AI_CURATED_MODELS: Readonly<Record<AiProviderId, readonly string[]>> = {
   anthropic: ["claude-opus-5", "claude-sonnet-5", "claude-haiku-4-5"],
-  openai_compatible: ["gpt-5", "gpt-5-mini"],
+  openai_compatible: [
+    "gpt-5",
+    "gpt-5-mini",
+    "deepseek-v4-pro",
+    "deepseek-v4-flash",
+    "kimi-k3",
+    "glm-5.2",
+    "grok-4.6",
+    "gemini-2.5-pro",
+    "gemini-2.5-flash",
+    "mistral-large-3-25-12",
+    "mistral-medium-3-5-26-04",
+    "mistral-small-4-0-26-03",
+    "ministral-3-14b-25-12",
+    "ministral-3-8b-25-12",
+    "ministral-3-3b-25-12",
+  ],
 } as const;
 
 /** Défauts proposés à la création d'un crédential, par fournisseur. */
@@ -402,10 +486,12 @@ export function presetForCredential(
   );
 }
 
-/** Un modèle est-il dans la liste curée de son fournisseur ? (R-15.2) */
-export function isCuratedModel(provider: AiProviderId, model: string): boolean {
-  return AI_CURATED_MODELS[provider].includes(model);
-}
+// Il n'y a PLUS de prédicat curé ici. `isCuratedModel(provider, model)` a vécu à
+// cet endroit sans jamais être appelé en production — seul un test le tenait en
+// vie — pendant que la décision réelle se prenait avec un prédicat agnostique
+// dans `src/features/tutor/tutor.server.ts`. Deux réponses contradictoires à la
+// même question, dont la stricte était morte : voir le ⚠️ de
+// {@link AI_CURATED_MODELS}.
 
 // ---------------------------------------------------------------------------
 // 3ter. La clé PLATEFORME — la même liberté que celle d'une famille (é11, A5)

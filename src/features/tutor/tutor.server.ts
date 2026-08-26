@@ -150,6 +150,16 @@ export type TutorExplanation =
  * validateur. Un modèle hors liste ne rejoint donc pas le pot commun, qu'il soit
  * payé par une famille ou par la plateforme — sans cette barrière, le modèle le
  * moins cher fixerait la qualité servie à tous les enfants.
+ *
+ * ⭐ C'EST LE SEUL PRÉDICAT, ET IL IGNORE LE FOURNISSEUR EXPRÈS. `AI_CURATED_MODELS`
+ * est indexé par fournisseur, ce qui a longtemps fait cohabiter un second
+ * `isCuratedModel(provider, model)` dans `shared/constants/ai.ts` : jamais appelé
+ * en production, et donnant la réponse INVERSE sur le cas qui compte. Une famille
+ * qui joint `claude-sonnet-5` par une passerelle compatible OpenAI (OpenRouter,
+ * LiteLLM) reçoit le même modèle, donc la même qualité — le refuser au pot commun
+ * punirait sa plomberie, pas son modèle. Ce que l'agnosticisme laisse passer en
+ * échange est nommé : un endpoint quelconque qui RENVOIE un id curé est cru sur
+ * parole. Arbitré le 2026-08-26 en faveur des passerelles.
  */
 export function isCuratedModel(model: string): boolean {
   return Object.values(AI_CURATED_MODELS).some((models: readonly string[]) =>
