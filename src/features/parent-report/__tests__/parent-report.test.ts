@@ -604,23 +604,25 @@ describe("parent-report — parentCodeErrorCode / parentCodeErrorLabel", () => {
 
   it("translates prefixed codes in the visitor's language, per context", async () => {
     const { parentCodeErrorLabel } = await import("@/features/parent-report/parent-code-errors");
-    const { fr } = await import("@/lib/i18n/fr");
-    const { ar } = await import("@/lib/i18n/ar");
+    const { frParent } = await import("@/lib/i18n/parent/fr");
+    const { arParent } = await import("@/lib/i18n/parent/ar");
 
     // Registre parent = vouvoiement (audit §F-1), plus jamais de FR servi en AR.
-    expect(parentCodeErrorLabel("PARENT_LINK_ERROR:not_parent", fr)).toMatch(/Votre compte/);
-    expect(parentCodeErrorLabel("PARENT_LINK_ERROR:invalid_code", ar)).toBe(
-      ar.parentReport.codeErrors.invalid_code,
+    expect(parentCodeErrorLabel("PARENT_LINK_ERROR:not_parent", frParent)).toMatch(/Votre compte/);
+    expect(parentCodeErrorLabel("PARENT_LINK_ERROR:invalid_code", arParent)).toBe(
+      arParent.parentReport.codeErrors.invalid_code,
     );
     // The generic fallback follows the CONTEXT prefix (link vs public report).
-    expect(parentCodeErrorLabel("PARENT_LINK_ERROR:generic", fr)).toBe(
-      fr.parentReport.codeErrors.generic_link,
+    expect(parentCodeErrorLabel("PARENT_LINK_ERROR:generic", frParent)).toBe(
+      frParent.parentReport.codeErrors.generic_link,
     );
-    expect(parentCodeErrorLabel("REPORT_CODE_ERROR:generic", fr)).toBe(
-      fr.parentReport.codeErrors.generic_report,
+    expect(parentCodeErrorLabel("REPORT_CODE_ERROR:generic", frParent)).toBe(
+      frParent.parentReport.codeErrors.generic_report,
     );
     // Unprefixed (network/legacy) messages degrade to the link generic.
-    expect(parentCodeErrorLabel("fetch failed", fr)).toBe(fr.parentReport.codeErrors.generic_link);
+    expect(parentCodeErrorLabel("fetch failed", frParent)).toBe(
+      frParent.parentReport.codeErrors.generic_link,
+    );
   });
 });
 

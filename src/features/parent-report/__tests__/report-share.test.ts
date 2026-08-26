@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { fr } from "@/lib/i18n/fr";
+import { frParent } from "@/lib/i18n/parent/fr";
 import { buildFamilyReportShareText, buildWeeklyAdvice, type ReportData } from "../report-share";
 
 function makeReport(overrides: Partial<ReportData> = {}): ReportData {
@@ -60,7 +60,7 @@ function makeReport(overrides: Partial<ReportData> = {}): ReportData {
 
 describe("parent-report — buildWeeklyAdvice", () => {
   it("targets the weakest chapter first", () => {
-    const advice = buildWeeklyAdvice(makeReport(), fr);
+    const advice = buildWeeklyAdvice(makeReport(), frParent);
     expect(advice).toContain("Thalès");
     expect(advice).toContain("Math");
   });
@@ -70,34 +70,34 @@ describe("parent-report — buildWeeklyAdvice", () => {
       summary: { ...makeReport().summary, verdict: "inactive" },
       chapterInsights: { strengths: [], weaknesses: [] },
     });
-    expect(buildWeeklyAdvice(report, fr)).toBe(fr.parentReport.adviceInactive);
+    expect(buildWeeklyAdvice(report, frParent)).toBe(frParent.parentReport.adviceInactive);
   });
 
   it("congratulates by name when everything is on track", () => {
     const report = makeReport({ chapterInsights: { strengths: [], weaknesses: [] } });
-    expect(buildWeeklyAdvice(report, fr)).toContain("Yahia");
+    expect(buildWeeklyAdvice(report, frParent)).toContain("Yahia");
   });
 });
 
 describe("parent-report — buildFamilyReportShareText", () => {
   it("includes the week summary, strengths, weaknesses and the advice", () => {
-    const text = buildFamilyReportShareText(makeReport(), fr);
-    expect(text).toContain(fr.parentReport.printTitle);
+    const text = buildFamilyReportShareText(makeReport(), frParent);
+    expect(text).toContain(frParent.parentReport.printTitle);
     expect(text).toContain("Yahia — 12");
     expect(text).toContain("45");
     expect(text).toContain("82%");
     expect(text).toContain("Les fractions (92%)");
     expect(text).toContain("Thalès (45%)");
-    expect(text).toContain(fr.parentReport.adviceTitle);
+    expect(text).toContain(frParent.parentReport.adviceTitle);
   });
 
   it("omits the insights lines when there is nothing to show", () => {
     const report = makeReport({ chapterInsights: { strengths: [], weaknesses: [] } });
-    const text = buildFamilyReportShareText(report, fr);
-    expect(text).not.toContain(fr.parentReport.strengthsTitle);
-    expect(text).not.toContain(fr.parentReport.weaknessesTitle);
+    const text = buildFamilyReportShareText(report, frParent);
+    expect(text).not.toContain(frParent.parentReport.strengthsTitle);
+    expect(text).not.toContain(frParent.parentReport.weaknessesTitle);
     // Still leads with the title and ends with the advice.
-    expect(text).toContain(fr.parentReport.printTitle);
-    expect(text).toContain(fr.parentReport.adviceTitle);
+    expect(text).toContain(frParent.parentReport.printTitle);
+    expect(text).toContain(frParent.parentReport.adviceTitle);
   });
 });

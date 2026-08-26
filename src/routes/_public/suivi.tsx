@@ -14,7 +14,7 @@ import {
   rememberCode,
   ReportContent,
 } from "@/features/parent-report";
-import { useI18n } from "@/lib/i18n";
+import { useParentT } from "@/lib/i18n/parent";
 
 /**
  * Suivi parental PUBLIC par code — aucun compte, aucune connexion requise.
@@ -43,7 +43,7 @@ export const Route = createFileRoute("/_public/suivi")({
 });
 
 function SuiviPublicPage() {
-  const { t } = useI18n();
+  const t = useParentT();
   const { code: codeParam } = Route.useSearch();
   const navigate = Route.useNavigate();
   const fetchReport = useServerFn(getStudentReportByCode);

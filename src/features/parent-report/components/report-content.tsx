@@ -18,7 +18,8 @@ import {
   Lightbulb,
   ShieldCheck,
 } from "lucide-react";
-import { useI18n, useT } from "@/lib/i18n";
+import { useI18n } from "@/lib/i18n";
+import { useParentT } from "@/lib/i18n/parent";
 import { useEntrance } from "@/shared/lib/motion";
 import { isolateLtrRuns } from "@/shared/lib/bidi";
 import { buildWeeklyAdvice, type ReportData } from "../report-share";
@@ -60,7 +61,8 @@ export function ReportContent({
   tutorCounters?: TutorParentCounters | null;
   renderTutorDigest?: ReactNode;
 }) {
-  const { t, locale } = useI18n();
+  const { locale } = useI18n();
+  const t = useParentT();
   const {
     student,
     summary,
@@ -466,7 +468,7 @@ export function ReportContent({
 }
 
 function VerdictCard({ score, verdict }: { score: number; verdict: string }) {
-  const t = useT();
+  const t = useParentT();
   const scaleIn = useEntrance("scale");
   const config = {
     excellent: {
@@ -640,7 +642,7 @@ function InsightList({
   emptyLabel: string;
   tone: "strength" | "weakness";
 }) {
-  const t = useT();
+  const t = useParentT();
   return (
     <div
       className={`rounded-lg border p-3 ${

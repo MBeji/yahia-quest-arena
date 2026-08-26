@@ -1,4 +1,4 @@
-import { useT } from "@/lib/i18n";
+import { useParentT } from "@/lib/i18n/parent";
 import type { IndexBand } from "../insights";
 
 /**
@@ -18,7 +18,7 @@ export const BAND_STYLES: Record<IndexBand, { text: string; bg: string; ring: st
 };
 
 export function useBandLabel(): (band: IndexBand) => string {
-  const t = useT();
+  const t = useParentT();
   return (band) =>
     ({
       excellent: t.parentDaily.bandExcellent,

@@ -33,6 +33,7 @@ import { TutorParentDigest } from "@/features/tutor/components/tutor-digest";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
+import { useParentT } from "@/lib/i18n/parent";
 import { useEntrance } from "@/shared/lib/motion";
 import { LoadingState } from "@/components/ui/loading-state";
 
@@ -42,7 +43,8 @@ export const Route = createFileRoute("/_authenticated/parent-report")({
 });
 
 function ParentReport() {
-  const { t, locale } = useI18n();
+  const { locale } = useI18n();
+  const t = useParentT();
   const fadeIn = useEntrance("fade");
   const queryClient = useQueryClient();
   const getStudentsFn = useServerFn(getLinkedStudents);
@@ -451,7 +453,7 @@ function isActiveThisWeek(lastActiveDate: string | null): boolean {
  * (upsert côté RPC — le lien parent-élève y est vérifié).
  */
 function WeeklyGoalCard({ studentId }: { studentId: string }) {
-  const { t } = useI18n();
+  const t = useParentT();
   const queryClient = useQueryClient();
   const getGoalFn = useServerFn(getStudentWeeklyGoal);
   const setGoalFn = useServerFn(setStudentWeeklyGoal);
