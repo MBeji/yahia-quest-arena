@@ -23,25 +23,6 @@ import { failWithClientError } from "@/shared/lib/safe-error";
  */
 
 /**
- * Les six RPC de l'examen sont postérieures aux types Supabase générés (figés au
- * 2026-07-14, non régénérables sans accès DB) : on fige leur contrat ici, même
- * patron que `economy.server.ts` et `dashboard.server.ts`. À supprimer à la
- * prochaine régénération des types.
- */
-type MockExamRpcClient = {
-  rpc: (
-    fn:
-      | "list_mock_exams"
-      | "start_mock_exam"
-      | "save_mock_answers"
-      | "finish_mock_exam"
-      | "get_mock_exam_review"
-      | "get_mock_exam_percentile",
-    args?: Record<string, unknown>,
-  ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
-};
-
-/**
  * Les signaux métier voyagent dans le message de l'exception SQL (motif
  * `DUNGEON_LOCKED` / `PARCOURS_LOCKED`). Ils sont traduits ici — et seulement
  * ici — pour que l'élève lise une phrase et non un code.
@@ -212,9 +193,14 @@ export const listMockExams = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) => z.object({ parcoursId: z.string().max(64).nullish() }).parse(d ?? {}))
   .handler(async ({ data, context }): Promise<ExamListItem[]> => {
-    const client = context.supabase as unknown as MockExamRpcClient;
+    const client = context.supabase;
+    // `?? undefined` et non `?? null` : la signature SQL est
+    // `list_mock_exams(p_parcours_id TEXT DEFAULT NULL)`, donc omettre l'argument
+    // vaut exactement `NULL`. Les types générés savent dire « optionnel »
+    // (`p_parcours_id?: string`) mais pas « nullable » — c'est la divergence que
+    // le cast `as unknown as MockExamRpcClient` masquait.
     const { data: payload, error } = await client.rpc("list_mock_exams", {
-      p_parcours_id: data.parcoursId ?? null,
+      p_parcours_id: data.parcoursId ?? undefined,
     });
     if (error) {
       failWithExamError("exam.listMockExams", error, "Impossible de charger les examens blancs.");
@@ -239,7 +225,7 @@ export const startMockExam = createServerFn({ method: "POST" })
       throw new Error("Trop d'ouvertures d'examen. Attends un instant.");
     }
 
-    const client = supabase as unknown as MockExamRpcClient;
+    const client = supabase;
     const { data: payload, error } = await client.rpc("start_mock_exam", {
       p_exam_id: data.examId,
       p_kind: data.kind,
@@ -285,7 +271,7 @@ export const saveMockAnswers = createServerFn({ method: "POST" })
     const patch: Record<string, string> = {};
     for (const a of data.answers) patch[a.questionId] = a.choice;
 
-    const client = supabase as unknown as MockExamRpcClient;
+    const client = supabase;
     const { data: payload, error } = await client.rpc("save_mock_answers", {
       p_session_id: data.sessionId,
       p_answers: patch,
@@ -314,7 +300,7 @@ export const finishMockExam = createServerFn({ method: "POST" })
       throw new Error("Trop de rendus. Attends un instant.");
     }
 
-    const client = supabase as unknown as MockExamRpcClient;
+    const client = supabase;
     const { data: payload, error } = await client.rpc("finish_mock_exam", {
       p_session_id: data.sessionId,
     });
@@ -328,7 +314,7 @@ export const getMockExamReview = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) => z.object({ sessionId: z.guid() }).parse(d))
   .handler(async ({ data, context }): Promise<ExamReview> => {
-    const client = context.supabase as unknown as MockExamRpcClient;
+    const client = context.supabase;
     const { data: payload, error } = await client.rpc("get_mock_exam_review", {
       p_session_id: data.sessionId,
     });
@@ -342,7 +328,7 @@ export const getMockExamPercentile = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) => z.object({ sessionId: z.guid() }).parse(d))
   .handler(async ({ data, context }): Promise<ExamPercentile> => {
-    const client = context.supabase as unknown as MockExamRpcClient;
+    const client = context.supabase;
     const { data: payload, error } = await client.rpc("get_mock_exam_percentile", {
       p_session_id: data.sessionId,
     });
