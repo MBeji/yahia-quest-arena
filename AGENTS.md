@@ -155,9 +155,9 @@ A change is **done** only when ALL of these hold — non-negotiable:
    Savepoint: prefix the **branch** `wip/`/`draft/`/`rescue/`. Do NOT rely on `[wip]`/`[draft]` in
    the commit subject — it leaks into `main` (twice on 2026-07-20): a single-commit branch squashes
    on the commit subject, and auto-merge freezes the message when it arms, so fixing the PR title afterwards is too late.
+   Le titre vient du sujet de `HEAD` : un commit de merge en tête titre le squash — vérifier `git log -1 --pretty=%s` avant de pousser, replier si besoin ([`collaboration.md`](./docs/agents/collaboration.md)).
 
-Full detail on §7/§8: [`docs/ci-cd-and-branch-protection.md`](./docs/ci-cd-and-branch-protection.md),
-[`docs/passation.md`](./docs/passation.md) — its §7 is the session-close checklist.
+Full detail on §7/§8: [`docs/ci-cd-and-branch-protection.md`](./docs/ci-cd-and-branch-protection.md), [`docs/passation.md`](./docs/passation.md) — its §7 is the session-close checklist.
 
 ## Execution policy
 
