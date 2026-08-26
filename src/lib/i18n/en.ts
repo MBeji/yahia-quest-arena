@@ -1071,6 +1071,10 @@ export const en: TranslationKeys = {
     forgeTitle: "The Forge",
     forgeDesc:
       "Ask for a quiz made for you. It earns no XP and no coins — it is practice, not a quest.",
+    forgeChapter: "Chapter",
+    forgeChapterPlaceholder: "Pick a chapter…",
+    forgeNoChapter: "Nothing to forge yet: the Forge needs a chapter whose lesson is written.",
+    forgeBrowseParcours: "See my subjects",
     forgeSize: "Number of questions",
     forgeDifficulty: "Difficulty",
     forgeStart: "Forge the quiz",

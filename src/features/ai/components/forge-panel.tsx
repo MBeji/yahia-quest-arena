@@ -1,13 +1,20 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { Hammer, TriangleAlert } from "lucide-react";
 
 import { useT, type TranslationKeys } from "@/lib/i18n";
 import { AI_FORGE_LIMITS } from "@/shared/constants/ai";
 import { MAX_DIFFICULTY_LEVEL, MIN_DIFFICULTY_LEVEL } from "@/shared/constants/gamification";
-import { forgeQuiz, listForgedQuizzes, type ForgedQuizSummary } from "../forge.server";
+import {
+  forgeQuiz,
+  listForgeableChapters,
+  listForgedQuizzes,
+  type ForgeableChapter,
+  type ForgedQuizSummary,
+} from "../forge.server";
 import { ForgedQuizPlayer } from "./forged-quiz-player";
 
 /**
@@ -17,6 +24,16 @@ import { ForgedQuizPlayer } from "./forged-quiz-player";
  * difficulté. « Aucun de ces champs n'est décidé par le modèle. » La langue
  * n'est même pas un choix : c'est celle de la matière (é11 R-3), et elle est
  * imposée côté serveur.
+ *
+ * SANS CHAPITRE, L'ÉCRAN EN DEMANDE UN
+ * -------------------------------------------------------------------------
+ * L'entrée du tableau de bord n'apporte aucun chapitre (§2.1 : « depuis le hub
+ * d'un chapitre ET depuis le dashboard élève »). Les réglages ne s'affichaient
+ * alors pas du tout, et la page se réduisait à son titre — une porte qui ne
+ * s'ouvre sur rien. Le sélecteur ci-dessous EST cette porte : il ne propose que
+ * des chapitres enseignés du parcours actif, ceux dont la Forge sait tirer un
+ * quiz. Un chapitre reçu en `search` reste prioritaire — on ne redemande pas
+ * ce que l'élève vient de désigner.
  *
  * R-14a — CE QUE CET ÉCRAN NE MONTRE JAMAIS
  * -------------------------------------------------------------------------
@@ -38,6 +55,7 @@ export function ForgePanel({ chapterId }: { chapterId: string | null }) {
   const t = useT();
   const queryClient = useQueryClient();
   const fetchList = useServerFn(listForgedQuizzes);
+  const fetchChapters = useServerFn(listForgeableChapters);
   const forge = useServerFn(forgeQuiz);
 
   const { data } = useQuery({
@@ -50,18 +68,30 @@ export function ForgePanel({ chapterId }: { chapterId: string | null }) {
   const [difficulty, setDifficulty] = useState(2);
   const [busy, setBusy] = useState(false);
   const [playing, setPlaying] = useState<string | null>(null);
+  const [picked, setPicked] = useState<string | null>(null);
+
+  // Le catalogue n'est interrogé QUE lorsqu'il sert : arrivé depuis un
+  // chapitre, l'élève a déjà choisi, et lui charger la liste serait une requête
+  // pour un menu qu'il ne verra pas.
+  const { data: chapters, isLoading: chaptersLoading } = useQuery<ForgeableChapter[]>({
+    queryKey: ["forgeable-chapters"],
+    queryFn: () => fetchChapters(),
+    enabled: chapterId === null,
+    staleTime: 5 * 60_000,
+  });
 
   if (playing) {
     return <ForgedQuizPlayer quizId={playing} onLeave={() => setPlaying(null)} />;
   }
 
+  const target = chapterId ?? picked;
   const quotaLeft = data?.quotaLeft ?? AI_FORGE_LIMITS.dailyQuizzesPerStudent;
 
   async function run() {
-    if (!chapterId || busy) return;
+    if (!target || busy) return;
     setBusy(true);
     try {
-      const outcome = await forge({ data: { chapterId, size, difficulty } });
+      const outcome = await forge({ data: { chapterId: target, size, difficulty } });
       if (outcome.ok) {
         await queryClient.invalidateQueries({ queryKey: ["forged-quizzes"] });
         setPlaying(outcome.quizId);
@@ -85,7 +115,16 @@ export function ForgePanel({ chapterId }: { chapterId: string | null }) {
           rapporte rien. L'apprendre à l'écran de résultat serait une déception. */}
       <p className="text-sm text-muted-foreground">{t.ai.forgeDesc}</p>
 
-      {chapterId && (
+      {chapterId === null && (
+        <ChapterPicker
+          chapters={chapters ?? []}
+          loading={chaptersLoading}
+          current={picked}
+          onPick={setPicked}
+        />
+      )}
+
+      {target && (
         <div className="mt-3 grid gap-3">
           <Choice
             label={t.ai.forgeSize}
@@ -134,6 +173,78 @@ export function ForgePanel({ chapterId }: { chapterId: string | null }) {
         ))}
       </ul>
     </div>
+  );
+}
+
+/**
+ * Le sélecteur de chapitre — visible seulement quand la page n'en a pas reçu.
+ *
+ * Un `<select>` natif, et pas une liste maison : trois langues dont une RTL, un
+ * usage majoritairement mobile, et un contrôle que le navigateur rend déjà
+ * accessible au clavier et au lecteur d'écran. Les `<optgroup>` portent la
+ * matière — sans eux, « Les fractions » et « Les fractions » de deux matières
+ * différentes seraient indiscernables.
+ *
+ * Liste VIDE ≠ chargement : le premier cas est un fait à expliquer (aucun
+ * chapitre enseigné dans le parcours actif, ou aucun parcours choisi) avec la
+ * sortie qui va avec ; le second ne promet rien tant qu'il ne sait rien.
+ */
+function ChapterPicker({
+  chapters,
+  loading,
+  current,
+  onPick,
+}: {
+  chapters: readonly ForgeableChapter[];
+  loading: boolean;
+  current: string | null;
+  onPick: (chapterId: string) => void;
+}) {
+  const t = useT();
+
+  if (loading) return null;
+
+  if (chapters.length === 0) {
+    return (
+      <p className="mt-3 text-sm text-muted-foreground" data-testid="forge-no-chapter">
+        {t.ai.forgeNoChapter}{" "}
+        <Link to="/parcours" className="font-semibold text-[color:var(--gold)] underline">
+          {t.ai.forgeBrowseParcours}
+        </Link>
+      </p>
+    );
+  }
+
+  const bySubject = new Map<string, ForgeableChapter[]>();
+  for (const chapter of chapters) {
+    const bucket = bySubject.get(chapter.subjectName);
+    if (bucket) bucket.push(chapter);
+    else bySubject.set(chapter.subjectName, [chapter]);
+  }
+
+  return (
+    <label className="mt-3 block">
+      <span className="text-xs font-semibold text-muted-foreground">{t.ai.forgeChapter}</span>
+      <select
+        value={current ?? ""}
+        onChange={(e) => onPick(e.target.value)}
+        data-testid="forge-chapter"
+        className="mt-1 min-h-11 w-full rounded-lg border border-border/60 bg-surface-2 px-3 py-1.5 text-sm"
+      >
+        <option value="" disabled>
+          {t.ai.forgeChapterPlaceholder}
+        </option>
+        {[...bySubject].map(([subjectName, items]) => (
+          <optgroup key={subjectName} label={subjectName}>
+            {items.map((chapter) => (
+              <option key={chapter.id} value={chapter.id}>
+                {chapter.title}
+              </option>
+            ))}
+          </optgroup>
+        ))}
+      </select>
+    </label>
   );
 }
 

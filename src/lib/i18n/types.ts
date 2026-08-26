@@ -894,6 +894,10 @@ export type TranslationKeys = {
     errEnergyCap: string;
     forgeTitle: string;
     forgeDesc: string;
+    forgeChapter: string;
+    forgeChapterPlaceholder: string;
+    forgeNoChapter: string;
+    forgeBrowseParcours: string;
     forgeSize: string;
     forgeDifficulty: string;
     forgeStart: string;
