@@ -404,11 +404,16 @@ async function preparePlatformCall(
   request: AiCallRequest,
   bounds: { maxTokens: number; contextTokens: number; energyCost: number },
 ): Promise<AiPreparation> {
-  const models = { fast: "claude-haiku-4-5", rich: "claude-sonnet-5" };
-  const credential = platformCredential(models);
+  // Le fournisseur et les deux modèles viennent de l'ENVIRONNEMENT, résolus
+  // contre les mêmes préréglages que le formulaire d'une famille : Anthropic par
+  // défaut, mais DeepSeek, Grok, Kimi, GLM ou n'importe quelle adresse
+  // compatible sans qu'une ligne d'ici change. Ils étaient écrits en dur juste
+  // ici — deux identifiants de modèle hors de `constants/ai.ts`, et une bascule
+  // de fournisseur qui passait par une PR.
+  const credential = platformCredential();
   if (!credential) return { ok: false, code: "AI_MODE_OFF" };
 
-  const model = request.tier === "rich" ? models.rich : models.fast;
+  const model = request.tier === "rich" ? credential.models.rich : credential.models.fast;
   const estimate = estimateCostMicros({
     model,
     estimatedInputTokens: bounds.contextTokens,
@@ -448,7 +453,11 @@ async function preparePlatformCall(
     ticket: {
       payer: "platform",
       ownerUserId: null,
-      provider: "anthropic",
+      // Le fournisseur RÉELLEMENT résolu, pas une constante : c'est lui qui est
+      // journalisé (R-13), donc lui que la console admin agrège. Le figer à
+      // « anthropic » aurait fait mentir la répartition par fournisseur le jour
+      // où la plateforme bascule.
+      provider: credential.provider,
       credential,
       model,
       maxTokens: bounds.maxTokens,

@@ -1219,6 +1219,7 @@ export type TranslationKeys = {
     adminStudents: string;
     adminCalls: string;
     adminQuality: string;
+    adminPlatform: string;
     adminDenied: string;
     errKeyInvalid: string;
     errModelUnknown: string;

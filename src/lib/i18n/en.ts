@@ -1385,6 +1385,7 @@ export const en: TranslationKeys = {
     adminStudents: "Students enabled",
     adminCalls: "Calls over 30 days",
     adminQuality: "Quality per model (30d)",
+    adminPlatform: "Platform key",
     adminDenied: "Administrators only.",
     errKeyInvalid: "Your provider rejected this key.",
     errModelUnknown: "That model does not exist at this provider.",

@@ -27,9 +27,13 @@ import {
   AI_DISCARD_ADVICE_THRESHOLD,
   AI_PROVIDERS,
   AI_MODEL_PRICES_AS_OF,
+  presetById,
   presetForCredential,
+  type AiPlatformIssue,
+  type AiProviderId,
   type AiProviderPreset,
 } from "@/shared/constants/ai";
+import { resolvePlatformProvider } from "@/shared/integrations/ai/provider.server";
 import { AI_MODE_ERROR_PREFIX } from "./ai-mode-status";
 
 type AiConsoleRpcClient = {
@@ -234,7 +238,50 @@ const adminRowSchema = z.object({
   ),
 });
 
-export type AiAdminOverview = z.infer<typeof adminRowSchema>;
+/**
+ * L'état de la clé PLATEFORME, tel qu'un exploitant a besoin de le lire.
+ *
+ * JAMAIS LA CLÉ, ni ses quatre derniers caractères : ce qui est montré est ce
+ * que l'environnement DÉCRIT — le fournisseur retenu, son adresse, ses deux
+ * modèles. Tout est déjà public par ailleurs (les préréglages sont dans un
+ * module isomorphe).
+ *
+ * Pourquoi cet écran existe : la mauvaise configuration est SILENCIEUSE. Une
+ * adresse en `http://`, un préréglage mal orthographié, un palier `rich` oublié
+ * — et le chemin plateforme s'éteint sans un mot, chaque élève sans clé de
+ * famille retombant sur le produit déterministe. Le symptôme est une absence
+ * d'appels, qui ne se remarque pas. Ici, la cause est nommée.
+ */
+export type AiPlatformSummary =
+  | {
+      readonly state: "on";
+      readonly presetId: string;
+      /** Le nom de marque du préréglage — `null` si le préréglage a disparu. */
+      readonly label: string | null;
+      readonly provider: AiProviderId;
+      readonly baseUrl: string | null;
+      readonly models: { readonly fast: string; readonly rich: string };
+    }
+  | { readonly state: "off"; readonly issue: AiPlatformIssue };
+
+export function platformSummary(): AiPlatformSummary {
+  const resolved = resolvePlatformProvider();
+  if (!resolved.ok) return { state: "off", issue: resolved.issue };
+  const { presetId, provider, baseUrl, models } = resolved.config;
+  return {
+    state: "on",
+    presetId,
+    label: presetById(presetId)?.label ?? null,
+    provider,
+    baseUrl,
+    models,
+  };
+}
+
+export type AiAdminOverview = z.infer<typeof adminRowSchema> & {
+  /** é11 A5 — quelle clé la plateforme utilise, et sinon pourquoi elle n'en a pas. */
+  readonly platform: AiPlatformSummary;
+};
 
 export const getAiAdminOverview = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -245,7 +292,10 @@ export const getAiAdminOverview = createServerFn({ method: "GET" })
     // de lever, pour que la route affiche « accès refusé » comme ses voisines.
     if (error) return null;
     const parsed = adminRowSchema.safeParse(Array.isArray(data) ? data[0] : null);
-    return parsed.success ? parsed.data : null;
+    // La configuration plateforme n'est lue QU'APRÈS le succès de la RPC : c'est
+    // elle, et elle seule, qui atteste que l'appelant est admin. La joindre plus
+    // haut la rendrait lisible par n'importe quel compte authentifié.
+    return parsed.success ? { ...parsed.data, platform: platformSummary() } : null;
   });
 
 export const setAiModeEnabled = createServerFn({ method: "POST" })

@@ -109,6 +109,55 @@ function AdminAiPage() {
             />
           </div>
 
+          {/* La clé PLATEFORME — quel fournisseur elle branche, et sinon
+              pourquoi elle n'en branche aucun (é11 A5).
+
+              Elle n'est plus câblée sur Anthropic : `AI_PLATFORM_PROVIDER` la
+              bascule vers DeepSeek, Grok, Kimi, GLM ou n'importe quelle adresse
+              compatible, exactement comme le formulaire d'une famille. Ce qui
+              rend cette ligne nécessaire : une variable mal saisie éteint le
+              chemin en SILENCE — l'élève retombe sur le produit déterministe,
+              et le seul symptôme est une absence d'appels. Le motif est nommé
+              tel quel (`missing_base_url`, …) : c'est le mot qu'on va chercher
+              dans les variables d'environnement de l'hébergeur. */}
+          <div className="mt-4 rounded-2xl border border-border/60 bg-surface-2 p-4">
+            <p className="font-display font-bold">{t.ai.adminPlatform}</p>
+            {data.platform.state === "on" ? (
+              <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
+                {/* Un nom de marque ne se traduit pas et se lit LTR même en arabe. */}
+                <span dir="ltr" className="font-semibold">
+                  {data.platform.label ?? data.platform.presetId}
+                </span>
+                <span dir="ltr" className="font-mono text-muted-foreground">
+                  {data.platform.models.fast} · {data.platform.models.rich}
+                </span>
+                {data.platform.baseUrl && (
+                  <span dir="ltr" className="font-mono text-muted-foreground">
+                    {data.platform.baseUrl}
+                  </span>
+                )}
+              </p>
+            ) : (
+              // Le motif est rendu TEL QUEL, sans traduction, et c'est délibéré
+              // à deux titres. C'est le mot exact qu'on va chercher dans les
+              // variables d'environnement de l'hébergeur — le traduire ferait
+              // perdre la seule information utile. Et le catalogue i18n est
+              // chargé par TOUS les élèves : y verser des phrases qu'un seul
+              // compte lira se paie en kilo-octets sur chaque appareil (le
+              // budget du bundle `i18n-` était déjà à 0,1 % de son plafond).
+              // `no_key` n'est pas une panne — c'est l'état par défaut (R-1) —
+              // d'où l'absence de rouge sur ce seul motif.
+              <p
+                dir="ltr"
+                className={`mt-1 font-mono text-xs ${
+                  data.platform.issue === "no_key" ? "text-muted-foreground" : "text-destructive"
+                }`}
+              >
+                {data.platform.issue}
+              </p>
+            )}
+          </div>
+
           <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
             <Stat label={t.ai.adminFamilies} value={data.families_with_key} />
             <Stat label={t.ai.adminSuspended} value={data.families_suspended} />

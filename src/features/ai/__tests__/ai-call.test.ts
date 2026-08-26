@@ -27,6 +27,9 @@ let generateImpl: () => Promise<unknown> = async () => ({
   latencyMs: 12,
 });
 
+/** Le crédential passé au fournisseur au dernier appel — voir le mock ci-dessous. */
+let lastCredential: Record<string, unknown> | null = null;
+
 const maybeSingle = vi.fn(async () => ({ data: credentialRow, error: null }));
 
 vi.mock("@/shared/integrations/supabase/client.server", () => ({
@@ -52,7 +55,13 @@ vi.mock("@/shared/integrations/ai/provider.server", async (importOriginal) => {
     getAiProvider: () => ({
       id: "fake",
       capabilities: { streaming: true, structuredOutput: true, promptCache: true },
-      generate: () => generateImpl(),
+      // Le crédential est CAPTURÉ : c'est lui qui porte le fournisseur, l'adresse
+      // et les deux modèles réellement résolus. Sans cette prise, un chemin
+      // plateforme recâblé en dur passerait tous les tests.
+      generate: (_req: unknown, cred: unknown) => {
+        lastCredential = cred as Record<string, unknown>;
+        return generateImpl();
+      },
       stream: async function* () {},
     }),
   };
@@ -101,6 +110,7 @@ beforeEach(() => {
   vi.stubEnv("AI_KEY_ENC_KEY_PREVIOUS", "");
   vi.stubEnv("AI_MODE_ENABLED", "1");
   rpcCalls.length = 0;
+  lastCredential = null;
   maybeSingle.mockClear();
   resolveRow = { ...ALLOWED };
   reserveRow = { granted: true, reason: null };
@@ -293,6 +303,68 @@ describe("le chemin PLATEFORME (D-2, Q-5)", () => {
     resolveRow = { ...ALLOWED, allowed: false, payer: "platform", owner_user_id: null };
     const outcome = await callAi(REQUEST);
     expect(outcome).toEqual({ ok: false, code: "AI_MODE_OFF" });
+  });
+});
+
+/**
+ * LA CLÉ PLATEFORME EST AGNOSTIQUE, comme celle d'une famille.
+ *
+ * Trois choses étaient câblées sur Anthropic ICI : le `provider` du ticket et les
+ * deux identifiants de modèle, écrits en dur dans `preparePlatformCall` — donc
+ * hors de `constants/ai.ts`, contre la règle qui ouvre ce module. Une famille
+ * pouvait brancher DeepSeek, Grok, Kimi ou GLM depuis ses Réglages ; nous, non.
+ */
+describe("le chemin plateforme suit le fournisseur de l'environnement", () => {
+  const PLATFORM = {
+    ...ALLOWED,
+    allowed: false,
+    payer: "platform" as const,
+    owner_user_id: null,
+    reason: null,
+  };
+
+  it("bascule adresse ET modèles sur le préréglage nommé", async () => {
+    vi.stubEnv("AI_PLATFORM_API_KEY", "sk-plateforme");
+    vi.stubEnv("AI_PLATFORM_PROVIDER", "deepseek");
+    resolveRow = { ...PLATFORM };
+
+    const outcome = await callAi(REQUEST);
+    expect(outcome.ok).toBe(true);
+    expect(lastCredential).toMatchObject({
+      provider: "openai_compatible",
+      baseUrl: "https://api.deepseek.com",
+      models: { fast: "deepseek-v4-flash", rich: "deepseek-v4-pro" },
+    });
+    // R-13 : c'est le fournisseur RÉELLEMENT appelé qui est journalisé. Le figer
+    // à « anthropic » ferait mentir la répartition de la console admin le jour
+    // où la plateforme bascule.
+    expect(called("log_ai_usage")[0].args.p_provider).toBe("openai_compatible");
+  });
+
+  it("sans variable de fournisseur, le comportement d'avant est INCHANGÉ", async () => {
+    // La compatibilité qui compte : la production a `ANTHROPIC_API_KEY` posée et
+    // aucune des nouvelles variables.
+    vi.stubEnv("ANTHROPIC_API_KEY", "sk-platform");
+    resolveRow = { ...PLATFORM };
+
+    await callAi(REQUEST);
+    expect(lastCredential).toMatchObject({
+      provider: "anthropic",
+      models: { fast: "claude-haiku-4-5", rich: "claude-sonnet-5" },
+    });
+    expect(called("log_ai_usage")[0].args.p_provider).toBe("anthropic");
+  });
+
+  it("une configuration incomplète éteint le chemin plutôt que de deviner", async () => {
+    // `custom` sans adresse : retomber sur Anthropic enverrait la clé d'un autre
+    // fournisseur à l'adresse d'Anthropic.
+    vi.stubEnv("AI_PLATFORM_API_KEY", "sk-plateforme");
+    vi.stubEnv("AI_PLATFORM_PROVIDER", "custom");
+    resolveRow = { ...PLATFORM };
+
+    expect(await callAi(REQUEST)).toEqual({ ok: false, code: "AI_MODE_OFF" });
+    expect(lastCredential).toBeNull();
+    expect(called("log_ai_usage")).toHaveLength(0);
   });
 });
 
