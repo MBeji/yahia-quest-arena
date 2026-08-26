@@ -144,18 +144,21 @@ export type TutorExplanation =
   | { readonly ok: false; readonly code: string };
 
 /**
- * R-15.2 — l'entrée dans le pot commun. Un modèle hors de la liste curée produit
- * une explication PRIVÉE à son payeur : sans cette barrière, la clé la moins
- * chère du parc fixerait la qualité servie à tous les enfants.
+ * R-15.2 — l'entrée dans le pot commun. La condition porte sur le MODÈLE, jamais
+ * sur le payeur : é29 D-9 retire explicitement le payeur du calcul (« mutualisé,
+ * quel que soit le payeur »), et R-15.2 ne connaît que la liste curée et le
+ * validateur. Un modèle hors liste ne rejoint donc pas le pot commun, qu'il soit
+ * payé par une famille ou par la plateforme — sans cette barrière, le modèle le
+ * moins cher fixerait la qualité servie à tous les enfants.
  *
- * LE FOURNISSEUR EST IGNORÉ, DÉLIBÉRÉMENT. `AI_CURATED_MODELS` est indexée par
- * fournisseur parce que l'écran s'en sert pour PROPOSER ; ce qui décide de la
- * qualité servie à un enfant, lui, est l'identité du MODÈLE — pas le protocole
- * qui l'a transporté. `claude-sonnet-5` servi par une passerelle compatible
- * OpenAI reste `claude-sonnet-5`, et Q-4 ouvre justement l'adresse à la saisie
- * libre. Depuis #871 le chemin plateforme se configure de la même façon : un
- * test par fournisseur y viderait le pot commun de TOUT le parc sur une
- * question de transport.
+ * LE FOURNISSEUR NON PLUS NE COMPTE PAS, ET C'EST DÉLIBÉRÉ. `AI_CURATED_MODELS`
+ * est indexée par fournisseur parce que l'écran s'en sert pour PROPOSER ; ce qui
+ * décide de la qualité servie à un enfant, lui, est l'identité du MODÈLE — pas
+ * le protocole qui l'a transporté. `claude-sonnet-5` servi par une passerelle
+ * compatible OpenAI reste `claude-sonnet-5`, et Q-4 ouvre l'adresse à la saisie
+ * libre exprès. Depuis #871 le chemin plateforme se configure de la même façon :
+ * un test par fournisseur y viderait le pot commun de TOUT le parc sur une
+ * question de transport — le symétrique exact du défaut fermé au §7.
  *
  * Ce que ce choix n'attrape pas, dit sans détour : un porteur qui pointe une
  * adresse à lui et déclare `claude-sonnet-5` entre dans le pot. Un test par
@@ -353,13 +356,44 @@ export const explainMistake = createServerFn({ method: "POST" })
       }
 
       // 7. Le cache, puis le fil. `shared` se calcule ici et NULLE PART ailleurs.
-      await (supabaseAdmin as unknown as TutorRpcClient).rpc("store_tutor_explanation", {
-        ...cacheKey,
-        p_body: validated.body,
-        p_model: outcome.model,
-        p_shared: outcome.payer === "family" ? isCuratedModel(outcome.model) : true,
-        p_owner: outcome.payer === "family" ? userId : null,
-      });
+      //
+      //    R-15.2 VAUT POUR LES DEUX PAYEURS, Y COMPRIS LE CHEMIN PLATEFORME.
+      //    Tant que la clé plateforme était câblée sur Anthropic, la question ne
+      //    se posait pas : ses deux modèles étaient curés. Depuis #871 elle est
+      //    agnostique, et son modèle est une variable d'environnement libre
+      //    (`AI_PLATFORM_PROVIDER` / `AI_PLATFORM_MODEL_FAST|RICH`) : un partage
+      //    inconditionnel laisserait un identifiant tapé dans Vercel fixer la
+      //    qualité servie à TOUS les élèves — RISK-4 d'é29, atteint par l'autre
+      //    porte. Pour verser un modèle plateforme au pot commun, on l'inscrit
+      //    dans `AI_CURATED_MODELS` : une décision écrite et relue, pas un effet
+      //    de bord de configuration. (À ne pas confondre avec R-18bis.4, qui
+      //    force la vérification complète sur ce même chemin : « c'est notre nom
+      //    sur le contenu » y ajoute une exigence, il n'en lève aucune.)
+      //
+      //    ET QUAND LE MODÈLE N'ENTRE PAS, ON N'ÉCRIT RIEN SUR CE CHEMIN. La
+      //    réserve privée de R-15.2 appartient au PAYEUR, et le payeur plateforme
+      //    n'a pas d'`owner_user_id` : `shared = false` avec `p_owner = NULL`
+      //    produirait une ligne que `find_tutor_explanation` ne peut relire pour
+      //    personne (`e.shared OR e.owner_user_id = v_user`) — morte à
+      //    l'écriture, et comptée au dénominateur de `get_tutor_cache_stats`.
+      const curated = isCuratedModel(outcome.model);
+      if (curated || outcome.payer === "family") {
+        await (supabaseAdmin as unknown as TutorRpcClient).rpc("store_tutor_explanation", {
+          ...cacheKey,
+          p_body: validated.body,
+          p_model: outcome.model,
+          p_shared: curated,
+          p_owner: outcome.payer === "family" ? userId : null,
+        });
+      } else {
+        // Sans cette trace, « le pot commun ne se remplit plus » ne se lit que
+        // sur un ratio qui baisse dans /admin/ia, des semaines plus tard. Avec
+        // elle, le modèle en cause est nommé le jour où il est configuré.
+        logger.info("tutor.cache.skipped", {
+          reason: "PLATFORM_MODEL_NOT_CURATED",
+          model: outcome.model,
+        });
+      }
 
       const messageIx = await appendTutorMessage(
         client,

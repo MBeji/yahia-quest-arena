@@ -21,7 +21,7 @@
 
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(19);
+SELECT plan(20);
 
 -- ---------------------------------------------------------
 -- Décor : un thème, une classe, une matière, un chapitre, un exercice,
@@ -225,6 +225,28 @@ SELECT ok(
   public.find_tutor_explanation('d7000000-0000-4000-8000-0000000000a1'::uuid,
     'tt.frac.add-denominators', 'ar', '12-14', 'concret') IS NULL,
   'R-15.2 ⭐ : une explication PRIVÉE ne fuit pas chez le voisin — le pot commun exige un modèle curé'
+);
+
+SET LOCAL ROLE postgres;
+-- LA LIGNE MORTE QUE LE SERVEUR NE DOIT JAMAIS ÉCRIRE : `shared = false` SANS
+-- propriétaire. C'est ce que produirait le chemin PLATEFORME, qui n'a pas de
+-- payeur nominatif, si on se contentait d'y appliquer la liste curée en
+-- basculant le booléen. La clause `(e.shared OR e.owner_user_id = v_user)` ne
+-- la rend à PERSONNE — pas même à l'élève qui l'a provoquée.
+--
+-- C'est le fait sur lequel repose la garde de `tutor.server.ts` (§7 d'
+-- `explainMistake`) : sur ce chemin, un modèle hors liste curée n'écrit RIEN
+-- plutôt que ceci. Ce test-ci garde la moitié SQL de la décision ; sa moitié
+-- Node est dans `src/features/tutor/__tests__/tutor-server.test.ts`.
+SELECT public.store_tutor_explanation(
+  'd7000000-0000-4000-8000-0000000000a1'::uuid, 'tt.frac.add-denominators',
+  'ar', '12-14', 'formel', 'explication orpheline', 'glm-4.5-air', false, NULL::uuid);
+SET LOCAL ROLE authenticated;
+
+SELECT ok(
+  public.find_tutor_explanation('d7000000-0000-4000-8000-0000000000a1'::uuid,
+    'tt.frac.add-denominators', 'ar', '12-14', 'formel') IS NULL,
+  'R-15.2 ⭐ : « privée » sans propriétaire n''est lisible par personne — une telle ligne naît morte'
 );
 
 SET LOCAL ROLE postgres;
