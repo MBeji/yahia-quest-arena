@@ -7,6 +7,8 @@ import { Hammer, TriangleAlert } from "lucide-react";
 
 import { useT, type TranslationKeys } from "@/lib/i18n";
 import { AI_FORGE_LIMITS } from "@/shared/constants/ai";
+import { AI_ERROR_CODES } from "@/shared/integrations/ai";
+import { aiErrorLabel } from "../ai-mode-status";
 import { MAX_DIFFICULTY_LEVEL, MIN_DIFFICULTY_LEVEL } from "@/shared/constants/gamification";
 import {
   forgeQuiz,
@@ -43,12 +45,32 @@ import { ForgedQuizPlayer } from "./forged-quiz-player";
  * jeu — pas de l'argent.
  */
 
+/**
+ * LE CODE D'ÉCHEC, DIT À L'ÉLÈVE — annexe C, appliquée ici aussi.
+ *
+ * Cette fonction ne reconnaissait que quatre codes et renvoyait tout le reste
+ * sur `errGeneric`, qui disait « L'enregistrement a échoué ». Deux fautes dans
+ * une seule ligne : la Forge n'enregistre rien à ce moment-là (elle GÉNÈRE), et
+ * une clé refusée, un modèle inexistant, un fournisseur en panne ou un plafond
+ * atteint arrivaient tous à l'écran sous cette même phrase — celle qui ne
+ * permet ni de comprendre, ni d'agir. Un porteur voyait « échec » sans jamais
+ * apprendre que sa clé était refusée.
+ *
+ * L'ordre compte : les codes propres à la Forge d'abord (l'annexe C ne les
+ * connaît pas), puis la table commune, puis un générique qui parle au moins de
+ * la bonne action.
+ */
 function forgeErrorLabel(raw: string, t: TranslationKeys): string {
   if (raw.includes("AI_FORGE_QUOTA")) return t.ai.errForgeQuota;
   if (raw.includes("AI_FORGE_NO_QUORUM")) return t.ai.errForgeNoQuorum;
   if (raw.includes("AI_FORGE_NO_CONTEXT")) return t.ai.errForgeNoContext;
-  if (raw.includes("AI_BUDGET_REACHED")) return t.ai.errBudgetReached;
-  return t.ai.errGeneric;
+  if (raw.includes("AI_OUTPUT_REJECTED")) return t.ai.errForgeOutputRejected;
+
+  // `AI_FORGE_NO_QUORUM` appartient aussi à `AI_ERROR_CODES` : il est traité
+  // au-dessus, donc la recherche ci-dessous ne le rencontre jamais.
+  const code = AI_ERROR_CODES.find((candidate) => raw.includes(candidate));
+  if (code && code !== "AI_UNKNOWN") return aiErrorLabel(code, t);
+  return t.ai.errForgeFailed;
 }
 
 export function ForgePanel({ chapterId }: { chapterId: string | null }) {

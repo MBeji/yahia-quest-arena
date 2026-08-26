@@ -1066,6 +1066,8 @@ export const en: TranslationKeys = {
     featExerciseGen: "Targeted exercises",
     featDigestStudent: "Student digest",
     featDigestParent: "Parent digest",
+    featVerify: "Key check",
+    featForgeSolve: "Quiz double-check",
     errNotLinked: "That student is not linked to your account.",
     errNoCredential: "Save a key first.",
     errEnergyCap: "Daily energy cannot exceed the cap.",
@@ -1101,6 +1103,9 @@ export const en: TranslationKeys = {
     errForgeNotFound: "That quiz does not exist.",
     errForgeExpired: "That quiz has expired.",
     errForgeNoContext: "This chapter has too little material to forge a quiz.",
+    errForgeOutputRejected:
+      "The model did not return a readable quiz. Try again — if it keeps happening, switch model in Settings.",
+    errForgeFailed: "The Forge could not produce this quiz.",
     spendTitle: "Your spending",
     spendToday: "Today",
     spendMonth: "This month",
@@ -1135,7 +1140,7 @@ export const en: TranslationKeys = {
     errHostNotAllowed: "This address cannot be called from our servers.",
     errBudgetReached: "Your cap has been reached.",
     errModeOff: "AI mode is not available.",
-    errGeneric: "Saving failed.",
+    errGeneric: "Something went wrong. Try again.",
   },
   public: enPublic,
   quotes: [

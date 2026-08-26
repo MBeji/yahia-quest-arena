@@ -1058,6 +1058,8 @@ export const ar: TranslationKeys = {
     featExerciseGen: "تمارين موجّهة",
     featDigestStudent: "حصيلة التلميذ",
     featDigestParent: "حصيلة الوليّ",
+    featVerify: "التحقّق من المفتاح",
+    featForgeSolve: "التحقّق المزدوج من تمرين",
     errNotLinked: "هذا التلميذ غير مرتبط بحسابك.",
     errNoCredential: "سجّل مفتاحا أولا.",
     errEnergyCap: "لا يمكن أن تتجاوز الطاقة اليومية السقف.",
@@ -1091,6 +1093,9 @@ export const ar: TranslationKeys = {
     errForgeNotFound: "هذا التمرين غير موجود.",
     errForgeExpired: "انتهت صلاحية هذا التمرين.",
     errForgeNoContext: "هذا الفصل لا يحتوي مادة كافية لطرق تمرين.",
+    errForgeOutputRejected:
+      "لم يُرجع النموذج تمرينا مقروءا. أعد المحاولة — وإن تكرّر ذلك فغيّر النموذج من الإعدادات.",
+    errForgeFailed: "لم تتمكّن المِطْرَقة من إنتاج هذا التمرين.",
     spendTitle: "إنفاقك",
     spendToday: "اليوم",
     spendMonth: "هذا الشهر",
@@ -1125,7 +1130,7 @@ export const ar: TranslationKeys = {
     errHostNotAllowed: "لا يمكن الاتصال بهذا العنوان من خوادمنا.",
     errBudgetReached: "بلغتَ السقف.",
     errModeOff: "وضع الذكاء الاصطناعي غير متاح.",
-    errGeneric: "فشل الحفظ.",
+    errGeneric: "حدث خطأ. أعد المحاولة.",
   },
   public: arPublic,
   quotes: [

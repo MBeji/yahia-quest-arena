@@ -3,7 +3,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { TriangleAlert } from "lucide-react";
 
 import { useT } from "@/lib/i18n";
-import { microsToUsd } from "@/shared/integrations/ai";
+import { asAiErrorCode, microsToUsd } from "@/shared/integrations/ai";
+import { aiErrorLabel, aiFeatureLabel } from "../ai-mode-status";
 import { getAiConsole, type AiConsole } from "../ai-console.server";
 
 /**
@@ -27,6 +28,9 @@ import { getAiConsole, type AiConsole } from "../ai-console.server";
  */
 
 const usd = (micros: number) => `${microsToUsd(micros).toFixed(2)} $`;
+
+/** Assez pour voir la panne du jour, pas assez pour noyer la console. */
+const RECENT_SHOWN = 8;
 
 export function AiSpendPanel() {
   const t = useT();
@@ -108,6 +112,47 @@ export function AiSpendPanel() {
                   {usd(stats.micros)} · {stats.calls}
                   {stats.errors > 0 && ` · ⚠ ${stats.errors}`}
                 </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* LES DERNIERS APPELS, ÉCHECS COMPRIS.
+          `get_ai_console` rend cette liste avec son `errorCode` depuis le lot 5,
+          et l'écran la jetait. C'était la seule surface où un porteur pouvait
+          apprendre POURQUOI un appel a échoué — sans elle, une clé refusée, un
+          modèle inexistant et un fournisseur en panne se ressemblent tous : un
+          geste qui ne marche pas. La clé n'est marquée `invalid` que sur un 401
+          (`concludeFailure`), donc le bandeau d'erreur des Réglages reste muet
+          pour tous les autres codes ; c'est ici qu'ils se lisent. */}
+      {data.recent.length > 0 && (
+        <div className="mt-3">
+          <p className="text-xs font-semibold text-muted-foreground">{t.ai.spendRecent}</p>
+          <ul className="mt-1 grid gap-1" data-testid="ai-spend-recent">
+            {data.recent.slice(0, RECENT_SHOWN).map((call) => (
+              <li
+                key={`${call.at}-${call.feature}-${call.model}`}
+                className="flex flex-wrap items-baseline justify-between gap-x-2 text-xs"
+              >
+                <span className="min-w-0 truncate">
+                  {aiFeatureLabel(call.feature, t) ?? call.feature}
+                  <span className="text-muted-foreground">
+                    {" · "}
+                    <span className="font-mono" dir="ltr">
+                      {call.model}
+                    </span>
+                  </span>
+                </span>
+                {call.status === "error" ? (
+                  <span className="shrink-0 text-destructive">
+                    {aiErrorLabel(asAiErrorCode(call.errorCode), t)}
+                  </span>
+                ) : (
+                  <span className="shrink-0" dir="ltr">
+                    {usd(call.micros)}
+                  </span>
+                )}
               </li>
             ))}
           </ul>

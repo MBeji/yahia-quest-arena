@@ -889,6 +889,10 @@ export type TranslationKeys = {
     featExerciseGen: string;
     featDigestStudent: string;
     featDigestParent: string;
+    featVerify: string;
+    featForgeSolve: string;
+    errForgeOutputRejected: string;
+    errForgeFailed: string;
     errNotLinked: string;
     errNoCredential: string;
     errEnergyCap: string;

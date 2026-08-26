@@ -1084,6 +1084,8 @@ export const fr: TranslationKeys = {
     featExerciseGen: "Exercices ciblés",
     featDigestStudent: "Bilan de l'élève",
     featDigestParent: "Bilan parent",
+    featVerify: "Vérification de la clé",
+    featForgeSolve: "Double vérification d'un quiz",
     errNotLinked: "Cet élève n'est pas lié à votre compte.",
     errNoCredential: "Enregistrez d'abord une clé.",
     errEnergyCap: "L'énergie quotidienne ne peut pas dépasser le plafond.",
@@ -1120,6 +1122,9 @@ export const fr: TranslationKeys = {
     errForgeNotFound: "Ce quiz n'existe pas.",
     errForgeExpired: "Ce quiz a expiré.",
     errForgeNoContext: "Ce chapitre n'a pas assez de matière pour forger un quiz.",
+    errForgeOutputRejected:
+      "Le modèle n'a pas rendu un quiz lisible. Réessaie — si ça recommence, change de modèle dans les Réglages.",
+    errForgeFailed: "La Forge n'a pas pu produire ce quiz.",
     spendTitle: "Votre dépense",
     spendToday: "Aujourd'hui",
     spendMonth: "Ce mois-ci",
@@ -1154,7 +1159,7 @@ export const fr: TranslationKeys = {
     errHostNotAllowed: "Cette adresse ne peut pas être appelée depuis nos serveurs.",
     errBudgetReached: "Votre plafond est atteint.",
     errModeOff: "Le mode IA n'est pas disponible.",
-    errGeneric: "L'enregistrement a échoué.",
+    errGeneric: "Une erreur s'est produite. Réessayez.",
   },
   public: frPublic,
   quotes: [
