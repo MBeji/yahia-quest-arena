@@ -1089,6 +1089,11 @@ export const fr: TranslationKeys = {
     forgeTitle: "La Forge",
     forgeDesc:
       "Demande un quiz sur mesure. Il ne rapporte ni XP ni pièces — c'est un entraînement, pas une quête.",
+    forgeChapter: "Chapitre",
+    forgeChapterPlaceholder: "Choisis un chapitre…",
+    forgeNoChapter:
+      "Aucun chapitre à forger pour l'instant : il en faut un dont le cours est écrit.",
+    forgeBrowseParcours: "Voir mes matières",
     forgeSize: "Nombre de questions",
     forgeDifficulty: "Difficulté",
     forgeStart: "Forger le quiz",

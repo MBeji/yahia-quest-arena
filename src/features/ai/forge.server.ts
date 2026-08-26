@@ -471,3 +471,111 @@ export const listForgedQuizzes = createServerFn({ method: "GET" })
 
 /** Ré-exporté pour la console qualité du lot 5 : le vocabulaire des rebuts. */
 export type { ForgeRejection };
+
+// ---------------------------------------------------------------------------
+// LE CHOIX DU CHAPITRE — la porte du tableau de bord n'était pas une porte
+// ---------------------------------------------------------------------------
+// L'étude 29 §2.1 demande DEUX entrées vers la Forge : « depuis le hub d'un
+// chapitre ET depuis le dashboard élève ». La seconde était livrée sans le
+// moyen de s'en servir : le panneau ne montre ses réglages que s'il a reçu un
+// chapitre, et le tableau de bord n'en passe aucun. Un élève qui vient de faire
+// brancher la clé de sa famille arrivait donc sur un écran vide — un titre, une
+// phrase, « aucun quiz forgé pour l'instant » — et concluait, à raison, que la
+// Forge ne faisait rien.
+//
+// Cette fonction rend ce que l'élève peut FORGER, pas le catalogue entier :
+//
+//   * les matières de son parcours ACTIF, exactement comme le tableau de bord
+//     les cadre (`current_parcours_id` → thème + niveau) ;
+//   * les chapitres qui ont un COURS. `get_forge_context` accepte un chapitre
+//     sans leçon et rend un extrait vide : la Forge partirait alors générer un
+//     quiz à partir de rien, brûlerait l'argent de la famille et échouerait au
+//     quorum. Un chapitre non enseigné n'est pas proposé.
+//
+// Elle ne porte AUCUN montant (R-14a) : ce sont des titres de chapitres.
+
+const forgeableChapterSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  subject_id: z.string(),
+});
+
+export type ForgeableChapter = {
+  readonly id: string;
+  readonly title: string;
+  readonly subjectName: string;
+};
+
+/** Borne de la liste — un parcours en compte quelques dizaines, jamais mille. */
+const FORGEABLE_CHAPTERS_MAX = 200;
+
+export const listForgeableChapters = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<ForgeableChapter[]> => {
+    const { supabase } = context;
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("current_parcours_id")
+      .eq("id", context.userId)
+      .maybeSingle();
+    const parcoursId = profile?.current_parcours_id ?? null;
+    // Sans parcours actif, l'élève n'a pas encore de matières : l'écran le dira
+    // lui-même et l'emmènera les choisir. Rendre le catalogue entier ici serait
+    // pire que rien — des chapitres qu'il n'étudie pas.
+    if (!parcoursId) return [];
+
+    const { data: parcours } = await supabase
+      .from("parcours")
+      .select("theme_id,grade_id")
+      .eq("id", parcoursId)
+      .maybeSingle();
+    if (!parcours) return [];
+
+    // Le MÊME cadrage que le tableau de bord (#parcours-pivot) : un parcours
+    // épingle un thème, et un niveau quand il en a un. `grade_id` nul se lit
+    // « les matières hors niveau scolaire », pas « toutes ».
+    const themeSubjects = supabase
+      .from("subjects")
+      .select("id,name_fr")
+      .eq("theme_id", parcours.theme_id);
+    // Les filtres AVANT le tri : `.order()` rend un builder de transformation,
+    // qui n'a plus `.eq()` ni `.is()`. L'ordre des appels est un contrat de
+    // supabase-js, pas une préférence de style.
+    const { data: subjects } = await (
+      parcours.grade_id
+        ? themeSubjects.eq("grade_id", parcours.grade_id)
+        : themeSubjects.is("grade_id", null)
+    ).order("display_order");
+
+    const subjectNames = new Map((subjects ?? []).map((s) => [s.id, s.name_fr]));
+    if (subjectNames.size === 0) return [];
+
+    const { data: rows, error } = await supabase
+      .from("chapters")
+      // JAMAIS `lesson_content` : le cours ne traverse pas le réseau pour
+      // remplir une liste déroulante. On filtre sur sa présence, on ne le lit
+      // pas — même motif que `getCatalogueStats`.
+      .select("id,title,subject_id")
+      .in("subject_id", [...subjectNames.keys()])
+      .not("lesson_content", "is", null)
+      .order("display_order")
+      .limit(FORGEABLE_CHAPTERS_MAX);
+
+    if (error) {
+      failWithClientError(
+        "ai.listForgeableChapters",
+        error,
+        "Impossible de charger les chapitres.",
+      );
+    }
+
+    const parsed = z.array(forgeableChapterSchema).safeParse(rows ?? []);
+    if (!parsed.success) return [];
+
+    return parsed.data.map((row) => ({
+      id: row.id,
+      title: row.title,
+      subjectName: subjectNames.get(row.subject_id) ?? "—",
+    }));
+  });
