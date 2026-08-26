@@ -335,4 +335,33 @@ describe("getTutorCacheStats — la fenêtre voyage, et un zéro ne s'invente pa
     mockRpc.mockResolvedValue(reply(null, { message: "Unauthorized" }));
     await expect(getTutorCacheStats({ data: {} })).resolves.toBeNull();
   });
+
+  it("R-15.3 : le taux d'ÉVICTION voyage avec ses deux compteurs", async () => {
+    // « Le taux d'éviction est un indicateur de la console admin » (é29 R-15.3).
+    // Il ne se lit jamais seul : `evictedRows` sur `sharedRows`, sinon on ne sait
+    // pas si 20 % vient de 1 sortie sur 5 ou de 200 sur 1 000.
+    mockRpc.mockResolvedValue(
+      reply({
+        hitRate: 0.62,
+        discardRate: 0.08,
+        evictionRate: 0.667,
+        evictedRows: 2,
+        sharedRows: 3,
+      }),
+    );
+    const out = await getTutorCacheStats({ data: {} });
+    expect(out).toMatchObject({ evictionRate: 0.667, evictedRows: 2, sharedRows: 3 });
+  });
+
+  it("⭐ R-15.3 : une base EN RETARD n'éteint pas tout le panneau", async () => {
+    // Ce panneau est déployé par Vercel pendant que `db-migrate-prod` applique la
+    // migration : les deux courent en parallèle sur le même merge. Si
+    // `evictionRate` était exigé comme les deux autres taux, la RPC d'avant la
+    // migration ferait rendre `null` — donc « mesure indisponible » sur le
+    // hit-rate ET sur le rebut, qui eux marchaient très bien.
+    mockRpc.mockResolvedValue(reply({ hitRate: 0.62, discardRate: 0.08 }));
+    const out = await getTutorCacheStats({ data: {} });
+    expect(out).toMatchObject({ hitRate: 0.62, discardRate: 0.08 });
+    expect(out?.evictionRate).toBeUndefined();
+  });
 });

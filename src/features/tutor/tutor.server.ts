@@ -19,7 +19,15 @@
 //   4. find_tutor_explanation  R-15.2 — le pot commun d'abord : GRATUIT
 //   5. callAi                  é29 — et seulement ici on dépense
 //   6. validateTutorOutput     §3.4 — un retry, puis dégradé
-//   7. store + append          le cache et le fil
+//   7. store + append + lien  le cache, le fil, et de quoi ÉVINCER (é29 R-15.3)
+//
+// La troisième pièce de l'étape 7 est arrivée après les deux autres, et elle
+// répare un trou : `tutor_feedback` porte un RANG dans un fil, pas l'identité de
+// l'entrée de cache qui a produit le message. Un 👎 n'était donc imputable à
+// rien, et rien ne sortait jamais du pot commun — pendant que l'entrée la plus
+// servie restait la plus collante (`ORDER BY serve_count DESC`). Le lien est
+// posé ici, sur les DEUX chemins (cache plein comme cache vide) ; l'éviction
+// elle-même est en SQL, dans `rate_tutor_message`.
 //
 // L'étape 4 avant l'étape 5 n'est pas une optimisation : c'est la raison d'être
 // du cache mutualisé. Une explication déjà payée par une autre famille sur la
@@ -69,6 +77,9 @@ type TutorRpcClient = {
       | "append_tutor_message"
       | "find_tutor_explanation"
       | "store_tutor_explanation"
+      // é29 R-15.3 — le lien message → entrée de cache (migration 20260826120000).
+      // `service_role` SEUL : c'est ce lien qui décide d'une éviction.
+      | "record_tutor_explanation_serving"
       | "rate_tutor_message"
       | "set_tutor_prefs"
       | "get_tutor_prefs"
@@ -122,6 +133,16 @@ const threadSchema = z.object({
 });
 
 const cacheHitSchema = z.object({
+  /**
+   * R-15.3 — l'identité de l'entrée servie, pour que le 👎 qui suivra sache
+   * QUOI évincer. OPTIONNELLE à dessein : la migration qui l'ajoute et ce code
+   * partent dans le même merge, mais Vercel déploie et `db-migrate-prod`
+   * applique en parallèle. Exiger la clé ferait échouer le `safeParse` pendant
+   * la fenêtre — donc traiter un HIT comme un MISS et REPAYER l'explication.
+   * Un lien manquant coûte une éviction ratée ; un cache manquant coûte de
+   * l'argent à chaque correction.
+   */
+  id: z.guid().optional(),
   body: z.string(),
   model: z.string(),
   shared: z.boolean(),
@@ -307,10 +328,13 @@ export const explainMistake = createServerFn({ method: "POST" })
         data.again,
         advance,
       );
+      // R-15.3 — sur un HIT aussi, et surtout sur un HIT : c'est l'entrée
+      // resservie en boucle qui fait le plus de dégâts quand elle est mauvaise.
+      await recordServing(threadId, appended, cached.data.id ?? null);
       return {
         ok: true,
         threadId,
-        messageIx: appended,
+        messageIx: appended ?? 0,
         body: cached.data.body,
         variant,
         canReformulate,
@@ -377,14 +401,29 @@ export const explainMistake = createServerFn({ method: "POST" })
       //    personne (`e.shared OR e.owner_user_id = v_user`) — morte à
       //    l'écriture, et comptée au dénominateur de `get_tutor_cache_stats`.
       const curated = isCuratedModel(outcome.model);
+      // R-15.3 — l'entrée fraîchement écrite est déjà évinçable. Une explication
+      // n'a pas besoin d'avoir vieilli dans le pot pour être mauvaise : le 👎 de
+      // l'élève qui vient de la recevoir compte comme celui d'un autre.
+      let servedId: string | null = null;
       if (curated || outcome.payer === "family") {
-        await (supabaseAdmin as unknown as TutorRpcClient).rpc("store_tutor_explanation", {
-          ...cacheKey,
-          p_body: validated.body,
-          p_model: outcome.model,
-          p_shared: curated,
-          p_owner: outcome.payer === "family" ? userId : null,
-        });
+        const stored = await (supabaseAdmin as unknown as TutorRpcClient).rpc(
+          "store_tutor_explanation",
+          {
+            ...cacheKey,
+            p_body: validated.body,
+            p_model: outcome.model,
+            p_shared: curated,
+            p_owner: outcome.payer === "family" ? userId : null,
+          },
+        );
+        if (stored.error) {
+          // L'élève a son explication ; c'est le cache qui a échoué, pas la
+          // pédagogie. On le dit, et on ne lie rien à une ligne inexistante.
+          logger.error("tutor.cache.store", { error: errorMessage(stored.error) });
+        } else {
+          const id = z.guid().safeParse(stored.data);
+          servedId = id.success ? id.data : null;
+        }
       } else {
         // Sans cette trace, « le pot commun ne se remplit plus » ne se lit que
         // sur un ratio qui baisse dans /admin/ia, des semaines plus tard. Avec
@@ -402,10 +441,11 @@ export const explainMistake = createServerFn({ method: "POST" })
         data.again,
         advance,
       );
+      await recordServing(threadId, messageIx, servedId);
       return {
         ok: true,
         threadId,
-        messageIx,
+        messageIx: messageIx ?? 0,
         body: validated.body,
         variant,
         canReformulate,
@@ -417,13 +457,24 @@ export const explainMistake = createServerFn({ method: "POST" })
     return { ok: false, code: lastCode };
   });
 
+/**
+ * Le rang du message écrit, ou `null` si le fil n'a rien enregistré.
+ *
+ * ⚠️ LA DISTINCTION EST NEUVE, ET ELLE COMPTE. Cette fonction rendait `0` sur
+ * échec — un rang parfaitement valide. Tant que le rang ne servait qu'à noter un
+ * message, confondre « le message 0 » et « pas de message » ne coûtait qu'un 👍
+ * mal rangé. Depuis R-15.3 ce rang DÉSIGNE une entrée de cache : lier l'entrée
+ * qu'on vient de servir au message 0 d'un fil qui en compte déjà dix ferait
+ * porter à une explication les 👎 d'une autre. `null` remonte donc jusqu'au
+ * lien, qui s'abstient ; l'écran, lui, garde son `0` de repli.
+ */
 async function appendTutorMessage(
   client: TutorRpcClient,
   threadId: string,
   body: string,
   again: boolean,
   advance: boolean,
-): Promise<number> {
+): Promise<number | null> {
   const { data, error } = await client.rpc("append_tutor_message", {
     p_thread: threadId,
     p_role: "tutor",
@@ -435,10 +486,37 @@ async function appendTutorMessage(
     // Le fil est de l'auditabilité, pas de la pédagogie : l'élève a déjà son
     // explication. On la lui rend, et on garde la trace de l'échec.
     logger.error("tutor.append", { error: errorMessage(error) });
-    return 0;
+    return null;
   }
   const parsed = z.object({ message_ix: z.number() }).safeParse(data);
-  return parsed.success ? parsed.data.message_ix : 0;
+  return parsed.success ? parsed.data.message_ix : null;
+}
+
+/**
+ * R-15.3 — LE LIEN QUI MANQUAIT : ce message vient de CETTE entrée de cache.
+ *
+ * Sans lui, un 👎 ne porte que sur `(thread_id, message_ix)` — un rang dans un
+ * fil — et l'entrée qui a produit la mauvaise explication reste dans le pot,
+ * d'autant plus servie qu'elle l'a déjà été (`ORDER BY serve_count DESC`).
+ *
+ * ÉCRIT AVEC LE CLIENT ADMIN, comme le cache lui-même. La RPC n'est GRANT qu'à
+ * `service_role` : si un client pouvait la joindre, il DÉSIGNERAIT l'entrée que
+ * son propre 👎 va faire sortir du pot commun.
+ *
+ * Ne lève jamais et ne change rien à ce que reçoit l'élève : un lien perdu coûte
+ * une éviction manquée, pas une explication.
+ */
+async function recordServing(
+  threadId: string,
+  messageIx: number | null,
+  explanationId: string | null,
+): Promise<void> {
+  if (messageIx === null || !explanationId) return;
+  const { error } = await (supabaseAdmin as unknown as TutorRpcClient).rpc(
+    "record_tutor_explanation_serving",
+    { p_thread: threadId, p_message_ix: messageIx, p_explanation: explanationId },
+  );
+  if (error) logger.error("tutor.serving", { error: errorMessage(error) });
 }
 
 /** R-17 — 👍/👎. Le 👎 propose « Explique autrement » côté écran. */

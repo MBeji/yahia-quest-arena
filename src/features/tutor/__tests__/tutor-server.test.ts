@@ -41,7 +41,20 @@ const { USER, mockRpc, mockSupabase, mockAdminRpc, mockCallAi } = vi.hoisted(() 
     USER: "11111111-1111-4111-8111-111111111111",
     mockRpc: rpc,
     mockSupabase: { rpc },
-    mockAdminRpc: vi.fn(async () => ({ data: null, error: null })),
+    // Le nom de la RPC est un PARAMÈTRE depuis R-15.3 : le client admin en sert
+    // deux (`store_tutor_explanation`, qui répond, et
+    // `record_tutor_explanation_serving`, qui ne répond pas), et `beforeEach`
+    // doit pouvoir les distinguer. Sans l'argument typé ici, `mockImplementation`
+    // ne compile pas — la fabrique `vi.hoisted` fige la signature.
+    mockAdminRpc: vi.fn(
+      async (
+        _fn: string,
+        _args?: Record<string, unknown>,
+      ): Promise<{ data: unknown; error: { message: string } | null }> => ({
+        data: null,
+        error: null,
+      }),
+    ),
     mockCallAi: vi.fn(),
   };
 });
@@ -104,6 +117,8 @@ import {
 const QUESTION = "22222222-2222-4222-8222-222222222222";
 const CHAPTER = "33333333-3333-4333-8333-333333333333";
 const THREAD = "44444444-4444-4444-8444-444444444444";
+/** L'entrée de cache que `store_tutor_explanation` rend, et que le lien R-15.3 désigne. */
+const EXPL = "55555555-5555-4555-8555-555555555555";
 
 /** Une explication assez longue et assez française pour passer le validateur. */
 const BODY =
@@ -121,6 +136,14 @@ beforeEach(() => {
   mockRpc.mockReset();
   mockAdminRpc.mockClear();
   mockCallAi.mockReset();
+
+  // Le client ADMIN sert deux RPC depuis R-15.3, et l'une des deux RÉPOND :
+  // `store_tutor_explanation` rend l'identifiant de la ligne écrite, et c'est
+  // lui que le lien message → entrée désigne. Un mock muet ferait passer le
+  // chemin du MISS pour un chemin sans lien.
+  mockAdminRpc.mockImplementation(async (fn: string) =>
+    fn === "store_tutor_explanation" ? { data: EXPL, error: null } : { data: null, error: null },
+  );
 
   replies = {
     can_use_tutor: reply({ allowed: true, reason: "OK" }),
@@ -328,6 +351,117 @@ describe("⭐ R-15.2 — le pot commun AVANT la dépense", () => {
     replies.open_tutor_thread = reply({ thread_id: THREAD, variant_served: 1, resolved: null });
     await explainMistake({ data: { questionId: QUESTION, again: true } });
     expect(mockCallAi.mock.calls[0][0]).toMatchObject({ feature: "reformulate" });
+  });
+});
+
+/**
+ * ⭐ R-15.3 — LA SORTIE DU POT COMMUN, côté orchestrateur.
+ *
+ * L'éviction elle-même est en SQL (`rate_tutor_message`, gardée par
+ * `supabase/tests/80_tutor_cache_eviction.test.sql`). Ce que ce fichier garde,
+ * c'est ce SANS QUOI elle ne peut rien évincer : le LIEN entre le message servi
+ * et l'entrée de cache qui l'a produit. `tutor_feedback` ne porte qu'un rang
+ * dans un fil ; si l'orchestrateur ne range pas ce lien, un 👎 ne désigne rien
+ * et le pot commun n'a toujours pas de sortie.
+ *
+ * Les quatre assertions correspondent aux quatre façons de le rater : oublier le
+ * chemin du cache plein, oublier celui du cache vide, lier une ligne qui n'a pas
+ * été écrite, et — la plus vicieuse — lier le message 0 d'un fil quand l'écriture
+ * du fil a échoué.
+ */
+describe("⭐ R-15.3 — le lien sans lequel rien ne sort du pot", () => {
+  it("un HIT range le lien vers l'entrée RESSERVIE", async () => {
+    // C'est le chemin qui compte le plus : une entrée du pot commun est
+    // resservie à des élèves de plus en plus nombreux (`ORDER BY serve_count
+    // DESC`). Sans ce lien, plus elle fait de dégâts, moins elle est évinçable.
+    replies.find_tutor_explanation = reply({
+      id: EXPL,
+      body: BODY,
+      model: "claude-sonnet-5",
+      shared: true,
+    });
+    replies.append_tutor_message = reply({ message_ix: 7 });
+
+    const out = await explainMistake({ data: { questionId: QUESTION, again: false } });
+
+    expect(out).toMatchObject({ ok: true, cached: true, messageIx: 7 });
+    expect(mockAdminRpc).toHaveBeenCalledWith("record_tutor_explanation_serving", {
+      p_thread: THREAD,
+      p_message_ix: 7,
+      p_explanation: EXPL,
+    });
+  });
+
+  it("un MISS range le lien vers l'entrée qui vient d'être ÉCRITE", async () => {
+    // Une explication n'a pas besoin d'avoir vieilli dans le pot pour être
+    // mauvaise : le 👎 de l'élève qui vient de la recevoir vaut celui d'un autre.
+    replies.append_tutor_message = reply({ message_ix: 2 });
+
+    await explainMistake({ data: { questionId: QUESTION, again: false } });
+
+    expect(mockAdminRpc).toHaveBeenCalledWith(
+      "store_tutor_explanation",
+      expect.objectContaining({ p_shared: true }),
+    );
+    expect(mockAdminRpc).toHaveBeenCalledWith("record_tutor_explanation_serving", {
+      p_thread: THREAD,
+      p_message_ix: 2,
+      p_explanation: EXPL,
+    });
+  });
+
+  it("une entrée NON écrite n'est liée à rien — pas de lien vers du vide", async () => {
+    // Le chemin plateforme hors liste curée n'écrit aucune ligne (R-15.2). Lier
+    // un message à une entrée inexistante ferait lever la FK, donc journaliser
+    // une erreur, à chaque explication servie par un modèle non curé.
+    mockCallAi.mockResolvedValue({
+      ok: true,
+      text: BODY,
+      model: "glm-4.5-air",
+      payer: "platform",
+      costUsdMicros: 42,
+      doubleSolve: true,
+    });
+
+    const out = await explainMistake({ data: { questionId: QUESTION, again: false } });
+
+    expect(out).toMatchObject({ ok: true, cached: false });
+    expect(mockAdminRpc).not.toHaveBeenCalled();
+  });
+
+  it("⭐ un fil qui n'a rien enregistré ne fait PAS porter le 👎 au message 0", async () => {
+    // Le piège que la distinction `number | null` ferme. `appendTutorMessage`
+    // rendait `0` sur échec — un rang parfaitement valide. Lier l'entrée servie
+    // au message 0 d'un fil qui en compte déjà dix ferait porter à cette
+    // explication-ci les 👎 d'une autre, et l'évincerait à sa place.
+    replies.find_tutor_explanation = reply({
+      id: EXPL,
+      body: BODY,
+      model: "claude-sonnet-5",
+      shared: true,
+    });
+    replies.append_tutor_message = reply(null, { message: "boom" });
+
+    const out = await explainMistake({ data: { questionId: QUESTION, again: false } });
+
+    // L'élève est servi quand même : le fil est de l'auditabilité, pas de la
+    // pédagogie. Seul le lien s'abstient.
+    expect(out).toMatchObject({ ok: true, cached: true, body: BODY, messageIx: 0 });
+    expect(mockAdminRpc).not.toHaveBeenCalled();
+  });
+
+  it("un cache SANS `id` sert encore — un déploiement en avance ne repaie pas", async () => {
+    // Vercel déploie et `db-migrate-prod` applique en parallèle sur le même
+    // merge. Si `cacheHitSchema` EXIGEAIT `id`, le `safeParse` échouerait pendant
+    // la fenêtre, chaque HIT deviendrait un MISS, et on repaierait toutes les
+    // explications du parc pour une clé qui manque quelques minutes.
+    replies.find_tutor_explanation = reply({ body: BODY, model: "claude-sonnet-5", shared: true });
+
+    const out = await explainMistake({ data: { questionId: QUESTION, again: false } });
+
+    expect(out).toMatchObject({ ok: true, cached: true, body: BODY });
+    expect(mockCallAi).not.toHaveBeenCalled();
+    expect(mockAdminRpc).not.toHaveBeenCalled();
   });
 });
 

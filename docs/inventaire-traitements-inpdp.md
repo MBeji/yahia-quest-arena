@@ -133,7 +133,11 @@ pas contre la divulgation.
 hors base), `ai_usage_events`, `ai_spend_ledger`, `ai_energy_ledger`,
 `ai_platform_ledger`, `ai_budget_alerts`, `ai_student_access`, `ai_admin_state`,
 `ai_owner_suspensions`, `ai_forged_quizzes`, `ai_feedback`, `tutor_threads`,
-`tutor_explanations`, `tutor_digests`, `tutor_feedback`, `tutor_prefs`.
+`tutor_explanations`, `tutor_digests`, `tutor_feedback`, `tutor_prefs`,
+`tutor_explanation_servings` (ajoutée le 2026-08-26 : le lien « ce message vient
+de cette entrée de cache », sans lequel un 👎 n'évince rien — é29 R-15.3. Elle ne
+porte **aucune** donnée d'élève en propre, seulement un fil, un rang et un
+identifiant de cache, et disparaît en cascade avec le fil).
 
 **Rien n'y transite tant que l'étage est éteint** (§1a). Le jour où il s'allume,
 deux choses changent d'un coup : une **conversation d'enfant** devient une donnée

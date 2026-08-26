@@ -10,6 +10,11 @@
 //     la même langue et le même âge, ne coûte ni argent ni énergie. C'est le
 //     mécanisme qui rend le tuteur soutenable ; sans mesure, on ne saurait pas
 //     s'il fonctionne, seulement qu'il existe ;
+//   * le TAUX D'ÉVICTION du pot (é29 R-15.3) — ajouté après les deux autres,
+//     parce que la règle qu'il mesure n'existait pas : « deux 👎 sur une entrée
+//     partagée la retirent du pot ». Il ne se lit JAMAIS seul. Un hit-rate haut
+//     avec une éviction qui monte n'est pas un bon cache : c'est un cache qui se
+//     remplit d'explications que les élèves refusent ;
 //   * le TAUX DE REBUT de la Forge (R-18bis/R-19) — la part des candidats jetés
 //     par la double résolution. `get_ai_console` le calcule DÉJÀ pour une
 //     famille, sur 7 jours ; la version plateforme reprend la MÊME formule sans
@@ -83,7 +88,7 @@ export function TutorCachePanel({ days = DEFAULT_DAYS }: { days?: number }) {
       {!data ? (
         <p className="text-muted-foreground mt-1 text-xs">{t.tutor.cacheStats.unavailable}</p>
       ) : (
-        <div className="mt-2 grid gap-3 sm:grid-cols-2">
+        <div className="mt-2 grid gap-3 sm:grid-cols-3">
           <Measure
             label={t.tutor.cacheStats.hitTitle}
             value={pct(data.hitRate)}
@@ -96,6 +101,30 @@ export function TutorCachePanel({ days = DEFAULT_DAYS }: { days?: number }) {
                     .replace("{misses}", String(data.misses))
             }
             testId="tutor-cache-hit"
+          />
+          {/*
+            R-15.3 — LA SORTIE, à côté de l'entrée. Les deux se lisent ENSEMBLE :
+            un pot qui se remplit vite et se vide autant dit que la condition
+            d'entrée (modèle curé + validateur) ne suffit plus, et que le modèle
+            configuré est en cause. C'est l'alerte que RISK-4 attendait.
+
+            La valeur affiche « — » quand la RPC ne rend pas la clé : le panneau
+            est déployé avant que sa migration ne soit forcément appliquée, et
+            une mesure ABSENTE doit se voir plutôt que se lire « 0,0 % » — un
+            aveu se corrige, un zéro silencieux se croit.
+          */}
+          <Measure
+            label={t.tutor.cacheStats.evictTitle}
+            value={data.evictionRate === undefined ? "—" : pct(data.evictionRate)}
+            window={windowLabel}
+            detail={
+              data.evictedRows === undefined || data.sharedRows === undefined
+                ? null
+                : t.tutor.cacheStats.evictDetail
+                    .replace("{evicted}", String(data.evictedRows))
+                    .replace("{shared}", String(data.sharedRows))
+            }
+            testId="tutor-cache-evict"
           />
           <Measure
             label={t.tutor.cacheStats.discardTitle}

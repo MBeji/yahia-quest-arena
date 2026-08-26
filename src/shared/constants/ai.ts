@@ -643,6 +643,22 @@ export const TUTOR_FREE_TEXT_MAX = 300 as const;
  */
 export const TUTOR_CHAT_WINDOW = 10 as const;
 
+/**
+ * Nombre de VOIX en 👎 qui retirent une explication du pot commun (é29 R-15.3,
+ * « éviction sur signal »).
+ *
+ * DES VOIX, PAS DES CLICS. Le même élève peut se faire resservir la même entrée
+ * — rouvrir le panneau de correction re-sert le registre déjà servi (é11 R-7) —
+ * et cliquer 👎 deux fois. Compter ces deux-là évincerait sur l'avis d'un seul
+ * enfant, et donnerait à un seul compte le pouvoir de vider le pot commun ; le
+ * SQL compte donc des `user_id` DISTINCTS.
+ *
+ * Miroir SQL : `tutor_eviction_downvotes()`, parce que l'éviction se décide dans
+ * la transaction qui enregistre le 👎 (é29 D-8 : la coupure est dans le chemin
+ * de requête, jamais dans un cron qui la découvrirait le lendemain).
+ */
+export const TUTOR_EVICTION_DOWNVOTES = 2 as const;
+
 /** Coût en énergie d'un appel, par surface. La Forge est l'action la plus chère du produit. */
 export const AI_ENERGY_COST: Readonly<Record<AiFeature, number>> = {
   verify: 0, // geste du porteur de clé, hors énergie élève
