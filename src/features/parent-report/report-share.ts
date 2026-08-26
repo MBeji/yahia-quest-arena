@@ -1,4 +1,4 @@
-import type { TranslationKeys } from "@/lib/i18n";
+import type { ParentTranslations } from "@/lib/i18n/parent.types";
 import type { getStudentReport } from "./parent-report.server";
 
 /** La forme du bilan famille telle que retournée (et validée) par le server fn. */
@@ -9,7 +9,7 @@ export type ReportData = Awaited<ReturnType<typeof getStudentReport>>;
  * sinon relancer un élève peu actif, sinon féliciter la régularité. Partagé
  * entre l'affichage du bilan et le texte de partage (WhatsApp / Web Share).
  */
-export function buildWeeklyAdvice(report: ReportData, t: TranslationKeys): string {
+export function buildWeeklyAdvice(report: ReportData, t: ParentTranslations): string {
   const { student, summary, chapterInsights } = report;
   const worstChapter = chapterInsights.weaknesses[0];
   if (worstChapter) {
@@ -30,7 +30,7 @@ export function buildWeeklyAdvice(report: ReportData, t: TranslationKeys): strin
  * Le bilan en texte brut, prêt à partager (WhatsApp est le canal familial n°1) :
  * résumé de la semaine, points forts / à renforcer, et le conseil de la semaine.
  */
-export function buildFamilyReportShareText(report: ReportData, t: TranslationKeys): string {
+export function buildFamilyReportShareText(report: ReportData, t: ParentTranslations): string {
   const { student, weekComparison, chapterInsights } = report;
   const name = student.displayName ?? t.parentReport.defaultStudentName;
   const week = weekComparison.thisWeek;

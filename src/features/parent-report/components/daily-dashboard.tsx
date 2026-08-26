@@ -13,7 +13,7 @@ import {
   Info,
   XCircle,
 } from "lucide-react";
-import { useT } from "@/lib/i18n";
+import { useParentT } from "@/lib/i18n/parent";
 import { LoadingState } from "@/components/ui/loading-state";
 import { isolateLtrRuns } from "@/shared/lib/bidi";
 import { getStudentDailyReport, getStudentDailyReportByCode } from "../parent-report.server";
@@ -66,7 +66,7 @@ export function DailyDashboard({
   /** Objectif famille de la semaine, quand le parent en a posé un (§5). */
   weeklyGoal?: { target: number; done: number } | null;
 }) {
-  const t = useT();
+  const t = useParentT();
   const fetchById = useServerFn(getStudentDailyReport);
   const fetchByCode = useServerFn(getStudentDailyReportByCode);
 
@@ -139,7 +139,7 @@ function DailyDashboardBody({
   weeklyGoal: { target: number; done: number } | null;
   onOpenAttempt: (attemptId: string) => void;
 }) {
-  const t = useT();
+  const t = useParentT();
   const engagement = useMemo(() => computeEngagement(report), [report]);
   const efficiency = useMemo(() => computeEfficiency(report), [report]);
   const kpis = useMemo(() => deriveKpis(report), [report]);
@@ -218,7 +218,7 @@ function FourQuestions({
   efficiency: ReturnType<typeof computeEfficiency>;
   kpis: ReturnType<typeof deriveKpis>;
 }) {
-  const t = useT();
+  const t = useParentT();
   const works = report.totals.exercises + report.totals.lessonsOpened > 0;
 
   return (
@@ -291,7 +291,7 @@ function QuestionCard({
 
 /** §1 : le résumé de la journée (ou de la période choisie). */
 function DaySummary({ report }: { report: DailyReport }) {
-  const t = useT();
+  const t = useParentT();
   const { totals } = report;
   const singleDay = report.range.days === 1;
   const day = singleDay ? report.days[0] : undefined;
@@ -351,7 +351,7 @@ function Fact({ label, value, hidden }: { label: string; value: string; hidden?:
 
 /** §1 : le temps consacré à chaque type d'activité. */
 function TimeBreakdown({ report }: { report: DailyReport }) {
-  const t = useT();
+  const t = useParentT();
   const b = report.totals.byActivity;
   const rows = [
     { key: "lesson", label: t.parentDaily.typeLesson, minutes: b.lesson, color: "bg-success" },
@@ -414,7 +414,7 @@ function Performance({
   report: DailyReport;
   kpis: ReturnType<typeof deriveKpis>;
 }) {
-  const t = useT();
+  const t = useParentT();
   const { totals } = report;
 
   return (
@@ -482,7 +482,7 @@ function Progression({
   report: DailyReport;
   kpis: ReturnType<typeof deriveKpis>;
 }) {
-  const t = useT();
+  const t = useParentT();
   // Sur une période antérieure à la mesure du temps, les minutes valent zéro
   // partout : on bascule alors sur le nombre d'activités, qui, lui, existe.
   const useMinutes = report.totals.appMinutes > 0;
@@ -597,7 +597,7 @@ function ScopePicker({
   applied: string;
   onScope: (next: string) => void;
 }) {
-  const t = useT();
+  const t = useParentT();
 
   // Rien à choisir tant que l'élève n'a touché qu'une seule piste.
   if (scopes.length < 2) return null;
@@ -651,7 +651,7 @@ function PeriodPicker({
   onPreset: (preset: PeriodPresetKey) => void;
   onCustom: (range: DateRange) => void;
 }) {
-  const t = useT();
+  const t = useParentT();
   const labels: Record<PeriodPresetKey, string> = {
     today: t.parentDaily.periodToday,
     yesterday: t.parentDaily.periodYesterday,

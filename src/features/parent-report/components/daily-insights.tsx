@@ -8,9 +8,8 @@ import {
   Target,
   TrendingUp,
 } from "lucide-react";
-import { useT } from "@/lib/i18n";
+import { useParentT, type ParentTranslationKeys } from "@/lib/i18n/parent";
 import { isolateLtrRuns } from "@/shared/lib/bidi";
-import type { TranslationKeys } from "@/lib/i18n/types";
 import {
   analyzeSubjects,
   formatMinutes,
@@ -29,7 +28,7 @@ import { alertMessage } from "./alert-message";
 import { BAND_STYLES, useBandLabel } from "./daily-band";
 import { DeltaChip, EmptyRow, Meter, SectionCard } from "./daily-primitives";
 
-type T = TranslationKeys;
+type T = ParentTranslationKeys;
 type AnyFactor = ScoredFactor<string>;
 
 /**
@@ -51,7 +50,7 @@ export function IndexCard({
   icon: React.ReactNode;
   result: EngagementResult | EfficiencyResult;
 }) {
-  const t = useT();
+  const t = useParentT();
   const bandLabel = useBandLabel();
   const style = BAND_STYLES[result.band];
 
@@ -128,7 +127,7 @@ function FactorList({
   factors: AnyFactor[];
   tone: "good" | "bad";
 }) {
-  const t = useT();
+  const t = useParentT();
   return (
     <div className="mt-3">
       <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
@@ -222,7 +221,7 @@ function factorReadout(factor: AnyFactor, t: T): string {
  * fragiles, délaissées, celles où l'enfant progresse le plus.
  */
 export function SubjectsSection({ report }: { report: DailyReport }) {
-  const t = useT();
+  const t = useParentT();
   const bandLabel = useBandLabel();
   const analysis = analyzeSubjects(report);
 
@@ -343,7 +342,7 @@ export function SubjectsSection({ report }: { report: DailyReport }) {
  * elle ne vaut pas 0 %.
  */
 function CoverageCell({ subject }: { subject: SubjectSlice }) {
-  const t = useT();
+  const t = useParentT();
 
   if (subject.chaptersTotal <= 0) {
     return <span className="text-xs text-muted-foreground">—</span>;
@@ -382,7 +381,7 @@ function SubjectTagList({
   names: string[];
   tone: "good" | "bad";
 }) {
-  const t = useT();
+  const t = useParentT();
   return (
     <div className="rounded-lg border border-border/50 bg-surface-3 p-2.5">
       <div className="text-2xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -410,7 +409,7 @@ function SubjectTagList({
 
 /** §9 : les alertes et recommandations, avec un lien pour agir. */
 export function AlertsSection({ alerts }: { alerts: ParentAlert[] }) {
-  const t = useT();
+  const t = useParentT();
 
   return (
     <SectionCard

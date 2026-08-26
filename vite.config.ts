@@ -69,6 +69,14 @@ export default defineConfig(async ({ command, mode }) => {
             // index chunk, creating an i18n⇄index cycle whose TDZ crash killed the
             // whole client bundle in production (login regression).
             if (/\/src\/lib\/i18n\/(fr|en|ar)\.ts$/.test(id)) return "i18n";
+            // Surface-scoped catalog: the parent dashboard's copy (parentReport.* +
+            // parentDaily.*, ~42 KB of source) serves ONLY /suivi and /parent-report,
+            // two dynamically-imported route chunks — so it must not ride along in the
+            // app-wide catalog every student downloads. Same rule as above: ONLY the
+            // pure-data files. `parent/index.ts` holds the hook (React + ../hooks) and
+            // deliberately stays out, or this chunk would import the index chunk back
+            // and re-open the very cycle the comment above is about.
+            if (/\/src\/lib\/i18n\/parent\/(fr|en|ar)\.ts$/.test(id)) return "i18n-parent";
             if (!id.includes("node_modules")) return;
 
             if (id.includes("@tanstack/")) return "vendor-tanstack";

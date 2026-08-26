@@ -27,13 +27,16 @@ const t = new Proxy(
   { get: (_o, k1) => new Proxy({}, { get: (_o2, k2) => `${String(k1)}.${String(k2)}` }) },
 );
 vi.mock("@/lib/i18n", () => ({ useI18n: () => ({ t, locale: "fr" }), useT: () => t }));
+// La surface parent lit son catalogue par `useParentT` (chunk `i18n-parent`) :
+// le même dictionnaire factice doit couvrir les deux portes d'entrée.
+vi.mock("@/lib/i18n/parent", () => ({ useParentT: () => t }));
 
 import { AlertsSection, IndexCard, SubjectsSection } from "../components/daily-insights";
 import { alertMessage } from "../components/alert-message";
 import { makeReport, makeTotals } from "./daily-fixtures";
 import { computeEngagement } from "../insights/engagement";
 import type { ParentAlert } from "../insights/alerts";
-import type { TranslationKeys } from "@/lib/i18n/types";
+import type { ParentTranslations } from "@/lib/i18n/parent.types";
 
 const subject = (over: Record<string, unknown> = {}) => ({
   subjectId: "math",
@@ -154,7 +157,7 @@ describe("alertMessage", () => {
     const template = "{subjectName} : {minutes} · {chapterTitle} à {chapterScore} %";
     const dictionary = {
       parentDaily: { alertTimeWithoutProgress: template },
-    } as unknown as TranslationKeys;
+    } as unknown as ParentTranslations;
 
     const message = alertMessage(
       {

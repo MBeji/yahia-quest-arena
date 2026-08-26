@@ -166,6 +166,12 @@ famille existant.
 est monté côté composant depuis le dictionnaire i18n (fr / en / ar). On teste ainsi les règles
 sans tester des phrases, et on traduit sans toucher aux règles.
 
+⚠️ Depuis le 2026-08-26 ce dictionnaire n'est plus celui de toute l'application : `parentDaily.*`
+et `parentReport.*` vivent dans `src/lib/i18n/parent/{fr,en,ar}.ts`, un chunk chargé avec les
+seuls écrans parent. Les écrans y accèdent par `useParentT()` — mêmes chemins de clés que
+`useT()`, catalogue app-wide compris. Ajouter une clé de suivi parental se fait là-bas, pas
+dans `src/lib/i18n/fr.ts`.
+
 Une alerte n'est utile que si elle est **rare** : les seuils sont posés haut (chute ≥ 10 points,
 ≥ 60 min de travail pour « temps sans progrès », ≥ 4 sessions pour l'abandon), et la liste est
 plafonnée à 6, avertissements d'abord.

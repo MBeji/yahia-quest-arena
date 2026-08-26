@@ -1,5 +1,5 @@
 import { Minus, TrendingDown, TrendingUp } from "lucide-react";
-import { useT } from "@/lib/i18n";
+import { useParentT } from "@/lib/i18n/parent";
 import type { IndexBand } from "../insights";
 import { BAND_STYLES, useBandLabel } from "./daily-band";
 
@@ -78,7 +78,7 @@ export function DeltaChip({
   /** Pour les métriques où baisser est BON (ex. tentatives avant réussite). */
   invert?: boolean;
 }) {
-  const t = useT();
+  const t = useParentT();
 
   if (value === null) {
     return (
