@@ -218,6 +218,43 @@ Prod migrations **auto-apply** on merge — nobody runs SQL by hand (AGENTS.md �
 4. Manual control when needed: `gh workflow run db-migrate-prod.yml` (or the Actions
    tab) with mode `push` / read-only `list` / one-time `repair-all`.
 
+## Quand la chaîne semble morte : trois pannes qui ne se soignent pas pareil
+
+Une PR qui ne merge pas a trois causes très différentes, et **le mauvais diagnostic coûte plus
+cher que l'attente**. La question qui les sépare tient en une commande :
+
+```bash
+gh api "repos/MBeji/yahia-quest-arena/actions/runs?branch=<branche>&per_page=5" \
+  --jq '.workflow_runs[] | "\(.created_at) \(.name) \(.event) \(.status)"'
+```
+
+1. **Les runs ne sont pas créés du tout** → l'événement n'est pas arrivé. C'est la panne du
+   2026-08-23 (le PAT d'`auto-pr.yml`) et celle du 2026-08-26 (livraison d'événements retardée
+   chez GitHub, jusqu'à **22 minutes** entre un push et le run qu'il déclenche). Dans le second
+   cas, **tout arrive, dans l'ordre, avec du retard** : il n'y a rien à faire qu'attendre.
+2. **Les runs sont créés mais restent `queued`** → aucun runner ne les prend. C'est une panne de
+   capacité GitHub, pas du dépôt : un `workflow_dispatch` est resté une heure en `queued` le
+   2026-08-26 pendant que les crons s'arrêtaient. Rien à réparer ici non plus.
+3. **Les runs tournent et échouent** → là seulement, c'est le diff. Lire le log.
+
+⛔ **Dispatcher les checks requis ne débloque PAS une PR.** C'est le réflexe naturel dans les cas
+1 et 2, et il ne marche pas — mesuré sur #885 le 2026-08-26. `ci.yml` et `migration-gate.yml`
+dispatchés sur la branche rendent bien trois check-runs **verts sur le SHA de tête** (l'API
+`commits/<sha>/check-runs` les montre), et la PR reste `BLOCKED` : le **rollup de la PR** ne
+contient que les check-runs issus d'un vrai événement `pull_request`.
+
+```
+avant l'événement natif : CodeQL, Vercel                       -> BLOCKED
+après (22 min plus tard) : + verify, Migration order/presence  -> merge automatique
+```
+
+`CodeQL` fait exception et apparaît quand même : son check vient de l'app **code-scanning**, pas
+de la suite Actions. La dispatch reste donc utile pour **savoir** si le code passe — jamais pour
+faire merger.
+
+⚠️ Et **ne pas fermer/rouvrir la PR** pour forcer un événement : ça désarme l'auto-merge, et
+l'événement `reopened` subira le même retard que les autres.
+
 ## When the chain ships something broken (rollback)
 
 The same automation that makes shipping free makes an outage self-perpetuating: a rollback
