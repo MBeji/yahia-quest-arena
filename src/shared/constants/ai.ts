@@ -242,6 +242,49 @@ export const AI_MODEL_PRICES: Readonly<Record<string, AiModelPrice>> = {
   "glm-5.2": { inputPerMTokUsd: 1.4, outputPerMTokUsd: 4.4, cachedInputPerMTokUsd: 0.26 },
   "glm-4.5": { inputPerMTokUsd: 0.6, outputPerMTokUsd: 2.2, cachedInputPerMTokUsd: 0.06 },
   "glm-4.5-air": { inputPerMTokUsd: 0.2, outputPerMTokUsd: 1.1, cachedInputPerMTokUsd: 0.03 },
+  // — Mistral, joignable par son endpoint compatible OpenAI. Relevé le
+  //   2026-08-26 sur docs.mistral.ai/inference/pricing. Aucun palier de taille
+  //   ici : un seul tarif par modèle, donc rien à arbitrer contrairement à xAI
+  //   et Google.
+  //
+  //   ⚠️ LES IDENTIFIANTS SONT LES INSTANTANÉS DATÉS, PAS LES ALIAS `-latest`,
+  //   pour la raison exacte que dit le ⚠️ d'{@link AI_CURATED_MODELS} : nos deux
+  //   adaptateurs retiennent l'id que le fournisseur ÉCHO, et La Plateforme y
+  //   résout l'alias. `mistral-large-latest` ne matcherait donc jamais — un
+  //   no-op silencieux, le pire des défauts. Vérifiable a posteriori dans la
+  //   colonne `model` d'`ai_usage_events` (R-13).
+  //
+  //   Ces lignes non plus n'ont pas fait bouger {@link AI_MODEL_PRICES_AS_OF}.
+  "mistral-large-3-25-12": {
+    inputPerMTokUsd: 0.5,
+    outputPerMTokUsd: 1.5,
+    cachedInputPerMTokUsd: 0.05,
+  },
+  "mistral-medium-3-5-26-04": {
+    inputPerMTokUsd: 1.5,
+    outputPerMTokUsd: 7.5,
+    cachedInputPerMTokUsd: 0.15,
+  },
+  "mistral-small-4-0-26-03": {
+    inputPerMTokUsd: 0.15,
+    outputPerMTokUsd: 0.6,
+    cachedInputPerMTokUsd: 0.015,
+  },
+  "ministral-3-14b-25-12": {
+    inputPerMTokUsd: 0.2,
+    outputPerMTokUsd: 0.2,
+    cachedInputPerMTokUsd: 0.02,
+  },
+  "ministral-3-8b-25-12": {
+    inputPerMTokUsd: 0.15,
+    outputPerMTokUsd: 0.15,
+    cachedInputPerMTokUsd: 0.015,
+  },
+  "ministral-3-3b-25-12": {
+    inputPerMTokUsd: 0.1,
+    outputPerMTokUsd: 0.1,
+    cachedInputPerMTokUsd: 0.01,
+  },
 } as const;
 
 /**
@@ -301,6 +344,21 @@ export const AI_CURATED_MODELS: Readonly<Record<AiProviderId, readonly string[]>
     "grok-4.6",
     "gemini-2.5-pro",
     "gemini-2.5-flash",
+    // Second tour de la même décision, 2026-08-26 : GLM et Mistral manquaient à
+    // l'appel. `glm-5.2` était déjà tarifé et suggéré par son préréglage sans
+    // pouvoir alimenter le pot — la seule famille du parc à être proposée et
+    // exclue à la fois. Pour Mistral, la grille arrive avec cette liste.
+    //
+    // ⚠️ `glm-5.3` n'y est pas, et ne peut PAS y être : la règle du tarif
+    // s'applique, et il n'en a toujours pas de relevé (voir la grille). Curer
+    // sans tarifer couperait le porteur à ~4 % de sa dépense.
+    "glm-5.2",
+    "mistral-large-3-25-12",
+    "mistral-medium-3-5-26-04",
+    "mistral-small-4-0-26-03",
+    "ministral-3-14b-25-12",
+    "ministral-3-8b-25-12",
+    "ministral-3-3b-25-12",
   ],
 } as const;
 
