@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { AI_MAX_TOKENS } from "@/shared/constants/ai";
+import { AI_DEFAULT_MODELS, AI_MAX_TOKENS, AI_PROVIDER_PRESETS } from "@/shared/constants/ai";
 import { makeFakeAiProvider } from "../fake.server";
 import { logAiRequest, logAiUsage } from "../usage.server";
 import { sealSecret, renderBlocks, cacheBoundaryIndex, revealSecret } from "../types";
@@ -101,18 +101,18 @@ describe("les kill-switches lisent l'environnement à CHAQUE appel (§3.10)", ()
     expect(isPlatformPathEnabled()).toBe(true);
   });
 
-  it("sans ANTHROPIC_API_KEY, seul le BYOK fonctionne", async () => {
+  it("sans clé plateforme, seul le BYOK fonctionne", async () => {
     vi.stubEnv("AI_KEY_ENC_KEY", "x".repeat(44));
     const { isByokEnabled, isPlatformPathEnabled, platformCredential } = await load();
     expect(isByokEnabled()).toBe(true);
     expect(isPlatformPathEnabled()).toBe(false);
-    expect(platformCredential({ fast: "a", rich: "b" })).toBeNull();
+    expect(platformCredential()).toBeNull();
   });
 
   it("le crédential plateforme sort de l'environnement, pas du coffre", async () => {
     vi.stubEnv("ANTHROPIC_API_KEY", "sk-platform-123");
     const { platformCredential } = await load();
-    const credential = platformCredential({ fast: "a", rich: "b" });
+    const credential = platformCredential();
     expect(credential?.provider).toBe("anthropic");
     expect(revealSecret(credential!.secret)).toBe("sk-platform-123");
   });
@@ -130,6 +130,146 @@ describe("les kill-switches lisent l'environnement à CHAQUE appel (§3.10)", ()
     vi.stubEnv("AI_PLATFORM_DAILY_BUDGET_USD", "12.5");
     const reloaded = await load();
     expect(reloaded.platformDailyBudgetUsd()).toBe(12.5);
+  });
+});
+
+/**
+ * LA CLÉ PLATEFORME EST AGNOSTIQUE, comme celle d'une famille.
+ *
+ * Le chemin plateforme était câblé sur Anthropic à trois endroits : le nom de la
+ * variable, le `provider` du crédential, et deux identifiants de modèle écrits
+ * en dur dans l'orchestrateur. Une famille pouvait brancher DeepSeek, Grok, Kimi
+ * ou GLM ; nous, non — alors que le moteur, lui, savait déjà le faire.
+ *
+ * Ces tests fixent les deux moitiés de la garantie : l'ouverture (n'importe quel
+ * préréglage, n'importe quelle adresse compatible, n'importe quel modèle) et le
+ * REFUS de deviner (un environnement à moitié rempli éteint le chemin en NOMMANT
+ * la cause, il ne retombe pas sur Anthropic avec la clé d'un autre).
+ */
+describe("le fournisseur plateforme se résout dans l'environnement", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.resetModules();
+  });
+
+  async function load() {
+    vi.resetModules();
+    return import("../provider.server");
+  }
+
+  it("sans rien : Anthropic, et les modèles de son préréglage", async () => {
+    // La compatibilité qui compte : la production a `ANTHROPIC_API_KEY` posée et
+    // AUCUNE des nouvelles variables. Le comportement doit être inchangé.
+    vi.stubEnv("ANTHROPIC_API_KEY", "sk-platform");
+    const { resolvePlatformProvider, platformCredential } = await load();
+    const resolved = resolvePlatformProvider();
+    expect(resolved.ok && resolved.config).toEqual({
+      presetId: "anthropic",
+      provider: "anthropic",
+      baseUrl: null,
+      models: AI_DEFAULT_MODELS.anthropic,
+    });
+    // Les deux modèles que l'orchestrateur écrivait en dur, désormais lus ici.
+    expect(platformCredential()?.models).toEqual(AI_DEFAULT_MODELS.anthropic);
+  });
+
+  it("AI_PLATFORM_API_KEY prime, et suffit seule", async () => {
+    vi.stubEnv("AI_PLATFORM_API_KEY", "sk-neutre");
+    vi.stubEnv("ANTHROPIC_API_KEY", "sk-ancienne");
+    const { platformCredential } = await load();
+    expect(revealSecret(platformCredential()!.secret)).toBe("sk-neutre");
+  });
+
+  it.each([
+    ["deepseek", "https://api.deepseek.com", "deepseek-v4-flash"],
+    ["xai", "https://api.x.ai/v1", "grok-4-fast"],
+    ["moonshot", "https://api.moonshot.ai/v1", "kimi-k3"],
+    ["zai", "https://api.z.ai/api/openai/v1", "glm-4.5-air"],
+  ])("le préréglage %s branche son adresse et ses modèles", async (id, baseUrl, fast) => {
+    vi.stubEnv("AI_PLATFORM_API_KEY", "sk-x");
+    vi.stubEnv("AI_PLATFORM_PROVIDER", id);
+    const { platformCredential, isPlatformPathEnabled } = await load();
+    const credential = platformCredential();
+    expect(isPlatformPathEnabled()).toBe(true);
+    expect(credential?.provider).toBe("openai_compatible");
+    expect(credential?.baseUrl).toBe(baseUrl);
+    expect(credential?.models.fast).toBe(fast);
+  });
+
+  it("les modèles de l'environnement surchargent ceux du préréglage", async () => {
+    vi.stubEnv("AI_PLATFORM_API_KEY", "sk-x");
+    vi.stubEnv("AI_PLATFORM_PROVIDER", "xai");
+    // Le modèle que nous avons mesuré, et qui n'est pas dans la grille de prix :
+    // la saisie libre reste ouverte des deux côtés (D-11).
+    vi.stubEnv("AI_PLATFORM_MODEL_RICH", "grok-4.6");
+    const { platformCredential } = await load();
+    expect(platformCredential()?.models).toEqual({ fast: "grok-4-fast", rich: "grok-4.6" });
+  });
+
+  it("« custom » ouvre n'importe quelle adresse compatible (Q-4)", async () => {
+    vi.stubEnv("AI_PLATFORM_API_KEY", "sk-x");
+    vi.stubEnv("AI_PLATFORM_PROVIDER", "custom");
+    vi.stubEnv("AI_PLATFORM_BASE_URL", "https://api.exemple.test/v1");
+    vi.stubEnv("AI_PLATFORM_MODEL_FAST", "petit");
+    vi.stubEnv("AI_PLATFORM_MODEL_RICH", "grand");
+    const { platformCredential } = await load();
+    expect(platformCredential()).toMatchObject({
+      provider: "openai_compatible",
+      baseUrl: "https://api.exemple.test/v1",
+      models: { fast: "petit", rich: "grand" },
+    });
+  });
+
+  it("une valeur collée avec une espace ou un retour à la ligne reste valide", async () => {
+    vi.stubEnv("AI_PLATFORM_API_KEY", "  sk-x\n");
+    vi.stubEnv("AI_PLATFORM_PROVIDER", " deepseek ");
+    vi.stubEnv("AI_PLATFORM_BASE_URL", "https://api.deepseek.com\n");
+    const { platformCredential } = await load();
+    expect(platformCredential()?.baseUrl).toBe("https://api.deepseek.com");
+    expect(revealSecret(platformCredential()!.secret)).toBe("sk-x");
+  });
+
+  it.each([
+    ["no_key", {}],
+    ["unknown_preset", { AI_PLATFORM_API_KEY: "sk-x", AI_PLATFORM_PROVIDER: "gemini" }],
+    ["missing_base_url", { AI_PLATFORM_API_KEY: "sk-x", AI_PLATFORM_PROVIDER: "custom" }],
+    [
+      "insecure_base_url",
+      {
+        AI_PLATFORM_API_KEY: "sk-x",
+        AI_PLATFORM_PROVIDER: "custom",
+        AI_PLATFORM_BASE_URL: "http://api.exemple.test/v1",
+      },
+    ],
+    [
+      "missing_model",
+      {
+        AI_PLATFORM_API_KEY: "sk-x",
+        AI_PLATFORM_PROVIDER: "custom",
+        AI_PLATFORM_BASE_URL: "https://api.exemple.test/v1",
+      },
+    ],
+  ])("un environnement incomplet éteint le chemin en nommant « %s »", async (issue, env) => {
+    for (const [name, value] of Object.entries(env)) vi.stubEnv(name, value);
+    const { resolvePlatformProvider, isPlatformPathEnabled, platformCredential } = await load();
+    const resolved = resolvePlatformProvider();
+    expect(resolved.ok).toBe(false);
+    expect(!resolved.ok && resolved.issue).toBe(issue);
+    // La conséquence, à chaque fois : pas de porte. Jamais un repli silencieux
+    // sur Anthropic, qui recevrait la clé d'un autre fournisseur.
+    expect(isPlatformPathEnabled()).toBe(false);
+    expect(platformCredential()).toBeNull();
+  });
+
+  it("chaque préréglage est branchable tel quel, sauf « custom » qui exige son adresse", async () => {
+    // Le test qui rattrapera l'oubli du jour où un préréglage sera ajouté sans
+    // adresse ni modèles : l'écran famille le proposerait, la plateforme non.
+    for (const preset of AI_PROVIDER_PRESETS) {
+      vi.stubEnv("AI_PLATFORM_API_KEY", "sk-x");
+      vi.stubEnv("AI_PLATFORM_PROVIDER", preset.id);
+      const { resolvePlatformProvider } = await load();
+      expect(resolvePlatformProvider().ok, preset.id).toBe(!preset.freeform);
+    }
   });
 });
 

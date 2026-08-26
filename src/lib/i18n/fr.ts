@@ -1136,6 +1136,7 @@ export const fr: TranslationKeys = {
     adminStudents: "Élèves activés",
     adminCalls: "Appels sur 30 jours",
     adminQuality: "Qualité par modèle (30 j)",
+    adminPlatform: "Clé plateforme",
     adminDenied: "Accès réservé aux administrateurs.",
     errKeyInvalid: "Votre fournisseur a refusé cette clé.",
     errModelUnknown: "Ce modèle n'existe pas chez ce fournisseur.",

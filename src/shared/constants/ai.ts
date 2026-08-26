@@ -205,6 +205,19 @@ export const AI_MODEL_PRICES: Readonly<Record<string, AiModelPrice>> = {
   },
   // — Moonshot (Kimi) —
   "kimi-k3": { inputPerMTokUsd: 3, outputPerMTokUsd: 15, cachedInputPerMTokUsd: 0.3 },
+  // — xAI (Grok). `grok-4.6` est volontairement ABSENT, pour la raison exacte de
+  //   `glm-5.3` plus bas : c'est le modèle que nous avons MESURÉ (59 s sur un
+  //   quiz de sept questions, cf. AI_TIMEOUT_MS), pas un modèle dont nous ayons
+  //   relevé un tarif par token. La saisie libre continue de l'accepter (D-11) —
+  //   il sera simplement estimé au tarif de repli, ce qui coupe tôt mais ne ment
+  //   pas dans le sens dangereux.
+  //   Les deux lignes ci-dessous sont entrées le 2026-08-26 et
+  //   {@link AI_MODEL_PRICES_AS_OF} n'a PAS bougé : le reste de la grille n'a pas
+  //   été re-relevé ce jour-là, et une date qui avancerait sans relevé serait un
+  //   fait inventé. Annoncer la grille plus vieille qu'elle n'est se trompe du
+  //   côté sûr — l'inverse pas.
+  "grok-4": { inputPerMTokUsd: 3, outputPerMTokUsd: 15, cachedInputPerMTokUsd: 0.75 },
+  "grok-4-fast": { inputPerMTokUsd: 0.2, outputPerMTokUsd: 0.5, cachedInputPerMTokUsd: 0.05 },
   // — Z.ai (GLM). `glm-5.3` est volontairement ABSENT : aucun tarif par token
   //   n'est publié à ce jour, et inventer un chiffre serait pire que le repli
   //   haut, qui au moins ne ment pas dans le sens dangereux.
@@ -335,6 +348,24 @@ export const AI_PROVIDER_PRESETS: readonly AiProviderPreset[] = [
     suggested: ["glm-5.2", "glm-4.5", "glm-4.5-air"],
   },
   {
+    // xAI. Nommé le 2026-08-26, en retard sur l'usage : `grok-4.6` était déjà
+    // branché par la porte « Autre » — c'est LUI qui a servi à mesurer le délai
+    // de la Forge (cf. AI_TIMEOUT_MS). Un fournisseur qu'on utilise pour
+    // calibrer le produit et qu'on n'affiche pas est exactement l'écart que les
+    // préréglages existent pour fermer.
+    //
+    // Les modèles proposés sont ceux dont le tarif est relevé ; `grok-4.6` reste
+    // accessible à la saisie libre, sans être suggéré (D-11 + la règle ⚠️
+    // ci-dessus : ne jamais pousser un porteur vers le tarif de repli).
+    id: "xai",
+    label: "Grok (xAI)",
+    provider: "openai_compatible",
+    baseUrl: "https://api.x.ai/v1",
+    freeform: false,
+    models: { fast: "grok-4-fast", rich: "grok-4" },
+    suggested: ["grok-4", "grok-4-fast"],
+  },
+  {
     // La porte de Q-4, explicitement. Sans cette entrée, l'écran redeviendrait
     // une liste blanche déguisée — ce que l'arbitrage a précisément refusé.
     id: "custom",
@@ -375,6 +406,52 @@ export function presetForCredential(
 export function isCuratedModel(provider: AiProviderId, model: string): boolean {
   return AI_CURATED_MODELS[provider].includes(model);
 }
+
+// ---------------------------------------------------------------------------
+// 3ter. La clé PLATEFORME — la même liberté que celle d'une famille (é11, A5)
+// ---------------------------------------------------------------------------
+
+/**
+ * LES DEUX PAYEURS CHOISISSENT DANS LA MÊME LISTE
+ * ---------------------------------------------------------------------------
+ * Le chemin plateforme a longtemps été câblé sur Anthropic : la clé s'appelait
+ * `ANTHROPIC_API_KEY`, le crédential naissait avec `provider: "anthropic"` et
+ * les deux modèles étaient écrits en dur dans l'orchestrateur — donc HORS de ce
+ * fichier, contre la règle qui ouvre le module. Une famille pouvait brancher
+ * DeepSeek, Kimi, GLM ou Grok ; nous, non.
+ *
+ * L'asymétrie qui reste est la seule qui soit structurelle : la clé d'une
+ * famille vit au coffre, la nôtre est une variable d'environnement — « nous ne
+ * stockons pas notre propre clé dans la base que nous exploitons ». Le CHOIX du
+ * fournisseur, lui, n'avait aucune raison de différer : c'est
+ * {@link AI_PROVIDER_PRESETS}, la même liste, préréglages et porte « Autre »
+ * comprises.
+ *
+ * Résolution : `src/shared/integrations/ai/provider.server.ts`.
+ */
+export const AI_PLATFORM_DEFAULT_PRESET_ID = "anthropic" as const;
+
+/**
+ * Pourquoi le chemin plateforme est éteint, quand il l'est.
+ *
+ * `no_key` n'est pas une panne : c'est l'état par défaut, et le produit y est
+ * complet (R-1). Les quatre autres le sont — une clé a été posée et le chemin
+ * reste fermé. Sans ce mot, une faute de frappe dans une adresse se lit
+ * `AI_MODE_OFF` côté élève et RIEN côté exploitant ; elle se découvre à
+ * l'absence d'appels, des jours plus tard.
+ *
+ * Le vocabulaire vit ici — donc isomorphe — parce que la console admin doit
+ * pouvoir le lire sans importer un module serveur.
+ */
+export const AI_PLATFORM_ISSUES = [
+  "no_key",
+  "unknown_preset",
+  "missing_base_url",
+  "insecure_base_url",
+  "missing_model",
+] as const;
+
+export type AiPlatformIssue = (typeof AI_PLATFORM_ISSUES)[number];
 
 // ---------------------------------------------------------------------------
 // 4. Argent — plafonds, alertes (R-11, Q-6)
