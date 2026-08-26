@@ -1368,6 +1368,7 @@ export const ar: TranslationKeys = {
     adminStudents: "تلاميذ مفعّلون",
     adminCalls: "الطلبات خلال 30 يوما",
     adminQuality: "الجودة حسب النموذج (30 يوما)",
+    adminPlatform: "مفتاح المنصّة",
     adminDenied: "مخصّص للمشرفين فقط.",
     errKeyInvalid: "رفض مزوّدك هذا المفتاح.",
     errModelUnknown: "هذا النموذج غير موجود لدى هذا المزوّد.",

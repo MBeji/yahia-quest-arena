@@ -349,7 +349,13 @@ leur valeur — c'est la seule décision que le calendrier prend à notre place.
    après la rentrée, l'étage IA traverse le trimestre sans preuve. **C'est un geste, pas un
    chantier.** ✅ Prérequis levés : `AI_KEY_ENC_KEY` posée en production le 2026-08-22, é29
    déployée, é11 lot 1 en prod, coupure plateforme bornée à 5 $/j (#823). ⚠️ Une variable Vercel
-   ne prend effet qu'au **déploiement suivant sa pose**.
+   ne prend effet qu'au **déploiement suivant sa pose**. **Le geste a changé le 2026-08-26** : la
+   clé plateforme n'est plus câblée sur Anthropic. `AI_PLATFORM_API_KEY` + `AI_PLATFORM_PROVIDER`
+   (`anthropic`, `openai`, `deepseek`, `xai`, `moonshot`, `zai`, `custom`) la branchent sur le
+   **même choix de fournisseurs que l'écran d'une famille** — le pilote peut donc tourner au
+   tarif le moins cher plutôt qu'à celui d'Opus. `ANTHROPIC_API_KEY` reste acceptée en repli.
+   ⚠️ Une configuration incomplète éteint le chemin **en silence** (l'élève retombe sur le
+   produit déterministe) : le motif est nommé dans `/admin/ia` → « Clé plateforme ».
 2. **C4bis étape 2 — publier le tagging, puis l'étendre.** ⚠️ **Le chiffre a changé le
    2026-08-25 et la question aussi.** Le lot 0bis de é30 (privé #241) a lu les 297 questions
    muettes une à une : couverture **521 → 662 des 818** questions de `math` 9ᵉ, soit **64 % →

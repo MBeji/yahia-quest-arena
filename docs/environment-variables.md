@@ -210,15 +210,47 @@ d'une famille (BYOK) ou la clé plateforme. Le mode « éteint » est l'état pa
 défaut de tout le monde, et le produit y est complet — aucune variable ci-dessous
 n'est requise pour faire tourner l'application.
 
-| Variable                       | Scope                 | Notes                                                                                                                       |
-| ------------------------------ | --------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `AI_KEY_ENC_KEY`               | server only (runtime) | **secret** — KEK du coffre, 32 octets en base64. Absente ⇒ le chemin **famille** est éteint ; le chemin plateforme continue |
-| `AI_KEY_ENC_KEY_PREVIOUS`      | server only (runtime) | **secret** — KEK précédente pendant une rotation (optionnelle, retirée après)                                               |
-| `AI_MODE_ENABLED`              | server (runtime)      | Kill-switch **global** de la porte IA. Défaut `true` ; `0`/`false` éteint les deux payeurs                                  |
-| `AI_BYOK_ENABLED`              | server (runtime)      | Kill-switch du **seul** chemin famille. Défaut `true` si `AI_KEY_ENC_KEY` est là                                            |
-| `AI_FAKE_PROVIDER`             | server (runtime)      | `1` ⇒ fournisseur factice (CI, e2e, dev). Court-circuite tout appel réel                                                    |
-| `ANTHROPIC_API_KEY`            | server only (runtime) | **secret** — clé **plateforme** (chemin étude 11, budget A5). Absente ⇒ seul le BYOK fonctionne                             |
-| `AI_PLATFORM_DAILY_BUDGET_USD` | server (runtime)      | Plafond plateforme par jour (défaut `5`). Ne s'applique **jamais** au payeur `family`                                       |
+| Variable                       | Scope                 | Notes                                                                                                                         |
+| ------------------------------ | --------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `AI_KEY_ENC_KEY`               | server only (runtime) | **secret** — KEK du coffre, 32 octets en base64. Absente ⇒ le chemin **famille** est éteint ; le chemin plateforme continue   |
+| `AI_KEY_ENC_KEY_PREVIOUS`      | server only (runtime) | **secret** — KEK précédente pendant une rotation (optionnelle, retirée après)                                                 |
+| `AI_MODE_ENABLED`              | server (runtime)      | Kill-switch **global** de la porte IA. Défaut `true` ; `0`/`false` éteint les deux payeurs                                    |
+| `AI_BYOK_ENABLED`              | server (runtime)      | Kill-switch du **seul** chemin famille. Défaut `true` si `AI_KEY_ENC_KEY` est là                                              |
+| `AI_FAKE_PROVIDER`             | server (runtime)      | `1` ⇒ fournisseur factice (CI, e2e, dev). Court-circuite tout appel réel                                                      |
+| `AI_PLATFORM_API_KEY`          | server only (runtime) | **secret** — clé **plateforme** (chemin étude 11, budget A5), quel que soit le fournisseur. Absente ⇒ seul le BYOK fonctionne |
+| `ANTHROPIC_API_KEY`            | server only (runtime) | **secret** — l'ancien nom de la même clé, toujours accepté en repli. `AI_PLATFORM_API_KEY` prime                              |
+| `AI_PLATFORM_PROVIDER`         | server (runtime)      | Préréglage du fournisseur plateforme : `anthropic` (défaut), `openai`, `deepseek`, `xai`, `moonshot`, `zai`, `custom`         |
+| `AI_PLATFORM_BASE_URL`         | server (runtime)      | Adresse compatible OpenAI. Facultative avec un préréglage nommé (elle le surcharge), **obligatoire** avec `custom`            |
+| `AI_PLATFORM_MODEL_FAST`       | server (runtime)      | Modèle du palier `fast`. Défaut : celui du préréglage ; **obligatoire** avec `custom`                                         |
+| `AI_PLATFORM_MODEL_RICH`       | server (runtime)      | Modèle du palier `rich`. Défaut : celui du préréglage ; **obligatoire** avec `custom`                                         |
+| `AI_PLATFORM_DAILY_BUDGET_USD` | server (runtime)      | Plafond plateforme par jour (défaut `5`). Ne s'applique **jamais** au payeur `family`                                         |
+
+**La clé plateforme est agnostique au fournisseur, comme celle d'une famille.**
+Elle a longtemps été câblée sur Anthropic — le nom de la variable, le `provider`
+du crédential et deux identifiants de modèle écrits en dur dans l'orchestrateur.
+Une famille pouvait brancher DeepSeek, Grok, Kimi ou GLM depuis `/parametrage` ;
+nous, non, alors que le moteur savait déjà le faire. Les cinq variables ci-dessus
+se résolvent contre **les mêmes préréglages** que ce formulaire
+([`src/shared/constants/ai.ts`](../src/shared/constants/ai.ts) →
+`AI_PROVIDER_PRESETS`), porte « Autre » (`custom`) comprise.
+
+Basculer la plateforme sur DeepSeek, par exemple, ne demande aucun déploiement de
+code — deux variables :
+
+```bash
+AI_PLATFORM_PROVIDER=deepseek
+AI_PLATFORM_API_KEY=sk-…
+```
+
+⚠️ **Une configuration incomplète éteint le chemin plateforme en silence** : pas
+d'erreur à l'écran, l'élève retombe simplement sur le produit déterministe (R-1),
+et le seul symptôme est une absence d'appels. Le motif est donc affiché dans
+`/admin/ia` → « Clé plateforme » : `unknown_preset` (préréglage mal orthographié),
+`missing_base_url` / `missing_model` (`custom` sans son adresse ou sans ses deux
+modèles), `insecure_base_url` (adresse en `http://` — condition 1 de R-6).
+Un préréglage inconnu est **refusé, pas rattrapé** : retomber sur Anthropic
+enverrait la clé d'un autre fournisseur à l'adresse d'Anthropic, et le `401` qui
+suivrait ne dirait pas pourquoi.
 
 ⚠️ **Aucune de ces variables n'est préfixée `VITE_`, et aucune ne doit l'être.**
 Un préfixe `VITE_` inline la valeur dans le bundle client au build : ce serait la

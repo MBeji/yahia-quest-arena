@@ -176,6 +176,9 @@ describe("R-6 — l'écran ne propose pas une adresse que le serveur refuserait"
     expect(screen.getByTestId("ai-preset-deepseek")).toBeInTheDocument();
     expect(screen.getByTestId("ai-preset-moonshot")).toBeInTheDocument();
     expect(screen.getByTestId("ai-preset-zai")).toBeInTheDocument();
+    // xAI a été nommé en retard sur l'usage : `grok-4.6` servait déjà à calibrer
+    // le délai de la Forge, branché par la porte « Autre ».
+    expect(screen.getByTestId("ai-preset-xai")).toBeInTheDocument();
 
     await userEvent.click(screen.getByTestId("ai-preset-deepseek"));
     expect(screen.getByTestId("ai-base-url")).toHaveValue("https://api.deepseek.com");
