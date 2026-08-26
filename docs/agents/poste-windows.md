@@ -291,6 +291,34 @@ contenu normalisé est déjà celui du blob. `npm run eol:check` (dans `verify` 
 échoue désormais **avant** les tests, avec la liste des fichiers, au lieu de laisser chercher
 dans une trace rolldown. Sur Linux/CI c'est un no-op.
 
+### ⚠️ La même trace rolldown a une SECONDE cause : un Node trop vieux
+
+Constaté le 2026-08-26. Symptôme identique au point 1 ci-dessus, au caractère près —
+`RolldownError: Parse failure: Invalid Character \`!\``sur`.claude/hooks/precommit-checks.mjs:1`, shebang rejeté derrière l'interop CJS. Mais
+`npm run eol:fix`a bien tourné,`eol:check`et`harness:check`sont repassés au vert, et
+**l'erreur est restée**. Ce n'était pas un CRLF : le shell servait **Node 22.23.1** alors que`.nvmrc` exige **24**. La même suite passe — 28 tests — dès qu'on repasse sur le Node du socle.
+
+Le Node 24 est déjà installé sur le poste, en `/c/Program Files/nodejs` ; c'est le shim fnm qui
+le masque, `fnm list` n'ayant que `v22`. D'où le réflexe, à faire **avant** de conclure quoi que
+ce soit sur ce fichier :
+
+```bash
+node -v                                        # 22.x ⇒ c'est ça, pas le CRLF
+export PATH="/c/Program Files/nodejs:$PATH"    # 24.x, celui du .nvmrc et de la CI
+hash -r
+```
+
+**Ce qui rend le piège coûteux, c'est qu'il ment dans les deux sens.** Le hook `pre-push`, lui,
+n'est **pas** affecté : git le lance avec le PATH système, donc sous Node 24 — un push part
+normalement pendant que le shell affiche un gate rouge. On peut donc croire le gate cassé alors
+qu'il ne l'est pas, ou croire avoir contourné un vrai rouge alors qu'on ne l'a jamais rencontré.
+Dans les deux cas la conclusion « il faut `--no-verify` » est fausse, et le DoD §2 l'interdit.
+
+Ordre de diagnostic, donc : `node -v` d'abord, `eol:fix` ensuite, et seulement après chercher
+dans le code. Contrôle négatif utile —
+`npx vitest run scripts/harness/__tests__/precommit-checks.test.mjs` seul échoue à l'identique
+sur un arbre **propre**, ce qui prouve que ce n'est pas le diff en cours.
+
 Corollaire : ne plus committer le résultat d'un `npm run harness:sync` lancé pour « corriger »
 une dérive de miroir sur ce poste — lancer `eol:fix` d'abord ; s'il ne reste plus de dérive,
 c'était ce piège. Si un `harness:sync` a déjà réécrit le miroir : `git checkout -- .agents/skills/`.
