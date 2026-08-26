@@ -1,10 +1,16 @@
 import { defineConfig } from "vitest/config";
 import path from "path";
 
+// `import.meta.dirname` plutôt que `__dirname` : Vite 8 avertit à chaque run que
+// `configLoader: 'native'` — le futur défaut — ne sait pas fournir `__dirname`. Le
+// paquet est `"type": "module"`, donc la forme ESM est la seule des deux qui vaudra
+// encore quand le défaut basculera.
+const here = import.meta.dirname;
+
 export default defineConfig({
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(here, "./src"),
     },
   },
   // Unit tests must stay hermetic: vitest runs in Vite mode "test", so a repo-root
@@ -12,7 +18,7 @@ export default defineConfig({
   // loaded into import.meta.env (client.ts reads VITE_SUPABASE_URL). Point envDir
   // at a directory with no .env* files. The process.env channel of the same leak
   // (scripts' _env.mjs dotenv side effect) is purged in src/__tests__/setup.ts.
-  envDir: path.resolve(__dirname, "./src/__tests__"),
+  envDir: path.resolve(here, "./src/__tests__"),
   test: {
     globals: true,
     environment: "jsdom",
@@ -40,7 +46,7 @@ export default defineConfig({
     // ref guards) whose regressions only ever surfaced in the nightly — unit-test
     // them here alongside the app.
     include: ["src/**/*.{test,spec}.{ts,tsx}", "scripts/**/__tests__/*.test.mjs"],
-    exclude: ["src/__tests__/deprecated/**"],
+
     coverage: {
       provider: "v8",
       reporter: ["text", "json-summary", "html"],

@@ -49,10 +49,10 @@ plus, for genuine defects, a **tracking issue** — a human stays in the loop.
   - `src/features/**`, `src/lib/**`, `src/hooks/**`, `src/shared/**` → **Vitest** unit/integration.
   - `supabase/migrations/**`, RPCs, RLS, grants → **pgTAP** (`supabase/tests/*.sql`).
   - routes / UI shell / user journeys → **Playwright e2e** (`e2e/`), public vs authed.
-  - `content/**` → content QA (`content:qa:strict`) — not behaviour tests, flag separately. Pedagogical
-    fidelity (scope, and **completeness vs the combined CNP sources — teacher guide + manuel élève**, the
-    student textbook being an indispensable complement) is **`content-audit`**'s job, not this skill's —
-    point school-content drift there rather than encoding it as a unit test.
+  - `content/**` → **rien ici** : depuis l'étude 24 le corpus vit dans le dépôt privé, et
+    `leak:check` fait échouer le gate s'il réapparaît. Sa QA (`content:qa:strict`) et sa fidélité
+    pédagogique (`content-audit`) tournent là-bas. Ce qui reste ici est le **moteur**
+    (`scripts/content/**`, `src/shared/content/**`) — lui se teste en Vitest comme le reste.
 - Ignore pure docs/comment changes.
 
 ### 2. Run the gate and the slow suites to see current truth
@@ -123,6 +123,6 @@ related code, the i18n catalogs, the route, or asking via the PR.
   sleeps; mirror the existing page-object / pgTAP conventions).
 - Tests travel with the code they cover; coverage must not regress.
 - Defers to: **`verify`** (the gate), **`code-review`** (reading the diff for
-  correctness). For content changes, run **`content:qa:strict`** rather than
-  inventing behaviour tests; for pedagogical fidelity and completeness vs the
-  **combined CNP sources (teacher guide + manuel élève)**, defer to **`content-audit`**.
+  correctness). ⚠️ `content:qa:strict` et `content-audit` ne sont **plus disponibles ici**
+  (partis au dépôt privé avec le corpus, étude 24) : une dérive de contenu se signale, elle
+  ne se teste pas depuis ce dépôt.

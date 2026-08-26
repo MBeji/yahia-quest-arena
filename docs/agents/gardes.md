@@ -115,6 +115,40 @@ l'agent gardant les branches qui demandent un jugement. C'est ce que fait `upgra
 réparation) — et au passage, un piège du dépôt encodé en assertion de script (npm 10 jamais 11,
 bloc `overrides` intact) vaut mieux que le même piège écrit dans un prompt.
 
+## Quand une garde rougit sans qu'aucune PR ne la répare
+
+Un cron rouge sur un arbre qui n'a pas bougé ne désigne presque jamais le dépôt. L'échelle de
+traitement est dans [`zero-intervention.md`](./zero-intervention.md) ; ce qui suit est le
+catalogue des signatures déjà rencontrées, pour que la suivante ne coûte pas une enquête.
+
+### `JWT issued at future` — l'horloge du fournisseur, pas la nôtre
+
+**Signature.** `[reports] Failed to read bug_reports: JWT issued at future` (ou
+`content_reports`), sur `report-triage.yml` et `report-apply.yml`, par salves de quelques
+heures, puis vert de lui-même.
+
+**Relevé du 2026-08-26** : quatre runs morts sur le même message — triage à 02:03, 05:00 et
+09:06, apply à 07:29 — puis vert à 13:29 sans qu'un octet ait changé de part et d'autre. Le
+secret `PROD_SUPABASE_SERVICE_ROLE_KEY` datait du 2026-07-27 : ni rotation, ni diff, ni
+déploiement dans la fenêtre.
+
+**Ce que ça veut dire.** Le fournisseur refuse un jeton dont l'`iat` est en avance sur SON
+horloge. Rien ici n'émet ce jeton autrement, et aucune PR ne le répare : c'est une entrée hors
+dépôt au sens du playbook. **Ne pas** reposer le secret, **ne pas** chercher la panne dans le
+diff du jour.
+
+**Ce qui est à nous, et qui est fait** (`scripts/shared/supabase-transient.mjs`) : un blip ne
+coûte plus un cron rouge — la lecture est rejouée jusqu'à trois fois (~14 s au total) sur une
+liste explicite d'erreurs transitoires ; et une panne longue se lit du premier coup d'œil,
+le message final renvoyant ici au lieu de laisser ré-enquêter. Les erreurs qui sont NÔTRES —
+RLS, schéma, clé invalide, `JWT expired` — ne sont jamais rejouées : les rejouer ne ferait que
+retarder un rouge mérité de quatorze secondes.
+
+**Si la salve dure.** Elle se referme seule ; l'issue de la garde des gardes se referme elle
+aussi dès qu'une fenêtre entière est verte. Ce qui mérite un geste, c'est une salve qui
+franchit la journée : là, la file de signalements n'est plus triée, et c'est ça le coût réel —
+pas le rouge.
+
 ## Sécurité
 
 - Les gardes n'ont que `GITHUB_TOKEN` (scopé au dépôt) et le jeton d'abonnement. **Jamais** de

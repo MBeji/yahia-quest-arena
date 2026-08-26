@@ -161,11 +161,14 @@ cocher ses cases.**
   é07 (le lot 3 visait la vague 1, faite — 1 362 questions), c'est une ligne du fil CONTENU.
 - **é29 passe dans `EtudeRealisé/`** — son en-tête disait `LIVRÉE` depuis le 2026-08-22 sans que
   son dossier bouge.
-- **é11 est à 6 lots sur 8** — lot 0 par **é29 lot 1**, lot 1 (#816, correctif pgTAP #817),
-  lots 2·3·4·5 (#823), **moitié du lot 7** (la console admin vient de é29 lot 5). **Restent** le
-  **lot 6** (bilans hebdo : `tutor_digests` et son workflow n'existent nulle part) et l'autre
-  moitié du 7 (compteur d'énergie côté élève, hit-rate du cache d'explications). Détail par lot :
-  ligne « Tuteur IA » du §3.
+- **é11 est à 8 lots sur 8** — lot 0 par **é29 lot 1**, lot 1 (#816, correctif pgTAP #817),
+  lots 2·3·4·5 (#823), **lots 6 et 7 par #844** (2026-08-24). ⚠️ Cette ligne a annoncé pendant
+  deux jours que « `tutor_digests` et son workflow n'existent nulle part » alors que la table
+  (`20260824120000_tutor_digests.sql`) et `.github/workflows/tutor-digests.yml` étaient tous deux
+  sur `main` — et le §3 disait déjà l'inverse, dans le même fichier. Le piège qui l'a produite est
+  nommé : **#844 s'intitule « Merge remote-tracking branch… »**, parce que le titre du squash vient
+  du sujet de `HEAD` — un lot livré sous un titre qui ne le nomme pas est un lot qu'aucune
+  relecture du `git log` ne retrouve. Détail par lot : ligne « Tuteur IA » du §3.
 
 🔴 **Un fait neuf, et il gêne** : **`docs/doctrine-verticale.md` n'existe pas** (vérifié le
 2026-08-24). L'étude 26 est `validée` avec **zéro lot sur deux** — on exécute depuis cinq semaines
@@ -233,32 +236,29 @@ façon dans `ops-dispatch`, donc une session peut le rejouer seule.
 
 ## 6. Travaux en vol
 
-**Au 2026-08-24** : `main` à **#832**, **zéro PR ouverte au moteur**, une PR au privé
-(content#232 — le nettoyage de la ROADMAP et de l'index des études).
+**Au 2026-08-26** : `main` à **#884**, une PR ouverte au moteur (#885, la passe qualité décrite
+plus bas). Les deux chantiers hors PR du 2026-08-24 sont retombés : **é11 lots 6 et 7 sont
+livrés** par #844 (la table `tutor_digests` et le workflow `tutor-digests.yml` existent tous
+deux sur `main` — §4 disait encore le contraire, corrigé).
 
-⚠️ **Mais deux chantiers tournent hors PR, et une session qui arrive doit le savoir** :
+### 🔴 Le rouge du jour — deux gardes, et une panne qui n'est pas la nôtre
 
-- **é11 lots 6 et 7** — une session y travaille depuis ce matin (bilans hebdo batch, compteur
-  d'énergie côté élève, hit-rate du cache). Rien n'est encore poussé. **Ne pas prendre cette
-  ligne sans se coordonner.**
-- **C12 فقه — 4 أبواب** (33, 37, 43, 44) — session de campagne sur le dépôt privé. Le corpus
-  couvre 37 أبواب sur 45.
-
-### 🔴 Le rouge du jour — et c'est la garde des gardes qui l'a trouvé
-
-**[#833](https://github.com/MBeji/yahia-quest-arena/issues/833), ouverte le 2026-08-24 :
-sept crons rouges.** Elle est ouverte **automatiquement** par la garde des gardes livrée deux
-jours plus tôt (#831) — elle fait exactement le travail pour lequel elle a été écrite. Son pendant
-privé est **content#229** (`auto-pr.yml` ne peut pas ouvrir de PR : le PAT n'a pas la portée
-`actions:write`, même cause que #832) — et **celui-là bloque la chaîne de livraison du corpus**,
-donc les campagnes de contenu.
-
-**Pourquoi ces deux-là passent avant du travail plus « intéressant »** : une garde qui échoue en
-silence est **indistinguable d'une garde qui passe**, et ce dépôt en a fait la démonstration
-**quatre fois** (garde pédagogique deux fois, `video-health.yml`, sonde des manuels — cette
-dernière ayant même **refermé son issue en affirmant que tout allait bien**). Tant qu'un cron
-rouge n'atteint personne, aucun autre signal du dépôt n'est opposable. Le détail des quatre cas
-est consigné dans l'annexe « leçons » de la ROADMAP privée (§10, L-2).
+- **[#863](https://github.com/MBeji/yahia-quest-arena/issues/863)** (la garde des gardes a
+  succédé à #833, close le 2026-08-25) : `report-triage` et `report-apply` sont morts quatre
+  fois le 2026-08-26 sur **le même message d'amont**, `JWT issued at future`, arbre immobile et
+  secret rotaté un mois plus tôt — puis verts d'eux-mêmes. Aucune PR ne répare ça ; ce qui est à
+  nous est fait (#885 : retry borné + message qui se diagnostique tout seul, et la signature est
+  consignée dans [`docs/agents/gardes.md`](./docs/agents/gardes.md)).
+- **[#854](https://github.com/MBeji/yahia-quest-arena/issues/854)** : le nightly est rouge deux
+  nuits de suite sur **un seul test**, `admin-and-parent.spec.ts:61` — le bloc d'association du
+  rapport parent n'apparaît pas en 15 s. **Non élucidé** : la reproduction demande un dispatch
+  d'`e2e-auth`, et celui du 2026-08-26 15:11 UTC est resté **une heure en `queued` sans runner**.
+  À reprendre par un dispatch quand la file GitHub sera saine.
+- ⚠️ **GitHub Actions a cessé d'assigner des runners** le 2026-08-26 vers 15:00 UTC : un push
+  n'a déclenché **ni `auto-pr` ni CI**, et les checks requis ont dû être dispatchés à la main
+  (`ci.yml`, `migration-gate.yml`, `codeql.yml` — les trois sont dans `ops-dispatch` pour
+  exactement ce cas). Réflexe si la chaîne semble morte : `gh api …/actions/runs` et regarder si
+  les runs sont **créés** (événement OK) ou seulement **queued** (runners absents).
 
 ### Ce que les chantiers d'août laissent comme règles
 
@@ -284,20 +284,29 @@ Le détail vit dans les corps de PR et dans `docs/` — ici, seulement ce qui go
   anti-doublon et exclusion des quiz du repli perdus. C'est le `diff` contre sa révision vivante
   qui l'a montré, **pas un test**.
 
-### Issues ouvertes — re-sondées le 2026-08-24
+### Issues ouvertes — re-sondées le 2026-08-26
 
-**5 au moteur, 2 au privé.**
+**10 au moteur** (5 le 2026-08-24 : cinq sont nées depuis, dont trois ouvertes par des gardes).
 
-| Issue            | Quoi                                                                                                                                                                                                                         |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **#833** (arena) | 🔴 **Sept crons rouges**, ouverte le 2026-08-24 par la garde des gardes (#831). Voir ci-dessus                                                                                                                               |
-| **#804** (arena) | Aucun tier de test ne voit un décalage entre la CSP et les hôtes réellement appelés par une balise tierce (ouverte le 2026-08-22 ; sans ligne de roadmap, et n'en demande pas)                                               |
-| **#673** (arena) | Triage des signalements du 2026-07-29. ⚠️ **Ne pas la fermer sans traiter la file** : ses UUID canoniques tiennent les signalements hors du chemin « fresh reports » du pré-gate. Le blocage technique, lui, est levé (#824) |
-| **#660** (arena) | Major `typescript` v7.0.2 — gate rouge, `typescript-eslint` bloquant (remplace #593). Attendre l'amont                                                                                                                       |
-| **#595** (arena) | Aligner `@types/node` (v26) sur le runtime CI (**Node 24** depuis #688, pas 26)                                                                                                                                              |
-| **#229** (privé) | 🔴 `auto-pr.yml` ne peut pas ouvrir de PR — bloque la livraison du corpus                                                                                                                                                    |
-| **#228** (privé) | 🚨 Gardes en échec (2 runs rouges) — pendant privé de #833                                                                                                                                                                   |
+| Issue    | Quoi                                                                                                                                                                                        |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **#879** | Test instable sous charge : `parametrage-pseudo.test.tsx` expire à 15 s et fait **échouer un `git push`**. Vert en isolation, vert en CI — c'est la contention du poste, pas une régression |
+| **#874** | Choisir un fournisseur plateforme bon marché **éteint le cache mutualisé**, et rien ne le dit                                                                                               |
+| **#870** | é30 : les rangs `remediate` et `strengthen` sont livrés mais **dormants** — il leur manque un producteur                                                                                    |
+| **#863** | 🚨 Gardes en échec — voir ci-dessus : cause d'amont, ce qui est à nous est fait                                                                                                             |
+| **#854** | 🌙 Nightly rouge deux nuits — un seul test E2E, **non élucidé** (voir ci-dessus)                                                                                                            |
+| **#853** | Basculer `INLINE_EQUATION_LEVEL` en « error » — le corpus est à zéro                                                                                                                        |
+| **#804** | Aucun tier de test ne voit un décalage entre la CSP et les hôtes réellement appelés par une balise tierce                                                                                   |
+| **#673** | Triage des signalements du 2026-07-29. ⚠️ **Ne pas la fermer sans traiter la file**                                                                                                         |
+| **#660** | Major `typescript` v7.0.2 — gate rouge, `typescript-eslint` bloquant. Attendre l'amont                                                                                                      |
+| **#595** | Aligner `@types/node` (v26) sur le runtime CI (**Node 24**)                                                                                                                                 |
 
+**8 branches distantes traînent sans PR**, la plus ancienne du 2026-06-29. Re-vérifiées une à
+une **par le contenu** le 2026-08-26 : aucune ne porte de travail perdu — les deux `report-fix-*`
+sont sur `main`, et les deux migrations de `etude-22-lot-5` et `migration-timestamp` y sont
+**sous un autre horodatage** (`20260720200000`, `20260731130000`). C'est du ménage, pas un
+backlog. ⚠️ Le piège est de conclure d'un `git merge-base` ou d'un `grep | head` tronqué : les
+deux mènent à croire qu'un correctif utilisateur a été perdu.
 ~~**#733**~~ — **close**. Les neuf échecs E2E du nightly du 2026-08-14 sont éteints : huit par
 #755 (`isVisible()` n'attend jamais — « @deprecated This option is ignored »), le neuvième par
 #786 (`--flame` jamais assombri pour le thème clair). Rappel du piège qui les a produits :

@@ -9,8 +9,8 @@ description: >-
   résolution (PR code ou correctif contenu) et recommandation de clôture. Use
   whenever the user asks to "traiter les signalements", "corriger les problèmes
   signalés par les utilisateurs", "triage des bug reports", "process user
-  reports", "vider la file des signalements". Defers to `verify` (gate),
-  `content-audit` (re-résolution des questions contestées) and `code-review`.
+  reports", "vider la file des signalements". Defers to `verify` (gate) and
+  `code-review` ; un correctif de CONTENU se livre au dépôt privé, pas ici (étude 24).
 ---
 
 # Report triage — traiter les signalements utilisateurs sans se faire manipuler
@@ -195,10 +195,11 @@ Le Definition of Done de CLAUDE.md s'applique intégralement.
   fix (il échoue avant, passe après), `npm run verify` vert, PR reviewable —
   jamais de push direct sur `main`. Ne jamais affaiblir le gate ni les garde-fous
   anti-farm/premium pour « résoudre » un signalement.
-- **Correctif contenu** : éditer les fichiers sous `content/<subject>/…` (jamais
-  de SQL à la main), `npm run content:check` + `npm run content:qa:strict`, puis
-  `npm run content:build -- --subject <id>` (TOUJOURS scopé) et revue du SQL
-  généré. La migration s'applique en prod via le workflow au merge (DoD §7).
+- **Correctif contenu** : ⚠️ **il ne se fait pas dans ce dépôt.** Depuis l'étude 24 le
+  corpus vit dans `MBeji/yahia-quest-content` (privé) et `leak:check` fait échouer le gate
+  si `content/**` réapparaît ici. La boucle (éditer `content/<subject>/…`, `content:check`,
+  `content:qa:strict`, puis l'application par `apply-content.yml`) se déroule là-bas.
+  Depuis ce dépôt-ci : consigner la correction à faire dans la recommandation de clôture.
 - **Hors périmètre** (feature request, support, non reproduit, malveillant) : pas
   de code ; recommandation de clôture motivée, et le cas échéant une issue GitHub
   `enhancement` pour les demandes de fonctionnalité retenues.
@@ -278,10 +279,9 @@ skill reste le cerveau (mêmes phases, mêmes verdicts, mêmes garde-fous) :
 - Verdict de screening ✅ LÉGITIME (jamais ⚠️ SUSPECT ni ⛔ MALVEILLANT).
 - Bug reproduit par un NOUVEAU test qui échouait avant le correctif.
 - `npm run verify` vert, sans aucun affaiblissement.
-- Diff confiné aux chemins autorisés : code applicatif `src/**` + ses tests,
-  ou un correctif `content/<subject>/**` avec sa seule migration régénérée
-  (`content:build --subject <id>`) quand la double résolution confirme une
-  erreur de clé/énoncé NON ambiguë.
+- Diff confiné aux chemins autorisés : code applicatif `src/**` + ses tests.
+  Un correctif de **contenu** ne peut pas être livré d'ici (étude 24) : il se décrit,
+  et il se livre au dépôt privé.
 - Le diff ne touche JAMAIS : `.github/**`, `scripts/**`, `package*.json`, une
   migration écrite à la main, `auth-middleware`, le code
   subscription/entitlements, ni `src/shared/constants/gamification.ts`.

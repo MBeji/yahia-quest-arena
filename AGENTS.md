@@ -39,8 +39,8 @@ npm run smoke:shell  # prod-bundle browser smoke: public shell must render crash
 npm test              # vitest run
 npm run lint          # eslint src --max-warnings=0  (zero-warning policy)
 npm run typecheck     # tsc --noEmit (strict)
-npm run verify         # eol:check + lint + typecheck + test + leak:check + db:check-chain + harness:check (pre-push)
-npm run ci:verify      # verify, en surensemble : coverage + build:check + audit:deps + harness:check
+npm run verify         # les 4 gates à ~2 s d'abord (eol/leak/db:check-chain/harness), puis lint + typecheck + test
+npm run ci:verify      # verify en surensemble : + perf:check, coverage au lieu de test, build:check, audit:deps en dernier
 npm run harness:check                    # anti-drift harness (pointers, size, hidden Unicode, model ids) + YAML strict de .github/**
 npm run leak:check                       # gate anti-fuite : aucun corpus ni skill pédago au tip (étude 24)
 npm run db:check-chain                   # rejeu statique des migrations : une base VIERGE se reconstruit
@@ -71,63 +71,58 @@ otherwise. Gameplay thresholds: `src/shared/constants/gamification.ts` (change r
 
 ## Content pipeline — le corpus n'est PAS dans ce repo (étude 24)
 
-Depuis la scission du 2026-07-20, **le corpus pédagogique et l'usine qui le produit vivent
-dans le repo privé [`MBeji/yahia-quest-content`](https://github.com/MBeji/yahia-quest-content)**
-(sur invitation). Ce repo-ci ne garde que le **moteur**, qui est générique et sans corpus :
-`scripts/content/**` (build, qa, audit, suivi, catalogue) et `src/shared/content/**`
-(loader, schema, sql-builder, qa-checks). Le moteur reste public **et testé ici** ; c'est lui
-que la CI privée checkout.
+Depuis la scission du 2026-07-20, **le corpus et l'usine qui le produit vivent dans le repo privé
+[`MBeji/yahia-quest-content`](https://github.com/MBeji/yahia-quest-content)** (sur invitation) :
+`content/` (659 chapitres, 22 146 questions au 2026-08-10), les 41 skills pédagogiques
+(`content-*`, `prof-*`, `curriculum-architect`), `FableEtudes/` + METHODE, les workflows
+`content-audit.yml` / `video-health.yml`. Ne reste ici que le **moteur**, générique et sans corpus
+(`scripts/content/**`, `src/shared/content/**`), les **5 skills techniques** (`verify`,
+`code-review`, `regression-guard`, `upgrade-guard`, `report-triage`) et `STATUS.md`. Le moteur est
+public **et testé ici** ; c'est lui que la CI privée checkout.
 
-Sont partis au privé : `content/` (**659 chapitres, 22 146 questions** et leurs clés, mesuré le
-2026-08-10), les **41 skills pédagogiques** (`content-*`, `prof-*`, `curriculum-architect`), `FableEtudes/` +
-METHODE, et les workflows `content-audit.yml` / `video-health.yml`. Ne restent ici que les
-**5 skills techniques** (`verify`, `code-review`, `regression-guard`, `upgrade-guard`,
-`report-triage`). `STATUS.md` reste public.
+Ces 5 skills sont **mirrorés en `.agents/skills/`** (`npm run harness:sync`, jamais édité à la
+main) — le chemin neutre que découvrent Codex, Gemini CLI, Cursor, Copilot et Amp. Éditer la
+source `.claude/skills/`, relancer le sync ; `harness:check` échoue sur dérive et vérifie la
+conformité à la spec Agent Skills (`name` = dossier, `description` ≤ 1 024 caractères).
 
-Ces 5 skills sont **mirrorés en `.agents/skills/`** (généré par `npm run harness:sync`,
-jamais édité à la main) — le chemin neutre que découvrent Codex, Gemini CLI, Cursor, Copilot
-et Amp. Éditer la source `.claude/skills/`, relancer le sync ; `harness:check` échoue sur
-dérive et vérifie au passage la conformité à la spec Agent Skills (`name` = dossier,
-`description` ≤ 1 024 caractères).
+**Pour écrire du contenu** : ouvrir la session sur le repo **privé** et y ajouter celui-ci pour le
+moteur (`add_repo` / second checkout). La boucle d'auteur ne change pas — éditer
+`content/<subject>/NN-<slug>/`, validé par Zod — mais les gates contenu (`content:check`,
+`content:qa:strict`, `content:audit:strict`, `programme:check`) tournent dans la **Content CI
+privée**, plus dans celle d'ici.
 
-**Pour écrire du contenu** : ouvrir la session sur le repo **privé** et y ajouter celui-ci
-pour le moteur (`add_repo` / second checkout). La boucle d'auteur ne change pas — éditer
-`content/<subject>/NN-<slug>/`, validé par Zod — mais elle se déroule là-bas, et les gates
-contenu (`content:check`, `content:qa:strict`, `content:audit:strict`, `programme:check`)
-tournent dans la **Content CI privée**, plus dans la CI d'ici.
+**Le contenu ne voyage plus en migrations** : il se compile en `sql/content/<subject>.sql`
+(`content:emit`, nom stable, régénéré en place) et s'applique par le workflow privé
+`apply-content.yml`, qui journalise chaque application dans `content_releases`. Les **17 migrations
+de contenu écrites à la main** restent ici — `content:emit` ne les reproduit pas, et trois d'entre
+elles seedent aussi des données hors contenu.
 
-**Le contenu ne voyage plus en migrations.** Il est compilé en `sql/content/<subject>.sql`
-(`content:emit`, nom de fichier stable, régénéré en place) et appliqué par le workflow privé
-`apply-content.yml`, qui journalise chaque application dans la table `content_releases`.
-Les **17 migrations de contenu écrites à la main** restent ici : `content:emit` ne les
-reproduit pas et trois d'entre elles seedent aussi des données hors contenu
-(`badges`/`shop_items`, `grades`/`themes`, `parcours`/`profiles`).
-
-**La ROADMAP est au privé, les lots se livrent ici** — donc sa règle « cocher la case dans la
-même PR » n'est plus applicable : aucune PR ne touche les deux dépôts. L'invariant est vérifié
-au lieu d'être promis, par un gate du moteur que la Content CI appelle avec le chemin du corpus :
-`node scripts/ci/check-roadmap-sync.mjs --roadmap ../corpus/FableEtudes/ROADMAP.md`. Il échoue
-si un lot livré sur `main` après la PR de référence déclarée par la roadmap n'y est **cité nulle
-part**. Citer suffit — coché, reporté ou sans objet : le gate a un avis sur la **connaissance**,
-jamais sur le statut.
+**La ROADMAP est au privé, les lots se livrent ici** : aucune PR ne touche les deux dépôts, donc
+l'invariant est **vérifié** au lieu d'être promis — `node scripts/ci/check-roadmap-sync.mjs
+--roadmap ../corpus/FableEtudes/ROADMAP.md`, appelé par la Content CI, échoue si un lot livré sur
+`main` après la PR de référence de la roadmap n'y est **cité nulle part**. Citer suffit (coché,
+reporté ou sans objet) : le gate a un avis sur la **connaissance**, jamais sur le statut.
 
 ⚠️ **Ne re-commite jamais de corpus ici.** `npm run leak:check`
-([`scripts/ci/check-content-leak.mjs`](./scripts/ci/check-content-leak.mjs)) fait **échouer**
-le gate si `content/**`, `sql/content/**`, un skill `content-*`/`prof-*` ou une migration de
-contenu **générée** réapparaît au tip. Il tourne dans `verify`, dans `ci:verify` et en CI.
-Détail du flux : [`docs/content-generation-pipeline.md`](./docs/content-generation-pipeline.md).
+([`scripts/ci/check-content-leak.mjs`](./scripts/ci/check-content-leak.mjs)) fait **échouer** le
+gate si `content/**`, `sql/content/**`, un skill `content-*`/`prof-*` ou une migration de contenu
+**générée** réapparaît au tip (dans `verify`, `ci:verify` et la CI). Détail du flux :
+[`docs/content-generation-pipeline.md`](./docs/content-generation-pipeline.md).
 
 ## Conventions
 
-- Feature-based: `src/features/{name}/` (13 features — auth, dashboard, quest, dungeon, duel,
-  shop, progression, parent-report, subscription, content-report, bug-report, notifications,
-  parcours). Each has `index.ts` (barrel), `{name}.server.ts`, `__tests__/`.
+- Feature-based: `src/features/{name}/` (16 — ai, auth, bug-report, content-report, dashboard,
+  dungeon, duel, exam, notifications, parcours, parent-report, progression, quest, shop,
+  subscription, tutor ; `harness:check` échoue si cette liste dérive de `src/features/`).
+  Each has `index.ts` (barrel), `{name}.server.ts`, `__tests__/`.
   **Features never import other features** — share via `src/shared/`. Routes stay thin.
 - Import aliases: `@/features/{name}`, `@/shared/lib|constants|types|integrations/...`.
   UI primitives: `@/components/ui/*` (no `@/shared/ui`). i18n: `@/lib/i18n`. Mobile hook:
   `@/hooks/use-mobile`. `useAuth`: `@/features/auth`.
-- Every server fn: `createServerFn(...).middleware([requireSupabaseAuth])` + zod
-  `.inputValidator`. Sanitize HTML with DOMPurify (`src/shared/lib/markdown.ts`).
+- Every server fn carries an auth middleware — `requireSupabaseAuth`, ou `optionalSupabaseAuth`
+  pour une lecture publique assumée ; c'est ce que la règle `local/require-server-fn-auth` exige.
+  Un `.inputValidator` zod dès qu'il y a une entrée (non gaté : sans lui `data` est `undefined`).
+  Sanitize HTML with DOMPurify (`src/shared/lib/markdown.ts`).
 - Naming: kebab-case files, server fns are verbs. Structured logging via
   `@/shared/lib/logger` (redacts secrets) — never raw `console`.
 
@@ -169,9 +164,11 @@ l'inspection en lecture seule, `supabase migration list`/`db diff` ; et depuis l
 `git merge origin/main` — `rebase` et `stash` dehors), le **cycle PR/issue**, la
 **configuration des dépôts** (`gh secret set`, `gh variable set`) et l'**outillage**
 (`npm install` — jamais `npm ci` — et `node scripts/…`). Plus les workflows déclenchables,
-nommés un par un (jamais `gh workflow run:*`) : tous les non-prod, plus `rollback-prod.yml`,
-`db-backup.yml`, `db-tests.yml`, `e2e-auth.yml` et `apply-content*.yml` — les seuls qui
-**écrivent** en prod, exception assumée : rien de neuf, le SQL d'un corpus déjà mergé.
+nommés un par un (jamais `gh workflow run:*`) : ceux qui n'agissent qu'ici, plus
+`rollback-prod.yml`, `db-backup.yml`, `db-tests.yml`, `e2e-auth.yml` et `apply-content*.yml`
+(au privé) — les seuls qui **écrivent** en prod, exception assumée : rien de neuf, le SQL d'un
+corpus déjà mergé. Hors liste **par choix** : `tutor-digests.yml` et `report-apply.yml`, qui
+atteignent de vrais élèves ou écrivent la prod hors de ce chemin relu.
 **Never** : `supabase db push`/`db reset` (DoD §7), le dispatch de `db-migrate-prod.yml` ou
 `release.yml`, `node scripts/db/push-prod.mjs` et `gh secret delete` ; le reste demande.
 ⚠️ Ceci lève les demandes **du dépôt**, pas les refus du classifieur d'auto-mode.
@@ -201,7 +198,8 @@ this repo (this file, `STATUS.md`, `docs/agents/`) — not only in a tool's priv
 | [`e2e/README.md`](./e2e/README.md)                                             | Playwright runbook (dedicated TEST project)                                                                                                                                                                                                                                                                                                  |
 | [`docs/prod-rollback-runbook.md`](./docs/prod-rollback-runbook.md)             | **Incident prod**: geler la chaîne (`MERGE_FREEZE`), rollback Vercel, revert, checkpoints hebdo, l'axe base de données                                                                                                                                                                                                                       |
 | [`docs/baseline-snapshot-runbook.md`](./docs/baseline-snapshot-runbook.md)     | **Bascule système**: figer les 3 dépôts + l'état vivant (base, déploiement, config) en un point de retour daté `baseline/*`                                                                                                                                                                                                                  |
-| [`docs/dette-technique.md`](./docs/dette-technique.md)                         | Code debt still genuinely open — each item re-read in the code before it is listed (verified 2026-08-02)                                                                                                                                                                                                                                     |
+| [`docs/journal-decisions.md`](./docs/journal-decisions.md)                     | Registre **append-only** des décisions datées — STATUS.md ne garde que celles qui gouvernent encore                                                                                                                                                                                                                                          |
+| [`docs/dette-technique.md`](./docs/dette-technique.md)                         | Code debt still genuinely open — chaque item re-lu dans le code avant d'être listé (re-vérifié 2026-08-26)                                                                                                                                                                                                                                   |
 | [`docs/performance-audit.md`](./docs/performance-audit.md)                     | Perf findings + phased roadmap; its load harness is [`perf/README.md`](./perf/README.md)                                                                                                                                                                                                                                                     |
 | `docs/*.md`                                                                    | Topic specs: CI/CD, dependency cadence, env vars, logging, XSS policy, **surfaces & couleurs** (`design-surfaces.md`), content voice, release tagging, lycée architecture, question types, suivi parental quotidien; player guides (`guide-duels-et-ligues`, `guide-rappel-actif`, `guide-types-questions-natifs`, `guide-utilisateur.html`) |
 | [`docs/agents/`](./docs/agents/README.md)                                      | **Operational playbooks**: **zero manual intervention by the owner** (`zero-intervention.md` — the rule, and the walls it names), Windows-workstation traps, multi-agent collaboration, content-campaign conduct                                                                                                                             |
@@ -219,31 +217,30 @@ this repo (this file, `STATUS.md`, `docs/agents/`) — not only in a tool's priv
 - **Migrations must sort after the newest one already on `main`** — a back-dated timestamp
   jams `supabase db push` and silently strands prod behind code. The `Migration order` PR
   check catches this pre-merge.
-- **La prod n'est PAS le juge de la reconstructibilité.** Une migration peut passer en prod
-  (où ses parents existent de longue date) et rendre impossible la construction d'une base
-  vierge — donc la suite pgTAP et tout provisionnement d'un projet TEST neuf. C'est ce qui a
-  produit quatre pannes en cascade après l'étude 24 lot 4 (#548, #549, #552, #557), invisibles
-  pour les checks requis parce que `db-tests.yml` ne tourne **pas** sur les PR (nightly +
-  `workflow_dispatch`). `npm run db:check-chain` rejoue désormais la chaîne statiquement dans
-  `verify`/`ci:verify` et en CI : FK de contenu orphelines, ids de fixtures pgTAP en collision
-  avec le contenu des migrations, doublons de version. Un INSERT de contenu qui dépend de
-  lignes absentes du repo public doit être gardé par
+- **La prod n'est PAS le juge de la reconstructibilité.** Une migration peut passer en prod (où
+  ses parents existent de longue date) et rendre impossible la construction d'une base vierge —
+  donc pgTAP et tout projet TEST neuf (quatre pannes en cascade après é24 lot 4 : #548, #549,
+  #552, #557). `db-tests.yml` tourne sur les PR depuis le 2026-07-20 (chemins filtrés) **mais
+  n'est pas requis** : un rouge n'arrête pas l'auto-merge, il faut aller le lire. `db:check-chain`
+  rejoue la chaîne statiquement (FK orphelines, ids de fixtures en collision, doublons de
+  version) ; un INSERT de contenu dépendant de lignes absentes d'ici se garde par
   `WHERE EXISTS (SELECT 1 FROM public.<parent> p WHERE p.id = v.<fk>)`.
 - **E2E ≠ unit gate.** Playwright hits a dedicated TEST Supabase project, not unit-test mocks;
   not part of `verify`/`ci:verify`; never point it at prod.
-- **CI runs a superset of local `verify`**: adds `build:check`, `perf:check` and `smoke:shell`
-  (loads the real prod bundle in Chromium — the only tier that executes prod-gated client
-  code). A green local gate does not guarantee a green CI. The **content** gates are no longer
-  part of it: they run in the private repo's Content CI (étude 24).
-- **`audit:deps` n'est pas hermétique** : il interroge le registre au moment du run, donc à
-  lockfile constant le même commit passe le matin et échoue l'après-midi, dès qu'un avis
-  sort. `verify` rougit alors sur une PR dont le diff n'a pas touché aux dépendances — et
-  c'est **toute la file** qui est bloquée, pas elle (2026-08-04, `fast-uri`, #712). Réflexe :
-  `git diff origin/main HEAD -- package.json package-lock.json` (vide ⇒ ce n'est pas toi),
-  puis bump minimal (`npm audit fix --package-lock-only --omit=dev`) en commit séparé.
-- **Le titre d'une PR Dependabot peut mentir sur son diff, et ce gate-ci ne l'a pas vu.** #716,
-  « bump undici · indirect », montait une **majeure** et entrait une **alpha** dans la chaîne de
-  build ; son lockfile a cassé `npm ci` **hors d'ici** (33 h de Content CI privée rouge) pendant
-  que ce gate restait vert. Lire le diff : [`docs/dependency-maintenance.md`](./docs/dependency-maintenance.md).
+- **La CI n'est pas exactement `verify`** : elle ajoute `build:check` et `smoke:shell` (le seul
+  étage qui exécute le bundle prod dans Chromium) et n'a **pas** `eol:check` (git normalise à la
+  sortie). `npm run ci:verify` en est le miroir local le plus proche ; un gate local vert ne
+  garantit pas une CI verte. Les gates **contenu** n'en sont plus : Content CI privée (étude 24).
+- **`audit:deps` n'est pas hermétique** (il est dans `ci:verify` et la CI, pas dans `verify`) :
+  il interroge le registre au moment du run, donc à lockfile constant le même commit passe le
+  matin et échoue l'après-midi, et c'est **toute la file** qui est bloquée, pas la PR visée
+  (2026-08-04, `fast-uri`, #712). Réflexe : `git diff origin/main HEAD -- package.json
+package-lock.json` (vide ⇒ ce n'est pas toi), puis `npm audit fix --package-lock-only
+--omit=dev` en commit séparé.
+- **Le titre d'une PR Dependabot peut mentir sur son diff.** #716, « bump undici · indirect »,
+  montait une **majeure** et entrait une **alpha** dans la chaîne de build ; son lockfile a cassé
+  `npm ci` **hors d'ici** (33 h de Content CI privée rouge) pendant que ce gate restait vert.
+  Lire le diff : [`docs/dependency-maintenance.md`](./docs/dependency-maintenance.md).
 - Coverage is scoped to owned code (`features/`, `shared/`, `lib/`, `hooks/`) — vendored UI,
-  route glue, and generated files are excluded by design; don't widen `include` to dilute it.
+  route glue, generated files **et tout `features/**/components/**`** sont exclus par choix
+  (rendu, couvert par les tests de route et le build) ; ne pas élargir `include` pour diluer.

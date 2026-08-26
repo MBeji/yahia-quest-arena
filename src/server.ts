@@ -100,7 +100,7 @@ export default {
     // auth propre (CRON_SECRET), réponse JSON, interception AVANT le SSR.
     //
     // Une porte SÉPARÉE, et pas une branche de plus dans `/api/cron/notify` :
-    // le batch se compte en minutes quand la fonction SSR a trente secondes, et
+    // le batch se compte en dizaines de minutes quand la fonction SSR a 300 s, et
     // son échec emporterait les notifications push s'ils partageaient la même
     // requête. Le tranchage vit dans `handleDigestCron` ; le script d'appel
     // rappelle cette route jusqu'à épuisement du curseur.

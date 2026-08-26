@@ -91,7 +91,10 @@
       "Bash(gh workflow run regression-guard.yml:*)",
       "Bash(gh workflow run report-triage.yml:*)",
       "Bash(gh workflow run checkpoint-tag.yml:*)",
-      "Bash(gh workflow run second-opinion.yml:*)"
+      "Bash(gh workflow run second-opinion.yml:*)",
+      "Bash(gh workflow run guard-watch.yml:*)",
+      "Bash(gh workflow run upgrade-guard.yml:*)",
+      "Bash(gh workflow run auto-pr.yml:*)"
     ],
     "deny": [
       "Bash(npx supabase db push:*)",

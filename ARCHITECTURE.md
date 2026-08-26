@@ -147,6 +147,24 @@ export const myFunction = createServerFn({ method: "GET" })
 
 The middleware injects `supabase` (authenticated client) and `userId` into context.
 
+### 6a. Les cinq chemins qui NE passent pas par un server fn
+
+`src/server.ts` intercepte cinq URL **avant** le handler SSR, et aucune n'est une route
+TanStack : elles n'ont ni middleware d'auth, ni `inputValidator`, et la règle ESLint
+`local/require-server-fn-auth` ne les voit pas. Chacune porte donc sa propre garde.
+
+| Chemin              | Garde                                                                                                        | Ce qu'il faut savoir                                                                           |
+| ------------------- | ------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| `/api/cron/notify`  | `CRON_SECRET`                                                                                                | envoi des notifications push, appelé par `notifications` (cron)                                |
+| `/api/cron/digest`  | `CRON_SECRET`                                                                                                | bilans hebdo d'El Ostedh, appelé par `tutor-digests.yml` — il écrit en prod et coûte du modèle |
+| `/api/tutor/stream` | Bearer Supabase — **le même helper** que le middleware des server fns, et zéro cookie donc zéro surface CSRF | le flux du tuteur ; le seul chemin SSR long (`maxDuration: 300`, `build-vercel.mjs`)           |
+| `/api/health`       | aucune, **volontairement**                                                                                   | 200/503 ; servi **avant** le bot guard pour qu'un moniteur externe ne soit jamais 403          |
+| `/sitemap.xml`      | aucune                                                                                                       | SEO public                                                                                     |
+
+⚠️ Un runbook s'appuie sur `/api/health` (`docs/prod-rollback-runbook.md`) et un moniteur
+externe le sonde toutes les 5 minutes : le déplacer ou le gater casse la détection d'incident,
+pas seulement une URL.
+
 ---
 
 ## 7. Testing strategy

@@ -14,9 +14,12 @@
  */
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { execFileSync } from "node:child_process";
-import { join } from "node:path";
+import { join, relative } from "node:path";
 
-const ROOT = new URL("../../", import.meta.url).pathname;
+// `import.meta.dirname`, pas `new URL(…).pathname` : sous Windows ce dernier rend
+// `/D:/…` (slash de tête), et `join()` en faisait `D:D:…` — ce gate n'a JAMAIS
+// pu tourner sur le poste, donc un rouge de CI y était irreproductible.
+const ROOT = join(import.meta.dirname, "..", "..");
 const K6_DIR = join(ROOT, "perf/k6");
 let errors = 0;
 const fail = (m) => {
@@ -35,7 +38,7 @@ function walk(dir) {
         execFileSync(process.execPath, ["--check", p], { stdio: "pipe" });
       } catch (e) {
         fail(
-          `syntax error in ${p.replace(ROOT, "")}: ${e.stderr?.toString().split("\n")[0] ?? e.message}`,
+          `syntax error in ${relative(ROOT, p)}: ${e.stderr?.toString().split("\n")[0] ?? e.message}`,
         );
       }
     }

@@ -22,9 +22,9 @@
 # l'écran lui rend l'état « bilan indisponible » (R-15), pas une page cassée.
 #
 # Pourquoi pas une seule horloge, en branchant la génération dans
-# `handlePushCron` ? Parce que la fonction SSR a 30 secondes (`maxDuration`,
-# scripts/build-vercel.mjs) : un batch de plusieurs minutes n'y tient pas, et
-# l'échec emporterait aussi l'envoi des push.
+# `handlePushCron` ? Parce qu'une fonction SSR est bornée (`maxDuration: 300`,
+# scripts/build-vercel.mjs) : un batch de plusieurs dizaines de minutes n'y tient
+# pas, et son échec emporterait aussi l'envoi des push.
 #
 # CE QUI COÛTE DE L'ARGENT, ET COMMENT ON L'ÉCRIT
 # ---------------------------------------------------------------------------
@@ -68,8 +68,11 @@ jobs:
   digests:
     name: Produire les bilans de la semaine
     runs-on: ubuntu-latest
-    # Large, mais borné : 120 tranches × ~25 s tiennent dedans, et le script
-    # s'arrête tout seul dès que le SQL n'a plus d'élève à rendre.
+    # C'est ICI qu'est la vraie borne du batch, et nulle part ailleurs. Une tranche
+    # dure ~25 s en régime normal (120 × 25 s ≈ 50 min), mais son plafond DUR est
+    # celui de la fonction SSR (300 s) : le script attend désormais SA réponse au
+    # lieu d'abandonner à 35 s et de rougir. Un run coupé ici n'a rien perdu — les
+    # bilans déjà écrits persistent et le curseur reprend au passage suivant.
     timeout-minutes: 55
     steps:
       - name: Vérifier que le secret est configuré
