@@ -22,9 +22,18 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
   # auto-pr.yml dispatche cette voie sur CHAQUE PR qu'il ouvre (depuis le
-  # 2026-08-24), pour que les checks requis rapportent sur le SHA de tête même
-  # si aucun événement `pull_request` n'arrive — ce qui s'est produit sans
-  # prévenir le 2026-08-23. Doublon assumé quand l'événement natif arrive bien.
+  # 2026-08-24), pour SAVOIR si le code passe même quand aucun événement
+  # `pull_request` n'arrive — ce qui s'est produit sans prévenir le 2026-08-23.
+  #
+  # ⚠️ CE QUE CETTE DISPATCH NE FAIT PAS, et la ligne qui le promettait a menti
+  # jusqu'au 2026-08-26 : elle NE DÉBLOQUE PAS la PR. Mesuré sur #885 — les trois
+  # check-runs verts sur le SHA de tête (`gh api repos/…/commits/<sha>/check-runs`
+  # les montre) et la PR reste `BLOCKED`, parce que le ROLLUP de la PR ne contient
+  # que les check-runs issus d'un vrai événement `pull_request`. `CodeQL` fait
+  # exception et apparaît quand même : son check vient de l'app code-scanning, pas
+  # de la suite Actions. Ce jour-là les événements natifs sont arrivés 22 min plus
+  # tard et le merge a suivi seul — le remède est donc d'ATTENDRE, pas de
+  # dispatcher, et surtout pas de fermer/rouvrir la PR (ça désarme l'auto-merge).
   workflow_dispatch:
     inputs:
       base:

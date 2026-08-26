@@ -236,8 +236,8 @@ façon dans `ops-dispatch`, donc une session peut le rejouer seule.
 
 ## 6. Travaux en vol
 
-**Au 2026-08-26** : `main` à **#884**, une PR ouverte au moteur (#885, la passe qualité décrite
-plus bas). Les deux chantiers hors PR du 2026-08-24 sont retombés : **é11 lots 6 et 7 sont
+**Au 2026-08-26** : `main` à **#885** (passe qualité : gardes, carte documentaire, plafond de
+lint), **zéro PR ouverte au moteur**. Les deux chantiers hors PR du 2026-08-24 sont retombés : **é11 lots 6 et 7 sont
 livrés** par #844 (la table `tutor_digests` et le workflow `tutor-digests.yml` existent tous
 deux sur `main` — §4 disait encore le contraire, corrigé).
 
