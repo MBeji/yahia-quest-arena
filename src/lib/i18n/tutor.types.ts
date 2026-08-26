@@ -300,6 +300,15 @@ export interface TutorTranslations {
     hitTitle: string;
     /** « {hits} resservies · {misses} écrites ». */
     hitDetail: string;
+    /**
+     * é29 R-15.3 — la SORTIE du pot commun : deux voix distinctes en 👎 retirent
+     * une explication du service. Se lit toujours à côté du hit-rate, jamais
+     * seul : un pot qui se remplit vite et se vide autant dit que la condition
+     * d'entrée ne suffit plus.
+     */
+    evictTitle: string;
+    /** « {evicted} évincées · {shared} entrées au pot ». */
+    evictDetail: string;
     discardTitle: string;
     /** « {discarded} rejetées · {kept} gardées ». */
     discardDetail: string;

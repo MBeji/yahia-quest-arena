@@ -586,6 +586,8 @@ export const en: TranslationKeys = {
       title: "Shared cache and discards",
       hitTitle: "Explanations served again",
       hitDetail: "{hits} served again · {misses} written",
+      evictTitle: "Evicted from the pool",
+      evictDetail: "{evicted} evicted · {shared} pooled",
       discardTitle: "Forge discards",
       discardDetail: "{discarded} rejected · {kept} kept",
       window: "across explanations produced in the last {n} days",

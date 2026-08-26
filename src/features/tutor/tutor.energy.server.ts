@@ -181,8 +181,21 @@ const cacheStatsSchema = z.object({
   hitRate: z.coerce.number(),
   /** Part des candidats de la Forge jetés par la double résolution (R-18bis). */
   discardRate: z.coerce.number(),
+  /**
+   * R-15.3 — part de ce qui est ENTRÉ au pot commun qui en est RESSORTI, sur la
+   * cohorte : deux voix distinctes en 👎 retirent une explication du service.
+   *
+   * ⚠️ `optional`, contrairement aux deux taux ci-dessus, et pas par confort :
+   * ce panneau est déployé avant que sa migration ne soit forcément appliquée
+   * (Vercel et `db-migrate-prod` courent en parallèle sur le même merge). Exiger
+   * la clé éteindrait TOUT le panneau — hit-rate et rebut compris — pour une
+   * mesure qui manque. Absente, elle affiche « — », et les deux autres tiennent.
+   */
+  evictionRate: z.coerce.number().optional(),
   hits: z.coerce.number().optional(),
   misses: z.coerce.number().optional(),
+  evictedRows: z.coerce.number().optional(),
+  sharedRows: z.coerce.number().optional(),
   discarded: z.coerce.number().optional(),
   kept: z.coerce.number().optional(),
   /** La fenêtre réellement appliquée par le SQL, en jours. */

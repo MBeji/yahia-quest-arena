@@ -584,6 +584,8 @@ export const ar: TranslationKeys = {
       title: "الذاكرة المشتركة ونسبة الرفض",
       hitTitle: "شروح أُعيد تقديمها",
       hitDetail: "{hits} أُعيد تقديمها · {misses} كُتبت",
+      evictTitle: "شروح استُبعدت من المشترك",
+      evictDetail: "{evicted} مستبعَدة · {shared} في المشترك",
       discardTitle: "مرفوضات المِطْرَقة",
       discardDetail: "{discarded} مرفوضة · {kept} محفوظة",
       window: "على الشروح المنتَجة في آخر {n} يومًا",

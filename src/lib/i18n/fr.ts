@@ -597,6 +597,8 @@ export const fr: TranslationKeys = {
       title: "Cache mutualisé et rebut",
       hitTitle: "Explications resservies",
       hitDetail: "{hits} resservies · {misses} écrites",
+      evictTitle: "Sorties du pot commun",
+      evictDetail: "{evicted} évincées · {shared} entrées au pot",
       discardTitle: "Rebut de la Forge",
       discardDetail: "{discarded} rejetées · {kept} gardées",
       window: "sur les explications produites ces {n} derniers jours",
