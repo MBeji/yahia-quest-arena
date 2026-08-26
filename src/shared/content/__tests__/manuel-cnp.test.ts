@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from "vitest";
 import { CNP_MANUEL_BASE_URL, cnpManuelFileName, cnpManuelUrl } from "../manuel-cnp";
 

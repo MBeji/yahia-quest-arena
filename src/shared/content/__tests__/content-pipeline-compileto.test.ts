@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * Mutualisation `compileTo` (étude 16 D-4, lot 1) — one authored directory
  * compiled into N per-section subjects.

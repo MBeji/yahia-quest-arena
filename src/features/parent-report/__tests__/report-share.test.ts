@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from "vitest";
 import { frParent } from "@/lib/i18n/parent/fr";
 import { buildFamilyReportShareText, buildWeeklyAdvice, type ReportData } from "../report-share";

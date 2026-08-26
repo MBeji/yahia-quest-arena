@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * Parcours interest votes — server functions.
  *

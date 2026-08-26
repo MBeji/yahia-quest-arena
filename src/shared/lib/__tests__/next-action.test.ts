@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * « Prochaine action » — étude 22, R-31.
  *

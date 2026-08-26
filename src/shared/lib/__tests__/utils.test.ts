@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from "vitest";
 import { cn, isRtlText, isMathExpression, rtlProps } from "@/shared/lib/utils";
 

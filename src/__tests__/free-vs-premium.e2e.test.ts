@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * FREE vs PREMIUM — END-TO-END SCENARIO SUITE
  * ===========================================

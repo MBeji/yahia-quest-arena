@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from "vitest";
 import { hubRouteForRole, shouldLeaveDashboard } from "../hub-route";
 

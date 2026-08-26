@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Exercises the REAL duel server fns. They are thin wrappers over the lot-2/lot-5

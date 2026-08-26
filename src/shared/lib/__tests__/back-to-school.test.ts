@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * Fenêtre de rentrée — étude 22, R-4.
  *

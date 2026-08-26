@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from "vitest";
 import { XP_PER_LEVEL } from "@/shared/constants/gamification";
 import { levelForXp, xpWithinLevel, xpToNextLevel } from "@/shared/lib/level";

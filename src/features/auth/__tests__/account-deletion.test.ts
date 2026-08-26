@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from "vitest";
 import {
   ACCOUNT_DELETE_ERROR_PREFIX,

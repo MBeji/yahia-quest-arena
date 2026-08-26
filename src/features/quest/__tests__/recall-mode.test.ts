@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // Recall mode (étude 17, lot 3) — server-fn wiring: the free-text active-recall

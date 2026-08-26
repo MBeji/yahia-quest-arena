@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * Leaderboard cold-start (étude 15 lot 11, D-7): the global board must never surface
  * a rank without XP — a brand-new 0-XP player is neither a « fictitious #1 » nor told

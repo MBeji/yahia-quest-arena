@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { errorMessage, failWithClientError } from "@/shared/lib/safe-error";
 

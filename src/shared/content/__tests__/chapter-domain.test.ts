@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect } from "vitest";
 import { domainKey, DOMAIN_LABEL_MAX } from "../chapter-domain";
 import { chapterMetaSchema } from "../schema";

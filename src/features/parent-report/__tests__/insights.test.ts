@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from "vitest";
 import { computeEngagement } from "../insights/engagement";
 import { computeEfficiency, paceRatio, revisionGain } from "../insights/efficiency";
