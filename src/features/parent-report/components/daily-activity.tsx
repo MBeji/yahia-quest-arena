@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { BookOpen, ChevronRight, Dumbbell, Eye } from "lucide-react";
-import { useT } from "@/lib/i18n";
+import { useParentT } from "@/lib/i18n/parent";
 import { isolateLtrRuns } from "@/shared/lib/bidi";
 import { DifficultyStars } from "@/components/game/difficulty-stars";
 import type { DailyReport, ExerciseRun, LessonView } from "../insights";
@@ -21,7 +21,7 @@ import { DeltaChip, EmptyRow, Meter, SectionCard } from "./daily-primitives";
 const PAGE_STEP = 8;
 
 export function LessonsSection({ report }: { report: DailyReport }) {
-  const t = useT();
+  const t = useParentT();
   const [shown, setShown] = useState(PAGE_STEP);
   const rows = report.lessons.slice(0, shown);
 
@@ -54,7 +54,7 @@ export function LessonsSection({ report }: { report: DailyReport }) {
 }
 
 function LessonRow({ lesson }: { lesson: LessonView }) {
-  const t = useT();
+  const t = useParentT();
 
   return (
     <li className="rounded-lg border border-border/50 bg-surface-3 p-3">
@@ -108,7 +108,7 @@ export function ExercisesSection({
   report: DailyReport;
   onOpenAttempt: (attemptId: string) => void;
 }) {
-  const t = useT();
+  const t = useParentT();
   const [shown, setShown] = useState(PAGE_STEP);
   const rows = report.exercises.slice(0, shown);
 
@@ -154,7 +154,7 @@ function ExerciseRow({
   passPct: number;
   onOpen: () => void;
 }) {
-  const t = useT();
+  const t = useParentT();
   const passed = run.scorePct >= passPct;
   const modeLabel = exerciseModeLabel(run, t);
 
@@ -228,7 +228,7 @@ function MoreButton({
   shown: number;
   onMore: () => void;
 }) {
-  const t = useT();
+  const t = useParentT();
   if (shown >= total) return null;
   return (
     <button

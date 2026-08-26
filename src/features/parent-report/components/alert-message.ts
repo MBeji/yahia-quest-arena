@@ -1,4 +1,4 @@
-import type { TranslationKeys } from "@/lib/i18n/types";
+import type { ParentTranslations } from "@/lib/i18n/parent.types";
 import { formatMinutes, type ParentAlert } from "../insights";
 
 /**
@@ -9,7 +9,7 @@ import { formatMinutes, type ParentAlert } from "../insights";
  * module, sans JSX : un fichier qui exporte des composants ne peut pas aussi
  * exporter une fonction sans casser le rafraîchissement à chaud.
  */
-export function alertMessage(alert: ParentAlert, t: TranslationKeys): string {
+export function alertMessage(alert: ParentAlert, t: ParentTranslations): string {
   const templates: Record<ParentAlert["key"], string> = {
     noActivity: t.parentDaily.alertNoActivity,
     performanceDrop: t.parentDaily.alertPerformanceDrop,

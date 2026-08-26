@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { LoadingState } from "@/components/ui/loading-state";
 import { RichField } from "@/components/ui/svg-figure";
 import { DifficultyStars } from "@/components/game/difficulty-stars";
-import { useT } from "@/lib/i18n";
+import { useParentT } from "@/lib/i18n/parent";
 import { isolateLtrRuns } from "@/shared/lib/bidi";
 import { getStudentAttemptDetail, getStudentAttemptDetailByCode } from "../parent-report.server";
 import { reportSourceKey, type ReportSource } from "../report-source";
@@ -32,7 +32,7 @@ export function AttemptDetailDialog({
   attemptId: string | null;
   onClose: () => void;
 }) {
-  const t = useT();
+  const t = useParentT();
   const fetchById = useServerFn(getStudentAttemptDetail);
   const fetchByCode = useServerFn(getStudentAttemptDetailByCode);
 
@@ -96,7 +96,7 @@ export function AttemptDetailDialog({
 }
 
 function QuestionRow({ question, index }: { question: AttemptQuestion; index: number }) {
-  const t = useT();
+  const t = useParentT();
   const Icon = question.isCorrect ? CheckCircle2 : XCircle;
   const tone = question.isCorrect ? "text-success" : "text-destructive";
 

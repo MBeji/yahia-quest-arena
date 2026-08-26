@@ -181,6 +181,24 @@ describe("i18n system", () => {
     const frKeys = leafPaths(fr).sort();
     expect(leafPaths(en).sort()).toEqual(frKeys);
     expect(leafPaths(ar).sort()).toEqual(frKeys);
+
+    // Le catalogue de la SURFACE PARENT vit à part (chunk `i18n-parent`, chargé
+    // avec /suivi et /parent-report seulement) : il a besoin de la même garde,
+    // sinon une clé ajoutée au seul français y passerait inaperçue.
+    const { frParent } = await import("@/lib/i18n/parent/fr");
+    const { enParent } = await import("@/lib/i18n/parent/en");
+    const { arParent } = await import("@/lib/i18n/parent/ar");
+
+    const frParentKeys = leafPaths(frParent).sort();
+    expect(frParentKeys.length).toBeGreaterThan(100);
+    expect(leafPaths(enParent).sort()).toEqual(frParentKeys);
+    expect(leafPaths(arParent).sort()).toEqual(frParentKeys);
+
+    // ...et il ne doit PAS retomber dans le catalogue app-wide : c'est tout
+    // l'objet du découpage (budget `i18n-parent-` dans check-bundle-budget.mjs).
+    expect(frKeys.some((k) => k.startsWith("parentReport.") || k.startsWith("parentDaily."))).toBe(
+      false,
+    );
   });
 
   it("exposes the keys added by the screens audit in every locale", async () => {

@@ -731,6 +731,15 @@ intrinsic dimensions. 245 KB → **37 KB** on realistic viewports.
 2,176 lines, every student downloads 2 unused languages (`provider.tsx:3-5`,
 `__root.tsx:17-19`, `vite.config.ts:66-71`). Gzips small but pure waste on the
 critical path. → per-locale dynamic `import()`.
+→ **Still open, but the chunk shrank on the OTHER axis (2026-08-26).** The catalog is
+no longer monolithic: the parent-only namespaces (`parentReport.*` + `parentDaily.*`)
+moved to `src/lib/i18n/parent/`, isolated as the `i18n-parent` chunk and pulled only by
+the dynamic imports of `/suivi` and `/parent-report` — **207.65 → 171.17 KB** app-wide,
+36.53 KB deferred. The two splits compose (surface × locale): doing H2-fe on top would
+divide what is left by three. Measured next-best surface candidate: `ai.*` (~21 KB,
+minus the two keys `ForgeEntry` uses on the dashboard). `tutor.*` does **not** qualify —
+the dashboard, the quest player and the public chapter reader all mount it, so splitting
+it only relocates the bytes. Detail and numbers: `scripts/check-bundle-budget.mjs`.
 **H3-fe · `renderMarkdown` re-parses + re-sanitizes on every render**
 (`lesson-reader.tsx:138`, no `useMemo`) — ~15 regex passes + DOMPurify re-run on
 any parent re-render (e.g. Cours/Résumé toggle). → `useMemo(…, [body])`.

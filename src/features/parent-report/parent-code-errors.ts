@@ -1,4 +1,4 @@
-import type { TranslationKeys } from "@/lib/i18n";
+import type { ParentTranslations } from "@/lib/i18n/parent.types";
 
 /**
  * Alliance-code failures, as STABLE codes (étude 15, lot 3 — audit §F-1).
@@ -43,7 +43,7 @@ const CODES: ReadonlySet<string> = new Set([
  * the raw `Error#message`; anything without a recognised prefix (network
  * failures, legacy messages) falls back to the context's generic label.
  */
-export function parentCodeErrorLabel(message: string, t: TranslationKeys): string {
+export function parentCodeErrorLabel(message: string, t: ParentTranslations): string {
   const labels = t.parentReport.codeErrors;
   const context: "link" | "report" = message.startsWith(REPORT_CODE_ERROR_PREFIX)
     ? "report"
