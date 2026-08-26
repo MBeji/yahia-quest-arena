@@ -54,6 +54,40 @@ Ce que la session doit faire :
   **sort aussi sur une réponse vide** (erreur réseau) et annonce un faux merge. Traiter
   explicitement `null | "" | erreur` comme « continuer ».
 
+## Le titre de squash est figé au push — et c'est le sujet de `HEAD`
+
+`auto-pr.yml` compose le titre de la PR avec `git log -1 --pretty=%s "$HEAD_SHA"` (étape
+« Create the PR if none is open ») puis **arme l'auto-merge dans la même exécution du même job**
+(étape « Arm auto-merge »). Le message de squash est donc figé à cet instant : renommer la PR
+ensuite ne change plus rien à ce qui atterrira sur `main`.
+
+Ce n'est pas un accident, c'est la procédure documentée qui y mène. La § « Execution policy »
+d'AGENTS.md met `git rebase` hors jeu et autorise `git merge origin/main` pour rattraper `main` :
+une session qui suit la consigne à la lettre se retrouve avec un **commit de merge en tête**, et
+`main` reçoit un squash intitulé « Merge remote-tracking branch 'origin/main' into claude/… ».
+Le cas est encore lisible dans l'historique — `b88ff517` (PR #844, 2026-08-24) ; mécanisme
+re-constaté le 2026-08-26 sur la PR #881.
+
+Le geste, juste avant chaque push :
+
+```bash
+git log -1 --pretty=%s
+```
+
+Si la réponse commence par `Merge`, replier la branche en un seul commit dont le sujet est celui
+qu'on veut voir sur `main` :
+
+```bash
+git reset --soft origin/main && git commit
+```
+
+Deux garde-fous :
+
+- les hooks restent **actifs** — `pre-commit` (lint-staged) et `pre-push` (`verify`) rejouent
+  normalement ; jamais de `--no-verify` (DoD §2) ;
+- prouver que l'arbre n'a pas bougé : `git diff <ancien-HEAD> HEAD` doit être **vide**. Noter le
+  SHA avant le `reset` — après, il ne se retrouve que par `git reflog`.
+
 ## Doublons de sauvetage
 
 Le sweep de fin de session (DoD §8) invite à rescaper les PR en `needs-rebase`. Une autre session
