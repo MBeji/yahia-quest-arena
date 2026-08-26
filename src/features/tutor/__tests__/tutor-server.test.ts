@@ -249,6 +249,71 @@ describe("⭐ R-15.2 — le pot commun AVANT la dépense", () => {
     );
   });
 
+  it("⭐ un modèle PLATEFORME hors liste curée n'écrit RIEN — pas une ligne illisible", async () => {
+    // Le piège que #871 a armé sans le vouloir : la clé plateforme est devenue
+    // agnostique, donc son modèle est une variable d'environnement libre. Le
+    // verser au pot commun sans condition ferait fixer la qualité servie à TOUS
+    // les élèves par un identifiant tapé dans Vercel.
+    //
+    // Et l'écrire en privé serait pire qu'inutile : le payeur plateforme n'a pas
+    // d'`owner_user_id`, donc `find_tutor_explanation` (`e.shared OR
+    // e.owner_user_id = v_user`) ne pourrait la relire pour personne. Une ligne
+    // morte à l'écriture, qui en plus pèse au dénominateur du ratio de
+    // mutualisation de /admin/ia. Donc : aucune écriture du tout.
+    mockCallAi.mockResolvedValue({
+      ok: true,
+      text: BODY,
+      model: "glm-4.5-air",
+      payer: "platform",
+      costUsdMicros: 42,
+      doubleSolve: true,
+    });
+
+    const out = await explainMistake({ data: { questionId: QUESTION, again: false } });
+
+    // L'élève est servi quand même — R-15.2 n'a jamais parlé de le priver.
+    expect(out).toMatchObject({ ok: true, cached: false, body: BODY });
+    expect(mockAdminRpc).not.toHaveBeenCalled();
+  });
+
+  it("un modèle plateforme CURÉ, lui, entre au pot commun — et sans propriétaire", async () => {
+    mockCallAi.mockResolvedValue({
+      ok: true,
+      text: BODY,
+      model: "claude-haiku-4-5",
+      payer: "platform",
+      costUsdMicros: 42,
+      doubleSolve: true,
+    });
+
+    await explainMistake({ data: { questionId: QUESTION, again: false } });
+
+    expect(mockAdminRpc).toHaveBeenCalledWith(
+      "store_tutor_explanation",
+      expect.objectContaining({ p_model: "claude-haiku-4-5", p_shared: true, p_owner: null }),
+    );
+  });
+
+  it("côté FAMILLE, un modèle hors liste s'écrit encore — mais privé à son payeur", async () => {
+    mockCallAi.mockResolvedValue({
+      ok: true,
+      text: BODY,
+      model: "un-modele-que-personne-n-a-teste",
+      payer: "family",
+      costUsdMicros: 42,
+      doubleSolve: true,
+    });
+
+    await explainMistake({ data: { questionId: QUESTION, again: false } });
+
+    // La réserve privée de R-15.2 : elle a un propriétaire, donc quelqu'un peut
+    // la relire. C'est ce qui la distingue du cas plateforme ci-dessus.
+    expect(mockAdminRpc).toHaveBeenCalledWith(
+      "store_tutor_explanation",
+      expect.objectContaining({ p_shared: false, p_owner: USER }),
+    );
+  });
+
   it("« Explique autrement » se journalise comme une REFORMULATION", async () => {
     replies.open_tutor_thread = reply({ thread_id: THREAD, variant_served: 1, resolved: null });
     await explainMistake({ data: { questionId: QUESTION, again: true } });
