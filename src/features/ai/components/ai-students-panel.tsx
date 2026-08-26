@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Users } from "lucide-react";
 
 import { Switch } from "@/components/ui/switch";
-import { useT, type TranslationKeys } from "@/lib/i18n";
+import { useT } from "@/lib/i18n";
 import { AI_LIVE_FEATURES, TUTOR_HARD_DAILY_CAP, type AiFeature } from "@/shared/constants/ai";
 import {
   AI_ACTIVATABLE_FEATURES,
@@ -13,7 +13,7 @@ import {
   setAiStudentAccess,
   type AiStudentAccess,
 } from "../ai-access.server";
-import { aiErrorLabel, aiModeErrorCode } from "../ai-mode-status";
+import { aiErrorLabel, aiFeatureLabel, aiModeErrorCode } from "../ai-mode-status";
 
 /**
  * US-3 — « Activer par enfant ». L'écran qui applique R-3.
@@ -40,30 +40,6 @@ import { aiErrorLabel, aiModeErrorCode } from "../ai-mode-status";
  * L'auto-détention (Q-2) apparaît comme une ligne « Moi » en tête : le porteur
  * qui a branché sa propre clé pour lui-même n'a pas à chercher où s'activer.
  */
-
-/** Le libellé d'une surface. Fermé : une surface sans libellé ne s'affiche pas. */
-function featureLabel(feature: AiFeature, t: TranslationKeys): string | null {
-  switch (feature) {
-    case "explain":
-      return t.ai.featExplain;
-    case "reformulate":
-      return t.ai.featReformulate;
-    case "chat":
-      return t.ai.featChat;
-    case "check":
-      return t.ai.featCheck;
-    case "forge":
-      return t.ai.featForge;
-    case "exercise_gen":
-      return t.ai.featExerciseGen;
-    case "digest_student":
-      return t.ai.featDigestStudent;
-    case "digest_parent":
-      return t.ai.featDigestParent;
-    default:
-      return null;
-  }
-}
 
 export function AiStudentsPanel() {
   const t = useT();
@@ -187,7 +163,7 @@ function StudentRow({ student, onChanged }: { student: AiStudentAccess; onChange
                 interrupteur qui n'allume rien fait conclure que le mode est
                 cassé — voir AI_LIVE_FEATURES. */}
             {AI_LIVE_FEATURES.map((feature) => {
-              const label = featureLabel(feature, t);
+              const label = aiFeatureLabel(feature, t);
               if (!label) return null;
               const on = student.features.includes(feature);
               return (

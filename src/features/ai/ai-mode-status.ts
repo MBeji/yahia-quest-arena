@@ -10,7 +10,7 @@
 // c'est un champ à part entière pour qu'on voie, en lisant ce fichier, exactement
 // ce que le porteur peut lire de sa propre clé.
 
-import type { AiProviderId } from "@/shared/constants/ai";
+import type { AiFeature, AiProviderId } from "@/shared/constants/ai";
 import type { AiErrorCode } from "@/shared/integrations/ai";
 import type { TranslationKeys } from "@/lib/i18n";
 
@@ -92,5 +92,45 @@ export function aiErrorLabel(code: AiErrorCode | null, t: TranslationKeys): stri
       return t.ai.errModeOff;
     default:
       return t.ai.errGeneric;
+  }
+}
+
+/**
+ * Le nom d'une surface, dans la langue du lecteur.
+ *
+ * Il vit ICI et non dans un composant parce que DEUX écrans le lisent : la
+ * console d'activation (« ce à quoi cet élève a droit ») et la console de
+ * dépense (« quel usage a coûté quoi, et lequel a échoué »). Deux tables de
+ * libellés qui divergent, c'est un écran qui nomme « Chat » ce que l'autre
+ * appelle « Discussion » sur la même ligne de facture.
+ *
+ * Fermée à dessein : une surface sans libellé rend `null`, et l'appelant décide
+ * (la console d'activation ne l'affiche pas, la console de dépense retombe sur
+ * l'identifiant brut plutôt que de perdre la ligne).
+ */
+export function aiFeatureLabel(feature: string, t: TranslationKeys): string | null {
+  switch (feature as AiFeature) {
+    case "explain":
+      return t.ai.featExplain;
+    case "reformulate":
+      return t.ai.featReformulate;
+    case "chat":
+      return t.ai.featChat;
+    case "check":
+      return t.ai.featCheck;
+    case "forge":
+      return t.ai.featForge;
+    case "exercise_gen":
+      return t.ai.featExerciseGen;
+    case "digest_student":
+      return t.ai.featDigestStudent;
+    case "digest_parent":
+      return t.ai.featDigestParent;
+    case "verify":
+      return t.ai.featVerify;
+    case "forge_solve":
+      return t.ai.featForgeSolve;
+    default:
+      return null;
   }
 }
