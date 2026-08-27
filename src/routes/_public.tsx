@@ -4,6 +4,8 @@ import { PublicFooter } from "@/components/public/public-footer";
 import { PrintMark } from "@/components/public/print-mark";
 import { CanonicalLink } from "@/components/public/canonical-link";
 import { usePublicContentProtection } from "@/shared/lib/content-protection";
+import { useAuth } from "@/features/auth";
+import { AiLauncher } from "@/features/ai";
 
 /**
  * Public coquille — NO auth guard: its content (courses, catalogue, exercises) is
@@ -19,6 +21,11 @@ export const Route = createFileRoute("/_public")({
 
 function PublicLayout() {
   usePublicContentProtection();
+  // La bulle IA vit AUSSI ici : le lecteur de chapitre est une page publique, et
+  // c'est la page où le chat existe. Un élève connecté qui lit son cours doit y
+  // trouver la même bulle que partout ailleurs. Un visiteur anonyme n'en voit
+  // rien — `AiLauncher` rend `null` sans session.
+  const { user } = useAuth();
   return (
     <div className="public-shell flex min-h-[100dvh] flex-col bg-background text-foreground">
       {/* Hoisted into <head> by React 19 — the indexable origin, stated outright. */}
@@ -29,6 +36,7 @@ function PublicLayout() {
       </main>
       <PublicFooter />
       <PrintMark />
+      <AiLauncher authenticated={!!user} />
     </div>
   );
 }

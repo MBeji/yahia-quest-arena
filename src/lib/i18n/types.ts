@@ -898,6 +898,18 @@ export type TranslationKeys = {
     errEnergyCap: string;
     forgeTitle: string;
     forgeDesc: string;
+    launcherLabel: string;
+    launcherTitle: string;
+    launcherDesc: string;
+    launcherLockedDesc: string;
+    launcherChat: string;
+    launcherChatDesc: string;
+    launcherForge: string;
+    launcherForgeDesc: string;
+    launcherEntryLocked: string;
+    launcherGo: string;
+    launcherInvite: string;
+    launcherInviteCta: string;
     forgeChapter: string;
     forgeChapterPlaceholder: string;
     forgeNoChapter: string;

@@ -28,6 +28,7 @@ export {
   type ServedForgedQuiz,
 } from "./forge.server";
 
+export { AiLauncher } from "./components/ai-launcher";
 export { ForgeEntry } from "./components/forge-entry";
 export { ForgePanel } from "./components/forge-panel";
 

@@ -47,7 +47,18 @@ function refusalCopy(code: string, t: ReturnType<typeof useT>): string | null {
   return t.tutor.pausedBody;
 }
 
-export function TutorChatPanel({ chapterId }: { chapterId: string }) {
+export function TutorChatPanel({
+  chapterId,
+  defaultOpen = false,
+}: {
+  chapterId: string;
+  /**
+   * Le panneau s'ouvre-t-il déplié ? La bulle IA globale amène l'élève sur ce
+   * chapitre POUR discuter (`?chat=1`) — le laisser replié lui demanderait un
+   * second clic pour la chose qu'il vient de demander.
+   */
+  defaultOpen?: boolean;
+}) {
   const t = useT();
   const queryClient = useQueryClient();
   const loadEntry = useServerFn(getTutorChatEntry);
@@ -57,7 +68,7 @@ export function TutorChatPanel({ chapterId }: { chapterId: string }) {
     staleTime: 60_000,
   });
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   const [turns, setTurns] = useState<Turn[]>([]);
   const [draft, setDraft] = useState("");
   const [streaming, setStreaming] = useState(false);

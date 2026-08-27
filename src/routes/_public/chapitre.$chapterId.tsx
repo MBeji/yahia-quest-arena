@@ -26,12 +26,21 @@ import { LessonReader } from "@/features/quest/components/lesson-reader";
  * lives under the public `_public` coquille.
  */
 export const Route = createFileRoute("/_public/chapitre/$chapterId")({
+  // `validateSearch` écrit à la main, SANS zod : le validateur vit dans l'arbre
+  // de routes, donc dans le chunk d'index — un `z.object()` ici y ferait entrer
+  // zod tout entier. Motif de `forge` et de `quest.$exerciseId`.
+  //
+  // `?chat=1` vient de la bulle IA : elle amène l'élève ici POUR discuter, et le
+  // panneau s'ouvre donc déplié au lieu de lui demander un second clic.
+  validateSearch: (search: Record<string, unknown>): { chat?: boolean } =>
+    search.chat === 1 || search.chat === "1" || search.chat === true ? { chat: true } : {},
   head: () => ({ meta: [{ title: "Cours · Na9ra Nal3ab" }] }),
   component: ChapitrePage,
 });
 
 function ChapitrePage() {
   const { chapterId } = Route.useParams();
+  const { chat: openChat } = Route.useSearch();
   const { user, loading: authLoading } = useAuth();
   const fetchLesson = useServerFn(getChapterLesson);
   const t = useT();
@@ -100,7 +109,7 @@ function ChapitrePage() {
             et une feature n'en importe pas une autre. Le panneau se rend
             lui-même invisible quand la porte est fermée (R-1) — un visiteur
             anonyme n'a pas de tuteur, et il n'en voit pas la trace. */}
-        {user ? <TutorChatPanel chapterId={chapterId} /> : null}
+        {user ? <TutorChatPanel chapterId={chapterId} defaultOpen={openChat === true} /> : null}
       </PageShell>
     </>
   );
