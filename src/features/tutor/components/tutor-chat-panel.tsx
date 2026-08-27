@@ -20,7 +20,7 @@
 // MÊME que celui des server fns, obtenu par la MÊME fonction — une seconde
 // lecture de session rejouerait la panne de rafraîchissement du 2026-08-18.
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { GraduationCap, Send } from "lucide-react";
@@ -30,11 +30,34 @@ import { useT } from "@/lib/i18n";
 import { TUTOR_FREE_TEXT_MAX } from "@/shared/constants/ai";
 import { resolveAccessToken } from "@/shared/integrations/supabase/auth-attacher";
 import { getTutorChatEntry } from "../tutor.server";
+import { tutorLockedKey } from "../locked";
 import type { TutorChatIntent } from "../chat";
 import { TUTOR_ENERGY_QUERY_KEY } from "../energy";
 import { TutorEnergyMeter } from "./tutor-energy";
 
 type Turn = { role: "student" | "tutor"; content: string };
+
+/**
+ * AMENER LE PANNEAU SOUS LES YEUX — la moitié visible du correctif du 2026-08-27.
+ *
+ * Ce panneau est monté tout en bas du lecteur de cours, APRÈS la leçon entière :
+ * l'ouvrir sans le rejoindre ne montre rien du tout. C'est l'autre face du bug
+ * signalé — « je clique sur discuter avec le Prof, rien ne se passe, je reviens
+ * au cours » : le chat s'ouvrait bel et bien, trois écrans plus bas.
+ *
+ * Le défilement attend une frame, à dessein. L'ouverture EST une navigation
+ * (`?chat=1`), et le routeur remet la page en haut à chaque navigation : demandé
+ * dans le même tour, notre défilement partirait AVANT ce retour en haut, qui
+ * l'écraserait. Aucune annulation au démontage non plus — `scrollIntoView` sur
+ * un nœud détaché ne fait rien, alors qu'un nettoyage, lui, rejouerait la panne
+ * (le simple retrait de `?chat=1` de l'URL suffirait à annuler le défilement
+ * qu'on vient de demander).
+ */
+function revealPanel(node: HTMLElement) {
+  requestAnimationFrame(() => {
+    node.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
 
 /** Les codes de refus que l'écran sait dire en langage d'élève. Le reste disparaît. */
 function refusalCopy(code: string, t: ReturnType<typeof useT>): string | null {
@@ -49,15 +72,39 @@ function refusalCopy(code: string, t: ReturnType<typeof useT>): string | null {
 
 export function TutorChatPanel({
   chapterId,
-  defaultOpen = false,
+  openIntent = false,
+  onIntentHandled,
 }: {
   chapterId: string;
   /**
-   * Le panneau s'ouvre-t-il déplié ? La bulle IA globale amène l'élève sur ce
-   * chapitre POUR discuter (`?chat=1`) — le laisser replié lui demanderait un
+   * L'INTENTION « ouvre le chat », portée par `?chat=1`. La bulle IA amène
+   * l'élève sur ce chapitre POUR discuter — le laisser replié lui demanderait un
    * second clic pour la chose qu'il vient de demander.
+   *
+   * ⚠️ Ce n'est PAS un `defaultOpen`, et c'est tout le défaut du 2026-08-27 :
+   * l'intention arrive au MONTAGE (l'élève venait d'ailleurs) **comme** à
+   * n'importe quel moment de la vie du composant (il était DÉJÀ sur ce cours, et
+   * la bulle n'a fait que changer la recherche de l'URL — même route, même
+   * composant, aucun remontage). Un `useState(defaultOpen)` ne lit que le
+   * premier cas : dans le second — celui de la capture, la bulle ouverte
+   * au-dessus d'un chapitre — le clic sur « Y aller » ne produisait
+   * rigoureusement rien.
    */
-  defaultOpen?: boolean;
+  openIntent?: boolean;
+  /**
+   * L'intention a été PRISE : à la route de la retirer de l'URL.
+   *
+   * Sans ce rendu-compte, `?chat=1` resterait collé à l'adresse, et le clic
+   * SUIVANT sur la bulle produirait une URL identique — donc aucune navigation,
+   * donc la même panne un cran plus loin, pour l'élève qui a refermé le panneau
+   * ou qui est simplement remonté lire son cours.
+   *
+   * Et c'est bien le PANNEAU qui rend compte, jamais la route toute seule : tant
+   * qu'il n'est pas monté (session encore en cours de résolution), l'intention
+   * doit SURVIVRE dans l'URL, sinon elle se perd entre le premier rendu et
+   * l'arrivée de la session.
+   */
+  onIntentHandled?: () => void;
 }) {
   const t = useT();
   const queryClient = useQueryClient();
@@ -68,21 +115,82 @@ export function TutorChatPanel({
     staleTime: 60_000,
   });
 
-  const [open, setOpen] = useState(defaultOpen);
+  const [open, setOpen] = useState(openIntent);
   const [turns, setTurns] = useState<Turn[]>([]);
   const [draft, setDraft] = useState("");
   const [streaming, setStreaming] = useState(false);
   const [refusal, setRefusal] = useState<string | null>(null);
   const liveRef = useRef<HTMLDivElement>(null);
+  /** La racine RENDUE du panneau — la section dépliée, ou la phrase d'un refus. */
+  const rootRef = useRef<HTMLElement | null>(null);
+  /** Une intention prise AVANT que la racine existe : elle attend le nœud. */
+  const revealWantedRef = useRef(false);
 
   // Le flux fait grandir la dernière bulle : on garde le bas visible, sinon la
   // réponse s'écrit hors de l'écran sur un téléphone.
+  //
+  // Rien à suivre tant qu'il n'y a pas de message : sans ce garde, l'ouverture
+  // du panneau tirait la page vers un fil VIDE — pile le mouvement qui entrait
+  // en conflit avec l'arrivée en tête du panneau.
   useEffect(() => {
+    if (turns.length === 0) return;
     liveRef.current?.scrollIntoView({ block: "end" });
   }, [turns]);
 
-  // R-1 : porte fermée ⇒ aucune surface. Pas de bouton grisé, pas de « bientôt ».
-  if (!entry?.allowed) return null;
+  // L'INTENTION, à CHAQUE fois qu'elle arrive — le montage n'est qu'un cas parmi
+  // deux. Elle ouvre, elle amène sous les yeux, et elle rend compte.
+  useEffect(() => {
+    if (!openIntent) return;
+    setOpen(true);
+    const node = rootRef.current;
+    // Rien à rejoindre pour l'instant : le panneau est replié, ou son entrée
+    // n'est pas encore revenue du serveur. Le nœud préviendra en s'attachant.
+    if (node) revealPanel(node);
+    else revealWantedRef.current = true;
+    onIntentHandled?.();
+  }, [openIntent, onIntentHandled]);
+
+  /**
+   * La racine, au moment où elle EXISTE. Une ref de rappel plutôt qu'un effet :
+   * c'est l'attachement du nœud qui est l'événement attendu, et il survient un
+   * rendu plus tard que l'intention (dépliage) ou une requête plus tard
+   * (l'entrée du tuteur).
+   */
+  const attachRoot = useCallback((node: HTMLElement | null) => {
+    rootRef.current = node;
+    if (!node || !revealWantedRef.current) return;
+    revealWantedRef.current = false;
+    revealPanel(node);
+  }, []);
+
+  // R-1 : porte fermée ⇒ aucune surface IA. Pas de bouton grisé, pas de « bientôt ».
+  //
+  // Mais un refus de PORTE se NOMME, comme l'écran de correction le fait depuis
+  // le lot 1 : « Pas pendant un donjon ! », « Termine d'abord ta mission ». Une
+  // porte fermée sans explication ressemble à une panne — et c'en était une, aux
+  // yeux de l'élève : `can_use_tutor` referme la portée chapitre dès qu'une
+  // séance d'exercice de CE chapitre est restée ouverte (cas courant : on
+  // commence un exercice, on le quitte, on revient lire le cours), et le panneau
+  // se retirait alors SANS UN MOT, juste après un clic sur « Discuter avec le
+  // Prof ». Le vocabulaire vient de `../locked`, partagé avec l'autre écran.
+  //
+  // Ce qui reste muet, à dessein : l'entrée pas encore revenue (un squelette est
+  // déjà une promesse) et un code qu'on ne sait pas traduire — `UNKNOWN`,
+  // `BAD_SCOPE`. L'écran s'efface, il n'invente pas (R-A1.2-3).
+  if (!entry) return null;
+  if (!entry.allowed) {
+    const lockedKey = tutorLockedKey(entry.reason);
+    if (!lockedKey) return null;
+    return (
+      <p
+        ref={attachRoot}
+        data-testid="tutor-chat-locked"
+        className="text-muted-foreground mt-4 scroll-mt-20 text-xs"
+      >
+        {t.tutor[lockedKey]}
+      </p>
+    );
+  }
 
   async function ask(intent: TutorChatIntent, freeText?: string) {
     setRefusal(null);
@@ -164,7 +272,13 @@ export function TutorChatPanel({
 
   if (!open) {
     return (
-      <Button type="button" variant="outline" size="sm" onClick={() => setOpen(true)}>
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        data-testid="tutor-chat-open"
+        onClick={() => setOpen(true)}
+      >
         <GraduationCap className="size-4" aria-hidden="true" />
         {t.tutor.chat.open}
       </Button>
@@ -172,7 +286,13 @@ export function TutorChatPanel({
   }
 
   return (
-    <section className="border-border bg-surface-2 mt-4 rounded-2xl border p-4">
+    // `scroll-mt-20` : l'en-tête public est collant, et sans cette marge le
+    // titre du panneau arriverait DESSOUS — rejoint, mais toujours invisible.
+    <section
+      ref={attachRoot}
+      data-testid="tutor-chat"
+      className="border-border bg-surface-2 mt-4 scroll-mt-20 rounded-2xl border p-4"
+    >
       <div className="mb-3 flex items-center gap-2">
         <GraduationCap className="size-4 text-[color:var(--gold)]" aria-hidden="true" />
         <h3 className="text-sm font-bold">{t.tutor.chat.title}</h3>

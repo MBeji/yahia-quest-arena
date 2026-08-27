@@ -187,3 +187,43 @@ duel avant sa propre `expires_at`, dernière séance de l'exercice ouverte depui
 ceux qui ne l'ont pas pris — et un utilisateur ne dira jamais « ma course de donjon est restée
 ouverte », il dira « ça ne marche pas ». Une garde se borne dans le temps, ou bien l'état qu'elle
 lit se referme tout seul.
+
+## Un paramètre d'URL qui exprime une INTENTION n'est pas un `defaultOpen`
+
+**Symptôme** : la bulle IA est là, le Prof n'est pas grisé, l'élève clique « Discuter avec le
+Prof » puis « Y aller » — **rien ne se passe, il revient au cours**. Depuis un autre écran,
+choisir un chapitre l'amène bien sur le cours, mais le chat semble absent. Aucune erreur, aucun
+appel réseau en échec : de l'extérieur, une porte fermée de plus.
+
+**Cause — trois défauts que la même phrase recouvre**, tous en aval de la porte réparée par #896 :
+
+1. **L'intention n'arrivait qu'au montage.** `?chat=1` était lu dans un `useState(defaultOpen)`.
+   Depuis un chapitre, « Y aller » ne change que la **recherche** de l'URL : même route, mêmes
+   paramètres, donc **aucun remontage** — le composant garde son état, et l'initialiseur n'est
+   jamais relu. Le cas de la capture (bulle ouverte au-dessus d'un chapitre) était exactement
+   celui-là, et il ne produisait rigoureusement rien.
+2. **Le panneau est monté APRÈS la leçon entière**, tout en bas du lecteur de cours. Ouvert sans
+   être rejoint, il est invisible — « je reviens au cours » était littéralement vrai : l'élève
+   regardait son cours, le chat trois écrans plus bas. Le routeur remet en plus la page **en
+   haut** à chaque navigation, et cette ouverture EN EST une : un défilement demandé dans le même
+   tour part avant ce retour en haut, qui l'écrase. D'où le `requestAnimationFrame`.
+3. **La porte fermée était muette.** `can_use_tutor` referme la portée chapitre dès qu'une séance
+   d'exercice de ce chapitre est restée ouverte (cas courant depuis #896 : moins de 4 h), et le
+   panneau rendait `null` — pas un mot, juste après un clic. L'écran de correction, lui, nomme le
+   refus depuis le lot 1 d'é11 (« Pas pendant un donjon ! ») ; les deux partagent désormais la
+   table de [`src/features/tutor/locked.ts`](../../src/features/tutor/locked.ts).
+
+**Mesuré le 2026-08-27** : contre le comportement précédent, **8 des 10 assertions** de
+[`tutor-chat-panel.test.tsx`](../../src/features/tutor/__tests__/tutor-chat-panel.test.tsx) sont
+rouges (`npx vitest run src/features/tutor/__tests__/tutor-chat-panel.test.tsx`) ; les 2 vertes
+sont les invariants qu'on ne voulait pas changer — l'entrée pas encore revenue et le refus
+intraduisible restent muets.
+
+**La règle générale** : distinguer un paramètre d'**état** (un filtre, un onglet, un code de
+suivi — il décrit la page, il reste dans l'URL) d'un paramètre d'**intention** (« ouvre ceci
+maintenant »). Une intention se traite comme un **événement** : lue dans un effet et non dans un
+initialiseur d'état ; **consommée** — retirée de l'URL par la route — sinon le clic suivant
+produit une adresse identique, donc aucune navigation, donc la même panne un cran plus loin ; et
+**amenée sous les yeux**, parce qu'ouvrir hors écran ne se distingue pas de ne rien faire. Et le
+consommateur est celui qui l'a **prise** (ici le panneau, monté seulement une fois la session
+résolue) : une intention retirée par la route avant que sa cible existe est une intention perdue.
