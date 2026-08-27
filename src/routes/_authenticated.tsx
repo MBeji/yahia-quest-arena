@@ -6,6 +6,7 @@ import { useAuth, useMyRole, shouldRedirectToOnboarding, hubRouteForRole } from 
 import { getPendingBetaCount } from "@/features/subscription";
 import { getOpenReportsCount } from "@/features/content-report";
 import { BetaBadge, BugReportLauncher, getOpenBugsCount } from "@/features/bug-report";
+import { AiLauncher } from "@/features/ai";
 import {
   Sparkles,
   LayoutDashboard,
@@ -248,6 +249,12 @@ function AuthenticatedLayout() {
           screens (quest/dungeon/lesson/onboarding) so it never overlaps an
           in-screen sticky CTA. */}
       {!immersive && <BugReportLauncher />}
+      {/* La bulle IA — permanente, y compris grisée (arbitrage du 2026-08-27,
+          qui renverse R-1 d'é29). Elle se tait d'elle-même sur les épreuves
+          notées : l'autre moitié de R-1 est une règle d'anti-triche, pas de
+          découverte. `authenticated` vient de la ROUTE, comme pour la Forge —
+          une feature n'importe pas `@/features/auth`. */}
+      <AiLauncher authenticated />
       {/* Mobile/tablet bottom tab bar — primary navigation for touch. Hidden on
           desktop (lg) where the top nav carries the same destinations, on
           immersive screens to avoid overlapping their in-screen CTAs, and for

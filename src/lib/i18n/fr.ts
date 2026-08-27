@@ -1092,6 +1092,20 @@ export const fr: TranslationKeys = {
     forgeTitle: "La Forge",
     forgeDesc:
       "Demande un quiz sur mesure. Il ne rapporte ni XP ni pièces — c'est un entraînement, pas une quête.",
+    launcherLabel: "Le Prof",
+    launcherTitle: "Le Prof, ton aide IA",
+    launcherDesc: "Pose une question sur un chapitre, ou fais-toi forger un quiz sur mesure.",
+    launcherLockedDesc:
+      "Le mode IA n'est pas encore ouvert sur ce compte. Voici ce qu'il débloque.",
+    launcherChat: "Discuter avec le Prof",
+    launcherChatDesc: "Une question sur un cours ? Il répond, sur ce chapitre.",
+    launcherForge: "La Forge",
+    launcherForgeDesc: "Un quiz sur mesure, sur le chapitre de ton choix.",
+    launcherEntryLocked: "Disponible une fois le mode IA ouvert.",
+    launcherGo: "Y aller",
+    launcherInvite:
+      "Le mode IA marche avec la clé d'API de ta famille — l'application ne prend rien, elle ne facture rien. Un adulte l'ajoute en une minute.",
+    launcherInviteCta: "Ouvrir les Réglages",
     forgeChapter: "Chapitre",
     forgeChapterPlaceholder: "Choisis un chapitre…",
     forgeNoChapter:
