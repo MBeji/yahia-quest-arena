@@ -783,6 +783,45 @@ export const AI_TIMEOUT_MS: Readonly<Record<AiFeature, number>> = {
 } as const;
 
 /**
+ * LA PATIENCE DE LA FORGE DÉPEND DU NOMBRE DE CANDIDATS, pas de la surface.
+ * ---------------------------------------------------------------------------
+ * `AI_TIMEOUT_MS.forge` valait 90 s, calibré le 2026-08-25 sur la mesure
+ * ci-dessus : 59 s pour **sept** candidats sur `grok-4.6`. Sept candidats, c'est
+ * le plus PETIT quiz du produit (5 demandés + 2 de marge). L'écran, lui, propose
+ * 5, 8 ou 10 questions et **arrive sur 8** — soit dix candidats, ~40 % de
+ * production en plus. Le plafond était donc réglé pour le cas que personne ne
+ * choisit par défaut, et la Forge tombait en `AI_PROVIDER_DOWN` sur son propre
+ * réglage d'origine (signalé en usage le 2026-08-26 : « failed to save » après
+ * l'attente, sur une clé dont la vérification venait pourtant de passer).
+ *
+ * Le barème : un coût fixe (connexion, prompt, premiers tokens de réflexion)
+ * plus un coût par candidat. Il rend 90 s à sept candidats — exactement la
+ * valeur mesurée, donc aucun quiz qui marchait hier ne se met à échouer — et
+ * monte à 120 s pour dix, 140 s pour douze.
+ *
+ * ⚠️ MÊME INVARIANT que {@link AI_TIMEOUT_MS} : le résultat doit rester
+ * STRICTEMENT INFÉRIEUR au `maxDuration` de la fonction SSR (300 s,
+ * `scripts/build-vercel.mjs`), et il faut y laisser la place de la double
+ * résolution qui SUIT la génération. D'où le plafond dur : au-delà, ce n'est
+ * plus une génération lente, c'est un modèle qui ne convient pas à la Forge, et
+ * l'écran doit le dire au lieu de faire attendre trois minutes pour rien.
+ */
+export const AI_FORGE_TIMEOUT = {
+  /** Connexion, prompt, premiers tokens de raisonnement — indépendant du volume. */
+  baseMs: 20_000,
+  /** Par candidat demandé, marge comprise. */
+  perCandidateMs: 10_000,
+  /** Plafond dur : la double résolution doit tenir dans ce qui reste des 300 s. */
+  capMs: 180_000,
+} as const;
+
+/** Le délai accordé à UNE génération de la Forge, pour `candidates` candidats. */
+export function forgeTimeoutMs(candidates: number): number {
+  const wanted = AI_FORGE_TIMEOUT.baseMs + AI_FORGE_TIMEOUT.perCandidateMs * candidates;
+  return Math.min(wanted, AI_FORGE_TIMEOUT.capMs);
+}
+
+/**
  * Retries par SURFACE. Prime sur {@link AI_EGRESS_RULES}.maxRetries.
  *
  * `forge` est à ZÉRO, et ce n'est pas de la frilosité. Une génération qui a
