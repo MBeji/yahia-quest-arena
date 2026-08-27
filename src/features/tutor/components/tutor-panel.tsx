@@ -33,6 +33,7 @@ import {
   type TutorMiniCheck,
 } from "../tutor.server";
 import type { TutorEscalationStep } from "../escalation";
+import { tutorLockedKey } from "../locked";
 
 type PanelState =
   | { kind: "idle" }
@@ -65,13 +66,13 @@ type MiniCheckState =
  * R-1 — les refus de la PORTE, dits en langage d'élève. Rend `null` pour tout ce
  * qui n'est pas un refus de porte : un code qu'on ne sait pas traduire ne
  * s'affiche pas, il fait disparaître le tuteur (R-A1.2-3).
+ *
+ * La table des codes est dans `../locked` : le chat de chapitre doit la même
+ * phrase au même refus, et deux copies auraient divergé.
  */
 function lockedCopy(reason: string, t: ReturnType<typeof useT>): string | null {
-  if (reason === "ACTIVE_SESSION") return t.tutor.lockedSession;
-  if (reason === "ACTIVE_DUNGEON") return t.tutor.lockedDungeon;
-  if (reason === "ACTIVE_DUEL") return t.tutor.lockedDuel;
-  if (reason === "NOT_ATTEMPTED") return t.tutor.lockedNotAttempted;
-  return null;
+  const key = tutorLockedKey(reason);
+  return key ? t.tutor[key] : null;
 }
 
 /** R-15 — un code technique devient une phrase d'enfant. Jamais l'inverse. */

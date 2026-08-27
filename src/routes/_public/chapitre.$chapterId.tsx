@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CloudOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -31,7 +31,8 @@ export const Route = createFileRoute("/_public/chapitre/$chapterId")({
   // zod tout entier. Motif de `forge` et de `quest.$exerciseId`.
   //
   // `?chat=1` vient de la bulle IA : elle amène l'élève ici POUR discuter, et le
-  // panneau s'ouvre donc déplié au lieu de lui demander un second clic.
+  // panneau s'ouvre donc déplié au lieu de lui demander un second clic. C'est une
+  // INTENTION — le panneau la prend, puis `dropChatIntent` la retire de l'URL.
   validateSearch: (search: Record<string, unknown>): { chat?: boolean } =>
     search.chat === 1 || search.chat === "1" || search.chat === true ? { chat: true } : {},
   head: () => ({ meta: [{ title: "Cours · Na9ra Nal3ab" }] }),
@@ -41,7 +42,24 @@ export const Route = createFileRoute("/_public/chapitre/$chapterId")({
 function ChapitrePage() {
   const { chapterId } = Route.useParams();
   const { chat: openChat } = Route.useSearch();
+  const navigate = Route.useNavigate();
   const { user, loading: authLoading } = useAuth();
+
+  /**
+   * `?chat=1` est une INTENTION, pas un état : elle vaut une fois, et le panneau
+   * la consomme. On la retire donc de l'URL dès qu'il l'a prise — sans quoi le
+   * clic SUIVANT sur la bulle produirait une adresse identique, donc aucune
+   * navigation, donc plus rien du tout (c'est la panne du 2026-08-27, un cran
+   * plus loin). `resetScroll: false` parce que ce retrait ne déplace personne :
+   * le panneau vient précisément d'amener l'élève jusqu'à lui.
+   *
+   * C'est le PANNEAU qui déclenche ce retrait, jamais un effet d'ici : tant que
+   * la session n'est pas résolue il n'est pas monté, et une intention retirée
+   * avant qu'il existe serait une intention perdue.
+   */
+  const dropChatIntent = useCallback(() => {
+    void navigate({ search: {}, replace: true, resetScroll: false });
+  }, [navigate]);
   const fetchLesson = useServerFn(getChapterLesson);
   const t = useT();
   const { data, isLoading, isError, refetch } = useQuery({
@@ -106,10 +124,17 @@ function ChapitrePage() {
         <ForgeEntry chapterId={chapterId} authenticated={!!user} />
         {/* Le chat du tuteur (é11 lot 3, US-8). Monté ici pour la même raison
             que la Forge juste au-dessus : c'est la ROUTE qui sait qui regarde,
-            et une feature n'en importe pas une autre. Le panneau se rend
-            lui-même invisible quand la porte est fermée (R-1) — un visiteur
-            anonyme n'a pas de tuteur, et il n'en voit pas la trace. */}
-        {user ? <TutorChatPanel chapterId={chapterId} defaultOpen={openChat === true} /> : null}
+            et une feature n'en importe pas une autre. Un visiteur anonyme n'a
+            pas de tuteur et n'en voit pas la trace (R-1) ; un élève dont la
+            porte est fermée par une épreuve en cours lit POURQUOI, en une
+            phrase — le panneau ne disparaît plus sans un mot. */}
+        {user ? (
+          <TutorChatPanel
+            chapterId={chapterId}
+            openIntent={openChat === true}
+            onIntentHandled={dropChatIntent}
+          />
+        ) : null}
       </PageShell>
     </>
   );
