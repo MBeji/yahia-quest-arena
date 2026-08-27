@@ -107,7 +107,7 @@ export function makeOpenAiCompatibleProvider(deps: OpenAiCompatibleDeps = {}): A
       // Le délai et le compte d'essais se lisent PAR SURFACE : une Forge et un
       // chat n'ont pas la même patience, et un modèle à raisonnement ne rend
       // pas un quiz en trente secondes (§3.5, mesure du 2026-08-25).
-      const timeoutMs = AI_TIMEOUT_MS[req.feature];
+      const timeoutMs = req.timeoutMs ?? AI_TIMEOUT_MS[req.feature];
       const maxRetries = AI_MAX_RETRIES[req.feature];
 
       for (let attempt = 0; attempt <= maxRetries; attempt += 1) {

@@ -35,7 +35,7 @@ import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middlew
 import { supabaseAdmin } from "@/shared/integrations/supabase/client.server";
 import { logger } from "@/shared/lib/logger";
 import { errorMessage, failWithClientError } from "@/shared/lib/safe-error";
-import { AI_FORGE_LIMITS, AI_VERIFY_SAMPLE_RATE } from "@/shared/constants/ai";
+import { AI_FORGE_LIMITS, AI_VERIFY_SAMPLE_RATE, forgeTimeoutMs } from "@/shared/constants/ai";
 // La difficulté d'un quiz forgé parle la MÊME échelle que celle du catalogue
 // (1-4) : c'est la constante de gameplay qui fait foi, pas une échelle parallèle
 // inventée pour la Forge.
@@ -177,6 +177,11 @@ export const forgeQuiz = createServerFn({ method: "POST" })
       feature: "forge",
       tier: "rich",
       system: FORGE_SYSTEM,
+      // La patience suit le VOLUME : un modèle à raisonnement passe des
+      // milliers de tokens de réflexion par candidat, et le plafond unique de
+      // 90 s était calibré sur le plus petit quiz (sept candidats) alors que
+      // l'écran arrive sur huit questions — donc dix.
+      timeoutMs: forgeTimeoutMs(wanted),
       blocks: buildForgeBlocks(
         {
           chapterTitle: ctx.chapter_title,

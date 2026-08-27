@@ -122,7 +122,7 @@ export function makeAnthropicProvider(factory: AnthropicFactory = defaultFactory
             // le client, lui, est construit une fois. Sans cette surcharge, un
             // élève attendrait deux fois moins longtemps selon la clé de sa
             // famille, ce que le constructeur ci-dessus refuse explicitement.
-            timeout: AI_TIMEOUT_MS[req.feature],
+            timeout: req.timeoutMs ?? AI_TIMEOUT_MS[req.feature],
             maxRetries: AI_MAX_RETRIES[req.feature],
           },
         );
@@ -162,7 +162,10 @@ export function makeAnthropicProvider(factory: AnthropicFactory = defaultFactory
           },
           // Même règle par surface que `generate` : la garantie annoncée en tête
           // de fichier ne vaut que si les DEUX chemins l'appliquent.
-          { timeout: AI_TIMEOUT_MS[req.feature], maxRetries: AI_MAX_RETRIES[req.feature] },
+          {
+            timeout: req.timeoutMs ?? AI_TIMEOUT_MS[req.feature],
+            maxRetries: AI_MAX_RETRIES[req.feature],
+          },
         );
       } catch (error) {
         throw toAiError(error);

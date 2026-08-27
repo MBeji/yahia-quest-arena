@@ -90,6 +90,20 @@ export type AiRequest = {
    * (R-19), pas à masquer.
    */
   readonly responseSchema?: Record<string, unknown>;
+  /**
+   * Patience de CET appel, en millisecondes. Absent ⇒ le barème par surface
+   * ({@link AI_TIMEOUT_MS}).
+   *
+   * Il existe parce qu'une surface n'a pas toujours la même durée : la Forge
+   * demande N+2 questions, et un modèle à raisonnement passe des milliers de
+   * tokens de réflexion sur CHACUNE. Un délai unique calibré sur le plus petit
+   * quiz condamne les grands — c'est la panne du 2026-08-26, où un quiz de huit
+   * questions (dix candidats) dépassait un plafond réglé pour sept.
+   *
+   * Ce n'est PAS une porte ouverte à l'appelant : la borne haute reste celle de
+   * R-6 condition 6, vérifiée contre le `maxDuration` de la fonction SSR.
+   */
+  readonly timeoutMs?: number;
 };
 
 /** Ce que le fournisseur rapporte avoir consommé. Base de l'estimation de coût (R-12). */

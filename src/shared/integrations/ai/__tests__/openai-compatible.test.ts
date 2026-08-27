@@ -259,6 +259,19 @@ describe("délai et essais par surface", () => {
     expect(calls[0].timeout).toBeGreaterThan(AI_EGRESS_RULES.timeoutMs);
   });
 
+  it("honore la patience DEMANDÉE par l'appelant, quand elle est fournie", async () => {
+    // La Forge la calcule sur le nombre de candidats (`forgeTimeoutMs`) : sans
+    // cette surcharge, la constante existerait et ne servirait à rien — la
+    // faute que ce dépôt a déjà commise plusieurs fois.
+    const { requestFn, calls } = scriptedTransport([{ statusCode: 200, body: okBody }]);
+    await makeOpenAiCompatibleProvider({ lookup, requestFn }).generate(
+      { ...forgeReq, timeoutMs: 123_000 },
+      cred,
+    );
+
+    expect(calls[0].timeout).toBe(123_000);
+  });
+
   it("laisse les surfaces qui répondent devant un élève au plafond commun", async () => {
     const { requestFn, calls } = scriptedTransport([{ statusCode: 200, body: okBody }]);
     await makeOpenAiCompatibleProvider({ lookup, requestFn }).generate(req, cred);

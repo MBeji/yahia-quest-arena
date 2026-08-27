@@ -153,6 +153,12 @@ export type AiCallRequest = {
    * vérification : exactement ce que R-18bis interdit.
    */
   readonly accessFeature?: AiFeature;
+  /**
+   * Patience de CET appel. Absent ⇒ le barème par surface
+   * ({@link AI_TIMEOUT_MS}). Un seul appelant aujourd'hui : la Forge, dont la
+   * durée dépend du NOMBRE de candidats demandés — voir `forgeTimeoutMs`.
+   */
+  readonly timeoutMs?: number;
 };
 
 export type AiCallOutcome =
@@ -480,6 +486,7 @@ function providerRequest(request: AiCallRequest, ticket: AiTicket): AiRequest {
     maxTokens: ticket.maxTokens,
     feature: request.feature,
     responseSchema: request.responseSchema,
+    timeoutMs: request.timeoutMs,
   };
 }
 
