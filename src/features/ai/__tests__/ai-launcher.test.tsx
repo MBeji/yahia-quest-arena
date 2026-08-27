@@ -50,6 +50,10 @@ vi.mock("@tanstack/react-router", () => ({
     return Promise.resolve();
   },
   useParams: () => routeParams,
+  // Le vrai `useLocation` re-rend à CHAQUE navigation ; le faux se contente de
+  // rendre le chemin courant, et les tests re-rendent eux-mêmes.
+  useLocation: (opts?: { select?: (l: { pathname: string }) => unknown }) =>
+    opts?.select ? opts.select({ pathname }) : { pathname },
 }));
 
 vi.mock("@/lib/i18n", () => ({
@@ -70,7 +74,6 @@ beforeEach(() => {
   chapters = CHAPTERS;
   routeParams = {};
   pathname = "/dashboard";
-  window.history.replaceState({}, "", pathname);
 });
 
 describe("AiLauncher", () => {
@@ -162,11 +165,32 @@ describe("AiLauncher", () => {
   it("SE TAIT pendant une épreuve notée — anti-triche, pas découverte", () => {
     surfaces = { enabled: true, features: ["chat", "forge"] };
     for (const path of ["/quest/abc", "/dungeon", "/duel/xyz", "/examen/1", "/onboarding"]) {
-      window.history.replaceState({}, "", path);
+      pathname = path;
       const view = render(<AiLauncher authenticated />);
       expect(screen.queryByTestId("ai-launcher"), path).not.toBeInTheDocument();
       view.unmount();
     }
+  });
+
+  /**
+   * La bulle lisait `window.location.pathname` PENDANT le rendu — une valeur qui
+   * ne notifie rien. Entre deux écrans sans paramètre d'URL (`/onboarding` puis
+   * `/dashboard`, `/dungeon` puis `/dashboard`), rien de ce à quoi le composant
+   * était abonné ne changeait : il gardait le `null` du rendu précédent, et le
+   * cœur du produit restait invisible sur le tableau de bord jusqu'au prochain
+   * rechargement complet. Le chemin vient donc du ROUTEUR.
+   */
+  it("REVIENT en quittant l'épreuve — même vers un écran sans paramètre d'URL", () => {
+    surfaces = { enabled: true, features: ["chat", "forge"] };
+    pathname = "/onboarding";
+    const view = render(<AiLauncher authenticated />);
+    expect(screen.queryByTestId("ai-launcher")).not.toBeInTheDocument();
+
+    // Sortie du tunnel : ni l'un ni l'autre de ces écrans n'a de paramètre, donc
+    // seul le chemin distingue les deux rendus.
+    pathname = "/dashboard";
+    view.rerender(<AiLauncher authenticated />);
+    expect(screen.getByTestId("ai-launcher")).toBeInTheDocument();
   });
 
   it("n'existe pas pour un visiteur anonyme", () => {

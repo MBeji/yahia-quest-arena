@@ -148,3 +148,42 @@ parce que les deux valeurs vivent dans deux fichiers que rien ne relie autrement
 **La règle générale** : une limite d'hébergement écrite dans un commentaire se **re-vérifie chez
 le fournisseur** avant d'être crue. Les plafonds des plateformes bougent — les commentaires qui
 les citent, non.
+
+## Une garde qui lit un état que rien ne referme devient définitive
+
+**Symptôme** : sur l'écran de correction d'une quête, « Demander au Prof » répond « Pas pendant
+un donjon ! On en parle à la sortie ». Aucun donjon n'est en cours. Le refus est **permanent** :
+il survit au rechargement, à la déconnexion, aux jours. Et comme il vient de la porte commune,
+il éteint d'un coup l'explication d'erreur, le chat de chapitre, la boucle de compréhension et
+« Entraîne-moi là-dessus » — donc l'entrée de la Forge par le tuteur. Vu de l'élève : « le mode
+IA ne marche pas », alors qu'aucun appel de modèle n'a jamais été tenté.
+
+**Cause** : `can_use_tutor` (R-1, é11) refusait dès qu'il **existait** une ligne d'épreuve non
+close. Or aucune des trois ne se referme d'elle-même :
+
+| Table               | Ce qui la ferme                                      | Ce qui arrive sinon                                                                     |
+| ------------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `dungeon_runs`      | une mauvaise réponse, ou `finalize_dungeon_run`      | onglet fermé ⇒ `status='active'` **à vie** ; `start_dungeon_run` en empile une nouvelle |
+| `exercise_sessions` | la soumission (`completed_at`)                       | quête quittée ⇒ séance ouverte à vie ; relancer le même exercice en ouvre une seconde   |
+| `duels`             | le balayage pg_cron `expire_duels`, toutes les 5 min | fenêtre de 5 min où un duel échu bloque encore                                          |
+
+Le chemin le plus court vers le défaut ne demande même pas d'abandon durable : quitter un
+exercice, le relancer, le terminer. La séance abandonnée est encore « en cours » quand l'écran
+de correction du run suivant s'affiche.
+
+**Vérifié le 2026-08-27** sur la suite pgTAP en local (recette de
+[`pgtap-en-local.md`](./pgtap-en-local.md)) : les six assertions de
+[`81_tutor_gate_live_trials.test.sql`](../../supabase/tests/81_tutor_gate_live_trials.test.sql)
+qui décrivent une épreuve abandonnée sont **rouges** contre l'ancienne fonction et vertes contre
+la nouvelle ; les six qui décrivent une épreuve réellement en cours sont vertes des deux côtés —
+c'est ce second groupe qui prouve que l'anti-triche n'a pas été échangée contre le correctif.
+
+**Le correctif** : la garde ne demande plus « cette ligne existe-t-elle ? » mais « cette épreuve
+est-elle **vivante** ? » — donjon actif il y a moins de 30 min (dernière réponse, ou son départ),
+duel avant sa propre `expires_at`, dernière séance de l'exercice ouverte depuis moins de 4 h.
+
+**La règle générale** : avant d'écrire `WHERE status = 'active'` dans une garde, chercher **qui**
+écrit l'autre statut. Si la réponse est « le chemin nominal », la garde est définitive pour tous
+ceux qui ne l'ont pas pris — et un utilisateur ne dira jamais « ma course de donjon est restée
+ouverte », il dira « ça ne marche pas ». Une garde se borne dans le temps, ou bien l'état qu'elle
+lit se referme tout seul.

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useNavigate, useParams } from "@tanstack/react-router";
+import { useLocation, useNavigate, useParams } from "@tanstack/react-router";
 import { GraduationCap, Hammer, Lock, Sparkles } from "lucide-react";
 
 import {
@@ -48,6 +48,27 @@ import { listForgeableChapters, type ForgeableChapter } from "../forge.server";
 /** Routes où la bulle se tait : épreuves notées et tunnels sans place pour elle. */
 const SILENT_PATHS = /^\/(quest|dungeon|duel|examen|onboarding)/;
 
+/**
+ * Le chemin courant, LU DANS LE ROUTEUR — jamais dans `window.location`.
+ *
+ * `window.location.pathname` lu pendant un rendu n'est pas une donnée réactive :
+ * il ne se relit qu'au prochain rendu, et rien ne garantit qu'il y en ait un.
+ * Deux écrans sans paramètre d'URL — `/onboarding` puis `/dashboard`, `/dungeon`
+ * puis `/dashboard` — ne changent aucune des valeurs auxquelles ce composant
+ * était abonné : il gardait donc le `null` du rendu précédent, et la bulle
+ * restait INVISIBLE sur le tableau de bord, juste après la sortie du tunnel
+ * d'inscription. Le cœur du produit disparaissait au moment exact où l'élève
+ * arrivait dessus, jusqu'au prochain rechargement complet.
+ *
+ * Le routeur, lui, notifie à chaque navigation ; et il rend le même chemin au
+ * SSR et au client, ce que `window` ne peut pas faire (côté serveur, il n'existe
+ * pas : la bulle était rendue dans le HTML des écrans d'épreuve, puis retirée à
+ * l'hydratation).
+ */
+function useSilent(): boolean {
+  return useLocation({ select: (location) => SILENT_PATHS.test(location.pathname) });
+}
+
 export function AiLauncher({ authenticated }: { authenticated: boolean }) {
   const t = useT();
   const navigate = useNavigate();
@@ -61,6 +82,7 @@ export function AiLauncher({ authenticated }: { authenticated: boolean }) {
   // il lit ce qu'elle expose.
   const params = useParams({ strict: false }) as { chapterId?: string };
   const currentChapterId = params.chapterId ?? null;
+  const silent = useSilent();
 
   const { data: surfaces } = useQuery({
     queryKey: ["ai-surfaces"],
@@ -82,7 +104,7 @@ export function AiLauncher({ authenticated }: { authenticated: boolean }) {
   });
 
   if (!authenticated) return null;
-  if (typeof window !== "undefined" && SILENT_PATHS.test(window.location.pathname)) return null;
+  if (silent) return null;
 
   const features = surfaces?.enabled === true ? surfaces.features : [];
   const chatOpen = features.includes("chat");
