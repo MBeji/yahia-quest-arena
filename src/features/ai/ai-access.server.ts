@@ -19,20 +19,29 @@ import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middlew
 import { logger } from "@/shared/lib/logger";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { AI_LIVE_FEATURES, TUTOR_HARD_DAILY_CAP } from "@/shared/constants/ai";
+import { isPlatformPathEnabled } from "@/shared/integrations/ai/provider.server";
 import { AI_MODE_ERROR_PREFIX } from "./ai-mode-status";
 
+type MaybeSingle<Row> = {
+  maybeSingle: () => PromiseLike<{
+    data: Row | null;
+    error: { message: string } | null;
+  }>;
+};
+
 type AiSurfacesReader = {
-  from: (table: "ai_student_access") => {
-    select: (columns: string) => {
-      eq: (
-        column: string,
-        value: string,
-      ) => {
-        maybeSingle: () => PromiseLike<{
-          data: { enabled: boolean; features: string[] } | null;
-          error: { message: string } | null;
-        }>;
+  from: {
+    (table: "ai_student_access"): {
+      select: (columns: string) => {
+        eq: (
+          column: string,
+          value: string,
+        ) => MaybeSingle<{ enabled: boolean; features: string[] }>;
       };
+    };
+    /** Singleton (`id` booléen vrai, CHECK sur la clé) : pas de `.eq()` à écrire. */
+    (table: "ai_admin_state"): {
+      select: (columns: string) => MaybeSingle<{ ai_enabled: boolean }>;
     };
   };
 };
@@ -141,28 +150,93 @@ export const setAiStudentAccess = createServerFn({ method: "POST" })
     return { ok: true } as const;
   });
 
+/** Ce qu'un élève peut atteindre. Aucun montant, et jamais le nom d'un payeur. */
+export type AiStudentSurfaces = { enabled: boolean; features: string[] };
+
+/**
+ * LA DÉCISION, séparée de ses deux lectures — et elle a DEUX payeurs.
+ *
+ * `ai_student_access` répond à « la clé de ma famille paie-t-elle cette
+ * surface », jamais à « cette surface est-elle ouverte ». Les deux questions ont
+ * eu la même réponse tant que le chemin plateforme était éteint ; le jour où
+ * `AI_PLATFORM_API_KEY` est posée, elles divergent — `resolve_ai_access` retombe
+ * sur la plateforme pour tout élève SANS ligne famille, et pour toute surface
+ * qu'une ligne famille ne coche pas.
+ *
+ * L'écran, lui, ne lisait que la première. Un élève sans clé de famille voyait
+ * donc « le mode IA n'est pas encore ouvert sur ce compte » et l'invitation à en
+ * brancher une — pendant que le serveur, sollicité, l'aurait servi. La bulle de
+ * #894 est née d'exactement cette faute côté famille (« une famille avait
+ * branché sa clé sans trouver aucune des surfaces ») ; celle-ci en est l'étage
+ * du dessous, et elle rendait la clé plateforme quasi invisible.
+ *
+ * L'ORDRE DES TROIS ENTRÉES SUIT CELUI DE `resolve_ai_access`, pour que l'écran
+ * ne puisse pas promettre ce que le SQL refusera :
+ *
+ *   1. le kill-switch DONNÉES (`ai_admin_state`) coupe tout, les deux payeurs ;
+ *   2. le chemin plateforme, s'il est armé, ouvre TOUTES les surfaces vivantes —
+ *      `preparePlatformCall` n'applique aucun filtre de surface ;
+ *   3. la ligne famille s'y ajoute (elle ne peut qu'ajouter : ce qu'elle décoche
+ *      retombe sur la plateforme, jamais dans le vide).
+ *
+ * Ce qu'elle NE dit toujours pas, délibérément : qui paie. R-14a interdit tout
+ * montant sur cette route, et le payeur n'a pas d'intérêt pour l'élève — il se
+ * lit dans la console du porteur, et nulle part ailleurs.
+ */
+export function studentSurfaces(input: {
+  globalEnabled: boolean;
+  family: { enabled: boolean; features: string[] } | null;
+  platformOpen: boolean;
+}): AiStudentSurfaces {
+  if (!input.globalEnabled) return { enabled: false, features: [] };
+
+  const features: string[] = input.platformOpen ? [...AI_LIVE_FEATURES] : [];
+  if (input.family?.enabled === true) {
+    for (const feature of input.family.features ?? []) {
+      if (!features.includes(feature)) features.push(feature);
+    }
+  }
+
+  return { enabled: features.length > 0, features };
+}
+
 /**
  * Les surfaces IA actives POUR L'APPELANT — la lecture que fait un élève, pas
  * son porteur de clé.
  *
  * C'est la requête de R-1 côté élève : une surface qui n'est pas dans cette
- * liste ne s'affiche pas du tout. Elle lit `ai_student_access` sous la RLS de
- * l'élève (sa propre ligne), donc elle ne révèle rien d'un autre compte — et
- * surtout, elle ne porte AUCUN montant (R-14a).
+ * liste ne s'affiche pas du tout. Elle lit sous la RLS de l'élève (sa propre
+ * ligne d'accès, et un état global que la migration déclare non secret
+ * justement « pour que l'UI puisse dégrader sans passer par une RPC »), donc
+ * elle ne révèle rien d'un autre compte — et surtout, elle ne porte AUCUN
+ * montant (R-14a).
  */
 export const getAiStudentSurfaces = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }): Promise<{ enabled: boolean; features: string[] }> => {
-    // La table est postérieure aux types Supabase générés : contrat figé ici,
-    // même patron que `exam.server.ts`. Deux colonnes, jamais une de plus — et
-    // surtout jamais `owner_user_id`, qui n'a rien à faire chez l'élève.
+  .handler(async ({ context }): Promise<AiStudentSurfaces> => {
+    // Contrat figé ici, même patron que `exam.server.ts`. Deux colonnes pour
+    // l'accès, jamais une de plus — et surtout jamais `owner_user_id`, qui n'a
+    // rien à faire chez l'élève.
     const client = context.supabase as unknown as AiSurfacesReader;
-    const { data: row, error } = await client
-      .from("ai_student_access")
-      .select("enabled, features")
-      .eq("student_user_id", context.userId)
-      .maybeSingle();
 
-    if (error || !row) return { enabled: false, features: [] };
-    return { enabled: row.enabled === true, features: row.features ?? [] };
+    const [family, admin] = await Promise.all([
+      client
+        .from("ai_student_access")
+        .select("enabled, features")
+        .eq("student_user_id", context.userId)
+        .maybeSingle(),
+      client.from("ai_admin_state").select("ai_enabled").maybeSingle(),
+    ]);
+
+    return studentSurfaces({
+      // Ligne absente ou lecture en échec ⇒ ALLUMÉ. C'est le `COALESCE(…, true)`
+      // de `resolve_ai_access`, mot pour mot : le kill-switch se lit à ce qu'il
+      // affirme, pas à ce qu'il tait, et une lecture ratée ne doit pas éteindre
+      // le parc. La coupure qui ne dépend de rien reste `AI_MODE_ENABLED`.
+      globalEnabled: admin.error ? true : admin.data?.ai_enabled !== false,
+      family: family.error ? null : family.data,
+      // Lu à CHAQUE appel comme partout ailleurs : un kill-switch qu'il faut
+      // redéployer pour actionner n'est pas un kill-switch.
+      platformOpen: isPlatformPathEnabled(),
+    });
   });
