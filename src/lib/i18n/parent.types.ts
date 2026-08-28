@@ -119,11 +119,16 @@ export type ParentTranslations = {
     pushDesc: string;
     goalTitle: string;
     goalHint: string;
+    goalPeriodDay: string;
+    goalPeriodWeek: string;
     goalSave: string;
     goalSaving: string;
     goalSaved: string;
+    goalSavedDaily: string;
     goalProgress: string;
+    goalProgressDaily: string;
     goalUnit: string;
+    goalUnitDaily: string;
     coverageShort: string;
   };
   // Suivi parental « jour par jour » — tableau de bord d'activité quotidienne.

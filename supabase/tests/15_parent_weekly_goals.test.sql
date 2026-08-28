@@ -67,7 +67,7 @@ SELECT is(
 
 SELECT throws_ok(
   $$SELECT public.set_parent_weekly_goal('f1000000-0000-0000-0000-0000000000bb', 0)$$,
-  'Invalid weekly target (1-50).',
+  'Invalid weekly target (1-1000).',
   'set: target below 1 is rejected');
 
 SELECT is(

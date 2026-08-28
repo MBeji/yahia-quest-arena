@@ -219,6 +219,7 @@ export const en: TranslationKeys = {
     recoveryFailed: "Recovery failed",
     familyGoalTitle: "Family goal",
     familyGoalProgress: "{done}/{target} missions this week",
+    familyGoalProgressDaily: "{done}/{target} missions today",
     familyGoalReached: "Goal reached, well done! 🎉",
     familyGoalHint: "Set by your parent — show them what you can do!",
     welcomeBack: "Welcome back,",

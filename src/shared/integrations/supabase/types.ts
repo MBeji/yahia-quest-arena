@@ -1677,6 +1677,36 @@ export type Database = {
           },
         ];
       };
+      parent_daily_goals: {
+        Row: {
+          created_at: string;
+          day: string;
+          id: string;
+          parent_user_id: string;
+          student_user_id: string;
+          target_exercises: number;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          day: string;
+          id?: string;
+          parent_user_id: string;
+          student_user_id: string;
+          target_exercises: number;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          day?: string;
+          id?: string;
+          parent_user_id?: string;
+          student_user_id?: string;
+          target_exercises?: number;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       parent_student_links: {
         Row: {
           created_at: string;
@@ -2906,7 +2936,10 @@ export type Database = {
         Returns: string;
       };
       _student_report_json: { Args: { p_student: string }; Returns: Json };
-      _student_weakness_insights: { Args: { p_student: string }; Returns: Json };
+      _student_weakness_insights: {
+        Args: { p_student: string };
+        Returns: Json;
+      };
       activate_inventory_item: { Args: { p_item_code: string }; Returns: Json };
       active_misconceptions: {
         Args: { p_user: string };
@@ -3010,6 +3043,7 @@ export type Database = {
         Args: { q: Database["public"]["Tables"]["questions"]["Row"] };
         Returns: string;
       };
+      app_current_day: { Args: never; Returns: string };
       app_current_week_start: { Args: never; Returns: string };
       append_tutor_message: {
         Args: {
@@ -3128,7 +3162,11 @@ export type Database = {
         Returns: number;
       };
       can_use_tutor: {
-        Args: { p_chapter_id?: string; p_question_id?: string; p_scope: string };
+        Args: {
+          p_chapter_id?: string;
+          p_question_id?: string;
+          p_scope: string;
+        };
         Returns: Json;
       };
       check_answers: {
@@ -3387,6 +3425,7 @@ export type Database = {
           subject_id: string;
         }[];
       };
+      get_family_daily_goal: { Args: { p_student: string }; Returns: Json };
       get_family_weekly_goal: { Args: { p_student: string }; Returns: Json };
       get_forge_context: {
         Args: { p_chapter: string };
@@ -4018,6 +4057,10 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      set_parent_daily_goal: {
+        Args: { p_student: string; p_target: number };
+        Returns: Json;
       };
       set_parent_weekly_goal: {
         Args: { p_student: string; p_target: number };

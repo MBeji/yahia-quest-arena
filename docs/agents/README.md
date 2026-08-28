@@ -20,12 +20,14 @@
 **Piège transverse à connaître avant d'écrire une RPC** : `src/shared/integrations/supabase/types.ts`
 est **généré depuis une base réelle**, jamais depuis `supabase/migrations/**`. Une fonction créée
 par une migration non encore appliquée n'est donc pas typée — `supabase.rpc('<nom>')` fait rougir
-`typecheck`, et le fichier est bloqué à l'édition manuelle (`guard-generated.mjs`, à raison). Sans
-Docker en local il n'y a **pas de raccourci** : c'est le cas d'usage exact de la DoD §7, en deux
-PR (migration, puis code après `supabase gen types`). Parade pour ne pas envoyer du PL/pgSQL non
-exécuté en prod entre les deux : le rejouer dans un Postgres WASM jetable **hors dépôt**
-(`@electric-sql/pglite`) — détail dans
-[`../suivi-parental-quotidien.md`](../suivi-parental-quotidien.md#livrer-en-deux-temps).
+`typecheck`, et le fichier est bloqué à l'édition manuelle (`guard-generated.mjs`, à raison). Ce
+fut longtemps réputé sans parade, d'où la livraison en deux PR (migration, puis code après
+`supabase gen types`). Ça ne l'est plus : le module `@supabase/postgres-meta` — celui que le CLI
+fait tourner dans son conteneur — s'installe hors dépôt et génère les types depuis le **cluster
+local** où la chaîne vient d'être rejouée, sans Docker ni jeton prod. Recette, et les trois
+écarts à régler dans la base de génération (pas dans le fichier) :
+[`pgtap-en-local.md`](./pgtap-en-local.md#le-même-cluster-type-aussi-les-rpc--sans-docker-sans-jeton-prod).
+La DoD §7 reste entière : elle porte sur l'ordre **d'application** en prod, pas sur le nombre de PR.
 
 **Le ref à passer à `--project-id` est celui de la PROD : `fasrenmmrkqjoobrztbp`** — source de
 vérité [`scripts/shared/prod-targets.mjs`](../../scripts/shared/prod-targets.mjs)

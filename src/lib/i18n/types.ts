@@ -231,6 +231,7 @@ export type TranslationKeys = {
     recoveryFailed: string;
     familyGoalTitle: string;
     familyGoalProgress: string;
+    familyGoalProgressDaily: string;
     familyGoalReached: string;
     familyGoalHint: string;
     welcomeBack: string;

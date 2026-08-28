@@ -17,12 +17,14 @@ import {
   buildFamilyReportShareText,
   DailyDashboard,
   getLinkedStudents,
+  getStudentDailyGoal,
   getStudentReport,
   getStudentWeeklyGoal,
   getTutorParentCounters,
   linkStudentByCode,
   parentCodeErrorLabel,
   ReportContent,
+  setStudentDailyGoal,
   setStudentWeeklyGoal,
 } from "@/features/parent-report";
 import { EnablePushCard } from "@/features/notifications";
@@ -36,6 +38,7 @@ import { useI18n } from "@/lib/i18n";
 import { useParentT } from "@/lib/i18n/parent";
 import { useEntrance } from "@/shared/lib/motion";
 import { LoadingState } from "@/components/ui/loading-state";
+import { GOAL_TARGET_MAX } from "@/shared/constants/gamification";
 
 export const Route = createFileRoute("/_authenticated/parent-report")({
   head: () => ({ meta: [{ title: "Suivi parental · Na9ra Nal3ab" }] }),
@@ -59,7 +62,7 @@ function ParentReport() {
   // jour par jour. Elles ne répondent pas aux mêmes questions et n'ont pas la
   // même densité — les empiler sur un seul écran les rendrait toutes deux
   // illisibles, d'où l'onglet.
-  const [view, setView] = useState<"summary" | "daily">("summary");
+  const [view, setView] = useState<"summary" | "daily">("daily");
   const ADMIN_PAGE_SIZE = 100;
 
   const { data: studentsData, isLoading: loadingStudents } = useQuery({
@@ -336,8 +339,8 @@ function ParentReport() {
         </div>
       )}
 
-      {/* Objectif de la semaine — le parent fixe la quête famille de l'enfant. */}
-      {!isAdmin && selectedStudent && <WeeklyGoalCard studentId={selectedStudent} />}
+      {/* Objectif famille — le parent fixe la quête de l'enfant, par jour ou par semaine. */}
+      {!isAdmin && selectedStudent && <FamilyGoalCard studentId={selectedStudent} />}
 
       {selectedStudent && (
         <div className="mb-4 inline-flex rounded-lg border border-border/60 bg-surface-2 p-0.5 print:hidden">
@@ -409,21 +412,28 @@ function ViewTab({
 }
 
 /**
- * L'objectif de la semaine alimente une alerte positive du tableau de bord
- * (« objectif atteint »). La requête partage la clé de `WeeklyGoalCard` :
- * TanStack Query la dédoublonne, il n'y a pas d'aller-retour supplémentaire.
+ * Les objectifs famille (jour et semaine) alimentent une alerte positive du
+ * tableau de bord (« objectif atteint »). Les requêtes partagent les clés de
+ * `FamilyGoalCard` : TanStack Query les dédoublonne, il n'y a pas
+ * d'aller-retour supplémentaire.
  */
 function DailyDashboardPanel({ studentId }: { studentId: string }) {
-  const getGoalFn = useServerFn(getStudentWeeklyGoal);
-  const { data: goal } = useQuery({
+  const getWeeklyFn = useServerFn(getStudentWeeklyGoal);
+  const getDailyFn = useServerFn(getStudentDailyGoal);
+  const { data: weekly } = useQuery({
     queryKey: ["weekly-goal", studentId],
-    queryFn: () => getGoalFn({ data: { studentId } }),
+    queryFn: () => getWeeklyFn({ data: { studentId } }),
+  });
+  const { data: daily } = useQuery({
+    queryKey: ["daily-goal", studentId],
+    queryFn: () => getDailyFn({ data: { studentId } }),
   });
 
   return (
     <DailyDashboard
       source={{ kind: "student", studentId }}
-      weeklyGoal={goal ? { target: goal.target, done: goal.done } : null}
+      weeklyGoal={weekly ? { target: weekly.target, done: weekly.done } : null}
+      dailyGoal={daily ? { target: daily.target, done: daily.done } : null}
     />
   );
 }
@@ -448,32 +458,53 @@ function isActiveThisWeek(lastActiveDate: string | null): boolean {
 }
 
 /**
- * Objectif de la semaine : le parent fixe un cap de missions ; l'enfant le voit
- * comme une quête famille sur son dashboard. Une ligne par élève et par semaine
- * (upsert côté RPC — le lien parent-élève y est vérifié).
+ * Objectif famille : le parent fixe un cap de missions **par jour ou par
+ * semaine** ; l'enfant le voit comme une quête famille sur son dashboard. Une
+ * ligne par élève et par période (upsert côté RPC — le lien parent-élève y est
+ * vérifié). Les deux périodes coexistent : en poser une n'efface pas l'autre.
  */
-function WeeklyGoalCard({ studentId }: { studentId: string }) {
+function FamilyGoalCard({ studentId }: { studentId: string }) {
   const t = useParentT();
   const queryClient = useQueryClient();
-  const getGoalFn = useServerFn(getStudentWeeklyGoal);
-  const setGoalFn = useServerFn(setStudentWeeklyGoal);
-  const [target, setTarget] = useState(5);
+  const getWeeklyFn = useServerFn(getStudentWeeklyGoal);
+  const setWeeklyFn = useServerFn(setStudentWeeklyGoal);
+  const getDailyFn = useServerFn(getStudentDailyGoal);
+  const setDailyFn = useServerFn(setStudentDailyGoal);
+  const [period, setPeriod] = useState<"day" | "week">("day");
+  const [target, setTarget] = useState(3);
 
-  const { data: goal } = useQuery({
+  // Deux requêtes distinctes plutôt qu'une requête paramétrée : elles partagent
+  // leurs clés avec `DailyDashboardPanel`, qui a besoin des DEUX objectifs pour
+  // ses alertes. TanStack Query les dédoublonne — basculer de période n'ouvre
+  // aucun aller-retour.
+  const { data: weeklyGoal } = useQuery({
     queryKey: ["weekly-goal", studentId],
-    queryFn: () => getGoalFn({ data: { studentId } }),
+    queryFn: () => getWeeklyFn({ data: { studentId } }),
   });
+  const { data: dailyGoal } = useQuery({
+    queryKey: ["daily-goal", studentId],
+    queryFn: () => getDailyFn({ data: { studentId } }),
+  });
+  const goal = period === "day" ? dailyGoal : weeklyGoal;
 
-  // Aligne le champ sur l'objectif déjà posé quand il arrive / change d'élève.
+  // Aligne le champ sur l'objectif déjà posé pour la période affichée. Sans
+  // objectif, une valeur d'amorce propre à la maille : un cap hebdomadaire de 3
+  // missions serait aussi absurde qu'un cap quotidien de 5.
   useEffect(() => {
-    if (goal) setTarget(goal.target);
-  }, [goal]);
+    setTarget(goal ? goal.target : period === "day" ? 3 : 5);
+  }, [goal, period]);
 
   const saveMutation = useMutation({
-    mutationFn: () => setGoalFn({ data: { studentId, target } }),
+    mutationFn: () =>
+      period === "day"
+        ? setDailyFn({ data: { studentId, target } })
+        : setWeeklyFn({ data: { studentId, target } }),
     onSuccess: (res) => {
-      toast.success(t.parentReport.goalSaved.replace("{n}", String(res.target)));
-      queryClient.invalidateQueries({ queryKey: ["weekly-goal", studentId] });
+      const label = period === "day" ? t.parentReport.goalSavedDaily : t.parentReport.goalSaved;
+      toast.success(label.replace("{n}", String(res.target)));
+      queryClient.invalidateQueries({
+        queryKey: period === "day" ? ["daily-goal", studentId] : ["weekly-goal", studentId],
+      });
     },
     onError: (error) => {
       toast.error(error instanceof Error ? error.message : t.parentReport.linkFailed);
@@ -490,20 +521,35 @@ function WeeklyGoalCard({ studentId }: { studentId: string }) {
         <span className="font-semibold">{t.parentReport.goalTitle}</span>
       </div>
       <p className="text-xs text-muted-foreground">{t.parentReport.goalHint}</p>
+      <div className="mt-3 inline-flex rounded-lg border border-border/60 bg-surface-2 p-0.5">
+        <ViewTab
+          active={period === "day"}
+          label={t.parentReport.goalPeriodDay}
+          onClick={() => setPeriod("day")}
+        />
+        <ViewTab
+          active={period === "week"}
+          label={t.parentReport.goalPeriodWeek}
+          onClick={() => setPeriod("week")}
+        />
+      </div>
       <div className="mt-3 flex flex-wrap items-center gap-3">
         <input
           type="number"
           min={1}
-          max={50}
+          max={GOAL_TARGET_MAX}
           value={target}
           onChange={(e) => {
             const n = Number(e.target.value);
-            if (Number.isFinite(n)) setTarget(Math.max(1, Math.min(50, Math.trunc(n))));
+            if (Number.isFinite(n))
+              setTarget(Math.max(1, Math.min(GOAL_TARGET_MAX, Math.trunc(n))));
           }}
           aria-label={t.parentReport.goalTitle}
-          className="w-20 rounded-lg border border-gold/30 bg-surface-3 px-3 py-2 text-sm text-foreground focus:border-gold focus:outline-none"
+          className="w-24 rounded-lg border border-gold/30 bg-surface-3 px-3 py-2 text-sm text-foreground focus:border-gold focus:outline-none"
         />
-        <span className="text-sm text-muted-foreground">{t.parentReport.goalUnit}</span>
+        <span className="text-sm text-muted-foreground">
+          {period === "day" ? t.parentReport.goalUnitDaily : t.parentReport.goalUnit}
+        </span>
         <button
           type="button"
           disabled={saveMutation.isPending || (goal != null && goal.target === target)}
@@ -516,7 +562,7 @@ function WeeklyGoalCard({ studentId }: { studentId: string }) {
       {goal && (
         <div className="mt-3">
           <div className="mb-1 text-xs text-muted-foreground">
-            {t.parentReport.goalProgress
+            {(period === "day" ? t.parentReport.goalProgressDaily : t.parentReport.goalProgress)
               .replace("{done}", String(done))
               .replace("{target}", String(goal.target))}
           </div>

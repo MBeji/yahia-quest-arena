@@ -626,29 +626,53 @@ describe("gamification.dashboard — getMyFamilyGoal", () => {
     mockRpc.mockReset();
   });
 
-  it("returns the parsed goal for the signed-in student", async () => {
-    mockRpc.mockResolvedValue({
-      data: { weekStart: "2026-06-29", target: 5, done: 3 },
-      error: null,
-    });
+  it("returns both periods, each parsed, for the signed-in student", async () => {
+    mockRpc.mockImplementation((fn: string) =>
+      Promise.resolve(
+        fn === "get_family_weekly_goal"
+          ? { data: { weekStart: "2026-06-29", target: 5, done: 3 }, error: null }
+          : { data: { day: "2026-06-30", target: 2, done: 2 }, error: null },
+      ),
+    );
 
     const { getMyFamilyGoal } = await import("@/features/dashboard");
     const result = await (getMyFamilyGoal as unknown as (d?: unknown) => Promise<unknown>)();
 
-    expect(result).toEqual({ weekStart: "2026-06-29", target: 5, done: 3 });
+    expect(result).toEqual({
+      weekly: { target: 5, done: 3 },
+      daily: { target: 2, done: 2 },
+    });
   });
 
-  it("returns null when no goal is set this week", async () => {
-    mockRpc.mockResolvedValue({ data: null, error: null });
+  it("returns null for a period with no goal set", async () => {
+    mockRpc.mockImplementation((fn: string) =>
+      Promise.resolve(
+        fn === "get_family_weekly_goal"
+          ? { data: { weekStart: "2026-06-29", target: 5, done: 3 }, error: null }
+          : { data: null, error: null },
+      ),
+    );
 
     const { getMyFamilyGoal } = await import("@/features/dashboard");
-    expect(await (getMyFamilyGoal as unknown as (d?: unknown) => Promise<unknown>)()).toBeNull();
+    expect(await (getMyFamilyGoal as unknown as (d?: unknown) => Promise<unknown>)()).toEqual({
+      weekly: { target: 5, done: 3 },
+      daily: null,
+    });
   });
 
-  it("degrades to null when the RPC is unavailable (not yet deployed)", async () => {
-    mockRpc.mockResolvedValue({ data: null, error: { message: "function does not exist" } });
+  it("degrades to null on the period whose RPC is unavailable (not yet deployed)", async () => {
+    mockRpc.mockImplementation((fn: string) =>
+      Promise.resolve(
+        fn === "get_family_weekly_goal"
+          ? { data: { weekStart: "2026-06-29", target: 5, done: 3 }, error: null }
+          : { data: null, error: { message: "function does not exist" } },
+      ),
+    );
 
     const { getMyFamilyGoal } = await import("@/features/dashboard");
-    expect(await (getMyFamilyGoal as unknown as (d?: unknown) => Promise<unknown>)()).toBeNull();
+    expect(await (getMyFamilyGoal as unknown as (d?: unknown) => Promise<unknown>)()).toEqual({
+      weekly: { target: 5, done: 3 },
+      daily: null,
+    });
   });
 });

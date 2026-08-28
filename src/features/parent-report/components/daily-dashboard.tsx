@@ -61,10 +61,13 @@ const PRESETS: PeriodPresetKey[] = [
 export function DailyDashboard({
   source,
   weeklyGoal = null,
+  dailyGoal = null,
 }: {
   source: ReportSource;
   /** Objectif famille de la semaine, quand le parent en a posé un (§5). */
   weeklyGoal?: { target: number; done: number } | null;
+  /** Objectif famille du jour, quand le parent en a posé un (§5). */
+  dailyGoal?: { target: number; done: number } | null;
 }) {
   const t = useParentT();
   const fetchById = useServerFn(getStudentDailyReport);
@@ -117,6 +120,7 @@ export function DailyDashboard({
         <DailyDashboardBody
           report={report}
           weeklyGoal={weeklyGoal}
+          dailyGoal={dailyGoal}
           onOpenAttempt={setOpenAttempt}
         />
       )}
@@ -133,17 +137,22 @@ export function DailyDashboard({
 function DailyDashboardBody({
   report,
   weeklyGoal,
+  dailyGoal,
   onOpenAttempt,
 }: {
   report: DailyReport;
   weeklyGoal: { target: number; done: number } | null;
+  dailyGoal: { target: number; done: number } | null;
   onOpenAttempt: (attemptId: string) => void;
 }) {
   const t = useParentT();
   const engagement = useMemo(() => computeEngagement(report), [report]);
   const efficiency = useMemo(() => computeEfficiency(report), [report]);
   const kpis = useMemo(() => deriveKpis(report), [report]);
-  const alerts = useMemo(() => buildAlerts(report, { weeklyGoal }), [report, weeklyGoal]);
+  const alerts = useMemo(
+    () => buildAlerts(report, { weeklyGoal, dailyGoal }),
+    [report, weeklyGoal, dailyGoal],
+  );
 
   // Le temps n'est mesuré que depuis la mise en place des pouls d'activité :
   // sur une période antérieure, « 0 minute » ne veut pas dire « rien fait ».
