@@ -34,6 +34,14 @@ export interface TutorTranslations {
   noEnergyBody: string;
   pausedTitle: string;
   pausedBody: string;
+  /**
+   * L'échec que « réessaie dans un moment » décrit MAL : la clé est refusée, le
+   * crédit épuisé, le modèle inconnu. Il se lève dans les Réglages, par la
+   * personne qui a attaché la clé — jamais par l'enfant, et jamais par un
+   * nouvel essai. Cf. `features/tutor/degraded.ts`.
+   */
+  keyIssueTitle: string;
+  keyIssueBody: string;
   /** R-1 — les refus de la porte, dits en langage d'élève. */
   lockedSession: string;
   lockedDungeon: string;

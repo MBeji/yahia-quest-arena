@@ -1,5 +1,5 @@
-import { render, screen, waitFor } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { TutorChatEntry } from "../tutor.server";
 
@@ -177,4 +177,71 @@ describe("TutorChatPanel — R-1, la porte", () => {
     const { container } = render(<TutorChatPanel chapterId={CHAPTER} openIntent />);
     expect(container.textContent).toBe("");
   });
+});
+
+/**
+ * R-15 — « IL NE RÉPOND PAS POUR L'INSTANT » NE DÉCRIT PAS TOUT.
+ *
+ * Constaté en prod le 2026-08-28, clé famille sur `grok-4.6` : tous les échecs
+ * d'appel tombaient sur ce même repli, y compris ceux qu'un nouvel essai ne peut
+ * PAS lever — clé refusée, crédit épuisé, modèle inconnu. Le conseil était donc
+ * faux là où il comptait le plus : l'enfant réessaie, dépense une unité de son
+ * énergie du jour à chaque tentative, et personne ne prévient l'adulte qui, lui,
+ * pourrait corriger la chose en trente secondes dans les Réglages.
+ *
+ * La ligne de partage vit dans `../degraded`, partagée avec l'écran de
+ * correction — même raison qu'en `../locked` : deux copies auraient divergé.
+ */
+describe("TutorChatPanel — l'échec qui appelle le porteur de la clé", () => {
+  /** Le flux SSE réduit à ce que le panneau en lit : une trame d'erreur. */
+  function streamFailingWith(code: string) {
+    const frame = `event: error\ndata: ${JSON.stringify({ code })}\n\n`;
+    let served = false;
+    return vi.fn(async () => ({
+      ok: true,
+      body: {
+        getReader: () => ({
+          read: async () =>
+            served
+              ? { done: true, value: undefined }
+              : ((served = true), { done: false, value: new TextEncoder().encode(frame) }),
+        }),
+      },
+    }));
+  }
+
+  async function ask(code: string) {
+    vi.stubGlobal("fetch", streamFailingWith(code));
+    render(<TutorChatPanel chapterId={CHAPTER} openIntent />);
+    fireEvent.click(screen.getByRole("button", { name: "Explique-moi ce chapitre" }));
+  }
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it.each(["AI_KEY_INVALID", "AI_CREDIT_EXHAUSTED", "AI_MODEL_UNKNOWN", "AI_HOST_NOT_ALLOWED"])(
+    "envoie l'élève vers ses parents sur %s",
+    async (code) => {
+      await ask(code);
+
+      await waitFor(() => expect(screen.getByText(/Préviens tes parents/)).toBeInTheDocument());
+      // Et surtout PAS l'ancien conseil : réessayer ne rouvre aucune de ces portes.
+      expect(screen.queryByText(/Réessaie dans un moment/)).toBeNull();
+      // R-5 : le code technique ne franchit jamais la ligne.
+      expect(screen.queryByText(new RegExp(code))).toBeNull();
+    },
+  );
+
+  it.each(["AI_PROVIDER_DOWN", "AI_RATE_LIMITED", "AI_UNKNOWN"])(
+    "garde « réessaie dans un moment » pour ce qui est vraiment passager — %s",
+    async (code) => {
+      await ask(code);
+
+      await waitFor(() => expect(screen.getByText(/Réessaie dans un moment/)).toBeInTheDocument());
+      // Déranger un parent pour une panne de trente secondes serait le défaut
+      // symétrique, et il coûterait la confiance dans le message.
+      expect(screen.queryByText(/Préviens tes parents/)).toBeNull();
+    },
+  );
 });

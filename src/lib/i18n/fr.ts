@@ -499,6 +499,8 @@ export const fr: TranslationKeys = {
     noEnergyBody: "Tu as utilisé toute ton énergie du jour. Le cours, lui, est toujours là !",
     pausedTitle: "El Ostedh est en pause",
     pausedBody: "Il ne répond pas pour l'instant. Réessaie dans un moment.",
+    keyIssueTitle: "El Ostedh ne peut pas répondre",
+    keyIssueBody: "La clé IA de ta famille a besoin d'un réglage. Préviens tes parents.",
     lockedSession: "Termine d'abord ta mission — après, on en parle",
     lockedDungeon: "Pas pendant un donjon ! On en parle à la sortie",
     lockedDuel: "Pas pendant un duel ! On en parle après",

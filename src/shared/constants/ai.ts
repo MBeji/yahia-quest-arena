@@ -746,6 +746,34 @@ export const AI_EGRESS_RULES = {
 } as const;
 
 /**
+ * LE BUDGET DES SURFACES QUI RÉPONDENT DEVANT UN ÉLÈVE.
+ * ---------------------------------------------------------------------------
+ * Le 2026-08-25 avait tiré la bonne conclusion pour la seule Forge : un modèle à
+ * raisonnement ne tient pas dans trente secondes. Le chat, l'explication, la
+ * reformulation et le mini-contrôle sont restés sur le plafond commun — le même
+ * mur, jamais déplacé. Mesuré le 2026-08-28 en prod sur `grok-4.6`, palier
+ * `fast`, un tour de chat : **27,1 s jusqu'au premier octet**, pour 611 octets
+ * de réponse. La médiane passait donc de justesse, et tout ce qui dépassait
+ * tombait en `AI_PROVIDER_DOWN` — un appel sur deux dans le journal du porteur.
+ *
+ * POURQUOI SOIXANTE, ET POURQUOI C'EST UNE ATTENTE PLUS COURTE
+ * ---------------------------------------------------------------------------
+ * Le chiffre paraît doubler la patience ; il la RÉDUIT. Ces surfaces réessayaient
+ * (`AI_MAX_RETRIES` = 2) et rejouaient le timeout lui-même : trois tentatives de
+ * trente secondes plus les reculs, soit ≈ 92 s avant que l'enfant lise « il ne
+ * répond pas » — et trois générations facturées par un fournisseur qui compte ce
+ * qu'il a calculé, même quand nous raccrochons. Un timeout ne se rejouant plus
+ * (cf. `openai-compatible.server.ts`), le pire cas devient UNE tentative de 60 s.
+ * L'élève attend donc strictement moins qu'avant, et reçoit une réponse là où il
+ * n'en recevait aucune.
+ *
+ * `verify` reste au plafond commun, à dessein : c'est le ping de 16 tokens qui
+ * décide si une clé est utilisable, et il est le seul de la liste à n'avoir
+ * jamais échoué sur la mesure.
+ */
+export const AI_STUDENT_TIMEOUT_MS = 60_000;
+
+/**
  * Délai par SURFACE. Prime sur {@link AI_EGRESS_RULES}.timeoutMs, qui reste le
  * défaut de tout appel qui ne passe pas de surface.
  *
@@ -771,10 +799,10 @@ export const AI_EGRESS_RULES = {
  */
 export const AI_TIMEOUT_MS: Readonly<Record<AiFeature, number>> = {
   verify: AI_EGRESS_RULES.timeoutMs,
-  explain: AI_EGRESS_RULES.timeoutMs,
-  reformulate: AI_EGRESS_RULES.timeoutMs,
-  chat: AI_EGRESS_RULES.timeoutMs,
-  check: AI_EGRESS_RULES.timeoutMs,
+  explain: AI_STUDENT_TIMEOUT_MS,
+  reformulate: AI_STUDENT_TIMEOUT_MS,
+  chat: AI_STUDENT_TIMEOUT_MS,
+  check: AI_STUDENT_TIMEOUT_MS,
   forge: 90_000,
   forge_solve: AI_EGRESS_RULES.timeoutMs,
   exercise_gen: AI_EGRESS_RULES.timeoutMs,

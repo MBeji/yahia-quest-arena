@@ -8,7 +8,7 @@ import {
   makeOpenAiCompatibleProvider,
   parseCompletion,
 } from "../openai-compatible.server";
-import { AI_EGRESS_RULES, AI_TIMEOUT_MS } from "@/shared/constants/ai";
+import { AI_EGRESS_RULES, AI_STUDENT_TIMEOUT_MS, AI_TIMEOUT_MS } from "@/shared/constants/ai";
 import { AiError } from "../errors";
 import { sealSecret, type AiCredential, type AiRequest } from "../types";
 import type { EgressLookup, HttpsRequestFn } from "../egress.server";
@@ -77,6 +77,50 @@ function scriptedTransport(responses: { statusCode: number; body: string }[]) {
     return req_;
   }) as unknown as HttpsRequestFn;
   return { requestFn, calls, attempts: () => index };
+}
+
+/**
+ * Un transport qui ÉCHOUE AVANT toute réponse — la seule façon d'observer la
+ * différence entre les deux pannes que `AI_PROVIDER_DOWN` recouvre.
+ *
+ * `timeout` : nous avons raccroché après avoir attendu tout le budget de la
+ * surface. `error` : DNS, TLS, RST — la socket est morte en quelques centaines
+ * de millisecondes. Le CODE est le même pour les deux ; seul le `detail` les
+ * sépare, et c'est sur lui que la décision de rejouer se prend.
+ */
+function failingTransport(kind: "timeout" | "error", okFromAttempt = Number.POSITIVE_INFINITY) {
+  let index = 0;
+  const requestFn = ((options: Record<string, unknown>, callback: (res: EventEmitter) => void) => {
+    const attempt = index;
+    index += 1;
+    const req_ = new EventEmitter() as EventEmitter & {
+      write: (chunk: string) => void;
+      end: () => void;
+      destroy: () => void;
+    };
+    req_.write = () => {};
+    req_.destroy = () => {};
+    req_.end = () => {
+      // Après `end()` : `egressRequest` a posé ses écouteurs avant d'appeler.
+      queueMicrotask(() => {
+        if (attempt >= okFromAttempt) {
+          const res = new EventEmitter() as EventEmitter & {
+            statusCode: number;
+            destroy: () => void;
+          };
+          res.statusCode = 200;
+          res.destroy = () => {};
+          callback(res);
+          res.emit("data", Buffer.from(okBody));
+          res.emit("end");
+          return;
+        }
+        req_.emit(kind);
+      });
+    };
+    return req_;
+  }) as unknown as HttpsRequestFn;
+  return { requestFn, attempts: () => index };
 }
 
 const okBody = JSON.stringify({
@@ -220,6 +264,54 @@ describe("retries — 429/5xx oui, 401/403 JAMAIS", () => {
   });
 });
 
+/**
+ * UN TIMEOUT NE SE REJOUE PAS — la promesse tenue.
+ *
+ * Le commentaire de l'adaptateur l'annonçait depuis l'origine (« un timeout a
+ * déjà consommé 30 secondes : on ne les rejoue pas ») et le code faisait
+ * l'inverse : `toAiError` rend `AI_PROVIDER_DOWN` pour un abandon comme pour un
+ * 5xx, et la branche de retry les traitait à l'identique. Constaté en prod le
+ * 2026-08-28 sur une clé famille : ≈ 92 s d'attente avant « il ne répond pas »,
+ * et trois générations facturées par un fournisseur qui compte ce qu'il a
+ * calculé même quand nous raccrochons.
+ */
+describe("retries — le timeout est le seul `AI_PROVIDER_DOWN` qu'on ne rejoue pas", () => {
+  it("abandonne dès la PREMIÈRE expiration", async () => {
+    vi.useFakeTimers();
+    const { requestFn, attempts } = failingTransport("timeout");
+    const promise = makeOpenAiCompatibleProvider({ lookup, requestFn })
+      .generate(req, cred)
+      .catch((e: unknown) => e);
+    await vi.runAllTimersAsync();
+
+    expect(await promise).toMatchObject({ code: "AI_PROVIDER_DOWN", detail: "timeout" });
+    // Trois tentatives, c'était trois fois le budget de la surface AJOUTÉ à
+    // l'attente de l'enfant, pour un verdict que la première avait déjà rendu.
+    expect(attempts()).toBe(1);
+    vi.useRealTimers();
+  });
+
+  it("réessaie en revanche un incident de TRANSPORT, qui lui est souvent passager", async () => {
+    vi.useFakeTimers();
+    // DNS, TLS, RST : la socket meurt en quelques centaines de millisecondes, et
+    // rejouer ne coûte ni attente sensible ni génération facturée.
+    const { requestFn, attempts } = failingTransport("error", 1);
+    const promise = makeOpenAiCompatibleProvider({ lookup, requestFn }).generate(req, cred);
+    await vi.runAllTimersAsync();
+
+    await expect(promise).resolves.toMatchObject({ text: "Voici l'explication." });
+    expect(attempts()).toBe(2);
+    vi.useRealTimers();
+  });
+
+  it("borne l'attente d'une surface d'élève à UN budget, et non à trois", () => {
+    // Le garde-fou de la régression : si un jour le timeout redevenait
+    // retentable, ce produit ferait attendre 180 s un enfant de douze ans.
+    const WORST_CASE_MS = AI_TIMEOUT_MS.chat;
+    expect(WORST_CASE_MS).toBeLessThan(3 * AI_EGRESS_RULES.timeoutMs);
+  });
+});
+
 describe("R-6 dans le chemin d'appel, pas seulement à la saisie", () => {
   it("refuse une base_url privée à CHAQUE appel, sans réessayer", async () => {
     const privateLookup: EgressLookup = async () => [{ address: "169.254.169.254", family: 4 }];
@@ -272,9 +364,24 @@ describe("délai et essais par surface", () => {
     expect(calls[0].timeout).toBe(123_000);
   });
 
-  it("laisse les surfaces qui répondent devant un élève au plafond commun", async () => {
+  it("accorde AUSSI aux surfaces d'élève un délai plus large que le plafond commun", async () => {
+    // Ce test disait l'inverse jusqu'au 2026-08-28 — les surfaces d'élève
+    // restaient à trente secondes — et c'était la panne, pas la règle : mesuré
+    // en prod sur `grok-4.6`, un tour de chat met 27,1 s avant le premier octet.
+    // La médiane passait de justesse, le reste tombait en `AI_PROVIDER_DOWN`.
     const { requestFn, calls } = scriptedTransport([{ statusCode: 200, body: okBody }]);
     await makeOpenAiCompatibleProvider({ lookup, requestFn }).generate(req, cred);
+
+    expect(calls[0].timeout).toBe(AI_STUDENT_TIMEOUT_MS);
+    expect(calls[0].timeout).toBeGreaterThan(AI_EGRESS_RULES.timeoutMs);
+  });
+
+  it("garde `verify` au plafond commun — le ping de 16 tokens n'a jamais manqué de temps", async () => {
+    const { requestFn, calls } = scriptedTransport([{ statusCode: 200, body: okBody }]);
+    await makeOpenAiCompatibleProvider({ lookup, requestFn }).generate(
+      { ...req, feature: "verify", maxTokens: 16 },
+      cred,
+    );
 
     expect(calls[0].timeout).toBe(AI_EGRESS_RULES.timeoutMs);
   });
