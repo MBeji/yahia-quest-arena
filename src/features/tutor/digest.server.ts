@@ -78,17 +78,6 @@ import {
  * `ai-call.server.ts`. À SUPPRIMER à la prochaine régénération de
  * `src/shared/integrations/supabase/types.ts`.
  */
-type DigestRpcClient = {
-  rpc: (
-    fn:
-      | "get_tutor_digest"
-      | "get_tutor_parent_digest"
-      | "get_tutor_digest_inputs"
-      | "store_tutor_digest",
-    args?: Record<string, unknown>,
-  ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
-};
-
 /**
  * Les LECTURES de table que le batch fait en direct. Aucune n'a de RPC, et
  * aucune n'en mérite une :
@@ -186,7 +175,7 @@ export const getWeeklyDigest = createServerFn({ method: "GET" })
       .parse(d ?? {}),
   )
   .handler(async ({ data, context }): Promise<TutorDigestView> => {
-    const client = context.supabase as unknown as DigestRpcClient;
+    const client = context.supabase;
 
     if (data.audience === "parent" && !data.studentId) {
       // Un écran parent sans élève désigné est un bug d'appelant, pas un état de
@@ -194,13 +183,19 @@ export const getWeeklyDigest = createServerFn({ method: "GET" })
       return { kind: "none", reason: "unavailable" };
     }
 
+    // Le `&& data.studentId` est REDONDANT avec la garde ci-dessus — et c'est
+    // exactement son intérêt : il rend au compilateur ce que la garde promettait
+    // en commentaire. Élargir le type serait faux ici, parce que le SQL REFUSE
+    // NULL : `is_parent_of_student(v_parent, NULL)` est faux, donc `NOT_LINKED`.
+    // `p_week_start`, lui, est `DATE DEFAULT NULL` des deux côtés : l'omettre
+    // vaut NULL, et NULL veut dire « le bilan le plus récent ».
     const { data: raw, error } =
-      data.audience === "parent"
+      data.audience === "parent" && data.studentId
         ? await client.rpc("get_tutor_parent_digest", {
             p_student_id: data.studentId,
-            p_week_start: data.weekStart,
+            p_week_start: data.weekStart ?? undefined,
           })
-        : await client.rpc("get_tutor_digest", { p_week_start: data.weekStart });
+        : await client.rpc("get_tutor_digest", { p_week_start: data.weekStart ?? undefined });
 
     if (error) {
       // `get_tutor_parent_digest` LÈVE `NOT_LINKED` sur un lien coupé : c'est le
@@ -337,7 +332,7 @@ async function produceDigest(
       continue;
     }
 
-    const stored = await (supabaseAdmin as unknown as DigestRpcClient).rpc("store_tutor_digest", {
+    const stored = await supabaseAdmin.rpc("store_tutor_digest", {
       p_user: studentUserId,
       p_week_start: weekStart,
       p_audience: audience,
@@ -415,7 +410,7 @@ export async function generateWeeklyDigests(
   options: TutorDigestBatchOptions,
 ): Promise<TutorDigestBatchSummary> {
   const weekStart = digestWeekStart(options.now ?? new Date());
-  const admin = supabaseAdmin as unknown as DigestRpcClient;
+  const admin = supabaseAdmin;
   const deadline = Date.now() + ROUND_BUDGET_MS;
 
   const summary = { examined: 0, written: 0, skippedEmpty: 0, skippedDone: 0, degraded: 0 };
