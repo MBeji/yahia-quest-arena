@@ -56,11 +56,13 @@ export {
 
 export {
   getAiModeStatus,
-  markCredentialState,
   revokeAiCredential,
   setAiCredential,
+  setAiModels,
   setAiPreferences,
 } from "./ai-credentials.server";
+
+export { markCredentialState } from "./ai-vault.server";
 
 export {
   AI_MODE_ERROR_PREFIX,

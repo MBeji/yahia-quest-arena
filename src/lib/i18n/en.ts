@@ -1014,6 +1014,11 @@ export const en: TranslationKeys = {
     modelRich: "Advanced model",
     modelCurated: "Recommended models",
     modelFree: "…or type any model id you like",
+    modelsTitle: "Models in use",
+    modelsHint:
+      "The fast model answers in chat and explanations; the advanced one forges quizzes. A reasoning model keeps the student waiting — prefer a fast one for the first.",
+    modelsSave: "Verify and switch model",
+    modelsSaved: "Models verified and saved.",
     keyLabel: "API key",
     keyHint: "It is encrypted before storage and never shown again — not to you, not to us.",
     dailyBudget: "Daily cap ($)",

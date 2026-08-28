@@ -44,7 +44,7 @@ import {
   type AiProviderId,
 } from "@/shared/constants/ai";
 import { asAiErrorCode, toAiError, type AiErrorCode } from "@/shared/integrations/ai";
-import { sealSecret } from "@/shared/integrations/ai/types";
+import { revealSecret, sealSecret } from "@/shared/integrations/ai/types";
 import { resolveEgressTarget } from "@/shared/integrations/ai/egress.server";
 import {
   getAiProvider,
@@ -54,6 +54,7 @@ import {
 import { logAiUsage } from "@/shared/integrations/ai/usage.server";
 import { settledCostMicros } from "@/shared/integrations/ai/pricing";
 import { AI_ENC_VERSION, fingerprint, isVaultAvailable, last4, sealForRow } from "./crypto.server";
+import { openOwnerSecret } from "./ai-vault.server";
 import { AI_MODE_ERROR_PREFIX, type AiModeStatus } from "./ai-mode-status";
 
 /**
@@ -311,6 +312,163 @@ export const setAiCredential = createServerFn({ method: "POST" })
   });
 
 // ---------------------------------------------------------------------------
+// Changer de MODÈLE sans recoller la clé
+// ---------------------------------------------------------------------------
+
+/**
+ * LE TROU QUE CECI FERME, ET POURQUOI IL N'ÉTAIT PAS VISIBLE.
+ * ---------------------------------------------------------------------------
+ * R-4 fait qu'une clé enregistrée ne réapparaît jamais — pas même à son
+ * porteur. `setAiCredential`, lui, exige le secret. La conséquence n'avait été
+ * énoncée nulle part : **changer un identifiant de modèle imposait d'avoir la
+ * clé sous la main et de la recoller en entier**. Signalé en usage le
+ * 2026-08-28, sur le geste le plus courant qui soit — passer le palier rapide
+ * d'un modèle à raisonnement à un modèle rapide, parce que le premier répondait
+ * en trente secondes.
+ *
+ * CE QUI N'EST PAS ASSOUPLI POUR AUTANT (§5)
+ * ---------------------------------------------------------------------------
+ * L'invariant tient mot pour mot : rien n'est écrit qui n'ait répondu. Le
+ * secret est simplement lu au COFFRE au lieu d'être ressaisi, et l'appel de
+ * vérification est exactement celui de US-2 — même prompt, mêmes 16 tokens,
+ * même comptabilité. Un modèle qui n'existe pas chez le fournisseur échoue ici,
+ * et la ligne en base ne bouge pas.
+ *
+ * Ni le consentement ni la confirmation d'adulte ne sont redemandés, et c'est
+ * délibéré : R-20 lie le consentement au FOURNISSEUR et au texte, dont aucun ne
+ * change. La version stockée est renvoyée telle quelle — écrire une version
+ * différente ici ferait signer un texte que personne n'a affiché.
+ */
+const setModelsInput = z.object({
+  modelFast: z.string().min(1).max(120),
+  modelRich: z.string().min(1).max(120),
+});
+
+export const setAiModels = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => setModelsInput.parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const client = supabase as unknown as AiCredentialRpcClient;
+
+    if (!isAiModeEnabled() || !isByokEnabled() || !isVaultAvailable()) {
+      failWithAiCode("ai.setAiModels.off", "AI_MODE_OFF");
+    }
+
+    // L'état COURANT fait foi pour tout ce qu'on ne change pas : fournisseur,
+    // adresse, plafonds, double résolution, version de consentement. Le client
+    // n'envoie que les deux modèles — il ne peut donc pas, au passage, se
+    // réécrire un plafond ou un consentement.
+    const { data: rows, error: readError } = await client.rpc("get_ai_credential_status");
+    if (readError) {
+      failWithAiCode("ai.setAiModels.read", "AI_UNKNOWN", readError);
+    }
+    const parsed = z.array(credentialRowSchema).safeParse(rows ?? []);
+    const row = parsed.success ? (parsed.data[0] ?? null) : null;
+    if (!row) {
+      failWithAiCode("ai.setAiModels.missing", "AI_MODE_OFF");
+    }
+
+    const opened = await openOwnerSecret(userId);
+    if (!opened) {
+      // Clé illisible : `openOwnerSecret` a déjà basculé la ligne en `invalid`.
+      // Le porteur devra la re-saisir — c'est le seul cas où on ne peut pas
+      // faire l'économie de la re-saisie, et il est nommé (RISK-10).
+      failWithAiCode("ai.setAiModels.vault", "AI_KEY_INVALID");
+    }
+
+    // R-6 à chaque écriture, comme à l'attachement : une adresse qui a cessé
+    // d'être joignable publiquement ne se re-valide pas parce qu'elle est déjà
+    // en base.
+    if (row.base_url !== null) {
+      try {
+        await resolveEgressTarget(row.base_url);
+      } catch (error) {
+        failWithAiCode("ai.setAiModels.egress", toAiError(error).code, error);
+      }
+    }
+
+    const provider = getAiProvider(row.provider);
+    const startedAt = Date.now();
+    let verifiedModel = data.modelFast;
+    let usage = { inputTokens: 0, outputTokens: 0, cachedTokens: 0 };
+    try {
+      const result = await provider.generate(
+        {
+          tier: "fast",
+          system: "Réponds exactement OK.",
+          blocks: [{ label: "ping", text: "OK" }],
+          maxTokens: AI_MAX_TOKENS.verify,
+          feature: "verify",
+        },
+        {
+          provider: row.provider,
+          baseUrl: row.base_url ?? undefined,
+          secret: opened.secret,
+          models: { fast: data.modelFast, rich: data.modelRich },
+        },
+      );
+      verifiedModel = result.model;
+      usage = result.usage;
+    } catch (error) {
+      const typed = toAiError(error);
+      logger.warn("ai.credential", { action: "verify", result: "error", errorCode: typed.code });
+      failWithAiCode("ai.setAiModels.verify", typed.code, error);
+    }
+
+    // Le modèle répond : on ré-écrit la ligne. Le secret repart au coffre scellé
+    // à neuf — `set_ai_credential` REMPLACE (R-4 : « pas de modification
+    // partielle »), donc il faut le lui redonner. `limits_enforced` n'est pas
+    // dans son UPDATE et survit ; `last_error_code` est remis à NULL, ce qui est
+    // exact puisqu'on vient de re-vérifier.
+    const clear = revealSecret(opened.secret);
+    const sealed = sealForRow(clear, {
+      ownerUserId: userId,
+      provider: row.provider,
+      encVersion: AI_ENC_VERSION,
+    });
+
+    const { error: writeError } = await adminRpc().rpc("set_ai_credential", {
+      p_owner: userId,
+      p_provider: row.provider,
+      p_base_url: row.base_url,
+      p_model_fast: data.modelFast,
+      p_model_rich: data.modelRich,
+      p_secret_enc: toByteaLiteral(sealed),
+      p_enc_version: AI_ENC_VERSION,
+      p_key_fingerprint: fingerprint(clear),
+      p_last4: last4(clear),
+      p_daily_budget_usd: row.daily_budget_usd,
+      p_monthly_budget_usd: row.monthly_budget_usd,
+      p_consent_version: row.consent_version,
+      p_double_solve: row.double_solve,
+      p_status: "active",
+    });
+    if (writeError) {
+      failWithAiCode("ai.setAiModels.write", "AI_UNKNOWN", writeError);
+    }
+
+    // La vérification est une dépense réelle sur la clé de la famille (R-7).
+    await logAiUsage(supabaseAdmin as unknown as Parameters<typeof logAiUsage>[0], {
+      userId: null,
+      payer: "family",
+      credentialOwner: userId,
+      provider: row.provider,
+      feature: "verify",
+      model: verifiedModel,
+      inputTokens: usage.inputTokens,
+      outputTokens: usage.outputTokens,
+      cachedTokens: usage.cachedTokens,
+      costUsdMicros: settledCostMicros({ model: verifiedModel, ...usage }),
+      status: "ok",
+      latencyMs: Date.now() - startedAt,
+    });
+
+    logger.info("ai.credential", { action: "models", result: "ok", provider: row.provider });
+    return { ok: true, modelFast: data.modelFast, modelRich: data.modelRich } as const;
+  });
+
+// ---------------------------------------------------------------------------
 // Réglages sans re-saisie — plafonds et double résolution
 // ---------------------------------------------------------------------------
 
@@ -371,24 +529,7 @@ export const revokeAiCredential = createServerFn({ method: "POST" })
     return { revoked: data === true } as const;
   });
 
-/**
- * Marque l'état d'une clé après un appel — appelé par l'orchestrateur des lots
- * suivants, jamais par un client.
- *
- * Un 401 fait basculer la clé en `invalid` : elle le restera jusqu'à ce que son
- * porteur la remplace. Ne pas le faire condamnerait chaque appel suivant à
- * re-découvrir la même chose, sur le quota du parent.
- */
-export async function markCredentialState(
-  ownerUserId: string,
-  status: "active" | "invalid",
-  errorCode: AiErrorCode | null,
-): Promise<void> {
-  const { error } = await adminRpc().rpc("set_ai_credential_state", {
-    p_owner: ownerUserId,
-    p_status: status,
-    p_error_code: errorCode,
-    p_touch_used: true,
-  });
-  if (error) logger.error("ai.credential.state", { error: errorMessage(error) });
-}
+// `markCredentialState` a déménagé dans `./ai-vault.server` (2026-08-28), avec
+// `openOwnerSecret` : les deux modules avaient fini par se tenir l'un l'autre —
+// la console voulait lire le coffre, l'orchestrateur voulait marquer l'état — et
+// un cycle d'imports entre deux modules serveur ne se laisse pas parier.

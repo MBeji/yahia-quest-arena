@@ -1029,6 +1029,11 @@ export const fr: TranslationKeys = {
     modelRich: "Modèle avancé",
     modelCurated: "Modèles recommandés",
     modelFree: "…ou saisissez l'identifiant de votre choix",
+    modelsTitle: "Modèles utilisés",
+    modelsHint:
+      "Le modèle rapide répond dans le chat et les explications ; l'avancé forge les quiz. Un modèle à raisonnement fait attendre l'élève — préférez un modèle rapide pour le premier.",
+    modelsSave: "Vérifier et changer de modèle",
+    modelsSaved: "Modèles vérifiés et enregistrés.",
     keyLabel: "Clé d'API",
     keyHint:
       "Elle est chiffrée avant d'être stockée, et ne réapparaît jamais — même pour vous, même pour nous.",

@@ -843,6 +843,15 @@ export type TranslationKeys = {
     modelRich: string;
     modelCurated: string;
     modelFree: string;
+    /**
+     * Changer de modèle SANS recoller la clé (2026-08-28). R-4 rend une clé
+     * enregistrée irrécupérable : sans ce bloc, corriger un identifiant de
+     * modèle imposait de ressaisir la clé entière.
+     */
+    modelsTitle: string;
+    modelsHint: string;
+    modelsSave: string;
+    modelsSaved: string;
     keyLabel: string;
     keyHint: string;
     dailyBudget: string;
