@@ -39,6 +39,8 @@
 // l'écran sait afficher. Les exceptions sont réservées aux bugs.
 
 import { createServerFn } from "@tanstack/react-start";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/integrations/supabase/types";
 import { z } from "zod";
 // Le pack élève : validation + choix de langue, deux gestes purs sortis d'ici (é30 lot 3bis).
 import { learnerContextSchema, toLearnerContext } from "./learner-context";
@@ -46,6 +48,7 @@ import { callAi } from "@/features/ai";
 import { AI_CURATED_MODELS } from "@/shared/constants/ai";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/shared/integrations/supabase/client.server";
+import { nullableRpcArg } from "@/shared/integrations/supabase/rpc-args";
 import { logger } from "@/shared/lib/logger";
 import { errorMessage } from "@/shared/lib/safe-error";
 import {
@@ -67,35 +70,6 @@ import { validateTutorOutput } from "./validator";
 // régénèrent depuis la base, et la base ne les a pas avant la migration). Le
 // contrat est donc figé ici, motif `exam.server.ts` / `ai-access.server.ts` —
 // À SUPPRIMER à la prochaine régénération de `supabase/types.ts`.
-type TutorRpcClient = {
-  rpc: (
-    fn:
-      | "can_use_tutor"
-      | "get_tutor_question_context"
-      | "get_tutor_learner_context"
-      | "open_tutor_thread"
-      | "append_tutor_message"
-      | "find_tutor_explanation"
-      | "store_tutor_explanation"
-      // é29 R-15.3 — le lien message → entrée de cache (migration 20260826120000).
-      // `service_role` SEUL : c'est ce lien qui décide d'une éviction.
-      | "record_tutor_explanation_serving"
-      | "rate_tutor_message"
-      | "set_tutor_prefs"
-      | "get_tutor_prefs"
-      | "set_tutor_plan_push"
-      | "get_tutor_chapter_context"
-      | "list_tutor_threads"
-      | "get_tutor_thread"
-      // Lot 4 — la boucle de compréhension (migration 20260823140000).
-      | "get_tutor_mini_check"
-      | "submit_tutor_mini_check"
-      | "tutor_understanding_signal"
-      | "escalate_tutor_thread",
-    args?: Record<string, unknown>,
-  ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
-};
-
 const langSchema = z.enum(TUTOR_LANGS);
 const ageBandSchema = z.enum(TUTOR_AGE_BANDS);
 
@@ -222,7 +196,7 @@ export const getTutorAvailability = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ questionId: z.guid() }).parse(d))
   .handler(async ({ data, context }): Promise<{ allowed: boolean; reason: string }> => {
-    const client = context.supabase as unknown as TutorRpcClient;
+    const client = context.supabase;
     const { data: raw, error } = await client.rpc("can_use_tutor", {
       p_scope: "question",
       p_question_id: data.questionId,
@@ -249,7 +223,7 @@ export const explainMistake = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }): Promise<TutorExplanation> => {
-    const client = context.supabase as unknown as TutorRpcClient;
+    const client = context.supabase;
     const userId = context.userId;
 
     // 1. R-1. La RPC re-vérifie de son côté ; on demande ici pour rendre un code
@@ -309,9 +283,14 @@ export const explainMistake = createServerFn({ method: "POST" })
     const canReformulate = (advance ? served + 1 : served) < TUTOR_VARIANTS.length;
 
     const threadId = threadParsed.data.thread_id;
+    // `p_misconception` est NULLABLE des deux côtés, et le SQL est écrit POUR :
+    // `find_tutor_explanation` compare avec `IS NOT DISTINCT FROM`, l'égalité
+    // NULL-safe — une question sans erreur nommée a bien une entrée de cache, sa
+    // clé porte simplement NULL. Le paramètre n'a pas de `DEFAULT` : on ne peut
+    // pas l'omettre, d'où `nullableRpcArg` et non `?? undefined`.
     const cacheKey = {
       p_question_id: data.questionId,
-      p_misconception: question.misconception,
+      p_misconception: nullableRpcArg(question.misconception),
       p_lang: question.lang,
       p_age_band: question.ageBand,
       p_variant: variant,
@@ -406,16 +385,15 @@ export const explainMistake = createServerFn({ method: "POST" })
       // l'élève qui vient de la recevoir compte comme celui d'un autre.
       let servedId: string | null = null;
       if (curated || outcome.payer === "family") {
-        const stored = await (supabaseAdmin as unknown as TutorRpcClient).rpc(
-          "store_tutor_explanation",
-          {
-            ...cacheKey,
-            p_body: validated.body,
-            p_model: outcome.model,
-            p_shared: curated,
-            p_owner: outcome.payer === "family" ? userId : null,
-          },
-        );
+        const stored = await supabaseAdmin.rpc("store_tutor_explanation", {
+          ...cacheKey,
+          p_body: validated.body,
+          p_model: outcome.model,
+          p_shared: curated,
+          // Une entrée du pot commun n'a pas de porteur : `owner_user_id` est
+          // NULL, et la lecture le prévoit (`e.shared OR e.owner_user_id = v_user`).
+          p_owner: nullableRpcArg(outcome.payer === "family" ? userId : null),
+        });
         if (stored.error) {
           // L'élève a son explication ; c'est le cache qui a échoué, pas la
           // pédagogie. On le dit, et on ne lie rien à une ligne inexistante.
@@ -469,7 +447,7 @@ export const explainMistake = createServerFn({ method: "POST" })
  * lien, qui s'abstient ; l'écran, lui, garde son `0` de repli.
  */
 async function appendTutorMessage(
-  client: TutorRpcClient,
+  client: SupabaseClient<Database>,
   threadId: string,
   body: string,
   again: boolean,
@@ -512,10 +490,11 @@ async function recordServing(
   explanationId: string | null,
 ): Promise<void> {
   if (messageIx === null || !explanationId) return;
-  const { error } = await (supabaseAdmin as unknown as TutorRpcClient).rpc(
-    "record_tutor_explanation_serving",
-    { p_thread: threadId, p_message_ix: messageIx, p_explanation: explanationId },
-  );
+  const { error } = await supabaseAdmin.rpc("record_tutor_explanation_serving", {
+    p_thread: threadId,
+    p_message_ix: messageIx,
+    p_explanation: explanationId,
+  });
   if (error) logger.error("tutor.serving", { error: errorMessage(error) });
 }
 
@@ -532,7 +511,7 @@ export const rateTutorMessage = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }): Promise<{ ok: boolean }> => {
-    const client = context.supabase as unknown as TutorRpcClient;
+    const client = context.supabase;
     const { error } = await client.rpc("rate_tutor_message", {
       p_thread: data.threadId,
       p_message_ix: data.messageIx,
@@ -565,7 +544,7 @@ export const getTutorChatEntry = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ chapterId: z.guid() }).parse(d))
   .handler(async ({ data, context }): Promise<TutorChatEntry> => {
-    const client = context.supabase as unknown as TutorRpcClient;
+    const client = context.supabase;
     const closed: TutorChatEntry = {
       allowed: false,
       reason: "UNKNOWN",
@@ -614,7 +593,7 @@ export type TutorThreadSummary = {
 export const getTutorHistory = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<TutorThreadSummary[]> => {
-    const client = context.supabase as unknown as TutorRpcClient;
+    const client = context.supabase;
     const { data, error } = await client.rpc("list_tutor_threads", { p_limit: 20 });
     if (error) {
       logger.warn("tutor.history", { error: errorMessage(error) });
@@ -647,7 +626,7 @@ export const getTutorThread = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ threadId: z.guid() }).parse(d))
   .handler(async ({ data, context }): Promise<{ messages: TutorMessage[] }> => {
-    const client = context.supabase as unknown as TutorRpcClient;
+    const client = context.supabase;
     const { data: raw, error } = await client.rpc("get_tutor_thread", { p_thread: data.threadId });
     if (error) {
       logger.warn("tutor.thread.read", { error: errorMessage(error) });
@@ -680,7 +659,7 @@ const DEFAULT_PREFS: TutorPrefs = { interests: [], verbosity: "normale", planPus
 export const getTutorPrefs = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<TutorPrefs> => {
-    const client = context.supabase as unknown as TutorRpcClient;
+    const client = context.supabase;
     const { data, error } = await client.rpc("get_tutor_prefs");
     if (error) {
       // Un réglage illisible retombe sur le DÉFAUT, jamais sur une erreur : la
@@ -697,7 +676,7 @@ export const setTutorPlanPush = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ enabled: z.boolean() }).parse(d))
   .handler(async ({ data, context }): Promise<{ ok: boolean }> => {
-    const client = context.supabase as unknown as TutorRpcClient;
+    const client = context.supabase;
     const { error } = await client.rpc("set_tutor_plan_push", { p_enabled: data.enabled });
     if (error) {
       logger.error("tutor.planPush", { error: errorMessage(error) });
@@ -717,7 +696,7 @@ export const setTutorPrefs = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }): Promise<{ ok: boolean }> => {
-    const client = context.supabase as unknown as TutorRpcClient;
+    const client = context.supabase;
     const { error } = await client.rpc("set_tutor_prefs", {
       p_interests: data.interests,
       p_verbosity: data.verbosity,
@@ -914,7 +893,7 @@ export const getTutorMiniCheck = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ questionId: z.guid() }).parse(d))
   .handler(async ({ data, context }): Promise<TutorMiniCheck> => {
-    const client = context.supabase as unknown as TutorRpcClient;
+    const client = context.supabase;
     const { data: raw, error } = await client.rpc("get_tutor_mini_check", {
       p_question_id: data.questionId,
     });
@@ -962,7 +941,7 @@ export const submitTutorMiniCheck = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }): Promise<TutorMiniCheckResult> => {
-    const client = context.supabase as unknown as TutorRpcClient;
+    const client = context.supabase;
     const { data: raw, error } = await client.rpc("submit_tutor_mini_check", {
       p_question_id: data.questionId,
       p_choice: data.choice,
@@ -1002,7 +981,7 @@ export const getTutorUnderstandingSignal = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ tag: z.string().min(1).max(200) }).parse(d))
   .handler(async ({ data, context }): Promise<{ level: number; step: TutorEscalationStep }> => {
-    const client = context.supabase as unknown as TutorRpcClient;
+    const client = context.supabase;
     const { data: raw, error } = await client.rpc("tutor_understanding_signal", {
       p_tag: data.tag,
     });
@@ -1029,7 +1008,7 @@ export const escalateTutorThread = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ threadId: z.guid() }).parse(d))
   .handler(async ({ data, context }): Promise<TutorEscalation | null> => {
-    const client = context.supabase as unknown as TutorRpcClient;
+    const client = context.supabase;
     const { data: raw, error } = await client.rpc("escalate_tutor_thread", {
       p_thread: data.threadId,
     });

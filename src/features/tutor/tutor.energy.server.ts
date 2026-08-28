@@ -46,13 +46,6 @@ import { rechargeOutcome, type TutorEnergyReading, type TutorRechargeOutcome } f
  * `tutor.server.ts` / `tutor.practice.server.ts` — À SUPPRIMER à la prochaine
  * régénération de `supabase/types.ts`.
  */
-type TutorEnergyRpcClient = {
-  rpc: (
-    fn: "get_tutor_energy" | "recharge_tutor_energy" | "get_tutor_cache_stats",
-    args?: Record<string, unknown>,
-  ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
-};
-
 /**
  * Les cinq clés de `get_tutor_energy()`, aux noms exacts de son
  * `jsonb_build_object`. Les entiers d'un JSONB arrivent en NOMBRES (et non en
@@ -81,7 +74,7 @@ const readingSchema = z.object({
 export const getTutorEnergy = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<TutorEnergyReading | null> => {
-    const client = context.supabase as unknown as TutorEnergyRpcClient;
+    const client = context.supabase;
     const { data, error } = await client.rpc("get_tutor_energy");
     const parsed = readingSchema.safeParse(data);
     if (error || !parsed.success) {
@@ -135,7 +128,7 @@ const rechargeSchema = z.object({
 export const rechargeTutorEnergy = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<TutorRechargeResult> => {
-    const client = context.supabase as unknown as TutorEnergyRpcClient;
+    const client = context.supabase;
     const { data, error } = await client.rpc("recharge_tutor_energy");
     const parsed = rechargeSchema.safeParse(data);
     if (error || !parsed.success) {
@@ -232,7 +225,7 @@ export const getTutorCacheStats = createServerFn({ method: "GET" })
       .parse(d),
   )
   .handler(async ({ data, context }): Promise<TutorCacheStats | null> => {
-    const client = context.supabase as unknown as TutorEnergyRpcClient;
+    const client = context.supabase;
     const { data: raw, error } = await client.rpc("get_tutor_cache_stats", { p_days: data.days });
     const parsed = cacheStatsSchema.safeParse(raw);
     if (error || !parsed.success) {

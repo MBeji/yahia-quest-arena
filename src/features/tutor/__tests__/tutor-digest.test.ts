@@ -749,7 +749,13 @@ describe("la lecture par l'écran (R-15 : quatre états, jamais une exception)",
       lang: "fr",
       body: STUDENT_FR,
     });
-    expect(rpcCalls("get_tutor_digest")[0]?.[1]).toEqual({ p_week_start: null });
+    // Ce qui compte est le CONTRAT — « aucune semaine demandée » — pas la forme
+    // du fil. `p_week_start DATE DEFAULT NULL` : envoyer NULL explicitement ou
+    // omettre l'argument donnent le même appel en base, et « le plus récent ».
+    // L'assertion accepte donc les deux, pour ne pas rougir sur un détail
+    // d'encodage le jour où l'un remplace l'autre.
+    const [, digestArgs] = rpcCalls("get_tutor_digest")[0] ?? [];
+    expect(digestArgs?.p_week_start ?? null).toBeNull();
   });
 
   it("rend le bilan parent par LA RPC DU PARENT, jamais celle de l'élève", async () => {

@@ -28,6 +28,8 @@
 // pas voir son quota baisser pour avoir reçu une phrase gentille.
 
 import { z } from "zod";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/integrations/supabase/types";
 
 import { streamAi } from "@/features/ai";
 import { TUTOR_FREE_TEXT_MAX } from "@/shared/constants/ai";
@@ -94,20 +96,6 @@ const learnerSchema = z.object({
   interests: z.array(z.string()).default([]),
   verbosity: z.enum(["courte", "normale"]).default("normale"),
 });
-
-type StreamRpcClient = {
-  rpc: (
-    fn:
-      | "can_use_tutor"
-      | "get_tutor_chapter_context"
-      | "get_tutor_learner_context"
-      | "open_tutor_chapter_thread"
-      | "append_tutor_message"
-      | "set_tutor_thread_summary"
-      | "check_rate_limit",
-    args?: Record<string, unknown>,
-  ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
-};
 
 /**
  * Les réponses fixes de la catégorie BIEN-ÊTRE (R-6).
@@ -183,7 +171,7 @@ export async function handleTutorStream(request: Request): Promise<Response> {
   const auth = await resolveSupabaseAuth(request);
   if (!auth.ok) return errorResponse("UNAUTHORIZED", 401);
 
-  const client = auth.supabase as unknown as StreamRpcClient;
+  const client = auth.supabase;
   const userId = auth.userId;
 
   // 2. Le schéma, comme toute server fn.
@@ -358,7 +346,7 @@ export async function handleTutorStream(request: Request): Promise<Response> {
 }
 
 async function openThread(
-  client: StreamRpcClient,
+  client: SupabaseClient<Database>,
   chapter: TutorChapterContext,
 ): Promise<z.infer<typeof threadSchema> | null> {
   const res = await client.rpc("open_tutor_chapter_thread", {
@@ -375,7 +363,7 @@ async function openThread(
 }
 
 async function appendMessage(
-  client: StreamRpcClient,
+  client: SupabaseClient<Database>,
   threadId: string,
   role: string,
   kind: string,
@@ -402,7 +390,7 @@ async function appendMessage(
  * oublie simplement plus vite.
  */
 async function maybeSummarize(
-  client: StreamRpcClient,
+  client: SupabaseClient<Database>,
   thread: z.infer<typeof threadSchema>,
   lang: TutorLang,
   userId: string,
