@@ -61,6 +61,59 @@ sus **avant** :
   Les fixtures de plusieurs suites les renseignent ; sans elles, `plan()` échoue avant la
   première assertion et le rapport dit « 0 tests ran », ce qui n'oriente vers rien.
 
+## Le même cluster type aussi les RPC — sans Docker, sans jeton prod
+
+> Découvert le 2026-08-28 (objectifs famille jour/semaine). **Cela lève la contrainte des deux
+> PR** que ce dossier et [`../suivi-parental-quotidien.md`](../suivi-parental-quotidien.md)
+> décrivaient comme sans parade : une migration et le code qui l'utilise tiennent désormais
+> dans une seule PR, comme le reste du dépôt le fait déjà.
+
+`supabase gen types` refuse `--db-url` sans Docker : le CLI délègue l'introspection à l'image
+`postgres-meta`. Mais **cette image n'est qu'un serveur autour d'un module npm**, et le module
+s'installe seul — hors dépôt, comme `pglite` :
+
+```bash
+mkdir -p /var/tmp/pgmeta && cd /var/tmp/pgmeta && npm init -y && npm i @supabase/postgres-meta
+```
+
+Puis une dizaine de lignes qui appellent exactement ce que le conteneur appelle :
+
+```js
+import PostgresMeta from "@supabase/postgres-meta/dist/lib/PostgresMeta.js";
+import { getGeneratorMetadata } from "@supabase/postgres-meta/dist/lib/generators.js";
+import { apply } from "@supabase/postgres-meta/dist/server/templates/typescript.js";
+
+const pgMeta = new (PostgresMeta.default ?? PostgresMeta)({ connectionString: process.argv[2] });
+const { data } = await getGeneratorMetadata(pgMeta, {
+  includedSchemas: ["public", "graphql_public"],
+});
+process.stdout.write(
+  await apply({ ...data, detectOneToOneRelationships: true, postgrestVersion: "14.17" }),
+);
+await pgMeta.end();
+```
+
+Trois écarts font toute la différence entre un fichier utilisable et un diff de 8 000 lignes.
+Les trois se règlent **dans la base de génération**, jamais à la main dans le fichier :
+
+- **`graphql_public` et `postgrestVersion`.** Sans eux, la sortie perd le bloc
+  `__InternalSupabase` et le schéma `graphql_public` que la prod porte. Le shim ne crée pas ce
+  schéma : l'ajouter à la base de génération (une fonction `graphql()` stub suffit) et passer la
+  version PostgREST lue dans le fichier committé.
+- **pgTAP doit être ABSENT.** Le shim l'installe dans `public`, où la prod le tient dans
+  `extensions` : ses ~200 fonctions (`col_is_null`, `_todo`, `finish`…) entrent alors dans les
+  types. Générer depuis une base **séparée** — shim sans pgTAP, extensions dans `extensions` —
+  et garder la base pgTAP pour `pg_prove`.
+- **Ce que la prod porte hors migrations.** Ici `_backup_subscriptions_20260609`, laissé par la
+  suppression des abonnements et référencé nulle part : la chaîne de migrations ne le reproduit
+  pas, donc une génération « propre » le **supprimerait** des types. Le recréer dans la base de
+  génération avant de générer. C'est le contrôle qui compte : `diff` contre le fichier committé,
+  et **rien ne doit disparaître** qui ne soit expliqué.
+
+Reste des écarts de **mise en forme** (prettier ré-enveloppe des objets selon les sauts de ligne
+de la source) : sans portée, mais ils gonflent le diff — le relire par `grep '^-[^-]'` plutôt
+qu'en entier.
+
 ## Ce que ça ne prouve PAS
 
 Un shim n'est pas Supabase. Il approxime les rôles et `auth.*` ; il ne rejoue ni le pooler, ni

@@ -5,6 +5,7 @@ export {
   getLinkedStudents,
   getStudentAttemptDetail,
   getStudentAttemptDetailByCode,
+  getStudentDailyGoal,
   getStudentDailyReport,
   getStudentDailyReportByCode,
   getStudentReport,
@@ -12,6 +13,7 @@ export {
   getStudentWeeklyGoal,
   getTutorParentCounters,
   linkStudentByCode,
+  setStudentDailyGoal,
   setStudentWeeklyGoal,
   type TutorParentCounters,
 } from "./parent-report.server";

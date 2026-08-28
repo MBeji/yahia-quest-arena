@@ -97,14 +97,19 @@ export const frParent: ParentTranslations = {
     pushTitle: "Recevez le bilan chaque dimanche",
     pushDesc:
       "Activez les notifications pour être prévenu·e quand le bilan hebdomadaire de votre enfant est prêt.",
-    goalTitle: "Objectif de la semaine",
+    goalTitle: "Objectif famille",
+    goalPeriodDay: "Par jour",
+    goalPeriodWeek: "Par semaine",
     goalHint:
-      "Fixez un cap de missions pour cette semaine — votre enfant le verra comme une quête famille sur son tableau de bord.",
+      "Fixez un cap de missions — par jour ou pour la semaine. Votre enfant le verra comme une quête famille sur son tableau de bord.",
     goalSave: "Enregistrer",
     goalSaving: "Enregistrement…",
     goalSaved: "Objectif enregistré : {n} mission(s) cette semaine.",
+    goalSavedDaily: "Objectif enregistré : {n} mission(s) aujourd'hui.",
     goalProgress: "{done}/{target} missions cette semaine",
+    goalProgressDaily: "{done}/{target} missions aujourd'hui",
     goalUnit: "missions / semaine",
+    goalUnitDaily: "missions / jour",
     coverageShort: "{done}/{total} chap.",
   },
   parentDaily: {

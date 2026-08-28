@@ -62,6 +62,8 @@ export const MAX_ALERTS = 6;
 export type BuildAlertsOptions = {
   /** Objectif famille de la semaine, quand le parent en a posé un. */
   weeklyGoal?: { target: number; done: number } | null;
+  /** Objectif famille du jour, quand le parent en a posé un. */
+  dailyGoal?: { target: number; done: number } | null;
 };
 
 export function buildAlerts(report: DailyReport, options: BuildAlertsOptions = {}): ParentAlert[] {
@@ -217,8 +219,13 @@ export function buildAlerts(report: DailyReport, options: BuildAlertsOptions = {
     });
   }
 
-  const goal = options.weeklyGoal;
-  if (goal && goal.target > 0 && goal.done >= goal.target) {
+  // Une seule alerte « objectif atteint », même quand le parent a posé les deux
+  // périodes : la plus exigeante des deux porte le message. En annoncer deux
+  // dirait deux fois la même bonne nouvelle et mangerait le plafond de six.
+  const goal = [options.dailyGoal, options.weeklyGoal]
+    .filter((g) => g != null && g.target > 0 && g.done >= g.target)
+    .sort((a, b) => b!.target - a!.target)[0];
+  if (goal) {
     alerts.push({
       key: "goalReached",
       tone: "positive",

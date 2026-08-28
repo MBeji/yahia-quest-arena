@@ -3,6 +3,7 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { optionalSupabaseAuth } from "@/shared/integrations/supabase/optional-auth-middleware";
 import { isRateLimited } from "@/shared/lib/rate-limit";
+import { GOAL_TARGET_MAX } from "@/shared/constants/gamification";
 import { logger } from "@/shared/lib/logger";
 import { errorMessage, failWithClientError } from "@/shared/lib/safe-error";
 // Alliance-code failures travel as STABLE codes and are translated client-side
@@ -539,7 +540,9 @@ export const getStudentWeeklyGoal = createServerFn({ method: "GET" })
 export const setStudentWeeklyGoal = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) =>
-    z.object({ studentId: z.guid(), target: z.number().int().min(1).max(50) }).parse(d),
+    z
+      .object({ studentId: z.guid(), target: z.number().int().min(1).max(GOAL_TARGET_MAX) })
+      .parse(d),
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
@@ -557,6 +560,72 @@ export const setStudentWeeklyGoal = createServerFn({ method: "POST" })
         "parentReport.setStudentWeeklyGoal: RPC failed",
         error,
         "Impossible d'enregistrer l'objectif de la semaine.",
+      );
+    }
+
+    const row = result && typeof result === "object" ? (result as Record<string, unknown>) : {};
+    return { target: typeof row.target === "number" ? row.target : data.target };
+  });
+
+// Objectif du jour : payload de get_family_daily_goal (null si aucun objectif posé).
+const dailyGoalSchema = z
+  .object({
+    day: z.string().catch(""),
+    target: numberish,
+    done: numberish,
+  })
+  .nullable()
+  .catch(null);
+
+/**
+ * Read today's family goal (target + live progress) for a linked student.
+ * Returns null when no goal is set today.
+ */
+export const getStudentDailyGoal = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({ studentId: z.guid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const { data: goal, error } = await supabase.rpc("get_family_daily_goal", {
+      p_student: data.studentId,
+    });
+    if (error) {
+      failWithClientError(
+        "parentReport.getStudentDailyGoal: RPC failed",
+        error,
+        "Impossible de charger l'objectif du jour.",
+      );
+    }
+    return dailyGoalSchema.parse(goal ?? null);
+  });
+
+/**
+ * Set (upsert) today's goal for a linked student. The link check lives in the
+ * `set_parent_daily_goal` SECURITY DEFINER RPC.
+ */
+export const setStudentDailyGoal = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z
+      .object({ studentId: z.guid(), target: z.number().int().min(1).max(GOAL_TARGET_MAX) })
+      .parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    if (await isRateLimited(supabase, `daily_goal_${userId}`, 30, 60_000)) {
+      throw new Error("Too many goal updates. Please slow down.");
+    }
+
+    const { data: result, error } = await supabase.rpc("set_parent_daily_goal", {
+      p_student: data.studentId,
+      p_target: data.target,
+    });
+    if (error) {
+      failWithClientError(
+        "parentReport.setStudentDailyGoal: RPC failed",
+        error,
+        "Impossible d'enregistrer l'objectif du jour.",
       );
     }
 

@@ -218,6 +218,7 @@ export const ar: TranslationKeys = {
     recoveryFailed: "فشلت الاستعادة",
     familyGoalTitle: "هدف العائلة",
     familyGoalProgress: "{done}/{target} مهمّة هذا الأسبوع",
+    familyGoalProgressDaily: "{done}/{target} مهمّة اليوم",
     familyGoalReached: "تحقّق الهدف، أحسنت! 🎉",
     familyGoalHint: "حدّده وليّك — أرِه ما تستطيع فعله!",
     welcomeBack: "مرحبًا بعودتك،",

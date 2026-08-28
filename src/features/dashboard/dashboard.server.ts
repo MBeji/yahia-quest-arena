@@ -1050,10 +1050,9 @@ export const getSprint2Dashboard = createServerFn({ method: "GET" })
     };
   });
 
-// ---------- Family weekly goal (set by a linked parent) ----------
+// ---------- Family goals (set by a linked parent) ----------
 const familyGoalSchema = z
   .object({
-    weekStart: z.string().catch(""),
     target: z.coerce.number().catch(0),
     done: z.coerce.number().catch(0),
   })
@@ -1061,24 +1060,31 @@ const familyGoalSchema = z
   .catch(null);
 
 /**
- * The student's current-week family goal (target set by a linked parent +
- * live progress). Null when no goal is set — and, defensively, when the RPC
- * is not deployed yet (graceful degradation, same pattern as best-scores).
+ * The student's family goals — the daily one, the weekly one, or both, each
+ * with the target set by a linked parent and the live progress. A period is
+ * null when no goal is set for it — and, defensively, when its RPC is not
+ * deployed yet (graceful degradation, same pattern as best-scores).
  */
 export const getMyFamilyGoal = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
 
-    const { data, error } = await supabase.rpc("get_family_weekly_goal", {
-      p_student: userId,
-    });
-    if (error) {
-      logger.warn("getMyFamilyGoal: RPC unavailable, degrading to null", {
-        message: error.message,
-      });
-      return null;
+    const [weekly, daily] = await Promise.all([
+      supabase.rpc("get_family_weekly_goal", { p_student: userId }),
+      supabase.rpc("get_family_daily_goal", { p_student: userId }),
+    ]);
+
+    for (const { error } of [weekly, daily]) {
+      if (error) {
+        logger.warn("getMyFamilyGoal: RPC unavailable, degrading to null", {
+          message: error.message,
+        });
+      }
     }
 
-    return familyGoalSchema.parse(data ?? null);
+    return {
+      weekly: weekly.error ? null : familyGoalSchema.parse(weekly.data ?? null),
+      daily: daily.error ? null : familyGoalSchema.parse(daily.data ?? null),
+    };
   });

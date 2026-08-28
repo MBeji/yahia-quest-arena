@@ -52,7 +52,7 @@ function SuiviPublicPage() {
   // option. Le choix reste sous les yeux (label + bouton d'oubli dès qu'un code
   // est retenu), donc l'écriture n'a rien de silencieux.
   const [remember, setRemember] = useState(true);
-  const [view, setView] = useState<"summary" | "daily">("summary");
+  const [view, setView] = useState<"summary" | "daily">("daily");
   const [hasStoredCode, setHasStoredCode] = useState(false);
   // Dernier code demandé : le submit pousse le code dans l'URL, ce qui réveille
   // l'effet d'auto-chargement — sans ce garde-fou la requête part deux fois.

@@ -176,6 +176,32 @@ Une alerte n'est utile que si elle est **rare** : les seuils sont posés haut (c
 ≥ 60 min de travail pour « temps sans progrès », ≥ 4 sessions pour l'abandon), et la liste est
 plafonnée à 6, avertissements d'abord.
 
+## L'objectif famille — deux mailles, jamais mélangées
+
+Le parent fixe un cap de missions **par jour** (`parent_daily_goals`) ou **pour la semaine**
+(`parent_weekly_goals`, 2026-07-01), au choix, et peut poser les deux : ce sont deux tables, deux
+RPC (`set_parent_{daily,weekly}_goal`), deux upserts indépendants — poser l'un n'efface pas
+l'autre. Découpage `Africa/Tunis` des deux côtés, comme tout ce module : un objectif du jour ne
+peut pas être arbitré en UTC.
+
+Le plafond commun est **1 000 missions** (`GOAL_TARGET_MAX`, miroir du `CHECK` des deux tables et
+de la borne des deux RPC — les trois se changent ensemble). L'ancien plafond de 50 était calibré
+sur la seule maille hebdomadaire ; sur une maille quotidienne il n'a plus de sens, et il obligeait
+un parent qui vise large à écrire un chiffre auquel il ne croit pas. La borne reste haute pour que
+la barre de progression et les alertes gardent des entiers raisonnables — ce n'est pas un garde-fou
+pédagogique, c'en est un d'affichage.
+
+Côté élève, la quête famille du tableau de bord rend **les deux barres** quand les deux existent.
+Côté alertes, `goalReached` reste **une seule** alerte même si les deux caps sont atteints — c'est
+la même bonne nouvelle dite deux fois, et le plafond de six alertes est étroit ; la plus exigeante
+des deux porte le message.
+
+**La vue par défaut du suivi parental est « Jour par jour »**, sur les deux surfaces
+(`/parent-report` et `/suivi`). Le bilan famille reste à un onglet. La raison est la même que celle
+qui gouverne tout ce module : les quatre questions du parent sont des questions du jour, et le
+tableau de bord quotidien ouvre déjà **sur la classe de l'élève** (`scope = "class"`) — son parcours
+par défaut, celui dont il se demande où il en est.
+
 ## Couverture du programme — une règle, jamais deux
 
 La colonne « Programme » du tableau des matières rend **chapitres terminés / chapitres publiés**.
@@ -255,8 +281,15 @@ that uses them ») :
 
 3. **PR 2 — le code.** Instrumentation, moteur d'indices, UI, i18n, tests.
 
-**Sans Docker en local, il n'y a pas de raccourci** : `supabase gen types --local` exige la stack
-Supabase. La parade pour ne pas envoyer du PL/pgSQL non exécuté en prod est de le rejouer dans un
+⚠️ **Ce « deux temps » n'est plus obligatoire depuis le 2026-08-28.** `supabase gen types` exige
+Docker, mais le module qu'il y fait tourner (`@supabase/postgres-meta`) s'installe seul, hors
+dépôt, et génère les types depuis le cluster local où la chaîne vient d'être rejouée — donc
+migration et code tiennent dans **une** PR, comme partout ailleurs dans ce dépôt. Recette et
+pièges : [`agents/pgtap-en-local.md`](./agents/pgtap-en-local.md#le-même-cluster-type-aussi-les-rpc--sans-docker-sans-jeton-prod).
+Ce qui suit reste valable comme repli, et la DoD §7 reste entière : elle porte sur l'ordre
+**d'application** en prod, pas sur le nombre de PR.
+
+Autre repli, pour ne pas envoyer du PL/pgSQL non exécuté en prod : le rejouer dans un
 Postgres **WASM jetable, hors dépôt** :
 
 ```bash

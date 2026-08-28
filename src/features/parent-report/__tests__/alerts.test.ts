@@ -200,6 +200,33 @@ describe("buildAlerts", () => {
     );
   });
 
+  it("l'objectif du jour atteint déclenche l'alerte, sans objectif hebdo posé", () => {
+    const alerts = buildAlerts(
+      makeReport({
+        totals: makeTotals({ exercises: 4, avgScore: 80, activeDays: 1 }),
+        subjects: [subject({ exercises: 4, avgScore: 80 })],
+      }),
+      { dailyGoal: { target: 3, done: 4 } },
+    );
+
+    const reached = alerts.find((a) => a.key === "goalReached");
+    expect(reached?.params).toEqual({ target: 3, done: 4 });
+  });
+
+  it("les deux objectifs atteints ne rendent QU'UNE alerte — la plus exigeante", () => {
+    const alerts = buildAlerts(
+      makeReport({
+        totals: makeTotals({ exercises: 12, avgScore: 80, activeDays: 5 }),
+        subjects: [subject({ exercises: 12, avgScore: 80 })],
+      }),
+      { dailyGoal: { target: 3, done: 4 }, weeklyGoal: { target: 10, done: 12 } },
+    );
+
+    const reached = alerts.filter((a) => a.key === "goalReached");
+    expect(reached).toHaveLength(1);
+    expect(reached[0].params).toEqual({ target: 10, done: 12 });
+  });
+
   it("ne rend jamais plus de six alertes", () => {
     const alerts = buildAlerts(
       makeReport({

@@ -66,6 +66,16 @@ export const GRADE_TAB_DEFAULT_MIN_RANKED = 10;
 export const DASHBOARD_RECENT_LIMIT = 50;
 
 /**
+ * Plafond d'un objectif famille (jour ou semaine), en missions. L'ancien plafond
+ * de 50 était calibré sur la seule maille hebdomadaire ; il n'a jamais protégé
+ * de rien et il obligeait un parent qui vise large à écrire un chiffre auquel il
+ * ne croit pas. Le mur reste haut pour que la barre de progression et les
+ * alertes gardent des entiers raisonnables — miroir du `CHECK` des deux tables
+ * `parent_{daily,weekly}_goals` et de leurs deux RPC, à changer ensemble.
+ */
+export const GOAL_TARGET_MAX = 1000;
+
+/**
  * Étude 22 R-4 (Q-3, arbitrée) — fenêtre d'affichage de la bannière de rentrée : du 1ᵉʳ
  * septembre au 31 octobre inclus.
  *
