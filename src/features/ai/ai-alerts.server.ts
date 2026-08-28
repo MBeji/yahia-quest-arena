@@ -31,13 +31,6 @@ import { logger } from "@/shared/lib/logger";
 import { errorMessage } from "@/shared/lib/safe-error";
 import { configureVapid, sendPushToUsers } from "@/shared/lib/push-sender.server";
 
-type AiAlertRpcClient = {
-  rpc: (
-    fn: "ai_budget_alerts_due" | "mark_ai_budget_alert",
-    args?: Record<string, unknown>,
-  ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
-};
-
 type DueAlert = { kind: string; period: string; month_usd: number; day_usd: number };
 
 /**
@@ -80,7 +73,7 @@ function alertPayload(alert: DueAlert) {
  * de notification serait une régression.
  */
 export async function notifyBudgetAlerts(ownerUserId: string): Promise<number> {
-  const client = supabaseAdmin as unknown as AiAlertRpcClient;
+  const client = supabaseAdmin;
 
   const { data, error } = await client.rpc("ai_budget_alerts_due", { p_owner: ownerUserId });
   if (error) {

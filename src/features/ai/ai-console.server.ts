@@ -36,18 +36,6 @@ import {
 import { resolvePlatformProvider } from "@/shared/integrations/ai/provider.server";
 import { AI_MODE_ERROR_PREFIX } from "./ai-mode-status";
 
-type AiConsoleRpcClient = {
-  rpc: (
-    fn:
-      | "get_ai_console"
-      | "get_ai_admin_overview"
-      | "set_ai_mode_enabled"
-      | "set_ai_owner_suspension"
-      | "submit_ai_feedback",
-    args?: Record<string, unknown>,
-  ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
-};
-
 const consoleRowSchema = z.object({
   day_micros: z.coerce.number(),
   month_micros: z.coerce.number(),
@@ -148,7 +136,7 @@ export function modelAdviceFor(args: {
 export const getAiConsole = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<AiConsole | null> => {
-    const client = context.supabase as unknown as AiConsoleRpcClient;
+    const client = context.supabase;
     const { data, error } = await client.rpc("get_ai_console");
     if (error) {
       failWithClientError("ai.getAiConsole", error, "Impossible de lire la dépense.");
@@ -200,14 +188,17 @@ export const submitAiFeedback = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
-    const client = context.supabase as unknown as AiConsoleRpcClient;
+    const client = context.supabase;
     // Le `model` n'est PAS envoyé par le client : la RPC le lit sur le quiz.
     // Le laisser déclarer permettrait d'imputer un 👎 au mauvais modèle, et la
     // seule donnée que ce lot produit deviendrait fausse (R-13).
+    // `?? undefined` et non `?? null` : `submit_ai_feedback(… p_reason TEXT
+    // DEFAULT NULL)` — l'argument omis prend son défaut, ce qui vaut exactement
+    // NULL. Les types générés savent dire « optionnel », jamais « nullable ».
     const { error } = await client.rpc("submit_ai_feedback", {
       p_quiz: data.quizId,
       p_verdict: data.verdict,
-      p_reason: data.reason ?? null,
+      p_reason: data.reason ?? undefined,
     });
     if (error) {
       if (error.message.includes("AI_FORGE_NOT_FOUND")) {
@@ -286,7 +277,7 @@ export type AiAdminOverview = z.infer<typeof adminRowSchema> & {
 export const getAiAdminOverview = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<AiAdminOverview | null> => {
-    const client = context.supabase as unknown as AiConsoleRpcClient;
+    const client = context.supabase;
     const { data, error } = await client.rpc("get_ai_admin_overview");
     // Un non-admin reçoit `Unauthorized` de la RPC : on rend `null` plutôt que
     // de lever, pour que la route affiche « accès refusé » comme ses voisines.
@@ -302,7 +293,7 @@ export const setAiModeEnabled = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ enabled: z.boolean() }).parse(d))
   .handler(async ({ data, context }) => {
-    const client = context.supabase as unknown as AiConsoleRpcClient;
+    const client = context.supabase;
     const { error } = await client.rpc("set_ai_mode_enabled", { p_enabled: data.enabled });
     if (error) {
       failWithClientError("ai.setAiModeEnabled", error, "Impossible de changer l'état du mode IA.");
@@ -325,11 +316,12 @@ export const setAiOwnerSuspension = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
-    const client = context.supabase as unknown as AiConsoleRpcClient;
+    const client = context.supabase;
+    // Même motif : `p_reason TEXT DEFAULT NULL`, donc omettre vaut NULL.
     const { error } = await client.rpc("set_ai_owner_suspension", {
       p_owner: data.ownerUserId,
       p_suspended: data.suspended,
-      p_reason: data.reason ?? null,
+      p_reason: data.reason ?? undefined,
     });
     if (error) {
       failWithClientError("ai.setAiOwnerSuspension", error, "Impossible de couper cette famille.");

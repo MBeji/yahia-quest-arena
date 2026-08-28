@@ -46,13 +46,6 @@ type AiSurfacesReader = {
   };
 };
 
-type AiAccessRpcClient = {
-  rpc: (
-    fn: "get_ai_students" | "set_ai_student_access" | "resolve_ai_access",
-    args?: Record<string, unknown>,
-  ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
-};
-
 const studentRowSchema = z.object({
   student_user_id: z.string(),
   display_name: z.string().nullable(),
@@ -78,7 +71,7 @@ export type AiStudentAccess = {
 export const getAiStudents = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<AiStudentAccess[]> => {
-    const client = context.supabase as unknown as AiAccessRpcClient;
+    const client = context.supabase;
     const { data, error } = await client.rpc("get_ai_students");
     if (error) {
       failWithClientError("ai.getAiStudents", error, "Impossible de charger la liste.");
@@ -126,7 +119,7 @@ export const setAiStudentAccess = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
-    const client = context.supabase as unknown as AiAccessRpcClient;
+    const client = context.supabase;
     const { error } = await client.rpc("set_ai_student_access", {
       p_student: data.studentUserId,
       p_enabled: data.enabled,
