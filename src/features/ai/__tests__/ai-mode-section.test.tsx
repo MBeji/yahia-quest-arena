@@ -80,8 +80,13 @@ const BASE: AiModeStatus = {
   credential: null,
 };
 
+/** jsdom n'implémente pas `scrollIntoView` : on le pose, et on l'observe. */
+const scrollIntoView = vi.fn();
+
 beforeEach(() => {
   status = undefined;
+  Element.prototype.scrollIntoView = scrollIntoView;
+  scrollIntoView.mockClear();
 });
 
 describe("R-1 — le produit sans clé est le produit d'aujourd'hui", () => {
@@ -255,5 +260,84 @@ describe("R-4 — la clé ne réapparaît jamais", () => {
     render(React.createElement(AiModeSection, { render: wrap }));
     expect(screen.getByText("ai.replace")).toBeInTheDocument();
     expect(screen.queryByText(/ai\.(show|reveal|display)/)).toBeNull();
+  });
+});
+
+/**
+ * « LE PARAMÉTRAGE NE ME DONNE PAS LA MAIN, ET REMPLACER LA CLÉ NE FAIT RIEN »
+ * — signalé le 2026-08-28, sur un compte dont la clé xAI était active.
+ *
+ * Trois défauts derrière cette phrase, et ce bloc les tient tous les trois :
+ *
+ *   1. le formulaire s'ouvrait HORS DE VUE. Il est monté en frère de la carte de
+ *      la clé, donc après les plafonds, le panneau de dépense et l'activation
+ *      par élève : mesuré sur le compte réel, bouton à 2093 px, champ de clé à
+ *      4903. Rien ne bougeait à l'écran, d'où « ne fait rien » ;
+ *   2. il s'ouvrait sur ANTHROPIC, jamais sur le fournisseur en place — tout
+ *      était à retrouver de tête ;
+ *   3. et il n'existait AUCUN moyen de changer un modèle sans recoller la clé,
+ *      que R-4 rend pourtant irrécupérable.
+ */
+describe("la console du porteur donne la main (2026-08-28)", () => {
+  const xai: AiModeStatus = {
+    ...BASE,
+    credential: {
+      provider: "openai_compatible",
+      baseUrl: "https://api.x.ai/v1",
+      modelFast: "grok-4.6",
+      modelRich: "grok-4.6",
+      last4: "6hzw",
+      status: "active",
+      lastErrorCode: "AI_UNKNOWN",
+      hasError: false,
+      verifiedAt: "2026-08-28T09:00:00Z",
+      lastUsedAt: null,
+      dailyBudgetUsd: 2,
+      monthlyBudgetUsd: 20,
+      doubleSolve: true,
+      consentStale: false,
+      limitsEnforced: false,
+    },
+  };
+
+  it("AMÈNE le formulaire sous les yeux au clic sur « Remplacer »", async () => {
+    status = xai;
+    render(React.createElement(AiModeSection, { render: wrap }));
+
+    await userEvent.click(screen.getByText("ai.replace"));
+    expect(screen.getByTestId("ai-form")).toBeInTheDocument();
+    // Une frame de retard, à dessein : le nœud doit exister avant qu'on le
+    // rejoigne. Sans ce défilement, le formulaire s'ouvre quatre écrans plus bas
+    // et l'écran a l'air inerte.
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    expect(scrollIntoView).toHaveBeenCalled();
+  });
+
+  it("rouvre sur le fournisseur ET les modèles en place, pas sur une page blanche", async () => {
+    status = xai;
+    render(React.createElement(AiModeSection, { render: wrap }));
+    await userEvent.click(screen.getByText("ai.replace"));
+
+    expect(screen.getByTestId("ai-base-url")).toHaveValue("https://api.x.ai/v1");
+    expect(screen.getByTestId("ai-model-fast")).toHaveValue("grok-4.6");
+    expect(screen.getByTestId("ai-model-rich")).toHaveValue("grok-4.6");
+    // La clé, elle, reste vide : c'est la seule chose que R-4 interdit de rendre.
+    expect(screen.getByTestId("ai-secret")).toHaveValue("");
+  });
+
+  it("laisse changer un modèle SANS recoller la clé", async () => {
+    status = xai;
+    render(React.createElement(AiModeSection, { render: wrap }));
+
+    // Désarmé tant que rien n'a bougé : ce bouton émet un appel FACTURÉ au
+    // fournisseur, il ne part pas sur un simple passage dans le champ.
+    expect(screen.getByTestId("ai-save-models")).toBeDisabled();
+
+    await userEvent.clear(screen.getByTestId("ai-saved-model-fast"));
+    await userEvent.type(screen.getByTestId("ai-saved-model-fast"), "grok-4-fast");
+    expect(screen.getByTestId("ai-save-models")).toBeEnabled();
+
+    // Et aucun champ de clé n'est apparu au passage : tout le point est là.
+    expect(screen.queryByTestId("ai-secret")).toBeNull();
   });
 });

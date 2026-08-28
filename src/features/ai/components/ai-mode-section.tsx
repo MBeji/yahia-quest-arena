@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useCallback, useState, type ReactNode } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
@@ -29,6 +29,7 @@ import {
   getAiModeStatus,
   revokeAiCredential,
   setAiCredential,
+  setAiModels,
   setAiPreferences,
 } from "../ai-credentials.server";
 import { aiErrorLabel, aiModeErrorCode, type AiModeStatus } from "../ai-mode-status";
@@ -116,6 +117,18 @@ function AiModeBody({ status, onChanged }: { status: AiModeStatus; onChanged: ()
   const [editing, setEditing] = useState(false);
   const credential = status.credential;
 
+  /**
+   * Le formulaire, au moment où il EXISTE. Une ref de rappel plutôt qu'un effet :
+   * c'est l'attachement du nœud qui est l'événement attendu, et il survient un
+   * rendu après le clic. Le formulaire n'étant monté que par ce clic, il n'y a
+   * pas ici le second cas du chat de chapitre (une intention reçue à panneau
+   * déjà monté) — le montage EST l'ouverture.
+   */
+  const revealForm = useCallback((node: HTMLDivElement | null) => {
+    if (!node) return;
+    requestAnimationFrame(() => node.scrollIntoView({ behavior: "smooth", block: "start" }));
+  }, []);
+
   return (
     <div>
       {credential ? (
@@ -138,14 +151,29 @@ function AiModeBody({ status, onChanged }: { status: AiModeStatus; onChanged: ()
       )}
 
       {editing && (
-        <AttachForm
-          status={status}
-          onDone={() => {
-            setEditing(false);
-            onChanged();
-          }}
-          onCancel={() => setEditing(false)}
-        />
+        // AMENER LE FORMULAIRE SOUS LES YEUX — signalé le 2026-08-28 :
+        // « remplacer la clé ne fait rien ». Il ne faisait rien de VISIBLE.
+        //
+        // Le formulaire est monté en frère de la carte de la clé, donc APRÈS
+        // tout ce qu'elle contient : les plafonds, le panneau de dépense avec
+        // son journal d'appels, et l'activation par élève. Mesuré sur un compte
+        // réel : le bouton est à 2093 px, le champ « Clé d'API » à 4903 —
+        // quatre écrans plus bas, sans que rien ne bouge au clic.
+        //
+        // Même remède qu'en é11 lot 3 pour le chat de chapitre, et pour la même
+        // raison : une frame de retard, parce que le rendu du formulaire doit
+        // avoir eu lieu avant qu'on cherche à le rejoindre. `scroll-mt-20`
+        // compense l'en-tête collant, sans quoi le titre arriverait dessous.
+        <div ref={revealForm} className="scroll-mt-20">
+          <AttachForm
+            status={status}
+            onDone={() => {
+              setEditing(false);
+              onChanged();
+            }}
+            onCancel={() => setEditing(false)}
+          />
+        </div>
       )}
     </div>
   );
@@ -164,8 +192,11 @@ function SavedKey({
   const t = useT();
   const credential = status.credential!;
   const savePrefs = useServerFn(setAiPreferences);
+  const changeModels = useServerFn(setAiModels);
   const revoke = useServerFn(revokeAiCredential);
 
+  const [modelFast, setModelFast] = useState(credential.modelFast);
+  const [modelRich, setModelRich] = useState(credential.modelRich);
   const [daily, setDaily] = useState(String(credential.dailyBudgetUsd));
   const [monthly, setMonthly] = useState(String(credential.monthlyBudgetUsd));
   const [doubleSolve, setDoubleSolve] = useState(credential.doubleSolve);
@@ -179,6 +210,28 @@ function SavedKey({
       : credential.status === "invalid"
         ? t.ai.stateInvalid
         : t.ai.stateUnverified;
+
+  /** Rien à vérifier tant que rien n'a bougé : le bouton reste désarmé. */
+  const modelsChanged =
+    modelFast.trim() !== credential.modelFast || modelRich.trim() !== credential.modelRich;
+
+  async function saveModels() {
+    if (busy || !modelsChanged) return;
+    setBusy(true);
+    try {
+      await changeModels({ data: { modelFast: modelFast.trim(), modelRich: modelRich.trim() } });
+      toast.success(t.ai.modelsSaved);
+      onChanged();
+    } catch (error) {
+      // Le code stable voyage dans le message (motif `parent-code-errors`) : un
+      // modèle inexistant chez le fournisseur se dit « ce modèle n'existe pas »,
+      // pas « une erreur est survenue ».
+      const code = aiModeErrorCode(error instanceof Error ? error.message : String(error));
+      toast.error(aiErrorLabel(code, t));
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function persist(next: { doubleSolve?: boolean; limitsEnforced?: boolean } = {}) {
     setBusy(true);
@@ -237,6 +290,52 @@ function SavedKey({
           {aiErrorLabel(credential.lastErrorCode, t)}
         </p>
       )}
+
+      {/* LES MODÈLES, RÉGLABLES SANS RECOLLER LA CLÉ (2026-08-28).
+          R-4 rend la clé irrécupérable — corriger un identifiant de modèle
+          imposait donc de la ressaisir en entier, sur le geste le plus courant
+          qui soit : quitter un modèle à raisonnement, trop lent pour répondre
+          devant un élève. Le serveur re-vérifie avec la clé du COFFRE, si bien
+          que l'invariant du §5 tient — rien n'est écrit qui n'ait répondu.
+
+          Un bouton, et pas un `onBlur` comme les plafonds juste dessous : celui-ci
+          émet un appel facturé au fournisseur, et on ne facture pas quelqu'un
+          parce qu'il a cliqué à côté d'un champ. */}
+      <div className="mt-4 border-t border-border/50 pt-3">
+        <span className="block font-semibold">{t.ai.modelsTitle}</span>
+        <span className="block text-xs text-muted-foreground">{t.ai.modelsHint}</span>
+        <div className="mt-2 grid gap-x-4 sm:grid-cols-2">
+          <Field label={t.ai.modelFast}>
+            <Input
+              dir="ltr"
+              value={modelFast}
+              onChange={(e) => setModelFast(e.target.value)}
+              disabled={busy}
+              data-testid="ai-saved-model-fast"
+              className={FIELD_CLASS}
+            />
+          </Field>
+          <Field label={t.ai.modelRich}>
+            <Input
+              dir="ltr"
+              value={modelRich}
+              onChange={(e) => setModelRich(e.target.value)}
+              disabled={busy}
+              data-testid="ai-saved-model-rich"
+              className={FIELD_CLASS}
+            />
+          </Field>
+        </div>
+        <button
+          type="button"
+          onClick={() => void saveModels()}
+          disabled={busy || !modelsChanged}
+          data-testid="ai-save-models"
+          className={`${ACTION_CLASS} mt-2`}
+        >
+          {busy ? t.ai.saving : t.ai.modelsSave}
+        </button>
+      </div>
 
       {/* Les plafonds de consommation. Décision du 2026-08-22 : ils ne coupent
           plus par défaut. L'interrupteur est posé AVANT les montants parce qu'il
@@ -370,6 +469,28 @@ function SavedKey({
   );
 }
 
+/**
+ * Le préréglage qui DÉCRIT la clé en place, pour rouvrir le formulaire dessus.
+ *
+ * Un fournisseur nommé se retrouve par son identifiant ; un compatible OpenAI se
+ * reconnaît à son adresse, et retombe sur « Autre » quand elle n'est celle
+ * d'aucun préréglage — ce qui est le cas nominal de la porte de Q-4, pas un
+ * échec.
+ */
+function presetForCredential(credential: AiModeStatus["credential"]): AiProviderPreset {
+  if (!credential) return AI_PROVIDER_PRESETS[0];
+  if (credential.provider !== "openai_compatible") {
+    return (
+      AI_PROVIDER_PRESETS.find((p) => p.provider === credential.provider) ?? AI_PROVIDER_PRESETS[0]
+    );
+  }
+  return (
+    AI_PROVIDER_PRESETS.find((p) => p.baseUrl && p.baseUrl === credential.baseUrl) ??
+    presetById("custom") ??
+    AI_PROVIDER_PRESETS[0]
+  );
+}
+
 /** US-1 : consentement → fournisseur → clé → modèles → plafonds → « Vérifier et enregistrer ». */
 function AttachForm({
   status,
@@ -383,15 +504,37 @@ function AttachForm({
   const t = useT();
   const save = useServerFn(setAiCredential);
 
-  const [presetId, setPresetId] = useState("anthropic");
+  /**
+   * REMPLACER, C'EST PARTIR DE L'EXISTANT — pas d'une page blanche.
+   *
+   * Le formulaire s'ouvrait sur `anthropic` et les modèles d'Anthropic, quel que
+   * soit le fournisseur en place : un porteur qui remplaçait une clé xAI
+   * atterrissait sur un formulaire Claude, et devait tout retrouver de tête —
+   * fournisseur, adresse, deux identifiants de modèle, deux plafonds. Signalé
+   * le 2026-08-28 avec le reste (« ne me donne pas la main »).
+   *
+   * Le SECRET, lui, reste vide, et c'est la seule chose qui ne se pré-remplit
+   * pas : R-4 le rend irrécupérable, et c'est justement ce qu'on veut ici.
+   */
+  const current = status.credential;
+  const initialPreset = presetForCredential(current);
+  const [presetId, setPresetId] = useState(initialPreset.id);
   const preset = presetById(presetId) ?? AI_PROVIDER_PRESETS[0];
   const provider: AiProviderId = preset.provider;
-  const [baseUrl, setBaseUrl] = useState("");
+  const [baseUrl, setBaseUrl] = useState(current?.baseUrl ?? initialPreset.baseUrl ?? "");
   const [secret, setSecret] = useState("");
-  const [modelFast, setModelFast] = useState(AI_PROVIDER_PRESETS[0].models!.fast);
-  const [modelRich, setModelRich] = useState(AI_PROVIDER_PRESETS[0].models!.rich);
-  const [daily, setDaily] = useState(String(AI_DEFAULT_BUDGETS.dailyUsd));
-  const [monthly, setMonthly] = useState(String(AI_DEFAULT_BUDGETS.monthlyUsd));
+  const [modelFast, setModelFast] = useState(
+    current?.modelFast ?? AI_PROVIDER_PRESETS[0].models!.fast,
+  );
+  const [modelRich, setModelRich] = useState(
+    current?.modelRich ?? AI_PROVIDER_PRESETS[0].models!.rich,
+  );
+  const [daily, setDaily] = useState(
+    String(current?.dailyBudgetUsd ?? AI_DEFAULT_BUDGETS.dailyUsd),
+  );
+  const [monthly, setMonthly] = useState(
+    String(current?.monthlyBudgetUsd ?? AI_DEFAULT_BUDGETS.monthlyUsd),
+  );
   const [consent, setConsent] = useState(false);
   const [adult, setAdult] = useState(false);
   const [busy, setBusy] = useState(false);
