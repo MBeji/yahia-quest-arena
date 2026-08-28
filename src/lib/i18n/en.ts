@@ -490,6 +490,8 @@ export const en: TranslationKeys = {
     noEnergyBody: "You have used all your energy for today. The lesson is still there though!",
     pausedTitle: "El Ostedh is paused",
     pausedBody: "He is not answering right now. Try again in a little while.",
+    keyIssueTitle: "El Ostedh cannot answer",
+    keyIssueBody: "Your family's AI key needs a fix. Let your parents know.",
     lockedSession: "Finish your mission first — then we will talk",
     lockedDungeon: "Not during a dungeon! We will talk on the way out",
     lockedDuel: "Not during a duel! We will talk afterwards",

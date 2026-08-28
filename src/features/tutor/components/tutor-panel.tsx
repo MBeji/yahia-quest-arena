@@ -34,6 +34,7 @@ import {
 } from "../tutor.server";
 import type { TutorEscalationStep } from "../escalation";
 import { tutorLockedKey } from "../locked";
+import { isKeyHolderFault } from "../degraded";
 
 type PanelState =
   | { kind: "idle" }
@@ -82,6 +83,11 @@ function degradedCopy(code: string, t: ReturnType<typeof useT>) {
   }
   if (code === "AI_MODE_OFF" || code === "AI_NOT_ACTIVATED") {
     return { title: t.tutor.offTitle, body: t.tutor.offBody };
+  }
+  // La même table que le chat de chapitre, pour la même raison qu'en `../locked` :
+  // les deux écrans doivent la même phrase au même code.
+  if (isKeyHolderFault(code)) {
+    return { title: t.tutor.keyIssueTitle, body: t.tutor.keyIssueBody };
   }
   return { title: t.tutor.pausedTitle, body: t.tutor.pausedBody };
 }

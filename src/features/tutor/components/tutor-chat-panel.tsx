@@ -31,6 +31,7 @@ import { TUTOR_FREE_TEXT_MAX } from "@/shared/constants/ai";
 import { resolveAccessToken } from "@/shared/integrations/supabase/auth-attacher";
 import { getTutorChatEntry } from "../tutor.server";
 import { tutorLockedKey } from "../locked";
+import { isKeyHolderFault } from "../degraded";
 import type { TutorChatIntent } from "../chat";
 import { TUTOR_ENERGY_QUERY_KEY } from "../energy";
 import { TutorEnergyMeter } from "./tutor-energy";
@@ -67,6 +68,9 @@ function refusalCopy(code: string, t: ReturnType<typeof useT>): string | null {
   if (code === "AI_OUTPUT_REJECTED") return t.tutor.chat.outputRejected;
   if (code === "AI_BUDGET_REACHED" || code === "AI_ENERGY_SPENT") return t.tutor.noEnergyBody;
   if (code === "AI_MODE_OFF" || code === "AI_NOT_ACTIVATED") return t.tutor.offBody;
+  // Une panne que l'enfant ne peut pas lever : « réessaie dans un moment » lui
+  // ferait dépenser son énergie du jour sur une porte qui ne s'ouvrira pas.
+  if (isKeyHolderFault(code)) return t.tutor.keyIssueBody;
   return t.tutor.pausedBody;
 }
 

@@ -132,9 +132,23 @@ export function makeOpenAiCompatibleProvider(deps: OpenAiCompatibleDeps = {}): A
           );
         } catch (error) {
           lastError = toAiError(error);
-          // Une adresse recalée par R-6 ne devient pas valide en réessayant, et
-          // un timeout a déjà consommé 30 secondes : on ne les rejoue pas.
+          // Une adresse recalée par R-6 ne devient pas valide en réessayant.
           if (lastError.code === "AI_HOST_NOT_ALLOWED") throw lastError;
+          // ET UN TIMEOUT NE SE REJOUE PAS. La ligne du dessus le promettait
+          // depuis l'origine — « un timeout a déjà consommé 30 secondes : on ne
+          // les rejoue pas » — mais le code faisait l'inverse : `toAiError` rend
+          // `AI_PROVIDER_DOWN` pour un abandon comme pour un 5xx, et la branche
+          // suivante réessayait les deux. Un modèle à raisonnement trop lent le
+          // reste : rejouer ajoutait deux fois le budget de la surface à
+          // l'attente de l'enfant (≈ 92 s au total) et faisait facturer trois
+          // générations, le fournisseur comptant ce qu'il a calculé même quand
+          // nous raccrochons. Mesuré en prod le 2026-08-28 sur `grok-4.6`.
+          //
+          // Les échecs RAPIDES gardent leurs essais, et c'est la distinction qui
+          // compte : `transport` (DNS, TLS, RST) et `response_stream` reviennent
+          // en quelques centaines de millisecondes et sont souvent passagers.
+          // Seul le `detail` les sépare — le code, lui, est le même pour tous.
+          if (lastError.detail === "timeout") throw lastError;
           if (attempt < maxRetries && lastError.code === "AI_PROVIDER_DOWN") {
             await sleep(backoffMs(attempt));
             continue;
