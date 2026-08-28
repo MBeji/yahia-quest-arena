@@ -49,13 +49,6 @@ import { decidePractice } from "./practice";
  * Contrat figé ici, motif `tutor.server.ts` — À SUPPRIMER à la prochaine
  * régénération de `supabase/types.ts`.
  */
-type PracticeRpcClient = {
-  rpc: (
-    fn: "can_use_tutor" | "get_targeted_exercises" | "tutor_practice_needs_generation",
-    args?: Record<string, unknown>,
-  ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
-};
-
 /** `ai_student_access` est postérieure aux types générés — même contrat local que `ai-access.server.ts`. */
 type SurfacesReader = {
   from: (table: "ai_student_access") => {
@@ -146,7 +139,7 @@ export const startTargetedPractice = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }): Promise<TutorPracticeResult> => {
-    const client = context.supabase as unknown as PracticeRpcClient;
+    const client = context.supabase;
 
     // ÉTAPE 1 — R-1, quand elle est interrogeable.
     //
@@ -163,9 +156,10 @@ export const startTargetedPractice = createServerFn({ method: "POST" })
     // antisèche), pas le fait de jouer une quête. Et la branche `forge`, elle,
     // est inatteignable sans chapitre.
     if (data.chapterId) {
+      // `p_question_id UUID DEFAULT NULL` : la portée est un chapitre, il n'y a
+      // pas de question — omettre l'argument vaut NULL.
       const gate = await client.rpc("can_use_tutor", {
         p_scope: "chapter",
-        p_question_id: null,
         p_chapter_id: data.chapterId,
       });
       if (gate.error) {
@@ -181,9 +175,11 @@ export const startTargetedPractice = createServerFn({ method: "POST" })
 
     // ÉTAPE 2 — le stock. Trois destinations au plus : c'est une relance, pas
     // un programme de révision (même esprit que le plan du jour, R-4).
+    // `p_competency TEXT DEFAULT NULL` : sans compétence visée, l'argument omis
+    // vaut NULL, et le SQL retombe sur le seul tag.
     const selection = await client.rpc("get_targeted_exercises", {
       p_tag: data.tag,
-      p_competency: data.competency,
+      p_competency: data.competency ?? undefined,
       p_limit: 3,
     });
     if (selection.error) {
