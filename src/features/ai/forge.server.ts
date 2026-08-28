@@ -33,6 +33,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/shared/integrations/supabase/client.server";
+import { nullableRpcArg } from "@/shared/integrations/supabase/rpc-args";
 import { logger } from "@/shared/lib/logger";
 import { errorMessage, failWithClientError } from "@/shared/lib/safe-error";
 import { AI_FORGE_LIMITS, AI_VERIFY_SAMPLE_RATE, forgeTimeoutMs } from "@/shared/constants/ai";
@@ -64,20 +65,7 @@ import {
   type ForgedQuestion,
 } from "./forge/schema";
 
-type ForgeRpcClient = {
-  rpc: (
-    fn:
-      | "get_forge_context"
-      | "create_forged_quiz"
-      | "serve_forged_quiz"
-      | "grade_forged_quiz"
-      | "list_forged_quizzes"
-      | "ai_forge_quota_left",
-    args?: Record<string, unknown>,
-  ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
-};
-
-const adminRpc = () => supabaseAdmin as unknown as ForgeRpcClient;
+const adminRpc = () => supabaseAdmin;
 
 const contextRowSchema = z.object({
   chapter_title: z.string(),
@@ -276,7 +264,9 @@ export const forgeQuiz = createServerFn({ method: "POST" })
       p_owner: userId,
       p_scope: "chapter",
       p_chapter: data.chapterId,
-      p_competency: null,
+      // Portée « chapitre » : la compétence est NULL, et `p_competency TEXT`
+      // n'a pas de défaut — impossible de l'omettre.
+      p_competency: nullableRpcArg<string>(null),
       p_lang: ctx.content_lang,
       p_difficulty: data.difficulty,
       p_requested: data.size,
@@ -349,7 +339,7 @@ export const getForgedQuiz = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ quizId: z.guid() }).parse(d))
   .handler(async ({ data, context }): Promise<ServedForgedQuiz> => {
-    const client = context.supabase as unknown as ForgeRpcClient;
+    const client = context.supabase;
     const { data: rows, error } = await client.rpc("serve_forged_quiz", { p_quiz: data.quizId });
     if (error) {
       for (const code of ["AI_FORGE_NOT_FOUND", "AI_FORGE_EXPIRED"]) {
@@ -399,7 +389,7 @@ export const gradeForgedQuiz = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }): Promise<ForgedQuizResult> => {
-    const client = context.supabase as unknown as ForgeRpcClient;
+    const client = context.supabase;
     const { data: rows, error } = await client.rpc("grade_forged_quiz", {
       p_quiz: data.quizId,
       p_answers: data.answers,
@@ -452,7 +442,7 @@ export type ForgedQuizSummary = {
 export const listForgedQuizzes = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<{ quizzes: ForgedQuizSummary[]; quotaLeft: number }> => {
-    const client = context.supabase as unknown as ForgeRpcClient;
+    const client = context.supabase;
     const [{ data: rows }, { data: quota }] = await Promise.all([
       client.rpc("list_forged_quizzes"),
       client.rpc("ai_forge_quota_left", { p_student: context.userId }),

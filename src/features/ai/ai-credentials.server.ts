@@ -33,6 +33,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/shared/integrations/supabase/client.server";
+import { nullableRpcArg } from "@/shared/integrations/supabase/rpc-args";
 import { logger } from "@/shared/lib/logger";
 import { errorMessage, failWithClientError } from "@/shared/lib/safe-error";
 import {
@@ -57,25 +58,7 @@ import { AI_ENC_VERSION, fingerprint, isVaultAvailable, last4, sealForRow } from
 import { openOwnerSecret } from "./ai-vault.server";
 import { AI_MODE_ERROR_PREFIX, type AiModeStatus } from "./ai-mode-status";
 
-/**
- * Les RPC du coffre sont postérieures aux types Supabase générés (non
- * régénérables sans accès DB) : on fige leur contrat ici, même patron que
- * `exam.server.ts`. À supprimer à la prochaine régénération des types.
- */
-type AiCredentialRpcClient = {
-  rpc: (
-    fn:
-      | "set_ai_credential"
-      | "set_ai_credential_state"
-      | "set_ai_preferences"
-      | "revoke_ai_credential"
-      | "get_ai_credential_status"
-      | "get_my_grade_rank",
-    args?: Record<string, unknown>,
-  ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
-};
-
-const adminRpc = () => supabaseAdmin as unknown as AiCredentialRpcClient;
+const adminRpc = () => supabaseAdmin;
 
 const credentialRowSchema = z.object({
   provider: z.enum(AI_PROVIDERS),
@@ -120,7 +103,7 @@ function toByteaLiteral(buffer: Buffer): string {
 export const getAiModeStatus = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<AiModeStatus> => {
-    const client = context.supabase as unknown as AiCredentialRpcClient;
+    const client = context.supabase;
 
     const [{ data: rows, error }, { data: rank }] = await Promise.all([
       client.rpc("get_ai_credential_status"),
@@ -196,7 +179,7 @@ export const setAiCredential = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => setCredentialInput.parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const client = supabase as unknown as AiCredentialRpcClient;
+    const client = supabase;
 
     if (!isAiModeEnabled() || !isByokEnabled() || !isVaultAvailable()) {
       failWithAiCode("ai.setAiCredential.off", "AI_MODE_OFF");
@@ -272,7 +255,7 @@ export const setAiCredential = createServerFn({ method: "POST" })
     const { error: writeError } = await adminRpc().rpc("set_ai_credential", {
       p_owner: userId,
       p_provider: data.provider,
-      p_base_url: baseUrl,
+      p_base_url: nullableRpcArg(baseUrl),
       p_model_fast: data.modelFast,
       p_model_rich: data.modelRich,
       p_secret_enc: toByteaLiteral(sealed),
@@ -349,7 +332,7 @@ export const setAiModels = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => setModelsInput.parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const client = supabase as unknown as AiCredentialRpcClient;
+    const client = supabase;
 
     if (!isAiModeEnabled() || !isByokEnabled() || !isVaultAvailable()) {
       failWithAiCode("ai.setAiModels.off", "AI_MODE_OFF");
@@ -431,7 +414,7 @@ export const setAiModels = createServerFn({ method: "POST" })
     const { error: writeError } = await adminRpc().rpc("set_ai_credential", {
       p_owner: userId,
       p_provider: row.provider,
-      p_base_url: row.base_url,
+      p_base_url: nullableRpcArg(row.base_url),
       p_model_fast: data.modelFast,
       p_model_rich: data.modelRich,
       p_secret_enc: toByteaLiteral(sealed),
@@ -493,12 +476,14 @@ export const setAiPreferences = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
-    const client = context.supabase as unknown as AiCredentialRpcClient;
+    const client = context.supabase;
     const { data: updated, error } = await client.rpc("set_ai_preferences", {
       p_daily_budget_usd: data.dailyBudgetUsd,
       p_monthly_budget_usd: data.monthlyBudgetUsd,
       p_double_solve: data.doubleSolve,
-      p_limits_enforced: data.limitsEnforced ?? null,
+      // `p_limits_enforced BOOLEAN DEFAULT NULL`, et le SQL documente que
+      // « NULL laisse le réglage inchangé » : l'omettre porte le même sens.
+      p_limits_enforced: data.limitsEnforced ?? undefined,
     });
     if (error) {
       failWithClientError("ai.setAiPreferences", error, "Impossible d'enregistrer les réglages.");
@@ -518,7 +503,7 @@ export const setAiPreferences = createServerFn({ method: "POST" })
 export const revokeAiCredential = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const client = context.supabase as unknown as AiCredentialRpcClient;
+    const client = context.supabase;
     const { data, error } = await client.rpc("revoke_ai_credential");
     if (error) {
       failWithClientError("ai.revokeAiCredential", error, "Impossible de révoquer la clé.");

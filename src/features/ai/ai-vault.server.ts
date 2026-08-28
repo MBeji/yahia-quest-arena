@@ -50,14 +50,7 @@ type AiSecretReader = {
   };
 };
 
-type VaultRpcClient = {
-  rpc: (
-    fn: "rewrite_ai_credential_secret" | "set_ai_credential_state",
-    args: Record<string, unknown>,
-  ) => PromiseLike<{ error: { message: string } | null }>;
-};
-
-const rpc = () => supabaseAdmin as unknown as VaultRpcClient;
+const rpc = () => supabaseAdmin;
 
 /**
  * Marque l'état d'une clé après un appel — ou après une rotation de KEK. Jamais
@@ -76,7 +69,8 @@ export async function markCredentialState(
   const { error } = await rpc().rpc("set_ai_credential_state", {
     p_owner: ownerUserId,
     p_status: status,
-    p_error_code: errorCode,
+    // `p_error_code TEXT DEFAULT NULL` : l'omettre vaut NULL.
+    p_error_code: errorCode ?? undefined,
     p_touch_used: true,
   });
   if (error) logger.error("ai.credential.state", { error: errorMessage(error) });

@@ -67,26 +67,7 @@ import {
 import { markCredentialState, openOwnerSecret } from "./ai-vault.server";
 import { notifyBudgetAlerts } from "./ai-alerts.server";
 
-/**
- * Les RPC du lot 3 sont postérieures aux types Supabase générés (non
- * régénérables sans accès DB) : contrat figé ici, même patron que
- * `exam.server.ts`. À supprimer à la prochaine régénération des types.
- */
-type AiCallRpcClient = {
-  rpc: (
-    fn:
-      | "resolve_ai_access"
-      | "reserve_ai_spend"
-      | "settle_ai_spend"
-      | "release_ai_reservation"
-      | "reserve_platform_spend"
-      | "settle_platform_spend"
-      | "release_platform_reservation",
-    args?: Record<string, unknown>,
-  ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
-};
-
-const rpc = () => supabaseAdmin as unknown as AiCallRpcClient;
+const rpc = () => supabaseAdmin;
 
 type AccessRow = {
   allowed: boolean;
