@@ -1,6 +1,17 @@
 // Feature: Mode IA « à la clé de la famille » (étude 29)
 // Public API — import from "@/features/ai"
 //
+// ⚠️ CETTE BARREL MÊLE COMPOSANTS CLIENT ET MODULES SERVEUR — une COQUILLE DE
+// ROUTE ne doit donc JAMAIS l'importer. Elle réexporte `ai-credentials.server`,
+// qui tire `egress.server` → `node:dns` : en dev (Vite sert les modules non
+// bundlés) le client charge vraiment ce graphe, `node:dns` est externalisé,
+// l'accès LÈVE, et la frontière d'erreur racine attrape avant tout routage.
+// Effet observé : les QUATRE routes gardées cessent de rediriger un visiteur
+// déconnecté, et le nightly rougit cinq nuits — pendant que la production, elle,
+// va bien, parce que son build élague ce que le dev server charge.
+// Depuis une route : importer le composant par son chemin
+// (`@/features/ai/components/ai-launcher`), jamais par ici.
+//
 // ⚠️ `crypto.server.ts` n'est PAS réexporté ici, et ne le sera jamais : c'est le
 // coffre. Il n'a qu'un seul appelant légitime (`ai-credentials.server.ts`), et
 // le garder hors du barrel rend impossible qu'un composant l'importe « juste

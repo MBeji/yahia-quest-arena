@@ -5,7 +5,7 @@ import { PrintMark } from "@/components/public/print-mark";
 import { CanonicalLink } from "@/components/public/canonical-link";
 import { usePublicContentProtection } from "@/shared/lib/content-protection";
 import { useAuth } from "@/features/auth";
-import { AiLauncher } from "@/features/ai";
+import { AiLauncher } from "@/features/ai/components/ai-launcher";
 
 /**
  * Public coquille — NO auth guard: its content (courses, catalogue, exercises) is

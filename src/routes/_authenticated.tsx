@@ -6,7 +6,7 @@ import { useAuth, useMyRole, shouldRedirectToOnboarding, hubRouteForRole } from 
 import { getPendingBetaCount } from "@/features/subscription";
 import { getOpenReportsCount } from "@/features/content-report";
 import { BetaBadge, BugReportLauncher, getOpenBugsCount } from "@/features/bug-report";
-import { AiLauncher } from "@/features/ai";
+import { AiLauncher } from "@/features/ai/components/ai-launcher";
 import {
   Sparkles,
   LayoutDashboard,
