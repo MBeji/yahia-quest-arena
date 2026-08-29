@@ -47,7 +47,12 @@ vi.mock("@/features/bug-report", () => ({
 }));
 
 // Le cœur du test : on OBSERVE ce que la coquille déclare à la bulle IA.
-vi.mock("@/features/ai", () => ({
+//
+// Le mock vise le CHEMIN PROFOND, celui qu'importe la route — et pas la barrel
+// `@/features/ai`, qu'une coquille ne doit justement plus importer : elle mêle
+// composants client et modules serveur (`egress.server` → `node:dns`), ce qui a
+// éteint le routage en dev et rougi le nightly cinq nuits.
+vi.mock("@/features/ai/components/ai-launcher", () => ({
   AiLauncher: (props: { authenticated: boolean }) => {
     launcherProps.push(props);
     return null;
