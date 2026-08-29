@@ -82,4 +82,23 @@ describe("useAuth", () => {
 
     expect(mockUnsubscribe).toHaveBeenCalledTimes(1);
   });
+
+  // Le mur de connexion de toute l'application dépend de ce booléen : tant que
+  // `loading`, `routes/_authenticated.tsx` rend son écran d'attente et son effet
+  // de redirection ne part pas. Une lecture de session qui rejette laissait donc
+  // une route de compte affichée à un visiteur SANS session, indéfiniment.
+  it("ferme le mur quand la session est ILLISIBLE, au lieu de le laisser ouvert", async () => {
+    mockOnAuthStateChange.mockReturnValue({
+      data: { subscription: { unsubscribe: mockUnsubscribe } },
+    });
+    mockGetSession.mockRejectedValue(new Error("network down"));
+
+    const { result } = renderHook(() => useAuth());
+
+    // Sans le `catch`, ce `waitFor` expire : `loading` ne retombe jamais.
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    // Et une session illisible n'est PAS une session : la garde doit se fermer.
+    expect(result.current.user).toBeNull();
+    expect(result.current.session).toBeNull();
+  });
 });
