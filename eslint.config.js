@@ -95,6 +95,12 @@ export default tseslint.config(
     plugins: { local },
     rules: {
       "local/require-server-fn-auth": "error",
+      // Cliquet sur le client Supabase de navigateur : une seconde instance
+      // GoTrue rafraîchit de son côté, et la rotation du refresh token
+      // invalide celui de l'autre. C'est la première hypothèse du bug
+      // « Invalid token » en fin d'exercice — infirmée par le code, et cette
+      // règle est ce qui garantit qu'elle le reste.
+      "local/single-browser-supabase-client": "error",
     },
   },
   eslintPluginPrettier,

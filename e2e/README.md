@@ -204,3 +204,48 @@ gh workflow run e2e-auth.yml --ref <branch>   # public-anon + authenticated tier
 Debugging: `npx playwright test --ui` (watch/time-travel), `npx playwright show-report`
 (last HTML report — also uploaded as a CI artifact). Failures keep a trace, screenshot,
 and video.
+
+## Repro manuelle : « Invalid token » en fin d'exercice
+
+La panne que ferme le filet de sauvegarde (outbox + brouillon + rejeu serveur).
+Elle n'est **pas** dans la suite Playwright, et c'est un choix : la reproduire
+exige d'abaisser la durée de vie des JWT du projet, un réglage de projet
+Supabase que ni un test ni un workflow ne peut poser — et qui, laissé en place,
+fausserait toutes les autres spécifications authentifiées.
+
+Elle est déterministe malgré tout, si on suit l'ordre.
+
+**Préparer (une fois, sur le projet TEST — jamais la prod).**
+Supabase Studio → Authentication → Sessions → _Access token (JWT) expiry_ :
+`300` secondes. Le noter pour le remettre à `3600` après.
+
+**Reproduire — doit ÉCHOUER avant le correctif.**
+
+1. Se connecter avec un compte de test, ouvrir une mission de `/quest/$exerciseId`.
+2. Répondre à une question, puis **laisser l'onglet en arrière-plan 6 minutes**
+   (plan d'un autre onglet, ou écran verrouillé sur mobile — le gel des
+   minuteries est le cœur du sujet : il empêche le ticker d'`autoRefreshToken`
+   de se déclencher).
+3. Revenir, terminer la mission, valider la dernière question.
+
+Avant le correctif : la soumission lève `Unauthorized: Invalid token`, le toast
+d'erreur passe, et **les réponses sont perdues** — elles ne vivaient que dans
+l'état React. Après : la pastille passe à « Pas encore enregistré », la file
+rejoue la soumission avec un jeton neuf, et le score s'affiche.
+
+**Vérifier le filet lui-même — la coupure réseau.**
+
+1. Ouvrir une mission, répondre à toutes les questions sauf la dernière.
+2. DevTools → Network → _Offline_.
+3. Valider la dernière question. La pastille passe à « Pas encore enregistré ».
+4. **Recharger la page** en restant hors ligne : la file survit (localStorage).
+5. Repasser en ligne. Le flush part au montage et à l'événement `online` ; la
+   tentative apparaît dans `attempts` sans qu'on ait rien cliqué.
+
+**Lire ce que la boîte noire en dit.** Après quelques jours en production, la
+requête d'en-tête de `20260831140000_client_errors_telemetry.sql` tranche entre
+les trois hypothèses. `jeton_valide_refuse > 0` confirme le diagnostic d'horloge
+de #914 ; `retour_de_veille` dominant désignerait plutôt le gel des minuteries
+mobiles. Les deux peuvent coexister.
+
+**Ne pas oublier** de remettre le JWT expiry du projet TEST à `3600`.

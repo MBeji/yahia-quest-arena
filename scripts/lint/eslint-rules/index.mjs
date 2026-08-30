@@ -7,12 +7,14 @@
  * `RuleTester` in `scripts/lint/__tests__/`.
  */
 import { requireServerFnAuth } from "./require-server-fn-auth.mjs";
+import { singleBrowserSupabaseClient } from "./single-browser-supabase-client.mjs";
 
 /** @type {import('eslint').ESLint.Plugin} */
 const plugin = {
   meta: { name: "eslint-plugin-local", version: "1.0.0" },
   rules: {
     "require-server-fn-auth": requireServerFnAuth,
+    "single-browser-supabase-client": singleBrowserSupabaseClient,
   },
 };
 
