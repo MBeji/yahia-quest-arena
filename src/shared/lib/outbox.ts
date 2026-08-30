@@ -21,6 +21,7 @@
 // commentaire qu'il faudra venir contredire, chiffres à l'appui.
 import { isRejectedTokenError } from "@/shared/integrations/supabase/auth-rejection";
 import { ensureFreshSession } from "@/shared/integrations/supabase/session-freshness";
+import { reportClientError } from "./client-log";
 import { logger } from "./logger";
 
 const STORAGE_KEY = "nn:outbox:v1";
@@ -310,11 +311,30 @@ async function send(sender: OutboxSender, item: OutboxItem): Promise<"sent" | Di
   } catch (error) {
     if (!isRejectedTokenError(error)) return disposeOf(error, item);
 
+    // La boîte noire, prise AVANT le rafraîchissement forcé : après lui, le TTL
+    // observé serait celui du jeton NEUF, et la mesure ne dirait plus rien de la
+    // panne qu'on cherche à comprendre.
+    reportClientError({
+      stage: "outbox-flush",
+      clientId: item.clientId,
+      errMessage: error instanceof Error ? error.message : String(error),
+      payload: { kind: item.kind, attempts: item.attempts },
+    });
+
     try {
       await ensureFreshSession(true);
       await sender(item.payload);
       return "sent";
     } catch (retryError) {
+      // Le rejeu a été refusé LUI AUSSI, avec un jeton pourtant tout neuf. C'est
+      // le cas le plus intéressant de tous : il disqualifie l'horloge locale et
+      // désigne le serveur ou la session elle-même.
+      reportClientError({
+        stage: "outbox-replay",
+        clientId: item.clientId,
+        errMessage: retryError instanceof Error ? retryError.message : String(retryError),
+        payload: { kind: item.kind, attempts: item.attempts },
+      });
       return disposeOf(retryError, item);
     }
   }

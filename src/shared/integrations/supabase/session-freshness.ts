@@ -68,21 +68,45 @@ export function ensureFreshSession(force = false): Promise<string | null> {
   return promise;
 }
 
+/**
+ * L'expiration du dernier jeton VU, en secondes UNIX — ou `undefined` si aucune
+ * session n'est encore passée par ici.
+ *
+ * POURQUOI ON LA MÉMORISE. La télémétrie du refus (`client-log.ts`) a besoin du
+ * TTL restant, et elle en a besoin dans un chemin d'ERREUR : y appeler
+ * `getSession()` déclencherait une lecture asynchrone — et, sur une session
+ * abîmée, potentiellement un rafraîchissement — au pire moment. Une valeur déjà
+ * connue, lue sans rien réveiller, suffit à répondre à la seule question posée :
+ * l'appareil se croyait-il encore dans les temps ?
+ */
+let lastExpiresAt: number | undefined;
+
+export function lastKnownExpiry(): number | undefined {
+  return lastExpiresAt;
+}
+
+function remember(expiresAt: number | undefined): void {
+  if (typeof expiresAt === "number" && Number.isFinite(expiresAt)) lastExpiresAt = expiresAt;
+}
+
 async function refreshIfNeeded(force: boolean): Promise<string | null> {
   if (force) {
     const { data } = await supabase.auth.refreshSession();
+    remember(data.session?.expires_at);
     return data.session?.access_token ?? null;
   }
 
   const { data } = await supabase.auth.getSession();
   const session = data.session;
   if (!session) return null;
+  remember(session.expires_at);
 
   if (secondsUntilExpiry(session.expires_at) > REFRESH_MARGIN_SECONDS) {
     return session.access_token;
   }
 
   const refreshed = await supabase.auth.refreshSession();
+  remember(refreshed.data.session?.expires_at);
   // Un rafraîchissement raté ne doit pas effacer un jeton encore utilisable :
   // le serveur tranchera, et `auth-attacher` rattrapera son refus.
   return refreshed.data.session?.access_token ?? session.access_token;
@@ -98,7 +122,8 @@ export function secondsUntilExpiry(expiresAt: number | undefined): number {
   return Math.round(expiresAt - Date.now() / 1000);
 }
 
-/** Oublie la course en cours — réservé aux tests. */
+/** Oublie la course en cours et l'expiration mémorisée — réservé aux tests. */
 export function resetSessionFreshnessForTests(): void {
   inFlight = null;
+  lastExpiresAt = undefined;
 }

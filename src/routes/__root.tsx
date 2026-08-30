@@ -25,6 +25,7 @@ import { logger } from "@/shared/lib/logger";
 import { initAnalytics, trackPageview, pagePathFromLocation } from "@/shared/lib/analytics";
 import { initWebVitals } from "@/shared/lib/web-vitals";
 import { flush as flushOutbox, registerSender, startOutbox } from "@/shared/lib/outbox";
+import { initHiddenTimeTracking } from "@/shared/lib/client-log";
 import { QUEST_SUBMIT_KIND, type QuestSubmitPayload } from "@/features/quest/quest-draft";
 
 import appCss from "../styles.css?url";
@@ -249,6 +250,11 @@ function RootComponent() {
   // l'ordre n'a pas d'importance — on relance simplement un flush une fois qu'il
   // l'est.
   useEffect(() => {
+    // Le compteur de temps caché doit tourner DÈS le chargement : quand un refus
+    // survient, il est trop tard pour se demander depuis combien de temps
+    // l'onglet dormait. C'est l'une des trois grandeurs qui départagent les
+    // hypothèses (voir 20260831140000_client_errors_telemetry.sql).
+    const stopHiddenTracking = initHiddenTimeTracking();
     const stop = startOutbox();
     void import("@/features/quest")
       .then(({ submitAttempt }) => {
@@ -258,7 +264,10 @@ function RootComponent() {
         return flushOutbox();
       })
       .catch(() => {});
-    return stop;
+    return () => {
+      stop();
+      stopHiddenTracking();
+    };
   }, []);
 
   // Google Analytics 4: load gtag.js once, then report a page_view for the
