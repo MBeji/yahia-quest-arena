@@ -1,0 +1,37 @@
+-- Ouvrir le parcours 2ème année secondaire — section Économie et Services :
+-- « coming_soon » → « available ». C'était la DERNIÈRE des quatre sections de
+-- 2ème sec encore fermée (sciences 20260730120000, lettres 20260730160000,
+-- info 20260731130000). Avec elle, les quatre sont ouvertes.
+--
+-- Seuil R-8 : une première tranche complète ouvre la classe, on n'attend pas la
+-- matière complète. Ici la tranche est de l'ANGLAIS, et elle n'a coûté qu'une
+-- seule écriture pour quatre classes — c'est une MUTUALISATION.
+--
+-- Le Student's Book « Perform to Learn — Second Year Secondary Education »
+-- (241203P00) n'est pas dédoublé par section au catalogue CNP : un seul code
+-- sert les quatre orientations, et la préface du manuel le dit elle-même (p. 3)
+-- — les 30 leçons du tronc commun valent pour tous, les 20 leçons Arts/Économie
+-- n'étant qu'un supplément optionnel par filière. Le sujet physique
+-- `english-2eme-sec` compile donc vers les quatre sujets de section
+-- (`compileTo`, étude 16 D-4) : les 6 chapitres publiés (Family life,
+-- Communicating with others, Social Life, Social Problems, Attitudes and
+-- Values, Rights and Duties — 12 exercices, 72 questions, plus les quiz)
+-- servent Économie et Services sans duplication ni réécriture. Appliqués par
+-- `apply-content.yml` avant cette migration (run 33307842690), release
+-- journalisée dans `content_releases`.
+--
+-- Ce qui manque à la section est nommé plutôt que passé sous silence : les
+-- chapitres 07 à 11 de l'anglais sont en cours de transcription, et aucune
+-- autre matière de la section n'est encore générée — ni l'arabe (201281), ni
+-- les mathématiques (222261), ni l'économie-gestion (229262), la matière
+-- emblématique de la filière, qui demandera son propre LOT A. R-8 assume
+-- l'ouverture avant la complétude.
+--
+-- Parcours `scolaire` GRATUIT (is_premium = false, preview_policy = 'full') :
+-- passer à 'available' l'ouvre entièrement, sans entitlement.
+--
+-- Idempotent : re-jouer est un no-op une fois le statut déjà 'available'.
+-- Miroir de 20260731130000_open_ecole_2eme_sec_info_parcours.sql.
+UPDATE public.parcours
+SET status = 'available'
+WHERE id = 'ecole-2eme-sec-eco-services';
