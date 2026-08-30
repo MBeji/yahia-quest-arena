@@ -288,6 +288,8 @@ export const en: TranslationKeys = {
     recallChip: "🧠 Recall",
     recallLockedHint: "First complete the mission at 100%",
     recallLockedHintAnon: "Sign in and complete the mission at 100%",
+    savePending: "Not saved yet — retrying",
+    saveDone: "Work saved",
   },
   levelUp: {
     title: "Level up!",

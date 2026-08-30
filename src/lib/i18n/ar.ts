@@ -287,6 +287,8 @@ export const ar: TranslationKeys = {
     recallChip: "🧠 استرجاع",
     recallLockedHint: "أنجِز المهمّة أوّلًا بنسبة 100%",
     recallLockedHintAnon: "سجّل الدخول وأنجِز المهمّة بنسبة 100%",
+    savePending: "لم يُحفظ بعد — جارٍ إعادة المحاولة",
+    saveDone: "تمّ حفظ عملك",
   },
   levelUp: {
     title: "مستوى أعلى!",

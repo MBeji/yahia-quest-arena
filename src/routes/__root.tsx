@@ -24,6 +24,8 @@ import { SoundProvider, useSound } from "@/lib/sound";
 import { logger } from "@/shared/lib/logger";
 import { initAnalytics, trackPageview, pagePathFromLocation } from "@/shared/lib/analytics";
 import { initWebVitals } from "@/shared/lib/web-vitals";
+import { flush as flushOutbox, registerSender, startOutbox } from "@/shared/lib/outbox";
+import { QUEST_SUBMIT_KIND, type QuestSubmitPayload } from "@/features/quest/quest-draft";
 
 import appCss from "../styles.css?url";
 
@@ -231,6 +233,32 @@ function RootComponent() {
     if (import.meta.env.PROD && typeof navigator !== "undefined" && "serviceWorker" in navigator) {
       navigator.serviceWorker.register("/sw.js").catch(() => {});
     }
+  }, []);
+
+  // Le filet de sauvegarde, installé pour toute l'application.
+  //
+  // POURQUOI ICI ET PAS DANS LA ROUTE DE QUÊTE. Une soumission restée en file
+  // appartient à la session PRÉCÉDENTE : l'élève a rechargé, fermé l'onglet, ou
+  // rouvert l'app le lendemain. L'installer sur la route de quête ne la
+  // rejouerait qu'au moment où il retourne de lui-même sur une mission — c'est
+  // exactement le moment où il croit son travail perdu.
+  //
+  // L'import de `submitAttempt` est DYNAMIQUE : statique, il tirerait le module
+  // de server fns de la quête dans le chunk d'index, qui a un budget de taille.
+  // La file conserve un item dont l'expéditeur n'est pas encore enregistré, donc
+  // l'ordre n'a pas d'importance — on relance simplement un flush une fois qu'il
+  // l'est.
+  useEffect(() => {
+    const stop = startOutbox();
+    void import("@/features/quest")
+      .then(({ submitAttempt }) => {
+        registerSender(QUEST_SUBMIT_KIND, (payload) =>
+          submitAttempt({ data: payload as QuestSubmitPayload }),
+        );
+        return flushOutbox();
+      })
+      .catch(() => {});
+    return stop;
   }, []);
 
   // Google Analytics 4: load gtag.js once, then report a page_view for the

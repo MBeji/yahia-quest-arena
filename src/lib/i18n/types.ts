@@ -306,6 +306,10 @@ export type TranslationKeys = {
     recallChip: string;
     recallLockedHint: string;
     recallLockedHintAnon: string;
+    // Filet de sauvegarde : ce que voit l'élève quand sa soumission n'est
+    // pas encore passée. Voir `quest-save-status.tsx`.
+    savePending: string;
+    saveDone: string;
   };
   // Level up
   levelUp: {

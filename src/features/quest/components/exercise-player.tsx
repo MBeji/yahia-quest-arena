@@ -6,9 +6,7 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { computeNextExerciseId, getExercise, getSubject } from "@/features/quest";
 import { PASS_THRESHOLD_PCT, RECALL_MIN_QUESTIONS } from "@/shared/constants/gamification";
-import { shuffleOptions, type BaseOption } from "@/shared/lib/question-utils";
 import { isValidAnswerFormat } from "@/shared/lib/answer-formats";
-import { isolateLtrRuns } from "@/shared/lib/bidi";
 import { userFacingError } from "@/shared/lib/error-message";
 import { RichField } from "@/components/ui/svg-figure";
 import { QuestionInput, type McqOptionRender } from "@/features/quest/components/question-input";
@@ -37,6 +35,7 @@ import { PageShell } from "@/components/ui/page-shell";
 import { GoldProgress } from "@/components/game/gold-progress";
 import { questionSlide, useEntrance } from "@/shared/lib/motion";
 import { useQuestPulse } from "@/features/quest/quest-pulse";
+import { useQuestionMaps } from "@/features/quest/question-maps";
 import { useSound } from "@/lib/sound";
 import {
   ComboStrip,
@@ -46,6 +45,11 @@ import {
 import { optionClassNameFor, type QuestionVerdict } from "@/features/quest/verdict";
 import { useInstantFeedback } from "@/features/quest/components/use-instant-feedback";
 import { useExerciseSession } from "@/features/quest/components/use-exercise-session";
+import {
+  useQuestAutosave,
+  useQuestDraftRestore,
+} from "@/features/quest/components/use-quest-autosave";
+import { QuestSaveStatus } from "@/features/quest/components/quest-save-status";
 import type { UnlockedBadge } from "@/shared/types/gamification";
 
 // =============================================================================
@@ -125,6 +129,13 @@ export type PlayerResult = {
   speedBonus: number;
   /** Anon quiz only: reached the score but rushed, so the chapter stays locked. */
   quizTooFast?: boolean;
+  /**
+   * Ce résultat est RELU : la session était déjà rendue et la RPC a renvoyé la
+   * tentative enregistrée au lieu de lever (migration 20260831130000). Le score
+   * est le vrai ; les compteurs de récompense, eux, sont neutres — ils ont été
+   * crédités au premier rendu. Absent dans le registre anonyme.
+   */
+  replayed?: boolean;
 };
 
 /** Outcome of starting an exercise: a playable session, or a gate that blocks it. */
@@ -297,8 +308,20 @@ export function ExercisePlayer({
   });
   const { sessionId, startGate, reset: resetSession } = session;
 
+  // Le filet : instantané local de la partie en cours, et mise en file de la
+  // soumission AVANT sa tentative. Réservé au registre connecté — l'anonyme n'a
+  // pas de compte où resynchroniser quoi que ce soit.
+  const autosave = useQuestAutosave({
+    exerciseId,
+    variant,
+    enabled: capabilities.rewards,
+    sessionId,
+    answers,
+    idx,
+  });
+
   const mutation = useMutation({
-    mutationFn: (payload: {
+    mutationFn: async (payload: {
       sessionId: string;
       exerciseId: string;
       chapterId: string | null;
@@ -306,7 +329,20 @@ export function ExercisePlayer({
       durationSeconds: number;
       isQuiz: boolean;
       totalQuestions: number;
-    }) => strategy.submit(payload),
+    }) => {
+      // ⚠️ L'ORDRE FAIT TOUT LE FILET : la soumission est écrite sur l'appareil
+      // AVANT de partir, et n'en sort qu'une fois acceptée. Entre les deux, plus
+      // rien ne peut la perdre — ni un jeton refusé, ni un réseau coupé, ni un
+      // onglet fermé. `outbox.ts` la rejouera au prochain déclencheur.
+      const clientId = await autosave.beginSubmit(payload.sessionId, {
+        sessionId: payload.sessionId,
+        exerciseId: payload.exerciseId,
+        answers: payload.answers,
+      });
+      const result = await strategy.submit(payload);
+      autosave.completeSubmit(clientId);
+      return result;
+    },
     onSuccess: (res) => {
       setResult(res);
       const passed = res.scorePct >= PASS_THRESHOLD_PCT;
@@ -318,7 +354,13 @@ export function ExercisePlayer({
         const profileLevel = Number(res.profile?.level ?? 0);
         const profileXp = Number(res.profile?.xp ?? 0);
         const prevLevel = levelForXp(profileXp - res.xpEarned);
-        if (profileLevel > prevLevel && res.xpEarned > 0) {
+        // ⚠️ PAS SUR UN REJEU. Le calcul suppose que `profile.xp` est celui
+        // d'APRÈS cette tentative-ci ; sur un résultat relu, le profil rendu est
+        // l'actuel, qui a pu gagner de l'XP depuis (d'autres missions). La
+        // soustraction ne désigne alors plus rien, et l'animation se
+        // déclencherait — ou pas — au hasard. Le score, lui, reste affiché : il
+        // est exact, et c'est souvent la première fois que l'élève le voit.
+        if (profileLevel > prevLevel && res.xpEarned > 0 && !res.replayed) {
           setTimeout(() => {
             setShowLevelUp(true);
             play("levelUp");
@@ -352,71 +394,8 @@ export function ExercisePlayer({
   });
 
   const questions = useMemo(() => data?.questions ?? [], [data?.questions]);
-  // Resolve a review item's prompt: the connected review carries it; the anon
-  // public correction does not, so the player fills it from the loaded questions.
-  const promptByQuestionId = useMemo(
-    () => new Map(questions.map((q) => [q.id, q.prompt])),
-    [questions],
-  );
-  const shuffledOptionsByQuestionId = useMemo(() => {
-    return new Map(
-      questions.map((q) => [q.id, shuffleOptions((q.options as BaseOption[]) ?? [])] as const),
-    );
-  }, [questions]);
-
-  /** type par question — la correction en a besoin, pas seulement la question courante. */
-  const typeByQuestionId = useMemo(
-    () =>
-      new Map(
-        questions.map((q) => [
-          q.id,
-          (q as { question_type?: string | null }).question_type ?? "mcq",
-        ]),
-      ),
-    [questions],
-  );
-
-  const getDisplayChoice = useCallback(
-    (questionId: string, choice: string) => {
-      if (!choice) return "-";
-      // `short_answer` (étude 20 lot 7) : réponse tapée, aucune option — même
-      // chemin d'affichage que le Rappel. Sans ce court-circuit, une réponse
-      // contenant une virgule tomberait dans la branche CSV des types B2 et
-      // s'afficherait découpée.
-      if (typeByQuestionId.get(questionId) === "short_answer") return isolateLtrRuns(choice);
-      // Recall (étude 17): the answer is free text, options are empty by
-      // construction — show the raw typed/expected text, LTR-isolated. Skipping
-      // the option/CSV lookups avoids a comma/colon in the text hitting the B2
-      // branch by accident.
-      if (isRecall) return isolateLtrRuns(choice);
-      const opts = shuffledOptionsByQuestionId.get(questionId) ?? [];
-      // mcq: show the option's display letter.
-      const direct = opts.find((opt) => opt.id === choice)?.displayId;
-      if (direct) return direct;
-      // B2 CSV answers (ordering "b,a,…" / matching "l1:r2,…"): map each id
-      // back to its option text when it is short plain text — raw shuffled ids
-      // mean nothing to the student. SVG/long texts fall back to the id.
-      if (choice.includes(",") || choice.includes(":")) {
-        const textById = new Map(opts.map((opt) => [opt.id, opt.text]));
-        const plain = (id: string) => {
-          const text = textById.get(id);
-          return text && !text.includes("<") && text.length <= 40 ? text : id;
-        };
-        const rendered = choice
-          .replace(/\s+/g, "")
-          .split(",")
-          .map((part) => {
-            const [left, right] = part.split(":");
-            return right !== undefined ? `${plain(left)} ⇢ ${plain(right)}` : plain(left);
-          })
-          .join(" · ");
-        return isolateLtrRuns(rendered);
-      }
-      // Otherwise (numeric value, give-up sentinel): the raw answer, LTR-isolated.
-      return isolateLtrRuns(choice);
-    },
-    [shuffledOptionsByQuestionId, isRecall, typeByQuestionId],
-  );
+  const questionIds = useMemo(() => questions.map((q) => q.id), [questions]);
+  const { promptById, optionsById, getDisplayChoice } = useQuestionMaps(questions, isRecall);
 
   const total = questions.length;
   const current = questions[idx];
@@ -551,6 +530,20 @@ export function ExercisePlayer({
     resetRun();
   }, [exerciseId, resetRun]);
 
+  // La reprise d'un brouillon vit dans son hook (`use-quest-autosave`) : le
+  // lecteur ne fournit que ce qu'il est seul à savoir — les questions servies —
+  // et repose l'état qu'on lui rend.
+  useQuestDraftRestore({
+    exerciseId,
+    variant,
+    enabled: capabilities.rewards && !result,
+    questionIds,
+    onRestore: ({ answers: restored, idx: at }) => {
+      setAnswers(restored);
+      setIdx(at);
+    },
+  });
+
   const advanceWithChoice = useCallback(
     (choice: string) => {
       if (!sessionId || !current?.id) return;
@@ -565,8 +558,10 @@ export function ExercisePlayer({
       setIdx((i) => i + 1);
       setSelected(null);
       answeredQuestionRef.current = null;
+      // Une réponse de plus à ne pas perdre : le prochain instantané la prendra.
+      autosave.markDirty();
     },
-    [answers, current?.id, idx, sessionId, total, submitRun],
+    [answers, current?.id, idx, sessionId, total, submitRun, autosave],
   );
 
   const continueAfterFeedback = useCallback(() => {
@@ -637,7 +632,7 @@ export function ExercisePlayer({
         validate();
         return;
       }
-      const optionsList = current ? (shuffledOptionsByQuestionId.get(current.id) ?? []) : [];
+      const optionsList = current ? (optionsById.get(current.id) ?? []) : [];
       const num = parseInt(e.key, 10);
       if (num >= 1 && num <= optionsList.length) {
         e.preventDefault();
@@ -735,7 +730,7 @@ export function ExercisePlayer({
         onReplay={resetRun}
         renderResultFooter={strategy.renderResultFooter}
         renderTutor={strategy.renderTutor}
-        resolvePrompt={(questionId) => promptByQuestionId.get(questionId) ?? ""}
+        resolvePrompt={(questionId) => promptById.get(questionId) ?? ""}
         getDisplayChoice={getDisplayChoice}
       />
     );
@@ -769,7 +764,7 @@ export function ExercisePlayer({
     setSelected(optId);
   }
 
-  const options = current ? (shuffledOptionsByQuestionId.get(current.id) ?? []) : [];
+  const options = current ? (optionsById.get(current.id) ?? []) : [];
   const canUseHints = !isQuiz && !bossMode && capabilities.hints && !isRecall;
   const currentHintRevealed = current ? current.id in revealedHints : false;
 
@@ -813,6 +808,13 @@ export function ExercisePlayer({
               .replace("{total}", String(total))}
           </span>
           {!bossMode && <span className="text-gold">{data.exercise.title}</span>}
+        </div>
+        <div className="mb-2 flex justify-end">
+          <QuestSaveStatus
+            status={autosave.status}
+            pendingLabel={t.quest.savePending}
+            doneLabel={t.quest.saveDone}
+          />
         </div>
         {bossMode ? (
           <div className="h-2 overflow-hidden rounded-full bg-secondary">

@@ -297,6 +297,8 @@ export const fr: TranslationKeys = {
     recallChip: "🧠 Rappel",
     recallLockedHint: "Termine d'abord la mission à 100 %",
     recallLockedHintAnon: "Connecte-toi et finis la mission à 100 %",
+    savePending: "Pas encore enregistré — nouvelle tentative en cours",
+    saveDone: "Travail enregistré",
   },
   levelUp: {
     title: "Niveau supérieur !",
