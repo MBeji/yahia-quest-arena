@@ -36,6 +36,7 @@ export const fr: TranslationKeys = {
     chapterLoadFailed: "Impossible de charger ce cours.",
     extrasLoadFailed: "Impossible de charger les extras.",
     sessionStartFailed: "Impossible de démarrer la session.",
+    sessionExpired: "Ta session a expiré. Reconnecte-toi pour enregistrer ta progression.",
   },
   auth: {
     titleSignup: "Crée ton compte",

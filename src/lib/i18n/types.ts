@@ -42,6 +42,8 @@ export type TranslationKeys = {
     chapterLoadFailed: string;
     extrasLoadFailed: string;
     sessionStartFailed: string;
+    /** Jeton refusé même après rafraîchissement : il faut se reconnecter. */
+    sessionExpired: string;
   };
   // Auth screen (login / signup)
   auth: {
