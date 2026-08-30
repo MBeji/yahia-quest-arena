@@ -36,6 +36,7 @@ export const ar: TranslationKeys = {
     chapterLoadFailed: "تعذّر تحميل هذا الدرس.",
     extrasLoadFailed: "تعذّر تحميل الإضافات.",
     sessionStartFailed: "تعذّر بدء الجلسة.",
+    sessionExpired: "انتهت صلاحية جلستك. أعِد تسجيل الدخول لحفظ تقدّمك.",
   },
   auth: {
     titleSignup: "أنشئ حسابك",

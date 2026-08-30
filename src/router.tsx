@@ -2,6 +2,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
 import { createIsomorphicFn } from "@tanstack/react-start";
 import { setResponseHeader } from "@tanstack/react-start/server";
+import { shouldReplayRejectedToken } from "@/shared/integrations/supabase/auth-rejection";
 import { buildContentSecurityPolicy } from "@/shared/lib/csp";
 import { initBrowserMonitoring } from "@/shared/lib/monitoring";
 import { routeTree } from "./routeTree.gen";
@@ -40,6 +41,24 @@ export const getRouter = () => {
       queries: {
         // Avoid refetching on every navigation; mutations explicitly invalidate.
         staleTime: 30_000,
+        // Pas de `retry` ici, À DESSEIN : le défaut de la librairie (3 essais)
+        // suffit à guérir un jeton refusé — le premier échec arme le drapeau de
+        // `auth-attacher`, l'essai suivant repart donc avec un jeton neuf. Le
+        // poser explicitement ne ferait qu'écraser ce défaut (et le `0` du SSR).
+      },
+      mutations: {
+        // Les mutations, elles, ne réessaient JAMAIS par défaut (`retry: 0`) :
+        // sans cette ligne, un jeton refusé se voyait offrir un rafraîchissement
+        // que plus rien ne venait consommer. C'est la panne signalée — l'élève
+        // termine son quiz, « Valider » lève « Unauthorized: Invalid token », et
+        // ses réponses, qui ne vivent que dans l'état React, partent avec.
+        //
+        // Pourquoi rejouer une mutation n'est pas la faute qu'on croit : ce
+        // refus-là est levé par `requireSupabaseAuth` AVANT `next()`, donc avant
+        // la moindre ligne de code métier. Rien n'a été écrit, il n'y a donc
+        // rien à écrire deux fois. C'est vrai de CE message et d'aucun autre —
+        // d'où un prédicat exact plutôt qu'un « ça ressemble à de l'auth ».
+        retry: shouldReplayRejectedToken,
       },
     },
   });
