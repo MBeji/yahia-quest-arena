@@ -16,7 +16,6 @@ export const GAMEPLAY_TABLES = [
   "spaced_repetition_schedule",
   "daily_objectives",
   "weekly_quests",
-  "difficulty_adaptation",
   "student_badges",
   "inventory_items",
   "exercise_assignments",

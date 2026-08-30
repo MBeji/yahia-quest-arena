@@ -1,0 +1,40 @@
+-- ---------------------------------------------------------------------------
+-- Q-4 de l'étude 30 — SECOND et dernier temps : la table tombe.
+--
+-- Migration DESTRUCTIVE, livrée en merge SÉPARÉ après `20260830120000`, qui a
+-- retiré son unique écrivain (`submit_exercise_attempt`) et qui est appliquée
+-- en prod depuis le merge de #910. C'est l'ordre qu'impose la DoD §7 : le code
+-- qui écrivait est parti d'abord, la structure part ensuite — jamais l'inverse,
+-- sinon la fenêtre entre les deux applications fait échouer chaque soumission.
+--
+-- CE QU'ON SUPPRIME, ET CE QUI PART AVEC
+-- ---------------------------------------------------------------------------
+-- `difficulty_adaptation` tenait un palier de difficulté par (élève, matière),
+-- recalculé à chaque soumission depuis le sprint 2 (`20260526220000`), et lu
+-- par personne. Mesuré sur la base reconstruite avant d'écrire : 1 policy,
+-- 2 index, 0 FK entrante, 0 trigger, 0 vue dépendante. Le `DROP TABLE` emporte
+-- policy et index ; rien d'autre ne le suit, et c'est pourquoi il n'y a PAS de
+-- CASCADE : si une dépendance était apparue entre-temps, cette migration doit
+-- échouer bruyamment plutôt que d'emporter un objet que personne n'a examiné.
+--
+-- CE QUI LA REMPLACE — ce n'est pas une perte de fonction
+-- ---------------------------------------------------------------------------
+-- L'étude 30 livre mieux, et par compétence plutôt que par matière entière :
+-- la croyance `p_known` (BKT, `20260825100000`), la frontière « prêt à
+-- apprendre » (`20260825120000`) et le choix d'item qui vise la ZPD calculée —
+-- `P(réussite) = p·(1−S) + (1−p)·G` dans [0,55 ; 0,80]. Le palier 1-4 que
+-- cette table maintenait était l'approximation la plus grossière possible de
+-- cette idée, et personne ne l'a jamais lue.
+--
+-- PAS DE SAUVEGARDE ICI, ET C'EST DÉLIBÉRÉ
+-- ---------------------------------------------------------------------------
+-- `db-migrate-prod.yml` prend un `pg_dump` AVANT d'appliquer : la donnée reste
+-- récupérable par la sauvegarde du jour. Créer en plus une table
+-- `_backup_difficulty_adaptation_*` copierait le motif de 2026-06-09, dont le
+-- résidu traîne encore dans les types générés — un cimetière qu'aucune
+-- migration ne reproduit et que chaque régénération doit contourner à la main.
+-- Une donnée que personne ne lit, dérivée d'`attempts` qui elle est conservée,
+-- ne mérite pas ce prix.
+-- ---------------------------------------------------------------------------
+
+DROP TABLE IF EXISTS public.difficulty_adaptation;

@@ -95,7 +95,7 @@ celui de la **langue**.
 ### 3.2 Activité d'apprentissage — le gros du volume
 
 `attempts`, `question_attempts`, `exercise_sessions`, `daily_objectives`,
-`weekly_quests`, `spaced_repetition_schedule`, `difficulty_adaptation`,
+`weekly_quests`, `spaced_repetition_schedule`,
 `user_misconceptions`, `user_competency_mastery`, `learning_pulses`,
 `mock_exam_sessions`, `dungeon_runs`, `dungeon_run_questions`, `duels`,
 `duel_participants`, `duel_queue`, `duel_league_awards`, `student_badges`,
