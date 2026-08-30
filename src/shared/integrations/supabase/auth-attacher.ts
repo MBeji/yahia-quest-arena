@@ -19,6 +19,47 @@ import { isRejectedTokenError } from "./auth-rejection";
 import { supabase } from "./client";
 
 /**
+ * Au-delà, on cesse d'ATTENDRE le service Auth et on rend la main.
+ *
+ * POURQUOI UNE LIMITE. Poser le jeton est la première chose que fait tout appel
+ * de server fn : tant qu'elle n'a pas rendu, la mutation reste `isPending` — et
+ * dans le lecteur de mission, `isPending` GRISE le bouton « Valider ». Une
+ * lecture de session qui ne revient jamais ne donne donc pas une erreur, elle
+ * donne un bouton mort avec sa roulette, dont seul un rechargement sort. Ce
+ * n'est pas théorique : auth-js sérialise l'accès à la session derrière un
+ * verrou (`navigator.locks`) et réessaie un rafraîchissement en échec avec
+ * temporisation — exactement la situation d'un jeton refusé, celle-là même que
+ * ce fichier vient d'apprendre à rattraper d'un `refreshSession()` de plus.
+ *
+ * 8 s est délibérément large : un aller-retour Auth sain se compte en dizaines
+ * de millisecondes, et un réseau mobile lent doit pouvoir aboutir. Ce n'est pas
+ * un budget de performance, c'est le seuil au-delà duquel l'élève est devant un
+ * écran figé. Passé ce délai on part SANS jeton : le serveur refuse, l'échec se
+ * voit, et la reprise (`mutations.retry`) rejoue l'appel. Une erreur bornée vaut
+ * mieux qu'un gel sans fin.
+ */
+const AUTH_CALL_TIMEOUT_MS = 8_000;
+
+/** Ce que rend la course quand le service Auth n'a pas répondu à temps. */
+const TIMED_OUT = Symbol("auth-call-timed-out");
+
+async function withAuthTimeout<T>(call: Promise<T>): Promise<T | typeof TIMED_OUT> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      call,
+      new Promise<typeof TIMED_OUT>((resolve) => {
+        timer = setTimeout(() => resolve(TIMED_OUT), AUTH_CALL_TIMEOUT_MS);
+      }),
+    ]);
+  } finally {
+    // Sans ça, chaque appel laisserait derrière lui une minuterie de 8 s — et,
+    // sous Node, de quoi tenir le processus de test éveillé d'autant.
+    clearTimeout(timer);
+  }
+}
+
+/**
  * Le serveur a-t-il refusé le dernier jeton posé ? Mémoire d'un seul cran, lue
  * et effacée par le prochain `resolveAccessToken()`.
  */
@@ -102,21 +143,24 @@ export async function resolveAccessToken(): Promise<string | null> {
   // l'horloge locale —, donc on force la seule chose qui ne dépend ni de l'une
   // ni de l'autre : un aller-retour de rafraîchissement.
   if (consumeRejectedToken()) {
-    const { data: forced } = await supabase.auth.refreshSession();
-    const token = forced.session?.access_token;
+    const forced = await withAuthTimeout(supabase.auth.refreshSession());
+    const token = forced === TIMED_OUT ? null : forced.data.session?.access_token;
     if (token) return token;
     // Le forçage n'a rien donné : on retombe sur le chemin normal, qui saura
     // dire « pas de session » (et le garde de `_authenticated` fera son office).
   }
 
-  const { data, error } = await supabase.auth.getSession();
+  const current = await withAuthTimeout(supabase.auth.getSession());
+  if (current === TIMED_OUT) return null;
+  const { data, error } = current;
   const token = data.session?.access_token;
   if (token) return token;
   // Cas 1 : pas de session du tout. Rien à retenter.
   if (!error) return null;
   // Cas 2 : le rafraîchissement a échoué — on lui redonne sa chance.
-  const { data: refreshed } = await supabase.auth.refreshSession();
-  return refreshed.session?.access_token ?? null;
+  const refreshed = await withAuthTimeout(supabase.auth.refreshSession());
+  if (refreshed === TIMED_OUT) return null;
+  return refreshed.data.session?.access_token ?? null;
 }
 
 // Must be registered as a global `functionMiddleware` in `src/start.ts`; otherwise

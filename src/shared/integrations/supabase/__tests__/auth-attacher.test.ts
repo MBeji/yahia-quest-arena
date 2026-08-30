@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const { mockGetSession, mockRefreshSession } = vi.hoisted(() => ({
   mockGetSession: vi.fn(),
@@ -332,5 +332,78 @@ describe("la reprise sauve la mutation (bout en bout)", () => {
 
     await expect(observer.mutate()).rejects.toThrow("Unauthorized: Invalid token");
     expect(serverFn).toHaveBeenCalledTimes(1);
+  });
+});
+
+// =============================================================================
+// LE SERVICE AUTH QUI NE RÉPOND PAS.
+//
+// Poser le jeton est la première chose que fait tout appel de server fn : tant
+// qu'elle n'a pas rendu, la mutation reste `isPending` — et dans le lecteur de
+// mission, `isPending` GRISE « Valider ». Une lecture de session qui ne revient
+// jamais ne donne donc pas une erreur, elle donne un bouton mort avec sa
+// roulette, dont seul un rechargement sort. auth-js sérialise l'accès derrière
+// `navigator.locks` et temporise ses rafraîchissements en échec : c'est
+// précisément la situation d'un jeton refusé.
+// =============================================================================
+describe("attachSupabaseAuth — le service Auth ne répond pas", () => {
+  beforeEach(() => {
+    mockGetSession.mockReset();
+    mockRefreshSession.mockReset();
+    resetRejectedTokenForTests();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("ne reste JAMAIS suspendu : l'appel part sans jeton et l'échec se voit", async () => {
+    mockGetSession.mockReturnValue(new Promise(() => {})); // ne rend jamais
+
+    const next = vi.fn().mockResolvedValue("ok");
+    const pending = callMiddleware({ next } as never);
+
+    await vi.advanceTimersByTimeAsync(8_000);
+    await pending;
+
+    expect(next).toHaveBeenCalledWith({ headers: {} });
+  });
+
+  it("le rafraîchissement FORCÉ est borné lui aussi", async () => {
+    // Le chemin ajouté par ce correctif : après un refus, on force un
+    // rafraîchissement. S'il pendait, on aurait remplacé une erreur visible par
+    // un gel — soit exactement le bouton grisé qu'on cherche à éviter.
+    mockGetSession.mockResolvedValue({ data: { session: { access_token: "périmé" } } });
+    mockRefreshSession.mockReturnValue(new Promise(() => {}));
+
+    const rejeté = vi.fn().mockRejectedValue(new Error("Unauthorized: Invalid token"));
+    await expect(callMiddleware({ next: rejeté } as never)).rejects.toThrow();
+
+    const next = vi.fn().mockResolvedValue("ok");
+    const pending = callMiddleware({ next } as never);
+    await vi.advanceTimersByTimeAsync(8_000);
+    await pending;
+
+    // Le forçage a expiré : on retombe sur le chemin normal plutôt que d'attendre.
+    expect(next).toHaveBeenCalledWith({ headers: { Authorization: "Bearer périmé" } });
+  });
+
+  it("une réponse simplement LENTE aboutit encore — ce n'est pas un budget de perf", async () => {
+    let resolveSession: (v: unknown) => void = () => {};
+    mockGetSession.mockReturnValue(
+      new Promise((resolve) => {
+        resolveSession = resolve;
+      }),
+    );
+
+    const next = vi.fn().mockResolvedValue("ok");
+    const pending = callMiddleware({ next } as never);
+
+    await vi.advanceTimersByTimeAsync(5_000);
+    resolveSession({ data: { session: { access_token: "lent-mais-bon" } } });
+    await pending;
+
+    expect(next).toHaveBeenCalledWith({ headers: { Authorization: "Bearer lent-mais-bon" } });
   });
 });
