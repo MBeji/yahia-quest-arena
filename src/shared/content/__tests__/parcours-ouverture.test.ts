@@ -157,7 +157,7 @@ describe("readOuvertures — rejeu statique de l'ouverture des parcours", () => 
     expect(lu.parcours).toEqual([]);
   });
 
-  it("rejoue les vraies migrations du dépôt : 1ère sec et bac lettres ouverts, 2ème sec éco-services non", () => {
+  it("rejoue les vraies migrations du dépôt : 1ère sec, bac lettres et 2ème sec éco-services ouverts, le nœud legacy 2ème sec non", () => {
     const dir = join(process.cwd(), "supabase/migrations");
     const files = readdirSync(dir)
       .filter((name) => name.endsWith(".sql"))
@@ -175,12 +175,19 @@ describe("readOuvertures — rejeu statique de l'ouverture des parcours", () => 
     expect(parcoursDuGrade(lu, "bac-lettres")).toEqual([
       expect.objectContaining({ id: "concours-bac-lettres", statut: "available" }),
     ]);
-    // Le cas négatif se déplace, il ne disparaît pas : cette section-là est
-    // seedée coming_soon et n'a jamais été basculée — un test qui n'aurait plus
-    // que des parcours ouverts ne distinguerait plus un parseur juste d'un
-    // parseur qui répondrait « available » à tout.
+    // Ouverte par 20260830140000_open_ecole_2eme_sec_eco_services_parcours.sql :
+    // c'est elle qui ferme la série des quatre sections de 2ème sec.
     expect(parcoursDuGrade(lu, "2eme-sec-eco-services")).toEqual([
-      expect.objectContaining({ id: "ecole-2eme-sec-eco-services", statut: "coming_soon" }),
+      expect.objectContaining({ id: "ecole-2eme-sec-eco-services", statut: "available" }),
+    ]);
+    // Le cas négatif se déplace, il ne disparaît pas — sans lui, un parseur qui
+    // répondrait « available » à tout passerait le test. Il se pose désormais sur
+    // le NŒUD LEGACY `ecole-2eme-sec` : seedé coming_soon, non sélectionnable
+    // (LEGACY_GRADE_SLUGS) et interdit comme cible `compileTo`, il n'a vocation à
+    // être ouvert JAMAIS. Le cas négatif n'aura donc plus à déménager à chaque
+    // ouverture de section, contrairement à celui qu'il remplace.
+    expect(parcoursDuGrade(lu, "2eme-sec")).toEqual([
+      expect.objectContaining({ id: "ecole-2eme-sec", statut: "coming_soon" }),
     ]);
     // Le rattachement grade → parcours couvre tout ce que la chaîne ouvre.
     expect(lu.ouvertsSansSeed).toEqual([]);
