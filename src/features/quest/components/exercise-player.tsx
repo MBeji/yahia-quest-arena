@@ -9,6 +9,7 @@ import { PASS_THRESHOLD_PCT, RECALL_MIN_QUESTIONS } from "@/shared/constants/gam
 import { shuffleOptions, type BaseOption } from "@/shared/lib/question-utils";
 import { isValidAnswerFormat } from "@/shared/lib/answer-formats";
 import { isolateLtrRuns } from "@/shared/lib/bidi";
+import { userFacingError } from "@/shared/lib/error-message";
 import { RichField } from "@/components/ui/svg-figure";
 import { QuestionInput, type McqOptionRender } from "@/features/quest/components/question-input";
 import { levelForXp } from "@/shared/lib/level";
@@ -327,7 +328,7 @@ export function ExercisePlayer({
         qc.invalidateQueries({ queryKey: ["subject"] });
       }
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : t.errors.errorFallback),
+    onError: (e) => toast.error(userFacingError(e, t.errors)),
   });
 
   const hintCharges = data?.hintCharges ?? 0;
@@ -347,7 +348,7 @@ export function ExercisePlayer({
       if (res.consumed) setHintsRemaining((n) => Math.max(0, n - 1));
       play("hint");
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : t.errors.errorFallback),
+    onError: (e) => toast.error(userFacingError(e, t.errors)),
   });
 
   const questions = useMemo(() => data?.questions ?? [], [data?.questions]);
