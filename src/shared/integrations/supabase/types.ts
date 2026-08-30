@@ -845,53 +845,6 @@ export type Database = {
         };
         Relationships: [];
       };
-      difficulty_adaptation: {
-        Row: {
-          avg_score: number;
-          created_at: string;
-          current_difficulty_level: number;
-          id: string;
-          last_adjusted_at: string | null;
-          recent_avg_score: number;
-          subject_id: string;
-          total_attempts: number;
-          updated_at: string;
-          user_id: string;
-        };
-        Insert: {
-          avg_score?: number;
-          created_at?: string;
-          current_difficulty_level?: number;
-          id?: string;
-          last_adjusted_at?: string | null;
-          recent_avg_score?: number;
-          subject_id: string;
-          total_attempts?: number;
-          updated_at?: string;
-          user_id: string;
-        };
-        Update: {
-          avg_score?: number;
-          created_at?: string;
-          current_difficulty_level?: number;
-          id?: string;
-          last_adjusted_at?: string | null;
-          recent_avg_score?: number;
-          subject_id?: string;
-          total_attempts?: number;
-          updated_at?: string;
-          user_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "difficulty_adaptation_subject_id_fkey";
-            columns: ["subject_id"];
-            isOneToOne: false;
-            referencedRelation: "subjects";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
       duel_league_awards: {
         Row: {
           awarded_at: string;
@@ -2936,10 +2889,7 @@ export type Database = {
         Returns: string;
       };
       _student_report_json: { Args: { p_student: string }; Returns: Json };
-      _student_weakness_insights: {
-        Args: { p_student: string };
-        Returns: Json;
-      };
+      _student_weakness_insights: { Args: { p_student: string }; Returns: Json };
       activate_inventory_item: { Args: { p_item_code: string }; Returns: Json };
       active_misconceptions: {
         Args: { p_user: string };
@@ -3162,11 +3112,7 @@ export type Database = {
         Returns: number;
       };
       can_use_tutor: {
-        Args: {
-          p_chapter_id?: string;
-          p_question_id?: string;
-          p_scope: string;
-        };
+        Args: { p_chapter_id?: string; p_question_id?: string; p_scope: string };
         Returns: Json;
       };
       check_answers: {
