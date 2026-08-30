@@ -81,6 +81,7 @@ function QuestPage() {
       submit: async ({ sessionId, exerciseId: exId, answers }): Promise<PlayerResult> => {
         const res = await submit({ data: { sessionId, exerciseId: exId, answers } });
         return {
+          replayed: res.replayed,
           correct: res.correct,
           total: res.total,
           scorePct: res.scorePct,
