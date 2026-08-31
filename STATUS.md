@@ -385,6 +385,15 @@ leur valeur — c'est la seule décision que le calendrier prend à notre place.
    tarif le moins cher plutôt qu'à celui d'Opus. `ANTHROPIC_API_KEY` reste acceptée en repli.
    ⚠️ Une configuration incomplète éteint le chemin **en silence** (l'élève retombe sur le
    produit déterministe) : le motif est nommé dans `/admin/ia` → « Clé plateforme ».
+   ⚠️ **Choisir le modèle le moins cher n'est pas gratuit : hors des modèles curés, le pilote
+   n'alimente plus le cache mutualisé.** Depuis #872 la barrière de R-15.2 vaut pour les deux
+   payeurs — sur le chemin plateforme, un modèle absent d'`AI_CURATED_MODELS` fait servir
+   l'explication à son demandeur **sans rien écrire** (`tutor.server.ts`, `curated || payer ===
+"family"`). #876 a depuis élargi la liste à DeepSeek, Kimi, Grok, Gemini, GLM 5.2 et Mistral,
+   donc les préréglages nommés y entrent presque tous ; ce qui reste dehors, c'est `glm-5.3`
+   (aucun tarif publié) et tout modèle saisi librement via `custom`. Là, chaque explication est
+   régénérée, le pilote peut coûter **plus** en agrégat qu'avec un modèle plus cher mais curé,
+   et le panneau de cache de `/admin/ia` lit 0 % sans que rien n'en dise la raison.
 2. **C4bis étape 2 — publier le tagging, puis l'étendre.** ⚠️ **Le chiffre a changé le
    2026-08-25 et la question aussi.** Le lot 0bis de é30 (privé #241) a lu les 297 questions
    muettes une à une : couverture **521 → 662 des 818** questions de `math` 9ᵉ, soit **64 % →

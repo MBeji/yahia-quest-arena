@@ -319,9 +319,25 @@ export const AI_UNKNOWN_MODEL_PRICE: AiModelPrice = {
 /**
  * Modèles CURÉS, proposés à la saisie et — c'est là que ça compte — **condition
  * d'entrée du cache mutualisé** (R-15.2). Une explication produite par un modèle
- * hors de cette liste est servie à son demandeur et reste privée à son payeur :
+ * hors de cette liste est servie à son demandeur sans entrer dans le pot commun :
  * sans quoi la clé la moins chère du parc fixerait la qualité pour tous les
  * enfants.
+ *
+ * ⚠️ CETTE BARRIÈRE VAUT POUR LES DEUX PAYEURS, ET ELLE NE COÛTE PAS LA MÊME CHOSE
+ * AUX DEUX. Elle est née pour les clés de FAMILLE, où le hors-liste retombe sur une
+ * réserve PRIVÉE — l'explication est écrite, simplement pas partagée. Depuis #872
+ * elle gouverne aussi le chemin PLATEFORME, où il n'y a pas de réserve privée où
+ * retomber : le payeur plateforme n'a pas d'`owner_user_id`, donc une entrée
+ * `shared = false` y serait morte à l'écriture (illisible par
+ * `find_tutor_explanation`, et comptée au dénominateur de
+ * `get_tutor_cache_stats`). Sur ce chemin, hors-liste veut donc dire **rien
+ * d'écrit du tout**, et chaque explication est régénérée.
+ *
+ * Conséquence pratique, à peser au moment de choisir `AI_PLATFORM_PROVIDER` : un
+ * modèle bon marché mais non curé peut coûter PLUS en agrégat qu'un modèle plus
+ * cher et curé, et le panneau de cache de `/admin/ia` lira 0 % sans en dire la
+ * raison. C'est écrit là où le choix se fait —
+ * `docs/environment-variables.md` § « Mode IA » — et dans le rang 0 de `STATUS.md`.
  *
  * La liste est une PROPOSITION, jamais une contrainte : la saisie libre d'un id
  * reste ouverte (D-11 — c'est sa clé, son choix).

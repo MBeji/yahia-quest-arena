@@ -242,6 +242,27 @@ AI_PLATFORM_PROVIDER=deepseek
 AI_PLATFORM_API_KEY=sk-…
 ```
 
+⚠️ **Le modèle choisi décide si le cache mutualisé se remplit — pas seulement ce
+qu'il coûte.** Depuis [#872] la barrière de R-15.2 vaut pour **les deux payeurs** :
+sur le chemin plateforme, une explication produite par un modèle absent
+d'`AI_CURATED_MODELS` ([`src/shared/constants/ai.ts`](../src/shared/constants/ai.ts))
+est servie à son demandeur et **rien n'est écrit** — le payeur plateforme n'a pas
+d'`owner_user_id`, donc une entrée privée y serait morte à l'écriture
+(`src/features/tutor/tutor.server.ts`, `curated || payer === "family"`).
+
+[#876] a depuis élargi la liste curée à DeepSeek, Kimi, Grok, Gemini, GLM 5.2 et
+Mistral : les préréglages nommés y entrent presque tous, et l'exemple DeepSeek
+ci-dessus alimente bien le pot commun. Restent dehors `glm-5.3` (aucun tarif par
+token publié — curer sans tarifer couperait le porteur à ~4 % de sa dépense) et
+tout modèle saisi librement par `AI_PLATFORM_MODEL_FAST` / `AI_PLATFORM_MODEL_RICH`
+via `custom`. Dans ces cas-là chaque explication est **régénérée** : la plateforme
+peut coûter plus en agrégat qu'avec un modèle plus cher mais curé, et le panneau de
+cache de `/admin/ia` lira 0 % sans en dire la raison. Vérifier le modèle contre la
+liste curée fait donc partie du choix de fournisseur, au même titre que son tarif.
+
+[#872]: https://github.com/MBeji/yahia-quest-arena/pull/872
+[#876]: https://github.com/MBeji/yahia-quest-arena/pull/876
+
 ⚠️ **Une configuration incomplète éteint le chemin plateforme en silence** : pas
 d'erreur à l'écran, l'élève retombe simplement sur le produit déterministe (R-1),
 et le seul symptôme est une absence d'appels. Le motif est donc affiché dans
