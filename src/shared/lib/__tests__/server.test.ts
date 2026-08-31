@@ -11,6 +11,8 @@ const {
   mockHandleHealthRequest,
   mockHandleDigestCron,
   mockHandleClientLog,
+  mockHandleTutorStream,
+  mockHandlePushCron,
 } = vi.hoisted(() => ({
   mockRenderErrorPage: vi.fn(() => "<html>fallback</html>"),
   mockConsumeLastCapturedError: vi.fn((): unknown => undefined),
@@ -19,6 +21,8 @@ const {
   mockHandleHealthRequest: vi.fn(),
   mockHandleDigestCron: vi.fn(),
   mockHandleClientLog: vi.fn(),
+  mockHandleTutorStream: vi.fn(),
+  mockHandlePushCron: vi.fn(),
 }));
 
 vi.mock("@/shared/lib/health", () => ({
@@ -57,6 +61,30 @@ vi.mock("@/shared/lib/client-log.server", () => ({
   handleClientLogRequest: mockHandleClientLog,
 }));
 
+/**
+ * Les DEUX DERNIÈRES portes lourdes de `src/server.ts`, moquées pour la même
+ * raison que les bilans juste au-dessus — et il aura fallu trois pushs rejetés
+ * pour finir de tirer le fil.
+ *
+ * `tutor.stream.server` traîne toute la pile IA ; `notifications.cron.server`
+ * traîne le client `service_role` et l'expéditeur push. Avec le
+ * `vi.resetModules()` de CHAQUE test, ces deux graphes se re-transforment à
+ * chaque fois, et le coût retombe sur le PREMIER test du fichier — celui
+ * d'`/api/health`, qui ne les touche même pas. Symptôme : `Test timed out in
+ * 15000ms` dès que la machine est chargée, et un fichier qui passe seul.
+ *
+ * Aucune couverture n'est perdue : aucun test d'ici n'exerce le flux du tuteur
+ * ni le cron push. Ce fichier vérifie le ROUTAGE du wrapper ; ce que ces portes
+ * font a ses propres suites.
+ */
+vi.mock("@/features/tutor/tutor.stream.server", () => ({
+  handleTutorStream: mockHandleTutorStream,
+}));
+
+vi.mock("@/features/notifications/notifications.cron.server", () => ({
+  handlePushCron: mockHandlePushCron,
+}));
+
 vi.mock("@tanstack/react-start/server-entry", () => ({
   default: {
     fetch: mockServerFetch,
@@ -88,6 +116,8 @@ describe("server fetch wrapper", () => {
     mockHandleHealthRequest.mockReset();
     mockHandleDigestCron.mockReset();
     mockHandleClientLog.mockReset();
+    mockHandleTutorStream.mockReset();
+    mockHandlePushCron.mockReset();
   });
 
   it("serves /api/health BEFORE the bot guard, so a monitor is never refused", async () => {
