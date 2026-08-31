@@ -156,6 +156,10 @@ SELECT is(
   'le rejeu se déclare comme tel — le client s''en sert pour ne pas refêter'
 );
 
+-- ⚠️ `::numeric::int` et pas `::int`. `score_pct` est NUMERIC en base, donc
+-- `->>` en rend le TEXTE — « 100.000000000000 » —, que `::int` refuse. Le double
+-- cast passe par le type réel avant d'arrondir. (Le cast simple suffit pour
+-- `xpEarned` et `correct`, qui sont des INT ; c'est ce qui rend le piège discret.)
 SELECT is(
   ((    SELECT public.submit_exercise_attempt(
       'a8000000-0000-0000-0000-000000000001',
@@ -165,7 +169,7 @@ SELECT is(
         {"questionId":"e3840000-0000-0000-0000-000000000003","choice":"a"},
         {"questionId":"e3840000-0000-0000-0000-000000000004","choice":"a"},
         {"questionId":"e3840000-0000-0000-0000-000000000005","choice":"a"}]'::jsonb
-    ) ->> 'scorePct')::int),
+    ) ->> 'scorePct')::numeric::int),
   100,
   'le rejeu rend le VRAI score de la tentative d''origine'
 );
