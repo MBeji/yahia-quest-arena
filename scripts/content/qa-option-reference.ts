@@ -43,9 +43,26 @@ const RANK_AR =
 // de l'option, c'est le bon patron. `a été` écarte l'auxiliaire avoir.
 const NOT_AN_OPTION_LETTER = `(?![\\p{L}\\p{N}’'.\\-])(?!\\s*[=≠≤≥<>+×÷^])(?!\\s+(?:été|eu))`;
 
+// Avant le nom : `answers a` est le seul couple nom+lettre qui, en anglais ordinaire, ne
+// parle pas d'options. `answers` y est bien plus souvent un VERBE qu'un nom pluriel, et `a`
+// l'article indéfini : « An opposite answers a meaning » n'accuse aucune option. L'article
+// OUVRE toujours un groupe nominal — il est suivi d'un mot (ou d'une citation ouvrante).
+// La lettre d'une option, elle, est ÉTIQUETÉE : déterminant devant le nom (« the answers a
+// and c »), lettre délimitée (« answers (a) », « answers "a" »), ou coordination qui la
+// laisse fermer le groupe (« answers a and c »). Le SINGULIER n'est pas touché — « the
+// answer b », « Answer a is wrong » restent des défauts, la lettre y désigne bien la place
+// que l'élève ne verra jamais. Ce qui échappe alors au filet : un pluriel nu suivi d'un
+// verbe (« Answers a repeat the stem »), tournure que le corpus n'a jamais produite.
+// Constaté le 2026-08-31 en rejouant `content:qa --strict` sur tout le corpus : la garde ne
+// retire QUE des `answers a` — 25 avertissements sur 10 questions, toutes fausses, dont les
+// 18 d'`english-bac`, qui tombe à zéro. Aucune autre tournure ne bouge, et `option a`
+// (109 occurrences) comme `options a` (23) sont, eux, tous réels. D'où la garde sur ce
+// couple-là et lui seul.
+const ENGLISH_ANSWERS_AS_VERB = `(?<!\\b(?:the|these|those|both|all|two|three|four|your)\\s)answers\\s+a\\s+(?!(?:and|or)\\b)["“'\\p{L}]`;
+
 // 1) « l'option b », « réponse (c) », « option « d » » — un nom d'option + une lettre.
 const OPTION_BY_LETTER = new RegExp(
-  `\\b${OPTION_NOUN_LATIN}\\s*[«"'(\\[]?\\s*[a-dA-D]\\s*[»"')\\]]?${NOT_AN_OPTION_LETTER}`,
+  `\\b(?!${ENGLISH_ANSWERS_AS_VERB})${OPTION_NOUN_LATIN}\\s*[«"'(\\[]?\\s*[a-dA-D]\\s*[»"')\\]]?${NOT_AN_OPTION_LETTER}`,
   "giu",
 );
 // 2) Lettre entre parenthèses toute seule — « (b) swaps the cities », « و(c) عكسُ ».
