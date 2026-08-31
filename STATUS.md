@@ -284,6 +284,26 @@ Le détail vit dans les corps de PR et dans `docs/` — ici, seulement ce qui go
   anti-doublon et exclusion des quiz du repli perdus. C'est le `diff` contre sa révision vivante
   qui l'a montré, **pas un test**.
 
+- **Le travail de l'élève est écrit AVANT d'être envoyé, jamais l'inverse** (2026-08-31).
+  Les réponses d'une mission ne vivaient que dans l'état React et n'en sortaient qu'à la
+  soumission finale : tout ce qui empêchait celle-ci d'aboutir emportait la partie entière.
+  `src/shared/lib/outbox.ts` inverse l'ordre — la soumission est mise en file locale, puis
+  tentée, et n'en sort qu'acceptée. Corollaires à ne pas défaire : une file rejouée exige un
+  serveur idempotent (d'où le rejeu qui **rend** la tentative au lieu de lever), et un rejeu
+  n'a de sens qu'une fois — la reprise de la file et celle de `mutations.retry` ne s'empilent
+  pas parce qu'elles ne sont pas sur le même chemin d'appel.
+- **`ensureFreshSession` est protégée par un mutex, et ce n'est pas de la prudence** (2026-08-31).
+  Chaque `refreshSession()` fait TOURNER le refresh token : N rafraîchissements concurrents
+  produisent N-1 jetons morts et un `Invalid Refresh Token: Already Used`. Un correctif non
+  sérialisé recréerait exactement la course qu'il prétend fermer. La règle ESLint
+  `local/single-browser-supabase-client` tient l'autre moitié : un seul client de navigateur.
+- **`/api/client-log` n'exige aucun jeton, DÉLIBÉRÉMENT** (2026-08-31). Elle reçoit le récit
+  d'un refus d'authentification : au moment où il y a quelque chose à raconter, le jeton est
+  cassé. Exiger un Bearer valide ne consignerait que les incidents qui ne se sont **pas**
+  produits. Ce qui la borne : sa place APRÈS `guardRequest` (plafond par IP), un corps
+  plafonné à 8 ko, et une table qui ne nomme personne (RLS sans policy, `client_id` désigne
+  une soumission). Trois tests le figent — dont sa place dans le wrapper.
+
 ### Issues ouvertes — re-sondées le 2026-08-26
 
 **10 au moteur** (5 le 2026-08-24 : cinq sont nées depuis, dont trois ouvertes par des gardes).

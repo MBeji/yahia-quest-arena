@@ -24,6 +24,7 @@ import { SoundProvider, useSound } from "@/lib/sound";
 import { logger } from "@/shared/lib/logger";
 import { initAnalytics, trackPageview, pagePathFromLocation } from "@/shared/lib/analytics";
 import { initWebVitals } from "@/shared/lib/web-vitals";
+import { initHiddenTimeTracking } from "@/shared/lib/client-log";
 
 import appCss from "../styles.css?url";
 
@@ -231,6 +232,55 @@ function RootComponent() {
     if (import.meta.env.PROD && typeof navigator !== "undefined" && "serviceWorker" in navigator) {
       navigator.serviceWorker.register("/sw.js").catch(() => {});
     }
+  }, []);
+
+  // Le filet de sauvegarde, installé pour toute l'application.
+  //
+  // POURQUOI ICI ET PAS DANS LA ROUTE DE QUÊTE. Une soumission restée en file
+  // appartient à la session PRÉCÉDENTE : l'élève a rechargé, fermé l'onglet, ou
+  // rouvert l'app le lendemain. L'installer sur la route de quête ne la
+  // rejouerait qu'au moment où il retourne de lui-même sur une mission — c'est
+  // exactement le moment où il croit son travail perdu.
+  //
+  // ⚠️ LA FILE ET LA QUÊTE SONT TOUTES DEUX EN IMPORT DYNAMIQUE, ET CE N'EST PAS
+  // NÉGOCIABLE. Tout ce que `__root` importe STATIQUEMENT entre dans le chunk
+  // `index` et son budget de 450 ko — y compris une simple constante : nommer
+  // `QUEST_SUBMIT_KIND` depuis ici suffisait à y faire entrer `quest-draft.ts`,
+  // et le budget passait à 452,26 ko (rouge en CI, PR #918). Sortir la seule
+  // constante en rendait 1,26 ; sortir aussi `outbox.ts` a rendu le reste. Même
+  // piège que celui déjà signalé dans le barrel pour `recall-messages`.
+  //
+  // Rien n'est perdu à différer : un flush est un travail de FOND, il n'a aucune
+  // raison d'être synchrone au montage. `initHiddenTimeTracking`, lui, reste
+  // statique — il doit compter dès la première milliseconde, et `client-log.ts`
+  // est de toute façon déjà dans le chunk, tiré par `auth-attacher`.
+  useEffect(() => {
+    // Le compteur de temps caché doit tourner DÈS le chargement : quand un refus
+    // survient, il est trop tard pour se demander depuis combien de temps
+    // l'onglet dormait. C'est l'une des trois grandeurs qui départagent les
+    // hypothèses (voir 20260831140000_client_errors_telemetry.sql).
+    const stopHiddenTracking = initHiddenTimeTracking();
+    let stopOutbox: (() => void) | undefined;
+    let unmounted = false;
+
+    void (async () => {
+      const [outbox, quest] = await Promise.all([
+        import("@/shared/lib/outbox"),
+        import("@/features/quest"),
+      ]);
+      // Démonté avant que les deux modules n'arrivent : ne rien installer, il n'y
+      // aurait plus personne pour le démonter.
+      if (unmounted) return;
+      quest.registerQuestOutboxSender();
+      stopOutbox = outbox.startOutbox();
+      await outbox.flush();
+    })().catch(() => {});
+
+    return () => {
+      unmounted = true;
+      stopOutbox?.();
+      stopHiddenTracking();
+    };
   }, []);
 
   // Google Analytics 4: load gtag.js once, then report a page_view for the

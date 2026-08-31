@@ -10,6 +10,7 @@ const {
   mockServerFetch,
   mockHandleHealthRequest,
   mockHandleDigestCron,
+  mockHandleClientLog,
 } = vi.hoisted(() => ({
   mockRenderErrorPage: vi.fn(() => "<html>fallback</html>"),
   mockConsumeLastCapturedError: vi.fn((): unknown => undefined),
@@ -17,6 +18,7 @@ const {
   mockServerFetch: vi.fn(),
   mockHandleHealthRequest: vi.fn(),
   mockHandleDigestCron: vi.fn(),
+  mockHandleClientLog: vi.fn(),
 }));
 
 vi.mock("@/shared/lib/health", () => ({
@@ -38,6 +40,21 @@ vi.mock("@/shared/lib/health", () => ({
  */
 vi.mock("@/features/tutor/digest.server", () => ({
   handleDigestCron: mockHandleDigestCron,
+}));
+
+/**
+ * La boîte noire du refus de jeton, MOQUÉE pour exactement la raison énoncée
+ * juste au-dessus pour les bilans : le vrai `client-log.server.ts` importe le
+ * client `service_role`, donc tout `@supabase/supabase-js`. Avec le
+ * `vi.resetModules()` de chaque test, ce graphe se re-transforme à chaque fois —
+ * il a suffi à faire crever le `testTimeout` de 15 s de ce fichier dès que la
+ * machine est chargée, sur un test qui ne le touche même pas.
+ *
+ * Ce que ce fichier vérifie de la route, c'est sa PLACE dans le wrapper ; ce
+ * qu'elle écrit est couvert par `client-log-server.test.ts`.
+ */
+vi.mock("@/shared/lib/client-log.server", () => ({
+  handleClientLogRequest: mockHandleClientLog,
 }));
 
 vi.mock("@tanstack/react-start/server-entry", () => ({
@@ -70,6 +87,7 @@ describe("server fetch wrapper", () => {
     mockRenderErrorPage.mockReturnValue("<html>fallback</html>");
     mockHandleHealthRequest.mockReset();
     mockHandleDigestCron.mockReset();
+    mockHandleClientLog.mockReset();
   });
 
   it("serves /api/health BEFORE the bot guard, so a monitor is never refused", async () => {
@@ -93,6 +111,48 @@ describe("server fetch wrapper", () => {
 
     expect(response.status).toBe(200);
     expect(mockHandleHealthRequest).toHaveBeenCalled();
+    expect(mockServerFetch).not.toHaveBeenCalled();
+  });
+
+  it("sert /api/client-log APRÈS le garde anti-bot — l'inverse de /api/health", async () => {
+    // Les deux routes n'ont pas le même besoin, et c'est tout le sujet de leur
+    // place respective. `/api/health` doit répondre à un moniteur QUOI QU'IL
+    // ARRIVE, donc avant le garde. `/api/client-log`, elle, ÉCRIT en base et
+    // n'exige aucun jeton (par nécessité : le jeton de l'élève est cassé au
+    // moment où elle sert) : elle a donc tout à gagner à hériter du plafond de
+    // rafales par IP. Un agent bloqué doit s'y voir refuser l'écriture.
+    mockHandleClientLog.mockResolvedValue(new Response(null, { status: 204 }));
+
+    const server = (await import("@/server")).default;
+    const blocked = await server.fetch(
+      new Request("https://app.local/api/client-log", {
+        method: "POST",
+        headers: { "user-agent": "python-requests/2.31.0" },
+      }),
+      {},
+      {},
+    );
+
+    expect(blocked.status).toBe(403);
+    expect(mockHandleClientLog).not.toHaveBeenCalled();
+  });
+
+  it("laisse passer un navigateur ordinaire vers /api/client-log", async () => {
+    mockHandleClientLog.mockResolvedValue(new Response(null, { status: 204 }));
+
+    const server = (await import("@/server")).default;
+    const response = await server.fetch(
+      new Request("https://app.local/api/client-log", {
+        method: "POST",
+        headers: { "user-agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)" },
+      }),
+      {},
+      {},
+    );
+
+    expect(response.status).toBe(204);
+    expect(mockHandleClientLog).toHaveBeenCalledTimes(1);
+    // Le handler SSR ne doit jamais voir cette requête.
     expect(mockServerFetch).not.toHaveBeenCalled();
   });
 

@@ -3,6 +3,7 @@ import "@/shared/lib/error-capture";
 import { consumeLastCapturedError } from "@/shared/lib/error-capture";
 import { renderErrorPage } from "@/shared/lib/error-page";
 import { logger } from "@/shared/lib/logger";
+import { handleClientLogRequest } from "@/shared/lib/client-log.server";
 import { handlePushCron } from "@/features/notifications/notifications.cron.server";
 // Le batch des bilans hebdomadaires (é11 lot 6). Importé par son chemin COMPLET
 // et non par `@/features/tutor` : le barrel de la feature est tiré par du code
@@ -169,6 +170,15 @@ export default {
     //
     // Pas de cookie ⇒ pas de surface CSRF. L'auth est un Bearer, vérifié par le
     // MÊME helper que le middleware des server fns.
+    // La boîte noire du refus d'authentification (voir client-log.server.ts).
+    // ICI, c'est-à-dire APRÈS `guardRequest` : contrairement à `/api/health`,
+    // qui doit répondre à un moniteur quoi qu'il arrive, cette route ÉCRIT et
+    // n'exige aucun jeton — elle a donc tout à gagner à hériter du plafond de
+    // rafales par IP. Elle ne rend jamais d'erreur, pas même sur exception.
+    if (new URL(request.url).pathname === "/api/client-log") {
+      return await handleClientLogRequest(request);
+    }
+
     if (new URL(request.url).pathname === "/api/tutor/stream") {
       try {
         return await handleTutorStream(request);

@@ -63,6 +63,15 @@ export type PotionApplied = {
 };
 
 type AtomicSubmitResponse = {
+  /**
+   * La session était DÉJÀ rendue : ce résultat est relu, pas recalculé.
+   *
+   * Le cas honnête que la RPC servait par un refus jusqu'à
+   * 20260831130000 — la soumission aboutit, sa réponse se perd au retour. Les
+   * champs de récompense sont alors neutres côté serveur (rien n'est crédité
+   * deux fois) et le client s'en sert pour ne pas rejouer les animations.
+   */
+  replayed: boolean;
   correct: number;
   total: number;
   scorePct: number;
@@ -140,6 +149,9 @@ function parseAtomicSubmitResponse(payload: unknown): AtomicSubmitResponse {
   const row = payload as Record<string, unknown>;
 
   return {
+    // Absent d'une RPC antérieure à 20260831130000 : `false` est exactement ce
+    // qu'elle voulait dire, puisqu'elle ne rendait jamais de rejeu.
+    replayed: row.replayed === true,
     correct: Number(row.correct ?? 0),
     total: Number(row.total ?? 0),
     scorePct: Number(row.scorePct ?? 0),
@@ -985,6 +997,7 @@ export const submitAttempt = createServerFn({ method: "POST" })
         });
 
     return {
+      replayed: atomic.replayed,
       correct: atomic.correct,
       total: atomic.total,
       scorePct: atomic.scorePct,

@@ -22,3 +22,6 @@ export { RECALL_LOCKED_MESSAGE, RECALL_NOT_ELIGIBLE_MESSAGE } from "./recall-mes
 export { computeNextExerciseId } from "./next-exercise";
 export { noXpReason } from "./no-xp-reason";
 export { exerciseRouteFor } from "./exercise-route";
+// Chargé UNIQUEMENT par un `import()` dynamique depuis `__root.tsx` : il tire
+// `quest.server` et `quest-draft`, qui n'ont rien à faire dans le chunk index.
+export { registerQuestOutboxSender } from "./quest-outbox";
