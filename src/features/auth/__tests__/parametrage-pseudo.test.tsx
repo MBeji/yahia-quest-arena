@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { describe, expect, it, vi, beforeAll, beforeEach } from "vitest";
 import React from "react";
 
 /**
@@ -138,8 +138,31 @@ vi.mock("@/lib/i18n", () => ({
   }),
 }));
 
-async function renderParametrage() {
+/**
+ * Charger le module de route est une COMPILATION, pas une assertion : le premier
+ * `import()` transforme et évalue tout le graphe de la route. C'est le poste le
+ * plus lourd du fichier, il est payé UNE fois, et il n'a rien à faire dans le
+ * budget d'un test.
+ *
+ * Il y était : `renderParametrage()` l'appelait, donc le PREMIER test payait la
+ * compilation en plus de son rendu. Sur un poste Windows chargé (`maxWorkers: 2`,
+ * mémoire disputée) ça a franchi les 15 s du `testTimeout` global et fait échouer
+ * un `git push` le 2026-08-26 — sur une branche qui ne touchait ni ce fichier, ni
+ * l'auth, ni l'i18n. Toujours par TIMEOUT, jamais par assertion ; vert en isolation
+ * (6 s) comme en CI.
+ *
+ * Le sortir dans un `beforeAll` doté de son propre budget sépare les deux horloges :
+ * la compilation a le temps qu'il lui faut, les tests gardent les 15 s — qui
+ * suffisent très largement à ce qu'ils mesurent vraiment. Hausser `testTimeout`
+ * aurait déplacé le plafond sans traiter la cause, que `vitest.config.ts` nomme
+ * déjà pour la classe entière (« the first-import transform/eval of a whole feature
+ * graph counts against the test budget »).
+ */
+beforeAll(async () => {
   await import("@/routes/_authenticated/parametrage");
+}, 60_000);
+
+function renderParametrage() {
   if (!captured) throw new Error("ParametragePage not captured");
   return render(React.createElement(captured));
 }
@@ -155,7 +178,7 @@ beforeEach(() => {
 describe("/parametrage — renaming yourself", () => {
   it("shows the current pseudo and opens an input pre-filled with it", async () => {
     const user = userEvent.setup();
-    await renderParametrage();
+    renderParametrage();
 
     expect(screen.getByTestId("settings-pseudo").textContent).toBe("Yahia");
 
@@ -165,7 +188,7 @@ describe("/parametrage — renaming yourself", () => {
 
   it("saves the new pseudo and refreshes BOTH surfaces that show it", async () => {
     const user = userEvent.setup();
-    await renderParametrage();
+    renderParametrage();
 
     await user.click(screen.getByTestId("settings-pseudo-edit"));
     await user.clear(screen.getByTestId("settings-pseudo-input"));
@@ -183,7 +206,7 @@ describe("/parametrage — renaming yourself", () => {
 
   it("refuses to send a pseudo the server fn would reject anyway", async () => {
     const user = userEvent.setup();
-    await renderParametrage();
+    renderParametrage();
 
     await user.click(screen.getByTestId("settings-pseudo-edit"));
     await user.clear(screen.getByTestId("settings-pseudo-input"));
@@ -195,7 +218,7 @@ describe("/parametrage — renaming yourself", () => {
 
   it("cancels without writing anything", async () => {
     const user = userEvent.setup();
-    await renderParametrage();
+    renderParametrage();
 
     await user.click(screen.getByTestId("settings-pseudo-edit"));
     await user.clear(screen.getByTestId("settings-pseudo-input"));
@@ -209,7 +232,7 @@ describe("/parametrage — renaming yourself", () => {
   it("keeps the draft open when the write fails, instead of claiming success", async () => {
     updateDisplayName.mockRejectedValue(new Error("display_name_update_failed"));
     const user = userEvent.setup();
-    await renderParametrage();
+    renderParametrage();
 
     await user.click(screen.getByTestId("settings-pseudo-edit"));
     await user.clear(screen.getByTestId("settings-pseudo-input"));
@@ -223,7 +246,7 @@ describe("/parametrage — renaming yourself", () => {
 
   it("falls back to a dash while the profile row has not loaded", async () => {
     displayName = null;
-    await renderParametrage();
+    renderParametrage();
     expect(screen.getByTestId("settings-pseudo").textContent).toBe("—");
   });
 });
