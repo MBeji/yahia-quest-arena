@@ -757,6 +757,33 @@ describe("auditOptionReference — une option ne se désigne pas par sa lettre n
     expect(hits("L'option a été retenue par le jury.")).toEqual([]);
   });
 
+  it("ne prend pas le verbe anglais « answers » + l'article « a » pour une option", () => {
+    // `answers` est plus souvent un verbe qu'un nom pluriel, et `a` l'article indéfini :
+    // la prose anglaise ordinaire déclenchait la règle. Cas réels du corpus (2026-08-31).
+    expect(hits("An opposite answers a meaning, never a word.")).toEqual([]);
+    expect(hits("The other pair answers a different question altogether.")).toEqual([]);
+    expect(hits("A price list answers a question about money.")).toEqual([]);
+    // L'article ouvre aussi bien une citation qu'un nom.
+    expect(hits('"It is behind" answers a "where" question.')).toEqual([]);
+    // La garde ne doit pas fuir sur un mot qui FINIT par un déterminant.
+    expect(hits("The crowd breathe answers a doubt.")).toEqual([]);
+  });
+
+  it("garde le nom anglais « answer(s) » quand la lettre est bien étiquetée", () => {
+    // Le singulier n'est jamais ambigu : la garde ne le touche pas.
+    expect(hits("the answer b is wrong")).toEqual(["answer b"]);
+    expect(hits("Answer a is wrong.")).toEqual(["Answer a"]);
+    // Au pluriel, la lettre doit être étiquetée : un déterminant devant le nom, un
+    // délimiteur, ou une coordination qui la laisse fermer le groupe nominal.
+    expect(hits("The answers a and c are both wrong.")).toEqual(["answers a"]);
+    expect(hits("Answers a and c reverse the relationship.")).toEqual(["Answers a"]);
+    expect(hits("Answers a, b and d repeat the stem.")).toEqual(["Answers a"]);
+    expect(hits("answers (a) drops the article")).toEqual(["answers (a)"]);
+    // Les autres noms d'option gardent leur lettre `a` : « option a » est bien réel.
+    expect(hits("Option a keeps the -s on visits.")).toEqual(["Option a"]);
+    expect(hits("Options a and c reverse the relationship.")).toEqual(["Options a"]);
+  });
+
   it("remonte un seul flag par question, au niveau documenté", () => {
     const flags = auditOptionReference(
       { prompt: "Question ?", explanation: "La réponse b oublie le signe ; l’option (c) aussi." },
