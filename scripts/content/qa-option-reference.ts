@@ -53,11 +53,12 @@ const NOT_AN_OPTION_LETTER = `(?![\\p{L}\\p{N}’'.\\-])(?!\\s*[=≠≤≥<>+×�
 // answer b », « Answer a is wrong » restent des défauts, la lettre y désigne bien la place
 // que l'élève ne verra jamais. Ce qui échappe alors au filet : un pluriel nu suivi d'un
 // verbe (« Answers a repeat the stem »), tournure que le corpus n'a jamais produite.
-// Constaté le 2026-08-31 en rejouant `content:qa --strict` sur tout le corpus : la garde ne
-// retire QUE des `answers a` — 25 avertissements sur 10 questions, toutes fausses, dont les
-// 18 d'`english-bac`, qui tombe à zéro. Aucune autre tournure ne bouge, et `option a`
-// (109 occurrences) comme `options a` (23) sont, eux, tous réels. D'où la garde sur ce
-// couple-là et lui seul.
+// Constaté le 2026-08-31 en rejouant la règle sur tout le corpus à son `main` (94 matières,
+// 24 387 questions) : la garde ne retire QUE des `answers a` — 7 questions, toutes fausses,
+// soit 21 avertissements compilés, dont les 18 d'`english-bac`, qui tombe à zéro. Aucune
+// autre tournure ne bouge, aucun nouvel avertissement n'apparaît, et `option a`
+// (100 occurrences) comme `options a` (22) sont, eux, tous réels — les rabattre aurait
+// aveuglé la campagne `options-par-lettre`. D'où la garde sur ce couple-là et lui seul.
 const ENGLISH_ANSWERS_AS_VERB = `(?<!\\b(?:the|these|those|both|all|two|three|four|your)\\s)answers\\s+a\\s+(?!(?:and|or)\\b)["“'\\p{L}]`;
 
 // 1) « l'option b », « réponse (c) », « option « d » » — un nom d'option + une lettre.
