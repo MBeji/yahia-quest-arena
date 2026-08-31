@@ -16,7 +16,7 @@
 // pourquoi c'est structurellement impossible ici.
 import { createMiddleware } from "@tanstack/react-start";
 import { reportClientError } from "@/shared/lib/client-log";
-import { isRejectedTokenError } from "./auth-rejection";
+import { isSessionRefusalError } from "./auth-rejection";
 import { supabase } from "./client";
 
 /**
@@ -183,11 +183,18 @@ export const attachSupabaseAuth = createMiddleware({ type: "function" }).client(
       // Ce middleware fait donc la seule moitié qui lui revient : RETENIR le
       // refus, pour que le prochain appel parte avec un jeton neuf. L'autre
       // moitié — redemander — appartient à l'appelant (`mutations.retry`).
-      if (isRejectedTokenError(error)) {
+      if (isSessionRefusalError(error)) {
         // Étant le seul poseur de jeton, il est aussi le seul à voir TOUS les
         // refus — y compris ceux d'appels qui ne passent pas par la file. La
         // mesure est prise ici, avant que `markTokenRejected` ne fasse forcer
         // un jeton neuf au prochain appel.
+        //
+        // « Refus » couvre les deux moitiés depuis le 2026-08-31 : le jeton
+        // POSÉ et refusé, et le jeton ABSENT — ce dernier étant précisément ce
+        // que produisent les deux issues sans jeton de `resolveAccessToken`
+        // (rafraîchissement en échec, ou dépassement des 8 s). Ne reconnaître
+        // que le premier laissait le second sans le moindre rattrapage : voir
+        // le bloc du haut de `auth-rejection.ts`.
         reportClientError({
           stage: "token-attach",
           errMessage: error instanceof Error ? error.message : String(error),

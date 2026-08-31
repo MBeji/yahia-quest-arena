@@ -19,7 +19,7 @@
 // SYNCHRONE qu'exige `pagehide` — coûterait de la complexité pour un cas que le
 // schéma rend impossible. Le jour où un payload volumineux entre ici, c'est ce
 // commentaire qu'il faudra venir contredire, chiffres à l'appui.
-import { isRejectedTokenError } from "@/shared/integrations/supabase/auth-rejection";
+import { isSessionRefusalError } from "@/shared/integrations/supabase/auth-rejection";
 import { ensureFreshSession } from "@/shared/integrations/supabase/session-freshness";
 import { reportClientError } from "./client-log";
 import { logger } from "./logger";
@@ -207,8 +207,12 @@ function disposeOf(error: unknown, item: OutboxItem): Disposition {
 
 /**
  * Les refus dont on sait qu'aucun rejeu ne les guérira. Reconnus au message,
- * comme `isRejectedTokenError` et pour la même raison : c'est la seule chose qui
- * traverse la frontière server fn.
+ * comme `isSessionRefusalError` et pour la même raison : c'est la seule chose qui
+ * traverse la frontière server fn. Ne pas y ranger un refus d'authentification :
+ * il est traité en amont par `send()`, qui force un jeton neuf AVANT d'abandonner
+ * — c'est précisément ce qu'un flush partant sans jeton (`NO_HEADER`) ne recevait
+ * pas avant le 2026-08-31, son travail restant en file sans que rien ne le
+ * débloque.
  *
  * « Session déjà terminée » mérite un mot : depuis la migration de rejeu, la RPC
  * REND le résultat d'origine au lieu de lever, donc ce cas ne devrait plus se
@@ -309,7 +313,7 @@ async function send(sender: OutboxSender, item: OutboxItem): Promise<"sent" | Di
     await sender(item.payload);
     return "sent";
   } catch (error) {
-    if (!isRejectedTokenError(error)) return disposeOf(error, item);
+    if (!isSessionRefusalError(error)) return disposeOf(error, item);
 
     // La boîte noire, prise AVANT le rafraîchissement forcé : après lui, le TTL
     // observé serait celui du jeton NEUF, et la mesure ne dirait plus rien de la

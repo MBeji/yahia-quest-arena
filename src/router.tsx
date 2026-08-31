@@ -2,7 +2,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
 import { createIsomorphicFn } from "@tanstack/react-start";
 import { setResponseHeader } from "@tanstack/react-start/server";
-import { shouldReplayRejectedToken } from "@/shared/integrations/supabase/auth-rejection";
+import { shouldReplaySessionRefusal } from "@/shared/integrations/supabase/auth-rejection";
 import { buildContentSecurityPolicy } from "@/shared/lib/csp";
 import { initBrowserMonitoring } from "@/shared/lib/monitoring";
 import { routeTree } from "./routeTree.gen";
@@ -53,12 +53,13 @@ export const getRouter = () => {
         // termine son quiz, « Valider » lève « Unauthorized: Invalid token », et
         // ses réponses, qui ne vivent que dans l'état React, partent avec.
         //
-        // Pourquoi rejouer une mutation n'est pas la faute qu'on croit : ce
-        // refus-là est levé par `requireSupabaseAuth` AVANT `next()`, donc avant
+        // Pourquoi rejouer une mutation n'est pas la faute qu'on croit : ces
+        // refus-là sont levés par `requireSupabaseAuth` AVANT `next()`, donc avant
         // la moindre ligne de code métier. Rien n'a été écrit, il n'y a donc
-        // rien à écrire deux fois. C'est vrai de CE message et d'aucun autre —
-        // d'où un prédicat exact plutôt qu'un « ça ressemble à de l'auth ».
-        retry: shouldReplayRejectedToken,
+        // rien à écrire deux fois. C'est vrai des DEUX messages que le prédicat
+        // reconnaît (jeton refusé, jeton absent) et d'aucun autre — d'où une
+        // liste exacte plutôt qu'un « ça ressemble à de l'auth ».
+        retry: shouldReplaySessionRefusal,
       },
     },
   });

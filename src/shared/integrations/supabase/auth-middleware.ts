@@ -86,6 +86,13 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
         // que seule une reconnexion levait), et elle était INVISIBLE : ce refus-ci
         // précède le bloc de journalisation ajouté par #773, donc rien n'en
         // sortait. Une ligne ici, et la prochaine occurrence se nomme toute seule.
+        //
+        // Elle s'est nommée : le message ci-dessous est resté treize jours hors
+        // du vocabulaire de reprise du client, qui ne connaissait que « Invalid
+        // token » — donc rien ne forçait de jeton neuf, et l'écran d'erreur se
+        // rejouait à l'identique. Ce refus est reconnu depuis le 2026-08-31
+        // (`auth-rejection.ts`) ; le libellé exact fait partie du contrat, il est
+        // épinglé des deux côtés par des tests.
         logger.warn("Server fn called without a bearer token", { path: pathOf(request) });
         throw new Error("Unauthorized: No authorization header provided");
       }
