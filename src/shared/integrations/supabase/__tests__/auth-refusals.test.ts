@@ -53,10 +53,23 @@ const ALL_REFUSALS = Object.entries(AUTH_REFUSALS) as [
 ][];
 
 describe("la table des refus — sa forme", () => {
-  it("chaque refus porte un message et une raison", () => {
+  it("chaque refus porte un message et une conduite", () => {
     for (const [failure, refusal] of ALL_REFUSALS) {
       expect(refusal.message, `${failure} sans message`).toBeTruthy();
-      expect(refusal.why, `${failure} sans raison`).toBeTruthy();
+      expect(["fresh-token", "none"]).toContain(refusal.recovery);
+    }
+  });
+
+  it("la table ne transporte QUE ce qui sert à l'exécution", () => {
+    // Ce module part dans le bundle du navigateur (via `auth-rejection.ts`). La
+    // raison de chaque choix est en COMMENTAIRE, jamais en champ : écrite comme
+    // propriété `why`, elle a fait dépasser le budget de `index` (450,40 kB pour
+    // 450). Ce test empêche de la réintroduire sans s'en apercevoir.
+    for (const [failure, refusal] of ALL_REFUSALS) {
+      expect(Object.keys(refusal).sort(), `${failure} porte un champ de trop`).toEqual([
+        "message",
+        "recovery",
+      ]);
     }
   });
 
@@ -82,7 +95,7 @@ describe("le CLIENT fait ce que la table déclare", () => {
   it.each(ALL_REFUSALS)("%s", (failure, refusal) => {
     expect(
       isSessionRefusalError(new Error(refusal.message)),
-      `${failure} est déclaré recovery:"${refusal.recovery}" — le prédicat client doit suivre. ${refusal.why}`,
+      `${failure} est déclaré recovery:"${refusal.recovery}" — le prédicat client doit suivre.`,
     ).toBe(refusal.recovery === "fresh-token");
   });
 });

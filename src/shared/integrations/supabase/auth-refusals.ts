@@ -85,9 +85,15 @@ export type AuthRefusal = {
   readonly message: string;
   /** Ce que le client en fait — voir `ClientRecovery`. */
   readonly recovery: ClientRecovery;
-  /** Pourquoi cette conduite-là. Lu par un humain, pas par le code. */
-  readonly why: string;
 };
+
+// ⚠️ POURQUOI LA RAISON DE CHAQUE CHOIX EST EN COMMENTAIRE, PAS EN CHAMP.
+// Elle a d'abord été écrite comme une propriété `why: string`. Le gate l'a
+// refusée, et il avait raison : ce module est importé par `auth-rejection.ts`,
+// donc par le BUNDLE DU NAVIGATEUR — la prose partait chez chaque élève et a
+// poussé `index` à 450,40 kB pour un budget de 450. Un commentaire dit la même
+// chose au même endroit, au lecteur qui en a besoin, et le minifieur l'efface.
+// Toute reprise de ce fichier doit garder cette forme.
 
 /**
  * Les sept refus, leur message et la conduite du client.
@@ -98,61 +104,68 @@ export type AuthRefusal = {
  * de le rejouer en boucle.
  */
 export const AUTH_REFUSALS: Record<AuthFailure, AuthRefusal> = {
+  /**
+   * Le client n'a pas pu produire de jeton : rafraîchissement en échec, ou
+   * lecture de session qui n'a pas rendu sous les 8 s d'`auth-attacher`. C'est
+   * la panne « Failed to load dashboard » (2026-08-18, #931) — un
+   * `refreshSession()` forcé est exactement ce qui en sort.
+   */
   NO_HEADER: {
     message: "Unauthorized: No authorization header provided",
     recovery: "fresh-token",
-    why:
-      "Le client n'a pas pu produire de jeton : rafraîchissement en échec, ou " +
-      "lecture de session qui n'a pas rendu sous les 8 s d'`auth-attacher`. " +
-      "C'est la panne « Failed to load dashboard » (2026-08-18, #931) — un " +
-      "`refreshSession()` forcé est exactement ce qui en sort.",
   },
+  /**
+   * auth-js ne juge de la péremption que sur l'horloge de L'APPAREIL, sans
+   * vérifier la signature : une horloge en retard fait rendre un jeton mort.
+   * Seul un aller-retour de rafraîchissement fait émettre un jeton par le
+   * serveur, seule autorité sur l'heure et la signature (#914).
+   */
   INVALID_TOKEN: {
     message: "Unauthorized: Invalid token",
     recovery: "fresh-token",
-    why:
-      "auth-js ne juge de la péremption que sur l'horloge de L'APPAREIL, sans " +
-      "vérifier la signature : une horloge en retard fait rendre un jeton mort. " +
-      "Seul un aller-retour de rafraîchissement fait émettre un jeton par le " +
-      "serveur, seule autorité sur l'heure et la signature (#914).",
   },
+  /**
+   * Le client envoie un schéma d'autorisation qui n'existe pas — un bug de
+   * client, pas une session fatiguée. Notre client ne produit jamais ce cas.
+   */
   BAD_SCHEME: {
     message: "Unauthorized: Only Bearer tokens are supported",
     recovery: "none",
-    why:
-      "Le client envoie un schéma d'autorisation qui n'existe pas — un bug de " +
-      "client, pas une session fatiguée. Notre client ne produit jamais ce cas.",
   },
+  /**
+   * `Bearer ` suivi de rien. Notre client ne produit pas ce cas non plus :
+   * faute de jeton il n'envoie PAS d'en-tête, ce qui est `NO_HEADER`.
+   */
   EMPTY_TOKEN: {
     message: "Unauthorized: No token provided",
     recovery: "none",
-    why:
-      "`Bearer ` suivi de rien. Notre client ne produit pas ce cas non plus : " +
-      "faute de jeton il n'envoie PAS d'en-tête, ce qui est `NO_HEADER`.",
   },
+  /**
+   * Le jeton est valide mais n'identifie personne. C'est une anomalie de
+   * FORME, pas une péremption : un jeton neuf aurait le même défaut.
+   */
   NO_SUBJECT: {
     message: "Unauthorized: No user ID found in token",
     recovery: "none",
-    why:
-      "Le jeton est valide mais n'identifie personne. C'est une anomalie de " +
-      "FORME, pas une péremption : un jeton neuf aurait le même défaut.",
   },
+  /**
+   * Le service Auth n'a pas RÉPONDU. Réessayer a du sens, mais pas en forçant
+   * un rafraîchissement : celui-ci passe par la MÊME porte, qu'on retrouverait
+   * fermée. La reprise ordinaire des requêtes suffit, et c'est un incident —
+   * `auth-middleware.ts` le journalise en `error`.
+   */
   UNAVAILABLE: {
     message: "Auth verification unavailable. Please try again.",
     recovery: "none",
-    why:
-      "Le service Auth n'a pas RÉPONDU. Réessayer a du sens, mais pas en " +
-      "forçant un rafraîchissement : celui-ci passe par la MÊME porte, qu'on " +
-      "retrouverait fermée. La reprise ordinaire des requêtes suffit, et c'est " +
-      "un incident — `auth-middleware.ts` le journalise en `error`.",
   },
+  /**
+   * Panne de déploiement : une variable d'environnement manque. Aucun jeton
+   * n'y peut rien. Seul refus dont le message est un PRÉFIXE — le middleware y
+   * ajoute les variables manquantes, qu'il faut nommer pour agir.
+   */
   MISCONFIGURED: {
     message: "Missing Supabase environment variable(s)",
     recovery: "none",
-    why:
-      "Panne de déploiement : une variable d'environnement manque. Aucun jeton " +
-      "n'y peut rien. Seul refus dont le message est un PRÉFIXE — le middleware " +
-      "y ajoute les variables manquantes, qu'il faut nommer pour agir.",
   },
 };
 
