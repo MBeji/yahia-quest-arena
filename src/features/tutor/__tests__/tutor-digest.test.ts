@@ -82,7 +82,7 @@ vi.mock("@/shared/integrations/supabase/auth-middleware", () => ({
 // Le client `service_role` du batch ET celui de la session partagent le même
 // double : on aiguille par NOM de fonction et par table, comme le vrai code.
 vi.mock("@/shared/integrations/supabase/client.server", () => ({ supabaseAdmin: mockSupabase }));
-vi.mock("@/features/ai", () => ({ callAi: mockCallAi }));
+vi.mock("@/features/ai/ai-call.server", () => ({ callAi: mockCallAi }));
 vi.mock("@/shared/lib/logger", () => ({
   logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn(), debug: vi.fn() },
 }));

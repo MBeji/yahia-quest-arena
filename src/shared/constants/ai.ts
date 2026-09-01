@@ -927,3 +927,14 @@ export const AI_CONSENT_VERSION = "2026-08-22" as const;
  * tromper dans l'autre laisse un enfant engager de l'argent sans un mot.
  */
 export const AI_ADULT_CONFIRM_GRADE_RANK = 13 as const;
+
+/**
+ * Version du SCHÉMA de chiffrement des clés du coffre. Elle entre dans l'AAD —
+ * voir `src/features/ai/crypto.server.ts`.
+ *
+ * Elle vit ICI, dans un module sans le moindre import, et non à côté du code qui
+ * chiffre : ses deux lecteurs (`ai-vault`, `ai-credentials`) n'ont besoin QUE de
+ * ce nombre, et le lire depuis `crypto.server` y ferait entrer `node:crypto` en
+ * import statique — donc dans le graphe que le dev server sert au navigateur (#909).
+ */
+export const AI_ENC_VERSION = 1;

@@ -46,7 +46,7 @@ vi.mock("@/shared/lib/rate-limit", () => ({
   isRateLimited: vi.fn(async () => rateLimited),
 }));
 
-vi.mock("@/features/ai", () => ({
+vi.mock("@/features/ai/ai-call.server", () => ({
   streamAi: vi.fn(async function* (req: { feature: string; system: string }) {
     streamCalls.push({ feature: req.feature, system: req.system });
     for (const chunk of streamChunks) yield chunk;

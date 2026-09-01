@@ -55,7 +55,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-import { callAi } from "@/features/ai";
+import { callAi } from "@/features/ai/ai-call.server";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/shared/integrations/supabase/client.server";
 import { logger } from "@/shared/lib/logger";
