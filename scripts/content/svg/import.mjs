@@ -147,7 +147,8 @@ function normalizeInPage({ source, title, allowed, nonRendering }) {
     if (uses.length) notes.push(`inlined ${uses.length} <use> reference(s)`);
   }
 
-  // 2 ── Resolve gradients to a single solid colour (the contract forbids <defs>).
+  // 2 ── Resolve gradients to a single solid colour: an imported clipart is normalized
+  //      down to flat primitives, so nothing it ships depends on a reference.
   const toRgb = (c) => {
     const probe = document.createElement("span");
     probe.style.color = "";
@@ -233,7 +234,8 @@ function normalizeInPage({ source, title, allowed, nonRendering }) {
   }
   if (flattenedGradients)
     notes.push(
-      `flattened ${flattenedGradients} gradient(s) to a solid colour — the contract forbids <defs>`,
+      `flattened ${flattenedGradients} gradient(s) to a solid colour — an imported clipart ` +
+        `is normalized down to flat primitives, whatever the lint would tolerate elsewhere`,
     );
 
   // 4 ── Prune everything the contract does not allow.

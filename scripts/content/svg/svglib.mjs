@@ -5,7 +5,10 @@
 // svg(). Output uses ONLY the drawing primitives allowed by the content
 // sanitizer (src/shared/lib/figure.ts → DOMPurify SVG profile):
 //   svg, title, g, line, path, polygon, polyline, rect, circle, ellipse, text
-// No <image>/<use>/<foreignObject>/href/script/style/marker/defs.
+// No <image>/<use>/<foreignObject>/href/script/style — the sanitizer destroys those.
+// No <marker>/<defs> either, though the sanitizer keeps them (see sanitizer-contract.mjs):
+// `ray()` computes its own arrowhead as a polygon, so a figure built here carries no
+// indirection at all — nothing to resolve, no id to collide.
 //
 // House style: dark strokes (#0f172a), accent colours for rays/highlights,
 // Western digits only (0–9) in labels, min stroke-width ~2, labels carry a white

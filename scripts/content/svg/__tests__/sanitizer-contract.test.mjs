@@ -99,6 +99,12 @@ describe("lintSvg", () => {
     expect(lintSvg(svg).length).toBeGreaterThan(0);
   });
 
+  it("refuse un dégradé dont il ne reste que le <stop>", () => {
+    expect(lintSvg('<svg viewBox="0 0 1 1"><stop offset="0"/></svg>').join()).toMatch(
+      /outside any gradient/,
+    );
+  });
+
   it("refuse un élément hors liste blanche", () => {
     expect(lintSvg('<svg viewBox="0 0 1 1"><clipPath/></svg>').join()).toMatch(/disallowed/);
   });
@@ -113,6 +119,71 @@ describe("lintSvg", () => {
 
   it("préfixe chaque problème par son emplacement", () => {
     expect(lintSvg("<svg></svg>", "content/x/cours.md")[0]).toMatch(/^content\/x\/cours\.md:/);
+  });
+});
+
+describe("indirection url(#…) — une flèche, un dégradé", () => {
+  /** La forme exacte qu'ont les 5 figures à flèches du corpus (physique, arabe). */
+  const arrow = (id = "fleche-noire") =>
+    `<svg viewBox="0 0 100 20"><defs><marker id="${id}" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#0f172a"/></marker></defs>` +
+    `<path d="M5 10 L90 10" stroke="#0f172a" stroke-width="2" fill="none" marker-end="url(#${id})"/></svg>`;
+
+  // Le fait qui a renversé la règle. Ce test est le garde-fou dans l'autre sens : si un
+  // jour `figure.ts` se met VRAIMENT à retirer les marqueurs, il rougit — et le lint doit
+  // alors les réinterdire, parce que la flèche aura, elle, réellement disparu.
+  it("le sanitizer de production garde le marqueur, sa référence et son id", () => {
+    const out = sanitizeSvg(arrow());
+    for (const kept of [
+      "<defs",
+      "<marker",
+      'id="fleche-noire"',
+      "marker-end",
+      "url(#fleche-noire)",
+    ])
+      expect(out).toContain(kept);
+  });
+
+  it("le lint accepte une flèche référencée", () => {
+    expect(lintSvg(arrow())).toEqual([]);
+  });
+
+  it("le lint accepte un dégradé référencé", () => {
+    const svg =
+      '<svg viewBox="0 0 100 20"><defs><linearGradient id="echelle-degre"><stop offset="0" stop-color="#dbeafe"/><stop offset="1" stop-color="#2563eb"/></linearGradient></defs>' +
+      '<rect x="0" y="0" width="100" height="20" fill="url(#echelle-degre)"/></svg>';
+    expect(lintSvg(svg)).toEqual([]);
+  });
+
+  it("refuse une référence qui ne résout rien — la flèche ne serait tout simplement pas là", () => {
+    const typo = arrow().replace("url(#fleche-noire)", "url(#fleche-noir)");
+    expect(lintSvg(typo).join()).toMatch(/url\(#fleche-noir\) points at no id/);
+  });
+
+  it("refuse une définition que personne n'appelle — elle ne dessine rien, elle voyage", () => {
+    const orphan = arrow().replace(' marker-end="url(#fleche-noire)"', "");
+    const joined = lintSvg(orphan).join();
+    expect(joined).toMatch(/<marker> that nothing references/);
+    expect(joined).toMatch(/<defs> holds nothing this figure references/);
+  });
+
+  describe("un id sans tiret", () => {
+    it("est refusé par le lint", () => {
+      expect(lintSvg(arrow("fleche")).join()).toMatch(/needs a hyphen/);
+    });
+
+    // …et voici pourquoi, prouvé sur le sanitizer réel plutôt que raconté : la garde
+    // anti-DOM-clobbering de DOMPurify retire l'id qui porte le nom d'une propriété de
+    // `document`. Le `url(#body)` survit et ne pointe alors sur rien : flèche muette,
+    // sans une seule erreur nulle part.
+    it("peut être supprimé par le sanitizer, ce qui casse la référence en silence", () => {
+      const out = sanitizeSvg(arrow("body"));
+      expect(out).not.toContain('id="body"');
+      expect(out).toContain("url(#body)");
+    });
+
+    it("contrôle négatif : le même sanitizer garde un id avec tiret", () => {
+      expect(sanitizeSvg(arrow("body-fleche"))).toContain('id="body-fleche"');
+    });
   });
 });
 
