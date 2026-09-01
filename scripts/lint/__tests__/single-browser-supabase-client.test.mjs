@@ -23,9 +23,24 @@ const FEATURE = "D:/repo/src/features/quest/components/exercise-player.tsx";
 const FACTORY = "D:/repo/src/shared/integrations/supabase/client.ts";
 const PER_REQUEST = "D:/repo/src/shared/integrations/supabase/auth-request.ts";
 const TEST_FILE = "D:/repo/src/shared/integrations/supabase/__tests__/client.test.ts";
+const E2E_HELPER = "D:/repo/e2e/helpers/db.ts";
 
 ruleTester.run("single-browser-supabase-client", singleBrowserSupabaseClient, {
   valid: [
+    {
+      // Régression du nightly 2026-09-01 : la règle faisait tomber « Lint e2e »
+      // sur `createAdminDb()`. Le harnais tourne dans Node avec une clé service
+      // role et `persistSession: false` — aucun refresh token à faire tourner,
+      // donc rien de la panne que cette règle prévient.
+      name: "le harnais e2e monte son client d'administration sans être inquiété",
+      filename: E2E_HELPER,
+      code: `
+        import { createClient } from "@supabase/supabase-js";
+        export function createAdminDb() {
+          return createClient(url, serviceRoleKey, { auth: { persistSession: false } });
+        }
+      `,
+    },
     {
       name: "la factory du navigateur a le droit de créer LE client",
       filename: FACTORY,
