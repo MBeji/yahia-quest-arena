@@ -30,7 +30,7 @@
 
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(27);
+SELECT plan(29);
 
 -- ---------------------------------------------------------
 -- Fixtures (superuser : RLS contournée pour le seed).
@@ -389,6 +389,32 @@ SELECT is_empty(
   $$ SELECT 1 FROM public.user_competency_mastery
       WHERE competency_id = 'be100000-0000-0000-0000-000000000003' $$,
   'R-6 : une compétence jamais rencontrée n''a pas de ligne — l''absence de preuve se lit'
+);
+
+-- ---------------------------------------------------------
+-- privé#247 item 2 — la borne de `p_transit` REFUSE ce qui éteindrait R-5.
+--
+-- Le plancher de la croyance vaut environ 1,12 x p(T) : au-dela de p(T) ~ 0,22 il passe
+-- au-dessus du seuil de lacune de R-5 (0,25), et une lacune devient indetectable quel que
+-- soit le nombre d'erreurs. La borne haute (0,18) est ce qui rend ce cas impossible a
+-- ecrire. Ces deux assertions sont ce qui empeche un elargissement futur du CHECK de
+-- rallumer le defaut en silence ; leur jumelle cote JS est dans
+-- `scripts/adaptive/__tests__/belief-model.test.mjs`.
+-- ---------------------------------------------------------
+SELECT throws_ok(
+  $$ INSERT INTO public.competencies (id, slug, family, label_fr, label_en, label_ar, p_transit)
+     VALUES ('be100000-0000-0000-0000-0000000000ff', 'test.belief.ptransit.haut', 'test',
+             'Trop haut', 'Too high', 'مرتفع', 0.30) $$,
+  '23514',
+  NULL,
+  'privé#247 : p_transit = 0,30 est REFUSÉ — au-dessus de 0,22 le plancher couvre le seuil de lacune de R-5'
+);
+
+SELECT lives_ok(
+  $$ INSERT INTO public.competencies (id, slug, family, label_fr, label_en, label_ar, p_transit)
+     VALUES ('be100000-0000-0000-0000-0000000000fe', 'test.belief.ptransit.max', 'test',
+             'Au maximum', 'At the cap', 'الحدّ', 0.18) $$,
+  'privé#247 : p_transit = 0,18 (le maximum) est ACCEPTÉ — le plancher y vaut ≈ 0,202, sous le seuil'
 );
 
 SELECT * FROM finish();
