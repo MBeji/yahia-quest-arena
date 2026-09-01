@@ -28,8 +28,22 @@ utilise Playwright (déjà dans les devDeps) + le Chromium pré-installé.
 
 Les figures traversent `src/shared/lib/figure.ts` → DOMPurify (profil SVG). **Éléments
 autorisés uniquement** : `svg, title, g, line, path, polygon, polyline, rect, circle,
-ellipse, text, tspan`. **Interdits** : `image, use, foreignObject, script, style,
-marker, defs`, et tout `href`/`xlink:href`. Donc :
+ellipse, text, tspan`. **Interdits** : `image, use, foreignObject, script, style`, et tout
+`href`/`xlink:href` — ceux-là, le sanitizer les détruit vraiment.
+
+**Les flèches et les dégradés font exception** (`defs, marker, linearGradient,
+radialGradient, stop`) : le sanitizer garde ces éléments, l'attribut qui les appelle
+(`marker-end`, `fill="url(#…)"`) et l'`id` auquel ils pendent — vérifié dans l'app, en
+Chromium, sur les figures du corpus. Trois règles les rendent sûrs, parce que chacune de
+leurs façons de casser est muette :
+
+- toute `url(#id)` doit **résoudre** dans la même figure (une coquille = pas de flèche) ;
+- toute définition doit être **appelée** (sinon elle ne dessine rien : elle voyage) ;
+- tout `id` porte un **tiret**. Sans tiret il peut porter le nom d'une propriété de
+  `document` (`body`, `all`, `location`…) : la garde anti-clobbering de DOMPurify le
+  retire, la référence pointe dans le vide, et rien ne le signale.
+
+Donc :
 
 - **un seul `<svg>` par champ** (le renderer n'en extrait qu'un) ;
 - premier enfant = un `<title>` (accessibilité) dans la langue du chapitre ;

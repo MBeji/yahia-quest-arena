@@ -8,7 +8,9 @@
 //
 // Checks per <svg> block (in cours.md/resume.md and inside question prompt/explanation/option):
 //   • only sanitizer-allowed elements (see src/shared/lib/figure.ts)
-//   • no forbidden refs/attrs (image/use/foreignObject/script/style/href/xlink:href/marker/defs)
+//   • no forbidden refs/attrs (image/use/foreignObject/script/style/href/xlink:href)
+//   • `url(#…)` indirection (arrow markers, gradients) that actually resolves — and an
+//     id that survives DOMPurify's anti-clobbering guard (see sanitizer-contract.mjs)
 //   • a viewBox (or explicit width+height) so it scales
 //   • balanced <svg>…</svg>
 //   • Western digits only — no Arabic-Indic (٠-٩) / Persian (۰-۹) digits, incl. Arabic content
@@ -46,7 +48,20 @@ function checkField(where, s) {
 function checkFile(path) {
   const text = readFileSync(path, "utf8");
   if (path.endsWith(".md")) {
-    for (const b of text.match(/<svg[\s\S]*?<\/svg>/gi) || []) checkSvg(path, b);
+    const blocks = text.match(/<svg[\s\S]*?<\/svg>/gi) || [];
+    for (const b of blocks) checkSvg(path, b);
+    // Toutes les figures d'une leçon atterrissent dans UN SEUL document : deux `id`
+    // identiques et `url(#…)` résout au premier, en silence. Le contrôle est ici et pas
+    // dans `lintSvg`, qui ne voit qu'une figure à la fois. (Une question de quiz, elle,
+    // s'affiche seule : la collision n'y existe pas.)
+    const seen = new Map();
+    for (const b of blocks)
+      for (const [, id] of b.matchAll(/\bid="([^"]*)"/g)) seen.set(id, (seen.get(id) || 0) + 1);
+    for (const [id, n] of seen)
+      if (n > 1)
+        issues.push(
+          `${path}: id="${id}" defined ${n}× in the same lesson — every reference resolves to the first`,
+        );
     return;
   }
   let data;
