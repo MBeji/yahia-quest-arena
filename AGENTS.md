@@ -225,6 +225,10 @@ this repo (this file, `STATUS.md`, `docs/agents/`) — not only in a tool's priv
   rejoue la chaîne statiquement (FK orphelines, ids de fixtures en collision, doublons de
   version) ; un INSERT de contenu dépendant de lignes absentes d'ici se garde par
   `WHERE EXISTS (SELECT 1 FROM public.<parent> p WHERE p.id = v.<fk>)`.
+- **Un refus d'auth se déclare dans `auth-refusals.ts`, jamais ailleurs** — message ET conduite
+  client. Deux listes tenues à la main ont divergé deux fois (#931 « Failed to load dashboard » ;
+  #914/#915 « Valider » grisé sans fin) : `Record<AuthFailure, …>` fait désormais échouer `tsc` sur
+  un refus sans sa ligne, et `auth-refusals.test.ts` couvre tout refus futur. Jamais de message en dur.
 - **E2E ≠ unit gate.** Playwright hits a dedicated TEST Supabase project, not unit-test mocks;
   not part of `verify`/`ci:verify`; never point it at prod.
 - **La CI n'est pas exactement `verify`** : elle ajoute `build:check` et `smoke:shell` (le seul
