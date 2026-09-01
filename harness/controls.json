@@ -1,0 +1,75 @@
+{
+  "$comment": [
+    "Où tourne chaque script de CONTRÔLE que les workflows de CE dépôt n'appellent pas.",
+    "",
+    "Le problème que ce fichier résout : `content:figures:check` existait depuis #451 et",
+    "n'était appelé par AUCUN workflow des deux dépôts. Il est resté rouge des mois, sur 32",
+    "signalements dont pas un seul n'était vrai, sans que personne puisse le voir. Un gate",
+    "que rien ne lance ne protège rien — et rien, dans la chaîne, ne disait qu'il en était un.",
+    "",
+    "Depuis l'étude 24, la moitié des contrôles tournent dans le dépôt PRIVÉ, que ce dépôt-ci",
+    "ne peut pas lire. La déclaration est donc le seul mécanisme honnête : `harness:check`",
+    "exige qu'un contrôle soit atteint par un workflow d'ici OU déclaré ici, avec un `why`",
+    "qu'un humain a écrit. Il a un avis sur la CONNAISSANCE, jamais sur le statut — comme",
+    "`check-roadmap-sync.mjs`, et pour la même raison : un invariant qui traverse deux dépôts",
+    "se vérifie de chaque côté avec ce que chaque côté peut voir.",
+    "",
+    "Le mode `--corpus <dir>` transforme chaque déclaration `privé:*` en VÉRIFICATION : le",
+    "fichier nommé doit exister ET appeler le script. Il sert à qui a les deux dépôts sous la",
+    "main — une session locale aujourd'hui.",
+    "",
+    "⚠️ Il n'est branché dans AUCUN workflow, et le dire ici plutôt que de laisser croire le",
+    "contraire est le minimum, vu ce que ce fichier existe pour empêcher. Le candidat naturel",
+    "est `roadmap-sync.yml` au privé (même forme : un invariant qui traverse les deux dépôts),",
+    "mais il tourne SANS `npm ci` par choix, et `harness:check` traîne des dépendances : il",
+    "faudrait d'abord sortir ces fonctions dans un module sans dépendance. Tant que ce n'est",
+    "pas fait, ces déclarations sont crues sur parole — c'est mieux que rien, ce n'est pas une",
+    "preuve, et une déclaration périmée passera."
+  ],
+  "controls": {
+    "content:check": {
+      "where": "privé:apply-content-test.yml",
+      "why": "compile le corpus avant de l'appliquer au projet TEST ; le corpus vit au privé (étude 24)."
+    },
+    "content:qa:strict": {
+      "where": "privé:content-ci.yml",
+      "why": "gate de PR du corpus."
+    },
+    "content:audit:strict": {
+      "where": "privé:content-ci.yml",
+      "why": "gate de PR du corpus."
+    },
+    "content:figures:check": {
+      "where": "privé:content-ci.yml",
+      "why": "gate de PR du corpus depuis MBeji/yahia-quest-content#292 — c'est l'absence de cette ligne qui a coûté des mois de rouge invisible."
+    },
+    "programme:check": {
+      "where": "privé:content-ci.yml",
+      "why": "registre de transcription CNP ; il a suivi ses données au privé (étude 24 lot 3b)."
+    },
+    "content:audit": {
+      "where": "privé:content-audit.yml",
+      "why": "audit périodique (mer./sam.), non bloquant — la variante :strict tient la PR."
+    },
+    "content:videos:check": {
+      "where": "privé:video-health.yml",
+      "why": "sonde hebdomadaire des vidéos ; appelée par `node scripts/content/check-videos.mjs`, PAS par `npm run` — le premier détecteur écrit pour ce gate l'a manquée pour cette seule raison."
+    },
+    "content:manuel:check": {
+      "where": "privé:manuel-health.yml",
+      "why": "sonde hebdomadaire des PDF du CNP, branchée depuis MBeji/yahia-quest-content#206 ; la disponibilité d'un site tiers ne doit jamais bloquer la file (leçon audit:deps)."
+    },
+    "content:qa": {
+      "where": "manuel",
+      "why": "variante NON stricte, boucle d'auteur pendant la rédaction ; c'est `content:qa:strict` qui garde la CI. La brancher ferait tourner deux fois le même contrôle avec un seuil plus faible."
+    },
+    "economy:check": {
+      "where": "manuel",
+      "why": "garde-fou d'ÉQUILIBRAGE, pas test de code — hors verify/ci:verify par l'arbitrage D-4 de l'étude 09. Il échoue aujourd'hui sur G-4 (#937) : le brancher dans le nightly avant d'avoir tranché installerait un rouge permanent, et un rouge permanent apprend à ne plus lire l'issue de suivi."
+    },
+    "content:overflow:check": {
+      "where": "manuel",
+      "why": "a besoin de Chromium ET des polices de l'app (une largeur de texte sans sa police ne mesure rien) : hors de portée de la Content CI telle qu'elle est. Le brancher est une décision à prendre avec ses 82 constats en main, pas avant — voir l'issue du corpus."
+    }
+  }
+}
