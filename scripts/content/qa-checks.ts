@@ -498,6 +498,52 @@ const buildSaysWrong = (letter: string) =>
   );
 
 /** Run all per-question heuristics. `where` is a human-readable locator. */
+/**
+ * LES CONTRÔLES DE RENDU PARTAGÉS PAR TOUS LES TYPES — un seul point d'appel.
+ *
+ * Ils étaient recopiés à l'identique dans `auditQuestion`, `auditBoardQuestion`
+ * et `auditNumericQuestion`, et c'est exactement pour cela que `short_answer`
+ * n'en a hérité d'AUCUN quand #654 l'a branché dans le ternaire de `qa.ts` : il
+ * n'y avait pas un appel à oublier, il fallait penser à recopier vingt lignes.
+ * Le gate est resté vert un mois en ne mesurant rien sur 119 questions.
+ *
+ * Un point d'appel unique rend l'omission structurellement plus difficile ; la
+ * table de `qa-controles-partages-par-type.test.ts` la rend impossible en
+ * silence pour le prochain type.
+ *
+ * `options` est vide pour les types qui n'en ont pas (numeric, short_answer) :
+ * ils n'offrent aucun endroit où une figure puisse légitimement vivre.
+ */
+function auditFigureAndRendering(
+  prompt: string,
+  explanation: string,
+  options: ReadonlyArray<QAOption>,
+  where: string,
+): Flag[] {
+  const flags: Flag[] = [];
+  if (FIGURE_REFERENCE.test(prompt)) {
+    const hasFigure = SVG_BLOCK.test(prompt) || options.some((o) => SVG_BLOCK.test(o.text));
+    if (!hasFigure) {
+      flags.push({
+        level: "error",
+        where,
+        msg: "prompt references a figure but no <svg> is present (unanswerable without it)",
+      });
+    }
+  }
+  flags.push(
+    ...auditRenderedFields(
+      [
+        ["prompt", prompt] as const,
+        ["explanation", explanation] as const,
+        ...options.map((o) => [`option ${o.id}`, o.text] as const),
+      ],
+      where,
+    ),
+  );
+  return flags;
+}
+
 export function auditQuestion(q: QAQuestion, where: string): Flag[] {
   const flags: Flag[] = [];
 
@@ -553,34 +599,10 @@ export function auditQuestion(q: QAQuestion, where: string): Flag[] {
     });
   }
 
-  // 5) figure-dependent prompt with no figure shipped → unanswerable.
-  //   The prompt sends the student to an adjacent figure but no <svg> is present
-  //   anywhere in the question (prompt or any option). A figure may legitimately
-  //   live in the options (e.g. "which piece completes it?"), so the whole
-  //   question is scanned before flagging.
-  if (FIGURE_REFERENCE.test(q.prompt)) {
-    const hasFigure = SVG_BLOCK.test(q.prompt) || q.options.some((o) => SVG_BLOCK.test(o.text));
-    if (!hasFigure) {
-      flags.push({
-        level: "error",
-        where,
-        msg: "prompt references a figure but no <svg> is present (unanswerable without it)",
-      });
-    }
-  }
-
-  // 6+7) rendering checks (svg viewBox, bidi-fragile math) — shared with the
-  //   numeric audit; see auditRenderedFields.
-  flags.push(
-    ...auditRenderedFields(
-      [
-        ["prompt", q.prompt] as const,
-        ["explanation", q.explanation] as const,
-        ...q.options.map((o) => [`option ${o.id}`, o.text] as const),
-      ],
-      where,
-    ),
-  );
+  // 5+6+7) figure absente et contrôles de rendu — voir auditFigureAndRendering.
+  //   Une figure peut légitimement vivre dans les options (« quelle pièce
+  //   complète la suite ? »), d'où le passage de `q.options`.
+  flags.push(...auditFigureAndRendering(q.prompt, q.explanation, q.options, where));
 
   // 8) meta-options & the non-idiomatic "none" calque (warn — quality, not structure).
   for (const o of q.options) {
@@ -808,27 +830,7 @@ export function auditBoardQuestion(q: QABoardQuestion, where: string): Flag[] {
     flags.push({ level: "warn", where, msg: "explanation is very short" });
   }
 
-  if (FIGURE_REFERENCE.test(q.prompt)) {
-    const hasFigure = SVG_BLOCK.test(q.prompt) || q.options.some((o) => SVG_BLOCK.test(o.text));
-    if (!hasFigure) {
-      flags.push({
-        level: "error",
-        where,
-        msg: "prompt references a figure but no <svg> is present (unanswerable without it)",
-      });
-    }
-  }
-
-  flags.push(
-    ...auditRenderedFields(
-      [
-        ["prompt", q.prompt] as const,
-        ["explanation", q.explanation] as const,
-        ...q.options.map((o) => [`option ${o.id}`, o.text] as const),
-      ],
-      where,
-    ),
-  );
+  flags.push(...auditFigureAndRendering(q.prompt, q.explanation, q.options, where));
 
   return flags;
 }
@@ -878,23 +880,7 @@ export function auditNumericQuestion(q: QANumericQuestion, where: string): Flag[
     flags.push({ level: "warn", where, msg: "explanation is very short" });
   }
 
-  if (FIGURE_REFERENCE.test(q.prompt) && !SVG_BLOCK.test(q.prompt)) {
-    flags.push({
-      level: "error",
-      where,
-      msg: "prompt references a figure but no <svg> is present (unanswerable without it)",
-    });
-  }
-
-  flags.push(
-    ...auditRenderedFields(
-      [
-        ["prompt", q.prompt],
-        ["explanation", q.explanation],
-      ],
-      where,
-    ),
-  );
+  flags.push(...auditFigureAndRendering(q.prompt, q.explanation, [], where));
 
   return flags;
 }
@@ -1260,5 +1246,27 @@ export function auditShortAnswerQuestion(
       err(`short_answer: expected mistake "${m.text}" duplicates another once normalised`);
     seen.add(mn);
   }
+
+  // LES TROIS CONTRÔLES PARTAGÉS, que les trois sœurs portent chacune et qui
+  // manquaient ICI depuis #654. Cause : `short_answer` a été branché dans le
+  // ternaire de `qa.ts` (l. ~176) sans eux — `auditRenderedFields` existait
+  // pourtant déjà, et les trois autres audits l'appelaient déjà. Le type neuf
+  // n'a hérité de rien. Conséquence mesurée : une `short_answer` échappait à
+  // NEUF contrôles — les sept du rendu (viewBox absent, radicande arabe,
+  // virgule arabe en séparateur, markup Markdown, formule mêlée à la phrase…),
+  // plus le renvoi vers une figure absente, plus le seuil d'explication courte.
+  //
+  // La garde contre la RÉCURRENCE n'est pas ici : c'est le test piloté par
+  // table de `content-pipeline-etude20.test.ts`, qui exige ces contrôles pour
+  // CHAQUE type routé par le ternaire. C'est le seul filet qui attrapera le
+  // prochain type ajouté.
+  const explanation = q.explanation ?? "";
+
+  if (explanation.trim().length < 25) {
+    flags.push({ level: "warn", where, msg: "explanation is very short" });
+  }
+
+  flags.push(...auditFigureAndRendering(q.prompt, explanation, [], where));
+
   return flags;
 }
