@@ -12,6 +12,9 @@ import {
   checkSkillFrontmatter,
   checkFeatureInventory,
   extractFeatureInventory,
+  checkControlCoverage,
+  findRunner,
+  CONTROL_SCRIPT_RE,
   AGENTS_MD_MAX_LINES,
   AGENTS_MD_MAX_BYTES,
   SKILL_DESCRIPTION_MAX,
@@ -327,5 +330,157 @@ describe("checkFeatureInventory", () => {
     expect(declared).not.toBeNull();
     expect(declared.names).toContain("quest");
     expect(declared.count).toBe(declared.names.length);
+  });
+});
+
+describe("CONTROL_SCRIPT_RE — qui est un contrôle", () => {
+  it.each(["lint", "typecheck", "verify", "ci:verify", "content:qa", "leak:check", "audit:deps"])(
+    "%s en est un",
+    (name) => expect(CONTROL_SCRIPT_RE.test(name)).toBe(true),
+  );
+
+  it.each(["dev", "build", "content:emit", "content:figures:preview", "db:inventory-content"])(
+    "%s n'en est pas un",
+    (name) => expect(CONTROL_SCRIPT_RE.test(name)).toBe(false),
+  );
+});
+
+describe("findRunner — les deux façons d'appeler un contrôle", () => {
+  const scripts = {
+    "content:manuel:check": "node --experimental-strip-types scripts/content/check-manuel-links.ts",
+    "content:videos:check": "node scripts/content/check-videos.mjs",
+    "content:qa": "node scripts/content/qa.ts",
+    "content:qa:strict": "node scripts/content/qa.ts --strict",
+  };
+
+  // Le bug qui a fait déclarer orphelin un workflow branché depuis trois semaines.
+  it("voit un `npm run` avec un flag intercalé", () => {
+    const wf = [["manuel-health.yml", "run: npm run --silent content:manuel:check > out.json"]];
+    expect(findRunner("content:manuel:check", scripts, wf)).toBe("manuel-health.yml");
+  });
+
+  // L'autre moitié : le workflow exécute le FICHIER, sans jamais nommer le script npm.
+  it("voit l'exécution directe du fichier", () => {
+    const wf = [["video-health.yml", "run: node scripts/content/check-videos.mjs > out.json"]];
+    expect(findRunner("content:videos:check", scripts, wf)).toBe("video-health.yml");
+  });
+
+  it("ne confond pas un script avec celui dont il est le préfixe", () => {
+    const wf = [["content-ci.yml", "run: npm run content:qa:strict"]];
+    expect(findRunner("content:qa", scripts, wf)).toBeNull();
+    expect(findRunner("content:qa:strict", scripts, wf)).toBe("content-ci.yml");
+  });
+
+  it("rend null quand personne ne l'appelle", () => {
+    expect(findRunner("content:qa", scripts, [["ci.yml", "run: npm run lint"]])).toBeNull();
+  });
+});
+
+describe("checkControlCoverage", () => {
+  const scripts = {
+    lint: "eslint src",
+    verify: "npm run eol:check && npm run lint",
+    "eol:check": "node scripts/ci/check-worktree-eol.mjs",
+    "content:figures:check": "node scripts/content/svg/check-figures.mjs content",
+  };
+  const ciOnly = [["ci.yml", "run: npm run verify"]];
+  const registry = (controls) => ({ controls });
+
+  it("accepte un contrôle atteint par un workflow", () => {
+    expect(checkControlCoverage({ scripts, workflows: ciOnly, registry: registry({}) })).toEqual(
+      expect.not.arrayContaining([expect.stringContaining("`verify`")]),
+    );
+  });
+
+  it("accepte un contrôle atteint PAR LA CHAÎNE d'un autre", () => {
+    const problems = checkControlCoverage({ scripts, workflows: ciOnly, registry: registry({}) });
+    expect(problems.join()).not.toMatch(/eol:check/);
+  });
+
+  // Le cas `content:figures:check` : rouge des mois, appelé par rien.
+  it("refuse un contrôle que rien n'appelle et que rien ne déclare", () => {
+    const problems = checkControlCoverage({ scripts, workflows: ciOnly, registry: registry({}) });
+    expect(problems.join()).toMatch(/`content:figures:check`.*aucun workflow/s);
+  });
+
+  it("accepte le même contrôle une fois déclaré", () => {
+    const declared = registry({
+      "content:figures:check": { where: "privé:content-ci.yml", why: "gate de PR du corpus." },
+    });
+    expect(checkControlCoverage({ scripts, workflows: ciOnly, registry: declared })).toEqual([]);
+  });
+
+  it("exige un `why`, pas seulement un `where`", () => {
+    const declared = registry({ "content:figures:check": { where: "privé:content-ci.yml" } });
+    const problems = checkControlCoverage({ scripts, workflows: ciOnly, registry: declared });
+    expect(problems.join()).toMatch(/doit porter un `where` ET un `why`/);
+  });
+
+  // Sans quoi le registre devient un cimetière : on déclare, on branche, on oublie de retirer.
+  it("refuse une déclaration périmée — le workflow l'exécute déjà", () => {
+    const declared = registry({ verify: { where: "manuel", why: "..." } });
+    const problems = checkControlCoverage({ scripts, workflows: ciOnly, registry: declared });
+    expect(problems.join()).toMatch(/`verify` est déclaré.*déjà/s);
+  });
+
+  it("refuse une déclaration qui nomme un script disparu", () => {
+    const declared = registry({ "content:disparu:check": { where: "manuel", why: "..." } });
+    const problems = checkControlCoverage({ scripts, workflows: ciOnly, registry: declared });
+    expect(problems.join()).toMatch(/n'existe plus dans package\.json/);
+  });
+
+  describe("mode --corpus : la déclaration devient une vérification", () => {
+    const declared = registry({
+      "content:figures:check": { where: "privé:content-ci.yml", why: "gate de PR du corpus." },
+    });
+
+    it("passe quand le workflow privé l'appelle vraiment", () => {
+      const corpus = new Map([["content-ci.yml", "run: npm run content:figures:check"]]);
+      expect(
+        checkControlCoverage({
+          scripts,
+          workflows: ciOnly,
+          registry: declared,
+          corpusWorkflows: corpus,
+        }),
+      ).toEqual([]);
+    });
+
+    it("échoue quand le workflow privé ne l'appelle pas — déclaration en l'air", () => {
+      const corpus = new Map([["content-ci.yml", "run: npm run content:qa:strict"]]);
+      const problems = checkControlCoverage({
+        scripts,
+        workflows: ciOnly,
+        registry: declared,
+        corpusWorkflows: corpus,
+      });
+      expect(problems.join()).toMatch(/qui ne l'appelle pas/);
+    });
+
+    it("échoue quand le fichier privé déclaré n'existe pas", () => {
+      const problems = checkControlCoverage({
+        scripts,
+        workflows: ciOnly,
+        registry: declared,
+        corpusWorkflows: new Map(),
+      });
+      expect(problems.join()).toMatch(/fichier absent du corpus/);
+    });
+  });
+});
+
+describe("harness/controls.json — le registre réel de ce dépôt", () => {
+  const registry = JSON.parse(readFileSync("harness/controls.json", "utf8"));
+  const pkg = JSON.parse(readFileSync("package.json", "utf8"));
+
+  it("ne déclare que des scripts qui existent", () => {
+    for (const name of Object.keys(registry.controls)) expect(pkg.scripts).toHaveProperty(name);
+  });
+
+  it("donne une raison à chaque déclaration", () => {
+    for (const [name, entry] of Object.entries(registry.controls)) {
+      expect(entry.where, name).toBeTruthy();
+      expect(entry.why, name).toBeTruthy();
+    }
   });
 });

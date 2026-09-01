@@ -26,6 +26,15 @@
  *      whose header tells the 2026-08-24 story: a key shipped twice by two
  *      sessions killed `auto-pr.yml` for the whole repo with zero jobs and no
  *      log, and every lenient parser called the file valid.
+ *   9. Every CONTROL script of package.json is either run by a workflow of this
+ *      repo, or declared in `harness/controls.json` with where it runs and why.
+ *      `content:figures:check` existed since #451 and was called by NOTHING, in
+ *      either repo: months of red nobody could see, on 32 findings not one of
+ *      which was true. Half the controls live in the PRIVATE corpus CI, which
+ *      this repo cannot read — so declaration is the honest mechanism. `--corpus
+ *      <dir>` turns a `privé:*` declaration into a verification, for whoever has
+ *      both repos at hand; it is wired into no workflow yet (harness/controls.json
+ *      says why), so those declarations are taken on trust.
  *
  * Driven by `.github/workflows/ci.yml` (job `verify`) and `npm run ci:verify`.
  * Pure helpers are exported and unit-tested; `main()` does the filesystem walk and
@@ -250,6 +259,130 @@ export function isJsonValid(text) {
   }
 }
 
+/**
+ * Un script de CONTRÔLE : celui dont le rouge est censé atteindre quelqu'un.
+ * Le suffixe/préfixe suffit à les nommer tous, et rien d'autre ne les nomme —
+ * `package.json` ne distingue pas un gate d'un utilitaire.
+ */
+export const CONTROL_SCRIPT_RE = /(?:^|:)(check|audit|qa|verify|lint|typecheck)(?::|$)/;
+
+/**
+ * `npm run <nom>` tel qu'un workflow l'écrit VRAIMENT — flags compris.
+ *
+ * Le premier détecteur écrit pour ce gate cherchait la sous-chaîne
+ * `npm run content:manuel:check` et concluait « orphelin ». Le workflow écrivait
+ * `npm run --silent content:manuel:check` : un flag intercalé, plus de
+ * correspondance, et une sonde branchée depuis trois semaines déclarée absente.
+ * D'où les flags optionnels ici, et la garde de fin de mot — sans elle,
+ * `content:qa` matcherait la ligne de `content:qa:strict`.
+ */
+const npmRunPattern = (name) =>
+  new RegExp(
+    `npm\\s+run(?:\\s+-{1,2}[\\w-]+)*\\s+${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\w:.-])`,
+  );
+
+/** Les fichiers `scripts/**` que la commande d'un script npm nomme. */
+const scriptFiles = (command) =>
+  [...String(command).matchAll(/(scripts\/[\w./-]+\.(?:mjs|ts|js))/g)].map((m) => m[1]);
+
+/**
+ * Où un workflow lance ce script — ou `null`. Deux façons de l'appeler, et le
+ * détecteur doit connaître les deux : `npm run <nom>`, et l'exécution DIRECTE du
+ * fichier (`node scripts/content/check-videos.mjs`), qui ne mentionne le script
+ * npm nulle part.
+ */
+export function findRunner(name, scripts, workflows) {
+  const pattern = npmRunPattern(name);
+  const files = scriptFiles(scripts[name] ?? "");
+  for (const [label, body] of workflows) {
+    if (pattern.test(body)) return label;
+    for (const file of files) if (body.includes(file)) return label;
+  }
+  return null;
+}
+
+/** Les scripts qu'un script DÉJÀ lancé entraîne avec lui (`verify` → `eol:check`, …). */
+function reachableThroughChains(scripts, directlyRun) {
+  const reached = new Map();
+  const walkChain = (name, origin, seen) => {
+    if (seen.has(name)) return;
+    seen.add(name);
+    for (const m of String(scripts[name] ?? "").matchAll(
+      /npm\s+run(?:\s+-{1,2}[\w-]+)*\s+([\w:.-]+)/g,
+    )) {
+      if (!reached.has(m[1])) reached.set(m[1], origin);
+      walkChain(m[1], origin, seen);
+    }
+  };
+  for (const [name, label] of directlyRun) walkChain(name, `${name} (${label})`, new Set());
+  return reached;
+}
+
+/**
+ * Tout contrôle doit être exécuté par quelqu'un, ou dire qui l'exécute.
+ *
+ * `corpusWorkflows` transforme une déclaration `privé:*` en VÉRIFICATION : ce
+ * dépôt ne voit pas les workflows du corpus, la Content CI privée voit les deux.
+ * Absent, les déclarations privées sont crues sur parole (et c'est dit).
+ */
+export function checkControlCoverage({ scripts, workflows, registry, corpusWorkflows = null }) {
+  const problems = [];
+  const declared = registry?.controls ?? {};
+
+  const directlyRun = new Map();
+  for (const name of Object.keys(scripts)) {
+    const label = findRunner(name, scripts, workflows);
+    if (label) directlyRun.set(name, label);
+  }
+  const viaChain = reachableThroughChains(scripts, directlyRun);
+  const isRun = (name) => directlyRun.get(name) ?? viaChain.get(name) ?? null;
+
+  for (const name of Object.keys(scripts).filter((n) => CONTROL_SCRIPT_RE.test(n))) {
+    const runner = isRun(name);
+    const entry = declared[name];
+    if (!runner && !entry) {
+      problems.push(
+        `\`${name}\` est un script de contrôle qu'aucun workflow de ce dépôt n'appelle et que ` +
+          "`harness/controls.json` ne déclare pas. Un gate que rien ne lance ne protège rien : " +
+          "branche-le dans un workflow, ou déclare où il tourne et pourquoi",
+      );
+    } else if (runner && entry) {
+      problems.push(
+        `\`${name}\` est déclaré dans harness/controls.json alors que ${runner} l'exécute déjà — ` +
+          "déclaration périmée, retire-la (sinon ce fichier devient un cimetière)",
+      );
+    }
+  }
+
+  for (const [name, entry] of Object.entries(declared)) {
+    if (!(name in scripts)) {
+      problems.push(
+        `harness/controls.json déclare \`${name}\`, qui n'existe plus dans package.json`,
+      );
+      continue;
+    }
+    if (!entry?.where || !entry?.why) {
+      problems.push(`harness/controls.json: \`${name}\` doit porter un \`where\` ET un \`why\``);
+      continue;
+    }
+    if (!corpusWorkflows || !entry.where.startsWith("privé:")) continue;
+    // Le mode vérifié — celui de la Content CI privée.
+    const file = entry.where.slice("privé:".length);
+    const body = corpusWorkflows.get(file);
+    if (body === undefined) {
+      problems.push(
+        `harness/controls.json: \`${name}\` dit tourner dans \`${file}\` (privé), fichier absent du corpus`,
+      );
+    } else if (!findRunner(name, scripts, [[file, body]])) {
+      problems.push(
+        `harness/controls.json: \`${name}\` dit tourner dans \`${file}\` (privé), qui ne l'appelle pas`,
+      );
+    }
+  }
+
+  return problems;
+}
+
 function readIfExists(path) {
   return existsSync(path) ? readFileSync(path, "utf8") : null;
 }
@@ -399,11 +532,50 @@ function main() {
   // not a convention. See check-workflow-yaml.mjs for the incident it replays.
   problems.push(...checkYamlFiles(collectGithubYaml(ROOT)));
 
+  // 8. Tout script de CONTRÔLE est exécuté par quelqu'un — ou dit qui l'exécute.
+  // `content:figures:check` a passé des mois rouge sans qu'aucun workflow ne
+  // l'appelle : rien, ici, ne disait qu'il en était un. Voir harness/controls.json.
+  const pkg = readIfExists(join(ROOT, "package.json"));
+  const registryRaw = readIfExists(join(ROOT, "harness", "controls.json"));
+  if (pkg === null) {
+    problems.push("package.json is missing.");
+  } else if (registryRaw === null || !isJsonValid(registryRaw)) {
+    problems.push("harness/controls.json is missing or invalid JSON.");
+  } else {
+    const workflows = walk(join(ROOT, ".github", "workflows"), /\.ya?ml$/).map((p) => [
+      rel(p),
+      readIfExists(p),
+    ]);
+    // `--corpus <dir>` : le corpus privé monté à côté, comme le fait déjà
+    // `check-roadmap-sync.mjs`. La Content CI privée l'a, ce dépôt non — et
+    // c'est elle qui transforme les déclarations `privé:*` en vérifications.
+    const corpusFlag = process.argv.indexOf("--corpus");
+    let corpusWorkflows = null;
+    if (corpusFlag !== -1 && process.argv[corpusFlag + 1]) {
+      const dir = join(process.argv[corpusFlag + 1], ".github", "workflows");
+      if (!existsSync(dir)) {
+        problems.push(`--corpus: ${dir} introuvable — le corpus est-il bien monté ?`);
+      } else {
+        corpusWorkflows = new Map(
+          walk(dir, /\.ya?ml$/).map((p) => [p.split(/[\\/]/).at(-1), readIfExists(p)]),
+        );
+      }
+    }
+    problems.push(
+      ...checkControlCoverage({
+        scripts: JSON.parse(pkg).scripts ?? {},
+        workflows: workflows.filter(([, body]) => body !== null),
+        registry: JSON.parse(registryRaw),
+        corpusWorkflows,
+      }),
+    );
+  }
+
   if (problems.length === 0) {
     console.log(
       "[harness:check] OK — pointers intact, AGENTS.md in budget et son inventaire de " +
         "features à jour, no hidden Unicode, " +
-        "no stray model ids, Actions pinned to SHAs, .github YAML parses strictly, " +
+        "no stray model ids, Actions pinned to SHAs, .github YAML parses strictly, chaque contrôle exécuté ou déclaré, " +
         "generated views in sync.",
     );
     return;

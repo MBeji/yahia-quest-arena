@@ -6,7 +6,7 @@ dans le contenu — dans les cours (`cours.md` / `resume.md`) et dans les **ques
 
 Il a servi à produire et auditer ~315 figures lors de la campagne « schémas
 explicatifs » (cours + questions). Zéro dépendance pour la génération ; le rendu
-utilise Playwright (déjà dans les devDeps) + le Chromium pré-installé.
+utilise Playwright (déjà dans les devDeps) + Chromium (`npx playwright install chromium`).
 
 > 📦 **Cet outillage est le moteur, il reste public — le corpus qu'il traite, non.** Depuis
 > l'étude 24 (2026-07-20), les fichiers `content/…` cités plus bas vivent dans le dépôt **privé**
@@ -14,15 +14,16 @@ utilise Playwright (déjà dans les devDeps) + le Chromium pré-installé.
 > Ne recopie jamais de corpus ici pour tester — `npm run leak:check` fait échouer le build.
 > Voir [`docs/content-generation-pipeline.md`](../../../docs/content-generation-pipeline.md).
 
-## Les trois outils
+## Les outils
 
-| Fichier                  | Rôle                                                                                                                                                                |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `svglib.mjs`             | mini-builder SVG sans dépendance — calcule la géométrie (flèches, arcs, ticks, angle droit) et n'émet que les primitives autorisées par le sanitizer                |
-| `preview.mjs`            | rend les figures d'un fichier en **grille PNG** pour relecture visuelle ; pour un `.json` il **décode** les SVG depuis les chaînes (ce qui part réellement en prod) |
-| `check-figures.mjs`      | lint structurel de toutes les figures de `content/` (whitelist sanitizer, viewBox, chiffres occidentaux, un `<svg>` par champ) — `npm run content:figures:check`    |
-| `import.mjs`             | **importe une illustration libre du net** et la rend embarquable — voir § « Importer une illustration libre » — `npm run content:figures:import`                    |
-| `sanitizer-contract.mjs` | la source unique du contrat (liste blanche, interdits, miroir de la config DOMPurify) — importée par `check-figures.mjs` et `import.mjs`                            |
+| Fichier                  | Rôle                                                                                                                                                                                             |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `svglib.mjs`             | mini-builder SVG sans dépendance — calcule la géométrie (flèches, arcs, ticks, angle droit) et n'émet que les primitives autorisées par le sanitizer                                             |
+| `preview.mjs`            | rend les figures d'un fichier en **grille PNG** pour relecture visuelle ; pour un `.json` il **décode** les SVG depuis les chaînes (ce qui part réellement en prod)                              |
+| `check-figures.mjs`      | lint structurel de toutes les figures de `content/` (whitelist sanitizer, viewBox, chiffres occidentaux, un `<svg>` par champ) — `npm run content:figures:check`                                 |
+| `check-overflow.mjs`     | mesure quel texte de figure sort de son `viewBox` — donc arrive **rogné** chez l'élève ; Chromium + les polices de l'app, et une calibration à chaque passage — `npm run content:overflow:check` |
+| `import.mjs`             | **importe une illustration libre du net** et la rend embarquable — voir § « Importer une illustration libre » — `npm run content:figures:import`                                                 |
+| `sanitizer-contract.mjs` | la source unique du contrat (liste blanche, interdits, miroir de la config DOMPurify) — importée par `check-figures.mjs` et `import.mjs`                                                         |
 
 ## Contraintes (le sanitizer décide)
 
