@@ -4,9 +4,9 @@ import { join } from "node:path";
 import { randomBytes } from "node:crypto";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { AI_ENC_VERSION } from "@/shared/constants/ai";
 import { revealSecret } from "@/shared/integrations/ai/types";
 import {
-  AI_ENC_VERSION,
   fingerprint,
   isVaultAvailable,
   last4,

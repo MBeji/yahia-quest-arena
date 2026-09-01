@@ -20,10 +20,13 @@
 import { supabaseAdmin } from "@/shared/integrations/supabase/client.server";
 import { logger } from "@/shared/lib/logger";
 import { errorMessage } from "@/shared/lib/safe-error";
-import type { AiProviderId } from "@/shared/constants/ai";
+import { AI_ENC_VERSION, type AiProviderId } from "@/shared/constants/ai";
 import type { AiErrorCode } from "@/shared/integrations/ai";
 import type { OpaqueSecret } from "@/shared/integrations/ai/types";
-import { AI_ENC_VERSION, openSecret, rewriteUnderCurrentKek } from "./crypto.server";
+// `crypto.server` — le coffre — n'est PAS importé statiquement : il tire
+// `node:crypto` au niveau module. Ses deux fonctions sont chargées à l'usage,
+// dans les fonctions async ci-dessous (#909). `AI_ENC_VERSION`, qui n'est qu'un
+// nombre, vient de `@/shared/constants/ai`.
 
 /**
  * La lecture du CHIFFRÉ, et d'elle seule. L'étude la décrit ainsi : « le
@@ -101,6 +104,7 @@ export async function openOwnerSecret(
   // PostgREST rend un `bytea` en notation `\x…`. C'est le seul endroit du
   // système qui reconstitue le tampon, et il le passe immédiatement au coffre.
   const blob = Buffer.from(row.secret_enc.replace(/^\\x/, ""), "hex");
+  const { openSecret } = await import("./crypto.server");
   const opened = openSecret(blob, {
     ownerUserId,
     provider: row.provider,
@@ -131,6 +135,7 @@ async function rewriteSecret(
   provider: AiProviderId,
   encVersion: number,
 ): Promise<void> {
+  const { rewriteUnderCurrentKek } = await import("./crypto.server");
   const next = rewriteUnderCurrentKek(blob, { ownerUserId, provider, encVersion });
   if (!next) return;
   const { error } = await rpc().rpc("rewrite_ai_credential_secret", {

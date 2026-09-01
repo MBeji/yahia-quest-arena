@@ -16,7 +16,7 @@
 // pas, on rend un code typé de l'annexe C.
 
 import { AI_MAX_RETRIES, AI_TIMEOUT_MS } from "@/shared/constants/ai";
-import { egressFetch, type EgressLookup, type HttpsRequestFn } from "./egress.server";
+import type { EgressLookup, HttpsRequestFn } from "./egress.server";
 import { AiError, aiErrorFromStatus, isRetryableStatus, toAiError } from "./errors";
 import {
   renderBlocks,
@@ -109,6 +109,13 @@ export function makeOpenAiCompatibleProvider(deps: OpenAiCompatibleDeps = {}): A
       // pas un quiz en trente secondes (§3.5, mesure du 2026-08-25).
       const timeoutMs = req.timeoutMs ?? AI_TIMEOUT_MS[req.feature];
       const maxRetries = AI_MAX_RETRIES[req.feature];
+
+      // `egress.server` importe `node:dns`/`node:net`/`node:https` au niveau
+      // MODULE. Chargé ici, à l'usage, il sort du graphe d'imports STATIQUES —
+      // celui que le dev server sert vraiment au navigateur (#909). La logique
+      // du refus des réseaux privés (RISK-7) n'est pas touchée : `egress.server`
+      // et son test restent tels quels, seule l'ARÊTE change.
+      const { egressFetch } = await import("./egress.server");
 
       for (let attempt = 0; attempt <= maxRetries; attempt += 1) {
         let response;
