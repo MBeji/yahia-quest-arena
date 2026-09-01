@@ -93,7 +93,7 @@ vi.mock("@/shared/integrations/supabase/auth-middleware", () => ({
 vi.mock("@/shared/integrations/supabase/client.server", () => ({
   supabaseAdmin: { rpc: mockAdminRpc },
 }));
-vi.mock("@/features/ai", () => ({ callAi: (r: unknown) => mockCallAi(r) }));
+vi.mock("@/features/ai/ai-call.server", () => ({ callAi: (r: unknown) => mockCallAi(r) }));
 vi.mock("@/shared/lib/logger", () => ({
   logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn(), debug: vi.fn() },
 }));

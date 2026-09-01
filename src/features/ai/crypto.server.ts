@@ -35,8 +35,10 @@ import { createDecipheriv, createCipheriv, createHmac, hkdfSync, randomBytes } f
 import { sealSecret, type OpaqueSecret } from "@/shared/integrations/ai/types";
 import type { AiProviderId } from "@/shared/constants/ai";
 
-/** Version du SCHÉMA de chiffrement. Elle entre dans l'AAD — voir la note ci-dessous. */
-export const AI_ENC_VERSION = 1;
+// `AI_ENC_VERSION` vit dans `@/shared/constants/ai` (et NON ici, et n'y est pas
+// réexportée) : ses lecteurs sont `ai-vault` et `ai-credentials`, et un simple
+// réexport suffirait à rendre `node:crypto` de nouveau atteignable en STATIQUE
+// depuis le graphe du client (#909).
 
 const IV_BYTES = 12;
 const TAG_BYTES = 16;

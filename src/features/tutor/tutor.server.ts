@@ -44,7 +44,7 @@ import type { Database } from "@/shared/integrations/supabase/types";
 import { z } from "zod";
 // Le pack élève : validation + choix de langue, deux gestes purs sortis d'ici (é30 lot 3bis).
 import { learnerContextSchema, toLearnerContext } from "./learner-context";
-import { callAi } from "@/features/ai";
+import { callAi } from "@/features/ai/ai-call.server";
 import { AI_CURATED_MODELS } from "@/shared/constants/ai";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/shared/integrations/supabase/client.server";
