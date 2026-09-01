@@ -28,31 +28,12 @@ import { createClient, isAuthRetryableFetchError } from "@supabase/supabase-js";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
 
-/**
- * Pourquoi une requête n'a pas d'identité. Chaque appelant le traduit à sa façon.
- *
- * La granularité n'est pas décorative : le middleware distinguait déjà ces six
- * cas dans ses messages, et les fondre en « pas de jeton » aurait fait perdre au
- * développeur la différence entre « le client n'a pas pu produire de jeton »
- * (rafraîchissement raté — la panne du 2026-08-18) et « le client envoie un
- * schéma d'autorisation qui n'existe pas ». Une extraction doit être à
- * comportement constant, messages compris.
- */
-export type AuthFailure =
-  /** Aucun en-tête `Authorization` — typiquement un rafraîchissement raté côté client. */
-  | "NO_HEADER"
-  /** En-tête présent, mais pas `Bearer `. */
-  | "BAD_SCHEME"
-  /** `Bearer ` suivi de rien. */
-  | "EMPTY_TOKEN"
-  /** Jeton expiré, malformé, signé par une autre clé — se reconnecter. */
-  | "INVALID_TOKEN"
-  /** Jeton vérifié, mais sans `sub` : il n'identifie personne. */
-  | "NO_SUBJECT"
-  /** Le service Auth n'a pas RÉPONDU — réessayer a du sens. */
-  | "UNAVAILABLE"
-  /** Variables d'environnement manquantes : c'est une panne de déploiement. */
-  | "MISCONFIGURED";
+// `AuthFailure` vit dans `auth-refusals.ts` — la table qui, pour CHAQUE refus,
+// porte son message et la conduite du client. Le type y est posé plutôt qu'ici
+// parce que le prédicat client doit le lire sans tirer `@supabase/supabase-js`
+// (importé plus haut) dans le bundle du navigateur.
+export type { AuthFailure } from "./auth-refusals";
+import type { AuthFailure } from "./auth-refusals";
 
 export type AuthResolution =
   | {
