@@ -240,6 +240,10 @@ export const ar: TranslationKeys = {
       boss_slayer: { name: "قاهر الوحوش", condition: "اجتياز 10 طوابق من السرداب إجمالا" },
       collector: { name: "جامع الكنوز", condition: "امتلاك 5 أغراض مختلفة" },
       rich_kid: { name: "الوريث الثريّ", condition: "بلوغ 500 قطعة" },
+      league_podium: {
+        name: "منصّة الدوري",
+        condition: "إنهاء أسبوع دوري في الذهب أو البلاتين أو الألماس",
+      },
     },
     badgeFamilyProgress: "{n}/{total}",
     badgeLocked: "لم يُفتح بعد",

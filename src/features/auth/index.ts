@@ -13,7 +13,9 @@ export {
   updateDisplayName,
   deleteAccount,
   exportUserData,
+  setProfileLocale,
 } from "./auth.server";
+export { useProfileLocaleSync } from "./use-locale-sync";
 export { displayNameSchema, isValidDisplayName, DISPLAY_NAME_MAX_LENGTH } from "./display-name";
 export {
   ACCOUNT_DELETE_ERROR_PREFIX,

@@ -241,6 +241,10 @@ export const en: TranslationKeys = {
       boss_slayer: { name: "Boss Slayer", condition: "Clear 10 dungeon floors in total" },
       collector: { name: "Collector", condition: "Own 5 different items" },
       rich_kid: { name: "Rich Heir", condition: "Reach 500 coins" },
+      league_podium: {
+        name: "League Podium",
+        condition: "Finish a league week in gold, platinum or diamond",
+      },
     },
     badgeFamilyProgress: "{n}/{total}",
     badgeLocked: "Locked",

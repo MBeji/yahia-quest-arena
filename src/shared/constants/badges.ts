@@ -23,8 +23,8 @@ export type BadgeFamily = (typeof BADGE_FAMILIES)[number];
 
 /**
  * Les codes semés en base après le lot 2 (`night_owl` retiré, D-5).
- * `league_podium` (lot 5) et les badges d'événement (lot 8) s'y ajouteront avec
- * leur migration — et leur ligne de traduction, faute de quoi `tsc` refusera.
+ Les badges d'événement (lot 8) s'y ajouteront avec leur
+ * migration — et leur ligne de traduction, faute de quoi `tsc` refusera.
  */
 export const BADGE_CODES = [
   "first_quest",
@@ -39,6 +39,8 @@ export const BADGE_CODES = [
   "boss_slayer",
   "collector",
   "rich_kid",
+  // é31 lot 5 — décerné par la clôture hebdo de ligue (R-14), famille `saison`.
+  "league_podium",
 ] as const;
 export type BadgeCode = (typeof BADGE_CODES)[number];
 

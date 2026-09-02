@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import React from "react";
 
@@ -178,22 +178,37 @@ describe("le catalogue du code suit celui de la base (R-13)", () => {
    * français dans les trois langues, un badge retiré de la base laisserait une
    * carte fantôme. Le test lit la migration, pas une copie.
    */
-  const migration = readFileSync(
-    join(process.cwd(), "supabase/migrations/20260902140000_badges_alive.sql"),
-    "utf8",
-  );
+  const MIGRATIONS = join(process.cwd(), "supabase/migrations");
+  const migration = readFileSync(join(MIGRATIONS, "20260902140000_badges_alive.sql"), "utf8");
+  /** Toutes les migrations, concaténées : un badge peut être semé par un lot ultérieur. */
+  const allMigrations = readdirSync(MIGRATIONS)
+    .filter((f) => f.endsWith(".sql"))
+    .map((f) => readFileSync(join(MIGRATIONS, f), "utf8"))
+    .join("\n");
 
-  it("⭐ déclare exactement les badges que la migration remplit", () => {
+  it("⭐ déclare tous les badges que le lot 2 remplit", () => {
     const block = migration.slice(
       migration.indexOf("UPDATE public.badges SET family"),
       migration.indexOf("-- D-5 :"),
     );
     const seeded = [
       ...block.matchAll(/\('([a-z_0-9]+)',\s+'(?:debut|serie|maitrise|arene|saison)'/g),
-    ]
-      .map((m) => m[1])
-      .sort();
-    expect(seeded).toEqual([...BADGE_CODES].sort());
+    ].map((m) => m[1]);
+    for (const code of seeded) {
+      expect((BADGE_CODES as readonly string[]).includes(code), `${code} absent du code`).toBe(
+        true,
+      );
+    }
+  });
+
+  it("⭐ et n'en déclare AUCUN que la base ne sème — dans les deux sens", () => {
+    // L'inverse du test précédent : un code inventé côté client afficherait une
+    // carte que personne ne peut obtenir, exactement la panne que R-13 interdit.
+    for (const code of BADGE_CODES) {
+      expect(allMigrations.includes(`'${code}'`), `${code} n'est semé par aucune migration`).toBe(
+        true,
+      );
+    }
   });
 
   it("⭐ `night_owl` a disparu des deux côtés (D-5)", () => {

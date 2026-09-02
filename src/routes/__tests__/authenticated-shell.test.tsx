@@ -36,6 +36,9 @@ vi.mock("@/features/auth", () => ({
   useMyRole: () => ({ role: "student", currentParcoursId: "p1", hasProfile: true, isLoaded: true }),
   shouldRedirectToOnboarding: () => false,
   hubRouteForRole: () => "/dashboard",
+  // é31 lot 4 : la coquille pousse la langue d'interface dans le profil (R-17).
+  // Neutralisé ici — ce fichier teste le mur de connexion.
+  useProfileLocaleSync: () => {},
 }));
 
 vi.mock("@/features/subscription", () => ({ getPendingBetaCount: vi.fn() }));

@@ -2,7 +2,13 @@ import { createFileRoute, Outlet, Link, useNavigate, useLocation } from "@tansta
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useAuth, useMyRole, shouldRedirectToOnboarding, hubRouteForRole } from "@/features/auth";
+import {
+  useAuth,
+  useMyRole,
+  shouldRedirectToOnboarding,
+  hubRouteForRole,
+  useProfileLocaleSync,
+} from "@/features/auth";
 import { getPendingBetaCount } from "@/features/subscription";
 import { getOpenReportsCount } from "@/features/content-report";
 import { BetaBadge, BugReportLauncher, getOpenBugsCount } from "@/features/bug-report";
@@ -42,6 +48,11 @@ function AuthenticatedLayout() {
   // shared query definition is required (cache-key collision otherwise locked
   // admins out of their consoles).
   const { role: userRole, currentParcoursId, hasProfile, isLoaded: meLoaded } = useMyRole();
+
+  // é31 lot 4 (R-17) — la langue d'interface descend dans le profil, pour que les
+  // notifications du soir parlent celle de l'élève. Ici parce que c'est le seul
+  // endroit qui sait à la fois qui est connecté et quelle langue est affichée.
+  useProfileLocaleSync(Boolean(user) && hasProfile);
 
   // Pending beta-access requests count for the admin nav badge.
   const fetchBetaCount = useServerFn(getPendingBetaCount);

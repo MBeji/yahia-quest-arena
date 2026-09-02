@@ -255,6 +255,10 @@ export const fr: TranslationKeys = {
       boss_slayer: { name: "Tueur de Boss", condition: "Franchir 10 étages de donjon au total" },
       collector: { name: "Collectionneur", condition: "Posséder 5 objets différents" },
       rich_kid: { name: "Riche Héritier", condition: "Atteindre 500 pièces" },
+      league_podium: {
+        name: "Podium de Ligue",
+        condition: "Terminer une semaine de ligue en or, platine ou diamant",
+      },
     },
     badgeFamilyProgress: "{n}/{total}",
     badgeLocked: "À débloquer",
