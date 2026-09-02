@@ -75,9 +75,8 @@ export const PRODUCT_EVENT_CATALOGUE: readonly ProductEventEntry[] = [
   { name: "duel_finished", fires: "Fin d'un duel (écran de résultat)", live: true },
   {
     name: "league_awarded",
-    fires: "Découverte du résultat de ligue de la semaine close",
-    live: false,
-    note: "câblé au lot 5 (podium de ligue)",
+    fires: "Découverte du résultat de ligue de la semaine close (podium)",
+    live: true,
   },
   { name: "shop_purchase", fires: "Achat d'un objet en boutique", live: true },
   { name: "streak_recovered", fires: "Rachat de série réussi", live: true },

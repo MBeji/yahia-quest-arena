@@ -5,15 +5,18 @@ export {
   getCatalogueStats,
   getDashboard,
   getDashboardSecondary,
-  getLeaderboard,
-  getGradeLeaderboard,
-  getLeaderboardSubjects,
   getMyFamilyGoal,
   getParcours,
   getParcoursSubjects,
   getSprint2Dashboard,
-  getSubjectLeaderboard,
 } from "./dashboard.server";
+export {
+  getLeaderboard,
+  getGradeLeaderboard,
+  getLeaderboardSubjects,
+  getSubjectLeaderboard,
+  getWeeklyLeaderboard,
+} from "./leaderboard.server";
 export { getEconomyOverview, type EconomyOverview } from "./economy.server";
 export {
   setDailyXpGoal,
@@ -29,6 +32,8 @@ export {
   type EngagementCurrWeek,
 } from "./engagement.server";
 export { EngagementAdmin } from "./components/engagement-admin";
+export { getWeeklyRecap, type WeeklyRecap } from "./weekly-recap.server";
+export { WeeklyRecapCard } from "./components/weekly-recap-card";
 export {
   getMyParcoursInterests,
   getParcoursInterestCounts,

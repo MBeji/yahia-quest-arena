@@ -4,6 +4,7 @@ import React from "react";
 
 import { EngagementAdmin } from "../components/engagement-admin";
 import type { EngagementOverview } from "../engagement.server";
+import { PRODUCT_EVENT_CATALOGUE } from "@/shared/lib/product-events";
 
 /**
  * Étude 31 lot 1 — la page « Engagement ».
@@ -142,11 +143,16 @@ describe("EngagementAdmin — l'engagement ne se lit jamais seul", () => {
     expect(screen.getByTestId("eng-kpi-c").textContent).toContain("25 %");
   });
 
-  it("⭐ liste l'instrumentation et signale ce qui n'est PAS encore émis (§3.7)", () => {
+  it("⭐ liste TOUTE l'instrumentation, et n'en cache aucune (§3.7)", () => {
     render(<EngagementAdmin data={overview()} />);
     const events = screen.getByTestId("eng-events").textContent ?? "";
-    expect(events).toContain("quest_completed");
-    expect(events).toContain("league_awarded");
-    expect(events).toContain("pas encore émis");
+    for (const entry of PRODUCT_EVENT_CATALOGUE) {
+      expect(events, `${entry.name} absent de la carte`).toContain(entry.name);
+    }
+    // Depuis le lot 5, les douze événements sont câblés : plus aucune mention
+    // « pas encore émis ». Le MARQUEUR, lui, reste tenu par
+    // `product-events.test.ts`, qui échoue si un événement déclaré non câblé est
+    // émis quelque part — ou l'inverse.
+    expect(events).not.toContain("pas encore émis");
   });
 });

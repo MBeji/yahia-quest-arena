@@ -16,7 +16,12 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
-import { getDailyRing, getDashboard, getSprint2Dashboard } from "@/features/dashboard";
+import {
+  getDailyRing,
+  getDashboard,
+  getSprint2Dashboard,
+  getWeeklyRecap,
+} from "@/features/dashboard";
 import type { DashboardGoalAction } from "@/features/dashboard";
 // Import direct, même raison que sur le lecteur de chapitre : le barrel de
 // la feature IA tirerait la console parent et la Forge dans ce chunk.
@@ -38,6 +43,7 @@ import { SubjectPathCard } from "@/features/dashboard/components/subject-path-ca
 import { MotivationalQuote } from "@/features/dashboard/components/motivational-quote";
 import { DashboardGoalsSkeleton } from "@/features/dashboard/components/dashboard-goals-skeleton";
 import { DashboardFocus } from "@/features/dashboard/components/dashboard-focus";
+import { WeeklyRecapCard } from "@/features/dashboard/components/weekly-recap-card";
 import { BackToSchoolBanner } from "@/features/dashboard/components/back-to-school-banner";
 import { DashboardSkeleton } from "@/features/dashboard/components/dashboard-skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -92,6 +98,7 @@ function Dashboard() {
   const fetchDashboard = useServerFn(getDashboard);
   const fetchSprint2 = useServerFn(getSprint2Dashboard);
   const fetchDailyRing = useServerFn(getDailyRing);
+  const fetchWeeklyRecap = useServerFn(getWeeklyRecap);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["dashboard"],
     queryFn: () => fetchDashboard(),
@@ -99,6 +106,11 @@ function Dashboard() {
   const { data: sprint2 } = useQuery({ queryKey: ["sprint2"], queryFn: () => fetchSprint2() });
   // é31 lot 3 — l'XP réellement gagné aujourd'hui, sur l'objectif choisi (R-12).
   const { data: ring } = useQuery({ queryKey: ["daily-ring"], queryFn: () => fetchDailyRing() });
+  // é31 lot 5 — le bilan de la semaine (US-8), déterministe et sans récompense.
+  const { data: recap } = useQuery({
+    queryKey: ["weekly-recap"],
+    queryFn: () => fetchWeeklyRecap(),
+  });
 
   // Light 3D gold ambient — only after mount, never on mobile or reduced-motion
   // (the CSS gold ambient from the shell remains as the fallback).
@@ -296,6 +308,15 @@ function Dashboard() {
           dailyGoal={ring?.goal ?? 100}
           streak={profile.current_streak}
         />
+
+        {/* é31 lot 5 (US-8, R-18) — « Ta semaine » : la fin de cycle qui manquait.
+            Les faits, comparés à la semaine d'avant, et AUCUNE récompense —
+            un bilan qui paye devient une tâche. */}
+        {recap && (
+          <div className="mt-6">
+            <WeeklyRecapCard recap={recap} />
+          </div>
+        )}
 
         {/* « Révision du jour » (étude 04, lot A1.1) — juste sous la bande focus, parce que
             c'est la même urgence détaillée : la bande promeut UNE action (la tête du plan),
