@@ -67,14 +67,14 @@ SELECT
   ('e0000000-0000-4000-8000-00000000000' || n)::uuid,
   'eng-user-' || n || '@test.local', 'x', now(),
   '{"display_name":"Eng"}'::jsonb, now(), now(),
-  'authenticated', 'authenticated', '00000000-0000-0000-0000-000000000000'
+  'authenticated', 'authenticated', '00000000-0000-0000-0000-000000000000'::uuid
 FROM generate_series(1, 9) n
 UNION ALL
 SELECT
   ('e0000000-0000-4000-8000-0000000000' || n)::uuid,
   'eng-user-' || n || '@test.local', 'x', now(),
   '{"display_name":"Eng"}'::jsonb, now(), now(),
-  'authenticated', 'authenticated', '00000000-0000-0000-0000-000000000000'
+  'authenticated', 'authenticated', '00000000-0000-0000-0000-000000000000'::uuid
 FROM generate_series(10, 13) n;
 
 -- Le profil naît par trigger ; on ne règle ici que ce que la mesure lit.
@@ -299,12 +299,16 @@ SELECT is(
 );
 
 -- Une cohorte toute neuve : mesurable pour rien, donc NULL partout — surtout pas 0.
+-- (Le décor s'écrit en propriétaire : `authenticated` n'a évidemment pas le droit
+-- de créer un compte.)
+RESET ROLE;
 INSERT INTO auth.users (id, email, encrypted_password, email_confirmed_at,
                         raw_user_meta_data, created_at, updated_at,
                         aud, role, instance_id)
 VALUES ('e0000000-0000-4000-8000-000000000014'::uuid, 'eng-fresh@test.local', 'x', now(),
         '{"display_name":"Fresh"}'::jsonb, now(), now(),
         'authenticated', 'authenticated', '00000000-0000-0000-0000-000000000000');
+SET LOCAL ROLE authenticated;
 
 SELECT is(
   (SELECT (c->>'d30_pct')
