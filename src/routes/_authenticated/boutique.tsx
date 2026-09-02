@@ -11,6 +11,7 @@ import { BackLink } from "@/components/ui/back-link";
 import { LoadingState } from "@/components/ui/loading-state";
 import { useT } from "@/lib/i18n";
 import { useSound } from "@/lib/sound";
+import { trackProductEvent } from "@/shared/lib/product-events";
 
 // Radar + inventory and the badges/shop grids are lazy — heavy (recharts / many
 // cards). They used to live at the very bottom of the dashboard; étude 15 lot 6
@@ -54,8 +55,11 @@ function BoutiquePage() {
 
   const purchaseMutation = useMutation({
     mutationFn: (payload: { itemCode: string }) => purchaseItem({ data: payload }),
-    onSuccess: (res) => {
+    onSuccess: (res, vars) => {
       play("purchase");
+      // é31 lot 1 — le seul PUITS de pièces mesurable côté produit (é09 suit le
+      // ratio en base ; ici on voit ce que l'élève choisit, et quand).
+      trackProductEvent("shop_purchase", { item_code: vars.itemCode });
       toast.success(t.dashboard.purchaseSuccess.replace("{name}", res.purchasedItemName));
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },

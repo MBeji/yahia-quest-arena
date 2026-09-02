@@ -38,6 +38,7 @@ import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { useEntrance } from "@/shared/lib/motion";
 import { parcoursName } from "@/shared/lib/parcours-locale";
 import { useI18n, useT } from "@/lib/i18n";
+import { trackProductEvent } from "@/shared/lib/product-events";
 
 /**
  * Slide-in/out of a wizard step (AnimatePresence needs an `exit`, which the
@@ -565,6 +566,10 @@ function OnboardingComponent() {
         queryClient.invalidateQueries({ queryKey: ["me-role"] }),
         queryClient.invalidateQueries({ queryKey: ["me-parcours"] }),
       ]);
+      // é31 lot 1 — deuxième fait du funnel : le parcours choisi, donc le compte
+      // réellement utilisable. L'écart signup → onboarding_completed est la
+      // première fuite mesurable du produit.
+      trackProductEvent("onboarding_completed", { intent: intent ?? "unknown" });
       setStep(2);
     },
     onError: () => {

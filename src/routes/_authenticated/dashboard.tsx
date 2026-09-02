@@ -45,6 +45,7 @@ import { entrance } from "@/shared/lib/motion";
 import { PageShell } from "@/components/ui/page-shell";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { GoldProgress } from "@/components/game/gold-progress";
+import { trackProductEvent } from "@/shared/lib/product-events";
 
 const GoldAmbientCanvas = lazy(() => import("@/components/visual/gold-ambient-canvas"));
 // « Carte de compétences » (étude 07 lot 4) : lazy comme les sections lourdes du dashboard —
@@ -116,6 +117,9 @@ function Dashboard() {
   const streakRecoveryMutation = useMutation({
     mutationFn: () => recoverStreakFn(),
     onSuccess: (res) => {
+      // é31 lot 1 — le rachat de série est le geste de RETOUR par excellence :
+      // il mesure combien d'élèves refusent de laisser tomber (constat n° 7).
+      trackProductEvent("streak_recovered", { new_streak: res.newStreak });
       toast.success(
         t.dashboard.streakRecovered
           .replace("{n}", String(res.newStreak))

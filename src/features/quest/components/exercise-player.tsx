@@ -10,7 +10,6 @@ import { isValidAnswerFormat } from "@/shared/lib/answer-formats";
 import { userFacingError } from "@/shared/lib/error-message";
 import { RichField } from "@/components/ui/svg-figure";
 import { QuestionInput, type McqOptionRender } from "@/features/quest/components/question-input";
-import { levelForXp } from "@/shared/lib/level";
 import { QuestResultScreen } from "@/features/quest/components/quest-result-screen";
 import { QuizContractHint, QuizLockScreen } from "@/features/quest/components/quiz-lock-screen";
 import { QuestHintButton } from "@/features/quest/components/quest-hint-button";
@@ -51,6 +50,7 @@ import {
 } from "@/features/quest/components/use-quest-autosave";
 import { QuestSaveStatus } from "@/features/quest/components/quest-save-status";
 import type { UnlockedBadge } from "@/shared/types/gamification";
+import { emitQuestResultTelemetry, levelCrossedBy } from "@/features/quest/quest-result-facts";
 
 // =============================================================================
 // ExercisePlayer — the single question-by-question gameplay screen shared by the
@@ -348,19 +348,22 @@ export function ExercisePlayer({
       const passed = res.scorePct >= PASS_THRESHOLD_PCT;
       // Reward cue on the result screen (both connected and anon registers).
       play(passed ? "victory" : "wrong");
+      // Le palier franchi (null hors registre connecté ou sur un rejeu) et les
+      // trois faits du funnel produit — é31 lot 1, `quest-result-facts.ts`.
+      const leveledUpTo = levelCrossedBy(res, capabilities.rewards);
+      emitQuestResultTelemetry({
+        result: res,
+        subjectId: data?.exercise?.subject_id,
+        variant,
+        isQuiz: data?.exercise?.mode === "quiz",
+        rewarded: capabilities.rewards,
+        passed,
+        leveledUpTo,
+      });
       if (capabilities.rewards) {
         if (passed) setShowConfetti(true);
         if (res.unlockedBadges.length > 0) setTimeout(() => play("badge"), 600);
-        const profileLevel = Number(res.profile?.level ?? 0);
-        const profileXp = Number(res.profile?.xp ?? 0);
-        const prevLevel = levelForXp(profileXp - res.xpEarned);
-        // ⚠️ PAS SUR UN REJEU. Le calcul suppose que `profile.xp` est celui
-        // d'APRÈS cette tentative-ci ; sur un résultat relu, le profil rendu est
-        // l'actuel, qui a pu gagner de l'XP depuis (d'autres missions). La
-        // soustraction ne désigne alors plus rien, et l'animation se
-        // déclencherait — ou pas — au hasard. Le score, lui, reste affiché : il
-        // est exact, et c'est souvent la première fois que l'élève le voit.
-        if (profileLevel > prevLevel && res.xpEarned > 0 && !res.replayed) {
+        if (leveledUpTo !== null) {
           setTimeout(() => {
             setShowLevelUp(true);
             play("levelUp");

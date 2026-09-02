@@ -39,6 +39,7 @@ import { Route as AuthenticatedAdminBetaRequestsRouteImport } from './routes/_au
 import { Route as AuthenticatedAdminBugReportsRouteImport } from './routes/_authenticated/admin.bug-reports'
 import { Route as AuthenticatedAdminContentReportsRouteImport } from './routes/_authenticated/admin.content-reports'
 import { Route as AuthenticatedAdminEconomieRouteImport } from './routes/_authenticated/admin.economie'
+import { Route as AuthenticatedAdminEngagementRouteImport } from './routes/_authenticated/admin.engagement'
 import { Route as AuthenticatedAdminIaRouteImport } from './routes/_authenticated/admin.ia'
 import { Route as AuthenticatedAdminParcoursInterestRouteImport } from './routes/_authenticated/admin.parcours-interest'
 import { Route as AuthenticatedAdminSubscriptionsRouteImport } from './routes/_authenticated/admin.subscriptions'
@@ -209,6 +210,12 @@ const AuthenticatedAdminEconomieRoute =
     path: '/admin/economie',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedAdminEngagementRoute =
+  AuthenticatedAdminEngagementRouteImport.update({
+    id: '/admin/engagement',
+    path: '/admin/engagement',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedAdminIaRoute = AuthenticatedAdminIaRouteImport.update({
   id: '/admin/ia',
   path: '/admin/ia',
@@ -318,6 +325,7 @@ export interface FileRoutesByFullPath {
   '/admin/bug-reports': typeof AuthenticatedAdminBugReportsRoute
   '/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
   '/admin/economie': typeof AuthenticatedAdminEconomieRoute
+  '/admin/engagement': typeof AuthenticatedAdminEngagementRoute
   '/admin/ia': typeof AuthenticatedAdminIaRoute
   '/admin/parcours-interest': typeof AuthenticatedAdminParcoursInterestRoute
   '/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
@@ -362,6 +370,7 @@ export interface FileRoutesByTo {
   '/admin/bug-reports': typeof AuthenticatedAdminBugReportsRoute
   '/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
   '/admin/economie': typeof AuthenticatedAdminEconomieRoute
+  '/admin/engagement': typeof AuthenticatedAdminEngagementRoute
   '/admin/ia': typeof AuthenticatedAdminIaRoute
   '/admin/parcours-interest': typeof AuthenticatedAdminParcoursInterestRoute
   '/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
@@ -409,6 +418,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/bug-reports': typeof AuthenticatedAdminBugReportsRoute
   '/_authenticated/admin/content-reports': typeof AuthenticatedAdminContentReportsRoute
   '/_authenticated/admin/economie': typeof AuthenticatedAdminEconomieRoute
+  '/_authenticated/admin/engagement': typeof AuthenticatedAdminEngagementRoute
   '/_authenticated/admin/ia': typeof AuthenticatedAdminIaRoute
   '/_authenticated/admin/parcours-interest': typeof AuthenticatedAdminParcoursInterestRoute
   '/_authenticated/admin/subscriptions': typeof AuthenticatedAdminSubscriptionsRoute
@@ -455,6 +465,7 @@ export interface FileRouteTypes {
     | '/admin/bug-reports'
     | '/admin/content-reports'
     | '/admin/economie'
+    | '/admin/engagement'
     | '/admin/ia'
     | '/admin/parcours-interest'
     | '/admin/subscriptions'
@@ -499,6 +510,7 @@ export interface FileRouteTypes {
     | '/admin/bug-reports'
     | '/admin/content-reports'
     | '/admin/economie'
+    | '/admin/engagement'
     | '/admin/ia'
     | '/admin/parcours-interest'
     | '/admin/subscriptions'
@@ -545,6 +557,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/bug-reports'
     | '/_authenticated/admin/content-reports'
     | '/_authenticated/admin/economie'
+    | '/_authenticated/admin/engagement'
     | '/_authenticated/admin/ia'
     | '/_authenticated/admin/parcours-interest'
     | '/_authenticated/admin/subscriptions'
@@ -782,6 +795,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminEconomieRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/admin/engagement': {
+      id: '/_authenticated/admin/engagement'
+      path: '/admin/engagement'
+      fullPath: '/admin/engagement'
+      preLoaderRoute: typeof AuthenticatedAdminEngagementRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/admin/ia': {
       id: '/_authenticated/admin/ia'
       path: '/admin/ia'
@@ -913,6 +933,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAdminBugReportsRoute: typeof AuthenticatedAdminBugReportsRoute
   AuthenticatedAdminContentReportsRoute: typeof AuthenticatedAdminContentReportsRoute
   AuthenticatedAdminEconomieRoute: typeof AuthenticatedAdminEconomieRoute
+  AuthenticatedAdminEngagementRoute: typeof AuthenticatedAdminEngagementRoute
   AuthenticatedAdminIaRoute: typeof AuthenticatedAdminIaRoute
   AuthenticatedAdminParcoursInterestRoute: typeof AuthenticatedAdminParcoursInterestRoute
   AuthenticatedAdminSubscriptionsRoute: typeof AuthenticatedAdminSubscriptionsRoute
@@ -942,6 +963,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminBugReportsRoute: AuthenticatedAdminBugReportsRoute,
   AuthenticatedAdminContentReportsRoute: AuthenticatedAdminContentReportsRoute,
   AuthenticatedAdminEconomieRoute: AuthenticatedAdminEconomieRoute,
+  AuthenticatedAdminEngagementRoute: AuthenticatedAdminEngagementRoute,
   AuthenticatedAdminIaRoute: AuthenticatedAdminIaRoute,
   AuthenticatedAdminParcoursInterestRoute:
     AuthenticatedAdminParcoursInterestRoute,

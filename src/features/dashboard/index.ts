@@ -17,6 +17,13 @@ export {
 export { getEconomyOverview, type EconomyOverview } from "./economy.server";
 export { EconomyAdmin } from "./components/economy-admin";
 export {
+  getEngagementOverview,
+  type EngagementOverview,
+  type EngagementCohort,
+  type EngagementCurrWeek,
+} from "./engagement.server";
+export { EngagementAdmin } from "./components/engagement-admin";
+export {
   getMyParcoursInterests,
   getParcoursInterestCounts,
   toggleParcoursInterest,
