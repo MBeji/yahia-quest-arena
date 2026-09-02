@@ -122,7 +122,7 @@ export const fr: TranslationKeys = {
     consecutiveDays: "jours consécutifs",
     quoteLabel: "Parole du jour",
     streakLostTitle: "Série perdue !",
-    streakLostDesc: "Récupère ta série pour 15 pièces (tu avais {n} jours)",
+    streakLostDesc: "Récupère ta série pour {cost} pièces (tu avais {n} jours)",
     streakRecover: "🔥 Récupérer",
     retryTitle: "Ton dernier exercice",
     // Priorité 1 de R-31 : une révision espacée est échue. Elle passe avant tout le reste.

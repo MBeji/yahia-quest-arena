@@ -28,6 +28,8 @@ import { TutorPracticeEntry } from "@/features/tutor/components/tutor-practice-e
 import { TutorDigestCard } from "@/features/tutor/components/tutor-digest";
 import { daysAwayFrom } from "@/features/tutor/coaching";
 import { appLocalDate } from "@/shared/lib/app-day";
+import { STREAK_RECOVERY_COST } from "@/shared/constants/gamification";
+import { streakRecoveryBlock } from "@/shared/lib/streak-recovery";
 import { DailyReviewPanel, recoverStreak } from "@/features/progression";
 import { hubRouteForRole, shouldLeaveDashboard } from "@/features/auth";
 import { EnablePushCard } from "@/features/notifications";
@@ -356,8 +358,12 @@ function Dashboard() {
           />
         </Suspense>
 
-        {/* STREAK RECOVERY BANNER */}
-        {profile.current_streak === 0 && (profile.longest_streak ?? 0) > 0 && (
+        {/* STREAK RECOVERY BANNER — la condition est celle du SERVEUR, lue au
+            même endroit (`streak-recovery.ts`). Elle testait auparavant
+            `current_streak === 0`, une valeur qu'`award_xp` n'écrit jamais : la
+            bannière ne s'affichait donc JAMAIS, et le rachat de série était un
+            chemin complet et muré. */}
+        {streakRecoveryBlock(profile) === null && (
           <motion.div
             {...entrance(prefersReduced, "rise", 0.12)}
             className="mt-4 flex flex-col gap-3 rounded-2xl border border-[color:var(--flame)]/40 bg-[color:var(--flame)]/8 p-4 backdrop-blur-md sm:flex-row sm:items-center sm:justify-between sm:gap-4"
@@ -369,13 +375,18 @@ function Dashboard() {
               <div>
                 <div className="font-display text-sm font-bold">{t.dashboard.streakLostTitle}</div>
                 <div className="text-xs text-muted-foreground">
-                  {t.dashboard.streakLostDesc.replace("{n}", String(profile.longest_streak))}
+                  {t.dashboard.streakLostDesc
+                    .replace("{n}", String(profile.longest_streak))
+                    .replace("{cost}", String(STREAK_RECOVERY_COST))}
                 </div>
               </div>
             </div>
             <button
               type="button"
-              disabled={streakRecoveryMutation.isPending || (profile.yahia_coins ?? 0) < 15}
+              disabled={
+                streakRecoveryMutation.isPending ||
+                (profile.yahia_coins ?? 0) < STREAK_RECOVERY_COST
+              }
               onClick={() => streakRecoveryMutation.mutate()}
               className="shrink-0 rounded-lg bg-[color:var(--flame)] px-4 py-2 text-sm font-bold text-primary-foreground transition hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
             >

@@ -121,7 +121,7 @@ export const en: TranslationKeys = {
     consecutiveDays: "consecutive days",
     quoteLabel: "Quote of the day",
     streakLostTitle: "Streak lost!",
-    streakLostDesc: "Recover your streak for 15 Coins (you had {n} days)",
+    streakLostDesc: "Recover your streak for {cost} Coins (you had {n} days)",
     streakRecover: "🔥 Recover",
     retryTitle: "Your last exercise",
     reviewOverline: "To review",

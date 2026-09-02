@@ -11,8 +11,11 @@ const run = (over = {}) => ({
   weeks: Array.from({ length: 8 }),
   maxXpInADay: 200,
   coinsEarned: 100,
-  shieldCoverableDays: 2,
-  missedDays: 30,
+  recoveryCoverableDays: 2,
+  // `daysMissed`, et non `missedDays` : c'est la clé que lit `assertions.mjs`.
+  // Avec la faute, G-4 mesurait `undefined` jours et rendait le message
+  // « 0 % des undefined jours manqués » — vert, et sans objet.
+  daysMissed: 30,
   ...over,
 });
 
