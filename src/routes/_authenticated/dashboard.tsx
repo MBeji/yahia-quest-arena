@@ -16,7 +16,8 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
-import { getDashboard, getSprint2Dashboard } from "@/features/dashboard";
+import { getDailyRing, getDashboard, getSprint2Dashboard } from "@/features/dashboard";
+import type { DashboardGoalAction } from "@/features/dashboard";
 // Import direct, même raison que sur le lecteur de chapitre : le barrel de
 // la feature IA tirerait la console parent et la Forge dans ce chunk.
 import { ForgeEntry } from "@/features/ai/components/forge-entry";
@@ -90,11 +91,14 @@ function Dashboard() {
   const navigate = useNavigate();
   const fetchDashboard = useServerFn(getDashboard);
   const fetchSprint2 = useServerFn(getSprint2Dashboard);
+  const fetchDailyRing = useServerFn(getDailyRing);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["dashboard"],
     queryFn: () => fetchDashboard(),
   });
   const { data: sprint2 } = useQuery({ queryKey: ["sprint2"], queryFn: () => fetchSprint2() });
+  // é31 lot 3 — l'XP réellement gagné aujourd'hui, sur l'objectif choisi (R-12).
+  const { data: ring } = useQuery({ queryKey: ["daily-ring"], queryFn: () => fetchDailyRing() });
 
   // Light 3D gold ambient — only after mount, never on mobile or reduced-motion
   // (the CSS gold ambient from the shell remains as the fallback).
@@ -177,9 +181,15 @@ function Dashboard() {
       : null;
   const continueSubject = subjects.find((s) => s.id === actionSubjectId) ?? undefined;
 
-  function runQuestAction(action: "retry" | "subject" | "dungeon") {
+  function runQuestAction(action: DashboardGoalAction) {
     if (action === "dungeon") {
       navigate({ to: "/dungeon" });
+      return;
+    }
+
+    // é31 lot 3 — la mission « joue un duel » mène à l'arène, pas à une matière.
+    if (action === "duel") {
+      navigate({ to: "/duel" });
       return;
     }
 
@@ -278,10 +288,12 @@ function Dashboard() {
         <DashboardFocus
           nextAction={data.nextAction}
           continueSubject={continueSubject}
-          xpToday={(sprint2?.dailyObjectives ?? [])
-            .filter((o) => o.status === "completed")
-            .reduce((sum, o) => sum + (o.xp_reward ?? 0), 0)}
-          dailyGoal={100}
+          /* é31 lot 3 (R-12) — l'anneau montrait la somme des `xp_reward` des
+             objectifs COMPLÉTÉS sur 100 en dur : 0 % ou 50 %, jamais l'XP réel.
+             Il lit désormais le compteur du jour tenu par `award_xp` (quête,
+             donjon, duel et objectifs y passent tous) sur l'objectif CHOISI. */
+          xpToday={ring?.xpToday ?? 0}
+          dailyGoal={ring?.goal ?? 100}
           streak={profile.current_streak}
         />
 

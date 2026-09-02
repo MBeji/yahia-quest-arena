@@ -127,6 +127,12 @@ export type TranslationKeys = {
     dailyGoalLabel: string;
     dailyGoalReached: string;
     dailyGoalRemaining: string;
+    dailyGoalChoose: string;
+    dailyGoalChooseHint: string;
+    dailyGoalAlreadySet: string;
+    dailyGoalSaved: string;
+    dailyMissionsDone: string;
+    dailyMissionsDoneDesc: string;
     consecutiveDays: string;
     quoteLabel: string;
     streakLostTitle: string;

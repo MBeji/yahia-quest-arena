@@ -119,6 +119,16 @@ export const fr: TranslationKeys = {
     dailyGoalLabel: "Objectif du jour",
     dailyGoalReached: "✨ Objectif atteint !",
     dailyGoalRemaining: "XP restants aujourd'hui",
+    // é31 lot 3 — l'objectif du jour se CHOISIT (R-12), et la journée se FERME (R-6).
+    dailyGoalChoose: "Ton objectif du jour",
+    dailyGoalChooseHint:
+      "L'anneau du tableau de bord suit l'XP que tu gagnes vraiment. Modifiable une fois par jour.",
+    dailyGoalAlreadySet:
+      "Objectif déjà changé aujourd'hui — tu pourras le régler à nouveau demain.",
+    dailyGoalSaved: "Objectif du jour mis à jour.",
+    dailyMissionsDone: "Objectif du jour atteint — à demain !",
+    dailyMissionsDoneDesc:
+      "Tes missions du jour sont finies. Ce que tu feras de plus est du bonus.",
     consecutiveDays: "jours consécutifs",
     quoteLabel: "Parole du jour",
     streakLostTitle: "Série perdue !",
@@ -167,6 +177,17 @@ export const fr: TranslationKeys = {
     dailyQuests: "Quêtes Quotidiennes",
     weeklyQuests: "Quêtes Hebdomadaires",
     objectiveTypes: {
+      // é31 lot 3 — les huit types du pool de missions (R-10), plus le bonus de
+      // complétion qui ferme la journée (R-6).
+      exercises_n: "Termine 3 exercices",
+      score_90: "Réussis un exercice à 90 % ou plus",
+      review_due: "Traite une révision due",
+      subject_focus: "2 exercices de ton parcours",
+      recall_one: "Fais un rappel actif",
+      dungeon_floors: "Franchis 5 étages du donjon",
+      duel_play: "Joue un duel",
+      chapter_step: "Avance dans un nouveau chapitre",
+      daily_complete: "Objectif du jour atteint",
       "3_exercises": "Complète 3 exercices",
       "15_min_study": "15 minutes d'étude",
       perfect_score: "Réussis un sans-faute",

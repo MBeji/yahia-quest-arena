@@ -60,6 +60,7 @@ import { formatStudentAllianceCode } from "@/features/parent-report";
 import { useI18n, useT } from "@/lib/i18n";
 import { parcoursName } from "@/shared/lib/parcours-locale";
 import { supabase } from "@/shared/integrations/supabase/client";
+import { DailyGoalChoice } from "@/features/dashboard/components/daily-goal-choice";
 
 /**
  * Paramétrage — le pôle unique des réglages.
@@ -457,6 +458,9 @@ function ParametragePage() {
         <Section Icon={Monitor} title={t.settings.displayTitle} desc={t.settings.displayDesc}>
           <ThemeChoice />
           <LocaleChoice />
+          {/* é31 lot 3 (R-12) — l'objectif du jour se choisit ici : c'est un
+              réglage de compte, et l'anneau du tableau de bord le suit. */}
+          <DailyGoalChoice />
         </Section>
 
         <Section Icon={Bell} title={t.settings.soundTitle} desc={t.settings.soundDesc}>

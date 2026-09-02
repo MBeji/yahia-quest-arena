@@ -70,8 +70,7 @@ export const PRODUCT_EVENT_CATALOGUE: readonly ProductEventEntry[] = [
   {
     name: "daily_missions_completed",
     fires: "Tableau de bord, quand toutes les missions du jour sont finies",
-    live: false,
-    note: "câblé au lot 3 (les 3 missions du jour)",
+    live: true,
   },
   { name: "duel_finished", fires: "Fin d'un duel (écran de résultat)", live: true },
   {

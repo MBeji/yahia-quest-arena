@@ -15,6 +15,12 @@ export {
   getSubjectLeaderboard,
 } from "./dashboard.server";
 export { getEconomyOverview, type EconomyOverview } from "./economy.server";
+export {
+  setDailyXpGoal,
+  getDailyRing,
+  DAILY_XP_GOALS,
+  DAILY_GOAL_ALREADY_SET,
+} from "./daily-goal.server";
 export { EconomyAdmin } from "./components/economy-admin";
 export {
   getEngagementOverview,
@@ -35,6 +41,7 @@ export {
   resolveDailyAction,
   resolveWeeklyAction,
 } from "./dashboard-helpers";
+export type { DashboardGoalAction } from "./dashboard-helpers";
 export { ParcoursInterestButton } from "./components/parcours-interest-button";
 export { ParcoursInterestAdmin } from "./components/parcours-interest-admin";
 export { useParcoursInterest, type ParcoursInterestState } from "./use-parcours-interest";
