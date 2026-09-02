@@ -2,7 +2,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { STREAK_RECOVERY_COST } from "@/shared/constants/gamification";
-import { getTodayUtc, getYesterdayUtc } from "@/shared/lib/dates";
+import { getTodayUtc } from "@/shared/lib/dates";
+import { streakRecoveryBlock } from "@/shared/lib/streak-recovery";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { isRateLimited } from "@/shared/lib/rate-limit";
 import { logger } from "@/shared/lib/logger";
@@ -44,17 +45,14 @@ export const recoverStreak = createServerFn({ method: "POST" })
       failWithClientError("recoverStreak: failed to load profile", profileErr, profileErr.message);
     }
 
-    // A streak counted today or yesterday is still alive — nothing to recover yet.
-    // award_xp only resets current_streak to 1 on the NEXT study after a missed day,
-    // so the reachable signal of a broken streak is a stale last_active_date, NOT
-    // current_streak === 0 (which award_xp never persists — that was the dead gate).
-    const lastActive = profile.last_active_date;
-    if (lastActive != null && lastActive >= getYesterdayUtc()) {
-      throw new Error("Ton streak est actif ! Pas besoin de le récupérer.");
-    }
-
-    if ((profile.longest_streak ?? 0) === 0) {
-      throw new Error("Tu n'as pas encore eu de streak à récupérer.");
+    // La condition vit dans `streak-recovery.ts` et NULLE PART ailleurs : le
+    // client la lit aussi, et c'est leur divergence qui avait muré ce chemin.
+    // Les messages, eux, restent ici — le serveur seul parle à l'élève.
+    switch (streakRecoveryBlock(profile)) {
+      case "streak-actif":
+        throw new Error("Ton streak est actif ! Pas besoin de le récupérer.");
+      case "aucun-streak":
+        throw new Error("Tu n'as pas encore eu de streak à récupérer.");
     }
 
     if ((profile.yahia_coins ?? 0) < STREAK_RECOVERY_COST) {

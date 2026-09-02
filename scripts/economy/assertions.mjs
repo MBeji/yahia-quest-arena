@@ -51,7 +51,7 @@ export const GUARDRAILS = {
   },
   G2: { maxXpPerDay: 1000 },
   G3: { minSinkRatio: 0.6 },
-  G4: { maxShieldCoverage: 0.2 },
+  G4: { maxRecoveryCoverage: 0.2 },
 };
 
 /**
@@ -109,7 +109,12 @@ export function checkGuardrails(runs) {
   // ---- G-3 : la boutique draine ce que le jeu produit ----
   // Le simulateur ne fait pas acheter : il mesure ce que le persona POURRAIT
   // drainer au prix courant. Un ratio bas dit « rien à acheter d'assez cher ».
-  const affordableSinks = moyen.shieldCoverableDays * STREAK_RECOVERY_COST;
+  //
+  // ⚠️ PORTÉE RÉELLE, à ne pas surestimer : le seul puits modélisé ici est le
+  // RACHAT DE SÉRIE, alors que `shop_items` en seede treize, de 30 à 500 coins.
+  // G-3 ne dit donc rien de la boutique — il dit ce qu'un élève pourrait
+  // racheter. Élargir son modèle est un arbitrage à part, pas un nettoyage.
+  const affordableSinks = moyen.recoveryCoverableDays * STREAK_RECOVERY_COST;
   const ratio = moyen.coinsEarned > 0 ? affordableSinks / moyen.coinsEarned : null;
   const ok3 = ratio !== null && ratio >= GUARDRAILS.G3.minSinkRatio;
   out.push({
@@ -123,15 +128,26 @@ export function checkGuardrails(runs) {
           : `les puits n'absorbent que ${Math.round(ratio * 100)} % des ${moyen.coinsEarned} coins gagnés : ils s'accumulent, et une monnaie qu'on ne dépense pas cesse d'être une récompense.`,
   });
 
-  // ---- G-4 : le shield ne rend pas la série triviale ----
-  const coverage = moyen.daysMissed > 0 ? moyen.shieldCoverableDays / moyen.daysMissed : 0;
-  const ok4 = coverage <= GUARDRAILS.G4.maxShieldCoverage;
+  // ---- G-4 : le RACHAT DE SÉRIE ne rend pas la série triviale ----
+  // Ce garde-fou a longtemps dit « shield » en mesurant le rachat. La confusion
+  // n'est pas cosmétique : elle a envoyé une enquête chercher le prix d'un item
+  // qui en coûte 250 (`bouclier_flamme`) alors que le nombre mesuré ici est
+  // `STREAK_RECOVERY_COST`.
+  const coverage = moyen.daysMissed > 0 ? moyen.recoveryCoverableDays / moyen.daysMissed : 0;
+  const ok4 = coverage <= GUARDRAILS.G4.maxRecoveryCoverage;
+  // Les deux bornes se calculent sur le MÊME arrondi que la mesure. `coverage`
+  // vaut `floor(C / k) / D` : le numérateur est entier, donc la condition
+  // `coverage <= M` équivaut à `floor(C / k) <= floor(D * M)`. Raisonner en
+  // continu donne des nombres faux — 40 au lieu de 37 sur les valeurs du jour.
+  const maxJoursRachetables = Math.floor(moyen.daysMissed * GUARDRAILS.G4.maxRecoveryCoverage);
+  const rendementMax = (maxJoursRachetables + 1) * STREAK_RECOVERY_COST - 1;
+  const prixMin = Math.floor(moyen.coinsEarned / (maxJoursRachetables + 1)) + 1;
   out.push({
     id: "G-4",
     ok: ok4,
     message: ok4
-      ? `les shields couvriraient ${Math.round(coverage * 100)} % des ${moyen.daysMissed} jours manqués (plafond ${Math.round(GUARDRAILS.G4.maxShieldCoverage * 100)} %)`
-      : `les shields couvriraient ${Math.round(coverage * 100)} % des ${moyen.daysMissed} jours manqués : la série s'achète, donc elle ne mesure plus l'assiduité.`,
+      ? `le rachat de série couvrirait ${Math.round(coverage * 100)} % des ${moyen.daysMissed} jours manqués (plafond ${Math.round(GUARDRAILS.G4.maxRecoveryCoverage * 100)} %) — marge : tient tant que le rendement reste ≤ ${rendementMax} coins, mesuré ${moyen.coinsEarned}`
+      : `le rachat de série couvrirait ${Math.round(coverage * 100)} % des ${moyen.daysMissed} jours manqués : la série s'achète, donc elle ne mesure plus l'assiduité. À ${STREAK_RECOVERY_COST} coins pièce il en faudrait au moins ${prixMin} — mais un prix posé au bord du seuil n'y tient que jusqu'au prochain exercice ajouté au corpus.`,
   });
 
   return out;
