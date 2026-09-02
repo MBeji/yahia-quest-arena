@@ -750,6 +750,8 @@ export type TranslationKeys = {
     celebrateSoonDesc: string;
     celebrateExtrasCta: string;
     celebrateDashboardCta: string;
+    welcomeCoins: string;
+    welcomeFirstQuestCta: string;
   };
   // School cycle group labels (programme scolaire)
   cycles: {

@@ -190,7 +190,8 @@ export const enPublic: TranslationKeys["public"] = {
     restart: "Start over",
     questCta: "Replay in quest mode to earn XP",
     continueCta: "Continue to the first exercise",
-    inviteDesc: "Create an account to earn XP, save your progress and climb the leaderboard.",
+    inviteDesc:
+      "Without an account, your XP, streak and badges are not kept. Create one to keep your next XP, your streak and your progress.",
     inviteCta: "Create my account",
   },
   print: {

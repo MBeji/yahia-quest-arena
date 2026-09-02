@@ -967,6 +967,8 @@ export const en: TranslationKeys = {
       "{parcours} is under construction. Meanwhile, explore the extras — and your vote moves it up.",
     celebrateExtrasCta: "Explore the extras",
     celebrateDashboardCta: "Go to my dashboard",
+    welcomeCoins: "+{coins} welcome coins",
+    welcomeFirstQuestCta: "Start my first quest",
   },
   cycles: {
     primaire: "Primary",
