@@ -15,7 +15,9 @@ import { PageShell } from "@/components/ui/page-shell";
  * 2026-07-31 : `analytics.ts`, `product-analytics.ts`, `monitoring.ts`,
  * `video-embed.tsx`, `csp.ts` ; révisé le 2026-08-19, quand la suppression de
  * compte a cessé d'être une promesse pour devenir un bouton — `deleteAccount`
- * et `/parametrage`, section « Zone sensible ») — pas d'un modèle générique.
+ * et `/parametrage`, section « Zone sensible » ; révisé le 2026-09-02, quand
+ * l'ACCÈS a suivi le même chemin — `exportUserData` et la section « Mes
+ * données ») — pas d'un modèle générique.
  * Toute nouvelle destination de données doit être ajoutée ici DANS LA MÊME PR
  * que le code qui l'introduit, sinon cette page devient un mensonge.
  *
@@ -56,7 +58,7 @@ function PrivacyPage() {
       <div className="mx-auto max-w-3xl px-4 pb-16 text-start" dir="ltr">
         <h1 className="font-display text-3xl font-bold">Politique de confidentialité</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Dernière mise à jour : 19 août 2026. Cette page décrit ce que Na9ra Nal3ab collecte,
+          Dernière mise à jour : 2 septembre 2026. Cette page décrit ce que Na9ra Nal3ab collecte,
           pourquoi, et avec qui ces données sont partagées.
         </p>
 
@@ -237,8 +239,18 @@ function PrivacyPage() {
             peut être restauré ensuite.
           </p>
           <p>
-            Pour l'accès et la rectification, ou si vous ne pouvez plus vous connecter au compte,
-            écrivez à{" "}
+            <strong>L'accès ne se demande pas non plus</strong> : depuis un compte connecté, page{" "}
+            <strong>Paramétrage</strong>, section « Mes données », un bouton télécharge un fichier
+            JSON contenant tout ce que la base sait du compte — profil, progression, tentatives,
+            badges, duels, liens familiaux, signalements écrits, ainsi que l'adresse e-mail et les
+            dates de connexion. Le fichier indique lui-même ce qu'il ne contient pas et pourquoi.
+            Deux exceptions, toutes deux des secrets et non des informations sur la personne : la
+            clé d'API que la famille aurait enregistrée pour le mode IA, et les clés de chiffrement
+            des notifications de chaque appareil — elles ne servent qu'à agir à votre place, et un
+            fichier d'export se partage.
+          </p>
+          <p>
+            Pour la rectification, ou si vous ne pouvez plus vous connecter au compte, écrivez à{" "}
             <a
               className="underline underline-offset-2 hover:text-foreground"
               href="mailto:contact@na9ranal3ab.tn"

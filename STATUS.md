@@ -214,15 +214,19 @@ il vit avec le corpus.
 **Ce qui bloque encore la Porte 1** — **deux choses au 2026-08-24, et une seule est du code.**
 La liste en portait trois : la troisième est tombée sans que personne ne la raye.
 
-1. **GAP-024, aux deux tiers** — pages légales livrées (#701) et **suppression de compte** livrée
-   le 2026-08-19 (#791 : effacement dur par `auth.admin.deleteUser`, confirmé par re-saisie de
-   l'adresse, section « Zone sensible » de `/parametrage`). **Reste `export_user_data`** —
-   l'export / portabilité, **zéro occurrence** dans `src/` et `supabase/migrations/`, re-vérifié
-   le 2026-08-24. ⚠️ **Ce reliquat-là EST du code** : c'est le **seul bloqueur légal qu'un agent
-   peut lever**, et le classer « humain » l'a gelé une semaine. C'est le rang 1 du §8.
-   Rappel du **double** piège : une PR qui **cite** un GAP dans son titre ne le clôt pas — et un
-   GAP qu'**aucune PR ne cite** peut avoir été livré quand même (#791 s'intitule « un compte peut
-   enfin être supprimé », sans un mot de GAP-024).
+1. ~~**GAP-024**~~ — **son volet CODE est complet depuis le 2026-09-02.** Pages légales (#701),
+   **suppression de compte** (#791 : effacement dur par `auth.admin.deleteUser`, confirmé par
+   re-saisie de l'adresse, section « Zone sensible » de `/parametrage`) et enfin
+   **`export_user_data`** — l'accès / portabilité, qui était à **zéro occurrence** dans `src/` et
+   `supabase/migrations/` encore le matin même. Une RPC `SECURITY DEFINER` sans aucun paramètre
+   (le sujet est `auth.uid()`, jamais une entrée) qui **dérive du catalogue** les tables où
+   l'utilisateur existe : une table créée demain entre dans l'export sans que personne n'y pense,
+   et le pgTAP 85 **échoue** tant qu'une colonne pointant vers `auth.users` reste non classée.
+   Section « Mes données » de `/parametrage`.
+   ⚠️ Ce qui reste de GAP-024 n'est **plus du code** : l'identité de l'éditeur pour des mentions
+   légales complètes. Rappel du **double** piège : une PR qui **cite** un GAP dans son titre ne le
+   clôt pas — et un GAP qu'**aucune PR ne cite** peut avoir été livré quand même (#791 s'intitule
+   « un compte peut enfin être supprimé », sans un mot de GAP-024).
 2. **GAP-003** (conformité mineurs / INPDP) — décisions humaines, non codables, **non vérifiables
    depuis un dépôt**. é29 §3.8 y ajoute une pièce : un registre de traitement INPDP pour le mode IA.
 
@@ -416,16 +420,17 @@ leur valeur — c'est la seule décision que le calendrier prend à notre place.
 La scorecard (§1bis) dit depuis le 2026-08-13 que le projet bute sur **zéro canal d'acquisition**.
 Le chemin qui l'ouvre tient en quatre nœuds — et **son premier est du code sans aucun prérequis** :
 
-`export_user_data` **→** é28 D-5 levée **→** é08 volet enseignant **→** un canal d'acquisition.
+~~`export_user_data`~~ **→** é28 D-5 levée **→** é08 volet enseignant **→** un canal d'acquisition.
 
-1. **`export_user_data`** — le **seul verrou légal qu'un agent peut lever**. Zéro occurrence de
-   `export_user_data` / `exportUserData` / « portabilité » dans `src/` et `supabase/migrations/`,
-   re-vérifié le 2026-08-24. Les deux autres tiers de GAP-024 sont livrés : pages légales (#701)
-   et **suppression de compte** (#791). ⚠️ **Il n'avait de ligne nulle part** — ni dans la file
-   produit, ni dans les fondations : il vivait comme « reliquat » d'une entrée F5, et é08 dormait
-   en brouillon. **Tout le reste de la file PRODUIT raffine un produit que personne n'a vu.**
-2. **Les 9 crons rouges** (#833, privé#229) — voir §6.
-3. **GAP-003 / INPDP** — humain, non codable. L'autre moitié de D-5.
+1. ~~**`export_user_data`**~~ — **livré le 2026-09-02.** Le premier nœud du chemin est tombé, et
+   il est tombé pour la raison que ce §8 nommait : c'était le **seul verrou légal qu'un agent
+   pouvait lever**, et il n'avait de ligne nulle part — ni dans la file produit, ni dans les
+   fondations. **D-5 n'attend donc plus que GAP-003**, qui est humain (ligne 3).
+2. ~~**Les 9 crons rouges**~~ (#833, privé#229) — **les deux issues sont closes**, re-constaté le
+   2026-09-02.
+3. **GAP-003 / INPDP** — humain, non codable. **Désormais la seule moitié manquante de D-5** :
+   la part Claude du dossier est livrée (`docs/inventaire-traitements-inpdp.md`), le dépôt de la
+   déclaration ne l'est pas.
 
 ### 🔨 Rang 2 et au-delà
 

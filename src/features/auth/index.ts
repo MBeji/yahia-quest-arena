@@ -12,6 +12,7 @@ export {
   setCurrentParcours,
   updateDisplayName,
   deleteAccount,
+  exportUserData,
 } from "./auth.server";
 export { displayNameSchema, isValidDisplayName, DISPLAY_NAME_MAX_LENGTH } from "./display-name";
 export {
@@ -21,3 +22,5 @@ export {
   normalizeAccountEmail,
 } from "./account-deletion";
 export type { AccountDeleteErrorCode } from "./account-deletion";
+export { countExportedRows, userDataExportFileName } from "./data-export";
+export type { UserDataExport, UserDataExportNote } from "./data-export";
