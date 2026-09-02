@@ -623,6 +623,14 @@ export type TranslationKeys = {
     helpDesc: string;
     helpTerms: string;
     helpPrivacy: string;
+    exportTitle: string;
+    exportDesc: string;
+    exportRowLabel: string;
+    exportAction: string;
+    exportBusy: string;
+    exportDone: string;
+    exportEmpty: string;
+    exportError: string;
     dangerTitle: string;
     dangerDesc: string;
     deleteAccount: string;

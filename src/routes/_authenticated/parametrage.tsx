@@ -8,6 +8,7 @@ import {
   Check,
   ChevronRight,
   Copy,
+  Download,
   KeyRound,
   LogOut,
   Map,
@@ -39,11 +40,14 @@ import { ThemeChoice, LocaleChoice, SoundToggles } from "@/components/ui/setting
 import {
   accountDeleteErrorLabel,
   confirmsAccountEmail,
+  countExportedRows,
   deleteAccount,
   DISPLAY_NAME_MAX_LENGTH,
+  exportUserData,
   isValidDisplayName,
   updateDisplayName,
   useAuth,
+  userDataExportFileName,
   useMyRole,
 } from "@/features/auth";
 import { getParcours } from "@/features/dashboard";
@@ -261,7 +265,9 @@ function ParametragePage() {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [typedEmail, setTypedEmail] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const runDeleteAccount = useServerFn(deleteAccount);
+  const runExportUserData = useServerFn(exportUserData);
 
   // L'état du push sur CET appareil, lu une fois et passé au réglage du rappel
   // du tuteur (étude 11 US-7) : `tutor` n'importe pas `notifications`, c'est la
@@ -308,6 +314,39 @@ function ParametragePage() {
       toast.error(t.settings.passwordError);
     } finally {
       setSendingReset(false);
+    }
+  }
+
+  // Le téléchargement se fait ICI, et nulle part ailleurs : le document ne
+  // transite par aucun stockage, aucune URL partageable, aucun e-mail. Il naît
+  // dans la réponse à ce clic, devient un fichier local, et l'URL objet est
+  // révoquée dans la foulée — un dossier complet qui traînerait derrière une URL
+  // devinable serait une fuite, pas un droit.
+  async function downloadMyData() {
+    if (exporting) return;
+    setExporting(true);
+    try {
+      const { document: doc } = await runExportUserData();
+      const url = URL.createObjectURL(
+        new Blob([JSON.stringify(doc, null, 2)], { type: "application/json" }),
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = userDataExportFileName(doc.generated_at);
+      link.click();
+      URL.revokeObjectURL(url);
+
+      // Un « c'est fait » nu laisserait l'utilisateur devant un fichier dont il
+      // ne sait pas s'il est plein. Un export vide est un cas RÉEL — un compte
+      // créé la veille — et il vaut mieux l'annoncer que le laisser découvrir.
+      const rows = countExportedRows(doc);
+      toast.success(
+        rows === 0 ? t.settings.exportEmpty : t.settings.exportDone.replace("{rows}", String(rows)),
+      );
+    } catch {
+      toast.error(t.settings.exportError);
+    } finally {
+      setExporting(false);
     }
   }
 
@@ -459,6 +498,27 @@ function ParametragePage() {
               <Shield className="h-3.5 w-3.5" />
               {t.settings.helpPrivacy}
             </Link>
+          </Row>
+        </Section>
+
+        {/* L'autre moitié des « droits des personnes » de GAP-024 : l'accès et la
+            portabilité. Elle précède la zone sensible et n'en porte pas la
+            couleur — récupérer ses données ne coûte rien, les effacer ne se
+            rattrape pas, et présenter les deux gestes du même ton les rendrait
+            également effrayants. La page confidentialité renvoyait ici vers une
+            adresse e-mail ; c'est là que le droit devient un clic. */}
+        <Section Icon={Download} title={t.settings.exportTitle} desc={t.settings.exportDesc}>
+          <Row label={t.settings.exportRowLabel}>
+            <button
+              type="button"
+              onClick={() => void downloadMyData()}
+              disabled={exporting}
+              data-testid="settings-export-data"
+              className={ACTION_CLASS}
+            >
+              <Download className="h-3.5 w-3.5" />
+              {exporting ? t.settings.exportBusy : t.settings.exportAction}
+            </button>
           </Row>
         </Section>
 

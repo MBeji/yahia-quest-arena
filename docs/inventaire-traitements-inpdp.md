@@ -181,11 +181,28 @@ Deux exceptions, délibérées et documentées dans la migration :
 - **un signalement survit à son auteur** : une clé de réponse fausse reste fausse
   quand le témoin s'en va. Le lien vers l'auteur est rompu.
 
+**L'ACCÈS aussi existe, et il est net** (livré le 2026-09-02) : `export_user_data()`
+rend en un document JSON tout ce que la base sait de l'appelant — `auth.users`
+compris, sans quoi l'adresse e-mail manquerait (§3.1). La fonction **dérive sa
+liste de tables de `pg_constraint`**, pas d'une énumération écrite à la main :
+une table créée demain y entre seule, et le §3 de cet inventaire n'est plus la
+seule chose à tenir à jour pour que le droit reste entier. Deux réserves,
+inscrites dans le document lui-même : les colonnes d'**attribution**
+(`reviewed_by`, `resolved_by`, `granted_by`, `awarded_by`) ne font pas d'une
+ligne la donnée de l'administrateur qui l'a traitée — sans quoi un export
+d'admin sortirait le nom et l'adresse en clair des demandeurs de
+`beta_access_requests` — et **quatre colonnes sont des secrets, pas des données**
+(`ai_credentials.secret_enc` et `key_fingerprint`, `push_subscriptions.auth` et
+`p256dh`) : elles sortent masquées, un fichier d'export ayant vocation à être
+partagé. Le contrat est tenu en pgTAP (`supabase/tests/85_export_user_data.test.sql`),
+qui **échoue** tant qu'une colonne pointant vers `auth.users` reste non classée.
+
 ---
 
 ## 6. Qui accède à quoi
 
-- **L'élève** : ses propres données, par RLS.
+- **L'élève** : ses propres données, par RLS — et, depuis le 2026-09-02, en un
+  fichier, par `export_user_data()` (Paramétrage → « Mes données »).
 - **Le parent lié** : le suivi de l'enfant auquel `parent_student_links` le relie.
 - **L'administrateur** : consoles de signalements, gardé par `is_admin()`.
 - **La clé `service_role`** : contourne RLS. Elle vit **uniquement** dans les
@@ -214,6 +231,9 @@ Ces points ne se constatent pas dans le code. Ils se décident.
    une fonctionnalité héritée d'une phase révolue. Si elle ne sert plus, la
    supprimer retire un traitement entier du registre — **c'est du code, donc à
    moi**, mais la décision de fermer la fonctionnalité est à toi.
+   ⚠️ Un motif de plus depuis le 2026-09-02 : c'est **la seule table** qui ait
+   obligé l'export à distinguer « la ligne est à moi » de « j'ai agi dessus ».
+   Tant qu'elle vit, cette distinction doit être maintenue exacte.
 6. **Avant la première clé d'IA** : la politique de confidentialité devra nommer
    le fournisseur, et le registre devra porter la conservation des conversations.
    Le pilote Q-9 ne peut pas démarrer sans ces deux lignes.
