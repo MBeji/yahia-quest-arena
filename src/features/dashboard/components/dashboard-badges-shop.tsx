@@ -1,19 +1,9 @@
 import { Loader2, Shield, ShoppingBag } from "lucide-react";
-import { EmptyState } from "@/components/ui/empty-state";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { avatarEmojiForSlug } from "@/shared/lib/avatar";
 import { useI18n } from "@/lib/i18n";
-import { BadgeMedal } from "@/components/game/badge-medal";
-
-type Badge = {
-  code: string;
-  name: string;
-  rarity: string;
-  /** Le glyphe semé en base — déjà servi par `getDashboard`, jamais affiché. */
-  iconName?: string | null;
-  awardedAt: string;
-  awardedReason: string | null;
-};
+import { BadgeCollection } from "@/features/dashboard/components/badge-collection";
+import type { BadgeCollectionEntry } from "@/shared/types/gamification";
 
 type ShopItem = {
   code: string;
@@ -31,7 +21,8 @@ type ShopItem = {
 };
 
 type DashboardBadgesShopProps = {
-  badges: Badge[];
+  /** é31 lot 2 — la collection ENTIÈRE (obtenus + verrouillés), plus la seule vitrine. */
+  collection: BadgeCollectionEntry[];
   shopItems: ShopItem[];
   availableCoins: number;
   isPurchasePending: boolean;
@@ -43,7 +34,7 @@ type DashboardBadgesShopProps = {
 };
 
 export function DashboardBadgesShop({
-  badges,
+  collection,
   shopItems,
   availableCoins,
   isPurchasePending,
@@ -53,7 +44,7 @@ export function DashboardBadgesShop({
   onEquip,
   onActivate,
 }: DashboardBadgesShopProps) {
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
   /** Armed-badge label per arming slot (passive streak shield vs next-quest item). */
   const armedLabel = (armSlot: "next-quest" | "passive" | null): string =>
     armSlot === "passive" ? t.dashboard.armedPassive : t.dashboard.armedQuest;
@@ -61,8 +52,6 @@ export function DashboardBadgesShop({
   // the raw value so an unmapped type/rarity still renders (just untranslated).
   const itemTypeLabel = (type: string): string =>
     (t.dashboard.itemTypes as Record<string, string>)[type] ?? type;
-  const rarityLabel = (rarity: string): string =>
-    (t.dashboard.rarities as Record<string, string>)[rarity] ?? rarity;
 
   return (
     <>
@@ -70,43 +59,10 @@ export function DashboardBadgesShop({
         <h2 className="mb-4 flex items-center gap-2 font-display text-xl font-bold">
           <Shield className="h-5 w-5 text-neon-gold" /> {t.dashboard.badgesTitle}
         </h2>
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {badges.length > 0 ? (
-            badges.map((badge) => (
-              <div
-                key={`${badge.code}-${badge.awardedAt}`}
-                className="rounded-2xl border border-border/50 bg-surface-3 p-5 backdrop-blur-md"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex min-w-0 items-center gap-3">
-                    <BadgeMedal iconName={badge.iconName} rarity={badge.rarity} />
-                    <div className="min-w-0">
-                      <div className="font-display text-lg font-bold">{badge.name}</div>
-                      <div
-                        className="text-xs uppercase tracking-widest"
-                        style={{ color: `var(--rarity-${badge.rarity})` }}
-                      >
-                        {rarityLabel(badge.rarity)}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="rounded-full bg-neon-gold/15 px-3 py-1 text-xs font-bold text-neon-gold">
-                    {t.dashboard.badgeTag}
-                  </div>
-                </div>
-                <div className="mt-3 text-sm text-muted-foreground">
-                  {badge.awardedReason ?? t.dashboard.badgeDefaultReason}
-                </div>
-                <div className="mt-3 text-xs uppercase tracking-widest text-muted-foreground">
-                  {t.dashboard.badgeEarnedOn} ·{" "}
-                  {new Date(badge.awardedAt).toLocaleDateString(locale)}
-                </div>
-              </div>
-            ))
-          ) : (
-            <EmptyState icon={Shield} title={t.dashboard.badgesEmpty} />
-          )}
-        </div>
+        {/* é31 lot 2 — la collection COMPLÈTE remplace la vitrine des seuls badges
+            obtenus : c'est la carte verrouillée, avec sa condition, qui donne une
+            raison de revenir (US-3, R-13). */}
+        <BadgeCollection collection={collection} />
       </section>
 
       <section className="mt-8" data-testid="shop">

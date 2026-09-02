@@ -1,3 +1,4 @@
+import type { BadgeCode, BadgeFamily } from "@/shared/constants/badges";
 import type { AdaptiveTranslations } from "./adaptive.types";
 import type { DuelTranslations } from "./duel.types";
 import type { TutorTranslations } from "./tutor.types";
@@ -205,6 +206,18 @@ export type TranslationKeys = {
     badgeDefaultReason: string;
     badgeEarnedOn: string;
     badgesEmpty: string;
+    /**
+     * é31 lot 2 — la collection COMPLÈTE (US-3, R-13). Un badge sans sa ligne
+     * fait échouer `tsc` : c'est le seul garde-fou qui empêche qu'un badge semé
+     * en base s'affiche en français dans les trois langues, comme les payloads
+     * push l'ont fait.
+     */
+    badgeFamilies: Record<BadgeFamily, string>;
+    badgeLabels: Record<BadgeCode, { name: string; condition: string }>;
+    /** Compteur d'une famille : « 3/5 ». */
+    badgeFamilyProgress: string;
+    badgeLocked: string;
+    badgeCollectionProgress: string;
     shopTitle: string;
     shopDefaultDesc: string;
     shopEquipped: string;

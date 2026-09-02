@@ -9,6 +9,7 @@ import {
   PASS_THRESHOLD_PCT,
 } from "@/shared/constants/gamification";
 import type { BadgeRow, DashboardShopItem, InventoryRow } from "@/shared/types/gamification";
+import { buildBadgeCollection, type BadgeCatalogueClient } from "@/features/dashboard/badges";
 import type { DailyPlanItem } from "@/shared/types/daily-plan";
 import type { CompetencyBlocker, CompetencyMasteryRow } from "@/shared/types/competency";
 import type { WeaknessRow } from "@/shared/types/weakness";
@@ -514,12 +515,22 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
 
-    const [badgesRes, inventoryRes, shopRes] = await Promise.all([
+    const [badgesRes, catalogueRes, inventoryRes, shopRes] = await Promise.all([
       supabase
         .from("student_badges")
         .select("awarded_at, awarded_reason, badge:badges(code,name,rarity,icon_name)")
         .eq("student_user_id", userId)
         .order("awarded_at", { ascending: false }),
+      // é31 lot 2 — le CATALOGUE, pas seulement les badges obtenus. Une collection
+      // qui ne montre que le déjà-gagné ne donne aucune raison de revenir : c'est
+      // la carte verrouillée, avec sa condition, qui en donne une (US-3, R-13).
+      // ⚠️ `family` est postérieure aux types Supabase générés, qui ne peuvent pas
+      // être régénérés sans accès DB (même patron que les RPC de `economy.server`
+      // et `progression.server`) : la colonne est lue via un client au contrat
+      // étroit, à supprimer à la prochaine régénération des types.
+      (supabase as unknown as BadgeCatalogueClient)
+        .from("badges")
+        .select("code,name,description,rarity,icon_name,family"),
       supabase
         .from("inventory_items")
         .select(
@@ -534,8 +545,11 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
         .order("price_coins", { ascending: true }),
     ]);
 
-    if (badgesRes.error)
-      failWithClientError("getDashboardSecondary.badges", badgesRes.error, DASHBOARD_ERROR_FR);
+    // Les deux lectures de badges partagent leur sort : sans catalogue la
+    // collection n'existe pas, sans les obtenus elle est fausse.
+    const badgeReadError = badgesRes.error ?? catalogueRes.error;
+    if (badgeReadError)
+      failWithClientError("getDashboardSecondary.badges", badgeReadError, DASHBOARD_ERROR_FR);
     if (inventoryRes.error)
       failWithClientError(
         "getDashboardSecondary.inventory",
@@ -559,6 +573,8 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
         },
       ];
     });
+
+    const badgeCollection = buildBadgeCollection(catalogueRes.data ?? [], badges);
 
     // Armable consumables fall into two independent arming slots, derived from the
     // effect payload (mirrors activate_inventory_item):
@@ -640,7 +656,7 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
       };
     });
 
-    return { badges, inventory, shopItems };
+    return { badges, badgeCollection, inventory, shopItems };
   });
 
 // ---------- Leaderboard ----------

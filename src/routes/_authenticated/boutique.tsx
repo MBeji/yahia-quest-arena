@@ -97,7 +97,7 @@ function BoutiquePage() {
     subject: s.attribute,
     value: Math.round(stats[s.id]?.avg ?? 0),
   }));
-  const badges = secondary?.badges ?? [];
+  const badgeCollection = secondary?.badgeCollection ?? [];
   const inventory = secondary?.inventory ?? [];
   const shopItems = secondary?.shopItems ?? [];
 
@@ -134,7 +134,7 @@ function BoutiquePage() {
             onActivate={(itemCode) => activateMutation.mutate({ itemCode })}
           />
           <DashboardBadgesShop
-            badges={badges}
+            collection={badgeCollection}
             shopItems={shopItems}
             availableCoins={profile.yahia_coins ?? 0}
             isPurchasePending={purchaseMutation.isPending}
