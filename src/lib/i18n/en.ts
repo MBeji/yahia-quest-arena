@@ -146,6 +146,10 @@ export const en: TranslationKeys = {
     streakLostDesc: "Recover your streak for {cost} Coins (you had {n} days)",
     streakRecover: "🔥 Recover",
     retryTitle: "Your last exercise",
+    remediateOverline: "Back to basics",
+    remediateTitle: "One step back, two steps forward",
+    strengthenOverline: "A little more",
+    strengthenTitle: "The same idea, another way",
     reviewOverline: "To review",
     backToSchool: {
       title: "Back to school!",

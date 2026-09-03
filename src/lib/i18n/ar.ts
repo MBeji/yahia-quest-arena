@@ -145,6 +145,10 @@ export const ar: TranslationKeys = {
     streakLostDesc: "استرجع سلسلتك مقابل {cost} عملة (كان لديك {n} أيام)",
     streakRecover: "🔥 استرجع",
     retryTitle: "آخر تمرين لك",
+    remediateOverline: "نعود إلى الأساس",
+    remediateTitle: "خطوة إلى الوراء، خطوتان إلى الأمام",
+    strengthenOverline: "قليلًا بعد",
+    strengthenTitle: "الفكرة نفسها، بطريقة أخرى",
     reviewOverline: "للمراجعة",
     backToSchool: {
       title: "بداية السنة الدراسيّة!",
