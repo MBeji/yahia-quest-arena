@@ -65,7 +65,11 @@ describe("gamification.progression — recoverStreak", () => {
   // Dates relative to the real clock the server fn reads (getTodayUtc/getYesterdayUtc).
   const TODAY = new Date().toISOString().slice(0, 10);
   const YESTERDAY = new Date(Date.now() - 86_400_000).toISOString().slice(0, 10);
-  const BROKEN = "2020-01-01"; // far enough back that the streak is always broken
+  // Depuis le 2026-09-03 la fenêtre de rachat est BORNÉE (STREAK_RECOVERY_WINDOW_DAYS = 2) :
+  // « assez loin pour que la série soit cassée » ne suffit plus, il faut être cassé ET dans la
+  // fenêtre. L'ancienne valeur (`2020-01-01`) est désormais le cas EXPIRÉ, testé plus bas.
+  const RACHETABLE = new Date(Date.now() - 2 * 86_400_000).toISOString().slice(0, 10);
+  const TROP_TARD = "2020-01-01";
 
   beforeEach(() => {
     vi.resetModules();
@@ -87,7 +91,7 @@ describe("gamification.progression — recoverStreak", () => {
       yahia_coins: 50,
       current_streak: 10,
       longest_streak: 10,
-      last_active_date: BROKEN,
+      last_active_date: RACHETABLE,
     });
     mockRpc.mockResolvedValue({ data: null, error: null });
 
@@ -153,7 +157,7 @@ describe("gamification.progression — recoverStreak", () => {
       yahia_coins: 5,
       current_streak: 7,
       longest_streak: 7,
-      last_active_date: BROKEN,
+      last_active_date: RACHETABLE,
     });
 
     const { recoverStreak } = await import("@/features/progression");
@@ -162,13 +166,32 @@ describe("gamification.progression — recoverStreak", () => {
     );
   });
 
+  it("rejects when the recovery window has closed (absent too long)", async () => {
+    // ⭐ Le trou remonté par le lot 3 de é31 : ce profil PASSAIT — un élève absent
+    // depuis des années rachetait pour 15 pièces une série perdue en 2020.
+    armProfile({
+      id: "user-123",
+      yahia_coins: 500,
+      current_streak: 30,
+      longest_streak: 30,
+      last_active_date: TROP_TARD,
+    });
+
+    const { recoverStreak } = await import("@/features/progression");
+    await expect((recoverStreak as unknown as () => Promise<unknown>)()).rejects.toThrow(
+      "fenêtre de rachat est passée",
+    );
+    // Et la dépense n'a PAS eu lieu : un refus qui débite serait pire que le trou.
+    expect(mockRpc).not.toHaveBeenCalled();
+  });
+
   it("throws on spend_coins RPC error", async () => {
     armProfile({
       id: "user-123",
       yahia_coins: 50,
       current_streak: 7,
       longest_streak: 7,
-      last_active_date: BROKEN,
+      last_active_date: RACHETABLE,
     });
     mockRpc.mockResolvedValue({ data: null, error: { message: "Insufficient funds" } });
 

@@ -587,7 +587,11 @@ describe("END-TO-END: lesson then streak recovery", () => {
             yahia_coins: 50,
             current_streak: 0,
             longest_streak: 5,
-            last_active_date: null,
+            // Actif avant-hier : cassé, mais DANS la fenêtre de rachat bornée
+            // (STREAK_RECOVERY_WINDOW_DAYS = 2, posé le 2026-09-03). `null` ouvrait
+            // le rachat avant cette date et ne l'ouvre plus — sans date, rien ne
+            // prouve qu'on est dans la fenêtre.
+            last_active_date: new Date(Date.now() - 2 * 86_400_000).toISOString().slice(0, 10),
           })
         : mockQuery([]),
     );

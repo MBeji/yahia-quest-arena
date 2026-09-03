@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
-import { STREAK_RECOVERY_COST } from "@/shared/constants/gamification";
+import { STREAK_RECOVERY_COST, STREAK_RECOVERY_WINDOW_DAYS } from "@/shared/constants/gamification";
 import { getTodayUtc } from "@/shared/lib/dates";
 import { streakRecoveryBlock } from "@/shared/lib/streak-recovery";
 import { failWithClientError } from "@/shared/lib/safe-error";
@@ -53,6 +53,13 @@ export const recoverStreak = createServerFn({ method: "POST" })
         throw new Error("Ton streak est actif ! Pas besoin de le récupérer.");
       case "aucun-streak":
         throw new Error("Tu n'as pas encore eu de streak à récupérer.");
+      case "fenetre-expiree":
+        // Un fait, pas un reproche (R-8) : la fenêtre est passée, le palmarès reste,
+        // et la phrase suivante est déjà tournée vers aujourd'hui.
+        throw new Error(
+          `La fenêtre de rachat est passée (${STREAK_RECOVERY_WINDOW_DAYS} jours). ` +
+            "Ta plus longue série reste à ton palmarès — la prochaine repart aujourd'hui.",
+        );
     }
 
     if ((profile.yahia_coins ?? 0) < STREAK_RECOVERY_COST) {
