@@ -1,7 +1,8 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
 
-import { checkGuardrails, GUARDRAILS, prixOuLesDeuxTiennent } from "../assertions.mjs";
+import { checkGuardrails, GUARDRAILS, prixMinimumPourG4 } from "../assertions.mjs";
+import { shopCapacityCoins, shopPrices } from "../shop-catalogue.mjs";
 
 /** Un run simulé réduit à ce que les garde-fous lisent. */
 const run = (over = {}) => ({
@@ -86,52 +87,54 @@ describe("G-1 — une fenêtre par profil (arbitrage A15)", () => {
   });
 });
 
-describe("prixOuLesDeuxTiennent — l'intervalle où G-3 et G-4 s'accordent (#937)", () => {
-  // Les valeurs mesurées du persona moyen au 2026-09-03 : 256 coins gagnés,
-  // 32 jours manqués. Ce sont elles qui rendent l'échec de G-4 lisible.
-  const moyen = { coinsEarned: 256, daysMissed: 32 };
+describe("G-3 lit la BOUTIQUE, et G-4 gouverne seul le rachat (#937)", () => {
+  const moyen = { coinsEarned: 256, daysMissed: 32, recoveryCoverableDays: 17 };
 
-  it("rend l'ensemble EXACT, trous compris — pas un min et un max", () => {
-    // Le piège que ce test verrouille : au-delà de 128 le rachat ne couvre plus
-    // qu'un seul jour, et G-3 retombe sous son plancher jusqu'à ce que le prix
-    // atteigne 60 % des coins à lui seul. Rendre « 37 à 256 » serait FAUX —
-    // 129 à 153 ne conviennent pas.
-    expect(prixOuLesDeuxTiennent(moyen)).toEqual([
-      { min: 37, max: 128 },
-      { min: 154, max: 256 },
-    ]);
+  it("le catalogue est lu dans les migrations, pas recopié", () => {
+    // Une seconde liste tenue à la main divergerait — le dépôt l'a déjà vécu deux
+    // fois (`auth-refusals.ts`). Ces bornes sont épinglées pour qu'AJOUTER un objet
+    // en boutique fasse tomber ce test : la mise à jour devient délibérée.
+    const prix = shopPrices();
+    expect(prix).toHaveLength(19);
+    expect(Math.min(...prix)).toBe(30);
+    expect(Math.max(...prix)).toBe(500);
+    expect(shopCapacityCoins()).toBe(3280);
   });
 
-  it("chaque prix rendu satisfait VRAIMENT les deux garde-fous, et les autres non", () => {
-    const tient = (k) => {
-      const rachetables = Math.floor(moyen.coinsEarned / k);
-      return (
-        (rachetables * k) / moyen.coinsEarned >= GUARDRAILS.G3.minSinkRatio &&
-        rachetables / moyen.daysMissed <= GUARDRAILS.G4.maxRecoveryCoverage
-      );
-    };
-    const dansLesPlages = (k) => prixOuLesDeuxTiennent(moyen).some((p) => k >= p.min && k <= p.max);
-    // Contrôle exhaustif : la fonction et la définition disent la même chose.
-    for (let k = 1; k <= moyen.coinsEarned; k++) expect(dansLesPlages(k)).toBe(tient(k));
-    // Et le prix courant en est dehors — c'est bien pourquoi G-4 échoue.
-    expect(dansLesPlages(15)).toBe(false);
-  });
-
-  it("rend une liste VIDE quand rien ne se concilie, plutôt qu'un intervalle inventé", () => {
-    // Aucun jour manqué : G-4 n'a rien à mesurer, la question ne se pose pas.
-    expect(prixOuLesDeuxTiennent({ coinsEarned: 256, daysMissed: 0 })).toEqual([]);
-    expect(prixOuLesDeuxTiennent({ coinsEarned: 0, daysMissed: 32 })).toEqual([]);
-  });
-
-  it("le message d'échec de G-4 porte l'intervalle et le prix courant", () => {
-    const results = checkGuardrails(
-      runs({ moyen: run({ coinsEarned: 256, daysMissed: 32, recoveryCoverableDays: 17 }) }),
+  it("G-3 ne dépend PLUS du prix du rachat — c'était tout le défaut", () => {
+    // Avant, G-3 mesurait `recoveryCoverableDays × STREAK_RECOVERY_COST` : il
+    // récompensait donc un rachat bon marché, pendant que G-4 en exige un cher.
+    // Faire varier ce champ ne doit plus rien changer à G-3.
+    const g3 = (over) =>
+      checkGuardrails(runs({ moyen: run({ ...moyen, ...over }) })).find((r) => r.id === "G-3");
+    expect(g3({ recoveryCoverableDays: 0 }).ok).toBe(true);
+    expect(g3({ recoveryCoverableDays: 17 }).message).toBe(
+      g3({ recoveryCoverableDays: 0 }).message,
     );
-    const g4 = results.find((r) => r.id === "G-4");
+  });
+
+  it("G-3 échoue si la boutique ne peut plus absorber ce que le jeu produit", () => {
+    // Le fil-piège : des récompenses qui s'envolent (ou une boutique vidée).
+    const g3 = checkGuardrails(runs({ moyen: run({ ...moyen, coinsEarned: 100_000 }) })).find(
+      (r) => r.id === "G-3",
+    );
+    expect(g3.ok).toBe(false);
+    expect(g3.message).toMatch(/s'accumulent/);
+  });
+
+  it("G-4 dit le prix MINIMUM, et se garde de donner un ordre", () => {
+    const g4 = checkGuardrails(runs({ moyen: run(moyen) })).find((r) => r.id === "G-4");
     expect(g4.ok).toBe(false);
-    expect(g4.message).toMatch(/37–128/);
-    expect(g4.message).toMatch(/154–256/);
-    // Il ne donne PAS d'ordre : les deux sorties faciles restent interdites.
-    expect(g4.message).toMatch(/Ce n'est pas une consigne/);
+    // floor(256 / (floor(32 × 0,2) + 1)) + 1 = floor(256/7) + 1 = 37.
+    expect(prixMinimumPourG4(moyen)).toBe(37);
+    expect(g4.message).toMatch(/au moins 37/);
+    expect(g4.message).toMatch(/PAS une consigne/);
+  });
+
+  it("le prix minimum est la VRAIE borne : 37 passe, 36 non", () => {
+    const tient = (k) =>
+      Math.floor(moyen.coinsEarned / k) / moyen.daysMissed <= GUARDRAILS.G4.maxRecoveryCoverage;
+    expect(tient(prixMinimumPourG4(moyen))).toBe(true);
+    expect(tient(prixMinimumPourG4(moyen) - 1)).toBe(false);
   });
 });
