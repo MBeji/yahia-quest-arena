@@ -41,9 +41,20 @@ import { pathToFileURL } from "node:url";
  * STATUS porte sa réserve dans son texte, pas dans une note de bas de page.
  */
 
+/**
+ * Un nombre à la française, ou « — » quand la RPC a refusé d'en inventer un.
+ *
+ * La virgule décimale n'est pas de la coquetterie : le relevé est lu en français,
+ * et le premier run publié a rendu « 1.4 chapitres » à côté de « 73,38 % » —
+ * deux séparateurs dans le même tableau.
+ */
+export function num(value) {
+  return value === null || value === undefined ? "—" : String(value).replace(".", ",");
+}
+
 /** Un pourcentage, ou « — » quand la RPC a refusé d'en inventer un. */
 export function pct(value) {
-  return value === null || value === undefined ? "—" : `${String(value).replace(".", ",")} %`;
+  return value === null || value === undefined ? "—" : `${num(value)} %`;
 }
 
 /** `2026-08-17` → `17/08`. Les semaines se lisent, elles ne se calculent pas. */
@@ -123,13 +134,15 @@ export function formatEngagementReport(overview, today = new Date()) {
 
   const learning = overview?.learning ?? {};
   lines.push("");
-  lines.push("**Métrique de garde (R-1)** — l'engagement n'a le droit d'être lu qu'à côté d'elle :");
+  lines.push(
+    "**Métrique de garde (R-1)** — l'engagement n'a le droit d'être lu qu'à côté d'elle :",
+  );
   lines.push("");
   lines.push("| précision moyenne | précision médiane | chapitres / actif | tentatives (30 j) |");
   lines.push("| ---: | ---: | ---: | ---: |");
   lines.push(
     `| ${pct(learning.accuracy_avg_pct ?? null)} | ${pct(learning.accuracy_p50_pct ?? null)} | ` +
-      `${learning.chapters_per_active ?? "—"} | ${learning.attempts_30d ?? "—"} |`,
+      `${num(learning.chapters_per_active ?? null)} | ${num(learning.attempts_30d ?? null)} |`,
   );
 
   lines.push("");
@@ -142,9 +155,7 @@ export function formatEngagementReport(overview, today = new Date()) {
     );
   }
   lines.push("");
-  lines.push(
-    "_Relevé automatique, lecture seule. La console humaine reste `/admin/engagement`._",
-  );
+  lines.push("_Relevé automatique, lecture seule. La console humaine reste `/admin/engagement`._");
   return lines.join("\n");
 }
 
