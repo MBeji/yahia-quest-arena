@@ -17,6 +17,7 @@ import { getCurrentWeekStartUtc, getTodayUtc } from "@/shared/lib/dates";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
 import { resolveNextAction } from "@/shared/lib/next-action";
+import { resolveAdaptiveInputs, type AdaptiveRpcClient } from "@/shared/lib/adaptive-inputs";
 import { resolvePromotionTarget, shouldOfferPromotion } from "@/shared/lib/back-to-school";
 import { lyceeYearOf } from "./program-families";
 
@@ -448,7 +449,12 @@ export const getDashboard = createServerFn({ method: "GET" })
     // il résout donc les priorités 1, 2 et 4, et DÉLÈGUE la 3 au hub matière en désignant la
     // matière du chemin — qui la résoudra avec ce même moteur. Un seul CTA en sortira.
     const lastWorkedSubjectId = recentRes.data?.[0]?.subject_id ?? null;
+    // Les entrées des rangs 2 et 4 (é30 amendement C, #870) — résolues ICI, sur le serveur,
+    // donc sans aller-retour de plus sur le chemin SSR. Le pourquoi et le coût sont dans
+    // `adaptive-inputs.ts` ; sur une matière non taggée elle rend `{}` en un seul appel.
+    const adaptive = await resolveAdaptiveInputs(supabase as unknown as AdaptiveRpcClient, null);
     const nextAction = resolveNextAction({
+      ...adaptive,
       // La tête du plan EST la priorité 1 : le plan est déjà trié par urgence, donc le premier
       // élément est la révision que le moteur doit promouvoir.
       dueReviewExerciseId: dailyPlan[0]?.exercise_id ?? null,

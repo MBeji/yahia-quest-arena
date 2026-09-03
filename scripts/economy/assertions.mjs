@@ -141,14 +141,85 @@ export function checkGuardrails(runs) {
   // continu donne des nombres faux — 40 au lieu de 37 sur les valeurs du jour.
   const maxJoursRachetables = Math.floor(moyen.daysMissed * GUARDRAILS.G4.maxRecoveryCoverage);
   const rendementMax = (maxJoursRachetables + 1) * STREAK_RECOVERY_COST - 1;
-  const prixMin = Math.floor(moyen.coinsEarned / (maxJoursRachetables + 1)) + 1;
+  const accord = prixOuLesDeuxTiennent(moyen);
   out.push({
     id: "G-4",
     ok: ok4,
     message: ok4
       ? `le rachat de série couvrirait ${Math.round(coverage * 100)} % des ${moyen.daysMissed} jours manqués (plafond ${Math.round(GUARDRAILS.G4.maxRecoveryCoverage * 100)} %) — marge : tient tant que le rendement reste ≤ ${rendementMax} coins, mesuré ${moyen.coinsEarned}`
-      : `le rachat de série couvrirait ${Math.round(coverage * 100)} % des ${moyen.daysMissed} jours manqués : la série s'achète, donc elle ne mesure plus l'assiduité. À ${STREAK_RECOVERY_COST} coins pièce il en faudrait au moins ${prixMin} — mais un prix posé au bord du seuil n'y tient que jusqu'au prochain exercice ajouté au corpus.`,
+      : `le rachat de série couvrirait ${Math.round(coverage * 100)} % des ${moyen.daysMissed} jours manqués : la série s'achète, donc elle ne mesure plus l'assiduité. ${phraseAccord(accord)}`,
   });
 
   return out;
+}
+
+/**
+ * LA FENÊTRE DE PRIX OÙ G-3 ET G-4 TIENNENT ENSEMBLE — et pourquoi elle existe.
+ *
+ * G-3 et G-4 lisent LE MÊME puits, `STREAK_RECOVERY_COST`, en sens INVERSE :
+ *
+ *   • G-3 veut qu'il draine ≥ 60 % des coins gagnés → il le veut BON MARCHÉ ;
+ *   • G-4 veut qu'il rachète ≤ 20 % des jours manqués → il le veut CHER.
+ *
+ * D'où le constat de #937 : les deux ne peuvent pas être saturés en même temps,
+ * et G-4 mesure un PIRE CAS — l'élève qui met chaque coin dans sa série. Ce pire
+ * cas reste la bonne question à poser à un rachat de série ; ce qui manquait,
+ * c'est de dire à quel prix les deux exigences s'accordent, au lieu de laisser
+ * lire l'échec comme « il faut monter le prix jusqu'à ce que ça passe ».
+ *
+ * ⚠️ Cette fonction ne CHOISIT pas un prix et ne touche à AUCUN seuil : les deux
+ * sorties faciles restent interdites (régler l'économie pour l'outil, ou caler le
+ * plafond sur la mesure du jour). Elle CALCULE, sur les valeurs mesurées du
+ * persona moyen, l'intervalle où les deux garde-fous existants sont vrais
+ * ensemble — et rend `null` s'il est vide, ce qui serait la vraie contradiction
+ * et se dirait alors franchement.
+ *
+ * Le balayage est entier parce que les deux conditions le sont : `floor(C / k)`
+ * ne bouge que par sauts, donc raisonner en continu rendrait des bornes fausses
+ * (le même piège que `maxJoursRachetables` ci-dessus).
+ *
+ * ⚠️ ET L'ENSEMBLE A DES TROUS — le rendre comme un seul intervalle serait FAUX.
+ * Sur les valeurs du jour (C = 256, D = 32), les prix 37→128 conviennent, 129→153
+ * NON, puis 154→256 de nouveau : au-delà de 128 le rachat ne couvre plus qu'un
+ * seul jour, et G-3 retombe sous son plancher tant que le prix n'a pas rattrapé
+ * les 60 % à lui seul. D'où une LISTE d'intervalles, pas un min et un max.
+ *
+ * @param {ReturnType<import("./simulate.mjs").simulate>} moyen
+ * @returns {Array<{ min: number, max: number }>}
+ */
+export function prixOuLesDeuxTiennent(moyen) {
+  const coins = moyen.coinsEarned;
+  const manques = moyen.daysMissed;
+  if (coins <= 0 || manques <= 0) return [];
+  /** @type {Array<{ min: number, max: number }>} */
+  const plages = [];
+  for (let k = 1; k <= coins; k++) {
+    const rachetables = Math.floor(coins / k);
+    const g3 = (rachetables * k) / coins >= GUARDRAILS.G3.minSinkRatio;
+    const g4 = rachetables / manques <= GUARDRAILS.G4.maxRecoveryCoverage;
+    if (!g3 || !g4) continue;
+    const derniere = plages[plages.length - 1];
+    if (derniere && derniere.max === k - 1) derniere.max = k;
+    else plages.push({ min: k, max: k });
+  }
+  return plages;
+}
+
+/** La phrase qui remet la décision au lecteur, avec le nombre qui la tranche. */
+function phraseAccord(plages) {
+  if (plages.length === 0) {
+    return (
+      `Et il n'existe AUCUN prix auquel G-3 et G-4 tiennent ensemble sur ces valeurs : ` +
+      `les deux lisent le même puits en sens inverse, donc c'est l'un des deux qui est mal posé, ` +
+      `pas le prix. À trancher sur la page Économie.`
+    );
+  }
+  const rendu = plages.map((p) => (p.min === p.max ? `${p.min}` : `${p.min}–${p.max}`)).join(", ");
+  return (
+    `G-3 et G-4 s'accordent pour un rachat à ${rendu} coins ; le prix courant est ` +
+    `${STREAK_RECOVERY_COST}. Ce n'est pas une consigne : c'est l'ensemble des prix où les deux ` +
+    `garde-fous EXISTANTS sont vrais ENSEMBLE, trous compris. Le choix — déplacer le prix, ` +
+    `élargir le modèle de puits (la boutique seede treize items de 30 à 500 coins, aucun n'est ` +
+    `simulé), ou corriger un seuil — se fait sur données réelles, page Économie.`
+  );
 }

@@ -1,0 +1,203 @@
+name: Garde des refus d'auth (la boîte noire est lue)
+
+# LA MOITIÉ DÉTECTION DU MÉCANISME ANTI-RECHUTE — #938, premier lot.
+#
+# #933 a livré la moitié PRÉVENTION : un refus d'authentification que le client
+# ignore ne compile plus. La moitié détection manquait, et elle était plus creuse
+# qu'il n'y paraît : les deux pannes récurrentes — « Failed to load dashboard »
+# (#931) et le bouton « Valider » grisé sans fin (#914/#915) — ont TOUTES DEUX été
+# signalées par le propriétaire, jamais par une garde. L'instrumentation existait
+# pourtant, et elle est bonne : la table `client_errors`, la route `/api/client-log`
+# délibérément sans jeton, et trois grandeurs qui départagent les hypothèses.
+#
+# Personne ne lisait cette table. Vérifié le 2026-09-01 : ses seuls consommateurs
+# dans tout le dépôt étaient son writer, son test, et deux mentions en doc.
+# Résultat mesuré : entre le 2026-08-18 et le 2026-08-31, la même panne a couru
+# TREIZE JOURS en produisant des lignes que rien ne relevait.
+#
+# CE QUE CETTE GARDE FAIT, ET SURTOUT CE QU'ELLE NE FAIT PAS
+# ---------------------------------------------------------------------------
+# LECTURE SEULE. Elle n'écrit rien en base, ne corrige rien, ne relance rien.
+# Elle tient UNE issue ouverte tant que le signal dépasse son bruit de fond, et
+# la referme d'elle-même quand une fenêtre est propre. Même forme que
+# `guard-watch.yml` et que `content-drift.yml` au privé.
+#
+# SON PROPRE FILET
+# ---------------------------------------------------------------------------
+# Une garde qui plante en silence n'est pas une garde. Celle-ci n'a pas besoin
+# d'un filet à elle : `guard-watch.yml` relève toutes les 6 h les runs rouges de
+# TOUS les workflows programmés de ce dépôt, celui-ci compris — c'est exactement
+# ce pour quoi il a été écrit, et c'est la forme qui ne se périme pas quand on
+# ajoute un workflow.
+#
+# ⚠️ LE SECRET, ET LA LEÇON DE 2026-07-29
+# ---------------------------------------------------------------------------
+# `client_errors` est en RLS SANS policy, privilèges `REVOKE`d : seule
+# `PROD_SUPABASE_SERVICE_ROLE_KEY` y lit. Tant que le secret est ABSENT, ce job
+# SAUTE PROPREMENT EN RESTANT VERT — un rouge permanent est précisément ce qui
+# apprend à ne plus lire une issue de suivi. Mais s'il est PRÉSENT et que la
+# lecture échoue, le job ÉCHOUE BRUYAMMENT : c'est la leçon de `PROD_SUPABASE_URL`
+# posé sans son `https://`, qui a passé un pré-vol ne testant que la non-vacuité
+# et tué 25 jours de triage en silence. D'où, aussi, l'URL résolue DEPUIS LE
+# DÉPÔT (`prod-targets.mjs`) plutôt que depuis un second secret : le besoin
+# supprimé plutôt que le secret reposé.
+
+on:
+  schedule:
+    # Toutes les 6 h, minute décalée (les crons ronds partent en retard).
+    - cron: "23 */6 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: client-errors-watch
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  watch:
+    name: la boîte noire dit-elle quelque chose ?
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+      LABEL: auth-bruit
+      # Fenêtre plus large que le cron À DESSEIN : deux passages se recouvrent,
+      # donc aucune rafale ne peut se glisser entre deux fenêtres. Le recouvrement
+      # ne produit pas de doublon — une seule issue est réutilisée.
+      WINDOW_HOURS: "8"
+    steps:
+      - name: Le secret est-il configuré ?
+        id: guard
+        run: |
+          set -euo pipefail
+          if [ -z "${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            {
+              echo "### ⏭️ Garde des refus d'auth — sautée"
+              echo ""
+              echo "\`PROD_SUPABASE_SERVICE_ROLE_KEY\` n'est pas configuré. \`client_errors\` est en"
+              echo "RLS sans policy : sans cette clé il n'y a rien à lire, et **échouer ici"
+              echo "installerait un rouge permanent** — ce qui apprend à ne plus lire une issue de"
+              echo "suivi. Le job sort donc vert, en le disant."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          echo "configured=true" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+
+      - name: Setup Node
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.guard.outputs.configured == 'true'
+        run: npm ci --no-audit --no-fund
+
+      # Depuis le DÉPÔT, jamais depuis un secret — voir l'en-tête. Une valeur
+      # malformée arrête ici, bruyamment, au lieu de mourir dans `createClient`.
+      - name: Résoudre l'URL de production (depuis le dépôt)
+        if: steps.guard.outputs.configured == 'true'
+        run: |
+          set -euo pipefail
+          url="$(node --input-type=module -e 'const m = await import("./scripts/shared/prod-targets.mjs"); process.stdout.write(m.PROD_SUPABASE_API_URL)')"
+          if ! printf '%s' "$url" | grep -qE '^https://[a-z0-9]+\.supabase\.co$'; then
+            echo "::error::PROD_SUPABASE_API_URL ne résout pas vers une URL d'API Supabase (reçu '$url') — voir scripts/shared/prod-targets.mjs."
+            exit 1
+          fi
+          echo "PROD_SUPABASE_API_URL=$url" >> "$GITHUB_ENV"
+
+      # Le seul appel réseau. `set -e` fait échouer le job si la lecture échoue :
+      # secret présent mais malformé ⇒ rouge, pas silence.
+      - name: Relever les refus de la fenêtre (lecture seule)
+        if: steps.guard.outputs.configured == 'true'
+        env:
+          SUPABASE_URL: ${{ env.PROD_SUPABASE_API_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          set -euo pipefail
+          npm run --silent reports:client-errors -- --window-hours "$WINDOW_HOURS" --out client-errors.json
+
+      - name: Décider — ouvrir, mettre à jour, ou refermer
+        if: steps.guard.outputs.configured == 'true'
+        run: |
+          set -euo pipefail
+
+          alertes="$(jq -r '.alertes | length' client-errors.json)"
+          total="$(jq -r '.total' client-errors.json)"
+          echo "Refus dans la fenêtre : $total · alertes : $alertes"
+
+          if [ "$alertes" = "0" ]; then
+            existing="$(gh issue list --label "$LABEL" --state open --limit 1 --json number --jq '.[0].number // empty')"
+            if [ -n "$existing" ]; then
+              gh issue close "$existing" \
+                --comment "✅ Fenêtre de ${WINDOW_HOURS} h propre ($total refus, sous les seuils) — fermeture automatique." >/dev/null
+              echo "Issue #$existing refermée."
+            else
+              echo "Rien à signaler ($total refus sur ${WINDOW_HOURS} h)."
+            fi
+            {
+              echo "### ✅ Refus d'auth — rien à signaler"
+              echo ""
+              echo "$total refus sur les ${WINDOW_HOURS} dernières heures, sous les seuils."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          {
+            echo "### 🔐 Rafale de refus d'authentification"
+            echo ""
+            echo "Fenêtre : les **${WINDOW_HOURS} dernières heures** (depuis \`$(jq -r '.window.since' client-errors.json)\` UTC)."
+            echo ""
+            jq -r '.alertes[] | "- \(.)"' client-errors.json
+            echo ""
+            echo "| stage | refus |"
+            echo "| --- | --- |"
+            jq -r '.parStage | to_entries[] | "| `\(.key)` | \(.value) |"' client-errors.json
+            echo ""
+            echo "| message (tel que \`auth-refusals.ts\` l'écrit) | refus |"
+            echo "| --- | --- |"
+            jq -r '.parMessage | to_entries[] | "| `\(.key)` | \(.value) |"' client-errors.json
+            echo ""
+            echo "**Départager les hypothèses** — les trois grandeurs que \`reportClientError\` emporte :"
+            echo ""
+            echo "| lecture | compte |"
+            echo "| --- | --- |"
+            echo "| jeton encore valide (> 60 s) et pourtant refusé | $(jq -r '.horloge.jetonValideRefuse' client-errors.json) |"
+            echo "| jeton que l'appareil se savait expiré (≤ 0 s) | $(jq -r '.horloge.jetonExpire' client-errors.json) |"
+            echo "| retour de veille (> 60 s onglet caché) | $(jq -r '.horloge.retourDeVeille' client-errors.json) |"
+            echo ""
+            echo "Une colonne « jeton valide refusé » non nulle **disqualifie l'expiration simple** et"
+            echo "confirme le diagnostic d'horloge de #914. Une colonne « retour de veille » dominante"
+            echo "désignerait plutôt le gel des minuteries mobiles. Les deux peuvent coexister."
+            echo ""
+            echo "⚠️ Les seuils (\`SEUILS\` dans \`scripts/reports/export-client-errors.mjs\`) sont des"
+            echo "**hypothèses de départ**, posées haut à dessein et jamais mesurées sur une vraie"
+            echo "semaine. Si cette issue s'ouvre pour une journée ordinaire, c'est le seuil qu'il"
+            echo "faut corriger — les comptes bruts sont là pour ça."
+            echo ""
+            echo "_Cette issue se referme toute seule dès qu'une fenêtre entière est sous les seuils._"
+          } > corps.md
+
+          gh label create "$LABEL" --color 5319e7 \
+            --description "Rafale de refus d'authentification en production" 2>/dev/null || true
+
+          titre="🔐 Refus d'auth en rafale ($total sur ${WINDOW_HOURS} h)"
+          existing="$(gh issue list --label "$LABEL" --state open --limit 1 --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            gh issue edit "$existing" --title "$titre" --body-file corps.md >/dev/null
+            echo "Issue #$existing mise à jour."
+          else
+            gh issue create --title "$titre" --label "$LABEL" --body-file corps.md
+          fi
+
+          cat corps.md >> "$GITHUB_STEP_SUMMARY"
