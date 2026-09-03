@@ -71,6 +71,28 @@ const OPTION_BY_LETTER = new RegExp(
 //    radical (`√(a) + √(b) ≠ √(a+b)`), où la lettre est une variable. Règle FAIBLE :
 //    elle ne compte que corroborée — voir `optionReferences`.
 const OPTION_BY_BARE_PAREN = /(?<![\p{L}\p{N}_’'√∛∜])\(\s*[a-dA-D]\s*\)(?![\p{L}\p{N}=])/gu;
+// 2 bis) L'ANALOGIE — « A est à B ce que C est à ? », le patron le plus courant du
+//    raisonnement analogique, écrit dans les trois langues du corpus. Les lettres y
+//    nomment les FIGURES de l'énoncé, pas les options : l'explication qui les reprend
+//    entre parenthèses (« le triangle plein (A) devient … (B) ») parle de l'énoncé.
+//
+//    Sans elle, le garde-fou de `optionReferences` ne prenait pas : il ne reconnaît
+//    un étiquetage local qu'entre PARENTHÈSES, or l'analogie écrit ses lettres NUES.
+//    Asymétrie de FORME, pas de fond — la même paire de lettres, parenthésée d'un côté
+//    et nue de l'autre (#945).
+//
+//    Volontairement étroite, dans l'esprit d'`ENGLISH_ANSWERS_AS_VERB` : une majuscule
+//    nue est plus ambiguë qu'une lettre parenthésée, donc on n'accepte QUE la lettre
+//    encadrée par un connecteur d'analogie, jamais une majuscule isolée. Le second
+//    membre peut être la lettre attendue ou le point d'interrogation qui la remplace
+//    (« C est à ? »), sinon la troisième figure resterait non déclarée.
+//
+//    Mesuré sur le corpus entier (94 matières) avant/après, comme #922 : la règle
+//    dégage EXACTEMENT les 3 questions de `iq-training-{ar,en,fr}/02-logique/02-defi`
+//    (6 occurrences, la même question triplée par langue) et n'en fait apparaître
+//    aucune nouvelle — 1 036 avertissements avant, 1 033 après.
+const ANALOGY_FIGURE_LETTERS =
+  /(?<![\p{L}\p{N}])([A-D])\s*(?:est\s+à|is\s+to|إلى)\s*(?:([A-D])(?![\p{L}\p{N}])|[?؟])/gu;
 // 3) « la dernière option », « réponse n° 2 » — le rang, dans les deux ordres.
 const OPTION_BY_RANK_FR = new RegExp(
   `\\b(?:${RANK_FR}\\s+${OPTION_NOUN_LATIN}|${OPTION_NOUN_LATIN}\\s+${RANK_FR}|${OPTION_NOUN_LATIN}\\s*n[°o]\\s*\\d)\\b`,
@@ -104,10 +126,27 @@ const OPTION_REFERENCE_RULES_STRONG = [
 const bareLetter = (hit: string) => hit.replace(/[^a-dA-D]/g, "").toLowerCase();
 
 /**
+ * Les lettres auxquelles l'ÉNONCÉ donne lui-même un sens local — ses cas étiquetés
+ * « (A) … (B) … », et les figures que nomme une analogie « A est à B ce que C est
+ * à ? ». Une explication qui les reprend parle de l'énoncé, pas des options.
+ */
+function locallyLabelledLetters(prompt: string): Set<string> {
+  const out = new Set<string>();
+  OPTION_BY_BARE_PAREN.lastIndex = 0;
+  for (const m of prompt.matchAll(OPTION_BY_BARE_PAREN)) out.add(bareLetter(m[0]));
+  ANALOGY_FIGURE_LETTERS.lastIndex = 0;
+  for (const m of prompt.matchAll(ANALOGY_FIGURE_LETTERS)) {
+    for (const letter of [m[1], m[2]]) if (letter) out.add(letter.toLowerCase());
+  }
+  return out;
+}
+
+/**
  * Toutes les tournures de `text` qui désignent une option par sa lettre ou son rang,
  * dédoublonnées et dans l'ordre d'apparition. `prompt` sert de garde-fou : un énoncé
- * qui étiquette lui-même ses cas « (A) … (B) … » donne un sens LOCAL à ces lettres,
- * et l'explication qui les reprend parle de l'énoncé, pas des options.
+ * qui étiquette lui-même ses cas « (A) … (B) … », ou qui nomme ses figures dans une
+ * analogie « A est à B ce que C est à ? », donne un sens LOCAL à ces lettres, et
+ * l'explication qui les reprend parle de l'énoncé, pas des options.
  */
 export function optionReferences(text: string, prompt = ""): string[] {
   const spans: Array<{ start: number; end: number; hit: string }> = [];
@@ -121,8 +160,7 @@ export function optionReferences(text: string, prompt = ""): string[] {
       });
     }
   }
-  OPTION_BY_BARE_PAREN.lastIndex = 0;
-  const labelled = new Set([...prompt.matchAll(OPTION_BY_BARE_PAREN)].map((m) => bareLetter(m[0])));
+  const labelled = locallyLabelledLetters(prompt);
   OPTION_BY_BARE_PAREN.lastIndex = 0;
   const bare = [...text.matchAll(OPTION_BY_BARE_PAREN)].filter(
     (m) => !labelled.has(bareLetter(m[0])),

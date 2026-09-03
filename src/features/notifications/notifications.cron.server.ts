@@ -170,7 +170,7 @@ export async function handlePushCron(request: Request, now: Date = new Date()): 
     return new Response("Unauthorized", { status: 401 });
   }
 
-  if (!configureVapid()) {
+  if (!(await configureVapid())) {
     logger.error("Push cron: VAPID env not configured");
     return jsonResponse({ error: "VAPID not configured" }, 500);
   }
