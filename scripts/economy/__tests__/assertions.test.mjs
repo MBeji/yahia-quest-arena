@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
 
-import { checkGuardrails, GUARDRAILS } from "../assertions.mjs";
+import { checkGuardrails, GUARDRAILS, prixOuLesDeuxTiennent } from "../assertions.mjs";
 
 /** Un run simulé réduit à ce que les garde-fous lisent. */
 const run = (over = {}) => ({
@@ -83,5 +83,55 @@ describe("G-1 — une fenêtre par profil (arbitrage A15)", () => {
     // Si un jour elles se rejoignent, on est revenu au seuil unique sans le dire.
     expect(GUARDRAILS.G1.assidu).not.toEqual(GUARDRAILS.G1.moyen);
     expect(GUARDRAILS.G1.occasionnel).toBeNull();
+  });
+});
+
+describe("prixOuLesDeuxTiennent — l'intervalle où G-3 et G-4 s'accordent (#937)", () => {
+  // Les valeurs mesurées du persona moyen au 2026-09-03 : 256 coins gagnés,
+  // 32 jours manqués. Ce sont elles qui rendent l'échec de G-4 lisible.
+  const moyen = { coinsEarned: 256, daysMissed: 32 };
+
+  it("rend l'ensemble EXACT, trous compris — pas un min et un max", () => {
+    // Le piège que ce test verrouille : au-delà de 128 le rachat ne couvre plus
+    // qu'un seul jour, et G-3 retombe sous son plancher jusqu'à ce que le prix
+    // atteigne 60 % des coins à lui seul. Rendre « 37 à 256 » serait FAUX —
+    // 129 à 153 ne conviennent pas.
+    expect(prixOuLesDeuxTiennent(moyen)).toEqual([
+      { min: 37, max: 128 },
+      { min: 154, max: 256 },
+    ]);
+  });
+
+  it("chaque prix rendu satisfait VRAIMENT les deux garde-fous, et les autres non", () => {
+    const tient = (k) => {
+      const rachetables = Math.floor(moyen.coinsEarned / k);
+      return (
+        (rachetables * k) / moyen.coinsEarned >= GUARDRAILS.G3.minSinkRatio &&
+        rachetables / moyen.daysMissed <= GUARDRAILS.G4.maxRecoveryCoverage
+      );
+    };
+    const dansLesPlages = (k) => prixOuLesDeuxTiennent(moyen).some((p) => k >= p.min && k <= p.max);
+    // Contrôle exhaustif : la fonction et la définition disent la même chose.
+    for (let k = 1; k <= moyen.coinsEarned; k++) expect(dansLesPlages(k)).toBe(tient(k));
+    // Et le prix courant en est dehors — c'est bien pourquoi G-4 échoue.
+    expect(dansLesPlages(15)).toBe(false);
+  });
+
+  it("rend une liste VIDE quand rien ne se concilie, plutôt qu'un intervalle inventé", () => {
+    // Aucun jour manqué : G-4 n'a rien à mesurer, la question ne se pose pas.
+    expect(prixOuLesDeuxTiennent({ coinsEarned: 256, daysMissed: 0 })).toEqual([]);
+    expect(prixOuLesDeuxTiennent({ coinsEarned: 0, daysMissed: 32 })).toEqual([]);
+  });
+
+  it("le message d'échec de G-4 porte l'intervalle et le prix courant", () => {
+    const results = checkGuardrails(
+      runs({ moyen: run({ coinsEarned: 256, daysMissed: 32, recoveryCoverableDays: 17 }) }),
+    );
+    const g4 = results.find((r) => r.id === "G-4");
+    expect(g4.ok).toBe(false);
+    expect(g4.message).toMatch(/37–128/);
+    expect(g4.message).toMatch(/154–256/);
+    // Il ne donne PAS d'ordre : les deux sorties faciles restent interdites.
+    expect(g4.message).toMatch(/Ce n'est pas une consigne/);
   });
 });

@@ -154,6 +154,16 @@ export type TranslationKeys = {
     streakLostDesc: string;
     streakRecover: string;
     retryTitle: string;
+    /**
+     * Rangs 2 et 4 de é30 (amendement C, #870) — « remonter à la cause » et « consolider ».
+     * R-14 : chaque action arrive AVEC SA RAISON en langage élève. Aucun de ces libellés ne
+     * nomme un état de croyance (« lacune », « fragile ») ni un pourcentage : D-1 réserve ces
+     * grandeurs à la console d'admin, et un enfant n'a pas à lire un diagnostic sur lui-même.
+     */
+    remediateOverline: string;
+    remediateTitle: string;
+    strengthenOverline: string;
+    strengthenTitle: string;
     /** Étude 22 R-31 — bande focus, priorité 1 (révision due). */
     reviewOverline: string;
     /** Étude 22 R-4 — bannière de rentrée (proposée, jamais imposée). */

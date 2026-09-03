@@ -45,6 +45,39 @@ describe("DashboardFocus", () => {
     expect(cta).toHaveAttribute("href", "/matiere/$subjectId");
   });
 
+  it("rend les rangs 2 et 4 — dormants jusqu'au producteur de #870", () => {
+    // Avant #870, aucun appelant ne renseignait `remediation`/`strengthen` : ces deux
+    // rangs rendaient `null` et la bande ne les voyait jamais. Ils arrivent ici.
+    render(
+      <DashboardFocus
+        nextAction={{ kind: "remediate", exerciseId: "ex-racine", competencySlug: "pgcd" }}
+        continueSubject={subject}
+        xpToday={0}
+        dailyGoal={100}
+        streak={0}
+      />,
+    );
+    expect(screen.getByText("On reprend la base")).toBeInTheDocument();
+    const cta = screen.getByText("Un pas en arrière pour deux en avant").closest("a");
+    expect(cta).toHaveAttribute("href", "/quest/$exerciseId");
+  });
+
+  it("ne dit JAMAIS à l'élève ce qu'on pense de lui (R-14 / D-1)", () => {
+    // Les libellés nomment l'ACTION, jamais l'état de croyance : ni « lacune », ni
+    // « fragile », ni un pourcentage. Ces grandeurs sont réservées à la console d'admin.
+    const { container } = render(
+      <DashboardFocus
+        nextAction={{ kind: "strengthen", exerciseId: "ex-2", competencySlug: "frac-add" }}
+        continueSubject={subject}
+        xpToday={0}
+        dailyGoal={100}
+        streak={0}
+      />,
+    );
+    expect(screen.getByText("Encore un peu")).toBeInTheDocument();
+    expect(container.textContent).not.toMatch(/lacune|fragile|pgcd|frac-add|%\s*de/i);
+  });
+
   it("stays silent rather than inventing a target when the engine has nothing (R-31)", () => {
     // L'ancienne bande retombait sur « la première matière du parcours » — un CTA que rien ne
     // justifiait. Un écran qui n'a rien à proposer doit le dire, pas meubler.
