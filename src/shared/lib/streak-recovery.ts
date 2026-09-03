@@ -1,4 +1,5 @@
-import { getYesterdayUtc } from "@/shared/lib/dates";
+import { STREAK_RECOVERY_WINDOW_DAYS } from "@/shared/constants/gamification";
+import { getDateDaysAgoUtc, getYesterdayUtc } from "@/shared/lib/dates";
 
 /**
  * QUAND UNE SÉRIE PEUT-ELLE ÊTRE RACHETÉE — déclaré ICI, et nulle part ailleurs.
@@ -24,6 +25,13 @@ export type StreakRecoveryBlock =
   | "streak-actif"
   /** Aucune série n'a jamais existé : il n'y a rien à récupérer. */
   | "aucun-streak"
+  /**
+   * La série est perdue depuis TROP LONGTEMPS — plus de
+   * `STREAK_RECOVERY_WINDOW_DAYS` jours manqués. Ce cas n'existait pas : la porte
+   * ne regardait que « périmé ou non », donc une absence de dix jours ouvrait le
+   * rachat comme une absence d'un jour.
+   */
+  | "fenetre-expiree"
   /** Aucun blocage — le rachat est ouvert. */
   | null;
 
@@ -47,5 +55,19 @@ export function streakRecoveryBlock(
   const lastActive = profile.last_active_date;
   if (lastActive != null && lastActive >= getYesterdayUtc(now)) return "streak-actif";
   if ((profile.longest_streak ?? 0) === 0) return "aucun-streak";
+
+  // ⭐ LA BORNE HAUTE. Une série rachetable est perdue depuis au plus
+  // `STREAK_RECOVERY_WINDOW_DAYS` jours. `last_active_date` étant le DERNIER jour
+  // actif, la veille de ce jour-là ne compte pas comme manquée : un élève actif
+  // avant-hier n'a manqué qu'hier. La plus vieille date encore rachetable est donc
+  // à `fenêtre + 1` jours.
+  //
+  // Une date ABSENTE ne peut pas être dans une fenêtre : `null` avec une série au
+  // palmarès est un profil que `award_xp` ne produit pas (il écrit toujours
+  // `last_active_date` en même temps que la série), et on ne devine pas une date
+  // pour ouvrir une dépense de pièces.
+  const plusVieilleRachetable = getDateDaysAgoUtc(STREAK_RECOVERY_WINDOW_DAYS + 1, now);
+  if (lastActive == null || lastActive < plusVieilleRachetable) return "fenetre-expiree";
+
   return null;
 }
