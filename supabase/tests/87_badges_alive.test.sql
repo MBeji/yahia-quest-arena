@@ -28,6 +28,10 @@ SELECT plan(20);
 -- =========================================================
 -- 1. ⭐ R-13 — TOUT BADGE DE LA BASE EST DÉCERNABLE.
 -- =========================================================
+-- Une règle peut être ÉCRITE (le code du badge apparaît dans le corps d'une
+-- fonction qui décerne) ou DÉCLARÉE (un événement du calendrier la porte en
+-- donnée, é31 lot 8 : `claim_event_badge` passe le code dynamiquement, donc
+-- aucun corps ne le contient). Les deux comptent ; l'absence des deux, non.
 SELECT is(
   (SELECT COUNT(*)::int FROM public.badges b
     WHERE NOT EXISTS (
@@ -37,6 +41,9 @@ SELECT is(
       WHERE n.nspname = 'public'
         AND p.prosrc LIKE '%award_badge_if_new%'
         AND p.prosrc LIKE '%''' || b.code || '''%'
+    )
+    AND NOT EXISTS (
+      SELECT 1 FROM public.app_events e WHERE e.badge_code = b.code
     )),
   0,
   '⭐ R-13 : aucun badge de la base n''est sans règle — c''est la panne du lot 2, en assertion'

@@ -41,6 +41,9 @@ export const BADGE_CODES = [
   "rich_kid",
   // é31 lot 5 — décerné par la clôture hebdo de ligue (R-14), famille `saison`.
   "league_podium",
+  // é31 lot 8 — le badge de l'événement PILOTE. Chaque événement futur ajoute le
+  // sien ici avec sa migration : sans sa ligne de traduction, `tsc` refuse.
+  "event_rentree",
 ] as const;
 export type BadgeCode = (typeof BADGE_CODES)[number];
 

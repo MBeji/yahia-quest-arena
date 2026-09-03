@@ -292,6 +292,10 @@ export const fr: TranslationKeys = {
         name: "Podium de Ligue",
         condition: "Terminer une semaine de ligue en or, platine ou diamant",
       },
+      event_rentree: {
+        name: "Rentrée 2026",
+        condition: "Relever le défi de la rentrée pendant sa fenêtre",
+      },
     },
     badgeFamilyProgress: "{n}/{total}",
     badgeLocked: "À débloquer",

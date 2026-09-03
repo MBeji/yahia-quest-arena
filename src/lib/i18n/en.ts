@@ -275,6 +275,10 @@ export const en: TranslationKeys = {
         name: "League Podium",
         condition: "Finish a league week in gold, platinum or diamond",
       },
+      event_rentree: {
+        name: "Back to school 2026",
+        condition: "Complete the back-to-school challenge during its window",
+      },
     },
     badgeFamilyProgress: "{n}/{total}",
     badgeLocked: "Locked",

@@ -274,6 +274,10 @@ export const ar: TranslationKeys = {
         name: "منصّة الدوري",
         condition: "إنهاء أسبوع دوري في الذهب أو البلاتين أو الألماس",
       },
+      event_rentree: {
+        name: "العودة المدرسيّة 2026",
+        condition: "إنجاز تحدّي العودة المدرسيّة خلال نافذته",
+      },
     },
     badgeFamilyProgress: "{n}/{total}",
     badgeLocked: "لم يُفتح بعد",

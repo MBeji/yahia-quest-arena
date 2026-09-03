@@ -34,6 +34,8 @@ export {
 export { EngagementAdmin } from "./components/engagement-admin";
 export { getWeeklyRecap, type WeeklyRecap } from "./weekly-recap.server";
 export { WeeklyRecapCard } from "./components/weekly-recap-card";
+export { getActiveEvent, claimEventBadge, type ActiveEvent } from "./events.server";
+export { EventBanner } from "./components/event-banner";
 export {
   getMyParcoursInterests,
   getParcoursInterestCounts,

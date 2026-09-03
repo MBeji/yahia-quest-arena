@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import {
+  getActiveEvent,
   getDailyRing,
   getDashboard,
   getSprint2Dashboard,
@@ -44,6 +45,7 @@ import { MotivationalQuote } from "@/features/dashboard/components/motivational-
 import { DashboardGoalsSkeleton } from "@/features/dashboard/components/dashboard-goals-skeleton";
 import { DashboardFocus } from "@/features/dashboard/components/dashboard-focus";
 import { WeeklyRecapCard } from "@/features/dashboard/components/weekly-recap-card";
+import { EventBanner } from "@/features/dashboard/components/event-banner";
 import { BackToSchoolBanner } from "@/features/dashboard/components/back-to-school-banner";
 import { DashboardSkeleton } from "@/features/dashboard/components/dashboard-skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -99,6 +101,7 @@ function Dashboard() {
   const fetchSprint2 = useServerFn(getSprint2Dashboard);
   const fetchDailyRing = useServerFn(getDailyRing);
   const fetchWeeklyRecap = useServerFn(getWeeklyRecap);
+  const fetchActiveEvent = useServerFn(getActiveEvent);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["dashboard"],
     queryFn: () => fetchDashboard(),
@@ -106,6 +109,11 @@ function Dashboard() {
   const { data: sprint2 } = useQuery({ queryKey: ["sprint2"], queryFn: () => fetchSprint2() });
   // é31 lot 3 — l'XP réellement gagné aujourd'hui, sur l'objectif choisi (R-12).
   const { data: ring } = useQuery({ queryKey: ["daily-ring"], queryFn: () => fetchDailyRing() });
+  // é31 lot 8 — l'événement du calendrier, s'il y en a un aujourd'hui.
+  const { data: activeEvent } = useQuery({
+    queryKey: ["active-event"],
+    queryFn: () => fetchActiveEvent(),
+  });
   // é31 lot 5 — le bilan de la semaine (US-8), déterministe et sans récompense.
   const { data: recap } = useQuery({
     queryKey: ["weekly-recap"],
@@ -313,6 +321,15 @@ function Dashboard() {
           dailyGoal={ring?.goal ?? 100}
           streak={profile.current_streak}
         />
+
+        {/* é31 lot 8 (US-12, R-21) — le calendrier scolaire : la seule chose datée
+            du produit était une suggestion de changement de classe. La bannière
+            annonce un défi et un badge — elle ne borne AUCUN contenu (R-2). */}
+        {activeEvent && (
+          <div className="mt-6">
+            <EventBanner event={activeEvent} />
+          </div>
+        )}
 
         {/* é31 lot 5 (US-8, R-18) — « Ta semaine » : la fin de cycle qui manquait.
             Les faits, comparés à la semaine d'avant, et AUCUNE récompense —
