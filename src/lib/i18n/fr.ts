@@ -151,6 +151,13 @@ export const fr: TranslationKeys = {
     streakLostDesc: "Récupère ta série pour {cost} pièces (tu avais {n} jours)",
     streakRecover: "🔥 Récupérer",
     retryTitle: "Ton dernier exercice",
+    // Rangs 2 et 4 de é30 (amendement C, #870). R-14 : chaque action arrive AVEC SA RAISON en
+    // langage élève — jamais « lacune », jamais « compétence fragile », jamais un pourcentage
+    // de croyance (D-1). On dit ce qu'on va faire, pas ce qu'on pense de l'élève.
+    remediateOverline: "On reprend la base",
+    remediateTitle: "Un pas en arrière pour deux en avant",
+    strengthenOverline: "Encore un peu",
+    strengthenTitle: "La même idée, autrement",
     // Priorité 1 de R-31 : une révision espacée est échue. Elle passe avant tout le reste.
     reviewOverline: "À réviser",
     // Étude 22 R-4 : la bannière de rentrée. « Je reste » ferme pour la saison, sans rien
