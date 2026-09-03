@@ -97,6 +97,35 @@ describe("catalogue des événements produit (é31 §3.6)", () => {
   });
 });
 
+/**
+ * Le texte de chaque appel `trackProductEvent(…)`, parenthèses équilibrées.
+ *
+ * ⚠️ Écrit en BALAYAGE, pas en expression régulière. La première version
+ * — `/trackProductEvent\((?:[^()]|\{[^{}]*\})*\)/g` — a été signalée HIGH par
+ * CodeQL (`js/redos`) sur la PR de l'étude 31 : ses quantificateurs imbriqués
+ * rétrogradent exponentiellement sur un appel suivi de nombreux `{}`. Compter les
+ * parenthèses est linéaire, et se trouve être PLUS juste : la version régulière
+ * ne savait pas lire un appel dont un argument contient lui-même une parenthèse.
+ */
+function trackCallSites(source: string): string[] {
+  const needle = "trackProductEvent(";
+  const calls: string[] = [];
+  let index = source.indexOf(needle);
+
+  while (index !== -1) {
+    let depth = 0;
+    let end = index + needle.length - 1;
+    for (; end < source.length; end += 1) {
+      if (source[end] === "(") depth += 1;
+      else if (source[end] === ")" && (depth -= 1) === 0) break;
+    }
+    calls.push(source.slice(index, end + 1));
+    index = source.indexOf(needle, end + 1);
+  }
+
+  return calls;
+}
+
 describe("trackProductEvent", () => {
   beforeEach(() => vi.mocked(captureProductEvent).mockClear());
   afterEach(() => vi.restoreAllMocks());
@@ -116,13 +145,16 @@ describe("trackProductEvent", () => {
 
   it("⭐ aucun appel du code ne joint une propriété d'identité (zéro PII, D-1)", () => {
     const banned = /\b(email|e_mail|user_id|userId|display_name|displayName|full_name|phone)\b/;
-    const files = sourceFiles(SRC);
-    for (const file of files) {
-      const src = readFileSync(file, "utf8");
-      // Chaque appel, avec son bloc de propriétés jusqu'à la parenthèse fermante.
-      for (const call of src.matchAll(/trackProductEvent\((?:[^()]|\{[^{}]*\})*\)/g)) {
-        expect(banned.test(call[0]), `${file} : ${call[0]}`).toBe(false);
+    let seen = 0;
+    for (const file of sourceFiles(SRC)) {
+      for (const call of trackCallSites(readFileSync(file, "utf8"))) {
+        seen += 1;
+        expect(banned.test(call), `${file} : ${call}`).toBe(false);
       }
     }
+    // ⚠️ Un balayage qui ne trouve RIEN passerait ce test sans rien vérifier —
+    // le piège « vert pour la mauvaise raison » du runbook. Il y a au moins un
+    // appel par événement câblé.
+    expect(seen).toBeGreaterThanOrEqual(PRODUCT_EVENT_CATALOGUE.filter((e) => e.live).length);
   });
 });
