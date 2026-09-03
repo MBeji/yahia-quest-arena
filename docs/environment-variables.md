@@ -112,6 +112,48 @@ endpoints régionaux). C'est ce piège qui a bloqué en silence une partie des `
 test `src/shared/lib/__tests__/csp.test.ts` assert désormais **un hôte à la fois**, sur le
 jeton exact. Rester étroit : ne jamais élargir en `https://*.google.com`.
 
+### 🔴 RÈGLE — re-sonder le navigateur après tout changement de CSP ou de balise tierce
+
+**Aucun tier de test ne peut voir ce défaut, et c'est structurel** (#804) — donc la vérification
+est une règle de conduite, pas un gate. Les trois tiers sont aveugles pour trois raisons
+différentes, et il ne sert à rien d'espérer qu'ils s'améliorent :
+
+| tier                                             | pourquoi il ne voit rien                                                                                                                                                    |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Playwright `e2e/public/security-headers.spec.ts` | son `webServer` est `npm run dev`, donc `import.meta.env.PROD` est faux, donc `isAnalyticsEnabled()` rend `false` : **gtag.js ne se charge jamais**, il n'y a rien à violer |
+| `smoke:shell`                                    | **hermétique par conception** — « every non-localhost request is blocked ». Une balise y serait arrêtée par le harnais, jamais par la CSP                                   |
+| `csp.test.ts`                                    | il juge la **chaîne** de la politique — ce que _nous croyons_ que gtag appelle, pas ce que gtag appelle                                                                     |
+
+La question « notre `connect-src` couvre-t-elle les hôtes que la balise appelle **réellement** ? »
+porte sur un **fait externe** (le comportement de Google), qui peut changer sans qu'une seule
+ligne bouge ici. Le trou se rouvrira donc tout seul le jour où gtag ajoutera une destination.
+
+**À faire après toute PR qui touche `csp.ts`, `analytics.ts` ou une balise tierce** — depuis la
+console d'un navigateur sur la prod. **Toujours avec le contrôle négatif** : sans lui, « aucune
+erreur » ne prouve rien (il prouverait aussi bien que la sonde ne sonde pas).
+
+```js
+const probe = async (u) => {
+  try {
+    const r = await fetch(u, { mode: "no-cors" });
+    return "ALLOWED " + r.type;
+  } catch (e) {
+    return "BLOCKED " + e.message;
+  }
+};
+await probe("https://analytics.google.com/robots.txt"); // doit être ALLOWED
+await probe("https://www.google.com/robots.txt"); // doit être ALLOWED
+await probe("https://example.com/"); // DOIT être BLOCKED — sinon la mesure ne vaut rien
+```
+
+On sonde l'**origine** avec un chemin inoffensif : `connect-src` juge l'origine, pas le chemin.
+
+**Pourquoi pas un canari prod automatique** (un job planifié chargeant une page publique dans un
+Chromium non hermétique, à l'écoute de `securitypolicyviolation`) : c'est le seul dispositif qui
+verrait un changement côté Google, et il a été **pesé puis écarté** — il fait sortir un tier de
+test vers l'extérieur, avec la flakiness que ça implique, et il écrit du trafic réel dans GA4 à
+chaque passage. Arbitrage du 2026-09-03. À rouvrir si la liste d'hôtes bouge une seconde fois.
+
 **Developer-traffic tagging.** Every hit carries a `traffic_type` parameter, resolved at
 runtime from `window.location.hostname` (`resolveTrafficType` in `analytics.ts`):
 `developer` on local hosts (`localhost`, loopback — e.g. `vite preview`/smoke runs of the
