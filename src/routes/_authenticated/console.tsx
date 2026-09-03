@@ -9,6 +9,7 @@ import {
   Coins,
   CreditCard,
   Flag,
+  Flame,
   FlaskConical,
   TrendingUp,
 } from "lucide-react";
@@ -31,6 +32,14 @@ import { useT } from "@/lib/i18n";
  *
  * Le pôle récupère aussi `/admin/economie`, console réelle que RIEN ne liait :
  * elle ne s'atteignait qu'en tapant son URL.
+ *
+ * ⚠️ **Et c'est arrivé une SECONDE fois** : `/admin/engagement` (é31 lot 1) a été
+ * livrée le 2026-09-02 sans sa ligne ici, et n'était atteignable qu'en collant son
+ * URL — signalé depuis la production le 2026-09-03. Une console qu'on n'atteint
+ * pas ne mesure rien : c'est exactement le constat que l'étude 31 fait des badges
+ * morts, rejoué sur l'outil censé la mesurer. `console.test.tsx` compare désormais
+ * cette liste aux fichiers `admin.*.tsx` du routeur — ajouter une console sans son
+ * entrée fait échouer le gate.
  *
  * Ce n'est PAS le contrôle d'accès : chaque console garde le sien, côté serveur.
  * Cette page ne fait que les rassembler.
@@ -102,6 +111,9 @@ function ConsolePage() {
       count: 0,
     },
     { to: "/admin/economie" as const, Icon: Coins, label: t.layout.economy, count: 0 },
+    // Étude 31 lot 1 : la console de rétention. Pas de pastille — elle ne porte
+    // aucune file d'attente, seulement des agrégats en lecture seule.
+    { to: "/admin/engagement" as const, Icon: Flame, label: t.layout.engagement, count: 0 },
     // Étude 29 lot 5 : la console du mode IA. Pas de pastille — elle ne porte
     // aucune file d'attente, seulement des agrégats et deux interrupteurs.
     { to: "/admin/ia" as const, Icon: BrainCircuit, label: t.ai.adminTitle, count: 0 },
