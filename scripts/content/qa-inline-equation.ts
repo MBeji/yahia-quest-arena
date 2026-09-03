@@ -36,14 +36,25 @@ import type { Flag } from "./qa-checks.ts";
 /**
  * Sévérité de la règle « équation mêlée au texte de l'énoncé ».
  *
- * WARN, le temps que la campagne de réécriture passe sur le corpus : l'état des
- * lieux du 2026-08-24 compte **145 énoncés** concernés (85 en `math`, 27 en
- * `math-8eme`, 25 en `math-7eme`, 7 en `svt`). Les deux dépôts ne se livrant jamais dans la même PR
- * (AGENTS.md § Content pipeline), poser `error` ici ferait rougir la Content CI
- * privée entre le merge du moteur et celui du corpus. Bascule d'une ligne une fois
- * la campagne mergée — précédent : `OPTION_REFERENCE_LEVEL`.
+ * ERROR depuis le 2026-09-03 (#853). Elle est née en `warn` — 145 énoncés au
+ * 2026-08-24 (85 `math`, 27 `math-8eme`, 25 `math-7eme`, 7 `svt`) — parce que les
+ * deux dépôts ne se livrent jamais dans la même PR (AGENTS.md § Content pipeline) :
+ * poser `error` avant le merge du corpus aurait fait rougir la Content CI privée
+ * dans l'intervalle. Même précédent que `OPTION_REFERENCE_LEVEL`.
+ *
+ * ⚠️ LA BASCULE A ÉTÉ RETARDÉE UNE FOIS, ET LA RAISON MÉRITE D'ÊTRE LUE.
+ * Le relevé qui concluait à « 0 énoncé » (2026-08-24) était exact pour ce que le
+ * gate voyait alors, et faux pour le corpus : **12 énoncés `short_answer`**
+ * restaient en `math`, invisibles parce que ce type échappait à neuf contrôles
+ * — corrigé par #946, APRÈS la mesure. Ils ont été réécrits par
+ * MBeji/yahia-quest-content#335 (la formule quitte la phrase et prend sa ligne),
+ * et `content:qa` rend **0** sur cette règle depuis.
+ *
+ * La leçon, elle, dépasse cette règle : un « zéro » daté d'avant #946 ne prouve
+ * rien pour un contrôle dont les `short_answer` s'échappaient. Toute bascule qui
+ * s'appuie sur un relevé antérieur au 2026-09-01 se re-mesure avant d'être faite.
  */
-export const INLINE_EQUATION_LEVEL: Flag["level"] = "warn";
+export const INLINE_EQUATION_LEVEL: Flag["level"] = "error";
 
 /** Poids minimal d'une formule pour qu'on exige sa propre ligne. */
 const INLINE_EQUATION_MIN = 10;
