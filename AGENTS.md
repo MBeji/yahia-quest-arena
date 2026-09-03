@@ -147,12 +147,17 @@ A change is **done** only when ALL of these hold — non-negotiable:
    armed; it merges alone once required checks are green on an up-to-date head — nobody reads,
    readies, or merges by hand. The session that pushed **stays on duty until the merge is real**:
    watch checks, fix reds, confirm the merge, then **close the session clean** (checklist below).
-   Savepoint: prefix the **branch** `wip/`/`draft/`/`rescue/`. Do NOT rely on `[wip]`/`[draft]` in
-   the commit subject — it leaks into `main` (twice on 2026-07-20): a single-commit branch squashes
-   on the commit subject, and auto-merge freezes the message when it arms, so fixing the PR title afterwards is too late.
-   Le titre vient du sujet de `HEAD` : un commit de merge en tête titre le squash — vérifier `git log -1 --pretty=%s` avant de pousser, replier si besoin ([`collaboration.md`](./docs/agents/collaboration.md)).
+   Savepoint = **préfixe de branche** `wip/`/`draft/`/`rescue/`, jamais `[wip]` dans le sujet de
+   commit (ça fuit dans `main`, deux fois le 2026-07-20 : un squash titre sur le sujet de `HEAD`,
+   et l'auto-merge fige le message en s'armant). Vérifier `git log -1 --pretty=%s` avant de
+   pousser ([`collaboration.md`](./docs/agents/collaboration.md)).
 
 Full detail on §7/§8: [`docs/ci-cd-and-branch-protection.md`](./docs/ci-cd-and-branch-protection.md), [`docs/passation.md`](./docs/passation.md) — its §7 is the session-close checklist.
+
+**Definition of Excellence — le pendant PRODUIT du DoD** (étude 26). Le DoD dit que le code est
+sain, la **DoE** que l'expérience est complète. **Profondeur avant largeur** : approfondir
+l'emporte **par défaut** sur ouvrir, et une ouverture se gèle par écrit faute d'arbitrage humain.
+Ses 8 critères, la grille M0-M4, la doctrine IA : [`docs/doctrine-verticale.md`](./docs/doctrine-verticale.md).
 
 ## Execution policy
 
@@ -193,6 +198,7 @@ this repo (this file, `STATUS.md`, `docs/agents/`) — not only in a tool's priv
 | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`ARCHITECTURE.md`](./ARCHITECTURE.md)                                         | Stack, directory structure, data model, deployment — the deep companion to this file                                                                                                                                                                                                                                                         |
 | [`STATUS.md`](./STATUS.md)                                                     | Central topo: phase, dated decisions, real feature/étude status                                                                                                                                                                                                                                                                              |
+| [`docs/doctrine-verticale.md`](./docs/doctrine-verticale.md)                   | **Doctrine produit** (étude 26) : profondeur avant largeur, grille M0-M4, Definition of Excellence, règle d'arbitrage, doctrine IA-native                                                                                                                                                                                                    |
 | `FableEtudes/` (repo **privé**)                                                | Epic design studies (architect → executor contracts) — parties au privé avec le corpus (étude 24)                                                                                                                                                                                                                                            |
 | [`docs/content-generation-pipeline.md`](./docs/content-generation-pipeline.md) | Content pipeline spec (French) — le moteur est ici, le corpus est au privé                                                                                                                                                                                                                                                                   |
 | [`e2e/README.md`](./e2e/README.md)                                             | Playwright runbook (dedicated TEST project)                                                                                                                                                                                                                                                                                                  |
@@ -218,33 +224,27 @@ this repo (this file, `STATUS.md`, `docs/agents/`) — not only in a tool's priv
   jams `supabase db push` and silently strands prod behind code. The `Migration order` PR
   check catches this pre-merge.
 - **La prod n'est PAS le juge de la reconstructibilité.** Une migration peut passer en prod (où
-  ses parents existent de longue date) et rendre impossible la construction d'une base vierge —
-  donc pgTAP et tout projet TEST neuf (quatre pannes en cascade après é24 lot 4 : #548, #549,
-  #552, #557). `db-tests.yml` tourne sur les PR depuis le 2026-07-20 (chemins filtrés) **mais
-  n'est pas requis** : un rouge n'arrête pas l'auto-merge, il faut aller le lire. `db:check-chain`
-  rejoue la chaîne statiquement (FK orphelines, ids de fixtures en collision, doublons de
-  version) ; un INSERT de contenu dépendant de lignes absentes d'ici se garde par
-  `WHERE EXISTS (SELECT 1 FROM public.<parent> p WHERE p.id = v.<fk>)`.
+  ses parents sont anciens) et rendre impossible la construction d'une base vierge — donc pgTAP
+  et tout projet TEST neuf (quatre pannes après é24 lot 4 : #548, #549, #552, #557).
+  `db-tests.yml` tourne sur les PR **mais n'est pas requis** : un rouge n'arrête pas l'auto-merge,
+  il faut aller le lire. `db:check-chain` rejoue la chaîne statiquement ; un INSERT dépendant de
+  lignes absentes se garde par `WHERE EXISTS (SELECT 1 FROM public.<parent> …)`.
 - **Un refus d'auth se déclare dans `auth-refusals.ts`, jamais ailleurs** — message ET conduite
-  client. Deux listes tenues à la main ont divergé deux fois (#931 « Failed to load dashboard » ;
-  #914/#915 « Valider » grisé sans fin) : `Record<AuthFailure, …>` fait désormais échouer `tsc` sur
-  un refus sans sa ligne, et `auth-refusals.test.ts` couvre tout refus futur. Jamais de message en dur.
+  client. Deux listes tenues à la main ont divergé deux fois (#931 ; #914/#915) : le
+  `Record<AuthFailure, …>` fait échouer `tsc` sur un refus sans sa ligne. Jamais de message en dur.
 - **E2E ≠ unit gate.** Playwright hits a dedicated TEST Supabase project, not unit-test mocks;
   not part of `verify`/`ci:verify`; never point it at prod.
-- **La CI n'est pas exactement `verify`** : elle ajoute `build:check` et `smoke:shell` (le seul
-  étage qui exécute le bundle prod dans Chromium) et n'a **pas** `eol:check` (git normalise à la
-  sortie). `npm run ci:verify` en est le miroir local le plus proche ; un gate local vert ne
-  garantit pas une CI verte. Les gates **contenu** n'en sont plus : Content CI privée (étude 24).
-- **`audit:deps` n'est pas hermétique** (il est dans `ci:verify` et la CI, pas dans `verify`) :
-  il interroge le registre au moment du run, donc à lockfile constant le même commit passe le
-  matin et échoue l'après-midi, et c'est **toute la file** qui est bloquée, pas la PR visée
-  (2026-08-04, `fast-uri`, #712). Réflexe : `git diff origin/main HEAD -- package.json
-package-lock.json` (vide ⇒ ce n'est pas toi), puis `npm audit fix --package-lock-only
---omit=dev` en commit séparé.
-- **Le titre d'une PR Dependabot peut mentir sur son diff.** #716, « bump undici · indirect »,
-  montait une **majeure** et entrait une **alpha** ; son lockfile a cassé `npm ci` **hors d'ici**
-  (33 h de Content CI privée rouge) pendant que ce gate restait vert. ✅ **Mécanisé le 2026-09-03**
-  (A17) : `check-dependency-pr.mjs` dans `verify` — [`docs/dependency-maintenance.md`](./docs/dependency-maintenance.md).
+- **La CI n'est pas exactement `verify`** : elle ajoute `build:check` et `smoke:shell` (seul
+  étage qui exécute le bundle prod dans Chromium) et n'a pas `eol:check`. `ci:verify` en est le
+  miroir local le plus proche — un gate local vert ne garantit pas une CI verte. Les gates
+  **contenu** n'en sont plus : Content CI privée (étude 24).
+- **`audit:deps` n'est pas hermétique** (dans `ci:verify` et la CI, pas dans `verify`) : il
+  interroge le registre au moment du run, donc à lockfile constant le même commit passe le matin
+  et échoue l'après-midi — et c'est **toute la file** qui bloque, pas la PR visée (`fast-uri`,
+  #712 puis 2026-09-02). Réflexe en trois gestes : [`docs/dependency-maintenance.md`](./docs/dependency-maintenance.md).
+- **Le titre d'une PR Dependabot peut mentir sur son diff** — #716 (« bump undici · indirect »)
+  montait une majeure et une alpha : 33 h de Content CI rouge, ce gate vert. ✅ Mécanisé le
+  2026-09-03 (A17) — [`docs/dependency-maintenance.md`](./docs/dependency-maintenance.md).
 - Coverage is scoped to owned code (`features/`, `shared/`, `lib/`, `hooks/`) — vendored UI,
   route glue, generated files **et tout `features/**/components/**`** sont exclus par choix
   (rendu, couvert par les tests de route et le build) ; ne pas élargir `include` pour diluer.
