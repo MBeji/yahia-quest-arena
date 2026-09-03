@@ -724,6 +724,49 @@ describe("auditOptionReference — une option ne se désigne pas par sa lettre n
     expect(optionReferences(explanation)).toHaveLength(4);
   });
 
+  it("laisse l'énoncé nommer ses figures par une analogie « A est à B », lettres NUES", () => {
+    // Le patron le plus courant du raisonnement analogique. Les lettres y désignent
+    // les FIGURES de l'énoncé, que `shuffleOptions` ne mélange pas — mais l'énoncé
+    // les écrit nues là où l'explication les parenthèse, et cette asymétrie de FORME
+    // suffisait à faire crier la garde (#945). Les trois langues du corpus :
+    const cas = [
+      [
+        "A est à B ce que C est à ? — observe la transformation entre les deux premières figures.",
+        "Le triangle plein vers la droite (A) devient un triangle vers le bas (B) : un quart de tour.",
+      ],
+      [
+        "A is to B as C is to ? — observe the transformation between the first two figures.",
+        "The solid triangle pointing right (A) becomes a triangle pointing down (B).",
+      ],
+      [
+        "نسبة A إلى B كنسبة C إلى ؟ — لاحظ التحويل.",
+        "المثلث الممتلئ (A) يصير مثلثًا متجهًا نحو الأسفل (B).",
+      ],
+    ] as const;
+    for (const [prompt, explanation] of cas) {
+      expect(optionReferences(explanation, prompt)).toEqual([]);
+      // Contrôle négatif, le même que pour les cas parenthésés : sans l'analogie
+      // dans l'énoncé, la garde voit encore les deux lettres.
+      expect(optionReferences(explanation)).toEqual(["(A)", "(B)"]);
+    }
+  });
+
+  it("n'excuse QUE la lettre encadrée par le connecteur d'analogie", () => {
+    // Une majuscule nue est plus ambiguë qu'une lettre parenthésée : un énoncé qui
+    // se contente d'en semer ne déclare rien, et l'explication reste fautive.
+    const explanation = "L'option (a) oublie le signe et (b) inverse le produit.";
+    expect(optionReferences(explanation, "Soit A un point du plan et B son image.")).toHaveLength(
+      2,
+    );
+    // `D` n'est pas dans l'analogie : il reste une option désignée par sa lettre —
+    // ici corroborée par le nom d'option, la règle FORTE. Une parenthèse `(d)` restée
+    // seule après le filtrage ne compterait pas : la règle faible exige toujours DEUX
+    // lettres non déclarées, ou une règle forte à côté.
+    expect(
+      optionReferences("L'option (d) translate le tracé (a).", "A est à B ce que C est à ?"),
+    ).toEqual(["option (d)"]);
+  });
+
   it("attrape le rang, dans les deux ordres et dans les trois langues", () => {
     expect(hits("La dernière réponse confond composée et bissectrice.")).toEqual([
       "dernière réponse",
