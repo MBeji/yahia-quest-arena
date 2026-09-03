@@ -1,4 +1,3 @@
-import type { BadgeCode, BadgeFamily } from "@/shared/constants/badges";
 import type { HeroClass, HeroTitle } from "@/shared/constants/hero-identity";
 import type { AdaptiveTranslations } from "./adaptive.types";
 import type { DuelTranslations } from "./duel.types";
@@ -229,24 +228,14 @@ export type TranslationKeys = {
     badgeEarnedOn: string;
     badgesEmpty: string;
     /**
-     * é31 lot 2 — la collection COMPLÈTE (US-3, R-13). Un badge sans sa ligne
-     * fait échouer `tsc` : c'est le seul garde-fou qui empêche qu'un badge semé
-     * en base s'affiche en français dans les trois langues, comme les payloads
-     * push l'ont fait.
-     */
-    /**
      * é31 lot 7 (R-22) — un palier sans sa ligne ne compile pas : la colonne
-     * portait du français, rendu tel quel dans les trois langues.
+     * portait du français, rendu tel quel dans les trois langues. Ces clés
+     * restent APP-WIDE (l'en-tête du tableau de bord n'est pas paresseux),
+     * contrairement aux libellés de badges partis dans `badges/`.
      */
     heroClasses: Record<HeroClass, string>;
     heroTitles: Record<HeroTitle, string>;
     avatarTierLabel: string;
-    badgeFamilies: Record<BadgeFamily, string>;
-    badgeLabels: Record<BadgeCode, { name: string; condition: string }>;
-    /** Compteur d'une famille : « 3/5 ». */
-    badgeFamilyProgress: string;
-    badgeLocked: string;
-    badgeCollectionProgress: string;
     shopTitle: string;
     shopDefaultDesc: string;
     shopEquipped: string;

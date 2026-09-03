@@ -2,6 +2,7 @@ import { Lock } from "lucide-react";
 
 import { BadgeMedal } from "@/components/game/badge-medal";
 import { useI18n } from "@/lib/i18n";
+import { useBadgeT } from "@/lib/i18n/badges";
 import {
   BADGE_FAMILIES,
   badgeFamilyRank,
@@ -34,15 +35,16 @@ import type { BadgeCollectionEntry } from "@/shared/types/gamification";
  * disparaître.
  */
 export function BadgeCollection({ collection }: { collection: BadgeCollectionEntry[] }) {
-  const { t, locale } = useI18n();
+  const { locale } = useI18n();
+  const t = useBadgeT();
 
   const label = (entry: BadgeCollectionEntry): { name: string; condition: string } =>
     isKnownBadgeCode(entry.code)
-      ? t.dashboard.badgeLabels[entry.code]
+      ? t.badgeCollection.labels[entry.code]
       : { name: entry.name, condition: entry.description ?? t.dashboard.badgeDefaultReason };
 
   const familyName = (family: string): string =>
-    (t.dashboard.badgeFamilies as Record<string, string>)[family] ?? family;
+    (t.badgeCollection.families as Record<string, string>)[family] ?? family;
 
   // Un badge obtenu passe devant dans sa famille ; à égalité, l'ordre de la base.
   const families = [...new Set(collection.map((b) => b.family))].sort(
@@ -61,7 +63,7 @@ export function BadgeCollection({ collection }: { collection: BadgeCollectionEnt
   return (
     <div className="space-y-6" data-testid="badge-collection">
       <p className="text-sm text-muted-foreground" data-testid="badge-collection-progress">
-        {t.dashboard.badgeCollectionProgress
+        {t.badgeCollection.collectionProgress
           .replace("{n}", String(earned))
           .replace("{total}", String(collection.length))}
       </p>
@@ -74,7 +76,7 @@ export function BadgeCollection({ collection }: { collection: BadgeCollectionEnt
             <h3 className="mb-3 flex items-center gap-2 font-display text-lg font-bold">
               {familyName(family)}
               <span className="text-xs font-normal uppercase tracking-widest text-muted-foreground">
-                {t.dashboard.badgeFamilyProgress
+                {t.badgeCollection.familyProgress
                   .replace("{n}", String(done))
                   .replace("{total}", String(items.length))}
               </span>
@@ -123,7 +125,7 @@ export function BadgeCollection({ collection }: { collection: BadgeCollectionEnt
                         ) : (
                           <div className="inline-flex items-center gap-1 rounded-full bg-surface-1 px-3 py-1 text-xs font-bold text-muted-foreground">
                             <Lock className="h-3 w-3" aria-hidden="true" />
-                            {t.dashboard.badgeLocked}
+                            {t.badgeCollection.locked}
                           </div>
                         )}
                       </div>

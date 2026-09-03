@@ -7,9 +7,9 @@ import React from "react";
 import { BadgeCollection } from "../components/badge-collection";
 import { buildBadgeCollection } from "../badges";
 import { BADGE_CODES, BADGE_FAMILIES } from "@/shared/constants/badges";
-import { fr } from "@/lib/i18n/fr";
-import { en } from "@/lib/i18n/en";
-import { ar } from "@/lib/i18n/ar";
+import { frBadges } from "@/lib/i18n/badges/fr";
+import { enBadges } from "@/lib/i18n/badges/en";
+import { arBadges } from "@/lib/i18n/badges/ar";
 import type { BadgeCollectionEntry } from "@/shared/types/gamification";
 
 /**
@@ -47,7 +47,7 @@ describe("BadgeCollection", () => {
     const locked = screen.getByTestId("badge-collection").querySelector('[data-code="streak_30"]');
     expect(locked).not.toBeNull();
     expect(locked?.getAttribute("data-unlocked")).toBe("false");
-    expect(locked?.textContent).toContain(fr.dashboard.badgeLabels.streak_30.condition);
+    expect(locked?.textContent).toContain(frBadges.badgeCollection.labels.streak_30.condition);
   });
 
   it("dit la progression globale et celle de chaque famille", () => {
@@ -147,11 +147,11 @@ describe("catalogue de badges — les trois langues (R-22)", () => {
   it("⭐ chaque badge a un nom ET une condition dans les 3 langues", () => {
     for (const code of BADGE_CODES) {
       for (const [name, dict] of [
-        ["fr", fr],
-        ["en", en],
-        ["ar", ar],
+        ["fr", frBadges],
+        ["en", enBadges],
+        ["ar", arBadges],
       ] as const) {
-        const label = dict.dashboard.badgeLabels[code];
+        const label = dict.badgeCollection.labels[code];
         expect(label?.name?.length ?? 0, `${code} / ${name} : nom manquant`).toBeGreaterThan(0);
         expect(
           label?.condition?.length ?? 0,
@@ -163,8 +163,8 @@ describe("catalogue de badges — les trois langues (R-22)", () => {
 
   it("chaque famille est nommée dans les 3 langues", () => {
     for (const family of BADGE_FAMILIES) {
-      for (const dict of [fr, en, ar]) {
-        expect(dict.dashboard.badgeFamilies[family].length).toBeGreaterThan(0);
+      for (const dict of [frBadges, enBadges, arBadges]) {
+        expect(dict.badgeCollection.families[family].length).toBeGreaterThan(0);
       }
     }
   });
@@ -215,6 +215,6 @@ describe("le catalogue du code suit celui de la base (R-13)", () => {
     expect((BADGE_CODES as readonly string[]).includes("night_owl")).toBe(false);
     expect(migration).toContain("DELETE FROM public.badges b");
     expect(migration).toContain("'night_owl'");
-    expect(fr.dashboard.badgeLabels).not.toHaveProperty("night_owl");
+    expect(frBadges.badgeCollection.labels).not.toHaveProperty("night_owl");
   });
 });

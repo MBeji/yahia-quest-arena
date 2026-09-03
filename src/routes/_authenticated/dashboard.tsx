@@ -44,8 +44,6 @@ import { SubjectPathCard } from "@/features/dashboard/components/subject-path-ca
 import { MotivationalQuote } from "@/features/dashboard/components/motivational-quote";
 import { DashboardGoalsSkeleton } from "@/features/dashboard/components/dashboard-goals-skeleton";
 import { DashboardFocus } from "@/features/dashboard/components/dashboard-focus";
-import { WeeklyRecapCard } from "@/features/dashboard/components/weekly-recap-card";
-import { EventBanner } from "@/features/dashboard/components/event-banner";
 import { BackToSchoolBanner } from "@/features/dashboard/components/back-to-school-banner";
 import { DashboardSkeleton } from "@/features/dashboard/components/dashboard-skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -77,6 +75,20 @@ const WeaknessesPanel = lazy(() =>
 );
 // Objectifs & quêtes : même raison, budget de chunk. Voir l'en-tête du composant —
 // c'est le `lazy()` qui déplace les octets, pas l'extraction seule.
+// é31 lots 5 et 8 — mêmes raisons que les objectifs ci-dessous : le chunk du
+// tableau de bord a un budget, et ces deux cartes ne sont pas la première chose
+// que l'élève regarde. C'est le `lazy()` qui déplace les octets, pas l'extraction.
+const WeeklyRecapCard = lazy(() =>
+  import("@/features/dashboard/components/weekly-recap-card").then((m) => ({
+    default: m.WeeklyRecapCard,
+  })),
+);
+const EventBanner = lazy(() =>
+  import("@/features/dashboard/components/event-banner").then((m) => ({
+    default: m.EventBanner,
+  })),
+);
+
 const DashboardGoals = lazy(() =>
   import("@/features/dashboard/components/dashboard-goals").then((m) => ({
     default: m.DashboardGoals,
@@ -326,18 +338,22 @@ function Dashboard() {
             du produit était une suggestion de changement de classe. La bannière
             annonce un défi et un badge — elle ne borne AUCUN contenu (R-2). */}
         {activeEvent && (
-          <div className="mt-6">
-            <EventBanner event={activeEvent} />
-          </div>
+          <Suspense fallback={null}>
+            <div className="mt-6">
+              <EventBanner event={activeEvent} />
+            </div>
+          </Suspense>
         )}
 
         {/* é31 lot 5 (US-8, R-18) — « Ta semaine » : la fin de cycle qui manquait.
             Les faits, comparés à la semaine d'avant, et AUCUNE récompense —
             un bilan qui paye devient une tâche. */}
         {recap && (
-          <div className="mt-6">
-            <WeeklyRecapCard recap={recap} />
-          </div>
+          <Suspense fallback={null}>
+            <div className="mt-6">
+              <WeeklyRecapCard recap={recap} />
+            </div>
+          </Suspense>
         )}
 
         {/* « Révision du jour » (étude 04, lot A1.1) — juste sous la bande focus, parce que

@@ -77,6 +77,9 @@ export default defineConfig(async ({ command, mode }) => {
             // deliberately stays out, or this chunk would import the index chunk back
             // and re-open the very cycle the comment above is about.
             if (/\/src\/lib\/i18n\/parent\/(fr|en|ar)\.ts$/.test(id)) return "i18n-parent";
+            // é31 lot 2 : même règle pour les libellés de la collection de badges
+            // (~5 KB ×3 langues), servis par la seule route /boutique.
+            if (/\/src\/lib\/i18n\/badges\/(fr|en|ar)\.ts$/.test(id)) return "i18n-badges";
             if (!id.includes("node_modules")) return;
 
             if (id.includes("@tanstack/")) return "vendor-tanstack";
