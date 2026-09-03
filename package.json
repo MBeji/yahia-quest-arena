@@ -52,6 +52,7 @@
     "perf:check": "node scripts/perf/check-harness.mjs",
     "reports:export": "node scripts/reports/export-reports.mjs",
     "reports:client-errors": "node --experimental-strip-types scripts/reports/export-client-errors.mjs",
+    "reports:engagement": "node scripts/reports/format-engagement.mjs",
     "reports:resolve": "node scripts/reports/resolve-reports.mjs",
     "harness:sync": "node scripts/harness/sync.mjs",
     "harness:check": "node scripts/harness/check.mjs",
