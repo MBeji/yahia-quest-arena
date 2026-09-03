@@ -42,6 +42,18 @@ export const frBadges: BadgeTranslations = {
         name: "Rentrée 2026",
         condition: "Relever le défi de la rentrée pendant sa fenêtre",
       },
+      event_synthese: {
+        name: "Devoirs de synthèse",
+        condition: "Réussir 3 missions à 90 % pendant la quinzaine des devoirs de synthèse",
+      },
+      event_ramadan: {
+        name: "Ramadan 1448",
+        condition: "Jouer 3 missions pendant la quinzaine du Défi Ramadan",
+      },
+      event_revisions: {
+        name: "Révisions de mai",
+        condition: "Réussir 5 missions à 90 % pendant la quinzaine des révisions de mai",
+      },
     },
     familyProgress: "{n}/{total}",
     locked: "À débloquer",

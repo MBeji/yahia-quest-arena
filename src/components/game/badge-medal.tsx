@@ -1,5 +1,6 @@
 import {
   Award,
+  BookOpen,
   Calculator,
   Coins,
   Flame,
@@ -7,10 +8,14 @@ import {
   Moon,
   Package,
   Shield,
+  Sparkles,
   Star,
+  Sun,
   Sword,
+  Swords,
   Timer,
   TrendingUp,
+  Trophy,
   Zap,
   type LucideIcon,
 } from "lucide-react";
@@ -28,7 +33,15 @@ import { cn } from "@/shared/lib/utils";
 // vraies médailles, seul ce composant change.
 // =============================================================================
 
-/** Les glyphes semés en base (`badges.icon_name`), plus un repli. */
+/**
+ * Les glyphes semés en base (`badges.icon_name`), plus un repli.
+ *
+ * ⚠️ Cette carte doit couvrir TOUT `icon_name` semé par une migration. Un nom
+ * absent ne casse rien — il retombe sur `Award` — et c'est bien le problème :
+ * `event_rentree` a été semé en `Sparkles` par le lot 8 de é31 et a porté le
+ * glyphe de repli sans que rien ne rougisse. `badge-medal.test.tsx` compare
+ * désormais cette carte au semis des migrations, dans les deux sens.
+ */
 const GLYPHS: Record<string, LucideIcon> = {
   Sword,
   Flame,
@@ -42,6 +55,15 @@ const GLYPHS: Record<string, LucideIcon> = {
   Package,
   Coins,
   Moon,
+  // é31 lot 8 et sa suite — les badges saisonniers du calendrier.
+  Sparkles,
+  BookOpen,
+  Sun,
+  // Semés et JAMAIS rendus : `league_podium` en `Trophy` (lot 5) et `boss_slayer`
+  // en `swords` (le tout premier seed, 2026-05-22). Le second est normalisé en
+  // `Swords` par `20260903120000` — la casse du seed d'origine ne rendait rien.
+  Trophy,
+  Swords,
 };
 
 const RARITY_COLOR: Record<string, string> = {

@@ -42,6 +42,18 @@ export const arBadges: BadgeTranslations = {
         name: "العودة المدرسيّة 2026",
         condition: "إنجاز تحدّي العودة المدرسيّة خلال نافذته",
       },
+      event_synthese: {
+        name: "فروض التأليف",
+        condition: "النجاح في 3 مهامّ بنسبة 90٪ خلال أسبوعَي فروض التأليف",
+      },
+      event_ramadan: {
+        name: "رمضان 1448",
+        condition: "إنجاز 3 مهامّ خلال أسبوعَي تحدّي رمضان",
+      },
+      event_revisions: {
+        name: "مراجعات مايو",
+        condition: "النجاح في 5 مهامّ بنسبة 90٪ خلال أسبوعَي مراجعات مايو",
+      },
     },
     familyProgress: "{n}/{total}",
     locked: "لم يُفتح بعد",

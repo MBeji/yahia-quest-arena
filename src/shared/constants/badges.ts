@@ -44,6 +44,11 @@ export const BADGE_CODES = [
   // é31 lot 8 — le badge de l'événement PILOTE. Chaque événement futur ajoute le
   // sien ici avec sa migration : sans sa ligne de traduction, `tsc` refuse.
   "event_rentree",
+  // é31 Q-2 — les trois autres moments du calendrier 2026-2027, semés le
+  // 2026-09-03 (`20260903120000_calendrier_2026_2027.sql`).
+  "event_synthese",
+  "event_ramadan",
+  "event_revisions",
 ] as const;
 export type BadgeCode = (typeof BADGE_CODES)[number];
 
