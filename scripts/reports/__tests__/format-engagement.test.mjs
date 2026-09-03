@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   formatEngagementReport,
+  num,
   latestMeasurable,
   maxActive,
   pct,
@@ -33,7 +34,12 @@ const RELEVE_REEL = {
     { week_start: "2026-08-10", active: 1, returned: 1, curr_pct: 100 },
     { week_start: "2026-08-17", active: 5, returned: 3, curr_pct: 60 },
   ],
-  learning: { accuracy_avg_pct: 74.2, accuracy_p50_pct: 80, chapters_per_active: 3, attempts_30d: 41 },
+  learning: {
+    accuracy_avg_pct: 74.2,
+    accuracy_p50_pct: 80,
+    chapters_per_active: 3,
+    attempts_30d: 41,
+  },
 };
 const LE_3_SEPTEMBRE = new Date("2026-09-03T18:00:00Z");
 
@@ -97,6 +103,25 @@ describe("le relevé du 2026-09-03, tel qu'il sera publié", () => {
   it("rend la métrique de garde R-1 — l'engagement ne se lit pas seul", () => {
     expect(md).toContain("Métrique de garde (R-1)");
     expect(md).toContain("74,2 %");
+  });
+
+  it("⭐ un seul séparateur décimal dans tout le relevé — la virgule", () => {
+    // Le PREMIER run publié (issue #962) a rendu « 1.4 chapitres » à côté de
+    // « 73,38 % » : `chapters_per_active` ne passait pas par le formateur de
+    // nombres. Deux séparateurs dans le même tableau, dans un texte français.
+    const avecDecimales = formatEngagementReport(
+      {
+        curr: [],
+        learning: { accuracy_avg_pct: 73.38, chapters_per_active: 1.4, attempts_30d: 124 },
+      },
+      LE_3_SEPTEMBRE,
+    );
+    const tableau = avecDecimales.split("\n").find((l) => l.includes("73,38"));
+    expect(tableau).toContain("1,4");
+    expect(tableau).not.toContain("1.4");
+    expect(num(1.4)).toBe("1,4");
+    expect(num(124)).toBe("124");
+    expect(num(null)).toBe("—");
   });
 
   it("rend les huit semaines, dans l'ordre", () => {
