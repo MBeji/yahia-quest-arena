@@ -807,6 +807,7 @@ export const en: TranslationKeys = {
     bugReports: "Bugs",
     parcoursInterest: "Interest",
     economy: "Economy",
+    engagement: "Engagement",
     console: "Console",
     signOut: "Sign out",
     logoutToast: "See you soon, warrior.",
