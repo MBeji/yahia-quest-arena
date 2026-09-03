@@ -805,6 +805,7 @@ export const ar: TranslationKeys = {
     bugReports: "الأخطاء",
     parcoursInterest: "الاهتمام",
     economy: "الاقتصاد",
+    engagement: "التفاعل",
     console: "لوحة الإدارة",
     signOut: "تسجيل الخروج",
     logoutToast: "إلى اللقاء، أيها المحارب.",

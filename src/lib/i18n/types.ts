@@ -615,6 +615,7 @@ export type TranslationKeys = {
     bugReports: string;
     parcoursInterest: string;
     economy: string;
+    engagement: string;
     console: string;
     signOut: string;
     logoutToast: string;
