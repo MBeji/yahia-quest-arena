@@ -100,6 +100,50 @@ jobs:
             exit 1
           fi
 
+      # ── Garde de diff de dépendance — arbitrage A17, SECONDE moitié ───────
+      # Le canari ci-dessus juge une propriété MÉCANIQUE : ce lockfile s'installe-t-il
+      # ailleurs ? Il aurait attrapé #716 par accident — parce que sa régénération
+      # était cassée — et il ne dira jamais rien d'un bump parfaitement installable
+      # qui fait entrer une majeure que personne n'a arbitrée. A17 demandait les
+      # DEUX : rejouer le lock sous npm 10, et « refuser une PR de dépendance dont
+      # le diff dépasse ce que son titre annonce ». Voici la seconde.
+      #
+      # Quatre règles, détaillées dans l'en-tête du script : une préversion qui
+      # entre dans le lockfile (l'alpha de #716), un titre « indirect » qui bouge
+      # pourtant le manifeste, une majeure sous un titre patch/minor, un titre qui
+      # nomme un paquet et un diff qui en bouge un autre.
+      #
+      # Éprouvée dans les DEUX sens avant livraison, sur de vrais commits git :
+      # #716 rejoué (titre « bump undici · indirect », manifeste qui monte
+      # @cloudflare/vite-plugin, miniflare 5.…-alpha au lock) sort ROUGE par trois
+      # règles indépendantes ; une bump indirecte honnête, une majeure annoncée
+      # comme telle et le correctif `fast-uri` du 2026-09-02 sortent VERTS.
+      #
+      # Uniquement sur les PR (il faut un titre et une base) et uniquement quand le
+      # diff touche les dépendances : ailleurs elle n'a rien à dire, et un gate qui
+      # parle pour ne rien dire finit ignoré.
+      - name: Garde de diff de dépendance (le titre tient-il sa promesse ?)
+        if: github.event_name == 'pull_request'
+        env:
+          # Par l'environnement, jamais interpolé dans le shell : un titre de PR
+          # est une chaîne écrite par un tiers, et Dependabot n'est pas le seul à
+          # pouvoir en ouvrir une.
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          # Le checkout est en profondeur 1 : la base n'est pas dans l'historique.
+          git fetch --depth=1 origin "$BASE_SHA"
+          # Forme à DEUX points, pas trois : `A...B` réclame une base de fusion,
+          # que ce clone superficiel ne peut pas calculer. `actions/checkout` sort
+          # déjà le commit de fusion sur une PR, donc `base..HEAD` EST le diff de
+          # la PR — et un `git diff A B` ne demande que les deux arbres.
+          if git diff --name-only "$BASE_SHA" HEAD | grep -qE '^package(-lock)?\.json$'; then
+            node scripts/ci/check-dependency-pr.mjs --base "$BASE_SHA" --title "$PR_TITLE"
+          else
+            echo "[dependency-pr] aucune dépendance touchée par cette PR — rien à juger."
+          fi
+
       # Anti-leak gate (étude 24, lot 4). Since the corpus split, the pedagogical
       # corpus, the generation factory (content-*/prof-* skills) and the compiled
       # content SQL live in the PRIVATE repo MBeji/yahia-quest-content. This step
