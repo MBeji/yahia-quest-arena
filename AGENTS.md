@@ -242,9 +242,9 @@ this repo (this file, `STATUS.md`, `docs/agents/`) — not only in a tool's priv
 package-lock.json` (vide ⇒ ce n'est pas toi), puis `npm audit fix --package-lock-only
 --omit=dev` en commit séparé.
 - **Le titre d'une PR Dependabot peut mentir sur son diff.** #716, « bump undici · indirect »,
-  montait une **majeure** et entrait une **alpha** dans la chaîne de build ; son lockfile a cassé
-  `npm ci` **hors d'ici** (33 h de Content CI privée rouge) pendant que ce gate restait vert.
-  Lire le diff : [`docs/dependency-maintenance.md`](./docs/dependency-maintenance.md).
+  montait une **majeure** et entrait une **alpha** ; son lockfile a cassé `npm ci` **hors d'ici**
+  (33 h de Content CI privée rouge) pendant que ce gate restait vert. ✅ **Mécanisé le 2026-09-03**
+  (A17) : `check-dependency-pr.mjs` dans `verify` — [`docs/dependency-maintenance.md`](./docs/dependency-maintenance.md).
 - Coverage is scoped to owned code (`features/`, `shared/`, `lib/`, `hooks/`) — vendored UI,
   route glue, generated files **et tout `features/**/components/**`** sont exclus par choix
   (rendu, couvert par les tests de route et le build) ; ne pas élargir `include` pour diluer.

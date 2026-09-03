@@ -830,6 +830,7 @@ export const fr: TranslationKeys = {
     bugReports: "Bugs",
     parcoursInterest: "Intérêts",
     economy: "Économie",
+    engagement: "Engagement",
     console: "Console",
     signOut: "Déconnexion",
     logoutToast: "À bientôt, guerrier.",

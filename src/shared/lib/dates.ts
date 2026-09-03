@@ -10,12 +10,18 @@ export function getTodayUtc(now: Date = new Date()): string {
   return toUtcDateString(now);
 }
 
+/** UTC date ('YYYY-MM-DD') `daysAgo` days before `now`. Arithmetic on UTC fields, so it
+ *  crosses months, years and leap days without a special case. */
+export function getDateDaysAgoUtc(daysAgo: number, now: Date = new Date()): string {
+  const then = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - daysAgo),
+  );
+  return toUtcDateString(then);
+}
+
 /** UTC date ('YYYY-MM-DD') of the day before `now`. */
 export function getYesterdayUtc(now: Date = new Date()): string {
-  const yesterday = new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - 1),
-  );
-  return toUtcDateString(yesterday);
+  return getDateDaysAgoUtc(1, now);
 }
 
 /** ISO date ('YYYY-MM-DD') of Monday of the current UTC week. */

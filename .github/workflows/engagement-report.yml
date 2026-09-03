@@ -1,0 +1,175 @@
+name: Relevé d'engagement (la CURR se relève toute seule)
+
+# LE BARREAU « SUPPRIMER LE BESOIN » — é31, suite du 2026-09-03.
+#
+# `admin_engagement_overview()` est livrée depuis le 2026-09-02 et la scorecard
+# STATUS §1bis attendait, ligne 2, « un CHIFFRE DATÉ, pas un instrument ». Ce
+# chiffre ne pouvait venir que d'un humain ouvrant `/admin/engagement` et le
+# recopiant. Ce geste ne s'est pas fait : la ligne est restée « jamais publiée »
+# du 2026-07-19 au 2026-09-03, six semaines, alors que la mesure était calculable
+# depuis le premier jour où elle a existé.
+#
+# `docs/agents/zero-intervention.md` classe les réponses possibles : faire →
+# SUPPRIMER LE BESOIN → harnais → rendre visible → remonter. Rappeler à quelqu'un
+# de relever une mesure est le dernier barreau ; faire que la mesure se relève est
+# le deuxième. C'est celui-ci.
+#
+# CE QU'IL FAIT, ET SURTOUT CE QU'IL NE FAIT PAS
+# ---------------------------------------------------------------------------
+# LECTURE SEULE, et pas seulement par discipline : `admin_engagement_overview()`
+# est déclarée `STABLE`, donc elle ne peut pas écrire. Le workflow n'applique
+# rien, ne corrige rien, ne relance rien. Il tient UNE issue à jour — le relevé
+# courant — et écrit le même texte dans le résumé du run.
+#
+# ⚠️ CETTE ISSUE N'EST PAS UNE ALERTE. Elle reste ouverte par construction : elle
+# EST le relevé. C'est la différence avec `auth-bruit` ou `garde-rouge`, qui se
+# referment quand le signal disparaît. Son label est neutre à dessein.
+#
+# ⚠️ POURQUOI PSQL ET PAS LA CLÉ SERVICE_ROLE
+# ---------------------------------------------------------------------------
+# La RPC est `SECURITY DEFINER` gardée par `is_admin()`, qui lit `auth.uid()`.
+# Un appel PostgREST avec la clé service_role n'a pas de `sub` : `auth.uid()` est
+# NULL, `is_admin()` est faux, la RPC refuse. Trois sorties existaient :
+#
+#   (a) élargir le garde de la RPC à service_role — TOUCHE UNE FONCTION DE
+#       SÉCURITÉ pour un besoin de reporting ;
+#   (b) ajouter une seconde RPC jumelle — deux portes vers la même donnée ;
+#   (c) se connecter en PROPRIÉTAIRE et poser la claim, comme le font les suites
+#       pgTAP de ce dépôt.
+#
+# (c) est retenue : elle ne change RIEN à la surface de sécurité — aucune
+# migration, aucun garde élargi, aucune fonction neuve. Le secret employé
+# (`PROD_SUPABASE_DB_URL`) est celui de `db-backup.yml` et `db-migrate-prod.yml`.
+# L'admin n'est pas écrit en dur : il est CHERCHÉ en base, et son absence fait
+# échouer le job bruyamment plutôt que de rendre un rapport vide.
+#
+# ⚠️ SECRET ABSENT ⇒ SAUTE EN VERT, en le disant. Un rouge permanent est ce qui
+# apprend à ne plus lire une issue de suivi (leçon de `PROD_SUPABASE_URL` posé
+# sans son `https://`, 25 jours de triage morts en silence). Secret PRÉSENT et
+# lecture en échec ⇒ le job ÉCHOUE, et `guard-watch.yml` relève ce rouge dans les
+# 6 h — ce workflow n'a pas besoin d'un filet à lui.
+
+on:
+  schedule:
+    # Lundi matin, après la clôture hebdo de ligue (02:30) : la semaine N+1 que
+    # la CURR mesure vient tout juste de se fermer. Minute décalée — les crons
+    # ronds partent en retard.
+    - cron: "41 6 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: engagement-report
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  releve:
+    name: relever la CURR en production
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+      LABEL: engagement-releve
+    steps:
+      - name: Le secret est-il configuré ?
+        id: guard
+        run: |
+          set -euo pipefail
+          if [ -z "${{ secrets.PROD_SUPABASE_DB_URL }}" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            {
+              echo "### ⏭️ Relevé d'engagement — sauté"
+              echo ""
+              echo "\`PROD_SUPABASE_DB_URL\` n'est pas configuré. Sans lui il n'y a rien à lire, et"
+              echo "**échouer ici installerait un rouge permanent** — ce qui apprend à ne plus lire"
+              echo "une issue de suivi. Le job sort donc vert, en le disant."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          echo "configured=true" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+
+      - name: Setup Node
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 24
+
+      - name: Install postgresql-client-17 (prod runs Postgres 17.x)
+        if: steps.guard.outputs.configured == 'true'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-common >/dev/null
+          yes | sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh >/dev/null
+          sudo apt-get install -y -qq postgresql-client-17 >/dev/null
+          echo "/usr/lib/postgresql/17/bin" >> "$GITHUB_PATH"
+
+      # Le seul accès à la production, et il est en LECTURE : `set_config` est
+      # local à la transaction, la RPC est STABLE, le COMMIT ne persiste rien.
+      # `ON_ERROR_STOP=1` + `set -e` : une lecture en échec fait échouer le job.
+      - name: Relever la CURR (lecture seule)
+        if: steps.guard.outputs.configured == 'true'
+        env:
+          PROD_SUPABASE_DB_URL: ${{ secrets.PROD_SUPABASE_DB_URL }}
+        run: |
+          set -euo pipefail
+          psql "$PROD_SUPABASE_DB_URL" -qtAX -v ON_ERROR_STOP=1 > overview.json <<'SQL'
+          BEGIN;
+          DO $$
+          DECLARE v_admin uuid;
+          BEGIN
+            SELECT id INTO v_admin FROM public.profiles WHERE role = 'admin' ORDER BY id LIMIT 1;
+            IF v_admin IS NULL THEN
+              RAISE EXCEPTION 'aucun profil role=admin en base : la RPC est gardée par is_admin()';
+            END IF;
+            PERFORM set_config('request.jwt.claims', json_build_object('sub', v_admin)::text, true);
+          END $$;
+          SELECT public.admin_engagement_overview();
+          COMMIT;
+          SQL
+          if [ ! -s overview.json ]; then
+            echo "::error::La RPC n'a rien rendu — lecture vide, pas un relevé vide."
+            exit 1
+          fi
+
+      - name: Mettre en forme
+        if: steps.guard.outputs.configured == 'true'
+        run: |
+          set -euo pipefail
+          npm run --silent reports:engagement -- overview.json > releve.md
+          cat releve.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Tenir l'issue du relevé à jour
+        if: steps.guard.outputs.configured == 'true'
+        run: |
+          set -euo pipefail
+
+          {
+            cat releve.md
+            echo ""
+            echo "---"
+            echo ""
+            echo "_Issue tenue par \`engagement-report.yml\`, chaque lundi. **Ce n'est pas une"
+            echo "alerte** : elle reste ouverte par construction, elle EST le relevé courant._"
+            echo "_La console humaine reste [\`/admin/engagement\`](https://www.na9ranal3ab.tn/admin/engagement)._"
+          } > corps.md
+
+          titre="📈 Relevé d'engagement — $(date -u +%Y-%m-%d)"
+
+          gh label create "$LABEL" --color 0e8a16 \
+            --description "Relevé périodique de la CURR (lecture seule, pas une alerte)" 2>/dev/null || true
+
+          existing="$(gh issue list --label "$LABEL" --state open --limit 1 --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            gh issue edit "$existing" --title "$titre" --body-file corps.md >/dev/null
+            echo "Issue #$existing mise à jour."
+          else
+            gh issue create --title "$titre" --label "$LABEL" --body-file corps.md
+          fi

@@ -42,6 +42,18 @@ export const enBadges: BadgeTranslations = {
         name: "Back to school 2026",
         condition: "Complete the back-to-school challenge during its window",
       },
+      event_synthese: {
+        name: "Synthesis exams",
+        condition: "Pass 3 missions at 90 % during the synthesis-exam fortnight",
+      },
+      event_ramadan: {
+        name: "Ramadan 1448",
+        condition: "Play 3 missions during the Ramadan challenge fortnight",
+      },
+      event_revisions: {
+        name: "May revisions",
+        condition: "Pass 5 missions at 90 % during the May revision fortnight",
+      },
     },
     familyProgress: "{n}/{total}",
     locked: "Locked",

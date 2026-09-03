@@ -111,6 +111,34 @@ que le gate d'ici serait resté vert. Aggravant : **`ci.yml` n'a pas tourné sur
    réponse : règle ci-dessous, une majeure = une PR isolée.
 3. **Se méfier du titre d'une PR Dependabot.** « bump `<transitive>` … indirect » peut cacher une
    montée de majeure du parent. Lire le diff de `package.json`, pas l'intitulé.
+   ✅ **Ce réflexe est devenu un gate le 2026-09-03** — c'est la SECONDE moitié de A17, et celle
+   que le canari ne couvrait pas. `scripts/ci/check-dependency-pr.mjs`, étape « Garde de diff de
+   dépendance » du job `verify`, confronte le titre au diff sur toute PR qui touche
+   `package.json`/`package-lock.json` :
+
+   | règle  | ce qu'elle refuse                                                                                                                     | titre requis                                                                                                                                                   |
+   | ------ | ------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | **A1** | une **préversion** qui ENTRE dans le lockfile — l'alpha de #716                                                                       | aucun : elle vaut pour toute PR, humaine comprise. Échappatoire assumée et visible : `[allow-prerelease]` dans le titre, qui suit le squash jusque dans `main` |
+   | **B1** | un titre qui dit « indirect » alors que le **manifeste** bouge — une bump indirecte ne touche pas `package.json`, c'est sa définition | oui                                                                                                                                                            |
+   | **B2** | une **majeure** qui traverse sous un titre patch/minor/indirect                                                                       | oui                                                                                                                                                            |
+   | **B3** | un titre qui nomme un paquet et un diff qui en bouge un **autre**                                                                     | oui                                                                                                                                                            |
+
+   **Pourquoi les deux moitiés, et pas une.** Le canari juge une propriété _mécanique_ — ce
+   lockfile s'installe-t-il ailleurs ? Il aurait attrapé #716 **par accident**, parce que sa
+   régénération était cassée, et il ne dira jamais rien d'un bump parfaitement installable qui
+   fait entrer une majeure non arbitrée. La propriété perdue avec npm 10 était accidentelle ;
+   celle-ci est **intentionnelle** : le titre d'une PR est une promesse, et le diff doit la tenir.
+
+   **Éprouvée dans les deux sens avant livraison**, sur de vrais commits git, comme le canari
+   l'avait été : **#716 rejoué** (titre « bump undici · indirect », manifeste qui monte
+   `@cloudflare/vite-plugin ^1.40.2 → ^1.51.1`, `miniflare 5.20260801.1-alpha` au lock) sort
+   **rouge par trois règles indépendantes** (A1, B1, B3) ; une bump indirecte honnête (le lock
+   bouge, le manifeste non), une majeure **annoncée** comme telle, et le correctif `fast-uri`
+   du 2026-09-02 sortent **verts**. Le faux positif est le risque principal d'une garde
+   pareille — bloquer la file coûte plus qu'elle ne rapporte — donc toute plage qu'elle ne sait
+   pas lire (`workspace:*`, un alias `npm:`, une plage composite) est **ignorée** plutôt
+   qu'interprétée.
+
 4. Un revert de bump n'est pas forcément une régression de sécurité : ici `undici` était une
    transitive d'une **devDependency**, et `audit:deps` (qui tourne en `--omit=dev`) rendait
    `0 vulnerabilities` après revert.
