@@ -101,7 +101,54 @@ function resoudre(root: string, depuis: string, spec: string): string | null {
   return null;
 }
 
-/** Les entrées dont un builtin est atteignable, avec la chaîne qui y mène. */
+/**
+ * LES PAQUETS npm QU'UN `*.server.ts` DU GRAPHE CLIENT A LE DROIT D'IMPORTER
+ * STATIQUEMENT — liste FERMÉE, chacun avec sa raison.
+ *
+ * Pourquoi une liste d'AUTORISÉS et non d'interdits : une liste d'interdits qui
+ * oublie une entrée est AVEUGLE, et c'est précisément ce qui s'est produit. La
+ * garde d'origine s'arrêtait aux specifiers `node:*` ; elle ne suivait rien
+ * au-delà d'un nom de paquet, donc `web-push` — qui tire `jws`, dont trois
+ * modules appellent `util.inherits(…)` AU CHARGEMENT — franchissait le contrôle
+ * sans être vu. Résultat : 27 tests e2e authentifiés rouges six nuits de suite,
+ * sur `util.inherits is not a function`, pendant que `tsc`, le lint,
+ * `build:check` et CETTE garde restaient verts (#909).
+ *
+ * À l'inverse, une liste d'autorisés qui oublie une entrée est BRUYANTE : le
+ * nouvel import rougit, quelqu'un décide, et la décision s'écrit ici. C'est la
+ * même posture que `harness/controls.json` (#937) — on déclare, avec un pourquoi.
+ *
+ * ⚠️ Ce contrôle ne modélise PAS la résolution de Vite (conditions `browser` vs
+ * `node`, champ `browser`, sous-chemins). Il ne peut donc pas DÉDUIRE qu'un
+ * paquet est sûr : il exige qu'on l'ait constaté et écrit.
+ *
+ * La règle ne s'applique qu'aux `*.server.ts` : c'est là que vit le code
+ * Node-only par convention (AGENTS.md), et les trois incidents (#906, #942,
+ * #909) sont tous passés par un de ces fichiers.
+ */
+export const PAQUETS_NAVIGATEUR_SUR: Record<string, string> = {
+  zod: "schémas isomorphes — aucun builtin Node, tourne tel quel dans le navigateur",
+  "@tanstack/react-start":
+    "le framework lui-même ; c'est lui qui sert le module au navigateur, et Vite en résout l'entrée client",
+  "@supabase/supabase-js":
+    "client isomorphe, publié avec une entrée navigateur — c'est déjà celui qu'utilise le code client",
+};
+
+/** Le nom de paquet d'un specifier npm (`@scope/nom/sous/chemin` → `@scope/nom`). */
+export function nomDePaquet(spec: string): string {
+  const parts = spec.split("/");
+  return spec.startsWith("@") ? parts.slice(0, 2).join("/") : (parts[0] as string);
+}
+
+/** Un specifier qui désigne un paquet npm — ni relatif, ni l'alias `@/` du dépôt. */
+function estPaquetNpm(spec: string): boolean {
+  return !spec.startsWith(".") && !spec.startsWith("@/") && !BUILTIN.test(spec);
+}
+
+/**
+ * Les entrées dont un builtin — ou un paquet npm non déclaré sûr, importé
+ * statiquement par un `*.server.ts` — est atteignable, avec la chaîne qui y mène.
+ */
 export function entreesEmpoisonnees(root: string, entrees: string[]): string[] {
   const fautes: string[] = [];
   for (const entree of entrees) {
@@ -117,8 +164,11 @@ export function entreesEmpoisonnees(root: string, entrees: string[]): string[] {
       } catch {
         continue;
       }
+      const serveur = /\.server\.tsx?$/.test(f);
       for (const spec of staticImports(source)) {
-        if (BUILTIN.test(spec)) {
+        const paquetInterdit =
+          serveur && estPaquetNpm(spec) && !(nomDePaquet(spec) in PAQUETS_NAVIGATEUR_SUR);
+        if (BUILTIN.test(spec) || paquetInterdit) {
           fautes.push(
             `${relative(root, entree)} → ${spec}\n    via ${chemin.map((c) => relative(root, c)).join(" → ")}`,
           );
@@ -171,5 +221,69 @@ describe("le graphe client n'atteint aucun builtin Node", () => {
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
+  });
+
+  it("aucun `*.server.ts` du graphe client n'importe un paquet npm non déclaré sûr", () => {
+    const entrees = [...tsFiles(join(SRC, "routes")), join(SRC, "router.tsx")];
+    // Même appel que ci-dessus : la règle « paquet npm » vit dans le même
+    // parcours, parce que c'est le MÊME graphe qui doit être propre. Ce test
+    // existe pour nommer la seconde propriété — un rouge doit dire laquelle.
+    expect(entreesEmpoisonnees(SRC, entrees)).toEqual([]);
+  });
+
+  it("la garde voit un paquet Node-only derrière son nom — contrôle négatif", () => {
+    const root = mkdtempSync(join(tmpdir(), "client-graph-npm-"));
+    try {
+      mkdirSync(join(root, "routes"), { recursive: true });
+      // `web-push` n'est pas déclaré sûr : c'est le paquet EXACT de #909, dont
+      // `jws` appelle `util.inherits(…)` au chargement. La garde d'avant le
+      // voyait passer sans rien dire — elle s'arrêtait au nom de paquet.
+      writeFileSync(join(root, "routes", "casse.tsx"), 'import { p } from "../push.server";\n');
+      writeFileSync(
+        join(root, "push.server.ts"),
+        'import webpush from "web-push";\nexport const p = webpush;\n',
+      );
+      // Un paquet DÉCLARÉ sûr passe, dans le même fichier serveur.
+      writeFileSync(join(root, "routes", "sain.tsx"), 'import { s } from "../ok.server";\n');
+      writeFileSync(join(root, "ok.server.ts"), 'import { z } from "zod";\nexport const s = z;\n');
+      // Le remède : le paquet chargé paresseusement n'est pas un import statique.
+      writeFileSync(
+        join(root, "routes", "paresseux.tsx"),
+        'import { l } from "../lazy.server";\nexport default l;\n',
+      );
+      writeFileSync(
+        join(root, "lazy.server.ts"),
+        'export const l = async () => (await import("web-push")).default;\n',
+      );
+      // Un composant CLIENT (pas `.server.ts`) garde le droit d'importer ses
+      // paquets d'interface : la règle vise la frontière serveur, pas React.
+      writeFileSync(join(root, "routes", "client.tsx"), 'import { motion } from "motion/react";\n');
+
+      const fautes = entreesEmpoisonnees(root, [
+        join(root, "routes", "casse.tsx"),
+        join(root, "routes", "sain.tsx"),
+        join(root, "routes", "paresseux.tsx"),
+        join(root, "routes", "client.tsx"),
+      ]);
+      expect(fautes).toHaveLength(1);
+      expect(fautes[0]).toContain("casse.tsx");
+      expect(fautes[0]).toContain("web-push");
+      expect(fautes[0]).toContain("push.server.ts");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("chaque paquet déclaré sûr porte sa raison", () => {
+    for (const [paquet, pourquoi] of Object.entries(PAQUETS_NAVIGATEUR_SUR)) {
+      expect(pourquoi.length, `${paquet} sans raison`).toBeGreaterThan(20);
+    }
+  });
+
+  it("le nom de paquet se lit sur un sous-chemin, scopé ou non", () => {
+    expect(nomDePaquet("zod")).toBe("zod");
+    expect(nomDePaquet("motion/react")).toBe("motion");
+    expect(nomDePaquet("@tanstack/react-start")).toBe("@tanstack/react-start");
+    expect(nomDePaquet("@tanstack/react-start/server")).toBe("@tanstack/react-start");
   });
 });

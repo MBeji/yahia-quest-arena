@@ -88,7 +88,7 @@ export async function notifyBudgetAlerts(ownerUserId: string): Promise<number> {
   // traitée. Sans cela, chaque appel suivant la re-découvrirait et le log
   // deviendrait un bruit permanent — pour une notification que rien ne peut
   // envoyer de toute façon.
-  const canPush = configureVapid();
+  const canPush = await configureVapid();
 
   for (const alert of due) {
     logger.warn("ai.budget", {
