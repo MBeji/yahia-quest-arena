@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { getDashboard, getDashboardSecondary } from "@/features/dashboard";
-import { purchaseShopItem, equipInventorySkin, activateInventoryItem } from "@/features/shop";
+import { purchaseShopItem, equipCosmetic, activateInventoryItem } from "@/features/shop";
 import { Sparkles } from "lucide-react";
 import { PageShell } from "@/components/ui/page-shell";
 import { BackLink } from "@/components/ui/back-link";
@@ -39,7 +39,7 @@ function BoutiquePage() {
   const fetchDashboard = useServerFn(getDashboard);
   const fetchSecondary = useServerFn(getDashboardSecondary);
   const purchaseItem = useServerFn(purchaseShopItem);
-  const equipSkin = useServerFn(equipInventorySkin);
+  const equipItem = useServerFn(equipCosmetic);
   const activateItem = useServerFn(activateInventoryItem);
 
   // Primary carries the profile (coins, avatar) + subjects/stats for the radar;
@@ -67,7 +67,9 @@ function BoutiquePage() {
       toast.error(error instanceof Error ? error.message : t.dashboard.purchaseFailed),
   });
   const equipMutation = useMutation({
-    mutationFn: (payload: { itemCode: string }) => equipSkin({ data: payload }),
+    // é31 lot 7 — `equip_cosmetic` sert les trois emplacements ; équiper un cadre
+    // ne déséquipe pas l'avatar.
+    mutationFn: (payload: { itemCode: string }) => equipItem({ data: payload }),
     onSuccess: (res) => {
       play("unlock");
       toast.success(t.dashboard.equipSuccess.replace("{name}", res.itemName));

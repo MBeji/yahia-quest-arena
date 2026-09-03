@@ -238,7 +238,11 @@ function Dashboard() {
           <div className="absolute -end-10 -top-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/30 blur-3xl" />
           <div className="absolute -bottom-10 -start-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/20 blur-3xl" />
           <div className="relative grid gap-6 sm:grid-cols-[auto_1fr_auto] sm:items-center">
-            <HeroAvatar avatarSlug={profile.avatar_slug} />
+            <HeroAvatar
+              avatarSlug={profile.avatar_slug}
+              frameSlug={(profile as { frame_slug?: string | null }).frame_slug ?? null}
+              avatarTier={profile.avatar_tier}
+            />
             <div className="min-w-0">
               <div className="text-sm text-muted-foreground">
                 {isFirstRun ? t.dashboard.firstRunWelcome : t.dashboard.welcomeBack}
@@ -252,6 +256,7 @@ function Dashboard() {
                 xp={profile.xp}
                 coins={profile.yahia_coins ?? 0}
                 heroClass={profile.hero_class}
+                titleCode={(profile as { title_code?: string | null }).title_code ?? null}
               />
               <div className="mt-4">
                 <div className="mb-1 flex justify-between text-xs text-muted-foreground">

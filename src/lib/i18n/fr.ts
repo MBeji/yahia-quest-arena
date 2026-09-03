@@ -239,6 +239,23 @@ export const fr: TranslationKeys = {
     badgeEarnedOn: "Obtenu",
     badgesEmpty:
       "Aucun badge débloqué pour l'instant. Continue tes quêtes pour remplir ta collection.",
+    // é31 lot 7 (US-11, R-22) — la classe de héros, l'emplacement de cadre et le
+    // titre : la base garde des CODES, l'affichage vit ici.
+    heroClasses: {
+      novice: "Novice",
+      candidat: "Candidat Civil",
+      aspirant: "Aspirant Académicien",
+      guerrier: "Guerrier des Équations",
+      maitre: "Maître des Langues",
+      elite: "Élite du Concours",
+      s_rank: "Légende de rang S",
+    },
+    heroTitles: {
+      studious: "L'Assidu",
+      sharp: "La Lame",
+      legend: "Légende",
+    },
+    avatarTierLabel: "Palier {n}/{max}",
     badgeFamilies: {
       debut: "Premiers pas",
       serie: "Séries",
@@ -289,7 +306,15 @@ export const fr: TranslationKeys = {
     shopActivate: "Activer",
     armedPassive: "Actif · protège ta série",
     armedQuest: "Actif · prochaine quête",
-    itemTypes: { skin: "Skin", potion: "Potion", booster: "Booster", shield: "Bouclier" },
+    itemTypes: {
+      skin: "Skin",
+      potion: "Potion",
+      booster: "Booster",
+      shield: "Bouclier",
+      // é31 lot 7 — les deux cosmétiques qui donnent un puits aux pièces.
+      frame: "Cadre",
+      title: "Titre",
+    },
     rarities: { common: "Commun", rare: "Rare", epic: "Épique", legendary: "Légendaire" },
     radarTitle: "Radar de Réussite",
     radarCaption: "Tes scores moyens par attribut.",

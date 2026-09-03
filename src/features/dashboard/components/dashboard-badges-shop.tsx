@@ -33,6 +33,9 @@ type DashboardBadgesShopProps = {
   onActivate: (itemCode: string) => void;
 };
 
+/** Les trois emplacements cosmétiques (é31 lot 7) — chacun indépendant des autres. */
+const EQUIPPABLE_TYPES = new Set(["skin", "frame", "title"]);
+
 export function DashboardBadgesShop({
   collection,
   shopItems,
@@ -71,9 +74,12 @@ export function DashboardBadgesShop({
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {shopItems.map((item) => {
-            const canEquip = item.itemType === "skin" && item.isOwned && !item.isEquipped;
+            // é31 lot 7 — trois emplacements cosmétiques s'équipent, pas un seul.
+            const canEquip =
+              EQUIPPABLE_TYPES.has(item.itemType) && item.isOwned && !item.isEquipped;
             const canActivate = item.isArmable && !item.isActive;
-            const canBuy = !item.isOwned || item.itemType !== "skin";
+            // Un cosmétique ne se rachète pas : il est unique par élève.
+            const canBuy = !item.isOwned || !EQUIPPABLE_TYPES.has(item.itemType);
             const isBusy = isPurchasePending || isEquipPending || isActivatePending;
             const skinEmoji = avatarEmojiForSlug(item.avatarSlug);
 

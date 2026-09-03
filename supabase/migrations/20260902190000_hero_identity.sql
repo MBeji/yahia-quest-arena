@@ -275,3 +275,63 @@ END;
 $$;
 
 REVOKE EXECUTE ON FUNCTION public.award_xp(uuid, int) FROM authenticated, anon, public;
+
+-- ===========================================================================
+-- 6. ⚠️ `award_duel_rewards` — LE SECOND ÉCRIVAIN DE `hero_class`.
+--
+--    Il recopie la courbe de niveau d'`award_xp` (duplication antérieure à ce
+--    lot, é05) et écrivait donc, lui aussi, du français. Sans cette
+--    substitution, la contrainte posée plus haut ferait ÉCHOUER chaque
+--    récompense de duel — la suite pgTAP `25_duel_forfeit` l'a montré en local
+--    avant la CI.
+--
+--    Substituée depuis 20260706170000, une seule ancre : le CASE des paliers.
+--    La duplication de la courbe, elle, reste — la réduire est un chantier d'é09,
+--    pas un effet de bord d'un lot d'engagement.
+-- ===========================================================================
+CREATE OR REPLACE FUNCTION public.award_duel_rewards(p_user UUID, p_xp INT, p_coins INT)
+RETURNS VOID
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_profile public.profiles;
+  v_level INT;
+  v_class TEXT;
+  v_tier INT;
+BEGIN
+  IF p_xp IS NULL OR p_xp < 0 OR p_coins IS NULL OR p_coins < 0 THEN
+    RAISE EXCEPTION 'Invalid duel reward';
+  END IF;
+
+  SELECT * INTO v_profile FROM public.profiles WHERE id = p_user FOR UPDATE;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'Profile not found';
+  END IF;
+
+  -- Same level curve as award_xp (200 XP/level); no streak side-effects — the
+  -- streak system is owned by the exercise/quiz path.
+  v_level := GREATEST(1, ((v_profile.xp + p_xp) / 200) + 1);
+  -- é31 lot 7 (R-22) — des CODES, comme `award_xp`. Les seuils ne bougent pas.
+  v_class := CASE
+    WHEN v_level >= 50 THEN 's_rank'
+    WHEN v_level >= 31 THEN 'elite'
+    WHEN v_level >= 21 THEN 'maitre'
+    WHEN v_level >= 11 THEN 'guerrier'
+    WHEN v_level >= 6 THEN 'aspirant'
+    ELSE 'candidat'
+  END;
+  v_tier := LEAST(6, GREATEST(1, (v_level / 8) + 1));
+
+  UPDATE public.profiles
+  SET xp = xp + p_xp,
+      yahia_coins = yahia_coins + p_coins,
+      level = v_level,
+      hero_class = v_class,
+      avatar_tier = v_tier
+  WHERE id = p_user;
+END;
+$$;
+
+REVOKE EXECUTE ON FUNCTION public.award_duel_rewards(uuid, int, int) FROM PUBLIC, anon, authenticated;

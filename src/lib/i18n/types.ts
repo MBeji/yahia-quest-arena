@@ -1,4 +1,5 @@
 import type { BadgeCode, BadgeFamily } from "@/shared/constants/badges";
+import type { HeroClass, HeroTitle } from "@/shared/constants/hero-identity";
 import type { AdaptiveTranslations } from "./adaptive.types";
 import type { DuelTranslations } from "./duel.types";
 import type { TutorTranslations } from "./tutor.types";
@@ -233,6 +234,13 @@ export type TranslationKeys = {
      * en base s'affiche en français dans les trois langues, comme les payloads
      * push l'ont fait.
      */
+    /**
+     * é31 lot 7 (R-22) — un palier sans sa ligne ne compile pas : la colonne
+     * portait du français, rendu tel quel dans les trois langues.
+     */
+    heroClasses: Record<HeroClass, string>;
+    heroTitles: Record<HeroTitle, string>;
+    avatarTierLabel: string;
     badgeFamilies: Record<BadgeFamily, string>;
     badgeLabels: Record<BadgeCode, { name: string; condition: string }>;
     /** Compteur d'une famille : « 3/5 ». */
@@ -249,7 +257,15 @@ export type TranslationKeys = {
     shopActivate: string;
     armedPassive: string;
     armedQuest: string;
-    itemTypes: { skin: string; potion: string; booster: string; shield: string };
+    /** é31 lot 7 — `frame` et `title` : les deux cosmétiques qui donnent un puits aux pièces. */
+    itemTypes: {
+      skin: string;
+      potion: string;
+      booster: string;
+      shield: string;
+      frame: string;
+      title: string;
+    };
     rarities: { common: string; rare: string; epic: string; legendary: string };
     radarTitle: string;
     radarCaption: string;
