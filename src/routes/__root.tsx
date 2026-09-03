@@ -63,7 +63,14 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
       ? buildErrorDebugText(error, import.meta.env.PROD)
       : null;
   return (
-    <div className="flex min-h-screen items-center justify-center bg-black-deep px-4">
+    // `data-testid` : la frontière d'erreur racine est le CUL-DE-SAC que l'e2e
+    // doit pouvoir nommer sans dépendre de la langue (`errorTitle` existe en
+    // fr/en/ar). C'est l'écran qu'une session morte ne doit JAMAIS produire —
+    // voir `e2e/authed/session-invalidation.spec.ts` (#938).
+    <div
+      data-testid="root-error-boundary"
+      className="flex min-h-screen items-center justify-center bg-black-deep px-4"
+    >
       <div className="max-w-md text-center">
         <h1 className="font-display text-2xl">{t.errors.errorTitle}</h1>
         <p className="mt-2 text-sm text-muted-foreground">
