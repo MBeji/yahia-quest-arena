@@ -4,13 +4,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { getDashboard, getDashboardSecondary } from "@/features/dashboard";
-import { purchaseShopItem, equipInventorySkin, activateInventoryItem } from "@/features/shop";
+import { purchaseShopItem, equipCosmetic, activateInventoryItem } from "@/features/shop";
 import { Sparkles } from "lucide-react";
 import { PageShell } from "@/components/ui/page-shell";
 import { BackLink } from "@/components/ui/back-link";
 import { LoadingState } from "@/components/ui/loading-state";
 import { useT } from "@/lib/i18n";
 import { useSound } from "@/lib/sound";
+import { trackProductEvent } from "@/shared/lib/product-events";
 
 // Radar + inventory and the badges/shop grids are lazy — heavy (recharts / many
 // cards). They used to live at the very bottom of the dashboard; étude 15 lot 6
@@ -38,7 +39,7 @@ function BoutiquePage() {
   const fetchDashboard = useServerFn(getDashboard);
   const fetchSecondary = useServerFn(getDashboardSecondary);
   const purchaseItem = useServerFn(purchaseShopItem);
-  const equipSkin = useServerFn(equipInventorySkin);
+  const equipItem = useServerFn(equipCosmetic);
   const activateItem = useServerFn(activateInventoryItem);
 
   // Primary carries the profile (coins, avatar) + subjects/stats for the radar;
@@ -54,8 +55,11 @@ function BoutiquePage() {
 
   const purchaseMutation = useMutation({
     mutationFn: (payload: { itemCode: string }) => purchaseItem({ data: payload }),
-    onSuccess: (res) => {
+    onSuccess: (res, vars) => {
       play("purchase");
+      // é31 lot 1 — le seul PUITS de pièces mesurable côté produit (é09 suit le
+      // ratio en base ; ici on voit ce que l'élève choisit, et quand).
+      trackProductEvent("shop_purchase", { item_code: vars.itemCode });
       toast.success(t.dashboard.purchaseSuccess.replace("{name}", res.purchasedItemName));
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
@@ -63,7 +67,9 @@ function BoutiquePage() {
       toast.error(error instanceof Error ? error.message : t.dashboard.purchaseFailed),
   });
   const equipMutation = useMutation({
-    mutationFn: (payload: { itemCode: string }) => equipSkin({ data: payload }),
+    // é31 lot 7 — `equip_cosmetic` sert les trois emplacements ; équiper un cadre
+    // ne déséquipe pas l'avatar.
+    mutationFn: (payload: { itemCode: string }) => equipItem({ data: payload }),
     onSuccess: (res) => {
       play("unlock");
       toast.success(t.dashboard.equipSuccess.replace("{name}", res.itemName));
@@ -93,7 +99,7 @@ function BoutiquePage() {
     subject: s.attribute,
     value: Math.round(stats[s.id]?.avg ?? 0),
   }));
-  const badges = secondary?.badges ?? [];
+  const badgeCollection = secondary?.badgeCollection ?? [];
   const inventory = secondary?.inventory ?? [];
   const shopItems = secondary?.shopItems ?? [];
 
@@ -130,7 +136,7 @@ function BoutiquePage() {
             onActivate={(itemCode) => activateMutation.mutate({ itemCode })}
           />
           <DashboardBadgesShop
-            badges={badges}
+            collection={badgeCollection}
             shopItems={shopItems}
             availableCoins={profile.yahia_coins ?? 0}
             isPurchasePending={purchaseMutation.isPending}

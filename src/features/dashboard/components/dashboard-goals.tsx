@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion } from "motion/react";
 import { Flame, Trophy } from "lucide-react";
 import { GoldProgress } from "@/components/game/gold-progress";
@@ -8,7 +9,10 @@ import {
   formatQuestType,
   resolveDailyAction,
   resolveWeeklyAction,
+  type DashboardGoalAction,
 } from "@/features/dashboard/dashboard-helpers";
+import { DAILY_COMPLETE_TYPE } from "@/shared/constants/daily-missions";
+import { trackProductEvent } from "@/shared/lib/product-events";
 import { FamilyGoalCard } from "@/features/dashboard/components/family-goal-card";
 
 // =============================================================================
@@ -40,7 +44,8 @@ export type DashboardQuest = {
   xp_reward: number | null;
 };
 
-export type GoalAction = "retry" | "subject" | "dungeon";
+/** Réexporté pour les appelants ; la définition vit avec les helpers. */
+export type GoalAction = DashboardGoalAction;
 
 /** Barre de progression bornée, sur une cible qui peut être nulle en base. */
 function progressPct(current: number, target: number): number {
@@ -59,6 +64,18 @@ export function DashboardGoals({
   const t = useT();
   const rise = useEntrance("rise", 0.2);
 
+  // é31 lot 3 — le BONUS DE COMPLÉTION n'est pas une quatrième mission : c'est le
+  // fait « la journée est finie ». Il sort de la liste et devient la célébration
+  // de fin (R-6), sans aucun bouton pour enchaîner — c'est précisément ce que la
+  // règle interdit : une fin de session doit être une fin.
+  const missions = dailyObjectives.filter((o) => o.objective_type !== DAILY_COMPLETE_TYPE);
+  const bonus = dailyObjectives.find((o) => o.objective_type === DAILY_COMPLETE_TYPE) ?? null;
+  const dayDone = bonus?.status === "completed";
+
+  useEffect(() => {
+    if (dayDone) trackProductEvent("daily_missions_completed", { missions: missions.length });
+  }, [dayDone, missions.length]);
+
   return (
     <motion.div {...rise} className="mt-8 grid gap-6 sm:grid-cols-2">
       {/* Objectifs du jour */}
@@ -67,10 +84,23 @@ export function DashboardGoals({
           <Trophy className="h-5 w-5 text-[color:var(--gold)]" /> {t.dashboard.dailyQuests}
         </div>
         <div className="space-y-3">
-          {dailyObjectives.length === 0 && (
+          {missions.length === 0 && (
             <p className="text-xs text-muted-foreground">{t.dashboard.dailyEmpty}</p>
           )}
-          {dailyObjectives.map((obj) => {
+          {dayDone && (
+            <div
+              data-testid="daily-missions-done"
+              className="rounded-xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/10 p-3"
+            >
+              <div className="font-display text-sm font-bold text-[color:var(--neon-gold)]">
+                {t.dashboard.dailyMissionsDone}
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {t.dashboard.dailyMissionsDoneDesc}
+              </p>
+            </div>
+          )}
+          {missions.map((obj) => {
             const done = obj.status === "completed";
             const label = formatObjectiveType(obj.objective_type, t.dashboard.objectiveTypes);
             return (

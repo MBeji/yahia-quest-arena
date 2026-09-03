@@ -75,10 +75,21 @@ const BUDGETS = {
   //   160→164  suppression de compte (GAP-024) — 0,02 KB de dépassement
   //   164→192  mode IA « à la clé de la famille » (étude 29 lot 2), namespace `ai.*`
   //   192→208  tuteur « El Ostedh » (étude 11 lots 2-3), coaching + `tutor.chat.*`
+  //   208→184  DÉCOUPAGE `parent/` (2026-08-26) — la baisse, pas un palier
+  //   184→188  étude 31 « l'envie de revenir » : classes de héros et titres
+  //            (l'en-tête du tableau de bord, R-22), huit types de missions du
+  //            jour, carte « Ta semaine », podium de ligue, accueil.
+  //            ⚠️ C'est l'exception que la règle ci-dessus exige de justifier, et
+  //            elle se justifie par ce qui a été DÉCOUPÉ d'abord : les libellés de
+  //            la collection de badges (13 badges × nom + condition × 3 langues,
+  //            ~4,5 KB) sont partis dans `i18n-badges`, servis par la seule
+  //            /boutique. Ce qui reste ici sert des surfaces APP-WIDE et non
+  //            paresseuses — l'en-tête du héros, l'anneau du jour, les missions —
+  //            donc le découpage ne s'y applique pas.
   //
   // Le chunk app-wide gzippe à ~61 KB : l'impact réseau est plus doux que le chiffre
   // brut, mais le coût de parse se paie plein, lui, et sur chaque appareil d'élève.
-  "i18n-": 184 * 1024,
+  "i18n-": 188 * 1024,
   // Surface parent (`parentReport.*` + `parentDaily.*`), mesurée 36,52 KB le
   // 2026-08-26 ; plafond à +20 % parce que le suivi « jour par jour » est récent et
   // bouge encore. Ces octets ne descendent QUE chez les comptes parent — ils sont
@@ -86,6 +97,12 @@ const BUDGETS = {
   // réapparaît un jour dans les imports STATIQUES du chunk index, le découpage est
   // cassé sans que rien ne rougisse : relire `manualChunks` dans `vite.config.ts`.
   "i18n-parent-": 44 * 1024,
+  // Surface boutique : les libellés de la collection de badges (nom + condition,
+  // 13 badges × 3 langues, é31 lot 2). Servis par la seule route /boutique, elle
+  // aussi chargée dynamiquement. C'est la règle ci-dessus APPLIQUÉE plutôt que
+  // contournée : sans ce découpage, `i18n-` réclamait son dix-septième
+  // relèvement pour une microcopy qu'un élève sur dix verra.
+  "i18n-badges-": 12 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
   // @dnd-kit (core+sortable+utilities) powering the B2 ordering/matching
@@ -94,7 +111,14 @@ const BUDGETS = {
   // Dashboard route chunk. Bumped 30→32 KB for the flagship-concours banner
   // integration (the banner trio is lazy-loaded into its own chunk; only the
   // small lazy glue lands here). Heavy sections (radar/3D, badges/shop) stay lazy.
-  "dashboard-": 32 * 1024,
+  //
+  // 32→36 KB — étude 31 « l'envie de revenir ». L'écran gagne trois surfaces :
+  // l'anneau du jour branché sur l'XP réel (lot 3), la carte « Ta semaine »
+  // (lot 5) et la bannière d'événement (lot 8). Les DEUX cartes sont
+  // `lazy()` — seule leur glu atterrit ici, comme pour les objectifs — et le
+  // relèvement paie ce qui ne peut pas l'être : trois lectures, leur câblage et
+  // l'en-tête du héros (cadre, palier, titre). Mesuré 34,00 KB ; plafond à +6 %.
+  "dashboard-": 36 * 1024,
   // --- Vendor chunks that had NO budget until the 2026-08-10 perf/quality pass
   // (finding M1-fe). They were free to grow uncaught: every Radix primitive or
   // Lucide icon added anywhere in the app lands here, and nothing complained.

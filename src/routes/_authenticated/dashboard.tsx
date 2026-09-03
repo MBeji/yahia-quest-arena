@@ -16,7 +16,14 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
-import { getDashboard, getSprint2Dashboard } from "@/features/dashboard";
+import {
+  getActiveEvent,
+  getDailyRing,
+  getDashboard,
+  getSprint2Dashboard,
+  getWeeklyRecap,
+} from "@/features/dashboard";
+import type { DashboardGoalAction } from "@/features/dashboard";
 // Import direct, même raison que sur le lecteur de chapitre : le barrel de
 // la feature IA tirerait la console parent et la Forge dans ce chunk.
 import { ForgeEntry } from "@/features/ai/components/forge-entry";
@@ -45,6 +52,7 @@ import { entrance } from "@/shared/lib/motion";
 import { PageShell } from "@/components/ui/page-shell";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { GoldProgress } from "@/components/game/gold-progress";
+import { trackProductEvent } from "@/shared/lib/product-events";
 
 const GoldAmbientCanvas = lazy(() => import("@/components/visual/gold-ambient-canvas"));
 // « Carte de compétences » (étude 07 lot 4) : lazy comme les sections lourdes du dashboard —
@@ -67,6 +75,20 @@ const WeaknessesPanel = lazy(() =>
 );
 // Objectifs & quêtes : même raison, budget de chunk. Voir l'en-tête du composant —
 // c'est le `lazy()` qui déplace les octets, pas l'extraction seule.
+// é31 lots 5 et 8 — mêmes raisons que les objectifs ci-dessous : le chunk du
+// tableau de bord a un budget, et ces deux cartes ne sont pas la première chose
+// que l'élève regarde. C'est le `lazy()` qui déplace les octets, pas l'extraction.
+const WeeklyRecapCard = lazy(() =>
+  import("@/features/dashboard/components/weekly-recap-card").then((m) => ({
+    default: m.WeeklyRecapCard,
+  })),
+);
+const EventBanner = lazy(() =>
+  import("@/features/dashboard/components/event-banner").then((m) => ({
+    default: m.EventBanner,
+  })),
+);
+
 const DashboardGoals = lazy(() =>
   import("@/features/dashboard/components/dashboard-goals").then((m) => ({
     default: m.DashboardGoals,
@@ -89,11 +111,26 @@ function Dashboard() {
   const navigate = useNavigate();
   const fetchDashboard = useServerFn(getDashboard);
   const fetchSprint2 = useServerFn(getSprint2Dashboard);
+  const fetchDailyRing = useServerFn(getDailyRing);
+  const fetchWeeklyRecap = useServerFn(getWeeklyRecap);
+  const fetchActiveEvent = useServerFn(getActiveEvent);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["dashboard"],
     queryFn: () => fetchDashboard(),
   });
   const { data: sprint2 } = useQuery({ queryKey: ["sprint2"], queryFn: () => fetchSprint2() });
+  // é31 lot 3 — l'XP réellement gagné aujourd'hui, sur l'objectif choisi (R-12).
+  const { data: ring } = useQuery({ queryKey: ["daily-ring"], queryFn: () => fetchDailyRing() });
+  // é31 lot 8 — l'événement du calendrier, s'il y en a un aujourd'hui.
+  const { data: activeEvent } = useQuery({
+    queryKey: ["active-event"],
+    queryFn: () => fetchActiveEvent(),
+  });
+  // é31 lot 5 — le bilan de la semaine (US-8), déterministe et sans récompense.
+  const { data: recap } = useQuery({
+    queryKey: ["weekly-recap"],
+    queryFn: () => fetchWeeklyRecap(),
+  });
 
   // Light 3D gold ambient — only after mount, never on mobile or reduced-motion
   // (the CSS gold ambient from the shell remains as the fallback).
@@ -116,6 +153,9 @@ function Dashboard() {
   const streakRecoveryMutation = useMutation({
     mutationFn: () => recoverStreakFn(),
     onSuccess: (res) => {
+      // é31 lot 1 — le rachat de série est le geste de RETOUR par excellence :
+      // il mesure combien d'élèves refusent de laisser tomber (constat n° 7).
+      trackProductEvent("streak_recovered", { new_streak: res.newStreak });
       toast.success(
         t.dashboard.streakRecovered
           .replace("{n}", String(res.newStreak))
@@ -173,9 +213,15 @@ function Dashboard() {
       : null;
   const continueSubject = subjects.find((s) => s.id === actionSubjectId) ?? undefined;
 
-  function runQuestAction(action: "retry" | "subject" | "dungeon") {
+  function runQuestAction(action: DashboardGoalAction) {
     if (action === "dungeon") {
       navigate({ to: "/dungeon" });
+      return;
+    }
+
+    // é31 lot 3 — la mission « joue un duel » mène à l'arène, pas à une matière.
+    if (action === "duel") {
+      navigate({ to: "/duel" });
       return;
     }
 
@@ -212,7 +258,11 @@ function Dashboard() {
           <div className="absolute -end-10 -top-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/30 blur-3xl" />
           <div className="absolute -bottom-10 -start-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/20 blur-3xl" />
           <div className="relative grid gap-6 sm:grid-cols-[auto_1fr_auto] sm:items-center">
-            <HeroAvatar avatarSlug={profile.avatar_slug} />
+            <HeroAvatar
+              avatarSlug={profile.avatar_slug}
+              frameSlug={(profile as { frame_slug?: string | null }).frame_slug ?? null}
+              avatarTier={profile.avatar_tier}
+            />
             <div className="min-w-0">
               <div className="text-sm text-muted-foreground">
                 {isFirstRun ? t.dashboard.firstRunWelcome : t.dashboard.welcomeBack}
@@ -226,6 +276,7 @@ function Dashboard() {
                 xp={profile.xp}
                 coins={profile.yahia_coins ?? 0}
                 heroClass={profile.hero_class}
+                titleCode={(profile as { title_code?: string | null }).title_code ?? null}
               />
               <div className="mt-4">
                 <div className="mb-1 flex justify-between text-xs text-muted-foreground">
@@ -274,12 +325,36 @@ function Dashboard() {
         <DashboardFocus
           nextAction={data.nextAction}
           continueSubject={continueSubject}
-          xpToday={(sprint2?.dailyObjectives ?? [])
-            .filter((o) => o.status === "completed")
-            .reduce((sum, o) => sum + (o.xp_reward ?? 0), 0)}
-          dailyGoal={100}
+          /* é31 lot 3 (R-12) — l'anneau montrait la somme des `xp_reward` des
+             objectifs COMPLÉTÉS sur 100 en dur : 0 % ou 50 %, jamais l'XP réel.
+             Il lit désormais le compteur du jour tenu par `award_xp` (quête,
+             donjon, duel et objectifs y passent tous) sur l'objectif CHOISI. */
+          xpToday={ring?.xpToday ?? 0}
+          dailyGoal={ring?.goal ?? 100}
           streak={profile.current_streak}
         />
+
+        {/* é31 lot 8 (US-12, R-21) — le calendrier scolaire : la seule chose datée
+            du produit était une suggestion de changement de classe. La bannière
+            annonce un défi et un badge — elle ne borne AUCUN contenu (R-2). */}
+        {activeEvent && (
+          <Suspense fallback={null}>
+            <div className="mt-6">
+              <EventBanner event={activeEvent} />
+            </div>
+          </Suspense>
+        )}
+
+        {/* é31 lot 5 (US-8, R-18) — « Ta semaine » : la fin de cycle qui manquait.
+            Les faits, comparés à la semaine d'avant, et AUCUNE récompense —
+            un bilan qui paye devient une tâche. */}
+        {recap && (
+          <Suspense fallback={null}>
+            <div className="mt-6">
+              <WeeklyRecapCard recap={recap} />
+            </div>
+          </Suspense>
+        )}
 
         {/* « Révision du jour » (étude 04, lot A1.1) — juste sous la bande focus, parce que
             c'est la même urgence détaillée : la bande promeut UNE action (la tête du plan),

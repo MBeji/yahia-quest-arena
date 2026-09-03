@@ -283,3 +283,38 @@ export const exportUserData = createServerFn({ method: "POST" })
     logger.info("auth.exportUserData: un dossier a été servi");
     return { document: data };
   });
+
+/**
+ * Étude 31 lot 4 (R-17) — la LANGUE DU PROFIL, pour que les notifications
+ * parlent celle de l'élève.
+ *
+ * Avant ce lot, la langue vivait dans un cookie et un `localStorage` : le serveur
+ * ne la connaissait pas, et les trois payloads push partaient en français pour
+ * tout le monde — y compris pour l'élève qui lit l'application en arabe. C'est un
+ * réglage d'INTERFACE qui devient une donnée de PROFIL, pour la seule raison
+ * qu'un canal asynchrone ne peut pas lire un cookie.
+ *
+ * Écriture par RPC `SECURITY DEFINER` : `locale` n'est pas dans les colonnes que
+ * le grant client autorise (20260606150000), et l'y ajouter ouvrirait une
+ * surface d'écriture directe pour un besoin qui tient en un verbe.
+ */
+export const setProfileLocale = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ locale: z.union([z.literal("fr"), z.literal("en"), z.literal("ar")]) }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const client = context.supabase as unknown as {
+      rpc: (
+        fn: "set_profile_locale",
+        args: { p_locale: string },
+      ) => PromiseLike<{ error: { message: string } | null }>;
+    };
+    const { error } = await client.rpc("set_profile_locale", { p_locale: data.locale });
+    if (error) {
+      // Une langue non enregistrée ne casse rien à l'écran : elle coûte une
+      // notification en français. On journalise, on ne fait pas échouer la page.
+      failWithClientError("auth.setProfileLocale", error, "Langue non enregistrée.");
+    }
+    return { locale: data.locale };
+  });

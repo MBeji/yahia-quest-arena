@@ -9,6 +9,7 @@ import { PageShell } from "@/components/ui/page-shell";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import {
+  getWeeklyLeaderboard,
   getLeaderboard,
   getGradeLeaderboard,
   getLeaderboardSubjects,
@@ -48,8 +49,18 @@ function LeaderboardPage() {
   const fetchGradeLeaderboard = useServerFn(getGradeLeaderboard);
   const fetchSubjects = useServerFn(getLeaderboardSubjects);
   const fetchSubjectLeaderboard = useServerFn(getSubjectLeaderboard);
+  const fetchWeekly = useServerFn(getWeeklyLeaderboard);
 
   const [tab, setTab] = useState<string | null>(null);
+  /**
+   * é31 lot 5 (US-7, R-15) — LA PÉRIODE, second axe du classement.
+   *
+   * L'XP était CUMULÉ À VIE : un compte de septembre ne rattraperait jamais un
+   * compte de juin, et le tableau ne disait plus rien à celui qui vient
+   * d'arriver. « Cette semaine » est le défaut (Q-3, arbitrée) ; le cumulatif
+   * reste, d'un clic.
+   */
+  const [period, setPeriod] = useState<"week" | "all">("week");
 
   // Tabs are scoped to the ACTIVE parcours' subjects (GAP-018) — not the whole
   // academy catalogue — so the row stays short and homonym subjects across grades
@@ -86,16 +97,32 @@ function LeaderboardPage() {
   const subjectQuery = useQuery({
     queryKey: ["leaderboard", "subject", activeTab],
     queryFn: () => fetchSubjectLeaderboard({ data: { subjectId: activeTab as string } }),
-    enabled: isSubjectTab,
+    enabled: isSubjectTab && period === "all",
+  });
+
+  // Le classement de la semaine sert les TROIS cohortes : la portée voyage en
+  // argument plutôt qu'en trois lectures distinctes.
+  const weeklyScope = isGlobal ? "global" : isMyClass ? "grade" : (activeTab ?? "global");
+  const weeklyQuery = useQuery({
+    queryKey: ["leaderboard", "week", weeklyScope],
+    queryFn: () => fetchWeekly({ data: { scope: weeklyScope } }),
+    enabled: period === "week" && activeTab !== null,
   });
 
   const subjects = subjectsQuery.data?.subjects ?? [];
   const activeSubject = subjects.find((s) => s.id === activeTab) ?? null;
 
-  const data = isGlobal ? globalQuery.data : isMyClass ? gradeQuery.data : subjectQuery.data;
+  const cumulative = isGlobal ? globalQuery.data : isMyClass ? gradeQuery.data : subjectQuery.data;
+  const data = period === "week" ? weeklyQuery.data : cumulative;
   const isLoading =
     activeTab === null ||
-    (isGlobal ? globalQuery.isLoading : isMyClass ? gradeQuery.isLoading : subjectQuery.isLoading);
+    (period === "week"
+      ? weeklyQuery.isLoading
+      : isGlobal
+        ? globalQuery.isLoading
+        : isMyClass
+          ? gradeQuery.isLoading
+          : subjectQuery.isLoading);
 
   const leaderboard = (data?.leaderboard ?? []) as Player[];
   const myRank = (data?.myRank ?? null) as Player | null;
@@ -116,6 +143,34 @@ function LeaderboardPage() {
               ? t.leaderboard.subtitleMyClass
               : t.leaderboard.subtitleSubject.replace("{subject}", activeSubject?.name_fr ?? "")}
         </p>
+      </div>
+
+      {/* é31 lot 5 (US-7, Q-3) — LA PÉRIODE, avant les cohortes : « cette semaine »
+          d'abord, parce qu'un classement à vie ne dit rien à qui vient d'arriver.
+          Le cumulatif reste, d'un clic. */}
+      <div className="mb-3 flex justify-center gap-1" role="radiogroup">
+        {(
+          [
+            ["week", t.dashboard.weekTab],
+            ["all", t.dashboard.allTimeTab],
+          ] as const
+        ).map(([value, label]) => (
+          <button
+            key={value}
+            type="button"
+            role="radio"
+            aria-checked={period === value}
+            data-testid={`leaderboard-period-${value}`}
+            onClick={() => setPeriod(value)}
+            className={`min-h-11 rounded-full px-4 py-1.5 text-xs font-bold transition ${
+              period === value
+                ? "bg-[color:var(--gold)]/15 text-[color:var(--gold)]"
+                : "text-muted-foreground hover:bg-accent hover:text-foreground"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       {/* Tabs: Global + one per subject */}

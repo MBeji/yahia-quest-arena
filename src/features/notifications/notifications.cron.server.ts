@@ -6,11 +6,14 @@ import { logger } from "@/shared/lib/logger";
 import { configureVapid, sendPushToUsers, type SendStats } from "@/shared/lib/push-sender.server";
 import {
   appLocalDate,
+  groupPushPlan,
   isParentDigestDay,
-  planReminderPayload,
-  selectStreakAtRiskUserIds,
-  streakReminderPayload,
-  weeklyParentDigestPayload,
+  parentDigestPayload,
+  payloadFor,
+  resolveDailyPushPlan,
+  safeLocale,
+  type PushCandidate,
+  type PushTag,
 } from "./push-audience";
 
 function jsonResponse(body: unknown, status = 200): Response {
@@ -20,83 +23,94 @@ function jsonResponse(body: unknown, status = 200): Response {
   });
 }
 
-/** Audience: users with a live streak who have not been active *today* (Tunis-local). */
-async function dispatchStreakReminder(now: Date): Promise<{ stats: SendStats; sentTo: string[] }> {
-  const { data: profiles, error: profilesError } = await supabaseAdmin
-    .from("profiles")
-    .select("id, current_streak, last_active_date")
-    .gt("current_streak", 0);
-  if (profilesError) {
-    logger.error("Push cron: failed to load profiles", { error: profilesError });
-    throw new Error("profiles");
-  }
+const EMPTY: SendStats = { audience: 0, sent: 0, pruned: 0 };
 
-  const userIds = selectStreakAtRiskUserIds(profiles ?? [], appLocalDate(now));
-  return { stats: await sendPushToUsers(userIds, streakReminderPayload()), sentTo: userIds };
+function addStats(a: SendStats, b: SendStats): SendStats {
+  return { audience: a.audience + b.audience, sent: a.sent + b.sent, pruned: a.pruned + b.pruned };
 }
 
 /**
- * Le rappel du plan du jour — étude 11 US-7.
- *
- * `alreadyNotified` porte la promesse « au plus un par jour » : le rappel de
- * série vise EXACTEMENT la même population (élève inactif aujourd'hui), et deux
- * notifications le même soir pour la même raison sont la meilleure façon de
- * faire couper les notifications. Ce n'est pas une politesse — c'est la seule
- * chose qui tienne l'opt-in dans la durée.
- *
- * L'audience est calculée en SQL (`tutor_plan_push_audience`) : opt-in armé,
- * au moins une révision due, pas encore venu. Le JOUR lui est passé, parce que
- * la journée de l'application est celle de Tunis et qu'elle est déjà calculée
- * ici — deux définitions de « aujourd'hui » dans le même cron divergeraient.
+ * `push_daily_audiences` est postérieure aux types Supabase générés : contrat
+ * figé ici, même patron que les autres RPC récentes.
  */
-async function dispatchPlanReminder(now: Date, alreadyNotified: string[]): Promise<SendStats> {
-  const { data, error } = await (
-    supabaseAdmin as unknown as {
-      rpc: (
-        fn: "tutor_plan_push_audience",
-        args: { p_today: string },
+type AudienceRow = {
+  user_id: string;
+  tag: string;
+  locale: string | null;
+  arg: number | null;
+  detail: string | null;
+};
+
+/** Contrat étroit pour `profiles.locale` (é31 lot 4), en attendant la régénération. */
+type ParentLocaleClient = {
+  from: (table: "profiles") => {
+    select: (columns: string) => {
+      in: (
+        column: string,
+        values: string[],
       ) => PromiseLike<{
-        data: { user_id: string; due_count: number }[] | null;
+        data: { id: string; locale: string | null }[] | null;
         error: { message: string } | null;
       }>;
-    }
-  ).rpc("tutor_plan_push_audience", { p_today: appLocalDate(now) });
+    };
+  };
+};
 
+type AudienceClient = {
+  rpc: (
+    fn: "push_daily_audiences",
+    args: { p_today: string },
+  ) => PromiseLike<{ data: AudienceRow[] | null; error: { message: string } | null }>;
+};
+
+/**
+ * ⭐ LE DISPATCHER D'ÉLÈVE — une lecture, un pipeline, au plus un push par élève.
+ *
+ * Avant é31 lot 4 : deux audiences, une exclusion croisée écrite à la main entre
+ * elles, et l'élève qui avait PERDU sa série n'était plus jamais recontacté. Il y
+ * a désormais six moments (R-16), et la règle « ≤ 1 par jour » (R-4) ne tient
+ * plus par une exclusion mais par la STRUCTURE : la base rend des candidats,
+ * `resolveDailyPushPlan` n'en garde qu'un.
+ *
+ * Le regroupement par (tag, langue, nombre) évite un envoi par élève : le
+ * transport prend une liste d'identifiants et un payload.
+ */
+async function dispatchStudentPush(
+  now: Date,
+): Promise<{ stats: SendStats; byTag: Record<string, number> }> {
+  const { data, error } = await (supabaseAdmin as unknown as AudienceClient).rpc(
+    "push_daily_audiences",
+    { p_today: appLocalDate(now) },
+  );
   if (error) {
-    logger.error("Push cron: failed to load tutor plan audience", { error });
-    throw new Error("tutor_plan");
+    logger.error("Push cron: failed to load daily audiences", { error });
+    throw new Error("audiences");
   }
 
-  const skip = new Set(alreadyNotified);
-  const rows = (data ?? []).filter((r) => !skip.has(r.user_id));
-  if (rows.length === 0) return { audience: 0, sent: 0, pruned: 0 };
+  const candidates: PushCandidate[] = (data ?? []).map((row) => ({
+    userId: row.user_id,
+    tag: row.tag as PushTag,
+    locale: row.locale,
+    arg: row.arg,
+  }));
 
-  // Le texte dépend du NOMBRE de révisions dues : on groupe par ce nombre pour
-  // n'envoyer qu'un payload par groupe plutôt qu'un par élève.
-  const byCount = new Map<number, string[]>();
-  for (const row of rows) {
-    const bucket = byCount.get(row.due_count) ?? [];
-    bucket.push(row.user_id);
-    byCount.set(row.due_count, bucket);
-  }
+  const plan = resolveDailyPushPlan(candidates);
+  const byTag: Record<string, number> = {};
+  for (const entry of plan) byTag[entry.tag] = (byTag[entry.tag] ?? 0) + 1;
 
+  const groups = groupPushPlan(plan);
   const results = await Promise.all(
-    [...byCount.entries()].map(([count, ids]) => sendPushToUsers(ids, planReminderPayload(count))),
+    groups.map((g) => sendPushToUsers(g.userIds, payloadFor(g.tag, safeLocale(g.locale), g.arg))),
   );
 
-  return results.reduce(
-    (total, r) => ({
-      audience: total.audience + r.audience,
-      sent: total.sent + r.sent,
-      pruned: total.pruned + r.pruned,
-    }),
-    { audience: 0, sent: 0, pruned: 0 },
-  );
+  return { stats: results.reduce(addStats, EMPTY), byTag };
 }
 
 /**
  * Weekly family digest — every parent with at least one active student link gets
  * a "your weekly report is ready" push on Sunday evening (see PARENT_DIGEST_WEEKDAY).
+ * Les parents ne concourent pas avec les élèves : ils reçoivent leur propre canal,
+ * et le pipeline de priorité ne les concerne pas.
  */
 async function dispatchParentDigest(): Promise<SendStats> {
   const { data: links, error: linksError } = await supabaseAdmin
@@ -109,18 +123,46 @@ async function dispatchParentDigest(): Promise<SendStats> {
   }
 
   const parentIds = [...new Set((links ?? []).map((l) => l.parent_user_id))];
-  return sendPushToUsers(parentIds, weeklyParentDigestPayload());
+  if (parentIds.length === 0) return EMPTY;
+
+  // é31 R-17 — le bilan part dans la langue du parent, comme le reste.
+  // ⚠️ `locale` est postérieure aux types Supabase générés (régénération
+  // impossible sans accès DB) : contrat étroit, comme les autres lectures du lot.
+  const { data: profiles, error: profilesError } = await (
+    supabaseAdmin as unknown as ParentLocaleClient
+  )
+    .from("profiles")
+    .select("id, locale")
+    .in("id", parentIds);
+  if (profilesError) {
+    logger.error("Push cron: failed to load parent locales", { error: profilesError });
+    throw new Error("parent_links");
+  }
+
+  const byLocale = new Map<string, string[]>();
+  const known = new Map((profiles ?? []).map((p) => [p.id, safeLocale(p.locale)]));
+  for (const id of parentIds) {
+    const locale = known.get(id) ?? "fr";
+    byLocale.set(locale, [...(byLocale.get(locale) ?? []), id]);
+  }
+
+  const results = await Promise.all(
+    [...byLocale.entries()].map(([locale, ids]) =>
+      sendPushToUsers(ids, parentDigestPayload(safeLocale(locale))),
+    ),
+  );
+  return results.reduce(addStats, EMPTY);
 }
 
 /**
  * Scheduled push dispatcher. Vercel Cron hits GET /api/cron/notify daily, which
- * src/server.ts routes here. Sends the "streak at risk" reminder every day, plus
- * the weekly family digest on Sunday (Tunis-local).
+ * src/server.ts routes here. Envoie AU PLUS UN push par élève (é31 R-4), plus le
+ * bilan famille le dimanche (heure de Tunis).
  *
  * Auth: the request must carry `Authorization: Bearer <CRON_SECRET>` (Vercel
  * injects this automatically when the CRON_SECRET env var is set). Runs in the
- * SSR worker (Node 22), reads with the service-role client (bypasses RLS), and
- * prunes dead endpoints (404/410) as it sends. `now` is injectable for tests.
+ * SSR worker, reads with the service-role client (bypasses RLS), and prunes dead
+ * endpoints (404/410) as it sends. `now` is injectable for tests.
  */
 export async function handlePushCron(request: Request, now: Date = new Date()): Promise<Response> {
   const secret = process.env.CRON_SECRET;
@@ -133,23 +175,14 @@ export async function handlePushCron(request: Request, now: Date = new Date()): 
     return jsonResponse({ error: "VAPID not configured" }, 500);
   }
 
-  let streak: SendStats;
-  let streakSentTo: string[];
+  let students: SendStats;
+  let byTag: Record<string, number>;
   try {
-    const result = await dispatchStreakReminder(now);
-    streak = result.stats;
-    streakSentTo = result.sentTo;
+    const result = await dispatchStudentPush(now);
+    students = result.stats;
+    byTag = result.byTag;
   } catch (err) {
-    return jsonResponse({ error: err instanceof Error ? err.message : "streak" }, 500);
-  }
-
-  // Étude 11 US-7. Après le rappel de série, et en l'excluant : les deux visent
-  // l'élève inactif du jour, et la promesse est « au plus un par jour ».
-  let tutorPlan: SendStats;
-  try {
-    tutorPlan = await dispatchPlanReminder(now, streakSentTo);
-  } catch (err) {
-    return jsonResponse({ error: err instanceof Error ? err.message : "tutor_plan" }, 500);
+    return jsonResponse({ error: err instanceof Error ? err.message : "audiences" }, 500);
   }
 
   let parentDigest: SendStats | null = null;
@@ -161,6 +194,8 @@ export async function handlePushCron(request: Request, now: Date = new Date()): 
     }
   }
 
-  logger.info("Push cron complete", { streak, tutorPlan, parentDigest });
-  return jsonResponse({ ...streak, tutorPlan, parentDigest });
+  // Journal par TAG (§3.7) : sans lui, « 12 envoyés » ne dit pas si le canal
+  // sert à relancer les absents ou à féliciter ceux qui sont déjà là.
+  logger.info("Push cron complete", { students, byTag, parentDigest });
+  return jsonResponse({ ...students, byTag, parentDigest });
 }

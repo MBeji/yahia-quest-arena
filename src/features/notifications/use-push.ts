@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { savePushSubscription, deletePushSubscription } from "./notifications.server";
 import { VAPID_PUBLIC_KEY, isPushSupported, urlBase64ToUint8Array } from "./push-client";
+import { trackProductEvent } from "@/shared/lib/product-events";
 
 /**
  * Push enablement state machine for the UI:
@@ -70,6 +71,10 @@ export function usePush() {
         },
       });
       setState("granted");
+      // é31 lot 1 — KPI-D. Le refus de permission n'est PAS un opt-out : on ne
+      // compte que la bascule effective, dans les deux sens (le côté serveur en
+      // journalise la vérité durable dans `push_consent_events`).
+      trackProductEvent("push_optin");
     } finally {
       setBusy(false);
     }
@@ -83,6 +88,7 @@ export function usePush() {
       if (sub) {
         await remove({ data: { endpoint: sub.endpoint } });
         await sub.unsubscribe();
+        trackProductEvent("push_optout");
       }
       setState("default");
     } finally {

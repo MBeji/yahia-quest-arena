@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { useT } from "@/lib/i18n";
 import { useEntrance } from "@/shared/lib/motion";
+import { trackProductEvent } from "@/shared/lib/product-events";
 import type { TranslationKeys } from "@/lib/i18n/types";
 
 /** `AuthError.code` when supabase-js exposes one (it is absent on plain Errors). */
@@ -238,6 +239,13 @@ function AuthPage() {
           toast.error(message);
           return;
         }
+
+        // é31 lot 1 — le premier fait du funnel produit. Émis dès que le compte
+        // EXISTE (une session, ou un mail de confirmation parti), donc y compris
+        // sur le chemin « confirme ton adresse » où l'élève ne revient parfois
+        // jamais : c'est justement la fuite qu'on veut voir. Aucune PII — le
+        // rôle choisi, rien d'autre.
+        trackProductEvent("signup", { role, needs_confirmation: !data.session });
 
         // Profile bootstrap (display name + role) is extracted to the
         // `bootstrapProfile` server fn (review #19). It is authenticated, so it can

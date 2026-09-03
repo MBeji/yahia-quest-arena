@@ -1,3 +1,4 @@
+import type { HeroClass, HeroTitle } from "@/shared/constants/hero-identity";
 import type { AdaptiveTranslations } from "./adaptive.types";
 import type { DuelTranslations } from "./duel.types";
 import type { TutorTranslations } from "./tutor.types";
@@ -126,6 +127,27 @@ export type TranslationKeys = {
     dailyGoalLabel: string;
     dailyGoalReached: string;
     dailyGoalRemaining: string;
+    dailyGoalChoose: string;
+    dailyGoalChooseHint: string;
+    dailyGoalAlreadySet: string;
+    dailyGoalSaved: string;
+    dailyMissionsDone: string;
+    dailyMissionsDoneDesc: string;
+    weekTab: string;
+    allTimeTab: string;
+    weeklyRecapTitle: string;
+    weeklyRecapEmpty: string;
+    weeklyRecapXp: string;
+    weeklyRecapMissions: string;
+    weeklyRecapAccuracy: string;
+    weeklyRecapDays: string;
+    weeklyRecapVsLast: string;
+    weeklyRecapBadges: string;
+    weeklyRecapLeague: string;
+    podiumTitle: string;
+    podiumRank: string;
+    podiumCoins: string;
+    podiumClose: string;
     consecutiveDays: string;
     quoteLabel: string;
     streakLostTitle: string;
@@ -205,6 +227,15 @@ export type TranslationKeys = {
     badgeDefaultReason: string;
     badgeEarnedOn: string;
     badgesEmpty: string;
+    /**
+     * é31 lot 7 (R-22) — un palier sans sa ligne ne compile pas : la colonne
+     * portait du français, rendu tel quel dans les trois langues. Ces clés
+     * restent APP-WIDE (l'en-tête du tableau de bord n'est pas paresseux),
+     * contrairement aux libellés de badges partis dans `badges/`.
+     */
+    heroClasses: Record<HeroClass, string>;
+    heroTitles: Record<HeroTitle, string>;
+    avatarTierLabel: string;
     shopTitle: string;
     shopDefaultDesc: string;
     shopEquipped: string;
@@ -215,7 +246,15 @@ export type TranslationKeys = {
     shopActivate: string;
     armedPassive: string;
     armedQuest: string;
-    itemTypes: { skin: string; potion: string; booster: string; shield: string };
+    /** é31 lot 7 — `frame` et `title` : les deux cosmétiques qui donnent un puits aux pièces. */
+    itemTypes: {
+      skin: string;
+      potion: string;
+      booster: string;
+      shield: string;
+      frame: string;
+      title: string;
+    };
     rarities: { common: string; rare: string; epic: string; legendary: string };
     radarTitle: string;
     radarCaption: string;
@@ -716,6 +755,8 @@ export type TranslationKeys = {
     celebrateSoonDesc: string;
     celebrateExtrasCta: string;
     celebrateDashboardCta: string;
+    welcomeCoins: string;
+    welcomeFirstQuestCta: string;
   };
   // School cycle group labels (programme scolaire)
   cycles: {

@@ -190,8 +190,11 @@ export const frPublic: TranslationKeys["public"] = {
     restart: "Recommencer",
     questCta: "Refaire en mode quête pour gagner des XP",
     continueCta: "Continuer vers le premier exercice",
+    // é31 lot 6 (US-10, R-20) — dire ce qui N'EST PAS gardé, et le formuler en
+    // GAIN FUTUR : « tes prochains XP », jamais « tu viens de tout perdre ».
+    // Jamais bloquant, jamais de compte à rebours : la pratique reste ouverte.
     inviteDesc:
-      "Crée un compte pour gagner des XP, sauvegarder ta progression et grimper au classement.",
+      "Sans compte, tes XP, ta série et tes badges ne sont pas conservés. Crée-en un pour garder tes prochains XP, ta série et ta progression.",
     inviteCta: "Créer mon compte",
   },
   print: {

@@ -33,11 +33,12 @@ import {
   buildLyceeYears,
 } from "@/features/dashboard";
 import type { LyceeYearGroup, ParcoursInterestState } from "@/features/dashboard";
-import { setCurrentParcours } from "@/features/auth";
+import { claimWelcomePack, setCurrentParcours, type WelcomePack } from "@/features/auth";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { useEntrance } from "@/shared/lib/motion";
 import { parcoursName } from "@/shared/lib/parcours-locale";
 import { useI18n, useT } from "@/lib/i18n";
+import { trackProductEvent } from "@/shared/lib/product-events";
 
 /**
  * Slide-in/out of a wizard step (AnimatePresence needs an `exit`, which the
@@ -463,10 +464,15 @@ export function CelebrationStep({
   parcours,
   landing,
   onGo,
+  welcome,
+  onFirstQuest,
 }: {
   parcours: Parcours | null;
   landing: string;
   onGo: (to: string) => void;
+  /** é31 lot 6 — la récompense de bienvenue, si elle vient d'être versée (R-19). */
+  welcome?: { coins: number; firstExerciseId: string | null } | null;
+  onFirstQuest?: (exerciseId: string) => void;
 }) {
   const t = useT();
   const { locale } = useI18n();
@@ -498,12 +504,37 @@ export function CelebrationStep({
             label,
           )}
         </p>
+        {welcome && welcome.coins > 0 && (
+          <p
+            data-testid="onboarding-welcome-coins"
+            className="mt-3 inline-block rounded-full bg-[color:var(--gold)]/15 px-4 py-1.5 font-display font-bold text-[color:var(--gold)]"
+          >
+            {t.onboarding.welcomeCoins.replace("{coins}", String(welcome.coins))}
+          </p>
+        )}
       </div>
       <div className="flex flex-col gap-3">
         {isComingSoon ? (
           <>
             <Button onClick={() => onGo("/extras")} className="min-h-12 gap-2 text-base">
               {t.onboarding.celebrateExtrasCta} <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
+            </Button>
+            <Button onClick={() => onGo(landing)} variant="outline" className="min-h-11">
+              {t.onboarding.celebrateDashboardCta}
+            </Button>
+          </>
+        ) : welcome?.firstExerciseId && onFirstQuest ? (
+          /* é31 lot 6 (US-9, R-19) — UNE action, pas un menu : la première quête
+             du parcours choisi est à un tap. Le tableau de bord reste
+             atteignable, en second. */
+          <>
+            <Button
+              onClick={() => onFirstQuest(welcome.firstExerciseId as string)}
+              data-testid="onboarding-first-quest"
+              className="min-h-12 gap-2 text-base"
+            >
+              {t.onboarding.welcomeFirstQuestCta}{" "}
+              <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
             </Button>
             <Button onClick={() => onGo(landing)} variant="outline" className="min-h-11">
               {t.onboarding.celebrateDashboardCta}
@@ -539,9 +570,11 @@ function OnboardingComponent() {
   const [step, setStep] = useState<0 | 1 | 2>(0);
   const [intent, setIntent] = useState<Intent | null>(null);
   const [selected, setSelected] = useState<Parcours | null>(null);
+  const [welcome, setWelcome] = useState<WelcomePack | null>(null);
 
   const fetchParcours = useServerFn(getParcours);
   const saveParcours = useServerFn(setCurrentParcours);
+  const claimWelcome = useServerFn(claimWelcomePack);
 
   const {
     data: parcoursData,
@@ -565,6 +598,18 @@ function OnboardingComponent() {
         queryClient.invalidateQueries({ queryKey: ["me-role"] }),
         queryClient.invalidateQueries({ queryKey: ["me-parcours"] }),
       ]);
+      // é31 lot 1 — deuxième fait du funnel : le parcours choisi, donc le compte
+      // réellement utilisable. L'écart signup → onboarding_completed est la
+      // première fuite mesurable du produit.
+      trackProductEvent("onboarding_completed", { intent: intent ?? "unknown" });
+      // é31 lot 6 (R-19) — la récompense de bienvenue est versée ICI, à la fin de
+      // l'accueil : idempotente côté SQL, donc un rejeu ne double rien. Un échec
+      // ne bloque pas l'écran — l'élève est arrivé, c'est ce qui compte.
+      try {
+        setWelcome(await claimWelcome());
+      } catch {
+        setWelcome(null);
+      }
       setStep(2);
     },
     onError: () => {
@@ -627,6 +672,10 @@ function OnboardingComponent() {
               parcours={selected}
               landing={landing}
               onGo={(to) => navigate({ to })}
+              welcome={welcome}
+              onFirstQuest={(exerciseId) =>
+                navigate({ to: "/quest/$exerciseId", params: { exerciseId } })
+              }
             />
           )}
         </AnimatePresence>

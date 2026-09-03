@@ -33,6 +33,9 @@ vi.mock("@tanstack/react-router", () => ({
 vi.mock("@tanstack/react-query", () => ({
   useQuery: () => ({ data: undefined }),
   useQueryClient: () => ({ invalidateQueries }),
+  // é31 lot 3 : le choix de l'objectif du jour, monté sur la même page, écrit par
+  // une mutation. Le stub la neutralise — ce fichier teste le pseudo.
+  useMutation: () => ({ mutate: vi.fn(), isPending: false }),
 }));
 
 // `createMiddleware`/`createServerFn` are stubbed too, not just `useServerFn`: the
@@ -74,7 +77,16 @@ vi.mock("@/features/notifications", () => ({
 vi.mock("@/features/tutor/components/tutor-plan-push-card", () => ({
   TutorPlanPushCard: () => null,
 }));
-vi.mock("@/features/dashboard", () => ({ getParcours: vi.fn() }));
+// é31 lot 3 : la page porte désormais le choix de l'objectif du jour, qui lit et
+// écrit par la feature `dashboard`. Le mock la couvre pour que ce test reste
+// centré sur le pseudo.
+vi.mock("@/features/dashboard", () => ({
+  getParcours: vi.fn(),
+  getDailyRing: vi.fn(() => Promise.resolve({ xpToday: 0, goal: 100, canChange: true })),
+  setDailyXpGoal: vi.fn(),
+  DAILY_XP_GOALS: [50, 100, 200] as const,
+  DAILY_GOAL_ALREADY_SET: "DAILY_GOAL_ALREADY_SET_TODAY",
+}));
 vi.mock("@/features/parent-report", () => ({ formatStudentAllianceCode: () => "" }));
 vi.mock("@/shared/lib/parcours-locale", () => ({ parcoursName: () => "" }));
 vi.mock("@/shared/integrations/supabase/client", () => ({
@@ -135,6 +147,14 @@ vi.mock("@/lib/i18n", () => ({
     },
     layout: { signOut: "Déconnexion", logoutToast: "" },
     auth: { heroNameLabel: "Prénom ou pseudo" },
+    // é31 lot 3 : le choix de l'objectif du jour vit dans la section « Affichage ».
+    dashboard: {
+      dailyGoalChoose: "Ton objectif du jour",
+      dailyGoalChooseHint: "",
+      dailyGoalAlreadySet: "",
+      dailyGoalSaved: "",
+    },
+    errors: { errorFallback: "" },
   }),
 }));
 

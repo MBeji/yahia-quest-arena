@@ -12,6 +12,7 @@ import {
 } from "@/features/duel";
 import { DuelQueueCard } from "@/features/duel/components/duel-queue-card";
 import { DuelLeague } from "@/features/duel/components/duel-league";
+import { LeaguePodium } from "@/features/duel/components/league-podium";
 import { Swords } from "lucide-react";
 import { BackLink } from "@/components/ui/back-link";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -205,6 +206,12 @@ function DuelHubPage() {
           </ul>
         )}
       </section>
+
+      {/* é31 lot 5 (US-6) — la ligue se terminait dans le SILENCE : le gain tombait
+
+          le lundi à 02:30 par cron. Le podium est ce que l'élève trouve en arrivant. */}
+
+      <LeaguePodium award={awardQuery.data?.award ?? null} />
 
       <DuelLeague
         rows={leagueQuery.data?.rows ?? []}
