@@ -30,6 +30,15 @@
  *   c'est le contrat qui est faux, pas la session de l'élève. C'est exactement la
  *   forme de #931 (`NO_HEADER` sans prédicat de reprise) et de #914.
  *
+ * • Et depuis le 2026-09-04, **les soumissions de mission qui n'aboutissent
+ *   pas** — le seul de ces comptes qui parle de TRAVAIL D'ÉLÈVE et pas de
+ *   sessions. Il a son seuil, bien plus bas que les deux autres. Motif : le
+ *   2026-09-03, un élève a fait ses exercices, validé, et le suivi parental du
+ *   lendemain n'en montrait aucun ; cette garde a répondu « 0 refus dans la
+ *   fenêtre » et disait vrai — `reportClientError` n'était alors appelé que
+ *   derrière un refus d'auth, donc la panne n'écrivait rien. Le classement des
+ *   stages vit dans `client-error-stages.ts`, lu des deux côtés.
+ *
  * • Le filtrage de la fenêtre est fait **côté serveur** (`.gte("created_at", …)`),
  *   jamais en local après une lecture bornée. Piège mesuré sur ce dépôt : les
  *   100 runs les plus récents ne couvraient qu'1 h 13, donc une fenêtre filtrée
@@ -51,6 +60,10 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { AUTH_REFUSALS } from "../../src/shared/integrations/supabase/auth-refusals.ts";
+import {
+  CLIENT_ERROR_STAGES,
+  UNRECOVERED_SUBMISSION_STAGES,
+} from "../../src/shared/lib/client-error-stages.ts";
 import { prodTargetReason } from "../shared/prod-targets.mjs";
 import { transientHint, withTransientRetry } from "../shared/supabase-transient.mjs";
 
@@ -75,6 +88,18 @@ export const SEUILS = {
    * démentirait, et ça vaut d'être regardé bien avant une rafale ordinaire.
    */
   freshTokenParFenetre: 10,
+  /**
+   * Des soumissions qui n'aboutissent pas et que RIEN ne reprend derrière
+   * (`UNRECOVERED_SUBMISSION_STAGES`).
+   *
+   * ⚠️ Le seuil le plus bas des trois, et ce n'est pas un réglage timide : les
+   * deux autres comptent des sessions refusées, celui-ci compte du TRAVAIL
+   * D'ÉLÈVE qui n'est pas arrivé. Trois missions perdues dans une fenêtre de
+   * 8 h, c'est déjà une soirée de travail effacée pour quelqu'un — le
+   * 2026-09-03 en a été une, et elle est passée sous les deux autres seuils
+   * sans rien déclencher parce que rien n'écrivait ces lignes.
+   */
+  soumissionParFenetre: 3,
 };
 
 /** Les messages que le serveur écrit pour un refus qu'un jeton neuf est censé guérir. */
@@ -129,6 +154,13 @@ export function buildClientErrorReport(rows, meta) {
   const jetonExpire = ttl.filter((s) => s <= 0).length;
   const retourDeVeille = rows.filter((r) => Number(r.last_hidden_ms) > 60_000).length;
 
+  // Le travail d'élève qui n'est pas arrivé, et que rien ne reprend derrière.
+  // Le stage suffit à le dire (`client-error-stages.ts`) : c'est la table qui
+  // classe, pas une liste de chaînes retapée ici.
+  const soumissionsPerdues = rows.filter((r) =>
+    UNRECOVERED_SUBMISSION_STAGES.includes(String(r.stage ?? "")),
+  );
+
   const alertes = [];
   if (rows.length >= SEUILS.totalParFenetre) {
     alertes.push(
@@ -141,6 +173,13 @@ export function buildClientErrorReport(rows, meta) {
         `(seuil ${SEUILS.freshTokenParFenetre}) — c'est le contrat d'\`auth-refusals.ts\` qui se dément, pas la session de l'élève.`,
     );
   }
+  if (soumissionsPerdues.length >= SEUILS.soumissionParFenetre) {
+    alertes.push(
+      `${soumissionsPerdues.length} soumissions de mission n'ont PAS abouti en ${meta.windowHours} h ` +
+        `(seuil ${SEUILS.soumissionParFenetre}) — du travail d'élève qui n'est pas enregistré, ` +
+        "donc invisible dans sa progression comme dans le suivi parental.",
+    );
+  }
 
   return {
     generatedAt: meta.generatedAt,
@@ -149,6 +188,13 @@ export function buildClientErrorReport(rows, meta) {
     parStage,
     parMessage,
     freshTokenQuiSeRepete: freshToken.length,
+    soumissionsPerdues: soumissionsPerdues.length,
+    /** Ce que chaque stage présent raconte, pour que l'issue se lise sans le code. */
+    legendeStages: Object.fromEntries(
+      Object.keys(parStage)
+        .filter((stage) => stage in CLIENT_ERROR_STAGES)
+        .map((stage) => [stage, CLIENT_ERROR_STAGES[stage].what]),
+    ),
     horloge: { jetonValideRefuse, jetonExpire, retourDeVeille },
     seuils: SEUILS,
     alertes,

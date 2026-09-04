@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { isSessionRefusalError } from "@/shared/integrations/supabase/auth-rejection";
 import { ensureFreshSession } from "@/shared/integrations/supabase/session-freshness";
 import { enqueue, pendingCount, remove, subscribe } from "@/shared/lib/outbox";
+import { reportClientError } from "@/shared/lib/client-log";
 import {
   QUEST_SUBMIT_KIND,
   clearDraft,
@@ -47,12 +49,14 @@ export type QuestAutosave = {
   /** Une réponse vient de changer : le prochain instantané aura du travail. */
   markDirty: () => void;
   /**
-   * Met la soumission en file et rend un jeton frais AVANT la mutation.
-   * Rend le `clientId` de l'item, à repasser à `completeSubmit`.
+   * Soumet le travail SOUS FILET, et rend ce que `send` a rendu.
+   *
+   * Le protocole entier vit ici plutôt qu'à l'écran, parce que c'est son ORDRE
+   * qui protège et qu'un ordre réparti sur trois appels chez l'appelant est un
+   * ordre qu'on finit par écrire de travers : mise en file et jeton frais AVANT
+   * l'envoi, sortie de file au succès seulement, boîte noire à l'échec.
    */
-  beginSubmit: (sessionId: string, payload: unknown) => Promise<string>;
-  /** La soumission a abouti : l'item sort de la file, le brouillon est effacé. */
-  completeSubmit: (clientId: string) => void;
+  guardSubmit: <T>(sessionId: string, payload: unknown, send: () => Promise<T>) => Promise<T>;
 };
 
 export function useQuestAutosave({
@@ -134,39 +138,63 @@ export function useQuestAutosave({
     };
   }, [enabled, snapshot]);
 
-  const beginSubmit = useCallback(
-    async (session: string, payload: unknown) => {
+  /**
+   * ⚠️ L'ORDRE EST LE SUJET, et il est indivisible.
+   *
+   * On ÉCRIT, puis on tente. Une mise en file faite après l'appel ne
+   * protégerait de rien — c'est pendant l'appel que tout se perd. Le jeton part
+   * frais : geste préventif, en amont du rattrapage réactif d'`auth-attacher`.
+   * Un échec de rafraîchissement ne bloque rien, le serveur tranchera et la
+   * file rattrapera son refus.
+   *
+   * À l'échec, l'item RESTE en file — c'est tout l'intérêt de l'étage 2 — mais
+   * l'échec est désormais RACONTÉ. ⚠️ C'est la moitié qui manquait le
+   * 2026-09-03 : une mission validée qui ne s'enregistre pas ne produisait
+   * qu'un `toast.error`, ni ligne en base, ni compteur, ni issue. Le lendemain,
+   * le suivi parental montrait « 0 exercice » pour une soirée entière passée à
+   * répondre, et rien nulle part ne disait pourquoi.
+   *
+   * Un refus d'AUTH n'est pas raconté ici : `outbox.ts` le fait déjà, avec le
+   * TTL du jeton pris avant le rafraîchissement forcé, et le doubler fausserait
+   * ses seuils.
+   *
+   * Aucune donnée personnelle : `clientId` désigne une soumission, jamais une
+   * personne, et le payload ne porte que la variante et l'état de la file.
+   */
+  const guardSubmit = useCallback(
+    async <T>(session: string, payload: unknown, send: () => Promise<T>): Promise<T> => {
       const clientId = questOutboxClientId(session);
       if (enabled) {
-        // ⚠️ L'ORDRE EST LE SUJET : on écrit, PUIS on tente. Une mise en file
-        // faite après l'appel ne protégerait de rien — c'est pendant l'appel
-        // que tout se perd.
         enqueue({ clientId, kind: QUEST_SUBMIT_KIND, payload });
-        // Le jeton part frais : c'est le geste préventif, en amont du rattrapage
-        // réactif d'`auth-attacher`. Un échec ici ne doit rien bloquer — le
-        // serveur tranchera, et la file rattrapera son refus.
         await ensureFreshSession().catch(() => null);
       }
-      return clientId;
-    },
-    [enabled],
-  );
 
-  const completeSubmit = useCallback(
-    (clientId: string) => {
-      remove(clientId);
-      clearDraft(exerciseId, variant);
-      dirtyRef.current = false;
-      setEverSaved(true);
+      try {
+        const result = await send();
+        remove(clientId);
+        clearDraft(exerciseId, variant);
+        dirtyRef.current = false;
+        setEverSaved(true);
+        return result;
+      } catch (error) {
+        if (!isSessionRefusalError(error)) {
+          reportClientError({
+            stage: "quest-submit",
+            clientId,
+            errMessage: error instanceof Error ? error.message : String(error),
+            payload: { variant, queued: enabled },
+          });
+        }
+        throw error;
+      }
     },
-    [exerciseId, variant],
+    [enabled, exerciseId, variant],
   );
 
   return {
     status: queued > 0 ? "pending" : everSaved ? "saved" : "idle",
     markDirty,
-    beginSubmit,
-    completeSubmit,
+    guardSubmit,
   };
 }
 

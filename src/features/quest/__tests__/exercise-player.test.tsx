@@ -70,6 +70,9 @@ vi.mock("@/shared/lib/utils", async (importOriginal) => ({
   isMathExpression: () => false,
 }));
 vi.mock("sonner", () => ({ toast: { error: vi.fn(), success: vi.fn() } }));
+// La boîte noire : espionnée, jamais envoyée. C'est le sujet du dernier bloc.
+const { mockReport } = vi.hoisted(() => ({ mockReport: vi.fn() }));
+vi.mock("@/shared/lib/client-log", () => ({ reportClientError: mockReport }));
 
 import {
   ExercisePlayer,
@@ -395,5 +398,58 @@ describe("ExercisePlayer — une panne ne doit jamais laisser un bouton mort", (
 
     expect(await screen.findByTestId("quest-score")).toBeInTheDocument();
     expect(submit).toHaveBeenCalledTimes(2);
+  });
+});
+
+// =============================================================================
+// UNE MISSION VALIDÉE QUI NE S'ENREGISTRE PAS — la panne du 2026-09-03.
+//
+// L'élève répond, appuie sur « Valider », et le serveur n'enregistre rien. Le
+// lendemain, le suivi parental montre « 0 exercice » pour une soirée passée à
+// travailler. Ce que ce bloc garde, c'est que le lecteur le DISE : jusqu'ici il
+// affichait un toast, et personne, nulle part, n'apprenait la panne.
+// =============================================================================
+describe("ExercisePlayer — l'échec de soumission est raconté", () => {
+  beforeEach(() => {
+    mockGetExercise.mockReset().mockResolvedValue(exerciseData());
+    mockGetSubject.mockReset().mockResolvedValue({ chapters: [], exercises: [] });
+    mockReport.mockClear();
+    localStorage.clear();
+  });
+
+  it("remonte l'échec à la boîte noire, avec le message exact du serveur", async () => {
+    const strategy = anonStrategy({
+      capabilities: {
+        rewards: true,
+        hints: false,
+        boss: false,
+        next: false,
+        instantFeedback: false,
+      },
+      submit: vi.fn().mockRejectedValue(new Error("Impossible d'enregistrer votre tentative.")),
+    });
+    renderPlayer(strategy);
+
+    fireEvent.click(await screen.findByText("2"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+
+    await waitFor(() => expect(mockReport).toHaveBeenCalledTimes(1));
+    expect(mockReport.mock.calls[0][0]).toMatchObject({
+      stage: "quest-submit",
+      // Le message EXACT, celui qu'aucun rapport d'élève ne rapporte jamais.
+      errMessage: "Impossible d'enregistrer votre tentative.",
+    });
+    // L'élève reste sur sa question : l'échec n'a pas été maquillé en réussite.
+    expect(screen.queryByTestId("quest-score")).not.toBeInTheDocument();
+  });
+
+  it("ne dit rien quand la soumission passe — le silence reste l'état normal", async () => {
+    renderPlayer(anonStrategy());
+
+    fireEvent.click(await screen.findByText("2"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+
+    expect(await screen.findByTestId("quest-score")).toBeInTheDocument();
+    expect(mockReport).not.toHaveBeenCalled();
   });
 });
