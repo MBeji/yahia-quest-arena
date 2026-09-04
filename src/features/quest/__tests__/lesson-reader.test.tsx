@@ -334,6 +334,39 @@ describe("LessonReader", () => {
     fireEvent.keyDown(document, { key: "Escape" });
   });
 
+  it("zooms an Arabic figure in the reading direction, not in a hardcoded ltr", () => {
+    // Une étiquette qui mêle chiffres et arabe se réordonne selon la direction de BASE.
+    // Le zoom forçait `ltr` : « 4 أصغر من 8 » y renvoyait le 4 derrière le 8, soit
+    // l'inverse de ce que la figure enseigne. Le zoom doit lire comme la page.
+    const svg =
+      '<svg viewBox="0 0 10 10"><g text-anchor="middle"><text x="5" y="5">4 أصغر من 8</text></g></svg>';
+    const { container } = render(
+      <LessonReader
+        chapterId="c1"
+        chapter={{
+          ...chapter,
+          lesson_content: `## المقارنة\n\n::: figure المقارنة\n${svg}\n:::`,
+          summary: null,
+          subjects: { name_fr: "الرياضيات", content_language: "ar" },
+        }}
+        allChapters={siblings}
+      />,
+    );
+
+    // La plaque en ligne n'a pas de `dir` : elle hérite du RTL du conteneur de lecture.
+    const inline = container.querySelector(".lesson-figure__plate");
+    expect(inline).not.toBeNull();
+    expect(inline?.closest("[dir]")?.getAttribute("dir")).toBe("rtl");
+
+    fireEvent.click(container.querySelector(".lesson-figure") as Element);
+    const zoom = screen
+      .getByTestId("lesson-figure-zoom")
+      .querySelector(".lesson-figure__plate--zoom");
+    expect(zoom?.getAttribute("dir")).toBe("rtl");
+
+    fireEvent.keyDown(document, { key: "Escape" });
+  });
+
   it("labels the blocks in the content language for an Arabic lesson (R-8)", () => {
     const { container } = render(
       <LessonReader
