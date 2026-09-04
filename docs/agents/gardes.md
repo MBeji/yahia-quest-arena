@@ -53,6 +53,23 @@ le 2026-07-19) : [`second-opinion.yml`](../../.github/workflows/second-opinion.y
 le secret `OPENAI_API_KEY` existe **et** le rôle porte un `model` non nul ; sinon il skippe en
 vert. Le secret dit « on paie », `models.json` dit « avec quoi » : il faut les deux.
 
+**Un garde dormant ne doit rien coûter — et celui-ci coûtait** (étude 32, D-4). Ses deux verrous
+vivent dans le job : ils ne pouvaient dire « non » qu'**après** le `checkout`, donc un garde qui
+n'a jamais tourné allouait un runner et clonait l'historique complet à chaque push de PR —
+**71 fois en 4,4 jours**. Une **condition de job** coupe avant tout ça, et c'est ce qui impose une
+**variable** de dépôt : le contexte `secrets` n'est pas lisible dans un `if:` de job, `vars` l'est.
+Règle générale pour tout futur garde dormant : le premier « non » se prononce **avant** le
+checkout, pas dedans. Pour l'allumer :
+
+```bash
+gh variable set SECOND_OPINION_ARMED --body true   # puis le secret et le rôle
+```
+
+⚠️ Ce que cela ne fait PAS disparaître : la **ligne du run** dans l'onglet Actions, avec un job
+`skipped`. Ce qui disparaît, c'est le runner et le clone. Seul un filtre de déclencheur
+supprimerait l'entrée, et il a été écarté (il tuerait aussi le chemin du label). Les deux chemins
+à la demande — label `second-avis`, dispatch manuel — passent outre la variable, comme avant.
+
 **Pourquoi ce garde existe** : tous nos gardes tournent sur la même famille de modèles, donc un
 angle mort partagé reste invisible quel que soit leur nombre. Une seconde famille le révèle.
 
@@ -79,6 +96,19 @@ d'un signalement inséré), donc **la cadence n'y suffisait pas** comme garde-fo
 s'il y a du travail de jugement. `upgrade-guard` va plus loin — son lot nominal (patch/minor)
 est un **script** qui tourne **sans jeton Claude** ; l'agent n'entre en scène que pour une
 major ou un lot rouge.
+
+## Mesurer le bruit plutôt que le raconter
+
+`npm run actions:census -- --repo <owner/name>` imprime, pour les N dernières pages de runs :
+la cadence par workflow × conclusion × événement, les **runs à zéro job** (ceux qui n'ont rien
+évalué — la sonde `jobs.total_count`, le seul test qui tranche), les minutes facturables à la
+minute entamée, et le nombre de runs par branche poussée. `--from <dump.json>` rejoue un relevé
+sauvegardé, hors ligne.
+
+Il existe parce que le chiffre qui a ouvert l'étude 32 — **21 % des runs du dépôt privé sont des
+rouges fantômes** — a demandé huit pages d'API et une agrégation à la main. Un « avant » qu'on ne
+sait pas rejouer ne donne jamais d'« après » : c'est ce script qui juge si un lot a servi, pas
+l'impression qu'on en a. Ce n'est **pas** un gate : il ne garde rien et n'échoue sur aucun chiffre.
 
 ## Un pré-gate déterministe avant chaque garde
 
