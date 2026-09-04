@@ -21,6 +21,7 @@ import {
   lastKnownExpiry,
   secondsUntilExpiry,
 } from "@/shared/integrations/supabase/session-freshness";
+import type { ClientErrorStage } from "@/shared/lib/client-error-stages";
 
 const ENDPOINT = "/api/client-log";
 
@@ -78,8 +79,12 @@ export function resetHiddenTimeForTests(): void {
 // --- L'envoi ----------------------------------------------------------------
 
 export type ClientErrorReport = {
-  /** Où l'échec s'est produit : 'quest-submit', 'outbox-flush', 'token-attach'. */
-  stage: string;
+  /**
+   * Où l'échec s'est produit. Le jeu est CLOS (`client-error-stages.ts`) : la
+   * garde qui relève la table agrège et seuille sur cette valeur, donc une
+   * chaîne libre écrite ici sortirait d'un seuil sans que rien ne le dise.
+   */
+  stage: ClientErrorStage;
   clientId?: string | null;
   httpStatus?: number | null;
   errMessage?: string | null;
