@@ -343,6 +343,20 @@ Le détail vit dans les corps de PR et dans `docs/` — ici, seulement ce qui go
   produits. Ce qui la borne : sa place APRÈS `guardRequest` (plafond par IP), un corps
   plafonné à 8 ko, et une table qui ne nomme personne (RLS sans policy, `client_id` désigne
   une soumission). Trois tests le figent — dont sa place dans le wrapper.
+- **Un chiffre de couverture sans son recours est un verdict, pas une information**
+  (2026-09-04). « 3/20 chap. » a été lu « il a fait 3 chapitres sur 20 » — **par l'auteur du
+  produit lui-même** — alors que ça veut dire « il en a MAÎTRISÉ 3 » : toutes les missions du
+  chapitre réussies ≥ 60 %, quiz de compréhension compris. Le calcul était juste, vérifié en
+  rejouant la chaîne complète sur un Postgres local (4/6 missions → 0 chapitre ; 6/6 → 1 ;
+  6/6 avec quiz expédié → 0). ⚠️ **Quand celui qui a écrit la règle se trompe en lisant son
+  propre chiffre, c'est le chiffre qui est en tort.** Livré : la colonne dit « chapitres
+  maîtrisés », et le suivi liste CE QUI MANQUE par chapitre — le plus proche du but d'abord,
+  parce qu'un chapitre à un seul geste enterré sous des chapitres à quatre missions près
+  n'aide personne. ⚠️ **La porte invisible est enfin dite** : un chapitre peut afficher
+  « 6/6 missions » et ne pas compter parce que le quiz a été expédié (< 4 s/question) —
+  aucun écran, élève ou parent, ne l'énonçait. `student_chapter_gaps` ne redéfinit rien : elle
+  reprend les prédicats de `student_parcours_progress`, et une assertion pgTAP les confronte
+  sur le même décor — sans elle, un parent pourrait lire « il ne manque rien » sous un « 3/20 ».
 - **La boîte noire consigne TOUT échec de soumission, pas seulement les refus d'auth**
   (2026-09-04). Signalement du propriétaire : son fils fait ses exercices le 2026-09-03,
   valide, et le suivi parental du lendemain n'en montre aucun — des `exercise_sessions`

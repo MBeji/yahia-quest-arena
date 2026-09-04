@@ -263,6 +263,15 @@ export type ParentTranslations = {
     subjectsEmpty: string;
     colSubject: string;
     colCoverage: string;
+    /** Ce que « chapitres maîtrisés » exige réellement — sinon le chiffre est un verdict muet. */
+    coverageHint: string;
+    gapsTitle: string;
+    gapsSubtitle: string;
+    gapsMissions: string;
+    gapsQuiz: string;
+    gapsBoth: string;
+    gapsMissionCount: string;
+    gapsQuizHint: string;
     scopeLabel: string;
     scopeClass: string;
     scopeClassHint: string;

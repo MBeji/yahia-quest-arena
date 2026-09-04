@@ -16,6 +16,7 @@ export {
   type ActivityTotals,
   type AttemptDetail,
   type AttemptQuestion,
+  type ChapterGap,
   type ChapterSlice,
   type DailyReport,
   type DailySlice,
@@ -66,6 +67,8 @@ export {
 } from "./efficiency";
 
 export { analyzeSubjects, subjectLevel, type SubjectAnalysis } from "./subjects";
+
+export { chapterGapRows, gapBlocker, type ChapterGapRow, type GapBlocker } from "./chapter-gaps";
 
 export { buildAlerts, type AlertKey, type AlertTone, type ParentAlert } from "./alerts";
 
