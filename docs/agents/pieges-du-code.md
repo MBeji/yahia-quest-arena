@@ -108,6 +108,54 @@ assertion sur le nombre d'occurrences, et `diff` le résultat contre l'extrait �
 montrer **que** les lignes voulues. C'est l'audit qui remplace la relecture de 500 lignes, et
 c'est ce qui rend la PR relisable.
 
+## `ON CONFLICT DO NOTHING` fige la PREMIÈRE valeur, jamais la meilleure
+
+**Symptôme** : une colonne semée porte une valeur qu'aucun fichier du dépôt ne réclame plus.
+Le seed qui la corrige est là, il est postérieur, il s'exécute sans erreur — et il ne change
+rien. Aucun gate ne bronche : `db:check-chain` rejoue la chaîne, la migration réussit, la suite
+pgTAP passe.
+
+**Cause** : `ON CONFLICT (code) DO NOTHING` ne veut pas dire « insérer si absent, corriger si
+présent ». Il veut dire « ne rien faire du tout si la ligne existe ». Un second `INSERT` écrit
+pour amender une ligne déjà semée est un **no-op silencieux**.
+
+**Mesuré le 2026-09-03**, quatre mois après les faits. `20260522153000_family_content_rewards.sql`
+sème trois badges avec un `icon_name` en minuscules :
+
+```sql
+('streak_7', …, 'rare', 'flame', 'streak_7'),
+('boss_slayer', …, 'epic', 'swords', 'boss_win'),
+('math_blitz', …, 'rare', 'zap', 'math_95')
+ON CONFLICT (code) DO NOTHING;
+```
+
+`20260522170000_seed_content.sql` — **le même jour, 1 h 40 plus tard** — réécrit les mêmes badges
+avec la bonne casse (`Flame`, `Shield`, …), et porte lui aussi `DO NOTHING`. Les lignes existant
+déjà, la correction n'a jamais été appliquée. Or `BadgeMedal` résout le glyphe par
+`GLYPHS[iconName] || Award` : trois badges ont rendu le glyphe passe-partout du 2026-05-22 au
+2026-09-03 sans qu'aucun test ne rougisse — le repli est un filet, pas une carte de glyphes.
+
+**La parade, en deux temps.**
+
+1. **Corriger une ligne existante demande un `UPDATE` explicite** (ou `DO UPDATE SET`), gardé sur
+   la valeur fautive pour rester idempotent :
+
+   ```sql
+   UPDATE public.badges SET icon_name = 'Flame' WHERE code = 'streak_7' AND icon_name = 'flame';
+   ```
+
+2. ⚠️ **Surtout pas en réécrivant la migration fautive.** Elle est appliquée en production, et le
+   suivi se fait par **version**, jamais par contenu : la réécrire ne rejoue rien là-bas et fait
+   diverger une base vierge de la prod — le piège que `AGENTS.md` nomme sous « la prod n'est PAS
+   le juge de la reconstructibilité », pris par l'autre bout.
+
+**Ce qui le rend invisible**, et donc ce qu'il faut garder : les deux moitiés sont justes
+séparément. Le seed d'origine est valide, le seed correctif est valide, et leur composition ne
+l'est pas. C'est la même classe que R-13 de l'étude 31 (« un badge sans règle ») et que
+`auth-refusals.ts` : deux listes tenues à la main, chacune juste de son côté. Un test qui
+confronte les deux — ici `badge-medal.test.tsx`, qui compare la carte des glyphes au semis des
+migrations dans les deux sens — est le seul filet qui tienne.
+
 ## Deux plafonds de 30 s, et c'est le mauvais qui gagne la course
 
 **Symptôme** : la Forge rend un `504 Gateway Timeout` **brut** au lieu d'une erreur typée. À
