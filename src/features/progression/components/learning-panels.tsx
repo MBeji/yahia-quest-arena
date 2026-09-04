@@ -60,7 +60,9 @@ export function LearningPanels({
   return (
     <>
       {/* « Prêt à apprendre » AVANT la carte, et c'est délibéré : l'élève vient jouer, pas
-          s'auditer. La carte d'état, en dessous, est là pour qui veut comprendre pourquoi. */}
+          s'auditer. La carte d'état, en dessous, est là pour qui veut comprendre pourquoi —
+          et depuis le 2026-09-04 elle se REPLIE : un résumé par état, le détail sur un geste.
+          Vingt lignes déroulées au milieu du hall, c'était l'audit imposé à tout le monde. */}
       <FrontierCard rows={frontier ?? []} />
       {(learningState?.length ?? 0) > 0 ? (
         <LearningStateMap rows={learningState ?? []} />
