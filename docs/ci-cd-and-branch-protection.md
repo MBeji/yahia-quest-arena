@@ -15,16 +15,25 @@ end-of-dev → production walkthrough lives in [passation.md](./passation.md).)
   `[no-automerge]` in the head-commit subject, or a `wip/` / `draft/` / `rescue/`
   branch prefix, opens a **draft** instead (promote with `gh pr ready`). A repeat
   push re-arms a ready-but-unarmed PR (self-healing) but never promotes an existing
-  draft. À chaque PR qu'il ouvre, le workflow **dispatche aussi** les workflows de
-  checks requis sur la branche — **inconditionnellement depuis le 2026-08-24**, PAT
-  ou pas. Le garde-fou précédent sautait cette dispatch dès qu'un PAT existait, en
-  pariant qu'une PR ouverte par un collaborateur émet de vrais événements
-  `pull_request` ; le 2026-08-23 ces événements ont cessé de produire le moindre run
+  draft. À chaque PR qu'il ouvre, le workflow **peut aussi dispatcher** les workflows
+  de checks requis sur la branche — c'est le FILET, et depuis l'étude 32 (D-3) il ne se
+  déploie plus qu'**après constat**.
+  Trois formes se sont succédé, et l'ordre explique la bonne. (1) Sautée dès qu'un PAT
+  existait, en pariant qu'une PR de collaborateur émet de vrais événements
+  `pull_request` — le 2026-08-23 ces événements ont cessé de produire le moindre run
   pendant ~9 h sans que le PAT cesse de répondre, et la PR #823 est restée gelée avec
-  ses 4 checks requis en « Expected ». Le pari n'étant vérifiable depuis aucun
-  workflow, il ne garde plus la porte : on accepte **deux runs par check requis**
-  (le natif sur `refs/pull/N/merge`, le dispatché sur `refs/heads/<branche>` — les
-  groupes de concurrence sont indexés sur le ref, donc ils ne s'annulent pas).
+  ses 4 checks requis en « Expected ». (2) **Inconditionnelle** à partir du 2026-08-24,
+  au prix de **deux runs par check requis** (le natif sur `refs/pull/N/merge`, le
+  dispatché sur `refs/heads/<branche>` — les groupes de concurrence sont indexés sur le
+  ref, donc ils ne s'annulent pas) : 38 dispatchs pour 71 runs natifs sur les 795
+  derniers runs. (3) **Après constat** : l'étape attend 90 s, puis demande à l'API quels
+  runs existent sur le SHA de tête et ne dispatche que les workflows qui n'en ont pas.
+  L'argument de (2) — « l'absence définitive d'un run ne se distingue pas de son simple
+  retard » — était vrai à l'instant zéro et faux quatre-vingt-dix secondes plus tard.
+  Le test est celui du dépôt de corpus, et c'est le seul qui tranche : un run à **zéro
+  job** n'a rien évalué. **Le doute dispatche** : API muette, `jq` en échec, run sans
+  job encore créé — tout ce qui n'est pas « oui, un run réel existe » vaut dispatch, le
+  pire cas restant le doublon d'avant.
 - **Un workflow qui _pousse_ une branche doit se checkouter avec le PAT** —
   `actions/checkout` avec `token: ${{ secrets.GH_AUTOMATION_PAT || secrets.GITHUB_TOKEN }}`.
   Le piège du bot non-collaborateur ne se joue pas à l'ouverture de la PR mais **au push** :

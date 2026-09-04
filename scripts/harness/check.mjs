@@ -45,6 +45,8 @@
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
 import { pathToFileURL } from "node:url";
+import { parse as parseYaml } from "yaml";
+
 import { checkYamlFiles, collectGithubYaml } from "../ci/check-workflow-yaml.mjs";
 import { buildViews } from "./sync.mjs";
 
@@ -65,6 +67,14 @@ export function checkPointer(claudeMdContent) {
   return { ok: true };
 }
 
+/**
+ * Part du budget au-delà de laquelle on AVERTIT sans faire échouer (étude 32, D-8).
+ * `AGENTS.md` a touché son plafond — 250 lignes sur 250, 24 184 octets sur 24 576 — et
+ * personne ne l'a su avant que la règle suivante ne puisse plus entrer. Un budget qui ne
+ * prévient qu'en bloquant prévient trop tard.
+ */
+export const AGENTS_MD_WARN_RATIO = 0.92;
+
 /** AGENTS.md must stay under the line/byte budget (D-1b). */
 export function checkAgentsSize(
   agentsMdContent,
@@ -84,7 +94,16 @@ export function checkAgentsSize(
   if (bytes > maxBytes) {
     violations.push(`${bytes} bytes > budget of ${maxBytes} (Codex truncates AGENTS.md at 32 KiB)`);
   }
-  return { ok: violations.length === 0, lines, bytes, violations };
+  const warnings = [];
+  if (violations.length === 0) {
+    if (lines >= Math.floor(maxLines * AGENTS_MD_WARN_RATIO)) {
+      warnings.push(`${lines} lignes sur un budget de ${maxLines}`);
+    }
+    if (bytes >= Math.floor(maxBytes * AGENTS_MD_WARN_RATIO)) {
+      warnings.push(`${bytes} octets sur un budget de ${maxBytes}`);
+    }
+  }
+  return { ok: violations.length === 0, lines, bytes, violations, warnings };
 }
 
 /**
@@ -154,6 +173,57 @@ export function findInvisibleChars(text) {
   }));
 }
 
+const EMOJI_RE = /\p{Extended_Pictographic}/u;
+const ARABIC_RE = /[\u0600-\u06FF]/;
+
+/** Le point de code qui FINIT à `index` (gère les paires de substitution). */
+function codePointEndingAt(text, index) {
+  if (index < 0) return null;
+  const start = index > 0 && /[\uD800-\uDBFF]/.test(text[index - 1]) ? index - 1 : index;
+  return String.fromCodePoint(text.codePointAt(start));
+}
+
+/**
+ * Les invisibles qui restent ILLÉGITIMES une fois le contexte lu (étude 32, D-5).
+ *
+ * Le scan brut ci-dessus est juste, et c'est justement le problème quand on l'étend au corpus
+ * privé : il y rend **38 constats, tous légitimes** — un ZWJ dans chaque `🧑‍🏫` de 25 skills,
+ * une marque RTL devant un chiffre latin en plein texte arabe (`‏6 أسئلة`), un ZWNJ qui empêche
+ * trois lettres arabes de se lier pour qu'elles se lisent comme les étiquettes A/B/C d'une
+ * figure (`أ‌ب‌ج`). Un gate qui crie 38 fois sur du travail correct n'est pas strict, il est
+ * ignoré — c'est la leçon de `content:figures:check` et de ses 32 signalements dont pas un
+ * n'était vrai.
+ *
+ * Les tolérances sont donc CONTEXTUELLES, jamais par fichier ni par plage entière :
+ *   • U+200D n'est toléré qu'ENTRE deux pictogrammes (une séquence emoji, rien d'autre) ;
+ *   • U+200C/U+200E/U+200F ne sont tolérés que dans un fichier qui contient de l'arabe — ce
+ *     sont les contrôles typographiques de cette écriture, et nulle part ailleurs.
+ * Tout le reste reste interdit PARTOUT, et c'est ce qui compte : U+200B, les surcharges de
+ * direction U+202A-E (la classe d'attaque « Rules File Backdoor »), U+2060-64, le BOM U+FEFF et
+ * les caractères tag. Le premier passage sur le corpus a d'ailleurs sorti un vrai défaut de
+ * cette liste : un BOM en tête d'un programme officiel.
+ */
+export function findSuspiciousInvisibles(text) {
+  if (typeof text !== "string") return [];
+  const hasArabic = ARABIC_RE.test(text);
+  return findInvisibleChars(text).filter(({ index, codePoint }) => {
+    if (codePoint === "U+200D") {
+      const before = codePointEndingAt(text, index - 1);
+      const after = text.codePointAt(index + 1);
+      return !(
+        before !== null &&
+        EMOJI_RE.test(before) &&
+        after !== undefined &&
+        EMOJI_RE.test(String.fromCodePoint(after))
+      );
+    }
+    if (codePoint === "U+200C" || codePoint === "U+200E" || codePoint === "U+200F") {
+      return !hasArabic;
+    }
+    return true;
+  });
+}
+
 /** Extracts the YAML frontmatter block (between the two `---` lines) of a SKILL.md. */
 export function extractFrontmatter(skillMdContent) {
   const match = /^---\r?\n([\s\S]*?)\r?\n---/.exec(skillMdContent ?? "");
@@ -180,12 +250,21 @@ export function checkSkillFrontmatter(folderName, frontmatter) {
   else if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(name))
     problems.push(`name "${name}" is not kebab-case`);
 
-  // `description` is usually a YAML block scalar (`>-`), so take everything up
-  // to the next top-level key rather than a single line.
-  const raw = /^description:\s*(?:>-|>|\|-|\|)?\s*\n?([\s\S]*?)(?=\n[a-zA-Z-]+:|$)/m.exec(
-    frontmatter,
-  )?.[1];
-  const description = raw?.replace(/\s+/g, " ").trim() ?? "";
+  // La description se lit avec un VRAI parseur YAML, et le détour vaut d'être écrit.
+  // La version d'origine l'extrayait par une regex terminée par `(?=\n[a-zA-Z-]+:|$)` en mode
+  // `m` : dans ce mode `$` matche CHAQUE fin de ligne, donc la capture paresseuse s'arrêtait à
+  // la PREMIÈRE. Or toutes les descriptions du projet sont des blocs `>-` de plusieurs lignes.
+  // Résultat : la borne des 1 024 caractères n'a jamais mesuré que la première ligne, sur
+  // aucun des 48 skills — deux skills du corpus étaient à 1 202 et 1 157 caractères, invisibles
+  // depuis le lot 3 de l'étude 25 (étude 32, C-7). Un parseur ne se trompe pas sur sa propre
+  // syntaxe ; une regex sur du YAML, si.
+  let description = "";
+  try {
+    const value = parseYaml(frontmatter)?.description;
+    description = typeof value === "string" ? value.replace(/\s+/g, " ").trim() : "";
+  } catch {
+    return [...problems, "frontmatter is not valid YAML"];
+  }
   if (!description) problems.push("missing `description`");
   else if (description.length > SKILL_DESCRIPTION_MAX) {
     problems.push(`description is ${description.length} chars > spec max ${SKILL_DESCRIPTION_MAX}`);
@@ -383,6 +462,106 @@ export function checkControlCoverage({ scripts, workflows, registry, corpusWorkf
   return problems;
 }
 
+/**
+ * Budget du `CLAUDE.md` du corpus privé. Il est autonome (il ne pointe pas vers AGENTS.md :
+ * le corpus n'a pas de moteur), donc son plafond lui est propre — il vaut 116 lignes /
+ * 9,2 Kio aujourd'hui, et la marge est celle qu'on veut lui laisser, pas celle du moteur.
+ */
+export const CORPUS_CLAUDE_MD_MAX_LINES = 150;
+export const CORPUS_CLAUDE_MD_MAX_BYTES = 12 * 1024;
+
+/**
+ * Les invariants du harness appliqués au dépôt PRIVÉ (étude 32, D-5).
+ *
+ * POURQUOI ICI ET PAS LÀ-BAS. Le corpus porte 43 skills, 12 workflows et un `CLAUDE.md` de
+ * 9 Kio — et **aucun gate de harness** : ni budget, ni Unicode invisible, ni conformité à la
+ * spec Agent Skills, ni YAML strict. Le seul invariant qu'il vérifiait était l'épinglage des
+ * Actions, par un `pin-check.yml` qui ré-écrivait `findUnpinnedActions` en bash. Deux
+ * implémentations d'une même règle divergent — c'est déjà arrivé trois fois sur le test
+ * « zéro job ». Le corpus ne peut pas importer ce script (dépôts séparés), mais la Content CI
+ * privée checkout DÉJÀ ce dépôt pour le moteur : c'est elle qui appelle, avec `--corpus`.
+ *
+ * Ce qui N'EST PAS vérifié là-bas, et pourquoi : le pointeur `@AGENTS.md` (le corpus n'a pas
+ * d'AGENTS.md — son CLAUDE.md est canonique chez lui), l'inventaire des features (pas de code),
+ * les vues générées et `harness/*.json` (le corpus n'en a pas). Chaque absence est un choix,
+ * pas un oubli.
+ *
+ * Le scan d'identifiants de modèle se limite aux workflows et aux frontmatters : appliqué à
+ * `references/`, il sortait « O2 » — le dioxygène, dans le programme de SVT de 1ʳᵉ année
+ * secondaire. Un gate qui prend une molécule pour un modèle apprend à se faire ignorer.
+ */
+export function collectCorpusProblems(root) {
+  const problems = [];
+  const at = (p) => join(root, p);
+  const relTo = (p) =>
+    p
+      .slice(root.length + 1)
+      .split("\\")
+      .join("/");
+
+  const claudeMd = readIfExists(at("CLAUDE.md"));
+  if (claudeMd === null) {
+    problems.push("corpus: CLAUDE.md est absent — c'est le fichier canonique de ce dépôt.");
+  } else {
+    const size = checkAgentsSize(claudeMd, {
+      maxLines: CORPUS_CLAUDE_MD_MAX_LINES,
+      maxBytes: CORPUS_CLAUDE_MD_MAX_BYTES,
+    });
+    for (const v of size.violations) problems.push(`corpus: CLAUDE.md hors budget — ${v}.`);
+  }
+
+  const skillsDir = at(join(".claude", "skills"));
+  if (!existsSync(skillsDir)) {
+    problems.push(`corpus: ${relTo(skillsDir)} introuvable — le corpus est-il bien monté ?`);
+  }
+
+  // Spec Agent Skills sur les 43 skills pédagogiques, frontmatter par frontmatter.
+  for (const skillMd of walk(skillsDir, /^SKILL\.md$/)) {
+    const frontmatter = extractFrontmatter(readIfExists(skillMd));
+    const folderName = relTo(skillMd).split("/").at(-2);
+    for (const problem of checkSkillFrontmatter(folderName, frontmatter)) {
+      problems.push(`corpus: ${relTo(skillMd)}: ${problem} (Agent Skills spec).`);
+    }
+    if (frontmatter === null) continue;
+    for (const id of findModelIds(frontmatter)) {
+      problems.push(`corpus: ${relTo(skillMd)}: identifiant de modèle en dur « ${id} ».`);
+    }
+  }
+
+  // Unicode invisible sur TOUT ce qu'un agent lit ici — skills et références comprises,
+  // puisque c'est précisément la surface qu'on lui fait lire (12 Mo de programmes officiels).
+  for (const file of walk(skillsDir, /\.md$/)) {
+    for (const hit of findSuspiciousInvisibles(readIfExists(file) ?? "")) {
+      problems.push(
+        `corpus: ${relTo(file)}: Unicode invisible ${hit.codePoint} au décalage ${hit.index}.`,
+      );
+    }
+  }
+
+  const workflowsDir = at(join(".github", "workflows"));
+  for (const file of walk(workflowsDir, /\.ya?ml$/)) {
+    const content = readIfExists(file) ?? "";
+    for (const hit of findSuspiciousInvisibles(content)) {
+      problems.push(
+        `corpus: ${relTo(file)}: Unicode invisible ${hit.codePoint} au décalage ${hit.index}.`,
+      );
+    }
+    for (const id of findModelIds(content)) {
+      problems.push(`corpus: ${relTo(file)}: identifiant de modèle en dur « ${id} ».`);
+    }
+    // L'épinglage au SHA — la règle que `pin-check.yml` ré-écrivait en bash. Une seule
+    // implémentation désormais, celle qui est testée.
+    for (const hit of findUnpinnedActions(content)) {
+      problems.push(
+        `corpus: ${relTo(file)}: \`uses: ${hit.uses}\` n'est pas épinglé à un SHA (${hit.reason}).`,
+      );
+    }
+  }
+
+  problems.push(...checkYamlFiles(collectGithubYaml(root)).map((p) => `corpus: ${p}`));
+  return problems;
+}
+
 function readIfExists(path) {
   return existsSync(path) ? readFileSync(path, "utf8") : null;
 }
@@ -403,8 +582,28 @@ function main() {
   const problems = [];
   const rel = (p) => relative(ROOT, p).split("\\").join("/");
 
+  // `--corpus <dir>` bascule le script en MODE CORPUS : il juge le dépôt privé, pas celui-ci.
+  //
+  // Les deux jeux d'invariants ne peuvent PAS cohabiter dans une même invocation, et c'est le
+  // premier run réel qui l'a montré plutôt qu'un raisonnement. La Content CI privée branche les
+  // 43 skills du corpus par symlink dans `engine/.claude/skills` — c'est sa raison d'être. Or
+  // l'invariant 6 d'ici (« chaque vue générée est à jour ») dérive le miroir `.agents/skills/`
+  // de ce qu'il trouve sous `.claude/skills/` : avec le corpus branché, il a réclamé
+  // **225 fichiers de miroir** qui n'ont aucune raison d'exister. Même piège pour l'invariant 1
+  // (le CLAUDE.md vu est celui du moteur, pas celui du corpus) et pour la recette LOCALE, qui
+  // fait exactement les mêmes symlinks.
+  //
+  // Donc : en mode corpus, on ne juge QUE le corpus, plus la couverture des contrôles (le seul
+  // invariant d'ici qui ait besoin des deux dépôts pour se prononcer). Les auto-contrôles du
+  // moteur tournent dans la CI du moteur, sur un checkout sans symlink — c'est-à-dire là où ils
+  // veulent dire quelque chose.
+  const corpusFlag = process.argv.indexOf("--corpus");
+  const corpusRoot =
+    corpusFlag !== -1 && process.argv[corpusFlag + 1] ? process.argv[corpusFlag + 1] : null;
+  const engineMode = corpusRoot === null;
+
   // 1. Pointer integrity.
-  const claudeMd = readIfExists(join(ROOT, "CLAUDE.md"));
+  const claudeMd = engineMode ? readIfExists(join(ROOT, "CLAUDE.md")) : "@AGENTS.md";
   if (claudeMd === null) {
     problems.push("CLAUDE.md is missing.");
   } else {
@@ -413,20 +612,26 @@ function main() {
   }
 
   // 2. AGENTS.md size budget.
-  const agentsMd = readIfExists(join(ROOT, "AGENTS.md"));
+  const agentsMd = engineMode ? readIfExists(join(ROOT, "AGENTS.md")) : "";
   if (agentsMd === null) {
     problems.push("AGENTS.md is missing — it is the canonical source (étude 25 D-1).");
   } else {
     const size = checkAgentsSize(agentsMd);
     for (const v of size.violations) problems.push(`AGENTS.md over budget: ${v}.`);
+    for (const w of size.warnings) {
+      // Un avertissement, pas un rouge : le fichier est encore valide, mais la marge
+      // qu'il reste ne suffira pas longtemps. Le lot 4 de l'étude 32 la lui rend.
+      console.warn(`::warning file=AGENTS.md::AGENTS.md approche son plafond — ${w}.`);
+    }
 
     // 2bis. L'inventaire des features décrit-il encore src/features/ ?
     const featuresDir = join(ROOT, "src", "features");
-    const featureNames = existsSync(featuresDir)
-      ? readdirSync(featuresDir, { withFileTypes: true })
-          .filter((entry) => entry.isDirectory())
-          .map((entry) => entry.name)
-      : [];
+    const featureNames =
+      engineMode && existsSync(featuresDir)
+        ? readdirSync(featuresDir, { withFileTypes: true })
+            .filter((entry) => entry.isDirectory())
+            .map((entry) => entry.name)
+        : [];
     if (featureNames.length) {
       for (const problem of checkFeatureInventory(agentsMd, featureNames)) {
         problems.push(`AGENTS.md: ${problem}.`);
@@ -438,22 +643,27 @@ function main() {
   // Since lot 5 the guard workflows resolve their model from harness/models.json,
   // so `.github/workflows/**` is in scope too — this is what makes the study's
   // "zero hardcoded model id" KPI actually enforced rather than aspirational.
-  const generatedViews = new Set(buildViews(ROOT).map(([relPath]) => relPath));
-  const surface = [
-    ["AGENTS.md", agentsMd],
-    ["CLAUDE.md", claudeMd],
-    ...[...generatedViews].map((relPath) => [relPath, readIfExists(join(ROOT, relPath))]),
-    // La SOURCE des skills, pas seulement son miroir : le miroir est exempté du
-    // scan d'identifiants (il est généré), donc sans cette ligne un id écrit à la
-    // main dans `.claude/skills/**` traversait le gate et arrivait tel quel chez
-    // Codex, Cursor et Amp.
-    ...walk(join(ROOT, ".claude", "skills"), /\.md$/).map((p) => [rel(p), readIfExists(p)]),
-    ...walk(join(ROOT, "harness"), /\.(json|md)$/).map((p) => [rel(p), readIfExists(p)]),
-    ...walk(join(ROOT, ".github", "workflows"), /\.ya?ml$/).map((p) => [rel(p), readIfExists(p)]),
-  ].filter(([, content]) => content !== null);
+  const generatedViews = new Set(engineMode ? buildViews(ROOT).map(([relPath]) => relPath) : []);
+  const surface = !engineMode
+    ? []
+    : [
+        ["AGENTS.md", agentsMd],
+        ["CLAUDE.md", claudeMd],
+        ...[...generatedViews].map((relPath) => [relPath, readIfExists(join(ROOT, relPath))]),
+        // La SOURCE des skills, pas seulement son miroir : le miroir est exempté du
+        // scan d'identifiants (il est généré), donc sans cette ligne un id écrit à la
+        // main dans `.claude/skills/**` traversait le gate et arrivait tel quel chez
+        // Codex, Cursor et Amp.
+        ...walk(join(ROOT, ".claude", "skills"), /\.md$/).map((p) => [rel(p), readIfExists(p)]),
+        ...walk(join(ROOT, "harness"), /\.(json|md)$/).map((p) => [rel(p), readIfExists(p)]),
+        ...walk(join(ROOT, ".github", "workflows"), /\.ya?ml$/).map((p) => [
+          rel(p),
+          readIfExists(p),
+        ]),
+      ].filter(([, content]) => content !== null);
 
   for (const [label, content] of surface) {
-    for (const hit of findInvisibleChars(content)) {
+    for (const hit of findSuspiciousInvisibles(content)) {
       problems.push(`${label}: hidden Unicode ${hit.codePoint} at offset ${hit.index}.`);
     }
     // Exempt: models.json declares the ids, and generated views merely compile
@@ -471,7 +681,7 @@ function main() {
   // parts of the Agent Skills spec (lot 3): the mirror at `.agents/skills/` is
   // read by tools that DO enforce them, so a skill that drifts here silently
   // stops working there.
-  for (const skillMd of walk(join(ROOT, ".claude", "skills"), /^SKILL\.md$/)) {
+  for (const skillMd of engineMode ? walk(join(ROOT, ".claude", "skills"), /^SKILL\.md$/) : []) {
     const frontmatter = extractFrontmatter(readIfExists(skillMd));
     const folderName = rel(skillMd).split("/").at(-2);
 
@@ -480,7 +690,7 @@ function main() {
     }
 
     if (frontmatter === null) continue;
-    for (const hit of findInvisibleChars(frontmatter)) {
+    for (const hit of findSuspiciousInvisibles(frontmatter)) {
       problems.push(
         `${rel(skillMd)} frontmatter: hidden Unicode ${hit.codePoint} at offset ${hit.index}.`,
       );
@@ -491,7 +701,7 @@ function main() {
   // was written in docs/dependency-maintenance.md but never enforced — see
   // findUnpinnedActions' header for the regression that proved a documented rule
   // without a gate is a suggestion.
-  for (const workflow of walk(join(ROOT, ".github", "workflows"), /\.ya?ml$/)) {
+  for (const workflow of engineMode ? walk(join(ROOT, ".github", "workflows"), /\.ya?ml$/) : []) {
     const content = readIfExists(workflow);
     if (content === null) continue;
     for (const hit of findUnpinnedActions(content)) {
@@ -504,7 +714,7 @@ function main() {
   }
 
   // 5. JSON validity of every harness/*.json file.
-  for (const jsonFile of walk(join(ROOT, "harness"), /\.json$/)) {
+  for (const jsonFile of engineMode ? walk(join(ROOT, "harness"), /\.json$/) : []) {
     const content = readIfExists(jsonFile);
     if (content !== null && !isJsonValid(content)) {
       problems.push(`${rel(jsonFile)} is not valid JSON.`);
@@ -515,7 +725,7 @@ function main() {
   // lets the model id inside a GENERATED file be legitimate: it is not
   // hand-written, it is compiled from harness/models.json — and any hand-edit
   // (including a model bumped only here) shows up as drift below.
-  for (const [relPath, expected] of buildViews(ROOT)) {
+  for (const [relPath, expected] of engineMode ? buildViews(ROOT) : []) {
     const actual = readIfExists(join(ROOT, relPath));
     if (actual === null) {
       problems.push(`${relPath} is missing — run \`npm run harness:sync\`.`);
@@ -530,7 +740,7 @@ function main() {
   // `startup_failure`: zero jobs, no log, no annotation. Lenient parsers (last
   // key wins) call such a file valid, so this needs a parser with `uniqueKeys`,
   // not a convention. See check-workflow-yaml.mjs for the incident it replays.
-  problems.push(...checkYamlFiles(collectGithubYaml(ROOT)));
+  if (engineMode) problems.push(...checkYamlFiles(collectGithubYaml(ROOT)));
 
   // 8. Tout script de CONTRÔLE est exécuté par quelqu'un — ou dit qui l'exécute.
   // `content:figures:check` a passé des mois rouge sans qu'aucun workflow ne
@@ -549,16 +759,20 @@ function main() {
     // `--corpus <dir>` : le corpus privé monté à côté, comme le fait déjà
     // `check-roadmap-sync.mjs`. La Content CI privée l'a, ce dépôt non — et
     // c'est elle qui transforme les déclarations `privé:*` en vérifications.
-    const corpusFlag = process.argv.indexOf("--corpus");
     let corpusWorkflows = null;
-    if (corpusFlag !== -1 && process.argv[corpusFlag + 1]) {
-      const dir = join(process.argv[corpusFlag + 1], ".github", "workflows");
+    if (corpusRoot !== null) {
+      const dir = join(corpusRoot, ".github", "workflows");
       if (!existsSync(dir)) {
         problems.push(`--corpus: ${dir} introuvable — le corpus est-il bien monté ?`);
       } else {
         corpusWorkflows = new Map(
           walk(dir, /\.ya?ml$/).map((p) => [p.split(/[\\/]/).at(-1), readIfExists(p)]),
         );
+        // `--corpus` ne servait qu'à vérifier les déclarations de controls.json ; depuis
+        // l'étude 32 (D-5) il porte TOUS les invariants applicables au corpus — c'est ce qui
+        // fait de ce script le gate unique des deux dépôts, et ce qui permet à `pin-check.yml`
+        // de disparaître au lieu de ré-écrire une règle d'ici en bash.
+        problems.push(...collectCorpusProblems(corpusRoot));
       }
     }
     problems.push(
@@ -569,6 +783,15 @@ function main() {
         corpusWorkflows,
       }),
     );
+  }
+
+  if (problems.length === 0 && !engineMode) {
+    console.log(
+      `[harness:check] OK — corpus ${corpusRoot} : skills conformes à la spec, aucun Unicode ` +
+        "invisible suspect, CLAUDE.md dans son budget, YAML strict, Actions épinglées, " +
+        "chaque contrôle déclaré exécuté par le workflow qu'il nomme.",
+    );
+    return;
   }
 
   if (problems.length === 0) {

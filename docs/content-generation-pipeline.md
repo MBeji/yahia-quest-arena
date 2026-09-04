@@ -545,7 +545,19 @@ Les fiches vivent aux deux emplacements du profil `source-web` :
 | Gate                                                                                             | S'exécute dans                                     |
 | ------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
 | `content:check`, `content:qa:strict`, `content:audit:strict`, `programme:check`                  | la **Content CI du dépôt privé** (double checkout) |
+| `harness:check --corpus` (les invariants du harness appliqués au corpus)                         | la **Content CI du dépôt privé** (é32 lot 2)       |
 | `lint`, `typecheck`, `test:coverage`, `build:check`, `audit:deps`, `harness:check`, `leak:check` | la CI de **ce dépôt** (`ci:verify`)                |
+
+**Un seul `harness:check` garde les deux dépôts** (étude 32, lot 2). Le corpus a 43 skills,
+12 workflows et un `CLAUDE.md` de 9 Kio, et n'avait **aucun** gate de harness : ni budget, ni
+Unicode invisible, ni conformité à la spec Agent Skills, ni YAML strict. Son seul invariant —
+l'épinglage des Actions — vivait dans un `pin-check.yml` qui ré-écrivait en bash une règle de ce
+dépôt ; deux implémentations d'une même règle divergent, on l'a déjà vu trois fois sur le test
+« zéro job ». La Content CI privée appelle donc désormais
+`node engine/scripts/harness/check.mjs --corpus "$GITHUB_WORKSPACE/corpus"`, et `pin-check.yml`
+a disparu. Ce que le mode `--corpus` ne vérifie pas là-bas est un choix écrit dans l'en-tête de
+`collectCorpusProblems` : pas de pointeur `@AGENTS.md` (le `CLAUDE.md` du corpus est canonique
+chez lui), pas d'inventaire de features (pas de code), pas de vues générées.
 
 **La CI de ce dépôt ne valide plus de contenu** — elle n'en a plus. `npm run ci:verify` ici,
 c'est : `lint` + `typecheck` + `test:coverage` + `build:check` + `audit:deps` + `harness:check` +
