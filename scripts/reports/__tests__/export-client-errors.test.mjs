@@ -10,6 +10,10 @@ import {
   readWindowHours,
 } from "../export-client-errors.mjs";
 import { AUTH_REFUSALS } from "../../../src/shared/integrations/supabase/auth-refusals.ts";
+import {
+  CLIENT_ERROR_STAGES,
+  UNRECOVERED_SUBMISSION_STAGES,
+} from "../../../src/shared/lib/client-error-stages.ts";
 
 const meta = {
   windowHours: 8,
@@ -125,5 +129,89 @@ describe("export-client-errors — la boîte noire agrégée (#938)", () => {
     expect(readWindowHours(["node", "x", "--window-hours", "8"])).toBe(8);
     expect(() => readWindowHours(["node", "x", "--window-hours", "huit"])).toThrow();
     expect(() => readWindowHours(["node", "x", "--window-hours", "0"])).toThrow();
+  });
+});
+
+// =============================================================================
+// LE SEUIL QUI MANQUAIT — #938, seconde moitié (2026-09-04).
+//
+// Le 2026-09-03, une soirée d'exercices d'un élève n'a produit aucune tentative
+// en base. La garde a dit « 0 refus dans la fenêtre » et disait vrai : rien
+// n'écrivait ces lignes, et les deux seuils d'alors comptaient des sessions
+// refusées, pas du travail d'élève.
+// =============================================================================
+describe("soumissions perdues", () => {
+  it("crie sur TROIS soumissions perdues, très loin sous le seuil de rafale", () => {
+    const doc = buildClientErrorReport(
+      [
+        ligne({ stage: "quest-submit", err_message: "Impossible d'enregistrer votre tentative." }),
+        ligne({ stage: "quest-submit", err_message: "Impossible d'enregistrer votre tentative." }),
+        ligne({ stage: "outbox-send", err_message: "Réponse invalide pour ce type de question." }),
+      ],
+      meta,
+    );
+
+    expect(doc.soumissionsPerdues).toBe(3);
+    // 3 lignes : huit fois moins que `totalParFenetre`. C'est tout l'objet du
+    // seuil séparé — une soirée de travail effacée n'a pas à ressembler à une
+    // rafale pour être vue.
+    expect(doc.total).toBeLessThan(SEUILS.totalParFenetre);
+    expect(doc.alertes.join(" ")).toMatch(/soumissions de mission n'ont PAS abouti/);
+  });
+
+  it("ne compte PAS ce qui se reprend en ligne — `outbox-flush` n'est pas du travail perdu", () => {
+    // Deux lignes plus bas, ce chemin force un jeton neuf et rejoue. Une
+    // expiration ordinaire y produit une ligne et se répare seule : la compter
+    // ferait crier la garde sur une journée normale, et on cesserait de la lire.
+    const doc = buildClientErrorReport(
+      [
+        ligne({ stage: "outbox-flush" }),
+        ligne({ stage: "outbox-flush" }),
+        ligne({ stage: "outbox-flush" }),
+      ],
+      meta,
+    );
+
+    expect(doc.soumissionsPerdues).toBe(0);
+    expect(doc.alertes).toEqual([]);
+  });
+
+  it("ne compte pas non plus un refus d'auth pur — ce sont les deux autres seuils qui le tiennent", () => {
+    const doc = buildClientErrorReport([ligne(), ligne(), ligne(), ligne()], meta);
+
+    expect(doc.soumissionsPerdues).toBe(0);
+    expect(doc.alertes).toEqual([]);
+  });
+
+  it("classe DEPUIS la table partagée, jamais depuis une liste retapée ici", () => {
+    // Le stage est écrit par trois modules et lu par celui-ci : quatre copies
+    // d'une chaîne, c'est la divergence que `auth-refusals.ts` a déjà payée deux
+    // fois. Si un stage change de nature là-bas, ce test suit sans qu'on y touche.
+    const attendus = Object.keys(CLIENT_ERROR_STAGES).filter(
+      (stage) =>
+        CLIENT_ERROR_STAGES[stage].concern === "submission" &&
+        !CLIENT_ERROR_STAGES[stage].recoversInline,
+    );
+    expect([...UNRECOVERED_SUBMISSION_STAGES]).toEqual(attendus);
+    expect(UNRECOVERED_SUBMISSION_STAGES).toContain("quest-submit");
+    expect(UNRECOVERED_SUBMISSION_STAGES).not.toContain("token-attach");
+  });
+
+  it("rend la légende des stages PRÉSENTS, pour que l'issue se lise sans le code", () => {
+    const doc = buildClientErrorReport([ligne({ stage: "quest-submit" })], meta);
+
+    expect(doc.legendeStages).toEqual({
+      "quest-submit": CLIENT_ERROR_STAGES["quest-submit"].what,
+    });
+  });
+
+  it("ignore un stage inconnu au lieu de tomber — une ligne périmée n'arrête pas la garde", () => {
+    // Un onglet resté ouvert sur un ancien bundle peut encore poster un stage
+    // que cette version ne connaît plus.
+    const doc = buildClientErrorReport([ligne({ stage: "stage-d-avant" })], meta);
+
+    expect(doc.soumissionsPerdues).toBe(0);
+    expect(doc.legendeStages).toEqual({});
+    expect(doc.parStage["stage-d-avant"]).toBe(1);
   });
 });
