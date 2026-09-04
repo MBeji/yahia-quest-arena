@@ -33,7 +33,7 @@ import {
   expandSubjects,
   loadAllSubjects,
 } from "../../src/shared/content/loader.ts";
-import { loadManifests, resolveProgrammesRel } from "./programmes-io.ts";
+import { loadManifests, PROGRAMMES_REL } from "./programmes-io.ts";
 
 function getFlag(name: string): string | undefined {
   const i = argv.indexOf(`--${name}`);
@@ -95,10 +95,7 @@ function main(): void {
   // Le chemin par défaut est RÉSOLU sous `root`, jamais recopié ici : trois copies de la
   // même constante vivaient dans trois fichiers, et c'est ce qui faisait du déplacement de
   // l'arbre un chantier à quatre fichiers plutôt qu'à un.
-  const manifestDir = resolve(
-    root,
-    getFlag("manifest-dir") ?? join(resolveProgrammesRel(root), "manifest"),
-  );
+  const manifestDir = resolve(root, getFlag("manifest-dir") ?? join(PROGRAMMES_REL, "manifest"));
   const contentDir = resolve(root, getFlag("content-dir") ?? "content");
   const strict = hasFlag("strict");
   const onlyGrade = getFlag("grade");

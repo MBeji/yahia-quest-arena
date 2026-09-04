@@ -30,40 +30,23 @@ import { isSurveilled, parseProvenance, type SurveilledText } from "./verbatim-c
 export const REPO_ROOT = resolve(import.meta.dirname, "../..");
 
 /**
- * Les deux emplacements possibles de l'arbre `programmes-officiels/`, par ordre de préférence
- * (étude 32, lot 5 — constat C-13).
+ * L'arbre `programmes-officiels/` — le registre de transcription — vit sous `content/`, avec
+ * les données qu'il décrit (étude 32, lot 5, constat C-13).
  *
- * POURQUOI IL DÉMÉNAGE. Cet arbre — 12 Mo, 130 fichiers : manifestes, programmes transcrits,
- * `suivi/` — est un REGISTRE DE DONNÉES, pas une instruction de skill. Vivant sous
- * `.claude/skills/…/references/`, il pèse sur le prompt-space des skills et impose le SECOND
- * symlink de la recette locale comme de la Content CI. Ce second lien n'est pas un détail : il
- * est la première chose qu'une session oublie, et le gate rend alors un faux « rien à faire »
- * sur le garde-fou anti-double-transcription — le pire résultat possible pour ce registre.
+ * IL A DÉMÉNAGÉ le 2026-09-04 (privé#346) depuis
+ * `.claude/skills/content-ecole-tn/references/programmes-officiels`, où 12 Mo et 130 fichiers de
+ * manifestes et de programmes transcrits étaient rangés dans un dossier d'INSTRUCTIONS. Ce
+ * rangement imposait un SECOND symlink à la recette locale comme à la Content CI — la première
+ * chose qu'une session oublie, et `programme:check` rendait alors un faux « rien à faire » sur
+ * le garde-fou anti-double-transcription.
  *
- * POURQUOI DEUX CANDIDATS PLUTÔT QU'UN CHEMIN NEUF. Les données vivent dans l'autre dépôt : le
- * déplacement ne peut pas être atomique. Le moteur apprend donc les deux emplacements AVANT que
- * le corpus ne bouge, et le legacy tombera dans un troisième temps, une fois le déplacement
- * constaté. C'est la discipline « additif d'abord » de la DoD §7, appliquée à un fichier plutôt
- * qu'à une table.
+ * Le chemin de compatibilité qui a porté la bascule est retiré : deux emplacements maintenus
+ * après le déménagement seraient un shim, et le premier lecteur qui en trouve deux ne sait plus
+ * lequel fait foi.
  */
-export const PROGRAMMES_REL_CANDIDATES = [
-  "content/programmes-officiels",
-  ".claude/skills/content-ecole-tn/references/programmes-officiels",
-] as const;
+export const PROGRAMMES_REL = "content/programmes-officiels";
 
-/**
- * Le chemin RELATIF de l'arbre sous `root`. Rend le premier candidat qui existe ; si aucun
- * n'existe, rend le nouveau — pour qu'un message d'erreur envoie là où l'arbre DOIT être, pas
- * là où il était.
- */
-export function resolveProgrammesRel(root: string): string {
-  for (const rel of PROGRAMMES_REL_CANDIDATES) {
-    if (existsSync(join(root, rel))) return rel;
-  }
-  return PROGRAMMES_REL_CANDIDATES[0];
-}
-
-export const PROGRAMMES_DIR = join(REPO_ROOT, resolveProgrammesRel(REPO_ROOT));
+export const PROGRAMMES_DIR = join(REPO_ROOT, PROGRAMMES_REL);
 export const SUIVI_DIR = join(PROGRAMMES_DIR, "suivi");
 /** Fiches de source externe du profil `source-web` (étude 27 D-2). */
 export const SOURCES_EXTERNES_DIR = join(PROGRAMMES_DIR, "sources-externes");
@@ -101,7 +84,7 @@ export function failMissingRegistry(path: string, what: string): never {
   }
   fail(
     `${what} introuvable: ${path} (lancer --corpus)\n` +
-      `  → Emplacements cherchés, dans cet ordre : ${PROGRAMMES_REL_CANDIDATES.join(", ")}.`,
+      `  → Emplacement attendu : ${PROGRAMMES_REL}.`,
   );
 }
 
