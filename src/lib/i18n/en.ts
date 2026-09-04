@@ -516,6 +516,9 @@ export const en: TranslationKeys = {
     mapTitle: "Where you stand",
     mapSubtitle: "What you have mastered, what you can take on, what is blocking you.",
     mapEmpty: "Play a few exercises — your map lights up as you go.",
+    mapSummaryLabel: "Summary by state",
+    mapShowDetail: "Show details",
+    mapHideDetail: "Hide details",
     provenBy: "proved {n} times, in {m} forms",
     inferredBadge: "Inferred",
     inferredExplain:
