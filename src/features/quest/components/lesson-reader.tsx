@@ -358,9 +358,16 @@ export function LessonReader({
             {zoomedFigure?.label || t.public.reader.zoomFigure}
           </DialogTitle>
           {zoomedFigure && (
+            /* Même direction que la lecture en ligne, jamais `ltr` en dur. `dir` ne miroite
+               pas la géométrie d'un SVG — il ne décide que du bidi et de l'ancrage du texte.
+               Forcer `ltr` ici ne protégeait donc aucune figure, mais retournait les
+               étiquettes arabes qui mêlent chiffres et lettres : « 4 أصغر من 8 » (4 est plus
+               petit que 8) faisait passer le 4 derrière le 8, et « 2 مئات = 200 » détachait
+               le 2 de « centaines ». La même figure se lisait juste en ligne et fausse au
+               zoom — 96 étiquettes du corpus étaient dans ce cas. */
             <div
               className="lesson-figure__plate lesson-figure__plate--zoom"
-              dir="ltr"
+              dir={isRtl ? "rtl" : "ltr"}
               dangerouslySetInnerHTML={{ __html: zoomedFigure.svg }}
             />
           )}
