@@ -26,7 +26,7 @@
     "e2e:reset": "node scripts/e2e/reset-gameplay.mjs",
     "e2e:setup": "npm run e2e:db:push && npm run e2e:seed-content && npm run e2e:seed && npm run e2e:reset",
     "lint": "eslint src --max-warnings=0 && node scripts/lint/check-rtl-classes.mjs && node scripts/lint/check-design-tokens.mjs",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.scripts.json",
     "format": "prettier --write .",
     "economy:check": "node --experimental-strip-types scripts/economy/check.mjs",
     "content:check": "node --experimental-strip-types scripts/content/build.ts --check",

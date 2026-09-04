@@ -38,7 +38,7 @@ npm run build:check  # build + bundle-budget check
 npm run smoke:shell  # prod-bundle browser smoke: public shell must render crash-free
 npm test              # vitest run
 npm run lint          # eslint src --max-warnings=0  (zero-warning policy)
-npm run typecheck     # tsc --noEmit (strict)
+npm run typecheck     # DEUX programmes : l'app (src/**) ET les scripts (tsconfig.scripts.json)
 npm run verify         # les 4 gates à ~2 s d'abord (eol/leak/db:check-chain/harness), puis lint + typecheck + test
 npm run ci:verify      # verify en surensemble : + perf:check, coverage au lieu de test, build:check, audit:deps en dernier
 npm run harness:check                    # anti-drift harness (pointers, size, hidden Unicode, model ids) + YAML strict de .github/**
