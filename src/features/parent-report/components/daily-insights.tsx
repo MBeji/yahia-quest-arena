@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   AlertTriangle,
@@ -12,10 +13,12 @@ import { useParentT, type ParentTranslationKeys } from "@/lib/i18n/parent";
 import { isolateLtrRuns } from "@/shared/lib/bidi";
 import {
   analyzeSubjects,
+  chapterGapRows,
   formatMinutes,
   subjectLevel,
   topContributors,
   topGaps,
+  type ChapterGapRow,
   type DailyReport,
   type EfficiencyResult,
   type EngagementResult,
@@ -303,6 +306,8 @@ export function SubjectsSection({ report }: { report: DailyReport }) {
             </table>
           </div>
 
+          <ChapterGapList report={report} />
+
           <div className="mt-4 grid gap-2 sm:grid-cols-2">
             <SubjectTagList
               label={t.parentDaily.subjectsStrong}
@@ -351,7 +356,7 @@ function CoverageCell({ subject }: { subject: SubjectSlice }) {
   const pctDone = Math.round((subject.chaptersCompleted / subject.chaptersTotal) * 100);
 
   return (
-    <div className="min-w-[5.5rem]">
+    <div className="min-w-[5.5rem]" title={t.parentDaily.coverageHint}>
       <div className="flex items-baseline justify-between gap-2 text-2xs text-muted-foreground">
         <span className="tabular-nums">
           {subject.chaptersCompleted}/{subject.chaptersTotal}
@@ -370,6 +375,62 @@ function CoverageCell({ subject }: { subject: SubjectSlice }) {
       </div>
     </div>
   );
+}
+
+/**
+ * Ce qui manque pour qu'un chapitre compte — la moitié ACTIONNABLE du « 3/20 ».
+ *
+ * Le chiffre de couverture est un verdict : il dit où on en est, jamais quoi
+ * faire. Le 2026-09-04, le propriétaire a lu « 3/20 chap. » comme « il a fait 3
+ * chapitres sur 20 », alors que ses chapitres étaient à « 4/6 missions ». Le
+ * calcul était juste ; c'est le recours qui manquait.
+ *
+ * Rien n'est recalculé ici : le serveur rend déjà les lacunes avec les prédicats
+ * de `student_parcours_progress`, donc cette liste ne peut pas contredire la
+ * fraction qu'elle explique.
+ */
+function ChapterGapList({ report }: { report: DailyReport }) {
+  const t = useParentT();
+  const rows = useMemo(() => chapterGapRows(report), [report]);
+
+  if (rows.length === 0) return null;
+
+  return (
+    <div className="mt-4 rounded-lg border border-border/50 p-3">
+      <div className="text-xs font-semibold text-foreground">{t.parentDaily.gapsTitle}</div>
+      <p className="mt-0.5 text-2xs text-muted-foreground">{t.parentDaily.gapsSubtitle}</p>
+      <ul className="mt-2 space-y-1.5">
+        {rows.map((row) => (
+          <li key={row.chapterId} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <span className="text-xs text-foreground">{isolateLtrRuns(row.chapterTitle)}</span>
+            <span className="text-2xs text-muted-foreground">
+              {isolateLtrRuns(row.subjectName)}
+              {row.gradeName ? ` · ${isolateLtrRuns(row.gradeName)}` : ""}
+            </span>
+            <span className="ms-auto text-2xs tabular-nums text-muted-foreground">
+              {t.parentDaily.gapsMissionCount
+                .replace("{done}", String(row.missionsPassed))
+                .replace("{total}", String(row.missionsTotal))}
+            </span>
+            <span className="w-full text-2xs text-flame">{gapLabel(row, t)}</span>
+          </li>
+        ))}
+      </ul>
+      {/* La porte invisible, dite une fois : un chapitre à 6/6 missions peut ne
+          toujours pas compter si le quiz a été expédié. Aucun écran ne le disait. */}
+      {rows.some((row) => row.blocker !== "missions") && (
+        <p className="mt-2 text-2xs text-muted-foreground">{t.parentDaily.gapsQuizHint}</p>
+      )}
+    </div>
+  );
+}
+
+/** Le geste attendu, en une phrase — jamais un reproche (R-8). */
+function gapLabel(row: ChapterGapRow, t: ReturnType<typeof useParentT>): string {
+  const n = String(row.missionsRemaining);
+  if (row.blocker === "quiz") return t.parentDaily.gapsQuiz;
+  if (row.blocker === "both") return t.parentDaily.gapsBoth.replace("{n}", n);
+  return t.parentDaily.gapsMissions.replace("{n}", n);
 }
 
 function SubjectTagList({
