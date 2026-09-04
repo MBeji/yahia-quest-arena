@@ -26,6 +26,8 @@ import {
   findPhantomProneTriggers,
   collectCorpusProblems,
   checkPolicyReasons,
+  checkScriptsTypecheck,
+  stripJsonComments,
 } from "../check.mjs";
 
 describe("checkPointer", () => {
@@ -760,6 +762,75 @@ describe("le CLI en mode corpus — les deux jeux d'invariants ne cohabitent pas
     const { status, stdout, stderr } = run(["--corpus", root]);
     expect(status).toBe(1);
     expect(stdout + stderr).toContain("corpus: .claude/skills/content-x/SKILL.md");
+  });
+});
+
+describe("stripJsonComments", () => {
+  it("retire les commentaires de ligne et de bloc", () => {
+    const jsonc = '{\n  // une ligne\n  "a": 1, /* un bloc */\n  "b": 2\n}';
+    expect(JSON.parse(stripJsonComments(jsonc))).toEqual({ a: 1, b: 2 });
+  });
+
+  it("ne touche PAS à ce qui ressemble à un commentaire DANS une chaîne", () => {
+    // Le piège classique d'un stripper naïf : une URL dans une valeur.
+    const jsonc = '{ "url": "https://exemple.tn/a", "x": 1 }';
+    expect(JSON.parse(stripJsonComments(jsonc))).toEqual({ url: "https://exemple.tn/a", x: 1 });
+  });
+
+  it("laisse un guillemet échappé fermer correctement la chaîne", () => {
+    const jsonc = '{ "s": "il a dit \\"//\\" ici", "y": 2 }';
+    expect(JSON.parse(stripJsonComments(jsonc))).toEqual({ s: 'il a dit "//" ici', y: 2 });
+  });
+});
+
+describe("checkScriptsTypecheck — les scripts .ts sont-ils VRAIMENT typés ?", () => {
+  const ok = {
+    typecheckScript: "tsc --noEmit && tsc -p tsconfig.scripts.json",
+    include: ["scripts/**/*.ts"],
+    scriptFiles: ["scripts/content/build.ts", "scripts/ci/quelque-chose.ts"],
+  };
+
+  it("passe quand la chaîne invoque le second programme et qu'il couvre tout", () => {
+    expect(checkScriptsTypecheck(ok)).toEqual([]);
+  });
+
+  it("attrape le débranchement de la chaîne", () => {
+    // Le filet le plus facile à perdre : on retire l'appel, plus rien ne le dit.
+    const problems = checkScriptsTypecheck({ ...ok, typecheckScript: "tsc --noEmit" });
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toContain("n'invoque pas");
+  });
+
+  it("attrape un `include` rétréci qui laisse des fichiers dehors", () => {
+    const problems = checkScriptsTypecheck({ ...ok, include: ["scripts/ci/**/*.ts"] });
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toContain("scripts/content/build.ts");
+  });
+
+  it("attrape un `include` vide ou absent, et s'arrête là", () => {
+    // Sans include, TOUS les fichiers seraient signalés : un seul constat vaut mieux qu'un mur.
+    expect(checkScriptsTypecheck({ ...ok, include: [] })).toHaveLength(1);
+    expect(checkScriptsTypecheck({ ...ok, include: undefined })).toHaveLength(1);
+  });
+
+  it("comprend `**/` au milieu d'un motif, pas seulement en tête", () => {
+    expect(
+      checkScriptsTypecheck({
+        ...ok,
+        include: ["scripts/**/*.ts"],
+        scriptFiles: ["scripts/a/b/c/profond.ts"],
+      }),
+    ).toEqual([]);
+  });
+
+  it("ne laisse pas `*` traverser un séparateur de chemin", () => {
+    // `scripts/*.ts` ne couvre PAS `scripts/content/x.ts` — sinon le contrôle mentirait.
+    const problems = checkScriptsTypecheck({
+      ...ok,
+      include: ["scripts/*.ts"],
+      scriptFiles: ["scripts/content/x.ts"],
+    });
+    expect(problems).toHaveLength(1);
   });
 });
 

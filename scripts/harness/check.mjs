@@ -330,6 +330,89 @@ export function findUnpinnedActions(text) {
 }
 
 /**
+ * Retire les commentaires d'un JSONC. `tsconfig.json` en porte déjà (`/* Bundler mode *\/`) :
+ * c'est le format que TypeScript accepte, et le gate doit le lire comme lui.
+ */
+export function stripJsonComments(text) {
+  let out = "";
+  let inString = false;
+  let escaped = false;
+  for (let i = 0; i < text.length; i += 1) {
+    const ch = text[i];
+    if (inString) {
+      out += ch;
+      if (escaped) escaped = false;
+      else if (ch === "\\") escaped = true;
+      else if (ch === '"') inString = false;
+      continue;
+    }
+    if (ch === '"') {
+      inString = true;
+      out += ch;
+    } else if (ch === "/" && text[i + 1] === "/") {
+      while (i < text.length && text[i] !== "\n") i += 1;
+      out += "\n";
+    } else if (ch === "/" && text[i + 1] === "*") {
+      i += 2;
+      while (i < text.length && !(text[i] === "*" && text[i + 1] === "/")) i += 1;
+      i += 1;
+    } else {
+      out += ch;
+    }
+  }
+  return out;
+}
+
+/** Un glob de `include` TypeScript, en expression régulière. Seuls `**` et `*` sont utilisés ici. */
+function includeToRegExp(pattern) {
+  // UNE seule passe, à dessein : deux `replace` enchaînés se corrompent l'un l'autre — le `*`
+  // que le premier insère dans `(?:.*/)` est réécrit par le second. Trouvé par le test qui
+  // vérifie qu'un motif couvre bien un fichier profond.
+  const body = pattern
+    .replace(/[.+^${}()|[\]\\]/g, "\\$&")
+    .replace(/\*\*\/|\*\*|\*/g, (m) => (m === "**/" ? "(?:[^/]+/)*" : m === "**" ? ".*" : "[^/]*"));
+  return new RegExp(`^${body}$`);
+}
+
+/**
+ * Les scripts TypeScript sont-ils VRAIMENT typés ? (étude 32, C-15)
+ *
+ * Le constat qui a fait écrire ce contrôle : `tsconfig.json` n'incluait que `src/**`, donc
+ * `npm run typecheck` ne voyait AUCUN des 13 fichiers de `scripts/content/**` — ceux-là mêmes
+ * qui portent les gates de contenu du corpus, et que Node exécute en
+ * `--experimental-strip-types`. Un `join` manquant à un import est passé vert au typecheck et a
+ * tué `content:audit:strict` sur un `ReferenceError` au premier lancement réel.
+ *
+ * Deux façons de perdre ce filet, et ce contrôle ferme les deux : débrancher le second
+ * programme de la chaîne, ou rétrécir son `include` jusqu'à ce qu'il ne couvre plus rien. Un
+ * gate qui peut être vidé sans que rien ne le dise est le défaut que cette étude a poursuivi
+ * de bout en bout.
+ */
+export function checkScriptsTypecheck({ typecheckScript, include, scriptFiles }) {
+  const problems = [];
+  const config = "tsconfig.scripts.json";
+
+  if (typeof typecheckScript !== "string" || !typecheckScript.includes(config)) {
+    problems.push(
+      `le script npm \`typecheck\` n'invoque pas \`${config}\` — les fichiers .ts de ` +
+        "`scripts/` ne seraient typés par personne (étude 32, C-15).",
+    );
+  }
+
+  const patterns = (Array.isArray(include) ? include : []).map(includeToRegExp);
+  if (patterns.length === 0) {
+    problems.push(`${config} n'a pas d'\`include\` — son programme serait vide.`);
+    return problems;
+  }
+  for (const file of scriptFiles) {
+    if (!patterns.some((re) => re.test(file))) {
+      problems.push(`${file} n'est couvert par aucun \`include\` de ${config} (étude 32, C-15).`);
+    }
+  }
+  return problems;
+}
+
+/**
  * Chaque famille de `policy.json` porte sa raison (étude 32, D-7).
  *
  * Ce fichier avait 7 300 caractères de `$comment` — trois arbitrages datés, racontés en
@@ -799,6 +882,32 @@ function main() {
           "resolve it with `gh api repos/<owner>/<repo>/commits/<tag> --jq .sha` and keep the " +
           "version as a trailing comment (docs/dependency-maintenance.md).",
       );
+    }
+  }
+
+  // 5ter. Les scripts .ts sont réellement typés (étude 32, C-15).
+  if (engineMode) {
+    const pkgRaw = readIfExists(join(ROOT, "package.json"));
+    const tsRaw = readIfExists(join(ROOT, "tsconfig.scripts.json"));
+    if (tsRaw === null) {
+      problems.push("tsconfig.scripts.json est absent — les scripts .ts ne seraient plus typés.");
+    } else {
+      let include = null;
+      try {
+        include = JSON.parse(stripJsonComments(tsRaw))?.include ?? null;
+      } catch {
+        problems.push("tsconfig.scripts.json n'est pas un JSONC lisible.");
+      }
+      if (include !== null) {
+        const scriptFiles = walk(join(ROOT, "scripts"), /\.ts$/).map(rel);
+        problems.push(
+          ...checkScriptsTypecheck({
+            typecheckScript: pkgRaw ? JSON.parse(pkgRaw).scripts?.typecheck : undefined,
+            include,
+            scriptFiles,
+          }),
+        );
+      }
     }
   }
 
