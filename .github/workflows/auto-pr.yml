@@ -217,10 +217,11 @@ jobs:
             echo "::warning title=Auto-merge non armé::Activez 'Allow auto-merge' dans Settings > General du repo."
           fi
 
-      - name: Dispatch the required checks on the branch (toujours)
-        # INCONDITIONNEL depuis le 2026-08-24 — c'est le correctif, et le reste
-        # de ce commentaire dit pourquoi la condition d'avant était une faute de
-        # forme avant d'être une panne.
+      - name: Dispatch the required checks on the branch (filet, après constat)
+        # HISTORIQUE — cette étape a d'abord été conditionnée à l'absence de PAT,
+        # puis rendue INCONDITIONNELLE le 2026-08-24, puis (étude 32, D-3) rendue
+        # conditionnelle à un CONSTAT. Les deux premiers temps sont racontés ici
+        # parce qu'ils expliquent pourquoi la troisième forme est la bonne.
         #
         # Cette étape portait `env.USING_PAT != 'true'` : avec un PAT de vrai
         # collaborateur, la PR est censée émettre de vrais événements
@@ -244,27 +245,27 @@ jobs:
         # son simple retard. Un pari non vérifiable ne doit pas garder une porte
         # dont l'ouverture est la seule chose qui débloque une livraison.
         #
-        # Le prix, assumé : la DUPLICATION. Les groupes de concurrence de ci.yml
+        # LE PRIX QU'ON PAYAIT, et qu'on ne paie plus. La forme inconditionnelle
+        # dupliquait chaque check requis : les groupes de concurrence de ci.yml
         # (`ci-<github.ref>`) et codeql.yml (`codeql-<github.ref>`) sont indexés
         # sur le ref ; un run `pull_request` tourne sur `refs/pull/N/merge` et un
         # run dispatché sur `refs/heads/<branche>` — ils ne s'annulent donc PAS
         # l'un l'autre, et migration-gate.yml n'a même pas de bloc concurrency.
-        # On paie donc deux exécutions complètes par check requis. C'est le bon
-        # côté de l'échange : quelques minutes de runner en double contre une PR
-        # gelée qui coûte une livraison et que personne ne remarque avant des
-        # heures. Les deux jumeaux convergent au vert — GitHub évalue un check
-        # requis sur le run le plus RÉCENT portant ce nom pour le SHA de tête —
-        # au prix d'un bref retour en « pending » le temps que le plus lent
-        # finisse. Les deux voient le même monde : `Migration order` diffe contre
-        # `origin/main` dans les deux cas, et la ref de merge n'ajoute aucune
-        # migration à la branche.
+        # Deux exécutions complètes par check requis, sur chaque branche neuve :
+        # 38 dispatchs pour 71 runs natifs sur les 795 derniers runs (étude 32,
+        # C-4). Les jumeaux convergeaient au vert — GitHub évalue un check requis
+        # sur le run le plus RÉCENT portant ce nom pour le SHA de tête — mais au
+        # prix d'un retour en « pending » le temps que le plus lent finisse, et
+        # d'une place de plus dans la file. Le 2026-08-26, quand GitHub a cessé
+        # d'assigner des runners pendant des heures, c'est cette file-là qui
+        # comptait, pas les minutes.
         #
-        # Écarté : indexer les groupes de concurrence sur la BRANCHE plutôt que
-        # sur le ref, pour que les jumeaux s'annulent proprement. Un run annulé
-        # conclut `cancelled`, que la protection de branche lit comme un échec —
-        # on troquerait un doublon inoffensif contre un rouge qui dépend de
-        # l'ordre d'arrivée, et sur TOUS les runs de ci.yml et codeql.yml, très
-        # au-delà de ce correctif.
+        # Écarté aussi : indexer les groupes de concurrence sur la BRANCHE plutôt
+        # que sur le ref, pour que les jumeaux s'annulent proprement. Un run
+        # annulé conclut `cancelled`, que la protection de branche lit comme un
+        # échec — on troquerait un doublon inoffensif contre un rouge qui dépend
+        # de l'ordre d'arrivée, sur TOUS les runs de ci.yml et codeql.yml.
+
         #
         # `created == 'true'` reste : on ne re-dispatche pas sur une PR déjà
         # ouverte — ses checks ont déjà tourné, et les pushes suivants les
@@ -292,17 +293,80 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
           BRANCH: ${{ github.ref_name }}
+          HEAD_SHA: ${{ github.sha }}
         run: |
           set -uo pipefail
-          # Chaque dispatch est jugée séparément : une qui échoue ne doit pas
-          # empêcher les deux autres de partir.
-          ko=""
+
+          # ── Attendre, puis CONSTATER (étude 32, D-3) ──────────────────────
+          #
+          # Ce qui a changé, et pourquoi ça a mis un mois. Cette étape est née
+          # inconditionnelle parce que « l'absence définitive d'un run ne se
+          # distingue pas de son simple retard » — vrai à l'instant zéro, faux
+          # quatre-vingt-dix secondes plus tard. On payait donc DEUX exécutions
+          # complètes de chaque check requis sur chaque branche neuve : mesuré
+          # le 2026-09-03, 38 dispatchs pour 71 runs natifs, soit un tiers des
+          # runs de `ci.yml` et de `codeql.yml` en pur doublon. Sur un dépôt
+          # public les minutes sont gratuites ; ce qu'on paie est la FILE, et
+          # le 2026-08-26 GitHub a cessé d'assigner des runners pendant des
+          # heures — un dépôt qui demande six runs là où trois suffisent
+          # attend deux fois plus longtemps.
+          #
+          # Le test est celui que le dépôt de corpus utilise déjà, et c'est le
+          # seul qui tranche : un run à ZÉRO job n'a rien évalué. Compter les
+          # runs sans regarder leurs jobs, c'est l'erreur qui a gelé la chaîne
+          # du corpus une journée entière (privé#291 → #297).
+          #
+          # Le doute dispatche, toujours : API muette, `jq` en échec, run en
+          # cours sans job encore créé — tout ce qui n'est pas un « oui, un run
+          # réel existe » vaut dispatch. Le pire cas reste le doublon
+          # d'aujourd'hui, jamais une PR sans checks.
+          echo "Attente de 90 s avant de constater — les runs \`pull_request\` natifs mettent quelques secondes à naître."
+          sleep 90
+
+          : > besoin.txt
           for spec in "ci.yml" "migration-gate.yml -f base=main" "codeql.yml"; do
+            wf="${spec%% *}"
+            reels=0
+            for id in $(gh run list --repo "$REPO" --workflow "$wf" --commit "$HEAD_SHA" \
+                          --json databaseId --jq '.[].databaseId' 2>/dev/null || true); do
+              # `|| echo 0` et non `|| echo 1`, et la polarité est TOUT le sujet : une
+              # sonde muette doit valoir « je n'ai pas la preuve qu'un run réel existe »,
+              # donc dispatch. L'inverse — compter le run comme réel — priverait la PR de
+              # son filet précisément le jour où l'API a un hoquet, c'est-à-dire le jour
+              # où le filet sert. Même polarité que le dépôt de corpus, et l'INVERSE de
+              # celle de `guard-watch.yml`, où un run de jobs inconnus doit rester rouge.
+              jobs="$(gh api "repos/$REPO/actions/runs/$id/jobs" --jq '.total_count' 2>/dev/null || echo 0)"
+              case "${jobs:-0}" in ''|*[!0-9]*) jobs=0 ;; esac
+              if [ "$jobs" -gt 0 ]; then
+                reels=$((reels + 1))
+              else
+                echo "$wf : run $id écarté — zéro job (ou sonde muette) : rien ne prouve qu'il ait évalué quoi que ce soit."
+              fi
+            done
+            if [ "$reels" -gt 0 ]; then
+              echo "$wf : $reels run(s) RÉEL(s) sur $HEAD_SHA — pas de dispatch."
+            else
+              printf '%s\n' "$spec" >> besoin.txt
+            fi
+          done
+
+          if [ ! -s besoin.txt ]; then
+            echo "Les trois checks requis tournent déjà sur $HEAD_SHA — le filet n'a pas eu à se déployer."
+          fi
+
+          # Une ligne par dispatch, lue dans un fichier : les specs contiennent des
+          # espaces (`migration-gate.yml -f base=main`), et découper sur l'espace
+          # comme sur un séparateur maison est la façon classique de se tromper.
+          # Chaque dispatch est jugée séparément — une qui échoue ne doit pas
+          # empêcher les autres de partir.
+          ko=""
+          while IFS= read -r spec; do
+            [ -n "$spec" ] || continue
             # shellcheck disable=SC2086
             if ! gh workflow run $spec --repo "$REPO" --ref "$BRANCH"; then
               ko="$ko ${spec%% *}"
             fi
-          done
+          done < besoin.txt
 
           if [ -n "$ko" ]; then
             # AVERTISSEMENT, pas erreur — et la nuance a un prix mesuré. Cette
@@ -322,4 +386,4 @@ jobs:
           # ligne de log qui a permis de comprendre la PR #823 (dispatch sautée
           # alors qu'aucun run `pull_request` n'arrivait). Sans elle, le prochain
           # diagnostic repart de zéro.
-          echo "Dispatched ci.yml + migration-gate.yml + codeql.yml on $BRANCH (USING_PAT=$USING_PAT ; dispatch inconditionnelle)."
+          echo "Dispatch de secours sur $BRANCH (USING_PAT=$USING_PAT) — demandée pour : $(tr '\n' ' ' < besoin.txt)."
