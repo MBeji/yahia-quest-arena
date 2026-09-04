@@ -1,6 +1,8 @@
 // @vitest-environment node
-import { describe, it, expect } from "vitest";
-import { readFileSync } from "node:fs";
+import { afterAll, describe, it, expect } from "vitest";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import {
   checkPointer,
   checkAgentsSize,
@@ -18,6 +20,9 @@ import {
   AGENTS_MD_MAX_LINES,
   AGENTS_MD_MAX_BYTES,
   SKILL_DESCRIPTION_MAX,
+  AGENTS_MD_WARN_RATIO,
+  findSuspiciousInvisibles,
+  collectCorpusProblems,
 } from "../check.mjs";
 
 describe("checkPointer", () => {
@@ -482,5 +487,164 @@ describe("harness/controls.json — le registre réel de ce dépôt", () => {
       expect(entry.where, name).toBeTruthy();
       expect(entry.why, name).toBeTruthy();
     }
+  });
+});
+
+describe("findSuspiciousInvisibles — le contexte décide, jamais le fichier", () => {
+  // Les quatre cas viennent du corpus réel (relevé du 2026-09-03, étude 32 §2.4) : le scan brut
+  // y rendait 38 constats, dont 37 légitimes. Un gate qui crie sur du travail correct finit
+  // ignoré — c'est la leçon de `content:figures:check` et de ses 32 signalements tous faux.
+
+  it("tolère le liant d'une séquence emoji (le 🧑‍🏫 de 25 skills prof-*)", () => {
+    expect(findSuspiciousInvisibles("# \u{1F9D1}\u200D\u{1F3EB} Prof. Maths")).toEqual([]);
+  });
+
+  it("refuse le MÊME caractère hors d'une séquence emoji", () => {
+    // U+200D entre deux lettres n'est pas une ligature d'emoji : c'est un mot coupé en deux
+    // qui se lit comme un seul. Le tolérer par plage aurait ouvert cette porte.
+    expect(findSuspiciousInvisibles("ad\u200Dmin")).toHaveLength(1);
+  });
+
+  it("tolère les marques de direction et le ZWNJ DANS un fichier arabe", () => {
+    // `‏6 أسئلة` — une marque RTL devant un chiffre latin, pour qu'il se place du bon côté.
+    expect(findSuspiciousInvisibles("\u200F6 أسئلة فأكثر")).toEqual([]);
+    // `أ‌ب‌ج` — un ZWNJ empêche trois lettres de se lier, pour qu'elles se lisent A/B/C.
+    expect(findSuspiciousInvisibles("الزاوية أ\u200Cب\u200Cج")).toEqual([]);
+  });
+
+  it("refuse les mêmes marques dans un fichier sans arabe", () => {
+    expect(findSuspiciousInvisibles("\u200Fhello")).toHaveLength(1);
+    expect(findSuspiciousInvisibles("he\u200Cllo")).toHaveLength(1);
+  });
+
+  it("refuse TOUJOURS une surcharge de direction, même en plein texte arabe", () => {
+    // Le cas qui justifie l'invariant : U+202E inverse l'affichage sans changer le texte lu
+    // par l'agent — la classe d'attaque « Rules File Backdoor ». Aucune tolérance ne doit
+    // l'atteindre, et c'est le test qui l'interdit.
+    expect(findSuspiciousInvisibles("مرحبا \u202Eadmin")).toHaveLength(1);
+    expect(findSuspiciousInvisibles("مرحبا \u200Btexte")).toHaveLength(1);
+    expect(findSuspiciousInvisibles("\uFEFFdocument")).toHaveLength(1);
+  });
+});
+
+describe("checkSkillFrontmatter — la borne des 1 024 caractères mesure enfin", () => {
+  it("attrape une description longue étalée sur plusieurs lignes", () => {
+    // LE défaut C-7 : la regex d'origine finissait par `$` en mode `m`, donc s'arrêtait à la
+    // première fin de ligne. Toutes les descriptions du projet sont des blocs `>-`
+    // multilignes : la borne n'a jamais rien mesuré, sur aucun des 48 skills.
+    const fm = `name: x\ndescription: >-\n  ${"a".repeat(500)}\n  ${"b".repeat(900)}`;
+    expect(checkSkillFrontmatter("x", fm)).toEqual(["description is 1401 chars > spec max 1024"]);
+  });
+
+  it("accepte un bloc multiligne qui tient dans le budget", () => {
+    const fm = `name: x\ndescription: >-\n  ${"a".repeat(400)}\n  ${"b".repeat(400)}`;
+    expect(checkSkillFrontmatter("x", fm)).toEqual([]);
+  });
+
+  it("signale un frontmatter qui n'est pas du YAML valide plutôt que de deviner", () => {
+    expect(checkSkillFrontmatter("x", "name: x\ndescription: [oups")).toContain(
+      "frontmatter is not valid YAML",
+    );
+  });
+});
+
+describe("checkAgentsSize — avertir avant de bloquer", () => {
+  const line = (n) => Array.from({ length: n }, () => "x").join("\n");
+
+  it("avertit à 92 % du budget de lignes sans échouer", () => {
+    const at = Math.ceil(AGENTS_MD_MAX_LINES * AGENTS_MD_WARN_RATIO);
+    const size = checkAgentsSize(line(at));
+    expect(size.ok).toBe(true);
+    expect(size.warnings.length).toBeGreaterThan(0);
+  });
+
+  it("ne dit rien tant qu'on est loin du plafond", () => {
+    expect(checkAgentsSize(line(50)).warnings).toEqual([]);
+  });
+
+  it("n'avertit pas en plus d'échouer — un fichier hors budget est déjà rouge", () => {
+    const size = checkAgentsSize(line(AGENTS_MD_MAX_LINES + 10));
+    expect(size.ok).toBe(false);
+    expect(size.warnings).toEqual([]);
+  });
+});
+
+describe("collectCorpusProblems — les invariants appliqués au dépôt privé", () => {
+  const skill = (name, description) =>
+    `---\nname: ${name}\ndescription: >-\n  ${description}\n---\n\n# ${name}\n`;
+
+  function makeCorpus(files) {
+    const root = mkdtempSync(join(tmpdir(), "corpus-"));
+    for (const [rel, body] of Object.entries(files)) {
+      const full = join(root, rel);
+      mkdirSync(join(full, ".."), { recursive: true });
+      writeFileSync(full, body);
+    }
+    return root;
+  }
+
+  const BASE = {
+    "CLAUDE.md": "# CLAUDE.md du corpus\n",
+    ".claude/skills/content-x/SKILL.md": skill("content-x", "Un skill correct."),
+    ".github/workflows/ci.yml":
+      "name: CI\non: push\njobs:\n  a:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7\n",
+  };
+
+  let roots = [];
+  const corpus = (extra = {}) => {
+    const root = makeCorpus({ ...BASE, ...extra });
+    roots.push(root);
+    return root;
+  };
+  afterAll(() => {
+    for (const root of roots) rmSync(root, { recursive: true, force: true });
+  });
+
+  it("ne dit rien sur un corpus sain", () => {
+    expect(collectCorpusProblems(corpus())).toEqual([]);
+  });
+
+  it("attrape une Action non épinglée — la règle que pin-check.yml ré-écrivait en bash", () => {
+    const root = corpus({
+      ".github/workflows/ci.yml":
+        "name: CI\non: push\njobs:\n  a:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n",
+    });
+    expect(collectCorpusProblems(root).join("\n")).toContain("n'est pas épinglé à un SHA");
+  });
+
+  it("attrape une description hors spec et un nom qui ne suit pas son dossier", () => {
+    const root = corpus({
+      ".claude/skills/content-x/SKILL.md": skill("autre-nom", "a".repeat(1200)),
+    });
+    const out = collectCorpusProblems(root).join("\n");
+    expect(out).toContain("> spec max 1024");
+    expect(out).toContain('name "autre-nom" ≠ folder "content-x"');
+  });
+
+  it("attrape un BOM dans une référence — le premier vrai défaut trouvé au corpus", () => {
+    const root = corpus({
+      ".claude/skills/content-x/references/programme.md": "\uFEFF# Programme officiel\n",
+    });
+    expect(collectCorpusProblems(root).join("\n")).toContain("U+FEFF");
+  });
+
+  it("laisse passer l'arabe et les emoji des skills réels", () => {
+    const root = corpus({
+      ".claude/skills/content-x/references/arabe.md":
+        "# \u{1F9D1}\u200D\u{1F3EB}\n\n\u200F6 أسئلة — الزاوية أ\u200Cب\u200Cج\n",
+    });
+    expect(collectCorpusProblems(root)).toEqual([]);
+  });
+
+  it("attrape un CLAUDE.md hors budget", () => {
+    const root = corpus({ "CLAUDE.md": Array.from({ length: 200 }, () => "x").join("\n") });
+    expect(collectCorpusProblems(root).join("\n")).toContain("hors budget");
+  });
+
+  it("attrape un YAML à clé dupliquée — le run à zéro job du 2026-08-24", () => {
+    const root = corpus({
+      ".github/workflows/dup.yml": "name: X\non: push\nname: Y\n",
+    });
+    expect(collectCorpusProblems(root).length).toBeGreaterThan(0);
   });
 });

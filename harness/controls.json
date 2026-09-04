@@ -18,13 +18,15 @@
     "fichier nommé doit exister ET appeler le script. Il sert à qui a les deux dépôts sous la",
     "main — une session locale aujourd'hui.",
     "",
-    "⚠️ Il n'est branché dans AUCUN workflow, et le dire ici plutôt que de laisser croire le",
-    "contraire est le minimum, vu ce que ce fichier existe pour empêcher. Le candidat naturel",
-    "est `roadmap-sync.yml` au privé (même forme : un invariant qui traverse les deux dépôts),",
-    "mais il tourne SANS `npm ci` par choix, et `harness:check` traîne des dépendances : il",
-    "faudrait d'abord sortir ces fonctions dans un module sans dépendance. Tant que ce n'est",
-    "pas fait, ces déclarations sont crues sur parole — c'est mieux que rien, ce n'est pas une",
-    "preuve, et une déclaration périmée passera."
+    "✅ Depuis l'étude 32 (lot 2), ce mode ne se contente plus de vérifier ces déclarations : il",
+    "porte TOUS les invariants du harness applicables au corpus — spec des skills, Unicode",
+    "invisible, budget du CLAUDE.md privé, YAML strict, épinglage des Actions. Et il est APPELÉ,",
+    "par la Content CI privée (`content-ci.yml`), qui checkout déjà ce dépôt pour le moteur et",
+    "y fait déjà son `npm ci`. Le candidat qu'on regardait avant — `roadmap-sync.yml` — tournait",
+    "SANS `npm ci` par choix, ce qui interdisait d'y appeler un script à dépendances ; il n'y",
+    "avait donc rien à sortir dans un module sans dépendance, seulement le bon workflow à",
+    "choisir. Ces déclarations ne sont donc plus crues sur parole : elles sont vérifiées à",
+    "chaque PR du corpus, et une déclaration périmée y devient rouge."
   ],
   "controls": {
     "content:check": {
