@@ -609,6 +609,28 @@ absent, manifeste invalide) — jamais parce qu'un constat déplaît.
 
 ---
 
+## 9 bis. La ROADMAP est au privé, les lots se livrent ici — et l'invariant se VÉRIFIE
+
+Aucune PR ne touche les deux dépôts (c'est la règle de la scission). La ROADMAP vit donc au
+privé pendant que la quasi-totalité des lots se livrent ici, et sa propre consigne — « cocher la
+case dans la PR qui livre le lot » — est devenue **inapplicable** le jour de l'étude 24.
+
+Elle a dérivé exactement comme on s'y attend : entre le 2026-07-20 et le 2026-07-25, **neuf lots
+livrés sont restés décochés** et une étude entière de six lots manquait. Une session qui obéit à
+la roadmap aurait reconstruit du travail déjà sur `main`.
+
+L'invariant est donc **vérifié au lieu d'être promis** :
+
+```bash
+node scripts/ci/check-roadmap-sync.mjs --roadmap ../corpus/FableEtudes/ROADMAP.md
+```
+
+Appelé par la Content CI privée, il échoue si un lot livré sur `main` après la PR de référence de
+la roadmap n'y est **cité nulle part**. **Citer suffit** — une ligne peut citer une PR comme
+livrée, reportée ou sans objet : le gate a un avis sur la **connaissance**, jamais sur le statut.
+Il est volontairement unidirectionnel : il signale ce que la roadmap n'a jamais entendu, il
+n'essaie pas d'apparier un commit à une ligne par la prose, ce qui serait de la devinette.
+
 ## 10. Le gate anti-fuite (`leak:check`)
 
 C'est le garde-fou de la scission. Il répond au risque évident : **une session future qui

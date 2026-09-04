@@ -329,6 +329,46 @@ export function findUnpinnedActions(text) {
   return out;
 }
 
+/**
+ * Chaque famille de `policy.json` porte sa raison (étude 32, D-7).
+ *
+ * Ce fichier avait 7 300 caractères de `$comment` — trois arbitrages datés, racontés en
+ * entier — au-dessus de 92 lignes de JSON. Le récit est juste et il a coûté cher à écrire ;
+ * c'est sa PLACE qui posait problème : un fichier de règles n'est pas un journal, et une
+ * histoire qu'on lit une fois n'aide pas celui qui cherche pourquoi `git rebase` est dehors.
+ * Le journal est parti dans `docs/agents/zero-intervention.md`, qui porte déjà ces
+ * arbitrages ; ici, une ligne par groupe — et cet invariant fait qu'un groupe ajouté sans
+ * raison ne passe pas. Une famille de permissions sans justification écrite est exactement
+ * ce que la revue est censée attraper, et ce qu'elle rate quand la liste s'allonge.
+ */
+export function checkPolicyReasons(policy) {
+  const allow = policy?.allow;
+  if (!allow || typeof allow !== "object") return ["harness/policy.json: bloc `allow` absent."];
+
+  const groups = Object.keys(allow).filter((k) => !k.startsWith("$"));
+  const why = allow.$why ?? {};
+  const problems = [];
+
+  for (const group of groups) {
+    const reason = why[group];
+    if (typeof reason !== "string" || reason.trim().length < 20) {
+      problems.push(
+        `harness/policy.json: la famille \`${group}\` n'a pas de raison lisible dans ` +
+          "`allow.$why` — une permission sans justification écrite est ce que la revue rate.",
+      );
+    }
+  }
+  for (const declared of Object.keys(why)) {
+    if (!groups.includes(declared)) {
+      problems.push(
+        `harness/policy.json: \`allow.$why\` justifie \`${declared}\`, qui n'est plus une famille — ` +
+          "raison périmée, retire-la (sinon ce bloc devient un cimetière).",
+      );
+    }
+  }
+  return problems;
+}
+
 export function isJsonValid(text) {
   try {
     JSON.parse(text);
@@ -711,6 +751,12 @@ function main() {
           "version as a trailing comment (docs/dependency-maintenance.md).",
       );
     }
+  }
+
+  // 5bis. Chaque famille de la politique porte sa raison (étude 32, D-7).
+  const policyRaw = engineMode ? readIfExists(join(ROOT, "harness", "policy.json")) : null;
+  if (policyRaw !== null && isJsonValid(policyRaw)) {
+    problems.push(...checkPolicyReasons(JSON.parse(policyRaw)));
   }
 
   // 5. JSON validity of every harness/*.json file.

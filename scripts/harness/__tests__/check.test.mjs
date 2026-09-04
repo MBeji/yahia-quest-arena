@@ -24,6 +24,7 @@ import {
   AGENTS_MD_WARN_RATIO,
   findSuspiciousInvisibles,
   collectCorpusProblems,
+  checkPolicyReasons,
 } from "../check.mjs";
 
 describe("checkPointer", () => {
@@ -698,5 +699,61 @@ describe("le CLI en mode corpus — les deux jeux d'invariants ne cohabitent pas
     const { status, stdout, stderr } = run(["--corpus", root]);
     expect(status).toBe(1);
     expect(stdout + stderr).toContain("corpus: .claude/skills/content-x/SKILL.md");
+  });
+});
+
+describe("checkPolicyReasons — une famille de permissions sans raison ne passe pas", () => {
+  const ok = {
+    allow: {
+      $why: { gates: "Les gates du projet, et tout script npm que `node scripts/:*` ouvre déjà." },
+      gates: ["Bash(npm run:*)"],
+    },
+  };
+
+  it("se tait quand chaque famille porte sa raison", () => {
+    expect(checkPolicyReasons(ok)).toEqual([]);
+  });
+
+  it("attrape une famille ajoutée sans justification", () => {
+    const drift = { allow: { ...ok.allow, "nouvelle-famille": ["Bash(curl:*)"] } };
+    expect(checkPolicyReasons(drift).join("\n")).toContain("nouvelle-famille");
+  });
+
+  it("refuse une raison trop courte pour en être une", () => {
+    // « ok » ou « utile » n'expliquent rien : la contrainte de longueur est là pour que
+    // remplir la case coûte au moins une phrase.
+    const lazy = { allow: { $why: { gates: "utile" }, gates: ["Bash(npm run:*)"] } };
+    expect(checkPolicyReasons(lazy)).toHaveLength(1);
+  });
+
+  it("attrape une raison PÉRIMÉE, pour que ce bloc ne devienne pas un cimetière", () => {
+    const stale = {
+      allow: { ...ok.allow, $why: { ...ok.allow.$why, disparue: "Une famille supprimée hier." } },
+    };
+    expect(checkPolicyReasons(stale).join("\n")).toContain("disparue");
+  });
+
+  it("rend un constat lisible plutôt que d'exploser sur un fichier vide", () => {
+    expect(checkPolicyReasons({})).toHaveLength(1);
+  });
+});
+
+describe("harness/policy.json — le fichier réel de ce dépôt", () => {
+  it("porte une raison pour chacune de ses familles", () => {
+    const policy = JSON.parse(readFileSync("harness/policy.json", "utf8"));
+    expect(checkPolicyReasons(policy)).toEqual([]);
+  });
+
+  it("garde ses dénis, que l'ouverture par famille ne doit jamais rouvrir", () => {
+    // `gates` ouvre désormais `npm run:*` : le déni qui protège le schéma de prod doit
+    // survivre à cet élargissement, sinon on a troqué une invite contre une porte.
+    const policy = JSON.parse(readFileSync("harness/policy.json", "utf8"));
+    const denied = policy.deny.map((d) => d.rule);
+    expect(denied).toContain("Bash(node scripts/db/push-prod.mjs:*)");
+    expect(denied).toContain("Bash(npx supabase db push:*)");
+    expect(denied).toContain("Bash(gh secret delete:*)");
+    expect(policy.deny.every((d) => typeof d.reason === "string" && d.reason.length > 20)).toBe(
+      true,
+    );
   });
 });
