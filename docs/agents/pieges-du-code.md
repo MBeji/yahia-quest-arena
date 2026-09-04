@@ -73,6 +73,29 @@ qui dit « on t'a envoyé un lien » doit donc offrir un **renvoi** (`auth.resen
 d'envoi (`Error sending confirmation email`) doit se distinguer d'une erreur d'identifiants :
 le compte, lui, existe. Voir [`auth.tsx`](../../src/routes/auth.tsx).
 
+## Trois pièges de migration qui ne se voient pas au moment où on les écrit
+
+Condensés en tête d'`AGENTS.md` jusqu'à l'étude 32 (D-8) ; le détail vit ici, la règle courte
+reste là-bas.
+
+**Une table neuve a besoin de ses `GRANT` explicites.** Un `CREATE TABLE` sans son propre
+`GRANT SELECT … TO authenticated` fonctionne en cloud — le rôle y hérite d'assez de choses — et
+casse la suite pgTAP nocturne sur une base fraîche. Référence : la migration de base
+`20260612221000_baseline_table_grants.sql`.
+
+**Une migration doit trier APRÈS la plus récente déjà sur `main`.** Un horodatage antidaté
+bloque `supabase db push` et laisse silencieusement la prod derrière le code. Le check de PR
+`Migration order` l'attrape avant le merge — c'est un check **requis**, contrairement au suivant.
+
+**La prod n'est PAS le juge de la reconstructibilité.** Une migration peut passer en prod, où
+ses parents sont anciens, et rendre impossible la construction d'une base **vierge** — donc
+casser pgTAP et tout projet TEST neuf. Quatre pannes de cette forme ont atteint `main` après le
+lot 4 de l'étude 24 (#548, #549, #552, #557), déterrées une par une à la main. Deux garde-fous,
+et leurs limites : `db-tests.yml` tourne sur les PR **mais n'est pas requis** — un rouge n'arrête
+pas l'auto-merge, il faut aller le lire ; `db:check-chain` rejoue la chaîne **statiquement**, en
+~0,2 s et sans base. Un INSERT qui dépend de lignes absentes se garde par
+`WHERE EXISTS (SELECT 1 FROM public.<parent> …)`.
+
 ## Un `CREATE OR REPLACE` peut effacer trois lots sans qu'aucun gate ne bronche
 
 **Symptôme** : aucun. La migration s'applique, la fonction compile, `verify` et la suite pgTAP

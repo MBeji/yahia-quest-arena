@@ -88,6 +88,124 @@ ancêtres de `main`, livrés ou non. Le seul test valable est le **contenu** —
 sur `main`, et à quelle version. Un chiffre spectaculaire mérite une vérification proportionnée
 à ce qu'il va justifier.
 
+## Le journal des élargissements de la politique
+
+`harness/policy.json` dit **ce que** la session peut lancer ; cette section dit **pourquoi**, et
+depuis quand. Les deux vivaient dans le même fichier — 7 300 caractères d'histoire au-dessus de
+92 lignes de JSON — jusqu'à l'étude 32 (D-7). Un fichier de règles n'est pas un journal : on y
+cherche « pourquoi `git rebase` est-il dehors ? », pas un récit. Le fichier garde une ligne de
+raison par famille (`allow.$why`, exigée par `harness:check`) ; le récit est ici.
+
+**Règle qui vaut pour toute la section** : ouvrir une famille n'ouvre jamais ce que la liste de
+dénis protégeait. Chaque élargissement ci-dessous s'est accompagné du déni qui le borne.
+
+### 2026-07-19 — la politique naît déclarative (étude 25, D-4)
+
+Les ~45 `allow` et 4 `deny` du réglage d'outil deviennent un fichier versionné, avec une raison
+sur chaque déni. `ops-dispatch` est la seule exception à `gh-readonly` : les workflows
+déclenchables sont nommés **un par un**, jamais `gh workflow run:*` — le joker donnerait aussi
+`db-migrate-prod.yml`. La plupart sont réversibles (le gel/dégel de `rollback-prod`) ou en
+lecture seule sur la prod (`db-backup` fait un dump, `db-tests` joue pgTAP sur une base jetable).
+
+Les deux entrées `apply-content*` **écrivent** la prod, et c'est l'exception assumée (arbitrage
+du propriétaire, 2026-07-28) : une campagne de contenu est prescrite de bout en bout, et publier
+était la seule étape qu'elle ne pouvait pas franchir. Ce qui les rend acceptables : elles ne
+publient **rien de neuf** — seulement le SQL compilé d'un corpus qu'une PR mergée et les gates de
+la Content CI ont déjà validé, de façon idempotente, journalisée dans `content_releases`, sans
+aucune migration.
+
+### 2026-08-22 — `e2e-auth` passe de `deny` à `allow`, et c'est le seul mouvement dans ce sens
+
+Il était dénié pour un incident réel : le run pointait le navigateur sur une préviusualisation
+Vercel via `PLAYWRIGHT_BASE_URL`, dont la couche SSR porte les secrets Supabase de PROD, et un
+spec a déposé une vraie ligne `content_reports` en production **trois nuits de suite** (#614 ;
+#638 est le même trou revu, clos NOT_PLANNED une fois #618/#621 livrés).
+
+Trois choses l'ont refermé, et l'entrée repose sur les trois : le workflow ne pose plus du tout
+`PLAYWRIGHT_BASE_URL` (Playwright lance son propre serveur local, nourri des secrets
+`TEST_SUPABASE_*`) ; son `workflow_dispatch` ne déclare **aucune entrée**, donc un dispatcheur ne
+peut pas rediriger le run ; et `findProdTarget` (`scripts/shared/prod-targets.mjs`) refuse depuis
+**trois endroits indépendants** si une URL résout vers la référence ou un hôte de prod — un
+secret TEST mal réglé échoue bruyamment au lieu d'écrire la prod.
+
+⚠️ Le risque résiduel qu'accepte cette entrée est le même que pour `apply-content` :
+`gh workflow run --ref <branche>` exécute le workflow **tel qu'il est défini sur cette branche**,
+et les trois garde-fous vivent dans des fichiers que la branche pourrait éditer. Le filet, là,
+c'est la revue de PR — pas ce fichier. À re-dénier le jour où ce workflow gagne une entrée
+d'URL de base, ou repointe vers un déploiement.
+
+### 2026-08-23 — le plus gros élargissement, et son déclencheur
+
+La règle du propriétaire devient **zéro intervention technique** : une demande de permission EST
+une validation manuelle, donc une politique dont le défaut est « demander » était elle-même ce
+qu'on voulait supprimer. Quatre familles s'ouvrent, l'option la plus large ayant été choisie avec
+ses contreparties nommées :
+
+- **`git-write`** — la boucle de livraison (`add`/`commit`/`push`/`checkout`/`switch`/`restore`),
+  plus `git merge origin/main`, la façon documentée de résoudre un fichier contesté. `rebase` et
+  `stash` restent **dehors** : le premier parce que la résolution documentée est un merge, le
+  second parce que le checkout est partagé entre sessions.
+- **`gh-write`** — le cycle PR/issue qu'une session possède déjà sous la DoD §8.
+- **`repo-config`** — `gh secret set` / `gh variable set`. C'est celle qui ferait lever un
+  sourcil, donc voici son dossier : le 2026-08-23, le triage des signalements a été trouvé mort
+  **depuis 25 jours** parce qu'un secret GitHub avait perdu son `https://`, et **rien dans le
+  dépôt ne pouvait réparer une valeur qui vit dehors**. Ce trou précis a été refermé mieux que
+  par une permission (l'URL n'était pas un secret — elle part dans chaque bundle client — et se
+  dérive désormais), mais la classe demeure : un secret qui pourrit est une panne qu'aucune PR ne
+  répare. Poser un secret est une réparation avec une cible nommée ; en **supprimer** un ne l'est
+  pas, et c'est dénié.
+- **`repo-scripts`** — `npm install` (jamais `npm ci` : le checkout est partagé) et
+  `node scripts/…`.
+
+`ops-dispatch` gagne au passage le trio `ci`/`migration-gate`/`codeql`, dont un mode de panne
+documenté a besoin : `auto-pr.yml` sautait sa dispatch de secours quand un PAT existait, laissant
+les checks requis figés en « Expected » — le remède était connu et n'était pas permis.
+
+**Deux dénis nouveaux tiennent l'élargissement honnête**, parce qu'ouvrir une famille ne doit
+jamais rouvrir en silence les portes que la liste protégeait : `node scripts/db/push-prod.mjs`
+(le schéma de prod, désormais à l'intérieur de la famille ouverte) et `gh secret delete`.
+
+**Un troisième a été écrit puis retiré avant livraison, et la raison mérite d'être gardée** :
+dénier `gh pr merge` se lit bien — merger à la main est le geste humain que la chaîne du
+2026-07-12 a supprimé — mais une règle de préfixe ne sait pas dire « sauf `--auto` », et
+`gh pr merge --auto` est **la façon d'armer** l'auto-merge. Le déni aurait retiré la seule
+réparation manuelle d'une PR qu'`auto-pr` n'a pas su armer, pour empêcher ce que la protection
+de branche empêche déjà (une PR rouge ne merge pas, à la main ou non). C'est donc une **norme**,
+pas une règle : une session surveille ses checks, elle ne merge pas autour d'eux.
+
+### 2026-08-26 — passe de complétude : la liste était incomplète des DEUX côtés
+
+Le trou se mesurait : 22 des 24 workflows portaient `workflow_dispatch`, `ops-dispatch` n'en
+nommait que 17. Trois purement internes la rejoignent — `guard-watch` (la garde des gardes :
+la relancer n'ouvre ou ne referme qu'une issue), `upgrade-guard` (il ouvre une PR, il ne merge
+rien) et `auto-pr` (il arme une branche déjà poussée, et son mode de panne documenté est
+justement de ne pas partir).
+
+**Deux restent dehors, et c'est un choix qu'il fallait écrire une fois la liste complète par
+ailleurs** : `tutor-digests.yml` frappe `/api/cron/digest` en PRODUCTION et fait rédiger des
+bilans envoyés à de vrais élèves et à leurs parents ; `report-apply.yml` écrit des statuts de
+signalement en prod, hors du chemin relu qui justifie `apply-content`. Aucun des deux n'est
+« non-prod » : leur cron les fait tourner seuls, et un dispatch à la main n'a pas de motif qui
+vaille l'ouverture. AGENTS.md disait « tous les non-prod » — la phrase promettait ces deux-là,
+corrigée le même jour.
+
+### 2026-09-04 — par familles, et les lectures cessent de demander (étude 32, D-7)
+
+Vingt-et-une entrées `npm run <script>` nommées une à une deviennent `npm run:*` : `node
+scripts/:*` ouvrait **déjà** tout ce que ces scripts appellent, donc les énumérer ne coûtait que
+des invites — et il en manquait sept (`eol:check`, `harness:sync`, `perf:check`, `programme:*`,
+`content:emit`, `content:figures:check`, `economy:check`). La contrepartie est écrite dans
+`allow.$why` : **tout script npm qui écrirait la prod se dénie par nom le jour où il naît**,
+comme `node scripts/db/push-prod.mjs`.
+
+Une famille **`shell-readonly`** apparaît, et elle répare une incohérence : `cat`, `grep`,
+`head`, `jq`, `diff` n'étaient pas listés, donc ils **demandaient** — une validation manuelle sur
+des commandes qui ne changent rien, c'est-à-dire exactement ce que la règle en tête de ce fichier
+exclut. La liste est **close** et ne contient que des binaires qui ne savent pas écrire : ni
+`find` (`-delete`, `-exec`), ni `sed`/`awk` (redirection, `-i`), ni `xargs`. Elle a la même forme
+— et le même risque résiduel de commande composée — que `Bash(ls:*)` et `Bash(node scripts/:*)`,
+acceptés avant elle.
+
 ## Ce que le mur « GitHub Free » coûte vraiment, et ce qu'on a construit dessous
 
 L'arbitrage du 2026-08-24 (rester en gratuit) ne rend pas le dépôt de corpus manuel : il

@@ -49,65 +49,42 @@ npm run db:inventory-content             # inventaire des migrations de contenu 
 npm run programme:etat                   # état des lieux campagne : fiche × programme × contenu × ouverture prod (rapport, pas un gate)
 ```
 
-⚠️ Les commandes `content:*` / `programme:*` existent toujours (le **moteur** est ici) mais
-n'ont plus de données dans ce repo — elles s'exécutent depuis le repo **privé**, qui checkout
-celui-ci pour le moteur. Voir « Content pipeline » ci-dessous. E2E needs a dedicated TEST
-Supabase project — see [`e2e/README.md`](./e2e/README.md); never point it at prod. Git hooks
-(husky): `pre-commit` runs lint-staged, `pre-push` runs `npm run verify` — never bypass with
-`--no-verify`.
+⚠️ Les commandes `content:*` / `programme:*` existent toujours (le moteur est ici) mais n'ont
+plus de données ici — elles tournent depuis le repo privé. E2E vise un projet Supabase TEST dédié
+([`e2e/README.md`](./e2e/README.md)), jamais la prod. Hooks husky : `pre-commit` lance
+lint-staged, `pre-push` lance `verify` — jamais de `--no-verify`.
 
 ## Data model & access
 
-Full model: [`ARCHITECTURE.md`](./ARCHITECTURE.md) §8. Core tables: `profiles`, `themes` →
-`grades` → `subjects` → `chapters` → `exercises` → `questions`, `attempts`,
-`parcours`/`parcours_entitlements` (dormant premium), `student_badges`/`shop_items`,
-`spaced_repetition_schedule` (SM-2), `dungeon_runs`, `duel_*`, `question_attempts` +
-`user_misconceptions` (adaptive engine, étude 04), `competencies`/`competency_prereqs`
-(knowledge graph, étude 07). Server logic lives in SQL (`handle_new_user`, `award_xp`,
-`submit_exercise_attempt`) — the two privileged functions are `REVOKE`d from anon/authenticated.
-**Access is decided server-side only** by `resolve_exercise_access` — the answer key
-(`correct_option`, `distractor_tags`) is **never** sent to the client, in the free phase or
-otherwise. Gameplay thresholds: `src/shared/constants/gamification.ts` (change rules there).
+Modèle complet, table par table : [`ARCHITECTURE.md`](./ARCHITECTURE.md) §8. La colonne
+vertébrale est `profiles` + la hiérarchie `themes → grades → subjects → chapters → exercises →
+questions`, plus `attempts`. La logique serveur vit en SQL (`handle_new_user`, `award_xp`,
+`submit_exercise_attempt` — les deux privilégiées sont `REVOKE`d de anon/authenticated).
+**L'accès se décide côté serveur, uniquement**, par `resolve_exercise_access` : la clé de réponse
+(`correct_option`, `distractor_tags`) n'est **jamais** envoyée au client, phase gratuite ou non.
+Seuils de gameplay : `src/shared/constants/gamification.ts` (c'est là qu'on change les règles).
 
 ## Content pipeline — le corpus n'est PAS dans ce repo (étude 24)
 
 Depuis la scission du 2026-07-20, **le corpus et l'usine qui le produit vivent dans le repo privé
-[`MBeji/yahia-quest-content`](https://github.com/MBeji/yahia-quest-content)** (sur invitation) :
-`content/` (659 chapitres, 22 146 questions au 2026-08-10), les 41 skills pédagogiques
-(`content-*`, `prof-*`, `curriculum-architect`), `FableEtudes/` + METHODE, les workflows
-`content-audit.yml` / `video-health.yml`. Ne reste ici que le **moteur**, générique et sans corpus
-(`scripts/content/**`, `src/shared/content/**`), les **5 skills techniques** (`verify`,
-`code-review`, `regression-guard`, `upgrade-guard`, `report-triage`) et `STATUS.md`. Le moteur est
-public **et testé ici** ; c'est lui que la CI privée checkout.
+[`MBeji/yahia-quest-content`](https://github.com/MBeji/yahia-quest-content)** : `content/`, les
+43 skills pédagogiques, `FableEtudes/` (dont la ROADMAP) et les workflows de contenu. Ne reste
+ici que le **moteur**, générique et sans corpus (`scripts/content/**`, `src/shared/content/**`),
+les 5 skills techniques et `STATUS.md`. Le moteur est public et testé ici ; c'est lui que la
+Content CI privée checkout — y compris pour `harness:check --corpus`, qui garde le corpus avec
+les invariants d'ici (étude 32).
 
-Ces 5 skills sont **mirrorés en `.agents/skills/`** (`npm run harness:sync`, jamais édité à la
-main) — le chemin neutre que découvrent Codex, Gemini CLI, Cursor, Copilot et Amp. Éditer la
-source `.claude/skills/`, relancer le sync ; `harness:check` échoue sur dérive et vérifie la
-conformité à la spec Agent Skills (`name` = dossier, `description` ≤ 1 024 caractères).
+**Pour écrire du contenu** : ouvrir la session sur le repo **privé** et y ajouter celui-ci
+(`add_repo`). Les gates de contenu tournent dans la Content CI privée, plus ici.
 
-**Pour écrire du contenu** : ouvrir la session sur le repo **privé** et y ajouter celui-ci pour le
-moteur (`add_repo` / second checkout). La boucle d'auteur ne change pas — éditer
-`content/<subject>/NN-<slug>/`, validé par Zod — mais les gates contenu (`content:check`,
-`content:qa:strict`, `content:audit:strict`, `programme:check`) tournent dans la **Content CI
-privée**, plus dans celle d'ici.
+⚠️ **Ne re-commite jamais de corpus ici.** `npm run leak:check` fait **échouer** le gate si
+`content/**`, `sql/content/**`, un skill `content-*`/`prof-*` ou une migration de contenu
+**générée** réapparaît au tip. Le contenu ne voyage plus en migrations : il se compile en
+`sql/content/<subject>.sql` et s'applique par le workflow privé `apply-content.yml`.
 
-**Le contenu ne voyage plus en migrations** : il se compile en `sql/content/<subject>.sql`
-(`content:emit`, nom stable, régénéré en place) et s'applique par le workflow privé
-`apply-content.yml`, qui journalise chaque application dans `content_releases`. Les **17 migrations
-de contenu écrites à la main** restent ici — `content:emit` ne les reproduit pas, et trois d'entre
-elles seedent aussi des données hors contenu.
-
-**La ROADMAP est au privé, les lots se livrent ici** : aucune PR ne touche les deux dépôts, donc
-l'invariant est **vérifié** au lieu d'être promis — `node scripts/ci/check-roadmap-sync.mjs
---roadmap ../corpus/FableEtudes/ROADMAP.md`, appelé par la Content CI, échoue si un lot livré sur
-`main` après la PR de référence de la roadmap n'y est **cité nulle part**. Citer suffit (coché,
-reporté ou sans objet) : le gate a un avis sur la **connaissance**, jamais sur le statut.
-
-⚠️ **Ne re-commite jamais de corpus ici.** `npm run leak:check`
-([`scripts/ci/check-content-leak.mjs`](./scripts/ci/check-content-leak.mjs)) fait **échouer** le
-gate si `content/**`, `sql/content/**`, un skill `content-*`/`prof-*` ou une migration de contenu
-**générée** réapparaît au tip (dans `verify`, `ci:verify` et la CI). Détail du flux :
-[`docs/content-generation-pipeline.md`](./docs/content-generation-pipeline.md).
+Tout le reste — le miroir `.agents/skills/`, les 17 migrations de contenu écrites à la main, le
+gate `check-roadmap-sync` qui vérifie que la roadmap privée connaît les lots livrés ici —
+est dans [`docs/content-generation-pipeline.md`](./docs/content-generation-pipeline.md).
 
 ## Conventions
 
@@ -163,25 +140,23 @@ Ses 8 critères, la grille M0-M4, la doctrine IA : [`docs/doctrine-verticale.md`
 
 Règle qui gouverne cette section : **zéro intervention technique du propriétaire**
 ([`docs/agents/zero-intervention.md`](./docs/agents/zero-intervention.md)) — une demande de
-permission est une validation manuelle. Always allowed : les gates, le pipeline contenu,
-l'inspection en lecture seule, `supabase migration list`/`db diff` ; et depuis le 2026-08-23
-(arbitrage explicite) la **boucle de livraison** (`git add/commit/push/checkout`,
-`git merge origin/main` — `rebase` et `stash` dehors), le **cycle PR/issue**, la
-**configuration des dépôts** (`gh secret set`, `gh variable set`) et l'**outillage**
-(`npm install` — jamais `npm ci` — et `node scripts/…`). Plus les workflows déclenchables,
-nommés un par un (jamais `gh workflow run:*`) : ceux qui n'agissent qu'ici, plus
-`rollback-prod.yml`, `db-backup.yml`, `db-tests.yml`, `e2e-auth.yml` et `apply-content*.yml`
-(au privé) — les seuls qui **écrivent** en prod, exception assumée : rien de neuf, le SQL d'un
-corpus déjà mergé. Hors liste **par choix** : `tutor-digests.yml` et `report-apply.yml`, qui
-atteignent de vrais élèves ou écrivent la prod hors de ce chemin relu.
-**Never** : `supabase db push`/`db reset` (DoD §7), le dispatch de `db-migrate-prod.yml` ou
-`release.yml`, `node scripts/db/push-prod.mjs` et `gh secret delete` ; le reste demande.
-⚠️ Ceci lève les demandes **du dépôt**, pas les refus du classifieur d'auto-mode.
-Source of truth: **`harness/policy.json`** (with a reason on every deny) — `npm run harness:sync`
-compiles it into each tool's view (today `.claude/settings.json`, never hand-edited) and
-`npm run harness:check` fails CI on drift. Tools without a repo-level permission file read this
-section as guidance; the hard net stays the husky hooks, the required CI checks, and the absence
-of prod credentials locally.
+permission est une validation manuelle.
+
+**Source de vérité : [`harness/policy.json`](./harness/policy.json)**, qui porte les règles PAR
+FAMILLE, une raison sur chaque famille et sur chaque déni. `npm run harness:sync` la compile en
+vues par outil (jamais éditées à la main) ; `harness:check` fait échouer la CI sur une dérive ou
+sur une famille sans raison. Le **journal daté** des élargissements — pourquoi `rebase` est
+dehors, pourquoi `apply-content` est l'exception assumée, pourquoi `gh secret delete` est dénié —
+vit dans `zero-intervention.md` § « Le journal des élargissements ».
+
+En deux lignes : les gates, les lectures et l'outillage passent ; la boucle de livraison, le
+cycle PR/issue et la configuration du dépôt aussi ; les workflows déclenchables sont nommés **un
+par un**, jamais `gh workflow run:*`. **Jamais** : `supabase db push`/`db reset`, le dispatch de
+`db-migrate-prod.yml` ou `release.yml`, `node scripts/db/push-prod.mjs`, `gh secret delete`.
+
+⚠️ Ceci lève les demandes **du dépôt**, pas les refus du classifieur d'auto-mode de l'outil. Pour
+les outils sans fichier de permissions, cette section est une indication : le filet dur reste les
+hooks husky, les checks requis, et l'absence de credentials de prod en local.
 
 ## Multi-agent collaboration
 
@@ -214,37 +189,26 @@ this repo (this file, `STATUS.md`, `docs/agents/`) — not only in a tool's priv
 
 ## Known gotchas / traps
 
-- `src/routeTree.gen.ts` and `src/shared/integrations/supabase/types.ts` are
-  **generated — never hand-edit**. (Content-generated migrations no longer live here: since
-  étude 24 the corpus compiles to `sql/content/*.sql` in the private repo.)
-- **New tables need EXPLICIT grants** — `CREATE TABLE` without its own
-  `GRANT SELECT … TO authenticated` works on cloud but breaks the nightly pgTAP suite on a
-  fresh DB (baseline: `20260612221000_baseline_table_grants.sql`).
-- **Migrations must sort after the newest one already on `main`** — a back-dated timestamp
-  jams `supabase db push` and silently strands prod behind code. The `Migration order` PR
-  check catches this pre-merge.
-- **La prod n'est PAS le juge de la reconstructibilité.** Une migration peut passer en prod (où
-  ses parents sont anciens) et rendre impossible la construction d'une base vierge — donc pgTAP
-  et tout projet TEST neuf (quatre pannes après é24 lot 4 : #548, #549, #552, #557).
-  `db-tests.yml` tourne sur les PR **mais n'est pas requis** : un rouge n'arrête pas l'auto-merge,
-  il faut aller le lire. `db:check-chain` rejoue la chaîne statiquement ; un INSERT dépendant de
-  lignes absentes se garde par `WHERE EXISTS (SELECT 1 FROM public.<parent> …)`.
+- **Fichiers générés, jamais édités à la main** : `src/routeTree.gen.ts`,
+  `src/shared/integrations/supabase/types.ts`, `.agents/skills/**`, `.claude/settings.json`.
+- **Migrations** : une table neuve a besoin de ses `GRANT` explicites ; une migration doit trier
+  **après** la plus récente sur `main` ; et **la prod n'est pas le juge de la
+  reconstructibilité** — `db:check-chain` rejoue la chaîne, `db-tests.yml` tourne sur les PR mais
+  **n'est pas requis**. Les trois pièges en détail :
+  [`docs/agents/pieges-du-code.md`](./docs/agents/pieges-du-code.md).
 - **Un refus d'auth se déclare dans `auth-refusals.ts`, jamais ailleurs** — message ET conduite
-  client. Deux listes tenues à la main ont divergé deux fois (#931 ; #914/#915) : le
-  `Record<AuthFailure, …>` fait échouer `tsc` sur un refus sans sa ligne. Jamais de message en dur.
-- **E2E ≠ unit gate.** Playwright hits a dedicated TEST Supabase project, not unit-test mocks;
-  not part of `verify`/`ci:verify`; never point it at prod.
-- **La CI n'est pas exactement `verify`** : elle ajoute `build:check` et `smoke:shell` (seul
-  étage qui exécute le bundle prod dans Chromium) et n'a pas `eol:check`. `ci:verify` en est le
-  miroir local le plus proche — un gate local vert ne garantit pas une CI verte. Les gates
-  **contenu** n'en sont plus : Content CI privée (étude 24).
-- **`audit:deps` n'est pas hermétique** (dans `ci:verify` et la CI, pas dans `verify`) : il
-  interroge le registre au moment du run, donc à lockfile constant le même commit passe le matin
-  et échoue l'après-midi — et c'est **toute la file** qui bloque, pas la PR visée (`fast-uri`,
-  #712 puis 2026-09-02). Réflexe en trois gestes : [`docs/dependency-maintenance.md`](./docs/dependency-maintenance.md).
-- **Le titre d'une PR Dependabot peut mentir sur son diff** — #716 (« bump undici · indirect »)
-  montait une majeure et une alpha : 33 h de Content CI rouge, ce gate vert. ✅ Mécanisé le
-  2026-09-03 (A17) — [`docs/dependency-maintenance.md`](./docs/dependency-maintenance.md).
-- Coverage is scoped to owned code (`features/`, `shared/`, `lib/`, `hooks/`) — vendored UI,
-  route glue, generated files **et tout `features/**/components/**`** sont exclus par choix
-  (rendu, couvert par les tests de route et le build) ; ne pas élargir `include` pour diluer.
+  client. Le `Record<AuthFailure, …>` fait échouer `tsc` sur un refus sans sa ligne ; deux listes
+  tenues à la main ont divergé deux fois (#931 ; #914/#915). Jamais de message en dur.
+- **E2E ≠ unit gate.** Playwright vise un projet Supabase TEST dédié, pas des mocks ; hors de
+  `verify`/`ci:verify` ; jamais pointé sur la prod.
+- **La CI n'est pas exactement `verify`** : elle ajoute `build:check` et `smoke:shell` (seul étage
+  qui exécute le bundle prod dans Chromium) et n'a pas `eol:check`. Un gate local vert ne
+  garantit pas une CI verte ; `ci:verify` en est le miroir le plus proche.
+- **Les dépendances mentent de deux façons** : `audit:deps` interroge le registre au moment du
+  run, donc à lockfile constant le même commit passe le matin et échoue l'après-midi — et c'est
+  **toute la file** qui bloque ; et le titre d'une PR Dependabot peut mentir sur son diff (#716 :
+  « bump undici · indirect » montait une majeure et une alpha). Les deux sont mécanisés et
+  expliqués dans [`docs/dependency-maintenance.md`](./docs/dependency-maintenance.md).
+- **La couverture est cadrée sur le code possédé** (`features/`, `shared/`, `lib/`, `hooks/`) —
+  UI vendue, glue de route, fichiers générés et tout `features/**/components/**` sont exclus par
+  choix ; ne pas élargir `include` pour diluer.
