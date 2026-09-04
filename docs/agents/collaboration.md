@@ -120,6 +120,24 @@ partout, mais la PR qui en sort embarque tout l'ancien historique, affiche un di
 `git push --force-with-lease` : la branche ne contient que de l'historique déjà sur `main`, il n'y
 a rien à perdre. Si l'outil refuse le `--force-with-lease`, demander plutôt que contourner.
 
+**3. La ref de suivi LOCALE survit à la suppression distante — et fait mentir tout ce qui compare
+`HEAD` à `origin/<branche>`.** `origin/claude/<sujet>` reste figée sur le dernier push d'avant le
+merge. Un outil qui répond à « qu'est-ce qui n'est pas poussé ? » en lisant cette ref voit alors
+les commits de `main` **eux-mêmes** comme en attente — vécu deux fois le 2026-09-04, où trois
+commits annoncés « non poussés » étaient les squashes de trois PR déjà mergées. Le test qui
+tranche, et le remède :
+
+```bash
+git ls-remote origin <branche>   # aucune ligne ⇒ la branche n'existe plus côté serveur
+git remote prune origin          # retire les refs de suivi périmées
+```
+
+⚠️ `git rev-list --count origin/main..HEAD` valant `0` ne dit **pas** `HEAD == origin/main` :
+il dit « rien à pousser », ce qui reste vrai quand `main` a avancé sans nous. Lu comme une égalité, il
+fait passer un `main` en retard de trois commits pour un arbre à jour — et, au moment où l'on
+compare enfin les SHA, pour un merge fantôme. La vérité serveur est `git ls-remote`, pas une ref
+locale.
+
 ⚠️ Et **ne jamais relancer un second `git push` par-dessus un premier encore en cours** : le hook
 `pre-push` rejoue `verify` (~2 min), deux pushes concurrents se marchent dessus et le second meurt
 sur `cannot lock ref … unable to resolve reference`, en laissant croire à un rejet du serveur.
