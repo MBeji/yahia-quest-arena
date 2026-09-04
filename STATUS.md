@@ -343,6 +343,22 @@ Le détail vit dans les corps de PR et dans `docs/` — ici, seulement ce qui go
   produits. Ce qui la borne : sa place APRÈS `guardRequest` (plafond par IP), un corps
   plafonné à 8 ko, et une table qui ne nomme personne (RLS sans policy, `client_id` désigne
   une soumission). Trois tests le figent — dont sa place dans le wrapper.
+- **La boîte noire consigne TOUT échec de soumission, pas seulement les refus d'auth**
+  (2026-09-04). Signalement du propriétaire : son fils fait ses exercices le 2026-09-03,
+  valide, et le suivi parental du lendemain n'en montre aucun — des `exercise_sessions`
+  commencées, pas une seule `completed_at`, donc pas une ligne dans `attempts`.
+  ⚠️ **Et rien ne l'avait consigné** : `reportClientError` n'était appelé que derrière
+  `isSessionRefusalError`, donc un échec de soumission pour toute AUTRE raison n'écrivait
+  rien ; le run de garde du 2026-09-03 21:07 UTC a répondu « 0 refus dans la fenêtre », et il
+  disait vrai. Une garde qui ne regarde pas la panne en cours ne ment pas — elle rassure, ce
+  qui est pire. Désormais : `outbox.ts` raconte tout échec d'envoi avec sa **disposition**
+  (« conservé » se rattrape, « abandonné » ne revient jamais), le lecteur de quête remonte le
+  PREMIER échec sous `quest-submit`, et la garde a un seuil **propre** aux soumissions perdues
+  (3 par fenêtre contre 25 pour la rafale d'auth : les autres comptent des sessions refusées,
+  celui-ci du travail d'élève). Le vocabulaire des stages vit dans **une** table
+  (`client-error-stages.ts`) lue des deux côtés — quatre copies d'une chaîne, c'est la
+  divergence qu'`auth-refusals.ts` a déjà payée deux fois. **La panne elle-même n'est pas
+  élucidée** : ce lot la rend lisible, il ne la corrige pas.
 
 ### Issues ouvertes — re-sondées le 2026-09-04
 

@@ -321,7 +321,7 @@ export function ExercisePlayer({
   });
 
   const mutation = useMutation({
-    mutationFn: async (payload: {
+    mutationFn: (payload: {
       sessionId: string;
       exerciseId: string;
       chapterId: string | null;
@@ -329,20 +329,18 @@ export function ExercisePlayer({
       durationSeconds: number;
       isQuiz: boolean;
       totalQuestions: number;
-    }) => {
-      // ⚠️ L'ORDRE FAIT TOUT LE FILET : la soumission est écrite sur l'appareil
-      // AVANT de partir, et n'en sort qu'une fois acceptée. Entre les deux, plus
-      // rien ne peut la perdre — ni un jeton refusé, ni un réseau coupé, ni un
-      // onglet fermé. `outbox.ts` la rejouera au prochain déclencheur.
-      const clientId = await autosave.beginSubmit(payload.sessionId, {
-        sessionId: payload.sessionId,
-        exerciseId: payload.exerciseId,
-        answers: payload.answers,
-      });
-      const result = await strategy.submit(payload);
-      autosave.completeSubmit(clientId);
-      return result;
-    },
+    }) =>
+      // Le filet est ENTIER dans `guardSubmit` — ordre de mise en file, sortie
+      // au succès, boîte noire à l'échec. Ici on ne fait que lui confier l'envoi.
+      autosave.guardSubmit(
+        payload.sessionId,
+        {
+          sessionId: payload.sessionId,
+          exerciseId: payload.exerciseId,
+          answers: payload.answers,
+        },
+        () => strategy.submit(payload),
+      ),
     onSuccess: (res) => {
       setResult(res);
       const passed = res.scorePct >= PASS_THRESHOLD_PCT;

@@ -1,6 +1,17 @@
-name: Garde des refus d'auth (la boîte noire est lue)
+name: Garde de la boîte noire client (refus d'auth ET soumissions perdues)
 
 # LA MOITIÉ DÉTECTION DU MÉCANISME ANTI-RECHUTE — #938, premier lot.
+#
+# ⚠️ ÉLARGIE LE 2026-09-04, ET LA RAISON VAUT D'ÊTRE LUE. Cette garde n'a longtemps
+# relevé que des refus d'AUTH — non par choix, mais parce que `reportClientError`
+# n'était appelé que derrière `isSessionRefusalError` : une soumission de mission
+# qui échouait pour toute autre raison n'écrivait pas une ligne. Le 2026-09-03, un
+# élève a fait ses exercices, validé, et le suivi parental du lendemain n'en
+# montrait aucun ; le run de 21:07 UTC a répondu « 0 refus dans la fenêtre », et il
+# disait vrai. Une garde qui ne regarde pas la panne en cours ne ment pas — elle
+# rassure, ce qui est pire. Les écrivains remontent désormais TOUT échec de
+# soumission, et un seuil PROPRE (bien plus bas) sépare le travail d'élève perdu
+# des sessions refusées.
 #
 # #933 a livré la moitié PRÉVENTION : un refus d'authentification que le client
 # ignore ne compile plus. La moitié détection manquait, et elle était plus creuse
@@ -64,7 +75,7 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GH_REPO: ${{ github.repository }}
-      LABEL: auth-bruit
+      LABEL: panne-client
       # Fenêtre plus large que le cron À DESSEIN : deux passages se recouvrent,
       # donc aucune rafale ne peut se glisser entre deux fenêtres. Le recouvrement
       # ne produit pas de doublon — une seule issue est réutilisée.
@@ -77,7 +88,7 @@ jobs:
           if [ -z "${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}" ]; then
             echo "configured=false" >> "$GITHUB_OUTPUT"
             {
-              echo "### ⏭️ Garde des refus d'auth — sautée"
+              echo "### ⏭️ Garde de la boîte noire client — sautée"
               echo ""
               echo "\`PROD_SUPABASE_SERVICE_ROLE_KEY\` n'est pas configuré. \`client_errors\` est en"
               echo "RLS sans policy : sans cette clé il n'y a rien à lire, et **échouer ici"
@@ -134,39 +145,47 @@ jobs:
 
           alertes="$(jq -r '.alertes | length' client-errors.json)"
           total="$(jq -r '.total' client-errors.json)"
-          echo "Refus dans la fenêtre : $total · alertes : $alertes"
+          perdues="$(jq -r '.soumissionsPerdues' client-errors.json)"
+          echo "Lignes dans la fenêtre : $total (dont $perdues soumissions perdues) · alertes : $alertes"
 
           if [ "$alertes" = "0" ]; then
             existing="$(gh issue list --label "$LABEL" --state open --limit 1 --json number --jq '.[0].number // empty')"
             if [ -n "$existing" ]; then
               gh issue close "$existing" \
-                --comment "✅ Fenêtre de ${WINDOW_HOURS} h propre ($total refus, sous les seuils) — fermeture automatique." >/dev/null
+                --comment "✅ Fenêtre de ${WINDOW_HOURS} h propre ($total lignes dont $perdues soumissions perdues, sous les seuils) — fermeture automatique." >/dev/null
               echo "Issue #$existing refermée."
             else
-              echo "Rien à signaler ($total refus sur ${WINDOW_HOURS} h)."
+              echo "Rien à signaler ($total lignes, $perdues soumissions perdues, sur ${WINDOW_HOURS} h)."
             fi
             {
-              echo "### ✅ Refus d'auth — rien à signaler"
+              echo "### ✅ Boîte noire client — rien à signaler"
               echo ""
-              echo "$total refus sur les ${WINDOW_HOURS} dernières heures, sous les seuils."
+              echo "$total ligne(s) sur les ${WINDOW_HOURS} dernières heures, dont $perdues soumission(s)"
+              echo "de mission non abouties. Sous les seuils."
             } >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
 
           {
-            echo "### 🔐 Rafale de refus d'authentification"
+            echo "### 🔐 La boîte noire client a quelque chose à dire"
             echo ""
             echo "Fenêtre : les **${WINDOW_HOURS} dernières heures** (depuis \`$(jq -r '.window.since' client-errors.json)\` UTC)."
             echo ""
             jq -r '.alertes[] | "- \(.)"' client-errors.json
             echo ""
-            echo "| stage | refus |"
-            echo "| --- | --- |"
-            jq -r '.parStage | to_entries[] | "| `\(.key)` | \(.value) |"' client-errors.json
+            echo "| stage | lignes | ce qu'il raconte |"
+            echo "| --- | --- | --- |"
+            jq -r '.parStage | to_entries[] | "| `\(.key)` | \(.value) | \($legende[.key] // "—") |"' \
+              --argjson legende "$(jq -c '.legendeStages' client-errors.json)" client-errors.json
             echo ""
             echo "| message (tel que \`auth-refusals.ts\` l'écrit) | refus |"
             echo "| --- | --- |"
             jq -r '.parMessage | to_entries[] | "| `\(.key)` | \(.value) |"' client-errors.json
+            echo ""
+            echo "**Du travail d'élève perdu ?** \`$perdues\` soumission(s) de mission n'ont pas abouti"
+            echo "dans la fenêtre, sur \`$total\` lignes. C'est le compte qui prime : les autres"
+            echo "mesurent des sessions refusées, celui-ci mesure des exercices faits et non"
+            echo "enregistrés — invisibles dans la progression de l'élève comme dans le suivi parental."
             echo ""
             echo "**Départager les hypothèses** — les trois grandeurs que \`reportClientError\` emporte :"
             echo ""
@@ -189,9 +208,16 @@ jobs:
           } > corps.md
 
           gh label create "$LABEL" --color 5319e7 \
-            --description "Rafale de refus d'authentification en production" 2>/dev/null || true
+            --description "Panne subie par le client en production (auth, soumissions)" 2>/dev/null || true
 
-          titre="🔐 Refus d'auth en rafale ($total sur ${WINDOW_HOURS} h)"
+          # Le titre nomme le PIRE des deux faits. Un « refus d'auth en rafale »
+          # posé sur une soirée d'exercices perdus ferait chercher au mauvais
+          # endroit — et c'est ainsi qu'on apprend à ne plus lire une issue.
+          if [ "$perdues" -ge 1 ]; then
+            titre="📉 Soumissions perdues ($perdues sur ${WINDOW_HOURS} h, $total lignes)"
+          else
+            titre="🔐 Refus d'auth en rafale ($total sur ${WINDOW_HOURS} h)"
+          fi
           existing="$(gh issue list --label "$LABEL" --state open --limit 1 --json number --jq '.[0].number // empty')"
           if [ -n "$existing" ]; then
             gh issue edit "$existing" --title "$titre" --body-file corps.md >/dev/null
