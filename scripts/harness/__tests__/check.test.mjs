@@ -1,5 +1,6 @@
 // @vitest-environment node
 import { afterAll, describe, it, expect } from "vitest";
+import { spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -646,5 +647,56 @@ describe("collectCorpusProblems — les invariants appliqués au dépôt privé"
       ".github/workflows/dup.yml": "name: X\non: push\nname: Y\n",
     });
     expect(collectCorpusProblems(root).length).toBeGreaterThan(0);
+  });
+});
+
+describe("le CLI en mode corpus — les deux jeux d'invariants ne cohabitent pas", () => {
+  // LE défaut que la CI a trouvé au premier run réel, et qu'aucun raisonnement n'avait vu.
+  // La Content CI privée branche les 43 skills du corpus par SYMLINK dans `engine/.claude/skills`
+  // — c'est sa raison d'être. L'invariant « chaque vue générée est à jour » dérive alors le
+  // miroir `.agents/skills/` du corpus et réclame 225 fichiers qui n'ont aucune raison
+  // d'exister ; la recette locale, qui fait les mêmes symlinks, tombait dans le même trou.
+  // D'où la règle : `--corpus` juge le corpus, et RIEN du moteur. Ce test la tient par le CLI,
+  // parce que c'est dans `main()` qu'elle vit.
+  const root = mkdtempSync(join(tmpdir(), "corpus-cli-"));
+  const write = (rel, body) => {
+    mkdirSync(join(root, rel, ".."), { recursive: true });
+    writeFileSync(join(root, rel), body);
+  };
+  write("CLAUDE.md", "# corpus\n");
+  write(
+    ".claude/skills/content-x/SKILL.md",
+    "---\nname: content-x\ndescription: >-\n  Un skill correct.\n---\n\n# x\n",
+  );
+  write(
+    ".github/workflows/ci.yml",
+    "name: CI\non: push\njobs:\n  a:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7\n",
+  );
+  afterAll(() => rmSync(root, { recursive: true, force: true }));
+
+  const run = (args) =>
+    spawnSync(process.execPath, ["scripts/harness/check.mjs", ...args], {
+      encoding: "utf8",
+      cwd: join(import.meta.dirname, "..", "..", ".."),
+    });
+
+  it("ne prononce AUCUN auto-contrôle du moteur", () => {
+    // L'assertion qui compte est négative, et c'est voulu : ce qui a cassé en CI n'est pas un
+    // constat manquant, c'est 225 constats de trop, tous sur le miroir `.agents/skills/` que
+    // le corpus branché par symlink faisait dériver. Aucune ligne du rapport ne doit plus
+    // parler d'une surface du moteur.
+    const { stdout, stderr } = run(["--corpus", root]);
+    const out = stdout + stderr;
+    expect(out).not.toContain(".agents/skills");
+    expect(out).not.toContain("harness:sync");
+    expect(out).not.toContain("pointers intact");
+    expect(out).not.toContain("AGENTS.md");
+  });
+
+  it("échoue sur un corpus fautif, avec le code de sortie qui va avec", () => {
+    writeFileSync(join(root, ".claude/skills/content-x/SKILL.md"), "pas de frontmatter\n");
+    const { status, stdout, stderr } = run(["--corpus", root]);
+    expect(status).toBe(1);
+    expect(stdout + stderr).toContain("corpus: .claude/skills/content-x/SKILL.md");
   });
 });
