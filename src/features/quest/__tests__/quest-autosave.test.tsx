@@ -1,10 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 
-const { mockEnsureFresh } = vi.hoisted(() => ({ mockEnsureFresh: vi.fn() }));
+const { mockEnsureFresh, mockReport } = vi.hoisted(() => ({
+  mockEnsureFresh: vi.fn(),
+  mockReport: vi.fn(),
+}));
 vi.mock("@/shared/integrations/supabase/session-freshness", () => ({
   ensureFreshSession: mockEnsureFresh,
 }));
+vi.mock("@/shared/lib/client-log", () => ({ reportClientError: mockReport }));
 
 import {
   QUEST_SNAPSHOT_INTERVAL_MS,
@@ -119,36 +123,51 @@ describe("instantané local", () => {
   });
 });
 
-describe("mise en file de la soumission", () => {
+describe("soumission sous filet", () => {
   it("écrit la soumission AVANT toute tentative réseau", async () => {
     const { result } = mount();
-
-    const clientId = await act(() =>
-      result.current.beginSubmit(SESSION, { sessionId: SESSION, answers: [] }),
+    // L'ordre ne se vérifie qu'EN COURS D'ENVOI : après coup, la file est vide
+    // dans les deux cas, et le test passerait même si on écrivait trop tard.
+    let enFileAuMomentDeLEnvoi = -1;
+    await act(() =>
+      result.current.guardSubmit(SESSION, { sessionId: SESSION, answers: [] }, async () => {
+        enFileAuMomentDeLEnvoi = pendingCount();
+        expect(pending()[0].kind).toBe("quest.submit");
+        return "ok";
+      }),
     );
 
-    expect(clientId).toBe(questOutboxClientId(SESSION));
-    expect(pendingCount()).toBe(1);
-    expect(pending()[0].kind).toBe("quest.submit");
+    expect(enFileAuMomentDeLEnvoi).toBe(1);
   });
 
-  it("rafraîchit la session avant la mutation", async () => {
+  it("rafraîchit la session avant l'envoi", async () => {
     const { result } = mount();
+    const ordre: string[] = [];
+    mockEnsureFresh.mockImplementation(() => {
+      ordre.push("jeton");
+      return Promise.resolve("token");
+    });
 
-    await act(() => result.current.beginSubmit(SESSION, {}));
+    await act(() =>
+      result.current.guardSubmit(SESSION, {}, async () => {
+        ordre.push("envoi");
+        return "ok";
+      }),
+    );
 
-    expect(mockEnsureFresh).toHaveBeenCalledTimes(1);
+    expect(ordre).toEqual(["jeton", "envoi"]);
   });
 
-  it("met quand même en file si le rafraîchissement échoue", async () => {
+  it("envoie quand même si le rafraîchissement échoue", async () => {
     // Le serveur tranchera, et la file rattrapera son refus : un échec ici ne
-    // doit surtout pas empêcher d'écrire le travail.
+    // doit surtout pas empêcher d'écrire le travail, ni de tenter.
     mockEnsureFresh.mockRejectedValue(new Error("auth down"));
+    const send = vi.fn().mockResolvedValue("ok");
     const { result } = mount();
 
-    await act(() => result.current.beginSubmit(SESSION, {}));
+    await act(() => result.current.guardSubmit(SESSION, {}, send));
 
-    expect(pendingCount()).toBe(1);
+    expect(send).toHaveBeenCalledTimes(1);
   });
 
   it("sort l'item de la file et efface le brouillon une fois la copie rendue", async () => {
@@ -158,20 +177,91 @@ describe("mise en file de la soumission", () => {
       window.dispatchEvent(new Event("pagehide"));
     });
 
-    const clientId = await act(() => result.current.beginSubmit(SESSION, {}));
-    act(() => result.current.completeSubmit(clientId));
+    await act(() => result.current.guardSubmit(SESSION, {}, async () => "ok"));
 
     expect(pendingCount()).toBe(0);
     expect(loadDraft(EX, "classic")).toBeNull();
   });
 
-  it("ne met rien en file dans le registre anonyme", async () => {
+  it("rend au lecteur exactement ce que l'envoi a rendu", async () => {
+    const { result } = mount();
+    const score = { scorePct: 80 };
+
+    const rendu = await act(() => result.current.guardSubmit(SESSION, {}, async () => score));
+
+    expect(rendu).toBe(score);
+  });
+
+  it("ne met rien en file dans le registre anonyme, et envoie quand même", async () => {
+    const send = vi.fn().mockResolvedValue("ok");
     const { result } = mount({ enabled: false });
 
-    await act(() => result.current.beginSubmit(SESSION, {}));
+    await act(() => result.current.guardSubmit(SESSION, {}, send));
 
     expect(pendingCount()).toBe(0);
     expect(mockEnsureFresh).not.toHaveBeenCalled();
+    expect(send).toHaveBeenCalledTimes(1);
+  });
+});
+
+// =============================================================================
+// LA SOUMISSION QUI N'ABOUTIT PAS — la panne du 2026-09-03.
+//
+// Une mission validée qui ne s'enregistre pas se manifestait par un
+// `toast.error` et rien d'autre : ni ligne en base, ni compteur, ni issue. Le
+// lendemain, le suivi parental montrait « 0 exercice » pour une soirée que
+// l'élève avait passée à répondre, et rien nulle part ne disait pourquoi.
+// =============================================================================
+describe("échec de soumission", () => {
+  const echoue = (result: { current: ReturnType<typeof useQuestAutosave> }, error: Error) =>
+    act(() =>
+      result.current.guardSubmit(SESSION, {}, () => Promise.reject(error)).catch(() => null),
+    );
+
+  it("raconte l'échec à la boîte noire, sans jeter le travail", async () => {
+    const { result } = mount();
+
+    await echoue(result, new Error("Exercise has no questions"));
+
+    expect(mockReport).toHaveBeenCalledWith({
+      stage: "quest-submit",
+      clientId: questOutboxClientId(SESSION),
+      errMessage: "Exercise has no questions",
+      payload: { variant: "classic", queued: true },
+    });
+    // L'item RESTE en file : `outbox.ts` le rejouera. Raconter n'est pas jeter.
+    expect(pendingCount()).toBe(1);
+    // Et le brouillon reste : la partie n'est pas finie tant qu'elle n'est pas passée.
+    expect(result.current.status).toBe("pending");
+  });
+
+  it("laisse le refus d'AUTH à `outbox.ts` — le doubler fausserait ses seuils", async () => {
+    // Là-bas le TTL du jeton est pris AVANT le rafraîchissement forcé ; ici il
+    // serait celui du jeton neuf, et la mesure ne dirait plus rien de la panne.
+    const { result } = mount();
+
+    await echoue(result, new Error("Unauthorized: Invalid token"));
+
+    expect(mockReport).not.toHaveBeenCalled();
+    expect(pendingCount()).toBe(1);
+  });
+
+  it("propage l'erreur au lecteur — l'échec n'est jamais maquillé en réussite", async () => {
+    const { result } = mount();
+
+    await expect(
+      act(() => result.current.guardSubmit(SESSION, {}, () => Promise.reject(new Error("boom")))),
+    ).rejects.toThrow("boom");
+  });
+
+  it("raconte aussi l'échec du registre anonyme, en disant qu'il n'est pas en file", async () => {
+    // Rien ne le rejouera : sa partie est perdue pour de bon. Raison de plus
+    // pour que la panne, elle, soit connue.
+    const { result } = mount({ enabled: false });
+
+    await echoue(result, new Error("boom"));
+
+    expect(mockReport.mock.calls[0][0].payload).toEqual({ variant: "classic", queued: false });
   });
 });
 
@@ -180,10 +270,14 @@ describe("statut affiché", () => {
     const { result } = mount();
     expect(result.current.status).toBe("idle");
 
-    const clientId = await act(() => result.current.beginSubmit(SESSION, {}));
-    expect(result.current.status).toBe("pending");
+    await act(() =>
+      result.current.guardSubmit(SESSION, {}, async () => {
+        // En vol : le travail est en file, l'indicateur doit le dire.
+        expect(pendingCount()).toBe(1);
+        return "ok";
+      }),
+    );
 
-    act(() => result.current.completeSubmit(clientId));
     expect(result.current.status).toBe("saved");
   });
 });
