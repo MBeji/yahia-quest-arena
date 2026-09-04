@@ -363,6 +363,22 @@ describe("withMorphologicalVariants — Tier A au build (étude 20 lot 2)", () =
     expect(variants).toEqual([]);
   });
 
+  it("n'expédie plus de tête مضاف articlée dans l'ensemble compilé", () => {
+    // Cas réel de content/math : « مركز الدائرة » émettait « المركز الدائرة »,
+    // une chaîne qu'aucun élève ne tape. La forme sans article, elle, reste.
+    const variants = withMorphologicalVariants(
+      questionSchema.parse({
+        type: "short_answer",
+        prompt: "ما هي النقطة التي تبعد نفس المسافة عن كلّ نقاط الدائرة ؟",
+        answerKey: { text: "مركز الدائرة" },
+        explanation: "كلّ نقاط الدائرة تبعد بنفس المسافة عن مركزها.",
+      }),
+      "ar",
+    );
+    expect(variants).not.toContain("المركز الدائرة");
+    expect(variants).toContain("مركز دائرة");
+  });
+
   it("garde les variantes authorées en tête et ne les évince jamais", () => {
     const authored = Array.from({ length: ACCEPTED_ANSWERS_MAX }, (_, i) => `variante ${i}`);
     const variants = withMorphologicalVariants(
