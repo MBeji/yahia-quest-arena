@@ -511,6 +511,47 @@ export const CORPUS_CLAUDE_MD_MAX_LINES = 150;
 export const CORPUS_CLAUDE_MD_MAX_BYTES = 12 * 1024;
 
 /**
+ * Les déclencheurs `pull_request` qui font naître un run FANTÔME (étude 32, lot 1).
+ *
+ * Sur le dépôt privé, `auto-pr.yml` ouvre la PR de chaque branche poussée avec le
+ * `GITHUB_TOKEN`. La garde anti-récursion de GitHub refuse alors de faire tourner ses
+ * checks — mais elle enregistre quand même la LIGNE du run, qui sort `failure` avec
+ * **zéro job**. Il n'a rien évalué et ressemble pourtant à un gate rouge : trois
+ * incidents en sont nés (#280, #291, #293), dont un gel d'une journée de toute la chaîne.
+ *
+ * Seul l'événement `opened` produit ces runs, et le retirer les supprime à la racine.
+ * Ce contrôle existe parce qu'un `types:` correct n'est qu'une convention tant qu'aucun
+ * gate ne le tient : `pull_request:` SANS `types:` réécoute `opened` par défaut, ce qui
+ * fait de l'oubli le comportement le plus facile.
+ */
+export function findPhantomProneTriggers(text) {
+  let doc;
+  try {
+    doc = parseYaml(text);
+  } catch {
+    return []; // Le YAML illisible est déjà le métier de `checkYamlFiles`.
+  }
+  // ⚠️ En YAML 1.1, `on:` est la clé booléenne `true`. Le paquet `yaml` suit la 1.2, où
+  // c'est la chaîne « on » — mais on lit les deux, pour ne dépendre d'aucune des deux.
+  const on = doc?.on ?? doc?.true ?? (doc ? doc[true] : undefined);
+  if (!on || typeof on !== "object") return [];
+
+  const out = [];
+  for (const event of ["pull_request", "pull_request_target"]) {
+    if (!(event in on)) continue;
+    const cfg = on[event];
+    // `pull_request:` nu (valeur nulle) vaut [opened, synchronize, reopened].
+    const types = cfg && typeof cfg === "object" ? cfg.types : undefined;
+    if (types === undefined || types === null) {
+      out.push({ event, reason: "sans `types:`, GitHub écoute `opened` par défaut" });
+    } else if (Array.isArray(types) && types.includes("opened")) {
+      out.push({ event, reason: "`opened` est listé explicitement" });
+    }
+  }
+  return out;
+}
+
+/**
  * Les invariants du harness appliqués au dépôt PRIVÉ (étude 32, D-5).
  *
  * POURQUOI ICI ET PAS LÀ-BAS. Le corpus porte 43 skills, 12 workflows et un `CLAUDE.md` de
@@ -594,6 +635,14 @@ export function collectCorpusProblems(root) {
     for (const hit of findUnpinnedActions(content)) {
       problems.push(
         `corpus: ${relTo(file)}: \`uses: ${hit.uses}\` n'est pas épinglé à un SHA (${hit.reason}).`,
+      );
+    }
+    // Le fantôme : un run que personne n'a demandé et que GitHub refuse aussitôt.
+    for (const hit of findPhantomProneTriggers(content)) {
+      problems.push(
+        `corpus: ${relTo(file)}: \`${hit.event}\` écoute \`opened\` (${hit.reason}) — ` +
+          "chaque PR ouverte par `auto-pr` y gagnerait un run `failure` à zéro job. " +
+          "Déclarer `types:` sans `opened` (étude 32, lot 1).",
       );
     }
   }
