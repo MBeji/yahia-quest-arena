@@ -23,6 +23,7 @@ import {
   SKILL_DESCRIPTION_MAX,
   AGENTS_MD_WARN_RATIO,
   findSuspiciousInvisibles,
+  findPhantomProneTriggers,
   collectCorpusProblems,
   checkPolicyReasons,
 } from "../check.mjs";
@@ -568,6 +569,66 @@ describe("checkAgentsSize — avertir avant de bloquer", () => {
     const size = checkAgentsSize(line(AGENTS_MD_MAX_LINES + 10));
     expect(size.ok).toBe(false);
     expect(size.warnings).toEqual([]);
+  });
+});
+
+describe("findPhantomProneTriggers — l'événement qui fabrique un run que personne n'a demandé", () => {
+  // Le fantôme n'est pas une hypothèse : mesuré sur la PR privée #343 le 2026-09-04, trois
+  // runs `pull_request` en `failure` — Content CI, Roadmap sync, Automerge — à ZÉRO job
+  // chacun, pendant que les vrais tournaient en `workflow_dispatch`. Seul `opened` les crée.
+  it("attrape le `pull_request:` nu, dont le défaut inclut `opened`", () => {
+    const hits = findPhantomProneTriggers("on:\n  pull_request:\n  push:\n    branches: [main]\n");
+    expect(hits).toHaveLength(1);
+    expect(hits[0]).toMatchObject({ event: "pull_request" });
+    expect(hits[0].reason).toContain("par défaut");
+  });
+
+  it("attrape `opened` listé explicitement", () => {
+    const hits = findPhantomProneTriggers(
+      "on:\n  pull_request:\n    types: [opened, reopened, labeled]\n",
+    );
+    expect(hits).toHaveLength(1);
+    expect(hits[0].reason).toContain("explicitement");
+  });
+
+  it("laisse passer la forme corrigée", () => {
+    expect(
+      findPhantomProneTriggers("on:\n  pull_request:\n    types: [synchronize, reopened]\n"),
+    ).toEqual([]);
+  });
+
+  it("garde le filtre `paths:` hors du sujet — c'est `types:` qui décide", () => {
+    // roadmap-sync.yml porte les deux ; un `paths:` ne dit rien de l'événement écouté.
+    expect(
+      findPhantomProneTriggers(
+        'on:\n  pull_request:\n    types: [synchronize, reopened]\n    paths:\n      - "FableEtudes/ROADMAP.md"\n',
+      ),
+    ).toEqual([]);
+  });
+
+  it("couvre aussi `pull_request_target`", () => {
+    expect(findPhantomProneTriggers("on:\n  pull_request_target:\n")).toMatchObject([
+      { event: "pull_request_target" },
+    ]);
+  });
+
+  it("ne dit rien d'un workflow qui n'écoute pas les PR", () => {
+    expect(findPhantomProneTriggers('on:\n  schedule:\n    - cron: "0 6 * * *"\n')).toEqual([]);
+    expect(findPhantomProneTriggers("on:\n  workflow_dispatch:\n")).toEqual([]);
+  });
+
+  it("laisse le YAML illisible au gate dont c'est le métier", () => {
+    // `checkYamlFiles` le signale déjà ; deux voix sur le même défaut brouillent le rapport.
+    expect(findPhantomProneTriggers("on:\n  pull_request:\n :::pas du yaml")).toEqual([]);
+    expect(findPhantomProneTriggers("")).toEqual([]);
+  });
+
+  it("lit `on:` même si un analyseur YAML 1.1 en fait la clé booléenne `true`", () => {
+    // Dépendre de la version de schéma du paquet `yaml` rendrait ce gate muet sur une montée
+    // de version — et un gate muet est pire qu'un gate absent.
+    expect(
+      findPhantomProneTriggers(JSON.stringify({ true: { pull_request: null } })),
+    ).toMatchObject([{ event: "pull_request" }]);
   });
 });
 
