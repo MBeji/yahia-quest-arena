@@ -582,8 +582,28 @@ function main() {
   const problems = [];
   const rel = (p) => relative(ROOT, p).split("\\").join("/");
 
+  // `--corpus <dir>` bascule le script en MODE CORPUS : il juge le dépôt privé, pas celui-ci.
+  //
+  // Les deux jeux d'invariants ne peuvent PAS cohabiter dans une même invocation, et c'est le
+  // premier run réel qui l'a montré plutôt qu'un raisonnement. La Content CI privée branche les
+  // 43 skills du corpus par symlink dans `engine/.claude/skills` — c'est sa raison d'être. Or
+  // l'invariant 6 d'ici (« chaque vue générée est à jour ») dérive le miroir `.agents/skills/`
+  // de ce qu'il trouve sous `.claude/skills/` : avec le corpus branché, il a réclamé
+  // **225 fichiers de miroir** qui n'ont aucune raison d'exister. Même piège pour l'invariant 1
+  // (le CLAUDE.md vu est celui du moteur, pas celui du corpus) et pour la recette LOCALE, qui
+  // fait exactement les mêmes symlinks.
+  //
+  // Donc : en mode corpus, on ne juge QUE le corpus, plus la couverture des contrôles (le seul
+  // invariant d'ici qui ait besoin des deux dépôts pour se prononcer). Les auto-contrôles du
+  // moteur tournent dans la CI du moteur, sur un checkout sans symlink — c'est-à-dire là où ils
+  // veulent dire quelque chose.
+  const corpusFlag = process.argv.indexOf("--corpus");
+  const corpusRoot =
+    corpusFlag !== -1 && process.argv[corpusFlag + 1] ? process.argv[corpusFlag + 1] : null;
+  const engineMode = corpusRoot === null;
+
   // 1. Pointer integrity.
-  const claudeMd = readIfExists(join(ROOT, "CLAUDE.md"));
+  const claudeMd = engineMode ? readIfExists(join(ROOT, "CLAUDE.md")) : "@AGENTS.md";
   if (claudeMd === null) {
     problems.push("CLAUDE.md is missing.");
   } else {
@@ -592,7 +612,7 @@ function main() {
   }
 
   // 2. AGENTS.md size budget.
-  const agentsMd = readIfExists(join(ROOT, "AGENTS.md"));
+  const agentsMd = engineMode ? readIfExists(join(ROOT, "AGENTS.md")) : "";
   if (agentsMd === null) {
     problems.push("AGENTS.md is missing — it is the canonical source (étude 25 D-1).");
   } else {
@@ -606,11 +626,12 @@ function main() {
 
     // 2bis. L'inventaire des features décrit-il encore src/features/ ?
     const featuresDir = join(ROOT, "src", "features");
-    const featureNames = existsSync(featuresDir)
-      ? readdirSync(featuresDir, { withFileTypes: true })
-          .filter((entry) => entry.isDirectory())
-          .map((entry) => entry.name)
-      : [];
+    const featureNames =
+      engineMode && existsSync(featuresDir)
+        ? readdirSync(featuresDir, { withFileTypes: true })
+            .filter((entry) => entry.isDirectory())
+            .map((entry) => entry.name)
+        : [];
     if (featureNames.length) {
       for (const problem of checkFeatureInventory(agentsMd, featureNames)) {
         problems.push(`AGENTS.md: ${problem}.`);
@@ -622,19 +643,24 @@ function main() {
   // Since lot 5 the guard workflows resolve their model from harness/models.json,
   // so `.github/workflows/**` is in scope too — this is what makes the study's
   // "zero hardcoded model id" KPI actually enforced rather than aspirational.
-  const generatedViews = new Set(buildViews(ROOT).map(([relPath]) => relPath));
-  const surface = [
-    ["AGENTS.md", agentsMd],
-    ["CLAUDE.md", claudeMd],
-    ...[...generatedViews].map((relPath) => [relPath, readIfExists(join(ROOT, relPath))]),
-    // La SOURCE des skills, pas seulement son miroir : le miroir est exempté du
-    // scan d'identifiants (il est généré), donc sans cette ligne un id écrit à la
-    // main dans `.claude/skills/**` traversait le gate et arrivait tel quel chez
-    // Codex, Cursor et Amp.
-    ...walk(join(ROOT, ".claude", "skills"), /\.md$/).map((p) => [rel(p), readIfExists(p)]),
-    ...walk(join(ROOT, "harness"), /\.(json|md)$/).map((p) => [rel(p), readIfExists(p)]),
-    ...walk(join(ROOT, ".github", "workflows"), /\.ya?ml$/).map((p) => [rel(p), readIfExists(p)]),
-  ].filter(([, content]) => content !== null);
+  const generatedViews = new Set(engineMode ? buildViews(ROOT).map(([relPath]) => relPath) : []);
+  const surface = !engineMode
+    ? []
+    : [
+        ["AGENTS.md", agentsMd],
+        ["CLAUDE.md", claudeMd],
+        ...[...generatedViews].map((relPath) => [relPath, readIfExists(join(ROOT, relPath))]),
+        // La SOURCE des skills, pas seulement son miroir : le miroir est exempté du
+        // scan d'identifiants (il est généré), donc sans cette ligne un id écrit à la
+        // main dans `.claude/skills/**` traversait le gate et arrivait tel quel chez
+        // Codex, Cursor et Amp.
+        ...walk(join(ROOT, ".claude", "skills"), /\.md$/).map((p) => [rel(p), readIfExists(p)]),
+        ...walk(join(ROOT, "harness"), /\.(json|md)$/).map((p) => [rel(p), readIfExists(p)]),
+        ...walk(join(ROOT, ".github", "workflows"), /\.ya?ml$/).map((p) => [
+          rel(p),
+          readIfExists(p),
+        ]),
+      ].filter(([, content]) => content !== null);
 
   for (const [label, content] of surface) {
     for (const hit of findSuspiciousInvisibles(content)) {
@@ -655,7 +681,7 @@ function main() {
   // parts of the Agent Skills spec (lot 3): the mirror at `.agents/skills/` is
   // read by tools that DO enforce them, so a skill that drifts here silently
   // stops working there.
-  for (const skillMd of walk(join(ROOT, ".claude", "skills"), /^SKILL\.md$/)) {
+  for (const skillMd of engineMode ? walk(join(ROOT, ".claude", "skills"), /^SKILL\.md$/) : []) {
     const frontmatter = extractFrontmatter(readIfExists(skillMd));
     const folderName = rel(skillMd).split("/").at(-2);
 
@@ -675,7 +701,7 @@ function main() {
   // was written in docs/dependency-maintenance.md but never enforced — see
   // findUnpinnedActions' header for the regression that proved a documented rule
   // without a gate is a suggestion.
-  for (const workflow of walk(join(ROOT, ".github", "workflows"), /\.ya?ml$/)) {
+  for (const workflow of engineMode ? walk(join(ROOT, ".github", "workflows"), /\.ya?ml$/) : []) {
     const content = readIfExists(workflow);
     if (content === null) continue;
     for (const hit of findUnpinnedActions(content)) {
@@ -688,7 +714,7 @@ function main() {
   }
 
   // 5. JSON validity of every harness/*.json file.
-  for (const jsonFile of walk(join(ROOT, "harness"), /\.json$/)) {
+  for (const jsonFile of engineMode ? walk(join(ROOT, "harness"), /\.json$/) : []) {
     const content = readIfExists(jsonFile);
     if (content !== null && !isJsonValid(content)) {
       problems.push(`${rel(jsonFile)} is not valid JSON.`);
@@ -699,7 +725,7 @@ function main() {
   // lets the model id inside a GENERATED file be legitimate: it is not
   // hand-written, it is compiled from harness/models.json — and any hand-edit
   // (including a model bumped only here) shows up as drift below.
-  for (const [relPath, expected] of buildViews(ROOT)) {
+  for (const [relPath, expected] of engineMode ? buildViews(ROOT) : []) {
     const actual = readIfExists(join(ROOT, relPath));
     if (actual === null) {
       problems.push(`${relPath} is missing — run \`npm run harness:sync\`.`);
@@ -714,7 +740,7 @@ function main() {
   // `startup_failure`: zero jobs, no log, no annotation. Lenient parsers (last
   // key wins) call such a file valid, so this needs a parser with `uniqueKeys`,
   // not a convention. See check-workflow-yaml.mjs for the incident it replays.
-  problems.push(...checkYamlFiles(collectGithubYaml(ROOT)));
+  if (engineMode) problems.push(...checkYamlFiles(collectGithubYaml(ROOT)));
 
   // 8. Tout script de CONTRÔLE est exécuté par quelqu'un — ou dit qui l'exécute.
   // `content:figures:check` a passé des mois rouge sans qu'aucun workflow ne
@@ -733,10 +759,8 @@ function main() {
     // `--corpus <dir>` : le corpus privé monté à côté, comme le fait déjà
     // `check-roadmap-sync.mjs`. La Content CI privée l'a, ce dépôt non — et
     // c'est elle qui transforme les déclarations `privé:*` en vérifications.
-    const corpusFlag = process.argv.indexOf("--corpus");
     let corpusWorkflows = null;
-    if (corpusFlag !== -1 && process.argv[corpusFlag + 1]) {
-      const corpusRoot = process.argv[corpusFlag + 1];
+    if (corpusRoot !== null) {
       const dir = join(corpusRoot, ".github", "workflows");
       if (!existsSync(dir)) {
         problems.push(`--corpus: ${dir} introuvable — le corpus est-il bien monté ?`);
@@ -759,6 +783,15 @@ function main() {
         corpusWorkflows,
       }),
     );
+  }
+
+  if (problems.length === 0 && !engineMode) {
+    console.log(
+      `[harness:check] OK — corpus ${corpusRoot} : skills conformes à la spec, aucun Unicode ` +
+        "invisible suspect, CLAUDE.md dans son budget, YAML strict, Actions épinglées, " +
+        "chaque contrôle déclaré exécuté par le workflow qu'il nomme.",
+    );
+    return;
   }
 
   if (problems.length === 0) {
