@@ -119,6 +119,43 @@ describe("summarise", () => {
     expect(summarise(runs).days).toBeCloseTo(1 / 24, 4);
   });
 
+  it("compte les CYCLES : une tête = une CI complète (C-14)", () => {
+    // Rejoue la forme exacte d'arena#975 : cinq têtes sur une seule branche, parce que
+    // quatre PR sont entrées dans `main` pendant sa CI et que rester à jour est exigé pour
+    // merger. Cinq cycles complets pour un diff sans une ligne de `src/`.
+    const heads = ["3d7d95d9", "2b0ee5c0", "82146fb1", "ca26098c", "e4fa88a8"];
+    const s = summarise(
+      heads.map((sha, i) => run({ id: i + 1, head_branch: "claude/e32", head_sha: sha })),
+    );
+    expect(s.cyclesPerBranch).toBe(5);
+    expect(s.worstBranch).toEqual({ branch: "claude/e32", cycles: 5 });
+  });
+
+  it("ne compte une tête qu'une fois, même vue par plusieurs workflows", () => {
+    // Sur une même tête, CI + CodeQL + Migration gate produisent trois runs : c'est UN cycle.
+    const s = summarise([
+      run({ id: 1, name: "CI", head_branch: "claude/x", head_sha: "aaa" }),
+      run({ id: 2, name: "CodeQL", head_branch: "claude/x", head_sha: "aaa" }),
+      run({ id: 3, name: "Migration gate", head_branch: "claude/x", head_sha: "aaa" }),
+    ]);
+    expect(s.cyclesPerBranch).toBe(1);
+  });
+
+  it("ignore la branche par défaut — C-14 ne parle que des PR", () => {
+    const s = summarise([
+      run({ id: 1, head_branch: "main", head_sha: "aaa" }),
+      run({ id: 2, head_branch: "main", head_sha: "bbb" }),
+      run({ id: 3, head_branch: "claude/y", head_sha: "ccc" }),
+    ]);
+    expect(s.cyclesPerBranch).toBe(1);
+    expect(s.worstBranch).toEqual({ branch: "claude/y", cycles: 1 });
+  });
+
+  it("ne rend pas de pire branche quand aucune n'a été relancée", () => {
+    expect(summarise([]).worstBranch).toBeNull();
+    expect(summarise([run({ head_branch: "main", head_sha: "a" })]).worstBranch).toBeNull();
+  });
+
   it("rend un résumé vide plutôt que d'échouer sur zéro run", () => {
     expect(summarise([])).toMatchObject({ total: 0, workflows: [], phantoms: 0 });
   });
@@ -137,6 +174,24 @@ describe("formatReport", () => {
     const text = formatReport(summarise([run({ id: 1 })]), { repo: "o/r", probed: false });
     expect(text).toContain("non sondés");
     expect(text).not.toContain("(0 %)");
+  });
+
+  it("annonce les cycles, et nomme la branche la plus relancée", () => {
+    const s = summarise([
+      run({ id: 1, head_branch: "claude/e32", head_sha: "a" }),
+      run({ id: 2, head_branch: "claude/e32", head_sha: "b" }),
+    ]);
+    const text = formatReport(s, { repo: "o/r" });
+    expect(text).toContain("cycles");
+    expect(text).toContain("2.0 tête(s) par branche");
+    expect(text).toContain("pire : claude/e32 à 2");
+  });
+
+  it("tait la « pire branche » quand personne n'a été relancé — un bruit de plus sinon", () => {
+    const text = formatReport(summarise([run({ head_branch: "claude/x", head_sha: "a" })]), {
+      repo: "o/r",
+    });
+    expect(text).not.toContain("pire :");
   });
 
   it("ne casse pas sur un relevé vide", () => {
