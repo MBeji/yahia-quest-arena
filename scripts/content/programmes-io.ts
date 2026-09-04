@@ -28,10 +28,42 @@ import { ContentValidationError } from "../../src/shared/content/loader.ts";
 import { isSurveilled, parseProvenance, type SurveilledText } from "./verbatim-checks.ts";
 
 export const REPO_ROOT = resolve(import.meta.dirname, "../..");
-export const PROGRAMMES_DIR = join(
-  REPO_ROOT,
+
+/**
+ * Les deux emplacements possibles de l'arbre `programmes-officiels/`, par ordre de préférence
+ * (étude 32, lot 5 — constat C-13).
+ *
+ * POURQUOI IL DÉMÉNAGE. Cet arbre — 12 Mo, 130 fichiers : manifestes, programmes transcrits,
+ * `suivi/` — est un REGISTRE DE DONNÉES, pas une instruction de skill. Vivant sous
+ * `.claude/skills/…/references/`, il pèse sur le prompt-space des skills et impose le SECOND
+ * symlink de la recette locale comme de la Content CI. Ce second lien n'est pas un détail : il
+ * est la première chose qu'une session oublie, et le gate rend alors un faux « rien à faire »
+ * sur le garde-fou anti-double-transcription — le pire résultat possible pour ce registre.
+ *
+ * POURQUOI DEUX CANDIDATS PLUTÔT QU'UN CHEMIN NEUF. Les données vivent dans l'autre dépôt : le
+ * déplacement ne peut pas être atomique. Le moteur apprend donc les deux emplacements AVANT que
+ * le corpus ne bouge, et le legacy tombera dans un troisième temps, une fois le déplacement
+ * constaté. C'est la discipline « additif d'abord » de la DoD §7, appliquée à un fichier plutôt
+ * qu'à une table.
+ */
+export const PROGRAMMES_REL_CANDIDATES = [
+  "content/programmes-officiels",
   ".claude/skills/content-ecole-tn/references/programmes-officiels",
-);
+] as const;
+
+/**
+ * Le chemin RELATIF de l'arbre sous `root`. Rend le premier candidat qui existe ; si aucun
+ * n'existe, rend le nouveau — pour qu'un message d'erreur envoie là où l'arbre DOIT être, pas
+ * là où il était.
+ */
+export function resolveProgrammesRel(root: string): string {
+  for (const rel of PROGRAMMES_REL_CANDIDATES) {
+    if (existsSync(join(root, rel))) return rel;
+  }
+  return PROGRAMMES_REL_CANDIDATES[0];
+}
+
+export const PROGRAMMES_DIR = join(REPO_ROOT, resolveProgrammesRel(REPO_ROOT));
 export const SUIVI_DIR = join(PROGRAMMES_DIR, "suivi");
 /** Fiches de source externe du profil `source-web` (étude 27 D-2). */
 export const SOURCES_EXTERNES_DIR = join(PROGRAMMES_DIR, "sources-externes");
@@ -67,7 +99,10 @@ export function failMissingRegistry(path: string, what: string): never {
         `    masquerait le vrai registre.`,
     );
   }
-  fail(`${what} introuvable: ${path} (lancer --corpus)`);
+  fail(
+    `${what} introuvable: ${path} (lancer --corpus)\n` +
+      `  → Emplacements cherchés, dans cet ordre : ${PROGRAMMES_REL_CANDIDATES.join(", ")}.`,
+  );
 }
 
 /**

@@ -21,7 +21,7 @@
  *   --manifest-dir <path>  Manifests root (default: the skill references path).
  *   --content-dir <path>   Content root (default: content).
  */
-import { resolve } from "node:path";
+import { join, resolve } from "node:path";
 import { argv, cwd, exit, stderr, stdout } from "node:process";
 import {
   auditGrade,
@@ -33,10 +33,7 @@ import {
   expandSubjects,
   loadAllSubjects,
 } from "../../src/shared/content/loader.ts";
-import { loadManifests } from "./programmes-io.ts";
-
-const DEFAULT_MANIFEST_DIR =
-  ".claude/skills/content-ecole-tn/references/programmes-officiels/manifest";
+import { loadManifests, resolveProgrammesRel } from "./programmes-io.ts";
 
 function getFlag(name: string): string | undefined {
   const i = argv.indexOf(`--${name}`);
@@ -95,7 +92,13 @@ function printGrade(g: GradeAudit): void {
 
 function main(): void {
   const root = cwd();
-  const manifestDir = resolve(root, getFlag("manifest-dir") ?? DEFAULT_MANIFEST_DIR);
+  // Le chemin par défaut est RÉSOLU sous `root`, jamais recopié ici : trois copies de la
+  // même constante vivaient dans trois fichiers, et c'est ce qui faisait du déplacement de
+  // l'arbre un chantier à quatre fichiers plutôt qu'à un.
+  const manifestDir = resolve(
+    root,
+    getFlag("manifest-dir") ?? join(resolveProgrammesRel(root), "manifest"),
+  );
   const contentDir = resolve(root, getFlag("content-dir") ?? "content");
   const strict = hasFlag("strict");
   const onlyGrade = getFlag("grade");

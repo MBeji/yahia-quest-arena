@@ -50,10 +50,15 @@ import { join, resolve } from "node:path";
 import { argv, cwd, exit, stdout } from "node:process";
 import { pathToFileURL } from "node:url";
 import { cnpManuelFileName, cnpManuelUrl } from "../../src/shared/content/manuel-cnp.ts";
+import { resolveProgrammesRel } from "./programmes-io.ts";
 
-/** Le registre CNP, dans le corpus privé — branché dans le moteur par la CI. */
-export const CORPUS_JSON =
-  ".claude/skills/content-ecole-tn/references/programmes-officiels/suivi/corpus-cnp.json";
+/**
+ * Le registre CNP, dans le corpus privé — branché dans le moteur par la CI. Le chemin est
+ * RÉSOLU (étude 32, lot 5) et non recopié : l'arbre `programmes-officiels/` a deux
+ * emplacements possibles le temps qu'il déménage d'un dépôt à l'autre.
+ */
+export const corpusJsonRel = (root: string): string =>
+  join(resolveProgrammesRel(root), "suivi/corpus-cnp.json");
 
 /** Les types de contenu qu'un manuel peut légitimement annoncer. */
 const PDF_CONTENT_TYPE = /^application\/(pdf|octet-stream|force-download|x-pdf)\b/i;
@@ -213,10 +218,11 @@ async function main() {
   const root = cwd();
   const contentDir = resolve(root, flag("content-dir", "content"));
   const throttleMs = Number(flag("throttle-ms", "250"));
-  const corpusPath = resolve(root, CORPUS_JSON);
+  const corpusRel = corpusJsonRel(root);
+  const corpusPath = resolve(root, corpusRel);
   if (!existsSync(corpusPath)) {
     stdout.write(
-      JSON.stringify({ error: `registre CNP introuvable: ${CORPUS_JSON} — corpus non branché` }) +
+      JSON.stringify({ error: `registre CNP introuvable: ${corpusRel} — corpus non branché` }) +
         "\n",
     );
     exit(1);
