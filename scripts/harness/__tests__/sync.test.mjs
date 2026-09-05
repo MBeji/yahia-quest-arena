@@ -60,6 +60,13 @@ describe("buildClaudeSettings", () => {
     expect(settings.hooks.PostToolUse[0].hooks[0].command).toContain("format-changed.mjs");
   });
 
+  it("amorce la session cloud au démarrage et à la reprise (étude cloud-first, lot 1)", () => {
+    const [entry] = settings.hooks.SessionStart;
+    expect(entry.matcher).toBe("startup|resume");
+    expect(entry.hooks[0]).toMatchObject({ type: "command", timeout: 300 });
+    expect(entry.hooks[0].command).toContain("session-start.mjs");
+  });
+
   it("no longer emits an agent hook or a hardcoded model (étude IA→déterministe, L1)", () => {
     const json = serialise(settings);
     expect(json).not.toContain('"type": "agent"');

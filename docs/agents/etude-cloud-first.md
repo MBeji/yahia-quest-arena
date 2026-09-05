@@ -299,6 +299,16 @@ C'est l'unique lot qui lui revient. Cible exacte, dans l'ordre, tout dans un nav
 
 ### Lot 1 — L'amorçage de session, versionné et vérifié (session, ce dépôt)
 
+> ✅ **Livré le 2026-09-04**, depuis une session cloud. `.claude/hooks/session-start.mjs` (câblé par
+> `scripts/harness/sync.mjs`, matcher `startup|resume`, 300 s de délai pour un `npm install` à froid),
+> `scripts/cloud/allowed-domains.mjs` (la liste du lot 0, une raison et une conséquence par ligne,
+> `node scripts/cloud/allowed-domains.mjs` l'imprime prête à coller), 27 tests. **Mesuré** : à froid,
+> Node 24 par nvm en 6 s et 523 paquets en 22 s ; à chaud, **1,8 s** pour tout le hook, sondes
+> comprises. Le PATH de Node 24 est exporté dans `$CLAUDE_ENV_FILE`, donc le hook `pre-push` tourne
+> sous le bon Node. Sortie constatée sur l'environnement encore en Trusted :
+> `[session-start · réseau] REFUSÉ par la politique réseau de l'environnement : www.cnp.com.tn →
+aucune campagne ne peut lire un manuel ; … — le lot 0 … n'est pas appliqué`.
+
 - Un hook `SessionStart` (`.claude/hooks/session-start.mjs`, câblé par `scripts/harness/sync.mjs`
   comme les trois hooks existants — donc couvert par `harness:check`), qui **ne fait rien hors
   cloud** (`CLAUDE_CODE_REMOTE`) et en cloud : pose Node **24** depuis `.nvmrc` via nvm et

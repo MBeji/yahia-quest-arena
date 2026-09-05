@@ -6,10 +6,12 @@
  *   harness/policy.json              →  .claude/settings.json (permissions + hooks)
  *   .claude/skills/**                →  .agents/skills/** (portable mirror)
  *
- * The hooks are deterministic command scripts (`guard-generated.mjs`,
+ * The hooks are deterministic command scripts (`session-start.mjs`, `guard-generated.mjs`,
  * `precommit-checks.mjs`, `format-changed.mjs`) wired directly below — since the
  * étude "IA → déterministe" lot L1, the pre-commit guard is a script too, so no
- * model or prompt feeds this view any more.
+ * model or prompt feeds this view any more. `session-start.mjs` (étude cloud-first, lot 1)
+ * only acts in a cloud session: Node from .nvmrc, npm install, and the network probe whose
+ * report lands in the session context. Its 300 s timeout covers a cold `npm install`.
  *
  * Same philosophy as the content pipeline: edit the SOURCE, run the build, never
  * hand-edit the output. `guard-generated.mjs` blocks the edit locally and
@@ -53,6 +55,18 @@ export function buildClaudeSettings({ policy }) {
       deny: (policy.deny ?? []).map((entry) => entry.rule),
     },
     hooks: {
+      SessionStart: [
+        {
+          matcher: "startup|resume",
+          hooks: [
+            {
+              type: "command",
+              command: "node .claude/hooks/session-start.mjs",
+              timeout: 300,
+            },
+          ],
+        },
+      ],
       PreToolUse: [
         {
           matcher: "Edit|Write|MultiEdit",
