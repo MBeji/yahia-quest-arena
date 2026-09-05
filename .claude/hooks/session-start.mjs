@@ -11,7 +11,7 @@
 //      sous le bon Node.
 //   2. Dépendances — `npm install` (jamais `npm ci`) si node_modules manque ou si
 //      package-lock.json est plus récent que ce qui est installé. Pose aussi les hooks husky.
-//   3. pgTAP — présent ou non (lot 4 : le script d'environnement l'installe).
+//   3. pgTAP — présent ou non (`npm run db:test:local` l'installe à la demande, lot 4).
 //   4. La sonde réseau — chaque domaine du lot 0 (scripts/cloud/allowed-domains.mjs) reçoit un
 //      HEAD via le proxy. Un « CONNECT 403 » est une politique réseau, pas une panne du site :
 //      la distinction que check-manuel-links a dû apprendre à faire sur le poste.
@@ -90,7 +90,7 @@ export function buildReport({ node, deps, pgtap, probes, durationMs }) {
       : deps.ran
         ? `dépendances : ${deps.packages ?? "?"} paquets installés (${secs(deps.seconds)})`
         : "dépendances : déjà en place",
-    `pgTAP : ${pgtap ? "présent" : "absent (lot 4 : script d'environnement)"}`,
+    `pgTAP : ${pgtap ? "présent" : "absent (npm run db:test:local l'installe)"}`,
     secs(durationMs / 1000),
   ];
   const blocked = probes.filter((p) => p.state !== "ok");
