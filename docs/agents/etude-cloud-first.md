@@ -265,6 +265,14 @@ arbitrage puis une exécution ; le lot 6 ferme.
 
 ### Lot 0 — Mohamed, depuis le téléphone, une fois (mur « réglage hors dépôt »)
 
+> **Constaté le 2026-09-05, en cours d'application depuis le téléphone.** L'environnement a été
+> créé sous le nom **« CloudAutonome »** (le nom est libre ; toute nouvelle session doit le
+> sélectionner dans l'icône nuage, sinon elle tourne dans « Default », resté en Trusted). Le champ
+> « Setup script » **n'apparaît pas dans l'application mobile** : le point 3 devient sans objet, le
+> lot 4 n'en dépend plus (pgTAP s'installe à la demande). Piège vu sur la capture : deux variables
+> saisies **sur une seule ligne**, jointes par « : » — le format `.env` exige une variable par
+> ligne, sinon la première porte tout le reste comme valeur.
+
 C'est l'unique lot qui lui revient. Cible exacte, dans l'ordre, tout dans un navigateur :
 
 1. **claude.ai/code → icône d'environnement → « Default » → réglages → Network access :
@@ -360,6 +368,15 @@ aucune campagne ne peut lire un manuel ; … — le lot 0 … n'est pas appliqu�
   « ~4 chapitres par session » se re-mesure en cloud, avec l'expiration de VM comme contrainte.
 
 ### Lot 4 — pgTAP en session cloud (session, ce dépôt) — indépendant
+
+> ✅ **Livré le 2026-09-05**, autrement que prévu : pas de script d'environnement (le champ
+> n'existe pas sur mobile), mais **une commande**, `npm run db:test:local`
+> ([`scripts/db/local/pgtap.sh`](../../scripts/db/local/pgtap.sh)), qui installe pgTAP si besoin,
+> crée le cluster jetable sous l'utilisateur `postgres` (`initdb` refuse root — la recette jouée
+> telle quelle en root rendait 211 échecs pour une seule cause), rejoue le shim et la chaîne, joue
+> `pg_prove`, et arrête tout. **Mesuré** : cluster 1 s, 211 migrations sans erreur en 10 s, 99
+> fichiers / 1 394 tests verts en 37 s, 48 s au total. K-5 atteint. Le playbook
+> [pgtap-en-local.md](./pgtap-en-local.md) porte la section « En session cloud ».
 
 - `scripts/cloud/setup-env.sh`, **versionné**, contenu du script d'environnement (`apt-get
 install -y postgresql-16-pgtap poppler-utils || true`, sous les cinq minutes) — le champ dans

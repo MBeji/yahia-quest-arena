@@ -1,4 +1,4 @@
-# Faire tourner la suite pgTAP **en local**, sans Docker
+# Faire tourner la suite pgTAP **en local ou en session cloud**, sans Docker
 
 > **Quand lire ceci** : dès qu'une session touche à `supabase/migrations/**` ou à
 > `supabase/tests/**`. Mesuré le 2026-08-25 (étude 30, cinq lots de SQL) : la suite complète —
@@ -47,6 +47,30 @@ l'essentiel du gain de vitesse.
 
 Pour repartir d'une base **vierge** — le seul état qui prouve la reconstructibilité —
 `createdb` un nouveau nom et rejouer les points 3 et 4. Quinze secondes.
+
+## En session cloud : une commande
+
+> Étude cloud-first, lot 4 (livré le 2026-09-05). La recette ci-dessus est devenue un script,
+> [`scripts/db/local/pgtap.sh`](../../scripts/db/local/pgtap.sh), branché en
+> `npm run db:test:local` — **hors** de `verify` et de `ci:verify` : ce n'est pas un gate de CI
+> (`db-tests.yml` le reste), c'est la boucle courte d'une session qui touche au SQL.
+
+Deux choses distinguent la VM cloud d'un poste, et le script les prend en charge :
+
+- **La VM démarre en root, et `initdb` refuse root.** Le cluster jetable est créé et piloté par
+  l'utilisateur `postgres` (`su postgres -s /bin/bash -c …`), puis interrogé en TCP avec
+  `--auth=trust` sur le port 55432 (`PGTAP_PORT` pour en changer). Constaté le 2026-09-04 : la
+  recette jouée telle quelle en root échoue à `initdb`, puis chaque migration échoue faute de
+  serveur, et `pg_prove` rend « No plan found » — trois rouges pour une seule cause.
+- **pgTAP n'est pas préinstallé**, et le champ « Setup script » de l'environnement n'apparaît
+  pas dans l'application mobile. Le script installe donc `postgresql-16-pgtap` lui-même quand
+  il est root (`archive.ubuntu.com` est dans la liste réseau par défaut) — une fois par VM,
+  ~30 s. Le hook de session (lot 1) dit `pgTAP : absent` tant que ce n'est pas fait.
+
+Mesuré en session cloud (4 vCPU) le 2026-09-05 : cluster en **1 s**, **211 migrations** rejouées
+sans erreur en **10 s**, **99 fichiers / 1 394 tests** verts en **37 s** — **48 s** au total, contre
+5-8 min de boucle CI. `PGTAP_KEEP=1` garde le cluster vivant pour typer les RPC ou requêter
+(section suivante) ; le script dit alors comment l'arrêter.
 
 ## Ce que le shim doit contenir, et pourquoi
 

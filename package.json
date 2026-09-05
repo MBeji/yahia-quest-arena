@@ -34,6 +34,7 @@
     "content:emit": "node --experimental-strip-types scripts/content/build.ts --sql-dir sql/content",
     "db:inventory-content": "node scripts/db/inventory-content-migrations.mjs",
     "db:check-chain": "node scripts/db/check-migration-chain.mjs",
+    "db:test:local": "bash scripts/db/local/pgtap.sh",
     "content:qa": "node --experimental-strip-types scripts/content/qa.ts",
     "content:qa:strict": "node --experimental-strip-types scripts/content/qa.ts --strict",
     "content:audit": "node --experimental-strip-types scripts/content/audit-program.ts",
