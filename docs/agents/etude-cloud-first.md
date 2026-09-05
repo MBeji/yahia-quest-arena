@@ -371,6 +371,22 @@ aucune campagne ne peut lire un manuel ; … — le lot 0 … n'est pas appliqu�
 
 ### Lot 3 — La campagne de contenu depuis le cloud (session, dépôt privé + celui-ci) — après le lot 0
 
+> ✅ **Moteur livré le 2026-09-05, pilote en attente du lot 0.** `npm run content:manuel:fetch --
+<code> [--render --pages a-b --dpi 150]` (`scripts/content/fetch-manuel.ts`, helpers purs dans
+> `src/shared/content/manuel-fetch.ts`, 16 tests) : l'URL se dérive du code, le fichier va dans un
+> cache privé de l'utilisateur (jamais le répertoire temporaire partagé, jamais d'écrasement), le
+> transfert est fait par `curl` — proxy natif, écriture en flux, et les octets du réseau ne passent
+> pas par Node : CodeQL avait signalé la version `fetch` → `writeFileSync` (« network data written
+> to file », « insecure temporary file ») —, la signature `%PDF-` est vérifiée après écriture et ce
+> qui n'est pas un PDF est supprimé, le rendu passe par `pdftoppm`.
+> **Constaté** : le `fetch` de Node ignore le proxy de la VM — un hôte même autorisé rend 403
+> `host_not_allowed` en direct, 200 via le proxy avec `NODE_USE_ENV_PROXY=1` ; le hook de session
+> l'exporte désormais. Un hôte refusé par la politique surfaces comme `Proxy response (403) !== 200
+when HTTP Tunneling`, deux causes sous « fetch failed » : la commande le traduit en « lot 0 non
+> appliqué ». Le connecteur Drive est actif dans la session ; ce qu'il rend d'un PDF reste à
+> constater au pilote. Le pilote (un chapitre de bout en bout) se joue dans une session lancée sur
+> l'environnement « CloudAutonome », une fois la liste de domaines enregistrée.
+
 - **Mesure d'abord** : le connecteur Drive rend-il les octets d'un PDF ? Un `HEAD` sur
   `CNP_MANUEL_BASE_URL/102905P00.pdf` répond-il 200 depuis la session ?
 - Un script `content:manuel:fetch <code>` (moteur, ici) qui télécharge dans le scratch de la
@@ -404,6 +420,15 @@ install -y postgresql-16-pgtap poppler-utils || true`, sous les cinq minutes) �
 
 ### Lot 5 — Les horloges deviennent des routines (arbitrage, puis session)
 
+> ✅ **Livré le 2026-09-05, sauf l'arbitrage.** La garde après push est écrite dans
+> [passation.md](../passation.md) §7 point 10. La **re-sonde hebdomadaire de STATUS.md** est une
+> routine cloud (lundi 07:00 UTC, environnement « CloudAutonome », notification push à la fin) :
+> elle re-constate `main`, les PR, les rouges et les études au privé, et n'ouvre une PR que si le
+> topo a dérivé. ⚠️ Créée depuis une session, elle part **sans connecteurs** : si les outils GitHub
+> lui manquent, l'éditer sur claude.ai/code/routines et y cocher le connecteur GitHub. L'arbitrage
+> « porter les trois gardes agent en routines » reste ouvert, porté par l'issue #1002 avec les dates
+> des identifiants.
+
 - **La garde après push** (DoD §8) documentée pour le cloud dans [passation.md](../passation.md)
   §7 : abonnement aux événements de la PR + réveil différé, et ce qu'une VM récupérée restaure.
 - **La re-sonde hebdomadaire de `STATUS.md`** : la passe du 2026-09-04 a trouvé **68 PR de
@@ -417,6 +442,12 @@ install -y postgresql-16-pgtap poppler-utils || true`, sous les cinq minutes) �
   labels, dispatch) se fait par outils MCP. À trancher avec le coût mesuré sur une semaine.
 
 ### Lot 6 — Décommission du poste (session, ce dépôt)
+
+> 🟡 **Entamé le 2026-09-05.** [poste-windows.md](./poste-windows.md) porte son en-tête « playbook
+> hérité » ; `STATUS.md` §1 ne fait plus du wrapper `YahiaAcademy/` une condition ; l'issue
+> [#1002](https://github.com/MBeji/yahia-quest-arena/issues/1002) porte les dates du PAT (2026-10-04)
+> et du jeton OAuth (à constater) avec le geste exact. Restent K-1 et K-2 (30 jours) et le pilote du
+> lot 3 avant de clore l'étude.
 
 - [poste-windows.md](./poste-windows.md) reçoit un en-tête « playbook **hérité** — un poste local
   n'est plus le cas nominal depuis le 2026-09-xx ; ces pièges restent vrais pour qui en garde

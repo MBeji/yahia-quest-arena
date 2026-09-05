@@ -93,9 +93,10 @@ export function classifyProbe({ exitCode, httpCode = "", stderr = "" }) {
 const secs = (n) => `${Math.round(n)} s`;
 
 /** Deux lignes, lues par la session : l'amorçage, puis le réseau — et ce que chaque refus interdit. */
-export function buildReport({ node, deps, pgtap, probes, durationMs }) {
+export function buildReport({ node, nodeProxy = false, deps, pgtap, probes, durationMs }) {
   const head = [
     node.ok ? `Node ${node.version} (${node.how})` : `Node : ${node.error}`,
+    ...(nodeProxy ? ["fetch Node via le proxy (NODE_USE_ENV_PROXY=1)"] : []),
     !deps.ok
       ? `dépendances : ${deps.error}`
       : deps.ran
@@ -199,6 +200,19 @@ function ensureDeps(root, env, binDir) {
   };
 }
 
+/**
+ * Le `fetch` de Node ignore HTTPS_PROXY par défaut : dans la VM, un `fetch` direct reçoit un 403
+ * du bac à sable (`x-deny-reason: host_not_allowed`) MÊME pour un hôte autorisé, pendant que
+ * `curl` passe. Avec NODE_USE_ENV_PROXY=1, Node emprunte le proxy comme curl (constaté le
+ * 2026-09-05 : api.github.com 403 sans, 200 avec). Exporté dans la session pour que
+ * `content:manuel:fetch`, `content:manuel:check` et tout script Node voient le même réseau.
+ */
+export function exportNodeProxy(env) {
+  if (!env.HTTPS_PROXY || !env.CLAUDE_ENV_FILE || env.NODE_USE_ENV_PROXY === "1") return false;
+  appendFileSync(env.CLAUDE_ENV_FILE, "export NODE_USE_ENV_PROXY=1\n");
+  return true;
+}
+
 function hasPgTap(env) {
   if (existsSync(PGTAP_CONTROL)) return true;
   return (env.PATH ?? "").split(":").some((dir) => dir && existsSync(join(dir, "pg_prove")));
@@ -241,10 +255,13 @@ async function main() {
   const t0 = Date.now();
   const env = process.env;
   const node = attempt("nvm", () => ensureNode(ROOT, env));
+  const nodeProxy = attempt("proxy", () => exportNodeProxy(env)) === true;
   const deps = attempt("npm install", () => ensureDeps(ROOT, env, node.binDir ?? null));
   const pgtap = hasPgTap(env);
   const probes = await Promise.all(ALLOWED_DOMAINS.map(probeDomain));
-  process.stdout.write(buildReport({ node, deps, pgtap, probes, durationMs: Date.now() - t0 }));
+  process.stdout.write(
+    buildReport({ node, nodeProxy, deps, pgtap, probes, durationMs: Date.now() - t0 }),
+  );
 }
 
 // CLI only — the pure helpers above stay importable from tests.

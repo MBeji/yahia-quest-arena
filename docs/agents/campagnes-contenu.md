@@ -10,12 +10,28 @@
 > une leçon de process, pas du contenu : elle vaut quel que soit le dépôt où tourne la session.
 > Les règles d'écriture, elles, vivent avec les skills, au privé.
 
-## Le corpus source est hors dépôt
+## Le corpus source est à la source — plus sur un poste
 
-Les manuels et documents CNP vivent dans le dossier **wrapper** `YahiaAcademy/` (hors git, non
-versionné). Une campagne tourne donc **sur ce poste**, pas dans un runner CI : la session doit
-être lancée localement avec l'accès au corpus (`--add-dir`). Une session headless sans
-abonnement échoue (« Not logged in »), et une clé API n'est pas une alternative acceptée ici.
+Les manuels sont **publics chez le CNP** (`CNP_MANUEL_BASE_URL`, `src/shared/content/manuel-cnp.ts`)
+et ne se copient nulle part : licence (`LICENSE-CONTENT.md`) et doctrine « en lien plutôt qu'en
+copie ». Une session — cloud ou locale — les télécharge **par code** dans un dossier jetable, puis
+rend les pages en images et les lit en vision (étude cloud-first, lot 3) :
+
+```bash
+npm run content:manuel:fetch -- 102905 --render --pages 18-24   # → ~/.cache/yqa-manuels/102905P00.pdf + PNG
+```
+
+L'URL se dérive du code, jamais saisie ; rien n'entre dans git — le cache est privé à
+l'utilisateur, jamais le répertoire temporaire partagé, et un fichier existant n'est pas écrasé.
+Le transfert est fait par `curl`, qui suit le proxy de la session nativement. En session cloud,
+l'environnement doit autoriser `www.cnp.com.tn` (lot 0 de l'étude) — sinon la commande le **dit** :
+« refusé par la politique réseau de l'environnement », pas « le CNP est tombé ». Pour les scripts
+qui passent par le `fetch` de Node (`content:manuel:check`), le hook de session exporte
+`NODE_USE_ENV_PROXY=1`, sans quoi Node ignore le proxy de la plateforme et échoue sur tout hôte.
+Le wrapper `YahiaAcademy/` du poste n'est plus une condition ; ce qui n'est pas au
+CNP (documents du ministère, notes, captures) vit sur Google Drive et se lit par le connecteur.
+Une session headless sans abonnement échoue toujours (« Not logged in »), et une clé API n'est
+pas une alternative acceptée ici.
 
 ## Budget de session
 
