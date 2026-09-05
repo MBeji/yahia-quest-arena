@@ -51,6 +51,9 @@ export function buildClaudeSettings({ policy }) {
     $schema: "https://json.schemastore.org/claude-code-settings.json",
     $comment: DO_NOT_EDIT,
     permissions: {
+      // Le mode de démarrage (étude cloud-first, lot 2) : `acceptEdits` = pas de classifieur,
+      // les règles ci-dessous décident. Absent de la policy → l'outil garde son défaut.
+      ...(policy.mode?.default ? { defaultMode: policy.mode.default } : {}),
       allow: flattenAllow(policy.allow),
       deny: (policy.deny ?? []).map((entry) => entry.rule),
     },

@@ -206,6 +206,52 @@ exclut. La liste est **close** et ne contient que des binaires qui ne savent pas
 — et le même risque résiduel de commande composée — que `Bash(ls:*)` et `Bash(node scripts/:*)`,
 acceptés avant elle.
 
+### 2026-09-05 — tout est autorisé : l'option C de l'étude cloud-first, première exception à la règle de cette section
+
+L'[étude cloud-first](./etude-cloud-first.md) (lot 2) posait un arbitrage : en session cloud, la
+surface GitHub est le serveur MCP `github`, dont l'outil de dispatch ne connaît **pas** les noms
+de workflows — la granularité « un par un » d'`ops-dispatch` n'existe pas, et il n'y a pas de
+troisième chemin (pas de `gh`, REST brut refusé par le proxy). Trois options ont été mises devant
+Mohamed avec leurs contreparties : **A** garder le dispatch et descendre la protection des deux
+workflows interdits dans les workflows eux-mêmes (une variable de dépôt qu'aucune session cloud ne
+peut poser) ; **B** refuser l'outil de dispatch aux sessions cloud, donc un clic humain sur chaque
+rollback et chaque publication de corpus ; **C** aucun garde, tout autorisé. Il a choisi **C**, en
+ces termes : « tout est autorisé, je veux que Claude soit autonome partout et ait tous les droits,
+je prends le risque ».
+
+Fait notable : la tentative d'appliquer A a été **refusée par le classifieur d'auto-mode** —
+éditer `db-migrate-prod.yml` et `release.yml` par script a été bloqué. Le mur nommé en tête de ce
+fichier s'est dressé devant le garde qui voulait le compléter. Puis, en appliquant C,
+`npm run harness:sync` — la commande qui régénère `.claude/settings.json` — a été refusé à son
+tour, exactement comme le 2026-08-23 : une famille `allow` dans la policy ne lève pas ce mur. La
+seule parade a été de sortir la session du mode auto (« Accept edits », depuis le téléphone) le
+temps de régénérer la vue — une règle de permission écrite dans le dépôt ne suffit pas.
+
+Ce que C ouvre : la famille **`cloud-autonomy`** — `Bash` (toute commande), `mcp__github` (tout
+l'outillage GitHub, dispatch compris), `mcp__Claude_Code_Remote` (sessions, réveils différés,
+abonnements de PR), `mcp__Google_Drive` (les documents de classe B de l'étude). Ce que C ne touche
+pas : les **huit dénis** restent et gagnent toujours (`db push`/`db reset`, `push-prod.mjs`,
+`gh secret delete`, le dispatch par `gh` des deux workflows de prod) ; les hooks husky sur tout
+`git push` ; l'absence d'identifiants de prod en session ; le classifieur.
+
+Ce qui fait tenir C, en pratique, n'est pas la famille : c'est le **mode de démarrage**. La doc
+de l'outil est explicite — en mode auto, une règle large comme `Bash` est **suspendue** et le
+classifieur juge chaque commande ; et le classifieur ne lit sa configuration que hors du dépôt
+(`~/.claude/settings.json`, réglages managés), jamais dans `.claude/settings.json`, précisément
+pour qu'un dépôt ne puisse pas l'assouplir. Le levier légitime est `permissions.defaultMode`, que
+les sessions cloud honorent : la policy porte donc `mode.default = acceptEdits`, compilé dans la
+vue — les sessions de ce dépôt démarrent **sans classifieur**, et ce sont ces règles qui décident.
+Dans une session déjà ouverte en mode auto, le sélecteur de mode reste le seul geste.
+
+**C'est la première exception à la règle écrite en tête de cette section** — « ouvrir une
+famille n'ouvre jamais ce que la liste de dénis protégeait » — et elle est assumée : depuis une
+session cloud, `mcp__github` peut dispatcher `db-migrate-prod.yml` et `release.yml`, merger une PR
+à la main (`merge_pull_request`) ou écrire un fichier par l'API sans passer par les hooks
+(`push_files`). Rien ne l'interdit plus mécaniquement ; ce qui l'interdit est la **norme** : la
+prod migre au merge (DoD §7), personne ne merge à la main (2026-07-12), le seul chemin d'écriture
+est `git push`. Le jour où l'une de ces normes cède, la réponse est ici : remettre le garde de
+l'option A, ou passer à l'option B — deux lignes de `policy.json` et deux `if:` de workflow.
+
 ## Ce que le mur « GitHub Free » coûte vraiment, et ce qu'on a construit dessous
 
 L'arbitrage du 2026-08-24 (rester en gratuit) ne rend pas le dépôt de corpus manuel : il
