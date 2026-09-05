@@ -345,6 +345,7 @@ export const en: TranslationKeys = {
     recallChip: "🧠 Recall",
     recallLockedHint: "First complete the mission at 100%",
     recallLockedHintAnon: "Sign in and complete the mission at 100%",
+    unrestrictedNav: "Test access: open any question",
     savePending: "Not saved yet — retrying",
     saveDone: "Work saved",
   },

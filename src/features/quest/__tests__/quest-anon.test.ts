@@ -111,7 +111,14 @@ describe("quest anonymous content reads (L0.4b)", () => {
 
     const res = await callSubject({ subjectId: "subj-1" });
 
-    expect(res.viewer).toEqual({ level: 0, isPremium: false, hasEntitlement: true });
+    // `unrestricted` (accès de test, compte admin) est faux pour un anonyme — et sans
+    // appel RPC : `isUnrestrictedViewer` ne sonde jamais un visiteur sans compte.
+    expect(res.viewer).toEqual({
+      level: 0,
+      isPremium: false,
+      hasEntitlement: true,
+      unrestricted: false,
+    });
     expect(res.bestByExercise).toEqual({});
     expect(res.quizPassedByChapter).toEqual({ ch1: false });
     expect(res.exercises).toHaveLength(2);

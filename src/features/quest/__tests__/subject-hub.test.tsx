@@ -10,6 +10,7 @@ vi.mock("@tanstack/react-router", () => ({
 import { SubjectHub } from "../components/subject-hub";
 import { QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
 import { fr } from "@/lib/i18n/fr";
+import { frPublic } from "@/lib/i18n/fr-public";
 
 const subject = {
   name_fr: "Mathématiques",
@@ -214,6 +215,32 @@ describe("SubjectHub", () => {
       />,
     );
     expect(container.querySelector('[data-testid="hub-resume"]')).toBeNull();
+  });
+
+  it("accès de test (admin) : le bandeau dit pourquoi tout est ouvert — absent pour un compte ordinaire", () => {
+    const { rerender } = render(
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        quizPassedByChapter={{ c1: true, c2: true }}
+        isAuthenticated
+        unrestricted
+      />,
+    );
+    expect(screen.getByTestId("hub-unrestricted")).toHaveTextContent(
+      frPublic.subject.unrestrictedBanner,
+    );
+    rerender(
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        quizPassedByChapter={{ c1: true, c2: true }}
+        isAuthenticated
+      />,
+    );
+    expect(screen.queryByTestId("hub-unrestricted")).not.toBeInTheDocument();
   });
 
   it("renders an Arabic subject right-to-left", () => {

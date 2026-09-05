@@ -355,6 +355,11 @@ export type TranslationKeys = {
     recallChip: string;
     recallLockedHint: string;
     recallLockedHintAnon: string;
+    /**
+     * Accès de test (compte admin, 2026-09-05) : intitulé du navigateur de
+     * questions, qui laisse ouvrir n'importe quelle question de la mission.
+     */
+    unrestrictedNav: string;
     // Filet de sauvegarde : ce que voit l'élève quand sa soumission n'est
     // pas encore passée. Voir `quest-save-status.tsx`.
     savePending: string;
@@ -1214,6 +1219,8 @@ export type TranslationKeys = {
       todo: string;
       unlocksChapter: string;
       quizContract: string;
+      /** Bandeau du compte de test (admin) : toutes les missions ouvertes, sans quiz ni ordre. */
+      unrestrictedBanner: string;
       /** En-tête du groupe fourre-tout quand une matière n'a rattaché qu'une partie de ses chapitres à un domaine. */
       otherChapters: string;
       /** Avancement d'un domaine, en chapitres terminés — `{done}`, `{total}`. */

@@ -60,6 +60,7 @@ function MatierePage() {
       parcours={data.parcours}
       recall={data.recall}
       isAuthenticated={!!user}
+      unrestricted={data.viewer.unrestricted}
     />
   );
 }

@@ -124,7 +124,7 @@ describe("gamification.quest — getSubject", () => {
       exercises: exercisesData,
       bestByExercise: { "ex-1": 85 },
       quizPassedByChapter: {},
-      viewer: { level: 0, isPremium: false, hasEntitlement: true },
+      viewer: { level: 0, isPremium: false, hasEntitlement: true, unrestricted: false },
       // Recall availability (étude 17) — empty here: the mocked RPC resolves nothing.
       recall: { eligibleByExercise: {}, unlockedByExercise: {}, bestByExercise: {} },
       // Level anchor (étude 15 lot 7) — null here: the mocked RPC resolves no parcours.
@@ -187,5 +187,85 @@ describe("gamification.quest — getSubject", () => {
 
     expect(result.bestByExercise).toEqual({});
     expect(result.subject).toEqual(subjectData);
+  });
+
+  // Accès de test (compte admin, 2026-09-05) : une matière SCOLAIRE dont le chapitre
+  // porte un quiz, vue par un admin puis par un élève sans tentative. La RPC de
+  // démarrage décide (pgTAP 97) ; ici on vérifie que le hub AFFICHE la même chose.
+  function mockSchoolWorld(tables: string[]) {
+    mockFrom.mockImplementation((table: string) => {
+      tables.push(table);
+      if (table === "subjects")
+        return mockQuery({
+          id: "subj-1",
+          name_fr: "Math",
+          grade_id: "g-9eme",
+          theme_id: "ecole-tn",
+        });
+      if (table === "chapters") return mockQuery([{ id: "ch-1", title: "Chapter 1" }]);
+      if (table === "exercises")
+        return mockQuery([
+          { id: "ex-1", chapter_id: "ch-1", mode: "quiz", title: "Quiz" },
+          { id: "ex-2", chapter_id: "ch-1", mode: "practice", title: "Mission" },
+        ]);
+      if (table === "profiles") return mockQuery({ level: 3 });
+      return mockQuery([]);
+    });
+  }
+  function mockRpcs(isAdmin: boolean) {
+    mockRpc.mockImplementation((fn: string) => {
+      if (fn === "is_admin") return { data: isAdmin, error: null };
+      if (fn === "get_recall_availability")
+        return {
+          data: [
+            { exercise_id: "ex-2", eligible_count: 3, unlocked: false, best_recall_pct: null },
+          ],
+          error: null,
+        };
+      return { data: null, error: null };
+    });
+  }
+  type HubView = {
+    quizPassedByChapter: Record<string, boolean>;
+    recall: { unlockedByExercise: Record<string, boolean> };
+    viewer: Record<string, unknown>;
+  };
+
+  it("compte de test (admin) : toutes les portes affichées ouvertes, sans lire les tentatives", async () => {
+    const tables: string[] = [];
+    mockSchoolWorld(tables);
+    mockRpcs(true);
+
+    const { getSubject } = await import("@/features/quest");
+    const result = (await (getSubject as unknown as (d: unknown) => Promise<unknown>)({
+      subjectId: "subj-1",
+    })) as HubView;
+
+    expect(result.quizPassedByChapter).toEqual({ "ch-1": true });
+    expect(result.recall.unlockedByExercise).toEqual({ "ex-2": true });
+    expect(result.viewer).toEqual({
+      level: 3,
+      isPremium: false,
+      hasEntitlement: true,
+      unrestricted: true,
+    });
+    // La porte du quiz est levée d'office : la lecture des tentatives n'a pas lieu.
+    expect(tables).not.toContain("attempts");
+  });
+
+  it("témoin : le même chapitre reste fermé à un élève sans tentative, et ses tentatives sont lues", async () => {
+    const tables: string[] = [];
+    mockSchoolWorld(tables);
+    mockRpcs(false);
+
+    const { getSubject } = await import("@/features/quest");
+    const result = (await (getSubject as unknown as (d: unknown) => Promise<unknown>)({
+      subjectId: "subj-1",
+    })) as HubView;
+
+    expect(result.quizPassedByChapter).toEqual({ "ch-1": false });
+    expect(result.recall.unlockedByExercise).toEqual({ "ex-2": false });
+    expect(result.viewer).toMatchObject({ unrestricted: false });
+    expect(tables).toContain("attempts");
   });
 });

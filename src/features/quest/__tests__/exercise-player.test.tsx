@@ -453,3 +453,96 @@ describe("ExercisePlayer — l'échec de soumission est raconté", () => {
     expect(mockReport).not.toHaveBeenCalled();
   });
 });
+
+// ---------------------------------------------------------------------------
+// Accès de test (compte admin, 2026-09-05) : le navigateur de questions.
+// `getExercise().unrestricted` est la seule chose qui l'allume — la RPC de
+// démarrage a déjà levé les portes côté serveur (pgTAP 97), le lecteur ne fait
+// qu'offrir le saut libre. Les options portent des mots, pas des chiffres : les
+// pastilles du navigateur affichent « 1 », « 2 »… et un `getByText("2")`
+// ambigu rendrait le test faux pour la mauvaise raison.
+// ---------------------------------------------------------------------------
+function unrestrictedExerciseData() {
+  return {
+    ...exerciseData(),
+    unrestricted: true,
+    questions: [
+      {
+        id: "q1",
+        prompt: "1 + 1 ?",
+        options: [
+          { id: "a", text: "deux" },
+          { id: "b", text: "trois" },
+        ],
+      },
+      {
+        id: "q2",
+        prompt: "2 + 2 ?",
+        options: [
+          { id: "a", text: "quatre" },
+          { id: "b", text: "cinq" },
+        ],
+      },
+    ],
+  };
+}
+
+describe("ExercisePlayer — accès de test (compte admin)", () => {
+  beforeEach(() => {
+    mockGetExercise.mockReset().mockResolvedValue(unrestrictedExerciseData());
+    mockGetSubject.mockReset().mockResolvedValue({ chapters: [], exercises: [] });
+  });
+
+  it("sans accès de test, aucun navigateur : le lecteur reste question par question", async () => {
+    mockGetExercise.mockResolvedValue({ ...unrestrictedExerciseData(), unrestricted: false });
+    renderPlayer(anonStrategy());
+    expect(await screen.findByText("1 + 1 ?")).toBeInTheDocument();
+    expect(screen.queryByTestId("question-navigator")).not.toBeInTheDocument();
+  });
+
+  it("ouvre n'importe quelle question sans répondre aux précédentes", async () => {
+    renderPlayer(anonStrategy());
+    expect(await screen.findByText("1 + 1 ?")).toBeInTheDocument();
+    const nav = screen.getByTestId("question-navigator");
+    expect(nav).toHaveTextContent("Accès test");
+    // La pastille courante est marquée et inerte ; l'autre saute.
+    expect(screen.getByTestId("question-nav-1")).toHaveAttribute("aria-current", "step");
+    expect(screen.getByTestId("question-nav-1")).toBeDisabled();
+    fireEvent.click(screen.getByTestId("question-nav-2"));
+    expect(await screen.findByText("2 + 2 ?")).toBeInTheDocument();
+    expect(screen.getByText("Question 2 / 2")).toBeInTheDocument();
+    expect(screen.getByTestId("question-nav-2")).toHaveAttribute("aria-current", "step");
+  });
+
+  it("une question re-répondue REMPLACE sa réponse : une réponse par question à la soumission", async () => {
+    const submit = vi.fn().mockResolvedValue({ ...neutralResult, total: 2, correct: 2 });
+    renderPlayer(anonStrategy({ submit }));
+
+    // Q1 répondue « deux » (a) → le lecteur avance sur Q2, la pastille 1 est cochée.
+    fireEvent.click(await screen.findByText("deux"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+    expect(await screen.findByText("2 + 2 ?")).toBeInTheDocument();
+    expect(screen.getByTestId("question-nav-1")).toHaveTextContent("✓");
+
+    // Retour sur Q1 : la réponse donnée est présélectionnée, on la change pour « trois » (b).
+    fireEvent.click(screen.getByTestId("question-nav-1"));
+    expect(await screen.findByText("1 + 1 ?")).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: /deux/ })).toBeChecked();
+    fireEvent.click(screen.getByText("trois"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+
+    // Q2 répondue « quatre » (a) → dernière question, la quête se soumet.
+    fireEvent.click(await screen.findByText("quatre"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+    expect(await screen.findByTestId("quest-score")).toBeInTheDocument();
+
+    expect(submit).toHaveBeenCalledTimes(1);
+    const { answers } = submit.mock.calls[0][0] as {
+      answers: Array<{ questionId: string; choice: string }>;
+    };
+    expect(answers).toEqual([
+      { questionId: "q1", choice: "b" },
+      { questionId: "q2", choice: "a" },
+    ]);
+  });
+});
