@@ -3,76 +3,116 @@
  * pages en images pour la lecture en vision — étude cloud-first, lot 3
  * (docs/agents/etude-cloud-first.md §7, docs/agents/campagnes-contenu.md).
  *
- *   npm run content:manuel:fetch -- 102905                          # → $TMPDIR/yqa-manuels/102905P00.pdf
+ *   npm run content:manuel:fetch -- 102905                          # → ~/.cache/yqa-manuels/102905P00.pdf
  *   npm run content:manuel:fetch -- 102905 --render --pages 18-24   # + 102905P00-p-18.png … -24.png
  *   npm run content:manuel:fetch -- 102105P01 --out /var/tmp/manuels --dpi 120
  *
  * Trois propriétés, les mêmes que pour le lien du lecteur (manuel-cnp.ts) :
  *   1. l'URL se DÉRIVE du code — jamais saisie : une coquille produit un fichier manquant, pas
  *      une destination arbitraire ;
- *   2. rien n'entre dans git — le dossier de sortie est jetable, par défaut sous le répertoire
- *      temporaire ; les manuels sont l'œuvre du CNP (LICENSE-CONTENT.md), on lie, on ne copie pas ;
+ *   2. rien n'entre dans git — le dossier de sortie est un cache PRIVÉ de l'utilisateur
+ *      (`~/.cache/yqa-manuels`, créé en 0700, jamais le répertoire temporaire partagé), et un
+ *      fichier existant n'est jamais écrasé ; les manuels sont l'œuvre du CNP
+ *      (LICENSE-CONTENT.md), on lie, on ne copie pas ;
  *   3. un refus réseau se DIT : en session cloud, un hôte hors liste blanche est refusé par le
  *      proxy de la plateforme, et le message nomme le lot 0 de l'étude — pas « le CNP est tombé ».
  *
- * Le rendu passe par `pdftoppm` (poppler — `npm run db:test:local` l'installe avec pgTAP, ou
+ * Le transfert est fait par `curl` (présent sur la VM cloud comme sur Windows) : il suit le proxy
+ * de la session nativement, écrit en flux, et Node ne manipule jamais les octets du réseau —
+ * il vérifie la signature `%PDF-` du fichier écrit et supprime ce qui n'est pas un PDF. Le rendu
+ * passe par `pdftoppm` (poppler — `npm run db:test:local` l'installe avec pgTAP, ou
  * `apt-get install poppler-utils`) ; sans lui, la commande dit quoi installer.
  *
  * Code de sortie : 0 téléchargé (et rendu) ; 1 code invalide ou erreur d'outillage ; 2 le CNP
  * ou le réseau ont refusé — le message dit lequel.
  */
-import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { execFileSync, spawnSync } from "node:child_process";
+import {
+  closeSync,
+  existsSync,
+  mkdirSync,
+  openSync,
+  readSync,
+  readdirSync,
+  statSync,
+  unlinkSync,
+} from "node:fs";
+import { homedir } from "node:os";
 import { basename, dirname, join } from "node:path";
-import { argv, env, exit, stderr, stdout } from "node:process";
+import { argv, exit, stderr, stdout } from "node:process";
 import { pathToFileURL } from "node:url";
 import {
-  classifyFetchError,
-  classifyResponse,
+  type CurlOutcome,
+  type Failure,
+  classifyCurlFailure,
+  classifyDownloadedHead,
+  curlArgs,
+  parseCurlReport,
   parsePages,
   planManuelDownload,
   renderArgs,
-  type Failure,
 } from "../../src/shared/content/manuel-fetch.ts";
 
 export type DownloadResult =
   { ok: true; file: string; bytes: number; ms: number } | { ok: false; failure: Failure };
 
-type DownloadOptions = {
-  fetchImpl?: typeof fetch;
-  environment?: { HTTPS_PROXY?: string; NODE_USE_ENV_PROXY?: string };
-  timeoutMs?: number;
+export type CurlRunner = (args: string[]) => CurlOutcome;
+
+/** curl sans shell : les arguments sont un tableau, l'URL et le chemin ne traversent rien. */
+const runCurl: CurlRunner = (args) => {
+  const r = spawnSync("curl", args, { encoding: "utf8" });
+  return { status: r.error ? null : r.status, stdout: r.stdout ?? "", stderr: r.stderr ?? "" };
 };
 
+/** Les premiers octets d'un fichier, pour la signature. */
+function readHead(file: string, length = 8): Uint8Array {
+  const fd = openSync(file, "r");
+  try {
+    const buf = new Uint8Array(length);
+    const n = readSync(fd, buf, 0, length, 0);
+    return buf.subarray(0, n);
+  } finally {
+    closeSync(fd);
+  }
+}
+
+function removeIfExists(file: string): void {
+  if (existsSync(file)) unlinkSync(file);
+}
+
 /**
- * Télécharge `url` dans `file`. Le corps est lu en mémoire (un manuel pèse 5 à 40 Mo) pour
- * vérifier la signature `%PDF-` AVANT d'écrire : une page d'erreur ne devient jamais un
- * « manuel » sur le disque. Toute exception est classée, jamais relancée telle quelle.
+ * Télécharge `url` dans `file` via curl. Le dossier est créé privé (0700) ; un fichier déjà
+ * présent n'est jamais écrasé ; un téléchargement qui échoue ou qui n'est pas un PDF ne laisse
+ * rien derrière lui.
  */
-export async function downloadManuel(
+export function downloadManuel(
   url: string,
   file: string,
-  { fetchImpl = fetch, environment = env, timeoutMs = 120_000 }: DownloadOptions = {},
-): Promise<DownloadResult> {
-  const t0 = Date.now();
-  let res: Response;
-  try {
-    res = await fetchImpl(url, { redirect: "follow", signal: AbortSignal.timeout(timeoutMs) });
-  } catch (err) {
-    return { ok: false, failure: classifyFetchError(err, environment) };
+  { run = runCurl, timeoutS = 300 } = {},
+): DownloadResult {
+  if (existsSync(file)) {
+    return {
+      ok: false,
+      failure: {
+        kind: "exists",
+        message: `${file} existe déjà — relancer avec un autre --out pour re-télécharger`,
+      },
+    };
   }
-  const bytes = new Uint8Array(await res.arrayBuffer());
-  const failure = classifyResponse({
-    status: res.status,
-    denyReason: res.headers.get("x-deny-reason"),
-    contentType: res.headers.get("content-type"),
-    head: bytes.subarray(0, 8),
-  });
-  if (failure) return { ok: false, failure };
-  mkdirSync(dirname(file), { recursive: true });
-  writeFileSync(file, bytes);
-  return { ok: true, file, bytes: bytes.length, ms: Date.now() - t0 };
+  mkdirSync(dirname(file), { recursive: true, mode: 0o700 });
+  const t0 = Date.now();
+  const outcome = run(curlArgs(url, file, timeoutS));
+  if (outcome.status !== 0) {
+    removeIfExists(file);
+    return { ok: false, failure: classifyCurlFailure(outcome) };
+  }
+  const { contentType } = parseCurlReport(outcome.stdout);
+  const failure = classifyDownloadedHead(readHead(file), contentType);
+  if (failure) {
+    removeIfExists(file);
+    return { ok: false, failure };
+  }
+  return { ok: true, file, bytes: statSync(file).size, ms: Date.now() - t0 };
 }
 
 /** Rend les pages en PNG avec pdftoppm ; rend la liste des fichiers produits. */
@@ -91,6 +131,11 @@ export function renderPages(
     .map((name) => join(dirname(file), name));
 }
 
+/** Le cache privé de l'utilisateur — jamais le répertoire temporaire partagé. */
+export function defaultOutDir(home = homedir()): string {
+  return join(home, ".cache", "yqa-manuels");
+}
+
 function readFlag(args: string[], name: string): string | undefined {
   const i = args.indexOf(name);
   return i >= 0 ? args[i + 1] : undefined;
@@ -107,8 +152,7 @@ async function main(): Promise<void> {
     );
     exit(1);
   }
-  const outDir = readFlag(args, "--out") ?? join(tmpdir(), "yqa-manuels");
-  const plan = planManuelDownload(code, outDir);
+  const plan = planManuelDownload(code, readFlag(args, "--out") ?? defaultOutDir());
   if (!plan) {
     stderr.write(
       `[manuel] ✗ code « ${code} » invalide — un code CNP est alphanumérique (102905, 102105P01).\n`,
@@ -128,7 +172,7 @@ async function main(): Promise<void> {
       `[manuel] déjà présent : ${plan.file} (relancer avec un autre --out pour re-télécharger)\n`,
     );
   } else {
-    const result = await downloadManuel(plan.url, plan.file);
+    const result = downloadManuel(plan.url, plan.file);
     if (!result.ok) {
       stderr.write(`[manuel] ✗ ${result.failure.kind} : ${result.failure.message}\n`);
       exit(2);

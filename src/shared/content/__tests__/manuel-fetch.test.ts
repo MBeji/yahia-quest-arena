@@ -1,15 +1,18 @@
 import { describe, expect, it, vi } from "vitest";
-import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { downloadManuel } from "../../../../scripts/content/fetch-manuel.ts";
+import { defaultOutDir, downloadManuel } from "../../../../scripts/content/fetch-manuel.ts";
 import { CNP_MANUEL_BASE_URL } from "../manuel-cnp";
 import {
+  CURL_USER_AGENT,
   NETWORK_POLICY_MESSAGE,
-  classifyFetchError,
-  classifyResponse,
+  classifyCurlFailure,
+  classifyDownloadedHead,
+  curlArgs,
   looksLikePdf,
+  parseCurlReport,
   parsePages,
   planManuelDownload,
   renderArgs,
@@ -20,22 +23,30 @@ const HTML_BYTES = new TextEncoder().encode(
   "<!doctype html><html><body>Access denied</body></html>",
 );
 
-/** L'erreur exacte qu'undici lève quand le proxy de l'environnement refuse l'hôte (constatée 2026-09-05). */
-function proxyRefusal(): Error {
-  const inner = Object.assign(new Error("Proxy response (403) !== 200 when HTTP Tunneling"), {
-    name: "AbortError",
-    code: "UND_ERR_ABORTED",
-  });
-  const cancelled = new Error("Request was cancelled.", { cause: inner });
-  return new TypeError("fetch failed", { cause: cancelled });
-}
+/**
+ * Le refus exact du proxy d'environnement, tel que curl --fail le rend (constaté 2026-09-05) :
+ * exit 22, les MÊMES mots qu'un 403 du site, mais aucun code HTTP et un CONNECT à 403.
+ */
+const PROXY_REFUSAL = {
+  status: 22,
+  stdout: "000 403 ",
+  stderr: "curl: (22) The requested URL returned error: 403\n",
+};
 
-function response(
-  status: number,
-  body: Uint8Array,
-  headers: Record<string, string> = {},
-): Response {
-  return new Response(body.slice(), { status, headers });
+/** Le même refus sans --fail (une sonde en -I) : exit 56 et le message qui nomme le tunnel. */
+const PROXY_REFUSAL_56 = {
+  status: 56,
+  stdout: "000 403 ",
+  stderr: "curl: (56) CONNECT tunnel failed, response 403\n",
+};
+
+/** Un faux curl : écrit `body` dans le fichier `-o`, rend le rapport `-w`. */
+function fakeCurl(body: Uint8Array | null, report = "200 200 application/pdf") {
+  return vi.fn((args: string[]) => {
+    const file = args[args.indexOf("-o") + 1];
+    if (body) writeFileSync(file, body);
+    return { status: 0, stdout: report, stderr: "" };
+  });
 }
 
 describe("planManuelDownload", () => {
@@ -56,78 +67,113 @@ describe("planManuelDownload", () => {
   });
 });
 
-describe("looksLikePdf", () => {
+describe("looksLikePdf / classifyDownloadedHead", () => {
   it("reconnaît la signature %PDF- et rien d'autre", () => {
     expect(looksLikePdf(PDF_BYTES)).toBe(true);
     expect(looksLikePdf(HTML_BYTES)).toBe(false);
     expect(looksLikePdf(new Uint8Array([0x25, 0x50]))).toBe(false);
   });
-});
 
-describe("classifyFetchError", () => {
-  it("lit le refus du proxy deux causes plus bas et nomme le lot 0, pas une panne du CNP", () => {
-    const v = classifyFetchError(proxyRefusal(), {
-      HTTPS_PROXY: "http://127.0.0.1:1",
-      NODE_USE_ENV_PROXY: "1",
-    });
-    expect(v.kind).toBe("network-policy");
-    expect(v.message).toBe(NETWORK_POLICY_MESSAGE);
-    expect(v.message).toMatch(/lot 0/);
-  });
-
-  it("nomme NODE_USE_ENV_PROXY quand la session a un proxy que Node n'utilise pas", () => {
-    const v = classifyFetchError(
-      new TypeError("fetch failed", {
-        cause: Object.assign(new Error("connect ETIMEDOUT"), { code: "ETIMEDOUT" }),
-      }),
-      {
-        HTTPS_PROXY: "http://127.0.0.1:1",
-      },
+  it("un PDF passe ; une page HTML est nommée avec son type", () => {
+    expect(classifyDownloadedHead(PDF_BYTES.subarray(0, 8), "application/pdf")).toBeNull();
+    const v = classifyDownloadedHead(HTML_BYTES.subarray(0, 8), "text/html");
+    expect(v?.kind).toBe("not-pdf");
+    expect(v?.message).toContain("text/html");
+    expect(classifyDownloadedHead(HTML_BYTES.subarray(0, 8), null)?.message).toContain(
+      "type inconnu",
     );
-    expect(v.kind).toBe("network");
-    expect(v.message).toMatch(/NODE_USE_ENV_PROXY=1/);
-    expect(v.message).toMatch(/ETIMEDOUT/);
-  });
-
-  it("rapporte la cause d'une panne ordinaire, sans inventer de politique réseau", () => {
-    const v = classifyFetchError(new Error("getaddrinfo ENOTFOUND www.cnp.com.tn"), {});
-    expect(v).toEqual({
-      kind: "network",
-      message: "échec réseau : getaddrinfo ENOTFOUND www.cnp.com.tn",
-    });
-    expect(classifyFetchError(undefined, {}).message).toMatch(/cause inconnue/);
   });
 });
 
-describe("classifyResponse", () => {
-  const head = PDF_BYTES.subarray(0, 8);
-
-  it("un 403 signé par le bac à sable est la politique réseau, un 403 nu est une erreur HTTP", () => {
-    expect(
-      classifyResponse({ status: 403, denyReason: "host_not_allowed", contentType: null, head })
-        ?.kind,
-    ).toBe("network-policy");
-    expect(classifyResponse({ status: 403, denyReason: null, contentType: null, head })).toEqual({
-      kind: "http",
-      message: "HTTP 403",
-    });
+describe("curlArgs / parseCurlReport", () => {
+  it("pin le schéma https, échoue sur HTTP ≥ 400, écrit dans le fichier et rapporte code, CONNECT et type", () => {
+    const args = curlArgs("https://example.test/x.pdf", "/tmp/x.pdf", 42);
+    expect(args).toContain("--fail");
+    expect(args.slice(args.indexOf("--proto"), args.indexOf("--proto") + 2)).toEqual([
+      "--proto",
+      "=https",
+    ]);
+    expect(args.slice(args.indexOf("--max-time"), args.indexOf("--max-time") + 2)).toEqual([
+      "--max-time",
+      "42",
+    ]);
+    expect(args.slice(args.indexOf("-A"), args.indexOf("-A") + 2)).toEqual(["-A", CURL_USER_AGENT]);
+    expect(args.slice(args.indexOf("-o"), args.indexOf("-o") + 2)).toEqual(["-o", "/tmp/x.pdf"]);
+    expect(args[args.indexOf("-w") + 1]).toBe("%{http_code} %{http_connect} %{content_type}");
+    expect(args.at(-1)).toBe("https://example.test/x.pdf");
   });
 
-  it("404 = code inconnu du CNP ; 200 sans %PDF- = page d'erreur ; 200 PDF = rien à signaler", () => {
-    expect(
-      classifyResponse({ status: 404, denyReason: null, contentType: "text/html", head })?.kind,
-    ).toBe("not-found");
-    const notPdf = classifyResponse({
+  it("lit le rapport -w, avec ou sans type", () => {
+    expect(parseCurlReport("200 200 application/pdf\n")).toEqual({
       status: 200,
-      denyReason: null,
-      contentType: "text/html",
-      head: HTML_BYTES,
+      connect: 200,
+      contentType: "application/pdf",
     });
-    expect(notPdf?.kind).toBe("not-pdf");
-    expect(notPdf?.message).toContain("text/html");
+    expect(parseCurlReport("000 403 ")).toEqual({ status: 0, connect: 403, contentType: null });
+    expect(parseCurlReport("")).toEqual({ status: 0, connect: 0, contentType: null });
+  });
+});
+
+describe("classifyCurlFailure", () => {
+  it("le CONNECT 403 du proxy est la politique réseau et nomme le lot 0 — même quand curl dit « error: 403 »", () => {
+    for (const refusal of [PROXY_REFUSAL, PROXY_REFUSAL_56]) {
+      const v = classifyCurlFailure(refusal);
+      expect(v.kind).toBe("network-policy");
+      expect(v.message).toBe(NETWORK_POLICY_MESSAGE);
+      expect(v.message).toMatch(/lot 0/);
+    }
+  });
+
+  it("un 403 du SITE (CONNECT 200) reste une erreur HTTP ; 404 = code inconnu du CNP", () => {
     expect(
-      classifyResponse({ status: 200, denyReason: null, contentType: "application/pdf", head }),
-    ).toBeNull();
+      classifyCurlFailure({
+        status: 22,
+        stdout: "403 200 text/html",
+        stderr: "curl: (22) The requested URL returned error: 403\n",
+      }),
+    ).toEqual({ kind: "http", message: "HTTP 403" });
+    expect(
+      classifyCurlFailure({
+        status: 22,
+        stdout: "404 200 text/html",
+        stderr: "curl: (22) The requested URL returned error: 404\n",
+      }).kind,
+    ).toBe("not-found");
+    expect(
+      classifyCurlFailure({
+        status: 22,
+        stdout: "",
+        stderr: "curl: (22) The requested URL returned error: 503",
+      }),
+    ).toEqual({ kind: "http", message: "HTTP 503" });
+    expect(classifyCurlFailure({ status: 22, stdout: "", stderr: "" }).message).toBe("HTTP ?");
+  });
+
+  it("distingue le délai, l'absence de curl et une panne ordinaire", () => {
+    expect(
+      classifyCurlFailure({
+        status: 28,
+        stdout: "000 000 ",
+        stderr: "curl: (28) Operation timed out",
+      }).message,
+    ).toMatch(/délai/);
+    expect(classifyCurlFailure({ status: null, stdout: "", stderr: "" })).toEqual({
+      kind: "network",
+      message: "curl indisponible sur ce poste",
+    });
+    expect(
+      classifyCurlFailure({
+        status: 6,
+        stdout: "000 000 ",
+        stderr: "curl: (6) Could not resolve host: www.cnp.com.tn\n",
+      }),
+    ).toEqual({
+      kind: "network",
+      message: "curl 6 : curl: (6) Could not resolve host: www.cnp.com.tn",
+    });
+    expect(classifyCurlFailure({ status: 7, stdout: "", stderr: "" }).message).toMatch(
+      /cause inconnue/,
+    );
   });
 });
 
@@ -165,56 +211,74 @@ describe("parsePages / renderArgs", () => {
 });
 
 describe("downloadManuel", () => {
-  it("écrit le PDF reçu et rend sa taille", async () => {
+  it("écrit le PDF reçu dans un dossier privé et rend sa taille", () => {
     const dir = mkdtempSync(join(tmpdir(), "manuel-fetch-"));
     try {
-      const fetchImpl = vi.fn(async () =>
-        response(200, PDF_BYTES, { "content-type": "application/pdf" }),
-      );
+      const run = fakeCurl(PDF_BYTES);
       const file = join(dir, "sub", "102905P00.pdf");
-      const r = await downloadManuel("https://example.test/102905P00.pdf", file, {
-        fetchImpl: fetchImpl as never,
-      });
+      const r = downloadManuel("https://example.test/102905P00.pdf", file, { run, timeoutS: 9 });
       expect(r).toMatchObject({ ok: true, file, bytes: PDF_BYTES.length });
       expect(readFileSync(file)).toEqual(Buffer.from(PDF_BYTES));
-      expect(fetchImpl).toHaveBeenCalledWith(
-        "https://example.test/102905P00.pdf",
-        expect.objectContaining({ redirect: "follow" }),
-      );
+      expect(statSync(join(dir, "sub")).mode & 0o777).toBe(0o700);
+      const args = run.mock.calls[0][0];
+      expect(args.at(-1)).toBe("https://example.test/102905P00.pdf");
+      expect(args).toContain("9");
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
   });
 
-  it("n'écrit RIEN quand la réponse n'est pas un PDF ou que le CNP ne connaît pas le code", async () => {
+  it("ne laisse RIEN derrière lui quand la réponse n'est pas un PDF ou que curl a échoué", () => {
     const dir = mkdtempSync(join(tmpdir(), "manuel-fetch-"));
     try {
       const file = join(dir, "x.pdf");
-      const html = await downloadManuel("https://example.test/x.pdf", file, {
-        fetchImpl: (async () =>
-          response(200, HTML_BYTES, { "content-type": "text/html" })) as never,
+      const html = downloadManuel("https://example.test/x.pdf", file, {
+        run: fakeCurl(HTML_BYTES, "200 200 text/html"),
       });
       expect(html).toMatchObject({ ok: false, failure: { kind: "not-pdf" } });
-      const missing = await downloadManuel("https://example.test/x.pdf", file, {
-        fetchImpl: (async () => response(404, HTML_BYTES)) as never,
+      expect(existsSync(file)).toBe(false);
+
+      const missing = downloadManuel("https://example.test/x.pdf", file, {
+        run: () => ({
+          status: 22,
+          stdout: "404 200 text/html",
+          stderr: "curl: (22) The requested URL returned error: 404",
+        }),
       });
       expect(missing).toMatchObject({ ok: false, failure: { kind: "not-found" } });
+
+      const refused = downloadManuel("https://example.test/x.pdf", file, {
+        run: () => PROXY_REFUSAL,
+      });
+      expect(refused).toEqual({
+        ok: false,
+        failure: { kind: "network-policy", message: NETWORK_POLICY_MESSAGE },
+      });
       expect(existsSync(file)).toBe(false);
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
   });
 
-  it("traduit le refus du proxy en « politique réseau, lot 0 »", async () => {
-    const r = await downloadManuel("https://example.test/x.pdf", "/nonexistent/x.pdf", {
-      fetchImpl: (async () => {
-        throw proxyRefusal();
-      }) as never,
-      environment: { HTTPS_PROXY: "http://127.0.0.1:1", NODE_USE_ENV_PROXY: "1" },
-    });
-    expect(r).toEqual({
-      ok: false,
-      failure: { kind: "network-policy", message: NETWORK_POLICY_MESSAGE },
-    });
+  it("n'écrase jamais un fichier existant — même par un lien préparé à l'avance", () => {
+    const dir = mkdtempSync(join(tmpdir(), "manuel-fetch-"));
+    try {
+      const file = join(dir, "x.pdf");
+      writeFileSync(file, "garde-moi");
+      const run = fakeCurl(PDF_BYTES);
+      const r = downloadManuel("https://example.test/x.pdf", file, { run });
+      expect(r).toMatchObject({ ok: false, failure: { kind: "exists" } });
+      expect(run).not.toHaveBeenCalled();
+      expect(readFileSync(file, "utf8")).toBe("garde-moi");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("defaultOutDir", () => {
+  it("est un cache sous le HOME de l'utilisateur, jamais le répertoire temporaire partagé", () => {
+    expect(defaultOutDir("/home/mohamed")).toBe(join("/home/mohamed", ".cache", "yqa-manuels"));
+    expect(defaultOutDir()).not.toContain(tmpdir());
   });
 });

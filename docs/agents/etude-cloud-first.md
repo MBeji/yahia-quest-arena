@@ -374,7 +374,11 @@ aucune campagne ne peut lire un manuel ; … — le lot 0 … n'est pas appliqu�
 > ✅ **Moteur livré le 2026-09-05, pilote en attente du lot 0.** `npm run content:manuel:fetch --
 <code> [--render --pages a-b --dpi 150]` (`scripts/content/fetch-manuel.ts`, helpers purs dans
 > `src/shared/content/manuel-fetch.ts`, 16 tests) : l'URL se dérive du code, le fichier va dans un
-> dossier jetable, la signature `%PDF-` est vérifiée avant d'écrire, le rendu passe par `pdftoppm`.
+> cache privé de l'utilisateur (jamais le répertoire temporaire partagé, jamais d'écrasement), le
+> transfert est fait par `curl` — proxy natif, écriture en flux, et les octets du réseau ne passent
+> pas par Node : CodeQL avait signalé la version `fetch` → `writeFileSync` (« network data written
+> to file », « insecure temporary file ») —, la signature `%PDF-` est vérifiée après écriture et ce
+> qui n'est pas un PDF est supprimé, le rendu passe par `pdftoppm`.
 > **Constaté** : le `fetch` de Node ignore le proxy de la VM — un hôte même autorisé rend 403
 > `host_not_allowed` en direct, 200 via le proxy avec `NODE_USE_ENV_PROXY=1` ; le hook de session
 > l'exporte désormais. Un hôte refusé par la politique surfaces comme `Proxy response (403) !== 200
