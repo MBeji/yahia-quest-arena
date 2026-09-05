@@ -950,6 +950,57 @@ export const quizSchema = z.object({
 });
 export type ContentQuiz = z.infer<typeof quizSchema>;
 
+/**
+ * Reprise d'exercices du manuel élève officiel (étude 21 D-6, lot 2).
+ *
+ * Portée : les fichiers `exercices/*.json`, et EUX SEULS. Ni `quiz.json` — le
+ * quiz gate la compréhension du cours, ce n'est pas une reprise — ni les
+ * questions individuelles : la traçabilité est au grain de la mission, parce
+ * que c'est au grain de la mission qu'on décide de reprendre un bloc
+ * d'exercices du manuel.
+ *
+ * ⚠️ CE QUI SE TRACE, ET CE QUI NE SE TRACE PAS (R-4). Une **reprise** —
+ * directe ou adaptée, mêmes données — porte ce champ. Une **variante**
+ * (données changées) ne le porte PAS : c'est du contenu maison inspiré, et le
+ * rapport de couverture ne compterait que du vent s'il l'additionnait. La
+ * distinction est écrite dans `manuel-valorisation.md` (régimes D-5).
+ *
+ * `items` est REQUIS quand le champ est là : un `manuel` sans item ne dit rien
+ * — ni ce qui est repris, ni ce qui reste. Les libellés sont ceux du manuel
+ * (« ex. 12 », « ex. 15a »), courts par construction ; ils servent au diff
+ * nominal du rapport de couverture, jamais d'indice de réponse (§3.6).
+ *
+ * `code` est optionnel et se résout au LOADER, pas ici : il hérite du
+ * `chapter.manuel.code` quand il est absent, et son irrésolubilité est une
+ * erreur de `content:check`. Zod ne voit qu'un fichier à la fois et ne peut
+ * donc pas trancher cet héritage.
+ */
+export const exerciseManuelSchema = z
+  .object({
+    code: z
+      .string()
+      .regex(/^[A-Za-z0-9_-]+$/, "manuel.code must be an alphanumeric book code")
+      .optional(),
+    pages: z.string().min(1).optional(),
+    items: z.array(z.string().min(1).max(40)).min(1).max(30),
+  })
+  .refine(
+    (m) => {
+      if (m.pages === undefined) return true;
+      try {
+        const ps = parseManuelPages(m.pages);
+        return ps.length > 0 && ps.every((p) => p >= 1);
+      } catch {
+        return false;
+      }
+    },
+    {
+      message: "manuel.pages must be a 1-based page range like '12-15' or '12, 14-16'",
+      path: ["pages"],
+    },
+  );
+export type ExerciseManuel = z.infer<typeof exerciseManuelSchema>;
+
 /** An exercise file under `<chapter>/exercices/*.json`. */
 export const exerciseSchema = z.object({
   title: z.string().min(1),
@@ -977,6 +1028,12 @@ export const exerciseSchema = z.object({
    * Compiled into `exercises.correction_video` JSONB.
    */
   correctionVideo: videoIdSchema.optional(),
+  /**
+   * Reprise déclarée d'exercices du manuel élève (étude 21 R-4). Compilé
+   * dans `exercises.manuel_ref` JSONB, miroir du pattern `chapters.manuel_ref`.
+   * Métadonnée publique par design : aucune clé de réponse n'y transite.
+   */
+  manuel: exerciseManuelSchema.optional(),
   questions: z.array(questionSchema).min(1).max(50),
 });
 export type ContentExercise = z.infer<typeof exerciseSchema>;
