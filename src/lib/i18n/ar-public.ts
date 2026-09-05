@@ -168,6 +168,7 @@ export const arPublic: TranslationKeys["public"] = {
     otherChapters: "فصول أخرى",
     chaptersProgress: "{done}/{total} فصول",
     quizContract: "انجح في الاختبار (≥ {pct}٪) لفتح مهمات هذا الفصل.",
+    unrestrictedBanner: "وصول تجريبي (حساب المشرف): كل المهمات مفتوحة، بلا اختبار ولا ترتيب مفروض.",
     manuelTitle: "الكتاب المدرسي الرسمي",
     manuelHint: "كتاب التلميذ الرسمي لهذه المادة، للاطّلاع عليه مباشرة.",
     manuelOpen: "فتح الكتاب",

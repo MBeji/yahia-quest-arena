@@ -28,7 +28,7 @@ strict nécessaire de Supabase. Le shim est versionné : [`scripts/db/local/supa
 apt-get install -y postgresql-16 postgresql-16-pgtap   # pg_prove vient avec
 
 # 2. Un cluster jetable, sur un port qui ne gêne personne
-initdb -D "$PGDATA" -U postgres --auth=trust
+initdb -D "$PGDATA" -U postgres --auth=trust -E UTF8 --locale=C.UTF-8
 pg_ctl -D "$PGDATA" -o '-p 55432 -c fsync=off -c synchronous_commit=off' -l pg.log start
 
 # 3. Le shim, puis la chaîne complète des migrations, dans l'ordre des noms
@@ -84,6 +84,15 @@ sus **avant** :
 - **`auth.users` a besoin de plus de colonnes qu'on ne croit** (`instance_id`, `is_sso_user`…).
   Les fixtures de plusieurs suites les renseignent ; sans elles, `plan()` échoue avant la
   première assertion et le rapport dit « 0 tests ran », ce qui n'oriente vers rien.
+- **Le cluster doit être en UTF8, et `initdb` ne tourne pas en root.** Sans `-E UTF8`, un poste
+  dont la locale est `C`/`POSIX` crée une base `SQL_ASCII`, et `normalize_recall_text` — qui
+  appelle `normalize()` — tombe avec « Unicode normalization can only be performed if server
+  encoding is UTF8 ». Toute suite qui touche au Rappel (29, 97…) rougit alors d'une façon qui
+  ressemble à un défaut du SQL testé, pas de la base : le 97 a rendu « Bad plan, planned 10
+  ran 6 » avant qu'on regarde l'encodage. Et `initdb` refuse de tourner en root — sur un
+  conteneur qui n'a que ce compte, `runuser -u postgres -- initdb …`, avec un `PGDATA`
+  appartenant à `postgres`. Mesuré le 2026-09-05 (100 fichiers, 1 404 assertions en 28 s une
+  fois le cluster recréé).
 
 ## Le même cluster type aussi les RPC — sans Docker, sans jeton prod
 

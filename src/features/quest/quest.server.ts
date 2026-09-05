@@ -22,6 +22,7 @@ import {
   toPerQuestion,
 } from "./quest.recall";
 import type { AttemptReviewItem } from "./quest.recall";
+import { isUnrestrictedViewer, openEveryGate } from "./quest.access";
 
 /** Error message thrown when an exercise is locked behind its chapter quiz. */
 export const QUIZ_LOCKED_MESSAGE =
@@ -214,7 +215,7 @@ export const getSubject = createServerFn({ method: "GET" })
         )
       : Promise.resolve([]);
 
-    const [subj, chaps, exs, bestScoresData] = await Promise.all([
+    const [subj, chaps, exs, bestScoresData, unrestricted] = await Promise.all([
       supabase.from("subjects").select("*").eq("id", data.subjectId).single(),
       supabase.from("chapters").select("*").eq("subject_id", data.subjectId).order("display_order"),
       supabase
@@ -223,6 +224,8 @@ export const getSubject = createServerFn({ method: "GET" })
         .eq("subject_id", data.subjectId)
         .order("display_order"),
       bestScoresPromise,
+      // Compte de test (admin) : même aller-retour, pas un de plus — quest.access.ts.
+      isUnrestrictedViewer(supabase, userId),
     ]);
     if (subj.error) {
       failWithClientError("quest.getSubject", subj.error, "Impossible de charger la matière.");
@@ -257,7 +260,7 @@ export const getSubject = createServerFn({ method: "GET" })
       if (quiz.chapter_id) quizPassedByChapter[quiz.chapter_id] = !isSchoolSubject;
     }
     const quizIds = quizExercises.map((e) => e.id);
-    if (isSchoolSubject && quizIds.length > 0 && userId) {
+    if (isSchoolSubject && quizIds.length > 0 && userId && !unrestricted) {
       const { data: passedRows } = await supabase
         .from("attempts")
         .select("exercise_id,duration_seconds,total_count")
@@ -279,6 +282,12 @@ export const getSubject = createServerFn({ method: "GET" })
         }
       }
     }
+
+    // Compte de test (admin) : la RPC de démarrage ne lui oppose aucune porte de
+    // progression, le hub n'en affiche donc aucune (quest.access.ts).
+    const gates = unrestricted
+      ? openEveryGate({ quizPassedByChapter, recall })
+      : { quizPassedByChapter, recall };
 
     // Parcours that owns this subject — powers the hub's level anchor + back link
     // (étude 15 lot 7, D-6 : the kicker shows the CLASS, not the RPG attribute, and
@@ -361,9 +370,11 @@ export const getSubject = createServerFn({ method: "GET" })
       chapters: chaps.data ?? [],
       exercises,
       bestByExercise: best,
-      quizPassedByChapter,
-      viewer,
-      recall,
+      quizPassedByChapter: gates.quizPassedByChapter,
+      // `unrestricted` est ce que le hub affiche (bandeau « accès test ») ; le droit
+      // d'accès suit, la porte du parcours étant franchie elle aussi.
+      viewer: { ...viewer, unrestricted, hasEntitlement: viewer.hasEntitlement || unrestricted },
+      recall: gates.recall,
       parcours: parcoursRow
         ? {
             id: parcoursRow.id,
@@ -430,7 +441,7 @@ export const getChapterLesson = createServerFn({ method: "GET" })
     // just to derive a boolean (a subject with N chapters × ~30 KB each). Split
     // into two tiny reads: the metadata for all siblings, and the id-only set of
     // those that actually carry a lesson.
-    const [{ data: siblings }, { data: siblingsWithLesson }] = await Promise.all([
+    const [{ data: siblings }, { data: siblingsWithLesson }, unrestricted] = await Promise.all([
       supabase
         .from("chapters")
         .select("id, title, display_order")
@@ -443,6 +454,7 @@ export const getChapterLesson = createServerFn({ method: "GET" })
         .not("lesson_content", "is", null)
         // Preserve the old `!!lesson_content` semantics: an empty string is "no lesson".
         .neq("lesson_content", ""),
+      isUnrestrictedViewer(supabase, userId),
     ]);
 
     const withLesson = new Set((siblingsWithLesson ?? []).map((s) => s.id));
@@ -475,7 +487,7 @@ export const getChapterLesson = createServerFn({ method: "GET" })
       ((chapter.subjects as { grade_id?: string | null } | null)?.grade_id ?? null) !== null;
     const quizGated = isSchoolSubject && quizExerciseId !== null;
     let quizPassed: boolean | null = null;
-    if (quizGated && userId) {
+    if (quizGated && userId && !unrestricted) {
       const { data: passedRows } = await supabase
         .from("attempts")
         .select("duration_seconds,total_count")
@@ -486,6 +498,8 @@ export const getChapterLesson = createServerFn({ method: "GET" })
         (r) => (r.duration_seconds ?? 0) >= (r.total_count ?? 0) * MIN_SECONDS_PER_QUESTION,
       );
     }
+    // Compte de test (admin) : la porte est franchie d'office (quest.access.ts).
+    if (quizGated && unrestricted) quizPassed = true;
 
     return {
       chapter: { ...chapter, videos },
@@ -735,7 +749,7 @@ export const getExercise = createServerFn({ method: "GET" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const isRecall = data.variant === "recall";
-    const [ex, qs] = await Promise.all([
+    const [ex, qs, unrestricted] = await Promise.all([
       supabase
         .from("exercises")
         .select(
@@ -752,6 +766,7 @@ export const getExercise = createServerFn({ method: "GET" })
             .select("id,prompt,options,display_order,question_type")
             .eq("exercise_id", data.exerciseId)
             .order("display_order"),
+      isUnrestrictedViewer(supabase, userId),
     ]);
     if (ex.error) {
       failWithClientError("quest.getExercise", ex.error, "Impossible de charger l'exercice.");
@@ -808,7 +823,8 @@ export const getExercise = createServerFn({ method: "GET" })
     const subjectGradeId =
       (ex.data as { subjects?: { grade_id?: string | null } | null } | null)?.subjects?.grade_id ??
       null;
-    const quizGated = chapterQuizId !== null && subjectGradeId !== null;
+    // Compte de test (admin) : jamais gaté — la RPC de démarrage dit la même chose.
+    const quizGated = chapterQuizId !== null && subjectGradeId !== null && !unrestricted;
 
     return {
       exercise: ex.data,
@@ -816,6 +832,8 @@ export const getExercise = createServerFn({ method: "GET" })
       hintCharges,
       chapterQuizId,
       quizGated,
+      // Ouvre le navigateur de questions du lecteur (question-navigator.tsx).
+      unrestricted,
       // Review video for the failure screen (étude 23 R-6) — server-resolved
       // here so BOTH registers (connected + anonymous) receive it.
       correctionVideo: await resolveCorrectionVideo(supabase, ex.data),

@@ -122,6 +122,7 @@ export function SubjectHub({
   parcours = null,
   recall = null,
   isAuthenticated,
+  unrestricted = false,
 }: {
   subject: SubjectHubSubject;
   chapters: SubjectHubChapter[];
@@ -131,6 +132,13 @@ export function SubjectHub({
   parcours?: SubjectHubParcours | null;
   recall?: SubjectHubRecall | null;
   isAuthenticated: boolean;
+  /**
+   * Accès de TEST (compte admin, 2026-09-05) : `getSubject` a déjà marqué chaque
+   * porte ouverte (quest.access.ts) — le hub n'a rien à recalculer, il le DIT.
+   * Sans ce bandeau, un testeur qui voit toutes les missions ouvertes croirait la
+   * porte du quiz cassée pour les élèves.
+   */
+  unrestricted?: boolean;
 }) {
   const t = useT();
   const { locale } = useI18n();
@@ -430,6 +438,16 @@ export function SubjectHub({
         </h1>
         {subject.description && <p className="mt-2 text-muted-foreground">{subject.description}</p>}
       </header>
+
+      {unrestricted && (
+        <p
+          role="status"
+          data-testid="hub-unrestricted"
+          className="mb-6 rounded-xl border border-dashed border-(--gold)/40 bg-(--gold)/5 px-3 py-2 text-xs font-semibold text-(--gold)"
+        >
+          🧪 {t.public.subject.unrestrictedBanner}
+        </p>
+      )}
 
       <ManuelEleveCard manuelRefs={subject.manuel_refs} />
 
