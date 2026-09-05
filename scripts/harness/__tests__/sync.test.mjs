@@ -47,6 +47,15 @@ describe("buildClaudeSettings", () => {
     ]);
   });
 
+  it("compile le mode de démarrage quand la policy le fixe, et n'en invente pas sinon", () => {
+    expect(settings.permissions.defaultMode).toBeUndefined();
+    const withMode = buildClaudeSettings({
+      policy: { ...POLICY, mode: { $comment: "…", default: "acceptEdits" } },
+    });
+    expect(withMode.permissions.defaultMode).toBe("acceptEdits");
+    expect(Object.keys(withMode.permissions)).toEqual(["defaultMode", "allow", "deny"]);
+  });
+
   it("carries a DO NOT EDIT marker so a human opening the file is warned", () => {
     expect(settings.$comment).toMatch(/DO NOT EDIT/);
     expect(settings.$comment).toMatch(/harness:sync/);

@@ -149,10 +149,14 @@ sur une famille sans raison. Le **journal daté** des élargissements — pourqu
 dehors, pourquoi `apply-content` est l'exception assumée, pourquoi `gh secret delete` est dénié —
 vit dans `zero-intervention.md` § « Le journal des élargissements ».
 
-En deux lignes : les gates, les lectures et l'outillage passent ; la boucle de livraison, le
-cycle PR/issue et la configuration du dépôt aussi ; les workflows déclenchables sont nommés **un
-par un**, jamais `gh workflow run:*`. **Jamais** : `supabase db push`/`db reset`, le dispatch de
-`db-migrate-prod.yml` ou `release.yml`, `node scripts/db/push-prod.mjs`, `gh secret delete`.
+En deux lignes : depuis le **2026-09-05, tout est autorisé** (arbitrage du propriétaire, option C
+de l'étude cloud-first — famille `cloud-autonomy` : `Bash`, tout le serveur MCP `github`, les
+sessions cloud, Google Drive ; « je prends le risque », écrit au journal) ; les familles nommées
+restent la carte de ce qu'une session fait, et les dénis gagnent toujours. Les sessions démarrent
+en `acceptEdits` (`permissions.defaultMode`) : sans classifieur, ce sont ces règles qui décident. **Jamais** :
+`supabase db push`/`db reset`, `node scripts/db/push-prod.mjs`, `gh secret delete`, et par `gh`
+le dispatch de `db-migrate-prod.yml` ou `release.yml` — en cloud, l'outil MCP de dispatch ne
+connaît pas les noms : là, c'est la règle écrite qui tient, pas la policy.
 
 ⚠️ Ceci lève les demandes **du dépôt**, pas les refus du classifieur d'auto-mode de l'outil. Pour
 les outils sans fichier de permissions, cette section est une indication : le filet dur reste les

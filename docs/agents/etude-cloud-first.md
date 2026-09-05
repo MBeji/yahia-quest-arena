@@ -331,6 +331,22 @@ aucune campagne ne peut lire un manuel ; … — le lot 0 … n'est pas appliqu�
 
 ### Lot 2 — La policy a une vue cloud (session, ce dépôt) — un arbitrage à l'intérieur
 
+> ✅ **Livré le 2026-09-05 — en option C**, arbitrage de Mohamed : « tout est autorisé, je veux que
+> Claude soit autonome partout et ait tous les droits, je prends le risque ». Aucun garde dans les
+> workflows — la tentative de poser celui de l'option A a d'ailleurs été **refusée par le
+> classifieur d'auto-mode**, puis `npm run harness:sync` l'a été aussi : le mur du §5 s'est dressé
+> devant le garde, puis devant la vue elle-même, et il a fallu sortir la session du mode auto
+> depuis le téléphone pour régénérer `.claude/settings.json` — et aucun déni nouveau. Une
+> famille `cloud-autonomy` dans `harness/policy.json` : `Bash`, `mcp__github`,
+> `mcp__Claude_Code_Remote`, `mcp__Google_Drive` ; les huit dénis restent et gagnent toujours ; et
+> `mode.default = acceptEdits`, compilé en `permissions.defaultMode`, pour que les sessions
+> démarrent **sans classifieur** — en mode auto la règle `Bash` est suspendue par l'outil et le
+> classifieur ne lit rien du dépôt, donc la famille seule n'aurait rien changé. Ce
+> que ça ouvre et ce qui n'est plus qu'une norme est écrit au journal des élargissements
+> ([zero-intervention.md](./zero-intervention.md) § 2026-09-05), la décision au journal des
+> décisions et dans `STATUS.md` §2 ; AGENTS.md § Execution policy dit désormais « tout est
+> autorisé ». La préconisation ci-dessous reste lisible comme le chemin de retour si une norme cède.
+
 - `harness/policy.json` gagne les règles **par outil MCP**, compilées dans
   `.claude/settings.json` par le sync existant : autoriser la lecture GitHub (`get_me`,
   `list_*`, `pull_request_read`, `issue_read`, `actions_get/list`, `get_job_logs`,
