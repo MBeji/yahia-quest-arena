@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -10,6 +10,7 @@ import {
   PROBE_TIMEOUT_S,
   buildReport,
   classifyProbe,
+  exportNodeProxy,
   isCloud,
   majorOf,
   needsInstall,
@@ -197,6 +198,34 @@ describe("NVM_SCRIPT — poser Node malgré le code de retour de nvm.sh", () => 
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
+  });
+});
+
+describe("exportNodeProxy — le fetch de Node emprunte le proxy de la session", () => {
+  it("écrit l'export dans le fichier d'environnement quand la session a un proxy", () => {
+    const dir = mkdtempSync(join(tmpdir(), "env-file-"));
+    try {
+      const file = join(dir, "env");
+      writeFileSync(file, "");
+      expect(exportNodeProxy({ HTTPS_PROXY: "http://127.0.0.1:1", CLAUDE_ENV_FILE: file })).toBe(
+        true,
+      );
+      expect(readFileSync(file, "utf8")).toBe("export NODE_USE_ENV_PROXY=1\n");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("ne fait rien sans proxy, sans fichier d'environnement, ou quand c'est déjà réglé", () => {
+    expect(exportNodeProxy({ CLAUDE_ENV_FILE: "/nonexistent/env" })).toBe(false);
+    expect(exportNodeProxy({ HTTPS_PROXY: "http://127.0.0.1:1" })).toBe(false);
+    expect(
+      exportNodeProxy({
+        HTTPS_PROXY: "http://127.0.0.1:1",
+        CLAUDE_ENV_FILE: "/nonexistent/env",
+        NODE_USE_ENV_PROXY: "1",
+      }),
+    ).toBe(false);
   });
 });
 

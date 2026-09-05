@@ -222,6 +222,14 @@ aucun gate — aucun n'est automatisable, c'est justement pourquoi ils sont écr
    jonctions Windows et détruit leurs **cibles** (voir
    [agents/poste-windows.md](./agents/poste-windows.md)). Un worktree qu'on laisse en place
    ne coûte rien ; un `node_modules` ou un corpus partagé détruit coûte une réinstallation.
+10. **En session cloud, la garde ne dort pas dans un terminal** (étude cloud-first, lot 5). La
+    session qui a poussé s'**abonne** aux événements de sa PR (`subscribe_pr_activity`) et se pose
+    un **réveil différé** (`send_later`, ~45 min) : une VM récupérée pour inactivité est
+    re-provisionnée au réveil, conversation restaurée, et le check-in constate le merge par le
+    **contenu** de `main` (`git ls-tree origin/main <fichier>`), jamais par un statut. Au merge
+    réel : désabonnement, réveil supprimé, branche locale ramenée sur `origin/main`. Une PR qui
+    merge **pendant** que le hook `pre-push` d'une retouche rejoue le gate laisse la retouche
+    orpheline (`cannot lock ref`) : repartir de `main`, même nom de branche, nouvelle PR.
 
 ## 8. Quand ça casse — le retour arrière
 
