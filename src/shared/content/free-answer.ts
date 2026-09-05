@@ -214,6 +214,81 @@ export const PARITY_CORPUS: ReadonlyArray<{ input: string; expected: string; why
 /** Article défini arabe, en tête de mot. */
 const AR_ARTICLE = /^ال(?=.)/u;
 
+/**
+ * « ال » ne se préfixe qu'à un mot qui PEUT le porter. Sans cette garde, la
+ * seule condition était « le mot de tête n'a pas déjà ال » — et le tier
+ * produisait la forme que son propre commentaire donnait en contre-exemple
+ * (« الفوق الشجرة »), plus « ال3 », « الفي », « الفوقها ».
+ *
+ * Les quatre refus ci-dessous sont mécaniques et désignent chacun un mot DÉJÀ
+ * défini, ou incapable de l'être : aucune des formes écartées n'est tapable par
+ * un élève, donc aucun faux négatif. Le doute, lui, profite à la variante —
+ * refuser une réponse juste coûte la confiance d'un élève, une chaîne morte de
+ * plus ne coûte rien.
+ *
+ * Liste FERMÉE des mots qui ne portent jamais l'article : حروف, ظروف employés
+ * en annexion, pronoms et démonstratifs (définis par nature). Sont
+ * délibérément ABSENTS — ils ont une forme en « ال » bien réelle, et les
+ * ajouter supprimerait des variantes JUSTES :
+ * كل (الكل)، بعض (البعض)، غير (الغير)، أمام (الأمام)، خلف (الخلف)،
+ * وسط (الوسط)، بعد (البعد)، حول (الحول).
+ */
+const AR_NEVER_ARTICLED = new Set(
+  [
+    // Prépositions et adverbes de lieu employés en annexion.
+    "في من الى إلى على عن مع عند لدى حتى منذ مذ فوق تحت بين هنا هناك",
+    // Conjonctions, particules, outils d'interrogation et de négation.
+    "الا إلا او أو ثم بل لكن قد لم لن لا ما هل ان أن إن اذا إذا لان لأن",
+    "كي لكي لو اذ إذ كما حيث سوى دون ايضا أيضا نعم بلى اي أي",
+    // Pronoms et démonstratifs — définis par nature.
+    "هو هي هما هم هن انا أنا نحن انت أنت انتم أنتم",
+    "هذا هذه هذان هذين هؤلاء ذلك تلك اولئك أولئك ذاك",
+  ].flatMap((group) => group.split(" ")),
+);
+
+/**
+ * Pronoms affixes SANS AMBIGUÏTÉ : après eux, le mot est défini par annexion.
+ * ـه ـي ـك ـهم ـكم ـهن ـكن en sont VOLONTAIREMENT absents — الوجه، العربي،
+ * السمك، الفهم، الحكم، الرهن، السكن sont des formes légitimes qui finissent par
+ * ces mêmes lettres ; les tester coûterait des réponses justes refusées.
+ */
+const AR_ATTACHED_PRONOUN = /(ها|هما|نا|كما)$/u;
+
+/**
+ * Le même, élargi, mais utilisé UNIQUEMENT pour retrouver le radical d'un mot
+ * de la classe fermée (« فوقها » → « فوق », « لأنّه » → « لأن »). La garde n'est
+ * pas la forme du suffixe : c'est l'appartenance du RADICAL à la liste fermée.
+ * Les alternatives longues d'abord, sinon « ها » couperait « هما ».
+ */
+const AR_ATTACHED_ANY = /(هما|كما|ها|هم|هن|كم|كن|نا|ه)$/u;
+
+/**
+ * Le mot nu : sans tashkeel/tatweel ni ponctuation de bord. Sans lui,
+ * « كتابَهَا » (fatha entre ب et ه) échapperait au test du pronom affixe, et
+ * « نعم، » à la liste fermée.
+ */
+function bareArabicWord(word: string): string {
+  return stripArabicDiacritics(word).replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "");
+}
+
+/** Le mot de tête peut-il porter « ال » ? `next` est le mot IMMÉDIATEMENT suivant. */
+function canTakeArabicArticle(head: string, next: string | undefined): boolean {
+  const h = bareArabicWord(head);
+  // (a) chiffre, mot latin, symbole : « ال3 » n'existe pas.
+  if (h === "" || !/^[ء-ي]/u.test(h)) return false;
+  // (b) classe fermée, avec ou sans pronom affixe.
+  if (AR_NEVER_ARTICLED.has(h)) return false;
+  const stem = h.replace(AR_ATTACHED_ANY, "");
+  if (stem !== h && AR_NEVER_ARTICLED.has(stem)) return false;
+  // (c) annexé à un pronom : déjà défini — le cas remonté par le pilote.
+  if (h.length >= 4 && AR_ATTACHED_PRONOUN.test(h)) return false;
+  // (d) suivi IMMÉDIATEMENT d'un mot en « ال » : la tête est un مضاف, donc déjà
+  //     définie. Le mot adjacent seulement : c'est là, et nulle part ailleurs,
+  //     que se joue l'annexion.
+  if (next !== undefined && AR_ARTICLE.test(bareArabicWord(next))) return false;
+  return true;
+}
+
 /** Articles français de tête, forme élidée incluse. */
 const FR_ARTICLES = ["le ", "la ", "les ", "l'", "l’"];
 
@@ -251,10 +326,12 @@ function expandArabic(text: string): string[] {
   const stripped = words.map((w) => w.replace(AR_ARTICLE, "")).join(" ");
   if (stripped !== text && stripped.trim() !== "") out.push(stripped);
 
-  // Avec article, sur le mot de tête seulement : ajouter « ال » à chaque mot
-  // produirait des formes qu'aucun élève ne tape (« الفوق الشجرة »).
-  if (!AR_ARTICLE.test(words[0] ?? "")) {
-    out.push([`ال${words[0]}`, ...words.slice(1)].join(" "));
+  // Avec article, sur le mot de tête, et seulement s'il PEUT le porter :
+  // l'ajouter à chaque mot, ou à un mot déjà défini, produirait des formes
+  // qu'aucun élève ne tape (« الفوق الشجرة », « الفوقها », « ال3 »).
+  const head = words[0];
+  if (head && !AR_ARTICLE.test(head) && canTakeArabicArticle(head, words[1])) {
+    out.push([`ال${head}`, ...words.slice(1)].join(" "));
   }
   return out;
 }

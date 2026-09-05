@@ -355,12 +355,13 @@ export function buildMigrationSql(subject: LoadedSubject, videos: VideoRegistry 
     displayOrder: number,
     questions: ContentQuestion[],
     correctionVideoSql: string,
+    manuelRefSql: string,
   ) => {
     out.push(
-      "INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order, correction_video) VALUES",
+      "INSERT INTO public.exercises (id, chapter_id, subject_id, title, difficulty, xp_reward, reward_coins, mode, source, display_order, correction_video, manuel_ref) VALUES",
       `  (${sqlString(exId)}, ${sqlString(chId)}, ${sqlString(subjectId)}, ${sqlString(title)}, ${difficulty}, ${xpReward}, ${rewardCoins}, ${sqlString(
         mode,
-      )}, 'admin', ${displayOrder}, ${correctionVideoSql})`,
+      )}, 'admin', ${displayOrder}, ${correctionVideoSql}, ${manuelRefSql})`,
       "ON CONFLICT (id) DO UPDATE SET",
       "  chapter_id = EXCLUDED.chapter_id,",
       "  subject_id = EXCLUDED.subject_id,",
@@ -370,7 +371,11 @@ export function buildMigrationSql(subject: LoadedSubject, videos: VideoRegistry 
       "  reward_coins = EXCLUDED.reward_coins,",
       "  mode = EXCLUDED.mode,",
       "  display_order = EXCLUDED.display_order,",
-      "  correction_video = EXCLUDED.correction_video;",
+      "  correction_video = EXCLUDED.correction_video,",
+      // Comme le lien manuel du chapitre : réémis à CHAQUE upsert, y compris à
+      // NULL. Retirer la reprise d'un fichier doit effacer la colonne, sinon le
+      // rapport de couverture compterait indéfiniment une reprise abandonnée.
+      "  manuel_ref = EXCLUDED.manuel_ref;",
       "",
     );
     // Order questions from easiest to hardest (stable; untagged = medium).
@@ -494,6 +499,9 @@ export function buildMigrationSql(subject: LoadedSubject, videos: VideoRegistry 
       0,
       chapter.quiz.questions,
       "NULL",
+      // Le quiz ne trace jamais de reprise : il gate la compréhension du cours
+      // (étude 21 D-6, la portée du champ est `exercices/*.json` et eux seuls).
+      "NULL",
     );
     for (const exercise of chapter.exercises) {
       const ex = exercise.data;
@@ -513,6 +521,19 @@ export function buildMigrationSql(subject: LoadedSubject, videos: VideoRegistry 
         ex.displayOrder,
         ex.questions,
         correctionVideo ? sqlJson(correctionVideo) : "NULL",
+        // Reprise du manuel (étude 21 lot 2) : forme compilée identique à celle
+        // du chapitre — le `code` est déjà résolu par le loader (héritage), et
+        // `pageNumbers` est déplié ici pour que la base n'ait pas à parser une
+        // grammaire de pages.
+        ex.manuel
+          ? sqlJson({
+              code: ex.manuel.code,
+              ...(ex.manuel.pages === undefined
+                ? {}
+                : { pages: ex.manuel.pages, pageNumbers: parseManuelPages(ex.manuel.pages) }),
+              items: ex.manuel.items,
+            })
+          : "NULL",
       );
     }
   }

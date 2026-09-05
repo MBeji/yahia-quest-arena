@@ -35,7 +35,7 @@ import {
   type CompetencyVocabulary,
   type Flag,
 } from "./qa-checks.ts";
-import { auditManuelRefs } from "./qa-manuel-refs.ts";
+import { auditExerciseManuelPages, auditManuelRefs } from "./qa-manuel-refs.ts";
 import { auditVerbatim, buildVerbatimIndex, questionTextSurface } from "./verbatim-checks.ts";
 import { loadCnpCorpusFiles, loadSurveilledSources } from "./programmes-io.ts";
 
@@ -149,6 +149,14 @@ function main(): void {
         ),
       );
       for (const ex of chapter.exercises) {
+        // Reprise du manuel (étude 21 §3.5) : cohérence de pages, advisory.
+        flags.push(
+          ...auditExerciseManuelPages(
+            ex.data.manuel,
+            chapter.meta.manuel,
+            `${subject.meta.id}/${chapter.slug}/${ex.slug}`,
+          ),
+        );
         if (ex.data.correctionVideo) {
           flags.push(
             ...auditVideoRefs(

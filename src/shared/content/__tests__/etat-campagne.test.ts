@@ -530,6 +530,34 @@ describe("buildEtat — volet prod : l'ouverture des parcours (R-8)", () => {
     expect(etat.totaux.parcoursANouvrir).toBe(1);
   });
 
+  it("ne signale RIEN sur un nœud plat hérité — il ne cache aucun élève", () => {
+    // `ecole-2eme-sec` est seedé coming_soon et le restera : le grade `2eme-sec` est
+    // `is_selectable = false` et interdit comme cible `compileTo`, donc le contenu
+    // « de 2ème sec » vit derrière les quatre parcours de SECTION. Signaler ce nœud
+    // prescrivait une migration d'ouverture que `parcours-ouverture.test.ts` déclare
+    // ne devoir arriver JAMAIS.
+    const plat: OuvertureLue = {
+      parcours: [
+        {
+          id: "ecole-2eme-sec",
+          grade: "2eme-sec",
+          statut: "coming_soon",
+          migration: "20260617120000_parcours_interest_and_school_grades.sql",
+        },
+      ],
+      ouvertsSansSeed: [],
+    };
+    const etat = buildEtat(
+      input([gradeSuivi([fiche({})], "2eme-sec")], [audit({ grade: "2eme-sec" })], undefined, plat),
+    );
+    // Le parcours reste AFFICHÉ — on ne cache pas le fait, on cesse d'en faire une alarme.
+    expect(etat.grades[0].ouverture).toEqual([
+      expect.objectContaining({ id: "ecole-2eme-sec", statut: "coming_soon" }),
+    ]);
+    expect(etat.grades[0].constats).toEqual([]);
+    expect(etat.totaux.parcoursANouvrir).toBe(0);
+  });
+
   it("ne signale rien quand le parcours est ouvert", () => {
     const etat = buildEtat(
       input([gradeSuivi([fiche({})])], [audit()], undefined, ouverture("available")),

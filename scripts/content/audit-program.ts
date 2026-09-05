@@ -20,6 +20,11 @@
  *   --grade <slug>         Audit a single grade (e.g. `1ere-base`).
  *   --manifest-dir <path>  Manifests root (default: the skill references path).
  *   --content-dir <path>   Content root (default: content).
+ *   --json                 Rend la couverture manuel en JSON sur stdout (étude 21 lot 4).
+ *
+ * ⚠️ La section « couverture manuel » (étude 21) est **advisory par construction** :
+ * elle n'entre jamais dans `findingCount`, donc jamais dans le gate `--strict`.
+ * Une campagne en cours n'est pas une régression.
  */
 import { join, resolve } from "node:path";
 import { argv, cwd, exit, stderr, stdout } from "node:process";
@@ -33,7 +38,15 @@ import {
   expandSubjects,
   loadAllSubjects,
 } from "../../src/shared/content/loader.ts";
+import {
+  coverageRate,
+  subjectCoverage,
+  type ChapterCoverageInput,
+  type SubjectCoverage,
+} from "../../src/shared/content/manuel-coverage.ts";
 import { loadManifests, PROGRAMMES_REL } from "./programmes-io.ts";
+import type { LoadedSubject } from "../../src/shared/content/schema.ts";
+import type { ProgramManifest } from "../../src/shared/content/program-manifest.ts";
 
 function getFlag(name: string): string | undefined {
   const i = argv.indexOf(`--${name}`);
@@ -90,6 +103,76 @@ function printGrade(g: GradeAudit): void {
   );
 }
 
+/**
+ * Couverture manuel (étude 21 lot 4) — croise ce que le manifeste DÉCLARE du
+ * manuel avec ce que les missions déclarent REPRENDRE.
+ *
+ * Ne rend que les matières qui ont quelque chose à dire : une matière dont
+ * aucun chapitre ne déclare de manuel et dont aucune mission ne trace de
+ * reprise n'a pas de couverture à afficher — l'imprimer à zéro ferait passer
+ * une matière hors périmètre pour une matière en retard.
+ */
+function manuelCoverage(
+  manifests: readonly ProgramManifest[],
+  subjects: readonly LoadedSubject[],
+): SubjectCoverage[] {
+  const byId = new Map(subjects.map((s) => [s.meta.id, s]));
+  const out: SubjectCoverage[] = [];
+  for (const manifest of manifests) {
+    for (const expected of manifest.subjects) {
+      const loaded = byId.get(expected.id);
+      if (!loaded) continue;
+      const chapters: ChapterCoverageInput[] = expected.chapters.map((declaredChapter) => {
+        const chapter = loaded.chapters.find((c) => c.slug === declaredChapter.slug);
+        return {
+          slug: declaredChapter.slug,
+          notion: declaredChapter.notion,
+          ...(declaredChapter.manuel ? { declared: declaredChapter.manuel } : {}),
+          ...(chapter?.meta.manuel ? { chapterManuelCode: chapter.meta.manuel.code } : {}),
+          takenUp: (chapter?.exercises ?? []).flatMap((ex) =>
+            ex.data.manuel
+              ? [
+                  {
+                    exerciseSlug: ex.slug,
+                    // Résolu par le loader — jamais `undefined` ici.
+                    code: ex.data.manuel.code ?? "",
+                    ...(ex.data.manuel.pages === undefined ? {} : { pages: ex.data.manuel.pages }),
+                    items: ex.data.manuel.items,
+                  },
+                ]
+              : [],
+          ),
+        };
+      });
+      const cov = subjectCoverage(expected.id, chapters);
+      if (cov.declaredTotal > 0 || cov.takenUpTotal > 0) out.push(cov);
+    }
+  }
+  return out;
+}
+
+/** La section imprimée. Rien ici n'entre dans `findingCount` (§3.5). */
+function printCoverage(rows: readonly SubjectCoverage[]): void {
+  if (rows.length === 0) return;
+  stdout.write("\nCouverture des manuels élèves (advisory — hors gate)\n");
+  for (const s of rows) {
+    const rate = coverageRate(s);
+    stdout.write(
+      `  ${s.subjectId.padEnd(26)} ${s.takenUpTotal}/${s.declaredTotal}` +
+        `${rate === null ? " (non mesurable)" : ` (${rate} %)`}` +
+        `${s.unmeasurable > 0 ? ` · ${s.unmeasurable} chapitre(s) sans déclaration` : ""}\n`,
+    );
+    for (const c of s.chapters) {
+      const notes: string[] = [];
+      if (c.remaining && c.remaining.length > 0) notes.push(`reste : ${c.remaining.join(", ")}`);
+      if (c.unknownItems.length > 0) notes.push(`hors plage : ${c.unknownItems.join(", ")}`);
+      if (c.missingChapterManuel) notes.push("chapitre sans `manuel` (R-9)");
+      if (c.codeMismatches.length > 0) notes.push(`autre livre : ${c.codeMismatches.join(", ")}`);
+      if (notes.length > 0) stdout.write(`    − ${c.slug} — ${notes.join(" · ")}\n`);
+    }
+  }
+}
+
 function main(): void {
   const root = cwd();
   // Le chemin par défaut est RÉSOLU sous `root`, jamais recopié ici : trois copies de la
@@ -113,6 +196,14 @@ function main(): void {
   const subjects = expandSubjects(loadAllSubjects(contentDir));
   const audits = manifests.map(({ manifest }) => auditGrade(manifest, subjects));
   audits.forEach(printGrade);
+
+  // Couverture manuel (étude 21 lot 4) — advisory, jamais dans `findingCount`.
+  const coverage = manuelCoverage(
+    manifests.map((m) => m.manifest),
+    subjects,
+  );
+  if (hasFlag("json")) stdout.write(`${JSON.stringify(coverage, null, 2)}\n`);
+  else printCoverage(coverage);
 
   // Opt-in gate: only SEALED grades can fail the run, and only under --strict.
   const sealedFailures = audits.filter((a) => a.sealed && a.findingCount > 0);
