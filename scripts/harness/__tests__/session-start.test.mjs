@@ -1,9 +1,12 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
 import { spawnSync } from "node:child_process";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import {
+  NVM_SCRIPT,
   PROBE_TIMEOUT_S,
   buildReport,
   classifyProbe,
@@ -151,6 +154,49 @@ describe("buildReport", () => {
     });
     expect(report).toContain("Node : nvm : introuvable");
     expect(report).toContain("dépendances : npm install : ETIMEDOUT");
+  });
+});
+
+describe("NVM_SCRIPT — poser Node malgré le code de retour de nvm.sh", () => {
+  it("survit à un `source nvm.sh` qui rend 3 (alias par défaut absent) et rend le chemin de node", () => {
+    const dir = mkdtempSync(join(tmpdir(), "nvm-fake-"));
+    try {
+      // Un faux nvm.sh : définit `nvm`, puis se termine comme le vrai sur une VM neuve — en échec.
+      writeFileSync(
+        join(dir, "nvm.sh"),
+        [
+          "nvm() {",
+          '  case "$1" in',
+          "    install) return 0 ;;",
+          "    alias) return 0 ;;",
+          '    which) echo "/fake/versions/node/v$2.0.0/bin/node" ;;',
+          "  esac",
+          "}",
+          "return 3",
+          "",
+        ].join("\n"),
+      );
+      const run = spawnSync("bash", ["-c", NVM_SCRIPT, join(dir, "nvm.sh"), "24"], {
+        encoding: "utf8",
+      });
+      expect(run.status).toBe(0);
+      expect(run.stdout.trim().split("\n").at(-1)).toBe("/fake/versions/node/v24.0.0/bin/node");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("échoue quand nvm ne connaît pas la version — l'amorçage le dira au lieu de le taire", () => {
+    const dir = mkdtempSync(join(tmpdir(), "nvm-fake-"));
+    try {
+      writeFileSync(join(dir, "nvm.sh"), "nvm() { return 1; }\nreturn 3\n");
+      const run = spawnSync("bash", ["-c", NVM_SCRIPT, join(dir, "nvm.sh"), "24"], {
+        encoding: "utf8",
+      });
+      expect(run.status).not.toBe(0);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });
 
