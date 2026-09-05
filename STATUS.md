@@ -343,6 +343,18 @@ Le détail vit dans les corps de PR et dans `docs/` — ici, seulement ce qui go
   produits. Ce qui la borne : sa place APRÈS `guardRequest` (plafond par IP), un corps
   plafonné à 8 ko, et une table qui ne nomme personne (RLS sans policy, `client_id` désigne
   une soumission). Trois tests le figent — dont sa place dans le wrapper.
+- **La porte du quiz d'un chapitre n'a plus qu'UNE définition** (2026-09-04). Trois fonctions
+  serveur — `student_parcours_progress` (carte /parcours + couverture parentale),
+  `student_chapter_gaps`, `admin_engagement_overview` (« chapitres par actif », la métrique de
+  garde de é31 R-1) — tiraient « le » quiz d'un chapitre par un `LIMIT 1` **sans `ORDER BY`**,
+  alors que le client débloque dès que **n'importe lequel** est passé. Rien n'interdit deux quiz
+  dans un chapitre : ni contrainte, ni gate de contenu. ⚠️ **Ordonner le tirage aurait été le
+  mauvais correctif** — il rend la réponse stable et la laisse fausse. Le tirage n'a pas lieu
+  d'être : `chapter_quiz_gated` / `chapter_quiz_cleared` portent la règle une fois, les trois
+  l'appellent. Changement de **résultat**, strictement dans un sens (un chapitre peut désormais
+  compter là où il ne comptait pas ; aucune progression ne se perd). Le pgTAP 96 tient le décor
+  à **deux quiz**, le seul où la panne était visible — le reste de la suite tourne sur des
+  chapitres à quiz unique, où le tirage tombait juste par construction.
 - **Un chiffre de couverture sans son recours est un verdict, pas une information**
   (2026-09-04). « 3/20 chap. » a été lu « il a fait 3 chapitres sur 20 » — **par l'auteur du
   produit lui-même** — alors que ça veut dire « il en a MAÎTRISÉ 3 » : toutes les missions du
