@@ -31,6 +31,17 @@ const PGTAP_CONTROL = "/usr/share/postgresql/16/extension/pgtap.control";
 export const PROBE_TIMEOUT_S = 8;
 const PROBE_UA = "yahia-quest-arena-session-start";
 
+/**
+ * Ce que bash joue pour poser Node : $0 = nvm.sh, $1 = la version majeure. `source nvm.sh`
+ * se termine par un `nvm use default` implicite et RETOURNE SON CODE — 3 quand l'alias par
+ * défaut (`lts` sur la VM) n'est pas installé, ce qui est le cas d'une VM neuve. Chaîner le
+ * `source` avec `&&` faisait donc échouer tout l'amorçage avant même `nvm install` (constaté
+ * à la première reprise de session, 2026-09-05). D'où le `;` : on source, on ignore son code,
+ * et seul `nvm which` décide.
+ */
+export const NVM_SCRIPT =
+  'source "$0" >/dev/null 2>&1; nvm install "$1" >/dev/null 2>&1 && nvm alias default "$1" >/dev/null 2>&1; nvm which "$1"';
+
 /** Le hook n'agit qu'en session cloud — la VM porte `CLAUDE_CODE_REMOTE=true`, jamais un poste. */
 export function isCloud(env = process.env) {
   return env.CLAUDE_CODE_REMOTE === "true";
@@ -148,16 +159,11 @@ function ensureNode(root, env) {
   }
   const t0 = Date.now();
   // Script FIXE ; $0 = nvm.sh, $1 = la version — jamais interpolés.
-  const out = execFileSync(
-    "bash",
-    [
-      "-c",
-      'source "$0" >/dev/null 2>&1 && nvm install "$1" >/dev/null 2>&1 && nvm alias default "$1" >/dev/null 2>&1 && nvm which "$1"',
-      nvmSh,
-      String(wanted),
-    ],
-    { encoding: "utf8", timeout: 180_000, stdio: ["ignore", "pipe", "pipe"] },
-  );
+  const out = execFileSync("bash", ["-c", NVM_SCRIPT, nvmSh, String(wanted)], {
+    encoding: "utf8",
+    timeout: 180_000,
+    stdio: ["ignore", "pipe", "pipe"],
+  });
   const nodeBin = out.trim().split("\n").at(-1);
   const binDir = dirname(nodeBin);
   const version = execFileSync(nodeBin, ["-v"], { encoding: "utf8" }).trim();
