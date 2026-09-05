@@ -44,6 +44,9 @@ import {
 import { optionClassNameFor, type QuestionVerdict } from "@/features/quest/verdict";
 import { useInstantFeedback } from "@/features/quest/components/use-instant-feedback";
 import { useExerciseSession } from "@/features/quest/components/use-exercise-session";
+import { useQuestHints } from "@/features/quest/components/use-quest-hints";
+import { useQuestKeyboard } from "@/features/quest/components/use-quest-keyboard";
+import { QuestionNavigator } from "@/features/quest/components/question-navigator";
 import {
   useQuestAutosave,
   useQuestDraftRestore,
@@ -265,8 +268,6 @@ export function ExercisePlayer({
   const [showConfetti, setShowConfetti] = useState(false);
   const [showLevelUp, setShowLevelUp] = useState(false);
   const [result, setResult] = useState<PlayerResult | null>(null);
-  const [hintsRemaining, setHintsRemaining] = useState(0);
-  const [revealedHints, setRevealedHints] = useState<Record<string, string | null>>({});
 
   // Retour immédiat (levier 01). Jamais sur le quiz de compréhension (l'élève
   // s'y valide seul, la clé n'y est pas rendue) ni en Rappel (réponse libre :
@@ -374,25 +375,16 @@ export function ExercisePlayer({
     onError: (e) => toast.error(userFacingError(e, t.errors)),
   });
 
-  const hintCharges = data?.hintCharges ?? 0;
-  useEffect(() => {
-    setHintsRemaining(capabilities.hints ? hintCharges : 0);
-  }, [hintCharges, exerciseId, capabilities.hints]);
-
-  const hintMutation = useMutation({
-    mutationFn: (payload: { questionId: string }) => {
-      if (!strategy.revealHint) return Promise.reject(new Error("hints unsupported"));
-      return strategy.revealHint(payload.questionId);
-    },
-    onSuccess: (res) => {
-      setRevealedHints((prev) =>
-        res.questionId in prev ? prev : { ...prev, [res.questionId]: res.hint },
-      );
-      if (res.consumed) setHintsRemaining((n) => Math.max(0, n - 1));
-      play("hint");
-    },
+  // Les indices consommables (charges, révélations, dépense) vivent dans leur hook.
+  const hints = useQuestHints({
+    hintCharges: data?.hintCharges ?? 0,
+    enabled: capabilities.hints,
+    exerciseId,
+    revealHint: strategy.revealHint,
+    onRevealed: () => play("hint"),
     onError: (e) => toast.error(userFacingError(e, t.errors)),
   });
+  const { reset: resetHints } = hints;
 
   const questions = useMemo(() => data?.questions ?? [], [data?.questions]);
   const questionIds = useMemo(() => questions.map((q) => q.id), [questions]);
@@ -410,6 +402,9 @@ export function ExercisePlayer({
   const effectiveType = isRecall ? "recall" : currentType;
   const canValidate = Boolean(selected && isValidAnswerFormat(effectiveType, selected));
   const progress = useMemo(() => (total > 0 ? (idx / total) * 100 : 0), [idx, total]);
+  // Accès de test (compte admin) : le navigateur de questions, et rien d'autre —
+  // les portes, elles, sont levées côté serveur (quest.access.ts).
+  const unrestricted = data?.unrestricted === true;
   const isQuiz = data?.exercise?.mode === "quiz";
   // Boss chrome + time pressure are a connected perk; an anon visitor plays a
   // boss exercise as a plain question-by-question quest (no timer).
@@ -518,14 +513,13 @@ export function ExercisePlayer({
     setSelected(null);
     setShowConfetti(false);
     setShowLevelUp(false);
-    setRevealedHints({});
-    // On dépend des CALLBACKS du hook, jamais de l'objet `instant` : il est neuf
-    // à chaque rendu, donc en dépendre relancerait `resetRun` à chaque changement
-    // d'état — et effacerait le verdict à l'instant même où il paraît.
+    // On dépend des CALLBACKS des hooks, jamais des objets `instant` / `hints` :
+    // ils sont neufs à chaque rendu, donc en dépendre relancerait `resetRun` à
+    // chaque changement d'état — et effacerait le verdict à l'instant même où il paraît.
     resetFeedback();
     committedChoiceRef.current = null;
-    setHintsRemaining(capabilities.hints ? hintCharges : 0);
-  }, [resetSession, hintCharges, capabilities.hints, resetFeedback]);
+    resetHints();
+  }, [resetSession, resetFeedback, resetHints]);
 
   useEffect(() => {
     resetRun();
@@ -550,7 +544,12 @@ export function ExercisePlayer({
       if (!sessionId || !current?.id) return;
       if (answeredQuestionRef.current === current.id) return;
       answeredQuestionRef.current = current.id;
-      const nextAnswers = [...answers, { questionId: current.id, choice }];
+      // Une question déjà répondue (retour par le navigateur de test) REMPLACE sa
+      // réponse : la RPC compte une réponse par question, jamais deux.
+      const nextAnswers = [
+        ...answers.filter((a) => a.questionId !== current.id),
+        { questionId: current.id, choice },
+      ];
       if (idx + 1 >= total) {
         submitRun(nextAnswers);
         return;
@@ -575,6 +574,30 @@ export function ExercisePlayer({
     answeredQuestionRef.current = null;
     advanceWithChoice(choice);
   }, [advanceWithChoice, clearFeedback]);
+
+  // Saut libre — accès de test uniquement (`data.unrestricted`, voir
+  // question-navigator.tsx). Un verdict à l'écran tient une réponse figée mais pas
+  // encore enregistrée : on l'enregistre avant de partir, sinon elle se perdrait.
+  const jumpTo = useCallback(
+    (target: number) => {
+      const committed = committedChoiceRef.current;
+      const leavingId = current?.id;
+      if (committed && leavingId) {
+        setAnswers((prev) => [
+          ...prev.filter((a) => a.questionId !== leavingId),
+          { questionId: leavingId, choice: committed },
+        ]);
+      }
+      committedChoiceRef.current = null;
+      answeredQuestionRef.current = null;
+      clearFeedback();
+      const targetId = questions[target]?.id;
+      setSelected(answers.find((a) => a.questionId === targetId)?.choice ?? null);
+      setIdx(target);
+      autosave.markDirty();
+    },
+    [current?.id, answers, questions, clearFeedback, autosave],
+  );
 
   const validate = useCallback(() => {
     if (!selected || !canValidate || !sessionId) return;
@@ -615,39 +638,13 @@ export function ExercisePlayer({
     commitBossTiming,
   ]);
 
-  useEffect(() => {
-    if (result) return;
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-      // Verdict à l'écran : la seule touche qui agit est celle qui enchaîne. Les
-      // raccourcis de sélection sont muets — la réponse est déjà figée.
-      if (feedback) {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          continueAfterFeedback();
-        }
-        return;
-      }
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        validate();
-        return;
-      }
-      const optionsList = current ? (optionsById.get(current.id) ?? []) : [];
-      const num = parseInt(e.key, 10);
-      if (num >= 1 && num <= optionsList.length) {
-        e.preventDefault();
-        setSelected(optionsList[num - 1].id);
-        return;
-      }
-      const letterIdx = "abcd".indexOf(e.key.toLowerCase());
-      if (letterIdx >= 0 && letterIdx < optionsList.length) {
-        e.preventDefault();
-        setSelected(optionsList[letterIdx].id);
-      }
-    }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+  useQuestKeyboard({
+    active: !result,
+    feedbackShown: Boolean(feedback),
+    options: current ? (optionsById.get(current.id) ?? []) : [],
+    onContinue: continueAfterFeedback,
+    onValidate: validate,
+    onSelect: setSelected,
   });
 
   const preparingScreen = <LoadingState label={t.quest.preparing} className="min-h-[60dvh]" />;
@@ -767,7 +764,7 @@ export function ExercisePlayer({
 
   const options = current ? (optionsById.get(current.id) ?? []) : [];
   const canUseHints = !isQuiz && !bossMode && capabilities.hints && !isRecall;
-  const currentHintRevealed = current ? current.id in revealedHints : false;
+  const currentHintRevealed = current ? current.id in hints.revealed : false;
 
   return (
     <PageShell width="narrow" dir={isRtlSubject ? "rtl" : undefined}>
@@ -838,6 +835,17 @@ export function ExercisePlayer({
         {isQuiz && <QuizContractHint className="mt-2" />}
       </div>
 
+      {unrestricted && (
+        <QuestionNavigator
+          questionIds={questionIds}
+          currentIndex={idx}
+          answers={answers}
+          label={t.quest.unrestrictedNav}
+          questionLabel={t.quest.questionN}
+          onJump={jumpTo}
+        />
+      )}
+
       {feedbackEnabled && (
         <ComboStrip streak={comboStreak} encouragement={encouragement} entrance={scaleIn} />
       )}
@@ -904,13 +912,13 @@ export function ExercisePlayer({
 
           {canUseHints && current && (
             <QuestHintButton
-              remaining={hintsRemaining}
-              revealed={revealedHints[current.id]}
+              remaining={hints.remaining}
+              revealed={hints.revealed[current.id]}
               isRevealed={currentHintRevealed}
-              isPending={hintMutation.isPending}
+              isPending={hints.isPending}
               onReveal={() => {
                 if (currentHintRevealed) return;
-                hintMutation.mutate({ questionId: current.id });
+                hints.reveal(current.id);
               }}
             />
           )}

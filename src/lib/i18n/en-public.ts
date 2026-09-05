@@ -170,6 +170,8 @@ export const enPublic: TranslationKeys["public"] = {
     otherChapters: "Other chapters",
     chaptersProgress: "{done}/{total} chapters",
     quizContract: "Pass the quiz (≥ {pct}%) to unlock this chapter's missions.",
+    unrestrictedBanner:
+      "Test access (admin account): every mission is open — no quiz, no set order.",
     manuelTitle: "Official textbook",
     manuelHint: "This subject's official student textbook, to read online.",
     manuelOpen: "Open the textbook",

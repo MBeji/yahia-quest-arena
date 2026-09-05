@@ -344,6 +344,7 @@ export const ar: TranslationKeys = {
     recallChip: "🧠 استرجاع",
     recallLockedHint: "أنجِز المهمّة أوّلًا بنسبة 100%",
     recallLockedHintAnon: "سجّل الدخول وأنجِز المهمّة بنسبة 100%",
+    unrestrictedNav: "وصول تجريبي: افتح أيّ سؤال",
     savePending: "لم يُحفظ بعد — جارٍ إعادة المحاولة",
     saveDone: "تمّ حفظ عملك",
   },

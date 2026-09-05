@@ -609,6 +609,8 @@ describe("NON-REGRESSION: Data shape contracts", () => {
       "hintCharges",
       "questions",
       "quizGated",
+      // Additive (2026-09-05) : accès de test du compte admin — allume le navigateur de questions.
+      "unrestricted",
       "variant",
     ]);
     expect(result.questions).toBeInstanceOf(Array);
