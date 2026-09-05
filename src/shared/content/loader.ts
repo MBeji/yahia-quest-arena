@@ -9,7 +9,9 @@ import {
   quizSchema,
   subjectMetaWithCompileToSchema,
   videoRegistrySchema,
+  type ChapterMeta,
   type CompetencyRegistry,
+  type ContentExercise,
   type LoadedChapter,
   type LoadedSubject,
   type LoadedExercise,
@@ -85,6 +87,38 @@ const listJsonFiles = (dir: string): string[] =>
         .sort()
     : [];
 
+/**
+ * Résout le `code` d'une reprise de manuel (étude 21 lot 2) : il hérite du
+ * chapitre quand l'exercice ne le porte pas.
+ *
+ * POURQUOI ICI ET PAS DANS ZOD. Zod valide UN fichier ; l'héritage lit deux
+ * fichiers — l'exercice et le `chapter.json` au-dessus. Le loader est le premier
+ * endroit qui tient les deux, donc le seul qui puisse trancher.
+ *
+ * ⚠️ UNE REPRISE SANS MANUEL IDENTIFIABLE EST UNE ERREUR, pas un avertissement.
+ * Le champ existe pour dire d'OÙ vient l'exercice : sans code résolu, il ne
+ * trace rien, et le rapport de couverture compterait une reprise qu'il ne peut
+ * rattacher à aucun manuel. Mieux vaut refuser le fichier que publier une
+ * traçabilité creuse.
+ */
+function resolveExerciseManuel(
+  data: ContentExercise,
+  meta: ChapterMeta,
+  filePath: string,
+): ContentExercise {
+  const manuel = data.manuel;
+  if (!manuel) return data;
+  const code = manuel.code ?? meta.manuel?.code;
+  if (!code) {
+    throw new ContentValidationError(
+      `Validation failed for ${filePath}:\n  manuel: no book code — the exercise declares no ` +
+        `\`manuel.code\` and its chapter has no \`manuel.code\` to inherit from. A reprise that ` +
+        `names no manual traces nothing (étude 21 R-4).`,
+    );
+  }
+  return { ...data, manuel: { ...manuel, code } };
+}
+
 function loadChapter(chapterDir: string, slug: string): LoadedChapter {
   const meta = parseOrThrow(
     chapterMetaSchema,
@@ -102,10 +136,8 @@ function loadChapter(chapterDir: string, slug: string): LoadedChapter {
   const exercisesDir = join(chapterDir, EXERCISES_DIR);
   const exercises: LoadedExercise[] = listJsonFiles(exercisesDir).map((file) => {
     const filePath = join(exercisesDir, file);
-    return {
-      slug: file.replace(/\.json$/, ""),
-      data: parseOrThrow(exerciseSchema, readJson(filePath), filePath),
-    };
+    const data = parseOrThrow(exerciseSchema, readJson(filePath), filePath);
+    return { slug: file.replace(/\.json$/, ""), data: resolveExerciseManuel(data, meta, filePath) };
   });
 
   return { slug, meta, lesson, summary, quiz, exercises };

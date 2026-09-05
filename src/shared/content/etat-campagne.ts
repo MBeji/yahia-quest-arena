@@ -21,6 +21,7 @@
  * appelle ici — même partage que `suivi.ts` / `audit-program.ts`.
  */
 import type { GradeAudit, SubjectAudit } from "./program-manifest.ts";
+import { LEGACY_GRADE_SLUGS } from "./schema.ts";
 import {
   parcoursDuGrade,
   type OuvertureLue,
@@ -177,6 +178,8 @@ function chapitresComplets(couples: EtatCouple[]): number {
   return total;
 }
 
+const LEGACY_SLUGS: ReadonlySet<string> = new Set(LEGACY_GRADE_SLUGS);
+
 /**
  * Le seul constat que rien d'autre ne porte : du contenu publiable derrière un
  * parcours qui n'est pas `available`. Ni les gates de contenu ni la Content CI
@@ -187,6 +190,18 @@ function constatsOuverture(parcours: ParcoursOuverture[], complets: number): str
   const out: string[] = [];
   for (const p of parcours) {
     if (p.statut === "available") continue;
+    // Un nœud plat hérité (`2eme-sec`, `3eme-sec`, `bac`) ne cache RIEN : il est
+    // `is_selectable = false` en base et interdit comme cible `compileTo`, donc
+    // aucun élève ne peut le choisir et aucun chapitre ne vit derrière lui — le
+    // contenu « de 2ème sec » est compilé vers les grades de SECTION, qui portent
+    // leurs propres parcours (étude 16 R-9). Le compte `complets` de ce niveau
+    // agrège justement les chapitres de ces sections : l'affirmer invisible
+    // derrière le nœud plat était faux, et prescrivait une migration d'ouverture
+    // que `parcours-ouverture.test.ts` déclare ne devoir arriver JAMAIS.
+    // C'est le faux « pas ouvert » contre lequel `parcours-ouverture.ts` met en
+    // garde en tête de fichier : il « enverrait quelqu'un écrire une migration
+    // inutile ». Vécu — une session est allée jusqu'à préparer la branche.
+    if (p.grade !== null && LEGACY_SLUGS.has(p.grade)) continue;
     const etat =
       p.statut === "coming_soon"
         ? `resté \`coming_soon\` (${p.migration})`

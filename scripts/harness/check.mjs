@@ -329,6 +329,129 @@ export function findUnpinnedActions(text) {
   return out;
 }
 
+/**
+ * Retire les commentaires d'un JSONC. `tsconfig.json` en porte déjà (`/* Bundler mode *\/`) :
+ * c'est le format que TypeScript accepte, et le gate doit le lire comme lui.
+ */
+export function stripJsonComments(text) {
+  let out = "";
+  let inString = false;
+  let escaped = false;
+  for (let i = 0; i < text.length; i += 1) {
+    const ch = text[i];
+    if (inString) {
+      out += ch;
+      if (escaped) escaped = false;
+      else if (ch === "\\") escaped = true;
+      else if (ch === '"') inString = false;
+      continue;
+    }
+    if (ch === '"') {
+      inString = true;
+      out += ch;
+    } else if (ch === "/" && text[i + 1] === "/") {
+      while (i < text.length && text[i] !== "\n") i += 1;
+      out += "\n";
+    } else if (ch === "/" && text[i + 1] === "*") {
+      i += 2;
+      while (i < text.length && !(text[i] === "*" && text[i + 1] === "/")) i += 1;
+      i += 1;
+    } else {
+      out += ch;
+    }
+  }
+  return out;
+}
+
+/** Un glob de `include` TypeScript, en expression régulière. Seuls `**` et `*` sont utilisés ici. */
+function includeToRegExp(pattern) {
+  // UNE seule passe, à dessein : deux `replace` enchaînés se corrompent l'un l'autre — le `*`
+  // que le premier insère dans `(?:.*/)` est réécrit par le second. Trouvé par le test qui
+  // vérifie qu'un motif couvre bien un fichier profond.
+  const body = pattern
+    .replace(/[.+^${}()|[\]\\]/g, "\\$&")
+    .replace(/\*\*\/|\*\*|\*/g, (m) => (m === "**/" ? "(?:[^/]+/)*" : m === "**" ? ".*" : "[^/]*"));
+  return new RegExp(`^${body}$`);
+}
+
+/**
+ * Les scripts TypeScript sont-ils VRAIMENT typés ? (étude 32, C-15)
+ *
+ * Le constat qui a fait écrire ce contrôle : `tsconfig.json` n'incluait que `src/**`, donc
+ * `npm run typecheck` ne voyait AUCUN des 13 fichiers de `scripts/content/**` — ceux-là mêmes
+ * qui portent les gates de contenu du corpus, et que Node exécute en
+ * `--experimental-strip-types`. Un `join` manquant à un import est passé vert au typecheck et a
+ * tué `content:audit:strict` sur un `ReferenceError` au premier lancement réel.
+ *
+ * Deux façons de perdre ce filet, et ce contrôle ferme les deux : débrancher le second
+ * programme de la chaîne, ou rétrécir son `include` jusqu'à ce qu'il ne couvre plus rien. Un
+ * gate qui peut être vidé sans que rien ne le dise est le défaut que cette étude a poursuivi
+ * de bout en bout.
+ */
+export function checkScriptsTypecheck({ typecheckScript, include, scriptFiles }) {
+  const problems = [];
+  const config = "tsconfig.scripts.json";
+
+  if (typeof typecheckScript !== "string" || !typecheckScript.includes(config)) {
+    problems.push(
+      `le script npm \`typecheck\` n'invoque pas \`${config}\` — les fichiers .ts de ` +
+        "`scripts/` ne seraient typés par personne (étude 32, C-15).",
+    );
+  }
+
+  const patterns = (Array.isArray(include) ? include : []).map(includeToRegExp);
+  if (patterns.length === 0) {
+    problems.push(`${config} n'a pas d'\`include\` — son programme serait vide.`);
+    return problems;
+  }
+  for (const file of scriptFiles) {
+    if (!patterns.some((re) => re.test(file))) {
+      problems.push(`${file} n'est couvert par aucun \`include\` de ${config} (étude 32, C-15).`);
+    }
+  }
+  return problems;
+}
+
+/**
+ * Chaque famille de `policy.json` porte sa raison (étude 32, D-7).
+ *
+ * Ce fichier avait 7 300 caractères de `$comment` — trois arbitrages datés, racontés en
+ * entier — au-dessus de 92 lignes de JSON. Le récit est juste et il a coûté cher à écrire ;
+ * c'est sa PLACE qui posait problème : un fichier de règles n'est pas un journal, et une
+ * histoire qu'on lit une fois n'aide pas celui qui cherche pourquoi `git rebase` est dehors.
+ * Le journal est parti dans `docs/agents/zero-intervention.md`, qui porte déjà ces
+ * arbitrages ; ici, une ligne par groupe — et cet invariant fait qu'un groupe ajouté sans
+ * raison ne passe pas. Une famille de permissions sans justification écrite est exactement
+ * ce que la revue est censée attraper, et ce qu'elle rate quand la liste s'allonge.
+ */
+export function checkPolicyReasons(policy) {
+  const allow = policy?.allow;
+  if (!allow || typeof allow !== "object") return ["harness/policy.json: bloc `allow` absent."];
+
+  const groups = Object.keys(allow).filter((k) => !k.startsWith("$"));
+  const why = allow.$why ?? {};
+  const problems = [];
+
+  for (const group of groups) {
+    const reason = why[group];
+    if (typeof reason !== "string" || reason.trim().length < 20) {
+      problems.push(
+        `harness/policy.json: la famille \`${group}\` n'a pas de raison lisible dans ` +
+          "`allow.$why` — une permission sans justification écrite est ce que la revue rate.",
+      );
+    }
+  }
+  for (const declared of Object.keys(why)) {
+    if (!groups.includes(declared)) {
+      problems.push(
+        `harness/policy.json: \`allow.$why\` justifie \`${declared}\`, qui n'est plus une famille — ` +
+          "raison périmée, retire-la (sinon ce bloc devient un cimetière).",
+      );
+    }
+  }
+  return problems;
+}
+
 export function isJsonValid(text) {
   try {
     JSON.parse(text);
@@ -471,6 +594,47 @@ export const CORPUS_CLAUDE_MD_MAX_LINES = 150;
 export const CORPUS_CLAUDE_MD_MAX_BYTES = 12 * 1024;
 
 /**
+ * Les déclencheurs `pull_request` qui font naître un run FANTÔME (étude 32, lot 1).
+ *
+ * Sur le dépôt privé, `auto-pr.yml` ouvre la PR de chaque branche poussée avec le
+ * `GITHUB_TOKEN`. La garde anti-récursion de GitHub refuse alors de faire tourner ses
+ * checks — mais elle enregistre quand même la LIGNE du run, qui sort `failure` avec
+ * **zéro job**. Il n'a rien évalué et ressemble pourtant à un gate rouge : trois
+ * incidents en sont nés (#280, #291, #293), dont un gel d'une journée de toute la chaîne.
+ *
+ * Seul l'événement `opened` produit ces runs, et le retirer les supprime à la racine.
+ * Ce contrôle existe parce qu'un `types:` correct n'est qu'une convention tant qu'aucun
+ * gate ne le tient : `pull_request:` SANS `types:` réécoute `opened` par défaut, ce qui
+ * fait de l'oubli le comportement le plus facile.
+ */
+export function findPhantomProneTriggers(text) {
+  let doc;
+  try {
+    doc = parseYaml(text);
+  } catch {
+    return []; // Le YAML illisible est déjà le métier de `checkYamlFiles`.
+  }
+  // ⚠️ En YAML 1.1, `on:` est la clé booléenne `true`. Le paquet `yaml` suit la 1.2, où
+  // c'est la chaîne « on » — mais on lit les deux, pour ne dépendre d'aucune des deux.
+  const on = doc?.on ?? doc?.true ?? (doc ? doc[true] : undefined);
+  if (!on || typeof on !== "object") return [];
+
+  const out = [];
+  for (const event of ["pull_request", "pull_request_target"]) {
+    if (!(event in on)) continue;
+    const cfg = on[event];
+    // `pull_request:` nu (valeur nulle) vaut [opened, synchronize, reopened].
+    const types = cfg && typeof cfg === "object" ? cfg.types : undefined;
+    if (types === undefined || types === null) {
+      out.push({ event, reason: "sans `types:`, GitHub écoute `opened` par défaut" });
+    } else if (Array.isArray(types) && types.includes("opened")) {
+      out.push({ event, reason: "`opened` est listé explicitement" });
+    }
+  }
+  return out;
+}
+
+/**
  * Les invariants du harness appliqués au dépôt PRIVÉ (étude 32, D-5).
  *
  * POURQUOI ICI ET PAS LÀ-BAS. Le corpus porte 43 skills, 12 workflows et un `CLAUDE.md` de
@@ -554,6 +718,14 @@ export function collectCorpusProblems(root) {
     for (const hit of findUnpinnedActions(content)) {
       problems.push(
         `corpus: ${relTo(file)}: \`uses: ${hit.uses}\` n'est pas épinglé à un SHA (${hit.reason}).`,
+      );
+    }
+    // Le fantôme : un run que personne n'a demandé et que GitHub refuse aussitôt.
+    for (const hit of findPhantomProneTriggers(content)) {
+      problems.push(
+        `corpus: ${relTo(file)}: \`${hit.event}\` écoute \`opened\` (${hit.reason}) — ` +
+          "chaque PR ouverte par `auto-pr` y gagnerait un run `failure` à zéro job. " +
+          "Déclarer `types:` sans `opened` (étude 32, lot 1).",
       );
     }
   }
@@ -711,6 +883,38 @@ function main() {
           "version as a trailing comment (docs/dependency-maintenance.md).",
       );
     }
+  }
+
+  // 5ter. Les scripts .ts sont réellement typés (étude 32, C-15).
+  if (engineMode) {
+    const pkgRaw = readIfExists(join(ROOT, "package.json"));
+    const tsRaw = readIfExists(join(ROOT, "tsconfig.scripts.json"));
+    if (tsRaw === null) {
+      problems.push("tsconfig.scripts.json est absent — les scripts .ts ne seraient plus typés.");
+    } else {
+      let include = null;
+      try {
+        include = JSON.parse(stripJsonComments(tsRaw))?.include ?? null;
+      } catch {
+        problems.push("tsconfig.scripts.json n'est pas un JSONC lisible.");
+      }
+      if (include !== null) {
+        const scriptFiles = walk(join(ROOT, "scripts"), /\.ts$/).map(rel);
+        problems.push(
+          ...checkScriptsTypecheck({
+            typecheckScript: pkgRaw ? JSON.parse(pkgRaw).scripts?.typecheck : undefined,
+            include,
+            scriptFiles,
+          }),
+        );
+      }
+    }
+  }
+
+  // 5bis. Chaque famille de la politique porte sa raison (étude 32, D-7).
+  const policyRaw = engineMode ? readIfExists(join(ROOT, "harness", "policy.json")) : null;
+  if (policyRaw !== null && isJsonValid(policyRaw)) {
+    problems.push(...checkPolicyReasons(JSON.parse(policyRaw)));
   }
 
   // 5. JSON validity of every harness/*.json file.

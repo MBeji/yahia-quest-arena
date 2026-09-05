@@ -28,10 +28,25 @@ import { ContentValidationError } from "../../src/shared/content/loader.ts";
 import { isSurveilled, parseProvenance, type SurveilledText } from "./verbatim-checks.ts";
 
 export const REPO_ROOT = resolve(import.meta.dirname, "../..");
-export const PROGRAMMES_DIR = join(
-  REPO_ROOT,
-  ".claude/skills/content-ecole-tn/references/programmes-officiels",
-);
+
+/**
+ * L'arbre `programmes-officiels/` — le registre de transcription — vit sous `content/`, avec
+ * les données qu'il décrit (étude 32, lot 5, constat C-13).
+ *
+ * IL A DÉMÉNAGÉ le 2026-09-04 (privé#346) depuis
+ * `.claude/skills/content-ecole-tn/references/programmes-officiels`, où 12 Mo et 130 fichiers de
+ * manifestes et de programmes transcrits étaient rangés dans un dossier d'INSTRUCTIONS. Ce
+ * rangement imposait un SECOND symlink à la recette locale comme à la Content CI — la première
+ * chose qu'une session oublie, et `programme:check` rendait alors un faux « rien à faire » sur
+ * le garde-fou anti-double-transcription.
+ *
+ * Le chemin de compatibilité qui a porté la bascule est retiré : deux emplacements maintenus
+ * après le déménagement seraient un shim, et le premier lecteur qui en trouve deux ne sait plus
+ * lequel fait foi.
+ */
+export const PROGRAMMES_REL = "content/programmes-officiels";
+
+export const PROGRAMMES_DIR = join(REPO_ROOT, PROGRAMMES_REL);
 export const SUIVI_DIR = join(PROGRAMMES_DIR, "suivi");
 /** Fiches de source externe du profil `source-web` (étude 27 D-2). */
 export const SOURCES_EXTERNES_DIR = join(PROGRAMMES_DIR, "sources-externes");
@@ -67,7 +82,10 @@ export function failMissingRegistry(path: string, what: string): never {
         `    masquerait le vrai registre.`,
     );
   }
-  fail(`${what} introuvable: ${path} (lancer --corpus)`);
+  fail(
+    `${what} introuvable: ${path} (lancer --corpus)\n` +
+      `  → Emplacement attendu : ${PROGRAMMES_REL}.`,
+  );
 }
 
 /**

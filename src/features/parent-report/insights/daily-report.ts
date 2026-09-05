@@ -99,6 +99,30 @@ const subjectSliceSchema = z.object({
   chaptersCompleted: numberish,
 });
 
+/**
+ * Ce qui MANQUE à un chapitre publié pour compter comme maîtrisé.
+ *
+ * Sans lui, « 3/20 chapitres » est un verdict sans recours : le parent lit un
+ * chiffre bas et n'a aucun moyen de savoir quel geste le ferait monter. Le
+ * 2026-09-04, l'auteur du produit lui-même a lu ce « 3/20 » comme « il a fait 3
+ * chapitres sur 20 » — alors que ses chapitres étaient à « 4/6 missions ».
+ */
+const chapterGapSchema = z.object({
+  subjectId: text,
+  chapterId: text,
+  title: text,
+  missionsTotal: numberish,
+  missionsPassed: numberish,
+  /** Le chapitre porte un quiz de compréhension ET la matière est scolaire. */
+  quizGated: z.boolean().catch(false),
+  /**
+   * Le quiz est validé — ≥ 80 % ET au moins 4 s par question. La seconde moitié
+   * est la porte INVISIBLE : un chapitre à « 6/6 missions » ne compte toujours
+   * pas si le quiz a été expédié, et rien ne le disait nulle part.
+   */
+  quizSatisfied: z.boolean().catch(true),
+});
+
 const chapterSliceSchema = z.object({
   chapterId: text,
   title: text,
@@ -239,6 +263,8 @@ export const dailyReportSchema = z.object({
   exercises: z.array(exerciseRunSchema).catch([]),
   subjects: z.array(subjectSliceSchema).catch([]),
   chapters: z.array(chapterSliceSchema).catch([]),
+  /** Au plus 3 par matière, le plus proche du but en premier. */
+  chapterGaps: z.array(chapterGapSchema).catch([]),
   totals: totalsSchema,
   previous: totalsSchema,
 });
@@ -249,6 +275,7 @@ export type LessonView = z.infer<typeof lessonViewSchema>;
 export type ExerciseRun = z.infer<typeof exerciseRunSchema>;
 export type SubjectSlice = z.infer<typeof subjectSliceSchema>;
 export type ChapterSlice = z.infer<typeof chapterSliceSchema>;
+export type ChapterGap = z.infer<typeof chapterGapSchema>;
 export type ActivityTotals = z.infer<typeof totalsSchema>;
 export type ActivityBreakdown = z.infer<typeof activityBreakdownSchema>;
 

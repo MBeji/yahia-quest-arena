@@ -23,7 +23,11 @@ import {
   SKILL_DESCRIPTION_MAX,
   AGENTS_MD_WARN_RATIO,
   findSuspiciousInvisibles,
+  findPhantomProneTriggers,
   collectCorpusProblems,
+  checkPolicyReasons,
+  checkScriptsTypecheck,
+  stripJsonComments,
 } from "../check.mjs";
 
 describe("checkPointer", () => {
@@ -570,6 +574,66 @@ describe("checkAgentsSize — avertir avant de bloquer", () => {
   });
 });
 
+describe("findPhantomProneTriggers — l'événement qui fabrique un run que personne n'a demandé", () => {
+  // Le fantôme n'est pas une hypothèse : mesuré sur la PR privée #343 le 2026-09-04, trois
+  // runs `pull_request` en `failure` — Content CI, Roadmap sync, Automerge — à ZÉRO job
+  // chacun, pendant que les vrais tournaient en `workflow_dispatch`. Seul `opened` les crée.
+  it("attrape le `pull_request:` nu, dont le défaut inclut `opened`", () => {
+    const hits = findPhantomProneTriggers("on:\n  pull_request:\n  push:\n    branches: [main]\n");
+    expect(hits).toHaveLength(1);
+    expect(hits[0]).toMatchObject({ event: "pull_request" });
+    expect(hits[0].reason).toContain("par défaut");
+  });
+
+  it("attrape `opened` listé explicitement", () => {
+    const hits = findPhantomProneTriggers(
+      "on:\n  pull_request:\n    types: [opened, reopened, labeled]\n",
+    );
+    expect(hits).toHaveLength(1);
+    expect(hits[0].reason).toContain("explicitement");
+  });
+
+  it("laisse passer la forme corrigée", () => {
+    expect(
+      findPhantomProneTriggers("on:\n  pull_request:\n    types: [synchronize, reopened]\n"),
+    ).toEqual([]);
+  });
+
+  it("garde le filtre `paths:` hors du sujet — c'est `types:` qui décide", () => {
+    // roadmap-sync.yml porte les deux ; un `paths:` ne dit rien de l'événement écouté.
+    expect(
+      findPhantomProneTriggers(
+        'on:\n  pull_request:\n    types: [synchronize, reopened]\n    paths:\n      - "FableEtudes/ROADMAP.md"\n',
+      ),
+    ).toEqual([]);
+  });
+
+  it("couvre aussi `pull_request_target`", () => {
+    expect(findPhantomProneTriggers("on:\n  pull_request_target:\n")).toMatchObject([
+      { event: "pull_request_target" },
+    ]);
+  });
+
+  it("ne dit rien d'un workflow qui n'écoute pas les PR", () => {
+    expect(findPhantomProneTriggers('on:\n  schedule:\n    - cron: "0 6 * * *"\n')).toEqual([]);
+    expect(findPhantomProneTriggers("on:\n  workflow_dispatch:\n")).toEqual([]);
+  });
+
+  it("laisse le YAML illisible au gate dont c'est le métier", () => {
+    // `checkYamlFiles` le signale déjà ; deux voix sur le même défaut brouillent le rapport.
+    expect(findPhantomProneTriggers("on:\n  pull_request:\n :::pas du yaml")).toEqual([]);
+    expect(findPhantomProneTriggers("")).toEqual([]);
+  });
+
+  it("lit `on:` même si un analyseur YAML 1.1 en fait la clé booléenne `true`", () => {
+    // Dépendre de la version de schéma du paquet `yaml` rendrait ce gate muet sur une montée
+    // de version — et un gate muet est pire qu'un gate absent.
+    expect(
+      findPhantomProneTriggers(JSON.stringify({ true: { pull_request: null } })),
+    ).toMatchObject([{ event: "pull_request" }]);
+  });
+});
+
 describe("collectCorpusProblems — les invariants appliqués au dépôt privé", () => {
   const skill = (name, description) =>
     `---\nname: ${name}\ndescription: >-\n  ${description}\n---\n\n# ${name}\n`;
@@ -698,5 +762,130 @@ describe("le CLI en mode corpus — les deux jeux d'invariants ne cohabitent pas
     const { status, stdout, stderr } = run(["--corpus", root]);
     expect(status).toBe(1);
     expect(stdout + stderr).toContain("corpus: .claude/skills/content-x/SKILL.md");
+  });
+});
+
+describe("stripJsonComments", () => {
+  it("retire les commentaires de ligne et de bloc", () => {
+    const jsonc = '{\n  // une ligne\n  "a": 1, /* un bloc */\n  "b": 2\n}';
+    expect(JSON.parse(stripJsonComments(jsonc))).toEqual({ a: 1, b: 2 });
+  });
+
+  it("ne touche PAS à ce qui ressemble à un commentaire DANS une chaîne", () => {
+    // Le piège classique d'un stripper naïf : une URL dans une valeur.
+    const jsonc = '{ "url": "https://exemple.tn/a", "x": 1 }';
+    expect(JSON.parse(stripJsonComments(jsonc))).toEqual({ url: "https://exemple.tn/a", x: 1 });
+  });
+
+  it("laisse un guillemet échappé fermer correctement la chaîne", () => {
+    const jsonc = '{ "s": "il a dit \\"//\\" ici", "y": 2 }';
+    expect(JSON.parse(stripJsonComments(jsonc))).toEqual({ s: 'il a dit "//" ici', y: 2 });
+  });
+});
+
+describe("checkScriptsTypecheck — les scripts .ts sont-ils VRAIMENT typés ?", () => {
+  const ok = {
+    typecheckScript: "tsc --noEmit && tsc -p tsconfig.scripts.json",
+    include: ["scripts/**/*.ts"],
+    scriptFiles: ["scripts/content/build.ts", "scripts/ci/quelque-chose.ts"],
+  };
+
+  it("passe quand la chaîne invoque le second programme et qu'il couvre tout", () => {
+    expect(checkScriptsTypecheck(ok)).toEqual([]);
+  });
+
+  it("attrape le débranchement de la chaîne", () => {
+    // Le filet le plus facile à perdre : on retire l'appel, plus rien ne le dit.
+    const problems = checkScriptsTypecheck({ ...ok, typecheckScript: "tsc --noEmit" });
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toContain("n'invoque pas");
+  });
+
+  it("attrape un `include` rétréci qui laisse des fichiers dehors", () => {
+    const problems = checkScriptsTypecheck({ ...ok, include: ["scripts/ci/**/*.ts"] });
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toContain("scripts/content/build.ts");
+  });
+
+  it("attrape un `include` vide ou absent, et s'arrête là", () => {
+    // Sans include, TOUS les fichiers seraient signalés : un seul constat vaut mieux qu'un mur.
+    expect(checkScriptsTypecheck({ ...ok, include: [] })).toHaveLength(1);
+    expect(checkScriptsTypecheck({ ...ok, include: undefined })).toHaveLength(1);
+  });
+
+  it("comprend `**/` au milieu d'un motif, pas seulement en tête", () => {
+    expect(
+      checkScriptsTypecheck({
+        ...ok,
+        include: ["scripts/**/*.ts"],
+        scriptFiles: ["scripts/a/b/c/profond.ts"],
+      }),
+    ).toEqual([]);
+  });
+
+  it("ne laisse pas `*` traverser un séparateur de chemin", () => {
+    // `scripts/*.ts` ne couvre PAS `scripts/content/x.ts` — sinon le contrôle mentirait.
+    const problems = checkScriptsTypecheck({
+      ...ok,
+      include: ["scripts/*.ts"],
+      scriptFiles: ["scripts/content/x.ts"],
+    });
+    expect(problems).toHaveLength(1);
+  });
+});
+
+describe("checkPolicyReasons — une famille de permissions sans raison ne passe pas", () => {
+  const ok = {
+    allow: {
+      $why: { gates: "Les gates du projet, et tout script npm que `node scripts/:*` ouvre déjà." },
+      gates: ["Bash(npm run:*)"],
+    },
+  };
+
+  it("se tait quand chaque famille porte sa raison", () => {
+    expect(checkPolicyReasons(ok)).toEqual([]);
+  });
+
+  it("attrape une famille ajoutée sans justification", () => {
+    const drift = { allow: { ...ok.allow, "nouvelle-famille": ["Bash(curl:*)"] } };
+    expect(checkPolicyReasons(drift).join("\n")).toContain("nouvelle-famille");
+  });
+
+  it("refuse une raison trop courte pour en être une", () => {
+    // « ok » ou « utile » n'expliquent rien : la contrainte de longueur est là pour que
+    // remplir la case coûte au moins une phrase.
+    const lazy = { allow: { $why: { gates: "utile" }, gates: ["Bash(npm run:*)"] } };
+    expect(checkPolicyReasons(lazy)).toHaveLength(1);
+  });
+
+  it("attrape une raison PÉRIMÉE, pour que ce bloc ne devienne pas un cimetière", () => {
+    const stale = {
+      allow: { ...ok.allow, $why: { ...ok.allow.$why, disparue: "Une famille supprimée hier." } },
+    };
+    expect(checkPolicyReasons(stale).join("\n")).toContain("disparue");
+  });
+
+  it("rend un constat lisible plutôt que d'exploser sur un fichier vide", () => {
+    expect(checkPolicyReasons({})).toHaveLength(1);
+  });
+});
+
+describe("harness/policy.json — le fichier réel de ce dépôt", () => {
+  it("porte une raison pour chacune de ses familles", () => {
+    const policy = JSON.parse(readFileSync("harness/policy.json", "utf8"));
+    expect(checkPolicyReasons(policy)).toEqual([]);
+  });
+
+  it("garde ses dénis, que l'ouverture par famille ne doit jamais rouvrir", () => {
+    // `gates` ouvre désormais `npm run:*` : le déni qui protège le schéma de prod doit
+    // survivre à cet élargissement, sinon on a troqué une invite contre une porte.
+    const policy = JSON.parse(readFileSync("harness/policy.json", "utf8"));
+    const denied = policy.deny.map((d) => d.rule);
+    expect(denied).toContain("Bash(node scripts/db/push-prod.mjs:*)");
+    expect(denied).toContain("Bash(npx supabase db push:*)");
+    expect(denied).toContain("Bash(gh secret delete:*)");
+    expect(policy.deny.every((d) => typeof d.reason === "string" && d.reason.length > 20)).toBe(
+      true,
+    );
   });
 });

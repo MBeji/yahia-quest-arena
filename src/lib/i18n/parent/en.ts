@@ -231,7 +231,17 @@ export const enParent: ParentTranslations = {
     subjectsSubtitle: "Where the time goes, and what it returns, subject by subject.",
     subjectsEmpty: "No subject worked in this period.",
     colSubject: "Subject",
-    colCoverage: "Syllabus",
+    colCoverage: "Chapters mastered",
+    coverageHint:
+      "A chapter counts once EVERY mission is passed (≥ 60 %), comprehension quiz included.",
+    gapsTitle: "What a chapter still needs",
+    gapsSubtitle: "Closest to done first — one move, and the chapter counts.",
+    gapsMissions: "{n} mission(s) left to pass",
+    gapsQuiz: "Comprehension quiz to retake, unhurried",
+    gapsBoth: "{n} mission(s) to pass, then the quiz",
+    gapsMissionCount: "{done}/{total} missions",
+    gapsQuizHint:
+      "The quiz needs 80 % AND at least 4 seconds per question — answering too fast does not validate it.",
     scopeLabel: "Showing:",
     scopeClass: "Their class",
     scopeClassHint: "(their class)",

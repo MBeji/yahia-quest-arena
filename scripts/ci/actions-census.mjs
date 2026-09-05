@@ -117,7 +117,18 @@ export function dedupe(runs) {
 export function summarise(runs, { phantomIds = new Set(), defaultBranch = "main" } = {}) {
   const all = dedupe(runs).sort((a, b) => String(a.created_at).localeCompare(String(b.created_at)));
   if (all.length === 0) {
-    return { total: 0, days: 0, from: null, to: null, workflows: [], phantoms: 0, branches: 0 };
+    return {
+      total: 0,
+      days: 0,
+      from: null,
+      to: null,
+      workflows: [],
+      phantoms: 0,
+      branches: 0,
+      runsPerBranch: 0,
+      cyclesPerBranch: 0,
+      worstBranch: null,
+    };
   }
 
   const from = all[0].created_at;
@@ -129,6 +140,7 @@ export function summarise(runs, { phantomIds = new Set(), defaultBranch = "main"
 
   const byWorkflow = new Map();
   const branches = new Set();
+  const headsByBranch = new Map();
   let phantoms = 0;
   let minutes = 0;
 
@@ -160,10 +172,27 @@ export function summarise(runs, { phantomIds = new Set(), defaultBranch = "main"
     entry.conclusions[conclusion] = (entry.conclusions[conclusion] ?? 0) + 1;
     entry.events[run.event] = (entry.events[run.event] ?? 0) + 1;
 
-    if (run.head_branch && run.head_branch !== defaultBranch) branches.add(run.head_branch);
+    if (run.head_branch && run.head_branch !== defaultBranch) {
+      branches.add(run.head_branch);
+      // Une TÊTE = un cycle de CI complet. Constat C-14 (étude 32) : pour merger, une PR doit
+      // rester à jour avec la branche par défaut, donc chaque PR qui entre pendant sa CI lui
+      // fabrique une tête neuve — et relance tout. Mesuré sur arena#975 : cinq têtes, cinq
+      // cycles, 41 minutes, pour un diff sans une ligne de `src/`. C'est une TROISIÈME source
+      // de runs par branche, distincte des fantômes et du double dispatch, et l'arbitrage Q-5
+      // a été de l'ACCEPTER tant que le dépôt est public — mais de la mesurer, pour qu'on
+      // rouvre la question sur un chiffre plutôt que sur une impression.
+      if (run.head_sha) {
+        if (!headsByBranch.has(run.head_branch)) headsByBranch.set(run.head_branch, new Set());
+        headsByBranch.get(run.head_branch).add(run.head_sha);
+      }
+    }
   }
 
   const workflows = [...byWorkflow.values()].sort((a, b) => b.runs - a.runs);
+  const heads = [...headsByBranch.values()].reduce((n, set) => n + set.size, 0);
+  // La branche la plus relancée de la fenêtre : c'est elle qui dit si C-14 coûte cher ce
+  // jour-là. Une moyenne seule le noierait — la plupart des branches n'ont qu'une tête.
+  const worst = [...headsByBranch.entries()].sort((a, b) => b[1].size - a[1].size)[0] ?? null;
   const onBranches = all.filter((r) => r.head_branch && r.head_branch !== defaultBranch).length;
 
   return {
@@ -176,6 +205,8 @@ export function summarise(runs, { phantomIds = new Set(), defaultBranch = "main"
     workflows,
     branches: branches.size,
     runsPerBranch: branches.size ? onBranches / branches.size : 0,
+    cyclesPerBranch: branches.size ? heads / branches.size : 0,
+    worstBranch: worst ? { branch: worst[0], cycles: worst[1].size } : null,
   };
 }
 
@@ -199,6 +230,11 @@ export function formatReport(summary, { repo = "?", probed = true } = {}) {
       : `  fantômes  non sondés (--no-probe) — la colonne reste à zéro, elle n'est pas une mesure`,
     `  minutes   ${summary.minutes} facturables (~${Math.round((summary.minutes / summary.days) * 30)}/30 j, minute entamée)`,
     `  branches  ${summary.branches} branche(s) hors défaut, ${summary.runsPerBranch.toFixed(1)} run(s) par branche`,
+    `  cycles    ${summary.cyclesPerBranch.toFixed(1)} tête(s) par branche — une tête = une CI complète (C-14)${
+      summary.worstBranch && summary.worstBranch.cycles > 1
+        ? `, pire : ${summary.worstBranch.branch} à ${summary.worstBranch.cycles}`
+        : ""
+    }`,
     "",
   ];
 

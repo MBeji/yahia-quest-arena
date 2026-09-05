@@ -11,6 +11,7 @@
  * compétence — exactement le défaut que é22 a corrigé sur « qu'est-ce que je fais maintenant ».
  */
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 
@@ -70,7 +71,7 @@ describe("LearningPanels — le repli R-6", () => {
     expect(screen.queryByText("Où tu en es")).not.toBeInTheDocument();
   });
 
-  it("avec des croyances, la carte à 4 états prend la place de l'ancienne", () => {
+  it("avec des croyances, la carte à 4 états prend la place de l'ancienne", async () => {
     stateRows = [
       {
         competency_id: "c-1",
@@ -92,6 +93,9 @@ describe("LearningPanels — le repli R-6", () => {
     ];
     render(<LearningPanels map={[legacyRow]} blockers={[]} blockedSlug={null} />);
     expect(screen.getByText("Où tu en es")).toBeInTheDocument();
+    // Repliée par défaut (2026-09-04) : la compétence n'apparaît qu'une fois dépliée.
+    expect(screen.queryByText("Additionner")).not.toBeInTheDocument();
+    await userEvent.setup().click(screen.getByRole("button", { expanded: false }));
     expect(screen.getByText("Additionner")).toBeInTheDocument();
     // Les deux cartes ensemble diraient deux choses de la même compétence.
     expect(screen.queryByText("Ancienne carte")).not.toBeInTheDocument();

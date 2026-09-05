@@ -537,6 +537,9 @@ export const fr: TranslationKeys = {
     mapTitle: "Où tu en es",
     mapSubtitle: "Ce que tu maîtrises, ce que tu peux attaquer, ce qui te bloque.",
     mapEmpty: "Joue quelques exercices : ta carte s'allumera au fur et à mesure.",
+    mapSummaryLabel: "Résumé par état",
+    mapShowDetail: "Voir le détail",
+    mapHideDetail: "Masquer le détail",
     provenBy: "prouvé {n} fois, sous {m} formes",
     inferredBadge: "Déduit",
     inferredExplain:

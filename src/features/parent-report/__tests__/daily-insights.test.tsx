@@ -152,6 +152,69 @@ describe("AlertsSection", () => {
   });
 });
 
+// =============================================================================
+// CE QUI MANQUE POUR VALIDER UN CHAPITRE — le signalement du 2026-09-04.
+//
+// « Mon fils a fait tous les exercices de maths 9ème et j'ai 3/20 chap. » Le
+// chiffre était juste ; c'est le recours qui manquait. Ce bloc garde la moitié
+// ACTIONNABLE : le geste attendu est nommé, et le chapitre à un seul geste
+// passe devant.
+// =============================================================================
+describe("SubjectsSection — les lacunes", () => {
+  const gap = (over: Record<string, unknown> = {}) => ({
+    subjectId: "math",
+    chapterId: "ch-1",
+    title: "Les fractions",
+    missionsTotal: 6,
+    missionsPassed: 4,
+    quizGated: true,
+    quizSatisfied: true,
+    ...over,
+  });
+
+  it("nomme le chapitre, son compte de missions et le geste attendu", () => {
+    render(
+      <SubjectsSection report={makeReport({ subjects: [subject()], chapterGaps: [gap()] })} />,
+    );
+
+    expect(screen.getByText("Les fractions")).toBeTruthy();
+    // Le compte que l'élève voit dans son hub — les deux écrans disent la même chose.
+    expect(screen.getByText("parentDaily.gapsMissionCount")).toBeTruthy();
+    expect(screen.getByText("parentDaily.gapsMissions")).toBeTruthy();
+  });
+
+  it("dit LE QUIZ quand c'est lui qui bloque, et explique la porte invisible", () => {
+    // 6/6 missions et le chapitre ne compte toujours pas : c'est le cas que rien
+    // n'expliquait nulle part avant ce lot.
+    render(
+      <SubjectsSection
+        report={makeReport({
+          subjects: [subject()],
+          chapterGaps: [gap({ missionsPassed: 6, quizSatisfied: false })],
+        })}
+      />,
+    );
+
+    expect(screen.getByText("parentDaily.gapsQuiz")).toBeTruthy();
+    expect(screen.getByText("parentDaily.gapsQuizHint")).toBeTruthy();
+  });
+
+  it("ne montre PAS l'explication du quiz quand seules des missions manquent", () => {
+    // Une note qui s'affiche toujours cesse d'être lue.
+    render(
+      <SubjectsSection report={makeReport({ subjects: [subject()], chapterGaps: [gap()] })} />,
+    );
+
+    expect(screen.queryByText("parentDaily.gapsQuizHint")).toBeNull();
+  });
+
+  it("n'affiche aucun bloc quand tout est maîtrisé", () => {
+    render(<SubjectsSection report={makeReport({ subjects: [subject()], chapterGaps: [] })} />);
+
+    expect(screen.queryByText("parentDaily.gapsTitle")).toBeNull();
+  });
+});
+
 describe("alertMessage", () => {
   it("remplit les paramètres et met les durées en forme lisible", () => {
     const template = "{subjectName} : {minutes} · {chapterTitle} à {chapterScore} %";
