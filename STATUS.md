@@ -538,8 +538,9 @@ Le chemin qui l'ouvre tient en quatre nœuds — et **son premier est du code sa
 **PRODUIT** : é08 enseignant (⛔ D-5) → é20 lots 4·8·6 → é30 lots 5-9 (différés, pas gelés)
 → **é26 lots 1-2** (écrire enfin la doctrine).
 **FONDATIONS** : A15/A16 (recaler G-1/G-4) → A17 (Node 22 ou garde de diff) → é25 L7 → é24 lot 5
-→ **étude cloud-first** lots 1, 2 et 4 (indépendants, prenables dès maintenant ; le lot 3 attend le
-lot 0, chez Mohamed).
+→ **étude cloud-first** : lots 0 à 5 livrés (le lot 0 le 2026-09-06, chaîne CA du CNP comprise) ;
+restent le pilote de contenu du lot 3 (un chapitre au privé, depuis le cloud), l'arbitrage des
+trois gardes agent (#1002) et les KPI K-1/K-2 à 30 jours qui closent le lot 6.
 **CONTENU** : C12 فقه (🚧) → محور 3 arabe 1ère sec → génération arabe 1ère sec → petites classes
 (🚧) → vidéos maths 9ᵉ (é23 lot 5, débloquée depuis le 2026-07-19 et **jamais prise**).
 
@@ -568,13 +569,15 @@ réglage hors dépôt, ou plan GitHub. Sinon c'est de l'exécution, et l'exécut
    contrepartie assumée au journal.
 2. **Le drill de portabilité du harness** (é25 L7) — session hors file, avec Mohamed. C'est ce
    qui fermerait l'étude.
-3. **Le réglage de l'environnement cloud** — mur « réglage hors dépôt ». L'[étude
-   cloud-first](./docs/agents/etude-cloud-first.md) (2026-09-04) a **mesuré** qu'une session
-   cloud joue tout le gate (211 s, vert) mais que le réseau « Trusted » de l'environnement
-   « Default » refuse `www.cnp.com.tn`, la prod et Supabase : aucune campagne ni sonde de prod
-   depuis le cloud tant que le niveau n'est pas passé en **Custom**. Dix minutes, une fois, depuis
-   le téléphone — la checklist exacte est au **§7 lot 0** de l'étude. C'est le seul geste de cette
-   étude qui lui revient ; tout le reste (lots 1-6) est de l'exécution.
+3. ~~**Le réglage de l'environnement cloud**~~ — **fait le 2026-09-06, depuis le téléphone.**
+   Mur « réglage hors dépôt » : l'[étude cloud-first](./docs/agents/etude-cloud-first.md)
+   (2026-09-04) avait **mesuré** que le réseau « Trusted » de l'environnement « Default » refusait
+   `www.cnp.com.tn`, la prod et Supabase. « Default » est passé en **Custom** (§7 lot 0 de
+   l'étude) : la sonde de session voit les quatre domaines, les variables publiques sont là, et le
+   dernier obstacle — le CNP sert son certificat sans son intermédiaire — est réparé **dans le
+   dépôt** (`scripts/cloud/ca-chain/`, posé par le hook de session), pas par un geste. Un manuel
+   se télécharge par code depuis le cloud en 2 s. Ce qui reste de l'étude (pilote de contenu,
+   arbitrage des gardes, KPI à 30 jours) est de l'exécution, pas une attente.
 
 ~~**Le geste opérateur de triage** (#673)~~ — **fait le 2026-08-24, et par un mécanisme, pas par
 un geste.** La ligne était irrégulière : elle ne citait aucun mur, parce qu'appliquer une

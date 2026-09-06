@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -10,6 +10,7 @@ import {
   PROBE_TIMEOUT_S,
   buildReport,
   classifyProbe,
+  ensureCaChain,
   exportNodeProxy,
   isCloud,
   majorOf,
@@ -94,6 +95,16 @@ describe("classifyProbe", () => {
     expect(v.label).toMatch(/politique réseau/);
   });
 
+  it("un curl 60 est un certificat que la session ne sait pas vérifier — la chaîne, pas la politique", () => {
+    const v = classifyProbe({
+      exitCode: 60,
+      httpCode: "000",
+      stderr: "curl: (60) SSL certificate problem: unable to get local issuer certificate",
+    });
+    expect(v.state).toBe("tls");
+    expect(v.label).toContain("scripts/cloud/ca-chain/README.md");
+  });
+
   it("distingue le délai et l'absence de curl d'une erreur quelconque", () => {
     expect(classifyProbe({ exitCode: 28, httpCode: "000" })).toMatchObject({ state: "timeout" });
     expect(classifyProbe({ exitCode: 28 }).label).toContain(String(PROBE_TIMEOUT_S));
@@ -104,6 +115,51 @@ describe("classifyProbe", () => {
     expect(
       classifyProbe({ exitCode: 6, stderr: "curl: (6) Could not resolve host" }).label,
     ).toMatch(/erreur curl 6 \(curl: \(6\)/);
+  });
+});
+
+describe("ensureCaChain", () => {
+  const ROOT_PEM = "-----BEGIN CERTIFICATE-----\nROOT\n-----END CERTIFICATE-----\n";
+  const INTER_PEM = "-----BEGIN CERTIFICATE-----\nINTER\n-----END CERTIFICATE-----\n";
+
+  it("pose le bundle combiné dans le cache privé et exporte les trois variables dans $CLAUDE_ENV_FILE", () => {
+    const dir = mkdtempSync(join(tmpdir(), "ca-chain-"));
+    try {
+      const base = join(dir, "base.crt");
+      writeFileSync(base, ROOT_PEM);
+      const chain = join(dir, "chain");
+      mkdirSync(chain);
+      writeFileSync(join(chain, "inter.pem"), INTER_PEM);
+      const envFile = join(dir, "env.sh");
+      writeFileSync(envFile, "");
+      const out = join(dir, "cache", "ca-bundle.pem");
+      const ca = ensureCaChain(
+        { CURL_CA_BUNDLE: base, CLAUDE_ENV_FILE: envFile },
+        { dir: chain, outFile: out },
+      );
+      expect(ca).toEqual({ ok: true, applied: true, file: out, labels: ["inter"], exported: true });
+      expect(readFileSync(out, "utf8")).toBe(ROOT_PEM + INTER_PEM);
+      expect(readFileSync(envFile, "utf8")).toBe(
+        `export CURL_CA_BUNDLE="${out}"\nexport SSL_CERT_FILE="${out}"\nexport NODE_EXTRA_CA_CERTS="${out}"\n`,
+      );
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("n'a rien à poser sans intermédiaire — et le dit sans erreur", () => {
+    const dir = mkdtempSync(join(tmpdir(), "ca-chain-"));
+    try {
+      const base = join(dir, "base.crt");
+      writeFileSync(base, ROOT_PEM);
+      const chain = join(dir, "chain");
+      mkdirSync(chain);
+      expect(
+        ensureCaChain({ CURL_CA_BUNDLE: base }, { dir: chain, outFile: join(dir, "x.pem") }),
+      ).toEqual({ ok: true, applied: false });
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });
 
@@ -131,6 +187,7 @@ describe("buildReport", () => {
     }
     expect(report).toMatch(/lot 0 de l'étude cloud-first .* n'est pas appliqué/);
     expect(report.trimEnd().split("\n")).toHaveLength(2);
+    expect(report).not.toContain("chaîne CA");
   });
 
   it("reste court quand tout est joignable et que rien n'a été installé", () => {
@@ -139,9 +196,24 @@ describe("buildReport", () => {
       state: "ok",
       label: "joignable (HTTP 200)",
     }));
-    const report = buildReport({ ...base, deps: { ok: true, ran: false }, pgtap: true, probes });
+    const ca = {
+      ok: true,
+      applied: true,
+      labels: ["sectigo-public-server-authentication-ca-dv-r36"],
+      exported: true,
+    };
+    const report = buildReport({
+      ...base,
+      deps: { ok: true, ran: false },
+      pgtap: true,
+      ca,
+      probes,
+    });
     expect(report).toContain("dépendances : déjà en place");
     expect(report).toContain("pgTAP : présent");
+    expect(report).toContain(
+      "chaîne CA : +1 intermédiaire (sectigo-public-server-authentication-ca-dv-r36)",
+    );
     expect(report).toContain(`les ${ALLOWED_DOMAINS.length} domaines du lot 0 sont joignables`);
     expect(report).not.toContain("n'est pas appliqué");
   });
@@ -151,10 +223,12 @@ describe("buildReport", () => {
       ...base,
       node: { ok: false, error: "nvm : introuvable" },
       deps: { ok: false, error: "npm install : ETIMEDOUT" },
+      ca: { ok: false, error: "chaîne CA : EACCES" },
       probes: [],
     });
     expect(report).toContain("Node : nvm : introuvable");
     expect(report).toContain("dépendances : npm install : ETIMEDOUT");
+    expect(report).toContain("· chaîne CA : EACCES ·");
   });
 });
 

@@ -265,13 +265,24 @@ arbitrage puis une exécution ; le lot 6 ferme.
 
 ### Lot 0 — Mohamed, depuis le téléphone, une fois (mur « réglage hors dépôt »)
 
-> **Constaté le 2026-09-05, en cours d'application depuis le téléphone.** L'environnement a été
-> créé sous le nom **« CloudAutonome »** (le nom est libre ; toute nouvelle session doit le
-> sélectionner dans l'icône nuage, sinon elle tourne dans « Default », resté en Trusted). Le champ
-> « Setup script » **n'apparaît pas dans l'application mobile** : le point 3 devient sans objet, le
-> lot 4 n'en dépend plus (pgTAP s'installe à la demande). Piège vu sur la capture : deux variables
-> saisies **sur une seule ligne**, jointes par « : » — le format `.env` exige une variable par
-> ligne, sinon la première porte tout le reste comme valeur.
+> ✅ **Appliqué le 2026-09-06 sur « Default »**, depuis le téléphone, en deux temps. Le 2026-09-05 :
+> un second environnement, « CloudAutonome » (le nom est libre) — mais chaque session devait le
+> choisir dans l'icône nuage, sinon elle tournait dans « Default », resté en Trusted. Le
+> 2026-09-06 : « Default » lui-même passé en Custom — les quatre domaines, la liste par défaut
+> cochée, les deux variables sur deux lignes, un script d'installation — plus rien à choisir, et la
+> routine hebdomadaire du lot 5 y est rattachée. **Constaté depuis la session, à la reprise** :
+> `VITE_*` présentes, trois domaines sur quatre joignables du premier coup, et le quatrième,
+> `www.cnp.com.tn`, en `curl 60 : unable to get local issuer certificate` — la politique laisse
+> passer, mais **le CNP sert sa feuille sans l'intermédiaire Sectigo** qui l'a signée, et curl ne
+> va pas le chercher (un navigateur, si). **Réparé dans le dépôt, sans geste** : l'intermédiaire,
+> public, extrait de la chaîne de `nodejs.org` (hôte déjà autorisé, `ghcr.io` sert le même) et
+> vérifié contre le magasin système, est vendu dans `scripts/cloud/ca-chain/` (README) et posé par
+> le hook de session — `CURL_CA_BUNDLE`, `SSL_CERT_FILE`, `NODE_EXTRA_CA_CERTS`. **VM neuve
+> sondée** par une session enfant : les variables y sont ; pgTAP et poppler **absents** — le script
+> d'installation saisi n'a pas eu d'effet visible (à revoir sans urgence : les deux s'installent à
+> la demande, lot 4). Le champ « Setup script » n'apparaît pas dans l'application mobile ; piège
+> vu sur la capture du 2026-09-05 : deux variables **sur une seule ligne**, jointes par « : » — le
+> format `.env` exige une variable par ligne, sinon la première porte tout le reste comme valeur.
 
 C'est l'unique lot qui lui revient. Cible exacte, dans l'ordre, tout dans un navigateur :
 
@@ -371,9 +382,9 @@ aucune campagne ne peut lire un manuel ; … — le lot 0 … n'est pas appliqu�
 
 ### Lot 3 — La campagne de contenu depuis le cloud (session, dépôt privé + celui-ci) — après le lot 0
 
-> ✅ **Moteur livré le 2026-09-05, pilote en attente du lot 0.** `npm run content:manuel:fetch --
-<code> [--render --pages a-b --dpi 150]` (`scripts/content/fetch-manuel.ts`, helpers purs dans
-> `src/shared/content/manuel-fetch.ts`, 16 tests) : l'URL se dérive du code, le fichier va dans un
+> ✅ **Moteur livré le 2026-09-05, chaîne technique du pilote jouée le 2026-09-06.** `npm run
+content:manuel:fetch -- <code> [--render --pages a-b --dpi 150]` (`scripts/content/fetch-manuel.ts`,
+> helpers purs dans `src/shared/content/manuel-fetch.ts`, 20 tests) : l'URL se dérive du code, le fichier va dans un
 > cache privé de l'utilisateur (jamais le répertoire temporaire partagé, jamais d'écrasement), le
 > transfert est fait par `curl` — proxy natif, écriture en flux, et les octets du réseau ne passent
 > pas par Node : CodeQL avait signalé la version `fetch` → `writeFileSync` (« network data written
@@ -381,11 +392,14 @@ aucune campagne ne peut lire un manuel ; … — le lot 0 … n'est pas appliqu�
 > qui n'est pas un PDF est supprimé, le rendu passe par `pdftoppm`.
 > **Constaté** : le `fetch` de Node ignore le proxy de la VM — un hôte même autorisé rend 403
 > `host_not_allowed` en direct, 200 via le proxy avec `NODE_USE_ENV_PROXY=1` ; le hook de session
-> l'exporte désormais. Un hôte refusé par la politique surfaces comme `Proxy response (403) !== 200
-when HTTP Tunneling`, deux causes sous « fetch failed » : la commande le traduit en « lot 0 non
-> appliqué ». Le connecteur Drive est actif dans la session ; ce qu'il rend d'un PDF reste à
-> constater au pilote. Le pilote (un chapitre de bout en bout) se joue dans une session lancée sur
-> l'environnement « CloudAutonome », une fois la liste de domaines enregistrée.
+> l'exporte désormais. Un hôte refusé par la politique sort de `curl --fail` en 22 avec les mots
+> d'un 403 du site ; `%{http_connect}` fait la différence, et la commande le traduit en « lot 0 non
+> appliqué » ; un `curl 60` est nommé aussi (la chaîne du CNP, lot 0). **Joué le 2026-09-06 depuis
+> cette session, lot 0 appliqué et chaîne CA posée** : `102905P00.pdf` téléchargé par code en
+> **2 s** (5,7 Mo, 221 pages, `%PDF-1.6`), deux pages rendues à 150 dpi en 1 s, lues en vision —
+> le chapitre « مجموعة الأعداد الحقيقية » est lisible tel quel. Le connecteur Drive est actif dans
+> la session ; ce qu'il rend d'un PDF reste à constater. Reste le pilote **de contenu** : un
+> chapitre transcrit de bout en bout sur le dépôt privé, jusqu'au merge et à `apply-content`.
 
 - **Mesure d'abord** : le connecteur Drive rend-il les octets d'un PDF ? Un `HEAD` sur
   `CNP_MANUEL_BASE_URL/102905P00.pdf` répond-il 200 depuis la session ?
@@ -408,7 +422,9 @@ when HTTP Tunneling`, deux causes sous « fetch failed » : la commande le tradu
 > telle quelle en root rendait 211 échecs pour une seule cause), rejoue le shim et la chaîne, joue
 > `pg_prove`, et arrête tout. **Mesuré** : cluster 1 s, 211 migrations sans erreur en 10 s, 99
 > fichiers / 1 394 tests verts en 37 s, 48 s au total. K-5 atteint. Le playbook
-> [pgtap-en-local.md](./pgtap-en-local.md) porte la section « En session cloud ».
+> [pgtap-en-local.md](./pgtap-en-local.md) porte la section « En session cloud ». Le script
+> d'installation saisi dans « Default » le 2026-09-06 n'a pas eu d'effet visible sur une VM neuve
+> (pgTAP et poppler absents) : l'installation à la demande reste le chemin nominal.
 
 - `scripts/cloud/setup-env.sh`, **versionné**, contenu du script d'environnement (`apt-get
 install -y postgresql-16-pgtap poppler-utils || true`, sous les cinq minutes) — le champ dans
@@ -422,7 +438,8 @@ install -y postgresql-16-pgtap poppler-utils || true`, sous les cinq minutes) �
 
 > ✅ **Livré le 2026-09-05, sauf l'arbitrage.** La garde après push est écrite dans
 > [passation.md](../passation.md) §7 point 10. La **re-sonde hebdomadaire de STATUS.md** est une
-> routine cloud (lundi 07:00 UTC, environnement « CloudAutonome », notification push à la fin) :
+> routine cloud (lundi 07:00 UTC, environnement « Default » depuis le 2026-09-06, notification
+> push à la fin) :
 > elle re-constate `main`, les PR, les rouges et les études au privé, et n'ouvre une PR que si le
 > topo a dérivé. ⚠️ Créée depuis une session, elle part **sans connecteurs** : si les outils GitHub
 > lui manquent, l'éditer sur claude.ai/code/routines et y cocher le connecteur GitHub. L'arbitrage
@@ -497,3 +514,28 @@ présent à l'organisation mais non connecté et inactif dans la session ; skill
 synchronisés sous `/root/.claude/skills/synced/`. **Cette étude elle-même** est le premier lot
 livré dans ces conditions : rédigée, gatée (`verify`, puis le hook `pre-push`) et poussée depuis
 une session cloud, sans qu'aucun poste n'ait été touché.
+
+### 2026-09-06 — « Default » passé en Custom, constaté depuis la même session à sa reprise
+
+```bash
+for h in www.cnp.com.tn www.na9ranal3ab.tn fasrenmmrkqjoobrztbp.supabase.co pqegdnwdtbjtplcthxyp.supabase.co; do
+  curl -sS -I --max-time 20 -o /dev/null -w "$h code=%{http_code} connect=%{http_connect}\n" "https://$h/"
+done                                       # cnp : curl 60, connect=200 · na9ranal3ab 403 · supabase 404 ×2 — joignables
+curl -sS -o /dev/null -w '%{http_code}\n' https://www.na9ranal3ab.tn/api/health          # 200
+env | grep -E '^VITE_' | sed -E 's/=(.{12}).*/=\1…/'                                      # les deux variables, présentes
+openssl s_client -proxy 127.0.0.1:$PORT -connect www.cnp.com.tn:443 -servername www.cnp.com.tn -showcerts </dev/null
+                                           # depth=0 seulement : « unable to verify the first certificate » — la feuille SEULE
+curl -sS -o /dev/null -w '%{http_connect}\n' http://crt.sectigo.com/                      # 403 : l'entrepôt AIA est hors liste
+for h in nodejs.org ghcr.io; do openssl s_client -proxy … -connect $h:443 -servername $h </dev/null | openssl x509 -noout -issuer; done
+                                           # les deux : « Sectigo Public Server Authentication CA DV R36 » — le même intermédiaire
+openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt sectigo-dv-r36.pem            # OK (racine R46 dans le magasin)
+curl -sS -I --cacert combined.pem https://www.cnp.com.tn/arabic/PDF/102905P00.pdf         # 200, application/pdf
+curl -sS --fail --cacert combined.pem -o 102905P00.pdf …                                  # 5 686 665 octets en 2 s, %PDF-1.6, 221 pages
+pdftoppm -r 150 -png -f 18 -l 19 102905P00.pdf p                                          # 2 pages en 1 s, lues en vision
+```
+
+VM **neuve** sur « Default » (session enfant, lecture seule) : `VITE_*` présentes ; `dpkg -l |
+grep -E 'pgtap|poppler'` vide — le script d'installation saisi n'a rien installé ; Supabase et la
+prod joignables ; le CNP en `curl 60` comme ici, avant la chaîne. À noter : la reprise de cette
+session a re-provisionné la VM (`/root/.ccr` daté de la reprise) avec la nouvelle politique, mais
+en conservant le disque — pgTAP et poppler installés la veille y étaient encore.

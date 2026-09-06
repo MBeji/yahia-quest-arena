@@ -8,6 +8,7 @@ import { CNP_MANUEL_BASE_URL } from "../manuel-cnp";
 import {
   CURL_USER_AGENT,
   NETWORK_POLICY_MESSAGE,
+  TLS_MESSAGE,
   classifyCurlFailure,
   classifyDownloadedHead,
   curlArgs,
@@ -147,6 +148,16 @@ describe("classifyCurlFailure", () => {
       }),
     ).toEqual({ kind: "http", message: "HTTP 503" });
     expect(classifyCurlFailure({ status: 22, stdout: "", stderr: "" }).message).toBe("HTTP ?");
+  });
+
+  it("un certificat non vérifiable (curl 60 — la chaîne incomplète du CNP) nomme le dossier ca-chain", () => {
+    const v = classifyCurlFailure({
+      status: 60,
+      stdout: "000 200 ",
+      stderr: "curl: (60) SSL certificate problem: unable to get local issuer certificate\n",
+    });
+    expect(v).toEqual({ kind: "tls", message: TLS_MESSAGE });
+    expect(v.message).toContain("scripts/cloud/ca-chain/");
   });
 
   it("distingue le délai, l'absence de curl et une panne ordinaire", () => {
