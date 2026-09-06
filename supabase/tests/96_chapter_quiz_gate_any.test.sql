@@ -18,7 +18,7 @@
 
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(7);
+SELECT plan(9);
 
 INSERT INTO auth.users (id, email) VALUES
   ('d9000000-0000-0000-0000-0000000000aa', 'twoquiz-student@test.local');
@@ -125,6 +125,47 @@ SELECT ok(
   NOT has_function_privilege('authenticated', 'public.chapter_quiz_cleared(uuid, uuid)', 'EXECUTE'),
   'chapter_quiz_cleared est REVOKEd de authenticated — un élève ne sonde pas la porte d''un autre'
 );
+
+-- ---------------------------------------------------------
+-- 8-9. ⭐ LA PORTE, confrontée aux lecteurs sur le MÊME décor.
+--
+--      `start_exercise_session` est le QUATRIÈME lecteur — et le seul qui décide
+--      vraiment : les trois autres affichent, celui-ci autorise. Il tirait « le »
+--      quiz par le même `LIMIT 1` sans ordre (issue #1005). Depuis que les trois
+--      lecteurs acceptent n'importe quel quiz, un tirage ici ferait dire « ouvert »
+--      à tous les écrans et « QUIZ_LOCKED » au clic.
+--
+--      Le décor n'a AUCUN parcours pour (tq-theme, tq-9) : `resolve_exercise_access`
+--      rend « allowed » sur une matière non mappée, donc la porte 1 laisse passer et
+--      c'est bien la porte 2 qu'on mesure.
+-- ---------------------------------------------------------
+SET LOCAL "request.jwt.claims" = '{"sub":"d9000000-0000-0000-0000-0000000000aa","role":"authenticated"}';
+SET LOCAL ROLE authenticated;
+
+SELECT isnt(
+  (SELECT s.session_id
+     FROM public.start_exercise_session('d9000000-0000-0000-0000-0000000011a1') s),
+  NULL,
+  'La PORTE s''ouvre sur le second quiz réussi — un tirage arbitraire pouvait exiger le premier'
+);
+
+-- Contre-épreuve : la porte gate toujours. Sans elle, l'assertion ci-dessus
+-- passerait aussi bien si le quiz avait cessé de bloquer quoi que ce soit.
+RESET ROLE;
+DELETE FROM public.attempts
+ WHERE user_id = 'd9000000-0000-0000-0000-0000000000aa'
+   AND exercise_id = 'd9000000-0000-0000-0000-0000000012a2';
+
+SET LOCAL "request.jwt.claims" = '{"sub":"d9000000-0000-0000-0000-0000000000aa","role":"authenticated"}';
+SET LOCAL ROLE authenticated;
+
+SELECT throws_ok(
+  $$ SELECT * FROM public.start_exercise_session('d9000000-0000-0000-0000-0000000011a1') $$,
+  'P0001', 'QUIZ_LOCKED',
+  'Aucun des deux quiz passé : la porte reste fermée — le seuil n''a pas été dilué'
+);
+
+RESET ROLE;
 
 SELECT * FROM finish();
 ROLLBACK;
