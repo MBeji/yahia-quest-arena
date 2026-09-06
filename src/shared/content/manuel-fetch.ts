@@ -18,6 +18,12 @@
  * as a site's own 403 — but `%{http_connect}` carries the proxy's 403 while `%{http_code}` stays
  * 000 (observed 2026-09-05). That means "lot 0 of the study is not applied", not "the CNP is
  * down" — the distinction check-manuel-links had to learn.
+ *
+ * And one thing specific to the CNP itself (observed 2026-09-06, lot 0 applied): its server sends
+ * the leaf certificate ALONE, without the Sectigo intermediate that signed it. Browsers fetch it
+ * on their own (AIA); curl does not and exits 60. The session hook fixes that by adding the vendored
+ * intermediate (scripts/cloud/ca-chain/) to CURL_CA_BUNDLE — so a 60 here means that chain no
+ * longer matches what the CNP serves, and names where it is maintained.
  */
 import { cnpManuelFileName, cnpManuelUrl } from "./manuel-cnp.ts";
 
@@ -43,12 +49,17 @@ export function looksLikePdf(head: Uint8Array): boolean {
 }
 
 export type FailureKind =
-  "network-policy" | "not-found" | "http" | "not-pdf" | "network" | "exists";
+  "network-policy" | "tls" | "not-found" | "http" | "not-pdf" | "network" | "exists";
 export type Failure = { kind: FailureKind; message: string };
 
 export const NETWORK_POLICY_MESSAGE =
   "refusé par la politique réseau de l'environnement cloud — le lot 0 de l'étude cloud-first " +
   "(www.cnp.com.tn dans les domaines autorisés) n'est pas appliqué à cet environnement";
+
+export const TLS_MESSAGE =
+  "certificat du serveur non vérifiable — le CNP sert sa feuille sans l'intermédiaire de son " +
+  "émetteur ; le hook de session le pose depuis scripts/cloud/ca-chain/ (README), hors cloud " +
+  "exporter CURL_CA_BUNDLE vers un magasin qui le contient";
 
 export const CURL_USER_AGENT = "yahia-quest-arena-manuel-fetch";
 
@@ -92,9 +103,10 @@ export function parseCurlReport(stdout: string): CurlReport {
 
 /**
  * Reads a curl failure. A CONNECT answered ≥ 400 with no HTTP code at all is the environment
- * proxy refusing the host — the network policy (exit 56 without `--fail`, 22 with it); 22 with a
- * real HTTP code is the site's answer, 404 meaning "unknown code"; 28 is the deadline; a missing
- * binary has no status at all. Everything else is reported with curl's own first line.
+ * proxy refusing the host — the network policy (exit 56 without `--fail`, 22 with it); 60 is a
+ * certificate the session cannot verify (the CNP's incomplete chain); 22 with a real HTTP code is
+ * the site's answer, 404 meaning "unknown code"; 28 is the deadline; a missing binary has no
+ * status at all. Everything else is reported with curl's own first line.
  */
 export function classifyCurlFailure({ status, stdout, stderr }: CurlOutcome): Failure {
   const report = parseCurlReport(stdout);
@@ -104,6 +116,7 @@ export function classifyCurlFailure({ status, stdout, stderr }: CurlOutcome): Fa
   if (proxyRefused || status === 56 || /CONNECT tunnel failed|host_not_allowed/i.test(stderr)) {
     return { kind: "network-policy", message: NETWORK_POLICY_MESSAGE };
   }
+  if (status === 60) return { kind: "tls", message: TLS_MESSAGE };
   if (status === 22) {
     const code = report.status || Number(/error: (\d{3})/.exec(stderr)?.[1] ?? 0);
     if (code === 404) {

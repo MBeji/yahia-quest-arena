@@ -25,7 +25,10 @@ L'URL se dérive du code, jamais saisie ; rien n'entre dans git — le cache est
 l'utilisateur, jamais le répertoire temporaire partagé, et un fichier existant n'est pas écrasé.
 Le transfert est fait par `curl`, qui suit le proxy de la session nativement. En session cloud,
 l'environnement doit autoriser `www.cnp.com.tn` (lot 0 de l'étude) — sinon la commande le **dit** :
-« refusé par la politique réseau de l'environnement », pas « le CNP est tombé ». Pour les scripts
+« refusé par la politique réseau de l'environnement », pas « le CNP est tombé ». Le CNP sert son
+certificat **sans l'intermédiaire** qui l'a signé : le hook de session ajoute cet intermédiaire
+(`scripts/cloud/ca-chain/`) au magasin de curl, sans quoi c'est `curl 60 : unable to get local
+issuer certificate` — que la commande nomme aussi. Pour les scripts
 qui passent par le `fetch` de Node (`content:manuel:check`), le hook de session exporte
 `NODE_USE_ENV_PROXY=1`, sans quoi Node ignore le proxy de la plateforme et échoue sur tout hôte.
 Le wrapper `YahiaAcademy/` du poste n'est plus une condition ; ce qui n'est pas au
