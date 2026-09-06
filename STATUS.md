@@ -377,6 +377,12 @@ Le détail vit dans les corps de PR et dans `docs/` — ici, seulement ce qui go
   compter là où il ne comptait pas ; aucune progression ne se perd). Le pgTAP 96 tient le décor
   à **deux quiz**, le seul où la panne était visible — le reste de la suite tourne sur des
   chapitres à quiz unique, où le tirage tombait juste par construction.
+  ⚠️ **Le lot annonçait « quatre lecteurs » et n'en avait réémis que trois** : la PORTE
+  (`start_exercise_session`, la seule façon d'ouvrir une quête) tirait encore au hasard.
+  Corrigée le **2026-09-06** (#1005) — et c'était le plus urgent des quatre, parce que depuis
+  la correction des trois autres l'élève lisait « chapitre débloqué » sur son hub, sur
+  `/parcours` et chez son parent, puis recevait `QUIZ_LOCKED` au clic. Être bloqué est mauvais ;
+  l'être **après avoir été invité à entrer** est la forme la plus coûteuse du même défaut.
 - **Un chiffre de couverture sans son recours est un verdict, pas une information**
   (2026-09-04). « 3/20 chap. » a été lu « il a fait 3 chapitres sur 20 » — **par l'auteur du
   produit lui-même** — alors que ça veut dire « il en a MAÎTRISÉ 3 » : toutes les missions du
