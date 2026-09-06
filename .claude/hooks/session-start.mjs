@@ -3,7 +3,7 @@
 // (étude cloud-first, lot 1 — docs/agents/etude-cloud-first.md §7).
 //
 // Hors cloud (CLAUDE_CODE_REMOTE ≠ "true") : ne fait RIEN, exit 0 — un poste garde ses
-// habitudes. En cloud, trois gestes puis un constat, et jamais d'échec bloquant :
+// habitudes. En cloud, quatre gestes puis un constat, et jamais d'échec bloquant :
 //   1. Node — la VM démarre sous Node 22 quand `.nvmrc` exige 24 ; sans ce pas, le hook
 //      `pre-push` rejoue le piège « Node trop vieux » (docs/agents/poste-windows.md). On installe
 //      via nvm (nodejs.org est dans la liste Trusted) et on exporte le PATH dans
@@ -12,9 +12,13 @@
 //   2. Dépendances — `npm install` (jamais `npm ci`) si node_modules manque ou si
 //      package-lock.json est plus récent que ce qui est installé. Pose aussi les hooks husky.
 //   3. pgTAP — présent ou non (`npm run db:test:local` l'installe à la demande, lot 4).
-//   4. La sonde réseau — chaque domaine du lot 0 (scripts/cloud/allowed-domains.mjs) reçoit un
-//      HEAD via le proxy. Un « CONNECT 403 » est une politique réseau, pas une panne du site :
-//      la distinction que check-manuel-links a dû apprendre à faire sur le poste.
+//   4. La chaîne de certificats — les intermédiaires que des sites oublient de servir
+//      (scripts/cloud/ca-chain/, le CNP en premier) rejoignent le magasin de la session :
+//      CURL_CA_BUNDLE, SSL_CERT_FILE et NODE_EXTRA_CA_CERTS exportés dans $CLAUDE_ENV_FILE.
+//   5. La sonde réseau — chaque domaine du lot 0 (scripts/cloud/allowed-domains.mjs) reçoit un
+//      HEAD via le proxy, avec cette chaîne. Un « CONNECT 403 » est une politique réseau, pas
+//      une panne du site — la distinction que check-manuel-links a dû apprendre sur le poste ;
+//      un « curl 60 » est un certificat que la session ne sait pas vérifier, pas un refus.
 // Le rapport part sur stdout : Claude Code l'ajoute au CONTEXTE de la session, qui sait donc ce
 // qui lui manque avant de commencer, au lieu de le découvrir sur un 403 en pleine campagne.
 //
@@ -25,6 +29,7 @@ import { appendFileSync, existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { ALLOWED_DOMAINS } from "../../scripts/cloud/allowed-domains.mjs";
+import { buildCaBundle, caEnvExports, pemLabel } from "../../scripts/cloud/ca-bundle.mjs";
 
 const ROOT = process.env.CLAUDE_PROJECT_DIR || process.cwd();
 const PGTAP_CONTROL = "/usr/share/postgresql/16/extension/pgtap.control";
@@ -73,7 +78,9 @@ export function needsInstall({ hasNodeModules, lockMtimeMs, installedLockMtimeMs
 /**
  * Lit une sonde curl. Un code HTTP — n'importe lequel, 401 et 403 du SITE compris — prouve
  * que l'hôte est joignable ; le `CONNECT tunnel failed` (curl 56) est le refus du proxy
- * d'environnement, donc la politique réseau ; 28 est un délai ; le reste est une erreur nommée.
+ * d'environnement, donc la politique réseau ; 60 est un certificat que la session ne sait pas
+ * vérifier — un site qui sert sa feuille sans l'intermédiaire (le CNP, constaté le 2026-09-06),
+ * ce que scripts/cloud/ca-chain/ répare ; 28 est un délai ; le reste est une erreur nommée.
  */
 export function classifyProbe({ exitCode, httpCode = "", stderr = "" }) {
   const code = String(httpCode).trim();
@@ -82,6 +89,13 @@ export function classifyProbe({ exitCode, httpCode = "", stderr = "" }) {
   }
   if (/CONNECT tunnel failed|host_not_allowed/i.test(stderr) || exitCode === 56) {
     return { state: "blocked", label: "REFUSÉ par la politique réseau de l'environnement" };
+  }
+  if (exitCode === 60) {
+    return {
+      state: "tls",
+      label:
+        "certificat non vérifiable (chaîne incomplète côté site — scripts/cloud/ca-chain/README.md)",
+    };
   }
   if (exitCode === 28) return { state: "timeout", label: `sans réponse en ${PROBE_TIMEOUT_S} s` };
   if (exitCode === -1 || /ENOENT/.test(stderr))
@@ -92,8 +106,26 @@ export function classifyProbe({ exitCode, httpCode = "", stderr = "" }) {
 
 const secs = (n) => `${Math.round(n)} s`;
 
+/** La chaîne de certificats en un mot — et rien quand rien n'a été posé. */
+function describeCa(ca) {
+  if (!ca) return [];
+  if (!ca.ok) return [ca.error];
+  if (!ca.applied) return [];
+  const n = ca.labels.length;
+  const what = `+${n} intermédiaire${n > 1 ? "s" : ""} (${ca.labels.join(", ")})`;
+  return [`chaîne CA : ${what}${ca.exported ? "" : ", non exportée (CLAUDE_ENV_FILE absent)"}`];
+}
+
 /** Deux lignes, lues par la session : l'amorçage, puis le réseau — et ce que chaque refus interdit. */
-export function buildReport({ node, nodeProxy = false, deps, pgtap, probes, durationMs }) {
+export function buildReport({
+  node,
+  nodeProxy = false,
+  deps,
+  pgtap,
+  ca = null,
+  probes,
+  durationMs,
+}) {
   const head = [
     node.ok ? `Node ${node.version} (${node.how})` : `Node : ${node.error}`,
     ...(nodeProxy ? ["fetch Node via le proxy (NODE_USE_ENV_PROXY=1)"] : []),
@@ -103,6 +135,7 @@ export function buildReport({ node, nodeProxy = false, deps, pgtap, probes, dura
         ? `dépendances : ${deps.packages ?? "?"} paquets installés (${secs(deps.seconds)})`
         : "dépendances : déjà en place",
     `pgTAP : ${pgtap ? "présent" : "absent (npm run db:test:local l'installe)"}`,
+    ...describeCa(ca),
     secs(durationMs / 1000),
   ];
   const blocked = probes.filter((p) => p.state !== "ok");
@@ -213,16 +246,37 @@ export function exportNodeProxy(env) {
   return true;
 }
 
+/**
+ * Pose la chaîne de certificats : magasin de base + intermédiaires vendus → un bundle dans le
+ * cache privé, exporté pour curl, OpenSSL et Node (scripts/cloud/ca-bundle.mjs). N'avoir rien à
+ * poser — aucun intermédiaire, ou pas de magasin en fichier — n'est pas une erreur.
+ */
+export function ensureCaChain(env, options = {}) {
+  const built = buildCaBundle({ env, ...options });
+  if (!built) return { ok: true, applied: false };
+  const exported = Boolean(env.CLAUDE_ENV_FILE);
+  if (exported) appendFileSync(env.CLAUDE_ENV_FILE, caEnvExports(built.file));
+  return {
+    ok: true,
+    applied: true,
+    file: built.file,
+    labels: built.intermediates.map(pemLabel),
+    exported,
+  };
+}
+
 function hasPgTap(env) {
   if (existsSync(PGTAP_CONTROL)) return true;
   return (env.PATH ?? "").split(":").some((dir) => dir && existsSync(join(dir, "pg_prove")));
 }
 
-function probeDomain(domain) {
+function probeDomain(domain, caFile = null) {
   return new Promise((resolve) => {
     const args = ["-sS", "-o", "/dev/null", "-I", "--max-time", String(PROBE_TIMEOUT_S)];
     args.push("-A", PROBE_UA, "-w", "%{http_code}", domain.probe);
-    const child = spawn("curl", args, { stdio: ["ignore", "pipe", "pipe"] });
+    // La sonde voit la chaîne posée à l'instant : le hook tourne AVANT que $CLAUDE_ENV_FILE soit lu.
+    const env = caFile ? { ...process.env, CURL_CA_BUNDLE: caFile } : process.env;
+    const child = spawn("curl", args, { env, stdio: ["ignore", "pipe", "pipe"] });
     let out = "";
     let err = "";
     child.stdout.on("data", (c) => (out += c));
@@ -258,9 +312,10 @@ async function main() {
   const nodeProxy = attempt("proxy", () => exportNodeProxy(env)) === true;
   const deps = attempt("npm install", () => ensureDeps(ROOT, env, node.binDir ?? null));
   const pgtap = hasPgTap(env);
-  const probes = await Promise.all(ALLOWED_DOMAINS.map(probeDomain));
+  const ca = attempt("chaîne CA", () => ensureCaChain(env));
+  const probes = await Promise.all(ALLOWED_DOMAINS.map((d) => probeDomain(d, ca.file ?? null)));
   process.stdout.write(
-    buildReport({ node, nodeProxy, deps, pgtap, probes, durationMs: Date.now() - t0 }),
+    buildReport({ node, nodeProxy, deps, pgtap, ca, probes, durationMs: Date.now() - t0 }),
   );
 }
 

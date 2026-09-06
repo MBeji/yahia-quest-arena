@@ -15,7 +15,9 @@
  *      fichier existant n'est jamais écrasé ; les manuels sont l'œuvre du CNP
  *      (LICENSE-CONTENT.md), on lie, on ne copie pas ;
  *   3. un refus réseau se DIT : en session cloud, un hôte hors liste blanche est refusé par le
- *      proxy de la plateforme, et le message nomme le lot 0 de l'étude — pas « le CNP est tombé ».
+ *      proxy de la plateforme, et le message nomme le lot 0 de l'étude — pas « le CNP est tombé » ;
+ *      un certificat non vérifiable aussi : le CNP sert sa feuille sans son intermédiaire, que le
+ *      hook de session ajoute au magasin de curl depuis scripts/cloud/ca-chain/.
  *
  * Le transfert est fait par `curl` (présent sur la VM cloud comme sur Windows) : il suit le proxy
  * de la session nativement, écrit en flux, et Node ne manipule jamais les octets du réseau —
