@@ -1,9 +1,10 @@
 // @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const { mockGetSession, mockRefreshSession } = vi.hoisted(() => ({
+const { mockGetSession, mockRefreshSession, mockSignOut } = vi.hoisted(() => ({
   mockGetSession: vi.fn(),
   mockRefreshSession: vi.fn(),
+  mockSignOut: vi.fn(),
 }));
 
 vi.mock("@tanstack/react-start", () => ({
@@ -17,6 +18,7 @@ vi.mock("@/shared/integrations/supabase/client", () => ({
     auth: {
       getSession: mockGetSession,
       refreshSession: mockRefreshSession,
+      signOut: mockSignOut,
     },
   },
 }));
@@ -25,6 +27,7 @@ import {
   attachSupabaseAuth,
   resetRejectedTokenForTests,
 } from "@/shared/integrations/supabase/auth-attacher";
+import { AuthApiError, AuthRetryableFetchError } from "@supabase/supabase-js";
 import {
   isSessionRefusalError,
   shouldReplaySessionRefusal,
@@ -38,6 +41,8 @@ describe("attachSupabaseAuth", () => {
   beforeEach(() => {
     mockGetSession.mockReset();
     mockRefreshSession.mockReset();
+    mockSignOut.mockReset();
+    mockSignOut.mockResolvedValue({ error: null });
   });
 
   it("attaches Authorization header when session token exists", async () => {
@@ -89,6 +94,8 @@ describe("attachSupabaseAuth — rafraîchissement raté", () => {
   beforeEach(() => {
     mockGetSession.mockReset();
     mockRefreshSession.mockReset();
+    mockSignOut.mockReset();
+    mockSignOut.mockResolvedValue({ error: null });
   });
 
   it("retente une fois, et l'appel repart avec le jeton neuf", async () => {
@@ -154,6 +161,8 @@ describe("attachSupabaseAuth — jeton refusé par le serveur", () => {
   beforeEach(() => {
     mockGetSession.mockReset();
     mockRefreshSession.mockReset();
+    mockSignOut.mockReset();
+    mockSignOut.mockResolvedValue({ error: null });
     resetRejectedTokenForTests();
   });
 
@@ -205,9 +214,26 @@ describe("attachSupabaseAuth — jeton refusé par le serveur", () => {
     expect(next).toHaveBeenLastCalledWith({ headers: { Authorization: "Bearer bon" } });
   });
 
-  it("si le forçage échoue, on retombe sur le chemin normal", async () => {
+  it("si le forçage échoue SANS refus du serveur, on retombe sur le chemin normal", async () => {
+    // ⚠️ CE TEST A ÉTÉ RÉÉCRIT (#969), et ce qu'il disait avant vaut d'être noté.
+    // Il s'appelait « si le forçage échoue, on retombe sur le chemin normal » et
+    // son erreur de rafraîchissement était un `{ message: "mort" }` sans statut
+    // — donc, en vrai, un REFUS du serveur. Il épinglait alors comme attendu le
+    // fait de reposer `Bearer périmé`, c'est-à-dire très exactement la boucle qui
+    // enfermait l'élève : le jeton refusé reposé indéfiniment, faute que
+    // quiconque termine la session. Un test peut protéger un bug ; celui-ci l'a
+    // fait pendant trois semaines.
+    //
+    // Ce qui reste vrai, et que ce test garde : un échec dont le serveur n'est
+    // PAS l'auteur (transport, 5xx, 429, délai dépassé) ne prouve rien sur le
+    // jeton. On repart alors du jeton stocké — le serveur tranchera. La sortie
+    // n'appartient qu'au refus prouvé, couvert par la suite « les deux jetons
+    // sont morts ».
     mockGetSession.mockResolvedValue({ data: { session: { access_token: "périmé" } } });
-    mockRefreshSession.mockResolvedValue({ data: { session: null }, error: { message: "mort" } });
+    mockRefreshSession.mockResolvedValue({
+      data: { session: null },
+      error: new AuthRetryableFetchError("Failed to fetch", 0),
+    });
 
     const rejeté = vi.fn().mockRejectedValue(new Error("Unauthorized: Invalid token"));
     await expect(callMiddleware({ next: rejeté } as never)).rejects.toThrow();
@@ -215,6 +241,7 @@ describe("attachSupabaseAuth — jeton refusé par le serveur", () => {
     const next = vi.fn().mockResolvedValue("ok");
     await callMiddleware({ next } as never);
 
+    expect(mockSignOut).not.toHaveBeenCalled();
     expect(next).toHaveBeenCalledWith({ headers: { Authorization: "Bearer périmé" } });
   });
 
@@ -290,6 +317,8 @@ describe("la reprise sauve la mutation (bout en bout)", () => {
   beforeEach(() => {
     mockGetSession.mockReset();
     mockRefreshSession.mockReset();
+    mockSignOut.mockReset();
+    mockSignOut.mockResolvedValue({ error: null });
     resetRejectedTokenForTests();
   });
 
@@ -373,6 +402,8 @@ describe("attachSupabaseAuth — le service Auth ne répond pas", () => {
   beforeEach(() => {
     mockGetSession.mockReset();
     mockRefreshSession.mockReset();
+    mockSignOut.mockReset();
+    mockSignOut.mockResolvedValue({ error: null });
     resetRejectedTokenForTests();
     vi.useFakeTimers();
   });
@@ -451,6 +482,8 @@ describe("attachSupabaseAuth — l'appel est parti SANS jeton", () => {
   beforeEach(() => {
     mockGetSession.mockReset();
     mockRefreshSession.mockReset();
+    mockSignOut.mockReset();
+    mockSignOut.mockResolvedValue({ error: null });
     resetRejectedTokenForTests();
     vi.useFakeTimers();
   });
@@ -504,6 +537,8 @@ describe("le tableau de bord guérit seul (bout en bout)", () => {
   beforeEach(() => {
     mockGetSession.mockReset();
     mockRefreshSession.mockReset();
+    mockSignOut.mockReset();
+    mockSignOut.mockResolvedValue({ error: null });
     resetRejectedTokenForTests();
   });
 
@@ -556,5 +591,157 @@ describe("le tableau de bord guérit seul (bout en bout)", () => {
     expect(result.status).toBe("success");
     expect(getDashboard).toHaveBeenNthCalledWith(1, {});
     expect(getDashboard).toHaveBeenNthCalledWith(2, { Authorization: "Bearer token-neuf" });
+  });
+});
+
+// =============================================================================
+// LA SESSION MORTE QUE PERSONNE N'EFFACE (#938 → #969).
+//
+// Les suites ci-dessus couvrent le jeton refusé RATTRAPABLE : un refresh forcé
+// rend un jeton neuf, l'élève ne voit rien. Restait le cas où le refresh échoue
+// LUI AUSSI — les deux jetons sont morts.
+//
+// On pourrait croire qu'auth-js s'en charge : il sait effacer une session et
+// émettre `SIGNED_OUT`. Il ne le fait PAS ici, et c'est délibéré de sa part. À
+// l'échec d'un rafraîchissement il ne détruit la session que si `expires_at`
+// est déjà passé ; sinon il la PRÉSERVE, en supposant qu'un access token non
+// expiré fonctionne encore (`GoTrueClient`, branche « proactive refresh failed,
+// access token still valid »). L'hypothèse est bonne en général — elle évite de
+// déconnecter quelqu'un dont le jeton marche — et fausse exactement ici, parce
+// que NOUS savons que le serveur vient de refuser cet access token. auth-js ne
+// connaît que l'horloge ; le middleware, lui, a vu le refus.
+//
+// Sans le correctif, `getSession()` rendait donc indéfiniment le même jeton
+// refusé : `user` restait vrai, le garde de `_authenticated` ne redirigeait
+// jamais, et l'élève restait sur un écran dont rien ne le sortait — la forme
+// exacte de #931 et #914/#915. La spec e2e `session-invalidation.spec.ts` le
+// mesurait dans un vrai navigateur ; ces tests-ci épinglent la décision.
+// =============================================================================
+describe("attachSupabaseAuth — les deux jetons sont morts", () => {
+  /** Un access token que le serveur refuse, mais qu'auth-js rend sans broncher. */
+  const REFUSÉ = { data: { session: { access_token: "refusé" } } };
+
+  beforeEach(() => {
+    mockGetSession.mockReset();
+    mockRefreshSession.mockReset();
+    mockSignOut.mockReset();
+    mockSignOut.mockResolvedValue({ error: null });
+    resetRejectedTokenForTests();
+  });
+
+  async function faireRefuserLeJeton(): Promise<void> {
+    const rejeté = vi.fn().mockRejectedValue(new Error("Unauthorized: Invalid token"));
+    await expect(callMiddleware({ next: rejeté } as never)).rejects.toThrow();
+  }
+
+  it("le serveur refuse AUSSI le rafraîchissement : la session se termine localement", async () => {
+    mockGetSession.mockResolvedValue(REFUSÉ);
+    mockRefreshSession.mockResolvedValue({
+      data: { session: null },
+      error: new AuthApiError(
+        "Invalid Refresh Token: Already Used",
+        400,
+        "refresh_token_already_used",
+      ),
+    });
+
+    await faireRefuserLeJeton();
+
+    const suivant = vi.fn().mockResolvedValue("ok");
+    await callMiddleware({ next: suivant } as never);
+
+    // `scope: "local"` : les jetons sont morts, une révocation réseau échouerait
+    // et ferait dépendre la SORTIE de l'élève d'un appel qui peut pendre.
+    expect(mockSignOut).toHaveBeenCalledWith({ scope: "local" });
+    // Et surtout : on ne repose PAS le jeton que le serveur vient de refuser.
+    expect(suivant).toHaveBeenCalledWith({ headers: {} });
+  });
+
+  it("LA RÉGRESSION : sans la sortie, `getSession()` reposerait le même jeton refusé", async () => {
+    // Le cœur de #969. `getSession()` ne vérifie aucune signature : il rend le
+    // jeton stocké tant qu'`expires_at` est dans le futur — donc le MÊME jeton
+    // refusé, à chaque appel, indéfiniment. Ce test échoue si le code retombe
+    // sur le chemin normal après un refus terminal.
+    // Le mock modélise le CONTRAT du SDK : `signOut({scope:"local"})` efface le
+    // stockage, donc `getSession()` ne rend plus rien ensuite. Sans cet état, le
+    // test mesurerait un mock immobile au lieu de la conduite réelle.
+    let sessionVivante = true;
+    mockGetSession.mockImplementation(() =>
+      Promise.resolve(sessionVivante ? REFUSÉ : { data: { session: null }, error: null }),
+    );
+    mockSignOut.mockImplementation(() => {
+      sessionVivante = false;
+      return Promise.resolve({ error: null });
+    });
+    mockRefreshSession.mockResolvedValue({
+      data: { session: null },
+      error: new AuthApiError("Invalid Refresh Token", 400, "bad_refresh_token"),
+    });
+
+    await faireRefuserLeJeton();
+
+    for (const _ of [1, 2, 3]) {
+      const appel = vi.fn().mockResolvedValue("ok");
+      await callMiddleware({ next: appel } as never);
+      expect(appel).not.toHaveBeenCalledWith({
+        headers: { Authorization: "Bearer refusé" },
+      });
+    }
+  });
+
+  it("panne de transport : on ne déconnecte PERSONNE pour un réseau qui tousse", async () => {
+    // La distinction qui protège l'élève : le serveur n'a pas dit « ce jeton est
+    // mauvais », il n'a rien dit du tout. Déconnecter ici punirait un métro sans
+    // réseau. On retombe sur le chemin normal, exactement comme avant.
+    mockGetSession.mockResolvedValue(REFUSÉ);
+    mockRefreshSession.mockResolvedValue({
+      data: { session: null },
+      error: new AuthRetryableFetchError("Failed to fetch", 0),
+    });
+
+    await faireRefuserLeJeton();
+
+    const suivant = vi.fn().mockResolvedValue("ok");
+    await callMiddleware({ next: suivant } as never);
+
+    expect(mockSignOut).not.toHaveBeenCalled();
+    expect(suivant).toHaveBeenCalledWith({ headers: { Authorization: "Bearer refusé" } });
+  });
+
+  it("5xx et 429 sont des indisponibilités, pas des refus", async () => {
+    // Même raison : « je ne peux pas répondre » ne vaut pas « ton jeton est
+    // mort ». Un pic de charge sur le service Auth ne doit pas vider les
+    // sessions de tous les élèves connectés au même instant.
+    for (const status of [429, 500, 503]) {
+      resetRejectedTokenForTests();
+      mockSignOut.mockClear();
+      mockGetSession.mockResolvedValue(REFUSÉ);
+      mockRefreshSession.mockResolvedValue({
+        data: { session: null },
+        error: new AuthApiError("service indisponible", status, undefined),
+      });
+
+      await faireRefuserLeJeton();
+      await callMiddleware({ next: vi.fn().mockResolvedValue("ok") } as never);
+
+      expect(mockSignOut, `statut ${status}`).not.toHaveBeenCalled();
+    }
+  });
+
+  it("une déconnexion locale qui échoue ne masque pas le refus : l'appel part sans jeton", async () => {
+    // Le défaut sûr est l'erreur VISIBLE, jamais l'exception avalée : si même
+    // effacer le stockage échoue, le serveur refusera et l'écran le dira.
+    mockGetSession.mockResolvedValue(REFUSÉ);
+    mockRefreshSession.mockResolvedValue({
+      data: { session: null },
+      error: new AuthApiError("Invalid Refresh Token", 400, "bad_refresh_token"),
+    });
+    mockSignOut.mockRejectedValue(new Error("storage indisponible"));
+
+    await faireRefuserLeJeton();
+
+    const suivant = vi.fn().mockResolvedValue("ok");
+    await expect(callMiddleware({ next: suivant } as never)).resolves.toBe("ok");
+    expect(suivant).toHaveBeenCalledWith({ headers: {} });
   });
 });
