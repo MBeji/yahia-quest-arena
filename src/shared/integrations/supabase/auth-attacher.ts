@@ -15,6 +15,7 @@
 // neuf. Il ne rejoue rien lui-même — voir le commentaire du `catch`, qui dit
 // pourquoi c'est structurellement impossible ici.
 import { createMiddleware } from "@tanstack/react-start";
+import { isAuthRetryableFetchError } from "@supabase/supabase-js";
 import { reportClientError } from "@/shared/lib/client-log";
 import { isSessionRefusalError } from "./auth-rejection";
 import { supabase } from "./client";
@@ -84,6 +85,72 @@ export function resetRejectedTokenForTests(): void {
 }
 
 /**
+ * Ce rafraîchissement a-t-il échoué DÉFINITIVEMENT, ou seulement pour cette fois ?
+ *
+ * La distinction décide d'une déconnexion, donc elle doit pencher du bon côté :
+ * dans le doute, on répond « transitoire » et l'élève garde sa session. Seul un
+ * REFUS du serveur (4xx qui n'est pas un 429) compte comme terminal — le jeton
+ * de rafraîchissement a été présenté et rejeté. Une panne de transport, une
+ * limitation de débit ou un 5xx ne disent rien de la validité du jeton : ils
+ * disent qu'on n'a pas pu demander.
+ *
+ * `isAuthRetryableFetchError` est l'étiquette d'auth-js pour le transport ; le
+ * 429 n'y est pas rangé, d'où la ligne qui suit. C'est le même partage que
+ * `isVerificationUnavailable` côté serveur (`auth-request.ts`) — écrit deux fois
+ * à dessein : ce fichier est CLIENT, et importer `auth-request.ts` ferait entrer
+ * le SDK serveur dans le bundle du navigateur (voir l'en-tête d'`auth-refusals.ts`).
+ */
+function isTerminalRefreshFailure(error: unknown): boolean {
+  if (!error) return false;
+  if (isAuthRetryableFetchError(error)) return false;
+  const { status } = error as { status?: unknown };
+  if (status === 429) return false;
+  if (typeof status === "number" && status >= 500) return false;
+  return true;
+}
+
+/**
+ * Termine LOCALEMENT une session dont le serveur a refusé les deux jetons.
+ *
+ * POURQUOI LE CLIENT DOIT LE FAIRE LUI-MÊME, alors qu'auth-js sait effacer une
+ * session. Parce qu'auth-js ne le fait PAS dans ce cas précis, et c'est
+ * délibéré de sa part : à l'échec d'un rafraîchissement il ne détruit la session
+ * que si l'`access_token` est déjà périmé selon `expires_at` ; sinon il la
+ * PRÉSERVE, en supposant qu'un jeton non expiré fonctionne encore
+ * (`GoTrueClient`, branche « proactive refresh failed, access token still
+ * valid »). L'hypothèse est raisonnable en général et fausse ici : nous savons,
+ * nous, que le serveur vient de REFUSER cet access token. auth-js ne connaît que
+ * l'horloge ; le middleware, lui, a vu le refus. C'est exactement l'information
+ * qui manque au SDK, et c'est pour ça que la décision revient à ce fichier.
+ *
+ * `scope: "local"` et pas un `signOut()` complet : les jetons sont morts, un
+ * aller-retour de révocation échouerait de toute façon, et on ne veut pas faire
+ * dépendre la SORTIE de l'élève d'un appel réseau qui peut pendre. Effacer le
+ * stockage émet `SIGNED_OUT`, `useAuth` remet `user` à `null`, et le garde de
+ * `_authenticated` renvoie vers `/auth`. C'est l'issue que la spec exige — elle
+ * n'en impose aucune en particulier, elle interdit le cul-de-sac.
+ */
+async function endDeadSession(): Promise<void> {
+  try {
+    // Borné comme tout le reste : un `signOut` qui pend derrière le verrou
+    // d'auth-js rendrait le bouton « Valider » gris sans fin — la panne même
+    // que ce fichier a déjà corrigée une fois (#914/#915).
+    await withAuthTimeout(supabase.auth.signOut({ scope: "local" }));
+  } catch (error) {
+    // Une déconnexion locale qui échoue ne doit pas masquer le refus d'origine :
+    // on le journalise et on rend la main. L'appel partira sans jeton, le
+    // serveur refusera, et l'erreur restera VISIBLE — ce qui vaut mieux qu'une
+    // exception avalée par le middleware.
+    reportClientError({
+      stage: "token-attach",
+      errMessage: `local sign-out after terminal refresh failure: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    });
+  }
+}
+
+/**
  * L'access token à poser sur l'appel, ou `null` s'il n'y en a pas.
  *
  * POURQUOI CE N'EST PAS UN SIMPLE `getSession()`. `getSession()` rafraîchit
@@ -109,10 +176,16 @@ export function resetRejectedTokenForTests(): void {
  * appel — et `refreshSession()` sans session stockée échoue de toute façon
  * localement, sans aller-retour réseau.
  *
- * Ce que ça ne prétend pas être : un remède au jeton de rafraîchissement
- * DÉFINITIVEMENT mort. Dans ce cas auth-js efface la session et émet
+ * ⚠️ LE JETON DE RAFRAÎCHISSEMENT DÉFINITIVEMENT MORT — ce que ce bloc affirmait,
+ * et qui était FAUX. Il disait : « dans ce cas auth-js efface la session et émet
  * `SIGNED_OUT`, et c'est le garde de `_authenticated` qui renvoie vers la
- * connexion.
+ * connexion. » auth-js ne fait cela que si l'`access_token` est AUSSI périmé
+ * selon `expires_at` ; tant que cette date est dans le futur, il PRÉSERVE la
+ * session à dessein. Une session dont les deux jetons sont refusés mais dont
+ * l'`expires_at` est intact n'était donc effacée par personne : `getSession()`
+ * rendait le même jeton refusé à chaque appel, le garde ne voyait jamais
+ * `user === null`, et l'élève restait sur un écran dont rien ne le sortait
+ * (#938 → #969). La sortie est posée plus bas, dans le cas 3.
  *
  * CAS 3, ET IL MANQUAIT — le jeton RENDU est refusé par le serveur. Les deux
  * cas ci-dessus supposent qu'un jeton rendu est un bon jeton ; c'est faux, et
@@ -145,10 +218,24 @@ export async function resolveAccessToken(): Promise<string | null> {
   // ni de l'autre : un aller-retour de rafraîchissement.
   if (consumeRejectedToken()) {
     const forced = await withAuthTimeout(supabase.auth.refreshSession());
-    const token = forced === TIMED_OUT ? null : forced.data.session?.access_token;
-    if (token) return token;
-    // Le forçage n'a rien donné : on retombe sur le chemin normal, qui saura
-    // dire « pas de session » (et le garde de `_authenticated` fera son office).
+    if (forced !== TIMED_OUT) {
+      const token = forced.data.session?.access_token;
+      if (token) return token;
+      // Le serveur a refusé l'access token ET vient de refuser le refresh token :
+      // cette session est morte, et personne d'autre ne le sait. Retomber sur le
+      // chemin normal serait ici une BOUCLE, pas un repli — `getSession()` ne
+      // vérifie aucune signature et rendrait exactement le jeton qu'on vient de
+      // faire refuser, indéfiniment. On termine donc la session localement, ce
+      // qui rend la main au garde de `_authenticated`.
+      if (isTerminalRefreshFailure(forced.error)) {
+        await endDeadSession();
+        return null;
+      }
+    }
+    // Échec NON terminal (délai dépassé, transport, 429, 5xx) : on ne déconnecte
+    // personne pour une panne passagère. On retombe sur le chemin normal, qui
+    // repartira du jeton stocké — c'est le comportement d'avant, et il est bon
+    // tant que le refus n'est pas prouvé définitif.
   }
 
   const current = await withAuthTimeout(supabase.auth.getSession());
