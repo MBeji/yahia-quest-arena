@@ -104,9 +104,13 @@ function isTerminalRefreshFailure(error: unknown): boolean {
   if (!error) return false;
   if (isAuthRetryableFetchError(error)) return false;
   const { status } = error as { status?: unknown };
-  if (status === 429) return false;
-  if (typeof status === "number" && status >= 500) return false;
-  return true;
+  // La PREUVE, et rien d'autre : le service Auth a répondu, et sa réponse est un
+  // refus (4xx, hors 429 qui dit « trop de demandes », pas « mauvais jeton »).
+  // Tout le reste — 5xx, statut absent, forme d'erreur inconnue — retombe sur
+  // `false`. C'est volontairement l'inverse d'un `return true` final : la SORTIE
+  // est un geste destructeur (l'élève perd sa session), donc elle se mérite par
+  // une preuve positive, jamais par défaut.
+  return typeof status === "number" && status >= 400 && status < 500 && status !== 429;
 }
 
 /**
