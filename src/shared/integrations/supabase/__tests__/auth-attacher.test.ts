@@ -708,6 +708,29 @@ describe("attachSupabaseAuth — les deux jetons sont morts", () => {
     expect(suivant).toHaveBeenCalledWith({ headers: { Authorization: "Bearer refusé" } });
   });
 
+  it("une erreur SANS statut ne prouve rien : on ne déconnecte pas", async () => {
+    // Le défaut sûr, et il a failli manquer. La première version de ce correctif
+    // finissait sur `return true` — donc toute erreur d'une forme inattendue
+    // valait « session morte ». Déconnecter est un geste DESTRUCTEUR : il se
+    // mérite par une preuve positive (le service Auth a répondu 4xx), jamais par
+    // défaut. Un objet d'erreur exotique, un `{ message }` nu, une couche
+    // intermédiaire qui ré-emballe : tout cela retombe désormais sur « on ne
+    // sait pas », et l'élève garde sa session.
+    mockGetSession.mockResolvedValue(REFUSÉ);
+    mockRefreshSession.mockResolvedValue({
+      data: { session: null },
+      error: { message: "quelque chose a échoué" },
+    });
+
+    await faireRefuserLeJeton();
+
+    const suivant = vi.fn().mockResolvedValue("ok");
+    await callMiddleware({ next: suivant } as never);
+
+    expect(mockSignOut).not.toHaveBeenCalled();
+    expect(suivant).toHaveBeenCalledWith({ headers: { Authorization: "Bearer refusé" } });
+  });
+
   it("5xx et 429 sont des indisponibilités, pas des refus", async () => {
     // Même raison : « je ne peux pas répondre » ne vaut pas « ton jeton est
     // mort ». Un pic de charge sur le service Auth ne doit pas vider les
