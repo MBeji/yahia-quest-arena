@@ -112,18 +112,42 @@ function measureInPage([svgs, tolerance]) {
     const root = host.querySelector("svg");
     if (!root?.viewBox?.baseVal?.width) return;
     const box = root.viewBox.baseVal;
+    let versViewBox = null;
+    try {
+      versViewBox = root.getScreenCTM()?.inverse() ?? null;
+    } catch {
+      return;
+    }
+    if (!versViewBox) return;
     let worst = null;
     for (const node of root.querySelectorAll("text, tspan")) {
       if (!node.textContent.trim()) continue;
       let bbox;
+      let matrice;
       try {
         bbox = node.getBBox();
+        matrice = versViewBox.multiply(node.getScreenCTM());
       } catch {
         continue;
       }
-      if (!bbox.width) continue;
-      const right = bbox.x + bbox.width - box.width;
-      const left = -bbox.x;
+      if (!bbox.width || !matrice) continue;
+      // `getBBox()` rend l'espace PROPRE du nœud : ni sa transformation ni celle
+      // de ses ancêtres n'y sont appliquées. Il faut donc les composer — sinon
+      // un `<g transform="translate(…)">` décale toute la mesure, dans les DEUX
+      // sens : il a rendu rouge une figure juste (`04-communication-technique-
+      // perceuse-sensitive`, une étiquette « r » annoncée +14,2 u alors qu'elle
+      // s'affiche à 291,8 pour un cadre de 300), et il rendrait vert un texte
+      // qu'un `translate` pousse dehors — le vrai danger, puisque c'est celui-là
+      // qui arrive rogné chez l'élève. Les QUATRE coins, parce qu'une rotation
+      // ne laisse pas « x » être le bord gauche.
+      const xs = [
+        [bbox.x, bbox.y],
+        [bbox.x + bbox.width, bbox.y],
+        [bbox.x, bbox.y + bbox.height],
+        [bbox.x + bbox.width, bbox.y + bbox.height],
+      ].map(([x, y]) => matrice.a * x + matrice.c * y + matrice.e);
+      const right = Math.max(...xs) - (box.x + box.width);
+      const left = box.x - Math.min(...xs);
       const excess = Math.max(right, left);
       if (excess > tolerance && (!worst || excess > worst.excess)) {
         worst = {
@@ -163,25 +187,52 @@ const CALIBRATION = {
   narrow: 340,
   wide: 356,
   expected: 9.7,
+  /** De combien les deux contrôles de transformation déplacent le texte. */
+  decalage: 20,
 };
 
 async function calibrate(page) {
-  const svg = (width) =>
-    `<svg viewBox="0 0 ${width} 170"><text ${CALIBRATION.attrs}>${CALIBRATION.text}</text></svg>`;
-  const measure = (width) => page.evaluate(measureInPage, [[svg(width)], OVERFLOW_TOLERANCE]);
+  const { narrow, wide, expected, decalage } = CALIBRATION;
+  // Le bord droit du texte, en unités de viewBox — c'est de lui que tout découle.
+  const bordDroit = narrow + expected;
+  const svg = (width, transform) =>
+    `<svg viewBox="0 0 ${width} 170">` +
+    (transform ? `<g transform="${transform}">` : "") +
+    `<text ${CALIBRATION.attrs}>${CALIBRATION.text}</text>` +
+    (transform ? "</g>" : "") +
+    "</svg>";
+  const measure = (width, transform) =>
+    page.evaluate(measureInPage, [[svg(width, transform)], OVERFLOW_TOLERANCE]);
 
   // Contrôle POSITIF (la trop étroite doit déborder) ET négatif (l'élargie non) :
   // une méthode qui ne rend jamais rien passerait le second toute seule.
-  const narrow = await measure(CALIBRATION.narrow);
-  const wide = await measure(CALIBRATION.wide);
-  const measured = narrow[0]?.excess ?? 0;
-  const ok = Math.abs(measured - CALIBRATION.expected) <= 0.5 && wide.length === 0;
+  const etroit = await measure(narrow);
+  const large = await measure(wide);
+  const mesure = etroit[0]?.excess ?? 0;
+
+  // Les deux mêmes contrôles, mais sous un `<g transform>` — car `getBBox()`
+  // ignore les transformations et une mesure non composée se trompe dans les
+  // DEUX sens. Le second est le plus important : c'est le faux NÉGATIF, celui
+  // qui laisse partir en production un texte rogné.
+  const sauve = await measure(narrow, `translate(-${decalage},0)`);
+  const pousse = await measure(wide, `translate(${decalage},0)`);
+  const attenduPousse = Math.round((bordDroit + decalage - wide) * 10) / 10;
+  const mesurePousse = pousse[0]?.excess ?? 0;
+
+  const ok =
+    Math.abs(mesure - expected) <= 0.5 &&
+    large.length === 0 &&
+    sauve.length === 0 &&
+    Math.abs(mesurePousse - attenduPousse) <= 0.5;
   stdout.write(
-    `calibration : viewBox ${CALIBRATION.narrow} → +${measured} u ` +
-      `(attendu +${CALIBRATION.expected}), viewBox ${CALIBRATION.wide} → ${wide.length} débordement\n` +
+    `calibration : viewBox ${narrow} → +${mesure} u (attendu +${expected}), ` +
+      `viewBox ${wide} → ${large.length} débordement\n` +
+      `              sous translate(-${decalage}) → ${sauve.length} débordement (attendu 0), ` +
+      `sous translate(+${decalage}) → +${mesurePousse} u (attendu +${attenduPousse})\n` +
       (ok
         ? "✓ la méthode mesure bien ce qu'elle prétend.\n"
-        : "✗ CALIBRATION EN ÉCHEC — la police ne s'applique probablement pas ; ne crois aucun résultat.\n"),
+        : "✗ CALIBRATION EN ÉCHEC — police non appliquée, ou transformations non composées ; " +
+          "ne crois aucun résultat.\n"),
   );
   return ok;
 }
