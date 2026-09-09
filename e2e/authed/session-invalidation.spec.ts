@@ -103,12 +103,17 @@ async function describeDeadEnd(page: Page): Promise<string> {
         .length.toString(),
     )
     .catch(() => "?");
+  const messageErreur = await page
+    .getByTestId("dashboard-error-message")
+    .innerText()
+    .catch(() => "(non affiché)");
   return [
     "ni tableau de bord peuplé ni retour vers /auth",
     `url: ${page.url()}`,
     `frontière d'erreur racine visible: ${boundary}`,
     `titre à l'écran: ${JSON.stringify(titre.slice(0, 120))}`,
     `clés de session restantes: ${session}`,
+    `message d'erreur rendu: ${JSON.stringify(messageErreur.slice(0, 160))}`,
   ].join(" — ");
 }
 

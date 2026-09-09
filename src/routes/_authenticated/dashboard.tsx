@@ -180,6 +180,20 @@ function Dashboard() {
           <Skull className="mx-auto h-10 w-10 text-destructive" />
           <h2 className="mt-4 font-display text-xl font-bold">{t.dashboard.failedLoad}</h2>
           <p className="mt-2 text-sm text-muted-foreground">{t.dashboard.failedLoadDesc}</p>
+          {/*
+            L'identité de l'erreur, comme sur la frontière d'erreur racine et pour la même
+            raison : c'est le seul canal de diagnostic d'un élève sur mobile, sans devtools.
+            Un écran qui ne dit que « quelque chose s'est mal passé » force à ouvrir une trace
+            — et c'est exactement ce qui a fait tourner en rond l'enquête #969.
+          */}
+          {error instanceof Error && error.message ? (
+            <p
+              data-testid="dashboard-error-message"
+              className="mt-2 text-xs break-words text-muted-foreground/70"
+            >
+              {error.message}
+            </p>
+          ) : null}
           <button
             onClick={() => queryClient.invalidateQueries({ queryKey: ["dashboard"] })}
             className="mt-4 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
