@@ -76,3 +76,40 @@ export function isSessionRefusalError(error: unknown): boolean {
 export function shouldReplaySessionRefusal(failureCount: number, error: unknown): boolean {
   return failureCount < 1 && isSessionRefusalError(error);
 }
+
+/**
+ * Faut-il sortir l'élève vers la connexion ? Décision de la FRONTIÈRE D'ERREUR RACINE
+ * (`src/routes/__root.tsx`), posée ici parce qu'elle est la même question que les deux
+ * prédicats ci-dessus — et parce qu'une décision d'authentification enfouie dans un composant
+ * de route n'est ni lisible ni testable.
+ *
+ * LE TROU QU'ELLE BOUCHE (#938 → #969). Le garde de `_authenticated` sort une session morte par
+ * `!loading && !user → /auth`. Mais quand la frontière d'erreur racine rend, elle REMPLACE
+ * l'arbre : le garde est démonté, son effet ne tourne plus, et plus personne n'écoute
+ * `SIGNED_OUT`. L'élève reste alors devant un écran dont le seul bouton rejoue l'appel qui
+ * échoue. Deux correctifs côté jeton (#1009, #1010) ont réduit le défaut sans le fermer — ils
+ * réparaient l'amont d'une porte déjà murée. C'est donc la règle du garde, redite là où le garde
+ * n'existe plus.
+ *
+ * LES DEUX CONDITIONS SONT NÉCESSAIRES, et la seconde est celle qui protège l'élève :
+ *
+ *   - `refusal` — l'échec est un refus d'authentification. Une panne ORDINAIRE (bug de rendu,
+ *     500, requête cassée) garde son écran d'erreur et son bouton « Réessayer », qui sont la
+ *     bonne réponse : renvoyer vers la connexion pour un défaut étranger à la session serait
+ *     une régression. C'est aussi ce qui rend un visiteur ANONYME insensible à cette sortie.
+ *   - `hasUser` faux — il n'y a plus de session. Donc `auth-attacher` a déjà constaté que les
+ *     deux jetons étaient morts et l'a terminée. Tant qu'une session existe, le refus peut être
+ *     passager, et « Réessayer » a du sens.
+ *
+ * `loading` vrai ne décide de rien : on ne sort pas quelqu'un pendant qu'on lit encore sa
+ * session — c'est la même précaution que le garde, et sans elle un rechargement sortirait tout
+ * le monde le temps d'un aller-retour de stockage.
+ */
+export function shouldLeaveForLogin(input: {
+  readonly loading: boolean;
+  readonly hasUser: boolean;
+  readonly error: unknown;
+}): boolean {
+  if (input.loading || input.hasUser) return false;
+  return isSessionRefusalError(input.error);
+}
