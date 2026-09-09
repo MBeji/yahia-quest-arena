@@ -91,10 +91,14 @@ async function describeDeadEnd(page: Page): Promise<string> {
     .getByTestId("root-error-boundary")
     .isVisible()
     .catch(() => false);
+  // ⚠️ CHAQUE lecture est bornée à 500 ms, et ce n'est pas du confort : sans borne, `innerText`
+  // sur un élément absent attend le timeout PAR DÉFAUT (30 s) avant que le `.catch` ne joue —
+  // le diagnostic mangeait alors la fenêtre de `toPass` et le message d'échec retombait sur un
+  // « Timeout exceeded » muet. Un outil de mesure qui fausse la mesure ne vaut rien.
   const titre = await page
     .locator("h1, h2")
     .first()
-    .innerText()
+    .innerText({ timeout: 500 })
     .catch(() => "(aucun titre)");
   const session = await page
     .evaluate(() =>
@@ -105,7 +109,7 @@ async function describeDeadEnd(page: Page): Promise<string> {
     .catch(() => "?");
   const messageErreur = await page
     .getByTestId("dashboard-error-message")
-    .innerText()
+    .innerText({ timeout: 500 })
     .catch(() => "(non affiché)");
   return [
     "ni tableau de bord peuplé ni retour vers /auth",
