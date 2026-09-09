@@ -294,33 +294,45 @@ est clos (#958), **é26 lot 1** est écrit (#961) et **é32 est LIVRÉE en entie
 privé#342 → #353) — ses cinq lots, ses cinq questions closes, et deux constats nés de son
 exécution : `typecheck` ne voyait aucun script, et rester à jour avec `main` relance toute la CI.
 
-### 🔴 Le rouge du jour — un vrai défaut, et deux issues qui en découlent
+### 🔴 Le rouge du jour — le défaut produit est corrigé, il reste un échec de test
 
-⚠️ **Ne pas les compter pour trois.** Six issues sont ouvertes, trois portent du rouge, et **deux
-d'entre elles ont la même cause.**
+- **[#969](https://github.com/MBeji/yahia-quest-arena/issues/969) — ✅ corrigé par #1013,
+  cause racine nommée.** `supabase.auth.getClaims(token)` était appelé comme s'il RETOURNAIT
+  toujours son erreur ; il peut la **lever**, et un JWT malformé fait échouer le décodage
+  base64 avant toute vérification — `invalid.invalid.invalid` produit « Invalid UTF-8
+  sequence ». L'exception traversait le middleware et arrivait **brute** au client, qui ne
+  recevait donc jamais `Unauthorized: Invalid token`. `isSessionRefusalError` répondait faux,
+  et **toute la chaîne posée derrière ce prédicat restait inerte** : le forçage d'un jeton
+  neuf (#931), la fin de session sur refus prouvé (#1009, #1010), la sortie vers `/auth`.
+  Aucune n'était fausse ; aucune n'était **atteinte**.
+  `session-invalidation.spec.ts` passe sur les runs `e2e-auth` **93 et 94**, contre rouge sur
+  `main` le matin même.
+- **[#1015](https://github.com/MBeji/yahia-quest-arena/issues/1015) — le rouge qui reste, et
+  il est ANCIEN.** `leaderboard.spec.ts:62` rend **zéro ligne** au classement global, alors
+  que `get_global_leaderboard` est écrite pour que l'appelant ait TOUJOURS la sienne (CTE
+  `me`, rang live). Rouge sur `main` comme sur la branche, sur les 3 reprises Playwright —
+  donc pas un aléa. C'était la deuxième moitié de #967 depuis le début, notée « antérieure et
+  distincte » sans avoir jamais eu d'issue à elle : elle en a une.
+- **[#967](https://github.com/MBeji/yahia-quest-arena/issues/967)** — le nightly rouge ne
+  tient plus qu'à #1015. Il se refermera de lui-même à la première nuit verte, et
+  [#1008](https://github.com/MBeji/yahia-quest-arena/issues/1008) (aucun checkpoint de
+  rollback vérifié) avec lui : ce sont les MÊMES octets, comptés trois fois.
 
-- **[#969](https://github.com/MBeji/yahia-quest-arena/issues/969) — le seul défaut PRODUIT, et il
-  est instruit.** `e2e/authed/session-invalidation.spec.ts:109` échoue de façon **reproductible**
-  (deux runs indépendants, 3 reprises Playwright chacun, message identique aux six tentatives) :
-  une session dont les jetons sont corrompus **sans toucher à la forme JSON ni à `expires_at`**
-  laisse l'élève sur `/dashboard`, sans tableau de bord et sans retour vers `/auth`. Le mécanisme
-  est lu dans le code : `getSession()` relit `localStorage` **sans vérifier la signature**, donc
-  `user` est vrai, donc le garde de `_authenticated` (qui ne redirige que sur `!user`) ne redirige
-  jamais ; le refresh forcé par #931 échoue et **rien ne transforme cet échec terminal en fin de
-  session**. C'est la troisième forme du même défaut, après #931 et #914/#915.
-  ⚠️ **La spec est rouge parce qu'elle a raison** — la passer en `skip` rendrait le gate vert et
-  l'élève toujours coincé, ce que #938 a précisément été ouverte pour empêcher.
-- **[#967](https://github.com/MBeji/yahia-quest-arena/issues/967)** — le nightly rouge : **c'est
-  la même chose**, plus `leaderboard.spec.ts:62` (« un compte classé porte la puce “Toi” »), un
-  échec antérieur et sans rapport, noté pour ne pas être confondu.
-- **[#965](https://github.com/MBeji/yahia-quest-arena/issues/965)** — la garde des gardes : **un
-  seul** run rouge dans sa fenêtre de 8 h (`regression-guard`, 00:47 UTC, `schedule`). Elle se
-  referme d'elle-même dès qu'une fenêtre entière est verte.
+**Deux leçons de #969, et la seconde vaut plus cher que la première.**
 
-**La leçon que #969 tire contre elle-même mérite d'être ici** : la spec est entrée sur `main` en
-#953, et le run `e2e-auth` vert invoqué comme preuve portait le commit de **#951** — donc
-**antérieur à la spec**. Elle a été livrée sans avoir jamais tourné. **Une spec e2e n'est vérifiée
-que par un run qui la contient**, et `e2e-auth.yml` est déclenchable exprès.
+1. La spec est entrée sur `main` en #953, et le run `e2e-auth` vert invoqué comme preuve
+   portait le commit de **#951** — donc **antérieur à la spec**. Elle a été livrée sans avoir
+   jamais tourné. **Une spec e2e n'est vérifiée que par un run qui la contient**, et
+   `e2e-auth.yml` est déclenchable exprès.
+2. **Raisonner depuis le code a produit quatre diagnostics faux d'affilée**, chacun démenti
+   par le run suivant. Ce qui a tranché en UN run, c'est d'avoir fait **dire à la spec ce
+   qu'elle voyait** — quatre faits rendus à chaque échec, dont le dernier nommait la cause.
+   ⚠️ Corollaire payé au prix fort : `describeDeadEnd` lisait d'abord **sans borne**, et
+   l'argument de message d'un `expect` est évalué à CHAQUE tour de `toPass`. Un `innerText()`
+   sur un élément absent attendait donc 30 s, soit toute la fenêtre, dès la première
+   itération : **la boucle de reprise était désactivée par son propre diagnostic**, et les
+   runs 89-92 ne mesuraient rien. Un outil de mesure qui fausse la mesure ne vaut rien —
+   borner chaque lecture.
 
 ### Ce que les chantiers d'août laissent comme règles
 
@@ -414,20 +426,30 @@ Le détail vit dans les corps de PR et dans `docs/` — ici, seulement ce qui go
   divergence qu'`auth-refusals.ts` a déjà payée deux fois. **La panne elle-même n'est pas
   élucidée** : ce lot la rend lisible, il ne la corrige pas.
 
-### Issues ouvertes — re-sondées le 2026-09-04
+### Issues ouvertes — re-sondées le 2026-09-09
 
-**6 au moteur**, contre 10 le 2026-08-26 : **sept des dix d'alors sont closes** (#879, #874,
-#870, #863, #854, #853, #804, #673, #595 — la file se vide, ce n'est pas une impression), et
-trois sont nées depuis. Deux des six sont **ouvertes par des gardes** et se referment seules.
+**10 au moteur** (9 dès que #1013 merge et ferme #969). ⚠️ Ce compteur disait **6** et le
+tableau en listait sept, dont une close — la ligne était fausse dans les deux sens depuis le
+2026-09-04, et personne ne la relit sans la re-sonder. C'est exactement ce que
+[#994](https://github.com/MBeji/yahia-quest-arena/issues/994) décrit : la roadmap privée est
+tenue à chaque lot, c'est **ce fichier-ci** qui décroche, parce qu'aucun gate ne le surveille.
+Ne pas croire ce tableau sans `list_issues` — **le re-sonder est la seule lecture valide**.
 
-| Issue    | Quoi                                                                                                                                                                |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **#969** | Une session corrompue est un **cul-de-sac** — la spec de #938 le prouve et **reste rouge**. Le seul défaut produit de la liste, et il est instruit (voir ci-dessus) |
-| **#967** | 🌙 Nightly rouge — **même cause que #969**, plus `leaderboard.spec.ts:62`, antérieur et distinct                                                                    |
-| **#965** | 🚨 Gardes en échec — **un seul** run (`regression-guard`, `schedule`). Se referme dès qu'une fenêtre est verte                                                      |
-| **#962** | 📈 Relevé d'engagement du 2026-09-03 — **informatif**, posé automatiquement par é31. Pas un rouge                                                                   |
-| **#937** | Gates orphelins : la classe est fermée par une garde — et **deux des trois constats de l'issue étaient faux**. #960 en a traité la part vraie (G-3)                 |
-| **#660** | Major `typescript` v7.0.2 — gate rouge, `typescript-eslint` bloquant. Attendre l'amont, ne pas forcer                                                               |
+**Trois des dix sont ouvertes par des gardes** (#1008, #967, #962) et se referment seules ;
+deux d'entre elles ne comptent pas pour deux, elles ont la même cause.
+
+| Issue     | Quoi                                                                                                                                                                            |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **#969**  | ✅ **Corrigé par #1013** — `getClaims` LEVAIT son erreur au lieu de la rendre, donc le refus n'arrivait jamais intact au client et rien de ce qui est posé derrière ne s'armait |
+| **#1015** | `leaderboard.spec.ts:62` rend **zéro ligne** là où la RPC en garantit une. Rouge sur `main` aussi, sur les 3 reprises — le seul échec qui reste dans la suite authentifiée      |
+| **#967**  | 🌙 Nightly rouge — ne tient plus qu'à **#1015**. Se referme à la première nuit verte                                                                                            |
+| **#1008** | ⚠️ Aucun checkpoint de rollback vérifié — **conséquence** du nightly rouge, pas un défaut à part. Se referme avec #967                                                          |
+| **#962**  | 📈 Relevé d'engagement du 2026-09-03 — **informatif**, posé automatiquement par é31. Pas un rouge                                                                               |
+| **#937**  | Gates orphelins : la classe est fermée par une garde — et **deux des trois constats de l'issue étaient faux**. #960 en a traité la part vraie (G-3)                             |
+| **#1002** | Identifiants hors dépôt : `GH_AUTOMATION_PAT` **expire le 2026-10-04**, `CLAUDE_CODE_OAUTH_TOKEN` à dater. Aucune session ne peut les renouveler — geste au navigateur          |
+| **#994**  | Rien ne garde `STATUS.md` ni l'index des études. La divergence à sens unique — et ce tableau vient de la refaire                                                                |
+| **#979**  | Une soirée d'exercices non enregistrée le 2026-09-03, **cause non élucidée**. #977 a posé l'instrumentation ; il faut une occurrence datée ou deux semaines de silence          |
+| **#660**  | Major `typescript` v7.0.2 — gate rouge, `typescript-eslint` bloquant. Attendre l'amont, ne pas forcer                                                                           |
 
 **8 branches distantes traînent sans PR** (9 au total, dont `draft/regression-guard-20260901`
 qui, elle, en a une — #932). Le compte n'a pas bougé depuis le 2026-08-26. ⚠️ **Leur contenu n'a
@@ -601,9 +623,9 @@ signalements en souffrance sont passés `dismissed`, et le **contrôle indépend
   et ne pas re-signaler la langue du premier contact comme un défaut.
 - ~~**Conformité mineurs : quelle voie**~~ → **dossier monté en interne** (voir ligne 2 ci-dessus).
 
-> **▶ Reprise pour une session vierge** — `main` à **#970** au 2026-09-04, **une seule PR
-> ouverte** (#932, savepoint volontaire en `draft/`), **un défaut produit instruit et non
-> corrigé** (#969, §6).
+> **▶ Reprise pour une session vierge** — `main` à **#1010** au 2026-09-09, **aucun défaut
+> produit ouvert** : #969 est corrigé par #1013 (§6). Ce qui reste rouge est un **échec de
+> test**, #1015, et il est antérieur.
 >
 > 1. **Les contrats d'exécution sont au privé.** La ROADMAP ordonnée (avec son graphe) et les
 >    `ETUDE.md` (requirements R-N, décisions D-N, stop-points par lot) vivent dans
