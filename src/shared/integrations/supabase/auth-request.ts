@@ -101,7 +101,33 @@ export async function resolveSupabaseAuth(request: Request): Promise<AuthResolut
     },
   );
 
-  const { data, error } = await supabase.auth.getClaims(token);
+  // ⚠️ `getClaims` ne RETOURNE pas toujours son erreur — il peut la LEVER, et c'est la cause
+  // racine de #969 (spec de #938). Un JWT malformé fait échouer le décodage base64 AVANT toute
+  // vérification : `invalid.invalid.invalid` produit « Invalid UTF-8 sequence », une exception
+  // qui traversait ce helper, le middleware, et arrivait BRUTE au client.
+  //
+  // Conséquence, et elle est vaste : le client ne recevait pas « Unauthorized: Invalid token »
+  // mais « Invalid UTF-8 sequence ». `isSessionRefusalError` répondait donc faux, et TOUTE la
+  // chaîne posée derrière ce prédicat restait inerte — le forçage de jeton neuf (#931), la fin
+  // de session sur refus prouvé (#1009, #1010), la sortie vers la connexion. Aucune n'était
+  // fausse ; aucune n'était atteinte. L'élève restait devant « Impossible de charger le
+  // dashboard » et son bouton « Réessayer », qui rejouait l'appel qui échoue.
+  //
+  // Un jeton qu'on ne peut pas DÉCODER est un jeton invalide, au même titre qu'un jeton mal
+  // signé : il rejoint la même ligne de la table. La distinction transport/refus est conservée
+  // — une panne de réseau levée ici reste `UNAVAILABLE`, exactement comme si elle était rendue.
+  let claims: Awaited<ReturnType<typeof supabase.auth.getClaims>>;
+  try {
+    claims = await supabase.auth.getClaims(token);
+  } catch (cause) {
+    return {
+      ok: false,
+      failure: isVerificationUnavailable(cause) ? "UNAVAILABLE" : "INVALID_TOKEN",
+      detail: cause instanceof Error ? cause.message : "getClaims a levé une erreur non typée",
+    };
+  }
+
+  const { data, error } = claims;
   if (error || !data?.claims) {
     return {
       ok: false,

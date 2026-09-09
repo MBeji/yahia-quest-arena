@@ -77,6 +77,51 @@ async function dropSession(page: Page): Promise<number> {
 }
 
 /**
+ * DE QUOI EST FAIT LE CUL-DE-SAC — le message d'échec, et pourquoi il en dit autant.
+ *
+ * L'assertion ne rendait que l'URL. C'était trop peu : trois correctifs successifs de #969 ont
+ * été écrits sur des HYPOTHÈSES de ce que la page montrait (« la frontière d'erreur ? un
+ * squelette ? une redirection avortée ? »), et chacun s'est révélé faux au run suivant. Un
+ * message qui NOMME l'écran rencontré transforme chaque échec en mesure — et il vaut bien
+ * au-delà de cette enquête : la prochaine régression dira d'elle-même où elle bloque, au lieu
+ * d'obliger à ouvrir une trace.
+ */
+async function describeDeadEnd(page: Page): Promise<string> {
+  const boundary = await page
+    .getByTestId("root-error-boundary")
+    .isVisible()
+    .catch(() => false);
+  // ⚠️ CHAQUE lecture est bornée à 500 ms, et ce n'est pas du confort : sans borne, `innerText`
+  // sur un élément absent attend le timeout PAR DÉFAUT (30 s) avant que le `.catch` ne joue —
+  // le diagnostic mangeait alors la fenêtre de `toPass` et le message d'échec retombait sur un
+  // « Timeout exceeded » muet. Un outil de mesure qui fausse la mesure ne vaut rien.
+  const titre = await page
+    .locator("h1, h2")
+    .first()
+    .innerText({ timeout: 500 })
+    .catch(() => "(aucun titre)");
+  const session = await page
+    .evaluate(() =>
+      Object.keys(localStorage)
+        .filter((k) => k.startsWith("sb-") && k.includes("auth-token"))
+        .length.toString(),
+    )
+    .catch(() => "?");
+  const messageErreur = await page
+    .getByTestId("dashboard-error-message")
+    .innerText({ timeout: 500 })
+    .catch(() => "(non affiché)");
+  return [
+    "ni tableau de bord peuplé ni retour vers /auth",
+    `url: ${page.url()}`,
+    `frontière d'erreur racine visible: ${boundary}`,
+    `titre à l'écran: ${JSON.stringify(titre.slice(0, 120))}`,
+    `clés de session restantes: ${session}`,
+    `message d'erreur rendu: ${JSON.stringify(messageErreur.slice(0, 160))}`,
+  ].join(" — ");
+}
+
+/**
  * L'issue attendue : le tableau de bord se peuple, OU on est renvoyé vers la
  * connexion. Jamais la frontière d'erreur racine.
  */
@@ -92,10 +137,7 @@ async function expectAnExit(
       .first()
       .isVisible()
       .catch(() => false);
-    expect(
-      onAuth || loaded,
-      `ni tableau de bord peuplé ni retour vers /auth — url: ${page.url()}`,
-    ).toBe(true);
+    expect(onAuth || loaded, await describeDeadEnd(page)).toBe(true);
   }).toPass({ timeout: 30_000 });
   // L'assertion qui compte : le cul-de-sac n'est pas là. Vérifiée APRÈS la
   // sortie, sinon un écran d'erreur transitoire pendant la reprise la ferait

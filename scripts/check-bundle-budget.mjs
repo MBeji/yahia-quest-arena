@@ -4,7 +4,28 @@ import { join } from "node:path";
 const clientAssetsDir = join(process.cwd(), "dist", "client", "assets");
 
 const BUDGETS = {
-  "index-": 450 * 1024,
+  // Chunk d'entrée — le seul que TOUT élève télécharge et parse, sur son appareil à lui.
+  //
+  // 450→456 KB (2026-09-09). Ce plafond n'avait pas bougé depuis sa pose, le 2026-06-01,
+  // et c'était le seul de ce fichier sans une ligne pour dire pourquoi. Trois mois de
+  // croissance y ont été absorbés en silence : mesuré sur `main` (0b4d272d) le jour du
+  // relèvement, le chunk pesait **449,86 KB pour 450,00** — 139 octets de marge, 99,97 %
+  // du plafond consommé. La PR qui a rougi n'a pas fait déborder le budget ; elle est
+  // arrivée quand il n'y avait plus rien dedans.
+  //
+  // CE QU'ELLE AJOUTE, ET POURQUOI ÇA NE SE DÉCOUPE PAS. 270 octets :
+  // `useExitOnRefusedSession` (#969), appelé par la frontière d'erreur racine. Le
+  // découpage — la règle que `i18n-` impose avant tout relèvement — ne s'applique pas
+  // ici : ce hook s'exécute au moment où l'application vient d'échouer, et c'est le pire
+  // moment pour aller CHERCHER du code sur le réseau. Un import dynamique en ferait une
+  // sortie de secours qui dépend de ce qui est déjà cassé.
+  //
+  // CE QUE CE RELÈVEMENT NE RÈGLE PAS. 5,8 KB de marge, et l'entrée continuera de
+  // grossir. Le vrai correctif est le découpage du chunk d'entrée, pas un dix-septième
+  // palier : la prochaine PR du chemin critique qui rougit ici devrait l'ouvrir plutôt
+  // que relever encore. C'est écrit ici pour que ce soit visible AVANT d'y arriver, et
+  // pas seulement dans le message de commit qui l'aura constaté.
+  "index-": 456 * 1024,
   // ---------------------------------------------------------------------------
   // Catalogues i18n. DEUX budgets depuis le 2026-08-26, parce que le catalogue
   // n'est plus monolithique :
