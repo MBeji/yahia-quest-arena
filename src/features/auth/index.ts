@@ -2,6 +2,7 @@
 // Public API — import from "@/features/auth"
 
 export { useAuth } from "./use-auth";
+export { useExitOnRefusedSession } from "./use-exit-on-refusal";
 export { useMyRole } from "./use-my-role";
 export { useMyStats } from "./use-my-stats";
 export { shouldRedirectToOnboarding } from "./onboarding-guard";

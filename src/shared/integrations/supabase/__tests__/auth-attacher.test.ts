@@ -28,10 +28,8 @@ import {
   resetRejectedTokenForTests,
 } from "@/shared/integrations/supabase/auth-attacher";
 import { AuthApiError, AuthRetryableFetchError } from "@supabase/supabase-js";
-import { RECOVERABLE_REFUSAL_MESSAGES } from "@/shared/integrations/supabase/auth-refusals";
 import {
   isSessionRefusalError,
-  shouldLeaveForLogin,
   shouldReplaySessionRefusal,
 } from "@/shared/integrations/supabase/auth-rejection";
 
@@ -768,64 +766,5 @@ describe("attachSupabaseAuth — les deux jetons sont morts", () => {
     const suivant = vi.fn().mockResolvedValue("ok");
     await expect(callMiddleware({ next: suivant } as never)).resolves.toBe("ok");
     expect(suivant).toHaveBeenCalledWith({ headers: {} });
-  });
-});
-
-// =============================================================================
-// LA SORTIE DE DERNIER RECOURS (#938 → #969).
-//
-// Le garde de `_authenticated` sort une session morte. Mais quand la frontière
-// d'erreur racine rend, elle REMPLACE l'arbre : le garde est démonté, son effet
-// ne tourne plus, et plus personne n'écoute `SIGNED_OUT`. C'est ce qui a rendu
-// #1009 et #1010 insuffisants — ils réparaient l'amont d'une porte déjà murée.
-// `shouldLeaveForLogin` redit la règle du garde là où le garde n'existe plus.
-// =============================================================================
-describe("shouldLeaveForLogin — sortir d'un cul-de-sac, et de rien d'autre", () => {
-  const REFUS = new Error("Unauthorized: Invalid token");
-
-  it("session morte + refus d'authentification : on sort vers la connexion", () => {
-    expect(shouldLeaveForLogin({ loading: false, hasUser: false, error: REFUS })).toBe(true);
-  });
-
-  it("une panne ORDINAIRE garde son écran d'erreur et son bouton Réessayer", () => {
-    // Renvoyer un élève vers la connexion pour un bug de rendu ou un 500 serait
-    // une régression, pas un correctif : son problème n'a rien à voir avec sa
-    // session, et la connexion ne le résoudrait pas.
-    for (const message of ["Boom", "Failed to fetch", "Internal Server Error"]) {
-      expect(
-        shouldLeaveForLogin({ loading: false, hasUser: false, error: new Error(message) }),
-        message,
-      ).toBe(false);
-    }
-  });
-
-  it("tant qu'une session existe, le refus peut être passager : on ne sort pas", () => {
-    // `auth-attacher` ne termine la session que sur un refus PROUVÉ. Qu'il en
-    // reste une signifie donc qu'il n'a pas conclu à la mort — insister ici
-    // déconnecterait sur une panne réseau.
-    expect(shouldLeaveForLogin({ loading: false, hasUser: true, error: REFUS })).toBe(false);
-  });
-
-  it("on ne sort personne pendant qu'on lit encore sa session", () => {
-    // Même précaution que le garde : sans elle, chaque rechargement sortirait
-    // tout le monde le temps d'un aller-retour de stockage.
-    expect(shouldLeaveForLogin({ loading: true, hasUser: false, error: REFUS })).toBe(false);
-  });
-
-  it("le refus ABSENT de jeton compte aussi — c'est la panne du 2026-08-18", () => {
-    const sansEnTete = new Error("Unauthorized: No authorization header provided");
-    expect(shouldLeaveForLogin({ loading: false, hasUser: false, error: sansEnTete })).toBe(true);
-  });
-
-  it("les messages viennent de la TABLE, jamais d'une liste écrite ici", () => {
-    // Le garde-fou de #931 et #914/#915 : deux listes tenues à la main ont
-    // divergé deux fois. Si un refus `fresh-token` est reformulé dans
-    // `auth-refusals.ts`, ce test suit sans être touché.
-    for (const message of RECOVERABLE_REFUSAL_MESSAGES) {
-      expect(
-        shouldLeaveForLogin({ loading: false, hasUser: false, error: new Error(message) }),
-        message,
-      ).toBe(true);
-    }
   });
 });

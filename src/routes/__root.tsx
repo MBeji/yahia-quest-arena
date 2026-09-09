@@ -4,7 +4,6 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
-  useNavigate,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -19,8 +18,7 @@ import { fr } from "@/lib/i18n/fr";
 import { en } from "@/lib/i18n/en";
 import { ar } from "@/lib/i18n/ar";
 import { buildErrorDebugText } from "@/shared/lib/error-debug";
-import { useAuth } from "@/features/auth";
-import { shouldLeaveForLogin } from "@/shared/integrations/supabase/auth-rejection";
+import { useExitOnRefusedSession } from "@/features/auth";
 import { ThemeProvider, useTheme, DEFAULT_THEME, themeFromCookieHeader } from "@/lib/theme";
 import type { Theme } from "@/lib/theme";
 import { SoundProvider, useSound } from "@/lib/sound";
@@ -52,33 +50,11 @@ function NotFoundComponent() {
   );
 }
 
-/**
- * LA SORTIE DE DERNIER RECOURS — la règle du garde, redite là où le garde n'existe plus.
- *
- * Quand cette frontière rend, elle REMPLACE l'arbre : `_authenticated` est démonté, et avec lui
- * le seul effet du produit qui sorte une session morte (`!loading && !user` → `/auth`). Plus
- * personne n'écoute `SIGNED_OUT` — la session peut se terminer proprement en amont, l'élève
- * reste devant un écran dont le seul bouton rejoue l'appel qui échoue. C'est le cul-de-sac que
- * mesure `e2e/authed/session-invalidation.spec.ts` (#938 → #969).
- *
- * La DÉCISION vit dans `auth-rejection.ts` (`shouldLeaveForLogin`), avec ses deux conditions et
- * la raison de chacune : une décision d'authentification n'a pas à être enfouie dans un
- * composant de route, et elle doit rester testable. Ce hook n'en est que le bras.
- */
-function useSessionRefusalExit(error: Error): void {
-  const { user, loading } = useAuth();
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!shouldLeaveForLogin({ loading, hasUser: Boolean(user), error })) return;
-    void navigate({ to: "/auth", search: { mode: "login" } });
-  }, [error, loading, user, navigate]);
-}
-
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   logger.error("Root error boundary caught an error", { error });
   const router = useRouter();
   const t = useT();
-  useSessionRefusalExit(error);
+  useExitOnRefusedSession(error);
   // Incident forensics: with `?debug=1` in the URL, surface the error identity
   // on the page itself — the only reliable diagnostic channel for mobile users
   // (no devtools). Client-only read; hidden for everyone else. The stack trace

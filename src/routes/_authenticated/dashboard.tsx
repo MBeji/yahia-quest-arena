@@ -39,6 +39,7 @@ import { STREAK_RECOVERY_COST } from "@/shared/constants/gamification";
 import { streakRecoveryBlock } from "@/shared/lib/streak-recovery";
 import { DailyReviewPanel, recoverStreak } from "@/features/progression";
 import { hubRouteForRole, shouldLeaveDashboard } from "@/features/auth";
+import { useExitOnRefusedSession } from "@/features/auth";
 import { EnablePushCard } from "@/features/notifications";
 import { SubjectPathCard } from "@/features/dashboard/components/subject-path-card";
 import { MotivationalQuote } from "@/features/dashboard/components/motivational-quote";
@@ -114,7 +115,7 @@ function Dashboard() {
   const fetchDailyRing = useServerFn(getDailyRing);
   const fetchWeeklyRecap = useServerFn(getWeeklyRecap);
   const fetchActiveEvent = useServerFn(getActiveEvent);
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["dashboard"],
     queryFn: () => fetchDashboard(),
   });
@@ -166,6 +167,11 @@ function Dashboard() {
     onError: (error) =>
       toast.error(error instanceof Error ? error.message : t.dashboard.recoveryFailed),
   });
+
+  // Le refus d'authentification qui atteint CET écran termine la session : c'est
+  // le cul-de-sac mesuré de #969, et le seul endroit qui sache que les reprises
+  // sont épuisées. Le garde de `_authenticated` fait la redirection.
+  useExitOnRefusedSession(isError ? error : null);
 
   if (isError) {
     return (
