@@ -38,7 +38,7 @@ import { appLocalDate } from "@/shared/lib/app-day";
 import { STREAK_RECOVERY_COST } from "@/shared/constants/gamification";
 import { streakRecoveryBlock } from "@/shared/lib/streak-recovery";
 import { DailyReviewPanel, recoverStreak } from "@/features/progression";
-import { hubRouteForRole, shouldLeaveDashboard } from "@/features/auth";
+import { hubRouteForRole, shouldLeaveDashboard, useExitOnRefusedSession } from "@/features/auth";
 import { EnablePushCard } from "@/features/notifications";
 import { SubjectPathCard } from "@/features/dashboard/components/subject-path-card";
 import { MotivationalQuote } from "@/features/dashboard/components/motivational-quote";
@@ -114,7 +114,7 @@ function Dashboard() {
   const fetchDailyRing = useServerFn(getDailyRing);
   const fetchWeeklyRecap = useServerFn(getWeeklyRecap);
   const fetchActiveEvent = useServerFn(getActiveEvent);
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["dashboard"],
     queryFn: () => fetchDashboard(),
   });
@@ -167,6 +167,11 @@ function Dashboard() {
       toast.error(error instanceof Error ? error.message : t.dashboard.recoveryFailed),
   });
 
+  // Le refus d'authentification qui atteint CET écran termine la session : c'est
+  // le cul-de-sac mesuré de #969, et le seul endroit qui sache que les reprises
+  // sont épuisées. Le garde de `_authenticated` fait la redirection.
+  useExitOnRefusedSession(isError ? error : null);
+
   if (isError) {
     return (
       <div className="mx-auto max-w-md px-6 py-20 text-center">
@@ -174,6 +179,20 @@ function Dashboard() {
           <Skull className="mx-auto h-10 w-10 text-destructive" />
           <h2 className="mt-4 font-display text-xl font-bold">{t.dashboard.failedLoad}</h2>
           <p className="mt-2 text-sm text-muted-foreground">{t.dashboard.failedLoadDesc}</p>
+          {/*
+            L'identité de l'erreur, comme sur la frontière d'erreur racine et pour la même
+            raison : c'est le seul canal de diagnostic d'un élève sur mobile, sans devtools.
+            Un écran qui ne dit que « quelque chose s'est mal passé » force à ouvrir une trace
+            — et c'est exactement ce qui a fait tourner en rond l'enquête #969.
+          */}
+          {error instanceof Error && error.message ? (
+            <p
+              data-testid="dashboard-error-message"
+              className="mt-2 text-xs break-words text-muted-foreground/70"
+            >
+              {error.message}
+            </p>
+          ) : null}
           <button
             onClick={() => queryClient.invalidateQueries({ queryKey: ["dashboard"] })}
             className="mt-4 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"

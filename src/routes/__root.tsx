@@ -18,6 +18,7 @@ import { fr } from "@/lib/i18n/fr";
 import { en } from "@/lib/i18n/en";
 import { ar } from "@/lib/i18n/ar";
 import { buildErrorDebugText } from "@/shared/lib/error-debug";
+import { useExitOnRefusedSession } from "@/features/auth";
 import { ThemeProvider, useTheme, DEFAULT_THEME, themeFromCookieHeader } from "@/lib/theme";
 import type { Theme } from "@/lib/theme";
 import { SoundProvider, useSound } from "@/lib/sound";
@@ -53,6 +54,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   logger.error("Root error boundary caught an error", { error });
   const router = useRouter();
   const t = useT();
+  useExitOnRefusedSession(error);
   // Incident forensics: with `?debug=1` in the URL, surface the error identity
   // on the page itself — the only reliable diagnostic channel for mobile users
   // (no devtools). Client-only read; hidden for everyone else. The stack trace

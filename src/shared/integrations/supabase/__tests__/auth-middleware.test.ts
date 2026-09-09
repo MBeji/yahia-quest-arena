@@ -143,6 +143,44 @@ describe("requireSupabaseAuth", () => {
     );
   });
 
+  // ===========================================================================
+  // LA CAUSE RACINE DE #969 : `getClaims` ne RETOURNE pas toujours son erreur.
+  //
+  // Un JWT malformé fait échouer le décodage base64 AVANT toute vérification :
+  // `invalid.invalid.invalid` LÈVE « Invalid UTF-8 sequence ». L'exception
+  // traversait ce middleware et arrivait BRUTE au client, qui ne voyait donc
+  // jamais « Unauthorized: Invalid token ». `isSessionRefusalError` répondait
+  // faux, et toute la chaîne posée derrière ce prédicat restait inerte —
+  // forçage de jeton neuf (#931), fin de session sur refus prouvé (#1009,
+  // #1010), sortie vers la connexion. Aucune n'était fausse ; aucune n'était
+  // atteinte. Mesuré par la spec e2e, qui rendait « message d'erreur rendu:
+  // "Invalid UTF-8 sequence" » là où le contrat annonce un refus d'auth.
+  // ===========================================================================
+  it("un jeton indécodable est un jeton INVALIDE, même si getClaims LÈVE", async () => {
+    mockGetRequest.mockReturnValue({
+      headers: new Headers({ authorization: "Bearer invalid.invalid.invalid" }),
+    });
+    mockGetClaims.mockRejectedValue(new Error("Invalid UTF-8 sequence"));
+
+    await expect(callMiddleware({ next: vi.fn() } as never)).rejects.toThrow(
+      "Unauthorized: Invalid token",
+    );
+  });
+
+  it("une panne de TRANSPORT levée reste une indisponibilité, pas un refus", async () => {
+    // La distinction du contrat est conservée des deux côtés de la barrière :
+    // « je n'ai pas pu vérifier » ne devient pas « ton jeton est mauvais »
+    // sous prétexte qu'il a été levé au lieu d'être rendu.
+    mockGetRequest.mockReturnValue({
+      headers: new Headers({ authorization: "Bearer token-123" }),
+    });
+    mockGetClaims.mockRejectedValue(new AuthRetryableFetchError("Failed to fetch", 0));
+
+    await expect(callMiddleware({ next: vi.fn() } as never)).rejects.toThrow(
+      "Auth verification unavailable. Please try again.",
+    );
+  });
+
   it("throws when token has no subject", async () => {
     mockGetRequest.mockReturnValue({
       headers: new Headers({ authorization: "Bearer token-123" }),
