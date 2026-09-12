@@ -67,11 +67,31 @@ test.describe("Leaderboard — ma propre ligne", () => {
     const xp = await adminDb.rankOnLeaderboard(userId);
 
     await leaderboard.goto();
-    // Onglet demandé explicitement : le défaut bascule sur « Ma classe » dès que la cohorte
-    // compte assez de classés (GRADE_TAB_DEFAULT_MIN_RANKED), et ce test n'a pas à dépendre
-    // de cet arbitrage. Ma ligne est calculée EN DIRECT par la RPC — elle n'attend pas le
-    // rafraîchissement 5 min de la vue matérialisée, contrairement à celle des autres.
+    // DEUX axes, et il faut les demander tous les deux (#1015).
+    //
+    // COHORTE — « Global » explicitement : le défaut bascule sur « Ma classe » dès que la
+    // cohorte compte assez de classés (GRADE_TAB_DEFAULT_MIN_RANKED), et ce test n'a pas à
+    // dépendre de cet arbitrage.
     await leaderboard.globalTab.click();
+    // PÉRIODE — « cumulatif » explicitement, et c'est ce qui manquait. « Cette semaine »
+    // est le DÉFAUT depuis é31 lot 5 (#949, 2026-09-03), et les deux périodes ne lisent pas
+    // la même source : le cumulatif lit `profiles.xp` via `get_global_leaderboard`, dont la
+    // CTE `me` calcule MA ligne en direct — elle n'attend pas le rafraîchissement 5 min de
+    // la vue matérialisée, contrairement à celle des autres. La semaine, elle, lit
+    // `attempts` sur les 7 jours courants, avec `HAVING SUM(xp_earned) > 0` et AUCUNE
+    // splice du demandeur (« on n'annonce jamais un rang à qui n'a rien joué cette
+    // semaine », é15 D-7).
+    //
+    // Or `rankOnLeaderboard()` pose une XP À VIE dans `profiles`, et `reset-gameplay` vide
+    // les tentatives avant chaque run : sur l'axe « semaine », ce compte n'a rien joué,
+    // donc zéro ligne. Le test est né le 2026-08-26, l'axe le 2026-09-03 ; le nightly a
+    // rougi le 2026-09-04 et l'est resté huit nuits. Il interrogeait un tableau qu'il
+    // n'avait pas garni.
+    await leaderboard.periodAll.click();
+    // La période active est ASSERTÉE, pas supposée : si le défaut rebasculait un jour, ce
+    // test doit le dire au lieu de mesurer en silence le mauvais tableau — c'est très
+    // exactement ce qui vient de coûter huit nuits de nightly rouge.
+    await expect(leaderboard.periodAll).toHaveAttribute("aria-checked", "true");
     await expect(leaderboard.rows.first()).toBeVisible({ timeout: 15_000 });
 
     // Le sélecteur désigne quelque chose — ce qu'un `toHaveCount(0)` seul, lui, ne prouve

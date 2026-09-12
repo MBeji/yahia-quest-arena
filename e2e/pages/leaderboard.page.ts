@@ -46,6 +46,25 @@ export class LeaderboardPage {
   get emptyState(): Locator {
     return this.page.getByTestId("empty-state");
   }
+  /**
+   * L'AXE PÉRIODE, second axe du classement depuis é31 lot 5 (#949) — à ne pas confondre
+   * avec les onglets de COHORTE (Global / Ma classe / matière), qui sont l'autre axe.
+   *
+   * ⚠️ « Cette semaine » est le DÉFAUT (Q-3, arbitrée), et les deux périodes ne lisent pas
+   * la même source : le cumulatif lit `profiles.xp` (l'XP à vie) via
+   * `get_global_leaderboard`, la semaine lit `attempts` sur les 7 jours courants via
+   * `get_weekly_leaderboard`. Une spec qui POSE une XP à vie doit donc demander le
+   * cumulatif — sinon elle interroge un tableau qu'elle n'a pas garni. C'est la panne
+   * #1015 : le test est né le 2026-08-26, l'axe le 2026-09-03, le nightly a rougi le
+   * 2026-09-04.
+   */
+  get periodAll(): Locator {
+    return this.page.getByTestId("leaderboard-period-all");
+  }
+  /** L'onglet « cette semaine » — le défaut. */
+  get periodWeek(): Locator {
+    return this.page.getByTestId("leaderboard-period-week");
+  }
   /** All subject tabs — scoped to the active parcours' subjects (GAP-018). */
   get subjectTabs(): Locator {
     return this.page.getByTestId("leaderboard-subject-tab");
