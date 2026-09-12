@@ -294,7 +294,7 @@ est clos (#958), **é26 lot 1** est écrit (#961) et **é32 est LIVRÉE en entie
 privé#342 → #353) — ses cinq lots, ses cinq questions closes, et deux constats nés de son
 exécution : `typecheck` ne voyait aucun script, et rester à jour avec `main` relance toute la CI.
 
-### 🔴 Le rouge du jour — le défaut produit est corrigé, il reste un échec de test
+### 🟢 Plus de rouge — la suite authentifiée est verte pour la première fois depuis le 2026-09-03
 
 - **[#969](https://github.com/MBeji/yahia-quest-arena/issues/969) — ✅ corrigé par #1013,
   cause racine nommée.** `supabase.auth.getClaims(token)` était appelé comme s'il RETOURNAIT
@@ -307,18 +307,25 @@ exécution : `typecheck` ne voyait aucun script, et rester à jour avec `main` r
   Aucune n'était fausse ; aucune n'était **atteinte**.
   `session-invalidation.spec.ts` passe sur les runs `e2e-auth` **93 et 94**, contre rouge sur
   `main` le matin même.
-- **[#1015](https://github.com/MBeji/yahia-quest-arena/issues/1015) — le rouge qui reste, et
-  il est ANCIEN.** `leaderboard.spec.ts:62` rend **zéro ligne** au classement global, alors
-  que `get_global_leaderboard` est écrite pour que l'appelant ait TOUJOURS la sienne (CTE
-  `me`, rang live). Rouge sur `main` comme sur la branche, sur les 3 reprises Playwright —
-  donc pas un aléa. C'était la deuxième moitié de #967 depuis le début, notée « antérieure et
-  distincte » sans avoir jamais eu d'issue à elle : elle en a une.
-- **[#967](https://github.com/MBeji/yahia-quest-arena/issues/967)** — le nightly rouge ne
-  tient plus qu'à #1015. Il se refermera de lui-même à la première nuit verte, et
-  [#1008](https://github.com/MBeji/yahia-quest-arena/issues/1008) (aucun checkpoint de
-  rollback vérifié) avec lui : ce sont les MÊMES octets, comptés trois fois.
+- **[#1015](https://github.com/MBeji/yahia-quest-arena/issues/1015) — ✅ corrigé par #1021.
+  Le classement a DEUX axes, la spec n'en demandait qu'un.** `leaderboard.spec.ts:62` rendait
+  zéro ligne alors que `get_global_leaderboard` garantit par construction la ligne de
+  l'appelant (CTE `me`). Les deux affirmations étaient vraies : **la spec ne lisait pas ce
+  tableau-là.** é31 lot 5 (#949) a ajouté l'axe PÉRIODE, de défaut « cette semaine », et les
+  deux périodes ne lisent pas la même source — le cumulatif lit `profiles.xp` (l'XP à vie),
+  la semaine lit `attempts` des 7 jours courants, `HAVING SUM(xp_earned) > 0` et **sans**
+  splice du demandeur (é15 D-7, délibéré). Or le fixture pose une XP à vie et
+  `reset-gameplay` vide `attempts` : sur l'axe « semaine », ce compte n'avait rien joué.
+  La spec interrogeait un tableau qu'elle n'avait pas garni.
+  ⚠️ **Aucun défaut produit** — l'écran rend son état vide, comme l'arbitrage le prévoit.
+- **[#967](https://github.com/MBeji/yahia-quest-arena/issues/967)** (nightly),
+  [#1008](https://github.com/MBeji/yahia-quest-arena/issues/1008) (checkpoint de rollback) et
+  [#1020](https://github.com/MBeji/yahia-quest-arena/issues/1020) (garde-rouge) n'avaient plus
+  d'autre cause que #1015 : **les mêmes octets comptés quatre fois.** Les trois se referment
+  seules à la première nuit verte. `e2e-auth` run **96** : suite entière verte, la première
+  depuis le run 84 du 2026-09-03.
 
-**Deux leçons de #969, et la seconde vaut plus cher que la première.**
+**Trois leçons de ces huit nuits — les deux premières de #969, la troisième de #1015.**
 
 1. La spec est entrée sur `main` en #953, et le run `e2e-auth` vert invoqué comme preuve
    portait le commit de **#951** — donc **antérieur à la spec**. Elle a été livrée sans avoir
@@ -333,6 +340,14 @@ exécution : `typecheck` ne voyait aucun script, et rester à jour avec `main` r
    itération : **la boucle de reprise était désactivée par son propre diagnostic**, et les
    runs 89-92 ne mesuraient rien. Un outil de mesure qui fausse la mesure ne vaut rien —
    borner chaque lecture.
+3. **Un écran qui gagne un AXE re-pointe en silence les specs écrites avant lui.** é31 a
+   ajouté la période au classement, de défaut « cette semaine » ; le test de #1015, né huit
+   jours plus tôt, a continué de cliquer son onglet de cohorte et s'est mis à interroger un
+   tableau qu'il ne garnissait pas. Rien n'a rougi le jour du changement — la spec est restée
+   verte jusqu'à ce que `reset-gameplay` la prive de ses tentatives. La règle qui en sort est
+   étroite et mécanique : **une spec ASSERTE l'état par défaut dont elle dépend**
+   (`aria-checked`, onglet actif, période), elle ne le suppose pas. Sans quoi un changement
+   de défaut ne casse pas le test — il le fait mesurer autre chose, ce qui est pire.
 
 ### Ce que les chantiers d'août laissent comme règles
 
