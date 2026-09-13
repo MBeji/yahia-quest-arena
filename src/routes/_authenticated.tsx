@@ -13,21 +13,14 @@ import { getPendingBetaCount } from "@/features/subscription";
 import { getOpenReportsCount } from "@/features/content-report";
 import { BetaBadge, BugReportLauncher, getOpenBugsCount } from "@/features/bug-report";
 import { AiLauncher } from "@/features/ai/components/ai-launcher";
-import {
-  Sparkles,
-  LayoutDashboard,
-  Map,
-  Compass,
-  Swords,
-  ClipboardList,
-  Shield,
-} from "lucide-react";
+import { LayoutDashboard, Map, Compass, Swords, ClipboardList, Shield } from "lucide-react";
 import { supabase } from "@/shared/integrations/supabase/client";
 import { toast } from "sonner";
 import { useT } from "@/lib/i18n";
 import { SettingsMenu } from "@/components/ui/settings-menu";
 import { GoldAmbient } from "@/components/visual/gold-ambient";
 import { AccountHud } from "@/components/account-hud";
+import { CrownMark } from "@/components/brand-mark";
 
 const NAV_LINK =
   "flex min-h-11 items-center gap-1.5 rounded-md px-3 py-1.5 text-muted-foreground transition hover:bg-[color:var(--gold)]/10 hover:text-champagne";
@@ -173,7 +166,7 @@ function AuthenticatedLayout() {
               made the header look like it looped. */}
           <Link to={hub} className="flex items-center gap-2">
             <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[image:var(--gradient-gold)] shadow-gold">
-              <Sparkles className="h-4 w-4 text-primary-foreground" />
+              <CrownMark className="h-5 w-5 text-primary-foreground" />
             </div>
             <span className="hidden font-display text-base font-bold tracking-wider sm:inline">
               Na9ra <span className="text-gradient-gold">Nal3ab</span>
