@@ -20,12 +20,19 @@ import type { Flag, QAQuestion } from "./qa-checks.ts";
 /**
  * Sévérité de la règle « option désignée par lettre/rang ».
  *
- * WARN pour l'instant : au 2026-07-30 l'état des lieux comptait 6 144 occurrences sur
- * 2 261 questions, 715 fichiers et 48 matières, donc passer en `error` ferait rougir
- * la Content CI d'un coup. La bascule en `"error"` se fait quand la campagne de
- * réécriture est terminée — quand `content:qa` ne remonte plus aucune occurrence.
+ * **ERROR depuis le 2026-09-13**, la campagne étant finie. Elle a été `warn` du
+ * 2026-07-30 au 2026-09-13 pour une raison écrite d'avance : l'état des lieux comptait
+ * alors 6 144 occurrences sur 2 261 questions, 715 fichiers et 48 matières, donc passer
+ * en `error` aurait fait rougir la Content CI d'un coup. La bascule était conditionnée à
+ * une chose, et à une seule : « quand `content:qa` ne remonte plus aucune occurrence ».
+ *
+ * Le compte, mesuré sur le corpus entier (privé#260, lots 1 à 4 + les deux correctifs de
+ * garde ci-dessous) : 5 143 → 3 925 → 3 135 → 1 396 → 30 → **0**. Les 30 dernières
+ * n'étaient pas du corpus à réécrire mais des FAUX POSITIFS de cette garde — des
+ * dérivées `f′(a)`, des applications `S_(AC)(A)` et des « secondes propositions » de
+ * grammaire française. Les corriger était la condition restante ; c'est fait.
  */
-export const OPTION_REFERENCE_LEVEL: Flag["level"] = "warn";
+export const OPTION_REFERENCE_LEVEL: Flag["level"] = "error";
 
 // Noms qui désignent une option, en français / anglais / arabe.
 const OPTION_NOUN_LATIN = "(?:options?|propositions?|choix|r[ée]ponses?|answers?|choices?)";
@@ -70,7 +77,19 @@ const OPTION_BY_LETTER = new RegExp(
 //    Le lookbehind écarte l'application de fonction (`f(a)`) et le radicande d'un
 //    radical (`√(a) + √(b) ≠ √(a+b)`), où la lettre est une variable. Règle FAIBLE :
 //    elle ne compte que corroborée — voir `optionReferences`.
-const OPTION_BY_BARE_PAREN = /(?<![\p{L}\p{N}_’'√∛∜])\(\s*[a-dA-D]\s*\)(?![\p{L}\p{N}=])/gu;
+//
+//    ⚠️ Deux caractères manquaient à cette classe, et ils ont coûté les DERNIÈRES
+//    occurrences de la campagne « options par lettre » (privé#260) — six questions de
+//    `math-bac-math` qu'aucune réécriture ne pouvait corriger, puisqu'elles étaient
+//    justes :
+//      • le PRIME `′` — `f′(a)`, `(f⁻¹)′(b)`, `r′(B)` sont des dérivées. L'apostrophe
+//        typographique était là, la prime mathématique non, alors que c'est elle
+//        qu'écrit une notation correcte ;
+//      • la PARENTHÈSE FERMANTE — `S_(AC)(A)`, `t_(BA⃗)(B)` : une parenthèse collée à
+//        la précédente est une application (ou un indice), jamais l'étiquette d'une
+//        option. Collée seulement : `… (voir plus haut) (b) est fausse` matche encore,
+//        l'espace suffit à séparer.
+const OPTION_BY_BARE_PAREN = /(?<![\p{L}\p{N}_’'′″)√∛∜])\(\s*[a-dA-D]\s*\)(?![\p{L}\p{N}=])/gu;
 // 2 bis) L'ANALOGIE — « A est à B ce que C est à ? », le patron le plus courant du
 //    raisonnement analogique, écrit dans les trois langues du corpus. Les lettres y
 //    nomment les FIGURES de l'énoncé, pas les options : l'explication qui les reprend
@@ -94,8 +113,31 @@ const OPTION_BY_BARE_PAREN = /(?<![\p{L}\p{N}_’'√∛∜])\(\s*[a-dA-D]\s*\)(
 const ANALOGY_FIGURE_LETTERS =
   /(?<![\p{L}\p{N}])([A-D])\s*(?:est\s+à|is\s+to|إلى)\s*(?:([A-D])(?![\p{L}\p{N}])|[?؟])/gu;
 // 3) « la dernière option », « réponse n° 2 » — le rang, dans les deux ordres.
+//    `proposition` en est ABSENT, et c'est la règle 3 bis qui le reprend.
+const OPTION_NOUN_RANK_FR = "(?:options?|choix|r[ée]ponses?|answers?|choices?)";
 const OPTION_BY_RANK_FR = new RegExp(
-  `\\b(?:${RANK_FR}\\s+${OPTION_NOUN_LATIN}|${OPTION_NOUN_LATIN}\\s+${RANK_FR}|${OPTION_NOUN_LATIN}\\s*n[°o]\\s*\\d)\\b`,
+  `\\b(?:${RANK_FR}\\s+${OPTION_NOUN_RANK_FR}|${OPTION_NOUN_RANK_FR}\\s+${RANK_FR}|${OPTION_NOUN_RANK_FR}\\s*n[°o]\\s*\\d)\\b`,
+  "giu",
+);
+// 3 bis) RANG + « proposition » — règle FAIBLE, pour une raison de langue et non de
+//    forme : en grammaire française, « proposition » désigne d'abord la PROPOSITION DE
+//    LA PHRASE analysée. « "si bien que" est une locution de subordination : la seconde
+//    proposition dépend syntaxiquement de la première » est une explication juste, et la
+//    garde la comptait comme une référence d'option. Les six occurrences trouvées à la
+//    fin de la campagne (privé#260, lot 4) étaient toutes de cette nature — zéro vraie.
+//    Elles vivaient dans les quatre `french-2eme-sec-*`, sur le chapitre « antithèse,
+//    opposition, concession », c'est-à-dire très exactement là où on PARLE de
+//    propositions.
+//
+//    Elle n'est pas retirée pour autant : « la seconde proposition oublie le signe »
+//    reste un défaut quand l'explication désigne bien des options. Corroborée, donc,
+//    comme la parenthèse nue — et par une règle FORTE seulement, sans quoi deux faibles
+//    se corroboreraient l'une l'autre.
+//
+//    ⚠️ `propositions?` RESTE dans `OPTION_NOUN_LATIN` : « la proposition (b) » nomme
+//    une option sans ambiguïté possible, c'est le RANG seul qui est équivoque.
+const OPTION_BY_RANK_FR_PROPOSITION = new RegExp(
+  `\\b(?:${RANK_FR}\\s+propositions?|propositions?\\s+${RANK_FR})\\b`,
   "giu",
 );
 const OPTION_BY_RANK_EN = new RegExp(
@@ -160,13 +202,28 @@ export function optionReferences(text: string, prompt = ""): string[] {
       });
     }
   }
+  // Le compte des règles FORTES est figé ici : c'est lui qui corrobore les faibles.
+  // Les compter après coup laisserait deux faibles se corroborer l'une l'autre.
+  const strongHits = spans.length;
+
+  OPTION_BY_RANK_FR_PROPOSITION.lastIndex = 0;
+  if (strongHits > 0) {
+    for (const m of text.matchAll(OPTION_BY_RANK_FR_PROPOSITION)) {
+      spans.push({
+        start: m.index,
+        end: m.index + m[0].length,
+        hit: m[0].trim().replace(/\s+/g, " "),
+      });
+    }
+  }
+
   const labelled = locallyLabelledLetters(prompt);
   OPTION_BY_BARE_PAREN.lastIndex = 0;
   const bare = [...text.matchAll(OPTION_BY_BARE_PAREN)].filter(
     (m) => !labelled.has(bareLetter(m[0])),
   );
   const distinctLetters = new Set(bare.map((m) => bareLetter(m[0])));
-  if (bare.length > 0 && (spans.length > 0 || distinctLetters.size >= 2)) {
+  if (bare.length > 0 && (strongHits > 0 || distinctLetters.size >= 2)) {
     for (const m of bare) {
       spans.push({ start: m.index, end: m.index + m[0].length, hit: m[0].replace(/\s+/g, "") });
     }
