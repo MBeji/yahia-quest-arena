@@ -20,11 +20,17 @@ name: Upgrade guard (nightly stack upgrade)
 # itself except the deterministic `automerge` job below, only for a fully-green
 # patch/minor PR.
 #
-# Trigger: it runs *after* the Nightly tests workflow finishes SUCCESSFULLY, so it
-# only ever upgrades from a known-green baseline ("juste après la CI + E2E
-# complets"). `workflow_run` (like `schedule`) only fires from the default branch
-# (main) — takes effect once this file is merged to main. Use the "Run workflow"
-# button (workflow_dispatch) any time to launch it manually.
+# Trigger: it runs *after* the Nightly tests workflow finishes — WHATEVER the
+# nightly's verdict. The baseline that matters for a dependency lot is the unit
+# gate: `verify` must be green on the commit the nightly ran on (checked in the
+# cadence step below), and the lot re-runs the slow suites (E2E public, E2E
+# authed, pgTAP) on its OWN branch before anything auto-merges. The nightly's
+# aggregate verdict also carries the secret-gated, TEST-project suites: one red
+# `e2e-auth` spec (#1015) kept it red from 2026-09-04 to 09-12 and this sweep was
+# skipped nine times while `main` was sound (#967) — 38 in-range bumps piled up.
+# `workflow_run` (like `schedule`) only fires from the default branch (main) —
+# takes effect once this file is merged to main. Use the "Run workflow" button
+# (workflow_dispatch) any time to launch it manually.
 #
 # Prereqs: NONE for the patch/minor lot — it is a script, so it works with no
 # Claude secret at all (that is the L4 gain). The repository secret
@@ -45,6 +51,9 @@ permissions:
   contents: write
   pull-requests: write
   issues: write
+  # The baseline step reads the `verify` check runs of the nightly's head commit.
+  # This block REPLACES the repository default: an unlisted scope is `none`.
+  checks: read
 
 # One sweep at a time (a slow run can overlap the next night's trigger).
 concurrency:
@@ -54,11 +63,12 @@ concurrency:
 jobs:
   apply:
     name: Detect + apply upgrades
-    # Only after a GREEN nightly, or a manual dispatch. A red/cancelled nightly
-    # means the baseline isn't trustworthy — don't build upgrades on it.
+    # After ANY finished nightly, or a manual dispatch. Whether the baseline is
+    # trustworthy is decided by the `verify` check on that commit (cadence step),
+    # not by the nightly's aggregate verdict — see the header.
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      github.event.workflow_run.conclusion == 'success'
+      github.event_name == 'workflow_run'
     runs-on: ubuntu-latest
     # Headroom for: the deterministic lot + its full gate, then (only if needed) the
     # agent reading changelogs and migrating each major, each running `npm run
@@ -76,16 +86,36 @@ jobs:
       # chain) because each run opens a PR and runs the slow suites — the constraint is
       # noise, not tokens. A manual workflow_dispatch always runs. Off-day runs stop here
       # in seconds, before any costly step.
-      - name: Check the upgrade cadence
+      - name: Check the upgrade cadence and the baseline
         id: cadence
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
         run: |
+          set -euo pipefail
           dow="$(date -u +%u)"  # 1=Mon … 7=Sun
-          if [ "${{ github.event_name }}" != "workflow_dispatch" ] && [ "$dow" != "2" ] && [ "$dow" != "5" ]; then
+          if [ "$EVENT_NAME" != "workflow_dispatch" ] && [ "$dow" != "2" ] && [ "$dow" != "5" ]; then
             echo "Not a scheduled upgrade day (UTC dow=$dow; sweep runs Tue/Fri) — skipping. Use 'Run workflow' to force it."
             echo "run=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "run=true" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
+          # Baseline: the unit gate on the commit the nightly ran on. The nightly's own
+          # verdict is deliberately NOT consulted (see the header) — a red optional suite
+          # must not freeze the stack; a red `verify` on main must.
+          if [ "$EVENT_NAME" = "workflow_run" ]; then
+            verify="$(gh api "repos/$REPO/commits/$HEAD_SHA/check-runs?check_name=verify" \
+              --jq '[.check_runs[].conclusion] | if any(. == "success") then "success" else (.[0] // "absent") end' \
+              2>/dev/null || echo absent)"
+            if [ "$verify" != "success" ]; then
+              echo "Baseline not proven: check 'verify' on $HEAD_SHA = $verify — skipping the sweep."
+              echo "run=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            echo "Baseline proven: 'verify' is green on $HEAD_SHA."
+          fi
+          echo "run=true" >> "$GITHUB_OUTPUT"
 
       - name: Checkout main (full history for branch/diff context)
         if: steps.cadence.outputs.run == 'true'
