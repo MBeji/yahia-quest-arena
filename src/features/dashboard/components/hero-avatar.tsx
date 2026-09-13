@@ -1,6 +1,5 @@
-import { Sparkles } from "lucide-react";
-
 import { avatarEmojiForSlug } from "@/shared/lib/avatar";
+import { CrownMark } from "@/components/brand-mark";
 import { useT } from "@/lib/i18n";
 import { AVATAR_TIER_MAX, clampAvatarTier, isHeroFrame } from "@/shared/constants/hero-identity";
 
@@ -51,7 +50,7 @@ export function HeroAvatar({
             {emoji}
           </span>
         ) : (
-          <Sparkles className="h-9 w-9 text-primary-foreground" />
+          <CrownMark className="h-11 w-11 text-primary-foreground" />
         )}
       </div>
       {/* Le palier, enfin visible — et borné : `award_xp` le plafonne à 6. */}

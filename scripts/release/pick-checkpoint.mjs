@@ -7,9 +7,17 @@
  * shell smoke). The deep suites — Playwright E2E and the pgTAP DB integration —
  * run in `nightly.yml`, hours later, on whatever `main` pointed at 01:00 UTC.
  * A checkpoint we would roll production back to must be backed by BOTH, or it
- * is a guess wearing a tag. So the selection walks the recent successful
- * nightly runs (newest first) and keeps the first whose head commit ALSO has a
- * green `verify` check — never the calendar's tip.
+ * is a guess wearing a tag. So the selection walks the recent FINISHED nightly
+ * runs (newest first) and keeps the first whose REQUIRED suites (E2E public,
+ * pgTAP) are green AND whose head commit has a green `verify` check — never the
+ * calendar's tip.
+ *
+ * The nightly run's own verdict is NOT the criterion. It aggregates the
+ * optional, secret-gated suites (authenticated E2E on the TEST project, the
+ * load smoke) — one red spec in `e2e-auth` (#1015) turned the nightly red for
+ * nine nights and froze checkpointing with it (#1008) while `main`, `verify`,
+ * pgTAP and the public E2E were all green. A failed optional suite is recorded
+ * in the annotation, where an operator can read it; it never vetoes the tag.
  *
  * Deliberately conservative: when no candidate qualifies, we mint NO tag and
  * say why (`checkpoint-tag.yml` opens a tracking issue). A week without a
@@ -37,11 +45,12 @@ export const MAX_EVIDENCE_AGE_DAYS = 8;
 /**
  * The nightly suites, matched by job name (`gh run view --json jobs`).
  *
- * `required: true` means a SKIP is a rejection, not a pass. `e2e-auth` and
- * `perf` are secret-gated by design (they skip green when their TEST/LOAD
- * secrets are unset — see nightly.yml), so they are recorded for the record but
- * never block. `e2e` (public) and pgTAP have no such gate: if they did not run
- * green, nothing here is proven.
+ * `required: true` means anything but green — a SKIP as much as a FAILURE — is
+ * a rejection. `e2e-auth` and `perf` are secret-gated by design (they skip
+ * green when their TEST/LOAD secrets are unset — see nightly.yml) and measure a
+ * TEST project, not `main`: they are recorded for the record but never block,
+ * skipped or failed alike. `e2e` (public) and pgTAP have no such gate: if they
+ * did not run green, nothing here is proven.
  */
 export const NIGHTLY_SUITES = [
   { key: "e2e", label: "E2E (public)", match: /e2e.*public/i, required: true },
@@ -130,7 +139,10 @@ export function evaluateCandidate(
   const suites = classifySuites(candidate.jobs);
   const ageDays = (now.getTime() - new Date(candidate.createdAt).getTime()) / 86_400_000;
 
-  if (candidate.conclusion !== "success") {
+  // Only a FINISHED run carries evidence: `in_progress`, `cancelled`, `timed_out`…
+  // prove nothing. A `failure` is allowed through — the required suites below
+  // decide, not the aggregate verdict (see the header: #1008).
+  if (candidate.conclusion !== "success" && candidate.conclusion !== "failure") {
     return { ok: false, reason: `nightly ${candidate.conclusion}`, suites, ageDays };
   }
   if (ageDays > maxAgeDays) {

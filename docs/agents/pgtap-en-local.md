@@ -101,6 +101,12 @@ sus **avant** :
 > décrivaient comme sans parade : une migration et le code qui l'utilise tiennent désormais
 > dans une seule PR, comme le reste du dépôt le fait déjà.
 
+> ✅ **Scripté le 2026-09-13** (audit du 2026-09-12, D-1) : `npm run db:gen-types` joue tout ce
+> qui suit — cluster jetable, chaîne + pgTAP, base de génération avec les trois écarts réglés,
+> génération, prettier, écriture de `types.ts` — et `npm run db:check-types` (gate de `verify`)
+> compare les noms des objets `public` de la chaîne à ceux du fichier, dans les deux sens.
+> Le détail ci-dessous reste la référence de CE que le script fait, et pourquoi.
+
 `supabase gen types` refuse `--db-url` sans Docker : le CLI délègue l'introspection à l'image
 `postgres-meta`. Mais **cette image n'est qu'un serveur autour d'un module npm**, et le module
 s'installe seul — hors dépôt, comme `pglite` :

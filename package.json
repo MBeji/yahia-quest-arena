@@ -35,6 +35,8 @@
     "db:inventory-content": "node scripts/db/inventory-content-migrations.mjs",
     "db:check-chain": "node scripts/db/check-migration-chain.mjs",
     "db:test:local": "bash scripts/db/local/pgtap.sh",
+    "db:gen-types": "bash scripts/db/local/gen-types.sh",
+    "db:check-types": "node scripts/db/check-types-drift.mjs",
     "content:qa": "node --experimental-strip-types scripts/content/qa.ts",
     "content:qa:strict": "node --experimental-strip-types scripts/content/qa.ts --strict",
     "content:audit": "node --experimental-strip-types scripts/content/audit-program.ts",
@@ -63,9 +65,9 @@
     "etudes:check": "node scripts/ci/check-etudes-index.mjs",
     "eol:check": "node scripts/ci/check-worktree-eol.mjs",
     "eol:fix": "node scripts/ci/check-worktree-eol.mjs --fix",
-    "verify": "npm run eol:check && npm run leak:check && npm run db:check-chain && npm run harness:check && npm run lint && npm run typecheck && npm run test",
+    "verify": "npm run eol:check && npm run leak:check && npm run db:check-chain && npm run db:check-types && npm run harness:check && npm run lint && npm run typecheck && npm run test",
     "audit:deps": "npm audit --omit=dev --audit-level=high --registry=https://registry.npmjs.org",
-    "ci:verify": "npm run eol:check && npm run leak:check && npm run db:check-chain && npm run harness:check && npm run perf:check && npm run lint && npm run typecheck && npm run test:coverage && npm run build:check && npm run audit:deps",
+    "ci:verify": "npm run eol:check && npm run leak:check && npm run db:check-chain && npm run db:check-types && npm run harness:check && npm run perf:check && npm run lint && npm run typecheck && npm run test:coverage && npm run build:check && npm run audit:deps",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -137,7 +139,6 @@
     "three": "^0.185.0",
     "tw-animate-css": "^1.3.4",
     "vaul": "^1.1.2",
-    "vite-tsconfig-paths": "^6.0.2",
     "web-push": "^3.6.7",
     "zod": "^4.4.3"
   },

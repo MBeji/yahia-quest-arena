@@ -23,6 +23,11 @@ import {
 } from "./quest.recall";
 import type { AttemptReviewItem } from "./quest.recall";
 import { isUnrestrictedViewer, openEveryGate } from "./quest.access";
+import {
+  arbitrateQuestOpenAnswers,
+  canPlayOpenQuestions,
+  filterOpenQuestions,
+} from "./quest.open-questions";
 
 /** Error message thrown when an exercise is locked behind its chapter quiz. */
 export const QUIZ_LOCKED_MESSAGE =
@@ -749,7 +754,7 @@ export const getExercise = createServerFn({ method: "GET" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const isRecall = data.variant === "recall";
-    const [ex, qs, unrestricted] = await Promise.all([
+    const [ex, qs, unrestricted, openAllowed] = await Promise.all([
       supabase
         .from("exercises")
         .select(
@@ -767,6 +772,12 @@ export const getExercise = createServerFn({ method: "GET" })
             .eq("exercise_id", data.exerciseId)
             .order("display_order"),
       isUnrestrictedViewer(supabase, userId),
+      // Étude 33 : les questions OUVERTES (`short_answer` — aucune proposition,
+      // une réponse tapée) ne sont servies qu'à un élève dont le mode IA peut
+      // JUGER une formulation imprévue. La base applique la même porte au
+      // dénominateur du score, sinon une question retirée de l'écran resterait
+      // dans le total, sans réponse, donc fausse.
+      canPlayOpenQuestions(supabase, userId),
     ]);
     if (ex.error) {
       failWithClientError("quest.getExercise", ex.error, "Impossible de charger l'exercice.");
@@ -828,7 +839,10 @@ export const getExercise = createServerFn({ method: "GET" })
 
     return {
       exercise: ex.data,
-      questions: recallQuestions ?? qs.data ?? [],
+      // Le Rappel n'est pas concerné : son jeu est fait de QCM maîtrisés
+      // rejoués en saisie libre, et une `short_answer` n'y entre jamais
+      // (é20 R-11). Le filtre porte sur le jeu CLASSIQUE, et lui seul.
+      questions: recallQuestions ?? filterOpenQuestions(qs.data ?? [], openAllowed),
       hintCharges,
       chapterQuizId,
       quizGated,
@@ -989,6 +1003,18 @@ export const submitAttempt = createServerFn({ method: "POST" })
     // before the atomic RPC increments them (they are created on demand, so a
     // first-of-the-day submission isn't lost). Best-effort: never block a submit.
     await supabase.rpc("ensure_daily_weekly_goals", { p_user: userId });
+
+    // Étude 33 — LE FILET, avant la note et pas après. Les réponses libres que
+    // l'ensemble { canonique } ∪ `acceptedAnswers` a REFUSÉES passent devant un
+    // juge, qui peut renverser le refus (jamais l'inverse : il ne voit pas les
+    // acceptations). Le verdict s'écrit en base ; c'est la RPC ci-dessous qui
+    // le lit, une seule fois, et qui reste le seul barème.
+    //
+    // Ce `await` est ce que l'élève attend en plus devant son écran de
+    // validation — et seulement quand une de ses réponses libres a été refusée,
+    // c'est-à-dire rarement, et précisément dans le cas où il avait peut-être
+    // raison. Une panne ici ne coûte rien : le verdict déterministe tient.
+    await arbitrateQuestOpenAnswers(userId, data.answers);
 
     const { data: submitData, error: submitErr } = await supabase.rpc("submit_exercise_attempt", {
       p_session_id: data.sessionId,

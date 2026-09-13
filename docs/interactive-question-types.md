@@ -43,14 +43,58 @@ manipulation (drag-&-drop), and multi-select judgment.
 - `options` keeps `[{id, text}]` for every type (items to order/match/select); unused for
   `numeric`.
 
-| type           | options carry                    | answer_key                   | answer payload (client → RPC)   | scoring                                                                  |
-| -------------- | -------------------------------- | ---------------------------- | ------------------------------- | ------------------------------------------------------------------------ |
-| `mcq`          | 2–6 choices                      | — (`correct_option`)         | `choice: "<optionId>"`          | id equality (unchanged)                                                  |
-| `numeric`      | — (optional unit hint in prompt) | `{value, tolerance?, unit?}` | `choice: "<number as string>"`  | `abs(x − value) ≤ tolerance` (default 0)                                 |
-| `ordering`     | 3–6 steps (ids)                  | `{order: ["b","a","d","c"]}` | `choice: "b,a,d,c"` (id CSV)    | exact sequence match; no partial credit v1                               |
-| `matching`     | left+right items (`l1…`, `r1…`)  | `{pairs: [["l1","r2"], …]}`  | `choice: "l1:r2,l2:r1,…"`       | set equality of pairs                                                    |
-| `multi`        | 2–6 choices                      | `{correct: ["a","c"]}`       | `choice: "a,c"` (sorted id CSV) | set equality; no partial credit v1                                       |
-| `short_answer` | — (aucune proposition)           | `{text, mistakes?}`          | `choice: "<texte tapé>"`        | appartenance à { canonique } ∪ `accepted_answers`, normalisée (étude 20) |
+| type           | options carry                    | answer_key                   | answer payload (client → RPC)   | scoring                                                                                                               |
+| -------------- | -------------------------------- | ---------------------------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `mcq`          | 2–6 choices                      | — (`correct_option`)         | `choice: "<optionId>"`          | id equality (unchanged)                                                                                               |
+| `numeric`      | — (optional unit hint in prompt) | `{value, tolerance?, unit?}` | `choice: "<number as string>"`  | `abs(x − value) ≤ tolerance` (default 0)                                                                              |
+| `ordering`     | 3–6 steps (ids)                  | `{order: ["b","a","d","c"]}` | `choice: "b,a,d,c"` (id CSV)    | exact sequence match; no partial credit v1                                                                            |
+| `matching`     | left+right items (`l1…`, `r1…`)  | `{pairs: [["l1","r2"], …]}`  | `choice: "l1:r2,l2:r1,…"`       | set equality of pairs                                                                                                 |
+| `multi`        | 2–6 choices                      | `{correct: ["a","c"]}`       | `choice: "a,c"` (sorted id CSV) | set equality; no partial credit v1                                                                                    |
+| `short_answer` | — (aucune proposition)           | `{text, mistakes?}`          | `choice: "<texte tapé>"`        | appartenance à { canonique } ∪ `accepted_answers`, normalisée (étude 20), **puis arbitrage IA d'un refus (étude 33)** |
+
+### ⚠️ `short_answer` est le seul type dont le SERVICE est conditionnel (étude 33, 2026-09-13)
+
+Arbitrage du propriétaire : **une question ouverte n'est proposée qu'à un élève dont le mode IA
+est activé, et sa réponse est vérifiée par l'IA.** Les cinq autres types sont servis à tout le
+monde, toujours ; celui-ci ne l'est pas, et c'est la seule asymétrie du tableau ci-dessus.
+
+La raison tient à l'asymétrie du verdict déterministe : l'appartenance à l'ensemble
+`{ canonique } ∪ accepted_answers` a raison quand elle **accepte** et ne sait pas quand elle
+**refuse**. Une formulation juste que personne n'avait prévue était comptée fausse, sans recours
+synchrone (« فوق الشجرة » là où la clé disait « فوقها », relevé en production). Plutôt que de
+servir la question à tous avec ce risque, on ne la sert qu'à qui dispose d'un juge.
+
+| élément                            | où                                                                      |
+| ---------------------------------- | ----------------------------------------------------------------------- |
+| la porte                           | `public.can_play_open_questions(élève)` — chemin FAMILLE uniquement     |
+| son application                    | `public.is_question_in_play(question, porte)`                           |
+| la surface IA à activer            | `open_answer` (`AI_LIVE_FEATURES`, `src/shared/constants/ai.ts`)        |
+| le filet                           | `ai_open_answer_verdicts` + la branche `short_answer` de `score_answer` |
+| le juge (gabarit, schéma, lecture) | `src/shared/integrations/ai/open-answer.ts`                             |
+| l'orchestration                    | `src/shared/integrations/ai/open-answer.server.ts` (`callAi` INJECTÉ)   |
+| le câblage côté quête              | `src/features/quest/quest.open-questions.ts`                            |
+
+Quatre invariants tiennent le filet, et il faut les connaître avant d'y toucher :
+
+1. **le modèle ne peut qu'AJOUTER** — il n'est consulté que sur une réponse déjà refusée, donc
+   il ne peut retirer aucune acceptation ; le déterministe reste le plancher ;
+2. **il ne peut pas rendre juste ce que l'auteur a déclaré faux** — `record_ai_open_answer_verdict`
+   refuse en SQL une acceptation qui égalerait une `answer_key -> mistakes` (é20 R-4). La garantie
+   n'est pas dans le prompt ;
+3. **il n'écrit pas dans le corpus** — `accepted_answers` reste un fichier versionné relu dans un
+   diff (é20 R-7). Le verdict est PAR ÉLÈVE, pour UN texte, sur UNE question ;
+4. **une panne ne change rien** — pas de verdict ⇒ le comportement d'avant l'étude 33.
+
+⚠️ **Le service ET le dénominateur, jamais l'un sans l'autre.** Retirer la question de l'écran
+sans la retirer du total la laisserait sans réponse, donc fausse : une mission de 9 questions
+jouée sur 8 et notée sur 9. `submit_exercise_attempt`, `score_quiz` et `get_attempt_review`
+portent donc la même garde que le service.
+
+**Trois surfaces excluent `short_answer` sans condition** : le **duel** (le jeu de questions est
+FIGÉ et PARTAGÉ — une porte par élève le rendrait inéquitable), le **donjon** et le **bac blanc**
+(CHRONOMÉTRÉS — un aller-retour vers un modèle au milieu d'un compte à rebours prendrait du temps
+d'épreuve, et seulement à ceux qui formulent autrement). Le pilote d'é20 lot 8 vit dans le lecteur
+de quête ; c'est là, et là seulement, que la porte s'ouvre.
 
 Design invariants: answers stay a single string (`choice`) so the existing
 `answers: [{questionId, choice}]` wire shape, rate limiting, and attempt persistence survive;

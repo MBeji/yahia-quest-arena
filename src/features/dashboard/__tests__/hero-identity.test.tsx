@@ -80,6 +80,18 @@ describe("HeroAvatar — le palier et le cadre, enfin visibles", () => {
     expect(screen.getByTestId("hero-avatar").getAttribute("data-frame")).toBeNull();
   });
 
+  it("⭐ porte la COURONNE de la marque quand aucun avatar n'est choisi", () => {
+    // L'emplacement affichait une `Sparkles` de lucide, quand le favicon et les
+    // icônes PWA montraient déjà une couronne — cf. src/components/brand-mark.tsx.
+    render(<HeroAvatar avatarSlug={null} avatarTier={1} />);
+    expect(screen.getByTestId("brand-crown")).toBeInTheDocument();
+  });
+
+  it("laisse l'avatar choisi passer devant la marque", () => {
+    render(<HeroAvatar avatarSlug="ninja" avatarTier={1} />);
+    expect(screen.queryByTestId("brand-crown")).not.toBeInTheDocument();
+  });
+
   it("borne le palier — `award_xp` le plafonne à 6, l'écran ne dépasse pas non plus", () => {
     expect(clampAvatarTier(99)).toBe(6);
     expect(clampAvatarTier(0)).toBe(1);

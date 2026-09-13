@@ -91,6 +91,17 @@ Détail et jours exacts : `docs/dependency-maintenance.md`.
 `report-triage.yml` est l'exception : il est aussi câblé sur un cron de 4 h (et sur le dispatch
 d'un signalement inséré), donc **la cadence n'y suffisait pas** comme garde-fou de bruit.
 
+⚠️ **Un nightly rouge n'est plus un gel** (2026-09-13, audit du 2026-09-12 C-1). Le verdict
+agrégé du nightly porte aussi les suites **optionnelles**, gatées par secret et jouées sur le
+projet TEST (`e2e-auth`, `perf`). Une seule spec rouge (#1015) l'a tenu rouge du 04 au 12/09, et
+deux consommateurs lisaient ce verdict au lieu des preuves qui les concernent : `upgrade-guard`
+a sauté neuf balayages et `checkpoint-tag` n'a coupé aucun point de retour (#1008), pendant que
+`main`, `verify`, pgTAP et l'E2E public étaient verts. Désormais `upgrade-guard` exige `verify`
+vert sur le commit du nightly (et rejoue les suites lentes sur sa propre branche), et
+`pick-checkpoint` exige les suites **requises** (E2E public, pgTAP) plus `verify` — une suite
+optionnelle rouge est **consignée dans l'annotation du tag**, jamais un veto. Règle qui reste :
+**un nightly rouge depuis plus de 48 h est un rang 0**, pas une issue qui vieillit.
+
 ⚠️ « Trois gardes Claude » décrit la **minuterie**, plus la dépense : depuis l'étude
 « IA → déterministe » (close le 2026-07-25), un garde qui se déclenche ne réveille un agent que
 s'il y a du travail de jugement. `upgrade-guard` va plus loin — son lot nominal (patch/minor)

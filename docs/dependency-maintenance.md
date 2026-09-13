@@ -87,6 +87,13 @@ build sous un titre de bump indirect. Sa régénération du lock a supprimé
 `node_modules/vite-tsconfig-paths/node_modules/typescript@5.9.3`, exigée par la peer optionnelle
 `typescript: ^5.0.0` de `tsconfck` (le `typescript@6.0.3` racine ne la satisfait pas).
 
+✅ **La cause est supprimée le 2026-09-13** : `vite-tsconfig-paths` est retiré — le seul mapping
+de `tsconfig.json` (`@/*`) était déjà déclaré en dur dans `resolve.alias` de `vite.config.ts` —,
+donc plus de `tsconfck`, plus de peer `typescript ^5` invalide, plus d'entrée imbriquée
+`vite-tsconfig-paths/node_modules/typescript` : le lock se résout à l'identique sous npm 10 et
+npm 11, et la PR Dependabot #1016 cessait d'échouer pour cette raison. **Le canari reste** : il
+garde la propriété pour la prochaine peer optionnelle qu'une majeure ferait entrer.
+
 Résultat : `npm ci` mort sur npm 10 ⇒ **Content CI privée rouge 33 h, `main` comprise**, pendant
 que le gate d'ici serait resté vert. Aggravant : **`ci.yml` n'a pas tourné sur le commit fautif**
 (dernier run sur `main` à 07:08:53Z, merge de #716 à 07:13:09Z) — aucun signal du tout.

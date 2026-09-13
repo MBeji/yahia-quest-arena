@@ -972,6 +972,7 @@ export type TranslationKeys = {
     featDigestParent: string;
     featVerify: string;
     featForgeSolve: string;
+    featOpenAnswer: string;
     errForgeOutputRejected: string;
     errForgeFailed: string;
     errNotLinked: string;
