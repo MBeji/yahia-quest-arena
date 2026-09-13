@@ -631,6 +631,38 @@ livrée, reportée ou sans objet : le gate a un avis sur la **connaissance**, ja
 Il est volontairement unidirectionnel : il signale ce que la roadmap n'a jamais entendu, il
 n'essaie pas d'apparier un commit à une ligne par la prose, ce qui serait de la devinette.
 
+## 9 ter. Trois documents disent le statut d'une étude — et rien ne les confrontait
+
+Le statut d'une étude est écrit en **trois endroits**, dont un seul fait foi (l'en-tête de son
+`ETUDE.md`) : l'index privé `FableEtudes/README.md`, ce même en-tête, et le §4 de `STATUS.md`
+ici. Un quatrième le dit physiquement : une étude `livrée` descend dans `EtudeRealisé/`.
+
+`STATUS.md` documente lui-même que la divergence est **à sens unique** — la roadmap et l'index
+privés sont tenus à chaque lot, c'est le topo public qui décroche, « parce qu'aucun gate ne le
+surveille ». Il l'a refait **en douze heures**, sur l'étude dont le sujet était les gates
+(arena#994).
+
+```bash
+npm run etudes:check -- --etudes ../corpus/FableEtudes    # + --status STATUS.md
+```
+
+Quatre contrôles, tous mécaniques : **liens morts** de l'index et de la roadmap (privé#354 a
+marqué é32 `livrée` en pointant le chemin qu'elle venait de quitter — le lien est passé vert),
+**cellule d'index ≠ en-tête**, **rangement ≠ statut**, **`STATUS.md` §4 ≠ en-tête** (y compris
+la même étude classée deux fois). Il porte sur la **contradiction**, jamais sur l'exhaustivité :
+un document muet sur une étude ne le fait pas rougir — sans quoi le topo deviendrait un journal,
+rôle déjà tenu par `docs/journal-decisions.md`.
+
+Le vocabulaire est **fermé** (le cycle de vie que l'index déclare, plus `scission faite`) et lu
+**en tête** de cellule : « lot 1 livré (1/2) » — la vraie cellule d'é26 le 2026-09-12 — est
+rapportée comme illisible, pas devinée. Lire « livré » dedans classerait comme livrée une étude
+à mi-parcours.
+
+Comme `check-roadmap-sync.mjs`, il vit ici et tourne **au privé** (`roadmap-sync.yml`, déclaré
+dans `harness/controls.json`) : ce dépôt n'a qu'un des trois documents. Première exécution,
+2026-09-12 : **six écarts**, dont é11 donnée « 6 lots sur 8 » dix-neuf jours après le merge des
+deux derniers, et un lot d'étude déclaré fini avec un de ses trois livrables jamais posé.
+
 ## 10. Le gate anti-fuite (`leak:check`)
 
 C'est le garde-fou de la scission. Il répond au risque évident : **une session future qui

@@ -49,6 +49,10 @@
       "where": "privé:content-ci.yml",
       "why": "registre de transcription CNP ; il a suivi ses données au privé (étude 24 lot 3b)."
     },
+    "etudes:check": {
+      "where": "privé:roadmap-sync.yml",
+      "why": "l'index des études et les en-têtes de `ETUDE.md` vivent au privé (étude 24) ; ce dépôt n'en a que STATUS.md, soit un seul des trois documents que le gate confronte. Il rejoint `check-roadmap-sync.mjs` dans le workflow qui checkout déjà les deux dépôts — et comme lui, il n'utilise que des modules natifs de Node, puisque ce workflow tourne SANS `npm ci`."
+    },
     "content:audit": {
       "where": "privé:content-audit.yml",
       "why": "audit périodique (mer./sam.), non bloquant — la variante :strict tient la PR."
