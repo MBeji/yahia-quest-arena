@@ -130,6 +130,8 @@ export function aiFeatureLabel(feature: string, t: TranslationKeys): string | nu
       return t.ai.featVerify;
     case "forge_solve":
       return t.ai.featForgeSolve;
+    case "open_answer":
+      return t.ai.featOpenAnswer;
     default:
       return null;
   }

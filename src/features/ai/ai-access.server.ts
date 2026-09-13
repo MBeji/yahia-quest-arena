@@ -147,6 +147,32 @@ export const setAiStudentAccess = createServerFn({ method: "POST" })
 export type AiStudentSurfaces = { enabled: boolean; features: string[] };
 
 /**
+ * LA SEULE SURFACE QUE LE CHEMIN PLATEFORME N'OUVRE PAS — et la raison tient en
+ * une phrase : c'est la seule qui change CE QUE L'ÉLÈVE VOIT.
+ *
+ * Partout ailleurs, le repli plateforme ne fait que changer de payeur : la
+ * surface existait déjà, elle reste la même, quelqu'un d'autre règle la note.
+ * `open_answer` ne se comporte pas comme ça. Elle commande la PORTE des
+ * questions ouvertes (`can_play_open_questions` en base) : allumée, la mission
+ * sert ses `short_answer` ; éteinte, le moteur les retire. Poser
+ * `AI_PLATFORM_API_KEY` ouvrirait donc, d'un coup et sans que personne l'ait
+ * décidé pour son enfant, un TYPE DE QUESTION à tout le parc — une variable
+ * d'environnement qui modifie le catalogue.
+ *
+ * Une question ouverte ne se sert que sur une activation EXPLICITE, par élève.
+ * Le repli plateforme, lui, garde tout son rôle une fois la porte ouverte :
+ * `resolve_ai_access` continue de payer l'arbitrage quand la clé de la famille
+ * tombe, exactement comme pour les autres surfaces.
+ *
+ * ⚠️ Ce Set est le MIROIR EXACT de `public.can_play_open_questions`, qui ne lit
+ * que la ligne famille (le SQL ne connaît pas la clé plateforme — elle est une
+ * variable d'environnement de Node). Les deux doivent dire la même chose : une
+ * liste qui promettrait ici ce que la base refuse là est précisément la faute
+ * que la fonction ci-dessous documente.
+ */
+const PLATFORM_NEVER_OPENS: ReadonlySet<string> = new Set(["open_answer"]);
+
+/**
  * LA DÉCISION, séparée de ses deux lectures — et elle a DEUX payeurs.
  *
  * `ai_student_access` répond à « la clé de ma famille paie-t-elle cette
@@ -183,7 +209,9 @@ export function studentSurfaces(input: {
 }): AiStudentSurfaces {
   if (!input.globalEnabled) return { enabled: false, features: [] };
 
-  const features: string[] = input.platformOpen ? [...AI_LIVE_FEATURES] : [];
+  const features: string[] = input.platformOpen
+    ? AI_LIVE_FEATURES.filter((feature) => !PLATFORM_NEVER_OPENS.has(feature))
+    : [];
   if (input.family?.enabled === true) {
     for (const feature of input.family.features ?? []) {
       if (!features.includes(feature)) features.push(feature);

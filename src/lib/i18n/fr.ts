@@ -1182,6 +1182,7 @@ export const fr: TranslationKeys = {
     featDigestParent: "Bilan parent",
     featVerify: "Vérification de la clé",
     featForgeSolve: "Double vérification d'un quiz",
+    featOpenAnswer: "Questions ouvertes (réponse tapée, corrigée par l'IA)",
     errNotLinked: "Cet élève n'est pas lié à votre compte.",
     errNoCredential: "Enregistrez d'abord une clé.",
     errEnergyCap: "L'énergie quotidienne ne peut pas dépasser le plafond.",

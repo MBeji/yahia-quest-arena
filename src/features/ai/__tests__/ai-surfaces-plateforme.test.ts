@@ -24,7 +24,20 @@ import { AI_ACTIVATABLE_FEATURES, studentSurfaces } from "../ai-access.server";
  * d'ouvert que le SQL refuserait, rien de fermé qu'il aurait servi.
  */
 
-const SIX = [...AI_LIVE_FEATURES];
+/**
+ * CE QUE LA PLATEFORME OUVRE — les surfaces vivantes, MOINS `open_answer`.
+ *
+ * L'exception est étroite et elle est la seule : `open_answer` (étude 33) ne
+ * change pas le payeur d'une surface existante, elle décide si un TYPE DE
+ * QUESTION est servi. Poser `AI_PLATFORM_API_KEY` ouvrirait sinon les questions
+ * ouvertes à tout le parc d'un coup, sans qu'aucun parent l'ait décidé pour son
+ * enfant — et l'écran promettrait alors ce que `can_play_open_questions`
+ * refuse, puisque le SQL ne connaît pas la clé plateforme.
+ *
+ * Le calcul est DÉRIVÉ et non recopié : ajouter une surface vivante l'ajoute
+ * ici, et seule une nouvelle exception délibérée fera bouger cette ligne.
+ */
+const PLATEFORME = AI_LIVE_FEATURES.filter((f) => f !== "open_answer");
 
 describe("studentSurfaces — sans ligne famille", () => {
   it("plateforme éteinte : RIEN, et ce n'est pas une panne (R-1)", () => {
@@ -35,13 +48,36 @@ describe("studentSurfaces — sans ligne famille", () => {
     });
   });
 
-  it("plateforme armée : les six surfaces vivantes — LE cas qui était faux", () => {
+  it("plateforme armée : les surfaces vivantes — LE cas qui était faux", () => {
     // `resolve_ai_access` renvoie `payer = 'platform'` pour TOUT élève sans
     // ligne famille. L'écran doit dire la même chose que le SQL.
     expect(studentSurfaces({ globalEnabled: true, family: null, platformOpen: true })).toEqual({
       enabled: true,
-      features: SIX,
+      features: PLATEFORME,
     });
+  });
+
+  it("n'ouvre JAMAIS les questions ouvertes sur la seule clé plateforme (é33)", () => {
+    // Le miroir exact de `can_play_open_questions`, qui ne lit que la ligne
+    // famille. Si cette assertion tombe, l'écran annonce un type de question
+    // que le moteur de service retirera — la faute que tout ce fichier
+    // documente, dans l'autre sens.
+    const { features } = studentSurfaces({
+      globalEnabled: true,
+      family: null,
+      platformOpen: true,
+    });
+    expect(features).not.toContain("open_answer");
+  });
+
+  it("une ligne famille, elle, ouvre bien les questions ouvertes (é33)", () => {
+    // L'activation EXPLICITE par élève reste le seul chemin, et il marche.
+    const { features } = studentSurfaces({
+      globalEnabled: true,
+      family: { enabled: true, features: ["open_answer"] },
+      platformOpen: true,
+    });
+    expect(features).toContain("open_answer");
   });
 
   it("ouvre nommément le chat et la Forge — les deux entrées de la bulle", () => {
@@ -90,7 +126,7 @@ describe("studentSurfaces — avec une ligne famille", () => {
         family: { enabled: false, features: [] },
         platformOpen: true,
       }),
-    ).toEqual({ enabled: true, features: SIX });
+    ).toEqual({ enabled: true, features: PLATEFORME });
   });
 
   it("la plateforme AJOUTE, elle ne retire ni ne double", () => {
@@ -101,7 +137,7 @@ describe("studentSurfaces — avec une ligne famille", () => {
       family: { enabled: true, features: ["forge"] },
       platformOpen: true,
     });
-    expect(features).toEqual(SIX);
+    expect(features).toEqual(PLATEFORME);
     expect(features.filter((f) => f === "forge")).toHaveLength(1);
   });
 });

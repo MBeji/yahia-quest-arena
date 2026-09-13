@@ -39,6 +39,7 @@ export const AI_FEATURES = [
   "check", // boucle de compréhension (é11 lot 4)
   "forge", // génération d'un quiz par la Forge (é29 lot 4)
   "forge_solve", // double résolution d'un candidat de la Forge (é29 lot 4)
+  "open_answer", // arbitrage d'une réponse libre refusée (é20 lot 6, é33)
   "exercise_gen", // exercices ciblés choisis par le tuteur (é11 lot 5)
   "digest_student", // bilan hebdomadaire élève (é11 lot 6)
   "digest_parent", // bilan hebdomadaire parent (é11 lot 6)
@@ -85,6 +86,17 @@ export const AI_INTERNAL_FEATURES = ["verify", "forge_solve"] as const;
  *     l'émet, pas avant.
  *   * `verify` / `forge_solve` — internes ({@link AI_INTERNAL_FEATURES}).
  *
+ * ⚠️ `open_answer` EST LA PREMIÈRE ENTRÉE QUI FAIT PLUS QUE PAYER — elle OUVRE.
+ * Partout ailleurs, décocher remet la surface à la charge de la plateforme sans
+ * rien éteindre (l'avertissement des bilans, ci-dessous). Ici, la même case
+ * décide en plus si les questions OUVERTES (`short_answer` — un énoncé, aucune
+ * proposition, une réponse tapée) sont SERVIES à l'élève : sans elle, le moteur
+ * de service les retire de la mission. C'est l'arbitrage du 2026-09-13 : une
+ * question libre n'est proposée que si un correcteur capable de juger une
+ * formulation imprévue est joignable. La porte est en base
+ * (`can_play_open_questions`), pas dans cette liste — mais elle lit cette
+ * activation, donc décocher ici RETIRE vraiment quelque chose.
+ *
  * LES ÉTUDES 04 ET 30 N'ONT RIEN À OUVRIR ICI, et c'est leur propriété la plus
  * utile : le moteur adaptatif (« quelle erreur tu fais ») et le tuteur
  * déterministe (« ce que tu maîtrises, ce que tu es prêt à apprendre ») sont
@@ -108,6 +120,7 @@ export const AI_LIVE_FEATURES = [
   "reformulate",
   "chat",
   "forge",
+  "open_answer",
   "digest_student",
   "digest_parent",
 ] as const satisfies readonly Exclude<AiFeature, (typeof AI_INTERNAL_FEATURES)[number]>[];
@@ -151,6 +164,11 @@ export const AI_MAX_TOKENS: Readonly<Record<AiFeature, number>> = {
   check: 400,
   forge: 4000,
   forge_solve: 300,
+  // Le juge d'une réponse libre rend un verdict, pas une explication : le
+  // schéma de sortie ne porte qu'un booléen. Le plafond le dit aussi, pour que
+  // le jour où quelqu'un voudrait y faire écrire une correction, la borne
+  // refuse avant l'écran.
+  open_answer: 32,
   exercise_gen: 2500,
   digest_student: 700,
   digest_parent: 900,
@@ -702,6 +720,14 @@ export const AI_ENERGY_COST: Readonly<Record<AiFeature, number>> = {
   check: 1,
   forge: 3, // R-18
   forge_solve: 0, // inclus dans le coût du `forge` qui l'a déclenché
+  // ZÉRO, et c'est un choix de justice, pas une facilité. L'arbitrage ne se
+  // déclenche QUE sur un refus déterministe — c'est-à-dire, dans le cas qui
+  // compte, sur une réponse JUSTE que le moteur n'avait pas prévue. Facturer de
+  // l'énergie à l'élève pour ça reviendrait à lui faire payer notre angle mort,
+  // et pire : à le lui faire payer d'autant plus qu'il formule bien. L'argent,
+  // lui, reste compté (`ai_usage_events`) — c'est l'énergie, mécanique de jeu
+  // (é11 R-12), qui n'a pas à punir ici.
+  open_answer: 0,
   exercise_gen: 2,
   digest_student: 0, // produit par un batch, pas par un geste d'élève
   digest_parent: 0,
@@ -821,6 +847,9 @@ export const AI_TIMEOUT_MS: Readonly<Record<AiFeature, number>> = {
   check: AI_STUDENT_TIMEOUT_MS,
   forge: 90_000,
   forge_solve: AI_EGRESS_RULES.timeoutMs,
+  // L'élève attend son score, écran bloqué : c'est la patience d'une surface
+  // qui répond DEVANT lui, pas celle d'une commande qu'on passe.
+  open_answer: AI_STUDENT_TIMEOUT_MS,
   exercise_gen: AI_EGRESS_RULES.timeoutMs,
   digest_student: AI_EGRESS_RULES.timeoutMs,
   digest_parent: AI_EGRESS_RULES.timeoutMs,
@@ -885,6 +914,10 @@ export const AI_MAX_RETRIES: Readonly<Record<AiFeature, number>> = {
   chat: AI_EGRESS_RULES.maxRetries,
   check: AI_EGRESS_RULES.maxRetries,
   forge: 0,
+  // Zéro : un échec ici ne casse rien — le verdict déterministe reste, et il
+  // est le plancher. Rejouer ferait attendre un élève pour un rattrapage qui,
+  // par construction, n'était pas dû.
+  open_answer: 0,
   forge_solve: AI_EGRESS_RULES.maxRetries,
   exercise_gen: AI_EGRESS_RULES.maxRetries,
   digest_student: AI_EGRESS_RULES.maxRetries,
