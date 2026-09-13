@@ -238,7 +238,7 @@ jobs:
             const date = new Date().toISOString().slice(0, 10);
 
             let body = `### ⚠️ Aucun checkpoint de rollback cette semaine — ${date}\n\n`;
-            body += `Aucun commit récent de \`main\` ne réunit **verify vert + nightly vert**. `;
+            body += `Aucun commit récent de \`main\` ne réunit **verify vert + suites requises du nightly vertes** (E2E public, pgTAP — une suite optionnelle rouge, `e2e-auth` ou `perf`, ne bloque plus depuis le 2026-09-13). `;
             body += `Tant que ça dure, le dernier point de retour arrière vérifié vieillit : `;
             body += `un rollback annulerait d'autant plus de travail mergé.\n\n`;
             body += `**Candidats écartés**\n\n${process.env.WHY || '_aucun_'}\n\n`;
