@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { Sparkles, Mail, Lock, User as UserIcon, Loader2, MailCheck } from "lucide-react";
+import { Mail, Lock, User as UserIcon, Loader2, MailCheck } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/shared/integrations/supabase/client";
 import { useServerFn } from "@tanstack/react-start";
@@ -9,6 +9,7 @@ import { linkStudentByCode } from "@/features/parent-report";
 import { bootstrapProfile } from "@/features/auth";
 import { Label } from "@/components/ui/label";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
+import { CrownMark } from "@/components/brand-mark";
 import { useT } from "@/lib/i18n";
 import { useEntrance } from "@/shared/lib/motion";
 import { trackProductEvent } from "@/shared/lib/product-events";
@@ -439,7 +440,7 @@ function AuthPage() {
       <div className="relative mx-auto flex min-h-[100dvh] max-w-md flex-col items-center justify-center px-4 pt-[max(3rem,env(safe-area-inset-top))] pb-[max(3rem,env(safe-area-inset-bottom))] sm:px-6">
         <Link to="/" className="mb-8 flex items-center gap-2">
           <div className="grid h-10 w-10 place-items-center rounded-lg bg-[image:var(--gradient-gold)] shadow-gold">
-            <Sparkles className="h-5 w-5 text-primary-foreground" />
+            <CrownMark className="h-6 w-6 text-primary-foreground" />
           </div>
           <span className="font-display text-xl font-bold tracking-wider">
             Na9ra <span className="text-gradient-gold">Nal3ab</span>
