@@ -1,12 +1,11 @@
 import { defineConfig, loadEnv, type PluginOption } from "vite";
 import tailwindcss from "@tailwindcss/vite";
-import tsConfigPaths from "vite-tsconfig-paths";
 import viteReact from "@vitejs/plugin-react";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 
 // Inlined replacement for the meta-plugin the original scaffold vendored — the project
 // now has ZERO dependency on that boilerplate. This reproduces exactly what that plugin
-// wired for the build: Tailwind, tsconfig path resolution, the Cloudflare Worker build
+// wired for the build: Tailwind, the Cloudflare Worker build
 // (build-time only — it produces the `dist/server` Worker entry that `wrangler.jsonc`
 // (`main: src/server.ts`) targets and `scripts/build-vercel.mjs` repackages for Vercel),
 // TanStack Start (SSR; entry = our error-wrapping `src/server.ts`) and React — plus the
@@ -15,7 +14,12 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 // (sandbox bridge, HMR gate, component tagger, dev SSR/server-fn error overlays) are
 // intentionally omitted: they only run under `vite serve` and never shipped in the build.
 export default defineConfig(async ({ command, mode }) => {
-  const plugins: PluginOption[] = [tailwindcss(), tsConfigPaths({ projects: ["./tsconfig.json"] })];
+  // Pas de plugin de résolution des `paths` de tsconfig : le seul mapping (`@/*` → `src/*`)
+  // est déclaré en dur dans `resolve.alias` ci-dessous (et dans vitest.config.ts).
+  // `vite-tsconfig-paths` traînait `tsconfck`, dont la peer optionnelle `typescript ^5`
+  // est invalide avec TypeScript 6 : c'est elle qui faisait diverger le lock entre npm 10
+  // et 11 (#716, #1016) et mourir chaque PR Dependabot au canari — audit du 2026-09-12, C-2.
+  const plugins: PluginOption[] = [tailwindcss()];
 
   // @cloudflare/vite-plugin only at build time (it owns the "ssr" Worker environment).
   if (command === "build") {
