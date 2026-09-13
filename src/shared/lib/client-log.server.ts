@@ -22,38 +22,15 @@
 // Toutes les issues — corps trop gros, JSON illisible, base en panne — rendent
 // 204. Ce qui rate se voit dans les logs serveur, pas chez l'élève.
 import { supabaseAdmin } from "@/shared/integrations/supabase/client.server";
+import type { Json } from "@/shared/integrations/supabase/types";
 import { logger } from "./logger";
 
 /**
- * ⚠️ PONT DE TYPES, À RETIRER À LA PROCHAINE RÉGÉNÉRATION.
- *
- * `types.ts` est GÉNÉRÉ par `supabase gen types` depuis la PROD : `client_errors`
- * n'y apparaîtra qu'une fois 20260831140000 appliquée, c'est-à-dire au merge sur
- * `main`. La table et son écrivain voyagent pourtant dans la même PR — d'où
- * cette description, posée une fois et ici seulement.
- *
- * Ce n'est pas un `as any` qui esquive le typage (DoD §2) : la forme est écrite
- * en toutes lettres, recopiée colonne par colonne depuis la migration, et le
- * compilateur la vérifie à l'appel. La régénération des types la rendra
- * redondante — et c'est à ce moment-là qu'il faudra la supprimer.
+ * `client_errors` est typée par `types.ts` comme n'importe quelle table : le fichier est
+ * régénéré depuis la CHAÎNE de migrations (`npm run db:gen-types`) et `db:check-types`
+ * rougit dès qu'un objet de la chaîne lui manque — le pont de types tenu à la main qui
+ * vivait ici (2026-08-31 → 2026-09-13) n'a plus de raison d'être.
  */
-type ClientErrorRow = {
-  stage: string;
-  client_id: string | null;
-  http_status: number | null;
-  err_message: string | null;
-  ttl_s: number | null;
-  hidden_total_ms: number | null;
-  last_hidden_ms: number | null;
-  user_agent: string | null;
-  payload: Record<string, unknown> | null;
-};
-
-type ClientErrorWriter = {
-  from(table: "client_errors"): {
-    insert(row: ClientErrorRow): PromiseLike<{ error: unknown }>;
-  };
-};
 
 /** Au-delà, on refuse sans lire. Un récit d'erreur tient très large là-dedans. */
 export const MAX_CLIENT_LOG_BYTES = 8 * 1024;
@@ -99,7 +76,7 @@ export async function handleClientLogRequest(request: Request): Promise<Response
     const stage = text(body.stage, 64);
     if (!stage) return accepted();
 
-    await (supabaseAdmin as unknown as ClientErrorWriter).from("client_errors").insert({
+    await supabaseAdmin.from("client_errors").insert({
       stage,
       client_id: text(body.clientId, 200),
       http_status: int(body.httpStatus),
@@ -112,7 +89,7 @@ export async function handleClientLogRequest(request: Request): Promise<Response
       user_agent: text(request.headers.get("user-agent"), 500),
       payload:
         body.payload && typeof body.payload === "object" && !Array.isArray(body.payload)
-          ? (body.payload as Record<string, unknown>)
+          ? (body.payload as Json)
           : null,
     });
 

@@ -29,6 +29,10 @@ local** où la chaîne vient d'être rejouée, sans Docker ni jeton prod. Recett
 écarts à régler dans la base de génération (pas dans le fichier) :
 [`pgtap-en-local.md`](./pgtap-en-local.md#le-même-cluster-type-aussi-les-rpc--sans-docker-sans-jeton-prod).
 La DoD §7 reste entière : elle porte sur l'ordre **d'application** en prod, pas sur le nombre de PR.
+**Depuis le 2026-09-13, la recette est un script** : `npm run db:gen-types` rejoue la chaîne (+ pgTAP),
+prépare la base de génération (sans pgTAP, extensions rangées, `graphql_public` posé) et
+réécrit `types.ts` ; et `npm run db:check-types` (dans `verify`) **rougit** dès qu'un objet
+`public` de la chaîne manque aux types — ou qu'un fantôme hors chaîne y traîne.
 
 **Le ref à passer à `--project-id` est celui de la PROD : `fasrenmmrkqjoobrztbp`** — source de
 vérité [`scripts/shared/prod-targets.mjs`](../../scripts/shared/prod-targets.mjs)

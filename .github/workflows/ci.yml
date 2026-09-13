@@ -175,6 +175,13 @@ jobs:
       - name: Migration chain (blank DB rebuilds)
         run: npm run db:check-chain
 
+      # Types drift gate (audit 2026-09-12, D-1): the generated Supabase types must carry
+      # exactly the public tables/views/functions/enums the migration chain creates — no
+      # RPC left untyped (28 were, on 2026-09-12), no prod-only ghost. Static, ~0.1 s.
+      # Remedy: `npm run db:gen-types` (from the chain, no Docker, no prod token).
+      - name: Types drift (types.ts ↔ migration chain)
+        run: npm run db:check-types
+
       # Harness anti-drift gate (étude 25): CLAUDE.md stays a thin @AGENTS.md
       # pointer, AGENTS.md stays in budget, no hidden Unicode, no model id
       # hardcoded outside harness/models.json.

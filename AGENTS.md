@@ -44,6 +44,7 @@ npm run ci:verify      # verify en surensemble : + perf:check, coverage au lieu 
 npm run harness:check                    # anti-drift harness (pointers, size, hidden Unicode, model ids) + YAML strict de .github/**
 npm run leak:check                       # gate anti-fuite : aucun corpus ni skill pédago au tip (étude 24)
 npm run db:check-chain                   # rejeu statique des migrations : une base VIERGE se reconstruit
+npm run db:check-types                   # types.ts ↔ chaîne (tables/vues/RPC/enums `public`) ; remède : npm run db:gen-types
 npm run eol:check / eol:fix              # CRLF invisibles dans l'arbre (piège Windows, docs/agents/poste-windows.md)
 npm run db:inventory-content             # inventaire des migrations de contenu (provenance)
 npm run programme:etat                   # état des lieux campagne : fiche × programme × contenu × ouverture prod (rapport, pas un gate)
