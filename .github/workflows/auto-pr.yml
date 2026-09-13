@@ -153,9 +153,28 @@ jobs:
           # General > Workflow permissions > "Allow GitHub Actions to create
           # and approve pull requests" must be ON, or createPullRequest is
           # rejected. Not needed when GH_AUTOMATION_PAT is set.
+          err_file="$(mktemp)"
           if ! url="$(gh pr create --repo "$REPO" --base main --head "$BRANCH" \
-            $draft_flag --title "$subject" --body-file "$body_file")"; then
-            echo "::error title=Auto-PR impossible::Si vous n'utilisez pas GH_AUTOMATION_PAT, activez 'Allow GitHub Actions to create and approve pull requests' (Settings > Actions > General > Workflow permissions), puis relancez ce workflow — ou ouvrez la PR à la main."
+            $draft_flag --title "$subject" --body-file "$body_file" 2>"$err_file")"; then
+            erreur="$(cat "$err_file")"
+            # ⚠️ TOUT ÉCHEC N'EST PAS UNE PANNE. Une branche SANS ÉCART avec `main`
+            # fait répondre à GitHub « No commits between main and <branche> » — et
+            # c'est le cas NOMINAL d'une session qui, sa PR mergée, repart sa branche
+            # de `main` (le protocole l'exige : une PR mergée ne porte pas de travail
+            # neuf). Il n'y a rien à proposer, et ce n'est pas une panne : sortir en
+            # rouge ici ferait crier `guard-watch` sur un dépôt parfaitement réglé.
+            # Porté du dépôt privé (yahia-quest-content#390), qui l'a constaté en vrai.
+            if printf '%s' "$erreur" | grep -qi "no commits between"; then
+              echo "Rien à ouvrir pour '$BRANCH' — aucun écart avec main. Ce n'est pas une panne."
+              echo "created=false" >> "$GITHUB_OUTPUT"
+              echo "target=" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            # Le FAIT d'abord (la réponse de GitHub), l'hypothèse ensuite — une alarme
+            # qui affirme une cause qu'elle n'a pas établie coûte plus qu'aucune alarme.
+            printf '%s\n' "$erreur"
+            msg="$(printf '%s' "$erreur" | tr '\n' ' ')"
+            echo "::error title=Auto-PR impossible::GitHub a répondu : ${msg} — si ce message parle de permissions et que vous n'utilisez pas GH_AUTOMATION_PAT, activez 'Allow GitHub Actions to create and approve pull requests' (Settings > Actions > General > Workflow permissions), puis relancez ce workflow — ou ouvrez la PR à la main."
             exit 1
           fi
           if [ -n "$draft_flag" ]; then
@@ -167,6 +186,9 @@ jobs:
           echo "target=$url" >> "$GITHUB_OUTPUT"
 
       - name: Arm auto-merge (default — drafts & no-automerge opt out)
+        # Rien à armer quand l'étape précédente n'a désigné aucune PR (branche sans
+        # écart avec `main`) : `gh pr view ""` échouerait et rougirait le run.
+        if: steps.pr.outputs.target != ''
         env:
           REPO: ${{ github.repository }}
           BRANCH: ${{ github.ref_name }}
