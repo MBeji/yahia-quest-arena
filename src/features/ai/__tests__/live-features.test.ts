@@ -60,19 +60,31 @@ describe("AI_LIVE_FEATURES est un sous-ensemble discipliné", () => {
     }
   });
 
-  it("porte les six surfaces que la clé d'une famille paie (arbitrage 2026-08-26)", () => {
+  it("porte les sept surfaces que la clé d'une famille paie (é33)", () => {
     // Ce test échoue au moindre ajout — c'est voulu : le faire passer oblige à
     // relire ce fichier, donc à vérifier qu'un appelant émet vraiment la
     // surface avant de l'ouvrir au porteur. Il a tenu `["forge"]` jusqu'au
-    // 2026-08-26, où l'arbitrage a ouvert TOUT ce qui appelle un modèle.
+    // 2026-08-26, où l'arbitrage a ouvert TOUT ce qui appelle un modèle, puis
+    // ces six-là jusqu'au 2026-09-13 : `open_answer` est la septième, et son
+    // appelant est `arbitrateOpenAnswers` (`shared/integrations/ai`).
     expect([...AI_LIVE_FEATURES]).toEqual([
       "explain",
       "reformulate",
       "chat",
       "forge",
+      "open_answer",
       "digest_student",
       "digest_parent",
     ]);
+  });
+
+  it("`open_answer` est la seule surface qui COMMANDE UNE PORTE, et elle est activable", () => {
+    // Les six autres ne changent que le payeur d'un écran déjà présent. Celle-ci
+    // décide si les questions ouvertes sont SERVIES (`can_play_open_questions`).
+    // Elle doit donc être activable par un parent — sinon la porte n'a aucun
+    // interrupteur — et rester hors des surfaces internes, que personne n'active.
+    expect([...AI_LIVE_FEATURES]).toContain("open_answer");
+    expect(AI_INTERNAL_FEATURES as readonly string[]).not.toContain("open_answer");
   });
 
   it("laisse dehors les surfaces SANS appel de modèle", () => {

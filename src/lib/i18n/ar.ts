@@ -1143,6 +1143,7 @@ export const ar: TranslationKeys = {
     featDigestParent: "حصيلة الوليّ",
     featVerify: "التحقّق من المفتاح",
     featForgeSolve: "التحقّق المزدوج من تمرين",
+    featOpenAnswer: "أسئلة مفتوحة (إجابة مكتوبة يصحّحها الذكاء الاصطناعي)",
     errNotLinked: "هذا التلميذ غير مرتبط بحسابك.",
     errNoCredential: "سجّل مفتاحا أولا.",
     errEnergyCap: "لا يمكن أن تتجاوز الطاقة اليومية السقف.",

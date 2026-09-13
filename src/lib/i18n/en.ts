@@ -1151,6 +1151,7 @@ export const en: TranslationKeys = {
     featDigestParent: "Parent digest",
     featVerify: "Key check",
     featForgeSolve: "Quiz double-check",
+    featOpenAnswer: "Open questions (typed answer, AI-graded)",
     errNotLinked: "That student is not linked to your account.",
     errNoCredential: "Save a key first.",
     errEnergyCap: "Daily energy cannot exceed the cap.",
