@@ -3964,6 +3964,22 @@ export type Database = {
           subject_id: string;
         }[];
       };
+      get_user_subject_stars: {
+        Args: { p_subject_ids?: string[] };
+        Returns: {
+          chapters_star1: number;
+          chapters_star2: number;
+          chapters_star3: number;
+          chapters_star4: number;
+          chapters_started: number;
+          chapters_total: number;
+          new_chapters: number;
+          new_missions: number;
+          seal_at: string;
+          seal_star: number;
+          subject_id: string;
+        }[];
+      };
       get_user_subject_stats: {
         Args: Record<PropertyKey, never>;
         Returns: {
