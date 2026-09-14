@@ -102,20 +102,31 @@ export type SubjectHubRecall = {
  *
  * - Level anchor + way back up: kicker = the CLASS (localized parcours name,
  *   not the RPG attribute), breadcrumb link to `/niveau/$parcoursId`.
+ * - « État de la matière » (étude 34) : les sceaux, le prochain (« 12/20 chapitres
+ *   prêts »), et l'effort en compteurs — jamais un pourcentage.
  * - « Reprendre ici » (signed-in): the furthest in-progress chapter, linking
  *   straight to its next actionable mission.
  * - One ACCORDION per chapter (collapsed except the resume/first chapter) with
- *   a state chip: `{n}/{n} ✓` · `quiz ✓ · {done}/{n}` · `🔒 quiz to pass` · todo.
- * - Tri-state mission rows: ✓ done (best score) · → todo (+XP, signed-in only —
- *   audit §D-3: XP shown to anonymous visitors is noise) · 🔒 locked by the
- *   comprehension quiz (non-interactive; the quiz itself stays clickable, and
- *   the lock explains HOW to lift it — R-4).
+ *   sa JAUGE D'ÉTOILES (étude 34, R-8) et, à l'étoile 4, « Maîtrisé ✓ ».
+ * - Tri-state mission rows: ✓ comptée (é34 R-3 — pas « ≥ 60 % ») · → todo (+XP,
+ *   signed-in only — audit §D-3: XP shown to anonymous visitors is noise) · 🔒
+ *   locked by the comprehension quiz (non-interactive; the quiz itself stays
+ *   clickable, and the lock explains HOW to lift it — R-4).
+ *
+ * ⭐ **Rien n'est recalculé ici.** Depuis l'étude 34, l'état de chaque chapitre et
+ * de chaque mission arrive tranché par `get_subject_progress` : la jauge dit
+ * l'ACQUIS (grand livre, jamais décroissant), le compteur de cran dit le
+ * reste-à-faire (vivant), ✨ nomme l'écart. Le hub tenait auparavant sa propre
+ * copie des seuils, qui redescendait dès qu'une mission arrivait et qui avait
+ * divergé sur l'anti-précipitation. Voir `docs/etoiles-et-sceaux.md`.
  *
  * Anonymous parity: same layout; the quiz-pass state merges the server map with
  * the browser-session gate (anon-quiz-gate), read after mount so SSR and the
  * first client render agree. Exercise links stay auth-aware (`exerciseRouteFor`).
- * Data comes from `getSubject` (bestByExercise, quizPassedByChapter, parcours) —
- * no new RPC. Copy is i18n (fr/en/ar).
+ * Sans compte, `progress` est `null` : on garde la FORME des chapitres (leurs
+ * crans, éteints) et une promesse en une ligne, sans rien calculer (R-16).
+ * Data comes from `getSubject` (progress, quizPassedByChapter, parcours) — une
+ * RPC, pas une de plus. Copy is i18n (fr/en/ar + catalogue paresseux `progress/`).
  */
 export function SubjectHub({
   subject,
@@ -199,7 +210,6 @@ export function SubjectHub({
         // même donnée que l'affichage, sans re-projeter les chapitres.
         domain: c.domain ?? null,
         chapEx,
-        quiz,
         done,
         total,
         unlocked,
