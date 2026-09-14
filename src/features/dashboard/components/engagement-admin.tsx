@@ -60,6 +60,26 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
+/** L'encre des cinq crans — même échelle que la barre du suivi parental. */
+const STAR_BUCKET_INK = [
+  "bg-border",
+  "bg-(--gold)/25",
+  "bg-(--gold)/50",
+  "bg-(--gold)/75",
+  "bg-(--gold)",
+] as const;
+
+type StarsDistribution = EngagementOverview["learning"]["stars_distribution"];
+
+/** Les cinq comptes, dans l'ordre des crans. */
+function starBucketCounts(d: StarsDistribution): [number, number, number, number, number] {
+  return [d.s0, d.s1, d.s2, d.s3, d.s4];
+}
+
+function starBucketTotal(d: StarsDistribution): number {
+  return d.s0 + d.s1 + d.s2 + d.s3 + d.s4;
+}
+
 export function EngagementAdmin({ data }: { data: EngagementOverview }) {
   const { curr, cohorts, activity, streaks, push, learning, notes } = data;
 
@@ -84,6 +104,49 @@ export function EngagementAdmin({ data }: { data: EngagementOverview }) {
           <Stat label="chapitres / actif" value={num(learning.chapters_per_active)} />
           <Stat label="tentatives (30 j)" value={num(learning.attempts_30d)} />
         </div>
+
+        {/* ⭐ Étude 34 R-18 — les trois mesures qui empêchent de lire le ratio de travers. */}
+        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3" data-testid="eng-stars">
+          <Stat label="médiane de l'étoile" value={num(learning.stars_median)} />
+          <Stat label="sceaux / actif" value={num(learning.seals_per_active)} />
+          <Stat label="étoiles préservées" value={num(learning.stars_preserved)} />
+        </div>
+
+        {/* La DISTRIBUTION, en une barre : un parc à ★★★☆ et un parc à zéro produisent
+            le même « 0,0 chapitre par actif », et seule cette barre les distingue. */}
+        <div className="mt-3" data-testid="eng-stars-dist">
+          <div className="mb-1 text-xs uppercase tracking-widest text-muted-foreground">
+            chapitres joués, par étoile
+          </div>
+          <div className="flex h-2 overflow-hidden rounded-full bg-border/60">
+            {STAR_BUCKET_INK.map((ink, star) => {
+              const n = starBucketCounts(learning.stars_distribution)[star] ?? 0;
+              const total = Math.max(1, starBucketTotal(learning.stars_distribution));
+              return n > 0 ? (
+                <span key={star} className={ink} style={{ width: `${(n / total) * 100}%` }} />
+              ) : null;
+            })}
+          </div>
+          <div className="mt-1 flex flex-wrap gap-x-3 text-xs tabular-nums text-muted-foreground">
+            {starBucketCounts(learning.stars_distribution).map((n, star) => (
+              <span key={star}>
+                {star === 0 ? "aucune" : "⭐".repeat(star)} {n}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* ⚠️ La NOTE DE CONTINUITÉ (R-18). Une console qui change de source sans le dire
+            fabrique une rupture de série que personne ne saura dater — et c'est
+            exactement ce qui rend un tableau de bord inutilisable six mois plus tard. */}
+        {notes.chapters_source && (
+          <p
+            className="mt-3 rounded-lg border border-border/60 bg-surface-2 px-3 py-2 text-xs text-muted-foreground"
+            data-testid="eng-kpie-note"
+          >
+            {notes.chapters_source}
+          </p>
+        )}
       </Card>
 
       <Card

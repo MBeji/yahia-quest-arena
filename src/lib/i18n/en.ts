@@ -916,6 +916,9 @@ export const en: TranslationKeys = {
     continueLabel: "Continue",
     review: "Review",
     nodeNext: "Suggested",
+    sealLegend:
+      "⭐ = subject seal: every chapter holds that star. The count says how many are ready for the next one.",
+    nodeSealAria: "{subject} — seal {stars}, {ready} chapters ready out of {total}",
     done: "Done",
     current: "In progress",
     xpToEarn: "XP to earn",

@@ -9,6 +9,5 @@ export {
   type SubjectNode,
   type NodeState,
   type XpProgress,
-  type SubjectProgress,
   type BuildSubjectNodesOptions,
 } from "./journey";

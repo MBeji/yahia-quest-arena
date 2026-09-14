@@ -37,6 +37,7 @@ import { makeReport, makeTotals } from "./daily-fixtures";
 import { computeEngagement } from "../insights/engagement";
 import type { ParentAlert } from "../insights/alerts";
 import type { ParentTranslations } from "@/lib/i18n/parent.types";
+import { frParent } from "@/lib/i18n/parent/fr";
 
 const subject = (over: Record<string, unknown> = {}) => ({
   subjectId: "math",
@@ -99,7 +100,10 @@ describe("SubjectsSection", () => {
     expect(firstCells[1]).toContain("9ème année");
   });
 
-  it("rend la couverture du programme en fraction, et un tiret sans chapitre publié", () => {
+  it("⭐ la couverture NOMME son verdict, et se tait sans chapitre publié (é34)", () => {
+    // « 7/24 chap. » s'est lu, le 2026-09-04, « il a fait 7 chapitres sur 24 ».
+    // Le mot manquait. Ici on vérifie le CÂBLAGE (le dictionnaire est factice) ; la
+    // copie réelle est contrôlée juste en dessous, sur le catalogue français.
     render(
       <SubjectsSection
         report={makeReport({
@@ -111,10 +115,71 @@ describe("SubjectsSection", () => {
       />,
     );
 
-    expect(screen.getByText("7/24")).toBeTruthy();
-    expect(screen.getByText("29%")).toBeTruthy();
-    // Aucun chapitre publié : la fraction n'existe pas, elle ne vaut pas 0 %.
-    expect(screen.queryByText("0%")).toBeNull();
+    const cells = screen.getAllByTestId("coverage-count");
+    // Une seule cellule : la matière sans chapitre publié rend « — », pas « 0 sur 0 ».
+    expect(cells).toHaveLength(1);
+    expect(cells[0]!.textContent).toBe("parentDaily.coverageMastered");
+    // Le POURCENTAGE de couverture a disparu — il divisait un travail par un
+    // catalogue qui bouge. (La colonne « Réussite » garde le sien : c'est un score.)
+    expect(cells[0]!.closest("td")?.textContent ?? "").not.toMatch(/\d+\s*%/);
+  });
+
+  it("⭐ et la copie française dit bien « maîtrisés », avec ses deux substitutions", () => {
+    // Le dictionnaire factice ci-dessus prouve le câblage, jamais le mot. Or c'est
+    // le MOT qui manquait le 2026-09-04 : « chap. » ne disait pas ce qu'il fallait
+    // avoir fait pour qu'un chapitre compte.
+    expect(frParent.parentDaily.coverageMastered).toContain("maîtrisés");
+    expect(frParent.parentDaily.coverageMastered).toContain("{done}");
+    expect(frParent.parentDaily.coverageMastered).toContain("{total}");
+  });
+
+  it("⭐ montre la DISTRIBUTION au-dessus du compte — la barre qui empêche le verdict", () => {
+    // 24 chapitres : 7 maîtrisés, 5 à ★★★, 4 à ★★, 3 à ★, 5 pas commencés. Sans la
+    // barre, « 7 sur 24 » efface les douze chapitres largement entamés.
+    render(
+      <SubjectsSection
+        report={makeReport({
+          subjects: [subject({ subjectId: "math-6", chaptersTotal: 24, chaptersCompleted: 7 })],
+          subjectStars: [
+            {
+              subjectId: "math-6",
+              chaptersTotal: 24,
+              chaptersStarted: 19,
+              star1: 19,
+              star2: 16,
+              star3: 12,
+              star4: 7,
+              sealStar: 0,
+              newChapters: 2,
+              newMissions: 3,
+            },
+          ],
+        })}
+      />,
+    );
+
+    const bar = screen.getByTestId("coverage-bar");
+    expect(bar).toBeInTheDocument();
+    // Cinq crans EXACTS, dérivés des bornes cumulées : 5 · 3 · 4 · 5 · 7.
+    expect(screen.getByTestId("coverage-seg-0")).toHaveStyle({ width: `${(5 / 24) * 100}%` });
+    expect(screen.getByTestId("coverage-seg-4")).toHaveStyle({ width: `${(7 / 24) * 100}%` });
+    // …et la ligne ✨ dit ce qui est arrivé depuis, plutôt que de laisser le
+    // dénominateur grandir en silence.
+    expect(screen.getByTestId("coverage-new")).toBeInTheDocument();
+  });
+
+  it("se passe de barre quand le rapport est ANTÉRIEUR à l'étude 34", () => {
+    // Le suivi parental est lu par des comptes qui n'ont pas rechargé : un rapport
+    // sans `subjectStars` doit rendre le compte seul, pas une barre vide.
+    render(
+      <SubjectsSection
+        report={makeReport({
+          subjects: [subject({ subjectId: "math-6", chaptersTotal: 24, chaptersCompleted: 7 })],
+        })}
+      />,
+    );
+    expect(screen.queryByTestId("coverage-bar")).not.toBeInTheDocument();
+    expect(screen.getByTestId("coverage-count")).toBeInTheDocument();
   });
 
   it("affiche un tiret, jamais un verdict, quand la matière n'a pas assez de tentatives", () => {
@@ -169,6 +234,9 @@ describe("SubjectsSection — les lacunes", () => {
     missionsPassed: 4,
     quizGated: true,
     quizSatisfied: true,
+    // Étude 34 : l'étoile visée et ce qui l'en sépare — c'est ce chiffre qui TRIE.
+    nextStar: 2,
+    missingForNext: 2,
     ...over,
   });
 

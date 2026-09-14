@@ -914,6 +914,8 @@ export const ar: TranslationKeys = {
     continueLabel: "متابعة",
     review: "مراجعة",
     nodeNext: "مُقترَح",
+    sealLegend: "⭐ = ختم المادّة: كلّ فصولها نالت النجمة. والعدد يقول كم منها جاهز للختم القادم.",
+    nodeSealAria: "{subject} — ختم {stars}، {ready} فصلا جاهزا من {total}",
     done: "مكتمل",
     current: "جارٍ",
     xpToEarn: "نقاط الخبرة المتاحة",

@@ -29,12 +29,26 @@ export function JourneyMap({ nodes, profile }: JourneyMapProps) {
       <JourneyTrack>
         {nodes.map((n, i) => {
           const color = `var(--subject-${n.colorToken.replace(/^subject-/, "")})`;
-          // Sous-libellé = la progression officielle R-16, pas la moyenne des scores : « 40 % »
-          // veut dire « 40 % des chapitres terminés », ce que l'élève peut vérifier au hub.
-          const sublabel = n.progressionPct != null ? `${n.progressionPct}%` : undefined;
+          // ⭐ Sous-libellé = le SCEAU, et ce qui manque pour le suivant (étude 34, R-9).
+          // Le pourcentage a disparu, et ce n'est pas une question de format : il divisait
+          // un travail par un catalogue qui bouge, donc il faisait reculer l'élève quand
+          // c'était le produit qui grandissait. Glyphes et chiffres, sans mot — la légende
+          // sous la carte porte le sens, une fois, pour tous les nœuds.
+          const seal = "⭐".repeat(n.sealStar);
+          const sublabel =
+            [seal, n.nextSeal ? `${n.nextSeal.chaptersReady}/${n.nextSeal.chaptersTotal}` : ""]
+              .filter(Boolean)
+              .join(" · ") || undefined;
+          const ariaLabel = n.nextSeal
+            ? t.parcours.nodeSealAria
+                .replace("{subject}", n.nameFr)
+                .replace("{stars}", seal || "—")
+                .replace("{ready}", String(n.nextSeal.chaptersReady))
+                .replace("{total}", String(n.nextSeal.chaptersTotal))
+            : n.nameFr;
           return (
             <TrackRow key={n.id} side={nodeSide(i)} index={i}>
-              <Link to="/matiere/$subjectId" params={{ subjectId: n.id }} aria-label={n.nameFr}>
+              <Link to="/matiere/$subjectId" params={{ subjectId: n.id }} aria-label={ariaLabel}>
                 <PathNode
                   state={n.state}
                   title={n.nameFr}
@@ -49,6 +63,11 @@ export function JourneyMap({ nodes, profile }: JourneyMapProps) {
         })}
         {nodes.length === 0 && <EmptyState icon={MapIcon} title={t.parcours.empty} />}
       </JourneyTrack>
+      {nodes.length > 0 && (
+        <p className="mt-6 text-center text-xs text-muted-foreground" data-testid="seal-legend">
+          {t.parcours.sealLegend}
+        </p>
+      )}
     </PageShell>
   );
 }

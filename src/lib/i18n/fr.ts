@@ -939,6 +939,9 @@ export const fr: TranslationKeys = {
     continueLabel: "Continuer",
     review: "Revoir",
     nodeNext: "Conseillé",
+    sealLegend:
+      "⭐ = sceau de matière : tous ses chapitres ont l'étoile. Le compte dit combien sont prêts pour le prochain.",
+    nodeSealAria: "{subject} — sceau {stars}, {ready} chapitres prêts sur {total}",
     done: "Terminé",
     current: "En cours",
     xpToEarn: "XP à gagner",

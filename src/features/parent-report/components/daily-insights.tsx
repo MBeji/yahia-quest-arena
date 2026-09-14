@@ -26,7 +26,9 @@ import {
   type ParentAlert,
   type ScoredFactor,
   type SubjectSlice,
+  type SubjectStarsSlice,
 } from "../insights";
+import { readSubjectStars, starBuckets } from "@/shared/lib/progress-stars";
 import { alertMessage } from "./alert-message";
 import { BAND_STYLES, useBandLabel } from "./daily-band";
 import { DeltaChip, EmptyRow, Meter, SectionCard } from "./daily-primitives";
@@ -224,6 +226,10 @@ function factorReadout(factor: AnyFactor, t: T): string {
  * fragiles, délaissées, celles où l'enfant progresse le plus.
  */
 export function SubjectsSection({ report }: { report: DailyReport }) {
+  // Une seule indexation pour toute la table — la distribution voyage à part du
+  // reste de la matière, parce qu'elle est arrivée par l'enveloppe et non par le
+  // rapport lui-même (étude 34 lot 3).
+  const starsBySubject = new Map(report.subjectStars.map((x) => [x.subjectId, x]));
   const t = useParentT();
   const bandLabel = useBandLabel();
   const analysis = analyzeSubjects(report);
@@ -273,7 +279,10 @@ export function SubjectsSection({ report }: { report: DailyReport }) {
                         )}
                       </td>
                       <td className="py-2 pe-2">
-                        <CoverageCell subject={subject} />
+                        <CoverageCell
+                          subject={subject}
+                          stars={starsBySubject.get(subject.subjectId)}
+                        />
                       </td>
                       <td className="py-2 text-end tabular-nums text-muted-foreground">
                         {formatMinutes(subject.minutes)}
@@ -346,33 +355,63 @@ export function SubjectsSection({ report }: { report: DailyReport }) {
  * Une matière sans chapitre publié affiche « — » : la fraction n'existe pas,
  * elle ne vaut pas 0 %.
  */
-function CoverageCell({ subject }: { subject: SubjectSlice }) {
+/** L'encre des cinq crans, du chapitre pas commencé au chapitre maîtrisé. */
+const BUCKET_INK = [
+  "bg-border",
+  "bg-(--gold)/25",
+  "bg-(--gold)/50",
+  "bg-(--gold)/75",
+  "bg-(--gold)",
+] as const;
+
+function CoverageCell({ subject, stars }: { subject: SubjectSlice; stars?: SubjectStarsSlice }) {
   const t = useParentT();
 
   if (subject.chaptersTotal <= 0) {
     return <span className="text-xs text-muted-foreground">—</span>;
   }
 
-  const pctDone = Math.round((subject.chaptersCompleted / subject.chaptersTotal) * 100);
+  // La DISTRIBUTION passe devant le compte (étude 34, R-13), et l'ordre n'est pas
+  // cosmétique : c'est la barre qui empêche de lire « 3 sur 20 » comme un verdict.
+  // Le 2026-09-04, ce ratio nu s'est lu « il a fait 3 chapitres sur 20 » alors que les
+  // dix-sept autres étaient à « 4/6 missions ». Le pourcentage, lui, a disparu — il
+  // divisait un travail par un catalogue qui bouge.
+  const summary = stars ? readSubjectStars(stars) : null;
+  const buckets = summary ? starBuckets(summary) : null;
 
   return (
     <div className="min-w-[5.5rem]" title={t.parentDaily.coverageHint}>
-      <div className="flex items-baseline justify-between gap-2 text-2xs text-muted-foreground">
-        <span className="tabular-nums">
-          {subject.chaptersCompleted}/{subject.chaptersTotal}
-        </span>
-        <span className="tabular-nums">{pctDone}%</span>
-      </div>
-      <div className="mt-1">
-        <Meter
-          value={subject.chaptersCompleted}
-          max={subject.chaptersTotal}
-          className="bg-primary"
-          label={t.parentDaily.coverageAria
+      {buckets && (
+        <div
+          className="mb-1 flex h-1.5 overflow-hidden rounded-full"
+          role="img"
+          data-testid="coverage-bar"
+          aria-label={t.parentDaily.coverageAria
             .replace("{done}", String(subject.chaptersCompleted))
             .replace("{total}", String(subject.chaptersTotal))}
-        />
+        >
+          {buckets.map((n, star) =>
+            n > 0 ? (
+              <span
+                key={star}
+                data-testid={`coverage-seg-${star}`}
+                className={BUCKET_INK[star]}
+                style={{ width: `${(n / subject.chaptersTotal) * 100}%` }}
+              />
+            ) : null,
+          )}
+        </div>
+      )}
+      <div className="text-2xs tabular-nums text-muted-foreground" data-testid="coverage-count">
+        {t.parentDaily.coverageMastered
+          .replace("{done}", String(subject.chaptersCompleted))
+          .replace("{total}", String(subject.chaptersTotal))}
       </div>
+      {summary && summary.newChapters > 0 && (
+        <div className="text-2xs font-semibold text-(--gold)" data-testid="coverage-new">
+          {t.parentDaily.coverageNew.replace("{n}", String(summary.newChapters))}
+        </div>
+      )}
     </div>
   );
 }

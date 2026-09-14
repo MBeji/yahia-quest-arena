@@ -5,6 +5,7 @@
  * so this feature never imports another feature.
  */
 import { XP_PER_LEVEL } from "@/shared/constants/gamification";
+import { nextSealOf, type NextSeal, type SubjectStarSummary } from "@/shared/lib/progress-stars";
 
 /**
  * Visual state of a path node (étude 22, R-11).
@@ -23,11 +24,17 @@ export type SubjectNode = {
   attempts: number;
   avg: number;
   /**
-   * Progression officielle (R-16) : chapitres complétés / chapitres publiés, en pourcentage.
-   * `null` quand la matière n'a aucun chapitre publié ou que la RPC n'a rien renvoyé — surtout
-   * pas 0/0 = 100 %, qui allumerait `done` sur une matière vide.
+   * Le SCEAU de la matière (étude 34, R-9) : 0 à 4, lu au grand livre. Il remplace le
+   * pourcentage de é22 R-16, et ce n'est pas un changement d'unité mais de nature — un
+   * pourcentage divise un travail par un catalogue qui bouge, donc il FAIT RECULER l'élève
+   * quand c'est le produit qui grandit. Un sceau, lui, ne se retire jamais.
    */
-  progressionPct: number | null;
+  sealStar: number;
+  /**
+   * Ce qui vient : « ⭐⭐⭐ : 14/20 chapitres prêts ». `null` au sceau ⭐⭐⭐⭐, où il n'y a
+   * plus rien à nommer — et où en nommer un transformerait un aboutissement en dette.
+   */
+  nextSeal: NextSeal | null;
   state: NodeState;
 };
 
@@ -63,23 +70,12 @@ type SubjectLike = {
   is_premium?: boolean;
 };
 
-export type SubjectProgress = { total: number; completed: number };
-
 export type BuildSubjectNodesOptions = {
-  /** Progression par matière (R-16), telle que servie par `get_user_parcours_progress`. */
-  progressBySubject?: Record<string, SubjectProgress>;
+  /** Étoiles et sceaux par matière, tels que servis par `get_user_subject_stars` (é34). */
+  starsBySubject?: Record<string, SubjectStarSummary>;
   /** Matière la plus récemment travaillée — porte l'état `current` (R-11). */
   lastActivitySubjectId?: string | null;
 };
-
-/**
- * Progression d'une matière (R-16) en pourcentage entier, ou `null` si elle n'est pas
- * calculable — aucune donnée, ou aucun chapitre publié. Ne jamais renvoyer 100 % pour 0/0.
- */
-function progressionPctOf(progress: SubjectProgress | undefined): number | null {
-  if (!progress || progress.total <= 0) return null;
-  return Math.round((progress.completed / progress.total) * 100);
-}
 
 /**
  * World-map subject nodes (étude 22, R-11 et R-16).
@@ -91,8 +87,10 @@ function progressionPctOf(progress: SubjectProgress | undefined): number | null 
  *
  * États restants, dans l'ordre de priorité :
  *   - `premium-locked` — le seul non cliquable ; dormant en phase gratuite ;
- *   - `done` — progression R-16 à 100 % (et non plus « moyenne ≥ 80 % », qui déclarait une
- *     matière terminée sur trois exercices réussis) ;
+ *   - `done` — le SCEAU ⭐⭐⭐⭐ (étude 34, D-5) : tous les chapitres publiés maîtrisés, lu au
+ *     grand livre. Il succède au « 100 % de progression » de é22 R-16, lui-même successeur
+ *     de « moyenne ≥ 80 % ». La différence n'est pas d'unité : un pourcentage redescendait
+ *     quand une campagne publiait du contenu, un sceau ne se retire jamais ;
  *   - `current` — la matière la plus récemment travaillée, une seule ;
  *   - `next` — la première matière du chemin sans aucune tentative (halo « recommandé ») ;
  *   - `open` — tout le reste.
@@ -106,7 +104,7 @@ export function buildSubjectNodes(
   lockedSubjectIds: ReadonlySet<string> = new Set(),
   options: BuildSubjectNodesOptions = {},
 ): SubjectNode[] {
-  const { progressBySubject = {}, lastActivitySubjectId = null } = options;
+  const { starsBySubject = {}, lastActivitySubjectId = null } = options;
 
   // `next` ne désigne qu'UNE matière : la première du chemin encore jamais tentée.
   const nextSubjectId =
@@ -116,11 +114,15 @@ export function buildSubjectNodes(
   return subjects.map((s) => {
     const st = statsBySubject[s.id] ?? { count: 0, avg: 0 };
     const premium = s.is_premium ?? false;
-    const progressionPct = progressionPctOf(progressBySubject[s.id]);
+    const stars = starsBySubject[s.id];
+    // Une matière sans chapitre publié n'a pas de sceau — et surtout pas le sceau 4 par
+    // vacuité, qui déclarerait `done` une matière vide.
+    const sealStar = stars && stars.chaptersTotal > 0 ? stars.sealStar : 0;
+    const nextSeal = stars && stars.chaptersTotal > 0 ? nextSealOf(stars) : null;
 
     let state: NodeState;
     if (lockedSubjectIds.has(s.id)) state = "premium-locked";
-    else if (progressionPct === 100) state = "done";
+    else if (sealStar >= 4) state = "done";
     else if (s.id === lastActivitySubjectId) state = "current";
     else if (s.id === nextSubjectId) state = "next";
     else state = "open";
@@ -133,7 +135,8 @@ export function buildSubjectNodes(
       isPremium: premium,
       attempts: st.count,
       avg: Math.round(st.avg),
-      progressionPct,
+      sealStar,
+      nextSeal,
       state,
     };
   });

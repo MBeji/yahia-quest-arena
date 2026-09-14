@@ -204,23 +204,42 @@ par défaut, celui dont il se demande où il en est.
 
 ## Couverture du programme — une règle, jamais deux
 
-La colonne « Programme » du tableau des matières rend **chapitres terminés / chapitres publiés**.
+La colonne « Programme » du tableau des matières rend une **barre empilée** — la distribution
+des chapitres publiés par étoile, de 0 à 4 — **au-dessus** du compte **« m maîtrisés sur N »**.
 Elle ne définit rien : elle réutilise la règle qui fait déjà autorité pour la carte `/parcours`
 que l'élève voit, et pour le hub matière.
 
 - un chapitre est **publié** s'il porte au moins une mission de catalogue (`source = 'admin'`,
-  hors quiz) — sinon il serait « terminé » par vacuité ou bloquerait le taux à jamais ;
-- une mission est **réussie** à partir de 60 % (meilleur score en variante classique — une
-  reprise en Rappel ne termine jamais un chapitre) ;
-- en scolaire, le **quiz de compréhension** doit en plus être passé à 80 % sans rush.
+  hors quiz) — sinon il serait « maîtrisé » par vacuité ou bloquerait le taux à jamais ;
+- une mission est **comptée** à partir de 60 % (meilleur score en variante classique — une
+  reprise en Rappel ne compte jamais) **et sans se précipiter** (≥ 4 s par question, étude 34) ;
+- en scolaire, le **quiz de compréhension** doit en plus être passé à 80 % sans rush ;
+- **maîtrisé** = l'étoile 4 : toutes les missions du chapitre, quiz compris. C'est le seul mot
+  de verdict, à l'écran comme au rapport (étude 34, Q-2).
+
+⭐ **Pourquoi la barre passe DEVANT le compte, et pourquoi le pourcentage a disparu.** Le
+2026-09-04, l'auteur du produit a lu « 3/20 chap. » comme « il a fait 3 chapitres sur 20 » —
+alors que dix-sept de ces chapitres étaient à « 4/6 missions ». Le ratio nu efface le travail à
+mi-chemin, et un pourcentage fait pire : il divise un travail par un catalogue qui bouge, donc
+il **fait reculer l'élève quand c'est le produit qui grandit**. La barre montre les cinq crans,
+le compte nomme son verdict, et une ligne « ✨ n chapitre(s) ajouté(s) » dit ce qui est arrivé
+depuis — plutôt que de laisser le dénominateur grandir en silence.
+
+Sous le tableau, « ce qui manque » classe les chapitres **par leur prochaine étoile** et non par
+leur nombre de missions restantes : un chapitre à une mission ⭐⭐ de gagner un cran passe devant
+un chapitre à qui il ne reste que le défi élite. Le serveur calcule ce classement
+(`student_chapter_gaps.missing_for_next`) ; le client ne le refait pas.
 
 La règle vivait en double : `get_user_parcours_progress` (SQL) et `chapter-completion.ts`
 (client), avec la consigne de les garder d'accord. La migration `20260816200000` l'a **extraite**
-dans `student_parcours_progress(p_user, …)` et rebranché la RPC de l'élève dessus. Parent et
-enfant lisent donc le même chiffre **par construction**, pas par vigilance. Toucher à la règle,
-c'est toucher à cette fonction — et aux deux écrans à la fois.
+dans `student_parcours_progress(p_user, …)` et rebranché la RPC de l'élève dessus ; l'étude 34 a
+ensuite **supprimé la copie client** et fait de cette fonction une projection du grand livre
+`user_chapter_stars`. Parent et enfant lisent donc le même chiffre **par construction**, pas par
+vigilance — et ce chiffre ne redescend plus. Toucher à la règle, c'est toucher à ces fonctions —
+et aux deux écrans à la fois. La règle complète :
+[`etoiles-et-sceaux.md`](./etoiles-et-sceaux.md).
 
-Une matière sans chapitre publié affiche « — », pas « 0 % » : la fraction n'existe pas.
+Une matière sans chapitre publié affiche « — », pas « 0 » : la fraction n'existe pas.
 
 ## Le niveau scolaire, sans lequel rien ne se distingue
 

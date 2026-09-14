@@ -30,6 +30,8 @@ vi.mock("@/lib/i18n", () => ({
       maxLevel: "max",
       premium: "Premium",
       nodeNext: "Suggested",
+      sealLegend: "⭐ = subject seal",
+      nodeSealAria: "{subject} — seal {stars}, {ready} of {total} ready",
       xpToEarn: "XP",
       backToMap: "back",
       empty: "empty",
@@ -49,7 +51,8 @@ const nodes: SubjectNode[] = [
     isPremium: false,
     attempts: 5,
     avg: 90,
-    progressionPct: 100,
+    sealStar: 4,
+    nextSeal: null,
     state: "done",
   },
   {
@@ -60,7 +63,8 @@ const nodes: SubjectNode[] = [
     isPremium: false,
     attempts: 2,
     avg: 50,
-    progressionPct: 40,
+    sealStar: 1,
+    nextSeal: { star: 2, chaptersReady: 8, chaptersTotal: 20, newChapters: 0 },
     state: "current",
   },
   {
@@ -71,7 +75,8 @@ const nodes: SubjectNode[] = [
     isPremium: false,
     attempts: 0,
     avg: 0,
-    progressionPct: 0,
+    sealStar: 0,
+    nextSeal: { star: 1, chaptersReady: 0, chaptersTotal: 12, newChapters: 0 },
     state: "next",
   },
   {
@@ -82,7 +87,8 @@ const nodes: SubjectNode[] = [
     isPremium: true,
     attempts: 0,
     avg: 0,
-    progressionPct: null,
+    sealStar: 0,
+    nextSeal: null,
     state: "premium-locked",
   },
 ];
@@ -109,18 +115,29 @@ describe("JourneyMap", () => {
     expect(hrefs).not.toContain("/parcours/$subjectId");
   });
 
-  it("shows the R-16 progression as sublabel and badges the recommended node", () => {
+  it("⭐ affiche le SCEAU et ce qui manque pour le suivant, et badge le nœud recommandé", () => {
     render(<JourneyMap nodes={nodes} profile={{ level: 1, xp: 0, heroClass: "Novice" }} />);
-    // Sous-libellé = progression en chapitres, pas la moyenne des scores (avg 90 ≠ 100 %).
-    expect(screen.getByText("40%")).toBeInTheDocument();
+    // Français : sceau ⭐ acquis, 8 chapitres sur 20 prêts pour le ⭐⭐.
+    expect(screen.getByText("⭐ · 8/20")).toBeInTheDocument();
+    // Maths est scellée au ⭐⭐⭐⭐ : le glyphe seul, sans fraction — il n'y a plus rien à viser.
+    expect(screen.getByText("⭐⭐⭐⭐")).toBeInTheDocument();
     // Le badge « recommandé » ne s'affiche que sur le nœud `next`.
     expect(screen.getAllByText("Suggested")).toHaveLength(1);
   });
 
-  it("omits the sublabel when progression is unknown rather than showing 100%", () => {
+  it("⭐ n'affiche AUCUN pourcentage — c'est tout l'objet du changement (é34)", () => {
+    const { container } = render(
+      <JourneyMap nodes={nodes} profile={{ level: 1, xp: 0, heroClass: "Novice" }} />,
+    );
+    // Un pourcentage divise un travail par un catalogue qui bouge : il faisait reculer
+    // l'élève quand c'était le produit qui grandissait. Il ne doit plus exister ici.
+    expect(container.textContent).not.toMatch(/\d+\s*%/);
+    // « Maîtrise » n'a ni sceau ni prochain : elle se tait plutôt que d'afficher « 0 ».
+    expect(screen.queryByText("null")).not.toBeInTheDocument();
+  });
+
+  it("porte une LÉGENDE : « ⭐⭐ · 8/20 » ne se devine pas", () => {
     render(<JourneyMap nodes={nodes} profile={{ level: 1, xp: 0, heroClass: "Novice" }} />);
-    // « Maîtrise » a progressionPct null : aucun pourcentage ne lui est accolé.
-    expect(screen.queryByText("null%")).not.toBeInTheDocument();
-    expect(screen.getAllByText(/^\d+%$/).length).toBe(3);
+    expect(screen.getByTestId("seal-legend").textContent).toMatch(/⭐/);
   });
 });

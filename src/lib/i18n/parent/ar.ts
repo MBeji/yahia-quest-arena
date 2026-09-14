@@ -105,7 +105,7 @@ export const arParent: ParentTranslations = {
     goalProgressDaily: "{done}/{target} مهمّة اليوم",
     goalUnit: "مهمّة / أسبوع",
     goalUnitDaily: "مهمّة / يوم",
-    coverageShort: "{done}/{total} فصل",
+    coverageShort: "{done}/{total} فصلا متقَنا",
   },
   parentDaily: {
     tabSummary: "الحصيلة",
@@ -243,6 +243,8 @@ export const arParent: ParentTranslations = {
     scopeExcluded:
       "خارج قسمه في هذه الفترة: {time} و{exercises} تمرينًا — مراجعات مستويات أخرى، وإضافات، وزنزانة ومبارزات. بدّل إلى «الكلّ» لإدراجها.",
     coverageAria: "{done} فصلًا مُنجزًا من أصل {total}",
+    coverageMastered: "{done} متقَنا من {total}",
+    coverageNew: "✨ {n} فصلا جديدا",
     colTime: "الوقت",
     colLessons: "دروس",
     colExercises: "تمارين",

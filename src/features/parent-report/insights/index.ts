@@ -23,6 +23,7 @@ export {
   type ExerciseRun,
   type LessonView,
   type SubjectSlice,
+  type SubjectStarsSlice,
 } from "./daily-report";
 
 export {

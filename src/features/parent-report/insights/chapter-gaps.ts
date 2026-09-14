@@ -30,6 +30,10 @@ export type ChapterGapRow = {
   missionsTotal: number;
   /** Combien de missions restent à réussir. 0 quand seul le quiz bloque. */
   missionsRemaining: number;
+  /** L'ÉTOILE visée ensuite (étude 34) — 1 à 4, lue au grand livre. */
+  nextStar: number;
+  /** Ce qui l'en sépare : missions du cran ≤ `nextStar`, plus le quiz s'il est dû. */
+  missingForNext: number;
 };
 
 /** Ce qui manque à ce chapitre, en une des trois formes possibles. */
@@ -54,30 +58,40 @@ export function gapBlocker(gap: ChapterGap): GapBlocker {
 export function chapterGapRows(report: DailyReport, limit = 6): ChapterGapRow[] {
   const subjectsById = new Map(report.subjects.map((s) => [s.subjectId, s]));
 
-  return report.chapterGaps
-    .flatMap((gap) => {
-      const subject = subjectsById.get(gap.subjectId);
-      if (!subject) return [];
-      const missionsTotal = Math.max(0, gap.missionsTotal);
-      const missionsPassed = Math.min(Math.max(0, gap.missionsPassed), missionsTotal);
-      return [
-        {
-          chapterId: gap.chapterId,
-          chapterTitle: gap.title,
-          subjectName: subject.name,
-          gradeName: subject.gradeName,
-          blocker: gapBlocker(gap),
-          missionsPassed,
-          missionsTotal,
-          missionsRemaining: missionsTotal - missionsPassed,
-        },
-      ];
-    })
-    .sort(
-      (a, b) =>
-        a.missionsRemaining - b.missionsRemaining ||
-        a.subjectName.localeCompare(b.subjectName) ||
-        a.chapterTitle.localeCompare(b.chapterTitle),
-    )
-    .slice(0, Math.max(0, limit));
+  return (
+    report.chapterGaps
+      .flatMap((gap) => {
+        const subject = subjectsById.get(gap.subjectId);
+        if (!subject) return [];
+        const missionsTotal = Math.max(0, gap.missionsTotal);
+        const missionsPassed = Math.min(Math.max(0, gap.missionsPassed), missionsTotal);
+        return [
+          {
+            chapterId: gap.chapterId,
+            chapterTitle: gap.title,
+            subjectName: subject.name,
+            gradeName: subject.gradeName,
+            blocker: gapBlocker(gap),
+            missionsPassed,
+            missionsTotal,
+            missionsRemaining: missionsTotal - missionsPassed,
+            nextStar: Math.min(4, Math.max(1, Math.round(gap.nextStar))),
+            missingForNext: Math.max(0, Math.round(gap.missingForNext)),
+          },
+        ];
+      })
+      // ⭐ Le tri suit LA PROCHAINE ÉTOILE, pas le total des missions restantes (étude 34).
+      // L'ancien classait sur « toutes les missions du chapitre », donc un chapitre à qui il
+      // ne manquait qu'une mission ⭐⭐ pour gagner un cran passait derrière un chapitre qui
+      // n'avait plus que le défi élite à faire. Le serveur calcule déjà `missing_for_next` et
+      // ordonne dessus ; le refaire ici sur un autre critère défaisait son travail.
+      .sort(
+        (a, b) =>
+          a.missingForNext - b.missingForNext ||
+          a.missionsRemaining - b.missionsRemaining ||
+          a.subjectName.localeCompare(b.subjectName) ||
+          a.chapterTitle.localeCompare(b.chapterTitle),
+      )
+      .slice(0, Math.max(0, limit))
+  );
 }
