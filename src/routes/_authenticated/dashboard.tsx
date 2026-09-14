@@ -208,7 +208,7 @@ function Dashboard() {
     return <DashboardSkeleton />;
   }
 
-  const { profile, subjects, stats, nextExerciseId } = data;
+  const { profile, subjects, stats, progress, nextExerciseId } = data;
   // School subjects flagged as locked by the server (premium parcours, no entitlement).
   const lockedSet = new Set(data.premiumLockedSubjectIds ?? []);
   if (!profile)
@@ -527,6 +527,7 @@ function Dashboard() {
                 <SubjectPathCard
                   subject={s}
                   stat={stats[s.id]}
+                  stars={progress[s.id]}
                   premiumLocked={lockedSet.has(s.id)}
                 />
               </motion.div>

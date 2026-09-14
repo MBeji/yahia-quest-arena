@@ -117,6 +117,28 @@ const learningSchema = z.object({
   attempts_30d: z.coerce.number(),
   chapters_completed: z.coerce.number(),
   chapters_per_active: z.coerce.number().nullable(),
+  /**
+   * Étude 34 R-18 — ce qui ENTOURE le ratio, et sans quoi il se lit de travers.
+   * Sur le corpus, 56 % des missions sont ⭐⭐⭐/⭐⭐⭐⭐ : un parc entier bloqué à
+   * ★★★☆ publie « 0,0 chapitre par actif », et ce zéro-là ne dit pas « ils ne
+   * font rien ». `.catch` sur chaque champ : une console lue pendant le
+   * déploiement de la migration doit répondre, pas échouer sur une clé absente.
+   */
+  stars_distribution: z
+    .object({
+      s0: z.coerce.number(),
+      s1: z.coerce.number(),
+      s2: z.coerce.number(),
+      s3: z.coerce.number(),
+      s4: z.coerce.number(),
+    })
+    .catch({ s0: 0, s1: 0, s2: 0, s3: 0, s4: 0 }),
+  /** Le chiffre de contrôle de Q-2 : la barre « maîtrisé » est-elle atteignable ? */
+  stars_median: z.coerce.number().nullable().catch(null),
+  seals_total: z.coerce.number().catch(0),
+  seals_per_active: z.coerce.number().nullable().catch(null),
+  /** Les couples (élève, chapitre) que le grand livre a protégés d'une régression. */
+  stars_preserved: z.coerce.number().catch(0),
 });
 
 const overviewSchema = z.object({
@@ -133,6 +155,8 @@ const overviewSchema = z.object({
     retention_rule: z.string(),
     activity_rule: z.string(),
     current_week: z.string(),
+    /** Étude 34 : ce qui a changé SOUS `chapters_completed`, daté. */
+    chapters_source: z.string().catch(""),
   }),
 });
 

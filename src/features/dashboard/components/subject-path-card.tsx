@@ -13,6 +13,8 @@ import {
   Lock,
 } from "lucide-react";
 import { useT } from "@/lib/i18n";
+import type { SubjectStarSummary } from "@/shared/lib/progress-stars";
+import { nextSealOf } from "@/shared/lib/progress-stars";
 
 const ICONS: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
   Sword,
@@ -42,19 +44,31 @@ type SubjectLike = {
   is_premium?: boolean;
 };
 
-/** One subject "path" card on the dashboard. Locked premium subjects show a lock badge. */
+/**
+ * One subject "path" card on the dashboard. Locked premium subjects show a lock badge.
+ *
+ * ⭐ Le chiffre de droite était la MOYENNE DES SCORES, affichée « 40 % » — exactement la
+ * même forme que le « 40 % » de la carte `/parcours`, qui lui disait la couverture des
+ * chapitres. Deux pourcentages identiques à l'œil pour deux choses différentes : c'est
+ * l'ambiguïté que l'étude 34 supprime. À sa place, le SCEAU de la matière et ce qui
+ * manque pour le suivant — une donnée qui ne peut pas se confondre avec une note.
+ */
 export function SubjectPathCard(props: {
   subject: SubjectLike;
   stat: { count: number; avg: number } | undefined;
+  /** Étoiles et sceaux de la matière (é34). Absent ⇒ la carte se tait, elle n'invente rien. */
+  stars?: SubjectStarSummary;
   premiumLocked: boolean;
 }) {
-  const { subject, stat } = props;
+  const { subject, stat, stars } = props;
   const t = useT();
   const Icon = ICONS[subject.icon] ?? Sword;
   // Show the Premium (lock) badge only when the subject is locked (the student is
   // not yet entitled); an entitled student needs no badge.
   const premiumLocked = props.premiumLocked;
   const color = colorVar(subject.color_token);
+  const nextSeal = stars && stars.chaptersTotal > 0 ? nextSealOf(stars) : null;
+  const sealStar = stars && stars.chaptersTotal > 0 ? stars.sealStar : 0;
 
   return (
     <Link
@@ -93,10 +107,29 @@ export function SubjectPathCard(props: {
         <span className="text-muted-foreground">
           {stat ? `${stat.count} quest${stat.count > 1 ? "s" : ""}` : t.dashboard.notAttempted}
         </span>
-        <span className="font-bold" style={{ color }}>
-          {stat ? `${Math.round(stat.avg)}%` : "—"}
+        <span className="font-bold" data-testid="card-seal" style={{ color }}>
+          {sealStar > 0 ? "⭐".repeat(sealStar) : "—"}
         </span>
       </div>
+      {/* La barre du prochain sceau : « k chapitres prêts sur N ». Elle ne se remplit que
+          vers le haut — un chapitre prêt le reste, donc elle ne recule jamais. Absente au
+          sceau ⭐⭐⭐⭐, où il n'y a plus rien à atteindre. */}
+      {nextSeal && (
+        <div className="relative mt-2" data-testid="card-next-seal">
+          <div className="h-1 overflow-hidden rounded-full bg-border/60">
+            <div
+              className="h-full rounded-full transition-[width]"
+              style={{
+                width: `${Math.min(100, Math.round((nextSeal.chaptersReady / Math.max(1, nextSeal.chaptersTotal)) * 100))}%`,
+                background: color,
+              }}
+            />
+          </div>
+          <div className="mt-1 text-[10px] tabular-nums text-muted-foreground">
+            {"⭐".repeat(nextSeal.star)} {nextSeal.chaptersReady}/{nextSeal.chaptersTotal}
+          </div>
+        </div>
+      )}
     </Link>
   );
 }

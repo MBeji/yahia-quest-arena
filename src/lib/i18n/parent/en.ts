@@ -110,7 +110,7 @@ export const enParent: ParentTranslations = {
     goalProgressDaily: "{done}/{target} missions today",
     goalUnit: "missions / week",
     goalUnitDaily: "missions / day",
-    coverageShort: "{done}/{total} ch.",
+    coverageShort: "{done}/{total} ch. mastered",
   },
   parentDaily: {
     tabSummary: "Overview",
@@ -249,6 +249,8 @@ export const enParent: ParentTranslations = {
     scopeExcluded:
       "Outside their class this period: {time} and {exercises} exercise(s) — other-year revision, extras, dungeon and duels. Switch to “Everything” to include them.",
     coverageAria: "{done} chapters completed out of {total}",
+    coverageMastered: "{done} mastered out of {total}",
+    coverageNew: "✨ {n} new chapter(s)",
     colTime: "Time",
     colLessons: "Lessons",
     colExercises: "Exercises",

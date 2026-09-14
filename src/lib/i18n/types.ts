@@ -728,6 +728,14 @@ export type TranslationKeys = {
     review: string;
     /** Badge du nœud « recommandé » sur la carte (étude 22, R-11). */
     nodeNext: string;
+    /**
+     * Ce que le sous-libellé d'un nœud veut dire (étude 34, R-9). La carte remplace le
+     * pourcentage par le SCEAU et le compte de chapitres prêts pour le suivant ; sans cette
+     * légende, « ⭐⭐ · 14/20 » se lirait comme une note.
+     */
+    sealLegend: string;
+    /** Nom accessible d'un nœud scellé — `{subject}`, `{stars}`, `{ready}`, `{total}`. */
+    nodeSealAria: string;
     done: string;
     current: string;
     xpToEarn: string;

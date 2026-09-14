@@ -121,6 +121,41 @@ const chapterGapSchema = z.object({
    * pas si le quiz a été expédié, et rien ne le disait nulle part.
    */
   quizSatisfied: z.boolean().catch(true),
+  /**
+   * L'ÉTOILE à gagner ensuite (étude 34), lue au grand livre — donc jamais en
+   * recul. `1` par défaut : un chapitre sans étoile inscrite vise la première.
+   */
+  nextStar: numberish.catch(1),
+  /**
+   * Ce qui l'en sépare : missions non comptées de difficulté ≤ `nextStar`, plus le
+   * quiz s'il est encore dû. C'est le chiffre qui TRIE la liste côté serveur — et
+   * le trier à nouveau ici sur le nombre de missions restantes, comme le faisait
+   * la version d'avant, enterrait le chapitre à un seul geste sous ceux qui en
+   * demandaient quatre.
+   */
+  missingForNext: numberish.catch(0),
+});
+
+/**
+ * La DISTRIBUTION des étoiles d'une matière (étude 34, R-13), à côté du compte.
+ *
+ * Bornes CUMULÉES (`star1` = chapitres à l'étoile ≥ 1), telles que la base les
+ * rend ; `starBuckets` en tire les cinq seaux exacts de la barre empilée. Sans
+ * elles, la colonne « Programme » reste la fraction nue qui, le 2026-09-04, s'est
+ * lue « il a fait 3 chapitres sur 20 » alors que les dix-sept autres étaient
+ * largement entamés.
+ */
+const subjectStarsSchema = z.object({
+  subjectId: text,
+  chaptersTotal: numberish,
+  chaptersStarted: numberish,
+  star1: numberish,
+  star2: numberish,
+  star3: numberish,
+  star4: numberish,
+  sealStar: numberish.catch(0),
+  newChapters: numberish.catch(0),
+  newMissions: numberish.catch(0),
 });
 
 const chapterSliceSchema = z.object({
@@ -265,6 +300,8 @@ export const dailyReportSchema = z.object({
   chapters: z.array(chapterSliceSchema).catch([]),
   /** Au plus 3 par matière, le plus proche du but en premier. */
   chapterGaps: z.array(chapterGapSchema).catch([]),
+  /** Une entrée par matière du périmètre (étude 34) — absente sur un rapport antérieur. */
+  subjectStars: z.array(subjectStarsSchema).catch([]),
   totals: totalsSchema,
   previous: totalsSchema,
 });
@@ -276,6 +313,7 @@ export type ExerciseRun = z.infer<typeof exerciseRunSchema>;
 export type SubjectSlice = z.infer<typeof subjectSliceSchema>;
 export type ChapterSlice = z.infer<typeof chapterSliceSchema>;
 export type ChapterGap = z.infer<typeof chapterGapSchema>;
+export type SubjectStarsSlice = z.infer<typeof subjectStarsSchema>;
 export type ActivityTotals = z.infer<typeof totalsSchema>;
 export type ActivityBreakdown = z.infer<typeof activityBreakdownSchema>;
 

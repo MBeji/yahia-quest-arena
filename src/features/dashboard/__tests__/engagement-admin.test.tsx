@@ -74,6 +74,14 @@ function overview(over: Partial<EngagementOverview> = {}): EngagementOverview {
       attempts_30d: 340,
       chapters_completed: 33,
       chapters_per_active: 1.57,
+      // Étude 34 R-18 — ce qui entoure le ratio. Le décor est un parc où la barre
+      // « maîtrisé » est visiblement haute : 40 chapitres joués, 5 maîtrisés, une
+      // médiane à 2. C'est exactement la situation que Q-2 demande de surveiller.
+      stars_distribution: { s0: 6, s1: 9, s2: 12, s3: 8, s4: 5 },
+      stars_median: 2,
+      seals_total: 14,
+      seals_per_active: 0.67,
+      stars_preserved: 3,
     },
     notes: {
       generated_at: "2026-09-02T18:00:00.000Z",
@@ -82,6 +90,8 @@ function overview(over: Partial<EngagementOverview> = {}): EngagementOverview {
       retention_rule: "window",
       activity_rule: "attempts + learning_pulses hors browse",
       current_week: "2026-08-31",
+      chapters_source:
+        "2026-09-14 (étude 34) : chapters_completed garde sa définition et change de SOURCE — il se lit au grand livre.",
     },
     ...over,
   };
@@ -141,6 +151,57 @@ describe("EngagementAdmin — l'engagement ne se lit jamais seul", () => {
   it("montre KPI-C (part des actifs hebdo à 7 jours de série)", () => {
     render(<EngagementAdmin data={overview()} />);
     expect(screen.getByTestId("eng-kpi-c").textContent).toContain("25 %");
+  });
+
+  // =========================================================================
+  // Étude 34 R-18 — ce qui entoure KPI-E, et la note qui date le changement.
+  // =========================================================================
+  it("⭐ publie la médiane de l'étoile, les sceaux et les étoiles préservées", () => {
+    // Les trois mesures existent pour une raison chiffrée : 56 % des missions du
+    // corpus sont ⭐⭐⭐/⭐⭐⭐⭐, donc « 1,57 chapitre par actif » ne dit PAS que le
+    // parc travaille peu. Sans elles, ce ratio se lit comme un échec.
+    render(<EngagementAdmin data={overview()} />);
+    const tiles = screen.getByTestId("eng-stars").textContent ?? "";
+    expect(tiles).toContain("médiane de l'étoile");
+    expect(tiles).toContain("2");
+    expect(tiles).toContain("sceaux / actif");
+    expect(tiles).toContain("étoiles préservées");
+    expect(tiles).toContain("3");
+  });
+
+  it("montre la DISTRIBUTION, sans laquelle un parc à ★★★☆ ressemble à un parc à zéro", () => {
+    render(<EngagementAdmin data={overview()} />);
+    const dist = screen.getByTestId("eng-stars-dist").textContent ?? "";
+    // Les cinq crans sont comptés, celui de zéro compris — un chapitre joué sans
+    // étoile n'est pas un chapitre absent, et la barre doit le dire.
+    expect(dist).toContain("aucune 6");
+    expect(dist).toContain("⭐⭐⭐⭐ 5");
+  });
+
+  it("⭐ DATE le changement de source de KPI-E — sans quoi la série serait rompue en silence", () => {
+    // R-18 : « la console porte une note datée disant ce qui a changé sous le
+    // chiffre ». Une console qui change de source sans le dire fabrique une
+    // rupture que personne ne saura dater six mois plus tard.
+    render(<EngagementAdmin data={overview()} />);
+    const note = screen.getByTestId("eng-kpie-note").textContent ?? "";
+    expect(note).toContain("2026-09-14");
+    expect(note).toContain("garde sa définition");
+  });
+
+  it("répond quand même sur un rapport ANTÉRIEUR à l'étude 34", () => {
+    // Le déploiement n'est pas atomique : la console peut être lue entre la mise
+    // en ligne du code et l'application de la migration. Elle doit rendre la page,
+    // pas une erreur de lecture — les champs manquants valent zéro, et la note
+    // absente ne s'affiche pas plutôt que de s'afficher vide.
+    const data = overview();
+    const legacy = {
+      ...data,
+      learning: { ...data.learning, stars_preserved: 0, stars_median: null },
+      notes: { ...data.notes, chapters_source: "" },
+    };
+    render(<EngagementAdmin data={legacy} />);
+    expect(screen.getByTestId("eng-stars").textContent).toContain("—");
+    expect(screen.queryByTestId("eng-kpie-note")).not.toBeInTheDocument();
   });
 
   it("⭐ liste TOUTE l'instrumentation, et n'en cache aucune (§3.7)", () => {

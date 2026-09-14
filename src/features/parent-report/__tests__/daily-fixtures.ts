@@ -121,6 +121,7 @@ export function makeReport(overrides: Partial<DailyReport> = {}): DailyReport {
     subjects: [],
     chapters: [],
     chapterGaps: [],
+    subjectStars: [],
     totals: makeTotals(),
     previous: makeTotals(),
     ...overrides,

@@ -17,6 +17,7 @@ import { getCurrentWeekStartUtc, getTodayUtc } from "@/shared/lib/dates";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
 import { resolveNextAction } from "@/shared/lib/next-action";
+import { readSubjectStars, type SubjectStarSummary } from "@/shared/lib/progress-stars";
 import { resolveAdaptiveInputs, type AdaptiveRpcClient } from "@/shared/lib/adaptive-inputs";
 import { resolvePromotionTarget, shouldOfferPromotion } from "@/shared/lib/back-to-school";
 import { lyceeYearOf } from "./program-families";
@@ -32,10 +33,18 @@ const DASHBOARD_ERROR_FR = "Impossible de charger le tableau de bord. Veuillez r
  * de l'étude 23 (lot 2) — narrowing local ici, types régénérés au prochain accès DB. Le
  * contrat est figé par la migration, pas par ce type.
  */
-type ParcoursProgressRow = {
+type SubjectStarsRow = {
   subject_id: string;
   chapters_total: number;
-  chapters_completed: number;
+  chapters_started: number;
+  chapters_star1: number;
+  chapters_star2: number;
+  chapters_star3: number;
+  chapters_star4: number;
+  seal_star: number | null;
+  seal_at: string | null;
+  new_chapters: number;
+  new_missions: number;
 };
 
 /**
@@ -44,11 +53,11 @@ type ParcoursProgressRow = {
  * cast de ce fichier, et il disparaîtra à la prochaine régénération des types. L'appel reste
  * une méthode de l'objet pour ne pas perdre son `this`.
  */
-type ParcoursProgressRpcClient = {
+type SubjectStarsRpcClient = {
   rpc: (
-    fn: "get_user_parcours_progress",
+    fn: "get_user_subject_stars",
     args: { p_subject_ids: string[] },
-  ) => PromiseLike<{ data: ParcoursProgressRow[] | null; error: { message: string } | null }>;
+  ) => PromiseLike<{ data: SubjectStarsRow[] | null; error: { message: string } | null }>;
 };
 
 /**
@@ -181,32 +190,30 @@ async function fetchWeakestBlockers(
   return { blockedSlug: weakest.slug, blockers: res.data ?? [] };
 }
 
-async function fetchParcoursProgress(
+async function fetchSubjectStars(
   supabase: unknown,
   subjectIds: string[],
-): Promise<Record<string, { total: number; completed: number }>> {
-  const progress: Record<string, { total: number; completed: number }> = {};
-  if (subjectIds.length === 0) return progress;
+): Promise<Record<string, SubjectStarSummary>> {
+  const stars: Record<string, SubjectStarSummary> = {};
+  if (subjectIds.length === 0) return stars;
 
-  const client = supabase as ParcoursProgressRpcClient;
-  const res = await client.rpc("get_user_parcours_progress", { p_subject_ids: subjectIds });
+  const client = supabase as SubjectStarsRpcClient;
+  const res = await client.rpc("get_user_subject_stars", { p_subject_ids: subjectIds });
 
   // Dégradation gracieuse, comme `stats` : si la RPC échoue (migration pas encore appliquée
-  // pendant un déploiement), la carte s'affiche sans progression plutôt que de casser la page.
+  // pendant un déploiement), la carte s'affiche sans sceau plutôt que de casser la page.
   if (res.error) {
-    logger.warn("getDashboard.progress: parcours-progress RPC failed, defaulting to empty", {
+    logger.warn("getDashboard.progress: subject-stars RPC failed, defaulting to empty", {
       error: res.error.message,
     });
-    return progress;
+    return stars;
   }
 
   for (const row of res.data ?? []) {
-    progress[row.subject_id] = {
-      total: Number(row.chapters_total),
-      completed: Number(row.chapters_completed),
-    };
+    const summary = readSubjectStars(row);
+    if (summary) stars[summary.subjectId] = summary;
   }
-  return progress;
+  return stars;
 }
 
 function resolveFallbackDisplayName(claims: Record<string, unknown>): string {
@@ -438,9 +445,11 @@ export const getDashboard = createServerFn({ method: "GET" })
     const { blockedSlug: competencyBlockedSlug, blockers: competencyBlockers } =
       await fetchWeakestBlockers(supabase, competencyMap);
 
-    // Progression officielle par matière (étude 22 R-16) — bornée aux matières du parcours
-    // actif, une seule requête. Alimente l'état `done` de la carte `/parcours`.
-    const progress = await fetchParcoursProgress(
+    // ⭐ Étoiles et sceaux par matière (étude 34) — bornés aux matières du parcours actif,
+    // une seule requête. Alimentent l'état `done` de la carte `/parcours` (sceau ⭐⭐⭐⭐) et
+    // le sous-libellé de chaque nœud. Ils remplacent le pourcentage de é22 R-16, qui
+    // redescendait dès qu'une campagne publiait du contenu.
+    const progress = await fetchSubjectStars(
       supabase,
       subjects.map((s) => s.id),
     );

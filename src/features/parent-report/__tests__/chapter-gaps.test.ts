@@ -13,6 +13,11 @@ const gap = (over: Partial<ChapterGap> = {}): ChapterGap => ({
   missionsPassed: 4,
   quizGated: true,
   quizSatisfied: true,
+  // Étude 34 : l'étoile visée et ce qui l'en sépare. C'est `missingForNext` qui TRIE
+  // la liste — le serveur l'ordonne dessus, et le refaire ici sur le total des
+  // missions restantes défaisait son travail.
+  nextStar: 2,
+  missingForNext: 2,
   ...over,
 });
 
@@ -121,5 +126,56 @@ describe("les lignes affichées", () => {
 
   it("ne rend rien quand tout est maîtrisé — pas de bloc vide à l'écran", () => {
     expect(chapterGapRows(reportWith([]))).toEqual([]);
+  });
+});
+
+describe("chapterGapRows — l'ordre suit la PROCHAINE ÉTOILE (étude 34)", () => {
+  it("place devant le chapitre à UN geste de son étoile, pas celui à qui il reste peu de missions", () => {
+    // A : neuf missions, sept encore à faire — mais une SEULE au cran visé (⭐⭐).
+    //     Il est donc à un geste de gagner une étoile.
+    // B : une seule mission restante dans tout le chapitre, mais son quiz est
+    //     encore dû : deux gestes avant le moindre cran.
+    // L'ancien tri, sur `missionsRemaining`, mettait B devant — il enterrait le
+    // chapitre réellement à portée sous celui qui demandait le plus gros effort.
+    const rows = chapterGapRows(
+      reportWith([
+        gap({
+          chapterId: "A",
+          title: "À un geste",
+          missionsTotal: 9,
+          missionsPassed: 2,
+          nextStar: 2,
+          missingForNext: 1,
+        }),
+        gap({
+          chapterId: "B",
+          title: "Quiz encore dû",
+          missionsTotal: 4,
+          missionsPassed: 3,
+          quizSatisfied: false,
+          nextStar: 1,
+          missingForNext: 2,
+        }),
+      ]),
+    );
+    expect(rows.map((r) => r.chapterId)).toEqual(["A", "B"]);
+    // …et l'ancien critère aurait donné l'inverse : c'est bien le tri qui a changé.
+    expect(rows[0]!.missionsRemaining).toBeGreaterThan(rows[1]!.missionsRemaining);
+  });
+
+  it("garde `missionsRemaining` comme départage, pas comme critère", () => {
+    const rows = chapterGapRows(
+      reportWith([
+        gap({ chapterId: "loin", missionsTotal: 9, missionsPassed: 2, missingForNext: 2 }),
+        gap({ chapterId: "proche", missionsTotal: 4, missionsPassed: 3, missingForNext: 2 }),
+      ]),
+    );
+    expect(rows.map((r) => r.chapterId)).toEqual(["proche", "loin"]);
+  });
+
+  it("borne l'étoile visée à [1, 4] — une donnée hors échelle ne crée pas de cran fantôme", () => {
+    const rows = chapterGapRows(reportWith([gap({ nextStar: 9, missingForNext: -3 })]));
+    expect(rows[0]!.nextStar).toBe(4);
+    expect(rows[0]!.missingForNext).toBe(0);
   });
 });

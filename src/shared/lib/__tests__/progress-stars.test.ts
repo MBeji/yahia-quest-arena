@@ -18,9 +18,12 @@ import {
   isCatalogueMission,
   missionTier,
   nextRung,
+  nextSealOf,
   parseSubjectProgress,
+  readSubjectStars,
   rungNovelties,
   rungTally,
+  starBuckets,
   type CatalogueExercise,
 } from "../progress-stars";
 
@@ -260,5 +263,82 @@ describe("dérivations d'affichage", () => {
     const p = parseSubjectProgress(payload())!;
     expect(rungTally(p.chapters.c1!.rungs)).toEqual({ counted: 2, total: 4 });
     expect(rungNovelties(p.chapters.c1!.rungs)).toBe(1);
+  });
+});
+
+describe("l'agrégat par matière — sceaux, distribution, prochain palier (lot 3)", () => {
+  /** Une ligne telle que `get_user_subject_stars` la rend : bornes CUMULÉES, snake_case. */
+  const row = (over: Record<string, unknown> = {}) => ({
+    subject_id: "math",
+    chapters_total: 20,
+    chapters_started: 18,
+    chapters_star1: 14,
+    chapters_star2: 9,
+    chapters_star3: 3,
+    chapters_star4: 1,
+    seal_star: 1,
+    seal_at: "2026-09-01T10:00:00+00:00",
+    new_chapters: 2,
+    new_missions: 5,
+    ...over,
+  });
+
+  it("lit la forme du serveur ET celle du suivi parental — une seule lecture", () => {
+    // Les deux surfaces décrivent la même chose ; en avoir deux interprétations
+    // serait le début d'une divergence, et c'est exactement ce que l'étude corrige.
+    const fromRpc = readSubjectStars(row());
+    const fromParent = readSubjectStars({
+      subjectId: "math",
+      chaptersTotal: 20,
+      chaptersStarted: 18,
+      star1: 14,
+      star2: 9,
+      star3: 3,
+      star4: 1,
+      sealStar: 1,
+      newChapters: 2,
+      newMissions: 5,
+    });
+    expect(fromRpc!.cumulative).toEqual([14, 9, 3, 1]);
+    expect(fromParent!.cumulative).toEqual(fromRpc!.cumulative);
+    expect(fromParent!.sealStar).toBe(1);
+  });
+
+  it("⭐ dérive les cinq crans EXACTS des bornes cumulées", () => {
+    // Sans cette différence, empiler les bornes compterait quatre fois le chapitre
+    // maîtrisé et la barre du parent déborderait de son total.
+    const buckets = starBuckets(readSubjectStars(row())!);
+    expect(buckets).toEqual([6, 5, 6, 2, 1]);
+    expect(buckets.reduce((a, b) => a + b, 0)).toBe(20);
+  });
+
+  it("ne rend jamais de cran négatif sur une donnée incohérente", () => {
+    // Un total plus petit que ses bornes ne doit pas produire une barre à l'envers.
+    const buckets = starBuckets(readSubjectStars(row({ chapters_total: 2 }))!);
+    expect(buckets.every((n) => n >= 0)).toBe(true);
+  });
+
+  it("nomme le PROCHAIN sceau et ce qui l'en sépare", () => {
+    // Sceau ⭐ acquis → le suivant est ⭐⭐, et 9 chapitres sur 20 le tiennent déjà.
+    expect(nextSealOf(readSubjectStars(row())!)).toEqual({
+      star: 2,
+      chaptersReady: 9,
+      chaptersTotal: 20,
+      newChapters: 2,
+    });
+  });
+
+  it("se tait au sceau ⭐⭐⭐⭐ — un aboutissement n'est pas une dette", () => {
+    expect(nextSealOf(readSubjectStars(row({ seal_star: 4 }))!)).toBeNull();
+  });
+
+  it("vise la PREMIÈRE étoile quand aucun sceau n'est encore tombé", () => {
+    const next = nextSealOf(readSubjectStars(row({ seal_star: null }))!);
+    expect(next).toMatchObject({ star: 1, chaptersReady: 14 });
+  });
+
+  it("rend `null` sur une ligne sans identifiant de matière", () => {
+    expect(readSubjectStars({ chapters_total: 20 })).toBeNull();
+    expect(readSubjectStars(null)).toBeNull();
   });
 });

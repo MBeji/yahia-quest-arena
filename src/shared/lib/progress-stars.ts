@@ -332,3 +332,91 @@ export function rungTally(rungs: ChapterRung[]): { counted: number; total: numbe
 export function rungNovelties(rungs: ChapterRung[]): number {
   return rungs.reduce((sum, r) => sum + r.newMissions, 0);
 }
+
+// --------------------------------------------------------------------------
+// L'AGRÉGAT PAR MATIÈRE (étude 34, lot 3)
+//
+// `get_user_subject_stars` (carte, QG) et la clé `subjectStars` de l'enveloppe du
+// suivi parental servent la MÊME forme : des bornes CUMULÉES (`star >= r`), telles
+// que la base les compte. Les deux surfaces en tirent des choses différentes — un
+// sceau ici, une barre empilée là — mais aucune ne redéfinit la règle.
+// --------------------------------------------------------------------------
+
+/** Ce qu'une matière vaut pour un élève, en un enregistrement. */
+export type SubjectStarSummary = {
+  subjectId: string;
+  chaptersTotal: number;
+  chaptersStarted: number;
+  /**
+   * Bornes CUMULÉES, index 0 → étoile 1 : `cumulative[r - 1]` = nombre de chapitres
+   * publiés dont l'étoile est **≥ r**, au grand livre. Cumulé et non exact parce que
+   * c'est la forme naturelle d'un seuil : « combien de chapitres ont au moins la
+   * ⭐⭐⭐ » est la question que pose un sceau.
+   */
+  cumulative: [number, number, number, number];
+  /** Le sceau le plus haut inscrit — 0 quand il n'y en a aucun. */
+  sealStar: number;
+  sealAt: string | null;
+  newChapters: number;
+  newMissions: number;
+};
+
+/**
+ * Les cinq seaux EXACTS, de l'étoile 0 à l'étoile 4 — ce que dessine la barre
+ * empilée du parent (R-13).
+ *
+ * Cumulé → exact par différences successives, et le cran 0 est le reste. C'est
+ * l'opération qui rend la barre honnête : sans elle, empiler les bornes cumulées
+ * compterait quatre fois le chapitre maîtrisé et la barre déborderait du total.
+ */
+export function starBuckets(summary: SubjectStarSummary): [number, number, number, number, number] {
+  const [c1, c2, c3, c4] = summary.cumulative;
+  return [
+    Math.max(0, summary.chaptersTotal - c1),
+    Math.max(0, c1 - c2),
+    Math.max(0, c2 - c3),
+    Math.max(0, c3 - c4),
+    Math.max(0, c4),
+  ];
+}
+
+/** Le prochain sceau à gagner, et ce qui l'en sépare. `null` au sceau ⭐⭐⭐⭐. */
+export function nextSealOf(summary: SubjectStarSummary): NextSeal | null {
+  if (summary.sealStar >= 4) return null;
+  const star = Math.min(4, Math.max(1, summary.sealStar + 1)) as StarTier;
+  return {
+    star,
+    chaptersReady: summary.cumulative[star - 1] ?? 0,
+    chaptersTotal: summary.chaptersTotal,
+    newChapters: summary.newChapters,
+  };
+}
+
+/**
+ * Lit une ligne de `get_user_subject_stars` (snake_case) ou une entrée de
+ * `subjectStars` du suivi parental (camelCase) — les deux formes, une seule
+ * lecture, parce qu'elles décrivent la même chose et qu'en avoir deux
+ * interprétations serait le début d'une divergence.
+ */
+export function readSubjectStars(raw: unknown): SubjectStarSummary | null {
+  const r = asRecord(raw);
+  if (!r) return null;
+  const subjectId = r.subject_id ?? r.subjectId;
+  if (typeof subjectId !== "string") return null;
+  const at = r.seal_at ?? r.sealAt;
+  return {
+    subjectId,
+    chaptersTotal: asInt(r.chapters_total ?? r.chaptersTotal),
+    chaptersStarted: asInt(r.chapters_started ?? r.chaptersStarted),
+    cumulative: [
+      asInt(r.chapters_star1 ?? r.star1),
+      asInt(r.chapters_star2 ?? r.star2),
+      asInt(r.chapters_star3 ?? r.star3),
+      asInt(r.chapters_star4 ?? r.star4),
+    ],
+    sealStar: Math.min(4, Math.max(0, asInt(r.seal_star ?? r.sealStar))),
+    sealAt: typeof at === "string" ? at : null,
+    newChapters: asInt(r.new_chapters ?? r.newChapters),
+    newMissions: asInt(r.new_missions ?? r.newMissions),
+  };
+}
