@@ -11,21 +11,25 @@ import {
   Zap,
 } from "lucide-react";
 import { useI18n, useT } from "@/lib/i18n";
+import { useProgressT } from "@/lib/i18n/progress";
 import { isRtlText } from "@/shared/lib/utils";
 import { parcoursName } from "@/shared/lib/parcours-locale";
 import { PageShell } from "@/components/ui/page-shell";
 import { DifficultyStars } from "@/components/game/difficulty-stars";
 import { QUIZ_PASS_THRESHOLD_PCT, RECALL_MIN_QUESTIONS } from "@/shared/constants/gamification";
 import {
-  chapterMissionCounts,
-  isChapterComplete,
-  isMissionPassed,
-} from "@/shared/lib/chapter-completion";
+  emptyRungs,
+  parseSubjectProgress,
+  rungTally,
+  type MissionProgress,
+} from "@/shared/lib/progress-stars";
 import { resolveNextAction } from "@/shared/lib/next-action";
 import { groupChaptersByDomain } from "@/shared/lib/subject-domains";
 import { hasPassedChapterQuiz } from "../anon-quiz-gate";
 import { exerciseRouteFor } from "../exercise-route";
+import { ChapterStarsChip, ChapterStarsNote } from "./chapter-stars";
 import { ManuelEleveCard } from "./manuel-eleve-card";
+import { SubjectSeals } from "./subject-seals";
 
 export type SubjectHubSubject = {
   name_fr: string;
@@ -117,7 +121,7 @@ export function SubjectHub({
   subject,
   chapters,
   exercises,
-  bestByExercise = {},
+  progress: rawProgress = null,
   quizPassedByChapter = {},
   parcours = null,
   recall = null,
@@ -127,7 +131,13 @@ export function SubjectHub({
   subject: SubjectHubSubject;
   chapters: SubjectHubChapter[];
   exercises: SubjectHubExercise[];
-  bestByExercise?: Record<string, number>;
+  /**
+   * La charge de `get_subject_progress` (étude 34), telle que `getSubject` la
+   * rend : étoiles inscrites, sceaux, effort, état de chaque mission. `null` pour
+   * l'anonyme et sur une RPC en échec — le hub retombe alors sur l'expérience
+   * publique, qui est complète (R-16), plutôt que d'inventer une progression.
+   */
+  progress?: unknown;
   quizPassedByChapter?: Record<string, boolean>;
   parcours?: SubjectHubParcours | null;
   recall?: SubjectHubRecall | null;
@@ -140,10 +150,14 @@ export function SubjectHub({
    */
   unrestricted?: boolean;
 }) {
-  const t = useT();
+  const t = useProgressT();
   const { locale } = useI18n();
   const isRtl = subject.content_language === "ar";
   const exerciseTo = exerciseRouteFor(isAuthenticated);
+
+  // Le grand livre, lu UNE fois. `null` = anonyme (ou RPC en échec) : tout ce qui
+  // suit le traite comme « pas de compte », jamais comme « zéro ».
+  const progress = useMemo(() => parseSubjectProgress(rawProgress), [rawProgress]);
 
   // Anonymous quiz passes live in sessionStorage — read after mount only, so
   // SSR and the first client render agree (same pattern as the course reader).
@@ -170,16 +184,14 @@ export function SubjectHub({
       // No quiz (or a non-gated theme: the server pre-marks those chapters true)
       // means the chapter is open; anonymous session passes merge on top.
       const unlocked = !quiz || quizPassedByChapter[c.id] === true || anonPassed[c.id] === true;
-      // R-14/R-15 : « réussie » vaut ≥ 60 %, pas « tentée » ; seules les missions de catalogue
-      // comptent (hors quiz, hors `source='parent'`). Le compteur disait auparavant « fait »
-      // pour un exercice raté à 10 %, et incluait le quiz et les missions familiales.
-      const { done, total } = chapterMissionCounts(chapEx, bestByExercise);
-      const allDone = isChapterComplete(chapEx, bestByExercise, unlocked);
-      // Next actionable mission: the first not-passed row that is clickable in the
-      // current lock state (the quiz when locked, any mission otherwise).
-      const next = !unlocked
-        ? quiz
-        : (chapEx.find((e) => !isMissionPassed(bestByExercise[e.id])) ?? null);
+      // ⭐ Étude 34 : l'état du chapitre ne se RECALCULE plus, il se lit. `star` vient du
+      // grand livre (il ne redescend jamais), `rungs` du calcul vivant (il dit le
+      // reste-à-faire), et l'écart entre les deux est nommé par ✨. Sans compte, on garde
+      // la FORME du chapitre — ses crans, éteints — sans rien calculer d'un élève absent.
+      const chapterProgress = progress?.chapters[c.id] ?? null;
+      const rungs = chapterProgress ? chapterProgress.rungs : emptyRungs(chapEx);
+      const { counted: done, total } = rungTally(rungs);
+      const mastered = chapterProgress?.mastered === true;
       return {
         chapter: c,
         index: ci,
@@ -191,11 +203,33 @@ export function SubjectHub({
         done,
         total,
         unlocked,
-        allDone,
-        next,
+        chapterProgress,
+        rungs,
+        mastered,
       };
     });
-  }, [chapters, exercises, bestByExercise, quizPassedByChapter, anonPassed]);
+  }, [chapters, exercises, progress, quizPassedByChapter, anonPassed]);
+
+  // Les deux cartes que `resolveNextAction` attend — dérivées UNE fois du grand livre.
+  // « Comptée » et « tentée » sont deux faits distincts : un chapitre tout tenté sans
+  // rien réussir est commencé, et c'est bien là qu'il faut reprendre.
+  const missionFlags = useMemo(() => {
+    const counted: Record<string, boolean> = {};
+    const attempted: Record<string, boolean> = {};
+    for (const mission of Object.values(progress?.missions ?? {})) {
+      counted[mission.exerciseId] = mission.counted;
+      attempted[mission.exerciseId] = mission.bestClassic != null;
+    }
+    // La charge du serveur ne porte QUE les missions (`mode <> 'quiz'`). Or franchir
+    // la porte d'un chapitre est du travail fait : sans cette boucle, un chapitre dont
+    // seul le quiz est passé ne serait pas « commencé », et « Reprendre ici » renverrait
+    // l'élève au début de la matière.
+    for (const exercise of exercises) {
+      if (exercise.mode !== "quiz") continue;
+      if (progress?.chapters[exercise.chapter_id]?.quiz.cleared) attempted[exercise.id] = true;
+    }
+    return { counted, attempted };
+  }, [progress, exercises]);
 
   // « Reprendre ici » (connecté) — étude 22 R-31. La cible ne se décide plus ici : elle sort du
   // moteur partagé `resolveNextAction`, celui-là même qui alimente la bande focus du dashboard.
@@ -208,14 +242,17 @@ export function SubjectHub({
     const action = resolveNextAction({
       chapters,
       exercises,
-      bestByExercise,
+      // Le moteur reçoit le verdict du serveur, jamais un score à re-seuiller : c'est
+      // ce qui garantit que « Reprendre ici » et la jauge désignent la même mission.
+      countedByExercise: missionFlags.counted,
+      attemptedByExercise: missionFlags.attempted,
       quizSatisfiedByChapter: Object.fromEntries(rows.map((r) => [r.chapter.id, r.unlocked])),
     });
     if (action?.kind !== "continue") return null;
     const row = rows.find((r) => r.chapter.id === action.chapterId) ?? null;
     const next = row?.chapEx.find((e) => e.id === action.exerciseId) ?? null;
     return row && next ? { ...row, next } : null;
-  }, [rows, chapters, exercises, bestByExercise, isAuthenticated]);
+  }, [rows, chapters, exercises, missionFlags, isAuthenticated]);
 
   // Accordions: everything collapsed except the resume chapter (or the first).
   const [openIds, setOpenIds] = useState<Set<string>>(
@@ -250,33 +287,11 @@ export function SubjectHub({
     chapter: c,
     index: ci,
     chapEx,
-    quiz,
-    done,
-    total,
     unlocked,
-    allDone,
+    chapterProgress,
+    rungs,
   }: (typeof rows)[number]) => {
     const open = openIds.has(c.id);
-    const chip = allDone
-      ? {
-          cls: "bg-success/12 text-success",
-          text: `${t.public.subject.chapterComplete} ✓`,
-        }
-      : !unlocked
-        ? {
-            // Opaque card surface + flame BORDER rather than a flame tint
-            // behind flame ink: at 11px bold the tinted variant measured
-            // 3.36:1 (#e54a00 on #fce9e0) under Référence and failed WCAG
-            // AA. Same remedy as the leaderboard "Toi" pill (GAP-047).
-            cls: "border border-[color:var(--flame)]/40 bg-card text-foreground",
-            text: `🔒 ${t.public.subject.quizToPass}`,
-          }
-        : done > 0
-          ? {
-              cls: "bg-success/12 text-success",
-              text: quiz ? `quiz ✓ · ${done}/${total}` : `${done}/${total}`,
-            }
-          : { cls: "bg-muted text-muted-foreground", text: t.public.subject.todo };
     return (
       <section key={c.id} className="overflow-hidden rounded-2xl border border-border bg-card">
         <button
@@ -294,9 +309,7 @@ export function SubjectHub({
           >
             {c.title}
           </span>
-          <span className={`shrink-0 rounded-full px-2 py-0.5 text-2xs font-bold ${chip.cls}`}>
-            {chip.text}
-          </span>
+          <ChapterStarsChip progress={chapterProgress} rungs={rungs} locked={!unlocked} />
           <ChevronDown
             className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
           />
@@ -312,6 +325,7 @@ export function SubjectHub({
                 {c.description}
               </p>
             )}
+            <ChapterStarsNote progress={chapterProgress} />
             <Link
               to="/chapitre/$chapterId"
               params={{ chapterId: c.id }}
@@ -323,8 +337,18 @@ export function SubjectHub({
             {chapEx.length > 0 && (
               <ul className="mt-1 divide-y divide-border/60 border-t border-border/60">
                 {chapEx.map((ex) => {
-                  const best = bestByExercise[ex.id];
                   const isQuiz = ex.mode === "quiz";
+                  // La charge du serveur ne porte QUE les missions : la porte du
+                  // chapitre a son propre verdict (`chapter_quiz_cleared`), et c'est
+                  // lui qui coche la ligne du quiz. Sans cela, un quiz déjà franchi
+                  // se serait remis à promettre ses XP comme s'il restait à faire.
+                  const mission: MissionProgress | null = isQuiz
+                    ? null
+                    : (progress?.missions[ex.id] ?? null);
+                  const done = isQuiz
+                    ? chapterProgress?.quiz.cleared === true
+                    : mission?.counted === true;
+                  const best = mission?.bestClassic ?? null;
                   const lockedRow = !unlocked && !isQuiz;
                   const title = (
                     <span
@@ -358,7 +382,10 @@ export function SubjectHub({
                         params={{ exerciseId: ex.id }}
                         className="flex items-center gap-2 py-2.5 text-sm transition hover:text-primary [@media(pointer:coarse)]:min-h-11"
                       >
-                        {isMissionPassed(best) ? (
+                        {/* ⭐ Le ✓ dit « comptée pour une étoile » (é34 R-3), pas
+                            « ≥ 60 % » : une réussite expédiée montre son score sans
+                            cocher, et la note du chapitre dit pourquoi. */}
+                        {done ? (
                           <Check className="h-4 w-4 shrink-0 text-success" />
                         ) : (
                           <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground rtl:-scale-x-100" />
@@ -367,13 +394,20 @@ export function SubjectHub({
                         {/* R-13 : la difficulté se lit en ⭐, pas dans le titre. Le quiz
                                   n'en a pas — ce n'est pas une mission mais la porte du chapitre. */}
                         {!isQuiz && <DifficultyStars level={ex.difficulty} className="shrink-0" />}
+                        {mission?.isNew && (
+                          <span
+                            data-testid="mission-new"
+                            aria-label={t.progress.newMissions.replace("{n}", "1")}
+                            className="shrink-0 text-xs"
+                          >
+                            ✨
+                          </span>
+                        )}
                         <span className="shrink-0 text-xs text-muted-foreground">
                           {best != null ? (
                             <span
                               className={
-                                isMissionPassed(best)
-                                  ? "font-bold text-success"
-                                  : "font-bold text-muted-foreground"
+                                done ? "font-bold text-success" : "font-bold text-muted-foreground"
                               }
                             >
                               {Math.round(best)}%
@@ -382,7 +416,7 @@ export function SubjectHub({
                             <span className="font-semibold text-primary">
                               {t.public.subject.unlocksChapter}
                             </span>
-                          ) : isAuthenticated ? (
+                          ) : done ? null : isAuthenticated ? (
                             <span className="flex items-center gap-0.5 font-semibold text-primary">
                               <Zap className="h-3 w-3" />+{ex.xp_reward} XP
                             </span>
@@ -449,6 +483,8 @@ export function SubjectHub({
         </p>
       )}
 
+      <SubjectSeals progress={progress} />
+
       <ManuelEleveCard manuelRefs={subject.manuel_refs} />
 
       {resume && resume.next && (
@@ -484,7 +520,7 @@ export function SubjectHub({
             // domaine, et où il en est dedans. Le détail par chapitre est déjà
             // dans les cartes, il n'a pas à être répété deux fois.
             const label = group.label ?? t.public.subject.otherChapters;
-            const doneChapters = group.chapters.filter((r) => r.allDone).length;
+            const doneChapters = group.chapters.filter((r) => r.mastered).length;
             // La clé porte des espaces (et « : » pour le fourre-tout) : un id
             // doit rester utilisable tel quel, aussi comme sélecteur.
             const headingId = `domain-${group.key.replace(/[^\p{L}\p{N}]+/gu, "-")}`;

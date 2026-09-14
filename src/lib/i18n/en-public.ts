@@ -164,8 +164,6 @@ export const enPublic: TranslationKeys["public"] = {
     resumeHere: "Continue here",
     missionsProgress: "{done}/{total} missions",
     quizToPass: "quiz to pass",
-    chapterComplete: "Chapter complete",
-    todo: "to do",
     unlocksChapter: "unlocks the chapter",
     otherChapters: "Other chapters",
     chaptersProgress: "{done}/{total} chapters",

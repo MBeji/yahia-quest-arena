@@ -73,7 +73,7 @@ function mockQuery(data: unknown, error: unknown = null) {
 
 const callSubject = getSubject as unknown as (input: unknown) => Promise<{
   viewer: { level: number; isPremium: boolean; hasEntitlement: boolean };
-  bestByExercise: Record<string, number>;
+  progress: unknown;
   quizPassedByChapter: Record<string, boolean>;
   exercises: unknown[];
 }>;
@@ -119,7 +119,9 @@ describe("quest anonymous content reads (L0.4b)", () => {
       hasEntitlement: true,
       unrestricted: false,
     });
-    expect(res.bestByExercise).toEqual({});
+    // Aucune progression pour un anonyme : la RPC `get_subject_progress` n'est même
+    // pas appelée (elle est `GRANT`ée aux seuls comptes), donc `null` — jamais « zéro ».
+    expect(res.progress).toBeNull();
     expect(res.quizPassedByChapter).toEqual({ ch1: false });
     expect(res.exercises).toHaveLength(2);
     // No ACCOUNT-BOUND RPC (best scores / entitlements) runs for an anon caller.

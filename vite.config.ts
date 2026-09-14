@@ -84,6 +84,10 @@ export default defineConfig(async ({ command, mode }) => {
             // é31 lot 2 : même règle pour les libellés de la collection de badges
             // (~5 KB ×3 langues), servis par la seule route /boutique.
             if (/\/src\/lib\/i18n\/badges\/(fr|en|ar)\.ts$/.test(id)) return "i18n-badges";
+            // é34 lot 2 : les étoiles de chapitre et les sceaux de matière. Servis
+            // par le hub matière, et aux lots suivants par le QG et le suivi
+            // parental — trois surfaces derrière des routes paresseuses.
+            if (/\/src\/lib\/i18n\/progress\/(fr|en|ar)\.ts$/.test(id)) return "i18n-progress";
             if (!id.includes("node_modules")) return;
 
             if (id.includes("@tanstack/")) return "vendor-tanstack";

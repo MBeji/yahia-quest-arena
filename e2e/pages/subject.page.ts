@@ -26,6 +26,32 @@ export class SubjectPage {
     return this.page.locator('a[href^="/chapitre/"]');
   }
 
+  // --- Étoiles de chapitre & sceaux de matière (étude 34) -------------------
+  /** Le bloc « état de la matière » : sceaux, prochain sceau, effort. */
+  get seals(): Locator {
+    return this.page.getByTestId("subject-seals");
+  }
+  /** Les quatre cachets de sceau — `data-earned` dit lesquels sont inscrits. */
+  get sealMarks(): Locator {
+    return this.page.getByTestId("seal-mark");
+  }
+  /** La promesse faite à l'anonyme (R-16) — absente dès qu'on est connecté. */
+  get anonPromise(): Locator {
+    return this.page.getByTestId("seal-anon-promise");
+  }
+  /** Les compteurs d'effort — présents pour un compte, jamais pour l'anonyme. */
+  get effort(): Locator {
+    return this.page.getByTestId("subject-effort");
+  }
+  /** Tous les crans de jauge de la page (tous chapitres confondus). */
+  get rungs(): Locator {
+    return this.page.locator('[data-testid^="star-rung-"]');
+  }
+  /** Les crans ACQUIS — ceux qui se lisent au grand livre. */
+  get litRungs(): Locator {
+    return this.page.locator('[data-testid^="star-rung-"][data-lit="true"]');
+  }
+
   async goto(id: string): Promise<void> {
     await this.page.goto(`/matiere/${id}`);
   }

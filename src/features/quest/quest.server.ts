@@ -10,7 +10,7 @@ import { MAX_CHOICE_LENGTH } from "@/shared/lib/answer-formats";
 import { assertAnswerFormats } from "@/features/quest/answer-format-guard";
 import { logger } from "@/shared/lib/logger";
 import type { UnlockedBadge } from "@/shared/types/gamification";
-import type { Database } from "@/shared/integrations/supabase/types";
+import type { Database, Json } from "@/shared/integrations/supabase/types";
 import type { CompiledVideo } from "@/shared/content/schema";
 import { resolveCorrectionVideo } from "./correction-video";
 import {
@@ -187,40 +187,52 @@ export const getSubject = createServerFn({ method: "GET" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
-    // Best scores are an account concept; anonymous visitors have none. Graceful
-    // fallback if the RPC fails, logged so a broken RPC never silently hides progress.
+    // La progression est un concept de COMPTE : l'anonyme n'en a aucune, et la RPC
+    // ne lui est pas accordée (`GRANT ... TO authenticated`). Retour dégradé et
+    // journalisé si elle échoue — une progression indisponible rend le hub
+    // exactement à l'expérience anonyme, jamais une page cassée.
     //
-    // It rides in the SAME `Promise.all` as the content queries (perf audit L1):
-    // it only needs `subjectId` + `userId`, so waiting for the subject first cost
-    // a serial round-trip on every authenticated subject page — and the SSR
-    // function is pinned to one region, so a round-trip is not free. Trade-off
-    // taken knowingly: on the rare error path where the subject does not load, we
-    // will have issued one RPC that the old code would have skipped.
-    const bestScoresPromise: Promise<unknown[]> = userId
+    // ⭐ Elle REMPLACE `get_best_scores_by_exercise` pour cet écran, à
+    // aller-retour constant, et c'est ce qui fait disparaître une divergence
+    // réelle : cette RPC-là rend le meilleur score classique SANS regarder la
+    // durée, quand la règle des étoiles exige en plus « non précipitée »
+    // (`mission_is_counted`, étude 34 R-3). Une réussite expédiée à 65 % cochait
+    // donc la mission au hub sans rien donner au grand livre. Le hub reçoit
+    // maintenant `counted`, déjà tranché, et ne re-seuille plus rien.
+    // (La RPC reste en base : d'autres lecteurs restent à inventorier, et sa
+    // dépose serait une migration destructive — DoD §7, merge séparé.)
+    //
+    // Elle voyage dans le MÊME `Promise.all` que les requêtes de contenu (audit
+    // perf L1) : elle n'a besoin que de `subjectId` + la session, donc attendre la
+    // matière coûtait un aller-retour série sur chaque page connectée — et la
+    // fonction SSR est épinglée à une région, donc un aller-retour n'est pas
+    // gratuit. Compromis assumé : sur le chemin d'erreur rare où la matière ne
+    // charge pas, on aura émis une RPC que l'ancien code aurait évitée.
+    const progressPromise: Promise<Json | null> = userId
       ? Promise.resolve(
-          supabase.rpc("get_best_scores_by_exercise", { p_subject: data.subjectId }),
+          supabase.rpc("get_subject_progress", { p_subject_id: data.subjectId }),
         ).then(
           (res) => {
             if (res.error) {
-              logger.warn("quest.getSubject: get_best_scores_by_exercise failed", {
+              logger.warn("quest.getSubject: get_subject_progress failed", {
                 subjectId: data.subjectId,
                 error: res.error.message,
               });
-              return [];
+              return null;
             }
-            return Array.isArray(res.data) ? res.data : [];
+            return res.data ?? null;
           },
           (err: unknown) => {
-            logger.warn("quest.getSubject: get_best_scores_by_exercise threw", {
+            logger.warn("quest.getSubject: get_subject_progress threw", {
               subjectId: data.subjectId,
               error: errorMessage(err),
             });
-            return [];
+            return null;
           },
         )
-      : Promise.resolve([]);
+      : Promise.resolve(null);
 
-    const [subj, chaps, exs, bestScoresData, unrestricted] = await Promise.all([
+    const [subj, chaps, exs, progress, unrestricted] = await Promise.all([
       supabase.from("subjects").select("*").eq("id", data.subjectId).single(),
       supabase.from("chapters").select("*").eq("subject_id", data.subjectId).order("display_order"),
       supabase
@@ -228,19 +240,12 @@ export const getSubject = createServerFn({ method: "GET" })
         .select("*")
         .eq("subject_id", data.subjectId)
         .order("display_order"),
-      bestScoresPromise,
+      progressPromise,
       // Compte de test (admin) : même aller-retour, pas un de plus — quest.access.ts.
       isUnrestrictedViewer(supabase, userId),
     ]);
     if (subj.error) {
       failWithClientError("quest.getSubject", subj.error, "Impossible de charger la matière.");
-    }
-
-    const best: Record<string, number> = {};
-    for (const row of bestScoresData) {
-      const r = row as Record<string, unknown>;
-      if (typeof r.exercise_id !== "string") continue;
-      best[r.exercise_id] = Number(r.best_score ?? 0);
     }
 
     // Recall availability (étude 17) — resolved for EVERYONE, anon included
@@ -374,7 +379,13 @@ export const getSubject = createServerFn({ method: "GET" })
       subject: subj.data,
       chapters: chaps.data ?? [],
       exercises,
-      bestByExercise: best,
+      /**
+       * La charge brute de `get_subject_progress` (JSONB) — étoiles de chapitre,
+       * sceaux, effort, état de chaque mission. `null` pour l'anonyme et sur une
+       * RPC en échec ; le hub la lit par `parseSubjectProgress`, qui retombe alors
+       * sur l'expérience anonyme plutôt que de casser (étude 34 R-16).
+       */
+      progress,
       quizPassedByChapter: gates.quizPassedByChapter,
       // `unrestricted` est ce que le hub affiche (bandeau « accès test ») ; le droit
       // d'accès suit, la porte du parcours étant franchie elle aussi.

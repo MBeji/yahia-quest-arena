@@ -42,6 +42,85 @@ const exercises = [
   { id: "e3", chapter_id: "c2", mode: "normal", title: "Un demi", difficulty: 1, xp_reward: 15 },
 ];
 const parcours = { id: "ecole-3eme-base", name_fr: "3ème année de base" };
+
+/**
+ * Une charge `get_subject_progress` à la forme EXACTE de la RPC (étude 34) — la
+ * même que celle dont pgTAP 101 vérifie la structure. Les décors parlent donc en
+ * étoiles et en missions comptées, comme le produit, et non plus en « meilleurs
+ * scores » que le hub re-seuillerait : c'est tout l'objet du lot.
+ */
+type ChapterSpec = {
+  star?: number;
+  starLive?: number;
+  quizCleared?: boolean;
+  quizGated?: boolean;
+  isNew?: boolean;
+  family?: { total: number; counted: number };
+  rungs?: { difficulty: number; total: number; counted: number; new?: number }[];
+};
+type MissionSpec = {
+  chapterId?: string;
+  source?: string;
+  counted?: boolean;
+  bestClassic?: number | null;
+  isNew?: boolean;
+};
+function progressOf({
+  chapters: chapterSpecs = {},
+  missions: missionSpecs = {},
+  seals = [],
+  nextSeal = null,
+  effort = {},
+}: {
+  chapters?: Record<string, ChapterSpec>;
+  missions?: Record<string, MissionSpec>;
+  seals?: { star: number; reachedAt: string }[];
+  nextSeal?: {
+    star: number;
+    chaptersReady: number;
+    chaptersTotal: number;
+    newChapters: number;
+  } | null;
+  effort?: Partial<{
+    missionsCounted: number;
+    xp: number;
+    chaptersStarted: number;
+    chaptersMastered: number;
+  }>;
+}) {
+  return {
+    subjectId: "math",
+    seals,
+    nextSeal,
+    effort: {
+      missionsCounted: 0,
+      xp: 0,
+      chaptersStarted: 0,
+      chaptersMastered: 0,
+      ...effort,
+    },
+    chapters: Object.entries(chapterSpecs).map(([chapterId, c]) => ({
+      chapterId,
+      star: c.star ?? 0,
+      starLive: c.starLive ?? c.star ?? 0,
+      mastered: (c.star ?? 0) >= 4,
+      isNew: c.isNew ?? false,
+      newMissions: (c.rungs ?? []).reduce((n, r) => n + (r.new ?? 0), 0),
+      quiz: { gated: c.quizGated ?? true, cleared: c.quizCleared ?? false },
+      rungs: (c.rungs ?? []).map((r) => ({ ...r, new: r.new ?? 0 })),
+      family: c.family ?? { total: 0, counted: 0 },
+    })),
+    missions: Object.entries(missionSpecs).map(([exerciseId, m]) => ({
+      exerciseId,
+      chapterId: m.chapterId ?? "c1",
+      source: m.source ?? "admin",
+      counted: m.counted ?? false,
+      bestClassic: m.bestClassic ?? null,
+      mastered: (m.bestClassic ?? 0) >= 100,
+      isNew: m.isNew ?? false,
+    })),
+  };
+}
 /** Expand every collapsed chapter (idempotent — the default already opens one). */
 function expandAll(container: HTMLElement) {
   for (const btn of Array.from(container.querySelectorAll('button[aria-expanded="false"]'))) {
@@ -145,15 +224,21 @@ describe("SubjectHub", () => {
         subject={subject}
         chapters={chapters}
         exercises={exercises}
-        bestByExercise={{ e1: 92, e2: 85 }}
+        progress={progressOf({
+          chapters: {
+            c1: { star: 4, quizCleared: true, rungs: [{ difficulty: 2, total: 1, counted: 1 }] },
+            c2: { star: 0, quizCleared: true, rungs: [{ difficulty: 1, total: 1, counted: 0 }] },
+          },
+          missions: { e2: { counted: true, bestClassic: 85 }, e3: { chapterId: "c2" } },
+        })}
         quizPassedByChapter={{ c1: true, c2: true }}
         isAuthenticated={true}
       />,
     );
-    // c1 complété (R-15 : quiz passé + toutes ses missions de catalogue réussies) → jalon ✓.
-    expect(screen.getByText("Chapitre terminé ✓")).toBeInTheDocument();
+    // c1 à l'étoile 4 AU GRAND LIVRE → « Maîtrisé ✓ », le seul mot de verdict (R-5, Q-2).
+    expect(screen.getByTestId("chapter-mastered")).toHaveTextContent("Maîtrisé ✓");
     expandAll(container);
-    expect(screen.getByText("92%")).toBeInTheDocument();
+    expect(screen.getByText("85%")).toBeInTheDocument();
   });
 
   it("« Reprendre ici » targets the in-progress chapter's next mission (signed-in only)", () => {
@@ -162,7 +247,13 @@ describe("SubjectHub", () => {
         subject={subject}
         chapters={chapters}
         exercises={exercises}
-        bestByExercise={{ e1: 92 }}
+        progress={progressOf({
+          chapters: {
+            c1: { star: 0, quizCleared: true, rungs: [{ difficulty: 2, total: 1, counted: 0 }] },
+            c2: { star: 0, quizCleared: false, rungs: [{ difficulty: 1, total: 1, counted: 0 }] },
+          },
+          missions: { e2: {}, e3: { chapterId: "c2" } },
+        })}
         quizPassedByChapter={{ c1: true, c2: true }}
         isAuthenticated={true}
       />,
@@ -194,14 +285,32 @@ describe("SubjectHub", () => {
         subject={subject}
         chapters={chapters}
         exercises={withParent}
-        // e2 tentée mais ratée (30 %) : « tentée » ne vaut pas « réussie ».
-        bestByExercise={{ e1: 92, e2: 30, p1: 100 }}
+        // e2 tentée mais ratée (30 %) : « tentée » ne vaut pas « comptée ». p1 est
+        // une mission de la FAMILLE, réussie à 100 % : elle ne pèse sur aucune étoile.
+        progress={progressOf({
+          chapters: {
+            c1: {
+              star: 0,
+              quizCleared: true,
+              rungs: [{ difficulty: 2, total: 1, counted: 0 }],
+              family: { total: 1, counted: 1 },
+            },
+            c2: { star: 0, quizCleared: true, rungs: [{ difficulty: 1, total: 1, counted: 0 }] },
+          },
+          missions: {
+            e2: { bestClassic: 30 },
+            e3: { chapterId: "c2" },
+            p1: { source: "parent", counted: true, bestClassic: 100 },
+          },
+        })}
         quizPassedByChapter={{ c1: true, c2: true }}
         isAuthenticated={true}
       />,
     );
     expect(screen.getByText(/0\/1 missions/)).toBeInTheDocument();
-    expect(screen.queryByText("Chapitre terminé ✓")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("chapter-mastered")).not.toBeInTheDocument();
+    // US-6 : la famille a sa propre ligne, et la ligne dit pourquoi elle est à part.
+    expect(screen.getByTestId("chapter-family")).toHaveTextContent("Missions de la famille 1/1");
   });
 
   it("anonymous: no resume band", () => {
@@ -210,7 +319,6 @@ describe("SubjectHub", () => {
         subject={subject}
         chapters={chapters}
         exercises={exercises}
-        bestByExercise={{ e1: 92 }}
         isAuthenticated={false}
       />,
     );
@@ -374,6 +482,14 @@ describe("SubjectHub — recall mission row (étude 17, US-6 + override R-9)", (
  * et retombe sur sa liste plate dès qu'il n'y a pas deux groupes à montrer.
  */
 describe("SubjectHub — domaines de programme", () => {
+  /**
+   * Les en-têtes des GROUPES, et eux seuls. La page porte d'autres `h2` — le bloc
+   * des sceaux depuis l'étude 34 — et la question posée ici est celle du
+   * regroupement des chapitres, pas celle du plan de titres de la page.
+   */
+  const groupHeadings = () =>
+    screen.queryAllByTestId("domain-group").map((g) => g.querySelector("h2")?.textContent ?? null);
+
   const sectioned = [
     { id: "c1", title: "Les nombres", description: null, domain: "Algèbre" },
     { id: "c2", title: "Thalès", description: null, domain: "Géométrie" },
@@ -384,8 +500,7 @@ describe("SubjectHub — domaines de programme", () => {
     render(
       <SubjectHub subject={subject} chapters={sectioned} exercises={[]} isAuthenticated={false} />,
     );
-    const headings = screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent);
-    expect(headings).toEqual(["Algèbre", "Géométrie"]);
+    expect(groupHeadings()).toEqual(["Algèbre", "Géométrie"]);
   });
 
   it("range chaque chapitre sous son domaine", () => {
@@ -408,8 +523,17 @@ describe("SubjectHub — domaines de programme", () => {
           { id: "e1", chapter_id: "c1", mode: "normal", title: "M1", difficulty: 1, xp_reward: 10 },
           { id: "e2", chapter_id: "c3", mode: "normal", title: "M2", difficulty: 1, xp_reward: 10 },
         ]}
-        // c1 terminé, c3 raté : 1 chapitre sur 2 pour Algèbre.
-        bestByExercise={{ e1: 100, e2: 20 }}
+        // c1 maîtrisé, c3 raté : 1 chapitre sur 2 pour Algèbre.
+        progress={progressOf({
+          chapters: {
+            c1: { star: 4, quizCleared: true, rungs: [{ difficulty: 1, total: 1, counted: 1 }] },
+            c3: { star: 0, quizCleared: true, rungs: [{ difficulty: 1, total: 1, counted: 0 }] },
+          },
+          missions: {
+            e1: { counted: true, bestClassic: 100 },
+            e2: { chapterId: "c3", bestClassic: 20 },
+          },
+        })}
         quizPassedByChapter={{ c1: true, c3: true }}
         isAuthenticated={true}
       />,
@@ -430,8 +554,7 @@ describe("SubjectHub — domaines de programme", () => {
         isAuthenticated={false}
       />,
     );
-    const headings = screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent);
-    expect(headings).toEqual(["Algèbre", fr.public.subject.otherChapters]);
+    expect(groupHeadings()).toEqual(["Algèbre", fr.public.subject.otherChapters]);
   });
 
   it("garde la liste plate quand aucun chapitre n'est rattaché", () => {
@@ -444,7 +567,7 @@ describe("SubjectHub — domaines de programme", () => {
       />,
     );
     expect(screen.queryAllByTestId("domain-group")).toHaveLength(0);
-    expect(screen.queryAllByRole("heading", { level: 2 })).toHaveLength(0);
+    expect(groupHeadings()).toHaveLength(0);
     // Les chapitres restent affichés — la bascule ne coûte rien à une matière
     // que le contenu n'a pas encore sectionnée.
     expect(screen.getByText("Les nombres")).toBeInTheDocument();
@@ -487,5 +610,230 @@ describe("SubjectHub — domaines de programme", () => {
     );
     expandAll(container);
     expect(screen.getByText("Config")).toBeInTheDocument();
+  });
+});
+
+/**
+ * ÉTOILES DE CHAPITRE & SCEAUX DE MATIÈRE — étude 34, lot 2.
+ *
+ * Ces cas disent ce que le hub PROMET : rien ne recule quand le contenu grandit,
+ * l'écart est nommé plutôt que tu, et l'anonyme voit la forme sans qu'on calcule
+ * quoi que ce soit pour lui.
+ */
+describe("SubjectHub — étoiles et sceaux (é34)", () => {
+  const open = { c1: true, c2: true };
+
+  it("US-1 : le contenu grandit, le verdict ne recule pas — et la ✨ dit pourquoi", () => {
+    // Le chapitre était maîtrisé (étoile 4 au grand livre) ; une campagne vient
+    // d'ajouter une mission ⭐⭐. Le VIVANT est retombé à 1 ; l'acquis, lui, tient.
+    const { container } = render(
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        progress={progressOf({
+          chapters: {
+            c1: {
+              star: 4,
+              starLive: 1,
+              quizCleared: true,
+              rungs: [{ difficulty: 2, total: 2, counted: 1, new: 1 }],
+            },
+            c2: { star: 0, quizCleared: true, rungs: [{ difficulty: 1, total: 1, counted: 0 }] },
+          },
+          missions: { e2: { counted: true, bestClassic: 85 }, e3: { chapterId: "c2" } },
+        })}
+        quizPassedByChapter={open}
+        isAuthenticated
+      />,
+    );
+    expect(screen.getByTestId("chapter-mastered")).toHaveTextContent("Maîtrisé ✓");
+    expect(screen.getByTestId("chapter-mastered")).toHaveTextContent("✨ 1");
+    expandAll(container);
+    expect(screen.getByTestId("chapter-new-missions")).toHaveTextContent("✨ 1");
+  });
+
+  it("R-3 : une réussite précipitée montre son score SANS cocher la mission", () => {
+    // C'est la divergence que le lot supprime : le hub cochait à ≥ 60 % alors que
+    // le serveur exigeait en plus « non précipitée ». Il lit désormais `counted`.
+    const { container } = render(
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        progress={progressOf({
+          chapters: {
+            c1: { star: 0, quizCleared: true, rungs: [{ difficulty: 2, total: 1, counted: 0 }] },
+            c2: { star: 0, quizCleared: true, rungs: [{ difficulty: 1, total: 1, counted: 0 }] },
+          },
+          missions: { e2: { counted: false, bestClassic: 65 }, e3: { chapterId: "c2" } },
+        })}
+        quizPassedByChapter={open}
+        isAuthenticated
+      />,
+    );
+    expandAll(container);
+    expect(screen.getByText("65%")).toBeInTheDocument();
+    // Aucun cran gagné : la jauge de c1 reste à zéro allumé.
+    const gauges = screen.getAllByTestId("star-rung-2");
+    expect(gauges.some((g) => g.getAttribute("data-lit") === "true")).toBe(false);
+  });
+
+  it("R-9 : le sceau acquis, le prochain, et ce qui l'a fait bouger", () => {
+    render(
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        progress={progressOf({
+          seals: [{ star: 1, reachedAt: "2026-09-01T10:00:00.000Z" }],
+          nextSeal: { star: 2, chaptersReady: 12, chaptersTotal: 20, newChapters: 1 },
+          effort: { missionsCounted: 26, xp: 1540, chaptersStarted: 12, chaptersMastered: 0 },
+          chapters: { c1: { star: 1, quizCleared: true } },
+        })}
+        quizPassedByChapter={open}
+        isAuthenticated
+      />,
+    );
+    expect(screen.getByTestId("seal-current")).toHaveTextContent("Sceau ⭐");
+    // La SEULE fraction de l'étude, et elle nomme ce qui l'a fait bouger.
+    expect(screen.getByTestId("seal-next")).toHaveTextContent(
+      "Prochain sceau ⭐⭐ : 12/20 chapitres prêts, dont 1 nouveaux",
+    );
+    // R-10 : des compteurs qui montent, jamais un pourcentage.
+    const effort = screen.getByTestId("subject-effort");
+    expect(effort).toHaveTextContent("26 missions réussies");
+    expect(effort).toHaveTextContent("1540 XP");
+    expect(effort.textContent).not.toMatch(/%/);
+  });
+
+  it("US-2 : sans aucun sceau, l'élève lit ce qu'il a — jamais « 0 % »", () => {
+    const { container } = render(
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        progress={progressOf({
+          nextSeal: { star: 1, chaptersReady: 12, chaptersTotal: 20, newChapters: 0 },
+          effort: { missionsCounted: 26, xp: 1540, chaptersStarted: 12, chaptersMastered: 0 },
+          chapters: { c1: { star: 0, quizCleared: true } },
+        })}
+        quizPassedByChapter={open}
+        isAuthenticated
+      />,
+    );
+    expect(screen.getByTestId("seal-none")).toBeInTheDocument();
+    expect(screen.getByTestId("seal-next")).toHaveTextContent("12/20 chapitres prêts");
+    expect(container.textContent).not.toMatch(/0\s*%/);
+  });
+
+  it("US-8 : l'anonyme voit la FORME et une promesse — aucun chiffre calculé", () => {
+    const { container } = render(
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        quizPassedByChapter={open}
+        isAuthenticated={false}
+      />,
+    );
+    expect(screen.getByTestId("seal-anon-promise")).toHaveTextContent(
+      "Connecte-toi pour garder tes étoiles",
+    );
+    // Les quatre cachets sont là, tous en attente.
+    const seals = screen.getAllByTestId("seal-mark");
+    expect(seals).toHaveLength(4);
+    expect(seals.every((s) => s.getAttribute("data-earned") === "false")).toBe(true);
+    // Les jauges existent (la forme du chapitre) mais aucun cran n'est allumé…
+    const rungs = container.querySelectorAll('[data-testid^="star-rung-"]');
+    expect(rungs.length).toBeGreaterThan(0);
+    expect([...rungs].every((r) => r.getAttribute("data-lit") === "false")).toBe(true);
+    // …et rien d'un compte : ni effort, ni note de chapitre.
+    expect(screen.queryByTestId("subject-effort")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("chapter-stars-note")).not.toBeInTheDocument();
+  });
+
+  it("R-7 : un chapitre arrivé après la dernière étoile se signale", () => {
+    render(
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        progress={progressOf({
+          chapters: {
+            c1: { star: 4, quizCleared: true, rungs: [{ difficulty: 2, total: 1, counted: 1 }] },
+            c2: {
+              star: 0,
+              isNew: true,
+              quizCleared: false,
+              rungs: [{ difficulty: 1, total: 1, counted: 0, new: 1 }],
+            },
+          },
+          missions: {
+            e2: { counted: true, bestClassic: 85 },
+            e3: { chapterId: "c2", isNew: true },
+          },
+        })}
+        quizPassedByChapter={open}
+        isAuthenticated
+      />,
+    );
+    expect(screen.getByTestId("chapter-new")).toHaveTextContent("✨ Nouveau chapitre");
+  });
+
+  it("R-8 : la légende nomme le geste qui donne le prochain cran", () => {
+    const { container } = render(
+      <SubjectHub
+        subject={subject}
+        chapters={[chapters[0]!]}
+        exercises={exercises}
+        progress={progressOf({
+          chapters: {
+            c1: {
+              star: 1,
+              quizCleared: true,
+              rungs: [
+                { difficulty: 1, total: 1, counted: 1 },
+                { difficulty: 3, total: 2, counted: 0 },
+              ],
+            },
+          },
+          missions: { e2: {} },
+        })}
+        quizPassedByChapter={open}
+        isAuthenticated
+      />,
+    );
+    expandAll(container);
+    // Le cran suivant est le 3 — « boss », le nom de l'échelle du CONTENU.
+    expect(screen.getByTestId("chapter-stars-note")).toHaveTextContent(
+      "Gagne l'étoile 3 en réussissant toutes les missions jusqu'à boss.",
+    );
+    // …et ce que « comptée » veut dire, en une phrase d'élève.
+    expect(screen.getByTestId("chapter-stars-note")).toHaveTextContent(
+      "Une mission compte à partir de 60 %, en prenant ton temps.",
+    );
+  });
+
+  it("un quiz franchi est coché, et cesse d'annoncer ses XP", () => {
+    // La charge du serveur ne porte que les missions : sans verdict propre, la
+    // ligne du quiz se serait remise à promettre ses XP comme s'il restait à faire.
+    const { container } = render(
+      <SubjectHub
+        subject={subject}
+        chapters={[chapters[0]!]}
+        exercises={exercises}
+        progress={progressOf({
+          chapters: {
+            c1: { star: 1, quizCleared: true, rungs: [{ difficulty: 2, total: 1, counted: 1 }] },
+          },
+          missions: { e2: { counted: true, bestClassic: 90 } },
+        })}
+        quizPassedByChapter={{ c1: true }}
+        isAuthenticated
+      />,
+    );
+    expandAll(container);
+    expect(screen.queryByText(/\+10 XP/)).not.toBeInTheDocument();
   });
 });

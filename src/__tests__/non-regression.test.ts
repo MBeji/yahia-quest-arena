@@ -143,7 +143,7 @@ describe("NON-REGRESSION: Quest Server Functions", () => {
       expect(result).toHaveProperty("subject");
       expect(result).toHaveProperty("chapters");
       expect(result).toHaveProperty("exercises");
-      expect(result).toHaveProperty("bestByExercise");
+      expect(result).toHaveProperty("progress");
     });
 
     it("resolves gracefully when RPC function does not exist", async () => {
@@ -154,7 +154,7 @@ describe("NON-REGRESSION: Quest Server Functions", () => {
         return mockQuery([]);
       });
       // Simulate RPC not existing (rejected promise)
-      mockRpc.mockRejectedValue(new Error("function get_best_scores_by_exercise does not exist"));
+      mockRpc.mockRejectedValue(new Error("function get_subject_progress does not exist"));
 
       const { getSubject } = await import("@/features/quest");
       const result = await withTimeout(
@@ -162,10 +162,11 @@ describe("NON-REGRESSION: Quest Server Functions", () => {
         1000,
       );
 
-      // Must NOT throw — must return with empty scores
+      // Must NOT throw — must degrade to "no progress" (étude 34 : le hub retombe
+      // alors sur l'expérience anonyme, qui est complète).
       const r = result as Record<string, unknown>;
       expect(r.subject).toEqual({ id: "s1", name_fr: "Test" });
-      expect(r.bestByExercise).toEqual({});
+      expect(r.progress).toBeNull();
     });
 
     it("resolves gracefully when RPC returns error", async () => {
@@ -184,7 +185,7 @@ describe("NON-REGRESSION: Quest Server Functions", () => {
       );
 
       const r = result as Record<string, unknown>;
-      expect(r.bestByExercise).toEqual({});
+      expect(r.progress).toBeNull();
     });
 
     it("throws clearly on subject table error (not hang)", async () => {
@@ -556,7 +557,7 @@ describe("NON-REGRESSION: Data shape contracts", () => {
     mockRpc.mockReturnValue({ data: [], error: null });
   });
 
-  it("getSubject returns { subject, chapters, exercises, bestByExercise, quizPassedByChapter }", async () => {
+  it("getSubject returns { subject, chapters, exercises, progress, quizPassedByChapter }", async () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "subjects")
         return mockQuery({ id: "s1", name_fr: "Math", color_token: "math", icon: "📐" });
@@ -573,12 +574,13 @@ describe("NON-REGRESSION: Data shape contracts", () => {
 
     // These keys are consumed by the SubjectPage component (`parcours` is the
     // hub's level anchor — étude 15 lot 7; `recall` is the recall-mode
-    // availability — étude 17 lot 3).
+    // availability — étude 17 lot 3; `progress` is the stars/seals ledger —
+    // étude 34 lot 2, which replaced the former `bestByExercise` map).
     expect(Object.keys(result).sort()).toEqual([
-      "bestByExercise",
       "chapters",
       "exercises",
       "parcours",
+      "progress",
       "quizPassedByChapter",
       "recall",
       "subject",
@@ -586,7 +588,8 @@ describe("NON-REGRESSION: Data shape contracts", () => {
     ]);
     expect(result.chapters).toBeInstanceOf(Array);
     expect(result.exercises).toBeInstanceOf(Array);
-    expect(typeof result.bestByExercise).toBe("object");
+    // `progress` voyage BRUT (JSONB) : le hub le lit par `parseSubjectProgress`.
+    expect(result).toHaveProperty("progress");
   });
 
   it("getExercise returns { exercise, questions, hintCharges, chapterQuizId, quizGated, correctionVideo, variant }", async () => {
