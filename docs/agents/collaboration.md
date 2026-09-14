@@ -68,6 +68,15 @@ une session qui suit la consigne à la lettre se retrouve avec un **commit de me
 Le cas est encore lisible dans l'historique — `b88ff517` (PR #844, 2026-08-24) ; mécanisme
 re-constaté le 2026-08-26 sur la PR #881.
 
+⚠️ **Et il ne faut pas avoir décidé de merger pour tomber dedans.** Le 2026-09-14 (PR #1037),
+la branche a été AVANCÉE SOUS LA SESSION : le job « Update armed PRs left behind by this push »
+merge `main` dans toute branche dont la PR est armée. Un push suivant part alors en
+`non-fast-forward`, la seule issue autorisée est `git merge origin/<sa-branche>` (le rebase est
+hors jeu), et `main` reçoit un squash intitulé « Merge remote-tracking branch
+'origin/claude/…' into claude/… » — un commit de `main` dont le titre ne dit pas ce qu'il fait.
+Le geste ci-dessous ne change donc pas : il se fait avant **chaque** push, y compris celui qu'on
+n'avait pas prévu de faire.
+
 Le geste, juste avant chaque push :
 
 ```bash
