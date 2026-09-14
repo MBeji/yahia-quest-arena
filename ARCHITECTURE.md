@@ -215,6 +215,8 @@ Run with coverage: `npm run test:coverage`
 | question_attempts                      | Append-only per-question telemetry (adaptive engine A0)                                       |
 | user_misconceptions                    | Per-(user, misconception-tag) aggregate, trigger-maintained                                   |
 | learning_pulses                        | Append-only time-on-task pulses (parent daily dashboard) — `docs/suivi-parental-quotidien.md` |
+| user_chapter_stars                     | **Grand livre des étoiles de chapitre** (insert-only) — `docs/etoiles-et-sceaux.md`           |
+| user_subject_seals                     | **Grand livre des sceaux de matière** (insert-only) — idem                                    |
 | themes                                 | Top-level content tracks (école-tn, culture-générale…)                                        |
 | grades                                 | Grade levels (e.g. 9th grade; incl. lycée section nodes)                                      |
 

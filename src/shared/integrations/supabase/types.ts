@@ -678,6 +678,7 @@ export type Database = {
       };
       chapters: {
         Row: {
+          created_at: string;
           description: string | null;
           display_order: number;
           domain: string | null;
@@ -690,6 +691,7 @@ export type Database = {
           videos: NonNullable<Json>;
         };
         Insert: {
+          created_at?: string;
           description?: string | null;
           display_order?: number;
           domain?: string | null;
@@ -702,6 +704,7 @@ export type Database = {
           videos?: NonNullable<Json>;
         };
         Update: {
+          created_at?: string;
           description?: string | null;
           display_order?: number;
           domain?: string | null;
@@ -1263,6 +1266,7 @@ export type Database = {
         Row: {
           chapter_id: string;
           correction_video: Json | null;
+          created_at: string;
           created_by: string | null;
           difficulty: number;
           display_order: number;
@@ -1279,6 +1283,7 @@ export type Database = {
         Insert: {
           chapter_id: string;
           correction_video?: Json | null;
+          created_at?: string;
           created_by?: string | null;
           difficulty?: number;
           display_order?: number;
@@ -1295,6 +1300,7 @@ export type Database = {
         Update: {
           chapter_id?: string;
           correction_video?: Json | null;
+          created_at?: string;
           created_by?: string | null;
           difficulty?: number;
           display_order?: number;
@@ -2696,6 +2702,48 @@ export type Database = {
           },
         ];
       };
+      user_chapter_stars: {
+        Row: {
+          attempt_id: string | null;
+          chapter_id: string;
+          missions_at_reach: number;
+          reached_at: string;
+          star: number;
+          user_id: string;
+        };
+        Insert: {
+          attempt_id?: string | null;
+          chapter_id: string;
+          missions_at_reach: number;
+          reached_at?: string;
+          star: number;
+          user_id: string;
+        };
+        Update: {
+          attempt_id?: string | null;
+          chapter_id?: string;
+          missions_at_reach?: number;
+          reached_at?: string;
+          star?: number;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_chapter_stars_attempt_id_fkey";
+            columns: ["attempt_id"];
+            isOneToOne: false;
+            referencedRelation: "attempts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "user_chapter_stars_chapter_id_fkey";
+            columns: ["chapter_id"];
+            isOneToOne: false;
+            referencedRelation: "chapters";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       user_competency_mastery: {
         Row: {
           attempts: number;
@@ -2788,6 +2836,48 @@ export type Database = {
           user_id?: string;
         };
         Relationships: [];
+      };
+      user_subject_seals: {
+        Row: {
+          attempt_id: string | null;
+          chapters_at_reach: number;
+          reached_at: string;
+          star: number;
+          subject_id: string;
+          user_id: string;
+        };
+        Insert: {
+          attempt_id?: string | null;
+          chapters_at_reach: number;
+          reached_at?: string;
+          star: number;
+          subject_id: string;
+          user_id: string;
+        };
+        Update: {
+          attempt_id?: string | null;
+          chapters_at_reach?: number;
+          reached_at?: string;
+          star?: number;
+          subject_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_subject_seals_attempt_id_fkey";
+            columns: ["attempt_id"];
+            isOneToOne: false;
+            referencedRelation: "attempts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "user_subject_seals_subject_id_fkey";
+            columns: ["subject_id"];
+            isOneToOne: false;
+            referencedRelation: "subjects";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       weekly_quests: {
         Row: {
@@ -3341,11 +3431,28 @@ export type Database = {
         Args: { p_chapter_id?: string; p_question_id?: string; p_scope: string };
         Returns: Json;
       };
+      chapter_progress_ref: {
+        Args: { p_chapter: string; p_user: string };
+        Returns: string;
+      };
       chapter_quiz_cleared: {
         Args: { p_chapter: string; p_user: string };
         Returns: boolean;
       };
       chapter_quiz_gated: { Args: { p_chapter: string }; Returns: boolean };
+      chapter_star_live: {
+        Args: { p_chapter: string; p_user: string };
+        Returns: number;
+      };
+      chapter_star_rungs: {
+        Args: { p_chapter: string; p_user: string };
+        Returns: {
+          difficulty: number;
+          missions_counted: number;
+          missions_new: number;
+          missions_total: number;
+        }[];
+      };
       check_answers: {
         Args: { p_answers: Json; p_exercise_id: string };
         Returns: {
@@ -3519,6 +3626,7 @@ export type Database = {
           student_user_id: string;
         }[];
       };
+      get_attempt_progress: { Args: { p_attempt_id: string }; Returns: Json };
       get_attempt_review: {
         Args: { p_answers?: Json; p_session_id: string };
         Returns: {
@@ -3804,6 +3912,7 @@ export type Database = {
           subject_xp: number;
         }[];
       };
+      get_subject_progress: { Args: { p_subject_id: string }; Returns: Json };
       get_targeted_exercises: {
         Args: { p_competency?: string; p_limit?: number; p_tag: string };
         Returns: {
@@ -3990,6 +4099,10 @@ export type Database = {
           window_days: number;
         }[];
       };
+      mission_is_counted: {
+        Args: { p_exercise: string; p_user: string };
+        Returns: boolean;
+      };
       normalize_recall_text: { Args: { p: string }; Returns: string };
       open_tutor_chapter_thread: {
         Args: {
@@ -4109,6 +4222,7 @@ export type Database = {
         Args: { p_energy: number; p_micros: number; p_student: string };
         Returns: undefined;
       };
+      replay_progress_stars: { Args: Record<PropertyKey, never>; Returns: Json };
       reserve_ai_spend: {
         Args: {
           p_energy: number;
@@ -4523,8 +4637,10 @@ export type Database = {
         };
         Returns: {
           chapter_id: string;
+          missing_for_next: number;
           missions_passed: number;
           missions_total: number;
+          next_star: number;
           quiz_gated: boolean;
           quiz_satisfied: boolean;
           subject_id: string;
@@ -4536,6 +4652,22 @@ export type Database = {
         Returns: {
           chapters_completed: number;
           chapters_total: number;
+          subject_id: string;
+        }[];
+      };
+      student_subject_stars: {
+        Args: { p_subject_ids?: string[]; p_user: string };
+        Returns: {
+          chapters_star1: number;
+          chapters_star2: number;
+          chapters_star3: number;
+          chapters_star4: number;
+          chapters_started: number;
+          chapters_total: number;
+          new_chapters: number;
+          new_missions: number;
+          seal_at: string;
+          seal_star: number;
           subject_id: string;
         }[];
       };
