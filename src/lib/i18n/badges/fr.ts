@@ -54,6 +54,21 @@ export const frBadges: BadgeTranslations = {
         name: "Révisions de mai",
         condition: "Réussir 5 missions à 90 % pendant la quinzaine des révisions de mai",
       },
+      // Étude 34 — les trois méta-badges des sceaux. La CONDITION est en clair
+      // (é31 R-13) : un badge dont personne ne sait comment il tombe n'est pas
+      // une reconnaissance, c'est une surprise.
+      first_seal: {
+        name: "Premier sceau",
+        condition: "Obtenir son premier sceau de matière",
+      },
+      subject_elite: {
+        name: "Matière d'élite",
+        condition: "Obtenir le sceau ⭐⭐⭐⭐ d'une matière — tous ses chapitres maîtrisés",
+      },
+      parcours_covered: {
+        name: "Classe couverte",
+        condition: "Obtenir le sceau ⭐ de toutes les matières de sa classe",
+      },
     },
     familyProgress: "{n}/{total}",
     locked: "À débloquer",

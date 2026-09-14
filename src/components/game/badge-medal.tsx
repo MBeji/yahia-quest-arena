@@ -1,5 +1,8 @@
 import {
   Award,
+  Stamp,
+  Gem,
+  Map,
   BookOpen,
   Calculator,
   Coins,
@@ -64,6 +67,10 @@ const GLYPHS: Record<string, LucideIcon> = {
   // `Swords` par `20260903120000` — la casse du seed d'origine ne rendait rien.
   Trophy,
   Swords,
+  // Étude 34 — les trois badges des sceaux.
+  Stamp,
+  Gem,
+  Map,
 };
 
 const RARITY_COLOR: Record<string, string> = {

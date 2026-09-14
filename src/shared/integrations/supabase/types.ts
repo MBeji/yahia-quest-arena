@@ -3755,6 +3755,10 @@ export type Database = {
           xp: number;
         }[];
       };
+      get_last_attempt_progress: {
+        Args: { p_exercise_id: string };
+        Returns: Json;
+      };
       get_learning_frontier: {
         Args: { p_family?: string; p_limit?: number };
         Returns: {
