@@ -1215,9 +1215,6 @@ export type TranslationKeys = {
       resumeHere: string;
       missionsProgress: string;
       quizToPass: string;
-      /** Jalon « chapitre complété » (étude 22, R-15). */
-      chapterComplete: string;
-      todo: string;
       unlocksChapter: string;
       quizContract: string;
       /** Bandeau du compte de test (admin) : toutes les missions ouvertes, sans quiz ni ordre. */

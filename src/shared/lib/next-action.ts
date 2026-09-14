@@ -40,12 +40,7 @@
  * `get_daily_plan` (études 04-A1 / 07) viendra alimenter la priorité 1 sans rien changer
  * d'autre : elle remplacera la source des révisions dues, pas le moteur (R-18, D-8).
  */
-import {
-  isCatalogueMission,
-  isChapterComplete,
-  isMissionPassed,
-  type CompletionExercise,
-} from "./chapter-completion";
+import { isCatalogueMission, type CatalogueExercise } from "./progress-stars";
 
 export type NextAction =
   /** Une révision espacée est échue (priorité 1). */
@@ -77,8 +72,7 @@ export type NextAction =
   /** Une matière encore jamais ouverte (priorité 6). */
   | { kind: "discover"; subjectId: string };
 
-export type NextActionExercise = CompletionExercise & {
-  difficulty?: number | null;
+export type NextActionExercise = CatalogueExercise & {
   display_order?: number | null;
 };
 
@@ -89,10 +83,24 @@ export type NextActionInput = {
   failedExerciseId?: string | null;
   /** Chapitres de la matière courante, dans leur ordre d'affichage. */
   chapters?: { id: string }[];
-  /** Exercices de ces chapitres — `source`/`mode` servent aux règles de complétion (R-15). */
+  /** Exercices de ces chapitres — `source`/`mode` disent lesquels sont du programme (R-15). */
   exercises?: NextActionExercise[];
-  /** Meilleur score classique par exercice. */
-  bestByExercise?: Record<string, number>;
+  /**
+   * Missions **comptées** (étude 34 R-3 : ≥ 60 % en classique, sans se précipiter),
+   * telles que `get_subject_progress` les rend. C'est la SEULE définition de « c'est
+   * fait » dans ce fichier : le moteur ne re-seuille aucun score, il lit le verdict
+   * que la base a rendu. Avant l'étude 34 il appliquait sa propre copie du seuil, qui
+   * ignorait l'anti-précipitation — le hub cochait alors une mission que le serveur
+   * ne comptait pas, et « Reprendre ici » sautait par-dessus.
+   */
+  countedByExercise?: Record<string, boolean>;
+  /**
+   * Missions déjà **tentées** — ce qui dit qu'un chapitre est commencé, donc où
+   * l'élève a laissé son travail. Distinct de `countedByExercise` : un chapitre où
+   * tout a été tenté sans rien réussir est commencé, et c'est bien là qu'il faut
+   * reprendre.
+   */
+  attemptedByExercise?: Record<string, boolean>;
   /** Porte du quiz déjà résolue serveur, par chapitre (R-7). */
   quizSatisfiedByChapter?: Record<string, boolean>;
   /**
@@ -136,26 +144,35 @@ function byRecommendedOrder(a: NextActionExercise, b: NextActionExercise): numbe
  * le début naturel pour quelqu'un qui n'a encore rien commencé.
  */
 function nextOnPath(input: NextActionInput): NextAction | null {
-  const { chapters = [], exercises = [], bestByExercise = {}, quizSatisfiedByChapter = {} } = input;
+  const {
+    chapters = [],
+    exercises = [],
+    countedByExercise = {},
+    attemptedByExercise = {},
+    quizSatisfiedByChapter = {},
+  } = input;
   if (chapters.length === 0 || exercises.length === 0) return null;
 
   const rows = chapters.map((chapter) => {
     const chapEx = exercises.filter((e) => e.chapter_id === chapter.id).sort(byRecommendedOrder);
     const quizSatisfied = quizSatisfiedByChapter[chapter.id] === true;
-    const complete = isChapterComplete(chapEx, bestByExercise, quizSatisfied);
-    const started = chapEx.some((e) => bestByExercise[e.id] != null);
+    const started = chapEx.some((e) => attemptedByExercise[e.id] === true);
     // Tant que la porte du quiz est fermée, la seule action possible est le quiz lui-même :
     // proposer une mission verrouillée serait un CTA qui mène à un refus (R-30).
     const quiz = chapEx.find((e) => e.mode === "quiz") ?? null;
     const next = !quizSatisfied
       ? quiz
-      : (chapEx.find((e) => isCatalogueMission(e) && !isMissionPassed(bestByExercise[e.id])) ??
-        null);
-    return { chapter, complete, started, next };
+      : (chapEx.find((e) => isCatalogueMission(e) && countedByExercise[e.id] !== true) ?? null);
+    return { chapter, started, next };
   });
 
-  const resumable = [...rows].reverse().find((r) => r.started && !r.complete && r.next);
-  const target = resumable ?? rows.find((r) => !r.complete && r.next);
+  // ⚠️ « Terminé » a DISPARU de cette fonction, et ce n'est pas un oubli : un chapitre
+  // n'a plus rien à proposer exactement quand il ne reste rien à y faire, donc
+  // `next === null` DIT « terminé » sans qu'aucune règle de complétion soit rejouée ici.
+  // L'ancienne version testait les deux, et deux définitions d'une même chose finissent
+  // toujours par diverger — c'est très précisément le défaut que l'étude 34 corrige.
+  const resumable = [...rows].reverse().find((r) => r.started && r.next);
+  const target = resumable ?? rows.find((r) => r.next);
   if (!target?.next) return null;
   return { kind: "continue", exerciseId: target.next.id, chapterId: target.chapter.id };
 }

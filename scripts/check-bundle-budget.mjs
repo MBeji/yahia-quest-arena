@@ -124,6 +124,12 @@ const BUDGETS = {
   // contournée : sans ce découpage, `i18n-` réclamait son dix-septième
   // relèvement pour une microcopy qu'un élève sur dix verra.
   "i18n-badges-": 12 * 1024,
+  // Surface progression : étoiles de chapitre, sceaux de matière, effort
+  // (étude 34 R-17). Servis par le hub matière, puis par le QG et le suivi
+  // parental aux lots 3 et 4 — toutes des routes chargées dynamiquement. Le
+  // plafond est posé AVEC le chunk, à 16 KB, pour que les lots suivants aient
+  // où grandir sans rouvrir la discussion du budget app-wide.
+  "i18n-progress-": 16 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
   // @dnd-kit (core+sortable+utilities) powering the B2 ordering/matching

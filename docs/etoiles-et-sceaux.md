@@ -134,6 +134,35 @@ portée du plus grand nombre, et la question se rouvre par amendement de l'étud
   catalogue ») : ils vivent chacun dans **une** fonction, et c'est ce qui a évité au projet trois
   divergences déjà payées.
 
+⚠️ **Correction du 2026-09-14 — `get_best_scores_by_exercise` filtre bien la variante.** Le
+commentaire du lot 1 (migration `20260914130000`, §3) affirme qu'elle « ne filtre PAS la
+variante » et donne cela pour la raison d'être du bloc `missions` de `get_subject_progress`.
+**C'est faux, et la migration est de l'histoire : elle ne se réécrit pas.** La définition
+VIVANTE de la RPC est `20260714130000` (mode Rappel), qui l'a ré-émise avec
+`AND a.variant = 'classic'` ; la lecture s'était arrêtée à `20260603110000`, l'avant-dernière.
+Le commentaire de `chapter-completion.ts`, accusé à tort dans la foulée, disait donc vrai.
+
+La divergence réelle, plus petite mais réelle, est **l'anti-précipitation** : la RPC rend le
+meilleur score classique **sans regarder la durée**, quand `mission_is_counted` exige en plus
+`duration_seconds >= total_count × 4` (R-3). Une réussite expédiée à 65 % cochait donc la
+mission au hub sans rien donner au grand livre. C'est cet écart-là — et lui seul — que le lot 2
+supprime, en servant `counted` au lieu d'un score brut re-seuillé côté client.
+
+**La leçon vaut au-delà du cas** : une RPC vivante n'est pas celle qui porte son nom en premier,
+c'est la **dernière** qui la ré-émet. `grep -rn '<nom>' supabase/migrations | tail -1` avant
+d'écrire une phrase sur son corps.
+
+- **Le client ne re-seuille plus AUCUN score.** `src/shared/lib/chapter-completion.ts` a été
+  supprimé au lot 2 : il tenait en TS une copie des règles de complétion, et cette copie avait
+  divergé. Le hub lit maintenant `counted` / `star` / `starLive` tels que `get_subject_progress`
+  les rend, et `src/shared/lib/progress-stars.ts` ne fait que **lire** cette charge. La seule
+  règle restée côté client y est `isCatalogueMission` — une propriété du CONTENU
+  (`source='admin'`, hors quiz), qui ne lit aucun score. Si tu te surprends à écrire
+  `score >= 60` dans un composant, tu es en train de recréer la divergence.
+- **La charge ne porte QUE les missions** (`mode <> 'quiz'`). La porte du chapitre a son propre
+  verdict, `chapter_quiz_cleared`, servi dans `chapters[].quiz.cleared` : c'est lui qui coche la
+  ligne du quiz. L'oublier fait promettre ses XP à un quiz déjà franchi.
+
 ---
 
 ## 6. Où c'est prouvé

@@ -96,11 +96,20 @@ describe("gamification.quest — getSubject", () => {
     mockRpc.mockReset();
   });
 
-  it("returns subject, chapters, exercises, and best scores", async () => {
+  it("returns subject, chapters, exercises, and the progress ledger", async () => {
     const subjectData = { id: "subj-1", name_fr: "Math" };
     const chaptersData = [{ id: "ch-1", title: "Chapter 1" }];
     const exercisesData = [{ id: "ex-1", title: "Exercise 1" }];
-    const bestScoresData = [{ exercise_id: "ex-1", best_score: 85 }];
+    // La charge de `get_subject_progress` (étude 34) : elle voyage BRUTE jusqu'au hub,
+    // qui la lit par `parseSubjectProgress`. La server fn ne la retouche pas.
+    const progressData = {
+      subjectId: "subj-1",
+      seals: [],
+      nextSeal: null,
+      effort: { missionsCounted: 1, xp: 20, chaptersStarted: 1, chaptersMastered: 0 },
+      chapters: [],
+      missions: [{ exerciseId: "ex-1", counted: true, bestClassic: 85 }],
+    };
 
     mockFrom.mockImplementation((table: string) => {
       if (table === "subjects") return mockQuery(subjectData);
@@ -109,7 +118,7 @@ describe("gamification.quest — getSubject", () => {
       return mockQuery([]);
     });
     mockRpc.mockImplementation((fn: string) => {
-      if (fn === "get_best_scores_by_exercise") return { data: bestScoresData, error: null };
+      if (fn === "get_subject_progress") return { data: progressData, error: null };
       return { data: [], error: null };
     });
 
@@ -122,7 +131,7 @@ describe("gamification.quest — getSubject", () => {
       subject: subjectData,
       chapters: chaptersData,
       exercises: exercisesData,
-      bestByExercise: { "ex-1": 85 },
+      progress: progressData,
       quizPassedByChapter: {},
       viewer: { level: 0, isPremium: false, hasEntitlement: true, unrestricted: false },
       // Recall availability (étude 17) — empty here: the mocked RPC resolves nothing.
@@ -146,7 +155,7 @@ describe("gamification.quest — getSubject", () => {
     ).rejects.toThrow("Impossible de charger la matière.");
   });
 
-  it("returns empty bestByExercise on bestScores RPC error", async () => {
+  it("degrades to no progress on a get_subject_progress RPC error", async () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "subjects") return mockQuery({ id: "s1" });
       if (table === "chapters") return mockQuery([]);
@@ -160,13 +169,15 @@ describe("gamification.quest — getSubject", () => {
     const result = await (getSubject as unknown as (d: unknown) => Promise<unknown>)({
       subjectId: "s1",
     });
-    expect((result as Record<string, unknown>).bestByExercise).toEqual({});
+    // `null`, pas `{}` : le hub lit « pas de compte », donc l'expérience anonyme —
+    // une progression indisponible ne doit pas se lire « zéro étoile ».
+    expect((result as Record<string, unknown>).progress).toBeNull();
   });
 
-  // The best-scores RPC rides in the same Promise.all as the content queries
-  // (perf audit L1). A rejection there must still degrade to "no best scores"
+  // The progress RPC rides in the same Promise.all as the content queries
+  // (perf audit L1). A rejection there must still degrade to "no progress"
   // and never take the whole page down with it.
-  it("returns empty bestByExercise — and still loads the subject — when bestScores THROWS", async () => {
+  it("degrades to no progress — and still loads the subject — when the RPC THROWS", async () => {
     const subjectData = { id: "s1", name_fr: "Math" };
     mockFrom.mockImplementation((table: string) => {
       if (table === "subjects") return mockQuery(subjectData);
@@ -175,7 +186,7 @@ describe("gamification.quest — getSubject", () => {
       return mockQuery([]);
     });
     mockRpc.mockImplementation((fn: string) => {
-      if (fn === "get_best_scores_by_exercise") return Promise.reject(new Error("network down"));
+      if (fn === "get_subject_progress") return Promise.reject(new Error("network down"));
       return { data: [], error: null };
     });
 
@@ -185,7 +196,7 @@ describe("gamification.quest — getSubject", () => {
       subjectId: "s1",
     })) as Record<string, unknown>;
 
-    expect(result.bestByExercise).toEqual({});
+    expect(result.progress).toBeNull();
     expect(result.subject).toEqual(subjectData);
   });
 

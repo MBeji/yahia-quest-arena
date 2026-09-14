@@ -55,7 +55,7 @@ function MatierePage() {
       subject={data.subject}
       chapters={data.chapters}
       exercises={data.exercises}
-      bestByExercise={data.bestByExercise}
+      progress={data.progress}
       quizPassedByChapter={data.quizPassedByChapter}
       parcours={data.parcours}
       recall={data.recall}
