@@ -41,6 +41,15 @@ export const arProgress: ProgressTranslations = {
       chaptersStarted: "{started} فصلا بدأته",
       chaptersMastered: "{mastered} متقَنا",
     },
+    celebration: {
+      starTitle: "نجمة الفصل!",
+      starTitlePlural: "{n} نجوم دفعة واحدة!",
+      starBody: "نلت النجمة {star} في هذا الفصل. صارت لك إلى الأبد.",
+      starMastered: "فصل متقَن: لم يبق فيه ما تفعله.",
+      sealTitle: "ختم {stars}",
+      sealBody: "كلّ فصول هذه المادّة نالت النجمة. الأمر مؤرّخ، ولا يُمحى.",
+      sealHint: "المس للعودة إلى نتيجتك.",
+    },
     anonPromise: "سجّل دخولك لتحتفظ بنجومك.",
   },
 };

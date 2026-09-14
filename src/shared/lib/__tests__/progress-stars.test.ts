@@ -19,10 +19,12 @@ import {
   missionTier,
   nextRung,
   nextSealOf,
+  parseAttemptProgress,
   parseSubjectProgress,
   readSubjectStars,
   rungNovelties,
   rungTally,
+  sealToCelebrate,
   starBuckets,
   type CatalogueExercise,
 } from "../progress-stars";
@@ -340,5 +342,66 @@ describe("l'agrégat par matière — sceaux, distribution, prochain palier (lot
   it("rend `null` sur une ligne sans identifiant de matière", () => {
     expect(readSubjectStars({ chapters_total: 20 })).toBeNull();
     expect(readSubjectStars(null)).toBeNull();
+  });
+});
+
+describe("le delta d'une soumission — ce que l'écran a le droit de célébrer (lot 4)", () => {
+  const delta = (over: Record<string, unknown> = {}) => ({
+    chapterId: "c1",
+    starBefore: 1,
+    starAfter: 3,
+    newStars: [2, 3],
+    newSeals: [
+      { subjectId: "math", star: 1 },
+      { subjectId: "math", star: 3 },
+    ],
+    newBadges: [{ code: "first_seal", name: "Premier sceau", rarity: "rare", iconName: "Stamp" }],
+    rungs: [
+      { difficulty: 1, total: 1, counted: 1, new: 0 },
+      { difficulty: 3, total: 2, counted: 2, new: 0 },
+    ],
+    ...over,
+  });
+
+  it("allume la jauge sur l'étoile APRÈS — c'est celle que le bloc montre", () => {
+    const p = parseAttemptProgress(delta())!;
+    expect(p.rungs.map((r) => r.lit)).toEqual([true, true]);
+    expect(p.starBefore).toBe(1);
+    expect(p.starAfter).toBe(3);
+  });
+
+  it("⭐ ne garde QU'UN sceau à fêter : le plus haut (R-12)", () => {
+    // Une matière maîtrisée d'un coup inscrit ses quatre sceaux dans la même
+    // transaction. Les fêter tous enchaînerait quatre modales — é31 R-6 l'interdit,
+    // et ça transformerait un sommet en corvée.
+    expect(sealToCelebrate(parseAttemptProgress(delta()))).toEqual({
+      subjectId: "math",
+      star: 3,
+    });
+  });
+
+  it("ne fête aucun sceau quand aucun n'est tombé", () => {
+    expect(sealToCelebrate(parseAttemptProgress(delta({ newSeals: [] })))).toBeNull();
+    expect(sealToCelebrate(null)).toBeNull();
+  });
+
+  it("lit les badges de CETTE soumission, pas la collection", () => {
+    const p = parseAttemptProgress(delta())!;
+    expect(p.newBadges).toHaveLength(1);
+    expect(p.newBadges[0]).toMatchObject({ code: "first_seal", iconName: "Stamp" });
+  });
+
+  it("rend `null` sur une charge méconnaissable — l'écran se tait alors", () => {
+    for (const bad of [null, undefined, 42, {}, { starAfter: 3 }]) {
+      expect(parseAttemptProgress(bad)).toBeNull();
+    }
+  });
+
+  it("survit à un sceau ou un badge sans identifiant", () => {
+    const p = parseAttemptProgress(
+      delta({ newSeals: [{ star: 2 }, null], newBadges: [{ name: "sans code" }] }),
+    )!;
+    expect(p.newSeals).toEqual([]);
+    expect(p.newBadges).toEqual([]);
   });
 });

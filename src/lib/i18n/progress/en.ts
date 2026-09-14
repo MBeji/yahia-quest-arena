@@ -35,6 +35,15 @@ export const enProgress: ProgressTranslations = {
       chaptersStarted: "{started} chapters started",
       chaptersMastered: "{mastered} mastered",
     },
+    celebration: {
+      starTitle: "Chapter star!",
+      starTitlePlural: "{n} stars at once!",
+      starBody: "You hold star {star} of this chapter. It is yours for good.",
+      starMastered: "Chapter mastered: there is nothing left to do here.",
+      sealTitle: "Seal {stars}",
+      sealBody: "Every chapter of this subject holds the star. It is dated, and it never fades.",
+      sealHint: "Tap to go back to your result.",
+    },
     anonPromise: "Sign in to keep your stars.",
   },
 };

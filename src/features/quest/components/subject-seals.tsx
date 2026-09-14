@@ -1,4 +1,5 @@
 import { SealMark } from "@/components/game/seal-mark";
+import { useI18n } from "@/lib/i18n";
 import { useProgressT } from "@/lib/i18n/progress";
 import { STAR_TIERS, type SubjectProgress } from "@/shared/lib/progress-stars";
 
@@ -26,6 +27,8 @@ import { STAR_TIERS, type SubjectProgress } from "@/shared/lib/progress-stars";
  */
 export function SubjectSeals({ progress }: { progress: SubjectProgress | null }) {
   const t = useProgressT();
+  // La date du sceau se rend dans la LANGUE de l'élève, comme celle des badges.
+  const { locale } = useI18n();
   const sealStar = progress?.sealStar ?? 0;
   const nextSeal = progress?.nextSeal ?? null;
 
@@ -56,7 +59,7 @@ export function SubjectSeals({ progress }: { progress: SubjectProgress | null })
                 <span className="ms-2 font-normal text-muted-foreground">
                   {t.progress.seal.earnedOn.replace(
                     "{date}",
-                    new Date(progress.seals.at(-1)!.reachedAt!).toLocaleDateString(),
+                    new Date(progress.seals.at(-1)!.reachedAt!).toLocaleDateString(locale),
                   )}
                 </span>
               )}

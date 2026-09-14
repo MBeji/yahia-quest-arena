@@ -40,6 +40,11 @@ const ETUDE_31_CLOSED_LIST: ProductEventName[] = [
   "streak_recovered",
   "push_optin",
   "push_optout",
+  // Étude 34 lot 4 — la liste de é31 était close ; celle-ci l'AMENDE, par écrit.
+  // Les deux événements de la progression sont commandés par R-12 et mesurent
+  // KPI-3 (le délai jusqu'à la première reconnaissance).
+  "chapter_star_earned",
+  "subject_seal_earned",
 ];
 
 const SRC = join(process.cwd(), "src");

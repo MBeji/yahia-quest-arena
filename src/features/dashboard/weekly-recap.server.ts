@@ -43,6 +43,13 @@ const recapSchema = z.object({
   }),
   streak: z.coerce.number(),
   badges: z.array(z.string()),
+  /**
+   * Étude 34 — les étoiles et les sceaux tombés CETTE semaine, lus au grand
+   * livre (qui est daté). `.catch(0)` : un rapport antérieur à la migration
+   * doit rendre la carte, pas la faire échouer.
+   */
+  stars: z.coerce.number().catch(0),
+  seals: z.coerce.number().catch(0),
   league: z
     .object({
       tier: z.string(),

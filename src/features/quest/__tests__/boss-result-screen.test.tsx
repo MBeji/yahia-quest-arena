@@ -97,6 +97,11 @@ function renderScreen(over: Partial<Parameters<typeof QuestResultScreen>[0]> = {
     showConfetti: false,
     showLevelUp: false,
     onLevelUpComplete: () => {},
+    // Étude 34 lot 4 : ce décor ne célèbre rien — l'écran doit rendre à l'identique.
+    attemptProgress: null,
+    showSeal: false,
+    onSealComplete: () => {},
+    subjectName: "",
     onReplay: () => {},
     renderResultFooter: () => null,
     resolvePrompt: () => "",

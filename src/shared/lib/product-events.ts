@@ -42,7 +42,12 @@ export type ProductEventName =
   | "shop_purchase"
   | "streak_recovered"
   | "push_optin"
-  | "push_optout";
+  | "push_optout"
+  // Étude 34 — ce que la progression fait tomber. Deux événements, pas un de plus :
+  // l'étoile est le geste fréquent, le sceau est le jalon rare, et mesurer les deux
+  // dit si la reconnaissance arrive assez tôt pour motiver (KPI-3 de l'étude).
+  | "chapter_star_earned"
+  | "subject_seal_earned";
 
 export type ProductEventEntry = {
   readonly name: ProductEventName;
@@ -82,6 +87,16 @@ export const PRODUCT_EVENT_CATALOGUE: readonly ProductEventEntry[] = [
   { name: "streak_recovered", fires: "Rachat de série réussi", live: true },
   { name: "push_optin", fires: "Activation des notifications", live: true },
   { name: "push_optout", fires: "Désactivation des notifications", live: true },
+  {
+    name: "chapter_star_earned",
+    fires: "à la fin d'une mission qui fait monter l'étoile d'un chapitre (étude 34)",
+    live: true,
+  },
+  {
+    name: "subject_seal_earned",
+    fires: "quand tous les chapitres d'une matière atteignent la même étoile (étude 34)",
+    live: true,
+  },
 ] as const;
 
 /**

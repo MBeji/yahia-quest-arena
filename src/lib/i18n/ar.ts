@@ -128,6 +128,7 @@ export const ar: TranslationKeys = {
     allTimeTab: "منذ البداية",
     weeklyRecapTitle: "أسبوعك",
     weeklyRecapEmpty: "أسبوعك يبدأ — أوّل مهمّة تفتح الحصيلة.",
+    weeklyRecapStars: "⭐ {stars} نجمة · {seals} ختما هذا الأسبوع",
     weeklyRecapXp: "نقاط الخبرة",
     weeklyRecapMissions: "مهامّ",
     weeklyRecapAccuracy: "الدقّة",

@@ -566,6 +566,41 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
 
     const badgeCollection = buildBadgeCollection(catalogueRes.data ?? [], badges);
 
+    // ⭐ LES SCEAUX (étude 34, lot 4 · D-7). Ils vivent dans leur propre table, pas
+    // dans le système de badges : 94 matières × 4 sceaux ne rentreraient ni dans
+    // `Record<BadgeCode, …>` ni dans le budget du chunk `i18n-badges`. La
+    // collection les affiche donc dans une section à part, au-dessus des familles.
+    //
+    // Lecture directe : `user_subject_seals` est en RLS propriétaire depuis le
+    // lot 1, donc ce `select` ne rend que les siens — aucune RPC n'a besoin
+    // d'exister pour ça. On garde le PLUS HAUT par matière : c'est le sceau que
+    // l'élève détient, les inférieurs sont son histoire, pas son état.
+    const sealsRes = await supabase
+      .from("user_subject_seals")
+      .select("subject_id, star, reached_at, subjects(name_fr)")
+      .order("star", { ascending: false });
+    const bySubject = new Map<
+      string,
+      { subjectId: string; subjectName: string; star: number; reachedAt: string }
+    >();
+    for (const row of (sealsRes.data ?? []) as unknown as {
+      subject_id: string;
+      star: number;
+      reached_at: string;
+      subjects: { name_fr: string } | null;
+    }[]) {
+      if (bySubject.has(row.subject_id)) continue;
+      bySubject.set(row.subject_id, {
+        subjectId: row.subject_id,
+        subjectName: row.subjects?.name_fr ?? row.subject_id,
+        star: Number(row.star),
+        reachedAt: row.reached_at,
+      });
+    }
+    const seals = [...bySubject.values()].sort(
+      (a, b) => b.star - a.star || a.subjectName.localeCompare(b.subjectName),
+    );
+
     // Armable consumables fall into two independent arming slots, derived from the
     // effect payload (mirrors activate_inventory_item):
     //   * "next-quest": multiplier potions (xpMultiplier/coinMultiplier) + the retry
@@ -646,7 +681,7 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
       };
     });
 
-    return { badges, badgeCollection, inventory, shopItems };
+    return { badges, badgeCollection, seals, inventory, shopItems };
   });
 
 // ---------- Parcours catalogue (sellable journeys: concours + free libre tracks) ----------

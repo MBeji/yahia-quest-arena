@@ -77,3 +77,30 @@ export function emitQuestResultTelemetry(params: {
     trackProductEvent("level_up", { level: params.leveledUpTo });
   }
 }
+
+/**
+ * Ce que la progression a fait tomber, pour la mesure (étude 34, R-12).
+ *
+ * Deux événements, et rien d'autre : l'étoile est le geste FRÉQUENT, le sceau le
+ * jalon RARE. Ensemble ils répondent à la question que l'étude pose en KPI-3 —
+ * combien de temps un élève attend sa première reconnaissance.
+ *
+ * ⚠️ AUCUNE PII. Ni identifiant d'élève, ni nom : uniquement le cran atteint et
+ * la matière, qui sont du contenu. Le test `product-events` balaie les sites
+ * d'appel et rougit sur une propriété qui ressemblerait à une donnée de personne.
+ */
+export function emitStarProgressTelemetry(progress: {
+  starBefore: number;
+  starAfter: number;
+  newSeals: { subjectId: string; star: number }[];
+}): void {
+  if (progress.starAfter > progress.starBefore) {
+    trackProductEvent("chapter_star_earned", {
+      star: progress.starAfter,
+      gained: progress.starAfter - progress.starBefore,
+    });
+  }
+  for (const seal of progress.newSeals) {
+    trackProductEvent("subject_seal_earned", { star: seal.star, subject_id: seal.subjectId });
+  }
+}

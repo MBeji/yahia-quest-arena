@@ -8,6 +8,7 @@ import {
   checkQuestion,
   revealHint,
   startExerciseSession,
+  getAttemptProgress,
   submitAttempt,
 } from "@/features/quest";
 import {
@@ -54,6 +55,10 @@ function QuestPage() {
   const submit = useServerFn(submitAttempt);
   const reveal = useServerFn(revealHint);
   const check = useServerFn(checkQuestion);
+  // ⭐ Étude 34 lot 4 : ce que la dernière soumission a fait tomber. Branchée sur
+  // la SEULE route connectée — sans compte il n'y a pas de grand livre à lire,
+  // et le registre anonyme laisse donc `loadProgress` absente.
+  const loadProgress = useServerFn(getAttemptProgress);
 
   const strategy = useMemo<ExercisePlayerStrategy>(
     () => ({
@@ -104,6 +109,7 @@ function QuestPage() {
           improved: res.improved,
         };
       },
+      loadProgress: (exId: string) => loadProgress({ data: { exerciseId: exId } }),
       revealHint: async (questionId) => {
         const r = await reveal({ data: { questionId } });
         return { questionId: r.questionId, hint: r.hint, consumed: r.consumed };
@@ -148,7 +154,7 @@ function QuestPage() {
         </>
       ),
     }),
-    [startSession, submit, reveal, check, t],
+    [startSession, submit, reveal, check, loadProgress, t],
   );
 
   // Plus de conteneur porteur de thème (levier 03) : le lecteur tire ses surfaces

@@ -87,6 +87,27 @@ export type ProgressTranslations = {
       /** `{mastered}` chapitres maîtrisés. */
       chaptersMastered: string;
     };
+    /**
+     * Ce que l'écran de résultat fête (R-12), et lui seul. Ces chaînes ne doivent
+     * jamais proposer une suite : une célébration qui enchaîne transforme un
+     * sommet en tapis roulant (é31 R-6).
+     */
+    celebration: {
+      /** Un cran gagné — « Étoile du chapitre ! ». */
+      starTitle: string;
+      /** Plusieurs d'un coup — `{n}`. */
+      starTitlePlural: string;
+      /** Le palier atteint — `{star}`. */
+      starBody: string;
+      /** L'étoile 4 : le chapitre n'a plus rien à donner. */
+      starMastered: string;
+      /** Le sceau — `{stars}`. */
+      sealTitle: string;
+      /** Ce que le sceau atteste. */
+      sealBody: string;
+      /** Comment refermer — jamais « continue », jamais une suite. */
+      sealHint: string;
+    };
     /** La promesse faite à l'anonyme (R-16) — jamais un verrou de plus. */
     anonPromise: string;
   };

@@ -28,6 +28,9 @@ function recap(over: Partial<WeeklyRecap> = {}): WeeklyRecap {
     streak: 5,
     badges: ["streak_7"],
     league: null,
+    // Étude 34 : la semaine n'a rien fait tomber par défaut — la ligne reste muette.
+    stars: 0,
+    seals: 0,
     ...over,
   };
 }
@@ -86,5 +89,28 @@ describe("WeeklyRecapCard", () => {
   it("compte les badges de la semaine, et se tait quand il n'y en a pas", () => {
     render(<WeeklyRecapCard recap={recap({ badges: [] })} />);
     expect(screen.queryByTestId("weekly-recap-badges")).not.toBeInTheDocument();
+  });
+});
+
+describe("WeeklyRecapCard — étoiles et sceaux de la semaine (é34)", () => {
+  it("raconte ce que la semaine a fait tomber, sans rien payer", () => {
+    // é31 R-18 : la carte RACONTE. Aucune XP, aucune pièce n'accompagne la ligne —
+    // et le test le vérifie en cherchant les mots de la récompense.
+    render(<WeeklyRecapCard recap={recap({ stars: 5, seals: 1 })} />);
+    const line = screen.getByTestId("weekly-recap-stars");
+    expect(line.textContent).toContain("5");
+    expect(line.textContent).toContain("1");
+    expect(line.textContent).not.toMatch(/XP|pièce|coin/i);
+  });
+
+  it("se tait quand la semaine n'a fait tomber ni étoile ni sceau", () => {
+    // Une ligne à zéro se lit comme un reproche, et « Ta semaine » n'en fait aucun.
+    render(<WeeklyRecapCard recap={recap({ stars: 0, seals: 0 })} />);
+    expect(screen.queryByTestId("weekly-recap-stars")).not.toBeInTheDocument();
+  });
+
+  it("parle dès qu'UN seul des deux a bougé", () => {
+    render(<WeeklyRecapCard recap={recap({ stars: 0, seals: 1 })} />);
+    expect(screen.getByTestId("weekly-recap-stars")).toBeInTheDocument();
   });
 });

@@ -129,6 +129,7 @@ export const en: TranslationKeys = {
     allTimeTab: "All time",
     weeklyRecapTitle: "Your week",
     weeklyRecapEmpty: "Your week is just starting — the first mission opens the recap.",
+    weeklyRecapStars: "⭐ {stars} stars · {seals} seals this week",
     weeklyRecapXp: "XP earned",
     weeklyRecapMissions: "missions",
     weeklyRecapAccuracy: "accuracy",

@@ -25,3 +25,4 @@ export { exerciseRouteFor } from "./exercise-route";
 // Chargé UNIQUEMENT par un `import()` dynamique depuis `__root.tsx` : il tire
 // `quest.server` et `quest-draft`, qui n'ont rien à faire dans le chunk index.
 export { registerQuestOutboxSender } from "./quest-outbox";
+export { getAttemptProgress } from "./quest.progress.server";

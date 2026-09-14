@@ -15,4 +15,16 @@ describe("GAMEPLAY_TABLES", () => {
   it("includes bug_reports so any future bug-report E2E spec stays clean", () => {
     expect(GAMEPLAY_TABLES).toContain("bug_reports");
   });
+
+  // Le grand livre de l'étude 34 est le seul décor e2e qui ne se dégrade pas tout
+  // seul : il est insert-only et MONOTONE (R-6), donc rien ne le remet à zéro au
+  // fil du temps. Omis ici, il ne casse aucun test le premier soir — il les casse
+  // tous les suivants, parce qu'une étoile déjà inscrite ne peut plus être gagnée
+  // et qu'un sceau déjà posé ne décerne plus son badge.
+  it.each(["user_chapter_stars", "user_subject_seals"])(
+    "includes %s so a star can be EARNED again on the next run",
+    (table) => {
+      expect(GAMEPLAY_TABLES).toContain(table);
+    },
+  );
 });

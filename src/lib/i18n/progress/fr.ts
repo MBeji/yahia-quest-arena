@@ -38,6 +38,16 @@ export const frProgress: ProgressTranslations = {
       chaptersStarted: "{started} chapitres commencés",
       chaptersMastered: "{mastered} maîtrisés",
     },
+    celebration: {
+      starTitle: "Étoile du chapitre !",
+      starTitlePlural: "{n} étoiles d'un coup !",
+      starBody: "Tu tiens l'étoile {star} de ce chapitre. Elle est à toi, définitivement.",
+      starMastered: "Chapitre maîtrisé : il ne te reste plus rien à y faire.",
+      sealTitle: "Sceau {stars}",
+      sealBody:
+        "Tous les chapitres de cette matière portent l'étoile. C'est daté, et ça ne s'efface pas.",
+      sealHint: "Touche pour revenir à ton résultat.",
+    },
     anonPromise: "Connecte-toi pour garder tes étoiles.",
   },
 };

@@ -420,3 +420,98 @@ export function readSubjectStars(raw: unknown): SubjectStarSummary | null {
     newMissions: asInt(r.new_missions ?? r.newMissions),
   };
 }
+
+// --------------------------------------------------------------------------
+// LE DELTA D'UNE SOUMISSION (étude 34, lot 4)
+//
+// `get_last_attempt_progress` dit ce que LA DERNIÈRE tentative a fait tomber, et
+// rien d'autre. C'est la distinction qui fait toute la célébration : « l'étoile
+// que tu viens de gagner » n'est pas « les étoiles que tu as », et un écran qui
+// confond les deux fête la même chose à chaque exercice — donc ne fête plus rien.
+// --------------------------------------------------------------------------
+
+/** Un badge décerné par CETTE soumission. */
+export type NewBadge = {
+  code: string;
+  name: string;
+  rarity: string;
+  iconName: string | null;
+};
+
+/** Un sceau gagné par CETTE soumission. */
+export type NewSeal = { subjectId: string; star: StarTier };
+
+/** Ce qu'une soumission a fait tomber. */
+export type AttemptProgress = {
+  chapterId: string;
+  /** L'étoile du chapitre AVANT cette tentative. */
+  starBefore: number;
+  /** …et après. Égales ⇒ rien à célébrer. */
+  starAfter: number;
+  /** Les crans gagnés par cette tentative, dans l'ordre. */
+  newStars: StarTier[];
+  newSeals: NewSeal[];
+  newBadges: NewBadge[];
+  /** La jauge du chapitre APRÈS la tentative — celle que le bloc anime. */
+  rungs: ChapterRung[];
+};
+
+/**
+ * Lit la charge de `get_last_attempt_progress`. `null` sur une charge absente ou
+ * méconnaissable : l'écran de résultat se tait alors, ce qui est exactement la
+ * bonne conduite — une célébration inventée vaut moins que pas de célébration.
+ */
+export function parseAttemptProgress(raw: unknown): AttemptProgress | null {
+  const p = asRecord(raw);
+  if (!p || typeof p.chapterId !== "string") return null;
+
+  const starAfter = asInt(p.starAfter);
+  const rungs = asArray(p.rungs)
+    .map(readRung)
+    .filter((r): r is ChapterRung => r !== null)
+    .map((r) => ({ ...r, lit: starAfter >= r.tier }))
+    .sort((a, b) => a.tier - b.tier);
+
+  return {
+    chapterId: p.chapterId,
+    starBefore: asInt(p.starBefore),
+    starAfter,
+    newStars: asArray(p.newStars)
+      .map((s) => asTier(s))
+      .sort((a, b) => a - b),
+    newSeals: asArray(p.newSeals)
+      .map((s) => {
+        const r = asRecord(s);
+        return r && typeof r.subjectId === "string"
+          ? { subjectId: r.subjectId, star: asTier(r.star) }
+          : null;
+      })
+      .filter((s): s is NewSeal => s !== null),
+    newBadges: asArray(p.newBadges)
+      .map((b) => {
+        const r = asRecord(b);
+        if (!r || typeof r.code !== "string") return null;
+        return {
+          code: r.code,
+          name: typeof r.name === "string" ? r.name : r.code,
+          rarity: typeof r.rarity === "string" ? r.rarity : "common",
+          iconName: typeof r.iconName === "string" ? r.iconName : null,
+        };
+      })
+      .filter((b): b is NewBadge => b !== null),
+    rungs,
+  };
+}
+
+/**
+ * LE sceau à célébrer : le plus haut que cette soumission a fait tomber (R-12).
+ *
+ * Une matière entièrement maîtrisée d'un coup inscrit les quatre sceaux dans la
+ * même transaction. Les fêter tous les quatre enchaînerait quatre modales, ce que
+ * é31 R-6 interdit — et ce qui transformerait un sommet en corvée. Une seule, la
+ * plus haute.
+ */
+export function sealToCelebrate(progress: AttemptProgress | null): NewSeal | null {
+  if (!progress || progress.newSeals.length === 0) return null;
+  return progress.newSeals.reduce((best, s) => (s.star > best.star ? s : best));
+}
