@@ -54,6 +54,18 @@ export const enBadges: BadgeTranslations = {
         name: "May revisions",
         condition: "Pass 5 missions at 90 % during the May revision fortnight",
       },
+      first_seal: {
+        name: "First Seal",
+        condition: "Earn your first subject seal",
+      },
+      subject_elite: {
+        name: "Elite Subject",
+        condition: "Earn a subject's ⭐⭐⭐⭐ seal — every chapter mastered",
+      },
+      parcours_covered: {
+        name: "Class Covered",
+        condition: "Earn the ⭐ seal in every subject of your class",
+      },
     },
     familyProgress: "{n}/{total}",
     locked: "Locked",

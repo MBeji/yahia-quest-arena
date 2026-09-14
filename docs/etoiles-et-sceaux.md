@@ -58,6 +58,27 @@ travail, les crans 1 et 2 étant absents.
 - une reprise en **Rappel** ;
 - une réussite **précipitée** (< 4 s/question) — même règle que l'XP et que le quiz.
 
+### Ce qui se collectionne (lot 4)
+
+Trois badges, **et pas un de plus** — famille `maitrise` :
+
+| code               | condition                                                    |
+| ------------------ | ------------------------------------------------------------ |
+| `first_seal`       | le premier sceau, toute matière confondue                    |
+| `subject_elite`    | un sceau ⭐⭐⭐⭐ — une matière entière maîtrisée            |
+| `parcours_covered` | le sceau ⭐ de **toutes** les matières publiées de sa classe |
+
+**Pourquoi trois et pas un par sceau** (D-7) : 94 matières × 4 sceaux et 773 chapitres × 4
+étoiles ne rentrent ni dans le patron `Record<BadgeCode, …>` — la garantie `tsc` qui fait
+échouer la compilation sur un badge sans son libellé, dans les trois langues — ni dans le
+budget de 12 KB du chunk `i18n-badges`. Les sceaux ont donc leur **vitrine à part** dans la
+collection, et le système de badges ne reçoit que ces trois méta-jalons.
+
+Ils tombent dans `record_progress_stars`, **seulement quand un sceau vient réellement d'être
+inscrit**, et leur `awarded_reason` porte l'id de la tentative (`stars:<uuid>`). C'est cette
+clé qui permet à l'écran de résultat de fêter « le badge que tu viens de gagner » plutôt que
+toute la collection.
+
 ---
 
 ## 2. Ce que ça ne fait pas
@@ -130,6 +151,12 @@ portée du plus grand nombre, et la question se rouvre par amendement de l'étud
 - **Le moteur de contenu n'a rien à changer** : `sql-builder` upserte avec des listes de
   colonnes explicites, donc `created_at` survit à une ré-application et se pose sur une
   insertion neuve. Ne pas l'ajouter à un `DO UPDATE SET`, jamais.
+- **`RETURNING … INTO` sur une insertion MULTI-LIGNES lève.** `record_progress_stars` pose
+  1..r sceaux d'un coup (`generate_series`), et un `INTO` de plpgsql exige exactement une
+  ligne : il lève « query returned more than one row » dès qu'un élève en gagne deux à la
+  fois. Le trigger s'exécutant sur **chaque** insertion dans `attempts`, la faute tombe la
+  suite pgTAP entière, y compris des tests qui ne parlent pas d'étoiles. Compter les lignes
+  réellement posées avec `GET DIAGNOSTICS … = ROW_COUNT`.
 - **Ne jamais recopier un prédicat** (les seuils 60 / 80 / 4 s, la porte du quiz, « mission de
   catalogue ») : ils vivent chacun dans **une** fonction, et c'est ce qui a évité au projet trois
   divergences déjà payées.

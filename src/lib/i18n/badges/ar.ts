@@ -54,6 +54,18 @@ export const arBadges: BadgeTranslations = {
         name: "مراجعات مايو",
         condition: "النجاح في 5 مهامّ بنسبة 90٪ خلال أسبوعَي مراجعات مايو",
       },
+      first_seal: {
+        name: "الختم الأوّل",
+        condition: "نيل أوّل ختم مادّة",
+      },
+      subject_elite: {
+        name: "مادّة النخبة",
+        condition: "نيل ختم ⭐⭐⭐⭐ لمادّة — كلّ فصولها متقَنة",
+      },
+      parcours_covered: {
+        name: "قسم مغطّى",
+        condition: "نيل ختم ⭐ في كلّ مواد القسم",
+      },
     },
     familyProgress: "{n}/{total}",
     locked: "لم يُفتح بعد",

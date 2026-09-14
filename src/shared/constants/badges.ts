@@ -49,6 +49,13 @@ export const BADGE_CODES = [
   "event_synthese",
   "event_ramadan",
   "event_revisions",
+  // Étude 34 — les TROIS méta-badges des sceaux, et pas un de plus (D-7) :
+  // 94 matières × 4 sceaux ne rentreraient ni dans `Record<BadgeCode, …>` ni
+  // dans le budget du chunk `i18n-badges`. Étoiles et sceaux vivent dans leurs
+  // deux tables ; ici on ne garde que les jalons qui se collectionnent.
+  "first_seal",
+  "subject_elite",
+  "parcours_covered",
 ] as const;
 export type BadgeCode = (typeof BADGE_CODES)[number];
 
