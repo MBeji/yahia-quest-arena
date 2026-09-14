@@ -136,6 +136,7 @@ function BoutiquePage() {
             onActivate={(itemCode) => activateMutation.mutate({ itemCode })}
           />
           <DashboardBadgesShop
+            seals={secondary?.seals ?? []}
             collection={badgeCollection}
             shopItems={shopItems}
             availableCoins={profile.yahia_coins ?? 0}

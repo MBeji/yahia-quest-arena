@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { computeNextExerciseId, getExercise, getSubject } from "@/features/quest";
+import { useAttemptCelebration } from "../use-attempt-celebration";
 import { PASS_THRESHOLD_PCT, RECALL_MIN_QUESTIONS } from "@/shared/constants/gamification";
 import { isValidAnswerFormat } from "@/shared/lib/answer-formats";
 import { userFacingError } from "@/shared/lib/error-message";
@@ -52,7 +53,6 @@ import {
   useQuestDraftRestore,
 } from "@/features/quest/components/use-quest-autosave";
 import { QuestSaveStatus } from "@/features/quest/components/quest-save-status";
-import type { UnlockedBadge } from "@/shared/types/gamification";
 import { emitQuestResultTelemetry, levelCrossedBy } from "@/features/quest/quest-result-facts";
 
 // =============================================================================
@@ -84,71 +84,12 @@ import { emitQuestResultTelemetry, levelCrossedBy } from "@/features/quest/quest
 // visible dans l'UI ce que la plateforme sert déjà.
 // =============================================================================
 
-export type PlayerAnswer = { questionId: string; choice: string };
+// Le contrat de données vit dans `player-types.ts` depuis que ce fichier a atteint
+// sa limite de lignes ; il reste ré-exporté ici, où tous ses appelants le lisent.
+import type { PlayerAnswer, PlayerResult, StartOutcome } from "../player-types";
 
+export type { PlayerAnswer, PlayerReviewItem, PlayerResult, StartOutcome } from "../player-types";
 export type { QuestionVerdict };
-
-export type PlayerReviewItem = {
-  questionId: string;
-  prompt: string;
-  selectedChoice: string;
-  correctChoice: string;
-  isCorrect: boolean;
-  explanation: string | null;
-  /**
-   * Étude 04 lot A1.2 — l'erreur nommée et son chapitre. OPTIONNELS à dessein :
-   * la correction anonyme (`check_answers`) n'a ni l'une ni l'autre, et le rendu
-   * dégradé est le comportement exigé (R-A1.2-3), pas un cas d'erreur.
-   */
-  misconceptionTag?: string | null;
-  chapterId?: string | null;
-  /** Les trois langues de l'erreur ; l'écran choisit la sienne (é07 `pickLabel`). */
-  misconceptionLabels?: { fr: string; en: string; ar: string } | null;
-  /** La compétence mise en défaut (A12) — cible du geste « m'entraîner ». */
-  misconceptionCompetency?: string | null;
-};
-
-/** Unified result superset. Anonymous results leave the reward fields neutral. */
-export type PlayerResult = {
-  correct: number;
-  total: number;
-  scorePct: number;
-  durationSeconds: number;
-  reviewHidden: boolean;
-  review: PlayerReviewItem[];
-  // Reward fields — populated only by the connected strategy (rewards capability).
-  xpEarned: number;
-  coinsEarned: number;
-  profile: Record<string, unknown> | null;
-  unlockedBadges: UnlockedBadge[];
-  potionApplied: { xpMultiplier: number; coinMultiplier: number } | null;
-  retryShieldUsed: boolean;
-  tooFast: boolean;
-  improved: boolean;
-  /**
-   * Prime de rapidité appliquée aux XP du boss (1 = aucune). Décidée serveur ;
-   * le registre anonyme, qui ne gagne pas d'XP, la laisse toujours à 1.
-   */
-  speedBonus: number;
-  /** Anon quiz only: reached the score but rushed, so the chapter stays locked. */
-  quizTooFast?: boolean;
-  /**
-   * Ce résultat est RELU : la session était déjà rendue et la RPC a renvoyé la
-   * tentative enregistrée au lieu de lever (migration 20260831130000). Le score
-   * est le vrai ; les compteurs de récompense, eux, sont neutres — ils ont été
-   * crédités au premier rendu. Absent dans le registre anonyme.
-   */
-  replayed?: boolean;
-};
-
-/** Outcome of starting an exercise: a playable session, or a gate that blocks it. */
-export type StartOutcome =
-  | { ok: true; sessionId: string }
-  | { ok: false; kind: "quiz" }
-  | { ok: false; kind: "premium"; message: string }
-  // Recall gates (étude 17): the classic run isn't mastered yet ("locked") or
-  // the mission can't be played in recall at all ("not-eligible").
-  | { ok: false; kind: "recall"; reason: "locked" | "not-eligible" };
 
 export type ExercisePlayerStrategy = {
   capabilities: {
@@ -179,6 +120,13 @@ export type ExercisePlayerStrategy = {
     isQuiz: boolean;
     totalQuestions: number;
   }) => Promise<PlayerResult>;
+  /**
+   * Ce que la dernière soumission a fait tomber (étude 34, lot 4) — étoiles,
+   * sceau, badges. **Optionnelle** : le registre anonyme ne la fournit pas, et
+   * c'est structurel — sans compte il n'y a pas de grand livre à lire. Lue APRÈS
+   * le résultat, jamais avant : la célébration suit le fait.
+   */
+  loadProgress?: (exerciseId: string) => Promise<unknown>;
   revealHint?: (
     questionId: string,
   ) => Promise<{ questionId: string; hint: string | null; consumed: boolean }>;
@@ -266,6 +214,16 @@ export function ExercisePlayer({
   const [answers, setAnswers] = useState<PlayerAnswer[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
+  // ⭐ La célébration des étoiles et des sceaux (étude 34, R-12), et ses gardes.
+  const celebration = useAttemptCelebration(strategy.loadProgress, play);
+  // Le CALLBACK, pas l'objet — la même règle que `hints` et `feedback` plus bas,
+  // et elle n'est pas cosmétique : `celebration` est un objet neuf à chaque rendu,
+  // donc en dépendre depuis `resetRun` rendait `resetRun` neuf lui aussi, et
+  // l'effet `[exerciseId, resetRun]` rebouclait à l'infini. Symptôme : la page
+  // tourne à 100 % de CPU et ne rend jamais. Vu ici, et vu par la gate, sous la
+  // forme la plus discrète qui soit — deux fichiers de test qui ne rendent
+  // JAMAIS leur verdict, comptés « 2 errors » à côté de 339 fichiers verts.
+  const { reset: resetCelebration } = celebration;
   const [showLevelUp, setShowLevelUp] = useState(false);
   const [result, setResult] = useState<PlayerResult | null>(null);
 
@@ -370,6 +328,15 @@ export function ExercisePlayer({
         }
         qc.invalidateQueries({ queryKey: ["dashboard"] });
         qc.invalidateQueries({ queryKey: ["subject"] });
+
+        // ⭐ Ce que cette soumission a fait tomber (étude 34, lot 4) — étoiles,
+        // sceau, badges. Le détail vit dans `use-attempt-celebration`, qui porte
+        // aussi les deux gardes : pas de rejeu, pas de célébration inventée.
+        celebration.load({
+          exerciseId,
+          replayed: res.replayed === true,
+          leveledUp: leveledUpTo !== null,
+        });
       }
     },
     onError: (e) => toast.error(userFacingError(e, t.errors)),
@@ -412,6 +379,8 @@ export function ExercisePlayer({
   const subjectInfo = data?.exercise?.subjects as {
     color_token?: string;
     content_language?: string;
+    /** Le nom de la matière — ce que la modale de sceau atteste (é34, US-3). */
+    name_fr?: string;
   } | null;
   const isRtlSubject = subjectInfo?.content_language === "ar";
   const qlang = (subjectInfo?.content_language ?? "fr") as QuestContentLang;
@@ -513,13 +482,15 @@ export function ExercisePlayer({
     setSelected(null);
     setShowConfetti(false);
     setShowLevelUp(false);
-    // On dépend des CALLBACKS des hooks, jamais des objets `instant` / `hints` :
+    resetCelebration();
+    // On dépend des CALLBACKS des hooks, jamais des objets `instant` / `hints` /
+    // `celebration` :
     // ils sont neufs à chaque rendu, donc en dépendre relancerait `resetRun` à
     // chaque changement d'état — et effacerait le verdict à l'instant même où il paraît.
     resetFeedback();
     committedChoiceRef.current = null;
     resetHints();
-  }, [resetSession, resetFeedback, resetHints]);
+  }, [resetSession, resetFeedback, resetHints, resetCelebration]);
 
   useEffect(() => {
     resetRun();
@@ -725,6 +696,10 @@ export function ExercisePlayer({
         showConfetti={showConfetti}
         showLevelUp={showLevelUp}
         onLevelUpComplete={() => setShowLevelUp(false)}
+        attemptProgress={celebration.progress}
+        showSeal={celebration.showSeal}
+        onSealComplete={celebration.dismissSeal}
+        subjectName={subjectInfo?.name_fr ?? ""}
         onReplay={resetRun}
         renderResultFooter={strategy.renderResultFooter}
         renderTutor={strategy.renderTutor}

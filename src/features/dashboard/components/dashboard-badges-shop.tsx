@@ -2,6 +2,7 @@ import { Loader2, Shield, ShoppingBag } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { avatarEmojiForSlug } from "@/shared/lib/avatar";
 import { useI18n } from "@/lib/i18n";
+import { SubjectSealCollection, type CollectedSeal } from "./subject-seal-collection";
 import { BadgeCollection } from "@/features/dashboard/components/badge-collection";
 import type { BadgeCollectionEntry } from "@/shared/types/gamification";
 
@@ -21,6 +22,8 @@ type ShopItem = {
 };
 
 type DashboardBadgesShopProps = {
+  /** Les sceaux de matière de l'élève (étude 34) — vitrine à part des badges (D-7). */
+  seals?: CollectedSeal[];
   /** é31 lot 2 — la collection ENTIÈRE (obtenus + verrouillés), plus la seule vitrine. */
   collection: BadgeCollectionEntry[];
   shopItems: ShopItem[];
@@ -38,6 +41,7 @@ const EQUIPPABLE_TYPES = new Set(["skin", "frame", "title"]);
 
 export function DashboardBadgesShop({
   collection,
+  seals,
   shopItems,
   availableCoins,
   isPurchasePending,
@@ -62,6 +66,11 @@ export function DashboardBadgesShop({
         <h2 className="mb-4 flex items-center gap-2 font-display text-xl font-bold">
           <Shield className="h-5 w-5 text-neon-gold" /> {t.dashboard.badgesTitle}
         </h2>
+        {/* é34 D-7 — les sceaux ont leur VITRINE À PART, avant les badges : ils ne
+            sont pas des badges (94 matières × 4 ne rentrent ni dans le patron
+            `Record<BadgeCode, …>` ni dans le budget `i18n-badges`), et seuls trois
+            méta-jalons de maîtrise traversent jusqu'à la collection d'à côté. */}
+        <SubjectSealCollection seals={seals ?? []} />
         {/* é31 lot 2 — la collection COMPLÈTE remplace la vitrine des seuls badges
             obtenus : c'est la carte verrouillée, avec sa condition, qui donne une
             raison de revenir (US-3, R-13). */}

@@ -46,6 +46,15 @@ export class QuestPage {
   get reviewItems(): Locator {
     return this.page.getByTestId("review-item");
   }
+  /**
+   * Le bloc « étoile du chapitre » de l'écran de résultat (étude 34, R-12). Il
+   * n'existe QUE quand cette soumission a fait monter l'étoile — c'est le serveur
+   * qui tranche (`starAfter > starBefore`), pas l'écran. Sa seule présence prouve
+   * donc toute la chaîne : trigger → grand livre → `get_attempt_progress` → rendu.
+   */
+  get starBlock(): Locator {
+    return this.page.getByTestId("result-star-block");
+  }
 
   // --- Active recall (étude 17) ---
   /** The recall-mode banner shown atop a `?variant=recall` run. */

@@ -1,3 +1,8 @@
+import type { AttemptProgress } from "@/shared/lib/progress-stars";
+import { sealToCelebrate } from "@/shared/lib/progress-stars";
+import { SealCelebration } from "@/components/ui/seal-celebration";
+import { useProgressT } from "@/lib/i18n/progress";
+import { StarResultBlock } from "./star-result-block";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { type ReactNode } from "react";
@@ -48,6 +53,10 @@ export function QuestResultScreen({
   showConfetti,
   showLevelUp,
   onLevelUpComplete,
+  attemptProgress,
+  showSeal,
+  onSealComplete,
+  subjectName,
   onReplay,
   renderResultFooter,
   renderTutor,
@@ -72,6 +81,16 @@ export function QuestResultScreen({
   showConfetti: boolean;
   showLevelUp: boolean;
   onLevelUpComplete: () => void;
+  /**
+   * Ce que CETTE soumission a fait tomber (étude 34, R-12). `null` sans compte,
+   * sur un rejeu, ou quand la lecture a échoué — l'écran se tait alors, ce qui
+   * vaut mieux qu'une fête inventée.
+   */
+  attemptProgress: AttemptProgress | null;
+  showSeal: boolean;
+  onSealComplete: () => void;
+  /** Le nom de la matière, pour la modale de sceau. */
+  subjectName: string;
   onReplay: () => void;
   /** Étude 11 lot 1 — le slot du tuteur, traversant depuis la route. */
   renderTutor?: (questionId: string) => ReactNode;
@@ -122,6 +141,10 @@ export function QuestResultScreen({
   // « Revoir la notion en vidéo » (étude 23 US-2/US-3): offered ONLY on a failed
   // run — the moment the motivation to understand peaks — and never during a
   // question (R-7). Watching changes no server state and grants nothing (R-10).
+  const pt = useProgressT();
+  // UN seul sceau par résultat (R-12) : le plus haut que cette soumission a fait tomber.
+  const seal = sealToCelebrate(attemptProgress);
+
   const reviewVideo =
     !passed && correctionVideo ? (
       <div className="mt-4" data-testid="correction-video">
@@ -142,6 +165,20 @@ export function QuestResultScreen({
           newLevel={resultLevel}
           xpGained={result.xpEarned}
           onComplete={onLevelUpComplete}
+        />
+      )}
+      {/* ⭐ La modale de SCEAU (R-12), une seule par résultat et jamais en même
+          temps que le level-up : le joueur la voit après, pas par-dessus. Elle
+          n'enchaîne rien — un tap ferme et rend la main (é31 R-6). */}
+      {rewards && seal && (
+        <SealCelebration
+          show={showSeal}
+          star={seal.star}
+          subjectName={subjectName}
+          title={pt.progress.celebration.sealTitle.replace("{stars}", "⭐".repeat(seal.star))}
+          body={pt.progress.celebration.sealBody}
+          hint={pt.progress.celebration.sealHint}
+          onComplete={onSealComplete}
         />
       )}
       <motion.div
@@ -273,6 +310,11 @@ export function QuestResultScreen({
               <div className="mt-6 text-xs uppercase tracking-widest text-[color:var(--champagne)]">
                 {result.profile?.hero_class as string}
               </div>
+              {/* ⭐ L'ÉTOILE DU CHAPITRE, à sa place du gabarit Player :
+                  score → gains → ÉTOILE → badges → correction. Devant les badges
+                  parce qu'elle dit ce que CE geste a fait avancer dans le
+                  programme, quand un badge dit ce que la collection a gagné. */}
+              <StarResultBlock progress={attemptProgress} />
               {result.unlockedBadges.length > 0 && (
                 <div className="mt-6 rounded-2xl border border-neon-gold/30 bg-neon-gold/10 p-4 text-start">
                   <div className="text-xs uppercase tracking-widest text-neon-gold">

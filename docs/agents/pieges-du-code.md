@@ -298,3 +298,51 @@ produit une adresse identique, donc aucune navigation, donc la même panne un cr
 **amenée sous les yeux**, parce qu'ouvrir hors écran ne se distingue pas de ne rien faire. Et le
 consommateur est celui qui l'a **prise** (ici le panneau, monté seulement une fois la session
 résolue) : une intention retirée par la route avant que sa cible existe est une intention perdue.
+
+## Une boucle de rendu se signale comme « 2 errors » — et un `| tail` la fait disparaître
+
+**Vécu le 2026-09-14** (étude 34, lot 4). Un hook neuf, `useAttemptCelebration`, rend un objet —
+comme tous ses voisins. Le lecteur d'exercice l'a mis dans la liste de dépendances de `resetRun` :
+
+```ts
+// ❌ `celebration` est un objet NEUF à chaque rendu
+}, [resetSession, resetFeedback, resetHints, celebration]);
+
+useEffect(() => {
+  resetRun();
+}, [exerciseId, resetRun]);
+```
+
+`resetRun` devient neuf à chaque rendu, donc l'effet se relance à chaque rendu, donc `resetRun()`
+repose l'état, donc le composant re-rend : **boucle infinie**. En production, c'est la page de
+quête qui prend 100 % d'un cœur et ne rend jamais. Le fichier documentait déjà la règle qui
+l'interdit, trois lignes plus bas — « on dépend des CALLBACKS des hooks, jamais des objets » —
+et le lot l'a enfreinte en ajoutant un hook de plus.
+
+Le remède est l'idiome déjà en place pour `hints` et `feedback` : `const { reset: resetX } = x;`,
+et c'est `resetX` qui va dans la liste.
+
+**Ce qu'il faut retenir tient surtout à la façon dont ça se voit.** Une boucle de rendu
+**synchrone** bloque la boucle d'événements : le `testTimeout` de 15 s ne peut pas se déclencher,
+et le fichier de test ne rend **jamais** son verdict. Vitest ne l'a donc compté ni en `passed` ni
+en `failed` :
+
+```
+ Test Files  339 passed (341)     ← 341 collectés, 339 rendus : DEUX manquent
+      Tests  4313 passed (4338)
+     Errors  2 errors             ← c'est là, et nulle part ailleurs
+   Duration  1200.16s             ← au lieu de ~250 s
+```
+
+Trois réflexes, dans cet ordre :
+
+1. **Lire le décompte entre parenthèses.** `339 passed (341)` n'est pas vert : il manque deux
+   fichiers. « 0 failed » ne veut pas dire « tout est passé ».
+2. **Ne jamais faire passer un gate par `| tail`, `| head` ou `| grep`.** Le code de sortie d'un
+   pipeline est celui de la DERNIÈRE commande — `tail` réussit toujours. `npm run verify | tail -8`
+   rend donc **0** sur une suite rouge. Rediriger (`> fichier 2>&1`) et lire le fichier ; si un
+   filtre est vraiment nécessaire, `set -o pipefail`.
+3. **Une durée qui explose est un symptôme, pas de la malchance.** Avant d'accuser la machine :
+   `ps aux | grep vitest` — deux workers à 100 % de CPU pendant que le journal n'écrit plus
+   depuis cinq minutes désignent un fichier qui tourne en rond, pas une contention. Le fichier
+   fautif se trouve en soustrayant les fichiers rendus de ceux collectés.

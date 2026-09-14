@@ -137,6 +137,8 @@ export type TranslationKeys = {
     allTimeTab: string;
     weeklyRecapTitle: string;
     weeklyRecapEmpty: string;
+    /** Étude 34 — « {stars} étoiles · {seals} sceaux cette semaine ». Sans récompense. */
+    weeklyRecapStars: string;
     weeklyRecapXp: string;
     weeklyRecapMissions: string;
     weeklyRecapAccuracy: string;

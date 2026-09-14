@@ -87,6 +87,18 @@ export function WeeklyRecapCard({ recap }: { recap: WeeklyRecap }) {
         ))}
       </div>
 
+      {/* ⭐ Étoiles et sceaux de la semaine (étude 34) — un RÉCIT, pas une
+          récompense (é31 R-18) : la carte dit ce qui s'est passé, elle ne paie
+          rien. Absente quand la semaine n'en a fait tomber aucun : une ligne à
+          zéro se lit comme un reproche. */}
+      {(recap.stars > 0 || recap.seals > 0) && (
+        <p className="mt-3 text-sm text-(--gold)" data-testid="weekly-recap-stars">
+          {t.dashboard.weeklyRecapStars
+            .replace("{stars}", String(recap.stars))
+            .replace("{seals}", String(recap.seals))}
+        </p>
+      )}
+
       {recap.badges.length > 0 && (
         <p className="mt-3 text-sm text-muted-foreground" data-testid="weekly-recap-badges">
           {recap.badges.length} {t.dashboard.weeklyRecapBadges}
