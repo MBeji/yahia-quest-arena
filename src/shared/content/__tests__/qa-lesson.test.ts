@@ -351,6 +351,38 @@ describe("auditCoursePattern — le patron de notion (étude 35)", () => {
           .some((m) => m.includes("over 60")),
       ).toBe(false);
     });
+
+    it("ne compte PAS les lignes vides — la mise en forme n'ajoute pas de notion", () => {
+      // 40 lignes de prose entrecoupées de vides : 80 lignes physiques, 40 de contenu.
+      const aere = `## Titre\n${"Une ligne de prose.\n\n".repeat(40)}`;
+      expect(aere.split("\n").length).toBeGreaterThan(60);
+      expect(
+        warns(aere)
+          .map((f) => f.msg)
+          .some((m) => m.includes("over 60")),
+      ).toBe(false);
+    });
+
+    it("compte un `<svg>` pour UNE ligne — une figure est une figure, pas cinquante", () => {
+      // Le cas réel : « شبه المنحرف » de 18-quadrilateres, signalée à 72 lignes pour 19 de fond.
+      const svg = ['<svg viewBox="0 0 10 10">', ...Array(80).fill('  <path d="M0 0" />'), "</svg>"];
+      const avecFigure = `## Titre\nDeux lignes d'ancrage ici.\nEt la question qu'elles posent.\n\n::: figure une légende\n${svg.join("\n")}\n:::\n`;
+      expect(avecFigure.split("\n").length).toBeGreaterThan(80);
+      expect(
+        warns(avecFigure)
+          .map((f) => f.msg)
+          .some((m) => m.includes("over 60")),
+      ).toBe(false);
+    });
+
+    it("avertit encore quand ce sont bien 61 lignes de CONTENU", () => {
+      const dense = `## Titre\n${"Une ligne de prose.\n".repeat(61)}`;
+      expect(
+        warns(dense)
+          .map((f) => f.msg)
+          .some((m) => m.includes("61 content lines")),
+      ).toBe(true);
+    });
   });
 });
 
