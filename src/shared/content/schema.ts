@@ -147,6 +147,19 @@ export const subjectMetaSchema = z.object({
    * `gradeSlugs` field. Expansion happens in `expandSubjects` (loader.ts).
    */
   compileTo: z.array(compileTargetSchema).min(2).optional(),
+  /**
+   * Patron d'explication du COURS auquel cette matière est tenue (étude 35, D-9).
+   *
+   * `"notion"` = les sept temps : ancrer (une situation et sa question) → nommer → voir →
+   * résoudre (l'exemple, chaque étape avec son pourquoi) → distinguer (l'erreur typique) →
+   * généraliser → vérifier sur place. Il ne se pose qu'au DERNIER lot de la campagne d'une
+   * matière, quand ses cours y sont conformes : il fait passer les contrôles de patron de
+   * `content:qa` de l'avertissement à l'erreur. Absent = la matière n'est pas encore sous
+   * patron, les mêmes contrôles y restent des `[warn]` (son backlog, pas son gate).
+   *
+   * Lu par le GATE seulement : jamais émis en SQL, jamais lu à l'exécution.
+   */
+  coursePattern: z.enum(["notion"]).optional(),
 });
 
 export const subjectMetaWithCompileToSchema = subjectMetaSchema.superRefine((meta, ctx) => {
@@ -264,6 +277,20 @@ export const videoIdSchema = z
   );
 
 /** `chapter.json` — maps onto a row in `chapters`. */
+/**
+ * A misconception tag id — namespaced by subject (étude 04 R-5), e.g.
+ * `math.frac.add-denominators`: lowercase dotted segments, the first being the
+ * subject namespace. Never free text — every tag used in content must exist in
+ * the versioned registry `content/misconceptions.json` (cross-checked by
+ * `content:qa`; an unknown tag is an error).
+ */
+export const misconceptionTagSchema = z
+  .string()
+  .regex(
+    /^[a-z][a-z0-9]*(?:\.[a-z0-9]+(?:-[a-z0-9]+)*){1,}$/,
+    "a misconception tag must be namespaced lowercase segments (e.g. 'math.frac.add-denominators')",
+  );
+
 export const chapterMetaSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
@@ -336,22 +363,23 @@ export const chapterMetaSchema = z.object({
     .max(3, "a chapter may reference at most 3 videos (étude 23 R-11)")
     .refine((a) => new Set(a).size === a.length, "chapter videos must be unique")
     .optional(),
+  /**
+   * Les erreurs typiques que le COURS de ce chapitre montre et corrige (étude 35, R-5/D-5).
+   *
+   * Chaque entrée est un tag du registre `content/misconceptions.json` — le même vocabulaire
+   * que les distracteurs des exercices. C'est ce qui rend la boucle vérifiable : le cours
+   * enseigne CONTRE les erreurs que les exercices mesurent, et `content:qa` refuse un tag
+   * inconnu du registre ou qu'aucun distracteur du chapitre n'encode (C-5) — sans quoi la
+   * déclaration serait une intention, pas un fait.
+   *
+   * Lu par le GATE seulement : jamais émis en SQL, jamais lu à l'exécution.
+   */
+  coursePitfalls: z
+    .array(misconceptionTagSchema)
+    .refine((a) => new Set(a).size === a.length, "coursePitfalls must be unique")
+    .optional(),
 });
 export type ChapterMeta = z.infer<typeof chapterMetaSchema>;
-
-/**
- * A misconception tag id — namespaced by subject (étude 04 R-5), e.g.
- * `math.frac.add-denominators`: lowercase dotted segments, the first being the
- * subject namespace. Never free text — every tag used in content must exist in
- * the versioned registry `content/misconceptions.json` (cross-checked by
- * `content:qa`; an unknown tag is an error).
- */
-export const misconceptionTagSchema = z
-  .string()
-  .regex(
-    /^[a-z][a-z0-9]*(?:\.[a-z0-9]+(?:-[a-z0-9]+)*){1,}$/,
-    "a misconception tag must be namespaced lowercase segments (e.g. 'math.frac.add-denominators')",
-  );
 
 const optionSchema = z.object({
   id: z.string().min(1),

@@ -946,6 +946,44 @@ html:not(.reference) .lesson-figure__plate {
   color: var(--primary);
 }
 
+/* Le contrôle sur place (étude 35) : « à toi de jouer ». Contour teinté comme la méthode —
+   c'est le même registre, on y applique une règle — mais POINTILLÉ : le bloc n'énonce pas,
+   il demande. La réponse vit dans un `<details>` natif : rien à styler pour qu'elle se
+   déplie, et le marqueur du `summary` se place tout seul du bon côté en RTL. */
+.lesson-content .lesson-blk--verifie {
+  background: color-mix(in oklab, var(--primary) 4%, var(--card));
+  border-color: color-mix(in oklab, var(--primary) 38%, transparent);
+  border-style: dashed;
+}
+.lesson-content .lesson-blk--verifie .lesson-blk__label {
+  color: var(--primary);
+}
+.lesson-content .lesson-check__question > *:last-child {
+  margin-bottom: 0;
+}
+.lesson-content .lesson-check {
+  margin-top: 0.9rem;
+}
+.lesson-content .lesson-check__toggle {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--primary);
+  /* Le marqueur natif reste : c'est lui qui dit « il y a quelque chose dessous », et il
+     suit la direction du texte sans qu'on ait à le repositionner. */
+  list-style-position: inside;
+}
+.lesson-content .lesson-check__toggle:hover {
+  text-decoration: underline;
+}
+.lesson-content .lesson-check__answer {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid color-mix(in oklab, var(--primary) 25%, transparent);
+}
+.lesson-content .lesson-check__answer > *:last-child {
+  margin-bottom: 0;
+}
+
 /* =====================================================
   Cartes de révision (étude 18, lot 3)
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { renderLesson } from "@/shared/lib/markdown";
+import { renderLesson, renderSummary } from "@/shared/lib/markdown";
 
 // Substitution PUREMENT mécanique : renderLesson remplace renderMarkdown et retourne
 // désormais { html, sections, figureCount }. Toutes les assertions ci-dessous — dont les
@@ -509,5 +509,109 @@ describe("renderLesson — figures légendées", () => {
     expect(result).toContain("lesson-blk");
     expect(result).toContain("Mais aucun SVG.");
     expect(result).not.toContain("lesson-figure__plate");
+  });
+});
+
+/**
+ * Le contrôle sur place — étude 35, lot 1.
+ *
+ * Le couple « exemple résolu → à toi de jouer » est le résultat le mieux établi de tout le
+ * corpus de preuves rassemblé par l'étude, et il n'avait AUCUNE syntaxe : le renderer ne
+ * savait rien replier. Ce bloc est le seul du vocabulaire dont le corps a deux côtés.
+ */
+describe("renderLesson — le bloc `verifie` (étude 35)", () => {
+  const CHECK = [
+    "::: verifie",
+    "Un robinet donne 4 litres par minute. Que vaut f(7) ?",
+    "---",
+    "f(7) = 28 litres, car f(x) = 4x.",
+    ":::",
+  ].join("\n");
+
+  it("replie la réponse dans un `details` natif et laisse la question visible", () => {
+    const out = html(CHECK);
+    expect(out).toContain('<section class="lesson-blk lesson-blk--verifie">');
+    expect(out).toContain('<div class="lesson-check__question">');
+    expect(out).toContain('<details class="lesson-check">');
+    expect(out).toContain('<summary class="lesson-check__toggle">Voir la réponse</summary>');
+    expect(out).toContain('<div class="lesson-check__answer">');
+    // La question est dehors, la réponse dedans — l'ordre est ce qui fait le contrôle.
+    expect(out.indexOf("Que vaut f(7)")).toBeLessThan(out.indexOf("<details"));
+    expect(out.indexOf("<details")).toBeLessThan(out.indexOf("f(7) = 28"));
+  });
+
+  it("n'émet JAMAIS `open` — le contenu ne décide pas qu'une réponse est déjà révélée", () => {
+    expect(html(CHECK)).not.toContain("open");
+    // Et un auteur qui l'écrirait à la main ne peut pas l'obtenir non plus.
+    expect(html("::: verifie\nQ\n---\n<details open>R</details>\n:::")).not.toContain(
+      "<details open>",
+    );
+  });
+
+  it("écrit le libellé du bloc ET du bouton dans la langue du CONTENU (R-8/R-18)", () => {
+    const ar = renderLesson(CHECK, { lang: "ar" }).html;
+    expect(ar).toContain("جرّب بنفسك");
+    expect(ar).toContain("أظهر الإجابة");
+    const en = renderLesson(CHECK, { lang: "en" }).html;
+    expect(en).toContain("Your turn");
+    expect(en).toContain("Show the answer");
+  });
+
+  it("scinde au PREMIER `---` — les suivants restent du markdown dans la réponse", () => {
+    const out = html("::: verifie\nQ\n---\nR1\n---\nR2\n:::");
+    expect(out.match(/<details/g)).toHaveLength(1);
+    expect(out).toContain('<hr class="lesson-hr">');
+  });
+
+  it("dégrade en bloc neutre SANS séparateur — tout visible, jamais de page cassée (R-17)", () => {
+    const out = html("::: verifie\nUne question sans réponse.\n:::");
+    expect(out).toContain("lesson-blk lesson-blk--verifie");
+    expect(out).not.toContain("<details");
+    expect(out).toContain("Une question sans réponse.");
+  });
+
+  it("dégrade de même quand un côté est vide", () => {
+    expect(html("::: verifie\nQ\n---\n\n:::")).not.toContain("<details");
+    expect(html("::: verifie\n\n---\nR\n:::")).not.toContain("<details");
+  });
+
+  it("laisse un `---` hors bloc devenir un `<hr>` — aucune régression", () => {
+    expect(html("Avant\n\n---\n\nAprès")).toContain('<hr class="lesson-hr">');
+  });
+
+  it("échappe les deux côtés — l'invariant R-1 ne connaît pas d'exception", () => {
+    const out = html(
+      "::: verifie\n<img src=x onerror=alert(1)>\n---\n<script>alert(2)</script>\n:::",
+    );
+    expect(out).not.toContain("<img");
+    expect(out).not.toContain("<script>");
+    expect(out).toContain("&lt;script&gt;");
+  });
+
+  it("rend le markdown des deux côtés (formule isolée, liste)", () => {
+    const out = html("::: verifie\n$$ f(x) = 4x $$\n---\n- Première étape\n- Seconde étape\n:::");
+    expect(out).toContain('<div class="lesson-math">');
+    expect(out).toContain('<ul class="lesson-ul">');
+  });
+
+  it("garde la formule LTR au milieu d'une prose arabe, des deux côtés", () => {
+    const out = renderLesson("::: verifie\nما قيمة √64 ؟\n---\nالجواب √64 = 8\n:::", {
+      lang: "ar",
+    }).html;
+    expect(out).toContain("√64");
+    expect(out).toContain("<details");
+  });
+
+  it("porte son titre libre, échappé comme tout texte d'auteur", () => {
+    const out = html('::: verifie Le robinet & "la citerne"\nQ\n---\nR\n:::');
+    expect(out).toContain('<p class="lesson-blk__title">Le robinet &amp; "la citerne"</p>');
+  });
+});
+
+describe("renderSummary — le résumé ne pose pas de question (é35 R-21)", () => {
+  it("ne replie RIEN : un résumé n'a pas de grammaire de blocs, donc rien à cacher", () => {
+    const out = renderSummary("- **Concept** : essence\n\n::: verifie\nQ\n---\nR\n:::").html;
+    expect(out).not.toContain("<details");
+    expect(out).toContain('<ul class="lesson-cards">');
   });
 });

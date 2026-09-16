@@ -19,11 +19,17 @@ Applies to any rendering path that may transform text into HTML.
   produces — an author cannot inject markup, whatever they write. The pedagogical blocks of
   étude 18 (`::: definition …`, promoted `> ⚠️` callouts) are emitted from a line-level parser,
   never copied from the source. `ALLOWED_TAGS` therefore carries only inert elements
-  (`section`/`span`/`figure`/`figcaption` alongside the original set) and `ALLOWED_ATTR` only
-  inert attributes (`class`/`id`/`dir` plus `role`/`tabindex`/`aria-label`, which make a figure
-  zoomable from the keyboard) — no `style`, no `href`, no `on*`. A directive with an unknown
-  type degrades to a neutral block and an unclosed one is implicitly closed: a content mistake
-  can cost style, never safety.
+  (`section`/`span`/`figure`/`figcaption`/`details`/`summary` alongside the original set) and
+  `ALLOWED_ATTR` only inert attributes (`class`/`id`/`dir` plus `role`/`tabindex`/`aria-label`,
+  which make a figure zoomable from the keyboard) — no `style`, no `href`, no `on*`. A directive
+  with an unknown type degrades to a neutral block and an unclosed one is implicitly closed: a
+  content mistake can cost style, never safety.
+  - **The folded answer of a `::: verifie`** (étude 35) is a NATIVE `<details>`/`<summary>` pair:
+    no script, no React state, no attribute added to the allowlist. `open` is deliberately NOT in
+    `ALLOWED_ATTR` — content cannot decide that an answer starts revealed, and the printing path
+    opens the blocks from the DOM, never from the markup. Both halves of the block go through the
+    same escape-then-emit pipeline as any other block; the separator (`---` alone on its line) is
+    consumed by the line parser before escaping, so it can never reach the output as markup.
   - **Author text in an attribute.** A `::: figure <caption>` legend reaches `aria-label`, so it
     goes through `escapeAttr` (quotes escaped), not merely `escapeHtml` (which escapes only
     `&`/`<`/`>`): an unescaped `"` would close the attribute. Regression test:

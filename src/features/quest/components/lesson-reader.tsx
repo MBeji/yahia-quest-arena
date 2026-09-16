@@ -89,6 +89,31 @@ export function LessonReader({
   const [readPct, setReadPct] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
 
+  /**
+   * Imprimer, réponses DÉPLIÉES (étude 35, R-19).
+   *
+   * Un `<details>` fermé ne s'imprime pas : sur papier, le cours perdrait la réponse de chaque
+   * contrôle et ne serait plus complet. On ouvre donc tous les blocs repliés le temps de
+   * l'impression, puis on rend exactement l'état de départ — celui qui a déplié une réponse
+   * la retrouve dépliée. `window.print()` étant synchrone et bloquant, la restauration passe
+   * après la boîte d'impression, sans minuterie ni état React.
+   *
+   * ⚠️ Un `Ctrl+P` du navigateur ne passe pas par ici : il imprime l'état courant. C'est
+   * l'écart assumé — le bouton est le chemin documenté (`t.public.reader.print`).
+   */
+  const printWithAnswers = () => {
+    const root = contentRef.current;
+    const folded = root
+      ? Array.from(root.querySelectorAll<HTMLDetailsElement>("details:not([open])"))
+      : [];
+    for (const d of folded) d.open = true;
+    try {
+      window.print();
+    } finally {
+      for (const d of folded) d.open = false;
+    }
+  };
+
   const content = chapter.lesson_content;
   const summary = chapter.summary;
   const subjectData = chapter.subjects as { name_fr: string; content_language?: string } | null;
@@ -281,7 +306,7 @@ export function LessonReader({
         <button
           type="button"
           data-testid="lesson-print"
-          onClick={() => window.print()}
+          onClick={printWithAnswers}
           className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition hover:border-primary/40 hover:text-primary [@media(pointer:coarse)]:min-h-11"
         >
           <Printer className="h-4 w-4" /> {t.public.reader.print}

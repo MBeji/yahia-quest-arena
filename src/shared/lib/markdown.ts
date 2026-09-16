@@ -5,6 +5,7 @@ import {
   BLOCK_LABELS,
   isDirectiveType,
   markerBlockType,
+  REVEAL_LABELS,
   type ContentLang,
   type LessonBlockType,
 } from "@/shared/lib/lesson-blocks";
@@ -19,6 +20,12 @@ const DIRECTIVE_OPEN = /^:::[ \t]+([a-z]+)(?:[ \t]+(.*))?$/;
 const DIRECTIVE_CLOSE = /^:::[ \t]*$/;
 /** Une ligne de citation, `> ` retiré. */
 const QUOTE_LINE = /^>[ \t]?(.*)$/;
+/**
+ * Le séparateur question / réponse d'un `::: verifie` (étude 35, R-16). Le PREMIER de ces
+ * traits scinde le bloc ; les suivants restent du markdown ordinaire (un `<hr>` dans la
+ * réponse). Il est consommé par la pré-passe, donc la passe `---` → `<hr>` ne le voit jamais.
+ */
+const CHECK_SPLIT = /^---[ \t]*$/;
 /** Une section `##`+ a commencé : au-delà, un `> 💡` n'est plus l'épigraphe. */
 const SECTION_HEADING = /^#{2,}[ \t]/;
 
@@ -49,6 +56,12 @@ type Segment =
       title: string | null;
       lines: string[];
       epigraph: boolean;
+      /**
+       * `::: verifie` seulement : les lignes d'APRÈS le premier `---`, celles que le lecteur
+       * déplie. `null` quand le bloc n'a pas de séparateur — il dégrade alors en bloc neutre,
+       * tout visible (R-17), et `content:qa` le remonte.
+       */
+      answer?: string[] | null;
     };
 
 type Ctx = { lang: ContentLang; sections: LessonSection[]; h2: number };
@@ -130,12 +143,23 @@ function segment(src: string): Segment[] {
       }
       const closed = j < lines.length && DIRECTIVE_CLOSE.test(lines[j]);
       const declared = open[1];
+      const type = isDirectiveType(declared) ? declared : null;
+      // Un `::: verifie` a DEUX côtés : la question, puis la réponse, séparés par le premier
+      // `---` seul sur sa ligne (R-16). Sans séparateur — ou avec un côté vide — le bloc
+      // dégrade en bloc neutre tout visible (R-17) : mieux vaut une réponse montrée qu'une
+      // page cassée, et `content:qa` fait rougir l'auteur (C-4).
+      const split = type === "verifie" ? body.findIndex((l) => CHECK_SPLIT.test(l)) : -1;
+      const hasSides =
+        split > -1 &&
+        body.slice(0, split).some((l) => l.trim()) &&
+        body.slice(split + 1).some((l) => l.trim());
       out.push({
         kind: "block",
-        type: isDirectiveType(declared) ? declared : null,
+        type,
         title: open[2]?.trim() || null,
-        lines: body,
+        lines: hasSides ? body.slice(0, split) : body,
         epigraph: false,
+        answer: hasSides ? body.slice(split + 1) : null,
       });
       // Une directive non fermée est implicitement close en fin de document (ou devant la
       // directive suivante) : une faute d'auteur dégrade le style, jamais la lecture (R-7).
@@ -275,6 +299,22 @@ function renderBlock(seg: Extract<Segment, { kind: "block" }>, ctx: Ctx): string
     // Le titre est du texte d'auteur : échappé, jamais interprété (R-1).
     (seg.title ? `<p class="lesson-blk__title">${escapeHtml(seg.title)}</p>` : "");
 
+  // Le contrôle sur place : la réponse est REPLIÉE dans un `<details>` natif (étude 35 D-2).
+  // Pas une ligne de script, pas un état React, pas un attribut de plus dans l'allowlist :
+  // le navigateur sait déplier, il le fait au clavier, et il l'imprime si on le lui demande.
+  if (seg.type === "verifie" && seg.answer) {
+    const answer = renderChunk(seg.answer, ctx);
+    return (
+      `<section class="${className}">${head}` +
+      `<div class="lesson-check__question">${inner}</div>` +
+      `<details class="lesson-check">` +
+      `<summary class="lesson-check__toggle">${escapeHtml(REVEAL_LABELS[ctx.lang])}</summary>` +
+      `<div class="lesson-check__answer">${answer}</div>` +
+      `</details>` +
+      `</section>`
+    );
+  }
+
   return `<section class="${className}">${head}${inner}</section>`;
 }
 
@@ -331,6 +371,11 @@ function finalize(body: string, figures: string[], lang: ContentLang): string {
           "span",
           "figure",
           "figcaption",
+          // étude 35 — le contrôle sur place. Deux balises natives, INERTES et sans attribut
+          // nouveau : `ALLOWED_ATTR` ne bouge pas (R-20), et `open` n'y est PAS — l'état
+          // « déplié » ne peut donc pas venir du contenu.
+          "details",
+          "summary",
         ],
         // `role`/`tabindex`/`aria-label` rendent la figure agrandissable au clavier.
         // Trois attributs INERTES : ils ne peuvent porter aucun script. `scope` rejoint la
