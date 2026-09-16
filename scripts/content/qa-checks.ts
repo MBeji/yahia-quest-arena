@@ -893,7 +893,12 @@ export function auditNumericQuestion(q: QANumericQuestion, where: string): Flag[
    « aucune figure en géométrie » a pu durer sans qu'aucune CI ne bronche.
    ========================================================================== */
 
-/** Miroir de `DIRECTIVE_TYPES` dans `src/shared/lib/lesson-blocks.ts` — garder en phase. */
+/**
+ * Miroir de `DIRECTIVE_TYPES` dans `src/shared/lib/lesson-blocks.ts` — garder en phase.
+ * Un test de synchronisation échoue si les deux listes divergent (`qa-lesson.test.ts`) :
+ * un type que le renderer connaît et que le gate ignore laisserait passer une faute, et
+ * l'inverse ferait rougir un contenu parfaitement rendu.
+ */
 const LESSON_DIRECTIVES = new Set([
   "definition",
   "propriete",
@@ -903,7 +908,150 @@ const LESSON_DIRECTIVES = new Set([
   "piege",
   "astuce",
   "retenir",
+  "verifie",
 ]);
+
+/** Les blocs qui ÉNONCENT un savoir : c'est eux qui appellent un exemple (é35, C-1). */
+const KNOWLEDGE_DIRECTIVES = new Set(["definition", "propriete", "methode"]);
+
+/** Le séparateur question / réponse d'un `::: verifie` — miroir de `CHECK_SPLIT` du renderer. */
+const CHECK_SPLIT = /^---[ \t]*$/;
+
+/**
+ * Le patron de notion (étude 35) : les sept temps dont l'ORDRE est fermé. Ces contrôles
+ * vérifient la FORME et rien d'autre (D-7) — C-2 compte des lignes, il ne juge pas qu'elles
+ * sont « concrètes ». Le fond est l'affaire de `content-audit` (grille §2.4 de l'étude) et de
+ * la re-résolution à l'aveugle ; aucun reniflage de prose ici, é18 D-1 tient toujours.
+ *
+ * Deux régimes, et c'est ce qui rend l'adoption possible matière par matière (D-9) :
+ *  - matière SANS `coursePattern` → `warn` : le constat existe, il ne bloque pas. C'est le
+ *    backlog de la campagne de fond, pas son gate ;
+ *  - matière AVEC `coursePattern: "notion"` → `error` : elle a fini sa campagne, elle s'y tient.
+ */
+type PatternLevel = "error" | "warn";
+
+/** Une section `##` d'une leçon, avec ses lignes — l'unité du patron : une section, une notion. */
+type LessonSection = { title: string; start: number; lines: string[] };
+
+function lessonSections(lines: string[]): LessonSection[] {
+  const out: LessonSection[] = [];
+  let current: LessonSection | null = null;
+  for (let i = 0; i < lines.length; i++) {
+    const heading = /^##[ \t]+(.+)$/.exec(lines[i]);
+    if (heading) {
+      if (current) out.push(current);
+      current = { title: heading[1].trim(), start: i + 1, lines: [] };
+      continue;
+    }
+    if (current) current.lines.push(lines[i]);
+  }
+  if (current) out.push(current);
+  return out;
+}
+
+/** Les types de directives ouverts dans ces lignes, dans l'ordre du document. */
+function directiveSequence(lines: string[]): string[] {
+  const out: string[] = [];
+  for (const line of lines) {
+    const opener = DIRECTIVE_OPEN.exec(line);
+    if (opener) out.push(opener[1]);
+  }
+  return out;
+}
+
+/**
+ * Les contrôles de PATRON d'une leçon (étude 35, C-1…C-3 et C-6).
+ *
+ * C-1 « une règle, un exemple » — une section qui pose un savoir montre comment on l'applique.
+ * C-2 « le concret d'abord » — un savoir ne peut pas ouvrir sa section : quelque chose doit
+ *     l'amener (deux lignes de prose au moins, ou une figure). La règle générale vient APRÈS
+ *     l'exemple, jamais avant (le manuel fait déjà ainsi : نشاط → encadré).
+ * C-3 « vérifie sur place » — une section qui montre un exemple donne de quoi l'essayer.
+ * C-6 « segmenter » — au-delà de 60 lignes, une section porte deux notions : elle se scinde.
+ */
+function auditCoursePattern(lines: string[], where: string, level: PatternLevel): Flag[] {
+  const flags: Flag[] = [];
+  const sections = lessonSections(lines);
+
+  // Une matière qui s'est mise sous patron doit s'en SERVIR. Sans ce contrôle, `coursePattern`
+  // serait décoratif : tous les autres ne se déclenchent qu'en présence d'un bloc de savoir,
+  // donc un cours qui n'en pose aucun les traverse tous en silence — et c'est exactement
+  // l'état du corpus d'aujourd'hui (maths 9ᵉ : 54 `figure`, 1 `methode`, zéro `definition`).
+  // Le contrôle ne vaut QUE dans le régime « error » : ailleurs, l'absence est le backlog.
+  if (level === "error" && sections.length > 0) {
+    const all = directiveSequence(lines);
+    if (!all.some((t) => KNOWLEDGE_DIRECTIVES.has(t)) && !all.includes("exemple")) {
+      flags.push({
+        level,
+        where,
+        msg: 'subject declares `coursePattern: "notion"` but this course carries no knowledge block and no worked example — the pattern is a way of writing, not a flag (é35 C-1)',
+      });
+    }
+  }
+
+  for (const section of sections) {
+    const seq = directiveSequence(section.lines);
+    const at = `${where} § ${section.title} (l.${section.start})`;
+
+    const knowledgeIdx = seq.findIndex((t) => KNOWLEDGE_DIRECTIVES.has(t));
+    if (knowledgeIdx > -1 && !seq.includes("exemple")) {
+      flags.push({
+        level,
+        where: at,
+        msg: "section poses a rule (definition/propriete/methode) with no `::: exemple` — a rule without a worked example is not taught (é35 C-1)",
+      });
+    }
+
+    if (knowledgeIdx > -1) {
+      // Ce qui précède la PREMIÈRE directive de savoir : de la prose, ou une figure ?
+      const firstKnowledge = section.lines.findIndex((l) => {
+        const o = DIRECTIVE_OPEN.exec(l);
+        return o !== null && KNOWLEDGE_DIRECTIVES.has(o[1]);
+      });
+      const before = section.lines.slice(0, firstKnowledge);
+      // De la prose : les lignes non vides qui ne sont ni une directive, ni un `:::` de
+      // fermeture, ni un `<svg>` — c'est ce qui AMÈNE la règle.
+      const prose = before.filter(
+        (l) =>
+          l.trim() &&
+          !DIRECTIVE_OPEN.test(l) &&
+          !DIRECTIVE_CLOSE.test(l) &&
+          !SVG_BLOCK.test(l) &&
+          !l.trim().startsWith("</svg"),
+      ).length;
+      // Une figure d'ancrage vaut l'amorce : montrer la situation est une façon de la poser.
+      const figure = before.some((l) => {
+        const o = DIRECTIVE_OPEN.exec(l);
+        return (o !== null && o[1] === "figure") || SVG_BLOCK.test(l);
+      });
+      if (prose < 2 && !figure) {
+        flags.push({
+          level,
+          where: at,
+          msg: "section opens straight on its rule — anchor it first in a concrete situation and the question it raises (é35 C-2)",
+        });
+      }
+    }
+
+    if (seq.includes("exemple") && !seq.includes("verifie")) {
+      flags.push({
+        level,
+        where: at,
+        msg: "section shows a worked example but never lets the student try one — add a `::: verifie` (é35 C-3)",
+      });
+    }
+
+    if (section.lines.length > 60) {
+      flags.push({
+        level: "warn",
+        where: at,
+        msg: `section runs ${section.lines.length} lines — over 60 it carries two notions; split it (é35 C-6)`,
+      });
+    }
+  }
+
+  return flags;
+}
 
 const DIRECTIVE_OPEN = /^:::[ \t]+([a-z]+)(?:[ \t]+(.*))?$/;
 const DIRECTIVE_CLOSE = /^:::[ \t]*$/;
@@ -939,7 +1087,11 @@ const GRAPHICAL_CHAPTER =
  *  - notation (viewBox, bidi, virgule arabe, LaTeX, chiffres arabo-indiens) — via
  *    `auditRenderedFields`, dont c'est le tout premier passage sur des leçons.
  */
-export function auditLesson(md: string, where: string, opts: { spatial?: boolean } = {}): Flag[] {
+export function auditLesson(
+  md: string,
+  where: string,
+  opts: { spatial?: boolean; pattern?: PatternLevel; summary?: boolean } = {},
+): Flag[] {
   const flags: Flag[] = [];
   // `\r?\n` et non `\n` : un checkout Windows matérialise le corpus en CRLF, et
   // un `split("\n")` laisse alors un `\r` en fin de chaque ligne. Les directives
@@ -950,7 +1102,7 @@ export function auditLesson(md: string, where: string, opts: { spatial?: boolean
   // LF) restait verte, ce qui rendait l'écart incompréhensible côté auteur.
   const lines = md.split(/\r?\n/);
 
-  let open: { type: string; line: number } | null = null;
+  let open: { type: string; line: number; body: string[] } | null = null;
   for (let i = 0; i < lines.length; i++) {
     const opener = DIRECTIVE_OPEN.exec(lines[i]);
     if (opener) {
@@ -976,15 +1128,30 @@ export function auditLesson(md: string, where: string, opts: { spatial?: boolean
           msg: `\`::: figure\` (l.${i + 1}) carries no caption — every course figure is captioned and numbered`,
         });
       }
-      open = { type, line: i + 1 };
+      if (type === "verifie" && opts.summary) {
+        // R-21 : le résumé ne pose pas de question, il sert la révision. Et son renderer
+        // n'a pas de grammaire de blocs : un `::: verifie` y afficherait sa réponse en clair.
+        flags.push({
+          level: "error",
+          where,
+          msg: `\`::: verifie\` (l.${i + 1}) has no place in a summary — the revision cards answer, they do not ask (é35 R-21)`,
+        });
+      }
+      open = { type, line: i + 1, body: [] };
       continue;
     }
     if (DIRECTIVE_CLOSE.test(lines[i])) {
       if (!open) {
         flags.push({ level: "error", where, msg: `stray \`:::\` (l.${i + 1}) closes nothing` });
       }
+      // C-4 « la réponse est repliée » : un `::: verifie` a un séparateur et DEUX côtés
+      // non vides. Sans cela le renderer dégrade en bloc neutre — la réponse s'affiche donc
+      // sous la question, et le contrôle ne contrôle plus rien.
+      if (open?.type === "verifie") flags.push(...auditCheckBlock(open, where));
       open = null;
+      continue;
     }
+    if (open) open.body.push(lines[i]);
   }
   if (open) {
     flags.push({
@@ -1005,6 +1172,28 @@ export function auditLesson(md: string, where: string, opts: { spatial?: boolean
     });
   }
 
+  // C-5a « l'erreur est nommée » : un cours qui ne montre AUCUNE erreur typique laisse
+  // l'élève la découvrir au quiz. Le piège s'écrit en directive (`::: piege`) ou en callout
+  // promu (`> ⚠️`) — les deux comptent, et le corpus emploie massivement le second.
+  //
+  // Le contrôle ne vaut que pour un vrai COURS, reconnu à ses sections : un fragment sans un
+  // seul `##` n'est pas une leçon à laquelle réclamer un piège. Même raison que pour les
+  // contrôles de patron, qui itèrent sur les sections et n'ont rien à dire sans elles.
+  if (!opts.summary && lessonSections(lines).length > 0) {
+    const hasPitfall =
+      lines.some((l) => {
+        const o = DIRECTIVE_OPEN.exec(l);
+        return o !== null && o[1] === "piege";
+      }) || /^>[ \t]?⚠/m.test(md);
+    if (!hasPitfall) {
+      flags.push({
+        level: opts.pattern ?? "warn",
+        where,
+        msg: "course shows no classic mistake at all — name the error where the confusion is born, and correct it (é35 C-5)",
+      });
+    }
+  }
+
   // Axe 5 « Illustration » : un chapitre de formes enseigné sans un seul dessin.
   if (opts.spatial && !hasFigure) {
     flags.push({
@@ -1018,6 +1207,87 @@ export function auditLesson(md: string, where: string, opts: { spatial?: boolean
   // parse), donc `**gras**` et `## Titre` y sont la notation attendue — la garde
   // « piège n°6 » ne vaut que pour les champs rendus en texte brut.
   flags.push(...auditRenderedFields([["lesson", md]], where, { markdown: true }));
+
+  // Le patron de notion (étude 35) — sur le COURS seulement : un résumé est une compression,
+  // il n'explique pas, et lui demander un exemple par règle serait lui demander d'être le cours.
+  if (!opts.summary) flags.push(...auditCoursePattern(lines, where, opts.pattern ?? "warn"));
+
+  return flags;
+}
+
+/** C-4 — la forme d'un `::: verifie` : un séparateur, deux côtés non vides (é35 R-16/R-17). */
+function auditCheckBlock(block: { line: number; body: string[] }, where: string): Flag[] {
+  const split = block.body.findIndex((l) => CHECK_SPLIT.test(l));
+  if (split === -1) {
+    return [
+      {
+        level: "error",
+        where,
+        msg: `\`::: verifie\` (l.${block.line}) has no \`---\` separator — question above, answer below, or the answer shows unfolded (é35 C-4)`,
+      },
+    ];
+  }
+  const question = block.body.slice(0, split).some((l) => l.trim());
+  const answer = block.body.slice(split + 1).some((l) => l.trim());
+  if (!question || !answer) {
+    return [
+      {
+        level: "error",
+        where,
+        msg: `\`::: verifie\` (l.${block.line}) has an empty ${question ? "answer" : "question"} — both sides of the \`---\` carry text (é35 C-4)`,
+      },
+    ];
+  }
+  return [];
+}
+
+/**
+ * C-5 (suite) — les erreurs typiques DÉCLARÉES par le chapitre (étude 35, R-5/D-5).
+ *
+ * `chapter.json` → `coursePitfalls` nomme, avec le vocabulaire du registre, les erreurs que
+ * le cours montre et corrige. Deux contrôles, et le second est celui qui compte : un tag
+ * inconnu du registre est une faute de frappe, mais un tag qu'AUCUN distracteur du chapitre
+ * n'encode est une boucle qui ne se referme pas — le cours enseignerait contre une erreur que
+ * les exercices ne mesurent jamais. La déclaration devient alors un fait vérifiable, pas une
+ * intention.
+ *
+ * Et dans l'autre sens : une matière qui s'est mise sous patron déclare ses erreurs, sinon
+ * rien ne distingue « ce chapitre n'en a pas » de « personne n'y a pensé ».
+ */
+export function auditCoursePitfalls(
+  declared: string[] | undefined,
+  chapterTags: Set<string>,
+  knownTags: Set<string>,
+  where: string,
+  level: PatternLevel,
+): Flag[] {
+  const flags: Flag[] = [];
+
+  for (const tag of declared ?? []) {
+    if (!knownTags.has(tag)) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `coursePitfalls: unknown misconception tag \`${tag}\` — declare it in content/misconceptions.json first`,
+      });
+      continue;
+    }
+    if (!chapterTags.has(tag)) {
+      flags.push({
+        level: "error",
+        where,
+        msg: `coursePitfalls: \`${tag}\` is taught against but no distractor of this chapter encodes it — the course would fight an error the exercises never measure (é35 C-5)`,
+      });
+    }
+  }
+
+  if (level === "error" && (declared ?? []).length === 0) {
+    flags.push({
+      level,
+      where,
+      msg: "chapter under the notion pattern declares no coursePitfalls — name at least the one classic mistake its course corrects (é35 C-5)",
+    });
+  }
 
   return flags;
 }

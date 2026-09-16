@@ -24,6 +24,7 @@ import {
   auditBoardQuestion,
   auditChapterDomains,
   auditCompetencyRefs,
+  auditCoursePitfalls,
   auditLesson,
   auditMisconceptionTags,
   auditShortAnswerQuestion,
@@ -123,9 +124,39 @@ function main(): void {
       // pouvait voir. Les contrôles de notation (bidi, virgule arabe, viewBox) s'y
       // appliquent donc pour la toute première fois.
       const spatial = isSpatialChapter(chapter.slug);
+      // Patron de notion (étude 35) : une matière qui a fini sa campagne le déclare dans son
+      // `subject.json`, et ses contrôles passent de l'avertissement à l'erreur (D-9). Sans
+      // déclaration ils restent des `warn` — le backlog de la campagne, pas son gate.
+      const pattern = subject.meta.coursePattern === "notion" ? "error" : "warn";
+      // Les erreurs que les DISTRACTEURS de ce chapitre encodent : c'est contre elles que le
+      // cours doit enseigner, et c'est ce qui rend `coursePitfalls` vérifiable (C-5).
+      const chapterTags = new Set<string>(
+        [chapter.quiz, ...chapter.exercises.map((e) => e.data)]
+          .flatMap((set) => set.questions)
+          // Seuls les QCM portent un `misconceptionTag` (schéma, étude 04) : les types natifs
+          // (numeric, matching, short_answer…) ont des options sans tag, ou pas d'options.
+          .flatMap((q) => ("options" in q ? q.options : []))
+          .flatMap((o) =>
+            "misconceptionTag" in o && typeof o.misconceptionTag === "string"
+              ? [o.misconceptionTag]
+              : [],
+          ),
+      );
       flags.push(
-        ...auditLesson(chapter.lesson, `${subject.meta.id}/${chapter.slug}/cours`, { spatial }),
-        ...auditLesson(chapter.summary, `${subject.meta.id}/${chapter.slug}/resume`),
+        ...auditLesson(chapter.lesson, `${subject.meta.id}/${chapter.slug}/cours`, {
+          spatial,
+          pattern,
+        }),
+        ...auditLesson(chapter.summary, `${subject.meta.id}/${chapter.slug}/resume`, {
+          summary: true,
+        }),
+        ...auditCoursePitfalls(
+          chapter.meta.coursePitfalls,
+          chapterTags,
+          knownTags,
+          `${subject.meta.id}/${chapter.slug}`,
+          pattern,
+        ),
         // Le cours est la surface de copie la plus exposée : c'est là qu'un
         // encadré « verbatim » d'une fiche source atterrirait le plus vite.
         ...auditVerbatim(chapter.lesson, verbatim, `${subject.meta.id}/${chapter.slug}/cours`),

@@ -82,8 +82,46 @@ const subjects = [
   },
 ];
 
+// Le chapitre « culture » porte une LEÇON : c'est le seul chapitre de fixture dont le lecteur
+// public est parcouru par un spec (`content-journey`), et le bloc `::: verifie` (étude 35) est
+// la seule chose du lecteur qui change d'état — sa réponse est repliée tant qu'on ne la
+// demande pas. Sans corps de leçon, le lecteur affiche son état vide et il n'y a rien à
+// vérifier au rendu.
+const CULTURE_LESSON = [
+  "# Fixture — une notion",
+  "",
+  "> 💡 « Une leçon de fixture, mais une vraie leçon. »",
+  "",
+  "## La notion",
+  "",
+  "Une situation concrète, et la question qu'elle pose.",
+  "Deux lignes, comme le patron le demande.",
+  "",
+  "::: definition",
+  "L'énoncé de la notion.",
+  ":::",
+  "",
+  "::: exemple",
+  "On l'applique une fois, chaque étape avec son pourquoi.",
+  ":::",
+  "",
+  "> ⚠️ L'erreur classique, nommée puis corrigée.",
+  "",
+  "::: verifie",
+  "À toi : que vaut la réponse ?",
+  "---",
+  "La réponse repliée de la fixture.",
+  ":::",
+].join("\n");
+
 const chapters = [
-  { id: CH_CULTURE, subject_id: CULTURE, title: "Fixture — types de questions", display_order: 1 },
+  {
+    id: CH_CULTURE,
+    subject_id: CULTURE,
+    title: "Fixture — types de questions",
+    display_order: 1,
+    lesson_content: CULTURE_LESSON,
+  },
   { id: CH_MUSCLE, subject_id: MUSCLE, title: "Fixture — logique", display_order: 1 },
 ];
 
