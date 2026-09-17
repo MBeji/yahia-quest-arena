@@ -470,9 +470,55 @@ export function auditLesson(
   return flags;
 }
 
+/**
+ * Troisième famille — les notions qui se lisent sur un **schéma légendé** : un mécanisme, un
+ * cycle, une coupe. Un séisme, un volcan, une plaque qui plonge, un croisement génétique — on
+ * ne les DÉCRIT pas, on les montre et on les annote.
+ *
+ * Ajoutée le 2026-09-17 en généralisant é35 au concours 9ᵉ : les deux familles précédentes
+ * sont bâties sur du vocabulaire français et mathématique, et les chapitres de
+ * `sciences-vie-terre` portent des slugs translittérés de l'arabe (`zalazil`, `barakin`,
+ * `safaih-taktuniya`) qui ne ressemblent à rien qu'elles connaissent.
+ *
+ * ⚠️ **Elle se teste sur des SEGMENTS de slug, jamais en sous-chaîne libre, et jamais sur le
+ * titre arabe.** La première version faisait les deux, et a reproduit en arabe très exactement
+ * le défaut qu'elle corrigeait en français : `ضوء` (lumière) attrapé À L'INTÉRIEUR de وضوء
+ * (ablution) sur six chapitres d'éducation islamique, et `takathur` dans **سورة التكاثر**, une
+ * sourate. Le titre arabe semblait le signal le plus stable — un slug n'est qu'une
+ * translittération de convenance — mais la morphologie arabe (préfixes ال، و، ب، ل) rend la
+ * sous-chaîne inexploitable : اـلضوء et وـضوء se ressemblent trop. Le segment de slug, lui,
+ * est délimité par des tirets et se teste exactement.
+ */
+// Mots ENTIERS, au singulier : le pluriel français est toléré (`seismes`, `volcans`), rien
+// d'autre — `03-seismes-et-volcans` échouait sans cela, et c'est la forme la plus naturelle.
+const SCHEMA_EXACT =
+  "s[ée]isme|volcan|chromosome|reproduction|zalazil|zalzal|barakin|burkan|safaih|taktuniya|wiratha|manaa|takathur-insan";
+// PRÉFIXES, dont la terminaison varie avec la langue et la fonction : tectonique/tectonic,
+// hérédité/héréditaire, génétique/génétiques, immunité/immunitaire.
+const SCHEMA_PREFIX = "tectoni|h[ée]r[ée]dit|g[ée]n[ée]tiq|immunit";
+const SCHEMA_CHAPTER = new RegExp(
+  `(?:^|[-_ ])(?:(?:${SCHEMA_EXACT})s?|(?:${SCHEMA_PREFIX})[a-z]*)(?:[-_ ]|$)`,
+  "i",
+);
+
+/**
+ * Ce qui nomme une notion de GRAMMAIRE n'est jamais un chapitre de formes, quoi qu'en disent
+ * les deux premières familles. Deux faux positifs mesurés le 2026-09-17 sur `french` 9ᵉ :
+ * `01-types-et-formes-de-phrases` déclenchait sur « **forme** » (qui y veut dire forme
+ * grammaticale, pas forme géométrique) et `02-propositions-subordonnees` sur « donn[ée]es »,
+ * attrapé À L'INTÉRIEUR de « subor-**donnees** » — un mot coupé en plein milieu.
+ *
+ * L'exclusion passe AVANT les familles, et c'est la règle honnête : exiger un dessin d'une
+ * leçon sur les subordonnées, c'est réclamer une figure qui n'existe pas, et un auteur qui
+ * obéit à un signal faux produit du remplissage.
+ */
+const GRAMMAR_CHAPTER =
+  /phrase|subordonn|proposition|verbal|conjug|discours|lexique|grammai|orthograph|vocabulair/i;
+
 /** Le chapitre relève-t-il d'une famille où la figure est exigible ? (axe 5) */
 export function isSpatialChapter(slug: string): boolean {
-  return SPATIAL_CHAPTER.test(slug) || GRAPHICAL_CHAPTER.test(slug);
+  if (GRAMMAR_CHAPTER.test(slug)) return false;
+  return SPATIAL_CHAPTER.test(slug) || GRAPHICAL_CHAPTER.test(slug) || SCHEMA_CHAPTER.test(slug);
 }
 
 /* ============================================================================
