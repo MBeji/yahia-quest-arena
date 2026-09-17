@@ -155,6 +155,67 @@ describe("auditLesson", () => {
         expect(isSpatialChapter(slug), slug).toBe(false);
       }
     });
+
+    /**
+     * Troisième famille — le schéma légendé (généralisation é35 au concours 9ᵉ, 2026-09-17).
+     * Les slugs sont ceux, réels, de `sciences-vie-terre` : translittérés de l'arabe, donc
+     * invisibles aux deux premières familles, bâties sur du vocabulaire français.
+     */
+    it("réclame une figure pour un mécanisme, un cycle ou une coupe", () => {
+      for (const slug of [
+        "04-zalazil",
+        "05-barakin",
+        "06-safaih-taktuniya",
+        "03-wiratha",
+        "01-takathur-insan",
+        "02-manaa",
+        "03-seismes-et-volcans",
+        "05-heredite-et-genetique",
+      ]) {
+        expect(isSpatialChapter(slug), slug).toBe(true);
+      }
+    });
+
+    /**
+     * Les trois faux positifs MESURÉS sur le corpus le 2026-09-17, tous de la même famille :
+     * un mot de forme attrapé à l'intérieur d'un mot de grammaire. `forme` dans « formes de
+     * phrases » (forme grammaticale, pas géométrique) et `donn[ée]es` dans « subor-donnees »,
+     * coupé en plein milieu. Exiger un dessin d'une leçon sur les subordonnées, c'est réclamer
+     * une figure qui n'existe pas — et un auteur qui obéit à un signal faux produit du
+     * remplissage.
+     */
+    it("ne réclame pas de figure d'un chapitre de grammaire", () => {
+      for (const slug of [
+        "01-types-et-formes-de-phrases",
+        "02-propositions-subordonnees",
+        "02-vivre-ensemble-formes-de-phrases",
+        "04-discours-direct-et-indirect",
+        "05-modes-et-temps-verbaux",
+        "07-lexique-et-figures-de-style",
+      ]) {
+        expect(isSpatialChapter(slug), slug).toBe(false);
+      }
+    });
+
+    /**
+     * La première version de la famille « schéma » testait aussi le TITRE arabe, et en
+     * sous-chaîne libre. Elle a reproduit en arabe le défaut qu'elle corrigeait en français :
+     * `ضوء` (lumière) attrapé DANS وضوء (ablution) sur six chapitres d'éducation islamique, et
+     * `takathur` dans **سورة التكاثر**, une sourate. La morphologie arabe (préfixes ال، و، ب)
+     * rend la sous-chaîne inexploitable ; le segment de slug, délimité par des tirets, non.
+     */
+    it("ne confond pas une sourate ni une ablution avec un chapitre de sciences", () => {
+      for (const slug of [
+        "04-sourate-at-takathur-al-qaria",
+        "06-al-woudou",
+        "04-al-woudou",
+        "05-al-wudoo",
+        "02-mujibat-al-wudu-wal-ghusl",
+        "04-sifat-al-wudu",
+      ]) {
+        expect(isSpatialChapter(slug), slug).toBe(false);
+      }
+    });
   });
 });
 
