@@ -113,6 +113,25 @@ describe("lintSvg", () => {
     expect(lintSvg('<svg viewBox="0 0 1 1"><text>٣٥</text></svg>').join()).toMatch(/digits/);
   });
 
+  // Le piège vient de l'autre règle de la maison : dans un bloc RTL, un groupe de chiffres
+  // arabe DOIT être tenu par une insécable (« 150 000 »), sinon il ressort à l'envers. Une
+  // passe de correction appliquée au fichier entier atteint alors aussi le `d=` et le
+  // `viewBox` de la figure — et là, l'insécable casse tout, en silence : JS `\s` l'accepte,
+  // le navigateur non. Les deux règles cohabitent, la frontière est attribut / contenu.
+  it("refuse une insécable dans une valeur d'attribut — le navigateur rejette le viewBox", () => {
+    expect(lintSvg('<svg viewBox="0 0 340 260"></svg>').join()).toMatch(/non-breaking/);
+  });
+
+  it("refuse une insécable dans un `d=` de tracé", () => {
+    expect(lintSvg('<svg viewBox="0 0 1 1"><path d="M0 0 L1 1"/></svg>').join()).toMatch(
+      /non-breaking/,
+    );
+  });
+
+  it("accepte la MÊME insécable dans le contenu d'un <text> — la notation arabe l'exige", () => {
+    expect(lintSvg('<svg viewBox="0 0 1 1"><text>150 000</text></svg>')).toEqual([]);
+  });
+
   it("refuse un <svg> mal formé", () => {
     expect(lintSvg('<svg viewBox="0 0 1 1"><circle r="1"/>').join()).toMatch(/malformed/);
   });

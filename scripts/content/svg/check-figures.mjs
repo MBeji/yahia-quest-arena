@@ -14,6 +14,8 @@
 //   • a viewBox (or explicit width+height) so it scales
 //   • balanced <svg>…</svg>
 //   • Western digits only — no Arabic-Indic (٠-٩) / Persian (۰-۹) digits, incl. Arabic content
+//   • no non-breaking/invisible space inside an attribute value (a `viewBox` split by U+00A0
+//     is rejected by the browser — Chromium reads it as 0×0 — while JS `\s` swallows it)
 //   • one <svg> per field (the renderer extracts a single figure per field)
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";

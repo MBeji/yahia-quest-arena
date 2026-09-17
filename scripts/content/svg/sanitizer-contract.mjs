@@ -62,6 +62,26 @@ export const FORBIDDEN = /<(image|use|foreignObject|script|style)\b|(?:xlink:)?h
 export const INDIC = /[٠-٩۰-۹]/;
 
 /**
+ * Espaces et invisibles qu'un parseur SVG ne reconnaît PAS comme séparateurs.
+ *
+ * La liste blanche de SVG/CSS pour découper `viewBox`, un `d=` ou un `points=` est
+ * exactement : espace, tabulation, CR, LF. Tout le reste coupe le nombre en deux.
+ * Mesuré dans Chromium : `viewBox="0 0 340 260"` donne 340×260, et le même avec une
+ * insécable entre les deux derniers donne **0×0** — le viewBox est rejeté en entier et
+ * la figure ne se met plus à l'échelle. Ni le lint ni `check-overflow` ne le voyaient :
+ * tous deux relisent l'attribut en JS, où `\s` inclut U+00A0, donc ils mesuraient une
+ * figure que le navigateur, lui, n'a jamais acceptée.
+ *
+ * ⚠️ Le contrôle porte sur les VALEURS D'ATTRIBUT seulement. Dans le CONTENU d'un
+ * `<text>`, l'insécable est au contraire ce que la règle de notation EXIGE : sans elle,
+ * un groupe de chiffres arabe (« 150 000 ») ressort à l'envers dans un bloc RTL.
+ */
+export const HARD_SPACE = /[   -​  ⁠　﻿]/;
+
+/** Attribut `nom="valeur"` — la valeur ne contient pas de guillemet double par construction. */
+const ATTR = /([a-zA-Z_:][\w:.-]*)\s*=\s*"([^"]*)"/g;
+
+/**
  * Containers whose children are NEVER painted where they sit — they only ever appear
  * through a reference (`clip-path="url(#…)"`, `<use href>`, a gradient fill).
  *
@@ -184,6 +204,14 @@ export function lintSvg(svg, where = "figure") {
 
   if (INDIC.test(svg))
     issues.push(`${where}: Arabic-Indic/Persian digits in figure — use Western digits (0-9)`);
+
+  for (const [, name, value] of svg.matchAll(ATTR))
+    if (HARD_SPACE.test(value))
+      issues.push(
+        `${where}: ${name}="…" holds a non-breaking/invisible space — an SVG parser only splits on ` +
+          `space, tab, CR, LF, so the value is rejected (Chromium reads such a viewBox as 0×0). ` +
+          `Use a plain space here; U+00A0 belongs in <text> content, not in an attribute`,
+      );
 
   return issues;
 }
