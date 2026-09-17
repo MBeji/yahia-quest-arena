@@ -121,6 +121,7 @@ export type Flag = { level: "error" | "warn"; where: string; msg: string };
 export {
   auditCoursePitfalls,
   auditLesson,
+  auditScriptMixing,
   contentLineCount,
   isSpatialChapter,
 } from "./qa-lesson-checks.ts";
@@ -180,7 +181,8 @@ export function hasBidiFragileMath(s: string): boolean {
 // is the comma is pure math notation.
 const ARABIC_PROSE =
   "\\u0621-\\u064A\\u066E-\\u06FF\\u0750-\\u077F\\u08A0-\\u08FF\\uFB50-\\uFDFF\\uFE70-\\uFEFF";
-const ARABIC_PROSE_RE = new RegExp(`[${ARABIC_PROSE}]`, "u");
+/** Une ligne porte-t-elle de la prose arabe ? Exporté pour C-7 (`qa-lesson-checks.ts`). */
+export const ARABIC_PROSE_RE = new RegExp(`[${ARABIC_PROSE}]`, "u");
 const ARABIC_LETTER_G = new RegExp(`[${ARABIC_PROSE}]`, "gu");
 const LATIN_LETTER_G = /[A-Za-z]/gu;
 
@@ -192,8 +194,12 @@ const LATIN_LETTER_G = /[A-Za-z]/gu;
  * must NOT be treated as RTL. Markup is stripped first — an Arabic lesson full of
  * SVG figures carries far more Latin in its attributes (`viewBox`, `stroke`) than
  * Arabic in its prose, and would otherwise read as LTR.
+ *
+ * Se mesure sur le DOCUMENT entier, jamais ligne à ligne : une ligne courte comme
+ * `ثلاثة عدّات différentes` compte autant de latin que d'arabe, et la trancher au compteur
+ * rendrait « LTR » précisément la faute que C-7 cherche.
  */
-function rendersRtl(s: string): boolean {
+export function rendersRtl(s: string): boolean {
   const prose = s.replace(/<[^>]+>/g, " ");
   return (prose.match(ARABIC_LETTER_G) ?? []).length > (prose.match(LATIN_LETTER_G) ?? []).length;
 }

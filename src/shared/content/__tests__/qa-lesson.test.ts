@@ -429,4 +429,76 @@ describe("le gate et le renderer partagent un vocabulaire, ou ils divergent", ()
     }
     expect(errors("::: remarque\nCorps.\n:::")[0].msg).toContain("unknown block directive");
   });
+
+  /**
+   * C-7 « une glose, pas une phrase » (R-14 amendée le 2026-09-17).
+   *
+   * Les cas « DOIT ALERTER » ne sont pas inventés : ce sont les phrases RÉELLES qui ont fui
+   * pendant la campagne pilote et qu'il a fallu purger à la main, trois fois. C'est la raison
+   * d'être du contrôle — une règle qu'aucune machine ne tient revient.
+   */
+  describe("C-7 — une glose, pas une phrase", () => {
+    const c7 = (md: string, opts?: LessonOpts) =>
+      auditLesson(md, "test/chapitre/cours", opts).filter((f) => f.msg.includes("C-7"));
+    // Assez d'arabe pour que le document soit RTL, comme un vrai chapitre.
+    const AR = "## الدرس\n\nهذا نصّ عربيّ طويل بما يكفي ليكون المستند عربيًّا بوضوح تامّ.\n";
+
+    it("attrape les phrases françaises qui ont réellement fui de la campagne", () => {
+      for (const fuite of [
+        "ثلاث نسب égales, pas deux",
+        "jamais الاثنين dans la même égalité",
+        "التكرار الكلّي، jamais sur le nombre de lignes",
+        "ثلاث قواعد تعود dans presque chaque exercice.",
+        "القيم donnent المعدّل sans jamais l'égaler",
+      ]) {
+        expect(c7(AR + fuite), fuite).not.toEqual([]);
+      }
+    });
+
+    it("attrape le mot français SEUL, que le premier prototype laissait passer", () => {
+      // La règle « deux mots latins consécutifs » ratait ce cas, qui est pourtant la faute :
+      // un adjectif français accroché à une proposition arabe.
+      expect(c7(AR + "ثلاثة عدّات différentes")).not.toEqual([]);
+    });
+
+    it("laisse passer la glose entre parenthèses, qui est la règle R-14", () => {
+      expect(c7(AR + "**الوتر** (hypoténuse) هو أطول ضلع في المثلّث القائم.")).toEqual([]);
+      expect(c7(AR + "المعيّن (losange) والمربّع (carré) لهما نفس الخاصيّة.")).toEqual([]);
+    });
+
+    it("laisse passer la notation : points, formules, code, unités, fonctions", () => {
+      expect(c7(AR + "في مثلّث ABC القائم في A نحسب الوتر [BC].")).toEqual([]);
+      expect(c7(AR + "نحسب $$ IA = IB = IC = BC/2 $$ إذن النقطة على الدائرة.")).toEqual([]);
+      expect(c7(AR + "الرمز `misconceptionTag` يوضع على المشتّت.")).toEqual([]);
+      expect(c7(AR + "العلاقة: 1 h = 60 min، و 1 min = 60 s.")).toEqual([]);
+      expect(c7(AR + "وحدات الطول بالترتيب: km، hm، dam، m، dm، cm.")).toEqual([]);
+      expect(c7(AR + "نحسب cos الزاوية ثمّ sin الزاوية.")).toEqual([]);
+    });
+
+    it("ne traverse pas le corps d'une figure, plein d'attributs latins", () => {
+      expect(c7(AR + `::: figure الشكل المجاور\n${SVG}\n:::`)).toEqual([]);
+    });
+
+    it("ne prend pas le mot-clé d'une directive pour de la prose — mais lit sa légende", () => {
+      // `figure`, `exemple`… sont la grammaire de é18. Les compter faisait 500 constats sur
+      // 550 au premier jet. La LÉGENDE, elle, reste contrôlée.
+      expect(c7(AR + "::: exemple مثلّث ABC حيث BC = 18\nالحلّ.\n:::")).toEqual([]);
+      expect(c7(AR + "::: figure الشكل, vu de dessus\n" + SVG + "\n:::")).not.toEqual([]);
+    });
+
+    it("se tait sur une leçon française qui cite un nom arabe", () => {
+      // Le document décide, pas la ligne : `rendersRtl` compte sur l'ensemble.
+      const fr =
+        "# Annales\n\nL'épreuve de français de fin d'études de base (ختم التعليم الأساسي) " +
+        "repose sur un texte suivi de trois grandes parties, et le temps est limité.\n";
+      expect(c7(fr)).toEqual([]);
+    });
+
+    it("suit les deux régimes, et vaut aussi pour le résumé", () => {
+      expect(c7(AR + "ثلاثة عدّات différentes")[0].level).toBe("warn");
+      expect(c7(AR + "ثلاثة عدّات différentes", { pattern: "error" })[0].level).toBe("error");
+      // Le résumé a fui autant que le cours — c'est la surface relue la veille du devoir.
+      expect(c7(AR + "القيم donnent المعدّل", { summary: true })).not.toEqual([]);
+    });
+  });
 });
