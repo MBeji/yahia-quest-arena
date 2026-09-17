@@ -11,7 +11,13 @@
  * re-résolution à l'aveugle.
  */
 
-import { auditRenderedFields, FIGURE_REFERENCE, type Flag } from "./qa-checks.ts";
+import {
+  ARABIC_PROSE_RE,
+  auditRenderedFields,
+  FIGURE_REFERENCE,
+  type Flag,
+  rendersRtl,
+} from "./qa-checks.ts";
 
 /** Un bloc `<svg>` complet — une figure, quel que soit le nombre de lignes qu'elle occupe. */
 const SVG_BLOCK = /<svg[\s\S]*?<\/svg>/i;
@@ -457,10 +463,150 @@ export function auditLesson(
   // il n'explique pas, et lui demander un exemple par règle serait lui demander d'être le cours.
   if (!opts.summary) flags.push(...auditCoursePattern(lines, where, opts.pattern ?? "warn"));
 
+  // C-7 sur les DEUX : le résumé a fui autant que le cours (« القيم donnent المعدّل »), et
+  // c'est la surface que l'élève relit la veille du devoir.
+  flags.push(...auditScriptMixing(lines, where, opts.pattern ?? "warn"));
+
   return flags;
 }
 
 /** Le chapitre relève-t-il d'une famille où la figure est exigible ? (axe 5) */
 export function isSpatialChapter(slug: string): boolean {
   return SPATIAL_CHAPTER.test(slug) || GRAPHICAL_CHAPTER.test(slug);
+}
+
+/* ============================================================================
+   C-7 — « une glose, pas une phrase » (é35 R-14, amendée le 2026-09-17)
+   ========================================================================== */
+
+/**
+ * Lettres latines, et RIEN d'autre.
+ *
+ * ⚠️ Ne JAMAIS écrire cette classe `[A-Za-zÀ-ÿ]` : le bloc Latin-1 contient, entre ses
+ * lettres accentuées, deux OPÉRATEURS — `×` (U+00D7) et `÷` (U+00F7). Une classe naïve les
+ * avale comme des lettres, et `k×a` devient alors « un mot latin de trois lettres ». C'est
+ * exactement la faute que `qa-checks.ts` a déjà consignée en miroir sur l'arabe (la virgule
+ * U+060C n'est pas une lettre) ; elle a coûté ici 10 faux positifs sur 18 avant d'être vue.
+ */
+const LATIN_LETTER = "A-Za-z\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u00FF";
+
+/** Un mot latin : trois lettres au moins, pour ne pas mordre sur `a`, `x`, `cm`, `AB`. */
+const LATIN_WORD = new RegExp(`(?<![(\\w])[${LATIN_LETTER}][${LATIN_LETTER}']{2,}`, "gu");
+
+/**
+ * Ce qui est de la NOTATION, pas un terme — donc hors de R-14, qui ne parle que des termes.
+ *
+ * Deux familles, et deux seulement : les symboles d'unités de trois lettres ou plus (les
+ * autres — `cm`, `km`, `kg` — ne peuvent pas matcher) et les noms de fonctions
+ * mathématiques. Un symbole d'unité ou `cos` n'a pas d'équivalent arabe à mettre devant :
+ * les gloser serait absurde, et les interdire ferait rougir un tableau d'unités parfaitement
+ * correct. Mesuré sur le corpus au 2026-09-17 : `min` (6×, math-4eme) et `dam` (2×,
+ * math-5eme) sont les SEULES occurrences réelles ; les fonctions ne sortent jamais des
+ * formules. La liste est donc volontairement courte — chaque ajout est un trou.
+ */
+const NOTATION_WORDS = new Set([
+  // unités métriques ≥ 3 lettres
+  "dam",
+  "dal",
+  "dag",
+  "min",
+  "mol",
+  // fonctions et opérateurs nommés
+  "cos",
+  "sin",
+  "tan",
+  "cot",
+  "log",
+  "exp",
+  "abs",
+  "max",
+  "arccos",
+  "arcsin",
+  "arctan",
+  "pgcd",
+  "ppcm",
+]);
+
+/**
+ * Ce que R-14 AUTORISE, retiré de la ligne avant de chercher : la glose entre parenthèses
+ * (`**الوتر** (hypoténuse)`), le code entre accents graves, les formules `$$…$$`, et les
+ * groupes entre crochets, qui nomment des points (`[BC]`, `(AB)`).
+ */
+const R14_ALLOWED = /\([^)]*\)|`[^`]*`|\$\$[\s\S]*?\$\$|\[[^\]]*\]/g;
+
+/**
+ * Le PRÉFIXE d'une directive (`::: figure`, `::: exemple`) — un mot-clé de la grammaire de
+ * é18, pas de la prose. Seul le préfixe tombe : la LÉGENDE qui suit reste contrôlée, parce
+ * qu'elle est lue par l'élève comme le reste. Retirer la ligne entière aurait été plus simple
+ * et aurait ouvert un trou grand comme une légende — mesuré : sans cette distinction, le
+ * mot-clé `figure` à lui seul faisait 500 des 550 constats du premier jet.
+ */
+const DIRECTIVE_PREFIX = /^:::[ \t]*[a-z]*/;
+
+/**
+ * C-7 « une glose, pas une phrase ».
+ *
+ * R-14 amendée autorise le terme français **entre parenthèses**, à sa première apparition :
+ * l'élève qui apprend الوتر en 9ᵉ rencontre « hypoténuse » au lycée, et c'est la 9ᵉ qui doit
+ * lui passer le couple. Ce qu'elle interdit est l'inverse exact : une PHRASE à moitié
+ * française au milieu d'une proposition arabe — « ثلاث نسب égales, pas deux », « ثلاثة عدّات
+ * différentes ». L'élève arabophone y bute sur une syntaxe qu'il n'a pas apprise, là où une
+ * étiquette entre parenthèses se saute sans rien perdre.
+ *
+ * Ce contrôle existe parce que la règle a fuité TROIS FOIS dans la seule campagne pilote,
+ * dont deux après une passe de purge manuelle. Une règle qu'aucune machine ne tient revient.
+ *
+ * ⚠️ Il ne renifle PAS la prose (D-7 tient) : il lit le SCRIPT des caractères, jamais leur
+ * sens. Il ne sait pas le français de l'anglais, ni une bonne phrase d'une mauvaise — il sait
+ * qu'un mot en lettres latines se tient hors des trois endroits où R-14 en autorise un.
+ *
+ * Portée : le COURS et le RÉSUMÉ (les deux ont fui), et seulement les lignes qui portent de
+ * la prose arabe — une leçon en français n'est pas concernée.
+ */
+export function auditScriptMixing(lines: string[], where: string, level: PatternLevel): Flag[] {
+  const flags: Flag[] = [];
+  // La question se pose au DOCUMENT, pas à la ligne. Une leçon de français ou d'anglais qui
+  // cite le nom arabe de l'examen (« ختم التعليم الأساسي ») n'est pas une leçon arabe, et la
+  // juger ligne à ligne la faisait rougir deux fois. `rendersRtl` porte déjà exactement cette
+  // distinction pour les questions — la réutiliser plutôt que la réinventer.
+  if (!rendersRtl(lines.join("\n"))) return flags;
+
+  let inSvg = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    const raw = lines[i];
+    // Le corps d'une figure est plein d'attributs latins (`viewBox`, `stroke`) : il n'est
+    // pas de la prose, et le traverser ferait rougir toute leçon illustrée.
+    if (inSvg) {
+      if (/<\/svg>/i.test(raw)) inSvg = false;
+      continue;
+    }
+    if (/<svg\b/i.test(raw)) {
+      if (!/<\/svg>/i.test(raw)) inSvg = true;
+      continue;
+    }
+    if (!ARABIC_PROSE_RE.test(raw)) continue;
+
+    const probe = raw.replace(DIRECTIVE_PREFIX, " ").replace(R14_ALLOWED, " ");
+    const found = [...probe.matchAll(LATIN_WORD)]
+      .map((m) => m[0])
+      // Une majuscule initiale nomme un point, un théorème ou une personne (`ABCD`,
+      // `Thalès`, `Pythagore`) — jamais une phrase française qui coule dans l'arabe.
+      .filter((w) => w[0] === w[0].toLowerCase() && !NOTATION_WORDS.has(w.toLowerCase()));
+
+    if (found.length > 0) {
+      flags.push({
+        level,
+        where: `${where} (l.${i + 1})`,
+        msg: `Latin words sit in Arabic prose outside a parenthesised gloss: ${found
+          .slice(0, 4)
+          .map((w) => `«${w}»`)
+          .join(
+            ", ",
+          )} — R-14 allows the French TERM in parentheses, never a French phrase inside an Arabic clause (é35 C-7)`,
+      });
+    }
+  }
+
+  return flags;
 }
