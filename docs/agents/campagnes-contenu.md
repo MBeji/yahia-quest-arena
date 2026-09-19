@@ -53,6 +53,53 @@ images (`render.sh`, ~150 dpi) puis lecture vision. La couche texte, quand elle 
 fiable pour la prose et **trompeuse pour les mathématiques** (formules aplaties) — re-vérifier
 toute formule à l'image.
 
+### Quatre régimes, et un seul se mesure avant de s'engager
+
+Mesuré le **2026-09-19** sur les 24 guides du primaire + maths 1ʳᵉ sec, en une commande :
+
+```bash
+pdfinfo "$f" | awk '/^Pages:/{print $2}'      # p
+pdftotext "$f" - | wc -c                      # c   →   c/p = caractères par page
+```
+
+| c/p                               | Régime                             | Ce que ça coûte                                                                                                                                                                                                                |
+| --------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **< 20**                          | **scan pur** — aucune couche texte | vision page par page, sans exception                                                                                                                                                                                           |
+| **200–2300, latin**               | **couche texte propre**            | extraction + comparaison automatiques ; c'est le régime confortable                                                                                                                                                            |
+| **200–2300, arabe**               | **couche texte en POLICE PRIVÉE**  | ⚠️ **le piège** : `pdftotext` rend beaucoup de caractères, donc le chiffre dit « texte », mais ce sont des glyphes latins mappés sur des octets arabes — **indécodables sans le `ToUnicode` de la police**. Vision quand même. |
+| CID `Identity-H` sans `ToUnicode` | **échec bruyant**                  | `pdftotext` refuse et le dit (« Unknown character collection ») — c'est le bon cas : il ne fabrique pas de faux texte.                                                                                                         |
+
+**Le résultat de la mesure, pour ne pas la refaire** : sur les 24 guides, **3 seulement** sont
+exploitables par extraction — les **francophones** (`521326` 3ᵉ, `521415` 4ᵉ, `521513` 5ᵉ).
+Les **19 arabophones** sont en police privée (au moins trois familles de mojibake distinctes :
+`ŗƒŕ°Ŷƃ¦…`, `qHDÒ∞«…`, `á«LƒZGó«Ñd…`) et **2 sont des scans purs** (`503104` éveil 1ʳᵉ,
+`503204` éveil 2ᵉ). Tester le décodage est inutile : cp1256, mac_arabic, iso8859_6 et
+mac_farsi ont tous été essayés sur les trois familles, aucun ne rend de l'arabe.
+
+**Conséquence de planification** : une fiche francophone se reprend en une passe ; une fiche
+arabophone de 200 pages se reprend en vision, et c'est un ordre de grandeur de plus. Ne pas
+promettre les deux au même rythme.
+
+### Télécharger un guide du CNP en session cloud
+
+`npm run content:manuel:fetch -- <code>` dérive l'URL du code et écrit dans `~/.cache/yqa-manuels`.
+⚠️ **L'état d'un shell ne survit pas d'un appel d'outil au suivant** : le hook de session pose
+`CURL_CA_BUNDLE` une fois, mais un shell ouvert plus tard ne le voit pas, et le fetch échoue alors
+en « certificat du serveur non vérifiable » — c'est-à-dire **en accusant le CNP**. Le réflexe, dans
+la commande elle-même :
+
+```bash
+export CURL_CA_BUNDLE=~/.cache/yqa-ca/ca-bundle.pem \
+       SSL_CERT_FILE=~/.cache/yqa-ca/ca-bundle.pem \
+       NODE_EXTRA_CA_CERTS=~/.cache/yqa-ca/ca-bundle.pem
+npm run content:manuel:fetch -- <code>
+```
+
+Si le bundle n'existe pas : `node scripts/cloud/ca-bundle.mjs`. Détail dans
+[`scripts/cloud/ca-chain/README.md`](../../scripts/cloud/ca-chain/README.md).
+Un code peut n'exister qu'en tomes (`222104` est servi en `P01`/`P02`, pas en `P00`) :
+`suivi/corpus-cnp.json` dit lesquels.
+
 ## Vérifier l'existant AVANT de générer
 
 Le registre `programmes-officiels/suivi/` dit ce qui est **déjà transcrit** (plages de pages,
