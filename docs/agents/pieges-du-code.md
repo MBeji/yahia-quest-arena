@@ -346,3 +346,56 @@ Trois réflexes, dans cet ordre :
    `ps aux | grep vitest` — deux workers à 100 % de CPU pendant que le journal n'écrit plus
    depuis cinq minutes désignent un fichier qui tourne en rond, pas une contention. Le fichier
    fautif se trouve en soustrayant les fichiers rendus de ceux collectés.
+
+## Une règle `@media print` accrochée à la COQUILLE meurt en silence quand le contenu déménage
+
+**Vécu le 2026-09-19.** Un élève en thème « Noir & Or » imprime son cours (ou l'enregistre en
+PDF, c'est le même chemin : `Ctrl+P` → « Enregistrer en PDF ») et reçoit **une feuille blanche**.
+Rien de cassé côté JS, rien de rouge au gate : le cours est bien dans la page, il est juste
+**écrit en blanc sur du blanc**.
+
+Trois faits qui se combinent :
+
+1. `.lesson-content { color: var(--foreground) }`, et `--foreground` vaut `oklch(0.965 …)` —
+   un quasi-blanc — dans le thème sombre (`:root`). Le thème clair « Référence » n'a jamais
+   montré le bug : son `--foreground` est déjà une encre.
+2. Le navigateur **n'imprime pas les fonds** par défaut. Le noir de la coquille disparaît, le
+   papier reste blanc, le texte reste blanc.
+3. La règle qui remettait le cours à l'encre visait `.app-shell .lesson-content` (correctif C4,
+   `d526f658`), parce que le lecteur vivait alors dans la coquille applicative. **Le chantier C8
+   l'a déplacé** vers le registre public : `/chapitre/$chapterId` sous `.public-shell`, et
+   `/lesson/$chapterId` n'est plus qu'une redirection 301. Le sélecteur n'attrapait donc plus
+   **aucun** cours. `.public-shell`, lui, n'avait qu'un `color: #000` posé sur la coquille — que
+   le `color` de `.lesson-content`, plus spécifique sur l'élément lui-même, écrase.
+
+Mesuré dans Chromium (`emulateMedia({media:'print'})`, fonds neutralisés comme le fait une
+imprimante), pixel le plus sombre du corps de texte sur fond blanc :
+
+| Nœud                       | avant      | après |
+| -------------------------- | ---------- | ----- |
+| paragraphe du cours        | **1,74:1** | 21:1  |
+| texte d'un bloc Définition | **1,31:1** | 21:1  |
+| cellule de tableau         | **1,74:1** | 21:1  |
+
+La barre AA est à 4,5:1 ; en dessous de ~1,5:1 il n'y a **rien** à voir sur du papier.
+
+**Ce qu'il faut retenir tient en deux règles.**
+
+1. **L'encre d'impression est une propriété du DOCUMENT, pas de sa coquille.** Le crochet doit
+   être une classe de CONTENU, qui voyage avec lui quand il change d'écran : `.family-report`
+   le faisait déjà bien pour le bilan parental, `.lesson-doc` / `.lesson-content` le font
+   maintenant pour le cours. Une règle `@media print` préfixée par `.app-shell` ou
+   `.public-shell` est un pari sur l'arborescence — et une route qui déménage ne fait pas de
+   bruit.
+2. **Un test qui cherche une CHAÎNE dans `styles.css` ne dit rien de ce que la règle atteint.**
+   Le garde-fou en place (`lesson-print-css.test.ts`) vérifiait que `.app-shell .lesson-content`
+   existait bien dans la feuille. Il est resté **vert pendant tout le bug** : la règle existait,
+   elle ne matchait plus rien. Le test réécrit (`lesson-print-css.test.tsx`) **monte le lecteur**,
+   prend ses vrais nœuds et demande à `Element.matches()` si une règle `@media print` les attrape
+   — sous `.public-shell`, sous `.app-shell`, et sans coquille du tout. Remis sur l'ancien
+   sélecteur, il tombe en rouge sur 5 tests.
+
+⚠️ Corollaire pour tout ce qui est `position: fixed` : à l'impression, un élément fixe se
+**tamponne sur chaque page** du PDF. La bulle IA (`ai-launcher.tsx`) le faisait, par-dessus le
+cours, pour tout élève connecté — d'où son `print:hidden`, comme l'en-tête, le sommaire et les
+appels à l'action du lecteur.
