@@ -162,6 +162,29 @@ describe("auditQuestion — contradiction check", () => {
     );
     expect(flags.some((f) => /right answer|wrong/.test(f.msg))).toBe(false);
   });
+
+  it("does NOT read the first letter of « exactement » as an option letter (K-1)", () => {
+    const flags = auditQuestion(
+      base({
+        correctOption: "d",
+        explanation:
+          "170/210 = 17/21 ; l'écart avec la bonne réponse est exactement 15/210, les conseils composés des seuls professeurs.",
+      }),
+      "w",
+    );
+    expect(flags.some((f) => /right answer/.test(f.msg))).toBe(false);
+  });
+
+  it("still reads a bare letter after « la bonne réponse est »", () => {
+    const flags = auditQuestion(
+      base({
+        correctOption: "a",
+        explanation: "Ici la bonne réponse est e, pas a, car 2 + 2 = 4.",
+      }),
+      "w",
+    );
+    expect(flags.some((f) => /right answer.*key is "a"/.test(f.msg))).toBe(true);
+  });
 });
 
 describe("auditQuestion — figure-dependent prompt", () => {
