@@ -13,6 +13,7 @@ import {
   findUnpinnedActions,
   isJsonValid,
   checkSkillFrontmatter,
+  checkDeclaredCounts,
   checkFeatureInventory,
   extractFeatureInventory,
   checkControlCoverage,
@@ -754,7 +755,17 @@ describe("le CLI en mode corpus — les deux jeux d'invariants ne cohabitent pas
     expect(out).not.toContain(".agents/skills");
     expect(out).not.toContain("harness:sync");
     expect(out).not.toContain("pointers intact");
-    expect(out).not.toContain("AGENTS.md");
+    expect(out).not.toMatch(/AGENTS\.md (approche|hors budget)|inventaire des features/);
+  });
+
+  it("juge en revanche un compteur dont le FAIT est le corpus, où que le nombre soit écrit", () => {
+    // #1039 lot 1 : « 43 skills pédagogiques » est affirmé dans les documents du moteur,
+    // mais seul le corpus peut le recalculer. Ce n'est pas un auto-contrôle du moteur —
+    // c'est le corpus qui parle, et il parle du seul endroit où le nombre est écrit.
+    const { stdout, stderr } = run(["--corpus", root]);
+    const out = stdout + stderr;
+    expect(out).toContain("`corpus-skills`");
+    expect(out).toContain("le disque en compte 1");
   });
 
   it("échoue sur un corpus fautif, avec le code de sortie qui va avec", () => {
@@ -887,5 +898,54 @@ describe("harness/policy.json — le fichier réel de ce dépôt", () => {
     expect(policy.deny.every((d) => typeof d.reason === "string" && d.reason.length > 20)).toBe(
       true,
     );
+  });
+});
+
+describe("checkDeclaredCounts — les compteurs marqués d'un document (#1039)", () => {
+  const facts = { "engine-skills": 5, "corpus-skills": null, features: 16 };
+  const doc = (text) => [["STATUS.md", text]];
+
+  it("accepte un compteur exact, même écrit à la française", () => {
+    expect(
+      checkDeclaredCounts(doc("les <!--count:engine-skills-->5<!--/count--> skills"), facts),
+    ).toEqual([]);
+    expect(
+      checkDeclaredCounts(doc("<!-- count:features -->16<!-- /count --> features"), facts),
+    ).toEqual([]);
+    expect(checkDeclaredCounts(doc("<!--count:features-->1\u202f6<!--/count-->"), facts)).toEqual(
+      [],
+    );
+  });
+
+  it("nomme le fichier, le compteur, les deux nombres — et dit quoi corriger", () => {
+    const problems = checkDeclaredCounts(
+      doc("les <!--count:engine-skills-->4<!--/count--> skills techniques"),
+      facts,
+    );
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toContain("STATUS.md");
+    expect(problems[0]).toContain("engine-skills");
+    expect(problems[0]).toContain("annonce 4");
+    expect(problems[0]).toContain("compte 5");
+  });
+
+  it("lit sans juger un fait qui vit dans l'autre dépôt (fact === null)", () => {
+    expect(
+      checkDeclaredCounts(
+        doc("<!--count:corpus-skills-->41<!--/count--> skills pédagogiques"),
+        facts,
+      ),
+    ).toEqual([]);
+  });
+
+  it("refuse un compteur que rien ne recalcule — un marqueur orphelin est un faux gate", () => {
+    const problems = checkDeclaredCounts(doc("<!--count:workflows-->26<!--/count-->"), facts);
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toContain("`workflows` inconnu");
+  });
+
+  it("ignore un nombre nu : contradiction, jamais exhaustivité (#994)", () => {
+    expect(checkDeclaredCounts(doc("41 skills pédagogiques, 26 workflows"), facts)).toEqual([]);
+    expect(checkDeclaredCounts([["AGENTS.md", null]], facts)).toEqual([]);
   });
 });

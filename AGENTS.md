@@ -73,9 +73,11 @@ reculer — règle, schéma et pièges dans [`docs/etoiles-et-sceaux.md`](./docs
 
 Depuis la scission du 2026-07-20, **le corpus et l'usine qui le produit vivent dans le repo privé
 [`MBeji/yahia-quest-content`](https://github.com/MBeji/yahia-quest-content)** : `content/`, les
-43 skills pédagogiques, `FableEtudes/` (dont la ROADMAP) et les workflows de contenu. Ne reste
-ici que le **moteur**, générique et sans corpus (`scripts/content/**`, `src/shared/content/**`),
-les 5 skills techniques et `STATUS.md`. Le moteur est public et testé ici ; c'est lui que la
+<!--count:corpus-skills-->43<!--/count--> skills pédagogiques, `FableEtudes/` (dont la ROADMAP) et
+
+les workflows de contenu. Ne reste ici que le **moteur**, générique et sans corpus
+(`scripts/content/**`, `src/shared/content/**`), les <!--count:engine-skills-->5<!--/count-->
+skills techniques et `STATUS.md`. Le moteur est public et testé ici ; c'est lui que la
 Content CI privée checkout — y compris pour `harness:check --corpus`, qui garde le corpus avec
 les invariants d'ici (étude 32).
 

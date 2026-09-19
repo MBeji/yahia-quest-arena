@@ -35,6 +35,13 @@
  *      <dir>` turns a `privé:*` declaration into a verification, for whoever has
  *      both repos at hand; it is wired into no workflow yet (harness/controls.json
  *      says why), so those declarations are taken on trust.
+ *  10. Every COUNTER a document declares is recomputed (#1039, lot 1). `STATUS.md`
+ *      said « 41 skills pédagogiques » while the corpus carried 43; nothing read the
+ *      number. A count wrapped as `<!--count:NAME-->N<!--/count-->` (HTML comments
+ *      do not render) names the FACT that verifies it: `engine-skills`, `features`
+ *      here, `corpus-skills` only under `--corpus` — elsewhere the marker is read,
+ *      not judged, exactly like a `privé:*` control declaration. Contradiction,
+ *      never exhaustivity (#994): a number WITHOUT a marker is nobody's business.
  *
  * Driven by `.github/workflows/ci.yml` (job `verify`) and `npm run ci:verify`.
  * Pure helpers are exported and unit-tested; `main()` does the filesystem walk and
@@ -153,6 +160,49 @@ export function checkFeatureInventory(agentsMdContent, actualNames) {
   if (ghosts.length) problems.push(`features listées mais inexistantes : ${ghosts.join(", ")}`);
   if (declared.count !== actual.length) {
     problems.push(`le compte annoncé (${declared.count}) ≠ ${actual.length} dossiers réels`);
+  }
+  return problems;
+}
+
+/**
+ * `<!--count:NAME-->N<!--/count-->` — le marqueur qui rend un compteur de document
+ * DÉCIDABLE (#1039). Le nombre peut être écrit à la française (« 1 529 », espace fine
+ * comprise) : c'est la prose qu'on garde, pas un JSON.
+ */
+export const COUNT_MARKER_RE =
+  /<!--\s*count:([a-z0-9-]+)\s*-->\s*(\d[\d\s\u202f\u00a0]*)\s*<!--\s*\/count\s*-->/gu;
+
+/** Nombre de sous-dossiers directs — `null` si le dossier n'existe pas (fait invérifiable ici). */
+export function countDirs(dir) {
+  if (!existsSync(dir)) return null;
+  return readdirSync(dir, { withFileTypes: true }).filter((d) => d.isDirectory()).length;
+}
+
+/**
+ * Chaque compteur marqué doit égaler le fait qu'il nomme. `facts[name] === null` veut dire
+ * « ce fait vit dans l'autre dépôt » : le marqueur est lu (son nom doit exister), pas jugé.
+ * Un nom inconnu est une violation — un marqueur que rien ne recalcule est un faux gate.
+ */
+export function checkDeclaredCounts(docs, facts) {
+  const problems = [];
+  for (const [file, text] of docs) {
+    for (const m of (text ?? "").matchAll(COUNT_MARKER_RE)) {
+      const [, name, raw] = m;
+      const declared = Number(raw.replace(/[\s\u202f\u00a0]/g, ""));
+      if (!Object.hasOwn(facts, name)) {
+        problems.push(
+          `${file}: compteur \`${name}\` inconnu — les faits recalculables sont ${Object.keys(facts).join(", ")}.`,
+        );
+        continue;
+      }
+      const actual = facts[name];
+      if (actual === null) continue;
+      if (declared !== actual) {
+        problems.push(
+          `${file}: le compteur \`${name}\` annonce ${declared}, le disque en compte ${actual} — corriger le nombre, pas le marqueur.`,
+        );
+      }
+    }
   }
   return problems;
 }
@@ -945,6 +995,20 @@ function main() {
   // key wins) call such a file valid, so this needs a parser with `uniqueKeys`,
   // not a convention. See check-workflow-yaml.mjs for the incident it replays.
   if (engineMode) problems.push(...checkYamlFiles(collectGithubYaml(ROOT)));
+  // 10. Les compteurs déclarés — STATUS.md et AGENTS.md sont lus depuis CE dépôt dans les
+  // deux modes (la Content CI privée checkout le moteur) ; seul le fait `corpus-skills`
+  // n'existe qu'avec `--corpus`, et il n'est jugé que là.
+  problems.push(
+    ...checkDeclaredCounts(
+      ["STATUS.md", "AGENTS.md"].map((f) => [f, readIfExists(join(ROOT, f))]),
+      {
+        "engine-skills": countDirs(join(ROOT, ".claude", "skills")),
+        "corpus-skills":
+          corpusRoot === null ? null : countDirs(join(corpusRoot, ".claude", "skills")),
+        features: countDirs(join(ROOT, "src", "features")),
+      },
+    ),
+  );
 
   // 8. Tout script de CONTRÔLE est exécuté par quelqu'un — ou dit qui l'exécute.
   // `content:figures:check` a passé des mois rouge sans qu'aucun workflow ne
