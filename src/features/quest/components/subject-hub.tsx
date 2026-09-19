@@ -234,9 +234,14 @@ export function SubjectHub({
     // la porte d'un chapitre est du travail fait : sans cette boucle, un chapitre dont
     // seul le quiz est passé ne serait pas « commencé », et « Reprendre ici » renverrait
     // l'élève au début de la matière.
+    // ⚠️ Seulement quand la porte EXISTE. `cleared` vaut aussi « non gaté » — c'est la
+    // définition même de `chapter_quiz_cleared` — donc sur une matière hors école chaque
+    // chapitre à quiz était « commencé » d'office, et « Reprendre ici » sautait au DERNIER
+    // chapitre de la matière. Le spec de rappel l'a vu quatre nuits de suite (#1047).
     for (const exercise of exercises) {
       if (exercise.mode !== "quiz") continue;
-      if (progress?.chapters[exercise.chapter_id]?.quiz.cleared) attempted[exercise.id] = true;
+      const quiz = progress?.chapters[exercise.chapter_id]?.quiz;
+      if (quiz?.gated && quiz.cleared) attempted[exercise.id] = true;
     }
     return { counted, attempted };
   }, [progress, exercises]);
@@ -308,6 +313,7 @@ export function SubjectHub({
           type="button"
           onClick={() => toggle(c.id)}
           aria-expanded={open}
+          data-testid={`chapter-toggle-${c.id}`}
           className="flex w-full items-center gap-3 px-4 py-3 text-start transition hover:bg-secondary/50 [@media(pointer:coarse)]:min-h-11"
         >
           <span className="shrink-0 text-2xs font-bold uppercase tracking-wider text-muted-foreground">

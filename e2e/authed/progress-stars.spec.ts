@@ -13,10 +13,15 @@ import { STORAGE_STATE } from "../helpers/users";
  * l'écran de résultat sache, au moment où l'étoile tombe, qu'elle vient de tomber.
  *
  * Le décor est celui de `quiz-gate.spec.ts` — une matière SCOLAIRE gratuite, donc
- * le quiz est le seul verrou en jeu — et les deux tests tournent EN SÉRIE parce
+ * le quiz est le seul verrou en jeu — mais PAS son compte. `quiz-gate` attend ce
+ * chapitre VERROUILLÉ pour l'élève `free`, et les fichiers tournent en parallèle
+ * (deux workers) : avec un seul compte, le quiz passé ici déverrouillait là-bas —
+ * quatre nuits de suite (#1047). L'élève `premium` est un second élève ordinaire
+ * (« premium » ne pèse rien depuis la phase gratuite) qu'aucun autre spec ne fait
+ * jouer dans une matière scolaire. Les deux tests d'ici tournent EN SÉRIE parce
  * que le second mute l'état (il passe un quiz et tout le cran 1 d'un chapitre).
  */
-test.use({ storageState: STORAGE_STATE.free });
+test.use({ storageState: STORAGE_STATE.premium });
 
 test.describe.serial("Étoiles de chapitre & sceaux de matière (é34)", () => {
   test("le hub connecté montre l'état de la matière, pas la promesse de l'anonyme", async ({
