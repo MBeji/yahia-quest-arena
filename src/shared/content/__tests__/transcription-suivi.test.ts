@@ -339,6 +339,45 @@ describe("checkSuivi — lien fiche → sujets (déclaré, jamais deviné)", () 
       ).toBe(true);
     });
 
+    // Une fiche LUE EN ENTIER dont la source ne couvre pas tout le chapitrage :
+    // aucun trou de pagination, et pourtant `complete` serait faux. C'est
+    // exactement l'arabe et l'anglais de 9ème (120/120 p. de نحو pur ; 44/44 p.
+    // d'un Teacher's Book qui ne nomme ni le passif ni le discours rapporté).
+    const lueEnEntier = (chapitresGeneration: string[]) =>
+      entry({
+        statut: "partielle",
+        profondeur: "generation",
+        sujets: ["arabe-1ere"],
+        chapitresGeneration,
+        sources: [
+          {
+            code: "501109",
+            tomes: ["P00"],
+            role: "enseignant",
+            pagesTotal: 100,
+            pagesLues: "integral",
+          },
+        ],
+      });
+
+    it("n'invite plus à promouvoir une fiche lue en entier dont la levée est au chapitre", () => {
+      const { warnings } = checkSuivi({
+        ...input([lueEnEntier(["01-alphabet"])]),
+        manifestSubjectsByGrade,
+        manifestChaptersByGrade,
+      });
+      expect(warnings.some((w) => w.includes("couvertes à 100 %"))).toBe(false);
+    });
+
+    it("mais invite toujours à promouvoir celle qui est lue en entier SANS levée — l'oubli reste attrapé", () => {
+      const { warnings } = checkSuivi({
+        ...input([lueEnEntier([])]),
+        manifestSubjectsByGrade,
+        manifestChaptersByGrade,
+      });
+      expect(warnings.some((w) => w.includes("couvertes à 100 %"))).toBe(true);
+    });
+
     it("rejette une levée déclarée sans lien fiche → contenu", () => {
       const { errors } = checkSuivi(
         input([
