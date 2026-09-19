@@ -147,8 +147,11 @@ const INTRUDER_PROMPT =
 
 // Strong, unambiguous phrasings that pin an option as THE answer or as wrong.
 // Kept deliberately narrow to avoid false positives on legitimate distractor talk.
+// La lettre doit être un MOT : « la bonne réponse est exactement 15/210 » commence par un
+// « e » qui n'est pas une option — lu comme telle, la garde a accusé une clé juste
+// (`math-bac-math/18-probabilites/04-defi` Q5, audit du 2026-09-12, finding K-1).
 const SAYS_CORRECT =
-  /(?:la\s+)?bonne\s+réponse\s+est\s+(?:l['’]option\s+|la\s+proposition\s+)?\(?([a-f])\)?|l['’]option\s+\(?([a-f])\)?\s+est\s+(?:la\s+bonne|correcte?|juste|exacte?)|option\s+\(?([a-f])\)?\s+is\s+(?:the\s+)?correct/gi;
+  /(?:la\s+)?bonne\s+réponse\s+est\s+(?:l['’]option\s+|la\s+proposition\s+)?\(?([a-f])\)?(?![\p{L}\p{N}])|l['’]option\s+\(?([a-f])\)?\s+est\s+(?:la\s+bonne|correcte?|juste|exacte?)|option\s+\(?([a-f])\)?\s+is\s+(?:the\s+)?correct/giu;
 
 // Deictic phrases that unambiguously point at an ACCOMPANYING figure. Kept
 // narrow on purpose: bare "figure"/"schéma" are excluded because they are far
