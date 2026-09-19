@@ -44,3 +44,25 @@ openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt /tmp/inter.pem        
 
 Un test (`scripts/cloud/__tests__/ca-bundle.test.mjs`) affirme que chaque fichier est un
 certificat, pas une clé, et que celui de Sectigo porte bien ce sujet et cette empreinte.
+
+## ⚠️ Le hook pose les variables une fois ; un outil qui ouvre un shell neuf ne les a pas
+
+Constaté le **2026-09-19** : `npm run content:manuel:fetch` a échoué en
+« certificat du serveur non vérifiable » sur `www.cnp.com.tn` **alors que le bundle existait
+déjà** (`~/.cache/yqa-ca/ca-bundle.pem`, posé par le hook). La cause n'est pas le bundle : c'est
+que l'état d'un shell — variables comprises — **ne survit pas** d'un appel d'outil au suivant.
+Le hook exporte dans `$CLAUDE_ENV_FILE` au démarrage ; un shell ouvert ensuite par un outil peut
+très bien ne rien en voir, et le message d'erreur, lui, parle du CNP.
+
+Le réflexe, dans la commande elle-même :
+
+```bash
+export CURL_CA_BUNDLE=~/.cache/yqa-ca/ca-bundle.pem \
+       SSL_CERT_FILE=~/.cache/yqa-ca/ca-bundle.pem \
+       NODE_EXTRA_CA_CERTS=~/.cache/yqa-ca/ca-bundle.pem
+npm run content:manuel:fetch -- <code>
+```
+
+Si le fichier n'existe pas, `node scripts/cloud/ca-bundle.mjs` le (re)fabrique. Sans ce réflexe,
+une session conclut « le CNP est injoignable » et renonce à télécharger un manuel : c'est
+exactement ce qui a failli arrêter l'audit des 24 fiches du seed ce jour-là.
