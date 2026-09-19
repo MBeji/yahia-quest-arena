@@ -176,6 +176,9 @@
     "yaml": "^2.9.0"
   },
   "overrides": {
-    "esbuild": "^0.28.1"
+    "esbuild": "^0.28.1",
+    "miniflare": {
+      "undici": "7.29.0"
+    }
   }
 }
