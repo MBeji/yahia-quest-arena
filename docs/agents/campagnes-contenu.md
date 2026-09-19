@@ -69,9 +69,12 @@ pdftotext "$f" - | wc -c                      # c   →   c/p = caractères par 
 | **200–2300, arabe**               | **couche texte en POLICE PRIVÉE**  | ⚠️ **le piège** : `pdftotext` rend beaucoup de caractères, donc le chiffre dit « texte », mais ce sont des glyphes latins mappés sur des octets arabes — **indécodables sans le `ToUnicode` de la police**. Vision quand même. |
 | CID `Identity-H` sans `ToUnicode` | **échec bruyant**                  | `pdftotext` refuse et le dit (« Unknown character collection ») — c'est le bon cas : il ne fabrique pas de faux texte.                                                                                                         |
 
-**Le résultat de la mesure, pour ne pas la refaire** : sur les 24 guides, **3 seulement** sont
-exploitables par extraction — les **francophones** (`521326` 3ᵉ, `521415` 4ᵉ, `521513` 5ᵉ).
-Les **19 arabophones** sont en police privée (au moins trois familles de mojibake distinctes :
+**Le résultat de la mesure, pour ne pas la refaire** : sur les 24 guides, **4 seulement** sont
+exploitables par extraction — les trois guides de **français** (`521326` 3ᵉ, `521415` 4ᵉ,
+`521513` 5ᵉ) **et le manuel de maths de 1ʳᵉ secondaire `222104`**. ⚠️ **Ce dernier est le piège
+dans le piège** : son code est arabe comme les autres, il a d'abord été rangé avec eux, et il est
+en réalité **écrit en français**. Le code CNP ne dit pas la langue du livre — seul le texte
+extrait la dit. Les **19 autres** sont en police privée (au moins trois familles de mojibake distinctes :
 `ŗƒŕ°Ŷƃ¦…`, `qHDÒ∞«…`, `á«LƒZGó«Ñd…`) et **2 sont des scans purs** (`503104` éveil 1ʳᵉ,
 `503204` éveil 2ᵉ). Tester le décodage est inutile : cp1256, mac_arabic, iso8859_6 et
 mac_farsi ont tous été essayés sur les trois familles, aucun ne rend de l'arabe.
