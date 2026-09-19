@@ -239,8 +239,13 @@ export function LessonReader({
     };
   }, [rendered]);
 
+  // `lesson-doc` est le crochet d'IMPRESSION du document — l'article entier,
+  // en-tête compris —, et il ne dépend d'AUCUNE coquille. C'est très exactement
+  // ce qui a manqué quand le lecteur a quitté `.app-shell` pour `.public-shell` :
+  // la remise à l'encre du cours était accrochée à la coquille, le lecteur a
+  // changé de coquille, et le thème sombre s'est mis à imprimer blanc sur blanc.
   return (
-    <article className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
+    <article className="lesson-doc mx-auto max-w-3xl px-4 py-8 sm:px-6">
       <header className="mb-6" dir={isRtl ? "rtl" : "ltr"}>
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
           <BookOpen className="h-3.5 w-3.5 shrink-0" />

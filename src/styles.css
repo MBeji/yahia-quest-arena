@@ -1318,13 +1318,6 @@ html:not(.reference) .lesson-figure__plate {
     color: #000;
     background: #fff;
   }
-  /* Les titres en dégradé-clip s'impriment en noir plein (les fonds ne sont pas
-     imprimés par défaut → sinon texte invisible). */
-  .public-shell .lesson-content .lesson-h1 {
-    -webkit-text-fill-color: currentColor;
-    color: #000;
-    background: none;
-  }
   .print-watermark {
     display: flex !important;
     position: fixed;
@@ -1366,13 +1359,58 @@ html:not(.reference) .lesson-figure__plate {
   .app-shell nav {
     display: none !important;
   }
-  /* Cours imprimé depuis l'app authentifiée — le thème sombre donne un premier-plan
-     quasi-blanc (--foreground ≈ oklch(0.965)) qui devient invisible sur fond blanc.
-     .public-shell avait color:#000 ; .app-shell n'avait rien (C4, d526f658). */
-  .app-shell .lesson-content,
-  .app-shell .lesson-content * {
+  /* Cours imprimé — L'ENCRE EST UNE PROPRIÉTÉ DU DOCUMENT, PAS DE SA COQUILLE.
+
+     Le thème « Noir & Or » donne un premier-plan quasi-blanc (`--foreground` ≈
+     oklch(0.965)) et des fonds sombres que le navigateur n'imprime pas : sans
+     remise à l'encre, le cours sort en blanc sur blanc — une feuille vide.
+
+     Le correctif C4 (d526f658) visait `.app-shell .lesson-content` parce que le
+     lecteur vivait alors dans la coquille applicative. Le chantier C8 l'a déplacé
+     vers le registre public (`/chapitre/$chapterId`, `.public-shell`) — et
+     `/lesson/$chapterId` n'est plus qu'une redirection 301. La règle est restée
+     accrochée à un sélecteur que plus AUCUN cours ne porte : elle ne repeignait
+     plus rien, et le thème sombre imprimait des pages blanches. Le test qui la
+     gardait cherchait la chaîne `.app-shell` dans cette feuille — il est resté
+     vert tout du long (voir `lesson-print-css.test.tsx`, réécrit pour interroger
+     le DOM réel du lecteur au lieu du texte de la feuille).
+
+     On vise donc le DOCUMENT : `.lesson-doc` (l'article du lecteur, en-tête
+     compris) et `.lesson-content` (le corps rendu, où qu'il soit monté). C'est
+     l'idiome que `.family-report` suit déjà pour le bilan parental — une classe
+     de CONTENU, qui voyage avec lui quand il change de coquille.
+
+     Compromis assumé : tout passe en noir, donc le papier perd la teinte des
+     blocs (le rouge du piège, le teal de la définition). Le filet les distingue
+     encore, et une imprimante monochrome les aplatissait de toute façon. */
+  .lesson-doc,
+  .lesson-doc *,
+  .lesson-content,
+  .lesson-content * {
     color: #000 !important;
     background: transparent !important;
+    border-color: #bbb !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    /* Les titres en dégradé-clip (`.lesson-h1`) peignent leur texte en
+       `transparent` et laissent le fond faire la couleur. Le fond neutralisé
+       juste au-dessus, sans cette ligne le titre disparaîtrait — ce que la
+       règle `.public-shell .lesson-content .lesson-h1` corrigeait pour la seule
+       coquille publique. Remise à `currentColor`, elle couvre tout texte
+       dégradé du document, présent ou à venir. */
+    -webkit-text-fill-color: currentColor !important;
+  }
+  /* Un filet ne se peint pas avec `color` : `.lesson-hr` est un dégradé de 1px de
+     haut, que la remise à zéro des fonds effacerait. */
+  .lesson-doc .lesson-hr,
+  .lesson-content .lesson-hr {
+    background: #bbb !important;
+  }
+  /* La planche d'une figure porte déjà son encre (fond clair, trait sombre) et
+     reste blanche sous le trait : c'est du contenu, pas du décor. */
+  .lesson-doc .lesson-figure__plate,
+  .lesson-content .lesson-figure__plate {
+    background: #fff !important;
   }
   .family-report,
   .family-report * {
