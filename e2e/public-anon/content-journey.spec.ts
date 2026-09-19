@@ -37,20 +37,25 @@ test.describe("Anonymous content journey (no login wall)", () => {
     await expect(reader.accountInvite).toBeVisible();
     await expect(page).not.toHaveURL(/\/auth/);
 
-    // Le contrôle sur place (étude 35) : la réponse est REPLIÉE tant que l'élève ne la
-    // demande pas. C'est tout l'intérêt du bloc — une réponse visible d'avance ne fait rien
-    // travailler. Le `<details>` est natif : rien à charger, rien à hydrater, et cette
-    // assertion est la seule qui le prouve dans un vrai navigateur.
-    await expect(reader.check).toBeVisible();
-    await expect(reader.checkAnswer).toBeHidden();
-    await reader.checkToggle.click();
-    await expect(reader.checkAnswer).toBeVisible();
-
     // When the chapter has a summary, the Cours/Résumé toggle works (body stays).
     if (await reader.summaryTab.isVisible()) {
       await reader.summaryTab.click();
       await expect(reader.content).toBeVisible();
     }
+
+    // Le contrôle sur place (étude 35) : la réponse est REPLIÉE tant que l'élève ne la
+    // demande pas. C'est tout l'intérêt du bloc — une réponse visible d'avance ne fait rien
+    // travailler. Le `<details>` est natif : rien à charger, rien à hydrater, et cette
+    // assertion est la seule qui le prouve dans un vrai navigateur.
+    // ⚠️ Sur le chapitre de FIXTURE qui porte le bloc, pas sur la matière scolaire
+    // ci-dessus : ses cours viennent des migrations de contenu historiques et n'en ont
+    // aucun — l'assertion posée là cherchait un bloc que rien n'avait seedé (#1047).
+    await page.goto(`/chapitre/${await adminDb.fixtureLessonChapterId()}`);
+    await expect(reader.content).toBeVisible({ timeout: 15_000 });
+    await expect(reader.check).toBeVisible();
+    await expect(reader.checkAnswer).toBeHidden();
+    await reader.checkToggle.click();
+    await expect(reader.checkAnswer).toBeVisible();
   });
 
   test("practise an exercise with immediate correction and an account invite", async ({

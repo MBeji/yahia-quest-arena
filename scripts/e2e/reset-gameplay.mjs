@@ -15,7 +15,7 @@
 import "./_env.mjs";
 import { createClient } from "@supabase/supabase-js";
 import { findProdTarget, prodRefusalMessage } from "../shared/prod-targets.mjs";
-import { GAMEPLAY_TABLES } from "./gameplay-tables.mjs";
+import { GAMEPLAY_TABLES, isMissingTableError, rowKey } from "./gameplay-tables.mjs";
 
 const URL =
   process.env.SUPABASE_URL ?? process.env.TEST_SUPABASE_URL ?? process.env.VITE_SUPABASE_URL;
@@ -34,14 +34,22 @@ if (prodTarget) {
 }
 
 const admin = createClient(URL, SERVICE_KEY, { auth: { persistSession: false } });
-const ALL_ROWS = ["id", "is", null]; // delete().not("id","is",null) ⇒ matches every row
 
+// PostgREST refuse un DELETE sans filtre : `.not(<clé>, "is", null)` vise toutes les
+// lignes, et la clé dépend de la table (`id` par défaut, `user_id` pour le grand livre —
+// voir ROW_KEY). Une table absente se saute ; toute autre erreur est un reset raté, et un
+// reset raté se voit ICI, pas trois specs plus loin sur un « élément introuvable ».
+let failed = 0;
 for (const table of GAMEPLAY_TABLES) {
-  const { error } = await admin
-    .from(table)
-    .delete()
-    .not(...ALL_ROWS);
-  console.log(error ? `  • skip ${table} (${error.message})` : `  • cleared ${table}`);
+  const { error } = await admin.from(table).delete().not(rowKey(table), "is", null);
+  if (!error) {
+    console.log(`  • cleared ${table}`);
+  } else if (isMissingTableError(error)) {
+    console.log(`  • skip ${table} (absente : ${error.message})`);
+  } else {
+    failed += 1;
+    console.error(`  ✗ ${table} NON vidée : ${error.message}`);
+  }
 }
 
 const { error: pErr } = await admin
@@ -55,7 +63,13 @@ const { error: pErr } = await admin
     last_active_date: null,
     avatar_slug: null,
   })
-  .not(...ALL_ROWS);
-console.log(pErr ? `  • profiles: ${pErr.message}` : "  • reset profiles progression");
+  .not("id", "is", null);
+if (pErr) failed += 1;
+console.log(pErr ? `  ✗ profiles: ${pErr.message}` : "  • reset profiles progression");
+
+if (failed > 0) {
+  console.error(`[e2e] reset INCOMPLET — ${failed} table(s) non vidée(s) : le décor est sale.`);
+  process.exit(1);
+}
 
 console.log("[e2e] gameplay reset complete");

@@ -25,6 +25,8 @@ export interface AdminDb {
    * muscle-cerveau/IQ, language tracks). Never quiz-gated.
    */
   nonSchoolSubjectId(): Promise<string>;
+  /** Le chapitre de fixture dont la leçon porte un bloc `::: verifie` (étude 35). */
+  fixtureLessonChapterId(): Promise<string>;
   /**
    * A non-premium school subject in a NON-concours grade (`grades.is_concours_national
    * = false`), so its parcours is FREE — the comprehension-quiz gate is the ONLY gate
@@ -158,6 +160,7 @@ export interface AdminDb {
    */
   recallReadyExercise(): Promise<{
     subjectId: string;
+    chapterId: string;
     exerciseId: string;
     answerKey: { prompt: string; correctText: string }[];
   } | null>;
@@ -225,6 +228,29 @@ export function createAdminDb(): AdminDb {
         .maybeSingle();
       if (error) throw new Error(`nonSchoolSubjectId: ${error.message}`);
       if (!data) throw new Error("No free non-school subject (grade_id null) in the test project.");
+      return data.id as string;
+    },
+    /**
+     * Le chapitre de FIXTURE qui porte une leçon avec un bloc `::: verifie` (étude 35),
+     * seedé par `scripts/e2e/seed-fixture-content.mjs` sur la matière `e2e-fixture-culture`.
+     * C'est le seul lecteur où le contrôle sur place est garanti : les matières scolaires du
+     * projet TEST viennent des migrations de contenu historiques, et leurs cours n'en ont pas.
+     */
+    async fixtureLessonChapterId() {
+      const { data, error } = await client
+        .from("chapters")
+        .select("id")
+        .eq("subject_id", "e2e-fixture-culture")
+        .ilike("lesson_content", "%::: verifie%")
+        .order("display_order")
+        .limit(1)
+        .maybeSingle();
+      if (error) throw new Error(`fixtureLessonChapterId: ${error.message}`);
+      if (!data) {
+        throw new Error(
+          "No fixture chapter carries a `::: verifie` lesson — run `npm run e2e:seed-content`.",
+        );
+      }
       return data.id as string;
     },
     async freeSchoolSubjectId() {
@@ -595,7 +621,7 @@ export function createAdminDb(): AdminDb {
       for (const s of subjects ?? []) {
         const { data: exercises, error: exErr } = await client
           .from("exercises")
-          .select("id")
+          .select("id, chapter_id")
           .eq("subject_id", s.id)
           .eq("source", "admin")
           .neq("mode", "quiz")
@@ -631,7 +657,12 @@ export function createAdminDb(): AdminDb {
             }
           }
           if (eligible >= MIN) {
-            return { subjectId: s.id as string, exerciseId: ex.id as string, answerKey };
+            return {
+              subjectId: s.id as string,
+              chapterId: ex.chapter_id as string,
+              exerciseId: ex.id as string,
+              answerKey,
+            };
           }
         }
       }
