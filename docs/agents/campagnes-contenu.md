@@ -83,6 +83,58 @@ mac_farsi ont tous été essayés sur les trois familles, aucun ne rend de l'ara
 arabophone de 200 pages se reprend en vision, et c'est un ordre de grandeur de plus. Ne pas
 promettre les deux au même rythme.
 
+### Le mojibake arabe est DÉCODABLE — constaté et prototypé le 2026-09-19
+
+Le tableau ci-dessus dit que les guides arabes sont en police privée et donc « vision quand même ».
+C'est vrai pour **transcrire**. Ça ne l'est pas pour **chercher, compter et naviguer** — et la
+différence vaut des milliers de pages.
+
+**Ce qui a été constaté.** La substitution n'est pas du bruit : c'est une **table déterministe**,
+glyphe → lettre arabe, en **ordre visuel inversé**. Elle se dérive en alignant un texte dont on
+connaît la vérité (lu à l'image) avec le mojibake de la même page. Exemple, sur `503504` p.36 :
+
+| mojibake (inversé) | lettres      | mot     |
+| ------------------ | ------------ | ------- |
+| `G d û° ª ù¢`      | ا ل ش م س    | الشمس   |
+| `G Ÿ ü° É O Q`     | ا لم ص ا د ر | المصادر |
+| `G Ÿ †° « Ä á`     | ا لم ض ي ئ ة | المضيئة |
+
+Trois règles suffisent à lire la table : **un `°` ou un `¢` qui suit un glyphe forme avec lui une
+seule lettre pointée** (`û°`=ش, `ü°`=ص, `†°`=ض, `ù¢`=س) ; **certains glyphes sont des ligatures**
+(`Ÿ`=لم, `’`=لا/لأ) ; et **le `q` est la shadda**, placée AVANT sa lettre côté mojibake.
+
+**Ce qui rend la trouvaille utile : la table est PARTAGÉE entre guides.** Dérivée d'une seule page
+du guide d'éveil de 5ᵉ (`503504`), une table de 38 glyphes décode déjà lisiblement le guide
+d'éducation islamique de 5ᵉ (`511505`), un autre volume, une autre matière :
+
+> `تنطل·ا···اتيجّيةالّت·اعلالأجتماعي·ن·موعة·نالأأ·دافالوجدانّيةالّتيتقودا···ل··نا`
+
+à comparer avec ce que la page imprime vraiment, lu à l'image :
+
+> « تنطلق استراتيجيّة التّفاعل الاجتماعي من مجموعة من الأهداف الوجدانيّة الّتي تقود إلى خلق مناخ… »
+
+Les `·` sont les glyphes que la table de 38 entrées ne connaît pas encore. **Il y a au moins deux
+familles de police** dans le corpus : celle-ci (`á q d G` — éveil, islamique, arabe 5ᵉ, arabe 6ᵉ) et
+une autre (`W± b Ò I ‡ L ∞ «` — éveil 4ᵉ, islamique 4ᵉ, maths 3ᵉ), qui demandera sa propre table.
+
+**Le contrat, et il n'est pas négociable.** Un décodeur à 90 % produit de l'arabe **plausible et
+faux** — c'est exactement le mode de défaillance que les audits du 2026-09-19 ont passé la journée à
+corriger. Donc :
+
+- le décodage sert à **chercher, compter, localiser une section, mesurer une couverture** ;
+- **aucune citation verbatim ne sort d'un décodage** : elle se lit à l'image, comme aujourd'hui ;
+- un décodeur qui rend `·` sur les glyphes inconnus est **sûr par construction** — il montre ses
+  trous au lieu de les combler.
+
+**Reste à faire** pour en tirer un outil : compléter la table (les 28 lettres × leurs formes +
+ligatures, ~150 entrées par famille), la dériver d'un corpus aligné plus large, et l'emballer dans
+un script testé de `scripts/content/`. Le prototype et la méthode d'alignement sont décrits
+ci-dessus ; c'est reproductible en une session.
+
+**Pourquoi ça compte** : les 17 fiches arabophones du registre représentent ~3 400 pages qu'on ne
+sait lire qu'à l'image. Rendre leur texte cherchable ne remplace pas la lecture, mais il dit **où**
+lire — et c'est la différence entre auditer une fiche en une passe et la relire page à page.
+
 ### Télécharger un guide du CNP en session cloud
 
 `npm run content:manuel:fetch -- <code>` dérive l'URL du code et écrit dans `~/.cache/yqa-manuels`.
