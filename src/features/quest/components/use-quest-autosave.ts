@@ -178,8 +178,27 @@ export function useQuestAutosave({
         return result;
       } catch (error) {
         if (!isSessionRefusalError(error)) {
+          // ⚠️ LE STAGE DIT LE REGISTRE, PARCE QUE LE SEUIL EN DÉPEND.
+          //
+          // Ce `catch` couvre les DEUX registres : le lecteur est unique, et
+          // c'est `strategy.submit` qui change dessous. Côté connecté, un échec
+          // vaut une mission perdue — une progression, un suivi parental, des
+          // étoiles. Côté public, `scoreQuizPublic`/`checkAnswersPublic` ne
+          // posent ni session ni tentative : il n'y a rien à perdre, le
+          // visiteur revalide.
+          //
+          // Les écrire sous un même stage les mélangeait dans
+          // `UNRECOVERED_SUBMISSION_STAGES`, donc dans le compteur du TRAVAIL
+          // D'ÉLÈVE et son seuil de 3 — le plus bas du dépôt. L'issue #1070 en
+          // est sortie le 2026-09-20 : « 3 soumissions perdues », alors que
+          // rien ne permettait de dire si un seul élève connecté était
+          // concerné.
+          //
+          // `enabled` EST le registre : son unique appelant l'alimente en
+          // `capabilities.rewards`, vrai du seul registre connecté — c'est déjà
+          // lui qui décide s'il y a une file où rattraper la soumission.
           reportClientError({
-            stage: "quest-submit",
+            stage: enabled ? "quest-submit" : "public-submit",
             clientId,
             errMessage: error instanceof Error ? error.message : String(error),
             payload: { variant, queued: enabled },
