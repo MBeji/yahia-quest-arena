@@ -50,14 +50,28 @@ export type ClientErrorStage =
   /** Le rejeu a été refusé DE NOUVEAU, jeton neuf en main. */
   | "outbox-replay"
   /** L'attacheur de jeton s'est fait refuser. */
-  | "token-attach";
+  | "token-attach"
+  /**
+   * Le registre PUBLIC n'a pas obtenu sa correction. Rien n'était en jeu en
+   * base : `scoreQuizPublic`/`checkAnswersPublic` ne posent ni session, ni
+   * tentative, ni XP — « No session, no attempt, no XP », dit leur propre
+   * contrat. Le visiteur revalide, et rien n'a été perdu.
+   */
+  | "public-submit";
 
 export type ClientErrorStageSpec = {
   /**
    * Ce qui est en jeu. `submission` = du travail d'élève qui n'est pas arrivé ;
-   * `auth` = une session refusée, sans qu'on sache ce qu'elle portait.
+   * `auth` = une session refusée, sans qu'on sache ce qu'elle portait ;
+   * `public-correction` = une correction anonyme qui n'est pas revenue, sans
+   * rien derrière elle à perdre.
+   *
+   * ⚠️ CE CHAMP EST LE SEUIL. `submission` fait entrer la ligne dans
+   * `UNRECOVERED_SUBMISSION_STAGES`, donc dans le compteur le plus bas et le
+   * plus alarmant des trois. Ne l'écrire que là où un élève CONNECTÉ perd
+   * vraiment quelque chose : une progression, un suivi parental, des étoiles.
    */
-  readonly concern: "submission" | "auth";
+  readonly concern: "submission" | "auth" | "public-correction";
   /**
    * Le chemin qui écrit cette ligne enchaîne-t-il TOUT DE SUITE sur une reprise
    * dont on sait qu'elle guérit le cas ordinaire ?
@@ -98,6 +112,11 @@ export const CLIENT_ERROR_STAGES: Record<ClientErrorStage, ClientErrorStageSpec>
     concern: "auth",
     recoversInline: false,
     what: "l'attacheur de jeton s'est fait refuser",
+  },
+  "public-submit": {
+    concern: "public-correction",
+    recoversInline: false,
+    what: "une correction demandée par un visiteur anonyme, que le serveur n'a pas rendue",
   },
 };
 

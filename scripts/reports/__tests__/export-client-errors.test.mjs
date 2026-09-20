@@ -113,7 +113,45 @@ describe("export-client-errors — la boîte noire agrégée (#938)", () => {
       ],
       meta,
     );
-    expect(doc.horloge).toEqual({ jetonValideRefuse: 1, jetonExpire: 1, retourDeVeille: 1 });
+    expect(doc.horloge).toEqual({
+      jetonValideRefuse: 1,
+      jetonExpire: 1,
+      retourDeVeille: 1,
+      sansSession: 0,
+    });
+  });
+
+  it("une ligne SANS session n'est pas une expiration — `Number(null)` vaut 0, et ça mentait", () => {
+    // Le défaut exact qui a fait lire l'issue #1070 de travers : `ttl_s` nul
+    // passait `Number.isFinite` à 0, donc tombait dans `<= 0`, donc sous
+    // « jeton que l'appareil se savait expiré ». Un visiteur anonyme n'a jamais
+    // eu de jeton : il ne mesure aucune horloge, il se compte à part.
+    const doc = buildClientErrorReport(
+      [ligne({ ttl_s: null }), ligne({ ttl_s: null }), ligne({ ttl_s: -5 })],
+      meta,
+    );
+
+    expect(doc.horloge.sansSession).toBe(2);
+    expect(doc.horloge.jetonExpire).toBe(1);
+    expect(doc.horloge.jetonValideRefuse).toBe(0);
+  });
+
+  it("une correction ANONYME ne compte pas comme du travail d'élève perdu", () => {
+    // `public-submit` : ni session, ni tentative, ni XP — le visiteur revalide
+    // et rien n'a été perdu. Au seuil de 3, ces lignes ne doivent RIEN lever,
+    // sans quoi l'alarme la plus basse du dépôt se déclenche sur du vent.
+    const doc = buildClientErrorReport(
+      Array.from({ length: SEUILS.soumissionParFenetre + 2 }, () =>
+        ligne({ stage: "public-submit", err_message: "Impossible de corriger le quiz." }),
+      ),
+      meta,
+    );
+
+    expect(doc.soumissionsPerdues).toBe(0);
+    expect(doc.alertes).toEqual([]);
+    // Elle reste VISIBLE — on ne la compte pas, on ne la cache pas.
+    expect(doc.parStage["public-submit"]).toBe(SEUILS.soumissionParFenetre + 2);
+    expect(doc.legendeStages["public-submit"]).toBe(CLIENT_ERROR_STAGES["public-submit"].what);
   });
 
   it("refuse de lire autre chose que la production", () => {
@@ -195,6 +233,9 @@ describe("soumissions perdues", () => {
     expect([...UNRECOVERED_SUBMISSION_STAGES]).toEqual(attendus);
     expect(UNRECOVERED_SUBMISSION_STAGES).toContain("quest-submit");
     expect(UNRECOVERED_SUBMISSION_STAGES).not.toContain("token-attach");
+    // Le registre public a son propre stage DEPUIS le 2026-09-20, précisément
+    // pour sortir d'ici : les deux registres partageaient `quest-submit`.
+    expect(UNRECOVERED_SUBMISSION_STAGES).not.toContain("public-submit");
   });
 
   it("rend la légende des stages PRÉSENTS, pour que l'issue se lise sans le code", () => {

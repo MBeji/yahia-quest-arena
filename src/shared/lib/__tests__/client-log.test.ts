@@ -85,6 +85,20 @@ describe("reportClientError", () => {
     expect(sentBody(beacon).ttlS).toBeLessThan(0);
   });
 
+  it("rend `null`, et surtout PAS 0, quand aucune session n'est jamais passée", () => {
+    // ⚠️ La nuance décide d'un diagnostic. `secondsUntilExpiry(undefined)` rend
+    // `0` — défaut sûr chez elle, où il force un rafraîchissement. Porté tel
+    // quel ici, ce `0` devient une MESURE, et la garde range `ttl_s <= 0` sous
+    // « jeton que l'appareil se savait expiré » : un visiteur anonyme, qui n'a
+    // jamais eu de jeton, y entrait comme une session morte. C'est ainsi que
+    // l'issue #1070 a été lue le 2026-09-20.
+    mockLastKnownExpiry.mockReturnValue(undefined);
+
+    reportClientError({ stage: "public-submit" });
+
+    expect(sentBody(beacon).ttlS).toBeNull();
+  });
+
   it("retombe sur fetch keepalive quand sendBeacon refuse", () => {
     // `sendBeacon` rend `false` au-delà de son quota : le repli doit offrir la
     // même garantie de survie, d'où `keepalive`.

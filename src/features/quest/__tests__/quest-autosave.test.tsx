@@ -254,14 +254,36 @@ describe("échec de soumission", () => {
     ).rejects.toThrow("boom");
   });
 
-  it("raconte aussi l'échec du registre anonyme, en disant qu'il n'est pas en file", async () => {
-    // Rien ne le rejouera : sa partie est perdue pour de bon. Raison de plus
-    // pour que la panne, elle, soit connue.
+  it("raconte l'échec du registre anonyme SOUS SON PROPRE STAGE — rien n'y est perdu", async () => {
+    // ⚠️ Le contraire de ce que ce test affirmait jusqu'au 2026-09-20 (« sa
+    // partie est perdue pour de bon »). Le registre public ne pose ni session,
+    // ni tentative, ni XP : il n'y a rien à rejouer parce qu'il n'y a rien
+    // d'enregistré, et le visiteur revalide. Sous `quest-submit`, ces lignes
+    // entraient dans `UNRECOVERED_SUBMISSION_STAGES` et donc dans le compteur
+    // du TRAVAIL D'ÉLÈVE, seuil 3 — le plus bas du dépôt. C'est ce qui a fait
+    // sortir l'issue #1070.
     const { result } = mount({ enabled: false });
 
     await echoue(result, new Error("boom"));
 
+    expect(mockReport.mock.calls[0][0].stage).toBe("public-submit");
     expect(mockReport.mock.calls[0][0].payload).toEqual({ variant: "classic", queued: false });
+  });
+
+  it("le stage suit le REGISTRE, pas le bouton — même `catch`, deux natures", async () => {
+    // Le lecteur d'exercices est unique et c'est `strategy.submit` qui change
+    // dessous : le seul discriminant disponible dans ce `catch` est `enabled`,
+    // alimenté par `capabilities.rewards`. S'il cessait de l'être, ce test
+    // tombe avant que le seuil ne se mette à mentir.
+    const connecte = mount();
+    await echoue(connecte.result, new Error("boom"));
+    expect(mockReport.mock.calls[0][0].stage).toBe("quest-submit");
+
+    mockReport.mockClear();
+
+    const anonyme = mount({ enabled: false });
+    await echoue(anonyme.result, new Error("boom"));
+    expect(mockReport.mock.calls[0][0].stage).toBe("public-submit");
   });
 });
 

@@ -39,6 +39,20 @@
  *   derrière un refus d'auth, donc la panne n'écrivait rien. Le classement des
  *   stages vit dans `client-error-stages.ts`, lu des deux côtés.
  *
+ * • ⚠️ Ce compteur a compté faux du 2026-09-04 au 2026-09-20, et les DEUX
+ *   raisons tenaient à un défaut qui ne prévient pas : une valeur par défaut
+ *   sûre chez elle, devenue une mesure ici.
+ *     1. Le lecteur d'exercices est unique, les deux registres passaient par le
+ *        même stage `quest-submit` : une correction ANONYME — ni session, ni
+ *        tentative, ni XP — entrait dans le compteur du travail d'élève. D'où
+ *        `public-submit`.
+ *     2. `secondsUntilExpiry(undefined)` rend `0`, et `Number(null)` aussi :
+ *        une ligne sans jeton se rangeait sous « jeton expiré ». D'où `ttl_s`
+ *        nul à l'écriture, et `sansSession` compté à part ici.
+ *   L'issue #1070 en est sortie, lue comme trois missions d'élève effacées.
+ *   Les lignes ÉCRITES avant le 2026-09-20 gardent l'ambiguïté : rien ne permet
+ *   de les reclasser après coup.
+ *
  * • Le filtrage de la fenêtre est fait **côté serveur** (`.gte("created_at", …)`),
  *   jamais en local après une lecture bornée. Piège mesuré sur ce dépôt : les
  *   100 runs les plus récents ne couvraient qu'1 h 13, donc une fenêtre filtrée
@@ -147,9 +161,19 @@ export function buildClientErrorReport(rows, meta) {
     MESSAGES_FRESH_TOKEN.some((m) => String(r.err_message ?? "").includes(m)),
   );
 
-  // Les trois grandeurs que `reportClientError` emporte pour départager les
+  // Les grandeurs que `reportClientError` emporte pour départager les
   // hypothèses (#914 : horloge de l'appareil vs retour de veille).
-  const ttl = rows.map((r) => Number(r.ttl_s)).filter((n) => Number.isFinite(n));
+  //
+  // ⚠️ UN NUL N'EST PAS UN ZÉRO. `Number(null)` vaut 0 et `Number.isFinite(0)`
+  // est vrai : ne filtrer que sur la finitude faisait entrer CHAQUE ligne sans
+  // session dans `jetonExpire` (0 ≤ 0), donc sous « jeton que l'appareil se
+  // savait expiré ». Une ligne sans jeton ne mesure aucune horloge — elle se
+  // compte à part, elle ne se range pas dans un camp.
+  const sansSession = rows.filter((r) => r.ttl_s === null || r.ttl_s === undefined).length;
+  const ttl = rows
+    .filter((r) => r.ttl_s !== null && r.ttl_s !== undefined)
+    .map((r) => Number(r.ttl_s))
+    .filter((n) => Number.isFinite(n));
   const jetonValideRefuse = ttl.filter((s) => s > 60).length;
   const jetonExpire = ttl.filter((s) => s <= 0).length;
   const retourDeVeille = rows.filter((r) => Number(r.last_hidden_ms) > 60_000).length;
@@ -157,6 +181,13 @@ export function buildClientErrorReport(rows, meta) {
   // Le travail d'élève qui n'est pas arrivé, et que rien ne reprend derrière.
   // Le stage suffit à le dire (`client-error-stages.ts`) : c'est la table qui
   // classe, pas une liste de chaînes retapée ici.
+  //
+  // ⚠️ Il ne suffisait PAS jusqu'au 2026-09-20 : le lecteur d'exercices est
+  // unique et les deux registres passaient par le même `quest-submit`, si bien
+  // qu'une correction anonyme — sans session, sans tentative, sans rien à
+  // perdre — comptait comme une mission d'élève effacée. D'où le stage
+  // `public-submit`, et la règle qui le tient : ce compteur ne prend que ce
+  // qu'un élève CONNECTÉ perd.
   const soumissionsPerdues = rows.filter((r) =>
     UNRECOVERED_SUBMISSION_STAGES.includes(String(r.stage ?? "")),
   );
@@ -195,7 +226,7 @@ export function buildClientErrorReport(rows, meta) {
         .filter((stage) => stage in CLIENT_ERROR_STAGES)
         .map((stage) => [stage, CLIENT_ERROR_STAGES[stage].what]),
     ),
-    horloge: { jetonValideRefuse, jetonExpire, retourDeVeille },
+    horloge: { jetonValideRefuse, jetonExpire, retourDeVeille, sansSession },
     seuils: SEUILS,
     alertes,
   };
