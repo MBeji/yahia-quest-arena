@@ -172,6 +172,39 @@ question) et de l'audit humain. Ne jamais conclure « le contenu est bon » sur 
 Corollaire observé : les erreurs se logent plus souvent dans les **exemples du cours** que dans
 les clés de réponse — l'audit doit lire `cours.md`, pas seulement les quiz.
 
+### Une forme morphologique fausse passe les sept étages — mesuré le 2026-09-20
+
+Les trois chapitres de صرف d'arabe 9ᵉ (المقصور/المنقوص/الممدود, التّصغير, النّسبة — 105 questions)
+ont été écrits, vérifiés par leur auteur, passés aux **sept** gates, mergés et **publiés en
+production**. Un audit en contexte neuf, lancé après coup, y a trouvé :
+
+- **une règle fausse** : « la همزة منقلبة d'un ممدود peut revenir à son origine », d'où
+  `بِناءان أو بِنايان`. Les deux seules faces sont la **همزة ou la واو** — jamais la ياء. La
+  formulation du manuel (« يجوز إرجاعها إلى أصلها ») avait été prise au pied de la lettre sans
+  contrôler sa **réalisation** ;
+- **deux dérivations justes par un chemin faux** : `حَمْراء` comptée quinquilitère et `ساعة`
+  quadrilitère, alors que les **deux marques de féminin — la تاء مربوطة et l'ألف ممدودة — ne se
+  comptent pas** (on réduit à `حَمْر` et `ساع`, trinômes). Bonnes réponses, méthode fausse : elle
+  casse dès le mot suivant ;
+- **un item à deux réponses défendables** (`سَمائيّ` donné comme distracteur alors qu'il est admis) ;
+- **une notion testée et jamais enseignée** — le cours de التّصغير a dû gagner 62 lignes.
+
+Trois choses à en retenir, et aucune n'est propre à l'arabe :
+
+1. **Le gate ne juge que ce qu'il sait compter.** `content:qa:strict` voit une clé absente, une
+   option dupliquée, un `difficulty` hors bornes. Il ne sait pas qu'un mot est mal dérivé, qu'une
+   date est fausse, qu'une formule est inversée. Un gate vert n'a jamais rien dit du fond.
+2. **Se relire soi-même dans la même session ne remplace pas un contexte neuf.** L'auteur relit
+   ses raisons, pas son résultat : les quatre défauts ci-dessus ont survécu à une re-résolution
+   faite par celui qui venait d'écrire. C'est un argument de méthode, pas de diligence.
+3. **Une transcription fidèle n'est pas une règle vérifiée.** Recopier correctement ce que dit le
+   manuel et en déduire la forme correcte sont deux opérations distinctes ; la première ne garantit
+   pas la seconde. Sur une matière à formes (صرف, conjugaison, calcul littéral), dériver soi-même
+   avant d'écrire, et faire dériver par un tiers avant de publier.
+
+**Conséquence opératoire** : sur une année de concours, le lot d'écriture n'est pas terminé au
+merge — il l'est à l'audit en contexte neuf. Le prévoir dans le plan, pas après coup.
+
 ## Merger ne publie pas — et un run vert ne prouve pas la publication
 
 Le contenu a quitté le framework de migrations (étude 24 D-3) : il est **appliqué** à la prod par
