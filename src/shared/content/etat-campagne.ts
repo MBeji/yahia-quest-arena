@@ -39,6 +39,7 @@ import {
   type FicheProfondeur,
   type FicheStatut,
   type SuiviCheckInput,
+  type SuiviGrade,
 } from "./transcription-suivi.ts";
 
 /** Content-side facts for one manifest subject, as measured by `auditGrade`. */
@@ -130,10 +131,31 @@ export interface EtatGrade {
   constats: string[];
 }
 
+/**
+ * Une fiche dit d'un document qu'il n'est PAS lu — et une AUTRE fiche le déclare
+ * lu. Ni l'une ni l'autre n'a tort chez elle ; c'est la jointure qui est périmée.
+ */
+export interface LectureACroiser {
+  /** La fiche qui porte la mention « non lu ». */
+  grade: string;
+  matiere: string;
+  /** La formule exacte relevée dans sa note, pour qu'on la retrouve sans chercher. */
+  mention: string;
+  /** Le code CNP nommé à côté d'elle. */
+  code: string;
+  /** Les fiches qui, elles, déclarent ce code lu — `<grade>/<matiere>`. */
+  lueEn: string[];
+}
+
 export interface EtatDesLieux {
   grades: EtatGrade[];
   /** Corpus left to attach, by grade slot (année) — same derivation as `_INDEX.md`. */
   aRattacher: Array<{ creneau: string; matieres: Array<{ matiere: string; codes: string[] }> }>;
+  /**
+   * Les questions de lecture qu'une fiche laisse ouvertes alors qu'une autre y a
+   * déjà répondu. Un RAPPORT, jamais un gate — voir `lecturesACroiser`.
+   */
+  lecturesACroiser: LectureACroiser[];
   totaux: {
     fiches: number;
     fichesGenerables: number;
@@ -394,6 +416,88 @@ function toEtatSujet(audit: SubjectAudit): EtatSujet {
   };
 }
 
+/**
+ * CE QUE PERSONNE NE REGARDAIT : une question posée dans une fiche et résolue
+ * dans une AUTRE.
+ *
+ * Mesuré le 2026-09-21. `suivi/8eme-base.json` réclamait depuis deux jours la
+ * lecture du فهرس de `101908` — « c'est la prochaine lecture, et elle coûte une
+ * page ». Cette lecture avait eu lieu la veille, pour écrire les chapitres de
+ * صرف de la 9ᵉ, et son résultat était transcrit dans la fiche voisine. Les deux
+ * fiches étaient justes chez elles ; rien ne confrontait la question à sa
+ * réponse, et la 8ᵉ appelait encore une lecture faite.
+ *
+ * ⚠️ POURQUOI C'EST UN RAPPORT ET PAS UN GATE, et ce n'est pas de la timidité.
+ * Le critère est TEXTUEL — une formule de prose près d'un code à six chiffres —
+ * et la prose ne distingue pas POSER une question de la CITER. Une fiche
+ * correctement réparée, qui cite l'ancienne question pour dire qu'elle est
+ * tranchée, déclenche ce relevé comme une fiche périmée : c'est le cas de la 8ᵉ
+ * depuis son correctif. En gate, cette ligne crierait donc sur la fiche que
+ * l'on vient de réparer — et ce dépôt sait où cela mène : « une garde qui crie
+ * le premier jour est une garde qu'on apprend à ne plus lire ». Ici le faux
+ * positif coûte cinq secondes de lecture au lancement d'une campagne, c'est-à-dire
+ * exactement quand la question se pose.
+ *
+ * Deux bornes gardent le relevé lisible : la fenêtre autour de la mention (un
+ * code cité trois paragraphes plus loin ne parle pas d'elle), et l'exclusion de
+ * la fiche ELLE-MÊME — « les tomes 2 et 3 ne sont pas lus » sur une source
+ * partiellement lue est un fait normal, pas une jointure périmée.
+ *
+ * Pure : aucune I/O, tout vient du registre déjà chargé.
+ */
+const MENTIONS_NON_LU =
+  /n'a pas été lu[es]?|non lus?\b|non lues?\b|jamais ouvert[es]?|prochaine lecture|pas encore lu[es]?/gi;
+/** Assez large pour couvrir une phrase, assez étroite pour ne pas ramasser le paragraphe voisin. */
+const FENETRE_CARACTERES = 180;
+
+export function lecturesACroiser(suivis: SuiviGrade[]): LectureACroiser[] {
+  // Qui déclare quoi comme LU. `inconnu` est l'aveu d'ignorance du seed : il ne
+  // vaut pas lecture, et le confondre rendrait le relevé faux dans le sens le
+  // plus coûteux — croire une question résolue.
+  const luPar = new Map<string, string[]>();
+  for (const { grade, fiches } of suivis) {
+    for (const f of fiches) {
+      for (const src of f.sources) {
+        const lu =
+          src.pagesLues === "integral" ||
+          (Array.isArray(src.pagesLues) && src.pagesLues.length > 0);
+        if (!lu) continue;
+        const liste = luPar.get(src.code) ?? [];
+        liste.push(`${grade}/${f.matiere}`);
+        luPar.set(src.code, liste);
+      }
+    }
+  }
+
+  const out: LectureACroiser[] = [];
+  for (const { grade, fiches } of suivis) {
+    for (const f of fiches) {
+      if (!f.notes) continue;
+      const ici = `${grade}/${f.matiere}`;
+      const vus = new Set<string>();
+      for (const m of f.notes.matchAll(MENTIONS_NON_LU)) {
+        const debut = Math.max(0, m.index - FENETRE_CARACTERES);
+        const fenetre = f.notes.slice(debut, m.index + m[0].length + FENETRE_CARACTERES);
+        for (const code of new Set(fenetre.match(/\b\d{6}\b/g) ?? [])) {
+          const ailleurs = (luPar.get(code) ?? []).filter((ou) => ou !== ici);
+          if (ailleurs.length === 0 || vus.has(code)) continue;
+          vus.add(code);
+          out.push({
+            grade,
+            matiere: f.matiere,
+            mention: m[0],
+            code,
+            lueEn: [...new Set(ailleurs)].sort(),
+          });
+        }
+      }
+    }
+  }
+  return out.sort((a, b) =>
+    `${a.grade}/${a.matiere}/${a.code}`.localeCompare(`${b.grade}/${b.matiere}/${b.code}`),
+  );
+}
+
 export function buildEtat(input: EtatInput): EtatDesLieux {
   const { corpus, affectations, suivis, audits, onlyGrade, ouvertures } = input;
   const auditByGrade = new Map(audits.map((a) => [a.grade, a]));
@@ -534,6 +638,7 @@ export function buildEtat(input: EtatInput): EtatDesLieux {
   return {
     grades,
     aRattacher,
+    lecturesACroiser: lecturesACroiser(input.suivis),
     totaux: {
       fiches,
       fichesGenerables,
@@ -638,6 +743,20 @@ export function renderEtat(etat: EtatDesLieux): string {
     for (const { creneau, matieres } of etat.aRattacher) {
       const parts = matieres.map((m) => `${m.matiere} (${m.codes.join(", ")})`);
       lines.push(`  ${creneau} : ${parts.join(" · ")}`);
+    }
+  }
+
+  if (etat.lecturesACroiser.length > 0) {
+    lines.push("");
+    lines.push("━━ Questions de lecture qu'une AUTRE fiche a déjà tranchées ━━");
+    lines.push(
+      "  Relevé textuel, à lire et non à croire : citer une question résolue y ressemble à la poser.",
+    );
+    for (const l of etat.lecturesACroiser) {
+      lines.push(
+        `  ${l.grade}/${l.matiere} dit « ${l.mention} » de \`${l.code}\` — ` +
+          `déclaré lu par ${l.lueEn.join(", ")}`,
+      );
     }
   }
 
