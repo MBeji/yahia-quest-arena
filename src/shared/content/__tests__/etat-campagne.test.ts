@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildEtat, renderEtat, type EtatInput } from "../etat-campagne.ts";
+import { buildEtat, lecturesACroiser, renderEtat, type EtatInput } from "../etat-campagne.ts";
 import type { GradeAudit, SubjectAudit } from "../program-manifest.ts";
 import type { Affectations, Corpus, FicheEntry, SuiviGrade } from "../transcription-suivi.ts";
 import type { OuvertureLue } from "../parcours-ouverture.ts";
@@ -627,5 +627,112 @@ describe("buildEtat — volet prod : l'ouverture des parcours (R-8)", () => {
     const rendu = renderEtat(etat);
     expect(rendu).toContain("prod — ecole-4eme-base : statut inconnu");
     expect(rendu).toContain("1 parcours à ouvrir");
+  });
+});
+
+// =============================================================================
+// LA QUESTION POSÉE ICI, RÉPONDUE AILLEURS — le relevé croisé (2026-09-21).
+//
+// `suivi/8eme-base.json` a réclamé deux jours durant la lecture du فهرس de
+// `101908` ; elle avait eu lieu la veille, pour la fiche voisine. Les deux
+// fiches étaient justes chez elles — c'est la jointure qui était périmée, et
+// rien ne la regardait.
+// =============================================================================
+describe("lecturesACroiser", () => {
+  const lue = (code: string) => ({
+    code,
+    tomes: ["P00"],
+    role: "enseignant" as const,
+    pagesTotal: 100,
+    pagesLues: "integral" as const,
+  });
+
+  it("relève une question qu'une AUTRE fiche a déjà tranchée", () => {
+    const out = lecturesACroiser([
+      {
+        grade: "8eme-base",
+        fiches: [
+          fiche({
+            matiere: "arabe",
+            sources: [],
+            notes: "le فهرس de la 9ᵉ révisée (101908) N'A PAS ÉTÉ LU. C'est la prochaine lecture.",
+          }),
+        ],
+      },
+      { grade: "9eme-base", fiches: [fiche({ matiere: "arabe", sources: [lue("101908")] })] },
+    ]);
+
+    expect(out).toHaveLength(1);
+    expect(out[0]).toMatchObject({
+      grade: "8eme-base",
+      matiere: "arabe",
+      code: "101908",
+      lueEn: ["9eme-base/arabe"],
+    });
+  });
+
+  it("ne relève RIEN quand c'est la fiche elle-même qui le déclare lu", () => {
+    // « les tomes 2 et 3 ne sont pas lus » sur une source partiellement lue est
+    // un fait normal, pas une jointure périmée. Sans cette borne, le relevé
+    // ramasserait chaque fiche à couverture partielle — donc presque toutes.
+    const out = lecturesACroiser([
+      {
+        grade: "6eme-base",
+        fiches: [
+          fiche({
+            matiere: "eveil",
+            sources: [lue("103604")],
+            notes: "les tomes 2 et 3 de 103604 ne sont pas lus",
+          }),
+        ],
+      },
+    ]);
+    expect(out).toEqual([]);
+  });
+
+  it("ne confond pas `inconnu` avec une lecture — le sens le plus coûteux", () => {
+    // `inconnu` est l'aveu d'ignorance du seed. Le prendre pour une lecture
+    // ferait croire une question résolue alors que personne n'a ouvert le PDF.
+    const out = lecturesACroiser([
+      {
+        grade: "8eme-base",
+        fiches: [fiche({ matiere: "arabe", sources: [], notes: "`101908` n'a pas été lu" })],
+      },
+      {
+        grade: "9eme-base",
+        fiches: [
+          fiche({ matiere: "arabe", sources: [{ ...lue("101908"), pagesLues: "inconnu" }] }),
+        ],
+      },
+    ]);
+    expect(out).toEqual([]);
+  });
+
+  it("ignore un code cité loin de la mention — sinon toute note longue déclenche", () => {
+    const loin = `101908 ouvre la leçon.${" .".repeat(200)} le tome 3 n'a pas été lu`;
+    const out = lecturesACroiser([
+      { grade: "8eme-base", fiches: [fiche({ matiere: "arabe", sources: [], notes: loin })] },
+      { grade: "9eme-base", fiches: [fiche({ matiere: "arabe", sources: [lue("101908")] })] },
+    ]);
+    expect(out).toEqual([]);
+  });
+
+  it("le rapport le rend, en disant qu'il se lit et ne se croit pas", () => {
+    const etat = buildEtat({
+      ...input([], [], undefined, undefined),
+      suivis: [
+        {
+          grade: "8eme-base",
+          fiches: [fiche({ matiere: "arabe", sources: [], notes: "`101908` n'a pas été lu" })],
+        },
+        { grade: "9eme-base", fiches: [fiche({ matiere: "arabe", sources: [lue("101908")] })] },
+      ],
+    });
+
+    const rendu = renderEtat(etat);
+    expect(rendu).toContain("Questions de lecture qu'une AUTRE fiche a déjà tranchées");
+    expect(rendu).toContain("à lire et non à croire");
+    expect(rendu).toContain("8eme-base/arabe dit");
+    expect(rendu).toContain("déclaré lu par 9eme-base/arabe");
   });
 });
