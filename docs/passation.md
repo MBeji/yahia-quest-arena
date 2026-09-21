@@ -230,6 +230,21 @@ aucun gate — aucun n'est automatisable, c'est justement pourquoi ils sont écr
     réel : désabonnement, réveil supprimé, branche locale ramenée sur `origin/main`. Une PR qui
     merge **pendant** que le hook `pre-push` d'une retouche rejoue le gate laisse la retouche
     orpheline (`cannot lock ref`) : repartir de `main`, même nom de branche, nouvelle PR.
+11. **Les sessions FILLES qu'on a lancées se clôturent** (`archive_session`), et c'est la session
+    mère qui le fait — personne d'autre ne sait qu'elles existent. Une session cloud dont le lot
+    est livré continue de facturer : mesuré le 2026-09-20, trois sessions tournaient encore des
+    heures après le merge de leurs PR, ~100 $ sur du travail déjà rendu.
+
+    ⚠️ **Ne jamais clôturer sur le seul statut.** Il ment dans les deux sens, mesuré le
+    2026-09-21 sur onze filles : `status_bucket` disait `WORKING` pour une session dont le
+    `post_turn_summary` disait « completed », et `BLOCKED` pour deux dont la PR était **mergée**
+    — bloquées sur une suite qu'elles s'étaient donnée, pas sur leur mission. Ce qui tranche est
+    le **livrable** : la PR du lot est-elle mergée, et son apport est-il sur `main` ? Si oui, la
+    mission est finie, quel que soit le statut affiché.
+
+    Et l'inverse coûte plus cher : une session **au milieu de son lot** perd son travail non
+    poussé si on l'archive. Le 2026-09-21, une fille avait lu 158 pages et enchaînait sur la
+    suite — la fermer aurait effacé la lecture. Lire le `post_turn_summary` avant d'archiver.
 
 ## 8. Quand ça casse — le retour arrière
 
