@@ -130,7 +130,9 @@ A change is **done** only when ALL of these hold — non-negotiable:
 8. **A pushed branch is the session's PR to land.** The push opens the PR ready with auto-merge
    armed; it merges alone once required checks are green on an up-to-date head — nobody reads,
    readies, or merges by hand. The session that pushed **stays on duty until the merge is real**:
-   watch checks, fix reds, confirm the merge, then **close the session clean** (checklist below).
+   watch checks, fix reds, confirm the merge, then **close the session clean** (checklist below) —
+   y compris les **sessions filles** qu'elle a lancées : personne d'autre ne sait qu'elles
+   existent, et une fille livrée continue de facturer (passation §7.11).
    Savepoint = **préfixe de branche** `wip/`/`draft/`/`rescue/`, jamais `[wip]` dans le sujet de
    commit (ça fuit dans `main`, deux fois le 2026-07-20 : un squash titre sur le sujet de `HEAD`,
    et l'auto-merge fige le message en s'armant). Vérifier `git log -1 --pretty=%s` avant de
