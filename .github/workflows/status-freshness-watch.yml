@@ -1,0 +1,199 @@
+name: Garde de fraîcheur du topo (STATUS.md décroche, trois fois sur trois)
+
+# POURQUOI CETTE GARDE EXISTE — issue #1039, constat G-1 de l'audit du 2026-09-12.
+#
+# `STATUS.md` est déclaré « point d'entrée unique pour savoir où en est le projet ».
+# Il a décroché de `main` TROIS fois, et le fichier le raconte lui-même :
+#   • 2026-08-24 : annonçait #805, `main` était à #832  —  27 PR de retard
+#   • 2026-09-04 : annonçait #832, `main` était à #970  —  68 PR de retard
+#   • 2026-09-22 : annonce #970,  `main` est à #1080    — 110 PR de retard
+# Trois passes de correction, trois re-décrochages. Ce n'est pas un défaut
+# d'attention : c'est qu'AUCUN gate ne le surveille, et le fichier l'écrit noir sur
+# blanc — « `check-roadmap-sync` vérifie la roadmap privée contre `main`, rien ne
+# vérifie STATUS.md contre quoi que ce soit ». La divergence est à sens unique :
+# les documents GARDÉS du dépôt privé, eux, restent à jour.
+#
+# POURQUOI UNE GARDE ET NON UN GATE — l'arbitrage que #1039 croyait devoir poser.
+# L'issue redoutait, à raison, un contrôle bloquant : à ~10 PR/jour il obligerait des
+# PR sans aucun rapport à toucher `STATUS.md` pour passer au vert, c'est-à-dire
+# exactement le « le topo devient un journal » que #994 interdit — et un rouge
+# permanent gèlerait toute la file (vécu ici : #291 a gelé la chaîne une journée).
+# Une garde dissout la question : elle ne bloque rien, elle tient UNE issue ouverte
+# tant que le topo ment, et la referme d'elle-même. C'est la forme des quatre autres
+# gardes de ce dépôt (`guard-watch`, `content-drift`, `client-errors-watch`,
+# `pat-expiry-watch`). Le seuil cesse alors d'être un arbitrage risqué : au pire une
+# issue s'ouvre un peu tôt.
+#
+# CE QU'ELLE NE FAIT PAS : elle ne réécrit pas `STATUS.md`. Rafraîchir le topo demande
+# de RE-VÉRIFIER l'état des features et des études contre le code et contre le dépôt
+# privé — un travail de lecture, pas un `sed`. Une garde qui « corrigerait » le nombre
+# sans toucher au reste rendrait le mensonge INVISIBLE au lieu de le supprimer.
+
+on:
+  schedule:
+    # 06:20 UTC, après la garde de dérive de contenu (06:40 est prise).
+    - cron: "20 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: status-freshness-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    name: Le topo est-il encore vrai
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Sans ceci, tout `gh` de ce fichier sort en 1 hors d'un dépôt git — la faute
+      # du 2026-09-22 sur `pat-expiry-watch.yml`, désormais gardée par
+      # `harness:check` (`findGhWithoutRepo`). On se checkout ici de toute façon,
+      # mais l'écrire coûte une ligne et ne dépend pas de l'ordre des étapes.
+      GH_REPO: ${{ github.repository }}
+      LABEL: status-perime
+      # LE SEUIL, et pourquoi 25. Les trois décrochages mesurés valent 27, 68 et 110
+      # PR. À 25, les TROIS auraient été vus — 40 aurait laissé passer le premier,
+      # celui dont le fichier dit « un topo qui vieillit en deux jours n'en est plus
+      # un ». Plus bas (l'audit proposait 10), l'issue serait ouverte en permanence
+      # à ~10 PR/jour, et une alarme toujours allumée n'alarme plus. C'est une
+      # garde, pas un gate : se tromper ici coûte une issue, jamais une file gelée.
+      SEUIL_PR: 25
+    steps:
+      - name: Checkout de `main` — jamais de la branche qui dispatche
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Lire ce que le topo AFFIRME, et ce que `main` dit
+        id: mesure
+        run: |
+          set -euo pipefail
+
+          # Le marqueur reprend l'idiome des compteurs (`<!--count:…-->N<!--/count-->`)
+          # pour que le nombre VISIBLE soit le nombre mesuré : deux emplacements
+          # finiraient par diverger, et c'est très exactement la faute d'origine —
+          # `STATUS.md` portait trois « main à #N » différents dans le même fichier.
+          affirme="$(grep -oE '<!--status-sync:main-pr-->[0-9]+<!--/status-sync-->' STATUS.md \
+                      | head -1 | grep -oE '[0-9]+' || true)"
+          nb="$(grep -cE '<!--status-sync:main-pr-->' STATUS.md || true)"
+
+          if [ -z "$affirme" ]; then
+            echo "etat=sans-marqueur" >>"$GITHUB_OUTPUT"
+            echo "STATUS.md ne porte aucun marqueur status-sync."
+            exit 0
+          fi
+          if [ "$nb" -ne 1 ]; then
+            echo "etat=marqueur-multiple" >>"$GITHUB_OUTPUT"
+            echo "nb=$nb" >>"$GITHUB_OUTPUT"
+            echo "STATUS.md porte $nb marqueurs — il doit n'y en avoir qu'un."
+            exit 0
+          fi
+
+          # `main` à #N se lit dans le SUJET du dernier commit : la chaîne merge en
+          # squash, et GitHub suffixe le sujet de « (#N) ». Pas d'appel d'API, donc
+          # rien qui puisse répondre autre chose que ce que porte le dépôt.
+          sujet="$(git log -1 --pretty=%s)"
+          reel="$(printf '%s' "$sujet" | grep -oE '\(#[0-9]+\)$' | grep -oE '[0-9]+' || true)"
+          if [ -z "$reel" ]; then
+            echo "etat=tip-sans-numero" >>"$GITHUB_OUTPUT"
+            echo "sujet=$sujet" >>"$GITHUB_OUTPUT"
+            echo "Le sujet du tip ne porte pas de (#N) : $sujet"
+            exit 0
+          fi
+
+          retard=$(( reel - affirme ))
+          [ "$retard" -lt 0 ] && retard=0
+          {
+            echo "etat=ok"
+            echo "affirme=$affirme"
+            echo "reel=$reel"
+            echo "retard=$retard"
+          } >>"$GITHUB_OUTPUT"
+          echo "STATUS.md affirme #$affirme, main est à #$reel — $retard PR de retard."
+
+      - name: Ouvrir, tenir ou refermer l'issue
+        env:
+          ETAT: ${{ steps.mesure.outputs.etat }}
+          AFFIRME: ${{ steps.mesure.outputs.affirme }}
+          REEL: ${{ steps.mesure.outputs.reel }}
+          RETARD: ${{ steps.mesure.outputs.retard }}
+          NB: ${{ steps.mesure.outputs.nb }}
+          SUJET: ${{ steps.mesure.outputs.sujet }}
+        run: |
+          set -euo pipefail
+
+          alerte=""
+          case "$ETAT" in
+            sans-marqueur)
+              alerte="\`STATUS.md\` ne porte **aucun** marqueur \`status-sync\` : plus rien ne peut confronter son instantané à \`main\`." ;;
+            marqueur-multiple)
+              alerte="\`STATUS.md\` porte **${NB}** marqueurs \`status-sync\` — il doit n'y en avoir **qu'un**. Deux emplacements finissent par diverger ; c'est la faute d'origine de #1039." ;;
+            tip-sans-numero)
+              alerte="Le sujet du dernier commit de \`main\` ne porte pas de \`(#N)\` : \`${SUJET}\`. La garde ne sait plus lire où en est \`main\` — un merge hors chaîne ?" ;;
+            ok)
+              if [ "${RETARD:-0}" -gt "${SEUIL_PR}" ]; then
+                alerte="\`STATUS.md\` affirme \`main\` à **#${AFFIRME}**, elle est à **#${REEL}** — **${RETARD} PR de retard** (seuil : ${SEUIL_PR})."
+              fi ;;
+          esac
+
+          # Le label AVANT la lecture : il lui sert de filtre, et un filtre sur un
+          # label absent n'est pas une lecture vide (leçon du 2026-09-22).
+          gh label create "$LABEL" --color fbca04 \
+            --description "Le topo central affirme un état de main qui n'est plus vrai" 2>/dev/null || true
+
+          num="$(gh issue list --label "$LABEL" --state open --limit 1 --json number --jq '.[0].number // empty')"
+
+          if [ -z "$alerte" ]; then
+            if [ -n "$num" ]; then
+              gh issue close "$num" --comment "✅ \`STATUS.md\` affirme \`main\` à #${AFFIRME}, elle est à #${REEL} — ${RETARD} PR d'écart, sous le seuil de ${SEUIL_PR}. Refermée par la garde."
+              echo "Issue #$num refermée."
+            else
+              echo "Rien à signaler (${RETARD:-?} PR d'écart)."
+            fi
+            exit 0
+          fi
+
+          {
+            echo "### 🗺️ Le topo central n'est plus vrai"
+            echo ""
+            echo "$alerte"
+            echo ""
+            echo "**Pourquoi ça compte.** \`STATUS.md\` se déclare « point d'entrée unique pour"
+            echo "savoir où en est le projet », et AGENTS.md envoie y lire avant de croire toute"
+            echo "affirmation « est-ce que X est livré ? ». Un topo faux ne se contente pas d'être"
+            echo "muet : il répond, et il répond à côté."
+            echo ""
+            echo "**Ce que ça n'est pas.** Ce n'est pas une demande de journal. La frontière de"
+            echo "#994 tient : **contradiction, jamais exhaustivité.** Aucune PR n'a à mentionner"
+            echo "quoi que ce soit ici — il s'agit seulement qu'un document cesse d'affirmer un"
+            echo "état faux."
+            echo ""
+            echo "**Le geste**, et il demande de LIRE, pas de \`sed\` :"
+            echo ""
+            echo "1. re-vérifier §3 (features) contre le code et les migrations, §4 (études)"
+            echo "   contre l'index du dépôt privé, §6 (travaux en vol) contre les PR et issues"
+            echo "   réellement ouvertes ;"
+            echo "2. mettre à jour le nombre **dans le marqueur** —"
+            echo "   \`<!--status-sync:main-pr-->N<!--/status-sync-->\` — qui est aussi le nombre"
+            echo "   affiché : il n'y a qu'un endroit, à dessein ;"
+            echo "3. rien d'autre. **Cette issue se referme toute seule** au prochain passage."
+            echo ""
+            echo "⚠️ Ne PAS se contenter de corriger le nombre : ça rendrait le mensonge"
+            echo "invisible au lieu de le supprimer, et c'est ce qui a fait revenir le problème"
+            echo "trois fois."
+            echo ""
+            echo "_Garde \`status-freshness-watch.yml\`, seuil ${SEUIL_PR} PR. Voir #1039._"
+          } > corps.md
+
+          if [ -n "$num" ]; then
+            gh issue edit "$num" --body-file corps.md
+            echo "Issue #$num mise à jour."
+          else
+            gh issue create --title "🗺️ STATUS.md affirme un état de \`main\` qui n'est plus vrai" \
+              --label "$LABEL" --body-file corps.md
+          fi

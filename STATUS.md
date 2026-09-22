@@ -1,6 +1,6 @@
 # STATUS — état du projet (topo central)
 
-> **Instantané daté du 2026-09-04** (`main` à **#970** ; exécution V1 « Apprendre & maîtriser »
+> **Instantané daté du 2026-09-04** (`main` à **#<!--status-sync:main-pr-->970<!--/status-sync-->** ; exécution V1 « Apprendre & maîtriser »
 > de la doctrine verticale, é26 — **J+3** APRÈS la rentrée, qui est passée). Ce fichier est le **point d'entrée
 > unique** pour savoir où en est le projet : phase produit, décisions qui gouvernent, état réel
 > des features, études, chantiers, travaux en vol. Il complète — sans les dupliquer — les
@@ -38,7 +38,13 @@
 > a déjà un fichier** : les lots vivent dans la ROADMAP privée, les décisions dans le journal, la
 > dette dans `docs/dette-technique.md` ; (5) un **compteur** qu'on affirme s'entoure de
 > `<!--count:nom-->N<!--/count-->` et `harness:check` le recalcule (#1039) — un nombre nu
-> n'engage personne, un nombre marqué ne peut plus mentir.
+> n'engage personne, un nombre marqué ne peut plus mentir ; (6) le **« `main` à #N »** de
+> l'en-tête ci-dessus est marqué de la même façon — `<!--status-sync:main-pr-->N<!--/status-sync-->`,
+> **un seul dans tout le fichier**, et le nombre marqué EST le nombre affiché. La garde
+> `status-freshness-watch.yml` le confronte chaque jour au tip de `main` et ouvre une issue
+> `status-perime` au-delà de 25 PR d'écart. Elle ne bloque rien et ne corrige rien : corriger le
+> seul nombre rendrait le mensonge invisible au lieu de le supprimer, ce qui est exactement
+> comment il est revenu trois fois (27, 68 puis 110 PR de retard).
 
 ---
 
