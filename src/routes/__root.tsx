@@ -50,7 +50,11 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+// `error` est `unknown` : TanStack Router le type ainsi depuis le lot de dépendances du 2026-09-22 (on
+// peut lever autre chose qu'une Error), et `Error` n'y était qu'une promesse. Normalisé une
+// fois ici, il compile sous les deux versions.
+function ErrorComponent({ error: thrown, reset }: { error: unknown; reset: () => void }) {
+  const error = thrown instanceof Error ? thrown : new Error(String(thrown));
   logger.error("Root error boundary caught an error", { error });
   const router = useRouter();
   const t = useT();

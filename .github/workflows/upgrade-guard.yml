@@ -187,6 +187,7 @@ jobs:
           set -o pipefail
           echo "node $(node -v) · npm $(npm -v)"
           node scripts/deps/apply-patch-minor.mjs apply --plan "$RUNNER_TEMP/upgrade-plan.json" \
+            --pr-body "$RUNNER_TEMP/upgrade-pr-body.md" --date "$(date -u +%F)" \
             2>&1 | tee "$RUNNER_TEMP/apply.log"
 
       # Les logs du runner sont ILLISIBLES depuis une session cloud (GitHub redirige vers
