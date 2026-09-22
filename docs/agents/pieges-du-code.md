@@ -3,7 +3,7 @@
 > Des comportements que **le gate local ne montre pas** et qu'on ne devine pas en lisant le
 > code : chacun a coûté soit un bug en production, soit un cycle de build. Ils ne sont pas dans
 > [`AGENTS.md`](../../AGENTS.md) § Known gotchas parce que ce fichier a un budget dur de
-> 250 lignes (il est injecté dans chaque session) — ici, il n'y en a pas.
+> 200 lignes (il est injecté dans chaque session) — ici, il n'y en a pas.
 >
 > **Une entrée n'arrive ici que mesurée.** Pas « je crois que » : le chiffre, la commande qui
 > l'a produit, la date. Si l'outillage change et qu'elle devient fausse, elle se corrige — elle
