@@ -24,6 +24,7 @@ import {
   SKILL_DESCRIPTION_MAX,
   AGENTS_MD_WARN_RATIO,
   findSuspiciousInvisibles,
+  findGhWithoutRepo,
   findPhantomProneTriggers,
   collectCorpusProblems,
   checkPolicyReasons,
@@ -572,6 +573,73 @@ describe("checkAgentsSize — avertir avant de bloquer", () => {
     const size = checkAgentsSize(line(AGENTS_MD_MAX_LINES + 10));
     expect(size.ok).toBe(false);
     expect(size.warnings).toEqual([]);
+  });
+});
+
+describe("findGhWithoutRepo — le `gh` qui ne sait pas sur quel dépôt il travaille", () => {
+  // Ce n'est pas une hypothèse : `pat-expiry-watch.yml` est parti en production sans
+  // `GH_REPO` ni `checkout`, et ses deux premiers passages sont sortis en 1 (runs
+  // 35699670930 et 35699869564, 2026-09-22). L'étape de sondage, qui n'utilise que
+  // `curl` et `${GITHUB_REPOSITORY}`, passait — seule celle qui appelait `gh` tombait.
+  const nu = [
+    "name: x",
+    "on: { workflow_dispatch: {} }",
+    "jobs:",
+    "  watch:",
+    "    runs-on: ubuntu-latest",
+    "    steps:",
+    "      - name: Ouvrir l'issue",
+    "        run: gh issue list --label foo --state open",
+    "",
+  ].join("\n");
+
+  it("attrape un `gh issue` sans dépôt, et NOMME l'étape", () => {
+    const hits = findGhWithoutRepo(nu);
+    expect(hits).toHaveLength(1);
+    expect(hits[0]).toMatchObject({ job: "watch", step: "Ouvrir l'issue" });
+  });
+
+  it("se tait sur `GH_REPO` au job — le correctif réellement appliqué", () => {
+    const corrige = nu.replace(
+      "    runs-on: ubuntu-latest",
+      "    runs-on: ubuntu-latest\n    env:\n      GH_REPO: owner/repo",
+    );
+    expect(findGhWithoutRepo(corrige)).toEqual([]);
+  });
+
+  it("se tait sur `GH_REPO` au workflow, sur un `checkout`, et sur `-R`", () => {
+    expect(findGhWithoutRepo("env:\n  GH_REPO: o/r\n" + nu.replace("name: x\n", ""))).toEqual([]);
+    expect(
+      findGhWithoutRepo(
+        nu.replace("      - name:", "      - uses: actions/checkout@sha\n      - name:"),
+      ),
+    ).toEqual([]);
+    expect(findGhWithoutRepo(nu.replace("gh issue list", "gh issue list -R o/r"))).toEqual([]);
+  });
+
+  it("ne crie PAS sur `gh api`, qui nomme son dépôt dans l'URL", () => {
+    // Un gate qui signale du code correct apprend à se faire ignorer — même
+    // raison que le scan d'identifiants de modèle qui sortait « O2 ».
+    expect(
+      findGhWithoutRepo(
+        nu.replace("gh issue list --label foo --state open", "gh api repos/o/r/issues"),
+      ),
+    ).toEqual([]);
+    expect(
+      findGhWithoutRepo(nu.replace("gh issue list --label foo --state open", "gh auth status")),
+    ).toEqual([]);
+  });
+
+  it("voit un `gh` enchaîné derrière un pipe ou un `&&`", () => {
+    const enchaine = nu.replace(
+      "run: gh issue list --label foo --state open",
+      'run: |\n          set -e\n          n="$(gh issue list --json number)" && echo "$n"',
+    );
+    expect(findGhWithoutRepo(enchaine)).toHaveLength(1);
+  });
+
+  it("ignore un YAML illisible — c'est le métier de `checkYamlFiles`", () => {
+    expect(findGhWithoutRepo("jobs:\n  a:\n   - : : :\n  a:\n")).toEqual([]);
   });
 });
 
