@@ -1,6 +1,6 @@
 # STATUS — état du projet (topo central)
 
-> **Instantané daté du 2026-09-04** (`main` à **#<!--status-sync:main-pr-->970<!--/status-sync-->** ; exécution V1 « Apprendre & maîtriser »
+> **Instantané daté du 2026-09-22** (`main` à **#<!--status-sync:main-pr-->1084<!--/status-sync-->** ; exécution V1 « Apprendre & maîtriser »
 > de la doctrine verticale, é26 — **J+3** APRÈS la rentrée, qui est passée). Ce fichier est le **point d'entrée
 > unique** pour savoir où en est le projet : phase produit, décisions qui gouvernent, état réel
 > des features, études, chantiers, travaux en vol. Il complète — sans les dupliquer — les
@@ -8,6 +8,23 @@
 > est un pointeur Claude Code vers ce fichier), [ARCHITECTURE.md](./ARCHITECTURE.md), l'index des
 > études (`FableEtudes/README.md`) et le programme go-live (`FableEtudes/go-live/`) — ces deux
 > derniers dans le **dépôt privé** `MBeji/yahia-quest-content`.
+>
+> ⚠️ **Ce que la passe du 2026-09-22 a corrigé — et le motif s'est répété une TROISIÈME fois.**
+> Ce fichier annonçait `main` à **#970** quand elle était à **#1084** : **114 PR de retard**,
+> après 68 en septembre et 27 en août. Son §6 datait du 2026-09-04 et listait dix issues dont
+> **six sont closes** depuis. La cause n'a jamais changé et ce fichier l'écrivait lui-même :
+> « rien ne vérifie STATUS.md contre quoi que ce soit ».
+> ✅ **Ce n'est plus vrai.** `status-freshness-watch.yml` (#1039 lot 2) confronte chaque jour le
+> marqueur de l'en-tête au tip de `main` et ouvre une issue `status-perime` au-delà de 25 PR
+> d'écart — un seuil choisi pour que les **trois** décrochages mesurés (27, 68, 114) aient été
+> vus. C'est une **garde**, pas un gate : elle ne bloque aucune PR, donc elle n'oblige personne
+> à toucher ce fichier pour merger autre chose — la frontière de #994 tient.
+> ⚠️ Et elle ne corrige rien d'elle-même, à dessein : corriger le seul nombre rendrait le
+> mensonge **invisible** au lieu de le supprimer. C'est un travail de **lecture**.
+> ⚠️ **Cette passe n'a PAS relu le §3** (il garde sa date du 2026-08-24) ; le §4 n'en avait pas
+> besoin, `etudes:check` le garde depuis #994. Un en-tête global qui couvre des sections
+> rafraîchies à des dates différentes est précisément la faute d'origine — chaque section dit
+> désormais la sienne.
 >
 > ⚠️ **Ce que la passe du 2026-09-04 a corrigé.** Ce fichier annonçait `main` à **#832** quand
 > elle était à **#970** — **68 PR de retard**, et il citait trois numéros différents (#832 en
@@ -310,70 +327,40 @@ façon dans `ops-dispatch`, donc une session peut le rejouer seule.
 
 ## 6. Travaux en vol
 
-**Au 2026-09-04** : `main` à **#970**, **une seule PR ouverte** au moteur — [#932](https://github.com/MBeji/yahia-quest-arena/pull/932),
-un **savepoint volontaire** en `draft/` (pgTAP sur le verrouillage de `client_errors`), donc rien
-qui attende un merge. Depuis la passe du 2026-08-26, **85 PR** ont été mergées : l'étage IA a été
-rendu utilisable de bout en bout (#890→#901), `difficulty_adaptation` est **tombée** (#910/#911),
-**é31 « l'envie de revenir » est livrée en production** (#949, #956, #957, #959), **é30** a reçu le
-producteur qui manquait à ses rangs dormants (#954), **GAP-024** est clos côté code (#948), **A17**
-est clos (#958), **é26 lot 1** est écrit (#961) et **é32 est LIVRÉE en entier** (#970 → #986 côté moteur,
-privé#342 → #353) — ses cinq lots, ses cinq questions closes, et deux constats nés de son
-exécution : `typecheck` ne voyait aucun script, et rester à jour avec `main` relance toute la CI.
+**Au 2026-09-22** : `main` à **#1084**, **une seule PR ouverte** au moteur —
+[#932](https://github.com/MBeji/yahia-quest-arena/pull/932), un **savepoint volontaire** en
+`draft/` (pgTAP sur le verrouillage de `client_errors`), donc rien qui attende un merge.
+Depuis la passe du 2026-09-04, **114 PR** ont été mergées.
 
-### 🟢 Plus de rouge — la suite authentifiée est verte pour la première fois depuis le 2026-09-03
+⚠️ **Ce que cette passe a re-vérifié, et ce qu'elle n'a PAS re-lu.** §6 et l'en-tête sont
+re-sondés contre `main`, les PR et les issues réellement ouvertes. Le **§3** garde sa date du
+2026-08-24 : il n'a pas été rejoué contre le code. Le **§4** n'avait pas à l'être — il est
+**gardé** depuis #994 par `etudes:check`, qui refuse toute contradiction entre l'en-tête d'un
+`ETUDE.md`, l'index privé et ce tableau, et qui tourne dans la Content CI privée. Dire ce
+qu'on n'a pas relu fait partie du travail : c'est un en-tête global couvrant des sections
+rafraîchies à des dates différentes qui a produit la faute d'origine.
 
-- **[#969](https://github.com/MBeji/yahia-quest-arena/issues/969) — ✅ corrigé par #1013,
-  cause racine nommée.** `supabase.auth.getClaims(token)` était appelé comme s'il RETOURNAIT
-  toujours son erreur ; il peut la **lever**, et un JWT malformé fait échouer le décodage
-  base64 avant toute vérification — `invalid.invalid.invalid` produit « Invalid UTF-8
-  sequence ». L'exception traversait le middleware et arrivait **brute** au client, qui ne
-  recevait donc jamais `Unauthorized: Invalid token`. `isSessionRefusalError` répondait faux,
-  et **toute la chaîne posée derrière ce prédicat restait inerte** : le forçage d'un jeton
-  neuf (#931), la fin de session sur refus prouvé (#1009, #1010), la sortie vers `/auth`.
-  Aucune n'était fausse ; aucune n'était **atteinte**.
-  `session-invalidation.spec.ts` passe sur les runs `e2e-auth` **93 et 94**, contre rouge sur
-  `main` le matin même.
-- **[#1015](https://github.com/MBeji/yahia-quest-arena/issues/1015) — ✅ corrigé par #1021.
-  Le classement a DEUX axes, la spec n'en demandait qu'un.** `leaderboard.spec.ts:62` rendait
-  zéro ligne alors que `get_global_leaderboard` garantit par construction la ligne de
-  l'appelant (CTE `me`). Les deux affirmations étaient vraies : **la spec ne lisait pas ce
-  tableau-là.** é31 lot 5 (#949) a ajouté l'axe PÉRIODE, de défaut « cette semaine », et les
-  deux périodes ne lisent pas la même source — le cumulatif lit `profiles.xp` (l'XP à vie),
-  la semaine lit `attempts` des 7 jours courants, `HAVING SUM(xp_earned) > 0` et **sans**
-  splice du demandeur (é15 D-7, délibéré). Or le fixture pose une XP à vie et
-  `reset-gameplay` vide `attempts` : sur l'axe « semaine », ce compte n'avait rien joué.
-  La spec interrogeait un tableau qu'elle n'avait pas garni.
-  ⚠️ **Aucun défaut produit** — l'écran rend son état vide, comme l'arbitrage le prévoit.
-- **[#967](https://github.com/MBeji/yahia-quest-arena/issues/967)** (nightly),
-  [#1008](https://github.com/MBeji/yahia-quest-arena/issues/1008) (checkpoint de rollback) et
-  [#1020](https://github.com/MBeji/yahia-quest-arena/issues/1020) (garde-rouge) n'avaient plus
-  d'autre cause que #1015 : **les mêmes octets comptés quatre fois.** Les trois se referment
-  seules à la première nuit verte. `e2e-auth` run **96** : suite entière verte, la première
-  depuis le run 84 du 2026-09-03.
+### Les rouges de septembre sont éteints — le détail vit dans leurs fils, pas ici
 
-**Trois leçons de ces huit nuits — les deux premières de #969, la troisième de #1015.**
+Règle de maintenance (4) : ne pas recopier ce qui a déjà un fichier. Cinq issues ouvertes
+entre le 3 et le 15 septembre sont closes, chacune avec sa cause racine dans son propre fil —
+[#969](https://github.com/MBeji/yahia-quest-arena/issues/969) (`getClaims` **levait** son
+erreur au lieu de la rendre, donc toute la chaîne posée derrière `isSessionRefusalError`
+restait inerte),
+[#1015](https://github.com/MBeji/yahia-quest-arena/issues/1015) (le classement a **deux** axes,
+la spec n'en garnissait qu'un), et
+[#967](https://github.com/MBeji/yahia-quest-arena/issues/967),
+[#1008](https://github.com/MBeji/yahia-quest-arena/issues/1008),
+[#1020](https://github.com/MBeji/yahia-quest-arena/issues/1020) qui n'avaient pas d'autre
+cause que #1015 — **les mêmes octets comptés quatre fois**.
 
-1. La spec est entrée sur `main` en #953, et le run `e2e-auth` vert invoqué comme preuve
-   portait le commit de **#951** — donc **antérieur à la spec**. Elle a été livrée sans avoir
-   jamais tourné. **Une spec e2e n'est vérifiée que par un run qui la contient**, et
-   `e2e-auth.yml` est déclenchable exprès.
-2. **Raisonner depuis le code a produit quatre diagnostics faux d'affilée**, chacun démenti
-   par le run suivant. Ce qui a tranché en UN run, c'est d'avoir fait **dire à la spec ce
-   qu'elle voyait** — quatre faits rendus à chaque échec, dont le dernier nommait la cause.
-   ⚠️ Corollaire payé au prix fort : `describeDeadEnd` lisait d'abord **sans borne**, et
-   l'argument de message d'un `expect` est évalué à CHAQUE tour de `toPass`. Un `innerText()`
-   sur un élément absent attendait donc 30 s, soit toute la fenêtre, dès la première
-   itération : **la boucle de reprise était désactivée par son propre diagnostic**, et les
-   runs 89-92 ne mesuraient rien. Un outil de mesure qui fausse la mesure ne vaut rien —
-   borner chaque lecture.
-3. **Un écran qui gagne un AXE re-pointe en silence les specs écrites avant lui.** é31 a
-   ajouté la période au classement, de défaut « cette semaine » ; le test de #1015, né huit
-   jours plus tôt, a continué de cliquer son onglet de cohorte et s'est mis à interroger un
-   tableau qu'il ne garnissait pas. Rien n'a rougi le jour du changement — la spec est restée
-   verte jusqu'à ce que `reset-gameplay` la prive de ses tentatives. La règle qui en sort est
-   étroite et mécanique : **une spec ASSERTE l'état par défaut dont elle dépend**
-   (`aria-checked`, onglet actif, période), elle ne le suppose pas. Sans quoi un changement
-   de défaut ne casse pas le test — il le fait mesurer autre chose, ce qui est pire.
+[#979](https://github.com/MBeji/yahia-quest-arena/issues/979), la soirée d'exercices non
+enregistrée du 2026-09-03, est close le 2026-09-22 **sur mesure** : 8 lignes de
+`client_errors` en 19 jours, dont 3 seulement à un stage de soumission — et ces trois portent
+`Impossible de corriger le quiz.`, message émis au seul `quest.scoreQuizPublic`, le chemin
+public anonyme qui ne pose ni session, ni tentative, ni XP. **Zéro soumission d'élève perdue
+en dix-huit jours d'instrumentation.** La cause de la soirée elle-même reste non élucidée, et
+c'est assumé : elle écrira désormais son message serveur exact si elle revient.
 
 ### Ce que les chantiers d'août laissent comme règles
 
@@ -467,46 +454,40 @@ Le détail vit dans les corps de PR et dans `docs/` — ici, seulement ce qui go
   divergence qu'`auth-refusals.ts` a déjà payée deux fois. **La panne elle-même n'est pas
   élucidée** : ce lot la rend lisible, il ne la corrige pas.
 
-### Issues ouvertes — re-sondées le 2026-09-09
+### Issues ouvertes — re-sondées le 2026-09-22
 
-**10 au moteur** (9 dès que #1013 merge et ferme #969). ⚠️ Ce compteur disait **6** et le
-tableau en listait sept, dont une close — la ligne était fausse dans les deux sens depuis le
-2026-09-04, et personne ne la relit sans la re-sonder. C'est exactement ce que
-[#994](https://github.com/MBeji/yahia-quest-arena/issues/994) décrit : la roadmap privée est
-tenue à chaque lot, c'est **ce fichier-ci** qui décroche, parce qu'aucun gate ne le surveille.
-Ne pas croire ce tableau sans `list_issues` — **le re-sonder est la seule lecture valide**.
+**Sept au moteur**, comptées par l'API le jour même. ⚠️ Ne pas croire ce tableau sans le
+re-sonder : le 2026-09-09 il annonçait 10 et en listait 7, dont une close, et il était faux
+**dans les deux sens**. C'est ce que décrit #1039 — et depuis le 2026-09-22 une garde le
+confronte : `status-freshness-watch.yml` compare le marqueur de l'en-tête au tip de `main` et
+ouvre une issue `status-perime` au-delà de 25 PR d'écart.
 
-**Trois des dix sont ouvertes par des gardes** (#1008, #967, #962) et se referment seules ;
-deux d'entre elles ne comptent pas pour deux, elles ont la même cause.
+**Deux des sept sont tenues par des gardes** (#1083, #1078) et se referment seules. **Deux
+attendent un geste hors dépôt** et aucun travail de code (#1078, #1002).
 
-| Issue     | Quoi                                                                                                                                                                            |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **#969**  | ✅ **Corrigé par #1013** — `getClaims` LEVAIT son erreur au lieu de la rendre, donc le refus n'arrivait jamais intact au client et rien de ce qui est posé derrière ne s'armait |
-| **#1015** | `leaderboard.spec.ts:62` rend **zéro ligne** là où la RPC en garantit une. Rouge sur `main` aussi, sur les 3 reprises — le seul échec qui reste dans la suite authentifiée      |
-| **#967**  | 🌙 Nightly rouge — ne tient plus qu'à **#1015**. Se referme à la première nuit verte                                                                                            |
-| **#1008** | ⚠️ Aucun checkpoint de rollback vérifié — **conséquence** du nightly rouge, pas un défaut à part. Se referme avec #967                                                          |
-| **#962**  | 📈 Relevé d'engagement du 2026-09-03 — **informatif**, posé automatiquement par é31. Pas un rouge                                                                               |
-| **#937**  | Gates orphelins : la classe est fermée par une garde — et **deux des trois constats de l'issue étaient faux**. #960 en a traité la part vraie (G-3)                             |
-| **#1002** | Identifiants hors dépôt : `GH_AUTOMATION_PAT` **expire le 2026-10-04**, `CLAUDE_CODE_OAUTH_TOKEN` à dater. Aucune session ne peut les renouveler — geste au navigateur          |
-| **#994**  | Rien ne garde `STATUS.md` ni l'index des études. La divergence à sens unique — et ce tableau vient de la refaire                                                                |
-| **#979**  | Une soirée d'exercices non enregistrée le 2026-09-03, **cause non élucidée**. #977 a posé l'instrumentation ; il faut une occurrence datée ou deux semaines de silence          |
-| **#660**  | Major `typescript` v7.0.2 — gate rouge, `typescript-eslint` bloquant. Attendre l'amont, ne pas forcer                                                                           |
+| Issue     | Quoi                                                                                                                                                                                                                                           |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **#1083** | 🗺️ Ce fichier affirmait `main` à #970 — **114 PR de retard**. Ouverte par la garde de fraîcheur, refermée par elle dès que le marqueur est à jour. Cette passe-ci est la réponse                                                               |
+| **#1078** | 🔑 `GH_AUTOMATION_PAT` expire le **2026-10-04**. Ouverte par `pat-expiry-watch.yml`, avec une date **mesurée** dans l'en-tête `Github-Authentication-Token-Expiration`, pas recopiée. Geste navigateur, 3 min, aucune session ne peut le faire |
+| **#1039** | Lot 1 (compteurs) et lot 2 (fraîcheur) livrés. Ce qui reste : rien dans le code — l'issue peut se fermer quand le topo est à jour                                                                                                              |
+| **#1002** | Identifiants hors dépôt. Moitié PAT **couverte** par #1078 ; moitié `CLAUDE_CODE_OAUTH_TOKEN` **non couverte et dite telle** — le jeton ne vient pas de GitHub, sa mort restera constatée, jamais prévenue                                     |
+| **#962**  | 📈 Relevé d'engagement — **informatif**, posé automatiquement par é31. Pas un rouge                                                                                                                                                            |
+| **#937**  | Gates orphelins : la classe est fermée par une garde — et **deux des trois constats de l'issue étaient faux**, ce que son auteur note lui-même                                                                                                 |
+| **#660**  | Major `typescript` v7.0.2 — gate rouge, `typescript-eslint` bloquant. Attendre l'amont, ne pas forcer                                                                                                                                          |
 
-**8 branches distantes traînent sans PR** (9 au total, dont `draft/regression-guard-20260901`
-qui, elle, en a une — #932). Le compte n'a pas bougé depuis le 2026-08-26. ⚠️ **Leur contenu n'a
-PAS été re-vérifié le 2026-09-04** : ce qui suit date de la passe du 26, et reste ce qu'on sait.
-Re-vérifiées une à une **par le contenu** ce jour-là : aucune ne portait de travail perdu — les deux `report-fix-*`
-sont sur `main`, et les deux migrations de `etude-22-lot-5` et `migration-timestamp` y sont
-**sous un autre horodatage** (`20260720200000`, `20260731130000`). C'est du ménage, pas un
-backlog. ⚠️ Le piège est de conclure d'un `git merge-base` ou d'un `grep | head` tronqué : les
-deux mènent à croire qu'un correctif utilisateur a été perdu.
-~~**#733**~~ — **close**. Les neuf échecs E2E du nightly du 2026-08-14 sont éteints : huit par
-#755 (`isVisible()` n'attend jamais — « @deprecated This option is ignored »), le neuvième par
-#786 (`--flame` jamais assombri pour le thème clair). Rappel du piège qui les a produits :
-**rien ne pouvait les attraper avant le merge**, l'E2E n'étant ni dans `verify` ni dans
-`ci:verify`.
+**Neuf branches distantes traînent sans PR** (dix au total, dont `draft/regression-guard-20260901`
+qui, elle, en a une — #932). Le compte était de huit au 2026-08-26 et au 2026-09-04 ; la
+neuvième est `claude/client-errors-enquete`, **vide** (elle pointe sur un commit de `main`),
+poussée par erreur le 2026-09-22 et que ni `git push --delete` ni l'API du proxy n'acceptent de
+supprimer. Elle ne portera jamais de PR : GitHub refuse une PR sans diff.
 
----
+⚠️ **Le contenu des huit autres n'a pas été re-vérifié depuis le 2026-08-26**, et ce qui suit
+date de cette passe-là. Re-vérifiées une à une **par le contenu** ce jour-là : aucune ne
+portait de travail perdu — les deux `report-fix-*` sont sur `main`, et les deux migrations de
+`etude-22-lot-5` et `migration-timestamp` y sont **sous un autre horodatage**
+(`20260720200000`, `20260731130000`). C'est du ménage, pas un backlog. ⚠️ Le piège est de
+conclure d'un `git merge-base` ou d'un `grep | head` tronqué : les deux mènent à croire qu'un
+correctif utilisateur a été perdu.
 
 ## 7. Carte de la documentation (qui fait foi pour quoi)
 
@@ -553,7 +534,7 @@ leur valeur — c'est la seule décision que le calendrier prend à notre place.
    2026-09-01.** Les **deux** clés sont vivantes : la clé famille (BYOK, `/parametrage`) et la
    clé plateforme (Vercel `AI_PLATFORM_API_KEY` + `AI_PLATFORM_PROVIDER`), toutes deux sur
    **DeepSeek**, trafic réel confirmé sur les deux chemins par `/admin/ia`. **Le pilote tourne** ;
-   **verdict attendu vers le 2026-09-15.** ⚠️ **Le risque que cette ligne nommait s'est en partie
+   **verdict attendu vers le 2026-09-15 — ⚠️ cette date est PASSÉE et aucun verdict n'est écrit nulle part** (constaté le 2026-09-22). Le pilote a donc tourné trois semaines sans que sa mesure soit relevée : c'est la mesure qui manque, pas le geste, et personne ne s'en apercevra tant qu'une ligne d'échéance restera un souvenir plutôt qu'une garde. ⚠️ **Le risque que cette ligne nommait s'est en partie
    réalisé** : elle disait « lancé après la rentrée, l'étage IA traverse le trimestre sans
    preuve » — il est parti **neuf jours après** la rentrée. Ce qui reste à faire est la
    **mesure**, pas le geste. ⚠️ Piège conservé, il vaut pour toute reconfiguration : une
