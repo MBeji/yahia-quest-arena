@@ -645,8 +645,8 @@ export function checkControlCoverage({ scripts, workflows, registry, corpusWorkf
 
 /**
  * Budget du `CLAUDE.md` du corpus privé. Il est autonome (il ne pointe pas vers AGENTS.md :
- * le corpus n'a pas de moteur), donc son plafond lui est propre — il vaut 116 lignes /
- * 9,2 Kio aujourd'hui, et la marge est celle qu'on veut lui laisser, pas celle du moteur.
+ * le corpus n'a pas de moteur), donc son plafond lui est propre — il vaut ~70 lignes /
+ * 4,6 Kio depuis sa cure du 2026-09-22 ; la marge est celle qu'on veut lui laisser.
  */
 export const CORPUS_CLAUDE_MD_MAX_LINES = 150;
 export const CORPUS_CLAUDE_MD_MAX_BYTES = 12 * 1024;

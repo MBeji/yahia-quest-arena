@@ -1,6 +1,6 @@
 name: db-migrate-prod
 
-# THE sanctioned way to apply Supabase migrations to PRODUCTION (CLAUDE.md §7).
+# THE sanctioned way to apply Supabase migrations to PRODUCTION (AGENTS.md §7).
 # Nobody runs prod migrations by hand anymore: author the migration, merge it,
 # this workflow applies it. Credentials never leave GitHub secrets.
 #
@@ -205,7 +205,7 @@ jobs:
               body += `les migrations suivantes restent en attente derrière elle).\n\n`;
               body += `**À faire** : ouvrir le run, lire l'erreur \`db push\`, corriger l'ordre `;
               body += `(re-horodater la migration fautive pour qu'elle trie APRÈS la dernière `;
-              body += `appliquée), puis re-déclencher le workflow. Voir CLAUDE.md §7.\n\n`;
+              body += `appliquée), puis re-déclencher le workflow. Voir AGENTS.md §7.\n\n`;
               body += `[Voir le run complet](${runUrl})\n`;
 
               const title = '🛑 Auto-apply migrations prod en échec';

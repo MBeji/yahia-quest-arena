@@ -34,7 +34,7 @@ export const QUIZ_COIN_REWARD = 5;
  * stable, public content id (chapter/exercise/question), never a secret or an
  * authentication token. Swapping the hash would silently change every id
  * already upserted into prod, breaking the ON CONFLICT / prune keying across
- * the whole content catalogue (see "Content pipeline" in CLAUDE.md). CodeQL's
+ * the whole content catalogue (see "Content pipeline" in AGENTS.md). CodeQL's
  * js/weak-cryptographic-algorithm alert on this line is a dismissed false
  * positive — it assumes a security context that doesn't apply to id derivation.
  */
