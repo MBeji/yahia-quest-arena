@@ -1,0 +1,176 @@
+name: Garde du PAT d'automatisation (il expire sans prévenir)
+
+# POURQUOI CETTE GARDE EXISTE — issue #1002, étude cloud-first §5 « Les murs ».
+#
+# `GH_AUTOMATION_PAT` est le seul identifiant dont dépend la chaîne d'automatisation
+# et qu'AUCUNE session ne peut renouveler : il se régénère depuis un navigateur.
+# Le jour où il expire, `auto-pr.yml` et `automerge.yml` retombent sur le
+# `GITHUB_TOKEN` : les PR redeviennent ouvertes par `github-actions[bot]`, qui
+# n'est pas collaborateur, et TOUS les checks requis repassent en « Approve and
+# run » manuel. La chaîne ne casse pas bruyamment — elle se fige, et les PR en
+# attente d'approbation ne désignent pas leur cause.
+#
+# ⚠️ CE QUE `USING_PAT` NE VOIT PAS, ET C'EST LE CŒUR DU PROBLÈME.
+# `auto-pr.yml` et `automerge.yml` calculent `USING_PAT: secrets.GH_AUTOMATION_PAT
+# != ''`. Un secret EXPIRÉ reste non vide : le jour J, `USING_PAT` vaut donc
+# toujours `true` pendant que l'API refuse le jeton. La chaîne se croit équipée.
+# Tester la présence du secret ne dit rien ; il faut tester qu'il AUTHENTIFIE.
+#
+# CE QUI REND CETTE GARDE PRÉVENTIVE PLUTÔT QUE CONSTATANTE.
+# GitHub renvoie l'en-tête `Github-Authentication-Token-Expiration` sur toute
+# réponse servie à un jeton daté (vérifié le 2026-09-22). La date vient donc de
+# GITHUB, pas d'une ligne recopiée dans un document — #1002 et
+# `docs/passation.md` en portaient une, et rien ne les tenait à jour. Une date
+# écrite à la main dans un doc est un rappel ; celle-ci est une mesure.
+#
+# CE QU'ELLE NE FAIT PAS : elle ne renouvelle rien (c'est impossible depuis un
+# runner), n'écrit dans aucun secret, ne touche aucune PR. Elle tient UNE issue
+# ouverte tant que le jeton est en danger et la referme d'elle-même — même forme
+# que `client-errors-watch.yml` et `guard-watch.yml`. Son propre plantage est
+# relevé par `guard-watch.yml`, qui balaye les runs rouges de ce dépôt.
+
+on:
+  schedule:
+    # 07:10 UTC — après la re-sonde de STATUS.md, avant la journée de travail.
+    - cron: "10 7 * * *"
+  workflow_dispatch:
+
+# Ce bloc REMPLACE le défaut du dépôt : toute portée non listée tombe à `none`,
+# pas à `read`. La garde n'a besoin que d'écrire son issue.
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: pat-expiry-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    name: Le PAT authentifie-t-il encore, et pour combien de temps
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PAT: ${{ secrets.GH_AUTOMATION_PAT }}
+      LABEL: pat-expiry
+      # Fenêtre d'alerte. 14 jours : assez pour que le geste (navigateur, 3 min)
+      # trouve sa place sans urgence, assez court pour ne pas crier deux semaines
+      # durant — une garde qu'on apprend à ignorer ne garde plus rien.
+      SEUIL_JOURS: 14
+    steps:
+      - name: Interroger l'API AVEC le PAT
+        id: probe
+        run: |
+          set -uo pipefail
+          if [ -z "${PAT:-}" ]; then
+            echo "etat=absent" >> "$GITHUB_OUTPUT"
+            echo "Aucun secret GH_AUTOMATION_PAT configuré."
+            exit 0
+          fi
+
+          # `-i` pour les en-têtes : c'est là que vit la date d'expiration.
+          rep="$(curl -sS -i -H "Authorization: Bearer ${PAT}" \
+                   -H "Accept: application/vnd.github+json" \
+                   https://api.github.com/repos/${GITHUB_REPOSITORY} 2>&1 || true)"
+          code="$(printf '%s' "$rep" | head -1 | awk '{print $2}')"
+          exp="$(printf '%s' "$rep" | grep -i '^github-authentication-token-expiration:' \
+                   | head -1 | cut -d: -f2- | sed 's/^ *//;s/\r$//')"
+
+          echo "HTTP $code · expiration brute : ${exp:-<aucune>}"
+
+          if [ "$code" != "200" ]; then
+            echo "etat=refuse" >> "$GITHUB_OUTPUT"
+            echo "code=$code" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [ -z "$exp" ]; then
+            # Un PAT classique sans expiration, ou un jeton d'app : rien à surveiller.
+            echo "etat=sans-date" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # « 2026-10-04 12:00:00 UTC » → epoch. `date -d` le lit tel quel.
+          fin="$(date -u -d "$exp" +%s 2>/dev/null || echo '')"
+          if [ -z "$fin" ]; then
+            echo "etat=date-illisible" >> "$GITHUB_OUTPUT"
+            echo "brut=$exp" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          jours=$(( (fin - $(date -u +%s)) / 86400 ))
+          echo "etat=ok" >> "$GITHUB_OUTPUT"
+          echo "jours=$jours" >> "$GITHUB_OUTPUT"
+          echo "le=$(date -u -d "$exp" +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+          echo "Le PAT authentifie et expire dans $jours jour(s)."
+
+      - name: Ouvrir, tenir ou refermer l'issue
+        run: |
+          set -euo pipefail
+          etat="${{ steps.probe.outputs.etat }}"
+          jours="${{ steps.probe.outputs.jours }}"
+          le="${{ steps.probe.outputs.le }}"
+          code="${{ steps.probe.outputs.code }}"
+
+          alerte=""
+          case "$etat" in
+            absent)  alerte="Aucun secret \`GH_AUTOMATION_PAT\` n'est configuré." ;;
+            refuse)  alerte="**Le PAT est REFUSÉ par l'API (HTTP ${code})** — expiré ou révoqué. La chaîne tourne déjà en mode dégradé." ;;
+            "date-illisible") alerte="GitHub a renvoyé une date d'expiration que la garde n'a pas su lire : \`${{ steps.probe.outputs.brut }}\`. À regarder — le format a peut-être changé." ;;
+            ok)
+              if [ "${jours:-999}" -le "${SEUIL_JOURS}" ]; then
+                alerte="Le PAT expire le **${le}**, soit dans **${jours} jour(s)**."
+              fi
+              ;;
+          esac
+
+          # Une seule issue, filtrée CÔTÉ SERVEUR.
+          num="$(gh issue list --label "$LABEL" --state open --limit 1 --json number --jq '.[0].number // empty')"
+
+          if [ -z "$alerte" ]; then
+            if [ -n "$num" ]; then
+              gh issue close "$num" --comment "✅ Le PAT authentifie et expire dans ${jours} jour(s) (le ${le}) — au-delà du seuil de ${SEUIL_JOURS} jours. Refermée par la garde."
+              echo "Issue #$num refermée."
+            else
+              echo "Rien à signaler (expire dans ${jours:-?} jour(s))."
+            fi
+            exit 0
+          fi
+
+          {
+            echo "### 🔑 Le jeton qui tient la chaîne d'automatisation"
+            echo ""
+            echo "$alerte"
+            echo ""
+            echo "**Ce que ça casse** — \`auto-pr.yml\` et \`automerge.yml\` retombent sur le"
+            echo "\`GITHUB_TOKEN\` : les PR redeviennent ouvertes par \`github-actions[bot]\`, qui"
+            echo "n'est pas collaborateur, et **tous les checks requis repassent en « Approve and"
+            echo "run » manuel**. La chaîne ne casse pas — elle se fige, et les PR en attente"
+            echo "d'approbation ne désignent pas leur cause."
+            echo ""
+            echo "⚠️ **Aucune session ne peut faire ce geste** : il n'y a ni \`gh\` ni outil MCP"
+            echo "pour écrire un secret. Il se fait depuis un navigateur, téléphone compris, en"
+            echo "trois minutes :"
+            echo ""
+            echo "1. github.com → Settings → Developer settings → Fine-grained tokens → régénérer"
+            echo "   le jeton, scopé à **ce seul dépôt**, permissions \`Contents: write\`,"
+            echo "   \`Pull requests: write\`, \`Workflows: write\`, \`Variables: read and write\`"
+            echo "   (pas « Agent variables »)."
+            echo "2. Dépôt → Settings → Secrets and variables → Actions → \`GH_AUTOMATION_PAT\` →"
+            echo "   coller la nouvelle valeur."
+            echo "3. Rien d'autre. **Cette issue se referme toute seule** au prochain passage de"
+            echo "   la garde : la date vient de l'en-tête \`Github-Authentication-Token-Expiration\`"
+            echo "   que GitHub renvoie, pas d'une ligne recopiée quelque part."
+            echo ""
+            echo "_Garde \`pat-expiry-watch.yml\`, seuil ${SEUIL_JOURS} jours. Voir #1002._"
+          } > corps.md
+
+          gh label create "$LABEL" --color b60205 --description "Le PAT d'automatisation expire ou est refusé" 2>/dev/null || true
+
+          if [ -n "$num" ]; then
+            gh issue edit "$num" --body-file corps.md
+            echo "Issue #$num mise à jour."
+          else
+            gh issue create --title "🔑 GH_AUTOMATION_PAT — action requise hors dépôt" \
+              --label "$LABEL" --body-file corps.md
+          fi
