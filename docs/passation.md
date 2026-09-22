@@ -328,6 +328,18 @@ La configuration est versionnée dans le repo, mais l'application vit dans GitHu
    configuré. Ni le `GITHUB_TOKEN` par défaut ni aucune portée de workflow ne peuvent écrire
    une variable Actions — ce PAT est le seul chemin.
 
+   ⏳ **Son expiration ne se retient plus, elle se mesure** (garde
+   `.github/workflows/pat-expiry-watch.yml`, 2026-09-22). Un PAT _fine-grained_ expire, et
+   le jour J la chaîne ne casse pas : elle se **fige**, les PR repassant en « Approve and
+   run » manuel sans que rien ne dise pourquoi. ⚠️ `USING_PAT`, calculé dans `auto-pr.yml`
+   et `automerge.yml` comme `secrets.GH_AUTOMATION_PAT != ''`, ne voit pas ce cas — **un
+   secret expiré reste non vide**, donc la chaîne se croit équipée pendant que l'API refuse
+   le jeton. La garde teste qu'il AUTHENTIFIE, lit sa date dans l'en-tête
+   `Github-Authentication-Token-Expiration` que GitHub renvoie, et ouvre une issue à 14
+   jours — qu'elle referme seule une fois le jeton renouvelé. Aucune date n'est donc à tenir
+   à jour ici : celle qui comptait vivait dans #1002 et dans ce paragraphe, et rien ne les
+   confrontait au jeton réel.
+
 5. **Surveiller l'expiration du PAT.** Un PAT _fine-grained_ expire (le nôtre : **4 octobre
    2026**). Le jour venu, `auto-pr.yml` et `automerge.yml` retombent silencieusement sur le
    `GITHUB_TOKEN` : les PR redeviennent ouvertes par `github-actions[bot]`, non collaborateur,
