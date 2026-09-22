@@ -56,6 +56,7 @@
     "perf:check": "node scripts/perf/check-harness.mjs",
     "actions:census": "node scripts/ci/actions-census.mjs",
     "reports:export": "node scripts/reports/export-reports.mjs",
+    "reports:ai-pilot": "node scripts/reports/export-ai-pilot.mjs",
     "reports:client-errors": "node --experimental-strip-types scripts/reports/export-client-errors.mjs",
     "reports:engagement": "node scripts/reports/format-engagement.mjs",
     "reports:resolve": "node scripts/reports/resolve-reports.mjs",
