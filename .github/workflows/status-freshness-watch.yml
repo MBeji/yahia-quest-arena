@@ -78,9 +78,16 @@ jobs:
           # pour que le nombre VISIBLE soit le nombre mesuré : deux emplacements
           # finiraient par diverger, et c'est très exactement la faute d'origine —
           # `STATUS.md` portait trois « main à #N » différents dans le même fichier.
-          affirme="$(grep -oE '<!--status-sync:main-pr-->[0-9]+<!--/status-sync-->' STATUS.md \
-                      | head -1 | grep -oE '[0-9]+' || true)"
-          nb="$(grep -cE '<!--status-sync:main-pr-->' STATUS.md || true)"
+          # ⚠️ UNE SEULE REGEX, et c'est le correctif de son premier passage réel.
+          # La lecture exigeait des chiffres, le comptage ne testait que la balise
+          # OUVRANTE : la règle de maintenance qui cite le marqueur en exemple porte
+          # un `N`, donc la garde lisait un marqueur et en comptait deux, puis
+          # accusait `STATUS.md` d'une faute qui était la sienne. C'est exactement le
+          # « deux implémentations d'une même règle divergent » que ce dépôt a déjà
+          # payé trois fois. Les deux valeurs sortent désormais du MÊME relevé.
+          trouves="$(grep -oE '<!--status-sync:main-pr-->[0-9]+<!--/status-sync-->' STATUS.md || true)"
+          nb="$(printf '%s' "$trouves" | grep -c . || true)"
+          affirme="$(printf '%s' "$trouves" | head -1 | grep -oE '[0-9]+' || true)"
 
           if [ -z "$affirme" ]; then
             echo "etat=sans-marqueur" >>"$GITHUB_OUTPUT"

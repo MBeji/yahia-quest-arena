@@ -58,6 +58,16 @@ on:
     # Toutes les 6 h, minute décalée (les crons ronds partent en retard).
     - cron: "23 */6 * * *"
   workflow_dispatch:
+    inputs:
+      window_hours:
+        description: >-
+          Fenêtre d'ENQUÊTE en heures (vide = la fenêtre du cron). Une valeur ici met le
+          job en lecture seule : il relève et annote, mais ne touche PAS à l'issue — les
+          seuils sont calibrés pour la fenêtre du cron, les appliquer à trois semaines
+          ouvrirait une alerte qui ne veut rien dire.
+        required: false
+        type: string
+        default: ""
 
 concurrency:
   group: client-errors-watch
@@ -99,6 +109,30 @@ jobs:
           fi
           echo "configured=true" >> "$GITHUB_OUTPUT"
 
+      # La fenêtre demandée est lue depuis `env:`, JAMAIS interpolée dans le script :
+      # `${{ }}` est substitué dans le texte du shell avant exécution, donc une valeur
+      # biscornue ne corrigerait pas une commande, elle la RÉÉCRIRAIT.
+      - name: Fenêtre effective — cron ou enquête
+        id: fenetre
+        if: steps.guard.outputs.configured == 'true'
+        env:
+          DEMANDE: ${{ inputs.window_hours }}
+        run: |
+          set -euo pipefail
+          if [ -z "${DEMANDE:-}" ]; then
+            echo "heures=$WINDOW_HOURS" >> "$GITHUB_OUTPUT"
+            echo "enquete=false" >> "$GITHUB_OUTPUT"
+            echo "Fenêtre du cron : $WINDOW_HOURS h."
+            exit 0
+          fi
+          if ! printf '%s' "$DEMANDE" | grep -qE '^[0-9]+$' || [ "$DEMANDE" -le 0 ]; then
+            echo "::error::window_hours attend un entier > 0, reçu « $DEMANDE »."
+            exit 1
+          fi
+          echo "heures=$DEMANDE" >> "$GITHUB_OUTPUT"
+          echo "enquete=true" >> "$GITHUB_OUTPUT"
+          echo "ENQUÊTE sur $DEMANDE h — l'issue ne sera pas touchée."
+
       - name: Checkout
         if: steps.guard.outputs.configured == 'true'
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
@@ -134,12 +168,34 @@ jobs:
         env:
           SUPABASE_URL: ${{ env.PROD_SUPABASE_API_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
+          HEURES: ${{ steps.fenetre.outputs.heures }}
         run: |
           set -euo pipefail
-          npm run --silent reports:client-errors -- --window-hours "$WINDOW_HOURS" --out client-errors.json
+          npm run --silent reports:client-errors -- --window-hours "$HEURES" --out client-errors.json
 
-      - name: Décider — ouvrir, mettre à jour, ou refermer
+      # POURQUOI CETTE ÉTAPE — 2026-09-22, la même leçon que `db-tests.yml`.
+      # Les journaux d'un runner sont ILLISIBLES depuis une session cloud : GitHub
+      # redirige vers un stockage Azure que le proxy de sortie refuse (403 au CONNECT).
+      # Le relevé de cette garde ne sortait donc QUE par l'issue — c'est-à-dire
+      # seulement au-dessus des seuils. Un « zéro ligne dans la fenêtre » n'était
+      # lisible nulle part, alors que c'est exactement ce que demande le critère de
+      # clôture de #979 (« deux semaines sans une seule ligne aux stages de
+      # soumission »). Les annotations, elles, se lisent par l'API.
+      - name: Rendre le relevé lisible sans accès aux journaux
         if: steps.guard.outputs.configured == 'true'
+        env:
+          HEURES: ${{ steps.fenetre.outputs.heures }}
+        run: |
+          set -euo pipefail
+          resume="$(jq -r '"fenêtre \(.window.hours) h depuis \(.window.since) · \(.total) ligne(s) · \(.soumissionsPerdues) soumission(s) perdue(s) · alertes \(.alertes | length)"' client-errors.json)"
+          echo "::notice title=Relevé boîte noire::${resume}"
+          jq -r '.parStage | to_entries[] | "::notice title=Stage::\(.key) = \(.value)"' client-errors.json
+          jq -r '.horloge | to_entries[] | "::notice title=Horloge::\(.key) = \(.value)"' client-errors.json
+
+      # En ENQUÊTE, on s'arrête au relevé : les seuils sont calibrés pour la fenêtre
+      # du cron. Les appliquer à trois semaines ouvrirait une issue qui ne mesure rien.
+      - name: Décider — ouvrir, mettre à jour, ou refermer
+        if: steps.guard.outputs.configured == 'true' && steps.fenetre.outputs.enquete != 'true'
         run: |
           set -euo pipefail
 
