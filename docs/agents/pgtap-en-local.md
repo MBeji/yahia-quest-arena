@@ -48,6 +48,46 @@ l'essentiel du gain de vitesse.
 Pour repartir d'une base **vierge** — le seul état qui prouve la reconstructibilité —
 `createdb` un nouveau nom et rejouer les points 3 et 4. Quinze secondes.
 
+## ⚠️ Le shim est PLUS PERMISSIF que l'image Supabase
+
+Un vert local ne vaut pas un vert en CI, et pas seulement « en général » : la différence a
+une forme précise, et elle a coûté un `main` rouge le 2026-09-22.
+
+Le shim crée les rôles Supabase mais la connexion reste le `postgres` d'`initdb`, donc un
+**superutilisateur**. `db-tests.yml`, lui, tourne sur l'image Supabase, où les grants sont
+ceux de la production. Tout ce qui dépend d'un **privilège** peut donc passer ici et tomber
+là-bas.
+
+Le cas vécu, et il est instructif parce qu'il vise une règle centrale du projet :
+
+```sql
+SET LOCAL ROLE authenticated;                      -- ← la ligne fautive
+SELECT public.score_answer((SELECT q FROM public.questions q WHERE q.id = …), 'texte');
+-- CI : ERROR: permission denied for table questions
+```
+
+`public.questions` n'est **pas** lisible en entier par `authenticated`. Elle porte une
+**liste blanche de colonnes** — `GRANT SELECT (question_type) ON public.questions TO
+authenticated, anon` — précisément pour que `correct_option`, `answer_key` et
+`distractor_tags` ne sortent jamais. Sélectionner la ligne ENTIÈRE (`SELECT q FROM …`)
+demande donc un droit que ce rôle n'a pas, et ne doit pas avoir.
+
+**La conduite**, telle que les §4 et §5 de `98_open_questions_ai_gated.test.sql` la
+pratiquent : poser le **claim** sans changer de rôle.
+
+```sql
+SET LOCAL request.jwt.claims = '{"sub":"<uuid>","role":"authenticated"}';
+-- pas de SET LOCAL ROLE : `auth.uid()` rend l'élève, et le SELECT garde ses droits
+```
+
+`SET LOCAL ROLE authenticated` reste le bon geste pour ce qu'on veut tester **en tant que**
+ce rôle — un refus d'accès, un `has_table_privilege`, une politique RLS. Il devient un piège
+dès que le test lit, en passant, une table dont les colonnes sont filtrées.
+
+**Règle de relecture** : tout `SET LOCAL ROLE` ajouté à un test se relit en se demandant
+« quelles tables ce bloc va-t-il lire, et ce rôle a-t-il le droit de les lire **en
+entier** ? ». Le shim ne posera jamais la question à votre place.
+
 ## En session cloud : une commande
 
 > Étude cloud-first, lot 4 (livré le 2026-09-05). La recette ci-dessus est devenue un script,

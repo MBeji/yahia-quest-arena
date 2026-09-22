@@ -323,8 +323,16 @@ SET answer_key = jsonb_set(
       (answer_key -> 'mistakes') || '[{"text":"le grand cote","tag":"confusion-plus-long"}]'::jsonb)
 WHERE id = '0a300000-0000-4000-8000-000000000003';
 
+-- ⚠️ LE CLAIM, JAMAIS LE RÔLE — et ce n'est pas un détail de style.
+-- `questions` n'est PAS lisible en entier par `authenticated` : elle porte une
+-- LISTE BLANCHE de colonnes (`GRANT SELECT (question_type)`), parce que la clé
+-- de réponse ne doit jamais sortir. Un `SET LOCAL ROLE authenticated` avant un
+-- `SELECT q FROM public.questions q` rend donc « permission denied for table
+-- questions » — c'est exactement ce qui a fait rougir la suite en CI le
+-- 2026-09-22, alors qu'elle passait sur le shim local, plus permissif. Poser le
+-- claim suffit : `auth.uid()` rend l'élève, et c'est tout ce dont R-4 a besoin.
+-- Les §4 et §5 font pareil ; ce bloc s'était écarté du patron, seul.
 SET LOCAL request.jwt.claims = '{"sub":"0a400000-0000-4000-8000-000000000002","role":"authenticated"}';
-SET LOCAL ROLE authenticated;
 SELECT is(
   public.score_answer(
     (SELECT q FROM public.questions q WHERE q.id = '0a300000-0000-4000-8000-000000000003'),
@@ -332,19 +340,28 @@ SELECT is(
   false,
   'R-4 à la LECTURE : un texte ajouté aux erreurs attendues APRÈS coup redevient faux'
 );
-RESET ROLE;
 
--- Et le grand livre n'a pas été réécrit : ce que le modèle a répondu ce jour-là
--- reste vrai comme TRACE. C'est sa portée qui se re-décide, pas son contenu —
--- une trace corrigée a posteriori n'est plus une trace.
+-- ET LE GRAND LIVRE N'A PAS ÉTÉ RÉÉCRIT. On le prouve en RETIRANT l'erreur : si
+-- la ligne `accepted` avait été effacée ou renversée, l'acceptation ne
+-- reviendrait pas. Prouver la même chose en lisant `ai_open_answer_verdicts`
+-- directement contredirait le §6, dont tout le propos est que cette table est un
+-- ORACLE qui ne se lit pas — une preuve ne doit pas emprunter le chemin qu'on
+-- déclare fermé.
+UPDATE public.questions
+SET answer_key = jsonb_set(
+      answer_key, '{mistakes}',
+      '[{"text":"le cote le plus long","tag":"confusion-plus-long"}]'::jsonb)
+WHERE id = '0a300000-0000-4000-8000-000000000003';
+
+SET LOCAL request.jwt.claims = '{"sub":"0a400000-0000-4000-8000-000000000002","role":"authenticated"}';
 SELECT is(
-  (SELECT accepted FROM public.ai_open_answer_verdicts
-    WHERE student_user_id = '0a400000-0000-4000-8000-000000000002'
-      AND question_id = '0a300000-0000-4000-8000-000000000003'
-      AND choice_norm = public.normalize_recall_text('le grand cote')),
+  public.score_answer(
+    (SELECT q FROM public.questions q WHERE q.id = '0a300000-0000-4000-8000-000000000003'),
+    'le grand cote'),
   true,
-  'la correction agit à la LECTURE : la ligne écrite est intacte, rien n''est réécrit'
+  'et la correction agit à la LECTURE SEULEMENT : l''erreur retirée, le verdict écrit revit'
 );
+RESET ROLE;
 
 -- ---------------------------------------------------------
 -- 6. SÉCURITÉ — la table des verdicts est un ORACLE, elle ne se lit pas.
