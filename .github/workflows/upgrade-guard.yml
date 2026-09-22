@@ -170,6 +170,12 @@ jobs:
       # était `skipped`. Sur 45 runs, l'apply n'a été tenté que 4 fois et n'a JAMAIS abouti.
       # C'est le même piège que les runs « zéro job » du dépôt de contenu : un vert qui dit
       # « rien n'a été évalué », pas « ça marche ».
+      #
+      # ⚠️ Ce pin est NÉCESSAIRE mais PAS SUFFISANT : rejoué en local sous npm 10, l'apply
+      # échoue encore sur un ERESOLVE (le lot monte react en 19.3.0 et @react-three/fiber en
+      # 9.7.0, dont le peer est react ">=19 <19.3" — incompatibles entre eux, alors que chacun
+      # passerait seul). L'étape d'annotations ci-dessous est ce qui rend ce second blocage
+      # visible ; l'arbitrage de dépendance, lui, est dans une issue dédiée.
       - name: Pin npm 10 for the lockfile write
         if: steps.cadence.outputs.run == 'true' && steps.detect.outputs.has_patch_minor == 'true'
         run: npm i -g npm@10

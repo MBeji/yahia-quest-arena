@@ -308,3 +308,15 @@ le jour même où le workflow lui a retiré ce qu'il exigeait. Chaque pièce ét
 3. **Monter le Node d'un workflow change son npm.** Node ≤ 22 livre npm 10, Node ≥ 23 livre
    npm 11 (`https://nodejs.org/dist/index.json`, champ `npm`). Toute bascule de `node-version`
    est aussi une bascule de gestionnaire de paquets, et c'est rarement ce qu'on avait en tête.
+
+4. **Le premier blocage trouvé n'est pas forcément le seul.** Le npm 11 ci-dessus a été
+   diagnostiqué par lecture — puis **rejoué en local sous npm 10, où l'`apply` a échoué
+   quand même**, sur un `ERESOLVE`. La lecture donnait une cause vraie et incomplète ; seule
+   l'exécution a donné la seconde. Un diagnostic de garde ne vaut que rejoué.
+
+   Le second blocage, mesuré le 2026-09-22 : le lot en-range monte `react` 19.2.8 → **19.3.0**
+   _et_ `@react-three/fiber` 9.6.x → **9.7.0**, dont le peer est `react ">=19 <19.3"`. Les deux
+   montées sont **mutuellement incompatibles** ; chacune seule passerait. Et comme l'`apply`
+   fait **un seul `npm update`** portant tout le lot, **un conflit en coule 41**. C'est
+   vraisemblablement aussi la cause de l'échec du 2026-08-21, antérieur à la bascule Node 24.
+   Suivi : voir l'issue « upgrade-guard : un conflit de peer en coule 41 ».
