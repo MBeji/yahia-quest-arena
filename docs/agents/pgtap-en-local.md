@@ -48,17 +48,13 @@ l'essentiel du gain de vitesse.
 Pour repartir d'une base **vierge** — le seul état qui prouve la reconstructibilité —
 `createdb` un nouveau nom et rejouer les points 3 et 4. Quinze secondes.
 
-## ⚠️ Le shim est PLUS PERMISSIF que l'image Supabase
+## ⚠️ Le piège n'est pas le shim — c'est de mesurer sur une branche périmée
 
-Un vert local ne vaut pas un vert en CI, et pas seulement « en général » : la différence a
-une forme précise, et elle a coûté un `main` rouge le 2026-09-22.
+Cette section a d'abord été écrite à l'envers, le 2026-09-22, et la corriger vaut mieux que
+l'effacer : la fausse explication est instructive.
 
-Le shim crée les rôles Supabase mais la connexion reste le `postgres` d'`initdb`, donc un
-**superutilisateur**. `db-tests.yml`, lui, tourne sur l'image Supabase, où les grants sont
-ceux de la production. Tout ce qui dépend d'un **privilège** peut donc passer ici et tomber
-là-bas.
-
-Le cas vécu, et il est instructif parce qu'il vise une règle centrale du projet :
+**L'épisode.** Un test ajouté à `98_open_questions_ai_gated.test.sql` a fait rougir
+`db-tests.yml` sur `main`. Il contenait
 
 ```sql
 SET LOCAL ROLE authenticated;                      -- ← la ligne fautive
@@ -66,27 +62,66 @@ SELECT public.score_answer((SELECT q FROM public.questions q WHERE q.id = …), 
 -- CI : ERROR: permission denied for table questions
 ```
 
-`public.questions` n'est **pas** lisible en entier par `authenticated`. Elle porte une
-**liste blanche de colonnes** — `GRANT SELECT (question_type) ON public.questions TO
-authenticated, anon` — précisément pour que `correct_option`, `answer_key` et
-`distractor_tags` ne sortent jamais. Sélectionner la ligne ENTIÈRE (`SELECT q FROM …`)
-demande donc un droit que ce rôle n'a pas, et ne doit pas avoir.
+`public.questions` n'est **pas** lisible en entier par `authenticated` : elle porte une
+**liste blanche de colonnes** — six — précisément pour que `correct_option`, `answer_key`,
+`accepted_answers` et `distractor_tags` ne sortent jamais. Sélectionner la ligne **entière**
+(`SELECT q FROM …`) demande donc un droit que ce rôle n'a pas, et ne doit pas avoir. Le refus
+était la bonne réponse.
 
-**La conduite**, telle que les §4 et §5 de `98_open_questions_ai_gated.test.sql` la
-pratiquent : poser le **claim** sans changer de rôle.
+**La première explication était fausse.** On avait conclu « le shim est plus permissif que
+l'image Supabase, donc il ne voit pas ce genre de refus ». **Mesuré, il le voit** — même
+message, même cluster jetable :
 
-```sql
-SET LOCAL request.jwt.claims = '{"sub":"<uuid>","role":"authenticated"}';
--- pas de SET LOCAL ROLE : `auth.uid()` rend l'élève, et le SELECT garde ses droits
+```console
+$ psql -c "BEGIN; SET LOCAL ROLE authenticated; SELECT q FROM public.questions q LIMIT 1;"
+BEGIN
+SET
+ERROR:  permission denied for table questions
 ```
 
-`SET LOCAL ROLE authenticated` reste le bon geste pour ce qu'on veut tester **en tant que**
-ce rôle — un refus d'accès, un `has_table_privilege`, une politique RLS. Il devient un piège
-dès que le test lit, en passant, une table dont les colonnes sont filtrées.
+La connexion du shim est bien le `postgres` d'`initdb`, superutilisateur — mais **un
+superutilisateur qui fait `SET ROLE` perd ses privilèges** le temps de la transaction. Tout
+test qui change de rôle est donc jugé, en local, exactement comme en CI.
 
-**Règle de relecture** : tout `SET LOCAL ROLE` ajouté à un test se relit en se demandant
-« quelles tables ce bloc va-t-il lire, et ce rôle a-t-il le droit de les lire **en
-entier** ? ». Le shim ne posera jamais la question à votre place.
+**La vraie cause : la suite n'a jamais tourné sur le code fautif.** Le premier
+`npm run db:test:local` avait été lancé depuis une branche créée d'un `origin/main`
+**périmé** — elle ne contenait pas le test (1 529 assertions au lieu de 1 531). Le second
+l'avait été après le retrait de la ligne. Deux verts, aucun sur la version poussée.
+`db:test:local` aurait rendu le refus en **40 secondes** au lieu d'un `main` rouge et d'une
+heure de déduction sans journaux.
+
+### Les deux gestes qui en découlent
+
+1. **Vérifier que la branche porte ce qu'on croit tester**, avant de conclure quoi que ce
+   soit d'un vert :
+
+   ```bash
+   git merge-base --is-ancestor origin/main HEAD && echo "à jour" || echo "EN RETARD"
+   grep -c "<la chose ajoutée>" <le fichier modifié>     # et le compte d'assertions bouge
+   ```
+
+   Un « tout passe » sur une branche périmée ne prouve rien, et il est **plus dangereux**
+   qu'un rouge : il ferme l'enquête.
+
+2. **Relire tout `SET LOCAL ROLE` ajouté à un test** en se demandant : quelles tables ce bloc
+   va-t-il lire, et ce rôle a-t-il le droit de les lire **en entier** ? `SET LOCAL ROLE`
+   reste le bon geste pour tester un refus, un `has_table_privilege`, une politique RLS. Il
+   devient un piège dès que le bloc lit, en passant, une table à colonnes filtrées. Quand
+   seul `auth.uid()` est en jeu, **poser le claim suffit** — c'est ce que font les §4 et §5
+   du même fichier :
+
+   ```sql
+   SET LOCAL request.jwt.claims = '{"sub":"<uuid>","role":"authenticated"}';
+   -- pas de SET LOCAL ROLE : le SELECT garde ses droits
+   ```
+
+### Ce qui reste vrai du « local ≠ CI »
+
+Le shim est une **approximation** : il imite le strict nécessaire de Supabase (rôles,
+schémas, quelques fonctions), sur Postgres 16 là où la CI tourne l'image Supabase. Il peut
+donc encore diverger — mais sur ce cas-là, précisément, il ne divergeait pas. Ne pas lui
+imputer une panne sans l'avoir **mesuré** : c'est un outil qu'on apprend à ignorer
+autrement.
 
 ## En session cloud : une commande
 

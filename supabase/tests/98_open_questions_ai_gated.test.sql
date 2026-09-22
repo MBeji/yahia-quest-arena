@@ -325,13 +325,16 @@ WHERE id = '0a300000-0000-4000-8000-000000000003';
 
 -- ⚠️ LE CLAIM, JAMAIS LE RÔLE — et ce n'est pas un détail de style.
 -- `questions` n'est PAS lisible en entier par `authenticated` : elle porte une
--- LISTE BLANCHE de colonnes (`GRANT SELECT (question_type)`), parce que la clé
--- de réponse ne doit jamais sortir. Un `SET LOCAL ROLE authenticated` avant un
--- `SELECT q FROM public.questions q` rend donc « permission denied for table
--- questions » — c'est exactement ce qui a fait rougir la suite en CI le
--- 2026-09-22, alors qu'elle passait sur le shim local, plus permissif. Poser le
--- claim suffit : `auth.uid()` rend l'élève, et c'est tout ce dont R-4 a besoin.
--- Les §4 et §5 font pareil ; ce bloc s'était écarté du patron, seul.
+-- LISTE BLANCHE de six colonnes, parce que `correct_option`, `answer_key`,
+-- `accepted_answers` et `distractor_tags` ne doivent jamais sortir. Un
+-- `SET LOCAL ROLE authenticated` avant un `SELECT q FROM public.questions q` —
+-- la ligne ENTIÈRE — rend donc « permission denied for table questions ». C'est
+-- ce qui a fait rougir la suite en CI le 2026-09-22 ; le refus était la bonne
+-- réponse. Poser le claim suffit : `auth.uid()` rend l'élève, et c'est tout ce
+-- dont R-4 a besoin. Les §4 et §5 font pareil ; ce bloc s'en était écarté, seul.
+-- (Et `db:test:local` rend exactement le même refus : un superutilisateur qui
+-- fait `SET ROLE` perd ses privilèges. La suite n'avait simplement jamais tourné
+-- sur la version fautive — voir `docs/agents/pgtap-en-local.md`.)
 SET LOCAL request.jwt.claims = '{"sub":"0a400000-0000-4000-8000-000000000002","role":"authenticated"}';
 SELECT is(
   public.score_answer(
