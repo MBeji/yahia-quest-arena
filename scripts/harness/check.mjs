@@ -1,61 +1,25 @@
 /**
- * Anti-drift gate for the AI-native harness (étude 25, "harness:check"). Guards the
- * invariants a model-agnostic harness depends on:
+ * Anti-drift gate for the AI-native harness (étude 25, `harness:check`). Each invariant's
+ * rationale — and the incident that made it necessary — lives in the doc comment of the
+ * function that enforces it; this index only maps them.
  *
- *   1. Pointer integrity — CLAUDE.md must stay a thin `@AGENTS.md` import, never
- *      regrow into a second copy of the canonical instructions (the exact drift
- *      étude 25 was written to kill — see its §2.4).
- *   2. AGENTS.md size budget — ≤250 lines / ≤24 KiB, under Codex's 32 KiB default
- *      truncation and the industry-observed ~200-line adherence threshold.
- *   3. No hidden Unicode (zero-width / bidi-override / tag characters) in the
- *      instruction/harness surface — the "Rules File Backdoor" class of attack
- *      (invisible instructions smuggled into a rules file a human reviews visually).
- *   4. No model identifier hardcoded outside `harness/models.json` — the one file
- *      a model bump should ever touch. Covers AGENTS.md/CLAUDE.md, `harness/**` and
- *      (since lot 5) `.github/workflows/**`, whose guards resolve their model from
- *      `models.json` at run time. GENERATED views are exempt: the id they contain is
- *      compiled from `models.json`, and invariant 6 proves it was not hand-edited.
- *   5. Every `harness/*.json` file parses as JSON.
- *   6. Every generated view matches what `harness:sync` would produce from the
- *      sources — the anti-drift guarantee that makes invariant 4's exemption safe.
- *   7. Every GitHub Action in `.github/workflows/**` is pinned to a commit SHA,
- *      never a moving tag (étude 25 lot 5b). A tag's owner decides what runs with
- *      this repo's secrets; Dependabot covers npm, this covers Actions.
- *   8. Every YAML file under `.github/**` parses STRICTLY — no duplicate mapping
- *      key, no syntax error. Delegated to `scripts/ci/check-workflow-yaml.mjs`,
- *      whose header tells the 2026-08-24 story: a key shipped twice by two
- *      sessions killed `auto-pr.yml` for the whole repo with zero jobs and no
- *      log, and every lenient parser called the file valid.
- *   9. Every CONTROL script of package.json is either run by a workflow of this
- *      repo, or declared in `harness/controls.json` with where it runs and why.
- *      `content:figures:check` existed since #451 and was called by NOTHING, in
- *      either repo: months of red nobody could see, on 32 findings not one of
- *      which was true. Half the controls live in the PRIVATE corpus CI, which
- *      this repo cannot read — so declaration is the honest mechanism. `--corpus
- *      <dir>` turns a `privé:*` declaration into a verification, for whoever has
- *      both repos at hand; it is wired into no workflow yet (harness/controls.json
- *      says why), so those declarations are taken on trust.
- *  10. Every COUNTER a document declares is recomputed (#1039, lot 1). `STATUS.md`
- *      said « 41 skills pédagogiques » while the corpus carried 43; nothing read the
- *      number. A count wrapped as `<!--count:NAME-->N<!--/count-->` (HTML comments
- *      do not render) names the FACT that verifies it: `engine-skills`, `features`
- *      here, `corpus-skills` only under `--corpus` — elsewhere the marker is read,
- *      not judged, exactly like a `privé:*` control declaration. Contradiction,
- *      never exhaustivity (#994): a number WITHOUT a marker is nobody's business.
- *  11. A workflow step that WRITES the lockfile gets the npm the writer demands.
- *      `apply-patch-minor.mjs` refuses npm 11 (it rewrites cross-platform native
- *      bindings) and `setup-node` with `node-version: 24` ships npm 11.19: since
- *      #975 made that switch, upgrade-guard applied ZERO lots in 18 days. Each
- *      piece was sound — the script, its unit test, the workflow — only the joint
- *      was not, and nothing looked at joints. It went unseen because the guard
- *      reports `success` on every day the cadence does not fire: 45 runs, 4
- *      attempts, 0 successes. A green that means « nothing was evaluated ».
+ *   1. `CLAUDE.md` stays a thin `@AGENTS.md` import ............ checkPointer
+ *   2. `AGENTS.md` stays in budget, its feature inventory true .. checkAgentsSize, checkFeatureInventory
+ *   3. No hidden Unicode on the instruction/harness surface ...... findSuspiciousInvisibles
+ *   4. No model id outside `harness/models.json` ................ findModelIds
+ *   5. `harness/*.json` parse; every policy family has a reason . isJsonValid, checkPolicyReasons
+ *   6. Generated views match `harness:sync` ...................... buildViews (sync.mjs)
+ *   7. Actions pinned to a SHA; `gh` knows its repo; lockfile
+ *      writers run npm 10 ....................................... findUnpinnedActions, findGhWithoutRepo, findApplyWithoutNpm10
+ *   8. `.github/**` YAML parses strictly ......................... check-workflow-yaml.mjs
+ *   9. Every control script is run by a workflow or declared ..... checkControlCoverage (+ harness/controls.json)
+ *  10. Every `<!--count:…-->` marker equals its fact ............. checkDeclaredCounts
+ *  11. Scripts `.ts` are really typechecked ...................... checkScriptsTypecheck
  *
- * Driven by `.github/workflows/ci.yml` (job `verify`) and `npm run ci:verify`.
- * Pure helpers are exported and unit-tested; `main()` does the filesystem walk and
- * runs only when this file is executed directly.
+ * `--corpus <dir>` judges the PRIVATE corpus instead (collectCorpusProblems), called by its
+ * Content CI. Driven by `ci.yml` (job `verify`) and `npm run verify`/`ci:verify`.
  *
- *   node scripts/harness/check.mjs
+ *   node scripts/harness/check.mjs [--corpus <dir>]
  */
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
@@ -67,8 +31,11 @@ import { buildViews } from "./sync.mjs";
 
 const ROOT = join(import.meta.dirname, "..", "..");
 
-export const AGENTS_MD_MAX_LINES = 250;
-export const AGENTS_MD_MAX_BYTES = 24 * 1024;
+// Resserré le 2026-09-22 (250 lignes / 24 Kio → 200 / 16 Kio) quand AGENTS.md est redescendu à
+// ~160 lignes / 10 Kio : le plafond ne sert qu'à empêcher la repousse — ~200 lignes est le seuil
+// d'adhérence observé, et Codex tronque à 32 Kio.
+export const AGENTS_MD_MAX_LINES = 200;
+export const AGENTS_MD_MAX_BYTES = 16 * 1024;
 
 /** CLAUDE.md must stay a pointer: contain the `@AGENTS.md` import. */
 export function checkPointer(claudeMdContent) {
