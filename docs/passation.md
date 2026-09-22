@@ -212,6 +212,34 @@ aucun gate — aucun n'est automatisable, c'est justement pourquoi ils sont écr
 6. **Les branches.** La branche distante est supprimée au merge ; ramener la locale sur
    `origin/main` plutôt que la laisser pointer un commit pré-squash. Aucune branche
    `wip/`/`rescue/` orpheline oubliée derrière soi.
+
+   ⚠️ **En session cloud, on ne PEUT pas supprimer une branche distante** — mesuré le
+   2026-09-22, les deux voies sont murées : `git push origin --delete <b>` meurt en
+   `send-pack: unexpected disconnect while reading sideband packet`, et l'API répond
+   **`403 — Write access to this GitHub API path is not permitted through this proxy`**.
+   Ce n'est pas un échec transitoire : c'est un mur du proxy (cf.
+   [agents/zero-intervention.md](./agents/zero-intervention.md) § le tableau des murs).
+   **Ce que la chaîne fait, elle**, le fait très bien : `automerge` merge en
+   `--squash --delete-branch`, donc une branche **mergée** disparaît toute seule.
+
+   Conséquence pratique : la seule branche qu'une session cloud peut laisser derrière elle
+   est une branche **non mergée** — et elle ne pourra pas la nettoyer. D'où la règle : ne
+   pousser une branche que lorsqu'elle porte un commit destiné à une PR. Une branche poussée
+   par accident (un `git checkout -b` pendant qu'une tâche de fond tenait des modifications
+   non committées, vu ce même jour) reste visible jusqu'à ce qu'un humain la supprime. La
+   **constater et la nommer** dans la réponse de clôture fait donc partie du travail ; la
+   passer sous silence, non. Pour vérifier qu'une telle branche est bien sans apport — et
+   non simplement périmée :
+
+   ```bash
+   base=$(git merge-base origin/main origin/<branche>)
+   git log --oneline "$base"..origin/<branche>   # vide ⇒ aucun commit propre
+   ```
+
+   ⚠️ **Jamais `git diff origin/main origin/<branche>`** pour ce jugement : `main` avance, et
+   une branche vide y affiche des milliers de suppressions qui ne sont que le retard de sa
+   base. C'est la même erreur de lecture que « juger une garde à la couleur du run ».
+
 7. **Le savoir découvert est écrit dans le dépôt** — un piège, une règle de conduite, un
    invariant : AGENTS.md, `STATUS.md` ou `docs/agents/`. La mémoire privée d'un outil ne se
    partage pas (AGENTS.md § Multi-agent collaboration).
