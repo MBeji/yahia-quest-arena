@@ -399,3 +399,36 @@ La barre AA est à 4,5:1 ; en dessous de ~1,5:1 il n'y a **rien** à voir sur du
 **tamponne sur chaque page** du PDF. La bulle IA (`ai-launcher.tsx`) le faisait, par-dessus le
 cours, pour tout élève connecté — d'où son `print:hidden`, comme l'en-tête, le sommaire et les
 appels à l'action du lecteur.
+
+## Règles laissées par les chantiers d'août-septembre 2026
+
+Sorties de `STATUS.md` le 2026-09-22 (son § 6 les portait) ; le détail et les mesures sont dans
+les PR citées. Chacune est tenue par un test ou un garde-fou — ne pas les défaire.
+
+- **Les surfaces passent par des tokens** (#724, #734) : plus aucun remap ne rattrape un
+  `bg-black` littéral, qui resterait noir sur le thème clair (le thème **par défaut**).
+  `check-design-tokens.mjs` le refuse ; `--surface-1/2/3` sont définis dans chaque thème et un
+  test les épingle dans les deux ; `src/__tests__/theme-contrast.test.ts` rend un contraste de
+  token opposable avant le merge (#786).
+- **Une fonction SQL vivante se SUBSTITUE, elle ne se retape pas** (#818) : `get_daily_plan`
+  retapée à la main réinventait l'algorithme — c'est le `diff` contre la révision vivante qui l'a
+  montré, pas un test. Voir aussi « Un `CREATE OR REPLACE` peut effacer trois lots » plus haut.
+- **Le travail de l'élève est écrit AVANT d'être envoyé** (2026-08-31) : `src/shared/lib/outbox.ts`
+  met la soumission en file locale, la tente, et ne l'en sort qu'acceptée. Une file rejouée exige
+  un serveur idempotent (le rejeu **rend** la tentative au lieu de lever). `outbox.ts` consigne
+  tout échec d'envoi avec sa disposition (« conservé » / « abandonné ») ; le vocabulaire des
+  stages vit dans une seule table, `client-error-stages.ts`.
+- **`ensureFreshSession` est sous mutex** (2026-08-31) : chaque `refreshSession()` fait tourner
+  le refresh token, N rafraîchissements concurrents produisent N-1 jetons morts. La règle ESLint
+  `local/single-browser-supabase-client` tient l'autre moitié : un seul client de navigateur.
+- **`/api/client-log` n'exige aucun jeton, délibérément** (2026-08-31) : il reçoit le récit d'un
+  refus d'authentification, donc d'un jeton cassé. Bornes : placé après `guardRequest` (plafond
+  par IP), corps ≤ 8 ko, table sans policy RLS qui ne nomme personne. Trois tests le figent.
+- **La porte du quiz d'un chapitre n'a qu'UNE définition** (2026-09-04, #1005) :
+  `chapter_quiz_gated` / `chapter_quiz_cleared`, appelées par les quatre lecteurs (dont
+  `start_exercise_session`). Un `LIMIT 1` sans `ORDER BY` tirait « le » quiz au hasard ;
+  l'ordonner aurait rendu la réponse stable **et fausse**. Le pgTAP 96 tient le décor à deux quiz.
+- **Un chiffre de couverture s'affiche avec son recours** (2026-09-04) : « 3/20 chap. » veut dire
+  « maîtrisés », et le suivi liste ce qui manque par chapitre — y compris le quiz expédié
+  (< 4 s/question) qui empêche un chapitre à 6/6 missions de compter. `student_chapter_gaps`
+  reprend les prédicats de `student_parcours_progress`, une assertion pgTAP les confronte.
