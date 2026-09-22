@@ -99,7 +99,50 @@ jobs:
       - name: Run pgTAP integration tests
         # `supabase test db` discovers supabase/tests/*.sql, runs them through
         # pg_prove, and exits non-zero on ANY failing assertion -> fails the job.
-        run: supabase test db
+        id: pgtap
+        # `pipefail` : sans lui, c'est le code de sortie de `tee` qui compte, et
+        # une suite rouge passerait pour verte.
+        run: |
+          set -o pipefail
+          supabase test db 2>&1 | tee /tmp/tap.txt
+
+      # POURQUOI CETTE ÉTAPE EXISTE — 2026-09-22.
+      #
+      # Les journaux d'un runner sont ILLISIBLES depuis une session cloud : GitHub
+      # redirige vers un stockage Azure que le proxy de sortie refuse (403 au
+      # CONNECT, par `gh api` comme par `curl` sur l'URL signée), et les
+      # annotations ne rendent que « Process completed with exit code 1 ». Une
+      # suite de 1 500 assertions qui échoue ne disait donc RIEN d'exploitable :
+      # il a fallu deviner, et c'est la partie la plus chère de la journée.
+      #
+      # Les annotations, elles, SE LISENT par l'API
+      # (`/repos/{o}/{r}/check-runs/{id}/annotations`). Cette étape y recopie donc
+      # les lignes qui nomment la panne — `not ok`, et le diagnostic pgTAP qui
+      # suit. Rien d'autre : un `::error::` par ligne utile, jamais les 1 500.
+      #
+      # Aucune permission de plus (`::error::` est une commande de workflow, pas
+      # un appel d'API), et aucun `gh` — donc pas de `GH_REPO` à déclarer.
+      - name: Rendre l'échec lisible sans accès aux journaux
+        if: failure() && steps.pgtap.conclusion == 'failure'
+        run: |
+          set -uo pipefail
+          if [ ! -s /tmp/tap.txt ]; then
+            echo "::error::La suite a échoué sans produire de sortie TAP — panne d'environnement, pas d'assertion."
+            exit 0
+          fi
+          # `not ok` et les lignes de diagnostic que pgTAP écrit juste après
+          # (« # Failed test », « # got », « # expected », « # Looks like… »).
+          grep -nE '^(not ok|# +(Failed test|got|expected|have|want)|# Looks like|.*\.sql \.+ Dubious)' \
+            /tmp/tap.txt | head -60 > /tmp/utiles.txt || true
+          if [ ! -s /tmp/utiles.txt ]; then
+            echo "::error::Sortie TAP présente mais aucune ligne « not ok » — voir la fin du fichier."
+            tail -20 /tmp/tap.txt > /tmp/utiles.txt || true
+          fi
+          while IFS= read -r ligne; do
+            # Échappement des commandes de workflow : % puis les fins de ligne.
+            esc="${ligne//%/%25}"
+            echo "::error::${esc}"
+          done < /tmp/utiles.txt
 
       - name: Tear down
         if: always()
