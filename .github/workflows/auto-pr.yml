@@ -1,7 +1,7 @@
 name: Auto PR
 
 # Completes the commit→push→merge chain with ZERO human steps (décision
-# 2026-07-12 — CLAUDE.md DoD §8): pushing ANY non-main branch opens its pull
+# 2026-07-12 — AGENTS.md DoD §8): pushing ANY non-main branch opens its pull
 # request READY with auto-merge armed, so it merges alone the moment the
 # ruleset's required checks are green on an up-to-date head (automerge.yml
 # keeps armed heads up to date). Nobody reads, readies or merges by hand — the

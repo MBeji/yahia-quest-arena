@@ -1,6 +1,6 @@
 name: Migration gate
 
-# Two jobs (CLAUDE.md §7). Merging a new `supabase/migrations/*.sql` to `main`
+# Two jobs (AGENTS.md §7). Merging a new `supabase/migrations/*.sql` to `main`
 # AUTO-APPLIES it to the production DB via db-migrate-prod.yml — no human action,
 # no manual SQL. This workflow guards that auto-apply at the PR:
 #
@@ -79,7 +79,7 @@ jobs:
             echo "### Migrations to auto-apply on merge"
             echo ""
             echo "On merge to \`main\`, \`db-migrate-prod.yml\` applies these to PRODUCTION"
-            echo "(pre-apply \`pg_dump\` backup + prod-ref guard). No manual SQL — see CLAUDE.md §7:"
+            echo "(pre-apply \`pg_dump\` backup + prod-ref guard). No manual SQL — see AGENTS.md §7:"
             echo ""
             echo "${migrations}" | sed 's/^/- /'
           } >> "$GITHUB_STEP_SUMMARY"
