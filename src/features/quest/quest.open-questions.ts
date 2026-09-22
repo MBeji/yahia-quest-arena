@@ -29,6 +29,7 @@
 
 import { callAi } from "@/features/ai/ai-call.server";
 import { arbitrateOpenAnswers } from "@/shared/integrations/ai/open-answer.server";
+import type { Database } from "@/shared/integrations/supabase/types";
 import { logger } from "@/shared/lib/logger";
 import { errorMessage } from "@/shared/lib/safe-error";
 
@@ -37,6 +38,27 @@ export const OPEN_QUESTION_TYPE = "short_answer";
 
 /** Une question telle que `getExercise` la sert — seul son type nous intéresse. */
 type ServedQuestion = { question_type?: string | null };
+
+/**
+ * Le client, réduit au SEUL appel dont cette porte a besoin — et dont la forme
+ * vient des types GÉNÉRÉS, donc de la base.
+ *
+ * Deux raisons de ne pas demander ici un `SupabaseClient<Database>` entier :
+ * la porte n'utilise qu'une RPC, et exiger le client complet obligerait son
+ * test à en monter une contrefaçon entière pour exercer dix lignes. Ce qui
+ * compte est que `p_student` et le type de retour ne soient plus recopiés à la
+ * main : ils l'ont été tant que la RPC était plus récente que `types.ts`, et
+ * le commentaire qui le justifiait a survécu à sa raison (#1074).
+ */
+export type OpenQuestionsGate = {
+  rpc: (
+    fn: "can_play_open_questions",
+    args: Database["public"]["Functions"]["can_play_open_questions"]["Args"],
+  ) => PromiseLike<{
+    data: Database["public"]["Functions"]["can_play_open_questions"]["Returns"] | null;
+    error: { message: string } | null;
+  }>;
+};
 
 /**
  * La porte, lue en base — jamais recalculée ici.
@@ -53,23 +75,13 @@ type ServedQuestion = { question_type?: string | null };
  * exactement ce que l'arbitrage du propriétaire interdit.
  */
 export async function canPlayOpenQuestions(
-  supabase: unknown,
+  supabase: OpenQuestionsGate,
   userId: string | null | undefined,
 ): Promise<boolean> {
   if (!userId) return false;
 
-  // Contrat figé ici : la fonction est postérieure aux types Supabase générés,
-  // qui ne peuvent pas l'être sans accès à une base (patron de
-  // `auth.exportUserData`).
-  const client = supabase as {
-    rpc: (
-      fn: "can_play_open_questions",
-      args: { p_student: string },
-    ) => PromiseLike<{ data: boolean | null; error: { message: string } | null }>;
-  };
-
   try {
-    const { data, error } = await client.rpc("can_play_open_questions", { p_student: userId });
+    const { data, error } = await supabase.rpc("can_play_open_questions", { p_student: userId });
     if (error) {
       logger.warn("quest.openQuestions.gate", { error: error.message });
       return false;

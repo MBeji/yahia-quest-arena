@@ -32,6 +32,7 @@
 import { logger } from "@/shared/lib/logger";
 import { errorMessage } from "@/shared/lib/safe-error";
 import { supabaseAdmin } from "@/shared/integrations/supabase/client.server";
+import type { Database } from "@/shared/integrations/supabase/types";
 import {
   buildOpenAnswerBlocks,
   readOpenAnswerVerdict,
@@ -65,38 +66,13 @@ export type OpenAnswerJudge = (request: {
   { ok: true; text: string; model: string } | { ok: false; code: string } | { ok: boolean }
 >;
 
-type CandidateRow = {
-  question_id: string;
-  prompt: string;
-  expected: string;
-  choice: string;
-  content_language: string;
-};
-
 /**
- * Le contrat des deux RPC, figé ici : elles sont postérieures aux types Supabase
- * générés, qui ne peuvent pas l'être sans accès à une base (même patron que
- * `auth.exportUserData`). Les deux sont réservées au `service_role` — d'où
- * `supabaseAdmin` et pas le client de l'élève.
+ * La ligne rendue par `ai_open_answer_candidates`, prise du type GÉNÉRÉ. Elle
+ * a été décrite à la main tant que la RPC était plus récente que `types.ts` ;
+ * elle y est depuis, et c'est la base qui doit dire sa forme — une colonne qui
+ * bouge casse alors ici, au `tsc`, et non à l'exécution.
  */
-type OpenAnswerAdmin = {
-  rpc: {
-    (
-      fn: "ai_open_answer_candidates",
-      args: { p_student: string; p_answers: unknown },
-    ): PromiseLike<{ data: CandidateRow[] | null; error: { message: string } | null }>;
-    (
-      fn: "record_ai_open_answer_verdict",
-      args: {
-        p_student: string;
-        p_question: string;
-        p_choice: string;
-        p_accepted: boolean;
-        p_model: string;
-      },
-    ): PromiseLike<{ data: boolean | null; error: { message: string } | null }>;
-  };
-};
+type CandidateRow = Database["public"]["Functions"]["ai_open_answer_candidates"]["Returns"][number];
 
 const LANGS: ReadonlySet<string> = new Set(["fr", "en", "ar"]);
 
@@ -131,14 +107,12 @@ export async function arbitrateOpenAnswers(input: {
   const { studentUserId, answers, judge } = input;
   if (answers.length === 0) return;
 
-  const admin = supabaseAdmin as unknown as OpenAnswerAdmin;
-
   let rows: CandidateRow[];
   try {
     // C'est la BASE qui décide ce qu'il reste à arbitrer : la porte du lot 1, le
     // test d'appartenance, la normalisation et le cache sont quatre règles qui
     // vivent en SQL (é20 D-3). Les rejouer ici, c'est la divergence garantie.
-    const { data, error } = await admin.rpc("ai_open_answer_candidates", {
+    const { data, error } = await supabaseAdmin.rpc("ai_open_answer_candidates", {
       p_student: studentUserId,
       p_answers: answers.map((a) => ({ questionId: a.questionId, choice: a.choice })),
     });
@@ -191,7 +165,7 @@ export async function arbitrateOpenAnswers(input: {
     if (verdict === null) continue;
 
     try {
-      const { data: recorded, error } = await admin.rpc("record_ai_open_answer_verdict", {
+      const { data: recorded, error } = await supabaseAdmin.rpc("record_ai_open_answer_verdict", {
         p_student: studentUserId,
         p_question: candidate.questionId,
         p_choice: candidate.choice,
