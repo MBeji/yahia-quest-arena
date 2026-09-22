@@ -13,7 +13,10 @@
  *             everything the declared ranges cannot reach (major boundaries AND 0.x lines),
  *             groups what MUST move together, and writes a machine-readable plan (+ a
  *             ready-to-post PR body).
- *   apply   → `npm update <planned…>` then a full `npm install` to normalise the lockfile.
+ *   apply   → `npm update <planned…>` then a full `npm install` to normalise the lockfile. When
+ *             the lot fails, it drops what sinks it — the dependent an ERESOLVE names, else each
+ *             package that fails on its own — and retries, saying in the plan and the PR body
+ *             what was dropped and why (#1092). One bad package no longer sinks forty.
  *
  * WHAT STAYS IA (§4.4/§4.6), and why:
  *   - **majors**: reading a changelog, judging a breaking change, writing the migration. The
@@ -272,6 +275,171 @@ export function assertOverridesUnchanged(before, after) {
   return true;
 }
 
+/**
+ * ERESOLVE — un conflit de peer dans le lot (#1092). `npm update` porte TOUT le lot en une
+ * commande : une seule paire incompatible le fait sortir en `ERESOLVE`, et ce sont alors les
+ * 40 montées saines qui coulent avec elle. Mesuré le 2026-09-22 : `react` 19.2 → 19.3 et
+ * `@react-three/fiber` 9.6 → 9.7 (peer `react ">=19 <19.3"`), chacune passant seule.
+ *
+ * Le geste d'un mainteneur, rendu déterministe : écarter du lot le paquet dont la contrainte
+ * de peer ne tient pas — le DÉPENDANT (« While resolving: X », « peer … from X »), pas la
+ * dépendance : c'est lui qui retarde, et la dépendance reste montable. Si aucun dépendant
+ * n'est dans le lot, on écarte tout ce que l'erreur nomme et qui en fait partie. Rien de
+ * nommé dans le lot → `updateWithConflictRetry` passe à l'essai paquet par paquet.
+ */
+const NPM_PKG_AT = /(@?[a-z0-9][\w.~-]*(?:\/[a-z0-9][\w.~-]*)?)@/gi;
+
+/**
+ * The TOP-LEVEL lines of npm's error, prefix stripped. Indented lines are the dependency chain
+ * npm prints as context (« peer react@"^19.3.0" from react-dom@19.3.0 » is a peer that HOLDS);
+ * reading them would blame packages that are not in conflict.
+ */
+function eresolveTopLines(stderr) {
+  return String(stderr ?? "")
+    .split("\n")
+    .map((l) => l.replace(/^npm (?:error|ERR!) ?/, ""))
+    .filter((l) => l.trim() !== "" && !/^\s/.test(l))
+    .map((l) => l.trim());
+}
+
+const nameOfSpec = (spec) => /^(@?[^@]+)@/.exec(spec)?.[1] ?? null;
+
+export function eresolveCulprits(stderr, lotNames) {
+  const lot = new Set(lotNames);
+  const dependents = new Set();
+  const named = new Set();
+  for (const line of eresolveTopLines(stderr)) {
+    const resolving = /^While resolving:\s+(\S+)/.exec(line);
+    const peerFrom = /^peer\s.*\sfrom\s+(\S+)/.exec(line);
+    for (const m of [resolving, peerFrom]) {
+      const name = m && nameOfSpec(m[1]);
+      if (name) dependents.add(name);
+    }
+    if (/^(While resolving:|Found:|peer\s|Conflicting peer dependency:)/.test(line)) {
+      for (const m of line.matchAll(NPM_PKG_AT)) named.add(m[1]);
+    }
+  }
+  const inLot = (set) => [...set].filter((n) => lot.has(n)).sort();
+  const culprits = inLot(dependents);
+  return culprits.length > 0 ? culprits : inLot(named);
+}
+
+/** La ligne de l'erreur qui dit POURQUOI (« peer react@">=19 <19.3" from … »), pour le corps de PR. */
+export function eresolveReason(stderr) {
+  return eresolveTopLines(stderr).find((l) => /^peer\s.*\sfrom\s/.test(l)) ?? null;
+}
+
+/** Le plan sans `names`, qui passent dans `excluded` avec leur raison — la PR dit ce qui a été écarté. */
+export function dropFromPlan(plan, names, reason) {
+  const drop = new Set(names);
+  const dropped = plan.patchMinor.filter((p) => drop.has(p.name));
+  const patchMinor = plan.patchMinor.filter((p) => !drop.has(p.name));
+  const excluded = [
+    ...plan.excluded,
+    ...dropped.map((p) => ({ name: p.name, current: p.from, wanted: p.to, kind: p.kind, reason })),
+  ];
+  return {
+    ...plan,
+    patchMinor,
+    excluded,
+    counts: { ...plan.counts, patchMinor: patchMinor.length, excluded: excluded.length },
+  };
+}
+
+/** Combien de fois on écarte des coupables avant de rendre la main : au-delà, ce n'est plus un cas isolé. */
+export const MAX_CONFLICT_RETRIES = 3;
+
+/** First meaningful line of npm's error output, for the PR body. */
+function firstNpmError(stderr) {
+  return (
+    String(stderr ?? "")
+      .split("\n")
+      .map((l) => l.replace(/^npm (?:error|ERR!) ?/, "").trim())
+      .find((l) => l && !/^(code |A complete log|ERESOLVE could not resolve)/.test(l)) ?? "échec"
+  );
+}
+
+/**
+ * Les paquets du lot qui échouent SEULS. C'est le filet quand l'erreur ne nomme personne :
+ * le 2026-09-22, `vite` 8.2 → 8.3 faisait planter npm 10 lui-même (`Cannot read properties of
+ * null (reading 'edgesOut')`, dans `#loadPeerSet`) — pas d'ERESOLVE, rien à lire, et le lot
+ * entier coulait encore. `restore()` remet package.json et le lockfile entre deux essais.
+ */
+export function isolateFailures(names, run, restore, log = console.log) {
+  const failing = [];
+  for (const name of names) {
+    restore();
+    try {
+      run(["update", name]);
+    } catch (err) {
+      const why = firstNpmError(err?.stderr);
+      log(`[deps]   ${name} fails on its own: ${why}`);
+      failing.push({ name, why });
+    }
+  }
+  restore();
+  return failing;
+}
+
+/**
+ * `npm update` du lot, en écartant ce qui le fait couler. `run(args)` lève comme `execFileSync`
+ * (avec `.stderr`) ; `restore()` remet package.json et le lockfile dans leur état d'avant.
+ * Deux parades, dans cet ordre : un ERESOLVE qui nomme son dépendant (#1092), sinon l'essai
+ * paquet par paquet. Rend le plan effectivement appliqué ; lève si rien n'est identifiable.
+ */
+export function updateWithConflictRetry(plan, run, log = console.log, restore = () => {}) {
+  let current = plan;
+  for (let attempt = 0; ; attempt++) {
+    const names = current.patchMinor.map((p) => p.name);
+    if (names.length === 0) {
+      throw new Error("every package of the lot was dropped — nothing left to apply.");
+    }
+    log(`[deps] npm update ${names.join(" ")}`);
+    let stderr;
+    try {
+      run(["update", ...names]);
+      return current;
+    } catch (err) {
+      stderr = String(err?.stderr ?? "");
+      if (attempt >= MAX_CONFLICT_RETRIES) {
+        throw new Error(
+          `the lot still fails after ${MAX_CONFLICT_RETRIES} round(s) of drops — hand it to the agent.\n${stderr}`,
+        );
+      }
+    }
+    restore();
+
+    const culprits = /ERESOLVE/.test(stderr) ? eresolveCulprits(stderr, names) : [];
+    if (culprits.length > 0) {
+      const why = eresolveReason(stderr);
+      log(
+        `[deps] ERESOLVE — dropping ${culprits.join(", ")} from the lot${why ? ` (${why})` : ""}`,
+      );
+      current = dropFromPlan(
+        current,
+        culprits,
+        `conflit de peer (ERESOLVE)${why ? ` : \`${why}\`` : ""} — écarté pour laisser passer le reste du lot`,
+      );
+      continue;
+    }
+
+    log(`[deps] the lot fails (${firstNpmError(stderr)}) — trying each package on its own`);
+    const failing = isolateFailures(names, run, restore, log);
+    if (failing.length === 0) {
+      throw new Error(
+        `the lot fails but every package passes on its own — an interaction npm does not name; hand it to the agent.\n${stderr}`,
+      );
+    }
+    for (const { name, why } of failing) {
+      current = dropFromPlan(
+        current,
+        [name],
+        `\`npm update ${name}\` échoue seul (\`${why}\`) — écarté pour laisser passer le reste du lot`,
+      );
+    }
+  }
+}
+
 function emitOutput(key, value) {
   const file = process.env.GITHUB_OUTPUT;
   if (file) appendFileSync(file, `${key}=${value}\n`);
@@ -300,6 +468,21 @@ const npm = (args) =>
     stdio: ["ignore", "pipe", "inherit"],
     shell: process.platform === "win32",
   });
+
+/** Same, with stderr CAPTURED (then echoed) — `updateWithConflictRetry` needs to read ERESOLVE. */
+const npmCapturingStderr = (args) => {
+  try {
+    const out = execFileSync("npm", args, {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+      shell: process.platform === "win32",
+    });
+    return out;
+  } catch (err) {
+    if (err?.stderr) process.stderr.write(String(err.stderr));
+    throw err;
+  }
+};
 
 /** npm's own package-name grammar — the only thing this script ever passes to `npm update`. */
 const SAFE_PACKAGE_NAME = /^(?:@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/;
@@ -391,8 +574,18 @@ function apply() {
   assertLockfileSafeNpm(npm(["--version"]).trim());
   const overridesBefore = JSON.parse(readFileSync("package.json", "utf8")).overrides;
 
-  console.log(`[deps] npm update ${names.join(" ")}`);
-  npm(["update", ...names]);
+  const manifests = ["package.json", "package-lock.json"].map((f) => [f, readFileSync(f, "utf8")]);
+  const restore = () => {
+    for (const [f, text] of manifests) writeFileSync(f, text, "utf8");
+  };
+  const applied = updateWithConflictRetry(plan, npmCapturingStderr, console.log, restore);
+  if (applied.patchMinor.length !== plan.patchMinor.length) {
+    // The plan and the PR body are what the workflow commits and posts: they must say what
+    // was really applied, and what was dropped and why.
+    writeFileSync(planPath, `${JSON.stringify(applied, null, 2)}\n`, "utf8");
+    const bodyPath = argValue("--pr-body");
+    if (bodyPath) writeFileSync(bodyPath, renderPrBody(applied, argValue("--date") ?? "—"), "utf8");
+  }
   // Full install (never --package-lock-only): the lockfile must be normalised the way `npm ci`
   // will read it back in CI.
   console.log("[deps] npm install (normalising the lockfile)");
@@ -402,8 +595,14 @@ function apply() {
     overridesBefore,
     JSON.parse(readFileSync("package.json", "utf8")).overrides,
   );
-  console.log(`[deps] applied ${names.length} in-range upgrade(s); overrides intact.`);
-  return plan;
+  console.log(
+    `[deps] applied ${applied.patchMinor.length} in-range upgrade(s)` +
+      (applied.patchMinor.length !== names.length
+        ? `, ${names.length - applied.patchMinor.length} dropped (see the plan)`
+        : "") +
+      "; overrides intact.",
+  );
+  return applied;
 }
 
 // CLI only — the pure helpers above stay importable from tests.
@@ -414,7 +613,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     else if (mode === "apply") apply();
     else {
       console.error(
-        "usage: apply-patch-minor.mjs <detect|apply> [--out plan.json] [--pr-body body.md] [--plan plan.json] [--hold pkg,pkg] [--date YYYY-MM-DD]",
+        "usage: apply-patch-minor.mjs <detect|apply> [--out plan.json] [--pr-body body.md] [--plan plan.json [--pr-body body.md --date D]] [--hold pkg,pkg] [--date YYYY-MM-DD]",
       );
       process.exit(2);
     }
