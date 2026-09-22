@@ -262,3 +262,49 @@ Les deux qui marchent déclaraient `GH_REPO`, la nouvelle non.
 
   Un `uses:` qui repasserait à un tag mouvant est un retour en arrière : c'est un point de
   vigilance en revue (le dépôt n'en contient plus aucun).
+
+## Le vert qui ne prouve rien — troisième piège du 2026-09-22
+
+Les deux premiers pièges du jour (le `gh` sans `GH_REPO`, les logs de runner illisibles depuis le
+cloud) sont au-dessus. Celui-ci est le plus coûteux, parce qu'il **ne laisse pas de rouge**.
+
+`upgrade-guard.yml` n'a **pas appliqué un seul lot de dépendances pendant dix-huit jours**, et
+son historique affichait très majoritairement `success`. Mesuré sur ses 45 derniers runs :
+
+|  runs | ce que l'étape `apply` a fait                                   |
+| ----: | --------------------------------------------------------------- |
+|    41 | **`skipped`** — la cadence n'avait pas tiré, rien n'a été tenté |
+|     4 | **`failure`** — 2026-08-21, 09-15, 09-18, 09-22                 |
+| **0** | succès                                                          |
+
+La cause des trois derniers est une **jointure**, pas une pièce : `scripts/deps/apply-patch-minor.mjs`
+refuse d'écrire le lockfile sous npm 11 (il réécrit les bindings natifs multi-plateformes), son
+test unitaire le vérifie depuis toujours — et #975 a fait passer le workflow à `node-version: 24`
+le 2026-09-04, qui livre **npm 11.19**. Le garde-fou du script est devenu la panne du workflow,
+le jour même où le workflow lui a retiré ce qu'il exigeait. Chaque pièce était juste.
+
+**Ce qu'il faut en retenir, et qui vaut pour toute garde :**
+
+1. **Un `success` de workflow ne dit pas « ça marche ».** Il dit « aucun job n'a échoué » — ce qui
+   inclut « rien n'a tourné ». C'est exactement le piège des runs « zéro job » du dépôt de contenu,
+   qui a coûté trois fois là-bas. Pour juger une garde, ne pas lire sa **conclusion** : lire la
+   **conclusion de l'étape qui fait le travail**.
+
+   ```bash
+   # pour chaque run : ce que l'étape utile a VRAIMENT fait
+   gh api repos/<o>/<r>/actions/runs/<id>/jobs \
+     --jq '.jobs[].steps[] | select(.name=="<l_étape>") | .conclusion'
+   ```
+
+   Une garde dont l'étape utile n'a jamais rendu `success` n'a jamais fonctionné, quel que soit
+   le vert de la colonne.
+
+2. **Quand un script refuse une version d'outil, l'invariant est que le workflow la lui donne.**
+   Un test unitaire sur le refus ne prouve rien du runner. Cet invariant-là est mécanisé :
+   `findApplyWithoutNpm10` dans `scripts/harness/check.mjs` fait **échouer la CI** si une étape
+   écrit le lockfile sans npm 10 dans son job. Il vérifie aussi l'**ordre** — un pin posé après
+   l'apply ne sert à rien.
+
+3. **Monter le Node d'un workflow change son npm.** Node ≤ 22 livre npm 10, Node ≥ 23 livre
+   npm 11 (`https://nodejs.org/dist/index.json`, champ `npm`). Toute bascule de `node-version`
+   est aussi une bascule de gestionnaire de paquets, et c'est rarement ce qu'on avait en tête.

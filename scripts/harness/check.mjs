@@ -42,6 +42,14 @@
  *      here, `corpus-skills` only under `--corpus` — elsewhere the marker is read,
  *      not judged, exactly like a `privé:*` control declaration. Contradiction,
  *      never exhaustivity (#994): a number WITHOUT a marker is nobody's business.
+ *  11. A workflow step that WRITES the lockfile gets the npm the writer demands.
+ *      `apply-patch-minor.mjs` refuses npm 11 (it rewrites cross-platform native
+ *      bindings) and `setup-node` with `node-version: 24` ships npm 11.19: since
+ *      #975 made that switch, upgrade-guard applied ZERO lots in 18 days. Each
+ *      piece was sound — the script, its unit test, the workflow — only the joint
+ *      was not, and nothing looked at joints. It went unseen because the guard
+ *      reports `success` on every day the cadence does not fire: 45 runs, 4
+ *      attempts, 0 successes. A green that means « nothing was evaluated ».
  *
  * Driven by `.github/workflows/ci.yml` (job `verify`) and `npm run ci:verify`.
  * Pure helpers are exported and unit-tested; `main()` does the filesystem walk and
@@ -708,6 +716,62 @@ export function findPhantomProneTriggers(text) {
  * dossier est alors un dépôt git avec sa remote), un `GH_REPO` en env (du workflow ou
  * du job), ou un `-R`/`--repo` sur la ligne elle-même.
  */
+/**
+ * Un script qui REFUSE une version d'outil doit la recevoir : sinon le garde-fou du script
+ * devient la panne du workflow. `scripts/deps/apply-patch-minor.mjs` n'écrit le lockfile que
+ * sous **npm 10** (npm 11 réécrit les bindings natifs multi-plateformes) — or `setup-node`
+ * avec `node-version: 24` livre npm 11.x.
+ *
+ * ⚠️ C'est un défaut de JOINTURE, pas de pièce : le script était juste, son test unitaire
+ * vert, le workflow valide — et la garde nocturne n'a pas appliqué un seul lot pendant
+ * 18 jours (#975 a basculé le workflow sur Node 24 le 2026-09-04 ; les runs du 09-15, 09-18
+ * et 09-22 ont tous échoué là). Personne ne l'a vu parce que la garde sort « success » les
+ * jours où la cadence ne tire pas : sur 45 runs, 4 tentatives, 0 réussite.
+ *
+ * Le contrôle : tout `run:` qui appelle `apply-patch-minor.mjs apply` doit être précédé,
+ * dans le même job, d'une étape qui pose npm 10 — ou tourner sur un Node qui l'embarque.
+ */
+export function findApplyWithoutNpm10(text) {
+  let doc;
+  try {
+    doc = parseYaml(text);
+  } catch {
+    return []; // Le YAML illisible est déjà le métier de `checkYamlFiles`.
+  }
+  const jobs = doc?.jobs;
+  if (!jobs || typeof jobs !== "object") return [];
+
+  const ECRIT_LE_LOCKFILE = /apply-patch-minor\.mjs\s+apply\b/;
+  const POSE_NPM_10 = /npm\s+(i|install)\s+-g\s+npm@10\b/;
+  // Node 22 et avant embarquent npm 10 ; 23+ embarquent npm 11 (mesuré sur nodejs.org/dist).
+  const NODE_AVEC_NPM_10 = /^(1[0-9]|2[0-2])(\.|$)/;
+
+  const out = [];
+  for (const [jobName, job] of Object.entries(jobs)) {
+    if (!job || typeof job !== "object") continue;
+    const steps = Array.isArray(job.steps) ? job.steps : [];
+
+    let npm10Pose = false;
+    for (const [i, st] of steps.entries()) {
+      if (typeof st?.uses === "string" && st.uses.startsWith("actions/setup-node@")) {
+        const v = String(st?.with?.["node-version"] ?? "");
+        npm10Pose = NODE_AVEC_NPM_10.test(v);
+        continue;
+      }
+      const run = typeof st?.run === "string" ? st.run : null;
+      if (run === null) continue;
+      if (POSE_NPM_10.test(run)) {
+        npm10Pose = true;
+        continue;
+      }
+      if (ECRIT_LE_LOCKFILE.test(run) && !npm10Pose) {
+        out.push({ job: jobName, step: st.name ?? `#${i + 1}` });
+      }
+    }
+  }
+  return out;
+}
+
 export function findGhWithoutRepo(text) {
   let doc;
   try {
@@ -1007,6 +1071,15 @@ function main() {
           "ou `-R <owner>/<repo>` sur la ligne.",
       );
     }
+    for (const hit of findApplyWithoutNpm10(content)) {
+      problems.push(
+        `${rel(workflow)}: job \`${hit.job}\`, étape \`${hit.step}\` écrit le lockfile via ` +
+          "`apply-patch-minor.mjs apply` sans npm 10 dans le job — le script REFUSE npm 11, " +
+          "et `setup-node` avec `node-version: 24` livre npm 11.x. Ajouter une étape " +
+          "`npm i -g npm@10` avant, sinon l'étape échoue à chaque lot (mesuré : 4 tentatives, " +
+          "0 réussite, 18 jours sans que personne le voie).",
+      );
+    }
   }
 
   // 5ter. Les scripts .ts sont réellement typés (étude 32, C-15).
@@ -1141,6 +1214,7 @@ function main() {
       "[harness:check] OK — pointers intact, AGENTS.md in budget et son inventaire de " +
         "features à jour, no hidden Unicode, " +
         "no stray model ids, Actions pinned to SHAs, chaque `gh` sait sur quel dépôt il travaille, " +
+        "le lockfile ne s'écrit que sous npm 10, " +
         ".github YAML parses strictly, chaque contrôle exécuté ou déclaré, " +
         "generated views in sync.",
     );
