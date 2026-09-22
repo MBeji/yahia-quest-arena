@@ -160,9 +160,43 @@ jobs:
       # lockfile. The script itself refuses to run under npm 11 and aborts if the
       # `overrides` block (the global esbuild security pin) moved — the two lockfile traps
       # are now enforced, not merely written in the skill.
-      - name: Apply the patch/minor lot
+      # `node-version: 24` above ships npm 11.x, and apply-patch-minor.mjs REFUSES to write the
+      # lockfile under it (npm 11 rewrites cross-platform native bindings). The lockfile writer
+      # therefore gets its own npm; everything else stays on the repo's Node 24.
+      #
+      # ⚠️ Mesuré le 2026-09-22 : depuis que ce workflow est passé à Node 24 (#975, 2026-09-04),
+      # les TROIS runs qui ont atteint l'étape suivante ont échoué ici — 09-15, 09-18, 09-22.
+      # Les runs verts entre les deux ne prouvent rien : la cadence n'avait pas tiré et l'étape
+      # était `skipped`. Sur 45 runs, l'apply n'a été tenté que 4 fois et n'a JAMAIS abouti.
+      # C'est le même piège que les runs « zéro job » du dépôt de contenu : un vert qui dit
+      # « rien n'a été évalué », pas « ça marche ».
+      - name: Pin npm 10 for the lockfile write
         if: steps.cadence.outputs.run == 'true' && steps.detect.outputs.has_patch_minor == 'true'
-        run: node scripts/deps/apply-patch-minor.mjs apply --plan "$RUNNER_TEMP/upgrade-plan.json"
+        run: npm i -g npm@10
+
+      - name: Apply the patch/minor lot
+        id: apply
+        if: steps.cadence.outputs.run == 'true' && steps.detect.outputs.has_patch_minor == 'true'
+        run: |
+          set -o pipefail
+          echo "node $(node -v) · npm $(npm -v)"
+          node scripts/deps/apply-patch-minor.mjs apply --plan "$RUNNER_TEMP/upgrade-plan.json" \
+            2>&1 | tee "$RUNNER_TEMP/apply.log"
+
+      # Les logs du runner sont ILLISIBLES depuis une session cloud (GitHub redirige vers
+      # `productionresultssa*.blob.core.windows.net`, que le proxy de sortie refuse). Les
+      # annotations, elles, se lisent par l'API — c'est le seul canal. Sans cette étape, cet
+      # échec-ci ne disait que « Process completed with exit code 1 », et il a tenu 18 jours.
+      - name: Pourquoi l'apply a échoué (annotations — cf. docs/agents/gardes.md)
+        if: failure() && steps.apply.outcome == 'failure'
+        run: |
+          echo "::error::apply-patch-minor a échoué sous node $(node -v) / npm $(npm -v)"
+          if [ -s "$RUNNER_TEMP/apply.log" ]; then
+            grep -iE 'error|abort|refus|cannot|EBADENGINE|ERESOLVE' "$RUNNER_TEMP/apply.log" \
+              | head -20 | while IFS= read -r ligne; do echo "::error::${ligne}"; done
+          else
+            echo "::error::aucune sortie capturée — l'échec précède le script lui-même"
+          fi
 
       # The gate decides, exactly as it does for a human PR. Non-blocking here: a red gate
       # is a legitimate outcome (draft PR + the agent's repair mode below), not a job crash.

@@ -25,6 +25,7 @@ import {
   AGENTS_MD_WARN_RATIO,
   findSuspiciousInvisibles,
   findGhWithoutRepo,
+  findApplyWithoutNpm10,
   findPhantomProneTriggers,
   collectCorpusProblems,
   checkPolicyReasons,
@@ -573,6 +574,102 @@ describe("checkAgentsSize — avertir avant de bloquer", () => {
     const size = checkAgentsSize(line(AGENTS_MD_MAX_LINES + 10));
     expect(size.ok).toBe(false);
     expect(size.warnings).toEqual([]);
+  });
+});
+
+describe("findApplyWithoutNpm10 — le script refuse un npm que le workflow lui sert quand même", () => {
+  // Ce n'est pas une hypothèse non plus. `apply-patch-minor.mjs` n'écrit le lockfile que sous
+  // npm 10, son test unitaire le vérifie depuis toujours — et #975 a basculé `upgrade-guard.yml`
+  // sur `node-version: 24`, qui livre npm 11.19. Résultat mesuré le 2026-09-22 sur 45 runs :
+  // l'étape `apply` n'a été TENTÉE que 4 fois (2026-08-21, 09-15, 09-18, 09-22) et a échoué les
+  // 4 fois. Les 41 autres runs sont « success » parce que la cadence n'avait pas tiré et que
+  // l'étape était `skipped` — un vert qui dit « rien n'a été évalué », pas « ça marche ».
+  const etapes = (avantApply) =>
+    [
+      "name: x",
+      "on: { schedule: [{ cron: '0 5 * * *' }] }",
+      "jobs:",
+      "  up:",
+      "    runs-on: ubuntu-latest",
+      "    steps:",
+      "      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+      "        with:",
+      "          node-version: 24",
+      ...avantApply,
+      "      - name: Apply the patch/minor lot",
+      "        run: node scripts/deps/apply-patch-minor.mjs apply --plan p.json",
+      "",
+    ].join("\n");
+
+  it("flags the real bug: node 24 and nothing pins npm 10", () => {
+    const hits = findApplyWithoutNpm10(etapes([]));
+    expect(hits).toHaveLength(1);
+    expect(hits[0].step).toBe("Apply the patch/minor lot");
+    expect(hits[0].job).toBe("up");
+  });
+
+  it("accepts the fix: an `npm i -g npm@10` step before the apply", () => {
+    expect(
+      findApplyWithoutNpm10(etapes(["      - name: Pin npm 10", "        run: npm i -g npm@10"])),
+    ).toEqual([]);
+  });
+
+  it("flags a pin that lands AFTER the apply — the order is the whole point", () => {
+    const tardif = [
+      "name: x",
+      "on: { workflow_dispatch: {} }",
+      "jobs:",
+      "  up:",
+      "    steps:",
+      "      - uses: actions/setup-node@abc",
+      "        with:",
+      "          node-version: 24",
+      "      - run: node scripts/deps/apply-patch-minor.mjs apply --plan p.json",
+      "      - run: npm i -g npm@10",
+      "",
+    ].join("\n");
+    expect(findApplyWithoutNpm10(tardif)).toHaveLength(1);
+  });
+
+  it("accepts a Node that ships npm 10 on its own (22 and below)", () => {
+    const n22 = [
+      "name: x",
+      "on: { workflow_dispatch: {} }",
+      "jobs:",
+      "  up:",
+      "    steps:",
+      "      - uses: actions/setup-node@abc",
+      "        with:",
+      "          node-version: 22",
+      "      - run: node scripts/deps/apply-patch-minor.mjs apply --plan p.json",
+      "",
+    ].join("\n");
+    expect(findApplyWithoutNpm10(n22)).toEqual([]);
+  });
+
+  it("leaves `detect` alone — it reads, it does not write the lockfile", () => {
+    const detect = [
+      "name: x",
+      "on: { workflow_dispatch: {} }",
+      "jobs:",
+      "  up:",
+      "    steps:",
+      "      - uses: actions/setup-node@abc",
+      "        with:",
+      "          node-version: 24",
+      "      - run: node scripts/deps/apply-patch-minor.mjs detect --out p.json",
+      "",
+    ].join("\n");
+    expect(findApplyWithoutNpm10(detect)).toEqual([]);
+  });
+
+  it("stays quiet on unreadable YAML — that is checkYamlFiles' job", () => {
+    expect(findApplyWithoutNpm10(":::not yaml: [")).toEqual([]);
+  });
+
+  it("passes the real upgrade-guard.yml of this repo", () => {
+    const reel = readFileSync(".github/workflows/upgrade-guard.yml", "utf8");
+    expect(findApplyWithoutNpm10(reel)).toEqual([]);
   });
 });
 
