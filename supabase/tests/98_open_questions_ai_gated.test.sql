@@ -28,7 +28,7 @@
 
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS pgtap;
-SELECT plan(27);
+SELECT plan(29);
 
 -- ---------------------------------------------------------
 -- Fixtures.
@@ -309,6 +309,42 @@ SELECT is(
   'et le scoring le confirme : ce que l''auteur déclare faux ne devient jamais juste'
 );
 RESET ROLE;
+
+-- ---------------------------------------------------------
+-- 5 bis. LE MUR TIENT AUSSI QUAND LE CONTENU BOUGE APRÈS LE VERDICT (#1074).
+--
+-- §5 prouve le mur au moment de l'arbitrage. Celui-ci prouve l'autre moitié,
+-- celle qui manquait : l'auteur corrige sa question APRÈS qu'un verdict a été
+-- écrit. « le grand cote » a été accepté en §4, et la ligne est en base.
+-- ---------------------------------------------------------
+UPDATE public.questions
+SET answer_key = jsonb_set(
+      answer_key, '{mistakes}',
+      (answer_key -> 'mistakes') || '[{"text":"le grand cote","tag":"confusion-plus-long"}]'::jsonb)
+WHERE id = '0a300000-0000-4000-8000-000000000003';
+
+SET LOCAL request.jwt.claims = '{"sub":"0a400000-0000-4000-8000-000000000002","role":"authenticated"}';
+SET LOCAL ROLE authenticated;
+SELECT is(
+  public.score_answer(
+    (SELECT q FROM public.questions q WHERE q.id = '0a300000-0000-4000-8000-000000000003'),
+    'le grand cote'),
+  false,
+  'R-4 à la LECTURE : un texte ajouté aux erreurs attendues APRÈS coup redevient faux'
+);
+RESET ROLE;
+
+-- Et le grand livre n'a pas été réécrit : ce que le modèle a répondu ce jour-là
+-- reste vrai comme TRACE. C'est sa portée qui se re-décide, pas son contenu —
+-- une trace corrigée a posteriori n'est plus une trace.
+SELECT is(
+  (SELECT accepted FROM public.ai_open_answer_verdicts
+    WHERE student_user_id = '0a400000-0000-4000-8000-000000000002'
+      AND question_id = '0a300000-0000-4000-8000-000000000003'
+      AND choice_norm = public.normalize_recall_text('le grand cote')),
+  true,
+  'la correction agit à la LECTURE : la ligne écrite est intacte, rien n''est réécrit'
+);
 
 -- ---------------------------------------------------------
 -- 6. SÉCURITÉ — la table des verdicts est un ORACLE, elle ne se lit pas.

@@ -1,7 +1,11 @@
 // @vitest-environment node
 import { describe, expect, it, vi } from "vitest";
 
-import { canPlayOpenQuestions, filterOpenQuestions } from "../quest.open-questions";
+import {
+  canPlayOpenQuestions,
+  filterOpenQuestions,
+  type OpenQuestionsGate,
+} from "../quest.open-questions";
 
 /**
  * LA PORTE DES QUESTIONS OUVERTES — étude 33 lot 1, côté lecteur de quête.
@@ -16,7 +20,7 @@ import { canPlayOpenQuestions, filterOpenQuestions } from "../quest.open-questio
  * donc une `short_answer` jamais servie serait restée dans le total, sans
  * réponse, donc fausse — une mission de 9 questions jouée sur 8 et notée sur 9.
  * C'est `is_question_in_play` qui tient l'autre moitié, en base, et le pgTAP
- * `101_open_questions_gate` le vérifie là où ça se décide.
+ * `98_open_questions_ai_gated.test.sql` le vérifie là où ça se décide.
  */
 
 /** Une question telle que `getExercise` la sert — le type est OPTIONNEL. */
@@ -72,7 +76,17 @@ describe("canPlayOpenQuestions", () => {
   // passe sans le `beforeEach(() => mock.mockReset())`, échoue avec.
   function fakeClient(impl: (...args: unknown[]) => unknown) {
     const rpc = vi.fn(impl);
-    return { rpc, supabase: { rpc: (...args: unknown[]) => rpc(...args) } };
+    // ⚠️ LA CONVERSION EST LE SUJET, pas un raccourci. La signature de la porte
+    // dit ce que la base PROMET (`boolean | null`, pris des types générés).
+    // Trois cas ci-dessous lui font répondre 1, "true" ou `undefined`, et deux
+    // autres la font lever — parce que c'est exactement ce qu'on veut prouver :
+    // la porte ne s'ouvre que sur un `true` franc, quoi qu'on lui réponde. Une
+    // promesse ROMPUE est ce qu'un type ne sait pas exprimer ; d'où ce `as`,
+    // ici, dans le faux, et nulle part dans le code servi.
+    const supabase: OpenQuestionsGate = {
+      rpc: (fn, args) => rpc(fn, args) as ReturnType<OpenQuestionsGate["rpc"]>,
+    };
+    return { rpc, supabase };
   }
 
   it("anonyme : FERMÉE, sans même interroger la base", async () => {
