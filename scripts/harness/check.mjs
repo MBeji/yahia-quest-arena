@@ -685,6 +685,72 @@ export function findPhantomProneTriggers(text) {
 }
 
 /**
+ * Un `gh` qui ne peut PAS savoir sur quel dépôt il travaille.
+ *
+ * CE QUE ÇA A COÛTÉ. `pat-expiry-watch.yml` est né sans `GH_REPO` et sans `checkout` —
+ * il ne lit aucun fichier, donc le checkout semblait inutile, et l'étape avait été
+ * copiée de `client-errors-watch.yml`, qui en fait un pour lancer un script Node. La
+ * pièce était bonne, le joint manquait : hors d'un dépôt git et sans `GH_REPO`, `gh`
+ * sort en 1 sur « no git remotes found ». Deux passages rouges le 2026-09-22 (runs
+ * 35699670930 et 35699869564), et la faute a coûté cher à diagnostiquer parce que
+ * les journaux d'un runner ne sont PAS lisibles depuis une session cloud (le stockage
+ * de logs répond 403 au proxy) : il a fallu la déduire de l'état laissé derrière.
+ *
+ * C'est exactement le genre de règle qui se documente et ne s'applique pas. D'où ce
+ * gate : une seule implémentation, et elle échoue avant la production.
+ *
+ * CE QUI EST VISÉ, ET SEULEMENT LUI : les sous-commandes de `gh` qui RÉSOLVENT un
+ * dépôt courant. `gh api repos/<o>/<r>/…` nomme le sien dans l'URL — il n'est pas
+ * concerné, et c'est pour ça que l'étape de sondage de cette même garde, qui
+ * n'utilise que `curl` et `${GITHUB_REPOSITORY}`, passait pendant que l'autre tombait.
+ *
+ * TROIS ÉCHAPPATOIRES, toutes légitimes : un `actions/checkout` dans le job (le
+ * dossier est alors un dépôt git avec sa remote), un `GH_REPO` en env (du workflow ou
+ * du job), ou un `-R`/`--repo` sur la ligne elle-même.
+ */
+export function findGhWithoutRepo(text) {
+  let doc;
+  try {
+    doc = parseYaml(text);
+  } catch {
+    return []; // Le YAML illisible est déjà le métier de `checkYamlFiles`.
+  }
+  const jobs = doc?.jobs;
+  if (!jobs || typeof jobs !== "object") return [];
+
+  // `gh pr`, `gh issue`… résolvent « le dépôt courant ». `gh api`, `gh auth`,
+  // `gh config` ne le font pas : les lister serait crier sur du code correct.
+  const RESOUT_UN_DEPOT =
+    /(^|[;&|(\n])\s*gh\s+(issue|pr|run|workflow|release|label|repo|cache|variable|secret|browse|ruleset)\b/;
+  const workflowEnv = doc?.env && typeof doc.env === "object" ? doc.env : {};
+
+  const out = [];
+  for (const [jobName, job] of Object.entries(jobs)) {
+    if (!job || typeof job !== "object") continue;
+    const steps = Array.isArray(job.steps) ? job.steps : [];
+    const seCheckout = steps.some(
+      (st) => typeof st?.uses === "string" && st.uses.startsWith("actions/checkout@"),
+    );
+    const jobEnv = job.env && typeof job.env === "object" ? job.env : {};
+    if (seCheckout || "GH_REPO" in jobEnv || "GH_REPO" in workflowEnv) continue;
+
+    for (const [i, st] of steps.entries()) {
+      const run = typeof st?.run === "string" ? st.run : null;
+      if (run === null) continue;
+      const stepEnv = st.env && typeof st.env === "object" ? st.env : {};
+      if ("GH_REPO" in stepEnv) continue;
+      for (const ligne of run.split("\n")) {
+        if (!RESOUT_UN_DEPOT.test("\n" + ligne)) continue;
+        if (/\s(-R|--repo)[\s=]/.test(ligne)) continue;
+        out.push({ job: jobName, step: st.name ?? `#${i + 1}`, ligne: ligne.trim().slice(0, 80) });
+        break;
+      }
+    }
+  }
+  return out;
+}
+
+/**
  * Les invariants du harness appliqués au dépôt PRIVÉ (étude 32, D-5).
  *
  * POURQUOI ICI ET PAS LÀ-BAS. Le corpus porte 43 skills, 12 workflows et un `CLAUDE.md` de
@@ -933,6 +999,14 @@ function main() {
           "version as a trailing comment (docs/dependency-maintenance.md).",
       );
     }
+    for (const hit of findGhWithoutRepo(content)) {
+      problems.push(
+        `${rel(workflow)}: job \`${hit.job}\`, étape \`${hit.step}\` appelle \`gh\` sans contexte ` +
+          `de dépôt (\`${hit.ligne}\`) — hors d'un dépôt git, \`gh\` sort en 1. Ajouter ` +
+          "`GH_REPO: ${{ github.repository }}` à l'`env:` du job, ou un `actions/checkout`, " +
+          "ou `-R <owner>/<repo>` sur la ligne.",
+      );
+    }
   }
 
   // 5ter. Les scripts .ts sont réellement typés (étude 32, C-15).
@@ -1066,7 +1140,8 @@ function main() {
     console.log(
       "[harness:check] OK — pointers intact, AGENTS.md in budget et son inventaire de " +
         "features à jour, no hidden Unicode, " +
-        "no stray model ids, Actions pinned to SHAs, .github YAML parses strictly, chaque contrôle exécuté ou déclaré, " +
+        "no stray model ids, Actions pinned to SHAs, chaque `gh` sait sur quel dépôt il travaille, " +
+        ".github YAML parses strictly, chaque contrôle exécuté ou déclaré, " +
         "generated views in sync.",
     );
     return;

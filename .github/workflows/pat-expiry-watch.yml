@@ -52,6 +52,16 @@ jobs:
     timeout-minutes: 5
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # ⚠️ SANS CECI, TOUT `gh` DE CE FICHIER ÉCHOUE — et c'est ce qui est arrivé
+      # aux deux premiers passages (runs 35699670930 et 35699869564, 2026-09-22).
+      # Cette garde ne lit aucun fichier, donc elle ne fait PAS de `checkout` ;
+      # or hors d'un dépôt git, `gh` n'a aucun moyen de savoir sur quel dépôt il
+      # travaille, et il sort en 1. `guard-watch.yml` et `client-errors-watch.yml`
+      # ne le rencontrent jamais : ils se checkout pour lancer un script Node, ET
+      # déclarent cette variable. J'ai copié le CORPS de leur étape sans son
+      # ENVIRONNEMENT — la pièce était bonne, le joint manquait.
+      # `harness:check` fait désormais échouer la CI sur cet oubli.
+      GH_REPO: ${{ github.repository }}
       PAT: ${{ secrets.GH_AUTOMATION_PAT }}
       LABEL: pat-expiry
       # Fenêtre d'alerte. 14 jours : assez pour que le geste (navigateur, 3 min)
@@ -124,6 +134,14 @@ jobs:
               ;;
           esac
 
+          # Le label D'ABORD : il sert de filtre à la lecture juste en dessous, et
+          # un filtre sur un label absent n'est pas une lecture vide, c'est une
+          # erreur. `guard-watch.yml` le crée avant de lire ; `client-errors-watch.yml`
+          # lit avant de créer et ne s'en aperçoit pas, son label existant depuis
+          # longtemps. Idempotent, donc gratuit à chaque passage.
+          gh label create "$LABEL" --color b60205 \
+            --description "Le PAT d'automatisation expire ou est refusé" 2>/dev/null || true
+
           # Une seule issue, filtrée CÔTÉ SERVEUR.
           num="$(gh issue list --label "$LABEL" --state open --limit 1 --json number --jq '.[0].number // empty')"
 
@@ -164,8 +182,6 @@ jobs:
             echo ""
             echo "_Garde \`pat-expiry-watch.yml\`, seuil ${SEUIL_JOURS} jours. Voir #1002._"
           } > corps.md
-
-          gh label create "$LABEL" --color b60205 --description "Le PAT d'automatisation expire ou est refusé" 2>/dev/null || true
 
           if [ -n "$num" ]; then
             gh issue edit "$num" --body-file corps.md

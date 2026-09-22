@@ -190,6 +190,57 @@ aussi dès qu'une fenêtre entière est verte. Ce qui mérite un geste, c'est un
 franchit la journée : là, la file de signalements n'est plus triée, et c'est ça le coût réel —
 pas le rouge.
 
+## Écrire une garde neuve — les deux pièges du 2026-09-22
+
+`pat-expiry-watch.yml` est partie en production et ses **deux premiers passages sont
+sortis en 1**. Les deux causes valent d'être écrites : l'une est désormais mécanisée,
+l'autre ne peut pas l'être.
+
+### 1. `gh` ne sait pas tout seul sur quel dépôt il travaille — **mécanisé**
+
+Une garde qui ne lit aucun fichier n'a pas besoin de `actions/checkout`, et c'est
+tentant de s'en passer. Mais hors d'un dépôt git, `gh issue`, `gh pr`, `gh run`,
+`gh label`… n'ont **aucun moyen** de résoudre « le dépôt courant » : ils sortent en 1.
+`guard-watch.yml` et `client-errors-watch.yml` ne le rencontrent jamais parce qu'ils se
+checkout _et_ déclarent `GH_REPO`. Copier le **corps** de leur étape sans leur
+**environnement**, c'est reprendre la pièce sans le joint.
+
+Trois formes correctes, au choix : `GH_REPO: ${{ github.repository }}` dans l'`env:`
+du job, un `actions/checkout`, ou `-R <owner>/<repo>` sur la ligne. `gh api
+repos/<o>/<r>/…` n'est pas concerné — il nomme son dépôt dans l'URL.
+
+**`npm run harness:check` fait échouer la CI là-dessus** (`findGhWithoutRepo`), et le
+message nomme le job et l'étape. Une règle écrite sans gate est une suggestion ; ce
+fichier-ci en est la preuve, puisque la règle était déjà _appliquée_ par deux gardes
+sur deux sans que personne l'ait jamais énoncée.
+
+⚠️ Corollaire du même passage : **créer le label AVANT de lire par ce label.**
+`guard-watch.yml` le fait dans cet ordre, `client-errors-watch.yml` dans l'autre — et
+ne s'en aperçoit pas, son label existant depuis longtemps. Une garde neuve, elle,
+démarre sur un dépôt qui n'a pas encore son label.
+
+### 2. Les journaux d'un runner sont **illisibles** depuis une session cloud
+
+C'est ce qui a coûté le plus cher, et rien ne peut le mécaniser.
+
+GitHub ne sert pas les logs d'un job : il **redirige** vers un stockage Azure
+(`*.blob.core.windows.net`), que le proxy de sortie d'une session cloud refuse — `403`
+au CONNECT, aussi bien par `gh api` que par `curl` sur l'URL signée. Les annotations
+du check run ne rendent que `Process completed with exit code 1`.
+
+Une session cloud ne peut donc diagnostiquer une garde rouge que par **ce qu'elle
+laisse derrière elle**. D'où deux conséquences quand on en écrit une :
+
+- **découper en étapes nommées** plutôt qu'un gros `run:` — le nom de l'étape en échec
+  se lit dans l'API des jobs, et c'est parfois la seule information disponible ;
+- **se demander, avant de pousser, ce que la garde prouvera de son propre travail** :
+  une issue créée, un label posé, un commentaire. Ici, « aucune issue `pat-expiry`
+  n'existe » a suffi à établir que la chute était **à ou avant** la création, et
+  « l'étape de sondage est verte » qu'elle était **après** l'appel à l'API.
+
+Le chemin qui a tranché, faute de log : comparer les blocs `env:` des trois gardes.
+Les deux qui marchent déclaraient `GH_REPO`, la nouvelle non.
+
 ## Sécurité
 
 - Les gardes n'ont que `GITHUB_TOKEN` (scopé au dépôt) et le jeton d'abonnement. **Jamais** de
