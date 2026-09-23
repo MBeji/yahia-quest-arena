@@ -84,8 +84,12 @@ jobs:
                    -H "Accept: application/vnd.github+json" \
                    https://api.github.com/repos/${GITHUB_REPOSITORY} 2>&1 || true)"
           code="$(printf '%s' "$rep" | head -1 | awk '{print $2}')"
+          # `|| true` : sans en-tête d'expiration, `grep` sort en 1 et, sous `-e` + `pipefail`,
+          # tuait l'étape AVANT le verdict — exactement dans les deux cas que la garde doit
+          # nommer (jeton refusé, jeton sans date). Constaté le 2026-09-23 au premier run
+          # après un renouvellement : « exit code 1 », aucune ligne « HTTP … ».
           exp="$(printf '%s' "$rep" | grep -i '^github-authentication-token-expiration:' \
-                   | head -1 | cut -d: -f2- | sed 's/^ *//;s/\r$//')"
+                   | head -1 | cut -d: -f2- | sed 's/^ *//;s/\r$//' || true)"
 
           echo "HTTP $code · expiration brute : ${exp:-<aucune>}"
 
@@ -147,7 +151,12 @@ jobs:
 
           if [ -z "$alerte" ]; then
             if [ -n "$num" ]; then
-              gh issue close "$num" --comment "✅ Le PAT authentifie et expire dans ${jours} jour(s) (le ${le}) — au-delà du seuil de ${SEUIL_JOURS} jours. Refermée par la garde."
+              if [ "$etat" = "sans-date" ]; then
+                motif="✅ Le PAT authentifie et GitHub ne lui connaît aucune date d'expiration — rien à surveiller tant qu'il n'est pas révoqué (un refus rouvrirait l'issue). Refermée par la garde."
+              else
+                motif="✅ Le PAT authentifie et expire dans ${jours} jour(s) (le ${le}) — au-delà du seuil de ${SEUIL_JOURS} jours. Refermée par la garde."
+              fi
+              gh issue close "$num" --comment "$motif"
               echo "Issue #$num refermée."
             else
               echo "Rien à signaler (expire dans ${jours:-?} jour(s))."
