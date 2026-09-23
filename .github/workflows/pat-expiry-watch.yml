@@ -151,7 +151,12 @@ jobs:
 
           if [ -z "$alerte" ]; then
             if [ -n "$num" ]; then
-              gh issue close "$num" --comment "✅ Le PAT authentifie et expire dans ${jours} jour(s) (le ${le}) — au-delà du seuil de ${SEUIL_JOURS} jours. Refermée par la garde."
+              if [ "$etat" = "sans-date" ]; then
+                motif="✅ Le PAT authentifie et GitHub ne lui connaît aucune date d'expiration — rien à surveiller tant qu'il n'est pas révoqué (un refus rouvrirait l'issue). Refermée par la garde."
+              else
+                motif="✅ Le PAT authentifie et expire dans ${jours} jour(s) (le ${le}) — au-delà du seuil de ${SEUIL_JOURS} jours. Refermée par la garde."
+              fi
+              gh issue close "$num" --comment "$motif"
               echo "Issue #$num refermée."
             else
               echo "Rien à signaler (expire dans ${jours:-?} jour(s))."
