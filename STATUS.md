@@ -214,18 +214,22 @@ Rien ici n'est codable — seulement ce qui cite un mur de
 | --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
 | ⏰  | **Renouveler `GH_AUTOMATION_PAT` avant le 2026-10-04** (#1078, #1002)                                                                                                                                                | toute l'automatisation des deux dépôts            |
 | 1   | **Verdict du pilote IA Q-9** (attendu ≈ 2026-09-15). Mesure chaque lundi dans #1087 : 1 famille, 0,078 $. La question est le **volume**, pas le coût : clore « armé, sans volume » ou prolonger avec une date de fin | clôture de é11, KPI-3                             |
-| 2   | **Arabe 1ʳᵉ→8ᵉ : trois arbitrages** (audit du 2026-09-22 au dépôt privé) : ~10 chapitres écrits sur des éditions antérieures à 2006, canal نصوص servi à 0 %, مدوّنات القسم à compter comme sources                   | la campagne arabe de base (§6.3)                  |
-| 3   | **Déclaration INPDP (GAP-003)** — tout ce qui se décide est isolé au §7 de [`inventaire-traitements-inpdp.md`](./docs/inventaire-traitements-inpdp.md)                                                               | é28 D-5 → é08 enseignant → canal d'acquisition    |
-| 4   | **A16** : le rachat de série couvre **53 %** des jours manqués (G-4 ≤ 20 %, garde-fou corrigé par #947). Desserrer le seuil ou renchérir le shield                                                                   | `economy:check` vert, clôture de é09              |
-| 5   | **é25 L7** : drill de portabilité, une session avec le propriétaire                                                                                                                                                  | clôture de é25                                    |
-| 6   | Console : coller les 3 gabarits d'e-mail FR dans Supabase ; vérifier qu'un `web_vitals` arrive dans PostHog                                                                                                          | premier contact parent en français ; perf mesurée |
-| 7   | Démarches externes : é23 Q-3 (app child-directed auprès de Google), é24 Q-4 (OTDAV/INNORPI)                                                                                                                          | —                                                 |
+| 2   | **Déclaration INPDP (GAP-003)** — tout ce qui se décide est isolé au §7 de [`inventaire-traitements-inpdp.md`](./docs/inventaire-traitements-inpdp.md)                                                               | é28 D-5 → é08 enseignant → canal d'acquisition    |
+| 3   | **A16** : le rachat de série couvre **53 %** des jours manqués (G-4 ≤ 20 %, garde-fou corrigé par #947). Desserrer le seuil ou renchérir le shield                                                                   | `economy:check` vert, clôture de é09              |
+| 4   | **é25 L7** : drill de portabilité, une session avec le propriétaire                                                                                                                                                  | clôture de é25                                    |
+| 5   | Console : coller les 3 gabarits d'e-mail FR dans Supabase ; vérifier qu'un `web_vitals` arrive dans PostHog                                                                                                          | premier contact parent en français ; perf mesurée |
+| 6   | Démarches externes : é23 Q-3 (app child-directed auprès de Google), é24 Q-4 (OTDAV/INNORPI)                                                                                                                          | —                                                 |
 
 ### 6.3 Contenu : campagnes ouvertes, à finir avant d'en ouvrir d'autres
 
 Leur avancement se lit avec `programme:etat` et `/campagne`, jamais ici.
 
-1. **Arabe de base 1ʳᵉ→8ᵉ** — fiches R-5 portées ; attend les trois arbitrages de la §6.2.
+1. **Arabe de base 1ʳᵉ→8ᵉ** — arbitrages rendus le 2026-09-23 (trois « oui », synthèse §4bis
+   au dépôt privé). Dans l'ordre : (a) réaligner les ~10 notions servies hors année sur le
+   programme post-2006, **sans renommer ni supprimer de slug** (sinon étoiles et sceaux
+   orphelins) ; (b) ouvrir le canal `نصوص` dans le sujet arabe de chaque niveau, 8ᵉ d'abord,
+   puis 7ᵉ, 6ᵉ, 5ᵉ ; (c) les 11 مدوّنات القسم comptent désormais comme sources — les 7 de
+   maths et de français sont à lire par les campagnes de ces matières.
 2. **é23 lot 5 : vidéos `math` 9ᵉ** — registre vide au 2026-09-23 ; chaînes AR/TN (R-8),
    visionnage intégral (R-3).
 3. **é16 vague A** — les quatre matières lycée restantes.
@@ -318,6 +322,7 @@ supprimer (#1094).
 
 | Date       | Événement                                                                                                                                              |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-09-23 | Arabe 1ʳᵉ→8ᵉ : trois arbitrages rendus (oui · oui · oui) ; 11 مدوّنات القسم requalifiées en sources au registre                                        |
 | 2026-09-23 | **ROADMAP privée fusionnée dans ce fichier** — un seul document pour l'état et le reste-à-faire ; `roadmap-sync` lit désormais STATUS.md, base à #1098 |
 | 2026-09-23 | Refonte « finir avant d'ouvrir » de la roadmap (privé#524, #1098) : règle de WIP, chaque ligne ouverte triée                                           |
 | 2026-09-22 | Pilote IA mesuré chaque lundi (#1086, #1088) ; STATUS.md réduit à l'état (#1095)                                                                       |
