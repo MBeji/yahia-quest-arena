@@ -566,6 +566,17 @@ touchés (`--changed`, diff du corpus contre `origin/main`) ou désignés (`--su
 | paires proches (Jaccard ≥ 0,45)        | ⚠ dès une paire             | doublons littéraux ; les nombres et symboles comptent, un item court n'est proche que ≥ 0,8, deux figures différentes jamais |
 | candidats **gabarit** (cadre de tâche) | informatif, pour l'auditeur | même consigne + même question, décor retiré (cité, noms propres, nombres), sur ≥ 2 chapitres                                 |
 
+**Le cliquet (`--fresh`)** ne mesure que les questions **nouvelles ou modifiées** par rapport au
+point de départ de la branche (la matière y est relue par `git archive` de la base de fusion) :
+la dette déjà publiée ne rend personne rouge, une question neuve ne peut plus en ajouter. C'est
+ce que la Content CI du corpus lance, avec `--strict-longest` — seule la fuite par la longueur
+bloque ; une paire d'exercices parallèles voulue se justifie au rapport, pas dans un gate.
+Rejoué sur les onze derniers merges de contenu (2026-09-23) : les tranches d'`english-6eme`
+passent (13–20 %), une PR de correction n'est jugée que sur ses 4 questions, et les trois
+dernières tranches d'`arabic-8eme` auraient été arrêtées à 61–75 % — la clé y porte sa
+justification (« حال في محلّ نصب، تصف الوردة ساعة موتها ») quand les distracteurs sont nus. Un
+taux ne se juge qu'au-delà de 8 questions : en deçà, les items sont listés, pas condamnés.
+
 Le dernier signal est celui que la méthode déclarait hors d'atteinte d'une mesure lexicale : il
 ne compare pas les mots de l'énoncé mais son **cadre** (première et dernière phrase, décor
 retiré). Il ne tranche rien — il nomme les groupes à mettre au mandat de l'auditeur (méthode B3,
