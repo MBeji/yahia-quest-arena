@@ -194,18 +194,30 @@ function main(): void {
       ? `${JSON.stringify(reports, null, 2)}\n`
       : `${reports.map(render).join("\n")}\n`,
   );
-  const failed = reports.filter((r) => !r.ok);
+  const leaking = reports.filter((r) => !r.longestKey.ok);
+  const paired = reports.filter((r) => r.nearPairs.length > 0);
   if (!hasFlag("json")) {
-    stdout.write(
-      failed.length === 0
-        ? "\n✓ content:tranche — les trois mesures de la méthode passent.\n"
-        : `\n⚠ content:tranche — ${failed.length} matière(s) à reprendre avant le commit : ` +
-            "raccourcir la clé ou étoffer un distracteur (la clé ne bouge pas) ; réécrire la paire proche, " +
-            "ou la justifier au rapport si c'est un exercice parallèle voulu (même savoir-faire, autres données).\n",
+    // Le verdict dit ce qui BLOQUE, puis ce qui reste à lire : sous
+    // `--strict-longest` (la CI), des paires proches ne sont pas « à reprendre »
+    // — un auteur qui lisait ce mot sur un run vert croyait sa PR en défaut.
+    const lines: string[] = [];
+    lines.push(
+      leaking.length === 0
+        ? "\n✓ content:tranche — la clé ne fuit pas par sa longueur."
+        : `\n⚠ content:tranche — clé la plus longue au-delà du hasard dans ${leaking.length} matière(s) : ` +
+            "raccourcir la clé (sa justification va à l'explication) ou étoffer les distracteurs au même niveau — la clé ne bouge pas.",
     );
+    if (paired.length > 0) {
+      lines.push(
+        `${hasFlag("strict-longest") ? "·" : "⚠"} paires proches dans ${paired.length} matière(s) : ` +
+          "réécrire la paire, ou la justifier au rapport si c'est un exercice parallèle voulu (même savoir-faire, autres données)" +
+          `${hasFlag("strict-longest") ? " — non bloquant ici." : "."}`,
+      );
+    }
+    stdout.write(`${lines.join("\n")}\n`);
   }
-  if (hasFlag("strict") && failed.length > 0) exit(1);
-  if (hasFlag("strict-longest") && reports.some((r) => !r.longestKey.ok)) exit(1);
+  if (hasFlag("strict") && (leaking.length > 0 || paired.length > 0)) exit(1);
+  if (hasFlag("strict-longest") && leaking.length > 0) exit(1);
 }
 
 main();
