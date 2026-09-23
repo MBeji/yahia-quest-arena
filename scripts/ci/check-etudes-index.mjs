@@ -25,7 +25,8 @@
  * silent about an étude is fine; a doc that asserts a state its own document
  * denies is not.
  *
- *   L — dead links: every relative link of the index and the roadmap resolves.
+ *   L — dead links: every relative link of the index resolves. (The private
+ *       roadmap it also scanned was merged into `STATUS.md` §6 on 2026-09-23.)
  *       Would have caught privé#354, which marked é32 `livrée` while pointing at
  *       `32-harness-optimisation/ETUDE.md`, a path dead since the folder moved
  *       into `EtudeRealisé/`. It went green.
@@ -384,15 +385,12 @@ function main() {
     if (!row.link)
       problems.push({ code: "L", num: row.num, detail: "sa ligne d'index ne porte aucun lien" });
   }
-  const roadmapPath = join(etudesDir, "ROADMAP.md");
-  for (const file of [indexPath, ...(existsSync(roadmapPath) ? [roadmapPath] : [])]) {
-    for (const link of deadLinks(readFileSync(file, "utf8"), file)) {
-      problems.push({
-        code: "L",
-        num: "--",
-        detail: `${relative(etudesDir, file)} pointe « ${link} », qui n'existe pas`,
-      });
-    }
+  for (const link of deadLinks(readFileSync(indexPath, "utf8"), indexPath)) {
+    problems.push({
+      code: "L",
+      num: "--",
+      detail: `${relative(etudesDir, indexPath)} pointe « ${link} », qui n'existe pas`,
+    });
   }
 
   if (problems.length === 0) {

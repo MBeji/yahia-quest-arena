@@ -183,7 +183,7 @@ lui, ne disait rien.
 1. **Application Claude → onglet Code → nouvelle session.** Choisir le ou les dépôts (une
    campagne : le privé **et** celui-ci pour le moteur), la branche, l'environnement (« Default »),
    le mode (Auto ou Accept edits). Écrire le **besoin**, pas le « comment » — le dépôt porte le
-   comment (`AGENTS.md`, `STATUS.md`, la ROADMAP privée).
+   comment (`AGENTS.md`, `STATUS.md` et sa feuille de route).
 2. **Poser le téléphone.** La session travaille, pousse, la chaîne ouvre la PR ready et arme
    l'auto-merge ; la session reste de garde (abonnement PR + réveil différé).
 3. **Revenir quand la session le demande** — une question d'arbitrage arrive comme une

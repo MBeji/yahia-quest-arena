@@ -1,27 +1,33 @@
-# STATUS — état du projet (topo central)
+# STATUS — état du projet et feuille de route
 
-> **Instantané daté du 2026-09-22** (`main` à **#<!--status-sync:main-pr-->1094<!--/status-sync-->** ;
-> exécution V1 « Apprendre & maîtriser » de la doctrine verticale, é26). **Point d'entrée unique**
-> pour savoir où en est le projet : phase, décisions qui gouvernent, état réel des features,
-> études, travaux en vol. Il ne duplique pas les documents normatifs — [AGENTS.md](./AGENTS.md)
-> gagne en cas de conflit. Les études, la ROADMAP et le programme go-live vivent au **dépôt
-> privé** `MBeji/yahia-quest-content` (`FableEtudes/`).
+<!-- roadmap-sync: since-pr=1098 -->
+
+> **Instantané daté du 2026-09-23** (`main` à **#<!--status-sync:main-pr-->1098<!--/status-sync-->** ;
+> exécution V1 « Apprendre & maîtriser » de la doctrine verticale, é26). **Document unique** pour
+> savoir où en est le projet ET ce qui reste à faire : phase, décisions qui gouvernent, état réel
+> des features et des études, **feuille de route (§6)**. Depuis le 2026-09-23 il n'y a plus de
+> ROADMAP privée : elle a été fusionnée ici. Il ne duplique pas les documents normatifs —
+> [AGENTS.md](./AGENTS.md) gagne en cas de conflit. Les études (`ETUDE.md`, leur index) et le
+> programme go-live restent au **dépôt privé** `MBeji/yahia-quest-content` (`FableEtudes/`).
 >
 > **Règles de maintenance.** (1) Toute session qui livre un jalon structurant met à jour la
 > section concernée, **et sa date**. (2) En cas de doute, le **code et les migrations font
 > foi**, pas ce fichier — un statut se **constate**, il ne se déduit pas. (3) Les décisions se
 > journalisent dans [`docs/journal-decisions.md`](./docs/journal-decisions.md) (append-only) ;
 > §2 ne garde que celles qui gouvernent encore. (4) **Ne rien recopier qui a déjà un fichier**
-> (lots → ROADMAP privée, dette → `docs/dette-technique.md`, pièges →
+> (détail d'un lot → le §4/§8 de son `ETUDE.md`, dette → `docs/dette-technique.md`, pièges →
 > [`docs/agents/pieges-du-code.md`](./docs/agents/pieges-du-code.md), détail d'un incident → son
 > issue ou sa PR). (5) Un compteur affirmé porte un marqueur `count:` que `harness:check`
 > recalcule. (6) Le « `main` à #N » de l'en-tête porte le **seul** marqueur `status-sync` du
 > fichier ; `status-freshness-watch.yml` le confronte chaque jour au tip de `main` et ouvre une
-> issue `status-perime` au-delà de 25 PR d'écart (il a décroché trois fois : 27, 68, 114 PR).
+> issue `status-perime` au-delà de 25 PR d'écart. (7) Le marqueur `roadmap-sync` : tout lot
+> d'étude livré au moteur après cette PR doit être **cité** ici (numéro de PR), sinon
+> `check-roadmap-sync.mjs` (cron du dépôt privé) ouvre une issue `roadmap-drift`. Une ligne
+> livrée **sort** de la §6 dans la PR qui la livre, avec une ligne au journal (§9).
 >
-> **Cure du 2026-09-22** : 670 lignes / 262 Ko → cette version. Rien n'a été re-sondé pour
-> l'occasion au-delà du §6 ; le récit complet des passes précédentes reste lisible par
-> `git show 855d018:STATUS.md`.
+> **Fusion du 2026-09-23** : la ROADMAP privée (531 lignes, refondue le matin même) et ce topo ne
+> font plus qu'un. L'ancienne roadmap se lit par `git show cc8c123:FableEtudes/ROADMAP.md` dans le
+> dépôt privé ; l'ancien récit de ce fichier par `git show 855d018:STATUS.md`.
 
 ---
 
@@ -121,7 +127,7 @@ la charge utile vit au corpus se re-constate **depuis le dépôt privé**.
 ## 4. Études (FableEtudes) — instantané
 
 > L'**état**, pas le « comment » : la source est `FableEtudes/README.md`, l'en-tête de chaque
-> `ETUDE.md` et `FableEtudes/ROADMAP.md` (privé). `etudes:check` (Content CI privée) échoue sur
+> `ETUDE.md` (privé) ; le reste-à-faire est en §6. `etudes:check` (Content CI privée) échoue sur
 > toute contradiction entre ce tableau, l'index et les en-têtes. Ne pas y recopier le détail des
 > lots.
 
@@ -129,14 +135,14 @@ la charge utile vit au corpus se re-constate **depuis le dépôt privé**.
 | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Livrées** — dossier dans `EtudeRealisé/` | **11** tuteur IA « El Ostedh » · **02** examen blanc · **03** types de questions natifs · **04** moteur adaptatif · **05** duels & ligues · **07** knowledge graph & maîtrise · **13** moteur de transcription (ScribeKit) · **14** refonte UX/design · **15** contenu & composition des écrans · **17** rappel actif · **18** cours vivants · **22** parcours élève & progression · **28** stratégie de référence · **29** mode IA « à la clé de la famille » · **30** tuteur déterministe (lots 5-9 différés) · **31** l'envie de revenir · **32** harness : optimiser, simplifier · **26** doctrine verticale · **21** valorisation des manuels (lot 3 abandonné) |
 | **Scission faite**                         | **24** protection IP — lots 1-4 livrés, gate anti-fuite en place ; lot 5 (purge de l'historique public) reporté, lot 6 partiel                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| **En exécution**                           | **34** étoiles & sceaux (lot 1 livré) · **09** économie du jeu (lots 1-2) · **35** comprendre la théorie (lots 1-2 livrés, reste la campagne maths 9ᵉ) · **16** ouverture lycée (reste la campagne) · **20** réponses acceptées (lots 1·2·3·5·7) · **23** vidéos explicatives (reste le lot 5) · **25** harness AI-native (reste L7)                                                                                                                                                                                                                                                                                                                                 |
+| **En exécution**                           | **34** étoiles & sceaux (lots 1-4 livrés) · **09** économie du jeu (lots 1-2) · **35** comprendre la théorie (lots 1-6 livrés, reste mesure et bilan) · **16** ouverture lycée (reste la campagne) · **20** réponses acceptées (lots 1·2·3·5·7) · **23** vidéos explicatives (reste le lot 5) · **25** harness AI-native (reste L7)                                                                                                                                                                                                                                                                                                                                  |
 | **Validées**                               | **19** questions illustrées                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | **Brouillons**                             | **08** analytics familles\* · **27** sources web tierces                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | **Gelées**                                 | **01** paiement en ligne (véhicule de dégel du premium) · **06** PWA offline, **10** anti-fraude, **12** studio d'ingestion (doctrine verticale, réversible)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 
 \* é08 porte le **canal enseignant** (é28 Q-3), derrière la précondition D-5 (GAP-024 + GAP-003) ;
 sa justification « premium » est à re-scoper à sa validation. Illustrations : é18 = cours, é19 =
-questions — leurs campagnes vivent dans la ROADMAP privée.
+questions — leurs campagnes suivent la §6.3.
 
 ---
 
@@ -152,26 +158,117 @@ par une session, famille `ops-dispatch`).
 
 ---
 
-## 6. Travaux en vol (re-sondé le 2026-09-22)
+## 6. Feuille de route — le reste-à-faire, trié (2026-09-23)
 
-**PR ouverte au moteur** : [#932](https://github.com/MBeji/yahia-quest-arena/pull/932), savepoint
-volontaire en `draft/` (pgTAP du verrouillage de `client_errors`) — rien n'attend un merge.
+### 6.0 Les quatre règles
 
-**Issues ouvertes au moteur** (comptées par l'API ; à re-sonder avant de croire ce tableau) :
+1. **Finir avant d'ouvrir.** Au plus **deux** chantiers de code ouverts en même temps. Tant que
+   la §6.1 n'est pas vide, on n'écrit pas de nouvelle étude et on ne commence aucun lot de la
+   §6.4. Pour le contenu, même règle : on ne lance pas de campagne sur un nouveau couple
+   niveau × matière tant qu'une campagne de la §6.3 reste ouverte.
+2. **Une ligne = une session = une PR**, suivie jusqu'au merge réel (et, pour du contenu,
+   jusqu'à la prod).
+3. **Un statut se vérifie en lançant la commande ou en lisant l'issue** ; on ne se fie jamais à
+   la ligne qui en parle (§8, L-1 et L-7). Pour le contenu : `npm run programme:etat` (ce qui
+   manque), l'issue `content-drift` du dépôt privé (mergé mais pas en prod), `/campagne`.
+4. **Une ligne livrée sort de cette section** dans la PR qui la livre, avec une ligne au
+   journal (§9) qui cite la PR. On ne garde jamais une ligne cochée : c'est elle qui périme.
 
-| Issue     | Quoi                                                                                                                                            |
-| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| **#1092** | `upgrade-guard` : un conflit de peer fait échouer le lot patch/minor — la garde n'a jamais appliqué un lot. Travail de code                     |
-| **#1087** | 🤖 Relevé du pilote IA (é29 §1.4), tenu chaque lundi par `ai-pilot-report.yml`. Premier relevé : 1 famille, 0,078 $ — la question est le volume |
-| **#1078** | 🔑 `GH_AUTOMATION_PAT` expire le **2026-10-04** — geste navigateur, aucune session ne peut le faire                                             |
-| **#1002** | Identifiants hors dépôt : moitié PAT couverte par #1078 ; `CLAUDE_CODE_OAUTH_TOKEN` non daté, sa mort sera constatée, pas prévenue              |
-| **#962**  | 📈 Relevé d'engagement hebdo (é31) — informatif                                                                                                 |
-| **#937**  | Gates orphelins : la classe est fermée par une garde                                                                                            |
-| **#660**  | Major `typescript` v7 — gate rouge, `typescript-eslint` bloquant. Attendre l'amont                                                              |
+**Reprise pour une session vierge** : les contrats d'exécution (`ETUDE.md`, go-live) sont au
+dépôt privé — pour une ligne de code, démarrer ici et lire l'étude là-bas ; pour du contenu,
+démarrer au privé. pgTAP tourne sur les PR de migration mais **n'est pas requis** : un rouge
+n'arrête pas l'auto-merge, il faut aller le lire.
 
-Branches distantes sans PR : du ménage, pas un backlog (vérifiées par le contenu le 2026-08-26 —
-aucune ne porte de travail perdu). Une session cloud ne peut pas supprimer une branche distante
-(#1094).
+**Chemin critique vers l'acquisition** : GAP-003 (humain) → é28 D-5 levée → é08 volet
+enseignant (§6.4) → premier canal actif (KPI-1, à zéro depuis le 2026-06-13). Il ne reste **rien
+de codable** avant GAP-003.
+
+### 6.1 Finir — ce qu'une session prend, dans cet ordre
+
+1. **é35 lot 7 : la mesure.** `admin_lesson_to_quiz_outcome` (lit `learning_pulses`,
+   `attempts`, `content_releases`) et sa carte console, grisée sous 30 lectures. Additif, un seul
+   merge, pgTAP, aucune surface élève. Lots 1 à 6 livrés (#1050 ; campagne maths 9ᵉ puis concours
+   9ᵉ au privé, finie le 2026-09-18), C-7 livré (#1054).
+2. **é35 lot 8 : le bilan, puis la clôture.** KPI §1.4 relus, sweep `content-audit`,
+   recommandation pour **Q-5** (matière suivante au patron), étude → `livrée`. Sans trafic, le
+   bilan dit « trafic insuffisant » et clôt quand même : la mesure reste en console. ⚠️
+   `coursePattern` ne peut pas être posé hors `math`/`math-6eme` tant que leurs distracteurs ne
+   sont pas tagués (C-5) : c'est une campagne de contenu, pas un reste de l'étude.
+3. **é20 : mesurer le pilote `short_answer`, puis clore.** 119 questions libres en prod depuis
+   le 2026-09-01 (`math` 9ᵉ). Relever les `content_reports` sur ces questions et le dernier
+   sweep `content-audit`, écrire le verdict au §8 de l'étude. Le lot 4 devient une campagne de
+   contenu (§6.3), le lot 6 passe en §6.4. Dette à consigner dans `docs/dette-technique.md` :
+   Tier A produit « الفوقها » (préfixe « ال » inconditionnel), ce qui consomme la borne des
+   24 variantes.
+4. **Trois clôtures administratives** (une PR privée pour l'étude + le §4 ici) : **é34** (lots 1
+   à 4 livrés : #1036, #1040, #1041, #1042, #1043, #1044, #1045 ; lot 5 → §6.4) ; **é09** (lots 1-2
+   livrés, ne reste que A16, à clore **après** A16) ; **é11** (§4/§8 de l'étude vides, à
+   resynchroniser **après** le verdict Q-9).
+
+### 6.2 Ce qui attend le propriétaire
+
+Rien ici n'est codable — seulement ce qui cite un mur de
+[`zero-intervention.md`](./docs/agents/zero-intervention.md). Dans l'ordre :
+
+| #   | Geste / décision                                                                                                                                                                                                     | Débloque                                          |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| ⏰  | **Renouveler `GH_AUTOMATION_PAT` avant le 2026-10-04** (#1078, #1002)                                                                                                                                                | toute l'automatisation des deux dépôts            |
+| 1   | **Verdict du pilote IA Q-9** (attendu ≈ 2026-09-15). Mesure chaque lundi dans #1087 : 1 famille, 0,078 $. La question est le **volume**, pas le coût : clore « armé, sans volume » ou prolonger avec une date de fin | clôture de é11, KPI-3                             |
+| 2   | **Arabe 1ʳᵉ→8ᵉ : trois arbitrages** (audit du 2026-09-22 au dépôt privé) : ~10 chapitres écrits sur des éditions antérieures à 2006, canal نصوص servi à 0 %, مدوّنات القسم à compter comme sources                   | la campagne arabe de base (§6.3)                  |
+| 3   | **Déclaration INPDP (GAP-003)** — tout ce qui se décide est isolé au §7 de [`inventaire-traitements-inpdp.md`](./docs/inventaire-traitements-inpdp.md)                                                               | é28 D-5 → é08 enseignant → canal d'acquisition    |
+| 4   | **A16** : le rachat de série couvre **53 %** des jours manqués (G-4 ≤ 20 %, garde-fou corrigé par #947). Desserrer le seuil ou renchérir le shield                                                                   | `economy:check` vert, clôture de é09              |
+| 5   | **é25 L7** : drill de portabilité, une session avec le propriétaire                                                                                                                                                  | clôture de é25                                    |
+| 6   | Console : coller les 3 gabarits d'e-mail FR dans Supabase ; vérifier qu'un `web_vitals` arrive dans PostHog                                                                                                          | premier contact parent en français ; perf mesurée |
+| 7   | Démarches externes : é23 Q-3 (app child-directed auprès de Google), é24 Q-4 (OTDAV/INNORPI)                                                                                                                          | —                                                 |
+
+### 6.3 Contenu : campagnes ouvertes, à finir avant d'en ouvrir d'autres
+
+Leur avancement se lit avec `programme:etat` et `/campagne`, jamais ici.
+
+1. **Arabe de base 1ʳᵉ→8ᵉ** — fiches R-5 portées ; attend les trois arbitrages de la §6.2.
+2. **é23 lot 5 : vidéos `math` 9ᵉ** — registre vide au 2026-09-23 ; chaînes AR/TN (R-8),
+   visionnage intégral (R-3).
+3. **é16 vague A** — les quatre matières lycée restantes.
+4. **é20 lot 4** — `acceptedAnswers` Tier B, une matière par PR (après §6.1 n° 3).
+
+Tout autre couple (nouvelle matière, patron é35 hors 9ᵉ, tagging é30 d'une nouvelle matière,
+é19) attend qu'une de ces quatre campagnes soit close.
+
+### 6.4 Gelé, bloqué ou différé — rien ne se lance avant sa condition
+
+| Quoi                                                                                       | Condition d'entrée                                               |
+| ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| **é08 volet enseignant** (classes + code, liste + taux par chapitre, devoir)               | é28 D-5 levée (GAP-003) ; Q-4 de l'étude tranchée avant le lot 4 |
+| é08 : trois lots parent (examen blanc au rapport, digest hebdo opt-in, comparatif seuillé) | §6.1 vide — ce sont les premiers lots de code à prendre ensuite  |
+| é34 lot 5 : l'échelle nommée des 50 niveaux                                                | la liste des 50 savants, livrée et relue (contenu)               |
+| é20 lot 6 : boucle du refus contesté (optionnel)                                           | un signalement réel « réponse juste refusée »                    |
+| é09 lot 3 : snapshot `economy_daily_stats`                                                 | un constat mesuré (RPC > 2 s ou écart de coins gênant)           |
+| é30 lots 5-9                                                                               | du volume réel dans `user_misconceptions` (vide en prod)         |
+| é19 questions illustrées (validée, jamais démarrée)                                        | une place libre en §6.3                                          |
+| é24 lot 5 : purge de l'historique git public · lot 6 : tier e2e authentifiée               | une fenêtre calme constatée                                      |
+| #660 : `typescript` v7                                                                     | `typescript-eslint` compatible en amont — ne rien forcer         |
+| é27 sources web tierces (brouillon)                                                        | Q-1…Q-5 arbitrées                                                |
+| é06 PWA offline · é10 anti-fraude · é12 studio d'ingestion                                 | dégel explicite par le propriétaire (é10 : au volume réel)       |
+| é01 paiement en ligne                                                                      | sortie de la phase gratuite                                      |
+
+**Tranché le 2026-08-24, à ne pas rouvrir sans raison neuve** (détail au journal des décisions) :
+G-1 devient une fenêtre par profil ; canari `npm ci --dry-run` sous npm 10 avec Node 24 ;
+e-mails d'authentification en anglais ; dossier INPDP monté en interne.
+
+### 6.5 Issues ouvertes au moteur (re-sondé le 2026-09-23 — à re-sonder avant d'y croire)
+
+| Issue     | Quoi                                                                                                                               |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| **#1087** | 🤖 Relevé du pilote IA (é29 §1.4), tenu chaque lundi par `ai-pilot-report.yml`                                                     |
+| **#1078** | 🔑 `GH_AUTOMATION_PAT` expire le **2026-10-04** — geste navigateur                                                                 |
+| **#1002** | Identifiants hors dépôt : moitié PAT couverte par #1078 ; `CLAUDE_CODE_OAUTH_TOKEN` non daté, sa mort sera constatée, pas prévenue |
+| **#962**  | 📈 Relevé d'engagement hebdo (é31) — informatif                                                                                    |
+| **#937**  | Gates orphelins : la classe est fermée par une garde                                                                               |
+| **#660**  | Major `typescript` v7 — voir §6.4                                                                                                  |
+
+PR [#932](https://github.com/MBeji/yahia-quest-arena/pull/932) : savepoint volontaire en `draft/`.
+Branches distantes sans PR : du ménage, pas un backlog ; une session cloud ne peut pas en
+supprimer (#1094).
 
 ---
 
@@ -182,52 +279,50 @@ aucune ne porte de travail perdu). Une session cloud ne peut pas supprimer une b
 | [AGENTS.md](./AGENTS.md)                                             | **Canonique** : commandes, conventions, DoD, gotchas — gagne sur tout autre document |
 | [CLAUDE.md](./CLAUDE.md)                                             | `@AGENTS.md` + le câblage propre à Claude Code                                       |
 | [ARCHITECTURE.md](./ARCHITECTURE.md)                                 | Stack, flux, modèle de données                                                       |
-| **STATUS.md** (ce fichier)                                           | Topo : phase, décisions qui gouvernent, état features/études/chantiers               |
+| **STATUS.md** (ce fichier)                                           | Topo **et feuille de route** : état features/études, reste-à-faire trié              |
 | [docs/journal-decisions.md](./docs/journal-decisions.md)             | Décisions datées, append-only                                                        |
 | [docs/dette-technique.md](./docs/dette-technique.md)                 | Dette de code encore ouverte                                                         |
 | [docs/agents/](./docs/agents/README.md)                              | Playbooks d'exploitation (zéro intervention, pièges, collaboration, gardes, cloud)   |
 | [docs/audit-global-2026-09-12.md](./docs/audit-global-2026-09-12.md) | Audit global daté — descend dans `docs/archive/` une fois traité                     |
 | [docs/archive/](./docs/archive/README.md)                            | Audits one-shot dépassés — historique, jamais un backlog                             |
-| `FableEtudes/` + `go-live/` (**privé**)                              | Études, ROADMAP, programme go-live                                                   |
+| `FableEtudes/` + `go-live/` (**privé**)                              | Études (`ETUDE.md` + index), programme go-live                                       |
 
 ---
 
-## 8. Prochaines actions
+## 8. Leçons de méthode (payées par des pannes réelles)
 
-> **L'ordre fait foi dans la ROADMAP privée** (`FableEtudes/ROADMAP.md`, refondue le 2026-09-23 :
-> « finir avant d'ouvrir »). Ceci en est le sommet. **Règle de WIP** : au plus deux chantiers de
-> code ouverts ; aucune étude nouvelle tant que la file « finir » n'est pas vide.
+- **L-1** — Une priorité écrite le jour J et mergée à J+6 est un instantané périmé. Relire
+  l'issue ou le code avant de prendre une ligne.
+- **L-2** — Une garde qui échoue en silence ne se distingue pas d'une garde qui passe. Ce qui
+  manque n'est jamais la garde, c'est que sa panne atteigne quelqu'un.
+- **L-3** — Une fonction SQL vivante se **substitue** depuis son texte extrait, elle ne se retape
+  pas (`get_daily_plan`, #818).
+- **L-4** — Un seuil dupliqué devient faux à plusieurs endroits ; ne jamais recopier une RPC
+  existante, cela crée un second juge sur la même question.
+- **L-5** — La prod ne juge pas la reconstructibilité de la base, et un gate vert veut dire
+  seulement « rien de ce que je sais lire ne manque ».
+- **L-6** — Le contenu commande le produit : avant de conclure qu'une ligne de code est bloquée,
+  lancer `programme:etat`.
+- **L-7** — Un chiffre vit à plusieurs endroits d'un document : après l'avoir changé, le `grep`
+  avant de committer.
+- **L-8** — Une horloge sans relève n'est pas une horloge : le verdict Q-9 « attendu
+  ≈ 2026-09-15 » est passé sans que personne ne relève la mesure (#1086 l'a automatisée), et une
+  campagne finie le 2026-09-18 était encore donnée « à faire » le 2026-09-23. Moins de chantiers
+  ouverts = moins de lignes à tenir justes (§6.0 règle 1).
 
-**Finir — ce qu'une session prend, dans l'ordre**
+---
 
-1. **é35 lot 7** (mesure `admin_lesson_to_quiz_outcome`, console), puis **lot 8** (bilan, Q-5) et
-   clôture — la campagne maths 9ᵉ et son extension au concours 9ᵉ sont faites.
-2. **é20** — mesurer le pilote `short_answer` (signalements + `content-audit`), puis clore ; le
-   lot 4 devient une campagne de contenu.
-3. **Clôtures administratives** — é34 (lots 1-4 faits, lot 5 optionnel différé), é09 (après A16),
-   é11 (§4/§8 à resynchroniser après le verdict Q-9).
+## 9. Journal de la feuille de route
 
-**Le goulot (zéro canal d'acquisition)** : GAP-003 → é28 D-5 → é08 volet enseignant → un canal.
-Rien de codable avant GAP-003.
+> Une ligne par événement, qui cite ses PR (moteur : `#N` ; dépôt privé : `privé#N`).
 
-**Ce qui attend un humain** — seulement ce qui cite un mur de
-[`zero-intervention.md`](./docs/agents/zero-intervention.md) :
-
-1. **Renouveler `GH_AUTOMATION_PAT`** avant le **2026-10-04** (#1078).
-2. **Verdict du pilote IA Q-9** — mesure relevée chaque lundi dans #1087 ; la question est le
-   volume, pas le coût.
-3. **Arabe 1ʳᵉ→8ᵉ : trois arbitrages** (audit au dépôt privé, 2026-09-22).
-4. **Déclaration INPDP (GAP-003)** — tout ce qui se décide est isolé au §7 de
-   [`inventaire-traitements-inpdp.md`](./docs/inventaire-traitements-inpdp.md).
-5. **A16** (prix du rachat de série) · **é25 L7** (drill de portabilité) · gabarits d'e-mail FR et
-   vérification `web_vitals` en console.
-
-**Tranché le 2026-08-24, à ne pas rouvrir sans raison neuve** (détail au journal) : G-1 devient une
-fenêtre par profil (lot dans `scripts/economy/assertions.mjs`) ; canari `npm ci --dry-run` sous
-npm 10 avec Node 24 ; e-mails d'authentification en anglais ; dossier INPDP monté en interne.
-
-> **▶ Reprise pour une session vierge.** Les contrats d'exécution (ROADMAP, `ETUDE.md`, go-live)
-> sont au **privé** : démarrer là et ajouter ce dépôt. Campagnes de contenu ouvertes (ROADMAP §4) : les
-> finir avant d'en ouvrir une autre. Discipline : AGENTS.md (un lot = une PR ; migration additive avant le code,
-> destructive dans un merge séparé ; pgTAP tourne sur les PR de migration mais **n'est pas
-> requis** — un rouge n'arrête pas l'auto-merge, il faut aller le lire).
+| Date       | Événement                                                                                                                                              |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-09-23 | **ROADMAP privée fusionnée dans ce fichier** — un seul document pour l'état et le reste-à-faire ; `roadmap-sync` lit désormais STATUS.md, base à #1098 |
+| 2026-09-23 | Refonte « finir avant d'ouvrir » de la roadmap (privé#524, #1098) : règle de WIP, chaque ligne ouverte triée                                           |
+| 2026-09-22 | Pilote IA mesuré chaque lundi (#1086, #1088) ; STATUS.md réduit à l'état (#1095)                                                                       |
+| 2026-09-18 | é35 : patron de notion étendu au concours 9ᵉ, campagne finie (privé#420 → privé#437)                                                                   |
+| 2026-09-16 | é35 validée, lots 1 à 6 livrés (#1050, privé#403 → privé#413)                                                                                          |
+| 2026-09-14 | é34 étoiles & sceaux : lots 1 à 4 livrés (#1036, #1040 → #1045)                                                                                        |
+| 2026-09-02 | `export_user_data` livré (#948) : D-5 n'attend plus que GAP-003                                                                                        |
+| 2026-09-01 | é11 : 8 lots livrés (#844) ; le pilote Q-9 démarre avec les deux clés                                                                                  |

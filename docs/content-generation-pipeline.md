@@ -609,7 +609,10 @@ absent, manifeste invalide) — jamais parce qu'un constat déplaît.
 
 ---
 
-## 9 bis. La ROADMAP est au privé, les lots se livrent ici — et l'invariant se VÉRIFIE
+## 9 bis. La feuille de route connaît-elle les lots livrés ? — l'invariant se VÉRIFIE
+
+> **Depuis le 2026-09-23 la ROADMAP privée est fusionnée dans `STATUS.md` §6** (ce dépôt). Le
+> gate lit `STATUS.md` par défaut ; le récit ci-dessous explique pourquoi il existe.
 
 Aucune PR ne touche les deux dépôts (c'est la règle de la scission). La ROADMAP vit donc au
 privé pendant que la quasi-totalité des lots se livrent ici, et sa propre consigne — « cocher la
@@ -622,10 +625,10 @@ la roadmap aurait reconstruit du travail déjà sur `main`.
 L'invariant est donc **vérifié au lieu d'être promis** :
 
 ```bash
-node scripts/ci/check-roadmap-sync.mjs --roadmap ../corpus/FableEtudes/ROADMAP.md
+node scripts/ci/check-roadmap-sync.mjs    # lit STATUS.md
 ```
 
-Appelé par la Content CI privée, il échoue si un lot livré sur `main` après la PR de référence de
+Appelé chaque jour par le cron privé `roadmap-sync.yml` (qui tient l'issue `roadmap-drift`), il échoue si un lot livré sur `main` après la PR de référence de
 la roadmap n'y est **cité nulle part**. **Citer suffit** — une ligne peut citer une PR comme
 livrée, reportée ou sans objet : le gate a un avis sur la **connaissance**, jamais sur le statut.
 Il est volontairement unidirectionnel : il signale ce que la roadmap n'a jamais entendu, il
@@ -646,7 +649,7 @@ surveille ». Il l'a refait **en douze heures**, sur l'étude dont le sujet éta
 npm run etudes:check -- --etudes ../corpus/FableEtudes    # + --status STATUS.md
 ```
 
-Quatre contrôles, tous mécaniques : **liens morts** de l'index et de la roadmap (privé#354 a
+Quatre contrôles, tous mécaniques : **liens morts** de l'index (privé#354 a
 marqué é32 `livrée` en pointant le chemin qu'elle venait de quitter — le lien est passé vert),
 **cellule d'index ≠ en-tête**, **rangement ≠ statut**, **`STATUS.md` §4 ≠ en-tête** (y compris
 la même étude classée deux fois). Il porte sur la **contradiction**, jamais sur l'exhaustivité :

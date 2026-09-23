@@ -52,7 +52,7 @@ can roll back — [`docs/etoiles-et-sceaux.md`](./docs/etoiles-et-sceaux.md).
 
 ## Content pipeline — the corpus is NOT in this repo (étude 24)
 
-The corpus, its 43 pedagogical skills, `FableEtudes/` (incl. the ROADMAP) and the content
+The corpus, its 43 pedagogical skills, `FableEtudes/` (études; the roadmap itself is `STATUS.md` §6) and the content
 workflows live in the **private** repo
 [`MBeji/yahia-quest-content`](https://github.com/MBeji/yahia-quest-content). To write content:
 open the session there and `add_repo` this one. Only the generic, tested **engine** stays here
