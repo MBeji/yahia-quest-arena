@@ -73,6 +73,14 @@
       "where": "manuel",
       "why": "garde-fou d'ÉQUILIBRAGE, pas test de code — hors verify/ci:verify par l'arbitrage D-4 de l'étude 09. Il échoue aujourd'hui sur G-4 (#937) : le brancher dans le nightly avant d'avoir tranché installerait un rouge permanent, et un rouge permanent apprend à ne plus lire l'issue de suivi."
     },
+    "content:tranche": {
+      "where": "manuel",
+      "why": "mesures d'AUTEUR avant le commit d'une tranche (méthode B2 : clé la plus longue, paires proches, candidats gabarit) — lancées aussi par `content:gates --tranche`. Hors CI par construction : sur tout le corpus, le seuil de la méthode rend ~4 200 paires, dont les exercices parallèles voulus des maths ; c'est un outil de relecture ciblé sur la tranche, pas une porte."
+    },
+    "content:gates": {
+      "where": "manuel",
+      "why": "raccourci local qui rejoue les sept étages de `content-ci.yml` dans son ordre ; la CI appelle chaque étage elle-même, le lui faire appeler doublerait le run."
+    },
     "content:overflow:check": {
       "where": "manuel",
       "why": "a besoin de Chromium ET des polices de l'app (une largeur de texte sans sa police ne mesure rien) : hors de portée de la Content CI telle qu'elle est. Le brancher est une décision à prendre avec ses 82 constats en main, pas avant — voir l'issue du corpus."
