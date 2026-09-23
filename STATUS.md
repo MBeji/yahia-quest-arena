@@ -131,18 +131,18 @@ la charge utile vit au corpus se re-constate **depuis le dépôt privé**.
 > toute contradiction entre ce tableau, l'index et les en-têtes. Ne pas y recopier le détail des
 > lots.
 
-| État                                       | Études                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Livrées** — dossier dans `EtudeRealisé/` | **11** tuteur IA « El Ostedh » · **02** examen blanc · **03** types de questions natifs · **04** moteur adaptatif · **05** duels & ligues · **07** knowledge graph & maîtrise · **13** moteur de transcription (ScribeKit) · **14** refonte UX/design · **15** contenu & composition des écrans · **17** rappel actif · **18** cours vivants · **22** parcours élève & progression · **28** stratégie de référence · **29** mode IA « à la clé de la famille » · **30** tuteur déterministe (lots 5-9 différés) · **31** l'envie de revenir · **32** harness : optimiser, simplifier · **26** doctrine verticale · **21** valorisation des manuels (lot 3 abandonné) · **35** comprendre la théorie (lot 7 différé au premier trafic) |
-| **Scission faite**                         | **24** protection IP — lots 1-4 livrés, gate anti-fuite en place ; lot 5 (purge de l'historique public) reporté, lot 6 partiel                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| **En exécution**                           | **34** étoiles & sceaux (lots 1-4 livrés) · **09** économie du jeu (lots 1-2) · **16** ouverture lycée (reste la campagne) · **20** réponses acceptées (lots 1·2·3·5·7) · **23** vidéos explicatives (reste le lot 5) · **25** harness AI-native (reste L7)                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| **Validées**                               | **19** questions illustrées                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| **Brouillons**                             | **08** analytics familles\* · **27** sources web tierces                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| **Gelées**                                 | **01** paiement en ligne (véhicule de dégel du premium) · **06** PWA offline, **10** anti-fraude, **12** studio d'ingestion (doctrine verticale, réversible)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| État                                       | Études                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Livrées** — dossier dans `EtudeRealisé/` | **11** tuteur IA « El Ostedh » · **02** examen blanc · **03** types de questions natifs · **04** moteur adaptatif · **05** duels & ligues · **07** knowledge graph & maîtrise · **13** moteur de transcription (ScribeKit) · **14** refonte UX/design · **15** contenu & composition des écrans · **17** rappel actif · **18** cours vivants · **22** parcours élève & progression · **28** stratégie de référence · **29** mode IA « à la clé de la famille » · **30** tuteur déterministe (lots 5-9 différés) · **31** l'envie de revenir · **32** harness : optimiser, simplifier · **26** doctrine verticale · **21** valorisation des manuels (lot 3 abandonné) · **35** comprendre la théorie (lot 7 différé au premier trafic) · **34** étoiles & sceaux (lot 5 différé) · **20** réponses acceptées (mesure différée au volume, lot 4 → campagne) |
+| **Scission faite**                         | **24** protection IP — lots 1-4 livrés, gate anti-fuite en place ; lot 5 (purge de l'historique public) reporté, lot 6 partiel                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| **En exécution**                           | **09** économie du jeu (lots 1-2) · **16** ouverture lycée (reste la campagne) · **23** vidéos explicatives (reste le lot 5) · **25** harness AI-native (reste L7)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| **Validées**                               | **19** questions illustrées                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| **Brouillons**                             | **08** analytics familles\* · **27** sources web tierces                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| **Gelées**                                 | **01** paiement en ligne (véhicule de dégel du premium) · **06** PWA offline, **10** anti-fraude, **12** studio d'ingestion (doctrine verticale, réversible)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 \* é08 porte le **canal enseignant** (é28 Q-3), derrière la précondition D-5 (GAP-024 + GAP-003) ;
 sa justification « premium » est à re-scoper à sa validation. Illustrations : é18 = cours, é19 =
-questions — leurs campagnes suivent la §6.3.
+questions — leurs campagnes suivent la §6.1.
 
 ---
 
@@ -162,10 +162,9 @@ par une session, famille `ops-dispatch`).
 
 ### 6.0 Les quatre règles
 
-1. **Finir avant d'ouvrir.** Au plus **deux** chantiers de code ouverts en même temps. Tant que
-   la §6.1 n'est pas vide, on n'écrit pas de nouvelle étude et on ne commence aucun lot de la
-   §6.4. Pour le contenu, même règle : on ne lance pas de campagne sur un nouveau couple
-   niveau × matière tant qu'une campagne de la §6.3 reste ouverte.
+1. **Finir avant d'ouvrir.** Au plus **deux** campagnes de contenu et **deux** chantiers de
+   code ouverts en même temps. On n'ouvre pas de nouveau couple niveau × matière tant qu'une
+   campagne de la §6.1 reste ouverte, et on ne commence aucun lot de la §6.3.
 2. **Une ligne = une session = une PR**, suivie jusqu'au merge réel (et, pour du contenu,
    jusqu'à la prod).
 3. **Un statut se vérifie en lançant la commande ou en lisant l'issue** ; on ne se fie jamais à
@@ -180,67 +179,87 @@ démarrer au privé. pgTAP tourne sur les PR de migration mais **n'est pas requi
 n'arrête pas l'auto-merge, il faut aller le lire.
 
 **Chemin critique vers l'acquisition** : GAP-003 (humain) → é28 D-5 levée → é08 volet
-enseignant (§6.4) → premier canal actif (KPI-1, à zéro depuis le 2026-06-13). Il ne reste **rien
+enseignant (§6.3) → premier canal actif (KPI-1, à zéro depuis le 2026-06-13). Il ne reste **rien
 de codable** avant GAP-003.
 
-### 6.1 Finir — ce qu'une session prend, dans cet ordre
+### 6.1 Priorité 1 — un contenu juste, compris, et qui sert vraiment l'élève
 
-1. **é20 : mesurer le pilote `short_answer`, puis clore.** 119 questions libres en prod depuis
-   le 2026-09-01 (`math` 9ᵉ). Relever les `content_reports` sur ces questions et le dernier
-   sweep `content-audit`, écrire le verdict au §8 de l'étude. Le lot 4 devient une campagne de
-   contenu (§6.3), le lot 6 passe en §6.4. Dette à consigner dans `docs/dette-technique.md` :
-   Tier A produit « الفوقها » (préfixe « ال » inconditionnel), ce qui consomme la borne des
-   24 variantes.
-2. **Trois clôtures administratives** (une PR privée pour l'étude + le §4 ici) : **é34** (lots 1
-   à 4 livrés : #1036, #1040, #1041, #1042, #1043, #1044, #1045 ; lot 5 → §6.4) ; **é09** (lots 1-2
-   livrés, ne reste que A16, à clore **après** A16) ; **é11** (§4/§8 de l'étude vides, à
-   resynchroniser **après** le verdict Q-9).
+> **Arbitrage du propriétaire, 2026-09-23** : les mesures qui demandent un volume d'usage
+> (pilote IA, `short_answer`, « cours → quiz ») sont dépriorisées — le volume n'existe pas
+> encore. **L'effort va au contenu.** Sa qualité se prouve **sans élèves**, par cinq
+> contrôles qui existent déjà ; un chapitre n'est « fini » que s'il les passe tous.
+
+**La barre d'un chapitre qui a de la valeur** (chaque niveau a son outil, aucun n'est déclaratif) :
+
+| #   | Le chapitre est…                                                              | Prouvé par                                                                                 |
+| --- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| 1   | **Au programme** — les bonnes notions, à la bonne année, depuis la source CNP | fiche R-5 lue en entier, `programme:check`                                                 |
+| 1   | **Compris** — chaque notion part du concret, se montre, se vérifie sur place  | patron de notion (é35) : `coursePattern` posé, contrôles C-1…C-7 en `error`                |
+| 2   | **Diagnostique** — chaque mauvaise réponse nomme l'erreur de l'élève          | distracteurs tagués au registre des erreurs (é30), C-5                                     |
+| 3   | **Juste** — aucune clé fausse, aucune explication fausse                      | audit indépendant qui **re-résout** chaque question (`content-audit`), `content:qa:strict` |
+| 4   | **En production** — l'élève le voit                                           | `apply-content.yml` joué, issue `content-drift` close                                      |
+
+**Par où commencer : les classes de concours** (6ᵉ et 9ᵉ), là où l'enjeu pour l'élève est le
+plus fort. État mesuré le 2026-09-23 sur les 10 matières servies (plus `french-6eme`, absent) :
+
+| Matière (id)                    | Niveau 2 (patron)                                          | Niveau 3 (tags) |
+| ------------------------------- | ---------------------------------------------------------- | --------------- |
+| maths 9ᵉ (`math`)               | ✅ armé (`error`)                                          | ✅              |
+| arabe 9ᵉ, français 9ᵉ, SVT 9ᵉ   | ✅ écrit, pas armé                                         | ❌              |
+| anglais 6ᵉ (`english-6eme`)     | ✅ écrit, pas armé                                         | ❌              |
+| **maths 6ᵉ** (`math-6eme`)      | ❌                                                         | ✅ 1 347 tags   |
+| physique-chimie 9ᵉ (`svt`)      | ❌                                                         | ❌              |
+| anglais 9ᵉ (`english`)          | ❌                                                         | ❌              |
+| arabe 6ᵉ, éveil scientifique 6ᵉ | ❌                                                         | ❌              |
+| **français 6ᵉ**                 | — la matière n'existe pas (fiche partielle, LOT A d'abord) | —               |
+
+**Les deux campagnes ouvertes** (règle 1 : pas plus de deux) :
+
+1. **Concours au patron** — une matière par campagne, dans l'ordre : `math-6eme` (seule matière
+   où la barre peut être atteinte **entière** : ses distracteurs sont déjà tagués), puis
+   physique-chimie 9ᵉ (`svt`), anglais 9ᵉ, arabe 6ᵉ, éveil 6ᵉ ; puis les tags (niveau 3) des
+   matières au patron non armé ; puis `french-6eme`. Chaque matière finit par un audit
+   indépendant (niveau 4) et sa publication (niveau 5).
+2. **Arabe de base 1ʳᵉ→8ᵉ** — arbitrages rendus le 2026-09-23 (synthèse §4bis au dépôt privé) :
+   (a) réaligner les ~10 notions servies hors année sur le programme post-2006, **sans renommer
+   ni supprimer de slug** (sinon étoiles et sceaux orphelins) ; (b) ouvrir le canal `نصوص`,
+   8ᵉ d'abord ; (c) les 11 مدوّنات القسم comptent comme sources — les 7 de maths et de français
+   sont lues par les campagnes de ces matières.
+
+Leur avancement se lit avec `programme:etat` et `/campagne`, jamais ici.
+
+**Code, seulement ce qui sert ces campagnes.** Reste à clore é09, après A16 (§6.2).
 
 ### 6.2 Ce qui attend le propriétaire
 
 Rien ici n'est codable — seulement ce qui cite un mur de
 [`zero-intervention.md`](./docs/agents/zero-intervention.md). Dans l'ordre :
 
-| #   | Geste / décision                                                                                                                                                                                                                                                                            | Débloque                                          |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| 1   | **Verdict du pilote IA Q-9** (attendu ≈ 2026-09-15). Mesure chaque lundi dans #1087 : 1 famille, 0,078 $. La question est le **volume**, pas le coût : clore « armé, sans volume » ou prolonger avec une date de fin                                                                        | clôture de é11, KPI-3                             |
-| 2   | **Déclaration INPDP (GAP-003)** — tout ce qui se décide est isolé au §7 de [`inventaire-traitements-inpdp.md`](./docs/inventaire-traitements-inpdp.md)                                                                                                                                      | é28 D-5 → é08 enseignant → canal d'acquisition    |
-| 3   | **A16** : le rachat de série couvre **53 %** des jours manqués (G-4 ≤ 20 %, garde-fou corrigé par #947). Desserrer le seuil ou renchérir le shield                                                                                                                                          | `economy:check` vert, clôture de é09              |
-| 4   | **é25 L7** : drill de portabilité, une session avec le propriétaire                                                                                                                                                                                                                         | clôture de é25                                    |
-| 5   | Console : coller les 3 gabarits d'e-mail FR dans Supabase ; vérifier qu'un `web_vitals` arrive dans PostHog                                                                                                                                                                                 | premier contact parent en français ; perf mesurée |
-| 6   | Démarches externes : é23 Q-3 (app child-directed auprès de Google), é24 Q-4 (OTDAV/INNORPI)                                                                                                                                                                                                 | —                                                 |
-| 7   | **é35 Q-5 : quelle matière passe ensuite au patron de notion ?** Recommandation du bilan : `math-6eme` (seule autre matière aux distracteurs tagués, donc seule où le patron s'arme en `error`), puis `svt` (physique-chimie 9ᵉ). Sans urgence : la campagne attend une place libre en §6.3 | la prochaine campagne « patron »                  |
+| #   | Geste / décision                                                                                                                                       | Débloque                                          |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------- |
+| 2   | **Déclaration INPDP (GAP-003)** — tout ce qui se décide est isolé au §7 de [`inventaire-traitements-inpdp.md`](./docs/inventaire-traitements-inpdp.md) | é28 D-5 → é08 enseignant → canal d'acquisition    |
+| 3   | **A16** : le rachat de série couvre **53 %** des jours manqués (G-4 ≤ 20 %, garde-fou corrigé par #947). Desserrer le seuil ou renchérir le shield     | `economy:check` vert, clôture de é09              |
+| 4   | **é25 L7** : drill de portabilité, une session avec le propriétaire                                                                                    | clôture de é25                                    |
+| 5   | Console : coller les 3 gabarits d'e-mail FR dans Supabase ; vérifier qu'un `web_vitals` arrive dans PostHog                                            | premier contact parent en français ; perf mesurée |
+| 5   | Démarches externes : é23 Q-3 (app child-directed auprès de Google), é24 Q-4 (OTDAV/INNORPI)                                                            | —                                                 |
 
-### 6.3 Contenu : campagnes ouvertes, à finir avant d'en ouvrir d'autres
-
-Leur avancement se lit avec `programme:etat` et `/campagne`, jamais ici.
-
-1. **Arabe de base 1ʳᵉ→8ᵉ** — arbitrages rendus le 2026-09-23 (trois « oui », synthèse §4bis
-   au dépôt privé). Dans l'ordre : (a) réaligner les ~10 notions servies hors année sur le
-   programme post-2006, **sans renommer ni supprimer de slug** (sinon étoiles et sceaux
-   orphelins) ; (b) ouvrir le canal `نصوص` dans le sujet arabe de chaque niveau, 8ᵉ d'abord,
-   puis 7ᵉ, 6ᵉ, 5ᵉ ; (c) les 11 مدوّنات القسم comptent désormais comme sources — les 7 de
-   maths et de français sont à lire par les campagnes de ces matières.
-2. **é23 lot 5 : vidéos `math` 9ᵉ** — registre vide au 2026-09-23 ; chaînes AR/TN (R-8),
-   visionnage intégral (R-3).
-3. **é16 vague A** — les quatre matières lycée restantes.
-4. **é20 lot 4** — `acceptedAnswers` Tier B, une matière par PR (après §6.1 n° 1).
-
-Tout autre couple (nouvelle matière, patron é35 hors 9ᵉ, tagging é30 d'une nouvelle matière,
-é19) attend qu'une de ces quatre campagnes soit close.
-
-### 6.4 Gelé, bloqué ou différé — rien ne se lance avant sa condition
+### 6.3 Gelé, bloqué ou différé — rien ne se lance avant sa condition
 
 | Quoi                                                                                                                 | Condition d'entrée                                               |
 | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
 | **é08 volet enseignant** (classes + code, liste + taux par chapitre, devoir)                                         | é28 D-5 levée (GAP-003) ; Q-4 de l'étude tranchée avant le lot 4 |
-| é08 : trois lots parent (examen blanc au rapport, digest hebdo opt-in, comparatif seuillé)                           | §6.1 vide — ce sont les premiers lots de code à prendre ensuite  |
+| é08 : trois lots parent (examen blanc au rapport, digest hebdo opt-in, comparatif seuillé)                           | un chantier de code libre — les premiers à prendre ensuite       |
 | é34 lot 5 : l'échelle nommée des 50 niveaux                                                                          | la liste des 50 savants, livrée et relue (contenu)               |
+| Pilote IA Q-9 — **clos le 2026-09-23** « armé, sans volume » ; le relevé hebdomadaire (#1087) continue seul          | un volume d'usage minimal (KPI-1 > 0)                            |
+| é20 : mesure du pilote `short_answer` (119 questions libres, maths 9ᵉ)                                               | un volume d'usage minimal                                        |
+| é20 lot 4 : campagne `acceptedAnswers` Tier B                                                                        | une place libre en §6.1 (après les concours)                     |
+| é23 lot 5 : vidéos `math` 9ᵉ                                                                                         | une place libre en §6.1                                          |
+| é16 vague A : les quatre matières lycée restantes (ouverture)                                                        | une place libre en §6.1 — profondeur avant largeur               |
 | é35 lot 7 : la mesure « cours → quiz » (`admin_lesson_to_quiz_outcome` + bloc console), spécifiée au §3.2 de l'étude | KPI-1 > 0 — le premier trafic (arbitrage Q-6)                    |
 | é20 lot 6 : boucle du refus contesté (optionnel)                                                                     | un signalement réel « réponse juste refusée »                    |
 | é09 lot 3 : snapshot `economy_daily_stats`                                                                           | un constat mesuré (RPC > 2 s ou écart de coins gênant)           |
 | é30 lots 5-9                                                                                                         | du volume réel dans `user_misconceptions` (vide en prod)         |
-| é19 questions illustrées (validée, jamais démarrée)                                                                  | une place libre en §6.3                                          |
+| é19 questions illustrées (validée, jamais démarrée)                                                                  | une place libre en §6.1                                          |
 | é24 lot 5 : purge de l'historique git public · lot 6 : tier e2e authentifiée                                         | une fenêtre calme constatée                                      |
 | #660 : `typescript` v7                                                                                               | `typescript-eslint` compatible en amont — ne rien forcer         |
 | é27 sources web tierces (brouillon)                                                                                  | Q-1…Q-5 arbitrées                                                |
@@ -251,7 +270,7 @@ Tout autre couple (nouvelle matière, patron é35 hors 9ᵉ, tagging é30 d'une 
 G-1 devient une fenêtre par profil ; canari `npm ci --dry-run` sous npm 10 avec Node 24 ;
 e-mails d'authentification en anglais ; dossier INPDP monté en interne.
 
-### 6.5 Issues ouvertes au moteur (re-sondé le 2026-09-23 — à re-sonder avant d'y croire)
+### 6.4 Issues ouvertes au moteur (re-sondé le 2026-09-23 — à re-sonder avant d'y croire)
 
 | Issue     | Quoi                                                                                                                                                                                        |
 | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -259,7 +278,7 @@ e-mails d'authentification en anglais ; dossier INPDP monté en interne.
 | **#1002** | Identifiants hors dépôt : `GH_AUTOMATION_PAT` renouvelé sans expiration le 2026-09-23 (#1078 close par sa garde) ; `CLAUDE_CODE_OAUTH_TOKEN` non daté, sa mort sera constatée, pas prévenue |
 | **#962**  | 📈 Relevé d'engagement hebdo (é31) — informatif                                                                                                                                             |
 | **#937**  | Gates orphelins : la classe est fermée par une garde                                                                                                                                        |
-| **#660**  | Major `typescript` v7 — voir §6.4                                                                                                                                                           |
+| **#660**  | Major `typescript` v7 — voir §6.3                                                                                                                                                           |
 
 PR [#932](https://github.com/MBeji/yahia-quest-arena/pull/932) : savepoint volontaire en `draft/`.
 Branches distantes sans PR : du ménage, pas un backlog ; une session cloud ne peut pas en
@@ -311,16 +330,17 @@ supprimer (#1094).
 
 > Une ligne par événement, qui cite ses PR (moteur : `#N` ; dépôt privé : `privé#N`).
 
-| Date       | Événement                                                                                                                                              |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 2026-09-23 | `GH_AUTOMATION_PAT` renouvelé sans date d'expiration ; la garde, qui mourait sur ce cas, corrigée (#1105) et #1078 refermée par elle                   |
-| 2026-09-23 | é35 livrée : bilan (lot 8) au privé — 20/20 chapitres au patron, 0 erreur ; lot 7 différé au premier trafic (Q-6), Q-5 à trancher                      |
-| 2026-09-23 | Arabe 1ʳᵉ→8ᵉ : trois arbitrages rendus (oui · oui · oui) ; 11 مدوّنات القسم requalifiées en sources au registre                                        |
-| 2026-09-23 | **ROADMAP privée fusionnée dans ce fichier** — un seul document pour l'état et le reste-à-faire ; `roadmap-sync` lit désormais STATUS.md, base à #1098 |
-| 2026-09-23 | Refonte « finir avant d'ouvrir » de la roadmap (privé#524, #1098) : règle de WIP, chaque ligne ouverte triée                                           |
-| 2026-09-22 | Pilote IA mesuré chaque lundi (#1086, #1088) ; STATUS.md réduit à l'état (#1095)                                                                       |
-| 2026-09-18 | é35 : patron de notion étendu au concours 9ᵉ, campagne finie (privé#420 → privé#437)                                                                   |
-| 2026-09-16 | é35 validée, lots 1 à 6 livrés (#1050, privé#403 → privé#413)                                                                                          |
-| 2026-09-14 | é34 étoiles & sceaux : lots 1 à 4 livrés (#1036, #1040 → #1045)                                                                                        |
-| 2026-09-02 | `export_user_data` livré (#948) : D-5 n'attend plus que GAP-003                                                                                        |
-| 2026-09-01 | é11 : 8 lots livrés (#844) ; le pilote Q-9 démarre avec les deux clés                                                                                  |
+| Date       | Événement                                                                                                                                                                                                                                          |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-09-23 | **Le contenu devient la priorité 1** (arbitrage du propriétaire) : pilote Q-9 clos « armé, sans volume », mesures à volume différées ; é20 et é34 livrées ; §6.1 réécrite autour de la barre de qualité en cinq niveaux et des classes de concours |
+| 2026-09-23 | `GH_AUTOMATION_PAT` renouvelé sans date d'expiration ; la garde, qui mourait sur ce cas, corrigée (#1105) et #1078 refermée par elle                                                                                                               |
+| 2026-09-23 | é35 livrée : bilan (lot 8) au privé — 20/20 chapitres au patron, 0 erreur ; lot 7 différé au premier trafic (Q-6), Q-5 à trancher                                                                                                                  |
+| 2026-09-23 | Arabe 1ʳᵉ→8ᵉ : trois arbitrages rendus (oui · oui · oui) ; 11 مدوّنات القسم requalifiées en sources au registre                                                                                                                                    |
+| 2026-09-23 | **ROADMAP privée fusionnée dans ce fichier** — un seul document pour l'état et le reste-à-faire ; `roadmap-sync` lit désormais STATUS.md, base à #1098                                                                                             |
+| 2026-09-23 | Refonte « finir avant d'ouvrir » de la roadmap (privé#524, #1098) : règle de WIP, chaque ligne ouverte triée                                                                                                                                       |
+| 2026-09-22 | Pilote IA mesuré chaque lundi (#1086, #1088) ; STATUS.md réduit à l'état (#1095)                                                                                                                                                                   |
+| 2026-09-18 | é35 : patron de notion étendu au concours 9ᵉ, campagne finie (privé#420 → privé#437)                                                                                                                                                               |
+| 2026-09-16 | é35 validée, lots 1 à 6 livrés (#1050, privé#403 → privé#413)                                                                                                                                                                                      |
+| 2026-09-14 | é34 étoiles & sceaux : lots 1 à 4 livrés (#1036, #1040 → #1045)                                                                                                                                                                                    |
+| 2026-09-02 | `export_user_data` livré (#948) : D-5 n'attend plus que GAP-003                                                                                                                                                                                    |
+| 2026-09-01 | é11 : 8 lots livrés (#844) ; le pilote Q-9 démarre avec les deux clés                                                                                                                                                                              |
