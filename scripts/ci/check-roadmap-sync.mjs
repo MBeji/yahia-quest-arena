@@ -2,7 +2,12 @@
 /**
  * Roadmap drift gate — does the execution order still know what has shipped?
  *
- * `FableEtudes/ROADMAP.md` is the ordered reste-à-faire: a session takes the first
+ * Since 2026-09-23 the reste-à-faire lives in `STATUS.md` §6 (this repo): the private
+ * `FableEtudes/ROADMAP.md` was merged into it. The history below is why the gate
+ * exists at all; it still runs from the private `roadmap-sync.yml` cron, which owns
+ * the `roadmap-drift` issue, now pointed at `engine/STATUS.md`.
+ *
+ * Until then, `FableEtudes/ROADMAP.md` was the ordered reste-à-faire: a session took the first
  * unchecked line of its file. Its own rule is "tick the box in the same PR that
  * delivers the lot" — a rule that became UNENFORCEABLE at the étude-24 split,
  * because the roadmap now lives in the private content repo while nearly every
@@ -24,7 +29,8 @@
  * lot 3 landed under #558, "exclure le miroir des skills de Prettier") is not
  * detected — a false negative, never a false positive.
  *
- *   node scripts/ci/check-roadmap-sync.mjs --roadmap ../corpus/FableEtudes/ROADMAP.md
+ *   node scripts/ci/check-roadmap-sync.mjs            # reads STATUS.md
+ *   node scripts/ci/check-roadmap-sync.mjs --roadmap path/to/other.md
  *
  * The roadmap declares its own baseline, so this repo holds no state:
  *   <!-- roadmap-sync: since-pr=536 -->
@@ -100,7 +106,7 @@ function argValue(flag, fallback) {
 }
 
 function main() {
-  const roadmapPath = argValue("--roadmap", "FableEtudes/ROADMAP.md");
+  const roadmapPath = argValue("--roadmap", "STATUS.md");
   const ref = argValue("--ref", "origin/main");
 
   let markdown;
@@ -109,8 +115,8 @@ function main() {
   } catch {
     console.error(
       `[roadmap-sync] roadmap introuvable : ${roadmapPath}\n` +
-        "      Ce gate se lance depuis le moteur avec le corpus privé à côté :\n" +
-        "      node scripts/ci/check-roadmap-sync.mjs --roadmap ../corpus/FableEtudes/ROADMAP.md",
+        "      Ce gate se lance depuis la racine du moteur (il lit STATUS.md par défaut) :\n" +
+        "      node scripts/ci/check-roadmap-sync.mjs",
     );
     process.exit(2);
   }
@@ -141,7 +147,7 @@ function main() {
   console.error(
     `[roadmap-sync] ${uncited.length} lot(s) livré(s) après #${baseline} que la roadmap ignore.\n` +
       "      Une session qui prend « la première ligne non cochée » referait ce travail.\n" +
-      "      Citer chaque PR sur la ligne concernée (cochée, reportée ou sans objet) :\n",
+      "      Citer chaque PR dans STATUS.md (§6 ou journal §9 — livrée, reportée ou sans objet) :\n",
   );
   for (const { pr, subject } of uncited) console.error(`  #${pr}  ${subject}`);
   process.exit(1);

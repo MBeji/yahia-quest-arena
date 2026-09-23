@@ -18,13 +18,13 @@
 
 ## Vérifier l'ordre réel avant de prendre un lot
 
-L'ordre écrit dans `FableEtudes/ROADMAP.md` (dépôt privé) est un **raccourci**.
+L'ordre écrit dans `STATUS.md` §6 (la feuille de route) est un **raccourci**.
 L'étude fait foi sur les dépendances entre ses lots. Avant de démarrer :
 
 1. lire le §« plan d'exécution » de l'étude (quels lots sont réellement indépendants) ;
 2. regarder ce que les **autres files** livrent en ce moment (`gh pr list`, worktrees actifs) ;
 3. si un lot d'une autre étude **contredit** le tien, ne pas l'exécuter en force : prendre un
-   lot frère indépendant, et **amender la ROADMAP** pour que la session suivante voie la
+   lot frère indépendant, et **amender la feuille de route** (`STATUS.md` §6) pour que la session suivante voie la
    contrainte.
 
 _Cas vécu (2026-07-20)_ : é25 lot 3 (miroir des skills dans `.agents/skills/`) aurait dupliqué
@@ -153,8 +153,8 @@ sur `cannot lock ref … unable to resolve reference`, en laissant croire à un 
 
 ## Fichiers à forte contention
 
-Ici : **`STATUS.md`**. Dans le dépôt privé : `FableEtudes/README.md` (index) et
-`FableEtudes/ROADMAP.md`. Presque toutes les sessions les modifient → conflit fréquent.
+Ici : **`STATUS.md`** (état et feuille de route). Dans le dépôt privé : `FableEtudes/README.md`
+(index). Presque toutes les sessions les modifient → conflit fréquent.
 Résolution type : **prendre la version de `main`** (structure à jour, lignes des autres études)
 et **y réappliquer sa seule ligne**. Ne jamais écraser le bloc entier avec sa propre version.
 
