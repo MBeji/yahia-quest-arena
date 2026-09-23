@@ -548,6 +548,30 @@ Les fiches vivent aux deux emplacements du profil `source-web` :
 | `harness:check --corpus` (les invariants du harness appliqués au corpus)                         | la **Content CI du dépôt privé** (é32 lot 2)       |
 | `lint`, `typecheck`, `test:coverage`, `build:check`, `audit:deps`, `harness:check`, `leak:check` | la CI de **ce dépôt** (`ci:verify`)                |
 
+**En local, une seule commande rejoue la Content CI** : `npm run content:gates` (depuis ce
+dépôt, corpus branché) lance les sept étages dans l'ordre de `content-ci.yml` — y compris le
+contrôle de fraîcheur de `CATALOGUE.md`, qui se lit par `git diff` dans le **corpus** —, continue
+après un rouge pour tout dire d'un coup, et mesure d'abord le retard du moteur sur `origin/main`
+(un clone en retard rend un verdict qui n'engage personne). `--tranche` y ajoute
+`content:tranche --changed --strict`.
+
+**`content:tranche` — les mesures d'auteur avant le commit** (méthode § B2). Sur les chapitres
+touchés (`--changed`, diff du corpus contre `origin/main`) ou désignés (`--subject <id>
+--chapters 04,05`), croisés avec les chapitres **publiés** de la matière :
+
+| mesure                                 | verdict                     | ce qu'elle attrape                                                                                                           |
+| -------------------------------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| clé **strictement** la plus longue     | ⚠ au-delà du hasard (1/n)   | la fuite par la forme — l'affichage mélange les options, pas les longueurs                                                   |
+| positions de clé a/b/c/d               | informatif                  | l'écriture au gabarit ; ne fuit rien (`shuffleOptions` sur chaque surface)                                                   |
+| paires proches (Jaccard ≥ 0,45)        | ⚠ dès une paire             | doublons littéraux ; les nombres et symboles comptent, un item court n'est proche que ≥ 0,8, deux figures différentes jamais |
+| candidats **gabarit** (cadre de tâche) | informatif, pour l'auditeur | même consigne + même question, décor retiré (cité, noms propres, nombres), sur ≥ 2 chapitres                                 |
+
+Le dernier signal est celui que la méthode déclarait hors d'atteinte d'une mesure lexicale : il
+ne compare pas les mots de l'énoncé mais son **cadre** (première et dernière phrase, décor
+retiré). Il ne tranche rien — il nomme les groupes à mettre au mandat de l'auditeur (méthode B3,
+point 2). Calibré sur le corpus au 2026-09-23 : il retrouve par exemple « Une seule des
+affirmations suivantes est vraie. Laquelle ? » servi 19 fois dans `math-bac-math`.
+
 **Un seul `harness:check` garde les deux dépôts** (étude 32, lot 2). Le corpus a 43 skills,
 12 workflows et un `CLAUDE.md` de 9 Kio, et n'avait **aucun** gate de harness : ni budget, ni
 Unicode invisible, ni conformité à la spec Agent Skills, ni YAML strict. Son seul invariant —
@@ -909,6 +933,8 @@ le contenu tout seul, il signale.
       sans dupliquer de question.
 - [ ] Barème qualité + auto-vérification (re-résoudre à l'aveugle, distracteurs réalistes, notation
       standard, piège nommé sur d3-4).
+- [ ] Avant chaque commit de tranche : `npm run content:gates -- --tranche` (les sept étages +
+      les mesures de tranche), candidats gabarit passés au mandat de l'auditeur.
 - [ ] PR ouverte dans le dépôt privé ; Content CI verte (`content:check`, `content:qa:strict`,
       `content:audit:strict`, `programme:check`).
 - [ ] Après merge : `apply-content.yml` vert, ligne présente dans `content_releases`.
