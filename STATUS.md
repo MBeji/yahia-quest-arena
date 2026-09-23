@@ -194,44 +194,40 @@ aucune ne porte de travail perdu). Une session cloud ne peut pas supprimer une b
 
 ## 8. Prochaines actions
 
-> **L'ordre fait foi dans la ROADMAP privée** (`FableEtudes/ROADMAP.md`, graphe de dépendances).
-> Ceci en est le sommet. Une **horloge** (coûte du calendrier, tourne seule une fois lancée) passe
-> devant un **chantier** (coûte de l'effort, attend sans se dégrader).
+> **L'ordre fait foi dans la ROADMAP privée** (`FableEtudes/ROADMAP.md`, refondue le 2026-09-23 :
+> « finir avant d'ouvrir »). Ceci en est le sommet. **Règle de WIP** : au plus deux chantiers de
+> code ouverts ; aucune étude nouvelle tant que la file « finir » n'est pas vide.
 
-**Rang 0 — horloges**
+**Finir — ce qu'une session prend, dans l'ordre**
 
-1. **Pilote IA Q-9** — lancé le 2026-09-01, relevé chaque lundi dans #1087. Reste l'**arbitrage**
-   du verdict. ⚠️ Une configuration incomplète éteint le chemin en silence (lire `/admin/ia` →
-   « Clé plateforme ») ; un modèle hors `AI_CURATED_MODELS` n'écrit rien au cache mutualisé.
-2. **C4bis étape 2** — étendre le tagging des misconceptions à une deuxième matière (`math` 9ᵉ est
-   publié). Alimente é30, é11 et la ligne 3 de la scorecard à la fois.
-3. **C4ter — `french-6eme`** : la classe de concours amputée d'une épreuve ; fiche transcrite, aucune
-   session ne l'a prise.
+1. **é35 lot 7** (mesure `admin_lesson_to_quiz_outcome`, console), puis **lot 8** (bilan, Q-5) et
+   clôture — la campagne maths 9ᵉ et son extension au concours 9ᵉ sont faites.
+2. **é20** — mesurer le pilote `short_answer` (signalements + `content-audit`), puis clore ; le
+   lot 4 devient une campagne de contenu.
+3. **Clôtures administratives** — é34 (lots 1-4 faits, lot 5 optionnel différé), é09 (après A16),
+   é11 (§4/§8 à resynchroniser après le verdict Q-9).
 
-**Rang 1 — le goulot (zéro canal d'acquisition)** : ~~`export_user_data`~~ → é28 D-5 (n'attend plus
-que GAP-003) → é08 volet enseignant → un canal d'acquisition.
-
-**Rang 2 et au-delà** — **Produit** : é08 enseignant (⛔ D-5) → é20 lots 4·8·6 → é30 lots 5-9.
-**Fondations** : #1092 (upgrade-guard) → A15 · A17 (tranchés, lots à prendre) → A16 (shields, non tranché) → é25 L7 → é24 lot 5 → étude cloud-first
-(pilote de contenu du lot 3, arbitrage des gardes agent #1002, KPI à 30 jours). **Contenu** : C12
-فقه → arabe 1ère sec → petites classes → vidéos maths 9ᵉ (é23 lot 5).
+**Le goulot (zéro canal d'acquisition)** : GAP-003 → é28 D-5 → é08 volet enseignant → un canal.
+Rien de codable avant GAP-003.
 
 **Ce qui attend un humain** — seulement ce qui cite un mur de
 [`zero-intervention.md`](./docs/agents/zero-intervention.md) :
 
-1. **Déclaration INPDP (GAP-003)** — geste administratif. Tout ce qui se décide est isolé au §7 de
-   [`inventaire-traitements-inpdp.md`](./docs/inventaire-traitements-inpdp.md) : identité de
-   l'éditeur, consentement parental, durées de conservation, Google Analytics (qui n'attend aucun
-   consentement), `beta_access_requests`. L'app ne collecte aucune date de naissance.
-2. **Renouveler `GH_AUTOMATION_PAT`** avant le 2026-10-04 (#1078).
-3. **Drill de portabilité du harness** (é25 L7) — session avec le propriétaire ; ferme l'étude.
+1. **Renouveler `GH_AUTOMATION_PAT`** avant le **2026-10-04** (#1078).
+2. **Verdict du pilote IA Q-9** — mesure relevée chaque lundi dans #1087 ; la question est le
+   volume, pas le coût.
+3. **Arabe 1ʳᵉ→8ᵉ : trois arbitrages** (audit au dépôt privé, 2026-09-22).
+4. **Déclaration INPDP (GAP-003)** — tout ce qui se décide est isolé au §7 de
+   [`inventaire-traitements-inpdp.md`](./docs/inventaire-traitements-inpdp.md).
+5. **A16** (prix du rachat de série) · **é25 L7** (drill de portabilité) · gabarits d'e-mail FR et
+   vérification `web_vitals` en console.
 
 **Tranché le 2026-08-24, à ne pas rouvrir sans raison neuve** (détail au journal) : G-1 devient une
 fenêtre par profil (lot dans `scripts/economy/assertions.mjs`) ; canari `npm ci --dry-run` sous
 npm 10 avec Node 24 ; e-mails d'authentification en anglais ; dossier INPDP monté en interne.
 
 > **▶ Reprise pour une session vierge.** Les contrats d'exécution (ROADMAP, `ETUDE.md`, go-live)
-> sont au **privé** : démarrer là et ajouter ce dépôt. Campagnes réservées (🚧 dans la ROADMAP §5) :
-> ne pas empiéter. Discipline : AGENTS.md (un lot = une PR ; migration additive avant le code,
+> sont au **privé** : démarrer là et ajouter ce dépôt. Campagnes de contenu ouvertes (ROADMAP §4) : les
+> finir avant d'en ouvrir une autre. Discipline : AGENTS.md (un lot = une PR ; migration additive avant le code,
 > destructive dans un merge séparé ; pgTAP tourne sur les PR de migration mais **n'est pas
 > requis** — un rouge n'arrête pas l'auto-merge, il faut aller le lire).
