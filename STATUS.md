@@ -203,7 +203,6 @@ Rien ici n'est codable — seulement ce qui cite un mur de
 
 | #   | Geste / décision                                                                                                                                                                                                                                                                            | Débloque                                          |
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| ⏰  | **Renouveler `GH_AUTOMATION_PAT` avant le 2026-10-04** (#1078, #1002)                                                                                                                                                                                                                       | toute l'automatisation des deux dépôts            |
 | 1   | **Verdict du pilote IA Q-9** (attendu ≈ 2026-09-15). Mesure chaque lundi dans #1087 : 1 famille, 0,078 $. La question est le **volume**, pas le coût : clore « armé, sans volume » ou prolonger avec une date de fin                                                                        | clôture de é11, KPI-3                             |
 | 2   | **Déclaration INPDP (GAP-003)** — tout ce qui se décide est isolé au §7 de [`inventaire-traitements-inpdp.md`](./docs/inventaire-traitements-inpdp.md)                                                                                                                                      | é28 D-5 → é08 enseignant → canal d'acquisition    |
 | 3   | **A16** : le rachat de série couvre **53 %** des jours manqués (G-4 ≤ 20 %, garde-fou corrigé par #947). Desserrer le seuil ou renchérir le shield                                                                                                                                          | `economy:check` vert, clôture de é09              |
@@ -254,14 +253,13 @@ e-mails d'authentification en anglais ; dossier INPDP monté en interne.
 
 ### 6.5 Issues ouvertes au moteur (re-sondé le 2026-09-23 — à re-sonder avant d'y croire)
 
-| Issue     | Quoi                                                                                                                               |
-| --------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| **#1087** | 🤖 Relevé du pilote IA (é29 §1.4), tenu chaque lundi par `ai-pilot-report.yml`                                                     |
-| **#1078** | 🔑 `GH_AUTOMATION_PAT` expire le **2026-10-04** — geste navigateur                                                                 |
-| **#1002** | Identifiants hors dépôt : moitié PAT couverte par #1078 ; `CLAUDE_CODE_OAUTH_TOKEN` non daté, sa mort sera constatée, pas prévenue |
-| **#962**  | 📈 Relevé d'engagement hebdo (é31) — informatif                                                                                    |
-| **#937**  | Gates orphelins : la classe est fermée par une garde                                                                               |
-| **#660**  | Major `typescript` v7 — voir §6.4                                                                                                  |
+| Issue     | Quoi                                                                                                                                                                                        |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **#1087** | 🤖 Relevé du pilote IA (é29 §1.4), tenu chaque lundi par `ai-pilot-report.yml`                                                                                                              |
+| **#1002** | Identifiants hors dépôt : `GH_AUTOMATION_PAT` renouvelé sans expiration le 2026-09-23 (#1078 close par sa garde) ; `CLAUDE_CODE_OAUTH_TOKEN` non daté, sa mort sera constatée, pas prévenue |
+| **#962**  | 📈 Relevé d'engagement hebdo (é31) — informatif                                                                                                                                             |
+| **#937**  | Gates orphelins : la classe est fermée par une garde                                                                                                                                        |
+| **#660**  | Major `typescript` v7 — voir §6.4                                                                                                                                                           |
 
 PR [#932](https://github.com/MBeji/yahia-quest-arena/pull/932) : savepoint volontaire en `draft/`.
 Branches distantes sans PR : du ménage, pas un backlog ; une session cloud ne peut pas en
@@ -315,6 +313,7 @@ supprimer (#1094).
 
 | Date       | Événement                                                                                                                                              |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-09-23 | `GH_AUTOMATION_PAT` renouvelé sans date d'expiration ; la garde, qui mourait sur ce cas, corrigée (#1105) et #1078 refermée par elle                   |
 | 2026-09-23 | é35 livrée : bilan (lot 8) au privé — 20/20 chapitres au patron, 0 erreur ; lot 7 différé au premier trafic (Q-6), Q-5 à trancher                      |
 | 2026-09-23 | Arabe 1ʳᵉ→8ᵉ : trois arbitrages rendus (oui · oui · oui) ; 11 مدوّنات القسم requalifiées en sources au registre                                        |
 | 2026-09-23 | **ROADMAP privée fusionnée dans ce fichier** — un seul document pour l'état et le reste-à-faire ; `roadmap-sync` lit désormais STATUS.md, base à #1098 |
