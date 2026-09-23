@@ -45,6 +45,12 @@ export const MIN_FRAME_TOKENS = 6;
 export const KEY_SHARE_BAND = { min: 0.15, max: 0.35 } as const;
 /** En deçà, une distribution de positions n'est pas interprétable. */
 export const MIN_ITEMS_FOR_DISTRIBUTION = 8;
+/**
+ * En deçà, un taux de clés les plus longues n'est pas un verdict : une seule
+ * question retouchée dont la clé est la plus longue ferait « 100 % ». Les
+ * items restent listés, le verdict attend un échantillon.
+ */
+export const MIN_ITEMS_FOR_RATE = 8;
 
 export interface TrancheItem {
   /** `<chapitre>/quiz#3` ou `<chapitre>/exercices/<slug>#5` (1-based). */
@@ -129,7 +135,13 @@ export function longestKey(items: TrancheItem[]): LongestKeyReport {
   }
   const rate = mcq.length ? longest.length / mcq.length : 0;
   const chance = mcq.length ? chanceSum / mcq.length : 0;
-  return { measured: mcq.length, longest, rate, chance, ok: rate <= chance };
+  return {
+    measured: mcq.length,
+    longest,
+    rate,
+    chance,
+    ok: mcq.length < MIN_ITEMS_FOR_RATE || rate <= chance,
+  };
 }
 
 // ── 2. Distribution des positions de clé ────────────────────────────────────
@@ -323,11 +335,37 @@ export interface TrancheReport {
   ok: boolean;
 }
 
+/** Ce qui fait l'identité d'un item pour la comparaison à la base : ce que l'élève voit et la clé. */
+function signature(it: TrancheItem): string {
+  return JSON.stringify([it.type, it.prompt, it.options.map((o) => o.text), it.keyIndex]);
+}
+
+/**
+ * Les items NOUVEAUX ou MODIFIÉS par rapport à la version de base de la même
+ * matière (même référence, contenu différent, ou référence absente). C'est ce
+ * qui fait de la mesure un CLIQUET : la dette déjà publiée ne rend personne
+ * rouge, mais une question neuve ne peut plus en ajouter. La référence est
+ * positionnelle — ce qui est juste ici, puisque la règle d'identité interdit
+ * de réordonner des questions (seul l'ajout en fin est permis).
+ */
+export function freshRefs(current: TrancheItem[], base: TrancheItem[] | null): Set<string> {
+  const before = new Map((base ?? []).map((it) => [it.ref, signature(it)]));
+  return new Set(current.filter((it) => before.get(it.ref) !== signature(it)).map((it) => it.ref));
+}
+
+/**
+ * `fresh` (facultatif) restreint la tranche aux items nouveaux ou modifiés :
+ * seuls eux sont mesurés, et une paire ou un gabarit ne compte que s'il en
+ * touche un.
+ */
 export function measureTranche(
   subject: LoadedSubject,
   tranche: ReadonlySet<string>,
+  fresh?: ReadonlySet<string>,
 ): TrancheReport {
-  const all = collectItems(subject, tranche);
+  const all = collectItems(subject, tranche).map((it) =>
+    fresh ? { ...it, inTranche: it.inTranche && fresh.has(it.ref) } : it,
+  );
   const mine = all.filter((it) => it.inTranche);
   const lk = longestKey(mine);
   const kd = keyDistribution(mine);

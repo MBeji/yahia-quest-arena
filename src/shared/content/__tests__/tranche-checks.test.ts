@@ -2,6 +2,7 @@
 import { describe, it, expect } from "vitest";
 import {
   collectItems,
+  freshRefs,
   jaccard,
   keyDistribution,
   longestKey,
@@ -56,7 +57,16 @@ describe("longestKey — la fuite par la forme", () => {
     expect(r.measured).toBe(2);
     expect(r.rate).toBe(0.5);
     expect(r.chance).toBe(0.25);
-    expect(r.ok).toBe(false);
+    // deux items ne font pas un verdict : listés, pas condamnés
+    expect(r.ok).toBe(true);
+  });
+
+  it("condamne au-delà du hasard sur un échantillon suffisant", () => {
+    const leak = (i: number) =>
+      mcq(`c/quiz#${i}`, ["non", "oui, parce que la règle le veut", "peut-être", "jamais"], 1);
+    const fair = (i: number) => mcq(`c/quiz#${i}`, ["abc", "abcd", "ab", "a"], 0);
+    expect(longestKey([...[1, 2, 3, 4].map(leak), ...[5, 6, 7, 8].map(fair)]).ok).toBe(false);
+    expect(longestKey([leak(1), ...[2, 3, 4, 5, 6, 7, 8, 9].map(fair)]).ok).toBe(true);
   });
 
   it("une égalité de longueur n'est pas une fuite, et une figure ne compte pas", () => {
@@ -265,6 +275,49 @@ describe("collectItems / measureTranche — sur une matière chargée", () => {
     expect(r.tranche).toEqual(["01-a"]);
     expect(r.items).toBe(2);
     expect(r.longestKey.longest).toEqual(["01-a/quiz#1"]);
-    expect(r.ok).toBe(false);
+    // listé, mais deux items ne font pas un verdict
+    expect(r.ok).toBe(true);
+  });
+});
+
+describe("freshRefs / measureTranche(fresh) — le cliquet", () => {
+  const leak = (ref: string) =>
+    mcq(ref, ["non", "oui, parce que la règle le veut", "peut-être", "jamais"], 1);
+
+  it("ne retient que le nouveau et le modifié", () => {
+    const base = [leak("01-a/quiz#1"), leak("01-a/quiz#2")];
+    const now = [
+      leak("01-a/quiz#1"),
+      { ...leak("01-a/quiz#2"), prompt: "Autre énoncé" },
+      leak("01-a/quiz#3"),
+    ];
+    expect([...freshRefs(now, base)]).toEqual(["01-a/quiz#2", "01-a/quiz#3"]);
+  });
+
+  it("une matière absente de la base est entièrement neuve", () => {
+    expect(freshRefs([leak("01-a/quiz#1")], null).size).toBe(1);
+  });
+
+  it("la dette publiée ne rend pas la tranche rouge", () => {
+    const q = (prompt: string, texts: string[], key: string) => ({
+      type: "mcq" as const,
+      prompt,
+      explanation: "x",
+      options: texts.map((text, i) => ({ id: "abcd"[i], text })),
+      correctOption: key,
+    });
+    const leaky = Array.from({ length: 10 }, (_, i) =>
+      q(`Question ${i}`, ["non", "oui, parce que la règle le veut", "peut-être", "jamais"], "b"),
+    );
+    const subject = {
+      meta: { id: "demo" },
+      chapters: [{ slug: "01-a", quiz: { questions: leaky }, exercises: [] }],
+    } as unknown as LoadedSubject;
+    const tranche = new Set(["01-a"]);
+    expect(measureTranche(subject, tranche).longestKey.ok).toBe(false);
+    const r = measureTranche(subject, tranche, new Set(["01-a/quiz#10"]));
+    expect(r.items).toBe(1);
+    expect(r.longestKey.longest).toEqual(["01-a/quiz#10"]);
+    expect(r.longestKey.ok).toBe(true);
   });
 });

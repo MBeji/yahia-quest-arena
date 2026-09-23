@@ -3,7 +3,7 @@
  *
  * Usage (depuis le moteur, corpus branché) :
  *   npm run content:tranche -- --subject <id> [--chapters 04,05,06] [--json] [--strict]
- *   npm run content:tranche -- --changed [--base origin/main] [--json] [--strict]
+ *   npm run content:tranche -- --changed [--base origin/main] [--fresh] [--json] [--strict]
  *
  * `--chapters` désigne la tranche par préfixe numérique ou par slug ; sans lui,
  * toute la matière est la tranche. `--changed` la déduit du diff du corpus
@@ -12,16 +12,25 @@
  * Les autres chapitres de la matière sont les chapitres PUBLIÉS, contre
  * lesquels les paires et les gabarits se croisent.
  *
- * `--strict` sort en 1 quand une des trois mesures de la méthode échoue ; les
+ * `--fresh` ne mesure que les questions NOUVELLES ou MODIFIÉES par rapport à la
+ * base (la matière est relue telle qu'elle est dans `--base`, par `git archive`) :
+ * c'est le cliquet de la Content CI — la dette publiée ne rend personne rouge,
+ * une question neuve ne peut plus en ajouter.
+ *
+ * `--strict` sort en 1 quand la clé fuit par sa longueur ou qu'une paire est
+ * proche ; `--strict-longest` seulement dans le premier cas (la CI : une paire
+ * d'exercices parallèles voulue se justifie au rapport, pas dans un gate). Les
  * candidats gabarit ne font jamais échouer : ils nourrissent le mandat de
  * l'auditeur (méthode B3, point 2).
  */
 import { execFileSync } from "node:child_process";
-import { existsSync, realpathSync } from "node:fs";
+import { existsSync, mkdtempSync, realpathSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { argv, cwd, exit, stdout } from "node:process";
 import { loadSubject } from "../../src/shared/content/loader.ts";
-import { measureTranche, type TrancheReport } from "./tranche-checks.ts";
+import type { LoadedSubject } from "../../src/shared/content/schema.ts";
+import { collectItems, freshRefs, measureTranche, type TrancheReport } from "./tranche-checks.ts";
 
 const hasFlag = (n: string) => argv.includes(`--${n}`);
 const getFlag = (n: string) => {
@@ -32,9 +41,44 @@ const getFlag = (n: string) => {
 const MAX_LISTED = 12;
 const pct = (x: number) => `${Math.round(x * 100)} %`;
 
-/** Chapitres touchés par matière, d'après le git du corpus (le lien `content` y mène). */
+/** Le dépôt git du corpus (le lien `content` y mène). */
+const corpusRepo = (contentDir: string) => dirname(realpathSync(contentDir));
+
+/**
+ * La matière telle qu'elle est dans `base`, ou null si elle n'y existe pas
+ * (ou n'y est pas lisible) — alors tout est neuf, ce qui est la réponse juste.
+ */
+function loadBaseSubject(contentDir: string, base: string, id: string): LoadedSubject | null {
+  const dir = mkdtempSync(join(tmpdir(), "tranche-base-"));
+  try {
+    const archive = execFileSync(
+      "git",
+      ["-C", corpusRepo(contentDir), "archive", base, "--", `content/${id}`],
+      { stdio: ["ignore", "pipe", "ignore"], maxBuffer: 512 * 1024 * 1024 },
+    );
+    execFileSync("tar", ["-x", "-C", dir], { input: archive });
+    return loadSubject(join(dir, "content", id));
+  } catch {
+    return null;
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+function mergeBase(contentDir: string, base: string): string {
+  try {
+    return execFileSync("git", ["-C", corpusRepo(contentDir), "merge-base", base, "HEAD"], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+  } catch {
+    return base;
+  }
+}
+
+/** Chapitres touchés par matière, d'après le git du corpus. */
 function changedChapters(contentDir: string, base: string): Map<string, Set<string>> {
-  const repo = dirname(realpathSync(contentDir));
+  const repo = corpusRepo(contentDir);
   const git = (...args: string[]) =>
     execFileSync("git", ["-C", repo, ...args], { encoding: "utf8" })
       .split("\n")
@@ -76,7 +120,8 @@ function list(refs: string[]): string {
 function render(r: TrancheReport): string {
   const mark = (ok: boolean) => (ok ? "✓" : "⚠");
   const lines = [
-    `\n■ ${r.subject} — tranche : ${r.tranche.join(", ")} (${r.items} question(s))`,
+    `\n■ ${r.subject} — tranche : ${r.tranche.join(", ")} (${r.items} question(s)` +
+      `${hasFlag("fresh") ? ` nouvelle(s) ou modifiée(s) contre ${getFlag("base") ?? "origin/main"}` : ""})`,
     `  ${mark(r.longestKey.ok)} clé strictement la plus longue : ${r.longestKey.longest.length}/` +
       `${r.longestKey.measured} = ${pct(r.longestKey.rate)} (hasard ${pct(r.longestKey.chance)}, viser 0)`,
   ];
@@ -106,9 +151,14 @@ function render(r: TrancheReport): string {
 
 function main(): void {
   const contentDir = resolve(cwd(), "content");
+  const base = getFlag("base") ?? "origin/main";
+  // La matière de référence se lit au POINT DE DÉPART de la branche, pas à la
+  // pointe de la base : ce que `main` a changé depuis n'est pas le travail de
+  // cette branche, et le compter « neuf » jugerait la tranche d'un autre.
+  const forkPoint = hasFlag("fresh") ? mergeBase(contentDir, base) : base;
   let targets: Map<string, Set<string> | undefined>;
   if (hasFlag("changed")) {
-    const changed = changedChapters(contentDir, getFlag("base") ?? "origin/main");
+    const changed = changedChapters(contentDir, base);
     targets = new Map([...changed].map(([s, c]) => [s, c]));
     if (targets.size === 0) {
       stdout.write("content:tranche — aucun chapitre touché contre la base : rien à mesurer.\n");
@@ -128,7 +178,15 @@ function main(): void {
     const subject = loadSubject(join(contentDir, id));
     const slugs = subject.chapters.map((c) => c.slug);
     const tranche = chapters ?? resolveChapters(slugs, getFlag("chapters"));
-    reports.push(measureTranche(subject, tranche));
+    const baseSubject = hasFlag("fresh") ? loadBaseSubject(contentDir, forkPoint, id) : undefined;
+    const fresh =
+      baseSubject === undefined
+        ? undefined
+        : freshRefs(
+            collectItems(subject, tranche),
+            baseSubject && collectItems(baseSubject, new Set()),
+          );
+    reports.push(measureTranche(subject, tranche, fresh));
   }
 
   stdout.write(
@@ -147,6 +205,7 @@ function main(): void {
     );
   }
   if (hasFlag("strict") && failed.length > 0) exit(1);
+  if (hasFlag("strict-longest") && reports.some((r) => !r.longestKey.ok)) exit(1);
 }
 
 main();
