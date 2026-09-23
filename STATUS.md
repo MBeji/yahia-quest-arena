@@ -207,7 +207,7 @@ plus fort. État mesuré le 2026-09-23 sur les 10 matières servies (plus `frenc
 | maths 9ᵉ (`math`)               | ✅ armé (`error`)                                          | ✅              |
 | arabe 9ᵉ, français 9ᵉ, SVT 9ᵉ   | ✅ écrit, pas armé                                         | ❌              |
 | anglais 6ᵉ (`english-6eme`)     | ✅ écrit, pas armé                                         | ❌              |
-| **maths 6ᵉ** (`math-6eme`)      | ❌                                                         | ✅ 1 347 tags   |
+| **maths 6ᵉ** (`math-6eme`)      | ✅ armé (`error`) — campagne finie le 2026-09-23           | ✅ 1 347 tags   |
 | physique-chimie 9ᵉ (`svt`)      | ❌                                                         | ❌              |
 | anglais 9ᵉ (`english`)          | ❌                                                         | ❌              |
 | arabe 6ᵉ, éveil scientifique 6ᵉ | ❌                                                         | ❌              |
@@ -215,11 +215,15 @@ plus fort. État mesuré le 2026-09-23 sur les 10 matières servies (plus `frenc
 
 **Les deux campagnes ouvertes** (règle 1 : pas plus de deux) :
 
-1. **Concours au patron** — une matière par campagne, dans l'ordre : `math-6eme` (seule matière
-   où la barre peut être atteinte **entière** : ses distracteurs sont déjà tagués), puis
+1. **Concours au patron** — une matière par campagne, dans l'ordre : ~~`math-6eme`~~ (✅ finie
+   le 2026-09-23 : 24/24 chapitres, manuel élève lu à 73 %, privé#535 → privé#542), puis
    physique-chimie 9ᵉ (`svt`), anglais 9ᵉ, arabe 6ᵉ, éveil 6ᵉ ; puis les tags (niveau 3) des
    matières au patron non armé ; puis `french-6eme`. Chaque matière finit par un audit
-   indépendant (niveau 4) et sa publication (niveau 5).
+   indépendant (niveau 4) et sa publication (niveau 5). **Chaque tranche commence par lire le
+   manuel élève à l'image** : sur `math-6eme`, cette lecture a trouvé une trentaine de notions
+   pratiquées par le manuel et absentes de la fiche (division par un décimal, échelle,
+   multiplication d'une durée, médiatrice, bissectrice, aire du losange…). Reste à la matière un
+   lot « exercices » : items sur ces notions neuves, paires d'items quasi identiques.
 2. **Arabe de base 1ʳᵉ→8ᵉ** — arbitrages rendus le 2026-09-23 (synthèse §4bis au dépôt privé) :
    (a) réaligner les ~10 notions servies hors année sur le programme post-2006, **sans renommer
    ni supprimer de slug** (sinon étoiles et sceaux orphelins) ; (b) ouvrir le canal `نصوص`,
@@ -330,17 +334,18 @@ supprimer (#1094).
 
 > Une ligne par événement, qui cite ses PR (moteur : `#N` ; dépôt privé : `privé#N`).
 
-| Date       | Événement                                                                                                                                                                                                                                          |
-| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-09-23 | **Le contenu devient la priorité 1** (arbitrage du propriétaire) : pilote Q-9 clos « armé, sans volume », mesures à volume différées ; é20 et é34 livrées ; §6.1 réécrite autour de la barre de qualité en cinq niveaux et des classes de concours |
-| 2026-09-23 | `GH_AUTOMATION_PAT` renouvelé sans date d'expiration ; la garde, qui mourait sur ce cas, corrigée (#1105) et #1078 refermée par elle                                                                                                               |
-| 2026-09-23 | é35 livrée : bilan (lot 8) au privé — 20/20 chapitres au patron, 0 erreur ; lot 7 différé au premier trafic (Q-6), Q-5 à trancher                                                                                                                  |
-| 2026-09-23 | Arabe 1ʳᵉ→8ᵉ : trois arbitrages rendus (oui · oui · oui) ; 11 مدوّنات القسم requalifiées en sources au registre                                                                                                                                    |
-| 2026-09-23 | **ROADMAP privée fusionnée dans ce fichier** — un seul document pour l'état et le reste-à-faire ; `roadmap-sync` lit désormais STATUS.md, base à #1098                                                                                             |
-| 2026-09-23 | Refonte « finir avant d'ouvrir » de la roadmap (privé#524, #1098) : règle de WIP, chaque ligne ouverte triée                                                                                                                                       |
-| 2026-09-22 | Pilote IA mesuré chaque lundi (#1086, #1088) ; STATUS.md réduit à l'état (#1095)                                                                                                                                                                   |
-| 2026-09-18 | é35 : patron de notion étendu au concours 9ᵉ, campagne finie (privé#420 → privé#437)                                                                                                                                                               |
-| 2026-09-16 | é35 validée, lots 1 à 6 livrés (#1050, privé#403 → privé#413)                                                                                                                                                                                      |
-| 2026-09-14 | é34 étoiles & sceaux : lots 1 à 4 livrés (#1036, #1040 → #1045)                                                                                                                                                                                    |
-| 2026-09-02 | `export_user_data` livré (#948) : D-5 n'attend plus que GAP-003                                                                                                                                                                                    |
-| 2026-09-01 | é11 : 8 lots livrés (#844) ; le pilote Q-9 démarre avec les deux clés                                                                                                                                                                              |
+| Date       | Événement                                                                                                                                                                                                                                              |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-09-23 | **Maths 6ᵉ au patron, campagne finie** : 24 chapitres réécrits en 4 tranches (privé#535, #537, #539, #542), chacune après lecture du manuel élève (30 → 127 p. / 174) et un audit indépendant ; `coursePattern` armé en `error`, publiée en production |
+| 2026-09-23 | **Le contenu devient la priorité 1** (arbitrage du propriétaire) : pilote Q-9 clos « armé, sans volume », mesures à volume différées ; é20 et é34 livrées ; §6.1 réécrite autour de la barre de qualité en cinq niveaux et des classes de concours     |
+| 2026-09-23 | `GH_AUTOMATION_PAT` renouvelé sans date d'expiration ; la garde, qui mourait sur ce cas, corrigée (#1105) et #1078 refermée par elle                                                                                                                   |
+| 2026-09-23 | é35 livrée : bilan (lot 8) au privé — 20/20 chapitres au patron, 0 erreur ; lot 7 différé au premier trafic (Q-6), Q-5 à trancher                                                                                                                      |
+| 2026-09-23 | Arabe 1ʳᵉ→8ᵉ : trois arbitrages rendus (oui · oui · oui) ; 11 مدوّنات القسم requalifiées en sources au registre                                                                                                                                        |
+| 2026-09-23 | **ROADMAP privée fusionnée dans ce fichier** — un seul document pour l'état et le reste-à-faire ; `roadmap-sync` lit désormais STATUS.md, base à #1098                                                                                                 |
+| 2026-09-23 | Refonte « finir avant d'ouvrir » de la roadmap (privé#524, #1098) : règle de WIP, chaque ligne ouverte triée                                                                                                                                           |
+| 2026-09-22 | Pilote IA mesuré chaque lundi (#1086, #1088) ; STATUS.md réduit à l'état (#1095)                                                                                                                                                                       |
+| 2026-09-18 | é35 : patron de notion étendu au concours 9ᵉ, campagne finie (privé#420 → privé#437)                                                                                                                                                                   |
+| 2026-09-16 | é35 validée, lots 1 à 6 livrés (#1050, privé#403 → privé#413)                                                                                                                                                                                          |
+| 2026-09-14 | é34 étoiles & sceaux : lots 1 à 4 livrés (#1036, #1040 → #1045)                                                                                                                                                                                        |
+| 2026-09-02 | `export_user_data` livré (#948) : D-5 n'attend plus que GAP-003                                                                                                                                                                                        |
+| 2026-09-01 | é11 : 8 lots livrés (#844) ; le pilote Q-9 démarre avec les deux clés                                                                                                                                                                                  |
