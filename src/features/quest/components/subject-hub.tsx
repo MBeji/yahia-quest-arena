@@ -345,9 +345,19 @@ export function SubjectHub({
             <Link
               to="/chapitre/$chapterId"
               params={{ chapterId: c.id }}
-              className="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-primary transition hover:opacity-80 [@media(pointer:coarse)]:min-h-11"
+              data-testid={`read-course-${c.id}`}
+              // Le cours est le point d'entrée du chapitre : un vrai bouton
+              // pleine largeur, teinté, et non un lien texte qui se perdait
+              // entre la description et la liste des missions.
+              className="group mt-3 mb-2 flex w-full items-center gap-3 rounded-xl border-2 border-primary/40 bg-primary/10 px-4 py-3 text-start transition hover:border-primary hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 [@media(pointer:coarse)]:min-h-12"
             >
-              <BookOpen className="h-4 w-4" /> {t.public.subject.readCourse}
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+                <BookOpen className="h-5 w-5" />
+              </span>
+              <span className="min-w-0 flex-1 font-display text-base font-bold text-primary">
+                {t.public.subject.readCourse}
+              </span>
+              <ChevronRight className="h-5 w-5 shrink-0 text-primary transition-transform group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5" />
             </Link>
 
             {chapEx.length > 0 && (
