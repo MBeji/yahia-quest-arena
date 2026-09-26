@@ -202,16 +202,17 @@ de codable** avant GAP-003.
 **Par où commencer : les classes de concours** (6ᵉ et 9ᵉ), là où l'enjeu pour l'élève est le
 plus fort. État mesuré le 2026-09-23 sur les 10 matières servies (plus `french-6eme`, absent) :
 
-| Matière (id)                    | Niveau 2 (patron)                                            | Niveau 3 (tags) |
-| ------------------------------- | ------------------------------------------------------------ | --------------- |
-| maths 9ᵉ (`math`)               | ✅ armé (`error`)                                            | ✅              |
-| arabe 9ᵉ, français 9ᵉ, SVT 9ᵉ   | ✅ écrit, pas armé                                           | ❌              |
-| anglais 6ᵉ (`english-6eme`)     | ✅ écrit, pas armé                                           | ❌              |
-| **maths 6ᵉ** (`math-6eme`)      | ✅ armé (`error`) — campagne finie le 2026-09-23             | ✅ 1 347 tags   |
-| physique-chimie 9ᵉ (`svt`)      | ✅ écrit, pas armé — réalignée sur le manuel le 2026-09-25   | ❌              |
-| anglais 9ᵉ (`english`)          | ✅ écrit, pas armé — réalignée sur les manuels le 2026-09-25 | ❌              |
-| arabe 6ᵉ, éveil scientifique 6ᵉ | ❌                                                           | ❌              |
-| **français 6ᵉ**                 | — la matière n'existe pas (fiche partielle, LOT A d'abord)   | —               |
+| Matière (id)                  | Niveau 2 (patron)                                            | Niveau 3 (tags) |
+| ----------------------------- | ------------------------------------------------------------ | --------------- |
+| maths 9ᵉ (`math`)             | ✅ armé (`error`)                                            | ✅              |
+| arabe 9ᵉ, français 9ᵉ, SVT 9ᵉ | ✅ écrit, pas armé                                           | ❌              |
+| anglais 6ᵉ (`english-6eme`)   | ✅ écrit, pas armé                                           | ❌              |
+| **maths 6ᵉ** (`math-6eme`)    | ✅ armé (`error`) — campagne finie le 2026-09-23             | ✅ 1 347 tags   |
+| physique-chimie 9ᵉ (`svt`)    | ✅ écrit, pas armé — réalignée sur le manuel le 2026-09-25   | ❌              |
+| anglais 9ᵉ (`english`)        | ✅ écrit, pas armé — réalignée sur les manuels le 2026-09-25 | ❌              |
+| arabe 6ᵉ (`arabic-6eme`)      | ✅ écrit, pas armé — réaligné sur le manuel le 2026-09-26    | ❌              |
+| éveil scientifique 6ᵉ         | ❌                                                           | ❌              |
+| **français 6ᵉ**               | — la matière n'existe pas (fiche partielle, LOT A d'abord)   | —               |
 
 **Les deux campagnes ouvertes** (règle 1 : pas plus de deux) :
 
@@ -220,7 +221,7 @@ plus fort. État mesuré le 2026-09-23 sur les 10 matières servies (plus `frenc
    ~~physique-chimie 9ᵉ (`svt`)~~ (✅ patron écrit le 2026-09-25, privé#546 : AUCUNE fiche
    n'existait — le contenu servi enseignait la loi d'Ohm et les lentilles, hors programme, et
    ignorait la moitié du programme ; manuel 103902 lu en entier, 13 chapitres dont 4 neufs,
-   armement en attente de ses tags), ~~anglais 9ᵉ (`english`)~~ (✅ patron écrit le 2026-09-25, privé#548 : Student's Book 141906 et Workbook 141907 lus en entier — le passif, le discours indirect, le 2ᵉ/3ᵉ conditionnel, _unless_ et _whose/where_ n'y sont pas enseignés ; 06 et 07 réalignés en place sur les _Communicative Functions_ et le _Word Building_, les extras gardés en « Going further » sans item ; armement en attente de ses tags), puis arabe 6ᵉ, éveil 6ᵉ ; puis les tags (niveau 3) des
+   armement en attente de ses tags), ~~anglais 9ᵉ (`english`)~~ (✅ patron écrit le 2026-09-25, privé#548 : Student's Book 141906 et Workbook 141907 lus en entier — le passif, le discours indirect, le 2ᵉ/3ᵉ conditionnel, _unless_ et _whose/where_ n'y sont pas enseignés ; 06 et 07 réalignés en place sur les _Communicative Functions_ et le _Word Building_, les extras gardés en « Going further » sans item ; armement en attente de ses tags), ~~arabe 6ᵉ (`arabic-6eme`)~~ (✅ patron écrit le 2026-09-26, privé#553 : manuel élève 101612 p.3–124 lu à l'image, 31 leçons ; arbitrage du propriétaire « la grammaire seule » — lecture et production écrite restent non servies ; 13 chapitres réalignés, la leçon 26 (الواو والياء في ج.م.س المضاف) enfin enseignée ; armement en attente de ses tags), puis, éveil 6ᵉ ; puis les tags (niveau 3) des
    matières au patron non armé ; puis `french-6eme`. Chaque matière finit par un audit
    indépendant (niveau 4) et sa publication (niveau 5). **Chaque tranche commence par lire le
    manuel élève à l'image** : sur `math-6eme`, cette lecture a trouvé une trentaine de notions
@@ -339,6 +340,7 @@ supprimer (#1094).
 
 | Date       | Événement                                                                                                                                                                                                                                                                                                                                                                                                     |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-09-26 | **Arabe 6ᵉ réaligné sur le manuel officiel** (privé#553) : 101612 p.3–124 lu à l'image leçon par leçon ; arbitrage du propriétaire — la grammaire au patron, lecture et production écrite hors campagne ; 13 chapitres réécrits (notions hors manuel retirées, leçon 26 ajoutée), audit indépendant en 4 passes ; publié en production                                                                        |
 | 2026-09-25 | **Anglais 9ᵉ réaligné sur les manuels officiels** (privé#548) : Student's Book et Workbook lus en entier, fiche R-5 complétée ; arbitrages du propriétaire — 06 et 07 réalignés en place (passif et discours indirect hors programme), 2ᵉ conditionnel / _unless_ / _whose-where_ gardés en « pour aller plus loin » sans item ; 10 chapitres au patron, audit indépendant en 3 passes ; publié en production |
 | 2026-09-25 | **Physique-chimie 9ᵉ réalignée sur le manuel officiel** (privé#546) : aucune fiche n'existait ; manuel 103902 lu en entier ; arbitrage du propriétaire « réaligner en place » — 08 (Ohm) devient le courant alternatif, 03 perd les lentilles, 01 devient un rappel de 8ᵉ, 4 chapitres neufs ; audit indépendant des 13 chapitres ; publiée en production                                                     |
 | 2026-09-23 | **Maths 6ᵉ au patron, campagne finie** : 24 chapitres réécrits en 4 tranches (privé#535, #537, #539, #542), chacune après lecture du manuel élève (30 → 127 p. / 174) et un audit indépendant ; `coursePattern` armé en `error`, publiée en production                                                                                                                                                        |
