@@ -54,11 +54,13 @@ const SEGMENT_RE = new RegExp(`[${ARABIC_CHARS}]+|[^${ARABIC_CHARS}]+`, "gu");
  * What genuinely needs isolation is a run containing a **mirrored or
  * direction-sensitive** glyph: the radical `√` (a prefix that otherwise lands
  * after its operand — `√64` → `64√`), the Bidi_Mirrored bracket/relation set
- * (`( ) [ ] { } ⟨ ⟩ ⌊ ⌋ ⌈ ⌉ < > ≤ ≥ ∈ ∉ ⊂ ⊃ ⊆ ⊇`), arrows, big operators and
- * grouping bars. Both raw operators and their HTML-escaped forms (`&lt;`,
+ * (`( ) [ ] { } ⟨ ⟩ ⌊ ⌋ ⌈ ⌉ < > ≤ ≥ ∈ ∉ ∋ ∌ ⊂ ⊃ ⊄ ⊅ ⊆ ⊇ ⊈ ⊉ ⊊ ⊋`), arrows, big
+ * operators and grouping bars. The set relations go as a WHOLE family: `⊄` or `∋`
+ * left out stays at the RTL level when it stands alone in Arabic prose and is drawn
+ * with its mirror glyph — `⊄` read as `⊅`, the statement reversed (#1117). Both raw operators and their HTML-escaped forms (`&lt;`,
  * `&gt;`) count, so the helper is safe to run before or after HTML escaping.
  */
-const BIDI_FLIP_SIGNAL = /[√∛∜()[\]{}⟨⟩⌊⌋⌈⌉<>≤≥≮≯∈∉⊂⊃⊆⊇←→⟵⟶⟸⟹⟺∑∏∫|‖]|&lt;|&gt;|&le;|&ge;/u;
+const BIDI_FLIP_SIGNAL = /[√∛∜()[\]{}⟨⟩⌊⌋⌈⌉<>≤≥≮≯∈∉∋∌⊂⊃⊄⊅⊆⊇⊈⊉⊊⊋←→⟵⟶⟸⟹⟺∑∏∫|‖]|&lt;|&gt;|&le;|&ge;/u;
 
 /**
  * A segment that is **only** whitespace and paired bracket characters with no
@@ -77,7 +79,7 @@ const SOLO_BRACKETS_RE = /^[\s()[\]{}⟨⟩⌊⌋⌈⌉]+$/u;
  * (`< > ≤ ≥ ∈ ⊂`…), arrows, large operators and grouping bars.  These glyphs
  * do not benefit from bidi-mirroring and must be forced LTR.
  */
-const STRONG_FLIP_SIGNAL = /[√∛∜<>≤≥≮≯∈∉⊂⊃⊆⊇←→⟵⟶⟸⟹⟺∑∏∫|‖]|&lt;|&gt;|&le;|&ge;/u;
+const STRONG_FLIP_SIGNAL = /[√∛∜<>≤≥≮≯∈∉∋∌⊂⊃⊄⊅⊆⊇⊈⊉⊊⊋←→⟵⟶⟸⟹⟺∑∏∫|‖]|&lt;|&gt;|&le;|&ge;/u;
 
 /**
  * A **tight signed number** — a `+`/`−` glued directly to a digit (`−5`, `+90`,
@@ -196,10 +198,10 @@ function needsLtrIsolate(segment: string): boolean {
  * écriture arabe, guillemets typographiques…) marque de la prose et coupe le run.
  */
 const MATH_TOKEN_CHARS =
-  "0-9A-Za-z+\\-−–±*/=<>≤≥≠≈≡%‰¹²³⁰⁴-⁹⁺⁻₀-₉₊₋√∛∜×÷·^_()\\[\\]{}⟨⟩⌊⌋⌈⌉|‖πµσΩ∆°′″.,;:…!?∈∉⊂⊃⊆⊇∪∩∅ℝℕℤℚℂ∥⊥∠→⟶⟵⟸⟹⟺∑∏∫∞'";
+  "0-9A-Za-z+\\-−–±*/=<>≤≥≠≈≡%‰¹²³⁰⁴-⁹⁺⁻₀-₉₊₋√∛∜×÷·^_()\\[\\]{}⟨⟩⌊⌋⌈⌉|‖πµσΩ∆°′″.,;:…!?∈∉∋∌⊂⊃⊄⊅⊆⊇⊈⊉⊊⊋∪∩∅ℝℕℤℚℂ∥⊥∠→⟶⟵⟸⟹⟺∑∏∫∞'";
 const MATH_TOKEN_RE = new RegExp(`^[${MATH_TOKEN_CHARS}]+$`, "u");
 /** Un opérateur, une relation ou un délimiteur — ce qui fait d'une suite de jetons une formule. */
-const MATH_OPERATOR_RE = /[+\-−–±*/=<>≤≥≠≈≡×÷·√∛∜()[\]{}⟨⟩⌊⌋⌈⌉∈∉⊂⊃⊆⊇∪∩∥⊥→⟶⟵⟸⟹⟺∑∏∫^]/u;
+const MATH_OPERATOR_RE = /[+\-−–±*/=<>≤≥≠≈≡×÷·√∛∜()[\]{}⟨⟩⌊⌋⌈⌉∈∉∋∌⊂⊃⊄⊅⊆⊇⊈⊉⊊⊋∪∩∥⊥→⟶⟵⟸⟹⟺∑∏∫^]/u;
 /** Une relation : `x = 5` est une formule à lui seul, `2 + 3` demande deux jetons. */
 const MATH_RELATION_RE = /[=<>≤≥≠≈≡⟹⟺]|&lt;|&gt;|&le;|&ge;/u;
 /** Suite d'au moins trois lettres latines — un MOT, sauf s'il est dans la liste ci-dessous. */
@@ -299,7 +301,7 @@ function isMathPhrase(tokens: string[]): boolean {
  */
 const PROSE_SHAPED_RE = /^(?:[A-Za-z]+|\?)$/u;
 /** Un jeton fait seulement d'opérateurs — `=`, `+`, `≤`, `→` : ce qui LIE une lettre à la formule. */
-const BARE_OPERATOR_RE = /^[+\-−–±*/=<>≤≥≠≈≡×÷·∈∉⊂⊃⊆⊇∪∩∥⊥→⟶⟵⟸⟹⟺]+$/u;
+const BARE_OPERATOR_RE = /^[+\-−–±*/=<>≤≥≠≈≡×÷·∈∉∋∌⊂⊃⊄⊅⊆⊇⊈⊉⊊⊋∪∩∥⊥→⟶⟵⟸⟹⟺]+$/u;
 
 /**
  * Rogne les bords d'un run des jetons purement alphabétiques qu'aucun opérateur
