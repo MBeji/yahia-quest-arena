@@ -39,6 +39,7 @@ import {
 import { auditExerciseManuelPages, auditManuelRefs } from "./qa-manuel-refs.ts";
 import { auditVerbatim, buildVerbatimIndex, questionTextSurface } from "./verbatim-checks.ts";
 import { loadCnpCorpusFiles, loadSurveilledSources } from "./programmes-io.ts";
+import { auditPositionalOptionRef } from "./qa-option-refs.ts";
 
 const hasFlag = (n: string) => argv.includes(`--${n}`);
 const getFlag = (n: string) => {
@@ -218,7 +219,12 @@ function main(): void {
                 ? auditBoardQuestion(q, where)
                 : q.type === "short_answer"
                   ? auditShortAnswerQuestion(q, knownTags, where)
-                  : [...auditQuestion(q, where), ...auditMisconceptionTags(q, knownTags, where)]),
+                  : [
+                      ...auditQuestion(q, where),
+                      ...auditMisconceptionTags(q, knownTags, where),
+                      // Options mélangées à l'affichage : une lettre dans l'explication ment.
+                      ...auditPositionalOptionRef(q, where, spatial),
+                    ]),
             // Competency refs apply to EVERY question type (étude 07 R-2).
             ...auditCompetencyRefs(q, subject.meta.id, competencyVocab, where),
             // Accepted-answer set (étude 20 R-4/R-5): also every type — the
