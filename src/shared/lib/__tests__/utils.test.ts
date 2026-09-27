@@ -82,6 +82,17 @@ describe("isMathExpression", () => {
     expect(isMathExpression("(3/5)⁻² = (5/3)²")).toBe(true);
   });
 
+  // #1117 — une option faite de relations d'ensemble niées ou converses est une formule :
+  // elle doit recevoir `dir="ltr"` comme ses sœurs `∈` et `⊂`.
+  it("detects negated and converse set relations", () => {
+    expect(isMathExpression("B ⊄ ℚ ; 0,(3) ∈ B")).toBe(true);
+    expect(isMathExpression("A ⊈ B")).toBe(true);
+    expect(isMathExpression("ℚ ∋ 1/3")).toBe(true);
+    expect(isMathExpression("π ∉ ℚ")).toBe(true);
+    // L'option qui porte une lettre arabe reste de la prose : c'est bidi.ts qui l'isole.
+    expect(isMathExpression("الرمز ⊄")).toBe(false);
+  });
+
   it("detects a positive exponent and signed subscripts", () => {
     expect(isMathExpression("2⁺³")).toBe(true);
     expect(isMathExpression("u₋₁")).toBe(true);

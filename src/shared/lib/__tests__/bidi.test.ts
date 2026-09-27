@@ -67,6 +67,17 @@ describe("isolateLtrRuns", () => {
     expect(isolateLtrRuns("السهم x → y معرّف")).toContain(`${LRI} x → y ${PDI}`);
   });
 
+  // #1117 — la famille des relations d'ensemble se traite EN BLOC. `⊄` ou `∋` oublié,
+  // seul dans une phrase arabe, restait au niveau RTL et se dessinait en miroir :
+  // l'option « الرمز ⊄ » d'un QCM publié se lisait « ⊅ », l'énoncé inversé.
+  it.each(["∈", "∉", "∋", "∌", "⊂", "⊃", "⊄", "⊅", "⊆", "⊇", "⊈", "⊉", "⊊", "⊋"])(
+    "isolates the set relation %s even when it stands alone in Arabic prose",
+    (rel) => {
+      expect(isolateLtrRuns(`الرمز ${rel}`)).toBe(`الرمز${LRI} ${rel}${PDI}`);
+      expect(isolateLtrRuns(`نكتب A ${rel} B هنا`)).toContain(`${LRI} A ${rel} B ${PDI}`);
+    },
+  );
+
   // Regression: plain arithmetic, units and bare numbers must be left UNTOUCHED.
   // The native bidi algorithm already orders them correctly inside RTL prose;
   // isolating them reverses the run (`10 مي + 2 مي` rendered as `10مي 2 + مي`).
