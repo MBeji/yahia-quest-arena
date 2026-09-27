@@ -12,7 +12,7 @@
  *
  * Usage (depuis le moteur, corpus branché par le lien `content`) :
  *   npm run content:gates                 # les sept étages
- *   npm run content:gates -- --tranche    # + content:tranche --changed (méthode § B2)
+ *   npm run content:gates -- --tranche    # + content:tranche --changed (méthode § B2) et les cliquets CI (--fresh)
  *   npm run content:gates -- --quiet      # n'affiche la sortie que des étages rouges
  *
  * Avant tout, il mesure le RETARD du moteur sur `origin/main` (skill campagne
@@ -71,6 +71,20 @@ if (argv.includes("--tranche")) {
     "content:tranche --changed",
     "node",
     ["--experimental-strip-types", "scripts/content/tranche.ts", "--changed", "--strict"],
+  ]);
+  // Les CLIQUETS tels que la Content CI les lance (`content-ci.yml`) : les questions neuves ne
+  // fuient pas par la longueur, les cours neufs ou retouchés ne reculent pas sur le patron é35.
+  stages.push([
+    "content:tranche --fresh (cliquets CI)",
+    "node",
+    [
+      "--experimental-strip-types",
+      "scripts/content/tranche.ts",
+      "--changed",
+      "--fresh",
+      "--strict-longest",
+      "--strict-lessons",
+    ],
   ]);
 }
 

@@ -22,6 +22,10 @@
  * d'exercices parallèles voulue se justifie au rapport, pas dans un gate). Les
  * candidats gabarit ne font jamais échouer : ils nourrissent le mandat de
  * l'auditeur (méthode B3, point 2).
+ *
+ * Sous `--fresh`, le rapport porte aussi le cliquet du patron de notion (é35,
+ * `lesson-ratchet.ts`) sur les cours neufs ou modifiés ; `--strict-lessons` sort
+ * en 1 quand un cours le fait reculer.
  */
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdtempSync, realpathSync, rmSync } from "node:fs";
@@ -30,6 +34,7 @@ import { dirname, join, resolve } from "node:path";
 import { argv, cwd, exit, stdout } from "node:process";
 import { loadSubject } from "../../src/shared/content/loader.ts";
 import type { LoadedSubject } from "../../src/shared/content/schema.ts";
+import { type LessonRatchetEntry, lessonRatchet } from "./lesson-ratchet.ts";
 import { collectItems, freshRefs, measureTranche, type TrancheReport } from "./tranche-checks.ts";
 
 const hasFlag = (n: string) => argv.includes(`--${n}`);
@@ -117,7 +122,22 @@ function list(refs: string[]): string {
   return refs.length > MAX_LISTED ? `${shown}, … (+${refs.length - MAX_LISTED})` : shown;
 }
 
-function render(r: TrancheReport): string {
+type Report = TrancheReport & { lessons?: LessonRatchetEntry[] };
+
+function renderLessons(entries: LessonRatchetEntry[]): string[] {
+  const back = entries.filter((e) => e.regressed);
+  const lines = [
+    `  ${back.length ? "⚠" : "✓"} patron de notion (é35) sur ${entries.length} cours neuf(s) ou modifié(s) : ` +
+      `${back.length} en recul`,
+  ];
+  for (const e of entries.filter((x) => x.regressed || x.now > 0).slice(0, MAX_LISTED)) {
+    const was = e.base === null ? "neuf" : `${e.base} avant`;
+    lines.push(`      ${e.regressed ? "✗" : "·"} ${e.chapter} : ${e.now} constat(s) (${was})`);
+  }
+  return lines;
+}
+
+function render(r: Report): string {
   const mark = (ok: boolean) => (ok ? "✓" : "⚠");
   const lines = [
     `\n■ ${r.subject} — tranche : ${r.tranche.join(", ")} (${r.items} question(s)` +
@@ -146,6 +166,7 @@ function render(r: TrancheReport): string {
   for (const t of r.templates.slice(0, MAX_LISTED)) {
     lines.push(`      ×${t.refs.length} « ${t.frame} »`, `         ${list(t.refs)}`);
   }
+  if (r.lessons) lines.push(...renderLessons(r.lessons));
   return lines.join("\n");
 }
 
@@ -173,7 +194,7 @@ function main(): void {
     targets = new Map([[subject, undefined]]);
   }
 
-  const reports: TrancheReport[] = [];
+  const reports: Report[] = [];
   for (const [id, chapters] of targets) {
     const subject = loadSubject(join(contentDir, id));
     const slugs = subject.chapters.map((c) => c.slug);
@@ -186,7 +207,12 @@ function main(): void {
             collectItems(subject, tranche),
             baseSubject && collectItems(baseSubject, new Set()),
           );
-    reports.push(measureTranche(subject, tranche, fresh));
+    reports.push({
+      ...measureTranche(subject, tranche, fresh),
+      ...(baseSubject === undefined
+        ? {}
+        : { lessons: lessonRatchet(subject, tranche, baseSubject) }),
+    });
   }
 
   stdout.write(
@@ -196,6 +222,7 @@ function main(): void {
   );
   const leaking = reports.filter((r) => !r.longestKey.ok);
   const paired = reports.filter((r) => r.nearPairs.length > 0);
+  const receding = reports.filter((r) => r.lessons?.some((e) => e.regressed));
   if (!hasFlag("json")) {
     // Le verdict dit ce qui BLOQUE, puis ce qui reste à lire : sous
     // `--strict-longest` (la CI), des paires proches ne sont pas « à reprendre »
@@ -214,10 +241,17 @@ function main(): void {
           `${hasFlag("strict-longest") ? " — non bloquant ici." : "."}`,
       );
     }
+    if (receding.length > 0) {
+      lines.push(
+        `⚠ content:tranche — patron de notion en recul dans ${receding.length} matière(s) : un chapitre neuf du ` +
+          "programme s'écrit au patron (course-explanation.md), un cours retouché n'y ajoute pas de constat.",
+      );
+    }
     stdout.write(`${lines.join("\n")}\n`);
   }
   if (hasFlag("strict") && (leaking.length > 0 || paired.length > 0)) exit(1);
   if (hasFlag("strict-longest") && leaking.length > 0) exit(1);
+  if (hasFlag("strict-lessons") && receding.length > 0) exit(1);
 }
 
 main();
