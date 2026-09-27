@@ -577,6 +577,22 @@ dernières tranches d'`arabic-8eme` auraient été arrêtées à 61–75 % — l
 justification (« حال في محلّ نصب، تصف الوردة ساعة موتها ») quand les distracteurs sont nus. Un
 taux ne se juge qu'au-delà de 8 questions : en deçà, les items sont listés, pas condamnés.
 
+**Le cliquet des cours (`--fresh --strict-lessons`, é35)** fait pour `cours.md` ce que le
+précédent fait pour les questions (`lesson-ratchet.ts`). `content:qa` juge le patron de notion en
+deux régimes : erreur pour une matière qui déclare `coursePattern: "notion"`, avertissement
+ailleurs — et, sans bloc de savoir, un cours ne déclenche **aucun** avertissement. Un chapitre
+neuf pouvait donc s'écrire à l'ancienne dans toute matière non déclarée. Le cliquet compte les
+constats é35 du régime **strict** sur chaque cours neuf ou modifié : un chapitre **neuf** du
+programme (`ecole-tn`) doit être à zéro, un cours **retouché** ne doit pas en compter plus
+qu'avant (la dette publiée ne force aucune réécriture). Les thèmes hors programme ne sont tenus
+qu'au second. Mesuré le 2026-09-27 sur 95 matières : 154 chapitres sur 813 sont au patron, dont ceux de six
+matières générées ces dix derniers jours qui ne le déclaraient pas.
+
+**Le renvoi positionnel** (`qa-option-refs.ts`, `warn`) : une explication qui désigne une option
+par sa lettre — « الخطأ الشائع (b) », « la réponse d » — ment à l'élève, puisque les options sont
+mélangées à l'affichage. La notation qui lui ressemble est écartée (`f′(a)`, un point `(B)`, une
+droite `(d)` en géométrie). 292 questions au 2026-09-27 : un avertissement, pas un gate.
+
 Le dernier signal est celui que la méthode déclarait hors d'atteinte d'une mesure lexicale : il
 ne compare pas les mots de l'énoncé mais son **cadre** (première et dernière phrase, décor
 retiré). Il ne tranche rien — il nomme les groupes à mettre au mandat de l'auditeur (méthode B3,
