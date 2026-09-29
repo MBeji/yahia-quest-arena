@@ -13,6 +13,8 @@ import type { UnlockedBadge } from "@/shared/types/gamification";
 import type { Database, Json } from "@/shared/integrations/supabase/types";
 import type { CompiledVideo } from "@/shared/content/schema";
 import { resolveCorrectionVideo } from "./correction-video";
+import { fetchSessionReveals } from "./quest.check.server";
+import { mergeRevealedAnswers } from "./quest-reveals";
 import {
   RECALL_LOCKED_MESSAGE,
   RECALL_NOT_ELIGIBLE_MESSAGE,
@@ -926,6 +928,9 @@ export const startExerciseSession = createServerFn({ method: "POST" })
     return {
       sessionId: session.session_id,
       startedAt: session.started_at,
+      // Une partie REPRISE (ou héritière) arrive avec ses réponses déjà corrigées,
+      // définitives : le lecteur les repose au lieu de les laisser rejouer.
+      revealed: await fetchSessionReveals(supabase, session.session_id),
     };
   });
 
@@ -993,6 +998,13 @@ export const submitAttempt = createServerFn({ method: "POST" })
     }
 
     await assertAnswerFormats(supabase, "quest.submitAttempt", data.exerciseId, data.answers);
+    // Les réponses FIGÉES par la correction immédiate l'emportent sur le payload. Le
+    // barème SQL l'impose de toute façon ; les réunir ici garde l'arbitrage et la
+    // correction de fin de partie d'accord avec la note (20260929120000).
+    const answers = mergeRevealedAnswers(
+      data.answers,
+      await fetchSessionReveals(supabase, data.sessionId),
+    );
 
     // Comprehension quizzes are validated by the student alone: we never return
     // the correct answers / explanations for a quiz, so they cannot be memorised
@@ -1025,12 +1037,12 @@ export const submitAttempt = createServerFn({ method: "POST" })
     // validation — et seulement quand une de ses réponses libres a été refusée,
     // c'est-à-dire rarement, et précisément dans le cas où il avait peut-être
     // raison. Une panne ici ne coûte rien : le verdict déterministe tient.
-    await arbitrateQuestOpenAnswers(userId, data.answers);
+    await arbitrateQuestOpenAnswers(userId, answers);
 
     const { data: submitData, error: submitErr } = await supabase.rpc("submit_exercise_attempt", {
       p_session_id: data.sessionId,
       p_exercise_id: data.exerciseId,
-      p_answers: data.answers,
+      p_answers: answers,
     });
     if (submitErr) {
       failWithClientError(
@@ -1046,7 +1058,7 @@ export const submitAttempt = createServerFn({ method: "POST" })
     // verdicts come from the submit RPC (D-4), assembled in the shared helper.
     const review: ReviewItem[] = isQuiz
       ? []
-      : await buildAttemptReview(supabase, data.sessionId, data.answers, {
+      : await buildAttemptReview(supabase, data.sessionId, answers, {
           isRecall: atomic.variant === "recall",
           perQuestion: atomic.perQuestion,
         });

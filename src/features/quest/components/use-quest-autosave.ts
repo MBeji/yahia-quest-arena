@@ -8,10 +8,10 @@ import {
   clearDraft,
   loadDraft,
   questOutboxClientId,
-  resumeFrom,
   saveDraft,
   type QuestDraftAnswer,
 } from "@/features/quest/quest-draft";
+import { planResume, type ResumePlan } from "@/features/quest/quest-reveals";
 
 // =============================================================================
 // LE TRAVAIL DE L'ÉLÈVE NE DOIT PLUS POUVOIR SE PERDRE — les deux étages.
@@ -218,44 +218,62 @@ export function useQuestAutosave({
 }
 
 /**
- * Reprend un brouillon laissé par une session précédente, une fois par exercice.
+ * Reprend une partie interrompue, une fois par session ouverte : le brouillon
+ * local ET les réponses que le serveur a figées (migration 20260929120000).
  *
  * VIT ICI ET PAS DANS LE LECTEUR, pour la même raison que le reste du fichier :
  * c'est un cycle de vie de la SAUVEGARDE. Le lecteur ne fournit que ce qu'il est
  * seul à savoir — les questions réellement servies — et reçoit un état à poser.
  *
+ * POURQUOI À L'OUVERTURE DE LA SESSION, et plus au chargement des questions : les
+ * réponses figées arrivent avec la session. Rien n'est perdu à attendre — le
+ * lecteur n'affiche aucune question tant qu'il n'a pas de session.
+ *
  * ⚠️ UN BROUILLON COMPLET N'EST PAS REPRIS. S'il ne reste aucune question sans
  * réponse, la partie était finie et seule la SOUMISSION a échoué : elle est déjà
  * en file, et `outbox.ts` la rejouera. Repeupler l'écran ferait re-valider
  * l'élève sous une session NEUVE — donc une seconde tentative pour un travail
- * déjà enregistré.
+ * déjà enregistré. (Le cas où ce sont les réponses FIGÉES qui complètent la
+ * partie est autre : voir `planResume`.)
+ *
+ * Rend `true` quand la reprise est faite (ou sans objet). Le lecteur attend ce
+ * signal avant d'afficher une question : sans lui, la session s'ouvre, la question
+ * 1 s'affiche une image, puis l'effet saute à la bonne — un clignotement que
+ * l'ancienne reprise, faite avant l'ouverture de la session, n'avait pas.
  */
 export function useQuestDraftRestore({
   exerciseId,
   variant,
   enabled,
   questionIds,
+  sessionId,
+  revealed,
   onRestore,
 }: {
   exerciseId: string;
   variant: string;
   enabled: boolean;
   questionIds: readonly string[];
-  onRestore: (state: { answers: QuestDraftAnswer[]; idx: number }) => void;
-}): void {
+  sessionId: string | null;
+  /** Les réponses de cette session que le serveur a figées. */
+  revealed: readonly QuestDraftAnswer[];
+  /** `locked` : la reprise porte des réponses figées, que l'élève ne peut plus changer. */
+  onRestore: (state: ResumePlan & { locked: boolean }) => void;
+}): boolean {
   const restoredForRef = useRef<string | null>(null);
+  const [doneFor, setDoneFor] = useState<string | null>(null);
   const onRestoreRef = useRef(onRestore);
   onRestoreRef.current = onRestore;
 
   useEffect(() => {
-    if (!enabled || questionIds.length === 0) return;
-    if (restoredForRef.current === exerciseId) return;
-    restoredForRef.current = exerciseId;
+    if (!enabled || !sessionId || questionIds.length === 0) return;
+    if (restoredForRef.current === sessionId) return;
+    restoredForRef.current = sessionId;
 
-    const draft = loadDraft(exerciseId, variant);
-    if (!draft) return;
-    const resumed = resumeFrom(questionIds, draft.answers);
-    if (resumed.answers.length === 0 || resumed.idx >= questionIds.length) return;
-    onRestoreRef.current(resumed);
-  }, [enabled, exerciseId, questionIds, variant]);
+    const plan = planResume(questionIds, loadDraft(exerciseId, variant)?.answers ?? [], revealed);
+    if (plan) onRestoreRef.current({ ...plan, locked: revealed.length > 0 });
+    setDoneFor(sessionId);
+  }, [enabled, exerciseId, questionIds, variant, sessionId, revealed]);
+
+  return !enabled || questionIds.length === 0 || doneFor === sessionId;
 }

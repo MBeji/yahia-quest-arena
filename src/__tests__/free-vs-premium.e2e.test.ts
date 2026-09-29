@@ -195,11 +195,13 @@ describe("FREE vs PREMIUM E2E: free user opens a beginner mission", () => {
     expect(session.sessionId).toBe("sess1");
 
     // 4) Submit the attempt → scoring RPC; practice exercise returns full review.
-    mockFrom.mockImplementation((table: string) =>
-      table === "questions"
-        ? mockQuery([{ id: Q, prompt: "2+2?", correct_option: "4", explanation: "x" }])
-        : mockQuery({ mode: "practice" }),
-    );
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "questions")
+        return mockQuery([{ id: Q, prompt: "2+2?", correct_option: "4", explanation: "x" }]);
+      // Aucune réponse figée : rien n'a été corrigé pendant la partie.
+      if (table === "exercise_session_reveals") return mockQuery([]);
+      return mockQuery({ mode: "practice" });
+    });
     mockRpc.mockImplementation(
       rpcByName({
         ensure_daily_weekly_goals: { data: null },
@@ -239,7 +241,8 @@ describe("FREE vs PREMIUM E2E: premium-parcours mission gate", () => {
   beforeEach(() => {
     vi.resetModules();
     capturedHandlers = {};
-    mockFrom.mockReset();
+    // Un démarrage réussi lit aussi les réponses figées de la partie (20260929120000).
+    mockFrom.mockReset().mockReturnValue(mockQuery([]));
     mockRpc.mockReset();
   });
 
@@ -301,7 +304,8 @@ describe("FREE vs PREMIUM E2E: comprehension-quiz gate", () => {
   beforeEach(() => {
     vi.resetModules();
     capturedHandlers = {};
-    mockFrom.mockReset();
+    // Un démarrage réussi lit aussi les réponses figées de la partie (20260929120000).
+    mockFrom.mockReset().mockReturnValue(mockQuery([]));
     mockRpc.mockReset();
   });
 

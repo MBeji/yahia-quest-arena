@@ -68,7 +68,9 @@ export type PlayerResult = {
 
 /** Outcome of starting an exercise: a playable session, or a gate that blocks it. */
 export type StartOutcome =
-  | { ok: true; sessionId: string }
+  // `revealed` : les réponses déjà corrigées de la partie — définitives — quand le
+  // serveur la REPREND après un rechargement (migration 20260929120000).
+  | { ok: true; sessionId: string; revealed?: PlayerAnswer[] }
   | { ok: false; kind: "quiz" }
   | { ok: false; kind: "premium"; message: string }
   // Recall gates (étude 17): the classic run isn't mastered yet ("locked") or
