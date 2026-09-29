@@ -81,6 +81,14 @@
       "where": "manuel",
       "why": "raccourci local qui rejoue les sept étages de `content-ci.yml` dans son ordre ; la CI appelle chaque étage elle-même, le lui faire appeler doublerait le run."
     },
+    "content:gisement:lignes": {
+      "where": "manuel",
+      "why": "lancé par la session de campagne (étude 36, étage G2) sur les lignes d'un lecteur, avant leur versement au registre du couple : elles naissent dans le dossier de la session, hors git, où aucun workflow ne les voit. `content:gisement:plan` rejoue le même jugement et refuse de planifier une ligne fautive."
+    },
+    "content:gisement:controle": {
+      "where": "manuel",
+      "why": "lancé par la session de campagne (étude 36, étage G6) contre les transcriptions des devoirs lus, gardées HORS git par doctrine (é27 R-10) : aucun workflow ne peut les lire, et c'est précisément pourquoi ce contrôle est local. La garde anti-verbatim de `content:qa:strict` tient la PR sur les fiches versionnées."
+    },
     "content:overflow:check": {
       "where": "manuel",
       "why": "a besoin de Chromium ET des polices de l'app (une largeur de texte sans sa police ne mesure rien) : hors de portée de la Content CI telle qu'elle est. Le brancher est une décision à prendre avec ses 82 constats en main, pas avant — voir l'issue du corpus."

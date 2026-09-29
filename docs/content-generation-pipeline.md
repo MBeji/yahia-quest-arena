@@ -658,6 +658,46 @@ Trois propriétés voulues :
 Ce n'est pas un gate : il ne sort en erreur que si l'état n'a pas pu être établi (registre
 absent, manifeste invalide) — jamais parce qu'un constat déplaît.
 
+### Le gisement (étude 36) — des examens et des devoirs aux missions
+
+Le mode gisement de `content-ingest` (dépôt privé) lit des sujets d'examen national et des
+devoirs en ligne, **une ligne par exercice**, puis en tire des missions : les examens se
+reprennent en les citant, les devoirs se réécrivent en salle blanche. Ce qu'un script peut
+vérifier dans cette chaîne, trois commandes déterministes le vérifient
+(`scripts/content/gisement/`). Chacune prend ses chemins en argument (`--content`, par défaut le
+lien `content/`), sort en **1** sur un constat et en **2** quand elle n'a pas pu juger. C'est la
+session de campagne qui les lance : lignes et transcriptions naissent hors git, aucun workflow ne
+les voit.
+
+- **`content:gisement:lignes -- <lignes.tsv…> --subject <id> --grade <classe>`** — étage G2,
+  après chaque lot de lecture, **avant** de verser les lignes au registre du couple. Juge le
+  format fermé : dix colonnes séparées par des tabulations (doc, créneau, exo, barème,
+  chapitres, compétences, archétype, étapes, piège, étage), chapitres pris au **manifeste**
+  de la classe (ou `HP:<mot-clé>`, notion hors du programme en vigueur), compétences prises au
+  **registre** de la famille (ou `hors-registre:<mot-clé>` ; `-` quand la famille n'a pas de
+  registre), étage `d1`–`d4`, et **aucun nombre de deux chiffres ni décimal** dans l'archétype
+  (16 mots au plus) ni dans le piège : un nombre de la source n'a rien à faire dans une ligne.
+  Sortie : `fichier:ligne — motif` par ligne fautive.
+- **`content:gisement:plan -- <lignes.tsv…> --subject <id> --grade <classe> --content <dir>`**
+  (options `--creneaux DC3,DS2`, `--lot-max 8`, `--out plan.json`) — étage G4, une fois la
+  carte écrite. Place chaque exercice au chapitre **le plus avancé** dans l'ordre du manifeste
+  (un exercice tout `HP:` n'est pas placé : il est compté à part avec son `doc#exo`), fait
+  **une mission par signature** de devoir ou de série (chapitre + compétences triées +
+  archétype normalisé ; la mission garde ses sources, l'étage le plus haut et le plus grand
+  nombre d'étapes) et **une par exercice** d'examen, forme les lots d'auteur (un gros chapitre
+  se coupe en lots équilibrés, les chapitres de trois missions ou moins se regroupent) et
+  réserve à chaque lot des plages `NN` disjointes, à la suite du plus grand numéro de fichier
+  existant du chapitre. Une ligne fautive, et aucun plan n'est écrit ; même entrée, même JSON,
+  octet pour octet.
+- **`content:gisement:controle -- --sources <snapshots> <cibles…>`** — étage G6, sur chaque
+  tranche écrite d'après des devoirs, et sur la carte et les lignes avant qu'elles n'entrent dans
+  git. Rejoue la garde anti-verbatim (plages de 8 mots ; de 6, à titre indicatif) contre les
+  transcriptions `.txt` gardées **hors git**, et signale toute question qui partage **au moins
+  trois nombres non triviaux** (trois chiffres ou plus, ou un décimal ; figures SVG retirées)
+  avec un même exercice source. Cibles : un exercice ou un quiz JSON (question par question), un
+  `.md` (en entier), des lignes `.tsv` (une à une, sur leur prose). Le rapport ne donne que des
+  comptes et nos identifiants (`fichier#q3`, `lignes.tsv:12`), jamais un fragment de la source.
+
 ---
 
 ## 9 bis. La feuille de route connaît-elle les lots livrés ? — l'invariant se VÉRIFIE
