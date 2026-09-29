@@ -193,7 +193,8 @@ describe("END-TO-END: premium-parcours gating of an élite challenge", () => {
   beforeEach(() => {
     vi.resetModules();
     capturedHandlers = {};
-    mockFrom.mockReset();
+    // Un démarrage réussi lit aussi les réponses figées de la partie (20260929120000).
+    mockFrom.mockReset().mockReturnValue(mockQuery([]));
     mockRpc.mockReset();
   });
 

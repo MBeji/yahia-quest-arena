@@ -79,6 +79,15 @@ function mockQuery(data: unknown, error: unknown = null) {
   return chain;
 }
 
+/**
+ * La table des réponses figées (migration 20260929120000), lue par le démarrage et
+ * par la soumission : vide sauf mention contraire, quel que soit le décor du test.
+ */
+function withReveals(impl: (table: string) => unknown, reveals: unknown[] = []) {
+  return (table: string) =>
+    table === "exercise_session_reveals" ? mockQuery(reveals) : impl(table);
+}
+
 describe("gamification.quest — getExercise", () => {
   beforeEach(() => {
     vi.resetModules();
@@ -184,7 +193,7 @@ describe("gamification.quest — startExerciseSession", () => {
   beforeEach(() => {
     vi.resetModules();
     capturedHandlers = {};
-    mockFrom.mockReset();
+    mockFrom.mockReset().mockImplementation(withReveals(() => mockQuery([])));
     mockRpc.mockReset();
   });
 
@@ -206,7 +215,11 @@ describe("gamification.quest — startExerciseSession", () => {
       data: [{ session_id: "sess-1", started_at: "2026-06-01T12:00:00Z" }],
       error: null,
     });
-    expect(await start()).toEqual({ sessionId: "sess-1", startedAt: "2026-06-01T12:00:00Z" });
+    expect(await start()).toEqual({
+      sessionId: "sess-1",
+      startedAt: "2026-06-01T12:00:00Z",
+      revealed: [],
+    });
   });
 
   it("surfaces the premium paywall message on a PARCOURS_LOCKED gate", async () => {
@@ -249,10 +262,12 @@ describe("gamification.quest — submitAttempt", () => {
   });
 
   it("surfaces the anti-rush flags (tooFast / improved) and a 0-XP result", async () => {
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises") return mockQuery({ mode: "practice" });
-      return mockQuery([{ id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "x" }]);
-    });
+    mockFrom.mockImplementation(
+      withReveals((table: string) => {
+        if (table === "exercises") return mockQuery({ mode: "practice" });
+        return mockQuery([{ id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "x" }]);
+      }),
+    );
     // The hardened RPC returns 0 XP with tooFast=true when answered too quickly.
     mockRpc.mockReturnValue({
       data: {
@@ -291,10 +306,12 @@ describe("gamification.quest — submitAttempt", () => {
       { question_id: Q2_ID, prompt: "3+3?", correct_option: "6", explanation: null },
     ];
 
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises") return mockQuery({ mode: "practice" });
-      return mockQuery([]);
-    });
+    mockFrom.mockImplementation(
+      withReveals((table: string) => {
+        if (table === "exercises") return mockQuery({ mode: "practice" });
+        return mockQuery([]);
+      }),
+    );
     mockRpc.mockImplementation((name: string) => {
       if (name === "get_attempt_review") return { data: reviewRows, error: null };
       return {
@@ -341,10 +358,12 @@ describe("gamification.quest — submitAttempt", () => {
   });
 
   it("rejects a malformed numeric answer before any scoring RPC", async () => {
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises") return mockQuery({ mode: "practice" });
-      return mockQuery([{ id: Q1_ID, question_type: "numeric" }]);
-    });
+    mockFrom.mockImplementation(
+      withReveals((table: string) => {
+        if (table === "exercises") return mockQuery({ mode: "practice" });
+        return mockQuery([{ id: Q1_ID, question_type: "numeric" }]);
+      }),
+    );
 
     const { submitAttempt } = await import("@/features/quest");
     await expect(
@@ -358,10 +377,12 @@ describe("gamification.quest — submitAttempt", () => {
   });
 
   it("scores the review through the RPC — an in-tolerance numeric answer shows correct", async () => {
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises") return mockQuery({ mode: "practice" });
-      return mockQuery([{ id: Q1_ID, question_type: "numeric" }]);
-    });
+    mockFrom.mockImplementation(
+      withReveals((table: string) => {
+        if (table === "exercises") return mockQuery({ mode: "practice" });
+        return mockQuery([{ id: Q1_ID, question_type: "numeric" }]);
+      }),
+    );
     mockRpc.mockImplementation((name: string) => {
       if (name === "get_attempt_review") {
         return {
@@ -405,10 +426,12 @@ describe("gamification.quest — submitAttempt", () => {
     const questionsData = [
       { id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "Basic math" },
     ];
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises") return mockQuery({ mode: "practice" });
-      return mockQuery(questionsData);
-    });
+    mockFrom.mockImplementation(
+      withReveals((table: string) => {
+        if (table === "exercises") return mockQuery({ mode: "practice" });
+        return mockQuery(questionsData);
+      }),
+    );
     mockRpc.mockReturnValue({
       data: {
         correct: 1,
@@ -447,10 +470,12 @@ describe("gamification.quest — submitAttempt", () => {
 
   it("returns potionApplied = null when no potion was applied", async () => {
     const questionsData = [{ id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "x" }];
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises") return mockQuery({ mode: "practice" });
-      return mockQuery(questionsData);
-    });
+    mockFrom.mockImplementation(
+      withReveals((table: string) => {
+        if (table === "exercises") return mockQuery({ mode: "practice" });
+        return mockQuery(questionsData);
+      }),
+    );
     mockRpc.mockReturnValue({
       data: {
         correct: 1,
@@ -478,10 +503,12 @@ describe("gamification.quest — submitAttempt", () => {
 
   it("surfaces retryShieldUsed=true when an armed retry shield suppressed a failure penalty", async () => {
     const questionsData = [{ id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "x" }];
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises") return mockQuery({ mode: "practice" });
-      return mockQuery(questionsData);
-    });
+    mockFrom.mockImplementation(
+      withReveals((table: string) => {
+        if (table === "exercises") return mockQuery({ mode: "practice" });
+        return mockQuery(questionsData);
+      }),
+    );
     mockRpc.mockReturnValue({
       data: {
         correct: 0,
@@ -512,10 +539,12 @@ describe("gamification.quest — submitAttempt", () => {
 
   it("defaults retryShieldUsed to false when the RPC omits it", async () => {
     const questionsData = [{ id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "x" }];
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises") return mockQuery({ mode: "practice" });
-      return mockQuery(questionsData);
-    });
+    mockFrom.mockImplementation(
+      withReveals((table: string) => {
+        if (table === "exercises") return mockQuery({ mode: "practice" });
+        return mockQuery(questionsData);
+      }),
+    );
     mockRpc.mockReturnValue({
       data: {
         correct: 1,
@@ -542,11 +571,13 @@ describe("gamification.quest — submitAttempt", () => {
   });
 
   it("hides the correction (no correct answers leak) for a comprehension quiz", async () => {
-    mockFrom.mockImplementation((table: string) => {
-      if (table === "exercises") return mockQuery({ mode: "quiz" });
-      // questions table
-      return mockQuery([{ id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "x" }]);
-    });
+    mockFrom.mockImplementation(
+      withReveals((table: string) => {
+        if (table === "exercises") return mockQuery({ mode: "quiz" });
+        // questions table
+        return mockQuery([{ id: Q1_ID, prompt: "2+2?", correct_option: "4", explanation: "x" }]);
+      }),
+    );
     mockRpc.mockReturnValue({
       data: {
         correct: 1,

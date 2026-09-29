@@ -366,6 +366,11 @@ export type TranslationKeys = {
     // pas encore passée. Voir `quest-save-status.tsx`.
     savePending: string;
     saveDone: string;
+    /**
+     * Une partie reprise après un rechargement : ses réponses déjà corrigées sont
+     * définitives (migration 20260929120000). Voir `useQuestDraftRestore`.
+     */
+    revealedKept: string;
   };
   // Level up
   levelUp: {

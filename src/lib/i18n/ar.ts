@@ -348,6 +348,7 @@ export const ar: TranslationKeys = {
     unrestrictedNav: "وصول تجريبي: افتح أيّ سؤال",
     savePending: "لم يُحفظ بعد — جارٍ إعادة المحاولة",
     saveDone: "تمّ حفظ عملك",
+    revealedKept: "استُؤنفت المهمّة — الإجابة التي صُحّحت لا يمكن تغييرها.",
   },
   levelUp: {
     title: "مستوى أعلى!",

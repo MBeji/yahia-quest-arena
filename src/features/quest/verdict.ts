@@ -13,6 +13,13 @@ import type { McqOptionRender } from "@/features/quest/components/question-input
  */
 export type QuestionVerdict = {
   questionId: string;
+  /**
+   * La réponse que ce verdict juge, telle que le serveur l'a FIGÉE (registre
+   * connecté, migration 20260929120000). Elle peut différer de celle qu'on vient
+   * d'envoyer : une question déjà corrigée dans la partie garde sa première
+   * réponse. Absente dans le registre anonyme, qui ne fige rien.
+   */
+  choice?: string;
   isCorrect: boolean;
   /** Pour un QCM : l'ID de la bonne option. Sinon : la valeur attendue brute. */
   correctChoice: string | null;
