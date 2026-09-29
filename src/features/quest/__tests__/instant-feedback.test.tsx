@@ -20,9 +20,12 @@ vi.mock("@tanstack/react-start", () => ({ useServerFn: (fn: unknown) => fn }));
 vi.mock("@/hooks/use-learning-pulse", () => ({ useLearningPulse: () => {} }));
 vi.mock("../quest.training", () => ({ getTrainingForMisconception: vi.fn() }));
 
-const { mockGetExercise, mockGetSubject } = vi.hoisted(() => ({
+const { mockGetExercise, mockGetSubject, seenPrompts } = vi.hoisted(() => ({
   mockGetExercise: vi.fn(),
   mockGetSubject: vi.fn(),
+  // Chaque énoncé que le lecteur a RENDU, même une seule fois : la seule façon de
+  // prouver qu'une question n'a jamais clignoté à l'écran avant une reprise.
+  seenPrompts: [] as string[],
 }));
 vi.mock("@/features/quest", () => ({
   getExercise: (args: unknown) => mockGetExercise(args),
@@ -44,8 +47,10 @@ vi.mock("motion/react", () => ({
   useReducedMotion: () => false,
 }));
 vi.mock("@/components/ui/svg-figure", () => ({
-  RichField: ({ raw, as = "div" }: { raw: string; as?: string }) =>
-    React.createElement(as, null, raw),
+  RichField: ({ raw, as = "div" }: { raw: string; as?: string }) => {
+    seenPrompts.push(raw);
+    return React.createElement(as, null, raw);
+  },
   OptionContent: ({ raw }: { raw: string }) => React.createElement("span", null, raw),
 }));
 vi.mock("@/components/ui/level-up-celebration", () => ({ LevelUpCelebration: () => null }));
@@ -58,8 +63,9 @@ vi.mock("@/shared/lib/utils", async (importOriginal) => ({
   isRtlText: () => false,
   isMathExpression: () => false,
 }));
-vi.mock("sonner", () => ({ toast: { error: vi.fn(), success: vi.fn() } }));
+vi.mock("sonner", () => ({ toast: { error: vi.fn(), success: vi.fn(), info: vi.fn() } }));
 
+import { toast } from "sonner";
 import {
   ExercisePlayer,
   type ExercisePlayerStrategy,
@@ -172,8 +178,10 @@ describe("ExercisePlayer — retour immédiat par question (levier 01)", () => {
     expect(screen.getByText("Deux, évidemment.")).toBeInTheDocument();
     // Toujours la première question — rien n'a avancé.
     expect(screen.getByText("1 + 1 ?")).toBeInTheDocument();
+    // La correction part DANS la session : c'est elle qui fige la réponse côté serveur.
     expect(checkAnswer).toHaveBeenCalledWith({
       exerciseId: EXERCISE_ID,
+      sessionId: "s-1",
       questionId: "q1",
       choice: "a",
     });
@@ -310,5 +318,143 @@ describe("ExercisePlayer — retour immédiat par question (levier 01)", () => {
 
     expect(await screen.findByText("2 + 2 ?")).toBeInTheDocument();
     expect(checkAnswer).not.toHaveBeenCalled();
+  });
+});
+
+// =============================================================================
+// UNE RÉPONSE CORRIGÉE EST DÉFINITIVE (migration 20260929120000) — la triche au F5.
+//
+// Signalée par un parent : cocher au hasard, lire la bonne réponse, recharger la
+// page, la redonner — comptée juste. Le verrou est au serveur ; ce bloc garde ce
+// que le LECTEUR en fait : il montre et soumet la réponse figée, et un
+// rechargement reprend la partie au lieu de rouvrir la question.
+// =============================================================================
+describe("ExercisePlayer — une réponse corrigée est définitive (F5)", () => {
+  const connected = {
+    rewards: true,
+    hints: false,
+    boss: false,
+    next: false,
+    instantFeedback: true,
+  };
+
+  beforeEach(() => {
+    mockGetExercise.mockReset().mockResolvedValue(exerciseData());
+    mockGetSubject.mockReset().mockResolvedValue({ chapters: [], exercises: [] });
+    vi.mocked(toast.info).mockClear();
+    seenPrompts.length = 0;
+    localStorage.clear();
+  });
+
+  it("le serveur rend une réponse DÉJÀ figée : l'écran la montre, et c'est elle qui est soumise", async () => {
+    const submit = vi.fn().mockResolvedValue(neutralResult);
+    // q1 avait déjà été corrigée sur « b » : le serveur juge « b », pas le « a » envoyé.
+    const checkAnswer = vi
+      .fn()
+      .mockImplementation(({ questionId }: { questionId: string }) =>
+        Promise.resolve(
+          questionId === "q1"
+            ? { questionId, choice: "b", isCorrect: false, correctChoice: "a", explanation: null }
+            : { questionId, choice: "a", isCorrect: true, correctChoice: "a", explanation: null },
+        ),
+      );
+    renderPlayer(strategyWith({ capabilities: connected, submit, checkAnswer }));
+
+    fireEvent.click(await screen.findByText("2")); // « a »
+    fireEvent.click(screen.getByTestId("quest-submit"));
+
+    const verdict = await screen.findByTestId("quest-feedback");
+    expect(verdict).toHaveAttribute("data-correct", "false");
+    // La réponse marquée est la figée (« b », texte « 3 »), pas celle qu'on venait d'envoyer.
+    await waitFor(() =>
+      expect(screen.getByText("3").closest("button")?.className).toContain("border-destructive"),
+    );
+
+    fireEvent.click(screen.getByTestId("quest-submit")); // continuer
+    fireEvent.click(await screen.findByText("4"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+    await screen.findByTestId("quest-feedback");
+    fireEvent.click(screen.getByTestId("quest-submit")); // terminer
+
+    await waitFor(() => expect(submit).toHaveBeenCalled());
+    expect(submit.mock.calls[0][0].answers).toEqual([
+      { questionId: "q1", choice: "b" },
+      { questionId: "q2", choice: "a" },
+    ]);
+  });
+
+  it("recharger reprend la partie : la question corrigée ne se rejoue pas, l'élève est prévenu", async () => {
+    const submit = vi.fn().mockResolvedValue(neutralResult);
+    renderPlayer(
+      strategyWith({
+        capabilities: connected,
+        submit,
+        // La session REPRISE arrive avec sa réponse déjà corrigée — et fausse.
+        startSession: vi.fn().mockResolvedValue({
+          ok: true,
+          sessionId: "s-1",
+          revealed: [{ questionId: "q1", choice: "b" }],
+        }),
+      }),
+    );
+
+    // On reprend sur la question 2 : la 1 n'est plus jouable.
+    expect(await screen.findByText("2 + 2 ?")).toBeInTheDocument();
+    expect(screen.queryByText("1 + 1 ?")).not.toBeInTheDocument();
+    // … et elle n'a même pas clignoté : le lecteur attend la reprise pour afficher.
+    expect(seenPrompts).not.toContain("1 + 1 ?");
+    expect(toast.info).toHaveBeenCalledTimes(1);
+
+    fireEvent.click(screen.getByText("4"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+    await screen.findByTestId("quest-feedback");
+    fireEvent.click(screen.getByTestId("quest-submit"));
+
+    await waitFor(() => expect(submit).toHaveBeenCalled());
+    expect(submit.mock.calls[0][0].answers).toEqual([
+      { questionId: "q1", choice: "b" },
+      { questionId: "q2", choice: "a" },
+    ]);
+  });
+
+  it("tout est déjà corrigé : retour sur la dernière question, sa réponse figée présélectionnée", async () => {
+    const submit = vi.fn().mockResolvedValue(neutralResult);
+    const checkAnswer = vi.fn().mockResolvedValue({
+      questionId: "q2",
+      choice: "b",
+      isCorrect: false,
+      correctChoice: "a",
+      explanation: null,
+    });
+    renderPlayer(
+      strategyWith({
+        capabilities: connected,
+        submit,
+        checkAnswer,
+        startSession: vi.fn().mockResolvedValue({
+          ok: true,
+          sessionId: "s-1",
+          revealed: [
+            { questionId: "q1", choice: "a" },
+            { questionId: "q2", choice: "b" },
+          ],
+        }),
+      }),
+    );
+
+    expect(await screen.findByText("2 + 2 ?")).toBeInTheDocument();
+    // « Valider » repart avec la réponse figée, sans que l'élève ait à la recocher.
+    fireEvent.click(screen.getByTestId("quest-submit"));
+    await screen.findByTestId("quest-feedback");
+    expect(checkAnswer).toHaveBeenCalledWith(
+      expect.objectContaining({ questionId: "q2", choice: "b" }),
+    );
+    fireEvent.click(screen.getByTestId("quest-submit")); // terminer
+
+    await waitFor(() => expect(submit).toHaveBeenCalled());
+    expect(submit.mock.calls[0][0].answers).toEqual([
+      { questionId: "q1", choice: "a" },
+      { questionId: "q2", choice: "b" },
+    ]);
   });
 });

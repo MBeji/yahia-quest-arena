@@ -166,7 +166,9 @@ describe("quest recall — startExerciseSession", () => {
   beforeEach(() => {
     vi.resetModules();
     capturedHandlers = {};
-    mockFrom.mockReset();
+    // Le démarrage lit aussi les réponses figées de la partie (20260929120000) :
+    // aucune en Rappel, qui ne corrige rien en cours de partie.
+    mockFrom.mockReset().mockReturnValue(mockQuery([]));
     mockRpc.mockReset();
   });
 
@@ -184,7 +186,7 @@ describe("quest recall — startExerciseSession", () => {
       error: null,
     });
     const res = await start("recall");
-    expect(res).toEqual({ sessionId: "sess-1", startedAt: "2026-07-14T12:00:00Z" });
+    expect(res).toEqual({ sessionId: "sess-1", startedAt: "2026-07-14T12:00:00Z", revealed: [] });
     expect(mockRpc).toHaveBeenCalledWith("start_exercise_session", {
       p_exercise_id: EXID,
       p_variant: "recall",

@@ -68,20 +68,25 @@ import { emitQuestResultTelemetry, levelCrossedBy } from "@/features/quest/quest
 //
 // RETOUR IMMÉDIAT (levier 01) — pourquoi c'est tenable. Corriger une question en
 // cours de partie révèle la bonne réponse avant que le score final ne soit
-// calculé : il faut donc que la réponse ne puisse plus bouger. Deux verrous, et
-// ce qu'ils ne couvrent pas :
-//   1. La réponse est figée AVANT l'appel (`answeredQuestionRef` + `committedChoiceRef`),
-//      la liste passe en `disabled`, les raccourcis clavier de sélection se taisent,
-//      et « Continuer » rejoue la réponse figée — pas la sélection courante.
-//   2. Le verdict ne vient jamais du client : c'est la RPC `check_answers`, qui
-//      refuse le quiz de compréhension et tout exercice hors catalogue `admin`.
-// Ce que ça ne prétend pas être : une garantie contre un client modifié. Cette
-// même RPC est ouverte à `authenticated` depuis l'étude « types natifs » — la clé
-// d'un exercice d'entraînement est donc déjà atteignable depuis une console, avec
-// ou sans ce lot. Le modèle anti-triche du score repose sur le serveur
-// (`submit_exercise_attempt`, anti-rush, session à usage unique), pas sur le
-// secret de la clé côté navigateur. Ce lot n'ajoute aucune capacité — il rend
-// visible dans l'UI ce que la plateforme sert déjà.
+// calculé : il faut donc que la réponse ne puisse plus bouger. Trois verrous :
+//   1. À l'écran, la réponse est figée AVANT l'appel (`answeredQuestionRef` +
+//      `committedChoiceRef`), la liste passe en `disabled`, les raccourcis clavier
+//      de sélection se taisent, et « Continuer » rejoue la réponse figée.
+//   2. Le verdict ne vient jamais du client : c'est la RPC `reveal_session_answer`
+//      (adossée à `check_answers`), fermée au quiz de compréhension et à tout
+//      exercice hors catalogue `admin`.
+//   3. ⚠️ Le verrou qui COMPTE est au serveur (migration 20260929120000). Les deux
+//      premiers vivent dans l'onglet, et un rechargement les effaçait : un élève
+//      cochait au hasard, lisait la bonne réponse, appuyait sur F5 et la redonnait
+//      — comptée juste (signalé par un parent le 2026-09-29). Désormais la
+//      correction FIGE la réponse dans la session, le rechargement REPREND la même
+//      partie (ses réponses figées reposées par `useQuestDraftRestore`), et la note
+//      porte sur la réponse figée, quoi que le client envoie.
+// Ce que ça ne prétend pas être : un coffre pour la clé. `check_answers` reste
+// ouverte à `authenticated` (correction publique) et la correction complète de fin
+// de partie reste servie — rejouer une mission RENDUE est permis. Ce qui est
+// garanti : une réponse dont l'élève a vu la correction ne se rejoue plus tant
+// qu'il n'a pas rendu la partie.
 // =============================================================================
 
 // Le contrat de données vit dans `player-types.ts` depuis que ce fichier a atteint
@@ -137,6 +142,7 @@ export type ExercisePlayerStrategy = {
    */
   checkAnswer?: (args: {
     exerciseId: string;
+    sessionId: string;
     questionId: string;
     choice: string;
   }) => Promise<QuestionVerdict | null>;
@@ -227,6 +233,22 @@ export function ExercisePlayer({
   const [showLevelUp, setShowLevelUp] = useState(false);
   const [result, setResult] = useState<PlayerResult | null>(null);
 
+  // Wall-clock start of the run, used to measure the answer duration the anon
+  // strategy needs for its anti-rush check (connected scoring is server-timed).
+  const runStartedAtRef = useRef<number>(0);
+
+  const session = useExerciseSession({
+    data,
+    paused: Boolean(result),
+    variant,
+    startSession: strategy.startSession,
+    onStarted: () => {
+      runStartedAtRef.current = Date.now();
+      play("start");
+    },
+  });
+  const { sessionId, startGate, reset: resetSession } = session;
+
   // Retour immédiat (levier 01). Jamais sur le quiz de compréhension (l'élève
   // s'y valide seul, la clé n'y est pas rendue) ni en Rappel (réponse libre :
   // `check_answers` la confronterait à la clé du QCM et rendrait des verdicts
@@ -247,25 +269,10 @@ export function ExercisePlayer({
   } = useInstantFeedback({
     enabled: feedbackEnabled,
     exerciseId,
+    sessionId,
     labels: t.encouragement,
     checkAnswer: strategy.checkAnswer,
   });
-
-  // Wall-clock start of the run, used to measure the answer duration the anon
-  // strategy needs for its anti-rush check (connected scoring is server-timed).
-  const runStartedAtRef = useRef<number>(0);
-
-  const session = useExerciseSession({
-    data,
-    paused: Boolean(result),
-    variant,
-    startSession: strategy.startSession,
-    onStarted: () => {
-      runStartedAtRef.current = Date.now();
-      play("start");
-    },
-  });
-  const { sessionId, startGate, reset: resetSession } = session;
 
   // Le filet : instantané local de la partie en cours, et mise en file de la
   // soumission AVANT sa tentative. Réservé au registre connecté — l'anonyme n'a
@@ -499,14 +506,18 @@ export function ExercisePlayer({
   // La reprise d'un brouillon vit dans son hook (`use-quest-autosave`) : le
   // lecteur ne fournit que ce qu'il est seul à savoir — les questions servies —
   // et repose l'état qu'on lui rend.
-  useQuestDraftRestore({
+  const restoreReady = useQuestDraftRestore({
     exerciseId,
     variant,
     enabled: capabilities.rewards && !result,
     questionIds,
-    onRestore: ({ answers: restored, idx: at }) => {
+    sessionId,
+    revealed: session.revealed,
+    onRestore: ({ answers: restored, idx: at, selected: preselected, locked }) => {
       setAnswers(restored);
       setIdx(at);
+      setSelected(preselected);
+      if (locked) toast.info(t.quest.revealedKept);
     },
   });
 
@@ -588,8 +599,15 @@ export function ExercisePlayer({
     answeredQuestionRef.current = current.id;
     committedChoiceRef.current = selected;
     const committed = selected;
-    void checkAnswerNow(current.id, committed).then((held) => {
-      if (held) return;
+    void checkAnswerNow(current.id, committed).then((verdict) => {
+      if (verdict) {
+        // Le serveur a pu rendre une réponse DÉJÀ figée (question corrigée plus tôt
+        // dans cette partie) : c'est elle qui compte, donc elle que l'écran montre
+        // et que « Continuer » enregistre.
+        committedChoiceRef.current = verdict.choice ?? committed;
+        setSelected(committedChoiceRef.current);
+        return;
+      }
       // Pas de verdict à montrer (exercice non corrigible, panne) : on enchaîne
       // exactement comme avant ce lot, avec la réponse que l'élève a donnée.
       answeredQuestionRef.current = null;
@@ -726,6 +744,9 @@ export function ExercisePlayer({
       />
     );
   }
+
+  // La reprise se pose avant toute question : jamais un flash de la question 1.
+  if (!restoreReady) return preparingScreen;
 
   function handleSelect(optId: string) {
     // Une fois la question corrigée (ou en cours de correction), la réponse est

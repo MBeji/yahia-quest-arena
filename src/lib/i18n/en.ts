@@ -349,6 +349,7 @@ export const en: TranslationKeys = {
     unrestrictedNav: "Test access: open any question",
     savePending: "Not saved yet — retrying",
     saveDone: "Work saved",
+    revealedKept: "Mission resumed — an answer that was already corrected can't be changed.",
   },
   levelUp: {
     title: "Level up!",

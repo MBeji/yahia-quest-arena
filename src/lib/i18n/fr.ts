@@ -370,6 +370,7 @@ export const fr: TranslationKeys = {
     unrestrictedNav: "Accès test : ouvre n'importe quelle question",
     savePending: "Pas encore enregistré — nouvelle tentative en cours",
     saveDone: "Travail enregistré",
+    revealedKept: "Mission reprise — une réponse déjà corrigée ne se change plus.",
   },
   levelUp: {
     title: "Niveau supérieur !",
