@@ -62,6 +62,7 @@ import { checkQuestion } from "@/features/quest/quest.check.server";
 
 type Verdict = {
   questionId: string;
+  choice: string;
   isCorrect: boolean;
   correctChoice: string | null;
   explanation: string | null;
@@ -70,6 +71,7 @@ const call = checkQuestion as unknown as (input: unknown) => Promise<Verdict>;
 
 const Q1 = "11111111-1111-1111-1111-111111111111";
 const EX = "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee";
+const SESSION = "5e555555-5555-4555-8555-555555555555";
 
 describe("quest.checkQuestion (retour immédiat, levier 01)", () => {
   beforeEach(() => {
@@ -81,13 +83,22 @@ describe("quest.checkQuestion (retour immédiat, levier 01)", () => {
   it("rend le verdict d'une bonne réponse", async () => {
     mockRpc.mockResolvedValue({
       data: [
-        { question_id: Q1, is_correct: true, correct_option: "a", explanation: "Parce que a." },
+        {
+          question_id: Q1,
+          choice: "a",
+          is_correct: true,
+          correct_option: "a",
+          explanation: "Parce que a.",
+        },
       ],
       error: null,
     });
 
-    await expect(call({ exerciseId: EX, questionId: Q1, choice: "a" })).resolves.toEqual({
+    await expect(
+      call({ exerciseId: EX, sessionId: SESSION, questionId: Q1, choice: "a" }),
+    ).resolves.toEqual({
       questionId: Q1,
+      choice: "a",
       isCorrect: true,
       correctChoice: "a",
       explanation: "Parce que a.",
@@ -96,52 +107,96 @@ describe("quest.checkQuestion (retour immédiat, levier 01)", () => {
 
   it("rend la bonne option et l'explication sur une réponse fausse", async () => {
     mockRpc.mockResolvedValue({
-      data: [{ question_id: Q1, is_correct: false, correct_option: "b", explanation: "C'est b." }],
+      data: [
+        {
+          question_id: Q1,
+          choice: "a",
+          is_correct: false,
+          correct_option: "b",
+          explanation: "C'est b.",
+        },
+      ],
       error: null,
     });
 
-    const verdict = await call({ exerciseId: EX, questionId: Q1, choice: "a" });
+    const verdict = await call({ exerciseId: EX, sessionId: SESSION, questionId: Q1, choice: "a" });
     expect(verdict).toEqual({
       questionId: Q1,
+      choice: "a",
       isCorrect: false,
       correctChoice: "b",
       explanation: "C'est b.",
     });
   });
 
-  it("n'envoie QUE la question demandée à la RPC de correction", async () => {
+  it("corrige DANS la session, qui fige la réponse (migration 20260929120000)", async () => {
     mockRpc.mockResolvedValue({ data: [], error: null });
-    await call({ exerciseId: EX, questionId: Q1, choice: "a" });
-    expect(mockRpc).toHaveBeenCalledWith("check_answers", {
-      p_exercise_id: EX,
-      p_answers: [{ questionId: Q1, choice: "a" }],
+    await call({ exerciseId: EX, sessionId: SESSION, questionId: Q1, choice: "a" });
+    expect(mockRpc).toHaveBeenCalledWith("reveal_session_answer", {
+      p_session_id: SESSION,
+      p_question_id: Q1,
+      p_choice: "a",
     });
   });
 
-  it("rend null quand la RPC ne corrige pas (quiz, catalogue non-admin) — le lecteur enchaîne", async () => {
-    // `check_answers` sort sans ligne pour un `mode = 'quiz'` ou une source ≠ admin.
+  it("rend la réponse FIGÉE et son verdict quand la question a déjà été corrigée (le F5)", async () => {
+    // 'b' a été corrigé (faux) ; l'élève recharge et renvoie 'a', qu'il vient de lire.
+    mockRpc.mockResolvedValue({
+      data: [
+        { question_id: Q1, choice: "b", is_correct: false, correct_option: "a", explanation: null },
+      ],
+      error: null,
+    });
+    await expect(
+      call({ exerciseId: EX, sessionId: SESSION, questionId: Q1, choice: "a" }),
+    ).resolves.toMatchObject({ choice: "b", isCorrect: false, correctChoice: "a" });
+  });
+
+  it("refuse une correction hors session", async () => {
+    await expect(call({ exerciseId: EX, questionId: Q1, choice: "a" })).rejects.toThrow();
+    expect(mockRpc).not.toHaveBeenCalled();
+  });
+
+  it("rend null quand la RPC ne corrige pas (quiz, catalogue non-admin, Rappel) — le lecteur enchaîne", async () => {
+    // La RPC sort sans ligne (et sans rien figer) hors du périmètre de `check_answers`.
     mockRpc.mockResolvedValue({ data: [], error: null });
-    await expect(call({ exerciseId: EX, questionId: Q1, choice: "a" })).resolves.toBeNull();
+    await expect(
+      call({ exerciseId: EX, sessionId: SESSION, questionId: Q1, choice: "a" }),
+    ).resolves.toBeNull();
   });
 
   it("rend null si la RPC répond pour une AUTRE question que celle demandée", async () => {
     mockRpc.mockResolvedValue({
-      data: [{ question_id: "other", is_correct: true, correct_option: "a", explanation: null }],
+      data: [
+        {
+          question_id: "other",
+          choice: "a",
+          is_correct: true,
+          correct_option: "a",
+          explanation: null,
+        },
+      ],
       error: null,
     });
-    await expect(call({ exerciseId: EX, questionId: Q1, choice: "a" })).resolves.toBeNull();
+    await expect(
+      call({ exerciseId: EX, sessionId: SESSION, questionId: Q1, choice: "a" }),
+    ).resolves.toBeNull();
   });
 
   it("refuse au-delà du plafond de requêtes", async () => {
     mockIsRateLimited.mockResolvedValue(true);
-    await expect(call({ exerciseId: EX, questionId: Q1, choice: "a" })).rejects.toThrow(/Trop de/);
+    await expect(
+      call({ exerciseId: EX, sessionId: SESSION, questionId: Q1, choice: "a" }),
+    ).rejects.toThrow(/Trop de/);
     expect(mockRpc).not.toHaveBeenCalled();
   });
 
   it("refuse une réponse au mauvais format pour le type de la question", async () => {
     // La question est numérique : un id d'option QCM n'est pas un format valide.
     mockFrom.mockReturnValue(questionTypesQuery([{ id: Q1, question_type: "numeric" }]));
-    await expect(call({ exerciseId: EX, questionId: Q1, choice: "a" })).rejects.toThrow();
+    await expect(
+      call({ exerciseId: EX, sessionId: SESSION, questionId: Q1, choice: "a" }),
+    ).rejects.toThrow();
     expect(mockRpc).not.toHaveBeenCalled();
   });
 });

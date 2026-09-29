@@ -68,7 +68,7 @@ function QuestPage() {
       startSession: async ({ exerciseId: exId, variant: v }): Promise<StartOutcome> => {
         try {
           const res = await startSession({ data: { exerciseId: exId, variant: v } });
-          return { ok: true, sessionId: res.sessionId };
+          return { ok: true, sessionId: res.sessionId, revealed: res.revealed };
         } catch (e) {
           const msg = e instanceof Error ? e.message : "";
           // The server fn raises localized, stable messages per gate.
@@ -114,8 +114,8 @@ function QuestPage() {
         const r = await reveal({ data: { questionId } });
         return { questionId: r.questionId, hint: r.hint, consumed: r.consumed };
       },
-      checkAnswer: ({ exerciseId: exId, questionId, choice }) =>
-        check({ data: { exerciseId: exId, questionId, choice } }),
+      checkAnswer: ({ exerciseId: exId, sessionId, questionId, choice }) =>
+        check({ data: { exerciseId: exId, sessionId, questionId, choice } }),
       renderPremiumLock: ({ message, subjectId, contentLang }) => {
         const QL = buildQuestLabels(contentLang);
         return (

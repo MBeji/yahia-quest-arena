@@ -15,12 +15,13 @@ export type InstantFeedback = {
   streak: number;
   encouragement: Encouragement | null;
   /**
-   * Corrige la réponse déjà VERROUILLÉE par l'appelant. Rend `true` si un
-   * verdict est désormais à l'écran (le lecteur attend « Continuer »), `false`
-   * s'il doit enchaîner tout de suite : correction indisponible, exercice non
-   * corrigible, ou panne — aucun de ces cas ne doit enfermer l'élève.
+   * Corrige la réponse déjà VERROUILLÉE par l'appelant. Rend le verdict désormais
+   * à l'écran (le lecteur attend « Continuer ») — son `choice`, s'il est fourni,
+   * est la réponse que le serveur a FIGÉE et qui compte —, ou `null` s'il doit
+   * enchaîner tout de suite : correction indisponible, exercice non corrigible,
+   * ou panne — aucun de ces cas ne doit enfermer l'élève.
    */
-  check: (questionId: string, choice: string) => Promise<boolean>;
+  check: (questionId: string, choice: string) => Promise<QuestionVerdict | null>;
   /** Referme le verdict avant de passer à la question suivante. */
   clear: () => void;
   /** Remet la série à zéro (changement d'exercice, rejeu). */
@@ -30,14 +31,18 @@ export type InstantFeedback = {
 export function useInstantFeedback({
   enabled,
   exerciseId,
+  sessionId,
   labels,
   checkAnswer,
 }: {
   enabled: boolean;
   exerciseId: string;
+  /** La partie dans laquelle le serveur fige la réponse corrigée. */
+  sessionId: string | null;
   labels: TranslationKeys["encouragement"];
   checkAnswer?: (args: {
     exerciseId: string;
+    sessionId: string;
     questionId: string;
     choice: string;
   }) => Promise<QuestionVerdict | null>;
@@ -52,12 +57,12 @@ export function useInstantFeedback({
   const streakRef = useRef(0);
 
   const check = useCallback(
-    async (questionId: string, choice: string): Promise<boolean> => {
-      if (!enabled || !checkAnswer) return false;
+    async (questionId: string, choice: string): Promise<QuestionVerdict | null> => {
+      if (!enabled || !checkAnswer || !sessionId) return null;
       setChecking(true);
       try {
-        const result = await checkAnswer({ exerciseId, questionId, choice });
-        if (!result) return false;
+        const result = await checkAnswer({ exerciseId, sessionId, questionId, choice });
+        if (!result) return null;
         setVerdict(result);
         if (result.isCorrect) {
           streakRef.current += 1;
@@ -70,14 +75,14 @@ export function useInstantFeedback({
           setEncouragement(null);
           play("wrong");
         }
-        return true;
+        return result;
       } catch {
-        return false;
+        return null;
       } finally {
         setChecking(false);
       }
     },
-    [enabled, checkAnswer, exerciseId, labels, combo, play],
+    [enabled, checkAnswer, exerciseId, sessionId, labels, combo, play],
   );
 
   const clear = useCallback(() => {

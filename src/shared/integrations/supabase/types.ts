@@ -1224,6 +1224,45 @@ export type Database = {
           },
         ];
       };
+      exercise_session_reveals: {
+        Row: {
+          choice: string;
+          question_id: string;
+          revealed_at: string;
+          session_id: string;
+          user_id: string;
+        };
+        Insert: {
+          choice: string;
+          question_id: string;
+          revealed_at?: string;
+          session_id: string;
+          user_id: string;
+        };
+        Update: {
+          choice?: string;
+          question_id?: string;
+          revealed_at?: string;
+          session_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "exercise_session_reveals_question_id_fkey";
+            columns: ["question_id"];
+            isOneToOne: false;
+            referencedRelation: "questions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "exercise_session_reveals_session_id_fkey";
+            columns: ["session_id"];
+            isOneToOne: false;
+            referencedRelation: "exercise_sessions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       exercise_sessions: {
         Row: {
           completed_at: string | null;
@@ -2084,6 +2123,8 @@ export type Database = {
           options: NonNullable<Json>;
           prompt: string;
           question_type: string;
+          answer_key_display: string | null;
+          is_question_recall_eligible: boolean | null;
         };
         Insert: {
           accepted_answers?: NonNullable<Json>;
@@ -3298,6 +3339,10 @@ export type Database = {
         };
         Returns: Json;
       };
+      apply_session_reveals: {
+        Args: { p_answers: Json; p_session_id: string };
+        Returns: Json;
+      };
       assert_can_read_student_activity: {
         Args: { p_student: string };
         Returns: undefined;
@@ -4309,6 +4354,16 @@ export type Database = {
       resolve_subject_parcours: {
         Args: { p_grade: string; p_theme: string };
         Returns: string;
+      };
+      reveal_session_answer: {
+        Args: { p_choice: string; p_question_id: string; p_session_id: string };
+        Returns: {
+          choice: string;
+          correct_option: string;
+          explanation: string;
+          is_correct: boolean;
+          question_id: string;
+        }[];
       };
       revoke_ai_credential: {
         Args: Record<PropertyKey, never>;
