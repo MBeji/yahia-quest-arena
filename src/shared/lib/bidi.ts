@@ -385,16 +385,33 @@ function splitLtrProse(text: string): TextRun[] {
  * {@link isolateLtrRuns} — mêmes runs, même signal : le rendu n'isole donc ni
  * plus ni moins qu'aujourd'hui, il rend seulement l'isolat incassable. En
  * contexte latin il n'y a rien à isoler, on repère juste les formules.
+ *
+ * Les espaces qui bordent une formule appartiennent à la PROSE, pas au run :
+ * posés dans le span insécable, ils supprimeraient la seule coupure possible
+ * entre deux formules voisines (`[0 ; 10[ ، [10 ; 20[ ، [20 ; 30[` — la virgule
+ * arabe n'admet aucun saut avant elle, l'espace qui la suit était pris dans
+ * l'insécable), et une liste d'intervalles ne passerait plus jamais à la ligne :
+ * elle débordait de la carte d'un téléphone (14 à 582 px mesurés).
  */
 export function splitMathRuns(text: string): TextRun[] {
   if (!text) return [];
   if (!ARABIC_RE.test(text)) return splitLtrProse(text);
   const runs: TextRun[] = [];
-  for (const segment of text.match(SEGMENT_RE) ?? []) {
-    const math = !ARABIC_RE.test(segment) && needsLtrIsolate(segment);
+  const pushProse = (chunk: string) => {
+    if (!chunk) return;
     const previous = runs[runs.length - 1];
-    if (previous && previous.math === math && !math) previous.text += segment;
-    else runs.push(run(segment, math));
+    if (previous && !previous.math) previous.text += chunk;
+    else runs.push(run(chunk, false));
+  };
+  for (const segment of text.match(SEGMENT_RE) ?? []) {
+    if (ARABIC_RE.test(segment) || !needsLtrIsolate(segment)) {
+      pushProse(segment);
+      continue;
+    }
+    const [, lead, body, tail] = segment.match(/^(\s*)([\s\S]*?)(\s*)$/u) as RegExpMatchArray;
+    pushProse(lead);
+    runs.push(run(body, true));
+    pushProse(tail);
   }
   return runs;
 }
