@@ -172,6 +172,54 @@ describe("isolateLtrRuns", () => {
     expect(isolateLtrRuns("الحدّ −2x صغير")).toContain(`${LRI} −2x ${PDI}`);
   });
 
+  // `∠` est Bidi_Mirrored, comme `⊄` (#1117) : dans une phrase arabe il restait au niveau
+  // RTL, se dessinait en miroir (⦣) et se détachait de ses lettres — « ∠ABy = 60° »
+  // s'affichait « ABy = 60°⦣ ». Remonté par l'audit du lot L12 (gisement é36).
+  it.each(["∠", "∡", "∢"])("isolates the angle sign %s even on its own", (sign) => {
+    expect(isolateLtrRuns(`يحقّق ${sign}ABy = 60° دائمًا`)).toContain(
+      `${LRI} ${sign}ABy = 60° ${PDI}`,
+    );
+    expect(isolateLtrRuns(`الرمز ${sign}`)).toBe(`الرمز${LRI} ${sign}${PDI}`);
+  });
+
+  // Une formule MÊLÉE de chiffres et de lettres qui s'ouvre par un nombre sort à moitié
+  // renversée : après un mot arabe, une lettre latine est forte gauche-à-droite et tout
+  // nombre qui la suit en hérite (règle W7), mais le premier terme reste au niveau RTL.
+  // `25 + k = 9` s'affichait `k = 9 + 25`, `1/b` s'affichait `b/1`.
+  it("isolates a formula that opens with a number and carries a letter", () => {
+    expect(isolateLtrRuns("نجد 25 + k = 9 ثمّ نحلّ")).toContain(`${LRI} 25 + k = 9 ${PDI}`);
+    expect(isolateLtrRuns("ما مقلوب 1/b في أبسط كتابة")).toContain(`${LRI} 1/b ${PDI}`);
+    expect(isolateLtrRuns("احسب 3 − x ثمّ")).toContain(`${LRI} 3 − x ${PDI}`);
+    expect(isolateLtrRuns("المقدار 10 × 3^p صحيح")).toContain(`${LRI} 10 × 3^p ${PDI}`);
+    expect(isolateLtrRuns("نكتب 1/2 = x دائمًا")).toContain(`${LRI} 1/2 = x ${PDI}`);
+  });
+
+  it("isolates a sign glued to a letter that does not follow an operand", () => {
+    expect(isolateLtrRuns("العدد −x موجب")).toContain(`${LRI} −x ${PDI}`);
+    expect(isolateLtrRuns("نجد −x + 1 ثمّ")).toContain(`${LRI} −x + 1 ${PDI}`);
+    expect(isolateLtrRuns("نجد +b هنا")).toContain(`${LRI} +b ${PDI}`);
+  });
+
+  // Ce qui s'ouvre par une LETTRE est déjà rendu gauche-à-droite (W7), et l'arithmétique
+  // sans lettre se lit de droite à gauche avec la phrase : on n'y touche pas.
+  it("does NOT isolate a formula that opens with a letter, nor digit-only arithmetic", () => {
+    for (const s of [
+      "نجد x − 3 = 5 ثمّ نحلّ",
+      "نجد AB = 5 − x ثمّ نكمل",
+      "نجد x = −a ثمّ نكمل",
+      "المجموع 10 − 4 = 6 صحيح",
+      "نجد 2x + 3 = 7 ثمّ نكمل",
+      "العدد 5 cm كبير",
+    ]) {
+      expect(isolateLtrRuns(s)).toBe(s);
+    }
+  });
+
+  // Une ponctuation de bord reste dehors, même quand la formule est isolée pour cette raison.
+  it("écarte la ponctuation de bord d'une formule mêlée isolée", () => {
+    expect(isolateLtrRuns("فنجد 25 + k = 9.")).toBe(`فنجد${LRI} 25 + k = 9${PDI}.`);
+  });
+
   // Regression: subtraction/addition is written SPACED, so the sign is not glued
   // to a digit and must NOT be isolated — the native algorithm already orders it,
   // and this includes the Arabic minute unit «د» used in time subtraction.
@@ -274,6 +322,10 @@ describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", ()
       "أمثلة: √9 = 3، √16 = 4.",
       "لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا",
       "(الجذر) √2 = 1,41 تقريبًا",
+      "نجد 25 + k = 9 ثمّ نحلّ",
+      "يحقّق ∠ABy = 60° دائمًا",
+      "العدد −x موجب",
+      "ما مقلوب 1/b في أبسط كتابة",
     ]) {
       const isolated = isolateLtrRuns(text);
       expect(mathRuns(text).length).toBe((isolated.match(new RegExp(LRI, "g")) ?? []).length);
