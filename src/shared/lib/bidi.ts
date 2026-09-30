@@ -226,7 +226,10 @@ function needsLtrIsolate(segment: string): boolean {
 /**
  * Sépare un segment non arabe DÉJÀ jugé à isoler en `[attaque, formule, queue]`,
  * la ponctuation latine qui le borde (`.`, `,`, `;`, `:`) et la parenthèse qu'il
- * ouvre ou ferme sans sa compagne allant à l'attaque ou à la queue.
+ * ouvre ou ferme sans sa compagne allant à l'attaque ou à la queue — dans les deux
+ * sens : `2012 (` et `) ·` (la parenthèse s'ouvre ou se ferme APRÈS la formule, vers
+ * le texte arabe qui suit), mais aussi `(x + 3` et `x + 3)` (la formule ouvre ou
+ * ferme un membre de phrase arabe ; sa compagne est dans un autre segment).
  * `attaque + formule + queue` redonne toujours le segment.
  *
  * Pourquoi : isolée avec la formule, cette ponctuation se lit dans l'isolat
@@ -245,17 +248,24 @@ function needsLtrIsolate(segment: string): boolean {
  * C'est la FORMULE (et non le segment entier) que les appelants soumettent à
  * {@link needsLtrIsolate} : un segment dont la seule raison d'être isolé était une
  * parenthèse de prose (`2012 (` dans le titre `مناظرة 2012 (تقني)`) ne l'est plus,
- * et se rend comme le navigateur sait le faire.
+ * et se rend comme le navigateur sait le faire. Pas de retrait de parenthèse dans un
+ * segment qui porte un crochet (`[OI)`, `]2 ; 5)`) : une demi-droite ou un intervalle
+ * apparie une parenthèse à un crochet.
  */
 function peelEdgePunctuation(segment: string): [lead: string, core: string, tail: string] {
   const count = (text: string, char: string) => text.split(char).length - 1;
+  // `[OI)`, `]2 ; 5)` : une demi-droite ou un intervalle apparie une parenthèse à un crochet,
+  // ce n'est jamais de la prose — on n'y retire que la ponctuation.
+  const bracketed = /[[\]]/u.test(segment);
   let lead = "";
   let core = segment;
   let tail = "";
   for (;;) {
     const punctuation = /^\s*[.,;:]+(?=\s)/u.exec(core)?.[0];
     const closer = count(core, ")") > count(core, "(") ? /^\s*\)/u.exec(core)?.[0] : undefined;
-    const peeled = punctuation ?? closer;
+    const opener =
+      !bracketed && count(core, "(") > count(core, ")") ? /^\s*\(/u.exec(core)?.[0] : undefined;
+    const peeled = punctuation ?? closer ?? opener;
     if (!peeled) break;
     lead += peeled;
     core = core.slice(peeled.length);
@@ -263,7 +273,9 @@ function peelEdgePunctuation(segment: string): [lead: string, core: string, tail
   for (;;) {
     const punctuation = /\s*[.,;:]+\s*$/u.exec(core)?.[0];
     const opener = count(core, "(") > count(core, ")") ? /\s*\(\s*$/u.exec(core)?.[0] : undefined;
-    const peeled = punctuation ?? opener;
+    const closer =
+      !bracketed && count(core, ")") > count(core, "(") ? /\s*\)\s*$/u.exec(core)?.[0] : undefined;
+    const peeled = punctuation ?? opener ?? closer;
     if (!peeled) break;
     tail = peeled + tail;
     core = core.slice(0, core.length - peeled.length);

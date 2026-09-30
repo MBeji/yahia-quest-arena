@@ -79,6 +79,29 @@ describe("isolateLtrRuns", () => {
   // Le titre d'une mission technique — « مناظرة 2012 (تقني) · التمرين 2 » — n'a rien à
   // isoler : la seule raison d'isoler « 2012 ( » et « ) · » était une parenthèse de PROSE.
   // Isolés, ils retournaient les parenthèses dans le rapport parent.
+  // Le cas inverse : la formule FERME ou OUVRE un membre de phrase arabe. `(نعلم أنّ √9 = 3)` :
+  // le « ) » restait dans l'isolat, à droite de la formule, donc entre la formule et le dernier
+  // mot arabe — le membre de phrase se fermait AVANT sa formule. Relevé par la re-vérification du
+  // lot L12 : une cinquantaine de chaînes des missions d'examen, près de 1 700 dans le corpus.
+  it("laisse hors de l'isolat la parenthèse que la formule ferme", () => {
+    expect(isolateLtrRuns("(نعلم أنّ √9 = 3)")).toBe(`(نعلم أنّ${LRI} √9 = 3${PDI})`);
+    // La compagne est dans un AUTRE segment : une parenthèse équilibrée reste dans la formule.
+    expect(isolateLtrRuns("(نعلم أنّ (x + 3) = 5 √9)")).toContain(`${LRI} (x + 3) = 5 √9${PDI})`);
+    // Un nombre seul ne demande aucun isolat : le « ) » de prose ne suffit plus à l'isoler.
+    expect(isolateLtrRuns("ينطلق (من 11 إلى 99)")).toBe("ينطلق (من 11 إلى 99)");
+  });
+
+  it("laisse hors de l'isolat la parenthèse que la formule ouvre", () => {
+    expect(isolateLtrRuns("ثمّ (√9 = 3 ثمّ نجد)")).toBe(`ثمّ (${LRI}√9 = 3 ${PDI}ثمّ نجد)`);
+    expect(isolateLtrRuns("الفقرة (2: التكنولوجيا)")).toBe("الفقرة (2: التكنولوجيا)");
+  });
+
+  // `[OI)` est une demi-droite, `]2 ; 5)` un intervalle : la parenthèse s'apparie à un crochet.
+  it("ne retire aucune parenthèse d'un segment à crochets (demi-droite, intervalle)", () => {
+    expect(isolateLtrRuns("المستقيم [OI) حيث EM = 1")).toContain(`${LRI} [OI) ${PDI}`);
+    expect(isolateLtrRuns("المجال ]2 ; 5) صحيح")).toContain(`${LRI} ]2 ; 5) ${PDI}`);
+  });
+
   it("n'isole pas un titre dont la seule parenthèse est de la prose", () => {
     const title = "🏛️ مناظرة 2012 (تقني) · التمرين 2 ⭐⭐: أصوات عشرين حزبًا";
     expect(isolateLtrRuns(title)).toBe(title);
@@ -326,6 +349,9 @@ describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", ()
       "يحقّق ∠ABy = 60° دائمًا",
       "العدد −x موجب",
       "ما مقلوب 1/b في أبسط كتابة",
+      "(نعلم أنّ √9 = 3)",
+      "ثمّ (√9 = 3 ثمّ نجد)",
+      "المستقيم [OI) حيث EM = 1",
     ]) {
       const isolated = isolateLtrRuns(text);
       expect(mathRuns(text).length).toBe((isolated.match(new RegExp(LRI, "g")) ?? []).length);
