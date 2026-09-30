@@ -1092,6 +1092,11 @@ html:not(.reference) .lesson-figure__plate {
   tient sur une ligne (seuil dans `src/shared/lib/bidi.ts`) : une chaîne de calcul de corrigé
   rendue insécable déborderait de la carte et ouvrirait une barre de défilement horizontale sur
   toute la page. Trop longue, la formule reste donc isolée — comme avant — mais cassable.
+
+  Les espaces qui bordent une formule restent HORS du span (dans la prose, `splitMathRuns`) : ce
+  sont les seules coupures possibles entre deux formules voisines — une liste d'intervalles
+  `[0 ; 10[ ، [10 ; 20[ ، …` dont les espaces seraient dans l'insécable ne passerait jamais à la
+  ligne et déborderait de la carte d'un téléphone.
    ===================================================== */
 .math-run {
   direction: ltr;
