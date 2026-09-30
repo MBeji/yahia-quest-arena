@@ -177,6 +177,7 @@ describe("isolateLtrRunsHtml", () => {
 
 describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", () => {
   const mathRuns = (text: string) => splitMathRuns(text).filter((run) => run.math);
+  const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
   const rebuild = (text: string) =>
     splitMathRuns(text)
       .map((run) => run.text)
@@ -217,7 +218,42 @@ describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", ()
     ]) {
       const isolated = isolateLtrRuns(text);
       expect(mathRuns(text).length).toBe((isolated.match(new RegExp(LRI, "g")) ?? []).length);
-      for (const run of mathRuns(text)) expect(isolated).toContain(`${LRI}${run.text}${PDI}`);
+      // Les espaces de bord sont dans l'isolat d'isolateLtrRuns et dans la PROSE pour
+      // splitMathRuns : la formule isolée, elle, est la même.
+      for (const run of mathRuns(text)) {
+        expect(isolated).toMatch(new RegExp(`${LRI}\\s*${escapeRegExp(run.text)}\\s*${PDI}`, "u"));
+      }
+    }
+  });
+
+  // Une liste d'intervalles (`[0 ; 10[ ، [10 ; 20[ ، …`) ne passait jamais à la ligne :
+  // les espaces qui bordent chaque intervalle étaient dans le span insécable, et la
+  // virgule arabe n'admet aucun saut avant elle — 14 à 582 px de débordement mesurés
+  // sur un téléphone, dans 28 énoncés d'examen. Les espaces de bord sont de la prose.
+  it("laisse les espaces de bord d'une formule dans la prose, entre deux formules voisines", () => {
+    const text = "الفئات هي [0 ; 10[ ، [10 ; 20[ ، [20 ; 30[ فقط";
+    const runs = splitMathRuns(text);
+    expect(runs.filter((run) => run.math).map((run) => run.text)).toEqual([
+      "[0 ; 10[",
+      "[10 ; 20[",
+      "[20 ; 30[",
+    ]);
+    // Le séparateur entre deux intervalles garde son espace AVANT et APRÈS la virgule :
+    // c'est l'espace qui suit la virgule qui offre la coupure au navigateur.
+    const between = runs.filter((run, index) => !run.math && index > 0 && index < runs.length - 1);
+    expect(between.map((run) => run.text)).toEqual([" ، ", " ، "]);
+    for (const run of runs.filter((r) => r.math)) expect(run.nowrap).toBe(true);
+    expect(rebuild(text)).toBe(text);
+  });
+
+  it("garde la formule seule dans son run — jamais d'espace en bord d'un run mathématique", () => {
+    for (const text of [
+      "بتطبيق مبدأ الجداء المعدوم، ما حلول المعادلة (x − 4)(x + 2) = 0 ؟",
+      "الناتج √50 = √(25 × 2) = 5√2 إذن",
+      "الفئات هي [0 ; 10[ ، [10 ; 20[ فقط",
+    ]) {
+      for (const run of mathRuns(text)) expect(run.text).toBe(run.text.trim());
+      expect(rebuild(text)).toBe(text);
     }
   });
 
