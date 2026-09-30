@@ -21,7 +21,9 @@
  *
  * Crucially we do **not** isolate plain digits or linear operators (`+ − × ÷ =`):
  * the native bidi algorithm already orders `10 مي + 2 مي = ؟` correctly, and
- * isolating it would reverse the run. Only glyphs that actually flip are wrapped.
+ * isolating it would reverse the run. Only glyphs that actually flip are wrapped —
+ * and the few number-and-letter formulas that come out half reversed
+ * ({@link DIGIT_FIRST_FORMULA}, {@link LEADING_SIGN_LETTER}).
  */
 
 /** LEFT-TO-RIGHT ISOLATE — opens an isolated LTR run. */
@@ -57,10 +59,13 @@ const SEGMENT_RE = new RegExp(`[${ARABIC_CHARS}]+|[^${ARABIC_CHARS}]+`, "gu");
  * (`( ) [ ] { } ⟨ ⟩ ⌊ ⌋ ⌈ ⌉ < > ≤ ≥ ∈ ∉ ∋ ∌ ⊂ ⊃ ⊄ ⊅ ⊆ ⊇ ⊈ ⊉ ⊊ ⊋`), arrows, big
  * operators and grouping bars. The set relations go as a WHOLE family: `⊄` or `∋`
  * left out stays at the RTL level when it stands alone in Arabic prose and is drawn
- * with its mirror glyph — `⊄` read as `⊅`, the statement reversed (#1117). Both raw operators and their HTML-escaped forms (`&lt;`,
- * `&gt;`) count, so the helper is safe to run before or after HTML escaping.
+ * with its mirror glyph — `⊄` read as `⊅`, the statement reversed (#1117). The angle
+ * signs `∠ ∡ ∢` are in the same case: `يحقّق ∠ABy = 60°` was drawn `ABy = 60°⦣`, the
+ * sign detached from its letters and mirrored. Both raw operators and their HTML-escaped
+ * forms (`&lt;`, `&gt;`) count, so the helper is safe to run before or after HTML escaping.
  */
-const BIDI_FLIP_SIGNAL = /[√∛∜()[\]{}⟨⟩⌊⌋⌈⌉<>≤≥≮≯∈∉∋∌⊂⊃⊄⊅⊆⊇⊈⊉⊊⊋←→⟵⟶⟸⟹⟺∑∏∫|‖]|&lt;|&gt;|&le;|&ge;/u;
+const BIDI_FLIP_SIGNAL =
+  /[√∛∜()[\]{}⟨⟩⌊⌋⌈⌉<>≤≥≮≯∈∉∋∌⊂⊃⊄⊅⊆⊇⊈⊉⊊⊋←→⟵⟶⟸⟹⟺∑∏∫∠∡∢|‖]|&lt;|&gt;|&le;|&ge;/u;
 
 /**
  * A segment that is **only** whitespace and paired bracket characters with no
@@ -79,7 +84,7 @@ const SOLO_BRACKETS_RE = /^[\s()[\]{}⟨⟩⌊⌋⌈⌉]+$/u;
  * (`< > ≤ ≥ ∈ ⊂`…), arrows, large operators and grouping bars.  These glyphs
  * do not benefit from bidi-mirroring and must be forced LTR.
  */
-const STRONG_FLIP_SIGNAL = /[√∛∜<>≤≥≮≯∈∉∋∌⊂⊃⊄⊅⊆⊇⊈⊉⊊⊋←→⟵⟶⟸⟹⟺∑∏∫|‖]|&lt;|&gt;|&le;|&ge;/u;
+const STRONG_FLIP_SIGNAL = /[√∛∜<>≤≥≮≯∈∉∋∌⊂⊃⊄⊅⊆⊇⊈⊉⊊⊋←→⟵⟶⟸⟹⟺∑∏∫∠∡∢|‖]|&lt;|&gt;|&le;|&ge;/u;
 
 /**
  * A **tight signed number** — a `+`/`−` glued directly to a digit (`−5`, `+90`,
@@ -104,6 +109,27 @@ const STRONG_FLIP_SIGNAL = /[√∛∜<>≤≥≮≯∈∉∋∌⊂⊃⊄⊅⊆�
  * (utils.ts) was flipping whole QCM options — including two correct answers.
  */
 const SIGNED_NUMBER = /(?<![\d)])[−–+][0-9]|[⁻⁺][⁰¹²³⁴⁵⁶⁷⁸⁹]|[₋₊][₀₁₂₃₄₅₆₇₈₉]/u;
+
+/**
+ * Two more forms the native algorithm scrambles, both **mixed number-and-letter
+ * formulas** whose reading order depends on what comes first. After an Arabic word a
+ * Latin LETTER is a strong left-to-right character, and every number after it inherits
+ * that direction (rule W7) — so `x − 3 = 5` and `AB = 5 − x` already render left to right.
+ * But when the formula opens with a number, or with a sign glued to a letter, the first
+ * term sits at the RTL level and only the tail turns left-to-right: the formula comes out
+ * half reversed.
+ *
+ *  - {@link DIGIT_FIRST_FORMULA}: a number, an operator, then a letter, with no letter
+ *    before (`25 + k = 9` drawn `k = 9 + 25`, `1/b` drawn `b/1`, `3 − x`, `10 × 3^p`).
+ *  - {@link LEADING_SIGN_LETTER}: a sign glued to a letter that does not follow an operand
+ *    (`−x + 1` drawn `x + 1−`, `−b`, `+b`).
+ *
+ * Measured on the whole corpus (96 943 Arabic strings), about 260 and 110 segments. Digit-only
+ * arithmetic (`10 − 4 = 6`, `3 + 5 = ؟`) carries no letter, stays untouched and keeps
+ * reading right to left with the sentence, as designed above.
+ */
+const DIGIT_FIRST_FORMULA = /^[^A-Za-z]*?\d[\d.,]*\s*[+−–×÷/=^]\s*[A-Za-z]/u;
+const LEADING_SIGN_LETTER = /^[^A-Za-z]*?(?<![\d)])[−–+][A-Za-z]/u;
 
 /**
  * Wrap every non-Arabic run that carries a bidi-flipping glyph (see
@@ -191,7 +217,9 @@ function needsLtrIsolate(segment: string): boolean {
   return (
     (BIDI_FLIP_SIGNAL.test(segment) &&
       (!SOLO_BRACKETS_RE.test(segment) || STRONG_FLIP_SIGNAL.test(segment))) ||
-    SIGNED_NUMBER.test(segment)
+    SIGNED_NUMBER.test(segment) ||
+    DIGIT_FIRST_FORMULA.test(segment) ||
+    LEADING_SIGN_LETTER.test(segment)
   );
 }
 
