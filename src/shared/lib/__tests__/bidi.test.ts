@@ -38,8 +38,63 @@ describe("isolateLtrRuns", () => {
     // The Arabic comma keeps the two formulas in distinct runs.
     const out = isolateLtrRuns("أمثلة: √9 = 3، √16 = 4.");
     expect((out.match(new RegExp(LRI, "g")) ?? []).length).toBe(2);
-    expect(out).toContain(`${LRI}: √9 = 3${PDI}`);
-    expect(out).toContain(`${LRI} √16 = 4.${PDI}`);
+    expect(out).toContain(`:${LRI} √9 = 3${PDI}`);
+    expect(out).toContain(`${LRI} √16 = 4${PDI}.`);
+  });
+
+  // Le point qui ferme la phrase et les deux-points qui ouvrent l'énoncé sont de la
+  // PROSE. Dans l'isolat gauche-à-droite, `المجال هو [−3 ; −1].` se dessinait avec le
+  // point entre le dernier mot arabe et la formule, à droite d'elle, au lieu d'être à
+  // l'extrémité gauche de la ligne qui termine la phrase (dette relevée par les audits
+  // du gisement : 420 énoncés de maths publiés sur 1 394).
+  it("laisse la ponctuation latine qui borde une formule hors de l'isolat", () => {
+    expect(isolateLtrRuns("المجال هو [−3 ; −1].")).toBe(`المجال هو${LRI} [−3 ; −1]${PDI}.`);
+    expect(isolateLtrRuns("الطول هو √5.")).toBe(`الطول هو${LRI} √5${PDI}.`);
+    expect(isolateLtrRuns("حلّ (x − 4)(x + 2) = 0, ثمّ")).toBe(
+      `حلّ${LRI} (x − 4)(x + 2) = 0${PDI}, ثمّ`,
+    );
+    // La virgule arabe n'est pas latine : elle coupe déjà le segment, rien ne change.
+    expect(isolateLtrRuns("حلّ (x − 4)(x + 2) = 0 ، ثمّ")).toBe(
+      `حلّ${LRI} (x − 4)(x + 2) = 0 ${PDI}، ثمّ`,
+    );
+    // Le point d'un décimal et le contenu de la formule ne sont jamais retirés.
+    expect(isolateLtrRuns("القيمة .5 √2 هنا")).toContain(`${LRI} .5 √2 ${PDI}`);
+    expect(isolateLtrRuns("العدد 3.5 √2 هنا")).toContain(`${LRI} 3.5 √2 ${PDI}`);
+  });
+
+  // Le « ( » qui ouvre un membre de phrase ARABE après une formule restait dans l'isolat, à
+  // droite de la formule : du mauvais côté du texte qu'il enferme (relevé dans les
+  // explications de maths de 35 missions d'examen sur 38, par les audits du gisement).
+  it("laisse hors de l'isolat la parenthèse qui ouvre ou ferme un membre de phrase arabe", () => {
+    expect(isolateLtrRuns("لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا")).toContain(
+      `${LRI} 12 + 8√2 = 5√2${PDI} (`,
+    );
+    expect(isolateLtrRuns("(الجذر) √2 = 1,41 تقريبًا")).toContain(`)${LRI} √2 = 1,41 ${PDI}`);
+    // Une parenthèse qui a sa compagne DANS la formule fait partie de la formule.
+    expect(isolateLtrRuns("الناتج (x − 4)(x + 2) = 0 صحيح")).toContain(
+      `${LRI} (x − 4)(x + 2) = 0 ${PDI}`,
+    );
+  });
+
+  // Le titre d'une mission technique — « مناظرة 2012 (تقني) · التمرين 2 » — n'a rien à
+  // isoler : la seule raison d'isoler « 2012 ( » et « ) · » était une parenthèse de PROSE.
+  // Isolés, ils retournaient les parenthèses dans le rapport parent.
+  it("n'isole pas un titre dont la seule parenthèse est de la prose", () => {
+    const title = "🏛️ مناظرة 2012 (تقني) · التمرين 2 ⭐⭐: أصوات عشرين حزبًا";
+    expect(isolateLtrRuns(title)).toBe(title);
+    expect(splitMathRuns(title).some((run) => run.math)).toBe(false);
+  });
+
+  it("ne perd ni n'ajoute aucun caractère en écartant la ponctuation", () => {
+    for (const text of [
+      "المجال هو [−3 ; −1].",
+      "أمثلة: √9 = 3، √16 = 4.",
+      "قيمة x = −2 ، ثمّ √5 ; و",
+      "لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا",
+      "(الجذر) √2 = 1,41 تقريبًا",
+    ]) {
+      expect(isolateLtrRuns(text).replaceAll(LRI, "").replaceAll(PDI, "")).toBe(text);
+    }
   });
 
   it("leaves text with no Arabic untouched (LTR content has no bug)", () => {
@@ -164,7 +219,7 @@ describe("isolateLtrRuns", () => {
 describe("isolateLtrRunsHtml", () => {
   it("isolates math inside text but never inside tag markup", () => {
     const out = isolateLtrRunsHtml('<li class="lesson-li">التعريف: √(a²) = |a|</li>');
-    expect(out).toBe(`<li class="lesson-li">التعريف${LRI}: √(a²) = |a|${PDI}</li>`);
+    expect(out).toBe(`<li class="lesson-li">التعريف:${LRI} √(a²) = |a|${PDI}</li>`);
     // class attribute must be left intact
     expect(out).toContain('class="lesson-li"');
   });
@@ -215,6 +270,10 @@ describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", ()
       "العدد a الموجب",
       "حيث b &gt; 0 دائمًا",
       "الدليل هو 10⁻⁴ هنا",
+      "المجال هو [−3 ; −1].",
+      "أمثلة: √9 = 3، √16 = 4.",
+      "لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا",
+      "(الجذر) √2 = 1,41 تقريبًا",
     ]) {
       const isolated = isolateLtrRuns(text);
       expect(mathRuns(text).length).toBe((isolated.match(new RegExp(LRI, "g")) ?? []).length);
@@ -244,6 +303,31 @@ describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", ()
     expect(between.map((run) => run.text)).toEqual([" ، ", " ، "]);
     for (const run of runs.filter((r) => r.math)) expect(run.nowrap).toBe(true);
     expect(rebuild(text)).toBe(text);
+  });
+
+  // Même règle que pour isolateLtrRuns : le point final est de la prose, pas un morceau
+  // de la formule.
+  it("laisse la ponctuation latine qui borde une formule dans la prose", () => {
+    expect(splitMathRuns("المجال هو [−3 ; −1].").map((run) => [run.text, run.math])).toEqual([
+      ["المجال هو ", false],
+      ["[−3 ; −1]", true],
+      [".", false],
+    ]);
+    const list = splitMathRuns("أمثلة: √9 = 3، √16 = 4.").map((run) => [run.text, run.math]);
+    expect(list.filter(([, math]) => math).map(([text]) => text)).toEqual(["√9 = 3", "√16 = 4"]);
+    expect(list[list.length - 1]).toEqual([".", false]);
+    expect(rebuild("المجال هو [−3 ; −1].")).toBe("المجال هو [−3 ; −1].");
+    // le point d'un décimal reste dans la formule
+    expect(mathRuns("القيمة .5 √2 هنا")[0].text).toBe(".5 √2");
+    // la parenthèse qui ouvre un membre de phrase arabe est de la prose, pas de la formule
+    const parenthetical = splitMathRuns("لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا");
+    expect(parenthetical.filter((run) => run.math).map((run) => run.text)).toEqual([
+      "12 + 8√2 = 5√2",
+    ]);
+    expect(parenthetical[parenthetical.length - 1].text.startsWith(" (")).toBe(true);
+    expect(rebuild("لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا")).toBe(
+      "لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا",
+    );
   });
 
   it("garde la formule seule dans son run — jamais d'espace en bord d'un run mathématique", () => {
