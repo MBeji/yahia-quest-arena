@@ -113,12 +113,16 @@ const SIGNED_NUMBER = /(?<![\d)])[−–+][0-9]|[⁻⁺][⁰¹²³⁴⁵⁶⁷�
  * native bidi algorithm already orders them correctly, and isolating them would
  * reverse them. Text with no Arabic at all is returned unchanged — LTR content
  * (French/English) has no reordering bug.
+ *
+ * The Latin punctuation that BORDERS a formula (`.,;:` closing a sentence or
+ * opening an énoncé) stays OUTSIDE the isolate — see {@link peelEdgePunctuation}.
  */
 export function isolateLtrRuns(text: string): string {
   if (!text || !ARABIC_RE.test(text)) return text;
   return text.replace(SEGMENT_RE, (segment) => {
     if (ARABIC_RE.test(segment)) return segment;
-    return needsLtrIsolate(segment) ? `${LRI}${segment}${PDI}` : segment;
+    const [lead, core, tail] = peelEdgePunctuation(segment);
+    return needsLtrIsolate(core) ? `${lead}${LRI}${core}${PDI}${tail}` : segment;
   });
 }
 
@@ -189,6 +193,54 @@ function needsLtrIsolate(segment: string): boolean {
       (!SOLO_BRACKETS_RE.test(segment) || STRONG_FLIP_SIGNAL.test(segment))) ||
     SIGNED_NUMBER.test(segment)
   );
+}
+
+/**
+ * Sépare un segment non arabe DÉJÀ jugé à isoler en `[attaque, formule, queue]`,
+ * la ponctuation latine qui le borde (`.`, `,`, `;`, `:`) et la parenthèse qu'il
+ * ouvre ou ferme sans sa compagne allant à l'attaque ou à la queue.
+ * `attaque + formule + queue` redonne toujours le segment.
+ *
+ * Pourquoi : isolée avec la formule, cette ponctuation se lit dans l'isolat
+ * gauche-à-droite. Le point qui ferme `المجال هو [−3 ; −1].` se dessinait alors
+ * entre le dernier mot arabe et la formule (à droite d'elle) au lieu d'être à
+ * l'extrémité gauche de la ligne qui termine la phrase ; les deux points de
+ * `أمثلة: √9 = 3` passaient après la formule ; et le « ( » de `… = 12 + 8√2 (الحدّان …)`,
+ * qui ouvre un membre de phrase ARABE, restait à droite de la formule, du mauvais
+ * côté du texte qu'il enferme. Hors de l'isolat, ces caractères sont des neutres
+ * entre deux forts RTL : ils prennent le sens de la phrase, et l'appariement des
+ * parenthèses fait le reste.
+ *
+ * Garde-fous : la ponctuation d'attaque n'est retirée que si un espace la suit
+ * (`: √9`, jamais le point d'un décimal `.5`) ; une parenthèse n'est retirée que
+ * si elle n'a pas de compagne DANS la formule — `(x − 4)(x + 2) = 0` reste entière.
+ * C'est la FORMULE (et non le segment entier) que les appelants soumettent à
+ * {@link needsLtrIsolate} : un segment dont la seule raison d'être isolé était une
+ * parenthèse de prose (`2012 (` dans le titre `مناظرة 2012 (تقني)`) ne l'est plus,
+ * et se rend comme le navigateur sait le faire.
+ */
+function peelEdgePunctuation(segment: string): [lead: string, core: string, tail: string] {
+  const count = (text: string, char: string) => text.split(char).length - 1;
+  let lead = "";
+  let core = segment;
+  let tail = "";
+  for (;;) {
+    const punctuation = /^\s*[.,;:]+(?=\s)/u.exec(core)?.[0];
+    const closer = count(core, ")") > count(core, "(") ? /^\s*\)/u.exec(core)?.[0] : undefined;
+    const peeled = punctuation ?? closer;
+    if (!peeled) break;
+    lead += peeled;
+    core = core.slice(peeled.length);
+  }
+  for (;;) {
+    const punctuation = /\s*[.,;:]+\s*$/u.exec(core)?.[0];
+    const opener = count(core, "(") > count(core, ")") ? /\s*\(\s*$/u.exec(core)?.[0] : undefined;
+    const peeled = punctuation ?? opener;
+    if (!peeled) break;
+    tail = peeled + tail;
+    core = core.slice(0, core.length - peeled.length);
+  }
+  return [lead, core, tail];
 }
 
 /**
@@ -392,6 +444,9 @@ function splitLtrProse(text: string): TextRun[] {
  * arabe n'admet aucun saut avant elle, l'espace qui la suit était pris dans
  * l'insécable), et une liste d'intervalles ne passerait plus jamais à la ligne :
  * elle débordait de la carte d'un téléphone (14 à 582 px mesurés).
+ *
+ * La ponctuation latine qui borde une formule (`.,;:`) est de la prose, elle
+ * aussi : voir {@link peelEdgePunctuation}.
  */
 export function splitMathRuns(text: string): TextRun[] {
   if (!text) return [];
@@ -404,14 +459,19 @@ export function splitMathRuns(text: string): TextRun[] {
     else runs.push(run(chunk, false));
   };
   for (const segment of text.match(SEGMENT_RE) ?? []) {
-    if (ARABIC_RE.test(segment) || !needsLtrIsolate(segment)) {
+    if (ARABIC_RE.test(segment)) {
       pushProse(segment);
       continue;
     }
-    const [, lead, body, tail] = segment.match(/^(\s*)([\s\S]*?)(\s*)$/u) as RegExpMatchArray;
-    pushProse(lead);
+    const [edgeLead, core, edgeTail] = peelEdgePunctuation(segment);
+    if (!needsLtrIsolate(core)) {
+      pushProse(segment);
+      continue;
+    }
+    const [, lead, body, tail] = core.match(/^(\s*)([\s\S]*?)(\s*)$/u) as RegExpMatchArray;
+    pushProse(edgeLead + lead);
     runs.push(run(body, true));
-    pushProse(tail);
+    pushProse(tail + edgeTail);
   }
   return runs;
 }
