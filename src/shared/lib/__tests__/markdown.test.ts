@@ -74,6 +74,29 @@ describe("renderLesson", () => {
       expect(result).toContain("<strong>");
       expect(result).toContain("<em>");
     });
+
+    // Prettier normalise `*x*` en `_x_` sur tout le corpus : les deux formes sont de l'italique.
+    it("renders underscore italic, including after an apostrophe", () => {
+      const result = html("Ne confonds pas l'_éminent_ et l'_imminent_, ni _accepter_.");
+      expect(result).toContain("l'<em>éminent</em>");
+      expect(result).toContain("l'<em>imminent</em>,");
+      expect(result).toContain("<em>accepter</em>.");
+      expect(result).not.toContain("_");
+    });
+
+    it("leaves formula subscripts alone", () => {
+      const result = html("L'aire S_D vaut 4, t_u(M) = M' et ∫_{1} f + ∫_{2} g.");
+      expect(result).not.toContain("<em>");
+      expect(result).toContain("S_D");
+      expect(result).toContain("∫_{1} f + ∫_{2} g");
+    });
+
+    it("renders an escaped asterisk or underscore as the bare character", () => {
+      const result = html("Note \\* : le signe \\_ reste tel quel, et *ceci* est en italique.");
+      expect(result).toContain("Note * : le signe _ reste tel quel");
+      expect(result).toContain("<em>ceci</em>");
+      expect(result).not.toContain("\\");
+    });
   });
 
   describe("Math blocks", () => {
