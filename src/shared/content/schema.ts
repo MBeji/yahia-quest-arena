@@ -775,7 +775,10 @@ const wireIdSchema = z
   .string()
   .regex(/^[A-Za-z0-9_-]+$/, "B2 option ids must be alphanumeric (no ',', ':' or spaces)");
 
-const wireOptionSchema = z.object({ id: wireIdSchema, text: z.string().min(1) });
+// `.strict()` : ces options (ordering, matching, multi) ne portent QUE `id` et `text`. Une étiquette
+// d'erreur (`misconceptionTag`) posée sur l'une d'elles passait la validation puis disparaissait à
+// l'émission SQL — seuls les QCM ont des `distractor_tags` : un défaut silencieux, désormais refusé.
+const wireOptionSchema = z.object({ id: wireIdSchema, text: z.string().min(1) }).strict();
 
 /**
  * Native drag-&-drop sequencing question (Tier B, phase B2): `options` are the
