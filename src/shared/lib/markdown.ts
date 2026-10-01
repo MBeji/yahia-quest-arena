@@ -100,14 +100,31 @@ function figureMarkup(token: string, index: number, caption: string | null, lang
 
 /** Inverse exact de `escapeHtml` (on n'échappe que ces trois entités) + emphase markdown
  *  retirée : le sommaire est du TEXTE rendu par React, pas du HTML. */
+/**
+ * Prettier, qui formate tout le corpus, réécrit l'italique `*mot*` en `_mot_` et protège
+ * un astérisque littéral en `\*`. Le rendu ne connaissait que `*…*` : 700+ leçons
+ * affichaient leurs `_…_` et leurs `\` tels quels. L'italique souligné n'ouvre qu'après un
+ * blanc ou une ponctuation ouvrante et ne ferme qu'avant un blanc ou une ponctuation : les
+ * indices de formule (`S_D`, `t_u⃗`, `∫_{1/2}`) ne sont jamais pris pour de l'italique.
+ */
+const UNDERSCORE_ITALIC =
+  /(^|[\s([«"'“‘’—–-])_(?=[\p{L}\p{N}])([^_\n]*?[^\s_])_(?=$|[\s.,;:!?)\]»"'”’…—–-])/gmu;
+/** Un `\*` ou `\_` d'auteur (échappement Markdown) : mis à l'abri du formatage, rendu nu. */
+const ESCAPED_MARK = /\\([*_])/g;
+const SHELTER: Record<string, string> = { "*": "\uE000", _: "\uE001" };
+const unshelter = (s: string) => s.replace(/\uE000/g, "*").replace(/\uE001/g, "_");
+
 const toPlainText = (s: string) =>
-  s
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&amp;/g, "&")
-    .replace(/\*\*/g, "")
-    .replace(/\*/g, "")
-    .trim();
+  unshelter(
+    s
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&amp;/g, "&")
+      .replace(ESCAPED_MARK, (_m, c: string) => SHELTER[c])
+      .replace(/\*\*/g, "")
+      .replace(/\*/g, "")
+      .replace(UNDERSCORE_ITALIC, "$1$2"),
+  ).trim();
 
 /**
  * Découpe la leçon en segments AVANT tout échappement : blocs `:::`, callouts promus, et
@@ -205,6 +222,7 @@ function segment(src: string): Segment[] {
  */
 function renderChunk(lines: string[], ctx: Ctx): string {
   let html = escapeHtml(lines.join("\n"))
+    .replace(ESCAPED_MARK, (_m, c: string) => SHELTER[c])
     // Headings
     .replace(/^### (.+)$/gm, '<h3 class="lesson-h3">$1</h3>')
     .replace(/^## (.+)$/gm, (_match, title: string) => {
@@ -217,6 +235,7 @@ function renderChunk(lines: string[], ctx: Ctx): string {
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     // Italic
     .replace(/\*(.+?)\*/g, "<em>$1</em>")
+    .replace(UNDERSCORE_ITALIC, "$1<em>$2</em>")
     // Blockquotes — celles qui n'ont pas été promues en bloc typé
     .replace(/^&gt; (.+)$/gm, '<blockquote class="lesson-quote">$1</blockquote>')
     // Inline code / math $$
@@ -268,7 +287,7 @@ function renderChunk(lines: string[], ctx: Ctx): string {
   html = html.replace(/((?:<li class="lesson-li">.*<\/li>\n?)+)/g, '<ul class="lesson-ul">$1</ul>');
 
   // Paragraphs: lines not starting with HTML tags
-  return html
+  return unshelter(html)
     .split("\n")
     .map((line) => {
       if (!line.trim()) return "";
