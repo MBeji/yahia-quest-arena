@@ -116,6 +116,31 @@ describe("isolateLtrRuns", () => {
     expect(isolateLtrRuns("(حاسبنا AB = 16.) ✓ (12 = 4×(3))").endsWith(`4×(3))${PDI}`)).toBe(true);
   });
 
+  // Le « ) » de `(بوحدة OI) : AB = …` ferme un membre de phrase ARABE mais tombait au MILIEU
+  // de son segment : l'isolat le dessinait entre `OI` et la formule, et le couple de
+  // parenthèses enfermait « بوحدة … : AB = … » en laissant `OI` dehors. Relevé par la
+  // re-vérification du lot L08 : 262 chaînes du corpus. Une parenthèse dont la compagne est dans
+  // UN AUTRE segment est de la prose, où qu'elle tombe ; les deux moitiés se jugent séparément.
+  it("laisse hors de l'isolat la parenthèse que le texte arabe ferme ou ouvre au milieu d'un segment", () => {
+    expect(isolateLtrRuns("(بوحدة OI) : AB = |−2 − (−√2)| = |√2 − 2|")).toBe(
+      `(بوحدة OI) :${LRI} AB = |−2 − (−√2)| = |√2 − 2|${PDI}`,
+    );
+    expect(isolateLtrRuns("إذن BI = (√13 − 3)/2 cm ✓ (≈ 0,30 وهو العدد b) ثمّ")).toBe(
+      `إذن${LRI} BI = (√13 − 3)/2 cm ✓${PDI} (≈ 0,30 وهو العدد b) ثمّ`,
+    );
+    expect(isolateLtrRuns("(نعلم أنّ 2 = 2ab) = (b − a)² ✓ ثمّ")).toBe(
+      `(نعلم أنّ 2 = 2ab)${LRI} = (b − a)² ✓ ${PDI}ثمّ`,
+    );
+    // Deux membres de phrase arabes séparés par un signe : plus rien à isoler.
+    const lines = "(المستقيم 1) ⊥ (المستقيم 2)";
+    expect(isolateLtrRuns(lines)).toBe(lines);
+    // Des crochets bien appariés ne retiennent pas la parenthèse ; une demi-droite, si.
+    expect(isolateLtrRuns("متوازي أضلاع ([AE] ∥ [CG] و AE = CG) وله")).toBe(
+      `متوازي أضلاع (${LRI}[AE] ∥ [CG] ${PDI}و AE = CG) وله`,
+    );
+    expect(isolateLtrRuns("(المستقيم [OI) حيث EM = 1)")).toContain(`${LRI} [OI) ${PDI}`);
+  });
+
   // Une fermante d'attaque et une ouvrante de queue sont de la prose même quand le segment
   // les compte à égalité : `). (` ne se rend plus dans un isolat gauche-à-droite.
   it("retire la fermante d'attaque et l'ouvrante de queue d'un segment qui les compte à égalité", () => {
@@ -382,6 +407,10 @@ describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", ()
       "(نعلم أنّ √9 = 3)",
       "ثمّ (√9 = 3 ثمّ نجد)",
       "المستقيم [OI) حيث EM = 1",
+      "(بوحدة OI) : AB = |−2 − (−√2)| = |√2 − 2|",
+      "إذن BI = (√13 − 3)/2 cm ✓ (≈ 0,30 وهو العدد b) ثمّ",
+      "(نعلم أنّ 2 = 2ab) = (b − a)² ✓ ثمّ",
+      "متوازي أضلاع ([AE] ∥ [CG] و AE = CG) وله",
     ]) {
       const isolated = isolateLtrRuns(text);
       expect(mathRuns(text).length).toBe((isolated.match(new RegExp(LRI, "g")) ?? []).length);
