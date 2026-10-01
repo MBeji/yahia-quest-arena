@@ -128,8 +128,10 @@ describe("isolateLtrRuns", () => {
     expect(isolateLtrRuns("إذن BI = (√13 − 3)/2 cm ✓ (≈ 0,30 وهو العدد b) ثمّ")).toBe(
       `إذن${LRI} BI = (√13 − 3)/2 cm ✓${PDI} (≈ 0,30 وهو العدد b) ثمّ`,
     );
+    // `2 = 2ab` s'ouvre par un nombre et porte des lettres : il est isolé lui aussi
+    // (rendu en `2ab = 2` avant le correctif des coefficients).
     expect(isolateLtrRuns("(نعلم أنّ 2 = 2ab) = (b − a)² ✓ ثمّ")).toBe(
-      `(نعلم أنّ 2 = 2ab)${LRI} = (b − a)² ✓ ${PDI}ثمّ`,
+      `(نعلم أنّ${LRI} 2 = 2ab${PDI})${LRI} = (b − a)² ✓ ${PDI}ثمّ`,
     );
     // Deux membres de phrase arabes séparés par un signe : plus rien à isoler.
     const lines = "(المستقيم 1) ⊥ (المستقيم 2)";
@@ -278,6 +280,37 @@ describe("isolateLtrRuns", () => {
     expect(isolateLtrRuns("نجد +b هنا")).toContain(`${LRI} +b ${PDI}`);
   });
 
+  // Un COEFFICIENT devant la lettre ne change rien : `3 − 2x = x − 3` s'affichait
+  // `2x = x − 3 − 3`, le premier terme restant au niveau RTL.
+  it("isolates a digit-first formula whose letter hides behind a coefficient", () => {
+    expect(isolateLtrRuns("ومنه 3 − 2x = x − 3 ثمّ")).toContain(`${LRI} 3 − 2x = x − 3 ${PDI}`);
+    expect(isolateLtrRuns("نجد 5 + 2x = 11 ثمّ")).toContain(`${LRI} 5 + 2x = 11 ${PDI}`);
+    expect(isolateLtrRuns("نحسب 120 − 3g − 2g = 10 ثمّ")).toContain(
+      `${LRI} 120 − 3g − 2g = 10 ${PDI}`,
+    );
+  });
+
+  // Un point ou une variable « primé » (`M'`, `A′`) est un atome mathématique même seul :
+  // l'apostrophe est neutre, prend le sens RTL et tombe du mauvais côté de la lettre
+  // (`M'` s'affichait `'M`).
+  it("isolates a primed point or variable, alone or in a chain", () => {
+    expect(isolateLtrRuns("النقطة M' نظيرة M")).toContain(`${LRI} M' ${PDI}`);
+    expect(isolateLtrRuns("نظيرة A هي A′ ثمّ")).toContain(`${LRI} A′ ${PDI}`);
+    expect(isolateLtrRuns("المثلّث A'B'C' قائم")).toContain(`${LRI} A'B'C' ${PDI}`);
+    expect(isolateLtrRuns("ثمّ M'M'' = BC ✓")).toContain(`${LRI} M'M'' = BC ✓${PDI}`);
+  });
+
+  it("leaves the apostrophes of French and English words alone", () => {
+    for (const s of [
+      "ترجمة aujourd'hui إلى العربية",
+      "كلمة l'eau هنا",
+      "عبارة it's ok هنا",
+      "الجملة c'est la vie مثال",
+    ]) {
+      expect(isolateLtrRuns(s)).toBe(s);
+    }
+  });
+
   // Ce qui s'ouvre par une LETTRE est déjà rendu gauche-à-droite (W7), et l'arithmétique
   // sans lettre se lit de droite à gauche avec la phrase : on n'y touche pas.
   it("does NOT isolate a formula that opens with a letter, nor digit-only arithmetic", () => {
@@ -411,6 +444,9 @@ describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", ()
       "إذن BI = (√13 − 3)/2 cm ✓ (≈ 0,30 وهو العدد b) ثمّ",
       "(نعلم أنّ 2 = 2ab) = (b − a)² ✓ ثمّ",
       "متوازي أضلاع ([AE] ∥ [CG] و AE = CG) وله",
+      "ومنه 3 − 2x = x − 3 ثمّ نجد 3x = 6",
+      "النقطة M' نظيرة M بالنسبة إلى O",
+      "نظيرة A هي A′ و B′ نظيرة B",
     ]) {
       const isolated = isolateLtrRuns(text);
       expect(mathRuns(text).length).toBe((isolated.match(new RegExp(LRI, "g")) ?? []).length);
