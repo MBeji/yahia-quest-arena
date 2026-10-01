@@ -145,11 +145,23 @@ const LEADING_SIGN_LETTER = /^[^A-Za-z]*?(?<![\d)])[−–+][A-Za-z]/u;
  */
 export function isolateLtrRuns(text: string): string {
   if (!text || !ARABIC_RE.test(text)) return text;
-  return text.replace(SEGMENT_RE, (segment) => {
-    if (ARABIC_RE.test(segment)) return segment;
-    const [lead, core, tail] = peelEdgePunctuation(segment);
-    return needsLtrIsolate(core) ? `${lead}${LRI}${core}${PDI}${tail}` : segment;
-  });
+  const segments = text.match(SEGMENT_RE) ?? [];
+  const pieces = splitAtParentheticals(segments);
+  return segments
+    .map((segment, index) =>
+      ARABIC_RE.test(segment)
+        ? segment
+        : pieces[index]
+            .map((piece) => (piece.prose ? piece.text : isolatePiece(piece.text)))
+            .join(""),
+    )
+    .join("");
+}
+
+/** Isole un morceau non arabe s'il le demande, ponctuation de bord restée dehors. */
+function isolatePiece(piece: string): string {
+  const [lead, core, tail] = peelEdgePunctuation(piece);
+  return needsLtrIsolate(core) ? `${lead}${LRI}${core}${PDI}${tail}` : piece;
 }
 
 /**
@@ -224,6 +236,84 @@ function needsLtrIsolate(segment: string): boolean {
 }
 
 /**
+ * Vrai si un segment mêle parenthèses et crochets : une demi-droite `[OI)`, un intervalle `]2 ; 5)`
+ * ou `(2 ; 5]`, où une parenthèse s'apparie à un crochet, ou un crochet resté seul (`]a ; b[` à
+ * la française). Ce n'est jamais de la prose : on n'y retire aucune parenthèse. Des crochets bien
+ * appariés (`[AB]`, `[BD]:`) n'y changent rien.
+ */
+function hasMixedDelimiters(segment: string): boolean {
+  const open: string[] = [];
+  for (const char of segment) {
+    if (char === "(" || char === "[") {
+      open.push(char);
+    } else if (char === ")" || char === "]") {
+      const wanted = char === ")" ? "(" : "[";
+      const top = open[open.length - 1];
+      if (top === wanted) open.pop();
+      else if (top !== undefined || char === "]") return true;
+    }
+  }
+  return open.includes("[");
+}
+
+/** Un morceau d'un segment non arabe : de la prose (une parenthèse arabe), ou un candidat à l'isolat. */
+type Piece = { text: string; prose: boolean };
+
+/**
+ * Découpe chaque segment non arabe aux parenthèses que le texte ARABE d'à côté ouvre ou ferme.
+ *
+ * Une parenthèse dont la compagne est dans UN AUTRE segment — de l'autre côté d'un mot arabe —
+ * enferme du texte arabe : c'est de la prose, où qu'elle se trouve dans son segment. Au bord,
+ * {@link peelEdgePunctuation} la retire déjà ; au MILIEU, elle restait dans l'isolat, qui la
+ * dessine dans le sens gauche-à-droite, à l'envers du membre de phrase qu'elle borne :
+ * `(بوحدة OI) : AB = |−2 − (−√2)| = |√2 − 2|` enfermait « بوحدة … : AB = … » et laissait `OI` dehors.
+ * Les deux moitiés se jugent séparément — `OI` n'a rien à isoler, `AB = …` si — et la parenthèse,
+ * neutre entre deux forts, prend le sens de la phrase.
+ *
+ * On apparie les parenthèses sur tout le texte (une pile), pas segment par segment. Restent
+ * dans leur segment : les parenthèses sans compagne nulle part (`1)` qui numérote une ligne), celles
+ * qui ont leur compagne dans le même segment (`(x − 4)(x + 2) = 0`), et tout segment qui mêle
+ * parenthèses et crochets (voir {@link hasMixedDelimiters}).
+ */
+function splitAtParentheticals(segments: string[]): Piece[][] {
+  const crossing = segments.map(() => new Set<number>());
+  const open: Array<[segment: number, at: number]> = [];
+  segments.forEach((segment, index) => {
+    if (ARABIC_RE.test(segment) || hasMixedDelimiters(segment)) return;
+    for (let at = 0; at < segment.length; at += 1) {
+      if (segment[at] === "(") {
+        open.push([index, at]);
+      } else if (segment[at] === ")") {
+        const companion = open.pop();
+        if (companion && companion[0] !== index) {
+          crossing[companion[0]].add(companion[1]);
+          crossing[index].add(at);
+        }
+      }
+    }
+  });
+  return segments.map((segment, index) => {
+    // Au bord du segment, {@link peelEdgePunctuation} retire déjà la parenthèse AVEC ses espaces.
+    const cuts = [...crossing[index]]
+      .filter((at) => segment.slice(0, at).trim() && segment.slice(at + 1).trim())
+      .sort((a, b) => a - b);
+    if (!cuts.length) return [{ text: segment, prose: false }];
+    const pieces: Piece[] = [];
+    let from = 0;
+    for (const at of cuts) {
+      // Les espaces qui précèdent la parenthèse sont de la prose avec elle, comme au bord du segment.
+      let start = at;
+      while (start > from && /\s/u.test(segment[start - 1])) start -= 1;
+      if (start > from) pieces.push({ text: segment.slice(from, start), prose: false });
+      pieces.push({ text: segment.slice(start, at + 1), prose: true });
+      from = at + 1;
+    }
+    if (from < segment.length) pieces.push({ text: segment.slice(from), prose: false });
+    return pieces;
+  });
+}
+
+/**
  * Sépare un segment non arabe DÉJÀ jugé à isoler en `[attaque, formule, queue]`,
  * la ponctuation latine qui le borde (`.`, `,`, `;`, `:`) et la parenthèse qu'il
  * ouvre ou ferme sans sa compagne allant à l'attaque ou à la queue — dans les deux
@@ -253,13 +343,13 @@ function needsLtrIsolate(segment: string): boolean {
  * {@link needsLtrIsolate} : un segment dont la seule raison d'être isolé était une
  * parenthèse de prose (`2012 (` dans le titre `مناظرة 2012 (تقني)`) ne l'est plus,
  * et se rend comme le navigateur sait le faire. Pas de retrait de parenthèse dans un
- * segment qui porte un crochet (`[OI)`, `]2 ; 5)`) : une demi-droite ou un intervalle
- * apparie une parenthèse à un crochet.
+ * segment qui mêle parenthèses et crochets (`[OI)`, `]2 ; 5)`) : une demi-droite ou un
+ * intervalle apparie une parenthèse à un crochet.
  */
 function peelEdgePunctuation(segment: string): [lead: string, core: string, tail: string] {
   // `[OI)`, `]2 ; 5)` : une demi-droite ou un intervalle apparie une parenthèse à un crochet,
   // ce n'est jamais de la prose — on n'y retire que la ponctuation.
-  const bracketed = /[[\]]/u.test(segment);
+  const bracketed = hasMixedDelimiters(segment);
   let lead = "";
   let core = segment;
   let tail = "";
@@ -525,21 +615,29 @@ export function splitMathRuns(text: string): TextRun[] {
     if (previous && !previous.math) previous.text += chunk;
     else runs.push(run(chunk, false));
   };
-  for (const segment of text.match(SEGMENT_RE) ?? []) {
+  const segments = text.match(SEGMENT_RE) ?? [];
+  const pieces = splitAtParentheticals(segments);
+  segments.forEach((segment, index) => {
     if (ARABIC_RE.test(segment)) {
       pushProse(segment);
-      continue;
+      return;
     }
-    const [edgeLead, core, edgeTail] = peelEdgePunctuation(segment);
-    if (!needsLtrIsolate(core)) {
-      pushProse(segment);
-      continue;
+    for (const piece of pieces[index]) {
+      if (piece.prose) {
+        pushProse(piece.text);
+        continue;
+      }
+      const [edgeLead, core, edgeTail] = peelEdgePunctuation(piece.text);
+      if (!needsLtrIsolate(core)) {
+        pushProse(piece.text);
+        continue;
+      }
+      const [, lead, body, tail] = core.match(/^(\s*)([\s\S]*?)(\s*)$/u) as RegExpMatchArray;
+      pushProse(edgeLead + lead);
+      runs.push(run(body, true));
+      pushProse(tail + edgeTail);
     }
-    const [, lead, body, tail] = core.match(/^(\s*)([\s\S]*?)(\s*)$/u) as RegExpMatchArray;
-    pushProse(edgeLead + lead);
-    runs.push(run(body, true));
-    pushProse(tail + edgeTail);
-  }
+  });
   return runs;
 }
 
