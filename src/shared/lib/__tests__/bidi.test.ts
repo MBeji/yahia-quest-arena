@@ -524,6 +524,11 @@ describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", ()
 });
 
 describe("isDisplayEquation — la ligne qui ne porte QUE la formule", () => {
+  const mathRunsOf = (text: string) =>
+    splitMathRuns(text)
+      .filter((run) => run.math)
+      .map((run) => run.text);
+
   it("reconnaît une ligne-équation", () => {
     expect(isDisplayEquation("(x − 4)(x + 2) = 0")).toBe(true);
     expect(isDisplayEquation("  2x + 5 = 13  ")).toBe(true);
@@ -548,6 +553,34 @@ describe("isDisplayEquation — la ligne qui ne porte QUE la formule", () => {
     expect(splitMathRuns("Quelle est la solution de (x − 4)(x + 2) = 0 ?")[1].text.trim()).toBe(
       "(x − 4)(x + 2) = 0",
     );
+  });
+
+  // Relevé par les audits des lots L08 et L10 : ces lignes, seules sur leur ligne, s'affichaient
+  // brouillées dans une carte RTL (`(3/21)³` → `³(3/21)`, `|x| ≤ 2` → `≤ 2 |x|`) parce que le moteur
+  // ne les reconnaissait pas comme équations — 16 lignes du corpus, dont cinq énoncés publiés.
+  it("reconnaît la valeur absolue, un terme seul, un symbole chimique et une unité collée à un nombre", () => {
+    for (const line of [
+      "|x| ≤ 2",
+      "1 − |x| > 2/3",
+      "|X| ≤ a ⟺ −a ≤ X ≤ a",
+      "(3/21)³",
+      "4(√3)⁴",
+      "(0,001)⁻⁴",
+      "√2",
+      "HCl + Al → H₂ + AlCl₃",
+      "CH₄ + Cl₂ → HCl + C",
+      "e = 1,6 × 10⁻¹⁹ C",
+      "6 × 10¹³ m",
+    ]) {
+      expect(isDisplayEquation(line)).toBe(true);
+    }
+    expect(mathRunsOf("|x| ≤ 2")).toEqual(["|x| ≤ 2"]);
+  });
+
+  it("refuse toujours la prose : mots en capitales, ligne de tableau, lettres seules, phrase à unité", () => {
+    for (const line of ["LIBRARY RULES", "NO PARKING", "|---|---|", "AB", "5", "x = 5 m de long"]) {
+      expect(isDisplayEquation(line)).toBe(false);
+    }
   });
 
   it("refuse une ligne de prose — y compris celle qu'isMathExpression accepte", () => {
