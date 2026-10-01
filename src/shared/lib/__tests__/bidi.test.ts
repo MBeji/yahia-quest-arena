@@ -96,6 +96,36 @@ describe("isolateLtrRuns", () => {
     expect(isolateLtrRuns("الفقرة (2: التكنولوجيا)")).toBe("الفقرة (2: التكنولوجيا)");
   });
 
+  // Régression de #1141 : la « ( » d'attaque était retirée dès que le segment comptait plus
+  // d'ouvrantes que de fermantes — même quand elle a sa « ) » DANS la formule et que c'est la
+  // « ( » de queue qui ouvre le membre de phrase arabe. `(80 + 100) ÷ 2 = 90 ✓ (…)` sortait
+  // de l'isolat par sa première parenthèse et y laissait le reste (37 chaînes du corpus).
+  // Les parenthèses s'apparient désormais pour de bon, au lieu de se comparer en totaux.
+  it("ne sépare jamais une parenthèse de sa compagne quand le segment les contient toutes deux", () => {
+    expect(isolateLtrRuns("(80 + 100) ÷ 2 = 90 ✓ (والفرق بين مركزين متتاليين 20)")).toBe(
+      `${LRI}(80 + 100) ÷ 2 = 90 ✓${PDI} (والفرق بين مركزين متتاليين 20)`,
+    );
+    expect(isolateLtrRuns("(−3) × (−4) = 12 (سالب × سالب = موجب)، ثمّ 12 + (−2) = 10.")).toBe(
+      `${LRI}(−3) × (−4) = 12${PDI} (سالب × سالب = موجب)، ثمّ${LRI} 12 + (−2) = 10${PDI}.`,
+    );
+    expect(isolateLtrRuns("نجد (x + 2)(x − 2) = x² − 4 (الفرق بين مربّعين)")).toBe(
+      `نجد${LRI} (x + 2)(x − 2) = x² − 4${PDI} (الفرق بين مربّعين)`,
+    );
+    // La « ) » finale referme une « ( » du segment : elle en fait partie, même quand une
+    // fermante de prose la précède et fait pencher le total.
+    expect(isolateLtrRuns("(حاسبنا AB = 16.) ✓ (12 = 4×(3))").endsWith(`4×(3))${PDI}`)).toBe(true);
+  });
+
+  // Une fermante d'attaque et une ouvrante de queue sont de la prose même quand le segment
+  // les compte à égalité : `). (` ne se rend plus dans un isolat gauche-à-droite.
+  it("retire la fermante d'attaque et l'ouvrante de queue d'un segment qui les compte à égalité", () => {
+    const text = "(مثل: علّم، كسّر). (تمرين «صيد الخطأ».) الخطأ";
+    expect(isolateLtrRuns(text)).toBe(text);
+    expect(isolateLtrRuns("(الجذر) √2 = 1,41 (تقريبًا)")).toBe(
+      `(الجذر)${LRI} √2 = 1,41${PDI} (تقريبًا)`,
+    );
+  });
+
   // `[OI)` est une demi-droite, `]2 ; 5)` un intervalle : la parenthèse s'apparie à un crochet.
   it("ne retire aucune parenthèse d'un segment à crochets (demi-droite, intervalle)", () => {
     expect(isolateLtrRuns("المستقيم [OI) حيث EM = 1")).toContain(`${LRI} [OI) ${PDI}`);
@@ -406,6 +436,18 @@ describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", ()
     expect(rebuild("لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا")).toBe(
       "لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا",
     );
+  });
+
+  // Même parité : la parenthèse qui a sa compagne dans la formule reste dans le run, seule la
+  // « ( » de queue qui ouvre un membre de phrase arabe retourne à la prose.
+  it("garde dans le run mathématique la parenthèse qui a sa compagne dans la formule", () => {
+    const text = "(80 + 100) ÷ 2 = 90 ✓ (والفرق بين مركزين متتاليين 20)";
+    const runs = splitMathRuns(text);
+    expect(runs.filter((run) => run.math).map((run) => run.text)).toEqual([
+      "(80 + 100) ÷ 2 = 90 ✓",
+    ]);
+    expect(runs[runs.length - 1].text.startsWith(" (")).toBe(true);
+    expect(rebuild(text)).toBe(text);
   });
 
   it("garde la formule seule dans son run — jamais d'espace en bord d'un run mathématique", () => {
