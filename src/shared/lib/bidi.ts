@@ -409,8 +409,11 @@ function isUnmatchedCloser(text: string, at: number): boolean {
 const MATH_TOKEN_CHARS =
   "0-9A-Za-z+\\-−–±*/=<>≤≥≠≈≡%‰¹²³⁰⁴-⁹⁺⁻₀-₉₊₋√∛∜×÷·^_()\\[\\]{}⟨⟩⌊⌋⌈⌉|‖πµσΩ∆°′″.,;:…!?∈∉∋∌⊂⊃⊄⊅⊆⊇⊈⊉⊊⊋∪∩∅ℝℕℤℚℂ∥⊥∠→⟶⟵⟸⟹⟺∑∏∫∞'";
 const MATH_TOKEN_RE = new RegExp(`^[${MATH_TOKEN_CHARS}]+$`, "u");
-/** Un opérateur, une relation ou un délimiteur — ce qui fait d'une suite de jetons une formule. */
-const MATH_OPERATOR_RE = /[+\-−–±*/=<>≤≥≠≈≡×÷·√∛∜()[\]{}⟨⟩⌊⌋⌈⌉∈∉∋∌⊂⊃⊄⊅⊆⊇⊈⊉⊊⊋∪∩∥⊥→⟶⟵⟸⟹⟺∑∏∫^]/u;
+/**
+ * Un opérateur, une relation ou un délimiteur — ce qui fait d'une suite de jetons une formule.
+ * Les barres `|x|` (valeur absolue) et `‖u‖` (norme) en sont : `|x| ≤ 2` est une équation.
+ */
+const MATH_OPERATOR_RE = /[+\-−–±*/=<>≤≥≠≈≡×÷·√∛∜()[\]{}⟨⟩⌊⌋⌈⌉|‖∈∉∋∌⊂⊃⊄⊅⊆⊇⊈⊉⊊⊋∪∩∥⊥→⟶⟵⟸⟹⟺∑∏∫^]/u;
 /** Une relation : `x = 5` est une formule à lui seul, `2 + 3` demande deux jetons. */
 const MATH_RELATION_RE = /[=<>≤≥≠≈≡⟹⟺]|&lt;|&gt;|&le;|&ge;/u;
 /** Suite d'au moins trois lettres latines — un MOT, sauf s'il est dans la liste ci-dessous. */
@@ -470,8 +473,9 @@ const MATH_WORDS = new Set([
  * Un jeton est mathématique s'il n'emprunte que le jeu de caractères ci-dessus,
  * qu'aucun de ses mots n'est de la prose (voir {@link hasProseWord}), ET qu'il
  * porte un signe d'appartenance : un chiffre — indices et exposants Unicode
- * compris, pour `SO₂` —, un opérateur, une longueur ≤ 2 (`x`, `AB`, `n`), ou un
- * nom de fonction connu (`sin`, seul dans `n₁ sin i₁ = n₂ sin i₂`). Un mot de
+ * compris, pour `SO₂` —, un opérateur, une longueur ≤ 2 (`x`, `AB`, `n`), un symbole
+ * composé (`HCl`, `NaOH`, voir {@link CHEMICAL_SYMBOL_RE}), ou un nom de fonction connu (`sin`, seul dans
+ * `n₁ sin i₁ = n₂ sin i₂`). Un mot de
  * prose (`Calculer`, `solution.`, `museum)`) échoue au test des mots ; un mot
  * court sans opérateur (`the`) échoue au signe.
  */
@@ -484,6 +488,13 @@ function hasProseWord(token: string): boolean {
   return false;
 }
 
+/**
+ * Un symbole composé qui n'est pas un mot : une majuscule collée à une minuscule qui la précède
+ * (`NaOH`, `AlCl`, `CaCO`) ou un groupe de majuscules suivi de minuscules (`HCl`, `HBr`). Ni `RULES`
+ * (un mot en capitales), ni `'If` ou `l'ONU` (l'apostrophe coupe).
+ */
+const CHEMICAL_SYMBOL_RE = /[a-z][A-Z]|^[A-Z]{2,}[a-z]+$/u;
+
 function isMathToken(token: string): boolean {
   if (!token || !MATH_TOKEN_RE.test(token)) return false;
   if (hasProseWord(token)) return false;
@@ -491,6 +502,7 @@ function isMathToken(token: string): boolean {
     /[0-9₀-₉⁰-⁹¹²³]/u.test(token) ||
     MATH_OPERATOR_RE.test(token) ||
     token.length <= 2 ||
+    CHEMICAL_SYMBOL_RE.test(token) ||
     MATH_WORDS.has(token.toLowerCase())
   );
 }
@@ -524,13 +536,20 @@ const BARE_OPERATOR_RE = /^[+\-−–±*/=<>≤≥≠≈≡×÷·∈∉∋∌⊂
  * qui précède la formule — et, en anglais, des bouts de phrase entiers
  * (`it), so it`).
  */
-function trimProseEdges(tokens: string[]): [number, number] {
-  const bound = (index: number) =>
-    index >= 0 && index < tokens.length && BARE_OPERATOR_RE.test(tokens[index]);
+function trimProseEdges(tokens: string[], units = false): [number, number] {
+  // Un opérateur nu rattache le jeton. Pour une ligne qui n'est QUE de la notation, une lettre SEULE
+  // collée à un nombre l'est aussi (`10⁻¹⁹ C`, `6 × 10¹³ m` : une unité, pas un mot).
+  const bound = (index: number, token: string) =>
+    index >= 0 &&
+    index < tokens.length &&
+    (BARE_OPERATOR_RE.test(tokens[index]) ||
+      (units && /^[A-Za-z]$/u.test(token) && /\d/u.test(tokens[index])));
   let low = 0;
   let high = tokens.length - 1;
-  while (low <= high && PROSE_SHAPED_RE.test(tokens[low]) && !bound(low + 1)) low += 1;
-  while (high >= low && PROSE_SHAPED_RE.test(tokens[high]) && !bound(high - 1)) high -= 1;
+  while (low <= high && PROSE_SHAPED_RE.test(tokens[low]) && !bound(low + 1, tokens[low])) low += 1;
+  while (high >= low && PROSE_SHAPED_RE.test(tokens[high]) && !bound(high - 1, tokens[high])) {
+    high -= 1;
+  }
   return [low, high];
 }
 
@@ -657,9 +676,13 @@ export function isDisplayEquation(line: string): boolean {
   const tokens = line.trim().split(/\s+/).filter(Boolean);
   if (!tokens.length) return false;
   if (!tokens.every(isMathToken)) return false;
+  // Un terme seul — `(3/21)³`, `√2`, `−5` — n'a ni relation ni opérateur entre deux jetons, mais il se
+  // brouille dans un champ RTL (`(3/21)³` se lisait `³(3/21)`) : bloc gauche-à-droite s'il demande l'isolat
+  // — et s'il porte un chiffre, une lettre ou un radical : `|---|---|`, ligne de tableau markdown, n'est pas une formule.
+  if (tokens.length === 1) return /[0-9A-Za-z√∛∜]/u.test(tokens[0]) && needsLtrIsolate(tokens[0]);
   // Un mot que rien ne rattache à la formule reste de la prose, même seul sur sa
   // ligne : `A B C` n'est pas une équation à centrer.
-  const [low, high] = trimProseEdges(tokens);
+  const [low, high] = trimProseEdges(tokens, true);
   if (low !== 0 || high !== tokens.length - 1) return false;
   return isMathPhrase(tokens);
 }
