@@ -12,6 +12,16 @@ export function isRtlText(text: string): boolean {
 }
 
 /**
+ * True when the text carries Arabic letters anywhere — unlike `isRtlText`, which only
+ * looks at the first letter. A question written in Arabic that opens on a Latin
+ * symbol ("ABCD مستطيل …", "(2 ; 3) هي …") is still Arabic content and must read
+ * right-to-left.
+ */
+export function hasArabicLetters(text: string): boolean {
+  return /\p{Script=Arabic}/u.test(text);
+}
+
+/**
  * Detect if text is a pure math/scientific expression (numbers, operators, set &
  * interval notation, units — no Arabic/Latin prose) that must render LTR. Used to
  * force `dir="ltr"` on answer options so brackets, the true minus `−` (U+2212) and

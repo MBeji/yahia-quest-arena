@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, it, expect } from "vitest";
-import { cn, isRtlText, isMathExpression, rtlProps } from "@/shared/lib/utils";
+import { cn, hasArabicLetters, isRtlText, isMathExpression, rtlProps } from "@/shared/lib/utils";
 
 describe("cn (class names merge)", () => {
   it("merges simple classes", () => {
@@ -48,6 +48,27 @@ describe("isRtlText", () => {
 
   it("returns false for empty string", () => {
     expect(isRtlText("")).toBe(false);
+  });
+});
+
+describe("hasArabicLetters", () => {
+  it("finds Arabic letters wherever they sit", () => {
+    expect(hasArabicLetters("مرحبا بالعالم")).toBe(true);
+    expect(hasArabicLetters("ABCD مستطيل فيه AB = 4")).toBe(true);
+    expect(hasArabicLetters("(2 ; 3) هي إحداثيّتا النقطة B")).toBe(true);
+  });
+
+  it("is what isRtlText misses: an Arabic sentence that opens on a Latin symbol", () => {
+    const prompt = "ABCD مستطيل فيه AB = 4";
+    expect(isRtlText(prompt)).toBe(false);
+    expect(hasArabicLetters(prompt)).toBe(true);
+  });
+
+  it("is false for French, English and bare notation", () => {
+    expect(hasArabicLetters("Quelle est la mesure de l'angle ABC ?")).toBe(false);
+    expect(hasArabicLetters("Solve: 5 + 7")).toBe(false);
+    expect(hasArabicLetters("(2 ; 3) ∪ [4 ; 7]")).toBe(false);
+    expect(hasArabicLetters("")).toBe(false);
   });
 });
 
