@@ -43,6 +43,22 @@ describe("schema validation — B3 multi-select type", () => {
     ).toBe(false);
   });
 
+  it("rejects a misconception tag on a multi option — the SQL emission would silently drop it", () => {
+    const tagged = {
+      ...multiBase,
+      options: [
+        { id: "a", text: "quatre côtés égaux" },
+        { id: "b", text: "quatre angles droits" },
+        {
+          id: "c",
+          text: "diagonales de longueurs différentes",
+          misconceptionTag: "math.geo.diagonales-proprietes-mal-attribuees",
+        },
+      ],
+    };
+    expect(questionSchema.safeParse(tagged).success).toBe(false);
+  });
+
   it("rejects B3 option ids that would break the CSV wire format", () => {
     expect(
       questionSchema.safeParse({
