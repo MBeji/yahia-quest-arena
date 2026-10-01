@@ -244,7 +244,11 @@ function needsLtrIsolate(segment: string): boolean {
  *
  * Garde-fous : la ponctuation d'attaque n'est retirée que si un espace la suit
  * (`: √9`, jamais le point d'un décimal `.5`) ; une parenthèse n'est retirée que
- * si elle n'a pas de compagne DANS la formule — `(x − 4)(x + 2) = 0` reste entière.
+ * si elle n'a pas de compagne DANS le segment — `(x − 4)(x + 2) = 0` reste entière,
+ * et `(80 + 100) ÷ 2 = 90 ✓ (` ne perd que son « ( » final : celui d'attaque a sa
+ * fermante, c'est la formule qui l'ouvre. On apparie vraiment les parenthèses (une
+ * pile), on ne compare pas des totaux : `(80 + 100) ÷ 2 = 90 (` en compte deux
+ * ouvrantes pour une fermante, sans que la première soit orpheline.
  * C'est la FORMULE (et non le segment entier) que les appelants soumettent à
  * {@link needsLtrIsolate} : un segment dont la seule raison d'être isolé était une
  * parenthèse de prose (`2012 (` dans le titre `مناظرة 2012 (تقني)`) ne l'est plus,
@@ -253,7 +257,6 @@ function needsLtrIsolate(segment: string): boolean {
  * apparie une parenthèse à un crochet.
  */
 function peelEdgePunctuation(segment: string): [lead: string, core: string, tail: string] {
-  const count = (text: string, char: string) => text.split(char).length - 1;
   // `[OI)`, `]2 ; 5)` : une demi-droite ou un intervalle apparie une parenthèse à un crochet,
   // ce n'est jamais de la prose — on n'y retire que la ponctuation.
   const bracketed = /[[\]]/u.test(segment);
@@ -262,9 +265,11 @@ function peelEdgePunctuation(segment: string): [lead: string, core: string, tail
   let tail = "";
   for (;;) {
     const punctuation = /^\s*[.,;:]+(?=\s)/u.exec(core)?.[0];
-    const closer = count(core, ")") > count(core, "(") ? /^\s*\)/u.exec(core)?.[0] : undefined;
+    // Une fermante d'attaque n'a, par construction, aucune ouvrante avant elle : orpheline.
+    const closer = /^\s*\)/u.exec(core)?.[0];
+    const head = /^\s*\(/u.exec(core)?.[0];
     const opener =
-      !bracketed && count(core, "(") > count(core, ")") ? /^\s*\(/u.exec(core)?.[0] : undefined;
+      !bracketed && head && isUnmatchedOpener(core, head.length - 1) ? head : undefined;
     const peeled = punctuation ?? closer ?? opener;
     if (!peeled) break;
     lead += peeled;
@@ -272,15 +277,37 @@ function peelEdgePunctuation(segment: string): [lead: string, core: string, tail
   }
   for (;;) {
     const punctuation = /\s*[.,;:]+\s*$/u.exec(core)?.[0];
-    const opener = count(core, "(") > count(core, ")") ? /\s*\(\s*$/u.exec(core)?.[0] : undefined;
+    // Une ouvrante de queue n'a, par construction, aucune fermante après elle : orpheline.
+    const opener = /\s*\(\s*$/u.exec(core)?.[0];
+    const last = /\s*\)\s*$/u.exec(core)?.[0];
     const closer =
-      !bracketed && count(core, ")") > count(core, "(") ? /\s*\)\s*$/u.exec(core)?.[0] : undefined;
+      !bracketed && last && isUnmatchedCloser(core, core.lastIndexOf(")")) ? last : undefined;
     const peeled = punctuation ?? opener ?? closer;
     if (!peeled) break;
     tail = peeled + tail;
     core = core.slice(0, core.length - peeled.length);
   }
   return [lead, core, tail];
+}
+
+/** Vrai si la « ( » de `text` à l'indice `at` n'a aucune « ) » pour la fermer dans `text`. */
+function isUnmatchedOpener(text: string, at: number): boolean {
+  let depth = 0;
+  for (let i = at; i < text.length; i++) {
+    if (text[i] === "(") depth++;
+    else if (text[i] === ")" && --depth === 0) return false;
+  }
+  return true;
+}
+
+/** Vrai si la « ) » de `text` à l'indice `at` n'a aucune « ( » pour l'ouvrir dans `text`. */
+function isUnmatchedCloser(text: string, at: number): boolean {
+  let depth = 0;
+  for (let i = at; i >= 0; i--) {
+    if (text[i] === ")") depth++;
+    else if (text[i] === "(" && --depth === 0) return false;
+  }
+  return true;
 }
 
 /**
