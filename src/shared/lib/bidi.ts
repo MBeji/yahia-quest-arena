@@ -119,8 +119,9 @@ const SIGNED_NUMBER = /(?<![\d)])[−–+][0-9]|[⁻⁺][⁰¹²³⁴⁵⁶⁷�
  * term sits at the RTL level and only the tail turns left-to-right: the formula comes out
  * half reversed.
  *
- *  - {@link DIGIT_FIRST_FORMULA}: a number, an operator, then a letter, with no letter
- *    before (`25 + k = 9` drawn `k = 9 + 25`, `1/b` drawn `b/1`, `3 − x`, `10 × 3^p`).
+ *  - {@link DIGIT_FIRST_FORMULA}: a number, an operator, then a letter — possibly behind a
+ *    coefficient — with no letter before (`25 + k = 9` drawn `k = 9 + 25`, `1/b` drawn `b/1`,
+ *    `3 − x`, `10 × 3^p`, `3 − 2x = x − 3` drawn `2x = x − 3 − 3`).
  *  - {@link LEADING_SIGN_LETTER}: a sign glued to a letter that does not follow an operand
  *    (`−x + 1` drawn `x + 1−`, `−b`, `+b`).
  *
@@ -128,8 +129,17 @@ const SIGNED_NUMBER = /(?<![\d)])[−–+][0-9]|[⁻⁺][⁰¹²³⁴⁵⁶⁷�
  * arithmetic (`10 − 4 = 6`, `3 + 5 = ؟`) carries no letter, stays untouched and keeps
  * reading right to left with the sentence, as designed above.
  */
-const DIGIT_FIRST_FORMULA = /^[^A-Za-z]*?\d[\d.,]*\s*[+−–×÷/=^]\s*[A-Za-z]/u;
+const DIGIT_FIRST_FORMULA = /^[^A-Za-z]*?\d[\d.,]*\s*[+−–×÷/=^]\s*[\d.,]*[A-Za-z]/u;
 const LEADING_SIGN_LETTER = /^[^A-Za-z]*?(?<![\d)])[−–+][A-Za-z]/u;
+
+/**
+ * A point or a variable carrying a prime — `M'`, `A″`, `x'` — is a mathematical atom even alone:
+ * inside RTL prose its apostrophe is a neutral character that takes the right-to-left direction
+ * and lands on the wrong side of the letter (`M'` drawn `'M`). Only a SINGLE letter qualifies
+ * (not preceded, nor followed, by another letter), so the apostrophes of French and English words
+ * (`l'eau`, `aujourd'hui`, `it's`) never match.
+ */
+const PRIMED_LETTER = /(?<![A-Za-z])[A-Za-z][′″']+(?![A-Za-z])/u;
 
 /**
  * Wrap every non-Arabic run that carries a bidi-flipping glyph (see
@@ -231,7 +241,8 @@ function needsLtrIsolate(segment: string): boolean {
       (!SOLO_BRACKETS_RE.test(segment) || STRONG_FLIP_SIGNAL.test(segment))) ||
     SIGNED_NUMBER.test(segment) ||
     DIGIT_FIRST_FORMULA.test(segment) ||
-    LEADING_SIGN_LETTER.test(segment)
+    LEADING_SIGN_LETTER.test(segment) ||
+    PRIMED_LETTER.test(segment)
   );
 }
 
