@@ -103,7 +103,7 @@ describe("isolateLtrRuns", () => {
   // Les parenthèses s'apparient désormais pour de bon, au lieu de se comparer en totaux.
   it("ne sépare jamais une parenthèse de sa compagne quand le segment les contient toutes deux", () => {
     expect(isolateLtrRuns("(80 + 100) ÷ 2 = 90 ✓ (والفرق بين مركزين متتاليين 20)")).toBe(
-      `${LRI}(80 + 100) ÷ 2 = 90 ✓${PDI} (والفرق بين مركزين متتاليين 20)`,
+      `${LRI}(80 + 100) ÷ 2 = 90${PDI} ✓ (والفرق بين مركزين متتاليين 20)`,
     );
     expect(isolateLtrRuns("(−3) × (−4) = 12 (سالب × سالب = موجب)، ثمّ 12 + (−2) = 10.")).toBe(
       `${LRI}(−3) × (−4) = 12${PDI} (سالب × سالب = موجب)، ثمّ${LRI} 12 + (−2) = 10${PDI}.`,
@@ -126,12 +126,12 @@ describe("isolateLtrRuns", () => {
       `(بوحدة OI) :${LRI} AB = |−2 − (−√2)| = |√2 − 2|${PDI}`,
     );
     expect(isolateLtrRuns("إذن BI = (√13 − 3)/2 cm ✓ (≈ 0,30 وهو العدد b) ثمّ")).toBe(
-      `إذن${LRI} BI = (√13 − 3)/2 cm ✓${PDI} (≈ 0,30 وهو العدد b) ثمّ`,
+      `إذن${LRI} BI = (√13 − 3)/2 cm${PDI} ✓ (≈ 0,30 وهو العدد b) ثمّ`,
     );
     // `2 = 2ab` s'ouvre par un nombre et porte des lettres : il est isolé lui aussi
     // (rendu en `2ab = 2` avant le correctif des coefficients).
     expect(isolateLtrRuns("(نعلم أنّ 2 = 2ab) = (b − a)² ✓ ثمّ")).toBe(
-      `(نعلم أنّ${LRI} 2 = 2ab${PDI})${LRI} = (b − a)² ✓ ${PDI}ثمّ`,
+      `(نعلم أنّ${LRI} 2 = 2ab${PDI})${LRI} = (b − a)²${PDI} ✓ ثمّ`,
     );
     // Deux membres de phrase arabes séparés par un signe : plus rien à isoler.
     const lines = "(المستقيم 1) ⊥ (المستقيم 2)";
@@ -280,6 +280,21 @@ describe("isolateLtrRuns", () => {
     expect(isolateLtrRuns("نجد +b هنا")).toContain(`${LRI} +b ${PDI}`);
   });
 
+  // La coche « ✓ » qui conclut un calcul est de la PROSE : dans l'isolat gauche-à-droite elle se
+  // retrouvait à droite de la formule, donc collée au mot arabe qui la précède et lue avant elle
+  // (`… على ✓ (ACQ)`). Dehors, elle suit la formule dans le sens de lecture de la phrase.
+  it("laisse la coche ✓ finale hors de l'isolat, comme la ponctuation de bord", () => {
+    expect(isolateLtrRuns("ومنه عمودي على (ACQ) ✓.")).toBe(`ومنه عمودي على${LRI} (ACQ)${PDI} ✓.`);
+    expect(isolateLtrRuns("فنجد √9 = 3 ✓ ثمّ")).toBe(`فنجد${LRI} √9 = 3${PDI} ✓ ثمّ`);
+    expect(isolateLtrRuns("الناتج (√2)² = 2 ✓، إذن")).toBe(`الناتج${LRI} (√2)² = 2${PDI} ✓، إذن`);
+  });
+
+  it("ne touche pas une coche qui ne suit pas une formule isolée", () => {
+    for (const s of ["المجموع 5 ✓ ثمّ", "ثمّ ✓ ثمّ"]) {
+      expect(isolateLtrRuns(s)).toBe(s);
+    }
+  });
+
   // Un COEFFICIENT devant la lettre ne change rien : `3 − 2x = x − 3` s'affichait
   // `2x = x − 3 − 3`, le premier terme restant au niveau RTL.
   it("isolates a digit-first formula whose letter hides behind a coefficient", () => {
@@ -297,7 +312,7 @@ describe("isolateLtrRuns", () => {
     expect(isolateLtrRuns("النقطة M' نظيرة M")).toContain(`${LRI} M' ${PDI}`);
     expect(isolateLtrRuns("نظيرة A هي A′ ثمّ")).toContain(`${LRI} A′ ${PDI}`);
     expect(isolateLtrRuns("المثلّث A'B'C' قائم")).toContain(`${LRI} A'B'C' ${PDI}`);
-    expect(isolateLtrRuns("ثمّ M'M'' = BC ✓")).toContain(`${LRI} M'M'' = BC ✓${PDI}`);
+    expect(isolateLtrRuns("ثمّ M'M'' = BC ✓")).toContain(`${LRI} M'M'' = BC${PDI} ✓`);
   });
 
   it("leaves the apostrophes of French and English words alone", () => {
@@ -447,6 +462,8 @@ describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", ()
       "ومنه 3 − 2x = x − 3 ثمّ نجد 3x = 6",
       "النقطة M' نظيرة M بالنسبة إلى O",
       "نظيرة A هي A′ و B′ نظيرة B",
+      "ومنه عمودي على (ACQ) ✓.",
+      "فنجد √9 = 3 ✓ ثمّ",
     ]) {
       const isolated = isolateLtrRuns(text);
       expect(mathRuns(text).length).toBe((isolated.match(new RegExp(LRI, "g")) ?? []).length);
@@ -503,15 +520,22 @@ describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", ()
     );
   });
 
+  // Même parité pour la coche finale : elle reste dans la prose, avec l'espace qui la précède.
+  it("garde la coche ✓ finale dans la prose, hors du run de la formule", () => {
+    const text = "ومنه عمودي على (ACQ) ✓.";
+    const runs = splitMathRuns(text);
+    expect(runs.filter((run) => run.math).map((run) => run.text)).toEqual(["(ACQ)"]);
+    expect(runs[runs.length - 1].text).toBe(" ✓.");
+    expect(rebuild(text)).toBe(text);
+  });
+
   // Même parité : la parenthèse qui a sa compagne dans la formule reste dans le run, seule la
   // « ( » de queue qui ouvre un membre de phrase arabe retourne à la prose.
   it("garde dans le run mathématique la parenthèse qui a sa compagne dans la formule", () => {
     const text = "(80 + 100) ÷ 2 = 90 ✓ (والفرق بين مركزين متتاليين 20)";
     const runs = splitMathRuns(text);
-    expect(runs.filter((run) => run.math).map((run) => run.text)).toEqual([
-      "(80 + 100) ÷ 2 = 90 ✓",
-    ]);
-    expect(runs[runs.length - 1].text.startsWith(" (")).toBe(true);
+    expect(runs.filter((run) => run.math).map((run) => run.text)).toEqual(["(80 + 100) ÷ 2 = 90"]);
+    expect(runs[runs.length - 1].text.startsWith(" ✓ (")).toBe(true);
     expect(rebuild(text)).toBe(text);
   });
 
