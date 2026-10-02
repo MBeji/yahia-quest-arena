@@ -77,9 +77,24 @@ function renderLines(text: string): ReactNode {
  * Renders a sanitized inline SVG figure. The markup is passed through
  * `sanitizeSvg` (DOMPurify SVG profile) so no script/event/foreignObject/external
  * reference can reach the DOM. See `docs/xss-rendering-policy.md`.
+ *
+ * Un schéma est de la géométrie, pas du texte : il se pose `dir="ltr"` quelle que
+ * soit la direction de la page. Un SVG hérite de `direction` — et dans une page
+ * arabe (`dir="rtl"`, le cas de toute matière dont le contenu est arabe) les
+ * ancres `text-anchor="start"` / `"end"` s'inversent : une graduation d'axe
+ * ancrée `end` à gauche de son trait se pose alors par-dessus. Les figures sont
+ * dessinées dans le repère gauche-à-droite de leur `viewBox` ; cet attribut leur
+ * rend ce repère, sans toucher à `text-anchor="middle"`, que la direction
+ * n'affecte pas.
  */
 export function SvgFigure({ markup, className }: { markup: string; className?: string }) {
-  return <span className={className} dangerouslySetInnerHTML={{ __html: sanitizeSvg(markup) }} />;
+  return (
+    <span
+      dir="ltr"
+      className={className}
+      dangerouslySetInnerHTML={{ __html: sanitizeSvg(markup) }}
+    />
+  );
 }
 
 /**
