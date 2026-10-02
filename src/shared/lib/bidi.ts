@@ -378,12 +378,17 @@ function peelEdgePunctuation(segment: string): [lead: string, core: string, tail
   }
   for (;;) {
     const punctuation = /\s*[.,;:]+\s*$/u.exec(core)?.[0];
+    // La coche « ✓ » qui conclut un calcul est un marqueur de PROSE, pas un signe de la formule :
+    // dans l'isolat elle se retrouve à droite de la formule, donc collée au mot arabe qui la
+    // précède et lue avant elle (`… على ✓ (ACQ)`) ; dehors, elle suit la formule dans le sens de
+    // lecture de la phrase.
+    const tick = /\s*✓\s*$/u.exec(core)?.[0];
     // Une ouvrante de queue n'a, par construction, aucune fermante après elle : orpheline.
     const opener = /\s*\(\s*$/u.exec(core)?.[0];
     const last = /\s*\)\s*$/u.exec(core)?.[0];
     const closer =
       !bracketed && last && isUnmatchedCloser(core, core.lastIndexOf(")")) ? last : undefined;
-    const peeled = punctuation ?? opener ?? closer;
+    const peeled = punctuation ?? tick ?? opener ?? closer;
     if (!peeled) break;
     tail = peeled + tail;
     core = core.slice(0, core.length - peeled.length);
