@@ -46,6 +46,48 @@ describe("figure rendering — visible on a light surface", () => {
   });
 });
 
+// Une page arabe est `dir="rtl"` et un SVG hérite de `direction` : les ancres
+// `text-anchor="start"` / `"end"` s'y inversent (mesuré dans Chromium : une
+// graduation `end` posée à x = 150 occupe [96, 150] en LTR, [150, 204] en RTL —
+// par-dessus l'axe qu'elle devait border). Un schéma est de la géométrie : il se
+// pose gauche-à-droite quel que soit le sens de la page qui le porte.
+describe("figure rendering — ancrée gauche-à-droite dans une page arabe", () => {
+  const AXIS_TICK =
+    '<svg viewBox="0 0 100 30"><text x="50" y="20" text-anchor="end">123</text></svg>';
+  const figureOf = (container: HTMLElement) =>
+    container.querySelector("svg")?.parentElement ?? null;
+
+  it("SvgFigure se pose dir=ltr", () => {
+    const { container } = render(<SvgFigure markup={AXIS_TICK} />);
+    expect(figureOf(container)?.getAttribute("dir")).toBe("ltr");
+  });
+
+  it("RichField garde la figure d'un énoncé arabe en dir=ltr, même sous un ancêtre dir=rtl", () => {
+    const { container } = render(
+      <div dir="rtl">
+        <RichField raw={`ما قيمة العدد المقروء على المحور؟ ${AXIS_TICK}`} />
+      </div>,
+    );
+    expect(figureOf(container)?.getAttribute("dir")).toBe("ltr");
+  });
+
+  it("OptionContent garde la figure d'une option en dir=ltr", () => {
+    const { container } = render(
+      <div dir="rtl">
+        <OptionContent raw={AXIS_TICK} />
+      </div>,
+    );
+    expect(figureOf(container)?.getAttribute("dir")).toBe("ltr");
+  });
+
+  it("ne change ni le texte de l'énoncé ni sa direction", () => {
+    const { container } = render(
+      <RichField raw={`ما قيمة العدد المقروء على المحور؟ ${AXIS_TICK}`} />,
+    );
+    expect(container.firstElementChild?.getAttribute("dir")).toBe("rtl");
+  });
+});
+
 // ---------------------------------------------------------------------------
 // Une équation ne se coupe jamais en deux lignes, et ne se mêle pas au texte.
 //
