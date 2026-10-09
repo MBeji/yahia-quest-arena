@@ -71,6 +71,7 @@ export type TranslationKeys = {
     toastSignupSuccess: string;
     toastLoginSuccess: string;
     toastLinked: string;
+    allianceLinkFailed: string;
     googleNotConfigured: string;
     googleFailed: string;
     // Error messages (friendlyAuthError + form validation)

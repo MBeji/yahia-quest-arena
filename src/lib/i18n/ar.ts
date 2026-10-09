@@ -62,6 +62,7 @@ export const ar: TranslationKeys = {
     toastSignupSuccess: "تم إنشاء الحساب! مرحباً بك 🎉",
     toastLoginSuccess: "سعداء بعودتك!",
     toastLinked: "تم الربط مع {name}.",
+    allianceLinkFailed: "رمز التحالف غير معروف — يمكنك ربط حساب الوليّ لاحقاً من صفحة التقرير.",
     googleNotConfigured: "مزوّد Google غير مفعّل في Supabase Auth.",
     googleFailed: "فشل تسجيل الدخول عبر Google: {message}",
     passwordTooShort: "يجب أن تحتوي كلمة السر على 8 أحرف على الأقل.",
