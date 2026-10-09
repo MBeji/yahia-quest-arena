@@ -305,6 +305,33 @@ describe("isolateLtrRuns", () => {
     );
   });
 
+  // Une lettre GRECQUE est une lettre : `π`, `α`, `θ` sont fortes gauche-à-droite comme `x`.
+  // `3,14 − π` s'affichait `π − 3,14` (la différence à l'envers), `2 × π × r` de même.
+  it("isolates a digit-first formula whose letter is Greek", () => {
+    expect(isolateLtrRuns("فالعدد 3,14 − π سالب")).toContain(`${LRI} 3,14 − π ${PDI}`);
+    expect(isolateLtrRuns("المحيط = 2 × π × r هو")).toContain(`${LRI} = 2 × π × r ${PDI}`);
+    expect(isolateLtrRuns("المحيط 2 × π × r هو")).toContain(`${LRI} 2 × π × r ${PDI}`);
+    expect(isolateLtrRuns("نكتب 6 − 2π ثمّ")).toContain(`${LRI} 6 − 2π ${PDI}`);
+    expect(isolateLtrRuns("القياس 90 − α بالدرجة")).toContain(`${LRI} 90 − α ${PDI}`);
+  });
+
+  // Le signe « ° » peut suivre le nombre : `30° = OI/OB` s'affichait `OI/OB = °30`.
+  it("isolates a digit-first formula whose number carries a degree sign", () => {
+    expect(isolateLtrRuns("فنجد ظا 30° = OI/OB لأنّ")).toContain(`${LRI} 30° = OI/OB ${PDI}`);
+    expect(isolateLtrRuns("ومنه 45° + x = 90° ثمّ")).toContain(`${LRI} 45° + x = 90° ${PDI}`);
+  });
+
+  it("isolates a sign glued to a Greek letter", () => {
+    expect(isolateLtrRuns("العدد −π سالب")).toContain(`${LRI} −π ${PDI}`);
+  });
+
+  it("still leaves a Greek letter that follows another letter or no number to the natural order", () => {
+    // pas de signal : un mot arabe suivi du seul `π` n'est pas une formule ouverte par un nombre
+    expect(isolateLtrRuns("العدد π غير ناطق")).toBe("العدد π غير ناطق");
+    // `π` PRÉCÈDE le nombre : la lettre forte est déjà en tête, l'ordre natif est le bon
+    expect(isolateLtrRuns("حيث π + 3 يساوي")).not.toContain(`${LRI} π + 3`);
+  });
+
   // Un point ou une variable « primé » (`M'`, `A′`) est un atome mathématique même seul :
   // l'apostrophe est neutre, prend le sens RTL et tombe du mauvais côté de la lettre
   // (`M'` s'affichait `'M`).
@@ -462,6 +489,8 @@ describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", ()
       "ومنه 3 − 2x = x − 3 ثمّ نجد 3x = 6",
       "النقطة M' نظيرة M بالنسبة إلى O",
       "نظيرة A هي A′ و B′ نظيرة B",
+      "فالعدد 3,14 − π سالب",
+      "المحيط = 2 × π × r هو",
       "ومنه عمودي على (ACQ) ✓.",
       "فنجد √9 = 3 ✓ ثمّ",
     ]) {
