@@ -257,13 +257,19 @@ function AuthPage() {
           await runBootstrapProfile({ data: { displayName, role } });
 
           if (role === "parent" && allianceCode.trim().length > 0) {
-            const linkRes = await linkByCode({
-              data: { studentCode: allianceCode.trim(), relationLabel: "parent" },
-            });
-            if (linkRes.linked) {
-              toast.success(
-                t.auth.toastLinked.replace("{name}", linkRes.student.displayName ?? "élève"),
-              );
+            try {
+              const linkRes = await linkByCode({
+                data: { studentCode: allianceCode.trim(), relationLabel: "parent" },
+              });
+              if (linkRes.linked) {
+                toast.success(
+                  t.auth.toastLinked.replace("{name}", linkRes.student.displayName ?? "élève"),
+                );
+              }
+            } catch {
+              // The alliance-code step is optional: an invalid or unknown code must not
+              // block account creation; the parent can link from /parent-report later.
+              toast.error(t.auth.allianceLinkFailed);
             }
           }
         }

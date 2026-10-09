@@ -149,6 +149,47 @@ describe("AuthPage — confirmation e-mail", () => {
   });
 });
 
+describe("AuthPage — parent signup with alliance code", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockSearch.mode = "signup";
+    // Pre-select the parent role via URL param so the alliance-code field renders.
+    mockSearch.role = "parent";
+    mockGetSession.mockResolvedValue({ data: { session: null } });
+    mockOnAuthStateChange.mockReturnValue({ data: { subscription: { unsubscribe: vi.fn() } } });
+  });
+
+  afterEach(() => {
+    delete mockSearch.role;
+  });
+
+  // Regression for report 04d460bf: when the optional alliance-code linking step
+  // fails (invalid code, network error, or the server fn returns undefined and
+  // `linkRes.linked` throws), the outer catch swallowed the error and never
+  // reached `navigate({ to: "/dashboard" })`, leaving the parent on the auth page
+  // even though their account had been created successfully.
+  it("an alliance-code error must not block navigation to /dashboard", async () => {
+    // Auto-login signup: both user and session present.
+    // With the default useServerFn mock, linkByCode() returns undefined and
+    // `undefined.linked` throws — that is the bug trigger this test pins.
+    mockSignUp.mockResolvedValue({
+      data: {
+        user: { id: "parent-u1", identities: [{ identity_id: "i1" }] },
+        session: { user: { id: "parent-u1" } },
+      },
+      error: null,
+    });
+    render(<AuthPage />);
+
+    fireEvent.change(screen.getByPlaceholderText(/Code Alliance élève/), {
+      target: { value: "ABCD-1234-ABCD-1234-ABCD-1234-ABCD-1234" },
+    });
+    submitSignup();
+
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith({ to: "/dashboard" }));
+  });
+});
+
 describe("friendlyAuthError", () => {
   const t = {
     auth: {

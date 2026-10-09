@@ -63,6 +63,8 @@ export const en: TranslationKeys = {
     toastSignupSuccess: "Account created! Welcome 🎉",
     toastLoginSuccess: "Good to see you again!",
     toastLinked: "Linked with {name}.",
+    allianceLinkFailed:
+      "Alliance Code not recognised — you can link the parent account from the Report page.",
     googleNotConfigured: "The Google provider is not configured in Supabase Auth.",
     googleFailed: "Google sign-in failed: {message}",
     passwordTooShort: "The password must contain at least 8 characters.",
