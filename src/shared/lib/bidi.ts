@@ -121,7 +121,10 @@ const SIGNED_NUMBER = /(?<![\d)])[−–+][0-9]|[⁻⁺][⁰¹²³⁴⁵⁶⁷�
  *
  *  - {@link DIGIT_FIRST_FORMULA}: a number, an operator, then a letter — possibly behind a
  *    coefficient — with no letter before (`25 + k = 9` drawn `k = 9 + 25`, `1/b` drawn `b/1`,
- *    `3 − x`, `10 × 3^p`, `3 − 2x = x − 3` drawn `2x = x − 3 − 3`).
+ *    `3 − x`, `10 × 3^p`, `3 − 2x = x − 3` drawn `2x = x − 3 − 3`). A Greek letter counts as a
+ *    letter — `π`, `α`, `θ` are strong left-to-right characters like `x` — so `3,14 − π` was drawn
+ *    `π − 3,14`, the difference reversed; and a degree sign may follow the number, so
+ *    `30° = OI/OB` was drawn `OI/OB = °30`.
  *  - {@link LEADING_SIGN_LETTER}: a sign glued to a letter that does not follow an operand
  *    (`−x + 1` drawn `x + 1−`, `−b`, `+b`).
  *
@@ -129,8 +132,10 @@ const SIGNED_NUMBER = /(?<![\d)])[−–+][0-9]|[⁻⁺][⁰¹²³⁴⁵⁶⁷�
  * arithmetic (`10 − 4 = 6`, `3 + 5 = ؟`) carries no letter, stays untouched and keeps
  * reading right to left with the sentence, as designed above.
  */
-const DIGIT_FIRST_FORMULA = /^[^A-Za-z]*?\d[\d.,]*\s*[+−–×÷/=^]\s*[\d.,]*[A-Za-z]/u;
-const LEADING_SIGN_LETTER = /^[^A-Za-z]*?(?<![\d)])[−–+][A-Za-z]/u;
+const DIGIT_FIRST_FORMULA =
+  /^[^A-Za-z\u0391-\u03A9\u03B1-\u03C9]*?\d[\d.,]*°?\s*[+−–×÷/=^]\s*[\d.,]*[A-Za-z\u0391-\u03A9\u03B1-\u03C9]/u;
+const LEADING_SIGN_LETTER =
+  /^[^A-Za-z\u0391-\u03A9\u03B1-\u03C9]*?(?<![\d)])[−–+][A-Za-z\u0391-\u03A9\u03B1-\u03C9]/u;
 
 /**
  * A point or a variable carrying a prime — `M'`, `A″`, `x'` — is a mathematical atom even alone:
