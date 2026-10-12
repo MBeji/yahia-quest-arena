@@ -204,19 +204,19 @@ de codable** avant GAP-003.
 **Par où commencer : les classes de concours** (6ᵉ et 9ᵉ), là où l'enjeu pour l'élève est le
 plus fort. État mesuré le 2026-09-23 sur les 10 matières servies (plus `french-6eme`, absent) :
 
-| Matière (id)                                      | Niveau 2 (patron)                                                                                                                                            | Niveau 3 (tags)   |
-| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------- |
-| maths 9ᵉ (`math`)                                 | ✅ armé (`error`) — ⚠️ 01 et 02 débordent sur d'autres chapitres (fiche §6.2 bis) : recentrage décidé le 2026-09-28                                          | ✅                |
-| SVT 9ᵉ (`sciences-vie-terre`)                     | ✅ armé (`error`) le 2026-10-01 — 14 chapitres du programme + 7 optionnels (15–21)                                                                           | ✅ 668 tags       |
-| arabe 9ᵉ (`arabic`)                               | ⏳ réaligné sur les manuels révisés 101908 et 101909 (19 chapitres, 5 neufs), audits A1–A3 faits — étiquettes et armement en cours (`wip/arabe-9eme-patron`) | ⏳                |
-| français 9ᵉ (`french`)                            | ✅ armé (`error`) le 2026-10-01 — manuel 121905 lu en entier, 10 chapitres réalignés + 5 neufs                                                               | ✅ 102 ids `fr.*` |
-| anglais 6ᵉ (`english-6eme`)                       | ✅ écrit, pas armé                                                                                                                                           | ❌                |
-| **maths 6ᵉ** (`math-6eme`)                        | ✅ armé (`error`) — campagne finie le 2026-09-23                                                                                                             | ✅ 1 347 tags     |
-| physique-chimie 9ᵉ (`svt`)                        | ✅ armé (`error`) le 2026-09-28 — réalignée le 2026-09-25                                                                                                    | ✅ 454 tags       |
-| anglais 9ᵉ (`english`)                            | ✅ armé (`error`) le 2026-09-28 — réalignée le 2026-09-25                                                                                                    | ✅ 576 tags       |
-| arabe 6ᵉ (`arabic-6eme`)                          | ✅ armé (`error`) le 2026-09-28 — 19 chapitres dont lecture et production (14–19)                                                                            | ✅ 847 tags       |
-| éveil scientifique 6ᵉ (`eveil-scientifique-6eme`) | ✅ armé (`error`) le 2026-09-28 — réaligné le 2026-09-28                                                                                                     | ✅ 425 tags       |
-| **français 6ᵉ**                                   | — la matière n'existe pas (fiche partielle, LOT A d'abord)                                                                                                   | —                 |
+| Matière (id)                                      | Niveau 2 (patron)                                                                                                                             | Niveau 3 (tags)   |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- |
+| maths 9ᵉ (`math`)                                 | ✅ armé (`error`) — 01 et 02 recentrés sur leur chapitre officiel, audités et publiés le 2026-10-12 (privé#660)                               | ✅                |
+| SVT 9ᵉ (`sciences-vie-terre`)                     | ✅ armé (`error`) le 2026-10-01 — 14 chapitres du programme + 7 optionnels (15–21)                                                            | ✅ 668 tags       |
+| arabe 9ᵉ (`arabic`)                               | ✅ armé (`error`) le 2026-10-12 — réaligné sur les manuels révisés 101908 et 101909 (19 chapitres, 5 neufs), audits A1–A4, publié (privé#663) | ✅ 1 445 tags     |
+| français 9ᵉ (`french`)                            | ✅ armé (`error`) le 2026-10-01 — manuel 121905 lu en entier, 10 chapitres réalignés + 5 neufs                                                | ✅ 102 ids `fr.*` |
+| anglais 6ᵉ (`english-6eme`)                       | ✅ écrit, pas armé                                                                                                                            | ❌                |
+| **maths 6ᵉ** (`math-6eme`)                        | ✅ armé (`error`) — campagne finie le 2026-09-23                                                                                              | ✅ 1 347 tags     |
+| physique-chimie 9ᵉ (`svt`)                        | ✅ armé (`error`) le 2026-09-28 — réalignée le 2026-09-25                                                                                     | ✅ 454 tags       |
+| anglais 9ᵉ (`english`)                            | ✅ armé (`error`) le 2026-09-28 — réalignée le 2026-09-25                                                                                     | ✅ 576 tags       |
+| arabe 6ᵉ (`arabic-6eme`)                          | ✅ armé (`error`) le 2026-09-28 — 19 chapitres dont lecture et production (14–19)                                                             | ✅ 847 tags       |
+| éveil scientifique 6ᵉ (`eveil-scientifique-6eme`) | ✅ armé (`error`) le 2026-09-28 — réaligné le 2026-09-28                                                                                      | ✅ 425 tags       |
+| **français 6ᵉ**                                   | — la matière n'existe pas (fiche partielle, LOT A d'abord)                                                                                    | —                 |
 
 **Les deux campagnes ouvertes** (règle 1 : pas plus de deux) — 🧭 **depuis le 2026-10-12, la campagne 1 est
 pilotée depuis un seul fichier, `FableEtudes/PILOTAGE.md` (dépôt privé)** : le patron et le gisement sont
