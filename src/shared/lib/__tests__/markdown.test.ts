@@ -309,6 +309,25 @@ describe("renderLesson", () => {
   });
 });
 
+// Audits arabe 9ᵉ (chapitres 09 et 10) : le guillemet était enfermé dans l'isolat LTR avec le
+// numéro de phrase ou la flèche, et se dessinait du mauvais côté. Dans le cours rendu, aucun
+// isolat ne contient plus de guillemet, et la flèche de prose n'est plus isolée.
+describe("renderLesson — guillemets et flèche de prose en arabe", () => {
+  it("laisse les guillemets hors des isolats et la flèche de prose sans isolat", () => {
+    const out = renderLesson(
+      [
+        "«(1) في رأيي أنّ الصدقَ أساسُ الثقةِ. (2) فقد قالَ المثلُ.» ما الركنُ الغائبُ؟",
+        "",
+        "2. **ولو قالتْ** «الشمسُ تُشرقُ من المشرقِ» ← لا يعترضُ أحدٌ ← لا حجاجَ.",
+      ].join("\n"),
+      { lang: "ar" },
+    ).html;
+    expect(out).toContain("«\u2066(1)\u2069 في رأيي");
+    expect(out).not.toMatch(/\u2066[^\u2069]*[«»][^\u2069]*\u2069/u);
+    expect(out).toContain("«الشمسُ تُشرقُ من المشرقِ» ← لا يعترضُ أحدٌ ← لا حجاجَ.");
+  });
+});
+
 /**
  * Moteur de blocs pédagogiques — étude 18, lot 1.
  *

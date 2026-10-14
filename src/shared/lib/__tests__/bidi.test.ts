@@ -415,6 +415,45 @@ describe("isolateLtrRuns", () => {
     expect(q6).toContain(`${LRI} −2${PDI}`);
     expect((q6.match(new RegExp(LRI, "g")) ?? []).length).toBe(4);
   });
+
+  // Un guillemet n'appartient jamais à une formule : enfermé dans l'isolat gauche-à-droite, il
+  // perd son miroir et change de côté. `«(1) في رأيي` s'affichait `(1)»في رأيي` (le guillemet
+  // entre le numéro et le texte), `«يتفادى نظراتِ أبيه» ← قرائنُ` dessinait le guillemet
+  // fermant APRÈS la flèche (audits arabe 9ᵉ, chapitres 09 et 10).
+  it("laisse les guillemets hors de l'isolat — numéro de phrase en tête de citation", () => {
+    expect(isolateLtrRuns("«(1) في رأيي أنّ الصدقَ أساسُ الثقةِ. (2) فقد قالَ المثلُ.»")).toBe(
+      `«${LRI}(1)${PDI} في رأيي أنّ الصدقَ أساسُ الثقةِ.${LRI} (2) ${PDI}فقد قالَ المثلُ.»`,
+    );
+    expect(isolateLtrRuns("قسِّمْ هذا النصَّ: «(1) يرى بعضُهم")).toBe(
+      `قسِّمْ هذا النصَّ: «${LRI}(1)${PDI} يرى بعضُهم`,
+    );
+  });
+
+  it("n'isole pas la flèche de prose qui suit ou précède une citation", () => {
+    const quoted = "«يتفادى نظراتِ أبيه» ← قرائنُ";
+    expect(isolateLtrRuns(quoted)).toBe(quoted);
+    const chain = "«الشمسُ تُشرقُ» ← لا يعترضُ أحدٌ ← لا حجاجَ";
+    expect(isolateLtrRuns(chain)).toBe(chain);
+    expect(isolateLtrRuns("حوّل: «المعلّمةُ تشرحُ الدرس» ← «……… تشرحُ الدرس».")).not.toContain(LRI);
+    expect(isolateLtrRuns("مثال: _«نجحَ التلميذُ.»_ ← «التلميذُ» فاعلٌ")).not.toContain(LRI);
+    expect(isolateLtrRuns("_← «كانتِ السماءُ صافيةً.»")).not.toContain(LRI);
+  });
+
+  it("garde la formule citée isolée, guillemets dehors", () => {
+    expect(isolateLtrRuns("نكتب «A = 3√2» في الدفتر")).toBe(`نكتب «${LRI}A = 3√2${PDI}» في الدفتر`);
+    // La flèche d'une formule reste dans l'isolat : seule la flèche nue entre deux phrases en sort.
+    expect(isolateLtrRuns("المعادلة 2Al + 3Cl₂ → 2AlCl₃ موزونة")).toContain(
+      `${LRI} 2Al + 3Cl₂ → 2AlCl₃ ${PDI}`,
+    );
+    expect(isolateLtrRuns("الانتقال 2 → 4 ممكن")).toContain(LRI);
+  });
+
+  // Les accolades coraniques se miroitent seules dans la phrase arabe : le guillemet collé
+  // (`{…}»`) les faisait isoler, donc dessiner à l'envers.
+  it("n'isole pas une accolade de prose collée à un guillemet", () => {
+    const verse = "يقرأ ب {سَبِّحِ اسْمَ رَبِّكَ الْأَعْلَى}»، وهي سورة الأعلى";
+    expect(isolateLtrRuns(verse)).toBe(verse);
+  });
 });
 
 describe("isolateLtrRunsHtml", () => {
@@ -493,6 +532,9 @@ describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", ()
       "المحيط = 2 × π × r هو",
       "ومنه عمودي على (ACQ) ✓.",
       "فنجد √9 = 3 ✓ ثمّ",
+      "«(1) في رأيي أنّ الصدقَ أساسُ الثقةِ. (2) فقد قالَ المثلُ.»",
+      "«يتفادى نظراتِ أبيه» ← قرائنُ",
+      "نكتب «A = 3√2» في الدفتر",
     ]) {
       const isolated = isolateLtrRuns(text);
       expect(mathRuns(text).length).toBe((isolated.match(new RegExp(LRI, "g")) ?? []).length);
