@@ -239,8 +239,19 @@ export type TextRun = { text: string; math: boolean; nowrap: boolean };
  */
 const NOWRAP_MAX = 32;
 
+/**
+ * Une flèche de PROSE : rien que des flèches, des espaces, et les blancs `___`/`………` d'un énoncé
+ * à compléter. En arabe, `←` relie deux membres de phrase (`«…» ← قرائنُ`, « donc ») ; seule
+ * entre deux mots arabes, elle prend le sens de la phrase et se dessine telle qu'écrite — une
+ * flèche ne se miroite pas. L'isoler n'apporte rien et, dès que la suite compte deux signes
+ * (`_ ←`, `← →`), la lit à l'envers. Une flèche DE FORMULE garde son isolat : elle a un chiffre
+ * ou une lettre dans son run (`2 → 4`, `2Al + 3Cl₂ → 2AlCl₃`).
+ */
+const PROSE_ARROW_RE = /^[\s←→⟵⟶⟸⟹⟺_…]+$/u;
+
 /** La condition exacte qu'applique {@link isolateLtrRuns} à un segment non arabe. */
 function needsLtrIsolate(segment: string): boolean {
+  if (PROSE_ARROW_RE.test(segment)) return false;
   return (
     (BIDI_FLIP_SIGNAL.test(segment) &&
       (!SOLO_BRACKETS_RE.test(segment) || STRONG_FLIP_SIGNAL.test(segment))) ||
@@ -308,24 +319,61 @@ function splitAtParentheticals(segments: string[]): Piece[][] {
       }
     }
   });
-  return segments.map((segment, index) => {
-    // Au bord du segment, {@link peelEdgePunctuation} retire déjà la parenthèse AVEC ses espaces.
-    const cuts = [...crossing[index]]
-      .filter((at) => segment.slice(0, at).trim() && segment.slice(at + 1).trim())
-      .sort((a, b) => a - b);
-    if (!cuts.length) return [{ text: segment, prose: false }];
-    const pieces: Piece[] = [];
-    let from = 0;
-    for (const at of cuts) {
-      // Les espaces qui précèdent la parenthèse sont de la prose avec elle, comme au bord du segment.
-      let start = at;
-      while (start > from && /\s/u.test(segment[start - 1])) start -= 1;
-      if (start > from) pieces.push({ text: segment.slice(from, start), prose: false });
-      pieces.push({ text: segment.slice(start, at + 1), prose: true });
-      from = at + 1;
-    }
-    if (from < segment.length) pieces.push({ text: segment.slice(from), prose: false });
-    return pieces;
+  return segments
+    .map((segment, index) => {
+      // Au bord du segment, {@link peelEdgePunctuation} retire déjà la parenthèse AVEC ses espaces.
+      const cuts = [...crossing[index]]
+        .filter((at) => segment.slice(0, at).trim() && segment.slice(at + 1).trim())
+        .sort((a, b) => a - b);
+      if (!cuts.length) return [{ text: segment, prose: false }];
+      const pieces: Piece[] = [];
+      let from = 0;
+      for (const at of cuts) {
+        // Les espaces qui précèdent la parenthèse sont de la prose avec elle, comme au bord du segment.
+        let start = at;
+        while (start > from && /\s/u.test(segment[start - 1])) start -= 1;
+        if (start > from) pieces.push({ text: segment.slice(from, start), prose: false });
+        pieces.push({ text: segment.slice(start, at + 1), prose: true });
+        from = at + 1;
+      }
+      if (from < segment.length) pieces.push({ text: segment.slice(from), prose: false });
+      return pieces;
+    })
+    .map(splitAtQuotes);
+}
+
+/**
+ * Guillemets et apostrophes typographiques — jamais un signe de formule, toujours de la prose.
+ * `«` et `»` sont de plus des glyphes MIROIR : à hauteur de la phrase arabe ils se dessinent
+ * retournés, comme il faut ; dans un isolat gauche-à-droite ils perdent ce miroir et passent de
+ * l'autre côté de ce qu'ils bornent. `«(1) في رأيي` se lisait `(1)»في رأيي`, et dans
+ * `«…» ← قرائنُ` le guillemet fermant venait après la flèche.
+ */
+const QUOTE_RE = /([«»“”‹›„])/u;
+
+/**
+ * Sort chaque guillemet d'un morceau candidat à l'isolat : il devient un morceau de prose, et ce
+ * qui l'entoure se juge séparément (`«(1) ` → `«` + `(1)` + ` `, `» ← «` → `»` + ` ← ` + `«`).
+ *
+ * Les espaces qui bordent un fragment voisin d'un guillemet sortent eux aussi de l'isolat : dans
+ * `«(1) في`, l'espace laissé dans l'isolat se dessinait du côté gauche-à-droite, entre le
+ * guillemet et le numéro (`« (1)في`), au lieu de séparer le numéro du texte.
+ */
+function splitAtQuotes(pieces: Piece[]): Piece[] {
+  return pieces.flatMap((piece) => {
+    if (piece.prose || !QUOTE_RE.test(piece.text)) return [piece];
+    return piece.text
+      .split(QUOTE_RE)
+      .filter(Boolean)
+      .flatMap((text): Piece[] => {
+        if (QUOTE_RE.test(text)) return [{ text, prose: true }];
+        const [, lead, core, tail] = text.match(/^(\s*)([\s\S]*?)(\s*)$/u) as RegExpMatchArray;
+        return [
+          { text: lead, prose: true },
+          { text: core, prose: false },
+          { text: tail, prose: true },
+        ].filter((part) => part.text);
+      });
   });
 }
 
