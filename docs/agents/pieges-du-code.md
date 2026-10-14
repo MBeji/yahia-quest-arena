@@ -400,6 +400,25 @@ La barre AA est à 4,5:1 ; en dessous de ~1,5:1 il n'y a **rien** à voir sur du
 cours, pour tout élève connecté — d'où son `print:hidden`, comme l'en-tête, le sommaire et les
 appels à l'action du lecteur.
 
+## Un déploiement Vercel rouge en une seconde n'est pas un build cassé — c'est un refus
+
+**Symptôme (2026-10-01 → 2026-10-14)** : tous les déploiements Vercel, Production comme
+Preview, passent en `failure` **dans la seconde** qui suit leur création ; `/api/health` sert
+toujours le même vieux `commit`. Les PR restent vertes (CI, CodeQL) et fusionnent : la prod a
+pris 12 commits de retard sans qu'aucun gate ne bronche.
+
+**Cause** : Vercel refuse de construire un commit dont le lock embarque une version
+vulnérable d'un paquet qu'il surveille — ici `errorCode: BLOCKED_PACKAGE`,
+`@tanstack/react-start@1.168.34` (CVE-2026-102989, corrigée en 1.168.60). Le refus tombe à
+`direct:build`, avant toute ligne de log de build : rien n'est visible depuis GitHub.
+
+**Ce qu'il faut faire** :
+
+- comparer `/api/health` (`commit`) à `main` dès qu'un statut **Vercel** est rouge ;
+- lancer `vercel-diagnose.yml` (lecture seule, `ops-dispatch`) : il rend `errorCode`,
+  `errorMessage` et le détail du dernier déploiement en échec ;
+- corriger dans le dépôt (montée du paquet, #1172) — jamais `DANGEROUSLY_DEPLOY_*`.
+
 ## Règles laissées par les chantiers d'août-septembre 2026
 
 Sorties de `STATUS.md` le 2026-09-22 (son § 6 les portait) ; le détail et les mesures sont dans
