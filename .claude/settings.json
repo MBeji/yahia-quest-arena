@@ -95,7 +95,8 @@
       "Bash(gh workflow run second-opinion.yml:*)",
       "Bash(gh workflow run guard-watch.yml:*)",
       "Bash(gh workflow run upgrade-guard.yml:*)",
-      "Bash(gh workflow run auto-pr.yml:*)"
+      "Bash(gh workflow run auto-pr.yml:*)",
+      "Bash(gh workflow run vercel-diagnose.yml:*)"
     ],
     "deny": [
       "Bash(npx supabase db push:*)",
