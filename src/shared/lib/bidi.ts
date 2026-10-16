@@ -180,16 +180,72 @@ function isolatePiece(piece: string): string {
 }
 
 /**
+ * Balises de mise en forme EN LIGNE : elles ne coupent pas une phrase, donc pas une formule.
+ * `فنأخذ المقابل: |√6 − 3| = −(√6 − 3) = **3 − √6**.` est UNE chaîne d'égalités dont le dernier
+ * membre est en gras ; jugée morceau par morceau, la partie en gras (sans lettre arabe) n'était
+ * pas isolée — elle s'affichait `6√ − 3` — et l'isolat de gauche la rejetait de l'autre côté de
+ * la chaîne. `span` reste une frontière : le rendu ne s'en sert que pour les étiquettes de blocs.
+ */
+const INLINE_FORMATTING_TAG_RE = /^<\/?(?:strong|em)>$/u;
+
+/**
  * HTML-aware variant of {@link isolateLtrRuns}: isolates math runs only inside
  * text content, never inside tag markup (so class names, ids and attributes are
  * left alone). Used by the markdown renderer on its final HTML output.
+ *
+ * Le texte que seules des balises en ligne ({@link INLINE_FORMATTING_TAG_RE}) séparent se juge
+ * d'un seul tenant, comme si elles n'étaient pas là ; les isolats posés reviennent ensuite dans
+ * les morceaux de texte d'origine — un isolat peut ainsi s'ouvrir avant `<strong>` et se fermer
+ * dedans, ce que l'algorithme bidi accepte : il travaille sur le paragraphe, pas sur la balise.
  */
 export function isolateLtrRunsHtml(html: string): string {
   if (!html || !ARABIC_RE.test(html)) return html;
-  return html
-    .split(/(<[^>]*>)/)
-    .map((piece) => (piece.startsWith("<") ? piece : isolateLtrRuns(piece)))
-    .join("");
+  const parts = html.split(/(<[^>]*>)/);
+  let group: number[] = [];
+  const flush = () => {
+    const texts = group.map((index) => parts[index]);
+    isolateTextGroup(texts).forEach((text, k) => (parts[group[k]] = text));
+    group = [];
+  };
+  parts.forEach((part, index) => {
+    if (!part.startsWith("<")) group.push(index);
+    else if (!INLINE_FORMATTING_TAG_RE.test(part)) flush();
+  });
+  flush();
+  return parts.join("");
+}
+
+/**
+ * Isole des morceaux de texte consécutifs comme un seul texte, puis rend à chaque morceau ses
+ * caractères et les isolats qui lui reviennent : l'ouvrant va au morceau du caractère qu'il
+ * précède, le fermant à celui du caractère qu'il suit. {@link isolateLtrRuns} n'ajoute que des
+ * isolats ; si jamais elle changeait autre chose, chaque morceau est jugé seul, comme avant.
+ */
+function isolateTextGroup(texts: string[]): string[] {
+  const joined = texts.join("");
+  const isolated = isolateLtrRuns(joined);
+  if (isolated === joined) return texts;
+  if (isolated.replaceAll(LRI, "").replaceAll(PDI, "") !== joined) return texts.map(isolateLtrRuns);
+  const out = texts.map(() => "");
+  let piece = 0;
+  let offset = 0;
+  let previous = 0;
+  for (const char of isolated) {
+    if (char === PDI) {
+      out[previous] += char;
+      continue;
+    }
+    while (piece < texts.length - 1 && offset >= texts[piece].length) {
+      piece += 1;
+      offset = 0;
+    }
+    out[piece] += char;
+    if (char !== LRI) {
+      offset += char.length;
+      previous = piece;
+    }
+  }
+  return out;
 }
 
 /* --------------------------------------------------------------------------

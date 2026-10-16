@@ -468,6 +468,41 @@ describe("isolateLtrRunsHtml", () => {
     const html = "<p>√50 = 5√2</p>";
     expect(isolateLtrRunsHtml(html)).toBe(html);
   });
+
+  // Le défaut relevé à l'audit D34 (cours math/19, l.84) : le dernier membre d'une chaîne,
+  // en gras, n'avait aucune lettre arabe dans son nœud de texte — il n'était pas isolé et
+  // s'affichait `6√ − 3`, rejeté de l'autre côté de la chaîne par l'isolat de gauche.
+  it("keeps a chain of equalities whose last member is bold in ONE isolate", () => {
+    const out = isolateLtrRunsHtml(
+      "<li>فنأخذ المقابل: |√6 − 3| = −(√6 − 3) = <strong>3 − √6</strong>.</li>",
+    );
+    expect(out).toBe(
+      `<li>فنأخذ المقابل:${LRI} |√6 − 3| = −(√6 − 3) = <strong>3 − √6${PDI}</strong>.</li>`,
+    );
+  });
+
+  it("isolates a bold formula standing alone between Arabic words", () => {
+    expect(isolateLtrRunsHtml("<p>الجواب <strong>3 − √6</strong> وهو موجب</p>")).toBe(
+      `<p>الجواب${LRI} <strong>3 − √6</strong> ${PDI}وهو موجب</p>`,
+    );
+  });
+
+  it("lets an isolate span an emphasis it does not start", () => {
+    expect(isolateLtrRunsHtml("<p>إذن √50 = <em>5√2</em> فقط</p>")).toBe(
+      `<p>إذن${LRI} √50 = <em>5√2</em> ${PDI}فقط</p>`,
+    );
+  });
+
+  it("still cuts at block tags and at span labels", () => {
+    // Joints à « مثال » à travers le span, `√3 = x` aurait été isolé : il reste tel quel.
+    const html = '<p>√2</p><p>عدد</p><span class="lbl">مثال</span>√3 = x';
+    expect(isolateLtrRunsHtml(html)).toBe(html);
+  });
+
+  it("leaves Arabic bold text and plain arithmetic alone", () => {
+    const html = "<p>الكتابة <strong>ليست قاعدة</strong> و <em>5 × 3 = 15</em> صحيحة</p>";
+    expect(isolateLtrRunsHtml(html)).toBe(html);
+  });
 });
 
 describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", () => {
