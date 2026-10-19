@@ -60,3 +60,17 @@ describe("RTL — tableaux de leçon", () => {
     expect(rtlCellRule?.selector).toContain("th");
   });
 });
+
+describe("Tableaux de leçon — mots entiers", () => {
+  it("rend aux cellules leurs mots entiers : le tableau défile, il ne coupe pas à 360 px", () => {
+    // Régression : `overflow-wrap: anywhere` hérité de `.lesson-content` coupait « Détermina/nt »
+    // au milieu d'une cellule au lieu de laisser le cadre `overflow-x: auto` défiler.
+    const cellRule = RULES.find((rule) =>
+      /^\.lesson-content\s+\.lesson-table\s+td\s*,\s*\.lesson-content\s+\.lesson-table\s+th$/.test(
+        rule.selector,
+      ),
+    );
+    expect(cellRule?.body).toMatch(/overflow-wrap\s*:\s*normal/);
+    expect(cellRule?.body).toMatch(/word-break\s*:\s*normal/);
+  });
+});
