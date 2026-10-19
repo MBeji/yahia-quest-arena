@@ -731,6 +731,10 @@ html.reference *:focus-visible {
 .lesson-content .lesson-table th {
   border: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
   padding: 0.5rem 0.75rem;
+  /* Le `overflow-wrap: anywhere` hérité de .lesson-content coupe les mots des cellules à 360 px
+     au lieu de laisser le tableau défiler dans son cadre : on rend aux cellules leurs mots entiers. */
+  overflow-wrap: normal;
+  word-break: normal;
 }
 /* L'en-tête se peint sur le `<th>`, pas sur `tr:first-child` : la position ne dit pas le
    rôle. Un tableau sans ligne de séparation n'a pas d'en-tête et ne doit pas en afficher. */
