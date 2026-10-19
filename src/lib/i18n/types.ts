@@ -632,6 +632,8 @@ export type TranslationKeys = {
     console: string;
     signOut: string;
     logoutToast: string;
+    /** Le bouton « Aide » des deux en-têtes — ouvre le guide intégré (`guide.*`). */
+    help: string;
   };
   // Theme picker (visual skin)
   theme: {

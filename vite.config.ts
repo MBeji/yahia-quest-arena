@@ -88,6 +88,10 @@ export default defineConfig(async ({ command, mode }) => {
             // par le hub matière, et aux lots suivants par le QG et le suivi
             // parental — trois surfaces derrière des routes paresseuses.
             if (/\/src\/lib\/i18n\/progress\/(fr|en|ar)\.ts$/.test(id)) return "i18n-progress";
+            // Guide intégré (2026-10-19) : les fiches d'aide de chaque écran. Tirées
+            // par la fiche (`React.lazy`) et par les routes paresseuses qui posent
+            // cartes et bulles — jamais par le chunk index.
+            if (/\/src\/lib\/i18n\/guide\/(fr|en|ar)\.ts$/.test(id)) return "i18n-guide";
             if (!id.includes("node_modules")) return;
 
             if (id.includes("@tanstack/")) return "vendor-tanstack";
