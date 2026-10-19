@@ -18,6 +18,10 @@ import { readingProgressPct } from "@/shared/lib/learning-pulse";
 import { useLearningPulse } from "@/hooks/use-learning-pulse";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useT } from "@/lib/i18n";
+import { useGuideT } from "@/lib/i18n/guide";
+import { ChapterSteps } from "@/components/guide/chapter-steps";
+import { HelpTip } from "@/components/guide/help-tip";
+import { LOCKED_CHAPTER_STEPS } from "@/shared/lib/guide";
 import { exerciseRouteFor } from "../exercise-route";
 import { ManuelPagesSection } from "./manuel-pages-section";
 import { ChapterVideosSection } from "./chapter-videos-section";
@@ -80,6 +84,7 @@ export function LessonReader({
   authLoading?: boolean;
 }) {
   const t = useT();
+  const guideT = useGuideT();
   const [showSummary, setShowSummary] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [zoomedFigure, setZoomedFigure] = useState<{ svg: string; label: string } | null>(null);
@@ -410,27 +415,36 @@ export function LessonReader({
 
       {(quizCta || practiceExerciseId) && (
         <div className="mt-10 print:hidden">
-          {quizCta ? (
-            // Gate still closed for this visitor: practising would hit the locked
-            // screen, so the single CTA sends them to the comprehension quiz first.
-            <Link
-              to={exerciseRouteFor(isAuthenticated)}
-              params={{ exerciseId: quizCta.exerciseId }}
-              data-testid="lesson-practice-cta"
-              className="flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
-            >
-              <Brain className="h-4 w-4" /> {t.public.reader.quizFirstCta}
-            </Link>
-          ) : (
-            <Link
-              to={exerciseRouteFor(isAuthenticated)}
-              params={{ exerciseId: practiceExerciseId as string }}
-              data-testid="lesson-practice-cta"
-              className="flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
-            >
-              <Dumbbell className="h-4 w-4" /> {t.public.reader.practiceCta}
-            </Link>
-          )}
+          {/* Guide intégré : la porte est fermée, l'élève voit où il en est —
+              cours (ici) → quiz → missions — avant d'appuyer sur le bouton. */}
+          {quizCta && <ChapterSteps states={LOCKED_CHAPTER_STEPS} className="mb-3" />}
+          <div className="flex items-center gap-2">
+            {quizCta ? (
+              // Gate still closed for this visitor: practising would hit the locked
+              // screen, so the single CTA sends them to the comprehension quiz first.
+              <Link
+                to={exerciseRouteFor(isAuthenticated)}
+                params={{ exerciseId: quizCta.exerciseId }}
+                data-testid="lesson-practice-cta"
+                className="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+              >
+                <Brain className="h-4 w-4" /> {t.public.reader.quizFirstCta}
+              </Link>
+            ) : (
+              <Link
+                to={exerciseRouteFor(isAuthenticated)}
+                params={{ exerciseId: practiceExerciseId as string }}
+                data-testid="lesson-practice-cta"
+                className="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+              >
+                <Dumbbell className="h-4 w-4" /> {t.public.reader.practiceCta}
+              </Link>
+            )}
+            <HelpTip
+              label={quizCta ? t.public.reader.quizFirstCta : t.public.reader.practiceCta}
+              text={quizCta ? guideT.guide.tips.lessonQuizCta : guideT.guide.tips.lessonPracticeCta}
+            />
+          </div>
         </div>
       )}
 

@@ -3,6 +3,7 @@ import { useT } from "@/lib/i18n";
 import { useAuth } from "@/features/auth";
 import { SettingsMenu } from "@/components/ui/settings-menu";
 import { AccountHud } from "@/components/account-hud";
+import { GuideButton } from "@/components/guide/guide-button";
 
 /**
  * Header of the public (Référence register) shell. Sober, content-first, and
@@ -71,6 +72,9 @@ export function PublicHeader() {
           {/* Même engrenage que la coquille connectée, sans le bloc compte : un
               visiteur anonyme règle thème, langue ET son — les trois providers
               vivent à la racine, mais l'ancien header public n'offrait pas le son. */}
+          {/* Sur téléphone, la marque + « Créer mon compte » remplissent déjà la
+              ligne : l'aide y garde son icône, son libellé revient dès `sm`. */}
+          <GuideButton compact />
           <SettingsMenu />
           {isAuthed ? (
             <AccountHud />

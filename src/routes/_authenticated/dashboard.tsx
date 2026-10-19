@@ -45,6 +45,7 @@ import { MotivationalQuote } from "@/features/dashboard/components/motivational-
 import { DashboardGoalsSkeleton } from "@/features/dashboard/components/dashboard-goals-skeleton";
 import { DashboardFocus } from "@/features/dashboard/components/dashboard-focus";
 import { BackToSchoolBanner } from "@/features/dashboard/components/back-to-school-banner";
+import { GuideIntroCard } from "@/components/guide/guide-intro-card";
 import { DashboardSkeleton } from "@/features/dashboard/components/dashboard-skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useReducedMotion } from "motion/react";
@@ -323,6 +324,10 @@ function Dashboard() {
         {/* Bannière de rentrée (étude 22, R-4) — proposée, jamais imposée : elle n'apparaît que
             dans la fenêtre du 1ᵉʳ septembre au 31 octobre, et seulement si le choix de classe
             précède cette rentrée. Aucune promotion automatique n'existe (D-6). */}
+        {/* Guide intégré : à la première visite, ce que fait cet écran en trois
+            lignes. Dans la page, jamais en surimpression ; fermé une fois pour toutes. */}
+        <GuideIntroCard screen="dashboard" className="mt-6" />
+
         {data.promotionSuggestion && (
           <BackToSchoolBanner
             suggestion={data.promotionSuggestion}

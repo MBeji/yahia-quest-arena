@@ -15,6 +15,7 @@ import {
   ReportContent,
 } from "@/features/parent-report";
 import { useParentT } from "@/lib/i18n/parent";
+import { GuideIntroCard } from "@/components/guide/guide-intro-card";
 
 /**
  * Suivi parental PUBLIC par code — aucun compte, aucune connexion requise.
@@ -141,6 +142,8 @@ function SuiviPublicPage() {
         </h1>
         <p className="mt-1 text-muted-foreground">{t.parentReport.subtitle}</p>
       </div>
+
+      <GuideIntroCard screen="suivi" className="mb-6 print:hidden" />
 
       <form
         onSubmit={submit}
