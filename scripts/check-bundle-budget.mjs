@@ -130,6 +130,10 @@ const BUDGETS = {
   // plafond est posé AVEC le chunk, à 16 KB, pour que les lots suivants aient
   // où grandir sans rouvrir la discussion du budget app-wide.
   "i18n-progress-": 16 * 1024,
+  // Surface du guide intégré (2026-10-19) : une fiche d'aide par écran + la règle
+  // d'or, en trois langues. Tirée par la fiche paresseuse et les routes qui
+  // posent cartes de première visite et bulles « ? ». Plafond posé avec le chunk.
+  "i18n-guide-": 40 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
   // @dnd-kit (core+sortable+utilities) powering the B2 ordering/matching

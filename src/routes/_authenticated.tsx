@@ -20,6 +20,7 @@ import { useT } from "@/lib/i18n";
 import { SettingsMenu } from "@/components/ui/settings-menu";
 import { GoldAmbient } from "@/components/visual/gold-ambient";
 import { AccountHud } from "@/components/account-hud";
+import { GuideButton } from "@/components/guide/guide-button";
 import { CrownMark } from "@/components/brand-mark";
 
 const NAV_LINK =
@@ -235,6 +236,9 @@ function AuthenticatedLayout() {
               téléphone de 360 px (débordement iPhone 13), et le réglage reste à un
               tap. `min-w-0` : la puce AccountHud garde le droit de se tronquer. */}
           <div className="flex min-w-0 items-center gap-1 sm:gap-2">
+            {/* « Aide » : le mode d'emploi de l'écran affiché, à un tap, partout —
+                y compris pendant une quête ou un cours (écrans immersifs). */}
+            <GuideButton />
             <AccountHud to={hub} />
             <SettingsMenu onSignOut={signOut} />
           </div>

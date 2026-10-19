@@ -842,6 +842,7 @@ export const fr: TranslationKeys = {
     console: "Console",
     signOut: "Déconnexion",
     logoutToast: "À bientôt, guerrier.",
+    help: "Aide",
   },
   theme: {
     label: "Thème",

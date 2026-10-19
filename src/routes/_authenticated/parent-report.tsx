@@ -36,6 +36,9 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
 import { useParentT } from "@/lib/i18n/parent";
+import { useGuideT } from "@/lib/i18n/guide";
+import { GuideIntroCard } from "@/components/guide/guide-intro-card";
+import { HelpTip } from "@/components/guide/help-tip";
 import { useEntrance } from "@/shared/lib/motion";
 import { LoadingState } from "@/components/ui/loading-state";
 import { GOAL_TARGET_MAX } from "@/shared/constants/gamification";
@@ -48,6 +51,7 @@ export const Route = createFileRoute("/_authenticated/parent-report")({
 function ParentReport() {
   const { locale } = useI18n();
   const t = useParentT();
+  const guideT = useGuideT();
   const fadeIn = useEntrance("fade");
   const queryClient = useQueryClient();
   const getStudentsFn = useServerFn(getLinkedStudents);
@@ -190,11 +194,16 @@ function ParentReport() {
         </div>
       </motion.div>
 
+      {!isAdmin && <GuideIntroCard screen="parent" className="mb-6 print:hidden" />}
+
       {!isAdmin && (
         <div className="mb-6 rounded-xl border border-gold/40 bg-surface-1 p-4 print:hidden">
           <div className="mb-3 flex items-center gap-2 text-champagne">
             <LinkIcon className="h-4 w-4" />
             <span className="font-semibold">{t.parentReport.linkTitle}</span>
+            {/* Libellé = le champ du code, pas le titre : « Associer » nommerait la bulle
+                comme le bouton d'envoi, que la page e2e retrouve par ce mot. */}
+            <HelpTip label={t.parentReport.codePlaceholder} text={guideT.guide.tips.parentLink} />
           </div>
           <div className="grid gap-2 md:grid-cols-[1fr_180px_auto]">
             <input

@@ -724,7 +724,9 @@ describe("SubjectHub — étoiles et sceaux (é34)", () => {
     );
     expect(screen.getByTestId("seal-none")).toBeInTheDocument();
     expect(screen.getByTestId("seal-next")).toHaveTextContent("12/20 chapitres prêts");
-    expect(container.textContent).not.toMatch(/0\s*%/);
+    // Un « 0 % » ISOLÉ : la carte de première visite du guide cite le seuil du
+    // quiz (« 80 % »), qui n'est pas un score de l'élève.
+    expect(container.textContent).not.toMatch(/(?<!\d)0\s*%/);
   });
 
   it("US-8 : l'anonyme voit la FORME et une promesse — aucun chiffre calculé", () => {
