@@ -816,6 +816,7 @@ export const ar: TranslationKeys = {
     console: "لوحة الإدارة",
     signOut: "تسجيل الخروج",
     logoutToast: "إلى اللقاء، أيها المحارب.",
+    help: "مساعدة",
   },
   theme: {
     label: "السمة",

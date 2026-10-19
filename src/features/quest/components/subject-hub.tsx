@@ -16,7 +16,16 @@ import { isRtlText } from "@/shared/lib/utils";
 import { parcoursName } from "@/shared/lib/parcours-locale";
 import { PageShell } from "@/components/ui/page-shell";
 import { DifficultyStars } from "@/components/game/difficulty-stars";
-import { QUIZ_PASS_THRESHOLD_PCT, RECALL_MIN_QUESTIONS } from "@/shared/constants/gamification";
+import { ChapterSteps } from "@/components/guide/chapter-steps";
+import { GuideIntroCard } from "@/components/guide/guide-intro-card";
+import { HelpTip } from "@/components/guide/help-tip";
+import { useGuideT } from "@/lib/i18n/guide";
+import {
+  MIN_SECONDS_PER_QUESTION,
+  QUIZ_PASS_THRESHOLD_PCT,
+  RECALL_MIN_QUESTIONS,
+} from "@/shared/constants/gamification";
+import { chapterSteps, fillGuideText } from "@/shared/lib/guide";
 import {
   emptyRungs,
   parseSubjectProgress,
@@ -28,6 +37,7 @@ import { groupChaptersByDomain } from "@/shared/lib/subject-domains";
 import { hasPassedChapterQuiz } from "../anon-quiz-gate";
 import { exerciseRouteFor } from "../exercise-route";
 import { ChapterStarsChip, ChapterStarsNote } from "./chapter-stars";
+import { LockedMissionRow } from "./locked-mission-row";
 import { ManuelEleveCard } from "./manuel-eleve-card";
 import { SubjectSeals } from "./subject-seals";
 
@@ -162,6 +172,7 @@ export function SubjectHub({
   unrestricted?: boolean;
 }) {
   const t = useProgressT();
+  const guideT = useGuideT();
   const { locale } = useI18n();
   const isRtl = subject.content_language === "ar";
   const exerciseTo = exerciseRouteFor(isAuthenticated);
@@ -203,6 +214,13 @@ export function SubjectHub({
       const rungs = chapterProgress ? chapterProgress.rungs : emptyRungs(chapEx);
       const { counted: done, total } = rungTally(rungs);
       const mastered = chapterProgress?.mastered === true;
+      // Le guide « cours → quiz → missions » ne se montre que là où la porte EXISTE.
+      // Le grand livre le dit pour un compte ; sans lui, le serveur pré-marque `true`
+      // les chapitres non gatés, donc seul un `false` explicite prouve une porte.
+      const gated =
+        quiz !== null &&
+        !unrestricted &&
+        (chapterProgress?.quiz.gated ?? quizPassedByChapter[c.id] === false);
       return {
         chapter: c,
         index: ci,
@@ -213,12 +231,14 @@ export function SubjectHub({
         done,
         total,
         unlocked,
+        quiz,
+        steps: chapterSteps({ gated, cleared: unlocked }),
         chapterProgress,
         rungs,
         mastered,
       };
     });
-  }, [chapters, exercises, progress, quizPassedByChapter, anonPassed]);
+  }, [chapters, exercises, progress, quizPassedByChapter, anonPassed, unrestricted]);
 
   // Les deux cartes que `resolveNextAction` attend — dérivées UNE fois du grand livre.
   // « Comptée » et « tentée » sont deux faits distincts : un chapitre tout tenté sans
@@ -303,6 +323,8 @@ export function SubjectHub({
     index: ci,
     chapEx,
     unlocked,
+    quiz,
+    steps,
     chapterProgress,
     rungs,
   }: (typeof rows)[number]) => {
@@ -342,23 +364,28 @@ export function SubjectHub({
               </p>
             )}
             <ChapterStarsNote progress={chapterProgress} />
-            <Link
-              to="/chapitre/$chapterId"
-              params={{ chapterId: c.id }}
-              data-testid={`read-course-${c.id}`}
-              // Le cours est le point d'entrée du chapitre : un vrai bouton
-              // pleine largeur, teinté, et non un lien texte qui se perdait
-              // entre la description et la liste des missions.
-              className="group mt-3 mb-2 flex w-full items-center gap-3 rounded-xl border-2 border-primary/40 bg-primary/10 px-4 py-3 text-start transition hover:border-primary hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 [@media(pointer:coarse)]:min-h-12"
-            >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-                <BookOpen className="h-5 w-5" />
-              </span>
-              <span className="min-w-0 flex-1 font-display text-base font-bold text-primary">
-                {t.public.subject.readCourse}
-              </span>
-              <ChevronRight className="h-5 w-5 shrink-0 text-primary transition-transform group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5" />
-            </Link>
+            {/* L'ordre du chapitre, visible avant le premier cadenas (guide intégré). */}
+            {steps && <ChapterSteps states={steps} className="mt-3" />}
+            <div className="mt-3 mb-2 flex items-center gap-2">
+              <Link
+                to="/chapitre/$chapterId"
+                params={{ chapterId: c.id }}
+                data-testid={`read-course-${c.id}`}
+                // Le cours est le point d'entrée du chapitre : un vrai bouton
+                // pleine largeur, teinté, et non un lien texte qui se perdait
+                // entre la description et la liste des missions.
+                className="group flex min-w-0 flex-1 items-center gap-3 rounded-xl border-2 border-primary/40 bg-primary/10 px-4 py-3 text-start transition hover:border-primary hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 [@media(pointer:coarse)]:min-h-12"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+                  <BookOpen className="h-5 w-5" />
+                </span>
+                <span className="min-w-0 flex-1 font-display text-base font-bold text-primary">
+                  {t.public.subject.readCourse}
+                </span>
+                <ChevronRight className="h-5 w-5 shrink-0 text-primary transition-transform group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5" />
+              </Link>
+              <HelpTip label={t.public.subject.readCourse} text={guideT.guide.tips.readCourse} />
+            </div>
 
             {chapEx.length > 0 && (
               <ul className="mt-1 divide-y divide-border/60 border-t border-border/60">
@@ -387,68 +414,80 @@ export function SubjectHub({
                   );
                   if (lockedRow) {
                     return (
-                      <li
+                      <LockedMissionRow
                         key={ex.id}
-                        // No opacity modifier on muted-foreground: the token
-                        // IS the muted step already, and diluting it drove
-                        // 14px body text to 2.66:1 on white (WCAG AA needs
-                        // 4.5:1). Locked rows read "muted" via the padlock.
-                        className="flex items-center gap-2 py-2.5 text-sm text-muted-foreground"
-                      >
-                        <Lock className="h-3.5 w-3.5 shrink-0" />
-                        {title}
-                        <span className="shrink-0 text-xs">—</span>
-                      </li>
+                        exerciseId={ex.id}
+                        title={ex.title}
+                        titleNode={title}
+                        chapterId={c.id}
+                        quizExerciseId={quiz?.id ?? null}
+                        exerciseTo={exerciseTo}
+                      />
                     );
                   }
                   return (
                     <li key={ex.id}>
-                      <Link
-                        to={exerciseTo}
-                        params={{ exerciseId: ex.id }}
-                        className="flex items-center gap-2 py-2.5 text-sm transition hover:text-primary [@media(pointer:coarse)]:min-h-11"
-                      >
-                        {/* ⭐ Le ✓ dit « comptée pour une étoile » (é34 R-3), pas
+                      <div className="flex items-center gap-2">
+                        <Link
+                          to={exerciseTo}
+                          params={{ exerciseId: ex.id }}
+                          className="flex min-w-0 flex-1 items-center gap-2 py-2.5 text-sm transition hover:text-primary [@media(pointer:coarse)]:min-h-11"
+                        >
+                          {/* ⭐ Le ✓ dit « comptée pour une étoile » (é34 R-3), pas
                             « ≥ 60 % » : une réussite expédiée montre son score sans
                             cocher, et la note du chapitre dit pourquoi. */}
-                        {done ? (
-                          <Check className="h-4 w-4 shrink-0 text-success" />
-                        ) : (
-                          <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground rtl:-scale-x-100" />
-                        )}
-                        {title}
-                        {/* R-13 : la difficulté se lit en ⭐, pas dans le titre. Le quiz
+                          {done ? (
+                            <Check className="h-4 w-4 shrink-0 text-success" />
+                          ) : (
+                            <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground rtl:-scale-x-100" />
+                          )}
+                          {title}
+                          {/* R-13 : la difficulté se lit en ⭐, pas dans le titre. Le quiz
                                   n'en a pas — ce n'est pas une mission mais la porte du chapitre. */}
-                        {!isQuiz && <DifficultyStars level={ex.difficulty} className="shrink-0" />}
-                        {mission?.isNew && (
-                          <span
-                            data-testid="mission-new"
-                            aria-label={t.progress.newMissions.replace("{n}", "1")}
-                            className="shrink-0 text-xs"
-                          >
-                            ✨
-                          </span>
-                        )}
-                        <span className="shrink-0 text-xs text-muted-foreground">
-                          {best != null ? (
+                          {!isQuiz && (
+                            <DifficultyStars level={ex.difficulty} className="shrink-0" />
+                          )}
+                          {mission?.isNew && (
                             <span
-                              className={
-                                done ? "font-bold text-success" : "font-bold text-muted-foreground"
-                              }
+                              data-testid="mission-new"
+                              aria-label={t.progress.newMissions.replace("{n}", "1")}
+                              className="shrink-0 text-xs"
                             >
-                              {Math.round(best)}%
+                              ✨
                             </span>
-                          ) : isQuiz && !unlocked ? (
-                            <span className="font-semibold text-primary">
-                              {t.public.subject.unlocksChapter}
-                            </span>
-                          ) : done ? null : isAuthenticated ? (
-                            <span className="flex items-center gap-0.5 font-semibold text-primary">
-                              <Zap className="h-3 w-3" />+{ex.xp_reward} XP
-                            </span>
-                          ) : null}
-                        </span>
-                      </Link>
+                          )}
+                          <span className="shrink-0 text-xs text-muted-foreground">
+                            {best != null ? (
+                              <span
+                                className={
+                                  done
+                                    ? "font-bold text-success"
+                                    : "font-bold text-muted-foreground"
+                                }
+                              >
+                                {Math.round(best)}%
+                              </span>
+                            ) : isQuiz && !unlocked ? (
+                              <span className="font-semibold text-primary">
+                                {t.public.subject.unlocksChapter}
+                              </span>
+                            ) : done ? null : isAuthenticated ? (
+                              <span className="flex items-center gap-0.5 font-semibold text-primary">
+                                <Zap className="h-3 w-3" />+{ex.xp_reward} XP
+                              </span>
+                            ) : null}
+                          </span>
+                        </Link>
+                        {isQuiz && !unlocked && (
+                          <HelpTip
+                            label={ex.title}
+                            text={fillGuideText(guideT.guide.tips.quizRow, {
+                              pct: QUIZ_PASS_THRESHOLD_PCT,
+                              sec: MIN_SECONDS_PER_QUESTION,
+                            })}
+                          />
+                        )}
+                      </div>
                       <RecallMissionRow
                         exerciseId={ex.id}
                         title={ex.title}
@@ -498,6 +537,8 @@ export function SubjectHub({
         </h1>
         {subject.description && <p className="mt-2 text-muted-foreground">{subject.description}</p>}
       </header>
+
+      <GuideIntroCard screen="subject" variant="rule" className="mb-6" />
 
       {unrestricted && (
         <p

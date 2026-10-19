@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { Suspense, lazy, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -39,6 +39,13 @@ import { useEntrance } from "@/shared/lib/motion";
 import { parcoursName } from "@/shared/lib/parcours-locale";
 import { useI18n, useT } from "@/lib/i18n";
 import { trackProductEvent } from "@/shared/lib/product-events";
+
+// La règle d'or du guide intégré, chargée à la demande : importée en statique,
+// ce fichier de route tirait le catalogue `i18n-guide` (25 KB) dans le chunk
+// index — téléchargé par chaque visiteur, inscrit ou non.
+const GuideRule = lazy(() =>
+  import("@/components/guide/guide-rule").then((m) => ({ default: m.GuideRule })),
+);
 
 /**
  * Slide-in/out of a wizard step (AnimatePresence needs an `exit`, which the
@@ -513,6 +520,13 @@ export function CelebrationStep({
           </p>
         )}
       </div>
+      {/* Guide intégré : avant la première quête, la règle d'or en trois étapes —
+          sans elle, le premier cadenas croisé ressemble à une panne. */}
+      {!isComingSoon && (
+        <Suspense fallback={null}>
+          <GuideRule className="text-start" />
+        </Suspense>
+      )}
       <div className="flex flex-col gap-3">
         {isComingSoon ? (
           <>

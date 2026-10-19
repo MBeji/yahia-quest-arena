@@ -12,6 +12,7 @@ import { getRequestHeader } from "@tanstack/react-start/server";
 import { useEffect } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { I18nProvider, useT } from "@/lib/i18n";
+import { GuideProvider } from "@/components/guide/guide-provider";
 import type { Locale } from "@/lib/i18n";
 import { DEFAULT_LOCALE, dirForLocale, localeFromCookieHeader } from "@/lib/i18n/context";
 import { fr } from "@/lib/i18n/fr";
@@ -316,9 +317,11 @@ function RootComponent() {
       <ThemeProvider>
         <I18nProvider>
           <SoundProvider>
-            <GlobalSoundEffects />
-            <Outlet />
-            <ThemedToaster />
+            <GuideProvider>
+              <GlobalSoundEffects />
+              <Outlet />
+              <ThemedToaster />
+            </GuideProvider>
           </SoundProvider>
         </I18nProvider>
       </ThemeProvider>
