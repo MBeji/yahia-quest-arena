@@ -149,7 +149,8 @@ const PRIMED_LETTER = /(?<![A-Za-z])[A-Za-z][′″']+(?![A-Za-z])/u;
 /**
  * Wrap every non-Arabic run that carries a bidi-flipping glyph (see
  * {@link BIDI_FLIP_SIGNAL}) or a tight signed number (see {@link SIGNED_NUMBER})
- * in `text` with LTR isolates so it renders left-to-right even inside RTL prose.
+ * in `text` with LTR isolates — and, inside any other run, each number with a
+ * missing digit (`2▢4`, see {@link GAP_NUMBER_RE}) on its own — so it renders left-to-right even inside RTL prose.
  * Runs that are plain arithmetic, units or bare numbers are left alone — the
  * native bidi algorithm already orders them correctly, and isolating them would
  * reverse them. Text with no Arabic at all is returned unchanged — LTR content
@@ -175,8 +176,56 @@ export function isolateLtrRuns(text: string): string {
 
 /** Isole un morceau non arabe s'il le demande, ponctuation de bord restée dehors. */
 function isolatePiece(piece: string): string {
+  return isolationSpans(piece)
+    .map((span) => (span.math ? `${LRI}${span.text}${PDI}` : span.text))
+    .join("");
+}
+
+/**
+ * Un nombre À CHIFFRE MANQUANT — `2▢4`, `27▢▢`, `▢5`, `3,▢5` : des chiffres et des cases vides
+ * (U+25A2), avec au moins un de chaque, la virgule ou le point décimal pouvant s'y glisser entre
+ * deux. C'est UN nombre, dont les chiffres ne doivent jamais changer d'ordre. Or la case est un
+ * neutre : entre deux chiffres, dans une phrase arabe, elle prend le sens de la phrase (règle N1,
+ * où les chiffres comptent comme de droite à gauche) et coupe le nombre en deux, rangés à
+ * l'envers — `2▢4` dessiné `4▢2`, `27▢▢` dessiné `▢▢27` (mesuré dans Chromium, `dir=rtl`).
+ *
+ * Seul l'ATOME est isolé, pas le segment : `2▢4 + 3 = ؟` garde son addition lue avec la phrase,
+ * comme toute arithmétique de chiffres (`10 − 4 = 6`). Les autres blancs qu'on trouve entre deux
+ * chiffres ne sont pas des chiffres manquants : `1…5` est un intervalle (deux nombres, rangés
+ * comme une opération), `_` entre deux chiffres n'apparaît que dans des URL, et `؟` est une
+ * lettre arabe forte qui coupe déjà le segment — aucun n'est touché.
+ */
+const GAP_NUMBER_RE = /[\d▢]+(?:[.,][\d▢]+)*/gu;
+const isGapNumber = (token: string) => /\d/u.test(token) && token.includes("▢");
+
+/** Un morceau d'un segment non arabe, jugé : à isoler (`math`) ou laissé à la phrase. */
+type Span = { text: string; math: boolean };
+
+/**
+ * Découpe un morceau non arabe en ce qui s'isole et ce qui reste de la prose. Le morceau entier
+ * s'il le demande ({@link needsLtrIsolate}), ponctuation de bord dehors ; sinon ses seuls nombres
+ * à chiffre manquant ({@link GAP_NUMBER_RE}). `isolateLtrRuns` et `splitMathRuns` passent tous deux
+ * par ici : ils isolent exactement les mêmes runs.
+ */
+function isolationSpans(piece: string): Span[] {
   const [lead, core, tail] = peelEdgePunctuation(piece);
-  return needsLtrIsolate(core) ? `${lead}${LRI}${core}${PDI}${tail}` : piece;
+  if (needsLtrIsolate(core)) {
+    return [
+      { text: lead, math: false },
+      { text: core, math: true },
+      { text: tail, math: false },
+    ].filter((span) => span.text);
+  }
+  const spans: Span[] = [];
+  let from = 0;
+  for (const match of piece.matchAll(GAP_NUMBER_RE)) {
+    if (!isGapNumber(match[0])) continue;
+    if (match.index > from) spans.push({ text: piece.slice(from, match.index), math: false });
+    spans.push({ text: match[0], math: true });
+    from = match.index + match[0].length;
+  }
+  if (from < piece.length) spans.push({ text: piece.slice(from), math: false });
+  return spans;
 }
 
 /**
@@ -771,15 +820,16 @@ export function splitMathRuns(text: string): TextRun[] {
         pushProse(piece.text);
         continue;
       }
-      const [edgeLead, core, edgeTail] = peelEdgePunctuation(piece.text);
-      if (!needsLtrIsolate(core)) {
-        pushProse(piece.text);
-        continue;
+      for (const span of isolationSpans(piece.text)) {
+        if (!span.math) {
+          pushProse(span.text);
+          continue;
+        }
+        const [, lead, body, tail] = span.text.match(/^(\s*)([\s\S]*?)(\s*)$/u) as RegExpMatchArray;
+        pushProse(lead);
+        runs.push(run(body, true));
+        pushProse(tail);
       }
-      const [, lead, body, tail] = core.match(/^(\s*)([\s\S]*?)(\s*)$/u) as RegExpMatchArray;
-      pushProse(edgeLead + lead);
-      runs.push(run(body, true));
-      pushProse(tail + edgeTail);
     }
   });
   return runs;
