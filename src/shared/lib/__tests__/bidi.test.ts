@@ -241,6 +241,33 @@ describe("isolateLtrRuns", () => {
     }
   });
 
+  // Un nombre à chiffre manquant (case vide U+25A2) est UN nombre : la case, neutre, prenait le
+  // sens de la phrase et rangeait ses chiffres à l'envers (`2▢4` dessiné `4▢2`, `27▢▢` → `▢▢27`).
+  it("isole un nombre à chiffre manquant, et lui seul, dans une phrase arabe", () => {
+    expect(isolateLtrRuns("في العدد 2▢4 مُحي رقم")).toBe(`في العدد ${LRI}2▢4${PDI} مُحي رقم`);
+    expect(isolateLtrRuns("ما الرقم الذي يعوّض ▢ في العدد 27▢▢ ليقبل القسمة")).toBe(
+      `ما الرقم الذي يعوّض ▢ في العدد ${LRI}27▢▢${PDI} ليقبل القسمة`,
+    );
+    expect(isolateLtrRuns("ففي ▢5 للقسمة على 5")).toBe(`ففي ${LRI}▢5${PDI} للقسمة على 5`);
+    expect(isolateLtrRuns("العدد العشري 3,▢5 أكبر من 3")).toBe(
+      `العدد العشري ${LRI}3,▢5${PDI} أكبر من 3`,
+    );
+    // la ponctuation de fin de phrase reste dehors, et l'addition voisine se lit avec la phrase
+    expect(isolateLtrRuns("فبقي 8▢5.")).toBe(`فبقي ${LRI}8▢5${PDI}.`);
+    expect(isolateLtrRuns("احسب 2▢4 + 3 = ؟")).toBe(`احسب ${LRI}2▢4${PDI} + 3 = ؟`);
+  });
+
+  it("ne touche ni une case seule, ni un intervalle, ni l'arithmétique de chiffres", () => {
+    for (const s of [
+      "عوّض ▢ + 5 = 8 بالعدد المناسب",
+      "حيث n = 1…5 في كلّ مرّة",
+      "احسب 10 − 4 = 6 ثمّ",
+      "العدد 2 ▢ 4 مكتوب",
+    ]) {
+      expect(isolateLtrRuns(s)).toBe(s);
+    }
+  });
+
   // A bare signed (negative/positive) number in RTL prose has no bracket or
   // relation to anchor it, so the neutral sign flips (`−5` → `5−`). It must be
   // isolated. Written tight (`−5`, not `− 5`), so it is never confused with the
@@ -570,6 +597,8 @@ describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", ()
       "«(1) في رأيي أنّ الصدقَ أساسُ الثقةِ. (2) فقد قالَ المثلُ.»",
       "«يتفادى نظراتِ أبيه» ← قرائنُ",
       "نكتب «A = 3√2» في الدفتر",
+      "في العدد 2▢4 مُحي رقم",
+      "احسب 2▢4 + 3 = ؟ ثمّ 27▢▢ و√9 = 3",
     ]) {
       const isolated = isolateLtrRuns(text);
       expect(mathRuns(text).length).toBe((isolated.match(new RegExp(LRI, "g")) ?? []).length);
