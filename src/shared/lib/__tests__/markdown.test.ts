@@ -378,6 +378,59 @@ describe("renderLesson — blocs pédagogiques", () => {
       expect(result.match(/lesson-blk--piege/g)).toHaveLength(1);
     });
 
+    // Forme réelle (maths 6ᵉ, chapitre 01) : le piège est renvoyé à la ligne vers 100 signes.
+    // Rendu ligne à ligne, il devenait un fragment nu puis un `<p>` par ligne suivante — la
+    // phrase « يقرأ «مئتان / وثلاثون مليونًا…» » coupée au milieu, en deux blocs.
+    it("recolle les lignes d'un même paragraphe de piège, comme Markdown standard", () => {
+      const md = [
+        "## S",
+        "",
+        "> ⚠️ **الخطأ الشائع (1)**: التجميع من اليسار. من يجمّع 2305040 هكذا: 230 | 504 | 0، يقرأ «مئتان",
+        "> وثلاثون مليونًا…»، وهو عدد أكبر بمئة مرّة. الأصناف تُقرأ من اليمين: 2 | 305 | 040.",
+      ].join("\n");
+      const block = renderLesson(md, { lang: "ar" }).html.split('lesson-blk--piege">')[1];
+      expect(block).not.toContain("<p>");
+      expect(block).not.toContain("\n");
+      expect(block).toContain("يقرأ «مئتان وثلاثون مليونًا…»");
+    });
+
+    it("recolle un piège de trois lignes et plus en un seul paragraphe", () => {
+      const result = html("## S\n\n> ⚠️ Une phrase qui\n> continue ici\n> et finit là.");
+      expect(result).toContain("<p>Une phrase qui continue ici et finit là.</p>");
+      expect(result.match(/<p>/g)).toHaveLength(1);
+    });
+
+    it("garde deux paragraphes séparés par une ligne `>` vide", () => {
+      const result = html(
+        "## S\n\n> ⚠️ Premier paragraphe\n> sur deux lignes.\n>\n> Second\n> paragraphe.",
+      );
+      expect(result).toContain("Premier paragraphe sur deux lignes.");
+      expect(result).toContain("<p>Second paragraphe.</p>");
+    });
+
+    it("ne recolle ni une liste, ni un tableau, ni une formule, ni un saut forcé", () => {
+      const list = html("## S\n\n> ⚠️ Pièges classiques :\n>\n> - premier\n> - second");
+      expect(list).toContain('<li class="lesson-li">premier</li>');
+      expect(list).toContain('<li class="lesson-li">second</li>');
+
+      const table = html("## S\n\n> 🗡️ Deux colonnes :\n> | a | b |\n> | 1 | 2 |");
+      expect(table).toContain('<table class="lesson-table">');
+      expect(table).not.toContain("colonnes : |");
+
+      const math = html("## S\n\n> ⚠️ On a :\n> $$ x = 2 $$");
+      expect(math).toContain('<div class="lesson-math"> x = 2 </div>');
+
+      const forced = html("## S\n\n> ⚠️ Ligne une  \n> Ligne deux.");
+      expect(forced).toContain("<p>Ligne deux.</p>");
+    });
+
+    it("ne recolle pas deux callouts consécutifs", () => {
+      const result = html("## S\n\n> 🗡️ Une astuce.\n> ⚠️ Un piège.");
+      expect(result.match(/lesson-blk--astuce/g)).toHaveLength(1);
+      expect(result.match(/lesson-blk--piege/g)).toHaveLength(1);
+      expect(result).not.toContain("astuce. Un piège");
+    });
+
     it("ne promeut PAS une citation ordinaire — aucune régression", () => {
       const result = renderLesson("> Simple citation.").html;
       expect(result).toContain('<blockquote class="lesson-quote">Simple citation.</blockquote>');

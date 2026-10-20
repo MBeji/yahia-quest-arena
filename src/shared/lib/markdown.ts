@@ -201,7 +201,13 @@ function segment(src: string): Segment[] {
       // (style-guide.md § squelette cours.md, ligne 21) ; les suivants sont des éclairages.
       const epigraph = promoted.type === "insight" && !sectionStarted && !epigraphTaken;
       if (epigraph) epigraphTaken = true;
-      out.push({ kind: "block", type: promoted.type, title: null, lines: body, epigraph });
+      out.push({
+        kind: "block",
+        type: promoted.type,
+        title: null,
+        lines: joinQuoteParagraphs(body),
+        epigraph,
+      });
       i = j - 1;
       continue;
     }
@@ -211,6 +217,41 @@ function segment(src: string): Segment[] {
   }
 
   flushRaw();
+  return out;
+}
+
+/**
+ * Une ligne qui ouvre une construction de bloc — puce, liste numérotée, ligne de tableau, titre,
+ * formule `$$`, trait, directive, jeton de figure : elle ne se recolle jamais à la précédente.
+ */
+const BLOCK_START =
+  /^\s*(?:[-*+][ \t]|\d+\.[ \t]|\||#{1,6}[ \t]|\$\$|---\s*$|:::|svgfigureplaceholder)/;
+/** Un saut de ligne FORCÉ (`\` ou deux espaces en fin de ligne) : la ligne suivante reste à part. */
+const HARD_BREAK = /(?:\\| {2,})$/;
+
+/**
+ * Recolle les lignes d'un même paragraphe de citation, comme Markdown standard.
+ *
+ * Un callout `> ⚠️ …` s'écrit sur plusieurs lignes `> …` (le texte est renvoyé à la ligne vers
+ * 100 signes dans le corpus : 973 lignes de continuation dans les callouts des cours). Rendue
+ * ligne à ligne, la citation devenait un fragment nu suivi d'un `<p>` par ligne : la phrase coupée
+ * au milieu, en deux blocs. Une ligne de prose qui suit une ligne de prose la CONTINUE ; une ligne
+ * `>` vide sépare deux paragraphes, et une construction de bloc ({@link BLOCK_START}) ou un saut
+ * forcé ({@link HARD_BREAK}) garde sa ligne.
+ */
+function joinQuoteParagraphs(lines: string[]): string[] {
+  const out: string[] = [];
+  let previous: string | null = null;
+  for (const line of lines) {
+    const prose = line.trim() !== "" && !BLOCK_START.test(line);
+    if (prose && previous !== null && !HARD_BREAK.test(previous)) {
+      previous = `${previous.trimEnd()} ${line.trimStart()}`;
+      out[out.length - 1] = previous;
+      continue;
+    }
+    out.push(line);
+    previous = prose ? line : null;
+  }
   return out;
 }
 
