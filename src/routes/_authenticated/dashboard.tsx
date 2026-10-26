@@ -37,7 +37,10 @@ import { daysAwayFrom } from "@/features/tutor/coaching";
 import { appLocalDate } from "@/shared/lib/app-day";
 import { STREAK_RECOVERY_COST } from "@/shared/constants/gamification";
 import { streakRecoveryBlock } from "@/shared/lib/streak-recovery";
-import { DailyReviewPanel, recoverStreak } from "@/features/progression";
+// Imports directs, pas le barrel : le barrel ré-exporte aussi les panneaux `lazy()` ci-dessous, et
+// l'importer ici les tirait dans le chunk eager — le `lazy()` ne découpait plus rien.
+import { DailyReviewPanel } from "@/features/progression/components/daily-review-panel";
+import { recoverStreak } from "@/features/progression/progression.server";
 import { hubRouteForRole, shouldLeaveDashboard, useExitOnRefusedSession } from "@/features/auth";
 import { EnablePushCard } from "@/features/notifications";
 import { SubjectPathCard } from "@/features/dashboard/components/subject-path-card";
@@ -65,7 +68,7 @@ const GoldAmbientCanvas = lazy(() => import("@/components/visual/gold-ambient-ca
 // budget, et le choix de quelle carte montrer appartient de toute façon à la progression, pas
 // à cette route. Le composant porte le commentaire complet.
 const LearningPanels = lazy(() =>
-  import("@/features/progression").then((m) => ({
+  import("@/features/progression/components/learning-panels").then((m) => ({
     default: m.LearningPanels,
   })),
 );
