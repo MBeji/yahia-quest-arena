@@ -168,6 +168,11 @@ describe("le chemin nominal", () => {
     expect(settle.p_reserved_micros).toBe(called("reserve_ai_spend")[0].args.p_micros);
   });
 
+  it("solde l'énergie réservée, pour que le balayage ne la rende pas (R-15)", async () => {
+    await callAi(REQUEST);
+    expect(called("settle_ai_energy")[0].args).toEqual({ p_student: STUDENT, p_energy: 1 });
+  });
+
   it("remonte le réglage de double résolution du porteur (R-18bis)", async () => {
     resolveRow = { ...ALLOWED, double_solve: false };
     const outcome = await callAi(REQUEST);
@@ -232,6 +237,7 @@ describe("é11 R-15 — chaque refus est silencieux, aucun n'est une exception",
     // é11 R-15 : un élève ne paie pas en énergie une panne de fournisseur.
     expect(called("release_ai_reservation")[0].args).toMatchObject({ p_energy: 1 });
     expect(called("settle_ai_spend")).toHaveLength(0);
+    expect(called("settle_ai_energy")).toHaveLength(0);
     expect(called("log_ai_usage")[0].args).toMatchObject({
       p_status: "error",
       p_error_code: "AI_PROVIDER_DOWN",
@@ -436,6 +442,7 @@ describe("é11 R-12/R-13 — le chemin plateforme est borné", () => {
     expect(settle.p_actual_micros).toBe(outcome.ok ? outcome.costUsdMicros : -1);
     expect(settle.p_reserved_micros).toBe(called("reserve_platform_spend")[0].args.p_micros);
     expect(called("release_platform_reservation")).toHaveLength(0);
+    expect(called("settle_ai_energy")[0].args).toEqual({ p_student: STUDENT, p_energy: 1 });
   });
 
   it("fournisseur en panne : énergie REMBOURSÉE et réservation libérée (R-15)", async () => {
