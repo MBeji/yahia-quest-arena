@@ -417,6 +417,9 @@ async function concludeSuccess(
     ticket.ownerUserId
       ? settle(ticket.ownerUserId, ticket.estimate, actual)
       : settlePlatform(ticket.estimate, actual),
+    // L'énergie reste dépensée ; elle sort seulement du « en vol », sans quoi le
+    // balayage la rendrait comme celle d'un appel tué (R-15).
+    settleEnergy(request.studentUserId, ticket.energyCost),
   ]);
 
   if (ticket.ownerUserId) void notifyBudgetAlerts(ticket.ownerUserId);
@@ -604,6 +607,15 @@ async function settle(owner: string, reserved: number, actual: number): Promise<
     p_actual_micros: actual,
   });
   if (error) logger.error("ai.settle", { error: errorMessage(error) });
+}
+
+async function settleEnergy(student: string, energy: number): Promise<void> {
+  if (energy <= 0) return;
+  const { error } = await rpc().rpc("settle_ai_energy", {
+    p_student: student,
+    p_energy: energy,
+  });
+  if (error) logger.error("ai.settle.energy", { error: errorMessage(error) });
 }
 
 async function releaseReservation(

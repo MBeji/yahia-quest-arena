@@ -148,6 +148,7 @@ export type Database = {
         Row: {
           bonus: number;
           day: string;
+          reserved: number;
           spent: number;
           student_user_id: string;
           updated_at: string;
@@ -155,6 +156,7 @@ export type Database = {
         Insert: {
           bonus?: number;
           day: string;
+          reserved?: number;
           spent?: number;
           student_user_id: string;
           updated_at?: string;
@@ -162,6 +164,7 @@ export type Database = {
         Update: {
           bonus?: number;
           day?: string;
+          reserved?: number;
           spent?: number;
           student_user_id?: string;
           updated_at?: string;
@@ -4601,6 +4604,10 @@ export type Database = {
       };
       set_tutor_thread_summary: {
         Args: { p_summary: string; p_thread: string };
+        Returns: undefined;
+      };
+      settle_ai_energy: {
+        Args: { p_energy: number; p_student: string };
         Returns: undefined;
       };
       settle_ai_spend: {
