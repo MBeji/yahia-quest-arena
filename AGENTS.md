@@ -69,7 +69,8 @@ as a migration. Details: [`docs/content-generation-pipeline.md`](./docs/content-
   dungeon, duel, exam, notifications, parcours, parent-report, progression, quest, shop,
   subscription, tutor ; `harness:check` fails if this list drifts from `src/features/`).
   Each has `index.ts` (barrel), `{name}.server.ts`, `__tests__/`.
-  **Features never import other features** — share via `src/shared/`. Routes stay thin.
+  **Features never import other features** — share via `src/shared/` (logic) or
+  `src/components/` (UI); ESLint `local/no-cross-feature-import`. Routes stay thin.
 - Import aliases: `@/features/{name}`, `@/shared/lib|constants|types|integrations/...`.
   UI primitives: `@/components/ui/*`. i18n: `@/lib/i18n`. `useAuth`: `@/features/auth`.
 - Every server fn carries an auth middleware — `requireSupabaseAuth`, or

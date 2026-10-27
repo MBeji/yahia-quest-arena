@@ -8,6 +8,7 @@
  */
 import { requireServerFnAuth } from "./require-server-fn-auth.mjs";
 import { singleBrowserSupabaseClient } from "./single-browser-supabase-client.mjs";
+import { noCrossFeatureImport } from "./no-cross-feature-import.mjs";
 
 /** @type {import('eslint').ESLint.Plugin} */
 const plugin = {
@@ -15,6 +16,7 @@ const plugin = {
   rules: {
     "require-server-fn-auth": requireServerFnAuth,
     "single-browser-supabase-client": singleBrowserSupabaseClient,
+    "no-cross-feature-import": noCrossFeatureImport,
   },
 };
 
