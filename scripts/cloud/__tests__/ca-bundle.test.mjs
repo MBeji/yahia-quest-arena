@@ -1,3 +1,4 @@
+// @vitest-environment node
 // La chaîne de certificats posée par le hook de session (étude cloud-first, lot 0 constaté le
 // 2026-09-06) : le bundle combiné, ses exports, et le contenu vendu dans ca-chain/.
 import { describe, expect, it } from "vitest";

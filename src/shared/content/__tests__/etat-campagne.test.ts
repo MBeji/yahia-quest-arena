@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from "vitest";
 import { buildEtat, lecturesACroiser, renderEtat, type EtatInput } from "../etat-campagne.ts";
 import type { GradeAudit, SubjectAudit } from "../program-manifest.ts";
