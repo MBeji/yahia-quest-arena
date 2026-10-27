@@ -22,7 +22,7 @@ import { QuestResultActions } from "@/features/quest/components/quest-result-act
 // que le tuteur entre dans l'écran de correction (AGENTS.md : une feature n'en
 // importe pas une autre).
 import { TutorPanel } from "@/features/tutor";
-import { buildQuestLabels } from "@/features/quest/quest-labels";
+import { buildQuestLabels } from "@/shared/lib/quest-labels";
 import { useT } from "@/lib/i18n";
 import { ReportErrorButton } from "@/features/content-report";
 import { SubscriptionPaywall } from "@/features/subscription";

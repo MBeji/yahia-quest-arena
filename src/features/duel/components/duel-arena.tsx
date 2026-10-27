@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { QuestionInput, type McqOptionRender } from "@/features/quest/components/question-input";
-import type { QuestLabels } from "@/features/quest/quest-labels";
+import { QuestionInput, type McqOptionRender } from "@/components/game/question-input";
+import type { QuestLabels } from "@/shared/lib/quest-labels";
 import { isValidAnswerFormat } from "@/shared/lib/answer-formats";
 import { shuffleOptions, type BaseOption } from "@/shared/lib/question-utils";
 import type { TranslationKeys } from "@/lib/i18n/types";

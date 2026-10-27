@@ -5,7 +5,7 @@ import {
   QuestionInput,
   UNSUPPORTED_ANSWER_CHOICE,
   type QuestionInputLabels,
-} from "../components/question-input";
+} from "@/components/game/question-input";
 
 const labels: QuestionInputLabels = {
   numericPlaceholder: "Ta réponse (nombre)",

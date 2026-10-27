@@ -20,7 +20,7 @@ let solveAnswers: string[] = [];
 let doubleSolve = true;
 let quotaLeft = 3;
 
-vi.mock("../ai-call.server", () => ({
+vi.mock("@/shared/integrations/ai/ai-call.server", () => ({
   callAi: vi.fn(async (request: Call & { feature: string }) => {
     calls.push({
       feature: request.feature,

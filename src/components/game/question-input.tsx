@@ -3,7 +3,7 @@ import { Check } from "lucide-react";
 import { isMathExpression, isRtlText } from "@/shared/lib/utils";
 import { isValidAnswerFormat, UNSUPPORTED_ANSWER_CHOICE } from "@/shared/lib/answer-formats";
 import { OptionContent } from "@/components/ui/svg-figure";
-import { MatchingBoard, OrderingBoard } from "@/features/quest/components/question-boards";
+import { MatchingBoard, OrderingBoard } from "@/components/game/question-boards";
 import type { DisplayOption } from "@/shared/lib/question-utils";
 
 // =============================================================================

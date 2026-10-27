@@ -223,7 +223,10 @@ describe("D-3 — aucun chemin de code ne rend le clair", () => {
     // « Un test le vérifie par lecture du module, pas par confiance » (§3.2).
     // Les seules signatures publiques rendant une `string` sont l'empreinte et
     // les 4 derniers caractères — ni l'une ni l'autre ne reconstitue la clé.
-    const source = readFileSync(join(process.cwd(), "src/features/ai/crypto.server.ts"), "utf8");
+    const source = readFileSync(
+      join(process.cwd(), "src/shared/integrations/ai/crypto.server.ts"),
+      "utf8",
+    );
     const exported = [
       ...source.matchAll(/^export function (\w+)\([^)]*\)(?::\s*([^{]+))?\{/gms),
     ].map((m) => [m[1], (m[2] ?? "").trim()] as const);

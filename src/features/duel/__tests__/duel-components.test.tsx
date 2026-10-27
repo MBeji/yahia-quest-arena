@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { fr } from "@/lib/i18n/fr";
-import { buildQuestLabels } from "@/features/quest/quest-labels";
+import { buildQuestLabels } from "@/shared/lib/quest-labels";
 import { computeOutcome } from "../duel-outcome";
 import { DuelRecap } from "../components/duel-recap";
 import { OpponentProgress } from "../components/opponent-progress";

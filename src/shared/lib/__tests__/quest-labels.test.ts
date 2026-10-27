@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, it, expect } from "vitest";
-import { buildQuestLabels, type QuestContentLang } from "../quest-labels";
+import { buildQuestLabels, type QuestContentLang } from "@/shared/lib/quest-labels";
 
 // The quest screens (quiz-gate lock, banners, review CTA) are labeled in the
 // EXERCISE's content language, not the UI locale — a regression here ships the

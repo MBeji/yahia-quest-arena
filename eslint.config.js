@@ -101,6 +101,9 @@ export default tseslint.config(
       // « Invalid token » en fin d'exercice — infirmée par le code, et cette
       // règle est ce qui garantit qu'elle le reste.
       "local/single-browser-supabase-client": "error",
+      // « Une feature n'importe jamais une autre » (AGENTS.md) — née verte le
+      // 2026-10-27, une fois la porte IA passée dans `src/shared/` : voir l'en-tête.
+      "local/no-cross-feature-import": "error",
     },
   },
   eslintPluginPrettier,

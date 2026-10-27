@@ -30,8 +30,8 @@ import {
 import { trackDungeonPoolScope } from "@/shared/lib/analytics";
 // Deep component imports (route→feature convention, like quest.$exerciseId):
 // the barrel would drag quest.server.ts into this route's module graph.
-import { QuestionInput, type McqOptionRender } from "@/features/quest/components/question-input";
-import { buildQuestLabels } from "@/features/quest/quest-labels";
+import { QuestionInput, type McqOptionRender } from "@/components/game/question-input";
+import { buildQuestLabels } from "@/shared/lib/quest-labels";
 import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/lib/question-utils";
 import { isValidAnswerFormat } from "@/shared/lib/answer-formats";
 import { hasArabicLetters } from "@/shared/lib/utils";

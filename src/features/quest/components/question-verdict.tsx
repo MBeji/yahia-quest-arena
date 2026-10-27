@@ -2,8 +2,8 @@ import { motion } from "motion/react";
 import { Check, X, Flame } from "lucide-react";
 import type { ReactNode } from "react";
 import { RichField } from "@/components/ui/svg-figure";
-import type { McqOptionRender } from "@/features/quest/components/question-input";
-import type { QuestLabels } from "@/features/quest/quest-labels";
+import type { McqOptionRender } from "@/components/game/question-input";
+import type { QuestLabels } from "@/shared/lib/quest-labels";
 import type { Encouragement } from "@/lib/sound";
 import type { QuestionVerdict } from "@/features/quest/verdict";
 

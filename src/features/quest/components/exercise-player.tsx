@@ -10,7 +10,7 @@ import { PASS_THRESHOLD_PCT, RECALL_MIN_QUESTIONS } from "@/shared/constants/gam
 import { isValidAnswerFormat } from "@/shared/lib/answer-formats";
 import { userFacingError } from "@/shared/lib/error-message";
 import { RichField } from "@/components/ui/svg-figure";
-import { QuestionInput, type McqOptionRender } from "@/features/quest/components/question-input";
+import { QuestionInput, type McqOptionRender } from "@/components/game/question-input";
 import { QuestResultScreen } from "@/features/quest/components/quest-result-screen";
 import { QuizContractHint, QuizLockScreen } from "@/features/quest/components/quiz-lock-screen";
 import { QuestHintButton } from "@/features/quest/components/quest-hint-button";
@@ -27,7 +27,7 @@ import {
   KEYPAD_BY_LANG,
   RECALL_CHAR_BAR,
   type QuestContentLang,
-} from "@/features/quest/quest-labels";
+} from "@/shared/lib/quest-labels";
 import { useT } from "@/lib/i18n";
 import { LoadingState } from "@/components/ui/loading-state";
 import { BackLink } from "@/components/ui/back-link";
