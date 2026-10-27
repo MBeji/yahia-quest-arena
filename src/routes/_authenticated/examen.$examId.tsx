@@ -13,8 +13,8 @@ import { useI18n, useT } from "@/lib/i18n";
 // `quest.$exerciseId`) : passer par le barrel de `quest` tirerait
 // `quest.server.ts` — et toute la boucle de récompense — dans le graphe de
 // modules de cette route.
-import { QuestionInput, type McqOptionRender } from "@/features/quest/components/question-input";
-import { buildQuestLabels } from "@/features/quest/quest-labels";
+import { QuestionInput, type McqOptionRender } from "@/components/game/question-input";
+import { buildQuestLabels } from "@/shared/lib/quest-labels";
 import { ExamCountdown } from "@/features/exam/components/exam-countdown";
 import { ExamResults } from "@/features/exam/components/exam-results";
 import {

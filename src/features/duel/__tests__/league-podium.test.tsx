@@ -4,7 +4,7 @@ import React from "react";
 
 const play = vi.fn();
 vi.mock("@/lib/sound", () => ({ useSound: () => ({ play }) }));
-vi.mock("@/features/quest/components/confetti", () => ({ Confetti: () => null }));
+vi.mock("@/components/game/confetti", () => ({ Confetti: () => null }));
 vi.mock("@/shared/lib/product-events", () => ({ trackProductEvent: vi.fn() }));
 import { trackProductEvent } from "@/shared/lib/product-events";
 

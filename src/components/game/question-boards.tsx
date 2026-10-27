@@ -19,7 +19,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { ArrowDown, ArrowUp, GripVertical } from "lucide-react";
 import { OptionContent } from "@/components/ui/svg-figure";
 import { splitMatchingOptions, type DisplayOption } from "@/shared/lib/question-utils";
-import type { QuestionInputLabels } from "@/features/quest/components/question-input";
+import type { QuestionInputLabels } from "@/components/game/question-input";
 
 // =============================================================================
 // Drag-&-drop answer boards (Tier B, phase B2 — docs/interactive-question-types.md).

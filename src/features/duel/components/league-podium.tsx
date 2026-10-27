@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Trophy, X } from "lucide-react";
 
-import { Confetti } from "@/features/quest/components/confetti";
+import { Confetti } from "@/components/game/confetti";
 import { useSound } from "@/lib/sound";
 import { useT } from "@/lib/i18n";
 import { trackProductEvent } from "@/shared/lib/product-events";

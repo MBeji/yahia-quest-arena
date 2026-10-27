@@ -13,7 +13,7 @@ import { DuelRecap } from "@/features/duel/components/duel-recap";
 import { OpponentProgress } from "@/features/duel/components/opponent-progress";
 import { useDuelChannel } from "@/features/duel/use-duel-channel";
 import { useAuth } from "@/features/auth";
-import { buildQuestLabels } from "@/features/quest/quest-labels";
+import { buildQuestLabels } from "@/shared/lib/quest-labels";
 import { useI18n, useT } from "@/lib/i18n";
 import { useLearningPulse } from "@/hooks/use-learning-pulse";
 import { computeOutcome } from "@/features/duel/duel-outcome";

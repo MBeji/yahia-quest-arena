@@ -57,7 +57,7 @@ vi.mock("@/components/ui/level-up-celebration", () => ({ LevelUpCelebration: () 
 vi.mock("@/components/ui/explain-hint", () => ({
   ExplainHint: ({ children }: { children: React.ReactNode }) => children,
 }));
-vi.mock("@/features/quest/components/confetti", () => ({ Confetti: () => null }));
+vi.mock("@/components/game/confetti", () => ({ Confetti: () => null }));
 vi.mock("@/shared/lib/utils", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/shared/lib/utils")>()),
   isRtlText: () => false,

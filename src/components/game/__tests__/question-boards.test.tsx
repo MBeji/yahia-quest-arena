@@ -1,9 +1,9 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 
-import { MatchingBoard, OrderingBoard } from "../components/question-boards";
+import { MatchingBoard, OrderingBoard } from "@/components/game/question-boards";
 import { splitMatchingOptions } from "@/shared/lib/question-utils";
-import type { QuestionInputLabels } from "../components/question-input";
+import type { QuestionInputLabels } from "@/components/game/question-input";
 
 const labels: QuestionInputLabels = {
   numericPlaceholder: "n",

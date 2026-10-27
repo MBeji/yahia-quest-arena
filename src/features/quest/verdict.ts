@@ -1,4 +1,4 @@
-import type { McqOptionRender } from "@/features/quest/components/question-input";
+import type { McqOptionRender } from "@/components/game/question-input";
 
 // =============================================================================
 // Le vocabulaire du verdict par question (levier 01) : son type et l'apparence
