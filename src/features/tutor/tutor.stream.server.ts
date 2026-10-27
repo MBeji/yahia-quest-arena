@@ -31,7 +31,7 @@ import { z } from "zod";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/shared/integrations/supabase/types";
 
-import { streamAi } from "@/features/ai/ai-call.server";
+import { streamAi } from "@/shared/integrations/ai/ai-call.server";
 import { TUTOR_FREE_TEXT_MAX } from "@/shared/constants/ai";
 import { resolveSupabaseAuth } from "@/shared/integrations/supabase/auth-request";
 import { isRateLimited } from "@/shared/lib/rate-limit";

@@ -42,7 +42,7 @@ import { AI_FORGE_LIMITS, AI_VERIFY_SAMPLE_RATE, forgeTimeoutMs } from "@/shared
 // inventée pour la Forge.
 import { MAX_DIFFICULTY_LEVEL, MIN_DIFFICULTY_LEVEL } from "@/shared/constants/gamification";
 import { AI_MODE_ERROR_PREFIX } from "./ai-mode-status";
-import { callAi } from "./ai-call.server";
+import { callAi } from "@/shared/integrations/ai/ai-call.server";
 import {
   candidateCount,
   filterCandidates,

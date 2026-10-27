@@ -963,7 +963,7 @@ export const AI_ADULT_CONFIRM_GRADE_RANK = 13 as const;
 
 /**
  * Version du SCHÉMA de chiffrement des clés du coffre. Elle entre dans l'AAD —
- * voir `src/features/ai/crypto.server.ts`.
+ * voir `src/shared/integrations/ai/crypto.server.ts`.
  *
  * Elle vit ICI, dans un module sans le moindre import, et non à côté du code qui
  * chiffre : ses deux lecteurs (`ai-vault`, `ai-credentials`) n'ont besoin QUE de

@@ -59,7 +59,7 @@ import { settledCostMicros } from "@/shared/integrations/ai/pricing";
 // depuis le graphe du CLIENT via `components/ai-mode-section.tsx`, et le dev
 // server charge vraiment ce qu'il voit. Les deux sont chargés à l'usage, dans
 // des handlers déjà `async` (#909). Aucune logique de sécurité ne bouge.
-import { openOwnerSecret } from "./ai-vault.server";
+import { openOwnerSecret } from "@/shared/integrations/ai/ai-vault.server";
 import { AI_MODE_ERROR_PREFIX, type AiModeStatus } from "./ai-mode-status";
 
 const adminRpc = () => supabaseAdmin;
@@ -108,7 +108,7 @@ export const getAiModeStatus = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<AiModeStatus> => {
     const client = context.supabase;
-    const { isVaultAvailable } = await import("./crypto.server");
+    const { isVaultAvailable } = await import("@/shared/integrations/ai/crypto.server");
 
     const [{ data: rows, error }, { data: rank }] = await Promise.all([
       client.rpc("get_ai_credential_status"),
@@ -186,7 +186,8 @@ export const setAiCredential = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
     const client = supabase;
 
-    const { fingerprint, isVaultAvailable, last4, sealForRow } = await import("./crypto.server");
+    const { fingerprint, isVaultAvailable, last4, sealForRow } =
+      await import("@/shared/integrations/ai/crypto.server");
 
     if (!isAiModeEnabled() || !isByokEnabled() || !isVaultAvailable()) {
       failWithAiCode("ai.setAiCredential.off", "AI_MODE_OFF");
@@ -342,7 +343,8 @@ export const setAiModels = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
     const client = supabase;
 
-    const { fingerprint, isVaultAvailable, last4, sealForRow } = await import("./crypto.server");
+    const { fingerprint, isVaultAvailable, last4, sealForRow } =
+      await import("@/shared/integrations/ai/crypto.server");
 
     if (!isAiModeEnabled() || !isByokEnabled() || !isVaultAvailable()) {
       failWithAiCode("ai.setAiModels.off", "AI_MODE_OFF");

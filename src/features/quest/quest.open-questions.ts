@@ -14,20 +14,16 @@
 // a déjà sorti `quest.training.ts` : ce fichier est à sa limite `max-lines`, et
 // une porte de dix lignes n'a pas à la faire sauter.
 //
-// POURQUOI L'IMPORT DE `@/features/ai/ai-call.server` EST ASSUMÉ ICI
+// LA PORTE IA EST UN SERVICE PARTAGÉ
 // ---------------------------------------------------------------------------
-// Une feature n'en importe pas une autre — sauf pour PARLER AU MODÈLE, qui n'a
-// qu'une porte. `features/tutor` a franchi cette frontière deux fois (é11 lots 1
-// et 3, `tutor.server.ts` et `tutor.stream.server.ts`) et le précédent est
-// documenté sur place. On le suit, au lieu d'inventer une troisième règle.
-//
-// Ce qui NE traverse pas : l'orchestration elle-même, qui vit dans
-// `shared/integrations/ai/open-answer.server.ts` parce que la logique « juger
-// une réponse libre » n'appartient pas à la quête. Elle reçoit `callAi` en
-// paramètre — `shared/` ne doit pas importer `features/`, ce serait inverser la
-// dépendance plutôt que la traverser.
+// `callAi` vit dans `shared/integrations/ai/` depuis le 2026-10-27 : la porte
+// unique vers le modèle sert `quest` comme `tutor`, et une feature n'en importe
+// jamais une autre (`local/no-cross-feature-import`). L'orchestration « juger une
+// réponse libre » vit à côté d'elle, dans `open-answer.server.ts`, parce qu'elle
+// n'appartient pas à la quête ; elle reçoit `callAi` en paramètre (voir son
+// en-tête).
 
-import { callAi } from "@/features/ai/ai-call.server";
+import { callAi } from "@/shared/integrations/ai/ai-call.server";
 import { arbitrateOpenAnswers } from "@/shared/integrations/ai/open-answer.server";
 import type { Database } from "@/shared/integrations/supabase/types";
 import { logger } from "@/shared/lib/logger";

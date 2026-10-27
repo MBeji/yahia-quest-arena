@@ -11,15 +11,12 @@
 //
 // POURQUOI `callAi` EST INJECTÉ PLUTÔT QU'IMPORTÉ
 // ---------------------------------------------------------------------------
-// `callAi` vit dans `@/features/ai/ai-call.server`. `features/tutor` l'importe
-// directement (lots 1 et 3 d'é11) et le précédent est assumé : c'est la porte
-// unique vers le modèle. Mais ce module-ci est dans `shared/`, et un import
-// `shared/ → features/` INVERSE la dépendance — c'est pire que le franchissement
-// horizontal du tuteur, pas mieux. L'appelant passe donc la porte en paramètre :
-// `quest` importe `callAi` comme `tutor` le fait, et ce module reste un module
-// partagé qui ne connaît personne. Bénéfice secondaire, et il n'est pas mince :
-// le test exerce la chaîne complète avec un faux juge de quatre lignes, sans
-// monter le graphe d'imports du mode IA.
+// À sa naissance, `callAi` vivait dans la feature `ai`, et un import
+// `shared/ → features/` aurait INVERSÉ la dépendance : l'appelant passait donc la
+// porte en paramètre. Depuis le 2026-10-27, la porte vit à côté
+// (`./ai-call.server`, arbitrage « service partagé »), et l'injection reste pour
+// la raison qui n'a pas changé : le test exerce la chaîne complète avec un faux
+// juge de quatre lignes, sans monter le graphe d'imports du mode IA.
 //
 // CE QUE CE MODULE NE RENVOIE PAS
 // ---------------------------------------------------------------------------
