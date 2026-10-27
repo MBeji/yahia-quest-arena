@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { isRateLimited, isRateLimitedLocal } from "@/shared/lib/rate-limit";
 

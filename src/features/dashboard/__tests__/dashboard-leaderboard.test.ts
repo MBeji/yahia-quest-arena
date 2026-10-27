@@ -1,3 +1,4 @@
+// @vitest-environment node
 /**
  * Les trois classements du tableau de bord — global, matières, et le classement
  * d'une matière. Sortis de `dashboard.test.ts` le 2026-08-26 : ce fichier-là
