@@ -47,6 +47,18 @@
  *   4. IDEMPOTENCE — le writer ne touche que les lignes encore `open`. Rejouer
  *      ce script est donc sans effet, ce qui autorise un cron sans état.
  *
+ * LA FERMETURE DE L'ISSUE (`planClosures`, depuis le 2026-10-30) — tant qu'un
+ * signalement cité est ouvert, l'issue de triage reste ouverte : c'est elle qui
+ * dit au pré-vol du triage (`scripts/ci/report-triage-pregate.mjs`) que l'id a
+ * déjà été vu, et la fermer le ferait re-trier puis re-dupliquer (#651/#658).
+ * Mais une fois TOUS les ids cités clos, l'issue ne protège plus rien : le
+ * pré-vol ne compare que des signalements encore ouverts, et il date son rappel
+ * à partir de TOUTES les issues de triage, closes comprises. La garder ouverte
+ * n'avait plus qu'un effet : un commentaire quotidien « déjà clos » sans fin
+ * (#1162, treize jours d'affilée). Elle se ferme donc d'elle-même, mûre, quand
+ * aucun id cité n'est ouvert dans aucun des deux canaux — et jamais une issue
+ * qui ne cite aucun id : on ne devine rien.
+ *
  * Le script n'écrit RIEN lui-même : il produit des trailers `Report-Id:` que
  * `resolve-reports.mjs` consomme. Un seul chemin d'écriture dans tout le
  * pipeline, déjà éprouvé — on ne s'en fabrique pas un second.
@@ -57,6 +69,19 @@ export const APPLICABLE_STATUSES = ["dismissed", "resolved"];
 
 /** Un id est-il déjà l'UUID canonique complet ? */
 const FULL_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+
+/**
+ * Les UUID canoniques n'importe où dans un corps — la MÊME expression que le
+ * pré-vol du triage (`UUID_RE` de report-triage-pregate.mjs) : ce que lui
+ * compte comme « déjà vu », la fermeture doit le compter comme « cité ».
+ */
+const UUID_IN_TEXT = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi;
+
+/** Pourquoi un id n'a pas été appliqué — le motif lisible de chaque raison. */
+const SKIP_WHY = {
+  absent: "déjà clos ou introuvable parmi les signalements ouverts",
+  ambigu: "préfixe ambigu — plusieurs signalements ouverts correspondent",
+};
 
 /**
  * Extrait les recommandations du tableau de clôture d'une issue de triage.
@@ -151,7 +176,8 @@ export function isMature(createdAt, now, minAgeDays) {
  * @param {string} input.now
  * @param {number} input.minAgeDays
  * @returns {{ apply: {id: string, channel: string, status: string, issue: number}[],
- *             skipped: {id: string, channel: string, issue: number, why: string}[] }}
+ *             skipped: {id: string, channel: string, issue: number,
+ *                       reason: "immature"|"absent"|"ambigu", why: string}[] }}
  */
 export function planApplications({ issues, open, now, minAgeDays }) {
   const apply = [];
@@ -162,6 +188,7 @@ export function planApplications({ issues, open, now, minAgeDays }) {
         id: "*",
         channel: "*",
         issue: issue.number,
+        reason: "immature",
         why: `issue trop récente (< ${minAgeDays} j) — délai d'objection en cours`,
       });
       continue;
@@ -176,15 +203,102 @@ export function planApplications({ issues, open, now, minAgeDays }) {
           id: rec.id,
           channel: rec.channel,
           issue: issue.number,
-          why:
-            reason === "absent"
-              ? "déjà clos ou introuvable parmi les signalements ouverts"
-              : "préfixe ambigu — plusieurs signalements ouverts correspondent",
+          reason,
+          why: SKIP_WHY[reason],
         });
       }
     }
   }
   return { apply, skipped };
+}
+
+/**
+ * Tous les ids qu'une issue de triage cite : chaque UUID canonique du corps
+ * (tableau, détail, prose — ce que le pré-vol lit) et l'id de chaque ligne du
+ * tableau de clôture, préfixes tronqués compris, MÊME sur une ligne au statut
+ * non applicable (`open (fix en PR #…)`) ou sans canal lisible. Une ligne qu'on
+ * ne sait pas appliquer n'en cite pas moins un signalement — c'est un sur-
+ * ensemble de `parseRecommendations`, à dessein.
+ *
+ * @param {string} body
+ * @returns {string[]} ids en minuscules, sans doublon
+ */
+export function citedReportIds(body) {
+  const text = String(body ?? "");
+  const ids = new Set();
+  for (const m of text.matchAll(UUID_IN_TEXT)) ids.add(m[0].toLowerCase());
+  for (const line of text.split(/\r?\n/)) {
+    if (!line.trimStart().startsWith("|")) continue;
+    const idMatch = (line.split("|")[1] ?? "").match(/`([0-9a-f][0-9a-f-]{5,})`/i);
+    if (idMatch) ids.add(idMatch[1].toLowerCase());
+  }
+  // Un préfixe d'un UUID déjà cité en entier ne cite rien de plus.
+  return [...ids].filter(
+    (id) => FULL_UUID.test(id) || ![...ids].some((full) => full !== id && full.startsWith(id)),
+  );
+}
+
+/**
+ * Quelles issues de triage peuvent se fermer — sans rien écrire.
+ *
+ * Une issue se ferme quand les trois conditions tiennent :
+ *   - elle est mûre (même délai d'objection que les applications) ;
+ *   - elle cite au moins un id — une issue muette ne se ferme pas, on ne devine
+ *     pas ce qu'elle couvrait ;
+ *   - AUCUN id cité n'est encore ouvert, dans AUCUN des deux canaux : il faut
+ *     `absent` partout. Un préfixe ambigu, c'est au moins un signalement ouvert.
+ *
+ * Pourquoi fermer ne re-duplique rien : le pré-vol du triage ne cherche dans les
+ * issues OUVERTES que des ids encore ouverts. Ici, il n'y en a plus. Et son
+ * rappel périodique se date sur toutes les issues de triage, closes comprises.
+ *
+ * Un export illisible (un canal manquant) ne ferme rien : sans la preuve qu'un
+ * signalement est clos, on le tient pour ouvert.
+ *
+ * @param {object} input
+ * @param {readonly {number: number, createdAt: string, body: string}[]} input.issues
+ * @param {{bugReports?: readonly {id: string}[], contentReports?: readonly {id: string}[]}} input.open
+ * @param {string} input.now
+ * @param {number} input.minAgeDays
+ * @returns {number[]} numéros des issues à fermer
+ */
+export function planClosures({ issues, open, now, minAgeDays }) {
+  const pools = [open?.bugReports, open?.contentReports];
+  if (!pools.every(Array.isArray)) return [];
+  const closable = [];
+  for (const issue of issues ?? []) {
+    if (!isMature(issue.createdAt, now, minAgeDays)) continue;
+    const cited = citedReportIds(issue.body);
+    if (cited.length === 0) continue;
+    const allClosed = cited.every((id) =>
+      pools.every((pool) => resolveReportId(id, pool).reason === "absent"),
+    );
+    if (allClosed) closable.push(issue.number);
+  }
+  return closable;
+}
+
+/**
+ * Le dernier commentaire d'une issue qui se ferme : pourquoi, et pourquoi sans
+ * risque. Vit ici pour être testé, comme les autres rendus.
+ *
+ * @param {{ number: number, body: string }} issue
+ * @returns {string}
+ */
+export function renderClosureComment(issue) {
+  const cited = citedReportIds(issue?.body);
+  let body = "### ✅ Triage soldé — fermeture automatique\n\n";
+  body +=
+    "Aucun des signalements cités par cette issue n'est encore ouvert, ni dans `bug_reports` ni dans `content_reports` :\n\n";
+  for (const id of cited) body += `- \`${id}\`\n`;
+  body +=
+    "\nL'issue ne protégeait plus rien. Le pré-vol du triage (`report-triage-pregate.mjs`) ne la lit que pour" +
+    " reconnaître des signalements encore ouverts déjà triés — il n'y en a plus — et date son rappel sur toutes les" +
+    " issues de triage, closes comprises. La fermer ne re-déclenche donc aucun triage.\n";
+  body +=
+    "\n_Posé par `report-apply.yml`, qui ne juge rien : un signalement rouvert ou nouveau ouvrira son propre triage." +
+    " Rouvrir cette issue reste possible à tout moment._\n";
+  return body;
 }
 
 /**
@@ -210,6 +324,11 @@ export function renderTrailers(planned, status) {
  * laisserait un signalement ouvert pour toujours, et personne ne saurait
  * pourquoi.
  *
+ * Une issue sans application dont TOUS les écarts sont `absent` ne reçoit rien :
+ * « déjà clos » répété chaque jour n'apprend rien à personne (#1162 en a reçu
+ * treize), et c'est `planClosures` qui la solde. Un écart `ambigu` ou une issue
+ * trop récente, eux, se disent toujours.
+ *
  * Vit ici et non dans le YAML pour être testable — la leçon du 2026-08-24, où
  * du shell non éprouvé glissé dans un workflow a cassé auto-pr pour tout le
  * dépôt.
@@ -230,7 +349,7 @@ export function renderIssueComments(plan, dryRun) {
 
   const out = [];
   for (const [issue, { apply, skipped }] of byIssue) {
-    if (apply.length === 0 && skipped.length === 0) continue;
+    if (apply.length === 0 && skipped.every((s) => s.reason === "absent")) continue;
     let body = dryRun
       ? "### 🧪 Simulation — aucune écriture\n\n"
       : "### 🤖 Recommandations appliquées\n\n";
@@ -246,7 +365,7 @@ export function renderIssueComments(plan, dryRun) {
     }
     body +=
       "\n_Posé par `report-apply.yml`. Le statut vient du tableau de clôture ci-dessus, écrit par le triage :" +
-      " ce workflow ne juge rien, il exécute. L'issue reste OUVERTE pour relecture._\n";
+      " ce workflow ne juge rien, il exécute. L'issue reste OUVERTE tant qu'un signalement cité est ouvert._\n";
     out.push({ issue, body });
   }
   return out;
