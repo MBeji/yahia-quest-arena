@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { BookMarked, ChevronLeft, ChevronRight } from "lucide-react";
-import { getManuelPageUrls } from "../quest.server";
+import { getManuelPageUrls } from "../quest.lesson.server";
 import { useT } from "@/lib/i18n";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 

@@ -3,16 +3,14 @@
 
 export {
   getSubject,
-  getChapterLesson,
-  getManuelPageUrls,
   getExercise,
   startExerciseSession,
   submitAttempt,
   revealHint,
-  checkAnswersPublic,
-  scoreQuizPublic,
 } from "./quest.server";
-export type { ManuelPage } from "./quest.server";
+export { getChapterLesson, getManuelPageUrls } from "./quest.lesson.server";
+export type { ManuelPage } from "./quest.lesson.server";
+export { checkAnswersPublic, scoreQuizPublic } from "./quest.practice.server";
 // Module ÉTROIT (comme `quest.training`) : le verdict par question ne doit pas
 // tirer tout `quest.server` dans le chunk qui l'importe.
 export { checkQuestion } from "./quest.check.server";
