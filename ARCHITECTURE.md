@@ -150,7 +150,7 @@ The middleware injects `supabase` (authenticated client) and `userId` into conte
 ### 6a. Les cinq chemins qui NE passent pas par un server fn
 
 `src/server.ts` intercepte cinq URL **avant** le handler SSR, et aucune n'est une route
-TanStack : elles n'ont ni middleware d’auth, ni `.validator`, et la règle ESLint
+TanStack : elles n'ont ni middleware d'auth, ni `.validator`, et la règle ESLint
 `local/require-server-fn-auth` ne les voit pas. Chacune porte donc sa propre garde.
 
 | Chemin              | Garde                                                                                                        | Ce qu'il faut savoir                                                                           |
