@@ -22,7 +22,7 @@
 // POURQUOI DES TRANCHES, ET NON UN BATCH
 // ---------------------------------------------------------------------------
 // La fonction SSR est configurée à `maxDuration: 300` secondes
-// (`scripts/build-vercel.mjs`). Cette valeur était à 30 s jusqu'au 2026-08-25,
+// (`scripts/vercel-function.mjs`, lu par `scripts/build-vercel.mjs`). Cette valeur était à 30 s jusqu'au 2026-08-25,
 // sur la foi d'une limite du plan Hobby qui n'existe plus depuis `fluid
 // compute` — la contrainte avait disparu, le commentaire était resté, et le
 // découpage ci-dessous en avait hérité une marge inutilement serrée.

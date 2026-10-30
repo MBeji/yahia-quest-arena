@@ -23,7 +23,7 @@
 #
 # Pourquoi pas une seule horloge, en branchant la génération dans
 # `handlePushCron` ? Parce qu'une fonction SSR est bornée (`maxDuration: 300`,
-# scripts/build-vercel.mjs) : un batch de plusieurs dizaines de minutes n'y tient
+# scripts/vercel-function.mjs) : un batch de plusieurs dizaines de minutes n'y tient
 # pas, et son échec emporterait aussi l'envoi des push.
 #
 # CE QUI COÛTE DE L'ARGENT, ET COMMENT ON L'ÉCRIT
