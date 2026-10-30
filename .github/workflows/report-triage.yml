@@ -288,8 +288,9 @@ jobs:
             every single run.
 
             Reports fixed by a PR resolve automatically at merge; `dismissed`
-            recommendations stay for the operator to apply from the admin
-            consoles.
+            and `resolved` recommendations in the closure table are applied by
+            `report-apply.yml` once the issue is 7 days old, and the issue
+            closes itself once none of the ids it cites is still open.
 
             Hard rules: NEVER push to main. When in doubt about a verdict, pick
             the more cautious one. When in doubt about auto-merge, do NOT arm

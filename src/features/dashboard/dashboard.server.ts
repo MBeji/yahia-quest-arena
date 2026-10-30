@@ -817,7 +817,7 @@ export const getCatalogueStats = createServerFn({ method: "GET" })
 // programme et non celui du catalogue — matières non ouvertes comprises.
 export const getParcoursSubjects = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
-  .inputValidator((d) => z.object({ parcoursId: z.string().min(1) }).parse(d))
+  .validator((d) => z.object({ parcoursId: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
 

@@ -194,7 +194,7 @@ function toQuestionContext(raw: z.infer<typeof questionContextSchema>): TutorQue
 /** R-1 — l'écran demande la porte avant d'afficher le bouton. */
 export const getTutorAvailability = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ questionId: z.guid() }).parse(d))
+  .validator((d: unknown) => z.object({ questionId: z.guid() }).parse(d))
   .handler(async ({ data, context }): Promise<{ allowed: boolean; reason: string }> => {
     const client = context.supabase;
     const { data: raw, error } = await client.rpc("can_use_tutor", {
@@ -213,7 +213,7 @@ export const getTutorAvailability = createServerFn({ method: "GET" })
 
 export const explainMistake = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         questionId: z.guid(),
@@ -501,7 +501,7 @@ async function recordServing(
 /** R-17 — 👍/👎. Le 👎 propose « Explique autrement » côté écran. */
 export const rateTutorMessage = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         threadId: z.guid(),
@@ -542,7 +542,7 @@ export type TutorChatEntry = {
 
 export const getTutorChatEntry = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ chapterId: z.guid() }).parse(d))
+  .validator((d: unknown) => z.object({ chapterId: z.guid() }).parse(d))
   .handler(async ({ data, context }): Promise<TutorChatEntry> => {
     const client = context.supabase;
     const closed: TutorChatEntry = {
@@ -624,7 +624,7 @@ export const getTutorHistory = createServerFn({ method: "GET" })
 
 export const getTutorThread = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ threadId: z.guid() }).parse(d))
+  .validator((d: unknown) => z.object({ threadId: z.guid() }).parse(d))
   .handler(async ({ data, context }): Promise<{ messages: TutorMessage[] }> => {
     const client = context.supabase;
     const { data: raw, error } = await client.rpc("get_tutor_thread", { p_thread: data.threadId });
@@ -674,7 +674,7 @@ export const getTutorPrefs = createServerFn({ method: "GET" })
 /** US-7 — l'élève arme ou désarme son rappel du plan du jour. */
 export const setTutorPlanPush = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ enabled: z.boolean() }).parse(d))
+  .validator((d: unknown) => z.object({ enabled: z.boolean() }).parse(d))
   .handler(async ({ data, context }): Promise<{ ok: boolean }> => {
     const client = context.supabase;
     const { error } = await client.rpc("set_tutor_plan_push", { p_enabled: data.enabled });
@@ -687,7 +687,7 @@ export const setTutorPlanPush = createServerFn({ method: "POST" })
 
 export const setTutorPrefs = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         interests: z.array(z.enum(TUTOR_INTERESTS)).max(3),
@@ -891,7 +891,7 @@ function toEscalationTarget(step: TutorEscalationStep, raw: unknown): TutorEscal
  */
 export const getTutorMiniCheck = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ questionId: z.guid() }).parse(d))
+  .validator((d: unknown) => z.object({ questionId: z.guid() }).parse(d))
   .handler(async ({ data, context }): Promise<TutorMiniCheck> => {
     const client = context.supabase;
     const { data: raw, error } = await client.rpc("get_tutor_mini_check", {
@@ -930,7 +930,7 @@ export const getTutorMiniCheck = createServerFn({ method: "POST" })
  */
 export const submitTutorMiniCheck = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         questionId: z.guid(),
@@ -979,7 +979,7 @@ export const submitTutorMiniCheck = createServerFn({ method: "POST" })
  */
 export const getTutorUnderstandingSignal = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ tag: z.string().min(1).max(200) }).parse(d))
+  .validator((d: unknown) => z.object({ tag: z.string().min(1).max(200) }).parse(d))
   .handler(async ({ data, context }): Promise<{ level: number; step: TutorEscalationStep }> => {
     const client = context.supabase;
     const { data: raw, error } = await client.rpc("tutor_understanding_signal", {
@@ -1006,7 +1006,7 @@ export const getTutorUnderstandingSignal = createServerFn({ method: "POST" })
  */
 export const escalateTutorThread = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ threadId: z.guid() }).parse(d))
+  .validator((d: unknown) => z.object({ threadId: z.guid() }).parse(d))
   .handler(async ({ data, context }): Promise<TutorEscalation | null> => {
     const client = context.supabase;
     const { data: raw, error } = await client.rpc("escalate_tutor_thread", {

@@ -66,7 +66,7 @@ const readingSchema = z.object({
  * Confondre les deux enverrait un enfant se coucher alors qu'il lui restait ses
  * dix questions.
  *
- * Aucun `.inputValidator` : la RPC ne prend pas d'argument et lit `auth.uid()`
+ * Aucun `.validator` : la RPC ne prend pas d'argument et lit `auth.uid()`
  * elle-même. C'est le cas de 27 des 68 server fns du dépôt, et la règle ESLint
  * `local/require-server-fn-auth` documente explicitement pourquoi elle n'exige
  * que le middleware — sans validateur, TanStack type déjà `data` à `undefined`.
@@ -213,7 +213,7 @@ export type TutorCacheStats = z.infer<typeof cacheStatsSchema>;
  */
 export const getTutorCacheStats = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         /**

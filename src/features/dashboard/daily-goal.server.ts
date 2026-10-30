@@ -42,7 +42,7 @@ type DailyGoalRpcClient = {
 
 export const setDailyXpGoal = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator(z.object({ goal: z.union([z.literal(50), z.literal(100), z.literal(200)]) }))
+  .validator(z.object({ goal: z.union([z.literal(50), z.literal(100), z.literal(200)]) }))
   .handler(async ({ context, data }): Promise<{ goal: number }> => {
     const client = context.supabase as unknown as DailyGoalRpcClient;
     const { error } = await client.rpc("set_daily_xp_goal", { p_goal: data.goal });

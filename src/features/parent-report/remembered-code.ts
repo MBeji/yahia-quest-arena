@@ -14,7 +14,7 @@
 
 export const SUIVI_CODE_STORAGE_KEY = "xp-scholars-suivi-code";
 
-/** Bornes du code, alignées sur l'`inputValidator` de `getStudentReportByCode`. */
+/** Bornes du code, alignées sur le `.validator()` de `getStudentReportByCode`. */
 const MIN_CODE_LENGTH = 8;
 const MAX_CODE_LENGTH = 64;
 

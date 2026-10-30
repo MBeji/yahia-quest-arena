@@ -11,7 +11,10 @@ const STEPS = [
 ] as const;
 
 const STATE_CLASS: Record<StepState, string> = {
-  done: "border-success/40 bg-success/10 text-success",
+  // Le vert succès teinte la bordure, le fond et l'icône ; le TEXTE reste en
+  // `foreground` : `text-success` sur `success/10` plafonne à 3,9:1 en thème
+  // clair (seuil AA 4,5:1 — #1191).
+  done: "border-success/40 bg-success/10 text-foreground",
   current: "border-primary bg-primary/10 text-primary ring-1 ring-primary/40",
   next: "border-border bg-card text-foreground",
   locked: "border-dashed border-border bg-card text-muted-foreground",
@@ -49,13 +52,16 @@ export function ChapterSteps({
               STATE_CLASS[state],
             )}
           >
-            <StateIcon className="h-4 w-4 shrink-0" aria-hidden="true" />
+            <StateIcon
+              className={cn("h-4 w-4 shrink-0", state === "done" && "text-success")}
+              aria-hidden="true"
+            />
             <span className="max-w-full truncate text-xs font-bold">
               {index + 1}. {t.guide.stepper[key]}
             </span>
-            <span className="max-w-full text-2xs leading-tight opacity-90">
-              {t.guide.stepper[state]}
-            </span>
+            {/* Jamais d'`opacity-*` ici : à 90 %, `text-primary` sur `primary/10`
+                tombe à 4,41:1 en thème clair et axe fait rougir le nightly (#1191). */}
+            <span className="max-w-full text-2xs leading-tight">{t.guide.stepper[state]}</span>
           </li>
         );
       })}

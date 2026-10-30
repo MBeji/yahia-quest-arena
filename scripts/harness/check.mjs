@@ -10,7 +10,8 @@
  *   5. `harness/*.json` parse; every policy family has a reason . isJsonValid, checkPolicyReasons
  *   6. Generated views match `harness:sync` ...................... buildViews (sync.mjs)
  *   7. Actions pinned to a SHA; `gh` knows its repo; lockfile
- *      writers run npm 10 ....................................... findUnpinnedActions, findGhWithoutRepo, findApplyWithoutNpm10
+ *      writers run npm 10; no push past a red gate .............. findUnpinnedActions, findGhWithoutRepo,
+ *                                                                 findApplyWithoutNpm10, findPushPastRedGate
  *   8. `.github/**` YAML parses strictly ......................... check-workflow-yaml.mjs
  *   9. Every control script is run by a workflow or declared ..... checkControlCoverage (+ harness/controls.json)
  *  10. Every `<!--count:…-->` marker equals its fact ............. checkDeclaredCounts
@@ -739,6 +740,69 @@ export function findApplyWithoutNpm10(text) {
   return out;
 }
 
+/**
+ * Un `git push` ne passe pas un gate rouge : le hook husky `pre-push` (= `npm run verify`) le
+ * refuse. Or un `npm ci` (ou `npm install`) dans un job exécute le `prepare` du projet, qui
+ * INSTALLE husky dans le checkout du runner — le hook y est donc actif comme en local.
+ *
+ * ⚠️ Mesuré le 2026-10-30 (#1203, run 41017413367) : `upgrade-guard.yml` laissait son gate
+ * `ci:verify` en `continue-on-error`, puis poussait le lot rouge « pour ouvrir une PR draft ».
+ * Le pre-push a rejoué les erreurs TS, le push a échoué, aucune PR n'est née, et les étapes
+ * suivantes (jeton, agent de réparation) sont sorties `skipped` : le mode « réparer un lot
+ * rouge » était mort dès que le rouge relevait de `verify`. Il n'avait marché le 10-27 que
+ * parce que ce rouge-là (budget de bundle) est hors du périmètre de `verify`.
+ *
+ * Le contrôle : dans un job où un `npm ci`/`npm install` a installé les hooks, toute étape
+ * `run:` qui fait `git push` APRÈS un gate non bloquant (`continue-on-error` + `npm run
+ * verify`/`ci:verify`) doit porter, dans son `if:`, `steps.<gate>.outcome == 'success'`.
+ * `outcome`, pas `conclusion` : la conclusion d'une étape `continue-on-error` est toujours
+ * `success`. Un `if` shell À L'INTÉRIEUR de l'étape ne compte pas — c'est la forme exacte
+ * du bug, et seul le `if:` d'étape se lit sans exécuter le bash.
+ */
+export function findPushPastRedGate(text) {
+  let doc;
+  try {
+    doc = parseYaml(text);
+  } catch {
+    return []; // Le YAML illisible est déjà le métier de `checkYamlFiles`.
+  }
+  const jobs = doc?.jobs;
+  if (!jobs || typeof jobs !== "object") return [];
+
+  const INSTALLE_LES_HOOKS = /(^|[;&|(\s])npm\s+(ci|install|i)\b/;
+  const SANS_SCRIPTS_NI_GLOBAL = /(\s-g\b|--global\b|--ignore-scripts\b)/;
+  const GATE_VERIFY = /\bnpm\s+run\s+(ci:)?verify\b/;
+  const POUSSE = /(^|[;&|(\s])git\s+push\b/;
+
+  const out = [];
+  for (const [jobName, job] of Object.entries(jobs)) {
+    if (!job || typeof job !== "object") continue;
+    const steps = Array.isArray(job.steps) ? job.steps : [];
+
+    let hooks = false;
+    const gatesMous = [];
+    for (const [i, st] of steps.entries()) {
+      const run = typeof st?.run === "string" ? st.run : null;
+      if (run === null) continue;
+      const lignes = run.split("\n");
+      if (lignes.some((l) => INSTALLE_LES_HOOKS.test(l) && !SANS_SCRIPTS_NI_GLOBAL.test(l))) {
+        hooks = true;
+      }
+      if (st["continue-on-error"] === true && GATE_VERIFY.test(run)) {
+        gatesMous.push(typeof st.id === "string" ? st.id : null);
+        continue;
+      }
+      if (!hooks || gatesMous.length === 0 || !lignes.some((l) => POUSSE.test(l))) continue;
+      const cond = typeof st.if === "string" ? st.if : "";
+      const garde = gatesMous.every(
+        (id) => id !== null && new RegExp(`steps\\.${id}\\.outcome\\s*==\\s*'success'`).test(cond),
+      );
+      if (!garde) out.push({ job: jobName, step: st.name ?? `#${i + 1}` });
+    }
+  }
+  return out;
+}
+
 export function findGhWithoutRepo(text) {
   let doc;
   try {
@@ -1047,6 +1111,15 @@ function main() {
           "0 réussite, 18 jours sans que personne le voie).",
       );
     }
+    for (const hit of findPushPastRedGate(content)) {
+      problems.push(
+        `${rel(workflow)}: job \`${hit.job}\`, étape \`${hit.step}\` fait \`git push\` après un ` +
+          "gate `verify`/`ci:verify` non bloquant, sans `if: steps.<gate>.outcome == 'success'` — " +
+          "le hook husky pre-push (installé par `npm ci`) refuse un lot rouge : l'étape échoue " +
+          "et coupe tout ce qui suit (#1203). Pousser seulement sur gate vert ; un lot rouge " +
+          "reste sur une branche locale.",
+      );
+    }
   }
 
   // 5ter. Les scripts .ts sont réellement typés (étude 32, C-15).
@@ -1181,7 +1254,7 @@ function main() {
       "[harness:check] OK — pointers intact, AGENTS.md in budget et son inventaire de " +
         "features à jour, no hidden Unicode, " +
         "no stray model ids, Actions pinned to SHAs, chaque `gh` sait sur quel dépôt il travaille, " +
-        "le lockfile ne s'écrit que sous npm 10, " +
+        "le lockfile ne s'écrit que sous npm 10, aucun push après un gate rouge, " +
         ".github YAML parses strictly, chaque contrôle exécuté ou déclaré, " +
         "generated views in sync.",
     );

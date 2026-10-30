@@ -32,7 +32,7 @@ import type { QuestDraftAnswer } from "@/features/quest/quest-draft";
  */
 export const checkQuestion = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         exerciseId: z.guid(),

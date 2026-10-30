@@ -190,7 +190,7 @@ export const getLeaderboardSubjects = createServerFn({ method: "GET" })
 // ---------- Per-subject leaderboard (ranked by XP earned in the subject) ----------
 export const getSubjectLeaderboard = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ subjectId: z.string().min(1) }).parse(d))
+  .validator((d) => z.object({ subjectId: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
 
@@ -256,7 +256,7 @@ type WeeklyLeaderboardClient = {
 
 export const getWeeklyLeaderboard = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ scope: z.string().min(1).max(64) }).parse(d))
+  .validator((d: unknown) => z.object({ scope: z.string().min(1).max(64) }).parse(d))
   .handler(async ({ context, data }) => {
     const client = context.supabase as unknown as WeeklyLeaderboardClient;
     const { data: rows, error } = await client.rpc("get_weekly_leaderboard", {

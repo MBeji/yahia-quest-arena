@@ -14,7 +14,7 @@ function asRecord(value: unknown): Record<string, unknown> {
 // inventory directly (INSERT/UPDATE revoked at the DB layer).
 export const purchaseShopItem = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ itemCode: z.string().min(1) }).parse(d))
+  .validator((d) => z.object({ itemCode: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
@@ -42,7 +42,7 @@ export const purchaseShopItem = createServerFn({ method: "POST" })
 // the `equip_inventory_skin` SECURITY DEFINER RPC.
 export const equipInventorySkin = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ itemCode: z.string().min(1) }).parse(d))
+  .validator((d) => z.object({ itemCode: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
 
@@ -71,7 +71,7 @@ export const equipInventorySkin = createServerFn({ method: "POST" })
 //     independently of the next-quest slot.
 export const activateInventoryItem = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ itemCode: z.string().min(1) }).parse(d))
+  .validator((d) => z.object({ itemCode: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
 
@@ -101,7 +101,7 @@ export const activateInventoryItem = createServerFn({ method: "POST" })
  */
 export const equipCosmetic = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ itemCode: z.string().min(1) }).parse(d))
+  .validator((d) => z.object({ itemCode: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }) => {
     const client = context.supabase as unknown as {
       rpc: (
