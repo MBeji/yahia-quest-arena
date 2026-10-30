@@ -140,7 +140,7 @@ seulement « c'est mal »), et propose un **correctif concret**.
 - [ ] **RLS & grants** : toute nouvelle table a une RLS ; les fonctions
       privilégiées (`award_xp`, `submit_exercise_attempt`, …) restent `REVOKE`
       pour `anon`/`authenticated`. Pas d'élévation de privilège via RPC.
-- [ ] **Validation d'entrée** : `zod` via `.inputValidator` sur **chaque** server
+- [ ] **Validation d'entrée** : `zod` via `.validator` sur **chaque** server
       fn ; bornes, types et énumérations vérifiés côté serveur.
 - [ ] **Anti-triche économie/gameplay** : les récompenses (XP/coins), l'usage des
       consommables et les gates anti-farm (`tooFast` / `≥60%` / `improved`) ne

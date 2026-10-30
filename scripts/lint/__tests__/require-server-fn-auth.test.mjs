@@ -27,7 +27,7 @@ ruleTester.run("require-server-fn-auth", requireServerFnAuth, {
       name: "requireSupabaseAuth",
       code: `createServerFn({ method: "POST" })
         .middleware([requireSupabaseAuth])
-        .inputValidator((d) => schema.parse(d))
+        .validator((d) => schema.parse(d))
         .handler(async ({ data, context }) => ({ ok: true }));`,
     },
     {
@@ -98,7 +98,7 @@ ruleTester.run("require-server-fn-auth", requireServerFnAuth, {
     {
       name: "validator but no middleware",
       code: `createServerFn({ method: "POST" })
-        .inputValidator((d) => schema.parse(d))
+        .validator((d) => schema.parse(d))
         .handler(async ({ data }) => data);`,
       errors: [{ messageId: "missingMiddleware" }],
     },

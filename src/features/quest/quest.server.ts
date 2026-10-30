@@ -185,7 +185,7 @@ function parseAtomicSubmitResponse(payload: unknown): AtomicSubmitResponse {
 // ---------- Get a subject with chapters & exercises ----------
 export const getSubject = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
-  .inputValidator((d) => z.object({ subjectId: z.string() }).parse(d))
+  .validator((d) => z.object({ subjectId: z.string() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
@@ -426,7 +426,7 @@ type ChapterLessonRow = {
 
 export const getChapterLesson = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
-  .inputValidator((d) => z.object({ chapterId: z.guid() }).parse(d))
+  .validator((d) => z.object({ chapterId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const { data: chapterRow, error } = await supabase
@@ -555,7 +555,7 @@ const manuelRefSchema = z.object({
  */
 export const getManuelPageUrls = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ chapterId: z.guid() }).parse(d))
+  .validator((d) => z.object({ chapterId: z.guid() }).parse(d))
   .handler(async ({ data, context }): Promise<{ pages: ManuelPage[] }> => {
     const { supabase } = context;
 
@@ -627,7 +627,7 @@ function clientIpKey(): string {
  */
 export const checkAnswersPublic = createServerFn({ method: "POST" })
   .middleware([optionalSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         exerciseId: z.guid(),
@@ -709,7 +709,7 @@ export const checkAnswersPublic = createServerFn({ method: "POST" })
  */
 export const scoreQuizPublic = createServerFn({ method: "POST" })
   .middleware([optionalSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         exerciseId: z.guid(),
@@ -756,7 +756,7 @@ export const scoreQuizPublic = createServerFn({ method: "POST" })
 // ---------- Get exercise + questions ----------
 export const getExercise = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         exerciseId: z.guid(),
@@ -877,7 +877,7 @@ export const getExercise = createServerFn({ method: "GET" })
 // maps its raised gate signals to the localized client messages.
 export const startExerciseSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         exerciseId: z.guid(),
@@ -943,7 +943,7 @@ export const startExerciseSession = createServerFn({ method: "POST" })
 // arm/slot system.
 export const revealHint = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ questionId: z.guid() }).parse(d))
+  .validator((d) => z.object({ questionId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
@@ -975,7 +975,7 @@ export const revealHint = createServerFn({ method: "POST" })
 // ---------- Submit attempt ----------
 export const submitAttempt = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         sessionId: z.guid(),

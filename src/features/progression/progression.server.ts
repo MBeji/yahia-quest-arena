@@ -106,7 +106,7 @@ export const recoverStreak = createServerFn({ method: "POST" })
 // (le bouton ne mène nulle part) plutôt que de casser la page.
 export const getCompetencyExercises = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ competency: z.string().min(1) }).parse(d))
+  .validator((d) => z.object({ competency: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }): Promise<CompetencyExercise[]> => {
     const client = context.supabase as unknown as CompetencyExercisesRpcClient;
     const res = await client.rpc("get_exercises_for_competency", { p_competency: data.competency });
@@ -154,7 +154,7 @@ type LearningRpcClient = {
  */
 export const getLearningState = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ family: z.string().min(1).nullable().default(null) }).parse(d))
+  .validator((d) => z.object({ family: z.string().min(1).nullable().default(null) }).parse(d))
   .handler(async ({ data, context }): Promise<LearningStateRow[]> => {
     const client = context.supabase as unknown as LearningRpcClient;
     const res = await client.rpc("get_learning_state", { p_family: data.family });
@@ -170,7 +170,7 @@ export const getLearningState = createServerFn({ method: "GET" })
 /** « Prêt à apprendre » — la frontière, triée par fan-out, avec son exercice d'entrée (§3.4). */
 export const getLearningFrontier = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         family: z.string().min(1).nullable().default(null),
@@ -205,7 +205,7 @@ export const getLearningFrontier = createServerFn({ method: "GET" })
  */
 export const disputeInference = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ competency: z.string().min(1) }).parse(d))
+  .validator((d) => z.object({ competency: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }): Promise<{ disputed: boolean }> => {
     const { userId } = context;
     // Un geste d'élève, pas une API de masse : le graphe compte 62 compétences, personne n'a

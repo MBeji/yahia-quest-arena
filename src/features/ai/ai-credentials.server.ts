@@ -181,7 +181,7 @@ const setCredentialInput = z
 
 export const setAiCredential = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => setCredentialInput.parse(d))
+  .validator((d: unknown) => setCredentialInput.parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const client = supabase;
@@ -338,7 +338,7 @@ const setModelsInput = z.object({
 
 export const setAiModels = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => setModelsInput.parse(d))
+  .validator((d: unknown) => setModelsInput.parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const client = supabase;
@@ -470,7 +470,7 @@ export const setAiModels = createServerFn({ method: "POST" })
 
 export const setAiPreferences = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         dailyBudgetUsd: z

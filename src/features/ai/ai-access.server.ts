@@ -102,7 +102,7 @@ export const AI_ACTIVATABLE_FEATURES = AI_LIVE_FEATURES;
 
 export const setAiStudentAccess = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         studentUserId: z.guid(),

@@ -31,7 +31,7 @@ import type { Json } from "@/shared/integrations/supabase/types";
  */
 export const getAttemptProgress = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ exerciseId: z.guid() }).parse(d))
+  .validator((d) => z.object({ exerciseId: z.guid() }).parse(d))
   .handler(async ({ data, context }): Promise<Json | null> => {
     const { supabase } = context;
     try {

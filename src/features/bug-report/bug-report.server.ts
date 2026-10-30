@@ -24,7 +24,7 @@ const LOAD_ERROR_FR = "Impossible de charger les bugs signalés.";
  */
 export const reportBug = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         message: z.string().trim().min(5).max(2000),
@@ -85,7 +85,7 @@ export const getOpenBugsCount = createServerFn({ method: "GET" })
 /** Admin: resolve or dismiss a bug report. */
 export const resolveBugReport = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z.object({ reportId: z.guid(), status: z.enum(["resolved", "dismissed"]) }).parse(d),
   )
   .handler(async ({ data, context }) => {

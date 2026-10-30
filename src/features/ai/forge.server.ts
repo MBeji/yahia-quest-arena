@@ -134,7 +134,7 @@ export type ForgeResult =
 
 export const forgeQuiz = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => forgeInput.parse(d))
+  .validator((d: unknown) => forgeInput.parse(d))
   .handler(async ({ data, context }): Promise<ForgeResult> => {
     const { userId } = context;
 
@@ -337,7 +337,7 @@ export type ServedForgedQuiz = {
 
 export const getForgedQuiz = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ quizId: z.guid() }).parse(d))
+  .validator((d: unknown) => z.object({ quizId: z.guid() }).parse(d))
   .handler(async ({ data, context }): Promise<ServedForgedQuiz> => {
     const client = context.supabase;
     const { data: rows, error } = await client.rpc("serve_forged_quiz", { p_quiz: data.quizId });
@@ -379,7 +379,7 @@ export type ForgedQuizResult = {
 
 export const gradeForgedQuiz = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         quizId: z.guid(),

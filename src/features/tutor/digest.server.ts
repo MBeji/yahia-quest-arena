@@ -163,7 +163,7 @@ const storedDigestSchema = z.object({
  */
 export const getWeeklyDigest = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         audience: z.enum(TUTOR_DIGEST_AUDIENCES).default("student"),

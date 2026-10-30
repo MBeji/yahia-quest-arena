@@ -28,7 +28,7 @@ import { displayNameSchema } from "./display-name";
  */
 export const bootstrapProfile = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         displayName: displayNameSchema,
@@ -78,7 +78,7 @@ export const bootstrapProfile = createServerFn({ method: "POST" })
  */
 export const setCurrentParcours = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ parcoursId: z.string().min(1) }).parse(d))
+  .validator((d: unknown) => z.object({ parcoursId: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
     const { data: profile, error } = await supabase.rpc("set_current_parcours", {
@@ -117,7 +117,7 @@ export const setCurrentParcours = createServerFn({ method: "POST" })
  */
 export const updateDisplayName = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ displayName: displayNameSchema }).parse(d))
+  .validator((d: unknown) => z.object({ displayName: displayNameSchema }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
@@ -182,7 +182,7 @@ export const updateDisplayName = createServerFn({ method: "POST" })
  */
 export const deleteAccount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     // 320 = la longueur maximale d'une adresse e-mail (64 + @ + 255).
     z.object({ confirmEmail: z.string().trim().min(1).max(320) }).parse(d),
   )
@@ -300,7 +300,7 @@ export const exportUserData = createServerFn({ method: "POST" })
  */
 export const setProfileLocale = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z.object({ locale: z.union([z.literal("fr"), z.literal("en"), z.literal("ar")]) }).parse(d),
   )
   .handler(async ({ data, context }) => {
