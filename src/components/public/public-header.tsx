@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useT } from "@/lib/i18n";
 import { trackProductEvent } from "@/shared/lib/product-events";
 import { rememberCurrentPage } from "@/shared/lib/return-to";
-import { useAuth } from "@/features/auth";
+import { useAuth, useMyRole, useSignOutInPlace } from "@/features/auth";
 import { SettingsMenu } from "@/components/ui/settings-menu";
 import { AccountHud } from "@/components/account-hud";
 import { GuideButton } from "@/components/guide/guide-button";
@@ -13,11 +13,27 @@ import { GuideButton } from "@/components/guide/guide-button";
  * converged « Découvrir » nav, a course link, etc. — sees a link back to their
  * space, never the login/signup CTAs (which would wrongly read as "logged out").
  * Copy is i18n (fr/en/ar).
+ *
+ * é38 lot 1 :
+ *   - R-6 — tant que la session n'est pas lue (`loading`), AUCUN libellé ne dit
+ *     l'état du compte : ni « Connexion · Créer mon compte » (faux pour un
+ *     connecté), ni le HUD (faux pour un visiteur). Le SSR rend ce même bloc
+ *     neutre — réglages et aide seuls — puis la lecture de session le complète.
+ *   - R-11 — le menu des réglages d'un connecté porte « Se déconnecter », qui le
+ *     laisse SUR la page, en visiteur (US-7).
+ *   - R-14 — « Suivi parent » est la porte du parent sans compte : un élève
+ *     connecté, qui a son propre espace, ne la voit pas.
  */
 export function PublicHeader() {
   const t = useT();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  const { role } = useMyRole();
+  const signOut = useSignOutInPlace();
   const isAuthed = user != null;
+  // R-14. Le lien reste pour le visiteur (et dans le HTML rendu côté serveur) et pour le parent ou
+  // l'admin ; il n'est PAS rendu pour un connecté dont le rôle n'est pas encore lu — mieux vaut un
+  // lien qui arrive qu'un lien qui disparaît sous le doigt de l'élève.
+  const showParentTracking = !isAuthed || role === "parent" || role === "admin";
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-card/90 pt-[env(safe-area-inset-top)] backdrop-blur print:hidden">
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-3 sm:gap-3 sm:px-6">
@@ -62,12 +78,14 @@ export function PublicHeader() {
             </Link>
             {/* Suivi parent — sans compte : discoverable depuis le catalogue,
                 plus seulement depuis le bloc famille de la landing (audit §C-4). */}
-            <Link
-              to="/suivi"
-              className="inline-flex items-center rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground sm:px-3 [@media(pointer:coarse)]:min-h-11"
-            >
-              {t.public.header.parentTracking}
-            </Link>
+            {showParentTracking && (
+              <Link
+                to="/suivi"
+                className="inline-flex items-center rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground sm:px-3 [@media(pointer:coarse)]:min-h-11"
+              >
+                {t.public.header.parentTracking}
+              </Link>
+            )}
           </nav>
         </div>
         <div className="flex items-center gap-1 sm:gap-2">
@@ -77,14 +95,15 @@ export function PublicHeader() {
           {/* Sur téléphone, la marque + « Créer mon compte » remplissent déjà la
               ligne : l'aide y garde son icône, son libellé revient dès `sm`. */}
           <GuideButton compact />
-          <SettingsMenu />
-          {isAuthed ? (
+          <SettingsMenu onSignOut={isAuthed ? signOut : undefined} />
+          {loading ? null : isAuthed ? (
             <AccountHud />
           ) : (
             <>
               <Link
                 to="/login"
                 onClick={() => rememberCurrentPage()}
+                data-testid="header-login"
                 className="hidden rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground sm:inline-block"
               >
                 {t.public.header.login}
@@ -95,6 +114,7 @@ export function PublicHeader() {
                   rememberCurrentPage();
                   trackProductEvent("account_invite_clicked", { surface: "header" });
                 }}
+                data-testid="header-signup"
                 className="rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90 sm:px-4"
               >
                 {t.public.header.signup}
@@ -122,16 +142,19 @@ export function PublicHeader() {
         >
           {t.public.header.extras}
         </Link>
-        <Link
-          to="/suivi"
-          className="rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
-        >
-          {t.public.header.parentTracking}
-        </Link>
-        {!isAuthed && (
+        {showParentTracking && (
+          <Link
+            to="/suivi"
+            className="rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+          >
+            {t.public.header.parentTracking}
+          </Link>
+        )}
+        {!loading && !isAuthed && (
           <Link
             to="/login"
             onClick={() => rememberCurrentPage()}
+            data-testid="header-login-phone"
             className="rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
           >
             {t.public.header.login}

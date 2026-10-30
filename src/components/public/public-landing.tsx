@@ -96,7 +96,9 @@ const groupThousands = (n: number) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g,
 
 export function PublicLanding({ stats }: { stats?: CatalogueStats | null }) {
   const t = useT();
-  const { user } = useAuth();
+  // é38 lot 1 (R-6) : tant que la session n'est pas lue (`loading`), AUCUNE invitation n'est rendue
+  // — ni côté serveur, qui ne sait pas qui lit. « Créer mon compte » serait faux pour un connecté.
+  const { user, loading } = useAuth();
   const isAuthed = user != null;
   const isMobile = useIsMobile();
   const [mounted, setMounted] = useState(false);
@@ -448,7 +450,7 @@ export function PublicLanding({ stats }: { stats?: CatalogueStats | null }) {
             )}
             {/* Suivi sans compte : le code d'alliance suffit. La création d'un
                 compte parent reste possible (extras qui écrivent) mais optionnelle. */}
-            {!isAuthed && (
+            {!loading && !isAuthed && (
               <Link
                 to="/auth"
                 search={{ mode: "signup", role: "parent" }}
@@ -488,19 +490,25 @@ export function PublicLanding({ stats }: { stats?: CatalogueStats | null }) {
               </li>
             </ul>
             {/* Auth-aware CTA: a signed-in visitor already has an account → send them to
-                their gameplay home, not the signup page (mirrors the auth-aware header). */}
-            <Link
-              to={isAuthed ? "/dashboard" : "/signup"}
-              onClick={
-                isAuthed
-                  ? undefined
-                  : () => trackProductEvent("account_invite_clicked", { surface: "landing" })
-              }
-              className="mt-7 inline-flex items-center gap-2 rounded-lg bg-amber-400 px-6 py-3 text-base font-bold text-[#15120d] transition hover:bg-amber-300"
-            >
-              {isAuthed ? t.public.landing.gameCtaAuthed : t.public.landing.gameCta}{" "}
-              <ArrowRight className="h-5 w-5 rtl:-scale-x-100" />
-            </Link>
+                their gameplay home, not the signup page (mirrors the auth-aware header).
+                Pendant la lecture de la session, la place est gardée (h-12 = la hauteur du
+                bouton) et le libellé arrive après : ni l'un ni l'autre ne se devine. */}
+            {loading ? (
+              <div aria-hidden="true" className="mt-7 h-12" />
+            ) : (
+              <Link
+                to={isAuthed ? "/dashboard" : "/signup"}
+                onClick={
+                  isAuthed
+                    ? undefined
+                    : () => trackProductEvent("account_invite_clicked", { surface: "landing" })
+                }
+                className="mt-7 inline-flex items-center gap-2 rounded-lg bg-amber-400 px-6 py-3 text-base font-bold text-[#15120d] transition hover:bg-amber-300"
+              >
+                {isAuthed ? t.public.landing.gameCtaAuthed : t.public.landing.gameCta}{" "}
+                <ArrowRight className="h-5 w-5 rtl:-scale-x-100" />
+              </Link>
+            )}
           </div>
           <div className="relative aspect-square overflow-hidden rounded-3xl border border-amber-400/20 bg-black/40">
             {show3D ? (

@@ -197,6 +197,30 @@ describe("ExercisePlayer", () => {
     );
   });
 
+  // é38 lot 1 (R-8) — la récompense de la mission est lue sur la ligne `exercises` déjà servie
+  // aux deux registres, et traverse jusqu'au pied de résultat de la route.
+  it.each([
+    ["une récompense connue", 40, 40],
+    ["une récompense nulle", 0, null],
+    ["une récompense absente", undefined, null],
+  ])("le pied de résultat reçoit xpReward — %s", async (_label, xpReward, expected) => {
+    const data = exerciseData();
+    mockGetExercise.mockResolvedValue({
+      ...data,
+      exercise: { ...data.exercise, xp_reward: xpReward },
+    });
+    const renderResultFooter = vi.fn(() => <div data-testid="footer">footer</div>);
+    renderPlayer(anonStrategy({ renderResultFooter }));
+
+    fireEvent.click(await screen.findByText("2"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+    await screen.findByTestId("footer");
+
+    expect(renderResultFooter).toHaveBeenCalledWith(
+      expect.objectContaining({ exerciseId: EXERCISE_ID, xpReward: expected }),
+    );
+  });
+
   it("renders the reward grid on the result screen when rewards are enabled", async () => {
     const rewardResult: PlayerResult = {
       ...neutralResult,

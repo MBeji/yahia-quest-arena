@@ -195,6 +195,8 @@ export const frPublic: TranslationKeys["public"] = {
     // Jamais bloquant, jamais de compte à rebours : la pratique reste ouverte.
     inviteDesc:
       "Sans compte, tes XP, ta série et tes badges ne sont pas conservés. Crée-en un pour garder tes prochains XP, ta série et ta progression.",
+    // é38 R-8 — la VALEUR de la mission, en gain futur, quand `xp_reward` est connu.
+    inviteValue: "Avec un compte, cette mission vaut jusqu’à {xp} XP.",
     inviteCta: "Créer mon compte",
   },
   print: {

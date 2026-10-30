@@ -50,6 +50,7 @@ export function QuestResultScreen({
   correctionVideo,
   exerciseId,
   nextExerciseId,
+  xpReward,
   showConfetti,
   showLevelUp,
   onLevelUpComplete,
@@ -78,6 +79,8 @@ export function QuestResultScreen({
   correctionVideo: CompiledVideo | null;
   exerciseId: string;
   nextExerciseId: string | null;
+  /** Transmis tel quel au pied de résultat de la route (é38 R-8). */
+  xpReward: number | null;
   showConfetti: boolean;
   showLevelUp: boolean;
   onLevelUpComplete: () => void;
@@ -98,6 +101,7 @@ export function QuestResultScreen({
     exerciseId: string;
     subjectId: string | null;
     nextExerciseId: string | null;
+    xpReward: number | null;
     onReplay: () => void;
     result: PlayerResult;
   }) => ReactNode;
@@ -373,6 +377,7 @@ export function QuestResultScreen({
             exerciseId,
             subjectId,
             nextExerciseId,
+            xpReward,
             onReplay,
             result,
           })}

@@ -173,7 +173,7 @@ function ExercicePage() {
           explanation: item.explanation,
         };
       },
-      renderResultFooter: ({ exerciseId: exId, subjectId, onReplay }) => (
+      renderResultFooter: ({ exerciseId: exId, subjectId, xpReward, onReplay }) => (
         <div className="mt-8 space-y-4">
           {/* Quiz just passed → the chapter is unlocked: continue straight into
               its first exercise instead of scrolling back through the hub. */}
@@ -219,7 +219,13 @@ function ExercicePage() {
             ) : (
               <div className="rounded-2xl border border-primary/30 bg-primary/[0.04] p-5 text-center">
                 <Sparkles className="mx-auto h-6 w-6 text-primary" />
-                <p className="mt-2 text-sm font-semibold">{t.public.practice.inviteDesc}</p>
+                {/* é38 R-8 : la VALEUR de la mission, en gain futur, quand elle est connue ;
+                    sinon la phrase sans chiffre (é31 R-20). */}
+                <p className="mt-2 text-sm font-semibold">
+                  {xpReward === null
+                    ? t.public.practice.inviteDesc
+                    : t.public.practice.inviteValue.replace("{xp}", String(xpReward))}
+                </p>
                 <Link
                   to="/signup"
                   onClick={() => {
