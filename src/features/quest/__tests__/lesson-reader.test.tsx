@@ -4,8 +4,32 @@ import React from "react";
 
 // Stub TanStack Link → <a href={to}> so we can assert navigation targets without a router.
 vi.mock("@tanstack/react-router", () => ({
-  Link: ({ children, to }: { children: React.ReactNode; to: string }) =>
-    React.createElement("a", { href: to }, children),
+  Link: ({
+    children,
+    to,
+    onClick,
+  }: {
+    children: React.ReactNode;
+    to: string;
+    onClick?: () => void;
+  }) =>
+    React.createElement(
+      "a",
+      {
+        href: to,
+        onClick: (e: React.MouseEvent) => {
+          e.preventDefault();
+          onClick?.();
+        },
+      },
+      children,
+    ),
+}));
+
+// é38 lot 0 : les clics d'invitation émettent `account_invite_clicked`.
+const trackProductEvent = vi.fn();
+vi.mock("@/shared/lib/product-events", () => ({
+  trackProductEvent: (...a: unknown[]) => trackProductEvent(...a),
 }));
 
 // The « Pages du manuel » section self-fetches (useQuery + a gated server fn); stub it
@@ -382,5 +406,18 @@ describe("LessonReader", () => {
     );
     expect(container.querySelector(".lesson-blk--piege")?.textContent).toContain("تحذير");
     expect(container.querySelector(".lesson-blk--piege")?.textContent).not.toContain("Piège");
+  });
+});
+
+describe("LessonReader — invitation mesurée (é38 lot 0)", () => {
+  it("l'invitation douce sous le cours émet account_invite_clicked depuis le lecteur", () => {
+    trackProductEvent.mockClear();
+    const { container } = render(
+      <LessonReader chapterId="c1" chapter={chapter} allChapters={siblings} />,
+    );
+    fireEvent.click(container.querySelector('a[href="/signup"]') as HTMLElement);
+    expect(trackProductEvent).toHaveBeenCalledWith("account_invite_clicked", {
+      surface: "reader",
+    });
   });
 });

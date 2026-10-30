@@ -26,6 +26,7 @@ import heroWebp1920 from "@/assets/hero-warrior-1920.webp";
 import { useAuth } from "@/features/auth";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useT } from "@/lib/i18n";
+import { trackProductEvent } from "@/shared/lib/product-events";
 
 /**
  * Public landing — « Référence » register (chantier C8, L1.2). Repositioned from the
@@ -451,6 +452,7 @@ export function PublicLanding({ stats }: { stats?: CatalogueStats | null }) {
               <Link
                 to="/auth"
                 search={{ mode: "signup", role: "parent" }}
+                onClick={() => trackProductEvent("account_invite_clicked", { surface: "landing" })}
                 className="mt-3 inline-flex items-center justify-center gap-1.5 text-sm font-medium text-muted-foreground transition hover:text-foreground"
               >
                 {t.public.landing.familleCta}
@@ -489,6 +491,11 @@ export function PublicLanding({ stats }: { stats?: CatalogueStats | null }) {
                 their gameplay home, not the signup page (mirrors the auth-aware header). */}
             <Link
               to={isAuthed ? "/dashboard" : "/signup"}
+              onClick={
+                isAuthed
+                  ? undefined
+                  : () => trackProductEvent("account_invite_clicked", { surface: "landing" })
+              }
               className="mt-7 inline-flex items-center gap-2 rounded-lg bg-amber-400 px-6 py-3 text-base font-bold text-[#15120d] transition hover:bg-amber-300"
             >
               {isAuthed ? t.public.landing.gameCtaAuthed : t.public.landing.gameCta}{" "}

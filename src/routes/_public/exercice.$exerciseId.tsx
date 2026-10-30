@@ -14,9 +14,14 @@ import {
   type PlayerResult,
   type StartOutcome,
 } from "@/features/quest/components/exercise-player";
-import { MIN_SECONDS_PER_QUESTION, QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
+import {
+  MIN_SECONDS_PER_QUESTION,
+  PASS_THRESHOLD_PCT,
+  QUIZ_PASS_THRESHOLD_PCT,
+} from "@/shared/constants/gamification";
 import { useAuth } from "@/features/auth";
 import { useT } from "@/lib/i18n";
+import { trackProductEvent } from "@/shared/lib/product-events";
 
 /**
  * Public « entraînement » register — login-free. Thin: builds the anonymous
@@ -98,6 +103,13 @@ function ExercicePage() {
           const reachedScore = scorePct >= QUIZ_PASS_THRESHOLD_PCT;
           const passedNow = reachedScore && notRushed;
           if (passedNow) markChapterQuizPassed(chapterId);
+          // é38 lot 0 (R-16) — le premier fait du tunnel sans compte : un entraînement
+          // terminé. Aucun identifiant de personne : un id de catalogue et deux booléens.
+          trackProductEvent("public_practice_completed", {
+            exercise_id: exId,
+            is_quiz: true,
+            passed: passedNow,
+          });
           quizJustPassedRef.current = passedNow;
           nextPracticeRef.current = null;
           if (passedNow) {
@@ -122,6 +134,11 @@ function ExercicePage() {
         }
         quizJustPassedRef.current = false;
         const r = await check({ data: { exerciseId: exId, answers } });
+        trackProductEvent("public_practice_completed", {
+          exercise_id: exId,
+          is_quiz: false,
+          passed: r.scorePct >= PASS_THRESHOLD_PCT,
+        });
         return {
           correct: r.correct,
           total: r.total,
@@ -204,6 +221,9 @@ function ExercicePage() {
                 <p className="mt-2 text-sm font-semibold">{t.public.practice.inviteDesc}</p>
                 <Link
                   to="/signup"
+                  onClick={() =>
+                    trackProductEvent("account_invite_clicked", { surface: "practice" })
+                  }
                   className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
                 >
                   {t.public.practice.inviteCta}

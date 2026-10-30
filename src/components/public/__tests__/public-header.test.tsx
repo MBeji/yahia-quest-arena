@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
@@ -6,8 +6,32 @@ import React from "react";
 // Match the lightweight router stub used by the sibling PublicLanding test: the
 // header only needs <Link> to render an anchor with its `to` as the href.
 vi.mock("@tanstack/react-router", () => ({
-  Link: ({ children, to }: { children: React.ReactNode; to: string }) =>
-    React.createElement("a", { href: to }, children),
+  Link: ({
+    children,
+    to,
+    onClick,
+  }: {
+    children: React.ReactNode;
+    to: string;
+    onClick?: () => void;
+  }) =>
+    React.createElement(
+      "a",
+      {
+        href: to,
+        onClick: (e: React.MouseEvent) => {
+          e.preventDefault();
+          onClick?.();
+        },
+      },
+      children,
+    ),
+}));
+
+// é38 lot 0 : les clics d'invitation émettent `account_invite_clicked`.
+const trackProductEvent = vi.fn();
+vi.mock("@/shared/lib/product-events", () => ({
+  trackProductEvent: (...a: unknown[]) => trackProductEvent(...a),
 }));
 
 // The header is auth-aware; mock useAuth so we can drive both states.
@@ -91,5 +115,28 @@ describe("PublicHeader", () => {
     // The brand logo now points at the dashboard.
     const brand = screen.getByText("Na9ra Nal3ab").closest("a");
     expect(brand).toHaveAttribute("href", "/dashboard");
+  });
+});
+
+describe("PublicHeader — invitation mesurée (é38 lot 0)", () => {
+  beforeEach(() => {
+    trackProductEvent.mockClear();
+    mockUseAuth.mockReturnValue({ user: null, session: null, loading: false });
+  });
+
+  it("« Créer mon compte » émet l'invitation depuis l'en-tête", () => {
+    const { container } = renderHeader();
+    fireEvent.click(container.querySelector('a[href="/signup"]') as HTMLElement);
+    expect(trackProductEvent).toHaveBeenCalledWith("account_invite_clicked", {
+      surface: "header",
+    });
+  });
+
+  it("« Connexion » n'est pas une invitation : un compte existe déjà, rien à mesurer", () => {
+    const { container } = renderHeader();
+    for (const link of container.querySelectorAll('a[href="/login"]')) {
+      fireEvent.click(link);
+    }
+    expect(trackProductEvent).not.toHaveBeenCalled();
   });
 });

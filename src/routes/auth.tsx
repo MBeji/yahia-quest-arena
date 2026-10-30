@@ -13,6 +13,7 @@ import { CrownMark } from "@/components/brand-mark";
 import { useT } from "@/lib/i18n";
 import { useEntrance } from "@/shared/lib/motion";
 import { trackProductEvent } from "@/shared/lib/product-events";
+import { cameFromContent } from "@/shared/lib/funnel-origin";
 import type { TranslationKeys } from "@/lib/i18n/types";
 
 /** `AuthError.code` when supabase-js exposes one (it is absent on plain Errors). */
@@ -58,6 +59,44 @@ export function friendlyAuthError(t: TranslationKeys, err: unknown): string {
 function cooldownFromError(err: unknown): number {
   const m = err instanceof Error ? /after (\d+) seconds?/i.exec(err.message) : null;
   return m ? Number(m[1]) : 0;
+}
+
+/** Ce que `isFreshGoogleSignIn` lit d'une session — le type de Supabase s'y range tel quel. */
+type SignInProbe = {
+  user: {
+    app_metadata?: { provider?: string };
+    identities?: { provider: string; last_sign_in_at?: string }[] | null;
+    last_sign_in_at?: string;
+  };
+};
+
+/** En deçà, la session est celle d'une connexion qui vient d'avoir lieu, pas d'une session retrouvée. */
+const FRESH_SIGN_IN_MS = 60_000;
+
+/**
+ * La session qui vient de s'ouvrir est-elle un retour de Google ?
+ *
+ * ⚠️ Ni `?code=` ni le fragment : le client Supabase du projet n'a pas de `flowType`, donc c'est le
+ * flux IMPLICITE (le défaut de la librairie), où le retour arrive dans `#access_token=…` et jamais
+ * dans `?code=`. Chercher un `code` dans l'URL aurait laissé cet événement muet en production, sans
+ * qu'aucun test le dise. La session, elle, dit les deux choses qu'il faut : QUELLE identité vient
+ * de servir (la plus récemment connectée — un compte peut en porter plusieurs) et QUAND. Le délai
+ * écarte l'onglet qu'on retrouve : l'événement SIGNED_IN y repart aussi, avec une session ancienne.
+ * Un retour de lien de confirmation e-mail, lui, porte l'identité « email » : ce n'est pas Google.
+ */
+export function isFreshGoogleSignIn(session: SignInProbe, now: number): boolean {
+  const latest = (session.user.identities ?? []).reduce<{ provider: string; at: number } | null>(
+    (best, identity) => {
+      const at = Date.parse(identity.last_sign_in_at ?? "");
+      return Number.isFinite(at) && (!best || at > best.at)
+        ? { provider: identity.provider, at }
+        : best;
+    },
+    null,
+  );
+  const provider = latest?.provider ?? session.user.app_metadata?.provider;
+  const at = latest?.at ?? Date.parse(session.user.last_sign_in_at ?? "");
+  return provider === "google" && Number.isFinite(at) && now - at < FRESH_SIGN_IN_MS;
 }
 
 export const Route = createFileRoute("/auth")({
@@ -137,8 +176,22 @@ function AuthPage() {
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) navigate({ to: "/dashboard" });
     });
-    const { data: authSub } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) navigate({ to: "/dashboard" });
+    let googleLoginTracked = false;
+    const { data: authSub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        // é38 lot 0 — le retour de Google (voir isFreshGoogleSignIn : jamais `?code=`).
+        // `from_content` est ABSENT : la page a été rechargée chez Google, l'origine est
+        // perdue — « inconnu » n'est pas « non » (funnel-origin.ts).
+        if (
+          event === "SIGNED_IN" &&
+          !googleLoginTracked &&
+          isFreshGoogleSignIn(session, Date.now())
+        ) {
+          googleLoginTracked = true;
+          trackProductEvent("login", { method: "google", reason: "fresh", return_to_kept: false });
+        }
+        navigate({ to: "/dashboard" });
+      }
     });
 
     // 3) Fallback: arrived from the OAuth callback (?code=) but no session
@@ -246,7 +299,12 @@ function AuthPage() {
         // sur le chemin « confirme ton adresse » où l'élève ne revient parfois
         // jamais : c'est justement la fuite qu'on veut voir. Aucune PII — le
         // rôle choisi, rien d'autre.
-        trackProductEvent("signup", { role, needs_confirmation: !data.session });
+        trackProductEvent("signup", {
+          role,
+          needs_confirmation: !data.session,
+          return_to_kept: false,
+          from_content: cameFromContent(),
+        });
 
         // Profile bootstrap (display name + role) is extracted to the
         // `bootstrapProfile` server fn (review #19). It is authenticated, so it can
@@ -285,6 +343,13 @@ function AuthPage() {
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
+        // é38 lot 0 : `reason: "expired"` et `return_to_kept: true` arrivent avec les lots 3 et 1.
+        trackProductEvent("login", {
+          method: "password",
+          reason: "fresh",
+          return_to_kept: false,
+          from_content: cameFromContent(),
+        });
         toast.success(t.auth.toastLoginSuccess);
         navigate({ to: "/dashboard" });
       }
