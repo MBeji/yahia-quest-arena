@@ -37,6 +37,20 @@ test.describe("Logout", () => {
       await expect(page).toHaveURL(/\/auth/, { timeout: 3000 });
     }).toPass({ timeout: 30_000 });
   });
+
+  // é38 lot 1 (R-11, US-7) : la coquille PUBLIC n'est pas un espace de compte. Se déconnecter
+  // depuis un cours laisse le visiteur sur le cours, en visiteur — ni /auth, ni l'accueil.
+  test("signing out from a public page keeps the visitor on that page", async ({ page, nav }) => {
+    await page.goto("/programme");
+    await expect(async () => {
+      await nav.openSettings();
+      await nav.settingsMenu.getByRole("button", { name: /sign out|déconnexion/i }).click();
+      // Le HUD laisse la place à l'invitation : la session est bien terminée.
+      await expect(page.getByTestId("header-signup")).toBeVisible({ timeout: 3000 });
+    }).toPass({ timeout: 30_000 });
+
+    await expect(page).toHaveURL(/\/programme$/);
+  });
 });
 
 // Regression net (hérité) : le rôle admin a la nav la plus longue. Ces liens

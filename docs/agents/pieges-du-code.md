@@ -445,6 +445,25 @@ récemment connectée, depuis moins d'une minute). L'événement `SIGNED_IN` rep
 retrouve un onglet, avec une session ancienne : c'est le délai qui l'écarte. Un lien de
 confirmation d'e-mail porte l'identité `email`, jamais `google`.
 
+## `signOut()` renvoie son erreur sans la lever — et la session de l'appareil est partie malgré elle
+
+**Symptôme évité** (é38 lot 1) : lire `{ error }` après `supabase.auth.signOut()` comme « je suis
+resté connecté », afficher une alerte, ne pas vider l'écran — alors que l'appareil n'a plus de
+session et que `useAuth` a déjà reçu `SIGNED_OUT`.
+
+**Cause** : dans `@supabase/auth-js` 2.118.0, `_signOut` appelle d'abord la révocation côté serveur ;
+si elle échoue autrement que par 401, 403 ou 404 (réseau coupé, 5xx), il **retire quand même la
+session locale** (`removeCurrentSession()`) avant de renvoyer l'erreur
+(`node_modules/@supabase/auth-js/dist/main/GoTrueClient.js`, autour de la ligne 3446). L'erreur dit
+« le serveur n'a pas révoqué le jeton », pas « tu es encore connecté ». Et elle n'est jamais levée :
+un `try/catch` autour de `signOut()` ne voit que les exceptions de plomberie (verrou, stockage).
+
+**Ce qu'on fait** : [`use-sign-out-in-place.ts`](../../src/features/auth/use-sign-out-in-place.ts)
+relit la **session** quand `signOut()` échoue, et ne dit « échec » que si elle est restée — dans le
+doute (lecture impossible), elle est tenue pour ouverte. Les deux autres déconnexions
+(`_authenticated.tsx`, `parametrage.tsx`) ignorent l'erreur : c'est cohérent avec ce comportement,
+et le jeton non révoqué expire de lui-même.
+
 ## Règles laissées par les chantiers d'août-septembre 2026
 
 Sorties de `STATUS.md` le 2026-09-22 (son § 6 les portait) ; le détail et les mesures sont dans

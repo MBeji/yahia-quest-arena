@@ -59,7 +59,8 @@ vi.mock("@/features/quest/components/exercise-player", () => ({
     return null;
   },
 }));
-vi.mock("@/features/auth", () => ({ useAuth: () => ({ user: null, loading: false }) }));
+const authState = vi.hoisted(() => ({ user: null as { id: string } | null, loading: false }));
+vi.mock("@/features/auth", () => ({ useAuth: () => authState }));
 
 import { Route } from "../_public/exercice.$exerciseId";
 import { peekReturnTo } from "@/shared/lib/return-to";
@@ -156,6 +157,7 @@ describe("entraînement public — public_practice_completed (é38 lot 0)", () =
           exerciseId: "ex-1",
           subjectId: "s1",
           nextExerciseId: null,
+          xpReward: null,
           onReplay: () => {},
           result: {} as never,
         })}
@@ -180,6 +182,7 @@ describe("entraînement public — le retour au point de départ (é38 lot 1)", 
           exerciseId: "ex-1",
           subjectId: "s1",
           nextExerciseId: null,
+          xpReward: null,
           onReplay: () => {},
           result: {} as never,
         })}
@@ -190,5 +193,72 @@ describe("entraînement public — le retour au point de départ (é38 lot 1)", 
     expect(peekReturnTo()).toBe("/exercice/ex-1");
     window.history.replaceState({}, "", "/");
     window.localStorage.clear();
+  });
+});
+
+describe("entraînement public — la valeur de la mission dans l'invitation (é38 lot 1, R-8)", () => {
+  /** Rend le pied de résultat comme le lecteur le ferait, avec la récompense qu'il lui passe. */
+  function renderFooter(xpReward: number | null) {
+    const strategy = mountStrategy();
+    return render(
+      <div>
+        {strategy.renderResultFooter({
+          exerciseId: "ex-1",
+          subjectId: "s1",
+          nextExerciseId: null,
+          xpReward,
+          onReplay: () => {},
+          result: {} as never,
+        })}
+      </div>,
+    );
+  }
+
+  beforeEach(() => {
+    authState.user = null;
+    authState.loading = false;
+  });
+
+  it("une mission à 40 XP promet « jusqu'à 40 XP » — un gain futur, jamais une perte", () => {
+    const { container } = renderFooter(40);
+
+    expect(container.textContent).toContain("jusqu’à 40 XP");
+    expect(container.textContent).not.toMatch(/perdu|perdre|ne sont pas conservés/i);
+  });
+
+  it("la phrase de valeur REMPLACE la phrase sans chiffre : une seule explication à l'écran", () => {
+    const { container } = renderFooter(40);
+
+    expect(container.textContent).not.toContain("Sans compte, tes XP");
+  });
+
+  it("sans récompense connue, la phrase actuelle reste — aucun chiffre inventé", () => {
+    const { container } = renderFooter(null);
+
+    expect(container.textContent).toContain("Sans compte, tes XP");
+    expect(container.textContent).not.toMatch(/jusqu’à \d/);
+  });
+
+  it("le chiffre est celui de la mission, rien d'autre", () => {
+    const { container } = renderFooter(125);
+
+    expect(container.textContent).toContain("jusqu’à 125 XP");
+  });
+
+  it("un connecté ne lit aucune invitation — il garde le lien vers la quête", () => {
+    authState.user = { id: "u1" };
+    const { container } = renderFooter(40);
+
+    expect(container.querySelector('a[href="/signup"]')).toBeNull();
+    expect(container.textContent).not.toContain("jusqu’à 40 XP");
+    expect(container.querySelector('a[href="/quest/$exerciseId"]')).not.toBeNull();
+  });
+
+  it("pendant la lecture de la session, ni l'une ni l'autre des deux cartes", () => {
+    authState.loading = true;
+    const { container } = renderFooter(40);
+
+    expect(container.querySelector('a[href="/signup"]')).toBeNull();
+    expect(container.querySelector('a[href="/quest/$exerciseId"]')).toBeNull();
   });
 });

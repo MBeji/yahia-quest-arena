@@ -164,6 +164,8 @@ export type ExercisePlayerStrategy = {
     exerciseId: string;
     subjectId: string | null;
     nextExerciseId: string | null;
+    /** Ce que la mission rapporte (`exercises.xp_reward`), ou `null` quand rien n'est à promettre — é38 R-8. */
+    xpReward: number | null;
     onReplay: () => void;
     result: PlayerResult;
   }) => ReactNode;
@@ -642,6 +644,9 @@ export function ExercisePlayer({
 
   const chapterId = (data.exercise.chapter_id as string | null) ?? null;
   const exSubjectId = (data.exercise.subject_id as string | null) ?? null;
+  // La colonne est servie telle quelle aux deux registres. Une valeur absente ou égale à 0 ne
+  // promet rien : le pied de résultat garde alors sa phrase sans chiffre.
+  const xpReward = data.exercise.xp_reward > 0 ? data.exercise.xp_reward : null;
 
   // Premium gate (connected only): the strategy owns the paywall layout.
   if (startGate?.kind === "premium") {
@@ -711,6 +716,7 @@ export function ExercisePlayer({
         correctionVideo={data?.correctionVideo ?? null}
         exerciseId={exerciseId}
         nextExerciseId={nextExerciseId}
+        xpReward={xpReward}
         showConfetti={showConfetti}
         showLevelUp={showLevelUp}
         onLevelUpComplete={() => setShowLevelUp(false)}

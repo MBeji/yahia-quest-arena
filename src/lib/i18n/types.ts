@@ -1262,6 +1262,8 @@ export type TranslationKeys = {
       questCta: string;
       continueCta: string;
       inviteDesc: string;
+      /** Invitation quand la mission a une récompense connue — `{xp}`. Gain futur, jamais une perte (é31 R-20, é38 R-8). */
+      inviteValue: string;
       inviteCta: string;
     };
     print: { copyrightNotice: string };

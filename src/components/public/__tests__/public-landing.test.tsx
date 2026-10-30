@@ -196,3 +196,43 @@ describe("PublicLanding — invitations mesurées (é38 lot 0)", () => {
     expect(trackProductEvent).not.toHaveBeenCalled();
   });
 });
+
+describe("PublicLanding — aucune invitation ne devine le compte (é38 lot 1, R-6)", () => {
+  it("pendant la lecture de la session : ni « Créer mon compte gratuit », ni « Créer mon compte parent », ni « Continuer à jouer »", () => {
+    mockUseAuth.mockReturnValue({ user: null, session: null, loading: true });
+    const { container } = render(<PublicLanding />);
+
+    const game = container.querySelector('[data-testid="game-block"]') as HTMLElement;
+    expect(game.querySelector("a")).toBeNull();
+    expect(container.querySelector('a[href="/signup"]')).toBeNull();
+    expect(container.querySelector('a[href="/dashboard"]')).toBeNull();
+    expect(screen.queryByText(/créer mon compte/i)).toBeNull();
+    expect(screen.queryByText(/continuer à jouer/i)).toBeNull();
+  });
+
+  it("le reste de la vitrine est là dès le HTML rendu : le catalogue et le suivi sans compte", () => {
+    mockUseAuth.mockReturnValue({ user: null, session: null, loading: true });
+    const { container } = render(<PublicLanding />);
+
+    expect(container.querySelector('a[href="/programme"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/suivi"]')).not.toBeNull();
+  });
+
+  it("la lecture finie, le visiteur retrouve ses deux invitations", () => {
+    mockUseAuth.mockReturnValue({ user: null, session: null, loading: false });
+    const { container } = render(<PublicLanding />);
+
+    expect(screen.getByText("Créer mon compte gratuit")).toBeInTheDocument();
+    expect(screen.getByText("Créer mon compte parent")).toBeInTheDocument();
+    expect(container.querySelector('a[href="/signup"]')).not.toBeNull();
+  });
+
+  it("la lecture finie, le connecté n'en voit aucune", () => {
+    mockUseAuth.mockReturnValue({ user: { id: "u1" }, session: {}, loading: false });
+    const { container } = render(<PublicLanding />);
+
+    expect(screen.queryByText(/créer mon compte/i)).toBeNull();
+    expect(container.querySelector('a[href="/signup"]')).toBeNull();
+    expect(screen.getByText("Continuer à jouer")).toBeInTheDocument();
+  });
+});
