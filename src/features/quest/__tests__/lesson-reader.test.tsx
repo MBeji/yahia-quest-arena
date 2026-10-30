@@ -41,6 +41,7 @@ vi.mock("../components/manuel-pages-section", () => ({ ManuelPagesSection: () =>
 vi.mock("../components/chapter-videos-section", () => ({ ChapterVideosSection: () => null }));
 
 import { LessonReader, type LessonReaderChapter } from "../components/lesson-reader";
+import { peekReturnTo } from "@/shared/lib/return-to";
 
 const chapter: LessonReaderChapter = {
   title: "Le présent : être et avoir",
@@ -419,5 +420,20 @@ describe("LessonReader — invitation mesurée (é38 lot 0)", () => {
     expect(trackProductEvent).toHaveBeenCalledWith("account_invite_clicked", {
       surface: "reader",
     });
+  });
+});
+
+describe("LessonReader — le retour au point de départ (é38 lot 1)", () => {
+  it("l'invitation retient la page du cours : on y revient une fois le compte créé", () => {
+    window.localStorage.clear();
+    window.history.replaceState({}, "", "/chapitre/c1");
+    const { container } = render(
+      <LessonReader chapterId="c1" chapter={chapter} allChapters={siblings} />,
+    );
+    fireEvent.click(container.querySelector('a[href="/signup"]') as HTMLElement);
+
+    expect(peekReturnTo()).toBe("/chapitre/c1");
+    window.history.replaceState({}, "", "/");
+    window.localStorage.clear();
   });
 });

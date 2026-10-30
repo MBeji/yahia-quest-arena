@@ -419,6 +419,32 @@ vulnérable d'un paquet qu'il surveille — ici `errorCode: BLOCKED_PACKAGE`,
   `errorMessage` et le détail du dernier déploiement en échec ;
 - corriger dans le dépôt (montée du paquet, #1172) — jamais `DANGEROUSLY_DEPLOY_*`.
 
+## Le retour d'une connexion Google ne se lit pas dans l'URL : le client du projet est en flux implicite
+
+**Symptôme évité** (é38 lot 0) : détecter le retour de Google par un `?code=` dans l'adresse
+n'émet **jamais** l'événement `login` — sans erreur, sans test rouge, puisqu'un test qui fournit
+lui-même `?code=` passe.
+
+**Cause** : `src/shared/integrations/supabase/client.ts` crée le client **sans `flowType`**, donc avec
+le défaut de la librairie, `implicit`. Le retour d'un OAuth (et d'un lien de confirmation d'e-mail)
+y arrive dans le **fragment** — `#access_token=…` — que `detectSessionInUrl` consomme puis efface ;
+un `?code=` n'existe qu'en PKCE. Les branches de `auth.tsx` qui cherchent `code` (l'avertissement
+à 2,5 s « connexion Google incomplète ») ne peuvent donc pas se déclencher dans la configuration
+actuelle.
+
+**Mesuré le 2026-10-30** : `grep -rn "flowType:" src supabase/config.toml` ne trouve rien (l'option
+n'est posée nulle part) ; dans
+`@supabase/auth-js` 2.118.0, `grep -n "flowType: 'implicit'" node_modules/@supabase/auth-js/dist/main/GoTrueClient.js`
+donne la ligne 24 (`DEFAULT_OPTIONS`). **Non mesuré** : le retour réel de Google en production n'a
+pas été observé — la conclusion vient du code installé, pas d'une requête. Si quelqu'un l'observe,
+qu'il corrige cette entrée dans un sens ou dans l'autre.
+
+**Ce qu'on fait à la place** : se fier à la **session**, qui dit QUELLE identité vient de servir et
+QUAND — `isFreshGoogleSignIn` dans [`auth.tsx`](../../src/routes/auth.tsx) (l'identité la plus
+récemment connectée, depuis moins d'une minute). L'événement `SIGNED_IN` repart aussi quand on
+retrouve un onglet, avec une session ancienne : c'est le délai qui l'écarte. Un lien de
+confirmation d'e-mail porte l'identité `email`, jamais `google`.
+
 ## Règles laissées par les chantiers d'août-septembre 2026
 
 Sorties de `STATUS.md` le 2026-09-22 (son § 6 les portait) ; le détail et les mesures sont dans

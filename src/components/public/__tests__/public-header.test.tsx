@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { peekReturnTo } from "@/shared/lib/return-to";
 import React from "react";
 
 // Match the lightweight router stub used by the sibling PublicLanding test: the
@@ -138,5 +139,45 @@ describe("PublicHeader — invitation mesurée (é38 lot 0)", () => {
       fireEvent.click(link);
     }
     expect(trackProductEvent).not.toHaveBeenCalled();
+  });
+});
+
+describe("PublicHeader — le retour au point de départ (é38 lot 1)", () => {
+  beforeEach(() => {
+    window.localStorage.clear();
+    mockUseAuth.mockReturnValue({ user: null, session: null, loading: false });
+  });
+  afterEach(() => {
+    window.history.replaceState({}, "", "/");
+    window.localStorage.clear();
+  });
+
+  it("« Créer mon compte » retient la page où l'on est, requête comprise", () => {
+    window.history.replaceState({}, "", "/chapitre/c1?x=1");
+    const { container } = renderHeader();
+    fireEvent.click(container.querySelector('a[href="/signup"]') as HTMLElement);
+
+    expect(peekReturnTo()).toBe("/chapitre/c1?x=1");
+  });
+
+  it("« Connexion » aussi — au bureau comme sur la rangée de téléphone", () => {
+    window.history.replaceState({}, "", "/programme");
+    const { container } = renderHeader();
+    const links = container.querySelectorAll('a[href="/login"]');
+    expect(links).toHaveLength(2);
+
+    for (const link of links) {
+      window.localStorage.clear();
+      fireEvent.click(link);
+      expect(peekReturnTo()).toBe("/programme");
+    }
+  });
+
+  it("depuis l'accueil rien n'est retenu : le Hall vaut mieux que la vitrine", () => {
+    window.history.replaceState({}, "", "/");
+    const { container } = renderHeader();
+    fireEvent.click(container.querySelector('a[href="/signup"]') as HTMLElement);
+
+    expect(peekReturnTo()).toBeNull();
   });
 });
