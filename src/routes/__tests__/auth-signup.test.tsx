@@ -3,13 +3,15 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 
 const mockNavigate = vi.fn();
-const mockSearch: { mode: string; role?: "parent" } = { mode: "signup" };
+const mockPush = vi.fn();
+const mockSearch: { mode: string; role?: "parent"; returnTo?: string } = { mode: "signup" };
 vi.mock("@tanstack/react-router", () => ({
   createFileRoute: () => (opts: Record<string, unknown>) => ({
     ...opts,
     useSearch: () => mockSearch,
   }),
   useNavigate: () => mockNavigate,
+  useRouter: () => ({ history: { push: mockPush } }),
   Link: ({ children, to }: { children: React.ReactNode; to: string }) =>
     React.createElement("a", { href: to }, children),
 }));
@@ -54,6 +56,7 @@ vi.mock("@/shared/lib/product-events", () => ({
 }));
 
 import { notePageForFunnel } from "@/shared/lib/funnel-origin";
+import { peekReturnTo, rememberReturnTo } from "@/shared/lib/return-to";
 import { Route, friendlyAuthError, isEmailNotConfirmed, isFreshGoogleSignIn } from "../auth";
 
 // The page itself is NOT exported: exporting a route's component defeats TanStack
@@ -73,6 +76,15 @@ function submitSignup(email = "hero@example.com") {
     target: { value: "motdepasse123" },
   });
   fireEvent.click(screen.getByRole("button", { name: /Créer mon compte/ }));
+}
+
+/** Fill the login form and submit it. */
+function submitLogin(email = "a@example.com") {
+  fireEvent.change(screen.getByPlaceholderText("Email"), { target: { value: email } });
+  fireEvent.change(screen.getByPlaceholderText(/Mot de passe/), {
+    target: { value: "motdepasse123" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: /Se connecter/ }));
 }
 
 describe("AuthPage — confirmation e-mail", () => {
@@ -236,9 +248,11 @@ describe("AuthPage — les événements du tunnel (é38 lot 0)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     notePageForFunnel("/");
+    window.localStorage.clear();
     window.history.replaceState({}, "", "/auth");
     mockSearch.mode = "signup";
     delete mockSearch.role;
+    delete mockSearch.returnTo;
     mockGetSession.mockResolvedValue({ data: { session: null } });
     mockOnAuthStateChange.mockReturnValue({ data: { subscription: { unsubscribe: vi.fn() } } });
   });
@@ -329,7 +343,7 @@ describe("AuthPage — les événements du tunnel (é38 lot 0)", () => {
     user: { id: "u1", identities: [{ provider, last_sign_in_at: signedInAt }] },
   });
 
-  it("retour de Google : UN login, et sans from_content — l'origine est perdue", () => {
+  it("retour de Google : UN login, dont l'origine se lit sur le retour gardé", () => {
     // Le flux du projet est IMPLICITE : le retour arrive dans le fragment, jamais dans ?code=.
     window.history.replaceState({}, "", "/auth#access_token=abc&token_type=bearer");
     render(<AuthPage />);
@@ -344,9 +358,26 @@ describe("AuthPage — les événements du tunnel (é38 lot 0)", () => {
       method: "google",
       reason: "fresh",
       return_to_kept: false,
+      from_content: false,
     });
-    // « Inconnu » n'est pas « non » : la clé est ABSENTE, pas fausse.
-    expect(trackProductEvent.mock.calls[0][1]).not.toHaveProperty("from_content");
+  });
+
+  it("retour de Google : le retour gardé a SURVÉCU au rechargement, il dit d'où l'on venait", () => {
+    // La page est rechargée chez Google : la dernière page en mémoire est perdue, la mémoire
+    // du retour (localStorage), non. C'est ce qui rend `from_content` lisible pour Google.
+    rememberReturnTo("/chapitre/c1");
+    render(<AuthPage />);
+    const listener = mockOnAuthStateChange.mock.calls[0][0] as (e: string, s: unknown) => void;
+
+    listener("SIGNED_IN", sessionOf("google", new Date().toISOString()));
+
+    expect(trackProductEvent).toHaveBeenCalledWith("login", {
+      method: "google",
+      reason: "fresh",
+      return_to_kept: true,
+      from_content: true,
+    });
+    expect(mockPush).toHaveBeenCalledWith("/chapitre/c1");
   });
 
   it("une session Google ANCIENNE qui se rouvre (onglet retrouvé) n'est pas une connexion", () => {
@@ -376,6 +407,187 @@ describe("AuthPage — les événements du tunnel (é38 lot 0)", () => {
 
     expect(trackProductEvent).not.toHaveBeenCalled();
     expect(mockNavigate).toHaveBeenCalledWith({ to: "/dashboard" });
+  });
+});
+
+describe("AuthPage — le retour au point de départ (é38 lot 1)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    window.localStorage.clear();
+    window.history.replaceState({}, "", "/auth");
+    notePageForFunnel("/");
+    mockSearch.mode = "login";
+    delete mockSearch.role;
+    delete mockSearch.returnTo;
+    mockGetSession.mockResolvedValue({ data: { session: null } });
+    mockOnAuthStateChange.mockReturnValue({ data: { subscription: { unsubscribe: vi.fn() } } });
+    mockSignIn.mockResolvedValue({ error: null });
+  });
+
+  const signedUp = {
+    data: {
+      user: { id: "u1", identities: [{ identity_id: "i1" }] },
+      session: { user: { id: "u1" } },
+    },
+    error: null,
+  };
+  const needsConfirmation = {
+    data: { user: { id: "u1", identities: [{ identity_id: "i1" }] }, session: null },
+    error: null,
+  };
+
+  it("après la connexion, ramène à la page gardée — et pas au Hall", async () => {
+    rememberReturnTo("/chapitre/c1");
+    render(<AuthPage />);
+    submitLogin();
+
+    await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/chapitre/c1"));
+    expect(mockNavigate).not.toHaveBeenCalled();
+    // Il ne sert qu'une fois : consommé.
+    expect(peekReturnTo()).toBeNull();
+  });
+
+  it("sans retour gardé, c'est le Hall, comme avant", async () => {
+    render(<AuthPage />);
+    submitLogin();
+
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith({ to: "/dashboard" }));
+    expect(mockPush).not.toHaveBeenCalled();
+  });
+
+  it("après l'inscription qui ouvre une session, ramène à la page gardée", async () => {
+    mockSearch.mode = "signup";
+    mockSignUp.mockResolvedValue(signedUp);
+    rememberReturnTo("/matiere/m1");
+    render(<AuthPage />);
+    submitSignup();
+
+    await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/matiere/m1"));
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it("l'inscription qui attend une confirmation GARDE le retour pour le lien du mail", async () => {
+    mockSearch.mode = "signup";
+    mockSignUp.mockResolvedValue(needsConfirmation);
+    rememberReturnTo("/chapitre/c1");
+    render(<AuthPage />);
+    submitSignup();
+
+    await screen.findByText(/Confirme ton email/);
+    expect(peekReturnTo()).toBe("/chapitre/c1");
+    expect(mockPush).not.toHaveBeenCalled();
+  });
+
+  it("le lien de confirmation, ouvert sur /auth, ramène à la page gardée", async () => {
+    // Le lien du mail rouvre /auth ; Supabase y ouvre la session ; la page n'a plus qu'à repartir.
+    rememberReturnTo("/chapitre/c1");
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: "u1" } } } });
+    render(<AuthPage />);
+
+    await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/chapitre/c1"));
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it("UNE seule navigation, même quand le rappel de session ET SIGNED_IN arrivent tous deux", async () => {
+    rememberReturnTo("/chapitre/c1");
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: "u1" } } } });
+    render(<AuthPage />);
+    const listener = mockOnAuthStateChange.mock.calls[0][0] as (e: string, s: unknown) => void;
+
+    await waitFor(() => expect(mockPush).toHaveBeenCalledTimes(1));
+    // Le second arrivant retrouverait une mémoire consommée et renverrait au Hall PAR-DESSUS le retour.
+    listener("SIGNED_IN", { user: { id: "u1" } });
+    listener("TOKEN_REFRESHED", { user: { id: "u1" } });
+
+    expect(mockPush).toHaveBeenCalledTimes(1);
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it("l'adresse peut écrire le retour : un lien d'invitation partagé", () => {
+    mockSearch.returnTo = "/matiere/m1";
+    render(<AuthPage />);
+
+    expect(peekReturnTo()).toBe("/matiere/m1");
+  });
+
+  it.each(["//evil.tn", "https://evil.tn/phish", "javascript:alert(1)", "/\\evil.tn", "/auth"])(
+    "…mais un retour dangereux dans l'adresse (%s) est ignoré",
+    (hostile) => {
+      mockSearch.returnTo = hostile;
+      render(<AuthPage />);
+
+      expect(peekReturnTo()).toBeNull();
+    },
+  );
+
+  it("un retour dangereux DÉJÀ dans le stockage — écrit par une autre page — est ignoré", async () => {
+    window.localStorage.setItem(
+      "na9ra.returnTo.v1",
+      JSON.stringify({ path: "//evil.tn", at: Date.now() }),
+    );
+    render(<AuthPage />);
+    submitLogin();
+
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith({ to: "/dashboard" }));
+    expect(mockPush).not.toHaveBeenCalled();
+  });
+
+  it("les événements disent que le retour est gardé et d'où l'on venait", async () => {
+    rememberReturnTo("/chapitre/c1");
+    render(<AuthPage />);
+    submitLogin();
+
+    await waitFor(() =>
+      expect(trackProductEvent).toHaveBeenCalledWith("login", {
+        method: "password",
+        reason: "fresh",
+        return_to_kept: true,
+        from_content: true,
+      }),
+    );
+  });
+
+  it("l'inscription le dit aussi", async () => {
+    mockSearch.mode = "signup";
+    mockSignUp.mockResolvedValue(needsConfirmation);
+    rememberReturnTo("/chapitre/c1");
+    render(<AuthPage />);
+    submitSignup();
+
+    await waitFor(() =>
+      expect(trackProductEvent).toHaveBeenCalledWith("signup", {
+        role: "student",
+        needs_confirmation: true,
+        return_to_kept: true,
+        from_content: true,
+      }),
+    );
+  });
+
+  it("le lien de confirmation revient sur /auth — et non plus sur /dashboard", async () => {
+    mockSearch.mode = "signup";
+    mockSignUp.mockResolvedValue(needsConfirmation);
+    mockResend.mockResolvedValue({ error: null });
+    render(<AuthPage />);
+    submitSignup();
+
+    await waitFor(() =>
+      expect(mockSignUp).toHaveBeenCalledWith(
+        expect.objectContaining({
+          options: expect.objectContaining({
+            emailRedirectTo: `${window.location.origin}/auth`,
+          }),
+        }),
+      ),
+    );
+    fireEvent.click(await screen.findByRole("button", { name: /Renvoyer l'email/ }));
+    await waitFor(() =>
+      expect(mockResend).toHaveBeenCalledWith(
+        expect.objectContaining({
+          options: { emailRedirectTo: `${window.location.origin}/auth` },
+        }),
+      ),
+    );
   });
 });
 

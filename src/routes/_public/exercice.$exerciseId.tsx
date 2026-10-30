@@ -22,6 +22,7 @@ import {
 import { useAuth } from "@/features/auth";
 import { useT } from "@/lib/i18n";
 import { trackProductEvent } from "@/shared/lib/product-events";
+import { rememberCurrentPage } from "@/shared/lib/return-to";
 
 /**
  * Public « entraînement » register — login-free. Thin: builds the anonymous
@@ -221,9 +222,10 @@ function ExercicePage() {
                 <p className="mt-2 text-sm font-semibold">{t.public.practice.inviteDesc}</p>
                 <Link
                   to="/signup"
-                  onClick={() =>
-                    trackProductEvent("account_invite_clicked", { surface: "practice" })
-                  }
+                  onClick={() => {
+                    rememberCurrentPage();
+                    trackProductEvent("account_invite_clicked", { surface: "practice" });
+                  }}
                   className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
                 >
                   {t.public.practice.inviteCta}

@@ -1,5 +1,5 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { createFileRoute, useNavigate, useRouter, Link } from "@tanstack/react-router";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { Mail, Lock, User as UserIcon, Loader2, MailCheck } from "lucide-react";
 import { toast } from "sonner";
@@ -13,7 +13,8 @@ import { CrownMark } from "@/components/brand-mark";
 import { useT } from "@/lib/i18n";
 import { useEntrance } from "@/shared/lib/motion";
 import { trackProductEvent } from "@/shared/lib/product-events";
-import { cameFromContent } from "@/shared/lib/funnel-origin";
+import { isFromContent } from "@/shared/lib/funnel-origin";
+import { consumeReturnTo, peekReturnTo, rememberReturnTo } from "@/shared/lib/return-to";
 import type { TranslationKeys } from "@/lib/i18n/types";
 
 /** `AuthError.code` when supabase-js exposes one (it is absent on plain Errors). */
@@ -110,18 +111,35 @@ export const Route = createFileRoute("/auth")({
       },
     ],
   }),
-  // `role` optionnel — tunnel parent depuis la landing « Espace Famille ».
-  validateSearch: (s: Record<string, unknown>): { mode: string; role?: "parent" } => ({
+  // `role` optionnel — tunnel parent depuis la landing « Espace Famille ». `returnTo` (é38 lot 1) :
+  // la page où ramener le visiteur ; gardé tel quel ici, VALIDÉ par `return-to.ts` avant tout usage.
+  validateSearch: (
+    s: Record<string, unknown>,
+  ): { mode: string; role?: "parent"; returnTo?: string } => ({
     mode: (s.mode as string) || "login",
     ...(s.role === "parent" ? { role: "parent" as const } : {}),
+    ...(typeof s.returnTo === "string" ? { returnTo: s.returnTo } : {}),
   }),
   component: AuthPage,
 });
 
 function AuthPage() {
-  const { mode, role: roleParam } = Route.useSearch();
+  const { mode, role: roleParam, returnTo } = Route.useSearch();
   const navigate = useNavigate();
+  const router = useRouter();
   const t = useT();
+  // é38 lot 1 (R-3) — OÙ ALLER une fois la session ouverte : le retour gardé s'il y en a un, sinon
+  // le Hall. Une seule fois par page : l'inscription, le rappel de session et l'événement SIGNED_IN
+  // arrivent tous, dans un ordre que personne ne maîtrise, et le premier doit gagner — le second
+  // retrouverait une mémoire déjà consommée et renverrait au Hall par-dessus le retour.
+  const left = useRef(false);
+  const leave = useCallback(() => {
+    if (left.current) return;
+    left.current = true;
+    const back = consumeReturnTo();
+    if (back) router.history.push(back);
+    else navigate({ to: "/dashboard" });
+  }, [navigate, router]);
   const isSignup = mode === "signup";
   const isForgot = mode === "forgot";
   const [email, setEmail] = useState("");
@@ -147,6 +165,13 @@ function AuthPage() {
   const entrance = useEntrance("scale");
   const linkByCode = useServerFn(linkStudentByCode);
   const runBootstrapProfile = useServerFn(bootstrapProfile);
+
+  // R-2 : l'adresse peut porter le retour (un lien d'invitation partagé). Elle ne fait qu'ÉCRIRE dans la
+  // mémoire — la décision se prend sur la mémoire, qui survit au lien de confirmation d'e-mail et à
+  // l'aller-retour chez Google, là où l'adresse, elle, est perdue. Le chemin est validé à l'écriture.
+  useEffect(() => {
+    if (returnTo !== undefined) rememberReturnTo(returnTo);
+  }, [returnTo]);
 
   useEffect(() => {
     // 1) Surface OAuth/callback errors that Supabase appends to the URL (query or
@@ -174,23 +199,28 @@ function AuthPage() {
     // Supabase exchanges /auth?code=... for a session ASYNCHRONOUSLY, so we also
     // subscribe to auth-state changes and navigate on SIGNED_IN.
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/dashboard" });
+      if (data.session) leave();
     });
     let googleLoginTracked = false;
     const { data: authSub } = supabase.auth.onAuthStateChange((event, session) => {
       if (session) {
-        // é38 lot 0 — le retour de Google (voir isFreshGoogleSignIn : jamais `?code=`).
-        // `from_content` est ABSENT : la page a été rechargée chez Google, l'origine est
-        // perdue — « inconnu » n'est pas « non » (funnel-origin.ts).
+        // é38 lot 0 — le retour de Google (voir isFreshGoogleSignIn : jamais `?code=`). La page a
+        // été rechargée chez Google, mais le retour gardé a survécu : c'est lui qui dit d'où l'on venait.
         if (
           event === "SIGNED_IN" &&
           !googleLoginTracked &&
           isFreshGoogleSignIn(session, Date.now())
         ) {
           googleLoginTracked = true;
-          trackProductEvent("login", { method: "google", reason: "fresh", return_to_kept: false });
+          const origin = peekReturnTo();
+          trackProductEvent("login", {
+            method: "google",
+            reason: "fresh",
+            return_to_kept: origin !== null,
+            from_content: isFromContent(origin),
+          });
         }
-        navigate({ to: "/dashboard" });
+        leave();
       }
     });
 
@@ -213,7 +243,7 @@ function AuthPage() {
       authSub.subscription.unsubscribe();
       if (timer) clearTimeout(timer);
     };
-  }, [navigate, t]);
+  }, [leave, t]);
 
   // Cooldown ticker — mirrors GoTrue's own per-address throttle so the button says
   // when it will work again instead of failing on every click.
@@ -232,7 +262,7 @@ function AuthPage() {
       const { error } = await supabase.auth.resend({
         type: "signup",
         email: target,
-        options: { emailRedirectTo: `${window.location.origin}/dashboard` },
+        options: { emailRedirectTo: `${window.location.origin}/auth` },
       });
       if (error) throw error;
       setSentTo(target);
@@ -270,7 +300,7 @@ function AuthPage() {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/dashboard`,
+            emailRedirectTo: `${window.location.origin}/auth`,
             // `role` lets `handle_new_user` persist the parent/student choice even on
             // the email-confirmation path where `bootstrapProfile` never runs (lot 10).
             data: { display_name: displayName, role },
@@ -299,11 +329,12 @@ function AuthPage() {
         // sur le chemin « confirme ton adresse » où l'élève ne revient parfois
         // jamais : c'est justement la fuite qu'on veut voir. Aucune PII — le
         // rôle choisi, rien d'autre.
+        const origin = peekReturnTo();
         trackProductEvent("signup", {
           role,
           needs_confirmation: !data.session,
-          return_to_kept: false,
-          from_content: cameFromContent(),
+          return_to_kept: origin !== null,
+          from_content: isFromContent(origin),
         });
 
         // Profile bootstrap (display name + role) is extracted to the
@@ -339,19 +370,20 @@ function AuthPage() {
           return;
         }
         toast.success(t.auth.toastSignupSuccess);
-        navigate({ to: "/dashboard" });
+        leave();
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        // é38 lot 0 : `reason: "expired"` et `return_to_kept: true` arrivent avec les lots 3 et 1.
+        // `reason: "expired"` arrive avec le lot 3 (la session qui meurt).
+        const origin = peekReturnTo();
         trackProductEvent("login", {
           method: "password",
           reason: "fresh",
-          return_to_kept: false,
-          from_content: cameFromContent(),
+          return_to_kept: origin !== null,
+          from_content: isFromContent(origin),
         });
         toast.success(t.auth.toastLoginSuccess);
-        navigate({ to: "/dashboard" });
+        leave();
       }
     } catch (err) {
       const message = friendlyAuthError(t, err);

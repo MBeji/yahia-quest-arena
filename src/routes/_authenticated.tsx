@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, Link, useNavigate, useLocation } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import {
@@ -17,6 +17,7 @@ import { LayoutDashboard, Map, Compass, Swords, ClipboardList, Shield } from "lu
 import { supabase } from "@/shared/integrations/supabase/client";
 import { toast } from "sonner";
 import { useT } from "@/lib/i18n";
+import { rememberReturnTo } from "@/shared/lib/return-to";
 import { SettingsMenu } from "@/components/ui/settings-menu";
 import { GoldAmbient } from "@/components/visual/gold-ambient";
 import { AccountHud } from "@/components/account-hud";
@@ -82,11 +83,21 @@ function AuthenticatedLayout() {
   const adminPending = pendingBeta + openReports + openBugs;
 
   // Redirect unauthenticated users via effect (not during render)
+  //
+  // é38 lot 1 (R-4) : un visiteur qui n'a JAMAIS eu de session ici et suit un lien vers un écran de
+  // compte retrouve, une fois connecté, la page qu'il voulait. Celui qui vient de se DÉCONNECTER, non :
+  // sur un poste partagé, la page du précédent n'est pas pour le suivant.
+  const hadUser = useRef(false);
   useEffect(() => {
-    if (!loading && !user) {
+    if (user) {
+      hadUser.current = true;
+      return;
+    }
+    if (!loading) {
+      if (!hadUser.current) rememberReturnTo(location.pathname + location.searchStr);
       navigate({ to: "/auth", search: { mode: "login" } });
     }
-  }, [loading, user, navigate]);
+  }, [loading, user, navigate, location.pathname, location.searchStr]);
 
   // Profile-first onboarding guard: a signed-in STUDENT with no active parcours is
   // sent to /onboarding. Gated on the profile query having loaded (no flash) and

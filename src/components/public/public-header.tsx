@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useT } from "@/lib/i18n";
 import { trackProductEvent } from "@/shared/lib/product-events";
+import { rememberCurrentPage } from "@/shared/lib/return-to";
 import { useAuth } from "@/features/auth";
 import { SettingsMenu } from "@/components/ui/settings-menu";
 import { AccountHud } from "@/components/account-hud";
@@ -83,13 +84,17 @@ export function PublicHeader() {
             <>
               <Link
                 to="/login"
+                onClick={() => rememberCurrentPage()}
                 className="hidden rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground sm:inline-block"
               >
                 {t.public.header.login}
               </Link>
               <Link
                 to="/signup"
-                onClick={() => trackProductEvent("account_invite_clicked", { surface: "header" })}
+                onClick={() => {
+                  rememberCurrentPage();
+                  trackProductEvent("account_invite_clicked", { surface: "header" });
+                }}
                 className="rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90 sm:px-4"
               >
                 {t.public.header.signup}
@@ -126,6 +131,7 @@ export function PublicHeader() {
         {!isAuthed && (
           <Link
             to="/login"
+            onClick={() => rememberCurrentPage()}
             className="rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
           >
             {t.public.header.login}

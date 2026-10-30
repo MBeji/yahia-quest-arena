@@ -19,7 +19,7 @@ describe("funnel-origin", () => {
   });
 
   it("ne sait rien avant la première page : un lien direct vers /auth n'est pas du contenu", () => {
-    expect(mod.cameFromContent()).toBe(false);
+    expect(mod.isFromContent(null)).toBe(false);
   });
 
   it.each([
@@ -33,14 +33,14 @@ describe("funnel-origin", () => {
     "/extras",
   ])("%s est du contenu", (path) => {
     mod.notePageForFunnel(path);
-    expect(mod.cameFromContent()).toBe(true);
+    expect(mod.isFromContent(null)).toBe(true);
   });
 
   it.each(["/", "/suivi", "/conditions", "/confidentialite", "/dashboard", "/programmes-speciaux"])(
     "%s n'est pas du contenu",
     (path) => {
       mod.notePageForFunnel(path);
-      expect(mod.cameFromContent()).toBe(false);
+      expect(mod.isFromContent(null)).toBe(false);
     },
   );
 
@@ -48,19 +48,26 @@ describe("funnel-origin", () => {
     mod.notePageForFunnel("/chapitre/c1");
     for (const funnel of ["/auth", "/auth?mode=signup", "/login", "/signup", "/auth#x"]) {
       mod.notePageForFunnel(funnel);
-      expect(mod.cameFromContent(), funnel).toBe(true);
+      expect(mod.isFromContent(null), funnel).toBe(true);
     }
+  });
+
+  it("un retour gardé répond AVANT la dernière page : c'est là qu'on ramène le visiteur", () => {
+    mod.notePageForFunnel("/");
+    expect(mod.isFromContent("/chapitre/c1")).toBe(true);
+    mod.notePageForFunnel("/chapitre/c1");
+    expect(mod.isFromContent("/dashboard")).toBe(false);
   });
 
   it("une page qui n'est pas du contenu efface l'origine", () => {
     mod.notePageForFunnel("/chapitre/c1");
     mod.notePageForFunnel("/");
-    expect(mod.cameFromContent()).toBe(false);
+    expect(mod.isFromContent(null)).toBe(false);
   });
 
   it("un chemin qui ressemble au tunnel sans l'être n'est PAS ignoré", () => {
     mod.notePageForFunnel("/chapitre/c1");
     mod.notePageForFunnel("/authors");
-    expect(mod.cameFromContent()).toBe(false);
+    expect(mod.isFromContent(null)).toBe(false);
   });
 });

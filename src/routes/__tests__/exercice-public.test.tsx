@@ -62,6 +62,7 @@ vi.mock("@/features/quest/components/exercise-player", () => ({
 vi.mock("@/features/auth", () => ({ useAuth: () => ({ user: null, loading: false }) }));
 
 import { Route } from "../_public/exercice.$exerciseId";
+import { peekReturnTo } from "@/shared/lib/return-to";
 
 const Page = (Route as unknown as { component: React.ComponentType }).component;
 
@@ -165,5 +166,29 @@ describe("entraînement public — public_practice_completed (é38 lot 0)", () =
     expect(trackProductEvent).toHaveBeenCalledWith("account_invite_clicked", {
       surface: "practice",
     });
+  });
+});
+
+describe("entraînement public — le retour au point de départ (é38 lot 1)", () => {
+  it("l'invitation du résultat retient la page de l'entraînement", () => {
+    window.localStorage.clear();
+    window.history.replaceState({}, "", "/exercice/ex-1");
+    const strategy = mountStrategy();
+    const { container } = render(
+      <div>
+        {strategy.renderResultFooter({
+          exerciseId: "ex-1",
+          subjectId: "s1",
+          nextExerciseId: null,
+          onReplay: () => {},
+          result: {} as never,
+        })}
+      </div>,
+    );
+    fireEvent.click(container.querySelector('a[href="/signup"]') as HTMLElement);
+
+    expect(peekReturnTo()).toBe("/exercice/ex-1");
+    window.history.replaceState({}, "", "/");
+    window.localStorage.clear();
   });
 });

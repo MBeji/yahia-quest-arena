@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { render } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { peekReturnTo } from "@/shared/lib/return-to";
 import React from "react";
 
 /**
@@ -16,6 +17,8 @@ let authState: { user: { id: string } | null; loading: boolean } = { user: null,
 const launcherProps: Array<{ authenticated: boolean }> = [];
 
 let captured: React.ComponentType | undefined;
+// La page demandée — réglable : le garde la retient (é38 lot 1, R-4).
+let currentLocation = { pathname: "/dashboard", searchStr: "" };
 
 vi.mock("@tanstack/react-router", () => ({
   createFileRoute: () => (opts: { component: React.ComponentType }) => {
@@ -25,7 +28,7 @@ vi.mock("@tanstack/react-router", () => ({
   Outlet: () => null,
   Link: ({ children }: { children: React.ReactNode }) => React.createElement("a", null, children),
   useNavigate: () => navigate,
-  useLocation: () => ({ pathname: "/dashboard" }),
+  useLocation: () => currentLocation,
 }));
 
 vi.mock("@tanstack/react-query", () => ({ useQuery: () => ({ data: undefined }) }));
@@ -86,6 +89,8 @@ async function renderShell() {
 beforeEach(() => {
   navigate.mockReset();
   launcherProps.length = 0;
+  currentLocation = { pathname: "/dashboard", searchStr: "" };
+  window.localStorage.clear();
 });
 
 describe("coquille connectée — le mur de connexion", () => {
@@ -116,5 +121,38 @@ describe("coquille connectée — le mur de connexion", () => {
     await renderShell();
     expect(launcherProps.at(-1)?.authenticated).toBe(true);
     expect(navigate).not.toHaveBeenCalledWith({ to: "/auth", search: { mode: "login" } });
+  });
+});
+
+describe("coquille connectée — le retour au point de départ (é38 lot 1, R-4)", () => {
+  it("retient la page qu'un visiteur sans session voulait voir, requête comprise", async () => {
+    currentLocation = { pathname: "/quest/ex-1", searchStr: "?variant=recall" };
+    authState = { user: null, loading: false };
+    await renderShell();
+
+    expect(peekReturnTo()).toBe("/quest/ex-1?variant=recall");
+    expect(navigate).toHaveBeenCalledWith({ to: "/auth", search: { mode: "login" } });
+  });
+
+  it("n'écrit rien tant que la session se lit : on ne sait pas encore s'il y en a une", async () => {
+    currentLocation = { pathname: "/quest/ex-1", searchStr: "" };
+    authState = { user: null, loading: true };
+    await renderShell();
+
+    expect(peekReturnTo()).toBeNull();
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
+  it("ne retient RIEN pour celui qui vient de se déconnecter : sur un poste partagé, la page du précédent n'est pas pour le suivant", async () => {
+    currentLocation = { pathname: "/quest/ex-1", searchStr: "" };
+    authState = { user: { id: "u1" }, loading: false };
+    const view = await renderShell();
+
+    // La déconnexion : la session disparaît alors que la coquille est déjà montée.
+    authState = { user: null, loading: false };
+    view.rerender(React.createElement(captured as React.ComponentType));
+
+    expect(navigate).toHaveBeenCalledWith({ to: "/auth", search: { mode: "login" } });
+    expect(peekReturnTo()).toBeNull();
   });
 });
