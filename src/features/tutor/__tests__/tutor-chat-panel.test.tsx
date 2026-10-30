@@ -39,7 +39,7 @@ vi.mock("@tanstack/react-start", () => ({
   createServerFn: () => {
     const chain = {
       middleware: () => chain,
-      inputValidator: () => chain,
+      validator: () => chain,
       handler: () => vi.fn(),
     };
     return chain;

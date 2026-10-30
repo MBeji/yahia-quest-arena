@@ -90,7 +90,7 @@ export default tseslint.config(
     // server fn must never be exposed without a server-side auth gate. This used
     // to be an agent check on the staged diff (tokens + up to 180 s per commit);
     // as an AST rule it runs for free in lint → pre-push → CI. See the rule's
-    // header for why it enforces the auth middleware but not `.inputValidator`.
+    // header for why it enforces the auth middleware but not `.validator`.
     files: ["**/*.{ts,tsx}"],
     plugins: { local },
     rules: {

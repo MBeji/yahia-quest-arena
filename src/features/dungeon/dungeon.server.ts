@@ -218,7 +218,7 @@ export const getDungeonAccess = createServerFn({ method: "GET" })
  */
 export const getDungeonQuestions = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         runId: z.guid(),
@@ -251,7 +251,7 @@ export const getDungeonQuestions = createServerFn({ method: "GET" })
 
 export const submitDungeonAnswer = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         runId: z.guid(),
@@ -307,7 +307,7 @@ export const submitDungeonAnswer = createServerFn({ method: "POST" })
  */
 export const submitDungeonRun = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         runId: z.guid(),

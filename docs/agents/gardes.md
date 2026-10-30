@@ -320,3 +320,31 @@ le jour même où le workflow lui a retiré ce qu'il exigeait. Chaque pièce ét
    fait **un seul `npm update`** portant tout le lot, **un conflit en coule 41**. C'est
    vraisemblablement aussi la cause de l'échec du 2026-08-21, antérieur à la bascule Node 24.
    Suivi : voir l'issue « upgrade-guard : un conflit de peer en coule 41 ».
+
+## Le hook qui voyage avec `npm ci` — piège du 2026-10-30 (#1203)
+
+`npm ci` exécute le `prepare` du projet, qui **installe husky dans le checkout du runner**. Toute
+garde qui fait `git push` après un `npm ci` passe donc par `.husky/pre-push` (= `npm run verify`),
+exactement comme un humain en local. Ce n'est pas un défaut : c'est le filet de sécurité qui suit
+le code partout. C'est un défaut d'une garde de **compter le contourner**.
+
+`upgrade-guard.yml` laissait son gate `ci:verify` en `continue-on-error`, puis poussait le lot
+rouge pour en faire une « PR draft `needs-review` » que l'agent réparerait. Run 41017413367 : le
+pre-push a rejoué les mêmes erreurs TS, le push a échoué, aucune PR n'est née, et les étapes
+suivantes (jeton, agent) sont sorties `skipped` — le mode « réparer un lot rouge » était mort dès
+que le rouge relevait de `verify`. Il avait marché le 10-27 (run 40459566340) parce que ce
+rouge-là (budget de bundle, `build:check`) est hors du périmètre de `verify` : un succès qui
+prouvait le cas facile, pas le cas utile. Le message final annonçait en plus une « PR draft
+(#) » qui n'existait pas.
+
+**Le correctif ne touche pas au hook** (ni `--no-verify`, ni `HUSKY=0`, ni `core.hooksPath`) :
+le lot est **commité sur une branche locale** quel que soit le gate, **poussé seulement si le
+gate est vert** ; rouge, il reste local, l'agent le répare (correctif ou `--hold`) et le pousse
+lui-même une fois `ci:verify` vert — le pre-push passe alors. S'il n'y arrive pas, il ne pousse
+rien et tient une issue de suivi.
+
+L'invariant est mécanisé : `findPushPastRedGate` (`scripts/harness/check.mjs`) fait échouer
+`harness:check` si, dans un job où un `npm ci` a installé les hooks, une étape fait `git push`
+après un gate `verify`/`ci:verify` non bloquant sans porter `if: steps.<gate>.outcome ==
+'success'`. `outcome`, pas `conclusion` — celle d'une étape `continue-on-error` est toujours
+`success`. Un `if` shell à l'intérieur de l'étape ne compte pas : c'était la forme exacte du bug.

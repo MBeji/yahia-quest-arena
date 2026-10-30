@@ -75,7 +75,7 @@ as a migration. Details: [`docs/content-generation-pipeline.md`](./docs/content-
   UI primitives: `@/components/ui/*`. i18n: `@/lib/i18n`. `useAuth`: `@/features/auth`.
 - Every server fn carries an auth middleware — `requireSupabaseAuth`, or
   `optionalSupabaseAuth` for a deliberate public read (ESLint `local/require-server-fn-auth`),
-  plus a zod `.inputValidator` whenever it takes input. Sanitize HTML with DOMPurify
+  plus a zod `.validator` whenever it takes input. Sanitize HTML with DOMPurify
   (`src/shared/lib/markdown.ts`).
 - Kebab-case files, server fns are verbs. Log through `@/shared/lib/logger` (redacts
   secrets) — never raw `console`.

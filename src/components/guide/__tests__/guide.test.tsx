@@ -140,6 +140,8 @@ describe("ChapterSteps et GuideRule", () => {
     expect(items[0]).toHaveTextContent(`1. ${g.stepper.lesson}`);
     expect(items[2]).toHaveAttribute("data-state", "locked");
     expect(items[2]).toHaveTextContent(g.stepper.locked);
+    // #1191 : l'étiquette d'état n'est jamais éclaircie (4,41:1 en thème clair).
+    expect(screen.getByText(g.stepper.current).className).not.toMatch(/\bopacity-/);
   });
 
   it("GuideRule peut taire son titre", () => {

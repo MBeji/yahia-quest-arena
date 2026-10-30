@@ -167,20 +167,25 @@ npm run ci:verify
 ```
 
 **Ce qui reste ton arbitrage — le lot rouge.** Si `ci:verify` échoue sur le lot, le
-workflow a poussé la branche en **PR draft `needs-review`** (`has_patch_minor=false`,
-donc aucun auto-merge) et t'a réveillé. Deux issues, jamais une troisième :
+workflow l'a **commité sur une branche LOCALE** `claude/upgrade-patch-minor-<date>`,
+**non poussée, sans PR** (`has_patch_minor` non posé, donc aucun auto-merge) et t'a
+réveillé. Elle ne peut pas être poussée rouge : `npm ci` installe husky dans le runner
+et le hook `pre-push` (= `npm run verify`) la refuse — ne le contourne jamais (ni
+`--no-verify`, ni `HUSKY=0`, ni `core.hooksPath`). Deux issues, jamais une troisième :
 
-- l'ajustement est correct et prescrit par le changelog → **corrige proprement**,
-  pousse, puis `gh pr ready` + retire `needs-review` et écris
-  `has_patch_minor=true` + branche + PR dans le fichier de résultat (les suites
-  lentes et l'auto-merge reprennent la main) ;
+- l'ajustement est correct et prescrit par le changelog → **corrige proprement** ;
 - le paquet est risqué ou incompris → **écarte-le du lot** et garde le reste :
-  `detect --hold <pkg>` puis `apply` sur un arbre propre, en consignant
+  `git checkout -B <branche> main`, `detect --hold <pkg>` puis `apply`, en consignant
   « held back: <pkg>, raison » dans le corps de la PR.
 
+Une fois `ci:verify` vert : pousse la branche (le pre-push passe), ouvre la PR toi-même
+(`gh pr create … --label dependencies --label no-automerge --base main`) et écris
+`has_patch_minor=true` + branche + PR dans le fichier de résultat (les suites lentes et
+l'auto-merge reprennent la main).
+
 Ne jamais affaiblir le gate pour passer au vert. Si même en écartant des paquets le
-lot ne passe pas, laisse la PR en draft `needs-review` avec l'explication : un humain
-reprend.
+lot ne passe pas, ne pousse rien : ouvre (ou commente, si elle existe) une issue de
+suivi qui nomme le paquet fautif et les erreurs — un humain reprend.
 
 > **Type-defs** : `npm update` garde `react`+`react-dom`+`@types/react`(+`-dom`) et
 > `three`+`@types/three` alignés dans le même lot ; le script les groupe aussi côté

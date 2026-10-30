@@ -53,7 +53,7 @@ export const getMyBetaRequest = createServerFn({ method: "GET" })
 /** Submit a beta access request (status pending). Rejected if one is already live. */
 export const requestBetaAccess = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         name: z.string().trim().min(1).max(120),
@@ -134,7 +134,7 @@ export const getPendingBetaCount = createServerFn({ method: "GET" })
  */
 export const reviewBetaRequest = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ requestId: z.guid(), approve: z.boolean() }).parse(d))
+  .validator((d) => z.object({ requestId: z.guid(), approve: z.boolean() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
     const { error } = await supabase.rpc("admin_review_beta_request", {

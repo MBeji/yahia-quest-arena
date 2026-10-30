@@ -20,7 +20,7 @@ import { PULSE_MAX_SECONDS, PULSE_MIN_SECONDS } from "@/shared/lib/learning-puls
  */
 export const recordLearningPulse = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         surface: z.enum(["lesson", "exercise", "quiz", "recall", "dungeon", "duel", "browse"]),

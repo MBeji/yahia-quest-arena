@@ -44,7 +44,7 @@ export const listParcoursEntitlements = createServerFn({ method: "GET" })
  */
 export const grantParcoursEntitlement = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         userId: z.guid(),
@@ -84,9 +84,7 @@ export const grantParcoursEntitlement = createServerFn({ method: "POST" })
 /** Admin: revoke (soft-delete) a user's parcours entitlement. RPC enforces admin-only. */
 export const revokeParcoursEntitlement = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
-    z.object({ userId: z.guid(), parcoursId: z.string().trim().min(1) }).parse(d),
-  )
+  .validator((d) => z.object({ userId: z.guid(), parcoursId: z.string().trim().min(1) }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
     const { error } = await supabase.rpc("admin_revoke_parcours", {

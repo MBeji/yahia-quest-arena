@@ -33,7 +33,7 @@ type CompetencyExercisesRpc = {
 
 export const getTrainingForMisconception = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ competency: z.string().trim().min(1).max(120) }).parse(d))
+  .validator((d) => z.object({ competency: z.string().trim().min(1).max(120) }).parse(d))
   .handler(async ({ data, context }): Promise<{ exerciseId: string | null }> => {
     const client = context.supabase as unknown as CompetencyExercisesRpc;
     const res = await client.rpc("get_exercises_for_competency", {

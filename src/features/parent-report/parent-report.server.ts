@@ -178,7 +178,7 @@ function parseStudentReportPayload(payload: unknown): StudentReportShape {
  */
 export const getLinkedStudents = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         page: z.number().int().min(1).default(1),
@@ -326,7 +326,7 @@ export const getLinkedStudents = createServerFn({ method: "GET" })
  */
 export const getStudentReport = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ studentId: z.guid() }).parse(d))
+  .validator((d: unknown) => z.object({ studentId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
 
@@ -364,7 +364,7 @@ const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Expected YYYY-MM-DD");
  */
 export const getStudentDailyReport = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         studentId: z.guid(),
@@ -412,7 +412,7 @@ export const getStudentDailyReport = createServerFn({ method: "GET" })
  */
 export const getStudentDailyReportByCode = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         studentCode: z.string().min(8).max(64),
@@ -458,7 +458,7 @@ export const getStudentDailyReportByCode = createServerFn({ method: "GET" })
  */
 export const getStudentAttemptDetail = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ studentId: z.guid(), attemptId: z.guid() }).parse(d))
+  .validator((d: unknown) => z.object({ studentId: z.guid(), attemptId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
 
@@ -481,7 +481,7 @@ export const getStudentAttemptDetail = createServerFn({ method: "GET" })
 /** Le même détail, ouvert au porteur du code alliance (cf. ci-dessus). */
 export const getStudentAttemptDetailByCode = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z.object({ studentCode: z.string().min(8).max(64), attemptId: z.guid() }).parse(d),
   )
   .handler(async ({ data, context }) => {
@@ -517,7 +517,7 @@ const weeklyGoalSchema = z
  */
 export const getStudentWeeklyGoal = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ studentId: z.guid() }).parse(d))
+  .validator((d: unknown) => z.object({ studentId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
     const { data: goal, error } = await supabase.rpc("get_family_weekly_goal", {
@@ -539,7 +539,7 @@ export const getStudentWeeklyGoal = createServerFn({ method: "GET" })
  */
 export const setStudentWeeklyGoal = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({ studentId: z.guid(), target: z.number().int().min(1).max(GOAL_TARGET_MAX) })
       .parse(d),
@@ -583,7 +583,7 @@ const dailyGoalSchema = z
  */
 export const getStudentDailyGoal = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ studentId: z.guid() }).parse(d))
+  .validator((d: unknown) => z.object({ studentId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
     const { data: goal, error } = await supabase.rpc("get_family_daily_goal", {
@@ -605,7 +605,7 @@ export const getStudentDailyGoal = createServerFn({ method: "GET" })
  */
 export const setStudentDailyGoal = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({ studentId: z.guid(), target: z.number().int().min(1).max(GOAL_TARGET_MAX) })
       .parse(d),
@@ -638,7 +638,7 @@ export const setStudentDailyGoal = createServerFn({ method: "POST" })
  */
 export const linkStudentByCode = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         studentCode: z.string().min(8).max(64),
@@ -695,7 +695,7 @@ export const linkStudentByCode = createServerFn({ method: "POST" })
  */
 export const getStudentReportByCode = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ studentCode: z.string().min(8).max(64) }).parse(d))
+  .validator((d: unknown) => z.object({ studentCode: z.string().min(8).max(64) }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
 
@@ -771,7 +771,7 @@ export type TutorParentCounters = {
  */
 export const getTutorParentCounters = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ studentId: z.guid() }).parse(d))
+  .validator((d: unknown) => z.object({ studentId: z.guid() }).parse(d))
   .handler(async ({ data, context }): Promise<TutorParentCounters | null> => {
     const { supabase } = context;
 
