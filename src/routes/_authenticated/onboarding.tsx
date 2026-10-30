@@ -615,7 +615,7 @@ function OnboardingComponent() {
       // é31 lot 1 — deuxième fait du funnel : le parcours choisi, donc le compte
       // réellement utilisable. L'écart signup → onboarding_completed est la
       // première fuite mesurable du produit.
-      trackProductEvent("onboarding_completed", { intent: intent ?? "unknown" });
+      trackProductEvent("onboarding_completed", { intent: intent ?? "unknown", source: "wizard" });
       // é31 lot 6 (R-19) — la récompense de bienvenue est versée ICI, à la fin de
       // l'accueil : idempotente côté SQL, donc un rejeu ne double rien. Un échec
       // ne bloque pas l'écran — l'élève est arrivé, c'est ce qui compte.

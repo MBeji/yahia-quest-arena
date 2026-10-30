@@ -18,6 +18,7 @@ import { readingProgressPct } from "@/shared/lib/learning-pulse";
 import { useLearningPulse } from "@/hooks/use-learning-pulse";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useT } from "@/lib/i18n";
+import { trackProductEvent } from "@/shared/lib/product-events";
 import { useGuideT } from "@/lib/i18n/guide";
 import { ChapterSteps } from "@/components/guide/chapter-steps";
 import { HelpTip } from "@/components/guide/help-tip";
@@ -490,6 +491,7 @@ export function LessonReader({
           </p>
           <Link
             to="/signup"
+            onClick={() => trackProductEvent("account_invite_clicked", { surface: "reader" })}
             className="mt-4 inline-flex items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
           >
             {t.public.reader.inviteCta}

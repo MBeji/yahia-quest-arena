@@ -29,7 +29,10 @@
 
 import { captureProductEvent } from "@/shared/lib/product-analytics";
 
-/** Les 12 événements produit de la liste fermée (é31 §3.6). Rien d'autre ne part. */
+/**
+ * La liste fermée des événements produit (é31 §3.6), amendée par écrit : deux par é34 (la
+ * progression), trois par é38 lot 0 (le tunnel sans compte → compte). Rien d'autre ne part.
+ */
 export type ProductEventName =
   | "signup"
   | "onboarding_completed"
@@ -47,7 +50,14 @@ export type ProductEventName =
   // l'étoile est le geste fréquent, le sceau est le jalon rare, et mesurer les deux
   // dit si la reconnaissance arrive assez tôt pour motiver (KPI-3 de l'étude).
   | "chapter_star_earned"
-  | "subject_seal_earned";
+  | "subject_seal_earned"
+  // Étude 38 lot 0 (R-16) — le tunnel « sans compte → compte », aveugle avant `signup` alors que
+  // le visiteur sans compte est l'audience principale. Trois événements, pas un de plus :
+  // l'entraînement terminé SANS compte, l'invitation cliquée, la connexion. Leurs consommateurs
+  // sont datés : KPI-1, KPI-2 et KPI-3 de l'étude 38, lus dans PostHog dès la mise en ligne.
+  | "public_practice_completed"
+  | "account_invite_clicked"
+  | "login";
 
 export type ProductEventEntry = {
   readonly name: ProductEventName;
@@ -95,6 +105,24 @@ export const PRODUCT_EVENT_CATALOGUE: readonly ProductEventEntry[] = [
   {
     name: "subject_seal_earned",
     fires: "quand tous les chapitres d'une matière atteignent la même étoile (étude 34)",
+    live: true,
+  },
+  {
+    name: "public_practice_completed",
+    fires:
+      "Entraînement terminé SANS compte : correction d'une mission, ou quiz de compréhension (étude 38)",
+    live: true,
+  },
+  {
+    name: "account_invite_clicked",
+    fires:
+      "Clic sur une invitation à créer un compte : lecteur de cours, résultat d'entraînement, accueil, en-tête (étude 38)",
+    live: true,
+  },
+  {
+    name: "login",
+    fires:
+      "Connexion réussie : mot de passe, ou retour de Google — une inscription Google y compte aussi, le client ne la distingue pas (étude 38)",
     live: true,
   },
 ] as const;

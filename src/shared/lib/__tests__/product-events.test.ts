@@ -46,6 +46,11 @@ const ETUDE_31_CLOSED_LIST: ProductEventName[] = [
   // KPI-3 (le délai jusqu'à la première reconnaissance).
   "chapter_star_earned",
   "subject_seal_earned",
+  // Étude 38 lot 0 (R-16) — la liste est amendée une seconde fois, par écrit. Ces trois-là
+  // instrumentent le tunnel « sans compte → compte » : KPI-1, KPI-2 et KPI-3 de l'étude 38.
+  "public_practice_completed",
+  "account_invite_clicked",
+  "login",
 ];
 
 const SRC = join(process.cwd(), "src");

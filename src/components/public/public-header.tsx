@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useT } from "@/lib/i18n";
+import { trackProductEvent } from "@/shared/lib/product-events";
 import { useAuth } from "@/features/auth";
 import { SettingsMenu } from "@/components/ui/settings-menu";
 import { AccountHud } from "@/components/account-hud";
@@ -88,6 +89,7 @@ export function PublicHeader() {
               </Link>
               <Link
                 to="/signup"
+                onClick={() => trackProductEvent("account_invite_clicked", { surface: "header" })}
                 className="rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90 sm:px-4"
               >
                 {t.public.header.signup}

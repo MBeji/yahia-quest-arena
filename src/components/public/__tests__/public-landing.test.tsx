@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 
@@ -7,16 +7,29 @@ vi.mock("@tanstack/react-router", () => ({
     children,
     to,
     params,
+    onClick,
   }: {
     children: React.ReactNode;
     to: string;
     params?: Record<string, string>;
+    onClick?: () => void;
   }) =>
     React.createElement(
       "a",
-      { href: params ? to.replace(/\$(\w+)/g, (_m, k: string) => params[k] ?? `$${k}`) : to },
+      {
+        href: params ? to.replace(/\$(\w+)/g, (_m, k: string) => params[k] ?? `$${k}`) : to,
+        onClick: (e: React.MouseEvent) => {
+          e.preventDefault();
+          onClick?.();
+        },
+      },
       children,
     ),
+}));
+// é38 lot 0 : les clics d'invitation émettent `account_invite_clicked`.
+const trackProductEvent = vi.fn();
+vi.mock("@/shared/lib/product-events", () => ({
+  trackProductEvent: (...a: unknown[]) => trackProductEvent(...a),
 }));
 vi.mock("@/hooks/use-mobile", () => ({ useIsMobile: () => true }));
 vi.mock("@/components/landing/golden-hero-canvas", () => ({ default: () => null }));
@@ -151,5 +164,35 @@ describe("PublicLanding", () => {
     expect(img.getAttribute("height")).toBe("1080");
     // Decorative: it must stay out of the accessibility tree.
     expect(img.getAttribute("alt")).toBe("");
+  });
+});
+
+describe("PublicLanding — invitations mesurées (é38 lot 0)", () => {
+  beforeEach(() => {
+    trackProductEvent.mockClear();
+    mockUseAuth.mockReturnValue({ user: null, session: null, loading: false });
+  });
+
+  it("« Créer mon compte gratuit » émet l'invitation depuis l'accueil", () => {
+    render(<PublicLanding />);
+    fireEvent.click(screen.getByRole("link", { name: /Créer mon compte gratuit/ }));
+    expect(trackProductEvent).toHaveBeenCalledWith("account_invite_clicked", {
+      surface: "landing",
+    });
+  });
+
+  it("« Créer mon compte parent » aussi : c'est une invitation, depuis l'accueil", () => {
+    render(<PublicLanding />);
+    fireEvent.click(screen.getByRole("link", { name: /Créer mon compte parent/ }));
+    expect(trackProductEvent).toHaveBeenCalledWith("account_invite_clicked", {
+      surface: "landing",
+    });
+  });
+
+  it("un connecté n'est pas invité : « Continuer à jouer » ne mesure rien", () => {
+    mockUseAuth.mockReturnValue({ user: { id: "u1" }, session: {}, loading: false });
+    render(<PublicLanding />);
+    fireEvent.click(screen.getByRole("link", { name: /Continuer à jouer/ }));
+    expect(trackProductEvent).not.toHaveBeenCalled();
   });
 });
