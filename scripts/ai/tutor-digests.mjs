@@ -16,8 +16,8 @@
  *
  * POURQUOI IL BOUCLE
  * ---------------------------------------------------------------------------
- * La fonction SSR est configurée à `maxDuration: 300` secondes
- * (`scripts/build-vercel.mjs`, plan Hobby). Un appel de modèle se compte en
+ * La fonction SSR est bornée à `SSR_MAX_DURATION_S` (300 s,
+ * `scripts/vercel-function.mjs`, plan Hobby). Un appel de modèle se compte en
  * secondes, un élève lié à un parent en coûte deux : trois élèves tiennent dans
  * l'enveloppe, cent n'y tiennent pas. La route traite donc une TRANCHE bornée et
  * rend un curseur ; ce script rappelle la route jusqu'à épuisement.
@@ -47,6 +47,7 @@
 import { pathToFileURL } from "node:url";
 
 import { PROD_APP_HOSTS } from "../shared/prod-targets.mjs";
+import { SSR_MAX_DURATION_S } from "../vercel-function.mjs";
 
 /** Élèves RÉDIGÉS au plus par requête, aligné sur `TUTOR_DIGEST_DEFAULT_LIMIT`. */
 const DEFAULT_LIMIT = 3;
@@ -57,8 +58,8 @@ const DEFAULT_LIMIT = 3;
  */
 const DEFAULT_ROUNDS = 120;
 /**
- * Un poil au-dessus du `maxDuration: 300` de la fonction SSR
- * (`scripts/build-vercel.mjs`) : on veut SA réponse, pas la nôtre.
+ * Dix secondes au-dessus du plafond de la fonction SSR (`SSR_MAX_DURATION_S`,
+ * `scripts/vercel-function.mjs`) : on veut SA réponse, pas la nôtre.
  *
  * La valeur a dit 35 s pendant que le serveur passait à 300 : on abandonnait donc
  * une tranche que le serveur avait parfaitement le droit de finir. Le contrat du
@@ -69,7 +70,7 @@ const DEFAULT_ROUNDS = 120;
  * c'est lui qu'on suit, pas un budget réinventé ici. Le run reste borné par le
  * `timeout-minutes` du workflow, et le curseur reprend au passage suivant.
  */
-const REQUEST_TIMEOUT_MS = 310_000;
+const REQUEST_TIMEOUT_MS = SSR_MAX_DURATION_S * 1000 + 10_000;
 
 /**
  * L'hôte de production, résolu depuis le DÉPÔT et non depuis un secret.

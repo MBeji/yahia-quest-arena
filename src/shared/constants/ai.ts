@@ -835,7 +835,7 @@ export const AI_STUDENT_TIMEOUT_MS = 60_000;
  * ne peut pas.
  *
  * ⚠️ INVARIANT : chaque valeur doit rester STRICTEMENT INFÉRIEURE au
- * `maxDuration` de la fonction SSR (`scripts/build-vercel.mjs`). Sinon c'est la
+ * `maxDuration` de la fonction SSR (`scripts/vercel-function.mjs`). Sinon c'est la
  * plateforme qui tue le processus avant nous, et un 504 muet remplace l'erreur
  * typée que le porteur peut lire — c'est exactement la panne du 2026-08-25.
  */
@@ -874,7 +874,7 @@ export const AI_TIMEOUT_MS: Readonly<Record<AiFeature, number>> = {
  *
  * ⚠️ MÊME INVARIANT que {@link AI_TIMEOUT_MS} : le résultat doit rester
  * STRICTEMENT INFÉRIEUR au `maxDuration` de la fonction SSR (300 s,
- * `scripts/build-vercel.mjs`), et il faut y laisser la place de la double
+ * `scripts/vercel-function.mjs`), et il faut y laisser la place de la double
  * résolution qui SUIT la génération. D'où le plafond dur : au-delà, ce n'est
  * plus une génération lente, c'est un modèle qui ne convient pas à la Forge, et
  * l'écran doit le dire au lieu de faire attendre trois minutes pour rien.
