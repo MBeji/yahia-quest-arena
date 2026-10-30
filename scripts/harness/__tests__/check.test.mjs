@@ -26,6 +26,7 @@ import {
   findSuspiciousInvisibles,
   findGhWithoutRepo,
   findApplyWithoutNpm10,
+  findPushPastRedGate,
   findPhantomProneTriggers,
   collectCorpusProblems,
   checkPolicyReasons,
@@ -670,6 +671,120 @@ describe("findApplyWithoutNpm10 — le script refuse un npm que le workflow lui 
   it("passes the real upgrade-guard.yml of this repo", () => {
     const reel = readFileSync(".github/workflows/upgrade-guard.yml", "utf8");
     expect(findApplyWithoutNpm10(reel)).toEqual([]);
+  });
+});
+
+describe("findPushPastRedGate — un lot rouge ne passe pas le hook pre-push", () => {
+  // Ce n'est pas une hypothèse : run 41017413367 (2026-10-30, #1203). `npm ci` installe husky
+  // dans le checkout du runner, le gate `ci:verify` est rouge (continue-on-error), et l'étape
+  // qui pousse le lot « pour ouvrir une PR draft » se fait refuser par `.husky/pre-push`
+  // (`npm run verify`) : aucune PR, et l'agent de réparation sort `skipped`.
+  const job = (etapePush) =>
+    [
+      "name: x",
+      "on: { workflow_dispatch: {} }",
+      "jobs:",
+      "  apply:",
+      "    runs-on: ubuntu-latest",
+      "    steps:",
+      "      - run: npm ci --no-audit --no-fund",
+      "      - name: Full gate on the lot",
+      "        id: gate",
+      "        continue-on-error: true",
+      "        run: npm run ci:verify",
+      ...etapePush,
+      "",
+    ].join("\n");
+
+  it("attrape la forme exacte du bug : le push n'est gardé que par un `if` shell", () => {
+    const hits = findPushPastRedGate(
+      job([
+        "      - name: Open the patch/minor PR",
+        "        env: { GATE: '${{ steps.gate.outcome }}' }",
+        "        run: |",
+        '          git push -u origin "$branch"',
+        '          if [ "$GATE" = "success" ]; then gh pr create; else gh pr create --draft; fi',
+      ]),
+    );
+    expect(hits).toEqual([{ job: "apply", step: "Open the patch/minor PR" }]);
+  });
+
+  it("accepte le correctif : le push ne tourne que si le gate est vert", () => {
+    expect(
+      findPushPastRedGate(
+        job([
+          "      - name: Open the patch/minor PR",
+          "        if: steps.commit.outcome == 'success' && steps.gate.outcome == 'success'",
+          '        run: git push -u origin "$BRANCH"',
+        ]),
+      ),
+    ).toEqual([]);
+  });
+
+  it("refuse `conclusion` : celle d'une étape continue-on-error est toujours success", () => {
+    expect(
+      findPushPastRedGate(
+        job([
+          "      - if: steps.gate.conclusion == 'success'",
+          '        run: git push -u origin "$BRANCH"',
+        ]),
+      ),
+    ).toHaveLength(1);
+  });
+
+  it("attrape un gate sans `id` — rien ne peut alors le lire", () => {
+    const anonyme = job([
+      "      - if: steps.gate.outcome == 'success'",
+      "        run: git push origin b",
+    ]).replace("        id: gate\n", "");
+    expect(findPushPastRedGate(anonyme)).toHaveLength(1);
+  });
+
+  it("se tait sans hooks installés (`npm ci --ignore-scripts`, ou pas de `npm ci`)", () => {
+    const etape = ["      - run: git push origin b"];
+    expect(
+      findPushPastRedGate(job(etape).replace("npm ci --no-audit", "npm ci --ignore-scripts")),
+    ).toEqual([]);
+    expect(
+      findPushPastRedGate(job(etape).replace("      - run: npm ci --no-audit --no-fund\n", "")),
+    ).toEqual([]);
+  });
+
+  it("ne compte pas `npm i -g npm@10` comme une installation des hooks", () => {
+    const global = job(["      - run: git push origin b"]).replace(
+      "npm ci --no-audit --no-fund",
+      "npm i -g npm@10",
+    );
+    expect(findPushPastRedGate(global)).toEqual([]);
+  });
+
+  it("se tait sur un push AVANT le gate, ou sans gate non bloquant", () => {
+    const avant = [
+      "name: x",
+      "on: { workflow_dispatch: {} }",
+      "jobs:",
+      "  j:",
+      "    steps:",
+      "      - run: npm ci",
+      "      - run: git push origin b",
+      "      - continue-on-error: true",
+      "        id: gate",
+      "        run: npm run verify",
+      "",
+    ].join("\n");
+    expect(findPushPastRedGate(avant)).toEqual([]);
+    expect(
+      findPushPastRedGate(avant.replace("      - continue-on-error: true\n", "      - id: x\n")),
+    ).toEqual([]);
+  });
+
+  it("stays quiet on unreadable YAML — that is checkYamlFiles' job", () => {
+    expect(findPushPastRedGate(":::not yaml: [")).toEqual([]);
+  });
+
+  it("passes the real upgrade-guard.yml of this repo", () => {
+    const reel = readFileSync(".github/workflows/upgrade-guard.yml", "utf8");
+    expect(findPushPastRedGate(reel)).toEqual([]);
   });
 });
 

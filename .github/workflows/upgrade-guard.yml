@@ -206,30 +206,25 @@ jobs:
           fi
 
       # The gate decides, exactly as it does for a human PR. Non-blocking here: a red gate
-      # is a legitimate outcome (draft PR + the agent's repair mode below), not a job crash.
+      # is a legitimate outcome (the agent's repair mode below), not a job crash.
       - name: Full gate on the lot
         id: gate
         if: steps.cadence.outputs.run == 'true' && steps.detect.outputs.has_patch_minor == 'true'
         continue-on-error: true
         run: npm run ci:verify
 
-      # Green → a ready PR that the slow suites below can auto-merge. Red → the same branch
-      # as a DRAFT labelled `needs-review`, has_patch_minor=false so nothing auto-merges,
-      # and the agent gets it as repair work. This is the skill's own decision tree, applied
-      # deterministically. This branch is excluded from auto-pr.yml (see its `branches-ignore`)
-      # precisely so that decision stays here, and the PR is opened below explicitly.
-      #
-      # `no-automerge` on the green path is not cosmetic: automerge.yml arms native
-      # auto-merge on every non-draft PR it sees opened, which would merge this lot as soon
-      # as the four REQUIRED checks are green — i.e. before the E2E and pgTAP jobs this
-      # workflow deliberately waits for. The label keeps the merge decision in the `merge`
-      # job below, which squash-merges once those slow suites are green too.
-      - name: Open the patch/minor PR
-        id: pr
+      # The lot is COMMITTED whatever the gate said, on a LOCAL branch — and only a green
+      # lot is PUSHED (next step). Why the split (#1203): `npm ci` above runs the project's
+      # `prepare`, which installs husky in this checkout, so `git push` here replays
+      # `.husky/pre-push` = `npm run verify`. A lot red at lint/typecheck/test can therefore
+      # NEVER be pushed: the push step used to fail, no draft PR was opened, and every later
+      # step (token, agent) was `skipped` — the repair mode was dead whenever the red was
+      # inside `verify`. It only worked on 2026-10-27 because that red (bundle budget,
+      # build:check) is outside `verify`. The hook is NOT bypassed (no --no-verify, no
+      # HUSKY=0): a red lot stays local, the agent repairs it, and pushes it once green.
+      - name: Commit the patch/minor lot on a local branch
+        id: commit
         if: steps.cadence.outputs.run == 'true' && steps.detect.outputs.has_patch_minor == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GH_AUTOMATION_PAT || secrets.GITHUB_TOKEN }}
-          GATE: ${{ steps.gate.outcome }}
         run: |
           set -euo pipefail
           date="$(date -u +%F)"
@@ -241,25 +236,38 @@ jobs:
           git commit -m "chore(deps): patch & minor upgrades $date" \
             -m "Lot déterministe monté dans les ranges par scripts/deps/apply-patch-minor.mjs (étude IA → déterministe, L4)." \
             -m "Co-Authored-By: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
-          git push -u origin "$branch"
-
-          body="$RUNNER_TEMP/upgrade-pr-body.md"
-          if [ "$GATE" = "success" ]; then
-            printf '\n---\n\n✅ `npm run ci:verify` vert sur la branche.\n' >> "$body"
-            gh pr create --title "chore(deps): patch & minor upgrades $date" --body-file "$body" \
-              --label dependencies --label no-automerge --head "$branch" --base main
-            echo "has_patch_minor=true" >> "$GITHUB_OUTPUT"
-          else
-            printf '\n---\n\n❌ `npm run ci:verify` **rouge** sur ce lot. PR laissée en **draft** : le garde agent\nreprend la main (corriger proprement, ou écarter le paquet fautif avec `--hold` et relancer).\nAucun auto-merge.\n' >> "$body"
-            gh pr create --draft --title "chore(deps): patch & minor upgrades $date" --body-file "$body" \
-              --label dependencies --label needs-review --head "$branch" --base main
-            echo "has_patch_minor=false" >> "$GITHUB_OUTPUT"
-          fi
           echo "branch=$branch" >> "$GITHUB_OUTPUT"
-          echo "number=$(gh pr view "$branch" --json number --jq .number)" >> "$GITHUB_OUTPUT"
           # Back to a clean main so the agent step below starts from the same baseline it
-          # always had (each major branches off main).
+          # always had (each major branches off main). The lot stays on its local branch.
           git checkout main
+
+      # Green ONLY → push + a ready PR that the slow suites below can auto-merge. A red lot
+      # never reaches this step (see above): it stays local, has_patch_minor stays unset, and
+      # the agent gets it as repair work. This branch is excluded from auto-pr.yml (see its
+      # `branches-ignore`) precisely so that decision stays here, and the PR is opened
+      # below explicitly.
+      #
+      # `no-automerge` is not cosmetic: automerge.yml arms native auto-merge on every
+      # non-draft PR it sees opened, which would merge this lot as soon as the four REQUIRED
+      # checks are green — i.e. before the E2E and pgTAP jobs this workflow deliberately
+      # waits for. The label keeps the merge decision in the `automerge` job below, which
+      # squash-merges once those slow suites are green too.
+      - name: Open the patch/minor PR
+        id: pr
+        if: steps.commit.outcome == 'success' && steps.gate.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ secrets.GH_AUTOMATION_PAT || secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ steps.commit.outputs.branch }}
+        run: |
+          set -euo pipefail
+          date="$(date -u +%F)"
+          git push -u origin "$BRANCH"
+          body="$RUNNER_TEMP/upgrade-pr-body.md"
+          printf '\n---\n\n✅ `npm run ci:verify` vert sur la branche.\n' >> "$body"
+          gh pr create --title "chore(deps): patch & minor upgrades $date" --body-file "$body" \
+            --label dependencies --label no-automerge --head "$BRANCH" --base main
+          echo "has_patch_minor=true" >> "$GITHUB_OUTPUT"
+          echo "number=$(gh pr view "$BRANCH" --json number --jq .number)" >> "$GITHUB_OUTPUT"
 
       # --- What still needs judgement: the majors, and a red lot (§4.4/§4.6) ------------
       # The agent is woken ONLY when there is real work for it: at least one major to read
@@ -336,20 +344,31 @@ jobs:
             State from this run:
               • in-range lot applied: ${{ steps.detect.outputs.has_patch_minor }}
               • its `npm run ci:verify`: ${{ steps.gate.outcome }}
-              • its branch / PR: ${{ steps.pr.outputs.branch }} / #${{ steps.pr.outputs.number }}
+              • its LOCAL branch: ${{ steps.commit.outputs.branch }} — committed in this
+                checkout, pushed and turned into a PR ONLY if the gate above is `success`
 
             Do, in this order:
 
-              1. IF the patch/minor gate above is `failure`: REPAIR that lot. Check out its
-                 branch, reproduce the failure, and either fix it properly when the fix is
-                 a correct changelog-prescribed adjustment, or drop the offending package
-                 from the lot by re-running
-                   `node scripts/deps/apply-patch-minor.mjs detect --out <plan> --hold <pkg>`
-                 then `… apply --plan <plan>` on a clean tree — recording the hold-back and
-                 its reason in the PR body. Push, and when `npm run ci:verify` is green mark
-                 the PR ready for review (`gh pr ready`), remove `needs-review`, and record
-                 has_patch_minor=true + the branch + PR number in the result file so the slow
-                 suites and the auto-merge can take over. Never weaken the gate to go green.
+              1. IF the patch/minor gate above is `failure`: REPAIR that lot. Its branch
+                 exists LOCALLY and is NOT pushed — there is no PR: the husky pre-push hook
+                 (`npm run verify`) refuses a red lot, and you must NEVER bypass it (no
+                 `--no-verify`, no `HUSKY=0`, no `core.hooksPath`). Check out that branch,
+                 reproduce the failure, and either fix it properly when the fix is a correct
+                 changelog-prescribed adjustment, or drop the offending package from the lot:
+                 reset the branch to `main` (`git checkout -B <branch> main`), re-run
+                   `node scripts/deps/apply-patch-minor.mjs detect --out <plan> --pr-body <body> --hold <pkg>`
+                 then `… apply --plan <plan>`, and commit. Once `npm run ci:verify` is green,
+                 push the branch (`git push -u origin <branch>` — the pre-push hook passes
+                 now) and open the PR yourself:
+                   `gh pr create --title "chore(deps): patch & minor upgrades <date>" --body-file <body>
+                    --label dependencies --label no-automerge --head <branch> --base main`
+                 with the hold-backs and their reasons in the body (`no-automerge` keeps the
+                 merge for the slow suites below). Then record has_patch_minor=true + the
+                 branch + PR number in the result file so the slow suites and the auto-merge
+                 take over. If it stays red after a reasonable effort, push nothing and open
+                 no PR: file a tracking ISSUE (or comment the existing one — same dedupe rule
+                 as in step 2) naming the failing package(s) and the errors. Never weaken the
+                 gate to go green.
 
               2. For EACH major group in the plan, in ISOLATION on its own branch (NEVER
                  bundle two groups): read its changelog/migration notes first (WebFetch /
@@ -396,7 +415,7 @@ jobs:
         if: ${{ always() && steps.cadence.outputs.run == 'true' }}
         env:
           DET_HAS: ${{ steps.pr.outputs.has_patch_minor }}
-          DET_BRANCH: ${{ steps.pr.outputs.branch }}
+          DET_BRANCH: ${{ steps.commit.outputs.branch }}
           DET_PR: ${{ steps.pr.outputs.number }}
         run: |
           set -euo pipefail
@@ -427,12 +446,15 @@ jobs:
         run: python3 .github/scripts/check-claude-result.py "$RUNNER_TEMP/claude-execution-output.json"
 
       # A red patch/minor gate must not pass unnoticed just because the agent was skipped
-      # (no token) or could not fix it: the draft PR exists, but the JOB stays red so the
-      # night is visibly not clean.
+      # (no token) or could not fix it: the lot never left the runner (a red lot cannot be
+      # pushed — see the commit step), so no PR exists, and the JOB stays red so the night
+      # is visibly not clean.
       - name: Fail if the patch/minor lot stayed red
         if: ${{ always() && steps.gate.outcome == 'failure' && steps.consolidate.outputs.has_patch_minor != 'true' }}
+        env:
+          BRANCH: ${{ steps.commit.outputs.branch }}
         run: |
-          echo "::error title=Lot patch/minor rouge::npm run ci:verify a échoué sur le lot patch/minor ; PR draft ${{ steps.pr.outputs.branch }} (#${{ steps.pr.outputs.number }}) laissée en needs-review."
+          echo "::error title=Lot patch/minor rouge::npm run ci:verify a échoué sur le lot patch/minor et l'agent ne l'a pas réparé (ou n'a pas tourné). Branche locale ${BRANCH:-non créée} non poussée — le hook pre-push refuse un lot rouge —, aucune PR ouverte."
           exit 1
   # --- Validate the patch/minor branch with the full slow suite -----------------
   # These reuse the canonical suite workflows, pointed at the upgrade branch via
