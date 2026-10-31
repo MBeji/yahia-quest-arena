@@ -14,7 +14,12 @@ import { useT } from "@/lib/i18n";
 import { useEntrance } from "@/shared/lib/motion";
 import { trackProductEvent } from "@/shared/lib/product-events";
 import { isFromContent } from "@/shared/lib/funnel-origin";
-import { consumeReturnTo, peekReturnTo, rememberReturnTo } from "@/shared/lib/return-to";
+import {
+  consumeReturnTo,
+  peekReturnReason,
+  peekReturnTo,
+  rememberReturnTo,
+} from "@/shared/lib/return-to";
 import type { TranslationKeys } from "@/lib/i18n/types";
 
 /** `AuthError.code` when supabase-js exposes one (it is absent on plain Errors). */
@@ -100,8 +105,16 @@ export function isFreshGoogleSignIn(session: SignInProbe, now: number): boolean 
   return provider === "google" && Number.isFinite(at) && now - at < FRESH_SIGN_IN_MS;
 }
 
-/** Ce que la mémoire de retour dit du moment : a-t-on de quoi ramener la personne, et vient-elle d'un contenu. */
-type ReturnContext = { return_to_kept: boolean; from_content: boolean };
+/**
+ * Ce que la mémoire de retour dit du moment : a-t-on de quoi ramener la personne, vient-elle d'un
+ * contenu, et POURQUOI elle revient — `expired` quand sa session est morte (é38 lot 3, R-7), `fresh`
+ * sinon. `signup` n'en reprend que les deux premiers champs.
+ */
+type ReturnContext = {
+  return_to_kept: boolean;
+  from_content: boolean;
+  reason: "fresh" | "expired";
+};
 
 /**
  * À lire AVANT tout appel qui ouvre une session : `leave()` consomme la mémoire, et `signUp` comme
@@ -111,7 +124,11 @@ type ReturnContext = { return_to_kept: boolean; from_content: boolean };
  */
 function readReturnContext(): ReturnContext {
   const origin = peekReturnTo();
-  return { return_to_kept: origin !== null, from_content: isFromContent(origin) };
+  return {
+    return_to_kept: origin !== null,
+    from_content: isFromContent(origin),
+    reason: peekReturnReason() ?? "fresh",
+  };
 }
 
 export const Route = createFileRoute("/auth")({
@@ -190,9 +207,22 @@ function AuthPage() {
   // La mesure du retour de Google se lit ICI, à l'arrivée : personne n'appelle rien à ce moment-là, la
   // session est déjà ouverte, et trois chemins (le rappel de session, l'écouteur, l'événement) peuvent
   // consommer la mémoire avant celui qui mesure. Lue APRÈS l'écriture d'un `?returnTo=` éventuel.
-  const arrival = useRef<ReturnContext>({ return_to_kept: false, from_content: false });
+  // Une seule fois PAR PAGE, pas par abonnement : l'effet qui s'abonne se rejoue quand `leave` ou `t`
+  // change, et un garde local à l'effet aurait alors mesuré la même connexion deux fois.
+  const googleLoginTracked = useRef(false);
+  const arrival = useRef<ReturnContext>({
+    return_to_kept: false,
+    from_content: false,
+    reason: "fresh",
+  });
+  // R-7 : la session est morte sous ses doigts — l'écran le dit en tête de formulaire. Même lecture
+  // que la mesure, donc elle aussi APRÈS le montage (la mémoire est locale à l'appareil : la lire au
+  // rendu ferait diverger l'hydratation du HTML serveur) et APRÈS l'écriture d'un `?returnTo=`, qui
+  // remplace un retour d'expiration par une invitation — l'avis ne vaut alors plus.
+  const [sessionExpired, setSessionExpired] = useState(false);
   useEffect(() => {
     arrival.current = readReturnContext();
+    setSessionExpired(arrival.current.reason === "expired");
   }, [returnTo]);
 
   useEffect(() => {
@@ -225,11 +255,10 @@ function AuthPage() {
     // chez Google, mais le retour gardé a survécu — c'est lui qui dit d'où l'on venait. Deux chemins et pas
     // un seul : selon l'ordre où Supabase livre INITIAL_SESSION et SIGNED_IN, c'est l'un ou l'autre qui
     // arrive d'abord, et `leave()` quitte la page aussitôt.
-    let googleLoginTracked = false;
     const trackGoogleLogin = (session: SignInProbe) => {
-      if (googleLoginTracked || !isFreshGoogleSignIn(session, Date.now())) return;
-      googleLoginTracked = true;
-      trackProductEvent("login", { method: "google", reason: "fresh", ...arrival.current });
+      if (googleLoginTracked.current || !isFreshGoogleSignIn(session, Date.now())) return;
+      googleLoginTracked.current = true;
+      trackProductEvent("login", { method: "google", ...arrival.current });
     };
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) {
@@ -351,7 +380,12 @@ function AuthPage() {
         // sur le chemin « confirme ton adresse » où l'élève ne revient parfois
         // jamais : c'est justement la fuite qu'on veut voir. Aucune PII — le
         // rôle choisi, rien d'autre.
-        trackProductEvent("signup", { role, needs_confirmation: !data.session, ...context });
+        trackProductEvent("signup", {
+          role,
+          needs_confirmation: !data.session,
+          return_to_kept: context.return_to_kept,
+          from_content: context.from_content,
+        });
 
         // Profile bootstrap (display name + role) is extracted to the
         // `bootstrapProfile` server fn (review #19). It is authenticated, so it can
@@ -391,7 +425,7 @@ function AuthPage() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         // `reason: "expired"` arrive avec le lot 3 (la session qui meurt).
-        trackProductEvent("login", { method: "password", reason: "fresh", ...context });
+        trackProductEvent("login", { method: "password", ...context });
         toast.success(t.auth.toastLoginSuccess);
         leave();
       }
@@ -621,6 +655,18 @@ function AuthPage() {
             </form>
           ) : (
             <>
+              {/* R-7 : « Ta session a expiré » — en connexion seulement (créer un compte n'a rien à voir),
+                  dans une région d'état toujours montée : un lecteur d'écran l'annonce sans voler le focus. */}
+              <div role="status" aria-live="polite">
+                {sessionExpired && !isSignup && (
+                  <p
+                    data-testid="auth-session-expired"
+                    className="mt-6 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-center text-xs text-gold"
+                  >
+                    {t.errors.sessionExpired}
+                  </p>
+                )}
+              </div>
               <button
                 type="button"
                 disabled={busy}
