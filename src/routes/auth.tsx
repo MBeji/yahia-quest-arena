@@ -100,6 +100,20 @@ export function isFreshGoogleSignIn(session: SignInProbe, now: number): boolean 
   return provider === "google" && Number.isFinite(at) && now - at < FRESH_SIGN_IN_MS;
 }
 
+/** Ce que la mémoire de retour dit du moment : a-t-on de quoi ramener la personne, et vient-elle d'un contenu. */
+type ReturnContext = { return_to_kept: boolean; from_content: boolean };
+
+/**
+ * À lire AVANT tout appel qui ouvre une session : `leave()` consomme la mémoire, et `signUp` comme
+ * `signInWithPassword` notifient `SIGNED_IN` AVANT de rendre la main — l'écouteur de la page a donc déjà
+ * navigué et vidé la mémoire quand le formulaire reprend la parole. Lue après, la mesure disait
+ * « pas de retour gardé » pour la plupart des connexions qui en avaient un.
+ */
+function readReturnContext(): ReturnContext {
+  const origin = peekReturnTo();
+  return { return_to_kept: origin !== null, from_content: isFromContent(origin) };
+}
+
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
@@ -173,6 +187,14 @@ function AuthPage() {
     if (returnTo !== undefined) rememberReturnTo(returnTo);
   }, [returnTo]);
 
+  // La mesure du retour de Google se lit ICI, à l'arrivée : personne n'appelle rien à ce moment-là, la
+  // session est déjà ouverte, et trois chemins (le rappel de session, l'écouteur, l'événement) peuvent
+  // consommer la mémoire avant celui qui mesure. Lue APRÈS l'écriture d'un `?returnTo=` éventuel.
+  const arrival = useRef<ReturnContext>({ return_to_kept: false, from_content: false });
+  useEffect(() => {
+    arrival.current = readReturnContext();
+  }, [returnTo]);
+
   useEffect(() => {
     // 1) Surface OAuth/callback errors that Supabase appends to the URL (query or
     // hash). Without this the user silently bounces back to the login form.
@@ -198,28 +220,26 @@ function AuthPage() {
     // 2) Redirect away if already signed in. Covers the OAuth callback too:
     // Supabase exchanges /auth?code=... for a session ASYNCHRONOUSLY, so we also
     // subscribe to auth-state changes and navigate on SIGNED_IN.
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) leave();
-    });
+    // é38 lot 0 — le retour de Google (voir isFreshGoogleSignIn : jamais `?code=`). Le premier chemin qui
+    // voit la session fraîche la mesure, UNE fois, avec le contexte lu à l'arrivée : la page a été rechargée
+    // chez Google, mais le retour gardé a survécu — c'est lui qui dit d'où l'on venait. Deux chemins et pas
+    // un seul : selon l'ordre où Supabase livre INITIAL_SESSION et SIGNED_IN, c'est l'un ou l'autre qui
+    // arrive d'abord, et `leave()` quitte la page aussitôt.
     let googleLoginTracked = false;
-    const { data: authSub } = supabase.auth.onAuthStateChange((event, session) => {
+    const trackGoogleLogin = (session: SignInProbe) => {
+      if (googleLoginTracked || !isFreshGoogleSignIn(session, Date.now())) return;
+      googleLoginTracked = true;
+      trackProductEvent("login", { method: "google", reason: "fresh", ...arrival.current });
+    };
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) {
+        trackGoogleLogin(data.session);
+        leave();
+      }
+    });
+    const { data: authSub } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
-        // é38 lot 0 — le retour de Google (voir isFreshGoogleSignIn : jamais `?code=`). La page a
-        // été rechargée chez Google, mais le retour gardé a survécu : c'est lui qui dit d'où l'on venait.
-        if (
-          event === "SIGNED_IN" &&
-          !googleLoginTracked &&
-          isFreshGoogleSignIn(session, Date.now())
-        ) {
-          googleLoginTracked = true;
-          const origin = peekReturnTo();
-          trackProductEvent("login", {
-            method: "google",
-            reason: "fresh",
-            return_to_kept: origin !== null,
-            from_content: isFromContent(origin),
-          });
-        }
+        trackGoogleLogin(session);
         leave();
       }
     });
@@ -293,6 +313,8 @@ function AuthPage() {
     }
     setPasswordError("");
     setBusy(true);
+    // Lu AVANT l'appel qui ouvre la session : voir `readReturnContext`.
+    const context = readReturnContext();
     try {
       if (isSignup) {
         const displayName = name || email.split("@")[0];
@@ -329,13 +351,7 @@ function AuthPage() {
         // sur le chemin « confirme ton adresse » où l'élève ne revient parfois
         // jamais : c'est justement la fuite qu'on veut voir. Aucune PII — le
         // rôle choisi, rien d'autre.
-        const origin = peekReturnTo();
-        trackProductEvent("signup", {
-          role,
-          needs_confirmation: !data.session,
-          return_to_kept: origin !== null,
-          from_content: isFromContent(origin),
-        });
+        trackProductEvent("signup", { role, needs_confirmation: !data.session, ...context });
 
         // Profile bootstrap (display name + role) is extracted to the
         // `bootstrapProfile` server fn (review #19). It is authenticated, so it can
@@ -375,13 +391,7 @@ function AuthPage() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         // `reason: "expired"` arrive avec le lot 3 (la session qui meurt).
-        const origin = peekReturnTo();
-        trackProductEvent("login", {
-          method: "password",
-          reason: "fresh",
-          return_to_kept: origin !== null,
-          from_content: isFromContent(origin),
-        });
+        trackProductEvent("login", { method: "password", reason: "fresh", ...context });
         toast.success(t.auth.toastLoginSuccess);
         leave();
       }

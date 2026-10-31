@@ -653,3 +653,155 @@ describe("isFreshGoogleSignIn", () => {
     expect(isFreshGoogleSignIn({ user: { identities: null } }, now)).toBe(false);
   });
 });
+
+/**
+ * Revue de sécurité du lot 1 — LA MESURE SE LIT AVANT QUE LA MÉMOIRE SOIT CONSOMMÉE.
+ *
+ * Les tests d'événements plus haut passaient pour une mauvaise raison : leur `signInWithPassword`
+ * simulé rendait la main SANS que l'écouteur d'état d'authentification ait parlé. Le vrai client
+ * (`auth-js`) notifie `SIGNED_IN` — et attend les écouteurs — AVANT de rendre la main : la page a déjà
+ * navigué, et `leave()` a déjà vidé la mémoire, quand le formulaire veut mesurer. Ici l'écouteur parle
+ * d'abord, comme en production.
+ */
+describe("AuthPage — la mesure se lit avant la consommation (revue de sécurité du lot 1)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    window.localStorage.clear();
+    window.history.replaceState({}, "", "/auth");
+    notePageForFunnel("/");
+    mockSearch.mode = "login";
+    delete mockSearch.role;
+    delete mockSearch.returnTo;
+    mockGetSession.mockResolvedValue({ data: { session: null } });
+    mockOnAuthStateChange.mockReturnValue({ data: { subscription: { unsubscribe: vi.fn() } } });
+  });
+
+  /** L'écouteur que la page a posé sur l'état d'authentification. */
+  const listener = () =>
+    mockOnAuthStateChange.mock.calls[0][0] as (event: string, session: unknown) => void;
+
+  /** Comme le vrai client : SIGNED_IN est notifié AVANT que l'appel ne rende la main. */
+  const signedInBeforeResolving = (result: unknown) => async () => {
+    listener()("SIGNED_IN", { user: { id: "u1" } });
+    return result;
+  };
+
+  const loginEvents = () => trackProductEvent.mock.calls.filter(([name]) => name === "login");
+
+  const freshGoogle = () => ({
+    user: {
+      id: "u1",
+      identities: [{ provider: "google", last_sign_in_at: new Date().toISOString() }],
+    },
+  });
+
+  it("connexion par mot de passe : le retour est ramené ET mesuré comme gardé", async () => {
+    rememberReturnTo("/chapitre/c1");
+    mockSignIn.mockImplementation(signedInBeforeResolving({ error: null }));
+    render(<AuthPage />);
+    submitLogin();
+
+    await waitFor(() =>
+      expect(trackProductEvent).toHaveBeenCalledWith("login", {
+        method: "password",
+        reason: "fresh",
+        return_to_kept: true,
+        from_content: true,
+      }),
+    );
+    expect(mockPush).toHaveBeenCalledTimes(1);
+    expect(mockPush).toHaveBeenCalledWith("/chapitre/c1");
+  });
+
+  it("inscription qui ouvre une session : même chose", async () => {
+    mockSearch.mode = "signup";
+    rememberReturnTo("/chapitre/c1");
+    mockSignUp.mockImplementation(
+      signedInBeforeResolving({
+        data: {
+          user: { id: "u1", identities: [{ identity_id: "i1" }] },
+          session: { access_token: "t" },
+        },
+        error: null,
+      }),
+    );
+    render(<AuthPage />);
+    submitSignup();
+
+    await waitFor(() =>
+      expect(trackProductEvent).toHaveBeenCalledWith("signup", {
+        role: "student",
+        needs_confirmation: false,
+        return_to_kept: true,
+        from_content: true,
+      }),
+    );
+    expect(mockPush).toHaveBeenCalledTimes(1);
+    expect(mockPush).toHaveBeenCalledWith("/chapitre/c1");
+  });
+
+  it("sans retour gardé, la mesure dit toujours faux — c'est le Hall", async () => {
+    mockSignIn.mockImplementation(signedInBeforeResolving({ error: null }));
+    render(<AuthPage />);
+    submitLogin();
+
+    await waitFor(() =>
+      expect(trackProductEvent).toHaveBeenCalledWith("login", {
+        method: "password",
+        reason: "fresh",
+        return_to_kept: false,
+        from_content: false,
+      }),
+    );
+    expect(mockNavigate).toHaveBeenCalledWith({ to: "/dashboard" });
+  });
+
+  it("retour de Google, session DÉJÀ ouverte au montage : un login, avec le contexte d'arrivée", async () => {
+    rememberReturnTo("/chapitre/c1");
+    mockGetSession.mockResolvedValue({ data: { session: freshGoogle() } });
+    render(<AuthPage />);
+
+    await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/chapitre/c1"));
+    // SIGNED_IN arrive APRÈS que le rappel de session a déjà consommé la mémoire : il ne doit ni
+    // doubler l'événement, ni le fausser.
+    listener()("SIGNED_IN", freshGoogle());
+
+    expect(loginEvents()).toEqual([
+      ["login", { method: "google", reason: "fresh", return_to_kept: true, from_content: true }],
+    ]);
+    expect(mockPush).toHaveBeenCalledTimes(1);
+  });
+
+  it("retour de Google, INITIAL_SESSION d'abord puis SIGNED_IN : un seul login, avec le bon contexte", () => {
+    rememberReturnTo("/chapitre/c1");
+    render(<AuthPage />);
+
+    listener()("INITIAL_SESSION", freshGoogle());
+    listener()("SIGNED_IN", freshGoogle());
+
+    expect(loginEvents()).toHaveLength(1);
+    expect(loginEvents()[0][1]).toEqual({
+      method: "google",
+      reason: "fresh",
+      return_to_kept: true,
+      from_content: true,
+    });
+  });
+
+  it("une session Google ancienne, vue par le rappel de session, n'est pas une connexion", async () => {
+    mockGetSession.mockResolvedValue({
+      data: {
+        session: {
+          user: {
+            id: "u1",
+            identities: [{ provider: "google", last_sign_in_at: "2026-01-01T00:00:00.000Z" }],
+          },
+        },
+      },
+    });
+    render(<AuthPage />);
+
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith({ to: "/dashboard" }));
+    expect(loginEvents()).toHaveLength(0);
+  });
+});

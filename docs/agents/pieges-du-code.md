@@ -464,6 +464,25 @@ doute (lecture impossible), elle est tenue pour ouverte. Les deux autres déconn
 (`_authenticated.tsx`, `parametrage.tsx`) ignorent l'erreur : c'est cohérent avec ce comportement,
 et le jeton non révoqué expire de lui-même.
 
+## `signUp` et `signInWithPassword` notifient `SIGNED_IN` AVANT de rendre la main
+
+**Symptôme évité** (revue de sécurité du lot 1, é38) : mesurer « un retour était-il gardé ? » APRÈS
+`await supabase.auth.signInWithPassword(...)`. La mesure disait presque toujours « non » alors que la
+personne était bien ramenée à sa page — et les tests restaient verts.
+
+**Cause** : dans `@supabase/auth-js` 2.118.0, `signInWithPassword` (lignes 967-971) et `signUp`
+(lignes 783-787) font `await this._notifyAllSubscribers('SIGNED_IN', session)` **avant** leur
+`return`, et `_notifyAllSubscribers` attend chaque écouteur (ligne 4363). L'écouteur de `/auth` a donc
+déjà navigué et consommé la mémoire du retour quand le formulaire reprend la parole. Un test qui
+simule `signInWithPassword` par un simple `mockResolvedValue` ne fait jamais parler l'écouteur : il
+passe pour la mauvaise raison.
+
+**Ce qu'on fait** : lire ce qu'il faut mesurer **avant** l'appel qui ouvre la session
+(`readReturnContext` dans [`auth.tsx`](../../src/routes/auth.tsx)), et, pour le retour de Google où
+personne n'appelle rien, à l'arrivée sur la page. Et tester dans l'ordre réel : le simulacre de
+`signInWithPassword` doit appeler l'écouteur **avant** de rendre sa valeur (voir « la mesure se lit
+avant la consommation » dans `auth-signup.test.tsx`).
+
 ## Règles laissées par les chantiers d'août-septembre 2026
 
 Sorties de `STATUS.md` le 2026-09-22 (son § 6 les portait) ; le détail et les mesures sont dans
