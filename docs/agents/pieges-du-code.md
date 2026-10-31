@@ -400,6 +400,35 @@ La barre AA est à 4,5:1 ; en dessous de ~1,5:1 il n'y a **rien** à voir sur du
 cours, pour tout élève connecté — d'où son `print:hidden`, comme l'en-tête, le sommaire et les
 appels à l'action du lecteur.
 
+## Un élément `motion` rendu par le serveur reste à son état de DÉPART si le client ne le rejoue pas
+
+**Symptôme** (audit d'affichage du 2026-10-31) : avec « réduire les animations », la carte de `/auth` et
+de `/auth/reset` restait à `opacity: 0` **pour toujours**. Le formulaire de connexion était invisible :
+personne dans ce cas ne pouvait se connecter ni s'inscrire. Aucune erreur, aucun test rouge — et
+Playwright tient un élément à `opacity: 0` pour _visible_.
+
+**Cause**, en deux temps, dont les deux ont suffi :
+
+1. Le serveur ne connaît pas la préférence : `useReducedMotion()` y rend `null`, donc le HTML porte
+   l'état de départ du preset (`style="opacity:0;transform:scale(0.95)"`). Un premier rendu client en
+   `initial: false` n'y change rien : **React ne corrige pas les attributs à l'hydratation**.
+2. Retirer `animate` au rendu suivant — ce que faisait `{ initial: false }` seul — est lu par `motion`
+   comme « retourne à ta valeur de base ». Celle-ci vient du DOM au montage, donc du HTML serveur :
+   `opacity: 0`. Mesuré avec une version qui réglait seulement le point 1 : même carte invisible.
+
+**Ce qu'on fait** : `useEntrance` ([`motion.ts`](../../src/shared/lib/motion.ts)) rend, **pendant
+l'hydratation seulement**, ce que le serveur a rendu avec une durée nulle, puis `initial: false` en
+**gardant `animate`** — jamais un rendu sans lui. `useSyncExternalStore` distingue l'hydratation du
+montage ordinaire (un `useState` + `useEffect` rendrait la même valeur aux deux premiers rendus).
+`entrance()`, la variante sans hook, n'a pas cette garde : ses appelants (tableau de bord, classement)
+sont rendus après la lecture de session, jamais par le serveur.
+
+**Comment le revoir** : l'e2e du tier public
+[`auth-reduced-motion.spec.ts`](../../e2e/public/auth-reduced-motion.spec.ts) lit l'opacité **calculée**
+de `data-testid="auth-card"` avec `reducedMotion: "reduce"` ; les tests de `motion.test.ts` fixent ce
+que le hook rend à chaque étape. Tout nouvel écran qui s'anime à la première image d'une page rendue
+côté serveur passe par `useEntrance`, jamais par un `initial` écrit à la main.
+
 ## Un déploiement Vercel rouge en une seconde n'est pas un build cassé — c'est un refus
 
 **Symptôme (2026-10-01 → 2026-10-14)** : tous les déploiements Vercel, Production comme
