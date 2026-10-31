@@ -560,7 +560,11 @@ function AuthPage() {
           </span>
         </Link>
 
-        <motion.div {...entrance} className="w-full glass-gold rounded-2xl p-6 shadow-gold sm:p-8">
+        <motion.div
+          {...entrance}
+          data-testid="auth-card"
+          className="w-full glass-gold rounded-2xl p-6 shadow-gold sm:p-8"
+        >
           <div className="mb-3 flex justify-end">
             <LanguageSwitcher />
           </div>
