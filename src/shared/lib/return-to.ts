@@ -23,8 +23,14 @@ export const RETURN_TO_TTL_MS = 24 * 60 * 60 * 1000;
 
 const MAX_LENGTH = 512;
 
-/** Le tunnel lui-même : y « revenir » boucle. */
-const FUNNEL_PATH = /^\/(?:auth|login|signup)(?:[/?]|$)/;
+/** La page publique du suivi parental : sa requête peut porter un code d'alliance (voir `rememberCurrentPage`). */
+const SUIVI_PATH = /^\/suivi\/?$/i;
+
+/**
+ * Le tunnel lui-même : y « revenir » boucle. Insensible à la casse : le routeur apparie `/AUTH` et
+ * `/Auth` au même écran que `/auth`, donc les laisser passer ferait un saut de plus par le tunnel.
+ */
+const FUNNEL_PATH = /^\/(?:auth|login|signup)(?:[/?]|$)/i;
 
 /**
  * Y a-t-il un caractère de contrôle ? Tabulation et saut de ligne compris : un navigateur les ôte d'une
@@ -66,6 +72,12 @@ export function isSafeReturnPath(raw: unknown): string | null {
   if (url.origin !== ORIGIN_PROBE) return null;
 
   const path = url.pathname + url.search;
+  // Seconde moitié de la ceinture. Le « // » est refusé plus haut sur la chaîne d'ORIGINE, mais la
+  // normalisation de l'URL peut en FAIRE apparaître un : `/.//evil.tn`, `/a/..//evil.tn` et
+  // `/%2e//evil.tn` deviennent `//evil.tn`, un chemin protocole-relatif — le contraire de ce que
+  // cette fonction promet. Le routeur le ramènerait sur notre origine, mais c'est lui qui nous
+  // sauverait, pas le contrôle : on refuse ici, sur le résultat.
+  if (path.startsWith("//")) return null;
   return FUNNEL_PATH.test(path) ? null : path;
 }
 
@@ -119,11 +131,18 @@ export function rememberReturnTo(path: unknown, now: number = Date.now()): boole
 /**
  * Retient la page où l'on est — sauf l'accueil public : y « revenir » après une inscription
  * ramènerait à la vitrine, alors que le Hall est ce qu'on veut montrer à quelqu'un qui vient d'arriver.
+ *
+ * `/suivi` est retenu SANS sa requête : `?code=` y porte le code d'alliance d'un enfant, une clé au
+ * porteur que la page ne garde sur l'appareil que si le parent a laissé « se souvenir » coché.
+ * La mémoire du retour vit vingt-quatre heures et « oublier » ne la vide pas : y glisser le code
+ * contournerait le choix du parent. Revenir sur `/suivi` suffit — un parent connecté y est renvoyé
+ * sur son espace, un visiteur y retrouve le code qu'il a choisi de garder.
  */
 export function rememberCurrentPage(): boolean {
   if (typeof window === "undefined") return false;
   const { pathname, search } = window.location;
-  return pathname === "/" ? false : rememberReturnTo(pathname + search);
+  if (pathname === "/") return false;
+  return rememberReturnTo(SUIVI_PATH.test(pathname) ? pathname : pathname + search);
 }
 
 /** Le retour gardé, sans le consommer — pour le MESURER avant de s'en servir. */

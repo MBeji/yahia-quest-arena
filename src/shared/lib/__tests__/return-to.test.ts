@@ -76,6 +76,75 @@ describe("isSafeReturnPath (R-1)", () => {
     expect(isSafeReturnPath("/" + "a".repeat(511))).not.toBeNull();
     expect(isSafeReturnPath("/" + "a".repeat(512))).toBeNull();
   });
+
+  // Revue de sécurité du lot 1 : la NORMALISATION de l'URL (segments « . » et « .. ») peut faire
+  // apparaître un « // » que la chaîne d'origine n'avait pas. Le contrôle sur l'origine ne le voit pas ;
+  // sans le contrôle sur le résultat, la fonction rend un chemin protocole-relatif.
+  it.each([
+    "/.//evil.tn",
+    "/a/..//x",
+    "/%2e//x",
+    "/..//evil.tn/phish",
+    "/././/evil.tn",
+    "/a/b/../..//evil.tn",
+  ])("refuse %s : la normalisation en ferait un « // »", (raw) => {
+    expect(isSafeReturnPath(raw)).toBeNull();
+  });
+
+  it("refuse le tunnel quelle que soit la casse : le routeur apparie /AUTH à /auth", () => {
+    for (const funnel of ["/AUTH", "/Auth?mode=signup", "/LOGIN", "/SignUp", "/aUtH/reset"]) {
+      expect(isSafeReturnPath(funnel), funnel).toBeNull();
+    }
+  });
+
+  it("ne refuse pas un chemin qui COMMENCE comme le tunnel sans en être un", () => {
+    expect(isSafeReturnPath("/authors")).toBe("/authors");
+    expect(isSafeReturnPath("/Authors?x=1")).toBe("/Authors?x=1");
+    expect(isSafeReturnPath("/login-help")).toBe("/login-help");
+  });
+
+  /**
+   * Les invariants que la fonction PROMET, sur un corpus engendré plutôt que sur des exemples choisis :
+   * c'est ainsi que le « // » d'après normalisation a été trouvé, et pas par les exemples. Tout ce qui
+   * sort est un chemin interne sans « // » ni antislash ni contrôle, hors tunnel — et rejouer la
+   * fonction sur sa propre sortie ne change rien (sinon la mémoire écrit ce qu'elle refusera de relire).
+   */
+  it("tient ses promesses sur un corpus engendré, et est idempotente", () => {
+    const pieces = [
+      "/",
+      ".",
+      "..",
+      "%2e",
+      "%2E",
+      "%2f",
+      "%5c",
+      "\\",
+      "a",
+      "auth",
+      "?",
+      "#",
+      "x=1",
+      "\t",
+    ];
+    let kept = 0;
+    const walk = (prefix: string, depth: number) => {
+      const out = isSafeReturnPath(prefix);
+      if (out !== null) {
+        kept += 1;
+        expect(out.startsWith("/"), prefix).toBe(true);
+        expect(out.startsWith("//"), prefix).toBe(false);
+        expect(out.includes("\\"), prefix).toBe(false);
+        expect(out.includes("#"), prefix).toBe(false);
+        expect(/^\/(?:auth|login|signup)(?:[/?]|$)/i.test(out), prefix).toBe(false);
+        expect(isSafeReturnPath(out), prefix).toBe(out);
+      }
+      if (depth === 0) return;
+      for (const piece of pieces) walk(prefix + piece, depth - 1);
+    };
+    for (const piece of pieces) walk("/" + piece, 3);
+    // Le corpus n'est pas vide de cas acceptés : sinon l'invariant ne mesurerait rien.
+    expect(kept).toBeGreaterThan(1000);
+  });
 });
 
 describe("la mémoire du retour (R-2, R-3)", () => {
@@ -178,5 +247,26 @@ describe("rememberCurrentPage — les invitations retiennent LA PAGE OÙ L'ON ES
   it("ne retient pas le tunnel", () => {
     window.history.replaceState({}, "", "/auth?mode=signup");
     expect(rememberCurrentPage()).toBe(false);
+  });
+
+  // Revue de sécurité du lot 1 : `?code=` y porte le code d'alliance d'un enfant — une clé au porteur
+  // que la page ne garde sur l'appareil que si le parent laisse « se souvenir » coché. La mémoire du
+  // retour dure vingt-quatre heures et « oublier » ne la vide pas.
+  it.each(["/suivi?code=ABCD1234", "/suivi/?code=ABCD1234", "/SUIVI?code=ABCD1234"])(
+    "retient %s SANS le code d'alliance",
+    (url) => {
+      window.history.replaceState({}, "", url);
+      expect(rememberCurrentPage()).toBe(true);
+      const kept = peekReturnTo();
+      expect(kept).not.toBeNull();
+      expect(kept).not.toContain("code");
+      expect(window.localStorage.getItem("na9ra.returnTo.v1")).not.toContain("ABCD1234");
+    },
+  );
+
+  it("garde la requête des autres pages : seule celle du suivi est sensible", () => {
+    window.history.replaceState({}, "", "/chapitre/c1?variant=recall");
+    expect(rememberCurrentPage()).toBe(true);
+    expect(peekReturnTo()).toBe("/chapitre/c1?variant=recall");
   });
 });
