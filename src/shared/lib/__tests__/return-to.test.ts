@@ -3,6 +3,7 @@ import {
   RETURN_TO_TTL_MS,
   consumeReturnTo,
   isSafeReturnPath,
+  peekReturnReason,
   peekReturnTo,
   rememberCurrentPage,
   rememberReturnTo,
@@ -268,5 +269,78 @@ describe("rememberCurrentPage — les invitations retiennent LA PAGE OÙ L'ON ES
     window.history.replaceState({}, "", "/chapitre/c1?variant=recall");
     expect(rememberCurrentPage()).toBe(true);
     expect(peekReturnTo()).toBe("/chapitre/c1?variant=recall");
+  });
+});
+
+describe("la raison du retour (é38 lot 3, R-7)", () => {
+  const T0 = Date.parse("2026-10-30T12:00:00.000Z");
+  const KEY = "na9ra.returnTo.v1";
+
+  beforeEach(() => window.localStorage.clear());
+  afterEach(() => window.history.replaceState({}, "", "/"));
+
+  it("un retour ordinaire n'a pas de raison", () => {
+    rememberReturnTo("/chapitre/c1", T0);
+    expect(peekReturnReason(T0)).toBeNull();
+  });
+
+  it("un retour d'expiration garde la sienne, et le chemin reste lisible", () => {
+    expect(rememberReturnTo("/quest/ex-1", T0, "expired")).toBe(true);
+    expect(peekReturnReason(T0)).toBe("expired");
+    expect(peekReturnTo(T0)).toBe("/quest/ex-1");
+  });
+
+  it("un retour écrit SANS raison remplace un retour d'expiration : la dernière intention compte", () => {
+    rememberReturnTo("/quest/ex-1", T0, "expired");
+    rememberReturnTo("/chapitre/c1", T0 + 1000);
+    expect(peekReturnTo(T0 + 1000)).toBe("/chapitre/c1");
+    expect(peekReturnReason(T0 + 1000)).toBeNull();
+  });
+
+  it("la raison est consommée avec le retour : il ne sert qu'une fois", () => {
+    rememberReturnTo("/quest/ex-1", T0, "expired");
+    expect(consumeReturnTo(T0)).toBe("/quest/ex-1");
+    expect(peekReturnReason(T0)).toBeNull();
+  });
+
+  it("la raison périme avec le retour (24 h)", () => {
+    rememberReturnTo("/quest/ex-1", T0, "expired");
+    expect(peekReturnReason(T0 + RETURN_TO_TTL_MS + 1)).toBeNull();
+  });
+
+  it.each([
+    ["une raison inconnue", "hacked"],
+    ["une raison qui n'est pas une chaîne", 42],
+    ["une raison objet", { x: 1 }],
+  ])(
+    "%s, écrite par une autre page, est ignorée — le chemin, lui, reste valable",
+    (_label, reason) => {
+      window.localStorage.setItem(KEY, JSON.stringify({ path: "/quest/ex-1", at: T0, reason }));
+      expect(peekReturnReason(T0)).toBeNull();
+      expect(peekReturnTo(T0)).toBe("/quest/ex-1");
+    },
+  );
+
+  it("une raison ne sauve pas un chemin dangereux", () => {
+    window.localStorage.setItem(
+      KEY,
+      JSON.stringify({ path: "//evil.tn", at: T0, reason: "expired" }),
+    );
+    expect(peekReturnReason(T0)).toBeNull();
+    expect(peekReturnTo(T0)).toBeNull();
+  });
+
+  it('rememberCurrentPage("expired") retient la page courante AVEC la raison', () => {
+    window.history.replaceState({}, "", "/quest/ex-1?variant=recall");
+    expect(rememberCurrentPage("expired")).toBe(true);
+    expect(peekReturnTo()).toBe("/quest/ex-1?variant=recall");
+    expect(peekReturnReason()).toBe("expired");
+  });
+
+  it('rememberCurrentPage("expired") retient /suivi sans le code d\'alliance, raison comprise', () => {
+    window.history.replaceState({}, "", "/suivi?code=ABCD1234");
+    expect(rememberCurrentPage("expired")).toBe(true);
+    expect(window.localStorage.getItem(KEY)).not.toContain("ABCD1234");
+    expect(peekReturnReason()).toBe("expired");
   });
 });

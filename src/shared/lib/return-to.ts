@@ -81,7 +81,14 @@ export function isSafeReturnPath(raw: unknown): string | null {
   return FUNNEL_PATH.test(path) ? null : path;
 }
 
-type Stored = { path: string; at: number };
+/**
+ * POURQUOI on ramène quelqu'un (é38 lot 3, R-7). Absent : l'envie ordinaire de revenir — une invitation,
+ * la garde d'un écran de compte. `"expired"` : sa session est morte sous ses doigts ; `/auth` le lui dit
+ * et la mesure le sépare d'une connexion ordinaire.
+ */
+export type ReturnReason = "expired";
+
+type Stored = { path: string; at: number; reason?: ReturnReason };
 
 // Toutes les lectures et écritures sont défensives : `localStorage` n'existe pas au SSR, lève en
 // navigation privée sur certains navigateurs, et peut être plein. Une mémoire qui casse la page
@@ -98,7 +105,9 @@ function read(now: number): Stored | null {
     const at = entry?.at;
     if (path === null || typeof at !== "number" || !Number.isFinite(at)) return null;
     if (now - at > RETURN_TO_TTL_MS || at > now) return null;
-    return { path, at };
+    // Une raison inconnue n'invalide pas le chemin : elle est simplement ignorée, comme tout ce que
+    // le stockage contient et que nous n'avons pas écrit.
+    return entry?.reason === "expired" ? { path, at, reason: "expired" } : { path, at };
   } catch {
     return null;
   }
@@ -113,15 +122,20 @@ function clear(): void {
   }
 }
 
-/** Retient `path` comme retour. Rend `true` s'il a été gardé, `false` s'il a été refusé ou n'a pas pu l'être. */
-export function rememberReturnTo(path: unknown, now: number = Date.now()): boolean {
+/**
+ * Retient `path` comme retour. Rend `true` s'il a été gardé, `false` s'il a été refusé ou n'a pas pu l'être.
+ * Un retour écrit SANS raison remplace un retour d'expiration : c'est la dernière intention qui compte.
+ */
+export function rememberReturnTo(
+  path: unknown,
+  now: number = Date.now(),
+  reason?: ReturnReason,
+): boolean {
   const safe = isSafeReturnPath(path);
   if (safe === null || typeof window === "undefined") return false;
   try {
-    window.localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({ path: safe, at: now } satisfies Stored),
-    );
+    const entry: Stored = reason ? { path: safe, at: now, reason } : { path: safe, at: now };
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(entry));
     return true;
   } catch {
     return false;
@@ -138,16 +152,25 @@ export function rememberReturnTo(path: unknown, now: number = Date.now()): boole
  * contournerait le choix du parent. Revenir sur `/suivi` suffit — un parent connecté y est renvoyé
  * sur son espace, un visiteur y retrouve le code qu'il a choisi de garder.
  */
-export function rememberCurrentPage(): boolean {
+export function rememberCurrentPage(reason?: ReturnReason): boolean {
   if (typeof window === "undefined") return false;
   const { pathname, search } = window.location;
   if (pathname === "/") return false;
-  return rememberReturnTo(SUIVI_PATH.test(pathname) ? pathname : pathname + search);
+  return rememberReturnTo(
+    SUIVI_PATH.test(pathname) ? pathname : pathname + search,
+    Date.now(),
+    reason,
+  );
 }
 
 /** Le retour gardé, sans le consommer — pour le MESURER avant de s'en servir. */
 export function peekReturnTo(now: number = Date.now()): string | null {
   return read(now)?.path ?? null;
+}
+
+/** Pourquoi le retour gardé existe, sans le consommer — `null` pour une invitation ordinaire ou sans retour. */
+export function peekReturnReason(now: number = Date.now()): ReturnReason | null {
+  return read(now)?.reason ?? null;
 }
 
 /**

@@ -1,6 +1,6 @@
 import type { Locator, Page } from "@playwright/test";
 import { test, expect } from "../fixtures";
-import { STORAGE_STATE } from "../helpers/users";
+import { E2E_PASSWORD, STORAGE_STATE, TEST_USERS } from "../helpers/users";
 
 /**
  * UNE SESSION QUI MEURT EN COURS DE ROUTE N'EST JAMAIS UN CUL-DE-SAC.
@@ -175,5 +175,42 @@ test.describe("Session invalidée en cours de route (#938)", () => {
     // neuf, c'est que la session meurt APRÈS le chargement de l'application.
     await expect(page).toHaveURL(/\/auth/, { timeout: 30_000 });
     await expect(page.getByTestId("root-error-boundary")).toBeHidden();
+  });
+
+  // é38 lot 3 (R-7, US-3) — la session qui meurt REVIENT À LA PAGE QUITTÉE. Les deux tests ci-dessus
+  // exigent une issue, pas laquelle ; celui-ci fixe la conduite quand l'issue est la sortie par le refus.
+  //
+  // Pour que ce soit CE chemin et pas un autre : on coupe le rafraîchissement du jeton. `auth-attacher`
+  // ne termine une session que sur un refus PROUVÉ du rafraîchissement — un réseau qui n'aboutit pas n'en
+  // est pas un, donc la session RESTE, et c'est le refus du serveur sur le jeton cassé qui atteint l'écran
+  // d'erreur du tableau de bord : `useExitOnRefusedSession`, qui retient la page avant de fermer la session.
+  test("la session qui meurt revient à la page quittée : l'avis sur /auth, puis le retour", async ({
+    page,
+    dashboard,
+    auth,
+  }) => {
+    const RETURN_KEY = "na9ra.returnTo.v1";
+    await dashboard.goto();
+    expect(await sessionKeys(page), "aucune session en localStorage").not.toHaveLength(0);
+
+    const refreshEndpoint = "**/auth/v1/token?grant_type=refresh_token*";
+    await page.route(refreshEndpoint, (route) => route.abort());
+    expect(await corruptSession(page)).toBeGreaterThan(0);
+    await page.goto("/dashboard");
+
+    // L'élève arrive sur /auth, et l'écran lui dit pourquoi.
+    await expect(page).toHaveURL(/\/auth/, { timeout: 60_000 });
+    await expect(page.getByTestId("auth-session-expired")).toBeVisible();
+    const kept = await page.evaluate((key) => window.localStorage.getItem(key), RETURN_KEY);
+    expect(JSON.parse(kept ?? "null"), "la page quittée n'a pas été retenue").toMatchObject({
+      path: "/dashboard",
+      reason: "expired",
+    });
+
+    // Il se reconnecte : la page quittée est de nouveau à l'écran, et la mémoire est consommée.
+    await page.unroute(refreshEndpoint);
+    await auth.login(TEST_USERS.free.email, E2E_PASSWORD);
+    await expect(page).toHaveURL(/\/dashboard/);
+    expect(await page.evaluate((key) => window.localStorage.getItem(key), RETURN_KEY)).toBeNull();
   });
 });

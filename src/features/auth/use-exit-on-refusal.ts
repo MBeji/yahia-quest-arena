@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { supabase } from "@/shared/integrations/supabase/client";
 import { isSessionRefusalError } from "@/shared/integrations/supabase/auth-rejection";
 import { reportClientError } from "@/shared/lib/client-log";
+import { rememberCurrentPage } from "@/shared/lib/return-to";
 
 /**
  * UN REFUS D'AUTHENTIFICATION QUI ATTEINT L'ÉCRAN TERMINE LA SESSION (#938 → #969).
@@ -32,6 +33,14 @@ import { reportClientError } from "@/shared/lib/client-log";
  * et le garde de `_authenticated` fait ce pour quoi il existe. On ne navigue pas soi-même — une
  * seule règle de redirection, au même endroit qu'avant.
  *
+ * LA PAGE QUITTÉE EST RETENUE AVANT LA SORTIE (é38 lot 3, R-7). Une session qui meurt en pleine
+ * quête ramenait au Hall : l'élève perdait sa quête au moment même où l'on lui demandait de se
+ * reconnecter. La garde ne la retiendra pas — elle ne mémorise rien pour qui avait une session
+ * (poste partagé : la page du précédent n'est pas pour le suivant) — mais ici la session n'a pas
+ * été quittée, elle est MORTE : rien d'un choix. D'où la raison `"expired"`, qui fait dire à `/auth`
+ * « ta session a expiré » et sépare ces retours des autres dans la mesure. Avant `signOut`, parce
+ * que `SIGNED_OUT` déclenche la garde aussitôt : écrire après serait une course.
+ *
  * CE QU'IL NE FAIT PAS : une panne ORDINAIRE (bug de rendu, 500, requête cassée) garde son écran
  * et son bouton « Réessayer », qui sont la bonne réponse. Le prédicat lit `auth-refusals.ts`,
  * source unique des deux côtés — jamais un message en dur, c'est la divergence de #931 et
@@ -40,6 +49,7 @@ import { reportClientError } from "@/shared/lib/client-log";
 export function useExitOnRefusedSession(error: unknown): void {
   useEffect(() => {
     if (!isSessionRefusalError(error)) return;
+    rememberCurrentPage("expired");
     // `scope: "local"` : les jetons sont refusés, une révocation réseau échouerait de toute
     // façon — et faire dépendre la SORTIE de l'élève d'un appel qui peut pendre reproduirait
     // le gel que ce chemin est censé supprimer.
