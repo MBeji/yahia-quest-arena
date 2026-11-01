@@ -13,6 +13,7 @@ import { getPendingBetaCount } from "@/features/subscription";
 import { getOpenReportsCount } from "@/features/content-report";
 import { BetaBadge, BugReportLauncher, getOpenBugsCount } from "@/features/bug-report";
 import { AiLauncher } from "@/features/ai/components/ai-launcher";
+import { useClaimPlacementSessions } from "@/features/placement";
 import { LayoutDashboard, Map, Compass, Swords, ClipboardList, Shield } from "lucide-react";
 import { supabase } from "@/shared/integrations/supabase/client";
 import { toast } from "sonner";
@@ -48,6 +49,11 @@ function AuthenticatedLayout() {
   // notifications du soir parlent celle de l'élève. Ici parce que c'est le seul
   // endroit qui sait à la fois qui est connecté et quelle langue est affichée.
   useProfileLocaleSync(Boolean(user) && hasProfile);
+
+  // é39 R-16 — les tests de niveau passés sur l'appareil AVANT le compte lui sont rattachés à la
+  // première connexion : le bilan de départ suit l'élève, il n'a rien à refaire. Ici parce que tout
+  // chemin d'entrée (inscription, connexion, Google, lien de confirmation) finit dans cette coquille.
+  useClaimPlacementSessions(Boolean(user) && !loading);
 
   // Pending beta-access requests count for the admin nav badge.
   const fetchBetaCount = useServerFn(getPendingBetaCount);
