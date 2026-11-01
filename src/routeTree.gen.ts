@@ -34,6 +34,7 @@ import { Route as PublicConfidentialiteRouteImport } from './routes/_public/conf
 import { Route as PublicExtrasRouteImport } from './routes/_public/extras'
 import { Route as PublicProgrammeRouteImport } from './routes/_public/programme'
 import { Route as PublicSuiviRouteImport } from './routes/_public/suivi'
+import { Route as PublicTestDeNiveauRouteImport } from './routes/_public/test-de-niveau'
 import { Route as AuthResetRouteImport } from './routes/auth_.reset'
 import { Route as AuthenticatedAdminBetaRequestsRouteImport } from './routes/_authenticated/admin.beta-requests'
 import { Route as AuthenticatedAdminBugReportsRouteImport } from './routes/_authenticated/admin.bug-reports'
@@ -53,6 +54,7 @@ import { Route as PublicChapitreChapterIdRouteImport } from './routes/_public/ch
 import { Route as PublicExerciceExerciseIdRouteImport } from './routes/_public/exercice.$exerciseId'
 import { Route as PublicMatiereSubjectIdRouteImport } from './routes/_public/matiere.$subjectId'
 import { Route as PublicNiveauParcoursIdRouteImport } from './routes/_public/niveau.$parcoursId'
+import { Route as PublicTestDeNiveauSessionIdRouteImport } from './routes/_public/test-de-niveau_.$sessionId'
 import { Route as PublicProgrammeLyceeAnneeRouteImport } from './routes/_public/programme_.lycee.$annee'
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
@@ -181,6 +183,11 @@ const PublicSuiviRoute = PublicSuiviRouteImport.update({
   path: '/suivi',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicTestDeNiveauRoute = PublicTestDeNiveauRouteImport.update({
+  id: '/test-de-niveau',
+  path: '/test-de-niveau',
+  getParentRoute: () => PublicRoute,
+} as any)
 const AuthResetRoute = AuthResetRouteImport.update({
   id: '/auth_/reset',
   path: '/auth/reset',
@@ -289,6 +296,12 @@ const PublicNiveauParcoursIdRoute = PublicNiveauParcoursIdRouteImport.update({
   path: '/niveau/$parcoursId',
   getParentRoute: () => PublicRoute,
 } as any)
+const PublicTestDeNiveauSessionIdRoute =
+  PublicTestDeNiveauSessionIdRouteImport.update({
+    id: '/test-de-niveau_/$sessionId',
+    path: '/test-de-niveau/$sessionId',
+    getParentRoute: () => PublicRoute,
+  } as any)
 const PublicProgrammeLyceeAnneeRoute =
   PublicProgrammeLyceeAnneeRouteImport.update({
     id: '/programme_/lycee/$annee',
@@ -320,6 +333,7 @@ export interface FileRoutesByFullPath {
   '/extras': typeof PublicExtrasRoute
   '/programme': typeof PublicProgrammeRoute
   '/suivi': typeof PublicSuiviRoute
+  '/test-de-niveau': typeof PublicTestDeNiveauRoute
   '/auth/reset': typeof AuthResetRoute
   '/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/admin/bug-reports': typeof AuthenticatedAdminBugReportsRoute
@@ -339,6 +353,7 @@ export interface FileRoutesByFullPath {
   '/exercice/$exerciseId': typeof PublicExerciceExerciseIdRoute
   '/matiere/$subjectId': typeof PublicMatiereSubjectIdRoute
   '/niveau/$parcoursId': typeof PublicNiveauParcoursIdRoute
+  '/test-de-niveau/$sessionId': typeof PublicTestDeNiveauSessionIdRoute
   '/programme/lycee/$annee': typeof PublicProgrammeLyceeAnneeRoute
 }
 export interface FileRoutesByTo {
@@ -365,6 +380,7 @@ export interface FileRoutesByTo {
   '/extras': typeof PublicExtrasRoute
   '/programme': typeof PublicProgrammeRoute
   '/suivi': typeof PublicSuiviRoute
+  '/test-de-niveau': typeof PublicTestDeNiveauRoute
   '/auth/reset': typeof AuthResetRoute
   '/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
   '/admin/bug-reports': typeof AuthenticatedAdminBugReportsRoute
@@ -384,6 +400,7 @@ export interface FileRoutesByTo {
   '/exercice/$exerciseId': typeof PublicExerciceExerciseIdRoute
   '/matiere/$subjectId': typeof PublicMatiereSubjectIdRoute
   '/niveau/$parcoursId': typeof PublicNiveauParcoursIdRoute
+  '/test-de-niveau/$sessionId': typeof PublicTestDeNiveauSessionIdRoute
   '/programme/lycee/$annee': typeof PublicProgrammeLyceeAnneeRoute
 }
 export interface FileRoutesById {
@@ -412,6 +429,7 @@ export interface FileRoutesById {
   '/_public/extras': typeof PublicExtrasRoute
   '/_public/programme': typeof PublicProgrammeRoute
   '/_public/suivi': typeof PublicSuiviRoute
+  '/_public/test-de-niveau': typeof PublicTestDeNiveauRoute
   '/auth_/reset': typeof AuthResetRoute
   '/_public/': typeof PublicIndexRoute
   '/_authenticated/admin/beta-requests': typeof AuthenticatedAdminBetaRequestsRoute
@@ -432,6 +450,7 @@ export interface FileRoutesById {
   '/_public/exercice/$exerciseId': typeof PublicExerciceExerciseIdRoute
   '/_public/matiere/$subjectId': typeof PublicMatiereSubjectIdRoute
   '/_public/niveau/$parcoursId': typeof PublicNiveauParcoursIdRoute
+  '/_public/test-de-niveau_/$sessionId': typeof PublicTestDeNiveauSessionIdRoute
   '/_public/programme_/lycee/$annee': typeof PublicProgrammeLyceeAnneeRoute
 }
 export interface FileRouteTypes {
@@ -460,6 +479,7 @@ export interface FileRouteTypes {
     | '/extras'
     | '/programme'
     | '/suivi'
+    | '/test-de-niveau'
     | '/auth/reset'
     | '/admin/beta-requests'
     | '/admin/bug-reports'
@@ -479,6 +499,7 @@ export interface FileRouteTypes {
     | '/exercice/$exerciseId'
     | '/matiere/$subjectId'
     | '/niveau/$parcoursId'
+    | '/test-de-niveau/$sessionId'
     | '/programme/lycee/$annee'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -505,6 +526,7 @@ export interface FileRouteTypes {
     | '/extras'
     | '/programme'
     | '/suivi'
+    | '/test-de-niveau'
     | '/auth/reset'
     | '/admin/beta-requests'
     | '/admin/bug-reports'
@@ -524,6 +546,7 @@ export interface FileRouteTypes {
     | '/exercice/$exerciseId'
     | '/matiere/$subjectId'
     | '/niveau/$parcoursId'
+    | '/test-de-niveau/$sessionId'
     | '/programme/lycee/$annee'
   id:
     | '__root__'
@@ -551,6 +574,7 @@ export interface FileRouteTypes {
     | '/_public/extras'
     | '/_public/programme'
     | '/_public/suivi'
+    | '/_public/test-de-niveau'
     | '/auth_/reset'
     | '/_public/'
     | '/_authenticated/admin/beta-requests'
@@ -571,6 +595,7 @@ export interface FileRouteTypes {
     | '/_public/exercice/$exerciseId'
     | '/_public/matiere/$subjectId'
     | '/_public/niveau/$parcoursId'
+    | '/_public/test-de-niveau_/$sessionId'
     | '/_public/programme_/lycee/$annee'
   fileRoutesById: FileRoutesById
 }
@@ -760,6 +785,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicSuiviRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/test-de-niveau': {
+      id: '/_public/test-de-niveau'
+      path: '/test-de-niveau'
+      fullPath: '/test-de-niveau'
+      preLoaderRoute: typeof PublicTestDeNiveauRouteImport
+      parentRoute: typeof PublicRoute
+    }
     '/auth_/reset': {
       id: '/auth_/reset'
       path: '/auth/reset'
@@ -893,6 +925,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicNiveauParcoursIdRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_public/test-de-niveau_/$sessionId': {
+      id: '/_public/test-de-niveau_/$sessionId'
+      path: '/test-de-niveau/$sessionId'
+      fullPath: '/test-de-niveau/$sessionId'
+      preLoaderRoute: typeof PublicTestDeNiveauSessionIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
     '/_public/programme_/lycee/$annee': {
       id: '/_public/programme_/lycee/$annee'
       path: '/programme/lycee/$annee'
@@ -985,11 +1024,13 @@ interface PublicRouteChildren {
   PublicExtrasRoute: typeof PublicExtrasRoute
   PublicProgrammeRoute: typeof PublicProgrammeRoute
   PublicSuiviRoute: typeof PublicSuiviRoute
+  PublicTestDeNiveauRoute: typeof PublicTestDeNiveauRoute
   PublicIndexRoute: typeof PublicIndexRoute
   PublicChapitreChapterIdRoute: typeof PublicChapitreChapterIdRoute
   PublicExerciceExerciseIdRoute: typeof PublicExerciceExerciseIdRoute
   PublicMatiereSubjectIdRoute: typeof PublicMatiereSubjectIdRoute
   PublicNiveauParcoursIdRoute: typeof PublicNiveauParcoursIdRoute
+  PublicTestDeNiveauSessionIdRoute: typeof PublicTestDeNiveauSessionIdRoute
   PublicProgrammeLyceeAnneeRoute: typeof PublicProgrammeLyceeAnneeRoute
 }
 
@@ -999,11 +1040,13 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicExtrasRoute: PublicExtrasRoute,
   PublicProgrammeRoute: PublicProgrammeRoute,
   PublicSuiviRoute: PublicSuiviRoute,
+  PublicTestDeNiveauRoute: PublicTestDeNiveauRoute,
   PublicIndexRoute: PublicIndexRoute,
   PublicChapitreChapterIdRoute: PublicChapitreChapterIdRoute,
   PublicExerciceExerciseIdRoute: PublicExerciceExerciseIdRoute,
   PublicMatiereSubjectIdRoute: PublicMatiereSubjectIdRoute,
   PublicNiveauParcoursIdRoute: PublicNiveauParcoursIdRoute,
+  PublicTestDeNiveauSessionIdRoute: PublicTestDeNiveauSessionIdRoute,
   PublicProgrammeLyceeAnneeRoute: PublicProgrammeLyceeAnneeRoute,
 }
 

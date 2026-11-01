@@ -1871,6 +1871,68 @@ export type Database = {
         };
         Relationships: [];
       };
+      placement_sessions: {
+        Row: {
+          answers: NonNullable<Json>;
+          audience: string;
+          claimed_at: string | null;
+          correct_count: number | null;
+          duration_seconds: number | null;
+          finished_at: string | null;
+          id: string;
+          question_ids: string[];
+          result: Json | null;
+          started_at: string;
+          status: string;
+          subject_id: string;
+          token: string;
+          total_count: number | null;
+          user_id: string | null;
+        };
+        Insert: {
+          answers?: NonNullable<Json>;
+          audience?: string;
+          claimed_at?: string | null;
+          correct_count?: number | null;
+          duration_seconds?: number | null;
+          finished_at?: string | null;
+          id?: string;
+          question_ids: string[];
+          result?: Json | null;
+          started_at?: string;
+          status?: string;
+          subject_id: string;
+          token?: string;
+          total_count?: number | null;
+          user_id?: string | null;
+        };
+        Update: {
+          answers?: NonNullable<Json>;
+          audience?: string;
+          claimed_at?: string | null;
+          correct_count?: number | null;
+          duration_seconds?: number | null;
+          finished_at?: string | null;
+          id?: string;
+          question_ids?: string[];
+          result?: Json | null;
+          started_at?: string;
+          status?: string;
+          subject_id?: string;
+          token?: string;
+          total_count?: number | null;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "placement_sessions_subject_id_fkey";
+            columns: ["subject_id"];
+            isOneToOne: false;
+            referencedRelation: "subjects";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       profiles: {
         Row: {
           avatar_slug: string | null;
@@ -3515,6 +3577,7 @@ export type Database = {
         Returns: boolean;
       };
       claim_event_badge: { Args: Record<PropertyKey, never>; Returns: Json };
+      claim_placement_sessions: { Args: { p_tokens: string[] }; Returns: Json };
       claim_welcome_pack: { Args: Record<PropertyKey, never>; Returns: Json };
       cleanup_rate_limit_events: {
         Args: { p_retention_hours?: number };
@@ -3609,6 +3672,15 @@ export type Database = {
         Returns: Json;
       };
       finish_mock_exam: { Args: { p_session_id: string }; Returns: Json };
+      finish_placement_session: {
+        Args: {
+          p_answers?: Json;
+          p_duration_seconds?: number;
+          p_session_id: string;
+          p_token?: string;
+        };
+        Returns: Json;
+      };
       forfeit_duel: { Args: { p_duel: string }; Returns: undefined };
       get_active_event: { Args: Record<PropertyKey, never>; Returns: Json };
       get_ai_admin_overview: {
@@ -3864,6 +3936,10 @@ export type Database = {
         }[];
       };
       get_my_grade_rank: { Args: Record<PropertyKey, never>; Returns: number };
+      get_my_placement_overview: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
       get_my_weaknesses: {
         Args: { p_limit?: number };
         Returns: {
@@ -3882,6 +3958,11 @@ export type Database = {
           trend: string;
         }[];
       };
+      get_placement_session: {
+        Args: { p_session_id: string; p_token?: string };
+        Returns: Json;
+      };
+      get_placement_subject: { Args: { p_subject_id: string }; Returns: Json };
       get_recall_availability: {
         Args: { p_subject_id: string };
         Returns: {
@@ -4122,6 +4203,10 @@ export type Database = {
         }[];
       };
       list_mock_exams: { Args: { p_parcours_id?: string }; Returns: Json };
+      list_placement_subjects: {
+        Args: { p_parcours_id: string };
+        Returns: Json;
+      };
       list_tutor_threads: {
         Args: { p_limit?: number };
         Returns: {
@@ -4198,6 +4283,29 @@ export type Database = {
           parcours_id: string;
         }[];
       };
+      placement_band: { Args: { p_score_on_20: number }; Returns: string };
+      placement_bilan_json: {
+        Args: {
+          p_full: boolean;
+          p_row: Database["public"]["Tables"]["placement_sessions"]["Row"];
+        };
+        Returns: Json;
+      };
+      placement_eligible_questions: {
+        Args: { p_subject_id: string };
+        Returns: {
+          chapter_id: string;
+          chapter_order: number;
+          difficulty: number;
+          exercise_id: string;
+          question_id: string;
+        }[];
+      };
+      placement_questions_json: {
+        Args: { p_question_ids: string[] };
+        Returns: Json;
+      };
+      placement_subject_json: { Args: { p_subject_id: string }; Returns: Json };
       propagate_competency_belief: {
         Args: {
           p_belief: number;
@@ -4672,6 +4780,10 @@ export type Database = {
         Args: { p_exam_id: string; p_kind?: string };
         Returns: Json;
       };
+      start_placement_session: {
+        Args: { p_audience?: string; p_subject_id: string };
+        Returns: Json;
+      };
       store_tutor_digest: {
         Args: {
           p_audience: string;
@@ -4776,6 +4888,10 @@ export type Database = {
       sweep_ai_reservations: {
         Args: Record<PropertyKey, never>;
         Returns: undefined;
+      };
+      sweep_placement_sessions: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
       };
       toggle_parcours_interest: {
         Args: { p_parcours: string };

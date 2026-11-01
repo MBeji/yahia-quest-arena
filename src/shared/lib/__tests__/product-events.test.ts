@@ -51,6 +51,12 @@ const ETUDE_31_CLOSED_LIST: ProductEventName[] = [
   "public_practice_completed",
   "account_invite_clicked",
   "login",
+  // Étude 39 (R-21) — troisième amendement écrit : les quatre événements du test de niveau,
+  // consommés par ses KPI-1 à KPI-3.
+  "placement_started",
+  "placement_completed",
+  "placement_shared",
+  "placement_claimed",
 ];
 
 const SRC = join(process.cwd(), "src");

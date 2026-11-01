@@ -66,7 +66,14 @@ describe("renderSitemap", () => {
 describe("collectSitemapPaths", () => {
   it("always lists the static public pages", async () => {
     const paths = await collectSitemapPaths(mockClient(EMPTY));
-    expect(paths).toEqual(["/", "/programme", "/extras", "/confidentialite", "/conditions"]);
+    expect(paths).toEqual([
+      "/",
+      "/programme",
+      "/extras",
+      "/confidentialite",
+      "/conditions",
+      "/test-de-niveau",
+    ]);
   });
 
   // La déclaration « child-directed » auprès de Google (é23 Q-3) exige une

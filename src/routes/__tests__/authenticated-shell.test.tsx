@@ -44,6 +44,9 @@ vi.mock("@/features/auth", () => ({
   useProfileLocaleSync: () => {},
 }));
 
+// é39 : la coquille rattache les tests de niveau de l'appareil à la connexion. Le hook importe la
+// couche serveur de sa feature (`createMiddleware`) : on remplace la feature, pas le framework.
+vi.mock("@/features/placement", () => ({ useClaimPlacementSessions: () => undefined }));
 vi.mock("@/features/subscription", () => ({ getPendingBetaCount: vi.fn() }));
 vi.mock("@/features/content-report", () => ({ getOpenReportsCount: vi.fn() }));
 vi.mock("@/features/bug-report", () => ({

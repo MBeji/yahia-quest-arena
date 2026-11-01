@@ -76,6 +76,14 @@ export function PublicHeader() {
             >
               {t.public.header.extras}
             </Link>
+            {/* Le test de niveau (étude 39) : la porte d'entrée partageable, visible de partout —
+                un visiteur qui arrive par un cours doit pouvoir la trouver sans l'accueil. */}
+            <Link
+              to="/test-de-niveau"
+              className="inline-flex items-center rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground sm:px-3 [@media(pointer:coarse)]:min-h-11"
+            >
+              {t.public.header.placement}
+            </Link>
             {/* Suivi parent — sans compte : discoverable depuis le catalogue,
                 plus seulement depuis le bloc famille de la landing (audit §C-4). */}
             {showParentTracking && (
@@ -141,6 +149,12 @@ export function PublicHeader() {
           className="rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
         >
           {t.public.header.extras}
+        </Link>
+        <Link
+          to="/test-de-niveau"
+          className="rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+        >
+          {t.public.header.placement}
         </Link>
         {showParentTracking && (
           <Link

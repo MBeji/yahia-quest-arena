@@ -37,6 +37,9 @@ export const GAMEPLAY_TABLES = [
   // clearing these they accumulate and pollute the production-triage queue.
   "content_reports",
   "bug_reports",
+  // Étude 39 : les tests de niveau d'un run (anonymes ou rattachés aux comptes de test) — sans
+  // ce nettoyage, le percentile et « ton dernier bilan » du Hall dérivent d'une nuit à l'autre.
+  "placement_sessions",
 ];
 
 /**
