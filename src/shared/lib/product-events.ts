@@ -57,7 +57,15 @@ export type ProductEventName =
   // sont datés : KPI-1, KPI-2 et KPI-3 de l'étude 38, lus dans PostHog dès la mise en ligne.
   | "public_practice_completed"
   | "account_invite_clicked"
-  | "login";
+  | "login"
+  // Étude 39 (R-21) — le test de niveau, premier canal d'acquisition mesurable. Quatre événements,
+  // pas un de plus, chacun avec son consommateur daté : commencé (KPI-1), fini (KPI-2, avec la bande
+  // et le bâclage), partagé (KPI-1, la part partagée), rattaché à un compte (KPI-3 — la conversion
+  // test → compte, que le tunnel de l'étude 38 ne savait pas nommer).
+  | "placement_started"
+  | "placement_completed"
+  | "placement_shared"
+  | "placement_claimed";
 
 export type ProductEventEntry = {
   readonly name: ProductEventName;
@@ -123,6 +131,29 @@ export const PRODUCT_EVENT_CATALOGUE: readonly ProductEventEntry[] = [
     name: "login",
     fires:
       "Connexion réussie : mot de passe, ou retour de Google — une inscription Google y compte aussi, le client ne la distingue pas (étude 38)",
+    live: true,
+  },
+  {
+    name: "placement_started",
+    fires:
+      "Test de niveau commencé : matière, audience (élève/parent), avec ou sans compte, depuis un lien partagé ou non (étude 39)",
+    live: true,
+  },
+  {
+    name: "placement_completed",
+    fires:
+      "Test de niveau fini : matière, bande de niveau, bâclé ou non, avec ou sans compte (étude 39)",
+    live: true,
+  },
+  {
+    name: "placement_shared",
+    fires: "Résultat du test de niveau partagé : feuille de partage ou copie (étude 39)",
+    live: true,
+  },
+  {
+    name: "placement_claimed",
+    fires:
+      "Tests de niveau de l'appareil rattachés au compte qui vient de se connecter — la conversion test → compte (étude 39)",
     live: true,
   },
 ] as const;

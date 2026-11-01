@@ -21,6 +21,8 @@ const STATIC_PATHS = [
   // auprès de Google exige une politique de confidentialité atteignable (é23 Q-3).
   "/confidentialite",
   "/conditions",
+  // Le test de niveau (étude 39) : la porte d'entrée partageable, indexable comme le catalogue.
+  "/test-de-niveau",
 ] as const;
 
 function escapeXml(value: string): string {

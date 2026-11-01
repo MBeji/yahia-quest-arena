@@ -1080,6 +1080,8 @@ export type TranslationKeys = {
       navAria: string;
       programme: string;
       extras: string;
+      /** L'entrée du test de niveau (étude 39) — la seule clé app-wide du test, l'en-tête n'étant pas paresseux. */
+      placement: string;
       parentTracking: string;
       login: string;
       signup: string;

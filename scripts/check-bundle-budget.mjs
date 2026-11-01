@@ -108,9 +108,19 @@ const BUDGETS = {
   //            paresseuses — l'en-tête du héros, l'anneau du jour, les missions —
   //            donc le découpage ne s'y applique pas.
   //
+  //   188→189  étude 39 (2026-11-01) : UNE clé, l'entrée « Test de niveau » de l'en-tête
+  //            public (`public.header.placement`, trois langues, 0,03 KB de dépassement).
+  //            C'est l'exception que la règle ci-dessus exige de justifier : l'en-tête est
+  //            rendu sur chaque page publique, il n'est pas paresseux, donc le découpage ne
+  //            s'applique pas à lui — et il s'applique à TOUT LE RESTE du test, parti dans
+  //            `i18n-placement-` (entrée, passation, bilan, carte du Hall). Le relèvement
+  //            est le plus petit palier possible, pas une marge pour la suite : é38 lots 2,
+  //            4 et 5 restent devant le même mur, et le vrai correctif est toujours le
+  //            découpage (candidat mesuré : `ai.*`, 116 clés, voir ci-dessus).
+  //
   // Le chunk app-wide gzippe à ~61 KB : l'impact réseau est plus doux que le chiffre
   // brut, mais le coût de parse se paie plein, lui, et sur chaque appareil d'élève.
-  "i18n-": 188 * 1024,
+  "i18n-": 189 * 1024,
   // Surface parent (`parentReport.*` + `parentDaily.*`), mesurée 36,52 KB le
   // 2026-08-26 ; plafond à +20 % parce que le suivi « jour par jour » est récent et
   // bouge encore. Ces octets ne descendent QUE chez les comptes parent — ils sont
@@ -134,6 +144,10 @@ const BUDGETS = {
   // d'or, en trois langues. Tirée par la fiche paresseuse et les routes qui
   // posent cartes de première visite et bulles « ? ». Plafond posé avec le chunk.
   "i18n-guide-": 40 * 1024,
+  // Surface du test de niveau (étude 39) : l'entrée, la passation, le bilan, la carte du Hall,
+  // en trois langues. Tirée par la route publique `/test-de-niveau` (paresseuse) et par la
+  // carte du Hall en `lazy()` — jamais par le chunk index. Plafond posé avec le chunk.
+  "i18n-placement-": 24 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
   // @dnd-kit (core+sortable+utilities) powering the B2 ordering/matching
@@ -149,7 +163,12 @@ const BUDGETS = {
   // `lazy()` — seule leur glu atterrit ici, comme pour les objectifs — et le
   // relèvement paie ce qui ne peut pas l'être : trois lectures, leur câblage et
   // l'en-tête du héros (cadre, palier, titre). Mesuré 34,00 KB ; plafond à +6 %.
-  "dashboard-": 36 * 1024,
+  //
+  // 36→37 KB — étude 39 (2026-11-01) : « Ton bilan de départ ». La carte est `lazy()` et
+  // porte elle-même sa lecture et son catalogue (`i18n-placement`) ; seule sa glu d'import
+  // dynamique atterrit ici (mesuré 36,36 KB pour 36,00). Le palier paie ce qui ne peut pas
+  // être découpé davantage : le point d'accroche d'une carte de plus dans la zone progression.
+  "dashboard-": 37 * 1024,
   // --- Vendor chunks that had NO budget until the 2026-08-10 perf/quality pass
   // (finding M1-fe). They were free to grow uncaught: every Radix primitive or
   // Lucide icon added anywhere in the app lands here, and nothing complained.
