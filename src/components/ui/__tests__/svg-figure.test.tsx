@@ -211,10 +211,14 @@ describe("figure rendering — une figure n'est assainie qu'une fois par chaîne
 
   it("une même chaîne remontée ailleurs (correction après le lecteur) ne repasse pas par le sanitiseur", () => {
     const sanitize = vi.spyOn(DOMPurify, "sanitize");
-    const { unmount } = render(<OptionContent raw={OPTIONS[0]} />);
+    // Une chaîne que ce fichier n'a jamais montrée : le test tient seul, pas grâce
+    // au cache que le test précédent a rempli.
+    const raw = `x = 200 ${figure(200)}`;
+    const { unmount } = render(<OptionContent raw={raw} />);
+    expect(sanitize).toHaveBeenCalledTimes(1);
     unmount();
-    render(<OptionContent raw={OPTIONS[0]} />);
-    expect(sanitize).not.toHaveBeenCalled();
+    render(<OptionContent raw={raw} />);
+    expect(sanitize).toHaveBeenCalledTimes(1);
   });
 
   it("une chaîne jamais vue passe toujours par le sanitiseur, et en garde le résultat", () => {
