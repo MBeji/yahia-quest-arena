@@ -141,6 +141,37 @@ describe("gamification.quest — getSubject", () => {
     });
   });
 
+  // Audit perf data-01 (2026-10-31) : la ligne `chapters` porte le cours et le résumé
+  // markdown — chapitres + missions pesaient 93 KB médian, 1 445 KB max par matière
+  // sur le corpus, contre 15 KB / 122 KB avec les colonnes nommées — que ni le hub ni
+  // le lecteur de quête ne lisent, et cet appel part à chaque vue du hub et à chaque
+  // mission connectée. Le test épingle les colonnes demandées : un retour à `*` (ou
+  // l'ajout de `lesson_content`/`summary`) le fait échouer.
+  it("ne demande aux chapitres et aux missions que les colonnes que le hub consomme", async () => {
+    const chains: Record<string, ReturnType<typeof mockQuery>> = {};
+    mockFrom.mockImplementation((table: string) => {
+      chains[table] ??= mockQuery(table === "subjects" ? { id: "subj-1" } : []);
+      return chains[table];
+    });
+    mockRpc.mockReturnValue({ data: null, error: null });
+
+    const { getSubject } = await import("@/features/quest");
+    await (getSubject as unknown as (d: unknown) => Promise<unknown>)({ subjectId: "subj-1" });
+
+    expect(chains.chapters?.select).toHaveBeenCalledWith(
+      "id,title,description,domain,display_order",
+    );
+    expect(chains.exercises?.select).toHaveBeenCalledWith(
+      "id,chapter_id,mode,title,difficulty,xp_reward,source,display_order",
+    );
+    for (const table of ["chapters", "exercises"]) {
+      for (const [columns] of (chains[table]?.select as ReturnType<typeof vi.fn>).mock.calls) {
+        expect(columns).not.toBe("*");
+        expect(columns).not.toMatch(/lesson_content|summary/);
+      }
+    }
+  });
+
   it("throws on subject fetch error", async () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "subjects") return mockQuery(null, { message: "Not found" });
