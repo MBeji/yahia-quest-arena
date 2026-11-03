@@ -1,5 +1,5 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { createFileRoute, useNavigate, useRouter, Link } from "@tanstack/react-router";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { Mail, Lock, User as UserIcon, Loader2, MailCheck } from "lucide-react";
 import { toast } from "sonner";
@@ -13,6 +13,13 @@ import { CrownMark } from "@/components/brand-mark";
 import { useT } from "@/lib/i18n";
 import { useEntrance } from "@/shared/lib/motion";
 import { trackProductEvent } from "@/shared/lib/product-events";
+import { isFromContent } from "@/shared/lib/funnel-origin";
+import {
+  consumeReturnTo,
+  peekReturnReason,
+  peekReturnTo,
+  rememberReturnTo,
+} from "@/shared/lib/return-to";
 import type { TranslationKeys } from "@/lib/i18n/types";
 
 /** `AuthError.code` when supabase-js exposes one (it is absent on plain Errors). */
@@ -60,6 +67,70 @@ function cooldownFromError(err: unknown): number {
   return m ? Number(m[1]) : 0;
 }
 
+/** Ce que `isFreshGoogleSignIn` lit d'une session — le type de Supabase s'y range tel quel. */
+type SignInProbe = {
+  user: {
+    app_metadata?: { provider?: string };
+    identities?: { provider: string; last_sign_in_at?: string }[] | null;
+    last_sign_in_at?: string;
+  };
+};
+
+/** En deçà, la session est celle d'une connexion qui vient d'avoir lieu, pas d'une session retrouvée. */
+const FRESH_SIGN_IN_MS = 60_000;
+
+/**
+ * La session qui vient de s'ouvrir est-elle un retour de Google ?
+ *
+ * ⚠️ Ni `?code=` ni le fragment : le client Supabase du projet n'a pas de `flowType`, donc c'est le
+ * flux IMPLICITE (le défaut de la librairie), où le retour arrive dans `#access_token=…` et jamais
+ * dans `?code=`. Chercher un `code` dans l'URL aurait laissé cet événement muet en production, sans
+ * qu'aucun test le dise. La session, elle, dit les deux choses qu'il faut : QUELLE identité vient
+ * de servir (la plus récemment connectée — un compte peut en porter plusieurs) et QUAND. Le délai
+ * écarte l'onglet qu'on retrouve : l'événement SIGNED_IN y repart aussi, avec une session ancienne.
+ * Un retour de lien de confirmation e-mail, lui, porte l'identité « email » : ce n'est pas Google.
+ */
+export function isFreshGoogleSignIn(session: SignInProbe, now: number): boolean {
+  const latest = (session.user.identities ?? []).reduce<{ provider: string; at: number } | null>(
+    (best, identity) => {
+      const at = Date.parse(identity.last_sign_in_at ?? "");
+      return Number.isFinite(at) && (!best || at > best.at)
+        ? { provider: identity.provider, at }
+        : best;
+    },
+    null,
+  );
+  const provider = latest?.provider ?? session.user.app_metadata?.provider;
+  const at = latest?.at ?? Date.parse(session.user.last_sign_in_at ?? "");
+  return provider === "google" && Number.isFinite(at) && now - at < FRESH_SIGN_IN_MS;
+}
+
+/**
+ * Ce que la mémoire de retour dit du moment : a-t-on de quoi ramener la personne, vient-elle d'un
+ * contenu, et POURQUOI elle revient — `expired` quand sa session est morte (é38 lot 3, R-7), `fresh`
+ * sinon. `signup` n'en reprend que les deux premiers champs.
+ */
+type ReturnContext = {
+  return_to_kept: boolean;
+  from_content: boolean;
+  reason: "fresh" | "expired";
+};
+
+/**
+ * À lire AVANT tout appel qui ouvre une session : `leave()` consomme la mémoire, et `signUp` comme
+ * `signInWithPassword` notifient `SIGNED_IN` AVANT de rendre la main — l'écouteur de la page a donc déjà
+ * navigué et vidé la mémoire quand le formulaire reprend la parole. Lue après, la mesure disait
+ * « pas de retour gardé » pour la plupart des connexions qui en avaient un.
+ */
+function readReturnContext(): ReturnContext {
+  const origin = peekReturnTo();
+  return {
+    return_to_kept: origin !== null,
+    from_content: isFromContent(origin),
+    reason: peekReturnReason() ?? "fresh",
+  };
+}
+
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
@@ -71,18 +142,35 @@ export const Route = createFileRoute("/auth")({
       },
     ],
   }),
-  // `role` optionnel — tunnel parent depuis la landing « Espace Famille ».
-  validateSearch: (s: Record<string, unknown>): { mode: string; role?: "parent" } => ({
+  // `role` optionnel — tunnel parent depuis la landing « Espace Famille ». `returnTo` (é38 lot 1) :
+  // la page où ramener le visiteur ; gardé tel quel ici, VALIDÉ par `return-to.ts` avant tout usage.
+  validateSearch: (
+    s: Record<string, unknown>,
+  ): { mode: string; role?: "parent"; returnTo?: string } => ({
     mode: (s.mode as string) || "login",
     ...(s.role === "parent" ? { role: "parent" as const } : {}),
+    ...(typeof s.returnTo === "string" ? { returnTo: s.returnTo } : {}),
   }),
   component: AuthPage,
 });
 
 function AuthPage() {
-  const { mode, role: roleParam } = Route.useSearch();
+  const { mode, role: roleParam, returnTo } = Route.useSearch();
   const navigate = useNavigate();
+  const router = useRouter();
   const t = useT();
+  // é38 lot 1 (R-3) — OÙ ALLER une fois la session ouverte : le retour gardé s'il y en a un, sinon
+  // le Hall. Une seule fois par page : l'inscription, le rappel de session et l'événement SIGNED_IN
+  // arrivent tous, dans un ordre que personne ne maîtrise, et le premier doit gagner — le second
+  // retrouverait une mémoire déjà consommée et renverrait au Hall par-dessus le retour.
+  const left = useRef(false);
+  const leave = useCallback(() => {
+    if (left.current) return;
+    left.current = true;
+    const back = consumeReturnTo();
+    if (back) router.history.push(back);
+    else navigate({ to: "/dashboard" });
+  }, [navigate, router]);
   const isSignup = mode === "signup";
   const isForgot = mode === "forgot";
   const [email, setEmail] = useState("");
@@ -109,6 +197,34 @@ function AuthPage() {
   const linkByCode = useServerFn(linkStudentByCode);
   const runBootstrapProfile = useServerFn(bootstrapProfile);
 
+  // R-2 : l'adresse peut porter le retour (un lien d'invitation partagé). Elle ne fait qu'ÉCRIRE dans la
+  // mémoire — la décision se prend sur la mémoire, qui survit au lien de confirmation d'e-mail et à
+  // l'aller-retour chez Google, là où l'adresse, elle, est perdue. Le chemin est validé à l'écriture.
+  useEffect(() => {
+    if (returnTo !== undefined) rememberReturnTo(returnTo);
+  }, [returnTo]);
+
+  // La mesure du retour de Google se lit ICI, à l'arrivée : personne n'appelle rien à ce moment-là, la
+  // session est déjà ouverte, et trois chemins (le rappel de session, l'écouteur, l'événement) peuvent
+  // consommer la mémoire avant celui qui mesure. Lue APRÈS l'écriture d'un `?returnTo=` éventuel.
+  // Une seule fois PAR PAGE, pas par abonnement : l'effet qui s'abonne se rejoue quand `leave` ou `t`
+  // change, et un garde local à l'effet aurait alors mesuré la même connexion deux fois.
+  const googleLoginTracked = useRef(false);
+  const arrival = useRef<ReturnContext>({
+    return_to_kept: false,
+    from_content: false,
+    reason: "fresh",
+  });
+  // R-7 : la session est morte sous ses doigts — l'écran le dit en tête de formulaire. Même lecture
+  // que la mesure, donc elle aussi APRÈS le montage (la mémoire est locale à l'appareil : la lire au
+  // rendu ferait diverger l'hydratation du HTML serveur) et APRÈS l'écriture d'un `?returnTo=`, qui
+  // remplace un retour d'expiration par une invitation — l'avis ne vaut alors plus.
+  const [sessionExpired, setSessionExpired] = useState(false);
+  useEffect(() => {
+    arrival.current = readReturnContext();
+    setSessionExpired(arrival.current.reason === "expired");
+  }, [returnTo]);
+
   useEffect(() => {
     // 1) Surface OAuth/callback errors that Supabase appends to the URL (query or
     // hash). Without this the user silently bounces back to the login form.
@@ -134,11 +250,27 @@ function AuthPage() {
     // 2) Redirect away if already signed in. Covers the OAuth callback too:
     // Supabase exchanges /auth?code=... for a session ASYNCHRONOUSLY, so we also
     // subscribe to auth-state changes and navigate on SIGNED_IN.
+    // é38 lot 0 — le retour de Google (voir isFreshGoogleSignIn : jamais `?code=`). Le premier chemin qui
+    // voit la session fraîche la mesure, UNE fois, avec le contexte lu à l'arrivée : la page a été rechargée
+    // chez Google, mais le retour gardé a survécu — c'est lui qui dit d'où l'on venait. Deux chemins et pas
+    // un seul : selon l'ordre où Supabase livre INITIAL_SESSION et SIGNED_IN, c'est l'un ou l'autre qui
+    // arrive d'abord, et `leave()` quitte la page aussitôt.
+    const trackGoogleLogin = (session: SignInProbe) => {
+      if (googleLoginTracked.current || !isFreshGoogleSignIn(session, Date.now())) return;
+      googleLoginTracked.current = true;
+      trackProductEvent("login", { method: "google", ...arrival.current });
+    };
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/dashboard" });
+      if (data.session) {
+        trackGoogleLogin(data.session);
+        leave();
+      }
     });
     const { data: authSub } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) navigate({ to: "/dashboard" });
+      if (session) {
+        trackGoogleLogin(session);
+        leave();
+      }
     });
 
     // 3) Fallback: arrived from the OAuth callback (?code=) but no session
@@ -160,7 +292,7 @@ function AuthPage() {
       authSub.subscription.unsubscribe();
       if (timer) clearTimeout(timer);
     };
-  }, [navigate, t]);
+  }, [leave, t]);
 
   // Cooldown ticker — mirrors GoTrue's own per-address throttle so the button says
   // when it will work again instead of failing on every click.
@@ -179,7 +311,7 @@ function AuthPage() {
       const { error } = await supabase.auth.resend({
         type: "signup",
         email: target,
-        options: { emailRedirectTo: `${window.location.origin}/dashboard` },
+        options: { emailRedirectTo: `${window.location.origin}/auth` },
       });
       if (error) throw error;
       setSentTo(target);
@@ -210,6 +342,8 @@ function AuthPage() {
     }
     setPasswordError("");
     setBusy(true);
+    // Lu AVANT l'appel qui ouvre la session : voir `readReturnContext`.
+    const context = readReturnContext();
     try {
       if (isSignup) {
         const displayName = name || email.split("@")[0];
@@ -217,7 +351,7 @@ function AuthPage() {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/dashboard`,
+            emailRedirectTo: `${window.location.origin}/auth`,
             // `role` lets `handle_new_user` persist the parent/student choice even on
             // the email-confirmation path where `bootstrapProfile` never runs (lot 10).
             data: { display_name: displayName, role },
@@ -246,7 +380,12 @@ function AuthPage() {
         // sur le chemin « confirme ton adresse » où l'élève ne revient parfois
         // jamais : c'est justement la fuite qu'on veut voir. Aucune PII — le
         // rôle choisi, rien d'autre.
-        trackProductEvent("signup", { role, needs_confirmation: !data.session });
+        trackProductEvent("signup", {
+          role,
+          needs_confirmation: !data.session,
+          return_to_kept: context.return_to_kept,
+          from_content: context.from_content,
+        });
 
         // Profile bootstrap (display name + role) is extracted to the
         // `bootstrapProfile` server fn (review #19). It is authenticated, so it can
@@ -281,12 +420,14 @@ function AuthPage() {
           return;
         }
         toast.success(t.auth.toastSignupSuccess);
-        navigate({ to: "/dashboard" });
+        leave();
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
+        // `reason: "expired"` arrive avec le lot 3 (la session qui meurt).
+        trackProductEvent("login", { method: "password", ...context });
         toast.success(t.auth.toastLoginSuccess);
-        navigate({ to: "/dashboard" });
+        leave();
       }
     } catch (err) {
       const message = friendlyAuthError(t, err);
@@ -453,7 +594,11 @@ function AuthPage() {
           </span>
         </Link>
 
-        <motion.div {...entrance} className="w-full glass-gold rounded-2xl p-6 shadow-gold sm:p-8">
+        <motion.div
+          {...entrance}
+          data-testid="auth-card"
+          className="w-full glass-gold rounded-2xl p-6 shadow-gold sm:p-8"
+        >
           <div className="mb-3 flex justify-end">
             <LanguageSwitcher />
           </div>
@@ -510,6 +655,18 @@ function AuthPage() {
             </form>
           ) : (
             <>
+              {/* R-7 : « Ta session a expiré » — en connexion seulement (créer un compte n'a rien à voir),
+                  dans une région d'état toujours montée : un lecteur d'écran l'annonce sans voler le focus. */}
+              <div role="status" aria-live="polite">
+                {sessionExpired && !isSignup && (
+                  <p
+                    data-testid="auth-session-expired"
+                    className="mt-6 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-center text-xs text-gold"
+                  >
+                    {t.errors.sessionExpired}
+                  </p>
+                )}
+              </div>
               <button
                 type="button"
                 disabled={busy}

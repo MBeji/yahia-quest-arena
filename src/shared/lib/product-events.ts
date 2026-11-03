@@ -29,7 +29,10 @@
 
 import { captureProductEvent } from "@/shared/lib/product-analytics";
 
-/** Les 12 événements produit de la liste fermée (é31 §3.6). Rien d'autre ne part. */
+/**
+ * La liste fermée des événements produit (é31 §3.6), amendée par écrit : deux par é34 (la
+ * progression), trois par é38 lot 0 (le tunnel sans compte → compte). Rien d'autre ne part.
+ */
 export type ProductEventName =
   | "signup"
   | "onboarding_completed"
@@ -47,7 +50,22 @@ export type ProductEventName =
   // l'étoile est le geste fréquent, le sceau est le jalon rare, et mesurer les deux
   // dit si la reconnaissance arrive assez tôt pour motiver (KPI-3 de l'étude).
   | "chapter_star_earned"
-  | "subject_seal_earned";
+  | "subject_seal_earned"
+  // Étude 38 lot 0 (R-16) — le tunnel « sans compte → compte », aveugle avant `signup` alors que
+  // le visiteur sans compte est l'audience principale. Trois événements, pas un de plus :
+  // l'entraînement terminé SANS compte, l'invitation cliquée, la connexion. Leurs consommateurs
+  // sont datés : KPI-1, KPI-2 et KPI-3 de l'étude 38, lus dans PostHog dès la mise en ligne.
+  | "public_practice_completed"
+  | "account_invite_clicked"
+  | "login"
+  // Étude 39 (R-21) — le test de niveau, premier canal d'acquisition mesurable. Quatre événements,
+  // pas un de plus, chacun avec son consommateur daté : commencé (KPI-1), fini (KPI-2, avec la bande
+  // et le bâclage), partagé (KPI-1, la part partagée), rattaché à un compte (KPI-3 — la conversion
+  // test → compte, que le tunnel de l'étude 38 ne savait pas nommer).
+  | "placement_started"
+  | "placement_completed"
+  | "placement_shared"
+  | "placement_claimed";
 
 export type ProductEventEntry = {
   readonly name: ProductEventName;
@@ -95,6 +113,47 @@ export const PRODUCT_EVENT_CATALOGUE: readonly ProductEventEntry[] = [
   {
     name: "subject_seal_earned",
     fires: "quand tous les chapitres d'une matière atteignent la même étoile (étude 34)",
+    live: true,
+  },
+  {
+    name: "public_practice_completed",
+    fires:
+      "Entraînement terminé SANS compte : correction d'une mission, ou quiz de compréhension (étude 38)",
+    live: true,
+  },
+  {
+    name: "account_invite_clicked",
+    fires:
+      "Clic sur une invitation à créer un compte : lecteur de cours, résultat d'entraînement, accueil, en-tête (étude 38)",
+    live: true,
+  },
+  {
+    name: "login",
+    fires:
+      "Connexion réussie : mot de passe, ou retour de Google — une inscription Google y compte aussi, le client ne la distingue pas (étude 38)",
+    live: true,
+  },
+  {
+    name: "placement_started",
+    fires:
+      "Test de niveau commencé : matière, audience (élève/parent), avec ou sans compte, depuis un lien partagé ou non (étude 39)",
+    live: true,
+  },
+  {
+    name: "placement_completed",
+    fires:
+      "Test de niveau fini : matière, bande de niveau, bâclé ou non, avec ou sans compte (étude 39)",
+    live: true,
+  },
+  {
+    name: "placement_shared",
+    fires: "Résultat du test de niveau partagé : feuille de partage ou copie (étude 39)",
+    live: true,
+  },
+  {
+    name: "placement_claimed",
+    fires:
+      "Tests de niveau de l'appareil rattachés au compte qui vient de se connecter — la conversion test → compte (étude 39)",
     live: true,
   },
 ] as const;

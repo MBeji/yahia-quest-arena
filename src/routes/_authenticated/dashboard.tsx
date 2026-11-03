@@ -98,6 +98,14 @@ const DashboardGoals = lazy(() =>
     default: m.DashboardGoals,
   })),
 );
+// é39 US-6 — « Ton bilan de départ ». Lazy pour la même raison que les cartes ci-dessus, et
+// davantage : la carte porte SA lecture et SON catalogue i18n (`i18n-placement`), qui ne doivent
+// pas entrer dans le chunk eager du tableau de bord.
+const PlacementHallCard = lazy(() =>
+  import("@/features/placement/components/placement-hall-card").then((m) => ({
+    default: m.PlacementHallCard,
+  })),
+);
 import { useT } from "@/lib/i18n";
 import { xpToNextLevel, xpWithinLevel } from "@/shared/lib/level";
 // (subject-locale filtering moved out with the « Autres thèmes » grid — lot 6.)
@@ -462,6 +470,15 @@ function Dashboard() {
             renderPractice={(weakness) => <TutorPracticeEntry weakness={weakness} />}
           />
         </Suspense>
+
+        {/* « Ton bilan de départ » (étude 39, US-6 / R-17) — le dernier test de niveau non
+            bâclé par matière, et par où commencer ; sans bilan, l'invitation à en passer un.
+            La carte lit elle-même (`getMyPlacementOverview`), hors du chemin SSR. */}
+        <div className="mt-6">
+          <Suspense fallback={null}>
+            <PlacementHallCard />
+          </Suspense>
+        </div>
 
         {/* STREAK RECOVERY BANNER — la condition est celle du SERVEUR, lue au
             même endroit (`streak-recovery.ts`). Elle testait auparavant

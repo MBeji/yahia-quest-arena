@@ -65,9 +65,9 @@ as a migration. Details: [`docs/content-generation-pipeline.md`](./docs/content-
 
 ## Conventions
 
-- Feature-based: `src/features/{name}/` (16 — ai, auth, bug-report, content-report, dashboard,
-  dungeon, duel, exam, notifications, parcours, parent-report, progression, quest, shop,
-  subscription, tutor ; `harness:check` fails if this list drifts from `src/features/`).
+- Feature-based: `src/features/{name}/` (17 — ai, auth, bug-report, content-report, dashboard,
+  dungeon, duel, exam, notifications, parcours, parent-report, placement, progression, quest,
+  shop, subscription, tutor ; `harness:check` fails if this list drifts from `src/features/`).
   Each has `index.ts` (barrel), `{name}.server.ts`, `__tests__/`.
   **Features never import other features** — share via `src/shared/` (logic) or
   `src/components/` (UI); ESLint `local/no-cross-feature-import`. Routes stay thin.

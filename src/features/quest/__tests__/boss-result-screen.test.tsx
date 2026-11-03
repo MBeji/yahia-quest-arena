@@ -94,6 +94,7 @@ function renderScreen(over: Partial<Parameters<typeof QuestResultScreen>[0]> = {
     correctionVideo: null,
     exerciseId: "ex-1",
     nextExerciseId: null,
+    xpReward: null,
     showConfetti: false,
     showLevelUp: false,
     onLevelUpComplete: () => {},

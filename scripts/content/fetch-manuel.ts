@@ -177,6 +177,10 @@ async function main(): Promise<void> {
     const result = downloadManuel(plan.url, plan.file);
     if (!result.ok) {
       stderr.write(`[manuel] ✗ ${result.failure.kind} : ${result.failure.message}\n`);
+      stderr.write(
+        "[manuel] depuis une session cloud, le CNP n'est plus la source (2026-11-03) : lire le PDF dans le " +
+          "dossier Google Drive du projet — procédure au dépôt privé, skill content-ingest § « Source et lecture ».\n",
+      );
       exit(2);
     }
     stdout.write(

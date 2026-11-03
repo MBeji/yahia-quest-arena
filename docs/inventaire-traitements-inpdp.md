@@ -99,12 +99,20 @@ celui de la **langue**.
 `user_misconceptions`, `user_competency_mastery`, `learning_pulses`,
 `mock_exam_sessions`, `dungeon_runs`, `dungeon_run_questions`, `duels`,
 `duel_participants`, `duel_queue`, `duel_league_awards`, `student_badges`,
-`inventory_items`, `exercise_assignments`, `parcours_interest`.
+`inventory_items`, `exercise_assignments`, `parcours_interest`, `placement_sessions`.
 
 Toutes rattachées à un `user_id`. Elles décrivent **ce qu'un enfant a répondu,
 quand, en combien de temps, et ce qu'il ne comprend pas** (`user_misconceptions`,
 `user_competency_mastery`). C'est de la donnée de comportement scolaire, plus
 sensible en pratique que l'e-mail.
+
+**Une exception, et c'est la seule table qui en porte une** : `placement_sessions` (le test de
+niveau, étude 39, 2026-11-01) accepte des lignes **sans compte** — `user_id` à NULL, un `token`
+aléatoire comme seule clé de lecture, les réponses à dix questions du catalogue, la note, la
+durée. Aucune identité, aucune adresse IP, aucun identifiant d'appareil n'y est écrit ; le jeton
+ne vit que dans le navigateur de la personne. Rétention : une ligne anonyme non finie est effacée
+après 7 jours, une ligne anonyme finie après 90 (`sweep_placement_sessions`, quotidien) ; une
+ligne rattachée à un compte suit le compte (suppression, export).
 
 ### 3.3 Lien parental
 

@@ -6,6 +6,7 @@ export const enPublic: TranslationKeys["public"] = {
     navAria: "Catalogue",
     programme: "Programme",
     extras: "Extras",
+    placement: "Placement test",
     parentTracking: "Parent tracking",
     login: "Log in",
     signup: "Create my account",
@@ -192,6 +193,7 @@ export const enPublic: TranslationKeys["public"] = {
     continueCta: "Continue to the first exercise",
     inviteDesc:
       "Without an account, your XP, streak and badges are not kept. Create one to keep your next XP, your streak and your progress.",
+    inviteValue: "With an account, this mission is worth up to {xp} XP.",
     inviteCta: "Create my account",
   },
   print: {

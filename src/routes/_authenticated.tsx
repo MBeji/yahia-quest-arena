@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, Link, useNavigate, useLocation } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import {
@@ -13,10 +13,12 @@ import { getPendingBetaCount } from "@/features/subscription";
 import { getOpenReportsCount } from "@/features/content-report";
 import { BetaBadge, BugReportLauncher, getOpenBugsCount } from "@/features/bug-report";
 import { AiLauncher } from "@/features/ai/components/ai-launcher";
+import { useClaimPlacementSessions } from "@/features/placement";
 import { LayoutDashboard, Map, Compass, Swords, ClipboardList, Shield } from "lucide-react";
 import { supabase } from "@/shared/integrations/supabase/client";
 import { toast } from "sonner";
 import { useT } from "@/lib/i18n";
+import { rememberReturnTo } from "@/shared/lib/return-to";
 import { SettingsMenu } from "@/components/ui/settings-menu";
 import { GoldAmbient } from "@/components/visual/gold-ambient";
 import { AccountHud } from "@/components/account-hud";
@@ -47,6 +49,11 @@ function AuthenticatedLayout() {
   // notifications du soir parlent celle de l'élève. Ici parce que c'est le seul
   // endroit qui sait à la fois qui est connecté et quelle langue est affichée.
   useProfileLocaleSync(Boolean(user) && hasProfile);
+
+  // é39 R-16 — les tests de niveau passés sur l'appareil AVANT le compte lui sont rattachés à la
+  // première connexion : le bilan de départ suit l'élève, il n'a rien à refaire. Ici parce que tout
+  // chemin d'entrée (inscription, connexion, Google, lien de confirmation) finit dans cette coquille.
+  useClaimPlacementSessions(Boolean(user) && !loading);
 
   // Pending beta-access requests count for the admin nav badge.
   const fetchBetaCount = useServerFn(getPendingBetaCount);
@@ -82,11 +89,21 @@ function AuthenticatedLayout() {
   const adminPending = pendingBeta + openReports + openBugs;
 
   // Redirect unauthenticated users via effect (not during render)
+  //
+  // é38 lot 1 (R-4) : un visiteur qui n'a JAMAIS eu de session ici et suit un lien vers un écran de
+  // compte retrouve, une fois connecté, la page qu'il voulait. Celui qui vient de se DÉCONNECTER, non :
+  // sur un poste partagé, la page du précédent n'est pas pour le suivant.
+  const hadUser = useRef(false);
   useEffect(() => {
-    if (!loading && !user) {
+    if (user) {
+      hadUser.current = true;
+      return;
+    }
+    if (!loading) {
+      if (!hadUser.current) rememberReturnTo(location.pathname + location.searchStr);
       navigate({ to: "/auth", search: { mode: "login" } });
     }
-  }, [loading, user, navigate]);
+  }, [loading, user, navigate, location.pathname, location.searchStr]);
 
   // Profile-first onboarding guard: a signed-in STUDENT with no active parcours is
   // sent to /onboarding. Gated on the profile query having loaded (no flash) and

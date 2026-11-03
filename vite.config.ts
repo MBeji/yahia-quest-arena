@@ -104,6 +104,9 @@ export default defineConfig(async ({ command, mode }) => {
             // par la fiche (`React.lazy`) et par les routes paresseuses qui posent
             // cartes et bulles — jamais par le chunk index.
             if (/\/src\/lib\/i18n\/guide\/(fr|en|ar)\.ts$/.test(id)) return "i18n-guide";
+            // Étude 39 : le test de niveau — ses écrans sont une route publique paresseuse, une
+            // carte du Hall en `lazy()` et la fin de l'accueil. Même règle : données seules.
+            if (/\/src\/lib\/i18n\/placement\/(fr|en|ar)\.ts$/.test(id)) return "i18n-placement";
             if (!id.includes("node_modules")) return;
 
             if (id.includes("@tanstack/")) return "vendor-tanstack";

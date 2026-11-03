@@ -1074,6 +1074,8 @@ export type TranslationKeys = {
       navAria: string;
       programme: string;
       extras: string;
+      /** L'entrée du test de niveau (étude 39) — la seule clé app-wide du test, l'en-tête n'étant pas paresseux. */
+      placement: string;
       parentTracking: string;
       login: string;
       signup: string;
@@ -1256,6 +1258,8 @@ export type TranslationKeys = {
       questCta: string;
       continueCta: string;
       inviteDesc: string;
+      /** Invitation quand la mission a une récompense connue — `{xp}`. Gain futur, jamais une perte (é31 R-20, é38 R-8). */
+      inviteValue: string;
       inviteCta: string;
     };
     print: { copyrightNotice: string };
