@@ -6,7 +6,7 @@ import { deriveKpis, formatMinutes, formatSeconds, longestActiveStreak } from ".
 import { clampRange, rangeLengthDays, resolvePeriod, shiftDays } from "../insights/periods";
 import { bandFor, scoreIndex, topContributors, topGaps } from "../insights/scoring";
 import { analyzeSubjects, subjectLevel } from "../insights/subjects";
-import { parseDailyReport } from "../insights/daily-report";
+import { parseDailyReport } from "../insights/daily-report.schemas";
 import { makeDay, makeReport, makeRun, makeTotals } from "./daily-fixtures";
 
 describe("periods", () => {

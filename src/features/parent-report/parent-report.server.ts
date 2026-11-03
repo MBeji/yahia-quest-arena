@@ -14,7 +14,15 @@ import {
   REPORT_CODE_ERROR_PREFIX,
   parentCodeErrorCode,
 } from "./parent-code-errors";
-import { parseAttemptDetail, parseDailyReport } from "./insights/daily-report";
+import { parseAttemptDetail, parseDailyReport } from "./insights/daily-report.schemas";
+// Les schémas de niveau module vivent à part (2026-10-31) : voir ce fichier.
+import {
+  dailyGoalSchema,
+  isoDate,
+  parseStudentReportPayload,
+  tutorCountersSchema,
+  weeklyGoalSchema,
+} from "./parent-report.schemas";
 
 type ParentStudent = {
   id: string;
@@ -29,149 +37,6 @@ type ParentStudent = {
   role?: string;
   relation: string;
 };
-
-// The RPC returns a `Json` value; validate field-by-field with zod, coercing
-// numbers, defaulting arrays to [], and constraining the verdict union with a
-// safe fallback so the route's `.map()`/`summary.verdict` access can never crash.
-const numberish = z.coerce.number().catch(0);
-const VERDICT_VALUES = ["excellent", "good", "average", "needs_improvement", "inactive"] as const;
-
-const weekSliceSchema = z
-  .object({
-    exercises: numberish,
-    minutes: numberish,
-    avgScore: numberish,
-  })
-  .catch({ exercises: 0, minutes: 0, avgScore: 0 });
-
-const chapterInsightSchema = z.object({
-  chapterId: z.string().catch(""),
-  chapterTitle: z.string().catch(""),
-  subjectId: z.string().catch(""),
-  subjectName: z.string().catch(""),
-  attempts: numberish,
-  avgScore: numberish,
-});
-
-const studentReportSchema = z.object({
-  student: z
-    .object({
-      displayName: z.string().nullable().catch(null),
-      heroClass: z.string().nullable().catch(null),
-      level: numberish,
-      xp: numberish,
-      currentStreak: numberish,
-      longestStreak: numberish,
-      lastActiveDate: z.string().nullable().catch(null),
-      createdAt: z.string().catch(""),
-    })
-    .catch({
-      displayName: null,
-      heroClass: null,
-      level: 0,
-      xp: 0,
-      currentStreak: 0,
-      longestStreak: 0,
-      lastActiveDate: null,
-      createdAt: "",
-    }),
-  summary: z
-    .object({
-      totalTimeMinutes: numberish,
-      totalExercises: numberish,
-      avgScore: numberish,
-      daysActiveThisWeek: numberish,
-      seriousnessScore: numberish,
-      verdict: z.enum(VERDICT_VALUES).catch("average"),
-      scoreTrend: numberish,
-    })
-    .catch({
-      totalTimeMinutes: 0,
-      totalExercises: 0,
-      avgScore: 0,
-      daysActiveThisWeek: 0,
-      seriousnessScore: 0,
-      verdict: "average",
-      scoreTrend: 0,
-    }),
-  subjectStats: z
-    .array(
-      z.object({
-        subjectId: z.string().catch(""),
-        name: z.string().catch(""),
-        // Le NIVEAU : une matière appartient à un niveau scolaire, et sans lui le
-        // bilan listait « Mathématiques » quatre fois sans rien pour les séparer.
-        gradeName: z.string().nullable().catch(null),
-        colorToken: z.string().nullable().catch(null),
-        attempts: numberish,
-        avgScore: numberish,
-        totalTimeMinutes: numberish,
-        // Couverture du programme — même règle que la carte `/parcours`.
-        chaptersTotal: numberish,
-        chaptersCompleted: numberish,
-      }),
-    )
-    .catch([]),
-  dailyActivity: z
-    .array(
-      z.object({
-        date: z.string().catch(""),
-        exercises: numberish,
-        minutes: numberish,
-        avgScore: numberish,
-      }),
-    )
-    .catch([]),
-  weekComparison: z
-    .object({
-      thisWeek: weekSliceSchema,
-      lastWeek: weekSliceSchema,
-    })
-    .catch({
-      thisWeek: { exercises: 0, minutes: 0, avgScore: 0 },
-      lastWeek: { exercises: 0, minutes: 0, avgScore: 0 },
-    }),
-  chapterInsights: z
-    .object({
-      strengths: z.array(chapterInsightSchema).catch([]),
-      weaknesses: z.array(chapterInsightSchema).catch([]),
-    })
-    .catch({ strengths: [], weaknesses: [] }),
-  /**
-   * Étude 04 A2.2 (US-3) — les erreurs NOMMÉES, à côté des chapitres faibles.
-   *
-   * Ce n'est pas un doublon de `chapterInsights` : celui-ci dit « Fractions :
-   * 45 % » (OÙ ça coince), celui-là dit « il additionne les dénominateurs »
-   * (QUOI réviser). Le second est le seul des deux sur lequel un parent peut
-   * agir le soir même.
-   *
-   * `.catch([])` comme partout ici : un rapport doit s'afficher même si la RPC
-   * est en cours de déploiement, ou si l'élève n'a aucune erreur installée —
-   * ce qui est le cas de tout compte neuf.
-   */
-  misconceptionInsights: z
-    .array(
-      z.object({
-        tag: z.string().catch(""),
-        labelFr: z.string().catch(""),
-        labelEn: z.string().catch(""),
-        labelAr: z.string().catch(""),
-        occurrences: numberish,
-        trend: z.enum(["improving", "worsening", "stable"]).catch("stable"),
-      }),
-    )
-    .catch([]),
-});
-
-type StudentReportShape = z.infer<typeof studentReportSchema>;
-
-function parseStudentReportPayload(payload: unknown): StudentReportShape {
-  if (!payload || typeof payload !== "object") {
-    throw new Error("Invalid student report payload.");
-  }
-
-  return studentReportSchema.parse(payload);
-}
 
 /**
  * Get the list of students visible to the current user (parent sees linked, admin sees all).
@@ -345,10 +210,6 @@ export const getStudentReport = createServerFn({ method: "GET" })
     return parseStudentReportPayload(reportData);
   });
 
-// Une date de calendrier, telle que la RPC l'attend et que le sélecteur de
-// période la produit (`YYYY-MM-DD`).
-const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Expected YYYY-MM-DD");
-
 /**
  * Le tableau de bord « jour par jour » : tout ce qui est MESURÉ sur une période.
  *
@@ -501,16 +362,6 @@ export const getStudentAttemptDetailByCode = createServerFn({ method: "GET" })
     return parseAttemptDetail(payload);
   });
 
-// Objectif hebdo : payload de get_family_weekly_goal (null si aucun objectif posé).
-const weeklyGoalSchema = z
-  .object({
-    weekStart: z.string().catch(""),
-    target: numberish,
-    done: numberish,
-  })
-  .nullable()
-  .catch(null);
-
 /**
  * Read the current-week family goal (target + live progress) for a linked student.
  * Returns null when no goal is set this week.
@@ -566,16 +417,6 @@ export const setStudentWeeklyGoal = createServerFn({ method: "POST" })
     const row = result && typeof result === "object" ? (result as Record<string, unknown>) : {};
     return { target: typeof row.target === "number" ? row.target : data.target };
   });
-
-// Objectif du jour : payload de get_family_daily_goal (null si aucun objectif posé).
-const dailyGoalSchema = z
-  .object({
-    day: z.string().catch(""),
-    target: numberish,
-    done: numberish,
-  })
-  .nullable()
-  .catch(null);
 
 /**
  * Read today's family goal (target + live progress) for a linked student.
@@ -730,20 +571,6 @@ export const getStudentReportByCode = createServerFn({ method: "GET" })
 //    quiconque détient le code, sans aucun lien parent vérifié. D'où une RPC
 //    séparée, une server fn séparée, et un prop OPTIONNEL sur `ReportContent`
 //    que seule la route AUTHENTIFIÉE remplit.
-
-const tutorThemeSchema = z.object({
-  tag: z.string(),
-  label_fr: z.string(),
-  label_en: z.string(),
-  label_ar: z.string(),
-  count: numberish,
-});
-
-const tutorCountersSchema = z.object({
-  interactions_7d: numberish,
-  interactions_30d: numberish,
-  top_themes: z.array(tutorThemeSchema).catch([]),
-});
 
 /** Les compteurs d'aide, tels que l'écran parent les rend. Aucun verbatim. */
 export type TutorParentCounters = {
