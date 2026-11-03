@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate, useRouter, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
-import { Mail, Lock, User as UserIcon, Loader2, MailCheck } from "lucide-react";
+import { Mail, Lock, User as UserIcon, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/shared/integrations/supabase/client";
 import { useServerFn } from "@tanstack/react-start";
@@ -11,125 +11,23 @@ import { Label } from "@/components/ui/label";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { CrownMark } from "@/components/brand-mark";
 import { useT } from "@/lib/i18n";
+import {
+  cooldownFromError,
+  friendlyAuthError,
+  isEmailNotConfirmed,
+} from "@/features/auth/auth-errors";
+import {
+  isFreshGoogleSignIn,
+  readReturnContext,
+  type ReturnContext,
+  type SignInProbe,
+} from "@/features/auth/sign-in-arrival";
+import { EmailSentScreen, ForgotSentScreen } from "@/features/auth/components/auth-sent-screens";
+import { ForgotPasswordForm } from "@/features/auth/components/forgot-password-form";
+import { GoogleSignInButton } from "@/features/auth/components/google-sign-in-button";
 import { useEntrance } from "@/shared/lib/motion";
 import { trackProductEvent } from "@/shared/lib/product-events";
-import { isFromContent } from "@/shared/lib/funnel-origin";
-import {
-  consumeReturnTo,
-  peekReturnReason,
-  peekReturnTo,
-  rememberReturnTo,
-} from "@/shared/lib/return-to";
-import type { TranslationKeys } from "@/lib/i18n/types";
-
-/** `AuthError.code` when supabase-js exposes one (it is absent on plain Errors). */
-function authCode(err: unknown): string {
-  const code = (err as { code?: unknown } | null)?.code;
-  return typeof code === "string" ? code : "";
-}
-
-/** GoTrue refuses an unconfirmed sign-in with « Email not confirmed ». */
-export function isEmailNotConfirmed(err: unknown): boolean {
-  const msg = err instanceof Error ? err.message.toLowerCase() : "";
-  return msg.includes("email not confirmed") || authCode(err) === "email_not_confirmed";
-}
-
-/** Map a raw Supabase auth error to a localized, user-actionable message. */
-export function friendlyAuthError(t: TranslationKeys, err: unknown): string {
-  const msg = err instanceof Error ? err.message.toLowerCase() : "";
-  const code = authCode(err);
-  if (msg.includes("invalid login")) return t.auth.errorInvalidLogin;
-  if (isEmailNotConfirmed(err)) return t.auth.errorEmailNotConfirmed;
-  if (msg.includes("user already registered") || code === "user_already_exists")
-    return t.auth.errorAccountExists;
-  // A mailer failure is not a credentials problem: the account exists, only the mail
-  // never left. Answering « authentication error » sends the user back to a form that
-  // will then tell them the account already exists — the dead end this branch closes.
-  if (msg.includes("error sending")) return t.auth.errorMailerDown;
-  // GoTrue's per-address cooldown reads « For security purposes, you can only request
-  // this after N seconds » — neither « rate limit » nor « too many » appears in it.
-  if (
-    msg.includes("rate limit") ||
-    msg.includes("too many") ||
-    msg.includes("for security purposes") ||
-    code === "over_email_send_rate_limit"
-  )
-    return t.auth.errorRateLimit;
-  if (msg.includes("password")) return t.auth.passwordTooShort;
-  if (msg.includes("signup_disabled") || code === "signup_disabled")
-    return t.auth.errorSignupDisabled;
-  return t.auth.errorGeneric;
-}
-
-/** Seconds GoTrue asks us to wait, parsed from its cooldown message. */
-function cooldownFromError(err: unknown): number {
-  const m = err instanceof Error ? /after (\d+) seconds?/i.exec(err.message) : null;
-  return m ? Number(m[1]) : 0;
-}
-
-/** Ce que `isFreshGoogleSignIn` lit d'une session — le type de Supabase s'y range tel quel. */
-type SignInProbe = {
-  user: {
-    app_metadata?: { provider?: string };
-    identities?: { provider: string; last_sign_in_at?: string }[] | null;
-    last_sign_in_at?: string;
-  };
-};
-
-/** En deçà, la session est celle d'une connexion qui vient d'avoir lieu, pas d'une session retrouvée. */
-const FRESH_SIGN_IN_MS = 60_000;
-
-/**
- * La session qui vient de s'ouvrir est-elle un retour de Google ?
- *
- * ⚠️ Ni `?code=` ni le fragment : le client Supabase du projet n'a pas de `flowType`, donc c'est le
- * flux IMPLICITE (le défaut de la librairie), où le retour arrive dans `#access_token=…` et jamais
- * dans `?code=`. Chercher un `code` dans l'URL aurait laissé cet événement muet en production, sans
- * qu'aucun test le dise. La session, elle, dit les deux choses qu'il faut : QUELLE identité vient
- * de servir (la plus récemment connectée — un compte peut en porter plusieurs) et QUAND. Le délai
- * écarte l'onglet qu'on retrouve : l'événement SIGNED_IN y repart aussi, avec une session ancienne.
- * Un retour de lien de confirmation e-mail, lui, porte l'identité « email » : ce n'est pas Google.
- */
-export function isFreshGoogleSignIn(session: SignInProbe, now: number): boolean {
-  const latest = (session.user.identities ?? []).reduce<{ provider: string; at: number } | null>(
-    (best, identity) => {
-      const at = Date.parse(identity.last_sign_in_at ?? "");
-      return Number.isFinite(at) && (!best || at > best.at)
-        ? { provider: identity.provider, at }
-        : best;
-    },
-    null,
-  );
-  const provider = latest?.provider ?? session.user.app_metadata?.provider;
-  const at = latest?.at ?? Date.parse(session.user.last_sign_in_at ?? "");
-  return provider === "google" && Number.isFinite(at) && now - at < FRESH_SIGN_IN_MS;
-}
-
-/**
- * Ce que la mémoire de retour dit du moment : a-t-on de quoi ramener la personne, vient-elle d'un
- * contenu, et POURQUOI elle revient — `expired` quand sa session est morte (é38 lot 3, R-7), `fresh`
- * sinon. `signup` n'en reprend que les deux premiers champs.
- */
-type ReturnContext = {
-  return_to_kept: boolean;
-  from_content: boolean;
-  reason: "fresh" | "expired";
-};
-
-/**
- * À lire AVANT tout appel qui ouvre une session : `leave()` consomme la mémoire, et `signUp` comme
- * `signInWithPassword` notifient `SIGNED_IN` AVANT de rendre la main — l'écouteur de la page a donc déjà
- * navigué et vidé la mémoire quand le formulaire reprend la parole. Lue après, la mesure disait
- * « pas de retour gardé » pour la plupart des connexions qui en avaient un.
- */
-function readReturnContext(): ReturnContext {
-  const origin = peekReturnTo();
-  return {
-    return_to_kept: origin !== null,
-    from_content: isFromContent(origin),
-    reason: peekReturnReason() ?? "fresh",
-  };
-}
+import { consumeReturnTo, rememberReturnTo } from "@/shared/lib/return-to";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -489,95 +387,24 @@ function AuthPage() {
     }
   }
 
-  if (forgotSent) {
-    return (
-      <main className="relative min-h-[100dvh] overflow-hidden bg-black-deep">
-        <div className="absolute inset-0 bg-grid opacity-50" />
-        <div className="relative mx-auto flex min-h-[100dvh] max-w-md flex-col items-center justify-center px-6 py-12">
-          <motion.div
-            {...entrance}
-            className="w-full glass-gold rounded-2xl p-8 shadow-gold text-center"
-          >
-            <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-gold/20 border border-gold/40">
-              <MailCheck className="h-8 w-8 text-gold" />
-            </div>
-            <h1 className="font-display text-2xl font-bold">{t.auth.forgotSentTitle}</h1>
-            <p className="mt-3 text-sm text-muted-foreground">
-              {t.auth.forgotSentBody.replace("{email}", sentTo)}
-            </p>
-            <div className="mt-6 rounded-xl border border-gold/30 bg-gold/5 p-4 text-xs text-muted-foreground">
-              {t.auth.forgotSentSpam}
-            </div>
-            <Link
-              to="/auth"
-              search={{ mode: "login" }}
-              className="mt-6 inline-flex min-h-11 items-center text-xs text-gold hover:underline"
-            >
-              {t.auth.forgotBack}
-            </Link>
-          </motion.div>
-        </div>
-      </main>
-    );
-  }
+  if (forgotSent) return <ForgotSentScreen sentTo={sentTo} />;
 
   if (emailSent) {
     return (
-      <main className="relative min-h-[100dvh] overflow-hidden bg-black-deep">
-        <div className="absolute inset-0 bg-grid opacity-50" />
-        <div className="relative mx-auto flex min-h-[100dvh] max-w-md flex-col items-center justify-center px-6 py-12">
-          <motion.div
-            {...entrance}
-            className="w-full glass-gold rounded-2xl p-8 shadow-gold text-center"
-          >
-            <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-gold/20 border border-gold/40">
-              <MailCheck className="h-8 w-8 text-gold" />
-            </div>
-            <h1 className="font-display text-2xl font-bold">{t.auth.emailSentTitle}</h1>
-            <p className="mt-3 text-sm text-muted-foreground">
-              {t.auth.emailSentBody1}{" "}
-              <span className="font-semibold text-foreground">{sentTo}</span>.<br />
-              {t.auth.emailSentBody2}
-            </p>
-            <div className="mt-6 rounded-xl border border-gold/30 bg-gold/5 p-4 text-xs text-muted-foreground">
-              {t.auth.emailSentSpam}
-            </div>
-            <button
-              type="button"
-              disabled={resendBusy || resendCooldown > 0}
-              onClick={() => void resendConfirmation(sentTo)}
-              className="mt-5 flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-gold/40 bg-gold/10 py-2.5 text-sm font-bold text-gold transition hover:bg-gold/20 disabled:opacity-60"
-            >
-              {resendBusy && <Loader2 className="h-4 w-4 animate-spin" />}
-              {resendCooldown > 0
-                ? t.auth.emailSentResendWait.replace("{s}", String(resendCooldown))
-                : t.auth.emailSentResend}
-            </button>
-            <div role="status" aria-live="polite">
-              {resendNote && <p className="mt-3 text-xs text-gold">{resendNote}</p>}
-            </div>
-            <div role="alert" aria-live="polite">
-              {formError && (
-                <p className="mt-3 rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-xs text-gold">
-                  {formError}
-                </p>
-              )}
-            </div>
-            <button
-              type="button"
-              onClick={() => {
-                setEmailSent(false);
-                setSentTo("");
-                setResendNote("");
-                setFormError("");
-              }}
-              className="mt-4 inline-flex min-h-11 items-center text-xs text-gold hover:underline"
-            >
-              {t.auth.emailSentEdit}
-            </button>
-          </motion.div>
-        </div>
-      </main>
+      <EmailSentScreen
+        sentTo={sentTo}
+        formError={formError}
+        resendBusy={resendBusy}
+        resendCooldown={resendCooldown}
+        resendNote={resendNote}
+        onResend={() => void resendConfirmation(sentTo)}
+        onEdit={() => {
+          setEmailSent(false);
+          setSentTo("");
+          setResendNote("");
+          setFormError("");
+        }}
+      />
     );
   }
 
@@ -614,45 +441,13 @@ function AuthPage() {
           </p>
 
           {isForgot ? (
-            <form onSubmit={handleForgot} className="mt-6 space-y-3">
-              <div className="relative">
-                <Label htmlFor="auth-email" className="sr-only">
-                  {t.auth.emailLabel}
-                </Label>
-                <Mail className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
-                <input
-                  id="auth-email"
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder={t.auth.emailLabel}
-                  className="w-full rounded-lg border border-input bg-background/60 py-2.5 ps-10 pe-3 text-sm focus:border-gold focus:outline-none"
-                />
-              </div>
-              <div role="alert" aria-live="polite">
-                {formError && (
-                  <p className="rounded-lg border border-gold/40 bg-gold/10 px-3 py-2 text-xs text-gold">
-                    {formError}
-                  </p>
-                )}
-              </div>
-              <button
-                type="submit"
-                disabled={busy}
-                className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] py-2.5 text-sm font-bold text-primary-foreground shadow-gold transition hover:opacity-90 disabled:opacity-60"
-              >
-                {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-                {t.auth.forgotSubmit}
-              </button>
-              <Link
-                to="/auth"
-                search={{ mode: "login" }}
-                className="block py-2 text-center text-xs font-medium text-muted-foreground transition hover:text-foreground"
-              >
-                {t.auth.forgotBack}
-              </Link>
-            </form>
+            <ForgotPasswordForm
+              email={email}
+              onEmailChange={setEmail}
+              formError={formError}
+              busy={busy}
+              onSubmit={handleForgot}
+            />
           ) : (
             <>
               {/* R-7 : « Ta session a expiré » — en connexion seulement (créer un compte n'a rien à voir),
@@ -667,36 +462,7 @@ function AuthPage() {
                   </p>
                 )}
               </div>
-              <button
-                type="button"
-                disabled={busy}
-                onClick={handleGoogle}
-                className="mt-6 flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-border bg-background/50 px-4 py-2.5 text-sm font-medium transition hover:bg-background/80 disabled:opacity-50"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24">
-                  <path
-                    fill="#4285F4"
-                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                  />
-                  <path
-                    fill="#34A853"
-                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                  />
-                  <path
-                    fill="#FBBC05"
-                    d="M5.84 14.1A6.97 6.97 0 0 1 5.46 12c0-.73.13-1.44.36-2.1V7.07H2.18A11 11 0 0 0 1 12c0 1.77.42 3.45 1.18 4.93l3.66-2.83z"
-                  />
-                  <path
-                    fill="#EA4335"
-                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.83C6.71 7.31 9.14 5.38 12 5.38z"
-                  />
-                </svg>
-                {t.auth.googleCta}
-              </button>
-
-              <p className="mt-2 text-center text-xs text-muted-foreground">
-                {t.auth.sessionRemembered}
-              </p>
+              <GoogleSignInButton busy={busy} onClick={handleGoogle} />
 
               <div className="my-5 flex items-center gap-3 text-xs uppercase tracking-widest text-muted-foreground">
                 <span className="h-px flex-1 bg-border" /> {t.auth.or}{" "}

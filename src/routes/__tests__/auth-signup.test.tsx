@@ -57,7 +57,9 @@ vi.mock("@/shared/lib/product-events", () => ({
 
 import { notePageForFunnel } from "@/shared/lib/funnel-origin";
 import { peekReturnTo, rememberReturnTo } from "@/shared/lib/return-to";
-import { Route, friendlyAuthError, isEmailNotConfirmed, isFreshGoogleSignIn } from "../auth";
+import { Route } from "../auth";
+import { friendlyAuthError, isEmailNotConfirmed } from "@/features/auth/auth-errors";
+import { isFreshGoogleSignIn } from "@/features/auth/sign-in-arrival";
 
 // The page itself is NOT exported: exporting a route's component defeats TanStack
 // Start's route splitting and drags its whole import graph (motion, icons, form
