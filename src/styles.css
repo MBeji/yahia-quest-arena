@@ -1290,6 +1290,14 @@ html:not(.reference) .lesson-figure__plate {
   contain-intrinsic-size: auto 72px;
 }
 
+/* Même confinement pour les articles d'un examen blanc (10-20 questions à
+   figures par épreuve, 2026-10-31) : une coche ne refait ni layout ni paint
+   des questions hors écran. L'estimation est celle d'un énoncé + 4 options. */
+.exam-question-cv {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 320px;
+}
+
 /* =====================================================
   Reduced motion. Respect the OS/user setting: neutralize
   animations and transitions (also kills the always-on
