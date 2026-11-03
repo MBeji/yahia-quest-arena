@@ -2,14 +2,6 @@ import type { TranslationKeys } from "./types";
 import { enPublic } from "./en-public";
 
 export const en: TranslationKeys = {
-  meta: {
-    title: "Na9ra Nal3ab — all of Tunisia's school curriculum, for free",
-    description:
-      "Courses, summaries and corrected exercises for the whole Tunisian school curriculum, from 1st grade to the Baccalauréat. Free and open access, no sign-up — for the whole family.",
-    ogTitle: "Na9ra Nal3ab — the Tunisian school curriculum, free and open",
-    ogDescription:
-      "The full official programme, from primary school to the Bac: courses, summaries and corrected exercises, for free.",
-  },
   common: {
     backToHall: "Back to hall",
     back: "Back",

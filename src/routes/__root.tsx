@@ -15,9 +15,7 @@ import { I18nProvider, useT } from "@/lib/i18n";
 import { GuideProvider } from "@/components/guide/guide-provider";
 import type { Locale } from "@/lib/i18n";
 import { DEFAULT_LOCALE, dirForLocale, localeFromCookieHeader } from "@/lib/i18n/context";
-import { fr } from "@/lib/i18n/fr";
-import { en } from "@/lib/i18n/en";
-import { ar } from "@/lib/i18n/ar";
+import { metaByLocale } from "@/lib/i18n/meta";
 import { buildErrorDebugText } from "@/shared/lib/error-debug";
 import { useExitOnRefusedSession } from "@/features/auth";
 import { ThemeProvider, useTheme, DEFAULT_THEME, themeFromCookieHeader } from "@/lib/theme";
@@ -119,7 +117,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     // shares. head() is a closure evaluated at render time, after the module is
     // fully initialised, so it can reference getShellLocale (defined below).
     const locale = getShellLocale();
-    const m = ({ fr, en, ar }[locale] ?? fr).meta;
+    const m = metaByLocale[locale];
     return {
       meta: [
         { charSet: "utf-8" },

@@ -2,14 +2,6 @@ import type { TranslationKeys } from "./types";
 import { frPublic } from "./fr-public";
 
 export const fr: TranslationKeys = {
-  meta: {
-    title: "Na9ra Nal3ab — tous les cours de l'école tunisienne, gratuitement",
-    description:
-      "Cours, résumés et exercices corrigés de toute l'école tunisienne, de la 1re année au Baccalauréat. Accès libre, gratuit, sans inscription — pour toute la famille.",
-    ogTitle: "Na9ra Nal3ab — l'école tunisienne, gratuite et en accès libre",
-    ogDescription:
-      "Tout le programme officiel, du Primaire au Bac : cours, résumés et exercices corrigés, gratuitement.",
-  },
   common: {
     backToHall: "Retour au hall",
     back: "Retour",

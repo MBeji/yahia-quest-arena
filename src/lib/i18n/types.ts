@@ -7,12 +7,6 @@ export type Locale = "en" | "fr" | "ar";
 
 export type TranslationKeys = {
   // Meta
-  meta: {
-    title: string;
-    description: string;
-    ogTitle: string;
-    ogDescription: string;
-  };
   // Common
   common: {
     backToHall: string;

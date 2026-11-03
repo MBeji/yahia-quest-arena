@@ -110,7 +110,28 @@ const BUDGETS = {
   //
   // Le chunk app-wide gzippe à ~61 KB : l'impact réseau est plus doux que le chiffre
   // brut, mais le coût de parse se paie plein, lui, et sur chaque appareil d'élève.
-  "i18n-": 188 * 1024,
+  //
+  // ## 2026-10-31 (H2-fe) : `i18n-` devient TROIS chunks, un par locale
+  //
+  // Le chunk trilingue mesurait 187,71 KB (192 215 octets, 66 303 gz), importé
+  // statiquement par index et préchargé sur chaque page — deux langues sur trois
+  // inutiles à chaque élève. Seul `i18n-fr` (défaut produit, langue du premier rendu,
+  // + la méta du document) reste dans le graphe statique ; `i18n-en` et `i18n-ar` sont
+  // tirés par `import()` (`src/lib/i18n/catalogues.ts`) pour la seule locale persistée,
+  // dès l'évaluation du module client. Mesuré sur ce commit :
+  //
+  //   avant   i18n     187,71 KB (chargé par tout le monde)
+  //   après   i18n-fr   60,94 KB  +  i18n-en 54,20 KB / i18n-ar 72,73 KB (en différé,
+  //                                   pour la locale du visiteur seulement)
+  //
+  // Élève FR : −129 812 octets bruts / −43 331 gz sur le chemin critique ; EN −74 310 ;
+  // AR −55 336. Plafonds à ≈ +5 % de la mesure, comme l'app-wide avant eux. Si l'un
+  // de `i18n-en-`/`i18n-ar-` réapparaît dans les imports STATIQUES d'index, le
+  // découpage est cassé sans que rien ne rougisse : un module partagé entre les
+  // fichiers de locale (relire `manualChunks` et `src/lib/i18n/meta.ts`).
+  "i18n-fr-": 64 * 1024,
+  "i18n-en-": 60 * 1024,
+  "i18n-ar-": 76 * 1024,
   // Surface parent (`parentReport.*` + `parentDaily.*`), mesurée 36,52 KB le
   // 2026-08-26 ; plafond à +20 % parce que le suivi « jour par jour » est récent et
   // bouge encore. Ces octets ne descendent QUE chez les comptes parent — ils sont

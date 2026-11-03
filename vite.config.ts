@@ -66,13 +66,25 @@ export default defineConfig(async ({ command, mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id: string) {
-            // Locale catalogs (fr/en/ar) — one parallel-loaded, independently cached
-            // chunk with its own budget, so growing the translations (GAP-010) never
-            // eats the index chunk's budget. ONLY the pure-data catalogs: pulling the
+            // Locale catalogs (fr/en/ar) — independently cached chunks with their own
+            // budgets, so growing the translations (GAP-010) never eats the index
+            // chunk's budget. ONLY the pure-data catalogs: pulling the
             // provider/context/hooks in too made the chunk import React back from the
             // index chunk, creating an i18n⇄index cycle whose TDZ crash killed the
             // whole client bundle in production (login regression).
-            if (/\/src\/lib\/i18n\/(fr|en|ar)\.ts$/.test(id)) return "i18n";
+            // H2-fe (2026-10-31) : UN chunk PAR locale. Seul `i18n-fr` reste dans le
+            // graphe statique (contexte + premier rendu) ; `i18n-en` / `i18n-ar` sont
+            // tirés par `import()` depuis `catalogues.ts` pour la seule locale du
+            // visiteur — avant, le chunk trilingue (192 KB) descendait chez chacun.
+            // Données pures seulement, et AUCUN module partagé entre les fichiers de
+            // locale : rolldown fond un module commun dans le premier chunk de locale
+            // rencontré (ar) et ramène ce chunk dans les imports statiques d'index
+            // (mesuré : le gain était annulé).
+            const locale = /\/src\/lib\/i18n\/(fr|en|ar)(-public)?\.ts$/.exec(id)?.[1];
+            if (locale) return `i18n-${locale}`;
+            // Méta du document × 3 locales (données pures, importées par __root seul) :
+            // voyage avec fr. ⚠️ Jamais importé depuis en/ar — cf. la règle ci-dessus.
+            if (/\/src\/lib\/i18n\/meta\.ts$/.test(id)) return "i18n-fr";
             // Surface-scoped catalog: the parent dashboard's copy (parentReport.* +
             // parentDaily.*, ~42 KB of source) serves ONLY /suivi and /parent-report,
             // two dynamically-imported route chunks — so it must not ride along in the

@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { I18nProvider, useI18n } from "@/lib/i18n";
 import { useProgressT, progressTranslations } from "@/lib/i18n/progress";
 import { fr } from "@/lib/i18n/fr";
@@ -59,7 +59,7 @@ describe("catalogue i18n de la progression (é34)", () => {
     expect(screen.getByTestId("seal").textContent).toBe(frProgress.progress.seal.heading);
   });
 
-  it("suit le changement de langue comme le catalogue app-wide", () => {
+  it("suit le changement de langue comme le catalogue app-wide", async () => {
     render(
       <I18nProvider>
         <LocaleSwitch />
@@ -70,8 +70,10 @@ describe("catalogue i18n de la progression (é34)", () => {
       frProgress.progress.chapterStars.mastered,
     );
     fireEvent.click(screen.getByTestId("to-ar"));
-    expect(screen.getByTestId("mastered").textContent).toBe(
-      arProgress.progress.chapterStars.mastered,
+    await waitFor(() =>
+      expect(screen.getByTestId("mastered").textContent).toBe(
+        arProgress.progress.chapterStars.mastered,
+      ),
     );
   });
 
