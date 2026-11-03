@@ -703,8 +703,9 @@ en tête et `'mode'` dans le JSON, puis retirer l'appel TS dans un second merge 
 série) ; db-01 — `get_subject_progress` appelle encore `chapter_star_rungs` trois fois par
 chapitre ; bundle-02 — le refus `schemas-` est nominal (nom de chunk), un audit des autres
 barrels atteignables par le client vaudrait d'être mené ; data-02 — fenêtre 30 s-5 min pour
-une donnée modifiée par un _autre_ acteur (parent, admin), et le chunk dashboard à
-35,90 / 36,00 kB ; bundle-04 — un module partagé entre `fr` et `en`/`ar` ramènerait `ar`
+une donnée modifiée par un _autre_ acteur (parent, admin) — journalisée le 2026-11-03
+comme comportement assumé —, et le chunk dashboard à 36,32 / 37,00 kB après la fusion avec
+`main` (plafond relevé par l'étude 39 pour la carte du bilan de départ) ; bundle-04 — un module partagé entre `fr` et `en`/`ar` ramènerait `ar`
 dans le graphe statique sans rougir le budget (gardé par `catalogues.test.ts` seulement) ;
 bundle-03 — `check-overflow.mjs` mesure les SVG arabes en Noto Kufi alors que l'app les rend
 en police système ; ssr-01 — confirmer les en-têtes en prod après merge (`curl -sI …/fonts/…`
@@ -712,9 +713,8 @@ en police système ; ssr-01 — confirmer les en-têtes en prod après merge (`c
 
 ### Relu et trouvé sain — ne pas refaire
 
-Condensé des notes d'axe (le détail, avec les lignes citées, est dans
-`/home/user/.scratch-perf-optim/run1/axes.json` le temps de la passe ; ce qui suit est ce
-qu'il faut savoir pour ne pas re-proposer).
+Condensé des notes d'axe, lignes relues en session le 2026-10-31 (le détail n'a pas survécu
+à la session : ce qui suit est ce qu'il faut savoir pour ne pas re-proposer).
 
 - **Couche données.** `useAuth` instancié 3 × par écran mais `getSession()` est une lecture
   localStorage sous `navigator.locks`, zéro réseau sauf jeton à < 90 s ; me-role, me-stats et

@@ -27,6 +27,12 @@
  *   • icônes, favicon, manifest — un jour, resservis périmés pendant une semaine
  *     le temps de revalider en arrière-plan : hors chemin critique, mais
  *     inutile de les revalider à chaque ouverture.
+ *
+ * ⚠️ Ces règles s'appliquent au CHEMIN, pas au fichier : un chemin absent sous
+ * `/fonts/` ou `/icons/` passe `handle: filesystem` sans rien trouver, tombe dans
+ * la fonction SSR, et sa page 404 HTML part avec le même `Cache-Control` (motif
+ * identique à `/assets/`, depuis toujours). Inoffensif tant qu'aucune page ne
+ * référence un fichier manquant — y penser avant d'ajouter une règle ici.
  */
 export const VERCEL_ROUTES = [
   // Static security headers on every response (then continue routing).
