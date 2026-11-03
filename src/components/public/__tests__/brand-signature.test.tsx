@@ -10,8 +10,12 @@ vi.mock("@tanstack/react-router", () => ({
   Link: ({ children, to }: { children: React.ReactNode; to: string }) =>
     React.createElement("a", { href: to }, children),
 }));
+// Visiteur anonyme : l'en-tête appelle aussi useMyRole et useSignOutInPlace
+// (étude 39, #1227) — stubs inertes, la branche connectée n'est pas rendue.
 vi.mock("@/features/auth", () => ({
   useAuth: () => ({ user: null, session: null, loading: false }),
+  useMyRole: () => ({ role: null, loading: false }),
+  useSignOutInPlace: () => vi.fn(),
 }));
 
 import { I18nProvider } from "@/lib/i18n";
