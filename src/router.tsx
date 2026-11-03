@@ -5,6 +5,7 @@ import { setResponseHeader } from "@tanstack/react-start/server";
 import { shouldReplaySessionRefusal } from "@/shared/integrations/supabase/auth-rejection";
 import { buildContentSecurityPolicy } from "@/shared/lib/csp";
 import { initBrowserMonitoring } from "@/shared/lib/monitoring";
+import { RESUME_REFETCH_AFTER_MS, refetchOnlyIfOlderThan } from "@/shared/lib/query-resume";
 import { routeTree } from "./routeTree.gen";
 
 /**
@@ -41,6 +42,12 @@ export const getRouter = () => {
       queries: {
         // Avoid refetching on every navigation; mutations explicitly invalidate.
         staleTime: 30_000,
+        // Retour d'onglet ou de réseau (2026-10-31, data-02) : un seuil de reprise
+        // de 5 min, distinct de la staleTime — le détour calculatrice ne relance
+        // plus les 9 server fns du tableau de bord ; les écrans vivants
+        // (classement, salon de duel) repassent explicitement à `true`.
+        refetchOnWindowFocus: refetchOnlyIfOlderThan(RESUME_REFETCH_AFTER_MS),
+        refetchOnReconnect: refetchOnlyIfOlderThan(RESUME_REFETCH_AFTER_MS),
         // Pas de `retry` ici, À DESSEIN : le défaut de la librairie (3 essais)
         // suffit à guérir un jeton refusé — le premier échec arme le drapeau de
         // `auth-attacher`, l'essai suivant repart donc avec un jeton neuf. Le

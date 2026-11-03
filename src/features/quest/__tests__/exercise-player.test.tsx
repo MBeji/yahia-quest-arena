@@ -148,11 +148,12 @@ function renderPlayer(strategy: ExercisePlayerStrategy, variant: "classic" | "re
   const qc = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   });
-  return render(
+  const view = render(
     <QueryClientProvider client={qc}>
       <ExercisePlayer exerciseId={EXERCISE_ID} strategy={strategy} variant={variant} />
     </QueryClientProvider>,
   );
+  return { ...view, qc };
 }
 
 describe("ExercisePlayer", () => {
@@ -222,6 +223,53 @@ describe("ExercisePlayer", () => {
     expect(await screen.findByTestId("quest-score")).toBeInTheDocument();
     // The reward grid surfaces the earned XP amount.
     expect(screen.getByText(/120/)).toBeInTheDocument();
+  });
+
+  // data-02 (2026-10-31) : la puce XP/série de l'en-tête (["me-stats", userId])
+  // ne se rafraîchissait que par le refetch au focus, désormais espacé à 5 min.
+  // Une soumission récompensée l'invalide donc explicitement, avec le tableau de
+  // bord et la matière ; une soumission anonyme n'invalide rien.
+  it("invalidates the HUD stats (me-stats) with dashboard and subject after a rewarded run", async () => {
+    const strategy = anonStrategy({
+      capabilities: {
+        rewards: true,
+        hints: false,
+        boss: false,
+        next: false,
+        instantFeedback: false,
+      },
+      submit: vi.fn().mockResolvedValue(neutralResult),
+    });
+    const { qc } = renderPlayer(strategy);
+    const spy = vi.spyOn(qc, "invalidateQueries");
+
+    fireEvent.click(await screen.findByText("2"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+    expect(await screen.findByTestId("quest-score")).toBeInTheDocument();
+
+    expect(spy).toHaveBeenCalledWith({ queryKey: ["dashboard"] });
+    expect(spy).toHaveBeenCalledWith({ queryKey: ["subject"] });
+    expect(spy).toHaveBeenCalledWith({ queryKey: ["me-stats"] });
+  });
+
+  it("does not invalidate anything after an anonymous (unrewarded) run", async () => {
+    const { qc } = renderPlayer(anonStrategy());
+    const spy = vi.spyOn(qc, "invalidateQueries");
+
+    fireEvent.click(await screen.findByText("2"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+    expect(await screen.findByTestId("quest-score")).toBeInTheDocument();
+
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it("never refetches the exercise or the subject on tab focus or reconnect (data-02)", async () => {
+    const { qc } = renderPlayer(anonStrategy());
+    await screen.findByText("1 + 1 ?");
+    const options = qc.getQueryCache().find({ queryKey: ["exercise", EXERCISE_ID, "classic"] })
+      ?.observers[0]?.options;
+    expect(options?.refetchOnWindowFocus).toBe(false);
+    expect(options?.refetchOnReconnect).toBe(false);
   });
 });
 

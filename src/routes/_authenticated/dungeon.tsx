@@ -125,6 +125,8 @@ function DungeonPage() {
       setTotalAnswered(res.totalAnswered);
       play("gameOver");
       qc.invalidateQueries({ queryKey: ["dashboard"] });
+      // La puce XP/série de l'en-tête suit le gain (data-02).
+      qc.invalidateQueries({ queryKey: ["me-stats"] });
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : t.dungeon.errorSavingRun),
   });

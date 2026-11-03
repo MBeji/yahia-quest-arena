@@ -174,6 +174,8 @@ function ExamRunner({ examId, kind }: { examId: string; kind: "ranked" | "practi
       setReview(rev);
       setPercentile(pct);
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+      // La puce XP/série de l'en-tête suit le gain (data-02).
+      queryClient.invalidateQueries({ queryKey: ["me-stats"] });
     },
   });
 

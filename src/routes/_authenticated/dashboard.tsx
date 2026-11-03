@@ -166,6 +166,8 @@ function Dashboard() {
           .replace("{unit}", res.newStreak > 1 ? t.dashboard.days : t.dashboard.day),
       );
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+      // La série rachetée doit aussi atteindre la puce de l'en-tête (data-02).
+      queryClient.invalidateQueries({ queryKey: ["me-stats"] });
     },
     onError: (error) =>
       toast.error(error instanceof Error ? error.message : t.dashboard.recoveryFailed),

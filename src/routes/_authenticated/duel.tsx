@@ -44,12 +44,24 @@ function DuelHubPage() {
   const [searching, setSearching] = useState(false);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  // Le salon est un écran VIVANT (un duel se règle pendant qu'on est ailleurs) :
+  // il garde le refetch au retour d'onglet dès que la donnée est périmée, là où
+  // le défaut du routeur attend 5 min (data-02).
   const historyQuery = useQuery({
     queryKey: ["duel-history"],
     queryFn: () => history(),
+    refetchOnWindowFocus: true,
   });
-  const leagueQuery = useQuery({ queryKey: ["duel-league"], queryFn: () => league() });
-  const awardQuery = useQuery({ queryKey: ["duel-last-award"], queryFn: () => lastAward() });
+  const leagueQuery = useQuery({
+    queryKey: ["duel-league"],
+    queryFn: () => league(),
+    refetchOnWindowFocus: true,
+  });
+  const awardQuery = useQuery({
+    queryKey: ["duel-last-award"],
+    queryFn: () => lastAward(),
+    refetchOnWindowFocus: true,
+  });
 
   const stopPolling = () => {
     if (pollRef.current) clearInterval(pollRef.current);
