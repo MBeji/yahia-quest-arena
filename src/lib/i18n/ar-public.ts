@@ -6,6 +6,7 @@ export const arPublic: TranslationKeys["public"] = {
     navAria: "الفهرس",
     programme: "البرنامج",
     extras: "إضافات",
+    placement: "اختبار المستوى",
     parentTracking: "متابعة الأبناء",
     login: "تسجيل الدخول",
     signup: "إنشاء حسابي",
@@ -189,6 +190,7 @@ export const arPublic: TranslationKeys["public"] = {
     continueCta: "واصل إلى التمرين الأول",
     inviteDesc:
       "بدون حساب، لا تُحفظ نقاط خبرتك ولا سلسلتك ولا شاراتك. أنشئ حسابًا لتحتفظ بنقاطك القادمة وسلسلتك وتقدّمك.",
+    inviteValue: "مع حساب، تمنحك هذه المهمة حتى {xp} من نقاط الخبرة.",
     inviteCta: "إنشاء حسابي",
   },
   print: {

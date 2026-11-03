@@ -76,7 +76,11 @@ export function ResetPasswordPage() {
     <main className="relative min-h-[100dvh] overflow-hidden bg-black-deep">
       <div className="absolute inset-0 bg-grid opacity-50" />
       <div className="relative mx-auto flex min-h-[100dvh] max-w-md flex-col items-center justify-center px-4 py-12 sm:px-6">
-        <motion.div {...entrance} className="w-full glass-gold rounded-2xl p-6 shadow-gold sm:p-8">
+        <motion.div
+          {...entrance}
+          data-testid="auth-card"
+          className="w-full glass-gold rounded-2xl p-6 shadow-gold sm:p-8"
+        >
           <div className="mb-3 flex justify-end">
             <LanguageSwitcher />
           </div>

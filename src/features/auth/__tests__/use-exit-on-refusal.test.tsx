@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 
 const { mockSignOut } = vi.hoisted(() => ({ mockSignOut: vi.fn() }));
 
@@ -11,6 +11,7 @@ const { mockReport } = vi.hoisted(() => ({ mockReport: vi.fn() }));
 vi.mock("@/shared/lib/client-log", () => ({ reportClientError: mockReport }));
 
 import { useExitOnRefusedSession } from "../use-exit-on-refusal";
+import { peekReturnReason, peekReturnTo, rememberReturnTo } from "@/shared/lib/return-to";
 
 /**
  * LE CUL-DE-SAC, TEL QUE LA SPEC E2E L'A MESURÉ (#938 → #969).
@@ -75,5 +76,68 @@ describe("useExitOnRefusedSession", () => {
     rerender();
     rerender();
     await waitFor(() => expect(mockSignOut).toHaveBeenCalledTimes(1));
+  });
+});
+
+/**
+ * Étude 38 lot 3 (R-7) — la session qui meurt revient au même endroit.
+ *
+ * La garde de `_authenticated` ne retient pas la page de qui AVAIT une session (poste partagé). Ici la
+ * session n'a pas été quittée : elle est morte, rien d'un choix. La page est donc retenue — avec la raison
+ * `expired` — par le seul endroit qui sait qu'un refus a atteint l'écran, et AVANT `signOut`, parce que
+ * `SIGNED_OUT` déclenche la garde aussitôt.
+ */
+describe("useExitOnRefusedSession — la page quittée est retenue avant la sortie (é38 lot 3)", () => {
+  beforeEach(() => {
+    mockSignOut.mockReset();
+    mockSignOut.mockResolvedValue({ error: null });
+    window.localStorage.clear();
+  });
+  afterEach(() => {
+    window.history.replaceState({}, "", "/");
+    window.localStorage.clear();
+  });
+
+  const refusal = () => new Error("Unauthorized: Invalid token");
+
+  it("retient la page courante avec la raison « expired », et le fait AVANT signOut", async () => {
+    window.history.replaceState({}, "", "/quest/ex-1?variant=recall");
+    let keptWhenSigningOut: { path: string | null; reason: string | null } | null = null;
+    mockSignOut.mockImplementation(async () => {
+      keptWhenSigningOut = { path: peekReturnTo(), reason: peekReturnReason() };
+      return { error: null };
+    });
+
+    renderHook(() => useExitOnRefusedSession(refusal()));
+    await waitFor(() => expect(mockSignOut).toHaveBeenCalledTimes(1));
+
+    expect(keptWhenSigningOut).toEqual({ path: "/quest/ex-1?variant=recall", reason: "expired" });
+  });
+
+  it("remplace un retour ordinaire déjà gardé : c'est la dernière intention qui compte", async () => {
+    rememberReturnTo("/chapitre/c1");
+    window.history.replaceState({}, "", "/quest/ex-1");
+
+    renderHook(() => useExitOnRefusedSession(refusal()));
+    await waitFor(() => expect(mockSignOut).toHaveBeenCalledTimes(1));
+
+    expect(peekReturnTo()).toBe("/quest/ex-1");
+    expect(peekReturnReason()).toBe("expired");
+  });
+
+  it("une panne ORDINAIRE ne retient rien : son problème n'a rien à voir avec sa session", async () => {
+    window.history.replaceState({}, "", "/quest/ex-1");
+    renderHook(() => useExitOnRefusedSession(new Error("Internal Server Error")));
+    await new Promise((r) => setTimeout(r, 0));
+
+    expect(peekReturnTo()).toBeNull();
+  });
+
+  it("depuis le tunnel lui-même rien n'est retenu : y revenir bouclerait", async () => {
+    window.history.replaceState({}, "", "/auth?mode=login");
+    renderHook(() => useExitOnRefusedSession(refusal()));
+    await waitFor(() => expect(mockSignOut).toHaveBeenCalledTimes(1));
+
+    expect(peekReturnTo()).toBeNull();
   });
 });

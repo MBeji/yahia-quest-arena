@@ -25,6 +25,7 @@ import type { Theme } from "@/lib/theme";
 import { SoundProvider, useSound } from "@/lib/sound";
 import { logger } from "@/shared/lib/logger";
 import { initAnalytics, trackPageview, pagePathFromLocation } from "@/shared/lib/analytics";
+import { notePageForFunnel } from "@/shared/lib/funnel-origin";
 import { initWebVitals } from "@/shared/lib/web-vitals";
 import { initHiddenTimeTracking } from "@/shared/lib/client-log";
 
@@ -306,7 +307,10 @@ function RootComponent() {
     // blind to p95 / LCP growth. Dependency-free, reports once on page hide.
     initWebVitals();
     const track = () => {
-      trackPageview(pagePathFromLocation(router.state.location));
+      const path = pagePathFromLocation(router.state.location);
+      // é38 lot 0 : d'où venait un clic de compte ? La dernière page, en mémoire seulement.
+      notePageForFunnel(path);
+      trackPageview(path);
     };
     track();
     return router.subscribe("onResolved", track);

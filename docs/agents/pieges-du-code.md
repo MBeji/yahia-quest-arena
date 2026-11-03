@@ -400,6 +400,35 @@ La barre AA est à 4,5:1 ; en dessous de ~1,5:1 il n'y a **rien** à voir sur du
 cours, pour tout élève connecté — d'où son `print:hidden`, comme l'en-tête, le sommaire et les
 appels à l'action du lecteur.
 
+## Un élément `motion` rendu par le serveur reste à son état de DÉPART si le client ne le rejoue pas
+
+**Symptôme** (audit d'affichage du 2026-10-31) : avec « réduire les animations », la carte de `/auth` et
+de `/auth/reset` restait à `opacity: 0` **pour toujours**. Le formulaire de connexion était invisible :
+personne dans ce cas ne pouvait se connecter ni s'inscrire. Aucune erreur, aucun test rouge — et
+Playwright tient un élément à `opacity: 0` pour _visible_.
+
+**Cause**, en deux temps, dont les deux ont suffi :
+
+1. Le serveur ne connaît pas la préférence : `useReducedMotion()` y rend `null`, donc le HTML porte
+   l'état de départ du preset (`style="opacity:0;transform:scale(0.95)"`). Un premier rendu client en
+   `initial: false` n'y change rien : **React ne corrige pas les attributs à l'hydratation**.
+2. Retirer `animate` au rendu suivant — ce que faisait `{ initial: false }` seul — est lu par `motion`
+   comme « retourne à ta valeur de base ». Celle-ci vient du DOM au montage, donc du HTML serveur :
+   `opacity: 0`. Mesuré avec une version qui réglait seulement le point 1 : même carte invisible.
+
+**Ce qu'on fait** : `useEntrance` ([`motion.ts`](../../src/shared/lib/motion.ts)) rend, **pendant
+l'hydratation seulement**, ce que le serveur a rendu avec une durée nulle, puis `initial: false` en
+**gardant `animate`** — jamais un rendu sans lui. `useSyncExternalStore` distingue l'hydratation du
+montage ordinaire (un `useState` + `useEffect` rendrait la même valeur aux deux premiers rendus).
+`entrance()`, la variante sans hook, n'a pas cette garde : ses appelants (tableau de bord, classement)
+sont rendus après la lecture de session, jamais par le serveur.
+
+**Comment le revoir** : l'e2e du tier public
+[`auth-reduced-motion.spec.ts`](../../e2e/public/auth-reduced-motion.spec.ts) lit l'opacité **calculée**
+de `data-testid="auth-card"` avec `reducedMotion: "reduce"` ; les tests de `motion.test.ts` fixent ce
+que le hook rend à chaque étape. Tout nouvel écran qui s'anime à la première image d'une page rendue
+côté serveur passe par `useEntrance`, jamais par un `initial` écrit à la main.
+
 ## Un déploiement Vercel rouge en une seconde n'est pas un build cassé — c'est un refus
 
 **Symptôme (2026-10-01 → 2026-10-14)** : tous les déploiements Vercel, Production comme
@@ -418,6 +447,70 @@ vulnérable d'un paquet qu'il surveille — ici `errorCode: BLOCKED_PACKAGE`,
 - lancer `vercel-diagnose.yml` (lecture seule, `ops-dispatch`) : il rend `errorCode`,
   `errorMessage` et le détail du dernier déploiement en échec ;
 - corriger dans le dépôt (montée du paquet, #1172) — jamais `DANGEROUSLY_DEPLOY_*`.
+
+## Le retour d'une connexion Google ne se lit pas dans l'URL : le client du projet est en flux implicite
+
+**Symptôme évité** (é38 lot 0) : détecter le retour de Google par un `?code=` dans l'adresse
+n'émet **jamais** l'événement `login` — sans erreur, sans test rouge, puisqu'un test qui fournit
+lui-même `?code=` passe.
+
+**Cause** : `src/shared/integrations/supabase/client.ts` crée le client **sans `flowType`**, donc avec
+le défaut de la librairie, `implicit`. Le retour d'un OAuth (et d'un lien de confirmation d'e-mail)
+y arrive dans le **fragment** — `#access_token=…` — que `detectSessionInUrl` consomme puis efface ;
+un `?code=` n'existe qu'en PKCE. Les branches de `auth.tsx` qui cherchent `code` (l'avertissement
+à 2,5 s « connexion Google incomplète ») ne peuvent donc pas se déclencher dans la configuration
+actuelle.
+
+**Mesuré le 2026-10-30** : `grep -rn "flowType:" src supabase/config.toml` ne trouve rien (l'option
+n'est posée nulle part) ; dans
+`@supabase/auth-js` 2.118.0, `grep -n "flowType: 'implicit'" node_modules/@supabase/auth-js/dist/main/GoTrueClient.js`
+donne la ligne 24 (`DEFAULT_OPTIONS`). **Non mesuré** : le retour réel de Google en production n'a
+pas été observé — la conclusion vient du code installé, pas d'une requête. Si quelqu'un l'observe,
+qu'il corrige cette entrée dans un sens ou dans l'autre.
+
+**Ce qu'on fait à la place** : se fier à la **session**, qui dit QUELLE identité vient de servir et
+QUAND — `isFreshGoogleSignIn` dans [`auth.tsx`](../../src/routes/auth.tsx) (l'identité la plus
+récemment connectée, depuis moins d'une minute). L'événement `SIGNED_IN` repart aussi quand on
+retrouve un onglet, avec une session ancienne : c'est le délai qui l'écarte. Un lien de
+confirmation d'e-mail porte l'identité `email`, jamais `google`.
+
+## `signOut()` renvoie son erreur sans la lever — et la session de l'appareil est partie malgré elle
+
+**Symptôme évité** (é38 lot 1) : lire `{ error }` après `supabase.auth.signOut()` comme « je suis
+resté connecté », afficher une alerte, ne pas vider l'écran — alors que l'appareil n'a plus de
+session et que `useAuth` a déjà reçu `SIGNED_OUT`.
+
+**Cause** : dans `@supabase/auth-js` 2.118.0, `_signOut` appelle d'abord la révocation côté serveur ;
+si elle échoue autrement que par 401, 403 ou 404 (réseau coupé, 5xx), il **retire quand même la
+session locale** (`removeCurrentSession()`) avant de renvoyer l'erreur
+(`node_modules/@supabase/auth-js/dist/main/GoTrueClient.js`, autour de la ligne 3446). L'erreur dit
+« le serveur n'a pas révoqué le jeton », pas « tu es encore connecté ». Et elle n'est jamais levée :
+un `try/catch` autour de `signOut()` ne voit que les exceptions de plomberie (verrou, stockage).
+
+**Ce qu'on fait** : [`use-sign-out-in-place.ts`](../../src/features/auth/use-sign-out-in-place.ts)
+relit la **session** quand `signOut()` échoue, et ne dit « échec » que si elle est restée — dans le
+doute (lecture impossible), elle est tenue pour ouverte. Les deux autres déconnexions
+(`_authenticated.tsx`, `parametrage.tsx`) ignorent l'erreur : c'est cohérent avec ce comportement,
+et le jeton non révoqué expire de lui-même.
+
+## `signUp` et `signInWithPassword` notifient `SIGNED_IN` AVANT de rendre la main
+
+**Symptôme évité** (revue de sécurité du lot 1, é38) : mesurer « un retour était-il gardé ? » APRÈS
+`await supabase.auth.signInWithPassword(...)`. La mesure disait presque toujours « non » alors que la
+personne était bien ramenée à sa page — et les tests restaient verts.
+
+**Cause** : dans `@supabase/auth-js` 2.118.0, `signInWithPassword` (lignes 967-971) et `signUp`
+(lignes 783-787) font `await this._notifyAllSubscribers('SIGNED_IN', session)` **avant** leur
+`return`, et `_notifyAllSubscribers` attend chaque écouteur (ligne 4363). L'écouteur de `/auth` a donc
+déjà navigué et consommé la mémoire du retour quand le formulaire reprend la parole. Un test qui
+simule `signInWithPassword` par un simple `mockResolvedValue` ne fait jamais parler l'écouteur : il
+passe pour la mauvaise raison.
+
+**Ce qu'on fait** : lire ce qu'il faut mesurer **avant** l'appel qui ouvre la session
+(`readReturnContext` dans [`auth.tsx`](../../src/routes/auth.tsx)), et, pour le retour de Google où
+personne n'appelle rien, à l'arrivée sur la page. Et tester dans l'ordre réel : le simulacre de
+`signInWithPassword` doit appeler l'écouteur **avant** de rendre sa valeur (voir « la mesure se lit
+avant la consommation » dans `auth-signup.test.tsx`).
 
 ## Règles laissées par les chantiers d'août-septembre 2026
 
