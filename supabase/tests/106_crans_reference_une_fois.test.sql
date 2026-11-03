@@ -1,7 +1,7 @@
 -- =========================================================
 -- db-01 — la référence de nouveauté d'un chapitre se calcule UNE fois par appel.
 -- ---------------------------------------------------------
--- Migration 20261031110000. Avant elle, la CTE `ref` de `chapter_star_rungs`
+-- Migration 20261103170000. Avant elle, la CTE `ref` de `chapter_star_rungs`
 -- était aplatie par le planificateur et `chapter_progress_ref` — qui joint
 -- toutes les tentatives de l'élève — repartait deux fois par mission : 1 464
 -- évaluations pour un hub matière de 10 chapitres, 5 490 pour un tableau de
