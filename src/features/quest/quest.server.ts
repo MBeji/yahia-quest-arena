@@ -181,6 +181,20 @@ function parseAtomicSubmitResponse(payload: unknown): AtomicSubmitResponse {
 }
 
 // ---------- Get a subject with chapters & exercises ----------
+/**
+ * Ce que le hub (`SubjectHubChapter`, `groupChaptersByDomain`) et le lecteur
+ * (`computeNextExerciseId`) lisent d'un chapitre — et rien d'autre : surtout pas
+ * `lesson_content` ni `summary`, qui pèsent l'essentiel de la ligne (voir `getSubject`).
+ */
+const SUBJECT_CHAPTER_COLUMNS = "id,title,description,domain,display_order";
+/**
+ * Idem pour une mission (`SubjectHubExercise`, `emptyRungs`, `resolveNextAction`,
+ * la porte du quiz ci-dessous) : `source` dit « admin ou parent » (étude 22 R-15),
+ * `display_order` porte le tri R-13.
+ */
+const SUBJECT_EXERCISE_COLUMNS =
+  "id,chapter_id,mode,title,difficulty,xp_reward,source,display_order";
+
 export const getSubject = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
   .validator((d) => z.object({ subjectId: z.string() }).parse(d))
@@ -232,12 +246,26 @@ export const getSubject = createServerFn({ method: "GET" })
         )
       : Promise.resolve(null);
 
+    // Colonnes NOMMÉES, pas `*` (audit perf data-01, 2026-10-31) : la ligne
+    // `chapters` porte le cours ET le résumé markdown (`lesson_content`, `summary`),
+    // que ni le hub ni le lecteur de quête ne lisent — ils passent par
+    // `getChapterLesson`. Or cet appel part à chaque vue du hub ET à chaque mission
+    // connectée (le lecteur ne s'en sert que pour `computeNextExerciseId`), puis
+    // repart après 30 s de staleTime. Mesuré sur le corpus (96 matières, 848
+    // chapitres) : chapitres + missions pesaient 93 KB médian, 506 KB p90,
+    // 1 445 KB max (fiqh), 1 095 KB sur math-6eme ; avec ces colonnes 15 KB médian,
+    // 38 KB p90, 122 KB max. Mêmes consommateurs, même rendu — `SubjectHubChapter`,
+    // `SubjectHubExercise` et `next-exercise.ts` disent exactement ce qu'il faut servir.
     const [subj, chaps, exs, progress, unrestricted] = await Promise.all([
       supabase.from("subjects").select("*").eq("id", data.subjectId).single(),
-      supabase.from("chapters").select("*").eq("subject_id", data.subjectId).order("display_order"),
+      supabase
+        .from("chapters")
+        .select(SUBJECT_CHAPTER_COLUMNS)
+        .eq("subject_id", data.subjectId)
+        .order("display_order"),
       supabase
         .from("exercises")
-        .select("*")
+        .select(SUBJECT_EXERCISE_COLUMNS)
         .eq("subject_id", data.subjectId)
         .order("display_order"),
       progressPromise,

@@ -58,7 +58,7 @@ export type SubjectHubChapter = {
    * Domaine du programme auquel ce chapitre appartient — la « section » de la
    * matière (Algèbre / Géométrie, قواعد اللغة / فهم المقروء). Écrit par l'auteur
    * du contenu, dans la langue de la matière. Déjà servi par `getSubject`
-   * (`select("*")`) ; optionnel côté type parce que la colonne est nullable ET
+   * (`SUBJECT_CHAPTER_COLUMNS`) ; optionnel côté type parce que la colonne est nullable ET
    * parce qu'une matière non sectionnée n'en déclare aucun — le hub retombe alors
    * sur sa liste à plat (`groupChaptersByDomain` rend `null`).
    */
@@ -74,7 +74,7 @@ export type SubjectHubExercise = {
   xp_reward: number;
   /**
    * `admin` (catalogue) ou `parent` (mission familiale). Déjà servi par `getSubject`
-   * (`select("*")`) ; déclaré depuis l'étude 22 R-15, qui exclut les missions `parent` de la
+   * (`SUBJECT_EXERCISE_COLUMNS`) ; déclaré depuis l'étude 22 R-15, qui exclut les missions `parent` de la
    * complétion d'un chapitre. Absent ⇒ `admin` (valeur par défaut de la colonne).
    */
   source?: string | null;
