@@ -1,5 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { render } from "@testing-library/react";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { render, fireEvent } from "@testing-library/react";
+import { useState } from "react";
+import DOMPurify from "dompurify";
 
 import { RichField, OptionContent, SvgFigure } from "@/components/ui/svg-figure";
 
@@ -166,5 +168,76 @@ describe("rendu des formules — insécables et hors du texte", () => {
     const { container } = render(<OptionContent raw="x = −4 و x = 2" />);
     expect(container.querySelectorAll(".math-run").length).toBeGreaterThan(0);
     expect(container.textContent).toBe("x = −4 و x = 2");
+  });
+});
+
+// Le lecteur, le donjon, l'examen et les écrans de correction re-rendent ces
+// composants à chaque tic d'état (sélection, verdict, autosave, confettis, chaque
+// mouvement du pointeur sur un plateau), sans que `raw` change. Mesuré le
+// 2026-10-31 (jsdom) : 5 sanitize au montage d'une question à figures et +5 à
+// chaque tap, ≈2,5 ms chacun. Le cache de module en tient le compte à 1 par
+// chaîne — la politique XSS reste la même, le sanitiseur tourne à la première vue.
+describe("figure rendering — une figure n'est assainie qu'une fois par chaîne", () => {
+  const figure = (seed: number) =>
+    `<svg viewBox="0 0 10 10"><circle cx="${seed}" cy="5" r="2" fill="#1f2937"/></svg>`;
+  const PROMPT = `حلّ المعادلة (x − 4)(x + 2) = 0 ${figure(100)}`;
+  const OPTIONS = [101, 102, 103, 104].map((seed) => `x = ${seed} ${figure(seed)}`);
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  function Question() {
+    const [taps, setTaps] = useState(0);
+    return (
+      <div>
+        <button onClick={() => setTaps(taps + 1)}>{taps}</button>
+        <RichField raw={PROMPT} />
+        {OPTIONS.map((raw) => (
+          <OptionContent key={raw} raw={raw} />
+        ))}
+      </div>
+    );
+  }
+
+  it("un tic d'état du parent ne relance aucun DOMPurify sur les figures déjà vues", () => {
+    const sanitize = vi.spyOn(DOMPurify, "sanitize");
+    const { getByRole, container } = render(<Question />);
+    expect(sanitize).toHaveBeenCalledTimes(5);
+    for (let tap = 0; tap < 6; tap++) fireEvent.click(getByRole("button"));
+    expect(sanitize).toHaveBeenCalledTimes(5);
+    expect(container.querySelectorAll("svg")).toHaveLength(5);
+  });
+
+  it("une même chaîne remontée ailleurs (correction après le lecteur) ne repasse pas par le sanitiseur", () => {
+    const sanitize = vi.spyOn(DOMPurify, "sanitize");
+    const { unmount } = render(<OptionContent raw={OPTIONS[0]} />);
+    unmount();
+    render(<OptionContent raw={OPTIONS[0]} />);
+    expect(sanitize).not.toHaveBeenCalled();
+  });
+
+  it("une chaîne jamais vue passe toujours par le sanitiseur, et en garde le résultat", () => {
+    const sanitize = vi.spyOn(DOMPurify, "sanitize");
+    const hostile =
+      '<svg viewBox="0 0 10 10"><script>alert(1)</script><rect width="4" height="4"/></svg>';
+    const first = render(<SvgFigure markup={hostile} />);
+    expect(sanitize).toHaveBeenCalledTimes(1);
+    expect(first.container.querySelector("script")).toBeNull();
+    expect(first.container.querySelector("rect")).not.toBeNull();
+    const second = render(<SvgFigure markup={hostile} />);
+    expect(sanitize).toHaveBeenCalledTimes(1);
+    expect(second.container.querySelector("script")).toBeNull();
+  });
+
+  it("le cache est borné : au-delà de 512 chaînes, la plus ancienne est réassainie", () => {
+    const sanitize = vi.spyOn(DOMPurify, "sanitize");
+    const oldest = figure(1000);
+    render(<SvgFigure markup={oldest} />);
+    expect(sanitize).toHaveBeenCalledTimes(1);
+    for (let seed = 1001; seed <= 1512; seed++) render(<SvgFigure markup={figure(seed)} />);
+    expect(sanitize).toHaveBeenCalledTimes(513);
+    render(<SvgFigure markup={oldest} />);
+    expect(sanitize).toHaveBeenCalledTimes(514);
   });
 });
