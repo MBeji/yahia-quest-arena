@@ -20,6 +20,11 @@
   le latin que s'il en croise. Seules les deux faces latines sont préchargées
   (voir `routes/__root.tsx`) — précharger l'arabe le ferait payer à tout le monde.
 
+  Servies `immutable` un an par Vercel (`scripts/vercel-routes.mjs`, depuis le
+  2026-11-03 : au défaut `max-age=0` chaque chargement complet revalidait les
+  faces préchargées et rendait d'abord la police de repli) : une fonte qui
+  change CHANGE DE NOM de fichier, jamais de contenu sous la même URL.
+
   La face Noto Kufi complète (124 ko, incompressible) n'est aujourd'hui
   téléchargée par PERSONNE : l'interface et les leçons arabes se rendent en
   `--font-sans` (police système pour l'arabe), et la seule chose qui la

@@ -10,6 +10,7 @@ import { cpSync, mkdirSync, writeFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 import { SSR_MAX_DURATION_S } from "./vercel-function.mjs";
+import { VERCEL_ROUTES } from "./vercel-routes.mjs";
 
 const ROOT = process.cwd();
 const OUTPUT = join(ROOT, ".vercel", "output");
@@ -141,35 +142,9 @@ writeFileSync(
   JSON.stringify(
     {
       version: 3,
-      routes: [
-        // Static security headers on every response (then continue routing).
-        // The Content-Security-Policy is deliberately NOT here: it needs a
-        // per-request nonce so script-src can drop 'unsafe-inline' (GAP-022), and
-        // Build Output headers are static. It is set on each HTML response by the
-        // SSR function instead — see src/router.tsx + src/shared/lib/csp.ts.
-        // (CSP on static assets is inert; only HTML documents need it.)
-        {
-          src: "/(.*)",
-          headers: {
-            "X-Content-Type-Options": "nosniff",
-            "X-Frame-Options": "DENY",
-            "Referrer-Policy": "strict-origin-when-cross-origin",
-            "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
-            "Permissions-Policy": "camera=(), microphone=(), geolocation=(), browsing-topics=()",
-          },
-          continue: true,
-        },
-        // Serve static assets directly (immutable cache for hashed filenames)
-        {
-          src: "/assets/(.*)",
-          headers: { "Cache-Control": "public, max-age=31536000, immutable" },
-          continue: true,
-        },
-        // Let existing static files be served as-is
-        { handle: "filesystem" },
-        // Everything else → Edge Function (SSR)
-        { src: "/(.*)", dest: "/index" },
-      ],
+      // Routes et en-têtes (Cache-Control compris) : `vercel-routes.mjs`, seule
+      // source, testée par `scripts/__tests__/vercel-routes.test.mjs`.
+      routes: VERCEL_ROUTES,
     },
     null,
     2,
