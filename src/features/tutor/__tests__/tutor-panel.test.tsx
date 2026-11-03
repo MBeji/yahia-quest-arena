@@ -3,12 +3,12 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import type { TutorExplanation } from "../tutor.server";
 import type {
   TutorEscalation,
-  TutorExplanation,
   TutorMiniCheck,
   TutorMiniCheckResult,
-} from "../tutor.server";
+} from "../tutor.comprehension.server";
 
 /**
  * Étude 11 lot 1 — ce que l'ÉCRAN doit garantir.
@@ -84,6 +84,9 @@ vi.mock("@tanstack/react-start", () => ({
 vi.mock("../tutor.server", () => ({
   explainMistake: (args: unknown) => explain(args),
   rateTutorMessage: (args: unknown) => rate(args),
+}));
+
+vi.mock("../tutor.comprehension.server", () => ({
   getTutorMiniCheck: (args: unknown) => fetchCheck(args),
   submitTutorMiniCheck: (args: unknown) => submitCheck(args),
   getTutorUnderstandingSignal: (args: unknown) => readSignal(args),

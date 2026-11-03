@@ -22,16 +22,14 @@ import { CheckCircle2, GraduationCap, RefreshCw, ThumbsDown, ThumbsUp } from "lu
 
 import { Button } from "@/components/ui/button";
 import { useT } from "@/lib/i18n";
+import { explainMistake, rateTutorMessage, type TutorExplanation } from "../tutor.server";
 import {
   escalateTutorThread,
-  explainMistake,
   getTutorMiniCheck,
   getTutorUnderstandingSignal,
-  rateTutorMessage,
   submitTutorMiniCheck,
-  type TutorExplanation,
   type TutorMiniCheck,
-} from "../tutor.server";
+} from "../tutor.comprehension.server";
 import type { TutorEscalationStep } from "../escalation";
 import { tutorLockedKey } from "../locked";
 import { isKeyHolderFault } from "../degraded";
