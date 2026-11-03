@@ -14,7 +14,7 @@ export function PublicFooter() {
         <p className="text-sm font-semibold text-foreground">{t.public.footer.tagline}</p>
         <p className="mt-1">
           © {new Date().getFullYear()} Na9ra Nal3ab ·{" "}
-          <span lang="ar" dir="rtl" className="font-arabic">
+          <span lang="ar" dir="rtl" className="font-brand-ar">
             نقرا نلعب
           </span>{" "}
           · {t.public.footer.rights}

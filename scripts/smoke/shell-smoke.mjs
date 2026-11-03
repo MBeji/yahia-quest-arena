@@ -32,6 +32,8 @@ const CLIENT_DIR = join(ROOT, "dist/client");
 const SERVER_ENTRY = join(ROOT, "dist/server/index.js");
 const PORT = 8129;
 const ORIGIN = `http://localhost:${PORT}`;
+/** La face arabe complète : aucune page publique ne doit la demander. */
+const FULL_ARABIC_FACE = "/fonts/noto-kufi-arabic-var.woff2";
 
 // Dummy env: inlined into the client bundle at build time and read by the SSR
 // runtime. Values are never dialled (all external requests are blocked below).
@@ -152,6 +154,18 @@ async function probePage(browser, path, marker) {
   );
   const failures = [];
   page.on("pageerror", (error) => failures.push(`pageerror: ${error.stack ?? error.message}`));
+  // Perf bundle-03 (2026-10-31) : la face Noto Kufi complète (124 ko,
+  // incompressible) partait sur chaque page publique pour la seule signature
+  // « نقرا نلعب », qui porte depuis sa sous-police de 6,8 ko. Les fontes sont
+  // same-origin, donc pas bloquées par la route ci-dessus : c'est le seul
+  // étage qui voit la requête réelle, un test jsdom ne sait pas quelle face le
+  // navigateur télécharge.
+  page.on("request", (request) => {
+    if (new URL(request.url()).pathname === FULL_ARABIC_FACE)
+      failures.push(
+        `full Arabic face requested (${FULL_ARABIC_FACE}) — the brand subset should suffice`,
+      );
+  });
 
   await page
     .goto(ORIGIN + path, { waitUntil: "load", timeout: 30_000 })

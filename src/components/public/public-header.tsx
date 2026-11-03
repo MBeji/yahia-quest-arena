@@ -37,7 +37,7 @@ export function PublicHeader() {
               lang="ar"
               dir="rtl"
               aria-hidden="true"
-              className="hidden font-arabic text-sm font-semibold text-muted-foreground sm:inline"
+              className="hidden font-brand-ar text-sm font-semibold text-muted-foreground sm:inline"
             >
               نقرا نلعب
             </span>

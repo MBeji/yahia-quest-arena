@@ -15,11 +15,19 @@
   fichier couvre toute la plage de graisses (Orbitron 500–900, Space Grotesk
   400–700, Noto Kufi 600–700) au lieu d'un fichier par graisse.
 
-  Les `unicode-range` sont ceux de Google et font le vrai travail : un lecteur
-  francophone ne télécharge JAMAIS les 124 ko d'arabe, et un lecteur arabophone
-  ne prend le latin que s'il en croise. Seules les deux faces latines sont
-  préchargées (voir `routes/__root.tsx`) — précharger l'arabe le ferait payer à
-  tout le monde.
+  Les `unicode-range` sont ceux de Google et font le vrai travail : une face ne
+  descend que si l'un de ses glyphes est RENDU, et un lecteur arabophone ne prend
+  le latin que s'il en croise. Seules les deux faces latines sont préchargées
+  (voir `routes/__root.tsx`) — précharger l'arabe le ferait payer à tout le monde.
+
+  La face Noto Kufi complète (124 ko, incompressible) n'est aujourd'hui
+  téléchargée par PERSONNE : l'interface et les leçons arabes se rendent en
+  `--font-sans` (police système pour l'arabe), et la seule chose qui la
+  déclenchait — la signature « نقرا نلعب » du header et du pied de page publics,
+  donc chaque page publique, mobile compris — porte depuis le 2026-10-31 sa
+  propre sous-police de marque (ci-dessous). Elle reste déclarée pour du contenu
+  arabe qui opterait un jour pour `font-arabic`, et son fichier sert au gate
+  contenu `scripts/content/svg/check-overflow.mjs`.
 
   `swap` et non `optional` : préchargées et servies par l'origine, ces fontes
   arrivent en pratique avant le premier rendu ; `optional` autoriserait le
@@ -68,6 +76,29 @@
     U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E,
     U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
 }
+/* Signature de marque « نقرا نلعب » (perf bundle-03, 2026-10-31) : sous-police de
+   7 lettres + espace (35 glyphes avec les formes contextuelles et les points)
+   tirée du même fichier variable — 6 792 o au lieu des 123 688 o de la face
+   complète, que la seule signature faisait télécharger sur chaque page publique
+   (−74 % des octets de fontes de `/` et `/programme`). Famille DÉDIÉE et non une
+   seconde face de « Noto Kufi Arabic » : deux faces d'une même famille se
+   partageraient un texte courant glyphe par glyphe et casseraient la liaison des
+   lettres ; ici le mot entier vit dans une seule face, rendu identique à la face
+   complète (mêmes contours, avances et formes aux graisses 400/600/700). Jamais
+   à poser sur du texte arabe courant. Son `unicode-range` est exactement sa
+   cmap. Regénérer si la signature change :
+   `pyftsubset public/fonts/noto-kufi-arabic-var.woff2 --text="نقرا نلعب"
+    --flavor=woff2 --layout-features='*'
+    --output-file=public/fonts/noto-kufi-arabic-brand-var.woff2`
+   (fonttools + brotli). */
+@font-face {
+  font-family: "Noto Kufi Arabic Brand";
+  font-style: normal;
+  font-weight: 600 700;
+  font-display: swap;
+  src: url("/fonts/noto-kufi-arabic-brand-var.woff2") format("woff2");
+  unicode-range: U+0020, U+0627-0628, U+0631, U+0639, U+0642, U+0644, U+0646;
+}
 
 /* =====================================================
   Na9ra Nal3ab — design system (étude 14) : 2 thèmes transversaux,
@@ -78,6 +109,7 @@
   --font-display: "Orbitron", "Space Grotesk", system-ui, sans-serif;
   --font-sans: "Space Grotesk", "Inter", system-ui, sans-serif;
   --font-arabic: "Noto Kufi Arabic", "Noto Sans Arabic", system-ui, sans-serif;
+  --font-brand-ar: "Noto Kufi Arabic Brand", system-ui, sans-serif;
 
   /* Micro-typo token — replaces ad-hoc text-[10px]/text-[11px] (étude 14, D-3) */
   --text-2xs: 0.6875rem;
