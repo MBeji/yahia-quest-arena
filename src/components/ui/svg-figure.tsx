@@ -18,6 +18,48 @@ import { isDisplayEquation, splitMathRuns } from "@/shared/lib/bidi";
 const FIGURE_SURFACE = "rounded-xl bg-white text-slate-900 ring-1 ring-black/10";
 
 /**
+ * Nombre de chaînes gardées par cache. Un écran de correction d'examen est le
+ * plus gourmand : 40 questions × (énoncé + explication + 4 options) = 240
+ * entrées, qu'il faut tenir d'un seul tenant pour que ses re-rendus (verdict,
+ * confettis, autosave) ne recalculent rien ; au-delà, l'entrée la plus ancienne
+ * cède sa place. Une figure du corpus pèse ~2 ko : le cache plein tient en ~1 Mo.
+ */
+const CACHE_LIMIT = 512;
+
+/**
+ * Mémoïse une fonction pure d'une chaîne, clé = la chaîne exacte.
+ *
+ * Ces composants sont re-rendus à chaque tic d'état du lecteur, du donjon, de
+ * l'examen et des écrans de correction — sélection, vérification, verdict,
+ * autosave, confettis, et CHAQUE mouvement du pointeur sur un plateau
+ * `useSortable` —, sans que leur `raw` change. Mesuré le 2026-10-31 (jsdom,
+ * espion sur `DOMPurify.sanitize`) : une question à figures = 5 sanitize au
+ * montage et +5 à chaque tap, ≈2,5 ms chacun ; un Android d'entrée de gamme est
+ * du même ordre. Un cache de module plutôt qu'un `useMemo` par composant : il
+ * survit au démontage (une option revue à la correction a déjà été vue au
+ * lecteur) et couvre d'un coup les trois composants et leurs 19 points de
+ * montage. La politique XSS est inchangée : le même sanitiseur tourne toujours
+ * à la première vue de chaque chaîne, et le résultat mis en cache est le sien.
+ */
+function memoizeByString<T>(compute: (input: string) => T): (input: string) => T {
+  const cache = new Map<string, T>();
+  return (input) => {
+    const hit = cache.get(input);
+    if (hit !== undefined) return hit;
+    const value = compute(input);
+    if (cache.size >= CACHE_LIMIT) {
+      const oldest = cache.keys().next().value;
+      if (oldest !== undefined) cache.delete(oldest);
+    }
+    cache.set(input, value);
+    return value;
+  };
+}
+
+const figureOf = memoizeByString(extractFigure);
+const sanitizedSvgOf = memoizeByString(sanitizeSvg);
+
+/**
  * Rend le texte d'un champ de contenu en gardant chaque formule d'un seul
  * tenant : un run mathématique devient un `.math-run` — isolé gauche-à-droite,
  * et insécable (`.math-run-tight`) tant qu'il tient sur une ligne
@@ -31,7 +73,7 @@ const FIGURE_SURFACE = "rounded-xl bg-white text-slate-900 ring-1 ring-black/10"
  * pas empêcher un retour à la ligne. La prose ne reçoit aucun élément : un
  * champ sans formule rend exactement le même DOM qu'avant.
  */
-function renderRuns(text: string): ReactNode {
+const renderRuns = memoizeByString((text: string): ReactNode => {
   const runs = splitMathRuns(text);
   if (runs.length === 1 && !runs[0].math) return text;
   return runs.map((run, index) =>
@@ -43,7 +85,7 @@ function renderRuns(text: string): ReactNode {
       <Fragment key={index}>{run.text}</Fragment>
     ),
   );
-}
+});
 
 /**
  * Rend un champ ligne à ligne. Une ligne qui n'est QUE de la notation devient
@@ -57,7 +99,7 @@ function renderRuns(text: string): ReactNode {
  * `display:block` — `RichField` est parfois monté `as="p"`, où un `<div>` ou un
  * `<p>` imbriqué serait du HTML invalide.
  */
-function renderLines(text: string): ReactNode {
+const renderLines = memoizeByString((text: string): ReactNode => {
   const lines = text.split("\n").filter((line) => line.trim() !== "");
   if (lines.length <= 1) return renderRuns(text);
   return lines.map((line, index) =>
@@ -71,7 +113,7 @@ function renderLines(text: string): ReactNode {
       </span>
     ),
   );
-}
+});
 
 /**
  * Renders a sanitized inline SVG figure. The markup is passed through
@@ -92,7 +134,7 @@ export function SvgFigure({ markup, className }: { markup: string; className?: s
     <span
       dir="ltr"
       className={className}
-      dangerouslySetInnerHTML={{ __html: sanitizeSvg(markup) }}
+      dangerouslySetInnerHTML={{ __html: sanitizedSvgOf(markup) }}
     />
   );
 }
@@ -110,7 +152,7 @@ export function RichField({
   as?: ElementType;
   className?: string;
 }) {
-  const { text, svg } = extractFigure(raw);
+  const { text, svg } = figureOf(raw);
   return (
     <>
       {text
@@ -134,7 +176,7 @@ export function RichField({
 
 /** An answer option whose `text` may be a label, an SVG figure, or both. */
 export function OptionContent({ raw }: { raw: string }) {
-  const { text, svg } = extractFigure(raw);
+  const { text, svg } = figureOf(raw);
   return (
     <>
       {text ? <span>{renderRuns(text)}</span> : null}
