@@ -18,7 +18,11 @@ import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
 import { resolveNextAction } from "@/shared/lib/next-action";
 import { readSubjectStars, type SubjectStarSummary } from "@/shared/lib/progress-stars";
-import { resolveAdaptiveInputs, type AdaptiveRpcClient } from "@/shared/lib/adaptive-inputs";
+import {
+  readLearningState,
+  resolveAdaptiveInputs,
+  type AdaptiveRpcClient,
+} from "@/shared/lib/adaptive-inputs";
 import { resolvePromotionTarget, shouldOfferPromotion } from "@/shared/lib/back-to-school";
 import { lyceeYearOf } from "./program-families";
 
@@ -240,7 +244,28 @@ export const getDashboard = createServerFn({ method: "GET" })
     // by the `get_user_subject_stats` RPC (GROUP BY subject_id), so the dashboard
     // no longer transfers a user's entire attempt history to reduce it in JS
     // (perf audit M4). The result is bounded to one row per subject.
-    const [profileRes, subjectsRes, recentRes, statsRes] = await Promise.all([
+    //
+    // Étage A — tout ce qui ne dépend QUE de la session part en une seule salve. Chaque
+    // `await` isolé coûtait un aller-retour Vercel → PostgREST payé en série (mesuré le
+    // 2026-10-31 : 14 lectures en 10 vagues, pour un graphe qui n'en a que deux : ces
+    // lectures, puis celles qui lisent leur résultat, l'étage B).
+    // Le catalogue des parcours est lu UNE fois : il sert au scoping des matières, à la
+    // bannière de rentrée (R-4) et à la passerelle « Réviser » (R-17). Une trentaine de lignes,
+    // donc on filtre ici plutôt que de refaire un aller-retour par usage.
+    // L'état de croyance (é30 §3.10) est lu UNE fois : il nourrit les rangs 2 et 4 de
+    // « Prochaine action » (étage B) ET la carte à 4 états de `LearningPanels`, qui le reçoit
+    // en prop — le navigateur ne relance plus la même RPC une fois son chunk chargé.
+    const [
+      profileRes,
+      subjectsRes,
+      recentRes,
+      statsRes,
+      parcoursRes,
+      dailyPlan,
+      competencyMap,
+      weaknesses,
+      learningState,
+    ] = await Promise.all([
       supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
       supabase.from("subjects").select("*").order("display_order"),
       supabase
@@ -250,6 +275,20 @@ export const getDashboard = createServerFn({ method: "GET" })
         .order("completed_at", { ascending: false })
         .limit(DASHBOARD_RECENT_LIMIT),
       supabase.rpc("get_user_subject_stats"),
+      supabase.from("parcours").select("id,name_fr,theme_id,grade_id,is_premium,status"),
+      // « Révision du jour » (étude 04, lot A1.1). Elle a remplacé la requête directe sur
+      // `spaced_repetition_schedule` qui tenait la priorité 1 depuis le lot 6 de l'étude 22 :
+      // même rôle, meilleure réponse — le plan arbitre par les misconceptions actives (D-3) et
+      // ne propose que des exercices réellement jouables (R-3). Le moteur de priorité, lui,
+      // n'a pas bougé d'une ligne (R-18, D-8) : il change de SOURCE, pas de règle.
+      fetchDailyPlan(supabase, DAILY_PLAN_MAX_ITEMS),
+      // Carte de compétences (étude 07 lot 4, US-1) ; « ce qui te bloque » (R-5) en dépend et
+      // part à l'étage B, seulement s'il existe une compétence en échec.
+      fetchCompetencyMap(supabase),
+      // Les erreurs NOMMÉES (A2.1). Distinctes de la carte : celle-ci dit « fractions
+      // 41 % », celles-là disent « tu additionnes les dénominateurs ».
+      fetchWeaknesses(supabase),
+      readLearningState(supabase as unknown as AdaptiveRpcClient, null),
     ]);
 
     if (profileRes.error)
@@ -315,13 +354,7 @@ export const getDashboard = createServerFn({ method: "GET" })
     const allSubjects = subjectsRes.data ?? [];
     const parcoursId = profile?.current_parcours_id ?? null;
 
-    // Le catalogue des parcours est lu UNE fois : il sert au scoping des matières, à la
-    // bannière de rentrée (R-4) et à la passerelle « Réviser » (R-17). Une trentaine de lignes,
-    // donc on filtre ici plutôt que de refaire un aller-retour par usage.
-    const { data: parcoursRows } = await supabase
-      .from("parcours")
-      .select("id,name_fr,theme_id,grade_id,is_premium,status");
-    const parcoursList = parcoursRows ?? [];
+    const parcoursList = parcoursRes.data ?? [];
 
     let subjects: typeof allSubjects = [];
     let premiumLockedSubjectIds: string[] = [];
@@ -366,11 +399,32 @@ export const getDashboard = createServerFn({ method: "GET" })
     // la 7ᵉ ? »), et un id ne se lit pas.
     let currentParcoursName: string | null = null;
 
+    // Étage B — les lectures qui dépendent de l'étage A, en une seconde salve : les `grades`
+    // (seulement si l'élève a une classe), les blocages de la compétence la plus faible
+    // (seulement s'il en existe une sous le seuil), les étoiles des matières du parcours, et
+    // les entrées des rangs 2 et 4 de « Prochaine action » (é30 amendement C, #870) —
+    // résolues ICI, sur le serveur, donc sans aller-retour de plus sur le chemin SSR. Le
+    // pourquoi et le coût sont dans `adaptive-inputs.ts` ; sans état (matière non taggée)
+    // elles ne coûtent aucun appel.
+    // ⭐ Étoiles et sceaux par matière (étude 34) — bornés aux matières du parcours actif,
+    // une seule requête. Alimentent l'état `done` de la carte `/parcours` (sceau ⭐⭐⭐⭐) et
+    // le sous-libellé de chaque nœud. Ils remplacent le pourcentage de é22 R-16, qui
+    // redescendait dès qu'une campagne publiait du contenu.
+    const [gradesRes, blockersOut, progress, adaptive] = await Promise.all([
+      profile?.current_grade_id
+        ? supabase.from("grades").select("id,slug,name_fr,theme_id,display_order,is_selectable")
+        : null,
+      fetchWeakestBlockers(supabase, competencyMap),
+      fetchSubjectStars(
+        supabase,
+        subjects.map((s) => s.id),
+      ),
+      resolveAdaptiveInputs(supabase as unknown as AdaptiveRpcClient, learningState),
+    ]);
+    const { blockedSlug: competencyBlockedSlug, blockers: competencyBlockers } = blockersOut;
+
     if (profile?.current_grade_id) {
-      const { data: gradeRows } = await supabase
-        .from("grades")
-        .select("id,slug,name_fr,theme_id,display_order,is_selectable");
-      const grades = gradeRows ?? [];
+      const grades = gradesRes?.data ?? [];
       const parcours = parcoursList;
       currentParcoursName = parcours.find((p) => p.id === parcoursId)?.name_fr ?? null;
 
@@ -429,39 +483,10 @@ export const getDashboard = createServerFn({ method: "GET" })
       }
     }
 
-    // « Révision du jour » (étude 04, lot A1.1). Elle a remplacé la requête directe sur
-    // `spaced_repetition_schedule` qui tenait la priorité 1 depuis le lot 6 de l'étude 22 :
-    // même rôle, meilleure réponse — le plan arbitre par les misconceptions actives (D-3) et
-    // ne propose que des exercices réellement jouables (R-3). Le moteur de priorité, lui,
-    // n'a pas bougé d'une ligne (R-18, D-8) : il change de SOURCE, pas de règle.
-    const dailyPlan = await fetchDailyPlan(supabase, DAILY_PLAN_MAX_ITEMS);
-
-    // Carte de compétences (étude 07 lot 4, US-1) + « ce qui te bloque » (R-5). La carte en une
-    // lecture ; les blocages en une seconde, seulement s'il existe une compétence en échec.
-    const competencyMap = await fetchCompetencyMap(supabase);
-    // Les erreurs NOMMÉES (A2.1). Distinctes de la carte : celle-ci dit « fractions
-    // 41 % », celles-là disent « tu additionnes les dénominateurs ».
-    const weaknesses = await fetchWeaknesses(supabase);
-    const { blockedSlug: competencyBlockedSlug, blockers: competencyBlockers } =
-      await fetchWeakestBlockers(supabase, competencyMap);
-
-    // ⭐ Étoiles et sceaux par matière (étude 34) — bornés aux matières du parcours actif,
-    // une seule requête. Alimentent l'état `done` de la carte `/parcours` (sceau ⭐⭐⭐⭐) et
-    // le sous-libellé de chaque nœud. Ils remplacent le pourcentage de é22 R-16, qui
-    // redescendait dès qu'une campagne publiait du contenu.
-    const progress = await fetchSubjectStars(
-      supabase,
-      subjects.map((s) => s.id),
-    );
-
     // « Prochaine action » unifiée (R-31). Le dashboard ne charge ni chapitres ni exercices :
     // il résout donc les priorités 1, 2 et 4, et DÉLÈGUE la 3 au hub matière en désignant la
     // matière du chemin — qui la résoudra avec ce même moteur. Un seul CTA en sortira.
     const lastWorkedSubjectId = recentRes.data?.[0]?.subject_id ?? null;
-    // Les entrées des rangs 2 et 4 (é30 amendement C, #870) — résolues ICI, sur le serveur,
-    // donc sans aller-retour de plus sur le chemin SSR. Le pourquoi et le coût sont dans
-    // `adaptive-inputs.ts` ; sur une matière non taggée elle rend `{}` en un seul appel.
-    const adaptive = await resolveAdaptiveInputs(supabase as unknown as AdaptiveRpcClient, null);
     const nextAction = resolveNextAction({
       ...adaptive,
       // La tête du plan EST la priorité 1 : le plan est déjà trié par urgence, donc le premier
@@ -486,6 +511,7 @@ export const getDashboard = createServerFn({ method: "GET" })
       dailyPlan,
       competencyMap,
       weaknesses,
+      learningState,
       competencyBlockers,
       competencyBlockedSlug,
       promotionSuggestion,

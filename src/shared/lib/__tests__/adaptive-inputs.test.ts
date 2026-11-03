@@ -5,6 +5,7 @@ import {
   pickAConsolider,
   pickLacune,
   pickRacine,
+  readLearningState,
   resolveAdaptiveInputs,
   type AdaptiveRpcClient,
 } from "../adaptive-inputs";
@@ -45,12 +46,37 @@ function fakeClient(replies: Record<string, { data?: unknown; error?: { message:
   return { client, calls };
 }
 
+/** Les deux temps du tableau de bord, enchaînés : l'état, puis les rangs qu'il produit. */
+async function resolve(client: AdaptiveRpcClient) {
+  return resolveAdaptiveInputs(client, await readLearningState(client, null));
+}
+
+describe("readLearningState — l'état lu UNE fois par chargement (2026-10-31)", () => {
+  it("rend les lignes de la famille demandée, telles quelles", async () => {
+    const rows = [etat({ family: "math" })];
+    const calls: unknown[] = [];
+    const client = {
+      rpc: (fn: string, args: unknown) => {
+        calls.push([fn, args]);
+        return Promise.resolve({ data: rows, error: null });
+      },
+    } as unknown as AdaptiveRpcClient;
+    expect(await readLearningState(client, "math")).toEqual(rows);
+    expect(calls).toEqual([["get_learning_state", { p_family: "math" }]]);
+  });
+
+  it("en échec rend une liste vide — rangs dormants et repli R-6, jamais une page cassée", async () => {
+    const { client } = fakeClient({ get_learning_state: { error: { message: "boom" } } });
+    expect(await readLearningState(client, null)).toEqual([]);
+  });
+});
+
 describe("resolveAdaptiveInputs — le producteur des rangs 2 et 4 (#870)", () => {
   it("sur une matière NON TAGGÉE, ne coûte QU'UN appel et ne produit rien", () => {
     // R-6 : zéro ligne de croyance n'est pas une erreur, c'est le cas courant du
     // catalogue. Il ne doit pas déclencher les deux RPC suivantes.
     const { client, calls } = fakeClient({ get_learning_state: { data: [] } });
-    return resolveAdaptiveInputs(client, null).then((out) => {
+    return resolve(client).then((out) => {
       expect(out).toEqual({});
       expect(calls).toEqual(["get_learning_state"]);
     });
@@ -66,7 +92,7 @@ describe("resolveAdaptiveInputs — le producteur des rangs 2 et 4 (#870)", () =
         ],
       },
     });
-    const out = await resolveAdaptiveInputs(client, null);
+    const out = await resolve(client);
     // Le slug qui voyage est celui de la RACINE : R-14 veut la raison, et la raison
     // est le prérequis manquant, pas la compétence où ça s'est vu.
     expect(out.remediation).toEqual({ competencySlug: "pgcd", exerciseId: "ex-racine" });
@@ -84,7 +110,7 @@ describe("resolveAdaptiveInputs — le producteur des rangs 2 et 4 (#870)", () =
         ],
       },
     });
-    expect((await resolveAdaptiveInputs(client, null)).remediation).toBeNull();
+    expect((await resolve(client)).remediation).toBeNull();
   });
 
   it("consolide la compétence vue sous le MOINS de formes", async () => {
@@ -114,7 +140,7 @@ describe("resolveAdaptiveInputs — le producteur des rangs 2 et 4 (#870)", () =
         ],
       },
     });
-    const out = await resolveAdaptiveInputs(client, null);
+    const out = await resolve(client);
     // La moins variée, et le plus facile de ses exercices : consolider n'est pas éprouver.
     expect(out.strengthen).toEqual({ competencySlug: "peu-variee", exerciseId: "ex-doux" });
   });
@@ -125,13 +151,13 @@ describe("resolveAdaptiveInputs — le producteur des rangs 2 et 4 (#870)", () =
       get_remediation_path: { error: { message: "boom" } },
       get_exercises_for_competency: { error: { message: "boom" } },
     });
-    const out = await resolveAdaptiveInputs(client, null);
+    const out = await resolve(client);
     expect(out).toEqual({ remediation: null, strengthen: null });
   });
 
   it("`get_learning_state` en échec rend `{}` — l'ordre d'avant l'amendement", async () => {
     const { client, calls } = fakeClient({ get_learning_state: { error: { message: "boom" } } });
-    expect(await resolveAdaptiveInputs(client, null)).toEqual({});
+    expect(await resolve(client)).toEqual({});
     expect(calls).toEqual(["get_learning_state"]);
   });
 
@@ -167,7 +193,7 @@ describe("les rangs 2 et 4 ne sont plus dormants — bout à bout avec le moteur
         data: [{ slug: "pgcd", entry_exercise_id: "ex-racine", is_root_cause: true, depth: 1 }],
       },
     });
-    const adaptive = await resolveAdaptiveInputs(client, null);
+    const adaptive = await resolve(client);
     const action = resolveNextAction({ ...adaptive, failedExerciseId: "ex-rate" });
     expect(action).toEqual({
       kind: "remediate",
@@ -178,7 +204,7 @@ describe("les rangs 2 et 4 ne sont plus dormants — bout à bout avec le moteur
 
   it("sans entrées produites, l'ordre reste EXACTEMENT celui d'avant", async () => {
     const { client } = fakeClient({ get_learning_state: { data: [] } });
-    const adaptive = await resolveAdaptiveInputs(client, null);
+    const adaptive = await resolve(client);
     expect(resolveNextAction({ ...adaptive, failedExerciseId: "ex-rate" })).toEqual({
       kind: "retry",
       exerciseId: "ex-rate",

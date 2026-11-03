@@ -248,7 +248,7 @@ export const deleteAccount = createServerFn({ method: "POST" })
  * middleware a vérifié — même posture que `deleteAccount` juste au-dessus.
  *
  * POURQUOI `POST` POUR UNE LECTURE. Les lectures de ce dépôt sont en `GET`
- * (`getCompetencyExercises`, `getLearningState`). Celle-ci ne l'est pas : elle
+ * (`getCompetencyExercises`, `getLearningFrontier`). Celle-ci ne l'est pas : elle
  * rend, en une réponse, la totalité du dossier d'une personne. Un `GET` est ce
  * qu'on préfetche, ce qu'un intermédiaire met en cache, ce qui atterrit dans un
  * journal d'accès avec son URL. Le geste est rare et explicite ; il n'a aucun

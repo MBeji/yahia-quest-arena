@@ -5,7 +5,7 @@ export { recoverStreak, getCompetencyExercises } from "./progression.server";
 // Tuteur déterministe (étude 30, lot 3). Les trois lectures de croyance : l'état et la zone
 // de chaque compétence, la frontière « prêt à apprendre », et le geste de contestation d'une
 // déduction (US-3/R-10).
-export { getLearningState, getLearningFrontier, disputeInference } from "./progression.server";
+export { getLearningFrontier, disputeInference } from "./progression.server";
 // « Carte de compétences » (étude 07, lot 4). Comme le panneau de révision, il vit dans la
 // progression et ses données arrivent par `getDashboard` (get_my_competency_map +
 // get_competency_blockers), lu une seule fois. La route dashboard compose.

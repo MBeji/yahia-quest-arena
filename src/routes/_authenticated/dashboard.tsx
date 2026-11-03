@@ -434,13 +434,14 @@ function Dashboard() {
             consigne, un pourcentage se lit comme une note. Le composant décide lui-même du
             repli sur l'ancienne carte quand la matière n'est pas taggée (R-6) — les deux
             lectures de croyance rendent alors zéro ligne, et l'écran doit rester EXACTEMENT
-            celui d'aujourd'hui. Données via ses propres requêtes client (§3.11), donc hors du
-            chemin SSR ; `getDashboard` continue d'alimenter le repli. */}
+            celui d'aujourd'hui. L'état vient de `getDashboard` (lu une fois, pour « Prochaine
+            action » aussi) ; seule la frontière reste une requête client (§3.11). */}
         <Suspense fallback={null}>
           <LearningPanels
             map={data.competencyMap ?? []}
             blockers={data.competencyBlockers ?? []}
             blockedSlug={data.competencyBlockedSlug ?? null}
+            learningState={data.learningState ?? []}
           />
         </Suspense>
 

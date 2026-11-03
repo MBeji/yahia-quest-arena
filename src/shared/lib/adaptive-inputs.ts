@@ -129,7 +129,35 @@ export function pickRacine(path: RemediationPathRow[]): RemediationPathRow | nul
 }
 
 /**
- * Produit les entrées des rangs 2 et 4. Ne décide rien, ne lève jamais.
+ * « Où tu en es » — l'état et la zone de chaque compétence de la famille (é30 §3.10).
+ * Lue UNE fois par chargement du tableau de bord : elle nourrit à la fois les rangs 2 et 4
+ * de « Prochaine action » (ci-dessous) et la carte à 4 états de `LearningPanels`, qui la
+ * reçoit en prop plutôt que de relancer la même RPC depuis le navigateur.
+ *
+ * Dégradation gracieuse : une RPC absente ou en erreur rend une liste vide — donc des rangs
+ * dormants et le repli R-6 sur l'ancienne carte, jamais une page cassée. Sur une matière
+ * NON TAGGÉE le résultat est vide aussi, et c'est R-6 qui parle, pas une erreur.
+ *
+ * @param client un client Supabase authentifié (le périmètre est `auth.uid()`)
+ * @param family la famille de compétences de la matière courante, ou `null`
+ */
+export async function readLearningState(
+  client: AdaptiveRpcClient,
+  family: string | null,
+): Promise<LearningStateRow[]> {
+  const etat = await client.rpc("get_learning_state", { p_family: family });
+  if (etat.error) {
+    logger.warn("adaptive: get_learning_state failed, ranks 2/4 stay dormant", {
+      error: etat.error.message,
+    });
+    return [];
+  }
+  return etat.data ?? [];
+}
+
+/**
+ * Produit les entrées des rangs 2 et 4 à partir de l'état lu par `readLearningState`.
+ * Ne décide rien, ne lève jamais.
  *
  * Dégradation gracieuse, comme les trois lectures de croyance du lot 3 : une RPC
  * absente ou en erreur rend l'entrée `null`, donc un rang qui ne se déclenche
@@ -137,22 +165,14 @@ export function pickRacine(path: RemediationPathRow[]): RemediationPathRow | nul
  * d'aujourd'hui — jamais une page cassée, jamais une erreur.
  *
  * @param client un client Supabase authentifié (le périmètre est `auth.uid()`)
- * @param family la famille de compétences de la matière courante, ou `null`
+ * @param rows l'état de croyance, tel que `readLearningState` l'a rendu
  */
 export async function resolveAdaptiveInputs(
   client: AdaptiveRpcClient,
-  family: string | null,
+  rows: LearningStateRow[],
 ): Promise<AdaptiveInputs> {
-  const etat = await client.rpc("get_learning_state", { p_family: family });
-  if (etat.error) {
-    logger.warn("adaptive: get_learning_state failed, ranks 2/4 stay dormant", {
-      error: etat.error.message,
-    });
-    return {};
-  }
-  const rows = etat.data ?? [];
   // Matière non taggée : R-6 parle, ce n'est pas une erreur — et on s'arrête ici,
-  // donc la résolution ne coûte QU'UN appel sur la majorité du catalogue.
+  // donc la résolution ne coûte AUCUN appel de plus sur la majorité du catalogue.
   if (rows.length === 0) return {};
 
   const [remediation, strengthen] = await Promise.all([
