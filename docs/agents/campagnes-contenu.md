@@ -12,6 +12,12 @@
 
 ## Le corpus source est à la source — plus sur un poste
 
+> ⚠️ **Depuis le 2026-11-03, la source des sessions est le dossier Google Drive du projet**, plus le
+> site du CNP : depuis une session cloud, `content:manuel:fetch` échoue (`curl 35 : Connection reset
+by peer`, mesuré ce jour-là) et la commande le dit. Les PDF se lisent par le connecteur Google
+> Drive, **couche texte d'abord, vision en dernier** ; la procédure complète vit au dépôt privé
+> (skill `content-ingest`, § « Source et lecture »). Ce qui suit reste vrai pour un poste local.
+
 Les manuels sont **publics chez le CNP** (`CNP_MANUEL_BASE_URL`, `src/shared/content/manuel-cnp.ts`)
 et ne se copient nulle part : licence (`LICENSE-CONTENT.md`) et doctrine « en lien plutôt qu'en
 copie ». Une session — cloud ou locale — les télécharge **par code** dans un dossier jetable, puis
