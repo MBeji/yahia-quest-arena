@@ -669,30 +669,43 @@ export const submitAttempt = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
-    // Rate limit: max 5 submissions per 10 seconds
-    if (await isRateLimited(supabase, `submit_${userId}`, 5, 10_000)) {
+    // Les quatre lectures préparatoires partent ENSEMBLE : le rate limit (5
+    // soumissions par 10 s), les types des questions, les réponses figées et le
+    // mode de l'exercice ne dépendent ni les unes des autres ni du verdict du
+    // débit. En série, elles coûtaient quatre allers-retours (20 à 40 ms) pour
+    // ~1 ms de SQL, sur l'écriture la plus fréquente de l'app (mesure du
+    // 2026-10-31, constat db-03). Rien n'écrit ici : ce sont des lectures, les
+    // lancer quand le débit est dépassé ne change rien de ce que l'élève voit.
+    //
+    // La précédence des refus reste celle d'avant : le débit dépassé d'abord, la
+    // réponse mal formée ensuite — d'où le verdict de format CAPTURÉ puis rejoué
+    // après la garde, au lieu d'un rejet qui doublerait le refus de débit. Les
+    // deux autres lectures ne rejettent jamais (elles dégradent en `[]`/`null`).
+    const [limited, formatRefusal, reveals, { data: exerciseRow }] = await Promise.all([
+      isRateLimited(supabase, `submit_${userId}`, 5, 10_000),
+      assertAnswerFormats(supabase, "quest.submitAttempt", data.exerciseId, data.answers).then(
+        () => null,
+        (error: unknown) => ({ error }),
+      ),
+      fetchSessionReveals(supabase, data.sessionId),
+      // Comprehension quizzes are validated by the student alone: we never return
+      // the correct answers / explanations for a quiz, so they cannot be memorised
+      // and the quiz re-passed blindly. Practice/boss get the full end-of-quest
+      // correction, built AFTER submit from the get_attempt_review SECURITY DEFINER
+      // RPC (the answer key is no longer client-readable — GAP-020).
+      supabase.from("exercises").select("mode").eq("id", data.exerciseId).single(),
+    ]);
+    if (limited) {
       throw new Error("Too many submissions. Please slow down.");
     }
+    if (formatRefusal) {
+      throw formatRefusal.error;
+    }
 
-    await assertAnswerFormats(supabase, "quest.submitAttempt", data.exerciseId, data.answers);
     // Les réponses FIGÉES par la correction immédiate l'emportent sur le payload. Le
     // barème SQL l'impose de toute façon ; les réunir ici garde l'arbitrage et la
     // correction de fin de partie d'accord avec la note (20260929120000).
-    const answers = mergeRevealedAnswers(
-      data.answers,
-      await fetchSessionReveals(supabase, data.sessionId),
-    );
-
-    // Comprehension quizzes are validated by the student alone: we never return
-    // the correct answers / explanations for a quiz, so they cannot be memorised
-    // and the quiz re-passed blindly. Practice/boss get the full end-of-quest
-    // correction, built AFTER submit from the get_attempt_review SECURITY DEFINER
-    // RPC (the answer key is no longer client-readable — GAP-020).
-    const { data: exerciseRow } = await supabase
-      .from("exercises")
-      .select("mode")
-      .eq("id", data.exerciseId)
-      .single();
+    const answers = mergeRevealedAnswers(data.answers, reveals);
     const isQuiz = (exerciseRow as { mode?: string } | null)?.mode === "quiz";
 
     // La forme de la correction est celle que `buildAttemptReview` produit — on la

@@ -265,19 +265,23 @@ export const submitDungeonAnswer = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
-    if (await isRateLimited(supabase, `dungeon_answer_${userId}`, 40, 60_000)) {
-      throw new Error("Trop de réponses envoyées. Ralentis un peu.");
-    }
-
     // Per-type wire-format validation (docs/interactive-question-types.md): a
     // malformed answer for the question's (client-readable) type is a clear
     // input error, not a silently-wrong floor. Degrades open on a failed fetch —
     // the scoring RPC is garbage-safe either way.
-    const { data: questionRow } = await supabase
-      .from("questions")
-      .select("question_type")
-      .eq("id", data.questionId)
-      .maybeSingle();
+    //
+    // Le rate limit (40 réponses par minute) et cette lecture partent ensemble :
+    // ni l'un ni l'autre ne dépend de l'autre, et c'était un aller-retour de
+    // plus en série à chaque étage du donjon, le mode où l'élève enchaîne le
+    // plus vite (même motif que submitAttempt, constat db-03 du 2026-10-31). Le
+    // refus de débit s'examine d'abord, comme avant.
+    const [limited, { data: questionRow }] = await Promise.all([
+      isRateLimited(supabase, `dungeon_answer_${userId}`, 40, 60_000),
+      supabase.from("questions").select("question_type").eq("id", data.questionId).maybeSingle(),
+    ]);
+    if (limited) {
+      throw new Error("Trop de réponses envoyées. Ralentis un peu.");
+    }
     if (questionRow && !isValidAnswerFormat(questionRow.question_type, data.choice)) {
       failWithClientError(
         "dungeon.submitDungeonAnswer: invalid answer format",
