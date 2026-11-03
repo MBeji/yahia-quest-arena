@@ -102,20 +102,22 @@ vi.mock("@/shared/lib/logger", () => ({
 
 import { AI_CURATED_MODELS } from "@/shared/constants/ai";
 import {
-  escalateTutorThread,
   explainMistake,
   getTutorAvailability,
   getTutorChatEntry,
   getTutorHistory,
-  getTutorMiniCheck,
   getTutorPrefs,
-  getTutorUnderstandingSignal,
   isCuratedModel,
   nextVariant,
   rateTutorMessage,
   setTutorPlanPush,
-  submitTutorMiniCheck,
 } from "../tutor.server";
+import {
+  escalateTutorThread,
+  getTutorMiniCheck,
+  getTutorUnderstandingSignal,
+  submitTutorMiniCheck,
+} from "../tutor.comprehension.server";
 
 const QUESTION = "22222222-2222-4222-8222-222222222222";
 const CHAPTER = "33333333-3333-4333-8333-333333333333";
