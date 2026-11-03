@@ -12,8 +12,9 @@
 > **Date.** Audited 2026-06-30 · **findings re-verified against the code from
 > 2026-08-10 to 2026-08-13** (§0 — the last sweep, which closed the remaining
 > "?" lines, ran on the 13th) · **§0-bis : suivi parental mesuré sur la prod le
-> 2026-08-19**. Re-run the audit when the catalogue or user base grows an order
-> of magnitude.
+> 2026-08-19** · **§0-ter : passe multi-agents du 2026-10-31 → 2026-11-03 (`main`
+> à #1208), 11 lots livrés, 1 constat réfuté, 21 au backlog**. Re-run the audit when the
+> catalogue or user base grows an order of magnitude.
 
 ---
 
@@ -75,15 +76,15 @@ finding exist here — and its remedy is the key migration.
 
 ### Still open (re-verified 2026-08-10)
 
-| ID                  | Evidence today                                                                                                                | Sev  |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ---- |
-| ~~**C1**~~          | ✅ **closed 2026-08-10** — see below; the "71" first reported here was a count over migration _text_, not the live policy set | CRIT |
-| **C1-fe**           | waterfall intact — but the stated remedy is **blocked by the auth architecture**, see below (2026-08-13)                      | CRIT |
-| ~~**C2-fe**~~       | ✅ **closed 2026-08-10** — AVIF/WebP `<picture>`, lazy, sized; and it was never the LCP element (see below)                   | CRIT |
-| **H2**              | dungeon pick still `ORDER BY random()` — **now measured**, see below (`20260720200000_dungeon_scoped_to_parcours.sql:174`)    | HIGH |
-| **H2-fe**           | `provider.tsx` still imports `en`/`fr`/`ar` statically — 123 KB i18n chunk ships all three                                    | HIGH |
-| **H-1 / H-3 / H-2** | infra unchanged: single `arn1` serverless fn, no edge cache on the public catalogue                                           | HIGH |
-| **M-1**             | 🟠 **client RUM + slow server-fn timing landed 2026-08-10** (see below); the DB slow-query log is a Supabase setting          | MED  |
+| ID                  | Evidence today                                                                                                                                                                                                                | Sev  |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| ~~**C1**~~          | ✅ **closed 2026-08-10** — see below; the "71" first reported here was a count over migration _text_, not the live policy set                                                                                                 | CRIT |
+| **C1-fe**           | waterfall intact — but the stated remedy is **blocked by the auth architecture**, see below (2026-08-13)                                                                                                                      | CRIT |
+| ~~**C2-fe**~~       | ✅ **closed 2026-08-10** — AVIF/WebP `<picture>`, lazy, sized; and it was never the LCP element (see below)                                                                                                                   | CRIT |
+| **H2**              | dungeon pick still `ORDER BY random()` — **now measured**, see below (`20260720200000_dungeon_scoped_to_parcours.sql:174`)                                                                                                    | HIGH |
+| ~~**H2-fe**~~       | ✅ **clos 2026-10-31** (§0-ter, `ac44de0`) — `i18n-fr` seul importé statiquement, `en`/`ar` par `import()` ; −43 KB gz par élève FR                                                                                           | HIGH |
+| **H-1 / H-3 / H-2** | infra unchanged: single `arn1` serverless fn, no edge cache on the public catalogue — **relu 2026-11-03 (§0-ter)** : H-3 🟠 à arbitrer (ssr-04, trois voies), H-1 mesuré (ssr-05 : 50-80 ms mécaniques au plus), H-2 inchangé | HIGH |
+| **M-1**             | 🟠 **client RUM + slow server-fn timing landed 2026-08-10** (see below); the DB slow-query log is a Supabase setting                                                                                                          | MED  |
 
 #### The remaining findings, swept 2026-08-13 — no line left unverified
 
@@ -91,20 +92,20 @@ The first pass left seven findings at "?". They are now all read in the code
 (**swept 2026-08-13**). One more turned out to be false, which is the **fourth**
 of the original audit.
 
-| ID           | Verified today                                                                                                                                                                                                  | State                 |
-| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
-| **C-2**      | `isRateLimited` still calls the `check_rate_limit` RPC **first**, at 8 feature call sites; `isRateLimitedLocal` is only an **error fallback**, not a first-gate                                                 | ⬜ open               |
-| **M2**       | `get_dungeon_access` still runs 2 × `COUNT(DISTINCT)` — **measured 2026-08-13**, see below                                                                                                                      | ⬜ open, chiffré      |
-| **M5**       | `get_student_report` still multi-scan (`20260708120000_student_report_by_code.sql`) — admin/parent frequency, so it stays acceptable                                                                            | ⬜ open, low          |
-| **M1** (DB)  | the `FOR UPDATE` chain on `profiles` is still there, but its amplifier (H3's unbounded aggregates) is gone — window much shorter                                                                                | 🟠 mitigated          |
-| **M3** (DB)  | N+1 `has_parcours_entitlement` — inert in the free phase; already tracked as **latent** in `docs/dette-technique.md`                                                                                            | 💤 latent             |
-| **H1-media** | `getExercise` still selects `options` wholesale (`quest.server.ts:744`), so inline SVG still ships per fetch                                                                                                    | ⬜ open               |
-| **M3-fe**    | réel (50 `motion.div`, `leaderboard.tsx:253`) mais **déjà atténué** trois fois — voir ci-dessous                                                                                                                | 🟠 atténué            |
-| **M4-fe**    | **FALSE** — "the dungeon route bundles all gameplay eagerly". The router plugin already splits it: `dungeon-*.js` is its own **15.15 kB** chunk, fetched only when a player navigates there                     | ✅ closed             |
-| **L1**       | ✅ **closed** — the 3 content queries were already parallel; the remaining serial call (`get_best_scores_by_exercise`) now rides the same `Promise.all`, removing one round-trip per authenticated subject load | ✅ closed             |
-| **L4**       | ✅ **mesuré 2026-08-13 : n'en vaut pas la peine** — l'index `(user_id, scheduled_for)` existant suffit, voir ci-dessous                                                                                         | ✅ clos (sans action) |
-| **L-1**      | `isRateLimitedLocal`'s store is module-scope ⇒ per-instance; the effective cap really is × N instances                                                                                                          | ⬜ open by design     |
-| **M-2**      | `waitUntil` est bien un no-op, mais **aucun code de `src/` ne l'appelle** — piège latent, pas défaut actif                                                                                                      | 🟠 latent             |
+| ID           | Verified today                                                                                                                                                                                                                                                                                                                                    | State                 |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| **C-2**      | `isRateLimited` still calls the `check_rate_limit` RPC **first**, at 8 feature call sites; `isRateLimitedLocal` is only an **error fallback**, not a first-gate — **2026-10-31 (§0-ter)** : les lectures qui suivaient la RPC partent avec elle (`932584d`, db-03) ; la purge `random()` est db-04 ; la porte locale reste (24 sites aujourd'hui) | ⬜ open, réduit       |
+| **M2**       | `get_dungeon_access` still runs 2 × `COUNT(DISTINCT)` — **measured 2026-08-13**, see below                                                                                                                                                                                                                                                        | ⬜ open, chiffré      |
+| **M5**       | `get_student_report` still multi-scan (`20260708120000_student_report_by_code.sql`) — admin/parent frequency, so it stays acceptable                                                                                                                                                                                                              | ⬜ open, low          |
+| **M1** (DB)  | the `FOR UPDATE` chain on `profiles` is still there, but its amplifier (H3's unbounded aggregates) is gone — window much shorter                                                                                                                                                                                                                  | 🟠 mitigated          |
+| **M3** (DB)  | N+1 `has_parcours_entitlement` — inert in the free phase; already tracked as **latent** in `docs/dette-technique.md`                                                                                                                                                                                                                              | 💤 latent             |
+| **H1-media** | `getExercise` still selects `options` wholesale (`quest.server.ts:744`), so inline SVG still ships per fetch                                                                                                                                                                                                                                      | ⬜ open               |
+| **M3-fe**    | réel (50 `motion.div`, `leaderboard.tsx:253`) mais **déjà atténué** trois fois — voir ci-dessous                                                                                                                                                                                                                                                  | 🟠 atténué            |
+| **M4-fe**    | **FALSE** — "the dungeon route bundles all gameplay eagerly". The router plugin already splits it: `dungeon-*.js` is its own **15.15 kB** chunk, fetched only when a player navigates there                                                                                                                                                       | ✅ closed             |
+| **L1**       | ✅ **closed** — the 3 content queries were already parallel; the remaining serial call (`get_best_scores_by_exercise`) now rides the same `Promise.all`, removing one round-trip per authenticated subject load                                                                                                                                   | ✅ closed             |
+| **L4**       | ✅ **mesuré 2026-08-13 : n'en vaut pas la peine** — l'index `(user_id, scheduled_for)` existant suffit, voir ci-dessous                                                                                                                                                                                                                           | ✅ clos (sans action) |
+| **L-1**      | `isRateLimitedLocal`'s store is module-scope ⇒ per-instance; the effective cap really is × N instances — relu 2026-11-03, inchangé                                                                                                                                                                                                                | ⬜ open by design     |
+| **M-2**      | `waitUntil` est bien un no-op, mais **aucun code de `src/` ne l'appelle** — piège latent, pas défaut actif ; relu 2026-11-03, inchangé                                                                                                                                                                                                            | 🟠 latent             |
 
 _Method note: the first sweep of C-2 looked clean because it grepped for
 `checkRateLimit`; the export is `isRateLimited`. A finding is only "closed" when
@@ -571,6 +572,216 @@ tous les buffers, ce qui suffit pour un avant/après.
 
 ---
 
+## 0-ter. Passe du 2026-10-31 — workflow multi-agents (`main` à #1208)
+
+> Même règle qu'aux §0 et §0-bis : **on n'inscrit ici qu'un constat dont on a relu la
+> ligne**, et ce qui a été réfuté compte autant que ce qui a été livré. Tout chiffre
+> ci-dessous vient d'une mesure rejouable (sonde jsdom ou Chromium, chaîne SQL rejouée,
+> build de référence, `curl` sur la prod) ; les estimations sont nommées comme telles.
+> Branche `claude/workflow-dynamique-optimisation-gdcat4`, 11 commits `perf(...)` du
+> 2026-10-31 au 2026-11-03 (l'axe SSR, coupé par la limite d'usage au premier run, a été
+> rejoué le 2026-11-03 — ses mesures prod portent cette date).
+
+**Méthode, en trois lignes.** _Run 1_ : cinq explorateurs en parallèle, un par axe
+(couche données, chargement/bundle, rendu React, base, SSR/infra), chacun en lecture seule
+du checkout principal avec son worktree jetable et son build de référence copié hors de
+`dist/` — **31 constats** sur quatre axes, plus 5 pour l'axe SSR rejoué au _run 2_.
+_Voie A_ : six constats déjà mesurés par l'explorateur, implémentés directement, la prémisse
+re-vérifiée par l'implémenteur sur le HEAD courant avant de toucher une ligne. _Voie B_ : six
+constats passés chacun par un **sceptique indépendant** (relecture de la ligne, mesure
+avant/après dans un worktree, correctif révisé) avant tout code — **un des six a été
+réfuté** (ssr-02), et trois autres sont sortis du sceptique avec un impact ou un remède
+corrigé (bundle-03, data-03, ssr-01). Base de toutes les mesures « avant » : `c2f213b`
+(= `main` au départ de la passe).
+
+### Livré — onze lots, chacun avec sa mesure et son commit
+
+| ID            | Constat (relu)                                                                                                                                                                                                         | Verdict                                                 | Preuve / mesure avant → après                                                                                                                                                                                                                                                                                                                                                                                                                                     | Commit    |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| **db-01**     | `chapter_progress_ref` (STABLE, joint toutes les tentatives de l'élève) recopiée dans le `FILTER` de l'agrégat de `chapter_star_rungs` — depuis PG 12 une CTE référencée une fois est aplatie                          | ✅ confirmé, voie A                                     | Chaîne rejouée (2 000 élèves, 105 k tentatives, élève engagé à 5 000) : hub matière **1 464 → 40** évaluations (126-150 → 63-73 ms), tableau de bord **5 490 → 150** (382-429 → 161-205 ms), une soumission 38 → 1 (3,5-9,2 → 2,8-6 ms) ; md5 des sorties identiques ; pgTAP `106_crans_reference_une_fois` compte les évaluations par une sonde                                                                                                                  | `82d6347` |
+| **data-01**   | `getSubject` lisait `chapters.select("*")` : le markdown complet (`lesson_content`, `summary`) de tous les chapitres partait au hub et à chaque mission (calcul de « Suivant »)                                        | ✅ confirmé, voie A                                     | Corpus privé (96 matières, 848 chapitres) : JSON médian **93,5 → 15,3 KB**, p90 506 → 38 KB, max 1 445 → 122 KB (fiqh), math-6ᵉ 1 095 → 62 KB ; colonnes nommées (`SUBJECT_CHAPTER_COLUMNS`, `SUBJECT_EXERCISE_COLUMNS`), test `quest-get-subject.test.ts` rougit sur un retour à `*`                                                                                                                                                                             | `6d678fc` |
+| **rendu-01**  | `RichField`/`OptionContent`/`SvgFigure` rejouaient `extractFigure` + DOMPurify + `splitMathRuns` à chaque tic d'état sans que `raw` change (19 points de montage : lecteur, donjon, examen, plateaux dnd-kit)          | ✅ confirmé, voie A                                     | jsdom, question arabe à 4 options SVG, 6 taps : **30 → 5** `sanitize` (≈ 2,5 ms chacun), 0 au remontage ; cache de module borné (512 entrées, FIFO, clé = chaîne exacte) devant les quatre fonctions — même sanitiseur, c'est sa _sortie_ qui est rejouée (`docs/xss-rendering-policy.md`)                                                                                                                                                                        | `9ef93ad` |
+| **bundle-02** | Le compilateur TanStack Start retire `.validator()`/`.handler()` des stubs client mais garde toute instruction de niveau module : trois modules construisaient des schémas zod au chargement → zod entier côté client  | ✅ confirmé, voie A                                     | `dist/client/assets` : chunk `schemas-*.js` **84 007 B (23,7 KB gz) → absent** ; `parent-report.server-*` 3 509 → 1 758 B ; `daily-dashboard-*` 67 914 → 64 378 B ; schémas déplacés dans `*.schemas.ts` importés par les seuls validateurs ; `check-bundle-budget` refuse tout chunk client `schemas-`                                                                                                                                                           | `9d61529` |
+| **db-03** (1) | `submitAttempt` : 4 allers-retours en série avant la première RPC (`check_rate_limit` → `question_type` → `exercise_session_reveals` → `exercises.mode`), sans dépendance entre eux ; donjon : 2                       | ✅ confirmé, voie A (partie 1 seule)                    | Latence simulée 5 ms/aller-retour, 20 soumissions : **38,8 → 22,6 ms** (−42 %) ; étapes série avant la RPC 4 → 1, dans tout l'appel 7 → 4 ; mêmes requêtes, précédence des refus conservée (débit d'abord, format ensuite) ; contrôle négatif : les 2 tests de parallélisme rougissent sur la version série                                                                                                                                                       | `932584d` |
+| **rendu-02**  | `ExamRunner` : un état `answers` unique re-rendait les N articles de l'épreuve à chaque coche (`onChange`/`optionClassName` inline, aucun `memo`)                                                                      | ✅ confirmé, voie A                                     | jsdom, 20 questions à figures, cache rendu-01 en place : **20 → 1** article rendu par coche, 33,0 → 2,2 ms par tap ; `<ExamQuestionCard>` mémoïsée + props stables, `.exam-question-cv` (second usage du motif `content-visibility` après `.list-row-cv`) ; chunk +211 B, `build:check` vert. Le « 306-422 ms » de l'explorateur était mesuré _avant_ rendu-01, qui absorbait déjà les sanitize                                                                   | `d64ecbc` |
+| **data-02**   | `refetchOnWindowFocus`/`refetchOnReconnect` au défaut `true` avec `staleTime` 30 s : chaque retour d'onglet > 30 s relançait toutes les queries montées (9 sur /dashboard, dont une _écriture_ SQL)                    | ✅ confirmé par le sceptique, voie B                    | Sonde Testing Library (vrai `query-core` 5.105, 9 queries, `Date` truquée, `visibilitychange`/`online` dispatchés) : **36 → 9** appels de `queryFn` pour des retours à +20/+31/+62 s et une reconnexion à +93 s ; seuil de _reprise_ 5 min (`query-resume.ts`), `staleTime` et `refetchOnMount` intacts ; classement (5) et salon duel (3) en opt-in `true`, joueur en opt-out                                                                                    | `20df36e` |
+| **bundle-04** | **H2-fe** : catalogue trilingue 192 215 B / 66 303 gz importé statiquement par `index` et préchargé sur chaque page, pour une seule langue utile                                                                       | ✅ confirmé par le sceptique, voie B                    | `i18n-fr` 62 403 / 22 938 gz (seul statique, seul préchargé, meta inclus), `i18n-en` 55 502, `i18n-ar` 74 476 derrière `import()` ; par élève sur le chemin critique **FR −129 812 B bruts / −43 331 gz**, AR −55 336 ; Chromium 3G (cookie ar, `/`) : JS 373 → 354 KB, premier texte arabe 4 334 → 4 041 ms médian, chunk ar reçu ≈ 500 ms avant l'effet post-montage. Budgets 64/60/76 KiB                                                                      | `ac44de0` |
+| **data-03**   | `getDashboard` : un `Promise.all` puis 8 `await` en série sans dépendance (builder postgrest-js = thenable paresseux, chaque `await` isolé = un aller-retour) ; `get_learning_state` exécuté deux fois                 | ✅ confirmé par le sceptique, voie B                    | Sonde à horloge logique, scénario le plus long : 14 lectures, **10 → 2 vagues** (le sceptique corrige le constat : pas d'« étage C », remédiation et consolidation étaient déjà parallèles) ; doublon client supprimé (server fn `getLearningState` retirée, l'état arrive en prop) ; chunks dashboard 36 769 → 36 679 B, learning-panels 10 066 → 9 975 B ; **db-02** est le même constat, clos                                                                  | `2ed3a51` |
+| **bundle-03** | La signature « نقرا نلعب » en `font-arabic` déclenchait via `unicode-range` la face Noto Kufi complète (123 688 B, woff2 incompressible) sur chaque page publique, mobile compris (span du pied de page sans `hidden`) | ✅ confirmé par le sceptique, voie B — volet (a) réfuté | Chromium, `/` et `/programme`, 375/1280, cookie absent/ar : fontes **157 776 → 40 880 B** par page publique (−74 %) ; sous-police variable 35 glyphes / 6 792 B, équivalence HarfBuzz prouvée à wght 400/600/700 ; pin réseau dans `smoke:shell` (requête de la face complète interdite, contrôle négatif joué). Le preload conditionnel `ar` de la face complète (volet a) est **réfuté** : aucun consommateur runtime, 124 KB en haute priorité sur chaque page | `c707461` |
+| **ssr-01**    | Tout `public/` (fontes, icônes, favicon, manifest) servi au défaut Vercel `max-age=0, must-revalidate` : un 304 par fichier à chaque chargement complet, FOUT puis échange de police                                   | ✅ confirmé par le sceptique, voie B (impact 4 → 3)     | Prod 2026-11-03 (`curl`) : `max-age=0` sur tout `public/`, `/assets/<hash>` bien `immutable` ; 304 à **0,050 s sur connexion réutilisée** (le « 420-590 ms » du run 1 incluait le TLS d'une connexion neuve — d'où l'impact revu à la baisse). Après : 6 routes dans `scripts/vercel-routes.mjs` (module pur, testé) — `/fonts/*` immutable 1 an, icons/favicon/manifest 1 j + SWR 7 j, `sw.js`/`offline.html`/`robots.txt`/HTML au défaut (voulu pour un SW)     | `2122bb1` |
+
+Gates : chaque lot est passé par prettier, `eslint --max-warnings 0`, `tsc` (app + scripts) et
+les suites concernées ; les lots de voie B par la suite complète (jusqu'à 367 fichiers /
+4 842 tests), `build:check` (16 budgets, index 448,85 / 456 KiB) et `smoke:shell` ; ssr-01 par
+`npm run verify` entier. Aucune migration hormis db-01 (additive, `db:check-chain` + pgTAP).
+Aucun budget relevé — bundle-04 en _remplace_ un (188 KiB) par trois plus bas.
+
+### Réfuté — et pourquoi
+
+**ssr-02 — « la fonction Vercel n'a pas `supportsResponseStreaming: true`, donc la plateforme
+tamponne le flux SSE du tuteur ».** Ce qui est exact : `.vc-config.json` ne porte pas le
+drapeau (aucune occurrence, `git log -S` vide), l'adaptateur relaie bien chunk par chunk
+(harnais scratch rejoué sous Node 24 : 4 trames reçues à +24 / +323 / +623 / +923 ms,
+`transfer-encoding: chunked`), et rien ne teste l'adaptateur sous Vercel. Ce qui ne tient pas :
+le _mécanisme de coût_ (« drapeau absent = invocation tamponnée ») est une **inférence** tirée
+d'une ligne de doc qui ne décrit que le cas `true`, contredite par trois sources Vercel
+concordantes — le changelog du 2024-07-04 (« streaming enabled by default for all Node.js
+Vercel Functions », Hobby depuis le 2024-07-08, Pro depuis le 2024-10-01), le guide Express
+(signature `(req, res)`, la forme de notre adaptateur : « stream responses by default on
+Node.js »), et le code ouvert de `@vercel/build-utils` (`get-lambda-supports-streaming.ts`,
+PR #15795 : `launcherType === 'Nodejs'` ⇒ `supportsStreaming: true` quand le drapeau est
+absent ; PR #16274 : les lambdas à drapeau `undefined` sont « silently flipped to true »).
+Notre config (launcher `Nodejs`, pas d'`awsLambdaHandler`) est donc déjà streamée ; les
+« 3-6 s d'écran vide » n'avaient pas été mesurés (le flux exige un Bearer élève et une clé
+IA). Par défaut du sceptique, trois sources contre une inférence : **rien à livrer**. Pour une
+certitude plutôt qu'une documentation : DevTools → Network → `POST /api/tutor/stream` →
+EventStream, les trames `token` doivent arriver une à une. Si un jour cette mesure montrait
+TTFT = TTLT, le correctif durci est consigné dans le verdict (drapeau explicite + catch
+`headersSent` + contre-pression `drain`/`close`). L'argument annexe (« la limite 4,5 MB ne
+s'applique qu'aux réponses non streamées ») ne tient pas non plus : la page Limits l'énonce
+sans exemption.
+
+Corrections de moindre portée, par le sceptique ou l'implémenteur, qui valent d'être
+rejouées avant de re-proposer un constat :
+
+- **bundle-03 (a)** — le preload conditionnel `ar` de la face Noto Kufi complète : réfuté,
+  voir le tableau.
+- **data-03** — « 3 étages » : le graphe réel n'en a que 2 ; db-02 (vue SQL du même constat)
+  avait raison sur le nombre, et se clôt avec le lot.
+- **ssr-01** — le 420-590 ms par 304 était du TLS de connexion neuve ; 50 ms sur connexion
+  ouverte, ≈ 1 RTT PoP (80-250 ms mobile). Réel, modeste, impact 4 → 3.
+- **rendu-02** — les 306-422 ms par tap de l'explorateur étaient mesurés avant rendu-01 ; le
+  lot ne supprime « que » le travail React restant (33 → 2,2 ms).
+- **db-01, deux A/B perdants à ne pas refaire** : `chapter_progress_ref` réécrite en
+  `LATERAL MAX` est **10 × plus lente** (MAX via index `(user, completed_at)` + filtre
+  `exercise_id`), et une version LATERAL de `get_subject_progress` aussi (1 s). Seul
+  `WITH ref AS MATERIALIZED` est prouvé.
+
+### À arbitrer — décisions produit ou d'architecture, pas des patchs
+
+| ID                     | Ce qui est établi                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Question au propriétaire                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **ssr-04** (= **H-3**) | Le cache CDN des pages publiques est bloqué par **trois** choses précises : nonce CSP par requête, shell dépendant des cookies locale/thème, clé de cache Vercel aveugle aux cookies. Enjeu : visiteur anonyme (SEO, lien partagé) — TTFB mesuré 370-1 050 ms depuis les États-Unis pour 3,7-7,6 KB br, ≈ 150-250 ms estimés à chaud depuis la Tunisie, contre ~50-100 ms pour un HIT au PoP. Les élèves connectés n'y gagneraient rien (leurs données n'arrivent pas dans le HTML, C1-fe) | Trois voies : **(A)** saine — routes publiques en rendu tamponné (le shell se rend en 5-40 ms, sans loader) + CSP par hachage `'sha256-…'` au lieu du nonce, variantes (locale, thème) par route `has: cookie`, `s-maxage=300, stale-while-revalidate=3600` ; **(B)** accepter la réutilisation d'un nonce pendant un `s-maxage` court (60 s) — contredit GAP-022, à inscrire au journal des décisions si retenu ; **(C)** ne rien cacher et traiter la latence par ssr-05. Ne pas glisser (B) dans un patch perf. |
+| **bundle-05**          | Le corps SSR est toujours en français : un élève arabophone voit du français mis en page RTL jusqu'à l'hydratation (3-5 s en 3G sur mobile bas de gamme). bundle-04 a préparé le terrain (`loadCatalogue` exposé) ; il reste à attendre le chunk de locale avant `hydrateStart` quand le cookie n'est pas `fr`                                                                                                                                                                             | Changement **visible** (la première peinture change de langue — amélioration, zéro gameplay). On l'assume comme tel, dans son propre lot ?                                                                                                                                                                                                                                                                                                                                                                         |
+| **rendu-04**           | `AnimatePresence mode="wait"` impose ~300-430 ms de sortie + entrée par question : ≈ 3-4 s d'attente incompressible par mission de 10, ≈ 2 s par lot de 5 au donjon, sur tous les appareils ; un e2e dépend de l'ordre actuel                                                                                                                                                                                                                                                              | Fondu croisé court (`popLayout`/`sync`, 0,12-0,15 s) ou échange instantané avec entrée seule ? C'est ce que l'élève voit : à trancher, pas à glisser.                                                                                                                                                                                                                                                                                                                                                              |
+| **rendu-05**           | `GoldAmbient` : trois halos `blur-3xl` (σ ≈ 64 px) dont deux animés en boucle, fixés derrière chaque écran connecté, quête et donjon compris — coût GPU **estimé** 1-3 ms/frame sur un Mali/Adreno d'entrée de gamme, **non mesuré**                                                                                                                                                                                                                                                       | D'abord une trace Performance sur un Android milieu de gamme avant/après ; si le temps GPU est négligeable, clore avec le chiffre (précédent L4). Sinon : statique sur tactile, ou dégradé sans filtre — nuance décorative à accepter.                                                                                                                                                                                                                                                                             |
+
+H2 (`ORDER BY random()` du donjon) et M2 (`get_dungeon_access`) restent les décisions produit
+du §0 : définitions relues, mesures de 2026-08 toujours valables.
+
+### Non instruits cette passe — le backlog de la prochaine, par impact décroissant
+
+Un correctif en une ligne par constat, tel que l'explorateur l'a proposé ; **aucun n'a été
+relu par un sceptique** — c'est la première chose à faire avant de l'implémenter.
+
+| ID                                      | Impact | Effort | Constat                                                                                                                                                                                              | Correctif proposé (non relu)                                                                                                                                                                                                                                                    |
+| --------------------------------------- | ------ | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **data-05**                             | 4      | M      | Démarrer une quête = `getExercise` (4 sauts en série) _puis_ `startExerciseSession` : 2 allers-retours mobiles successifs (≈ 500-900 ms) avant la première réponse possible                          | Mode « eager » dans `useExerciseSession` (la route connectée lance `mutate` au montage sans attendre `data`, gardes `startedForRef`/`startGate` conservées) ; dans `getExercise`, joindre `chapters(…)` et l'inventaire dans le premier `Promise.all`                           |
+| **data-04**                             | 3      | S      | Charge morte dans le payload du tableau de bord : `otherSubjects` jamais lu (≈ 25 KB), 49 lignes de `recent` inutiles, `pendingSpacedReps` jamais lu, `getDailyRing` relit `profile`                 | Retirer `otherSubjects`, `.limit(1)` sur `recent`, retirer la lecture SRS de `getSprint2Dashboard`, dériver l'anneau du jour de `data.profile` ; même objet de retour que data-03 — à enchaîner après `2ed3a51`                                                                 |
+| **data-06**                             | 3      | S      | Le catalogue (matière, chapitre, exercice) est caché comme de la donnée vive (staleTime 30 s / gcTime 5 min), clés sans identité de viewer, `["lesson"]` jamais invalidé                             | `staleTime` 15 min / `gcTime` 30 min sur subject/lesson, clé par viewer (`user?.id ?? "anon"`), `invalidateQueries(["lesson"])` à côté de `["subject"]` au succès de `submitAttempt`                                                                                            |
+| **data-07** (= **C1-fe**, volet client) | 3      | M      | Aucun loader de route : chunk de route, _puis_ montage, _puis_ query — ≈ 150-400 ms par navigation SPA vers /dashboard, /quest, /matiere                                                             | `ssr: false` + `loader` appelant `ensureQueryData` avec les mêmes `queryOptions()` que le composant, erreur d'auth avalée pour laisser `_authenticated` rediriger ; `defaultPreload: "intent"`. Gain nul au premier chargement (C1-fe reste bloqué par l'auth, §0)              |
+| **bundle-01**                           | 3      | M      | `@dnd-kit` (43 KB bruts / 14 KB gz) dans le graphe de démarrage de tout le monde : React est capturé par le groupe `vendor-dndkit`                                                                   | Migrer `manualChunks` vers `codeSplitting.groups` avec `vendor-react` déclaré en premier (priorité 100) — piège mesuré : `includeDependenciesRecursively: false` refusé par l'env SSR tant que `preserveEntrySignatures` est `strict` ; puis _abaisser_ le plafond `index-`     |
+| **bundle-06**                           | 3      | M      | Aucun cache inter-déploiements : 380 KB de runtime vivent dans `index`, dont le hash change à chaque commit — ≈ 100 KB gz retéléchargés par élève et par déploiement                                 | Même migration que bundle-01 (`vendor-react`, `vendor-tanstack`) ; SW : dériver `VERSION` du build ou purger les `/assets/*` absents du manifeste à l'activation (≈ 2 Mo d'orphelins par déploiement aujourd'hui)                                                               |
+| **bundle-07**                           | 3      | M      | `vendor-supabase` (209 KB) embarque realtime, phoenix, storage, functions, iceberg (≈ 85 KB bruts / 22 KB gz) au démarrage — seul auth-js est nécessaire hors duel                                   | Composer le client sans `createClient` (`GoTrueClient` + `PostgrestClient`), `RealtimeClient` paresseux dans `use-duel-channel.ts` ; sur le chemin d'auth : garde-fous `auth-middleware.jwks-cache.test.ts` + e2e de session                                                    |
+| **rendu-03**                            | 3      | S      | `backdrop-blur-xl` (24 px) sur la barre d'onglets fixe, l'en-tête, la carte de question, les cartes du QG — recalculé à chaque frame, et **invisible** sur le thème par défaut (surfaces opaques)    | Étape pixel-identique : `dark:backdrop-blur-xl` sur toute surface opaque en thème `reference` ; étape 2 (nuance à accepter) : `backdrop-blur-md` en `dark`, aucun filtre sur la carte qui glisse. Coût GPU estimé, à tracer                                                     |
+| **db-06**                               | 3      | M      | Ouvrir un exercice = 3 server fns et ~15 requêtes, dont un `getSubject` complet (avec `get_subject_progress`, 40-150 ms de SQL) rejoué pour le seul id de « Suivant »                                | Hisser inventaire, quiz du chapitre et vidéos dans le premier `Promise.all` ; pour « Suivant », un server fn léger (catalogue ordonné, sans progression) ou la donnée déjà en cache `["subject", id]`                                                                           |
+| **data-08**                             | 2      | S      | `getChapterLesson` (page publique la plus lue) : 3-4 sauts en série là où 2 suffisent                                                                                                                | Étage 1 `Promise.all([chapter, exercisesByChapter, isUnrestrictedViewer])`, étage 2 `[siblings, siblingsWithLesson, attempts si quizGated]` — même résultat, −10-40 ms de TTFB                                                                                                  |
+| **bundle-08**                           | 2      | S      | Aucun préchargement de route à l'intention ; `defaultPreloadStaleTime` est une option morte                                                                                                          | `defaultPreload: "intent"` dans `createRouter` ; `"viewport"` pour la barre d'onglets mobile (≈ 118 KB prélevés) est un choix de consommation de données, à arbitrer                                                                                                            |
+| **db-04**                               | 2      | S      | `check_rate_limit` purge la table entière dans 1 % des écritures (`random() < 0.01`) : mesuré 71 ms / 64 097 buffers en Seq Scan avec 60 k lignes périmées, payé par un élève au hasard (p99)        | Migration additive : `cron.schedule('purge-rate-limit-events', '17 * * * *', …)` et ré-émission de `check_rate_limit` sans le bloc `random()` — la RPC redevient déterministe. Partie « purge » de **C-2** ; la porte locale (L-1) reste à part                                 |
+| **db-05**                               | 2      | S      | Badges polyglot / math_master : l'agrégat non borné sur tout l'historique (patron H3) est revenu dans `submit_exercise_attempt` via `badges_alive` — 2,2 ms sur 7 ms de soumission à chaud, linéaire | Ré-émission additive avec `IF NOT EXISTS (… student_badges … code = 'polyglot')` autour de chaque bloc (0,02 ms) ; résultat identique, `award_badge_if_new` n'insère déjà rien                                                                                                  |
+| **db-07**                               | 2      | S      | `subject_leaderboard_totals` ré-agrégée sur toutes les tentatives toutes les 5 min, activité ou non : 537 ms à 105 k tentatives, linéaire (prod = 270 lignes le 2026-08-19 : constat de cible)       | Wrapper `refresh_subject_leaderboard_if_dirty()` comparant `max(completed_at)` au dernier refresh ; la variante incrémentale par trigger (temps réel) est une décision produit                                                                                                  |
+| **ssr-05** (= **H-1**, part mécanique)  | 2      | M      | Démarrage à froid mesuré : ~170 ms d'évaluation de modules + 100-200 ms de première requête, sur un froid total de 0,5-0,8 s ; UptimeRobot (5 min) garde déjà une instance tiède                     | Crons et tuteur en `await import()` (−15-25 ms), `build.minify` SSR avec `keepNames` (−20-30 ms), exclure `vendor-three-*`/`hero-warrior-*`/`styles-*.css` du paquet (−0,5 MB de zip) : **50-80 ms au total, pas plus**. Le reste de H-1 est du non-code (fluid compute / plan) |
+| **rendu-06**                            | 1      | S      | Providers racine non mémoïsés + racine re-rendue à chaque navigation : impact **nul aujourd'hui** (mesuré), mais rendu-02 a introduit le premier `memo` du dépôt — le piège est désormais armé       | `useMemo` sur les trois valeurs de contexte, `Route.useRouteContext({ select })` à la racine                                                                                                                                                                                    |
+| **rendu-07**                            | 1      | S      | `useAuth()` est un hook par composant : 3 abonnements et 3 parsings de session par écran connecté, N re-rendus par événement auth                                                                    | Un `AuthProvider` sous `QueryClientProvider`, `useAuth` devient un `useContext` à signature identique (14 sites inchangés)                                                                                                                                                      |
+| **db-08**                               | 1      | S      | `attempts` porte 9 index B-tree dont 2 strictement redondants (`idx_attempts_user`, `idx_attempts_subject` : 7 % du volume d'index, 2/9 du travail par INSERT)                                       | **Destructif** (DROP INDEX CONCURRENTLY) ⇒ merge séparé (DoD §7), après lecture de `pg_stat_user_indexes.idx_scan` en prod                                                                                                                                                      |
+
+Clos sans lot propre : **db-02** (doublon de data-03, voir le tableau des livrés).
+
+**Reliquats des lots livrés** (ouverts par construction, à ne pas redécouvrir) :
+db-03 partie (2) — ré-émettre `submit_exercise_attempt` avec `PERFORM ensure_daily_weekly_goals`
+en tête et `'mode'` dans le JSON, puis retirer l'appel TS dans un second merge (4 → 3 étapes
+série) ; db-01 — `get_subject_progress` appelle encore `chapter_star_rungs` trois fois par
+chapitre ; bundle-02 — le refus `schemas-` est nominal (nom de chunk), un audit des autres
+barrels atteignables par le client vaudrait d'être mené ; data-02 — fenêtre 30 s-5 min pour
+une donnée modifiée par un _autre_ acteur (parent, admin), et le chunk dashboard à
+35,90 / 36,00 kB ; bundle-04 — un module partagé entre `fr` et `en`/`ar` ramènerait `ar`
+dans le graphe statique sans rougir le budget (gardé par `catalogues.test.ts` seulement) ;
+bundle-03 — `check-overflow.mjs` mesure les SVG arabes en Noto Kufi alors que l'app les rend
+en police système ; ssr-01 — confirmer les en-têtes en prod après merge (`curl -sI …/fonts/…`
+→ `immutable`) et suivre le CLS des chargements répétés dans le RUM.
+
+### Relu et trouvé sain — ne pas refaire
+
+Condensé des notes d'axe (le détail, avec les lignes citées, est dans
+`/home/user/.scratch-perf-optim/run1/axes.json` le temps de la passe ; ce qui suit est ce
+qu'il faut savoir pour ne pas re-proposer).
+
+- **Couche données.** `useAuth` instancié 3 × par écran mais `getSession()` est une lecture
+  localStorage sous `navigator.locks`, zéro réseau sauf jeton à < 90 s ; me-role, me-stats et
+  les queries de route partent en parallèle dès que `loading` retombe, aucune cascade. Clés
+  dédupliquées (`["dashboard"]` partagée par /dashboard, /parcours, /boutique) ; `checkQuestion`
+  = 1 POST par réponse, c'est le retour immédiat (décision produit) ; `useLearningPulse` 1
+  RTT/min. Pas de N+1 `for … await` dans les server fns ; le seul `Promise.all(rows.map(rpc))`
+  est l'entitlement premium, dormant (M3 latent). H1-media remesuré sur 4 448 exercices :
+  payload médian 2,7 KB, p90 6,3 KB, 17,5 % portent du SVG — longue traîne, pas la médiane.
+  Écart mineur non classé : `useProfileLocaleSync` POSTe `set_profile_locale` à chaque
+  chargement à froid même sans changement.
+- **Bundle.** Le HTML SSR émet `modulepreload` pour tout le graphe de démarrage et les chunks
+  de la route appariée : pas de cascade au premier écran ; routes auto-découpées (dungeon
+  15 KB, panneaux lazy) ; scène 3D gardée `mounted && !isMobile && !reduce` ; `schemas`,
+  `bidi`, `quest-labels`, `daily-dashboard` hors démarrage. Composition d'`index` (sourcemap) :
+  90 % de runtime (react-dom 171 KB, router 58, sonner 33, query 32, tailwind-merge 27,
+  seroval 24), ≈ 60 KB d'applicatif — le « vrai découpage » est bundle-01/06, pas applicatif.
+  `vendor-motion` (122 KB) irréductible sans décision produit (importé par 60 chunks dont
+  `_public`/`_authenticated`) ; sonner, tailwind-merge, seroval idem. CSS 135 KB / 20 KB gz :
+  rien à purger (219 `@supports` = replis color-mix de Tailwind 4). Piège confirmé : retirer
+  une règle `manualChunks` fait passer son plafond en « skipped » sans rougir
+  (`check-bundle-budget.mjs:218`).
+- **Rendu.** Minuteurs (`BossChrono`, `ExamCountdown`) à état local 1 Hz ; pulse, autosave et
+  flush d'examen en refs ; seuls polls : matchmaking et duel actif à 3 s (produit). Lecteur :
+  H3-fe bien clos, mélange d'options et index mémoïsés, clés stables, aucun `layout`/`layoutId`.
+  Tableau de bord sans `Date`/localStorage en boucle de rendu, sections lourdes en `lazy()`.
+  Reduced-motion coupe les keyframes infinies, `entrance()` renvoie `initial: false`, confetti
+  ne rend rien. Images/CLS : hero `<picture>` lazy dimensionné, poster vidéo en `aspect-video`.
+  M3-fe (classement) toujours atténué par `content-visibility` + stagger plafonné.
+- **Base.** Chaîne de 222 migrations rejouée (pgTAP 1 575 verts) sur PG16 jetable, synthétique
+  à 2 000 élèves / 105 k tentatives — ⚠️ le premier jeu était dégénéré (LATERAL `random()`
+  évalué une fois ⇒ toutes les tentatives sur un exercice) et gonflait `get_subject_progress` à
+  450 ms ; tout a été re-semé. RLS : C1 bien clos, `($0 = user_id) OR is_admin()` ordonné arme
+  bon marché d'abord. `get_user_subject_stats` 2,7 ms, `get_daily_plan` 7,3 ms (L4 confirmé),
+  `get_attempt_review` 1,5-2,3 ms, `start_exercise_session` 1,2-1,9 ms, `check_rate_limit` SQL
+  0,1-0,3 ms (le coût de C-2 est l'aller-retour, pas la requête), `submit_exercise_attempt`
+  7 ms à chaud / 23-32 ms à froid, chaîne `FOR UPDATE` de M1 sans coût mesurable (`award_xp`
+  0,44 ms), 3 triggers ligne de `question_attempts` ≈ 0,6 ms/réponse (acceptable, 4
+  écrivains ⇒ pas de passage en triggers d'instruction). H2 et M2 : définitions relues
+  (`get_dungeon_questions` ré-émise le 2026-09-13 mais même tirage), mesures de 2026-08
+  valables. `isRateLimited` a **24** sites d'appel aujourd'hui (l'audit en comptait 8).
+- **SSR / infra.** Ordre des gardes de `server.ts` en µs, bot-guard ~66 `includes` + Map IP
+  plafonnée à 5 000, `supabaseAdmin`/`supabase` en Proxy paresseux (zéro coût au boot) ;
+  `/sitemap.xml` en `s-maxage=3600` (payé par les crawlers) ; `/api/health` `no-store`, sonde
+  3 s, UptimeRobot 5 min = maintien tiède gratuit ; `content-encoding: br` sur le HTML SSR
+  (/programme 13 KB → 3,7 KB) ; rendu du shell à chaud 5-44 ms selon la route — le coût est
+  le réseau et le froid, pas le rendu ; `web-vitals.ts` un événement par vue en `keepalive`,
+  `monitoring.ts` no-op sans DSN ; SDK Anthropic importé dynamiquement, `vendor-three` jamais
+  évalué côté serveur ; M-2 (`waitUntil`) et L-1 relus, inchangés. Expériences non retenues :
+  minification SSR seule (−20-30 ms, intégrée à ssr-05), cache de bytecode V8 (dépend de la
+  plateforme). **Hors axe, constaté** (observabilité, pas perf) : `error-capture.ts` s'abonne
+  via `globalThis.addEventListener`, `undefined` sous Node — sur Vercel
+  `consumeLastCapturedError()` rend toujours `undefined` et la réponse catastrophique
+  journalise l'erreur générique.
+
+**Méthode, à retenir pour la prochaine passe.** Trois mécanismes nouveaux valent une règle :
+(1) le compilateur TanStack Start ne retire des stubs client que `.validator()`/`.handler()` —
+tout schéma zod construit au niveau module embarque zod entier (bundle-02) ; (2) rolldown fusionne
+un module partagé entre chunks de locale dans le chunk de la dernière locale, qui revient alors
+dans le graphe statique (bundle-04, mesuré avec `meta.ts`) ; (3) depuis PG 12, une CTE
+référencée une fois est aplatie, et une fonction STABLE dans le `FILTER` d'un agrégat est
+réévaluée par ligne (db-01). Et une règle de passe : **un constat SSR/infra se mesure depuis
+le bon PoP** — ce conteneur sort en `iad1` → `arn1`, ses TTFB sont ceux d'un visiteur
+américain ; les chiffres « Tunisie » sont des estimations, nommées comme telles.
+
+---
+
 ## 1. Executive summary
 
 The architecture is **correct and reasonably mature** for its current size: hot
@@ -948,20 +1159,31 @@ _Status stamped 2026-08-10._
 - **H2** Replace dungeon `ORDER BY random()` with sampled selection. **M**
 - **M4/M2** Move `getDashboard` + `get_dungeon_access` aggregates into GROUP BY
   RPCs / cached counters. **M**
-- **C-2** Local-first rate-limit gate + `rate_limit_events` prune/partition. **M**
-- **C1-fe** SSR route loaders (`ensureQueryData`) for the auth→profile→data chain. **M**
+- **C-2** Local-first rate-limit gate + `rate_limit_events` prune/partition. **M** —
+  🟠 **réduit 2026-10-31** : les lectures préparatoires de `submitAttempt`/`submitDungeonAnswer`
+  partent avec la RPC (`932584d`, §0-ter db-03) ; la purge `random()` est chiffrée (db-04,
+  71 ms en Seq Scan, à déplacer sur `pg_cron`) ; la porte locale reste à faire.
+- **C1-fe** SSR route loaders (`ensureQueryData`) for the auth→profile→data chain. **M** —
+  ⬜ le volet _client_ (loader `ssr: false`, −150-400 ms par navigation SPA) est data-07 au
+  backlog §0-ter ; le volet SSR reste bloqué par l'auth (§0).
 
 ### Phase 3 — Edge, caching, and the media tier
 
-- **H-3** Edge-cache the public catalogue/landing (cacheable anon variant). **M–L**
-- **H2-fe** Per-locale i18n code-split; **M4-fe** code-split the dungeon route. **M**
+- **H-3** Edge-cache the public catalogue/landing (cacheable anon variant). **M–L** —
+  🟠 **à arbitrer 2026-11-03** (§0-ter ssr-04) : trois bloqueurs nommés (nonce CSP, shell
+  cookie-dépendant, clé de cache aveugle aux cookies), trois voies, la seule saine est une CSP
+  par hachage avec rendu tamponné — décision d'architecture, pas un patch.
+- ✅ **H2-fe done 2026-10-31** (`ac44de0`, §0-ter bundle-04) — `i18n-fr`/`en`/`ar` par
+  locale, `fr` seul statique, budgets 64/60/76 KiB ; **M4-fe** was false (§0). **M**
 - **§5** Stand up the media architecture: images (sanitizer + CDN), externalize
   SVG, then **audio**, then video (HLS). **L**
 
 ### Phase 4 — Resilience & global reach
 
 - **H-1** Provisioned concurrency / warm-keeping; evaluate multi-region or Edge
-  runtime vs the Supabase region pin. **L**
+  runtime vs the Supabase region pin. **L** — **mesuré 2026-11-03** (§0-ter ssr-05) : froid =
+  ~170 ms de modules + 100-200 ms de première requête sur 0,5-0,8 s ; les leviers dans le
+  dépôt valent 50-80 ms au total, le reste est du non-code (plan / fluid compute).
 - **L-1** Move IP burst-limiting to the edge (Cloudflare). **M**
 
 ---
@@ -970,31 +1192,36 @@ _Status stamped 2026-08-10._
 
 _Status column stamped 2026-08-10 (§0). "?" = not re-verified in that pass._
 
-| ID                                        | Tier    | Sev  | One-line                                                     | Status           |
-| ----------------------------------------- | ------- | ---- | ------------------------------------------------------------ | ---------------- |
-| C1                                        | DB      | CRIT | per-row `EXISTS` + un-wrapped `auth.uid()` in `profiles` RLS | ✅ closed        |
-| C-1                                       | Infra   | CRIT | fresh client + `getClaims` per server fn                     | ❌ retired       |
-| C-2                                       | Infra   | CRIT | rate-limit DB round-trip before every write                  | ⬜ open          |
-| C1-fe                                     | FE      | CRIT | no SSR prefetch — client-side waterfall                      | ⬜ open          |
-| C2-fe                                     | FE      | CRIT | 245 KB unoptimized hero JPG, LCP                             | ✅ closed        |
-| H1                                        | DB      | HIGH | global leaderboard ranks all profiles per call               | ✅ closed        |
-| H2                                        | DB      | HIGH | dungeon `ORDER BY random()` over full join                   | ⬜ open          |
-| H3                                        | DB      | HIGH | unbounded per-user aggregates on write path                  | ✅ closed        |
-| H4                                        | DB      | HIGH | missing `attempts(user_id, exercise_id)` index               | ✅ closed        |
-| H-1                                       | Infra   | HIGH | single cold single-region SSR function                       | ⬜ open          |
-| H-2                                       | Infra   | HIGH | scaling load relocates to PostgREST/Auth                     | ⬜ open          |
-| H-3                                       | Infra   | HIGH | no edge/CDN cache for public catalogue                       | ⬜ open          |
-| H2-fe                                     | FE      | HIGH | all 3 i18n locales bundled eagerly                           | ⬜ open          |
-| H3-fe                                     | FE      | HIGH | `renderMarkdown` re-runs DOMPurify per render                | ✅ closed        |
-| H1-media                                  | Content | HIGH | inline SVG ships on every question fetch                     | ⬜ open          |
-| H2-media                                  | Content | HIGH | `getChapterLesson` over-fetches sibling markdown             | ✅ closed        |
-| M1-fe                                     | FE      | MED  | vendor chunks with no bundle budget                          | ✅ closed        |
-| M4                                        | DB      | MED  | `getDashboard` aggregates a full attempt history in JS       | ✅ closed        |
-| **N1**                                    | Tooling | HIGH | `npm ci` fails on Node 22 — lock needs npm ≥ 11              | ✅ closed (#718) |
-| **N2**                                    | Quality | MED  | false "generated" header on `auth-middleware.ts`             | ✅ closed        |
-| **N3**                                    | CI      | MED  | current `main` has no `ci.yml` run                           | ⬜ open          |
-| M1–M3, M5 (DB), M-2–M-3 (Infra), M2–M3-fe | mixed   | MED  | see §3 — all swept 2026-08-10, table in §0                   | ⬜ open          |
-| L-\*                                      | mixed   | LOW  | see §3 — L1/L4/L-1 swept 2026-08-10, table in §0             | ⬜ open          |
+| ID                                                                                                           | Tier    | Sev  | One-line                                                     | Status                                   |
+| ------------------------------------------------------------------------------------------------------------ | ------- | ---- | ------------------------------------------------------------ | ---------------------------------------- |
+| C1                                                                                                           | DB      | CRIT | per-row `EXISTS` + un-wrapped `auth.uid()` in `profiles` RLS | ✅ closed                                |
+| C-1                                                                                                          | Infra   | CRIT | fresh client + `getClaims` per server fn                     | ❌ retired                               |
+| C-2                                                                                                          | Infra   | CRIT | rate-limit DB round-trip before every write                  | 🟠 réduit `932584d` (§0-ter)             |
+| C1-fe                                                                                                        | FE      | CRIT | no SSR prefetch — client-side waterfall                      | ⬜ open (volet client = data-07, §0-ter) |
+| C2-fe                                                                                                        | FE      | CRIT | 245 KB unoptimized hero JPG, LCP                             | ✅ closed                                |
+| H1                                                                                                           | DB      | HIGH | global leaderboard ranks all profiles per call               | ✅ closed                                |
+| H2                                                                                                           | DB      | HIGH | dungeon `ORDER BY random()` over full join                   | ⬜ open                                  |
+| H3                                                                                                           | DB      | HIGH | unbounded per-user aggregates on write path                  | ✅ closed                                |
+| H4                                                                                                           | DB      | HIGH | missing `attempts(user_id, exercise_id)` index               | ✅ closed                                |
+| H-1                                                                                                          | Infra   | HIGH | single cold single-region SSR function                       | ⬜ open, mesuré 2026-11-03 (ssr-05)      |
+| H-2                                                                                                          | Infra   | HIGH | scaling load relocates to PostgREST/Auth                     | ⬜ open                                  |
+| H-3                                                                                                          | Infra   | HIGH | no edge/CDN cache for public catalogue                       | 🟠 à arbitrer (ssr-04, §0-ter)           |
+| H2-fe                                                                                                        | FE      | HIGH | all 3 i18n locales bundled eagerly                           | ✅ closed 2026-10-31 (`ac44de0`)         |
+| H3-fe                                                                                                        | FE      | HIGH | `renderMarkdown` re-runs DOMPurify per render                | ✅ closed                                |
+| H1-media                                                                                                     | Content | HIGH | inline SVG ships on every question fetch                     | ⬜ open                                  |
+| H2-media                                                                                                     | Content | HIGH | `getChapterLesson` over-fetches sibling markdown             | ✅ closed                                |
+| M1-fe                                                                                                        | FE      | MED  | vendor chunks with no bundle budget                          | ✅ closed                                |
+| M4                                                                                                           | DB      | MED  | `getDashboard` aggregates a full attempt history in JS       | ✅ closed                                |
+| **N1**                                                                                                       | Tooling | HIGH | `npm ci` fails on Node 22 — lock needs npm ≥ 11              | ✅ closed (#718)                         |
+| **N2**                                                                                                       | Quality | MED  | false "generated" header on `auth-middleware.ts`             | ✅ closed                                |
+| **N3**                                                                                                       | CI      | MED  | current `main` has no `ci.yml` run                           | ⬜ open                                  |
+| M1–M3, M5 (DB), M-2–M-3 (Infra), M2–M3-fe                                                                    | mixed   | MED  | see §3 — all swept 2026-08-10, table in §0                   | ⬜ open                                  |
+| L-\*                                                                                                         | mixed   | LOW  | see §3 — L1/L4/L-1 swept 2026-08-10, table in §0             | ⬜ open                                  |
+| **db-01, data-01, rendu-01, bundle-02, db-03 (1), rendu-02, data-02, bundle-04, data-03, bundle-03, ssr-01** | mixed   | —    | passe du 2026-10-31, §0-ter — un commit et une mesure chacun | ✅ livrés (11)                           |
+| **ssr-02**                                                                                                   | Infra   | —    | `supportsResponseStreaming` absent ⇒ SSE tamponné            | ❌ réfuté (§0-ter)                       |
+| **ssr-04, bundle-05, rendu-04, rendu-05**                                                                    | mixed   | —    | décisions produit / architecture, question posée en §0-ter   | 🟠 à arbitrer                            |
+| **data-04…08, bundle-01/06/07/08, rendu-03/06/07, db-04…08, ssr-05**                                         | mixed   | —    | backlog §0-ter, non relus par un sceptique                   | ⬜ ouverts                               |
+| **db-02**                                                                                                    | DB      | —    | même constat que data-03                                     | ✅ clos (doublon)                        |
 
 _No application code was modified by the audit. Remediations ship as separate,
 reviewable changes per the roadmap._
