@@ -79,8 +79,12 @@ function rowsOf(table: string): unknown {
  * test la libère : c'est ce qui permet d'observer combien de lectures sont en vol
  * en même temps. Sans, elle répond au tic suivant, comme un réseau instantané.
  */
-function query(data: unknown, release?: Array<() => void>) {
-  const result = { data, error: null };
+function query(
+  data: unknown,
+  release?: Array<() => void>,
+  error: { message: string } | null = null,
+) {
+  const result = { data, error };
   const chain: Record<string, unknown> = {
     then: (resolve: (v: unknown) => unknown) => {
       if (release) release.push(() => resolve(result));
@@ -99,6 +103,24 @@ const SUBMISSION = {
   answers: [{ questionId: Q1, choice: "4" }],
 };
 
+/** La RPC de barème répond comme en prod ; toutes les autres rendent une liste vide. */
+function rpcHappyPath(name: string) {
+  return {
+    data:
+      name === "submit_exercise_attempt"
+        ? { correct: 1, total: 1, scorePct: 100, xpEarned: 10, coinsEarned: 1, durationSeconds: 9 }
+        : [],
+    error: null,
+  };
+}
+
+/** Le décor d'une soumission dont la lecture des réponses figées ÉCHOUE côté PostgREST. */
+function revealsReadFailing(table: string) {
+  return table === "exercise_session_reveals"
+    ? query(null, undefined, { message: "permission denied for table exercise_session_reveals" })
+    : query(rowsOf(table));
+}
+
 beforeEach(() => {
   mockFrom.mockReset();
   mockRpc.mockReset();
@@ -110,20 +132,7 @@ describe("submitAttempt — les lectures préparatoires partent ensemble", () =>
   it("rate limit, types, réponses figées et mode sont en vol avant qu'aucun n'ait répondu", async () => {
     const release: Array<() => void> = [];
     const issued: string[] = [];
-    mockRpc.mockImplementation((name: string) => ({
-      data:
-        name === "submit_exercise_attempt"
-          ? {
-              correct: 1,
-              total: 1,
-              scorePct: 100,
-              xpEarned: 10,
-              coinsEarned: 1,
-              durationSeconds: 9,
-            }
-          : [],
-      error: null,
-    }));
+    mockRpc.mockImplementation(rpcHappyPath);
     mockIsRateLimited.mockImplementation(
       () => new Promise<boolean>((resolve) => release.push(() => resolve(false))),
     );
@@ -162,6 +171,30 @@ describe("submitAttempt — les lectures préparatoires partent ensemble", () =>
     await expect(
       submit({ ...SUBMISSION, answers: [{ questionId: Q1, choice: "abc" }] }),
     ).rejects.toThrow("Réponse invalide pour ce type de question.");
+    expect(mockRpc).not.toHaveBeenCalled();
+  });
+
+  // Les deux lectures « qui ne rejettent jamais » le sont par construction
+  // (`fetchSessionReveals` dégrade en [] et journalise) — mais `Promise.all` en fait
+  // une hypothèse de la soumission entière : un rejet dans l'une d'elles ferait tomber
+  // la salve et masquerait le refus de débit. Ces deux cas l'épinglent.
+  it("réponses figées illisibles : la soumission passe quand même, sans réponse figée", async () => {
+    mockIsRateLimited.mockResolvedValue(false);
+    mockRpc.mockImplementation(rpcHappyPath);
+    mockFrom.mockImplementation(revealsReadFailing);
+
+    await expect(submit(SUBMISSION)).resolves.toBeDefined();
+    expect(mockRpc).toHaveBeenCalledWith(
+      "submit_exercise_attempt",
+      expect.objectContaining({ p_answers: [{ questionId: Q1, choice: "4" }] }),
+    );
+  });
+
+  it("réponses figées illisibles ET débit dépassé : c'est le refus de débit qui sort", async () => {
+    mockIsRateLimited.mockResolvedValue(true);
+    mockFrom.mockImplementation(revealsReadFailing);
+
+    await expect(submit(SUBMISSION)).rejects.toThrow("Too many submissions. Please slow down.");
     expect(mockRpc).not.toHaveBeenCalled();
   });
 });
