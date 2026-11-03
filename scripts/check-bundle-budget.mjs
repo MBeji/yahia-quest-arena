@@ -209,9 +209,37 @@ function findLatestChunkSize(prefix) {
   return sizes[0];
 }
 
+/**
+ * Chunks INTERDITS côté client — un préfixe qui ne doit exister dans aucun build.
+ *
+ * `schemas-` est zod (`zod/v4/classic/schemas.js`, 81 KB sur les 84 du chunk,
+ * 23,6 KB gzip). Mesuré le 2026-10-31 : il était servi sur /auth, /parametrage,
+ * /suivi et /parent-report, sans qu'un seul `parse` y tourne — le compilateur de
+ * TanStack Start retire les validateurs du stub client, mais pas un schéma
+ * construit au niveau module du fichier (`parent-report.server.ts`,
+ * `insights/daily-report.ts`, `display-name.ts`). Ces schémas vivent depuis dans
+ * des modules `*.schema(s).ts` que seuls les validateurs et les handlers
+ * importent. Si zod devait un jour servir au client, ce serait `zod/mini`
+ * (secouable), et une ligne ici dirait pourquoi.
+ */
+const FORBIDDEN_CHUNKS = {
+  "schemas-": "zod ne doit jamais atteindre un chunk client (2026-10-31)",
+};
+
 let failed = false;
 
 console.log("Bundle budget check:\n");
+for (const [prefix, reason] of Object.entries(FORBIDDEN_CHUNKS)) {
+  const present = readdirSync(clientAssetsDir).filter(
+    (name) => name.endsWith(".js") && name.startsWith(prefix),
+  );
+  if (present.length === 0) {
+    console.log(`- ${prefix}: absent => OK`);
+    continue;
+  }
+  console.log(`- ${present.join(", ")}: forbidden chunk => FAIL (${reason})`);
+  failed = true;
+}
 for (const [prefix, maxSize] of Object.entries(BUDGETS)) {
   const chunk = findLatestChunkSize(prefix);
   if (!chunk) {

@@ -6,7 +6,7 @@ import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
 import { ACCOUNT_DELETE_ERROR_PREFIX, confirmsAccountEmail } from "./account-deletion";
 import type { UserDataExport } from "./data-export";
-import { displayNameSchema } from "./display-name";
+import { displayNameSchema } from "./display-name.schema";
 
 /**
  * Bootstrap the freshly-signed-up user's profile (display name + role).

@@ -1,0 +1,379 @@
+import { z } from "zod";
+
+/**
+ * La forme du rapport quotidien renvoyé par `get_student_daily_report`.
+ *
+ * Le RPC rend un `Json` opaque : on le valide champ par champ, avec un
+ * `.catch()` partout. Un tableau de bord parental n'a pas le droit de tomber en
+ * écran blanc parce qu'un agrégat est arrivé en `null` — il affiche zéro et
+ * continue. C'est la même posture que `studentReportSchema` (bilan famille).
+ *
+ * SERVEUR SEULEMENT (2026-10-31). Ces schémas se construisent au chargement du
+ * module, et zod n'est pas secouable : tant qu'ils vivaient dans `daily-report.ts`,
+ * le barrel `./index` — importé par `daily-dashboard.tsx` pour `formatMinutes` —
+ * expédiait zod entier (84 KB / 23,6 KB gzip) à chaque parent sur /suivi et
+ * /parent-report, pour un `parse` qui ne tourne que dans les server fns. Les
+ * TYPES, eux, restent exposés par `daily-report.ts` (`export type`, effacé à la
+ * compilation) ; seul `parent-report.server.ts` importe ce fichier.
+ */
+
+const numberish = z.coerce.number().catch(0);
+const nullableNumber = z.coerce.number().nullable().catch(null);
+const text = z.string().catch("");
+const nullableText = z.string().nullable().catch(null);
+
+const activityBreakdownSchema = z
+  .object({
+    lesson: numberish,
+    exercise: numberish,
+    quiz: numberish,
+    recall: numberish,
+    arena: numberish,
+    browse: numberish,
+  })
+  .catch({ lesson: 0, exercise: 0, quiz: 0, recall: 0, arena: 0, browse: 0 });
+
+const dailySliceSchema = z.object({
+  date: text,
+  appMinutes: numberish,
+  learningMinutes: numberish,
+  byActivity: activityBreakdownSchema,
+  firstAt: nullableText,
+  lastAt: nullableText,
+  sessions: numberish,
+  exercises: numberish,
+  lessonsRead: numberish,
+  activities: numberish,
+  avgScore: numberish,
+  correct: numberish,
+  questions: numberish,
+});
+
+const lessonViewSchema = z.object({
+  date: text,
+  firstAt: text,
+  at: text,
+  chapterId: nullableText,
+  chapterTitle: text,
+  subjectId: nullableText,
+  subjectName: text,
+  gradeName: nullableText,
+  seconds: numberish,
+  progressPct: numberish,
+  views: numberish,
+  studied: z.boolean().catch(false),
+});
+
+const exerciseRunSchema = z.object({
+  attemptId: text,
+  date: text,
+  at: text,
+  exerciseId: nullableText,
+  exerciseTitle: text,
+  mode: text,
+  variant: text,
+  difficulty: numberish,
+  chapterId: nullableText,
+  chapterTitle: text,
+  subjectId: nullableText,
+  subjectName: text,
+  gradeName: nullableText,
+  durationSeconds: numberish,
+  scorePct: numberish,
+  correct: numberish,
+  wrong: numberish,
+  total: numberish,
+  attemptNo: numberish,
+  previousScorePct: nullableNumber,
+});
+
+const subjectSliceSchema = z.object({
+  subjectId: text,
+  name: text,
+  colorToken: nullableText,
+  /** Le niveau scolaire — sans lui, « Mathématiques » s'affiche quatre fois. */
+  gradeName: nullableText,
+  minutes: numberish,
+  lessons: numberish,
+  exercises: numberish,
+  previousExercises: numberish,
+  avgScore: numberish,
+  scoreDelta: nullableNumber,
+  /**
+   * Couverture du programme — chapitres du catalogue publiés dans la matière, et
+   * ceux que l'élève a terminés. Même règle que la carte `/parcours` qu'il voit.
+   */
+  chaptersTotal: numberish,
+  chaptersCompleted: numberish,
+});
+
+/**
+ * Ce qui MANQUE à un chapitre publié pour compter comme maîtrisé.
+ *
+ * Sans lui, « 3/20 chapitres » est un verdict sans recours : le parent lit un
+ * chiffre bas et n'a aucun moyen de savoir quel geste le ferait monter. Le
+ * 2026-09-04, l'auteur du produit lui-même a lu ce « 3/20 » comme « il a fait 3
+ * chapitres sur 20 » — alors que ses chapitres étaient à « 4/6 missions ».
+ */
+const chapterGapSchema = z.object({
+  subjectId: text,
+  chapterId: text,
+  title: text,
+  missionsTotal: numberish,
+  missionsPassed: numberish,
+  /** Le chapitre porte un quiz de compréhension ET la matière est scolaire. */
+  quizGated: z.boolean().catch(false),
+  /**
+   * Le quiz est validé — ≥ 80 % ET au moins 4 s par question. La seconde moitié
+   * est la porte INVISIBLE : un chapitre à « 6/6 missions » ne compte toujours
+   * pas si le quiz a été expédié, et rien ne le disait nulle part.
+   */
+  quizSatisfied: z.boolean().catch(true),
+  /**
+   * L'ÉTOILE à gagner ensuite (étude 34), lue au grand livre — donc jamais en
+   * recul. `1` par défaut : un chapitre sans étoile inscrite vise la première.
+   */
+  nextStar: numberish.catch(1),
+  /**
+   * Ce qui l'en sépare : missions non comptées de difficulté ≤ `nextStar`, plus le
+   * quiz s'il est encore dû. C'est le chiffre qui TRIE la liste côté serveur — et
+   * le trier à nouveau ici sur le nombre de missions restantes, comme le faisait
+   * la version d'avant, enterrait le chapitre à un seul geste sous ceux qui en
+   * demandaient quatre.
+   */
+  missingForNext: numberish.catch(0),
+});
+
+/**
+ * La DISTRIBUTION des étoiles d'une matière (étude 34, R-13), à côté du compte.
+ *
+ * Bornes CUMULÉES (`star1` = chapitres à l'étoile ≥ 1), telles que la base les
+ * rend ; `starBuckets` en tire les cinq seaux exacts de la barre empilée. Sans
+ * elles, la colonne « Programme » reste la fraction nue qui, le 2026-09-04, s'est
+ * lue « il a fait 3 chapitres sur 20 » alors que les dix-sept autres étaient
+ * largement entamés.
+ */
+const subjectStarsSchema = z.object({
+  subjectId: text,
+  chaptersTotal: numberish,
+  chaptersStarted: numberish,
+  star1: numberish,
+  star2: numberish,
+  star3: numberish,
+  star4: numberish,
+  sealStar: numberish.catch(0),
+  newChapters: numberish.catch(0),
+  newMissions: numberish.catch(0),
+});
+
+const chapterSliceSchema = z.object({
+  chapterId: text,
+  title: text,
+  subjectId: text,
+  subjectName: text,
+  exercises: numberish,
+  avgScore: numberish,
+  correct: numberish,
+  questions: numberish,
+});
+
+const EMPTY_TOTALS = {
+  appMinutes: 0,
+  learningMinutes: 0,
+  byActivity: { lesson: 0, exercise: 0, quiz: 0, recall: 0, arena: 0, browse: 0 },
+  activeDays: 0,
+  sessions: 0,
+  exercises: 0,
+  exercisesPassed: 0,
+  exercisesFailed: 0,
+  correct: 0,
+  wrong: 0,
+  questions: 0,
+  avgScore: 0,
+  avgSecondsPerExercise: 0,
+  avgSecondsPerQuestion: 0,
+  lessonsOpened: 0,
+  lessonsStudied: 0,
+  exerciseSessionsStarted: 0,
+  exerciseSessionsCompleted: 0,
+  avgTriesToPass: 0,
+};
+
+const totalsSchema = z
+  .object({
+    appMinutes: numberish,
+    learningMinutes: numberish,
+    byActivity: activityBreakdownSchema,
+    activeDays: numberish,
+    sessions: numberish,
+    exercises: numberish,
+    exercisesPassed: numberish,
+    exercisesFailed: numberish,
+    correct: numberish,
+    wrong: numberish,
+    questions: numberish,
+    avgScore: numberish,
+    avgSecondsPerExercise: numberish,
+    avgSecondsPerQuestion: numberish,
+    lessonsOpened: numberish,
+    lessonsStudied: numberish,
+    exerciseSessionsStarted: numberish,
+    exerciseSessionsCompleted: numberish,
+    avgTriesToPass: numberish,
+  })
+  .catch(EMPTY_TOTALS);
+
+const dailyReportSchema = z.object({
+  student: z
+    .object({
+      displayName: nullableText,
+      level: numberish,
+      currentStreak: numberish,
+      longestStreak: numberish,
+      lastActiveDate: nullableText,
+    })
+    .catch({
+      displayName: null,
+      level: 0,
+      currentStreak: 0,
+      longestStreak: 0,
+      lastActiveDate: null,
+    }),
+  range: z
+    .object({
+      from: text,
+      to: text,
+      days: numberish,
+      timezone: text,
+      /** Date du tout premier temps mesuré — `null` avant l'instrumentation. */
+      measuredSince: nullableText,
+    })
+    .catch({ from: "", to: "", days: 0, timezone: "UTC", measuredSince: null }),
+  /**
+   * Le périmètre appliqué — et surtout ce qu'il a mis de côté. Un filtre qui
+   * cache sans le dire se lirait comme une chute d'activité.
+   */
+  /**
+   * Les parcours et niveaux que l'élève utilise RÉELLEMENT — calculés sur tout
+   * son historique, pas sur la période affichée : un sélecteur qui se vide quand
+   * on choisit « aujourd'hui » serait inutilisable.
+   */
+  scopes: z
+    .array(
+      z.object({
+        /** `all`, `grade:<uuid>` ou `theme:<slug>`. */
+        key: text,
+        kind: z.enum(["grade", "theme"]).catch("grade"),
+        label: text,
+        /** Sa classe — mise en tête par l'écran. */
+        isCurrent: z.boolean().catch(false),
+      }),
+    )
+    .catch([]),
+  scope: z
+    .object({
+      /** La clé RÉELLEMENT appliquée : « all » si le filtre n'a rien restreint. */
+      applied: text,
+      /** Le libellé du périmètre appliqué, `null` pour « tout ». */
+      label: nullableText,
+      gradeId: nullableText,
+      gradeName: nullableText,
+      /** Faux quand l'élève n'a pas de classe (parcours libre) : rien à filtrer. */
+      hasClass: z.boolean().catch(false),
+      /** Minutes écartées : autres niveaux, extras, et activité sans matière. */
+      excludedMinutes: numberish,
+      excludedExercises: numberish,
+    })
+    .catch({
+      applied: "all",
+      label: null,
+      gradeId: null,
+      gradeName: null,
+      hasClass: false,
+      excludedMinutes: 0,
+      excludedExercises: 0,
+    }),
+  thresholds: z
+    .object({
+      passPct: numberish,
+      studiedSeconds: numberish,
+      studiedPct: numberish,
+      sessionGapMinutes: numberish,
+    })
+    .catch({ passPct: 60, studiedSeconds: 120, studiedPct: 60, sessionGapMinutes: 30 }),
+  days: z.array(dailySliceSchema).catch([]),
+  lessons: z.array(lessonViewSchema).catch([]),
+  exercises: z.array(exerciseRunSchema).catch([]),
+  subjects: z.array(subjectSliceSchema).catch([]),
+  chapters: z.array(chapterSliceSchema).catch([]),
+  /** Au plus 3 par matière, le plus proche du but en premier. */
+  chapterGaps: z.array(chapterGapSchema).catch([]),
+  /** Une entrée par matière du périmètre (étude 34) — absente sur un rapport antérieur. */
+  subjectStars: z.array(subjectStarsSchema).catch([]),
+  totals: totalsSchema,
+  previous: totalsSchema,
+});
+
+export type DailyReport = z.infer<typeof dailyReportSchema>;
+export type DailySlice = z.infer<typeof dailySliceSchema>;
+export type LessonView = z.infer<typeof lessonViewSchema>;
+export type ExerciseRun = z.infer<typeof exerciseRunSchema>;
+export type SubjectSlice = z.infer<typeof subjectSliceSchema>;
+export type ChapterSlice = z.infer<typeof chapterSliceSchema>;
+export type ChapterGap = z.infer<typeof chapterGapSchema>;
+export type SubjectStarsSlice = z.infer<typeof subjectStarsSchema>;
+export type ActivityTotals = z.infer<typeof totalsSchema>;
+export type ActivityBreakdown = z.infer<typeof activityBreakdownSchema>;
+
+export function parseDailyReport(payload: unknown): DailyReport {
+  if (!payload || typeof payload !== "object") {
+    throw new Error("Invalid daily report payload.");
+  }
+  return dailyReportSchema.parse(payload);
+}
+
+/** Le détail d'une tentative — ce que l'enfant a répondu, question par question. */
+const attemptQuestionSchema = z.object({
+  questionId: text,
+  order: numberish,
+  prompt: text,
+  questionType: text,
+  // `{ id, text }` — la forme `BaseOption` du moteur de quête. Indispensable :
+  // la réponse enregistrée est l'IDENTIFIANT de l'option (« b »), qui ne veut
+  // rien dire pour un parent tant qu'on ne le remet pas en face de son libellé.
+  options: z.array(z.object({ id: text, text: text })).catch([]),
+  answer: nullableText,
+  isCorrect: z.boolean().catch(false),
+  /** `null` sur un quiz de compréhension : sa correction n'est jamais révélée. */
+  correctOption: nullableText,
+  explanation: nullableText,
+});
+
+const attemptDetailSchema = z.object({
+  attemptId: text,
+  exerciseId: nullableText,
+  exerciseTitle: text,
+  mode: text,
+  difficulty: numberish,
+  chapterId: nullableText,
+  chapterTitle: text,
+  subjectName: text,
+  contentLanguage: z.string().catch("fr"),
+  completedAt: text,
+  durationSeconds: numberish,
+  scorePct: numberish,
+  correct: numberish,
+  total: numberish,
+  reviewHidden: z.boolean().catch(false),
+  questions: z.array(attemptQuestionSchema).catch([]),
+});
+
+export type AttemptDetail = z.infer<typeof attemptDetailSchema>;
+export type AttemptQuestion = z.infer<typeof attemptQuestionSchema>;
+
+export function parseAttemptDetail(payload: unknown): AttemptDetail {
+  if (!payload || typeof payload !== "object") {
+    throw new Error("Invalid attempt detail payload.");
+  }
+  return attemptDetailSchema.parse(payload);
+}
