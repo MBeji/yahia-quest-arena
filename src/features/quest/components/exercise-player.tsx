@@ -2,7 +2,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { computeNextExerciseId, getExercise, getSubject } from "@/features/quest";
 import { useAttemptCelebration } from "../use-attempt-celebration";
@@ -12,16 +11,8 @@ import { userFacingError } from "@/shared/lib/error-message";
 import { RichField } from "@/components/ui/svg-figure";
 import { QuestionInput, type McqOptionRender } from "@/components/game/question-input";
 import { QuestResultScreen } from "@/features/quest/components/quest-result-screen";
-import { QuizContractHint, QuizLockScreen } from "@/features/quest/components/quiz-lock-screen";
 import { QuestHintButton } from "@/features/quest/components/quest-hint-button";
 import { QuestSessionError } from "@/features/quest/components/quest-session-error";
-import { BossBanner } from "@/features/quest/components/boss-chrono";
-import {
-  bossDamageFor,
-  bossHpForDamage,
-  bossRankForDamage,
-  type BossSpeedTier,
-} from "@/features/quest/boss-speed";
 import {
   buildQuestLabels,
   KEYPAD_BY_LANG,
@@ -30,9 +21,7 @@ import {
 } from "@/shared/lib/quest-labels";
 import { useT } from "@/lib/i18n";
 import { LoadingState } from "@/components/ui/loading-state";
-import { BackLink } from "@/components/ui/back-link";
 import { PageShell } from "@/components/ui/page-shell";
-import { GoldProgress } from "@/components/game/gold-progress";
 import { questionSlide, useEntrance } from "@/shared/lib/motion";
 import { useQuestPulse } from "@/features/quest/quest-pulse";
 import { useQuestionMaps } from "@/features/quest/question-maps";
@@ -48,11 +37,14 @@ import { useExerciseSession } from "@/features/quest/components/use-exercise-ses
 import { useQuestHints } from "@/features/quest/components/use-quest-hints";
 import { useQuestKeyboard } from "@/features/quest/components/use-quest-keyboard";
 import { QuestionNavigator } from "@/features/quest/components/question-navigator";
+import { useBossTiming } from "@/features/quest/components/use-boss-timing";
+import { QuestStartGate } from "@/features/quest/components/quest-start-gate";
+import { QuestProgressHeader } from "@/features/quest/components/quest-progress-header";
+import { QuestSubmitButton } from "@/features/quest/components/quest-submit-button";
 import {
   useQuestAutosave,
   useQuestDraftRestore,
 } from "@/features/quest/components/use-quest-autosave";
-import { QuestSaveStatus } from "@/features/quest/components/quest-save-status";
 import { emitQuestResultTelemetry, levelCrossedBy } from "@/features/quest/quest-result-facts";
 
 // =============================================================================
@@ -445,47 +437,19 @@ export function ExercisePlayer({
     [mutation, exerciseId, durationSeconds, data?.exercise?.mode, data?.exercise?.chapter_id],
   );
 
-  // Chronomètre du combat de boss. Il ne coupe rien : la seule chose qu'il
-  // décide, ce sont les dégâts de la question qu'on vient de répondre. La mesure
-  // est prise ICI, à la validation — pas dans la pastille qui l'affiche, et pas
-  // après l'écran de correction, qui n'est plus du temps de réflexion.
-  const questionStartedAtRef = useRef<number>(0);
-  const bossTimedQuestionRef = useRef<string | null>(null);
-  const [bossDamage, setBossDamage] = useState(0);
-
-  useEffect(() => {
-    if (!bossMode || !sessionId) return;
-    questionStartedAtRef.current = Date.now();
-    bossTimedQuestionRef.current = null;
-  }, [bossMode, sessionId, idx]);
-
-  const commitBossTiming = useCallback(
-    (questionId: string) => {
-      if (!bossMode || bossTimedQuestionRef.current === questionId) return;
-      bossTimedQuestionRef.current = questionId;
-      const elapsed = (Date.now() - questionStartedAtRef.current) / 1000;
-      setBossDamage((d) => d + bossDamageFor(elapsed, totalRef.current));
-    },
-    [bossMode],
-  );
-
-  // La barre de HP EST le score du chronomètre : elle ne suit plus l'avancement
-  // (« question 3 sur 5 », qui ne disait rien), elle suit les dégâts cumulés.
-  const bossHp = useMemo(
-    () => (bossMode ? bossHpForDamage(bossDamage) : 100),
-    [bossMode, bossDamage],
-  );
-  const bossSummary = useMemo<{ hp: number; rank: BossSpeedTier } | null>(
-    () => (bossMode ? { hp: bossHp, rank: bossRankForDamage(bossDamage) } : null),
-    [bossMode, bossHp, bossDamage],
-  );
+  // Chronomètre du combat de boss : il vit dans son hook (`use-boss-timing`).
+  const { bossHp, bossSummary, commitBossTiming, resetBossTiming } = useBossTiming({
+    bossMode,
+    sessionId,
+    idx,
+    totalRef,
+  });
 
   const resetRun = useCallback(() => {
     answeredQuestionRef.current = null;
-    bossTimedQuestionRef.current = null;
+    resetBossTiming();
     resetSession();
     setResult(null);
-    setBossDamage(0);
     setIdx(0);
     setAnswers([]);
     setSelected(null);
@@ -499,7 +463,7 @@ export function ExercisePlayer({
     resetFeedback();
     committedChoiceRef.current = null;
     resetHints();
-  }, [resetSession, resetFeedback, resetHints, resetCelebration]);
+  }, [resetSession, resetFeedback, resetHints, resetCelebration, resetBossTiming]);
 
   useEffect(() => {
     resetRun();
@@ -648,54 +612,20 @@ export function ExercisePlayer({
   // promet rien : le pied de résultat garde alors sa phrase sans chiffre.
   const xpReward = data.exercise.xp_reward > 0 ? data.exercise.xp_reward : null;
 
-  // Premium gate (connected only): the strategy owns the paywall layout.
-  if (startGate?.kind === "premium") {
+  // Les portes du démarrage (premium, quiz de compréhension, rappel) : un écran
+  // complet chacune, dans `quest-start-gate`.
+  if (startGate) {
     return (
-      strategy.renderPremiumLock?.({
-        message: startGate.message,
-        subjectId: exSubjectId,
-        contentLang: qlang,
-      }) ?? null
-    );
-  }
-
-  // Comprehension-quiz gate: a chapter's exercises stay locked until its quiz is
-  // passed (connected: server-side; anon: session-local). Same lock screen, only
-  // the "take the quiz" destination register differs.
-  if (startGate?.kind === "quiz") {
-    return (
-      <QuizLockScreen
-        title={QL.lockedTitle}
-        body={QL.lockedBody}
-        takeQuizLabel={QL.takeQuiz}
-        reviewLabel={QL.review}
-        backLabel={QL.back}
-        quizId={data.chapterQuizId}
+      <QuestStartGate
+        gate={startGate}
+        strategy={strategy}
+        labels={QL}
+        exerciseId={exerciseId}
         chapterId={chapterId}
         subjectId={exSubjectId}
+        chapterQuizId={data.chapterQuizId}
         rtl={isRtlSubject}
-        quizExerciseTo={strategy.quizExerciseTo}
-      />
-    );
-  }
-
-  // Recall gates (étude 17): the mission's recall mode is locked (classic not
-  // mastered) or not eligible. Same lock pattern as the quiz gate; the CTA is
-  // "replay this mission in QCM" (classic) instead of "take the quiz".
-  if (startGate?.kind === "recall") {
-    const locked = startGate.reason === "locked";
-    return (
-      <QuizLockScreen
-        title={locked ? QL.recallLockedTitle : QL.recallNotEligibleTitle}
-        body={locked ? QL.recallLockedBody : QL.recallNotEligibleBody}
-        takeQuizLabel={QL.recallReplayQcm}
-        reviewLabel={QL.review}
-        backLabel={QL.back}
-        quizId={exerciseId}
-        chapterId={chapterId}
-        subjectId={exSubjectId}
-        rtl={isRtlSubject}
-        quizExerciseTo={strategy.quizExerciseTo}
+        contentLang={qlang}
       />
     );
   }
@@ -770,72 +700,22 @@ export function ExercisePlayer({
 
   return (
     <PageShell width="narrow" dir={isRtlSubject ? "rtl" : undefined}>
-      {exSubjectId ? (
-        <BackLink to="/matiere/$subjectId" params={{ subjectId: exSubjectId }}>
-          {t.quest.leaveQuest}
-        </BackLink>
-      ) : (
-        <BackLink to={strategy.homeTo}>{t.quest.leaveQuest}</BackLink>
-      )}
-
-      {isRecall && (
-        <div
-          className="mb-6 rounded-2xl border border-(--gold)/40 bg-(--gold)/5 px-4 py-3 text-center text-sm font-bold text-(--gold)"
-          data-testid="recall-banner"
-          dir={isRtlSubject ? "rtl" : undefined}
-        >
-          {QL.recallBanner}
-        </div>
-      )}
-
-      {bossMode && (
-        <BossBanner
-          title={data.exercise.title}
-          hp={bossHp}
-          questionIndex={idx}
-          chronoActive={Boolean(sessionId) && !result && !feedback && !feedbackChecking}
-          entrance={scaleIn}
-          reduced={Boolean(reduced)}
-          labels={{ fight: t.quest.bossFight, hp: t.quest.bossHp }}
-        />
-      )}
-
-      <div className="mb-6">
-        <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-widest text-muted-foreground">
-          <span>
-            {t.quest.questionOf
-              .replace("{current}", String(idx + 1))
-              .replace("{total}", String(total))}
-          </span>
-          {!bossMode && <span className="text-gold">{data.exercise.title}</span>}
-        </div>
-        <div className="mb-2 flex justify-end">
-          <QuestSaveStatus
-            status={autosave.status}
-            pendingLabel={t.quest.savePending}
-            doneLabel={t.quest.saveDone}
-          />
-        </div>
-        {bossMode ? (
-          <div className="h-2 overflow-hidden rounded-full bg-secondary">
-            <motion.div
-              className="h-full rounded-full shadow-gold bg-linear-to-r from-destructive to-gold"
-              initial={reduced ? false : { width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: reduced ? 0 : 0.4 }}
-            />
-          </div>
-        ) : (
-          <GoldProgress
-            value={progress}
-            aria-label={t.quest.questionOf
-              .replace("{current}", String(idx + 1))
-              .replace("{total}", String(total))}
-            className="shadow-gold"
-          />
-        )}
-        {isQuiz && <QuizContractHint className="mt-2" />}
-      </div>
+      <QuestProgressHeader
+        subjectId={exSubjectId}
+        homeTo={strategy.homeTo}
+        title={data.exercise.title}
+        labels={QL}
+        rtl={isRtlSubject}
+        isRecall={isRecall}
+        isQuiz={isQuiz}
+        bossMode={bossMode}
+        bossHp={bossHp}
+        chronoActive={Boolean(sessionId) && !result && !feedback && !feedbackChecking}
+        idx={idx}
+        total={total}
+        progress={progress}
+        saveStatus={autosave.status}
+      />
 
       {unrestricted && (
         <QuestionNavigator
@@ -926,35 +806,19 @@ export function ExercisePlayer({
           )}
 
           <div className="mt-6 flex justify-end">
-            <button
-              data-testid="quest-submit"
+            <QuestSubmitButton
+              feedbackShown={Boolean(feedback)}
               disabled={
                 feedback
                   ? mutation.isPending
                   : !canValidate || feedbackChecking || mutation.isPending || session.isPending
               }
+              busy={mutation.isPending || session.isPending || feedbackChecking}
+              bossMode={bossMode}
+              isLast={idx + 1 >= total}
+              labels={QL}
               onClick={feedback ? continueAfterFeedback : validate}
-              className={`inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-bold shadow-gold transition disabled:opacity-40 ${
-                bossMode
-                  ? "bg-linear-to-r from-destructive to-gold text-primary-foreground"
-                  : "bg-[image:var(--gradient-gold)] text-primary-foreground"
-              }`}
-            >
-              {(mutation.isPending || session.isPending || feedbackChecking) && (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              )}
-              {feedback
-                ? idx + 1 >= total
-                  ? QL.feedbackFinish
-                  : QL.feedbackContinue
-                : bossMode
-                  ? idx + 1 >= total
-                    ? t.quest.bossFinalBlow
-                    : t.quest.bossAttack
-                  : idx + 1 >= total
-                    ? t.quest.finishQuest
-                    : t.quest.nextQuestion}
-            </button>
+            />
           </div>
         </motion.div>
       </AnimatePresence>
