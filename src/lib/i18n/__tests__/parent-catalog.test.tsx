@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { render, screen, fireEvent, act } from "@testing-library/react";
+import { render, screen, fireEvent, act, waitFor } from "@testing-library/react";
 import { I18nProvider, useI18n } from "@/lib/i18n";
 import { useParentT, parentTranslations } from "@/lib/i18n/parent";
 import { fr } from "@/lib/i18n/fr";
@@ -49,7 +49,7 @@ describe("catalogue i18n de la surface parent", () => {
     expect(screen.getByTestId("report").textContent).toBe(frParent.parentReport.title);
   });
 
-  it("suit le changement de langue comme le catalogue app-wide", () => {
+  it("suit le changement de langue comme le catalogue app-wide", async () => {
     render(
       <I18nProvider>
         <LocaleSwitch />
@@ -63,7 +63,9 @@ describe("catalogue i18n de la surface parent", () => {
       fireEvent.click(screen.getByTestId("to-ar"));
     });
 
-    expect(screen.getByTestId("daily").textContent).toBe(arParent.parentDaily.tabSummary);
+    await waitFor(() =>
+      expect(screen.getByTestId("daily").textContent).toBe(arParent.parentDaily.tabSummary),
+    );
     // Contrôle négatif : les deux libellés diffèrent bien, sinon l'assertion
     // ci-dessus passerait même si la locale n'était pas suivie.
     expect(arParent.parentDaily.tabSummary).not.toBe(frParent.parentDaily.tabSummary);

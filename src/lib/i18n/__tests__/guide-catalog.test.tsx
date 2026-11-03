@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import { I18nProvider, useI18n } from "@/lib/i18n";
 import { fr } from "@/lib/i18n/fr";
@@ -45,7 +45,7 @@ function leaves(value: unknown): string[] {
 describe("catalogue i18n du guide intégré", () => {
   afterEach(() => localStorage.clear());
 
-  it("fusionne le catalogue app-wide et celui du guide, et suit la langue", () => {
+  it("fusionne le catalogue app-wide et celui du guide, et suit la langue", async () => {
     render(
       <I18nProvider>
         <GuideConsumer />
@@ -55,7 +55,9 @@ describe("catalogue i18n du guide intégré", () => {
     expect(screen.getByTestId("core").textContent).toBe(fr.common.loading);
     expect(screen.getByTestId("sheet").textContent).toBe(frGuide.guide.sheetTitle);
     fireEvent.click(screen.getByTestId("to-ar"));
-    expect(screen.getByTestId("sheet").textContent).toBe(arGuide.guide.sheetTitle);
+    await waitFor(() =>
+      expect(screen.getByTestId("sheet").textContent).toBe(arGuide.guide.sheetTitle),
+    );
   });
 
   it("expose chaque locale hors composant", () => {

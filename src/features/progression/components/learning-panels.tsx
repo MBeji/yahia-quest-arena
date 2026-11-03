@@ -1,8 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 
-import type { CompetencyBlocker, CompetencyMasteryRow } from "@/shared/types/competency";
-import { getLearningFrontier, getLearningState } from "../progression.server";
+import type {
+  CompetencyBlocker,
+  CompetencyMasteryRow,
+  LearningStateRow,
+} from "@/shared/types/competency";
+import { getLearningFrontier } from "../progression.server";
 import { CompetencyMapPanel } from "./competency-map-panel";
 import { FrontierCard } from "./frontier-card";
 import { LearningStateMap } from "./learning-state-map";
@@ -18,10 +22,13 @@ import { LearningStateMap } from "./learning-state-map";
  *     chunk eager du tableau de bord de 32,00 à 32,13 kB — au-dessus de son budget. Relever
  *     le budget aurait été affaiblir le gate pour 130 octets ; regrouper coûte moins et se
  *     lit mieux. La route ne charge plus qu'UNE porte, et tout le reste vit derrière.
- *  2. **Les deux lectures sont des requêtes CLIENT** (§3.11, clés `learning-state` et
- *     `frontier`). Elles ne partent donc qu'une fois ce module chargé — ce qui veut dire que
- *     sur une matière non taggée, le chemin SSR du tableau de bord n'est pas seulement
- *     inchangé en RÉSULTAT (R-6) mais aussi en LATENCE : rien n'est demandé, rien n'attend.
+ *  2. **La frontière est une requête CLIENT** (§3.11, clé `frontier`). Elle ne part donc
+ *     qu'une fois ce module chargé — ce qui veut dire que sur une matière non taggée, le
+ *     chemin SSR du tableau de bord n'est pas seulement inchangé en RÉSULTAT (R-6) mais aussi
+ *     en LATENCE : rien n'est demandé, rien n'attend. L'état (`learning-state`), lui, arrive
+ *     en PROP : `getDashboard` le lit déjà pour « Prochaine action » (rangs 2 et 4), et le
+ *     relire depuis le navigateur coûtait un aller-retour et une RPC de plus par chargement,
+ *     plus un passage par l'ancienne carte le temps qu'il revienne.
  *  3. **Le repli appartient à la progression, pas à la route.** Décider quelle carte montrer
  *     est une règle de cette feature ; la route ne devrait avoir à connaître ni les états, ni
  *     la notion de « non taggé ».
@@ -36,21 +43,16 @@ export function LearningPanels({
   map,
   blockers,
   blockedSlug,
+  learningState,
 }: {
   map: CompetencyMasteryRow[];
   blockers: CompetencyBlocker[];
   blockedSlug: string | null;
+  /** Toutes familles confondues : lu par `getDashboard`, vide = repli R-6 sur `map`. */
+  learningState: LearningStateRow[];
 }) {
-  const fetchLearningState = useServerFn(getLearningState);
   const fetchFrontier = useServerFn(getLearningFrontier);
 
-  // Toutes familles confondues (`family: null`) : le tableau de bord n'est pas dans une
-  // matière. Une erreur de lecture rend une liste vide côté server fn, donc ici le repli
-  // joue — un tableau de bord ne casse pas parce qu'une carte n'a pas pu se charger.
-  const { data: learningState } = useQuery({
-    queryKey: ["learning-state", null],
-    queryFn: () => fetchLearningState({ data: { family: null } }),
-  });
   // Trois cartes, jamais une liste (é15 R-1) : c'est une proposition, pas un catalogue.
   const { data: frontier } = useQuery({
     queryKey: ["frontier", null],
@@ -64,8 +66,8 @@ export function LearningPanels({
           et depuis le 2026-09-04 elle se REPLIE : un résumé par état, le détail sur un geste.
           Vingt lignes déroulées au milieu du hall, c'était l'audit imposé à tout le monde. */}
       <FrontierCard rows={frontier ?? []} />
-      {(learningState?.length ?? 0) > 0 ? (
-        <LearningStateMap rows={learningState ?? []} />
+      {learningState.length > 0 ? (
+        <LearningStateMap rows={learningState} />
       ) : (
         <CompetencyMapPanel map={map} blockers={blockers} blockedSlug={blockedSlug} />
       )}

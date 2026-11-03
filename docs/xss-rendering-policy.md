@@ -55,6 +55,9 @@ Applies to any rendering path that may transform text into HTML.
   it is sanitized through DOMPurify's SVG profile (drawing primitives only — no
   `script`/`style`/`foreignObject`/`<a>`/`<image>`/`<use>`, no `on*` handlers, no
   `href`/`xlink:href`, residual `javascript:` neutralized) before reaching the DOM.
+  `svg-figure.tsx` keeps a bounded module cache (512 entries, key = the exact input
+  string) in front of `extractFigure`/`sanitizeSvg`: a string is sanitized on first sight
+  and its sanitizer output is what gets replayed — never the raw markup.
 
 ## Validation
 

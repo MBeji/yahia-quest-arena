@@ -6,7 +6,7 @@ import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
 import { ACCOUNT_DELETE_ERROR_PREFIX, confirmsAccountEmail } from "./account-deletion";
 import type { UserDataExport } from "./data-export";
-import { displayNameSchema } from "./display-name";
+import { displayNameSchema } from "./display-name.schema";
 
 /**
  * Bootstrap the freshly-signed-up user's profile (display name + role).
@@ -248,7 +248,7 @@ export const deleteAccount = createServerFn({ method: "POST" })
  * middleware a vérifié — même posture que `deleteAccount` juste au-dessus.
  *
  * POURQUOI `POST` POUR UNE LECTURE. Les lectures de ce dépôt sont en `GET`
- * (`getCompetencyExercises`, `getLearningState`). Celle-ci ne l'est pas : elle
+ * (`getCompetencyExercises`, `getLearningFrontier`). Celle-ci ne l'est pas : elle
  * rend, en une réponse, la totalité du dossier d'une personne. Un `GET` est ce
  * qu'on préfetche, ce qu'un intermédiaire met en cache, ce qui atterrit dans un
  * journal d'accès avec son URL. Le geste est rare et explicite ; il n'a aucun

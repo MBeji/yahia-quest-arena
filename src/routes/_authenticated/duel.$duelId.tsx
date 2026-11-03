@@ -83,7 +83,9 @@ function DuelPlayPage() {
   useEffect(() => {
     if (!settledOutcome) return;
     trackProductEvent("duel_finished", { outcome: settledOutcome });
-  }, [duelId, settledOutcome]);
+    // Le duel réglé a versé son XP : la puce de l'en-tête suit (data-02).
+    qc.invalidateQueries({ queryKey: ["me-stats"] });
+  }, [duelId, qc, settledOutcome]);
 
   if (stateQuery.isLoading || questionsQuery.isLoading) {
     return <LoadingState label={t.duel.loading} className="min-h-[40dvh]" />;

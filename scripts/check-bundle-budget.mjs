@@ -118,9 +118,33 @@ const BUDGETS = {
   //            4 et 5 restent devant le même mur, et le vrai correctif est toujours le
   //            découpage (candidat mesuré : `ai.*`, 116 clés, voir ci-dessus).
   //
+  //   189→ fr 61 / en 54 / ar 73  DÉCOUPAGE PAR LOCALE (2026-10-31, H2-fe) — la baisse,
+  //            pas un palier : chaque élève ne descend plus que SA langue (détail ci-dessous).
+  //
   // Le chunk app-wide gzippe à ~61 KB : l'impact réseau est plus doux que le chiffre
   // brut, mais le coût de parse se paie plein, lui, et sur chaque appareil d'élève.
-  "i18n-": 189 * 1024,
+  //
+  // ## 2026-10-31 (H2-fe) : `i18n-` devient TROIS chunks, un par locale
+  //
+  // Le chunk trilingue mesurait 187,71 KB (192 215 octets, 66 303 gz), importé
+  // statiquement par index et préchargé sur chaque page — deux langues sur trois
+  // inutiles à chaque élève. Seul `i18n-fr` (défaut produit, langue du premier rendu,
+  // + la méta du document) reste dans le graphe statique ; `i18n-en` et `i18n-ar` sont
+  // tirés par `import()` (`src/lib/i18n/catalogues.ts`) pour la seule locale persistée,
+  // dès l'évaluation du module client. Mesuré sur ce commit :
+  //
+  //   avant   i18n     187,71 KB (chargé par tout le monde)
+  //   après   i18n-fr   60,94 KB  +  i18n-en 54,20 KB / i18n-ar 72,73 KB (en différé,
+  //                                   pour la locale du visiteur seulement)
+  //
+  // Élève FR : −129 812 octets bruts / −43 331 gz sur le chemin critique ; EN −74 310 ;
+  // AR −55 336. Plafonds à ≈ +5 % de la mesure, comme l'app-wide avant eux. Si l'un
+  // de `i18n-en-`/`i18n-ar-` réapparaît dans les imports STATIQUES d'index, le
+  // découpage est cassé sans que rien ne rougisse : un module partagé entre les
+  // fichiers de locale (relire `manualChunks` et `src/lib/i18n/meta.ts`).
+  "i18n-fr-": 64 * 1024,
+  "i18n-en-": 60 * 1024,
+  "i18n-ar-": 76 * 1024,
   // Surface parent (`parentReport.*` + `parentDaily.*`), mesurée 36,52 KB le
   // 2026-08-26 ; plafond à +20 % parce que le suivi « jour par jour » est récent et
   // bouge encore. Ces octets ne descendent QUE chez les comptes parent — ils sont
@@ -228,9 +252,37 @@ function findLatestChunkSize(prefix) {
   return sizes[0];
 }
 
+/**
+ * Chunks INTERDITS côté client — un préfixe qui ne doit exister dans aucun build.
+ *
+ * `schemas-` est zod (`zod/v4/classic/schemas.js`, 81 KB sur les 84 du chunk,
+ * 23,6 KB gzip). Mesuré le 2026-10-31 : il était servi sur /auth, /parametrage,
+ * /suivi et /parent-report, sans qu'un seul `parse` y tourne — le compilateur de
+ * TanStack Start retire les validateurs du stub client, mais pas un schéma
+ * construit au niveau module du fichier (`parent-report.server.ts`,
+ * `insights/daily-report.ts`, `display-name.ts`). Ces schémas vivent depuis dans
+ * des modules `*.schema(s).ts` que seuls les validateurs et les handlers
+ * importent. Si zod devait un jour servir au client, ce serait `zod/mini`
+ * (secouable), et une ligne ici dirait pourquoi.
+ */
+const FORBIDDEN_CHUNKS = {
+  "schemas-": "zod ne doit jamais atteindre un chunk client (2026-10-31)",
+};
+
 let failed = false;
 
 console.log("Bundle budget check:\n");
+for (const [prefix, reason] of Object.entries(FORBIDDEN_CHUNKS)) {
+  const present = readdirSync(clientAssetsDir).filter(
+    (name) => name.endsWith(".js") && name.startsWith(prefix),
+  );
+  if (present.length === 0) {
+    console.log(`- ${prefix}: absent => OK`);
+    continue;
+  }
+  console.log(`- ${present.join(", ")}: forbidden chunk => FAIL (${reason})`);
+  failed = true;
+}
 for (const [prefix, maxSize] of Object.entries(BUDGETS)) {
   const chunk = findLatestChunkSize(prefix);
   if (!chunk) {

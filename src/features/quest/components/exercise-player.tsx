@@ -184,9 +184,15 @@ export function ExercisePlayer({
   const { capabilities } = strategy;
   const isRecall = variant === "recall";
 
+  // En mission, rien ne change ces deux lectures que la soumission de l'élève —
+  // et elle invalide ["subject"] explicitement. Un détour par la calculatrice ne
+  // doit donc jamais relancer getExercise ni getSubject pendant qu'il répond,
+  // en concurrence sur la radio avec son prochain « Valider » (data-02).
   const { data, isLoading } = useQuery({
     queryKey: ["exercise", exerciseId, variant],
     queryFn: () => fetchExercise({ data: { exerciseId, variant } }),
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 
   const subjectIdForNext = data?.exercise?.subject_id ?? null;
@@ -194,6 +200,8 @@ export function ExercisePlayer({
     queryKey: ["subject", subjectIdForNext],
     queryFn: () => fetchSubjectForNext({ data: { subjectId: subjectIdForNext as string } }),
     enabled: capabilities.next && Boolean(subjectIdForNext),
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 
   const nextExerciseId = useMemo<string | null>(() => {
@@ -329,6 +337,10 @@ export function ExercisePlayer({
         }
         qc.invalidateQueries({ queryKey: ["dashboard"] });
         qc.invalidateQueries({ queryKey: ["subject"] });
+        // La puce XP/série de l'en-tête (["me-stats", userId]) n'était invalidée
+        // nulle part : elle ne se rafraîchissait QUE par le refetch au focus, que
+        // data-02 espace. Elle suit désormais le gain dès « Valider ».
+        qc.invalidateQueries({ queryKey: ["me-stats"] });
 
         // ⭐ Ce que cette soumission a fait tomber (étude 34, lot 4) — étoiles,
         // sceau, badges. Le détail vit dans `use-attempt-celebration`, qui porte

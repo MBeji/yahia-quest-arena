@@ -20,7 +20,9 @@ export {
 } from "./auth.server";
 export { useProfileLocaleSync } from "./use-locale-sync";
 export { claimWelcomePack, type WelcomePack } from "./welcome-pack.server";
-export { displayNameSchema, isValidDisplayName, DISPLAY_NAME_MAX_LENGTH } from "./display-name";
+// `displayNameSchema` (zod) ne sort pas du barrel : il ne sert qu'aux server fns
+// et le barrel est servi au client (2026-10-31).
+export { isValidDisplayName, DISPLAY_NAME_MAX_LENGTH } from "./display-name";
 export {
   ACCOUNT_DELETE_ERROR_PREFIX,
   accountDeleteErrorLabel,

@@ -15,9 +15,7 @@ import { I18nProvider, useT } from "@/lib/i18n";
 import { GuideProvider } from "@/components/guide/guide-provider";
 import type { Locale } from "@/lib/i18n";
 import { DEFAULT_LOCALE, dirForLocale, localeFromCookieHeader } from "@/lib/i18n/context";
-import { fr } from "@/lib/i18n/fr";
-import { en } from "@/lib/i18n/en";
-import { ar } from "@/lib/i18n/ar";
+import { metaByLocale } from "@/lib/i18n/meta";
 import { buildErrorDebugText } from "@/shared/lib/error-debug";
 import { useExitOnRefusedSession } from "@/features/auth";
 import { ThemeProvider, useTheme, DEFAULT_THEME, themeFromCookieHeader } from "@/lib/theme";
@@ -120,7 +118,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     // shares. head() is a closure evaluated at render time, after the module is
     // fully initialised, so it can reference getShellLocale (defined below).
     const locale = getShellLocale();
-    const m = ({ fr, en, ar }[locale] ?? fr).meta;
+    const m = metaByLocale[locale];
     return {
       meta: [
         { charSet: "utf-8" },
@@ -149,9 +147,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
         // Fontes auto-hébergées (levier 06) : les @font-face vivent dans
         // styles.css, il ne reste ici que le préchargement des DEUX faces
-        // latines — celles que tout premier écran utilise. L'arabe n'est pas
-        // préchargé : son `unicode-range` le déclenche seulement sur du contenu
-        // arabe, et le précharger ferait payer 124 ko à tous les autres.
+        // latines — celles que tout premier écran utilise. Rien d'arabe ici,
+        // même pour la locale `ar` (mesuré le 2026-10-31, bundle-03) : l'UI
+        // arabe se rend en police système, la face Noto Kufi complète (124 ko)
+        // n'a plus aucun consommateur depuis que la signature de marque porte
+        // sa sous-police de 6,8 ko, et un preload dans ce head() partirait en
+        // haute priorité sur CHAQUE page, publique ou non — « preloaded but
+        // not used » et 124 ko payés par tous.
         // `crossOrigin` est requis même en same-origin : une fonte se récupère
         // en mode CORS, et sans lui le navigateur télécharge le fichier DEUX
         // fois (le préchargement ne matche pas la requête de la fonte).

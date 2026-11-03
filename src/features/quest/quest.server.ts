@@ -181,6 +181,20 @@ function parseAtomicSubmitResponse(payload: unknown): AtomicSubmitResponse {
 }
 
 // ---------- Get a subject with chapters & exercises ----------
+/**
+ * Ce que le hub (`SubjectHubChapter`, `groupChaptersByDomain`) et le lecteur
+ * (`computeNextExerciseId`) lisent d'un chapitre — et rien d'autre : surtout pas
+ * `lesson_content` ni `summary`, qui pèsent l'essentiel de la ligne (voir `getSubject`).
+ */
+const SUBJECT_CHAPTER_COLUMNS = "id,title,description,domain,display_order";
+/**
+ * Idem pour une mission (`SubjectHubExercise`, `emptyRungs`, `resolveNextAction`,
+ * la porte du quiz ci-dessous) : `source` dit « admin ou parent » (étude 22 R-15),
+ * `display_order` porte le tri R-13.
+ */
+const SUBJECT_EXERCISE_COLUMNS =
+  "id,chapter_id,mode,title,difficulty,xp_reward,source,display_order";
+
 export const getSubject = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
   .validator((d) => z.object({ subjectId: z.string() }).parse(d))
@@ -232,12 +246,26 @@ export const getSubject = createServerFn({ method: "GET" })
         )
       : Promise.resolve(null);
 
+    // Colonnes NOMMÉES, pas `*` (audit perf data-01, 2026-10-31) : la ligne
+    // `chapters` porte le cours ET le résumé markdown (`lesson_content`, `summary`),
+    // que ni le hub ni le lecteur de quête ne lisent — ils passent par
+    // `getChapterLesson`. Or cet appel part à chaque vue du hub ET à chaque mission
+    // connectée (le lecteur ne s'en sert que pour `computeNextExerciseId`), puis
+    // repart après 30 s de staleTime. Mesuré sur le corpus (96 matières, 848
+    // chapitres) : chapitres + missions pesaient 93 KB médian, 506 KB p90,
+    // 1 445 KB max (fiqh), 1 095 KB sur math-6eme ; avec ces colonnes 15 KB médian,
+    // 38 KB p90, 122 KB max. Mêmes consommateurs, même rendu — `SubjectHubChapter`,
+    // `SubjectHubExercise` et `next-exercise.ts` disent exactement ce qu'il faut servir.
     const [subj, chaps, exs, progress, unrestricted] = await Promise.all([
       supabase.from("subjects").select("*").eq("id", data.subjectId).single(),
-      supabase.from("chapters").select("*").eq("subject_id", data.subjectId).order("display_order"),
+      supabase
+        .from("chapters")
+        .select(SUBJECT_CHAPTER_COLUMNS)
+        .eq("subject_id", data.subjectId)
+        .order("display_order"),
       supabase
         .from("exercises")
-        .select("*")
+        .select(SUBJECT_EXERCISE_COLUMNS)
         .eq("subject_id", data.subjectId)
         .order("display_order"),
       progressPromise,
@@ -641,30 +669,43 @@ export const submitAttempt = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
-    // Rate limit: max 5 submissions per 10 seconds
-    if (await isRateLimited(supabase, `submit_${userId}`, 5, 10_000)) {
+    // Les quatre lectures préparatoires partent ENSEMBLE : le rate limit (5
+    // soumissions par 10 s), les types des questions, les réponses figées et le
+    // mode de l'exercice ne dépendent ni les unes des autres ni du verdict du
+    // débit. En série, elles coûtaient quatre allers-retours (20 à 40 ms) pour
+    // ~1 ms de SQL, sur l'écriture la plus fréquente de l'app (mesure du
+    // 2026-10-31, constat db-03). Rien n'écrit ici : ce sont des lectures, les
+    // lancer quand le débit est dépassé ne change rien de ce que l'élève voit.
+    //
+    // La précédence des refus reste celle d'avant : le débit dépassé d'abord, la
+    // réponse mal formée ensuite — d'où le verdict de format CAPTURÉ puis rejoué
+    // après la garde, au lieu d'un rejet qui doublerait le refus de débit. Les
+    // deux autres lectures ne rejettent jamais (elles dégradent en `[]`/`null`).
+    const [limited, formatRefusal, reveals, { data: exerciseRow }] = await Promise.all([
+      isRateLimited(supabase, `submit_${userId}`, 5, 10_000),
+      assertAnswerFormats(supabase, "quest.submitAttempt", data.exerciseId, data.answers).then(
+        () => null,
+        (error: unknown) => ({ error }),
+      ),
+      fetchSessionReveals(supabase, data.sessionId),
+      // Comprehension quizzes are validated by the student alone: we never return
+      // the correct answers / explanations for a quiz, so they cannot be memorised
+      // and the quiz re-passed blindly. Practice/boss get the full end-of-quest
+      // correction, built AFTER submit from the get_attempt_review SECURITY DEFINER
+      // RPC (the answer key is no longer client-readable — GAP-020).
+      supabase.from("exercises").select("mode").eq("id", data.exerciseId).single(),
+    ]);
+    if (limited) {
       throw new Error("Too many submissions. Please slow down.");
     }
+    if (formatRefusal) {
+      throw formatRefusal.error;
+    }
 
-    await assertAnswerFormats(supabase, "quest.submitAttempt", data.exerciseId, data.answers);
     // Les réponses FIGÉES par la correction immédiate l'emportent sur le payload. Le
     // barème SQL l'impose de toute façon ; les réunir ici garde l'arbitrage et la
     // correction de fin de partie d'accord avec la note (20260929120000).
-    const answers = mergeRevealedAnswers(
-      data.answers,
-      await fetchSessionReveals(supabase, data.sessionId),
-    );
-
-    // Comprehension quizzes are validated by the student alone: we never return
-    // the correct answers / explanations for a quiz, so they cannot be memorised
-    // and the quiz re-passed blindly. Practice/boss get the full end-of-quest
-    // correction, built AFTER submit from the get_attempt_review SECURITY DEFINER
-    // RPC (the answer key is no longer client-readable — GAP-020).
-    const { data: exerciseRow } = await supabase
-      .from("exercises")
-      .select("mode")
-      .eq("id", data.exerciseId)
-      .single();
+    const answers = mergeRevealedAnswers(data.answers, reveals);
     const isQuiz = (exerciseRow as { mode?: string } | null)?.mode === "quiz";
 
     // La forme de la correction est celle que `buildAttemptReview` produit — on la

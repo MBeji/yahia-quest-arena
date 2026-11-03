@@ -7,15 +7,14 @@ import { ChevronLeft, ChevronRight, ShieldAlert } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import { PageShell } from "@/components/ui/page-shell";
-import { RichField } from "@/components/ui/svg-figure";
 import { useI18n, useT } from "@/lib/i18n";
 // Imports profonds route→feature (même convention que `dungeon` et
 // `quest.$exerciseId`) : passer par le barrel de `quest` tirerait
 // `quest.server.ts` — et toute la boucle de récompense — dans le graphe de
 // modules de cette route.
-import { QuestionInput, type McqOptionRender } from "@/components/game/question-input";
 import { buildQuestLabels } from "@/shared/lib/quest-labels";
 import { ExamCountdown } from "@/features/exam/components/exam-countdown";
+import { ExamQuestionCard } from "@/features/exam/components/exam-question-card";
 import { ExamResults } from "@/features/exam/components/exam-results";
 import {
   finishMockExam,
@@ -48,6 +47,9 @@ import { EXAM_AUTOSAVE_INTERVAL_MS } from "@/shared/constants/gamification";
 // `validateSearch` écrit à la main, sans zod : le validateur d'une route reste
 // hors du chunk d'index (budget de bundle), motif de `quest.$exerciseId`.
 type ExamSearch = { kind: "ranked" | "practice" };
+
+// Un `[]` neuf à chaque rendu casserait la mémoïsation de la carte.
+const EMPTY_OPTIONS: DisplayOption[] = [];
 
 export const Route = createFileRoute("/_authenticated/examen/$examId")({
   head: () => ({ meta: [{ title: "Examen blanc · Na9ra Nal3ab" }] }),
@@ -172,6 +174,8 @@ function ExamRunner({ examId, kind }: { examId: string; kind: "ranked" | "practi
       setReview(rev);
       setPercentile(pct);
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+      // La puce XP/série de l'en-tête suit le gain (data-02).
+      queryClient.invalidateQueries({ queryKey: ["me-stats"] });
     },
   });
 
@@ -307,33 +311,22 @@ function ExamRunner({ examId, kind }: { examId: string; kind: "ranked" | "practi
             )}
           </p>
 
+          {/* Carte mémoïsée : une coche ne re-rend que la question touchée
+              (props stables — `optionsByQuestion`, `questLabels`,
+              `answerQuestion`), pas les N articles de l'épreuve. */}
           {paper.questions.map((q, i) => (
-            <article key={q.id} className="rounded-xl border border-border bg-surface-2 p-4">
-              <p className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">
-                {t.exam.questionOf
-                  .replace("{i}", String(i + 1))
-                  .replace("{n}", String(paper.questions.length))}
-              </p>
-              <RichField raw={q.prompt} className="mb-3 font-medium" />
-              <QuestionInput
-                questionType={q.questionType}
-                prompt={q.prompt}
-                options={optionsByQuestion.get(q.id) ?? []}
-                value={answers[q.id] ?? null}
-                onChange={(choice) => answerQuestion(q.id, choice)}
-                rtl={rtl}
-                labels={questLabels}
-                // Aucun verdict pendant l'épreuve : la sélection seule est
-                // marquée. C'est la règle qui distingue un examen d'une quête.
-                optionClassName={({ isSelected }: McqOptionRender) =>
-                  `flex w-full items-center gap-3 rounded-lg border p-3 text-start transition-colors ${
-                    isSelected
-                      ? "border-gold bg-gold/15"
-                      : "border-border bg-surface-1 hover:bg-surface-3"
-                  }`
-                }
-              />
-            </article>
+            <ExamQuestionCard
+              key={q.id}
+              question={q}
+              heading={t.exam.questionOf
+                .replace("{i}", String(i + 1))
+                .replace("{n}", String(paper.questions.length))}
+              options={optionsByQuestion.get(q.id) ?? EMPTY_OPTIONS}
+              value={answers[q.id] ?? null}
+              onAnswer={answerQuestion}
+              rtl={rtl}
+              labels={questLabels}
+            />
           ))}
 
           <div className="flex items-center justify-between gap-2">

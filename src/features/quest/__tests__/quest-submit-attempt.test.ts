@@ -455,6 +455,9 @@ describe("gamification.quest — submitAttempt", () => {
   it("throws when rate limited", async () => {
     const { isRateLimited } = await import("@/shared/lib/rate-limit");
     vi.mocked(isRateLimited).mockResolvedValueOnce(true);
+    // Les lectures préparatoires partent en même temps que le rate limit
+    // (2026-10-31) : un décor vide suffit, le refus de débit l'emporte.
+    mockFrom.mockImplementation(withReveals(() => mockQuery([])));
 
     const { submitAttempt } = await import("@/features/quest");
 

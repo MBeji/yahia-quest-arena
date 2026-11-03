@@ -65,17 +65,24 @@ function LeaderboardPage() {
   // Tabs are scoped to the ACTIVE parcours' subjects (GAP-018) — not the whole
   // academy catalogue — so the row stays short and homonym subjects across grades
   // ("Mathématiques" 9ème vs 6ème) can't collide.
+  //
+  // Un classement est un écran VIVANT : les autres y gagnent des rangs pendant
+  // qu'on a le dos tourné. Il garde donc le refetch au retour d'onglet dès que
+  // la donnée est périmée, là où le défaut du routeur attend 5 min (data-02).
   const subjectsQuery = useQuery({
     queryKey: ["leaderboard-subjects"],
     queryFn: () => fetchSubjects(),
+    refetchOnWindowFocus: true,
   });
   const globalQuery = useQuery({
     queryKey: ["leaderboard", GLOBAL],
     queryFn: () => fetchLeaderboard(),
+    refetchOnWindowFocus: true,
   });
   const gradeQuery = useQuery({
     queryKey: ["leaderboard", MY_CLASS],
     queryFn: () => fetchGradeLeaderboard(),
+    refetchOnWindowFocus: true,
   });
 
   // R-23 : la cohorte de classe n'existe que pour un élève rattaché à un grade. Un parcours
@@ -98,6 +105,7 @@ function LeaderboardPage() {
     queryKey: ["leaderboard", "subject", activeTab],
     queryFn: () => fetchSubjectLeaderboard({ data: { subjectId: activeTab as string } }),
     enabled: isSubjectTab && period === "all",
+    refetchOnWindowFocus: true,
   });
 
   // Le classement de la semaine sert les TROIS cohortes : la portée voyage en
@@ -107,6 +115,7 @@ function LeaderboardPage() {
     queryKey: ["leaderboard", "week", weeklyScope],
     queryFn: () => fetchWeekly({ data: { scope: weeklyScope } }),
     enabled: period === "week" && activeTab !== null,
+    refetchOnWindowFocus: true,
   });
 
   const subjects = subjectsQuery.data?.subjects ?? [];
