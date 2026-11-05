@@ -262,7 +262,7 @@ Leur avancement se lit avec `programme:etat` et `/campagne`, jamais ici.
 **Chantier court arbitré le 2026-10-30, livré le 2026-10-31 : é38 lots 0, 1 et 3** — la mesure du
 tunnel sans compte → compte (#1209), le retour au point de départ et la cohérence du compte à l'écran
 (#1210, #1211, puis la revue de sécurité #1212), la session expirée qui revient à la page quittée
-(#1214). Zéro SQL ; le contrat est l'étude 38 au dépôt privé, dont le journal d'exécution porte les
+(#1214), bilan consigné ici (#1215). Zéro SQL ; le contrat est l'étude 38 au dépôt privé, dont le journal d'exécution porte les
 écarts acceptés. **Les lots 2, 4 et 5 restent en file (§6.3), derrière un prérequis** : le chunk
 `i18n-` est à 0,06 Ko de son plafond, ils devront tailler ou découper avant d'ajouter du texte.
 **Chantier ouvert et livré le 2026-11-01 sur commande du propriétaire : é39, le test de niveau (lots 1 à 3)**
