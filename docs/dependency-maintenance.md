@@ -150,6 +150,33 @@ que le gate d'ici serait resté vert. Aggravant : **`ci.yml` n'a pas tourné sur
    transitive d'une **devDependency**, et `audit:deps` (qui tourne en `--omit=dev`) rendait
    `0 vulnerabilities` après revert.
 
+## Une transitive épinglée par son parent : l'override ciblé (2026-11-05)
+
+Quand un paquet tiré par un parent est épinglé **exactement** par ce parent, `npm update <transitive>`
+ne bouge rien : la seule version de l'arbre est celle du parent. C'est le cas de `undici` sous
+`miniflare 4`, épinglé à `7.28.0`.
+
+La PR Dependabot #1016 (« bump undici 7.28.0 → 7.29.0 ») ne pouvait donc pas être sauvée par un
+rebase : pour atteindre `7.29.0`, elle montait `@cloudflare/vite-plugin` au manifeste et faisait
+entrer `miniflare 5-alpha`, le motif de #716 à l'identique. Son titre mentait sur son diff. Elle a
+été fermée au profit de #1063.
+
+Le geste juste est un **override ciblé**, au niveau du parent :
+
+```json
+"overrides": {
+  "miniflare": { "undici": "7.29.0" }
+}
+```
+
+Ciblé, et jamais global : un override global basculerait aussi le `jsdom` de l'arbre, qui porte
+`undici 8`. C'est une dépendance de développement (`audit:deps` tourne en `--omit=dev` et ne la
+voit pas) : elle se vérifie par le canari npm 10, la garde de diff et `build:check`.
+
+⚠️ Un commentaire `@dependabot rebase` ne peut pas être posté par une session : le connecteur GitHub
+neutralise la mention (`·@·d·ependabot r·ebase`). Seul un humain le tape. Un override ciblé rend
+souvent ce geste inutile.
+
 ## Rules
 
 - Never merge dependency updates without CI green.

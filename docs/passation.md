@@ -210,7 +210,10 @@ aucun gate — aucun n'est automatisable, c'est justement pourquoi ils sont écr
 5. **Aucun processus laissé en vie** : serveur de dev arrêté, tâches de fond terminées et
    leur sortie lue (une tâche tuée en silence a pu échouer **ou** avoir déjà tout mergé).
 6. **Les branches.** La branche distante est supprimée au merge ; ramener la locale sur
-   `origin/main` plutôt que la laisser pointer un commit pré-squash. Aucune branche
+   `origin/main` plutôt que la laisser pointer un commit pré-squash, puis purger les refs de suivi :
+   `git fetch --prune origin`. Sans cela, le ref `origin/<branche>` reste dans la clone et le
+   hook de fin de tour compare HEAD à lui : il annonce « N commits non poussés » pour les
+   squashs de `main`, faux, à chaque tour. Une fois le ref purgé, le hook sort en 0. Aucune branche
    `wip/`/`rescue/` orpheline oubliée derrière soi.
 
    ⚠️ **En session cloud, on ne PEUT pas supprimer une branche distante** — mesuré le
