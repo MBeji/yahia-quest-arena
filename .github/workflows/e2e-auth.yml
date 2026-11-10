@@ -116,7 +116,7 @@ jobs:
       # — only pushes new migrations. Fixture content is seeded in the next step.
       - name: Set up Supabase CLI
         if: steps.guard.outputs.configured == 'true' && steps.guard.outputs.has_db_url == 'true'
-        uses: supabase/setup-cli@46f7f98c7f948ad727d22c1e67fab04c223a0520 # v3.0.0
+        uses: supabase/setup-cli@689adcfb80d947100a1eab127289b97d1fb07b13 # v3.2.0
         with:
           # Pinned: an unpinned "latest" bump (17.6.1.132 → .134 image) silently
           # broke the local-stack grants on 2026-06-07. Bump deliberately.
