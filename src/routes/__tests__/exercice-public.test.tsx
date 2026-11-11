@@ -1,5 +1,5 @@
 import { fireEvent, render } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import React from "react";
 import type { ExercisePlayerStrategy } from "@/features/quest/components/exercise-player";
 
@@ -59,6 +59,16 @@ vi.mock("@/features/quest/components/exercise-player", () => ({
     return null;
   },
 }));
+// La route importe `getExerciseMeta` directement du fichier serveur (pas du barrel :
+// le loader vit dans le chunk d'entrée). On le remplace ici, sinon le vrai fichier
+// serveur se charge avec ses middlewares.
+const getExerciseMeta = vi.fn();
+vi.mock("@/features/quest/quest.practice.server", () => ({
+  getExerciseMeta: (...a: unknown[]) => getExerciseMeta(...a),
+}));
+vi.mock("@/shared/lib/logger", () => ({
+  logger: { warn: vi.fn(), error: vi.fn(), info: vi.fn() },
+}));
 const authState = vi.hoisted(() => ({ user: null as { id: string } | null, loading: false }));
 vi.mock("@/features/auth", () => ({ useAuth: () => authState }));
 
@@ -66,6 +76,12 @@ import { Route } from "../_public/exercice.$exerciseId";
 import { peekReturnTo } from "@/shared/lib/return-to";
 
 const Page = (Route as unknown as { component: React.ComponentType }).component;
+
+type HeadTags = { meta: Array<Record<string, string>> };
+const routeOptions = Route as unknown as {
+  loader: (ctx: { params: { exerciseId: string } }) => Promise<{ head: HeadTags } | null> | null;
+  head: (ctx: { loaderData: { head: HeadTags } | null | undefined }) => HeadTags;
+};
 
 /** Monte la page et rend la stratégie que le lecteur aurait reçue. */
 function mountStrategy(): ExercisePlayerStrategy {
@@ -260,5 +276,75 @@ describe("entraînement public — la valeur de la mission dans l'invitation (é
 
     expect(container.querySelector('a[href="/signup"]')).toBeNull();
     expect(container.querySelector('a[href="/quest/$exerciseId"]')).toBeNull();
+  });
+});
+
+describe("entraînement public — le <head> rendu par le serveur", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("au rendu serveur, la page annonce son exercice, son chapitre et sa matière", async () => {
+    vi.stubEnv("SSR", true);
+    getExerciseMeta.mockResolvedValue({
+      title: "Mission 3",
+      mode: "practice",
+      chapterTitle: "Les fractions",
+      subjectName: "Mathématiques",
+    });
+
+    const seeded = await routeOptions.loader({ params: { exerciseId: "ex-1" } });
+    const head = routeOptions.head({ loaderData: seeded });
+
+    expect(getExerciseMeta).toHaveBeenCalledWith({ data: { exerciseId: "ex-1" } });
+    expect(head.meta).toContainEqual({ title: "Mission 3 — Les fractions · Na9ra Nal3ab" });
+    expect(head.meta).toContainEqual({
+      name: "description",
+      content:
+        "Exercice corrigé, gratuit et sans inscription : Mission 3 (Les fractions · Mathématiques).",
+    });
+    expect(head.meta).toContainEqual({
+      property: "og:url",
+      content: "https://www.na9ranal3ab.tn/exercice/ex-1",
+    });
+  });
+
+  it("un quiz de compréhension se présente comme tel", async () => {
+    vi.stubEnv("SSR", true);
+    getExerciseMeta.mockResolvedValue({
+      title: "Quiz",
+      mode: "quiz",
+      chapterTitle: null,
+      subjectName: null,
+    });
+    const seeded = await routeOptions.loader({ params: { exerciseId: "ex-1" } });
+    const head = routeOptions.head({ loaderData: seeded });
+    expect(head.meta).toContainEqual({ title: "Quiz · Na9ra Nal3ab" });
+    expect(head.meta).toContainEqual({
+      name: "description",
+      content: "Quiz de compréhension, gratuit et sans inscription : Quiz.",
+    });
+  });
+
+  it("exercice inconnu ou lecture en panne : le titre générique reste", async () => {
+    vi.stubEnv("SSR", true);
+    getExerciseMeta.mockResolvedValue(null);
+    expect(await routeOptions.loader({ params: { exerciseId: "ex-1" } })).toBeNull();
+
+    getExerciseMeta.mockRejectedValue(new Error("db down"));
+    expect(await routeOptions.loader({ params: { exerciseId: "ex-1" } })).toBeNull();
+
+    expect(routeOptions.head({ loaderData: null })).toEqual({
+      meta: [{ title: "Entraînement · Na9ra Nal3ab" }],
+    });
+  });
+
+  it("dans le navigateur, le loader ne lit rien", () => {
+    vi.stubEnv("SSR", false);
+    expect(routeOptions.loader({ params: { exerciseId: "ex-1" } })).toBeNull();
+    expect(getExerciseMeta).not.toHaveBeenCalled();
   });
 });

@@ -16,6 +16,7 @@ import { GuideProvider } from "@/components/guide/guide-provider";
 import type { Locale } from "@/lib/i18n";
 import { DEFAULT_LOCALE, dirForLocale, localeFromCookieHeader } from "@/lib/i18n/context";
 import { metaByLocale } from "@/lib/i18n/meta";
+import { SOCIAL_IMAGE } from "@/shared/constants/site";
 import { buildErrorDebugText } from "@/shared/lib/error-debug";
 import { useExitOnRefusedSession } from "@/features/auth";
 import { ThemeProvider, useTheme, DEFAULT_THEME, themeFromCookieHeader } from "@/lib/theme";
@@ -131,7 +132,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { property: "og:title", content: m.ogTitle },
         { property: "og:description", content: m.ogDescription },
         { property: "og:type", content: "website" },
+        { property: "og:image", content: SOCIAL_IMAGE.url },
+        { property: "og:image:width", content: String(SOCIAL_IMAGE.width) },
+        { property: "og:image:height", content: String(SOCIAL_IMAGE.height) },
+        { property: "og:image:alt", content: m.ogTitle },
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: SOCIAL_IMAGE.url },
         // PWA / mobile install
         { name: "theme-color", content: "#0a0a0a" },
         { name: "mobile-web-app-capable", content: "yes" },

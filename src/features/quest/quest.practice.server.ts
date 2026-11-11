@@ -9,6 +9,7 @@ import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { optionalSupabaseAuth } from "@/shared/integrations/supabase/optional-auth-middleware";
 import { isRateLimited, isRateLimitedLocal } from "@/shared/lib/rate-limit";
+import { logger } from "@/shared/lib/logger";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { MAX_CHOICE_LENGTH } from "@/shared/lib/answer-formats";
 import { assertAnswerFormats } from "@/features/quest/answer-format-guard";
@@ -166,4 +167,46 @@ export const scoreQuizPublic = createServerFn({ method: "POST" })
     const correct = Number(row?.correct ?? 0);
     const scorePct = total > 0 ? Math.round((correct / total) * 100) : 0;
     return { correct, total, scorePct };
+  });
+
+// ---------- Public practice page — what its <head> needs, nothing more ----------
+
+/** Les trois noms qui décrivent une page d'entraînement à un moteur de recherche. */
+export type ExerciseMeta = {
+  title: string;
+  mode: string;
+  chapterTitle: string | null;
+  subjectName: string | null;
+};
+
+/**
+ * Le titre d'un exercice, celui de son chapitre et le nom de sa matière — de quoi
+ * écrire le `<title>` et la description de `/exercice/$id` au rendu serveur (les
+ * 5 477 pages du sitemap portaient toutes « Entraînement · Na9ra Nal3ab »).
+ *
+ * Volontairement PAS `getExercise` : celle-ci lit aussi les questions, l'inventaire
+ * et la porte du quiz, que le lecteur recharge de toute façon avec la session de
+ * l'élève. Ici une seule lecture, trois chaînes, aucune question. `null` quand
+ * l'exercice n'existe pas ou n'est pas lisible : la page garde son titre générique.
+ */
+export const getExerciseMeta = createServerFn({ method: "GET" })
+  .middleware([optionalSupabaseAuth])
+  .validator((d) => z.object({ exerciseId: z.guid() }).parse(d))
+  .handler(async ({ data, context }): Promise<ExerciseMeta | null> => {
+    const { data: row, error } = await context.supabase
+      .from("exercises")
+      .select("title, mode, chapters(title), subjects(name_fr)")
+      .eq("id", data.exerciseId)
+      .maybeSingle();
+    if (error) {
+      logger.warn("quest.getExerciseMeta: lookup failed", { error: error.message });
+      return null;
+    }
+    if (!row) return null;
+    return {
+      title: row.title,
+      mode: row.mode,
+      chapterTitle: row.chapters?.title ?? null,
+      subjectName: row.subjects?.name_fr ?? null,
+    };
   });

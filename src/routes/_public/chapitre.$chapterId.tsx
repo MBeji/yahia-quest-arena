@@ -7,9 +7,7 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import { useT } from "@/lib/i18n";
-// Import direct du fichier serveur, pas du barrel : le `loader` vit dans le chunk
-// d'entrée (seul le composant est découpé), et le barrel y ferait entrer la feature.
-import { getChapterLesson } from "@/features/quest/quest.lesson.server";
+import { getChapterLesson } from "@/features/quest";
 import { hasPassedChapterQuiz } from "@/features/quest/anon-quiz-gate";
 import { useAuth } from "@/features/auth";
 // Import DIRECT, pas via le barrel : `@/features/ai` réexporte la console
@@ -51,7 +49,10 @@ export const Route = createFileRoute("/_public/chapitre/$chapterId")({
 
 /** SSR seulement : la leçon anonyme et le <head> qui la décrit (titre, description, JSON-LD). */
 async function seedChapitre(chapterId: string) {
-  const data = await seedOnServer("chapitre", () => getChapterLesson({ data: { chapterId } }));
+  const data = await seedOnServer("chapitre", async () => {
+    const server = await import("@/features/quest/quest.lesson.server");
+    return server.getChapterLesson({ data: { chapterId } });
+  });
   if (!data) return null;
   const { chapter } = data;
   const subject = chapter.subjects as { name_fr?: string; content_language?: string } | null;

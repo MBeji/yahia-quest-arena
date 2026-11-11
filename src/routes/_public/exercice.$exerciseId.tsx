@@ -23,6 +23,7 @@ import { useAuth } from "@/features/auth";
 import { useT } from "@/lib/i18n";
 import { trackProductEvent } from "@/shared/lib/product-events";
 import { rememberCurrentPage } from "@/shared/lib/return-to";
+import { publicPageHead, seedOnServer } from "@/shared/lib/public-page-seo";
 
 /**
  * Public « entraînement » register — login-free. Thin: builds the anonymous
@@ -35,9 +36,32 @@ import { rememberCurrentPage } from "@/shared/lib/return-to";
  * aggregate-only via `scoreQuizPublic` (the answer key stays secret).
  */
 export const Route = createFileRoute("/_public/exercice/$exerciseId")({
-  head: () => ({ meta: [{ title: "Entraînement · Na9ra Nal3ab" }] }),
+  // Rendu serveur du <head> seulement (`public-page-seo.ts`) : la page annonce son
+  // exercice, son chapitre et sa matière. Le lecteur, lui, charge ses questions
+  // côté client avec la session de l'élève — elles ne sont pas préchargées ici.
+  // Derrière `import.meta.env.SSR`, ce code sort du bundle client.
+  loader: ({ params }) => (import.meta.env.SSR ? seedExercice(params.exerciseId) : null),
+  head: ({ loaderData }) =>
+    loaderData?.head ?? { meta: [{ title: "Entraînement · Na9ra Nal3ab" }] },
   component: ExercicePage,
 });
+
+/** SSR seulement : le <head> d'une page d'entraînement (titre, description, carte de partage). */
+async function seedExercice(exerciseId: string) {
+  const meta = await seedOnServer("exercice", async () => {
+    const server = await import("@/features/quest/quest.practice.server");
+    return server.getExerciseMeta({ data: { exerciseId } });
+  });
+  if (!meta) return null;
+  const where = [meta.chapterTitle, meta.subjectName].filter(Boolean).join(" · ");
+  const kind = meta.mode === "quiz" ? "Quiz de compréhension" : "Exercice corrigé";
+  const head = publicPageHead({
+    title: meta.chapterTitle ? `${meta.title} — ${meta.chapterTitle}` : meta.title,
+    description: `${kind}, gratuit et sans inscription : ${meta.title}${where ? ` (${where})` : ""}.`,
+    path: `/exercice/${exerciseId}`,
+  });
+  return { head };
+}
 
 function ExercicePage() {
   const { exerciseId } = Route.useParams();
