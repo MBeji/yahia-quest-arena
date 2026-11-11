@@ -290,10 +290,27 @@ export function SubjectHub({
   }, [rows, chapters, exercises, missionFlags, isAuthenticated]);
 
   // Accordions: everything collapsed except the resume chapter (or the first).
+  const resumeChapterId = resume?.chapter.id ?? null;
   const [openIds, setOpenIds] = useState<Set<string>>(
-    () => new Set([resume?.chapter.id ?? chapters[0]?.id].filter(Boolean) as string[]),
+    () => new Set([resumeChapterId ?? chapters[0]?.id].filter(Boolean) as string[]),
   );
+  // Le hub peut monter AVANT de savoir où l'élève en est. Depuis le rendu serveur des pages
+  // publiques (#1246), il s'affiche d'abord sur le sommaire ANONYME préchargé ; la
+  // progression n'arrive qu'ensuite, avec la requête que porte la session. Or `useState`
+  // ne lit la cible qu'au montage : le chapitre à reprendre restait replié, et sa ligne de
+  // rappel avec lui — c'est le spec de rappel qui l'a vu, le jour même. L'accordéon suit
+  // donc la cible quand elle se révèle (ou change), tant que l'élève n'a rien ouvert ni
+  // fermé lui-même : son geste prime sur une réponse arrivée après lui. Ajusté PENDANT le
+  // rendu, pas dans un effet — sinon le premier chapitre s'afficherait ouvert le temps
+  // d'une image avant de céder la place.
+  const [followedResumeId, setFollowedResumeId] = useState(resumeChapterId);
+  const [accordionTouched, setAccordionTouched] = useState(false);
+  if (resumeChapterId !== followedResumeId) {
+    setFollowedResumeId(resumeChapterId);
+    if (resumeChapterId && !accordionTouched) setOpenIds(new Set([resumeChapterId]));
+  }
   function toggle(id: string) {
+    setAccordionTouched(true);
     setOpenIds((prev) => {
       const nextSet = new Set(prev);
       if (nextSet.has(id)) nextSet.delete(id);
