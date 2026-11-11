@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import React from "react";
 
@@ -176,5 +176,90 @@ describe("SubjectHub — « Reprendre ici » sur une matière hors école (#1047
     );
     expect(expanded("k1")).toBe("true");
     expect(expanded("k3")).toBe("false");
+  });
+});
+
+/**
+ * LE HUB MONTE AVANT LA SESSION. Depuis le rendu serveur des pages publiques (#1246), la
+ * route montre d'abord le sommaire ANONYME préchargé (`placeholderData`), puis la réponse
+ * de la requête que porte la session : même composant monté, nouvelles props. L'accordéon
+ * ne lisait sa cible qu'au montage — sur un chargement direct de `/matiere/…`, l'élève
+ * connecté retrouvait le PREMIER chapitre ouvert, et celui où il travaillait replié. Seul
+ * le spec de rappel (E2E authentifié) l'a vu : aucun test unitaire ne rejouait l'arrivée
+ * de la progression après le premier rendu.
+ */
+describe("SubjectHub — la progression arrive après le premier rendu (#1246)", () => {
+  const noGate = { gated: false, cleared: true };
+  const anonymous = (
+    <SubjectHub
+      subject={subject}
+      chapters={chapters}
+      exercises={exercises}
+      progress={null}
+      quizPassedByChapter={{ k1: true, k2: true, k3: true }}
+      isAuthenticated={false}
+    />
+  );
+  // La même charge que le premier test de ce fichier : l'élève a travaillé au chapitre 2.
+  const withSession = (
+    <SubjectHub
+      subject={subject}
+      chapters={chapters}
+      exercises={exercises}
+      progress={progressOf(
+        { k1: noGate, k2: { ...noGate, star: 1, counted: 1 }, k3: noGate },
+        {
+          m1: { chapterId: "k1" },
+          m1b: { chapterId: "k1" },
+          m2: { chapterId: "k2", counted: true, bestClassic: 100 },
+          m2b: { chapterId: "k2" },
+          m3: { chapterId: "k3" },
+        },
+      )}
+      quizPassedByChapter={{ k1: true, k2: true, k3: true }}
+      isAuthenticated
+    />
+  );
+
+  it("ouvre le chapitre à reprendre quand la session le révèle", () => {
+    const { rerender } = render(anonymous);
+    // Sommaire anonyme : rien à reprendre, le premier chapitre est ouvert.
+    expect(expanded("k1")).toBe("true");
+    expect(expanded("k2")).toBe("false");
+
+    rerender(withSession);
+    expect(expanded("k2")).toBe("true");
+    expect(expanded("k1")).toBe("false");
+  });
+
+  it("laisse l'accordéon tel que l'élève l'a mis s'il y a touché avant", () => {
+    const { rerender } = render(anonymous);
+    fireEvent.click(screen.getByTestId("chapter-toggle-k3"));
+    expect(expanded("k3")).toBe("true");
+
+    rerender(withSession);
+    // Son geste prime : ni k3 refermé, ni k2 ouvert d'autorité dans son dos.
+    expect(expanded("k3")).toBe("true");
+    expect(expanded("k1")).toBe("true");
+    expect(expanded("k2")).toBe("false");
+  });
+
+  it("n'y touche pas quand la session n'apporte rien à reprendre", () => {
+    const { rerender } = render(anonymous);
+    rerender(
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        progress={progressOf(
+          { k1: noGate, k2: noGate, k3: noGate },
+          { m1: { chapterId: "k1" }, m2: { chapterId: "k2" }, m3: { chapterId: "k3" } },
+        )}
+        quizPassedByChapter={{ k1: true, k2: true, k3: true }}
+        isAuthenticated
+      />,
+    );
+    expect(expanded("k1")).toBe("true");
+    expect(expanded("k2")).toBe("false");
   });
 });
