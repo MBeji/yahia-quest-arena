@@ -157,7 +157,8 @@
   "overrides": {
     "esbuild": "^0.28.1",
     "miniflare": {
-      "undici": "7.29.0"
+      "sharp": "0.35.5",
+      "undici": "7.30.2"
     }
   }
 }
