@@ -173,6 +173,22 @@ Ciblé, et jamais global : un override global basculerait aussi le `jsdom` de l'
 `undici 8`. C'est une dépendance de développement (`audit:deps` tourne en `--omit=dev` et ne la
 voit pas) : elle se vérifie par le canari npm 10, la garde de diff et `build:check`.
 
+**Le même geste, rejoué le 2026-11-11** pour la PR Dependabot #1135 (« bump `@vitest/mocker` et
+`sharp` »). `sharp` est épinglé à `0.35.2` par `miniflare 4`, exactement comme `undici` ; pour
+l'atteindre, Dependabot montait là encore `@cloudflare/vite-plugin` au manifeste (`^1.40.2` →
+`^1.62.2`), donc `miniflare 5-alpha`. La PR a été fermée au profit de l'override :
+
+```json
+"overrides": {
+  "miniflare": { "sharp": "0.35.5", "undici": "7.30.2" }
+}
+```
+
+Les deux versions sont les premières hors des avis ouverts ce jour-là (`sharp` ≤ 0.35.5-rc.1,
+`undici` 7.0.0 – 7.30.0) ; `npm audit` **dev inclus** passe de 4 avis « high » à 0. Un override
+épinglé vieillit comme le pin qu'il remplace : c'est `npm audit` sans `--omit=dev` qui dit quand
+le remonter, puisque `audit:deps` ne regarde pas cette chaîne.
+
 ⚠️ Un commentaire `@dependabot rebase` ne peut pas être posté par une session : le connecteur GitHub
 neutralise la mention (`·@·d·ependabot r·ebase`). Seul un humain le tape. Un override ciblé rend
 souvent ce geste inutile.
