@@ -177,6 +177,46 @@ voit pas) : elle se vérifie par le canari npm 10, la garde de diff et `build:ch
 neutralise la mention (`·@·d·ependabot r·ebase`). Seul un humain le tape. Un override ciblé rend
 souvent ce geste inutile.
 
+## Les écartés du lot — `scripts/deps/held-back.json` (2026-11-11)
+
+Une montée **dans les ranges** peut être refusée par le gate pour une raison qui ne se corrige pas
+dans la PR du lot : elle fait entrer une préversion, ou elle fait déborder un budget de bundle.
+L'écarter à la main (`--hold`) ne durait qu'une commande : le run suivant la retrouvait et la
+re-refusait. `react` 19.3 et `lucide-react` ont ainsi été écartés pour le budget de bundle
+trois fois (2026-09-25, 09-29, 10-02), mesures refaites à chaque fois, puis réembarqués par les
+cinq lots suivants, restés rouges. Onze lots de suite, du 2026-09-25 au 2026-11-10, n'ont jamais
+mergé
+([`agents/gardes.md`](./agents/gardes.md)).
+
+[`scripts/deps/held-back.json`](../scripts/deps/held-back.json) est la mémoire de ces refus. Une
+entrée = **une raison**, pour un ou plusieurs paquets qui montent ensemble :
+
+| champ      | ce qu'il porte                                                                  |
+| ---------- | ------------------------------------------------------------------------------- |
+| `packages` | les paquets écartés — un groupe (`react` et ses `@types`) reste dans une entrée |
+| `since`    | la date de l'écart                                                              |
+| `reason`   | le refus, **mesuré** : la préversion nommée, ou le chunk et ses deux tailles    |
+| `liftWhen` | ce qui lèvera l'écart — sans cette ligne, un écart est un gel                   |
+
+Le script refuse une entrée sans `reason` ni `liftWhen`, et chaque PR de lot réaffiche la liste :
+un écart qu'on ne relit jamais ne se lève jamais. Un écart **sans objet** (le paquet n'a plus rien à
+monter dans son range) est signalé dans la PR, pour être retiré.
+
+État au 2026-11-11, chiffres pris sur `main` :
+
+| paquet                               | ce qui le retient                                                                                  |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| `@cloudflare/vite-plugin` ≥ 1.49.1   | dépend de `miniflare 5` (alpha puis bêta). 1.49.0 est la dernière version sur `miniflare 4`        |
+| `vite` 8.3                           | `rolldown` ≥ 1.2.16 : son binding wasm32-wasi (optionnel) dépend de `@emnapi/core 2.0.0-beta.2`    |
+| `react` 19.3 (et `react-dom`, types) | `react-dom-client` grossit en amont (536 → 625 kB) : chunk d'entrée 454,53 → 482,54 kB, budget 456 |
+| `lucide-react` 1.72                  | `vendor-icons` 30,78 → 37,42 kB, budget 32, à imports inchangés                                    |
+
+**Une préversion ne passe plus par accident.** Le script rejoue la règle A1 sur le lot qu'il vient
+d'appliquer ; si une préversion entre, il remonte le lockfile jusqu'au paquet du lot qui la **tire**
+(`dependencies` et `optionalDependencies`, jamais les peers — presque tout l'outillage a `vite` en
+peer), l'écarte, le nomme dans la PR et applique le reste. L'assumer reste un geste à part : une PR
+dédiée, `[allow-prerelease]` dans son titre.
+
 ## Rules
 
 - Never merge dependency updates without CI green.

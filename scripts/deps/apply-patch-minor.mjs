@@ -16,7 +16,8 @@
  *   apply   → `npm update <planned…>` then a full `npm install` to normalise the lockfile. When
  *             the lot fails, it drops what sinks it — the dependent an ERESOLVE names, else each
  *             package that fails on its own — and retries, saying in the plan and the PR body
- *             what was dropped and why (#1092). One bad package no longer sinks forty.
+ *             what was dropped and why (#1092). One bad package no longer sinks forty. It then
+ *             refuses a lot that brings a prerelease into the lockfile, the same way.
  *
  * WHAT STAYS IA (§4.4/§4.6), and why:
  *   - **majors**: reading a changelog, judging a breaking change, writing the migration. The
@@ -35,10 +36,28 @@
  *     `npm ci` then fails on Linux CI);
  *   - the **`overrides` block must survive untouched** (it carries the global esbuild security
  *     pin) — compared before/after the update, and a change aborts the apply.
+ *
+ * Two more were added on 2026-11-11, after eleven patch/minor lots in a row (09-25 → 11-10)
+ * were opened and never merged:
+ *   - **no prerelease may enter the lockfile.** That is rule A1 of the dependency-diff guard
+ *     (`scripts/ci/check-dependency-pr.mjs`), which lives in the REQUIRED `verify` check and
+ *     NOT in `ci:verify` — so the lot's own gate could be green on a lot the PR gate refuses
+ *     in 18 seconds. Eight of the eleven lots brought `miniflare 5` (alpha, then beta) in
+ *     through `@cloudflare/vite-plugin`: three straight from this script, "✅ ci:verify vert"
+ *     in their body, three more after the agent had repaired them. The same rule now runs
+ *     here, on the same code, and the lot package that carries the prerelease is dropped
+ *     and named (`settleLot`);
+ *   - **what is known to break the gate stays out, with its reason, in a versioned file**
+ *     (`scripts/deps/held-back.json`). `--hold` only lived for one command line: the agent
+ *     held `react` 19.3 and `lucide-react` back for the bundle budget three times (09-25,
+ *     09-29, 10-02), with the same measurements each time — and the five lots that followed
+ *     (10-06 → 10-23) carried both again and stayed red.
  */
 import { execFileSync } from "node:child_process";
-import { readFileSync, writeFileSync, appendFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync, appendFileSync, rmSync } from "node:fs";
 import { pathToFileURL } from "node:url";
+
+import { lockVersions, newPrereleases } from "../ci/check-dependency-pr.mjs";
 
 /**
  * Packages that must move as ONE major: upgrading half a set leaves the app in a state no
@@ -100,6 +119,76 @@ export function majorGroupOf(name) {
   return MAJOR_GROUPS.find((g) => g.match.test(name))?.name ?? null;
 }
 
+/** Where the standing hold-backs live. One entry = one reason, for one or several packages. */
+export const HELD_BACK_FILE = "scripts/deps/held-back.json";
+
+/** npm's own package-name grammar — the only thing this script ever passes to `npm update`. */
+const SAFE_PACKAGE_NAME = /^(?:@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/;
+
+/**
+ * Parse `held-back.json` into one `{ name, reason, liftWhen, since }` per package.
+ *
+ * A hold is a decision somebody has to be able to UNDO, so an entry that does not say why it
+ * exists (`reason`) or what would lift it (`liftWhen`) is refused outright — otherwise the
+ * file becomes a list of packages frozen for reasons nobody remembers, which is the failure
+ * it replaces. Same for a package held twice: two reasons for one package is one too many.
+ */
+export function parseHeldBack(text) {
+  let parsed;
+  try {
+    parsed = JSON.parse(text);
+  } catch (err) {
+    throw new Error(`${HELD_BACK_FILE} is not valid JSON (${err.message}).`);
+  }
+  if (!Array.isArray(parsed?.held)) {
+    throw new Error(`${HELD_BACK_FILE} must carry a "held" array.`);
+  }
+  const out = [];
+  const seen = new Set();
+  parsed.held.forEach((entry, i) => {
+    const where = `${HELD_BACK_FILE} · held[${i}]`;
+    const packages = entry?.packages;
+    if (!Array.isArray(packages) || packages.length === 0) {
+      throw new Error(`${where}: "packages" must be a non-empty array.`);
+    }
+    for (const field of ["reason", "liftWhen"]) {
+      if (typeof entry[field] !== "string" || entry[field].trim() === "") {
+        throw new Error(`${where}: "${field}" is required — a hold must say why, and until when.`);
+      }
+    }
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(entry.since ?? ""))) {
+      throw new Error(`${where}: "since" must be a YYYY-MM-DD date.`);
+    }
+    for (const name of packages) {
+      if (typeof name !== "string" || !SAFE_PACKAGE_NAME.test(name)) {
+        throw new Error(`${where}: "${name}" is not a package name.`);
+      }
+      if (seen.has(name)) throw new Error(`${where}: "${name}" is held twice.`);
+      seen.add(name);
+      out.push({
+        name,
+        reason: entry.reason.trim(),
+        liftWhen: entry.liftWhen.trim(),
+        since: entry.since,
+      });
+    }
+  });
+  return out;
+}
+
+/** `name → reason` (null for a bare `--hold` name) from the mixed list `classifyOutdated` takes. */
+function heldReasons(heldBack) {
+  const held = new Map();
+  for (const h of heldBack ?? []) {
+    if (typeof h === "string") {
+      if (!held.has(h)) held.set(h, null);
+    } else if (h && typeof h.name === "string") {
+      held.set(h.name, h.reason ?? null);
+    }
+  }
+  return held;
+}
+
 /**
  * Split `npm outdated` into the in-range patch/minor lot and everything the declared range
  * cannot reach.
@@ -116,10 +205,12 @@ export function majorGroupOf(name) {
  * its changelog read.
  *
  * @param {object} raw            parsed `npm outdated --json`
- * @param {string[]} heldBack     packages to exclude from the lot (an earlier red gate)
+ * @param {Array<string | {name: string, reason?: string}>} heldBack
+ *        packages to exclude from the lot (an earlier red gate) — a bare name (`--hold`) or
+ *        an entry of `held-back.json`, whose reason then travels into the PR body
  */
 export function classifyOutdated(raw, heldBack = []) {
-  const held = new Set(heldBack);
+  const held = heldReasons(heldBack);
   const outdated = normalizeOutdated(raw);
   const patchMinor = [];
   const majors = [];
@@ -138,7 +229,14 @@ export function classifyOutdated(raw, heldBack = []) {
       const inRange = bumpKind(current, wanted);
       if (inRange === "patch" || inRange === "minor") {
         if (held.has(name)) {
-          excluded.push({ name, current, wanted, kind: inRange, reason: "held back" });
+          const why = held.get(name);
+          excluded.push({
+            name,
+            current,
+            wanted,
+            kind: inRange,
+            reason: why ? `held back — ${why}` : "held back",
+          });
         } else {
           patchMinor.push({ name, from: current, to: wanted, kind: inRange });
         }
@@ -180,10 +278,18 @@ export function groupMajors(majors) {
 /** The full plan: the lot to apply, the majors to hand over, what was left out and why. */
 export function buildPlan(raw, heldBack = []) {
   const { patchMinor, majors, excluded } = classifyOutdated(raw, heldBack);
+  // A hold with nothing left to hold (the package is no longer behind inside its range) is
+  // dead configuration. It is REPORTED rather than ignored: a hold nobody is reminded of is
+  // a hold nobody lifts.
+  const stillHolding = new Set(
+    excluded.filter((e) => e.reason.startsWith("held back")).map((e) => e.name),
+  );
+  const mootHolds = [...heldReasons(heldBack).keys()].filter((n) => !stillHolding.has(n)).sort();
   return {
     lot: "L4 (étude IA → déterministe)",
     patchMinor,
     excluded,
+    mootHolds,
     majorGroups: groupMajors(majors),
     counts: {
       patchMinor: patchMinor.length,
@@ -218,6 +324,15 @@ export function renderPrBody(plan, date) {
     for (const e of plan.excluded)
       lines.push(`- \`${e.name}\` (${e.current ?? "absent"} → ${e.wanted}) — ${e.reason}`);
     lines.push("");
+  }
+
+  if (plan.mootHolds?.length > 0) {
+    lines.push(
+      `> ⚠️ Écart sans objet — plus rien à monter dans les ranges pour ${plan.mootHolds
+        .map((n) => `\`${n}\``)
+        .join(", ")} : retirer l'entrée de \`${HELD_BACK_FILE}\`.`,
+      "",
+    );
   }
 
   if (plan.majorGroups.length > 0) {
@@ -440,6 +555,171 @@ export function updateWithConflictRetry(plan, run, log = console.log, restore = 
   }
 }
 
+/**
+ * Resolve a dependency name the way Node does, inside a lockfile's `packages` map: look in the
+ * dependent's own `node_modules`, then walk up. `null` when the lock does not carry it (an
+ * optional dependency npm left out).
+ */
+function resolveInLock(packages, fromPath, name) {
+  let dir = fromPath;
+  for (;;) {
+    const candidate = `${dir ? `${dir}/` : ""}node_modules/${name}`;
+    if (Object.hasOwn(packages, candidate)) return candidate;
+    if (!dir) return null;
+    const i = dir.lastIndexOf("/node_modules/");
+    dir = i === -1 ? "" : dir.slice(0, i);
+  }
+}
+
+/**
+ * The lot packages through which an entering prerelease is reachable in the NEW lockfile.
+ *
+ * Followed edges: `dependencies` and `optionalDependencies` only — what a package PULLS IN.
+ * Peers are deliberately not followed: nearly every build plugin of this repo peers on `vite`,
+ * so walking them would blame the whole toolchain for the one package that moved `rolldown`.
+ * Measured on 2026-11-11: `@emnapi/core 2.0.0-beta.2` is reached from `vite` alone
+ * (→ rolldown → @rolldown/binding-wasm32-wasi), `miniflare 5.x-beta` from
+ * `@cloudflare/vite-plugin` alone.
+ *
+ * When several lot packages reach the same prerelease, all of them are returned: dropping one
+ * too many costs a retry of that package at the next run; keeping the wrong one costs a dead PR.
+ */
+export function prereleaseCarriers(lockText, prereleaseVersions, lotNames) {
+  const packages = JSON.parse(lockText)?.packages ?? {};
+  const wanted = new Set(prereleaseVersions);
+  const targets = new Set(
+    Object.entries(packages)
+      .filter(([, entry]) => wanted.has(entry?.version))
+      .map(([path]) => path),
+  );
+  if (targets.size === 0) return [];
+
+  const carriers = [];
+  for (const name of lotNames) {
+    const start = `node_modules/${name}`;
+    if (!Object.hasOwn(packages, start)) continue;
+    const seen = new Set([start]);
+    const queue = [start];
+    let reaches = false;
+    while (queue.length > 0 && !reaches) {
+      const path = queue.pop();
+      if (targets.has(path)) {
+        reaches = true;
+        break;
+      }
+      const entry = packages[path] ?? {};
+      for (const dep of Object.keys({ ...entry.dependencies, ...entry.optionalDependencies })) {
+        const next = resolveInLock(packages, path, dep);
+        if (next && !seen.has(next)) {
+          seen.add(next);
+          queue.push(next);
+        }
+      }
+    }
+    if (reaches) carriers.push(name);
+  }
+  return carriers.sort();
+}
+
+/**
+ * `run` + `restore`, aware that an `npm update` MOVES `node_modules`.
+ *
+ * `restore()` used to rewrite package.json and the lockfile and nothing else. That is a
+ * complete restore only while npm failed before touching the tree. The solo tries of
+ * `isolateFailures` SUCCEED for most packages, and each success leaves an installed tree that
+ * no longer matches the lockfile just put back — on which npm 10 then dies (`ENOENT … lstat
+ * node_modules/@tailwindcss/oxide-wasm32-wasi`), whatever package is tried next. Measured on
+ * the three lots of November 2026 (11-03, 11-06, 11-10): the packages "failing on their own
+ * (`syscall lstat`)" were exactly those sorted AFTER `@tailwindcss/vite` — 16, 17 then 20
+ * false failures, the last lot down to 5 packages applied out of 26. Reproduced by hand on
+ * 2026-11-11, and neither a plain `npm install` nor dropping
+ * `node_modules/.package-lock.json` recovers the tree: only one
+ * rebuilt from the restored lockfile does. Hence `resetTree`, called only when an `npm update`
+ * ran since the last restore — the happy path never pays for it.
+ */
+export function makeTreeGuard({ run, writeManifests, resetTree }) {
+  let moved = false;
+  return {
+    run(args) {
+      // Set BEFORE the call: a run that fails halfway through its reify moved the tree too.
+      moved = true;
+      return run(args);
+    },
+    restore() {
+      writeManifests();
+      if (moved) {
+        resetTree();
+        moved = false;
+      }
+    },
+  };
+}
+
+/** The prerelease versions the lot would bring into the lockfile (rule A1 of the PR gate). */
+export function enteringPrereleases(baseLockText, headLockText) {
+  const base = lockVersions(baseLockText);
+  const head = lockVersions(headLockText);
+  if (!base || !head) {
+    throw new Error("package-lock.json has no `packages` block — cannot check for prereleases.");
+  }
+  return newPrereleases(base, head);
+}
+
+/**
+ * Apply the lot until it is one the PR gate will accept: `npm update` (with the conflict
+ * drops above), the normalising install, then the prerelease rule. A lot that brings a
+ * prerelease in is not handed over red — the package carrying it is dropped, named in the
+ * plan, and the rest is applied again from a clean tree.
+ *
+ * `io` is injected so the loop is testable without npm:
+ *   run / restore   the tree-aware pair from `makeTreeGuard`
+ *   install         the full `npm install` that normalises the lockfile
+ *   readLock        the lockfile as text, after the install
+ *   baseLock        the lockfile as text, before anything moved
+ */
+export function settleLot(plan, io, log = console.log) {
+  let current = plan;
+  for (let round = 0; ; round++) {
+    const applied = updateWithConflictRetry(current, io.run, log, io.restore);
+    io.install();
+    const headLock = io.readLock();
+    const entering = enteringPrereleases(io.baseLock, headLock);
+    if (entering.length === 0) return applied;
+
+    const what = entering.map((e) => `${e.version} (${e.path})`).join(", ");
+    if (round >= MAX_CONFLICT_RETRIES) {
+      throw new Error(
+        `a prerelease still enters the lockfile after ${MAX_CONFLICT_RETRIES} round(s) of drops (${what}) — hand it to the agent.`,
+      );
+    }
+    // One reason per package: each is dropped for the prerelease IT pulls in, not for the
+    // whole list — the PR body is where somebody decides whether to assume it.
+    const names = applied.patchMinor.map((p) => p.name);
+    const carried = new Map();
+    for (const e of entering) {
+      for (const name of prereleaseCarriers(headLock, [e.version], names)) {
+        carried.set(name, [...(carried.get(name) ?? []), `${e.version} (${e.path})`]);
+      }
+    }
+    if (carried.size === 0) {
+      throw new Error(
+        `a prerelease enters the lockfile (${what}) but no package of the lot carries it — hand it to the agent.`,
+      );
+    }
+    const carriers = [...carried.keys()].sort();
+    log(`[deps] prerelease entering (${what}) — dropping ${carriers.join(", ")} from the lot`);
+    current = applied;
+    for (const name of carriers) {
+      current = dropFromPlan(
+        current,
+        [name],
+        `ferait entrer une préversion dans le lockfile : ${carried.get(name).join(", ")} — refusée par la garde de diff de dépendance (A1). À assumer dans sa propre PR (\`[allow-prerelease]\`) ou à inscrire dans \`${HELD_BACK_FILE}\``,
+      );
+    }
+    io.restore();
+  }
+}
+
 function emitOutput(key, value) {
   const file = process.env.GITHUB_OUTPUT;
   if (file) appendFileSync(file, `${key}=${value}\n`);
@@ -484,9 +764,6 @@ const npmCapturingStderr = (args) => {
   }
 };
 
-/** npm's own package-name grammar — the only thing this script ever passes to `npm update`. */
-const SAFE_PACKAGE_NAME = /^(?:@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/;
-
 /** Nothing but a real package name reaches the command line (Windows runs it through a shell). */
 export function assertSafePackageNames(names) {
   const bad = names.filter((n) => !SAFE_PACKAGE_NAME.test(n));
@@ -515,12 +792,25 @@ export function readOutdated(run = npm) {
   return text ? JSON.parse(text) : {};
 }
 
-function detect() {
-  const heldBack = (argValue("--hold") ?? "")
+/**
+ * The standing holds (`held-back.json`) plus the one-off `--hold a,b`. `--hold-file <path>`
+ * points elsewhere — an explicit path that does not exist is an error, the default one that
+ * does not exist is simply "no standing hold".
+ */
+function readHolds() {
+  const explicit = argValue("--hold-file");
+  const path = explicit ?? HELD_BACK_FILE;
+  const standing = existsSync(path) ? parseHeldBack(readFileSync(path, "utf8")) : null;
+  if (explicit && !standing) throw new Error(`--hold-file ${explicit}: no such file.`);
+  const oneOff = (argValue("--hold") ?? "")
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
-  const plan = buildPlan(readOutdated(), heldBack);
+  return [...(standing ?? []), ...oneOff];
+}
+
+function detect() {
+  const plan = buildPlan(readOutdated(), readHolds());
 
   const outPath = argValue("--out");
   if (outPath) writeFileSync(outPath, `${JSON.stringify(plan, null, 2)}\n`, "utf8");
@@ -539,6 +829,8 @@ function detect() {
         .join(", ")}`,
     );
   for (const e of plan.excluded) console.log(`[deps]   excluded ${e.name}: ${e.reason}`);
+  for (const n of plan.mootHolds)
+    console.log(`[deps]   moot hold ${n}: nothing left to raise in range — drop its entry`);
 
   emitOutput("has_patch_minor", String(plan.counts.patchMinor > 0));
   emitOutput("has_majors", String(plan.counts.majors > 0));
@@ -555,7 +847,10 @@ function detect() {
         (plan.counts.majors > 0
           ? ` ${plan.counts.majors} montée(s) hors range détectée(s) — traitée(s) hors lot.`
           : "")) +
-      (plan.counts.excluded > 0 ? ` ${plan.counts.excluded} paquet(s) écarté(s) du lot.` : ""),
+      (plan.counts.excluded > 0 ? ` ${plan.counts.excluded} paquet(s) écarté(s) du lot.` : "") +
+      (plan.mootHolds.length > 0
+        ? ` ⚠️ Écart sans objet à retirer de \`${HELD_BACK_FILE}\` : ${plan.mootHolds.join(", ")}.`
+        : ""),
   );
   return plan;
 }
@@ -575,10 +870,31 @@ function apply() {
   const overridesBefore = JSON.parse(readFileSync("package.json", "utf8")).overrides;
 
   const manifests = ["package.json", "package-lock.json"].map((f) => [f, readFileSync(f, "utf8")]);
-  const restore = () => {
-    for (const [f, text] of manifests) writeFileSync(f, text, "utf8");
-  };
-  const applied = updateWithConflictRetry(plan, npmCapturingStderr, console.log, restore);
+  const tree = makeTreeGuard({
+    run: npmCapturingStderr,
+    writeManifests: () => {
+      for (const [f, text] of manifests) writeFileSync(f, text, "utf8");
+    },
+    // `rm` + a full install rather than `npm ci`: same result, and the install is the one
+    // command this script already runs on the tree.
+    resetTree: () => {
+      console.log("[deps] rebuilding node_modules from the restored lockfile");
+      rmSync("node_modules", { recursive: true, force: true });
+      npm(["install", "--no-audit", "--no-fund"]);
+    },
+  });
+  const applied = settleLot(plan, {
+    run: tree.run,
+    restore: tree.restore,
+    // Full install (never --package-lock-only): the lockfile must be normalised the way
+    // `npm ci` will read it back in CI.
+    install: () => {
+      console.log("[deps] npm install (normalising the lockfile)");
+      npm(["install", "--no-audit", "--no-fund"]);
+    },
+    readLock: () => readFileSync("package-lock.json", "utf8"),
+    baseLock: manifests[1][1],
+  });
   if (applied.patchMinor.length !== plan.patchMinor.length) {
     // The plan and the PR body are what the workflow commits and posts: they must say what
     // was really applied, and what was dropped and why.
@@ -586,10 +902,6 @@ function apply() {
     const bodyPath = argValue("--pr-body");
     if (bodyPath) writeFileSync(bodyPath, renderPrBody(applied, argValue("--date") ?? "—"), "utf8");
   }
-  // Full install (never --package-lock-only): the lockfile must be normalised the way `npm ci`
-  // will read it back in CI.
-  console.log("[deps] npm install (normalising the lockfile)");
-  npm(["install", "--no-audit", "--no-fund"]);
 
   assertOverridesUnchanged(
     overridesBefore,
@@ -613,7 +925,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     else if (mode === "apply") apply();
     else {
       console.error(
-        "usage: apply-patch-minor.mjs <detect|apply> [--out plan.json] [--pr-body body.md] [--plan plan.json [--pr-body body.md --date D]] [--hold pkg,pkg] [--date YYYY-MM-DD]",
+        "usage: apply-patch-minor.mjs <detect|apply> [--out plan.json] [--pr-body body.md] [--plan plan.json [--pr-body body.md --date D]] [--hold pkg,pkg] [--hold-file held-back.json] [--date YYYY-MM-DD]",
       );
       process.exit(2);
     }
