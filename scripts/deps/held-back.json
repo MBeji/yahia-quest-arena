@@ -1,0 +1,29 @@
+{
+  "$doc": "Montées dans les ranges que le lot patch/minor (scripts/deps/apply-patch-minor.mjs) laisse de côté, avec leur raison mesurée et ce qui les lèvera. Une entrée = une raison, pour un ou plusieurs paquets qui montent ensemble. Lu par `detect` ; chaque PR de lot réaffiche la liste. Détail : docs/dependency-maintenance.md § Les écartés du lot.",
+  "held": [
+    {
+      "packages": ["@cloudflare/vite-plugin"],
+      "since": "2026-11-11",
+      "reason": "toute version ≥ 1.49.1 dépend de miniflare 5 (alpha puis bêta) : préversion refusée par la garde de diff de dépendance (A1) — le motif de #716. 1.49.0 est la dernière sur miniflare 4",
+      "liftWhen": "miniflare 5 sort en version stable (dist-tag `latest`)"
+    },
+    {
+      "packages": ["vite"],
+      "since": "2026-11-11",
+      "reason": "vite 8.3 tire rolldown ≥ 1.2.16, dont le binding wasm32-wasi (optionnel) dépend de @emnapi/core 2.0.0-beta.2 : préversion entrante refusée par la garde de diff de dépendance (A1)",
+      "liftWhen": "une PR dédiée assume la préversion dans son titre (`[allow-prerelease]`), ou @emnapi 2 sort en version stable"
+    },
+    {
+      "packages": ["react", "react-dom", "@types/react", "@types/react-dom"],
+      "since": "2026-11-11",
+      "reason": "react-dom 19.3 grossit en amont (react-dom-client.production.js : 536 → 625 kB) ; le chunk d'entrée passe de 454,53 à 482,54 kB pour un budget de 456 (build:check)",
+      "liftWhen": "le chunk d'entrée est découpé — voir l'entrée `index-` de scripts/check-bundle-budget.mjs, qui le prescrit avant tout relèvement"
+    },
+    {
+      "packages": ["lucide-react"],
+      "since": "2026-11-11",
+      "reason": "lucide-react 1.72 fait passer vendor-icons de 30,78 à 37,42 kB pour un budget de 32 (build:check), à imports inchangés",
+      "liftWhen": "le surcoût par icône est expliqué et réduit, ou le budget `vendor-icons-` est ré-arbitré"
+    }
+  ]
+}
