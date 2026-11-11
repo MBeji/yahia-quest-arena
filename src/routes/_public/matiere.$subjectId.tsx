@@ -6,9 +6,12 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SubjectHubSkeleton } from "@/features/quest/components/subject-hub-skeleton";
 import { useT } from "@/lib/i18n";
-import { getSubject } from "@/features/quest";
+// Import direct du fichier serveur, pas du barrel : le `loader` vit dans le chunk
+// d'entrée (seul le composant est découpé), et le barrel y ferait entrer la feature.
+import { getSubject } from "@/features/quest/quest.server";
 import { useAuth } from "@/features/auth";
 import { SubjectHub } from "@/features/quest/components/subject-hub";
+import { publicPageHead, seedOnServer } from "@/shared/lib/public-page-seo";
 
 /**
  * Public subject page — « Référence » register (chantier C8). Thin: fetches the
@@ -16,18 +19,41 @@ import { SubjectHub } from "@/features/quest/components/subject-hub";
  * public `_public` coquille).
  */
 export const Route = createFileRoute("/_public/matiere/$subjectId")({
-  head: () => ({ meta: [{ title: "Matière · Na9ra Nal3ab" }] }),
+  // Rendu serveur de la page publique (`public-page-seo.ts`) : le loader ne tourne
+  // utilement qu'au SSR, où il précharge la version ANONYME de la page et calcule
+  // son <head> ; le composant la montre en `placeholderData` jusqu'à ce que sa
+  // propre requête réponde. Derrière `import.meta.env.SSR`, ce code (et son
+  // `<head>`) sort du bundle client — le loader y rend `null`.
+  loader: ({ params }) => (import.meta.env.SSR ? seedMatiere(params.subjectId) : null),
+  head: ({ loaderData }) => loaderData?.head ?? { meta: [{ title: "Matière · Na9ra Nal3ab" }] },
   component: MatierePage,
 });
+
+/** SSR seulement : le sommaire anonyme de la matière et son <head>. */
+async function seedMatiere(subjectId: string) {
+  const data = await seedOnServer("matiere", () => getSubject({ data: { subjectId } }));
+  if (!data?.subject) return null;
+  const { subject, parcours, chapters } = data;
+  const chapterTitles = chapters.map((c) => c.title).join(" · ");
+  const head = publicPageHead({
+    title: parcours ? `${subject.name_fr} — ${parcours.name_fr}` : subject.name_fr,
+    description:
+      subject.description || `Cours, résumés et exercices corrigés, gratuits : ${chapterTitles}`,
+    path: `/matiere/${subjectId}`,
+  });
+  return { data, head };
+}
 
 function MatierePage() {
   const { subjectId } = Route.useParams();
   const { user } = useAuth();
   const fetchSubject = useServerFn(getSubject);
   const t = useT();
+  const seed = Route.useLoaderData();
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["subject", subjectId],
     queryFn: () => fetchSubject({ data: { subjectId } }),
+    placeholderData: seed?.data,
   });
 
   if (isError) {
