@@ -23,9 +23,6 @@ import { useAuth } from "@/features/auth";
 import { useT } from "@/lib/i18n";
 import { trackProductEvent } from "@/shared/lib/product-events";
 import { rememberCurrentPage } from "@/shared/lib/return-to";
-// Import direct du fichier serveur, pas du barrel : le `loader` vit dans le chunk
-// d'entrée (seul le composant est découpé), et le barrel y ferait entrer la feature.
-import { getExerciseMeta } from "@/features/quest/quest.practice.server";
 import { publicPageHead, seedOnServer } from "@/shared/lib/public-page-seo";
 
 /**
@@ -51,7 +48,10 @@ export const Route = createFileRoute("/_public/exercice/$exerciseId")({
 
 /** SSR seulement : le <head> d'une page d'entraînement (titre, description, carte de partage). */
 async function seedExercice(exerciseId: string) {
-  const meta = await seedOnServer("exercice", () => getExerciseMeta({ data: { exerciseId } }));
+  const meta = await seedOnServer("exercice", async () => {
+    const server = await import("@/features/quest/quest.practice.server");
+    return server.getExerciseMeta({ data: { exerciseId } });
+  });
   if (!meta) return null;
   const where = [meta.chapterTitle, meta.subjectName].filter(Boolean).join(" · ");
   const kind = meta.mode === "quiz" ? "Quiz de compréhension" : "Exercice corrigé";

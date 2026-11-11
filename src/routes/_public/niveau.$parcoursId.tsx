@@ -6,9 +6,7 @@ import { CloudOff, Compass as CompassIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
-// Import direct du fichier serveur, pas du barrel : le `loader` vit dans le chunk
-// d'entrée (seul le composant est découpé), et le barrel y ferait entrer la feature.
-import { getParcoursSubjects } from "@/features/dashboard/dashboard.server";
+import { getParcoursSubjects } from "@/features/dashboard";
 import { setCurrentParcours, useAuth } from "@/features/auth";
 import { ParcoursSubjects } from "@/features/dashboard/components/parcours-subjects";
 import { useT } from "@/lib/i18n";
@@ -34,7 +32,10 @@ export const Route = createFileRoute("/_public/niveau/$parcoursId")({
 
 /** SSR seulement : les matières du niveau et le <head> qui les annonce. */
 async function seedNiveau(parcoursId: string) {
-  const data = await seedOnServer("niveau", () => getParcoursSubjects({ data: { parcoursId } }));
+  const data = await seedOnServer("niveau", async () => {
+    const server = await import("@/features/dashboard/dashboard.server");
+    return server.getParcoursSubjects({ data: { parcoursId } });
+  });
   if (!data?.parcours) return null;
   const { parcours, subjects } = data;
   const head = publicPageHead({

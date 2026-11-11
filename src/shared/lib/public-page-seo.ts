@@ -30,6 +30,14 @@ export const META_DESCRIPTION_MAX = 160;
  *   chargement d'avant ; à l'hydratation elle relit la valeur du serveur.
  * - **Panne** : `null` et une ligne de journal. Une page qui n'a pas pu être
  *   préchargée retombe sur le chargement client, elle ne casse jamais le rendu.
+ *
+ * ⚠️ Dans `load`, la fonction serveur s'importe À LA DEMANDE (`await import(…)`),
+ * jamais en tête de la route. Le `loader` d'une route vit dans le chunk d'entrée,
+ * que tout visiteur télécharge (seul son composant est découpé) : un import
+ * statique y embarque les souches de TOUTES les fonctions serveur du fichier visé
+ * — un `createServerFn(…)` au niveau module ne s'élimine pas. Mesuré le
+ * 2026-11-11 : quatre routes, +1,9 Ko sur `index-`, budget dépassé. Importée
+ * dans la fonction SSR, elle disparaît du bundle client avec elle.
  */
 export async function seedOnServer<T>(label: string, load: () => Promise<T>): Promise<T | null> {
   if (!import.meta.env.SSR) return null;

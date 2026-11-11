@@ -6,9 +6,7 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SubjectHubSkeleton } from "@/features/quest/components/subject-hub-skeleton";
 import { useT } from "@/lib/i18n";
-// Import direct du fichier serveur, pas du barrel : le `loader` vit dans le chunk
-// d'entrée (seul le composant est découpé), et le barrel y ferait entrer la feature.
-import { getSubject } from "@/features/quest/quest.server";
+import { getSubject } from "@/features/quest";
 import { useAuth } from "@/features/auth";
 import { SubjectHub } from "@/features/quest/components/subject-hub";
 import { publicPageHead, seedOnServer } from "@/shared/lib/public-page-seo";
@@ -31,7 +29,10 @@ export const Route = createFileRoute("/_public/matiere/$subjectId")({
 
 /** SSR seulement : le sommaire anonyme de la matière et son <head>. */
 async function seedMatiere(subjectId: string) {
-  const data = await seedOnServer("matiere", () => getSubject({ data: { subjectId } }));
+  const data = await seedOnServer("matiere", async () => {
+    const server = await import("@/features/quest/quest.server");
+    return server.getSubject({ data: { subjectId } });
+  });
   if (!data?.subject) return null;
   const { subject, parcours, chapters } = data;
   const chapterTitles = chapters.map((c) => c.title).join(" · ");
