@@ -21,3 +21,19 @@
  * bundle for the sake of one string. A constant with no imports has no such cost.
  */
 export const SITE_URL = "https://www.na9ranal3ab.tn";
+
+/**
+ * L'image d'aperçu d'un lien partagé (Facebook, WhatsApp, Messenger, X…), servie
+ * depuis `public/`. Jusqu'au 2026-11-11 le site n'en déclarait aucune : un lien
+ * collé dans une conversation arrivait sans visuel, alors que le partage entre
+ * parents et élèves est le premier canal d'un site scolaire. 1200 × 630 est le
+ * format que ces plateformes affichent en grand ; les dimensions sont déclarées
+ * pour que la carte s'affiche dès le premier partage, sans attendre leur mesure.
+ * Un test vérifie que le fichier existe et a bien ces dimensions.
+ */
+export const SOCIAL_IMAGE = {
+  url: `${SITE_URL}/og-image.png`,
+  publicPath: "public/og-image.png",
+  width: 1200,
+  height: 630,
+} as const;
