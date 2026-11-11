@@ -45,7 +45,11 @@ vi.mock("@/shared/integrations/supabase/client", () => ({
   },
 }));
 
-import { ResetPasswordPage } from "../auth_.reset";
+import { Route } from "../auth_.reset";
+
+// Le composant n'est plus exporté par la route (il sortait du découpage) : on le
+// prend là où le routeur le prend.
+const ResetPasswordPage = (Route as unknown as { component: React.ComponentType }).component;
 
 describe("ResetPasswordPage (/auth/reset)", () => {
   beforeEach(() => {
