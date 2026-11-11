@@ -14,23 +14,41 @@ vi.mock("@/shared/lib/logger", () => ({
 type TableResult = { data?: unknown[] | null; error?: { message: string } | null };
 
 /**
- * Minimal stub of the anon Supabase client: `from(t).select(c).order(k).range(a, b)`
- * resolves to the slice `[a, b]` of the table, like PostgREST does. `ranges` records
- * every page asked for, per table.
+ * Minimal stub of the anon Supabase client, PostgREST-shaped:
+ * `from(t).select(c)[.not(col, "is", null)][.neq(col, v)].order(k).range(a, b)`
+ * applies the filters, then resolves to the slice `[a, b]`. `ranges` records every
+ * page asked for and `selects` every column list, per table.
  */
 function mockClient(
   tables: Record<string, TableResult>,
   ranges: Record<string, Array<[number, number]>> = {},
+  selects: Record<string, string[]> = {},
 ): Parameters<typeof collectSitemapPaths>[0] {
   return {
     from(table: string) {
       const r = tables[table] ?? { data: [], error: null };
-      const range = (from: number, to: number) => {
-        (ranges[table] ??= []).push([from, to]);
-        if (r.error) return Promise.resolve({ data: null, error: r.error });
-        return Promise.resolve({ data: (r.data ?? []).slice(from, to + 1), error: null });
+      let rows = (r.data ?? []) as Array<Record<string, unknown>>;
+      const builder = {
+        select(columns: string) {
+          (selects[table] ??= []).push(columns);
+          return builder;
+        },
+        not(column: string, op: string, value: unknown) {
+          if (op === "is" && value === null) rows = rows.filter((row) => row[column] != null);
+          return builder;
+        },
+        neq(column: string, value: unknown) {
+          rows = rows.filter((row) => row[column] !== value);
+          return builder;
+        },
+        order: () => builder,
+        range(from: number, to: number) {
+          (ranges[table] ??= []).push([from, to]);
+          if (r.error) return Promise.resolve({ data: null, error: r.error });
+          return Promise.resolve({ data: rows.slice(from, to + 1), error: null });
+        },
       };
-      return { select: () => ({ order: () => ({ range }) }) };
+      return builder;
     },
   } as unknown as Parameters<typeof collectSitemapPaths>[0];
 }
@@ -119,7 +137,7 @@ describe("collectSitemapPaths", () => {
     expect(paths).toContain("/matiere/math-9eme");
   });
 
-  it("includes chapters that have lesson content, drops empty ones", async () => {
+  it("includes chapters that have lesson content, drops NULL and empty ones", async () => {
     const paths = await collectSitemapPaths(
       mockClient({
         ...EMPTY,
@@ -127,14 +145,29 @@ describe("collectSitemapPaths", () => {
           data: [
             { id: "ch-with", lesson_content: "# Leçon" },
             { id: "ch-null", lesson_content: null },
-            { id: "ch-blank", lesson_content: "   " },
+            { id: "ch-empty", lesson_content: "" },
           ],
         },
       }),
     );
     expect(paths).toContain("/chapitre/ch-with");
     expect(paths).not.toContain("/chapitre/ch-null");
-    expect(paths).not.toContain("/chapitre/ch-blank");
+    expect(paths).not.toContain("/chapitre/ch-empty");
+  });
+
+  // Régression du 2026-11-11 : lire `lesson_content` (1 000 leçons triées par page)
+  // dépassait le statement timeout et TOUS les cours tombaient du sitemap. Le
+  // filtre se fait en base ; seul l'id doit voyager.
+  it("never downloads lesson bodies — only chapter ids travel", async () => {
+    const selects: Record<string, string[]> = {};
+    await collectSitemapPaths(
+      mockClient(
+        { ...EMPTY, chapters: { data: [{ id: "c", lesson_content: "# L" }] } },
+        {},
+        selects,
+      ),
+    );
+    expect(selects.chapters).toEqual(["id"]);
   });
 
   it("includes admin practice exercises, drops quizzes and non-admin content", async () => {
