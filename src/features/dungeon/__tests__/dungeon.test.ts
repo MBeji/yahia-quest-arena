@@ -25,7 +25,7 @@ vi.mock("@tanstack/react-start", () => ({
     let validatorFn: ((d: unknown) => unknown) | undefined;
     const chain = {
       middleware: () => chain,
-      inputValidator: (fn: (d: unknown) => unknown) => {
+      validator: (fn: (d: unknown) => unknown) => {
         validatorFn = fn;
         return chain;
       },
@@ -569,5 +569,54 @@ describe("dungeon — startDungeonRun gate", () => {
     await expect((startDungeonRun as unknown as AnyFn)()).rejects.toThrow(
       /Accès au Dungeon refusé/i,
     );
+  });
+});
+
+describe("dungeon — submitDungeonAnswer (lectures préparatoires ensemble, 2026-10-31)", () => {
+  it("le rate limit et le type de la question partent avant qu'aucun n'ait répondu", async () => {
+    const release: Array<() => void> = [];
+    mockIsRateLimited.mockImplementation(
+      () => new Promise<boolean>((resolve) => release.push(() => resolve(false))),
+    );
+    mockFrom.mockReturnValue({
+      select: () => ({
+        eq: () => ({
+          maybeSingle: () =>
+            new Promise((resolve) =>
+              release.push(() => resolve({ data: { question_type: "mcq" }, error: null })),
+            ),
+        }),
+      }),
+    });
+    mockRpc.mockImplementation(
+      rpcResponder({
+        submit_dungeon_answer: { data: { isCorrect: true, runStatus: "active" }, error: null },
+      }),
+    );
+
+    const { submitDungeonAnswer } = await import("@/features/dungeon");
+    const pending = (submitDungeonAnswer as unknown as AnyFn)({
+      data: { runId: RUN_ID, questionId: QUESTION_ID, choice: "a" },
+    });
+
+    // En série, seule la première partirait ; ici les deux attendent ensemble.
+    await vi.waitFor(() => expect(release).toHaveLength(2));
+    expect(mockRpc).not.toHaveBeenCalled();
+
+    for (const answer of release) answer();
+    await expect(pending).resolves.toMatchObject({ isCorrect: true });
+  });
+
+  it("débit dépassé ET réponse mal formée : le refus de débit l'emporte, comme avant", async () => {
+    mockIsRateLimited.mockResolvedValue(true);
+    mockFrom.mockReturnValue(questionTypeQuery({ question_type: "numeric" }));
+
+    const { submitDungeonAnswer } = await import("@/features/dungeon");
+    await expect(
+      (submitDungeonAnswer as unknown as AnyFn)({
+        data: { runId: RUN_ID, questionId: QUESTION_ID, choice: "abc" },
+      }),
+    ).rejects.toThrow(/Trop de réponses/i);
+    expect(mockRpc).not.toHaveBeenCalled();
   });
 });

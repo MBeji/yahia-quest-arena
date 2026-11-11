@@ -23,7 +23,7 @@ test.describe("Active recall (étude 17)", () => {
       seed,
       `recall-eligible mission missing — run \`npm run e2e:seed-content\``,
     ).not.toBeNull();
-    const { subjectId, exerciseId, answerKey } = seed!;
+    const { subjectId, chapterId, exerciseId, answerKey } = seed!;
     const userId = await adminDb.userIdByEmail(TEST_USERS.free.email);
 
     // 1. Master the classic run: 100%, paced past the anti-farm floor — the R-3
@@ -36,7 +36,16 @@ test.describe("Active recall (étude 17)", () => {
 
     // 2. The subject hub now surfaces an UNLOCKED recall row (mastered → playable;
     //    the locked row is also shown to anon since the R-9 override of 2026-07-15).
+    //    The row lives inside its chapter's accordion, and the hub opens the chapter
+    //    where the student just worked (é22 R-31) — assert THAT first, so a collapsed
+    //    chapter reads as what it is, not as a missing recall row (#1047: é34 made
+    //    every non-gated chapter look « started », and the hub opened the LAST one).
     await page.goto(`/matiere/${subjectId}`);
+    await expect(page.getByTestId(`chapter-toggle-${chapterId}`)).toHaveAttribute(
+      "aria-expanded",
+      "true",
+      { timeout: 15_000 },
+    );
     await expect(page.getByTestId("recall-chip-unlocked").first()).toBeVisible({
       timeout: 15_000,
     });

@@ -22,11 +22,24 @@ name: Report apply (appliquer les recommandations mûres)
 # blanche, idempotence) sont détaillées dans
 # `scripts/reports/apply-recommendations.mjs`.
 #
-# CE QU'IL N'ÉCRIT PAS NON PLUS : il ne ferme aucune issue. Le tableau de
-# clôture reste ouvert pour qui veut le relire, et une issue de triage fermée
-# par une machine se re-dupliquerait au passage suivant (piège vécu, #651/#658).
-# Il ajoute un commentaire disant ce qu'il a fait — et ce qu'il a refusé de
-# faire, ce qui compte davantage.
+# QUAND IL FERME UNE ISSUE, ET POURQUOI CELA NE RE-DUPLIQUE RIEN : tant qu'un
+# signalement cité est encore ouvert, l'issue de triage reste ouverte — c'est
+# elle qui dit au pré-vol du triage (scripts/ci/report-triage-pregate.mjs) que
+# l'id a déjà été vu ; la fermer le ferait re-trier puis re-dupliquer (piège
+# vécu, #651/#658). Mais quand PLUS AUCUN id cité n'est ouvert, dans aucun des
+# deux canaux, l'issue ne protège plus rien : le pré-vol ne cherche dans les
+# issues ouvertes que des signalements encore ouverts, et il date son rappel
+# périodique (`triageIssueDates`) sur TOUTES les issues de triage, closes
+# comprises. Il la ferme alors, mûre, avec un commentaire final qui dit
+# pourquoi. Avant cela, une issue soldée recevait chaque jour un « déjà clos »
+# sans effet (#1162 : treize commentaires du 18 au 30 octobre) — ce bruit-là
+# n'est plus posté non plus. Le reste du temps, il commente ce qu'il a fait —
+# et ce qu'il a refusé de faire, ce qui compte davantage.
+#
+# La fermeture lit le MÊME export que la planification, pris avant l'étape
+# « Appliquer » : un signalement appliqué à ce passage y figure encore ouvert,
+# donc son issue se ferme au passage suivant, jamais dans la foulée. Prudent
+# par construction — on ne ferme que sur la preuve d'un export.
 #
 # Prérequis (le job SKIPPE en restant vert si le secret manque) :
 #   • PROD_SUPABASE_SERVICE_ROLE_KEY — les tables de signalements sont sous RLS.
@@ -54,7 +67,7 @@ concurrency:
 
 permissions:
   contents: read
-  # Commenter l'issue de suivi.
+  # Commenter l'issue de suivi, et la fermer une fois soldée.
   issues: write
 
 jobs:
@@ -184,3 +197,43 @@ jobs:
           done
         env:
           PLAN: ${{ runner.temp }}/plan.json
+
+      # Une issue dont plus aucun signalement cité n'est ouvert se ferme, avec un
+      # dernier commentaire qui dit pourquoi. La décision (`planClosures`) et le
+      # texte (`renderClosureComment`) vivent dans le module, testés ; ce pas ne
+      # fait qu'écrire des fichiers et boucler dessus. En simulation, il annonce
+      # sans rien fermer.
+      - name: Fermer les issues soldées
+        if: steps.guard.outputs.configured == 'true'
+        run: |
+          set -euo pipefail
+          node --input-type=module -e '
+            import { readFileSync, writeFileSync } from "node:fs";
+            const m = await import("./scripts/reports/apply-recommendations.mjs");
+            const issues = JSON.parse(readFileSync(process.env.ISSUES, "utf8"));
+            const exported = JSON.parse(readFileSync(process.env.OPEN, "utf8"));
+            const closable = m.planClosures({
+              issues,
+              open: exported,
+              now: new Date().toISOString(),
+              minAgeDays: Number(process.env.MIN_AGE_DAYS),
+            });
+            for (const n of closable) {
+              const issue = issues.find((i) => i.number === n);
+              writeFileSync(`${process.env.RUNNER_TEMP}/closure-${n}.md`, m.renderClosureComment(issue));
+            }
+            console.log(`[apply] ${closable.length} issue(s) soldée(s)${closable.length ? " : #" + closable.join(", #") : ""}.`);
+          '
+          for f in "$RUNNER_TEMP"/closure-*.md; do
+            [ -e "$f" ] || continue
+            n="$(basename "$f" .md)"; n="${n#closure-}"
+            if [ "$DRY_RUN" = "true" ]; then
+              echo "simulation — #$n serait fermée"
+              continue
+            fi
+            gh issue comment "$n" --body-file "$f" >/dev/null
+            gh issue close "$n" --reason completed >/dev/null && echo "fermé #$n"
+          done
+        env:
+          ISSUES: ${{ runner.temp }}/issues.json
+          OPEN: ${{ runner.temp }}/open.json

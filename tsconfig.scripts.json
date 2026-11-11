@@ -1,0 +1,22 @@
+{
+  // Les SCRIPTS sont du Node, pas du navigateur — d'où un programme à part (étude 32, C-15).
+  //
+  // POURQUOI CE FICHIER EXISTE. `tsconfig.json` n'incluait que `src/**`, `vite.config.ts` et
+  // `eslint.config.js` : `npm run typecheck` ne voyait AUCUN script, alors que
+  // `scripts/content/**` porte les gates de contenu du corpus et que Node les exécute en
+  // `--experimental-strip-types`. Le typage y était purement décoratif. Constaté le
+  // 2026-09-04 : un `join` manquant à un import est passé vert au typecheck et a tué
+  // `content:audit:strict` sur un `ReferenceError` au premier lancement réel.
+  //
+  // POURQUOI UN SECOND PROGRAMME PLUTÔT QUE D'ÉLARGIR LE PREMIER. Les deux mondes n'ont ni la
+  // même `lib` ni les mêmes `types` : l'app vise le DOM et charge `vite/client`, les scripts
+  // visent Node. Les fondre obligerait à charger les types du navigateur dans les scripts et
+  // ceux de Node dans l'app — 31 des 44 erreurs relevées venaient exactement de là.
+  "extends": "./tsconfig.json",
+  "include": ["scripts/**/*.ts"],
+  "compilerOptions": {
+    "lib": ["ES2023"],
+    "types": ["node"],
+    "noEmit": true
+  }
+}

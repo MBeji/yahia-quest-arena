@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from "react";
 import { useReducedMotion } from "motion/react";
 
 /**
@@ -17,7 +18,7 @@ export type MotionPreset = keyof typeof MOTION_PRESETS;
 type EntranceProps =
   | { initial: false }
   | {
-      initial: (typeof MOTION_PRESETS)[MotionPreset]["initial"];
+      initial: false | (typeof MOTION_PRESETS)[MotionPreset]["initial"];
       animate: (typeof MOTION_PRESETS)[MotionPreset]["animate"];
       transition: { duration: number; ease: "easeOut"; delay: number };
     };
@@ -37,13 +38,51 @@ export function entrance(
   return { initial, animate, transition: { duration: 0.35, ease: "easeOut", delay } };
 }
 
+const noSubscription = () => () => {};
+
+/**
+ * Faux sur le serveur ET pendant le rendu d'hydratation, vrai ensuite : « ce rendu doit-il encore
+ * ressembler au HTML que le serveur a envoyé ? ». `useSyncExternalStore` est le seul outil de React 19
+ * qui distingue les deux — un `useState` + `useEffect` rendrait la même valeur aux deux premiers rendus.
+ */
+function useHydrated(): boolean {
+  return useSyncExternalStore(
+    noSubscription,
+    () => true,
+    () => false,
+  );
+}
+
 /**
  * Entrance props for a `motion.*` element. Under reduced motion the element
  * renders directly in its final state (`initial: false` — no animation, no
  * opacity flash).
+ *
+ * ⚠️ UNE EXCEPTION, ET C'EST ELLE QUI TENAIT LA CONNEXION. Le serveur ne connaît pas la préférence
+ * « réduire les animations » : il rend l'état de DÉPART (`style="opacity:0;transform:scale(.95)"`).
+ * Un premier rendu client en `initial: false` ne le corrige pas — React ne corrige pas les attributs
+ * à l'hydratation — et, faute d'`animate`, `motion` n'écrit plus rien : la carte de /auth et de
+ * /auth/reset restait à `opacity: 0` POUR TOUJOURS, donc personne ne pouvait se connecter.
+ *
+ * Pendant l'hydratation seulement, on rend donc ce que le serveur a rendu (`initial`), avec une durée
+ * nulle : `motion` amène l'élément à son état final dès la première image, sans une seconde de
+ * mouvement. Et `animate` RESTE défini au rendu suivant : le retirer (`{ initial: false }` seul, comme
+ * avant) est lu par `motion` comme « retourne à ta valeur de base » — celle du HTML serveur, donc
+ * `opacity: 0` — et défait l'animation avant qu'elle ait écrit quoi que ce soit. Pour tout élément monté
+ * après l'hydratation, `initial: false` + `animate` rend directement l'état final, sans image de départ.
  */
 export function useEntrance(preset: MotionPreset = "rise", delay = 0): EntranceProps {
-  return entrance(useReducedMotion(), preset, delay);
+  const reduced = useReducedMotion();
+  const hydrated = useHydrated();
+  if (reduced) {
+    const { initial, animate } = MOTION_PRESETS[preset];
+    return {
+      initial: hydrated ? false : initial,
+      animate,
+      transition: { duration: 0, ease: "easeOut", delay: 0 },
+    };
+  }
+  return entrance(reduced, preset, delay);
 }
 
 /**

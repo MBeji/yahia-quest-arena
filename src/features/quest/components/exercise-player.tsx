@@ -2,37 +2,26 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { computeNextExerciseId, getExercise, getSubject } from "@/features/quest";
+import { useAttemptCelebration } from "../use-attempt-celebration";
 import { PASS_THRESHOLD_PCT, RECALL_MIN_QUESTIONS } from "@/shared/constants/gamification";
 import { isValidAnswerFormat } from "@/shared/lib/answer-formats";
 import { userFacingError } from "@/shared/lib/error-message";
 import { RichField } from "@/components/ui/svg-figure";
-import { QuestionInput, type McqOptionRender } from "@/features/quest/components/question-input";
-import { levelForXp } from "@/shared/lib/level";
+import { QuestionInput, type McqOptionRender } from "@/components/game/question-input";
 import { QuestResultScreen } from "@/features/quest/components/quest-result-screen";
-import { QuizContractHint, QuizLockScreen } from "@/features/quest/components/quiz-lock-screen";
 import { QuestHintButton } from "@/features/quest/components/quest-hint-button";
 import { QuestSessionError } from "@/features/quest/components/quest-session-error";
-import { BossBanner } from "@/features/quest/components/boss-chrono";
-import {
-  bossDamageFor,
-  bossHpForDamage,
-  bossRankForDamage,
-  type BossSpeedTier,
-} from "@/features/quest/boss-speed";
 import {
   buildQuestLabels,
   KEYPAD_BY_LANG,
   RECALL_CHAR_BAR,
   type QuestContentLang,
-} from "@/features/quest/quest-labels";
+} from "@/shared/lib/quest-labels";
 import { useT } from "@/lib/i18n";
 import { LoadingState } from "@/components/ui/loading-state";
-import { BackLink } from "@/components/ui/back-link";
 import { PageShell } from "@/components/ui/page-shell";
-import { GoldProgress } from "@/components/game/gold-progress";
 import { questionSlide, useEntrance } from "@/shared/lib/motion";
 import { useQuestPulse } from "@/features/quest/quest-pulse";
 import { useQuestionMaps } from "@/features/quest/question-maps";
@@ -45,12 +34,18 @@ import {
 import { optionClassNameFor, type QuestionVerdict } from "@/features/quest/verdict";
 import { useInstantFeedback } from "@/features/quest/components/use-instant-feedback";
 import { useExerciseSession } from "@/features/quest/components/use-exercise-session";
+import { useQuestHints } from "@/features/quest/components/use-quest-hints";
+import { useQuestKeyboard } from "@/features/quest/components/use-quest-keyboard";
+import { QuestionNavigator } from "@/features/quest/components/question-navigator";
+import { useBossTiming } from "@/features/quest/components/use-boss-timing";
+import { QuestStartGate } from "@/features/quest/components/quest-start-gate";
+import { QuestProgressHeader } from "@/features/quest/components/quest-progress-header";
+import { QuestSubmitButton } from "@/features/quest/components/quest-submit-button";
 import {
   useQuestAutosave,
   useQuestDraftRestore,
 } from "@/features/quest/components/use-quest-autosave";
-import { QuestSaveStatus } from "@/features/quest/components/quest-save-status";
-import type { UnlockedBadge } from "@/shared/types/gamification";
+import { emitQuestResultTelemetry, levelCrossedBy } from "@/features/quest/quest-result-facts";
 
 // =============================================================================
 // ExercisePlayer — the single question-by-question gameplay screen shared by the
@@ -65,87 +60,33 @@ import type { UnlockedBadge } from "@/shared/types/gamification";
 //
 // RETOUR IMMÉDIAT (levier 01) — pourquoi c'est tenable. Corriger une question en
 // cours de partie révèle la bonne réponse avant que le score final ne soit
-// calculé : il faut donc que la réponse ne puisse plus bouger. Deux verrous, et
-// ce qu'ils ne couvrent pas :
-//   1. La réponse est figée AVANT l'appel (`answeredQuestionRef` + `committedChoiceRef`),
-//      la liste passe en `disabled`, les raccourcis clavier de sélection se taisent,
-//      et « Continuer » rejoue la réponse figée — pas la sélection courante.
-//   2. Le verdict ne vient jamais du client : c'est la RPC `check_answers`, qui
-//      refuse le quiz de compréhension et tout exercice hors catalogue `admin`.
-// Ce que ça ne prétend pas être : une garantie contre un client modifié. Cette
-// même RPC est ouverte à `authenticated` depuis l'étude « types natifs » — la clé
-// d'un exercice d'entraînement est donc déjà atteignable depuis une console, avec
-// ou sans ce lot. Le modèle anti-triche du score repose sur le serveur
-// (`submit_exercise_attempt`, anti-rush, session à usage unique), pas sur le
-// secret de la clé côté navigateur. Ce lot n'ajoute aucune capacité — il rend
-// visible dans l'UI ce que la plateforme sert déjà.
+// calculé : il faut donc que la réponse ne puisse plus bouger. Trois verrous :
+//   1. À l'écran, la réponse est figée AVANT l'appel (`answeredQuestionRef` +
+//      `committedChoiceRef`), la liste passe en `disabled`, les raccourcis clavier
+//      de sélection se taisent, et « Continuer » rejoue la réponse figée.
+//   2. Le verdict ne vient jamais du client : c'est la RPC `reveal_session_answer`
+//      (adossée à `check_answers`), fermée au quiz de compréhension et à tout
+//      exercice hors catalogue `admin`.
+//   3. ⚠️ Le verrou qui COMPTE est au serveur (migration 20260929120000). Les deux
+//      premiers vivent dans l'onglet, et un rechargement les effaçait : un élève
+//      cochait au hasard, lisait la bonne réponse, appuyait sur F5 et la redonnait
+//      — comptée juste (signalé par un parent le 2026-09-29). Désormais la
+//      correction FIGE la réponse dans la session, le rechargement REPREND la même
+//      partie (ses réponses figées reposées par `useQuestDraftRestore`), et la note
+//      porte sur la réponse figée, quoi que le client envoie.
+// Ce que ça ne prétend pas être : un coffre pour la clé. `check_answers` reste
+// ouverte à `authenticated` (correction publique) et la correction complète de fin
+// de partie reste servie — rejouer une mission RENDUE est permis. Ce qui est
+// garanti : une réponse dont l'élève a vu la correction ne se rejoue plus tant
+// qu'il n'a pas rendu la partie.
 // =============================================================================
 
-export type PlayerAnswer = { questionId: string; choice: string };
+// Le contrat de données vit dans `player-types.ts` depuis que ce fichier a atteint
+// sa limite de lignes ; il reste ré-exporté ici, où tous ses appelants le lisent.
+import type { PlayerAnswer, PlayerResult, StartOutcome } from "../player-types";
 
+export type { PlayerAnswer, PlayerReviewItem, PlayerResult, StartOutcome } from "../player-types";
 export type { QuestionVerdict };
-
-export type PlayerReviewItem = {
-  questionId: string;
-  prompt: string;
-  selectedChoice: string;
-  correctChoice: string;
-  isCorrect: boolean;
-  explanation: string | null;
-  /**
-   * Étude 04 lot A1.2 — l'erreur nommée et son chapitre. OPTIONNELS à dessein :
-   * la correction anonyme (`check_answers`) n'a ni l'une ni l'autre, et le rendu
-   * dégradé est le comportement exigé (R-A1.2-3), pas un cas d'erreur.
-   */
-  misconceptionTag?: string | null;
-  chapterId?: string | null;
-  /** Les trois langues de l'erreur ; l'écran choisit la sienne (é07 `pickLabel`). */
-  misconceptionLabels?: { fr: string; en: string; ar: string } | null;
-  /** La compétence mise en défaut (A12) — cible du geste « m'entraîner ». */
-  misconceptionCompetency?: string | null;
-};
-
-/** Unified result superset. Anonymous results leave the reward fields neutral. */
-export type PlayerResult = {
-  correct: number;
-  total: number;
-  scorePct: number;
-  durationSeconds: number;
-  reviewHidden: boolean;
-  review: PlayerReviewItem[];
-  // Reward fields — populated only by the connected strategy (rewards capability).
-  xpEarned: number;
-  coinsEarned: number;
-  profile: Record<string, unknown> | null;
-  unlockedBadges: UnlockedBadge[];
-  potionApplied: { xpMultiplier: number; coinMultiplier: number } | null;
-  retryShieldUsed: boolean;
-  tooFast: boolean;
-  improved: boolean;
-  /**
-   * Prime de rapidité appliquée aux XP du boss (1 = aucune). Décidée serveur ;
-   * le registre anonyme, qui ne gagne pas d'XP, la laisse toujours à 1.
-   */
-  speedBonus: number;
-  /** Anon quiz only: reached the score but rushed, so the chapter stays locked. */
-  quizTooFast?: boolean;
-  /**
-   * Ce résultat est RELU : la session était déjà rendue et la RPC a renvoyé la
-   * tentative enregistrée au lieu de lever (migration 20260831130000). Le score
-   * est le vrai ; les compteurs de récompense, eux, sont neutres — ils ont été
-   * crédités au premier rendu. Absent dans le registre anonyme.
-   */
-  replayed?: boolean;
-};
-
-/** Outcome of starting an exercise: a playable session, or a gate that blocks it. */
-export type StartOutcome =
-  | { ok: true; sessionId: string }
-  | { ok: false; kind: "quiz" }
-  | { ok: false; kind: "premium"; message: string }
-  // Recall gates (étude 17): the classic run isn't mastered yet ("locked") or
-  // the mission can't be played in recall at all ("not-eligible").
-  | { ok: false; kind: "recall"; reason: "locked" | "not-eligible" };
 
 export type ExercisePlayerStrategy = {
   capabilities: {
@@ -176,6 +117,13 @@ export type ExercisePlayerStrategy = {
     isQuiz: boolean;
     totalQuestions: number;
   }) => Promise<PlayerResult>;
+  /**
+   * Ce que la dernière soumission a fait tomber (étude 34, lot 4) — étoiles,
+   * sceau, badges. **Optionnelle** : le registre anonyme ne la fournit pas, et
+   * c'est structurel — sans compte il n'y a pas de grand livre à lire. Lue APRÈS
+   * le résultat, jamais avant : la célébration suit le fait.
+   */
+  loadProgress?: (exerciseId: string) => Promise<unknown>;
   revealHint?: (
     questionId: string,
   ) => Promise<{ questionId: string; hint: string | null; consumed: boolean }>;
@@ -186,6 +134,7 @@ export type ExercisePlayerStrategy = {
    */
   checkAnswer?: (args: {
     exerciseId: string;
+    sessionId: string;
     questionId: string;
     choice: string;
   }) => Promise<QuestionVerdict | null>;
@@ -207,6 +156,8 @@ export type ExercisePlayerStrategy = {
     exerciseId: string;
     subjectId: string | null;
     nextExerciseId: string | null;
+    /** Ce que la mission rapporte (`exercises.xp_reward`), ou `null` quand rien n'est à promettre — é38 R-8. */
+    xpReward: number | null;
     onReplay: () => void;
     result: PlayerResult;
   }) => ReactNode;
@@ -233,9 +184,15 @@ export function ExercisePlayer({
   const { capabilities } = strategy;
   const isRecall = variant === "recall";
 
+  // En mission, rien ne change ces deux lectures que la soumission de l'élève —
+  // et elle invalide ["subject"] explicitement. Un détour par la calculatrice ne
+  // doit donc jamais relancer getExercise ni getSubject pendant qu'il répond,
+  // en concurrence sur la radio avec son prochain « Valider » (data-02).
   const { data, isLoading } = useQuery({
     queryKey: ["exercise", exerciseId, variant],
     queryFn: () => fetchExercise({ data: { exerciseId, variant } }),
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 
   const subjectIdForNext = data?.exercise?.subject_id ?? null;
@@ -243,6 +200,8 @@ export function ExercisePlayer({
     queryKey: ["subject", subjectIdForNext],
     queryFn: () => fetchSubjectForNext({ data: { subjectId: subjectIdForNext as string } }),
     enabled: capabilities.next && Boolean(subjectIdForNext),
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 
   const nextExerciseId = useMemo<string | null>(() => {
@@ -263,10 +222,34 @@ export function ExercisePlayer({
   const [answers, setAnswers] = useState<PlayerAnswer[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
+  // ⭐ La célébration des étoiles et des sceaux (étude 34, R-12), et ses gardes.
+  const celebration = useAttemptCelebration(strategy.loadProgress, play);
+  // Le CALLBACK, pas l'objet — la même règle que `hints` et `feedback` plus bas,
+  // et elle n'est pas cosmétique : `celebration` est un objet neuf à chaque rendu,
+  // donc en dépendre depuis `resetRun` rendait `resetRun` neuf lui aussi, et
+  // l'effet `[exerciseId, resetRun]` rebouclait à l'infini. Symptôme : la page
+  // tourne à 100 % de CPU et ne rend jamais. Vu ici, et vu par la gate, sous la
+  // forme la plus discrète qui soit — deux fichiers de test qui ne rendent
+  // JAMAIS leur verdict, comptés « 2 errors » à côté de 339 fichiers verts.
+  const { reset: resetCelebration } = celebration;
   const [showLevelUp, setShowLevelUp] = useState(false);
   const [result, setResult] = useState<PlayerResult | null>(null);
-  const [hintsRemaining, setHintsRemaining] = useState(0);
-  const [revealedHints, setRevealedHints] = useState<Record<string, string | null>>({});
+
+  // Wall-clock start of the run, used to measure the answer duration the anon
+  // strategy needs for its anti-rush check (connected scoring is server-timed).
+  const runStartedAtRef = useRef<number>(0);
+
+  const session = useExerciseSession({
+    data,
+    paused: Boolean(result),
+    variant,
+    startSession: strategy.startSession,
+    onStarted: () => {
+      runStartedAtRef.current = Date.now();
+      play("start");
+    },
+  });
+  const { sessionId, startGate, reset: resetSession } = session;
 
   // Retour immédiat (levier 01). Jamais sur le quiz de compréhension (l'élève
   // s'y valide seul, la clé n'y est pas rendue) ni en Rappel (réponse libre :
@@ -288,25 +271,10 @@ export function ExercisePlayer({
   } = useInstantFeedback({
     enabled: feedbackEnabled,
     exerciseId,
+    sessionId,
     labels: t.encouragement,
     checkAnswer: strategy.checkAnswer,
   });
-
-  // Wall-clock start of the run, used to measure the answer duration the anon
-  // strategy needs for its anti-rush check (connected scoring is server-timed).
-  const runStartedAtRef = useRef<number>(0);
-
-  const session = useExerciseSession({
-    data,
-    paused: Boolean(result),
-    variant,
-    startSession: strategy.startSession,
-    onStarted: () => {
-      runStartedAtRef.current = Date.now();
-      play("start");
-    },
-  });
-  const { sessionId, startGate, reset: resetSession } = session;
 
   // Le filet : instantané local de la partie en cours, et mise en file de la
   // soumission AVANT sa tentative. Réservé au registre connecté — l'anonyme n'a
@@ -321,7 +289,7 @@ export function ExercisePlayer({
   });
 
   const mutation = useMutation({
-    mutationFn: async (payload: {
+    mutationFn: (payload: {
       sessionId: string;
       exerciseId: string;
       chapterId: string | null;
@@ -329,38 +297,39 @@ export function ExercisePlayer({
       durationSeconds: number;
       isQuiz: boolean;
       totalQuestions: number;
-    }) => {
-      // ⚠️ L'ORDRE FAIT TOUT LE FILET : la soumission est écrite sur l'appareil
-      // AVANT de partir, et n'en sort qu'une fois acceptée. Entre les deux, plus
-      // rien ne peut la perdre — ni un jeton refusé, ni un réseau coupé, ni un
-      // onglet fermé. `outbox.ts` la rejouera au prochain déclencheur.
-      const clientId = await autosave.beginSubmit(payload.sessionId, {
-        sessionId: payload.sessionId,
-        exerciseId: payload.exerciseId,
-        answers: payload.answers,
-      });
-      const result = await strategy.submit(payload);
-      autosave.completeSubmit(clientId);
-      return result;
-    },
+    }) =>
+      // Le filet est ENTIER dans `guardSubmit` — ordre de mise en file, sortie
+      // au succès, boîte noire à l'échec. Ici on ne fait que lui confier l'envoi.
+      autosave.guardSubmit(
+        payload.sessionId,
+        {
+          sessionId: payload.sessionId,
+          exerciseId: payload.exerciseId,
+          answers: payload.answers,
+        },
+        () => strategy.submit(payload),
+      ),
     onSuccess: (res) => {
       setResult(res);
       const passed = res.scorePct >= PASS_THRESHOLD_PCT;
       // Reward cue on the result screen (both connected and anon registers).
       play(passed ? "victory" : "wrong");
+      // Le palier franchi (null hors registre connecté ou sur un rejeu) et les
+      // trois faits du funnel produit — é31 lot 1, `quest-result-facts.ts`.
+      const leveledUpTo = levelCrossedBy(res, capabilities.rewards);
+      emitQuestResultTelemetry({
+        result: res,
+        subjectId: data?.exercise?.subject_id,
+        variant,
+        isQuiz: data?.exercise?.mode === "quiz",
+        rewarded: capabilities.rewards,
+        passed,
+        leveledUpTo,
+      });
       if (capabilities.rewards) {
         if (passed) setShowConfetti(true);
         if (res.unlockedBadges.length > 0) setTimeout(() => play("badge"), 600);
-        const profileLevel = Number(res.profile?.level ?? 0);
-        const profileXp = Number(res.profile?.xp ?? 0);
-        const prevLevel = levelForXp(profileXp - res.xpEarned);
-        // ⚠️ PAS SUR UN REJEU. Le calcul suppose que `profile.xp` est celui
-        // d'APRÈS cette tentative-ci ; sur un résultat relu, le profil rendu est
-        // l'actuel, qui a pu gagner de l'XP depuis (d'autres missions). La
-        // soustraction ne désigne alors plus rien, et l'animation se
-        // déclencherait — ou pas — au hasard. Le score, lui, reste affiché : il
-        // est exact, et c'est souvent la première fois que l'élève le voit.
-        if (profileLevel > prevLevel && res.xpEarned > 0 && !res.replayed) {
+        if (leveledUpTo !== null) {
           setTimeout(() => {
             setShowLevelUp(true);
             play("levelUp");
@@ -368,30 +337,34 @@ export function ExercisePlayer({
         }
         qc.invalidateQueries({ queryKey: ["dashboard"] });
         qc.invalidateQueries({ queryKey: ["subject"] });
+        // La puce XP/série de l'en-tête (["me-stats", userId]) n'était invalidée
+        // nulle part : elle ne se rafraîchissait QUE par le refetch au focus, que
+        // data-02 espace. Elle suit désormais le gain dès « Valider ».
+        qc.invalidateQueries({ queryKey: ["me-stats"] });
+
+        // ⭐ Ce que cette soumission a fait tomber (étude 34, lot 4) — étoiles,
+        // sceau, badges. Le détail vit dans `use-attempt-celebration`, qui porte
+        // aussi les deux gardes : pas de rejeu, pas de célébration inventée.
+        celebration.load({
+          exerciseId,
+          replayed: res.replayed === true,
+          leveledUp: leveledUpTo !== null,
+        });
       }
     },
     onError: (e) => toast.error(userFacingError(e, t.errors)),
   });
 
-  const hintCharges = data?.hintCharges ?? 0;
-  useEffect(() => {
-    setHintsRemaining(capabilities.hints ? hintCharges : 0);
-  }, [hintCharges, exerciseId, capabilities.hints]);
-
-  const hintMutation = useMutation({
-    mutationFn: (payload: { questionId: string }) => {
-      if (!strategy.revealHint) return Promise.reject(new Error("hints unsupported"));
-      return strategy.revealHint(payload.questionId);
-    },
-    onSuccess: (res) => {
-      setRevealedHints((prev) =>
-        res.questionId in prev ? prev : { ...prev, [res.questionId]: res.hint },
-      );
-      if (res.consumed) setHintsRemaining((n) => Math.max(0, n - 1));
-      play("hint");
-    },
+  // Les indices consommables (charges, révélations, dépense) vivent dans leur hook.
+  const hints = useQuestHints({
+    hintCharges: data?.hintCharges ?? 0,
+    enabled: capabilities.hints,
+    exerciseId,
+    revealHint: strategy.revealHint,
+    onRevealed: () => play("hint"),
     onError: (e) => toast.error(userFacingError(e, t.errors)),
   });
+  const { reset: resetHints } = hints;
 
   const questions = useMemo(() => data?.questions ?? [], [data?.questions]);
   const questionIds = useMemo(() => questions.map((q) => q.id), [questions]);
@@ -409,6 +382,9 @@ export function ExercisePlayer({
   const effectiveType = isRecall ? "recall" : currentType;
   const canValidate = Boolean(selected && isValidAnswerFormat(effectiveType, selected));
   const progress = useMemo(() => (total > 0 ? (idx / total) * 100 : 0), [idx, total]);
+  // Accès de test (compte admin) : le navigateur de questions, et rien d'autre —
+  // les portes, elles, sont levées côté serveur (quest.access.ts).
+  const unrestricted = data?.unrestricted === true;
   const isQuiz = data?.exercise?.mode === "quiz";
   // Boss chrome + time pressure are a connected perk; an anon visitor plays a
   // boss exercise as a plain question-by-question quest (no timer).
@@ -416,6 +392,8 @@ export function ExercisePlayer({
   const subjectInfo = data?.exercise?.subjects as {
     color_token?: string;
     content_language?: string;
+    /** Le nom de la matière — ce que la modale de sceau atteste (é34, US-3). */
+    name_fr?: string;
   } | null;
   const isRtlSubject = subjectInfo?.content_language === "ar";
   const qlang = (subjectInfo?.content_language ?? "fr") as QuestContentLang;
@@ -471,60 +449,33 @@ export function ExercisePlayer({
     [mutation, exerciseId, durationSeconds, data?.exercise?.mode, data?.exercise?.chapter_id],
   );
 
-  // Chronomètre du combat de boss. Il ne coupe rien : la seule chose qu'il
-  // décide, ce sont les dégâts de la question qu'on vient de répondre. La mesure
-  // est prise ICI, à la validation — pas dans la pastille qui l'affiche, et pas
-  // après l'écran de correction, qui n'est plus du temps de réflexion.
-  const questionStartedAtRef = useRef<number>(0);
-  const bossTimedQuestionRef = useRef<string | null>(null);
-  const [bossDamage, setBossDamage] = useState(0);
-
-  useEffect(() => {
-    if (!bossMode || !sessionId) return;
-    questionStartedAtRef.current = Date.now();
-    bossTimedQuestionRef.current = null;
-  }, [bossMode, sessionId, idx]);
-
-  const commitBossTiming = useCallback(
-    (questionId: string) => {
-      if (!bossMode || bossTimedQuestionRef.current === questionId) return;
-      bossTimedQuestionRef.current = questionId;
-      const elapsed = (Date.now() - questionStartedAtRef.current) / 1000;
-      setBossDamage((d) => d + bossDamageFor(elapsed, totalRef.current));
-    },
-    [bossMode],
-  );
-
-  // La barre de HP EST le score du chronomètre : elle ne suit plus l'avancement
-  // (« question 3 sur 5 », qui ne disait rien), elle suit les dégâts cumulés.
-  const bossHp = useMemo(
-    () => (bossMode ? bossHpForDamage(bossDamage) : 100),
-    [bossMode, bossDamage],
-  );
-  const bossSummary = useMemo<{ hp: number; rank: BossSpeedTier } | null>(
-    () => (bossMode ? { hp: bossHp, rank: bossRankForDamage(bossDamage) } : null),
-    [bossMode, bossHp, bossDamage],
-  );
+  // Chronomètre du combat de boss : il vit dans son hook (`use-boss-timing`).
+  const { bossHp, bossSummary, commitBossTiming, resetBossTiming } = useBossTiming({
+    bossMode,
+    sessionId,
+    idx,
+    totalRef,
+  });
 
   const resetRun = useCallback(() => {
     answeredQuestionRef.current = null;
-    bossTimedQuestionRef.current = null;
+    resetBossTiming();
     resetSession();
     setResult(null);
-    setBossDamage(0);
     setIdx(0);
     setAnswers([]);
     setSelected(null);
     setShowConfetti(false);
     setShowLevelUp(false);
-    setRevealedHints({});
-    // On dépend des CALLBACKS du hook, jamais de l'objet `instant` : il est neuf
-    // à chaque rendu, donc en dépendre relancerait `resetRun` à chaque changement
-    // d'état — et effacerait le verdict à l'instant même où il paraît.
+    resetCelebration();
+    // On dépend des CALLBACKS des hooks, jamais des objets `instant` / `hints` /
+    // `celebration` :
+    // ils sont neufs à chaque rendu, donc en dépendre relancerait `resetRun` à
+    // chaque changement d'état — et effacerait le verdict à l'instant même où il paraît.
     resetFeedback();
     committedChoiceRef.current = null;
-    setHintsRemaining(capabilities.hints ? hintCharges : 0);
-  }, [resetSession, hintCharges, capabilities.hints, resetFeedback]);
+    resetHints();
+  }, [resetSession, resetFeedback, resetHints, resetCelebration, resetBossTiming]);
 
   useEffect(() => {
     resetRun();
@@ -533,14 +484,18 @@ export function ExercisePlayer({
   // La reprise d'un brouillon vit dans son hook (`use-quest-autosave`) : le
   // lecteur ne fournit que ce qu'il est seul à savoir — les questions servies —
   // et repose l'état qu'on lui rend.
-  useQuestDraftRestore({
+  const restoreReady = useQuestDraftRestore({
     exerciseId,
     variant,
     enabled: capabilities.rewards && !result,
     questionIds,
-    onRestore: ({ answers: restored, idx: at }) => {
+    sessionId,
+    revealed: session.revealed,
+    onRestore: ({ answers: restored, idx: at, selected: preselected, locked }) => {
       setAnswers(restored);
       setIdx(at);
+      setSelected(preselected);
+      if (locked) toast.info(t.quest.revealedKept);
     },
   });
 
@@ -549,7 +504,12 @@ export function ExercisePlayer({
       if (!sessionId || !current?.id) return;
       if (answeredQuestionRef.current === current.id) return;
       answeredQuestionRef.current = current.id;
-      const nextAnswers = [...answers, { questionId: current.id, choice }];
+      // Une question déjà répondue (retour par le navigateur de test) REMPLACE sa
+      // réponse : la RPC compte une réponse par question, jamais deux.
+      const nextAnswers = [
+        ...answers.filter((a) => a.questionId !== current.id),
+        { questionId: current.id, choice },
+      ];
       if (idx + 1 >= total) {
         submitRun(nextAnswers);
         return;
@@ -575,6 +535,30 @@ export function ExercisePlayer({
     advanceWithChoice(choice);
   }, [advanceWithChoice, clearFeedback]);
 
+  // Saut libre — accès de test uniquement (`data.unrestricted`, voir
+  // question-navigator.tsx). Un verdict à l'écran tient une réponse figée mais pas
+  // encore enregistrée : on l'enregistre avant de partir, sinon elle se perdrait.
+  const jumpTo = useCallback(
+    (target: number) => {
+      const committed = committedChoiceRef.current;
+      const leavingId = current?.id;
+      if (committed && leavingId) {
+        setAnswers((prev) => [
+          ...prev.filter((a) => a.questionId !== leavingId),
+          { questionId: leavingId, choice: committed },
+        ]);
+      }
+      committedChoiceRef.current = null;
+      answeredQuestionRef.current = null;
+      clearFeedback();
+      const targetId = questions[target]?.id;
+      setSelected(answers.find((a) => a.questionId === targetId)?.choice ?? null);
+      setIdx(target);
+      autosave.markDirty();
+    },
+    [current?.id, answers, questions, clearFeedback, autosave],
+  );
+
   const validate = useCallback(() => {
     if (!selected || !canValidate || !sessionId) return;
     if (feedback || feedbackChecking) return;
@@ -593,8 +577,15 @@ export function ExercisePlayer({
     answeredQuestionRef.current = current.id;
     committedChoiceRef.current = selected;
     const committed = selected;
-    void checkAnswerNow(current.id, committed).then((held) => {
-      if (held) return;
+    void checkAnswerNow(current.id, committed).then((verdict) => {
+      if (verdict) {
+        // Le serveur a pu rendre une réponse DÉJÀ figée (question corrigée plus tôt
+        // dans cette partie) : c'est elle qui compte, donc elle que l'écran montre
+        // et que « Continuer » enregistre.
+        committedChoiceRef.current = verdict.choice ?? committed;
+        setSelected(committedChoiceRef.current);
+        return;
+      }
       // Pas de verdict à montrer (exercice non corrigible, panne) : on enchaîne
       // exactement comme avant ce lot, avec la réponse que l'élève a donnée.
       answeredQuestionRef.current = null;
@@ -614,39 +605,13 @@ export function ExercisePlayer({
     commitBossTiming,
   ]);
 
-  useEffect(() => {
-    if (result) return;
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-      // Verdict à l'écran : la seule touche qui agit est celle qui enchaîne. Les
-      // raccourcis de sélection sont muets — la réponse est déjà figée.
-      if (feedback) {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          continueAfterFeedback();
-        }
-        return;
-      }
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        validate();
-        return;
-      }
-      const optionsList = current ? (optionsById.get(current.id) ?? []) : [];
-      const num = parseInt(e.key, 10);
-      if (num >= 1 && num <= optionsList.length) {
-        e.preventDefault();
-        setSelected(optionsList[num - 1].id);
-        return;
-      }
-      const letterIdx = "abcd".indexOf(e.key.toLowerCase());
-      if (letterIdx >= 0 && letterIdx < optionsList.length) {
-        e.preventDefault();
-        setSelected(optionsList[letterIdx].id);
-      }
-    }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+  useQuestKeyboard({
+    active: !result,
+    feedbackShown: Boolean(feedback),
+    options: current ? (optionsById.get(current.id) ?? []) : [],
+    onContinue: continueAfterFeedback,
+    onValidate: validate,
+    onSelect: setSelected,
   });
 
   const preparingScreen = <LoadingState label={t.quest.preparing} className="min-h-[60dvh]" />;
@@ -655,55 +620,24 @@ export function ExercisePlayer({
 
   const chapterId = (data.exercise.chapter_id as string | null) ?? null;
   const exSubjectId = (data.exercise.subject_id as string | null) ?? null;
+  // La colonne est servie telle quelle aux deux registres. Une valeur absente ou égale à 0 ne
+  // promet rien : le pied de résultat garde alors sa phrase sans chiffre.
+  const xpReward = data.exercise.xp_reward > 0 ? data.exercise.xp_reward : null;
 
-  // Premium gate (connected only): the strategy owns the paywall layout.
-  if (startGate?.kind === "premium") {
+  // Les portes du démarrage (premium, quiz de compréhension, rappel) : un écran
+  // complet chacune, dans `quest-start-gate`.
+  if (startGate) {
     return (
-      strategy.renderPremiumLock?.({
-        message: startGate.message,
-        subjectId: exSubjectId,
-        contentLang: qlang,
-      }) ?? null
-    );
-  }
-
-  // Comprehension-quiz gate: a chapter's exercises stay locked until its quiz is
-  // passed (connected: server-side; anon: session-local). Same lock screen, only
-  // the "take the quiz" destination register differs.
-  if (startGate?.kind === "quiz") {
-    return (
-      <QuizLockScreen
-        title={QL.lockedTitle}
-        body={QL.lockedBody}
-        takeQuizLabel={QL.takeQuiz}
-        reviewLabel={QL.review}
-        backLabel={QL.back}
-        quizId={data.chapterQuizId}
+      <QuestStartGate
+        gate={startGate}
+        strategy={strategy}
+        labels={QL}
+        exerciseId={exerciseId}
         chapterId={chapterId}
         subjectId={exSubjectId}
+        chapterQuizId={data.chapterQuizId}
         rtl={isRtlSubject}
-        quizExerciseTo={strategy.quizExerciseTo}
-      />
-    );
-  }
-
-  // Recall gates (étude 17): the mission's recall mode is locked (classic not
-  // mastered) or not eligible. Same lock pattern as the quiz gate; the CTA is
-  // "replay this mission in QCM" (classic) instead of "take the quiz".
-  if (startGate?.kind === "recall") {
-    const locked = startGate.reason === "locked";
-    return (
-      <QuizLockScreen
-        title={locked ? QL.recallLockedTitle : QL.recallNotEligibleTitle}
-        body={locked ? QL.recallLockedBody : QL.recallNotEligibleBody}
-        takeQuizLabel={QL.recallReplayQcm}
-        reviewLabel={QL.review}
-        backLabel={QL.back}
-        quizId={exerciseId}
-        chapterId={chapterId}
-        subjectId={exSubjectId}
-        rtl={isRtlSubject}
-        quizExerciseTo={strategy.quizExerciseTo}
+        contentLang={qlang}
       />
     );
   }
@@ -724,9 +658,14 @@ export function ExercisePlayer({
         correctionVideo={data?.correctionVideo ?? null}
         exerciseId={exerciseId}
         nextExerciseId={nextExerciseId}
+        xpReward={xpReward}
         showConfetti={showConfetti}
         showLevelUp={showLevelUp}
         onLevelUpComplete={() => setShowLevelUp(false)}
+        attemptProgress={celebration.progress}
+        showSeal={celebration.showSeal}
+        onSealComplete={celebration.dismissSeal}
+        subjectName={subjectInfo?.name_fr ?? ""}
         onReplay={resetRun}
         renderResultFooter={strategy.renderResultFooter}
         renderTutor={strategy.renderTutor}
@@ -754,6 +693,9 @@ export function ExercisePlayer({
     );
   }
 
+  // La reprise se pose avant toute question : jamais un flash de la question 1.
+  if (!restoreReady) return preparingScreen;
+
   function handleSelect(optId: string) {
     // Une fois la question corrigée (ou en cours de correction), la réponse est
     // figée : plus aucune sélection n'est acceptée.
@@ -766,76 +708,37 @@ export function ExercisePlayer({
 
   const options = current ? (optionsById.get(current.id) ?? []) : [];
   const canUseHints = !isQuiz && !bossMode && capabilities.hints && !isRecall;
-  const currentHintRevealed = current ? current.id in revealedHints : false;
+  const currentHintRevealed = current ? current.id in hints.revealed : false;
 
   return (
     <PageShell width="narrow" dir={isRtlSubject ? "rtl" : undefined}>
-      {exSubjectId ? (
-        <BackLink to="/matiere/$subjectId" params={{ subjectId: exSubjectId }}>
-          {t.quest.leaveQuest}
-        </BackLink>
-      ) : (
-        <BackLink to={strategy.homeTo}>{t.quest.leaveQuest}</BackLink>
-      )}
+      <QuestProgressHeader
+        subjectId={exSubjectId}
+        homeTo={strategy.homeTo}
+        title={data.exercise.title}
+        labels={QL}
+        rtl={isRtlSubject}
+        isRecall={isRecall}
+        isQuiz={isQuiz}
+        bossMode={bossMode}
+        bossHp={bossHp}
+        chronoActive={Boolean(sessionId) && !result && !feedback && !feedbackChecking}
+        idx={idx}
+        total={total}
+        progress={progress}
+        saveStatus={autosave.status}
+      />
 
-      {isRecall && (
-        <div
-          className="mb-6 rounded-2xl border border-(--gold)/40 bg-(--gold)/5 px-4 py-3 text-center text-sm font-bold text-(--gold)"
-          data-testid="recall-banner"
-          dir={isRtlSubject ? "rtl" : undefined}
-        >
-          {QL.recallBanner}
-        </div>
-      )}
-
-      {bossMode && (
-        <BossBanner
-          title={data.exercise.title}
-          hp={bossHp}
-          questionIndex={idx}
-          chronoActive={Boolean(sessionId) && !result && !feedback && !feedbackChecking}
-          entrance={scaleIn}
-          reduced={Boolean(reduced)}
-          labels={{ fight: t.quest.bossFight, hp: t.quest.bossHp }}
+      {unrestricted && (
+        <QuestionNavigator
+          questionIds={questionIds}
+          currentIndex={idx}
+          answers={answers}
+          label={t.quest.unrestrictedNav}
+          questionLabel={t.quest.questionN}
+          onJump={jumpTo}
         />
       )}
-
-      <div className="mb-6">
-        <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-widest text-muted-foreground">
-          <span>
-            {t.quest.questionOf
-              .replace("{current}", String(idx + 1))
-              .replace("{total}", String(total))}
-          </span>
-          {!bossMode && <span className="text-gold">{data.exercise.title}</span>}
-        </div>
-        <div className="mb-2 flex justify-end">
-          <QuestSaveStatus
-            status={autosave.status}
-            pendingLabel={t.quest.savePending}
-            doneLabel={t.quest.saveDone}
-          />
-        </div>
-        {bossMode ? (
-          <div className="h-2 overflow-hidden rounded-full bg-secondary">
-            <motion.div
-              className="h-full rounded-full shadow-gold bg-linear-to-r from-destructive to-gold"
-              initial={reduced ? false : { width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: reduced ? 0 : 0.4 }}
-            />
-          </div>
-        ) : (
-          <GoldProgress
-            value={progress}
-            aria-label={t.quest.questionOf
-              .replace("{current}", String(idx + 1))
-              .replace("{total}", String(total))}
-            className="shadow-gold"
-          />
-        )}
-        {isQuiz && <QuizContractHint className="mt-2" />}
-      </div>
 
       {feedbackEnabled && (
         <ComboStrip streak={comboStreak} encouragement={encouragement} entrance={scaleIn} />
@@ -903,47 +806,31 @@ export function ExercisePlayer({
 
           {canUseHints && current && (
             <QuestHintButton
-              remaining={hintsRemaining}
-              revealed={revealedHints[current.id]}
+              remaining={hints.remaining}
+              revealed={hints.revealed[current.id]}
               isRevealed={currentHintRevealed}
-              isPending={hintMutation.isPending}
+              isPending={hints.isPending}
               onReveal={() => {
                 if (currentHintRevealed) return;
-                hintMutation.mutate({ questionId: current.id });
+                hints.reveal(current.id);
               }}
             />
           )}
 
           <div className="mt-6 flex justify-end">
-            <button
-              data-testid="quest-submit"
+            <QuestSubmitButton
+              feedbackShown={Boolean(feedback)}
               disabled={
                 feedback
                   ? mutation.isPending
                   : !canValidate || feedbackChecking || mutation.isPending || session.isPending
               }
+              busy={mutation.isPending || session.isPending || feedbackChecking}
+              bossMode={bossMode}
+              isLast={idx + 1 >= total}
+              labels={QL}
               onClick={feedback ? continueAfterFeedback : validate}
-              className={`inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-bold shadow-gold transition disabled:opacity-40 ${
-                bossMode
-                  ? "bg-linear-to-r from-destructive to-gold text-primary-foreground"
-                  : "bg-[image:var(--gradient-gold)] text-primary-foreground"
-              }`}
-            >
-              {(mutation.isPending || session.isPending || feedbackChecking) && (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              )}
-              {feedback
-                ? idx + 1 >= total
-                  ? QL.feedbackFinish
-                  : QL.feedbackContinue
-                : bossMode
-                  ? idx + 1 >= total
-                    ? t.quest.bossFinalBlow
-                    : t.quest.bossAttack
-                  : idx + 1 >= total
-                    ? t.quest.finishQuest
-                    : t.quest.nextQuestion}
-            </button>
+            />
           </div>
         </motion.div>
       </AnimatePresence>

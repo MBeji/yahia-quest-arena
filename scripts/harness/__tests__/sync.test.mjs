@@ -47,6 +47,15 @@ describe("buildClaudeSettings", () => {
     ]);
   });
 
+  it("compile le mode de démarrage quand la policy le fixe, et n'en invente pas sinon", () => {
+    expect(settings.permissions.defaultMode).toBeUndefined();
+    const withMode = buildClaudeSettings({
+      policy: { ...POLICY, mode: { $comment: "…", default: "acceptEdits" } },
+    });
+    expect(withMode.permissions.defaultMode).toBe("acceptEdits");
+    expect(Object.keys(withMode.permissions)).toEqual(["defaultMode", "allow", "deny"]);
+  });
+
   it("carries a DO NOT EDIT marker so a human opening the file is warned", () => {
     expect(settings.$comment).toMatch(/DO NOT EDIT/);
     expect(settings.$comment).toMatch(/harness:sync/);
@@ -58,6 +67,13 @@ describe("buildClaudeSettings", () => {
     expect(preCommit).toMatchObject({ type: "command", if: "Bash(git commit*)" });
     expect(preCommit.command).toContain("precommit-checks.mjs");
     expect(settings.hooks.PostToolUse[0].hooks[0].command).toContain("format-changed.mjs");
+  });
+
+  it("amorce la session cloud au démarrage et à la reprise (étude cloud-first, lot 1)", () => {
+    const [entry] = settings.hooks.SessionStart;
+    expect(entry.matcher).toBe("startup|resume");
+    expect(entry.hooks[0]).toMatchObject({ type: "command", timeout: 300 });
+    expect(entry.hooks[0].command).toContain("session-start.mjs");
   });
 
   it("no longer emits an agent hook or a hardcoded model (étude IA→déterministe, L1)", () => {

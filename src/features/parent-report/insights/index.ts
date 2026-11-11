@@ -6,22 +6,23 @@
 // rend l'ensemble testable ligne à ligne — et qui laissera brancher plus tard
 // une couche d'insights IA sur les mêmes faits sans réécrire le SQL.
 
+// Les parseurs zod (`parseDailyReport`, `parseAttemptDetail`) ne passent PAS par
+// ici : `./daily-report.schemas` est importé par les seules server fns. Ce barrel
+// est servi aux parents avec le tableau de bord, et zod n'y a rien à faire.
 export {
   answerLabel,
-  attemptDetailSchema,
-  dailyReportSchema,
-  parseAttemptDetail,
-  parseDailyReport,
   type ActivityBreakdown,
   type ActivityTotals,
   type AttemptDetail,
   type AttemptQuestion,
+  type ChapterGap,
   type ChapterSlice,
   type DailyReport,
   type DailySlice,
   type ExerciseRun,
   type LessonView,
   type SubjectSlice,
+  type SubjectStarsSlice,
 } from "./daily-report";
 
 export {
@@ -66,6 +67,8 @@ export {
 } from "./efficiency";
 
 export { analyzeSubjects, subjectLevel, type SubjectAnalysis } from "./subjects";
+
+export { chapterGapRows, gapBlocker, type ChapterGapRow, type GapBlocker } from "./chapter-gaps";
 
 export { buildAlerts, type AlertKey, type AlertTone, type ParentAlert } from "./alerts";
 

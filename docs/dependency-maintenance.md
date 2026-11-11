@@ -87,6 +87,13 @@ build sous un titre de bump indirect. Sa régénération du lock a supprimé
 `node_modules/vite-tsconfig-paths/node_modules/typescript@5.9.3`, exigée par la peer optionnelle
 `typescript: ^5.0.0` de `tsconfck` (le `typescript@6.0.3` racine ne la satisfait pas).
 
+✅ **La cause est supprimée le 2026-09-13** : `vite-tsconfig-paths` est retiré — le seul mapping
+de `tsconfig.json` (`@/*`) était déjà déclaré en dur dans `resolve.alias` de `vite.config.ts` —,
+donc plus de `tsconfck`, plus de peer `typescript ^5` invalide, plus d'entrée imbriquée
+`vite-tsconfig-paths/node_modules/typescript` : le lock se résout à l'identique sous npm 10 et
+npm 11, et la PR Dependabot #1016 cessait d'échouer pour cette raison. **Le canari reste** : il
+garde la propriété pour la prochaine peer optionnelle qu'une majeure ferait entrer.
+
 Résultat : `npm ci` mort sur npm 10 ⇒ **Content CI privée rouge 33 h, `main` comprise**, pendant
 que le gate d'ici serait resté vert. Aggravant : **`ci.yml` n'a pas tourné sur le commit fautif**
 (dernier run sur `main` à 07:08:53Z, merge de #716 à 07:13:09Z) — aucun signal du tout.
@@ -111,9 +118,64 @@ que le gate d'ici serait resté vert. Aggravant : **`ci.yml` n'a pas tourné sur
    réponse : règle ci-dessous, une majeure = une PR isolée.
 3. **Se méfier du titre d'une PR Dependabot.** « bump `<transitive>` … indirect » peut cacher une
    montée de majeure du parent. Lire le diff de `package.json`, pas l'intitulé.
+   ✅ **Ce réflexe est devenu un gate le 2026-09-03** — c'est la SECONDE moitié de A17, et celle
+   que le canari ne couvrait pas. `scripts/ci/check-dependency-pr.mjs`, étape « Garde de diff de
+   dépendance » du job `verify`, confronte le titre au diff sur toute PR qui touche
+   `package.json`/`package-lock.json` :
+
+   | règle  | ce qu'elle refuse                                                                                                                     | titre requis                                                                                                                                                   |
+   | ------ | ------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | **A1** | une **préversion** qui ENTRE dans le lockfile — l'alpha de #716                                                                       | aucun : elle vaut pour toute PR, humaine comprise. Échappatoire assumée et visible : `[allow-prerelease]` dans le titre, qui suit le squash jusque dans `main` |
+   | **B1** | un titre qui dit « indirect » alors que le **manifeste** bouge — une bump indirecte ne touche pas `package.json`, c'est sa définition | oui                                                                                                                                                            |
+   | **B2** | une **majeure** qui traverse sous un titre patch/minor/indirect                                                                       | oui                                                                                                                                                            |
+   | **B3** | un titre qui nomme un paquet et un diff qui en bouge un **autre**                                                                     | oui                                                                                                                                                            |
+
+   **Pourquoi les deux moitiés, et pas une.** Le canari juge une propriété _mécanique_ — ce
+   lockfile s'installe-t-il ailleurs ? Il aurait attrapé #716 **par accident**, parce que sa
+   régénération était cassée, et il ne dira jamais rien d'un bump parfaitement installable qui
+   fait entrer une majeure non arbitrée. La propriété perdue avec npm 10 était accidentelle ;
+   celle-ci est **intentionnelle** : le titre d'une PR est une promesse, et le diff doit la tenir.
+
+   **Éprouvée dans les deux sens avant livraison**, sur de vrais commits git, comme le canari
+   l'avait été : **#716 rejoué** (titre « bump undici · indirect », manifeste qui monte
+   `@cloudflare/vite-plugin ^1.40.2 → ^1.51.1`, `miniflare 5.20260801.1-alpha` au lock) sort
+   **rouge par trois règles indépendantes** (A1, B1, B3) ; une bump indirecte honnête (le lock
+   bouge, le manifeste non), une majeure **annoncée** comme telle, et le correctif `fast-uri`
+   du 2026-09-02 sortent **verts**. Le faux positif est le risque principal d'une garde
+   pareille — bloquer la file coûte plus qu'elle ne rapporte — donc toute plage qu'elle ne sait
+   pas lire (`workspace:*`, un alias `npm:`, une plage composite) est **ignorée** plutôt
+   qu'interprétée.
+
 4. Un revert de bump n'est pas forcément une régression de sécurité : ici `undici` était une
    transitive d'une **devDependency**, et `audit:deps` (qui tourne en `--omit=dev`) rendait
    `0 vulnerabilities` après revert.
+
+## Une transitive épinglée par son parent : l'override ciblé (2026-11-05)
+
+Quand un paquet tiré par un parent est épinglé **exactement** par ce parent, `npm update <transitive>`
+ne bouge rien : la seule version de l'arbre est celle du parent. C'est le cas de `undici` sous
+`miniflare 4`, épinglé à `7.28.0`.
+
+La PR Dependabot #1016 (« bump undici 7.28.0 → 7.29.0 ») ne pouvait donc pas être sauvée par un
+rebase : pour atteindre `7.29.0`, elle montait `@cloudflare/vite-plugin` au manifeste et faisait
+entrer `miniflare 5-alpha`, le motif de #716 à l'identique. Son titre mentait sur son diff. Elle a
+été fermée au profit de #1063.
+
+Le geste juste est un **override ciblé**, au niveau du parent :
+
+```json
+"overrides": {
+  "miniflare": { "undici": "7.29.0" }
+}
+```
+
+Ciblé, et jamais global : un override global basculerait aussi le `jsdom` de l'arbre, qui porte
+`undici 8`. C'est une dépendance de développement (`audit:deps` tourne en `--omit=dev` et ne la
+voit pas) : elle se vérifie par le canari npm 10, la garde de diff et `build:check`.
+
+⚠️ Un commentaire `@dependabot rebase` ne peut pas être posté par une session : le connecteur GitHub
+neutralise la mention (`·@·d·ependabot r·ebase`). Seul un humain le tape. Un override ciblé rend
+souvent ce geste inutile.
 
 ## Rules
 

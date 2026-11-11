@@ -5,10 +5,10 @@ import { optionalSupabaseAuth } from "@/shared/integrations/supabase/optional-au
 import {
   DAILY_PLAN_MAX_ITEMS,
   DASHBOARD_RECENT_LIMIT,
-  LEADERBOARD_LIMIT,
   PASS_THRESHOLD_PCT,
 } from "@/shared/constants/gamification";
 import type { BadgeRow, DashboardShopItem, InventoryRow } from "@/shared/types/gamification";
+import { buildBadgeCollection, type BadgeCatalogueClient } from "@/features/dashboard/badges";
 import type { DailyPlanItem } from "@/shared/types/daily-plan";
 import type { CompetencyBlocker, CompetencyMasteryRow } from "@/shared/types/competency";
 import type { WeaknessRow } from "@/shared/types/weakness";
@@ -17,6 +17,12 @@ import { getCurrentWeekStartUtc, getTodayUtc } from "@/shared/lib/dates";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
 import { resolveNextAction } from "@/shared/lib/next-action";
+import { readSubjectStars, type SubjectStarSummary } from "@/shared/lib/progress-stars";
+import {
+  readLearningState,
+  resolveAdaptiveInputs,
+  type AdaptiveRpcClient,
+} from "@/shared/lib/adaptive-inputs";
 import { resolvePromotionTarget, shouldOfferPromotion } from "@/shared/lib/back-to-school";
 import { lyceeYearOf } from "./program-families";
 
@@ -31,10 +37,18 @@ const DASHBOARD_ERROR_FR = "Impossible de charger le tableau de bord. Veuillez r
  * de l'étude 23 (lot 2) — narrowing local ici, types régénérés au prochain accès DB. Le
  * contrat est figé par la migration, pas par ce type.
  */
-type ParcoursProgressRow = {
+type SubjectStarsRow = {
   subject_id: string;
   chapters_total: number;
-  chapters_completed: number;
+  chapters_started: number;
+  chapters_star1: number;
+  chapters_star2: number;
+  chapters_star3: number;
+  chapters_star4: number;
+  seal_star: number | null;
+  seal_at: string | null;
+  new_chapters: number;
+  new_missions: number;
 };
 
 /**
@@ -43,35 +57,11 @@ type ParcoursProgressRow = {
  * cast de ce fichier, et il disparaîtra à la prochaine régénération des types. L'appel reste
  * une méthode de l'objet pour ne pas perdre son `this`.
  */
-type ParcoursProgressRpcClient = {
+type SubjectStarsRpcClient = {
   rpc: (
-    fn: "get_user_parcours_progress",
+    fn: "get_user_subject_stars",
     args: { p_subject_ids: string[] },
-  ) => PromiseLike<{ data: ParcoursProgressRow[] | null; error: { message: string } | null }>;
-};
-
-/**
- * Ligne du classement de cohorte — étude 22 R-23. Même contrat que `get_global_leaderboard`.
- * `get_grade_leaderboard` (migration `20260720210000`) manque aux types Supabase générés pour
- * la même raison que la RPC de progression ci-dessus : `supabase gen types` exige un accès DB
- * et le fichier est généré. Le contrat est figé par la migration, pas par ce type.
- */
-type GradeLeaderboardRow = {
-  rank: number;
-  display_name: string;
-  hero_class: string;
-  level: number;
-  xp: number;
-  current_streak: number;
-  avatar_tier: number;
-  is_me: boolean;
-};
-
-type GradeLeaderboardRpcClient = {
-  rpc: (
-    fn: "get_grade_leaderboard",
-    args: { p_limit: number },
-  ) => PromiseLike<{ data: GradeLeaderboardRow[] | null; error: { message: string } | null }>;
+  ) => PromiseLike<{ data: SubjectStarsRow[] | null; error: { message: string } | null }>;
 };
 
 /**
@@ -204,32 +194,30 @@ async function fetchWeakestBlockers(
   return { blockedSlug: weakest.slug, blockers: res.data ?? [] };
 }
 
-async function fetchParcoursProgress(
+async function fetchSubjectStars(
   supabase: unknown,
   subjectIds: string[],
-): Promise<Record<string, { total: number; completed: number }>> {
-  const progress: Record<string, { total: number; completed: number }> = {};
-  if (subjectIds.length === 0) return progress;
+): Promise<Record<string, SubjectStarSummary>> {
+  const stars: Record<string, SubjectStarSummary> = {};
+  if (subjectIds.length === 0) return stars;
 
-  const client = supabase as ParcoursProgressRpcClient;
-  const res = await client.rpc("get_user_parcours_progress", { p_subject_ids: subjectIds });
+  const client = supabase as SubjectStarsRpcClient;
+  const res = await client.rpc("get_user_subject_stars", { p_subject_ids: subjectIds });
 
   // Dégradation gracieuse, comme `stats` : si la RPC échoue (migration pas encore appliquée
-  // pendant un déploiement), la carte s'affiche sans progression plutôt que de casser la page.
+  // pendant un déploiement), la carte s'affiche sans sceau plutôt que de casser la page.
   if (res.error) {
-    logger.warn("getDashboard.progress: parcours-progress RPC failed, defaulting to empty", {
+    logger.warn("getDashboard.progress: subject-stars RPC failed, defaulting to empty", {
       error: res.error.message,
     });
-    return progress;
+    return stars;
   }
 
   for (const row of res.data ?? []) {
-    progress[row.subject_id] = {
-      total: Number(row.chapters_total),
-      completed: Number(row.chapters_completed),
-    };
+    const summary = readSubjectStars(row);
+    if (summary) stars[summary.subjectId] = summary;
   }
-  return progress;
+  return stars;
 }
 
 function resolveFallbackDisplayName(claims: Record<string, unknown>): string {
@@ -256,7 +244,28 @@ export const getDashboard = createServerFn({ method: "GET" })
     // by the `get_user_subject_stats` RPC (GROUP BY subject_id), so the dashboard
     // no longer transfers a user's entire attempt history to reduce it in JS
     // (perf audit M4). The result is bounded to one row per subject.
-    const [profileRes, subjectsRes, recentRes, statsRes] = await Promise.all([
+    //
+    // Étage A — tout ce qui ne dépend QUE de la session part en une seule salve. Chaque
+    // `await` isolé coûtait un aller-retour Vercel → PostgREST payé en série (mesuré le
+    // 2026-10-31 : 14 lectures en 10 vagues, pour un graphe qui n'en a que deux : ces
+    // lectures, puis celles qui lisent leur résultat, l'étage B).
+    // Le catalogue des parcours est lu UNE fois : il sert au scoping des matières, à la
+    // bannière de rentrée (R-4) et à la passerelle « Réviser » (R-17). Une trentaine de lignes,
+    // donc on filtre ici plutôt que de refaire un aller-retour par usage.
+    // L'état de croyance (é30 §3.10) est lu UNE fois : il nourrit les rangs 2 et 4 de
+    // « Prochaine action » (étage B) ET la carte à 4 états de `LearningPanels`, qui le reçoit
+    // en prop — le navigateur ne relance plus la même RPC une fois son chunk chargé.
+    const [
+      profileRes,
+      subjectsRes,
+      recentRes,
+      statsRes,
+      parcoursRes,
+      dailyPlan,
+      competencyMap,
+      weaknesses,
+      learningState,
+    ] = await Promise.all([
       supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
       supabase.from("subjects").select("*").order("display_order"),
       supabase
@@ -266,6 +275,20 @@ export const getDashboard = createServerFn({ method: "GET" })
         .order("completed_at", { ascending: false })
         .limit(DASHBOARD_RECENT_LIMIT),
       supabase.rpc("get_user_subject_stats"),
+      supabase.from("parcours").select("id,name_fr,theme_id,grade_id,is_premium,status"),
+      // « Révision du jour » (étude 04, lot A1.1). Elle a remplacé la requête directe sur
+      // `spaced_repetition_schedule` qui tenait la priorité 1 depuis le lot 6 de l'étude 22 :
+      // même rôle, meilleure réponse — le plan arbitre par les misconceptions actives (D-3) et
+      // ne propose que des exercices réellement jouables (R-3). Le moteur de priorité, lui,
+      // n'a pas bougé d'une ligne (R-18, D-8) : il change de SOURCE, pas de règle.
+      fetchDailyPlan(supabase, DAILY_PLAN_MAX_ITEMS),
+      // Carte de compétences (étude 07 lot 4, US-1) ; « ce qui te bloque » (R-5) en dépend et
+      // part à l'étage B, seulement s'il existe une compétence en échec.
+      fetchCompetencyMap(supabase),
+      // Les erreurs NOMMÉES (A2.1). Distinctes de la carte : celle-ci dit « fractions
+      // 41 % », celles-là disent « tu additionnes les dénominateurs ».
+      fetchWeaknesses(supabase),
+      readLearningState(supabase as unknown as AdaptiveRpcClient, null),
     ]);
 
     if (profileRes.error)
@@ -331,13 +354,7 @@ export const getDashboard = createServerFn({ method: "GET" })
     const allSubjects = subjectsRes.data ?? [];
     const parcoursId = profile?.current_parcours_id ?? null;
 
-    // Le catalogue des parcours est lu UNE fois : il sert au scoping des matières, à la
-    // bannière de rentrée (R-4) et à la passerelle « Réviser » (R-17). Une trentaine de lignes,
-    // donc on filtre ici plutôt que de refaire un aller-retour par usage.
-    const { data: parcoursRows } = await supabase
-      .from("parcours")
-      .select("id,name_fr,theme_id,grade_id,is_premium,status");
-    const parcoursList = parcoursRows ?? [];
+    const parcoursList = parcoursRes.data ?? [];
 
     let subjects: typeof allSubjects = [];
     let premiumLockedSubjectIds: string[] = [];
@@ -382,11 +399,32 @@ export const getDashboard = createServerFn({ method: "GET" })
     // la 7ᵉ ? »), et un id ne se lit pas.
     let currentParcoursName: string | null = null;
 
+    // Étage B — les lectures qui dépendent de l'étage A, en une seconde salve : les `grades`
+    // (seulement si l'élève a une classe), les blocages de la compétence la plus faible
+    // (seulement s'il en existe une sous le seuil), les étoiles des matières du parcours, et
+    // les entrées des rangs 2 et 4 de « Prochaine action » (é30 amendement C, #870) —
+    // résolues ICI, sur le serveur, donc sans aller-retour de plus sur le chemin SSR. Le
+    // pourquoi et le coût sont dans `adaptive-inputs.ts` ; sans état (matière non taggée)
+    // elles ne coûtent aucun appel.
+    // ⭐ Étoiles et sceaux par matière (étude 34) — bornés aux matières du parcours actif,
+    // une seule requête. Alimentent l'état `done` de la carte `/parcours` (sceau ⭐⭐⭐⭐) et
+    // le sous-libellé de chaque nœud. Ils remplacent le pourcentage de é22 R-16, qui
+    // redescendait dès qu'une campagne publiait du contenu.
+    const [gradesRes, blockersOut, progress, adaptive] = await Promise.all([
+      profile?.current_grade_id
+        ? supabase.from("grades").select("id,slug,name_fr,theme_id,display_order,is_selectable")
+        : null,
+      fetchWeakestBlockers(supabase, competencyMap),
+      fetchSubjectStars(
+        supabase,
+        subjects.map((s) => s.id),
+      ),
+      resolveAdaptiveInputs(supabase as unknown as AdaptiveRpcClient, learningState),
+    ]);
+    const { blockedSlug: competencyBlockedSlug, blockers: competencyBlockers } = blockersOut;
+
     if (profile?.current_grade_id) {
-      const { data: gradeRows } = await supabase
-        .from("grades")
-        .select("id,slug,name_fr,theme_id,display_order,is_selectable");
-      const grades = gradeRows ?? [];
+      const grades = gradesRes?.data ?? [];
       const parcours = parcoursList;
       currentParcoursName = parcours.find((p) => p.id === parcoursId)?.name_fr ?? null;
 
@@ -445,34 +483,12 @@ export const getDashboard = createServerFn({ method: "GET" })
       }
     }
 
-    // « Révision du jour » (étude 04, lot A1.1). Elle a remplacé la requête directe sur
-    // `spaced_repetition_schedule` qui tenait la priorité 1 depuis le lot 6 de l'étude 22 :
-    // même rôle, meilleure réponse — le plan arbitre par les misconceptions actives (D-3) et
-    // ne propose que des exercices réellement jouables (R-3). Le moteur de priorité, lui,
-    // n'a pas bougé d'une ligne (R-18, D-8) : il change de SOURCE, pas de règle.
-    const dailyPlan = await fetchDailyPlan(supabase, DAILY_PLAN_MAX_ITEMS);
-
-    // Carte de compétences (étude 07 lot 4, US-1) + « ce qui te bloque » (R-5). La carte en une
-    // lecture ; les blocages en une seconde, seulement s'il existe une compétence en échec.
-    const competencyMap = await fetchCompetencyMap(supabase);
-    // Les erreurs NOMMÉES (A2.1). Distinctes de la carte : celle-ci dit « fractions
-    // 41 % », celles-là disent « tu additionnes les dénominateurs ».
-    const weaknesses = await fetchWeaknesses(supabase);
-    const { blockedSlug: competencyBlockedSlug, blockers: competencyBlockers } =
-      await fetchWeakestBlockers(supabase, competencyMap);
-
-    // Progression officielle par matière (étude 22 R-16) — bornée aux matières du parcours
-    // actif, une seule requête. Alimente l'état `done` de la carte `/parcours`.
-    const progress = await fetchParcoursProgress(
-      supabase,
-      subjects.map((s) => s.id),
-    );
-
     // « Prochaine action » unifiée (R-31). Le dashboard ne charge ni chapitres ni exercices :
     // il résout donc les priorités 1, 2 et 4, et DÉLÈGUE la 3 au hub matière en désignant la
     // matière du chemin — qui la résoudra avec ce même moteur. Un seul CTA en sortira.
     const lastWorkedSubjectId = recentRes.data?.[0]?.subject_id ?? null;
     const nextAction = resolveNextAction({
+      ...adaptive,
       // La tête du plan EST la priorité 1 : le plan est déjà trié par urgence, donc le premier
       // élément est la révision que le moteur doit promouvoir.
       dueReviewExerciseId: dailyPlan[0]?.exercise_id ?? null,
@@ -495,6 +511,7 @@ export const getDashboard = createServerFn({ method: "GET" })
       dailyPlan,
       competencyMap,
       weaknesses,
+      learningState,
       competencyBlockers,
       competencyBlockedSlug,
       promotionSuggestion,
@@ -514,12 +531,22 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
 
-    const [badgesRes, inventoryRes, shopRes] = await Promise.all([
+    const [badgesRes, catalogueRes, inventoryRes, shopRes] = await Promise.all([
       supabase
         .from("student_badges")
         .select("awarded_at, awarded_reason, badge:badges(code,name,rarity,icon_name)")
         .eq("student_user_id", userId)
         .order("awarded_at", { ascending: false }),
+      // é31 lot 2 — le CATALOGUE, pas seulement les badges obtenus. Une collection
+      // qui ne montre que le déjà-gagné ne donne aucune raison de revenir : c'est
+      // la carte verrouillée, avec sa condition, qui en donne une (US-3, R-13).
+      // ⚠️ `family` est postérieure aux types Supabase générés, qui ne peuvent pas
+      // être régénérés sans accès DB (même patron que les RPC de `economy.server`
+      // et `progression.server`) : la colonne est lue via un client au contrat
+      // étroit, à supprimer à la prochaine régénération des types.
+      (supabase as unknown as BadgeCatalogueClient)
+        .from("badges")
+        .select("code,name,description,rarity,icon_name,family"),
       supabase
         .from("inventory_items")
         .select(
@@ -534,8 +561,11 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
         .order("price_coins", { ascending: true }),
     ]);
 
-    if (badgesRes.error)
-      failWithClientError("getDashboardSecondary.badges", badgesRes.error, DASHBOARD_ERROR_FR);
+    // Les deux lectures de badges partagent leur sort : sans catalogue la
+    // collection n'existe pas, sans les obtenus elle est fausse.
+    const badgeReadError = badgesRes.error ?? catalogueRes.error;
+    if (badgeReadError)
+      failWithClientError("getDashboardSecondary.badges", badgeReadError, DASHBOARD_ERROR_FR);
     if (inventoryRes.error)
       failWithClientError(
         "getDashboardSecondary.inventory",
@@ -559,6 +589,43 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
         },
       ];
     });
+
+    const badgeCollection = buildBadgeCollection(catalogueRes.data ?? [], badges);
+
+    // ⭐ LES SCEAUX (étude 34, lot 4 · D-7). Ils vivent dans leur propre table, pas
+    // dans le système de badges : 94 matières × 4 sceaux ne rentreraient ni dans
+    // `Record<BadgeCode, …>` ni dans le budget du chunk `i18n-badges`. La
+    // collection les affiche donc dans une section à part, au-dessus des familles.
+    //
+    // Lecture directe : `user_subject_seals` est en RLS propriétaire depuis le
+    // lot 1, donc ce `select` ne rend que les siens — aucune RPC n'a besoin
+    // d'exister pour ça. On garde le PLUS HAUT par matière : c'est le sceau que
+    // l'élève détient, les inférieurs sont son histoire, pas son état.
+    const sealsRes = await supabase
+      .from("user_subject_seals")
+      .select("subject_id, star, reached_at, subjects(name_fr)")
+      .order("star", { ascending: false });
+    const bySubject = new Map<
+      string,
+      { subjectId: string; subjectName: string; star: number; reachedAt: string }
+    >();
+    for (const row of (sealsRes.data ?? []) as unknown as {
+      subject_id: string;
+      star: number;
+      reached_at: string;
+      subjects: { name_fr: string } | null;
+    }[]) {
+      if (bySubject.has(row.subject_id)) continue;
+      bySubject.set(row.subject_id, {
+        subjectId: row.subject_id,
+        subjectName: row.subjects?.name_fr ?? row.subject_id,
+        star: Number(row.star),
+        reachedAt: row.reached_at,
+      });
+    }
+    const seals = [...bySubject.values()].sort(
+      (a, b) => b.star - a.star || a.subjectName.localeCompare(b.subjectName),
+    );
 
     // Armable consumables fall into two independent arming slots, derived from the
     // effect payload (mirrors activate_inventory_item):
@@ -640,107 +707,7 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
       };
     });
 
-    return { badges, inventory, shopItems };
-  });
-
-// ---------- Leaderboard ----------
-// Reads through the SECURITY DEFINER `get_global_leaderboard` RPC rather than
-// `profiles` directly: since migration 20260522153000 the profiles SELECT policy
-// is "own or linked profiles", so a direct query returned ONLY the caller's row
-// (you could see your own score but no one else's). The RPC aggregates across all
-// students despite per-row RLS and — like the per-subject board — returns no peer
-// `user_id`, only the public-safe fields plus the `is_me` flag. Rows past the
-// visible window are dropped; the caller's own row is always returned so "my rank"
-// is known even when outside the top `LEADERBOARD_LIMIT`.
-export const getLeaderboard = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const { supabase } = context;
-
-    const { data: rows, error } = await supabase.rpc("get_global_leaderboard", {
-      p_limit: LEADERBOARD_LIMIT,
-    });
-    if (error) failWithClientError("getLeaderboard", error, DASHBOARD_ERROR_FR);
-
-    const mapped = (rows ?? []).map((r) => ({
-      rank: Number(r.rank),
-      displayName: r.display_name,
-      heroClass: r.hero_class,
-      level: r.level,
-      xp: Number(r.xp),
-      streak: r.current_streak,
-      avatarTier: r.avatar_tier,
-      isMe: r.is_me,
-    }));
-
-    // Cold-start (étude 15 lot 11, D-7): never show a rank without XP. A brand-new
-    // player with 0 XP must not surface as a « fictitious #1 » (nor be told they
-    // rank Nth). They appear only once they've earned their first XP.
-    const ranked = mapped.filter((r) => r.xp > 0);
-    const leaderboard = ranked.filter((r) => r.rank <= LEADERBOARD_LIMIT);
-    const myRank = ranked.find((r) => r.isMe) ?? null;
-
-    return { leaderboard, myRank };
-  });
-
-// ---------- Grade cohort leaderboard (étude 22, R-23) ----------
-// « Ma classe » : la même lecture que le classement global, ramenée aux élèves de MÊME
-// `current_grade_id` — la cohorte scolaire, pas le parcours (D-5 : un « Concours 9ème » et un
-// « 9ème » sont des pairs). Un élève sans grade (parcours libre) n'a pas de cohorte : la RPC
-// renvoie vide et `hasCohort` dit au client de masquer l'onglet plutôt que d'afficher un
-// classement vide sans raison.
-//
-// `rankedCount` porte la décision d'onglet par défaut (R-23/Q-1) : c'est le nombre d'élèves
-// réellement classés dans la cohorte, pas la taille du top affiché — c'est lui que le seuil
-// GRADE_TAB_DEFAULT_MIN_RANKED interroge.
-export const getGradeLeaderboard = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const { supabase, userId } = context;
-
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("current_grade_id")
-      .eq("id", userId)
-      .maybeSingle();
-    const hasCohort = Boolean(profile?.current_grade_id);
-    if (!hasCohort) {
-      return { leaderboard: [], myRank: null, hasCohort: false, rankedCount: 0 };
-    }
-
-    const { data: rows, error } = await (supabase as unknown as GradeLeaderboardRpcClient).rpc(
-      "get_grade_leaderboard",
-      { p_limit: LEADERBOARD_LIMIT },
-    );
-    if (error) failWithClientError("getGradeLeaderboard", error, DASHBOARD_ERROR_FR);
-
-    const mapped = (rows ?? []).map((r) => ({
-      rank: Number(r.rank),
-      displayName: r.display_name,
-      heroClass: r.hero_class,
-      level: r.level,
-      xp: Number(r.xp),
-      streak: r.current_streak,
-      avatarTier: r.avatar_tier,
-      isMe: r.is_me,
-    }));
-
-    // La RPC filtre déjà `xp > 0` ; on garde le même filet que le global par symétrie.
-    const ranked = mapped.filter((r) => r.xp > 0);
-    const leaderboard = ranked.filter((r) => r.rank <= LEADERBOARD_LIMIT);
-    const myRank = ranked.find((r) => r.isMe) ?? null;
-
-    // Minorant du nombre de classés dans la cohorte. Deux sources, dont on prend le max :
-    // le NOMBRE de lignes remontées (exact tant que la cohorte tient sous la limite, et seul
-    // fiable en cas d'ex aequo — `rank()` partage le rang, donc dix élèves à égalité sont tous
-    // rang 1), et le RANG le plus élevé vu (seul à révéler la profondeur réelle quand
-    // l'appelant se situe au-delà du top remonté).
-    const rankedCount = Math.max(
-      ranked.length,
-      ranked.reduce((max, r) => Math.max(max, r.rank), 0),
-    );
-
-    return { leaderboard, myRank, hasCohort: true, rankedCount };
+    return { badges, badgeCollection, seals, inventory, shopItems };
   });
 
 // ---------- Parcours catalogue (sellable journeys: concours + free libre tracks) ----------
@@ -876,7 +843,7 @@ export const getCatalogueStats = createServerFn({ method: "GET" })
 // programme et non celui du catalogue — matières non ouvertes comprises.
 export const getParcoursSubjects = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
-  .inputValidator((d) => z.object({ parcoursId: z.string().min(1) }).parse(d))
+  .validator((d) => z.object({ parcoursId: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
 
@@ -918,80 +885,6 @@ export const getParcoursSubjects = createServerFn({ method: "GET" })
     }
 
     return { parcours, subjects: subjects ?? [], soon };
-  });
-
-// ---------- Subjects of the caller's ACTIVE parcours (leaderboard tabs) ----------
-// The leaderboard offers one tab per subject of the active parcours only (GAP-018):
-// listing every academy subject produced ~30 tabs, with homonym subjects across
-// grades (e.g. "Mathématiques" in 9ème AND 6ème) indistinguishable. Scoping to the
-// parcours both trims the tab row and removes the ambiguity (one grade → one
-// subject per name). Same resolution as getDashboard: profile → parcours →
-// subjects of its (theme, grade) pair. No parcours (pre-onboarding) → empty list,
-// the page then shows the Global tab alone.
-export const getLeaderboardSubjects = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const { supabase, userId } = context;
-
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("current_parcours_id")
-      .eq("id", userId)
-      .maybeSingle();
-    const parcoursId = profile?.current_parcours_id ?? null;
-    if (!parcoursId) return { subjects: [] };
-
-    const { data: par } = await supabase
-      .from("parcours")
-      .select("theme_id,grade_id")
-      .eq("id", parcoursId)
-      .maybeSingle();
-    if (!par) return { subjects: [] };
-
-    let query = supabase
-      .from("subjects")
-      .select("id,name_fr,color_token,icon,content_language")
-      .eq("theme_id", par.theme_id)
-      .order("display_order");
-    query = par.grade_id ? query.eq("grade_id", par.grade_id) : query.is("grade_id", null);
-    const { data: rows, error } = await query;
-    if (error) failWithClientError("getLeaderboardSubjects", error, DASHBOARD_ERROR_FR);
-    return { subjects: rows ?? [] };
-  });
-
-// ---------- Per-subject leaderboard (ranked by XP earned in the subject) ----------
-export const getSubjectLeaderboard = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ subjectId: z.string().min(1) }).parse(d))
-  .handler(async ({ data, context }) => {
-    const { supabase } = context;
-
-    const { data: rows, error } = await supabase.rpc("get_subject_leaderboard", {
-      p_subject: data.subjectId,
-      p_limit: LEADERBOARD_LIMIT,
-    });
-    if (error) failWithClientError("getSubjectLeaderboard", error, DASHBOARD_ERROR_FR);
-
-    // SECURITY: the RPC no longer returns peer `user_id`s (UUID-leak fix). Rows
-    // are identified to the client by `rank` (stable, unique per board) and the
-    // self row by the RPC's `is_me` flag — no other user's id is ever exposed.
-    const mapped = (rows ?? []).map((r) => ({
-      rank: Number(r.rank),
-      displayName: r.display_name,
-      heroClass: r.hero_class,
-      level: r.level,
-      xp: Number(r.subject_xp),
-      streak: r.current_streak,
-      avatarTier: r.avatar_tier,
-      isMe: r.is_me,
-    }));
-
-    // Cold-start (D-7): never show a rank without XP — same rule as the global board.
-    const ranked = mapped.filter((r) => r.xp > 0);
-    const leaderboard = ranked.filter((r) => r.rank <= LEADERBOARD_LIMIT);
-    const myRank = ranked.find((r) => r.isMe) ?? null;
-
-    return { leaderboard, myRank };
   });
 
 // ---------- Get Sprint 2 dashboard data (daily objectives + weekly quests + spaced rep) ----------

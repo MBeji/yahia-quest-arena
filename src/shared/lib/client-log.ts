@@ -21,6 +21,7 @@ import {
   lastKnownExpiry,
   secondsUntilExpiry,
 } from "@/shared/integrations/supabase/session-freshness";
+import type { ClientErrorStage } from "@/shared/lib/client-error-stages";
 
 const ENDPOINT = "/api/client-log";
 
@@ -78,8 +79,12 @@ export function resetHiddenTimeForTests(): void {
 // --- L'envoi ----------------------------------------------------------------
 
 export type ClientErrorReport = {
-  /** Où l'échec s'est produit : 'quest-submit', 'outbox-flush', 'token-attach'. */
-  stage: string;
+  /**
+   * Où l'échec s'est produit. Le jeu est CLOS (`client-error-stages.ts`) : la
+   * garde qui relève la table agrège et seuille sur cette valeur, donc une
+   * chaîne libre écrite ici sortirait d'un seuil sans que rien ne le dise.
+   */
+  stage: ClientErrorStage;
   clientId?: string | null;
   httpStatus?: number | null;
   errMessage?: string | null;
@@ -102,14 +107,27 @@ export function reportClientError(report: ClientErrorReport): void {
     if (typeof window === "undefined") return;
 
     const hidden = hiddenTime();
+    // `lastKnownExpiry()` est lu SYNCHRONEMENT : interroger la session ici
+    // réveillerait un rafraîchissement sur une session déjà abîmée.
+    //
+    // ⚠️ AUCUNE SESSION N'EST PAS UNE SESSION EXPIRÉE, et la nuance décide d'un
+    // diagnostic. `secondsUntilExpiry(undefined)` rend `0` — défaut SÛR chez
+    // elle, où il force un rafraîchissement plutôt que d'en sauter un. Porté
+    // tel quel dans la télémétrie, ce `0` devient une MESURE : la garde range
+    // `ttl_s <= 0` sous « jeton que l'appareil se savait expiré », si bien
+    // qu'un visiteur anonyme — qui n'a jamais eu de jeton — y entrait comme
+    // une expiration. L'issue #1070 (2026-09-20) a été lue ainsi : trois
+    // lignes « expirées », zéro « jeton valide refusé », et la table
+    // d'hypothèses censée départager #914 du gel des minuteries mobiles ne
+    // pouvait pas dire que ces trois-là n'avaient simplement pas de session.
+    // `null` dit « la question ne se pose pas » ; la colonne est nullable.
+    const expiry = lastKnownExpiry();
     const body = JSON.stringify({
       stage: report.stage,
       clientId: report.clientId ?? null,
       httpStatus: report.httpStatus ?? null,
       errMessage: report.errMessage ?? null,
-      // `lastKnownExpiry()` est lu SYNCHRONEMENT : interroger la session ici
-      // réveillerait un rafraîchissement sur une session déjà abîmée.
-      ttlS: secondsUntilExpiry(lastKnownExpiry()),
+      ttlS: expiry === undefined ? null : secondsUntilExpiry(expiry),
       hiddenTotalMs: hidden.hiddenTotalMs,
       lastHiddenMs: hidden.lastHiddenMs,
       payload: report.payload ?? null,

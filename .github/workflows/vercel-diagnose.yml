@@ -1,0 +1,140 @@
+name: Vercel diagnose (lecture seule)
+
+# POURQUOI CE WORKFLOW EXISTE — incident constaté le 2026-10-14 : depuis
+# `dc19a816` (2026-10-01T16:37Z), TOUS les déploiements Vercel échouent,
+# Production comme Preview, et la prod reste figée sur `96c9e5b`. Le statut
+# GitHub passe de `pending` à `failure` en ~3 secondes : ce n'est pas un build
+# qui casse, c'est la plateforme qui refuse (compte, plan, quota, projet,
+# réglage). Le seul indice côté GitHub est « run `vercel inspect … --logs` » —
+# et une session cloud ne peut pas joindre `api.vercel.com` (CONNECT 403) ni
+# lire les secrets. Ce workflow est donc l'œil de la session chez Vercel : il
+# interroge l'API AVEC les secrets déjà posés pour `rollback-prod.yml` et
+# imprime la cause (`errorCode`, `errorMessage`, `readyStateReason`, état du
+# compte, `softBlock`, plan) dans les logs du job.
+#
+# CE QU'IL NE FAIT PAS, PAR CONSTRUCTION : uniquement des `GET`. Il ne
+# déploie, ne promeut, ne rollback et n'écrit rien chez Vercel ni sur GitHub
+# (`permissions: contents: read`, aucun checkout). Aucun secret n'est imprimé :
+# le jeton ne passe que dans l'en-tête `Authorization`, les ID sont masqués par
+# GitHub, et on ne sort du projet qu'une liste blanche de champs (jamais `env`).
+#
+# Sans `VERCEL_TOKEN`, il le dit et sort en 0 — un diagnostic absent n'est pas
+# un incident de plus.
+#
+# Usage : gh workflow run vercel-diagnose.yml   (ou dispatch REST sur `main`).
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Nombre de déploiements récents à lister"
+        type: string
+        default: "15"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vercel-diagnose
+  cancel-in-progress: false
+
+jobs:
+  diagnose:
+    name: pourquoi Vercel refuse-t-il de déployer ?
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      LIMIT: ${{ inputs.limit || '15' }}
+    steps:
+      - name: Interroger l'API Vercel (GET seulement)
+        run: |
+          set -uo pipefail
+          if [ -z "${VERCEL_TOKEN:-}" ]; then
+            echo "::warning title=VERCEL_TOKEN absent::Le secret VERCEL_TOKEN est vide — aucun diagnostic possible. Settings > Secrets and variables > Actions."
+            exit 0
+          fi
+          case "$LIMIT" in ''|*[!0-9]*) LIMIT=15 ;; esac
+
+          team=""
+          [ -n "${VERCEL_ORG_ID:-}" ] && team="teamId=${VERCEL_ORG_ID}"
+
+          # api <chemin> <fichier> — GET, code HTTP sur stdout, corps dans <fichier>.
+          api() {
+            local path="$1" out="$2" sep="?"
+            case "$path" in *\?*) sep="&" ;; esac
+            [ -n "$team" ] && path="${path}${sep}${team}"
+            curl -sS --max-time 30 -o "$out" -w '%{http_code}' \
+              -H "Authorization: Bearer ${VERCEL_TOKEN}" \
+              "https://api.vercel.com${path}" || echo "000"
+          }
+          # Une réponse d'erreur Vercel ne contient que {error:{code,message}}.
+          show_error() { jq -c '.error // .' "$1" 2>/dev/null || head -c 500 "$1"; echo; }
+
+          echo "================ 1. Jeton : à qui appartient-il ? ================"
+          code=$(api "/v2/user" user.json)
+          echo "HTTP $code"
+          if [ "$code" = "200" ]; then
+            jq '.user | {username, softBlock, billing: (.billing // null | if . then {plan, status, period, trial, cancelation, overdue} else null end), defaultTeamId, version, limited}' user.json
+          else
+            show_error user.json
+          fi
+
+          echo "================ 2. Équipe (scope des déploiements) ================"
+          if [ -n "${VERCEL_ORG_ID:-}" ]; then
+            code=$(curl -sS --max-time 30 -o team.json -w '%{http_code}' \
+              -H "Authorization: Bearer ${VERCEL_TOKEN}" \
+              "https://api.vercel.com/v2/teams/${VERCEL_ORG_ID}" || echo "000")
+            echo "HTTP $code"
+            if [ "$code" = "200" ]; then
+              jq '{slug, name, softBlock, blocked: (.softBlock != null), billing: (.billing // null | if . then {plan, status, period, trial, overdue, cancelation} else null end), resourceConfig, membership: (.membership | {role, confirmed} ), enablePreviewFeedback, limited}' team.json
+            else
+              show_error team.json
+            fi
+          else
+            echo "VERCEL_ORG_ID vide — compte personnel supposé."
+          fi
+
+          echo "================ 3. Projet ================"
+          code=$(api "/v9/projects/${VERCEL_PROJECT_ID}" project.json)
+          echo "HTTP $code"
+          if [ "$code" = "200" ]; then
+            # Liste blanche : JAMAIS `.env` (variables d'environnement).
+            jq '{name, framework, nodeVersion, buildCommand, installCommand, outputDirectory, rootDirectory, paused, live, gitForkProtection, autoExposeSystemEnvs, skipGitConnectDuringLink, commandForIgnoringBuildStep, gitRepository: (.link | if . then {type, repo, org, productionBranch, deployHooksCount: ((.deployHooks // []) | length)} else null end), gitComments, gitProviderOptions, passwordProtection: (.passwordProtection != null), ssoProtection, protectionBypassCount: ((.protectionBypass // {}) | length), deploymentExpiration, resourceConfig, defaultResourceConfig, blocked: (.blocked // null), features, updatedAt}' project.json
+          else
+            show_error project.json
+          fi
+
+          echo "================ 4. Derniers déploiements (tous environnements) ================"
+          code=$(api "/v6/deployments?projectId=${VERCEL_PROJECT_ID}&limit=${LIMIT}" deployments.json)
+          echo "HTTP $code"
+          if [ "$code" != "200" ]; then
+            show_error deployments.json
+            exit 0
+          fi
+          jq -r '.deployments[] | [ ((.created // 0)/1000 | todate), .uid, (.target // "preview"), (.readyState // .state), (.readySubstate // "-"), ((.meta.githubCommitSha // "?")[0:8]), (.creator.username // "?"), (.meta.githubCommitAuthorLogin // "?"), (.errorCode // "-") ] | @tsv' deployments.json
+
+          echo "================ 5. Détail des déploiements en échec (3 derniers) ================"
+          for uid in $(jq -r '[.deployments[] | select((.readyState // .state) == "ERROR" or (.readyState // .state) == "CANCELED")][0:3][].uid' deployments.json); do
+            echo "---------- $uid ----------"
+            code=$(api "/v13/deployments/${uid}" dep.json)
+            echo "HTTP $code"
+            if [ "$code" = "200" ]; then
+              jq '{uid: .id, url, target, readyState, readySubstate, readyStateReason, errorCode, errorMessage, errorStep, errorLink, created: ((.createdAt // 0)/1000 | todate), buildingAt, ready, source, creator: (.creator | {username, uid}), gitSource: (.gitSource | if . then {type, ref, sha, repoId} else null end), meta: (.meta | {githubCommitSha, githubCommitRef, githubCommitAuthorLogin, githubCommitAuthorName, githubDeployment, githubCommitOrg, githubCommitRepo}), checksState, checksConclusion, buildSkipped: (.buildSkipped // null), regions, plan: (.plan // null), projectSettings: (.projectSettings // null | if . then {framework, buildCommand, installCommand, nodeVersion} else null end)}' dep.json
+            else
+              show_error dep.json
+            fi
+            echo "-- événements (build) --"
+            code=$(api "/v3/deployments/${uid}/events?builds=1&limit=200&direction=forward" events.json)
+            echo "HTTP $code"
+            if [ "$code" = "200" ]; then
+              jq -r '(if type == "array" then . else [.] end)[] | [ ((.created // .date // 0)/1000 | todate), (.type // "-"), ((.payload.text // .text // (.payload | tostring)) | gsub("\n"; " ⏎ ") | .[0:400]) ] | @tsv' events.json | tail -n 120
+            else
+              show_error events.json
+            fi
+          done
+
+          echo "================ 6. Dernier déploiement READY (celui que sert la prod) ================"
+          jq -r '[.deployments[] | select((.readyState // .state) == "READY" and .target == "production")][0] // {} | [ ((.created // 0)/1000 | todate), .uid, ((.meta.githubCommitSha // "?")[0:8]), (.creator.username // "?") ] | @tsv' deployments.json

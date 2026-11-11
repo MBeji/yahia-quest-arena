@@ -35,7 +35,7 @@ describe("equipped skin rendering", () => {
   it("shows the skin glyph on a shop skin card", () => {
     render(
       <DashboardBadgesShop
-        badges={[]}
+        collection={[]}
         shopItems={[
           {
             code: "skin_pharaoh",

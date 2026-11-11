@@ -93,10 +93,30 @@ describe("evaluateCandidate", () => {
     expect(evaluateCandidate(candidate(), { now: NOW }).ok).toBe(true);
   });
 
-  it("rejects a nightly that did not succeed", () => {
-    const v = evaluateCandidate(candidate({ conclusion: "failure" }), { now: NOW });
+  it("rejects a nightly that did not finish — in_progress, cancelled or timed_out prove nothing", () => {
+    for (const conclusion of ["in_progress", "cancelled", "timed_out"]) {
+      const v = evaluateCandidate(candidate({ conclusion }), { now: NOW });
+      expect(v.ok).toBe(false);
+      expect(v.reason).toContain(conclusion);
+    }
+  });
+
+  it("accepts a FAILED nightly whose only red suite is optional — one e2e-auth spec froze checkpoints for nine nights (#1008)", () => {
+    const jobs = GREEN_JOBS.map((j) =>
+      j.name.includes("authenticated") ? { ...j, conclusion: "failure" } : j,
+    );
+    const v = evaluateCandidate(candidate({ conclusion: "failure", jobs }), { now: NOW });
+    expect(v.ok).toBe(true);
+    expect(v.suites["e2e-auth"]).toBe("failure");
+  });
+
+  it("rejects a failed nightly when a REQUIRED suite is red", () => {
+    const jobs = GREEN_JOBS.map((j) =>
+      j.name.includes("pgTAP") ? { ...j, conclusion: "failure" } : j,
+    );
+    const v = evaluateCandidate(candidate({ conclusion: "failure", jobs }), { now: NOW });
     expect(v.ok).toBe(false);
-    expect(v.reason).toContain("failure");
+    expect(v.reason).toContain("pgTAP");
   });
 
   it("rejects a commit whose verify check is not green — CI cancels superseded main runs", () => {
@@ -154,7 +174,7 @@ describe("pickCheckpoint", () => {
   it("returns the newest qualifying candidate and records the rejections before it", () => {
     const { chosen, rejected } = pickCheckpoint(
       [
-        candidate({ headSha: "c".repeat(40), conclusion: "failure" }),
+        candidate({ headSha: "c".repeat(40), conclusion: "cancelled" }),
         candidate({ headSha: "b".repeat(40), verify: "cancelled" }),
         candidate({ headSha: "a".repeat(40) }),
       ],
@@ -162,11 +182,11 @@ describe("pickCheckpoint", () => {
     );
     expect(chosen.headSha).toBe("a".repeat(40));
     expect(rejected).toHaveLength(2);
-    expect(rejected[0].reason).toContain("failure");
+    expect(rejected[0].reason).toContain("cancelled");
   });
 
   it("returns nothing rather than a false checkpoint when no candidate qualifies", () => {
-    const { chosen, rejected } = pickCheckpoint([candidate({ conclusion: "failure" })], {
+    const { chosen, rejected } = pickCheckpoint([candidate({ conclusion: "cancelled" })], {
       now: NOW,
     });
     expect(chosen).toBeNull();

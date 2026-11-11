@@ -30,6 +30,18 @@
  * premier. Les `__tests__` sont hors périmètre : ils simulent la factory, ils ne
  * l'appellent pas en production.
  *
+ * `e2e/` l'est aussi, pour la même raison poussée d'un cran : le harnais
+ * Playwright tourne dans NODE, pas dans le navigateur du produit, et son
+ * `createAdminDb()` monte un client SERVICE ROLE avec `persistSession: false` —
+ * donc aucun refresh token n'y est stocké, et il n'y a rien à faire tourner. La
+ * panne que cette règle rend impossible ne peut pas s'y produire.
+ *
+ * ⚠️ Cette exemption a coûté une nuit avant d'être écrite. La règle est née avec
+ * #918 et `npm run verify` ne lint QUE `src` : `e2e/helpers/db.ts` n'a donc été
+ * vu par personne jusqu'au nightly du 2026-09-01, où l'étape « Lint e2e » a fait
+ * tomber la suite E2E publique — sur une ligne parfaitement légitime, et sans
+ * qu'aucun test n'ait échoué.
+ *
  * `createBrowserClient` (l'API de `@supabase/ssr`) est refusée PARTOUT, sans
  * exception : le paquet n'est pas une dépendance du projet, donc son apparition
  * signale toujours un second client — ou une migration d'architecture qui doit
@@ -47,15 +59,21 @@ const ALLOWED_FACTORIES = [
 /** Chemin normalisé en slashes, relatif à la racine du dépôt. */
 function repoPath(filename) {
   const normalized = String(filename).replace(/\\/g, "/");
-  const at = normalized.lastIndexOf("/src/");
-  if (at !== -1) return normalized.slice(at + 1);
-  const scripts = normalized.lastIndexOf("/scripts/");
-  return scripts !== -1 ? normalized.slice(scripts + 1) : normalized;
+  // `e2e/` compte au même titre que `src/` et `scripts/` : sans lui, un fichier
+  // du harnais ne se réduit jamais à un chemin de dépôt et l'exemption ci-dessous
+  // ne peut pas le reconnaître.
+  for (const marker of ["/src/", "/scripts/", "/e2e/"]) {
+    const at = normalized.lastIndexOf(marker);
+    if (at !== -1) return normalized.slice(at + 1);
+  }
+  return normalized;
 }
 
 function isExempt(filename) {
   const path = repoPath(filename);
   if (path.includes("__tests__/")) return true;
+  // Harnais Playwright : Node, service role, `persistSession: false` — voir l'en-tête.
+  if (path.startsWith("e2e/")) return true;
   return ALLOWED_FACTORIES.some((allowed) => path.endsWith(allowed));
 }
 

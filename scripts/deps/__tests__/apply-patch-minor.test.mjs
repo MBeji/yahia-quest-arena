@@ -8,12 +8,18 @@ import {
   buildPlan,
   bumpKind,
   classifyOutdated,
+  dropFromPlan,
+  eresolveCulprits,
+  eresolveReason,
+  MAX_CONFLICT_RETRIES,
   groupMajors,
+  isolateFailures,
   majorGroupOf,
   normalizeOutdated,
   readOutdated,
   renderPrBody,
   semverParts,
+  updateWithConflictRetry,
 } from "../apply-patch-minor.mjs";
 
 describe("semverParts / bumpKind", () => {
@@ -299,5 +305,173 @@ describe("assertSafePackageNames", () => {
   it("refuses anything that could reach a shell as something else", () => {
     expect(() => assertSafePackageNames(["vite", "zod && rm -rf /"])).toThrow(/non-package-name/);
     expect(() => assertSafePackageNames(["--registry=http://evil"])).toThrow(/non-package-name/);
+  });
+});
+
+// Le conflit réel de #1092, tel que npm 10 l'imprime.
+const ERESOLVE_1092 = [
+  "npm error code ERESOLVE",
+  "npm error ERESOLVE could not resolve",
+  "npm error",
+  "npm error While resolving: @react-three/fiber@9.7.0",
+  "npm error Found: react@19.3.0",
+  "npm error node_modules/react",
+  'npm error   react@"^19.2.7" from the root project',
+  'npm error   peer react@"^19.3.0" from react-dom@19.3.0',
+  "npm error",
+  "npm error Could not resolve dependency:",
+  'npm error peer react@">=19 <19.3" from @react-three/fiber@9.7.0',
+  "npm error node_modules/@react-three/fiber",
+  'npm error   @react-three/fiber@"^9.6.1" from the root project',
+  "npm error",
+  "npm error Conflicting peer dependency: react@19.2.9",
+].join("\n");
+
+function lotOf(...names) {
+  return buildPlan(
+    Object.fromEntries(
+      names.map((n) => [n, { current: "1.0.0", wanted: "1.1.0", latest: "1.1.0" }]),
+    ),
+  );
+}
+
+describe("peer conflicts (ERESOLVE) — #1092", () => {
+  it("names the DEPENDENT whose peer range breaks, not the dependency it retards", () => {
+    expect(
+      eresolveCulprits(ERESOLVE_1092, ["react", "react-dom", "@react-three/fiber", "vite"]),
+    ).toEqual(["@react-three/fiber"]);
+  });
+
+  it("falls back to every lot package the error names when no dependent is in the lot", () => {
+    // react-dom only appears in npm's indented context, where its peer HOLDS: not a culprit.
+    expect(eresolveCulprits(ERESOLVE_1092, ["react", "react-dom", "vite"])).toEqual(["react"]);
+  });
+
+  it("names nothing outside the lot", () => {
+    expect(eresolveCulprits(ERESOLVE_1092, ["vite"])).toEqual([]);
+  });
+
+  it("reads the old `npm ERR!` prefix too", () => {
+    const old = ERESOLVE_1092.replaceAll("npm error", "npm ERR!");
+    expect(eresolveCulprits(old, ["react", "@react-three/fiber"])).toEqual(["@react-three/fiber"]);
+  });
+
+  it("extracts the line that says why", () => {
+    expect(eresolveReason(ERESOLVE_1092)).toBe(
+      'peer react@">=19 <19.3" from @react-three/fiber@9.7.0',
+    );
+  });
+
+  it("moves a dropped package to `excluded` with its reason and recounts", () => {
+    const plan = dropFromPlan(lotOf("a", "b"), ["b"], "conflit");
+    expect(plan.patchMinor.map((p) => p.name)).toEqual(["a"]);
+    expect(plan.excluded).toContainEqual({
+      name: "b",
+      current: "1.0.0",
+      wanted: "1.1.0",
+      kind: "minor",
+      reason: "conflit",
+    });
+    expect(plan.counts).toMatchObject({ patchMinor: 1, excluded: 1 });
+  });
+
+  it("drops the culprit and applies the rest — one conflict no longer sinks the lot", () => {
+    const calls = [];
+    const run = (args) => {
+      calls.push(args.slice(1));
+      if (args.includes("@react-three/fiber")) {
+        throw Object.assign(new Error("exit 1"), { status: 1, stderr: ERESOLVE_1092 });
+      }
+      return "";
+    };
+    const applied = updateWithConflictRetry(
+      lotOf("react", "@react-three/fiber", "vite"),
+      run,
+      () => {},
+    );
+    expect(calls).toHaveLength(2);
+    expect(calls[1]).toEqual(["react", "vite"]);
+    expect(applied.patchMinor.map((p) => p.name)).toEqual(["react", "vite"]);
+    const dropped = applied.excluded.find((e) => e.name === "@react-three/fiber");
+    expect(dropped.reason).toMatch(/ERESOLVE/);
+    expect(dropped.reason).toContain('peer react@">=19 <19.3"');
+  });
+
+  it("isolates a package that fails ON ITS OWN when npm names nobody (vite 8.3, 2026-09-22)", () => {
+    const crash = "npm error Cannot read properties of null (reading 'edgesOut')";
+    let restores = 0;
+    const calls = [];
+    const run = (args) => {
+      calls.push(args.slice(1).join(" "));
+      if (args.includes("vite"))
+        throw Object.assign(new Error("exit 1"), { status: 1, stderr: crash });
+      return "";
+    };
+    const applied = updateWithConflictRetry(
+      lotOf("react", "vite", "zod"),
+      run,
+      () => {},
+      () => restores++,
+    );
+    expect(calls).toEqual(["react vite zod", "react", "vite", "zod", "react zod"]);
+    expect(applied.patchMinor.map((p) => p.name)).toEqual(["react", "zod"]);
+    expect(applied.excluded.find((e) => e.name === "vite").reason).toContain("edgesOut");
+    expect(restores).toBeGreaterThanOrEqual(4); // before each solo try, and after them
+  });
+
+  it("refuses to guess when the lot fails but every package passes alone", () => {
+    const run = (args) => {
+      if (args.length > 2) throw Object.assign(new Error("exit 1"), { status: 1, stderr: "boom" });
+      return "";
+    };
+    expect(() => updateWithConflictRetry(lotOf("a", "b"), run, () => {})).toThrow(
+      /every package passes on its own/,
+    );
+  });
+
+  it("isolateFailures reports each solo failure with npm's first error line", () => {
+    const run = (args) => {
+      if (args[1] === "b") {
+        throw Object.assign(new Error("x"), {
+          stderr: "npm error code E404\nnpm error 404 Not Found - b",
+        });
+      }
+    };
+    expect(
+      isolateFailures(
+        ["a", "b"],
+        run,
+        () => {},
+        () => {},
+      ),
+    ).toEqual([{ name: "b", why: "404 Not Found - b" }]);
+  });
+
+  it("gives up after MAX_CONFLICT_RETRIES drops instead of whittling the lot away", () => {
+    const names = Array.from({ length: MAX_CONFLICT_RETRIES + 2 }, (_, i) => `p${i}`);
+    let calls = 0;
+    const run = (args) => {
+      calls++;
+      const victim = args[1];
+      throw Object.assign(new Error("exit 1"), {
+        status: 1,
+        stderr: `npm error code ERESOLVE\nnpm error While resolving: ${victim}@1.1.0`,
+      });
+    };
+    expect(() => updateWithConflictRetry(lotOf(...names), run, () => {})).toThrow(
+      /still fails after/,
+    );
+    expect(calls).toBe(MAX_CONFLICT_RETRIES + 1);
+  });
+
+  it("falls back to the solo try when ERESOLVE names nothing in the lot", () => {
+    const run = () => {
+      throw Object.assign(new Error("exit 1"), {
+        status: 1,
+        stderr: "npm error code ERESOLVE\nnpm error While resolving: elsewhere@1.0.0",
+      });
+    };
+    // Nothing named in the lot: the solo try takes over, `a` fails alone too, the lot empties.
+    expect(() => updateWithConflictRetry(lotOf("a"), run, () => {})).toThrow(/every package/);
   });
 });

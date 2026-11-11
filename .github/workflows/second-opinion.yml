@@ -7,11 +7,29 @@ name: Second opinion (dormant)
 # invisible quel que soit le nombre de gardes. Une seconde famille le révèle.
 #
 # ÉTAT : DORMANT. Q-3 a été différée le 2026-07-19 — la mécanique est prête, la
-# dépense ne l'est pas. Ce workflow ne s'exécute que si DEUX conditions sont
+# dépense ne l'est pas. Ce workflow ne s'exécute que si TROIS conditions sont
 # réunies :
+#   0. la variable de dépôt `SECOND_OPINION_ARMED` vaut `true` (voir ci-dessous) ;
 #   1. le secret `OPENAI_API_KEY` existe sur le dépôt ;
 #   2. le rôle `second-avis` de harness/models.json porte un `model` non nul.
 # Sans ça il skippe en VERT, comme les autres gardes sans leur secret.
+#
+# POURQUOI UNE VARIABLE EN PLUS DES DEUX VERROUS — étude 32, D-4. Les deux verrous
+# vivent DANS le job, donc ils ne pouvaient dire « non » qu'après le `checkout`. Un
+# garde qui n'a jamais tourné a quand même allumé un runner et cloné l'historique
+# complet (`fetch-depth: 0`) 71 fois en 4,4 jours, pour conclure qu'il est éteint.
+# Une condition de JOB coupe avant tout ça — et il faut une variable pour l'écrire :
+# le contexte `secrets` n'est pas lisible dans un `if:` de job, `vars` l'est.
+# Ce que ça ne change pas : le double verrou reste, et reste le juge de l'ARMEMENT
+# (le secret dit « on paie », models.json dit « avec quoi »). La variable ne dit que
+# « ça vaut la peine de démarrer un runner ». Les deux chemins À LA DEMANDE — le
+# label `second-avis` et le dispatch manuel — passent outre, comme avant.
+# ⚠️ La ligne du run reste visible dans l'onglet Actions, avec un job `skipped` : ce
+# qui disparaît, c'est le runner et le clone, pas l'entrée. Un `if:` de déclencheur
+# le ferait, mais il faudrait un filtre `paths:` — écarté au lot L5 de l'étude « IA
+# → déterministe », parce qu'il tuerait aussi l'événement du label sur une PR sans
+# chemin à risque, et que « chemins OU label » ne tiendrait plus.
+# Pour l'allumer : `gh variable set SECOND_OPINION_ARMED --body true`.
 #
 # ⚠️ NON TESTÉ DE BOUT EN BOUT, par construction : sans secret il n'a jamais pu
 # s'exécuter. Le squelette suit le contrat des gardes (docs/agents/gardes.md) et
@@ -46,6 +64,15 @@ jobs:
     name: Second opinion
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
+    # Étude 32, D-4 — la seule chose qui s'exécute AVANT le checkout. Tant que la
+    # variable n'est pas posée, aucun runner n'est alloué et l'historique n'est pas
+    # cloné ; les deux chemins à la demande (label, dispatch) restent ouverts, et le
+    # double verrou du job garde le dernier mot sur l'armement réel.
+    if: >-
+      vars.SECOND_OPINION_ARMED == 'true' ||
+      github.event_name == 'workflow_dispatch' ||
+      github.event.label.name == 'second-avis'
 
     steps:
       - name: Checkout

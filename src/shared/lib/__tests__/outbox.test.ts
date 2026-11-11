@@ -2,10 +2,15 @@
 // de `window`/`document`, qui sont tout le sujet.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const { mockEnsureFresh } = vi.hoisted(() => ({ mockEnsureFresh: vi.fn() }));
+const { mockEnsureFresh, mockReport } = vi.hoisted(() => ({
+  mockEnsureFresh: vi.fn(),
+  mockReport: vi.fn(),
+}));
 vi.mock("@/shared/integrations/supabase/session-freshness", () => ({
   ensureFreshSession: mockEnsureFresh,
 }));
+// La boîte noire est le SUJET du dernier bloc : espionnée, jamais envoyée.
+vi.mock("@/shared/lib/client-log", () => ({ reportClientError: mockReport }));
 
 import {
   clearOutboxForTests,
@@ -265,5 +270,69 @@ describe("startOutbox", () => {
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(send).not.toHaveBeenCalled();
+  });
+});
+
+// =============================================================================
+// LA BOÎTE NOIRE — ce qui manquait le 2026-09-03.
+//
+// Un élève a fait ses exercices, validé, et le suivi parental du lendemain n'en
+// montrait aucun. La garde a répondu « 0 refus dans la fenêtre » et disait vrai :
+// seuls les refus d'AUTH étaient racontés, et la panne n'en était pas un.
+// =============================================================================
+describe("boîte noire", () => {
+  it("raconte un échec qui n'est PAS un refus d'auth — la branche qui sortait en silence", async () => {
+    registerSender(
+      KIND,
+      vi.fn().mockRejectedValue(new Error("Impossible d'enregistrer votre tentative.")),
+    );
+    enqueue({ clientId: "c1", kind: KIND, payload: 1 });
+
+    await flush();
+
+    expect(mockReport).toHaveBeenCalledTimes(1);
+    expect(mockReport.mock.calls[0][0]).toMatchObject({
+      stage: "outbox-send",
+      clientId: "c1",
+      errMessage: "Impossible d'enregistrer votre tentative.",
+      // « conservé » se rattrapera au prochain déclencheur ; c'est « abandonné »
+      // qui désigne du travail perdu pour de bon. Sans ce champ, l'issue ne
+      // saurait pas dire lequel des deux elle regarde.
+      payload: { kind: KIND, attempts: 0, disposition: "keep" },
+    });
+    // Le travail, lui, est toujours là : raconter n'est pas jeter.
+    expect(pendingCount()).toBe(1);
+  });
+
+  it("dit ABANDONNÉ quand le refus est définitif — le seul cas qui ne revient jamais", async () => {
+    // « Invalid quest session » est terminal : aucun rejeu ne le guérira.
+    registerSender(KIND, vi.fn().mockRejectedValue(new Error("Invalid quest session.")));
+    enqueue({ clientId: "c1", kind: KIND, payload: 1 });
+
+    await flush();
+
+    expect(mockReport.mock.calls[0][0].payload).toMatchObject({ disposition: "drop" });
+    expect(pendingCount()).toBe(0);
+  });
+
+  it("laisse le chemin d'auth intact — deux stages, et le TTL pris avant le jeton neuf", async () => {
+    const send = vi.fn().mockRejectedValue(rejectedToken());
+    registerSender(KIND, send);
+    enqueue({ clientId: "c1", kind: KIND, payload: 1 });
+
+    await flush();
+
+    // `outbox-send` ne doit PAS doubler le chemin d'auth : il fausserait le seuil
+    // « soumissions perdues », qui ne compte que ce que rien ne reprend.
+    expect(mockReport.mock.calls.map((c) => c[0].stage)).toEqual(["outbox-flush", "outbox-replay"]);
+  });
+
+  it("ne dit rien quand l'envoi passe", async () => {
+    registerSender(KIND, vi.fn().mockResolvedValue({ ok: true }));
+    enqueue({ clientId: "c1", kind: KIND, payload: 1 });
+
+    await flush();
+
+    expect(mockReport).not.toHaveBeenCalled();
   });
 });

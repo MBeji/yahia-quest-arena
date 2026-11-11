@@ -2,14 +2,6 @@ import type { TranslationKeys } from "./types";
 import { frPublic } from "./fr-public";
 
 export const fr: TranslationKeys = {
-  meta: {
-    title: "Na9ra Nal3ab — tous les cours de l'école tunisienne, gratuitement",
-    description:
-      "Cours, résumés et exercices corrigés de toute l'école tunisienne, de la 1re année au Baccalauréat. Accès libre, gratuit, sans inscription — pour toute la famille.",
-    ogTitle: "Na9ra Nal3ab — l'école tunisienne, gratuite et en accès libre",
-    ogDescription:
-      "Tout le programme officiel, du Primaire au Bac : cours, résumés et exercices corrigés, gratuitement.",
-  },
   common: {
     backToHall: "Retour au hall",
     back: "Retour",
@@ -63,6 +55,8 @@ export const fr: TranslationKeys = {
     toastSignupSuccess: "Compte créé ! Bienvenue 🎉",
     toastLoginSuccess: "Content de te revoir !",
     toastLinked: "Compte lié avec {name}.",
+    allianceLinkFailed:
+      "Code Alliance non reconnu — tu pourras lier le compte parent depuis la page Rapport.",
     googleNotConfigured: "Le provider Google n'est pas configuré dans Supabase Auth.",
     googleFailed: "Échec de la connexion Google : {message}",
     passwordTooShort: "Le mot de passe doit contenir au moins 8 caractères.",
@@ -119,12 +113,46 @@ export const fr: TranslationKeys = {
     dailyGoalLabel: "Objectif du jour",
     dailyGoalReached: "✨ Objectif atteint !",
     dailyGoalRemaining: "XP restants aujourd'hui",
+    // é31 lot 3 — l'objectif du jour se CHOISIT (R-12), et la journée se FERME (R-6).
+    dailyGoalChoose: "Ton objectif du jour",
+    dailyGoalChooseHint:
+      "L'anneau du tableau de bord suit l'XP que tu gagnes vraiment. Modifiable une fois par jour.",
+    dailyGoalAlreadySet:
+      "Objectif déjà changé aujourd'hui — tu pourras le régler à nouveau demain.",
+    dailyGoalSaved: "Objectif du jour mis à jour.",
+    dailyMissionsDone: "Objectif du jour atteint — à demain !",
+    dailyMissionsDoneDesc:
+      "Tes missions du jour sont finies. Ce que tu feras de plus est du bonus.",
+    // é31 lot 5 — la semaine : classement qui repart, podium, carte « Ta semaine ».
+    weekTab: "Cette semaine",
+    allTimeTab: "Depuis toujours",
+    weeklyRecapTitle: "Ta semaine",
+    weeklyRecapEmpty: "Ta semaine commence — la première mission ouvrira le bilan.",
+    weeklyRecapStars: "⭐ {stars} étoiles · {seals} sceaux cette semaine",
+    weeklyRecapXp: "XP gagnés",
+    weeklyRecapMissions: "missions",
+    weeklyRecapAccuracy: "précision",
+    weeklyRecapDays: "jours actifs",
+    weeklyRecapVsLast: "vs semaine dernière",
+    weeklyRecapBadges: "badges décrochés",
+    weeklyRecapLeague: "Ligue : {tier}, rang {rank}",
+    podiumTitle: "Ta ligue de la semaine",
+    podiumRank: "Rang {rank} · {tier}",
+    podiumCoins: "+{coins} pièces",
+    podiumClose: "Continuer",
     consecutiveDays: "jours consécutifs",
     quoteLabel: "Parole du jour",
     streakLostTitle: "Série perdue !",
-    streakLostDesc: "Récupère ta série pour 15 pièces (tu avais {n} jours)",
+    streakLostDesc: "Récupère ta série pour {cost} pièces (tu avais {n} jours)",
     streakRecover: "🔥 Récupérer",
     retryTitle: "Ton dernier exercice",
+    // Rangs 2 et 4 de é30 (amendement C, #870). R-14 : chaque action arrive AVEC SA RAISON en
+    // langage élève — jamais « lacune », jamais « compétence fragile », jamais un pourcentage
+    // de croyance (D-1). On dit ce qu'on va faire, pas ce qu'on pense de l'élève.
+    remediateOverline: "On reprend la base",
+    remediateTitle: "Un pas en arrière pour deux en avant",
+    strengthenOverline: "Encore un peu",
+    strengthenTitle: "La même idée, autrement",
     // Priorité 1 de R-31 : une révision espacée est échue. Elle passe avant tout le reste.
     reviewOverline: "À réviser",
     // Étude 22 R-4 : la bannière de rentrée. « Je reste » ferme pour la saison, sans rien
@@ -167,6 +195,17 @@ export const fr: TranslationKeys = {
     dailyQuests: "Quêtes Quotidiennes",
     weeklyQuests: "Quêtes Hebdomadaires",
     objectiveTypes: {
+      // é31 lot 3 — les huit types du pool de missions (R-10), plus le bonus de
+      // complétion qui ferme la journée (R-6).
+      exercises_n: "Termine 3 exercices",
+      score_90: "Réussis un exercice à 90 % ou plus",
+      review_due: "Traite une révision due",
+      subject_focus: "2 exercices de ton parcours",
+      recall_one: "Fais un rappel actif",
+      dungeon_floors: "Franchis 5 étages du donjon",
+      duel_play: "Joue un duel",
+      chapter_step: "Avance dans un nouveau chapitre",
+      daily_complete: "Objectif du jour atteint",
       "3_exercises": "Complète 3 exercices",
       "15_min_study": "15 minutes d'étude",
       perfect_score: "Réussis un sans-faute",
@@ -202,6 +241,23 @@ export const fr: TranslationKeys = {
     badgeEarnedOn: "Obtenu",
     badgesEmpty:
       "Aucun badge débloqué pour l'instant. Continue tes quêtes pour remplir ta collection.",
+    // é31 lot 7 (US-11, R-22) — la classe de héros, l'emplacement de cadre et le
+    // titre : la base garde des CODES, l'affichage vit ici.
+    heroClasses: {
+      novice: "Novice",
+      candidat: "Candidat Civil",
+      aspirant: "Aspirant Académicien",
+      guerrier: "Guerrier des Équations",
+      maitre: "Maître des Langues",
+      elite: "Élite du Concours",
+      s_rank: "Légende de rang S",
+    },
+    heroTitles: {
+      studious: "L'Assidu",
+      sharp: "La Lame",
+      legend: "Légende",
+    },
+    avatarTierLabel: "Palier {n}/{max}",
     shopTitle: "Boutique de l'Académie",
     shopDefaultDesc: "Objet de l'Académie.",
     shopEquipped: "Équipé",
@@ -212,7 +268,15 @@ export const fr: TranslationKeys = {
     shopActivate: "Activer",
     armedPassive: "Actif · protège ta série",
     armedQuest: "Actif · prochaine quête",
-    itemTypes: { skin: "Skin", potion: "Potion", booster: "Booster", shield: "Bouclier" },
+    itemTypes: {
+      skin: "Skin",
+      potion: "Potion",
+      booster: "Booster",
+      shield: "Bouclier",
+      // é31 lot 7 — les deux cosmétiques qui donnent un puits aux pièces.
+      frame: "Cadre",
+      title: "Titre",
+    },
     rarities: { common: "Commun", rare: "Rare", epic: "Épique", legendary: "Légendaire" },
     radarTitle: "Radar de Réussite",
     radarCaption: "Tes scores moyens par attribut.",
@@ -297,8 +361,10 @@ export const fr: TranslationKeys = {
     recallChip: "🧠 Rappel",
     recallLockedHint: "Termine d'abord la mission à 100 %",
     recallLockedHintAnon: "Connecte-toi et finis la mission à 100 %",
+    unrestrictedNav: "Accès test : ouvre n'importe quelle question",
     savePending: "Pas encore enregistré — nouvelle tentative en cours",
     saveDone: "Travail enregistré",
+    revealedKept: "Mission reprise — une réponse déjà corrigée ne se change plus.",
   },
   levelUp: {
     title: "Niveau supérieur !",
@@ -468,6 +534,9 @@ export const fr: TranslationKeys = {
     mapTitle: "Où tu en es",
     mapSubtitle: "Ce que tu maîtrises, ce que tu peux attaquer, ce qui te bloque.",
     mapEmpty: "Joue quelques exercices : ta carte s'allumera au fur et à mesure.",
+    mapSummaryLabel: "Résumé par état",
+    mapShowDetail: "Voir le détail",
+    mapHideDetail: "Masquer le détail",
     provenBy: "prouvé {n} fois, sous {m} formes",
     inferredBadge: "Déduit",
     inferredExplain:
@@ -761,9 +830,11 @@ export const fr: TranslationKeys = {
     bugReports: "Bugs",
     parcoursInterest: "Intérêts",
     economy: "Économie",
+    engagement: "Engagement",
     console: "Console",
     signOut: "Déconnexion",
     logoutToast: "À bientôt, guerrier.",
+    help: "Aide",
   },
   theme: {
     label: "Thème",
@@ -816,6 +887,14 @@ export const fr: TranslationKeys = {
     helpDesc: "Signaler un problème et consulter les mentions.",
     helpTerms: "Conditions d'utilisation",
     helpPrivacy: "Confidentialité",
+    exportTitle: "Mes données",
+    exportDesc: "Tout ce que nous savons de toi, dans un fichier.",
+    exportRowLabel: "Copie de mes données",
+    exportAction: "Télécharger",
+    exportBusy: "Préparation…",
+    exportDone: "Fichier téléchargé — {rows} lignes de données te concernant.",
+    exportEmpty: "Fichier téléchargé — nous n'avons encore aucune donnée sur toi.",
+    exportError: "Le téléchargement a échoué. Réessaie dans un instant.",
     dangerTitle: "Zone sensible",
     dangerDesc: "Ce qu'un clic ne rattrape pas.",
     deleteAccount: "Supprimer mon compte",
@@ -857,6 +936,9 @@ export const fr: TranslationKeys = {
     continueLabel: "Continuer",
     review: "Revoir",
     nodeNext: "Conseillé",
+    sealLegend:
+      "⭐ = sceau de matière : tous ses chapitres ont l'étoile. Le compte dit combien sont prêts pour le prochain.",
+    nodeSealAria: "{subject} — sceau {stars}, {ready} chapitres prêts sur {total}",
     done: "Terminé",
     current: "En cours",
     xpToEarn: "XP à gagner",
@@ -899,6 +981,9 @@ export const fr: TranslationKeys = {
       "{parcours} est en construction. En attendant, explore les extras — et ton vote la fait avancer.",
     celebrateExtrasCta: "Explorer les extras",
     celebrateDashboardCta: "Voir mon tableau de bord",
+    // é31 lot 6 (US-9, R-19) — l'accueil se termine sur une VICTOIRE, pas sur un menu.
+    welcomeCoins: "+{coins} pièces de bienvenue",
+    welcomeFirstQuestCta: "Commencer ma première quête",
   },
   cycles: {
     primaire: "Primaire",
@@ -1097,6 +1182,7 @@ export const fr: TranslationKeys = {
     featDigestParent: "Bilan parent",
     featVerify: "Vérification de la clé",
     featForgeSolve: "Double vérification d'un quiz",
+    featOpenAnswer: "Questions ouvertes (réponse tapée, corrigée par l'IA)",
     errNotLinked: "Cet élève n'est pas lié à votre compte.",
     errNoCredential: "Enregistrez d'abord une clé.",
     errEnergyCap: "L'énergie quotidienne ne peut pas dépasser le plafond.",

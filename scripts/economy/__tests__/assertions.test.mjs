@@ -1,7 +1,8 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
 
-import { checkGuardrails, GUARDRAILS } from "../assertions.mjs";
+import { checkGuardrails, GUARDRAILS, prixMinimumPourG4 } from "../assertions.mjs";
+import { shopCapacityCoins, shopPrices } from "../shop-catalogue.mjs";
 
 /** Un run simulé réduit à ce que les garde-fous lisent. */
 const run = (over = {}) => ({
@@ -11,8 +12,11 @@ const run = (over = {}) => ({
   weeks: Array.from({ length: 8 }),
   maxXpInADay: 200,
   coinsEarned: 100,
-  shieldCoverableDays: 2,
-  missedDays: 30,
+  recoveryCoverableDays: 2,
+  // `daysMissed`, et non `missedDays` : c'est la clé que lit `assertions.mjs`.
+  // Avec la faute, G-4 mesurait `undefined` jours et rendait le message
+  // « 0 % des undefined jours manqués » — vert, et sans objet.
+  daysMissed: 30,
   ...over,
 });
 
@@ -80,5 +84,57 @@ describe("G-1 — une fenêtre par profil (arbitrage A15)", () => {
     // Si un jour elles se rejoignent, on est revenu au seuil unique sans le dire.
     expect(GUARDRAILS.G1.assidu).not.toEqual(GUARDRAILS.G1.moyen);
     expect(GUARDRAILS.G1.occasionnel).toBeNull();
+  });
+});
+
+describe("G-3 lit la BOUTIQUE, et G-4 gouverne seul le rachat (#937)", () => {
+  const moyen = { coinsEarned: 256, daysMissed: 32, recoveryCoverableDays: 17 };
+
+  it("le catalogue est lu dans les migrations, pas recopié", () => {
+    // Une seconde liste tenue à la main divergerait — le dépôt l'a déjà vécu deux
+    // fois (`auth-refusals.ts`). Ces bornes sont épinglées pour qu'AJOUTER un objet
+    // en boutique fasse tomber ce test : la mise à jour devient délibérée.
+    const prix = shopPrices();
+    expect(prix).toHaveLength(19);
+    expect(Math.min(...prix)).toBe(30);
+    expect(Math.max(...prix)).toBe(500);
+    expect(shopCapacityCoins()).toBe(3280);
+  });
+
+  it("G-3 ne dépend PLUS du prix du rachat — c'était tout le défaut", () => {
+    // Avant, G-3 mesurait `recoveryCoverableDays × STREAK_RECOVERY_COST` : il
+    // récompensait donc un rachat bon marché, pendant que G-4 en exige un cher.
+    // Faire varier ce champ ne doit plus rien changer à G-3.
+    const g3 = (over) =>
+      checkGuardrails(runs({ moyen: run({ ...moyen, ...over }) })).find((r) => r.id === "G-3");
+    expect(g3({ recoveryCoverableDays: 0 }).ok).toBe(true);
+    expect(g3({ recoveryCoverableDays: 17 }).message).toBe(
+      g3({ recoveryCoverableDays: 0 }).message,
+    );
+  });
+
+  it("G-3 échoue si la boutique ne peut plus absorber ce que le jeu produit", () => {
+    // Le fil-piège : des récompenses qui s'envolent (ou une boutique vidée).
+    const g3 = checkGuardrails(runs({ moyen: run({ ...moyen, coinsEarned: 100_000 }) })).find(
+      (r) => r.id === "G-3",
+    );
+    expect(g3.ok).toBe(false);
+    expect(g3.message).toMatch(/s'accumulent/);
+  });
+
+  it("G-4 dit le prix MINIMUM, et se garde de donner un ordre", () => {
+    const g4 = checkGuardrails(runs({ moyen: run(moyen) })).find((r) => r.id === "G-4");
+    expect(g4.ok).toBe(false);
+    // floor(256 / (floor(32 × 0,2) + 1)) + 1 = floor(256/7) + 1 = 37.
+    expect(prixMinimumPourG4(moyen)).toBe(37);
+    expect(g4.message).toMatch(/au moins 37/);
+    expect(g4.message).toMatch(/PAS une consigne/);
+  });
+
+  it("le prix minimum est la VRAIE borne : 37 passe, 36 non", () => {
+    const tient = (k) =>
+      Math.floor(moyen.coinsEarned / k) / moyen.daysMissed <= GUARDRAILS.G4.maxRecoveryCoverage;
+    expect(tient(prixMinimumPourG4(moyen))).toBe(true);
+    expect(tient(prixMinimumPourG4(moyen) - 1)).toBe(false);
   });
 });

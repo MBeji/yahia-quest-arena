@@ -1,6 +1,9 @@
 // @vitest-environment node
-import { describe, it, expect } from "vitest";
-import { readFileSync } from "node:fs";
+import { afterAll, describe, it, expect } from "vitest";
+import { spawnSync } from "node:child_process";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import {
   checkPointer,
   checkAgentsSize,
@@ -10,11 +13,25 @@ import {
   findUnpinnedActions,
   isJsonValid,
   checkSkillFrontmatter,
+  checkDeclaredCounts,
   checkFeatureInventory,
   extractFeatureInventory,
+  checkControlCoverage,
+  findRunner,
+  CONTROL_SCRIPT_RE,
   AGENTS_MD_MAX_LINES,
   AGENTS_MD_MAX_BYTES,
   SKILL_DESCRIPTION_MAX,
+  AGENTS_MD_WARN_RATIO,
+  findSuspiciousInvisibles,
+  findGhWithoutRepo,
+  findApplyWithoutNpm10,
+  findPushPastRedGate,
+  findPhantomProneTriggers,
+  collectCorpusProblems,
+  checkPolicyReasons,
+  checkScriptsTypecheck,
+  stripJsonComments,
 } from "../check.mjs";
 
 describe("checkPointer", () => {
@@ -327,5 +344,888 @@ describe("checkFeatureInventory", () => {
     expect(declared).not.toBeNull();
     expect(declared.names).toContain("quest");
     expect(declared.count).toBe(declared.names.length);
+  });
+});
+
+describe("CONTROL_SCRIPT_RE — qui est un contrôle", () => {
+  it.each(["lint", "typecheck", "verify", "ci:verify", "content:qa", "leak:check", "audit:deps"])(
+    "%s en est un",
+    (name) => expect(CONTROL_SCRIPT_RE.test(name)).toBe(true),
+  );
+
+  it.each(["dev", "build", "content:emit", "content:figures:preview", "db:inventory-content"])(
+    "%s n'en est pas un",
+    (name) => expect(CONTROL_SCRIPT_RE.test(name)).toBe(false),
+  );
+});
+
+describe("findRunner — les deux façons d'appeler un contrôle", () => {
+  const scripts = {
+    "content:manuel:check": "node --experimental-strip-types scripts/content/check-manuel-links.ts",
+    "content:videos:check": "node scripts/content/check-videos.mjs",
+    "content:qa": "node scripts/content/qa.ts",
+    "content:qa:strict": "node scripts/content/qa.ts --strict",
+  };
+
+  // Le bug qui a fait déclarer orphelin un workflow branché depuis trois semaines.
+  it("voit un `npm run` avec un flag intercalé", () => {
+    const wf = [["manuel-health.yml", "run: npm run --silent content:manuel:check > out.json"]];
+    expect(findRunner("content:manuel:check", scripts, wf)).toBe("manuel-health.yml");
+  });
+
+  // L'autre moitié : le workflow exécute le FICHIER, sans jamais nommer le script npm.
+  it("voit l'exécution directe du fichier", () => {
+    const wf = [["video-health.yml", "run: node scripts/content/check-videos.mjs > out.json"]];
+    expect(findRunner("content:videos:check", scripts, wf)).toBe("video-health.yml");
+  });
+
+  it("ne confond pas un script avec celui dont il est le préfixe", () => {
+    const wf = [["content-ci.yml", "run: npm run content:qa:strict"]];
+    expect(findRunner("content:qa", scripts, wf)).toBeNull();
+    expect(findRunner("content:qa:strict", scripts, wf)).toBe("content-ci.yml");
+  });
+
+  it("rend null quand personne ne l'appelle", () => {
+    expect(findRunner("content:qa", scripts, [["ci.yml", "run: npm run lint"]])).toBeNull();
+  });
+});
+
+describe("checkControlCoverage", () => {
+  const scripts = {
+    lint: "eslint src",
+    verify: "npm run eol:check && npm run lint",
+    "eol:check": "node scripts/ci/check-worktree-eol.mjs",
+    "content:figures:check": "node scripts/content/svg/check-figures.mjs content",
+  };
+  const ciOnly = [["ci.yml", "run: npm run verify"]];
+  const registry = (controls) => ({ controls });
+
+  it("accepte un contrôle atteint par un workflow", () => {
+    expect(checkControlCoverage({ scripts, workflows: ciOnly, registry: registry({}) })).toEqual(
+      expect.not.arrayContaining([expect.stringContaining("`verify`")]),
+    );
+  });
+
+  it("accepte un contrôle atteint PAR LA CHAÎNE d'un autre", () => {
+    const problems = checkControlCoverage({ scripts, workflows: ciOnly, registry: registry({}) });
+    expect(problems.join()).not.toMatch(/eol:check/);
+  });
+
+  // Le cas `content:figures:check` : rouge des mois, appelé par rien.
+  it("refuse un contrôle que rien n'appelle et que rien ne déclare", () => {
+    const problems = checkControlCoverage({ scripts, workflows: ciOnly, registry: registry({}) });
+    expect(problems.join()).toMatch(/`content:figures:check`.*aucun workflow/s);
+  });
+
+  it("accepte le même contrôle une fois déclaré", () => {
+    const declared = registry({
+      "content:figures:check": { where: "privé:content-ci.yml", why: "gate de PR du corpus." },
+    });
+    expect(checkControlCoverage({ scripts, workflows: ciOnly, registry: declared })).toEqual([]);
+  });
+
+  it("exige un `why`, pas seulement un `where`", () => {
+    const declared = registry({ "content:figures:check": { where: "privé:content-ci.yml" } });
+    const problems = checkControlCoverage({ scripts, workflows: ciOnly, registry: declared });
+    expect(problems.join()).toMatch(/doit porter un `where` ET un `why`/);
+  });
+
+  // Sans quoi le registre devient un cimetière : on déclare, on branche, on oublie de retirer.
+  it("refuse une déclaration périmée — le workflow l'exécute déjà", () => {
+    const declared = registry({ verify: { where: "manuel", why: "..." } });
+    const problems = checkControlCoverage({ scripts, workflows: ciOnly, registry: declared });
+    expect(problems.join()).toMatch(/`verify` est déclaré.*déjà/s);
+  });
+
+  it("refuse une déclaration qui nomme un script disparu", () => {
+    const declared = registry({ "content:disparu:check": { where: "manuel", why: "..." } });
+    const problems = checkControlCoverage({ scripts, workflows: ciOnly, registry: declared });
+    expect(problems.join()).toMatch(/n'existe plus dans package\.json/);
+  });
+
+  describe("mode --corpus : la déclaration devient une vérification", () => {
+    const declared = registry({
+      "content:figures:check": { where: "privé:content-ci.yml", why: "gate de PR du corpus." },
+    });
+
+    it("passe quand le workflow privé l'appelle vraiment", () => {
+      const corpus = new Map([["content-ci.yml", "run: npm run content:figures:check"]]);
+      expect(
+        checkControlCoverage({
+          scripts,
+          workflows: ciOnly,
+          registry: declared,
+          corpusWorkflows: corpus,
+        }),
+      ).toEqual([]);
+    });
+
+    it("échoue quand le workflow privé ne l'appelle pas — déclaration en l'air", () => {
+      const corpus = new Map([["content-ci.yml", "run: npm run content:qa:strict"]]);
+      const problems = checkControlCoverage({
+        scripts,
+        workflows: ciOnly,
+        registry: declared,
+        corpusWorkflows: corpus,
+      });
+      expect(problems.join()).toMatch(/qui ne l'appelle pas/);
+    });
+
+    it("échoue quand le fichier privé déclaré n'existe pas", () => {
+      const problems = checkControlCoverage({
+        scripts,
+        workflows: ciOnly,
+        registry: declared,
+        corpusWorkflows: new Map(),
+      });
+      expect(problems.join()).toMatch(/fichier absent du corpus/);
+    });
+  });
+});
+
+describe("harness/controls.json — le registre réel de ce dépôt", () => {
+  const registry = JSON.parse(readFileSync("harness/controls.json", "utf8"));
+  const pkg = JSON.parse(readFileSync("package.json", "utf8"));
+
+  it("ne déclare que des scripts qui existent", () => {
+    for (const name of Object.keys(registry.controls)) expect(pkg.scripts).toHaveProperty(name);
+  });
+
+  it("donne une raison à chaque déclaration", () => {
+    for (const [name, entry] of Object.entries(registry.controls)) {
+      expect(entry.where, name).toBeTruthy();
+      expect(entry.why, name).toBeTruthy();
+    }
+  });
+});
+
+describe("findSuspiciousInvisibles — le contexte décide, jamais le fichier", () => {
+  // Les quatre cas viennent du corpus réel (relevé du 2026-09-03, étude 32 §2.4) : le scan brut
+  // y rendait 38 constats, dont 37 légitimes. Un gate qui crie sur du travail correct finit
+  // ignoré — c'est la leçon de `content:figures:check` et de ses 32 signalements tous faux.
+
+  it("tolère le liant d'une séquence emoji (le 🧑‍🏫 de 25 skills prof-*)", () => {
+    expect(findSuspiciousInvisibles("# \u{1F9D1}\u200D\u{1F3EB} Prof. Maths")).toEqual([]);
+  });
+
+  it("refuse le MÊME caractère hors d'une séquence emoji", () => {
+    // U+200D entre deux lettres n'est pas une ligature d'emoji : c'est un mot coupé en deux
+    // qui se lit comme un seul. Le tolérer par plage aurait ouvert cette porte.
+    expect(findSuspiciousInvisibles("ad\u200Dmin")).toHaveLength(1);
+  });
+
+  it("tolère les marques de direction et le ZWNJ DANS un fichier arabe", () => {
+    // `‏6 أسئلة` — une marque RTL devant un chiffre latin, pour qu'il se place du bon côté.
+    expect(findSuspiciousInvisibles("\u200F6 أسئلة فأكثر")).toEqual([]);
+    // `أ‌ب‌ج` — un ZWNJ empêche trois lettres de se lier, pour qu'elles se lisent A/B/C.
+    expect(findSuspiciousInvisibles("الزاوية أ\u200Cب\u200Cج")).toEqual([]);
+  });
+
+  it("refuse les mêmes marques dans un fichier sans arabe", () => {
+    expect(findSuspiciousInvisibles("\u200Fhello")).toHaveLength(1);
+    expect(findSuspiciousInvisibles("he\u200Cllo")).toHaveLength(1);
+  });
+
+  it("refuse TOUJOURS une surcharge de direction, même en plein texte arabe", () => {
+    // Le cas qui justifie l'invariant : U+202E inverse l'affichage sans changer le texte lu
+    // par l'agent — la classe d'attaque « Rules File Backdoor ». Aucune tolérance ne doit
+    // l'atteindre, et c'est le test qui l'interdit.
+    expect(findSuspiciousInvisibles("مرحبا \u202Eadmin")).toHaveLength(1);
+    expect(findSuspiciousInvisibles("مرحبا \u200Btexte")).toHaveLength(1);
+    expect(findSuspiciousInvisibles("\uFEFFdocument")).toHaveLength(1);
+  });
+});
+
+describe("checkSkillFrontmatter — la borne des 1 024 caractères mesure enfin", () => {
+  it("attrape une description longue étalée sur plusieurs lignes", () => {
+    // LE défaut C-7 : la regex d'origine finissait par `$` en mode `m`, donc s'arrêtait à la
+    // première fin de ligne. Toutes les descriptions du projet sont des blocs `>-`
+    // multilignes : la borne n'a jamais rien mesuré, sur aucun des 48 skills.
+    const fm = `name: x\ndescription: >-\n  ${"a".repeat(500)}\n  ${"b".repeat(900)}`;
+    expect(checkSkillFrontmatter("x", fm)).toEqual(["description is 1401 chars > spec max 1024"]);
+  });
+
+  it("accepte un bloc multiligne qui tient dans le budget", () => {
+    const fm = `name: x\ndescription: >-\n  ${"a".repeat(400)}\n  ${"b".repeat(400)}`;
+    expect(checkSkillFrontmatter("x", fm)).toEqual([]);
+  });
+
+  it("signale un frontmatter qui n'est pas du YAML valide plutôt que de deviner", () => {
+    expect(checkSkillFrontmatter("x", "name: x\ndescription: [oups")).toContain(
+      "frontmatter is not valid YAML",
+    );
+  });
+});
+
+describe("checkAgentsSize — avertir avant de bloquer", () => {
+  const line = (n) => Array.from({ length: n }, () => "x").join("\n");
+
+  it("avertit à 92 % du budget de lignes sans échouer", () => {
+    const at = Math.ceil(AGENTS_MD_MAX_LINES * AGENTS_MD_WARN_RATIO);
+    const size = checkAgentsSize(line(at));
+    expect(size.ok).toBe(true);
+    expect(size.warnings.length).toBeGreaterThan(0);
+  });
+
+  it("ne dit rien tant qu'on est loin du plafond", () => {
+    expect(checkAgentsSize(line(50)).warnings).toEqual([]);
+  });
+
+  it("n'avertit pas en plus d'échouer — un fichier hors budget est déjà rouge", () => {
+    const size = checkAgentsSize(line(AGENTS_MD_MAX_LINES + 10));
+    expect(size.ok).toBe(false);
+    expect(size.warnings).toEqual([]);
+  });
+});
+
+describe("findApplyWithoutNpm10 — le script refuse un npm que le workflow lui sert quand même", () => {
+  // Ce n'est pas une hypothèse non plus. `apply-patch-minor.mjs` n'écrit le lockfile que sous
+  // npm 10, son test unitaire le vérifie depuis toujours — et #975 a basculé `upgrade-guard.yml`
+  // sur `node-version: 24`, qui livre npm 11.19. Résultat mesuré le 2026-09-22 sur 45 runs :
+  // l'étape `apply` n'a été TENTÉE que 4 fois (2026-08-21, 09-15, 09-18, 09-22) et a échoué les
+  // 4 fois. Les 41 autres runs sont « success » parce que la cadence n'avait pas tiré et que
+  // l'étape était `skipped` — un vert qui dit « rien n'a été évalué », pas « ça marche ».
+  const etapes = (avantApply) =>
+    [
+      "name: x",
+      "on: { schedule: [{ cron: '0 5 * * *' }] }",
+      "jobs:",
+      "  up:",
+      "    runs-on: ubuntu-latest",
+      "    steps:",
+      "      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+      "        with:",
+      "          node-version: 24",
+      ...avantApply,
+      "      - name: Apply the patch/minor lot",
+      "        run: node scripts/deps/apply-patch-minor.mjs apply --plan p.json",
+      "",
+    ].join("\n");
+
+  it("flags the real bug: node 24 and nothing pins npm 10", () => {
+    const hits = findApplyWithoutNpm10(etapes([]));
+    expect(hits).toHaveLength(1);
+    expect(hits[0].step).toBe("Apply the patch/minor lot");
+    expect(hits[0].job).toBe("up");
+  });
+
+  it("accepts the fix: an `npm i -g npm@10` step before the apply", () => {
+    expect(
+      findApplyWithoutNpm10(etapes(["      - name: Pin npm 10", "        run: npm i -g npm@10"])),
+    ).toEqual([]);
+  });
+
+  it("flags a pin that lands AFTER the apply — the order is the whole point", () => {
+    const tardif = [
+      "name: x",
+      "on: { workflow_dispatch: {} }",
+      "jobs:",
+      "  up:",
+      "    steps:",
+      "      - uses: actions/setup-node@abc",
+      "        with:",
+      "          node-version: 24",
+      "      - run: node scripts/deps/apply-patch-minor.mjs apply --plan p.json",
+      "      - run: npm i -g npm@10",
+      "",
+    ].join("\n");
+    expect(findApplyWithoutNpm10(tardif)).toHaveLength(1);
+  });
+
+  it("accepts a Node that ships npm 10 on its own (22 and below)", () => {
+    const n22 = [
+      "name: x",
+      "on: { workflow_dispatch: {} }",
+      "jobs:",
+      "  up:",
+      "    steps:",
+      "      - uses: actions/setup-node@abc",
+      "        with:",
+      "          node-version: 22",
+      "      - run: node scripts/deps/apply-patch-minor.mjs apply --plan p.json",
+      "",
+    ].join("\n");
+    expect(findApplyWithoutNpm10(n22)).toEqual([]);
+  });
+
+  it("leaves `detect` alone — it reads, it does not write the lockfile", () => {
+    const detect = [
+      "name: x",
+      "on: { workflow_dispatch: {} }",
+      "jobs:",
+      "  up:",
+      "    steps:",
+      "      - uses: actions/setup-node@abc",
+      "        with:",
+      "          node-version: 24",
+      "      - run: node scripts/deps/apply-patch-minor.mjs detect --out p.json",
+      "",
+    ].join("\n");
+    expect(findApplyWithoutNpm10(detect)).toEqual([]);
+  });
+
+  it("stays quiet on unreadable YAML — that is checkYamlFiles' job", () => {
+    expect(findApplyWithoutNpm10(":::not yaml: [")).toEqual([]);
+  });
+
+  it("passes the real upgrade-guard.yml of this repo", () => {
+    const reel = readFileSync(".github/workflows/upgrade-guard.yml", "utf8");
+    expect(findApplyWithoutNpm10(reel)).toEqual([]);
+  });
+});
+
+describe("findPushPastRedGate — un lot rouge ne passe pas le hook pre-push", () => {
+  // Ce n'est pas une hypothèse : run 41017413367 (2026-10-30, #1203). `npm ci` installe husky
+  // dans le checkout du runner, le gate `ci:verify` est rouge (continue-on-error), et l'étape
+  // qui pousse le lot « pour ouvrir une PR draft » se fait refuser par `.husky/pre-push`
+  // (`npm run verify`) : aucune PR, et l'agent de réparation sort `skipped`.
+  const job = (etapePush) =>
+    [
+      "name: x",
+      "on: { workflow_dispatch: {} }",
+      "jobs:",
+      "  apply:",
+      "    runs-on: ubuntu-latest",
+      "    steps:",
+      "      - run: npm ci --no-audit --no-fund",
+      "      - name: Full gate on the lot",
+      "        id: gate",
+      "        continue-on-error: true",
+      "        run: npm run ci:verify",
+      ...etapePush,
+      "",
+    ].join("\n");
+
+  it("attrape la forme exacte du bug : le push n'est gardé que par un `if` shell", () => {
+    const hits = findPushPastRedGate(
+      job([
+        "      - name: Open the patch/minor PR",
+        "        env: { GATE: '${{ steps.gate.outcome }}' }",
+        "        run: |",
+        '          git push -u origin "$branch"',
+        '          if [ "$GATE" = "success" ]; then gh pr create; else gh pr create --draft; fi',
+      ]),
+    );
+    expect(hits).toEqual([{ job: "apply", step: "Open the patch/minor PR" }]);
+  });
+
+  it("accepte le correctif : le push ne tourne que si le gate est vert", () => {
+    expect(
+      findPushPastRedGate(
+        job([
+          "      - name: Open the patch/minor PR",
+          "        if: steps.commit.outcome == 'success' && steps.gate.outcome == 'success'",
+          '        run: git push -u origin "$BRANCH"',
+        ]),
+      ),
+    ).toEqual([]);
+  });
+
+  it("refuse `conclusion` : celle d'une étape continue-on-error est toujours success", () => {
+    expect(
+      findPushPastRedGate(
+        job([
+          "      - if: steps.gate.conclusion == 'success'",
+          '        run: git push -u origin "$BRANCH"',
+        ]),
+      ),
+    ).toHaveLength(1);
+  });
+
+  it("attrape un gate sans `id` — rien ne peut alors le lire", () => {
+    const anonyme = job([
+      "      - if: steps.gate.outcome == 'success'",
+      "        run: git push origin b",
+    ]).replace("        id: gate\n", "");
+    expect(findPushPastRedGate(anonyme)).toHaveLength(1);
+  });
+
+  it("se tait sans hooks installés (`npm ci --ignore-scripts`, ou pas de `npm ci`)", () => {
+    const etape = ["      - run: git push origin b"];
+    expect(
+      findPushPastRedGate(job(etape).replace("npm ci --no-audit", "npm ci --ignore-scripts")),
+    ).toEqual([]);
+    expect(
+      findPushPastRedGate(job(etape).replace("      - run: npm ci --no-audit --no-fund\n", "")),
+    ).toEqual([]);
+  });
+
+  it("ne compte pas `npm i -g npm@10` comme une installation des hooks", () => {
+    const global = job(["      - run: git push origin b"]).replace(
+      "npm ci --no-audit --no-fund",
+      "npm i -g npm@10",
+    );
+    expect(findPushPastRedGate(global)).toEqual([]);
+  });
+
+  it("se tait sur un push AVANT le gate, ou sans gate non bloquant", () => {
+    const avant = [
+      "name: x",
+      "on: { workflow_dispatch: {} }",
+      "jobs:",
+      "  j:",
+      "    steps:",
+      "      - run: npm ci",
+      "      - run: git push origin b",
+      "      - continue-on-error: true",
+      "        id: gate",
+      "        run: npm run verify",
+      "",
+    ].join("\n");
+    expect(findPushPastRedGate(avant)).toEqual([]);
+    expect(
+      findPushPastRedGate(avant.replace("      - continue-on-error: true\n", "      - id: x\n")),
+    ).toEqual([]);
+  });
+
+  it("stays quiet on unreadable YAML — that is checkYamlFiles' job", () => {
+    expect(findPushPastRedGate(":::not yaml: [")).toEqual([]);
+  });
+
+  it("passes the real upgrade-guard.yml of this repo", () => {
+    const reel = readFileSync(".github/workflows/upgrade-guard.yml", "utf8");
+    expect(findPushPastRedGate(reel)).toEqual([]);
+  });
+});
+
+describe("findGhWithoutRepo — le `gh` qui ne sait pas sur quel dépôt il travaille", () => {
+  // Ce n'est pas une hypothèse : `pat-expiry-watch.yml` est parti en production sans
+  // `GH_REPO` ni `checkout`, et ses deux premiers passages sont sortis en 1 (runs
+  // 35699670930 et 35699869564, 2026-09-22). L'étape de sondage, qui n'utilise que
+  // `curl` et `${GITHUB_REPOSITORY}`, passait — seule celle qui appelait `gh` tombait.
+  const nu = [
+    "name: x",
+    "on: { workflow_dispatch: {} }",
+    "jobs:",
+    "  watch:",
+    "    runs-on: ubuntu-latest",
+    "    steps:",
+    "      - name: Ouvrir l'issue",
+    "        run: gh issue list --label foo --state open",
+    "",
+  ].join("\n");
+
+  it("attrape un `gh issue` sans dépôt, et NOMME l'étape", () => {
+    const hits = findGhWithoutRepo(nu);
+    expect(hits).toHaveLength(1);
+    expect(hits[0]).toMatchObject({ job: "watch", step: "Ouvrir l'issue" });
+  });
+
+  it("se tait sur `GH_REPO` au job — le correctif réellement appliqué", () => {
+    const corrige = nu.replace(
+      "    runs-on: ubuntu-latest",
+      "    runs-on: ubuntu-latest\n    env:\n      GH_REPO: owner/repo",
+    );
+    expect(findGhWithoutRepo(corrige)).toEqual([]);
+  });
+
+  it("se tait sur `GH_REPO` au workflow, sur un `checkout`, et sur `-R`", () => {
+    expect(findGhWithoutRepo("env:\n  GH_REPO: o/r\n" + nu.replace("name: x\n", ""))).toEqual([]);
+    expect(
+      findGhWithoutRepo(
+        nu.replace("      - name:", "      - uses: actions/checkout@sha\n      - name:"),
+      ),
+    ).toEqual([]);
+    expect(findGhWithoutRepo(nu.replace("gh issue list", "gh issue list -R o/r"))).toEqual([]);
+  });
+
+  it("ne crie PAS sur `gh api`, qui nomme son dépôt dans l'URL", () => {
+    // Un gate qui signale du code correct apprend à se faire ignorer — même
+    // raison que le scan d'identifiants de modèle qui sortait « O2 ».
+    expect(
+      findGhWithoutRepo(
+        nu.replace("gh issue list --label foo --state open", "gh api repos/o/r/issues"),
+      ),
+    ).toEqual([]);
+    expect(
+      findGhWithoutRepo(nu.replace("gh issue list --label foo --state open", "gh auth status")),
+    ).toEqual([]);
+  });
+
+  it("voit un `gh` enchaîné derrière un pipe ou un `&&`", () => {
+    const enchaine = nu.replace(
+      "run: gh issue list --label foo --state open",
+      'run: |\n          set -e\n          n="$(gh issue list --json number)" && echo "$n"',
+    );
+    expect(findGhWithoutRepo(enchaine)).toHaveLength(1);
+  });
+
+  it("ignore un YAML illisible — c'est le métier de `checkYamlFiles`", () => {
+    expect(findGhWithoutRepo("jobs:\n  a:\n   - : : :\n  a:\n")).toEqual([]);
+  });
+});
+
+describe("findPhantomProneTriggers — l'événement qui fabrique un run que personne n'a demandé", () => {
+  // Le fantôme n'est pas une hypothèse : mesuré sur la PR privée #343 le 2026-09-04, trois
+  // runs `pull_request` en `failure` — Content CI, Roadmap sync, Automerge — à ZÉRO job
+  // chacun, pendant que les vrais tournaient en `workflow_dispatch`. Seul `opened` les crée.
+  it("attrape le `pull_request:` nu, dont le défaut inclut `opened`", () => {
+    const hits = findPhantomProneTriggers("on:\n  pull_request:\n  push:\n    branches: [main]\n");
+    expect(hits).toHaveLength(1);
+    expect(hits[0]).toMatchObject({ event: "pull_request" });
+    expect(hits[0].reason).toContain("par défaut");
+  });
+
+  it("attrape `opened` listé explicitement", () => {
+    const hits = findPhantomProneTriggers(
+      "on:\n  pull_request:\n    types: [opened, reopened, labeled]\n",
+    );
+    expect(hits).toHaveLength(1);
+    expect(hits[0].reason).toContain("explicitement");
+  });
+
+  it("laisse passer la forme corrigée", () => {
+    expect(
+      findPhantomProneTriggers("on:\n  pull_request:\n    types: [synchronize, reopened]\n"),
+    ).toEqual([]);
+  });
+
+  it("garde le filtre `paths:` hors du sujet — c'est `types:` qui décide", () => {
+    // roadmap-sync.yml porte les deux ; un `paths:` ne dit rien de l'événement écouté.
+    expect(
+      findPhantomProneTriggers(
+        'on:\n  pull_request:\n    types: [synchronize, reopened]\n    paths:\n      - "FableEtudes/ROADMAP.md"\n',
+      ),
+    ).toEqual([]);
+  });
+
+  it("couvre aussi `pull_request_target`", () => {
+    expect(findPhantomProneTriggers("on:\n  pull_request_target:\n")).toMatchObject([
+      { event: "pull_request_target" },
+    ]);
+  });
+
+  it("ne dit rien d'un workflow qui n'écoute pas les PR", () => {
+    expect(findPhantomProneTriggers('on:\n  schedule:\n    - cron: "0 6 * * *"\n')).toEqual([]);
+    expect(findPhantomProneTriggers("on:\n  workflow_dispatch:\n")).toEqual([]);
+  });
+
+  it("laisse le YAML illisible au gate dont c'est le métier", () => {
+    // `checkYamlFiles` le signale déjà ; deux voix sur le même défaut brouillent le rapport.
+    expect(findPhantomProneTriggers("on:\n  pull_request:\n :::pas du yaml")).toEqual([]);
+    expect(findPhantomProneTriggers("")).toEqual([]);
+  });
+
+  it("lit `on:` même si un analyseur YAML 1.1 en fait la clé booléenne `true`", () => {
+    // Dépendre de la version de schéma du paquet `yaml` rendrait ce gate muet sur une montée
+    // de version — et un gate muet est pire qu'un gate absent.
+    expect(
+      findPhantomProneTriggers(JSON.stringify({ true: { pull_request: null } })),
+    ).toMatchObject([{ event: "pull_request" }]);
+  });
+});
+
+describe("collectCorpusProblems — les invariants appliqués au dépôt privé", () => {
+  const skill = (name, description) =>
+    `---\nname: ${name}\ndescription: >-\n  ${description}\n---\n\n# ${name}\n`;
+
+  function makeCorpus(files) {
+    const root = mkdtempSync(join(tmpdir(), "corpus-"));
+    for (const [rel, body] of Object.entries(files)) {
+      const full = join(root, rel);
+      mkdirSync(join(full, ".."), { recursive: true });
+      writeFileSync(full, body);
+    }
+    return root;
+  }
+
+  const BASE = {
+    "CLAUDE.md": "# CLAUDE.md du corpus\n",
+    ".claude/skills/content-x/SKILL.md": skill("content-x", "Un skill correct."),
+    ".github/workflows/ci.yml":
+      "name: CI\non: push\njobs:\n  a:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7\n",
+  };
+
+  let roots = [];
+  const corpus = (extra = {}) => {
+    const root = makeCorpus({ ...BASE, ...extra });
+    roots.push(root);
+    return root;
+  };
+  afterAll(() => {
+    for (const root of roots) rmSync(root, { recursive: true, force: true });
+  });
+
+  it("ne dit rien sur un corpus sain", () => {
+    expect(collectCorpusProblems(corpus())).toEqual([]);
+  });
+
+  it("attrape une Action non épinglée — la règle que pin-check.yml ré-écrivait en bash", () => {
+    const root = corpus({
+      ".github/workflows/ci.yml":
+        "name: CI\non: push\njobs:\n  a:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n",
+    });
+    expect(collectCorpusProblems(root).join("\n")).toContain("n'est pas épinglé à un SHA");
+  });
+
+  it("attrape une description hors spec et un nom qui ne suit pas son dossier", () => {
+    const root = corpus({
+      ".claude/skills/content-x/SKILL.md": skill("autre-nom", "a".repeat(1200)),
+    });
+    const out = collectCorpusProblems(root).join("\n");
+    expect(out).toContain("> spec max 1024");
+    expect(out).toContain('name "autre-nom" ≠ folder "content-x"');
+  });
+
+  it("attrape un BOM dans une référence — le premier vrai défaut trouvé au corpus", () => {
+    const root = corpus({
+      ".claude/skills/content-x/references/programme.md": "\uFEFF# Programme officiel\n",
+    });
+    expect(collectCorpusProblems(root).join("\n")).toContain("U+FEFF");
+  });
+
+  it("laisse passer l'arabe et les emoji des skills réels", () => {
+    const root = corpus({
+      ".claude/skills/content-x/references/arabe.md":
+        "# \u{1F9D1}\u200D\u{1F3EB}\n\n\u200F6 أسئلة — الزاوية أ\u200Cب\u200Cج\n",
+    });
+    expect(collectCorpusProblems(root)).toEqual([]);
+  });
+
+  it("attrape un CLAUDE.md hors budget", () => {
+    const root = corpus({ "CLAUDE.md": Array.from({ length: 200 }, () => "x").join("\n") });
+    expect(collectCorpusProblems(root).join("\n")).toContain("hors budget");
+  });
+
+  it("attrape un YAML à clé dupliquée — le run à zéro job du 2026-08-24", () => {
+    const root = corpus({
+      ".github/workflows/dup.yml": "name: X\non: push\nname: Y\n",
+    });
+    expect(collectCorpusProblems(root).length).toBeGreaterThan(0);
+  });
+});
+
+describe("le CLI en mode corpus — les deux jeux d'invariants ne cohabitent pas", () => {
+  // LE défaut que la CI a trouvé au premier run réel, et qu'aucun raisonnement n'avait vu.
+  // La Content CI privée branche les 43 skills du corpus par SYMLINK dans `engine/.claude/skills`
+  // — c'est sa raison d'être. L'invariant « chaque vue générée est à jour » dérive alors le
+  // miroir `.agents/skills/` du corpus et réclame 225 fichiers qui n'ont aucune raison
+  // d'exister ; la recette locale, qui fait les mêmes symlinks, tombait dans le même trou.
+  // D'où la règle : `--corpus` juge le corpus, et RIEN du moteur. Ce test la tient par le CLI,
+  // parce que c'est dans `main()` qu'elle vit.
+  const root = mkdtempSync(join(tmpdir(), "corpus-cli-"));
+  const write = (rel, body) => {
+    mkdirSync(join(root, rel, ".."), { recursive: true });
+    writeFileSync(join(root, rel), body);
+  };
+  write("CLAUDE.md", "# corpus\n");
+  write(
+    ".claude/skills/content-x/SKILL.md",
+    "---\nname: content-x\ndescription: >-\n  Un skill correct.\n---\n\n# x\n",
+  );
+  write(
+    ".github/workflows/ci.yml",
+    "name: CI\non: push\njobs:\n  a:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7\n",
+  );
+  afterAll(() => rmSync(root, { recursive: true, force: true }));
+
+  const run = (args) =>
+    spawnSync(process.execPath, ["scripts/harness/check.mjs", ...args], {
+      encoding: "utf8",
+      cwd: join(import.meta.dirname, "..", "..", ".."),
+    });
+
+  it("ne prononce AUCUN auto-contrôle du moteur", () => {
+    // L'assertion qui compte est négative, et c'est voulu : ce qui a cassé en CI n'est pas un
+    // constat manquant, c'est 225 constats de trop, tous sur le miroir `.agents/skills/` que
+    // le corpus branché par symlink faisait dériver. Aucune ligne du rapport ne doit plus
+    // parler d'une surface du moteur.
+    const { stdout, stderr } = run(["--corpus", root]);
+    const out = stdout + stderr;
+    expect(out).not.toContain(".agents/skills");
+    expect(out).not.toContain("harness:sync");
+    expect(out).not.toContain("pointers intact");
+    expect(out).not.toMatch(/AGENTS\.md (approche|hors budget)|inventaire des features/);
+  });
+
+  it("juge en revanche un compteur dont le FAIT est le corpus, où que le nombre soit écrit", () => {
+    // #1039 lot 1 : « 43 skills pédagogiques » est affirmé dans les documents du moteur,
+    // mais seul le corpus peut le recalculer. Ce n'est pas un auto-contrôle du moteur —
+    // c'est le corpus qui parle, et il parle du seul endroit où le nombre est écrit.
+    const { stdout, stderr } = run(["--corpus", root]);
+    const out = stdout + stderr;
+    expect(out).toContain("`corpus-skills`");
+    expect(out).toContain("le disque en compte 1");
+  });
+
+  it("échoue sur un corpus fautif, avec le code de sortie qui va avec", () => {
+    writeFileSync(join(root, ".claude/skills/content-x/SKILL.md"), "pas de frontmatter\n");
+    const { status, stdout, stderr } = run(["--corpus", root]);
+    expect(status).toBe(1);
+    expect(stdout + stderr).toContain("corpus: .claude/skills/content-x/SKILL.md");
+  });
+});
+
+describe("stripJsonComments", () => {
+  it("retire les commentaires de ligne et de bloc", () => {
+    const jsonc = '{\n  // une ligne\n  "a": 1, /* un bloc */\n  "b": 2\n}';
+    expect(JSON.parse(stripJsonComments(jsonc))).toEqual({ a: 1, b: 2 });
+  });
+
+  it("ne touche PAS à ce qui ressemble à un commentaire DANS une chaîne", () => {
+    // Le piège classique d'un stripper naïf : une URL dans une valeur.
+    const jsonc = '{ "url": "https://exemple.tn/a", "x": 1 }';
+    expect(JSON.parse(stripJsonComments(jsonc))).toEqual({ url: "https://exemple.tn/a", x: 1 });
+  });
+
+  it("laisse un guillemet échappé fermer correctement la chaîne", () => {
+    const jsonc = '{ "s": "il a dit \\"//\\" ici", "y": 2 }';
+    expect(JSON.parse(stripJsonComments(jsonc))).toEqual({ s: 'il a dit "//" ici', y: 2 });
+  });
+});
+
+describe("checkScriptsTypecheck — les scripts .ts sont-ils VRAIMENT typés ?", () => {
+  const ok = {
+    typecheckScript: "tsc --noEmit && tsc -p tsconfig.scripts.json",
+    include: ["scripts/**/*.ts"],
+    scriptFiles: ["scripts/content/build.ts", "scripts/ci/quelque-chose.ts"],
+  };
+
+  it("passe quand la chaîne invoque le second programme et qu'il couvre tout", () => {
+    expect(checkScriptsTypecheck(ok)).toEqual([]);
+  });
+
+  it("attrape le débranchement de la chaîne", () => {
+    // Le filet le plus facile à perdre : on retire l'appel, plus rien ne le dit.
+    const problems = checkScriptsTypecheck({ ...ok, typecheckScript: "tsc --noEmit" });
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toContain("n'invoque pas");
+  });
+
+  it("attrape un `include` rétréci qui laisse des fichiers dehors", () => {
+    const problems = checkScriptsTypecheck({ ...ok, include: ["scripts/ci/**/*.ts"] });
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toContain("scripts/content/build.ts");
+  });
+
+  it("attrape un `include` vide ou absent, et s'arrête là", () => {
+    // Sans include, TOUS les fichiers seraient signalés : un seul constat vaut mieux qu'un mur.
+    expect(checkScriptsTypecheck({ ...ok, include: [] })).toHaveLength(1);
+    expect(checkScriptsTypecheck({ ...ok, include: undefined })).toHaveLength(1);
+  });
+
+  it("comprend `**/` au milieu d'un motif, pas seulement en tête", () => {
+    expect(
+      checkScriptsTypecheck({
+        ...ok,
+        include: ["scripts/**/*.ts"],
+        scriptFiles: ["scripts/a/b/c/profond.ts"],
+      }),
+    ).toEqual([]);
+  });
+
+  it("ne laisse pas `*` traverser un séparateur de chemin", () => {
+    // `scripts/*.ts` ne couvre PAS `scripts/content/x.ts` — sinon le contrôle mentirait.
+    const problems = checkScriptsTypecheck({
+      ...ok,
+      include: ["scripts/*.ts"],
+      scriptFiles: ["scripts/content/x.ts"],
+    });
+    expect(problems).toHaveLength(1);
+  });
+});
+
+describe("checkPolicyReasons — une famille de permissions sans raison ne passe pas", () => {
+  const ok = {
+    allow: {
+      $why: { gates: "Les gates du projet, et tout script npm que `node scripts/:*` ouvre déjà." },
+      gates: ["Bash(npm run:*)"],
+    },
+  };
+
+  it("se tait quand chaque famille porte sa raison", () => {
+    expect(checkPolicyReasons(ok)).toEqual([]);
+  });
+
+  it("attrape une famille ajoutée sans justification", () => {
+    const drift = { allow: { ...ok.allow, "nouvelle-famille": ["Bash(curl:*)"] } };
+    expect(checkPolicyReasons(drift).join("\n")).toContain("nouvelle-famille");
+  });
+
+  it("refuse une raison trop courte pour en être une", () => {
+    // « ok » ou « utile » n'expliquent rien : la contrainte de longueur est là pour que
+    // remplir la case coûte au moins une phrase.
+    const lazy = { allow: { $why: { gates: "utile" }, gates: ["Bash(npm run:*)"] } };
+    expect(checkPolicyReasons(lazy)).toHaveLength(1);
+  });
+
+  it("attrape une raison PÉRIMÉE, pour que ce bloc ne devienne pas un cimetière", () => {
+    const stale = {
+      allow: { ...ok.allow, $why: { ...ok.allow.$why, disparue: "Une famille supprimée hier." } },
+    };
+    expect(checkPolicyReasons(stale).join("\n")).toContain("disparue");
+  });
+
+  it("rend un constat lisible plutôt que d'exploser sur un fichier vide", () => {
+    expect(checkPolicyReasons({})).toHaveLength(1);
+  });
+});
+
+describe("harness/policy.json — le fichier réel de ce dépôt", () => {
+  it("porte une raison pour chacune de ses familles", () => {
+    const policy = JSON.parse(readFileSync("harness/policy.json", "utf8"));
+    expect(checkPolicyReasons(policy)).toEqual([]);
+  });
+
+  it("garde ses dénis, que l'ouverture par famille ne doit jamais rouvrir", () => {
+    // `gates` ouvre désormais `npm run:*` : le déni qui protège le schéma de prod doit
+    // survivre à cet élargissement, sinon on a troqué une invite contre une porte.
+    const policy = JSON.parse(readFileSync("harness/policy.json", "utf8"));
+    const denied = policy.deny.map((d) => d.rule);
+    expect(denied).toContain("Bash(node scripts/db/push-prod.mjs:*)");
+    expect(denied).toContain("Bash(npx supabase db push:*)");
+    expect(denied).toContain("Bash(gh secret delete:*)");
+    expect(policy.deny.every((d) => typeof d.reason === "string" && d.reason.length > 20)).toBe(
+      true,
+    );
+  });
+});
+
+describe("checkDeclaredCounts — les compteurs marqués d'un document (#1039)", () => {
+  const facts = { "engine-skills": 5, "corpus-skills": null, features: 16 };
+  const doc = (text) => [["STATUS.md", text]];
+
+  it("accepte un compteur exact, même écrit à la française", () => {
+    expect(
+      checkDeclaredCounts(doc("les <!--count:engine-skills-->5<!--/count--> skills"), facts),
+    ).toEqual([]);
+    expect(
+      checkDeclaredCounts(doc("<!-- count:features -->16<!-- /count --> features"), facts),
+    ).toEqual([]);
+    expect(checkDeclaredCounts(doc("<!--count:features-->1\u202f6<!--/count-->"), facts)).toEqual(
+      [],
+    );
+  });
+
+  it("nomme le fichier, le compteur, les deux nombres — et dit quoi corriger", () => {
+    const problems = checkDeclaredCounts(
+      doc("les <!--count:engine-skills-->4<!--/count--> skills techniques"),
+      facts,
+    );
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toContain("STATUS.md");
+    expect(problems[0]).toContain("engine-skills");
+    expect(problems[0]).toContain("annonce 4");
+    expect(problems[0]).toContain("compte 5");
+  });
+
+  it("lit sans juger un fait qui vit dans l'autre dépôt (fact === null)", () => {
+    expect(
+      checkDeclaredCounts(
+        doc("<!--count:corpus-skills-->41<!--/count--> skills pédagogiques"),
+        facts,
+      ),
+    ).toEqual([]);
+  });
+
+  it("refuse un compteur que rien ne recalcule — un marqueur orphelin est un faux gate", () => {
+    const problems = checkDeclaredCounts(doc("<!--count:workflows-->26<!--/count-->"), facts);
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toContain("`workflows` inconnu");
+  });
+
+  it("ignore un nombre nu : contradiction, jamais exhaustivité (#994)", () => {
+    expect(checkDeclaredCounts(doc("41 skills pédagogiques, 26 workflows"), facts)).toEqual([]);
+    expect(checkDeclaredCounts([["AGENTS.md", null]], facts)).toEqual([]);
   });
 });

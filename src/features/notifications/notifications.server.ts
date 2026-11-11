@@ -12,7 +12,7 @@ import { failWithClientError } from "@/shared/lib/safe-error";
  */
 export const savePushSubscription = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         endpoint: z.string().url().max(2048),
@@ -42,7 +42,7 @@ export const savePushSubscription = createServerFn({ method: "POST" })
 /** Remove the current user's subscription for a given endpoint (unsubscribe). */
 export const deletePushSubscription = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ endpoint: z.string().url().max(2048) }).parse(d))
+  .validator((d) => z.object({ endpoint: z.string().url().max(2048) }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
     const { error } = await supabase.rpc("delete_push_subscription", {

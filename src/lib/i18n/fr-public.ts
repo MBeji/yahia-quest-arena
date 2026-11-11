@@ -6,6 +6,7 @@ export const frPublic: TranslationKeys["public"] = {
     navAria: "Catalogue",
     programme: "Programme",
     extras: "Extras",
+    placement: "Test de niveau",
     parentTracking: "Suivi parent",
     login: "Connexion",
     signup: "Créer mon compte",
@@ -164,12 +165,12 @@ export const frPublic: TranslationKeys["public"] = {
     resumeHere: "Reprendre ici",
     missionsProgress: "{done}/{total} missions",
     quizToPass: "quiz à passer",
-    chapterComplete: "Chapitre terminé",
-    todo: "à faire",
     unlocksChapter: "déverrouille le chapitre",
     otherChapters: "Autres chapitres",
     chaptersProgress: "{done}/{total} chapitres",
     quizContract: "Réussis le quiz (≥ {pct} %) pour déverrouiller les missions de ce chapitre.",
+    unrestrictedBanner:
+      "Accès test (compte admin) : toutes les missions sont ouvertes, sans quiz ni ordre imposé.",
     manuelTitle: "Manuel officiel",
     manuelHint: "Le manuel élève officiel de cette matière, à consulter en ligne.",
     manuelOpen: "Ouvrir le manuel",
@@ -190,8 +191,13 @@ export const frPublic: TranslationKeys["public"] = {
     restart: "Recommencer",
     questCta: "Refaire en mode quête pour gagner des XP",
     continueCta: "Continuer vers le premier exercice",
+    // é31 lot 6 (US-10, R-20) — dire ce qui N'EST PAS gardé, et le formuler en
+    // GAIN FUTUR : « tes prochains XP », jamais « tu viens de tout perdre ».
+    // Jamais bloquant, jamais de compte à rebours : la pratique reste ouverte.
     inviteDesc:
-      "Crée un compte pour gagner des XP, sauvegarder ta progression et grimper au classement.",
+      "Sans compte, tes XP, ta série et tes badges ne sont pas conservés. Crée-en un pour garder tes prochains XP, ta série et ta progression.",
+    // é38 R-8 — la VALEUR de la mission, en gain futur, quand `xp_reward` est connu.
+    inviteValue: "Avec un compte, cette mission vaut jusqu’à {xp} XP.",
     inviteCta: "Créer mon compte",
   },
   print: {

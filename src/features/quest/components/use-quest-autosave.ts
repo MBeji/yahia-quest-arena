@@ -1,15 +1,17 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { isSessionRefusalError } from "@/shared/integrations/supabase/auth-rejection";
 import { ensureFreshSession } from "@/shared/integrations/supabase/session-freshness";
 import { enqueue, pendingCount, remove, subscribe } from "@/shared/lib/outbox";
+import { reportClientError } from "@/shared/lib/client-log";
 import {
   QUEST_SUBMIT_KIND,
   clearDraft,
   loadDraft,
   questOutboxClientId,
-  resumeFrom,
   saveDraft,
   type QuestDraftAnswer,
 } from "@/features/quest/quest-draft";
+import { planResume, type ResumePlan } from "@/features/quest/quest-reveals";
 
 // =============================================================================
 // LE TRAVAIL DE L'ÉLÈVE NE DOIT PLUS POUVOIR SE PERDRE — les deux étages.
@@ -47,12 +49,14 @@ export type QuestAutosave = {
   /** Une réponse vient de changer : le prochain instantané aura du travail. */
   markDirty: () => void;
   /**
-   * Met la soumission en file et rend un jeton frais AVANT la mutation.
-   * Rend le `clientId` de l'item, à repasser à `completeSubmit`.
+   * Soumet le travail SOUS FILET, et rend ce que `send` a rendu.
+   *
+   * Le protocole entier vit ici plutôt qu'à l'écran, parce que c'est son ORDRE
+   * qui protège et qu'un ordre réparti sur trois appels chez l'appelant est un
+   * ordre qu'on finit par écrire de travers : mise en file et jeton frais AVANT
+   * l'envoi, sortie de file au succès seulement, boîte noire à l'échec.
    */
-  beginSubmit: (sessionId: string, payload: unknown) => Promise<string>;
-  /** La soumission a abouti : l'item sort de la file, le brouillon est effacé. */
-  completeSubmit: (clientId: string) => void;
+  guardSubmit: <T>(sessionId: string, payload: unknown, send: () => Promise<T>) => Promise<T>;
 };
 
 export function useQuestAutosave({
@@ -134,81 +138,142 @@ export function useQuestAutosave({
     };
   }, [enabled, snapshot]);
 
-  const beginSubmit = useCallback(
-    async (session: string, payload: unknown) => {
+  /**
+   * ⚠️ L'ORDRE EST LE SUJET, et il est indivisible.
+   *
+   * On ÉCRIT, puis on tente. Une mise en file faite après l'appel ne
+   * protégerait de rien — c'est pendant l'appel que tout se perd. Le jeton part
+   * frais : geste préventif, en amont du rattrapage réactif d'`auth-attacher`.
+   * Un échec de rafraîchissement ne bloque rien, le serveur tranchera et la
+   * file rattrapera son refus.
+   *
+   * À l'échec, l'item RESTE en file — c'est tout l'intérêt de l'étage 2 — mais
+   * l'échec est désormais RACONTÉ. ⚠️ C'est la moitié qui manquait le
+   * 2026-09-03 : une mission validée qui ne s'enregistre pas ne produisait
+   * qu'un `toast.error`, ni ligne en base, ni compteur, ni issue. Le lendemain,
+   * le suivi parental montrait « 0 exercice » pour une soirée entière passée à
+   * répondre, et rien nulle part ne disait pourquoi.
+   *
+   * Un refus d'AUTH n'est pas raconté ici : `outbox.ts` le fait déjà, avec le
+   * TTL du jeton pris avant le rafraîchissement forcé, et le doubler fausserait
+   * ses seuils.
+   *
+   * Aucune donnée personnelle : `clientId` désigne une soumission, jamais une
+   * personne, et le payload ne porte que la variante et l'état de la file.
+   */
+  const guardSubmit = useCallback(
+    async <T>(session: string, payload: unknown, send: () => Promise<T>): Promise<T> => {
       const clientId = questOutboxClientId(session);
       if (enabled) {
-        // ⚠️ L'ORDRE EST LE SUJET : on écrit, PUIS on tente. Une mise en file
-        // faite après l'appel ne protégerait de rien — c'est pendant l'appel
-        // que tout se perd.
         enqueue({ clientId, kind: QUEST_SUBMIT_KIND, payload });
-        // Le jeton part frais : c'est le geste préventif, en amont du rattrapage
-        // réactif d'`auth-attacher`. Un échec ici ne doit rien bloquer — le
-        // serveur tranchera, et la file rattrapera son refus.
         await ensureFreshSession().catch(() => null);
       }
-      return clientId;
-    },
-    [enabled],
-  );
 
-  const completeSubmit = useCallback(
-    (clientId: string) => {
-      remove(clientId);
-      clearDraft(exerciseId, variant);
-      dirtyRef.current = false;
-      setEverSaved(true);
+      try {
+        const result = await send();
+        remove(clientId);
+        clearDraft(exerciseId, variant);
+        dirtyRef.current = false;
+        setEverSaved(true);
+        return result;
+      } catch (error) {
+        if (!isSessionRefusalError(error)) {
+          // ⚠️ LE STAGE DIT LE REGISTRE, PARCE QUE LE SEUIL EN DÉPEND.
+          //
+          // Ce `catch` couvre les DEUX registres : le lecteur est unique, et
+          // c'est `strategy.submit` qui change dessous. Côté connecté, un échec
+          // vaut une mission perdue — une progression, un suivi parental, des
+          // étoiles. Côté public, `scoreQuizPublic`/`checkAnswersPublic` ne
+          // posent ni session ni tentative : il n'y a rien à perdre, le
+          // visiteur revalide.
+          //
+          // Les écrire sous un même stage les mélangeait dans
+          // `UNRECOVERED_SUBMISSION_STAGES`, donc dans le compteur du TRAVAIL
+          // D'ÉLÈVE et son seuil de 3 — le plus bas du dépôt. L'issue #1070 en
+          // est sortie le 2026-09-20 : « 3 soumissions perdues », alors que
+          // rien ne permettait de dire si un seul élève connecté était
+          // concerné.
+          //
+          // `enabled` EST le registre : son unique appelant l'alimente en
+          // `capabilities.rewards`, vrai du seul registre connecté — c'est déjà
+          // lui qui décide s'il y a une file où rattraper la soumission.
+          reportClientError({
+            stage: enabled ? "quest-submit" : "public-submit",
+            clientId,
+            errMessage: error instanceof Error ? error.message : String(error),
+            payload: { variant, queued: enabled },
+          });
+        }
+        throw error;
+      }
     },
-    [exerciseId, variant],
+    [enabled, exerciseId, variant],
   );
 
   return {
     status: queued > 0 ? "pending" : everSaved ? "saved" : "idle",
     markDirty,
-    beginSubmit,
-    completeSubmit,
+    guardSubmit,
   };
 }
 
 /**
- * Reprend un brouillon laissé par une session précédente, une fois par exercice.
+ * Reprend une partie interrompue, une fois par session ouverte : le brouillon
+ * local ET les réponses que le serveur a figées (migration 20260929120000).
  *
  * VIT ICI ET PAS DANS LE LECTEUR, pour la même raison que le reste du fichier :
  * c'est un cycle de vie de la SAUVEGARDE. Le lecteur ne fournit que ce qu'il est
  * seul à savoir — les questions réellement servies — et reçoit un état à poser.
  *
+ * POURQUOI À L'OUVERTURE DE LA SESSION, et plus au chargement des questions : les
+ * réponses figées arrivent avec la session. Rien n'est perdu à attendre — le
+ * lecteur n'affiche aucune question tant qu'il n'a pas de session.
+ *
  * ⚠️ UN BROUILLON COMPLET N'EST PAS REPRIS. S'il ne reste aucune question sans
  * réponse, la partie était finie et seule la SOUMISSION a échoué : elle est déjà
  * en file, et `outbox.ts` la rejouera. Repeupler l'écran ferait re-valider
  * l'élève sous une session NEUVE — donc une seconde tentative pour un travail
- * déjà enregistré.
+ * déjà enregistré. (Le cas où ce sont les réponses FIGÉES qui complètent la
+ * partie est autre : voir `planResume`.)
+ *
+ * Rend `true` quand la reprise est faite (ou sans objet). Le lecteur attend ce
+ * signal avant d'afficher une question : sans lui, la session s'ouvre, la question
+ * 1 s'affiche une image, puis l'effet saute à la bonne — un clignotement que
+ * l'ancienne reprise, faite avant l'ouverture de la session, n'avait pas.
  */
 export function useQuestDraftRestore({
   exerciseId,
   variant,
   enabled,
   questionIds,
+  sessionId,
+  revealed,
   onRestore,
 }: {
   exerciseId: string;
   variant: string;
   enabled: boolean;
   questionIds: readonly string[];
-  onRestore: (state: { answers: QuestDraftAnswer[]; idx: number }) => void;
-}): void {
+  sessionId: string | null;
+  /** Les réponses de cette session que le serveur a figées. */
+  revealed: readonly QuestDraftAnswer[];
+  /** `locked` : la reprise porte des réponses figées, que l'élève ne peut plus changer. */
+  onRestore: (state: ResumePlan & { locked: boolean }) => void;
+}): boolean {
   const restoredForRef = useRef<string | null>(null);
+  const [doneFor, setDoneFor] = useState<string | null>(null);
   const onRestoreRef = useRef(onRestore);
   onRestoreRef.current = onRestore;
 
   useEffect(() => {
-    if (!enabled || questionIds.length === 0) return;
-    if (restoredForRef.current === exerciseId) return;
-    restoredForRef.current = exerciseId;
+    if (!enabled || !sessionId || questionIds.length === 0) return;
+    if (restoredForRef.current === sessionId) return;
+    restoredForRef.current = sessionId;
 
-    const draft = loadDraft(exerciseId, variant);
-    if (!draft) return;
-    const resumed = resumeFrom(questionIds, draft.answers);
-    if (resumed.answers.length === 0 || resumed.idx >= questionIds.length) return;
-    onRestoreRef.current(resumed);
-  }, [enabled, exerciseId, questionIds, variant]);
+    const plan = planResume(questionIds, loadDraft(exerciseId, variant)?.answers ?? [], revealed);
+    if (plan) onRestoreRef.current({ ...plan, locked: revealed.length > 0 });
+    setDoneFor(sessionId);
+  }, [enabled, exerciseId, questionIds, variant, sessionId, revealed]);
+
+  return !enabled || questionIds.length === 0 || doneFor === sessionId;
 }

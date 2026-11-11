@@ -182,18 +182,30 @@ describe("Modèle de croyance — port JS (étude 30 §3.2, annexe A)", () => {
         low = beliefUpdate(low, false, mcq, beliefSlip(2, false), 0.15);
       expect(low).toBeCloseTo(0.168, 2);
 
-      // ⚠️ ET C'EST CE QUI REND `p_transit` DANGEREUX À ÉCRIRE HAUT. Le plancher suit p(T)
-      // de près (≈ 1,12 × p(T)). R-5 déclare une LACUNE à p_known ≤ 0,25 ; le CHECK du
-      // registre autorise p_transit jusqu'à 0,40. Au-delà de ≈ 0,22, le plancher passe
-      // au-dessus du seuil de lacune et la lacune devient INDÉTECTABLE sur cette
-      // compétence — quel que soit le nombre d'erreurs. Le défaut de famille (0,15) est
-      // confortablement en deçà ; un auteur qui monte cette valeur doit savoir ce qu'il
-      // éteint. (Signalé à l'étude : §3.8c donne le CHECK, §3.2 le seuil, et rien ne dit
-      // qu'ils se contraignent l'un l'autre.)
-      let high = 0.8;
+      // ⚠️ LE PLANCHER SUIT p(T), ET C'EST CE QUI REND `p_transit` DANGEREUX À ÉCRIRE
+      // HAUT : ≈ 1,12 × p(T). R-5 déclare une LACUNE à p_known ≤ 0,25, donc au-delà de
+      // p(T) ≈ 0,22 le plancher passe AU-DESSUS du seuil et la lacune devient
+      // INDÉTECTABLE sur cette compétence — quel que soit le nombre d'erreurs.
+      // Voici le danger, gardé comme justification de la borne :
+      let ecrase = 0.8;
       for (let i = 0; i < 200; i += 1)
-        high = beliefUpdate(high, false, mcq, beliefSlip(2, false), 0.4);
-      expect(high).toBeGreaterThan(0.25);
+        ecrase = beliefUpdate(ecrase, false, mcq, beliefSlip(2, false), 0.4);
+      expect(ecrase).toBeGreaterThan(0.25);
+    });
+
+    it("la borne du registre (0,18) SUFFIT : à son maximum, une lacune reste détectable", () => {
+      // privé#247 item 2, tranché le 2026-09-01 : le CHECK de `competencies.p_transit`
+      // est passé de 0,40 à 0,18 (migration `20260901200000`). Ce test est ce qui rend
+      // les deux nombres solidaires — sinon rien n'empêche un futur élargissement du
+      // CHECK de rallumer le défaut en silence. Il échoue si l'un bouge sans l'autre.
+      const mcq = beliefGuess("mcq", 4, "classic");
+      const GAP_THRESHOLD = 0.25; // R-5
+      const P_TRANSIT_MAX = 0.18; // CHECK du registre
+      let low = 0.8;
+      for (let i = 0; i < 200; i += 1)
+        low = beliefUpdate(low, false, mcq, beliefSlip(2, false), P_TRANSIT_MAX);
+      expect(low).toBeCloseTo(0.202, 2);
+      expect(low).toBeLessThan(GAP_THRESHOLD);
     });
 
     it("un item dégénéré ne fabrique pas d'information", () => {

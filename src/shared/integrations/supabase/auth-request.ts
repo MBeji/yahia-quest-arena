@@ -28,31 +28,12 @@ import { createClient, isAuthRetryableFetchError } from "@supabase/supabase-js";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
 
-/**
- * Pourquoi une requête n'a pas d'identité. Chaque appelant le traduit à sa façon.
- *
- * La granularité n'est pas décorative : le middleware distinguait déjà ces six
- * cas dans ses messages, et les fondre en « pas de jeton » aurait fait perdre au
- * développeur la différence entre « le client n'a pas pu produire de jeton »
- * (rafraîchissement raté — la panne du 2026-08-18) et « le client envoie un
- * schéma d'autorisation qui n'existe pas ». Une extraction doit être à
- * comportement constant, messages compris.
- */
-export type AuthFailure =
-  /** Aucun en-tête `Authorization` — typiquement un rafraîchissement raté côté client. */
-  | "NO_HEADER"
-  /** En-tête présent, mais pas `Bearer `. */
-  | "BAD_SCHEME"
-  /** `Bearer ` suivi de rien. */
-  | "EMPTY_TOKEN"
-  /** Jeton expiré, malformé, signé par une autre clé — se reconnecter. */
-  | "INVALID_TOKEN"
-  /** Jeton vérifié, mais sans `sub` : il n'identifie personne. */
-  | "NO_SUBJECT"
-  /** Le service Auth n'a pas RÉPONDU — réessayer a du sens. */
-  | "UNAVAILABLE"
-  /** Variables d'environnement manquantes : c'est une panne de déploiement. */
-  | "MISCONFIGURED";
+// `AuthFailure` vit dans `auth-refusals.ts` — la table qui, pour CHAQUE refus,
+// porte son message et la conduite du client. Le type y est posé plutôt qu'ici
+// parce que le prédicat client doit le lire sans tirer `@supabase/supabase-js`
+// (importé plus haut) dans le bundle du navigateur.
+export type { AuthFailure } from "./auth-refusals";
+import type { AuthFailure } from "./auth-refusals";
 
 export type AuthResolution =
   | {
@@ -120,7 +101,33 @@ export async function resolveSupabaseAuth(request: Request): Promise<AuthResolut
     },
   );
 
-  const { data, error } = await supabase.auth.getClaims(token);
+  // ⚠️ `getClaims` ne RETOURNE pas toujours son erreur — il peut la LEVER, et c'est la cause
+  // racine de #969 (spec de #938). Un JWT malformé fait échouer le décodage base64 AVANT toute
+  // vérification : `invalid.invalid.invalid` produit « Invalid UTF-8 sequence », une exception
+  // qui traversait ce helper, le middleware, et arrivait BRUTE au client.
+  //
+  // Conséquence, et elle est vaste : le client ne recevait pas « Unauthorized: Invalid token »
+  // mais « Invalid UTF-8 sequence ». `isSessionRefusalError` répondait donc faux, et TOUTE la
+  // chaîne posée derrière ce prédicat restait inerte — le forçage de jeton neuf (#931), la fin
+  // de session sur refus prouvé (#1009, #1010), la sortie vers la connexion. Aucune n'était
+  // fausse ; aucune n'était atteinte. L'élève restait devant « Impossible de charger le
+  // dashboard » et son bouton « Réessayer », qui rejouait l'appel qui échoue.
+  //
+  // Un jeton qu'on ne peut pas DÉCODER est un jeton invalide, au même titre qu'un jeton mal
+  // signé : il rejoint la même ligne de la table. La distinction transport/refus est conservée
+  // — une panne de réseau levée ici reste `UNAVAILABLE`, exactement comme si elle était rendue.
+  let claims: Awaited<ReturnType<typeof supabase.auth.getClaims>>;
+  try {
+    claims = await supabase.auth.getClaims(token);
+  } catch (cause) {
+    return {
+      ok: false,
+      failure: isVerificationUnavailable(cause) ? "UNAVAILABLE" : "INVALID_TOKEN",
+      detail: cause instanceof Error ? cause.message : "getClaims a levé une erreur non typée",
+    };
+  }
+
+  const { data, error } = claims;
   if (error || !data?.claims) {
     return {
       ok: false,

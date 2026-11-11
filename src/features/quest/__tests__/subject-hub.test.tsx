@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 
@@ -9,44 +9,15 @@ vi.mock("@tanstack/react-router", () => ({
 
 import { SubjectHub } from "../components/subject-hub";
 import { QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
-import { fr } from "@/lib/i18n/fr";
-
-const subject = {
-  name_fr: "Mathématiques",
-  attribute: "Logique",
-  description: "Le calcul et les nombres.",
-  content_language: "fr",
-};
-const chapters = [
-  { id: "c1", title: "Les nombres", description: "Compter et comparer." },
-  { id: "c2", title: "Les fractions", description: null },
-];
-const exercises = [
-  {
-    id: "e1",
-    chapter_id: "c1",
-    mode: "quiz",
-    title: "Quiz : les nombres",
-    difficulty: 1,
-    xp_reward: 10,
-  },
-  {
-    id: "e2",
-    chapter_id: "c1",
-    mode: "normal",
-    title: "Additionner",
-    difficulty: 2,
-    xp_reward: 20,
-  },
-  { id: "e3", chapter_id: "c2", mode: "normal", title: "Un demi", difficulty: 1, xp_reward: 15 },
-];
-const parcours = { id: "ecole-3eme-base", name_fr: "3ème année de base" };
-/** Expand every collapsed chapter (idempotent — the default already opens one). */
-function expandAll(container: HTMLElement) {
-  for (const btn of Array.from(container.querySelectorAll('button[aria-expanded="false"]'))) {
-    fireEvent.click(btn);
-  }
-}
+import { frPublic } from "@/lib/i18n/fr-public";
+import {
+  chapters,
+  exercises,
+  expandAll,
+  parcours,
+  progressOf,
+  subject,
+} from "./subject-hub-fixtures";
 
 beforeEach(() => sessionStorage.clear());
 
@@ -144,15 +115,21 @@ describe("SubjectHub", () => {
         subject={subject}
         chapters={chapters}
         exercises={exercises}
-        bestByExercise={{ e1: 92, e2: 85 }}
+        progress={progressOf({
+          chapters: {
+            c1: { star: 4, quizCleared: true, rungs: [{ difficulty: 2, total: 1, counted: 1 }] },
+            c2: { star: 0, quizCleared: true, rungs: [{ difficulty: 1, total: 1, counted: 0 }] },
+          },
+          missions: { e2: { counted: true, bestClassic: 85 }, e3: { chapterId: "c2" } },
+        })}
         quizPassedByChapter={{ c1: true, c2: true }}
         isAuthenticated={true}
       />,
     );
-    // c1 complété (R-15 : quiz passé + toutes ses missions de catalogue réussies) → jalon ✓.
-    expect(screen.getByText("Chapitre terminé ✓")).toBeInTheDocument();
+    // c1 à l'étoile 4 AU GRAND LIVRE → « Maîtrisé ✓ », le seul mot de verdict (R-5, Q-2).
+    expect(screen.getByTestId("chapter-mastered")).toHaveTextContent("Maîtrisé ✓");
     expandAll(container);
-    expect(screen.getByText("92%")).toBeInTheDocument();
+    expect(screen.getByText("85%")).toBeInTheDocument();
   });
 
   it("« Reprendre ici » targets the in-progress chapter's next mission (signed-in only)", () => {
@@ -161,7 +138,13 @@ describe("SubjectHub", () => {
         subject={subject}
         chapters={chapters}
         exercises={exercises}
-        bestByExercise={{ e1: 92 }}
+        progress={progressOf({
+          chapters: {
+            c1: { star: 0, quizCleared: true, rungs: [{ difficulty: 2, total: 1, counted: 0 }] },
+            c2: { star: 0, quizCleared: false, rungs: [{ difficulty: 1, total: 1, counted: 0 }] },
+          },
+          missions: { e2: {}, e3: { chapterId: "c2" } },
+        })}
         quizPassedByChapter={{ c1: true, c2: true }}
         isAuthenticated={true}
       />,
@@ -193,14 +176,32 @@ describe("SubjectHub", () => {
         subject={subject}
         chapters={chapters}
         exercises={withParent}
-        // e2 tentée mais ratée (30 %) : « tentée » ne vaut pas « réussie ».
-        bestByExercise={{ e1: 92, e2: 30, p1: 100 }}
+        // e2 tentée mais ratée (30 %) : « tentée » ne vaut pas « comptée ». p1 est
+        // une mission de la FAMILLE, réussie à 100 % : elle ne pèse sur aucune étoile.
+        progress={progressOf({
+          chapters: {
+            c1: {
+              star: 0,
+              quizCleared: true,
+              rungs: [{ difficulty: 2, total: 1, counted: 0 }],
+              family: { total: 1, counted: 1 },
+            },
+            c2: { star: 0, quizCleared: true, rungs: [{ difficulty: 1, total: 1, counted: 0 }] },
+          },
+          missions: {
+            e2: { bestClassic: 30 },
+            e3: { chapterId: "c2" },
+            p1: { source: "parent", counted: true, bestClassic: 100 },
+          },
+        })}
         quizPassedByChapter={{ c1: true, c2: true }}
         isAuthenticated={true}
       />,
     );
     expect(screen.getByText(/0\/1 missions/)).toBeInTheDocument();
-    expect(screen.queryByText("Chapitre terminé ✓")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("chapter-mastered")).not.toBeInTheDocument();
+    // US-6 : la famille a sa propre ligne, et la ligne dit pourquoi elle est à part.
+    expect(screen.getByTestId("chapter-family")).toHaveTextContent("Missions de la famille 1/1");
   });
 
   it("anonymous: no resume band", () => {
@@ -209,11 +210,36 @@ describe("SubjectHub", () => {
         subject={subject}
         chapters={chapters}
         exercises={exercises}
-        bestByExercise={{ e1: 92 }}
         isAuthenticated={false}
       />,
     );
     expect(container.querySelector('[data-testid="hub-resume"]')).toBeNull();
+  });
+
+  it("accès de test (admin) : le bandeau dit pourquoi tout est ouvert — absent pour un compte ordinaire", () => {
+    const { rerender } = render(
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        quizPassedByChapter={{ c1: true, c2: true }}
+        isAuthenticated
+        unrestricted
+      />,
+    );
+    expect(screen.getByTestId("hub-unrestricted")).toHaveTextContent(
+      frPublic.subject.unrestrictedBanner,
+    );
+    rerender(
+      <SubjectHub
+        subject={subject}
+        chapters={chapters}
+        exercises={exercises}
+        quizPassedByChapter={{ c1: true, c2: true }}
+        isAuthenticated
+      />,
+    );
+    expect(screen.queryByTestId("hub-unrestricted")).not.toBeInTheDocument();
   });
 
   it("renders an Arabic subject right-to-left", () => {
@@ -226,239 +252,5 @@ describe("SubjectHub", () => {
       />,
     );
     expect(container.querySelector('div[dir="rtl"]')).not.toBeNull();
-  });
-});
-
-describe("SubjectHub — recall mission row (étude 17, US-6 + override R-9)", () => {
-  const openC1 = { c1: true, c2: true };
-
-  it("unlocked: an eligible + mastered mission links into the recall run with its best score", () => {
-    const { container } = render(
-      <SubjectHub
-        subject={subject}
-        chapters={chapters}
-        exercises={exercises}
-        quizPassedByChapter={openC1}
-        isAuthenticated={true}
-        recall={{
-          eligibleByExercise: { e2: 5 },
-          unlockedByExercise: { e2: true },
-          bestByExercise: { e2: 88 },
-        }}
-      />,
-    );
-    expandAll(container);
-    const chip = screen.getByTestId("recall-chip-unlocked");
-    expect(chip).toBeInTheDocument();
-    expect(chip.getAttribute("href")).toBe("/quest/$exerciseId");
-    expect(screen.getByText(/88%/)).toBeInTheDocument();
-  });
-
-  it("locked: eligible but not mastered shows the inert lock, never a link", () => {
-    const { container } = render(
-      <SubjectHub
-        subject={subject}
-        chapters={chapters}
-        exercises={exercises}
-        quizPassedByChapter={openC1}
-        isAuthenticated={true}
-        recall={{
-          eligibleByExercise: { e2: 5 },
-          unlockedByExercise: {},
-          bestByExercise: {},
-        }}
-      />,
-    );
-    expandAll(container);
-    expect(screen.getByTestId("recall-chip-locked")).toBeInTheDocument();
-    expect(screen.queryByTestId("recall-chip-unlocked")).not.toBeInTheDocument();
-    // Signed-in reason omits the "sign in" step.
-    expect(screen.getByText(fr.quest.recallLockedHint)).toBeInTheDocument();
-  });
-
-  it("absent below RECALL_MIN_QUESTIONS eligible questions (no dead end)", () => {
-    const { container } = render(
-      <SubjectHub
-        subject={subject}
-        chapters={chapters}
-        exercises={exercises}
-        quizPassedByChapter={openC1}
-        isAuthenticated={true}
-        recall={{
-          eligibleByExercise: { e2: 2 },
-          unlockedByExercise: { e2: true },
-          bestByExercise: {},
-        }}
-      />,
-    );
-    expandAll(container);
-    expect(screen.queryByTestId("recall-chip-locked")).not.toBeInTheDocument();
-    expect(screen.queryByTestId("recall-chip-unlocked")).not.toBeInTheDocument();
-  });
-
-  it("anonymous visitor: the recall mission is DISCOVERABLE but locked (override R-9)", () => {
-    const { container } = render(
-      <SubjectHub
-        subject={subject}
-        chapters={chapters}
-        exercises={exercises}
-        quizPassedByChapter={openC1}
-        isAuthenticated={false}
-        // Anon never unlocks (no durable attempts) → server returns unlocked=false.
-        recall={{
-          eligibleByExercise: { e2: 5 },
-          unlockedByExercise: {},
-          bestByExercise: {},
-        }}
-      />,
-    );
-    expandAll(container);
-    // Locked row shown with the sign-in reason; never a playable link.
-    expect(screen.getByTestId("recall-chip-locked")).toBeInTheDocument();
-    expect(screen.queryByTestId("recall-chip-unlocked")).not.toBeInTheDocument();
-    expect(screen.getByText(fr.quest.recallLockedHintAnon)).toBeInTheDocument();
-  });
-
-  it("absent on the quiz row even when signed-in and eligible", () => {
-    const { container } = render(
-      <SubjectHub
-        subject={subject}
-        chapters={chapters}
-        exercises={exercises}
-        quizPassedByChapter={openC1}
-        isAuthenticated={true}
-        recall={{
-          eligibleByExercise: { e1: 5 },
-          unlockedByExercise: { e1: true },
-          bestByExercise: {},
-        }}
-      />,
-    );
-    expandAll(container);
-    // e1 is the quiz mission → no recall chip, only e-row chips would appear.
-    expect(screen.queryByTestId("recall-chip-unlocked")).not.toBeInTheDocument();
-    expect(screen.queryByTestId("recall-chip-locked")).not.toBeInTheDocument();
-  });
-});
-
-/**
- * Domaines de programme — les « sections » d'une matière (Algèbre / Géométrie,
- * قواعد اللغة / فهم المقروء). Le hub ne les invente pas : il lit `chapters.domain`
- * et retombe sur sa liste plate dès qu'il n'y a pas deux groupes à montrer.
- */
-describe("SubjectHub — domaines de programme", () => {
-  const sectioned = [
-    { id: "c1", title: "Les nombres", description: null, domain: "Algèbre" },
-    { id: "c2", title: "Thalès", description: null, domain: "Géométrie" },
-    { id: "c3", title: "Les fractions", description: null, domain: "Algèbre" },
-  ];
-
-  it("pose un en-tête par domaine, dans l'ordre du programme", () => {
-    render(
-      <SubjectHub subject={subject} chapters={sectioned} exercises={[]} isAuthenticated={false} />,
-    );
-    const headings = screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent);
-    expect(headings).toEqual(["Algèbre", "Géométrie"]);
-  });
-
-  it("range chaque chapitre sous son domaine", () => {
-    render(
-      <SubjectHub subject={subject} chapters={sectioned} exercises={[]} isAuthenticated={false} />,
-    );
-    const groups = screen.getAllByTestId("domain-group");
-    expect(groups[0]?.textContent).toContain("Les nombres");
-    expect(groups[0]?.textContent).toContain("Les fractions");
-    expect(groups[0]?.textContent).not.toContain("Thalès");
-    expect(groups[1]?.textContent).toContain("Thalès");
-  });
-
-  it("compte les chapitres terminés du domaine, pas ses missions", () => {
-    render(
-      <SubjectHub
-        subject={subject}
-        chapters={sectioned}
-        exercises={[
-          { id: "e1", chapter_id: "c1", mode: "normal", title: "M1", difficulty: 1, xp_reward: 10 },
-          { id: "e2", chapter_id: "c3", mode: "normal", title: "M2", difficulty: 1, xp_reward: 10 },
-        ]}
-        // c1 terminé, c3 raté : 1 chapitre sur 2 pour Algèbre.
-        bestByExercise={{ e1: 100, e2: 20 }}
-        quizPassedByChapter={{ c1: true, c3: true }}
-        isAuthenticated={true}
-      />,
-    );
-    expect(screen.getByText("1/2 chapitres")).toBeInTheDocument();
-    expect(screen.getByText("0/1 chapitres")).toBeInTheDocument();
-  });
-
-  it("regroupe les chapitres sans domaine sous « Autres chapitres »", () => {
-    render(
-      <SubjectHub
-        subject={subject}
-        chapters={[
-          { id: "c1", title: "Les nombres", description: null, domain: "Algèbre" },
-          { id: "c2", title: "Divers", description: null },
-        ]}
-        exercises={[]}
-        isAuthenticated={false}
-      />,
-    );
-    const headings = screen.getAllByRole("heading", { level: 2 }).map((h) => h.textContent);
-    expect(headings).toEqual(["Algèbre", fr.public.subject.otherChapters]);
-  });
-
-  it("garde la liste plate quand aucun chapitre n'est rattaché", () => {
-    render(
-      <SubjectHub
-        subject={subject}
-        chapters={chapters}
-        exercises={exercises}
-        isAuthenticated={false}
-      />,
-    );
-    expect(screen.queryAllByTestId("domain-group")).toHaveLength(0);
-    expect(screen.queryAllByRole("heading", { level: 2 })).toHaveLength(0);
-    // Les chapitres restent affichés — la bascule ne coûte rien à une matière
-    // que le contenu n'a pas encore sectionnée.
-    expect(screen.getByText("Les nombres")).toBeInTheDocument();
-    expect(screen.getByText("Les fractions")).toBeInTheDocument();
-  });
-
-  it("garde la liste plate quand un domaine unique couvre toute la matière", () => {
-    render(
-      <SubjectHub
-        subject={subject}
-        chapters={[
-          { id: "c1", title: "Les nombres", description: null, domain: "Algèbre" },
-          { id: "c2", title: "Les fractions", description: null, domain: "Algèbre" },
-        ]}
-        exercises={[]}
-        isAuthenticated={false}
-      />,
-    );
-    expect(screen.queryAllByTestId("domain-group")).toHaveLength(0);
-  });
-
-  it("les chapitres restent dépliables une fois groupés", () => {
-    const { container } = render(
-      <SubjectHub
-        subject={subject}
-        chapters={sectioned}
-        exercises={[
-          {
-            id: "e1",
-            chapter_id: "c2",
-            mode: "normal",
-            title: "Config",
-            difficulty: 1,
-            xp_reward: 10,
-          },
-        ]}
-        quizPassedByChapter={{ c2: true }}
-        isAuthenticated={false}
-      />,
-    );
-    expandAll(container);
-    expect(screen.getByText("Config")).toBeInTheDocument();
   });
 });

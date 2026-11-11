@@ -182,6 +182,50 @@ bypassing `is_admin()`); `student.free@` has **no entitlements**. There are no
 every parcours is `is_premium = false` in prod, so these seeded entitlements exercise the
 **dormant** premium machinery — specs assert the free-phase behavior.
 
+## Un nightly rouge : lire la TRACE avant de lire le code
+
+Le rapport Playwright est **téléchargeable depuis n'importe quel run**, et il contient la console
+du navigateur. C'est presque toujours là qu'est la réponse — pas dans le code.
+
+```bash
+gh api repos/MBeji/yahia-quest-arena/actions/runs/<RUN_ID>/artifacts \
+  --jq '.artifacts[] | "\(.name) \(.size_in_bytes)"'
+gh run download <RUN_ID> -n playwright-report -D /tmp/pw     # ou playwright-report-auth
+unzip -o -q /tmp/pw/data/<hash>.zip -d /tmp/trace            # la trace d'UN test
+node -e 'for (const l of require("fs").readFileSync("/tmp/trace/0-trace.trace","utf8").trim().split("\n")) {
+  const j = JSON.parse(l); if (j.type === "console" || j.type === "pageerror") console.log(j.messageType, j.text);
+}'
+```
+
+**Ce que ça a coûté de ne pas le faire.** Du 2026-08-25 au 08-29, le nightly a rougi **cinq
+nuits**. La cause tenait en une ligne de console — `Module "node:dns" has been externalized for
+browser compatibility` — présente dans un artefact attaché à **chaque** run. Elle a été trouvée
+après deux jours de lecture de code et **quatre hypothèses réfutées** : la bulle IA, la garde
+d'authentification, les identifiants Supabase factices du job public, puis la piste de
+configuration du plugin. Toutes plausibles, toutes fausses.
+
+### Deux réflexes qui font gagner des heures
+
+**Compter les tests qui échouent avant de chercher pourquoi.** Quatre routes gardées tombant
+_ensemble_ écartent d'emblée toute cause propre à l'une d'elles — il faut une explication qui les
+prenne toutes. C'est ce qui a orienté vers la coquille partagée.
+
+**Comparer avec la production.** L'application tourne sur le même commit :
+`https://www.na9ranal3ab.tn` dans un vrai navigateur. Si le comportement y est correct, la panne
+est **propre au banc d'essai** (serveur de dev Vite, modules non bundlés) et pas au produit — ce
+qui change complètement où chercher, et ce qu'on a le droit d'annoncer.
+
+### ⚠️ Une suite « annulée » n'est pas une suite verte
+
+Le nightly s'arrête au premier rouge : quand la suite publique échoue, l'authentifiée est
+**annulée**. Elle a donc pu casser sans que personne ne le voie. Le motif s'est produit **trois
+fois de suite** en une semaine — chaque correctif révélant la panne suivante, une nuit à la fois.
+Toujours lire l'état de CHAQUE suite, jamais le seul verdict du run :
+
+```bash
+gh run view <RUN_ID> --json jobs --jq '.jobs[] | "\(.name): \(.conclusion)"'
+```
+
 ## Maintenance / guardrails
 
 These two live inside the `E2E` workflow and are **not** part of `npm run verify`.

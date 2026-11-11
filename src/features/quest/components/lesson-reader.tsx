@@ -18,6 +18,12 @@ import { readingProgressPct } from "@/shared/lib/learning-pulse";
 import { useLearningPulse } from "@/hooks/use-learning-pulse";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useT } from "@/lib/i18n";
+import { trackProductEvent } from "@/shared/lib/product-events";
+import { rememberCurrentPage } from "@/shared/lib/return-to";
+import { useGuideT } from "@/lib/i18n/guide";
+import { ChapterSteps } from "@/components/guide/chapter-steps";
+import { HelpTip } from "@/components/guide/help-tip";
+import { LOCKED_CHAPTER_STEPS } from "@/shared/lib/guide";
 import { exerciseRouteFor } from "../exercise-route";
 import { ManuelPagesSection } from "./manuel-pages-section";
 import { ChapterVideosSection } from "./chapter-videos-section";
@@ -80,6 +86,7 @@ export function LessonReader({
   authLoading?: boolean;
 }) {
   const t = useT();
+  const guideT = useGuideT();
   const [showSummary, setShowSummary] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [zoomedFigure, setZoomedFigure] = useState<{ svg: string; label: string } | null>(null);
@@ -88,6 +95,31 @@ export function LessonReader({
   // et avec la durée, ce qui distingue un cours étudié d'une page ouverte.
   const [readPct, setReadPct] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * Imprimer, réponses DÉPLIÉES (étude 35, R-19).
+   *
+   * Un `<details>` fermé ne s'imprime pas : sur papier, le cours perdrait la réponse de chaque
+   * contrôle et ne serait plus complet. On ouvre donc tous les blocs repliés le temps de
+   * l'impression, puis on rend exactement l'état de départ — celui qui a déplié une réponse
+   * la retrouve dépliée. `window.print()` étant synchrone et bloquant, la restauration passe
+   * après la boîte d'impression, sans minuterie ni état React.
+   *
+   * ⚠️ Un `Ctrl+P` du navigateur ne passe pas par ici : il imprime l'état courant. C'est
+   * l'écart assumé — le bouton est le chemin documenté (`t.public.reader.print`).
+   */
+  const printWithAnswers = () => {
+    const root = contentRef.current;
+    const folded = root
+      ? Array.from(root.querySelectorAll<HTMLDetailsElement>("details:not([open])"))
+      : [];
+    for (const d of folded) d.open = true;
+    try {
+      window.print();
+    } finally {
+      for (const d of folded) d.open = false;
+    }
+  };
 
   const content = chapter.lesson_content;
   const summary = chapter.summary;
@@ -214,8 +246,13 @@ export function LessonReader({
     };
   }, [rendered]);
 
+  // `lesson-doc` est le crochet d'IMPRESSION du document — l'article entier,
+  // en-tête compris —, et il ne dépend d'AUCUNE coquille. C'est très exactement
+  // ce qui a manqué quand le lecteur a quitté `.app-shell` pour `.public-shell` :
+  // la remise à l'encre du cours était accrochée à la coquille, le lecteur a
+  // changé de coquille, et le thème sombre s'est mis à imprimer blanc sur blanc.
   return (
-    <article className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
+    <article className="lesson-doc mx-auto max-w-3xl px-4 py-8 sm:px-6">
       <header className="mb-6" dir={isRtl ? "rtl" : "ltr"}>
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
           <BookOpen className="h-3.5 w-3.5 shrink-0" />
@@ -281,7 +318,7 @@ export function LessonReader({
         <button
           type="button"
           data-testid="lesson-print"
-          onClick={() => window.print()}
+          onClick={printWithAnswers}
           className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition hover:border-primary/40 hover:text-primary [@media(pointer:coarse)]:min-h-11"
         >
           <Printer className="h-4 w-4" /> {t.public.reader.print}
@@ -358,9 +395,16 @@ export function LessonReader({
             {zoomedFigure?.label || t.public.reader.zoomFigure}
           </DialogTitle>
           {zoomedFigure && (
+            /* Même direction que la lecture en ligne, jamais `ltr` en dur. `dir` ne miroite
+               pas la géométrie d'un SVG — il ne décide que du bidi et de l'ancrage du texte.
+               Forcer `ltr` ici ne protégeait donc aucune figure, mais retournait les
+               étiquettes arabes qui mêlent chiffres et lettres : « 4 أصغر من 8 » (4 est plus
+               petit que 8) faisait passer le 4 derrière le 8, et « 2 مئات = 200 » détachait
+               le 2 de « centaines ». La même figure se lisait juste en ligne et fausse au
+               zoom — 96 étiquettes du corpus étaient dans ce cas. */
             <div
               className="lesson-figure__plate lesson-figure__plate--zoom"
-              dir="ltr"
+              dir={isRtl ? "rtl" : "ltr"}
               dangerouslySetInnerHTML={{ __html: zoomedFigure.svg }}
             />
           )}
@@ -373,27 +417,36 @@ export function LessonReader({
 
       {(quizCta || practiceExerciseId) && (
         <div className="mt-10 print:hidden">
-          {quizCta ? (
-            // Gate still closed for this visitor: practising would hit the locked
-            // screen, so the single CTA sends them to the comprehension quiz first.
-            <Link
-              to={exerciseRouteFor(isAuthenticated)}
-              params={{ exerciseId: quizCta.exerciseId }}
-              data-testid="lesson-practice-cta"
-              className="flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
-            >
-              <Brain className="h-4 w-4" /> {t.public.reader.quizFirstCta}
-            </Link>
-          ) : (
-            <Link
-              to={exerciseRouteFor(isAuthenticated)}
-              params={{ exerciseId: practiceExerciseId as string }}
-              data-testid="lesson-practice-cta"
-              className="flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
-            >
-              <Dumbbell className="h-4 w-4" /> {t.public.reader.practiceCta}
-            </Link>
-          )}
+          {/* Guide intégré : la porte est fermée, l'élève voit où il en est —
+              cours (ici) → quiz → missions — avant d'appuyer sur le bouton. */}
+          {quizCta && <ChapterSteps states={LOCKED_CHAPTER_STEPS} className="mb-3" />}
+          <div className="flex items-center gap-2">
+            {quizCta ? (
+              // Gate still closed for this visitor: practising would hit the locked
+              // screen, so the single CTA sends them to the comprehension quiz first.
+              <Link
+                to={exerciseRouteFor(isAuthenticated)}
+                params={{ exerciseId: quizCta.exerciseId }}
+                data-testid="lesson-practice-cta"
+                className="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+              >
+                <Brain className="h-4 w-4" /> {t.public.reader.quizFirstCta}
+              </Link>
+            ) : (
+              <Link
+                to={exerciseRouteFor(isAuthenticated)}
+                params={{ exerciseId: practiceExerciseId as string }}
+                data-testid="lesson-practice-cta"
+                className="flex min-w-0 flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+              >
+                <Dumbbell className="h-4 w-4" /> {t.public.reader.practiceCta}
+              </Link>
+            )}
+            <HelpTip
+              label={quizCta ? t.public.reader.quizFirstCta : t.public.reader.practiceCta}
+              text={quizCta ? guideT.guide.tips.lessonQuizCta : guideT.guide.tips.lessonPracticeCta}
+            />
+          </div>
         </div>
       )}
 
@@ -439,6 +492,10 @@ export function LessonReader({
           </p>
           <Link
             to="/signup"
+            onClick={() => {
+              rememberCurrentPage();
+              trackProductEvent("account_invite_clicked", { surface: "reader" });
+            }}
             className="mt-4 inline-flex items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
           >
             {t.public.reader.inviteCta}

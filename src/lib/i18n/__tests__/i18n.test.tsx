@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, act } from "@testing-library/react";
+import { render, screen, fireEvent, act, waitFor } from "@testing-library/react";
 import { I18nProvider, useI18n, useT } from "@/lib/i18n";
 
 // Helper component to test hooks
@@ -80,7 +80,7 @@ describe("i18n system", () => {
     expect(screen.getByTestId("loading").textContent).toBe("Chargement…");
   });
 
-  it("switches to Arabic with RTL direction", () => {
+  it("switches to Arabic with RTL direction", async () => {
     render(
       <I18nProvider>
         <TestConsumer />
@@ -91,7 +91,7 @@ describe("i18n system", () => {
       fireEvent.click(screen.getByTestId("switch-ar"));
     });
 
-    expect(screen.getByTestId("locale").textContent).toBe("ar");
+    await waitFor(() => expect(screen.getByTestId("locale").textContent).toBe("ar"));
     expect(screen.getByTestId("dir").textContent).toBe("rtl");
     expect(document.documentElement.dir).toBe("rtl");
     expect(document.documentElement.lang).toBe("ar");
@@ -111,7 +111,7 @@ describe("i18n system", () => {
     expect(localStorage.getItem("xp-scholars-locale")).toBe("fr");
   });
 
-  it("restores locale from localStorage on mount", () => {
+  it("restores locale from localStorage on mount", async () => {
     localStorage.setItem("xp-scholars-locale", "ar");
 
     render(
@@ -121,7 +121,7 @@ describe("i18n system", () => {
     );
 
     // After useEffect runs
-    expect(screen.getByTestId("locale").textContent).toBe("ar");
+    await waitFor(() => expect(screen.getByTestId("locale").textContent).toBe("ar"));
   });
 
   it("falls back to French for invalid stored locale", () => {
@@ -139,7 +139,7 @@ describe("i18n system", () => {
   // Review #8: legacy users who only have the localStorage preference (set before the
   // cookie existed) must have it mirrored into the cookie on first mount, so the SSR
   // shell paints the right <html lang/dir> on the next request (no flash of default).
-  it("mirrors a localStorage-only locale into the cookie on mount", () => {
+  it("mirrors a localStorage-only locale into the cookie on mount", async () => {
     localStorage.setItem("xp-scholars-locale", "ar");
     expect(document.cookie).not.toContain("xp-scholars-locale=ar");
 
@@ -149,7 +149,7 @@ describe("i18n system", () => {
       </I18nProvider>,
     );
 
-    expect(screen.getByTestId("locale").textContent).toBe("ar");
+    await waitFor(() => expect(screen.getByTestId("locale").textContent).toBe("ar"));
     expect(document.cookie).toContain("xp-scholars-locale=ar");
   });
 
@@ -223,7 +223,7 @@ describe("i18n system", () => {
     }
   });
 
-  it("switching back to English sets LTR", () => {
+  it("switching back to English sets LTR", async () => {
     render(
       <I18nProvider>
         <TestConsumer />
@@ -233,12 +233,12 @@ describe("i18n system", () => {
     act(() => {
       fireEvent.click(screen.getByTestId("switch-ar"));
     });
-    expect(document.documentElement.dir).toBe("rtl");
+    await waitFor(() => expect(document.documentElement.dir).toBe("rtl"));
 
     act(() => {
       fireEvent.click(screen.getByTestId("switch-en"));
     });
-    expect(document.documentElement.dir).toBe("ltr");
+    await waitFor(() => expect(document.documentElement.dir).toBe("ltr"));
     expect(document.documentElement.lang).toBe("en");
   });
 });

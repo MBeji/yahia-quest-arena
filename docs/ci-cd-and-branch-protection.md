@@ -15,16 +15,25 @@ end-of-dev → production walkthrough lives in [passation.md](./passation.md).)
   `[no-automerge]` in the head-commit subject, or a `wip/` / `draft/` / `rescue/`
   branch prefix, opens a **draft** instead (promote with `gh pr ready`). A repeat
   push re-arms a ready-but-unarmed PR (self-healing) but never promotes an existing
-  draft. À chaque PR qu'il ouvre, le workflow **dispatche aussi** les workflows de
-  checks requis sur la branche — **inconditionnellement depuis le 2026-08-24**, PAT
-  ou pas. Le garde-fou précédent sautait cette dispatch dès qu'un PAT existait, en
-  pariant qu'une PR ouverte par un collaborateur émet de vrais événements
-  `pull_request` ; le 2026-08-23 ces événements ont cessé de produire le moindre run
+  draft. À chaque PR qu'il ouvre, le workflow **peut aussi dispatcher** les workflows
+  de checks requis sur la branche — c'est le FILET, et depuis l'étude 32 (D-3) il ne se
+  déploie plus qu'**après constat**.
+  Trois formes se sont succédé, et l'ordre explique la bonne. (1) Sautée dès qu'un PAT
+  existait, en pariant qu'une PR de collaborateur émet de vrais événements
+  `pull_request` — le 2026-08-23 ces événements ont cessé de produire le moindre run
   pendant ~9 h sans que le PAT cesse de répondre, et la PR #823 est restée gelée avec
-  ses 4 checks requis en « Expected ». Le pari n'étant vérifiable depuis aucun
-  workflow, il ne garde plus la porte : on accepte **deux runs par check requis**
-  (le natif sur `refs/pull/N/merge`, le dispatché sur `refs/heads/<branche>` — les
-  groupes de concurrence sont indexés sur le ref, donc ils ne s'annulent pas).
+  ses 4 checks requis en « Expected ». (2) **Inconditionnelle** à partir du 2026-08-24,
+  au prix de **deux runs par check requis** (le natif sur `refs/pull/N/merge`, le
+  dispatché sur `refs/heads/<branche>` — les groupes de concurrence sont indexés sur le
+  ref, donc ils ne s'annulent pas) : 38 dispatchs pour 71 runs natifs sur les 795
+  derniers runs. (3) **Après constat** : l'étape attend 90 s, puis demande à l'API quels
+  runs existent sur le SHA de tête et ne dispatche que les workflows qui n'en ont pas.
+  L'argument de (2) — « l'absence définitive d'un run ne se distingue pas de son simple
+  retard » — était vrai à l'instant zéro et faux quatre-vingt-dix secondes plus tard.
+  Le test est celui du dépôt de corpus, et c'est le seul qui tranche : un run à **zéro
+  job** n'a rien évalué. **Le doute dispatche** : API muette, `jq` en échec, run sans
+  job encore créé — tout ce qui n'est pas « oui, un run réel existe » vaut dispatch, le
+  pire cas restant le doublon d'avant.
 - **Un workflow qui _pousse_ une branche doit se checkouter avec le PAT** —
   `actions/checkout` avec `token: ${{ secrets.GH_AUTOMATION_PAT || secrets.GITHUB_TOKEN }}`.
   Le piège du bot non-collaborateur ne se joue pas à l'ouverture de la PR mais **au push** :
@@ -56,6 +65,37 @@ end-of-dev → production walkthrough lives in [passation.md](./passation.md).)
     `git merge-tree $(git merge-base HEAD origin/main) HEAD origin/main | grep -c '^changed in both'`.
   - **Réflexe de fin de session** : vérifier que les **4 checks requis sont présents** sur la tête,
     pas seulement qu'aucun n'est rouge. « Pas de rouge » et « c'est vert » ne sont pas la même chose.
+- ⚠️ **Auto-merge ARMÉ, tout vert, et la PR ne merge jamais — le gel sans symptôme.**
+  Constaté le 2026-09-16 sur #1052. Les 4 checks requis verts à 20:24:52, `mergeable_state: clean`,
+  `auto_merge: true` — et rien pendant 30 min, là où #1050 et #1051 avaient mergé en 4-5 min le
+  matin même. **Aucun des diagnostics ci-dessus ne s'applique** : les checks sont présents ET verts,
+  la ref de merge se calcule, rien n'est `action_required`.
+  - **Cause** : `automerge.yml` ne merge pas, il **arme** (`gh pr merge --auto`, l.134). L'armement
+    a eu lieu à 20:21:03, pendant que `verify` tournait encore — donc l'armement natif était le bon
+    geste. Mais l'auto-merge natif de GitHub n'a pas déclenché à la complétion du dernier check, et
+    le seul autre balayage prévu, le job « Update armed PRs left behind by this push », ne tourne
+    **que sur `push: main`**. Quand la PR gelée est la seule ouverte, aucun push sur `main` ne vient
+    jamais : le filet ne se déploie pas, faute d'événement.
+  - **Piège** : désarmer puis ré-armer NE MARCHE PAS. `PUT …/ccr/auto_merge` répond **422 « Pull
+    request is in clean status »** — l'auto-merge natif ne s'applique qu'à une PR encore **bloquée**.
+    Une fois tout vert, il n'y a plus rien à armer, et un désarmement est irréversible dans cet état.
+  - **Piège 2** : `gh pr merge --auto` depuis une session Claude Code échoue en **403** — la commande
+    passe par GraphQL, indisponible ici (utiliser les routes REST/CCR).
+  - **Remède, et il respecte « personne ne merge à la main »** : `automerge.yml` écoute
+    `pull_request: [labeled, unlabeled]`. Poser une étiquette puis la retirer envoie **deux
+    événements**, le job d'armement re-tourne **dans le workflow** (où GraphQL fonctionne) et
+    `gh pr merge --auto --squash --delete-branch` merge sur place puisque la PR est propre.
+    C'est l'automation du dépôt qui merge, avec sa méthode et son nettoyage de branche ; on lui
+    rend seulement l'événement qui lui manquait.
+    ```bash
+    gh api -X POST   repos/OWNER/REPO/issues/N/labels -f 'labels[]=documentation'
+    gh api -X DELETE repos/OWNER/REPO/issues/N/labels/documentation
+    ```
+  - **Ne PAS** faire un `PUT …/pulls/N/merge` : le gate est vert, mais merger par l'API est
+    exactement le geste que la DoD §8 interdit, et il contourne le `--delete-branch`.
+  - **Diagnostic en une ligne** : `gh api repos/OWNER/REPO/pulls/N --jq '{mergeable_state,auto_merge:(.auto_merge!=null),merged}'`
+    — `clean` + `true` + `false` pendant plus de dix minutes, c'est ce gel-ci.
+
 - ⚠️ **Une clé YAML dupliquée tue le workflow AVANT tout job — et il n'y a rien à lire.**
   Constaté le 2026-08-24 sur `auto-pr.yml` : conclusion `failure`, **zéro job**, et
   `gh run view --log-failed` qui répond « log not found ». Les PR #830 et #832 avaient

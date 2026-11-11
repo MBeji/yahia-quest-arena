@@ -1,10 +1,7 @@
 // @vitest-environment node
 import { describe, it, expect } from "vitest";
-import {
-  DISPLAY_NAME_MAX_LENGTH,
-  displayNameSchema,
-  isValidDisplayName,
-} from "@/features/auth/display-name";
+import { DISPLAY_NAME_MAX_LENGTH, isValidDisplayName } from "@/features/auth/display-name";
+import { displayNameSchema } from "@/features/auth/display-name.schema";
 
 /**
  * The pseudo rule, pinned on both sides.
@@ -60,5 +57,35 @@ describe("display name — the shared rule", () => {
     expect(isValidDisplayName(`Ya${ZERO_WIDTH_SPACE}hia`)).toBe(false);
     // Right-to-left override: the stored string and the rendered name differ.
     expect(isValidDisplayName(`Ya${RIGHT_TO_LEFT_OVERRIDE}hia`)).toBe(false);
+  });
+
+  // Depuis le 2026-10-31 le prédicat du formulaire n'appelle plus le schéma (zod
+  // restait sinon dans le chunk de /parametrage) : ce sont deux implémentations
+  // des MÊMES constantes, et c'est ce test qui les tient ensemble. Un cas qui
+  // divergerait ici est exactement la dérive que le module existe pour empêcher.
+  it("the pure predicate and the zod schema judge every case the same way", () => {
+    const cases = [
+      "Yahia",
+      "  Yahia  ",
+      "Émile",
+      "يحيى",
+      "Ali 9raya",
+      "",
+      "   ",
+      NON_BREAKING_SPACE.repeat(3),
+      "x".repeat(DISPLAY_NAME_MAX_LENGTH),
+      "x".repeat(DISPLAY_NAME_MAX_LENGTH + 1),
+      `  ${"x".repeat(DISPLAY_NAME_MAX_LENGTH)}  `,
+      "Ya\nhia",
+      "Ya\thia",
+      `Ya${NUL}hia`,
+      `Ya${ZERO_WIDTH_SPACE}hia`,
+      `Ya${RIGHT_TO_LEFT_OVERRIDE}hia`,
+    ];
+    for (const pseudo of cases) {
+      expect(isValidDisplayName(pseudo), JSON.stringify(pseudo)).toBe(
+        displayNameSchema.safeParse(pseudo).success,
+      );
+    }
   });
 });

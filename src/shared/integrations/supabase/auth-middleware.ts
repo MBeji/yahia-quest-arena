@@ -22,6 +22,7 @@ import { logger } from "@/shared/lib/logger";
 // fichier garde ce qui lui appartient — la MISE EN FORME du refus pour une
 // server fn (une `Error` dont le message remonte au client) et la mesure de
 // lenteur.
+import { refusalMessage } from "./auth-refusals";
 import { missingSupabaseEnv, resolveSupabaseAuth } from "./auth-request";
 
 /**
@@ -49,7 +50,7 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
     if (missing.length > 0) {
       logger.error("Supabase auth middleware misconfiguration", { missing });
       throw new Error(
-        `Missing Supabase environment variable(s): ${missing.join(", ")}. Set them in your deployment environment.`,
+        `${refusalMessage("MISCONFIGURED")}: ${missing.join(", ")}. Set them in your deployment environment.`,
       );
     }
 
@@ -64,18 +65,11 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
     if (!resolved.ok) {
       const meta = { path: pathOf(request), error: resolved.detail ?? resolved.failure };
 
-      if (resolved.failure === "BAD_SCHEME") {
-        throw new Error("Unauthorized: Only Bearer tokens are supported");
-      }
-
-      if (resolved.failure === "EMPTY_TOKEN") {
-        throw new Error("Unauthorized: No token provided");
-      }
-
-      if (resolved.failure === "NO_SUBJECT") {
-        throw new Error("Unauthorized: No user ID found in token");
-      }
-
+      // LE MESSAGE NE S'ÉCRIT PLUS ICI. Il vient de `auth-refusals.ts`, qui le
+      // partage avec le prédicat de reprise du client. Il était écrit des DEUX
+      // côtés, donc une reformulation d'un seul cassait la reprise sans qu'aucun
+      // test ne tombe — chaque côté testait sa propre copie. Ne reste ici que ce
+      // qui appartient vraiment au serveur : QUOI JOURNALISER, et à quel niveau.
       if (resolved.failure === "NO_HEADER") {
         // PAS auto-évident, contrairement à ce que la place de ce refus suggère.
         // Une server fn authentifiée n'est jamais appelée sans en-tête « par
@@ -94,21 +88,27 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
         // (`auth-rejection.ts`) ; le libellé exact fait partie du contrat, il est
         // épinglé des deux côtés par des tests.
         logger.warn("Server fn called without a bearer token", { path: pathOf(request) });
-        throw new Error("Unauthorized: No authorization header provided");
-      }
-
-      if (resolved.failure === "UNAVAILABLE") {
+      } else if (resolved.failure === "UNAVAILABLE") {
         // `error` (not `warn`): this is an incident, and only `error` reaches
         // the monitoring sink. Naming it "Unauthorized" would be a lie that
         // sends the next reader hunting for a bad token.
         logger.error("Auth verification unavailable", meta);
-        throw new Error("Auth verification unavailable. Please try again.");
+      } else if (resolved.failure === "INVALID_TOKEN") {
+        // A rejected token is ROUTINE (every session expires), so it stays a
+        // warning — an error line here would drown the incident above in noise.
+        logger.warn("Bearer token rejected", meta);
       }
+      // Les trois refus restants (`BAD_SCHEME`, `EMPTY_TOKEN`, `NO_SUBJECT`) ne
+      // se journalisent pas : notre client ne les produit pas, et les voir dans
+      // le flux dirait « quelqu'un sonde l'API », pas « la nôtre a un défaut ».
 
-      // A rejected token is ROUTINE (every session expires), so it stays a
-      // warning — an error line here would drown the incident above in noise.
-      logger.warn("Bearer token rejected", meta);
-      throw new Error("Unauthorized: Invalid token");
+      // `MISCONFIGURED` ne peut pas arriver ici — le contrôle d'environnement en
+      // tête de ce middleware lève avant. S'il y parvenait un jour, ce refus se
+      // nommerait désormais LUI-MÊME : la cascade précédente le faisait tomber
+      // dans son cas par défaut et ressortir en « Unauthorized: Invalid token »,
+      // ce qui aurait envoyé le prochain lecteur chercher un jeton pendant
+      // qu'une variable d'environnement manquait.
+      throw new Error(refusalMessage(resolved.failure));
     }
 
     const { supabase, userId, claims } = resolved;

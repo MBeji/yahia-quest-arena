@@ -14,7 +14,7 @@ function asRecord(value: unknown): Record<string, unknown> {
 // inventory directly (INSERT/UPDATE revoked at the DB layer).
 export const purchaseShopItem = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ itemCode: z.string().min(1) }).parse(d))
+  .validator((d) => z.object({ itemCode: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
@@ -42,7 +42,7 @@ export const purchaseShopItem = createServerFn({ method: "POST" })
 // the `equip_inventory_skin` SECURITY DEFINER RPC.
 export const equipInventorySkin = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ itemCode: z.string().min(1) }).parse(d))
+  .validator((d) => z.object({ itemCode: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
 
@@ -71,7 +71,7 @@ export const equipInventorySkin = createServerFn({ method: "POST" })
 //     independently of the next-quest slot.
 export const activateInventoryItem = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ itemCode: z.string().min(1) }).parse(d))
+  .validator((d) => z.object({ itemCode: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
 
@@ -88,5 +88,38 @@ export const activateInventoryItem = createServerFn({ method: "POST" })
       itemName: typeof row.item_name === "string" ? row.item_name : "",
       slot: row.slot === "passive" ? ("passive" as const) : ("next-quest" as const),
       isActive: row.is_active === true,
+    };
+  });
+
+/**
+ * é31 lot 7 (US-11) — ÉQUIPER UN COSMÉTIQUE : avatar, cadre ou titre.
+ *
+ * `equipInventorySkin` ne connaît que les skins et refuse le reste. La RPC
+ * `equip_cosmetic` généralise à trois emplacements SÉPARÉS : équiper un cadre ne
+ * déséquipe pas l'avatar — c'est exactement l'erreur qu'une seule liste
+ * d'équipés produirait.
+ */
+export const equipCosmetic = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((d) => z.object({ itemCode: z.string().min(1) }).parse(d))
+  .handler(async ({ data, context }) => {
+    const client = context.supabase as unknown as {
+      rpc: (
+        fn: "equip_cosmetic",
+        args: { p_item_code: string },
+      ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
+    };
+    const { data: result, error } = await client.rpc("equip_cosmetic", {
+      p_item_code: data.itemCode,
+    });
+    if (error) {
+      failWithClientError("shop.equipCosmetic", error, "Impossible d'équiper cet objet.");
+    }
+
+    const row = asRecord(result);
+    return {
+      itemCode: typeof row.item_code === "string" ? row.item_code : data.itemCode,
+      itemName: typeof row.item_name === "string" ? row.item_name : "",
+      itemType: typeof row.item_type === "string" ? row.item_type : "",
     };
   });

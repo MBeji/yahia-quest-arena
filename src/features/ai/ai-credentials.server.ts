@@ -39,6 +39,7 @@ import { errorMessage, failWithClientError } from "@/shared/lib/safe-error";
 import {
   AI_ADULT_CONFIRM_GRADE_RANK,
   AI_BUDGET_LIMITS,
+  AI_ENC_VERSION,
   AI_CONSENT_VERSION,
   AI_MAX_TOKENS,
   AI_PROVIDERS,
@@ -46,7 +47,6 @@ import {
 } from "@/shared/constants/ai";
 import { asAiErrorCode, toAiError, type AiErrorCode } from "@/shared/integrations/ai";
 import { revealSecret, sealSecret } from "@/shared/integrations/ai/types";
-import { resolveEgressTarget } from "@/shared/integrations/ai/egress.server";
 import {
   getAiProvider,
   isAiModeEnabled,
@@ -54,8 +54,12 @@ import {
 } from "@/shared/integrations/ai/provider.server";
 import { logAiUsage } from "@/shared/integrations/ai/usage.server";
 import { settledCostMicros } from "@/shared/integrations/ai/pricing";
-import { AI_ENC_VERSION, fingerprint, isVaultAvailable, last4, sealForRow } from "./crypto.server";
-import { openOwnerSecret } from "./ai-vault.server";
+// Ni `egress.server` (→ `node:dns`, `node:net`, `node:https`) ni `crypto.server`
+// (→ `node:crypto`) ne sont importés statiquement ici : ce module est atteint
+// depuis le graphe du CLIENT via `components/ai-mode-section.tsx`, et le dev
+// server charge vraiment ce qu'il voit. Les deux sont chargés à l'usage, dans
+// des handlers déjà `async` (#909). Aucune logique de sécurité ne bouge.
+import { openOwnerSecret } from "@/shared/integrations/ai/ai-vault.server";
 import { AI_MODE_ERROR_PREFIX, type AiModeStatus } from "./ai-mode-status";
 
 const adminRpc = () => supabaseAdmin;
@@ -104,6 +108,7 @@ export const getAiModeStatus = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<AiModeStatus> => {
     const client = context.supabase;
+    const { isVaultAvailable } = await import("@/shared/integrations/ai/crypto.server");
 
     const [{ data: rows, error }, { data: rank }] = await Promise.all([
       client.rpc("get_ai_credential_status"),
@@ -176,10 +181,13 @@ const setCredentialInput = z
 
 export const setAiCredential = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => setCredentialInput.parse(d))
+  .validator((d: unknown) => setCredentialInput.parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const client = supabase;
+
+    const { fingerprint, isVaultAvailable, last4, sealForRow } =
+      await import("@/shared/integrations/ai/crypto.server");
 
     if (!isAiModeEnabled() || !isByokEnabled() || !isVaultAvailable()) {
       failWithAiCode("ai.setAiCredential.off", "AI_MODE_OFF");
@@ -203,6 +211,7 @@ export const setAiCredential = createServerFn({ method: "POST" })
     // envoyé. Une adresse recalée ne devient jamais une ligne en base.
     if (baseUrl !== null) {
       try {
+        const { resolveEgressTarget } = await import("@/shared/integrations/ai/egress.server");
         await resolveEgressTarget(baseUrl);
       } catch (error) {
         failWithAiCode("ai.setAiCredential.egress", toAiError(error).code, error);
@@ -329,10 +338,13 @@ const setModelsInput = z.object({
 
 export const setAiModels = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => setModelsInput.parse(d))
+  .validator((d: unknown) => setModelsInput.parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const client = supabase;
+
+    const { fingerprint, isVaultAvailable, last4, sealForRow } =
+      await import("@/shared/integrations/ai/crypto.server");
 
     if (!isAiModeEnabled() || !isByokEnabled() || !isVaultAvailable()) {
       failWithAiCode("ai.setAiModels.off", "AI_MODE_OFF");
@@ -365,6 +377,7 @@ export const setAiModels = createServerFn({ method: "POST" })
     // en base.
     if (row.base_url !== null) {
       try {
+        const { resolveEgressTarget } = await import("@/shared/integrations/ai/egress.server");
         await resolveEgressTarget(row.base_url);
       } catch (error) {
         failWithAiCode("ai.setAiModels.egress", toAiError(error).code, error);
@@ -457,7 +470,7 @@ export const setAiModels = createServerFn({ method: "POST" })
 
 export const setAiPreferences = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         dailyBudgetUsd: z

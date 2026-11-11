@@ -27,7 +27,7 @@ vi.mock("@tanstack/react-start", () => ({
     let validatorFn: ((d: unknown) => unknown) | undefined;
     const chain = {
       middleware: () => chain,
-      inputValidator: (fn: (d: unknown) => unknown) => {
+      validator: (fn: (d: unknown) => unknown) => {
         validatorFn = fn;
         return chain;
       },
@@ -64,7 +64,7 @@ vi.mock("@/shared/lib/safe-error", () => ({
   errorMessage: (e: unknown) => String(e),
 }));
 
-import { checkAnswersPublic } from "@/features/quest/quest.server";
+import { checkAnswersPublic } from "@/features/quest/quest.practice.server";
 
 type Result = {
   reviewable: boolean;

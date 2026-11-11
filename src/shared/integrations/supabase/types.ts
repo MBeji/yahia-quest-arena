@@ -33,27 +33,6 @@ export type Database = {
   };
   public: {
     Tables: {
-      _backup_subscriptions_20260609: {
-        Row: {
-          id: string | null;
-          subscription_activated_at: string | null;
-          subscription_expires_at: string | null;
-          subscription_type: string | null;
-        };
-        Insert: {
-          id?: string | null;
-          subscription_activated_at?: string | null;
-          subscription_expires_at?: string | null;
-          subscription_type?: string | null;
-        };
-        Update: {
-          id?: string | null;
-          subscription_activated_at?: string | null;
-          subscription_expires_at?: string | null;
-          subscription_type?: string | null;
-        };
-        Relationships: [];
-      };
       ai_admin_state: {
         Row: {
           ai_enabled: boolean;
@@ -169,6 +148,7 @@ export type Database = {
         Row: {
           bonus: number;
           day: string;
+          reserved: number;
           spent: number;
           student_user_id: string;
           updated_at: string;
@@ -176,6 +156,7 @@ export type Database = {
         Insert: {
           bonus?: number;
           day: string;
+          reserved?: number;
           spent?: number;
           student_user_id: string;
           updated_at?: string;
@@ -183,6 +164,7 @@ export type Database = {
         Update: {
           bonus?: number;
           day?: string;
+          reserved?: number;
           spent?: number;
           student_user_id?: string;
           updated_at?: string;
@@ -249,7 +231,7 @@ export type Database = {
           lang: string;
           model: string;
           owner_user_id: string;
-          payload: Json;
+          payload: NonNullable<Json>;
           requested: number;
           scope: string;
           student_user_id: string;
@@ -266,7 +248,7 @@ export type Database = {
           lang: string;
           model: string;
           owner_user_id: string;
-          payload: Json;
+          payload: NonNullable<Json>;
           requested: number;
           scope: string;
           student_user_id: string;
@@ -283,7 +265,7 @@ export type Database = {
           lang?: string;
           model?: string;
           owner_user_id?: string;
-          payload?: Json;
+          payload?: NonNullable<Json>;
           requested?: number;
           scope?: string;
           student_user_id?: string;
@@ -295,6 +277,41 @@ export type Database = {
             columns: ["chapter_id"];
             isOneToOne: false;
             referencedRelation: "chapters";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      ai_open_answer_verdicts: {
+        Row: {
+          accepted: boolean;
+          choice_norm: string;
+          created_at: string;
+          model: string;
+          question_id: string;
+          student_user_id: string;
+        };
+        Insert: {
+          accepted: boolean;
+          choice_norm: string;
+          created_at?: string;
+          model: string;
+          question_id: string;
+          student_user_id: string;
+        };
+        Update: {
+          accepted?: boolean;
+          choice_norm?: string;
+          created_at?: string;
+          model?: string;
+          question_id?: string;
+          student_user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "ai_open_answer_verdicts_question_id_fkey";
+            columns: ["question_id"];
+            isOneToOne: false;
+            referencedRelation: "questions";
             referencedColumns: ["id"];
           },
         ];
@@ -446,6 +463,50 @@ export type Database = {
         };
         Relationships: [];
       };
+      app_events: {
+        Row: {
+          badge_code: string | null;
+          code: string;
+          description: NonNullable<Json>;
+          ends_at: string;
+          goal_target: number;
+          goal_type: string;
+          id: string;
+          name: NonNullable<Json>;
+          starts_at: string;
+        };
+        Insert: {
+          badge_code?: string | null;
+          code: string;
+          description: NonNullable<Json>;
+          ends_at: string;
+          goal_target: number;
+          goal_type: string;
+          id?: string;
+          name: NonNullable<Json>;
+          starts_at: string;
+        };
+        Update: {
+          badge_code?: string | null;
+          code?: string;
+          description?: NonNullable<Json>;
+          ends_at?: string;
+          goal_target?: number;
+          goal_type?: string;
+          id?: string;
+          name?: NonNullable<Json>;
+          starts_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "app_events_badge_code_fkey";
+            columns: ["badge_code"];
+            isOneToOne: false;
+            referencedRelation: "badges";
+            referencedColumns: ["code"];
+          },
+        ];
+      };
       attempts: {
         Row: {
           completed_at: string;
@@ -518,6 +579,7 @@ export type Database = {
           code: string;
           created_at: string;
           description: string | null;
+          family: string;
           icon_name: string | null;
           id: string;
           name: string;
@@ -528,6 +590,7 @@ export type Database = {
           code: string;
           created_at?: string;
           description?: string | null;
+          family: string;
           icon_name?: string | null;
           id?: string;
           name: string;
@@ -538,6 +601,7 @@ export type Database = {
           code?: string;
           created_at?: string;
           description?: string | null;
+          family?: string;
           icon_name?: string | null;
           id?: string;
           name?: string;
@@ -617,6 +681,7 @@ export type Database = {
       };
       chapters: {
         Row: {
+          created_at: string;
           description: string | null;
           display_order: number;
           domain: string | null;
@@ -626,9 +691,10 @@ export type Database = {
           subject_id: string;
           summary: string | null;
           title: string;
-          videos: Json;
+          videos: NonNullable<Json>;
         };
         Insert: {
+          created_at?: string;
           description?: string | null;
           display_order?: number;
           domain?: string | null;
@@ -638,9 +704,10 @@ export type Database = {
           subject_id: string;
           summary?: string | null;
           title: string;
-          videos?: Json;
+          videos?: NonNullable<Json>;
         };
         Update: {
+          created_at?: string;
           description?: string | null;
           display_order?: number;
           domain?: string | null;
@@ -650,7 +717,7 @@ export type Database = {
           subject_id?: string;
           summary?: string | null;
           title?: string;
-          videos?: Json;
+          videos?: NonNullable<Json>;
         };
         Relationships: [
           {
@@ -661,6 +728,48 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      client_errors: {
+        Row: {
+          client_id: string | null;
+          created_at: string;
+          err_message: string | null;
+          hidden_total_ms: number | null;
+          http_status: number | null;
+          id: number;
+          last_hidden_ms: number | null;
+          payload: Json | null;
+          stage: string;
+          ttl_s: number | null;
+          user_agent: string | null;
+        };
+        Insert: {
+          client_id?: string | null;
+          created_at?: string;
+          err_message?: string | null;
+          hidden_total_ms?: number | null;
+          http_status?: number | null;
+          id?: number;
+          last_hidden_ms?: number | null;
+          payload?: Json | null;
+          stage: string;
+          ttl_s?: number | null;
+          user_agent?: string | null;
+        };
+        Update: {
+          client_id?: string | null;
+          created_at?: string;
+          err_message?: string | null;
+          hidden_total_ms?: number | null;
+          http_status?: number | null;
+          id?: number;
+          last_hidden_ms?: number | null;
+          payload?: Json | null;
+          stage?: string;
+          ttl_s?: number | null;
+          user_agent?: string | null;
+        };
+        Relationships: [];
       };
       competencies: {
         Row: {
@@ -1118,6 +1227,45 @@ export type Database = {
           },
         ];
       };
+      exercise_session_reveals: {
+        Row: {
+          choice: string;
+          question_id: string;
+          revealed_at: string;
+          session_id: string;
+          user_id: string;
+        };
+        Insert: {
+          choice: string;
+          question_id: string;
+          revealed_at?: string;
+          session_id: string;
+          user_id: string;
+        };
+        Update: {
+          choice?: string;
+          question_id?: string;
+          revealed_at?: string;
+          session_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "exercise_session_reveals_question_id_fkey";
+            columns: ["question_id"];
+            isOneToOne: false;
+            referencedRelation: "questions";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "exercise_session_reveals_session_id_fkey";
+            columns: ["session_id"];
+            isOneToOne: false;
+            referencedRelation: "exercise_sessions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       exercise_sessions: {
         Row: {
           completed_at: string | null;
@@ -1160,10 +1308,12 @@ export type Database = {
         Row: {
           chapter_id: string;
           correction_video: Json | null;
+          created_at: string;
           created_by: string | null;
           difficulty: number;
           display_order: number;
           id: string;
+          manuel_ref: Json | null;
           mode: string;
           reward_coins: number;
           source: string;
@@ -1175,10 +1325,12 @@ export type Database = {
         Insert: {
           chapter_id: string;
           correction_video?: Json | null;
+          created_at?: string;
           created_by?: string | null;
           difficulty?: number;
           display_order?: number;
           id?: string;
+          manuel_ref?: Json | null;
           mode?: string;
           reward_coins?: number;
           source?: string;
@@ -1190,10 +1342,12 @@ export type Database = {
         Update: {
           chapter_id?: string;
           correction_video?: Json | null;
+          created_at?: string;
           created_by?: string | null;
           difficulty?: number;
           display_order?: number;
           id?: string;
+          manuel_ref?: Json | null;
           mode?: string;
           reward_coins?: number;
           source?: string;
@@ -1408,7 +1562,7 @@ export type Database = {
       };
       mock_exam_sessions: {
         Row: {
-          answers: Json;
+          answers: NonNullable<Json>;
           deadline: string;
           exam_id: string;
           finished_at: string | null;
@@ -1420,7 +1574,7 @@ export type Database = {
           user_id: string;
         };
         Insert: {
-          answers?: Json;
+          answers?: NonNullable<Json>;
           deadline: string;
           exam_id: string;
           finished_at?: string | null;
@@ -1432,7 +1586,7 @@ export type Database = {
           user_id: string;
         };
         Update: {
-          answers?: Json;
+          answers?: NonNullable<Json>;
           deadline?: string;
           exam_id?: string;
           finished_at?: string | null;
@@ -1717,6 +1871,68 @@ export type Database = {
         };
         Relationships: [];
       };
+      placement_sessions: {
+        Row: {
+          answers: NonNullable<Json>;
+          audience: string;
+          claimed_at: string | null;
+          correct_count: number | null;
+          duration_seconds: number | null;
+          finished_at: string | null;
+          id: string;
+          question_ids: string[];
+          result: Json | null;
+          started_at: string;
+          status: string;
+          subject_id: string;
+          token: string;
+          total_count: number | null;
+          user_id: string | null;
+        };
+        Insert: {
+          answers?: NonNullable<Json>;
+          audience?: string;
+          claimed_at?: string | null;
+          correct_count?: number | null;
+          duration_seconds?: number | null;
+          finished_at?: string | null;
+          id?: string;
+          question_ids: string[];
+          result?: Json | null;
+          started_at?: string;
+          status?: string;
+          subject_id: string;
+          token?: string;
+          total_count?: number | null;
+          user_id?: string | null;
+        };
+        Update: {
+          answers?: NonNullable<Json>;
+          audience?: string;
+          claimed_at?: string | null;
+          correct_count?: number | null;
+          duration_seconds?: number | null;
+          finished_at?: string | null;
+          id?: string;
+          question_ids?: string[];
+          result?: Json | null;
+          started_at?: string;
+          status?: string;
+          subject_id?: string;
+          token?: string;
+          total_count?: number | null;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "placement_sessions_subject_id_fkey";
+            columns: ["subject_id"];
+            isOneToOne: false;
+            referencedRelation: "subjects";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       profiles: {
         Row: {
           avatar_slug: string | null;
@@ -1727,15 +1943,23 @@ export type Database = {
           current_parcours_id: string | null;
           current_parcours_set_at: string | null;
           current_streak: number;
+          daily_xp_base: number;
+          daily_xp_day: string | null;
+          daily_xp_goal: number;
+          daily_xp_goal_set_on: string | null;
           display_name: string;
+          frame_slug: string | null;
           hero_class: string;
           id: string;
           last_active_date: string | null;
           level: number;
+          locale: string;
           longest_streak: number;
           role: string;
+          title_code: string | null;
           total_time_minutes: number;
           weekly_objectives_completed: number;
+          welcome_pack_at: string | null;
           xp: number;
           yahia_coins: number;
         };
@@ -1748,15 +1972,23 @@ export type Database = {
           current_parcours_id?: string | null;
           current_parcours_set_at?: string | null;
           current_streak?: number;
+          daily_xp_base?: number;
+          daily_xp_day?: string | null;
+          daily_xp_goal?: number;
+          daily_xp_goal_set_on?: string | null;
           display_name?: string;
+          frame_slug?: string | null;
           hero_class?: string;
           id: string;
           last_active_date?: string | null;
           level?: number;
+          locale?: string;
           longest_streak?: number;
           role?: string;
+          title_code?: string | null;
           total_time_minutes?: number;
           weekly_objectives_completed?: number;
+          welcome_pack_at?: string | null;
           xp?: number;
           yahia_coins?: number;
         };
@@ -1769,15 +2001,23 @@ export type Database = {
           current_parcours_id?: string | null;
           current_parcours_set_at?: string | null;
           current_streak?: number;
+          daily_xp_base?: number;
+          daily_xp_day?: string | null;
+          daily_xp_goal?: number;
+          daily_xp_goal_set_on?: string | null;
           display_name?: string;
+          frame_slug?: string | null;
           hero_class?: string;
           id?: string;
           last_active_date?: string | null;
           level?: number;
+          locale?: string;
           longest_streak?: number;
           role?: string;
+          title_code?: string | null;
           total_time_minutes?: number;
           weekly_objectives_completed?: number;
+          welcome_pack_at?: string | null;
           xp?: number;
           yahia_coins?: number;
         };
@@ -1797,6 +2037,27 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      push_consent_events: {
+        Row: {
+          action: string;
+          id: number;
+          occurred_at: string;
+          user_id: string;
+        };
+        Insert: {
+          action: string;
+          id?: never;
+          occurred_at?: string;
+          user_id: string;
+        };
+        Update: {
+          action?: string;
+          id?: never;
+          occurred_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
       };
       push_subscriptions: {
         Row: {
@@ -1916,7 +2177,7 @@ export type Database = {
       };
       questions: {
         Row: {
-          accepted_answers: Json;
+          accepted_answers: NonNullable<Json>;
           answer_key: Json | null;
           correct_option: string | null;
           display_order: number;
@@ -1924,12 +2185,14 @@ export type Database = {
           exercise_id: string;
           explanation: string | null;
           id: string;
-          options: Json;
+          options: NonNullable<Json>;
           prompt: string;
           question_type: string;
+          answer_key_display: string | null;
+          is_question_recall_eligible: boolean | null;
         };
         Insert: {
-          accepted_answers?: Json;
+          accepted_answers?: NonNullable<Json>;
           answer_key?: Json | null;
           correct_option?: string | null;
           display_order?: number;
@@ -1937,12 +2200,12 @@ export type Database = {
           exercise_id: string;
           explanation?: string | null;
           id?: string;
-          options: Json;
+          options: NonNullable<Json>;
           prompt: string;
           question_type?: string;
         };
         Update: {
-          accepted_answers?: Json;
+          accepted_answers?: NonNullable<Json>;
           answer_key?: Json | null;
           correct_option?: string | null;
           display_order?: number;
@@ -1950,7 +2213,7 @@ export type Database = {
           exercise_id?: string;
           explanation?: string | null;
           id?: string;
-          options?: Json;
+          options?: NonNullable<Json>;
           prompt?: string;
           question_type?: string;
         };
@@ -1987,7 +2250,7 @@ export type Database = {
           code: string;
           created_at: string;
           description: string | null;
-          effect_payload: Json;
+          effect_payload: NonNullable<Json>;
           id: string;
           is_active: boolean;
           item_type: string;
@@ -1998,7 +2261,7 @@ export type Database = {
           code: string;
           created_at?: string;
           description?: string | null;
-          effect_payload?: Json;
+          effect_payload?: NonNullable<Json>;
           id?: string;
           is_active?: boolean;
           item_type: string;
@@ -2009,7 +2272,7 @@ export type Database = {
           code?: string;
           created_at?: string;
           description?: string | null;
-          effect_payload?: Json;
+          effect_payload?: NonNullable<Json>;
           id?: string;
           is_active?: boolean;
           item_type?: string;
@@ -2467,7 +2730,7 @@ export type Database = {
           escalation_level: number;
           id: string;
           lang: string;
-          messages: Json;
+          messages: NonNullable<Json>;
           question_id: string | null;
           resolved: boolean | null;
           scope: string;
@@ -2488,7 +2751,7 @@ export type Database = {
           escalation_level?: number;
           id?: string;
           lang: string;
-          messages?: Json;
+          messages?: NonNullable<Json>;
           question_id?: string | null;
           resolved?: boolean | null;
           scope: string;
@@ -2509,7 +2772,7 @@ export type Database = {
           escalation_level?: number;
           id?: string;
           lang?: string;
-          messages?: Json;
+          messages?: NonNullable<Json>;
           question_id?: string | null;
           resolved?: boolean | null;
           scope?: string;
@@ -2541,6 +2804,48 @@ export type Database = {
             columns: ["question_id"];
             isOneToOne: false;
             referencedRelation: "questions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      user_chapter_stars: {
+        Row: {
+          attempt_id: string | null;
+          chapter_id: string;
+          missions_at_reach: number;
+          reached_at: string;
+          star: number;
+          user_id: string;
+        };
+        Insert: {
+          attempt_id?: string | null;
+          chapter_id: string;
+          missions_at_reach: number;
+          reached_at?: string;
+          star: number;
+          user_id: string;
+        };
+        Update: {
+          attempt_id?: string | null;
+          chapter_id?: string;
+          missions_at_reach?: number;
+          reached_at?: string;
+          star?: number;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_chapter_stars_attempt_id_fkey";
+            columns: ["attempt_id"];
+            isOneToOne: false;
+            referencedRelation: "attempts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "user_chapter_stars_chapter_id_fkey";
+            columns: ["chapter_id"];
+            isOneToOne: false;
+            referencedRelation: "chapters";
             referencedColumns: ["id"];
           },
         ];
@@ -2637,6 +2942,48 @@ export type Database = {
           user_id?: string;
         };
         Relationships: [];
+      };
+      user_subject_seals: {
+        Row: {
+          attempt_id: string | null;
+          chapters_at_reach: number;
+          reached_at: string;
+          star: number;
+          subject_id: string;
+          user_id: string;
+        };
+        Insert: {
+          attempt_id?: string | null;
+          chapters_at_reach: number;
+          reached_at?: string;
+          star: number;
+          subject_id: string;
+          user_id: string;
+        };
+        Update: {
+          attempt_id?: string | null;
+          chapters_at_reach?: number;
+          reached_at?: string;
+          star?: number;
+          subject_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_subject_seals_attempt_id_fkey";
+            columns: ["attempt_id"];
+            isOneToOne: false;
+            referencedRelation: "attempts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "user_subject_seals_subject_id_fkey";
+            columns: ["subject_id"];
+            isOneToOne: false;
+            referencedRelation: "subjects";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       weekly_quests: {
         Row: {
@@ -2747,6 +3094,20 @@ export type Database = {
           day: string | null;
           user_id: string | null;
           xp_earned: number | null;
+        };
+        Relationships: [];
+      };
+      eng_activity_days: {
+        Row: {
+          day: string | null;
+          user_id: string | null;
+        };
+        Relationships: [];
+      };
+      eng_activity_weeks: {
+        Row: {
+          user_id: string | null;
+          week_start: string | null;
         };
         Relationships: [];
       };
@@ -2900,7 +3261,14 @@ export type Database = {
           tag: string;
         }[];
       };
-      admin_economy_overview: { Args: never; Returns: Json };
+      admin_economy_overview: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
+      admin_engagement_overview: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
       admin_grant_parcours: {
         Args: {
           p_expires_at?: string;
@@ -2911,7 +3279,7 @@ export type Database = {
         Returns: undefined;
       };
       admin_list_beta_requests: {
-        Args: never;
+        Args: Record<PropertyKey, never>;
         Returns: {
           created_at: string;
           email: string;
@@ -2924,7 +3292,7 @@ export type Database = {
         }[];
       };
       admin_list_bug_reports: {
-        Args: never;
+        Args: Record<PropertyKey, never>;
         Returns: {
           created_at: string;
           id: string;
@@ -2934,7 +3302,7 @@ export type Database = {
         }[];
       };
       admin_list_content_reports: {
-        Args: never;
+        Args: Record<PropertyKey, never>;
         Returns: {
           created_at: string;
           exercise_id: string;
@@ -2947,7 +3315,7 @@ export type Database = {
         }[];
       };
       admin_list_parcours_entitlements: {
-        Args: never;
+        Args: Record<PropertyKey, never>;
         Returns: {
           display_name: string;
           email: string;
@@ -2960,9 +3328,18 @@ export type Database = {
           user_id: string;
         }[];
       };
-      admin_open_bugs_count: { Args: never; Returns: number };
-      admin_open_reports_count: { Args: never; Returns: number };
-      admin_pending_beta_count: { Args: never; Returns: number };
+      admin_open_bugs_count: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
+      admin_open_reports_count: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
+      admin_pending_beta_count: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
       admin_resolve_bug_report: {
         Args: { p_report: string; p_status: string };
         Returns: undefined;
@@ -2989,12 +3366,32 @@ export type Database = {
         }[];
       };
       ai_forge_quota_left: { Args: { p_student: string }; Returns: number };
+      ai_open_answer_candidates: {
+        Args: { p_answers: Json; p_student: string };
+        Returns: {
+          choice: string;
+          content_language: string;
+          expected: string;
+          prompt: string;
+          question_id: string;
+        }[];
+      };
       answer_key_display: {
         Args: { q: Database["public"]["Tables"]["questions"]["Row"] };
         Returns: string;
       };
-      app_current_day: { Args: never; Returns: string };
-      app_current_week_start: { Args: never; Returns: string };
+      app_current_day: { Args: Record<PropertyKey, never>; Returns: string };
+      app_current_week_start: {
+        Args: Record<PropertyKey, never>;
+        Returns: string;
+      };
+      app_daily_mission_pool: {
+        Args: { p_user: string };
+        Returns: {
+          mission_type: string;
+          target_value: number;
+        }[];
+      };
       append_tutor_message: {
         Args: {
           p_advance_variant?: boolean;
@@ -3005,6 +3402,10 @@ export type Database = {
           p_tokens_in?: number;
           p_tokens_out?: number;
         };
+        Returns: Json;
+      };
+      apply_session_reveals: {
+        Args: { p_answers: Json; p_session_id: string };
         Returns: Json;
       };
       assert_can_read_student_activity: {
@@ -3026,15 +3427,23 @@ export type Database = {
           current_parcours_id: string | null;
           current_parcours_set_at: string | null;
           current_streak: number;
+          daily_xp_base: number;
+          daily_xp_day: string | null;
+          daily_xp_goal: number;
+          daily_xp_goal_set_on: string | null;
           display_name: string;
+          frame_slug: string | null;
           hero_class: string;
           id: string;
           last_active_date: string | null;
           level: number;
+          locale: string;
           longest_streak: number;
           role: string;
+          title_code: string | null;
           total_time_minutes: number;
           weekly_objectives_completed: number;
+          welcome_pack_at: string | null;
           xp: number;
           yahia_coins: number;
         };
@@ -3061,15 +3470,23 @@ export type Database = {
           current_parcours_id: string | null;
           current_parcours_set_at: string | null;
           current_streak: number;
+          daily_xp_base: number;
+          daily_xp_day: string | null;
+          daily_xp_goal: number;
+          daily_xp_goal_set_on: string | null;
           display_name: string;
+          frame_slug: string | null;
           hero_class: string;
           id: string;
           last_active_date: string | null;
           level: number;
+          locale: string;
           longest_streak: number;
           role: string;
+          title_code: string | null;
           total_time_minutes: number;
           weekly_objectives_completed: number;
+          welcome_pack_at: string | null;
           xp: number;
           yahia_coins: number;
         };
@@ -3079,6 +3496,10 @@ export type Database = {
           isOneToOne: true;
           isSetofReturn: false;
         };
+      };
+      badge_is_math_subject: {
+        Args: { p_subject_id: string };
+        Returns: boolean;
       };
       belief_evidence_weight: {
         Args: { p_session_id: string; p_user_id: string };
@@ -3111,9 +3532,36 @@ export type Database = {
         };
         Returns: number;
       };
+      bump_daily_mission: {
+        Args: { p_by?: number; p_day: string; p_type: string; p_user: string };
+        Returns: undefined;
+      };
+      can_play_open_questions: { Args: { p_student: string }; Returns: boolean };
       can_use_tutor: {
         Args: { p_chapter_id?: string; p_question_id?: string; p_scope: string };
         Returns: Json;
+      };
+      chapter_progress_ref: {
+        Args: { p_chapter: string; p_user: string };
+        Returns: string;
+      };
+      chapter_quiz_cleared: {
+        Args: { p_chapter: string; p_user: string };
+        Returns: boolean;
+      };
+      chapter_quiz_gated: { Args: { p_chapter: string }; Returns: boolean };
+      chapter_star_live: {
+        Args: { p_chapter: string; p_user: string };
+        Returns: number;
+      };
+      chapter_star_rungs: {
+        Args: { p_chapter: string; p_user: string };
+        Returns: {
+          difficulty: number;
+          missions_counted: number;
+          missions_new: number;
+          missions_total: number;
+        }[];
       };
       check_answers: {
         Args: { p_answers: Json; p_exercise_id: string };
@@ -3128,6 +3576,9 @@ export type Database = {
         Args: { p_key: string; p_max_requests: number; p_window_ms: number };
         Returns: boolean;
       };
+      claim_event_badge: { Args: Record<PropertyKey, never>; Returns: Json };
+      claim_placement_sessions: { Args: { p_tokens: string[] }; Returns: Json };
+      claim_welcome_pack: { Args: Record<PropertyKey, never>; Returns: Json };
       cleanup_rate_limit_events: {
         Args: { p_retention_hours?: number };
         Returns: number;
@@ -3200,9 +3651,11 @@ export type Database = {
         Args: { p_user: string };
         Returns: undefined;
       };
+      equip_cosmetic: { Args: { p_item_code: string }; Returns: Json };
       equip_inventory_skin: { Args: { p_item_code: string }; Returns: Json };
       escalate_tutor_thread: { Args: { p_thread: string }; Returns: Json };
-      expire_duels: { Args: never; Returns: number };
+      expire_duels: { Args: Record<PropertyKey, never>; Returns: number };
+      export_user_data: { Args: Record<PropertyKey, never>; Returns: Json };
       finalize_duel: { Args: { p_duel: string }; Returns: undefined };
       finalize_dungeon_run: {
         Args: { p_duration_seconds: number; p_run_id: string };
@@ -3219,9 +3672,19 @@ export type Database = {
         Returns: Json;
       };
       finish_mock_exam: { Args: { p_session_id: string }; Returns: Json };
+      finish_placement_session: {
+        Args: {
+          p_answers?: Json;
+          p_duration_seconds?: number;
+          p_session_id: string;
+          p_token?: string;
+        };
+        Returns: Json;
+      };
       forfeit_duel: { Args: { p_duel: string }; Returns: undefined };
+      get_active_event: { Args: Record<PropertyKey, never>; Returns: Json };
       get_ai_admin_overview: {
-        Args: never;
+        Args: Record<PropertyKey, never>;
         Returns: {
           ai_enabled: boolean;
           by_model: Json;
@@ -3235,7 +3698,7 @@ export type Database = {
         }[];
       };
       get_ai_console: {
-        Args: never;
+        Args: Record<PropertyKey, never>;
         Returns: {
           base_url: string;
           by_feature: Json;
@@ -3253,7 +3716,7 @@ export type Database = {
         }[];
       };
       get_ai_credential_status: {
-        Args: never;
+        Args: Record<PropertyKey, never>;
         Returns: {
           base_url: string;
           consent_version: string;
@@ -3272,7 +3735,7 @@ export type Database = {
         }[];
       };
       get_ai_students: {
-        Args: never;
+        Args: Record<PropertyKey, never>;
         Returns: {
           daily_energy_max: number;
           display_name: string;
@@ -3283,6 +3746,7 @@ export type Database = {
           student_user_id: string;
         }[];
       };
+      get_attempt_progress: { Args: { p_attempt_id: string }; Returns: Json };
       get_attempt_review: {
         Args: { p_answers?: Json; p_session_id: string };
         Returns: {
@@ -3343,7 +3807,7 @@ export type Database = {
       };
       get_duel_state: { Args: { p_duel: string }; Returns: Json };
       get_dungeon_access: {
-        Args: never;
+        Args: Record<PropertyKey, never>;
         Returns: {
           can_access: boolean;
           chapters_done: number;
@@ -3411,6 +3875,10 @@ export type Database = {
           xp: number;
         }[];
       };
+      get_last_attempt_progress: {
+        Args: { p_exercise_id: string };
+        Returns: Json;
+      };
       get_learning_frontier: {
         Args: { p_family?: string; p_limit?: number };
         Returns: {
@@ -3467,7 +3935,11 @@ export type Database = {
           slug: string;
         }[];
       };
-      get_my_grade_rank: { Args: never; Returns: number };
+      get_my_grade_rank: { Args: Record<PropertyKey, never>; Returns: number };
+      get_my_placement_overview: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
       get_my_weaknesses: {
         Args: { p_limit?: number };
         Returns: {
@@ -3486,6 +3958,11 @@ export type Database = {
           trend: string;
         }[];
       };
+      get_placement_session: {
+        Args: { p_session_id: string; p_token?: string };
+        Returns: Json;
+      };
+      get_placement_subject: { Args: { p_subject_id: string }; Returns: Json };
       get_recall_availability: {
         Args: { p_subject_id: string };
         Returns: {
@@ -3568,6 +4045,7 @@ export type Database = {
           subject_xp: number;
         }[];
       };
+      get_subject_progress: { Args: { p_subject_id: string }; Returns: Json };
       get_targeted_exercises: {
         Args: { p_competency?: string; p_limit?: number; p_tag: string };
         Returns: {
@@ -3591,8 +4069,11 @@ export type Database = {
         Args: { p_user: string; p_week_start: string };
         Returns: Json;
       };
-      get_tutor_energy: { Args: never; Returns: Json };
-      get_tutor_learner_context: { Args: never; Returns: Json };
+      get_tutor_energy: { Args: Record<PropertyKey, never>; Returns: Json };
+      get_tutor_learner_context: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
       get_tutor_mini_check: { Args: { p_question_id: string }; Returns: Json };
       get_tutor_parent_counters: {
         Args: { p_student_id: string };
@@ -3602,7 +4083,7 @@ export type Database = {
         Args: { p_student_id: string; p_week_start?: string };
         Returns: Json;
       };
-      get_tutor_prefs: { Args: never; Returns: Json };
+      get_tutor_prefs: { Args: Record<PropertyKey, never>; Returns: Json };
       get_tutor_question_context: {
         Args: { p_question_id: string };
         Returns: Json;
@@ -3616,8 +4097,24 @@ export type Database = {
           subject_id: string;
         }[];
       };
+      get_user_subject_stars: {
+        Args: { p_subject_ids?: string[] };
+        Returns: {
+          chapters_star1: number;
+          chapters_star2: number;
+          chapters_star3: number;
+          chapters_star4: number;
+          chapters_started: number;
+          chapters_total: number;
+          new_chapters: number;
+          new_missions: number;
+          seal_at: string;
+          seal_star: number;
+          subject_id: string;
+        }[];
+      };
       get_user_subject_stats: {
-        Args: never;
+        Args: Record<PropertyKey, never>;
         Returns: {
           attempts_count: number;
           avg_score: number;
@@ -3625,6 +4122,20 @@ export type Database = {
           total_xp: number;
         }[];
       };
+      get_weekly_leaderboard: {
+        Args: { p_limit?: number; p_scope?: string };
+        Returns: {
+          avatar_tier: number;
+          current_streak: number;
+          display_name: string;
+          hero_class: string;
+          is_me: boolean;
+          level: number;
+          rank: number;
+          xp: number;
+        }[];
+      };
+      get_weekly_recap: { Args: Record<PropertyKey, never>; Returns: Json };
       grade_forged_quiz: {
         Args: { p_answers: Json; p_quiz: string };
         Returns: {
@@ -3632,6 +4143,10 @@ export type Database = {
           review: Json;
           total: number;
         }[];
+      };
+      has_ai_open_answer_verdict: {
+        Args: { p_choice: string; p_question: string };
+        Returns: boolean;
       };
       has_parcours_entitlement: {
         Args: { p_parcours: string; p_user: string };
@@ -3648,13 +4163,20 @@ export type Database = {
         };
         Returns: boolean;
       };
-      is_admin: { Args: never; Returns: boolean };
+      is_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
       is_duel_participant: {
         Args: { p_duel: string; p_user: string };
         Returns: boolean;
       };
       is_parent_of_student: {
         Args: { p_parent: string; p_student: string };
+        Returns: boolean;
+      };
+      is_question_in_play: {
+        Args: {
+          p_open_ok: boolean;
+          q: Database["public"]["Tables"]["questions"]["Row"];
+        };
         Returns: boolean;
       };
       is_question_recall_eligible: {
@@ -3666,7 +4188,7 @@ export type Database = {
         Returns: Json;
       };
       list_forged_quizzes: {
-        Args: never;
+        Args: Record<PropertyKey, never>;
         Returns: {
           chapter_id: string;
           chapter_title: string;
@@ -3681,6 +4203,10 @@ export type Database = {
         }[];
       };
       list_mock_exams: { Args: { p_parcours_id?: string }; Returns: Json };
+      list_placement_subjects: {
+        Args: { p_parcours_id: string };
+        Returns: Json;
+      };
       list_tutor_threads: {
         Args: { p_limit?: number };
         Returns: {
@@ -3717,14 +4243,18 @@ export type Database = {
         Args: { p_kind: string; p_owner: string; p_period: string };
         Returns: undefined;
       };
-      match_duel: { Args: never; Returns: string };
+      match_duel: { Args: Record<PropertyKey, never>; Returns: string };
       misconception_active_thresholds: {
-        Args: never;
+        Args: Record<PropertyKey, never>;
         Returns: {
           min_occurrences: number;
           min_sessions: number;
           window_days: number;
         }[];
+      };
+      mission_is_counted: {
+        Args: { p_exercise: string; p_user: string };
+        Returns: boolean;
       };
       normalize_recall_text: { Args: { p: string }; Returns: string };
       open_tutor_chapter_thread: {
@@ -3746,13 +4276,36 @@ export type Database = {
         Returns: Json;
       };
       parcours_interest_counts: {
-        Args: never;
+        Args: Record<PropertyKey, never>;
         Returns: {
           interest_count: number;
           name_fr: string;
           parcours_id: string;
         }[];
       };
+      placement_band: { Args: { p_score_on_20: number }; Returns: string };
+      placement_bilan_json: {
+        Args: {
+          p_full: boolean;
+          p_row: Database["public"]["Tables"]["placement_sessions"]["Row"];
+        };
+        Returns: Json;
+      };
+      placement_eligible_questions: {
+        Args: { p_subject_id: string };
+        Returns: {
+          chapter_id: string;
+          chapter_order: number;
+          difficulty: number;
+          exercise_id: string;
+          question_id: string;
+        }[];
+      };
+      placement_questions_json: {
+        Args: { p_question_ids: string[] };
+        Returns: Json;
+      };
+      placement_subject_json: { Args: { p_subject_id: string }; Returns: Json };
       propagate_competency_belief: {
         Args: {
           p_belief: number;
@@ -3763,19 +4316,60 @@ export type Database = {
         Returns: number;
       };
       purchase_shop_item: { Args: { p_item_code: string }; Returns: Json };
-      purge_ai_feedback: { Args: never; Returns: undefined };
-      purge_ai_forged_quizzes: { Args: never; Returns: undefined };
-      purge_ai_ledgers: { Args: never; Returns: undefined };
-      purge_ai_usage_events: { Args: never; Returns: undefined };
-      purge_learning_pulses: { Args: never; Returns: undefined };
-      purge_question_attempts: { Args: never; Returns: number };
-      purge_tutor_digests: { Args: never; Returns: undefined };
-      purge_tutor_threads: { Args: never; Returns: undefined };
+      purge_ai_feedback: {
+        Args: Record<PropertyKey, never>;
+        Returns: undefined;
+      };
+      purge_ai_forged_quizzes: {
+        Args: Record<PropertyKey, never>;
+        Returns: undefined;
+      };
+      purge_ai_ledgers: { Args: Record<PropertyKey, never>; Returns: undefined };
+      purge_ai_usage_events: {
+        Args: Record<PropertyKey, never>;
+        Returns: undefined;
+      };
+      purge_learning_pulses: {
+        Args: Record<PropertyKey, never>;
+        Returns: undefined;
+      };
+      purge_question_attempts: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
+      purge_tutor_digests: {
+        Args: Record<PropertyKey, never>;
+        Returns: undefined;
+      };
+      purge_tutor_threads: {
+        Args: Record<PropertyKey, never>;
+        Returns: undefined;
+      };
+      push_daily_audiences: {
+        Args: { p_today: string };
+        Returns: {
+          arg: number;
+          detail: string;
+          locale: string;
+          tag: string;
+          user_id: string;
+        }[];
+      };
       rate_tutor_message: {
         Args: { p_message_ix: number; p_rating: number; p_thread: string };
         Returns: undefined;
       };
-      recharge_tutor_energy: { Args: never; Returns: Json };
+      recharge_tutor_energy: { Args: Record<PropertyKey, never>; Returns: Json };
+      record_ai_open_answer_verdict: {
+        Args: {
+          p_accepted: boolean;
+          p_choice: string;
+          p_model: string;
+          p_question: string;
+          p_student: string;
+        };
+        Returns: boolean;
+      };
       record_learning_pulse: {
         Args: {
           p_active_seconds: number;
@@ -3804,6 +4398,7 @@ export type Database = {
         Args: { p_energy: number; p_micros: number; p_student: string };
         Returns: undefined;
       };
+      replay_progress_stars: { Args: Record<PropertyKey, never>; Returns: Json };
       reserve_ai_spend: {
         Args: {
           p_energy: number;
@@ -3871,7 +4466,20 @@ export type Database = {
         Args: { p_grade: string; p_theme: string };
         Returns: string;
       };
-      revoke_ai_credential: { Args: never; Returns: boolean };
+      reveal_session_answer: {
+        Args: { p_choice: string; p_question_id: string; p_session_id: string };
+        Returns: {
+          choice: string;
+          correct_option: string;
+          explanation: string;
+          is_correct: boolean;
+          question_id: string;
+        }[];
+      };
+      revoke_ai_credential: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
       rewrite_ai_credential_secret: {
         Args: { p_enc_version: number; p_owner: string; p_secret_enc: string };
         Returns: undefined;
@@ -3985,15 +4593,61 @@ export type Database = {
           current_parcours_id: string | null;
           current_parcours_set_at: string | null;
           current_streak: number;
+          daily_xp_base: number;
+          daily_xp_day: string | null;
+          daily_xp_goal: number;
+          daily_xp_goal_set_on: string | null;
           display_name: string;
+          frame_slug: string | null;
           hero_class: string;
           id: string;
           last_active_date: string | null;
           level: number;
+          locale: string;
           longest_streak: number;
           role: string;
+          title_code: string | null;
           total_time_minutes: number;
           weekly_objectives_completed: number;
+          welcome_pack_at: string | null;
+          xp: number;
+          yahia_coins: number;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "profiles";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      set_daily_xp_goal: {
+        Args: { p_goal: number };
+        Returns: {
+          avatar_slug: string | null;
+          avatar_tier: number;
+          bosses_defeated: number;
+          created_at: string;
+          current_grade_id: string | null;
+          current_parcours_id: string | null;
+          current_parcours_set_at: string | null;
+          current_streak: number;
+          daily_xp_base: number;
+          daily_xp_day: string | null;
+          daily_xp_goal: number;
+          daily_xp_goal_set_on: string | null;
+          display_name: string;
+          frame_slug: string | null;
+          hero_class: string;
+          id: string;
+          last_active_date: string | null;
+          level: number;
+          locale: string;
+          longest_streak: number;
+          role: string;
+          title_code: string | null;
+          total_time_minutes: number;
+          weekly_objectives_completed: number;
+          welcome_pack_at: string | null;
           xp: number;
           yahia_coins: number;
         };
@@ -4012,6 +4666,7 @@ export type Database = {
         Args: { p_student: string; p_target: number };
         Returns: Json;
       };
+      set_profile_locale: { Args: { p_locale: string }; Returns: undefined };
       set_profile_role: {
         Args: { p_role: string };
         Returns: {
@@ -4023,15 +4678,23 @@ export type Database = {
           current_parcours_id: string | null;
           current_parcours_set_at: string | null;
           current_streak: number;
+          daily_xp_base: number;
+          daily_xp_day: string | null;
+          daily_xp_goal: number;
+          daily_xp_goal_set_on: string | null;
           display_name: string;
+          frame_slug: string | null;
           hero_class: string;
           id: string;
           last_active_date: string | null;
           level: number;
+          locale: string;
           longest_streak: number;
           role: string;
+          title_code: string | null;
           total_time_minutes: number;
           weekly_objectives_completed: number;
+          welcome_pack_at: string | null;
           xp: number;
           yahia_coins: number;
         };
@@ -4049,6 +4712,10 @@ export type Database = {
       };
       set_tutor_thread_summary: {
         Args: { p_summary: string; p_thread: string };
+        Returns: undefined;
+      };
+      settle_ai_energy: {
+        Args: { p_energy: number; p_student: string };
         Returns: undefined;
       };
       settle_ai_spend: {
@@ -4074,15 +4741,23 @@ export type Database = {
           current_parcours_id: string | null;
           current_parcours_set_at: string | null;
           current_streak: number;
+          daily_xp_base: number;
+          daily_xp_day: string | null;
+          daily_xp_goal: number;
+          daily_xp_goal_set_on: string | null;
           display_name: string;
+          frame_slug: string | null;
           hero_class: string;
           id: string;
           last_active_date: string | null;
           level: number;
+          locale: string;
           longest_streak: number;
           role: string;
+          title_code: string | null;
           total_time_minutes: number;
           weekly_objectives_completed: number;
+          welcome_pack_at: string | null;
           xp: number;
           yahia_coins: number;
         };
@@ -4093,7 +4768,7 @@ export type Database = {
           isSetofReturn: false;
         };
       };
-      start_dungeon_run: { Args: never; Returns: string };
+      start_dungeon_run: { Args: Record<PropertyKey, never>; Returns: string };
       start_exercise_session: {
         Args: { p_exercise_id: string; p_variant?: string };
         Returns: {
@@ -4103,6 +4778,10 @@ export type Database = {
       };
       start_mock_exam: {
         Args: { p_exam_id: string; p_kind?: string };
+        Returns: Json;
+      };
+      start_placement_session: {
+        Args: { p_audience?: string; p_subject_id: string };
         Returns: Json;
       };
       store_tutor_digest: {
@@ -4144,11 +4823,45 @@ export type Database = {
         };
         Returns: Json;
       };
+      student_chapter_gaps: {
+        Args: {
+          p_per_subject?: number;
+          p_subject_ids?: string[];
+          p_user: string;
+        };
+        Returns: {
+          chapter_id: string;
+          missing_for_next: number;
+          missions_passed: number;
+          missions_total: number;
+          next_star: number;
+          quiz_gated: boolean;
+          quiz_satisfied: boolean;
+          subject_id: string;
+          title: string;
+        }[];
+      };
       student_parcours_progress: {
         Args: { p_subject_ids?: string[]; p_user: string };
         Returns: {
           chapters_completed: number;
           chapters_total: number;
+          subject_id: string;
+        }[];
+      };
+      student_subject_stars: {
+        Args: { p_subject_ids?: string[]; p_user: string };
+        Returns: {
+          chapters_star1: number;
+          chapters_star2: number;
+          chapters_star3: number;
+          chapters_star4: number;
+          chapters_started: number;
+          chapters_total: number;
+          new_chapters: number;
+          new_missions: number;
+          seal_at: string;
+          seal_star: number;
           subject_id: string;
         }[];
       };
@@ -4172,15 +4885,28 @@ export type Database = {
         Args: { p_choice: string; p_question_id: string };
         Returns: Json;
       };
-      sweep_ai_reservations: { Args: never; Returns: undefined };
+      sweep_ai_reservations: {
+        Args: Record<PropertyKey, never>;
+        Returns: undefined;
+      };
+      sweep_placement_sessions: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
       toggle_parcours_interest: {
         Args: { p_parcours: string };
         Returns: boolean;
       };
       tutor_age_band: { Args: { p_grade_id: string }; Returns: string };
-      tutor_daily_energy: { Args: never; Returns: number };
-      tutor_eviction_downvotes: { Args: never; Returns: number };
-      tutor_hard_daily_cap: { Args: never; Returns: number };
+      tutor_daily_energy: { Args: Record<PropertyKey, never>; Returns: number };
+      tutor_eviction_downvotes: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
+      tutor_hard_daily_cap: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
       tutor_plan_push_audience: {
         Args: { p_today: string };
         Returns: {
@@ -4196,6 +4922,27 @@ export type Database = {
       tutor_thread_window: { Args: { p_messages: Json }; Returns: Json };
       tutor_understanding_signal: { Args: { p_tag: string }; Returns: Json };
       tutor_week_start: { Args: { p_day: string }; Returns: string };
+      user_data_export_plan: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          column_name: string;
+          disposition: string;
+          reason: string;
+          table_name: string;
+        }[];
+      };
+      user_data_export_redact: {
+        Args: { p_columns: string[]; p_row: Json };
+        Returns: Json;
+      };
+      user_data_export_redactions: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          column_name: string;
+          reason: string;
+          table_name: string;
+        }[];
+      };
     };
     Enums: {
       [_ in never]: never;

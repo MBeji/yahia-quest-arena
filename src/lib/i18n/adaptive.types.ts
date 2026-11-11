@@ -39,6 +39,15 @@ export interface AdaptiveTranslations {
   mapTitle: string;
   mapSubtitle: string;
   mapEmpty: string;
+  /**
+   * Le panneau se REPLIE sur le tableau de bord (2026-09-04) : par défaut il ne montre qu'un
+   * résumé par état, et la liste complète se déplie d'un geste. `mapSummaryLabel` nomme la
+   * liste des compteurs pour un lecteur d'écran ; les deux autres sont le bouton, dans ses
+   * deux positions.
+   */
+  mapSummaryLabel: string;
+  mapShowDetail: string;
+  mapHideDetail: string;
   /** « prouvé {n} fois, sous {m} formes » — la preuve de R-4, montrée et non affirmée. */
   provenBy: string;
   /** Une croyance déduite, jamais gagnée : elle se dit, et elle se conteste (US-3). */

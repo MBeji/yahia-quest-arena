@@ -22,7 +22,7 @@
 // POURQUOI DES TRANCHES, ET NON UN BATCH
 // ---------------------------------------------------------------------------
 // La fonction SSR est configurée à `maxDuration: 300` secondes
-// (`scripts/build-vercel.mjs`). Cette valeur était à 30 s jusqu'au 2026-08-25,
+// (`scripts/vercel-function.mjs`, lu par `scripts/build-vercel.mjs`). Cette valeur était à 30 s jusqu'au 2026-08-25,
 // sur la foi d'une limite du plan Hobby qui n'existe plus depuis `fluid
 // compute` — la contrainte avait disparu, le commentaire était resté, et le
 // découpage ci-dessous en avait hérité une marge inutilement serrée.
@@ -55,7 +55,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-import { callAi } from "@/features/ai";
+import { callAi } from "@/shared/integrations/ai/ai-call.server";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { supabaseAdmin } from "@/shared/integrations/supabase/client.server";
 import { logger } from "@/shared/lib/logger";
@@ -163,7 +163,7 @@ const storedDigestSchema = z.object({
  */
 export const getWeeklyDigest = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         audience: z.enum(TUTOR_DIGEST_AUDIENCES).default("student"),

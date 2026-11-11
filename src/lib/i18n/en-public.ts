@@ -6,6 +6,7 @@ export const enPublic: TranslationKeys["public"] = {
     navAria: "Catalogue",
     programme: "Programme",
     extras: "Extras",
+    placement: "Placement test",
     parentTracking: "Parent tracking",
     login: "Log in",
     signup: "Create my account",
@@ -164,12 +165,12 @@ export const enPublic: TranslationKeys["public"] = {
     resumeHere: "Continue here",
     missionsProgress: "{done}/{total} missions",
     quizToPass: "quiz to pass",
-    chapterComplete: "Chapter complete",
-    todo: "to do",
     unlocksChapter: "unlocks the chapter",
     otherChapters: "Other chapters",
     chaptersProgress: "{done}/{total} chapters",
     quizContract: "Pass the quiz (≥ {pct}%) to unlock this chapter's missions.",
+    unrestrictedBanner:
+      "Test access (admin account): every mission is open — no quiz, no set order.",
     manuelTitle: "Official textbook",
     manuelHint: "This subject's official student textbook, to read online.",
     manuelOpen: "Open the textbook",
@@ -190,7 +191,9 @@ export const enPublic: TranslationKeys["public"] = {
     restart: "Start over",
     questCta: "Replay in quest mode to earn XP",
     continueCta: "Continue to the first exercise",
-    inviteDesc: "Create an account to earn XP, save your progress and climb the leaderboard.",
+    inviteDesc:
+      "Without an account, your XP, streak and badges are not kept. Create one to keep your next XP, your streak and your progress.",
+    inviteValue: "With an account, this mission is worth up to {xp} XP.",
     inviteCta: "Create my account",
   },
   print: {

@@ -5,7 +5,8 @@ import { supabaseAdmin } from "@/shared/integrations/supabase/client.server";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
 import { ACCOUNT_DELETE_ERROR_PREFIX, confirmsAccountEmail } from "./account-deletion";
-import { displayNameSchema } from "./display-name";
+import type { UserDataExport } from "./data-export";
+import { displayNameSchema } from "./display-name.schema";
 
 /**
  * Bootstrap the freshly-signed-up user's profile (display name + role).
@@ -27,7 +28,7 @@ import { displayNameSchema } from "./display-name";
  */
 export const bootstrapProfile = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         displayName: displayNameSchema,
@@ -77,7 +78,7 @@ export const bootstrapProfile = createServerFn({ method: "POST" })
  */
 export const setCurrentParcours = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ parcoursId: z.string().min(1) }).parse(d))
+  .validator((d: unknown) => z.object({ parcoursId: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
     const { data: profile, error } = await supabase.rpc("set_current_parcours", {
@@ -116,7 +117,7 @@ export const setCurrentParcours = createServerFn({ method: "POST" })
  */
 export const updateDisplayName = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ displayName: displayNameSchema }).parse(d))
+  .validator((d: unknown) => z.object({ displayName: displayNameSchema }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
@@ -181,7 +182,7 @@ export const updateDisplayName = createServerFn({ method: "POST" })
  */
 export const deleteAccount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     // 320 = la longueur maximale d'une adresse e-mail (64 + @ + 255).
     z.object({ confirmEmail: z.string().trim().min(1).max(320) }).parse(d),
   )
@@ -220,4 +221,100 @@ export const deleteAccount = createServerFn({ method: "POST" })
 
     logger.info("auth.deleteAccount: un compte a été supprimé");
     return { ok: true as const };
+  });
+
+/**
+ * Rendre à l'appelant TOUT ce que la base sait de lui, en un document JSON.
+ *
+ * C'est la moitié « accès & portabilité » de GAP-024 (STATUS.md §5), et le
+ * dernier volet CODE de ce verrou : les pages légales (#701) et la suppression
+ * (#791) sont livrées, l'accès renvoyait encore la personne vers
+ * `contact@na9ranal3ab.tn` — c'est-à-dire vers un geste humain, sur une boîte que
+ * personne ne relève. La politique de confidentialité promet ce droit ; à partir
+ * d'ici il s'exerce en un clic, comme la suppression.
+ *
+ * TOUT LE TRAVAIL EST DANS LE SQL, et ce n'est pas un raccourci. `export_user_data()`
+ * énumère `pg_constraint` pour trouver les tables où l'utilisateur existe
+ * (20260902120000_export_user_data.sql, D-1) : une table créée demain entre dans
+ * l'export sans que personne n'y pense. La même liste écrite ici serait vraie le
+ * jour de sa PR et fausse en silence à la suivante — et un export incomplet
+ * ressemble trait pour trait à un export complet. Cette fonction ne fait donc que
+ * relayer, délibérément : lui ajouter la moindre décision sur CE QUI sort
+ * rouvrirait la deuxième liste.
+ *
+ * AUCUNE ENTRÉE, et c'est le garde-fou : rien dans cet appel ne désigne une
+ * personne, donc rien n'en fait une arme (« exporte les données de quelqu'un
+ * d'autre »). Le sujet est `auth.uid()`, lu par la base dans le jeton que le
+ * middleware a vérifié — même posture que `deleteAccount` juste au-dessus.
+ *
+ * POURQUOI `POST` POUR UNE LECTURE. Les lectures de ce dépôt sont en `GET`
+ * (`getCompetencyExercises`, `getLearningFrontier`). Celle-ci ne l'est pas : elle
+ * rend, en une réponse, la totalité du dossier d'une personne. Un `GET` est ce
+ * qu'on préfetche, ce qu'un intermédiaire met en cache, ce qui atterrit dans un
+ * journal d'accès avec son URL. Le geste est rare et explicite ; il n'a aucun
+ * besoin de la sémantique de cache d'un `GET`, et beaucoup à perdre à l'avoir.
+ */
+export const exportUserData = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    // Même patron que les RPC de `progression.server.ts` : la fonction est
+    // postérieure aux types Supabase générés, qui ne peuvent pas être régénérés
+    // sans accès à une base. On fige donc son contrat ici — sans argument, ce qui
+    // est aussi ce que le pgTAP 85 vérifie côté SQL.
+    const client = context.supabase as unknown as {
+      rpc: (
+        fn: "export_user_data",
+      ) => PromiseLike<{ data: UserDataExport | null; error: { message: string } | null }>;
+    };
+
+    const { data, error } = await client.rpc("export_user_data");
+
+    if (error || !data) {
+      failWithClientError(
+        "auth.exportUserData",
+        error ?? new Error("export_user_data returned no document"),
+        "data_export_failed",
+      );
+    }
+
+    // Le SUCCÈS ne laisse aucune trace nominative — même règle que la suppression
+    // juste au-dessus : journaliser qui a demandé son dossier, et quand, créerait
+    // une donnée personnelle de plus à l'endroit exact où l'on rend les siennes.
+    logger.info("auth.exportUserData: un dossier a été servi");
+    return { document: data };
+  });
+
+/**
+ * Étude 31 lot 4 (R-17) — la LANGUE DU PROFIL, pour que les notifications
+ * parlent celle de l'élève.
+ *
+ * Avant ce lot, la langue vivait dans un cookie et un `localStorage` : le serveur
+ * ne la connaissait pas, et les trois payloads push partaient en français pour
+ * tout le monde — y compris pour l'élève qui lit l'application en arabe. C'est un
+ * réglage d'INTERFACE qui devient une donnée de PROFIL, pour la seule raison
+ * qu'un canal asynchrone ne peut pas lire un cookie.
+ *
+ * Écriture par RPC `SECURITY DEFINER` : `locale` n'est pas dans les colonnes que
+ * le grant client autorise (20260606150000), et l'y ajouter ouvrirait une
+ * surface d'écriture directe pour un besoin qui tient en un verbe.
+ */
+export const setProfileLocale = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((d: unknown) =>
+    z.object({ locale: z.union([z.literal("fr"), z.literal("en"), z.literal("ar")]) }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    const client = context.supabase as unknown as {
+      rpc: (
+        fn: "set_profile_locale",
+        args: { p_locale: string },
+      ) => PromiseLike<{ error: { message: string } | null }>;
+    };
+    const { error } = await client.rpc("set_profile_locale", { p_locale: data.locale });
+    if (error) {
+      // Une langue non enregistrée ne casse rien à l'écran : elle coûte une
+      // notification en français. On journalise, on ne fait pas échouer la page.
+      failWithClientError("auth.setProfileLocale", error, "Langue non enregistrée.");
+    }
+    return { locale: data.locale };
   });

@@ -42,6 +42,20 @@ test.describe("Anonymous content journey (no login wall)", () => {
       await reader.summaryTab.click();
       await expect(reader.content).toBeVisible();
     }
+
+    // Le contrôle sur place (étude 35) : la réponse est REPLIÉE tant que l'élève ne la
+    // demande pas. C'est tout l'intérêt du bloc — une réponse visible d'avance ne fait rien
+    // travailler. Le `<details>` est natif : rien à charger, rien à hydrater, et cette
+    // assertion est la seule qui le prouve dans un vrai navigateur.
+    // ⚠️ Sur le chapitre de FIXTURE qui porte le bloc, pas sur la matière scolaire
+    // ci-dessus : ses cours viennent des migrations de contenu historiques et n'en ont
+    // aucun — l'assertion posée là cherchait un bloc que rien n'avait seedé (#1047).
+    await page.goto(`/chapitre/${await adminDb.fixtureLessonChapterId()}`);
+    await expect(reader.content).toBeVisible({ timeout: 15_000 });
+    await expect(reader.check).toBeVisible();
+    await expect(reader.checkAnswer).toBeHidden();
+    await reader.checkToggle.click();
+    await expect(reader.checkAnswer).toBeVisible();
   });
 
   test("practise an exercise with immediate correction and an account invite", async ({
@@ -65,5 +79,50 @@ test.describe("Anonymous content journey (no login wall)", () => {
     // The « moment d'or »: a non-blocking account invite (gain XP / save / rank).
     await expect(practice.accountInvite).toBeVisible();
     await expect(page).not.toHaveURL(/\/auth/);
+  });
+});
+
+/**
+ * ÉTOILES & SCEAUX VUS SANS COMPTE — étude 34, US-8 / R-16.
+ *
+ * La promesse de l'étude côté public : le visiteur voit la FORME de ce qu'il
+ * gagnerait (les quatre cachets, les crans de chaque chapitre) et une invitation
+ * en une ligne — mais **rien ne se calcule sans compte**, et **rien de plus n'est
+ * verrouillé**. Ce dernier point est le vrai risque de régression : une surface
+ * de progression ajoutée à un écran public est le meilleur moyen d'y glisser un
+ * mur sans le vouloir.
+ */
+test.describe("Hub public — étoiles et sceaux sans compte (é34, US-8)", () => {
+  test("montre les cachets en attente et la promesse, sans rien calculer", async ({
+    page,
+    adminDb,
+  }) => {
+    const subjectId = await adminDb.nonSchoolSubjectId();
+    const hub = new SubjectHubPage(page);
+    await hub.goto(subjectId);
+
+    await expect(hub.seals).toBeVisible({ timeout: 20_000 });
+    // Les quatre cachets, tous en attente : on voit ce qu'il y a à gagner.
+    await expect(hub.sealMarks).toHaveCount(4);
+    await expect(page.locator('[data-testid="seal-mark"][data-earned="true"]')).toHaveCount(0);
+    await expect(hub.anonPromise).toBeVisible();
+
+    // …et rien d'un compte : aucun cran acquis, aucun compteur d'effort.
+    await expect(hub.litRungs).toHaveCount(0);
+    await expect(hub.effort).toHaveCount(0);
+  });
+
+  test("n'ajoute AUCUN verrou : les missions restent atteignables en entraînement", async ({
+    page,
+    adminDb,
+  }) => {
+    const subjectId = await adminDb.nonSchoolSubjectId();
+    const hub = new SubjectHubPage(page);
+    await hub.goto(subjectId);
+
+    // Une matière hors école n'a pas de porte de quiz : toutes ses missions
+    // restent des liens d'entraînement, exactement comme avant l'étude.
+    await expect(hub.practiceLinks.first()).toBeVisible({ timeout: 20_000 });
+    await expect(hub.questLinks).toHaveCount(0);
   });
 });

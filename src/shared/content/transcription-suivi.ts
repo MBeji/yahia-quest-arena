@@ -542,10 +542,24 @@ export function checkSuivi(input: SuiviCheckInput): SuiviCheckResult {
       if ((entry.statut === "validee-r7" || entry.statut === "promue") && entry.r7 === null) {
         errors.push(`suivi ${path}: statut "${entry.statut}" sans verdict r7 enregistré`);
       }
+      // A `partielle` fiche whose sources are all fully read is usually an
+      // oversight: the reading is paid for, the promotion was forgotten. But
+      // not when `chapitresGeneration` is set — that pair is the DESIGNED way
+      // to say "read end to end, yet the source does not span the chapitrage".
+      // The 9ème arabic and English guides are the case: 120/120 and 44/44
+      // pages read, but a نحو-only guide covers 5 of 11 chapters, and the
+      // English Teacher's Book never names the passive or reported speech. The
+      // fiche cannot be `complete` (that would authorise generating chapters
+      // the source is silent on) and its coverage has no holes either, so the
+      // vocabulary has no word for it — the chapter-scoped lift carries the
+      // meaning instead. Warning there would nag on a correct state, and a
+      // gate that cries wolf on a correct state is how a real signal gets
+      // missed later.
       if (
         entry.statut === "partielle" &&
         entry.sources.every((s) => coversFully(s)) &&
-        entry.sources.length > 0
+        entry.sources.length > 0 &&
+        entry.chapitresGeneration.length === 0
       ) {
         warnings.push(
           `suivi ${path}: statut "partielle" mais toutes les sources sont couvertes à 100 % — promouvoir ?`,

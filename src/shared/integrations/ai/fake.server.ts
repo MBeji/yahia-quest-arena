@@ -60,6 +60,13 @@ function fakeText(req: AiRequest, fingerprint: string): string {
       return JSON.stringify({ items: [] });
     case "forge_solve":
       return JSON.stringify({ answer: 0 });
+    case "open_answer":
+      // DÉTERMINISTE, et REFUSE par défaut. Le faux ne doit jamais rendre juste
+      // une réponse que le déterministe a refusée : sinon toute la CI joue le
+      // chemin « l'IA rattrape », et le chemin qui compte — le refus tient —
+      // n'est plus exercé nulle part. Un test qui veut l'acceptation construit
+      // un faux fournisseur qui la rend.
+      return JSON.stringify({ equivalent: false });
     default:
       return `[fake:${req.feature}:${fingerprint}]`;
   }

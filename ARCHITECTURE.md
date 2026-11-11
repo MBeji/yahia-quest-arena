@@ -150,7 +150,7 @@ The middleware injects `supabase` (authenticated client) and `userId` into conte
 ### 6a. Les cinq chemins qui NE passent pas par un server fn
 
 `src/server.ts` intercepte cinq URL **avant** le handler SSR, et aucune n'est une route
-TanStack : elles n'ont ni middleware d'auth, ni `inputValidator`, et la règle ESLint
+TanStack : elles n'ont ni middleware d'auth, ni `.validator`, et la règle ESLint
 `local/require-server-fn-auth` ne les voit pas. Chacune porte donc sa propre garde.
 
 | Chemin              | Garde                                                                                                        | Ce qu'il faut savoir                                                                           |
@@ -215,6 +215,9 @@ Run with coverage: `npm run test:coverage`
 | question_attempts                      | Append-only per-question telemetry (adaptive engine A0)                                       |
 | user_misconceptions                    | Per-(user, misconception-tag) aggregate, trigger-maintained                                   |
 | learning_pulses                        | Append-only time-on-task pulses (parent daily dashboard) — `docs/suivi-parental-quotidien.md` |
+| user_chapter_stars                     | **Grand livre des étoiles de chapitre** (insert-only) — `docs/etoiles-et-sceaux.md`           |
+| user_subject_seals                     | **Grand livre des sceaux de matière** (insert-only) — idem                                    |
+| placement_sessions                     | **Test de niveau** (é39) : dix questions, note figée ; anonyme par `token`, `user_id` NULL    |
 | themes                                 | Top-level content tracks (école-tn, culture-générale…)                                        |
 | grades                                 | Grade levels (e.g. 9th grade; incl. lycée section nodes)                                      |
 

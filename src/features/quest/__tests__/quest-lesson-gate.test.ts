@@ -21,7 +21,7 @@ vi.mock("@tanstack/react-start", () => ({
     let validatorFn: ((d: unknown) => unknown) | undefined;
     const chain = {
       middleware: () => chain,
-      inputValidator: (fn: (d: unknown) => unknown) => {
+      validator: (fn: (d: unknown) => unknown) => {
         validatorFn = fn;
         return chain;
       },
@@ -171,6 +171,24 @@ describe("gamification.quest — getChapterLesson quiz gate (étude 15, lot 1)",
     expect(res.quizExerciseId).toBe("qz");
     expect(res.quizGated).toBe(false);
     expect(res.quizPassed).toBeNull();
+  });
+
+  it("compte de test (admin) : la porte est franchie d'office, sans lire les tentatives", async () => {
+    mockChapterWorld({
+      gradeId: "g-9eme",
+      exercises: [
+        { id: "qz", mode: "quiz", display_order: 1 },
+        { id: "ex", mode: "practice", display_order: 2 },
+      ],
+    });
+    mockRpc.mockImplementation((fn: string) =>
+      fn === "is_admin" ? { data: true, error: null } : { data: null, error: null },
+    );
+
+    const res = await callGetChapterLesson();
+    expect(res.quizGated).toBe(true);
+    expect(res.quizPassed).toBe(true);
+    expect(mockFrom).not.toHaveBeenCalledWith("attempts");
   });
 
   it("reports no quiz target at all for a chapter without a quiz exercise", async () => {

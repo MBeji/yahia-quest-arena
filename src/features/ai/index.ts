@@ -44,16 +44,6 @@ export { ForgeEntry } from "./components/forge-entry";
 export { ForgePanel } from "./components/forge-panel";
 
 export {
-  callAi,
-  streamAi,
-  type AiCallOutcome,
-  type AiCallRequest,
-  type AiStreamChunk,
-} from "./ai-call.server";
-
-export { notifyBudgetAlerts } from "./ai-alerts.server";
-
-export {
   dominantModel,
   getAiAdminOverview,
   getAiConsole,
@@ -72,8 +62,6 @@ export {
   setAiModels,
   setAiPreferences,
 } from "./ai-credentials.server";
-
-export { markCredentialState } from "./ai-vault.server";
 
 export {
   AI_MODE_ERROR_PREFIX,

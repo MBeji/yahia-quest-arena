@@ -5,7 +5,7 @@
  *
  * Driven by .github/workflows/db-migrate-prod.yml (auto on merge to `main` when
  * supabase/migrations/** change, or manual dispatch). NEVER run prod migrations
- * by hand — author the migration, let the workflow apply it. See CLAUDE.md §7.
+ * by hand — author the migration, let the workflow apply it. See AGENTS.md §7.
  *
  * Needs PROD_SUPABASE_DB_URL (the prod Postgres URI — the same secret that
  * db-backup.yml uses). Modes:

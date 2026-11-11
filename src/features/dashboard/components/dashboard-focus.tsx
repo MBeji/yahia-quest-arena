@@ -34,41 +34,52 @@ export function DashboardFocus({
 }) {
   const t = useT();
 
+  // Les cinq actions qui désignent un EXERCICE se rendent toutes pareil : un lien vers la
+  // quête, un sur-titre et un titre. Elles vivaient en cascade de ternaires ; l'amendement C
+  // en ajoutant deux rangs a rendu cette cascade illisible — et une cascade illisible est
+  // exactement l'endroit où l'on se trompe de branche. La table dit la même chose, dans
+  // l'ordre de `resolveNextAction`, et le compilateur vérifie qu'aucun rang n'y manque.
+  const LIBELLES: Record<
+    Extract<NextAction, { exerciseId: string }>["kind"],
+    { overline: string; title: string }
+  > = {
+    review: { overline: t.dashboard.reviewOverline, title: t.dashboard.reviewTitle },
+    // Rang 2 (é30 amendement C, #870), DEVANT `retry` : rejouer l'exercice raté sans traiter
+    // le prérequis manquant est la définition du piétinement. Le libellé dit ce qu'on va
+    // faire, jamais ce qu'on pense de l'élève — « lacune » et les pourcentages de croyance
+    // sont réservés à la console d'admin (D-1).
+    remediate: { overline: t.dashboard.remediateOverline, title: t.dashboard.remediateTitle },
+    retry: { overline: t.duel.resume, title: t.dashboard.retryTitle },
+    // Rang 4 — la même compétence, servie sous une AUTRE forme (« répétée ET variée », R-4).
+    // Sans lui, réussir trois fois le même type d'item passe pour de la compréhension alors
+    // que c'est une forme de réponse apprise.
+    strengthen: { overline: t.dashboard.strengthenOverline, title: t.dashboard.strengthenTitle },
+    continue: { overline: t.dashboard.continueLabel, title: t.dashboard.retryTitle },
+  };
+
   // La bande focus ne DÉCIDE plus : elle rend. La priorité est tranchée en amont par
   // `resolveNextAction` (R-31), le même moteur que le « Reprendre ici » du hub matière — les
   // deux écrans ne peuvent donc plus désigner deux cibles différentes au même instant.
-  // Ici, il ne reste qu'à choisir le verbe : réviser, reprendre, continuer, découvrir.
-  const target = !nextAction
-    ? null
-    : nextAction.kind === "review"
+  const target =
+    nextAction && "exerciseId" in nextAction
       ? {
           to: "/quest/$exerciseId" as const,
           params: { exerciseId: nextAction.exerciseId },
-          overline: t.dashboard.reviewOverline,
-          title: t.dashboard.reviewTitle,
+          ...LIBELLES[nextAction.kind],
         }
-      : nextAction.kind === "retry"
+      : // Rangs 5-délégué et 6 : l'action désigne une MATIÈRE, pas un exercice.
+        // ⚠️ `nextAction` doit rester dans la condition : sans lui, une bande sans
+        // action retomberait sur « la première matière du parcours » — le CTA que
+        // rien ne justifie, et que R-31 a précisément supprimé. Un écran qui n'a
+        // rien à proposer doit le dire, pas meubler.
+        nextAction && continueSubject
         ? {
-            to: "/quest/$exerciseId" as const,
-            params: { exerciseId: nextAction.exerciseId },
-            overline: t.duel.resume,
-            title: t.dashboard.retryTitle,
+            to: "/matiere/$subjectId" as const,
+            params: { subjectId: continueSubject.id },
+            overline: t.dashboard.continueLabel,
+            title: continueSubject.name_fr,
           }
-        : nextAction.kind === "continue"
-          ? {
-              to: "/quest/$exerciseId" as const,
-              params: { exerciseId: nextAction.exerciseId },
-              overline: t.dashboard.continueLabel,
-              title: t.dashboard.retryTitle,
-            }
-          : continueSubject
-            ? {
-                to: "/matiere/$subjectId" as const,
-                params: { subjectId: continueSubject.id },
-                overline: t.dashboard.continueLabel,
-                title: continueSubject.name_fr,
-              }
-            : null;
+        : null;
 
   return (
     <div className="mt-6 space-y-4">

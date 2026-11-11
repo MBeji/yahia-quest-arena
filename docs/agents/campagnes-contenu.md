@@ -10,12 +10,37 @@
 > une leçon de process, pas du contenu : elle vaut quel que soit le dépôt où tourne la session.
 > Les règles d'écriture, elles, vivent avec les skills, au privé.
 
-## Le corpus source est hors dépôt
+## Le corpus source est à la source — plus sur un poste
 
-Les manuels et documents CNP vivent dans le dossier **wrapper** `YahiaAcademy/` (hors git, non
-versionné). Une campagne tourne donc **sur ce poste**, pas dans un runner CI : la session doit
-être lancée localement avec l'accès au corpus (`--add-dir`). Une session headless sans
-abonnement échoue (« Not logged in »), et une clé API n'est pas une alternative acceptée ici.
+> ⚠️ **Depuis le 2026-11-03, la source des sessions est le dossier Google Drive du projet**, plus le
+> site du CNP : depuis une session cloud, `content:manuel:fetch` échoue (`curl 35 : Connection reset
+by peer`, mesuré ce jour-là) et la commande le dit. Les PDF se lisent par le connecteur Google
+> Drive, **couche texte d'abord, vision en dernier** ; la procédure complète vit au dépôt privé
+> (skill `content-ingest`, § « Source et lecture »). Ce qui suit reste vrai pour un poste local.
+
+Les manuels sont **publics chez le CNP** (`CNP_MANUEL_BASE_URL`, `src/shared/content/manuel-cnp.ts`)
+et ne se copient nulle part : licence (`LICENSE-CONTENT.md`) et doctrine « en lien plutôt qu'en
+copie ». Une session — cloud ou locale — les télécharge **par code** dans un dossier jetable, puis
+rend les pages en images et les lit en vision (étude cloud-first, lot 3) :
+
+```bash
+npm run content:manuel:fetch -- 102905 --render --pages 18-24   # → ~/.cache/yqa-manuels/102905P00.pdf + PNG
+```
+
+L'URL se dérive du code, jamais saisie ; rien n'entre dans git — le cache est privé à
+l'utilisateur, jamais le répertoire temporaire partagé, et un fichier existant n'est pas écrasé.
+Le transfert est fait par `curl`, qui suit le proxy de la session nativement. En session cloud,
+l'environnement doit autoriser `www.cnp.com.tn` (lot 0 de l'étude) — sinon la commande le **dit** :
+« refusé par la politique réseau de l'environnement », pas « le CNP est tombé ». Le CNP sert son
+certificat **sans l'intermédiaire** qui l'a signé : le hook de session ajoute cet intermédiaire
+(`scripts/cloud/ca-chain/`) au magasin de curl, sans quoi c'est `curl 60 : unable to get local
+issuer certificate` — que la commande nomme aussi. Pour les scripts
+qui passent par le `fetch` de Node (`content:manuel:check`), le hook de session exporte
+`NODE_USE_ENV_PROXY=1`, sans quoi Node ignore le proxy de la plateforme et échoue sur tout hôte.
+Le wrapper `YahiaAcademy/` du poste n'est plus une condition ; ce qui n'est pas au
+CNP (documents du ministère, notes, captures) vit sur Google Drive et se lit par le connecteur.
+Une session headless sans abonnement échoue toujours (« Not logged in »), et une clé API n'est
+pas une alternative acceptée ici.
 
 ## Budget de session
 
@@ -34,6 +59,108 @@ images (`render.sh`, ~150 dpi) puis lecture vision. La couche texte, quand elle 
 fiable pour la prose et **trompeuse pour les mathématiques** (formules aplaties) — re-vérifier
 toute formule à l'image.
 
+### Quatre régimes, et un seul se mesure avant de s'engager
+
+Mesuré le **2026-09-19** sur les 24 guides du primaire + maths 1ʳᵉ sec, en une commande :
+
+```bash
+pdfinfo "$f" | awk '/^Pages:/{print $2}'      # p
+pdftotext "$f" - | wc -c                      # c   →   c/p = caractères par page
+```
+
+| c/p                               | Régime                             | Ce que ça coûte                                                                                                                                                                                                                |
+| --------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **< 20**                          | **scan pur** — aucune couche texte | vision page par page, sans exception                                                                                                                                                                                           |
+| **200–2300, latin**               | **couche texte propre**            | extraction + comparaison automatiques ; c'est le régime confortable                                                                                                                                                            |
+| **200–2300, arabe**               | **couche texte en POLICE PRIVÉE**  | ⚠️ **le piège** : `pdftotext` rend beaucoup de caractères, donc le chiffre dit « texte », mais ce sont des glyphes latins mappés sur des octets arabes — **indécodables sans le `ToUnicode` de la police**. Vision quand même. |
+| CID `Identity-H` sans `ToUnicode` | **échec bruyant**                  | `pdftotext` refuse et le dit (« Unknown character collection ») — c'est le bon cas : il ne fabrique pas de faux texte.                                                                                                         |
+
+**Le résultat de la mesure, pour ne pas la refaire** : sur les 24 guides, **4 seulement** sont
+exploitables par extraction — les trois guides de **français** (`521326` 3ᵉ, `521415` 4ᵉ,
+`521513` 5ᵉ) **et le manuel de maths de 1ʳᵉ secondaire `222104`**. ⚠️ **Ce dernier est le piège
+dans le piège** : son code est arabe comme les autres, il a d'abord été rangé avec eux, et il est
+en réalité **écrit en français**. Le code CNP ne dit pas la langue du livre — seul le texte
+extrait la dit. Les **19 autres** sont en police privée (au moins trois familles de mojibake distinctes :
+`ŗƒŕ°Ŷƃ¦…`, `qHDÒ∞«…`, `á«LƒZGó«Ñd…`) et **2 sont des scans purs** (`503104` éveil 1ʳᵉ,
+`503204` éveil 2ᵉ). Tester le décodage est inutile : cp1256, mac_arabic, iso8859_6 et
+mac_farsi ont tous été essayés sur les trois familles, aucun ne rend de l'arabe.
+
+**Conséquence de planification** : une fiche francophone se reprend en une passe ; une fiche
+arabophone de 200 pages se reprend en vision, et c'est un ordre de grandeur de plus. Ne pas
+promettre les deux au même rythme.
+
+### Le mojibake arabe est DÉCODABLE — constaté et prototypé le 2026-09-19
+
+Le tableau ci-dessus dit que les guides arabes sont en police privée et donc « vision quand même ».
+C'est vrai pour **transcrire**. Ça ne l'est pas pour **chercher, compter et naviguer** — et la
+différence vaut des milliers de pages.
+
+**Ce qui a été constaté.** La substitution n'est pas du bruit : c'est une **table déterministe**,
+glyphe → lettre arabe, en **ordre visuel inversé**. Elle se dérive en alignant un texte dont on
+connaît la vérité (lu à l'image) avec le mojibake de la même page. Exemple, sur `503504` p.36 :
+
+| mojibake (inversé) | lettres      | mot     |
+| ------------------ | ------------ | ------- |
+| `G d û° ª ù¢`      | ا ل ش م س    | الشمس   |
+| `G Ÿ ü° É O Q`     | ا لم ص ا د ر | المصادر |
+| `G Ÿ †° « Ä á`     | ا لم ض ي ئ ة | المضيئة |
+
+Trois règles suffisent à lire la table : **un `°` ou un `¢` qui suit un glyphe forme avec lui une
+seule lettre pointée** (`û°`=ش, `ü°`=ص, `†°`=ض, `ù¢`=س) ; **certains glyphes sont des ligatures**
+(`Ÿ`=لم, `’`=لا/لأ) ; et **le `q` est la shadda**, placée AVANT sa lettre côté mojibake.
+
+**Ce qui rend la trouvaille utile : la table est PARTAGÉE entre guides.** Dérivée d'une seule page
+du guide d'éveil de 5ᵉ (`503504`), une table de 38 glyphes décode déjà lisiblement le guide
+d'éducation islamique de 5ᵉ (`511505`), un autre volume, une autre matière :
+
+> `تنطل·ا···اتيجّيةالّت·اعلالأجتماعي·ن·موعة·نالأأ·دافالوجدانّيةالّتيتقودا···ل··نا`
+
+à comparer avec ce que la page imprime vraiment, lu à l'image :
+
+> « تنطلق استراتيجيّة التّفاعل الاجتماعي من مجموعة من الأهداف الوجدانيّة الّتي تقود إلى خلق مناخ… »
+
+Les `·` sont les glyphes que la table de 38 entrées ne connaît pas encore. **Il y a au moins deux
+familles de police** dans le corpus : celle-ci (`á q d G` — éveil, islamique, arabe 5ᵉ, arabe 6ᵉ) et
+une autre (`W± b Ò I ‡ L ∞ «` — éveil 4ᵉ, islamique 4ᵉ, maths 3ᵉ), qui demandera sa propre table.
+
+**Le contrat, et il n'est pas négociable.** Un décodeur à 90 % produit de l'arabe **plausible et
+faux** — c'est exactement le mode de défaillance que les audits du 2026-09-19 ont passé la journée à
+corriger. Donc :
+
+- le décodage sert à **chercher, compter, localiser une section, mesurer une couverture** ;
+- **aucune citation verbatim ne sort d'un décodage** : elle se lit à l'image, comme aujourd'hui ;
+- un décodeur qui rend `·` sur les glyphes inconnus est **sûr par construction** — il montre ses
+  trous au lieu de les combler.
+
+**Reste à faire** pour en tirer un outil : compléter la table (les 28 lettres × leurs formes +
+ligatures, ~150 entrées par famille), la dériver d'un corpus aligné plus large, et l'emballer dans
+un script testé de `scripts/content/`. Le prototype et la méthode d'alignement sont décrits
+ci-dessus ; c'est reproductible en une session.
+
+**Pourquoi ça compte** : les 17 fiches arabophones du registre représentent ~3 400 pages qu'on ne
+sait lire qu'à l'image. Rendre leur texte cherchable ne remplace pas la lecture, mais il dit **où**
+lire — et c'est la différence entre auditer une fiche en une passe et la relire page à page.
+
+### Télécharger un guide du CNP en session cloud
+
+`npm run content:manuel:fetch -- <code>` dérive l'URL du code et écrit dans `~/.cache/yqa-manuels`.
+⚠️ **L'état d'un shell ne survit pas d'un appel d'outil au suivant** : le hook de session pose
+`CURL_CA_BUNDLE` une fois, mais un shell ouvert plus tard ne le voit pas, et le fetch échoue alors
+en « certificat du serveur non vérifiable » — c'est-à-dire **en accusant le CNP**. Le réflexe, dans
+la commande elle-même :
+
+```bash
+export CURL_CA_BUNDLE=~/.cache/yqa-ca/ca-bundle.pem \
+       SSL_CERT_FILE=~/.cache/yqa-ca/ca-bundle.pem \
+       NODE_EXTRA_CA_CERTS=~/.cache/yqa-ca/ca-bundle.pem
+npm run content:manuel:fetch -- <code>
+```
+
+Si le bundle n'existe pas : `node scripts/cloud/ca-bundle.mjs`. Détail dans
+[`scripts/cloud/ca-chain/README.md`](../../scripts/cloud/ca-chain/README.md).
+Un code peut n'exister qu'en tomes (`222104` est servi en `P01`/`P02`, pas en `P00`) :
+`suivi/corpus-cnp.json` dit lesquels.
+
 ## Vérifier l'existant AVANT de générer
 
 Le registre `programmes-officiels/suivi/` dit ce qui est **déjà transcrit** (plages de pages,
@@ -50,6 +177,39 @@ question) et de l'audit humain. Ne jamais conclure « le contenu est bon » sur 
 
 Corollaire observé : les erreurs se logent plus souvent dans les **exemples du cours** que dans
 les clés de réponse — l'audit doit lire `cours.md`, pas seulement les quiz.
+
+### Une forme morphologique fausse passe les sept étages — mesuré le 2026-09-20
+
+Les trois chapitres de صرف d'arabe 9ᵉ (المقصور/المنقوص/الممدود, التّصغير, النّسبة — 105 questions)
+ont été écrits, vérifiés par leur auteur, passés aux **sept** gates, mergés et **publiés en
+production**. Un audit en contexte neuf, lancé après coup, y a trouvé :
+
+- **une règle fausse** : « la همزة منقلبة d'un ممدود peut revenir à son origine », d'où
+  `بِناءان أو بِنايان`. Les deux seules faces sont la **همزة ou la واو** — jamais la ياء. La
+  formulation du manuel (« يجوز إرجاعها إلى أصلها ») avait été prise au pied de la lettre sans
+  contrôler sa **réalisation** ;
+- **deux dérivations justes par un chemin faux** : `حَمْراء` comptée quinquilitère et `ساعة`
+  quadrilitère, alors que les **deux marques de féminin — la تاء مربوطة et l'ألف ممدودة — ne se
+  comptent pas** (on réduit à `حَمْر` et `ساع`, trinômes). Bonnes réponses, méthode fausse : elle
+  casse dès le mot suivant ;
+- **un item à deux réponses défendables** (`سَمائيّ` donné comme distracteur alors qu'il est admis) ;
+- **une notion testée et jamais enseignée** — le cours de التّصغير a dû gagner 62 lignes.
+
+Trois choses à en retenir, et aucune n'est propre à l'arabe :
+
+1. **Le gate ne juge que ce qu'il sait compter.** `content:qa:strict` voit une clé absente, une
+   option dupliquée, un `difficulty` hors bornes. Il ne sait pas qu'un mot est mal dérivé, qu'une
+   date est fausse, qu'une formule est inversée. Un gate vert n'a jamais rien dit du fond.
+2. **Se relire soi-même dans la même session ne remplace pas un contexte neuf.** L'auteur relit
+   ses raisons, pas son résultat : les quatre défauts ci-dessus ont survécu à une re-résolution
+   faite par celui qui venait d'écrire. C'est un argument de méthode, pas de diligence.
+3. **Une transcription fidèle n'est pas une règle vérifiée.** Recopier correctement ce que dit le
+   manuel et en déduire la forme correcte sont deux opérations distinctes ; la première ne garantit
+   pas la seconde. Sur une matière à formes (صرف, conjugaison, calcul littéral), dériver soi-même
+   avant d'écrire, et faire dériver par un tiers avant de publier.
+
+**Conséquence opératoire** : sur une année de concours, le lot d'écriture n'est pas terminé au
+merge — il l'est à l'audit en contexte neuf. Le prévoir dans le plan, pas après coup.
 
 ## Merger ne publie pas — et un run vert ne prouve pas la publication
 

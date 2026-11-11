@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { Suspense, lazy, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -33,11 +33,20 @@ import {
   buildLyceeYears,
 } from "@/features/dashboard";
 import type { LyceeYearGroup, ParcoursInterestState } from "@/features/dashboard";
-import { setCurrentParcours } from "@/features/auth";
+import { claimWelcomePack, setCurrentParcours, type WelcomePack } from "@/features/auth";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 import { useEntrance } from "@/shared/lib/motion";
 import { parcoursName } from "@/shared/lib/parcours-locale";
 import { useI18n, useT } from "@/lib/i18n";
+import { usePlacementT } from "@/lib/i18n/placement";
+import { trackProductEvent } from "@/shared/lib/product-events";
+
+// La règle d'or du guide intégré, chargée à la demande : importée en statique,
+// ce fichier de route tirait le catalogue `i18n-guide` (25 KB) dans le chunk
+// index — téléchargé par chaque visiteur, inscrit ou non.
+const GuideRule = lazy(() =>
+  import("@/components/guide/guide-rule").then((m) => ({ default: m.GuideRule })),
+);
 
 /**
  * Slide-in/out of a wizard step (AnimatePresence needs an `exit`, which the
@@ -463,12 +472,19 @@ export function CelebrationStep({
   parcours,
   landing,
   onGo,
+  welcome,
+  onFirstQuest,
 }: {
   parcours: Parcours | null;
   landing: string;
   onGo: (to: string) => void;
+  /** é31 lot 6 — la récompense de bienvenue, si elle vient d'être versée (R-19). */
+  welcome?: { coins: number; firstExerciseId: string | null } | null;
+  onFirstQuest?: (exerciseId: string) => void;
 }) {
   const t = useT();
+  // é39 : le libellé de l'invitation au test vit dans son propre catalogue (budget `i18n-`).
+  const tp = usePlacementT();
   const { locale } = useI18n();
   const stepSlide = useStepSlide();
   const isComingSoon = parcours?.status === "coming_soon";
@@ -498,7 +514,22 @@ export function CelebrationStep({
             label,
           )}
         </p>
+        {welcome && welcome.coins > 0 && (
+          <p
+            data-testid="onboarding-welcome-coins"
+            className="mt-3 inline-block rounded-full bg-[color:var(--gold)]/15 px-4 py-1.5 font-display font-bold text-[color:var(--gold)]"
+          >
+            {t.onboarding.welcomeCoins.replace("{coins}", String(welcome.coins))}
+          </p>
+        )}
       </div>
+      {/* Guide intégré : avant la première quête, la règle d'or en trois étapes —
+          sans elle, le premier cadenas croisé ressemble à une panne. */}
+      {!isComingSoon && (
+        <Suspense fallback={null}>
+          <GuideRule className="text-start" />
+        </Suspense>
+      )}
       <div className="flex flex-col gap-3">
         {isComingSoon ? (
           <>
@@ -509,10 +540,39 @@ export function CelebrationStep({
               {t.onboarding.celebrateDashboardCta}
             </Button>
           </>
+        ) : welcome?.firstExerciseId && onFirstQuest ? (
+          /* é31 lot 6 (US-9, R-19) — UNE action, pas un menu : la première quête
+             du parcours choisi est à un tap. Le tableau de bord reste
+             atteignable, en second. */
+          <>
+            <Button
+              onClick={() => onFirstQuest(welcome.firstExerciseId as string)}
+              data-testid="onboarding-first-quest"
+              className="min-h-12 gap-2 text-base"
+            >
+              {t.onboarding.welcomeFirstQuestCta}{" "}
+              <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
+            </Button>
+            <Button onClick={() => onGo(landing)} variant="outline" className="min-h-11">
+              {t.onboarding.celebrateDashboardCta}
+            </Button>
+          </>
         ) : (
           <Button onClick={() => onGo(landing)} className="min-h-12 gap-2 text-base">
             {t.onboarding.celebrateDashboardCta} <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
           </Button>
+        )}
+        {/* é39 US-6 — l'étape d'initiation : le test de niveau, proposé en second, jamais imposé
+            (é30 R-11 : facultatif). Le compte naît avec un bilan plutôt qu'à zéro. */}
+        {!isComingSoon && (
+          <button
+            type="button"
+            onClick={() => onGo("/test-de-niveau")}
+            data-testid="onboarding-placement"
+            className="min-h-11 text-sm font-semibold text-[color:var(--gold)] underline-offset-2 hover:underline"
+          >
+            {tp.placement.hall.onboardingCta}
+          </button>
         )}
       </div>
     </motion.div>
@@ -539,9 +599,11 @@ function OnboardingComponent() {
   const [step, setStep] = useState<0 | 1 | 2>(0);
   const [intent, setIntent] = useState<Intent | null>(null);
   const [selected, setSelected] = useState<Parcours | null>(null);
+  const [welcome, setWelcome] = useState<WelcomePack | null>(null);
 
   const fetchParcours = useServerFn(getParcours);
   const saveParcours = useServerFn(setCurrentParcours);
+  const claimWelcome = useServerFn(claimWelcomePack);
 
   const {
     data: parcoursData,
@@ -565,6 +627,18 @@ function OnboardingComponent() {
         queryClient.invalidateQueries({ queryKey: ["me-role"] }),
         queryClient.invalidateQueries({ queryKey: ["me-parcours"] }),
       ]);
+      // é31 lot 1 — deuxième fait du funnel : le parcours choisi, donc le compte
+      // réellement utilisable. L'écart signup → onboarding_completed est la
+      // première fuite mesurable du produit.
+      trackProductEvent("onboarding_completed", { intent: intent ?? "unknown", source: "wizard" });
+      // é31 lot 6 (R-19) — la récompense de bienvenue est versée ICI, à la fin de
+      // l'accueil : idempotente côté SQL, donc un rejeu ne double rien. Un échec
+      // ne bloque pas l'écran — l'élève est arrivé, c'est ce qui compte.
+      try {
+        setWelcome(await claimWelcome());
+      } catch {
+        setWelcome(null);
+      }
       setStep(2);
     },
     onError: () => {
@@ -627,6 +701,10 @@ function OnboardingComponent() {
               parcours={selected}
               landing={landing}
               onGo={(to) => navigate({ to })}
+              welcome={welcome}
+              onFirstQuest={(exerciseId) =>
+                navigate({ to: "/quest/$exerciseId", params: { exerciseId } })
+              }
             />
           )}
         </AnimatePresence>

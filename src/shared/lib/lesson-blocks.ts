@@ -14,7 +14,7 @@
  *    pas encore.
  */
 
-/** Types authorables via `::: <type>`. Liste CLOSE (étude 18, R-6). */
+/** Types authorables via `::: <type>`. Liste CLOSE (étude 18 R-6, étendue par é35 R-16). */
 export const DIRECTIVE_TYPES = [
   "definition",
   "propriete",
@@ -24,6 +24,10 @@ export const DIRECTIVE_TYPES = [
   "piege",
   "astuce",
   "retenir",
+  // étude 35 — le contrôle sur place : un exemple à compléter ou un problème jumeau, dont la
+  // réponse est REPLIÉE. C'est le seul type dont le corps a deux côtés (question / réponse,
+  // séparés par un `---` seul sur sa ligne) et le seul qui rende un élément dépliable.
+  "verifie",
 ] as const;
 
 export type DirectiveType = (typeof DIRECTIVE_TYPES)[number];
@@ -63,7 +67,22 @@ export const BLOCK_LABELS: Record<LessonBlockType, Record<ContentLang, string>> 
   piege: { fr: "Piège", en: "Pitfall", ar: "تحذير" },
   astuce: { fr: "Astuce", en: "Tip", ar: "حيلة" },
   retenir: { fr: "À retenir", en: "Remember", ar: "للحفظ" },
+  verifie: { fr: "À toi", en: "Your turn", ar: "جرّب بنفسك" },
   insight: { fr: "Éclairage", en: "Insight", ar: "إضاءة" },
+};
+
+/**
+ * Libellé du bouton qui déplie la réponse d'un `::: verifie` (étude 35 R-18).
+ *
+ * Il suit la langue du CONTENU comme les libellés de blocs (R-8) et NON la locale de
+ * l'interface : il est posé à l'intérieur de la leçon, entre deux phrases de sa prose.
+ * Table séparée de `BLOCK_LABELS` parce que ce n'est pas un chip de bloc mais l'étiquette
+ * d'une action — et qu'elle doit rester une phrase, pas une capitale espacée.
+ */
+export const REVEAL_LABELS: Record<ContentLang, string> = {
+  fr: "Voir la réponse",
+  en: "Show the answer",
+  ar: "أظهر الإجابة",
 };
 
 /**

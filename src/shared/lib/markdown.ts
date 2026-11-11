@@ -5,6 +5,7 @@ import {
   BLOCK_LABELS,
   isDirectiveType,
   markerBlockType,
+  REVEAL_LABELS,
   type ContentLang,
   type LessonBlockType,
 } from "@/shared/lib/lesson-blocks";
@@ -19,6 +20,12 @@ const DIRECTIVE_OPEN = /^:::[ \t]+([a-z]+)(?:[ \t]+(.*))?$/;
 const DIRECTIVE_CLOSE = /^:::[ \t]*$/;
 /** Une ligne de citation, `> ` retiré. */
 const QUOTE_LINE = /^>[ \t]?(.*)$/;
+/**
+ * Le séparateur question / réponse d'un `::: verifie` (étude 35, R-16). Le PREMIER de ces
+ * traits scinde le bloc ; les suivants restent du markdown ordinaire (un `<hr>` dans la
+ * réponse). Il est consommé par la pré-passe, donc la passe `---` → `<hr>` ne le voit jamais.
+ */
+const CHECK_SPLIT = /^---[ \t]*$/;
 /** Une section `##`+ a commencé : au-delà, un `> 💡` n'est plus l'épigraphe. */
 const SECTION_HEADING = /^#{2,}[ \t]/;
 
@@ -49,6 +56,12 @@ type Segment =
       title: string | null;
       lines: string[];
       epigraph: boolean;
+      /**
+       * `::: verifie` seulement : les lignes d'APRÈS le premier `---`, celles que le lecteur
+       * déplie. `null` quand le bloc n'a pas de séparateur — il dégrade alors en bloc neutre,
+       * tout visible (R-17), et `content:qa` le remonte.
+       */
+      answer?: string[] | null;
     };
 
 type Ctx = { lang: ContentLang; sections: LessonSection[]; h2: number };
@@ -87,14 +100,31 @@ function figureMarkup(token: string, index: number, caption: string | null, lang
 
 /** Inverse exact de `escapeHtml` (on n'échappe que ces trois entités) + emphase markdown
  *  retirée : le sommaire est du TEXTE rendu par React, pas du HTML. */
+/**
+ * Prettier, qui formate tout le corpus, réécrit l'italique `*mot*` en `_mot_` et protège
+ * un astérisque littéral en `\*`. Le rendu ne connaissait que `*…*` : 700+ leçons
+ * affichaient leurs `_…_` et leurs `\` tels quels. L'italique souligné n'ouvre qu'après un
+ * blanc ou une ponctuation ouvrante et ne ferme qu'avant un blanc ou une ponctuation : les
+ * indices de formule (`S_D`, `t_u⃗`, `∫_{1/2}`) ne sont jamais pris pour de l'italique.
+ */
+const UNDERSCORE_ITALIC =
+  /(^|[\s([«"'“‘’—–-])_(?=[\p{L}\p{N}])([^_\n]*?[^\s_])_(?=$|[\s.,;:!?)\]»"'”’…—–-])/gmu;
+/** Un `\*` ou `\_` d'auteur (échappement Markdown) : mis à l'abri du formatage, rendu nu. */
+const ESCAPED_MARK = /\\([*_])/g;
+const SHELTER: Record<string, string> = { "*": "\uE000", _: "\uE001" };
+const unshelter = (s: string) => s.replace(/\uE000/g, "*").replace(/\uE001/g, "_");
+
 const toPlainText = (s: string) =>
-  s
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&amp;/g, "&")
-    .replace(/\*\*/g, "")
-    .replace(/\*/g, "")
-    .trim();
+  unshelter(
+    s
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&amp;/g, "&")
+      .replace(ESCAPED_MARK, (_m, c: string) => SHELTER[c])
+      .replace(/\*\*/g, "")
+      .replace(/\*/g, "")
+      .replace(UNDERSCORE_ITALIC, "$1$2"),
+  ).trim();
 
 /**
  * Découpe la leçon en segments AVANT tout échappement : blocs `:::`, callouts promus, et
@@ -130,12 +160,23 @@ function segment(src: string): Segment[] {
       }
       const closed = j < lines.length && DIRECTIVE_CLOSE.test(lines[j]);
       const declared = open[1];
+      const type = isDirectiveType(declared) ? declared : null;
+      // Un `::: verifie` a DEUX côtés : la question, puis la réponse, séparés par le premier
+      // `---` seul sur sa ligne (R-16). Sans séparateur — ou avec un côté vide — le bloc
+      // dégrade en bloc neutre tout visible (R-17) : mieux vaut une réponse montrée qu'une
+      // page cassée, et `content:qa` fait rougir l'auteur (C-4).
+      const split = type === "verifie" ? body.findIndex((l) => CHECK_SPLIT.test(l)) : -1;
+      const hasSides =
+        split > -1 &&
+        body.slice(0, split).some((l) => l.trim()) &&
+        body.slice(split + 1).some((l) => l.trim());
       out.push({
         kind: "block",
-        type: isDirectiveType(declared) ? declared : null,
+        type,
         title: open[2]?.trim() || null,
-        lines: body,
+        lines: hasSides ? body.slice(0, split) : body,
         epigraph: false,
+        answer: hasSides ? body.slice(split + 1) : null,
       });
       // Une directive non fermée est implicitement close en fin de document (ou devant la
       // directive suivante) : une faute d'auteur dégrade le style, jamais la lecture (R-7).
@@ -160,7 +201,13 @@ function segment(src: string): Segment[] {
       // (style-guide.md § squelette cours.md, ligne 21) ; les suivants sont des éclairages.
       const epigraph = promoted.type === "insight" && !sectionStarted && !epigraphTaken;
       if (epigraph) epigraphTaken = true;
-      out.push({ kind: "block", type: promoted.type, title: null, lines: body, epigraph });
+      out.push({
+        kind: "block",
+        type: promoted.type,
+        title: null,
+        lines: joinQuoteParagraphs(body),
+        epigraph,
+      });
       i = j - 1;
       continue;
     }
@@ -174,6 +221,41 @@ function segment(src: string): Segment[] {
 }
 
 /**
+ * Une ligne qui ouvre une construction de bloc — puce, liste numérotée, ligne de tableau, titre,
+ * formule `$$`, trait, directive, jeton de figure : elle ne se recolle jamais à la précédente.
+ */
+const BLOCK_START =
+  /^\s*(?:[-*+][ \t]|\d+\.[ \t]|\||#{1,6}[ \t]|\$\$|---\s*$|:::|svgfigureplaceholder)/;
+/** Un saut de ligne FORCÉ (`\` ou deux espaces en fin de ligne) : la ligne suivante reste à part. */
+const HARD_BREAK = /(?:\\| {2,})$/;
+
+/**
+ * Recolle les lignes d'un même paragraphe de citation, comme Markdown standard.
+ *
+ * Un callout `> ⚠️ …` s'écrit sur plusieurs lignes `> …` (le texte est renvoyé à la ligne vers
+ * 100 signes dans le corpus : 973 lignes de continuation dans les callouts des cours). Rendue
+ * ligne à ligne, la citation devenait un fragment nu suivi d'un `<p>` par ligne : la phrase coupée
+ * au milieu, en deux blocs. Une ligne de prose qui suit une ligne de prose la CONTINUE ; une ligne
+ * `>` vide sépare deux paragraphes, et une construction de bloc ({@link BLOCK_START}) ou un saut
+ * forcé ({@link HARD_BREAK}) garde sa ligne.
+ */
+function joinQuoteParagraphs(lines: string[]): string[] {
+  const out: string[] = [];
+  let previous: string | null = null;
+  for (const line of lines) {
+    const prose = line.trim() !== "" && !BLOCK_START.test(line);
+    if (prose && previous !== null && !HARD_BREAK.test(previous)) {
+      previous = `${previous.trimEnd()} ${line.trimStart()}`;
+      out[out.length - 1] = previous;
+      continue;
+    }
+    out.push(line);
+    previous = prose ? line : null;
+  }
+  return out;
+}
+
+/**
  * Le pipeline historique, appliqué à un segment. Inchangé dans son comportement : c'est ce
  * qui garantit qu'aucune assertion des tests existants (échappement, listes, tableaux,
  * figures, RTL) ne bouge. Seul le compteur de `##` devient partagé, pour que les ancres
@@ -181,6 +263,7 @@ function segment(src: string): Segment[] {
  */
 function renderChunk(lines: string[], ctx: Ctx): string {
   let html = escapeHtml(lines.join("\n"))
+    .replace(ESCAPED_MARK, (_m, c: string) => SHELTER[c])
     // Headings
     .replace(/^### (.+)$/gm, '<h3 class="lesson-h3">$1</h3>')
     .replace(/^## (.+)$/gm, (_match, title: string) => {
@@ -193,6 +276,7 @@ function renderChunk(lines: string[], ctx: Ctx): string {
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     // Italic
     .replace(/\*(.+?)\*/g, "<em>$1</em>")
+    .replace(UNDERSCORE_ITALIC, "$1<em>$2</em>")
     // Blockquotes — celles qui n'ont pas été promues en bloc typé
     .replace(/^&gt; (.+)$/gm, '<blockquote class="lesson-quote">$1</blockquote>')
     // Inline code / math $$
@@ -244,7 +328,7 @@ function renderChunk(lines: string[], ctx: Ctx): string {
   html = html.replace(/((?:<li class="lesson-li">.*<\/li>\n?)+)/g, '<ul class="lesson-ul">$1</ul>');
 
   // Paragraphs: lines not starting with HTML tags
-  return html
+  return unshelter(html)
     .split("\n")
     .map((line) => {
       if (!line.trim()) return "";
@@ -274,6 +358,22 @@ function renderBlock(seg: Extract<Segment, { kind: "block" }>, ctx: Ctx): string
     (label ? `<span class="lesson-blk__label">${escapeHtml(label)}</span>` : "") +
     // Le titre est du texte d'auteur : échappé, jamais interprété (R-1).
     (seg.title ? `<p class="lesson-blk__title">${escapeHtml(seg.title)}</p>` : "");
+
+  // Le contrôle sur place : la réponse est REPLIÉE dans un `<details>` natif (étude 35 D-2).
+  // Pas une ligne de script, pas un état React, pas un attribut de plus dans l'allowlist :
+  // le navigateur sait déplier, il le fait au clavier, et il l'imprime si on le lui demande.
+  if (seg.type === "verifie" && seg.answer) {
+    const answer = renderChunk(seg.answer, ctx);
+    return (
+      `<section class="${className}">${head}` +
+      `<div class="lesson-check__question">${inner}</div>` +
+      `<details class="lesson-check">` +
+      `<summary class="lesson-check__toggle">${escapeHtml(REVEAL_LABELS[ctx.lang])}</summary>` +
+      `<div class="lesson-check__answer">${answer}</div>` +
+      `</details>` +
+      `</section>`
+    );
+  }
 
   return `<section class="${className}">${head}${inner}</section>`;
 }
@@ -331,6 +431,11 @@ function finalize(body: string, figures: string[], lang: ContentLang): string {
           "span",
           "figure",
           "figcaption",
+          // étude 35 — le contrôle sur place. Deux balises natives, INERTES et sans attribut
+          // nouveau : `ALLOWED_ATTR` ne bouge pas (R-20), et `open` n'y est PAS — l'état
+          // « déplié » ne peut donc pas venir du contenu.
+          "details",
+          "summary",
         ],
         // `role`/`tabindex`/`aria-label` rendent la figure agrandissable au clavier.
         // Trois attributs INERTES : ils ne peuvent porter aucun script. `scope` rejoint la

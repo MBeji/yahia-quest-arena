@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import type {
   ExercisePlayerStrategy,
+  PlayerAnswer,
   StartOutcome,
 } from "@/features/quest/components/exercise-player";
 
@@ -25,9 +26,17 @@ type ExerciseForSession = {
   quizGated?: boolean;
 } | null;
 
+/** Une partie neuve : rien de figé. Constante, pour une identité stable. */
+const NO_REVEALS: readonly PlayerAnswer[] = [];
+
 export type ExerciseSession = {
   /** La session en cours — `null` tant qu'elle n'est pas ouverte. */
   sessionId: string | null;
+  /**
+   * Les réponses déjà corrigées de cette partie, définitives : non vide quand le
+   * serveur REPREND une partie après un rechargement (migration 20260929120000).
+   */
+  revealed: readonly PlayerAnswer[];
   /** Le gate qui a refusé le démarrage (premium, quiz, rappel), s'il y en a un. */
   startGate: Exclude<StartOutcome, { ok: true }> | null;
   isPending: boolean;
@@ -55,6 +64,7 @@ export function useExerciseSession({
   onStarted: () => void;
 }): ExerciseSession {
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [revealed, setRevealed] = useState<readonly PlayerAnswer[]>(NO_REVEALS);
   const [startGate, setStartGate] = useState<Exclude<StartOutcome, { ok: true }> | null>(null);
   // Compteur de relance : les dépendances de l'effet ne bougent pas après un
   // échec, donc c'est lui qui le fait repartir. Aucune autre sémantique.
@@ -75,6 +85,7 @@ export function useExerciseSession({
     }) => startSession(payload),
     onSuccess: (outcome) => {
       if (outcome.ok) {
+        setRevealed(outcome.revealed ?? NO_REVEALS);
         setSessionId(outcome.sessionId);
         onStartedRef.current();
       } else {
@@ -109,11 +120,13 @@ export function useExerciseSession({
     startedForRef.current = null;
     resetMutation();
     setSessionId(null);
+    setRevealed(NO_REVEALS);
     setStartGate(null);
   }, [resetMutation]);
 
   return {
     sessionId,
+    revealed,
     startGate,
     isPending: mutation.isPending,
     isError: mutation.isError,

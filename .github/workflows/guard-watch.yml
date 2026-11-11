@@ -31,6 +31,13 @@ name: Garde des gardes (un rouge programmé se voit)
 #
 # Éprouvée d'abord dans le dépôt de corpus (privé #226) : à son premier vrai
 # passage elle a relevé deux échecs et ouvert son issue avec le bon tableau.
+#
+# OÙ VIT LA DÉCISION — depuis l'étude 32 (L3b), dans `scripts/ci/guard-watch.mjs`,
+# le MÊME fichier que celui qu'appelle le dépôt de corpus. Ce workflow ne garde
+# que ce qui a besoin d'un jeton : lister les runs, sonder les jobs, ouvrir ou
+# refermer l'issue. Les deux fichiers ne partageaient auparavant AUCUNE ligne pour
+# deux différences de fond seulement — et deux copies d'une même règle divergent,
+# ce que ce projet a payé trois fois sur le seul test « zéro job ».
 
 on:
   schedule:
@@ -64,81 +71,51 @@ jobs:
       # ne produit pas de doublon — une seule issue est réutilisée.
       WINDOW_HOURS: "8"
     steps:
+      - name: Checkout (la décision vit dans `scripts/ci/guard-watch.mjs`)
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version-file: .nvmrc
+
       - name: Relever les runs rouges de la fenêtre
         id: scan
         run: |
           set -euo pipefail
 
+          # Borne basse calculée par `date` : pas d'arithmétique de dates en shell.
           since="$(date -u -d "-${WINDOW_HOURS} hours" +%Y-%m-%dT%H:%M:%SZ)"
           echo "Fenêtre : depuis $since (UTC)."
 
-          # Les échecs sur `pull_request` sont EXCLUS. Ici une PR rouge a
-          # déjà un propriétaire : la DoD §8 met la session qui a poussé de
-          # garde jusqu'au merge, et les checks requis empêchent le merge tout
-          # seuls. Les relever ferait de cette issue un miroir bruyant de la
-          # file de PR, et une alarme qu'on apprend à ignorer ne vaut pas mieux
-          # qu'une alarme absente. Ce qu'on cherche, ce sont les runs que
-          # PERSONNE ne regarde : les crons, les `workflow_run`, les pushes sur
-          # main. (Le dépôt de corpus, lui, les inclut : sans check requis,
-          # une PR rouge y dort sans que rien ne la bloque visiblement.)
-          # Le filtrage est fait par le SERVEUR (`--created`, `--status`), pas
-          # en local après un `--limit`. Ce n'est pas un raffinement : mesuré le
-          # 2026-08-24, les 100 runs les plus récents de ce dépôt ne couvraient
-          # qu'1 h 13 (08:48 → 10:01). Une fenêtre de 8 h filtrée en local
-          # n'aurait donc rien vu de ses 7 dernières heures — et aurait rendu
-          # « 0 rouge » d'un air parfaitement vert. Le même appel restreint à
-          # `--status failure` remonte, lui, à onze jours. Une garde qui se
-          # trompe en silence est pire que pas de garde du tout.
-          fields=workflowName,conclusion,createdAt,event,url
-          failed="$(gh run list --created ">=$since" --status failure --limit 200 --json "$fields")"
-          timed="$(gh run list --created ">=$since" --status timed_out --limit 200 --json "$fields")"
+          # Le filtrage est fait par le SERVEUR (`--created`, `--status`), pas en local après
+          # un `--limit`. Correction, pas raffinement : mesuré le 2026-08-24, les 100 runs les
+          # plus récents de ce dépôt ne couvraient qu'1 h 13 (08:48 → 10:01). Une fenêtre de
+          # 8 h filtrée en local n'aurait donc rien vu de ses 7 dernières heures — et aurait
+          # rendu « 0 rouge » d'un air parfaitement vert.
+          #
+          # Ce workflow ne s'exclut PAS de son propre scan, et c'est délibéré : un run qui meurt
+          # ne rapporte rien, donc l'exclure ne protégerait de rien et rendrait seulement la
+          # garde aveugle à ses propres pannes. Pas de boucle possible — un run en cours n'a pas
+          # encore de conclusion, il ne peut jamais se voir lui-même.
+          fields=databaseId,workflowName,conclusion,createdAt,event,url
+          gh run list --created ">=$since" --status failure   --limit 200 --json "$fields" > rouges.json
+          gh run list --created ">=$since" --status timed_out --limit 200 --json "$fields" > lents.json
+          jq -s 'add' rouges.json lents.json > runs.json
 
-          # Les deux tableaux sont concaténés, puis les échecs de `pull_request`
-          # écartés (voir plus haut).
-          all="$(printf '%s\n%s\n' "$failed" "$timed" \
-            | jq -s 'add | map(select(.event != "pull_request"))')"
+          # QUI compte comme un rouge, et COMMENT il se raconte : `scripts/ci/guard-watch.mjs`,
+          # partagé avec le dépôt de corpus (étude 32, L3b) et couvert par 18 tests. Ce dépôt
+          # EXCLUT les échecs de `pull_request` — ils ont déjà un propriétaire (DoD §8) et les
+          # checks requis les bloquent d'eux-mêmes ; le corpus, lui, les garde. C'est l'unique
+          # divergence, et elle est désormais un drapeau, plus une seconde copie du fichier.
+          count="$(node scripts/ci/guard-watch.mjs \
+            --runs runs.json --out corps.md \
+            --since "$since" --window-hours "$WINDOW_HOURS")"
 
-          count="$(echo "$all" | jq 'length')"
           echo "count=$count" >> "$GITHUB_OUTPUT"
           echo "Rouges dans la fenêtre : $count"
-
-          if [ "$count" = "0" ]; then
-            exit 0
-          fi
-
-          # Un résumé par WORKFLOW, pas par run : dix échecs du même cron sont
-          # UN problème, pas dix — c'est la différence entre une issue qu'on lit
-          # et une issue qu'on ferme sans lire.
-          {
-            echo "### 🚨 Gardes en échec"
-            echo ""
-            echo "Fenêtre observée : les **${WINDOW_HOURS} dernières heures** (depuis \`$since\` UTC)."
-            echo "Les échecs sur \`pull_request\` sont volontairement exclus — ils ont déjà un"
-            echo "propriétaire (DoD §8) et les checks requis les bloquent d'eux-mêmes."
-            echo ""
-            echo "| Workflow | Échecs | Dernier | Déclencheur |"
-            echo "| --- | --- | --- | --- |"
-            echo "$all" | jq -r '
-              group_by(.workflowName)
-              | map({
-                  nom: .[0].workflowName,
-                  n: length,
-                  dernier: (sort_by(.createdAt) | last)
-                })
-              | sort_by(-.n)
-              | .[]
-              | "| \(.nom) | \(.n) | [\(.dernier.createdAt[0:16])](\(.dernier.url)) | `\(.dernier.event)` |"
-            '
-            echo ""
-            echo "**Un échec répété sur un arbre qui n'a pas bougé** désigne presque toujours une"
-            echo "entrée hors dépôt (secret, variable, jeton) — donc quelque chose qu'aucune PR ne"
-            echo "répare. C'était le cas des 26 jours de \`report-triage\` : la réponse n'a pas été"
-            echo "de reposer le secret mais de **supprimer le besoin** (l'URL n'en était pas un)."
-            echo "Voir [\`docs/agents/zero-intervention.md\`](../blob/main/docs/agents/zero-intervention.md)"
-            echo "— l'échelle de traitement et le tableau des murs."
-            echo ""
-            echo "_Cette issue se referme toute seule dès qu'une fenêtre entière est verte._"
-          } > corps.md
 
       - name: Ouvrir ou mettre à jour l'issue
         if: steps.scan.outputs.count != '0'

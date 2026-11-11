@@ -313,7 +313,24 @@ async function send(sender: OutboxSender, item: OutboxItem): Promise<"sent" | Di
     await sender(item.payload);
     return "sent";
   } catch (error) {
-    if (!isSessionRefusalError(error)) return disposeOf(error, item);
+    if (!isSessionRefusalError(error)) {
+      // ⚠️ CETTE BRANCHE SORTAIT EN SILENCE, et c'est ce qui a coûté la journée
+      // du 2026-09-03 : un rejeu refusé pour toute raison AUTRE qu'un jeton
+      // — la RPC qui lève, la server fn qui tombe, le format d'une réponse
+      // rejeté — ne produisait pas une ligne. La garde a répondu « 0 refus dans
+      // la fenêtre » ce soir-là, et elle disait vrai : elle ne voyait que la
+      // moitié auth. Un travail d'élève qui n'arrive pas se raconte maintenant
+      // ici aussi, avec sa DISPOSITION — « conservé » se rattrapera au prochain
+      // déclencheur, « abandonné » ne reviendra jamais.
+      const disposition = disposeOf(error, item);
+      reportClientError({
+        stage: "outbox-send",
+        clientId: item.clientId,
+        errMessage: error instanceof Error ? error.message : String(error),
+        payload: { kind: item.kind, attempts: item.attempts, disposition },
+      });
+      return disposition;
+    }
 
     // La boîte noire, prise AVANT le rafraîchissement forcé : après lui, le TTL
     // observé serait celui du jeton NEUF, et la mesure ne dirait plus rien de la
@@ -333,13 +350,14 @@ async function send(sender: OutboxSender, item: OutboxItem): Promise<"sent" | Di
       // Le rejeu a été refusé LUI AUSSI, avec un jeton pourtant tout neuf. C'est
       // le cas le plus intéressant de tous : il disqualifie l'horloge locale et
       // désigne le serveur ou la session elle-même.
+      const disposition = disposeOf(retryError, item);
       reportClientError({
         stage: "outbox-replay",
         clientId: item.clientId,
         errMessage: retryError instanceof Error ? retryError.message : String(retryError),
-        payload: { kind: item.kind, attempts: item.attempts },
+        payload: { kind: item.kind, attempts: item.attempts, disposition },
       });
-      return disposeOf(retryError, item);
+      return disposition;
     }
   }
 }

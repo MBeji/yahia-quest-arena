@@ -25,6 +25,8 @@ export interface AdminDb {
    * muscle-cerveau/IQ, language tracks). Never quiz-gated.
    */
   nonSchoolSubjectId(): Promise<string>;
+  /** Le chapitre de fixture dont la leçon porte un bloc `::: verifie` (étude 35). */
+  fixtureLessonChapterId(): Promise<string>;
   /**
    * A non-premium school subject in a NON-concours grade (`grades.is_concours_national
    * = false`), so its parcours is FREE — the comprehension-quiz gate is the ONLY gate
@@ -37,6 +39,22 @@ export interface AdminDb {
    * such chapter exists. Lets a test prove the quiz gate locks/unlocks that mission.
    */
   chapterQuizAndMission(subjectId: string): Promise<{ quizId: string; missionId: string } | null>;
+  /**
+   * Le décor MINIMAL qui fait tomber une PREMIÈRE étoile (étude 34, R-4 + R-8) :
+   * le quiz d'un chapitre, puis **toutes** ses missions de catalogue du cran 1.
+   *
+   * ⚠️ `chapterQuizAndMission` ne suffit pas pour ça, et la nuance est le piège :
+   * il rend UNE mission, ce qui allume un CRAN de la jauge — mais l'étoile ⭐ n'est
+   * inscrite que lorsque **toutes** les missions du cran 1 sont comptées. Sur un
+   * chapitre qui en a trois, une seule mission ne célèbre rien, et une spec qui
+   * attendrait le bloc étoile échouerait sur un code parfaitement sain.
+   *
+   * Cran 1 = `difficulty` bornée à [1,4] valant 1, comme en base
+   * (`LEAST(GREATEST(e.difficulty, 1), 4)`), et mission de CATALOGUE seulement
+   * (`source = 'admin'`, hors quiz — R-2/R-15 : une mission familiale ne donne
+   * jamais d'étoile). Null quand aucun chapitre du sujet n'offre les deux.
+   */
+  chapterFirstStarPlan(subjectId: string): Promise<{ quizId: string; missionIds: string[] } | null>;
   /**
    * A free-accessible exercise of a subject: a non-quiz mission at difficulty
    * <= 2 (no premium-difficulty gate), lowest display order.
@@ -142,6 +160,7 @@ export interface AdminDb {
    */
   recallReadyExercise(): Promise<{
     subjectId: string;
+    chapterId: string;
     exerciseId: string;
     answerKey: { prompt: string; correctText: string }[];
   } | null>;
@@ -211,6 +230,29 @@ export function createAdminDb(): AdminDb {
       if (!data) throw new Error("No free non-school subject (grade_id null) in the test project.");
       return data.id as string;
     },
+    /**
+     * Le chapitre de FIXTURE qui porte une leçon avec un bloc `::: verifie` (étude 35),
+     * seedé par `scripts/e2e/seed-fixture-content.mjs` sur la matière `e2e-fixture-culture`.
+     * C'est le seul lecteur où le contrôle sur place est garanti : les matières scolaires du
+     * projet TEST viennent des migrations de contenu historiques, et leurs cours n'en ont pas.
+     */
+    async fixtureLessonChapterId() {
+      const { data, error } = await client
+        .from("chapters")
+        .select("id")
+        .eq("subject_id", "e2e-fixture-culture")
+        .ilike("lesson_content", "%::: verifie%")
+        .order("display_order")
+        .limit(1)
+        .maybeSingle();
+      if (error) throw new Error(`fixtureLessonChapterId: ${error.message}`);
+      if (!data) {
+        throw new Error(
+          "No fixture chapter carries a `::: verifie` lesson — run `npm run e2e:seed-content`.",
+        );
+      }
+      return data.id as string;
+    },
     async freeSchoolSubjectId() {
       // Non-concours grades resolve to FREE parcours (the premium concours parcours
       // are the national-exam years), so the only gate left is the chapter quiz.
@@ -250,6 +292,31 @@ export function createAdminDb(): AdminDb {
         if (r.mode !== "quiz") continue;
         const mission = rows.find((x) => x.chapter_id === r.chapter_id && x.mode !== "quiz");
         if (mission) return { quizId: r.id as string, missionId: mission.id as string };
+      }
+      return null;
+    },
+    async chapterFirstStarPlan(subjectId: string) {
+      const { data, error } = await client
+        .from("exercises")
+        .select("id, chapter_id, mode, difficulty, source")
+        .eq("subject_id", subjectId)
+        .order("display_order");
+      if (error) throw new Error(`chapterFirstStarPlan: ${error.message}`);
+      const rows = data ?? [];
+      // Même bornage que la base : une difficulté 0 (défaut de colonne) ou 5
+      // (contenu qui invente un cran) se range au cran le plus proche.
+      const tier = (d: number | null): number => Math.min(4, Math.max(1, Math.round(d ?? 1)));
+      const isCatalogueMission = (r: (typeof rows)[number]): boolean =>
+        r.mode !== "quiz" && (r.source ?? "admin") === "admin";
+      for (const quiz of rows) {
+        if (quiz.mode !== "quiz") continue;
+        const missionIds = rows
+          .filter(
+            (r) =>
+              r.chapter_id === quiz.chapter_id && isCatalogueMission(r) && tier(r.difficulty) === 1,
+          )
+          .map((r) => r.id as string);
+        if (missionIds.length > 0) return { quizId: quiz.id as string, missionIds };
       }
       return null;
     },
@@ -554,7 +621,7 @@ export function createAdminDb(): AdminDb {
       for (const s of subjects ?? []) {
         const { data: exercises, error: exErr } = await client
           .from("exercises")
-          .select("id")
+          .select("id, chapter_id")
           .eq("subject_id", s.id)
           .eq("source", "admin")
           .neq("mode", "quiz")
@@ -590,7 +657,12 @@ export function createAdminDb(): AdminDb {
             }
           }
           if (eligible >= MIN) {
-            return { subjectId: s.id as string, exerciseId: ex.id as string, answerKey };
+            return {
+              subjectId: s.id as string,
+              chapterId: ex.chapter_id as string,
+              exerciseId: ex.id as string,
+              answerKey,
+            };
           }
         }
       }

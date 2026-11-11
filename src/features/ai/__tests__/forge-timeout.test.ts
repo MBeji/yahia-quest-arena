@@ -1,5 +1,4 @@
 // @vitest-environment node
-import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -8,6 +7,7 @@ import {
   AI_TIMEOUT_MS,
   forgeTimeoutMs,
 } from "@/shared/constants/ai";
+import { SSR_MAX_DURATION_S } from "../../../../scripts/vercel-function.mjs";
 import { candidateCount } from "../forge/filters";
 
 /**
@@ -22,12 +22,12 @@ import { candidateCount } from "../forge/filters";
  * vérification venait pourtant de passer).
  */
 
-/** Le `maxDuration` réel de la fonction SSR, lu à la source et non recopié. */
+/**
+ * Le `maxDuration` réel de la fonction SSR, importé de la seule source que
+ * `build-vercel.mjs` lit aussi — ni recopié, ni extrait du texte par une regex.
+ */
 function ssrMaxDurationMs(): number {
-  const source = readFileSync("scripts/build-vercel.mjs", "utf8");
-  const match = /maxDuration:\s*(\d+)/.exec(source);
-  if (!match) throw new Error("maxDuration introuvable dans scripts/build-vercel.mjs");
-  return Number(match[1]) * 1000;
+  return SSR_MAX_DURATION_S * 1000;
 }
 
 describe("forgeTimeoutMs", () => {

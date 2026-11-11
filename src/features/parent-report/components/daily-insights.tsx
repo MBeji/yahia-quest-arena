@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   AlertTriangle,
@@ -12,10 +13,12 @@ import { useParentT, type ParentTranslationKeys } from "@/lib/i18n/parent";
 import { isolateLtrRuns } from "@/shared/lib/bidi";
 import {
   analyzeSubjects,
+  chapterGapRows,
   formatMinutes,
   subjectLevel,
   topContributors,
   topGaps,
+  type ChapterGapRow,
   type DailyReport,
   type EfficiencyResult,
   type EngagementResult,
@@ -23,7 +26,9 @@ import {
   type ParentAlert,
   type ScoredFactor,
   type SubjectSlice,
+  type SubjectStarsSlice,
 } from "../insights";
+import { readSubjectStars, starBuckets } from "@/shared/lib/progress-stars";
 import { alertMessage } from "./alert-message";
 import { BAND_STYLES, useBandLabel } from "./daily-band";
 import { DeltaChip, EmptyRow, Meter, SectionCard } from "./daily-primitives";
@@ -221,6 +226,10 @@ function factorReadout(factor: AnyFactor, t: T): string {
  * fragiles, délaissées, celles où l'enfant progresse le plus.
  */
 export function SubjectsSection({ report }: { report: DailyReport }) {
+  // Une seule indexation pour toute la table — la distribution voyage à part du
+  // reste de la matière, parce qu'elle est arrivée par l'enveloppe et non par le
+  // rapport lui-même (étude 34 lot 3).
+  const starsBySubject = new Map(report.subjectStars.map((x) => [x.subjectId, x]));
   const t = useParentT();
   const bandLabel = useBandLabel();
   const analysis = analyzeSubjects(report);
@@ -270,7 +279,10 @@ export function SubjectsSection({ report }: { report: DailyReport }) {
                         )}
                       </td>
                       <td className="py-2 pe-2">
-                        <CoverageCell subject={subject} />
+                        <CoverageCell
+                          subject={subject}
+                          stars={starsBySubject.get(subject.subjectId)}
+                        />
                       </td>
                       <td className="py-2 text-end tabular-nums text-muted-foreground">
                         {formatMinutes(subject.minutes)}
@@ -302,6 +314,8 @@ export function SubjectsSection({ report }: { report: DailyReport }) {
               </tbody>
             </table>
           </div>
+
+          <ChapterGapList report={report} />
 
           <div className="mt-4 grid gap-2 sm:grid-cols-2">
             <SubjectTagList
@@ -341,35 +355,121 @@ export function SubjectsSection({ report }: { report: DailyReport }) {
  * Une matière sans chapitre publié affiche « — » : la fraction n'existe pas,
  * elle ne vaut pas 0 %.
  */
-function CoverageCell({ subject }: { subject: SubjectSlice }) {
+/** L'encre des cinq crans, du chapitre pas commencé au chapitre maîtrisé. */
+const BUCKET_INK = [
+  "bg-border",
+  "bg-(--gold)/25",
+  "bg-(--gold)/50",
+  "bg-(--gold)/75",
+  "bg-(--gold)",
+] as const;
+
+function CoverageCell({ subject, stars }: { subject: SubjectSlice; stars?: SubjectStarsSlice }) {
   const t = useParentT();
 
   if (subject.chaptersTotal <= 0) {
     return <span className="text-xs text-muted-foreground">—</span>;
   }
 
-  const pctDone = Math.round((subject.chaptersCompleted / subject.chaptersTotal) * 100);
+  // La DISTRIBUTION passe devant le compte (étude 34, R-13), et l'ordre n'est pas
+  // cosmétique : c'est la barre qui empêche de lire « 3 sur 20 » comme un verdict.
+  // Le 2026-09-04, ce ratio nu s'est lu « il a fait 3 chapitres sur 20 » alors que les
+  // dix-sept autres étaient à « 4/6 missions ». Le pourcentage, lui, a disparu — il
+  // divisait un travail par un catalogue qui bouge.
+  const summary = stars ? readSubjectStars(stars) : null;
+  const buckets = summary ? starBuckets(summary) : null;
 
   return (
-    <div className="min-w-[5.5rem]">
-      <div className="flex items-baseline justify-between gap-2 text-2xs text-muted-foreground">
-        <span className="tabular-nums">
-          {subject.chaptersCompleted}/{subject.chaptersTotal}
-        </span>
-        <span className="tabular-nums">{pctDone}%</span>
-      </div>
-      <div className="mt-1">
-        <Meter
-          value={subject.chaptersCompleted}
-          max={subject.chaptersTotal}
-          className="bg-primary"
-          label={t.parentDaily.coverageAria
+    <div className="min-w-[5.5rem]" title={t.parentDaily.coverageHint}>
+      {buckets && (
+        <div
+          className="mb-1 flex h-1.5 overflow-hidden rounded-full"
+          role="img"
+          data-testid="coverage-bar"
+          aria-label={t.parentDaily.coverageAria
             .replace("{done}", String(subject.chaptersCompleted))
             .replace("{total}", String(subject.chaptersTotal))}
-        />
+        >
+          {buckets.map((n, star) =>
+            n > 0 ? (
+              <span
+                key={star}
+                data-testid={`coverage-seg-${star}`}
+                className={BUCKET_INK[star]}
+                style={{ width: `${(n / subject.chaptersTotal) * 100}%` }}
+              />
+            ) : null,
+          )}
+        </div>
+      )}
+      <div className="text-2xs tabular-nums text-muted-foreground" data-testid="coverage-count">
+        {t.parentDaily.coverageMastered
+          .replace("{done}", String(subject.chaptersCompleted))
+          .replace("{total}", String(subject.chaptersTotal))}
       </div>
+      {summary && summary.newChapters > 0 && (
+        <div className="text-2xs font-semibold text-(--gold)" data-testid="coverage-new">
+          {t.parentDaily.coverageNew.replace("{n}", String(summary.newChapters))}
+        </div>
+      )}
     </div>
   );
+}
+
+/**
+ * Ce qui manque pour qu'un chapitre compte — la moitié ACTIONNABLE du « 3/20 ».
+ *
+ * Le chiffre de couverture est un verdict : il dit où on en est, jamais quoi
+ * faire. Le 2026-09-04, le propriétaire a lu « 3/20 chap. » comme « il a fait 3
+ * chapitres sur 20 », alors que ses chapitres étaient à « 4/6 missions ». Le
+ * calcul était juste ; c'est le recours qui manquait.
+ *
+ * Rien n'est recalculé ici : le serveur rend déjà les lacunes avec les prédicats
+ * de `student_parcours_progress`, donc cette liste ne peut pas contredire la
+ * fraction qu'elle explique.
+ */
+function ChapterGapList({ report }: { report: DailyReport }) {
+  const t = useParentT();
+  const rows = useMemo(() => chapterGapRows(report), [report]);
+
+  if (rows.length === 0) return null;
+
+  return (
+    <div className="mt-4 rounded-lg border border-border/50 p-3">
+      <div className="text-xs font-semibold text-foreground">{t.parentDaily.gapsTitle}</div>
+      <p className="mt-0.5 text-2xs text-muted-foreground">{t.parentDaily.gapsSubtitle}</p>
+      <ul className="mt-2 space-y-1.5">
+        {rows.map((row) => (
+          <li key={row.chapterId} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <span className="text-xs text-foreground">{isolateLtrRuns(row.chapterTitle)}</span>
+            <span className="text-2xs text-muted-foreground">
+              {isolateLtrRuns(row.subjectName)}
+              {row.gradeName ? ` · ${isolateLtrRuns(row.gradeName)}` : ""}
+            </span>
+            <span className="ms-auto text-2xs tabular-nums text-muted-foreground">
+              {t.parentDaily.gapsMissionCount
+                .replace("{done}", String(row.missionsPassed))
+                .replace("{total}", String(row.missionsTotal))}
+            </span>
+            <span className="w-full text-2xs text-flame">{gapLabel(row, t)}</span>
+          </li>
+        ))}
+      </ul>
+      {/* La porte invisible, dite une fois : un chapitre à 6/6 missions peut ne
+          toujours pas compter si le quiz a été expédié. Aucun écran ne le disait. */}
+      {rows.some((row) => row.blocker !== "missions") && (
+        <p className="mt-2 text-2xs text-muted-foreground">{t.parentDaily.gapsQuizHint}</p>
+      )}
+    </div>
+  );
+}
+
+/** Le geste attendu, en une phrase — jamais un reproche (R-8). */
+function gapLabel(row: ChapterGapRow, t: ReturnType<typeof useParentT>): string {
+  const n = String(row.missionsRemaining);
+  if (row.blocker === "quiz") return t.parentDaily.gapsQuiz;
+  if (row.blocker === "both") return t.parentDaily.gapsBoth.replace("{n}", n);
+  return t.parentDaily.gapsMissions.replace("{n}", n);
 }
 
 function SubjectTagList({

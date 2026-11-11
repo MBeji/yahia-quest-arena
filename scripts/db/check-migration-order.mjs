@@ -106,7 +106,7 @@ function main() {
         `::error file=${v.file}::Out-of-order migration: ${v.version} sorts at/before ` +
           `the newest migration already on ${base} (${v.maxBase}). Supabase applies ` +
           `migrations in timestamp order and refuses to insert one before the last ` +
-          `applied — re-timestamp this file to sort AFTER ${v.maxBase} (CLAUDE.md §7).`,
+          `applied — re-timestamp this file to sort AFTER ${v.maxBase} (AGENTS.md §7).`,
       );
     }
   }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { renderLesson } from "@/shared/lib/markdown";
+import { renderLesson, renderSummary } from "@/shared/lib/markdown";
 
 // Substitution PUREMENT mécanique : renderLesson remplace renderMarkdown et retourne
 // désormais { html, sections, figureCount }. Toutes les assertions ci-dessous — dont les
@@ -73,6 +73,29 @@ describe("renderLesson", () => {
       const result = html("***both***");
       expect(result).toContain("<strong>");
       expect(result).toContain("<em>");
+    });
+
+    // Prettier normalise `*x*` en `_x_` sur tout le corpus : les deux formes sont de l'italique.
+    it("renders underscore italic, including after an apostrophe", () => {
+      const result = html("Ne confonds pas l'_éminent_ et l'_imminent_, ni _accepter_.");
+      expect(result).toContain("l'<em>éminent</em>");
+      expect(result).toContain("l'<em>imminent</em>,");
+      expect(result).toContain("<em>accepter</em>.");
+      expect(result).not.toContain("_");
+    });
+
+    it("leaves formula subscripts alone", () => {
+      const result = html("L'aire S_D vaut 4, t_u(M) = M' et ∫_{1} f + ∫_{2} g.");
+      expect(result).not.toContain("<em>");
+      expect(result).toContain("S_D");
+      expect(result).toContain("∫_{1} f + ∫_{2} g");
+    });
+
+    it("renders an escaped asterisk or underscore as the bare character", () => {
+      const result = html("Note \\* : le signe \\_ reste tel quel, et *ceci* est en italique.");
+      expect(result).toContain("Note * : le signe _ reste tel quel");
+      expect(result).toContain("<em>ceci</em>");
+      expect(result).not.toContain("\\");
     });
   });
 
@@ -286,6 +309,25 @@ describe("renderLesson", () => {
   });
 });
 
+// Audits arabe 9ᵉ (chapitres 09 et 10) : le guillemet était enfermé dans l'isolat LTR avec le
+// numéro de phrase ou la flèche, et se dessinait du mauvais côté. Dans le cours rendu, aucun
+// isolat ne contient plus de guillemet, et la flèche de prose n'est plus isolée.
+describe("renderLesson — guillemets et flèche de prose en arabe", () => {
+  it("laisse les guillemets hors des isolats et la flèche de prose sans isolat", () => {
+    const out = renderLesson(
+      [
+        "«(1) في رأيي أنّ الصدقَ أساسُ الثقةِ. (2) فقد قالَ المثلُ.» ما الركنُ الغائبُ؟",
+        "",
+        "2. **ولو قالتْ** «الشمسُ تُشرقُ من المشرقِ» ← لا يعترضُ أحدٌ ← لا حجاجَ.",
+      ].join("\n"),
+      { lang: "ar" },
+    ).html;
+    expect(out).toContain("«\u2066(1)\u2069 في رأيي");
+    expect(out).not.toMatch(/\u2066[^\u2069]*[«»][^\u2069]*\u2069/u);
+    expect(out).toContain("«الشمسُ تُشرقُ من المشرقِ» ← لا يعترضُ أحدٌ ← لا حجاجَ.");
+  });
+});
+
 /**
  * Moteur de blocs pédagogiques — étude 18, lot 1.
  *
@@ -334,6 +376,59 @@ describe("renderLesson — blocs pédagogiques", () => {
       expect(result).toContain("Première ligne.");
       expect(result).toContain("Deuxième ligne.");
       expect(result.match(/lesson-blk--piege/g)).toHaveLength(1);
+    });
+
+    // Forme réelle (maths 6ᵉ, chapitre 01) : le piège est renvoyé à la ligne vers 100 signes.
+    // Rendu ligne à ligne, il devenait un fragment nu puis un `<p>` par ligne suivante — la
+    // phrase « يقرأ «مئتان / وثلاثون مليونًا…» » coupée au milieu, en deux blocs.
+    it("recolle les lignes d'un même paragraphe de piège, comme Markdown standard", () => {
+      const md = [
+        "## S",
+        "",
+        "> ⚠️ **الخطأ الشائع (1)**: التجميع من اليسار. من يجمّع 2305040 هكذا: 230 | 504 | 0، يقرأ «مئتان",
+        "> وثلاثون مليونًا…»، وهو عدد أكبر بمئة مرّة. الأصناف تُقرأ من اليمين: 2 | 305 | 040.",
+      ].join("\n");
+      const block = renderLesson(md, { lang: "ar" }).html.split('lesson-blk--piege">')[1];
+      expect(block).not.toContain("<p>");
+      expect(block).not.toContain("\n");
+      expect(block).toContain("يقرأ «مئتان وثلاثون مليونًا…»");
+    });
+
+    it("recolle un piège de trois lignes et plus en un seul paragraphe", () => {
+      const result = html("## S\n\n> ⚠️ Une phrase qui\n> continue ici\n> et finit là.");
+      expect(result).toContain("<p>Une phrase qui continue ici et finit là.</p>");
+      expect(result.match(/<p>/g)).toHaveLength(1);
+    });
+
+    it("garde deux paragraphes séparés par une ligne `>` vide", () => {
+      const result = html(
+        "## S\n\n> ⚠️ Premier paragraphe\n> sur deux lignes.\n>\n> Second\n> paragraphe.",
+      );
+      expect(result).toContain("Premier paragraphe sur deux lignes.");
+      expect(result).toContain("<p>Second paragraphe.</p>");
+    });
+
+    it("ne recolle ni une liste, ni un tableau, ni une formule, ni un saut forcé", () => {
+      const list = html("## S\n\n> ⚠️ Pièges classiques :\n>\n> - premier\n> - second");
+      expect(list).toContain('<li class="lesson-li">premier</li>');
+      expect(list).toContain('<li class="lesson-li">second</li>');
+
+      const table = html("## S\n\n> 🗡️ Deux colonnes :\n> | a | b |\n> | 1 | 2 |");
+      expect(table).toContain('<table class="lesson-table">');
+      expect(table).not.toContain("colonnes : |");
+
+      const math = html("## S\n\n> ⚠️ On a :\n> $$ x = 2 $$");
+      expect(math).toContain('<div class="lesson-math"> x = 2 </div>');
+
+      const forced = html("## S\n\n> ⚠️ Ligne une  \n> Ligne deux.");
+      expect(forced).toContain("<p>Ligne deux.</p>");
+    });
+
+    it("ne recolle pas deux callouts consécutifs", () => {
+      const result = html("## S\n\n> 🗡️ Une astuce.\n> ⚠️ Un piège.");
+      expect(result.match(/lesson-blk--astuce/g)).toHaveLength(1);
+      expect(result.match(/lesson-blk--piege/g)).toHaveLength(1);
+      expect(result).not.toContain("astuce. Un piège");
     });
 
     it("ne promeut PAS une citation ordinaire — aucune régression", () => {
@@ -509,5 +604,109 @@ describe("renderLesson — figures légendées", () => {
     expect(result).toContain("lesson-blk");
     expect(result).toContain("Mais aucun SVG.");
     expect(result).not.toContain("lesson-figure__plate");
+  });
+});
+
+/**
+ * Le contrôle sur place — étude 35, lot 1.
+ *
+ * Le couple « exemple résolu → à toi de jouer » est le résultat le mieux établi de tout le
+ * corpus de preuves rassemblé par l'étude, et il n'avait AUCUNE syntaxe : le renderer ne
+ * savait rien replier. Ce bloc est le seul du vocabulaire dont le corps a deux côtés.
+ */
+describe("renderLesson — le bloc `verifie` (étude 35)", () => {
+  const CHECK = [
+    "::: verifie",
+    "Un robinet donne 4 litres par minute. Que vaut f(7) ?",
+    "---",
+    "f(7) = 28 litres, car f(x) = 4x.",
+    ":::",
+  ].join("\n");
+
+  it("replie la réponse dans un `details` natif et laisse la question visible", () => {
+    const out = html(CHECK);
+    expect(out).toContain('<section class="lesson-blk lesson-blk--verifie">');
+    expect(out).toContain('<div class="lesson-check__question">');
+    expect(out).toContain('<details class="lesson-check">');
+    expect(out).toContain('<summary class="lesson-check__toggle">Voir la réponse</summary>');
+    expect(out).toContain('<div class="lesson-check__answer">');
+    // La question est dehors, la réponse dedans — l'ordre est ce qui fait le contrôle.
+    expect(out.indexOf("Que vaut f(7)")).toBeLessThan(out.indexOf("<details"));
+    expect(out.indexOf("<details")).toBeLessThan(out.indexOf("f(7) = 28"));
+  });
+
+  it("n'émet JAMAIS `open` — le contenu ne décide pas qu'une réponse est déjà révélée", () => {
+    expect(html(CHECK)).not.toContain("open");
+    // Et un auteur qui l'écrirait à la main ne peut pas l'obtenir non plus.
+    expect(html("::: verifie\nQ\n---\n<details open>R</details>\n:::")).not.toContain(
+      "<details open>",
+    );
+  });
+
+  it("écrit le libellé du bloc ET du bouton dans la langue du CONTENU (R-8/R-18)", () => {
+    const ar = renderLesson(CHECK, { lang: "ar" }).html;
+    expect(ar).toContain("جرّب بنفسك");
+    expect(ar).toContain("أظهر الإجابة");
+    const en = renderLesson(CHECK, { lang: "en" }).html;
+    expect(en).toContain("Your turn");
+    expect(en).toContain("Show the answer");
+  });
+
+  it("scinde au PREMIER `---` — les suivants restent du markdown dans la réponse", () => {
+    const out = html("::: verifie\nQ\n---\nR1\n---\nR2\n:::");
+    expect(out.match(/<details/g)).toHaveLength(1);
+    expect(out).toContain('<hr class="lesson-hr">');
+  });
+
+  it("dégrade en bloc neutre SANS séparateur — tout visible, jamais de page cassée (R-17)", () => {
+    const out = html("::: verifie\nUne question sans réponse.\n:::");
+    expect(out).toContain("lesson-blk lesson-blk--verifie");
+    expect(out).not.toContain("<details");
+    expect(out).toContain("Une question sans réponse.");
+  });
+
+  it("dégrade de même quand un côté est vide", () => {
+    expect(html("::: verifie\nQ\n---\n\n:::")).not.toContain("<details");
+    expect(html("::: verifie\n\n---\nR\n:::")).not.toContain("<details");
+  });
+
+  it("laisse un `---` hors bloc devenir un `<hr>` — aucune régression", () => {
+    expect(html("Avant\n\n---\n\nAprès")).toContain('<hr class="lesson-hr">');
+  });
+
+  it("échappe les deux côtés — l'invariant R-1 ne connaît pas d'exception", () => {
+    const out = html(
+      "::: verifie\n<img src=x onerror=alert(1)>\n---\n<script>alert(2)</script>\n:::",
+    );
+    expect(out).not.toContain("<img");
+    expect(out).not.toContain("<script>");
+    expect(out).toContain("&lt;script&gt;");
+  });
+
+  it("rend le markdown des deux côtés (formule isolée, liste)", () => {
+    const out = html("::: verifie\n$$ f(x) = 4x $$\n---\n- Première étape\n- Seconde étape\n:::");
+    expect(out).toContain('<div class="lesson-math">');
+    expect(out).toContain('<ul class="lesson-ul">');
+  });
+
+  it("garde la formule LTR au milieu d'une prose arabe, des deux côtés", () => {
+    const out = renderLesson("::: verifie\nما قيمة √64 ؟\n---\nالجواب √64 = 8\n:::", {
+      lang: "ar",
+    }).html;
+    expect(out).toContain("√64");
+    expect(out).toContain("<details");
+  });
+
+  it("porte son titre libre, échappé comme tout texte d'auteur", () => {
+    const out = html('::: verifie Le robinet & "la citerne"\nQ\n---\nR\n:::');
+    expect(out).toContain('<p class="lesson-blk__title">Le robinet &amp; "la citerne"</p>');
+  });
+});
+
+describe("renderSummary — le résumé ne pose pas de question (é35 R-21)", () => {
+  it("ne replie RIEN : un résumé n'a pas de grammaire de blocs, donc rien à cacher", () => {
+    const out = renderSummary("- **Concept** : essence\n\n::: verifie\nQ\n---\nR\n:::").html;
+    expect(out).not.toContain("<details");
+    expect(out).toContain('<ul class="lesson-cards">');
   });
 });

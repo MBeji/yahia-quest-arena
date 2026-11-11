@@ -59,7 +59,7 @@ export const getParcoursInterestCounts = createServerFn({ method: "GET" })
  */
 export const toggleParcoursInterest = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ parcoursId: z.string().trim().min(1).max(100) }).parse(d))
+  .validator((d) => z.object({ parcoursId: z.string().trim().min(1).max(100) }).parse(d))
   .handler(async ({ data, context }): Promise<{ interested: boolean }> => {
     const { supabase } = context;
     const { data: result, error } = await supabase.rpc("toggle_parcours_interest", {

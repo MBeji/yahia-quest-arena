@@ -265,10 +265,36 @@ SELECT is(
   'un refus de budget ne consomme PAS d''énergie — les deux réservations sont solidaires'
 );
 
--- Le plafond MENSUEL coupe aussi, indépendamment du journalier : une dépense
--- passée sous le plafond du jour peut avoir épuisé le mois.
+-- Le plafond MENSUEL coupe aussi, indépendamment du journalier.
+--
+-- ⚠️ CE SCÉNARIO NE PEUT PAS S'ÉCRIRE « UNE DÉPENSE D'HIER ». La fenêtre
+-- mensuelle est CALENDAIRE — `l.day >= date_trunc('month', CURRENT_DATE)`
+-- (`reserve_ai_spend`, migration 20260823110000) — donc le 1er du mois
+-- `CURRENT_DATE - 1` tombe dans le mois PRÉCÉDENT, hors fenêtre : les 19,90 $
+-- ne comptaient pas, rien ne coupait, et l'assertion lisait NULL au lieu de
+-- `AI_BUDGET_REACHED`. Le test était donc juste 30 jours sur 31 et faux le 31ᵉ.
+-- Constaté le 2026-09-01 : il a fait rougir le nightly à lui seul, le jour où
+-- il n'y avait plus le rouge de 83_open_ecole_3eme_sec pour le cacher.
+--
+-- On ne peut pas non plus « choisir un autre jour passé du mois » : le 1er, il
+-- n'en existe aucun. Le scénario est donc reconstruit autrement — la dépense va
+-- sur AUJOURD'HUI, et c'est le plafond JOURNALIER qu'on écarte le temps de
+-- l'assertion. Ce qui isole vraiment le mensuel, au lieu de le déduire d'un
+-- calendrier : sans le journalier pour couper, seul le mensuel peut refuser.
+SELECT set_config(
+  'test.daily_budget_before',
+  (SELECT daily_budget_usd::text FROM public.ai_credentials WHERE owner_user_id = 'c9000000-0000-4000-8000-000000000001'),
+  false
+);
+
+UPDATE public.ai_credentials SET daily_budget_usd = 50
+ WHERE owner_user_id = 'c9000000-0000-4000-8000-000000000001';
+
+-- 19,90 $ déjà dépensés + 0,50 $ déjà réservés = 20,40 $ sur le mois (plafond
+-- 20 $) mais très en deçà des 50 $/jour qu'on vient d'accorder (le maximum que le CHECK
+-- de la colonne autorise : `daily_budget_usd <= 50`).
 INSERT INTO public.ai_spend_ledger (owner_user_id, day, spent_micros)
-VALUES ('c9000000-0000-4000-8000-000000000001', CURRENT_DATE - 1, 19900000)
+VALUES ('c9000000-0000-4000-8000-000000000001', CURRENT_DATE, 19900000)
 ON CONFLICT (owner_user_id, day) DO UPDATE SET spent_micros = 19900000;
 
 SELECT is(
@@ -280,8 +306,14 @@ SELECT is(
   'R-11 : le plafond MENSUEL coupe même quand le journalier laisserait passer'
 );
 
+-- Rendre le plafond journalier tel qu'il était : les sections suivantes
+-- décrivent le comportement du porteur ORDINAIRE, pas celui d'un compte à 50 $.
+UPDATE public.ai_credentials
+   SET daily_budget_usd = current_setting('test.daily_budget_before')::NUMERIC
+ WHERE owner_user_id = 'c9000000-0000-4000-8000-000000000001';
+
 DELETE FROM public.ai_spend_ledger
- WHERE owner_user_id = 'c9000000-0000-4000-8000-000000000001' AND day = CURRENT_DATE - 1;
+ WHERE owner_user_id = 'c9000000-0000-4000-8000-000000000001' AND day = CURRENT_DATE;
 
 -- ---------------------------------------------------------
 -- 4bis. LE NOUVEAU DÉFAUT — on compte, on alerte, on ne coupe pas.

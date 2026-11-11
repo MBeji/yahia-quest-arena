@@ -278,9 +278,9 @@ describe("étude 23 — sql-builder compilation", () => {
     const sql = buildMigrationSql(makeSubject([]), {});
     expect(sql).toContain("display_order, domain, manuel_ref, videos) VALUES");
     expect(sql).toContain("'[]'::jsonb)"); // chapter videos default
-    expect(sql).toContain("source, display_order, correction_video) VALUES");
+    expect(sql).toContain("source, display_order, correction_video, manuel_ref) VALUES");
     // The exercise row ends with a NULL correction_video.
-    expect(sql).toMatch(/'admin', 1, NULL\)/);
+    expect(sql).toMatch(/'admin', 1, NULL, NULL\)/);
   });
 
   it("compiles an exercise correction_video from an active ref", () => {
@@ -291,7 +291,7 @@ describe("étude 23 — sql-builder compilation", () => {
 
   it("leaves correction_video NULL for a non-active ref", () => {
     const sql = buildMigrationSql(makeSubject([], "math.retired"), registry);
-    expect(sql).toMatch(/'admin', 1, NULL\)/);
+    expect(sql).toMatch(/'admin', 1, NULL, NULL\)/);
   });
 });
 

@@ -34,7 +34,7 @@ function ParcoursPage() {
     data.subjects,
     data.stats,
     new Set(data.premiumLockedSubjectIds ?? []),
-    { progressBySubject: data.progress, lastActivitySubjectId },
+    { starsBySubject: data.progress, lastActivitySubjectId },
   );
 
   return (

@@ -4,7 +4,28 @@ import { join } from "node:path";
 const clientAssetsDir = join(process.cwd(), "dist", "client", "assets");
 
 const BUDGETS = {
-  "index-": 450 * 1024,
+  // Chunk d'entrée — le seul que TOUT élève télécharge et parse, sur son appareil à lui.
+  //
+  // 450→456 KB (2026-09-09). Ce plafond n'avait pas bougé depuis sa pose, le 2026-06-01,
+  // et c'était le seul de ce fichier sans une ligne pour dire pourquoi. Trois mois de
+  // croissance y ont été absorbés en silence : mesuré sur `main` (0b4d272d) le jour du
+  // relèvement, le chunk pesait **449,86 KB pour 450,00** — 139 octets de marge, 99,97 %
+  // du plafond consommé. La PR qui a rougi n'a pas fait déborder le budget ; elle est
+  // arrivée quand il n'y avait plus rien dedans.
+  //
+  // CE QU'ELLE AJOUTE, ET POURQUOI ÇA NE SE DÉCOUPE PAS. 270 octets :
+  // `useExitOnRefusedSession` (#969), appelé par la frontière d'erreur racine. Le
+  // découpage — la règle que `i18n-` impose avant tout relèvement — ne s'applique pas
+  // ici : ce hook s'exécute au moment où l'application vient d'échouer, et c'est le pire
+  // moment pour aller CHERCHER du code sur le réseau. Un import dynamique en ferait une
+  // sortie de secours qui dépend de ce qui est déjà cassé.
+  //
+  // CE QUE CE RELÈVEMENT NE RÈGLE PAS. 5,8 KB de marge, et l'entrée continuera de
+  // grossir. Le vrai correctif est le découpage du chunk d'entrée, pas un dix-septième
+  // palier : la prochaine PR du chemin critique qui rougit ici devrait l'ouvrir plutôt
+  // que relever encore. C'est écrit ici pour que ce soit visible AVANT d'y arriver, et
+  // pas seulement dans le message de commit qui l'aura constaté.
+  "index-": 456 * 1024,
   // ---------------------------------------------------------------------------
   // Catalogues i18n. DEUX budgets depuis le 2026-08-26, parce que le catalogue
   // n'est plus monolithique :
@@ -75,10 +96,55 @@ const BUDGETS = {
   //   160→164  suppression de compte (GAP-024) — 0,02 KB de dépassement
   //   164→192  mode IA « à la clé de la famille » (étude 29 lot 2), namespace `ai.*`
   //   192→208  tuteur « El Ostedh » (étude 11 lots 2-3), coaching + `tutor.chat.*`
+  //   208→184  DÉCOUPAGE `parent/` (2026-08-26) — la baisse, pas un palier
+  //   184→188  étude 31 « l'envie de revenir » : classes de héros et titres
+  //            (l'en-tête du tableau de bord, R-22), huit types de missions du
+  //            jour, carte « Ta semaine », podium de ligue, accueil.
+  //            ⚠️ C'est l'exception que la règle ci-dessus exige de justifier, et
+  //            elle se justifie par ce qui a été DÉCOUPÉ d'abord : les libellés de
+  //            la collection de badges (13 badges × nom + condition × 3 langues,
+  //            ~4,5 KB) sont partis dans `i18n-badges`, servis par la seule
+  //            /boutique. Ce qui reste ici sert des surfaces APP-WIDE et non
+  //            paresseuses — l'en-tête du héros, l'anneau du jour, les missions —
+  //            donc le découpage ne s'y applique pas.
+  //
+  //   188→189  étude 39 (2026-11-01) : UNE clé, l'entrée « Test de niveau » de l'en-tête
+  //            public (`public.header.placement`, trois langues, 0,03 KB de dépassement).
+  //            C'est l'exception que la règle ci-dessus exige de justifier : l'en-tête est
+  //            rendu sur chaque page publique, il n'est pas paresseux, donc le découpage ne
+  //            s'applique pas à lui — et il s'applique à TOUT LE RESTE du test, parti dans
+  //            `i18n-placement-` (entrée, passation, bilan, carte du Hall). Le relèvement
+  //            est le plus petit palier possible, pas une marge pour la suite : é38 lots 2,
+  //            4 et 5 restent devant le même mur, et le vrai correctif est toujours le
+  //            découpage (candidat mesuré : `ai.*`, 116 clés, voir ci-dessus).
+  //
+  //   189→ fr 61 / en 54 / ar 73  DÉCOUPAGE PAR LOCALE (2026-10-31, H2-fe) — la baisse,
+  //            pas un palier : chaque élève ne descend plus que SA langue (détail ci-dessous).
   //
   // Le chunk app-wide gzippe à ~61 KB : l'impact réseau est plus doux que le chiffre
   // brut, mais le coût de parse se paie plein, lui, et sur chaque appareil d'élève.
-  "i18n-": 184 * 1024,
+  //
+  // ## 2026-10-31 (H2-fe) : `i18n-` devient TROIS chunks, un par locale
+  //
+  // Le chunk trilingue mesurait 187,71 KB (192 215 octets, 66 303 gz), importé
+  // statiquement par index et préchargé sur chaque page — deux langues sur trois
+  // inutiles à chaque élève. Seul `i18n-fr` (défaut produit, langue du premier rendu,
+  // + la méta du document) reste dans le graphe statique ; `i18n-en` et `i18n-ar` sont
+  // tirés par `import()` (`src/lib/i18n/catalogues.ts`) pour la seule locale persistée,
+  // dès l'évaluation du module client. Mesuré sur ce commit :
+  //
+  //   avant   i18n     187,71 KB (chargé par tout le monde)
+  //   après   i18n-fr   60,94 KB  +  i18n-en 54,20 KB / i18n-ar 72,73 KB (en différé,
+  //                                   pour la locale du visiteur seulement)
+  //
+  // Élève FR : −129 812 octets bruts / −43 331 gz sur le chemin critique ; EN −74 310 ;
+  // AR −55 336. Plafonds à ≈ +5 % de la mesure, comme l'app-wide avant eux. Si l'un
+  // de `i18n-en-`/`i18n-ar-` réapparaît dans les imports STATIQUES d'index, le
+  // découpage est cassé sans que rien ne rougisse : un module partagé entre les
+  // fichiers de locale (relire `manualChunks` et `src/lib/i18n/meta.ts`).
+  "i18n-fr-": 64 * 1024,
+  "i18n-en-": 60 * 1024,
+  "i18n-ar-": 76 * 1024,
   // Surface parent (`parentReport.*` + `parentDaily.*`), mesurée 36,52 KB le
   // 2026-08-26 ; plafond à +20 % parce que le suivi « jour par jour » est récent et
   // bouge encore. Ces octets ne descendent QUE chez les comptes parent — ils sont
@@ -86,6 +152,26 @@ const BUDGETS = {
   // réapparaît un jour dans les imports STATIQUES du chunk index, le découpage est
   // cassé sans que rien ne rougisse : relire `manualChunks` dans `vite.config.ts`.
   "i18n-parent-": 44 * 1024,
+  // Surface boutique : les libellés de la collection de badges (nom + condition,
+  // 13 badges × 3 langues, é31 lot 2). Servis par la seule route /boutique, elle
+  // aussi chargée dynamiquement. C'est la règle ci-dessus APPLIQUÉE plutôt que
+  // contournée : sans ce découpage, `i18n-` réclamait son dix-septième
+  // relèvement pour une microcopy qu'un élève sur dix verra.
+  "i18n-badges-": 12 * 1024,
+  // Surface progression : étoiles de chapitre, sceaux de matière, effort
+  // (étude 34 R-17). Servis par le hub matière, puis par le QG et le suivi
+  // parental aux lots 3 et 4 — toutes des routes chargées dynamiquement. Le
+  // plafond est posé AVEC le chunk, à 16 KB, pour que les lots suivants aient
+  // où grandir sans rouvrir la discussion du budget app-wide.
+  "i18n-progress-": 16 * 1024,
+  // Surface du guide intégré (2026-10-19) : une fiche d'aide par écran + la règle
+  // d'or, en trois langues. Tirée par la fiche paresseuse et les routes qui
+  // posent cartes de première visite et bulles « ? ». Plafond posé avec le chunk.
+  "i18n-guide-": 40 * 1024,
+  // Surface du test de niveau (étude 39) : l'entrée, la passation, le bilan, la carte du Hall,
+  // en trois langues. Tirée par la route publique `/test-de-niveau` (paresseuse) et par la
+  // carte du Hall en `lazy()` — jamais par le chunk index. Plafond posé avec le chunk.
+  "i18n-placement-": 24 * 1024,
   "vendor-supabase-": 240 * 1024,
   "vendor-motion-": 150 * 1024,
   // @dnd-kit (core+sortable+utilities) powering the B2 ordering/matching
@@ -94,7 +180,19 @@ const BUDGETS = {
   // Dashboard route chunk. Bumped 30→32 KB for the flagship-concours banner
   // integration (the banner trio is lazy-loaded into its own chunk; only the
   // small lazy glue lands here). Heavy sections (radar/3D, badges/shop) stay lazy.
-  "dashboard-": 32 * 1024,
+  //
+  // 32→36 KB — étude 31 « l'envie de revenir ». L'écran gagne trois surfaces :
+  // l'anneau du jour branché sur l'XP réel (lot 3), la carte « Ta semaine »
+  // (lot 5) et la bannière d'événement (lot 8). Les DEUX cartes sont
+  // `lazy()` — seule leur glu atterrit ici, comme pour les objectifs — et le
+  // relèvement paie ce qui ne peut pas l'être : trois lectures, leur câblage et
+  // l'en-tête du héros (cadre, palier, titre). Mesuré 34,00 KB ; plafond à +6 %.
+  //
+  // 36→37 KB — étude 39 (2026-11-01) : « Ton bilan de départ ». La carte est `lazy()` et
+  // porte elle-même sa lecture et son catalogue (`i18n-placement`) ; seule sa glu d'import
+  // dynamique atterrit ici (mesuré 36,36 KB pour 36,00). Le palier paie ce qui ne peut pas
+  // être découpé davantage : le point d'accroche d'une carte de plus dans la zone progression.
+  "dashboard-": 37 * 1024,
   // --- Vendor chunks that had NO budget until the 2026-08-10 perf/quality pass
   // (finding M1-fe). They were free to grow uncaught: every Radix primitive or
   // Lucide icon added anywhere in the app lands here, and nothing complained.
@@ -154,9 +252,37 @@ function findLatestChunkSize(prefix) {
   return sizes[0];
 }
 
+/**
+ * Chunks INTERDITS côté client — un préfixe qui ne doit exister dans aucun build.
+ *
+ * `schemas-` est zod (`zod/v4/classic/schemas.js`, 81 KB sur les 84 du chunk,
+ * 23,6 KB gzip). Mesuré le 2026-10-31 : il était servi sur /auth, /parametrage,
+ * /suivi et /parent-report, sans qu'un seul `parse` y tourne — le compilateur de
+ * TanStack Start retire les validateurs du stub client, mais pas un schéma
+ * construit au niveau module du fichier (`parent-report.server.ts`,
+ * `insights/daily-report.ts`, `display-name.ts`). Ces schémas vivent depuis dans
+ * des modules `*.schema(s).ts` que seuls les validateurs et les handlers
+ * importent. Si zod devait un jour servir au client, ce serait `zod/mini`
+ * (secouable), et une ligne ici dirait pourquoi.
+ */
+const FORBIDDEN_CHUNKS = {
+  "schemas-": "zod ne doit jamais atteindre un chunk client (2026-10-31)",
+};
+
 let failed = false;
 
 console.log("Bundle budget check:\n");
+for (const [prefix, reason] of Object.entries(FORBIDDEN_CHUNKS)) {
+  const present = readdirSync(clientAssetsDir).filter(
+    (name) => name.endsWith(".js") && name.startsWith(prefix),
+  );
+  if (present.length === 0) {
+    console.log(`- ${prefix}: absent => OK`);
+    continue;
+  }
+  console.log(`- ${present.join(", ")}: forbidden chunk => FAIL (${reason})`);
+  failed = true;
+}
 for (const [prefix, maxSize] of Object.entries(BUDGETS)) {
   const chunk = findLatestChunkSize(prefix);
   if (!chunk) {

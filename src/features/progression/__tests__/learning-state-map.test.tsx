@@ -14,8 +14,11 @@
  *     compétence déclarée maîtrisée, parce que c'est là que la phrase engage.
  *  4. **US-3, la contestation** — elle est offerte sur une croyance DÉDUITE, et sur elle seule.
  *  5. **R-6** — zéro ligne rend un état vide qui invite, jamais une page cassée.
+ *  6. **Le repli (2026-09-04)** — sur le tableau de bord, la carte ne déroule PAS ses lignes :
+ *     un résumé par état, et un geste pour le détail. Les tests de détail ci-dessous passent
+ *     donc par `expand()` — c'est le chemin de l'élève, pas un contournement.
  */
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
@@ -69,9 +72,16 @@ beforeEach(() => {
   disputeInference.mockClear();
 });
 
+/** Le geste de l'élève : déplier la liste. Sélectionné par son état ARIA, pas par son libellé,
+ *  pour que les tests en arabe passent par le même chemin. */
+async function expand() {
+  await userEvent.setup().click(screen.getByRole("button", { expanded: false }));
+  return screen.getByTestId("learning-state-detail");
+}
+
 describe("LearningStateMap — la carte à 4 états", () => {
   describe("D-1 : la croyance décide, elle ne s'affiche pas", () => {
-    it("ne rend AUCUNE probabilité de croyance, sous aucune forme", () => {
+    it("ne rend AUCUNE probabilité de croyance, sous aucune forme", async () => {
       const { container } = render(
         <LearningStateMap
           rows={[
@@ -95,6 +105,11 @@ describe("LearningStateMap — la carte à 4 états", () => {
           ]}
         />,
       );
+      // Replié (le résumé) puis déplié (les lignes) : les deux surfaces sont balayées, parce
+      // qu'une régression pourrait rebrancher la valeur dans l'une sans toucher l'autre.
+      const collapsed = container.textContent ?? "";
+      expect(collapsed).not.toMatch(/\d+\s*%/);
+      await expand();
       const text = container.textContent ?? "";
 
       // Ni la valeur brute, ni son écriture décimale française, ni sa version en pourcentage.
@@ -119,26 +134,31 @@ describe("LearningStateMap — la carte à 4 états", () => {
       expect(text).not.toMatch(/\d+\s*%/);
     });
 
-    it("rend un ÉTAT en toutes lettres à la place", () => {
+    it("rend un ÉTAT en toutes lettres à la place", async () => {
       render(<LearningStateMap rows={[row({ state: "lacune" })]} />);
+      // Une fois dans le résumé, une fois sur la ligne : les deux en toutes lettres.
       expect(screen.getByText("Lacune")).toBeInTheDocument();
+      await expand();
+      expect(screen.getAllByText("Lacune")).toHaveLength(2);
     });
   });
 
   describe("R-4 : la preuve se montre, elle ne s'affirme pas", () => {
-    it("affiche « prouvé N fois, sous M formes » sur une compétence maîtrisée", () => {
+    it("affiche « prouvé N fois, sous M formes » sur une compétence maîtrisée", async () => {
       render(
         <LearningStateMap
           rows={[row({ state: "maitrisee", evidence_count: 5, forms_count: 3 })]}
         />,
       );
+      await expand();
       expect(screen.getByText("prouvé 5 fois, sous 3 formes")).toBeInTheDocument();
     });
 
-    it("ne l'affiche PAS sur une compétence qui n'est pas déclarée maîtrisée", () => {
+    it("ne l'affiche PAS sur une compétence qui n'est pas déclarée maîtrisée", async () => {
       // La phrase engage : « prouvé 3 fois » sous une compétence fragile laisserait croire
       // que la preuve suffit, alors que R-4 dit exactement l'inverse.
       render(<LearningStateMap rows={[row({ state: "fragile", evidence_count: 3 })]} />);
+      await expand();
       expect(screen.queryByText(/prouvé/)).not.toBeInTheDocument();
     });
   });
@@ -147,6 +167,7 @@ describe("LearningStateMap — la carte à 4 états", () => {
     it("offre « je ne suis pas d'accord » sur une croyance déduite", async () => {
       const user = userEvent.setup();
       render(<LearningStateMap rows={[row({ belief_source: "inference" })]} />);
+      await expand();
 
       expect(screen.getByText("Déduit")).toBeInTheDocument();
       await user.click(screen.getByRole("button", { name: "Je ne suis pas d'accord" }));
@@ -160,19 +181,21 @@ describe("LearningStateMap — la carte à 4 états", () => {
       expect(screen.queryByText("Déduit")).not.toBeInTheDocument();
     });
 
-    it("ne l'offre PAS sur une croyance gagnée par la preuve", () => {
+    it("ne l'offre PAS sur une croyance gagnée par la preuve", async () => {
       // La refuser reviendrait à effacer ce que l'élève a réellement fait.
       render(<LearningStateMap rows={[row({ belief_source: "evidence" })]} />);
+      await expand();
       expect(screen.queryByText("Déduit")).not.toBeInTheDocument();
       expect(screen.queryByRole("button", { name: /pas d'accord/ })).not.toBeInTheDocument();
     });
   });
 
   describe("R-17 : la maîtrise conseille, elle n'interdit jamais", () => {
-    it("une compétence hors-portée est signalée, jamais verrouillée", () => {
+    it("une compétence hors-portée est signalée, jamais verrouillée", async () => {
       const { container } = render(
         <LearningStateMap rows={[row({ zone: "hors-portee", state: "fragile" })]} />,
       );
+      await expand();
       expect(screen.getByText("Il manque une base")).toBeInTheDocument();
       // Aucun bouton désactivé, aucun cadenas : é22 a retiré les faux verrous séquentiels,
       // et cette carte ne les remet pas par la bande.
@@ -182,16 +205,17 @@ describe("LearningStateMap — la carte à 4 états", () => {
   });
 
   describe("R-8 : « à revoir » est une priorité, pas une sanction", () => {
-    it("affiche le marqueur suspect sans changer l'état", () => {
+    it("affiche le marqueur suspect sans changer l'état", async () => {
       render(<LearningStateMap rows={[row({ suspect: true, state: "en-cours" })]} />);
-      expect(screen.getByText("À revoir")).toBeInTheDocument();
-      expect(screen.getByText("En cours")).toBeInTheDocument();
+      const detail = await expand();
+      expect(within(detail).getByText("À revoir")).toBeInTheDocument();
+      expect(within(detail).getByText("En cours")).toBeInTheDocument();
     });
   });
 
   describe("Lecture et langue", () => {
-    it("trie par urgence : ce qui bloque en haut, l'acquis en bas", () => {
-      const { container } = render(
+    it("trie par urgence : ce qui bloque en haut, l'acquis en bas", async () => {
+      render(
         <LearningStateMap
           rows={[
             row({
@@ -207,22 +231,24 @@ describe("LearningStateMap — la carte à 4 états", () => {
           ]}
         />,
       );
-      const labels = [...container.querySelectorAll("li")].map((li) =>
-        li.textContent?.slice(0, 20),
-      );
+      const detail = await expand();
+      const labels = within(detail)
+        .getAllByRole("listitem")
+        .map((li) => li.textContent?.slice(0, 20));
       expect(labels[0]).toContain("Bloquante");
       expect(labels[1]).toContain("Fragile");
       expect(labels[2]).toContain("Acquise");
     });
 
-    it("met les libellés dans la langue de l'interface (le serveur en envoie trois)", () => {
+    it("met les libellés dans la langue de l'interface (le serveur en envoie trois)", async () => {
       mockLocale = "ar";
       render(<LearningStateMap rows={[row()]} />);
+      await expand();
       expect(screen.getByText("جمع الكسور")).toBeInTheDocument();
       expect(screen.queryByText("Additionner des fractions")).not.toBeInTheDocument();
     });
 
-    it("RTL : une phrase mixte texte/chiffres est UN SEUL nœud de texte", () => {
+    it("RTL : une phrase mixte texte/chiffres est UN SEUL nœud de texte", async () => {
       // Le piège documenté de `docs/design-surfaces.md` : « أُثبتت 4 مرات، بـ 2 أشكال » mêle
       // arabe et chiffres. Découpée en plusieurs nœuds (« أُثبتت », {n}, « مرات »…), elle
       // s'inverse à l'affichage — les nombres partent au mauvais bout de la phrase. La parade
@@ -234,6 +260,7 @@ describe("LearningStateMap — la carte à 4 états", () => {
           rows={[row({ state: "maitrisee", evidence_count: 4, forms_count: 2 })]}
         />,
       );
+      await expand();
       const proven = [...container.querySelectorAll("span")].find((el) =>
         el.textContent?.includes("أُثبتت"),
       );
@@ -243,7 +270,7 @@ describe("LearningStateMap — la carte à 4 états", () => {
       expect(proven?.textContent).toBe("أُثبتت 4 مرات، بـ 2 أشكال");
     });
 
-    it("groupe par domaine", () => {
+    it("groupe par domaine", async () => {
       render(
         <LearningStateMap
           rows={[
@@ -252,8 +279,69 @@ describe("LearningStateMap — la carte à 4 états", () => {
           ]}
         />,
       );
+      await expand();
       expect(screen.getByText("frac")).toBeInTheDocument();
       expect(screen.getByText("geo")).toBeInTheDocument();
+    });
+  });
+
+  describe("Le repli : le hall n'est pas un audit", () => {
+    const three = [
+      row({ competency_id: "a", slug: "a", state: "lacune", label_fr: "Bloquante" }),
+      row({ competency_id: "b", slug: "b", state: "lacune", label_fr: "Bloquante aussi" }),
+      row({
+        competency_id: "c",
+        slug: "c",
+        state: "maitrisee",
+        label_fr: "Acquise",
+        evidence_count: 4,
+        forms_count: 2,
+      }),
+    ];
+
+    it("se replie par défaut : le titre, le résumé par état, et AUCUNE ligne de compétence", () => {
+      render(<LearningStateMap rows={three} />);
+      expect(screen.getByText("Où tu en es")).toBeInTheDocument();
+      expect(screen.queryByTestId("learning-state-detail")).not.toBeInTheDocument();
+      expect(screen.queryByText("Bloquante")).not.toBeInTheDocument();
+      expect(screen.queryByText(/prouvé/)).not.toBeInTheDocument();
+      expect(screen.getByRole("button", { expanded: false })).toHaveTextContent("Voir le détail");
+    });
+
+    it("le résumé compte par état, dans l'ordre d'urgence, et tait les états absents", () => {
+      render(<LearningStateMap rows={three} />);
+      const chips = within(screen.getByRole("list", { name: "Résumé par état" })).getAllByRole(
+        "listitem",
+      );
+      expect(chips.map((c) => c.textContent)).toEqual(["Lacune2", "Maîtrisée1"]);
+      // Ni « Fragile », ni « En cours », ni « Pas encore vue » : un zéro n'informe pas, et
+      // « 0 lacune » ressemblerait à un satisfecit.
+      expect(screen.queryByText("Fragile")).not.toBeInTheDocument();
+      expect(screen.queryByText("En cours")).not.toBeInTheDocument();
+    });
+
+    it("un geste déplie la liste complète, le même geste la replie", async () => {
+      const user = userEvent.setup();
+      render(<LearningStateMap rows={three} />);
+
+      await user.click(screen.getByRole("button", { expanded: false }));
+      const detail = screen.getByTestId("learning-state-detail");
+      expect(within(detail).getAllByRole("listitem")).toHaveLength(3);
+      expect(screen.getByText("prouvé 4 fois, sous 2 formes")).toBeInTheDocument();
+      const toggle = screen.getByRole("button", { expanded: true });
+      expect(toggle).toHaveTextContent("Masquer le détail");
+      expect(toggle).toHaveAttribute("aria-controls", detail.id);
+
+      await user.click(toggle);
+      expect(screen.queryByTestId("learning-state-detail")).not.toBeInTheDocument();
+      expect(screen.getByRole("button", { expanded: false })).toBeInTheDocument();
+    });
+
+    it("le résumé suit la langue de l'interface", () => {
+      mockLocale = "ar";
+      render(<LearningStateMap rows={three} />);
+      expect(screen.getByRole("list", { name: "ملخّص حسب الحالة" })).toBeInTheDocument();
+      expect(screen.getByRole("button", { expanded: false })).toHaveTextContent("عرض التفاصيل");
     });
   });
 

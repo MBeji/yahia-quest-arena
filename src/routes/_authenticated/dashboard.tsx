@@ -16,7 +16,14 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
-import { getDashboard, getSprint2Dashboard } from "@/features/dashboard";
+import {
+  getActiveEvent,
+  getDailyRing,
+  getDashboard,
+  getSprint2Dashboard,
+  getWeeklyRecap,
+} from "@/features/dashboard";
+import type { DashboardGoalAction } from "@/features/dashboard";
 // Import direct, même raison que sur le lecteur de chapitre : le barrel de
 // la feature IA tirerait la console parent et la Forge dans ce chunk.
 import { ForgeEntry } from "@/features/ai/components/forge-entry";
@@ -28,14 +35,20 @@ import { TutorPracticeEntry } from "@/features/tutor/components/tutor-practice-e
 import { TutorDigestCard } from "@/features/tutor/components/tutor-digest";
 import { daysAwayFrom } from "@/features/tutor/coaching";
 import { appLocalDate } from "@/shared/lib/app-day";
-import { DailyReviewPanel, recoverStreak } from "@/features/progression";
-import { hubRouteForRole, shouldLeaveDashboard } from "@/features/auth";
+import { STREAK_RECOVERY_COST } from "@/shared/constants/gamification";
+import { streakRecoveryBlock } from "@/shared/lib/streak-recovery";
+// Imports directs, pas le barrel : le barrel ré-exporte aussi les panneaux `lazy()` ci-dessous, et
+// l'importer ici les tirait dans le chunk eager — le `lazy()` ne découpait plus rien.
+import { DailyReviewPanel } from "@/features/progression/components/daily-review-panel";
+import { recoverStreak } from "@/features/progression/progression.server";
+import { hubRouteForRole, shouldLeaveDashboard, useExitOnRefusedSession } from "@/features/auth";
 import { EnablePushCard } from "@/features/notifications";
 import { SubjectPathCard } from "@/features/dashboard/components/subject-path-card";
 import { MotivationalQuote } from "@/features/dashboard/components/motivational-quote";
 import { DashboardGoalsSkeleton } from "@/features/dashboard/components/dashboard-goals-skeleton";
 import { DashboardFocus } from "@/features/dashboard/components/dashboard-focus";
 import { BackToSchoolBanner } from "@/features/dashboard/components/back-to-school-banner";
+import { GuideIntroCard } from "@/components/guide/guide-intro-card";
 import { DashboardSkeleton } from "@/features/dashboard/components/dashboard-skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useReducedMotion } from "motion/react";
@@ -43,6 +56,7 @@ import { entrance } from "@/shared/lib/motion";
 import { PageShell } from "@/components/ui/page-shell";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { GoldProgress } from "@/components/game/gold-progress";
+import { trackProductEvent } from "@/shared/lib/product-events";
 
 const GoldAmbientCanvas = lazy(() => import("@/components/visual/gold-ambient-canvas"));
 // « Carte de compétences » (étude 07 lot 4) : lazy comme les sections lourdes du dashboard —
@@ -54,7 +68,7 @@ const GoldAmbientCanvas = lazy(() => import("@/components/visual/gold-ambient-ca
 // budget, et le choix de quelle carte montrer appartient de toute façon à la progression, pas
 // à cette route. Le composant porte le commentaire complet.
 const LearningPanels = lazy(() =>
-  import("@/features/progression").then((m) => ({
+  import("@/features/progression/components/learning-panels").then((m) => ({
     default: m.LearningPanels,
   })),
 );
@@ -65,9 +79,31 @@ const WeaknessesPanel = lazy(() =>
 );
 // Objectifs & quêtes : même raison, budget de chunk. Voir l'en-tête du composant —
 // c'est le `lazy()` qui déplace les octets, pas l'extraction seule.
+// é31 lots 5 et 8 — mêmes raisons que les objectifs ci-dessous : le chunk du
+// tableau de bord a un budget, et ces deux cartes ne sont pas la première chose
+// que l'élève regarde. C'est le `lazy()` qui déplace les octets, pas l'extraction.
+const WeeklyRecapCard = lazy(() =>
+  import("@/features/dashboard/components/weekly-recap-card").then((m) => ({
+    default: m.WeeklyRecapCard,
+  })),
+);
+const EventBanner = lazy(() =>
+  import("@/features/dashboard/components/event-banner").then((m) => ({
+    default: m.EventBanner,
+  })),
+);
+
 const DashboardGoals = lazy(() =>
   import("@/features/dashboard/components/dashboard-goals").then((m) => ({
     default: m.DashboardGoals,
+  })),
+);
+// é39 US-6 — « Ton bilan de départ ». Lazy pour la même raison que les cartes ci-dessus, et
+// davantage : la carte porte SA lecture et SON catalogue i18n (`i18n-placement`), qui ne doivent
+// pas entrer dans le chunk eager du tableau de bord.
+const PlacementHallCard = lazy(() =>
+  import("@/features/placement/components/placement-hall-card").then((m) => ({
+    default: m.PlacementHallCard,
   })),
 );
 import { useT } from "@/lib/i18n";
@@ -87,11 +123,26 @@ function Dashboard() {
   const navigate = useNavigate();
   const fetchDashboard = useServerFn(getDashboard);
   const fetchSprint2 = useServerFn(getSprint2Dashboard);
-  const { data, isLoading, isError } = useQuery({
+  const fetchDailyRing = useServerFn(getDailyRing);
+  const fetchWeeklyRecap = useServerFn(getWeeklyRecap);
+  const fetchActiveEvent = useServerFn(getActiveEvent);
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["dashboard"],
     queryFn: () => fetchDashboard(),
   });
   const { data: sprint2 } = useQuery({ queryKey: ["sprint2"], queryFn: () => fetchSprint2() });
+  // é31 lot 3 — l'XP réellement gagné aujourd'hui, sur l'objectif choisi (R-12).
+  const { data: ring } = useQuery({ queryKey: ["daily-ring"], queryFn: () => fetchDailyRing() });
+  // é31 lot 8 — l'événement du calendrier, s'il y en a un aujourd'hui.
+  const { data: activeEvent } = useQuery({
+    queryKey: ["active-event"],
+    queryFn: () => fetchActiveEvent(),
+  });
+  // é31 lot 5 — le bilan de la semaine (US-8), déterministe et sans récompense.
+  const { data: recap } = useQuery({
+    queryKey: ["weekly-recap"],
+    queryFn: () => fetchWeeklyRecap(),
+  });
 
   // Light 3D gold ambient — only after mount, never on mobile or reduced-motion
   // (the CSS gold ambient from the shell remains as the fallback).
@@ -114,16 +165,26 @@ function Dashboard() {
   const streakRecoveryMutation = useMutation({
     mutationFn: () => recoverStreakFn(),
     onSuccess: (res) => {
+      // é31 lot 1 — le rachat de série est le geste de RETOUR par excellence :
+      // il mesure combien d'élèves refusent de laisser tomber (constat n° 7).
+      trackProductEvent("streak_recovered", { new_streak: res.newStreak });
       toast.success(
         t.dashboard.streakRecovered
           .replace("{n}", String(res.newStreak))
           .replace("{unit}", res.newStreak > 1 ? t.dashboard.days : t.dashboard.day),
       );
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+      // La série rachetée doit aussi atteindre la puce de l'en-tête (data-02).
+      queryClient.invalidateQueries({ queryKey: ["me-stats"] });
     },
     onError: (error) =>
       toast.error(error instanceof Error ? error.message : t.dashboard.recoveryFailed),
   });
+
+  // Le refus d'authentification qui atteint CET écran termine la session : c'est
+  // le cul-de-sac mesuré de #969, et le seul endroit qui sache que les reprises
+  // sont épuisées. Le garde de `_authenticated` fait la redirection.
+  useExitOnRefusedSession(isError ? error : null);
 
   if (isError) {
     return (
@@ -132,6 +193,20 @@ function Dashboard() {
           <Skull className="mx-auto h-10 w-10 text-destructive" />
           <h2 className="mt-4 font-display text-xl font-bold">{t.dashboard.failedLoad}</h2>
           <p className="mt-2 text-sm text-muted-foreground">{t.dashboard.failedLoadDesc}</p>
+          {/*
+            L'identité de l'erreur, comme sur la frontière d'erreur racine et pour la même
+            raison : c'est le seul canal de diagnostic d'un élève sur mobile, sans devtools.
+            Un écran qui ne dit que « quelque chose s'est mal passé » force à ouvrir une trace
+            — et c'est exactement ce qui a fait tourner en rond l'enquête #969.
+          */}
+          {error instanceof Error && error.message ? (
+            <p
+              data-testid="dashboard-error-message"
+              className="mt-2 text-xs break-words text-muted-foreground/70"
+            >
+              {error.message}
+            </p>
+          ) : null}
           <button
             onClick={() => queryClient.invalidateQueries({ queryKey: ["dashboard"] })}
             className="mt-4 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
@@ -147,7 +222,7 @@ function Dashboard() {
     return <DashboardSkeleton />;
   }
 
-  const { profile, subjects, stats, nextExerciseId } = data;
+  const { profile, subjects, stats, progress, nextExerciseId } = data;
   // School subjects flagged as locked by the server (premium parcours, no entitlement).
   const lockedSet = new Set(data.premiumLockedSubjectIds ?? []);
   if (!profile)
@@ -171,9 +246,15 @@ function Dashboard() {
       : null;
   const continueSubject = subjects.find((s) => s.id === actionSubjectId) ?? undefined;
 
-  function runQuestAction(action: "retry" | "subject" | "dungeon") {
+  function runQuestAction(action: DashboardGoalAction) {
     if (action === "dungeon") {
       navigate({ to: "/dungeon" });
+      return;
+    }
+
+    // é31 lot 3 — la mission « joue un duel » mène à l'arène, pas à une matière.
+    if (action === "duel") {
+      navigate({ to: "/duel" });
       return;
     }
 
@@ -210,7 +291,11 @@ function Dashboard() {
           <div className="absolute -end-10 -top-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/30 blur-3xl" />
           <div className="absolute -bottom-10 -start-10 h-48 w-48 rounded-full bg-[color:var(--gold)]/20 blur-3xl" />
           <div className="relative grid gap-6 sm:grid-cols-[auto_1fr_auto] sm:items-center">
-            <HeroAvatar avatarSlug={profile.avatar_slug} />
+            <HeroAvatar
+              avatarSlug={profile.avatar_slug}
+              frameSlug={(profile as { frame_slug?: string | null }).frame_slug ?? null}
+              avatarTier={profile.avatar_tier}
+            />
             <div className="min-w-0">
               <div className="text-sm text-muted-foreground">
                 {isFirstRun ? t.dashboard.firstRunWelcome : t.dashboard.welcomeBack}
@@ -224,6 +309,7 @@ function Dashboard() {
                 xp={profile.xp}
                 coins={profile.yahia_coins ?? 0}
                 heroClass={profile.hero_class}
+                titleCode={(profile as { title_code?: string | null }).title_code ?? null}
               />
               <div className="mt-4">
                 <div className="mb-1 flex justify-between text-xs text-muted-foreground">
@@ -251,6 +337,10 @@ function Dashboard() {
         {/* Bannière de rentrée (étude 22, R-4) — proposée, jamais imposée : elle n'apparaît que
             dans la fenêtre du 1ᵉʳ septembre au 31 octobre, et seulement si le choix de classe
             précède cette rentrée. Aucune promotion automatique n'existe (D-6). */}
+        {/* Guide intégré : à la première visite, ce que fait cet écran en trois
+            lignes. Dans la page, jamais en surimpression ; fermé une fois pour toutes. */}
+        <GuideIntroCard screen="dashboard" className="mt-6" />
+
         {data.promotionSuggestion && (
           <BackToSchoolBanner
             suggestion={data.promotionSuggestion}
@@ -272,12 +362,36 @@ function Dashboard() {
         <DashboardFocus
           nextAction={data.nextAction}
           continueSubject={continueSubject}
-          xpToday={(sprint2?.dailyObjectives ?? [])
-            .filter((o) => o.status === "completed")
-            .reduce((sum, o) => sum + (o.xp_reward ?? 0), 0)}
-          dailyGoal={100}
+          /* é31 lot 3 (R-12) — l'anneau montrait la somme des `xp_reward` des
+             objectifs COMPLÉTÉS sur 100 en dur : 0 % ou 50 %, jamais l'XP réel.
+             Il lit désormais le compteur du jour tenu par `award_xp` (quête,
+             donjon, duel et objectifs y passent tous) sur l'objectif CHOISI. */
+          xpToday={ring?.xpToday ?? 0}
+          dailyGoal={ring?.goal ?? 100}
           streak={profile.current_streak}
         />
+
+        {/* é31 lot 8 (US-12, R-21) — le calendrier scolaire : la seule chose datée
+            du produit était une suggestion de changement de classe. La bannière
+            annonce un défi et un badge — elle ne borne AUCUN contenu (R-2). */}
+        {activeEvent && (
+          <Suspense fallback={null}>
+            <div className="mt-6">
+              <EventBanner event={activeEvent} />
+            </div>
+          </Suspense>
+        )}
+
+        {/* é31 lot 5 (US-8, R-18) — « Ta semaine » : la fin de cycle qui manquait.
+            Les faits, comparés à la semaine d'avant, et AUCUNE récompense —
+            un bilan qui paye devient une tâche. */}
+        {recap && (
+          <Suspense fallback={null}>
+            <div className="mt-6">
+              <WeeklyRecapCard recap={recap} />
+            </div>
+          </Suspense>
+        )}
 
         {/* « Révision du jour » (étude 04, lot A1.1) — juste sous la bande focus, parce que
             c'est la même urgence détaillée : la bande promeut UNE action (la tête du plan),
@@ -328,13 +442,14 @@ function Dashboard() {
             consigne, un pourcentage se lit comme une note. Le composant décide lui-même du
             repli sur l'ancienne carte quand la matière n'est pas taggée (R-6) — les deux
             lectures de croyance rendent alors zéro ligne, et l'écran doit rester EXACTEMENT
-            celui d'aujourd'hui. Données via ses propres requêtes client (§3.11), donc hors du
-            chemin SSR ; `getDashboard` continue d'alimenter le repli. */}
+            celui d'aujourd'hui. L'état vient de `getDashboard` (lu une fois, pour « Prochaine
+            action » aussi) ; seule la frontière reste une requête client (§3.11). */}
         <Suspense fallback={null}>
           <LearningPanels
             map={data.competencyMap ?? []}
             blockers={data.competencyBlockers ?? []}
             blockedSlug={data.competencyBlockedSlug ?? null}
+            learningState={data.learningState ?? []}
           />
         </Suspense>
 
@@ -356,8 +471,21 @@ function Dashboard() {
           />
         </Suspense>
 
-        {/* STREAK RECOVERY BANNER */}
-        {profile.current_streak === 0 && (profile.longest_streak ?? 0) > 0 && (
+        {/* « Ton bilan de départ » (étude 39, US-6 / R-17) — le dernier test de niveau non
+            bâclé par matière, et par où commencer ; sans bilan, l'invitation à en passer un.
+            La carte lit elle-même (`getMyPlacementOverview`), hors du chemin SSR. */}
+        <div className="mt-6">
+          <Suspense fallback={null}>
+            <PlacementHallCard />
+          </Suspense>
+        </div>
+
+        {/* STREAK RECOVERY BANNER — la condition est celle du SERVEUR, lue au
+            même endroit (`streak-recovery.ts`). Elle testait auparavant
+            `current_streak === 0`, une valeur qu'`award_xp` n'écrit jamais : la
+            bannière ne s'affichait donc JAMAIS, et le rachat de série était un
+            chemin complet et muré. */}
+        {streakRecoveryBlock(profile) === null && (
           <motion.div
             {...entrance(prefersReduced, "rise", 0.12)}
             className="mt-4 flex flex-col gap-3 rounded-2xl border border-[color:var(--flame)]/40 bg-[color:var(--flame)]/8 p-4 backdrop-blur-md sm:flex-row sm:items-center sm:justify-between sm:gap-4"
@@ -369,13 +497,18 @@ function Dashboard() {
               <div>
                 <div className="font-display text-sm font-bold">{t.dashboard.streakLostTitle}</div>
                 <div className="text-xs text-muted-foreground">
-                  {t.dashboard.streakLostDesc.replace("{n}", String(profile.longest_streak))}
+                  {t.dashboard.streakLostDesc
+                    .replace("{n}", String(profile.longest_streak))
+                    .replace("{cost}", String(STREAK_RECOVERY_COST))}
                 </div>
               </div>
             </div>
             <button
               type="button"
-              disabled={streakRecoveryMutation.isPending || (profile.yahia_coins ?? 0) < 15}
+              disabled={
+                streakRecoveryMutation.isPending ||
+                (profile.yahia_coins ?? 0) < STREAK_RECOVERY_COST
+              }
               onClick={() => streakRecoveryMutation.mutate()}
               className="shrink-0 rounded-lg bg-[color:var(--flame)] px-4 py-2 text-sm font-bold text-primary-foreground transition hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -422,6 +555,7 @@ function Dashboard() {
                 <SubjectPathCard
                   subject={s}
                   stat={stats[s.id]}
+                  stars={progress[s.id]}
                   premiumLocked={lockedSet.has(s.id)}
                 />
               </motion.div>

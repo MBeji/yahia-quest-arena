@@ -194,6 +194,10 @@ export function simulate(personaName, { seed = 42 } = {}) {
     maxXpInADay,
     levelFiveDay,
     /** Combien de jours manqués un shield pourrait couvrir, au prix courant. */
-    shieldCoverableDays: Math.floor(coinsEarned / STREAK_RECOVERY_COST),
+    // Nombre de jours manqués que l'élève pourrait RACHETER avec ses coins.
+    // Ce n'est PAS le `bouclier_flamme` de la boutique (250 coins, armé
+    // d'avance) : c'est le rachat de série, rétroactif et 16,7× moins cher —
+    // donc le seul des deux qu'un élève rationnel utilise.
+    recoveryCoverableDays: Math.floor(coinsEarned / STREAK_RECOVERY_COST),
   };
 }

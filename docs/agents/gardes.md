@@ -53,6 +53,23 @@ le 2026-07-19) : [`second-opinion.yml`](../../.github/workflows/second-opinion.y
 le secret `OPENAI_API_KEY` existe **et** le rôle porte un `model` non nul ; sinon il skippe en
 vert. Le secret dit « on paie », `models.json` dit « avec quoi » : il faut les deux.
 
+**Un garde dormant ne doit rien coûter — et celui-ci coûtait** (étude 32, D-4). Ses deux verrous
+vivent dans le job : ils ne pouvaient dire « non » qu'**après** le `checkout`, donc un garde qui
+n'a jamais tourné allouait un runner et clonait l'historique complet à chaque push de PR —
+**71 fois en 4,4 jours**. Une **condition de job** coupe avant tout ça, et c'est ce qui impose une
+**variable** de dépôt : le contexte `secrets` n'est pas lisible dans un `if:` de job, `vars` l'est.
+Règle générale pour tout futur garde dormant : le premier « non » se prononce **avant** le
+checkout, pas dedans. Pour l'allumer :
+
+```bash
+gh variable set SECOND_OPINION_ARMED --body true   # puis le secret et le rôle
+```
+
+⚠️ Ce que cela ne fait PAS disparaître : la **ligne du run** dans l'onglet Actions, avec un job
+`skipped`. Ce qui disparaît, c'est le runner et le clone. Seul un filtre de déclencheur
+supprimerait l'entrée, et il a été écarté (il tuerait aussi le chemin du label). Les deux chemins
+à la demande — label `second-avis`, dispatch manuel — passent outre la variable, comme avant.
+
 **Pourquoi ce garde existe** : tous nos gardes tournent sur la même famille de modèles, donc un
 angle mort partagé reste invisible quel que soit leur nombre. Une seconde famille le révèle.
 
@@ -74,11 +91,35 @@ Détail et jours exacts : `docs/dependency-maintenance.md`.
 `report-triage.yml` est l'exception : il est aussi câblé sur un cron de 4 h (et sur le dispatch
 d'un signalement inséré), donc **la cadence n'y suffisait pas** comme garde-fou de bruit.
 
+⚠️ **Un nightly rouge n'est plus un gel** (2026-09-13, audit du 2026-09-12 C-1). Le verdict
+agrégé du nightly porte aussi les suites **optionnelles**, gatées par secret et jouées sur le
+projet TEST (`e2e-auth`, `perf`). Une seule spec rouge (#1015) l'a tenu rouge du 04 au 12/09, et
+deux consommateurs lisaient ce verdict au lieu des preuves qui les concernent : `upgrade-guard`
+a sauté neuf balayages et `checkpoint-tag` n'a coupé aucun point de retour (#1008), pendant que
+`main`, `verify`, pgTAP et l'E2E public étaient verts. Désormais `upgrade-guard` exige `verify`
+vert sur le commit du nightly (et rejoue les suites lentes sur sa propre branche), et
+`pick-checkpoint` exige les suites **requises** (E2E public, pgTAP) plus `verify` — une suite
+optionnelle rouge est **consignée dans l'annotation du tag**, jamais un veto. Règle qui reste :
+**un nightly rouge depuis plus de 48 h est un rang 0**, pas une issue qui vieillit.
+
 ⚠️ « Trois gardes Claude » décrit la **minuterie**, plus la dépense : depuis l'étude
 « IA → déterministe » (close le 2026-07-25), un garde qui se déclenche ne réveille un agent que
 s'il y a du travail de jugement. `upgrade-guard` va plus loin — son lot nominal (patch/minor)
 est un **script** qui tourne **sans jeton Claude** ; l'agent n'entre en scène que pour une
 major ou un lot rouge.
+
+## Mesurer le bruit plutôt que le raconter
+
+`npm run actions:census -- --repo <owner/name>` imprime, pour les N dernières pages de runs :
+la cadence par workflow × conclusion × événement, les **runs à zéro job** (ceux qui n'ont rien
+évalué — la sonde `jobs.total_count`, le seul test qui tranche), les minutes facturables à la
+minute entamée, et le nombre de runs par branche poussée. `--from <dump.json>` rejoue un relevé
+sauvegardé, hors ligne.
+
+Il existe parce que le chiffre qui a ouvert l'étude 32 — **21 % des runs du dépôt privé sont des
+rouges fantômes** — a demandé huit pages d'API et une agrégation à la main. Un « avant » qu'on ne
+sait pas rejouer ne donne jamais d'« après » : c'est ce script qui juge si un lot a servi, pas
+l'impression qu'on en a. Ce n'est **pas** un gate : il ne garde rien et n'échoue sur aucun chiffre.
 
 ## Un pré-gate déterministe avant chaque garde
 
@@ -149,6 +190,57 @@ aussi dès qu'une fenêtre entière est verte. Ce qui mérite un geste, c'est un
 franchit la journée : là, la file de signalements n'est plus triée, et c'est ça le coût réel —
 pas le rouge.
 
+## Écrire une garde neuve — les deux pièges du 2026-09-22
+
+`pat-expiry-watch.yml` est partie en production et ses **deux premiers passages sont
+sortis en 1**. Les deux causes valent d'être écrites : l'une est désormais mécanisée,
+l'autre ne peut pas l'être.
+
+### 1. `gh` ne sait pas tout seul sur quel dépôt il travaille — **mécanisé**
+
+Une garde qui ne lit aucun fichier n'a pas besoin de `actions/checkout`, et c'est
+tentant de s'en passer. Mais hors d'un dépôt git, `gh issue`, `gh pr`, `gh run`,
+`gh label`… n'ont **aucun moyen** de résoudre « le dépôt courant » : ils sortent en 1.
+`guard-watch.yml` et `client-errors-watch.yml` ne le rencontrent jamais parce qu'ils se
+checkout _et_ déclarent `GH_REPO`. Copier le **corps** de leur étape sans leur
+**environnement**, c'est reprendre la pièce sans le joint.
+
+Trois formes correctes, au choix : `GH_REPO: ${{ github.repository }}` dans l'`env:`
+du job, un `actions/checkout`, ou `-R <owner>/<repo>` sur la ligne. `gh api
+repos/<o>/<r>/…` n'est pas concerné — il nomme son dépôt dans l'URL.
+
+**`npm run harness:check` fait échouer la CI là-dessus** (`findGhWithoutRepo`), et le
+message nomme le job et l'étape. Une règle écrite sans gate est une suggestion ; ce
+fichier-ci en est la preuve, puisque la règle était déjà _appliquée_ par deux gardes
+sur deux sans que personne l'ait jamais énoncée.
+
+⚠️ Corollaire du même passage : **créer le label AVANT de lire par ce label.**
+`guard-watch.yml` le fait dans cet ordre, `client-errors-watch.yml` dans l'autre — et
+ne s'en aperçoit pas, son label existant depuis longtemps. Une garde neuve, elle,
+démarre sur un dépôt qui n'a pas encore son label.
+
+### 2. Les journaux d'un runner sont **illisibles** depuis une session cloud
+
+C'est ce qui a coûté le plus cher, et rien ne peut le mécaniser.
+
+GitHub ne sert pas les logs d'un job : il **redirige** vers un stockage Azure
+(`*.blob.core.windows.net`), que le proxy de sortie d'une session cloud refuse — `403`
+au CONNECT, aussi bien par `gh api` que par `curl` sur l'URL signée. Les annotations
+du check run ne rendent que `Process completed with exit code 1`.
+
+Une session cloud ne peut donc diagnostiquer une garde rouge que par **ce qu'elle
+laisse derrière elle**. D'où deux conséquences quand on en écrit une :
+
+- **découper en étapes nommées** plutôt qu'un gros `run:` — le nom de l'étape en échec
+  se lit dans l'API des jobs, et c'est parfois la seule information disponible ;
+- **se demander, avant de pousser, ce que la garde prouvera de son propre travail** :
+  une issue créée, un label posé, un commentaire. Ici, « aucune issue `pat-expiry`
+  n'existe » a suffi à établir que la chute était **à ou avant** la création, et
+  « l'étape de sondage est verte » qu'elle était **après** l'appel à l'API.
+
+Le chemin qui a tranché, faute de log : comparer les blocs `env:` des trois gardes.
+Les deux qui marchent déclaraient `GH_REPO`, la nouvelle non.
+
 ## Sécurité
 
 - Les gardes n'ont que `GITHUB_TOKEN` (scopé au dépôt) et le jeton d'abonnement. **Jamais** de
@@ -170,3 +262,89 @@ pas le rouge.
 
   Un `uses:` qui repasserait à un tag mouvant est un retour en arrière : c'est un point de
   vigilance en revue (le dépôt n'en contient plus aucun).
+
+## Le vert qui ne prouve rien — troisième piège du 2026-09-22
+
+Les deux premiers pièges du jour (le `gh` sans `GH_REPO`, les logs de runner illisibles depuis le
+cloud) sont au-dessus. Celui-ci est le plus coûteux, parce qu'il **ne laisse pas de rouge**.
+
+`upgrade-guard.yml` n'a **pas appliqué un seul lot de dépendances pendant dix-huit jours**, et
+son historique affichait très majoritairement `success`. Mesuré sur ses 45 derniers runs :
+
+|  runs | ce que l'étape `apply` a fait                                   |
+| ----: | --------------------------------------------------------------- |
+|    41 | **`skipped`** — la cadence n'avait pas tiré, rien n'a été tenté |
+|     4 | **`failure`** — 2026-08-21, 09-15, 09-18, 09-22                 |
+| **0** | succès                                                          |
+
+La cause des trois derniers est une **jointure**, pas une pièce : `scripts/deps/apply-patch-minor.mjs`
+refuse d'écrire le lockfile sous npm 11 (il réécrit les bindings natifs multi-plateformes), son
+test unitaire le vérifie depuis toujours — et #975 a fait passer le workflow à `node-version: 24`
+le 2026-09-04, qui livre **npm 11.19**. Le garde-fou du script est devenu la panne du workflow,
+le jour même où le workflow lui a retiré ce qu'il exigeait. Chaque pièce était juste.
+
+**Ce qu'il faut en retenir, et qui vaut pour toute garde :**
+
+1. **Un `success` de workflow ne dit pas « ça marche ».** Il dit « aucun job n'a échoué » — ce qui
+   inclut « rien n'a tourné ». C'est exactement le piège des runs « zéro job » du dépôt de contenu,
+   qui a coûté trois fois là-bas. Pour juger une garde, ne pas lire sa **conclusion** : lire la
+   **conclusion de l'étape qui fait le travail**.
+
+   ```bash
+   # pour chaque run : ce que l'étape utile a VRAIMENT fait
+   gh api repos/<o>/<r>/actions/runs/<id>/jobs \
+     --jq '.jobs[].steps[] | select(.name=="<l_étape>") | .conclusion'
+   ```
+
+   Une garde dont l'étape utile n'a jamais rendu `success` n'a jamais fonctionné, quel que soit
+   le vert de la colonne.
+
+2. **Quand un script refuse une version d'outil, l'invariant est que le workflow la lui donne.**
+   Un test unitaire sur le refus ne prouve rien du runner. Cet invariant-là est mécanisé :
+   `findApplyWithoutNpm10` dans `scripts/harness/check.mjs` fait **échouer la CI** si une étape
+   écrit le lockfile sans npm 10 dans son job. Il vérifie aussi l'**ordre** — un pin posé après
+   l'apply ne sert à rien.
+
+3. **Monter le Node d'un workflow change son npm.** Node ≤ 22 livre npm 10, Node ≥ 23 livre
+   npm 11 (`https://nodejs.org/dist/index.json`, champ `npm`). Toute bascule de `node-version`
+   est aussi une bascule de gestionnaire de paquets, et c'est rarement ce qu'on avait en tête.
+
+4. **Le premier blocage trouvé n'est pas forcément le seul.** Le npm 11 ci-dessus a été
+   diagnostiqué par lecture — puis **rejoué en local sous npm 10, où l'`apply` a échoué
+   quand même**, sur un `ERESOLVE`. La lecture donnait une cause vraie et incomplète ; seule
+   l'exécution a donné la seconde. Un diagnostic de garde ne vaut que rejoué.
+
+   Le second blocage, mesuré le 2026-09-22 : le lot en-range monte `react` 19.2.8 → **19.3.0**
+   _et_ `@react-three/fiber` 9.6.x → **9.7.0**, dont le peer est `react ">=19 <19.3"`. Les deux
+   montées sont **mutuellement incompatibles** ; chacune seule passerait. Et comme l'`apply`
+   fait **un seul `npm update`** portant tout le lot, **un conflit en coule 41**. C'est
+   vraisemblablement aussi la cause de l'échec du 2026-08-21, antérieur à la bascule Node 24.
+   Suivi : voir l'issue « upgrade-guard : un conflit de peer en coule 41 ».
+
+## Le hook qui voyage avec `npm ci` — piège du 2026-10-30 (#1203)
+
+`npm ci` exécute le `prepare` du projet, qui **installe husky dans le checkout du runner**. Toute
+garde qui fait `git push` après un `npm ci` passe donc par `.husky/pre-push` (= `npm run verify`),
+exactement comme un humain en local. Ce n'est pas un défaut : c'est le filet de sécurité qui suit
+le code partout. C'est un défaut d'une garde de **compter le contourner**.
+
+`upgrade-guard.yml` laissait son gate `ci:verify` en `continue-on-error`, puis poussait le lot
+rouge pour en faire une « PR draft `needs-review` » que l'agent réparerait. Run 41017413367 : le
+pre-push a rejoué les mêmes erreurs TS, le push a échoué, aucune PR n'est née, et les étapes
+suivantes (jeton, agent) sont sorties `skipped` — le mode « réparer un lot rouge » était mort dès
+que le rouge relevait de `verify`. Il avait marché le 10-27 (run 40459566340) parce que ce
+rouge-là (budget de bundle, `build:check`) est hors du périmètre de `verify` : un succès qui
+prouvait le cas facile, pas le cas utile. Le message final annonçait en plus une « PR draft
+(#) » qui n'existait pas.
+
+**Le correctif ne touche pas au hook** (ni `--no-verify`, ni `HUSKY=0`, ni `core.hooksPath`) :
+le lot est **commité sur une branche locale** quel que soit le gate, **poussé seulement si le
+gate est vert** ; rouge, il reste local, l'agent le répare (correctif ou `--hold`) et le pousse
+lui-même une fois `ci:verify` vert — le pre-push passe alors. S'il n'y arrive pas, il ne pousse
+rien et tient une issue de suivi.
+
+L'invariant est mécanisé : `findPushPastRedGate` (`scripts/harness/check.mjs`) fait échouer
+`harness:check` si, dans un job où un `npm ci` a installé les hooks, une étape fait `git push`
+après un gate `verify`/`ci:verify` non bloquant sans porter `if: steps.<gate>.outcome ==
+'success'`. `outcome`, pas `conclusion` — celle d'une étape `continue-on-error` est toujours
+`success`. Un `if` shell à l'intérieur de l'étape ne compte pas : c'était la forme exacte du bug.

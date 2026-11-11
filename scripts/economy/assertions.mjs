@@ -13,6 +13,7 @@
  */
 
 import { STREAK_RECOVERY_COST, XP_PER_LEVEL } from "../../src/shared/constants/gamification.ts";
+import { shopCapacityCoins } from "./shop-catalogue.mjs";
 
 /** Niveau 5 = 4 paliers franchis. */
 export const LEVEL_FIVE_XP = 4 * XP_PER_LEVEL;
@@ -51,7 +52,7 @@ export const GUARDRAILS = {
   },
   G2: { maxXpPerDay: 1000 },
   G3: { minSinkRatio: 0.6 },
-  G4: { maxShieldCoverage: 0.2 },
+  G4: { maxRecoveryCoverage: 0.2 },
 };
 
 /**
@@ -107,10 +108,30 @@ export function checkGuardrails(runs) {
   });
 
   // ---- G-3 : la boutique draine ce que le jeu produit ----
-  // Le simulateur ne fait pas acheter : il mesure ce que le persona POURRAIT
-  // drainer au prix courant. Un ratio bas dit « rien à acheter d'assez cher ».
-  const affordableSinks = moyen.shieldCoverableDays * STREAK_RECOVERY_COST;
-  const ratio = moyen.coinsEarned > 0 ? affordableSinks / moyen.coinsEarned : null;
+  //
+  // ⚠️ CE GARDE-FOU NE MESURAIT PAS LA BOUTIQUE, et son propre commentaire le
+  // disait : « le seul puits modélisé ici est le RACHAT DE SÉRIE ». Il rendait
+  // donc 100 % — non parce que la boutique draine, mais parce qu'un rachat à
+  // 15 coins peut absorber presque tous les coins d'un élève. Autrement dit
+  // G-3 récompensait un rachat BON MARCHÉ, pendant que G-4 en exige un CHER :
+  // les deux lisaient LE MÊME NOMBRE en sens inverse (#937).
+  //
+  // Il lit désormais le CATALOGUE, dans les migrations qui le seedent.
+  //
+  // Le rachat de série en est volontairement EXCLU, et c'est tout le correctif :
+  // il est RÉPÉTABLE, donc sa capacité d'absorption est infinie, donc l'inclure
+  // faisait passer G-3 quoi qu'il arrive. Un puits sans fond n'est pas un puits.
+  //
+  // ⚠️ CE QUE ÇA MESURE, ET RIEN DE PLUS : une CAPACITÉ, pas un comportement.
+  // On ne sait pas ce qu'un élève achète, et l'inventer pour faire tomber un
+  // chiffre serait la même faute que régler l'économie sur le test. La question
+  // posée est celle que G-3 pose depuis toujours : « la monnaie a-t-elle où
+  // aller ? » Il passe donc confortablement aujourd'hui (3 280 coins de
+  // catalogue face à 256 gagnés en 8 semaines) — c'est un fil-piège contre une
+  // régression réelle (une boutique vidée, des récompenses qui s'envolent), pas
+  // une mesure fine de l'équilibrage.
+  const capacite = shopCapacityCoins();
+  const ratio = moyen.coinsEarned > 0 ? Math.min(1, capacite / moyen.coinsEarned) : null;
   const ok3 = ratio !== null && ratio >= GUARDRAILS.G3.minSinkRatio;
   out.push({
     id: "G-3",
@@ -119,20 +140,63 @@ export function checkGuardrails(runs) {
       ratio === null
         ? `le persona MOYEN ne gagne aucun coin en ${moyen.weeks.length} semaines — il n'y a pas d'économie à équilibrer.`
         : ok3
-          ? `les puits absorbent ${Math.round(ratio * 100)} % des coins gagnés (plancher ${Math.round(GUARDRAILS.G3.minSinkRatio * 100)} %)`
-          : `les puits n'absorbent que ${Math.round(ratio * 100)} % des ${moyen.coinsEarned} coins gagnés : ils s'accumulent, et une monnaie qu'on ne dépense pas cesse d'être une récompense.`,
+          ? `la boutique peut absorber ${Math.round(ratio * 100)} % des ${moyen.coinsEarned} coins gagnés (${capacite} coins de catalogue, plancher ${Math.round(GUARDRAILS.G3.minSinkRatio * 100)} %)`
+          : `la boutique ne peut absorber que ${Math.round(ratio * 100)} % des ${moyen.coinsEarned} coins gagnés (${capacite} coins de catalogue) : ils s'accumulent, et une monnaie qu'on ne dépense pas cesse d'être une récompense.`,
   });
 
-  // ---- G-4 : le shield ne rend pas la série triviale ----
-  const coverage = moyen.daysMissed > 0 ? moyen.shieldCoverableDays / moyen.daysMissed : 0;
-  const ok4 = coverage <= GUARDRAILS.G4.maxShieldCoverage;
+  // ---- G-4 : le RACHAT DE SÉRIE ne rend pas la série triviale ----
+  // Ce garde-fou a longtemps dit « shield » en mesurant le rachat. La confusion
+  // n'est pas cosmétique : elle a envoyé une enquête chercher le prix d'un item
+  // qui en coûte 250 (`bouclier_flamme`) alors que le nombre mesuré ici est
+  // `STREAK_RECOVERY_COST`.
+  //
+  // Depuis que G-3 lit la boutique, G-4 gouverne SEUL le prix du rachat : plus
+  // de contre-pression, donc plus de fenêtre à trous à calculer — une borne
+  // basse suffit, et elle se lit d'un coup d'œil.
+  const coverage = moyen.daysMissed > 0 ? moyen.recoveryCoverableDays / moyen.daysMissed : 0;
+  const ok4 = coverage <= GUARDRAILS.G4.maxRecoveryCoverage;
+  // Les deux bornes se calculent sur le MÊME arrondi que la mesure. `coverage`
+  // vaut `floor(C / k) / D` : le numérateur est entier, donc la condition
+  // `coverage <= M` équivaut à `floor(C / k) <= floor(D * M)`. Raisonner en
+  // continu donne des nombres faux — 40 au lieu de 37 sur les valeurs du jour.
+  const maxJoursRachetables = Math.floor(moyen.daysMissed * GUARDRAILS.G4.maxRecoveryCoverage);
+  const rendementMax = (maxJoursRachetables + 1) * STREAK_RECOVERY_COST - 1;
   out.push({
     id: "G-4",
     ok: ok4,
     message: ok4
-      ? `les shields couvriraient ${Math.round(coverage * 100)} % des ${moyen.daysMissed} jours manqués (plafond ${Math.round(GUARDRAILS.G4.maxShieldCoverage * 100)} %)`
-      : `les shields couvriraient ${Math.round(coverage * 100)} % des ${moyen.daysMissed} jours manqués : la série s'achète, donc elle ne mesure plus l'assiduité.`,
+      ? `le rachat de série couvrirait ${Math.round(coverage * 100)} % des ${moyen.daysMissed} jours manqués (plafond ${Math.round(GUARDRAILS.G4.maxRecoveryCoverage * 100)} %) — marge : tient tant que le rendement reste ≤ ${rendementMax} coins, mesuré ${moyen.coinsEarned}`
+      : `le rachat de série couvrirait ${Math.round(coverage * 100)} % des ${moyen.daysMissed} jours manqués : la série s'achète, donc elle ne mesure plus l'assiduité. ${phrasePrixMinimum(moyen)}`,
   });
 
   return out;
+}
+
+/**
+ * LE PRIX MINIMUM auquel G-4 tiendrait, sur les valeurs mesurées du persona moyen.
+ *
+ * ⚠️ CE N'EST PAS UNE CONSIGNE, et la nuance a coûté assez cher pour être écrite :
+ * l'étude interdit de régler `gamification.ts` pour faire passer un test, et de
+ * caler un seuil sur la mesure du jour. Ce nombre dit seulement OÙ est la borne,
+ * pour qu'un rouge soit une décision instruite plutôt qu'un rouge.
+ *
+ * Le calcul suit le même arrondi que la mesure : G-4 tient dès que
+ * `floor(C / k) <= floor(D * M)`, donc dès que `k > C / (floor(D * M) + 1)`.
+ *
+ * @param {ReturnType<import("./simulate.mjs").simulate>} moyen
+ * @returns {number}
+ */
+export function prixMinimumPourG4(moyen) {
+  const maxJours = Math.floor(moyen.daysMissed * GUARDRAILS.G4.maxRecoveryCoverage);
+  return Math.floor(moyen.coinsEarned / (maxJours + 1)) + 1;
+}
+
+/** La phrase qui remet la décision au lecteur, avec le nombre qui la borne. */
+function phrasePrixMinimum(moyen) {
+  return (
+    `À ${STREAK_RECOVERY_COST} coins pièce, il en faudrait au moins ${prixMinimumPourG4(moyen)} pour que G-4 tienne. ` +
+    `Ce n'est PAS une consigne : depuis que G-3 lit la boutique, plus rien ne pousse ce prix vers le bas, ` +
+    `donc la question est enfin simple — un rachat de série à ${STREAK_RECOVERY_COST} coins est-il trop bon marché ` +
+    `pour le produit ? À trancher page Économie, sur données réelles, pas ici.`
+  );
 }

@@ -54,7 +54,7 @@ const LOAD_ERROR_FR = "Impossible de charger les signalements.";
 /** Report a suspected mistake in an exercise/question. Rate-limited (anti-spam). */
 export const reportContentError = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         exerciseId: z.guid().optional(),
@@ -131,7 +131,7 @@ export const getOpenReportsCount = createServerFn({ method: "GET" })
 /** Admin: resolve or dismiss a report. */
 export const resolveContentReport = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z.object({ reportId: z.guid(), status: z.enum(["resolved", "dismissed"]) }).parse(d),
   )
   .handler(async ({ data, context }) => {

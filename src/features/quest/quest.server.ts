@@ -1,18 +1,18 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { optionalSupabaseAuth } from "@/shared/integrations/supabase/optional-auth-middleware";
-import { isRateLimited, isRateLimitedLocal } from "@/shared/lib/rate-limit";
+import { isRateLimited } from "@/shared/lib/rate-limit";
 import { MIN_SECONDS_PER_QUESTION, QUIZ_PASS_THRESHOLD_PCT } from "@/shared/constants/gamification";
 import { errorMessage, failWithClientError } from "@/shared/lib/safe-error";
 import { MAX_CHOICE_LENGTH } from "@/shared/lib/answer-formats";
 import { assertAnswerFormats } from "@/features/quest/answer-format-guard";
 import { logger } from "@/shared/lib/logger";
 import type { UnlockedBadge } from "@/shared/types/gamification";
-import type { Database } from "@/shared/integrations/supabase/types";
-import type { CompiledVideo } from "@/shared/content/schema";
+import type { Database, Json } from "@/shared/integrations/supabase/types";
 import { resolveCorrectionVideo } from "./correction-video";
+import { fetchSessionReveals } from "./quest.check.server";
+import { mergeRevealedAnswers } from "./quest-reveals";
 import {
   RECALL_LOCKED_MESSAGE,
   RECALL_NOT_ELIGIBLE_MESSAGE,
@@ -22,6 +22,12 @@ import {
   toPerQuestion,
 } from "./quest.recall";
 import type { AttemptReviewItem } from "./quest.recall";
+import { isUnrestrictedViewer, openEveryGate } from "./quest.access";
+import {
+  arbitrateQuestOpenAnswers,
+  canPlayOpenQuestions,
+  filterOpenQuestions,
+} from "./quest.open-questions";
 
 /** Error message thrown when an exercise is locked behind its chapter quiz. */
 export const QUIZ_LOCKED_MESSAGE =
@@ -175,64 +181,99 @@ function parseAtomicSubmitResponse(payload: unknown): AtomicSubmitResponse {
 }
 
 // ---------- Get a subject with chapters & exercises ----------
+/**
+ * Ce que le hub (`SubjectHubChapter`, `groupChaptersByDomain`) et le lecteur
+ * (`computeNextExerciseId`) lisent d'un chapitre — et rien d'autre : surtout pas
+ * `lesson_content` ni `summary`, qui pèsent l'essentiel de la ligne (voir `getSubject`).
+ */
+const SUBJECT_CHAPTER_COLUMNS = "id,title,description,domain,display_order";
+/**
+ * Idem pour une mission (`SubjectHubExercise`, `emptyRungs`, `resolveNextAction`,
+ * la porte du quiz ci-dessous) : `source` dit « admin ou parent » (étude 22 R-15),
+ * `display_order` porte le tri R-13.
+ */
+const SUBJECT_EXERCISE_COLUMNS =
+  "id,chapter_id,mode,title,difficulty,xp_reward,source,display_order";
+
 export const getSubject = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
-  .inputValidator((d) => z.object({ subjectId: z.string() }).parse(d))
+  .validator((d) => z.object({ subjectId: z.string() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
-    // Best scores are an account concept; anonymous visitors have none. Graceful
-    // fallback if the RPC fails, logged so a broken RPC never silently hides progress.
+    // La progression est un concept de COMPTE : l'anonyme n'en a aucune, et la RPC
+    // ne lui est pas accordée (`GRANT ... TO authenticated`). Retour dégradé et
+    // journalisé si elle échoue — une progression indisponible rend le hub
+    // exactement à l'expérience anonyme, jamais une page cassée.
     //
-    // It rides in the SAME `Promise.all` as the content queries (perf audit L1):
-    // it only needs `subjectId` + `userId`, so waiting for the subject first cost
-    // a serial round-trip on every authenticated subject page — and the SSR
-    // function is pinned to one region, so a round-trip is not free. Trade-off
-    // taken knowingly: on the rare error path where the subject does not load, we
-    // will have issued one RPC that the old code would have skipped.
-    const bestScoresPromise: Promise<unknown[]> = userId
+    // ⭐ Elle REMPLACE `get_best_scores_by_exercise` pour cet écran, à
+    // aller-retour constant, et c'est ce qui fait disparaître une divergence
+    // réelle : cette RPC-là rend le meilleur score classique SANS regarder la
+    // durée, quand la règle des étoiles exige en plus « non précipitée »
+    // (`mission_is_counted`, étude 34 R-3). Une réussite expédiée à 65 % cochait
+    // donc la mission au hub sans rien donner au grand livre. Le hub reçoit
+    // maintenant `counted`, déjà tranché, et ne re-seuille plus rien.
+    // (La RPC reste en base : d'autres lecteurs restent à inventorier, et sa
+    // dépose serait une migration destructive — DoD §7, merge séparé.)
+    //
+    // Elle voyage dans le MÊME `Promise.all` que les requêtes de contenu (audit
+    // perf L1) : elle n'a besoin que de `subjectId` + la session, donc attendre la
+    // matière coûtait un aller-retour série sur chaque page connectée — et la
+    // fonction SSR est épinglée à une région, donc un aller-retour n'est pas
+    // gratuit. Compromis assumé : sur le chemin d'erreur rare où la matière ne
+    // charge pas, on aura émis une RPC que l'ancien code aurait évitée.
+    const progressPromise: Promise<Json | null> = userId
       ? Promise.resolve(
-          supabase.rpc("get_best_scores_by_exercise", { p_subject: data.subjectId }),
+          supabase.rpc("get_subject_progress", { p_subject_id: data.subjectId }),
         ).then(
           (res) => {
             if (res.error) {
-              logger.warn("quest.getSubject: get_best_scores_by_exercise failed", {
+              logger.warn("quest.getSubject: get_subject_progress failed", {
                 subjectId: data.subjectId,
                 error: res.error.message,
               });
-              return [];
+              return null;
             }
-            return Array.isArray(res.data) ? res.data : [];
+            return res.data ?? null;
           },
           (err: unknown) => {
-            logger.warn("quest.getSubject: get_best_scores_by_exercise threw", {
+            logger.warn("quest.getSubject: get_subject_progress threw", {
               subjectId: data.subjectId,
               error: errorMessage(err),
             });
-            return [];
+            return null;
           },
         )
-      : Promise.resolve([]);
+      : Promise.resolve(null);
 
-    const [subj, chaps, exs, bestScoresData] = await Promise.all([
+    // Colonnes NOMMÉES, pas `*` (audit perf data-01, 2026-10-31) : la ligne
+    // `chapters` porte le cours ET le résumé markdown (`lesson_content`, `summary`),
+    // que ni le hub ni le lecteur de quête ne lisent — ils passent par
+    // `getChapterLesson`. Or cet appel part à chaque vue du hub ET à chaque mission
+    // connectée (le lecteur ne s'en sert que pour `computeNextExerciseId`), puis
+    // repart après 30 s de staleTime. Mesuré sur le corpus (96 matières, 848
+    // chapitres) : chapitres + missions pesaient 93 KB médian, 506 KB p90,
+    // 1 445 KB max (fiqh), 1 095 KB sur math-6eme ; avec ces colonnes 15 KB médian,
+    // 38 KB p90, 122 KB max. Mêmes consommateurs, même rendu — `SubjectHubChapter`,
+    // `SubjectHubExercise` et `next-exercise.ts` disent exactement ce qu'il faut servir.
+    const [subj, chaps, exs, progress, unrestricted] = await Promise.all([
       supabase.from("subjects").select("*").eq("id", data.subjectId).single(),
-      supabase.from("chapters").select("*").eq("subject_id", data.subjectId).order("display_order"),
       supabase
-        .from("exercises")
-        .select("*")
+        .from("chapters")
+        .select(SUBJECT_CHAPTER_COLUMNS)
         .eq("subject_id", data.subjectId)
         .order("display_order"),
-      bestScoresPromise,
+      supabase
+        .from("exercises")
+        .select(SUBJECT_EXERCISE_COLUMNS)
+        .eq("subject_id", data.subjectId)
+        .order("display_order"),
+      progressPromise,
+      // Compte de test (admin) : même aller-retour, pas un de plus — quest.access.ts.
+      isUnrestrictedViewer(supabase, userId),
     ]);
     if (subj.error) {
       failWithClientError("quest.getSubject", subj.error, "Impossible de charger la matière.");
-    }
-
-    const best: Record<string, number> = {};
-    for (const row of bestScoresData) {
-      const r = row as Record<string, unknown>;
-      if (typeof r.exercise_id !== "string") continue;
-      best[r.exercise_id] = Number(r.best_score ?? 0);
     }
 
     // Recall availability (étude 17) — resolved for EVERYONE, anon included
@@ -257,7 +298,7 @@ export const getSubject = createServerFn({ method: "GET" })
       if (quiz.chapter_id) quizPassedByChapter[quiz.chapter_id] = !isSchoolSubject;
     }
     const quizIds = quizExercises.map((e) => e.id);
-    if (isSchoolSubject && quizIds.length > 0 && userId) {
+    if (isSchoolSubject && quizIds.length > 0 && userId && !unrestricted) {
       const { data: passedRows } = await supabase
         .from("attempts")
         .select("exercise_id,duration_seconds,total_count")
@@ -279,6 +320,12 @@ export const getSubject = createServerFn({ method: "GET" })
         }
       }
     }
+
+    // Compte de test (admin) : la RPC de démarrage ne lui oppose aucune porte de
+    // progression, le hub n'en affiche donc aucune (quest.access.ts).
+    const gates = unrestricted
+      ? openEveryGate({ quizPassedByChapter, recall })
+      : { quizPassedByChapter, recall };
 
     // Parcours that owns this subject — powers the hub's level anchor + back link
     // (étude 15 lot 7, D-6 : the kicker shows the CLASS, not the RPG attribute, and
@@ -360,10 +407,18 @@ export const getSubject = createServerFn({ method: "GET" })
       subject: subj.data,
       chapters: chaps.data ?? [],
       exercises,
-      bestByExercise: best,
-      quizPassedByChapter,
-      viewer,
-      recall,
+      /**
+       * La charge brute de `get_subject_progress` (JSONB) — étoiles de chapitre,
+       * sceaux, effort, état de chaque mission. `null` pour l'anonyme et sur une
+       * RPC en échec ; le hub la lit par `parseSubjectProgress`, qui retombe alors
+       * sur l'expérience anonyme plutôt que de casser (étude 34 R-16).
+       */
+      progress,
+      quizPassedByChapter: gates.quizPassedByChapter,
+      // `unrestricted` est ce que le hub affiche (bandeau « accès test ») ; le droit
+      // d'accès suit, la porte du parcours étant franchie elle aussi.
+      viewer: { ...viewer, unrestricted, hasEntitlement: viewer.hasEntitlement || unrestricted },
+      recall: gates.recall,
       parcours: parcoursRow
         ? {
             id: parcoursRow.id,
@@ -375,356 +430,10 @@ export const getSubject = createServerFn({ method: "GET" })
     };
   });
 
-// ---------- Get chapter lesson content ----------
-/** Narrowed chapter row for the reader — adds the `videos` and `domain` columns the generated types lack. */
-type ChapterLessonRow = {
-  id: string;
-  title: string;
-  description: string | null;
-  lesson_content: string | null;
-  summary: string | null;
-  subject_id: string;
-  display_order: number;
-  /**
-   * Domaine du programme auquel ce chapitre appartient — la « section » de la
-   * matière (Algèbre, Géométrie, قواعد اللغة…). NULL tant que le contenu ne l'a
-   * pas rattaché : c'est l'état de tout le corpus au moment où la colonne arrive.
-   */
-  domain: string | null;
-  videos: CompiledVideo[] | null;
-  subjects: { grade_id?: string | null; name_fr: string; content_language?: string } | null;
-};
-
-export const getChapterLesson = createServerFn({ method: "GET" })
-  .middleware([optionalSupabaseAuth])
-  .inputValidator((d) => z.object({ chapterId: z.guid() }).parse(d))
-  .handler(async ({ data, context }) => {
-    const { supabase, userId } = context;
-    const { data: chapterRow, error } = await supabase
-      .from("chapters")
-      .select(
-        "id, title, description, lesson_content, summary, subject_id, display_order, domain, videos, subjects(id, name_fr, color_token, icon, content_language, grade_id)",
-      )
-      .eq("id", data.chapterId)
-      .single();
-    if (error) {
-      failWithClientError("quest.getChapterLesson", error, "Impossible de charger la leçon.");
-    }
-
-    // Selecting the étude-23 `videos` column and `domain` (both absent from the
-    // pre-existing generated types) makes the row loosely typed — narrow it once,
-    // the same posture the joined `subjects` relation already uses. The compiled
-    // `videos` JSONB (0–3 display objects) flows straight to the public reader,
-    // and `domain` names the section of the program this chapter sits in.
-    //
-    // Cette liste de colonnes est EXPLICITE : elle exige que `domain` existe en
-    // base. C'est pourquoi ce lot arrive APRÈS le merge de sa migration
-    // (`20260818120000`, appliquée en prod le 2026-08-18) et non avec elle — le
-    // hub, lui, lit `select("*")` et tolérait son absence (DoD §7).
-    const chapter = chapterRow as unknown as ChapterLessonRow;
-    const videos: CompiledVideo[] = chapter.videos ?? [];
-
-    // Fetch all sibling chapters for navigation. We only need each sibling's
-    // metadata + whether it HAS a lesson — never the lesson body itself. Pulling
-    // `lesson_content` here shipped every sibling's full markdown over the wire
-    // just to derive a boolean (a subject with N chapters × ~30 KB each). Split
-    // into two tiny reads: the metadata for all siblings, and the id-only set of
-    // those that actually carry a lesson.
-    const [{ data: siblings }, { data: siblingsWithLesson }] = await Promise.all([
-      supabase
-        .from("chapters")
-        .select("id, title, display_order")
-        .eq("subject_id", chapter.subject_id)
-        .order("display_order"),
-      supabase
-        .from("chapters")
-        .select("id")
-        .eq("subject_id", chapter.subject_id)
-        .not("lesson_content", "is", null)
-        // Preserve the old `!!lesson_content` semantics: an empty string is "no lesson".
-        .neq("lesson_content", ""),
-    ]);
-
-    const withLesson = new Set((siblingsWithLesson ?? []).map((s) => s.id));
-    const allChapters = (siblings ?? []).map((s) => ({
-      id: s.id,
-      title: s.title,
-      display_order: s.display_order,
-      hasLesson: withLesson.has(s.id),
-    }));
-
-    // Target for the course reader's single « practise this chapter » CTA: the
-    // chapter's first non-quiz exercise (real practice — the comprehension quiz
-    // is the connected gate, not practice). null → nothing to practise → no CTA.
-    // The reader links it auth-aware (signed-in → /quest, anon → /exercice).
-    const { data: chapterExercises } = await supabase
-      .from("exercises")
-      .select("id, mode, display_order")
-      .eq("chapter_id", data.chapterId)
-      .order("display_order");
-    const practiceExerciseId = (chapterExercises ?? []).find((e) => e.mode !== "quiz")?.id ?? null;
-
-    // Quiz-gate affordance for the reader CTA (étude 15, lot 1 — audit §D-4): the
-    // chapter's quiz id, whether the gate applies (school subjects only — same
-    // rule as getSubject), and — signed-in only — whether THIS user already
-    // passed it (score ≥ threshold AND not rushed, mirroring getSubject).
-    // Anonymous visitors resolve their pass client-side (sessionStorage, see
-    // anon-quiz-gate.ts), so quizPassed stays null for them.
-    const quizExerciseId = (chapterExercises ?? []).find((e) => e.mode === "quiz")?.id ?? null;
-    const isSchoolSubject =
-      ((chapter.subjects as { grade_id?: string | null } | null)?.grade_id ?? null) !== null;
-    const quizGated = isSchoolSubject && quizExerciseId !== null;
-    let quizPassed: boolean | null = null;
-    if (quizGated && userId) {
-      const { data: passedRows } = await supabase
-        .from("attempts")
-        .select("duration_seconds,total_count")
-        .eq("user_id", userId)
-        .eq("exercise_id", quizExerciseId as string)
-        .gte("score_pct", QUIZ_PASS_THRESHOLD_PCT);
-      quizPassed = (passedRows ?? []).some(
-        (r) => (r.duration_seconds ?? 0) >= (r.total_count ?? 0) * MIN_SECONDS_PER_QUESTION,
-      );
-    }
-
-    return {
-      chapter: { ...chapter, videos },
-      allChapters,
-      practiceExerciseId,
-      quizExerciseId,
-      quizGated,
-      quizPassed,
-    };
-  });
-
-// ---------- Manuel élève pages (login-gated) ----------
-
-/** A single official-textbook page available to display under a chapter. */
-export type ManuelPage = { page: number; url: string };
-
-/** Private Storage bucket holding the watermarked manuel-élève page images. */
-const MANUEL_PAGES_BUCKET = "manuel-pages";
-/** Signed-URL lifetime — long enough to read the gallery, short enough to expire. */
-const MANUEL_SIGNED_URL_TTL_SECONDS = 60 * 60;
-
-/** Shape of `chapters.manuel_ref` we rely on (the build also stores `pages`). */
-const manuelRefSchema = z.object({
-  code: z.string().regex(/^[A-Za-z0-9_-]+$/),
-  pageNumbers: z.array(z.number().int().positive()).min(1),
-});
-
-/**
- * Resolve the official student-textbook (manuel élève) pages for a chapter into
- * **signed URLs**, gated to authenticated users. Returns `{ pages: [] }` when the
- * chapter has no `manuel_ref`, the data is malformed, or signing fails — the UI
- * simply hides the « Pages du manuel » section. The images live in a private
- * bucket (RLS = authenticated read); URLs are minted with the caller's JWT, so
- * anonymous visitors can neither call this nor read the objects.
- */
-export const getManuelPageUrls = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ chapterId: z.guid() }).parse(d))
-  .handler(async ({ data, context }): Promise<{ pages: ManuelPage[] }> => {
-    const { supabase } = context;
-
-    const { data: chapter, error } = await supabase
-      .from("chapters")
-      .select("manuel_ref")
-      .eq("id", data.chapterId)
-      .single();
-    if (error || !chapter) {
-      logger.warn("quest.getManuelPageUrls: chapter not found", { chapterId: data.chapterId });
-      return { pages: [] };
-    }
-
-    const parsed = manuelRefSchema.safeParse(chapter.manuel_ref);
-    if (!parsed.success) return { pages: [] }; // no manuel link (or malformed) → hide the section
-
-    const { code, pageNumbers } = parsed.data;
-    // Map each storage path back to its page number; de-dupe defensively.
-    const pageByPath = new Map(pageNumbers.map((p) => [`${code}/${p}.webp`, p]));
-    const paths = [...pageByPath.keys()];
-
-    const { data: signed, error: signError } = await supabase.storage
-      .from(MANUEL_PAGES_BUCKET)
-      .createSignedUrls(paths, MANUEL_SIGNED_URL_TTL_SECONDS);
-    if (signError || !signed) {
-      logger.warn("quest.getManuelPageUrls: failed to sign manuel page urls", {
-        chapterId: data.chapterId,
-      });
-      return { pages: [] };
-    }
-
-    const pages: ManuelPage[] = signed
-      .flatMap((s) => {
-        if (s.error || !s.signedUrl || !s.path) return [];
-        const page = pageByPath.get(s.path);
-        return page ? [{ page, url: s.signedUrl }] : [];
-      })
-      .sort((a, b) => a.page - b.page);
-
-    return { pages };
-  });
-
-// ---------- Public practice correction (anonymous-capable) ----------
-export type PracticeReviewItem = {
-  questionId: string;
-  selectedChoice: string;
-  isCorrect: boolean;
-  correctChoice: string | null;
-  explanation: string | null;
-};
-
-function clientIpKey(): string {
-  try {
-    const headers = getRequest()?.headers;
-    const forwarded = headers?.get("x-forwarded-for");
-    return forwarded?.split(",")[0]?.trim() || headers?.get("x-real-ip") || "unknown";
-  } catch {
-    return "unknown";
-  }
-}
-
-/**
- * Public, stateless correction for anonymous (or signed-in) practice. Calls the
- * SECURITY DEFINER check_answers RPC — no session, no attempt, no XP. Returns the
- * per-question correction for admin practice/boss exercises; comprehension quizzes
- * and parent content yield an empty, non-reviewable result. The RPC withholds the
- * `explanation` from anonymous callers (auth.uid() IS NULL) — hint-economy content
- * (audit #1) — so `correctChoice` is set but `explanation` is null for visitors.
- */
-export const checkAnswersPublic = createServerFn({ method: "POST" })
-  .middleware([optionalSupabaseAuth])
-  .inputValidator((d) =>
-    z
-      .object({
-        exerciseId: z.guid(),
-        answers: z
-          .array(
-            z.object({ questionId: z.guid(), choice: z.string().min(1).max(MAX_CHOICE_LENGTH) }),
-          )
-          .min(1)
-          .max(100),
-      })
-      .parse(d),
-  )
-  .handler(async ({ data, context }) => {
-    const { supabase, userId } = context;
-
-    // Anti-abuse. Signed-in callers use the persistent limiter (keyed by user);
-    // anonymous ones use a best-effort in-memory limiter by IP (check_rate_limit
-    // requires auth.uid()). A distributed anon limiter is a Transverse follow-up.
-    const limited = userId
-      ? await isRateLimited(supabase, `check_answers_${userId}`, 30, 60_000)
-      : isRateLimitedLocal(`check_answers_ip_${clientIpKey()}`, 30, 60_000);
-    if (limited) {
-      throw new Error("Trop de requêtes. Réessaie dans un instant.");
-    }
-
-    await assertAnswerFormats(supabase, "quest.checkAnswersPublic", data.exerciseId, data.answers);
-
-    const { data: rows, error } = await supabase.rpc("check_answers", {
-      p_exercise_id: data.exerciseId,
-      p_answers: data.answers,
-    });
-    if (error) {
-      failWithClientError(
-        "quest.checkAnswersPublic",
-        error,
-        "Impossible de corriger l'entraînement.",
-      );
-    }
-
-    const list = Array.isArray(rows)
-      ? (rows as Array<{
-          question_id: string;
-          is_correct: boolean;
-          correct_option: string | null;
-          explanation: string | null;
-        }>)
-      : [];
-    const byId = new Map(list.map((row) => [row.question_id, row]));
-
-    const review: PracticeReviewItem[] = [];
-    for (const answer of data.answers) {
-      const row = byId.get(answer.questionId);
-      if (!row) continue;
-      review.push({
-        questionId: answer.questionId,
-        selectedChoice: answer.choice,
-        isCorrect: row.is_correct,
-        correctChoice: row.correct_option,
-        explanation: row.explanation,
-      });
-    }
-
-    const total = review.length;
-    const correct = review.filter((item) => item.isCorrect).length;
-    const scorePct = total > 0 ? Math.round((correct / total) * 100) : 0;
-
-    return { reviewable: total > 0, correct, total, scorePct, review };
-  });
-
-// ---------- Public quiz scoring (anonymous gate parity) ----------
-/**
- * Public, stateless SCORING for the comprehension quiz. Mirrors the connected gate
- * WITHOUT leaking it: calls the SECURITY DEFINER `score_quiz` RPC, which returns
- * only the aggregate (correct count + total) for admin mode='quiz' exercises —
- * never per-question correctness, the correct option, or explanations. So an
- * anonymous visitor can self-validate their comprehension and unlock a chapter's
- * practice client-side, exactly like a signed-in student (whose quiz attempts also
- * return a score only). No session, no attempt, no XP.
- */
-export const scoreQuizPublic = createServerFn({ method: "POST" })
-  .middleware([optionalSupabaseAuth])
-  .inputValidator((d) =>
-    z
-      .object({
-        exerciseId: z.guid(),
-        answers: z
-          .array(
-            z.object({ questionId: z.guid(), choice: z.string().min(1).max(MAX_CHOICE_LENGTH) }),
-          )
-          .min(1)
-          .max(100),
-      })
-      .parse(d),
-  )
-  .handler(async ({ data, context }) => {
-    const { supabase, userId } = context;
-
-    // Anti-abuse — same split as checkAnswersPublic: persistent limiter for
-    // signed-in callers, best-effort in-memory IP limiter for anonymous ones.
-    const limited = userId
-      ? await isRateLimited(supabase, `score_quiz_${userId}`, 30, 60_000)
-      : isRateLimitedLocal(`score_quiz_ip_${clientIpKey()}`, 30, 60_000);
-    if (limited) {
-      throw new Error("Trop de requêtes. Réessaie dans un instant.");
-    }
-
-    await assertAnswerFormats(supabase, "quest.scoreQuizPublic", data.exerciseId, data.answers);
-
-    const { data: rows, error } = await supabase.rpc("score_quiz", {
-      p_exercise_id: data.exerciseId,
-      p_answers: data.answers,
-    });
-    if (error) {
-      failWithClientError("quest.scoreQuizPublic", error, "Impossible de corriger le quiz.");
-    }
-
-    const row = Array.isArray(rows)
-      ? (rows[0] as { correct?: number; total?: number } | undefined)
-      : undefined;
-    const total = Number(row?.total ?? 0);
-    const correct = Number(row?.correct ?? 0);
-    const scorePct = total > 0 ? Math.round((correct / total) * 100) : 0;
-    return { correct, total, scorePct };
-  });
-
 // ---------- Get exercise + questions ----------
 export const getExercise = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         exerciseId: z.guid(),
@@ -735,7 +444,7 @@ export const getExercise = createServerFn({ method: "GET" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const isRecall = data.variant === "recall";
-    const [ex, qs] = await Promise.all([
+    const [ex, qs, unrestricted, openAllowed] = await Promise.all([
       supabase
         .from("exercises")
         .select(
@@ -752,6 +461,13 @@ export const getExercise = createServerFn({ method: "GET" })
             .select("id,prompt,options,display_order,question_type")
             .eq("exercise_id", data.exerciseId)
             .order("display_order"),
+      isUnrestrictedViewer(supabase, userId),
+      // Étude 33 : les questions OUVERTES (`short_answer` — aucune proposition,
+      // une réponse tapée) ne sont servies qu'à un élève dont le mode IA peut
+      // JUGER une formulation imprévue. La base applique la même porte au
+      // dénominateur du score, sinon une question retirée de l'écran resterait
+      // dans le total, sans réponse, donc fausse.
+      canPlayOpenQuestions(supabase, userId),
     ]);
     if (ex.error) {
       failWithClientError("quest.getExercise", ex.error, "Impossible de charger l'exercice.");
@@ -808,14 +524,20 @@ export const getExercise = createServerFn({ method: "GET" })
     const subjectGradeId =
       (ex.data as { subjects?: { grade_id?: string | null } | null } | null)?.subjects?.grade_id ??
       null;
-    const quizGated = chapterQuizId !== null && subjectGradeId !== null;
+    // Compte de test (admin) : jamais gaté — la RPC de démarrage dit la même chose.
+    const quizGated = chapterQuizId !== null && subjectGradeId !== null && !unrestricted;
 
     return {
       exercise: ex.data,
-      questions: recallQuestions ?? qs.data ?? [],
+      // Le Rappel n'est pas concerné : son jeu est fait de QCM maîtrisés
+      // rejoués en saisie libre, et une `short_answer` n'y entre jamais
+      // (é20 R-11). Le filtre porte sur le jeu CLASSIQUE, et lui seul.
+      questions: recallQuestions ?? filterOpenQuestions(qs.data ?? [], openAllowed),
       hintCharges,
       chapterQuizId,
       quizGated,
+      // Ouvre le navigateur de questions du lecteur (question-navigator.tsx).
+      unrestricted,
       // Review video for the failure screen (étude 23 R-6) — server-resolved
       // here so BOTH registers (connected + anonymous) receive it.
       correctionVideo: await resolveCorrectionVideo(supabase, ex.data),
@@ -832,7 +554,7 @@ export const getExercise = createServerFn({ method: "GET" })
 // maps its raised gate signals to the localized client messages.
 export const startExerciseSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         exerciseId: z.guid(),
@@ -883,6 +605,9 @@ export const startExerciseSession = createServerFn({ method: "POST" })
     return {
       sessionId: session.session_id,
       startedAt: session.started_at,
+      // Une partie REPRISE (ou héritière) arrive avec ses réponses déjà corrigées,
+      // définitives : le lecteur les repose au lieu de les laisser rejouer.
+      revealed: await fetchSessionReveals(supabase, session.session_id),
     };
   });
 
@@ -895,7 +620,7 @@ export const startExerciseSession = createServerFn({ method: "POST" })
 // arm/slot system.
 export const revealHint = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ questionId: z.guid() }).parse(d))
+  .validator((d) => z.object({ questionId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
@@ -927,7 +652,7 @@ export const revealHint = createServerFn({ method: "POST" })
 // ---------- Submit attempt ----------
 export const submitAttempt = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         sessionId: z.guid(),
@@ -944,23 +669,43 @@ export const submitAttempt = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
-    // Rate limit: max 5 submissions per 10 seconds
-    if (await isRateLimited(supabase, `submit_${userId}`, 5, 10_000)) {
+    // Les quatre lectures préparatoires partent ENSEMBLE : le rate limit (5
+    // soumissions par 10 s), les types des questions, les réponses figées et le
+    // mode de l'exercice ne dépendent ni les unes des autres ni du verdict du
+    // débit. En série, elles coûtaient quatre allers-retours (20 à 40 ms) pour
+    // ~1 ms de SQL, sur l'écriture la plus fréquente de l'app (mesure du
+    // 2026-10-31, constat db-03). Rien n'écrit ici : ce sont des lectures, les
+    // lancer quand le débit est dépassé ne change rien de ce que l'élève voit.
+    //
+    // La précédence des refus reste celle d'avant : le débit dépassé d'abord, la
+    // réponse mal formée ensuite — d'où le verdict de format CAPTURÉ puis rejoué
+    // après la garde, au lieu d'un rejet qui doublerait le refus de débit. Les
+    // deux autres lectures ne rejettent jamais (elles dégradent en `[]`/`null`).
+    const [limited, formatRefusal, reveals, { data: exerciseRow }] = await Promise.all([
+      isRateLimited(supabase, `submit_${userId}`, 5, 10_000),
+      assertAnswerFormats(supabase, "quest.submitAttempt", data.exerciseId, data.answers).then(
+        () => null,
+        (error: unknown) => ({ error }),
+      ),
+      fetchSessionReveals(supabase, data.sessionId),
+      // Comprehension quizzes are validated by the student alone: we never return
+      // the correct answers / explanations for a quiz, so they cannot be memorised
+      // and the quiz re-passed blindly. Practice/boss get the full end-of-quest
+      // correction, built AFTER submit from the get_attempt_review SECURITY DEFINER
+      // RPC (the answer key is no longer client-readable — GAP-020).
+      supabase.from("exercises").select("mode").eq("id", data.exerciseId).single(),
+    ]);
+    if (limited) {
       throw new Error("Too many submissions. Please slow down.");
     }
+    if (formatRefusal) {
+      throw formatRefusal.error;
+    }
 
-    await assertAnswerFormats(supabase, "quest.submitAttempt", data.exerciseId, data.answers);
-
-    // Comprehension quizzes are validated by the student alone: we never return
-    // the correct answers / explanations for a quiz, so they cannot be memorised
-    // and the quiz re-passed blindly. Practice/boss get the full end-of-quest
-    // correction, built AFTER submit from the get_attempt_review SECURITY DEFINER
-    // RPC (the answer key is no longer client-readable — GAP-020).
-    const { data: exerciseRow } = await supabase
-      .from("exercises")
-      .select("mode")
-      .eq("id", data.exerciseId)
-      .single();
+    // Les réponses FIGÉES par la correction immédiate l'emportent sur le payload. Le
+    // barème SQL l'impose de toute façon ; les réunir ici garde l'arbitrage et la
+    // correction de fin de partie d'accord avec la note (20260929120000).
+    const answers = mergeRevealedAnswers(data.answers, reveals);
     const isQuiz = (exerciseRow as { mode?: string } | null)?.mode === "quiz";
 
     // La forme de la correction est celle que `buildAttemptReview` produit — on la
@@ -972,10 +717,22 @@ export const submitAttempt = createServerFn({ method: "POST" })
     // first-of-the-day submission isn't lost). Best-effort: never block a submit.
     await supabase.rpc("ensure_daily_weekly_goals", { p_user: userId });
 
+    // Étude 33 — LE FILET, avant la note et pas après. Les réponses libres que
+    // l'ensemble { canonique } ∪ `acceptedAnswers` a REFUSÉES passent devant un
+    // juge, qui peut renverser le refus (jamais l'inverse : il ne voit pas les
+    // acceptations). Le verdict s'écrit en base ; c'est la RPC ci-dessous qui
+    // le lit, une seule fois, et qui reste le seul barème.
+    //
+    // Ce `await` est ce que l'élève attend en plus devant son écran de
+    // validation — et seulement quand une de ses réponses libres a été refusée,
+    // c'est-à-dire rarement, et précisément dans le cas où il avait peut-être
+    // raison. Une panne ici ne coûte rien : le verdict déterministe tient.
+    await arbitrateQuestOpenAnswers(userId, answers);
+
     const { data: submitData, error: submitErr } = await supabase.rpc("submit_exercise_attempt", {
       p_session_id: data.sessionId,
       p_exercise_id: data.exerciseId,
-      p_answers: data.answers,
+      p_answers: answers,
     });
     if (submitErr) {
       failWithClientError(
@@ -991,7 +748,7 @@ export const submitAttempt = createServerFn({ method: "POST" })
     // verdicts come from the submit RPC (D-4), assembled in the shared helper.
     const review: ReviewItem[] = isQuiz
       ? []
-      : await buildAttemptReview(supabase, data.sessionId, data.answers, {
+      : await buildAttemptReview(supabase, data.sessionId, answers, {
           isRecall: atomic.variant === "recall",
           perQuestion: atomic.perQuestion,
         });

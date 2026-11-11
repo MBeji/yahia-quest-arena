@@ -545,7 +545,70 @@ Les fiches vivent aux deux emplacements du profil `source-web` :
 | Gate                                                                                             | S'exécute dans                                     |
 | ------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
 | `content:check`, `content:qa:strict`, `content:audit:strict`, `programme:check`                  | la **Content CI du dépôt privé** (double checkout) |
+| `harness:check --corpus` (les invariants du harness appliqués au corpus)                         | la **Content CI du dépôt privé** (é32 lot 2)       |
 | `lint`, `typecheck`, `test:coverage`, `build:check`, `audit:deps`, `harness:check`, `leak:check` | la CI de **ce dépôt** (`ci:verify`)                |
+
+**En local, une seule commande rejoue la Content CI** : `npm run content:gates` (depuis ce
+dépôt, corpus branché) lance les sept étages dans l'ordre de `content-ci.yml` — y compris le
+contrôle de fraîcheur de `CATALOGUE.md`, qui se lit par `git diff` dans le **corpus** —, continue
+après un rouge pour tout dire d'un coup, et mesure d'abord le retard du moteur sur `origin/main`
+(un clone en retard rend un verdict qui n'engage personne). `--tranche` y ajoute
+`content:tranche --changed --strict`.
+
+**`content:tranche` — les mesures d'auteur avant le commit** (méthode § B2). Sur les chapitres
+touchés (`--changed`, diff du corpus contre `origin/main`) ou désignés (`--subject <id>
+--chapters 04,05`), croisés avec les chapitres **publiés** de la matière :
+
+| mesure                                 | verdict                     | ce qu'elle attrape                                                                                                           |
+| -------------------------------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| clé **strictement** la plus longue     | ⚠ au-delà du hasard (1/n)   | la fuite par la forme — l'affichage mélange les options, pas les longueurs                                                   |
+| positions de clé a/b/c/d               | informatif                  | l'écriture au gabarit ; ne fuit rien (`shuffleOptions` sur chaque surface)                                                   |
+| paires proches (Jaccard ≥ 0,45)        | ⚠ dès une paire             | doublons littéraux ; les nombres et symboles comptent, un item court n'est proche que ≥ 0,8, deux figures différentes jamais |
+| candidats **gabarit** (cadre de tâche) | informatif, pour l'auditeur | même consigne + même question, décor retiré (cité, noms propres, nombres), sur ≥ 2 chapitres                                 |
+
+**Le cliquet (`--fresh`)** ne mesure que les questions **nouvelles ou modifiées** par rapport au
+point de départ de la branche (la matière y est relue par `git archive` de la base de fusion) :
+la dette déjà publiée ne rend personne rouge, une question neuve ne peut plus en ajouter. C'est
+ce que la Content CI du corpus lance, avec `--strict-longest` — seule la fuite par la longueur
+bloque ; une paire d'exercices parallèles voulue se justifie au rapport, pas dans un gate.
+Rejoué sur les onze derniers merges de contenu (2026-09-23) : les tranches d'`english-6eme`
+passent (13–20 %), une PR de correction n'est jugée que sur ses 4 questions, et les trois
+dernières tranches d'`arabic-8eme` auraient été arrêtées à 61–75 % — la clé y porte sa
+justification (« حال في محلّ نصب، تصف الوردة ساعة موتها ») quand les distracteurs sont nus. Un
+taux ne se juge qu'au-delà de 8 questions : en deçà, les items sont listés, pas condamnés.
+
+**Le cliquet des cours (`--fresh --strict-lessons`, é35)** fait pour `cours.md` ce que le
+précédent fait pour les questions (`lesson-ratchet.ts`). `content:qa` juge le patron de notion en
+deux régimes : erreur pour une matière qui déclare `coursePattern: "notion"`, avertissement
+ailleurs — et, sans bloc de savoir, un cours ne déclenche **aucun** avertissement. Un chapitre
+neuf pouvait donc s'écrire à l'ancienne dans toute matière non déclarée. Le cliquet compte les
+constats é35 du régime **strict** sur chaque cours neuf ou modifié : un chapitre **neuf** du
+programme (`ecole-tn`) doit être à zéro, un cours **retouché** ne doit pas en compter plus
+qu'avant (la dette publiée ne force aucune réécriture). Les thèmes hors programme ne sont tenus
+qu'au second. Mesuré le 2026-09-27 sur 95 matières : 154 chapitres sur 813 sont au patron, dont ceux de six
+matières générées ces dix derniers jours qui ne le déclaraient pas.
+
+**Le renvoi positionnel** (`qa-option-refs.ts`, `warn`) : une explication qui désigne une option
+par sa lettre — « الخطأ الشائع (b) », « la réponse d » — ment à l'élève, puisque les options sont
+mélangées à l'affichage. La notation qui lui ressemble est écartée (`f′(a)`, un point `(B)`, une
+droite `(d)` en géométrie). 292 questions au 2026-09-27 : un avertissement, pas un gate.
+
+Le dernier signal est celui que la méthode déclarait hors d'atteinte d'une mesure lexicale : il
+ne compare pas les mots de l'énoncé mais son **cadre** (première et dernière phrase, décor
+retiré). Il ne tranche rien — il nomme les groupes à mettre au mandat de l'auditeur (méthode B3,
+point 2). Calibré sur le corpus au 2026-09-23 : il retrouve par exemple « Une seule des
+affirmations suivantes est vraie. Laquelle ? » servi 19 fois dans `math-bac-math`.
+
+**Un seul `harness:check` garde les deux dépôts** (étude 32, lot 2). Le corpus a 43 skills,
+12 workflows et un `CLAUDE.md` de 9 Kio, et n'avait **aucun** gate de harness : ni budget, ni
+Unicode invisible, ni conformité à la spec Agent Skills, ni YAML strict. Son seul invariant —
+l'épinglage des Actions — vivait dans un `pin-check.yml` qui ré-écrivait en bash une règle de ce
+dépôt ; deux implémentations d'une même règle divergent, on l'a déjà vu trois fois sur le test
+« zéro job ». La Content CI privée appelle donc désormais
+`node engine/scripts/harness/check.mjs --corpus "$GITHUB_WORKSPACE/corpus"`, et `pin-check.yml`
+a disparu. Ce que le mode `--corpus` ne vérifie pas là-bas est un choix écrit dans l'en-tête de
+`collectCorpusProblems` : pas de pointeur `@AGENTS.md` (le `CLAUDE.md` du corpus est canonique
+chez lui), pas d'inventaire de features (pas de code), pas de vues générées.
 
 **La CI de ce dépôt ne valide plus de contenu** — elle n'en a plus. `npm run ci:verify` ici,
 c'est : `lint` + `typecheck` + `test:coverage` + `build:check` + `audit:deps` + `harness:check` +
@@ -595,7 +658,104 @@ Trois propriétés voulues :
 Ce n'est pas un gate : il ne sort en erreur que si l'état n'a pas pu être établi (registre
 absent, manifeste invalide) — jamais parce qu'un constat déplaît.
 
+### Le gisement (étude 36) — des examens et des devoirs aux missions
+
+Le mode gisement de `content-ingest` (dépôt privé) lit des sujets d'examen national et des
+devoirs en ligne, **une ligne par exercice**, puis en tire des missions : les examens se
+reprennent en les citant, les devoirs se réécrivent en salle blanche. Ce qu'un script peut
+vérifier dans cette chaîne, trois commandes déterministes le vérifient
+(`scripts/content/gisement/`). Chacune prend ses chemins en argument (`--content`, par défaut le
+lien `content/`), sort en **1** sur un constat et en **2** quand elle n'a pas pu juger. C'est la
+session de campagne qui les lance : lignes et transcriptions naissent hors git, aucun workflow ne
+les voit.
+
+- **`content:gisement:lignes -- <lignes.tsv…> --subject <id> --grade <classe>`** — étage G2,
+  après chaque lot de lecture, **avant** de verser les lignes au registre du couple. Juge le
+  format fermé : dix colonnes séparées par des tabulations (doc, créneau, exo, barème,
+  chapitres, compétences, archétype, étapes, piège, étage), chapitres pris au **manifeste**
+  de la classe (ou `HP:<mot-clé>`, notion hors du programme en vigueur), compétences prises au
+  **registre** de la famille (ou `hors-registre:<mot-clé>` ; `-` quand la famille n'a pas de
+  registre), étage `d1`–`d4`, et **aucun nombre de deux chiffres ni décimal** dans l'archétype
+  (16 mots au plus) ni dans le piège : un nombre de la source n'a rien à faire dans une ligne.
+  Sortie : `fichier:ligne — motif` par ligne fautive.
+- **`content:gisement:plan -- <lignes.tsv…> --subject <id> --grade <classe> --content <dir>`**
+  (options `--creneaux DC3,DS2`, `--lot-max 8`, `--out plan.json`) — étage G4, une fois la
+  carte écrite. Place chaque exercice au chapitre **le plus avancé** dans l'ordre du manifeste
+  (un exercice tout `HP:` n'est pas placé : il est compté à part avec son `doc#exo`), fait
+  **une mission par signature** de devoir ou de série (chapitre + compétences triées +
+  archétype normalisé ; la mission garde ses sources, l'étage le plus haut et le plus grand
+  nombre d'étapes) et **une par exercice** d'examen, forme les lots d'auteur (un gros chapitre
+  se coupe en lots équilibrés, les chapitres de trois missions ou moins se regroupent) et
+  réserve à chaque lot des plages `NN` disjointes, à la suite du plus grand numéro de fichier
+  existant du chapitre. Une ligne fautive, et aucun plan n'est écrit ; même entrée, même JSON,
+  octet pour octet.
+- **`content:gisement:controle -- --sources <snapshots> <cibles…>`** — étage G6, sur chaque
+  tranche écrite d'après des devoirs, et sur la carte et les lignes avant qu'elles n'entrent dans
+  git. Rejoue la garde anti-verbatim (plages de 8 mots ; de 6, à titre indicatif) contre les
+  transcriptions `.txt` gardées **hors git**, et signale toute question qui partage **au moins
+  trois nombres non triviaux** (trois chiffres ou plus, ou un décimal ; figures SVG retirées)
+  avec un même exercice source. Cibles : un exercice ou un quiz JSON (question par question), un
+  `.md` (en entier), des lignes `.tsv` (une à une, sur leur prose). Le rapport ne donne que des
+  comptes et nos identifiants (`fichier#q3`, `lignes.tsv:12`), jamais un fragment de la source.
+
 ---
+
+## 9 bis. La feuille de route connaît-elle les lots livrés ? — l'invariant se VÉRIFIE
+
+> **Depuis le 2026-09-23 la ROADMAP privée est fusionnée dans `STATUS.md` §6** (ce dépôt). Le
+> gate lit `STATUS.md` par défaut ; le récit ci-dessous explique pourquoi il existe.
+
+Aucune PR ne touche les deux dépôts (c'est la règle de la scission). La ROADMAP vit donc au
+privé pendant que la quasi-totalité des lots se livrent ici, et sa propre consigne — « cocher la
+case dans la PR qui livre le lot » — est devenue **inapplicable** le jour de l'étude 24.
+
+Elle a dérivé exactement comme on s'y attend : entre le 2026-07-20 et le 2026-07-25, **neuf lots
+livrés sont restés décochés** et une étude entière de six lots manquait. Une session qui obéit à
+la roadmap aurait reconstruit du travail déjà sur `main`.
+
+L'invariant est donc **vérifié au lieu d'être promis** :
+
+```bash
+node scripts/ci/check-roadmap-sync.mjs    # lit STATUS.md
+```
+
+Appelé chaque jour par le cron privé `roadmap-sync.yml` (qui tient l'issue `roadmap-drift`), il échoue si un lot livré sur `main` après la PR de référence de
+la roadmap n'y est **cité nulle part**. **Citer suffit** — une ligne peut citer une PR comme
+livrée, reportée ou sans objet : le gate a un avis sur la **connaissance**, jamais sur le statut.
+Il est volontairement unidirectionnel : il signale ce que la roadmap n'a jamais entendu, il
+n'essaie pas d'apparier un commit à une ligne par la prose, ce qui serait de la devinette.
+
+## 9 ter. Trois documents disent le statut d'une étude — et rien ne les confrontait
+
+Le statut d'une étude est écrit en **trois endroits**, dont un seul fait foi (l'en-tête de son
+`ETUDE.md`) : l'index privé `FableEtudes/README.md`, ce même en-tête, et le §4 de `STATUS.md`
+ici. Un quatrième le dit physiquement : une étude `livrée` descend dans `EtudeRealisé/`.
+
+`STATUS.md` documente lui-même que la divergence est **à sens unique** — la roadmap et l'index
+privés sont tenus à chaque lot, c'est le topo public qui décroche, « parce qu'aucun gate ne le
+surveille ». Il l'a refait **en douze heures**, sur l'étude dont le sujet était les gates
+(arena#994).
+
+```bash
+npm run etudes:check -- --etudes ../corpus/FableEtudes    # + --status STATUS.md
+```
+
+Quatre contrôles, tous mécaniques : **liens morts** de l'index (privé#354 a
+marqué é32 `livrée` en pointant le chemin qu'elle venait de quitter — le lien est passé vert),
+**cellule d'index ≠ en-tête**, **rangement ≠ statut**, **`STATUS.md` §4 ≠ en-tête** (y compris
+la même étude classée deux fois). Il porte sur la **contradiction**, jamais sur l'exhaustivité :
+un document muet sur une étude ne le fait pas rougir — sans quoi le topo deviendrait un journal,
+rôle déjà tenu par `docs/journal-decisions.md`.
+
+Le vocabulaire est **fermé** (le cycle de vie que l'index déclare, plus `scission faite`) et lu
+**en tête** de cellule : « lot 1 livré (1/2) » — la vraie cellule d'é26 le 2026-09-12 — est
+rapportée comme illisible, pas devinée. Lire « livré » dedans classerait comme livrée une étude
+à mi-parcours.
+
+Comme `check-roadmap-sync.mjs`, il vit ici et tourne **au privé** (`roadmap-sync.yml`, déclaré
+dans `harness/controls.json`) : ce dépôt n'a qu'un des trois documents. Première exécution,
+2026-09-12 : **six écarts**, dont é11 donnée « 6 lots sur 8 » dix-neuf jours après le merge des
+deux derniers, et un lot d'étude déclaré fini avec un de ses trois livrables jamais posé.
 
 ## 10. Le gate anti-fuite (`leak:check`)
 
@@ -840,6 +1000,8 @@ le contenu tout seul, il signale.
       sans dupliquer de question.
 - [ ] Barème qualité + auto-vérification (re-résoudre à l'aveugle, distracteurs réalistes, notation
       standard, piège nommé sur d3-4).
+- [ ] Avant chaque commit de tranche : `npm run content:gates -- --tranche` (les sept étages +
+      les mesures de tranche), candidats gabarit passés au mandat de l'auditeur.
 - [ ] PR ouverte dans le dépôt privé ; Content CI verte (`content:check`, `content:qa:strict`,
       `content:audit:strict`, `programme:check`).
 - [ ] Après merge : `apply-content.yml` vert, ligne présente dans `content_releases`.

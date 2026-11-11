@@ -11,8 +11,9 @@ name: Report close (auto-resolve merged fixes)
 # ignored), a resolved/dismissed whitelist, and only rows still `open` are
 # touched (re-runs are no-ops). Skips gracefully while the PROD_* secrets
 # are unset. `dismissed` closures (malicious/not-reproduced reports) are NOT
-# automated here — the operator applies them from the admin consoles, per
-# the triage tracking issue.
+# applied here — `report-apply.yml` applies them from the triage tracking
+# issue's closure table once it has matured, then closes that issue when none
+# of the reports it cites is still open.
 
 on:
   pull_request:

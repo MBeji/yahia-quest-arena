@@ -30,6 +30,18 @@ export class LessonReaderPage {
   get printButton(): Locator {
     return this.page.getByTestId("lesson-print");
   }
+  /** Le bloc « à toi » d'une leçon (étude 35) — la seule chose du lecteur qui change d'état. */
+  get check(): Locator {
+    return this.page.locator(".lesson-blk--verifie");
+  }
+  /** Le bouton qui déplie la réponse. Son libellé suit la langue du CONTENU, pas celle de l'UI. */
+  get checkToggle(): Locator {
+    return this.page.locator(".lesson-check__toggle");
+  }
+  /** La réponse : présente dans le DOM, invisible tant que le bloc est replié. */
+  get checkAnswer(): Locator {
+    return this.page.locator(".lesson-check__answer");
+  }
   /** The « practise this chapter » CTA — present when the chapter has a non-quiz exercise. */
   get practiceCta(): Locator {
     return this.page.getByTestId("lesson-practice-cta");

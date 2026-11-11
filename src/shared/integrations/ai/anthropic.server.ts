@@ -19,7 +19,19 @@
 // re-typées (R-5, annexe C) ; usage rapporté ; absence du bundle client prouvée
 // par `build:check`.
 
-import Anthropic from "@anthropic-ai/sdk";
+// ⚠️ LE SDK EST IMPORTÉ EN `type` UNIQUEMENT — sa valeur arrive par
+// `await import(…)` dans la fabrique ci-dessous (#909).
+//
+// `@anthropic-ai/sdk` tire `node:fs` et `node:path`. En dev, Vite sert les
+// modules non bundlés : un composant client qui importe un `*.server.ts` fait
+// charger au navigateur tout le graphe STATIQUE de ce module — le plugin
+// TanStack Start vide les corps de server functions mais laisse leurs imports.
+// Ce SDK entrait donc dans le graphe client par
+// `ai-call.server` → `provider.server` → ce fichier. Il n'y levait pas (ses
+// accès `fs` sont gardés) : il masquait simplement le voisin qui, lui, levait.
+// Un import de type disparaît à la compilation ; la coupure est posée ici, au
+// point d'entrée du paquet, pour qu'aucun appelant ne puisse le réintroduire.
+import type Anthropic from "@anthropic-ai/sdk";
 import { AI_EGRESS_RULES, AI_MAX_RETRIES, AI_TIMEOUT_MS } from "@/shared/constants/ai";
 import { AiError, toAiError } from "./errors";
 import {
@@ -32,11 +44,18 @@ import {
   type AiResult,
 } from "./types";
 
-/** Fabrique du client — paramétrable pour que les tests n'ouvrent aucune socket. */
-export type AnthropicFactory = (apiKey: string) => Anthropic;
+/**
+ * Fabrique du client — paramétrable pour que les tests n'ouvrent aucune socket.
+ *
+ * Elle rend `Anthropic` OU une promesse : la fabrique par défaut charge le SDK
+ * paresseusement (voir l'en-tête), les fabriques de test le rendent
+ * directement, et les deux appels (`generate`, `stream`) sont déjà `async`.
+ */
+export type AnthropicFactory = (apiKey: string) => Anthropic | Promise<Anthropic>;
 
-const defaultFactory: AnthropicFactory = (apiKey) =>
-  new Anthropic({
+const defaultFactory: AnthropicFactory = async (apiKey) => {
+  const { default: AnthropicSdk } = await import("@anthropic-ai/sdk");
+  return new AnthropicSdk({
     apiKey,
     // DÉFAUTS du client, surchargés par surface à chaque appel (voir `generate`).
     // Ils ne servent donc qu'aux chemins qui ne passent pas de surface — mais un
@@ -52,6 +71,7 @@ const defaultFactory: AnthropicFactory = (apiKey) =>
     // pour que les deux adaptateurs soient réglés au même endroit.
     maxRetries: AI_EGRESS_RULES.maxRetries,
   });
+};
 
 /**
  * Les blocs, traduits en contenu Messages avec la césure de cache.
@@ -100,7 +120,7 @@ export function makeAnthropicProvider(factory: AnthropicFactory = defaultFactory
       const model = req.tier === "rich" ? cred.models.rich : cred.models.fast;
       const startedAt = Date.now();
       try {
-        const client = factory(revealSecret(cred.secret));
+        const client = await factory(revealSecret(cred.secret));
         const message = await client.messages.create(
           {
             model,
@@ -152,7 +172,7 @@ export function makeAnthropicProvider(factory: AnthropicFactory = defaultFactory
       const startedAt = Date.now();
       let stream;
       try {
-        const client = factory(revealSecret(cred.secret));
+        const client = await factory(revealSecret(cred.secret));
         stream = client.messages.stream(
           {
             model,

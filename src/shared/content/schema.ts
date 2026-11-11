@@ -147,6 +147,19 @@ export const subjectMetaSchema = z.object({
    * `gradeSlugs` field. Expansion happens in `expandSubjects` (loader.ts).
    */
   compileTo: z.array(compileTargetSchema).min(2).optional(),
+  /**
+   * Patron d'explication du COURS auquel cette matière est tenue (étude 35, D-9).
+   *
+   * `"notion"` = les sept temps : ancrer (une situation et sa question) → nommer → voir →
+   * résoudre (l'exemple, chaque étape avec son pourquoi) → distinguer (l'erreur typique) →
+   * généraliser → vérifier sur place. Il ne se pose qu'au DERNIER lot de la campagne d'une
+   * matière, quand ses cours y sont conformes : il fait passer les contrôles de patron de
+   * `content:qa` de l'avertissement à l'erreur. Absent = la matière n'est pas encore sous
+   * patron, les mêmes contrôles y restent des `[warn]` (son backlog, pas son gate).
+   *
+   * Lu par le GATE seulement : jamais émis en SQL, jamais lu à l'exécution.
+   */
+  coursePattern: z.enum(["notion"]).optional(),
 });
 
 export const subjectMetaWithCompileToSchema = subjectMetaSchema.superRefine((meta, ctx) => {
@@ -264,6 +277,20 @@ export const videoIdSchema = z
   );
 
 /** `chapter.json` — maps onto a row in `chapters`. */
+/**
+ * A misconception tag id — namespaced by subject (étude 04 R-5), e.g.
+ * `math.frac.add-denominators`: lowercase dotted segments, the first being the
+ * subject namespace. Never free text — every tag used in content must exist in
+ * the versioned registry `content/misconceptions.json` (cross-checked by
+ * `content:qa`; an unknown tag is an error).
+ */
+export const misconceptionTagSchema = z
+  .string()
+  .regex(
+    /^[a-z][a-z0-9]*(?:\.[a-z0-9]+(?:-[a-z0-9]+)*){1,}$/,
+    "a misconception tag must be namespaced lowercase segments (e.g. 'math.frac.add-denominators')",
+  );
+
 export const chapterMetaSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
@@ -336,22 +363,23 @@ export const chapterMetaSchema = z.object({
     .max(3, "a chapter may reference at most 3 videos (étude 23 R-11)")
     .refine((a) => new Set(a).size === a.length, "chapter videos must be unique")
     .optional(),
+  /**
+   * Les erreurs typiques que le COURS de ce chapitre montre et corrige (étude 35, R-5/D-5).
+   *
+   * Chaque entrée est un tag du registre `content/misconceptions.json` — le même vocabulaire
+   * que les distracteurs des exercices. C'est ce qui rend la boucle vérifiable : le cours
+   * enseigne CONTRE les erreurs que les exercices mesurent, et `content:qa` refuse un tag
+   * inconnu du registre ou qu'aucun distracteur du chapitre n'encode (C-5) — sans quoi la
+   * déclaration serait une intention, pas un fait.
+   *
+   * Lu par le GATE seulement : jamais émis en SQL, jamais lu à l'exécution.
+   */
+  coursePitfalls: z
+    .array(misconceptionTagSchema)
+    .refine((a) => new Set(a).size === a.length, "coursePitfalls must be unique")
+    .optional(),
 });
 export type ChapterMeta = z.infer<typeof chapterMetaSchema>;
-
-/**
- * A misconception tag id — namespaced by subject (étude 04 R-5), e.g.
- * `math.frac.add-denominators`: lowercase dotted segments, the first being the
- * subject namespace. Never free text — every tag used in content must exist in
- * the versioned registry `content/misconceptions.json` (cross-checked by
- * `content:qa`; an unknown tag is an error).
- */
-export const misconceptionTagSchema = z
-  .string()
-  .regex(
-    /^[a-z][a-z0-9]*(?:\.[a-z0-9]+(?:-[a-z0-9]+)*){1,}$/,
-    "a misconception tag must be namespaced lowercase segments (e.g. 'math.frac.add-denominators')",
-  );
 
 const optionSchema = z.object({
   id: z.string().min(1),
@@ -747,7 +775,10 @@ const wireIdSchema = z
   .string()
   .regex(/^[A-Za-z0-9_-]+$/, "B2 option ids must be alphanumeric (no ',', ':' or spaces)");
 
-const wireOptionSchema = z.object({ id: wireIdSchema, text: z.string().min(1) });
+// `.strict()` : ces options (ordering, matching, multi) ne portent QUE `id` et `text`. Une étiquette
+// d'erreur (`misconceptionTag`) posée sur l'une d'elles passait la validation puis disparaissait à
+// l'émission SQL — seuls les QCM ont des `distractor_tags` : un défaut silencieux, désormais refusé.
+const wireOptionSchema = z.object({ id: wireIdSchema, text: z.string().min(1) }).strict();
 
 /**
  * Native drag-&-drop sequencing question (Tier B, phase B2): `options` are the
@@ -950,6 +981,57 @@ export const quizSchema = z.object({
 });
 export type ContentQuiz = z.infer<typeof quizSchema>;
 
+/**
+ * Reprise d'exercices du manuel élève officiel (étude 21 D-6, lot 2).
+ *
+ * Portée : les fichiers `exercices/*.json`, et EUX SEULS. Ni `quiz.json` — le
+ * quiz gate la compréhension du cours, ce n'est pas une reprise — ni les
+ * questions individuelles : la traçabilité est au grain de la mission, parce
+ * que c'est au grain de la mission qu'on décide de reprendre un bloc
+ * d'exercices du manuel.
+ *
+ * ⚠️ CE QUI SE TRACE, ET CE QUI NE SE TRACE PAS (R-4). Une **reprise** —
+ * directe ou adaptée, mêmes données — porte ce champ. Une **variante**
+ * (données changées) ne le porte PAS : c'est du contenu maison inspiré, et le
+ * rapport de couverture ne compterait que du vent s'il l'additionnait. La
+ * distinction est écrite dans `manuel-valorisation.md` (régimes D-5).
+ *
+ * `items` est REQUIS quand le champ est là : un `manuel` sans item ne dit rien
+ * — ni ce qui est repris, ni ce qui reste. Les libellés sont ceux du manuel
+ * (« ex. 12 », « ex. 15a »), courts par construction ; ils servent au diff
+ * nominal du rapport de couverture, jamais d'indice de réponse (§3.6).
+ *
+ * `code` est optionnel et se résout au LOADER, pas ici : il hérite du
+ * `chapter.manuel.code` quand il est absent, et son irrésolubilité est une
+ * erreur de `content:check`. Zod ne voit qu'un fichier à la fois et ne peut
+ * donc pas trancher cet héritage.
+ */
+export const exerciseManuelSchema = z
+  .object({
+    code: z
+      .string()
+      .regex(/^[A-Za-z0-9_-]+$/, "manuel.code must be an alphanumeric book code")
+      .optional(),
+    pages: z.string().min(1).optional(),
+    items: z.array(z.string().min(1).max(40)).min(1).max(30),
+  })
+  .refine(
+    (m) => {
+      if (m.pages === undefined) return true;
+      try {
+        const ps = parseManuelPages(m.pages);
+        return ps.length > 0 && ps.every((p) => p >= 1);
+      } catch {
+        return false;
+      }
+    },
+    {
+      message: "manuel.pages must be a 1-based page range like '12-15' or '12, 14-16'",
+      path: ["pages"],
+    },
+  );
+export type ExerciseManuel = z.infer<typeof exerciseManuelSchema>;
+
 /** An exercise file under `<chapter>/exercices/*.json`. */
 export const exerciseSchema = z.object({
   title: z.string().min(1),
@@ -977,6 +1059,12 @@ export const exerciseSchema = z.object({
    * Compiled into `exercises.correction_video` JSONB.
    */
   correctionVideo: videoIdSchema.optional(),
+  /**
+   * Reprise déclarée d'exercices du manuel élève (étude 21 R-4). Compilé
+   * dans `exercises.manuel_ref` JSONB, miroir du pattern `chapters.manuel_ref`.
+   * Métadonnée publique par design : aucune clé de réponse n'y transite.
+   */
+  manuel: exerciseManuelSchema.optional(),
   questions: z.array(questionSchema).min(1).max(50),
 });
 export type ContentExercise = z.infer<typeof exerciseSchema>;

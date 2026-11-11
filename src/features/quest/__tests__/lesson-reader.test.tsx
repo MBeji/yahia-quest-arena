@@ -4,8 +4,32 @@ import React from "react";
 
 // Stub TanStack Link → <a href={to}> so we can assert navigation targets without a router.
 vi.mock("@tanstack/react-router", () => ({
-  Link: ({ children, to }: { children: React.ReactNode; to: string }) =>
-    React.createElement("a", { href: to }, children),
+  Link: ({
+    children,
+    to,
+    onClick,
+  }: {
+    children: React.ReactNode;
+    to: string;
+    onClick?: () => void;
+  }) =>
+    React.createElement(
+      "a",
+      {
+        href: to,
+        onClick: (e: React.MouseEvent) => {
+          e.preventDefault();
+          onClick?.();
+        },
+      },
+      children,
+    ),
+}));
+
+// é38 lot 0 : les clics d'invitation émettent `account_invite_clicked`.
+const trackProductEvent = vi.fn();
+vi.mock("@/shared/lib/product-events", () => ({
+  trackProductEvent: (...a: unknown[]) => trackProductEvent(...a),
 }));
 
 // The « Pages du manuel » section self-fetches (useQuery + a gated server fn); stub it
@@ -17,6 +41,7 @@ vi.mock("../components/manuel-pages-section", () => ({ ManuelPagesSection: () =>
 vi.mock("../components/chapter-videos-section", () => ({ ChapterVideosSection: () => null }));
 
 import { LessonReader, type LessonReaderChapter } from "../components/lesson-reader";
+import { peekReturnTo } from "@/shared/lib/return-to";
 
 const chapter: LessonReaderChapter = {
   title: "Le présent : être et avoir",
@@ -334,6 +359,39 @@ describe("LessonReader", () => {
     fireEvent.keyDown(document, { key: "Escape" });
   });
 
+  it("zooms an Arabic figure in the reading direction, not in a hardcoded ltr", () => {
+    // Une étiquette qui mêle chiffres et arabe se réordonne selon la direction de BASE.
+    // Le zoom forçait `ltr` : « 4 أصغر من 8 » y renvoyait le 4 derrière le 8, soit
+    // l'inverse de ce que la figure enseigne. Le zoom doit lire comme la page.
+    const svg =
+      '<svg viewBox="0 0 10 10"><g text-anchor="middle"><text x="5" y="5">4 أصغر من 8</text></g></svg>';
+    const { container } = render(
+      <LessonReader
+        chapterId="c1"
+        chapter={{
+          ...chapter,
+          lesson_content: `## المقارنة\n\n::: figure المقارنة\n${svg}\n:::`,
+          summary: null,
+          subjects: { name_fr: "الرياضيات", content_language: "ar" },
+        }}
+        allChapters={siblings}
+      />,
+    );
+
+    // La plaque en ligne n'a pas de `dir` : elle hérite du RTL du conteneur de lecture.
+    const inline = container.querySelector(".lesson-figure__plate");
+    expect(inline).not.toBeNull();
+    expect(inline?.closest("[dir]")?.getAttribute("dir")).toBe("rtl");
+
+    fireEvent.click(container.querySelector(".lesson-figure") as Element);
+    const zoom = screen
+      .getByTestId("lesson-figure-zoom")
+      .querySelector(".lesson-figure__plate--zoom");
+    expect(zoom?.getAttribute("dir")).toBe("rtl");
+
+    fireEvent.keyDown(document, { key: "Escape" });
+  });
+
   it("labels the blocks in the content language for an Arabic lesson (R-8)", () => {
     const { container } = render(
       <LessonReader
@@ -349,5 +407,33 @@ describe("LessonReader", () => {
     );
     expect(container.querySelector(".lesson-blk--piege")?.textContent).toContain("تحذير");
     expect(container.querySelector(".lesson-blk--piege")?.textContent).not.toContain("Piège");
+  });
+});
+
+describe("LessonReader — invitation mesurée (é38 lot 0)", () => {
+  it("l'invitation douce sous le cours émet account_invite_clicked depuis le lecteur", () => {
+    trackProductEvent.mockClear();
+    const { container } = render(
+      <LessonReader chapterId="c1" chapter={chapter} allChapters={siblings} />,
+    );
+    fireEvent.click(container.querySelector('a[href="/signup"]') as HTMLElement);
+    expect(trackProductEvent).toHaveBeenCalledWith("account_invite_clicked", {
+      surface: "reader",
+    });
+  });
+});
+
+describe("LessonReader — le retour au point de départ (é38 lot 1)", () => {
+  it("l'invitation retient la page du cours : on y revient une fois le compte créé", () => {
+    window.localStorage.clear();
+    window.history.replaceState({}, "", "/chapitre/c1");
+    const { container } = render(
+      <LessonReader chapterId="c1" chapter={chapter} allChapters={siblings} />,
+    );
+    fireEvent.click(container.querySelector('a[href="/signup"]') as HTMLElement);
+
+    expect(peekReturnTo()).toBe("/chapitre/c1");
+    window.history.replaceState({}, "", "/");
+    window.localStorage.clear();
   });
 });

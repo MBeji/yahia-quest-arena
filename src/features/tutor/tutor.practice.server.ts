@@ -126,7 +126,7 @@ const gateSchema = z.object({ allowed: z.boolean(), reason: z.string() });
  */
 export const startTargetedPractice = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         /** Le tag de l'erreur — `get_my_weaknesses.tag`. Jamais affiché (R-A1.2-1). */

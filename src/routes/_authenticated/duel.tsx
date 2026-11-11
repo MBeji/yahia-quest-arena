@@ -12,6 +12,7 @@ import {
 } from "@/features/duel";
 import { DuelQueueCard } from "@/features/duel/components/duel-queue-card";
 import { DuelLeague } from "@/features/duel/components/duel-league";
+import { LeaguePodium } from "@/features/duel/components/league-podium";
 import { Swords } from "lucide-react";
 import { BackLink } from "@/components/ui/back-link";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -43,12 +44,24 @@ function DuelHubPage() {
   const [searching, setSearching] = useState(false);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  // Le salon est un écran VIVANT (un duel se règle pendant qu'on est ailleurs) :
+  // il garde le refetch au retour d'onglet dès que la donnée est périmée, là où
+  // le défaut du routeur attend 5 min (data-02).
   const historyQuery = useQuery({
     queryKey: ["duel-history"],
     queryFn: () => history(),
+    refetchOnWindowFocus: true,
   });
-  const leagueQuery = useQuery({ queryKey: ["duel-league"], queryFn: () => league() });
-  const awardQuery = useQuery({ queryKey: ["duel-last-award"], queryFn: () => lastAward() });
+  const leagueQuery = useQuery({
+    queryKey: ["duel-league"],
+    queryFn: () => league(),
+    refetchOnWindowFocus: true,
+  });
+  const awardQuery = useQuery({
+    queryKey: ["duel-last-award"],
+    queryFn: () => lastAward(),
+    refetchOnWindowFocus: true,
+  });
 
   const stopPolling = () => {
     if (pollRef.current) clearInterval(pollRef.current);
@@ -205,6 +218,12 @@ function DuelHubPage() {
           </ul>
         )}
       </section>
+
+      {/* é31 lot 5 (US-6) — la ligue se terminait dans le SILENCE : le gain tombait
+
+          le lundi à 02:30 par cron. Le podium est ce que l'élève trouve en arrivant. */}
+
+      <LeaguePodium award={awardQuery.data?.award ?? null} />
 
       <DuelLeague
         rows={leagueQuery.data?.rows ?? []}

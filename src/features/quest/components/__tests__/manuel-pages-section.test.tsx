@@ -6,7 +6,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 const getManuel = vi.fn();
 
 vi.mock("@tanstack/react-start", () => ({ useServerFn: (fn: unknown) => fn }));
-vi.mock("../../quest.server", () => ({
+vi.mock("../../quest.lesson.server", () => ({
   getManuelPageUrls: (...a: unknown[]) => getManuel(...a),
 }));
 vi.mock("@/lib/i18n", () => ({

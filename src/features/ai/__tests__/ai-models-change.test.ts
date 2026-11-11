@@ -45,7 +45,7 @@ vi.mock("@tanstack/react-start", () => ({
     let validatorFn: ((d: unknown) => unknown) | undefined;
     const chain = {
       middleware: () => chain,
-      inputValidator: (fn: (d: unknown) => unknown) => {
+      validator: (fn: (d: unknown) => unknown) => {
         validatorFn = fn;
         return chain;
       },
@@ -83,11 +83,11 @@ vi.mock("@/shared/integrations/ai/egress.server", () => ({
   resolveEgressTarget: (url: string) => mockResolveEgress(url),
 }));
 vi.mock("@/shared/integrations/ai/usage.server", () => ({ logAiUsage: vi.fn() }));
-vi.mock("../ai-vault.server", () => ({
+vi.mock("@/shared/integrations/ai/ai-vault.server", () => ({
   openOwnerSecret: (owner: string) => mockOpenOwnerSecret(owner),
   markCredentialState: vi.fn(),
 }));
-vi.mock("../crypto.server", () => ({
+vi.mock("@/shared/integrations/ai/crypto.server", () => ({
   AI_ENC_VERSION: 1,
   isVaultAvailable: () => true,
   sealForRow: () => Buffer.from("scelle"),

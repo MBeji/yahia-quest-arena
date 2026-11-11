@@ -181,6 +181,25 @@ export function dungeonRunsPerDay(level: number): number {
 /** Cost in Coins to recover a lost streak */
 export const STREAK_RECOVERY_COST = 15;
 
+/**
+ * COMBIEN DE JOURS MANQUÉS UNE SÉRIE PEUT-ELLE RACHETER — la borne haute de la fenêtre.
+ *
+ * Elle manquait. `streakRecoveryBlock` n'exigeait qu'une série périmée, sans dire
+ * DEPUIS QUAND : un élève absent dix jours pouvait encore racheter la série qu'il
+ * avait perdue neuf jours plus tôt. R-16 de é31 suppose l'inverse — sa formulation
+ * (« série perdue avant-hier, fenêtre encore ouverte ») décrit une fenêtre COURTE,
+ * et le lot 3 a remonté l'écart plutôt que de le trancher seul.
+ *
+ * 2 jours manqués, arbitré le 2026-09-03. C'est le levier qui ne touche PAS à
+ * l'économie : A16 de é09 constate que le shield à 15 pièces est bon marché
+ * (G-4 échoue à 38 %), et resserrer la fenêtre resserre G-4 sans changer un prix —
+ * donc sans rien ajouter au registre §3.9 ni à ce que é09 mesure.
+ *
+ * Une série rachetable est donc une série perdue HIER ou AVANT-HIER. Au-delà, elle
+ * est finie : c'est une fin de cycle (R-6), pas un échec à reprocher (R-8).
+ */
+export const STREAK_RECOVERY_WINDOW_DAYS = 2;
+
 // ---------------------------------------------------------------------------
 // Duels (étude 05 — duels temps réel & ligues). 1v1 on a frozen question set
 // drawn from the two players' shared parcours. Duels are an ENGAGEMENT feature,

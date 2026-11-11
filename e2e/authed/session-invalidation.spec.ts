@@ -1,0 +1,216 @@
+import type { Locator, Page } from "@playwright/test";
+import { test, expect } from "../fixtures";
+import { E2E_PASSWORD, STORAGE_STATE, TEST_USERS } from "../helpers/users";
+
+/**
+ * UNE SESSION QUI MEURT EN COURS DE ROUTE N'EST JAMAIS UN CUL-DE-SAC.
+ *
+ * POURQUOI CE FICHIER EXISTE
+ * ---------------------------------------------------------------------------
+ * Deux pannes en trois semaines, la même forme : l'élève reste devant un écran
+ * dont rien ne le sort. « Failed to load dashboard » (#931, deux fois), puis le
+ * bouton « Valider » grisé sans fin (#914/#915). #933 a fermé la porte CÔTÉ
+ * TYPES — `Record<AuthFailure, AuthRefusal>` fait échouer `tsc` sur un refus
+ * dont la conduite client n'est pas déclarée — et l'unitaire couvre la table.
+ *
+ * Mais rien ne vérifiait la propriété DANS UN VRAI NAVIGATEUR : la table peut
+ * être exhaustive et juste, et l'application quand même se figer, parce que la
+ * reprise passe par le stockage local, le rafraîchissement de jeton et le
+ * routeur — trois étages qu'aucun test unitaire ne traverse. C'est le second
+ * lot de #938.
+ *
+ * CE QUE LE TEST AFFIRME, ET CE QU'IL N'AFFIRME PAS
+ * ---------------------------------------------------------------------------
+ * Il n'exige PAS une issue précise : selon l'état du jeton, se rattraper avec
+ * un jeton neuf est aussi correct que renvoyer vers la connexion. Il exige
+ * qu'il y ait une issue — donc il interdit la TROISIÈME, la seule qui soit un
+ * défaut : rester sur la frontière d'erreur racine.
+ *
+ * C'est pour ça que l'assertion négative porte sur `root-error-boundary` et non
+ * sur un message : `errorTitle` existe en fr/en/ar, et un test qui épingle une
+ * langue ne mesure plus rien le jour où la suite tourne dans une autre.
+ */
+
+test.use({ storageState: STORAGE_STATE.free });
+
+/** Les clés de session de supabase-js dans `localStorage` (`sb-<ref>-auth-token`, parfois découpée). */
+async function sessionKeys(page: Page): Promise<string[]> {
+  return page.evaluate(() =>
+    Object.keys(localStorage).filter((k) => k.startsWith("sb-") && k.includes("auth-token")),
+  );
+}
+
+/** Casse les jetons SANS toucher à la forme : le client croit avoir une session, le serveur la refuse. */
+async function corruptSession(page: Page): Promise<number> {
+  return page.evaluate(() => {
+    const keys = Object.keys(localStorage).filter(
+      (k) => k.startsWith("sb-") && k.includes("auth-token"),
+    );
+    for (const k of keys) {
+      const raw = localStorage.getItem(k);
+      if (!raw) continue;
+      try {
+        const parsed = JSON.parse(raw) as Record<string, unknown>;
+        parsed.access_token = "invalid.invalid.invalid";
+        parsed.refresh_token = "invalid-refresh-token";
+        localStorage.setItem(k, JSON.stringify(parsed));
+      } catch {
+        // Session découpée en morceaux (`…auth-token.0`) : le JSON n'est pas
+        // parsable morceau par morceau. La casser franchement fait le même
+        // office — un jeton illisible est un jeton refusé.
+        localStorage.setItem(k, "not-a-session");
+      }
+    }
+    return keys.length;
+  });
+}
+
+/** Supprime la session : le client n'a plus rien à envoyer (`NO_HEADER`). */
+async function dropSession(page: Page): Promise<number> {
+  return page.evaluate(() => {
+    const keys = Object.keys(localStorage).filter(
+      (k) => k.startsWith("sb-") && k.includes("auth-token"),
+    );
+    for (const k of keys) localStorage.removeItem(k);
+    return keys.length;
+  });
+}
+
+/**
+ * DE QUOI EST FAIT LE CUL-DE-SAC — le message d'échec, et pourquoi il en dit autant.
+ *
+ * L'assertion ne rendait que l'URL. C'était trop peu : trois correctifs successifs de #969 ont
+ * été écrits sur des HYPOTHÈSES de ce que la page montrait (« la frontière d'erreur ? un
+ * squelette ? une redirection avortée ? »), et chacun s'est révélé faux au run suivant. Un
+ * message qui NOMME l'écran rencontré transforme chaque échec en mesure — et il vaut bien
+ * au-delà de cette enquête : la prochaine régression dira d'elle-même où elle bloque, au lieu
+ * d'obliger à ouvrir une trace.
+ */
+async function describeDeadEnd(page: Page): Promise<string> {
+  const boundary = await page
+    .getByTestId("root-error-boundary")
+    .isVisible()
+    .catch(() => false);
+  // ⚠️ CHAQUE lecture est bornée à 500 ms, et ce n'est pas du confort : sans borne, `innerText`
+  // sur un élément absent attend le timeout PAR DÉFAUT (30 s) avant que le `.catch` ne joue —
+  // le diagnostic mangeait alors la fenêtre de `toPass` et le message d'échec retombait sur un
+  // « Timeout exceeded » muet. Un outil de mesure qui fausse la mesure ne vaut rien.
+  const titre = await page
+    .locator("h1, h2")
+    .first()
+    .innerText({ timeout: 500 })
+    .catch(() => "(aucun titre)");
+  const session = await page
+    .evaluate(() =>
+      Object.keys(localStorage)
+        .filter((k) => k.startsWith("sb-") && k.includes("auth-token"))
+        .length.toString(),
+    )
+    .catch(() => "?");
+  const messageErreur = await page
+    .getByTestId("dashboard-error-message")
+    .innerText({ timeout: 500 })
+    .catch(() => "(non affiché)");
+  return [
+    "ni tableau de bord peuplé ni retour vers /auth",
+    `url: ${page.url()}`,
+    `frontière d'erreur racine visible: ${boundary}`,
+    `titre à l'écran: ${JSON.stringify(titre.slice(0, 120))}`,
+    `clés de session restantes: ${session}`,
+    `message d'erreur rendu: ${JSON.stringify(messageErreur.slice(0, 160))}`,
+  ].join(" — ");
+}
+
+/**
+ * L'issue attendue : le tableau de bord se peuple, OU on est renvoyé vers la
+ * connexion. Jamais la frontière d'erreur racine.
+ */
+async function expectAnExit(
+  page: Page,
+  dashboard: { statLevel: Locator; subjectCards: Locator },
+): Promise<void> {
+  const errorBoundary = page.getByTestId("root-error-boundary");
+  await expect(async () => {
+    const onAuth = /\/auth/.test(page.url());
+    const loaded = await dashboard.statLevel
+      .or(dashboard.subjectCards.first())
+      .first()
+      .isVisible()
+      .catch(() => false);
+    expect(onAuth || loaded, await describeDeadEnd(page)).toBe(true);
+  }).toPass({ timeout: 30_000 });
+  // L'assertion qui compte : le cul-de-sac n'est pas là. Vérifiée APRÈS la
+  // sortie, sinon un écran d'erreur transitoire pendant la reprise la ferait
+  // tomber pour rien.
+  await expect(errorBoundary).toBeHidden();
+}
+
+test.describe("Session invalidée en cours de route (#938)", () => {
+  test.describe.configure({ timeout: 90_000 });
+
+  test("des jetons cassés ne laissent pas l'élève sur l'écran d'erreur", async ({
+    page,
+    dashboard,
+  }) => {
+    await dashboard.goto();
+    // Contrôle positif : sans lui, un `localStorage` vide (session jamais
+    // écrite) rendrait le test vert sans avoir rien invalidé.
+    expect(await sessionKeys(page), "aucune session en localStorage").not.toHaveLength(0);
+
+    expect(await corruptSession(page)).toBeGreaterThan(0);
+    await page.goto("/dashboard");
+    await expectAnExit(page, dashboard);
+  });
+
+  test("une session supprimée renvoie vers la connexion, sans écran d'erreur", async ({
+    page,
+    dashboard,
+  }) => {
+    await dashboard.goto();
+    expect(await dropSession(page)).toBeGreaterThan(0);
+    await page.goto("/dashboard");
+    // Ici l'issue est déterminée : sans session, le garde de `_authenticated`
+    // renvoie vers `/auth` — c'est ce que le tier public vérifie déjà pour un
+    // visiteur déconnecté (`e2e/public/auth-redirects.spec.ts`). Ce qui est
+    // neuf, c'est que la session meurt APRÈS le chargement de l'application.
+    await expect(page).toHaveURL(/\/auth/, { timeout: 30_000 });
+    await expect(page.getByTestId("root-error-boundary")).toBeHidden();
+  });
+
+  // é38 lot 3 (R-7, US-3) — la session qui meurt REVIENT À LA PAGE QUITTÉE. Les deux tests ci-dessus
+  // exigent une issue, pas laquelle ; celui-ci fixe la conduite quand l'issue est la sortie par le refus.
+  //
+  // Pour que ce soit CE chemin et pas un autre : on coupe le rafraîchissement du jeton. `auth-attacher`
+  // ne termine une session que sur un refus PROUVÉ du rafraîchissement — un réseau qui n'aboutit pas n'en
+  // est pas un, donc la session RESTE, et c'est le refus du serveur sur le jeton cassé qui atteint l'écran
+  // d'erreur du tableau de bord : `useExitOnRefusedSession`, qui retient la page avant de fermer la session.
+  test("la session qui meurt revient à la page quittée : l'avis sur /auth, puis le retour", async ({
+    page,
+    dashboard,
+    auth,
+  }) => {
+    const RETURN_KEY = "na9ra.returnTo.v1";
+    await dashboard.goto();
+    expect(await sessionKeys(page), "aucune session en localStorage").not.toHaveLength(0);
+
+    const refreshEndpoint = "**/auth/v1/token?grant_type=refresh_token*";
+    await page.route(refreshEndpoint, (route) => route.abort());
+    expect(await corruptSession(page)).toBeGreaterThan(0);
+    await page.goto("/dashboard");
+
+    // L'élève arrive sur /auth, et l'écran lui dit pourquoi.
+    await expect(page).toHaveURL(/\/auth/, { timeout: 60_000 });
+    await expect(page.getByTestId("auth-session-expired")).toBeVisible();
+    const kept = await page.evaluate((key) => window.localStorage.getItem(key), RETURN_KEY);
+    expect(JSON.parse(kept ?? "null"), "la page quittée n'a pas été retenue").toMatchObject({
+      path: "/dashboard",
+      reason: "expired",
+    });
+
+    // Il se reconnecte : la page quittée est de nouveau à l'écran, et la mémoire est consommée.
+    await page.unroute(refreshEndpoint);
+    await auth.login(TEST_USERS.free.email, E2E_PASSWORD);
+    await expect(page).toHaveURL(/\/dashboard/);
+    expect(await page.evaluate((key) => window.localStorage.getItem(key), RETURN_KEY)).toBeNull();
+  });
+});

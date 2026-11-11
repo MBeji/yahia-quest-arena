@@ -257,10 +257,42 @@ describe("expandMorphologicalVariants — Tier A (étude 20 lot 2)", () => {
     expect(expandMorphologicalVariants("النبات الأخضر", "ar")).toContain("نبات أخضر");
   });
 
-  it("n'ajoute l'article arabe qu'en tête — jamais sur chaque mot", () => {
+  it("retire l'article mot à mot, sans jamais en ajouter à une tête مضاف", () => {
+    // Ce test exigeait « الفوق الشجرة » — la forme que le commentaire du code
+    // donnait lui-même en contre-exemple. C'était la dette, figée en vert :
+    // l'attente était fausse, pas le correctif qui la retire.
     const variants = expandMorphologicalVariants("فوق الشجرة", "ar");
-    expect(variants).toContain("الفوق الشجرة");
-    expect(variants.some((v) => v.startsWith("الفوق الالشجرة"))).toBe(false);
+    expect(variants).toContain("فوق شجرة"); // sens « sans article » : inchangé
+    expect(variants).not.toContain("الفوق الشجرة"); // فوق est مضاف, et une particule
+    expect(variants.some((v) => v.includes("الالشجرة"))).toBe(false);
+  });
+
+  it("ne préfixe « ال » qu'à un mot qui peut le porter", () => {
+    // Le cas remonté par le pilote é20 : « فوقها » est défini par annexion.
+    expect(expandMorphologicalVariants("فوقها", "ar")).not.toContain("الفوقها");
+    // Un chiffre, une particule, un démonstratif : « ال » ne s'y colle jamais.
+    expect(expandMorphologicalVariants("3", "ar")).toEqual([]);
+    expect(expandMorphologicalVariants("في", "ar")).toEqual([]);
+    expect(expandMorphologicalVariants("هذا", "ar")).toEqual([]);
+    // Une tête مضاف : « المركز الدائرة » n'existe pas.
+    expect(expandMorphologicalVariants("مركز الدائرة", "ar")).not.toContain("المركز الدائرة");
+    // Le tashkeel ne doit pas faire échapper le pronom affixe.
+    expect(expandMorphologicalVariants("كتابَهَا", "ar")).not.toContain("الكتابَهَا");
+    // …et le gisement qui justifie le tier reste intact.
+    expect(expandMorphologicalVariants("نملة", "ar")).toContain("النملة");
+    expect(expandMorphologicalVariants("النملة", "ar")).toContain("نملة");
+  });
+
+  it("garde les têtes que rien ne disqualifie — la prudence va à la variante", () => {
+    // La règle n'est pas « mono-mot » : « المفعول به منصوب بالفتحة » EST une
+    // réponse plausible en إعراب. Un doute profite toujours à la variante,
+    // parce qu'un faux négatif coûte la confiance d'un élève.
+    expect(expandMorphologicalVariants("مفعول به منصوب بالفتحة", "ar")).toContain(
+      "المفعول به منصوب بالفتحة",
+    );
+    // Un nom fini par ـه dont le radical n'est PAS de la classe fermée passe :
+    // الوجه، الفقه، المياه sont légitimes, on ne les sacrifie pas.
+    expect(expandMorphologicalVariants("وجه", "ar")).toContain("الوجه");
   });
 
   it("retire l'article français, élidé compris", () => {

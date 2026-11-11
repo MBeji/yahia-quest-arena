@@ -30,10 +30,11 @@ import {
 import { trackDungeonPoolScope } from "@/shared/lib/analytics";
 // Deep component imports (route→feature convention, like quest.$exerciseId):
 // the barrel would drag quest.server.ts into this route's module graph.
-import { QuestionInput, type McqOptionRender } from "@/features/quest/components/question-input";
-import { buildQuestLabels } from "@/features/quest/quest-labels";
+import { QuestionInput, type McqOptionRender } from "@/components/game/question-input";
+import { buildQuestLabels } from "@/shared/lib/quest-labels";
 import { shuffleOptions, type BaseOption, type DisplayOption } from "@/shared/lib/question-utils";
 import { isValidAnswerFormat } from "@/shared/lib/answer-formats";
+import { hasArabicLetters } from "@/shared/lib/utils";
 import { RichField } from "@/components/ui/svg-figure";
 import { useT } from "@/lib/i18n";
 import { useLearningPulse } from "@/hooks/use-learning-pulse";
@@ -124,6 +125,8 @@ function DungeonPage() {
       setTotalAnswered(res.totalAnswered);
       play("gameOver");
       qc.invalidateQueries({ queryKey: ["dashboard"] });
+      // La puce XP/série de l'en-tête suit le gain (data-02).
+      qc.invalidateQueries({ queryKey: ["me-stats"] });
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : t.dungeon.errorSavingRun),
   });
@@ -505,9 +508,15 @@ function DungeonPage() {
   const subjectInfo = currentQuestion.exercises?.subjects;
   const difficulty = currentQuestion.exercises?.difficulty ?? 1;
   const isCorrectAnswer = showFeedback && answerWasCorrect === true;
-  // Content-language labels for the per-type input. The dungeon payload only
-  // carries color_token (not content_language) — same signal as the RTL flag.
-  const dungeonInputLabels = buildQuestLabels(subjectInfo?.color_token === "arabic" ? "ar" : "fr");
+  // Direction follows the CONTENT, not the subject's colour: a 9ᵉ maths question is
+  // written in Arabic (formulas stay left-to-right, isolated by RichField) yet its
+  // subject token is "math". The dungeon payload carries color_token but not
+  // content_language (get_dungeon_questions change pending), so Arabic letters in the
+  // prompt are the signal alongside the "arabic" token. French or English maths
+  // carries none and stays left-to-right.
+  const isArabicQuestion =
+    subjectInfo?.color_token === "arabic" || hasArabicLetters(currentQuestion.prompt);
+  const dungeonInputLabels = buildQuestLabels(isArabicQuestion ? "ar" : "fr");
   const canValidate = Boolean(
     selected && isValidAnswerFormat(currentQuestion.questionType, selected),
   );
@@ -595,11 +604,9 @@ function DungeonPage() {
           key={currentQuestion.id}
           {...questionSlide(reduced)}
           className="rounded-3xl border border-gold/30 bg-surface-3 p-6 backdrop-blur-xl sm:p-8"
-          // Only Arabic content is RTL. Math uses standard LTR notation (project
-          // rule), so it must NOT be forced RTL. Full unification on the subject's
-          // content_language is pending a get_dungeon_questions RPC change to carry
-          // it in the payload; until then the color_token is the only signal here.
-          dir={subjectInfo && subjectInfo.color_token === "arabic" ? "rtl" : undefined}
+          // Only Arabic content is RTL (see isArabicQuestion above): math notation stays
+          // left-to-right, so French or English maths is never forced RTL.
+          dir={isArabicQuestion ? "rtl" : undefined}
         >
           <RichField
             raw={currentQuestion.prompt}
@@ -616,7 +623,7 @@ function DungeonPage() {
             onChange={handleSelect}
             onSubmit={validate}
             disabled={showFeedback || answerMutation.isPending}
-            rtl={subjectInfo?.color_token === "arabic"}
+            rtl={isArabicQuestion}
             labels={dungeonInputLabels}
             optionClassName={({ isSelected }: McqOptionRender) => {
               const isCorrect = showFeedback && isSelected && answerWasCorrect === true;

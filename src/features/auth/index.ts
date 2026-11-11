@@ -2,6 +2,9 @@
 // Public API — import from "@/features/auth"
 
 export { useAuth } from "./use-auth";
+export { useExitOnRefusedSession } from "./use-exit-on-refusal";
+export { useRedirectConnectedParent } from "./use-redirect-connected-parent";
+export { useSignOutInPlace } from "./use-sign-out-in-place";
 export { useMyRole } from "./use-my-role";
 export { useMyStats } from "./use-my-stats";
 export { shouldRedirectToOnboarding } from "./onboarding-guard";
@@ -12,8 +15,14 @@ export {
   setCurrentParcours,
   updateDisplayName,
   deleteAccount,
+  exportUserData,
+  setProfileLocale,
 } from "./auth.server";
-export { displayNameSchema, isValidDisplayName, DISPLAY_NAME_MAX_LENGTH } from "./display-name";
+export { useProfileLocaleSync } from "./use-locale-sync";
+export { claimWelcomePack, type WelcomePack } from "./welcome-pack.server";
+// `displayNameSchema` (zod) ne sort pas du barrel : il ne sert qu'aux server fns
+// et le barrel est servi au client (2026-10-31).
+export { isValidDisplayName, DISPLAY_NAME_MAX_LENGTH } from "./display-name";
 export {
   ACCOUNT_DELETE_ERROR_PREFIX,
   accountDeleteErrorLabel,
@@ -21,3 +30,5 @@ export {
   normalizeAccountEmail,
 } from "./account-deletion";
 export type { AccountDeleteErrorCode } from "./account-deletion";
+export { countExportedRows, userDataExportFileName } from "./data-export";
+export type { UserDataExport, UserDataExportNote } from "./data-export";

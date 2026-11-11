@@ -1,0 +1,181 @@
+name: Relevé du pilote IA (é29 §1.4 — la mesure, pas le verdict)
+
+# POURQUOI CE WORKFLOW EXISTE — constaté le 2026-09-22.
+#
+# `STATUS.md` §8 rang 0 portait, depuis le 2026-09-01 : « Le pilote tourne ;
+# verdict attendu vers le 2026-09-15. » En rafraîchissant le topo (#1085), on a
+# constaté que cette date était PASSÉE depuis une semaine et qu'aucun verdict
+# n'était écrit nulle part. Le pilote a tourné trois semaines sans que sa mesure
+# soit relevée — alors que la ligne disait déjà « ce qui reste à faire est la
+# MESURE, pas le geste ».
+#
+# Rien ne manquait qu'un relevé : é29 §1.4 pose ses KPI et précise « tous
+# calculables depuis les tables de cette étude — aucun tracker tiers ». Ils
+# l'étaient. Personne ne les avait calculés, et une échéance tenue de mémoire ne
+# se relève pas toute seule : c'est exactement le motif de #1039 sur le topo.
+#
+# CE QUE CE N'EST PAS — une alerte. Comme `engagement-report.yml`, il tient UNE
+# issue à jour, ouverte par construction : elle EST le relevé courant. Rien ici
+# ne rougit, rien ne bloque, rien ne se referme. Un relevé qui s'ouvrirait et se
+# fermerait au gré des seuils deviendrait une alarme, et une alarme qui parle de
+# tendance apprend à être ignorée.
+#
+# CE QU'IL NE REND PAS — un verdict. Le script confronte les mesures aux cibles
+# et nomme l'écart ; « le pilote est-il concluant » est un arbitrage du porteur
+# du produit, et un workflow ne le prend pas.
+
+on:
+  schedule:
+    # Lundi matin, après le relevé d'engagement (06:41) : les deux se lisent
+    # ensemble, et deux crons ronds partent en retard l'un derrière l'autre.
+    - cron: "53 6 * * 1"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: Fenêtre du relevé en jours (défaut 30).
+        required: false
+        type: string
+        default: ""
+
+concurrency:
+  group: ai-pilot-report
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  releve:
+    name: relever les KPI du pilote en production
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Sans ceci tout `gh` sort en 1 hors d'un dépôt git (faute du 2026-09-22 sur
+      # `pat-expiry-watch.yml`, désormais gardée par `harness:check`).
+      GH_REPO: ${{ github.repository }}
+      LABEL: pilote-ia
+    steps:
+      - name: Le secret est-il configuré ?
+        id: guard
+        run: |
+          set -euo pipefail
+          if [ -z "${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            {
+              echo "### ⏭️ Relevé du pilote IA — sauté"
+              echo ""
+              echo "\`PROD_SUPABASE_SERVICE_ROLE_KEY\` n'est pas configuré. Les tables de é29 sont"
+              echo "en RLS et leurs privilèges REVOKE : sans cette clé il n'y a rien à lire, et"
+              echo "**échouer ici installerait un rouge permanent** — ce qui apprend à ne plus lire"
+              echo "une issue de suivi. Le job sort donc vert, en le disant."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          echo "configured=true" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+
+      - name: Setup Node
+        if: steps.guard.outputs.configured == 'true'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.guard.outputs.configured == 'true'
+        run: npm ci --no-audit --no-fund
+
+      # Depuis le DÉPÔT, jamais depuis un second secret — même raison que
+      # `client-errors-watch.yml` : un `PROD_SUPABASE_URL` posé sans son `https://`
+      # a passé un pré-vol qui ne testait que la non-vacuité, et tué 25 jours de
+      # triage en silence. Le besoin supprimé plutôt que le secret reposé.
+      - name: Résoudre l'URL de production (depuis le dépôt)
+        if: steps.guard.outputs.configured == 'true'
+        run: |
+          set -euo pipefail
+          url="$(node --input-type=module -e 'const m = await import("./scripts/shared/prod-targets.mjs"); process.stdout.write(m.PROD_SUPABASE_API_URL)')"
+          if ! printf '%s' "$url" | grep -qE '^https://[a-z0-9]+\.supabase\.co$'; then
+            echo "::error::PROD_SUPABASE_API_URL ne résout pas vers une URL d'API Supabase (reçu '$url')."
+            exit 1
+          fi
+          echo "PROD_SUPABASE_API_URL=$url" >> "$GITHUB_ENV"
+
+      - name: Fenêtre effective
+        id: fenetre
+        if: steps.guard.outputs.configured == 'true'
+        # La valeur demandée passe par `env:`, jamais interpolée dans le script :
+        # `${{ }}` est substitué dans le TEXTE du shell avant exécution.
+        env:
+          DEMANDE: ${{ inputs.days }}
+        run: |
+          set -euo pipefail
+          jours="${DEMANDE:-30}"
+          if ! printf '%s' "$jours" | grep -qE '^[0-9]+$' || [ "$jours" -le 0 ]; then
+            echo "::error::days attend un entier > 0, reçu « $jours »."
+            exit 1
+          fi
+          echo "jours=$jours" >> "$GITHUB_OUTPUT"
+
+      # Le seul accès à la production, en LECTURE. `secret_enc` n'est jamais
+      # sélectionné : un relevé n'a aucune raison de faire transiter une clé
+      # chiffrée, et la seule façon sûre de ne pas la journaliser est de ne pas
+      # la lire. `set -e` : une lecture en échec fait échouer le job.
+      - name: Relever les KPI (lecture seule)
+        if: steps.guard.outputs.configured == 'true'
+        env:
+          SUPABASE_URL: ${{ env.PROD_SUPABASE_API_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
+          JOURS: ${{ steps.fenetre.outputs.jours }}
+        run: |
+          set -euo pipefail
+          npm run --silent reports:ai-pilot -- --days "$JOURS" --out ai-pilot.json
+          npm run --silent reports:ai-pilot -- --days "$JOURS" --markdown > releve.md
+          cat releve.md >> "$GITHUB_STEP_SUMMARY"
+
+      # Les journaux d'un runner sont illisibles depuis une session cloud (403 au
+      # CONNECT sur le stockage Azure) ; les annotations, elles, se lisent par
+      # l'API. Trois chiffres suffisent à savoir si le relevé a vu quelque chose.
+      - name: Rendre le relevé lisible sans accès aux journaux
+        if: steps.guard.outputs.configured == 'true'
+        run: |
+          set -euo pipefail
+          jq -r '"::notice title=Pilote IA::fenêtre \(.fenetre.jours) j · \(.adoption.famillesActives) famille(s) active(s) · \(.adoption.elevesActives) élève(s) · dépense totale \(.facture.depenseTotaleUsd) $"' ai-pilot.json
+          jq -r '.confrontation[] | "::notice title=KPI::\(.nom) = \(.mesure) (cible \(.cible)) → \(.etat)"' ai-pilot.json
+
+      - name: Tenir l'issue du relevé à jour
+        if: steps.guard.outputs.configured == 'true'
+        run: |
+          set -euo pipefail
+
+          {
+            cat releve.md
+            echo ""
+            echo "---"
+            echo ""
+            echo "_Issue tenue par \`ai-pilot-report.yml\`, chaque lundi. **Ce n'est pas une"
+            echo "alerte** : elle reste ouverte par construction, elle EST le relevé courant._"
+            echo "_La console humaine reste [\`/admin/ia\`](https://www.na9ranal3ab.tn/admin/ia)._"
+            echo ""
+            echo "_Elle existe parce que le §8 de \`STATUS.md\` a porté « verdict attendu vers le"
+            echo "2026-09-15 » pendant une semaine après l'échéance, sans que personne ne relève"
+            echo "la mesure. Une échéance tenue de mémoire ne se relève pas toute seule._"
+          } > corps.md
+
+          titre="🤖 Relevé du pilote IA — $(date -u +%Y-%m-%d)"
+
+          # Le label AVANT la lecture : il lui sert de filtre (leçon du 2026-09-22).
+          gh label create "$LABEL" --color 1d76db \
+            --description "Relevé périodique des KPI du pilote IA (lecture seule, pas une alerte)" 2>/dev/null || true
+
+          existing="$(gh issue list --label "$LABEL" --state open --limit 1 --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            gh issue edit "$existing" --title "$titre" --body-file corps.md >/dev/null
+            echo "Issue #$existing mise à jour."
+          else
+            gh issue create --title "$titre" --label "$LABEL" --body-file corps.md
+          fi

@@ -3,7 +3,7 @@
 > Des comportements que **le gate local ne montre pas** et qu'on ne devine pas en lisant le
 > code : chacun a coûté soit un bug en production, soit un cycle de build. Ils ne sont pas dans
 > [`AGENTS.md`](../../AGENTS.md) § Known gotchas parce que ce fichier a un budget dur de
-> 250 lignes (il est injecté dans chaque session) — ici, il n'y en a pas.
+> 200 lignes (il est injecté dans chaque session) — ici, il n'y en a pas.
 >
 > **Une entrée n'arrive ici que mesurée.** Pas « je crois que » : le chiffre, la commande qui
 > l'a produit, la date. Si l'outillage change et qu'elle devient fausse, elle se corrige — elle
@@ -73,6 +73,29 @@ qui dit « on t'a envoyé un lien » doit donc offrir un **renvoi** (`auth.resen
 d'envoi (`Error sending confirmation email`) doit se distinguer d'une erreur d'identifiants :
 le compte, lui, existe. Voir [`auth.tsx`](../../src/routes/auth.tsx).
 
+## Trois pièges de migration qui ne se voient pas au moment où on les écrit
+
+Condensés en tête d'`AGENTS.md` jusqu'à l'étude 32 (D-8) ; le détail vit ici, la règle courte
+reste là-bas.
+
+**Une table neuve a besoin de ses `GRANT` explicites.** Un `CREATE TABLE` sans son propre
+`GRANT SELECT … TO authenticated` fonctionne en cloud — le rôle y hérite d'assez de choses — et
+casse la suite pgTAP nocturne sur une base fraîche. Référence : la migration de base
+`20260612221000_baseline_table_grants.sql`.
+
+**Une migration doit trier APRÈS la plus récente déjà sur `main`.** Un horodatage antidaté
+bloque `supabase db push` et laisse silencieusement la prod derrière le code. Le check de PR
+`Migration order` l'attrape avant le merge — c'est un check **requis**, contrairement au suivant.
+
+**La prod n'est PAS le juge de la reconstructibilité.** Une migration peut passer en prod, où
+ses parents sont anciens, et rendre impossible la construction d'une base **vierge** — donc
+casser pgTAP et tout projet TEST neuf. Quatre pannes de cette forme ont atteint `main` après le
+lot 4 de l'étude 24 (#548, #549, #552, #557), déterrées une par une à la main. Deux garde-fous,
+et leurs limites : `db-tests.yml` tourne sur les PR **mais n'est pas requis** — un rouge n'arrête
+pas l'auto-merge, il faut aller le lire ; `db:check-chain` rejoue la chaîne **statiquement**, en
+~0,2 s et sans base. Un INSERT qui dépend de lignes absentes se garde par
+`WHERE EXISTS (SELECT 1 FROM public.<parent> …)`.
+
 ## Un `CREATE OR REPLACE` peut effacer trois lots sans qu'aucun gate ne bronche
 
 **Symptôme** : aucun. La migration s'applique, la fonction compile, `verify` et la suite pgTAP
@@ -107,6 +130,54 @@ Puis : extraire le corps (`sed -n 'D,Fp'`), appliquer la modification **par scri
 assertion sur le nombre d'occurrences, et `diff` le résultat contre l'extrait — le diff doit ne
 montrer **que** les lignes voulues. C'est l'audit qui remplace la relecture de 500 lignes, et
 c'est ce qui rend la PR relisable.
+
+## `ON CONFLICT DO NOTHING` fige la PREMIÈRE valeur, jamais la meilleure
+
+**Symptôme** : une colonne semée porte une valeur qu'aucun fichier du dépôt ne réclame plus.
+Le seed qui la corrige est là, il est postérieur, il s'exécute sans erreur — et il ne change
+rien. Aucun gate ne bronche : `db:check-chain` rejoue la chaîne, la migration réussit, la suite
+pgTAP passe.
+
+**Cause** : `ON CONFLICT (code) DO NOTHING` ne veut pas dire « insérer si absent, corriger si
+présent ». Il veut dire « ne rien faire du tout si la ligne existe ». Un second `INSERT` écrit
+pour amender une ligne déjà semée est un **no-op silencieux**.
+
+**Mesuré le 2026-09-03**, quatre mois après les faits. `20260522153000_family_content_rewards.sql`
+sème trois badges avec un `icon_name` en minuscules :
+
+```sql
+('streak_7', …, 'rare', 'flame', 'streak_7'),
+('boss_slayer', …, 'epic', 'swords', 'boss_win'),
+('math_blitz', …, 'rare', 'zap', 'math_95')
+ON CONFLICT (code) DO NOTHING;
+```
+
+`20260522170000_seed_content.sql` — **le même jour, 1 h 40 plus tard** — réécrit les mêmes badges
+avec la bonne casse (`Flame`, `Shield`, …), et porte lui aussi `DO NOTHING`. Les lignes existant
+déjà, la correction n'a jamais été appliquée. Or `BadgeMedal` résout le glyphe par
+`GLYPHS[iconName] || Award` : trois badges ont rendu le glyphe passe-partout du 2026-05-22 au
+2026-09-03 sans qu'aucun test ne rougisse — le repli est un filet, pas une carte de glyphes.
+
+**La parade, en deux temps.**
+
+1. **Corriger une ligne existante demande un `UPDATE` explicite** (ou `DO UPDATE SET`), gardé sur
+   la valeur fautive pour rester idempotent :
+
+   ```sql
+   UPDATE public.badges SET icon_name = 'Flame' WHERE code = 'streak_7' AND icon_name = 'flame';
+   ```
+
+2. ⚠️ **Surtout pas en réécrivant la migration fautive.** Elle est appliquée en production, et le
+   suivi se fait par **version**, jamais par contenu : la réécrire ne rejoue rien là-bas et fait
+   diverger une base vierge de la prod — le piège que `AGENTS.md` nomme sous « la prod n'est PAS
+   le juge de la reconstructibilité », pris par l'autre bout.
+
+**Ce qui le rend invisible**, et donc ce qu'il faut garder : les deux moitiés sont justes
+séparément. Le seed d'origine est valide, le seed correctif est valide, et leur composition ne
+l'est pas. C'est la même classe que R-13 de l'étude 31 (« un badge sans règle ») et que
+`auth-refusals.ts` : deux listes tenues à la main, chacune juste de son côté. Un test qui
+confronte les deux — ici `badge-medal.test.tsx`, qui compare la carte des glyphes au semis des
+migrations dans les deux sens — est le seul filet qui tienne.
 
 ## Deux plafonds de 30 s, et c'est le mauvais qui gagne la course
 
@@ -227,3 +298,249 @@ produit une adresse identique, donc aucune navigation, donc la même panne un cr
 **amenée sous les yeux**, parce qu'ouvrir hors écran ne se distingue pas de ne rien faire. Et le
 consommateur est celui qui l'a **prise** (ici le panneau, monté seulement une fois la session
 résolue) : une intention retirée par la route avant que sa cible existe est une intention perdue.
+
+## Une boucle de rendu se signale comme « 2 errors » — et un `| tail` la fait disparaître
+
+**Vécu le 2026-09-14** (étude 34, lot 4). Un hook neuf, `useAttemptCelebration`, rend un objet —
+comme tous ses voisins. Le lecteur d'exercice l'a mis dans la liste de dépendances de `resetRun` :
+
+```ts
+// ❌ `celebration` est un objet NEUF à chaque rendu
+}, [resetSession, resetFeedback, resetHints, celebration]);
+
+useEffect(() => {
+  resetRun();
+}, [exerciseId, resetRun]);
+```
+
+`resetRun` devient neuf à chaque rendu, donc l'effet se relance à chaque rendu, donc `resetRun()`
+repose l'état, donc le composant re-rend : **boucle infinie**. En production, c'est la page de
+quête qui prend 100 % d'un cœur et ne rend jamais. Le fichier documentait déjà la règle qui
+l'interdit, trois lignes plus bas — « on dépend des CALLBACKS des hooks, jamais des objets » —
+et le lot l'a enfreinte en ajoutant un hook de plus.
+
+Le remède est l'idiome déjà en place pour `hints` et `feedback` : `const { reset: resetX } = x;`,
+et c'est `resetX` qui va dans la liste.
+
+**Ce qu'il faut retenir tient surtout à la façon dont ça se voit.** Une boucle de rendu
+**synchrone** bloque la boucle d'événements : le `testTimeout` de 15 s ne peut pas se déclencher,
+et le fichier de test ne rend **jamais** son verdict. Vitest ne l'a donc compté ni en `passed` ni
+en `failed` :
+
+```
+ Test Files  339 passed (341)     ← 341 collectés, 339 rendus : DEUX manquent
+      Tests  4313 passed (4338)
+     Errors  2 errors             ← c'est là, et nulle part ailleurs
+   Duration  1200.16s             ← au lieu de ~250 s
+```
+
+Trois réflexes, dans cet ordre :
+
+1. **Lire le décompte entre parenthèses.** `339 passed (341)` n'est pas vert : il manque deux
+   fichiers. « 0 failed » ne veut pas dire « tout est passé ».
+2. **Ne jamais faire passer un gate par `| tail`, `| head` ou `| grep`.** Le code de sortie d'un
+   pipeline est celui de la DERNIÈRE commande — `tail` réussit toujours. `npm run verify | tail -8`
+   rend donc **0** sur une suite rouge. Rediriger (`> fichier 2>&1`) et lire le fichier ; si un
+   filtre est vraiment nécessaire, `set -o pipefail`.
+3. **Une durée qui explose est un symptôme, pas de la malchance.** Avant d'accuser la machine :
+   `ps aux | grep vitest` — deux workers à 100 % de CPU pendant que le journal n'écrit plus
+   depuis cinq minutes désignent un fichier qui tourne en rond, pas une contention. Le fichier
+   fautif se trouve en soustrayant les fichiers rendus de ceux collectés.
+
+## Une règle `@media print` accrochée à la COQUILLE meurt en silence quand le contenu déménage
+
+**Vécu le 2026-09-19.** Un élève en thème « Noir & Or » imprime son cours (ou l'enregistre en
+PDF, c'est le même chemin : `Ctrl+P` → « Enregistrer en PDF ») et reçoit **une feuille blanche**.
+Rien de cassé côté JS, rien de rouge au gate : le cours est bien dans la page, il est juste
+**écrit en blanc sur du blanc**.
+
+Trois faits qui se combinent :
+
+1. `.lesson-content { color: var(--foreground) }`, et `--foreground` vaut `oklch(0.965 …)` —
+   un quasi-blanc — dans le thème sombre (`:root`). Le thème clair « Référence » n'a jamais
+   montré le bug : son `--foreground` est déjà une encre.
+2. Le navigateur **n'imprime pas les fonds** par défaut. Le noir de la coquille disparaît, le
+   papier reste blanc, le texte reste blanc.
+3. La règle qui remettait le cours à l'encre visait `.app-shell .lesson-content` (correctif C4,
+   `d526f658`), parce que le lecteur vivait alors dans la coquille applicative. **Le chantier C8
+   l'a déplacé** vers le registre public : `/chapitre/$chapterId` sous `.public-shell`, et
+   `/lesson/$chapterId` n'est plus qu'une redirection 301. Le sélecteur n'attrapait donc plus
+   **aucun** cours. `.public-shell`, lui, n'avait qu'un `color: #000` posé sur la coquille — que
+   le `color` de `.lesson-content`, plus spécifique sur l'élément lui-même, écrase.
+
+Mesuré dans Chromium (`emulateMedia({media:'print'})`, fonds neutralisés comme le fait une
+imprimante), pixel le plus sombre du corps de texte sur fond blanc :
+
+| Nœud                       | avant      | après |
+| -------------------------- | ---------- | ----- |
+| paragraphe du cours        | **1,74:1** | 21:1  |
+| texte d'un bloc Définition | **1,31:1** | 21:1  |
+| cellule de tableau         | **1,74:1** | 21:1  |
+
+La barre AA est à 4,5:1 ; en dessous de ~1,5:1 il n'y a **rien** à voir sur du papier.
+
+**Ce qu'il faut retenir tient en deux règles.**
+
+1. **L'encre d'impression est une propriété du DOCUMENT, pas de sa coquille.** Le crochet doit
+   être une classe de CONTENU, qui voyage avec lui quand il change d'écran : `.family-report`
+   le faisait déjà bien pour le bilan parental, `.lesson-doc` / `.lesson-content` le font
+   maintenant pour le cours. Une règle `@media print` préfixée par `.app-shell` ou
+   `.public-shell` est un pari sur l'arborescence — et une route qui déménage ne fait pas de
+   bruit.
+2. **Un test qui cherche une CHAÎNE dans `styles.css` ne dit rien de ce que la règle atteint.**
+   Le garde-fou en place (`lesson-print-css.test.ts`) vérifiait que `.app-shell .lesson-content`
+   existait bien dans la feuille. Il est resté **vert pendant tout le bug** : la règle existait,
+   elle ne matchait plus rien. Le test réécrit (`lesson-print-css.test.tsx`) **monte le lecteur**,
+   prend ses vrais nœuds et demande à `Element.matches()` si une règle `@media print` les attrape
+   — sous `.public-shell`, sous `.app-shell`, et sans coquille du tout. Remis sur l'ancien
+   sélecteur, il tombe en rouge sur 5 tests.
+
+⚠️ Corollaire pour tout ce qui est `position: fixed` : à l'impression, un élément fixe se
+**tamponne sur chaque page** du PDF. La bulle IA (`ai-launcher.tsx`) le faisait, par-dessus le
+cours, pour tout élève connecté — d'où son `print:hidden`, comme l'en-tête, le sommaire et les
+appels à l'action du lecteur.
+
+## Un élément `motion` rendu par le serveur reste à son état de DÉPART si le client ne le rejoue pas
+
+**Symptôme** (audit d'affichage du 2026-10-31) : avec « réduire les animations », la carte de `/auth` et
+de `/auth/reset` restait à `opacity: 0` **pour toujours**. Le formulaire de connexion était invisible :
+personne dans ce cas ne pouvait se connecter ni s'inscrire. Aucune erreur, aucun test rouge — et
+Playwright tient un élément à `opacity: 0` pour _visible_.
+
+**Cause**, en deux temps, dont les deux ont suffi :
+
+1. Le serveur ne connaît pas la préférence : `useReducedMotion()` y rend `null`, donc le HTML porte
+   l'état de départ du preset (`style="opacity:0;transform:scale(0.95)"`). Un premier rendu client en
+   `initial: false` n'y change rien : **React ne corrige pas les attributs à l'hydratation**.
+2. Retirer `animate` au rendu suivant — ce que faisait `{ initial: false }` seul — est lu par `motion`
+   comme « retourne à ta valeur de base ». Celle-ci vient du DOM au montage, donc du HTML serveur :
+   `opacity: 0`. Mesuré avec une version qui réglait seulement le point 1 : même carte invisible.
+
+**Ce qu'on fait** : `useEntrance` ([`motion.ts`](../../src/shared/lib/motion.ts)) rend, **pendant
+l'hydratation seulement**, ce que le serveur a rendu avec une durée nulle, puis `initial: false` en
+**gardant `animate`** — jamais un rendu sans lui. `useSyncExternalStore` distingue l'hydratation du
+montage ordinaire (un `useState` + `useEffect` rendrait la même valeur aux deux premiers rendus).
+`entrance()`, la variante sans hook, n'a pas cette garde : ses appelants (tableau de bord, classement)
+sont rendus après la lecture de session, jamais par le serveur.
+
+**Comment le revoir** : l'e2e du tier public
+[`auth-reduced-motion.spec.ts`](../../e2e/public/auth-reduced-motion.spec.ts) lit l'opacité **calculée**
+de `data-testid="auth-card"` avec `reducedMotion: "reduce"` ; les tests de `motion.test.ts` fixent ce
+que le hook rend à chaque étape. Tout nouvel écran qui s'anime à la première image d'une page rendue
+côté serveur passe par `useEntrance`, jamais par un `initial` écrit à la main.
+
+## Un déploiement Vercel rouge en une seconde n'est pas un build cassé — c'est un refus
+
+**Symptôme (2026-10-01 → 2026-10-14)** : tous les déploiements Vercel, Production comme
+Preview, passent en `failure` **dans la seconde** qui suit leur création ; `/api/health` sert
+toujours le même vieux `commit`. Les PR restent vertes (CI, CodeQL) et fusionnent : la prod a
+pris 12 commits de retard sans qu'aucun gate ne bronche.
+
+**Cause** : Vercel refuse de construire un commit dont le lock embarque une version
+vulnérable d'un paquet qu'il surveille — ici `errorCode: BLOCKED_PACKAGE`,
+`@tanstack/react-start@1.168.34` (CVE-2026-102989, corrigée en 1.168.60). Le refus tombe à
+`direct:build`, avant toute ligne de log de build : rien n'est visible depuis GitHub.
+
+**Ce qu'il faut faire** :
+
+- comparer `/api/health` (`commit`) à `main` dès qu'un statut **Vercel** est rouge ;
+- lancer `vercel-diagnose.yml` (lecture seule, `ops-dispatch`) : il rend `errorCode`,
+  `errorMessage` et le détail du dernier déploiement en échec ;
+- corriger dans le dépôt (montée du paquet, #1172) — jamais `DANGEROUSLY_DEPLOY_*`.
+
+## Le retour d'une connexion Google ne se lit pas dans l'URL : le client du projet est en flux implicite
+
+**Symptôme évité** (é38 lot 0) : détecter le retour de Google par un `?code=` dans l'adresse
+n'émet **jamais** l'événement `login` — sans erreur, sans test rouge, puisqu'un test qui fournit
+lui-même `?code=` passe.
+
+**Cause** : `src/shared/integrations/supabase/client.ts` crée le client **sans `flowType`**, donc avec
+le défaut de la librairie, `implicit`. Le retour d'un OAuth (et d'un lien de confirmation d'e-mail)
+y arrive dans le **fragment** — `#access_token=…` — que `detectSessionInUrl` consomme puis efface ;
+un `?code=` n'existe qu'en PKCE. Les branches de `auth.tsx` qui cherchent `code` (l'avertissement
+à 2,5 s « connexion Google incomplète ») ne peuvent donc pas se déclencher dans la configuration
+actuelle.
+
+**Mesuré le 2026-10-30** : `grep -rn "flowType:" src supabase/config.toml` ne trouve rien (l'option
+n'est posée nulle part) ; dans
+`@supabase/auth-js` 2.118.0, `grep -n "flowType: 'implicit'" node_modules/@supabase/auth-js/dist/main/GoTrueClient.js`
+donne la ligne 24 (`DEFAULT_OPTIONS`). **Non mesuré** : le retour réel de Google en production n'a
+pas été observé — la conclusion vient du code installé, pas d'une requête. Si quelqu'un l'observe,
+qu'il corrige cette entrée dans un sens ou dans l'autre.
+
+**Ce qu'on fait à la place** : se fier à la **session**, qui dit QUELLE identité vient de servir et
+QUAND — `isFreshGoogleSignIn` dans [`auth.tsx`](../../src/routes/auth.tsx) (l'identité la plus
+récemment connectée, depuis moins d'une minute). L'événement `SIGNED_IN` repart aussi quand on
+retrouve un onglet, avec une session ancienne : c'est le délai qui l'écarte. Un lien de
+confirmation d'e-mail porte l'identité `email`, jamais `google`.
+
+## `signOut()` renvoie son erreur sans la lever — et la session de l'appareil est partie malgré elle
+
+**Symptôme évité** (é38 lot 1) : lire `{ error }` après `supabase.auth.signOut()` comme « je suis
+resté connecté », afficher une alerte, ne pas vider l'écran — alors que l'appareil n'a plus de
+session et que `useAuth` a déjà reçu `SIGNED_OUT`.
+
+**Cause** : dans `@supabase/auth-js` 2.118.0, `_signOut` appelle d'abord la révocation côté serveur ;
+si elle échoue autrement que par 401, 403 ou 404 (réseau coupé, 5xx), il **retire quand même la
+session locale** (`removeCurrentSession()`) avant de renvoyer l'erreur
+(`node_modules/@supabase/auth-js/dist/main/GoTrueClient.js`, autour de la ligne 3446). L'erreur dit
+« le serveur n'a pas révoqué le jeton », pas « tu es encore connecté ». Et elle n'est jamais levée :
+un `try/catch` autour de `signOut()` ne voit que les exceptions de plomberie (verrou, stockage).
+
+**Ce qu'on fait** : [`use-sign-out-in-place.ts`](../../src/features/auth/use-sign-out-in-place.ts)
+relit la **session** quand `signOut()` échoue, et ne dit « échec » que si elle est restée — dans le
+doute (lecture impossible), elle est tenue pour ouverte. Les deux autres déconnexions
+(`_authenticated.tsx`, `parametrage.tsx`) ignorent l'erreur : c'est cohérent avec ce comportement,
+et le jeton non révoqué expire de lui-même.
+
+## `signUp` et `signInWithPassword` notifient `SIGNED_IN` AVANT de rendre la main
+
+**Symptôme évité** (revue de sécurité du lot 1, é38) : mesurer « un retour était-il gardé ? » APRÈS
+`await supabase.auth.signInWithPassword(...)`. La mesure disait presque toujours « non » alors que la
+personne était bien ramenée à sa page — et les tests restaient verts.
+
+**Cause** : dans `@supabase/auth-js` 2.118.0, `signInWithPassword` (lignes 967-971) et `signUp`
+(lignes 783-787) font `await this._notifyAllSubscribers('SIGNED_IN', session)` **avant** leur
+`return`, et `_notifyAllSubscribers` attend chaque écouteur (ligne 4363). L'écouteur de `/auth` a donc
+déjà navigué et consommé la mémoire du retour quand le formulaire reprend la parole. Un test qui
+simule `signInWithPassword` par un simple `mockResolvedValue` ne fait jamais parler l'écouteur : il
+passe pour la mauvaise raison.
+
+**Ce qu'on fait** : lire ce qu'il faut mesurer **avant** l'appel qui ouvre la session
+(`readReturnContext` dans [`auth.tsx`](../../src/routes/auth.tsx)), et, pour le retour de Google où
+personne n'appelle rien, à l'arrivée sur la page. Et tester dans l'ordre réel : le simulacre de
+`signInWithPassword` doit appeler l'écouteur **avant** de rendre sa valeur (voir « la mesure se lit
+avant la consommation » dans `auth-signup.test.tsx`).
+
+## Règles laissées par les chantiers d'août-septembre 2026
+
+Sorties de `STATUS.md` le 2026-09-22 (son § 6 les portait) ; le détail et les mesures sont dans
+les PR citées. Chacune est tenue par un test ou un garde-fou — ne pas les défaire.
+
+- **Les surfaces passent par des tokens** (#724, #734) : plus aucun remap ne rattrape un
+  `bg-black` littéral, qui resterait noir sur le thème clair (le thème **par défaut**).
+  `check-design-tokens.mjs` le refuse ; `--surface-1/2/3` sont définis dans chaque thème et un
+  test les épingle dans les deux ; `src/__tests__/theme-contrast.test.ts` rend un contraste de
+  token opposable avant le merge (#786).
+- **Une fonction SQL vivante se SUBSTITUE, elle ne se retape pas** (#818) : `get_daily_plan`
+  retapée à la main réinventait l'algorithme — c'est le `diff` contre la révision vivante qui l'a
+  montré, pas un test. Voir aussi « Un `CREATE OR REPLACE` peut effacer trois lots » plus haut.
+- **Le travail de l'élève est écrit AVANT d'être envoyé** (2026-08-31) : `src/shared/lib/outbox.ts`
+  met la soumission en file locale, la tente, et ne l'en sort qu'acceptée. Une file rejouée exige
+  un serveur idempotent (le rejeu **rend** la tentative au lieu de lever). `outbox.ts` consigne
+  tout échec d'envoi avec sa disposition (« conservé » / « abandonné ») ; le vocabulaire des
+  stages vit dans une seule table, `client-error-stages.ts`.
+- **`ensureFreshSession` est sous mutex** (2026-08-31) : chaque `refreshSession()` fait tourner
+  le refresh token, N rafraîchissements concurrents produisent N-1 jetons morts. La règle ESLint
+  `local/single-browser-supabase-client` tient l'autre moitié : un seul client de navigateur.
+- **`/api/client-log` n'exige aucun jeton, délibérément** (2026-08-31) : il reçoit le récit d'un
+  refus d'authentification, donc d'un jeton cassé. Bornes : placé après `guardRequest` (plafond
+  par IP), corps ≤ 8 ko, table sans policy RLS qui ne nomme personne. Trois tests le figent.
+- **La porte du quiz d'un chapitre n'a qu'UNE définition** (2026-09-04, #1005) :
+  `chapter_quiz_gated` / `chapter_quiz_cleared`, appelées par les quatre lecteurs (dont
+  `start_exercise_session`). Un `LIMIT 1` sans `ORDER BY` tirait « le » quiz au hasard ;
+  l'ordonner aurait rendu la réponse stable **et fausse**. Le pgTAP 96 tient le décor à deux quiz.
+- **Un chiffre de couverture s'affiche avec son recours** (2026-09-04) : « 3/20 chap. » veut dire
+  « maîtrisés », et le suivi liste ce qui manque par chapitre — y compris le quiz expédié
+  (< 4 s/question) qui empêche un chapitre à 6/6 missions de compter. `student_chapter_gaps`
+  reprend les prédicats de `student_parcours_progress`, une assertion pgTAP les confronte.

@@ -129,6 +129,12 @@ export type ParentTranslations = {
     goalProgressDaily: string;
     goalUnit: string;
     goalUnitDaily: string;
+    /**
+     * Le sous-libellé du bilan familial. Il porte SON VERDICT depuis l'étude 34 :
+     * « maîtrisés » veut dire toutes les missions du chapitre et son quiz (Q-2).
+     * « {done}/{total} chap. » ne le disait pas, et ce silence a coûté une lecture
+     * fausse au propriétaire du produit lui-même, le 2026-09-04.
+     */
     coverageShort: string;
   };
   // Suivi parental « jour par jour » — tableau de bord d'activité quotidienne.
@@ -263,12 +269,29 @@ export type ParentTranslations = {
     subjectsEmpty: string;
     colSubject: string;
     colCoverage: string;
+    /** Ce que « chapitres maîtrisés » exige réellement — sinon le chiffre est un verdict muet. */
+    coverageHint: string;
+    gapsTitle: string;
+    gapsSubtitle: string;
+    gapsMissions: string;
+    gapsQuiz: string;
+    gapsBoth: string;
+    gapsMissionCount: string;
+    gapsQuizHint: string;
     scopeLabel: string;
     scopeClass: string;
     scopeClassHint: string;
     scopeAll: string;
     scopeExcluded: string;
     coverageAria: string;
+    /**
+     * Le compte, avec SON VERDICT nommé (étude 34 R-5, Q-2) : « maîtrisé » veut dire
+     * toutes les missions du chapitre et son quiz. « {done}/{total} chap. » ne le disait
+     * pas, et le 2026-09-04 il s'est lu « il a fait 3 chapitres sur 20 ».
+     */
+    coverageMastered: string;
+    /** Ligne ✨ : des chapitres sont arrivés depuis la dernière étoile de la matière. */
+    coverageNew: string;
     colTime: string;
     colLessons: string;
     colExercises: string;

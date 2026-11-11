@@ -8,6 +8,7 @@ import {
   checkQuestion,
   revealHint,
   startExerciseSession,
+  getAttemptProgress,
   submitAttempt,
 } from "@/features/quest";
 import {
@@ -21,7 +22,7 @@ import { QuestResultActions } from "@/features/quest/components/quest-result-act
 // que le tuteur entre dans l'écran de correction (AGENTS.md : une feature n'en
 // importe pas une autre).
 import { TutorPanel } from "@/features/tutor";
-import { buildQuestLabels } from "@/features/quest/quest-labels";
+import { buildQuestLabels } from "@/shared/lib/quest-labels";
 import { useT } from "@/lib/i18n";
 import { ReportErrorButton } from "@/features/content-report";
 import { SubscriptionPaywall } from "@/features/subscription";
@@ -54,6 +55,10 @@ function QuestPage() {
   const submit = useServerFn(submitAttempt);
   const reveal = useServerFn(revealHint);
   const check = useServerFn(checkQuestion);
+  // ⭐ Étude 34 lot 4 : ce que la dernière soumission a fait tomber. Branchée sur
+  // la SEULE route connectée — sans compte il n'y a pas de grand livre à lire,
+  // et le registre anonyme laisse donc `loadProgress` absente.
+  const loadProgress = useServerFn(getAttemptProgress);
 
   const strategy = useMemo<ExercisePlayerStrategy>(
     () => ({
@@ -63,7 +68,7 @@ function QuestPage() {
       startSession: async ({ exerciseId: exId, variant: v }): Promise<StartOutcome> => {
         try {
           const res = await startSession({ data: { exerciseId: exId, variant: v } });
-          return { ok: true, sessionId: res.sessionId };
+          return { ok: true, sessionId: res.sessionId, revealed: res.revealed };
         } catch (e) {
           const msg = e instanceof Error ? e.message : "";
           // The server fn raises localized, stable messages per gate.
@@ -104,12 +109,13 @@ function QuestPage() {
           improved: res.improved,
         };
       },
+      loadProgress: (exId: string) => loadProgress({ data: { exerciseId: exId } }),
       revealHint: async (questionId) => {
         const r = await reveal({ data: { questionId } });
         return { questionId: r.questionId, hint: r.hint, consumed: r.consumed };
       },
-      checkAnswer: ({ exerciseId: exId, questionId, choice }) =>
-        check({ data: { exerciseId: exId, questionId, choice } }),
+      checkAnswer: ({ exerciseId: exId, sessionId, questionId, choice }) =>
+        check({ data: { exerciseId: exId, sessionId, questionId, choice } }),
       renderPremiumLock: ({ message, subjectId, contentLang }) => {
         const QL = buildQuestLabels(contentLang);
         return (
@@ -148,7 +154,7 @@ function QuestPage() {
         </>
       ),
     }),
-    [startSession, submit, reveal, check, t],
+    [startSession, submit, reveal, check, loadProgress, t],
   );
 
   // Plus de conteneur porteur de thème (levier 03) : le lecteur tire ses surfaces

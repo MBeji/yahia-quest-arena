@@ -64,6 +64,8 @@ vi.mock("@/features/dashboard", () => ({
   getParcoursInterestCounts: vi.fn(() => Promise.resolve({ counts: [] })),
   ParcoursInterestAdmin: () =>
     React.createElement("div", { "data-testid": "parcours-interest-admin" }),
+  getEngagementOverview: vi.fn(() => Promise.resolve({})),
+  EngagementAdmin: () => React.createElement("div", { "data-testid": "engagement-admin" }),
 }));
 
 vi.mock("@tanstack/react-start", () => ({
@@ -79,12 +81,14 @@ import "../admin.beta-requests";
 import "../admin.content-reports";
 import "../admin.bug-reports";
 import "../admin.parcours-interest";
+import "../admin.engagement";
 
 const SUBSCRIPTIONS = "/_authenticated/admin/subscriptions";
 const BETA = "/_authenticated/admin/beta-requests";
 const REPORTS = "/_authenticated/admin/content-reports";
 const BUGS = "/_authenticated/admin/bug-reports";
 const INTEREST = "/_authenticated/admin/parcours-interest";
+const ENGAGEMENT = "/_authenticated/admin/engagement";
 
 function pageFor(path: string): React.ComponentType {
   const Component = h.components[path];
@@ -236,6 +240,34 @@ describe("admin console route guards (GAP-017)", () => {
 
       expect(screen.getByText(fr.subscription.accessDenied)).toBeInTheDocument();
       expect(screen.queryByTestId("parcours-interest-admin")).not.toBeInTheDocument();
+    });
+  });
+
+  // é31 lot 1 — la console d'engagement lit des agrégats de TOUT le parc (CURR,
+  // cohortes, séries). La porte autoritaire est SQL (`admin_engagement_overview`
+  // refuse un non-admin), mais le garde de route doit tenir aussi : sans lui, un
+  // élève verrait l'écran se charger puis échouer, ce qui ressemble à une panne.
+  describe("/admin/engagement", () => {
+    it("lets an admin into the engagement console", async () => {
+      h.role = ADMIN;
+      renderPage(pageFor(ENGAGEMENT));
+
+      expect(screen.queryByText(fr.subscription.accessDenied)).not.toBeInTheDocument();
+      expect(await screen.findByTestId("engagement-admin")).toBeInTheDocument();
+    });
+
+    it("refuses a non-admin", () => {
+      h.role = {
+        role: "student",
+        isAdmin: false,
+        currentParcoursId: "x",
+        hasProfile: true,
+        isLoaded: true,
+      };
+      renderPage(pageFor(ENGAGEMENT));
+
+      expect(screen.getByText(fr.subscription.accessDenied)).toBeInTheDocument();
+      expect(screen.queryByTestId("engagement-admin")).not.toBeInTheDocument();
     });
   });
 

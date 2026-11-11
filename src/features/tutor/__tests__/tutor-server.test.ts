@@ -67,7 +67,7 @@ vi.mock("@tanstack/react-start", () => ({
     let validatorFn: ((d: unknown) => unknown) | undefined;
     const chain = {
       middleware: () => chain,
-      inputValidator: (fn: (d: unknown) => unknown) => {
+      validator: (fn: (d: unknown) => unknown) => {
         validatorFn = fn;
         return chain;
       },
@@ -93,27 +93,31 @@ vi.mock("@/shared/integrations/supabase/auth-middleware", () => ({
 vi.mock("@/shared/integrations/supabase/client.server", () => ({
   supabaseAdmin: { rpc: mockAdminRpc },
 }));
-vi.mock("@/features/ai", () => ({ callAi: (r: unknown) => mockCallAi(r) }));
+vi.mock("@/shared/integrations/ai/ai-call.server", () => ({
+  callAi: (r: unknown) => mockCallAi(r),
+}));
 vi.mock("@/shared/lib/logger", () => ({
   logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn(), debug: vi.fn() },
 }));
 
 import { AI_CURATED_MODELS } from "@/shared/constants/ai";
 import {
-  escalateTutorThread,
   explainMistake,
   getTutorAvailability,
   getTutorChatEntry,
   getTutorHistory,
-  getTutorMiniCheck,
   getTutorPrefs,
-  getTutorUnderstandingSignal,
   isCuratedModel,
   nextVariant,
   rateTutorMessage,
   setTutorPlanPush,
-  submitTutorMiniCheck,
 } from "../tutor.server";
+import {
+  escalateTutorThread,
+  getTutorMiniCheck,
+  getTutorUnderstandingSignal,
+  submitTutorMiniCheck,
+} from "../tutor.comprehension.server";
 
 const QUESTION = "22222222-2222-4222-8222-222222222222";
 const CHAPTER = "33333333-3333-4333-8333-333333333333";

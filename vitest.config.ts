@@ -34,6 +34,12 @@ export default defineConfig({
     // SVG, qui passe par DOMPurify). Résultat : 365 s -> 254 s, à décompte identique
     // (276 fichiers, 3 445 tests).
     //
+    // Repasse du 2026-10-27 : 225 sur 357. Les 21 de plus ont été joués un par un sous
+    // `--environment node` ; deux échouaient (moteur audio, capture d'erreurs) et
+    // restent en jsdom, comme `haptics`, qui passait grâce au `navigator` global de
+    // Node 24 — une API navigateur se teste dans un navigateur. Mesuré sur la même
+    // machine : `environment` 109 s -> 98 s. Les 132 fichiers restants rendent du DOM.
+    //
     // Vitest 4 n'a plus `environmentMatchGlobs` ; le docblock est la voie supportée, et
     // il a l'avantage d'être lisible DANS le fichier concerné plutôt que dans un glob
     // ici. Se tromper échoue **bruyamment** (`document is not defined`), jamais en

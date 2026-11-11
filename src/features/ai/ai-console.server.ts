@@ -178,7 +178,7 @@ export const getAiConsole = createServerFn({ method: "GET" })
 
 export const submitAiFeedback = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         quizId: z.guid(),
@@ -291,7 +291,7 @@ export const getAiAdminOverview = createServerFn({ method: "GET" })
 
 export const setAiModeEnabled = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => z.object({ enabled: z.boolean() }).parse(d))
+  .validator((d: unknown) => z.object({ enabled: z.boolean() }).parse(d))
   .handler(async ({ data, context }) => {
     const client = context.supabase;
     const { error } = await client.rpc("set_ai_mode_enabled", { p_enabled: data.enabled });
@@ -306,7 +306,7 @@ export const setAiModeEnabled = createServerFn({ method: "POST" })
 
 export const setAiOwnerSuspension = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z
       .object({
         ownerUserId: z.guid(),

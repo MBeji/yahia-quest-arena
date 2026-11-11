@@ -2,6 +2,7 @@ import { Flame, Zap, Sparkles } from "lucide-react";
 
 import { useT } from "@/lib/i18n";
 import { ExplainHint } from "@/components/ui/explain-hint";
+import { isHeroClass, isHeroTitle } from "@/shared/constants/hero-identity";
 
 interface HeroStatChipsProps {
   level: number;
@@ -9,6 +10,8 @@ interface HeroStatChipsProps {
   xp: number;
   coins: number;
   heroClass: string | null;
+  /** é31 lot 7 — le titre acheté en boutique, à côté de la classe (US-11). */
+  titleCode?: string | null;
 }
 
 /**
@@ -17,14 +20,31 @@ interface HeroStatChipsProps {
  * every figure means and how to earn it. Extracted from the dashboard route to
  * keep that file under the max-lines budget.
  */
-export function HeroStatChips({ level, currentStreak, xp, coins, heroClass }: HeroStatChipsProps) {
+export function HeroStatChips({
+  level,
+  currentStreak,
+  xp,
+  coins,
+  heroClass,
+  titleCode,
+}: HeroStatChipsProps) {
   const t = useT();
+
+  // é31 lot 7 (R-22) — la classe est un CODE en base : elle se traduit ici. Un
+  // code inconnu s'affiche tel quel plutôt que de laisser un trou.
+  const className =
+    heroClass && isHeroClass(heroClass) ? t.dashboard.heroClasses[heroClass] : heroClass;
+  const title = isHeroTitle(titleCode) ? t.dashboard.heroTitles[titleCode] : null;
 
   return (
     <>
-      {heroClass ? (
-        <div className="text-xs uppercase tracking-[0.3em] text-[color:var(--gold)]">
-          <ExplainHint text={t.explain.heroClass}>{heroClass}</ExplainHint>
+      {className ? (
+        <div
+          data-testid="hero-class"
+          className="text-xs uppercase tracking-[0.3em] text-[color:var(--gold)]"
+        >
+          <ExplainHint text={t.explain.heroClass}>{className}</ExplainHint>
+          {title && <span data-testid="hero-title"> · {title}</span>}
         </div>
       ) : null}
       <div className="mt-3 flex flex-wrap items-center gap-3">

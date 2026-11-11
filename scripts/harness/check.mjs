@@ -1,48 +1,42 @@
 /**
- * Anti-drift gate for the AI-native harness (étude 25, "harness:check"). Guards the
- * invariants a model-agnostic harness depends on:
+ * Anti-drift gate for the AI-native harness (étude 25, `harness:check`). Each invariant's
+ * rationale — and the incident that made it necessary — lives in the doc comment of the
+ * function that enforces it; this index only maps them.
  *
- *   1. Pointer integrity — CLAUDE.md must stay a thin `@AGENTS.md` import, never
- *      regrow into a second copy of the canonical instructions (the exact drift
- *      étude 25 was written to kill — see its §2.4).
- *   2. AGENTS.md size budget — ≤250 lines / ≤24 KiB, under Codex's 32 KiB default
- *      truncation and the industry-observed ~200-line adherence threshold.
- *   3. No hidden Unicode (zero-width / bidi-override / tag characters) in the
- *      instruction/harness surface — the "Rules File Backdoor" class of attack
- *      (invisible instructions smuggled into a rules file a human reviews visually).
- *   4. No model identifier hardcoded outside `harness/models.json` — the one file
- *      a model bump should ever touch. Covers AGENTS.md/CLAUDE.md, `harness/**` and
- *      (since lot 5) `.github/workflows/**`, whose guards resolve their model from
- *      `models.json` at run time. GENERATED views are exempt: the id they contain is
- *      compiled from `models.json`, and invariant 6 proves it was not hand-edited.
- *   5. Every `harness/*.json` file parses as JSON.
- *   6. Every generated view matches what `harness:sync` would produce from the
- *      sources — the anti-drift guarantee that makes invariant 4's exemption safe.
- *   7. Every GitHub Action in `.github/workflows/**` is pinned to a commit SHA,
- *      never a moving tag (étude 25 lot 5b). A tag's owner decides what runs with
- *      this repo's secrets; Dependabot covers npm, this covers Actions.
- *   8. Every YAML file under `.github/**` parses STRICTLY — no duplicate mapping
- *      key, no syntax error. Delegated to `scripts/ci/check-workflow-yaml.mjs`,
- *      whose header tells the 2026-08-24 story: a key shipped twice by two
- *      sessions killed `auto-pr.yml` for the whole repo with zero jobs and no
- *      log, and every lenient parser called the file valid.
+ *   1. `CLAUDE.md` stays a thin `@AGENTS.md` import ............ checkPointer
+ *   2. `AGENTS.md` stays in budget, its feature inventory true .. checkAgentsSize, checkFeatureInventory
+ *   3. No hidden Unicode on the instruction/harness surface ...... findSuspiciousInvisibles
+ *   4. No model id outside `harness/models.json` ................ findModelIds
+ *   5. `harness/*.json` parse; every policy family has a reason . isJsonValid, checkPolicyReasons
+ *   6. Generated views match `harness:sync` ...................... buildViews (sync.mjs)
+ *   7. Actions pinned to a SHA; `gh` knows its repo; lockfile
+ *      writers run npm 10; no push past a red gate .............. findUnpinnedActions, findGhWithoutRepo,
+ *                                                                 findApplyWithoutNpm10, findPushPastRedGate
+ *   8. `.github/**` YAML parses strictly ......................... check-workflow-yaml.mjs
+ *   9. Every control script is run by a workflow or declared ..... checkControlCoverage (+ harness/controls.json)
+ *  10. Every `<!--count:…-->` marker equals its fact ............. checkDeclaredCounts
+ *  11. Scripts `.ts` are really typechecked ...................... checkScriptsTypecheck
  *
- * Driven by `.github/workflows/ci.yml` (job `verify`) and `npm run ci:verify`.
- * Pure helpers are exported and unit-tested; `main()` does the filesystem walk and
- * runs only when this file is executed directly.
+ * `--corpus <dir>` judges the PRIVATE corpus instead (collectCorpusProblems), called by its
+ * Content CI. Driven by `ci.yml` (job `verify`) and `npm run verify`/`ci:verify`.
  *
- *   node scripts/harness/check.mjs
+ *   node scripts/harness/check.mjs [--corpus <dir>]
  */
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
 import { pathToFileURL } from "node:url";
+import { parse as parseYaml } from "yaml";
+
 import { checkYamlFiles, collectGithubYaml } from "../ci/check-workflow-yaml.mjs";
 import { buildViews } from "./sync.mjs";
 
 const ROOT = join(import.meta.dirname, "..", "..");
 
-export const AGENTS_MD_MAX_LINES = 250;
-export const AGENTS_MD_MAX_BYTES = 24 * 1024;
+// Resserré le 2026-09-22 (250 lignes / 24 Kio → 200 / 16 Kio) quand AGENTS.md est redescendu à
+// ~160 lignes / 10 Kio : le plafond ne sert qu'à empêcher la repousse — ~200 lignes est le seuil
+// d'adhérence observé, et Codex tronque à 32 Kio.
+export const AGENTS_MD_MAX_LINES = 200;
+export const AGENTS_MD_MAX_BYTES = 16 * 1024;
 
 /** CLAUDE.md must stay a pointer: contain the `@AGENTS.md` import. */
 export function checkPointer(claudeMdContent) {
@@ -55,6 +49,14 @@ export function checkPointer(claudeMdContent) {
   }
   return { ok: true };
 }
+
+/**
+ * Part du budget au-delà de laquelle on AVERTIT sans faire échouer (étude 32, D-8).
+ * `AGENTS.md` a touché son plafond — 250 lignes sur 250, 24 184 octets sur 24 576 — et
+ * personne ne l'a su avant que la règle suivante ne puisse plus entrer. Un budget qui ne
+ * prévient qu'en bloquant prévient trop tard.
+ */
+export const AGENTS_MD_WARN_RATIO = 0.92;
 
 /** AGENTS.md must stay under the line/byte budget (D-1b). */
 export function checkAgentsSize(
@@ -75,7 +77,16 @@ export function checkAgentsSize(
   if (bytes > maxBytes) {
     violations.push(`${bytes} bytes > budget of ${maxBytes} (Codex truncates AGENTS.md at 32 KiB)`);
   }
-  return { ok: violations.length === 0, lines, bytes, violations };
+  const warnings = [];
+  if (violations.length === 0) {
+    if (lines >= Math.floor(maxLines * AGENTS_MD_WARN_RATIO)) {
+      warnings.push(`${lines} lignes sur un budget de ${maxLines}`);
+    }
+    if (bytes >= Math.floor(maxBytes * AGENTS_MD_WARN_RATIO)) {
+      warnings.push(`${bytes} octets sur un budget de ${maxBytes}`);
+    }
+  }
+  return { ok: violations.length === 0, lines, bytes, violations, warnings };
 }
 
 /**
@@ -129,6 +140,49 @@ export function checkFeatureInventory(agentsMdContent, actualNames) {
   return problems;
 }
 
+/**
+ * `<!--count:NAME-->N<!--/count-->` — le marqueur qui rend un compteur de document
+ * DÉCIDABLE (#1039). Le nombre peut être écrit à la française (« 1 529 », espace fine
+ * comprise) : c'est la prose qu'on garde, pas un JSON.
+ */
+export const COUNT_MARKER_RE =
+  /<!--\s*count:([a-z0-9-]+)\s*-->\s*(\d[\d\s\u202f\u00a0]*)\s*<!--\s*\/count\s*-->/gu;
+
+/** Nombre de sous-dossiers directs — `null` si le dossier n'existe pas (fait invérifiable ici). */
+export function countDirs(dir) {
+  if (!existsSync(dir)) return null;
+  return readdirSync(dir, { withFileTypes: true }).filter((d) => d.isDirectory()).length;
+}
+
+/**
+ * Chaque compteur marqué doit égaler le fait qu'il nomme. `facts[name] === null` veut dire
+ * « ce fait vit dans l'autre dépôt » : le marqueur est lu (son nom doit exister), pas jugé.
+ * Un nom inconnu est une violation — un marqueur que rien ne recalcule est un faux gate.
+ */
+export function checkDeclaredCounts(docs, facts) {
+  const problems = [];
+  for (const [file, text] of docs) {
+    for (const m of (text ?? "").matchAll(COUNT_MARKER_RE)) {
+      const [, name, raw] = m;
+      const declared = Number(raw.replace(/[\s\u202f\u00a0]/g, ""));
+      if (!Object.hasOwn(facts, name)) {
+        problems.push(
+          `${file}: compteur \`${name}\` inconnu — les faits recalculables sont ${Object.keys(facts).join(", ")}.`,
+        );
+        continue;
+      }
+      const actual = facts[name];
+      if (actual === null) continue;
+      if (declared !== actual) {
+        problems.push(
+          `${file}: le compteur \`${name}\` annonce ${declared}, le disque en compte ${actual} — corriger le nombre, pas le marqueur.`,
+        );
+      }
+    }
+  }
+  return problems;
+}
+
 // Zero-width, bidi-override, and Unicode tag ranges — invisible or
 // direction-flipping characters that render identically to nothing in a
 // GitHub diff review but change what an agent reads. NOT Arabic script (which
@@ -143,6 +197,57 @@ export function findInvisibleChars(text) {
     index: m.index,
     codePoint: `U+${m[0].codePointAt(0).toString(16).toUpperCase().padStart(4, "0")}`,
   }));
+}
+
+const EMOJI_RE = /\p{Extended_Pictographic}/u;
+const ARABIC_RE = /[\u0600-\u06FF]/;
+
+/** Le point de code qui FINIT à `index` (gère les paires de substitution). */
+function codePointEndingAt(text, index) {
+  if (index < 0) return null;
+  const start = index > 0 && /[\uD800-\uDBFF]/.test(text[index - 1]) ? index - 1 : index;
+  return String.fromCodePoint(text.codePointAt(start));
+}
+
+/**
+ * Les invisibles qui restent ILLÉGITIMES une fois le contexte lu (étude 32, D-5).
+ *
+ * Le scan brut ci-dessus est juste, et c'est justement le problème quand on l'étend au corpus
+ * privé : il y rend **38 constats, tous légitimes** — un ZWJ dans chaque `🧑‍🏫` de 25 skills,
+ * une marque RTL devant un chiffre latin en plein texte arabe (`‏6 أسئلة`), un ZWNJ qui empêche
+ * trois lettres arabes de se lier pour qu'elles se lisent comme les étiquettes A/B/C d'une
+ * figure (`أ‌ب‌ج`). Un gate qui crie 38 fois sur du travail correct n'est pas strict, il est
+ * ignoré — c'est la leçon de `content:figures:check` et de ses 32 signalements dont pas un
+ * n'était vrai.
+ *
+ * Les tolérances sont donc CONTEXTUELLES, jamais par fichier ni par plage entière :
+ *   • U+200D n'est toléré qu'ENTRE deux pictogrammes (une séquence emoji, rien d'autre) ;
+ *   • U+200C/U+200E/U+200F ne sont tolérés que dans un fichier qui contient de l'arabe — ce
+ *     sont les contrôles typographiques de cette écriture, et nulle part ailleurs.
+ * Tout le reste reste interdit PARTOUT, et c'est ce qui compte : U+200B, les surcharges de
+ * direction U+202A-E (la classe d'attaque « Rules File Backdoor »), U+2060-64, le BOM U+FEFF et
+ * les caractères tag. Le premier passage sur le corpus a d'ailleurs sorti un vrai défaut de
+ * cette liste : un BOM en tête d'un programme officiel.
+ */
+export function findSuspiciousInvisibles(text) {
+  if (typeof text !== "string") return [];
+  const hasArabic = ARABIC_RE.test(text);
+  return findInvisibleChars(text).filter(({ index, codePoint }) => {
+    if (codePoint === "U+200D") {
+      const before = codePointEndingAt(text, index - 1);
+      const after = text.codePointAt(index + 1);
+      return !(
+        before !== null &&
+        EMOJI_RE.test(before) &&
+        after !== undefined &&
+        EMOJI_RE.test(String.fromCodePoint(after))
+      );
+    }
+    if (codePoint === "U+200C" || codePoint === "U+200E" || codePoint === "U+200F") {
+      return !hasArabic;
+    }
+    return true;
+  });
 }
 
 /** Extracts the YAML frontmatter block (between the two `---` lines) of a SKILL.md. */
@@ -171,12 +276,21 @@ export function checkSkillFrontmatter(folderName, frontmatter) {
   else if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(name))
     problems.push(`name "${name}" is not kebab-case`);
 
-  // `description` is usually a YAML block scalar (`>-`), so take everything up
-  // to the next top-level key rather than a single line.
-  const raw = /^description:\s*(?:>-|>|\|-|\|)?\s*\n?([\s\S]*?)(?=\n[a-zA-Z-]+:|$)/m.exec(
-    frontmatter,
-  )?.[1];
-  const description = raw?.replace(/\s+/g, " ").trim() ?? "";
+  // La description se lit avec un VRAI parseur YAML, et le détour vaut d'être écrit.
+  // La version d'origine l'extrayait par une regex terminée par `(?=\n[a-zA-Z-]+:|$)` en mode
+  // `m` : dans ce mode `$` matche CHAQUE fin de ligne, donc la capture paresseuse s'arrêtait à
+  // la PREMIÈRE. Or toutes les descriptions du projet sont des blocs `>-` de plusieurs lignes.
+  // Résultat : la borne des 1 024 caractères n'a jamais mesuré que la première ligne, sur
+  // aucun des 48 skills — deux skills du corpus étaient à 1 202 et 1 157 caractères, invisibles
+  // depuis le lot 3 de l'étude 25 (étude 32, C-7). Un parseur ne se trompe pas sur sa propre
+  // syntaxe ; une regex sur du YAML, si.
+  let description = "";
+  try {
+    const value = parseYaml(frontmatter)?.description;
+    description = typeof value === "string" ? value.replace(/\s+/g, " ").trim() : "";
+  } catch {
+    return [...problems, "frontmatter is not valid YAML"];
+  }
   if (!description) problems.push("missing `description`");
   else if (description.length > SKILL_DESCRIPTION_MAX) {
     problems.push(`description is ${description.length} chars > spec max ${SKILL_DESCRIPTION_MAX}`);
@@ -241,6 +355,129 @@ export function findUnpinnedActions(text) {
   return out;
 }
 
+/**
+ * Retire les commentaires d'un JSONC. `tsconfig.json` en porte déjà (`/* Bundler mode *\/`) :
+ * c'est le format que TypeScript accepte, et le gate doit le lire comme lui.
+ */
+export function stripJsonComments(text) {
+  let out = "";
+  let inString = false;
+  let escaped = false;
+  for (let i = 0; i < text.length; i += 1) {
+    const ch = text[i];
+    if (inString) {
+      out += ch;
+      if (escaped) escaped = false;
+      else if (ch === "\\") escaped = true;
+      else if (ch === '"') inString = false;
+      continue;
+    }
+    if (ch === '"') {
+      inString = true;
+      out += ch;
+    } else if (ch === "/" && text[i + 1] === "/") {
+      while (i < text.length && text[i] !== "\n") i += 1;
+      out += "\n";
+    } else if (ch === "/" && text[i + 1] === "*") {
+      i += 2;
+      while (i < text.length && !(text[i] === "*" && text[i + 1] === "/")) i += 1;
+      i += 1;
+    } else {
+      out += ch;
+    }
+  }
+  return out;
+}
+
+/** Un glob de `include` TypeScript, en expression régulière. Seuls `**` et `*` sont utilisés ici. */
+function includeToRegExp(pattern) {
+  // UNE seule passe, à dessein : deux `replace` enchaînés se corrompent l'un l'autre — le `*`
+  // que le premier insère dans `(?:.*/)` est réécrit par le second. Trouvé par le test qui
+  // vérifie qu'un motif couvre bien un fichier profond.
+  const body = pattern
+    .replace(/[.+^${}()|[\]\\]/g, "\\$&")
+    .replace(/\*\*\/|\*\*|\*/g, (m) => (m === "**/" ? "(?:[^/]+/)*" : m === "**" ? ".*" : "[^/]*"));
+  return new RegExp(`^${body}$`);
+}
+
+/**
+ * Les scripts TypeScript sont-ils VRAIMENT typés ? (étude 32, C-15)
+ *
+ * Le constat qui a fait écrire ce contrôle : `tsconfig.json` n'incluait que `src/**`, donc
+ * `npm run typecheck` ne voyait AUCUN des 13 fichiers de `scripts/content/**` — ceux-là mêmes
+ * qui portent les gates de contenu du corpus, et que Node exécute en
+ * `--experimental-strip-types`. Un `join` manquant à un import est passé vert au typecheck et a
+ * tué `content:audit:strict` sur un `ReferenceError` au premier lancement réel.
+ *
+ * Deux façons de perdre ce filet, et ce contrôle ferme les deux : débrancher le second
+ * programme de la chaîne, ou rétrécir son `include` jusqu'à ce qu'il ne couvre plus rien. Un
+ * gate qui peut être vidé sans que rien ne le dise est le défaut que cette étude a poursuivi
+ * de bout en bout.
+ */
+export function checkScriptsTypecheck({ typecheckScript, include, scriptFiles }) {
+  const problems = [];
+  const config = "tsconfig.scripts.json";
+
+  if (typeof typecheckScript !== "string" || !typecheckScript.includes(config)) {
+    problems.push(
+      `le script npm \`typecheck\` n'invoque pas \`${config}\` — les fichiers .ts de ` +
+        "`scripts/` ne seraient typés par personne (étude 32, C-15).",
+    );
+  }
+
+  const patterns = (Array.isArray(include) ? include : []).map(includeToRegExp);
+  if (patterns.length === 0) {
+    problems.push(`${config} n'a pas d'\`include\` — son programme serait vide.`);
+    return problems;
+  }
+  for (const file of scriptFiles) {
+    if (!patterns.some((re) => re.test(file))) {
+      problems.push(`${file} n'est couvert par aucun \`include\` de ${config} (étude 32, C-15).`);
+    }
+  }
+  return problems;
+}
+
+/**
+ * Chaque famille de `policy.json` porte sa raison (étude 32, D-7).
+ *
+ * Ce fichier avait 7 300 caractères de `$comment` — trois arbitrages datés, racontés en
+ * entier — au-dessus de 92 lignes de JSON. Le récit est juste et il a coûté cher à écrire ;
+ * c'est sa PLACE qui posait problème : un fichier de règles n'est pas un journal, et une
+ * histoire qu'on lit une fois n'aide pas celui qui cherche pourquoi `git rebase` est dehors.
+ * Le journal est parti dans `docs/agents/zero-intervention.md`, qui porte déjà ces
+ * arbitrages ; ici, une ligne par groupe — et cet invariant fait qu'un groupe ajouté sans
+ * raison ne passe pas. Une famille de permissions sans justification écrite est exactement
+ * ce que la revue est censée attraper, et ce qu'elle rate quand la liste s'allonge.
+ */
+export function checkPolicyReasons(policy) {
+  const allow = policy?.allow;
+  if (!allow || typeof allow !== "object") return ["harness/policy.json: bloc `allow` absent."];
+
+  const groups = Object.keys(allow).filter((k) => !k.startsWith("$"));
+  const why = allow.$why ?? {};
+  const problems = [];
+
+  for (const group of groups) {
+    const reason = why[group];
+    if (typeof reason !== "string" || reason.trim().length < 20) {
+      problems.push(
+        `harness/policy.json: la famille \`${group}\` n'a pas de raison lisible dans ` +
+          "`allow.$why` — une permission sans justification écrite est ce que la revue rate.",
+      );
+    }
+  }
+  for (const declared of Object.keys(why)) {
+    if (!groups.includes(declared)) {
+      problems.push(
+        `harness/policy.json: \`allow.$why\` justifie \`${declared}\`, qui n'est plus une famille — ` +
+          "raison périmée, retire-la (sinon ce bloc devient un cimetière).",
+      );
+    }
+  }
+  return problems;
+}
+
 export function isJsonValid(text) {
   try {
     JSON.parse(text);
@@ -248,6 +485,464 @@ export function isJsonValid(text) {
   } catch {
     return false;
   }
+}
+
+/**
+ * Un script de CONTRÔLE : celui dont le rouge est censé atteindre quelqu'un.
+ * Le suffixe/préfixe suffit à les nommer tous, et rien d'autre ne les nomme —
+ * `package.json` ne distingue pas un gate d'un utilitaire.
+ */
+export const CONTROL_SCRIPT_RE = /(?:^|:)(check|audit|qa|verify|lint|typecheck)(?::|$)/;
+
+/**
+ * `npm run <nom>` tel qu'un workflow l'écrit VRAIMENT — flags compris.
+ *
+ * Le premier détecteur écrit pour ce gate cherchait la sous-chaîne
+ * `npm run content:manuel:check` et concluait « orphelin ». Le workflow écrivait
+ * `npm run --silent content:manuel:check` : un flag intercalé, plus de
+ * correspondance, et une sonde branchée depuis trois semaines déclarée absente.
+ * D'où les flags optionnels ici, et la garde de fin de mot — sans elle,
+ * `content:qa` matcherait la ligne de `content:qa:strict`.
+ */
+const npmRunPattern = (name) =>
+  new RegExp(
+    `npm\\s+run(?:\\s+-{1,2}[\\w-]+)*\\s+${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\w:.-])`,
+  );
+
+/** Les fichiers `scripts/**` que la commande d'un script npm nomme. */
+const scriptFiles = (command) =>
+  [...String(command).matchAll(/(scripts\/[\w./-]+\.(?:mjs|ts|js))/g)].map((m) => m[1]);
+
+/**
+ * Où un workflow lance ce script — ou `null`. Deux façons de l'appeler, et le
+ * détecteur doit connaître les deux : `npm run <nom>`, et l'exécution DIRECTE du
+ * fichier (`node scripts/content/check-videos.mjs`), qui ne mentionne le script
+ * npm nulle part.
+ */
+export function findRunner(name, scripts, workflows) {
+  const pattern = npmRunPattern(name);
+  const files = scriptFiles(scripts[name] ?? "");
+  for (const [label, body] of workflows) {
+    if (pattern.test(body)) return label;
+    for (const file of files) if (body.includes(file)) return label;
+  }
+  return null;
+}
+
+/** Les scripts qu'un script DÉJÀ lancé entraîne avec lui (`verify` → `eol:check`, …). */
+function reachableThroughChains(scripts, directlyRun) {
+  const reached = new Map();
+  const walkChain = (name, origin, seen) => {
+    if (seen.has(name)) return;
+    seen.add(name);
+    for (const m of String(scripts[name] ?? "").matchAll(
+      /npm\s+run(?:\s+-{1,2}[\w-]+)*\s+([\w:.-]+)/g,
+    )) {
+      if (!reached.has(m[1])) reached.set(m[1], origin);
+      walkChain(m[1], origin, seen);
+    }
+  };
+  for (const [name, label] of directlyRun) walkChain(name, `${name} (${label})`, new Set());
+  return reached;
+}
+
+/**
+ * Tout contrôle doit être exécuté par quelqu'un, ou dire qui l'exécute.
+ *
+ * `corpusWorkflows` transforme une déclaration `privé:*` en VÉRIFICATION : ce
+ * dépôt ne voit pas les workflows du corpus, la Content CI privée voit les deux.
+ * Absent, les déclarations privées sont crues sur parole (et c'est dit).
+ */
+export function checkControlCoverage({ scripts, workflows, registry, corpusWorkflows = null }) {
+  const problems = [];
+  const declared = registry?.controls ?? {};
+
+  const directlyRun = new Map();
+  for (const name of Object.keys(scripts)) {
+    const label = findRunner(name, scripts, workflows);
+    if (label) directlyRun.set(name, label);
+  }
+  const viaChain = reachableThroughChains(scripts, directlyRun);
+  const isRun = (name) => directlyRun.get(name) ?? viaChain.get(name) ?? null;
+
+  for (const name of Object.keys(scripts).filter((n) => CONTROL_SCRIPT_RE.test(n))) {
+    const runner = isRun(name);
+    const entry = declared[name];
+    if (!runner && !entry) {
+      problems.push(
+        `\`${name}\` est un script de contrôle qu'aucun workflow de ce dépôt n'appelle et que ` +
+          "`harness/controls.json` ne déclare pas. Un gate que rien ne lance ne protège rien : " +
+          "branche-le dans un workflow, ou déclare où il tourne et pourquoi",
+      );
+    } else if (runner && entry) {
+      problems.push(
+        `\`${name}\` est déclaré dans harness/controls.json alors que ${runner} l'exécute déjà — ` +
+          "déclaration périmée, retire-la (sinon ce fichier devient un cimetière)",
+      );
+    }
+  }
+
+  for (const [name, entry] of Object.entries(declared)) {
+    if (!(name in scripts)) {
+      problems.push(
+        `harness/controls.json déclare \`${name}\`, qui n'existe plus dans package.json`,
+      );
+      continue;
+    }
+    if (!entry?.where || !entry?.why) {
+      problems.push(`harness/controls.json: \`${name}\` doit porter un \`where\` ET un \`why\``);
+      continue;
+    }
+    if (!corpusWorkflows || !entry.where.startsWith("privé:")) continue;
+    // Le mode vérifié — celui de la Content CI privée.
+    const file = entry.where.slice("privé:".length);
+    const body = corpusWorkflows.get(file);
+    if (body === undefined) {
+      problems.push(
+        `harness/controls.json: \`${name}\` dit tourner dans \`${file}\` (privé), fichier absent du corpus`,
+      );
+    } else if (!findRunner(name, scripts, [[file, body]])) {
+      problems.push(
+        `harness/controls.json: \`${name}\` dit tourner dans \`${file}\` (privé), qui ne l'appelle pas`,
+      );
+    }
+  }
+
+  return problems;
+}
+
+/**
+ * Budget du `CLAUDE.md` du corpus privé. Il est autonome (il ne pointe pas vers AGENTS.md :
+ * le corpus n'a pas de moteur), donc son plafond lui est propre — il vaut ~70 lignes /
+ * 4,6 Kio depuis sa cure du 2026-09-22 ; la marge est celle qu'on veut lui laisser.
+ */
+export const CORPUS_CLAUDE_MD_MAX_LINES = 150;
+export const CORPUS_CLAUDE_MD_MAX_BYTES = 12 * 1024;
+
+/**
+ * Les déclencheurs `pull_request` qui font naître un run FANTÔME (étude 32, lot 1).
+ *
+ * Sur le dépôt privé, `auto-pr.yml` ouvre la PR de chaque branche poussée avec le
+ * `GITHUB_TOKEN`. La garde anti-récursion de GitHub refuse alors de faire tourner ses
+ * checks — mais elle enregistre quand même la LIGNE du run, qui sort `failure` avec
+ * **zéro job**. Il n'a rien évalué et ressemble pourtant à un gate rouge : trois
+ * incidents en sont nés (#280, #291, #293), dont un gel d'une journée de toute la chaîne.
+ *
+ * Seul l'événement `opened` produit ces runs, et le retirer les supprime à la racine.
+ * Ce contrôle existe parce qu'un `types:` correct n'est qu'une convention tant qu'aucun
+ * gate ne le tient : `pull_request:` SANS `types:` réécoute `opened` par défaut, ce qui
+ * fait de l'oubli le comportement le plus facile.
+ */
+export function findPhantomProneTriggers(text) {
+  let doc;
+  try {
+    doc = parseYaml(text);
+  } catch {
+    return []; // Le YAML illisible est déjà le métier de `checkYamlFiles`.
+  }
+  // ⚠️ En YAML 1.1, `on:` est la clé booléenne `true`. Le paquet `yaml` suit la 1.2, où
+  // c'est la chaîne « on » — mais on lit les deux, pour ne dépendre d'aucune des deux.
+  const on = doc?.on ?? doc?.true ?? (doc ? doc[true] : undefined);
+  if (!on || typeof on !== "object") return [];
+
+  const out = [];
+  for (const event of ["pull_request", "pull_request_target"]) {
+    if (!(event in on)) continue;
+    const cfg = on[event];
+    // `pull_request:` nu (valeur nulle) vaut [opened, synchronize, reopened].
+    const types = cfg && typeof cfg === "object" ? cfg.types : undefined;
+    if (types === undefined || types === null) {
+      out.push({ event, reason: "sans `types:`, GitHub écoute `opened` par défaut" });
+    } else if (Array.isArray(types) && types.includes("opened")) {
+      out.push({ event, reason: "`opened` est listé explicitement" });
+    }
+  }
+  return out;
+}
+
+/**
+ * Un `gh` qui ne peut PAS savoir sur quel dépôt il travaille.
+ *
+ * CE QUE ÇA A COÛTÉ. `pat-expiry-watch.yml` est né sans `GH_REPO` et sans `checkout` —
+ * il ne lit aucun fichier, donc le checkout semblait inutile, et l'étape avait été
+ * copiée de `client-errors-watch.yml`, qui en fait un pour lancer un script Node. La
+ * pièce était bonne, le joint manquait : hors d'un dépôt git et sans `GH_REPO`, `gh`
+ * sort en 1 sur « no git remotes found ». Deux passages rouges le 2026-09-22 (runs
+ * 35699670930 et 35699869564), et la faute a coûté cher à diagnostiquer parce que
+ * les journaux d'un runner ne sont PAS lisibles depuis une session cloud (le stockage
+ * de logs répond 403 au proxy) : il a fallu la déduire de l'état laissé derrière.
+ *
+ * C'est exactement le genre de règle qui se documente et ne s'applique pas. D'où ce
+ * gate : une seule implémentation, et elle échoue avant la production.
+ *
+ * CE QUI EST VISÉ, ET SEULEMENT LUI : les sous-commandes de `gh` qui RÉSOLVENT un
+ * dépôt courant. `gh api repos/<o>/<r>/…` nomme le sien dans l'URL — il n'est pas
+ * concerné, et c'est pour ça que l'étape de sondage de cette même garde, qui
+ * n'utilise que `curl` et `${GITHUB_REPOSITORY}`, passait pendant que l'autre tombait.
+ *
+ * TROIS ÉCHAPPATOIRES, toutes légitimes : un `actions/checkout` dans le job (le
+ * dossier est alors un dépôt git avec sa remote), un `GH_REPO` en env (du workflow ou
+ * du job), ou un `-R`/`--repo` sur la ligne elle-même.
+ */
+/**
+ * Un script qui REFUSE une version d'outil doit la recevoir : sinon le garde-fou du script
+ * devient la panne du workflow. `scripts/deps/apply-patch-minor.mjs` n'écrit le lockfile que
+ * sous **npm 10** (npm 11 réécrit les bindings natifs multi-plateformes) — or `setup-node`
+ * avec `node-version: 24` livre npm 11.x.
+ *
+ * ⚠️ C'est un défaut de JOINTURE, pas de pièce : le script était juste, son test unitaire
+ * vert, le workflow valide — et la garde nocturne n'a pas appliqué un seul lot pendant
+ * 18 jours (#975 a basculé le workflow sur Node 24 le 2026-09-04 ; les runs du 09-15, 09-18
+ * et 09-22 ont tous échoué là). Personne ne l'a vu parce que la garde sort « success » les
+ * jours où la cadence ne tire pas : sur 45 runs, 4 tentatives, 0 réussite.
+ *
+ * Le contrôle : tout `run:` qui appelle `apply-patch-minor.mjs apply` doit être précédé,
+ * dans le même job, d'une étape qui pose npm 10 — ou tourner sur un Node qui l'embarque.
+ */
+export function findApplyWithoutNpm10(text) {
+  let doc;
+  try {
+    doc = parseYaml(text);
+  } catch {
+    return []; // Le YAML illisible est déjà le métier de `checkYamlFiles`.
+  }
+  const jobs = doc?.jobs;
+  if (!jobs || typeof jobs !== "object") return [];
+
+  const ECRIT_LE_LOCKFILE = /apply-patch-minor\.mjs\s+apply\b/;
+  const POSE_NPM_10 = /npm\s+(i|install)\s+-g\s+npm@10\b/;
+  // Node 22 et avant embarquent npm 10 ; 23+ embarquent npm 11 (mesuré sur nodejs.org/dist).
+  const NODE_AVEC_NPM_10 = /^(1[0-9]|2[0-2])(\.|$)/;
+
+  const out = [];
+  for (const [jobName, job] of Object.entries(jobs)) {
+    if (!job || typeof job !== "object") continue;
+    const steps = Array.isArray(job.steps) ? job.steps : [];
+
+    let npm10Pose = false;
+    for (const [i, st] of steps.entries()) {
+      if (typeof st?.uses === "string" && st.uses.startsWith("actions/setup-node@")) {
+        const v = String(st?.with?.["node-version"] ?? "");
+        npm10Pose = NODE_AVEC_NPM_10.test(v);
+        continue;
+      }
+      const run = typeof st?.run === "string" ? st.run : null;
+      if (run === null) continue;
+      if (POSE_NPM_10.test(run)) {
+        npm10Pose = true;
+        continue;
+      }
+      if (ECRIT_LE_LOCKFILE.test(run) && !npm10Pose) {
+        out.push({ job: jobName, step: st.name ?? `#${i + 1}` });
+      }
+    }
+  }
+  return out;
+}
+
+/**
+ * Un `git push` ne passe pas un gate rouge : le hook husky `pre-push` (= `npm run verify`) le
+ * refuse. Or un `npm ci` (ou `npm install`) dans un job exécute le `prepare` du projet, qui
+ * INSTALLE husky dans le checkout du runner — le hook y est donc actif comme en local.
+ *
+ * ⚠️ Mesuré le 2026-10-30 (#1203, run 41017413367) : `upgrade-guard.yml` laissait son gate
+ * `ci:verify` en `continue-on-error`, puis poussait le lot rouge « pour ouvrir une PR draft ».
+ * Le pre-push a rejoué les erreurs TS, le push a échoué, aucune PR n'est née, et les étapes
+ * suivantes (jeton, agent de réparation) sont sorties `skipped` : le mode « réparer un lot
+ * rouge » était mort dès que le rouge relevait de `verify`. Il n'avait marché le 10-27 que
+ * parce que ce rouge-là (budget de bundle) est hors du périmètre de `verify`.
+ *
+ * Le contrôle : dans un job où un `npm ci`/`npm install` a installé les hooks, toute étape
+ * `run:` qui fait `git push` APRÈS un gate non bloquant (`continue-on-error` + `npm run
+ * verify`/`ci:verify`) doit porter, dans son `if:`, `steps.<gate>.outcome == 'success'`.
+ * `outcome`, pas `conclusion` : la conclusion d'une étape `continue-on-error` est toujours
+ * `success`. Un `if` shell À L'INTÉRIEUR de l'étape ne compte pas — c'est la forme exacte
+ * du bug, et seul le `if:` d'étape se lit sans exécuter le bash.
+ */
+export function findPushPastRedGate(text) {
+  let doc;
+  try {
+    doc = parseYaml(text);
+  } catch {
+    return []; // Le YAML illisible est déjà le métier de `checkYamlFiles`.
+  }
+  const jobs = doc?.jobs;
+  if (!jobs || typeof jobs !== "object") return [];
+
+  const INSTALLE_LES_HOOKS = /(^|[;&|(\s])npm\s+(ci|install|i)\b/;
+  const SANS_SCRIPTS_NI_GLOBAL = /(\s-g\b|--global\b|--ignore-scripts\b)/;
+  const GATE_VERIFY = /\bnpm\s+run\s+(ci:)?verify\b/;
+  const POUSSE = /(^|[;&|(\s])git\s+push\b/;
+
+  const out = [];
+  for (const [jobName, job] of Object.entries(jobs)) {
+    if (!job || typeof job !== "object") continue;
+    const steps = Array.isArray(job.steps) ? job.steps : [];
+
+    let hooks = false;
+    const gatesMous = [];
+    for (const [i, st] of steps.entries()) {
+      const run = typeof st?.run === "string" ? st.run : null;
+      if (run === null) continue;
+      const lignes = run.split("\n");
+      if (lignes.some((l) => INSTALLE_LES_HOOKS.test(l) && !SANS_SCRIPTS_NI_GLOBAL.test(l))) {
+        hooks = true;
+      }
+      if (st["continue-on-error"] === true && GATE_VERIFY.test(run)) {
+        gatesMous.push(typeof st.id === "string" ? st.id : null);
+        continue;
+      }
+      if (!hooks || gatesMous.length === 0 || !lignes.some((l) => POUSSE.test(l))) continue;
+      const cond = typeof st.if === "string" ? st.if : "";
+      const garde = gatesMous.every(
+        (id) => id !== null && new RegExp(`steps\\.${id}\\.outcome\\s*==\\s*'success'`).test(cond),
+      );
+      if (!garde) out.push({ job: jobName, step: st.name ?? `#${i + 1}` });
+    }
+  }
+  return out;
+}
+
+export function findGhWithoutRepo(text) {
+  let doc;
+  try {
+    doc = parseYaml(text);
+  } catch {
+    return []; // Le YAML illisible est déjà le métier de `checkYamlFiles`.
+  }
+  const jobs = doc?.jobs;
+  if (!jobs || typeof jobs !== "object") return [];
+
+  // `gh pr`, `gh issue`… résolvent « le dépôt courant ». `gh api`, `gh auth`,
+  // `gh config` ne le font pas : les lister serait crier sur du code correct.
+  const RESOUT_UN_DEPOT =
+    /(^|[;&|(\n])\s*gh\s+(issue|pr|run|workflow|release|label|repo|cache|variable|secret|browse|ruleset)\b/;
+  const workflowEnv = doc?.env && typeof doc.env === "object" ? doc.env : {};
+
+  const out = [];
+  for (const [jobName, job] of Object.entries(jobs)) {
+    if (!job || typeof job !== "object") continue;
+    const steps = Array.isArray(job.steps) ? job.steps : [];
+    const seCheckout = steps.some(
+      (st) => typeof st?.uses === "string" && st.uses.startsWith("actions/checkout@"),
+    );
+    const jobEnv = job.env && typeof job.env === "object" ? job.env : {};
+    if (seCheckout || "GH_REPO" in jobEnv || "GH_REPO" in workflowEnv) continue;
+
+    for (const [i, st] of steps.entries()) {
+      const run = typeof st?.run === "string" ? st.run : null;
+      if (run === null) continue;
+      const stepEnv = st.env && typeof st.env === "object" ? st.env : {};
+      if ("GH_REPO" in stepEnv) continue;
+      for (const ligne of run.split("\n")) {
+        if (!RESOUT_UN_DEPOT.test("\n" + ligne)) continue;
+        if (/\s(-R|--repo)[\s=]/.test(ligne)) continue;
+        out.push({ job: jobName, step: st.name ?? `#${i + 1}`, ligne: ligne.trim().slice(0, 80) });
+        break;
+      }
+    }
+  }
+  return out;
+}
+
+/**
+ * Les invariants du harness appliqués au dépôt PRIVÉ (étude 32, D-5).
+ *
+ * POURQUOI ICI ET PAS LÀ-BAS. Le corpus porte 43 skills, 12 workflows et un `CLAUDE.md` de
+ * 9 Kio — et **aucun gate de harness** : ni budget, ni Unicode invisible, ni conformité à la
+ * spec Agent Skills, ni YAML strict. Le seul invariant qu'il vérifiait était l'épinglage des
+ * Actions, par un `pin-check.yml` qui ré-écrivait `findUnpinnedActions` en bash. Deux
+ * implémentations d'une même règle divergent — c'est déjà arrivé trois fois sur le test
+ * « zéro job ». Le corpus ne peut pas importer ce script (dépôts séparés), mais la Content CI
+ * privée checkout DÉJÀ ce dépôt pour le moteur : c'est elle qui appelle, avec `--corpus`.
+ *
+ * Ce qui N'EST PAS vérifié là-bas, et pourquoi : le pointeur `@AGENTS.md` (le corpus n'a pas
+ * d'AGENTS.md — son CLAUDE.md est canonique chez lui), l'inventaire des features (pas de code),
+ * les vues générées et `harness/*.json` (le corpus n'en a pas). Chaque absence est un choix,
+ * pas un oubli.
+ *
+ * Le scan d'identifiants de modèle se limite aux workflows et aux frontmatters : appliqué à
+ * `references/`, il sortait « O2 » — le dioxygène, dans le programme de SVT de 1ʳᵉ année
+ * secondaire. Un gate qui prend une molécule pour un modèle apprend à se faire ignorer.
+ */
+export function collectCorpusProblems(root) {
+  const problems = [];
+  const at = (p) => join(root, p);
+  const relTo = (p) =>
+    p
+      .slice(root.length + 1)
+      .split("\\")
+      .join("/");
+
+  const claudeMd = readIfExists(at("CLAUDE.md"));
+  if (claudeMd === null) {
+    problems.push("corpus: CLAUDE.md est absent — c'est le fichier canonique de ce dépôt.");
+  } else {
+    const size = checkAgentsSize(claudeMd, {
+      maxLines: CORPUS_CLAUDE_MD_MAX_LINES,
+      maxBytes: CORPUS_CLAUDE_MD_MAX_BYTES,
+    });
+    for (const v of size.violations) problems.push(`corpus: CLAUDE.md hors budget — ${v}.`);
+  }
+
+  const skillsDir = at(join(".claude", "skills"));
+  if (!existsSync(skillsDir)) {
+    problems.push(`corpus: ${relTo(skillsDir)} introuvable — le corpus est-il bien monté ?`);
+  }
+
+  // Spec Agent Skills sur les 43 skills pédagogiques, frontmatter par frontmatter.
+  for (const skillMd of walk(skillsDir, /^SKILL\.md$/)) {
+    const frontmatter = extractFrontmatter(readIfExists(skillMd));
+    const folderName = relTo(skillMd).split("/").at(-2);
+    for (const problem of checkSkillFrontmatter(folderName, frontmatter)) {
+      problems.push(`corpus: ${relTo(skillMd)}: ${problem} (Agent Skills spec).`);
+    }
+    if (frontmatter === null) continue;
+    for (const id of findModelIds(frontmatter)) {
+      problems.push(`corpus: ${relTo(skillMd)}: identifiant de modèle en dur « ${id} ».`);
+    }
+  }
+
+  // Unicode invisible sur TOUT ce qu'un agent lit ici — skills et références comprises,
+  // puisque c'est précisément la surface qu'on lui fait lire (12 Mo de programmes officiels).
+  for (const file of walk(skillsDir, /\.md$/)) {
+    for (const hit of findSuspiciousInvisibles(readIfExists(file) ?? "")) {
+      problems.push(
+        `corpus: ${relTo(file)}: Unicode invisible ${hit.codePoint} au décalage ${hit.index}.`,
+      );
+    }
+  }
+
+  const workflowsDir = at(join(".github", "workflows"));
+  for (const file of walk(workflowsDir, /\.ya?ml$/)) {
+    const content = readIfExists(file) ?? "";
+    for (const hit of findSuspiciousInvisibles(content)) {
+      problems.push(
+        `corpus: ${relTo(file)}: Unicode invisible ${hit.codePoint} au décalage ${hit.index}.`,
+      );
+    }
+    for (const id of findModelIds(content)) {
+      problems.push(`corpus: ${relTo(file)}: identifiant de modèle en dur « ${id} ».`);
+    }
+    // L'épinglage au SHA — la règle que `pin-check.yml` ré-écrivait en bash. Une seule
+    // implémentation désormais, celle qui est testée.
+    for (const hit of findUnpinnedActions(content)) {
+      problems.push(
+        `corpus: ${relTo(file)}: \`uses: ${hit.uses}\` n'est pas épinglé à un SHA (${hit.reason}).`,
+      );
+    }
+    // Le fantôme : un run que personne n'a demandé et que GitHub refuse aussitôt.
+    for (const hit of findPhantomProneTriggers(content)) {
+      problems.push(
+        `corpus: ${relTo(file)}: \`${hit.event}\` écoute \`opened\` (${hit.reason}) — ` +
+          "chaque PR ouverte par `auto-pr` y gagnerait un run `failure` à zéro job. " +
+          "Déclarer `types:` sans `opened` (étude 32, lot 1).",
+      );
+    }
+  }
+
+  problems.push(...checkYamlFiles(collectGithubYaml(root)).map((p) => `corpus: ${p}`));
+  return problems;
 }
 
 function readIfExists(path) {
@@ -270,8 +965,28 @@ function main() {
   const problems = [];
   const rel = (p) => relative(ROOT, p).split("\\").join("/");
 
+  // `--corpus <dir>` bascule le script en MODE CORPUS : il juge le dépôt privé, pas celui-ci.
+  //
+  // Les deux jeux d'invariants ne peuvent PAS cohabiter dans une même invocation, et c'est le
+  // premier run réel qui l'a montré plutôt qu'un raisonnement. La Content CI privée branche les
+  // 43 skills du corpus par symlink dans `engine/.claude/skills` — c'est sa raison d'être. Or
+  // l'invariant 6 d'ici (« chaque vue générée est à jour ») dérive le miroir `.agents/skills/`
+  // de ce qu'il trouve sous `.claude/skills/` : avec le corpus branché, il a réclamé
+  // **225 fichiers de miroir** qui n'ont aucune raison d'exister. Même piège pour l'invariant 1
+  // (le CLAUDE.md vu est celui du moteur, pas celui du corpus) et pour la recette LOCALE, qui
+  // fait exactement les mêmes symlinks.
+  //
+  // Donc : en mode corpus, on ne juge QUE le corpus, plus la couverture des contrôles (le seul
+  // invariant d'ici qui ait besoin des deux dépôts pour se prononcer). Les auto-contrôles du
+  // moteur tournent dans la CI du moteur, sur un checkout sans symlink — c'est-à-dire là où ils
+  // veulent dire quelque chose.
+  const corpusFlag = process.argv.indexOf("--corpus");
+  const corpusRoot =
+    corpusFlag !== -1 && process.argv[corpusFlag + 1] ? process.argv[corpusFlag + 1] : null;
+  const engineMode = corpusRoot === null;
+
   // 1. Pointer integrity.
-  const claudeMd = readIfExists(join(ROOT, "CLAUDE.md"));
+  const claudeMd = engineMode ? readIfExists(join(ROOT, "CLAUDE.md")) : "@AGENTS.md";
   if (claudeMd === null) {
     problems.push("CLAUDE.md is missing.");
   } else {
@@ -280,20 +995,26 @@ function main() {
   }
 
   // 2. AGENTS.md size budget.
-  const agentsMd = readIfExists(join(ROOT, "AGENTS.md"));
+  const agentsMd = engineMode ? readIfExists(join(ROOT, "AGENTS.md")) : "";
   if (agentsMd === null) {
     problems.push("AGENTS.md is missing — it is the canonical source (étude 25 D-1).");
   } else {
     const size = checkAgentsSize(agentsMd);
     for (const v of size.violations) problems.push(`AGENTS.md over budget: ${v}.`);
+    for (const w of size.warnings) {
+      // Un avertissement, pas un rouge : le fichier est encore valide, mais la marge
+      // qu'il reste ne suffira pas longtemps. Le lot 4 de l'étude 32 la lui rend.
+      console.warn(`::warning file=AGENTS.md::AGENTS.md approche son plafond — ${w}.`);
+    }
 
     // 2bis. L'inventaire des features décrit-il encore src/features/ ?
     const featuresDir = join(ROOT, "src", "features");
-    const featureNames = existsSync(featuresDir)
-      ? readdirSync(featuresDir, { withFileTypes: true })
-          .filter((entry) => entry.isDirectory())
-          .map((entry) => entry.name)
-      : [];
+    const featureNames =
+      engineMode && existsSync(featuresDir)
+        ? readdirSync(featuresDir, { withFileTypes: true })
+            .filter((entry) => entry.isDirectory())
+            .map((entry) => entry.name)
+        : [];
     if (featureNames.length) {
       for (const problem of checkFeatureInventory(agentsMd, featureNames)) {
         problems.push(`AGENTS.md: ${problem}.`);
@@ -305,22 +1026,27 @@ function main() {
   // Since lot 5 the guard workflows resolve their model from harness/models.json,
   // so `.github/workflows/**` is in scope too — this is what makes the study's
   // "zero hardcoded model id" KPI actually enforced rather than aspirational.
-  const generatedViews = new Set(buildViews(ROOT).map(([relPath]) => relPath));
-  const surface = [
-    ["AGENTS.md", agentsMd],
-    ["CLAUDE.md", claudeMd],
-    ...[...generatedViews].map((relPath) => [relPath, readIfExists(join(ROOT, relPath))]),
-    // La SOURCE des skills, pas seulement son miroir : le miroir est exempté du
-    // scan d'identifiants (il est généré), donc sans cette ligne un id écrit à la
-    // main dans `.claude/skills/**` traversait le gate et arrivait tel quel chez
-    // Codex, Cursor et Amp.
-    ...walk(join(ROOT, ".claude", "skills"), /\.md$/).map((p) => [rel(p), readIfExists(p)]),
-    ...walk(join(ROOT, "harness"), /\.(json|md)$/).map((p) => [rel(p), readIfExists(p)]),
-    ...walk(join(ROOT, ".github", "workflows"), /\.ya?ml$/).map((p) => [rel(p), readIfExists(p)]),
-  ].filter(([, content]) => content !== null);
+  const generatedViews = new Set(engineMode ? buildViews(ROOT).map(([relPath]) => relPath) : []);
+  const surface = !engineMode
+    ? []
+    : [
+        ["AGENTS.md", agentsMd],
+        ["CLAUDE.md", claudeMd],
+        ...[...generatedViews].map((relPath) => [relPath, readIfExists(join(ROOT, relPath))]),
+        // La SOURCE des skills, pas seulement son miroir : le miroir est exempté du
+        // scan d'identifiants (il est généré), donc sans cette ligne un id écrit à la
+        // main dans `.claude/skills/**` traversait le gate et arrivait tel quel chez
+        // Codex, Cursor et Amp.
+        ...walk(join(ROOT, ".claude", "skills"), /\.md$/).map((p) => [rel(p), readIfExists(p)]),
+        ...walk(join(ROOT, "harness"), /\.(json|md)$/).map((p) => [rel(p), readIfExists(p)]),
+        ...walk(join(ROOT, ".github", "workflows"), /\.ya?ml$/).map((p) => [
+          rel(p),
+          readIfExists(p),
+        ]),
+      ].filter(([, content]) => content !== null);
 
   for (const [label, content] of surface) {
-    for (const hit of findInvisibleChars(content)) {
+    for (const hit of findSuspiciousInvisibles(content)) {
       problems.push(`${label}: hidden Unicode ${hit.codePoint} at offset ${hit.index}.`);
     }
     // Exempt: models.json declares the ids, and generated views merely compile
@@ -338,7 +1064,7 @@ function main() {
   // parts of the Agent Skills spec (lot 3): the mirror at `.agents/skills/` is
   // read by tools that DO enforce them, so a skill that drifts here silently
   // stops working there.
-  for (const skillMd of walk(join(ROOT, ".claude", "skills"), /^SKILL\.md$/)) {
+  for (const skillMd of engineMode ? walk(join(ROOT, ".claude", "skills"), /^SKILL\.md$/) : []) {
     const frontmatter = extractFrontmatter(readIfExists(skillMd));
     const folderName = rel(skillMd).split("/").at(-2);
 
@@ -347,7 +1073,7 @@ function main() {
     }
 
     if (frontmatter === null) continue;
-    for (const hit of findInvisibleChars(frontmatter)) {
+    for (const hit of findSuspiciousInvisibles(frontmatter)) {
       problems.push(
         `${rel(skillMd)} frontmatter: hidden Unicode ${hit.codePoint} at offset ${hit.index}.`,
       );
@@ -358,7 +1084,7 @@ function main() {
   // was written in docs/dependency-maintenance.md but never enforced — see
   // findUnpinnedActions' header for the regression that proved a documented rule
   // without a gate is a suggestion.
-  for (const workflow of walk(join(ROOT, ".github", "workflows"), /\.ya?ml$/)) {
+  for (const workflow of engineMode ? walk(join(ROOT, ".github", "workflows"), /\.ya?ml$/) : []) {
     const content = readIfExists(workflow);
     if (content === null) continue;
     for (const hit of findUnpinnedActions(content)) {
@@ -368,10 +1094,68 @@ function main() {
           "version as a trailing comment (docs/dependency-maintenance.md).",
       );
     }
+    for (const hit of findGhWithoutRepo(content)) {
+      problems.push(
+        `${rel(workflow)}: job \`${hit.job}\`, étape \`${hit.step}\` appelle \`gh\` sans contexte ` +
+          `de dépôt (\`${hit.ligne}\`) — hors d'un dépôt git, \`gh\` sort en 1. Ajouter ` +
+          "`GH_REPO: ${{ github.repository }}` à l'`env:` du job, ou un `actions/checkout`, " +
+          "ou `-R <owner>/<repo>` sur la ligne.",
+      );
+    }
+    for (const hit of findApplyWithoutNpm10(content)) {
+      problems.push(
+        `${rel(workflow)}: job \`${hit.job}\`, étape \`${hit.step}\` écrit le lockfile via ` +
+          "`apply-patch-minor.mjs apply` sans npm 10 dans le job — le script REFUSE npm 11, " +
+          "et `setup-node` avec `node-version: 24` livre npm 11.x. Ajouter une étape " +
+          "`npm i -g npm@10` avant, sinon l'étape échoue à chaque lot (mesuré : 4 tentatives, " +
+          "0 réussite, 18 jours sans que personne le voie).",
+      );
+    }
+    for (const hit of findPushPastRedGate(content)) {
+      problems.push(
+        `${rel(workflow)}: job \`${hit.job}\`, étape \`${hit.step}\` fait \`git push\` après un ` +
+          "gate `verify`/`ci:verify` non bloquant, sans `if: steps.<gate>.outcome == 'success'` — " +
+          "le hook husky pre-push (installé par `npm ci`) refuse un lot rouge : l'étape échoue " +
+          "et coupe tout ce qui suit (#1203). Pousser seulement sur gate vert ; un lot rouge " +
+          "reste sur une branche locale.",
+      );
+    }
+  }
+
+  // 5ter. Les scripts .ts sont réellement typés (étude 32, C-15).
+  if (engineMode) {
+    const pkgRaw = readIfExists(join(ROOT, "package.json"));
+    const tsRaw = readIfExists(join(ROOT, "tsconfig.scripts.json"));
+    if (tsRaw === null) {
+      problems.push("tsconfig.scripts.json est absent — les scripts .ts ne seraient plus typés.");
+    } else {
+      let include = null;
+      try {
+        include = JSON.parse(stripJsonComments(tsRaw))?.include ?? null;
+      } catch {
+        problems.push("tsconfig.scripts.json n'est pas un JSONC lisible.");
+      }
+      if (include !== null) {
+        const scriptFiles = walk(join(ROOT, "scripts"), /\.ts$/).map(rel);
+        problems.push(
+          ...checkScriptsTypecheck({
+            typecheckScript: pkgRaw ? JSON.parse(pkgRaw).scripts?.typecheck : undefined,
+            include,
+            scriptFiles,
+          }),
+        );
+      }
+    }
+  }
+
+  // 5bis. Chaque famille de la politique porte sa raison (étude 32, D-7).
+  const policyRaw = engineMode ? readIfExists(join(ROOT, "harness", "policy.json")) : null;
+  if (policyRaw !== null && isJsonValid(policyRaw)) {
+    problems.push(...checkPolicyReasons(JSON.parse(policyRaw)));
   }
 
   // 5. JSON validity of every harness/*.json file.
-  for (const jsonFile of walk(join(ROOT, "harness"), /\.json$/)) {
+  for (const jsonFile of engineMode ? walk(join(ROOT, "harness"), /\.json$/) : []) {
     const content = readIfExists(jsonFile);
     if (content !== null && !isJsonValid(content)) {
       problems.push(`${rel(jsonFile)} is not valid JSON.`);
@@ -382,7 +1166,7 @@ function main() {
   // lets the model id inside a GENERATED file be legitimate: it is not
   // hand-written, it is compiled from harness/models.json — and any hand-edit
   // (including a model bumped only here) shows up as drift below.
-  for (const [relPath, expected] of buildViews(ROOT)) {
+  for (const [relPath, expected] of engineMode ? buildViews(ROOT) : []) {
     const actual = readIfExists(join(ROOT, relPath));
     if (actual === null) {
       problems.push(`${relPath} is missing — run \`npm run harness:sync\`.`);
@@ -397,13 +1181,81 @@ function main() {
   // `startup_failure`: zero jobs, no log, no annotation. Lenient parsers (last
   // key wins) call such a file valid, so this needs a parser with `uniqueKeys`,
   // not a convention. See check-workflow-yaml.mjs for the incident it replays.
-  problems.push(...checkYamlFiles(collectGithubYaml(ROOT)));
+  if (engineMode) problems.push(...checkYamlFiles(collectGithubYaml(ROOT)));
+  // 10. Les compteurs déclarés — STATUS.md et AGENTS.md sont lus depuis CE dépôt dans les
+  // deux modes (la Content CI privée checkout le moteur) ; seul le fait `corpus-skills`
+  // n'existe qu'avec `--corpus`, et il n'est jugé que là.
+  problems.push(
+    ...checkDeclaredCounts(
+      ["STATUS.md", "AGENTS.md"].map((f) => [f, readIfExists(join(ROOT, f))]),
+      {
+        "engine-skills": countDirs(join(ROOT, ".claude", "skills")),
+        "corpus-skills":
+          corpusRoot === null ? null : countDirs(join(corpusRoot, ".claude", "skills")),
+        features: countDirs(join(ROOT, "src", "features")),
+      },
+    ),
+  );
+
+  // 8. Tout script de CONTRÔLE est exécuté par quelqu'un — ou dit qui l'exécute.
+  // `content:figures:check` a passé des mois rouge sans qu'aucun workflow ne
+  // l'appelle : rien, ici, ne disait qu'il en était un. Voir harness/controls.json.
+  const pkg = readIfExists(join(ROOT, "package.json"));
+  const registryRaw = readIfExists(join(ROOT, "harness", "controls.json"));
+  if (pkg === null) {
+    problems.push("package.json is missing.");
+  } else if (registryRaw === null || !isJsonValid(registryRaw)) {
+    problems.push("harness/controls.json is missing or invalid JSON.");
+  } else {
+    const workflows = walk(join(ROOT, ".github", "workflows"), /\.ya?ml$/).map((p) => [
+      rel(p),
+      readIfExists(p),
+    ]);
+    // `--corpus <dir>` : le corpus privé monté à côté, comme le fait déjà
+    // `check-roadmap-sync.mjs`. La Content CI privée l'a, ce dépôt non — et
+    // c'est elle qui transforme les déclarations `privé:*` en vérifications.
+    let corpusWorkflows = null;
+    if (corpusRoot !== null) {
+      const dir = join(corpusRoot, ".github", "workflows");
+      if (!existsSync(dir)) {
+        problems.push(`--corpus: ${dir} introuvable — le corpus est-il bien monté ?`);
+      } else {
+        corpusWorkflows = new Map(
+          walk(dir, /\.ya?ml$/).map((p) => [p.split(/[\\/]/).at(-1), readIfExists(p)]),
+        );
+        // `--corpus` ne servait qu'à vérifier les déclarations de controls.json ; depuis
+        // l'étude 32 (D-5) il porte TOUS les invariants applicables au corpus — c'est ce qui
+        // fait de ce script le gate unique des deux dépôts, et ce qui permet à `pin-check.yml`
+        // de disparaître au lieu de ré-écrire une règle d'ici en bash.
+        problems.push(...collectCorpusProblems(corpusRoot));
+      }
+    }
+    problems.push(
+      ...checkControlCoverage({
+        scripts: JSON.parse(pkg).scripts ?? {},
+        workflows: workflows.filter(([, body]) => body !== null),
+        registry: JSON.parse(registryRaw),
+        corpusWorkflows,
+      }),
+    );
+  }
+
+  if (problems.length === 0 && !engineMode) {
+    console.log(
+      `[harness:check] OK — corpus ${corpusRoot} : skills conformes à la spec, aucun Unicode ` +
+        "invisible suspect, CLAUDE.md dans son budget, YAML strict, Actions épinglées, " +
+        "chaque contrôle déclaré exécuté par le workflow qu'il nomme.",
+    );
+    return;
+  }
 
   if (problems.length === 0) {
     console.log(
       "[harness:check] OK — pointers intact, AGENTS.md in budget et son inventaire de " +
         "features à jour, no hidden Unicode, " +
-        "no stray model ids, Actions pinned to SHAs, .github YAML parses strictly, " +
+        "no stray model ids, Actions pinned to SHAs, chaque `gh` sait sur quel dépôt il travaille, " +
+        "le lockfile ne s'écrit que sous npm 10, aucun push après un gate rouge, " +
+        ".github YAML parses strictly, chaque contrôle exécuté ou déclaré, " +
         "generated views in sync.",
     );
     return;

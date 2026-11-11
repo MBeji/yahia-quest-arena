@@ -6,7 +6,7 @@ name: Auto-merge
 # automatic push → PR → checks → merge → deploy chain (Vercel + db-migrate-prod
 # fire on the merge to main). Since 2026-07-12, auto-pr.yml opens PRs READY
 # with auto-merge armed by default — there is NO human step anywhere in the
-# chain (CLAUDE.md DoD §8); this workflow is the safety net that (re)arms on
+# chain (AGENTS.md DoD §8); this workflow is the safety net that (re)arms on
 # PR events, disarms on opt-out, and keeps armed heads mergeable.
 #
 # Security model — arming is cheap, MERGING is gated:
@@ -55,7 +55,7 @@ name: Auto-merge
 # stale/UNKNOWN. Trusting it left armed PRs stranded BEHIND while the job
 # logged "nothing to update" (confirmed live 2026-07-12 on #379/#383). When
 # update-branch fails (merge conflict), the PR gets the `needs-rebase` label
-# so the next working session rebases it (CLAUDE.md DoD §8); the label is
+# so the next working session rebases it (AGENTS.md DoD §8); the label is
 # removed on the next successful update.
 
 on:
@@ -224,7 +224,7 @@ jobs:
             echo "PR #$pr ($branch) is $behind commit(s) behind main — updating branch."
             if ! gh api -X PUT "repos/$REPO/pulls/$pr/update-branch" >/dev/null; then
               # Almost always a merge conflict: flag it for the next working
-              # session's sweep (CLAUDE.md DoD §8) — Mohamed never intervenes.
+              # session's sweep (AGENTS.md DoD §8) — Mohamed never intervenes.
               gh label create needs-rebase --repo "$REPO" --color D93F0B \
                 --description "PR armée dont l'update-branch automatique a échoué (conflit) — une session doit la rebaser (DoD §8)" \
                 2>/dev/null || true

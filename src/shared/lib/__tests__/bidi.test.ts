@@ -38,8 +38,143 @@ describe("isolateLtrRuns", () => {
     // The Arabic comma keeps the two formulas in distinct runs.
     const out = isolateLtrRuns("أمثلة: √9 = 3، √16 = 4.");
     expect((out.match(new RegExp(LRI, "g")) ?? []).length).toBe(2);
-    expect(out).toContain(`${LRI}: √9 = 3${PDI}`);
-    expect(out).toContain(`${LRI} √16 = 4.${PDI}`);
+    expect(out).toContain(`:${LRI} √9 = 3${PDI}`);
+    expect(out).toContain(`${LRI} √16 = 4${PDI}.`);
+  });
+
+  // Le point qui ferme la phrase et les deux-points qui ouvrent l'énoncé sont de la
+  // PROSE. Dans l'isolat gauche-à-droite, `المجال هو [−3 ; −1].` se dessinait avec le
+  // point entre le dernier mot arabe et la formule, à droite d'elle, au lieu d'être à
+  // l'extrémité gauche de la ligne qui termine la phrase (dette relevée par les audits
+  // du gisement : 420 énoncés de maths publiés sur 1 394).
+  it("laisse la ponctuation latine qui borde une formule hors de l'isolat", () => {
+    expect(isolateLtrRuns("المجال هو [−3 ; −1].")).toBe(`المجال هو${LRI} [−3 ; −1]${PDI}.`);
+    expect(isolateLtrRuns("الطول هو √5.")).toBe(`الطول هو${LRI} √5${PDI}.`);
+    expect(isolateLtrRuns("حلّ (x − 4)(x + 2) = 0, ثمّ")).toBe(
+      `حلّ${LRI} (x − 4)(x + 2) = 0${PDI}, ثمّ`,
+    );
+    // La virgule arabe n'est pas latine : elle coupe déjà le segment, rien ne change.
+    expect(isolateLtrRuns("حلّ (x − 4)(x + 2) = 0 ، ثمّ")).toBe(
+      `حلّ${LRI} (x − 4)(x + 2) = 0 ${PDI}، ثمّ`,
+    );
+    // Le point d'un décimal et le contenu de la formule ne sont jamais retirés.
+    expect(isolateLtrRuns("القيمة .5 √2 هنا")).toContain(`${LRI} .5 √2 ${PDI}`);
+    expect(isolateLtrRuns("العدد 3.5 √2 هنا")).toContain(`${LRI} 3.5 √2 ${PDI}`);
+  });
+
+  // Le « ( » qui ouvre un membre de phrase ARABE après une formule restait dans l'isolat, à
+  // droite de la formule : du mauvais côté du texte qu'il enferme (relevé dans les
+  // explications de maths de 35 missions d'examen sur 38, par les audits du gisement).
+  it("laisse hors de l'isolat la parenthèse qui ouvre ou ferme un membre de phrase arabe", () => {
+    expect(isolateLtrRuns("لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا")).toContain(
+      `${LRI} 12 + 8√2 = 5√2${PDI} (`,
+    );
+    expect(isolateLtrRuns("(الجذر) √2 = 1,41 تقريبًا")).toContain(`)${LRI} √2 = 1,41 ${PDI}`);
+    // Une parenthèse qui a sa compagne DANS la formule fait partie de la formule.
+    expect(isolateLtrRuns("الناتج (x − 4)(x + 2) = 0 صحيح")).toContain(
+      `${LRI} (x − 4)(x + 2) = 0 ${PDI}`,
+    );
+  });
+
+  // Le titre d'une mission technique — « مناظرة 2012 (تقني) · التمرين 2 » — n'a rien à
+  // isoler : la seule raison d'isoler « 2012 ( » et « ) · » était une parenthèse de PROSE.
+  // Isolés, ils retournaient les parenthèses dans le rapport parent.
+  // Le cas inverse : la formule FERME ou OUVRE un membre de phrase arabe. `(نعلم أنّ √9 = 3)` :
+  // le « ) » restait dans l'isolat, à droite de la formule, donc entre la formule et le dernier
+  // mot arabe — le membre de phrase se fermait AVANT sa formule. Relevé par la re-vérification du
+  // lot L12 : une cinquantaine de chaînes des missions d'examen, près de 1 700 dans le corpus.
+  it("laisse hors de l'isolat la parenthèse que la formule ferme", () => {
+    expect(isolateLtrRuns("(نعلم أنّ √9 = 3)")).toBe(`(نعلم أنّ${LRI} √9 = 3${PDI})`);
+    // La compagne est dans un AUTRE segment : une parenthèse équilibrée reste dans la formule.
+    expect(isolateLtrRuns("(نعلم أنّ (x + 3) = 5 √9)")).toContain(`${LRI} (x + 3) = 5 √9${PDI})`);
+    // Un nombre seul ne demande aucun isolat : le « ) » de prose ne suffit plus à l'isoler.
+    expect(isolateLtrRuns("ينطلق (من 11 إلى 99)")).toBe("ينطلق (من 11 إلى 99)");
+  });
+
+  it("laisse hors de l'isolat la parenthèse que la formule ouvre", () => {
+    expect(isolateLtrRuns("ثمّ (√9 = 3 ثمّ نجد)")).toBe(`ثمّ (${LRI}√9 = 3 ${PDI}ثمّ نجد)`);
+    expect(isolateLtrRuns("الفقرة (2: التكنولوجيا)")).toBe("الفقرة (2: التكنولوجيا)");
+  });
+
+  // Régression de #1141 : la « ( » d'attaque était retirée dès que le segment comptait plus
+  // d'ouvrantes que de fermantes — même quand elle a sa « ) » DANS la formule et que c'est la
+  // « ( » de queue qui ouvre le membre de phrase arabe. `(80 + 100) ÷ 2 = 90 ✓ (…)` sortait
+  // de l'isolat par sa première parenthèse et y laissait le reste (37 chaînes du corpus).
+  // Les parenthèses s'apparient désormais pour de bon, au lieu de se comparer en totaux.
+  it("ne sépare jamais une parenthèse de sa compagne quand le segment les contient toutes deux", () => {
+    expect(isolateLtrRuns("(80 + 100) ÷ 2 = 90 ✓ (والفرق بين مركزين متتاليين 20)")).toBe(
+      `${LRI}(80 + 100) ÷ 2 = 90${PDI} ✓ (والفرق بين مركزين متتاليين 20)`,
+    );
+    expect(isolateLtrRuns("(−3) × (−4) = 12 (سالب × سالب = موجب)، ثمّ 12 + (−2) = 10.")).toBe(
+      `${LRI}(−3) × (−4) = 12${PDI} (سالب × سالب = موجب)، ثمّ${LRI} 12 + (−2) = 10${PDI}.`,
+    );
+    expect(isolateLtrRuns("نجد (x + 2)(x − 2) = x² − 4 (الفرق بين مربّعين)")).toBe(
+      `نجد${LRI} (x + 2)(x − 2) = x² − 4${PDI} (الفرق بين مربّعين)`,
+    );
+    // La « ) » finale referme une « ( » du segment : elle en fait partie, même quand une
+    // fermante de prose la précède et fait pencher le total.
+    expect(isolateLtrRuns("(حاسبنا AB = 16.) ✓ (12 = 4×(3))").endsWith(`4×(3))${PDI}`)).toBe(true);
+  });
+
+  // Le « ) » de `(بوحدة OI) : AB = …` ferme un membre de phrase ARABE mais tombait au MILIEU
+  // de son segment : l'isolat le dessinait entre `OI` et la formule, et le couple de
+  // parenthèses enfermait « بوحدة … : AB = … » en laissant `OI` dehors. Relevé par la
+  // re-vérification du lot L08 : 262 chaînes du corpus. Une parenthèse dont la compagne est dans
+  // UN AUTRE segment est de la prose, où qu'elle tombe ; les deux moitiés se jugent séparément.
+  it("laisse hors de l'isolat la parenthèse que le texte arabe ferme ou ouvre au milieu d'un segment", () => {
+    expect(isolateLtrRuns("(بوحدة OI) : AB = |−2 − (−√2)| = |√2 − 2|")).toBe(
+      `(بوحدة OI) :${LRI} AB = |−2 − (−√2)| = |√2 − 2|${PDI}`,
+    );
+    expect(isolateLtrRuns("إذن BI = (√13 − 3)/2 cm ✓ (≈ 0,30 وهو العدد b) ثمّ")).toBe(
+      `إذن${LRI} BI = (√13 − 3)/2 cm${PDI} ✓ (≈ 0,30 وهو العدد b) ثمّ`,
+    );
+    // `2 = 2ab` s'ouvre par un nombre et porte des lettres : il est isolé lui aussi
+    // (rendu en `2ab = 2` avant le correctif des coefficients).
+    expect(isolateLtrRuns("(نعلم أنّ 2 = 2ab) = (b − a)² ✓ ثمّ")).toBe(
+      `(نعلم أنّ${LRI} 2 = 2ab${PDI})${LRI} = (b − a)²${PDI} ✓ ثمّ`,
+    );
+    // Deux membres de phrase arabes séparés par un signe : plus rien à isoler.
+    const lines = "(المستقيم 1) ⊥ (المستقيم 2)";
+    expect(isolateLtrRuns(lines)).toBe(lines);
+    // Des crochets bien appariés ne retiennent pas la parenthèse ; une demi-droite, si.
+    expect(isolateLtrRuns("متوازي أضلاع ([AE] ∥ [CG] و AE = CG) وله")).toBe(
+      `متوازي أضلاع (${LRI}[AE] ∥ [CG] ${PDI}و AE = CG) وله`,
+    );
+    expect(isolateLtrRuns("(المستقيم [OI) حيث EM = 1)")).toContain(`${LRI} [OI) ${PDI}`);
+  });
+
+  // Une fermante d'attaque et une ouvrante de queue sont de la prose même quand le segment
+  // les compte à égalité : `). (` ne se rend plus dans un isolat gauche-à-droite.
+  it("retire la fermante d'attaque et l'ouvrante de queue d'un segment qui les compte à égalité", () => {
+    const text = "(مثل: علّم، كسّر). (تمرين «صيد الخطأ».) الخطأ";
+    expect(isolateLtrRuns(text)).toBe(text);
+    expect(isolateLtrRuns("(الجذر) √2 = 1,41 (تقريبًا)")).toBe(
+      `(الجذر)${LRI} √2 = 1,41${PDI} (تقريبًا)`,
+    );
+  });
+
+  // `[OI)` est une demi-droite, `]2 ; 5)` un intervalle : la parenthèse s'apparie à un crochet.
+  it("ne retire aucune parenthèse d'un segment à crochets (demi-droite, intervalle)", () => {
+    expect(isolateLtrRuns("المستقيم [OI) حيث EM = 1")).toContain(`${LRI} [OI) ${PDI}`);
+    expect(isolateLtrRuns("المجال ]2 ; 5) صحيح")).toContain(`${LRI} ]2 ; 5) ${PDI}`);
+  });
+
+  it("n'isole pas un titre dont la seule parenthèse est de la prose", () => {
+    const title = "🏛️ مناظرة 2012 (تقني) · التمرين 2 ⭐⭐: أصوات عشرين حزبًا";
+    expect(isolateLtrRuns(title)).toBe(title);
+    expect(splitMathRuns(title).some((run) => run.math)).toBe(false);
+  });
+
+  it("ne perd ni n'ajoute aucun caractère en écartant la ponctuation", () => {
+    for (const text of [
+      "المجال هو [−3 ; −1].",
+      "أمثلة: √9 = 3، √16 = 4.",
+      "قيمة x = −2 ، ثمّ √5 ; و",
+      "لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا",
+      "(الجذر) √2 = 1,41 تقريبًا",
+    ]) {
+      expect(isolateLtrRuns(text).replaceAll(LRI, "").replaceAll(PDI, "")).toBe(text);
+    }
   });
 
   it("leaves text with no Arabic untouched (LTR content has no bug)", () => {
@@ -66,6 +201,17 @@ describe("isolateLtrRuns", () => {
     expect(isolateLtrRuns("المجموعة A ⊂ B")).toContain(`${LRI} A ⊂ B${PDI}`);
     expect(isolateLtrRuns("السهم x → y معرّف")).toContain(`${LRI} x → y ${PDI}`);
   });
+
+  // #1117 — la famille des relations d'ensemble se traite EN BLOC. `⊄` ou `∋` oublié,
+  // seul dans une phrase arabe, restait au niveau RTL et se dessinait en miroir :
+  // l'option « الرمز ⊄ » d'un QCM publié se lisait « ⊅ », l'énoncé inversé.
+  it.each(["∈", "∉", "∋", "∌", "⊂", "⊃", "⊄", "⊅", "⊆", "⊇", "⊈", "⊉", "⊊", "⊋"])(
+    "isolates the set relation %s even when it stands alone in Arabic prose",
+    (rel) => {
+      expect(isolateLtrRuns(`الرمز ${rel}`)).toBe(`الرمز${LRI} ${rel}${PDI}`);
+      expect(isolateLtrRuns(`نكتب A ${rel} B هنا`)).toContain(`${LRI} A ${rel} B ${PDI}`);
+    },
+  );
 
   // Regression: plain arithmetic, units and bare numbers must be left UNTOUCHED.
   // The native bidi algorithm already orders them correctly inside RTL prose;
@@ -95,6 +241,33 @@ describe("isolateLtrRuns", () => {
     }
   });
 
+  // Un nombre à chiffre manquant (case vide U+25A2) est UN nombre : la case, neutre, prenait le
+  // sens de la phrase et rangeait ses chiffres à l'envers (`2▢4` dessiné `4▢2`, `27▢▢` → `▢▢27`).
+  it("isole un nombre à chiffre manquant, et lui seul, dans une phrase arabe", () => {
+    expect(isolateLtrRuns("في العدد 2▢4 مُحي رقم")).toBe(`في العدد ${LRI}2▢4${PDI} مُحي رقم`);
+    expect(isolateLtrRuns("ما الرقم الذي يعوّض ▢ في العدد 27▢▢ ليقبل القسمة")).toBe(
+      `ما الرقم الذي يعوّض ▢ في العدد ${LRI}27▢▢${PDI} ليقبل القسمة`,
+    );
+    expect(isolateLtrRuns("ففي ▢5 للقسمة على 5")).toBe(`ففي ${LRI}▢5${PDI} للقسمة على 5`);
+    expect(isolateLtrRuns("العدد العشري 3,▢5 أكبر من 3")).toBe(
+      `العدد العشري ${LRI}3,▢5${PDI} أكبر من 3`,
+    );
+    // la ponctuation de fin de phrase reste dehors, et l'addition voisine se lit avec la phrase
+    expect(isolateLtrRuns("فبقي 8▢5.")).toBe(`فبقي ${LRI}8▢5${PDI}.`);
+    expect(isolateLtrRuns("احسب 2▢4 + 3 = ؟")).toBe(`احسب ${LRI}2▢4${PDI} + 3 = ؟`);
+  });
+
+  it("ne touche ni une case seule, ni un intervalle, ni l'arithmétique de chiffres", () => {
+    for (const s of [
+      "عوّض ▢ + 5 = 8 بالعدد المناسب",
+      "حيث n = 1…5 في كلّ مرّة",
+      "احسب 10 − 4 = 6 ثمّ",
+      "العدد 2 ▢ 4 مكتوب",
+    ]) {
+      expect(isolateLtrRuns(s)).toBe(s);
+    }
+  });
+
   // A bare signed (negative/positive) number in RTL prose has no bracket or
   // relation to anchor it, so the neutral sign flips (`−5` → `5−`). It must be
   // isolated. Written tight (`−5`, not `− 5`), so it is never confused with the
@@ -104,6 +277,127 @@ describe("isolateLtrRuns", () => {
     expect(isolateLtrRuns("قيمة x = −2 دائمًا")).toContain(`${LRI} x = −2 ${PDI}`);
     expect(isolateLtrRuns("الدوران +90° نحو اليمين")).toContain(`${LRI} +90° ${PDI}`);
     expect(isolateLtrRuns("الحدّ −2x صغير")).toContain(`${LRI} −2x ${PDI}`);
+  });
+
+  // `∠` est Bidi_Mirrored, comme `⊄` (#1117) : dans une phrase arabe il restait au niveau
+  // RTL, se dessinait en miroir (⦣) et se détachait de ses lettres — « ∠ABy = 60° »
+  // s'affichait « ABy = 60°⦣ ». Remonté par l'audit du lot L12 (gisement é36).
+  it.each(["∠", "∡", "∢"])("isolates the angle sign %s even on its own", (sign) => {
+    expect(isolateLtrRuns(`يحقّق ${sign}ABy = 60° دائمًا`)).toContain(
+      `${LRI} ${sign}ABy = 60° ${PDI}`,
+    );
+    expect(isolateLtrRuns(`الرمز ${sign}`)).toBe(`الرمز${LRI} ${sign}${PDI}`);
+  });
+
+  // Une formule MÊLÉE de chiffres et de lettres qui s'ouvre par un nombre sort à moitié
+  // renversée : après un mot arabe, une lettre latine est forte gauche-à-droite et tout
+  // nombre qui la suit en hérite (règle W7), mais le premier terme reste au niveau RTL.
+  // `25 + k = 9` s'affichait `k = 9 + 25`, `1/b` s'affichait `b/1`.
+  it("isolates a formula that opens with a number and carries a letter", () => {
+    expect(isolateLtrRuns("نجد 25 + k = 9 ثمّ نحلّ")).toContain(`${LRI} 25 + k = 9 ${PDI}`);
+    expect(isolateLtrRuns("ما مقلوب 1/b في أبسط كتابة")).toContain(`${LRI} 1/b ${PDI}`);
+    expect(isolateLtrRuns("احسب 3 − x ثمّ")).toContain(`${LRI} 3 − x ${PDI}`);
+    expect(isolateLtrRuns("المقدار 10 × 3^p صحيح")).toContain(`${LRI} 10 × 3^p ${PDI}`);
+    expect(isolateLtrRuns("نكتب 1/2 = x دائمًا")).toContain(`${LRI} 1/2 = x ${PDI}`);
+  });
+
+  it("isolates a sign glued to a letter that does not follow an operand", () => {
+    expect(isolateLtrRuns("العدد −x موجب")).toContain(`${LRI} −x ${PDI}`);
+    expect(isolateLtrRuns("نجد −x + 1 ثمّ")).toContain(`${LRI} −x + 1 ${PDI}`);
+    expect(isolateLtrRuns("نجد +b هنا")).toContain(`${LRI} +b ${PDI}`);
+  });
+
+  // La coche « ✓ » qui conclut un calcul est de la PROSE : dans l'isolat gauche-à-droite elle se
+  // retrouvait à droite de la formule, donc collée au mot arabe qui la précède et lue avant elle
+  // (`… على ✓ (ACQ)`). Dehors, elle suit la formule dans le sens de lecture de la phrase.
+  it("laisse la coche ✓ finale hors de l'isolat, comme la ponctuation de bord", () => {
+    expect(isolateLtrRuns("ومنه عمودي على (ACQ) ✓.")).toBe(`ومنه عمودي على${LRI} (ACQ)${PDI} ✓.`);
+    expect(isolateLtrRuns("فنجد √9 = 3 ✓ ثمّ")).toBe(`فنجد${LRI} √9 = 3${PDI} ✓ ثمّ`);
+    expect(isolateLtrRuns("الناتج (√2)² = 2 ✓، إذن")).toBe(`الناتج${LRI} (√2)² = 2${PDI} ✓، إذن`);
+  });
+
+  it("ne touche pas une coche qui ne suit pas une formule isolée", () => {
+    for (const s of ["المجموع 5 ✓ ثمّ", "ثمّ ✓ ثمّ"]) {
+      expect(isolateLtrRuns(s)).toBe(s);
+    }
+  });
+
+  // Un COEFFICIENT devant la lettre ne change rien : `3 − 2x = x − 3` s'affichait
+  // `2x = x − 3 − 3`, le premier terme restant au niveau RTL.
+  it("isolates a digit-first formula whose letter hides behind a coefficient", () => {
+    expect(isolateLtrRuns("ومنه 3 − 2x = x − 3 ثمّ")).toContain(`${LRI} 3 − 2x = x − 3 ${PDI}`);
+    expect(isolateLtrRuns("نجد 5 + 2x = 11 ثمّ")).toContain(`${LRI} 5 + 2x = 11 ${PDI}`);
+    expect(isolateLtrRuns("نحسب 120 − 3g − 2g = 10 ثمّ")).toContain(
+      `${LRI} 120 − 3g − 2g = 10 ${PDI}`,
+    );
+  });
+
+  // Une lettre GRECQUE est une lettre : `π`, `α`, `θ` sont fortes gauche-à-droite comme `x`.
+  // `3,14 − π` s'affichait `π − 3,14` (la différence à l'envers), `2 × π × r` de même.
+  it("isolates a digit-first formula whose letter is Greek", () => {
+    expect(isolateLtrRuns("فالعدد 3,14 − π سالب")).toContain(`${LRI} 3,14 − π ${PDI}`);
+    expect(isolateLtrRuns("المحيط = 2 × π × r هو")).toContain(`${LRI} = 2 × π × r ${PDI}`);
+    expect(isolateLtrRuns("المحيط 2 × π × r هو")).toContain(`${LRI} 2 × π × r ${PDI}`);
+    expect(isolateLtrRuns("نكتب 6 − 2π ثمّ")).toContain(`${LRI} 6 − 2π ${PDI}`);
+    expect(isolateLtrRuns("القياس 90 − α بالدرجة")).toContain(`${LRI} 90 − α ${PDI}`);
+  });
+
+  // Le signe « ° » peut suivre le nombre : `30° = OI/OB` s'affichait `OI/OB = °30`.
+  it("isolates a digit-first formula whose number carries a degree sign", () => {
+    expect(isolateLtrRuns("فنجد ظا 30° = OI/OB لأنّ")).toContain(`${LRI} 30° = OI/OB ${PDI}`);
+    expect(isolateLtrRuns("ومنه 45° + x = 90° ثمّ")).toContain(`${LRI} 45° + x = 90° ${PDI}`);
+  });
+
+  it("isolates a sign glued to a Greek letter", () => {
+    expect(isolateLtrRuns("العدد −π سالب")).toContain(`${LRI} −π ${PDI}`);
+  });
+
+  it("still leaves a Greek letter that follows another letter or no number to the natural order", () => {
+    // pas de signal : un mot arabe suivi du seul `π` n'est pas une formule ouverte par un nombre
+    expect(isolateLtrRuns("العدد π غير ناطق")).toBe("العدد π غير ناطق");
+    // `π` PRÉCÈDE le nombre : la lettre forte est déjà en tête, l'ordre natif est le bon
+    expect(isolateLtrRuns("حيث π + 3 يساوي")).not.toContain(`${LRI} π + 3`);
+  });
+
+  // Un point ou une variable « primé » (`M'`, `A′`) est un atome mathématique même seul :
+  // l'apostrophe est neutre, prend le sens RTL et tombe du mauvais côté de la lettre
+  // (`M'` s'affichait `'M`).
+  it("isolates a primed point or variable, alone or in a chain", () => {
+    expect(isolateLtrRuns("النقطة M' نظيرة M")).toContain(`${LRI} M' ${PDI}`);
+    expect(isolateLtrRuns("نظيرة A هي A′ ثمّ")).toContain(`${LRI} A′ ${PDI}`);
+    expect(isolateLtrRuns("المثلّث A'B'C' قائم")).toContain(`${LRI} A'B'C' ${PDI}`);
+    expect(isolateLtrRuns("ثمّ M'M'' = BC ✓")).toContain(`${LRI} M'M'' = BC${PDI} ✓`);
+  });
+
+  it("leaves the apostrophes of French and English words alone", () => {
+    for (const s of [
+      "ترجمة aujourd'hui إلى العربية",
+      "كلمة l'eau هنا",
+      "عبارة it's ok هنا",
+      "الجملة c'est la vie مثال",
+    ]) {
+      expect(isolateLtrRuns(s)).toBe(s);
+    }
+  });
+
+  // Ce qui s'ouvre par une LETTRE est déjà rendu gauche-à-droite (W7), et l'arithmétique
+  // sans lettre se lit de droite à gauche avec la phrase : on n'y touche pas.
+  it("does NOT isolate a formula that opens with a letter, nor digit-only arithmetic", () => {
+    for (const s of [
+      "نجد x − 3 = 5 ثمّ نحلّ",
+      "نجد AB = 5 − x ثمّ نكمل",
+      "نجد x = −a ثمّ نكمل",
+      "المجموع 10 − 4 = 6 صحيح",
+      "نجد 2x + 3 = 7 ثمّ نكمل",
+      "العدد 5 cm كبير",
+    ]) {
+      expect(isolateLtrRuns(s)).toBe(s);
+    }
+  });
+
+  // Une ponctuation de bord reste dehors, même quand la formule est isolée pour cette raison.
+  it("écarte la ponctuation de bord d'une formule mêlée isolée", () => {
+    expect(isolateLtrRuns("فنجد 25 + k = 9.")).toBe(`فنجد${LRI} 25 + k = 9${PDI}.`);
   });
 
   // Regression: subtraction/addition is written SPACED, so the sign is not glued
@@ -148,12 +442,51 @@ describe("isolateLtrRuns", () => {
     expect(q6).toContain(`${LRI} −2${PDI}`);
     expect((q6.match(new RegExp(LRI, "g")) ?? []).length).toBe(4);
   });
+
+  // Un guillemet n'appartient jamais à une formule : enfermé dans l'isolat gauche-à-droite, il
+  // perd son miroir et change de côté. `«(1) في رأيي` s'affichait `(1)»في رأيي` (le guillemet
+  // entre le numéro et le texte), `«يتفادى نظراتِ أبيه» ← قرائنُ` dessinait le guillemet
+  // fermant APRÈS la flèche (audits arabe 9ᵉ, chapitres 09 et 10).
+  it("laisse les guillemets hors de l'isolat — numéro de phrase en tête de citation", () => {
+    expect(isolateLtrRuns("«(1) في رأيي أنّ الصدقَ أساسُ الثقةِ. (2) فقد قالَ المثلُ.»")).toBe(
+      `«${LRI}(1)${PDI} في رأيي أنّ الصدقَ أساسُ الثقةِ.${LRI} (2) ${PDI}فقد قالَ المثلُ.»`,
+    );
+    expect(isolateLtrRuns("قسِّمْ هذا النصَّ: «(1) يرى بعضُهم")).toBe(
+      `قسِّمْ هذا النصَّ: «${LRI}(1)${PDI} يرى بعضُهم`,
+    );
+  });
+
+  it("n'isole pas la flèche de prose qui suit ou précède une citation", () => {
+    const quoted = "«يتفادى نظراتِ أبيه» ← قرائنُ";
+    expect(isolateLtrRuns(quoted)).toBe(quoted);
+    const chain = "«الشمسُ تُشرقُ» ← لا يعترضُ أحدٌ ← لا حجاجَ";
+    expect(isolateLtrRuns(chain)).toBe(chain);
+    expect(isolateLtrRuns("حوّل: «المعلّمةُ تشرحُ الدرس» ← «……… تشرحُ الدرس».")).not.toContain(LRI);
+    expect(isolateLtrRuns("مثال: _«نجحَ التلميذُ.»_ ← «التلميذُ» فاعلٌ")).not.toContain(LRI);
+    expect(isolateLtrRuns("_← «كانتِ السماءُ صافيةً.»")).not.toContain(LRI);
+  });
+
+  it("garde la formule citée isolée, guillemets dehors", () => {
+    expect(isolateLtrRuns("نكتب «A = 3√2» في الدفتر")).toBe(`نكتب «${LRI}A = 3√2${PDI}» في الدفتر`);
+    // La flèche d'une formule reste dans l'isolat : seule la flèche nue entre deux phrases en sort.
+    expect(isolateLtrRuns("المعادلة 2Al + 3Cl₂ → 2AlCl₃ موزونة")).toContain(
+      `${LRI} 2Al + 3Cl₂ → 2AlCl₃ ${PDI}`,
+    );
+    expect(isolateLtrRuns("الانتقال 2 → 4 ممكن")).toContain(LRI);
+  });
+
+  // Les accolades coraniques se miroitent seules dans la phrase arabe : le guillemet collé
+  // (`{…}»`) les faisait isoler, donc dessiner à l'envers.
+  it("n'isole pas une accolade de prose collée à un guillemet", () => {
+    const verse = "يقرأ ب {سَبِّحِ اسْمَ رَبِّكَ الْأَعْلَى}»، وهي سورة الأعلى";
+    expect(isolateLtrRuns(verse)).toBe(verse);
+  });
 });
 
 describe("isolateLtrRunsHtml", () => {
   it("isolates math inside text but never inside tag markup", () => {
     const out = isolateLtrRunsHtml('<li class="lesson-li">التعريف: √(a²) = |a|</li>');
-    expect(out).toBe(`<li class="lesson-li">التعريف${LRI}: √(a²) = |a|${PDI}</li>`);
+    expect(out).toBe(`<li class="lesson-li">التعريف:${LRI} √(a²) = |a|${PDI}</li>`);
     // class attribute must be left intact
     expect(out).toContain('class="lesson-li"');
   });
@@ -162,10 +495,46 @@ describe("isolateLtrRunsHtml", () => {
     const html = "<p>√50 = 5√2</p>";
     expect(isolateLtrRunsHtml(html)).toBe(html);
   });
+
+  // Le défaut relevé à l'audit D34 (cours math/19, l.84) : le dernier membre d'une chaîne,
+  // en gras, n'avait aucune lettre arabe dans son nœud de texte — il n'était pas isolé et
+  // s'affichait `6√ − 3`, rejeté de l'autre côté de la chaîne par l'isolat de gauche.
+  it("keeps a chain of equalities whose last member is bold in ONE isolate", () => {
+    const out = isolateLtrRunsHtml(
+      "<li>فنأخذ المقابل: |√6 − 3| = −(√6 − 3) = <strong>3 − √6</strong>.</li>",
+    );
+    expect(out).toBe(
+      `<li>فنأخذ المقابل:${LRI} |√6 − 3| = −(√6 − 3) = <strong>3 − √6${PDI}</strong>.</li>`,
+    );
+  });
+
+  it("isolates a bold formula standing alone between Arabic words", () => {
+    expect(isolateLtrRunsHtml("<p>الجواب <strong>3 − √6</strong> وهو موجب</p>")).toBe(
+      `<p>الجواب${LRI} <strong>3 − √6</strong> ${PDI}وهو موجب</p>`,
+    );
+  });
+
+  it("lets an isolate span an emphasis it does not start", () => {
+    expect(isolateLtrRunsHtml("<p>إذن √50 = <em>5√2</em> فقط</p>")).toBe(
+      `<p>إذن${LRI} √50 = <em>5√2</em> ${PDI}فقط</p>`,
+    );
+  });
+
+  it("still cuts at block tags and at span labels", () => {
+    // Joints à « مثال » à travers le span, `√3 = x` aurait été isolé : il reste tel quel.
+    const html = '<p>√2</p><p>عدد</p><span class="lbl">مثال</span>√3 = x';
+    expect(isolateLtrRunsHtml(html)).toBe(html);
+  });
+
+  it("leaves Arabic bold text and plain arithmetic alone", () => {
+    const html = "<p>الكتابة <strong>ليست قاعدة</strong> و <em>5 × 3 = 15</em> صحيحة</p>";
+    expect(isolateLtrRunsHtml(html)).toBe(html);
+  });
 });
 
 describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", () => {
   const mathRuns = (text: string) => splitMathRuns(text).filter((run) => run.math);
+  const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
   const rebuild = (text: string) =>
     splitMathRuns(text)
       .map((run) => run.text)
@@ -203,10 +572,116 @@ describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", ()
       "العدد a الموجب",
       "حيث b &gt; 0 دائمًا",
       "الدليل هو 10⁻⁴ هنا",
+      "المجال هو [−3 ; −1].",
+      "أمثلة: √9 = 3، √16 = 4.",
+      "لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا",
+      "(الجذر) √2 = 1,41 تقريبًا",
+      "نجد 25 + k = 9 ثمّ نحلّ",
+      "يحقّق ∠ABy = 60° دائمًا",
+      "العدد −x موجب",
+      "ما مقلوب 1/b في أبسط كتابة",
+      "(نعلم أنّ √9 = 3)",
+      "ثمّ (√9 = 3 ثمّ نجد)",
+      "المستقيم [OI) حيث EM = 1",
+      "(بوحدة OI) : AB = |−2 − (−√2)| = |√2 − 2|",
+      "إذن BI = (√13 − 3)/2 cm ✓ (≈ 0,30 وهو العدد b) ثمّ",
+      "(نعلم أنّ 2 = 2ab) = (b − a)² ✓ ثمّ",
+      "متوازي أضلاع ([AE] ∥ [CG] و AE = CG) وله",
+      "ومنه 3 − 2x = x − 3 ثمّ نجد 3x = 6",
+      "النقطة M' نظيرة M بالنسبة إلى O",
+      "نظيرة A هي A′ و B′ نظيرة B",
+      "فالعدد 3,14 − π سالب",
+      "المحيط = 2 × π × r هو",
+      "ومنه عمودي على (ACQ) ✓.",
+      "فنجد √9 = 3 ✓ ثمّ",
+      "«(1) في رأيي أنّ الصدقَ أساسُ الثقةِ. (2) فقد قالَ المثلُ.»",
+      "«يتفادى نظراتِ أبيه» ← قرائنُ",
+      "نكتب «A = 3√2» في الدفتر",
+      "في العدد 2▢4 مُحي رقم",
+      "احسب 2▢4 + 3 = ؟ ثمّ 27▢▢ و√9 = 3",
     ]) {
       const isolated = isolateLtrRuns(text);
       expect(mathRuns(text).length).toBe((isolated.match(new RegExp(LRI, "g")) ?? []).length);
-      for (const run of mathRuns(text)) expect(isolated).toContain(`${LRI}${run.text}${PDI}`);
+      // Les espaces de bord sont dans l'isolat d'isolateLtrRuns et dans la PROSE pour
+      // splitMathRuns : la formule isolée, elle, est la même.
+      for (const run of mathRuns(text)) {
+        expect(isolated).toMatch(new RegExp(`${LRI}\\s*${escapeRegExp(run.text)}\\s*${PDI}`, "u"));
+      }
+    }
+  });
+
+  // Une liste d'intervalles (`[0 ; 10[ ، [10 ; 20[ ، …`) ne passait jamais à la ligne :
+  // les espaces qui bordent chaque intervalle étaient dans le span insécable, et la
+  // virgule arabe n'admet aucun saut avant elle — 14 à 582 px de débordement mesurés
+  // sur un téléphone, dans 28 énoncés d'examen. Les espaces de bord sont de la prose.
+  it("laisse les espaces de bord d'une formule dans la prose, entre deux formules voisines", () => {
+    const text = "الفئات هي [0 ; 10[ ، [10 ; 20[ ، [20 ; 30[ فقط";
+    const runs = splitMathRuns(text);
+    expect(runs.filter((run) => run.math).map((run) => run.text)).toEqual([
+      "[0 ; 10[",
+      "[10 ; 20[",
+      "[20 ; 30[",
+    ]);
+    // Le séparateur entre deux intervalles garde son espace AVANT et APRÈS la virgule :
+    // c'est l'espace qui suit la virgule qui offre la coupure au navigateur.
+    const between = runs.filter((run, index) => !run.math && index > 0 && index < runs.length - 1);
+    expect(between.map((run) => run.text)).toEqual([" ، ", " ، "]);
+    for (const run of runs.filter((r) => r.math)) expect(run.nowrap).toBe(true);
+    expect(rebuild(text)).toBe(text);
+  });
+
+  // Même règle que pour isolateLtrRuns : le point final est de la prose, pas un morceau
+  // de la formule.
+  it("laisse la ponctuation latine qui borde une formule dans la prose", () => {
+    expect(splitMathRuns("المجال هو [−3 ; −1].").map((run) => [run.text, run.math])).toEqual([
+      ["المجال هو ", false],
+      ["[−3 ; −1]", true],
+      [".", false],
+    ]);
+    const list = splitMathRuns("أمثلة: √9 = 3، √16 = 4.").map((run) => [run.text, run.math]);
+    expect(list.filter(([, math]) => math).map(([text]) => text)).toEqual(["√9 = 3", "√16 = 4"]);
+    expect(list[list.length - 1]).toEqual([".", false]);
+    expect(rebuild("المجال هو [−3 ; −1].")).toBe("المجال هو [−3 ; −1].");
+    // le point d'un décimal reste dans la formule
+    expect(mathRuns("القيمة .5 √2 هنا")[0].text).toBe(".5 √2");
+    // la parenthèse qui ouvre un membre de phrase arabe est de la prose, pas de la formule
+    const parenthetical = splitMathRuns("لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا");
+    expect(parenthetical.filter((run) => run.math).map((run) => run.text)).toEqual([
+      "12 + 8√2 = 5√2",
+    ]);
+    expect(parenthetical[parenthetical.length - 1].text.startsWith(" (")).toBe(true);
+    expect(rebuild("لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا")).toBe(
+      "لأنّ 12 + 8√2 = 5√2 (تقريبًا) دائمًا",
+    );
+  });
+
+  // Même parité pour la coche finale : elle reste dans la prose, avec l'espace qui la précède.
+  it("garde la coche ✓ finale dans la prose, hors du run de la formule", () => {
+    const text = "ومنه عمودي على (ACQ) ✓.";
+    const runs = splitMathRuns(text);
+    expect(runs.filter((run) => run.math).map((run) => run.text)).toEqual(["(ACQ)"]);
+    expect(runs[runs.length - 1].text).toBe(" ✓.");
+    expect(rebuild(text)).toBe(text);
+  });
+
+  // Même parité : la parenthèse qui a sa compagne dans la formule reste dans le run, seule la
+  // « ( » de queue qui ouvre un membre de phrase arabe retourne à la prose.
+  it("garde dans le run mathématique la parenthèse qui a sa compagne dans la formule", () => {
+    const text = "(80 + 100) ÷ 2 = 90 ✓ (والفرق بين مركزين متتاليين 20)";
+    const runs = splitMathRuns(text);
+    expect(runs.filter((run) => run.math).map((run) => run.text)).toEqual(["(80 + 100) ÷ 2 = 90"]);
+    expect(runs[runs.length - 1].text.startsWith(" ✓ (")).toBe(true);
+    expect(rebuild(text)).toBe(text);
+  });
+
+  it("garde la formule seule dans son run — jamais d'espace en bord d'un run mathématique", () => {
+    for (const text of [
+      "بتطبيق مبدأ الجداء المعدوم، ما حلول المعادلة (x − 4)(x + 2) = 0 ؟",
+      "الناتج √50 = √(25 × 2) = 5√2 إذن",
+      "الفئات هي [0 ; 10[ ، [10 ; 20[ فقط",
+    ]) {
+      for (const run of mathRuns(text)) expect(run.text).toBe(run.text.trim());
+      expect(rebuild(text)).toBe(text);
     }
   });
 
@@ -244,6 +719,11 @@ describe("splitMathRuns — une équation ne se coupe jamais en deux lignes", ()
 });
 
 describe("isDisplayEquation — la ligne qui ne porte QUE la formule", () => {
+  const mathRunsOf = (text: string) =>
+    splitMathRuns(text)
+      .filter((run) => run.math)
+      .map((run) => run.text);
+
   it("reconnaît une ligne-équation", () => {
     expect(isDisplayEquation("(x − 4)(x + 2) = 0")).toBe(true);
     expect(isDisplayEquation("  2x + 5 = 13  ")).toBe(true);
@@ -268,6 +748,34 @@ describe("isDisplayEquation — la ligne qui ne porte QUE la formule", () => {
     expect(splitMathRuns("Quelle est la solution de (x − 4)(x + 2) = 0 ?")[1].text.trim()).toBe(
       "(x − 4)(x + 2) = 0",
     );
+  });
+
+  // Relevé par les audits des lots L08 et L10 : ces lignes, seules sur leur ligne, s'affichaient
+  // brouillées dans une carte RTL (`(3/21)³` → `³(3/21)`, `|x| ≤ 2` → `≤ 2 |x|`) parce que le moteur
+  // ne les reconnaissait pas comme équations — 16 lignes du corpus, dont cinq énoncés publiés.
+  it("reconnaît la valeur absolue, un terme seul, un symbole chimique et une unité collée à un nombre", () => {
+    for (const line of [
+      "|x| ≤ 2",
+      "1 − |x| > 2/3",
+      "|X| ≤ a ⟺ −a ≤ X ≤ a",
+      "(3/21)³",
+      "4(√3)⁴",
+      "(0,001)⁻⁴",
+      "√2",
+      "HCl + Al → H₂ + AlCl₃",
+      "CH₄ + Cl₂ → HCl + C",
+      "e = 1,6 × 10⁻¹⁹ C",
+      "6 × 10¹³ m",
+    ]) {
+      expect(isDisplayEquation(line)).toBe(true);
+    }
+    expect(mathRunsOf("|x| ≤ 2")).toEqual(["|x| ≤ 2"]);
+  });
+
+  it("refuse toujours la prose : mots en capitales, ligne de tableau, lettres seules, phrase à unité", () => {
+    for (const line of ["LIBRARY RULES", "NO PARKING", "|---|---|", "AB", "5", "x = 5 m de long"]) {
+      expect(isDisplayEquation(line)).toBe(false);
+    }
   });
 
   it("refuse une ligne de prose — y compris celle qu'isMathExpression accepte", () => {

@@ -25,7 +25,7 @@ vi.mock("@tanstack/react-start", () => ({
     let validatorFn: ((d: unknown) => unknown) | undefined;
     const chain = {
       middleware: () => chain,
-      inputValidator: (fn: (d: unknown) => unknown) => {
+      validator: (fn: (d: unknown) => unknown) => {
         validatorFn = fn;
         return chain;
       },
@@ -96,11 +96,20 @@ describe("gamification.quest — getSubject", () => {
     mockRpc.mockReset();
   });
 
-  it("returns subject, chapters, exercises, and best scores", async () => {
+  it("returns subject, chapters, exercises, and the progress ledger", async () => {
     const subjectData = { id: "subj-1", name_fr: "Math" };
     const chaptersData = [{ id: "ch-1", title: "Chapter 1" }];
     const exercisesData = [{ id: "ex-1", title: "Exercise 1" }];
-    const bestScoresData = [{ exercise_id: "ex-1", best_score: 85 }];
+    // La charge de `get_subject_progress` (étude 34) : elle voyage BRUTE jusqu'au hub,
+    // qui la lit par `parseSubjectProgress`. La server fn ne la retouche pas.
+    const progressData = {
+      subjectId: "subj-1",
+      seals: [],
+      nextSeal: null,
+      effort: { missionsCounted: 1, xp: 20, chaptersStarted: 1, chaptersMastered: 0 },
+      chapters: [],
+      missions: [{ exerciseId: "ex-1", counted: true, bestClassic: 85 }],
+    };
 
     mockFrom.mockImplementation((table: string) => {
       if (table === "subjects") return mockQuery(subjectData);
@@ -109,7 +118,7 @@ describe("gamification.quest — getSubject", () => {
       return mockQuery([]);
     });
     mockRpc.mockImplementation((fn: string) => {
-      if (fn === "get_best_scores_by_exercise") return { data: bestScoresData, error: null };
+      if (fn === "get_subject_progress") return { data: progressData, error: null };
       return { data: [], error: null };
     });
 
@@ -122,14 +131,45 @@ describe("gamification.quest — getSubject", () => {
       subject: subjectData,
       chapters: chaptersData,
       exercises: exercisesData,
-      bestByExercise: { "ex-1": 85 },
+      progress: progressData,
       quizPassedByChapter: {},
-      viewer: { level: 0, isPremium: false, hasEntitlement: true },
+      viewer: { level: 0, isPremium: false, hasEntitlement: true, unrestricted: false },
       // Recall availability (étude 17) — empty here: the mocked RPC resolves nothing.
       recall: { eligibleByExercise: {}, unlockedByExercise: {}, bestByExercise: {} },
       // Level anchor (étude 15 lot 7) — null here: the mocked RPC resolves no parcours.
       parcours: null,
     });
+  });
+
+  // Audit perf data-01 (2026-10-31) : la ligne `chapters` porte le cours et le résumé
+  // markdown — chapitres + missions pesaient 93 KB médian, 1 445 KB max par matière
+  // sur le corpus, contre 15 KB / 122 KB avec les colonnes nommées — que ni le hub ni
+  // le lecteur de quête ne lisent, et cet appel part à chaque vue du hub et à chaque
+  // mission connectée. Le test épingle les colonnes demandées : un retour à `*` (ou
+  // l'ajout de `lesson_content`/`summary`) le fait échouer.
+  it("ne demande aux chapitres et aux missions que les colonnes que le hub consomme", async () => {
+    const chains: Record<string, ReturnType<typeof mockQuery>> = {};
+    mockFrom.mockImplementation((table: string) => {
+      chains[table] ??= mockQuery(table === "subjects" ? { id: "subj-1" } : []);
+      return chains[table];
+    });
+    mockRpc.mockReturnValue({ data: null, error: null });
+
+    const { getSubject } = await import("@/features/quest");
+    await (getSubject as unknown as (d: unknown) => Promise<unknown>)({ subjectId: "subj-1" });
+
+    expect(chains.chapters?.select).toHaveBeenCalledWith(
+      "id,title,description,domain,display_order",
+    );
+    expect(chains.exercises?.select).toHaveBeenCalledWith(
+      "id,chapter_id,mode,title,difficulty,xp_reward,source,display_order",
+    );
+    for (const table of ["chapters", "exercises"]) {
+      for (const [columns] of (chains[table]?.select as ReturnType<typeof vi.fn>).mock.calls) {
+        expect(columns).not.toBe("*");
+        expect(columns).not.toMatch(/lesson_content|summary/);
+      }
+    }
   });
 
   it("throws on subject fetch error", async () => {
@@ -146,7 +186,7 @@ describe("gamification.quest — getSubject", () => {
     ).rejects.toThrow("Impossible de charger la matière.");
   });
 
-  it("returns empty bestByExercise on bestScores RPC error", async () => {
+  it("degrades to no progress on a get_subject_progress RPC error", async () => {
     mockFrom.mockImplementation((table: string) => {
       if (table === "subjects") return mockQuery({ id: "s1" });
       if (table === "chapters") return mockQuery([]);
@@ -160,13 +200,15 @@ describe("gamification.quest — getSubject", () => {
     const result = await (getSubject as unknown as (d: unknown) => Promise<unknown>)({
       subjectId: "s1",
     });
-    expect((result as Record<string, unknown>).bestByExercise).toEqual({});
+    // `null`, pas `{}` : le hub lit « pas de compte », donc l'expérience anonyme —
+    // une progression indisponible ne doit pas se lire « zéro étoile ».
+    expect((result as Record<string, unknown>).progress).toBeNull();
   });
 
-  // The best-scores RPC rides in the same Promise.all as the content queries
-  // (perf audit L1). A rejection there must still degrade to "no best scores"
+  // The progress RPC rides in the same Promise.all as the content queries
+  // (perf audit L1). A rejection there must still degrade to "no progress"
   // and never take the whole page down with it.
-  it("returns empty bestByExercise — and still loads the subject — when bestScores THROWS", async () => {
+  it("degrades to no progress — and still loads the subject — when the RPC THROWS", async () => {
     const subjectData = { id: "s1", name_fr: "Math" };
     mockFrom.mockImplementation((table: string) => {
       if (table === "subjects") return mockQuery(subjectData);
@@ -175,7 +217,7 @@ describe("gamification.quest — getSubject", () => {
       return mockQuery([]);
     });
     mockRpc.mockImplementation((fn: string) => {
-      if (fn === "get_best_scores_by_exercise") return Promise.reject(new Error("network down"));
+      if (fn === "get_subject_progress") return Promise.reject(new Error("network down"));
       return { data: [], error: null };
     });
 
@@ -185,7 +227,87 @@ describe("gamification.quest — getSubject", () => {
       subjectId: "s1",
     })) as Record<string, unknown>;
 
-    expect(result.bestByExercise).toEqual({});
+    expect(result.progress).toBeNull();
     expect(result.subject).toEqual(subjectData);
+  });
+
+  // Accès de test (compte admin, 2026-09-05) : une matière SCOLAIRE dont le chapitre
+  // porte un quiz, vue par un admin puis par un élève sans tentative. La RPC de
+  // démarrage décide (pgTAP 97) ; ici on vérifie que le hub AFFICHE la même chose.
+  function mockSchoolWorld(tables: string[]) {
+    mockFrom.mockImplementation((table: string) => {
+      tables.push(table);
+      if (table === "subjects")
+        return mockQuery({
+          id: "subj-1",
+          name_fr: "Math",
+          grade_id: "g-9eme",
+          theme_id: "ecole-tn",
+        });
+      if (table === "chapters") return mockQuery([{ id: "ch-1", title: "Chapter 1" }]);
+      if (table === "exercises")
+        return mockQuery([
+          { id: "ex-1", chapter_id: "ch-1", mode: "quiz", title: "Quiz" },
+          { id: "ex-2", chapter_id: "ch-1", mode: "practice", title: "Mission" },
+        ]);
+      if (table === "profiles") return mockQuery({ level: 3 });
+      return mockQuery([]);
+    });
+  }
+  function mockRpcs(isAdmin: boolean) {
+    mockRpc.mockImplementation((fn: string) => {
+      if (fn === "is_admin") return { data: isAdmin, error: null };
+      if (fn === "get_recall_availability")
+        return {
+          data: [
+            { exercise_id: "ex-2", eligible_count: 3, unlocked: false, best_recall_pct: null },
+          ],
+          error: null,
+        };
+      return { data: null, error: null };
+    });
+  }
+  type HubView = {
+    quizPassedByChapter: Record<string, boolean>;
+    recall: { unlockedByExercise: Record<string, boolean> };
+    viewer: Record<string, unknown>;
+  };
+
+  it("compte de test (admin) : toutes les portes affichées ouvertes, sans lire les tentatives", async () => {
+    const tables: string[] = [];
+    mockSchoolWorld(tables);
+    mockRpcs(true);
+
+    const { getSubject } = await import("@/features/quest");
+    const result = (await (getSubject as unknown as (d: unknown) => Promise<unknown>)({
+      subjectId: "subj-1",
+    })) as HubView;
+
+    expect(result.quizPassedByChapter).toEqual({ "ch-1": true });
+    expect(result.recall.unlockedByExercise).toEqual({ "ex-2": true });
+    expect(result.viewer).toEqual({
+      level: 3,
+      isPremium: false,
+      hasEntitlement: true,
+      unrestricted: true,
+    });
+    // La porte du quiz est levée d'office : la lecture des tentatives n'a pas lieu.
+    expect(tables).not.toContain("attempts");
+  });
+
+  it("témoin : le même chapitre reste fermé à un élève sans tentative, et ses tentatives sont lues", async () => {
+    const tables: string[] = [];
+    mockSchoolWorld(tables);
+    mockRpcs(false);
+
+    const { getSubject } = await import("@/features/quest");
+    const result = (await (getSubject as unknown as (d: unknown) => Promise<unknown>)({
+      subjectId: "subj-1",
+    })) as HubView;
+
+    expect(result.quizPassedByChapter).toEqual({ "ch-1": false });
+    expect(result.recall.unlockedByExercise).toEqual({ "ex-2": false });
+    expect(result.viewer).toMatchObject({ unrestricted: false });
+    expect(tables).toContain("attempts");
   });
 });

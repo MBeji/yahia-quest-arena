@@ -36,7 +36,6 @@ describe("resolveNextAction — l'ordre de priorité (R-31)", () => {
       failedExerciseId: "failed-1",
       chapters,
       exercises,
-      bestByExercise: {},
       quizSatisfiedByChapter: allQuizOpen,
       pathSubjectId: "math",
       untouchedSubjectId: "svt",
@@ -49,7 +48,6 @@ describe("resolveNextAction — l'ordre de priorité (R-31)", () => {
       failedExerciseId: "failed-1",
       chapters,
       exercises,
-      bestByExercise: {},
       quizSatisfiedByChapter: allQuizOpen,
       pathSubjectId: "math",
       untouchedSubjectId: "svt",
@@ -61,7 +59,8 @@ describe("resolveNextAction — l'ordre de priorité (R-31)", () => {
     const action = resolveNextAction({
       chapters,
       exercises,
-      bestByExercise: { q1: 100, m1: 100, m2: 100, q2: 100 },
+      countedByExercise: { m1: true, m2: true },
+      attemptedByExercise: { q1: true, m1: true, m2: true, q2: true },
       quizSatisfiedByChapter: allQuizOpen,
       untouchedSubjectId: "svt",
     });
@@ -85,7 +84,7 @@ describe("resolveNextAction — priorité 3, le choix du chapitre", () => {
     const action = resolveNextAction({
       chapters,
       exercises,
-      bestByExercise: { q2: 100, m3: 20 },
+      attemptedByExercise: { q2: true, m3: true },
       quizSatisfiedByChapter: allQuizOpen,
     });
     expect(action).toEqual({ kind: "continue", exerciseId: "m3", chapterId: "c2" });
@@ -95,7 +94,6 @@ describe("resolveNextAction — priorité 3, le choix du chapitre", () => {
     const action = resolveNextAction({
       chapters,
       exercises,
-      bestByExercise: {},
       quizSatisfiedByChapter: allQuizOpen,
     });
     expect(action).toEqual({ kind: "continue", exerciseId: "m1", chapterId: "c1" });
@@ -106,7 +104,6 @@ describe("resolveNextAction — priorité 3, le choix du chapitre", () => {
     const action = resolveNextAction({
       chapters: [{ id: "c1" }],
       exercises,
-      bestByExercise: {},
       quizSatisfiedByChapter: { c1: false },
     });
     expect(action).toEqual({ kind: "continue", exerciseId: "q1", chapterId: "c1" });
@@ -120,7 +117,6 @@ describe("resolveNextAction — priorité 3, le choix du chapitre", () => {
         ex("m2", { chapter_id: "c1", difficulty: 2, display_order: 1 }),
         ex("m1", { chapter_id: "c1", difficulty: 1, display_order: 2 }),
       ],
-      bestByExercise: {},
       quizSatisfiedByChapter: { c1: true },
     });
     expect(action).toMatchObject({ kind: "continue", exerciseId: "m1" });
@@ -133,7 +129,6 @@ describe("resolveNextAction — priorité 3, le choix du chapitre", () => {
         ex("parent-1", { chapter_id: "c1", source: "parent", difficulty: 1, display_order: 1 }),
         ex("m1", { chapter_id: "c1", difficulty: 1, display_order: 2 }),
       ],
-      bestByExercise: {},
       quizSatisfiedByChapter: { c1: true },
     });
     expect(action).toMatchObject({ exerciseId: "m1" });
@@ -143,7 +138,8 @@ describe("resolveNextAction — priorité 3, le choix du chapitre", () => {
     const action = resolveNextAction({
       chapters,
       exercises,
-      bestByExercise: { q1: 100, m1: 100, m2: 100, q2: 100, m3: 100 },
+      countedByExercise: { m1: true, m2: true, m3: true },
+      attemptedByExercise: { q1: true, m1: true, m2: true, q2: true, m3: true },
       quizSatisfiedByChapter: allQuizOpen,
     });
     expect(action).toBeNull();
@@ -167,11 +163,59 @@ describe("resolveNextAction — priorité 3 déléguée", () => {
     const action = resolveNextAction({
       chapters,
       exercises,
-      bestByExercise: {},
       quizSatisfiedByChapter: allQuizOpen,
       pathSubjectId: "math",
     });
     expect(action).toMatchObject({ kind: "continue", exerciseId: "m1" });
+  });
+});
+
+// =============================================================================
+// Étude 34 — le moteur lit le verdict du serveur, il ne le recalcule plus.
+// =============================================================================
+
+/**
+ * Ce que ce bloc protège : jusqu'à l'étude 34, `nextOnPath` re-seuillait les meilleurs
+ * scores avec sa propre copie de la règle. Cette copie ignorait l'anti-précipitation, donc
+ * une réussite expédiée à 65 % « finissait » la mission ici alors que la base ne la comptait
+ * pas — le hub montrait un cran incomplet et « Reprendre ici » pointait ailleurs. Le moteur
+ * reçoit désormais `counted`, tel quel.
+ */
+describe("é34 — « c'est fait » vient du serveur, jamais d'un seuil recopié", () => {
+  it("une mission TENTÉE mais NON COMPTÉE reste le prochain geste", () => {
+    // Le cas d'une réussite précipitée : le serveur la refuse, le moteur la propose encore.
+    const action = resolveNextAction({
+      chapters: [{ id: "c1" }],
+      exercises,
+      attemptedByExercise: { q1: true, m1: true },
+      countedByExercise: { m1: false },
+      quizSatisfiedByChapter: { c1: true },
+    });
+    expect(action).toEqual({ kind: "continue", exerciseId: "m1", chapterId: "c1" });
+  });
+
+  it("un chapitre tenté sans rien réussir est COMMENCÉ — c'est là qu'on reprend", () => {
+    // « Commencé » et « réussi » sont deux faits distincts ; les confondre renverrait
+    // l'élève au début de la matière après un échec.
+    const action = resolveNextAction({
+      chapters,
+      exercises,
+      attemptedByExercise: { q2: true, m3: true },
+      countedByExercise: {},
+      quizSatisfiedByChapter: allQuizOpen,
+    });
+    expect(action).toEqual({ kind: "continue", exerciseId: "m3", chapterId: "c2" });
+  });
+
+  it("une mission comptée n'est plus proposée, même sans score dans l'entrée", () => {
+    // Le moteur ne reçoit plus AUCUN score : `counted` suffit, et c'est le but.
+    const action = resolveNextAction({
+      chapters: [{ id: "c1" }],
+      exercises,
+      countedByExercise: { m1: true },
+      quizSatisfiedByChapter: { c1: true },
+    });
+    expect(action).toEqual({ kind: "continue", exerciseId: "m2", chapterId: "c1" });
   });
 });
 
@@ -206,7 +250,6 @@ describe("é30 amendement C — non-régression LITTÉRALE sur les entrées d'av
                 failedExerciseId: hasFailed ? "fail" : null,
                 chapters: hasPath ? chapters : [],
                 exercises: hasPath ? exercises : [],
-                bestByExercise: {},
                 quizSatisfiedByChapter: hasPath ? allQuizOpen : {},
                 pathSubjectId: hasSubject ? "subj" : null,
                 untouchedSubjectId: hasUntouched ? "neuf" : null,
@@ -278,7 +321,6 @@ describe("é30 amendement C — les deux nouveaux rangs", () => {
       resolveNextAction({
         chapters,
         exercises,
-        bestByExercise: {},
         quizSatisfiedByChapter: allQuizOpen,
         strengthen,
       }),
@@ -295,7 +337,6 @@ describe("é30 amendement C — les deux nouveaux rangs", () => {
       failedExerciseId: "fail",
       chapters,
       exercises,
-      bestByExercise: {},
       quizSatisfiedByChapter: allQuizOpen,
       pathSubjectId: "subj",
       untouchedSubjectId: "neuf",

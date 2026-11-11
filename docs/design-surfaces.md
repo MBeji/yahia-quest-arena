@@ -84,3 +84,27 @@ Tout token de couleur se définit dans **les deux** blocs de `src/styles.css` �
 et `html.reference` (clair) — puis s'expose à Tailwind dans `@theme inline`. En définir un d'un
 seul côté sert l'encre d'un thème sur le fond de l'autre : c'est le bug classique de tout design
 system à deux thèmes, et `src/features/quest/__tests__/surface-tokens-css.test.ts` l'épingle.
+
+## La marque : une couronne, une seule
+
+Le logo de Na9ra Nal3ab est une **couronne dorée**. Elle vivait déjà dans tout ce que
+l'application montre hors de son interface — `public/favicon.svg`, les trois icônes PWA
+(`public/icons/*.png`) et `public/offline.html` — mais l'interface, elle, dessinait une
+`Sparkles` de lucide : l'en-tête de la coquille, le verrou de marque de l'écran d'auth et
+l'avatar du héros sans avatar choisi. L'onglet du navigateur ne ressemblait pas à la page
+qu'il ouvrait, et personne ne voyait la faute puisque chaque écran, pris seul, était cohérent.
+
+La marque se dessine donc désormais en **un seul endroit** : `src/components/brand-mark.tsx`
+(`<CrownMark className="…" />`). Deux règles tiennent, et
+`src/components/__tests__/brand-mark.test.tsx` fait échouer le gate sur chacune :
+
+1. **le tracé est celui du favicon**, primitive par primitive. Une couronne dans le produit,
+   jamais deux silhouettes à faire diverger — le test compare les deux fichiers ;
+2. **le `viewBox` est la boîte englobante EXACTE du tracé** (serrée, là où le favicon porte les
+   marges d'une icône d'application). Toucher au tracé sans la recalculer rogne le dessin en
+   silence, à une taille où personne ne le remarque.
+
+Le composant ne code aucune couleur : l'encre vient de `currentColor` (donc du `text-…` de
+l'appelant) et la lueur du conteneur (`shadow-gold`), comme pour l'icône qu'elle remplace.
+Une `Sparkles` reste légitime partout où elle veut dire _autre chose_ — les pièces, la forge
+IA, un badge : ce sont des icônes sémantiques, pas la marque.

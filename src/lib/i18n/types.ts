@@ -1,3 +1,4 @@
+import type { HeroClass, HeroTitle } from "@/shared/constants/hero-identity";
 import type { AdaptiveTranslations } from "./adaptive.types";
 import type { DuelTranslations } from "./duel.types";
 import type { TutorTranslations } from "./tutor.types";
@@ -6,12 +7,6 @@ export type Locale = "en" | "fr" | "ar";
 
 export type TranslationKeys = {
   // Meta
-  meta: {
-    title: string;
-    description: string;
-    ogTitle: string;
-    ogDescription: string;
-  };
   // Common
   common: {
     backToHall: string;
@@ -70,6 +65,7 @@ export type TranslationKeys = {
     toastSignupSuccess: string;
     toastLoginSuccess: string;
     toastLinked: string;
+    allianceLinkFailed: string;
     googleNotConfigured: string;
     googleFailed: string;
     // Error messages (friendlyAuthError + form validation)
@@ -126,12 +122,45 @@ export type TranslationKeys = {
     dailyGoalLabel: string;
     dailyGoalReached: string;
     dailyGoalRemaining: string;
+    dailyGoalChoose: string;
+    dailyGoalChooseHint: string;
+    dailyGoalAlreadySet: string;
+    dailyGoalSaved: string;
+    dailyMissionsDone: string;
+    dailyMissionsDoneDesc: string;
+    weekTab: string;
+    allTimeTab: string;
+    weeklyRecapTitle: string;
+    weeklyRecapEmpty: string;
+    /** Étude 34 — « {stars} étoiles · {seals} sceaux cette semaine ». Sans récompense. */
+    weeklyRecapStars: string;
+    weeklyRecapXp: string;
+    weeklyRecapMissions: string;
+    weeklyRecapAccuracy: string;
+    weeklyRecapDays: string;
+    weeklyRecapVsLast: string;
+    weeklyRecapBadges: string;
+    weeklyRecapLeague: string;
+    podiumTitle: string;
+    podiumRank: string;
+    podiumCoins: string;
+    podiumClose: string;
     consecutiveDays: string;
     quoteLabel: string;
     streakLostTitle: string;
     streakLostDesc: string;
     streakRecover: string;
     retryTitle: string;
+    /**
+     * Rangs 2 et 4 de é30 (amendement C, #870) — « remonter à la cause » et « consolider ».
+     * R-14 : chaque action arrive AVEC SA RAISON en langage élève. Aucun de ces libellés ne
+     * nomme un état de croyance (« lacune », « fragile ») ni un pourcentage : D-1 réserve ces
+     * grandeurs à la console d'admin, et un enfant n'a pas à lire un diagnostic sur lui-même.
+     */
+    remediateOverline: string;
+    remediateTitle: string;
+    strengthenOverline: string;
+    strengthenTitle: string;
     /** Étude 22 R-31 — bande focus, priorité 1 (révision due). */
     reviewOverline: string;
     /** Étude 22 R-4 — bannière de rentrée (proposée, jamais imposée). */
@@ -205,6 +234,15 @@ export type TranslationKeys = {
     badgeDefaultReason: string;
     badgeEarnedOn: string;
     badgesEmpty: string;
+    /**
+     * é31 lot 7 (R-22) — un palier sans sa ligne ne compile pas : la colonne
+     * portait du français, rendu tel quel dans les trois langues. Ces clés
+     * restent APP-WIDE (l'en-tête du tableau de bord n'est pas paresseux),
+     * contrairement aux libellés de badges partis dans `badges/`.
+     */
+    heroClasses: Record<HeroClass, string>;
+    heroTitles: Record<HeroTitle, string>;
+    avatarTierLabel: string;
     shopTitle: string;
     shopDefaultDesc: string;
     shopEquipped: string;
@@ -215,7 +253,15 @@ export type TranslationKeys = {
     shopActivate: string;
     armedPassive: string;
     armedQuest: string;
-    itemTypes: { skin: string; potion: string; booster: string; shield: string };
+    /** é31 lot 7 — `frame` et `title` : les deux cosmétiques qui donnent un puits aux pièces. */
+    itemTypes: {
+      skin: string;
+      potion: string;
+      booster: string;
+      shield: string;
+      frame: string;
+      title: string;
+    };
     rarities: { common: string; rare: string; epic: string; legendary: string };
     radarTitle: string;
     radarCaption: string;
@@ -306,10 +352,20 @@ export type TranslationKeys = {
     recallChip: string;
     recallLockedHint: string;
     recallLockedHintAnon: string;
+    /**
+     * Accès de test (compte admin, 2026-09-05) : intitulé du navigateur de
+     * questions, qui laisse ouvrir n'importe quelle question de la mission.
+     */
+    unrestrictedNav: string;
     // Filet de sauvegarde : ce que voit l'élève quand sa soumission n'est
     // pas encore passée. Voir `quest-save-status.tsx`.
     savePending: string;
     saveDone: string;
+    /**
+     * Une partie reprise après un rechargement : ses réponses déjà corrigées sont
+     * définitives (migration 20260929120000). Voir `useQuestDraftRestore`.
+     */
+    revealedKept: string;
   };
   // Level up
   levelUp: {
@@ -566,9 +622,12 @@ export type TranslationKeys = {
     bugReports: string;
     parcoursInterest: string;
     economy: string;
+    engagement: string;
     console: string;
     signOut: string;
     logoutToast: string;
+    /** Le bouton « Aide » des deux en-têtes — ouvre le guide intégré (`guide.*`). */
+    help: string;
   };
   // Theme picker (visual skin)
   theme: {
@@ -623,6 +682,14 @@ export type TranslationKeys = {
     helpDesc: string;
     helpTerms: string;
     helpPrivacy: string;
+    exportTitle: string;
+    exportDesc: string;
+    exportRowLabel: string;
+    exportAction: string;
+    exportBusy: string;
+    exportDone: string;
+    exportEmpty: string;
+    exportError: string;
     dangerTitle: string;
     dangerDesc: string;
     deleteAccount: string;
@@ -665,6 +732,14 @@ export type TranslationKeys = {
     review: string;
     /** Badge du nœud « recommandé » sur la carte (étude 22, R-11). */
     nodeNext: string;
+    /**
+     * Ce que le sous-libellé d'un nœud veut dire (étude 34, R-9). La carte remplace le
+     * pourcentage par le SCEAU et le compte de chapitres prêts pour le suivant ; sans cette
+     * légende, « ⭐⭐ · 14/20 » se lirait comme une note.
+     */
+    sealLegend: string;
+    /** Nom accessible d'un nœud scellé — `{subject}`, `{stars}`, `{ready}`, `{total}`. */
+    nodeSealAria: string;
     done: string;
     current: string;
     xpToEarn: string;
@@ -708,6 +783,8 @@ export type TranslationKeys = {
     celebrateSoonDesc: string;
     celebrateExtrasCta: string;
     celebrateDashboardCta: string;
+    welcomeCoins: string;
+    welcomeFirstQuestCta: string;
   };
   // School cycle group labels (programme scolaire)
   cycles: {
@@ -907,6 +984,7 @@ export type TranslationKeys = {
     featDigestParent: string;
     featVerify: string;
     featForgeSolve: string;
+    featOpenAnswer: string;
     errForgeOutputRejected: string;
     errForgeFailed: string;
     errNotLinked: string;
@@ -996,6 +1074,8 @@ export type TranslationKeys = {
       navAria: string;
       programme: string;
       extras: string;
+      /** L'entrée du test de niveau (étude 39) — la seule clé app-wide du test, l'en-tête n'étant pas paresseux. */
+      placement: string;
       parentTracking: string;
       login: string;
       signup: string;
@@ -1149,11 +1229,10 @@ export type TranslationKeys = {
       resumeHere: string;
       missionsProgress: string;
       quizToPass: string;
-      /** Jalon « chapitre complété » (étude 22, R-15). */
-      chapterComplete: string;
-      todo: string;
       unlocksChapter: string;
       quizContract: string;
+      /** Bandeau du compte de test (admin) : toutes les missions ouvertes, sans quiz ni ordre. */
+      unrestrictedBanner: string;
       /** En-tête du groupe fourre-tout quand une matière n'a rattaché qu'une partie de ses chapitres à un domaine. */
       otherChapters: string;
       /** Avancement d'un domaine, en chapitres terminés — `{done}`, `{total}`. */
@@ -1179,6 +1258,8 @@ export type TranslationKeys = {
       questCta: string;
       continueCta: string;
       inviteDesc: string;
+      /** Invitation quand la mission a une récompense connue — `{xp}`. Gain futur, jamais une perte (é31 R-20, é38 R-8). */
+      inviteValue: string;
       inviteCta: string;
     };
     print: { copyrightNotice: string };

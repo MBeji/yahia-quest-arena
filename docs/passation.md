@@ -210,8 +210,39 @@ aucun gate — aucun n'est automatisable, c'est justement pourquoi ils sont écr
 5. **Aucun processus laissé en vie** : serveur de dev arrêté, tâches de fond terminées et
    leur sortie lue (une tâche tuée en silence a pu échouer **ou** avoir déjà tout mergé).
 6. **Les branches.** La branche distante est supprimée au merge ; ramener la locale sur
-   `origin/main` plutôt que la laisser pointer un commit pré-squash. Aucune branche
+   `origin/main` plutôt que la laisser pointer un commit pré-squash, puis purger les refs de suivi :
+   `git fetch --prune origin`. Sans cela, le ref `origin/<branche>` reste dans la clone et le
+   hook de fin de tour compare HEAD à lui : il annonce « N commits non poussés » pour les
+   squashs de `main`, faux, à chaque tour. Une fois le ref purgé, le hook sort en 0. Aucune branche
    `wip/`/`rescue/` orpheline oubliée derrière soi.
+
+   ⚠️ **En session cloud, on ne PEUT pas supprimer une branche distante** — mesuré le
+   2026-09-22, les deux voies sont murées : `git push origin --delete <b>` meurt en
+   `send-pack: unexpected disconnect while reading sideband packet`, et l'API répond
+   **`403 — Write access to this GitHub API path is not permitted through this proxy`**.
+   Ce n'est pas un échec transitoire : c'est un mur du proxy (cf.
+   [agents/zero-intervention.md](./agents/zero-intervention.md) § le tableau des murs).
+   **Ce que la chaîne fait, elle**, le fait très bien : `automerge` merge en
+   `--squash --delete-branch`, donc une branche **mergée** disparaît toute seule.
+
+   Conséquence pratique : la seule branche qu'une session cloud peut laisser derrière elle
+   est une branche **non mergée** — et elle ne pourra pas la nettoyer. D'où la règle : ne
+   pousser une branche que lorsqu'elle porte un commit destiné à une PR. Une branche poussée
+   par accident (un `git checkout -b` pendant qu'une tâche de fond tenait des modifications
+   non committées, vu ce même jour) reste visible jusqu'à ce qu'un humain la supprime. La
+   **constater et la nommer** dans la réponse de clôture fait donc partie du travail ; la
+   passer sous silence, non. Pour vérifier qu'une telle branche est bien sans apport — et
+   non simplement périmée :
+
+   ```bash
+   base=$(git merge-base origin/main origin/<branche>)
+   git log --oneline "$base"..origin/<branche>   # vide ⇒ aucun commit propre
+   ```
+
+   ⚠️ **Jamais `git diff origin/main origin/<branche>`** pour ce jugement : `main` avance, et
+   une branche vide y affiche des milliers de suppressions qui ne sont que le retard de sa
+   base. C'est la même erreur de lecture que « juger une garde à la couleur du run ».
+
 7. **Le savoir découvert est écrit dans le dépôt** — un piège, une règle de conduite, un
    invariant : AGENTS.md, `STATUS.md` ou `docs/agents/`. La mémoire privée d'un outil ne se
    partage pas (AGENTS.md § Multi-agent collaboration).
@@ -222,6 +253,29 @@ aucun gate — aucun n'est automatisable, c'est justement pourquoi ils sont écr
    jonctions Windows et détruit leurs **cibles** (voir
    [agents/poste-windows.md](./agents/poste-windows.md)). Un worktree qu'on laisse en place
    ne coûte rien ; un `node_modules` ou un corpus partagé détruit coûte une réinstallation.
+10. **En session cloud, la garde ne dort pas dans un terminal** (étude cloud-first, lot 5). La
+    session qui a poussé s'**abonne** aux événements de sa PR (`subscribe_pr_activity`) et se pose
+    un **réveil différé** (`send_later`, ~45 min) : une VM récupérée pour inactivité est
+    re-provisionnée au réveil, conversation restaurée, et le check-in constate le merge par le
+    **contenu** de `main` (`git ls-tree origin/main <fichier>`), jamais par un statut. Au merge
+    réel : désabonnement, réveil supprimé, branche locale ramenée sur `origin/main`. Une PR qui
+    merge **pendant** que le hook `pre-push` d'une retouche rejoue le gate laisse la retouche
+    orpheline (`cannot lock ref`) : repartir de `main`, même nom de branche, nouvelle PR.
+11. **Les sessions FILLES qu'on a lancées se clôturent** (`archive_session`), et c'est la session
+    mère qui le fait — personne d'autre ne sait qu'elles existent. Une session cloud dont le lot
+    est livré continue de facturer : mesuré le 2026-09-20, trois sessions tournaient encore des
+    heures après le merge de leurs PR, ~100 $ sur du travail déjà rendu.
+
+    ⚠️ **Ne jamais clôturer sur le seul statut.** Il ment dans les deux sens, mesuré le
+    2026-09-21 sur onze filles : `status_bucket` disait `WORKING` pour une session dont le
+    `post_turn_summary` disait « completed », et `BLOCKED` pour deux dont la PR était **mergée**
+    — bloquées sur une suite qu'elles s'étaient donnée, pas sur leur mission. Ce qui tranche est
+    le **livrable** : la PR du lot est-elle mergée, et son apport est-il sur `main` ? Si oui, la
+    mission est finie, quel que soit le statut affiché.
+
+    Et l'inverse coûte plus cher : une session **au milieu de son lot** perd son travail non
+    poussé si on l'archive. Le 2026-09-21, une fille avait lu 158 pages et enchaînait sur la
+    suite — la fermer aurait effacé la lecture. Lire le `post_turn_summary` avant d'archiver.
 
 ## 8. Quand ça casse — le retour arrière
 
@@ -304,6 +358,18 @@ La configuration est versionnée dans le repo, mais l'application vit dans GitHu
    `HTTP 403: Resource not accessible by personal access token` alors que tout paraît
    configuré. Ni le `GITHUB_TOKEN` par défaut ni aucune portée de workflow ne peuvent écrire
    une variable Actions — ce PAT est le seul chemin.
+
+   ⏳ **Son expiration ne se retient plus, elle se mesure** (garde
+   `.github/workflows/pat-expiry-watch.yml`, 2026-09-22). Un PAT _fine-grained_ expire, et
+   le jour J la chaîne ne casse pas : elle se **fige**, les PR repassant en « Approve and
+   run » manuel sans que rien ne dise pourquoi. ⚠️ `USING_PAT`, calculé dans `auto-pr.yml`
+   et `automerge.yml` comme `secrets.GH_AUTOMATION_PAT != ''`, ne voit pas ce cas — **un
+   secret expiré reste non vide**, donc la chaîne se croit équipée pendant que l'API refuse
+   le jeton. La garde teste qu'il AUTHENTIFIE, lit sa date dans l'en-tête
+   `Github-Authentication-Token-Expiration` que GitHub renvoie, et ouvre une issue à 14
+   jours — qu'elle referme seule une fois le jeton renouvelé. Aucune date n'est donc à tenir
+   à jour ici : celle qui comptait vivait dans #1002 et dans ce paragraphe, et rien ne les
+   confrontait au jeton réel.
 
 5. **Surveiller l'expiration du PAT.** Un PAT _fine-grained_ expire (le nôtre : **4 octobre
    2026**). Le jour venu, `auto-pr.yml` et `automerge.yml` retombent silencieusement sur le

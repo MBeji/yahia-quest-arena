@@ -12,17 +12,18 @@ import { getRequestHeader } from "@tanstack/react-start/server";
 import { useEffect } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { I18nProvider, useT } from "@/lib/i18n";
+import { GuideProvider } from "@/components/guide/guide-provider";
 import type { Locale } from "@/lib/i18n";
 import { DEFAULT_LOCALE, dirForLocale, localeFromCookieHeader } from "@/lib/i18n/context";
-import { fr } from "@/lib/i18n/fr";
-import { en } from "@/lib/i18n/en";
-import { ar } from "@/lib/i18n/ar";
+import { metaByLocale } from "@/lib/i18n/meta";
 import { buildErrorDebugText } from "@/shared/lib/error-debug";
+import { useExitOnRefusedSession } from "@/features/auth";
 import { ThemeProvider, useTheme, DEFAULT_THEME, themeFromCookieHeader } from "@/lib/theme";
 import type { Theme } from "@/lib/theme";
 import { SoundProvider, useSound } from "@/lib/sound";
 import { logger } from "@/shared/lib/logger";
 import { initAnalytics, trackPageview, pagePathFromLocation } from "@/shared/lib/analytics";
+import { notePageForFunnel } from "@/shared/lib/funnel-origin";
 import { initWebVitals } from "@/shared/lib/web-vitals";
 import { initHiddenTimeTracking } from "@/shared/lib/client-log";
 
@@ -49,10 +50,15 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+// `error` est `unknown` : TanStack Router le type ainsi depuis le lot de dépendances du 2026-09-22 (on
+// peut lever autre chose qu'une Error), et `Error` n'y était qu'une promesse. Normalisé une
+// fois ici, il compile sous les deux versions.
+function ErrorComponent({ error: thrown, reset }: { error: unknown; reset: () => void }) {
+  const error = thrown instanceof Error ? thrown : new Error(String(thrown));
   logger.error("Root error boundary caught an error", { error });
   const router = useRouter();
   const t = useT();
+  useExitOnRefusedSession(error);
   // Incident forensics: with `?debug=1` in the URL, surface the error identity
   // on the page itself — the only reliable diagnostic channel for mobile users
   // (no devtools). Client-only read; hidden for everyone else. The stack trace
@@ -63,7 +69,14 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
       ? buildErrorDebugText(error, import.meta.env.PROD)
       : null;
   return (
-    <div className="flex min-h-screen items-center justify-center bg-black-deep px-4">
+    // `data-testid` : la frontière d'erreur racine est le CUL-DE-SAC que l'e2e
+    // doit pouvoir nommer sans dépendre de la langue (`errorTitle` existe en
+    // fr/en/ar). C'est l'écran qu'une session morte ne doit JAMAIS produire —
+    // voir `e2e/authed/session-invalidation.spec.ts` (#938).
+    <div
+      data-testid="root-error-boundary"
+      className="flex min-h-screen items-center justify-center bg-black-deep px-4"
+    >
       <div className="max-w-md text-center">
         <h1 className="font-display text-2xl">{t.errors.errorTitle}</h1>
         <p className="mt-2 text-sm text-muted-foreground">
@@ -105,7 +118,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     // shares. head() is a closure evaluated at render time, after the module is
     // fully initialised, so it can reference getShellLocale (defined below).
     const locale = getShellLocale();
-    const m = ({ fr, en, ar }[locale] ?? fr).meta;
+    const m = metaByLocale[locale];
     return {
       meta: [
         { charSet: "utf-8" },
@@ -134,9 +147,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
         // Fontes auto-hébergées (levier 06) : les @font-face vivent dans
         // styles.css, il ne reste ici que le préchargement des DEUX faces
-        // latines — celles que tout premier écran utilise. L'arabe n'est pas
-        // préchargé : son `unicode-range` le déclenche seulement sur du contenu
-        // arabe, et le précharger ferait payer 124 ko à tous les autres.
+        // latines — celles que tout premier écran utilise. Rien d'arabe ici,
+        // même pour la locale `ar` (mesuré le 2026-10-31, bundle-03) : l'UI
+        // arabe se rend en police système, la face Noto Kufi complète (124 ko)
+        // n'a plus aucun consommateur depuis que la signature de marque porte
+        // sa sous-police de 6,8 ko, et un preload dans ce head() partirait en
+        // haute priorité sur CHAQUE page, publique ou non — « preloaded but
+        // not used » et 124 ko payés par tous.
         // `crossOrigin` est requis même en same-origin : une fonte se récupère
         // en mode CORS, et sans lui le navigateur télécharge le fichier DEUX
         // fois (le préchargement ne matche pas la requête de la fonte).
@@ -292,7 +309,10 @@ function RootComponent() {
     // blind to p95 / LCP growth. Dependency-free, reports once on page hide.
     initWebVitals();
     const track = () => {
-      trackPageview(pagePathFromLocation(router.state.location));
+      const path = pagePathFromLocation(router.state.location);
+      // é38 lot 0 : d'où venait un clic de compte ? La dernière page, en mémoire seulement.
+      notePageForFunnel(path);
+      trackPageview(path);
     };
     track();
     return router.subscribe("onResolved", track);
@@ -303,9 +323,11 @@ function RootComponent() {
       <ThemeProvider>
         <I18nProvider>
           <SoundProvider>
-            <GlobalSoundEffects />
-            <Outlet />
-            <ThemedToaster />
+            <GuideProvider>
+              <GlobalSoundEffects />
+              <Outlet />
+              <ThemedToaster />
+            </GuideProvider>
           </SoundProvider>
         </I18nProvider>
       </ThemeProvider>

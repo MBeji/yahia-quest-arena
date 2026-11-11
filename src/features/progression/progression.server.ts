@@ -1,16 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
-import { STREAK_RECOVERY_COST } from "@/shared/constants/gamification";
-import { getTodayUtc, getYesterdayUtc } from "@/shared/lib/dates";
+import { STREAK_RECOVERY_COST, STREAK_RECOVERY_WINDOW_DAYS } from "@/shared/constants/gamification";
+import { getTodayUtc } from "@/shared/lib/dates";
+import { streakRecoveryBlock } from "@/shared/lib/streak-recovery";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { isRateLimited } from "@/shared/lib/rate-limit";
 import { logger } from "@/shared/lib/logger";
-import type {
-  CompetencyExercise,
-  LearningFrontierRow,
-  LearningStateRow,
-} from "@/shared/types/competency";
+import type { CompetencyExercise, LearningFrontierRow } from "@/shared/types/competency";
 
 /**
  * `get_exercises_for_competency` (étude 07 lot 4) est postérieure aux types Supabase générés,
@@ -44,17 +41,21 @@ export const recoverStreak = createServerFn({ method: "POST" })
       failWithClientError("recoverStreak: failed to load profile", profileErr, profileErr.message);
     }
 
-    // A streak counted today or yesterday is still alive — nothing to recover yet.
-    // award_xp only resets current_streak to 1 on the NEXT study after a missed day,
-    // so the reachable signal of a broken streak is a stale last_active_date, NOT
-    // current_streak === 0 (which award_xp never persists — that was the dead gate).
-    const lastActive = profile.last_active_date;
-    if (lastActive != null && lastActive >= getYesterdayUtc()) {
-      throw new Error("Ton streak est actif ! Pas besoin de le récupérer.");
-    }
-
-    if ((profile.longest_streak ?? 0) === 0) {
-      throw new Error("Tu n'as pas encore eu de streak à récupérer.");
+    // La condition vit dans `streak-recovery.ts` et NULLE PART ailleurs : le
+    // client la lit aussi, et c'est leur divergence qui avait muré ce chemin.
+    // Les messages, eux, restent ici — le serveur seul parle à l'élève.
+    switch (streakRecoveryBlock(profile)) {
+      case "streak-actif":
+        throw new Error("Ton streak est actif ! Pas besoin de le récupérer.");
+      case "aucun-streak":
+        throw new Error("Tu n'as pas encore eu de streak à récupérer.");
+      case "fenetre-expiree":
+        // Un fait, pas un reproche (R-8) : la fenêtre est passée, le palmarès reste,
+        // et la phrase suivante est déjà tournée vers aujourd'hui.
+        throw new Error(
+          `La fenêtre de rachat est passée (${STREAK_RECOVERY_WINDOW_DAYS} jours). ` +
+            "Ta plus longue série reste à ton palmarès — la prochaine repart aujourd'hui.",
+        );
     }
 
     if ((profile.yahia_coins ?? 0) < STREAK_RECOVERY_COST) {
@@ -101,7 +102,7 @@ export const recoverStreak = createServerFn({ method: "POST" })
 // (le bouton ne mène nulle part) plutôt que de casser la page.
 export const getCompetencyExercises = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ competency: z.string().min(1) }).parse(d))
+  .validator((d) => z.object({ competency: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }): Promise<CompetencyExercise[]> => {
     const client = context.supabase as unknown as CompetencyExercisesRpcClient;
     const res = await client.rpc("get_exercises_for_competency", { p_competency: data.competency });
@@ -123,13 +124,9 @@ export const getCompetencyExercises = createServerFn({ method: "GET" })
  */
 type LearningRpcClient = {
   rpc: ((
-    fn: "get_learning_state",
-    args: { p_family: string | null },
-  ) => PromiseLike<{ data: LearningStateRow[] | null; error: { message: string } | null }>) &
-    ((
-      fn: "get_learning_frontier",
-      args: { p_family: string | null; p_limit: number },
-    ) => PromiseLike<{ data: LearningFrontierRow[] | null; error: { message: string } | null }>) &
+    fn: "get_learning_frontier",
+    args: { p_family: string | null; p_limit: number },
+  ) => PromiseLike<{ data: LearningFrontierRow[] | null; error: { message: string } | null }>) &
     ((
       fn: "dispute_inference",
       args: { p_competency: string },
@@ -139,33 +136,13 @@ type LearningRpcClient = {
     }>);
 };
 
-/**
- * « Où tu en es » — l'état et la zone de chaque compétence de la famille (§3.10).
- *
- * Dégradation gracieuse, comme sa voisine : une RPC absente rend une liste vide, donc un
- * panneau qui ne s'affiche pas, plutôt qu'une page cassée. Sur une matière NON TAGGÉE le
- * résultat est vide aussi — et c'est R-6 qui parle, pas une erreur : l'écran est alors
- * exactement celui d'aujourd'hui.
- */
-export const getLearningState = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ family: z.string().min(1).nullable().default(null) }).parse(d))
-  .handler(async ({ data, context }): Promise<LearningStateRow[]> => {
-    const client = context.supabase as unknown as LearningRpcClient;
-    const res = await client.rpc("get_learning_state", { p_family: data.family });
-    if (res.error) {
-      logger.warn("getLearningState: RPC failed, defaulting to empty", {
-        error: res.error.message,
-      });
-      return [];
-    }
-    return res.data ?? [];
-  });
+// « Où tu en es » (§3.10) n'est plus une server fn : `getDashboard` lit l'état une fois
+// (`readLearningState`, `@/shared/lib/adaptive-inputs`) et le passe à `LearningPanels` en prop.
 
 /** « Prêt à apprendre » — la frontière, triée par fan-out, avec son exercice d'entrée (§3.4). */
 export const getLearningFrontier = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         family: z.string().min(1).nullable().default(null),
@@ -200,7 +177,7 @@ export const getLearningFrontier = createServerFn({ method: "GET" })
  */
 export const disputeInference = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ competency: z.string().min(1) }).parse(d))
+  .validator((d) => z.object({ competency: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }): Promise<{ disputed: boolean }> => {
     const { userId } = context;
     // Un geste d'élève, pas une API de masse : le graphe compte 62 compétences, personne n'a

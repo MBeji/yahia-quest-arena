@@ -40,6 +40,31 @@ export type BadgeRow = {
   } | null;
 };
 
+/** Une ligne du catalogue `badges` — le référentiel, pas ce que l'élève possède. */
+export type BadgeCatalogueRow = {
+  code: string;
+  name: string;
+  description: string | null;
+  rarity: string;
+  icon_name: string | null;
+  family: string;
+};
+
+/**
+ * Un badge de la COLLECTION (é31 lot 2, US-3) : tout le catalogue, obtenu ou non.
+ * `awardedAt` à `null` = verrouillé — et c'est bien la carte verrouillée qui
+ * porte la condition, sinon la collection ne dit pas comment progresser (R-13).
+ */
+export type BadgeCollectionEntry = {
+  code: string;
+  name: string;
+  description: string | null;
+  rarity: string;
+  iconName: string | null;
+  family: string;
+  awardedAt: string | null;
+};
+
 export type InventoryRow = {
   quantity: number;
   is_equipped: boolean;

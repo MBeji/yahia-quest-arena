@@ -7,6 +7,7 @@ vi.mock("@tanstack/react-router", () => ({
     React.createElement("a", { href: to }, children),
 }));
 
+import type { SubjectStarSummary } from "@/shared/lib/progress-stars";
 import { SubjectPathCard } from "../components/subject-path-card";
 
 const base = {
@@ -18,17 +19,64 @@ const base = {
 };
 
 describe("SubjectPathCard", () => {
-  it("renders the name, attribute, quest count and average", () => {
+  /** Un agrégat de matière à la forme de `get_user_subject_stars` — bornes CUMULÉES. */
+  const stars = (
+    total: number,
+    cumulative: [number, number, number, number],
+    sealStar = 0,
+  ): SubjectStarSummary => ({
+    subjectId: "math",
+    chaptersTotal: total,
+    chaptersStarted: cumulative[0],
+    cumulative,
+    sealStar,
+    sealAt: null,
+    newChapters: 0,
+    newMissions: 0,
+  });
+
+  it("renders the name, attribute and quest count", () => {
     render(<SubjectPathCard subject={base} stat={{ count: 3, avg: 82 }} premiumLocked={false} />);
     expect(screen.getByText("Mathématiques")).toBeInTheDocument();
     expect(screen.getByText(/Force/)).toBeInTheDocument();
     expect(screen.getByText(/3 quest/)).toBeInTheDocument();
-    expect(screen.getByText("82%")).toBeInTheDocument();
   });
 
-  it("shows a dash for the average when there is no stat", () => {
+  it("⭐ le SCEAU remplace la moyenne des scores — deux « 82 % » différents, c'était un", () => {
+    // Avant l'étude 34, ce chiffre était la moyenne des SCORES, affichée exactement
+    // comme le « 40 % » de la carte /parcours, qui disait la couverture des chapitres.
+    // Deux pourcentages identiques à l'œil pour deux choses différentes.
+    render(
+      <SubjectPathCard
+        subject={base}
+        stat={{ count: 3, avg: 82 }}
+        stars={stars(20, [14, 9, 3, 1], 1)}
+        premiumLocked={false}
+      />,
+    );
+    expect(screen.queryByText("82%")).not.toBeInTheDocument();
+    expect(screen.getByTestId("card-seal").textContent).toBe("⭐");
+    // …et la barre du prochain sceau dit ce qui manque, sans pourcentage.
+    expect(screen.getByTestId("card-next-seal").textContent).toContain("⭐⭐ 9/20");
+  });
+
+  it("se tait au sceau ⭐⭐⭐⭐ : plus rien à viser", () => {
+    render(
+      <SubjectPathCard
+        subject={base}
+        stat={{ count: 9, avg: 95 }}
+        stars={stars(3, [3, 3, 3, 3], 4)}
+        premiumLocked={false}
+      />,
+    );
+    expect(screen.getByTestId("card-seal").textContent).toBe("⭐⭐⭐⭐");
+    expect(screen.queryByTestId("card-next-seal")).not.toBeInTheDocument();
+  });
+
+  it("n'invente aucun sceau sans donnée — la carte se tait (tiret)", () => {
     render(<SubjectPathCard subject={base} stat={undefined} premiumLocked={false} />);
-    expect(screen.getByText("—")).toBeInTheDocument();
+    expect(screen.getByTestId("card-seal").textContent).toBe("—");
+    expect(screen.queryByTestId("card-next-seal")).not.toBeInTheDocument();
   });
 
   it("shows a Premium (lock) badge on a premium-locked subject", () => {

@@ -15,6 +15,8 @@ import {
   ReportContent,
 } from "@/features/parent-report";
 import { useParentT } from "@/lib/i18n/parent";
+import { GuideIntroCard } from "@/components/guide/guide-intro-card";
+import { useRedirectConnectedParent } from "@/features/auth";
 
 /**
  * Suivi parental PUBLIC par code — aucun compte, aucune connexion requise.
@@ -45,6 +47,8 @@ export const Route = createFileRoute("/_public/suivi")({
 function SuiviPublicPage() {
   const t = useParentT();
   const { code: codeParam } = Route.useSearch();
+  // é38 R-14 : un parent connecté a son espace. Un lien partagé avec un code garde cette page.
+  useRedirectConnectedParent({ enabled: codeParam === undefined });
   const navigate = Route.useNavigate();
   const fetchReport = useServerFn(getStudentReportByCode);
   const [code, setCode] = useState(codeParam ?? "");
@@ -141,6 +145,8 @@ function SuiviPublicPage() {
         </h1>
         <p className="mt-1 text-muted-foreground">{t.parentReport.subtitle}</p>
       </div>
+
+      <GuideIntroCard screen="suivi" className="mb-6 print:hidden" />
 
       <form
         onSubmit={submit}

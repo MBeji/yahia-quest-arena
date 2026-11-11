@@ -22,12 +22,12 @@
  * A server fn with NO middleware is the bug this rule exists to catch: it is
  * exposed with no server-side auth gate at all ("server fn nue").
  *
- * WHY IT DOES NOT ENFORCE `.inputValidator`
+ * WHY IT DOES NOT ENFORCE `.validator`
  * ---------------------------------------------------------------------------
  * 27 of the 68 server fns legitimately take no input and carry no validator, so
  * requiring one everywhere would be 27 false positives — a *degradation* of the
  * gate for no gain. And TanStack Start already couples the two at the type level:
- * without `.inputValidator`, the handler's `data` is `undefined`, so consuming
+ * without `.validator`, the handler's `data` is `undefined`, so consuming
  * input without validating it is already a `tsc` error. The validator is thus
  * covered by TypeScript + PR review; only the auth gate needs this AST rule.
  *
@@ -81,7 +81,7 @@ export const requireServerFnAuth = {
     return {
       CallExpression(node) {
         // Fire only on the innermost `createServerFn(...)` call. The outer
-        // `.middleware(...)`, `.inputValidator(...)`, `.handler(...)` calls have a
+        // `.middleware(...)`, `.validator(...)`, `.handler(...)` calls have a
         // MemberExpression callee, so they are skipped here.
         if (node.callee.type !== "Identifier" || node.callee.name !== "createServerFn") {
           return;

@@ -22,7 +22,7 @@ vi.mock("@tanstack/react-start", () => ({
     let validatorFn: ((d: unknown) => unknown) | undefined;
     const chain = {
       middleware: () => chain,
-      inputValidator: (fn: (d: unknown) => unknown) => {
+      validator: (fn: (d: unknown) => unknown) => {
         validatorFn = fn;
         return chain;
       },
@@ -58,7 +58,7 @@ vi.mock("@/shared/lib/logger", () => ({
   logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn(), debug: vi.fn() },
 }));
 
-import { getManuelPageUrls } from "../quest.server";
+import { getManuelPageUrls } from "../quest.lesson.server";
 
 const CHAPTER_ID = "11111111-1111-4111-8111-111111111111";
 

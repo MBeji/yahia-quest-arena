@@ -191,7 +191,7 @@ function parseOrFail<T>(schema: z.ZodType<T>, data: unknown, context: string): T
 
 export const listMockExams = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ parcoursId: z.string().max(64).nullish() }).parse(d ?? {}))
+  .validator((d) => z.object({ parcoursId: z.string().max(64).nullish() }).parse(d ?? {}))
   .handler(async ({ data, context }): Promise<ExamListItem[]> => {
     const client = context.supabase;
     // `?? undefined` et non `?? null` : la signature SQL est
@@ -210,7 +210,7 @@ export const listMockExams = createServerFn({ method: "GET" })
 
 export const startMockExam = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         examId: z.guid(),
@@ -244,7 +244,7 @@ export const startMockExam = createServerFn({ method: "POST" })
  */
 export const saveMockAnswers = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         sessionId: z.guid(),
@@ -292,7 +292,7 @@ export const saveMockAnswers = createServerFn({ method: "POST" })
 
 export const finishMockExam = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ sessionId: z.guid() }).parse(d))
+  .validator((d) => z.object({ sessionId: z.guid() }).parse(d))
   .handler(async ({ data, context }): Promise<ExamResult> => {
     const { supabase, userId } = context;
 
@@ -312,7 +312,7 @@ export const finishMockExam = createServerFn({ method: "POST" })
 
 export const getMockExamReview = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ sessionId: z.guid() }).parse(d))
+  .validator((d) => z.object({ sessionId: z.guid() }).parse(d))
   .handler(async ({ data, context }): Promise<ExamReview> => {
     const client = context.supabase;
     const { data: payload, error } = await client.rpc("get_mock_exam_review", {
@@ -326,7 +326,7 @@ export const getMockExamReview = createServerFn({ method: "GET" })
 
 export const getMockExamPercentile = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ sessionId: z.guid() }).parse(d))
+  .validator((d) => z.object({ sessionId: z.guid() }).parse(d))
   .handler(async ({ data, context }): Promise<ExamPercentile> => {
     const client = context.supabase;
     const { data: payload, error } = await client.rpc("get_mock_exam_percentile", {

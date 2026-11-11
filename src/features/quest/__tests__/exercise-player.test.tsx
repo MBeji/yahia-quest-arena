@@ -63,13 +63,16 @@ vi.mock("@/components/ui/level-up-celebration", () => ({ LevelUpCelebration: () 
 vi.mock("@/components/ui/explain-hint", () => ({
   ExplainHint: ({ children }: { children: React.ReactNode }) => children,
 }));
-vi.mock("@/features/quest/components/confetti", () => ({ Confetti: () => null }));
+vi.mock("@/components/game/confetti", () => ({ Confetti: () => null }));
 vi.mock("@/shared/lib/utils", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/shared/lib/utils")>()),
   isRtlText: () => false,
   isMathExpression: () => false,
 }));
 vi.mock("sonner", () => ({ toast: { error: vi.fn(), success: vi.fn() } }));
+// La boîte noire : espionnée, jamais envoyée. C'est le sujet du dernier bloc.
+const { mockReport } = vi.hoisted(() => ({ mockReport: vi.fn() }));
+vi.mock("@/shared/lib/client-log", () => ({ reportClientError: mockReport }));
 
 import {
   ExercisePlayer,
@@ -145,11 +148,12 @@ function renderPlayer(strategy: ExercisePlayerStrategy, variant: "classic" | "re
   const qc = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   });
-  return render(
+  const view = render(
     <QueryClientProvider client={qc}>
       <ExercisePlayer exerciseId={EXERCISE_ID} strategy={strategy} variant={variant} />
     </QueryClientProvider>,
   );
+  return { ...view, qc };
 }
 
 describe("ExercisePlayer", () => {
@@ -194,6 +198,30 @@ describe("ExercisePlayer", () => {
     );
   });
 
+  // é38 lot 1 (R-8) — la récompense de la mission est lue sur la ligne `exercises` déjà servie
+  // aux deux registres, et traverse jusqu'au pied de résultat de la route.
+  it.each([
+    ["une récompense connue", 40, 40],
+    ["une récompense nulle", 0, null],
+    ["une récompense absente", undefined, null],
+  ])("le pied de résultat reçoit xpReward — %s", async (_label, xpReward, expected) => {
+    const data = exerciseData();
+    mockGetExercise.mockResolvedValue({
+      ...data,
+      exercise: { ...data.exercise, xp_reward: xpReward },
+    });
+    const renderResultFooter = vi.fn(() => <div data-testid="footer">footer</div>);
+    renderPlayer(anonStrategy({ renderResultFooter }));
+
+    fireEvent.click(await screen.findByText("2"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+    await screen.findByTestId("footer");
+
+    expect(renderResultFooter).toHaveBeenCalledWith(
+      expect.objectContaining({ exerciseId: EXERCISE_ID, xpReward: expected }),
+    );
+  });
+
   it("renders the reward grid on the result screen when rewards are enabled", async () => {
     const rewardResult: PlayerResult = {
       ...neutralResult,
@@ -219,6 +247,53 @@ describe("ExercisePlayer", () => {
     expect(await screen.findByTestId("quest-score")).toBeInTheDocument();
     // The reward grid surfaces the earned XP amount.
     expect(screen.getByText(/120/)).toBeInTheDocument();
+  });
+
+  // data-02 (2026-10-31) : la puce XP/série de l'en-tête (["me-stats", userId])
+  // ne se rafraîchissait que par le refetch au focus, désormais espacé à 5 min.
+  // Une soumission récompensée l'invalide donc explicitement, avec le tableau de
+  // bord et la matière ; une soumission anonyme n'invalide rien.
+  it("invalidates the HUD stats (me-stats) with dashboard and subject after a rewarded run", async () => {
+    const strategy = anonStrategy({
+      capabilities: {
+        rewards: true,
+        hints: false,
+        boss: false,
+        next: false,
+        instantFeedback: false,
+      },
+      submit: vi.fn().mockResolvedValue(neutralResult),
+    });
+    const { qc } = renderPlayer(strategy);
+    const spy = vi.spyOn(qc, "invalidateQueries");
+
+    fireEvent.click(await screen.findByText("2"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+    expect(await screen.findByTestId("quest-score")).toBeInTheDocument();
+
+    expect(spy).toHaveBeenCalledWith({ queryKey: ["dashboard"] });
+    expect(spy).toHaveBeenCalledWith({ queryKey: ["subject"] });
+    expect(spy).toHaveBeenCalledWith({ queryKey: ["me-stats"] });
+  });
+
+  it("does not invalidate anything after an anonymous (unrewarded) run", async () => {
+    const { qc } = renderPlayer(anonStrategy());
+    const spy = vi.spyOn(qc, "invalidateQueries");
+
+    fireEvent.click(await screen.findByText("2"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+    expect(await screen.findByTestId("quest-score")).toBeInTheDocument();
+
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it("never refetches the exercise or the subject on tab focus or reconnect (data-02)", async () => {
+    const { qc } = renderPlayer(anonStrategy());
+    await screen.findByText("1 + 1 ?");
+    const options = qc.getQueryCache().find({ queryKey: ["exercise", EXERCISE_ID, "classic"] })
+      ?.observers[0]?.options;
+    expect(options?.refetchOnWindowFocus).toBe(false);
+    expect(options?.refetchOnReconnect).toBe(false);
   });
 });
 
@@ -395,5 +470,151 @@ describe("ExercisePlayer — une panne ne doit jamais laisser un bouton mort", (
 
     expect(await screen.findByTestId("quest-score")).toBeInTheDocument();
     expect(submit).toHaveBeenCalledTimes(2);
+  });
+});
+
+// =============================================================================
+// UNE MISSION VALIDÉE QUI NE S'ENREGISTRE PAS — la panne du 2026-09-03.
+//
+// L'élève répond, appuie sur « Valider », et le serveur n'enregistre rien. Le
+// lendemain, le suivi parental montre « 0 exercice » pour une soirée passée à
+// travailler. Ce que ce bloc garde, c'est que le lecteur le DISE : jusqu'ici il
+// affichait un toast, et personne, nulle part, n'apprenait la panne.
+// =============================================================================
+describe("ExercisePlayer — l'échec de soumission est raconté", () => {
+  beforeEach(() => {
+    mockGetExercise.mockReset().mockResolvedValue(exerciseData());
+    mockGetSubject.mockReset().mockResolvedValue({ chapters: [], exercises: [] });
+    mockReport.mockClear();
+    localStorage.clear();
+  });
+
+  it("remonte l'échec à la boîte noire, avec le message exact du serveur", async () => {
+    const strategy = anonStrategy({
+      capabilities: {
+        rewards: true,
+        hints: false,
+        boss: false,
+        next: false,
+        instantFeedback: false,
+      },
+      submit: vi.fn().mockRejectedValue(new Error("Impossible d'enregistrer votre tentative.")),
+    });
+    renderPlayer(strategy);
+
+    fireEvent.click(await screen.findByText("2"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+
+    await waitFor(() => expect(mockReport).toHaveBeenCalledTimes(1));
+    expect(mockReport.mock.calls[0][0]).toMatchObject({
+      stage: "quest-submit",
+      // Le message EXACT, celui qu'aucun rapport d'élève ne rapporte jamais.
+      errMessage: "Impossible d'enregistrer votre tentative.",
+    });
+    // L'élève reste sur sa question : l'échec n'a pas été maquillé en réussite.
+    expect(screen.queryByTestId("quest-score")).not.toBeInTheDocument();
+  });
+
+  it("ne dit rien quand la soumission passe — le silence reste l'état normal", async () => {
+    renderPlayer(anonStrategy());
+
+    fireEvent.click(await screen.findByText("2"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+
+    expect(await screen.findByTestId("quest-score")).toBeInTheDocument();
+    expect(mockReport).not.toHaveBeenCalled();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Accès de test (compte admin, 2026-09-05) : le navigateur de questions.
+// `getExercise().unrestricted` est la seule chose qui l'allume — la RPC de
+// démarrage a déjà levé les portes côté serveur (pgTAP 97), le lecteur ne fait
+// qu'offrir le saut libre. Les options portent des mots, pas des chiffres : les
+// pastilles du navigateur affichent « 1 », « 2 »… et un `getByText("2")`
+// ambigu rendrait le test faux pour la mauvaise raison.
+// ---------------------------------------------------------------------------
+function unrestrictedExerciseData() {
+  return {
+    ...exerciseData(),
+    unrestricted: true,
+    questions: [
+      {
+        id: "q1",
+        prompt: "1 + 1 ?",
+        options: [
+          { id: "a", text: "deux" },
+          { id: "b", text: "trois" },
+        ],
+      },
+      {
+        id: "q2",
+        prompt: "2 + 2 ?",
+        options: [
+          { id: "a", text: "quatre" },
+          { id: "b", text: "cinq" },
+        ],
+      },
+    ],
+  };
+}
+
+describe("ExercisePlayer — accès de test (compte admin)", () => {
+  beforeEach(() => {
+    mockGetExercise.mockReset().mockResolvedValue(unrestrictedExerciseData());
+    mockGetSubject.mockReset().mockResolvedValue({ chapters: [], exercises: [] });
+  });
+
+  it("sans accès de test, aucun navigateur : le lecteur reste question par question", async () => {
+    mockGetExercise.mockResolvedValue({ ...unrestrictedExerciseData(), unrestricted: false });
+    renderPlayer(anonStrategy());
+    expect(await screen.findByText("1 + 1 ?")).toBeInTheDocument();
+    expect(screen.queryByTestId("question-navigator")).not.toBeInTheDocument();
+  });
+
+  it("ouvre n'importe quelle question sans répondre aux précédentes", async () => {
+    renderPlayer(anonStrategy());
+    expect(await screen.findByText("1 + 1 ?")).toBeInTheDocument();
+    const nav = screen.getByTestId("question-navigator");
+    expect(nav).toHaveTextContent("Accès test");
+    // La pastille courante est marquée et inerte ; l'autre saute.
+    expect(screen.getByTestId("question-nav-1")).toHaveAttribute("aria-current", "step");
+    expect(screen.getByTestId("question-nav-1")).toBeDisabled();
+    fireEvent.click(screen.getByTestId("question-nav-2"));
+    expect(await screen.findByText("2 + 2 ?")).toBeInTheDocument();
+    expect(screen.getByText("Question 2 / 2")).toBeInTheDocument();
+    expect(screen.getByTestId("question-nav-2")).toHaveAttribute("aria-current", "step");
+  });
+
+  it("une question re-répondue REMPLACE sa réponse : une réponse par question à la soumission", async () => {
+    const submit = vi.fn().mockResolvedValue({ ...neutralResult, total: 2, correct: 2 });
+    renderPlayer(anonStrategy({ submit }));
+
+    // Q1 répondue « deux » (a) → le lecteur avance sur Q2, la pastille 1 est cochée.
+    fireEvent.click(await screen.findByText("deux"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+    expect(await screen.findByText("2 + 2 ?")).toBeInTheDocument();
+    expect(screen.getByTestId("question-nav-1")).toHaveTextContent("✓");
+
+    // Retour sur Q1 : la réponse donnée est présélectionnée, on la change pour « trois » (b).
+    fireEvent.click(screen.getByTestId("question-nav-1"));
+    expect(await screen.findByText("1 + 1 ?")).toBeInTheDocument();
+    expect(screen.getByRole("radio", { name: /deux/ })).toBeChecked();
+    fireEvent.click(screen.getByText("trois"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+
+    // Q2 répondue « quatre » (a) → dernière question, la quête se soumet.
+    fireEvent.click(await screen.findByText("quatre"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+    expect(await screen.findByTestId("quest-score")).toBeInTheDocument();
+
+    expect(submit).toHaveBeenCalledTimes(1);
+    const { answers } = submit.mock.calls[0][0] as {
+      answers: Array<{ questionId: string; choice: string }>;
+    };
+    expect(answers).toEqual([
+      { questionId: "q1", choice: "b" },
+      { questionId: "q2", choice: "a" },
+    ]);
   });
 });

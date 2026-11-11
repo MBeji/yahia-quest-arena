@@ -9,6 +9,7 @@ const CHIPS = readFileSync(
   resolve(ROOT, "src/features/dashboard/components/hero-stat-chips.tsx"),
   "utf-8",
 );
+const STEPPER = readFileSync(resolve(ROOT, "src/components/guide/chapter-steps.tsx"), "utf-8");
 
 /**
  * Contraste des tokens de THÈME, mesuré dans `verify`.
@@ -61,6 +62,12 @@ function parseColor(value: string): RGB {
   ].map((v) => Math.round(srgb(clamp(v)) * 255)) as RGB;
 }
 
+/** Alpha d'une couleur `oklch(L C H / a)` — 1 si elle est opaque. */
+function alphaOf(value: string): number {
+  const m = value.match(/\/\s*([\d.]+)\s*\)$/);
+  return m ? Number(m[1]) : 1;
+}
+
 /** Composite `fg` à `alpha` sur `bg` — ce que le navigateur peint pour `/20`. */
 const over = (fg: RGB, alpha: number, bg: RGB): RGB =>
   fg.map((v, i) => Math.round(alpha * v + (1 - alpha) * bg[i])) as RGB;
@@ -110,5 +117,53 @@ describe("Contraste des tokens de thème", () => {
   it("les deux thèmes définissent --flame-ink — sans quoi l'un d'eux n'a plus de couleur de texte", () => {
     expect(token(block(":root"), "--flame-ink")).toBeTruthy();
     expect(token(light, "--flame-ink")).toBeTruthy();
+  });
+});
+
+/**
+ * Stepper de chapitre (#1191) : la surface et la couleur de texte de chaque état
+ * sont LUES dans `STATE_CLASS`, puis le contraste est calculé dans les deux
+ * thèmes. Le nightly axe ne voit qu'un seul état à la fois — celui que l'état de
+ * jeu du compte de test met à l'écran — ; ce test les voit tous, à chaque `verify`.
+ */
+describe("Contraste du stepper de chapitre", () => {
+  const themes = { clair: block("html.reference"), sombre: block(":root") };
+
+  /** La carte peinte : composée sur `--background` quand elle est translucide (thème sombre). */
+  function cardOf(theme: string): RGB {
+    const raw = token(theme, "--card");
+    return over(parseColor(raw), alphaOf(raw), parseColor(token(theme, "--background")));
+  }
+
+  const states = [...STEPPER.matchAll(/^\s*(done|current|next|locked):\s*"([^"]+)"/gm)].map(
+    ([, state, classes]) => ({ state, classes }),
+  );
+
+  it("lit les quatre états de STATE_CLASS", () => {
+    expect(states.map((s) => s.state).sort()).toEqual(["current", "done", "locked", "next"]);
+  });
+
+  for (const [name, theme] of Object.entries(themes)) {
+    for (const { state, classes } of states) {
+      it(`l'état « ${state} » est lisible en thème ${name}`, () => {
+        const bg = classes.match(/\bbg-([a-z-]+?)(?:\/(\d+))?(?:\s|$)/);
+        const fg = classes.match(/\btext-([a-z-]+)(?:\s|$)/);
+        expect(bg, `pas de fond pour ${state}`).not.toBeNull();
+        expect(fg, `pas de couleur de texte pour ${state}`).not.toBeNull();
+
+        const card = cardOf(theme);
+        const surface = over(
+          parseColor(token(theme, `--${bg![1]}`)),
+          bg![2] ? Number(bg![2]) / 100 : 1,
+          card,
+        );
+        const ink = parseColor(token(theme, `--${fg![1]}`));
+        expect(contrast(ink, surface)).toBeGreaterThanOrEqual(AA);
+      });
+    }
+  }
+
+  it("aucun texte du stepper n'est éclairci par une opacité (4,41:1 à 90 % — #1191)", () => {
+    expect(STEPPER).not.toMatch(/className=[^>]*\bopacity-\d+/);
   });
 });

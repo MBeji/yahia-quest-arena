@@ -35,6 +35,27 @@ export const manifestChapterSchema = z.object({
   notion: z.string().min(1),
   /** When true, a missing chapter is reported informationally, never as a gap. */
   optional: z.boolean().default(false),
+  /**
+   * Ce que le MANUEL élève officiel porte pour ce chapitre (étude 21 lot 2).
+   * Optionnel, et à trois profondeurs assumées — c'est ce qui rend le rapport
+   * de couverture utilisable AVANT que la transcription soit complète :
+   *
+   *   * rien              → couverture « non mesurable », listée telle quelle ;
+   *   * `exerciseCount`   → un TAUX (repris / déclaré) ;
+   *   * `exerciseItems`   → le DIFF nominal (ce qui reste, nommé).
+   *
+   * La transcription enrichit progressivement (PROMPT-CNP phase 2). Déclarer
+   * une profondeur qu'on n'a pas serait pire que ne rien déclarer : le rapport
+   * afficherait un taux calculé sur une base inventée.
+   */
+  manuel: z
+    .object({
+      code: z.string().regex(/^[A-Za-z0-9_-]+$/, "manuel.code must be an alphanumeric book code"),
+      pages: z.string().min(1).optional(),
+      exerciseCount: z.number().int().positive().optional(),
+      exerciseItems: z.array(z.string().min(1).max(40)).min(1).max(200).optional(),
+    })
+    .optional(),
 });
 export type ManifestChapter = z.infer<typeof manifestChapterSchema>;
 

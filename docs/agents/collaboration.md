@@ -18,13 +18,13 @@
 
 ## Vérifier l'ordre réel avant de prendre un lot
 
-L'ordre écrit dans `FableEtudes/ROADMAP.md` (dépôt privé) est un **raccourci**.
+L'ordre écrit dans `STATUS.md` §6 (la feuille de route) est un **raccourci**.
 L'étude fait foi sur les dépendances entre ses lots. Avant de démarrer :
 
 1. lire le §« plan d'exécution » de l'étude (quels lots sont réellement indépendants) ;
 2. regarder ce que les **autres files** livrent en ce moment (`gh pr list`, worktrees actifs) ;
 3. si un lot d'une autre étude **contredit** le tien, ne pas l'exécuter en force : prendre un
-   lot frère indépendant, et **amender la ROADMAP** pour que la session suivante voie la
+   lot frère indépendant, et **amender la feuille de route** (`STATUS.md` §6) pour que la session suivante voie la
    contrainte.
 
 _Cas vécu (2026-07-20)_ : é25 lot 3 (miroir des skills dans `.agents/skills/`) aurait dupliqué
@@ -67,6 +67,15 @@ une session qui suit la consigne à la lettre se retrouve avec un **commit de me
 `main` reçoit un squash intitulé « Merge remote-tracking branch 'origin/main' into claude/… ».
 Le cas est encore lisible dans l'historique — `b88ff517` (PR #844, 2026-08-24) ; mécanisme
 re-constaté le 2026-08-26 sur la PR #881.
+
+⚠️ **Et il ne faut pas avoir décidé de merger pour tomber dedans.** Le 2026-09-14 (PR #1037),
+la branche a été AVANCÉE SOUS LA SESSION : le job « Update armed PRs left behind by this push »
+merge `main` dans toute branche dont la PR est armée. Un push suivant part alors en
+`non-fast-forward`, la seule issue autorisée est `git merge origin/<sa-branche>` (le rebase est
+hors jeu), et `main` reçoit un squash intitulé « Merge remote-tracking branch
+'origin/claude/…' into claude/… » — un commit de `main` dont le titre ne dit pas ce qu'il fait.
+Le geste ci-dessous ne change donc pas : il se fait avant **chaque** push, y compris celui qu'on
+n'avait pas prévu de faire.
 
 Le geste, juste avant chaque push :
 
@@ -120,14 +129,32 @@ partout, mais la PR qui en sort embarque tout l'ancien historique, affiche un di
 `git push --force-with-lease` : la branche ne contient que de l'historique déjà sur `main`, il n'y
 a rien à perdre. Si l'outil refuse le `--force-with-lease`, demander plutôt que contourner.
 
+**3. La ref de suivi LOCALE survit à la suppression distante — et fait mentir tout ce qui compare
+`HEAD` à `origin/<branche>`.** `origin/claude/<sujet>` reste figée sur le dernier push d'avant le
+merge. Un outil qui répond à « qu'est-ce qui n'est pas poussé ? » en lisant cette ref voit alors
+les commits de `main` **eux-mêmes** comme en attente — vécu deux fois le 2026-09-04, où trois
+commits annoncés « non poussés » étaient les squashes de trois PR déjà mergées. Le test qui
+tranche, et le remède :
+
+```bash
+git ls-remote origin <branche>   # aucune ligne ⇒ la branche n'existe plus côté serveur
+git remote prune origin          # retire les refs de suivi périmées
+```
+
+⚠️ `git rev-list --count origin/main..HEAD` valant `0` ne dit **pas** `HEAD == origin/main` :
+il dit « rien à pousser », ce qui reste vrai quand `main` a avancé sans nous. Lu comme une égalité, il
+fait passer un `main` en retard de trois commits pour un arbre à jour — et, au moment où l'on
+compare enfin les SHA, pour un merge fantôme. La vérité serveur est `git ls-remote`, pas une ref
+locale.
+
 ⚠️ Et **ne jamais relancer un second `git push` par-dessus un premier encore en cours** : le hook
 `pre-push` rejoue `verify` (~2 min), deux pushes concurrents se marchent dessus et le second meurt
 sur `cannot lock ref … unable to resolve reference`, en laissant croire à un rejet du serveur.
 
 ## Fichiers à forte contention
 
-Ici : **`STATUS.md`**. Dans le dépôt privé : `FableEtudes/README.md` (index) et
-`FableEtudes/ROADMAP.md`. Presque toutes les sessions les modifient → conflit fréquent.
+Ici : **`STATUS.md`** (état et feuille de route). Dans le dépôt privé : `FableEtudes/README.md`
+(index). Presque toutes les sessions les modifient → conflit fréquent.
 Résolution type : **prendre la version de `main`** (structure à jour, lignes des autres études)
 et **y réappliquer sa seule ligne**. Ne jamais écraser le bloc entier avec sa propre version.
 

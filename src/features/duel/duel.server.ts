@@ -172,7 +172,7 @@ export const leaveDuelQueue = createServerFn({ method: "POST" })
  */
 export const forfeitDuel = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ duelId: z.guid() }).parse(d))
+  .validator((d) => z.object({ duelId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
     const { error } = await supabase.rpc("forfeit_duel", { p_duel: data.duelId });
@@ -189,7 +189,7 @@ export const forfeitDuel = createServerFn({ method: "POST" })
 /** US-3/US-5: the polled duel snapshot (progress + review once finished). */
 export const getDuelState = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ duelId: z.guid() }).parse(d))
+  .validator((d) => z.object({ duelId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const { data: payload, error } = await supabase.rpc("get_duel_state", { p_duel: data.duelId });
@@ -222,7 +222,7 @@ export const getDuelState = createServerFn({ method: "GET" })
  */
 export const getDuelQuestions = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) => z.object({ duelId: z.guid() }).parse(d))
+  .validator((d) => z.object({ duelId: z.guid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { supabase } = context;
     const { data: duel, error: duelErr } = await supabase
@@ -263,7 +263,7 @@ export const getDuelQuestions = createServerFn({ method: "GET" })
 /** US-2/US-6: submit the next answer in the frozen order (server-scored). */
 export const submitDuelAnswer = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d) =>
+  .validator((d) =>
     z
       .object({
         duelId: z.guid(),

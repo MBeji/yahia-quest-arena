@@ -35,24 +35,28 @@ Règles d'application :
 Un concept = un mot par langue, partout (écrans, toasts, erreurs, e-mails futurs). Toute
 nouvelle clé i18n le respecte ; toute dérive est un bug de PR.
 
-| Concept               | FR                               | EN                         | AR                                      | Notes                                                                                      |
-| --------------------- | -------------------------------- | -------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------ |
-| streak                | **série**                        | streak                     | **سلسلة**                               | jamais « streak » en FR ; format « série de {n} jours » / « {n} j »                        |
-| coins                 | **pièces**                       | coins                      | **عملات**                               | la monnaie du jeu ; « {n} pièces »                                                         |
-| XP                    | XP                               | XP                         | **نقاط الخبرة** (prose) / XP (compteur) | sigle conservé dans les chips                                                              |
-| niveau (jeu)          | niveau {n}                       | level {n}                  | المستوى {n}                             | ne pas confondre avec la classe scolaire                                                   |
-| classe (école)        | classe                           | class/grade                | **القسم**                               | registre scolaire tunisien (« ما هو قسمك؟ »)                                               |
-| quête / mission       | quête (jeu) · mission (contenu)  | quest · mission            | مهمة                                    | « mission » pour les exercices du contenu                                                  |
-| donjon                | le Donjon Infini                 | the Infinite Dungeon       | **القبو اللانهائي**                     | « الزنزانة » (cellule de prison) est **banni** (Q-1b)                                      |
-| duel                  | duel                             | duel                       | مبارزة                                  |                                                                                            |
-| classement            | classement                       | leaderboard                | الترتيب                                 | assiette : l'Académie entière, jamais « du concours »                                      |
-| parcours              | parcours                         | track                      | مسار                                    | le produit-track choisi à l'onboarding                                                     |
-| code alliance         | code alliance                    | alliance code              | رمز التحالف                             | UN seul nom par langue sur tout le tunnel parent (fin de « Alliance Code »/« Code élève ») |
-| suivi parental        | suivi                            | monitoring/report          | المتابعة                                | verbe côté parent : « voir/ouvrir le bilan », jamais « associer » pour une consultation    |
-| quiz de compréhension | quiz de compréhension            | comprehension quiz         | اختبار الفهم                            | LE seul verrou de l'app en phase gratuite                                                  |
-| rappel actif          | **Rappel** (mode) · rappel actif | **Recall** · active recall | **استرجاع**                             | mode de réactivation (étude 17) ; jamais « quiz Rappel » ; chip « 🧠 Rappel »              |
-| boutique              | boutique                         | shop                       | المتجر                                  |                                                                                            |
-| classe de héros       | classe de héros                  | hero class                 | رتبة البطل                              | les intitulés de rangs seront localisés au lot des écrans qui les affichent                |
+| Concept               | FR                               | EN                         | AR                                      | Notes                                                                                              |
+| --------------------- | -------------------------------- | -------------------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| streak                | **série**                        | streak                     | **سلسلة**                               | jamais « streak » en FR ; format « série de {n} jours » / « {n} j »                                |
+| coins                 | **pièces**                       | coins                      | **عملات**                               | la monnaie du jeu ; « {n} pièces »                                                                 |
+| XP                    | XP                               | XP                         | **نقاط الخبرة** (prose) / XP (compteur) | sigle conservé dans les chips                                                                      |
+| niveau (jeu)          | niveau {n}                       | level {n}                  | المستوى {n}                             | ne pas confondre avec la classe scolaire                                                           |
+| classe (école)        | classe                           | class/grade                | **القسم**                               | registre scolaire tunisien (« ما هو قسمك؟ »)                                                       |
+| quête / mission       | quête (jeu) · mission (contenu)  | quest · mission            | مهمة                                    | « mission » pour les exercices du contenu                                                          |
+| donjon                | le Donjon Infini                 | the Infinite Dungeon       | **القبو اللانهائي**                     | « الزنزانة » (cellule de prison) est **banni** (Q-1b)                                              |
+| duel                  | duel                             | duel                       | مبارزة                                  |                                                                                                    |
+| classement            | classement                       | leaderboard                | الترتيب                                 | assiette : l'Académie entière, jamais « du concours »                                              |
+| parcours              | parcours                         | track                      | مسار                                    | le produit-track choisi à l'onboarding                                                             |
+| code alliance         | code alliance                    | alliance code              | رمز التحالف                             | UN seul nom par langue sur tout le tunnel parent (fin de « Alliance Code »/« Code élève »)         |
+| suivi parental        | suivi                            | monitoring/report          | المتابعة                                | verbe côté parent : « voir/ouvrir le bilan », jamais « associer » pour une consultation            |
+| quiz de compréhension | quiz de compréhension            | comprehension quiz         | اختبار الفهم                            | LE seul verrou de l'app en phase gratuite                                                          |
+| rappel actif          | **Rappel** (mode) · rappel actif | **Recall** · active recall | **استرجاع**                             | mode de réactivation (étude 17) ; jamais « quiz Rappel » ; chip « 🧠 Rappel »                      |
+| boutique              | boutique                         | shop                       | المتجر                                  |                                                                                                    |
+| classe de héros       | classe de héros                  | hero class                 | رتبة البطل                              | les intitulés de rangs seront localisés au lot des écrans qui les affichent                        |
+| étoile de chapitre    | **étoile** (de chapitre)         | chapter star               | **نجمة الفصل**                          | 1 à 4, l'échelle ⭐ du CONTENU (socle · pratique · boss · élite) ; jamais « niveau » ni « palier » |
+| sceau de matière      | **sceau**                        | subject seal               | **ختم المادة**                          | ⭐ à ⭐⭐⭐⭐ ; jamais « or/platine/diamant » (ligue) ni « rang » (classement)                     |
+| nouveauté             | **nouveauté ✨**                 | new ✨                     | **جديد ✨**                             | contenu arrivé APRÈS une étoile ; nomme l'écart, ne s'écrit jamais comme une perte                 |
+| chapitre maîtrisé     | **maîtrisé**                     | mastered                   | **متقَن**                               | étoile 4 — le SEUL mot de verdict (étude 34 Q-2) ; « terminé » est un synonyme d'écran             |
 
 Compléments de langue :
 
@@ -91,16 +95,24 @@ Opérationnalisation des règles R-1→R-9 de l'étude 15 (l'exécuteur les réf
 
 Le gabarit dit ce que l'écran a le DROIT d'empiler. Dépasser le budget = retirer, pas tasser.
 
-| Type                              | Rôle                     | Budget (ordre imposé)                                                                                                                                                                                |
-| --------------------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **QG** (dashboard)                | « que faire maintenant » | action n°1 → objectifs du jour/semaine (condensés) → matières du parcours → 1 passerelle Découvrir → 1 carte Famille. **Pas** de catalogue externe, boutique, inventaire ou stats détaillées inline. |
-| **Hub** (matière)                 | choisir chapitre/mission | ancrage (classe + remontée) → « reprendre ici » → chapitres (accordéon, progression x/y) → missions avec état (✓ / à faire / 🔒 quiz)                                                                |
-| **Lecteur** (cours)               | lire puis enchaîner      | fil d'ariane → Cours/Résumé → texte → UNE suite (quiz tant que verrouillé, sinon s'entraîner) → prev/next                                                                                            |
-| **Player** (mission)              | répondre                 | contexte 1 ligne (matière · chapitre · enjeu) → question → réponse → validation ; résultat = score → gains → correction → UNE continuation primaire                                                  |
-| **Mode** (donjon/duel/classement) | donner envie + cadrer    | pitch 1 phrase → règles+gains (tuile « règle+chiffre+icône ») → mon état (record/rang) → action n°1 ; cold-start raconté                                                                             |
-| **Formulaire** (auth, liaison)    | convertir sans friction  | promesse 1 ligne → champs minimum → action → issues de secours (mot de passe oublié, « continuer sans compte »)                                                                                      |
-| **Rapport** (parent)              | répondre à « ça va ? »   | verdict + conseil D'ABORD → métriques → détail ; outils (liaison, objectif) repliés une fois configurés                                                                                              |
-| **Admin**                         | trier vite               | compteur à traiter → liste filtrable → action par ligne avec effet EXPLICITE                                                                                                                         |
+| Type                              | Rôle                     | Budget (ordre imposé)                                                                                                                                                                                 |
+| --------------------------------- | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **QG** (dashboard)                | « que faire maintenant » | action n°1 → objectifs du jour/semaine (condensés) → matières du parcours → 1 passerelle Découvrir → 1 carte Famille. **Pas** de catalogue externe, boutique, inventaire ou stats détaillées inline.  |
+| **Hub** (matière)                 | choisir chapitre/mission | ancrage (classe + remontée) → **état de la matière** (sceaux · prochain sceau · effort) → « reprendre ici » → chapitres (accordéon, **jauge d'étoiles**) → missions avec état (✓ / à faire / 🔒 quiz) |
+| **Lecteur** (cours)               | lire puis enchaîner      | fil d'ariane → Cours/Résumé → texte → UNE suite (quiz tant que verrouillé, sinon s'entraîner) → prev/next                                                                                             |
+| **Player** (mission)              | répondre                 | contexte 1 ligne (matière · chapitre · enjeu) → question → réponse → validation ; résultat = score → gains → correction → UNE continuation primaire                                                   |
+| **Mode** (donjon/duel/classement) | donner envie + cadrer    | pitch 1 phrase → règles+gains (tuile « règle+chiffre+icône ») → mon état (record/rang) → action n°1 ; cold-start raconté                                                                              |
+| **Formulaire** (auth, liaison)    | convertir sans friction  | promesse 1 ligne → champs minimum → action → issues de secours (mot de passe oublié, « continuer sans compte »)                                                                                       |
+| **Rapport** (parent)              | répondre à « ça va ? »   | verdict + conseil D'ABORD → métriques → détail ; outils (liaison, objectif) repliés une fois configurés                                                                                               |
+| **Admin**                         | trier vite               | compteur à traiter → liste filtrable → action par ligne avec effet EXPLICITE                                                                                                                          |
+
+⚠️ **Le gabarit Hub a gagné un bloc le 2026-09-14 (étude 34, lot 2), et c'est un ajout assumé.**
+Le hub ne disait rien du niveau atteint dans la matière : un élève à douze chapitres sur vingt
+n'y lisait aucune trace de son travail. Le bloc « état de la matière » répond à cela (US-2,
+R-9, R-10). Ce qu'il ne fait PAS, et qui garde le budget honnête : le ratio `x/y` par chapitre
+disparaît du bandeau — la jauge d'étoiles le remplace, à encombrement égal — et le
+pourcentage de matière ne revient nulle part. Un pourcentage divise un travail par un
+catalogue qui bouge, donc il fait reculer l'élève quand c'est le produit qui grandit.
 
 ## 5. Erreurs & messages système
 

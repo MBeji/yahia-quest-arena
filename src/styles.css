@@ -15,11 +15,24 @@
   fichier couvre toute la plage de graisses (Orbitron 500–900, Space Grotesk
   400–700, Noto Kufi 600–700) au lieu d'un fichier par graisse.
 
-  Les `unicode-range` sont ceux de Google et font le vrai travail : un lecteur
-  francophone ne télécharge JAMAIS les 124 ko d'arabe, et un lecteur arabophone
-  ne prend le latin que s'il en croise. Seules les deux faces latines sont
-  préchargées (voir `routes/__root.tsx`) — précharger l'arabe le ferait payer à
-  tout le monde.
+  Les `unicode-range` sont ceux de Google et font le vrai travail : une face ne
+  descend que si l'un de ses glyphes est RENDU, et un lecteur arabophone ne prend
+  le latin que s'il en croise. Seules les deux faces latines sont préchargées
+  (voir `routes/__root.tsx`) — précharger l'arabe le ferait payer à tout le monde.
+
+  Servies `immutable` un an par Vercel (`scripts/vercel-routes.mjs`, depuis le
+  2026-11-03 : au défaut `max-age=0` chaque chargement complet revalidait les
+  faces préchargées et rendait d'abord la police de repli) : une fonte qui
+  change CHANGE DE NOM de fichier, jamais de contenu sous la même URL.
+
+  La face Noto Kufi complète (124 ko, incompressible) n'est aujourd'hui
+  téléchargée par PERSONNE : l'interface et les leçons arabes se rendent en
+  `--font-sans` (police système pour l'arabe), et la seule chose qui la
+  déclenchait — la signature « نقرا نلعب » du header et du pied de page publics,
+  donc chaque page publique, mobile compris — porte depuis le 2026-10-31 sa
+  propre sous-police de marque (ci-dessous). Elle reste déclarée pour du contenu
+  arabe qui opterait un jour pour `font-arabic`, et son fichier sert au gate
+  contenu `scripts/content/svg/check-overflow.mjs`.
 
   `swap` et non `optional` : préchargées et servies par l'origine, ces fontes
   arrivent en pratique avant le premier rendu ; `optional` autoriserait le
@@ -68,6 +81,29 @@
     U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E,
     U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
 }
+/* Signature de marque « نقرا نلعب » (perf bundle-03, 2026-10-31) : sous-police de
+   7 lettres + espace (35 glyphes avec les formes contextuelles et les points)
+   tirée du même fichier variable — 6 792 o au lieu des 123 688 o de la face
+   complète, que la seule signature faisait télécharger sur chaque page publique
+   (−74 % des octets de fontes de `/` et `/programme`). Famille DÉDIÉE et non une
+   seconde face de « Noto Kufi Arabic » : deux faces d'une même famille se
+   partageraient un texte courant glyphe par glyphe et casseraient la liaison des
+   lettres ; ici le mot entier vit dans une seule face, rendu identique à la face
+   complète (mêmes contours, avances et formes aux graisses 400/600/700). Jamais
+   à poser sur du texte arabe courant. Son `unicode-range` est exactement sa
+   cmap. Regénérer si la signature change :
+   `pyftsubset public/fonts/noto-kufi-arabic-var.woff2 --text="نقرا نلعب"
+    --flavor=woff2 --layout-features='*'
+    --output-file=public/fonts/noto-kufi-arabic-brand-var.woff2`
+   (fonttools + brotli). */
+@font-face {
+  font-family: "Noto Kufi Arabic Brand";
+  font-style: normal;
+  font-weight: 600 700;
+  font-display: swap;
+  src: url("/fonts/noto-kufi-arabic-brand-var.woff2") format("woff2");
+  unicode-range: U+0020, U+0627-0628, U+0631, U+0639, U+0642, U+0644, U+0646;
+}
 
 /* =====================================================
   Na9ra Nal3ab — design system (étude 14) : 2 thèmes transversaux,
@@ -78,6 +114,7 @@
   --font-display: "Orbitron", "Space Grotesk", system-ui, sans-serif;
   --font-sans: "Space Grotesk", "Inter", system-ui, sans-serif;
   --font-arabic: "Noto Kufi Arabic", "Noto Sans Arabic", system-ui, sans-serif;
+  --font-brand-ar: "Noto Kufi Arabic Brand", system-ui, sans-serif;
 
   /* Micro-typo token — replaces ad-hoc text-[10px]/text-[11px] (étude 14, D-3) */
   --text-2xs: 0.6875rem;
@@ -731,6 +768,10 @@ html.reference *:focus-visible {
 .lesson-content .lesson-table th {
   border: 1px solid color-mix(in oklab, var(--border) 60%, transparent);
   padding: 0.5rem 0.75rem;
+  /* Le `overflow-wrap: anywhere` hérité de .lesson-content coupe les mots des cellules à 360 px
+     au lieu de laisser le tableau défiler dans son cadre : on rend aux cellules leurs mots entiers. */
+  overflow-wrap: normal;
+  word-break: normal;
 }
 /* L'en-tête se peint sur le `<th>`, pas sur `tr:first-child` : la position ne dit pas le
    rôle. Un tableau sans ligne de séparation n'a pas d'en-tête et ne doit pas en afficher. */
@@ -946,6 +987,44 @@ html:not(.reference) .lesson-figure__plate {
   color: var(--primary);
 }
 
+/* Le contrôle sur place (étude 35) : « à toi de jouer ». Contour teinté comme la méthode —
+   c'est le même registre, on y applique une règle — mais POINTILLÉ : le bloc n'énonce pas,
+   il demande. La réponse vit dans un `<details>` natif : rien à styler pour qu'elle se
+   déplie, et le marqueur du `summary` se place tout seul du bon côté en RTL. */
+.lesson-content .lesson-blk--verifie {
+  background: color-mix(in oklab, var(--primary) 4%, var(--card));
+  border-color: color-mix(in oklab, var(--primary) 38%, transparent);
+  border-style: dashed;
+}
+.lesson-content .lesson-blk--verifie .lesson-blk__label {
+  color: var(--primary);
+}
+.lesson-content .lesson-check__question > *:last-child {
+  margin-bottom: 0;
+}
+.lesson-content .lesson-check {
+  margin-top: 0.9rem;
+}
+.lesson-content .lesson-check__toggle {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--primary);
+  /* Le marqueur natif reste : c'est lui qui dit « il y a quelque chose dessous », et il
+     suit la direction du texte sans qu'on ait à le repositionner. */
+  list-style-position: inside;
+}
+.lesson-content .lesson-check__toggle:hover {
+  text-decoration: underline;
+}
+.lesson-content .lesson-check__answer {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid color-mix(in oklab, var(--primary) 25%, transparent);
+}
+.lesson-content .lesson-check__answer > *:last-child {
+  margin-bottom: 0;
+}
+
 /* =====================================================
   Cartes de révision (étude 18, lot 3)
 
@@ -1054,6 +1133,11 @@ html:not(.reference) .lesson-figure__plate {
   tient sur une ligne (seuil dans `src/shared/lib/bidi.ts`) : une chaîne de calcul de corrigé
   rendue insécable déborderait de la carte et ouvrirait une barre de défilement horizontale sur
   toute la page. Trop longue, la formule reste donc isolée — comme avant — mais cassable.
+
+  Les espaces qui bordent une formule restent HORS du span (dans la prose, `splitMathRuns`) : ce
+  sont les seules coupures possibles entre deux formules voisines — une liste d'intervalles
+  `[0 ; 10[ ، [10 ; 20[ ، …` dont les espaces seraient dans l'insécable ne passerait jamais à la
+  ligne et déborderait de la carte d'un téléphone.
    ===================================================== */
 .math-run {
   direction: ltr;
@@ -1243,6 +1327,14 @@ html:not(.reference) .lesson-figure__plate {
   contain-intrinsic-size: auto 72px;
 }
 
+/* Même confinement pour les articles d'un examen blanc (10-20 questions à
+   figures par épreuve, 2026-10-31) : une coche ne refait ni layout ni paint
+   des questions hors écran. L'estimation est celle d'un énoncé + 4 options. */
+.exam-question-cv {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 320px;
+}
+
 /* =====================================================
   Reduced motion. Respect the OS/user setting: neutralize
   animations and transitions (also kills the always-on
@@ -1279,13 +1371,6 @@ html:not(.reference) .lesson-figure__plate {
   .public-shell {
     color: #000;
     background: #fff;
-  }
-  /* Les titres en dégradé-clip s'impriment en noir plein (les fonds ne sont pas
-     imprimés par défaut → sinon texte invisible). */
-  .public-shell .lesson-content .lesson-h1 {
-    -webkit-text-fill-color: currentColor;
-    color: #000;
-    background: none;
   }
   .print-watermark {
     display: flex !important;
@@ -1328,13 +1413,58 @@ html:not(.reference) .lesson-figure__plate {
   .app-shell nav {
     display: none !important;
   }
-  /* Cours imprimé depuis l'app authentifiée — le thème sombre donne un premier-plan
-     quasi-blanc (--foreground ≈ oklch(0.965)) qui devient invisible sur fond blanc.
-     .public-shell avait color:#000 ; .app-shell n'avait rien (C4, d526f658). */
-  .app-shell .lesson-content,
-  .app-shell .lesson-content * {
+  /* Cours imprimé — L'ENCRE EST UNE PROPRIÉTÉ DU DOCUMENT, PAS DE SA COQUILLE.
+
+     Le thème « Noir & Or » donne un premier-plan quasi-blanc (`--foreground` ≈
+     oklch(0.965)) et des fonds sombres que le navigateur n'imprime pas : sans
+     remise à l'encre, le cours sort en blanc sur blanc — une feuille vide.
+
+     Le correctif C4 (d526f658) visait `.app-shell .lesson-content` parce que le
+     lecteur vivait alors dans la coquille applicative. Le chantier C8 l'a déplacé
+     vers le registre public (`/chapitre/$chapterId`, `.public-shell`) — et
+     `/lesson/$chapterId` n'est plus qu'une redirection 301. La règle est restée
+     accrochée à un sélecteur que plus AUCUN cours ne porte : elle ne repeignait
+     plus rien, et le thème sombre imprimait des pages blanches. Le test qui la
+     gardait cherchait la chaîne `.app-shell` dans cette feuille — il est resté
+     vert tout du long (voir `lesson-print-css.test.tsx`, réécrit pour interroger
+     le DOM réel du lecteur au lieu du texte de la feuille).
+
+     On vise donc le DOCUMENT : `.lesson-doc` (l'article du lecteur, en-tête
+     compris) et `.lesson-content` (le corps rendu, où qu'il soit monté). C'est
+     l'idiome que `.family-report` suit déjà pour le bilan parental — une classe
+     de CONTENU, qui voyage avec lui quand il change de coquille.
+
+     Compromis assumé : tout passe en noir, donc le papier perd la teinte des
+     blocs (le rouge du piège, le teal de la définition). Le filet les distingue
+     encore, et une imprimante monochrome les aplatissait de toute façon. */
+  .lesson-doc,
+  .lesson-doc *,
+  .lesson-content,
+  .lesson-content * {
     color: #000 !important;
     background: transparent !important;
+    border-color: #bbb !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    /* Les titres en dégradé-clip (`.lesson-h1`) peignent leur texte en
+       `transparent` et laissent le fond faire la couleur. Le fond neutralisé
+       juste au-dessus, sans cette ligne le titre disparaîtrait — ce que la
+       règle `.public-shell .lesson-content .lesson-h1` corrigeait pour la seule
+       coquille publique. Remise à `currentColor`, elle couvre tout texte
+       dégradé du document, présent ou à venir. */
+    -webkit-text-fill-color: currentColor !important;
+  }
+  /* Un filet ne se peint pas avec `color` : `.lesson-hr` est un dégradé de 1px de
+     haut, que la remise à zéro des fonds effacerait. */
+  .lesson-doc .lesson-hr,
+  .lesson-content .lesson-hr {
+    background: #bbb !important;
+  }
+  /* La planche d'une figure porte déjà son encre (fond clair, trait sombre) et
+     reste blanche sous le trait : c'est du contenu, pas du décor. */
+  .lesson-doc .lesson-figure__plate,
+  .lesson-content .lesson-figure__plate {
+    background: #fff !important;
   }
   .family-report,
   .family-report * {

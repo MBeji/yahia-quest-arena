@@ -11,21 +11,35 @@ import {
   Zap,
 } from "lucide-react";
 import { useI18n, useT } from "@/lib/i18n";
+import { useProgressT } from "@/lib/i18n/progress";
 import { isRtlText } from "@/shared/lib/utils";
 import { parcoursName } from "@/shared/lib/parcours-locale";
 import { PageShell } from "@/components/ui/page-shell";
 import { DifficultyStars } from "@/components/game/difficulty-stars";
-import { QUIZ_PASS_THRESHOLD_PCT, RECALL_MIN_QUESTIONS } from "@/shared/constants/gamification";
+import { ChapterSteps } from "@/components/guide/chapter-steps";
+import { GuideIntroCard } from "@/components/guide/guide-intro-card";
+import { HelpTip } from "@/components/guide/help-tip";
+import { useGuideT } from "@/lib/i18n/guide";
 import {
-  chapterMissionCounts,
-  isChapterComplete,
-  isMissionPassed,
-} from "@/shared/lib/chapter-completion";
+  MIN_SECONDS_PER_QUESTION,
+  QUIZ_PASS_THRESHOLD_PCT,
+  RECALL_MIN_QUESTIONS,
+} from "@/shared/constants/gamification";
+import { chapterSteps, fillGuideText } from "@/shared/lib/guide";
+import {
+  emptyRungs,
+  parseSubjectProgress,
+  rungTally,
+  type MissionProgress,
+} from "@/shared/lib/progress-stars";
 import { resolveNextAction } from "@/shared/lib/next-action";
 import { groupChaptersByDomain } from "@/shared/lib/subject-domains";
 import { hasPassedChapterQuiz } from "../anon-quiz-gate";
 import { exerciseRouteFor } from "../exercise-route";
+import { ChapterStarsChip, ChapterStarsNote } from "./chapter-stars";
+import { LockedMissionRow } from "./locked-mission-row";
 import { ManuelEleveCard } from "./manuel-eleve-card";
+import { SubjectSeals } from "./subject-seals";
 
 export type SubjectHubSubject = {
   name_fr: string;
@@ -44,7 +58,7 @@ export type SubjectHubChapter = {
    * Domaine du programme auquel ce chapitre appartient — la « section » de la
    * matière (Algèbre / Géométrie, قواعد اللغة / فهم المقروء). Écrit par l'auteur
    * du contenu, dans la langue de la matière. Déjà servi par `getSubject`
-   * (`select("*")`) ; optionnel côté type parce que la colonne est nullable ET
+   * (`SUBJECT_CHAPTER_COLUMNS`) ; optionnel côté type parce que la colonne est nullable ET
    * parce qu'une matière non sectionnée n'en déclare aucun — le hub retombe alors
    * sur sa liste à plat (`groupChaptersByDomain` rend `null`).
    */
@@ -60,7 +74,7 @@ export type SubjectHubExercise = {
   xp_reward: number;
   /**
    * `admin` (catalogue) ou `parent` (mission familiale). Déjà servi par `getSubject`
-   * (`select("*")`) ; déclaré depuis l'étude 22 R-15, qui exclut les missions `parent` de la
+   * (`SUBJECT_EXERCISE_COLUMNS`) ; déclaré depuis l'étude 22 R-15, qui exclut les missions `parent` de la
    * complétion d'un chapitre. Absent ⇒ `admin` (valeur par défaut de la colonne).
    */
   source?: string | null;
@@ -98,44 +112,74 @@ export type SubjectHubRecall = {
  *
  * - Level anchor + way back up: kicker = the CLASS (localized parcours name,
  *   not the RPG attribute), breadcrumb link to `/niveau/$parcoursId`.
+ * - « État de la matière » (étude 34) : les sceaux, le prochain (« 12/20 chapitres
+ *   prêts »), et l'effort en compteurs — jamais un pourcentage.
  * - « Reprendre ici » (signed-in): the furthest in-progress chapter, linking
  *   straight to its next actionable mission.
  * - One ACCORDION per chapter (collapsed except the resume/first chapter) with
- *   a state chip: `{n}/{n} ✓` · `quiz ✓ · {done}/{n}` · `🔒 quiz to pass` · todo.
- * - Tri-state mission rows: ✓ done (best score) · → todo (+XP, signed-in only —
- *   audit §D-3: XP shown to anonymous visitors is noise) · 🔒 locked by the
- *   comprehension quiz (non-interactive; the quiz itself stays clickable, and
- *   the lock explains HOW to lift it — R-4).
+ *   sa JAUGE D'ÉTOILES (étude 34, R-8) et, à l'étoile 4, « Maîtrisé ✓ ».
+ * - Tri-state mission rows: ✓ comptée (é34 R-3 — pas « ≥ 60 % ») · → todo (+XP,
+ *   signed-in only — audit §D-3: XP shown to anonymous visitors is noise) · 🔒
+ *   locked by the comprehension quiz (non-interactive; the quiz itself stays
+ *   clickable, and the lock explains HOW to lift it — R-4).
+ *
+ * ⭐ **Rien n'est recalculé ici.** Depuis l'étude 34, l'état de chaque chapitre et
+ * de chaque mission arrive tranché par `get_subject_progress` : la jauge dit
+ * l'ACQUIS (grand livre, jamais décroissant), le compteur de cran dit le
+ * reste-à-faire (vivant), ✨ nomme l'écart. Le hub tenait auparavant sa propre
+ * copie des seuils, qui redescendait dès qu'une mission arrivait et qui avait
+ * divergé sur l'anti-précipitation. Voir `docs/etoiles-et-sceaux.md`.
  *
  * Anonymous parity: same layout; the quiz-pass state merges the server map with
  * the browser-session gate (anon-quiz-gate), read after mount so SSR and the
  * first client render agree. Exercise links stay auth-aware (`exerciseRouteFor`).
- * Data comes from `getSubject` (bestByExercise, quizPassedByChapter, parcours) —
- * no new RPC. Copy is i18n (fr/en/ar).
+ * Sans compte, `progress` est `null` : on garde la FORME des chapitres (leurs
+ * crans, éteints) et une promesse en une ligne, sans rien calculer (R-16).
+ * Data comes from `getSubject` (progress, quizPassedByChapter, parcours) — une
+ * RPC, pas une de plus. Copy is i18n (fr/en/ar + catalogue paresseux `progress/`).
  */
 export function SubjectHub({
   subject,
   chapters,
   exercises,
-  bestByExercise = {},
+  progress: rawProgress = null,
   quizPassedByChapter = {},
   parcours = null,
   recall = null,
   isAuthenticated,
+  unrestricted = false,
 }: {
   subject: SubjectHubSubject;
   chapters: SubjectHubChapter[];
   exercises: SubjectHubExercise[];
-  bestByExercise?: Record<string, number>;
+  /**
+   * La charge de `get_subject_progress` (étude 34), telle que `getSubject` la
+   * rend : étoiles inscrites, sceaux, effort, état de chaque mission. `null` pour
+   * l'anonyme et sur une RPC en échec — le hub retombe alors sur l'expérience
+   * publique, qui est complète (R-16), plutôt que d'inventer une progression.
+   */
+  progress?: unknown;
   quizPassedByChapter?: Record<string, boolean>;
   parcours?: SubjectHubParcours | null;
   recall?: SubjectHubRecall | null;
   isAuthenticated: boolean;
+  /**
+   * Accès de TEST (compte admin, 2026-09-05) : `getSubject` a déjà marqué chaque
+   * porte ouverte (quest.access.ts) — le hub n'a rien à recalculer, il le DIT.
+   * Sans ce bandeau, un testeur qui voit toutes les missions ouvertes croirait la
+   * porte du quiz cassée pour les élèves.
+   */
+  unrestricted?: boolean;
 }) {
-  const t = useT();
+  const t = useProgressT();
+  const guideT = useGuideT();
   const { locale } = useI18n();
   const isRtl = subject.content_language === "ar";
   const exerciseTo = exerciseRouteFor(isAuthenticated);
+
+  // Le grand livre, lu UNE fois. `null` = anonyme (ou RPC en échec) : tout ce qui
+  // suit le traite comme « pas de compte », jamais comme « zéro ».
+  const progress = useMemo(() => parseSubjectProgress(rawProgress), [rawProgress]);
 
   // Anonymous quiz passes live in sessionStorage — read after mount only, so
   // SSR and the first client render agree (same pattern as the course reader).
@@ -162,16 +206,21 @@ export function SubjectHub({
       // No quiz (or a non-gated theme: the server pre-marks those chapters true)
       // means the chapter is open; anonymous session passes merge on top.
       const unlocked = !quiz || quizPassedByChapter[c.id] === true || anonPassed[c.id] === true;
-      // R-14/R-15 : « réussie » vaut ≥ 60 %, pas « tentée » ; seules les missions de catalogue
-      // comptent (hors quiz, hors `source='parent'`). Le compteur disait auparavant « fait »
-      // pour un exercice raté à 10 %, et incluait le quiz et les missions familiales.
-      const { done, total } = chapterMissionCounts(chapEx, bestByExercise);
-      const allDone = isChapterComplete(chapEx, bestByExercise, unlocked);
-      // Next actionable mission: the first not-passed row that is clickable in the
-      // current lock state (the quiz when locked, any mission otherwise).
-      const next = !unlocked
-        ? quiz
-        : (chapEx.find((e) => !isMissionPassed(bestByExercise[e.id])) ?? null);
+      // ⭐ Étude 34 : l'état du chapitre ne se RECALCULE plus, il se lit. `star` vient du
+      // grand livre (il ne redescend jamais), `rungs` du calcul vivant (il dit le
+      // reste-à-faire), et l'écart entre les deux est nommé par ✨. Sans compte, on garde
+      // la FORME du chapitre — ses crans, éteints — sans rien calculer d'un élève absent.
+      const chapterProgress = progress?.chapters[c.id] ?? null;
+      const rungs = chapterProgress ? chapterProgress.rungs : emptyRungs(chapEx);
+      const { counted: done, total } = rungTally(rungs);
+      const mastered = chapterProgress?.mastered === true;
+      // Le guide « cours → quiz → missions » ne se montre que là où la porte EXISTE.
+      // Le grand livre le dit pour un compte ; sans lui, le serveur pré-marque `true`
+      // les chapitres non gatés, donc seul un `false` explicite prouve une porte.
+      const gated =
+        quiz !== null &&
+        !unrestricted &&
+        (chapterProgress?.quiz.gated ?? quizPassedByChapter[c.id] === false);
       return {
         chapter: c,
         index: ci,
@@ -179,15 +228,43 @@ export function SubjectHub({
         // même donnée que l'affichage, sans re-projeter les chapitres.
         domain: c.domain ?? null,
         chapEx,
-        quiz,
         done,
         total,
         unlocked,
-        allDone,
-        next,
+        quiz,
+        steps: chapterSteps({ gated, cleared: unlocked }),
+        chapterProgress,
+        rungs,
+        mastered,
       };
     });
-  }, [chapters, exercises, bestByExercise, quizPassedByChapter, anonPassed]);
+  }, [chapters, exercises, progress, quizPassedByChapter, anonPassed, unrestricted]);
+
+  // Les deux cartes que `resolveNextAction` attend — dérivées UNE fois du grand livre.
+  // « Comptée » et « tentée » sont deux faits distincts : un chapitre tout tenté sans
+  // rien réussir est commencé, et c'est bien là qu'il faut reprendre.
+  const missionFlags = useMemo(() => {
+    const counted: Record<string, boolean> = {};
+    const attempted: Record<string, boolean> = {};
+    for (const mission of Object.values(progress?.missions ?? {})) {
+      counted[mission.exerciseId] = mission.counted;
+      attempted[mission.exerciseId] = mission.bestClassic != null;
+    }
+    // La charge du serveur ne porte QUE les missions (`mode <> 'quiz'`). Or franchir
+    // la porte d'un chapitre est du travail fait : sans cette boucle, un chapitre dont
+    // seul le quiz est passé ne serait pas « commencé », et « Reprendre ici » renverrait
+    // l'élève au début de la matière.
+    // ⚠️ Seulement quand la porte EXISTE. `cleared` vaut aussi « non gaté » — c'est la
+    // définition même de `chapter_quiz_cleared` — donc sur une matière hors école chaque
+    // chapitre à quiz était « commencé » d'office, et « Reprendre ici » sautait au DERNIER
+    // chapitre de la matière. Le spec de rappel l'a vu quatre nuits de suite (#1047).
+    for (const exercise of exercises) {
+      if (exercise.mode !== "quiz") continue;
+      const quiz = progress?.chapters[exercise.chapter_id]?.quiz;
+      if (quiz?.gated && quiz.cleared) attempted[exercise.id] = true;
+    }
+    return { counted, attempted };
+  }, [progress, exercises]);
 
   // « Reprendre ici » (connecté) — étude 22 R-31. La cible ne se décide plus ici : elle sort du
   // moteur partagé `resolveNextAction`, celui-là même qui alimente la bande focus du dashboard.
@@ -200,14 +277,17 @@ export function SubjectHub({
     const action = resolveNextAction({
       chapters,
       exercises,
-      bestByExercise,
+      // Le moteur reçoit le verdict du serveur, jamais un score à re-seuiller : c'est
+      // ce qui garantit que « Reprendre ici » et la jauge désignent la même mission.
+      countedByExercise: missionFlags.counted,
+      attemptedByExercise: missionFlags.attempted,
       quizSatisfiedByChapter: Object.fromEntries(rows.map((r) => [r.chapter.id, r.unlocked])),
     });
     if (action?.kind !== "continue") return null;
     const row = rows.find((r) => r.chapter.id === action.chapterId) ?? null;
     const next = row?.chapEx.find((e) => e.id === action.exerciseId) ?? null;
     return row && next ? { ...row, next } : null;
-  }, [rows, chapters, exercises, bestByExercise, isAuthenticated]);
+  }, [rows, chapters, exercises, missionFlags, isAuthenticated]);
 
   // Accordions: everything collapsed except the resume chapter (or the first).
   const [openIds, setOpenIds] = useState<Set<string>>(
@@ -242,39 +322,20 @@ export function SubjectHub({
     chapter: c,
     index: ci,
     chapEx,
-    quiz,
-    done,
-    total,
     unlocked,
-    allDone,
+    quiz,
+    steps,
+    chapterProgress,
+    rungs,
   }: (typeof rows)[number]) => {
     const open = openIds.has(c.id);
-    const chip = allDone
-      ? {
-          cls: "bg-success/12 text-success",
-          text: `${t.public.subject.chapterComplete} ✓`,
-        }
-      : !unlocked
-        ? {
-            // Opaque card surface + flame BORDER rather than a flame tint
-            // behind flame ink: at 11px bold the tinted variant measured
-            // 3.36:1 (#e54a00 on #fce9e0) under Référence and failed WCAG
-            // AA. Same remedy as the leaderboard "Toi" pill (GAP-047).
-            cls: "border border-[color:var(--flame)]/40 bg-card text-foreground",
-            text: `🔒 ${t.public.subject.quizToPass}`,
-          }
-        : done > 0
-          ? {
-              cls: "bg-success/12 text-success",
-              text: quiz ? `quiz ✓ · ${done}/${total}` : `${done}/${total}`,
-            }
-          : { cls: "bg-muted text-muted-foreground", text: t.public.subject.todo };
     return (
       <section key={c.id} className="overflow-hidden rounded-2xl border border-border bg-card">
         <button
           type="button"
           onClick={() => toggle(c.id)}
           aria-expanded={open}
+          data-testid={`chapter-toggle-${c.id}`}
           className="flex w-full items-center gap-3 px-4 py-3 text-start transition hover:bg-secondary/50 [@media(pointer:coarse)]:min-h-11"
         >
           <span className="shrink-0 text-2xs font-bold uppercase tracking-wider text-muted-foreground">
@@ -286,9 +347,7 @@ export function SubjectHub({
           >
             {c.title}
           </span>
-          <span className={`shrink-0 rounded-full px-2 py-0.5 text-2xs font-bold ${chip.cls}`}>
-            {chip.text}
-          </span>
+          <ChapterStarsChip progress={chapterProgress} rungs={rungs} locked={!unlocked} />
           <ChevronDown
             className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
           />
@@ -304,19 +363,45 @@ export function SubjectHub({
                 {c.description}
               </p>
             )}
-            <Link
-              to="/chapitre/$chapterId"
-              params={{ chapterId: c.id }}
-              className="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-primary transition hover:opacity-80 [@media(pointer:coarse)]:min-h-11"
-            >
-              <BookOpen className="h-4 w-4" /> {t.public.subject.readCourse}
-            </Link>
+            <ChapterStarsNote progress={chapterProgress} />
+            {/* L'ordre du chapitre, visible avant le premier cadenas (guide intégré). */}
+            {steps && <ChapterSteps states={steps} className="mt-3" />}
+            <div className="mt-3 mb-2 flex items-center gap-2">
+              <Link
+                to="/chapitre/$chapterId"
+                params={{ chapterId: c.id }}
+                data-testid={`read-course-${c.id}`}
+                // Le cours est le point d'entrée du chapitre : un vrai bouton
+                // pleine largeur, teinté, et non un lien texte qui se perdait
+                // entre la description et la liste des missions.
+                className="group flex min-w-0 flex-1 items-center gap-3 rounded-xl border-2 border-primary/40 bg-primary/10 px-4 py-3 text-start transition hover:border-primary hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 [@media(pointer:coarse)]:min-h-12"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+                  <BookOpen className="h-5 w-5" />
+                </span>
+                <span className="min-w-0 flex-1 font-display text-base font-bold text-primary">
+                  {t.public.subject.readCourse}
+                </span>
+                <ChevronRight className="h-5 w-5 shrink-0 text-primary transition-transform group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5" />
+              </Link>
+              <HelpTip label={t.public.subject.readCourse} text={guideT.guide.tips.readCourse} />
+            </div>
 
             {chapEx.length > 0 && (
               <ul className="mt-1 divide-y divide-border/60 border-t border-border/60">
                 {chapEx.map((ex) => {
-                  const best = bestByExercise[ex.id];
                   const isQuiz = ex.mode === "quiz";
+                  // La charge du serveur ne porte QUE les missions : la porte du
+                  // chapitre a son propre verdict (`chapter_quiz_cleared`), et c'est
+                  // lui qui coche la ligne du quiz. Sans cela, un quiz déjà franchi
+                  // se serait remis à promettre ses XP comme s'il restait à faire.
+                  const mission: MissionProgress | null = isQuiz
+                    ? null
+                    : (progress?.missions[ex.id] ?? null);
+                  const done = isQuiz
+                    ? chapterProgress?.quiz.cleared === true
+                    : mission?.counted === true;
+                  const best = mission?.bestClassic ?? null;
                   const lockedRow = !unlocked && !isQuiz;
                   const title = (
                     <span
@@ -329,58 +414,80 @@ export function SubjectHub({
                   );
                   if (lockedRow) {
                     return (
-                      <li
+                      <LockedMissionRow
                         key={ex.id}
-                        // No opacity modifier on muted-foreground: the token
-                        // IS the muted step already, and diluting it drove
-                        // 14px body text to 2.66:1 on white (WCAG AA needs
-                        // 4.5:1). Locked rows read "muted" via the padlock.
-                        className="flex items-center gap-2 py-2.5 text-sm text-muted-foreground"
-                      >
-                        <Lock className="h-3.5 w-3.5 shrink-0" />
-                        {title}
-                        <span className="shrink-0 text-xs">—</span>
-                      </li>
+                        exerciseId={ex.id}
+                        title={ex.title}
+                        titleNode={title}
+                        chapterId={c.id}
+                        quizExerciseId={quiz?.id ?? null}
+                        exerciseTo={exerciseTo}
+                      />
                     );
                   }
                   return (
                     <li key={ex.id}>
-                      <Link
-                        to={exerciseTo}
-                        params={{ exerciseId: ex.id }}
-                        className="flex items-center gap-2 py-2.5 text-sm transition hover:text-primary [@media(pointer:coarse)]:min-h-11"
-                      >
-                        {isMissionPassed(best) ? (
-                          <Check className="h-4 w-4 shrink-0 text-success" />
-                        ) : (
-                          <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground rtl:-scale-x-100" />
-                        )}
-                        {title}
-                        {/* R-13 : la difficulté se lit en ⭐, pas dans le titre. Le quiz
+                      <div className="flex items-center gap-2">
+                        <Link
+                          to={exerciseTo}
+                          params={{ exerciseId: ex.id }}
+                          className="flex min-w-0 flex-1 items-center gap-2 py-2.5 text-sm transition hover:text-primary [@media(pointer:coarse)]:min-h-11"
+                        >
+                          {/* ⭐ Le ✓ dit « comptée pour une étoile » (é34 R-3), pas
+                            « ≥ 60 % » : une réussite expédiée montre son score sans
+                            cocher, et la note du chapitre dit pourquoi. */}
+                          {done ? (
+                            <Check className="h-4 w-4 shrink-0 text-success" />
+                          ) : (
+                            <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground rtl:-scale-x-100" />
+                          )}
+                          {title}
+                          {/* R-13 : la difficulté se lit en ⭐, pas dans le titre. Le quiz
                                   n'en a pas — ce n'est pas une mission mais la porte du chapitre. */}
-                        {!isQuiz && <DifficultyStars level={ex.difficulty} className="shrink-0" />}
-                        <span className="shrink-0 text-xs text-muted-foreground">
-                          {best != null ? (
+                          {!isQuiz && (
+                            <DifficultyStars level={ex.difficulty} className="shrink-0" />
+                          )}
+                          {mission?.isNew && (
                             <span
-                              className={
-                                isMissionPassed(best)
-                                  ? "font-bold text-success"
-                                  : "font-bold text-muted-foreground"
-                              }
+                              data-testid="mission-new"
+                              aria-label={t.progress.newMissions.replace("{n}", "1")}
+                              className="shrink-0 text-xs"
                             >
-                              {Math.round(best)}%
+                              ✨
                             </span>
-                          ) : isQuiz && !unlocked ? (
-                            <span className="font-semibold text-primary">
-                              {t.public.subject.unlocksChapter}
-                            </span>
-                          ) : isAuthenticated ? (
-                            <span className="flex items-center gap-0.5 font-semibold text-primary">
-                              <Zap className="h-3 w-3" />+{ex.xp_reward} XP
-                            </span>
-                          ) : null}
-                        </span>
-                      </Link>
+                          )}
+                          <span className="shrink-0 text-xs text-muted-foreground">
+                            {best != null ? (
+                              <span
+                                className={
+                                  done
+                                    ? "font-bold text-success"
+                                    : "font-bold text-muted-foreground"
+                                }
+                              >
+                                {Math.round(best)}%
+                              </span>
+                            ) : isQuiz && !unlocked ? (
+                              <span className="font-semibold text-primary">
+                                {t.public.subject.unlocksChapter}
+                              </span>
+                            ) : done ? null : isAuthenticated ? (
+                              <span className="flex items-center gap-0.5 font-semibold text-primary">
+                                <Zap className="h-3 w-3" />+{ex.xp_reward} XP
+                              </span>
+                            ) : null}
+                          </span>
+                        </Link>
+                        {isQuiz && !unlocked && (
+                          <HelpTip
+                            label={ex.title}
+                            text={fillGuideText(guideT.guide.tips.quizRow, {
+                              pct: QUIZ_PASS_THRESHOLD_PCT,
+                              sec: MIN_SECONDS_PER_QUESTION,
+                            })}
+                          />
+                        )}
+                      </div>
                       <RecallMissionRow
                         exerciseId={ex.id}
                         title={ex.title}
@@ -431,6 +538,20 @@ export function SubjectHub({
         {subject.description && <p className="mt-2 text-muted-foreground">{subject.description}</p>}
       </header>
 
+      <GuideIntroCard screen="subject" variant="rule" className="mb-6" />
+
+      {unrestricted && (
+        <p
+          role="status"
+          data-testid="hub-unrestricted"
+          className="mb-6 rounded-xl border border-dashed border-(--gold)/40 bg-(--gold)/5 px-3 py-2 text-xs font-semibold text-(--gold)"
+        >
+          🧪 {t.public.subject.unrestrictedBanner}
+        </p>
+      )}
+
+      <SubjectSeals progress={progress} />
+
       <ManuelEleveCard manuelRefs={subject.manuel_refs} />
 
       {resume && resume.next && (
@@ -466,7 +587,7 @@ export function SubjectHub({
             // domaine, et où il en est dedans. Le détail par chapitre est déjà
             // dans les cartes, il n'a pas à être répété deux fois.
             const label = group.label ?? t.public.subject.otherChapters;
-            const doneChapters = group.chapters.filter((r) => r.allDone).length;
+            const doneChapters = group.chapters.filter((r) => r.mastered).length;
             // La clé porte des espaces (et « : » pour le fourre-tout) : un id
             // doit rester utilisable tel quel, aussi comme sélecteur.
             const headingId = `domain-${group.key.replace(/[^\p{L}\p{N}]+/gu, "-")}`;

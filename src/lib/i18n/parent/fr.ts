@@ -110,7 +110,7 @@ export const frParent: ParentTranslations = {
     goalProgressDaily: "{done}/{target} missions aujourd'hui",
     goalUnit: "missions / semaine",
     goalUnitDaily: "missions / jour",
-    coverageShort: "{done}/{total} chap.",
+    coverageShort: "{done}/{total} chap. maîtrisés",
   },
   parentDaily: {
     tabSummary: "Bilan",
@@ -233,7 +233,21 @@ export const frParent: ParentTranslations = {
     subjectsSubtitle: "Où va le temps, et ce qu'il rapporte, matière par matière.",
     subjectsEmpty: "Aucune matière travaillée sur cette période.",
     colSubject: "Matière",
-    colCoverage: "Programme",
+    colCoverage: "Chapitres maîtrisés",
+    // ⚠️ « maîtrisés », pas « faits » : la barre est « toutes les missions du
+    // chapitre réussies au-dessus de 60 % », plus le quiz de compréhension en
+    // scolaire. Le 2026-09-04, l'auteur du produit a lu « 3/20 chap. » comme
+    // « il a fait 3 chapitres sur 20 » — le mot manquait.
+    coverageHint:
+      "Un chapitre compte quand TOUTES ses missions sont réussies (≥ 60 %), quiz de compréhension inclus.",
+    gapsTitle: "Ce qui manque pour valider un chapitre",
+    gapsSubtitle: "Les plus proches du but d'abord — un geste, et le chapitre compte.",
+    gapsMissions: "{n} mission(s) à réussir",
+    gapsQuiz: "Quiz de compréhension à repasser, sans se presser",
+    gapsBoth: "{n} mission(s) à réussir, puis le quiz",
+    gapsMissionCount: "{done}/{total} missions",
+    gapsQuizHint:
+      "Le quiz demande 80 % ET au moins 4 secondes par question — répondre trop vite ne le valide pas.",
     scopeLabel: "Afficher :",
     scopeClass: "Sa classe",
     scopeClassHint: "(sa classe)",
@@ -241,6 +255,8 @@ export const frParent: ParentTranslations = {
     scopeExcluded:
       "Hors de sa classe sur cette période : {time} et {exercises} exercice(s) — révisions d’autres niveaux, extras, donjon et duels. Bascule sur « Tout » pour les inclure.",
     coverageAria: "{done} chapitres terminés sur {total}",
+    coverageMastered: "{done} maîtrisés sur {total}",
+    coverageNew: "✨ {n} chapitre(s) ajouté(s)",
     colTime: "Temps",
     colLessons: "Cours",
     colExercises: "Exercices",

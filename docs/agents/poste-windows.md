@@ -4,6 +4,12 @@
 > projet ; ils ne se déduisent d'aucun fichier du repo. Un agent (ou un humain) qui les ignore
 > perd du temps ou, pire, croit un faux signal. Le poste principal de Mohamed est **Windows 11**
 > avec Git Bash (MSYS) ; la CI, elle, tourne sous Ubuntu — d'où les écarts ci-dessous.
+>
+> ⚠️ **Playbook hérité depuis le 2026-09-05.** Le poste local n'est plus le cas nominal : les
+> sessions tournent dans le cloud ([étude cloud-first](./etude-cloud-first.md)), sur une VM
+> Ubuntu neuve par session, où **aucun** de ces pièges n'existe — LF natif, `jq` présent, `/tmp`
+> réel, pas de checkout partagé, pas de schannel. Ces pièges restent vrais pour qui garde un poste
+> Windows ; ils ne se lisent plus en premier.
 
 ## Git Bash convertit les chemins (MSYS pathconv)
 

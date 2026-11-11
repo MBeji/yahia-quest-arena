@@ -21,7 +21,9 @@
  *
  * Crucially we do **not** isolate plain digits or linear operators (`+ − × ÷ =`):
  * the native bidi algorithm already orders `10 مي + 2 مي = ؟` correctly, and
- * isolating it would reverse the run. Only glyphs that actually flip are wrapped.
+ * isolating it would reverse the run. Only glyphs that actually flip are wrapped —
+ * and the few number-and-letter formulas that come out half reversed
+ * ({@link DIGIT_FIRST_FORMULA}, {@link LEADING_SIGN_LETTER}).
  */
 
 /** LEFT-TO-RIGHT ISOLATE — opens an isolated LTR run. */
@@ -54,11 +56,16 @@ const SEGMENT_RE = new RegExp(`[${ARABIC_CHARS}]+|[^${ARABIC_CHARS}]+`, "gu");
  * What genuinely needs isolation is a run containing a **mirrored or
  * direction-sensitive** glyph: the radical `√` (a prefix that otherwise lands
  * after its operand — `√64` → `64√`), the Bidi_Mirrored bracket/relation set
- * (`( ) [ ] { } ⟨ ⟩ ⌊ ⌋ ⌈ ⌉ < > ≤ ≥ ∈ ∉ ⊂ ⊃ ⊆ ⊇`), arrows, big operators and
- * grouping bars. Both raw operators and their HTML-escaped forms (`&lt;`,
- * `&gt;`) count, so the helper is safe to run before or after HTML escaping.
+ * (`( ) [ ] { } ⟨ ⟩ ⌊ ⌋ ⌈ ⌉ < > ≤ ≥ ∈ ∉ ∋ ∌ ⊂ ⊃ ⊄ ⊅ ⊆ ⊇ ⊈ ⊉ ⊊ ⊋`), arrows, big
+ * operators and grouping bars. The set relations go as a WHOLE family: `⊄` or `∋`
+ * left out stays at the RTL level when it stands alone in Arabic prose and is drawn
+ * with its mirror glyph — `⊄` read as `⊅`, the statement reversed (#1117). The angle
+ * signs `∠ ∡ ∢` are in the same case: `يحقّق ∠ABy = 60°` was drawn `ABy = 60°⦣`, the
+ * sign detached from its letters and mirrored. Both raw operators and their HTML-escaped
+ * forms (`&lt;`, `&gt;`) count, so the helper is safe to run before or after HTML escaping.
  */
-const BIDI_FLIP_SIGNAL = /[√∛∜()[\]{}⟨⟩⌊⌋⌈⌉<>≤≥≮≯∈∉⊂⊃⊆⊇←→⟵⟶⟸⟹⟺∑∏∫|‖]|&lt;|&gt;|&le;|&ge;/u;
+const BIDI_FLIP_SIGNAL =
+  /[√∛∜()[\]{}⟨⟩⌊⌋⌈⌉<>≤≥≮≯∈∉∋∌⊂⊃⊄⊅⊆⊇⊈⊉⊊⊋←→⟵⟶⟸⟹⟺∑∏∫∠∡∢|‖]|&lt;|&gt;|&le;|&ge;/u;
 
 /**
  * A segment that is **only** whitespace and paired bracket characters with no
@@ -77,7 +84,7 @@ const SOLO_BRACKETS_RE = /^[\s()[\]{}⟨⟩⌊⌋⌈⌉]+$/u;
  * (`< > ≤ ≥ ∈ ⊂`…), arrows, large operators and grouping bars.  These glyphs
  * do not benefit from bidi-mirroring and must be forced LTR.
  */
-const STRONG_FLIP_SIGNAL = /[√∛∜<>≤≥≮≯∈∉⊂⊃⊆⊇←→⟵⟶⟸⟹⟺∑∏∫|‖]|&lt;|&gt;|&le;|&ge;/u;
+const STRONG_FLIP_SIGNAL = /[√∛∜<>≤≥≮≯∈∉∋∌⊂⊃⊄⊅⊆⊇⊈⊉⊊⊋←→⟵⟶⟸⟹⟺∑∏∫∠∡∢|‖]|&lt;|&gt;|&le;|&ge;/u;
 
 /**
  * A **tight signed number** — a `+`/`−` glued directly to a digit (`−5`, `+90`,
@@ -104,33 +111,190 @@ const STRONG_FLIP_SIGNAL = /[√∛∜<>≤≥≮≯∈∉⊂⊃⊆⊇←→⟵�
 const SIGNED_NUMBER = /(?<![\d)])[−–+][0-9]|[⁻⁺][⁰¹²³⁴⁵⁶⁷⁸⁹]|[₋₊][₀₁₂₃₄₅₆₇₈₉]/u;
 
 /**
+ * Two more forms the native algorithm scrambles, both **mixed number-and-letter
+ * formulas** whose reading order depends on what comes first. After an Arabic word a
+ * Latin LETTER is a strong left-to-right character, and every number after it inherits
+ * that direction (rule W7) — so `x − 3 = 5` and `AB = 5 − x` already render left to right.
+ * But when the formula opens with a number, or with a sign glued to a letter, the first
+ * term sits at the RTL level and only the tail turns left-to-right: the formula comes out
+ * half reversed.
+ *
+ *  - {@link DIGIT_FIRST_FORMULA}: a number, an operator, then a letter — possibly behind a
+ *    coefficient — with no letter before (`25 + k = 9` drawn `k = 9 + 25`, `1/b` drawn `b/1`,
+ *    `3 − x`, `10 × 3^p`, `3 − 2x = x − 3` drawn `2x = x − 3 − 3`). A Greek letter counts as a
+ *    letter — `π`, `α`, `θ` are strong left-to-right characters like `x` — so `3,14 − π` was drawn
+ *    `π − 3,14`, the difference reversed; and a degree sign may follow the number, so
+ *    `30° = OI/OB` was drawn `OI/OB = °30`.
+ *  - {@link LEADING_SIGN_LETTER}: a sign glued to a letter that does not follow an operand
+ *    (`−x + 1` drawn `x + 1−`, `−b`, `+b`).
+ *
+ * Measured on the whole corpus (96 943 Arabic strings), about 260 and 110 segments. Digit-only
+ * arithmetic (`10 − 4 = 6`, `3 + 5 = ؟`) carries no letter, stays untouched and keeps
+ * reading right to left with the sentence, as designed above.
+ */
+const DIGIT_FIRST_FORMULA =
+  /^[^A-Za-z\u0391-\u03A9\u03B1-\u03C9]*?\d[\d.,]*°?\s*[+−–×÷/=^]\s*[\d.,]*[A-Za-z\u0391-\u03A9\u03B1-\u03C9]/u;
+const LEADING_SIGN_LETTER =
+  /^[^A-Za-z\u0391-\u03A9\u03B1-\u03C9]*?(?<![\d)])[−–+][A-Za-z\u0391-\u03A9\u03B1-\u03C9]/u;
+
+/**
+ * A point or a variable carrying a prime — `M'`, `A″`, `x'` — is a mathematical atom even alone:
+ * inside RTL prose its apostrophe is a neutral character that takes the right-to-left direction
+ * and lands on the wrong side of the letter (`M'` drawn `'M`). Only a SINGLE letter qualifies
+ * (not preceded, nor followed, by another letter), so the apostrophes of French and English words
+ * (`l'eau`, `aujourd'hui`, `it's`) never match.
+ */
+const PRIMED_LETTER = /(?<![A-Za-z])[A-Za-z][′″']+(?![A-Za-z])/u;
+
+/**
  * Wrap every non-Arabic run that carries a bidi-flipping glyph (see
  * {@link BIDI_FLIP_SIGNAL}) or a tight signed number (see {@link SIGNED_NUMBER})
- * in `text` with LTR isolates so it renders left-to-right even inside RTL prose.
+ * in `text` with LTR isolates — and, inside any other run, each number with a
+ * missing digit (`2▢4`, see {@link GAP_NUMBER_RE}) on its own — so it renders left-to-right even inside RTL prose.
  * Runs that are plain arithmetic, units or bare numbers are left alone — the
  * native bidi algorithm already orders them correctly, and isolating them would
  * reverse them. Text with no Arabic at all is returned unchanged — LTR content
  * (French/English) has no reordering bug.
+ *
+ * The Latin punctuation that BORDERS a formula (`.,;:` closing a sentence or
+ * opening an énoncé) stays OUTSIDE the isolate — see {@link peelEdgePunctuation}.
  */
 export function isolateLtrRuns(text: string): string {
   if (!text || !ARABIC_RE.test(text)) return text;
-  return text.replace(SEGMENT_RE, (segment) => {
-    if (ARABIC_RE.test(segment)) return segment;
-    return needsLtrIsolate(segment) ? `${LRI}${segment}${PDI}` : segment;
-  });
+  const segments = text.match(SEGMENT_RE) ?? [];
+  const pieces = splitAtParentheticals(segments);
+  return segments
+    .map((segment, index) =>
+      ARABIC_RE.test(segment)
+        ? segment
+        : pieces[index]
+            .map((piece) => (piece.prose ? piece.text : isolatePiece(piece.text)))
+            .join(""),
+    )
+    .join("");
 }
+
+/** Isole un morceau non arabe s'il le demande, ponctuation de bord restée dehors. */
+function isolatePiece(piece: string): string {
+  return isolationSpans(piece)
+    .map((span) => (span.math ? `${LRI}${span.text}${PDI}` : span.text))
+    .join("");
+}
+
+/**
+ * Un nombre À CHIFFRE MANQUANT — `2▢4`, `27▢▢`, `▢5`, `3,▢5` : des chiffres et des cases vides
+ * (U+25A2), avec au moins un de chaque, la virgule ou le point décimal pouvant s'y glisser entre
+ * deux. C'est UN nombre, dont les chiffres ne doivent jamais changer d'ordre. Or la case est un
+ * neutre : entre deux chiffres, dans une phrase arabe, elle prend le sens de la phrase (règle N1,
+ * où les chiffres comptent comme de droite à gauche) et coupe le nombre en deux, rangés à
+ * l'envers — `2▢4` dessiné `4▢2`, `27▢▢` dessiné `▢▢27` (mesuré dans Chromium, `dir=rtl`).
+ *
+ * Seul l'ATOME est isolé, pas le segment : `2▢4 + 3 = ؟` garde son addition lue avec la phrase,
+ * comme toute arithmétique de chiffres (`10 − 4 = 6`). Les autres blancs qu'on trouve entre deux
+ * chiffres ne sont pas des chiffres manquants : `1…5` est un intervalle (deux nombres, rangés
+ * comme une opération), `_` entre deux chiffres n'apparaît que dans des URL, et `؟` est une
+ * lettre arabe forte qui coupe déjà le segment — aucun n'est touché.
+ */
+const GAP_NUMBER_RE = /[\d▢]+(?:[.,][\d▢]+)*/gu;
+const isGapNumber = (token: string) => /\d/u.test(token) && token.includes("▢");
+
+/** Un morceau d'un segment non arabe, jugé : à isoler (`math`) ou laissé à la phrase. */
+type Span = { text: string; math: boolean };
+
+/**
+ * Découpe un morceau non arabe en ce qui s'isole et ce qui reste de la prose. Le morceau entier
+ * s'il le demande ({@link needsLtrIsolate}), ponctuation de bord dehors ; sinon ses seuls nombres
+ * à chiffre manquant ({@link GAP_NUMBER_RE}). `isolateLtrRuns` et `splitMathRuns` passent tous deux
+ * par ici : ils isolent exactement les mêmes runs.
+ */
+function isolationSpans(piece: string): Span[] {
+  const [lead, core, tail] = peelEdgePunctuation(piece);
+  if (needsLtrIsolate(core)) {
+    return [
+      { text: lead, math: false },
+      { text: core, math: true },
+      { text: tail, math: false },
+    ].filter((span) => span.text);
+  }
+  const spans: Span[] = [];
+  let from = 0;
+  for (const match of piece.matchAll(GAP_NUMBER_RE)) {
+    if (!isGapNumber(match[0])) continue;
+    if (match.index > from) spans.push({ text: piece.slice(from, match.index), math: false });
+    spans.push({ text: match[0], math: true });
+    from = match.index + match[0].length;
+  }
+  if (from < piece.length) spans.push({ text: piece.slice(from), math: false });
+  return spans;
+}
+
+/**
+ * Balises de mise en forme EN LIGNE : elles ne coupent pas une phrase, donc pas une formule.
+ * `فنأخذ المقابل: |√6 − 3| = −(√6 − 3) = **3 − √6**.` est UNE chaîne d'égalités dont le dernier
+ * membre est en gras ; jugée morceau par morceau, la partie en gras (sans lettre arabe) n'était
+ * pas isolée — elle s'affichait `6√ − 3` — et l'isolat de gauche la rejetait de l'autre côté de
+ * la chaîne. `span` reste une frontière : le rendu ne s'en sert que pour les étiquettes de blocs.
+ */
+const INLINE_FORMATTING_TAG_RE = /^<\/?(?:strong|em)>$/u;
 
 /**
  * HTML-aware variant of {@link isolateLtrRuns}: isolates math runs only inside
  * text content, never inside tag markup (so class names, ids and attributes are
  * left alone). Used by the markdown renderer on its final HTML output.
+ *
+ * Le texte que seules des balises en ligne ({@link INLINE_FORMATTING_TAG_RE}) séparent se juge
+ * d'un seul tenant, comme si elles n'étaient pas là ; les isolats posés reviennent ensuite dans
+ * les morceaux de texte d'origine — un isolat peut ainsi s'ouvrir avant `<strong>` et se fermer
+ * dedans, ce que l'algorithme bidi accepte : il travaille sur le paragraphe, pas sur la balise.
  */
 export function isolateLtrRunsHtml(html: string): string {
   if (!html || !ARABIC_RE.test(html)) return html;
-  return html
-    .split(/(<[^>]*>)/)
-    .map((piece) => (piece.startsWith("<") ? piece : isolateLtrRuns(piece)))
-    .join("");
+  const parts = html.split(/(<[^>]*>)/);
+  let group: number[] = [];
+  const flush = () => {
+    const texts = group.map((index) => parts[index]);
+    isolateTextGroup(texts).forEach((text, k) => (parts[group[k]] = text));
+    group = [];
+  };
+  parts.forEach((part, index) => {
+    if (!part.startsWith("<")) group.push(index);
+    else if (!INLINE_FORMATTING_TAG_RE.test(part)) flush();
+  });
+  flush();
+  return parts.join("");
+}
+
+/**
+ * Isole des morceaux de texte consécutifs comme un seul texte, puis rend à chaque morceau ses
+ * caractères et les isolats qui lui reviennent : l'ouvrant va au morceau du caractère qu'il
+ * précède, le fermant à celui du caractère qu'il suit. {@link isolateLtrRuns} n'ajoute que des
+ * isolats ; si jamais elle changeait autre chose, chaque morceau est jugé seul, comme avant.
+ */
+function isolateTextGroup(texts: string[]): string[] {
+  const joined = texts.join("");
+  const isolated = isolateLtrRuns(joined);
+  if (isolated === joined) return texts;
+  if (isolated.replaceAll(LRI, "").replaceAll(PDI, "") !== joined) return texts.map(isolateLtrRuns);
+  const out = texts.map(() => "");
+  let piece = 0;
+  let offset = 0;
+  let previous = 0;
+  for (const char of isolated) {
+    if (char === PDI) {
+      out[previous] += char;
+      continue;
+    }
+    while (piece < texts.length - 1 && offset >= texts[piece].length) {
+      piece += 1;
+      offset = 0;
+    }
+    out[piece] += char;
+    if (char !== LRI) {
+      offset += char.length;
+      previous = piece;
+    }
+  }
+  return out;
 }
 
 /* --------------------------------------------------------------------------
@@ -180,13 +344,234 @@ export type TextRun = { text: string; math: boolean; nowrap: boolean };
  */
 const NOWRAP_MAX = 32;
 
+/**
+ * Une flèche de PROSE : rien que des flèches, des espaces, et les blancs `___`/`………` d'un énoncé
+ * à compléter. En arabe, `←` relie deux membres de phrase (`«…» ← قرائنُ`, « donc ») ; seule
+ * entre deux mots arabes, elle prend le sens de la phrase et se dessine telle qu'écrite — une
+ * flèche ne se miroite pas. L'isoler n'apporte rien et, dès que la suite compte deux signes
+ * (`_ ←`, `← →`), la lit à l'envers. Une flèche DE FORMULE garde son isolat : elle a un chiffre
+ * ou une lettre dans son run (`2 → 4`, `2Al + 3Cl₂ → 2AlCl₃`).
+ */
+const PROSE_ARROW_RE = /^[\s←→⟵⟶⟸⟹⟺_…]+$/u;
+
 /** La condition exacte qu'applique {@link isolateLtrRuns} à un segment non arabe. */
 function needsLtrIsolate(segment: string): boolean {
+  if (PROSE_ARROW_RE.test(segment)) return false;
   return (
     (BIDI_FLIP_SIGNAL.test(segment) &&
       (!SOLO_BRACKETS_RE.test(segment) || STRONG_FLIP_SIGNAL.test(segment))) ||
-    SIGNED_NUMBER.test(segment)
+    SIGNED_NUMBER.test(segment) ||
+    DIGIT_FIRST_FORMULA.test(segment) ||
+    LEADING_SIGN_LETTER.test(segment) ||
+    PRIMED_LETTER.test(segment)
   );
+}
+
+/**
+ * Vrai si un segment mêle parenthèses et crochets : une demi-droite `[OI)`, un intervalle `]2 ; 5)`
+ * ou `(2 ; 5]`, où une parenthèse s'apparie à un crochet, ou un crochet resté seul (`]a ; b[` à
+ * la française). Ce n'est jamais de la prose : on n'y retire aucune parenthèse. Des crochets bien
+ * appariés (`[AB]`, `[BD]:`) n'y changent rien.
+ */
+function hasMixedDelimiters(segment: string): boolean {
+  const open: string[] = [];
+  for (const char of segment) {
+    if (char === "(" || char === "[") {
+      open.push(char);
+    } else if (char === ")" || char === "]") {
+      const wanted = char === ")" ? "(" : "[";
+      const top = open[open.length - 1];
+      if (top === wanted) open.pop();
+      else if (top !== undefined || char === "]") return true;
+    }
+  }
+  return open.includes("[");
+}
+
+/** Un morceau d'un segment non arabe : de la prose (une parenthèse arabe), ou un candidat à l'isolat. */
+type Piece = { text: string; prose: boolean };
+
+/**
+ * Découpe chaque segment non arabe aux parenthèses que le texte ARABE d'à côté ouvre ou ferme.
+ *
+ * Une parenthèse dont la compagne est dans UN AUTRE segment — de l'autre côté d'un mot arabe —
+ * enferme du texte arabe : c'est de la prose, où qu'elle se trouve dans son segment. Au bord,
+ * {@link peelEdgePunctuation} la retire déjà ; au MILIEU, elle restait dans l'isolat, qui la
+ * dessine dans le sens gauche-à-droite, à l'envers du membre de phrase qu'elle borne :
+ * `(بوحدة OI) : AB = |−2 − (−√2)| = |√2 − 2|` enfermait « بوحدة … : AB = … » et laissait `OI` dehors.
+ * Les deux moitiés se jugent séparément — `OI` n'a rien à isoler, `AB = …` si — et la parenthèse,
+ * neutre entre deux forts, prend le sens de la phrase.
+ *
+ * On apparie les parenthèses sur tout le texte (une pile), pas segment par segment. Restent
+ * dans leur segment : les parenthèses sans compagne nulle part (`1)` qui numérote une ligne), celles
+ * qui ont leur compagne dans le même segment (`(x − 4)(x + 2) = 0`), et tout segment qui mêle
+ * parenthèses et crochets (voir {@link hasMixedDelimiters}).
+ */
+function splitAtParentheticals(segments: string[]): Piece[][] {
+  const crossing = segments.map(() => new Set<number>());
+  const open: Array<[segment: number, at: number]> = [];
+  segments.forEach((segment, index) => {
+    if (ARABIC_RE.test(segment) || hasMixedDelimiters(segment)) return;
+    for (let at = 0; at < segment.length; at += 1) {
+      if (segment[at] === "(") {
+        open.push([index, at]);
+      } else if (segment[at] === ")") {
+        const companion = open.pop();
+        if (companion && companion[0] !== index) {
+          crossing[companion[0]].add(companion[1]);
+          crossing[index].add(at);
+        }
+      }
+    }
+  });
+  return segments
+    .map((segment, index) => {
+      // Au bord du segment, {@link peelEdgePunctuation} retire déjà la parenthèse AVEC ses espaces.
+      const cuts = [...crossing[index]]
+        .filter((at) => segment.slice(0, at).trim() && segment.slice(at + 1).trim())
+        .sort((a, b) => a - b);
+      if (!cuts.length) return [{ text: segment, prose: false }];
+      const pieces: Piece[] = [];
+      let from = 0;
+      for (const at of cuts) {
+        // Les espaces qui précèdent la parenthèse sont de la prose avec elle, comme au bord du segment.
+        let start = at;
+        while (start > from && /\s/u.test(segment[start - 1])) start -= 1;
+        if (start > from) pieces.push({ text: segment.slice(from, start), prose: false });
+        pieces.push({ text: segment.slice(start, at + 1), prose: true });
+        from = at + 1;
+      }
+      if (from < segment.length) pieces.push({ text: segment.slice(from), prose: false });
+      return pieces;
+    })
+    .map(splitAtQuotes);
+}
+
+/**
+ * Guillemets et apostrophes typographiques — jamais un signe de formule, toujours de la prose.
+ * `«` et `»` sont de plus des glyphes MIROIR : à hauteur de la phrase arabe ils se dessinent
+ * retournés, comme il faut ; dans un isolat gauche-à-droite ils perdent ce miroir et passent de
+ * l'autre côté de ce qu'ils bornent. `«(1) في رأيي` se lisait `(1)»في رأيي`, et dans
+ * `«…» ← قرائنُ` le guillemet fermant venait après la flèche.
+ */
+const QUOTE_RE = /([«»“”‹›„])/u;
+
+/**
+ * Sort chaque guillemet d'un morceau candidat à l'isolat : il devient un morceau de prose, et ce
+ * qui l'entoure se juge séparément (`«(1) ` → `«` + `(1)` + ` `, `» ← «` → `»` + ` ← ` + `«`).
+ *
+ * Les espaces qui bordent un fragment voisin d'un guillemet sortent eux aussi de l'isolat : dans
+ * `«(1) في`, l'espace laissé dans l'isolat se dessinait du côté gauche-à-droite, entre le
+ * guillemet et le numéro (`« (1)في`), au lieu de séparer le numéro du texte.
+ */
+function splitAtQuotes(pieces: Piece[]): Piece[] {
+  return pieces.flatMap((piece) => {
+    if (piece.prose || !QUOTE_RE.test(piece.text)) return [piece];
+    return piece.text
+      .split(QUOTE_RE)
+      .filter(Boolean)
+      .flatMap((text): Piece[] => {
+        if (QUOTE_RE.test(text)) return [{ text, prose: true }];
+        const [, lead, core, tail] = text.match(/^(\s*)([\s\S]*?)(\s*)$/u) as RegExpMatchArray;
+        return [
+          { text: lead, prose: true },
+          { text: core, prose: false },
+          { text: tail, prose: true },
+        ].filter((part) => part.text);
+      });
+  });
+}
+
+/**
+ * Sépare un segment non arabe DÉJÀ jugé à isoler en `[attaque, formule, queue]`,
+ * la ponctuation latine qui le borde (`.`, `,`, `;`, `:`) et la parenthèse qu'il
+ * ouvre ou ferme sans sa compagne allant à l'attaque ou à la queue — dans les deux
+ * sens : `2012 (` et `) ·` (la parenthèse s'ouvre ou se ferme APRÈS la formule, vers
+ * le texte arabe qui suit), mais aussi `(x + 3` et `x + 3)` (la formule ouvre ou
+ * ferme un membre de phrase arabe ; sa compagne est dans un autre segment).
+ * `attaque + formule + queue` redonne toujours le segment.
+ *
+ * Pourquoi : isolée avec la formule, cette ponctuation se lit dans l'isolat
+ * gauche-à-droite. Le point qui ferme `المجال هو [−3 ; −1].` se dessinait alors
+ * entre le dernier mot arabe et la formule (à droite d'elle) au lieu d'être à
+ * l'extrémité gauche de la ligne qui termine la phrase ; les deux points de
+ * `أمثلة: √9 = 3` passaient après la formule ; et le « ( » de `… = 12 + 8√2 (الحدّان …)`,
+ * qui ouvre un membre de phrase ARABE, restait à droite de la formule, du mauvais
+ * côté du texte qu'il enferme. Hors de l'isolat, ces caractères sont des neutres
+ * entre deux forts RTL : ils prennent le sens de la phrase, et l'appariement des
+ * parenthèses fait le reste.
+ *
+ * Garde-fous : la ponctuation d'attaque n'est retirée que si un espace la suit
+ * (`: √9`, jamais le point d'un décimal `.5`) ; une parenthèse n'est retirée que
+ * si elle n'a pas de compagne DANS le segment — `(x − 4)(x + 2) = 0` reste entière,
+ * et `(80 + 100) ÷ 2 = 90 ✓ (` ne perd que son « ( » final : celui d'attaque a sa
+ * fermante, c'est la formule qui l'ouvre. On apparie vraiment les parenthèses (une
+ * pile), on ne compare pas des totaux : `(80 + 100) ÷ 2 = 90 (` en compte deux
+ * ouvrantes pour une fermante, sans que la première soit orpheline.
+ * C'est la FORMULE (et non le segment entier) que les appelants soumettent à
+ * {@link needsLtrIsolate} : un segment dont la seule raison d'être isolé était une
+ * parenthèse de prose (`2012 (` dans le titre `مناظرة 2012 (تقني)`) ne l'est plus,
+ * et se rend comme le navigateur sait le faire. Pas de retrait de parenthèse dans un
+ * segment qui mêle parenthèses et crochets (`[OI)`, `]2 ; 5)`) : une demi-droite ou un
+ * intervalle apparie une parenthèse à un crochet.
+ */
+function peelEdgePunctuation(segment: string): [lead: string, core: string, tail: string] {
+  // `[OI)`, `]2 ; 5)` : une demi-droite ou un intervalle apparie une parenthèse à un crochet,
+  // ce n'est jamais de la prose — on n'y retire que la ponctuation.
+  const bracketed = hasMixedDelimiters(segment);
+  let lead = "";
+  let core = segment;
+  let tail = "";
+  for (;;) {
+    const punctuation = /^\s*[.,;:]+(?=\s)/u.exec(core)?.[0];
+    // Une fermante d'attaque n'a, par construction, aucune ouvrante avant elle : orpheline.
+    const closer = /^\s*\)/u.exec(core)?.[0];
+    const head = /^\s*\(/u.exec(core)?.[0];
+    const opener =
+      !bracketed && head && isUnmatchedOpener(core, head.length - 1) ? head : undefined;
+    const peeled = punctuation ?? closer ?? opener;
+    if (!peeled) break;
+    lead += peeled;
+    core = core.slice(peeled.length);
+  }
+  for (;;) {
+    const punctuation = /\s*[.,;:]+\s*$/u.exec(core)?.[0];
+    // La coche « ✓ » qui conclut un calcul est un marqueur de PROSE, pas un signe de la formule :
+    // dans l'isolat elle se retrouve à droite de la formule, donc collée au mot arabe qui la
+    // précède et lue avant elle (`… على ✓ (ACQ)`) ; dehors, elle suit la formule dans le sens de
+    // lecture de la phrase.
+    const tick = /\s*✓\s*$/u.exec(core)?.[0];
+    // Une ouvrante de queue n'a, par construction, aucune fermante après elle : orpheline.
+    const opener = /\s*\(\s*$/u.exec(core)?.[0];
+    const last = /\s*\)\s*$/u.exec(core)?.[0];
+    const closer =
+      !bracketed && last && isUnmatchedCloser(core, core.lastIndexOf(")")) ? last : undefined;
+    const peeled = punctuation ?? tick ?? opener ?? closer;
+    if (!peeled) break;
+    tail = peeled + tail;
+    core = core.slice(0, core.length - peeled.length);
+  }
+  return [lead, core, tail];
+}
+
+/** Vrai si la « ( » de `text` à l'indice `at` n'a aucune « ) » pour la fermer dans `text`. */
+function isUnmatchedOpener(text: string, at: number): boolean {
+  let depth = 0;
+  for (let i = at; i < text.length; i++) {
+    if (text[i] === "(") depth++;
+    else if (text[i] === ")" && --depth === 0) return false;
+  }
+  return true;
+}
+
+/** Vrai si la « ) » de `text` à l'indice `at` n'a aucune « ( » pour l'ouvrir dans `text`. */
+function isUnmatchedCloser(text: string, at: number): boolean {
+  let depth = 0;
+  for (let i = at; i >= 0; i--) {
+    if (text[i] === ")") depth++;
+    else if (text[i] === "(" && --depth === 0) return false;
+  }
+  return true;
 }
 
 /**
@@ -196,10 +581,13 @@ function needsLtrIsolate(segment: string): boolean {
  * écriture arabe, guillemets typographiques…) marque de la prose et coupe le run.
  */
 const MATH_TOKEN_CHARS =
-  "0-9A-Za-z+\\-−–±*/=<>≤≥≠≈≡%‰¹²³⁰⁴-⁹⁺⁻₀-₉₊₋√∛∜×÷·^_()\\[\\]{}⟨⟩⌊⌋⌈⌉|‖πµσΩ∆°′″.,;:…!?∈∉⊂⊃⊆⊇∪∩∅ℝℕℤℚℂ∥⊥∠→⟶⟵⟸⟹⟺∑∏∫∞'";
+  "0-9A-Za-z+\\-−–±*/=<>≤≥≠≈≡%‰¹²³⁰⁴-⁹⁺⁻₀-₉₊₋√∛∜×÷·^_()\\[\\]{}⟨⟩⌊⌋⌈⌉|‖πµσΩ∆°′″.,;:…!?∈∉∋∌⊂⊃⊄⊅⊆⊇⊈⊉⊊⊋∪∩∅ℝℕℤℚℂ∥⊥∠→⟶⟵⟸⟹⟺∑∏∫∞'";
 const MATH_TOKEN_RE = new RegExp(`^[${MATH_TOKEN_CHARS}]+$`, "u");
-/** Un opérateur, une relation ou un délimiteur — ce qui fait d'une suite de jetons une formule. */
-const MATH_OPERATOR_RE = /[+\-−–±*/=<>≤≥≠≈≡×÷·√∛∜()[\]{}⟨⟩⌊⌋⌈⌉∈∉⊂⊃⊆⊇∪∩∥⊥→⟶⟵⟸⟹⟺∑∏∫^]/u;
+/**
+ * Un opérateur, une relation ou un délimiteur — ce qui fait d'une suite de jetons une formule.
+ * Les barres `|x|` (valeur absolue) et `‖u‖` (norme) en sont : `|x| ≤ 2` est une équation.
+ */
+const MATH_OPERATOR_RE = /[+\-−–±*/=<>≤≥≠≈≡×÷·√∛∜()[\]{}⟨⟩⌊⌋⌈⌉|‖∈∉∋∌⊂⊃⊄⊅⊆⊇⊈⊉⊊⊋∪∩∥⊥→⟶⟵⟸⟹⟺∑∏∫^]/u;
 /** Une relation : `x = 5` est une formule à lui seul, `2 + 3` demande deux jetons. */
 const MATH_RELATION_RE = /[=<>≤≥≠≈≡⟹⟺]|&lt;|&gt;|&le;|&ge;/u;
 /** Suite d'au moins trois lettres latines — un MOT, sauf s'il est dans la liste ci-dessous. */
@@ -259,8 +647,9 @@ const MATH_WORDS = new Set([
  * Un jeton est mathématique s'il n'emprunte que le jeu de caractères ci-dessus,
  * qu'aucun de ses mots n'est de la prose (voir {@link hasProseWord}), ET qu'il
  * porte un signe d'appartenance : un chiffre — indices et exposants Unicode
- * compris, pour `SO₂` —, un opérateur, une longueur ≤ 2 (`x`, `AB`, `n`), ou un
- * nom de fonction connu (`sin`, seul dans `n₁ sin i₁ = n₂ sin i₂`). Un mot de
+ * compris, pour `SO₂` —, un opérateur, une longueur ≤ 2 (`x`, `AB`, `n`), un symbole
+ * composé (`HCl`, `NaOH`, voir {@link CHEMICAL_SYMBOL_RE}), ou un nom de fonction connu (`sin`, seul dans
+ * `n₁ sin i₁ = n₂ sin i₂`). Un mot de
  * prose (`Calculer`, `solution.`, `museum)`) échoue au test des mots ; un mot
  * court sans opérateur (`the`) échoue au signe.
  */
@@ -273,6 +662,13 @@ function hasProseWord(token: string): boolean {
   return false;
 }
 
+/**
+ * Un symbole composé qui n'est pas un mot : une majuscule collée à une minuscule qui la précède
+ * (`NaOH`, `AlCl`, `CaCO`) ou un groupe de majuscules suivi de minuscules (`HCl`, `HBr`). Ni `RULES`
+ * (un mot en capitales), ni `'If` ou `l'ONU` (l'apostrophe coupe).
+ */
+const CHEMICAL_SYMBOL_RE = /[a-z][A-Z]|^[A-Z]{2,}[a-z]+$/u;
+
 function isMathToken(token: string): boolean {
   if (!token || !MATH_TOKEN_RE.test(token)) return false;
   if (hasProseWord(token)) return false;
@@ -280,6 +676,7 @@ function isMathToken(token: string): boolean {
     /[0-9₀-₉⁰-⁹¹²³]/u.test(token) ||
     MATH_OPERATOR_RE.test(token) ||
     token.length <= 2 ||
+    CHEMICAL_SYMBOL_RE.test(token) ||
     MATH_WORDS.has(token.toLowerCase())
   );
 }
@@ -299,7 +696,7 @@ function isMathPhrase(tokens: string[]): boolean {
  */
 const PROSE_SHAPED_RE = /^(?:[A-Za-z]+|\?)$/u;
 /** Un jeton fait seulement d'opérateurs — `=`, `+`, `≤`, `→` : ce qui LIE une lettre à la formule. */
-const BARE_OPERATOR_RE = /^[+\-−–±*/=<>≤≥≠≈≡×÷·∈∉⊂⊃⊆⊇∪∩∥⊥→⟶⟵⟸⟹⟺]+$/u;
+const BARE_OPERATOR_RE = /^[+\-−–±*/=<>≤≥≠≈≡×÷·∈∉∋∌⊂⊃⊄⊅⊆⊇⊈⊉⊊⊋∪∩∥⊥→⟶⟵⟸⟹⟺]+$/u;
 
 /**
  * Rogne les bords d'un run des jetons purement alphabétiques qu'aucun opérateur
@@ -313,13 +710,20 @@ const BARE_OPERATOR_RE = /^[+\-−–±*/=<>≤≥≠≈≡×÷·∈∉⊂⊃⊆
  * qui précède la formule — et, en anglais, des bouts de phrase entiers
  * (`it), so it`).
  */
-function trimProseEdges(tokens: string[]): [number, number] {
-  const bound = (index: number) =>
-    index >= 0 && index < tokens.length && BARE_OPERATOR_RE.test(tokens[index]);
+function trimProseEdges(tokens: string[], units = false): [number, number] {
+  // Un opérateur nu rattache le jeton. Pour une ligne qui n'est QUE de la notation, une lettre SEULE
+  // collée à un nombre l'est aussi (`10⁻¹⁹ C`, `6 × 10¹³ m` : une unité, pas un mot).
+  const bound = (index: number, token: string) =>
+    index >= 0 &&
+    index < tokens.length &&
+    (BARE_OPERATOR_RE.test(tokens[index]) ||
+      (units && /^[A-Za-z]$/u.test(token) && /\d/u.test(tokens[index])));
   let low = 0;
   let high = tokens.length - 1;
-  while (low <= high && PROSE_SHAPED_RE.test(tokens[low]) && !bound(low + 1)) low += 1;
-  while (high >= low && PROSE_SHAPED_RE.test(tokens[high]) && !bound(high - 1)) high -= 1;
+  while (low <= high && PROSE_SHAPED_RE.test(tokens[low]) && !bound(low + 1, tokens[low])) low += 1;
+  while (high >= low && PROSE_SHAPED_RE.test(tokens[high]) && !bound(high - 1, tokens[high])) {
+    high -= 1;
+  }
   return [low, high];
 }
 
@@ -383,17 +787,51 @@ function splitLtrProse(text: string): TextRun[] {
  * {@link isolateLtrRuns} — mêmes runs, même signal : le rendu n'isole donc ni
  * plus ni moins qu'aujourd'hui, il rend seulement l'isolat incassable. En
  * contexte latin il n'y a rien à isoler, on repère juste les formules.
+ *
+ * Les espaces qui bordent une formule appartiennent à la PROSE, pas au run :
+ * posés dans le span insécable, ils supprimeraient la seule coupure possible
+ * entre deux formules voisines (`[0 ; 10[ ، [10 ; 20[ ، [20 ; 30[` — la virgule
+ * arabe n'admet aucun saut avant elle, l'espace qui la suit était pris dans
+ * l'insécable), et une liste d'intervalles ne passerait plus jamais à la ligne :
+ * elle débordait de la carte d'un téléphone (14 à 582 px mesurés).
+ *
+ * La ponctuation latine qui borde une formule (`.,;:`) est de la prose, elle
+ * aussi : voir {@link peelEdgePunctuation}.
  */
 export function splitMathRuns(text: string): TextRun[] {
   if (!text) return [];
   if (!ARABIC_RE.test(text)) return splitLtrProse(text);
   const runs: TextRun[] = [];
-  for (const segment of text.match(SEGMENT_RE) ?? []) {
-    const math = !ARABIC_RE.test(segment) && needsLtrIsolate(segment);
+  const pushProse = (chunk: string) => {
+    if (!chunk) return;
     const previous = runs[runs.length - 1];
-    if (previous && previous.math === math && !math) previous.text += segment;
-    else runs.push(run(segment, math));
-  }
+    if (previous && !previous.math) previous.text += chunk;
+    else runs.push(run(chunk, false));
+  };
+  const segments = text.match(SEGMENT_RE) ?? [];
+  const pieces = splitAtParentheticals(segments);
+  segments.forEach((segment, index) => {
+    if (ARABIC_RE.test(segment)) {
+      pushProse(segment);
+      return;
+    }
+    for (const piece of pieces[index]) {
+      if (piece.prose) {
+        pushProse(piece.text);
+        continue;
+      }
+      for (const span of isolationSpans(piece.text)) {
+        if (!span.math) {
+          pushProse(span.text);
+          continue;
+        }
+        const [, lead, body, tail] = span.text.match(/^(\s*)([\s\S]*?)(\s*)$/u) as RegExpMatchArray;
+        pushProse(lead);
+        runs.push(run(body, true));
+        pushProse(tail);
+      }
+    }
+  });
   return runs;
 }
 
@@ -413,9 +851,13 @@ export function isDisplayEquation(line: string): boolean {
   const tokens = line.trim().split(/\s+/).filter(Boolean);
   if (!tokens.length) return false;
   if (!tokens.every(isMathToken)) return false;
+  // Un terme seul — `(3/21)³`, `√2`, `−5` — n'a ni relation ni opérateur entre deux jetons, mais il se
+  // brouille dans un champ RTL (`(3/21)³` se lisait `³(3/21)`) : bloc gauche-à-droite s'il demande l'isolat
+  // — et s'il porte un chiffre, une lettre ou un radical : `|---|---|`, ligne de tableau markdown, n'est pas une formule.
+  if (tokens.length === 1) return /[0-9A-Za-z√∛∜]/u.test(tokens[0]) && needsLtrIsolate(tokens[0]);
   // Un mot que rien ne rattache à la formule reste de la prose, même seul sur sa
   // ligne : `A B C` n'est pas une équation à centrer.
-  const [low, high] = trimProseEdges(tokens);
+  const [low, high] = trimProseEdges(tokens, true);
   if (low !== 0 || high !== tokens.length - 1) return false;
   return isMathPhrase(tokens);
 }

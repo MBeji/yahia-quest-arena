@@ -12,7 +12,18 @@ import { APP_TIME_ZONE } from "@/shared/lib/app-day";
 
 export { APP_TIME_ZONE, appLocalDate } from "@/shared/lib/app-day";
 
-export type PushPayload = { title: string; body: string; url: string; tag: string };
+// é31 lot 4 — les TEXTES vivent dans `push-copy.ts` (trois langues, R-17) ; ce
+// module garde ce qu'il a toujours gardé : QUI reçoit quoi, et quand.
+export {
+  PUSH_PRIORITY,
+  PARENT_DIGEST_TAG,
+  payloadFor,
+  parentDigestPayload,
+  safeLocale,
+  type PushTag,
+  type PushPayload,
+} from "./push-copy";
+import { PUSH_PRIORITY, type PushTag } from "./push-copy";
 
 /** Minimal profile shape the streak-at-risk selection needs. */
 export type StreakProfileRow = {
@@ -38,45 +49,6 @@ export function selectStreakAtRiskUserIds(
   return profiles.filter((p) => isStreakAtRisk(p, todayLocal)).map((p) => p.id);
 }
 
-/**
- * v1 ships a single French copy: there is no per-user locale stored server-side
- * yet (the UI locale lives in a cookie). Per-locale push is a later increment.
- */
-export function streakReminderPayload(): PushPayload {
-  return {
-    title: "🔥 Ton streak est en danger !",
-    body: "Reviens vite faire une quête aujourd'hui pour sauver ta série. Ne laisse pas le boss reprendre l'avantage !",
-    url: "/dashboard",
-    tag: "streak-at-risk",
-  };
-}
-
-/**
- * Le rappel du plan du jour — étude 11 US-7.
- *
- * « 1/jour max » est tenu par la SÉLECTION, pas par cette fonction : le rappel
- * de série vise exactement la même population (élève inactif aujourd'hui), et
- * le cron retire donc de cette audience-ci tous ceux qui viennent d'être
- * appelés. Deux notifications le même soir pour la même raison seraient la
- * meilleure façon de faire couper les notifications.
- *
- * Même convention de copie unique en français que les deux payloads voisins :
- * aucune locale n'est stockée côté serveur (elle vit dans un cookie). Le nombre
- * de révisions dues est interpolé, parce qu'un rappel qui dit COMBIEN se lit
- * comme un service, et un rappel qui dit « tu as du retard » comme un reproche.
- */
-export function planReminderPayload(dueCount: number): PushPayload {
-  return {
-    title: "🎓 El Ostedh a préparé ton plan",
-    body:
-      dueCount === 1
-        ? "Une seule révision t'attend aujourd'hui — cinq minutes et c'est réglé."
-        : `${dueCount} révisions t'attendent aujourd'hui. On commence par la plus utile ?`,
-    url: "/dashboard",
-    tag: "tutor-daily-plan",
-  };
-}
-
 /** The short weekday name ("Sun", "Mon", …) in the app timezone for a given instant. */
 export function appLocalWeekday(now: Date): string {
   return new Intl.DateTimeFormat("en-US", {
@@ -96,12 +68,69 @@ export function isParentDigestDay(now: Date): boolean {
   return appLocalWeekday(now) === PARENT_DIGEST_WEEKDAY;
 }
 
-/** Same single-copy convention as the streak reminder (per-locale is a later increment). */
-export function weeklyParentDigestPayload(): PushPayload {
-  return {
-    title: "📋 Le bilan famille de la semaine est prêt",
-    body: "Points forts, chapitres à revoir et le conseil de la semaine : ouvrez le suivi de votre enfant.",
-    url: "/parent-report",
-    tag: "weekly-family-report",
-  };
+/**
+ * ⭐ LE PIPELINE DE PRIORITÉ (R-4, R-16) — au plus UN push par élève et par jour.
+ *
+ * Avant ce lot, la règle tenait par une exclusion écrite à la main entre DEUX
+ * audiences (é11 US-7 retirait de son audience ceux que le rappel de série
+ * venait d'appeler). À six audiences, il faudrait quinze exclusions deux à deux,
+ * et il suffirait d'en oublier une pour qu'un élève reçoive trois notifications
+ * le même soir — c'est-à-dire pour qu'il les coupe (RISK-2).
+ *
+ * La règle devient donc STRUCTURELLE : la base rend des CANDIDATS, et cette
+ * fonction n'en garde qu'un par élève, le plus prioritaire. Un tag ajouté demain
+ * hérite de la garantie sans qu'on y pense — il lui suffit d'entrer dans
+ * `PUSH_PRIORITY`.
+ *
+ * L'ordre (R-16) va du FAIT ACQUIS à la RELANCE : un résultat de ligue est une
+ * nouvelle, une série perdue est une occasion de revenir, un plan est un
+ * service, un « reviens » est le dernier recours.
+ */
+export type PushCandidate = {
+  userId: string;
+  tag: PushTag;
+  locale: string | null;
+  arg: number | null;
+};
+
+export function resolveDailyPushPlan(candidates: PushCandidate[]): PushCandidate[] {
+  const rank = new Map<PushTag, number>(PUSH_PRIORITY.map((tag, index) => [tag, index]));
+  const best = new Map<string, PushCandidate>();
+
+  for (const candidate of candidates) {
+    // Un tag hors liste ne peut pas être classé : on l'écarte plutôt que de le
+    // faire gagner par accident (un rang inconnu vaudrait -1 ou +∞ selon le tri).
+    if (!rank.has(candidate.tag)) continue;
+    const current = best.get(candidate.userId);
+    if (!current || (rank.get(candidate.tag) ?? 0) < (rank.get(current.tag) ?? 0)) {
+      best.set(candidate.userId, candidate);
+    }
+  }
+
+  return [...best.values()];
+}
+
+/**
+ * Regroupe le plan par (tag, langue, nombre) : un envoi par groupe plutôt qu'un
+ * par élève. Le transport prend une liste d'identifiants et UN payload.
+ */
+export function groupPushPlan(
+  plan: PushCandidate[],
+): { tag: PushTag; locale: string | null; arg: number | null; userIds: string[] }[] {
+  const groups = new Map<
+    string,
+    { tag: PushTag; locale: string | null; arg: number | null; userIds: string[] }
+  >();
+  for (const candidate of plan) {
+    const key = `${candidate.tag}|${candidate.locale ?? "fr"}|${candidate.arg ?? ""}`;
+    const group = groups.get(key) ?? {
+      tag: candidate.tag,
+      locale: candidate.locale,
+      arg: candidate.arg,
+      userIds: [],
+    };
+    group.userIds.push(candidate.userId);
+    groups.set(key, group);
+  }
+  return [...groups.values()];
 }

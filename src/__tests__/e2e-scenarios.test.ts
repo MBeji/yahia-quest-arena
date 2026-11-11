@@ -21,7 +21,7 @@ vi.mock("@tanstack/react-start", () => ({
     let validatorFn: ((d: unknown) => unknown) | undefined;
     const chain = {
       middleware: () => chain,
-      inputValidator: (fn: (d: unknown) => unknown) => {
+      validator: (fn: (d: unknown) => unknown) => {
         validatorFn = fn;
         return chain;
       },
@@ -193,7 +193,8 @@ describe("END-TO-END: premium-parcours gating of an élite challenge", () => {
   beforeEach(() => {
     vi.resetModules();
     capturedHandlers = {};
-    mockFrom.mockReset();
+    // Un démarrage réussi lit aussi les réponses figées de la partie (20260929120000).
+    mockFrom.mockReset().mockReturnValue(mockQuery([]));
     mockRpc.mockReset();
   });
 
@@ -587,7 +588,11 @@ describe("END-TO-END: lesson then streak recovery", () => {
             yahia_coins: 50,
             current_streak: 0,
             longest_streak: 5,
-            last_active_date: null,
+            // Actif avant-hier : cassé, mais DANS la fenêtre de rachat bornée
+            // (STREAK_RECOVERY_WINDOW_DAYS = 2, posé le 2026-09-03). `null` ouvrait
+            // le rachat avant cette date et ne l'ouvre plus — sans date, rien ne
+            // prouve qu'on est dans la fenêtre.
+            last_active_date: new Date(Date.now() - 2 * 86_400_000).toISOString().slice(0, 10),
           })
         : mockQuery([]),
     );

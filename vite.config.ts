@@ -1,12 +1,11 @@
 import { defineConfig, loadEnv, type PluginOption } from "vite";
 import tailwindcss from "@tailwindcss/vite";
-import tsConfigPaths from "vite-tsconfig-paths";
 import viteReact from "@vitejs/plugin-react";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 
 // Inlined replacement for the meta-plugin the original scaffold vendored — the project
 // now has ZERO dependency on that boilerplate. This reproduces exactly what that plugin
-// wired for the build: Tailwind, tsconfig path resolution, the Cloudflare Worker build
+// wired for the build: Tailwind, the Cloudflare Worker build
 // (build-time only — it produces the `dist/server` Worker entry that `wrangler.jsonc`
 // (`main: src/server.ts`) targets and `scripts/build-vercel.mjs` repackages for Vercel),
 // TanStack Start (SSR; entry = our error-wrapping `src/server.ts`) and React — plus the
@@ -15,7 +14,12 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 // (sandbox bridge, HMR gate, component tagger, dev SSR/server-fn error overlays) are
 // intentionally omitted: they only run under `vite serve` and never shipped in the build.
 export default defineConfig(async ({ command, mode }) => {
-  const plugins: PluginOption[] = [tailwindcss(), tsConfigPaths({ projects: ["./tsconfig.json"] })];
+  // Pas de plugin de résolution des `paths` de tsconfig : le seul mapping (`@/*` → `src/*`)
+  // est déclaré en dur dans `resolve.alias` ci-dessous (et dans vitest.config.ts).
+  // `vite-tsconfig-paths` traînait `tsconfck`, dont la peer optionnelle `typescript ^5`
+  // est invalide avec TypeScript 6 : c'est elle qui faisait diverger le lock entre npm 10
+  // et 11 (#716, #1016) et mourir chaque PR Dependabot au canari — audit du 2026-09-12, C-2.
+  const plugins: PluginOption[] = [tailwindcss()];
 
   // @cloudflare/vite-plugin only at build time (it owns the "ssr" Worker environment).
   if (command === "build") {
@@ -62,13 +66,25 @@ export default defineConfig(async ({ command, mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id: string) {
-            // Locale catalogs (fr/en/ar) — one parallel-loaded, independently cached
-            // chunk with its own budget, so growing the translations (GAP-010) never
-            // eats the index chunk's budget. ONLY the pure-data catalogs: pulling the
+            // Locale catalogs (fr/en/ar) — independently cached chunks with their own
+            // budgets, so growing the translations (GAP-010) never eats the index
+            // chunk's budget. ONLY the pure-data catalogs: pulling the
             // provider/context/hooks in too made the chunk import React back from the
             // index chunk, creating an i18n⇄index cycle whose TDZ crash killed the
             // whole client bundle in production (login regression).
-            if (/\/src\/lib\/i18n\/(fr|en|ar)\.ts$/.test(id)) return "i18n";
+            // H2-fe (2026-10-31) : UN chunk PAR locale. Seul `i18n-fr` reste dans le
+            // graphe statique (contexte + premier rendu) ; `i18n-en` / `i18n-ar` sont
+            // tirés par `import()` depuis `catalogues.ts` pour la seule locale du
+            // visiteur — avant, le chunk trilingue (192 KB) descendait chez chacun.
+            // Données pures seulement, et AUCUN module partagé entre les fichiers de
+            // locale : rolldown fond un module commun dans le premier chunk de locale
+            // rencontré (ar) et ramène ce chunk dans les imports statiques d'index
+            // (mesuré : le gain était annulé).
+            const locale = /\/src\/lib\/i18n\/(fr|en|ar)(-public)?\.ts$/.exec(id)?.[1];
+            if (locale) return `i18n-${locale}`;
+            // Méta du document × 3 locales (données pures, importées par __root seul) :
+            // voyage avec fr. ⚠️ Jamais importé depuis en/ar — cf. la règle ci-dessus.
+            if (/\/src\/lib\/i18n\/meta\.ts$/.test(id)) return "i18n-fr";
             // Surface-scoped catalog: the parent dashboard's copy (parentReport.* +
             // parentDaily.*, ~42 KB of source) serves ONLY /suivi and /parent-report,
             // two dynamically-imported route chunks — so it must not ride along in the
@@ -77,6 +93,20 @@ export default defineConfig(async ({ command, mode }) => {
             // deliberately stays out, or this chunk would import the index chunk back
             // and re-open the very cycle the comment above is about.
             if (/\/src\/lib\/i18n\/parent\/(fr|en|ar)\.ts$/.test(id)) return "i18n-parent";
+            // é31 lot 2 : même règle pour les libellés de la collection de badges
+            // (~5 KB ×3 langues), servis par la seule route /boutique.
+            if (/\/src\/lib\/i18n\/badges\/(fr|en|ar)\.ts$/.test(id)) return "i18n-badges";
+            // é34 lot 2 : les étoiles de chapitre et les sceaux de matière. Servis
+            // par le hub matière, et aux lots suivants par le QG et le suivi
+            // parental — trois surfaces derrière des routes paresseuses.
+            if (/\/src\/lib\/i18n\/progress\/(fr|en|ar)\.ts$/.test(id)) return "i18n-progress";
+            // Guide intégré (2026-10-19) : les fiches d'aide de chaque écran. Tirées
+            // par la fiche (`React.lazy`) et par les routes paresseuses qui posent
+            // cartes et bulles — jamais par le chunk index.
+            if (/\/src\/lib\/i18n\/guide\/(fr|en|ar)\.ts$/.test(id)) return "i18n-guide";
+            // Étude 39 : le test de niveau — ses écrans sont une route publique paresseuse, une
+            // carte du Hall en `lazy()` et la fin de l'accueil. Même règle : données seules.
+            if (/\/src\/lib\/i18n\/placement\/(fr|en|ar)\.ts$/.test(id)) return "i18n-placement";
             if (!id.includes("node_modules")) return;
 
             if (id.includes("@tanstack/")) return "vendor-tanstack";

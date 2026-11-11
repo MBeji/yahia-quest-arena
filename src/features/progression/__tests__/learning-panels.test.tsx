@@ -11,6 +11,7 @@
  * compétence — exactement le défaut que é22 a corrigé sur « qu'est-ce que je fais maintenant ».
  */
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 
@@ -19,17 +20,20 @@ import type { LearningFrontierRow, LearningStateRow } from "@/shared/types/compe
 let stateRows: LearningStateRow[] = [];
 let frontierRows: LearningFrontierRow[] = [];
 
+// Les clés des requêtes CLIENT émises par le panneau : depuis le 2026-10-31 il n'en reste
+// qu'une (la frontière), l'état de croyance arrivant en prop depuis `getDashboard`.
+const { queryKeys } = vi.hoisted(() => ({ queryKeys: [] as unknown[][] }));
 vi.mock("@tanstack/react-query", () => ({
-  useQuery: ({ queryKey }: { queryKey: unknown[] }) => ({
-    data: queryKey[0] === "learning-state" ? stateRows : frontierRows,
-  }),
+  useQuery: ({ queryKey }: { queryKey: unknown[] }) => {
+    queryKeys.push(queryKey);
+    return { data: frontierRows };
+  },
 }));
 vi.mock("@tanstack/react-start", () => ({
   useServerFn: () => () => Promise.resolve([]),
 }));
 vi.mock("@tanstack/react-router", () => ({ useNavigate: () => vi.fn() }));
 vi.mock("../progression.server", () => ({
-  getLearningState: vi.fn(),
   getLearningFrontier: vi.fn(),
   getCompetencyExercises: vi.fn(() => Promise.resolve([])),
   disputeInference: vi.fn(() => Promise.resolve({ disputed: true })),
@@ -59,18 +63,26 @@ const legacyRow = {
 beforeEach(() => {
   stateRows = [];
   frontierRows = [];
+  queryKeys.length = 0;
 });
 
 describe("LearningPanels — le repli R-6", () => {
   it("sans croyance, rend l'ANCIENNE carte de é07 — l'écran d'aujourd'hui, intact", () => {
-    render(<LearningPanels map={[legacyRow]} blockers={[]} blockedSlug={null} />);
+    render(
+      <LearningPanels
+        map={[legacyRow]}
+        blockers={[]}
+        blockedSlug={null}
+        learningState={stateRows}
+      />,
+    );
     expect(screen.getByText("Ancienne carte")).toBeInTheDocument();
     // Et surtout pas l'état vide de la nouvelle : remplacer un écran qui marche par une
     // invitation à jouer serait une régression déguisée en nouveauté.
     expect(screen.queryByText("Où tu en es")).not.toBeInTheDocument();
   });
 
-  it("avec des croyances, la carte à 4 états prend la place de l'ancienne", () => {
+  it("avec des croyances, la carte à 4 états prend la place de l'ancienne", async () => {
     stateRows = [
       {
         competency_id: "c-1",
@@ -90,15 +102,42 @@ describe("LearningPanels — le repli R-6", () => {
         suspect: false,
       },
     ];
-    render(<LearningPanels map={[legacyRow]} blockers={[]} blockedSlug={null} />);
+    render(
+      <LearningPanels
+        map={[legacyRow]}
+        blockers={[]}
+        blockedSlug={null}
+        learningState={stateRows}
+      />,
+    );
     expect(screen.getByText("Où tu en es")).toBeInTheDocument();
+    // Repliée par défaut (2026-09-04) : la compétence n'apparaît qu'une fois dépliée.
+    expect(screen.queryByText("Additionner")).not.toBeInTheDocument();
+    await userEvent.setup().click(screen.getByRole("button", { expanded: false }));
     expect(screen.getByText("Additionner")).toBeInTheDocument();
     // Les deux cartes ensemble diraient deux choses de la même compétence.
     expect(screen.queryByText("Ancienne carte")).not.toBeInTheDocument();
   });
 
+  it("n'émet qu'UNE requête client — la frontière ; l'état vient de `getDashboard`", () => {
+    // Avant le 2026-10-31, le panneau relançait `get_learning_state` depuis le navigateur
+    // alors que `getDashboard` venait de la lire pour « Prochaine action » : un aller-retour
+    // et une RPC de plus par chargement, et l'ancienne carte affichée le temps du retour.
+    render(
+      <LearningPanels map={[legacyRow]} blockers={[]} blockedSlug={null} learningState={[]} />,
+    );
+    expect(queryKeys).toEqual([["frontier", null]]);
+  });
+
   it("sans frontière, aucun panneau « prêt à apprendre » ne s'affiche", () => {
-    render(<LearningPanels map={[legacyRow]} blockers={[]} blockedSlug={null} />);
+    render(
+      <LearningPanels
+        map={[legacyRow]}
+        blockers={[]}
+        blockedSlug={null}
+        learningState={stateRows}
+      />,
+    );
     expect(screen.queryByText("Prêt à apprendre")).not.toBeInTheDocument();
   });
 
@@ -119,7 +158,12 @@ describe("LearningPanels — le repli R-6", () => {
       },
     ];
     const { container } = render(
-      <LearningPanels map={[legacyRow]} blockers={[]} blockedSlug={null} />,
+      <LearningPanels
+        map={[legacyRow]}
+        blockers={[]}
+        blockedSlug={null}
+        learningState={stateRows}
+      />,
     );
     const text = container.textContent ?? "";
     expect(text.indexOf("Prêt à apprendre")).toBeGreaterThanOrEqual(0);

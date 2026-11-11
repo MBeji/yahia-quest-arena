@@ -116,6 +116,16 @@ export type QABoardQuestion = {
 };
 export type Flag = { level: "error" | "warn"; where: string; msg: string };
 
+// Les contrôles du patron de notion (étude 35) vivent à part — `max-lines` l'a exigé au
+// lot 5, et le découpage suit la matière : ici le gate général, là le patron.
+export {
+  auditCoursePitfalls,
+  auditLesson,
+  auditScriptMixing,
+  contentLineCount,
+  isSpatialChapter,
+} from "./qa-lesson-checks.ts";
+
 /** Normalise for substring comparison: strip whitespace, fold Arabic-Indic digits, lowercase. */
 export function norm(s: string): string {
   const arabicDigits = "٠١٢٣٤٥٦٧٨٩";
@@ -137,14 +147,17 @@ const INTRUDER_PROMPT =
 
 // Strong, unambiguous phrasings that pin an option as THE answer or as wrong.
 // Kept deliberately narrow to avoid false positives on legitimate distractor talk.
+// La lettre doit être un MOT : « la bonne réponse est exactement 15/210 » commence par un
+// « e » qui n'est pas une option — lu comme telle, la garde a accusé une clé juste
+// (`math-bac-math/18-probabilites/04-defi` Q5, audit du 2026-09-12, finding K-1).
 const SAYS_CORRECT =
-  /(?:la\s+)?bonne\s+réponse\s+est\s+(?:l['’]option\s+|la\s+proposition\s+)?\(?([a-f])\)?|l['’]option\s+\(?([a-f])\)?\s+est\s+(?:la\s+bonne|correcte?|juste|exacte?)|option\s+\(?([a-f])\)?\s+is\s+(?:the\s+)?correct/gi;
+  /(?:la\s+)?bonne\s+réponse\s+est\s+(?:l['’]option\s+|la\s+proposition\s+)?\(?([a-f])\)?(?![\p{L}\p{N}])|l['’]option\s+\(?([a-f])\)?\s+est\s+(?:la\s+bonne|correcte?|juste|exacte?)|option\s+\(?([a-f])\)?\s+is\s+(?:the\s+)?correct/giu;
 
 // Deictic phrases that unambiguously point at an ACCOMPANYING figure. Kept
 // narrow on purpose: bare "figure"/"schéma" are excluded because they are far
 // more often non-visual in this catalogue ("figure de style", "schéma
 // narratif", "figure de proue"). Only location-bearing deixis qualifies.
-const FIGURE_REFERENCE =
+export const FIGURE_REFERENCE =
   /ci-?dessous|ci-?contre|ci-?après|shown\s+(?:below|above)|(?:figure|diagram|picture)\s+(?:below|above)|الشكل\s+(?:المجاور|التالي|المقابل)|كما\s+في\s+الشكل|المبيّن\s+في\s+الشكل|في\s+الشكل\s+المجاور|الرسم\s+(?:المجاور|التالي)/i;
 
 const SVG_BLOCK = /<svg[\s\S]*?<\/svg>/i;
@@ -171,7 +184,8 @@ export function hasBidiFragileMath(s: string): boolean {
 // is the comma is pure math notation.
 const ARABIC_PROSE =
   "\\u0621-\\u064A\\u066E-\\u06FF\\u0750-\\u077F\\u08A0-\\u08FF\\uFB50-\\uFDFF\\uFE70-\\uFEFF";
-const ARABIC_PROSE_RE = new RegExp(`[${ARABIC_PROSE}]`, "u");
+/** Une ligne porte-t-elle de la prose arabe ? Exporté pour C-7 (`qa-lesson-checks.ts`). */
+export const ARABIC_PROSE_RE = new RegExp(`[${ARABIC_PROSE}]`, "u");
 const ARABIC_LETTER_G = new RegExp(`[${ARABIC_PROSE}]`, "gu");
 const LATIN_LETTER_G = /[A-Za-z]/gu;
 
@@ -183,8 +197,12 @@ const LATIN_LETTER_G = /[A-Za-z]/gu;
  * must NOT be treated as RTL. Markup is stripped first — an Arabic lesson full of
  * SVG figures carries far more Latin in its attributes (`viewBox`, `stroke`) than
  * Arabic in its prose, and would otherwise read as LTR.
+ *
+ * Se mesure sur le DOCUMENT entier, jamais ligne à ligne : une ligne courte comme
+ * `ثلاثة عدّات différentes` compte autant de latin que d'arabe, et la trancher au compteur
+ * rendrait « LTR » précisément la faute que C-7 cherche.
  */
-function rendersRtl(s: string): boolean {
+export function rendersRtl(s: string): boolean {
   const prose = s.replace(/<[^>]+>/g, " ");
   return (prose.match(ARABIC_LETTER_G) ?? []).length > (prose.match(LATIN_LETTER_G) ?? []).length;
 }
@@ -498,6 +516,52 @@ const buildSaysWrong = (letter: string) =>
   );
 
 /** Run all per-question heuristics. `where` is a human-readable locator. */
+/**
+ * LES CONTRÔLES DE RENDU PARTAGÉS PAR TOUS LES TYPES — un seul point d'appel.
+ *
+ * Ils étaient recopiés à l'identique dans `auditQuestion`, `auditBoardQuestion`
+ * et `auditNumericQuestion`, et c'est exactement pour cela que `short_answer`
+ * n'en a hérité d'AUCUN quand #654 l'a branché dans le ternaire de `qa.ts` : il
+ * n'y avait pas un appel à oublier, il fallait penser à recopier vingt lignes.
+ * Le gate est resté vert un mois en ne mesurant rien sur 119 questions.
+ *
+ * Un point d'appel unique rend l'omission structurellement plus difficile ; la
+ * table de `qa-controles-partages-par-type.test.ts` la rend impossible en
+ * silence pour le prochain type.
+ *
+ * `options` est vide pour les types qui n'en ont pas (numeric, short_answer) :
+ * ils n'offrent aucun endroit où une figure puisse légitimement vivre.
+ */
+function auditFigureAndRendering(
+  prompt: string,
+  explanation: string,
+  options: ReadonlyArray<QAOption>,
+  where: string,
+): Flag[] {
+  const flags: Flag[] = [];
+  if (FIGURE_REFERENCE.test(prompt)) {
+    const hasFigure = SVG_BLOCK.test(prompt) || options.some((o) => SVG_BLOCK.test(o.text));
+    if (!hasFigure) {
+      flags.push({
+        level: "error",
+        where,
+        msg: "prompt references a figure but no <svg> is present (unanswerable without it)",
+      });
+    }
+  }
+  flags.push(
+    ...auditRenderedFields(
+      [
+        ["prompt", prompt] as const,
+        ["explanation", explanation] as const,
+        ...options.map((o) => [`option ${o.id}`, o.text] as const),
+      ],
+      where,
+    ),
+  );
+  return flags;
+}
+
 export function auditQuestion(q: QAQuestion, where: string): Flag[] {
   const flags: Flag[] = [];
 
@@ -553,34 +617,10 @@ export function auditQuestion(q: QAQuestion, where: string): Flag[] {
     });
   }
 
-  // 5) figure-dependent prompt with no figure shipped → unanswerable.
-  //   The prompt sends the student to an adjacent figure but no <svg> is present
-  //   anywhere in the question (prompt or any option). A figure may legitimately
-  //   live in the options (e.g. "which piece completes it?"), so the whole
-  //   question is scanned before flagging.
-  if (FIGURE_REFERENCE.test(q.prompt)) {
-    const hasFigure = SVG_BLOCK.test(q.prompt) || q.options.some((o) => SVG_BLOCK.test(o.text));
-    if (!hasFigure) {
-      flags.push({
-        level: "error",
-        where,
-        msg: "prompt references a figure but no <svg> is present (unanswerable without it)",
-      });
-    }
-  }
-
-  // 6+7) rendering checks (svg viewBox, bidi-fragile math) — shared with the
-  //   numeric audit; see auditRenderedFields.
-  flags.push(
-    ...auditRenderedFields(
-      [
-        ["prompt", q.prompt] as const,
-        ["explanation", q.explanation] as const,
-        ...q.options.map((o) => [`option ${o.id}`, o.text] as const),
-      ],
-      where,
-    ),
-  );
+  // 5+6+7) figure absente et contrôles de rendu — voir auditFigureAndRendering.
+  //   Une figure peut légitimement vivre dans les options (« quelle pièce
+  //   complète la suite ? »), d'où le passage de `q.options`.
+  flags.push(...auditFigureAndRendering(q.prompt, q.explanation, q.options, where));
 
   // 8) meta-options & the non-idiomatic "none" calque (warn — quality, not structure).
   for (const o of q.options) {
@@ -808,27 +848,7 @@ export function auditBoardQuestion(q: QABoardQuestion, where: string): Flag[] {
     flags.push({ level: "warn", where, msg: "explanation is very short" });
   }
 
-  if (FIGURE_REFERENCE.test(q.prompt)) {
-    const hasFigure = SVG_BLOCK.test(q.prompt) || q.options.some((o) => SVG_BLOCK.test(o.text));
-    if (!hasFigure) {
-      flags.push({
-        level: "error",
-        where,
-        msg: "prompt references a figure but no <svg> is present (unanswerable without it)",
-      });
-    }
-  }
-
-  flags.push(
-    ...auditRenderedFields(
-      [
-        ["prompt", q.prompt] as const,
-        ["explanation", q.explanation] as const,
-        ...q.options.map((o) => [`option ${o.id}`, o.text] as const),
-      ],
-      where,
-    ),
-  );
+  flags.push(...auditFigureAndRendering(q.prompt, q.explanation, q.options, where));
 
   return flags;
 }
@@ -878,167 +898,9 @@ export function auditNumericQuestion(q: QANumericQuestion, where: string): Flag[
     flags.push({ level: "warn", where, msg: "explanation is very short" });
   }
 
-  if (FIGURE_REFERENCE.test(q.prompt) && !SVG_BLOCK.test(q.prompt)) {
-    flags.push({
-      level: "error",
-      where,
-      msg: "prompt references a figure but no <svg> is present (unanswerable without it)",
-    });
-  }
-
-  flags.push(
-    ...auditRenderedFields(
-      [
-        ["prompt", q.prompt],
-        ["explanation", q.explanation],
-      ],
-      where,
-    ),
-  );
+  flags.push(...auditFigureAndRendering(q.prompt, q.explanation, [], where));
 
   return flags;
-}
-
-/* ============================================================================
-   Leçons (`cours.md` / `resume.md`) — étude 18, lot 4.
-
-   Jusqu'ici, `content:qa` ne lisait QUE les questions : les 541 leçons étaient
-   hors de tout gate déterministe, et c'est précisément pour cela que la dérive
-   « aucune figure en géométrie » a pu durer sans qu'aucune CI ne bronche.
-   ========================================================================== */
-
-/** Miroir de `DIRECTIVE_TYPES` dans `src/shared/lib/lesson-blocks.ts` — garder en phase. */
-const LESSON_DIRECTIVES = new Set([
-  "definition",
-  "propriete",
-  "exemple",
-  "methode",
-  "figure",
-  "piege",
-  "astuce",
-  "retenir",
-]);
-
-const DIRECTIVE_OPEN = /^:::[ \t]+([a-z]+)(?:[ \t]+(.*))?$/;
-const DIRECTIVE_CLOSE = /^:::[ \t]*$/;
-
-/**
- * Chapitres dont les notions sont intrinsèquement SPATIALES : y énoncer une règle sur des
- * formes sans la dessiner est une non-conformité (axe 5 « Illustration »). Testé sur le SLUG
- * du chapitre. Liste normative : `content-engine/references/course-figures.md` — garder les
- * deux en phase.
- */
-const SPATIAL_CHAPTER =
-  // Formes & espace. `ligne`/`reperage`/`forme` ajoutés le 2026-07-14 : le chapitre
-  // «التموقع في الفضاء» (`07-reperage-espace`) et «الخطوط» (`10-lignes`, `07-formes-lignes`)
-  // du primaire — les plus visuels qui soient pour un enfant de 6  ans — passaient inaperçus.
-  /thales|thal[eè]s|pythagore|triangle|g[ée]om[ée]tri|forme|cercle|angle|vecteur|rep[eè]re|espace|solide|sym[ée]trie|translation|rotation|quart.?tour|homoth[ée]tie|section|perim[eè]tre|p[ée]rim[eè]tre|quadrilat[eè]re|polygone|trigo|prisme|pyramide|c[oô]ne|cylindre|sph[eè]re|droites|ligne/i;
-
-/**
- * Deuxième famille — les notions qui se LISENT sur un graphique. Une leçon sur les fonctions
- * linéaires sans sa droite, ou sur les statistiques sans son diagramme, souffre exactement du
- * même défaut qu'une géométrie sans triangle : elle décrit ce qu'il fallait montrer.
- * Ajoutée le 2026-07-14 en illustrant math-1ere-sec — la première version de la liste ne
- * couvrait que les formes, et laissait passer `12-fonctions-lineaires` et
- * `16-exploitation-information` sans le moindre dessin.
- */
-const GRAPHICAL_CHAPTER =
-  /fonction|graphique|diagramme|statistiq|donn[ée]es|exploitation.?information|frise|chronolog/i;
-
-/**
- * Audit d'une leçon. Contrôles :
- *  - directives `:::` : type inconnu, non fermée, `:::` orphelin, `::: figure` sans légende ;
- *  - la leçon DÉSIGNE une figure (« ci-dessous », « الشكل المجاور »…) mais n'en porte aucune ;
- *  - chapitre spatial sans la moindre figure ;
- *  - notation (viewBox, bidi, virgule arabe, LaTeX, chiffres arabo-indiens) — via
- *    `auditRenderedFields`, dont c'est le tout premier passage sur des leçons.
- */
-export function auditLesson(md: string, where: string, opts: { spatial?: boolean } = {}): Flag[] {
-  const flags: Flag[] = [];
-  // `\r?\n` et non `\n` : un checkout Windows matérialise le corpus en CRLF, et
-  // un `split("\n")` laisse alors un `\r` en fin de chaque ligne. Les directives
-  // sont reconnues par des regex ancrées sur `$` (`::: figure …`, `:::`), qui
-  // cessent toutes de matcher — l'ouverture n'est plus vue, et la fermeture est
-  // rapportée « stray `:::` closes nothing ». Le gate inventait donc deux
-  // erreurs par chapitre à figure, en local seulement : la CI (Linux, checkout
-  // LF) restait verte, ce qui rendait l'écart incompréhensible côté auteur.
-  const lines = md.split(/\r?\n/);
-
-  let open: { type: string; line: number } | null = null;
-  for (let i = 0; i < lines.length; i++) {
-    const opener = DIRECTIVE_OPEN.exec(lines[i]);
-    if (opener) {
-      const [, type, caption] = opener;
-      if (open) {
-        flags.push({
-          level: "error",
-          where,
-          msg: `directive \`::: ${open.type}\` (l.${open.line}) is never closed — \`::: ${type}\` opens at l.${i + 1}`,
-        });
-      }
-      if (!LESSON_DIRECTIVES.has(type)) {
-        flags.push({
-          level: "error",
-          where,
-          msg: `unknown block directive \`::: ${type}\` (l.${i + 1}) — allowed: ${[...LESSON_DIRECTIVES].join(", ")}`,
-        });
-      }
-      if (type === "figure" && !(caption ?? "").trim()) {
-        flags.push({
-          level: "error",
-          where,
-          msg: `\`::: figure\` (l.${i + 1}) carries no caption — every course figure is captioned and numbered`,
-        });
-      }
-      open = { type, line: i + 1 };
-      continue;
-    }
-    if (DIRECTIVE_CLOSE.test(lines[i])) {
-      if (!open) {
-        flags.push({ level: "error", where, msg: `stray \`:::\` (l.${i + 1}) closes nothing` });
-      }
-      open = null;
-    }
-  }
-  if (open) {
-    flags.push({
-      level: "error",
-      where,
-      msg: `directive \`::: ${open.type}\` (l.${open.line}) is never closed`,
-    });
-  }
-
-  const hasFigure = SVG_BLOCK.test(md);
-
-  // Le contrôle le plus discriminant : la leçon parle d'une image absente.
-  if (!hasFigure && FIGURE_REFERENCE.test(md)) {
-    flags.push({
-      level: "error",
-      where,
-      msg: "the lesson points at a figure («ci-dessous», «الشكل المجاور»…) but carries none — the student is sent to an image that does not exist",
-    });
-  }
-
-  // Axe 5 « Illustration » : un chapitre de formes enseigné sans un seul dessin.
-  if (opts.spatial && !hasFigure) {
-    flags.push({
-      level: "warn",
-      where,
-      msg: "spatial chapter with no figure at all — a rule about shapes taught without a drawing (course-quality.md, axis 5)",
-    });
-  }
-
-  // `markdown: true` : une leçon EST du Markdown (`src/shared/lib/markdown.ts` la
-  // parse), donc `**gras**` et `## Titre` y sont la notation attendue — la garde
-  // « piège n°6 » ne vaut que pour les champs rendus en texte brut.
-  flags.push(...auditRenderedFields([["lesson", md]], where, { markdown: true }));
-
-  return flags;
-}
-
-/** Le chapitre relève-t-il d'une famille où la figure est exigible ? (axe 5) */
-export function isSpatialChapter(slug: string): boolean {
-  return SPATIAL_CHAPTER.test(slug) || GRAPHICAL_CHAPTER.test(slug);
 }
 
 /* ============================================================================
@@ -1260,5 +1122,27 @@ export function auditShortAnswerQuestion(
       err(`short_answer: expected mistake "${m.text}" duplicates another once normalised`);
     seen.add(mn);
   }
+
+  // LES TROIS CONTRÔLES PARTAGÉS, que les trois sœurs portent chacune et qui
+  // manquaient ICI depuis #654. Cause : `short_answer` a été branché dans le
+  // ternaire de `qa.ts` (l. ~176) sans eux — `auditRenderedFields` existait
+  // pourtant déjà, et les trois autres audits l'appelaient déjà. Le type neuf
+  // n'a hérité de rien. Conséquence mesurée : une `short_answer` échappait à
+  // NEUF contrôles — les sept du rendu (viewBox absent, radicande arabe,
+  // virgule arabe en séparateur, markup Markdown, formule mêlée à la phrase…),
+  // plus le renvoi vers une figure absente, plus le seuil d'explication courte.
+  //
+  // La garde contre la RÉCURRENCE n'est pas ici : c'est le test piloté par
+  // table de `content-pipeline-etude20.test.ts`, qui exige ces contrôles pour
+  // CHAQUE type routé par le ternaire. C'est le seul filet qui attrapera le
+  // prochain type ajouté.
+  const explanation = q.explanation ?? "";
+
+  if (explanation.trim().length < 25) {
+    flags.push({ level: "warn", where, msg: "explanation is very short" });
+  }
+
+  flags.push(...auditFigureAndRendering(q.prompt, explanation, [], where));
+
   return flags;
 }

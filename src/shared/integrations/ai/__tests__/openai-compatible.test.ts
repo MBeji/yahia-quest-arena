@@ -400,17 +400,6 @@ describe("délai et essais par surface", () => {
     expect(attempts()).toBe(1);
     vi.useRealTimers();
   });
-
-  it("garde tout délai de surface SOUS le plafond de la fonction SSR", () => {
-    // `maxDuration: 300` dans `scripts/build-vercel.mjs`. Au-dessus, c'est la
-    // plateforme qui tue le processus et l'erreur n'est plus lisible.
-    const SSR_MAX_DURATION_MS = 300_000;
-    for (const [feature, ms] of Object.entries(AI_TIMEOUT_MS)) {
-      expect(ms, `la surface ${feature} dépasse le plafond de la fonction`).toBeLessThan(
-        SSR_MAX_DURATION_MS,
-      );
-    }
-  });
 });
 
 describe("dégradation prévue — le streaming retombe en réponse entière (§3.5)", () => {

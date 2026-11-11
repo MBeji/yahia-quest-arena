@@ -17,7 +17,30 @@
 // l'élagage des abonnements morts, et le refus silencieux quand VAPID n'est pas
 // configuré (l'app doit tourner sans push, en développement comme en CI).
 
-import webpush, { WebPushError } from "web-push";
+// ⚠️ `web-push` N'EST JAMAIS IMPORTÉ STATIQUEMENT — et la raison est un défaut
+// vécu, pas une précaution (#909).
+//
+// En dev, Vite sert les modules NON bundlés : un composant client qui importe un
+// `*.server.ts` fait charger au NAVIGATEUR tout le graphe statique de ce module.
+// Le plugin TanStack Start vide bien le corps des server functions, mais il
+// LAISSE leurs imports en tête du module servi — vérifié en lisant ce que le dev
+// server répond. La chaîne vivante était :
+//
+//   `_authenticated/dashboard.tsx` → `features/tutor/components/tutor-digest`
+//     → `features/tutor/digest.server` → `features/ai/ai-call.server`
+//     → `features/ai/ai-alerts.server` → CE FICHIER → `web-push`
+//
+// Or `web-push` → `jws`, dont `data-stream.js`, `sign-stream.js` et
+// `verify-stream.js` appellent `util.inherits(…)` AU CHARGEMENT du module. Dans
+// un navigateur, `util` est un stub vide : `util.inherits is not a function`, la
+// frontière d'erreur racine attrape, et les 27 tests e2e authentifiés tombent sur
+// « Le parchemin s'est déchiré » — six nuits durant.
+//
+// La coupure est posée ICI plutôt que chez l'appelant : deux correctifs
+// précédents (#906, #942) ont coupé une arête chacun, et une troisième s'est
+// rouverte derrière eux. Un `await import(…)` au point d'entrée du paquet ferme
+// la CLASSE — aucun appelant, présent ou futur, ne peut plus le faire entrer
+// dans un graphe client.
 import { supabaseAdmin } from "@/shared/integrations/supabase/client.server";
 import { logger } from "./logger";
 
@@ -25,15 +48,51 @@ export type PushPayload = { title: string; body: string; url: string; tag: strin
 
 export type SendStats = { audience: number; sent: number; pruned: number };
 
+type WebPushApi = typeof import("web-push");
+type WebPushLoaded = { api: WebPushApi; WebPushError: WebPushApi["WebPushError"] };
+
+/**
+ * Le module, chargé UNE fois et partagé — pas un `await import(…)` par appel.
+ *
+ * Ce n'est pas de la coquetterie : `dispatchPlanReminder` lance un envoi par
+ * groupe de révisions en `Promise.all`, et avec un `await import(…)` par appel le
+ * SECOND recevait un espace de noms encore vide — donc `sendNotification`
+ * absent. L'échec tombait dans le `catch` de l'envoi, qui comptait 0 envoyé sans
+ * rien dire : mesuré sur `notifications.cron.test.ts`, où deux payloads distincts
+ * n'en produisaient plus qu'un. Une promesse mémorisée supprime la course, quel
+ * que soit le chargeur.
+ */
+let webPushModule: Promise<WebPushLoaded> | null = null;
+function loadWebPush(): Promise<WebPushLoaded> {
+  webPushModule ??= import("web-push").then((mod) => ({
+    // `web-push` est CJS, et son espace de noms ESM est ASYMÉTRIQUE — mesuré,
+    // pas supposé : `default` porte tout `module.exports`, tandis que les
+    // exports NOMMÉS se limitent à ce que le lexer CJS sait voir, soit
+    // `WebPushError` et `supportedContentEncodings`. `sendNotification` et
+    // `setVapidDetails`, posés par expression de membre, n'en sont PAS. Passer
+    // par les exports nommés casserait l'envoi en silence.
+    // `@types/web-push` décrit l'API en exports nommés et ne modélise pas ce
+    // `default` : l'assertion nomme la forme réelle, elle n'esquive aucun type.
+    api: (mod as WebPushApi & { default: WebPushApi }).default,
+    WebPushError: mod.WebPushError,
+  }));
+  return webPushModule;
+}
+
 let vapidConfigured = false;
 
-/** Configure web-push depuis l'environnement, une fois. `false` s'il manque une variable. */
-export function configureVapid(): boolean {
+/**
+ * Configure web-push depuis l'environnement, une fois. `false` s'il manque une
+ * variable — et dans ce cas le paquet n'est même pas chargé : l'absence de VAPID
+ * se lit dans `process.env`, pas dans `web-push`.
+ */
+export async function configureVapid(): Promise<boolean> {
   if (vapidConfigured) return true;
   const subject = process.env.VAPID_SUBJECT;
   const publicKey = process.env.VAPID_PUBLIC_KEY;
   const privateKey = process.env.VAPID_PRIVATE_KEY;
   if (!subject || !publicKey || !privateKey) return false;
+  const { api: webpush } = await loadWebPush();
   webpush.setVapidDetails(subject, publicKey, privateKey);
   vapidConfigured = true;
   return true;
@@ -73,6 +132,8 @@ async function pruneSubscriptions(ids: string[]): Promise<number> {
  */
 export async function sendPushToUsers(userIds: string[], payload: PushPayload): Promise<SendStats> {
   if (userIds.length === 0) return { audience: 0, sent: 0, pruned: 0 };
+
+  const { api: webpush, WebPushError } = await loadWebPush();
 
   const { data: subs, error: subsError } = await supabaseAdmin
     .from("push_subscriptions")

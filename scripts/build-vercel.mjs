@@ -9,6 +9,9 @@ import { execSync } from "node:child_process";
 import { cpSync, mkdirSync, writeFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
+import { SSR_MAX_DURATION_S } from "./vercel-function.mjs";
+import { VERCEL_ROUTES } from "./vercel-routes.mjs";
+
 const ROOT = process.cwd();
 const OUTPUT = join(ROOT, ".vercel", "output");
 
@@ -107,8 +110,9 @@ writeFileSync(
       runtime: "nodejs22.x",
       handler: "index.js",
       launcherType: "Nodejs",
-      // 300 s = le maximum du plan Hobby depuis que `fluid compute` est le
-      // défaut (doc Vercel, relevée le 2026-08-25). L'ancienne valeur de 30 s
+      // 300 s (`vercel-function.mjs`, seule source) = le maximum du plan Hobby
+      // depuis que `fluid compute` est le défaut (doc Vercel, relevée le
+      // 2026-08-25). L'ancienne valeur de 30 s
       // datait des limites précédentes et n'était plus une contrainte du plan :
       // elle tuait la Forge à mi-parcours et rendait un 504 muet, la fonction
       // mourant avant que notre propre garde R-6 puisse typer l'erreur.
@@ -119,7 +123,7 @@ writeFileSync(
       // Un plafond haut inutilisé ne coûte donc rien.
       //
       // ⚠️ Toute valeur de `AI_TIMEOUT_MS` doit rester strictement en dessous.
-      maxDuration: 300,
+      maxDuration: SSR_MAX_DURATION_S,
       // Pin the SSR function to Stockholm (arn1) to co-locate it with the
       // Supabase project (region eu-north-1 / AWS Stockholm). Every server fn
       // talks to Supabase over PostgREST, so same-region placement removes a
@@ -138,35 +142,9 @@ writeFileSync(
   JSON.stringify(
     {
       version: 3,
-      routes: [
-        // Static security headers on every response (then continue routing).
-        // The Content-Security-Policy is deliberately NOT here: it needs a
-        // per-request nonce so script-src can drop 'unsafe-inline' (GAP-022), and
-        // Build Output headers are static. It is set on each HTML response by the
-        // SSR function instead — see src/router.tsx + src/shared/lib/csp.ts.
-        // (CSP on static assets is inert; only HTML documents need it.)
-        {
-          src: "/(.*)",
-          headers: {
-            "X-Content-Type-Options": "nosniff",
-            "X-Frame-Options": "DENY",
-            "Referrer-Policy": "strict-origin-when-cross-origin",
-            "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
-            "Permissions-Policy": "camera=(), microphone=(), geolocation=(), browsing-topics=()",
-          },
-          continue: true,
-        },
-        // Serve static assets directly (immutable cache for hashed filenames)
-        {
-          src: "/assets/(.*)",
-          headers: { "Cache-Control": "public, max-age=31536000, immutable" },
-          continue: true,
-        },
-        // Let existing static files be served as-is
-        { handle: "filesystem" },
-        // Everything else → Edge Function (SSR)
-        { src: "/(.*)", dest: "/index" },
-      ],
+      // Routes et en-têtes (Cache-Control compris) : `vercel-routes.mjs`, seule
+      // source, testée par `scripts/__tests__/vercel-routes.test.mjs`.
+      routes: VERCEL_ROUTES,
     },
     null,
     2,

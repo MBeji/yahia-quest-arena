@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Swords } from "lucide-react";
 import { BackLink } from "@/components/ui/back-link";
@@ -12,9 +13,11 @@ import { DuelRecap } from "@/features/duel/components/duel-recap";
 import { OpponentProgress } from "@/features/duel/components/opponent-progress";
 import { useDuelChannel } from "@/features/duel/use-duel-channel";
 import { useAuth } from "@/features/auth";
-import { buildQuestLabels } from "@/features/quest/quest-labels";
+import { buildQuestLabels } from "@/shared/lib/quest-labels";
 import { useI18n, useT } from "@/lib/i18n";
 import { useLearningPulse } from "@/hooks/use-learning-pulse";
+import { computeOutcome } from "@/features/duel/duel-outcome";
+import { trackProductEvent } from "@/shared/lib/product-events";
 
 export const Route = createFileRoute("/_authenticated/duel/$duelId")({
   head: () => ({ meta: [{ title: "Duel · Na9ra Nal3ab" }] }),
@@ -69,6 +72,20 @@ function DuelPlayPage() {
 
   const state = stateQuery.data;
   const rtl = locale === "ar";
+
+  // é31 lot 1 — le duel réglé, une fois et une seule. Le duel est la mécanique
+  // sociale déjà livrée (é05) et la seule dont on ne savait pas si elle servait ;
+  // le verdict (gagné/perdu/nul) part avec, jamais l'identité de l'adversaire.
+  const settledOutcome =
+    state && (state.status === "finished" || state.status === "expired")
+      ? computeOutcome(state)
+      : null;
+  useEffect(() => {
+    if (!settledOutcome) return;
+    trackProductEvent("duel_finished", { outcome: settledOutcome });
+    // Le duel réglé a versé son XP : la puce de l'en-tête suit (data-02).
+    qc.invalidateQueries({ queryKey: ["me-stats"] });
+  }, [duelId, qc, settledOutcome]);
 
   if (stateQuery.isLoading || questionsQuery.isLoading) {
     return <LoadingState label={t.duel.loading} className="min-h-[40dvh]" />;
