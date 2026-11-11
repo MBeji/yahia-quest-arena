@@ -162,9 +162,9 @@ function AiModeBody({ status, onChanged }: { status: AiModeStatus; onChanged: ()
         //
         // Même remède qu'en é11 lot 3 pour le chat de chapitre, et pour la même
         // raison : une frame de retard, parce que le rendu du formulaire doit
-        // avoir eu lieu avant qu'on cherche à le rejoindre. `scroll-mt-20`
-        // compense l'en-tête collant, sans quoi le titre arriverait dessous.
-        <div ref={revealForm} className="scroll-mt-20">
+        // avoir eu lieu avant qu'on cherche à le rejoindre. L'en-tête collant
+        // est compté par `scroll-padding-top` (styles.css), pas par une marge ici.
+        <div ref={revealForm}>
           <AttachForm
             status={status}
             onDone={() => {

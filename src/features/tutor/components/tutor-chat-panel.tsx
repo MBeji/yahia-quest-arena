@@ -189,7 +189,7 @@ export function TutorChatPanel({
       <p
         ref={attachRoot}
         data-testid="tutor-chat-locked"
-        className="text-muted-foreground mt-4 scroll-mt-20 text-xs"
+        className="text-muted-foreground mt-4 text-xs"
       >
         {t.tutor[lockedKey]}
       </p>
@@ -290,12 +290,13 @@ export function TutorChatPanel({
   }
 
   return (
-    // `scroll-mt-20` : l'en-tête public est collant, et sans cette marge le
-    // titre du panneau arriverait DESSOUS — rejoint, mais toujours invisible.
+    // L'en-tête public est collant : `scroll-padding-top` (styles.css) arrête le
+    // défilement SOUS lui, sans quoi le titre du panneau arriverait dessous —
+    // rejoint, mais toujours invisible.
     <section
       ref={attachRoot}
       data-testid="tutor-chat"
-      className="border-border bg-surface-2 mt-4 scroll-mt-20 rounded-2xl border p-4"
+      className="border-border bg-surface-2 mt-4 rounded-2xl border p-4"
     >
       <div className="mb-3 flex items-center gap-2">
         <GraduationCap className="size-4 text-[color:var(--gold)]" aria-hidden="true" />
