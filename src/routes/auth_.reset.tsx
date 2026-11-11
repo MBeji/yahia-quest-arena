@@ -22,7 +22,11 @@ export const Route = createFileRoute("/auth_/reset")({
   component: ResetPasswordPage,
 });
 
-export function ResetPasswordPage() {
+// PAS d'`export` : un composant exporté par son fichier de route ne peut pas être
+// découpé par le routeur, et toute la page entrait alors dans le chunk d'entrée que
+// chaque visiteur télécharge (3,7 Ko mesurés le 2026-11-11, issue #1250). Le test
+// la prend par `Route.component`.
+function ResetPasswordPage() {
   const navigate = useNavigate();
   const t = useT();
   const entrance = useEntrance("scale");

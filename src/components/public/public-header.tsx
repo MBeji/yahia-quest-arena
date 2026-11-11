@@ -6,6 +6,7 @@ import { useAuth, useMyRole, useSignOutInPlace } from "@/features/auth";
 import { SettingsMenu } from "@/components/ui/settings-menu";
 import { AccountHud } from "@/components/account-hud";
 import { GuideButton } from "@/components/guide/guide-button";
+import { useStickyHeaderOffset } from "@/components/public/use-sticky-header-offset";
 
 /**
  * Header of the public (Référence register) shell. Sober, content-first, and
@@ -34,8 +35,14 @@ export function PublicHeader() {
   // l'admin ; il n'est PAS rendu pour un connecté dont le rôle n'est pas encore lu — mieux vaut un
   // lien qui arrive qu'un lien qui disparaît sous le doigt de l'élève.
   const showParentTracking = !isAuthed || role === "parent" || role === "admin";
+  // Les sauts d'ancre s'arrêtent SOUS cet en-tête, quelle que soit sa hauteur.
+  const headerRef = useStickyHeaderOffset<HTMLElement>();
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-card/90 pt-[env(safe-area-inset-top)] backdrop-blur print:hidden">
+    <header
+      ref={headerRef}
+      data-public-header
+      className="sticky top-0 z-30 border-b border-border bg-card/90 pt-[env(safe-area-inset-top)] backdrop-blur print:hidden"
+    >
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-3 sm:gap-3 sm:px-6">
         <div className="flex items-center gap-3 sm:gap-6">
           {/* Brand = home. AUTH-AWARE destination: a signed-in visitor who reached

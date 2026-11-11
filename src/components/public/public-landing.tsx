@@ -415,7 +415,7 @@ export function PublicLanding({ stats }: { stats?: CatalogueStats | null }) {
       <section
         id="espace-famille"
         data-testid="famille-block"
-        className="mx-auto max-w-5xl scroll-mt-20 px-4 py-12 sm:px-6"
+        className="mx-auto max-w-5xl px-4 py-12 sm:px-6"
       >
         <div className="mb-8 text-center">
           <div className="inline-flex items-center gap-2 rounded-full bg-secondary px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary">

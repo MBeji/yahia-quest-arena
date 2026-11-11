@@ -15,6 +15,30 @@ describe("ExplainHint", () => {
     expect(trigger.className).toContain("decoration-dotted");
   });
 
+  // Régression de l'audit d'affichage (2026-10-31) : un `aria-label` posé sur le
+  // bouton REMPLAÇAIT son contenu — niveau, série, XP, pièces et score n'étaient
+  // jamais annoncés, seule l'explication l'était.
+  it("names the trigger after its visible content, never after the explanation", () => {
+    render(
+      <ExplainHint text="Les points d'expérience gagnés en mission" label="XP">
+        <span>1234 XP</span>
+      </ExplainHint>,
+    );
+    const trigger = screen.getByRole("button", { name: "1234 XP" });
+    expect(trigger).not.toHaveAttribute("aria-label");
+  });
+
+  it("links the explanation to the trigger as its description once shown", () => {
+    render(
+      <ExplainHint text="Les points d'expérience gagnés en mission">
+        <span>1234 XP</span>
+      </ExplainHint>,
+    );
+    const trigger = screen.getByRole("button", { name: "1234 XP" });
+    fireEvent.focus(trigger);
+    expect(trigger).toHaveAccessibleDescription("Les points d'expérience gagnés en mission");
+  });
+
   it("renders an icon-only trigger when no children are given", () => {
     render(<ExplainHint text="Some explanation" label="What is this?" />);
     const trigger = screen.getByRole("button", { name: "What is this?" });

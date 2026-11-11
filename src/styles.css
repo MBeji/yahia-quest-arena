@@ -293,6 +293,34 @@
 }
 
 /* =====================================================
+  Sauts d'ancre et en-tête collant.
+  Une cible d'ancre (sommaire d'un cours, /#espace-famille, panneau du tuteur)
+  s'arrête SOUS l'en-tête collant de la coquille publique, pas derrière lui.
+  `--public-header-h` est la hauteur mesurée de cet en-tête, publiée par
+  `use-sticky-header-offset.ts`. Avant l'hydratation (arrivée directe sur une
+  ancre) ou sans ResizeObserver, les valeurs ci-dessous servent de repli, prises
+  sur les hauteurs mesurées le 2026-11-11 : 168 px sur téléphone (deux rangées
+  qui s'enroulent), 118 px sur tablette, 81 px à partir de `lg`. Hors coquille
+  publique, pas d'en-tête collant : 0.
+  ===================================================== */
+html {
+  scroll-padding-top: calc(var(--public-header-h, 0px) + 0.75rem);
+}
+html:has([data-public-header]) {
+  --public-header-h: 10.5rem;
+}
+@media (min-width: 40rem) {
+  html:has([data-public-header]) {
+    --public-header-h: 7.5rem;
+  }
+}
+@media (min-width: 64rem) {
+  html:has([data-public-header]) {
+    --public-header-h: 5.25rem;
+  }
+}
+
+/* =====================================================
   Reference theme — « Clair / Référence » (content-first: white + teal #0F6E56).
   The sober editorial reading register and the DEFAULT of the 2-theme model
   (étude 14, Q-1), applied globally via <html class="reference">. The "gold"
@@ -708,7 +736,7 @@ html.reference *:focus-visible {
   color: var(--neon-violet);
   border-bottom: 1px solid color-mix(in oklab, var(--neon-violet) 30%, transparent);
   padding-bottom: 0.5rem;
-  scroll-margin-top: 5rem;
+  /* L'en-tête collant est compté par `scroll-padding-top` (html, plus haut). */
 }
 .lesson-content .lesson-h3 {
   font-size: 1.15rem;
