@@ -39,7 +39,14 @@ export function ExplainHint({ text, children, label, className }: ExplainHintPro
               e.preventDefault();
               e.stopPropagation();
             }}
-            aria-label={label ?? text}
+            // Le nom accessible ne doit JAMAIS remplacer ce qui est écrit : avec un
+            // `aria-label`, « 1234 XP » disparaissait pour un lecteur d'écran, qui
+            // n'entendait que l'explication (niveau, série, XP, pièces, score — audit
+            // d'affichage du 2026-10-31). Avec un contenu, le nom vient du contenu ;
+            // l'explication arrive par l'infobulle, que Radix relie au bouton en
+            // `aria-describedby` dès qu'elle s'ouvre (survol, focus, tap). Sans
+            // contenu (icône seule), le libellé reste le nom.
+            aria-label={children ? undefined : (label ?? text)}
             className={cn(
               "inline-flex max-w-full cursor-help items-center gap-1 align-middle outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)] focus-visible:ring-offset-1 focus-visible:ring-offset-transparent rounded-sm",
               children &&

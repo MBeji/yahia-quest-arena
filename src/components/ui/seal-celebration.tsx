@@ -1,17 +1,18 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { SealMark } from "@/components/game/seal-mark";
+import { useCelebrationDismiss } from "@/components/ui/use-celebration-dismiss";
 import type { StarTier } from "@/shared/lib/progress-stars";
 
 /**
  * LE SCEAU D'UNE MATIÈRE, célébré (étude 34, R-12 · US-3).
  *
- * Jumeau de `level-up-celebration`, avec trois différences assumées :
+ * Jumeau de `level-up-celebration`, avec deux différences assumées (2 et 3) :
  *
- *  1. **Il respecte `prefers-reduced-motion`.** Son aîné ne le fait pas — 60
- *     particules tombent quoi qu'il arrive. Ici, le mouvement réduit garde la
- *     modale et son cachet, et supprime les particules : ce qui compte est
- *     l'attestation, pas l'animation, et un élève qui a demandé moins de
- *     mouvement ne doit pas payer sa reconnaissance en vertige.
+ *  1. **Il respecte `prefers-reduced-motion`** (son aîné aussi, depuis le
+ *     2026-11-11). Le mouvement réduit garde la modale et son cachet, et supprime
+ *     les particules : ce qui compte est l'attestation, pas l'animation, et un
+ *     élève qui a demandé moins de mouvement ne doit pas payer sa reconnaissance
+ *     en vertige.
  *  2. **Elle n'enchaîne RIEN** (é31 R-6). Un tap ferme, et rend la main à
  *     l'écran de résultat. Une modale qui propose « continuer » transforme un
  *     sommet en tapis roulant.
@@ -41,16 +42,20 @@ export function SealCelebration({
   onComplete?: () => void;
 }) {
   const reduced = useReducedMotion();
+  // Clavier : le focus entre dans la modale, Échap / Entrée / Espace la ferment.
+  const dialogRef = useCelebrationDismiss<HTMLDivElement>(show, onComplete);
 
   return (
     <AnimatePresence>
       {show && (
         <motion.div
+          ref={dialogRef}
+          tabIndex={-1}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="fixed inset-0 z-[100] grid place-items-center bg-[#0a0a0a]/70 p-6 backdrop-blur-sm"
+          className="fixed inset-0 z-[100] grid place-items-center bg-[#0a0a0a]/70 p-6 outline-none backdrop-blur-sm"
           role="dialog"
           aria-modal="true"
           aria-label={title}

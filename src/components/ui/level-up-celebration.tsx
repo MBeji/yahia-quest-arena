@@ -1,7 +1,8 @@
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { useMemo } from "react";
 import { Crown, Zap } from "lucide-react";
 import { useT } from "@/lib/i18n";
+import { useCelebrationDismiss } from "@/components/ui/use-celebration-dismiss";
 
 interface LevelUpCelebrationProps {
   show: boolean;
@@ -28,7 +29,7 @@ function CelebrationParticles() {
   );
 
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
       {particles.map((p) => (
         <motion.div
           key={p.id}
@@ -61,29 +62,43 @@ export function LevelUpCelebration({
   onComplete,
 }: LevelUpCelebrationProps) {
   const t = useT();
+  // Mouvement réduit : la modale et son contenu restent, la pluie de particules et
+  // les rebonds disparaissent — comme sa jumelle `seal-celebration`.
+  const reduced = useReducedMotion();
+  const dialogRef = useCelebrationDismiss<HTMLDivElement>(show, onComplete);
   return (
     <AnimatePresence>
       {show && (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0a0a0a]/70 backdrop-blur-sm"
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${t.levelUp.title} ${t.leaderboard.lvl} ${newLevel}`}
+          tabIndex={-1}
+          data-testid="level-up-celebration"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0a0a0a]/70 outline-none backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
           onClick={onComplete}
         >
-          <CelebrationParticles />
+          {!reduced && <CelebrationParticles />}
 
           <motion.div
             className="relative z-10 flex flex-col items-center gap-4 rounded-3xl border border-[color:var(--neon-gold)]/50 bg-card/90 px-12 py-10 shadow-2xl backdrop-blur-xl"
-            initial={{ scale: 0.5, opacity: 0, y: 30 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.8, opacity: 0, y: -20 }}
-            transition={{ type: "spring", damping: 15, stiffness: 200, delay: 0.2 }}
+            initial={reduced ? { opacity: 0 } : { scale: 0.5, opacity: 0, y: 30 }}
+            animate={reduced ? { opacity: 1 } : { scale: 1, opacity: 1, y: 0 }}
+            exit={reduced ? { opacity: 0 } : { scale: 0.8, opacity: 0, y: -20 }}
+            transition={
+              reduced
+                ? { duration: 0.2 }
+                : { type: "spring", damping: 15, stiffness: 200, delay: 0.2 }
+            }
           >
             <motion.div
               className="grid h-20 w-20 place-items-center rounded-2xl bg-[image:var(--gradient-gold)] shadow-gold"
-              animate={{ rotate: [0, -10, 10, -5, 5, 0], scale: [1, 1.1, 1] }}
+              animate={reduced ? undefined : { rotate: [0, -10, 10, -5, 5, 0], scale: [1, 1.1, 1] }}
               transition={{ duration: 0.8, delay: 0.5 }}
             >
               <Crown className="h-10 w-10 text-black" />
@@ -99,7 +114,7 @@ export function LevelUpCelebration({
                 {t.levelUp.title}
               </div>
               <div className="mt-2 font-display text-5xl font-black text-gradient-gold">
-                Lvl {newLevel}
+                {t.leaderboard.lvl} {newLevel}
               </div>
             </motion.div>
 
