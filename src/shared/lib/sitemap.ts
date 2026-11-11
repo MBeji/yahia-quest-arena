@@ -35,6 +35,31 @@ function escapeXml(value: string): string {
 }
 
 /**
+ * PostgREST caps every response at `max_rows` (1 000 on Supabase by default) and
+ * truncates SILENTLY: the sitemap of 2026-11-11 listed exactly 1 000 chapters out
+ * of 1 171 and 858 exercises out of 6 648. Every table is therefore read page by
+ * page, in a stable order, until a short page says there is nothing left.
+ */
+export const SITEMAP_PAGE_SIZE = 1000;
+
+type Page<Row> = { data: Row[] | null; error: { message: string } | null };
+type PageQuery = (
+  from: number,
+  to: number,
+) => PromiseLike<{ data: unknown[] | null; error: { message: string } | null }>;
+
+async function fetchAllRows<Row>(query: PageQuery): Promise<Page<Row>> {
+  const rows: Row[] = [];
+  for (let from = 0; ; from += SITEMAP_PAGE_SIZE) {
+    const { data, error } = await query(from, from + SITEMAP_PAGE_SIZE - 1);
+    if (error) return { data: null, error };
+    const page = (data ?? []) as Row[];
+    rows.push(...page);
+    if (page.length < SITEMAP_PAGE_SIZE) return { data: rows, error: null };
+  }
+}
+
+/**
  * Collect every public, indexable path from the anon-visible catalogue. RLS
  * already restricts the anon client to public content; on top of that we drop
  * pages that have no real indexable content:
@@ -50,10 +75,29 @@ export async function collectSitemapPaths(supabase: SitemapClient): Promise<stri
   const paths: string[] = [...STATIC_PATHS];
 
   const [parcours, subjects, chapters, exercises] = await Promise.all([
-    supabase.from("parcours").select("id,status"),
-    supabase.from("subjects").select("id"),
-    supabase.from("chapters").select("id,lesson_content"),
-    supabase.from("exercises").select("id,mode,source"),
+    fetchAllRows<{ id: string; status: string }>((from, to) =>
+      supabase.from("parcours").select("id,status").order("id").range(from, to),
+    ),
+    fetchAllRows<{ id: string }>((from, to) =>
+      supabase.from("subjects").select("id").order("id").range(from, to),
+    ),
+    // Le filtre « a une leçon » se fait EN BASE et seul l'id voyage. Lire
+    // `lesson_content` pour le tester ici (~30 Ko par leçon, 1 000 par page, triées)
+    // dépassait le statement timeout (57014, constaté en prod le 2026-11-11) : la
+    // table entière tombait du sitemap. Même sémantique que les voisins du lecteur
+    // (`quest.lesson.server.ts`) : NULL et chaîne vide = pas de leçon.
+    fetchAllRows<{ id: string }>((from, to) =>
+      supabase
+        .from("chapters")
+        .select("id")
+        .not("lesson_content", "is", null)
+        .neq("lesson_content", "")
+        .order("id")
+        .range(from, to),
+    ),
+    fetchAllRows<{ id: string; mode: string; source: string }>((from, to) =>
+      supabase.from("exercises").select("id,mode,source").order("id").range(from, to),
+    ),
   ]);
 
   if (parcours.error) {
@@ -76,7 +120,7 @@ export async function collectSitemapPaths(supabase: SitemapClient): Promise<stri
     logger.warn("sitemap: chapters query failed", { error: chapters.error.message });
   } else {
     for (const c of chapters.data ?? []) {
-      if (c.lesson_content && c.lesson_content.trim().length > 0) paths.push(`/chapitre/${c.id}`);
+      paths.push(`/chapitre/${c.id}`);
     }
   }
 

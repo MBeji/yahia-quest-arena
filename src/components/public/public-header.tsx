@@ -48,7 +48,7 @@ export function PublicHeader() {
             className="flex items-baseline gap-2"
             aria-label={isAuthed ? t.public.header.account : t.public.header.homeAria}
           >
-            <span className="font-display text-lg font-bold tracking-tight text-primary">
+            <span className="font-display text-lg font-bold tracking-tight whitespace-nowrap text-primary">
               Na9ra Nal3ab
             </span>
             <span
@@ -60,10 +60,7 @@ export function PublicHeader() {
               نقرا نلعب
             </span>
           </Link>
-          <nav
-            className="hidden items-center gap-0.5 sm:flex sm:gap-1"
-            aria-label={t.public.header.navAria}
-          >
+          <nav className="hidden items-center gap-1 lg:flex" aria-label={t.public.header.navAria}>
             <Link
               to="/programme"
               className="inline-flex items-center rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground sm:px-3 [@media(pointer:coarse)]:min-h-11"
@@ -131,11 +128,13 @@ export function PublicHeader() {
           )}
         </div>
       </div>
-      {/* Phone-only catalogue nav: the inline nav above is hidden below `sm`, so
-          surface Programme / Extras (+ login when logged out) in a compact wrapping
-          row here, otherwise phone visitors lose those entry points entirely. */}
+      {/* Catalogue nav below `lg`: the inline nav above only fits from `lg` up — at
+          768 px (iPad portrait) the brand, four catalogue links and the account
+          buttons on ONE line overflowed the viewport by 38 px (nightly #1219). Below
+          `lg` they live in this compact wrapping row instead. Login joins it below `sm`
+          only — from `sm` up the top bar shows it. */}
       <nav
-        className="flex flex-wrap items-center gap-x-1 gap-y-0.5 border-t border-border px-4 py-1.5 sm:hidden"
+        className="flex flex-wrap items-center gap-x-1 gap-y-0.5 border-t border-border px-4 py-1.5 sm:px-6 lg:hidden"
         aria-label={t.public.header.navAria}
       >
         <Link
@@ -169,7 +168,7 @@ export function PublicHeader() {
             to="/login"
             onClick={() => rememberCurrentPage()}
             data-testid="header-login-phone"
-            className="rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+            className="rounded-lg sm:hidden px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
           >
             {t.public.header.login}
           </Link>

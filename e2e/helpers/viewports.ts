@@ -15,8 +15,10 @@ export const DEVICE_VIEWPORTS = [
   { name: "Desktop 1080p", width: 1920, height: 1080 },
 ] as const;
 
-/** The Tailwind `sm` breakpoint — the public Référence header reveals its
- *  catalogue nav (Programme/Extras) at/above this width (hidden below). */
+/** The Tailwind `sm` breakpoint — the public Référence header shows its login link
+ *  in the top bar at/above this width (in the catalogue row below it). The inline
+ *  catalogue nav itself only appears from `lg` (1024 px): below, it lives in the
+ *  wrapping second row (the 768 px overflow of nightly #1219). */
 export const SM_BREAKPOINT = 640;
 
 /** The Tailwind `md` breakpoint — desktop nav appears at/above this width. */
