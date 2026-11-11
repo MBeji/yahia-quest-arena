@@ -1,4 +1,6 @@
 // @vitest-environment node
+import { readFileSync } from "node:fs";
+
 import { describe, expect, it } from "vitest";
 
 import {
@@ -9,16 +11,22 @@ import {
   bumpKind,
   classifyOutdated,
   dropFromPlan,
+  enteringPrereleases,
   eresolveCulprits,
   eresolveReason,
+  HELD_BACK_FILE,
   MAX_CONFLICT_RETRIES,
   groupMajors,
   isolateFailures,
   majorGroupOf,
+  makeTreeGuard,
   normalizeOutdated,
+  parseHeldBack,
+  prereleaseCarriers,
   readOutdated,
   renderPrBody,
   semverParts,
+  settleLot,
   updateWithConflictRetry,
 } from "../apply-patch-minor.mjs";
 
@@ -473,5 +481,382 @@ describe("peer conflicts (ERESOLVE) — #1092", () => {
     };
     // Nothing named in the lot: the solo try takes over, `a` fails alone too, the lot empties.
     expect(() => updateWithConflictRetry(lotOf("a"), run, () => {})).toThrow(/every package/);
+  });
+});
+
+describe("held-back.json — the standing holds", () => {
+  const entry = (over = {}) => ({
+    packages: ["react", "react-dom"],
+    since: "2026-11-11",
+    reason: "le chunk d'entrée dépasse son budget",
+    liftWhen: "le chunk d'entrée est découpé",
+    ...over,
+  });
+  const file = (...held) => JSON.stringify({ held });
+
+  it("gives one hold per package, each carrying the reason of its entry", () => {
+    expect(
+      parseHeldBack(file(entry(), entry({ packages: ["vite"], reason: "préversion" }))),
+    ).toEqual([
+      {
+        name: "react",
+        reason: "le chunk d'entrée dépasse son budget",
+        liftWhen: "le chunk d'entrée est découpé",
+        since: "2026-11-11",
+      },
+      {
+        name: "react-dom",
+        reason: "le chunk d'entrée dépasse son budget",
+        liftWhen: "le chunk d'entrée est découpé",
+        since: "2026-11-11",
+      },
+      {
+        name: "vite",
+        reason: "préversion",
+        liftWhen: "le chunk d'entrée est découpé",
+        since: "2026-11-11",
+      },
+    ]);
+  });
+
+  it("refuses a hold that does not say why, or until when", () => {
+    expect(() => parseHeldBack(file(entry({ reason: "  " })))).toThrow(/"reason" is required/);
+    expect(() => parseHeldBack(file(entry({ liftWhen: undefined })))).toThrow(
+      /"liftWhen" is required/,
+    );
+    expect(() => parseHeldBack(file(entry({ since: "novembre" })))).toThrow(/YYYY-MM-DD/);
+  });
+
+  it("refuses anything that is not a package name, an empty entry, or a package held twice", () => {
+    expect(() => parseHeldBack(file(entry({ packages: ["vite; rm -rf /"] })))).toThrow(
+      /not a package name/,
+    );
+    expect(() => parseHeldBack(file(entry({ packages: [] })))).toThrow(/non-empty array/);
+    expect(() => parseHeldBack(file(entry(), entry({ packages: ["react"] })))).toThrow(
+      /"react" is held twice/,
+    );
+  });
+
+  it("refuses a file it cannot read as a list of holds", () => {
+    expect(() => parseHeldBack("{ nope")).toThrow(/not valid JSON/);
+    expect(() => parseHeldBack("{}")).toThrow(/"held" array/);
+  });
+
+  it("the committed file is one this script accepts", () => {
+    // The guard reads this file twice a week with nobody watching: a malformed entry would
+    // turn `detect` red for a reason that has nothing to do with dependencies.
+    const text = readFileSync(new URL(`../../../${HELD_BACK_FILE}`, import.meta.url), "utf8");
+    const holds = parseHeldBack(text);
+    expect(holds.length).toBeGreaterThan(0);
+    // What moves together is held together — half a set in the lot is the state no changelog
+    // describes (same rule as MAJOR_GROUPS).
+    const held = new Set(holds.map((h) => h.name));
+    for (const group of [["react", "react-dom", "@types/react", "@types/react-dom"]]) {
+      const present = group.filter((n) => held.has(n));
+      expect([0, group.length]).toContain(present.length);
+    }
+  });
+
+  it("carries the reason of a standing hold into the plan, and keeps a bare --hold terse", () => {
+    const { excluded } = classifyOutdated(
+      {
+        react: { current: "19.2.8", wanted: "19.3.1", latest: "19.3.1" },
+        flaky: { current: "1.0.0", wanted: "1.0.1", latest: "1.0.1" },
+      },
+      [{ name: "react", reason: "budget du chunk d'entrée" }, "flaky"],
+    );
+    expect(excluded.map((e) => [e.name, e.reason])).toEqual([
+      ["flaky", "held back"],
+      ["react", "held back — budget du chunk d'entrée"],
+    ]);
+  });
+
+  it("reports a hold that no longer holds anything, so it gets removed", () => {
+    const plan = buildPlan(
+      {
+        react: { current: "19.2.8", wanted: "19.3.1", latest: "19.3.1" },
+        // Held, but already at the top of its range: the hold is dead configuration.
+        vite: { current: "8.3.8", wanted: "8.3.8", latest: "9.0.0" },
+      },
+      [
+        { name: "react", reason: "budget" },
+        { name: "vite", reason: "préversion" },
+        { name: "gone", reason: "plus installé" },
+      ],
+    );
+    expect(plan.mootHolds).toEqual(["gone", "vite"]);
+    const body = renderPrBody(plan, "2026-11-11");
+    expect(body).toContain("Écart sans objet");
+    expect(body).toContain("`gone`, `vite`");
+    expect(body).toContain(HELD_BACK_FILE);
+    expect(renderPrBody(buildPlan({}, []), "2026-11-11")).not.toContain("Écart sans objet");
+  });
+});
+
+/** A lockfile, as text, from `{ path: [version, { dependencies…, optionalDependencies… }] }`. */
+function lockOf(packages) {
+  return JSON.stringify({
+    lockfileVersion: 3,
+    packages: {
+      "": { name: "root" },
+      ...Object.fromEntries(
+        Object.entries(packages).map(([path, [version, deps = {}]]) => [
+          path,
+          { version, ...deps },
+        ]),
+      ),
+    },
+  });
+}
+
+// The two prereleases the red lots of 2026-09-25 → 11-10 kept bringing in, at their real paths.
+const LOCK_BEFORE = lockOf({
+  "node_modules/vite": ["8.2.4", { dependencies: { rolldown: "~1.2.4" } }],
+  "node_modules/rolldown": ["1.2.15"],
+  "node_modules/@tailwindcss/vite": ["4.3.3", { peerDependencies: { vite: "^8" } }],
+  "node_modules/@cloudflare/vite-plugin": [
+    "1.49.0",
+    { dependencies: { miniflare: "4.20260730.0" } },
+  ],
+  "node_modules/miniflare": ["4.20260730.0", { dependencies: { youch: "4.1.0-beta.10" } }],
+  // A prerelease that was ALREADY there must never be reported: it does not ENTER.
+  "node_modules/youch": ["4.1.0-beta.10"],
+  "node_modules/zod": ["3.9.0"],
+});
+const LOCK_WITH_BOTH = lockOf({
+  "node_modules/vite": ["8.3.8", { dependencies: { rolldown: "~1.2.18" } }],
+  "node_modules/rolldown": [
+    "1.2.19",
+    { optionalDependencies: { "@rolldown/binding-wasm32-wasi": "1.2.19" } },
+  ],
+  "node_modules/@rolldown/binding-wasm32-wasi": [
+    "1.2.19",
+    { dependencies: { "@emnapi/core": "2.0.0-beta.2" } },
+  ],
+  "node_modules/@emnapi/core": ["2.0.0-beta.2"],
+  "node_modules/@tailwindcss/vite": ["4.3.5", { peerDependencies: { vite: "^8" } }],
+  "node_modules/@cloudflare/vite-plugin": [
+    "1.68.0",
+    { dependencies: { miniflare: "5.20261103.0-beta" } },
+  ],
+  "node_modules/miniflare": ["5.20261103.0-beta", { dependencies: { youch: "4.1.0-beta.10" } }],
+  "node_modules/youch": ["4.1.0-beta.10"],
+  "node_modules/zod": ["3.9.1"],
+});
+const LOCK_CLEAN_AFTER = lockOf({
+  "node_modules/vite": ["8.2.4", { dependencies: { rolldown: "~1.2.4" } }],
+  "node_modules/rolldown": ["1.2.15"],
+  "node_modules/@tailwindcss/vite": ["4.3.5", { peerDependencies: { vite: "^8" } }],
+  "node_modules/@cloudflare/vite-plugin": [
+    "1.49.0",
+    { dependencies: { miniflare: "4.20260730.0" } },
+  ],
+  "node_modules/miniflare": ["4.20260730.0", { dependencies: { youch: "4.1.0-beta.10" } }],
+  "node_modules/youch": ["4.1.0-beta.10"],
+  "node_modules/zod": ["3.9.1"],
+});
+
+describe("a prerelease must not enter the lockfile (rule A1 of the PR gate)", () => {
+  it("names what ENTERS, and stays silent on a prerelease that was already there", () => {
+    expect(enteringPrereleases(LOCK_BEFORE, LOCK_WITH_BOTH).map((e) => e.version)).toEqual([
+      "2.0.0-beta.2",
+      "5.20261103.0-beta",
+    ]);
+    expect(enteringPrereleases(LOCK_BEFORE, LOCK_CLEAN_AFTER)).toEqual([]);
+  });
+
+  it("refuses to call a lockfile clean when it cannot read it", () => {
+    expect(() => enteringPrereleases(LOCK_BEFORE, "{}")).toThrow(/no `packages` block/);
+  });
+
+  it("blames the lot package that PULLS the prerelease in, not the plugins that peer on it", () => {
+    const lot = ["@cloudflare/vite-plugin", "@tailwindcss/vite", "vite", "zod"];
+    expect(prereleaseCarriers(LOCK_WITH_BOTH, ["2.0.0-beta.2"], lot)).toEqual(["vite"]);
+    expect(prereleaseCarriers(LOCK_WITH_BOTH, ["5.20261103.0-beta"], lot)).toEqual([
+      "@cloudflare/vite-plugin",
+    ]);
+    expect(prereleaseCarriers(LOCK_WITH_BOTH, ["2.0.0-beta.2", "5.20261103.0-beta"], lot)).toEqual([
+      "@cloudflare/vite-plugin",
+      "vite",
+    ]);
+  });
+
+  it("resolves a nested copy the way Node does: the nearest node_modules wins", () => {
+    const lock = lockOf({
+      "node_modules/a": ["1.1.0", { dependencies: { shared: "^2.0.0-rc.1" } }],
+      "node_modules/a/node_modules/shared": ["2.0.0-rc.1"],
+      "node_modules/b": ["1.1.0", { dependencies: { shared: "^1.0.0" } }],
+      "node_modules/shared": ["1.4.0"],
+    });
+    // `b` depends on `shared` too — but on the hoisted, stable copy.
+    expect(prereleaseCarriers(lock, ["2.0.0-rc.1"], ["a", "b"])).toEqual(["a"]);
+  });
+
+  it("names nobody when no lot package reaches the prerelease", () => {
+    expect(prereleaseCarriers(LOCK_WITH_BOTH, ["2.0.0-beta.2"], ["zod", "absent"])).toEqual([]);
+    expect(prereleaseCarriers(LOCK_WITH_BOTH, ["9.9.9-alpha"], ["vite"])).toEqual([]);
+  });
+});
+
+describe("settleLot — a lot the PR gate will accept, or none", () => {
+  /** An npm that writes `locks[i]` at its i-th install; `run` never fails. */
+  function fakeIo(locks) {
+    const state = { installs: 0, restores: 0, updates: [] };
+    return {
+      state,
+      io: {
+        run: (args) => {
+          state.updates.push(args.slice(1));
+          return "";
+        },
+        restore: () => state.restores++,
+        install: () => state.installs++,
+        readLock: () => locks[Math.min(state.installs, locks.length) - 1],
+        baseLock: LOCK_BEFORE,
+      },
+    };
+  }
+
+  it("applies a clean lot once, without ever restoring", () => {
+    const { io, state } = fakeIo([LOCK_CLEAN_AFTER]);
+    const applied = settleLot(lotOf("@tailwindcss/vite", "zod"), io, () => {});
+    expect(applied.patchMinor.map((p) => p.name)).toEqual(["@tailwindcss/vite", "zod"]);
+    expect(state).toMatchObject({ installs: 1, restores: 0 });
+  });
+
+  it("drops the packages that carry a prerelease, says why, and applies the rest", () => {
+    const { io, state } = fakeIo([LOCK_WITH_BOTH, LOCK_CLEAN_AFTER]);
+    const applied = settleLot(
+      lotOf("@cloudflare/vite-plugin", "@tailwindcss/vite", "vite", "zod"),
+      io,
+      () => {},
+    );
+    expect(state.updates).toEqual([
+      ["@cloudflare/vite-plugin", "@tailwindcss/vite", "vite", "zod"],
+      ["@tailwindcss/vite", "zod"],
+    ]);
+    expect(applied.patchMinor.map((p) => p.name)).toEqual(["@tailwindcss/vite", "zod"]);
+    // The tree was put back before the second attempt — it had been moved by the first.
+    expect(state.restores).toBe(1);
+    const reasons = Object.fromEntries(applied.excluded.map((e) => [e.name, e.reason]));
+    // Each package answers for the prerelease IT pulls in — not for its neighbour's.
+    expect(reasons.vite).toContain("2.0.0-beta.2 (node_modules/@emnapi/core)");
+    expect(reasons.vite).not.toContain("miniflare");
+    expect(reasons.vite).toContain("(A1)");
+    expect(reasons["@cloudflare/vite-plugin"]).toContain("5.20261103.0-beta");
+    expect(reasons["@cloudflare/vite-plugin"]).not.toContain("@emnapi");
+    // …and the PR body, which is rendered from the plan, says it too.
+    expect(renderPrBody(applied, "2026-11-11")).toContain(
+      "- `vite` (1.0.0 → 1.1.0) — ferait entrer",
+    );
+  });
+
+  it("hands over when a prerelease enters but nothing in the lot carries it", () => {
+    const { io } = fakeIo([LOCK_WITH_BOTH]);
+    expect(() => settleLot(lotOf("zod"), io, () => {})).toThrow(/no package of the lot carries it/);
+  });
+
+  it("gives up after MAX_CONFLICT_RETRIES rounds instead of whittling the lot away", () => {
+    // Round after round, ONE more package of the lot turns out to carry a fresh prerelease.
+    const names = Array.from({ length: MAX_CONFLICT_RETRIES + 2 }, (_, i) => `p${i}`);
+    let installs = 0;
+    const io = {
+      run: () => "",
+      restore: () => {},
+      install: () => installs++,
+      readLock: () =>
+        lockOf(
+          Object.fromEntries(
+            names.map((n, i) => [
+              `node_modules/${n}`,
+              [i === installs - 1 ? `1.1.0-rc.${i}` : "1.1.0"],
+            ]),
+          ),
+        ),
+      baseLock: lockOf({}),
+    };
+    expect(() => settleLot(lotOf(...names), io, () => {})).toThrow(/still enters the lockfile/);
+    expect(installs).toBe(MAX_CONFLICT_RETRIES + 1);
+  });
+});
+
+describe("makeTreeGuard — a restore that also puts node_modules back", () => {
+  it("rebuilds the tree only when an npm update ran since the last restore", () => {
+    const log = [];
+    const guard = makeTreeGuard({
+      run: (args) => {
+        log.push(`run ${args[1]}`);
+        if (args[1] === "boom") throw new Error("exit 1");
+        return "";
+      },
+      writeManifests: () => log.push("manifests"),
+      resetTree: () => log.push("reset"),
+    });
+    guard.restore(); // nothing ran: the manifests alone are a complete restore
+    guard.run(["update", "a"]);
+    guard.restore();
+    guard.restore(); // already clean
+    expect(() => guard.run(["update", "boom"])).toThrow();
+    guard.restore(); // a FAILED update may have moved the tree halfway
+    expect(log).toEqual([
+      "manifests",
+      "run a",
+      "manifests",
+      "reset",
+      "manifests",
+      "run boom",
+      "manifests",
+      "reset",
+    ]);
+  });
+
+  // The three lots of November 2026 (11-03 → 11-10), as a model. npm 10 dies (`ENOENT … lstat`) as
+  // soon as node_modules no longer matches the lockfile — which is the state a successful solo
+  // `npm update` leaves behind once ONLY the manifests are put back.
+  function npmThatNeedsACleanTree() {
+    const state = { tree: "base" };
+    const run = (args) => {
+      if (state.tree !== "base") {
+        throw Object.assign(new Error("exit 254"), {
+          stderr: "npm error code ENOENT\nnpm error syscall lstat",
+        });
+      }
+      if (args[1] === "vite") {
+        throw Object.assign(new Error("exit 1"), {
+          stderr: "npm error Cannot read properties of null (reading 'edgesOut')",
+        });
+      }
+      state.tree = args[1];
+      return "";
+    };
+    return { state, run };
+  }
+
+  it("with manifests-only restores, every package after the first success fails (the bug)", () => {
+    const { run } = npmThatNeedsACleanTree();
+    const failing = isolateFailures(
+      ["a", "b", "vite", "zod"],
+      run,
+      () => {},
+      () => {},
+    );
+    expect(failing.map((f) => f.name)).toEqual(["b", "vite", "zod"]);
+    expect(failing[0].why).toContain("syscall lstat");
+  });
+
+  it("with the guard, only the package that really fails on its own is reported", () => {
+    const { state, run } = npmThatNeedsACleanTree();
+    const guard = makeTreeGuard({
+      run,
+      writeManifests: () => {},
+      resetTree: () => {
+        state.tree = "base";
+      },
+    });
+    const failing = isolateFailures(["a", "b", "vite", "zod"], guard.run, guard.restore, () => {});
+    expect(failing).toEqual([
+      { name: "vite", why: "Cannot read properties of null (reading 'edgesOut')" },
+    ]);
+    expect(state.tree).toBe("base"); // left clean for the retry of the lot
   });
 });

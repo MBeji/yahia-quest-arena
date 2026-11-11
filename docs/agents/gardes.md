@@ -321,6 +321,51 @@ le jour même où le workflow lui a retiré ce qu'il exigeait. Chaque pièce ét
    vraisemblablement aussi la cause de l'échec du 2026-08-21, antérieur à la bascule Node 24.
    Suivi : voir l'issue « upgrade-guard : un conflit de peer en coule 41 ».
 
+## Onze lots ouverts, aucun mergé — le gate du script n'était pas celui de la PR (2026-11-11)
+
+Du 2026-09-25 au 2026-11-10, `upgrade-guard.yml` a ouvert **onze PR de lot patch/minor** et
+**aucune n'a mergé**. Elles se sont empilées jusqu'à ce qu'une session les compte. Relevé lot
+par lot, sur les branches et les descriptions des PR :
+
+| lots                | ce qui les retenait                                                                                                                                                             |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| #1111, #1128, #1153 | rouges sur deux budgets de bundle, **réparés par l'agent** (`react` 19.3 et `lucide-react` écartés) — puis refusés par le check requis `verify` : préversion `miniflare 5` (A1) |
+| #1157, #1158        | `ci:verify` rouge sur les mêmes budgets, jamais réparés — et la même préversion                                                                                                 |
+| #1176, #1185, #1189 | `ci:verify` rouge : `react` 19.3 et `lucide-react` de nouveau dans le lot, jamais réparés                                                                                       |
+| #1221, #1236, #1241 | « ✅ `ci:verify` vert » dans le script, refusés de même par A1 ; lots réduits à quelques paquets par de faux échecs (défaut 3)                                                  |
+
+La préversion vient de `@cloudflare/vite-plugin` : toute version ≥ 1.49.1 dépend de `miniflare 5`.
+
+Trois défauts, indépendants :
+
+1. **Le lot était jugé par un gate, la PR par un autre.** Le script passe `ci:verify` ; le check
+   requis `verify` joue en plus la garde de diff de dépendance (règle A1), qui n'existe que dans
+   `ci.yml`. Six lots sont sortis verts de leur propre gate pour rougir en 18 secondes sur la PR.
+2. **Le script ne se souvenait de rien.** L'agent a écarté `react` 19.3 et `lucide-react` pour
+   dépassement de budget **trois fois** — 09-25 (#1111), 09-29 (#1128), 10-02 (#1153) — en
+   refaisant chaque fois les mêmes mesures. Rien ne le consignait hors de ces PR : les cinq
+   lots suivants (10-06 → 10-23) ont embarqué les deux paquets de nouveau, et sont restés rouges.
+3. **L'essai paquet par paquet fabriquait ses propres échecs** — les trois lots de novembre.
+   `isolateFailures` remettait `package.json` et le lockfile entre deux essais, pas
+   `node_modules`. Un essai **réussi** laisse un arbre installé qui ne correspond plus au
+   lockfile restauré, et npm 10 meurt alors sur tout ce qui suit (`ENOENT … lstat
+node_modules/@tailwindcss/oxide-wasm32-wasi`). Les paquets « écartés : échoue seul
+   (`syscall lstat`) » étaient exactement ceux classés après `@tailwindcss/vite` dans l'ordre
+   alphabétique : **16, 17 puis 20 faux échecs**, le dernier lot réduit à 5 paquets sur 26.
+   Reproduit à la main ; ni un `npm install` ni la suppression de
+   `node_modules/.package-lock.json` ne rattrapent l'arbre — il faut le reconstruire.
+
+Corrigé dans `scripts/deps/apply-patch-minor.mjs` : il rejoue la règle A1 sur le lot appliqué et
+écarte le paquet qui tire la préversion (`settleLot`) ; ce que le gate refuse reste écarté d'un
+run à l'autre dans [`scripts/deps/held-back.json`](../../scripts/deps/held-back.json)
+([`dependency-maintenance.md`](../dependency-maintenance.md) § Les écartés du lot) ; et sa
+restauration reconstruit `node_modules` dès qu'un `npm update` a tourné (`makeTreeGuard`).
+
+**Ce qu'il faut en retenir :** un script qui ouvre une PR doit la juger avec **le gate de la PR**,
+pas avec un sous-ensemble. Un arbitrage rendu dans une description de PR est perdu au run
+suivant. Et quand une liste d'« écartés » porte vingt fois le même message d'erreur, c'est
+l'outil qui parle, pas vingt paquets.
+
 ## Le hook qui voyage avec `npm ci` — piège du 2026-10-30 (#1203)
 
 `npm ci` exécute le `prepare` du projet, qui **installe husky dans le checkout du runner**. Toute

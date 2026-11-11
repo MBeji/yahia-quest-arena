@@ -73,7 +73,8 @@ at the end). When the env var is unset (local run), skip the file.
 >
 > 1. **les majors** — lire un changelog, migrer un breaking change (§3, §5) ;
 > 2. **un lot patch/minor rouge** — corriger proprement _ou_ écarter le paquet
->    fautif (`--hold`), l'arbitrage que le script ne peut pas rendre (§4).
+>    fautif (une entrée de `scripts/deps/held-back.json`), l'arbitrage que le script
+>    ne peut pas rendre (§4).
 >
 > Le script écrit un **plan** (`upgrade-plan.json`) : `majorGroups` te donne tout ce
 > que les ranges déclarés n'atteignent pas, **déjà groupé** (le set TanStack = un
@@ -158,6 +159,18 @@ Deux pièges du dépôt ne sont plus des consignes mais des **assertions** dans 
 script (il s'arrête plutôt que de produire un lockfile cassé) : **npm 10, jamais
 11**, et le bloc `overrides` (le pin de sécurité esbuild global) **inchangé**.
 
+Deux autres règles s'y sont ajoutées le 2026-11-11, après onze lots ouverts et
+jamais mergés (détail : `docs/agents/gardes.md`) :
+
+- **aucune préversion n'entre dans le lockfile.** C'est la règle A1 de la garde de
+  diff de dépendance, que `ci:verify` ne joue pas : le script la joue lui-même,
+  **écarte le paquet du lot qui tire la préversion** et le dit dans le corps de la PR ;
+- **ce qui fait rougir le gate reste dehors, avec sa raison, dans un fichier
+  versionné** : [`scripts/deps/held-back.json`](../../../scripts/deps/held-back.json).
+  `detect` le lit à chaque exécution ; chaque entrée dit **pourquoi** (`reason`,
+  mesuré) et **ce qui la lèvera** (`liftWhen`) — le script refuse une entrée qui ne
+  dit ni l'un ni l'autre. Un écart devenu sans objet est signalé dans la PR.
+
 En **session locale**, pilote-le au lieu de refaire les gestes à la main :
 
 ```bash
@@ -175,8 +188,11 @@ et le hook `pre-push` (= `npm run verify`) la refuse — ne le contourne jamais 
 
 - l'ajustement est correct et prescrit par le changelog → **corrige proprement** ;
 - le paquet est risqué ou incompris → **écarte-le du lot** et garde le reste :
-  `git checkout -B <branche> main`, `detect --hold <pkg>` puis `apply`, en consignant
-  « held back: <pkg>, raison » dans le corps de la PR.
+  `git checkout -B <branche> main`, **ajoute son entrée à `scripts/deps/held-back.json`**
+  (`packages`, `since`, `reason` chiffrée, `liftWhen`), puis `detect` et `apply`. Le
+  fichier part dans la PR du lot : sans lui, le prochain run retrouverait le même rouge
+  et te réveillerait pour le même arbitrage. `--hold <pkg>` reste pour un essai d'une
+  seule commande ; il ne laisse aucune trace.
 
 Une fois `ci:verify` vert : pousse la branche (le pre-push passe), ouvre la PR toi-même
 (`gh pr create … --label dependencies --label no-automerge --base main`) et écris
