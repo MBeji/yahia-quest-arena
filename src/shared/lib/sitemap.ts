@@ -35,6 +35,35 @@ function escapeXml(value: string): string {
 }
 
 /**
+ * PostgREST caps every response at `max_rows` (1 000 on Supabase by default) and
+ * truncates SILENTLY: the sitemap of 2026-11-11 listed exactly 1 000 chapters out
+ * of 1 171 and 858 exercises out of 6 648. Every table is therefore read page by
+ * page, in a stable order, until a short page says there is nothing left.
+ */
+export const SITEMAP_PAGE_SIZE = 1000;
+
+type Page<Row> = { data: Row[] | null; error: { message: string } | null };
+
+async function fetchAllRows<Row>(
+  supabase: SitemapClient,
+  table: "parcours" | "subjects" | "chapters" | "exercises",
+  columns: string,
+): Promise<Page<Row>> {
+  const rows: Row[] = [];
+  for (let from = 0; ; from += SITEMAP_PAGE_SIZE) {
+    const { data, error } = await supabase
+      .from(table)
+      .select(columns)
+      .order("id")
+      .range(from, from + SITEMAP_PAGE_SIZE - 1);
+    if (error) return { data: null, error };
+    const page = (data ?? []) as Row[];
+    rows.push(...page);
+    if (page.length < SITEMAP_PAGE_SIZE) return { data: rows, error: null };
+  }
+}
+
+/**
  * Collect every public, indexable path from the anon-visible catalogue. RLS
  * already restricts the anon client to public content; on top of that we drop
  * pages that have no real indexable content:
@@ -50,10 +79,18 @@ export async function collectSitemapPaths(supabase: SitemapClient): Promise<stri
   const paths: string[] = [...STATIC_PATHS];
 
   const [parcours, subjects, chapters, exercises] = await Promise.all([
-    supabase.from("parcours").select("id,status"),
-    supabase.from("subjects").select("id"),
-    supabase.from("chapters").select("id,lesson_content"),
-    supabase.from("exercises").select("id,mode,source"),
+    fetchAllRows<{ id: string; status: string }>(supabase, "parcours", "id,status"),
+    fetchAllRows<{ id: string }>(supabase, "subjects", "id"),
+    fetchAllRows<{ id: string; lesson_content: string | null }>(
+      supabase,
+      "chapters",
+      "id,lesson_content",
+    ),
+    fetchAllRows<{ id: string; mode: string; source: string }>(
+      supabase,
+      "exercises",
+      "id,mode,source",
+    ),
   ]);
 
   if (parcours.error) {

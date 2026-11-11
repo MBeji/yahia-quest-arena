@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import { useT } from "@/lib/i18n";
-import { getChapterLesson } from "@/features/quest";
+// Import direct du fichier serveur, pas du barrel : le `loader` vit dans le chunk
+// d'entrée (seul le composant est découpé), et le barrel y ferait entrer la feature.
+import { getChapterLesson } from "@/features/quest/quest.lesson.server";
 import { hasPassedChapterQuiz } from "@/features/quest/anon-quiz-gate";
 import { useAuth } from "@/features/auth";
 // Import DIRECT, pas via le barrel : `@/features/ai` réexporte la console
@@ -19,6 +21,8 @@ import { ForgeEntry } from "@/features/ai/components/forge-entry";
 import { TutorChatPanel } from "@/features/tutor/components/tutor-chat-panel";
 import { PageShell } from "@/components/ui/page-shell";
 import { LessonReader } from "@/features/quest/components/lesson-reader";
+import { SITE_URL } from "@/shared/constants/site";
+import { publicPageHead, seedOnServer } from "@/shared/lib/public-page-seo";
 
 /**
  * Public course reader route — « Référence » register (chantier C8). Thin: fetches
@@ -35,9 +39,42 @@ export const Route = createFileRoute("/_public/chapitre/$chapterId")({
   // INTENTION — le panneau la prend, puis `dropChatIntent` la retire de l'URL.
   validateSearch: (search: Record<string, unknown>): { chat?: boolean } =>
     search.chat === 1 || search.chat === "1" || search.chat === true ? { chat: true } : {},
-  head: () => ({ meta: [{ title: "Cours · Na9ra Nal3ab" }] }),
+  // Rendu serveur de la page publique (`public-page-seo.ts`) : le loader ne tourne
+  // utilement qu'au SSR, où il précharge la version ANONYME de la page et calcule
+  // son <head> ; le composant la montre en `placeholderData` jusqu'à ce que sa
+  // propre requête réponde. Derrière `import.meta.env.SSR`, ce code (et son
+  // `<head>`) sort du bundle client — le loader y rend `null`.
+  loader: ({ params }) => (import.meta.env.SSR ? seedChapitre(params.chapterId) : null),
+  head: ({ loaderData }) => loaderData?.head ?? { meta: [{ title: "Cours · Na9ra Nal3ab" }] },
   component: ChapitrePage,
 });
+
+/** SSR seulement : la leçon anonyme et le <head> qui la décrit (titre, description, JSON-LD). */
+async function seedChapitre(chapterId: string) {
+  const data = await seedOnServer("chapitre", () => getChapterLesson({ data: { chapterId } }));
+  if (!data) return null;
+  const { chapter } = data;
+  const subject = chapter.subjects as { name_fr?: string; content_language?: string } | null;
+  const path = `/chapitre/${chapterId}`;
+  const head = publicPageHead({
+    title: subject?.name_fr ? `${chapter.title} — ${subject.name_fr}` : chapter.title,
+    description: chapter.description || chapter.summary || chapter.lesson_content || "",
+    type: "article",
+    path,
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      name: chapter.title,
+      learningResourceType: "lesson",
+      isAccessibleForFree: true,
+      ...(subject?.content_language ? { inLanguage: subject.content_language } : {}),
+      ...(subject?.name_fr ? { about: subject.name_fr } : {}),
+      url: `${SITE_URL}${path}`,
+      publisher: { "@type": "Organization", name: "Na9ra Nal3ab" },
+    },
+  });
+  return { data, head };
+}
 
 function ChapitrePage() {
   const { chapterId } = Route.useParams();
@@ -62,9 +99,11 @@ function ChapitrePage() {
   }, [navigate]);
   const fetchLesson = useServerFn(getChapterLesson);
   const t = useT();
+  const seed = Route.useLoaderData();
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["lesson", chapterId],
     queryFn: () => fetchLesson({ data: { chapterId } }),
+    placeholderData: seed?.data,
   });
 
   // Anonymous pass state lives in sessionStorage (anon-quiz-gate) — read it

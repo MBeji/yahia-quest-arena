@@ -1,6 +1,11 @@
 // @vitest-environment node
 import { describe, it, expect, vi } from "vitest";
-import { collectSitemapPaths, renderSitemap, SITE_URL } from "@/shared/lib/sitemap";
+import {
+  collectSitemapPaths,
+  renderSitemap,
+  SITE_URL,
+  SITEMAP_PAGE_SIZE,
+} from "@/shared/lib/sitemap";
 
 vi.mock("@/shared/lib/logger", () => ({
   logger: { warn: vi.fn(), error: vi.fn(), info: vi.fn() },
@@ -8,18 +13,24 @@ vi.mock("@/shared/lib/logger", () => ({
 
 type TableResult = { data?: unknown[] | null; error?: { message: string } | null };
 
-/** Minimal stub of the anon Supabase client: `from(t).select(c)` resolves to a row set. */
+/**
+ * Minimal stub of the anon Supabase client: `from(t).select(c).order(k).range(a, b)`
+ * resolves to the slice `[a, b]` of the table, like PostgREST does. `ranges` records
+ * every page asked for, per table.
+ */
 function mockClient(
   tables: Record<string, TableResult>,
+  ranges: Record<string, Array<[number, number]>> = {},
 ): Parameters<typeof collectSitemapPaths>[0] {
   return {
     from(table: string) {
-      return {
-        select() {
-          const r = tables[table] ?? { data: [], error: null };
-          return Promise.resolve({ data: r.data ?? null, error: r.error ?? null });
-        },
+      const r = tables[table] ?? { data: [], error: null };
+      const range = (from: number, to: number) => {
+        (ranges[table] ??= []).push([from, to]);
+        if (r.error) return Promise.resolve({ data: null, error: r.error });
+        return Promise.resolve({ data: (r.data ?? []).slice(from, to + 1), error: null });
       };
+      return { select: () => ({ order: () => ({ range }) }) };
     },
   } as unknown as Parameters<typeof collectSitemapPaths>[0];
 }
@@ -158,5 +169,38 @@ describe("collectSitemapPaths", () => {
     expect(paths).toContain("/niveau/ecole-1ere-base");
     expect(paths).toContain("/");
     expect(paths.some((p) => p.startsWith("/matiere/"))).toBe(false);
+  });
+
+  // Régression du 2026-11-11 : PostgREST plafonne chaque réponse à 1 000 lignes
+  // sans le dire — le sitemap de prod listait 1 000 chapitres sur 1 171 et 858
+  // exercices sur 6 648. Chaque table se lit donc page par page.
+  it("reads every page of a table past the PostgREST row cap", async () => {
+    const total = SITEMAP_PAGE_SIZE * 2 + 171;
+    const exercises = Array.from({ length: total }, (_, i) => ({
+      id: `ex-${i}`,
+      mode: "practice",
+      source: "admin",
+    }));
+    const ranges: Record<string, Array<[number, number]>> = {};
+    const paths = await collectSitemapPaths(
+      mockClient({ ...EMPTY, exercises: { data: exercises } }, ranges),
+    );
+    expect(paths.filter((p) => p.startsWith("/exercice/"))).toHaveLength(total);
+    expect(paths).toContain(`/exercice/ex-${total - 1}`);
+    expect(ranges.exercises).toEqual([
+      [0, SITEMAP_PAGE_SIZE - 1],
+      [SITEMAP_PAGE_SIZE, 2 * SITEMAP_PAGE_SIZE - 1],
+      [2 * SITEMAP_PAGE_SIZE, 3 * SITEMAP_PAGE_SIZE - 1],
+    ]);
+  });
+
+  it("asks for one more page when the last one is exactly full", async () => {
+    const subjects = Array.from({ length: SITEMAP_PAGE_SIZE }, (_, i) => ({ id: `s-${i}` }));
+    const ranges: Record<string, Array<[number, number]>> = {};
+    const paths = await collectSitemapPaths(
+      mockClient({ ...EMPTY, subjects: { data: subjects } }, ranges),
+    );
+    expect(paths.filter((p) => p.startsWith("/matiere/"))).toHaveLength(SITEMAP_PAGE_SIZE);
+    expect(ranges.subjects).toHaveLength(2);
   });
 });
