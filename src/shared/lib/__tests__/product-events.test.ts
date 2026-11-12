@@ -57,6 +57,9 @@ const ETUDE_31_CLOSED_LIST: ProductEventName[] = [
   "placement_completed",
   "placement_shared",
   "placement_claimed",
+  // Étude 38 lot 5 — quatrième amendement écrit : le clic sur la carte « Reprendre » du visiteur
+  // sans compte. Un seul événement ; `days_since` y sépare un retour d'un simple aller-retour.
+  "resume_card_clicked",
 ];
 
 const SRC = join(process.cwd(), "src");

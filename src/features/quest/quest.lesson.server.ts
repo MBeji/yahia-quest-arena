@@ -168,7 +168,7 @@ export const getChapterLesson = createServerFn({ method: "GET" })
     // chapter's quiz id, whether the gate applies (school subjects only — same
     // rule as getSubject), and — signed-in only — whether THIS user already
     // passed it (score ≥ threshold AND not rushed, mirroring getSubject).
-    // Anonymous visitors resolve their pass client-side (sessionStorage, see
+    // Anonymous visitors resolve their pass client-side (device memory, see
     // anon-quiz-gate.ts), so quizPassed stays null for them.
     const quizExerciseId = (chapterExercises ?? []).find((e) => e.mode === "quiz")?.id ?? null;
     const isSchoolSubject =
