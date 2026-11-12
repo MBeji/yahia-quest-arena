@@ -640,12 +640,20 @@ export const getParcours = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    const { data, error } = await supabase
-      .from("parcours")
-      .select(
-        "id,name_fr,name_en,name_ar,kind,is_premium,status,display_order,icon,color,theme_id,grade_id",
-      )
-      .order("display_order");
+    // Trois lectures dont aucune ne dépend d'une autre : elles partent ENSEMBLE
+    // (rt-10 — en série, `/programme` payait trois allers-retours pour rien).
+    // Seule la première est vitale ; les deux autres enrichissent et se dégradent
+    // en silence, comme avant.
+    const [{ data, error }, { data: gradeRows }, { data: subjectRows }] = await Promise.all([
+      supabase
+        .from("parcours")
+        .select(
+          "id,name_fr,name_en,name_ar,kind,is_premium,status,display_order,icon,color,theme_id,grade_id",
+        )
+        .order("display_order"),
+      supabase.from("grades").select("id,slug,cycle,display_order,is_selectable"),
+      supabase.from("subjects").select("theme_id,grade_id"),
+    ]);
     if (error) failWithClientError("getParcours", error, DASHBOARD_ERROR_FR);
     const rows = data ?? [];
 
@@ -655,15 +663,11 @@ export const getParcours = createServerFn({ method: "GET" })
     // `slug` + `is_selectable` (étude 16 lot 2) let the client group the lycée
     // year → section and hide the flat legacy nodes (R-1/R-2 — filter lives in
     // `buildPrograms`, lot 3); a grade-less (libre) parcours stays selectable.
-    const { data: gradeRows } = await supabase
-      .from("grades")
-      .select("id,slug,cycle,display_order,is_selectable");
     const gradeById = new Map((gradeRows ?? []).map((g) => [g.id, g]));
 
     // Real volumetry per parcours (« N matières », étude 15 lot 8): a parcours pins a
     // (theme, grade) pair — grade null for the libre extras — and its subjects are the
     // ones sharing that pair. One cheap catalogue-wide scan → a count map keyed by pair.
-    const { data: subjectRows } = await supabase.from("subjects").select("theme_id,grade_id");
     const subjectsCountByPair = new Map<string, number>();
     for (const s of subjectRows ?? []) {
       const key = `${s.theme_id}::${s.grade_id ?? ""}`;
