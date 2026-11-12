@@ -1,4 +1,4 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { CloudOff } from "lucide-react";
@@ -6,10 +6,17 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SubjectHubSkeleton } from "@/features/quest/components/subject-hub-skeleton";
 import { useT } from "@/lib/i18n";
-import { getSubject } from "@/features/quest";
+import { getSubject, getSubjectParcours } from "@/features/quest";
 import { useAuth } from "@/features/auth";
 import { SubjectHub } from "@/features/quest/components/subject-hub";
-import { publicPageHead, seedOnServer } from "@/shared/lib/public-page-seo";
+import { PageShell } from "@/components/ui/page-shell";
+import { isRtlText } from "@/shared/lib/utils";
+import {
+  breadcrumbJsonLd,
+  itemListJsonLd,
+  publicPageHead,
+  seedOnServer,
+} from "@/shared/lib/public-page-seo";
 import { CatalogueNotFound } from "./-catalogue-not-found";
 
 /**
@@ -49,15 +56,44 @@ async function seedMatiere(subjectId: string) {
     if (exists === false) throw notFound();
     return null;
   }
-  const { subject, parcours, chapters } = data;
+  const { subject, chapters } = data;
+  // Le niveau : `getSubject` ne le rend JAMAIS à l'anonyme (sa RPC lui est refusée),
+  // donc jamais au rendu serveur — lecture directe, d'appoint (`null` si elle échoue).
+  const parcours =
+    data.parcours ??
+    (await seedOnServer("matiere-niveau", async () => {
+      const server = await import("@/features/quest/quest.lesson.server");
+      return server.getSubjectParcours({ data: { subjectId } });
+    }));
+  const path = `/matiere/${subjectId}`;
   const chapterTitles = chapters.map((c) => c.title).join(" · ");
+  // Le titre nomme le NIVEAU : 88 pages de matière sur 129 partageaient le leur
+  // (« English » × 21, « الرياضيات » × 9) tant qu'il manquait.
+  const title = parcours ? `${subject.name_fr} — ${parcours.name_fr}` : subject.name_fr;
   const head = publicPageHead({
-    title: parcours ? `${subject.name_fr} — ${parcours.name_fr}` : subject.name_fr,
+    title,
     description:
       subject.description || `Cours, résumés et exercices corrigés, gratuits : ${chapterTitles}`,
-    path: `/matiere/${subjectId}`,
+    path,
+    contentLanguage: subject.content_language,
+    jsonLd: [
+      // Fil d'Ariane : niveau › matière.
+      breadcrumbJsonLd([
+        ...(parcours ? [{ name: parcours.name_fr, path: `/niveau/${parcours.id}` }] : []),
+        { name: subject.name_fr, path },
+      ]),
+      // Les cours de la matière, dans l'ordre du programme.
+      ...(chapters.length > 0
+        ? [
+            itemListJsonLd(
+              title,
+              chapters.map((c) => ({ name: c.title, path: `/chapitre/${c.id}` })),
+            ),
+          ]
+        : []),
+    ],
   });
-  return { data, head };
+  return { data, parcours, head };
 }
 
 function MatierePage() {
@@ -70,6 +106,17 @@ function MatierePage() {
     queryKey: ["subject", subjectId],
     queryFn: () => fetchSubject({ data: { subjectId } }),
     placeholderData: seed?.data,
+  });
+  // Le niveau du visiteur SANS compte : `getSubject` ne le lui rend pas (voir
+  // `seedMatiere`). Sans cette lecture, le lien de retour vers le niveau
+  // n'existait que pour un élève connecté — ni pour un visiteur, ni pour un robot.
+  const fetchParcours = useServerFn(getSubjectParcours);
+  const { data: anonParcours } = useQuery({
+    queryKey: ["subject-parcours", subjectId],
+    queryFn: () => fetchParcours({ data: { subjectId } }),
+    placeholderData: seed?.parcours,
+    enabled: !!data && !data.parcours,
+    staleTime: Infinity,
   });
 
   if (isError) {
@@ -93,16 +140,52 @@ function MatierePage() {
   }
 
   return (
-    <SubjectHub
-      subject={data.subject}
-      chapters={data.chapters}
-      exercises={data.exercises}
-      progress={data.progress}
-      quizPassedByChapter={data.quizPassedByChapter}
-      parcours={data.parcours}
-      recall={data.recall}
-      isAuthenticated={!!user}
-      unrestricted={data.viewer.unrestricted}
-    />
+    <>
+      <SubjectHub
+        subject={data.subject}
+        chapters={data.chapters}
+        exercises={data.exercises}
+        progress={data.progress}
+        quizPassedByChapter={data.quizPassedByChapter}
+        parcours={data.parcours ?? anonParcours ?? null}
+        recall={data.recall}
+        isAuthenticated={!!user}
+        unrestricted={data.viewer.unrestricted}
+      />
+      {/* Le sommaire, en LIENS : le hub replie ses chapitres et ne rend le lien d'un
+          cours que dans l'accordéon ouvert — un seul sur N dans le HTML du serveur
+          (constat du 2026-11-12). Ici chaque cours est à un clic de sa matière, pour
+          l'élève qui cherche un chapitre comme pour un robot sans JavaScript. */}
+      {data.chapters.length > 1 && (
+        <PageShell className="pt-0">
+          <nav aria-labelledby="matiere-sommaire">
+            <h2
+              id="matiere-sommaire"
+              className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground"
+            >
+              {t.public.reader.toc}
+            </h2>
+            {/* `dir` sur la LISTE, d'après les titres : une matière en arabe se lit de
+                droite à gauche, colonnes comprises (le n° 1 à droite). */}
+            <ol
+              dir={data.chapters.some((chapter) => isRtlText(chapter.title)) ? "rtl" : "ltr"}
+              className="mt-3 grid gap-x-6 gap-y-1.5 sm:grid-cols-2"
+            >
+              {data.chapters.map((chapter, index) => (
+                <li key={chapter.id}>
+                  <Link
+                    to="/chapitre/$chapterId"
+                    params={{ chapterId: chapter.id }}
+                    className="text-sm text-muted-foreground transition hover:text-primary hover:underline"
+                  >
+                    <span className="tabular-nums">{index + 1}.</span> {chapter.title}
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        </PageShell>
+      )}
+    </>
   );
 }
