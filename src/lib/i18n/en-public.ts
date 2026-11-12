@@ -16,6 +16,12 @@ export const enPublic: TranslationKeys["public"] = {
     rights: "All rights reserved",
     legalLink: "Legal notice",
   },
+  titles: {
+    programme: "Tunisian school curriculum",
+    extras: "Extras · languages, general knowledge, logic",
+    suivi: "My child's progress",
+    auth: "Join the Academy",
+  },
   landing: {
     freeBadge: "100% free · no sign-up",
     heroTitle: "Every lesson of the Tunisian school. From Year 1 to the Bac.",
@@ -75,7 +81,7 @@ export const enPublic: TranslationKeys["public"] = {
     familleStepsTitle: "How does it work?",
     familleStep1: "Your child creates their student account and practices",
     familleStep2: "You create your parent account in seconds",
-    familleStep3: "You link the two with their Alliance code — that's it",
+    familleStep3: "You link the two with their alliance code — that's it",
     familleCta: "Create my parent account",
     familleCtaAuthed: "Open the parent report",
   },

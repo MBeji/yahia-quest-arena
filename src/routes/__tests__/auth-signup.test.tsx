@@ -202,7 +202,7 @@ describe("AuthPage — parent signup with alliance code", () => {
     });
     render(<AuthPage />);
 
-    fireEvent.change(screen.getByPlaceholderText(/Code Alliance élève/), {
+    fireEvent.change(screen.getByPlaceholderText(/Code alliance de l'élève/), {
       target: { value: "ABCD-1234-ABCD-1234-ABCD-1234-ABCD-1234" },
     });
     submitSignup();

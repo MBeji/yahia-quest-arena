@@ -8,6 +8,7 @@ import { LoadingState } from "@/components/ui/loading-state";
 import { PageShell } from "@/components/ui/page-shell";
 import { useI18n, useT } from "@/lib/i18n";
 import { listMockExams, type ExamListItem } from "@/features/exam";
+import { pageTitle } from "@/lib/i18n/head";
 
 /**
  * Le catalogue des examens blancs — étude 02.
@@ -22,7 +23,7 @@ import { listMockExams, type ExamListItem } from "@/features/exam";
  * échouera.
  */
 export const Route = createFileRoute("/_authenticated/examens")({
-  head: () => ({ meta: [{ title: "Examens blancs · Na9ra Nal3ab" }] }),
+  head: () => ({ meta: [{ title: pageTitle((t) => t.exam.title) }] }),
   component: ExamListPage,
 });
 

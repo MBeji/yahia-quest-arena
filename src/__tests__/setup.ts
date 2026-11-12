@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom/vitest";
+import { vi } from "vitest";
 
 // Unit tests are hermetic — they must never see the repo-root `.env.test`
 // (the DOCUMENTED local e2e setup, see e2e/README.md). The suite includes
@@ -20,3 +21,11 @@ for (const key of [
 ]) {
   delete process.env[key];
 }
+
+// La langue de la requête (`getShellLocale`) est une fonction isomorphe de TanStack
+// Start : hors de son compilateur — donc dans Vitest — elle n'a ni cookie de requête
+// ni branche client, et rend toujours le français. Elle est figée ici à cette même
+// valeur pour que les fichiers de route (dont le `head` appelle `pageTitle`) restent
+// importables par les suites qui remplacent `@tanstack/react-start` en entier. Un
+// test qui veut une autre langue pose son propre `vi.mock` de ce module.
+vi.mock("@/lib/i18n/shell-locale", () => ({ getShellLocale: () => "fr" }));

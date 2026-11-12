@@ -15,6 +15,7 @@ import { I18nProvider, useT } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n";
 import { GuideProvider } from "@/components/guide/guide-provider";
 import { dirForLocale } from "@/lib/i18n/context";
+import { headCatalogue } from "@/lib/i18n/head";
 import { getShellLocale } from "@/lib/i18n/shell-locale";
 import { metaByLocale } from "@/lib/i18n/meta";
 import { SOCIAL_IMAGE } from "@/shared/constants/site";
@@ -73,7 +74,14 @@ function ErrorComponent({ error: thrown, reset }: { error: unknown; reset: () =>
   const error = thrown instanceof Error ? thrown : new Error(String(thrown));
   logger.error("Root error boundary caught an error", { error });
   const router = useRouter();
-  const t = useT();
+  // PAS `useT()` : cette frontière REMPLACE `RootComponent`, donc `I18nProvider`
+  // n'est plus au-dessus d'elle et le contexte retombait sur sa valeur par défaut —
+  // du français pour tout le monde, mis en page de gauche à droite (issue #1228,
+  // `root-error-boundary-wrong-language-direction`). Le catalogue de la langue de
+  // la requête est chargé avant tout rendu (`router.tsx`) : on le lit directement,
+  // et l'écran porte lui-même `lang`/`dir` au cas où `<html>` ne les aurait plus.
+  const locale = getShellLocale();
+  const t = headCatalogue();
   useExitOnRefusedSession(error);
   // Incident forensics: with `?debug=1` in the URL, surface the error identity
   // on the page itself — the only reliable diagnostic channel for mobile users
@@ -91,6 +99,8 @@ function ErrorComponent({ error: thrown, reset }: { error: unknown; reset: () =>
     // voir `e2e/authed/session-invalidation.spec.ts` (#938).
     <main
       data-testid="root-error-boundary"
+      lang={locale}
+      dir={dirForLocale(locale)}
       className="flex min-h-[100dvh] items-center justify-center bg-background px-4 text-foreground"
     >
       {/* `role="alert"` : l'écran remplace la page sans rechargement, donc un lecteur

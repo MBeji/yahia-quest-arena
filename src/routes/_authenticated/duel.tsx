@@ -20,9 +20,10 @@ import { PageShell } from "@/components/ui/page-shell";
 import { DUEL_REWARDS } from "@/shared/constants/gamification";
 import { useT } from "@/lib/i18n";
 import { toast } from "sonner";
+import { pageTitle } from "@/lib/i18n/head";
 
 export const Route = createFileRoute("/_authenticated/duel")({
-  head: () => ({ meta: [{ title: "Duels · Na9ra Nal3ab" }] }),
+  head: () => ({ meta: [{ title: pageTitle((t) => t.duel.title) }] }),
   component: DuelHubPage,
 });
 

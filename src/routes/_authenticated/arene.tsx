@@ -4,6 +4,7 @@ import { PageShell } from "@/components/ui/page-shell";
 import { useT } from "@/lib/i18n";
 import { DUNGEON_XP_PER_FLOOR } from "@/features/dungeon";
 import { DUEL_REWARDS, EXAM_MAX_COINS, EXAM_MAX_XP } from "@/shared/constants/gamification";
+import { pageTitle } from "@/lib/i18n/head";
 
 /**
  * Arène — le pôle compétitif (étude 15, lot 5 / D-4). Regroupe Donjon · Duels ·
@@ -14,7 +15,7 @@ import { DUEL_REWARDS, EXAM_MAX_COINS, EXAM_MAX_XP } from "@/shared/constants/ga
  * le clic (R-4) — lu depuis les constantes de jeu, jamais dupliqué en dur.
  */
 export const Route = createFileRoute("/_authenticated/arene")({
-  head: () => ({ meta: [{ title: "Arène · Na9ra Nal3ab" }] }),
+  head: () => ({ meta: [{ title: pageTitle((t) => t.arena.title) }] }),
   component: ArenePage,
 });
 
