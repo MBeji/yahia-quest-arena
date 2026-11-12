@@ -785,6 +785,10 @@ export type TranslationKeys = {
     celebrateDashboardCta: string;
     welcomeCoins: string;
     welcomeFirstQuestCta: string;
+    // Étude 38, lot 2 — la carte de classe de la quête (R-5). `{parcours}`.
+    quickPickTitle: string;
+    quickPickCta: string;
+    quickPickLater: string;
   };
   // School cycle group labels (programme scolaire)
   cycles: {

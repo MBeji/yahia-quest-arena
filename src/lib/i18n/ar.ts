@@ -956,6 +956,9 @@ export const ar: TranslationKeys = {
     celebrateDashboardCta: "الذهاب إلى لوحة التحكّم",
     welcomeCoins: "+{coins} قطعة ترحيبيّة",
     welcomeFirstQuestCta: "ابدأ مهمّتي الأولى",
+    quickPickTitle: "هذا الدرس من {parcours} — هل هذا قسمك؟",
+    quickPickCta: "اختيار",
+    quickPickLater: "لاحقاً",
   },
   cycles: {
     primaire: "الابتدائي",

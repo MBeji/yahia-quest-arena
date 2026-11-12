@@ -1,8 +1,8 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { CloudOff, Compass as CompassIcon } from "lucide-react";
+import { CloudOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
@@ -11,6 +11,7 @@ import { setCurrentParcours, useAuth } from "@/features/auth";
 import { ParcoursSubjects } from "@/features/dashboard/components/parcours-subjects";
 import { useT } from "@/lib/i18n";
 import { publicPageHead, seedOnServer } from "@/shared/lib/public-page-seo";
+import { CatalogueNotFound } from "./-catalogue-not-found";
 
 /**
  * Public level page — the subjects of one parcours/level (« Référence » register,
@@ -28,7 +29,15 @@ export const Route = createFileRoute("/_public/niveau/$parcoursId")({
   loader: ({ params }) => (import.meta.env.SSR ? seedNiveau(params.parcoursId) : null),
   head: ({ loaderData }) => loaderData?.head ?? { meta: [{ title: "Niveau · Na9ra Nal3ab" }] },
   component: NiveauPage,
+  // Un niveau qui n'existe pas : HTTP 404 dans la coquille publique (voir
+  // `seedNiveau`), pas un écran « introuvable » servi en 200.
+  notFoundComponent: NiveauNotFound,
 });
+
+function NiveauNotFound() {
+  const t = useT();
+  return <CatalogueNotFound title={t.errors.parcoursNotFound} />;
+}
 
 /** SSR seulement : les matières du niveau et le <head> qui les annonce. */
 async function seedNiveau(parcoursId: string) {
@@ -36,7 +45,10 @@ async function seedNiveau(parcoursId: string) {
     const server = await import("@/features/dashboard/dashboard.server");
     return server.getParcoursSubjects({ data: { parcoursId } });
   });
-  if (!data?.parcours) return null;
+  // `data === null` : la lecture a échoué → 200, le client recharge. `parcours`
+  // absent d'une lecture RÉUSSIE : ce niveau n'existe pas → 404.
+  if (!data) return null;
+  if (!data.parcours) throw notFound();
   const { parcours, subjects } = data;
   const head = publicPageHead({
     title: parcours.name_fr,
@@ -96,13 +108,7 @@ function NiveauPage() {
     return <LoadingState label={t.common.loading} className="min-h-[60dvh]" />;
   }
 
-  if (!data.parcours) {
-    return (
-      <div className="mx-auto max-w-md px-6 py-20">
-        <EmptyState icon={CompassIcon} title={t.errors.parcoursNotFound} />
-      </div>
-    );
-  }
+  if (!data.parcours) return <NiveauNotFound />;
 
   return (
     <ParcoursSubjects
