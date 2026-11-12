@@ -26,6 +26,17 @@ describe("parseDsn", () => {
 });
 
 describe("buildSentryEvent", () => {
+  it("scrubs secret-shaped values from the message, the exception and the stack", () => {
+    const key = "sk-proj-AbCdEf0123456789AbCdEf";
+    const ev = buildSentryEvent(
+      `verify failed: ${key}`,
+      new Error(`Incorrect API key provided: ${key}`),
+      { source: "logger" },
+      EVENT_OPTS,
+    );
+    expect(JSON.stringify(ev)).not.toContain(key);
+  });
+
   it("carries level, source tag, request path and the exception", () => {
     const ev = buildSentryEvent(
       "boom",
