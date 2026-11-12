@@ -110,6 +110,56 @@ export function serializeJsonLd(data: Record<string, unknown>): string {
   return JSON.stringify(data).replace(/</g, "\\u003c");
 }
 
+/** Un maillon : ce qu'on lit, et où il mène (chemin relatif au site). */
+export type PageLink = { name: string; path: string };
+
+/**
+ * Le fil d'Ariane d'une page, en `BreadcrumbList` schema.org — ce que Google
+ * affiche à la place de l'URL brute (`…/chapitre/2bd52d30-…` ne dit rien à
+ * personne ; « 7ème année › Mathématiques » dit où l'on est). Du plus large au
+ * plus précis, la page elle-même en dernier.
+ */
+export function breadcrumbJsonLd(trail: PageLink[]): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: trail.map((link, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: link.name,
+      item: `${SITE_URL}${link.path}`,
+    })),
+  };
+}
+
+/** Une liste ordonnée de pages (les cours d'une matière), en `ItemList` schema.org. */
+export function itemListJsonLd(name: string, items: PageLink[]): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name,
+    numberOfItems: items.length,
+    itemListElement: items.map((link, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: link.name,
+      url: `${SITE_URL}${link.path}`,
+    })),
+  };
+}
+
+/**
+ * `og:locale` d'une langue de CONTENU. Un cours d'arabe partagé sur Facebook ou
+ * WhatsApp est un contenu arabe, quelle que soit la langue d'interface du
+ * visiteur. Les valeurs sont celles que Facebook reconnaît (il n'a ni `ar_TN` ni
+ * `fr_TN`) ; une langue inconnue ne déclare rien plutôt que de mentir.
+ */
+const OG_LOCALE_BY_LANGUAGE: Record<string, string> = {
+  fr: "fr_FR",
+  ar: "ar_AR",
+  en: "en_US",
+};
+
 export type PublicPageMetaInput = {
   /** Le nom propre de la page, sans le nom du site (il est ajouté). */
   title: string;
@@ -119,8 +169,10 @@ export type PublicPageMetaInput = {
   type?: "website" | "article";
   /** Chemin relatif au site, pour `og:url`. */
   path: string;
-  /** Données structurées schema.org, servies en `application/ld+json`. */
-  jsonLd?: Record<string, unknown>;
+  /** Langue du CONTENU (`subjects.content_language`), pour `og:locale`. */
+  contentLanguage?: string | null;
+  /** Données structurées schema.org — un `<script type="application/ld+json">` par objet. */
+  jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
 };
 
 /** Le suffixe de marque commun à tous les titres d'onglet du site public. */
@@ -146,9 +198,15 @@ export function publicPageHead(input: PublicPageMetaInput): PublicPageHead {
       { property: "og:description", content: description },
     );
   }
+  const ogLocale = input.contentLanguage ? OG_LOCALE_BY_LANGUAGE[input.contentLanguage] : undefined;
+  if (ogLocale) meta.push({ property: "og:locale", content: ogLocale });
   if (!input.jsonLd) return { meta };
+  const documents = Array.isArray(input.jsonLd) ? input.jsonLd : [input.jsonLd];
   return {
     meta,
-    scripts: [{ type: "application/ld+json", children: serializeJsonLd(input.jsonLd) }],
+    scripts: documents.map((data) => ({
+      type: "application/ld+json",
+      children: serializeJsonLd(data),
+    })),
   };
 }
