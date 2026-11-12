@@ -1,15 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import {
-  ArrowLeft,
-  BookOpen,
-  Check,
-  ChevronDown,
-  ChevronRight,
-  Lock,
-  Play,
-  Zap,
-} from "lucide-react";
+import { BookOpen, Check, ChevronDown, ChevronRight, Lock, Play, Zap } from "lucide-react";
 import { useI18n, useT } from "@/lib/i18n";
 import { useProgressT } from "@/lib/i18n/progress";
 import { isRtlText } from "@/shared/lib/utils";
@@ -40,6 +31,7 @@ import { ChapterStarsChip, ChapterStarsNote } from "./chapter-stars";
 import { LockedMissionRow } from "./locked-mission-row";
 import { ManuelEleveCard } from "./manuel-eleve-card";
 import { SubjectSeals } from "./subject-seals";
+import { BackLink } from "@/components/ui/back-link";
 
 export type SubjectHubSubject = {
   name_fr: string;
@@ -533,13 +525,9 @@ export function SubjectHub({
     <PageShell dir={isRtl ? "rtl" : "ltr"}>
       <header className="mb-6">
         {parcours && (
-          <Link
-            to="/niveau/$parcoursId"
-            params={{ parcoursId: parcours.id }}
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition hover:text-primary"
-          >
-            <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" /> {parcoursName(parcours, locale)}
-          </Link>
+          <BackLink to="/niveau/$parcoursId" params={{ parcoursId: parcours.id }} className="mb-0">
+            {parcoursName(parcours, locale)}
+          </BackLink>
         )}
         {parcours && (
           <div className="mt-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary">

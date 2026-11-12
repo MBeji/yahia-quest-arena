@@ -94,7 +94,7 @@ export function BugReportLauncher() {
               <button
                 type="submit"
                 disabled={!canSend}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-1.5 text-sm font-bold text-primary-foreground shadow-gold transition hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[image:var(--gradient-gold)] px-4 py-1.5 text-sm font-bold text-primary-foreground shadow-gold transition hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 [@media(pointer:coarse)]:min-h-11"
               >
                 {mutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                 {t.bugReport.send}

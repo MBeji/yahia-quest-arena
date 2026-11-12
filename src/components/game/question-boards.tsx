@@ -160,7 +160,7 @@ export function OrderingBoard({ options, value, onChange, disabled, rtl, labels 
 
   return (
     <div className="mt-6" data-testid="ordering-board">
-      <p className="text-xs text-muted-foreground/70" dir={rtl ? "rtl" : undefined}>
+      <p className="text-xs text-muted-foreground" dir={rtl ? "rtl" : undefined}>
         {labels.orderingHint}
       </p>
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
@@ -262,7 +262,7 @@ export function MatchingBoard({ options, value, onChange, disabled, rtl, labels 
 
   return (
     <div className="mt-6" data-testid="matching-board">
-      <p className="text-xs text-muted-foreground/70" dir={rtl ? "rtl" : undefined}>
+      <p className="text-xs text-muted-foreground" dir={rtl ? "rtl" : undefined}>
         {labels.matchingHint}
       </p>
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>

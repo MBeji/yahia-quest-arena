@@ -4,6 +4,11 @@ import { describe, it, expect, vi } from "vitest";
 import React from "react";
 
 vi.mock("@tanstack/react-router", () => ({
+  // `BackLink` se construit avec `createLink` : il rend l'ancre qu'on lui passe.
+  createLink:
+    (Comp: React.ElementType) =>
+    ({ to, params: _params, ...rest }: { to: string; params?: unknown }) =>
+      React.createElement(Comp, { ...rest, href: to }),
   Link: ({ children, to }: { children: React.ReactNode; to: string }) =>
     React.createElement("a", { href: to }, children),
 }));
