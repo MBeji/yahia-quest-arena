@@ -543,8 +543,6 @@ export function SubjectHub({
         {subject.description && <p className="mt-2 text-muted-foreground">{subject.description}</p>}
       </header>
 
-      <GuideIntroCard screen="subject" variant="rule" className="mb-6" />
-
       {unrestricted && (
         <p
           role="status"
@@ -556,8 +554,6 @@ export function SubjectHub({
       )}
 
       <SubjectSeals progress={progress} />
-
-      <ManuelEleveCard manuelRefs={subject.manuel_refs} />
 
       {resume && resume.next && (
         <Link
@@ -625,6 +621,18 @@ export function SubjectHub({
       ) : (
         <div className="space-y-3">{rows.map(renderChapter)}</div>
       )}
+
+      {/* SOUS la liste des chapitres, et plus au-dessus (relevé « première visite » du
+          2026-11-12, C-7). La carte de première visite ne se monte qu'après lecture du
+          stockage de l'appareil : placée en tête, elle s'insérait 4 s après l'affichage et
+          repoussait tout le contenu de 670 px (décalage cumulé mesuré : 0,57), et le premier
+          geste possible — ouvrir le cours, passer le quiz — se retrouvait à 2,4 écrans de
+          téléphone. Ici elle n'a plus rien à pousser. Le manuel, lui, est une référence :
+          il suit les chapitres au lieu de les précéder. */}
+      <div className="mt-6">
+        <GuideIntroCard screen="subject" variant="rule" className="mb-6" />
+        <ManuelEleveCard manuelRefs={subject.manuel_refs} />
+      </div>
     </PageShell>
   );
 }

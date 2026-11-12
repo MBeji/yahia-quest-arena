@@ -60,6 +60,10 @@ const ETUDE_31_CLOSED_LIST: ProductEventName[] = [
   // Étude 38 lot 5 — quatrième amendement écrit : le clic sur la carte « Reprendre » du visiteur
   // sans compte. Un seul événement ; `days_since` y sépare un retour d'un simple aller-retour.
   "resume_card_clicked",
+  // Relevé « première visite » du 2026-11-12 — cinquième amendement écrit : la première réponse
+  // validée sans compte et la porte du quiz vue. Consommateur : la fiche D-1 du relevé.
+  "public_practice_started",
+  "public_gate_shown",
 ];
 
 const SRC = join(process.cwd(), "src");
