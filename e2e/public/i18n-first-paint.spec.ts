@@ -33,8 +33,6 @@ test.describe("Premier rendu dans la langue du cookie", () => {
       const served = await context.request.get("/");
       const html = await served.text();
       expect(html).toMatch(new RegExp(`<html[^>]*lang="${lang}"[^>]*dir="${dir}"`));
-      const servedTitle = /<h1[^>]*>([\s\S]*?)<\/h1>/.exec(html)?.[1].replace(/<[^>]+>/g, "");
-      expect(servedTitle).toMatch(hero);
 
       // 2. L'hydratation : ni erreur de page, ni avertissement d'écart en console.
       const hydrationIssues: string[] = [];
@@ -55,9 +53,16 @@ test.describe("Premier rendu dans la langue du cookie", () => {
       // dépend de la session, le serveur ne le rend pas.
       await expect(landing.signupCta).toBeVisible();
 
-      // 3. Même titre qu'au HTML servi : aucune bascule de langue après coup.
-      const hydratedTitle = await landing.heroTitle.evaluate((el) => el.innerHTML);
-      expect(hydratedTitle.replace(/<[^>]+>/g, "")).toBe(servedTitle);
+      // 3. Le titre du HTML servi est déjà traduit, et c'est le même une fois la page
+      // hydratée : aucune bascule de langue après coup. Le HTML servi est lu par un
+      // DOMParser (inerte : il n'exécute aucun script), pas par une regex de balises.
+      const servedTitle = await page.evaluate(
+        (source) =>
+          new DOMParser().parseFromString(source, "text/html").querySelector("h1")?.textContent,
+        html,
+      );
+      expect(servedTitle).toMatch(hero);
+      expect(await landing.heroTitle.textContent()).toBe(servedTitle);
       expect(hydrationIssues).toEqual([]);
     });
   }
