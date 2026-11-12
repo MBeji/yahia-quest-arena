@@ -6,16 +6,17 @@ import { DEFAULT_LOCALE, STORAGE_KEY, isLocale, localeFromCookieHeader } from ".
  * Chargement des catalogues par locale (H2-fe, 2026-10-31).
  *
  * Seul `fr` (DEFAULT_LOCALE) reste dans le graphe synchrone — `context.ts` en a
- * besoin pour la valeur par défaut du contexte, et c'est la langue du premier rendu
- * (SSR comme hydratation). `en` et `ar` sont chacun leur propre chunk (`i18n-en` /
+ * besoin pour la valeur par défaut du contexte, et c'est la langue du visiteur sans
+ * cookie. `en` et `ar` sont chacun leur propre chunk (`i18n-en` /
  * `i18n-ar`, cf. manualChunks dans vite.config.ts), tiré pour la seule locale du
  * visiteur : avant, le chunk trilingue (192 KB bruts / 66 KB gz) était importé
  * statiquement par index et préchargé sur chaque page, pour deux langues inutiles.
  *
- * Pas de flash ajouté : le chunk de la locale persistée est demandé dès l'évaluation
- * du module client (bas de ce fichier), en parallèle de la création du routeur et de
- * l'hydratation — mesuré en 3G, il arrive ≈ 500 ms avant l'effet post-montage qui
- * applique la locale.
+ * Premier rendu dans la langue du cookie (2026-11-12, issue #1228) : `router.tsx`
+ * attend `loadCatalogue(langue du cookie)` avant le rendu serveur ET avant
+ * l'hydratation, donc le texte sort d'emblée dans la bonne langue et le client
+ * hydrate le même. Le chunk est demandé dès l'évaluation du module client (bas de
+ * ce fichier), en parallèle du reste du graphe, pour que cette attente soit courte.
  *
  * ⚠️ Règle de chunk : les fichiers de locale ne doivent partager aucun module entre
  * eux — rolldown fond un module commun à fr/en/ar dans le premier chunk de locale
@@ -46,10 +47,19 @@ export function loadCatalogue(locale: Locale): Promise<TranslationKeys> {
   if (cached || !isLazy(locale)) return Promise.resolve(cached ?? fr);
   let pending = inflight.get(locale);
   if (!pending) {
-    pending = loaders[locale]().then((catalogue) => {
-      loaded[locale] = catalogue;
-      return catalogue;
-    });
+    pending = loaders[locale]().then(
+      (catalogue) => {
+        loaded[locale] = catalogue;
+        return catalogue;
+      },
+      (error: unknown) => {
+        // Un chunk qui n'est pas venu (réseau coupé) doit pouvoir être redemandé :
+        // sans cela, la promesse rejetée restait en cache et la langue ne
+        // pouvait plus jamais être chargée sans recharger la page.
+        inflight.delete(locale);
+        throw error;
+      },
+    );
     inflight.set(locale, pending);
   }
   return pending;
