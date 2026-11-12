@@ -9,6 +9,7 @@ import {
   SITE_TITLE_SUFFIX,
   plainExcerpt,
   publicPageHead,
+  SEED_TIMEOUT_MS,
   seedOnServer,
   serializeJsonLd,
 } from "@/shared/lib/public-page-seo";
@@ -50,6 +51,58 @@ describe("seedOnServer", () => {
       expect.stringContaining("SSR seed failed"),
       expect.objectContaining({ label: "matiere" }),
     );
+  });
+});
+
+// rt-09 : base injoignable, `postgrest-js` rejoue la panne 1 + 2 + 4 s et le
+// premier octet d'une page publique attendait 7 s.
+describe("seedOnServer — l'attente est bornée", () => {
+  afterEach(() => vi.useRealTimers());
+
+  it("gives up after the timeout and lets the client fetch", async () => {
+    vi.stubEnv("SSR", true);
+    vi.useFakeTimers();
+    const pending = seedOnServer("programme", () => new Promise<never>(() => undefined));
+
+    await vi.advanceTimersByTimeAsync(SEED_TIMEOUT_MS - 1);
+    let settled = false;
+    void pending.then(() => (settled = true));
+    await Promise.resolve();
+    expect(settled).toBe(false);
+
+    await vi.advanceTimersByTimeAsync(1);
+    await expect(pending).resolves.toBeNull();
+    expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining("SSR seed timed out"), {
+      label: "programme",
+      timeoutMs: SEED_TIMEOUT_MS,
+    });
+  });
+
+  it("does not turn the late rejection of an abandoned load into an unhandled one", async () => {
+    vi.stubEnv("SSR", true);
+    vi.useFakeTimers();
+    const unhandled = vi.fn();
+    process.on("unhandledRejection", unhandled);
+    const pending = seedOnServer(
+      "programme",
+      () => new Promise<never>((_, reject) => setTimeout(() => reject(new Error("late")), 7000)),
+    );
+
+    await vi.advanceTimersByTimeAsync(SEED_TIMEOUT_MS);
+    await expect(pending).resolves.toBeNull();
+    await vi.advanceTimersByTimeAsync(7000);
+    vi.useRealTimers();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    process.off("unhandledRejection", unhandled);
+
+    expect(unhandled).not.toHaveBeenCalled();
+  });
+
+  it("leaves a fast load untouched and arms no lingering timer", async () => {
+    vi.stubEnv("SSR", true);
+    vi.useFakeTimers();
+    await expect(seedOnServer("chapitre", async () => ({ ok: 1 }))).resolves.toEqual({ ok: 1 });
+    expect(vi.getTimerCount()).toBe(0);
   });
 });
 

@@ -7,7 +7,7 @@ import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middlew
 import { MAX_CHOICE_LENGTH } from "@/shared/lib/answer-formats";
 import { logger } from "@/shared/lib/logger";
 import { isRateLimited, isRateLimitedLocal } from "@/shared/lib/rate-limit";
-import { failWithClientError } from "@/shared/lib/safe-error";
+import { failWithClientError, RATE_LIMITED_FR } from "@/shared/lib/safe-error";
 import { PLACEMENT_BANDS } from "@/shared/constants/placement";
 
 /**
@@ -61,7 +61,7 @@ function failWithPlacementError(
   failWithClientError(context, error, fallback);
 }
 
-const TOO_MANY = "Trop de requêtes. Réessaie dans un instant.";
+const TOO_MANY = RATE_LIMITED_FR;
 
 function clientIpKey(): string {
   try {
