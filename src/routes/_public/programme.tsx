@@ -86,9 +86,10 @@ function ProgrammePage() {
 
   return (
     <>
-      {/* é38 lot 5 : le visiteur sans compte retrouve ici aussi le chapitre qu'il lisait. */}
-      <ResumeCard surface="programme" className="mt-6 max-w-[calc(100%-2rem)] sm:max-w-md" />
       <ProgrammeCatalogue parcours={data.parcours as CatalogueParcours[]} />
+      {/* é38 lot 5 : le visiteur sans compte retrouve ici aussi le chapitre qu'il lisait —
+          en carte flottante, pour ne rien pousser sur cette page rendue côté serveur. */}
+      <ResumeCard surface="programme" />
     </>
   );
 }
