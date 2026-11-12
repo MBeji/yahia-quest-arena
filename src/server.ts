@@ -52,7 +52,11 @@ function isCatastrophicSsrErrorBody(body: string, responseStatus: number): boole
   }
 
   const fields = payload as Record<string, unknown>;
-  const expectedKeys = new Set(["message", "status", "unhandled"]);
+  // `statusText` : TanStack Start l'écrit depuis 1.169.45 (il a quitté h3). Tant
+  // que la liste l'ignorait, AUCUN 500 avalé n'était reconnu — le visiteur
+  // recevait le JSON brut. Le test de contrat de server-error-contract.test.ts
+  // fabrique ce corps avec le vrai framework : une clé de plus le fera rougir.
+  const expectedKeys = new Set(["message", "status", "statusText", "unhandled"]);
   if (!Object.keys(fields).every((key) => expectedKeys.has(key))) {
     return false;
   }
@@ -64,8 +68,9 @@ function isCatastrophicSsrErrorBody(body: string, responseStatus: number): boole
   );
 }
 
-// h3 swallows in-handler throws into a normal 500 Response with body
-// {"unhandled":true,"message":"HTTPError"} — try/catch alone never fires for those.
+// Le framework avale un throw du handler en réponse 500 normale, de corps
+// {"status":500,"statusText":"","unhandled":true,"message":"HTTPError"} — un
+// try/catch seul ne se déclenche jamais pour ceux-là.
 async function normalizeCatastrophicSsrResponse(response: Response): Promise<Response> {
   if (response.status < 500) return response;
   const contentType = response.headers.get("content-type") ?? "";
@@ -78,7 +83,7 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
 
   logger.error("SSR response normalized after swallowed catastrophic error", {
     status: response.status,
-    error: consumeLastCapturedError() ?? new Error(`h3 swallowed SSR error: ${body}`),
+    error: consumeLastCapturedError() ?? new Error(`swallowed SSR error: ${body}`),
   });
   return brandedErrorResponse();
 }

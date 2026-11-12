@@ -291,6 +291,48 @@ describe("server fetch wrapper", () => {
     );
   });
 
+  // CONTRAT avec le framework : le corps est fabriqué par le VRAI
+  // `handleStartError`, pas recopié. Le 2026-11-11, une montée mineure
+  // (1.169.40 → 1.169.45) y a ajouté `statusText` ; la liste fermée des clés
+  // attendues l'a refusé, et plus aucun 500 avalé n'était ni habillé ni
+  // journalisé — sans qu'un seul test rougisse, le corps étant écrit à la main.
+  it("recognizes the body the real framework builds for a swallowed throw", async () => {
+    const { handleStartError } = await import("@tanstack/react-start/server");
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    mockServerFetch.mockResolvedValue(handleStartError(new Error("boom")));
+    consoleError.mockRestore();
+
+    const server = (await import("@/server")).default;
+    const response = await server.fetch(new Request("https://app.local/contract"), {}, {});
+
+    expect(response.status).toBe(500);
+    expect(response.headers.get("content-type")).toContain("text/html");
+    await expect(response.text()).resolves.toBe("<html>fallback</html>");
+    expect(mockLoggerError).toHaveBeenCalledWith(
+      "SSR response normalized after swallowed catastrophic error",
+      expect.objectContaining({ status: 500 }),
+    );
+  });
+
+  it("logs the captured original error rather than the placeholder", async () => {
+    const original = new Error("captured-ssr");
+    mockServerFetch.mockResolvedValue(
+      new Response(JSON.stringify({ unhandled: true, message: "HTTPError", status: 500 }), {
+        status: 500,
+        headers: { "content-type": "application/json" },
+      }),
+    );
+    mockConsumeLastCapturedError.mockReturnValue(original);
+
+    const server = (await import("@/server")).default;
+    await server.fetch(new Request("https://app.local/catastrophic"), {}, {});
+
+    expect(mockLoggerError).toHaveBeenCalledWith(
+      "SSR response normalized after swallowed catastrophic error",
+      { status: 500, error: original },
+    );
+  });
+
   it("keeps non-catastrophic responses unchanged", async () => {
     const upstream = new Response(JSON.stringify({ ok: true }), {
       status: 500,
