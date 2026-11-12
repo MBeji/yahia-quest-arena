@@ -176,6 +176,8 @@ export type ExerciseMeta = {
   mode: string;
   chapterTitle: string | null;
   subjectName: string | null;
+  /** Langue du contenu (`subjects.content_language`), pour `og:locale`. */
+  contentLanguage: string | null;
 };
 
 /**
@@ -200,7 +202,7 @@ export const getExerciseMeta = createServerFn({ method: "GET" })
   .handler(async ({ data, context }): Promise<ExerciseMeta | null> => {
     const { data: row, error } = await context.supabase
       .from("exercises")
-      .select("title, mode, chapters(title), subjects(name_fr)")
+      .select("title, mode, chapters(title), subjects(name_fr, content_language)")
       .eq("id", data.exerciseId)
       .maybeSingle();
     if (error) {
@@ -212,5 +214,6 @@ export const getExerciseMeta = createServerFn({ method: "GET" })
       mode: row.mode,
       chapterTitle: row.chapters?.title ?? null,
       subjectName: row.subjects?.name_fr ?? null,
+      contentLanguage: row.subjects?.content_language ?? null,
     };
   });

@@ -10,7 +10,12 @@ import { getParcoursSubjects } from "@/features/dashboard";
 import { setCurrentParcours, useAuth } from "@/features/auth";
 import { ParcoursSubjects } from "@/features/dashboard/components/parcours-subjects";
 import { useT } from "@/lib/i18n";
-import { publicPageHead, seedOnServer } from "@/shared/lib/public-page-seo";
+import {
+  breadcrumbJsonLd,
+  itemListJsonLd,
+  publicPageHead,
+  seedOnServer,
+} from "@/shared/lib/public-page-seo";
 import { CatalogueNotFound } from "./-catalogue-not-found";
 
 /**
@@ -54,6 +59,21 @@ async function seedNiveau(parcoursId: string) {
     title: parcours.name_fr,
     description: `Cours, résumés et exercices corrigés, gratuits : ${subjects.map((s) => s.name_fr).join(" · ")}`,
     path: `/niveau/${parcoursId}`,
+    jsonLd: [
+      // Fil d'Ariane : programme › niveau.
+      breadcrumbJsonLd([
+        { name: "Programme", path: "/programme" },
+        { name: parcours.name_fr, path: `/niveau/${parcoursId}` },
+      ]),
+      ...(subjects.length > 0
+        ? [
+            itemListJsonLd(
+              parcours.name_fr,
+              subjects.map((s) => ({ name: s.name_fr, path: `/matiere/${s.id}` })),
+            ),
+          ]
+        : []),
+    ],
   });
   return { data, head };
 }
