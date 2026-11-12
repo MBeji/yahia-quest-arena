@@ -191,7 +191,23 @@ describe("getDashboard — profondeur du chemin critique", () => {
     const rpcs: Record<string, unknown> = {
       get_user_subject_stats: [],
       get_daily_plan: [],
-      get_my_competency_map: [{ competency_id: "c1", slug: "math.frac.add", mastery: 30 }],
+      // Une ligne COMPLÈTE : la carte est validée à la frontière, et une ligne
+      // partielle serait écartée — donc plus de compétence en échec, donc plus
+      // de lecture des blocages.
+      get_my_competency_map: [
+        {
+          competency_id: "c1",
+          slug: "math.frac.add",
+          family: "math",
+          domain: "frac",
+          label_fr: "",
+          label_en: "",
+          label_ar: "",
+          mastery: 30,
+          attempts: 6,
+          recent_result: null,
+        },
+      ],
       get_my_weaknesses: [],
       get_competency_blockers: [],
       get_user_subject_stars: [],

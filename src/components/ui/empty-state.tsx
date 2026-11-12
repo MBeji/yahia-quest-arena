@@ -11,12 +11,19 @@ export function EmptyState({
   title,
   description,
   action,
+  tone = "neutral",
   className,
 }: {
   icon?: LucideIcon;
   title: string;
   description?: string;
   action?: React.ReactNode;
+  /**
+   * `"error"` : l'écran dit qu'un chargement a ÉCHOUÉ. Il remplace alors un squelette
+   * sans que la page change, et un lecteur d'écran n'en saurait rien : `role="alert"`
+   * le lui annonce. Un état simplement vide reste silencieux (`"neutral"`).
+   */
+  tone?: "neutral" | "error";
   className?: string;
 }) {
   return (
@@ -26,6 +33,7 @@ export function EmptyState({
       // cold-start invitation), which silently un-finds any locator written
       // against the wording. The grammar is shared, so the hook belongs here once.
       data-testid="empty-state"
+      role={tone === "error" ? "alert" : undefined}
       className={cn(
         "rounded-2xl border border-dashed border-border/50 bg-card/40 p-6 text-center",
         className,

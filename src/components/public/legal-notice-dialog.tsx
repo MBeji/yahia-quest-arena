@@ -1,4 +1,5 @@
 import { useT } from "@/lib/i18n";
+import { cn } from "@/shared/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -14,12 +15,12 @@ import {
  * régénérer le route-tree TanStack — ceci livre la notice IP/légale tout de suite
  * et pourra être promu en page `/mentions-legales` plus tard. Copie i18n (fr/en/ar).
  */
-export function LegalNoticeDialog() {
+export function LegalNoticeDialog({ className }: { className?: string }) {
   const t = useT();
   const l = t.public.legal;
   return (
     <Dialog>
-      <DialogTrigger className="cursor-pointer underline underline-offset-2 transition hover:text-foreground">
+      <DialogTrigger className={cn("cursor-pointer", className)}>
         {t.public.footer.legalLink}
       </DialogTrigger>
       <DialogContent className="max-h-[85dvh] overflow-y-auto text-start">

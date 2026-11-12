@@ -16,6 +16,7 @@ export type TranslationKeys = {
     loading: string;
     retry: string;
     home: string;
+    close: string;
     continue: string;
     completed: string;
     leaderboard: string;
@@ -1074,7 +1075,6 @@ export type TranslationKeys = {
   // course reader, subject hub, anonymous practice + shared public chrome.
   public: {
     header: {
-      homeAria: string;
       navAria: string;
       programme: string;
       extras: string;
@@ -1281,6 +1281,12 @@ export type TranslationKeys = {
       lawTitle: string;
       lawBody: string;
       updated: string;
+    };
+    /** Étude 38 lot 5 — la carte « Reprendre » du visiteur sans compte (accueil, programme). */
+    resume: {
+      kicker: string;
+      forget: string;
+      forgetLabel: string;
     };
   };
   // Motivational quotes

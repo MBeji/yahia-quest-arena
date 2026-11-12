@@ -30,18 +30,6 @@ import { logger } from "@/shared/lib/logger";
 
 const LOAD_ERROR_FR = "Impossible de charger les indicateurs d'engagement.";
 
-/**
- * `admin_engagement_overview` est postérieure aux types Supabase générés, qui ne
- * peuvent pas être régénérés sans accès DB : son contrat est figé ici, même
- * patron que `economy.server.ts`. À supprimer à la prochaine régénération.
- */
-type EngagementOverviewRpcClient = {
-  rpc: (fn: "admin_engagement_overview") => PromiseLike<{
-    data: unknown;
-    error: { message: string } | null;
-  }>;
-};
-
 /** Au-delà, la console mérite un instantané journalier plutôt qu'un calcul à la volée. */
 const SLOW_RPC_MS = 2000;
 
@@ -170,8 +158,7 @@ export const getEngagementOverview = createServerFn({ method: "GET" })
     const { supabase } = context;
     const startedAt = Date.now();
 
-    const client = supabase as unknown as EngagementOverviewRpcClient;
-    const { data, error } = await client.rpc("admin_engagement_overview");
+    const { data, error } = await supabase.rpc("admin_engagement_overview");
     if (error) failWithClientError("engagement.overview", error, LOAD_ERROR_FR);
 
     const elapsedMs = Date.now() - startedAt;

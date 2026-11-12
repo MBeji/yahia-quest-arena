@@ -24,11 +24,14 @@ import heroAvif1920 from "@/assets/hero-warrior-1920.avif";
 import heroWebp960 from "@/assets/hero-warrior-960.webp";
 import heroWebp1920 from "@/assets/hero-warrior-1920.webp";
 import { useAuth } from "@/features/auth";
+import { ResumeCardView } from "@/components/public/resume-card";
+import { useResumeChapter } from "@/components/public/use-resume-chapter";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useT } from "@/lib/i18n";
 import { usePlacementT } from "@/lib/i18n/placement";
 import { PLACEMENT_ITEMS } from "@/shared/constants/placement";
 import { trackProductEvent } from "@/shared/lib/product-events";
+import { cn } from "@/shared/lib/utils";
 
 /**
  * Public landing — « Référence » register (chantier C8, L1.2). Repositioned from the
@@ -113,6 +116,8 @@ export function PublicLanding({ stats }: { stats?: CatalogueStats | null }) {
     setReduce(window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false);
   }, []);
   const show3D = mounted && !isMobile && !reduce;
+  // é38 lot 5 : le chapitre qu'un visiteur SANS compte lisait sur cet appareil (30 jours).
+  const resume = useResumeChapter();
 
   // The parent door deep-links to the « Espace Famille » section below; the two
   // other personas enter the public catalogue.
@@ -197,10 +202,26 @@ export function PublicLanding({ stats }: { stats?: CatalogueStats | null }) {
   return (
     <>
       {/* HERO — la promesse familiale */}
-      <section className="mx-auto max-w-5xl px-4 pb-12 pt-12 text-center sm:px-6 sm:pt-16">
-        <div className="inline-flex items-center gap-2 rounded-full bg-secondary px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
-          <Sparkles className="h-3.5 w-3.5" /> {t.public.landing.freeBadge}
-        </div>
+      {/* é38 lot 5 — LA CARTE « REPRENDRE » NE POUSSE RIEN. Le serveur ne sait pas ce que l'appareil
+          retient : la carte n'arrive qu'après l'hydratation, sur une page déjà peinte. Elle prend
+          donc une place qui EXISTE déjà — celle de la pastille (1,75 rem) plus 2,25 rem repris à
+          la marge haute : 4 rem, sa hauteur fixe. Le titre ne bouge pas d'un pixel (CLS nul,
+          vérifié en e2e). */}
+      <section
+        className={cn(
+          "mx-auto max-w-5xl px-4 pb-12 text-center sm:px-6",
+          resume ? "pt-3 sm:pt-7" : "pt-12 sm:pt-16",
+        )}
+      >
+        {resume ? (
+          <ResumeCardView chapter={resume} surface="landing" />
+        ) : (
+          <div className="flex h-7 items-center justify-center">
+            <div className="inline-flex items-center gap-2 rounded-full bg-secondary px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
+              <Sparkles className="h-3.5 w-3.5" /> {t.public.landing.freeBadge}
+            </div>
+          </div>
+        )}
         <h1 className="mx-auto mt-5 max-w-3xl font-display text-4xl font-bold leading-tight sm:text-5xl">
           {t.public.landing.heroTitle}
         </h1>
@@ -301,14 +322,16 @@ export function PublicLanding({ stats }: { stats?: CatalogueStats | null }) {
               to={p.to}
               hash={p.hash}
               data-testid="persona-door"
-              className="group rounded-2xl border border-border bg-card p-6 transition hover:border-primary/60 hover:shadow-sm"
+              // Colonne flex : le lien d'action se cale en BAS de la carte, donc les trois
+              // s'alignent quelle que soit la longueur du texte au-dessus.
+              className="group flex flex-col rounded-2xl border border-border bg-card p-6 transition hover:border-primary/60 hover:shadow-sm"
             >
               <span className="grid h-12 w-12 place-items-center rounded-xl bg-secondary text-primary">
                 <p.icon className="h-6 w-6" />
               </span>
               <h2 className="mt-4 font-display text-lg font-bold">{p.title}</h2>
               <p className="mt-1 text-sm text-muted-foreground">{p.desc}</p>
-              <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary">
+              <span className="mt-auto inline-flex items-center gap-1 pt-3 text-sm font-semibold text-primary">
                 {p.cta}
                 <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5 rtl:-scale-x-100" />
               </span>
@@ -488,7 +511,7 @@ export function PublicLanding({ stats }: { stats?: CatalogueStats | null }) {
                 to="/auth"
                 search={{ mode: "signup", role: "parent" }}
                 onClick={() => trackProductEvent("account_invite_clicked", { surface: "landing" })}
-                className="mt-3 inline-flex items-center justify-center gap-1.5 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+                className="mt-1 inline-flex min-h-11 items-center justify-center gap-1.5 text-sm font-medium text-muted-foreground transition hover:text-foreground"
               >
                 {t.public.landing.familleCta}
               </Link>

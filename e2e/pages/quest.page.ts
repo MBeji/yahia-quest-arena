@@ -21,9 +21,11 @@ export class QuestPage {
 
   /** Chapter comprehension-quiz lock screen (school subjects): shown when the
    * mission is reachable (entitlement OK) but the chapter quiz isn't passed yet.
-   * FR "Exercice verrouillé", EN "Exercise locked", AR "التمرين مقفل". */
+   * FR "D'abord le quiz du chapitre", EN "First, the chapter quiz", AR "أوّلًا اختبار فهم الدرس". */
   get quizLock(): Locator {
-    return this.page.getByText(/exercice verrouillé|exercise locked|التمرين مقفل/i).first();
+    return this.page
+      .getByText(/d'abord le quiz du chapitre|first, the chapter quiz|أوّلًا اختبار فهم الدرس/i)
+      .first();
   }
 
   /** Answer options (radio buttons) of the current question. */

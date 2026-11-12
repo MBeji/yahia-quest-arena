@@ -2,7 +2,6 @@ import type { TranslationKeys } from "./types";
 
 export const arPublic: TranslationKeys["public"] = {
   header: {
-    homeAria: "نقرا نلعب — الرئيسية",
     navAria: "الفهرس",
     programme: "البرنامج",
     extras: "إضافات",
@@ -214,5 +213,10 @@ export const arPublic: TranslationKeys["public"] = {
     lawTitle: "القانون المنطبق",
     lawBody: "تخضع هذه المقتضيات للقانون التونسي.",
     updated: "آخر تحديث: جوان 2026.",
+  },
+  resume: {
+    kicker: "واصل القراءة",
+    forget: "انسَ",
+    forgetLabel: "لا تحتفظ بقراءتي على هذا الجهاز",
   },
 };

@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useRef } from "react";
-import { Dumbbell, RotateCcw, Sparkles, Zap } from "lucide-react";
+import { ArrowRight, Dumbbell, RotateCcw, Sparkles, Zap } from "lucide-react";
 import { checkAnswersPublic, getChapterLesson, scoreQuizPublic } from "@/features/quest";
 import {
   hasPassedChapterQuiz,
@@ -87,6 +87,9 @@ function ExercicePage() {
   // set during submit(), read when the result footer renders.
   const quizJustPassedRef = useRef(false);
   const nextPracticeRef = useRef<string | null>(null);
+  // Le dernier rendu était-il un quiz ? Un quiz raté à 70 % ne doit pas offrir la « mission
+  // suivante » : elle est derrière la porte qu'il vient de ne pas ouvrir.
+  const lastWasQuizRef = useRef(false);
 
   const strategy = useMemo<ExercisePlayerStrategy>(
     () => ({
@@ -94,14 +97,17 @@ function ExercicePage() {
         rewards: false,
         hints: false,
         boss: false,
-        next: false,
+        // La suite existe aussi sans compte : après une réussite, l'écran de résultat ne
+        // proposait que « Recommencer », « Retour à la matière » et « Créer mon compte »
+        // (relevé « première visite » du 2026-11-12, C-3).
+        next: true,
         instantFeedback: true,
       },
       quizExerciseTo: "/exercice/$exerciseId",
       homeTo: "/",
       startSession: async ({ quizGated, chapterId, mode }): Promise<StartOutcome> => {
         // The quiz itself is always playable; only a gated non-quiz exercise locks
-        // until this session has passed the chapter's comprehension quiz.
+        // until this device has passed the chapter's comprehension quiz.
         if (
           mode !== "quiz" &&
           isQuizGateLocked({ quizGated, quizPassed: hasPassedChapterQuiz(chapterId) })
@@ -118,6 +124,7 @@ function ExercicePage() {
         isQuiz,
         totalQuestions,
       }): Promise<PlayerResult> => {
+        lastWasQuizRef.current = isQuiz;
         const neutral = {
           xpEarned: 0,
           coinsEarned: 0,
@@ -208,8 +215,27 @@ function ExercicePage() {
           explanation: item.explanation,
         };
       },
-      renderResultFooter: ({ exerciseId: exId, subjectId, xpReward, onReplay }) => (
+      renderResultFooter: ({
+        exerciseId: exId,
+        subjectId,
+        nextExerciseId,
+        xpReward,
+        onReplay,
+        result,
+      }) => (
         <div className="mt-8 space-y-4">
+          {/* Mission réussie → la suivante, en un toucher. Jamais après un quiz (réussi, il a sa
+              propre suite ci-dessous) ni après un échec : rejouer vient alors d'abord. */}
+          {!lastWasQuizRef.current && nextExerciseId && result.scorePct >= PASS_THRESHOLD_PCT && (
+            <Link
+              to="/exercice/$exerciseId"
+              params={{ exerciseId: nextExerciseId }}
+              data-testid="practice-next"
+              className="flex items-center justify-center gap-2 rounded-2xl bg-primary p-4 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+            >
+              {t.quest.nextQuest} <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
+            </Link>
+          )}
           {/* Quiz just passed → the chapter is unlocked: continue straight into
               its first exercise instead of scrolling back through the hub. */}
           {quizJustPassedRef.current && nextPracticeRef.current && (

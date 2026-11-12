@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   pickAConsolider,
@@ -7,10 +7,13 @@ import {
   pickRacine,
   readLearningState,
   resolveAdaptiveInputs,
-  type AdaptiveRpcClient,
 } from "../adaptive-inputs";
+import { logger } from "../logger";
 import { resolveNextAction } from "../next-action";
 import type { LearningStateRow } from "@/shared/types/competency";
+
+/** Le client typé qu'attend le module ; les faux n'en portent que `rpc`. */
+type AdaptiveRpcClient = Parameters<typeof readLearningState>[0];
 
 vi.mock("../logger", () => ({ logger: { warn: vi.fn(), error: vi.fn(), info: vi.fn() } }));
 
@@ -50,6 +53,8 @@ function fakeClient(replies: Record<string, { data?: unknown; error?: { message:
 async function resolve(client: AdaptiveRpcClient) {
   return resolveAdaptiveInputs(client, await readLearningState(client, null));
 }
+
+beforeEach(() => vi.mocked(logger.error).mockClear());
 
 describe("readLearningState — l'état lu UNE fois par chargement (2026-10-31)", () => {
   it("rend les lignes de la famille demandée, telles quelles", async () => {
@@ -111,6 +116,47 @@ describe("resolveAdaptiveInputs — le producteur des rangs 2 et 4 (#870)", () =
       },
     });
     expect((await resolve(client)).remediation).toBeNull();
+  });
+
+  it("lit `is_root_cause` NULL comme « pas la racine » — tout le chemin est maîtrisé", async () => {
+    // Côté SQL, `competency_id = (SELECT … FROM root)` rend NULL quand `root` est
+    // vide. C'est un état normal du chemin, pas une dérive : la ligne est gardée,
+    // aucune racine n'est désignée, le rang 2 reste dormant.
+    const { client } = fakeClient({
+      get_learning_state: { data: [etat({ state: "lacune" })] },
+      get_remediation_path: {
+        data: [{ slug: "pgcd", entry_exercise_id: "ex-1", is_root_cause: null, depth: 1 }],
+      },
+    });
+    expect((await resolve(client)).remediation).toBeNull();
+    expect(logger.error).not.toHaveBeenCalled();
+  });
+
+  it("écarte une ligne d'état hors contrat au lieu de la laisser passer mal typée", async () => {
+    // Un `state` hors de l'union fermée ne peut plus atteindre `pickLacune` ni le
+    // rendu : la ligne tombe, la dérive est journalisée, le reste vit.
+    const saine = etat({ slug: "saine", state: "lacune" });
+    const { client } = fakeClient({
+      get_learning_state: { data: [saine, { ...etat({ slug: "derive" }), state: "perdue" }] },
+    });
+    expect(await readLearningState(client, null)).toEqual([saine]);
+    expect(logger.error).toHaveBeenCalledWith(
+      "adaptive.learningState: unexpected RPC shape",
+      expect.objectContaining({ rejected: 1, total: 2 }),
+    );
+  });
+
+  it("demande TOUTES les familles en omettant l'argument, pas en envoyant `null`", async () => {
+    const seen: unknown[] = [];
+    const client = {
+      rpc: (_fn: string, args: unknown) => {
+        seen.push(args);
+        return Promise.resolve({ data: [], error: null });
+      },
+    } as unknown as AdaptiveRpcClient;
+    await readLearningState(client, null);
+    // `p_family TEXT DEFAULT NULL` : la clé absente EST le NULL de la signature.
+    expect(seen).toEqual([{ p_family: undefined }]);
   });
 
   it("consolide la compétence vue sous le MOINS de formes", async () => {

@@ -75,6 +75,12 @@ export const frParent: ParentTranslations = {
     namedErrorsImproving: "en recul",
     namedErrorsWorsening: "en hausse",
     namedErrorsStable: "stable",
+    examsTitle: "Examens blancs",
+    examsPoints: "{points} points",
+    examsPercentile: "Mieux que {pct} % des {n} candidats.",
+    examsPending: "Classement affiché à partir de {n} candidats.",
+    examsNone: "Pas encore d'examen blanc rendu : il y en a d'ouverts dans son parcours.",
+    examsHint: "Un examen blanc sert à s'entraîner : chaque élève avance à son rythme.",
     tutorHelpTitle: "L'aide d'El Ostedh",
     tutorHelpSubtitle:
       "Combien de fois votre enfant a demandé de l'aide, et sur quels thèmes. Le contenu des échanges reste entre El Ostedh et lui.",

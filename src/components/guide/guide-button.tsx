@@ -28,7 +28,7 @@ export function GuideButton({
       title={t.layout.help}
       data-testid="guide-open"
       className={cn(
-        "inline-flex shrink-0 items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-2.5 py-1.5 text-sm font-semibold text-primary transition hover:border-primary hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary [@media(pointer:coarse)]:min-h-11",
+        "inline-flex shrink-0 items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-2.5 py-1.5 text-sm font-semibold text-primary transition hover:border-primary hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary [@media(pointer:coarse)]:min-h-11 [@media(pointer:coarse)]:min-w-11 justify-center",
         className,
       )}
     >

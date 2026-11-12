@@ -2,7 +2,6 @@ import type { TranslationKeys } from "./types";
 
 export const enPublic: TranslationKeys["public"] = {
   header: {
-    homeAria: "Na9ra Nal3ab — home",
     navAria: "Catalogue",
     programme: "Programme",
     extras: "Extras",
@@ -219,5 +218,10 @@ export const enPublic: TranslationKeys["public"] = {
     lawTitle: "Governing law",
     lawBody: "This notice is governed by Tunisian law.",
     updated: "Last updated: June 2026.",
+  },
+  resume: {
+    kicker: "Continue reading",
+    forget: "Forget",
+    forgetLabel: "Stop remembering my reading on this device",
   },
 };

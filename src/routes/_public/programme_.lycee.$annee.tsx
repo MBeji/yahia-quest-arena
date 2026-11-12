@@ -12,7 +12,7 @@ import {
   LyceeYearSections,
   type CatalogueParcours,
 } from "@/features/dashboard/components/parcours-catalogue";
-import { seedOnServer } from "@/shared/lib/public-page-seo";
+import { publicPageHead, seedOnServer } from "@/shared/lib/public-page-seo";
 import { CatalogueNotFound } from "./-catalogue-not-found";
 
 /**
@@ -27,6 +27,13 @@ import { CatalogueNotFound } from "./-catalogue-not-found";
 const YEARS = ["2eme", "3eme", "bac"] as const;
 type Year = (typeof YEARS)[number];
 
+/** Le nom de chaque année, pour le `<title>` et la description de sa page. */
+const YEAR_HEAD: Record<Year, string> = {
+  "2eme": "2ème année secondaire",
+  "3eme": "3ème année secondaire",
+  bac: "Baccalauréat (4ème année secondaire)",
+};
+
 export const Route = createFileRoute("/_public/programme_/lycee/$annee")({
   // Une année qui n'existe pas (`/programme/lycee/xyz`) : HTTP 404, tranché sans
   // lecture. Sinon, rendu serveur des sections de l'année (`public-page-seo.ts`) :
@@ -37,7 +44,17 @@ export const Route = createFileRoute("/_public/programme_/lycee/$annee")({
     if (!YEARS.includes(params.annee as Year)) throw notFound();
     return import.meta.env.SSR ? seedLycee() : null;
   },
-  head: () => ({ meta: [{ title: "Lycée · Na9ra Nal3ab" }] }),
+  // Un titre et une description PAR ANNÉE : les trois pages portaient le même
+  // « Lycée · Na9ra Nal3ab », sans description propre.
+  head: ({ params }) => {
+    const year = YEAR_HEAD[params.annee as Year];
+    if (!year) return { meta: [{ title: "Lycée · Na9ra Nal3ab" }] };
+    return publicPageHead({
+      title: `${year} — toutes les sections du lycée`,
+      description: `${year} du lycée tunisien, section par section : cours, résumés et exercices corrigés, gratuits et sans inscription.`,
+      path: `/programme/lycee/${params.annee}`,
+    });
+  },
   component: LyceeYearPage,
   notFoundComponent: () => <CatalogueNotFound />,
 });
@@ -74,6 +91,7 @@ function LyceeYearPage() {
       <div className="mx-auto max-w-md px-6 py-20">
         <EmptyState
           icon={CloudOff}
+          tone="error"
           title={t.errors.programmeLoadFailed}
           action={
             <Button variant="outline" onClick={() => refetch()}>

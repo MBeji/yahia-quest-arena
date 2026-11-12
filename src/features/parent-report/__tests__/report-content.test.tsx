@@ -196,3 +196,44 @@ describe("ReportContent — Q-5, l'aide du tuteur", () => {
     expect(getByTestId("report-tutor-help").textContent).not.toMatch(/messages|summary/i);
   });
 });
+
+describe("ReportContent — les examens blancs (étude 08 lot 1)", () => {
+  const examSummary = {
+    minCandidates: 20,
+    openExams: 0,
+    exams: [
+      {
+        examId: "e1",
+        titleFr: "Blanc A",
+        titleEn: null,
+        titleAr: null,
+        finishedAt: "2026-11-08T10:00:00Z",
+        scorePoints: 120,
+        maxPoints: 150,
+        scoreOn20: 16,
+        candidates: 19,
+        percentile: null,
+      },
+    ],
+  };
+
+  it("sans le prop (chemin public au code alliance), la section n'existe pas", () => {
+    const { queryByTestId } = render(<ReportContent report={report as never} />);
+    expect(queryByTestId("report-exams")).toBeNull();
+  });
+
+  it("une lecture en panne (null) ne casse pas le bilan : la section disparaît seule", () => {
+    const { queryByTestId, getByText } = render(
+      <ReportContent report={report as never} examSummary={null} />,
+    );
+    expect(queryByTestId("report-exams")).toBeNull();
+    expect(getByText("Yahia")).toBeTruthy();
+  });
+
+  it("avec le prop (route authentifiée), la section rend l'examen", () => {
+    const { getByTestId } = render(
+      <ReportContent report={report as never} examSummary={examSummary} />,
+    );
+    expect(getByTestId("report-exams").textContent).toContain("Blanc A");
+  });
+});
