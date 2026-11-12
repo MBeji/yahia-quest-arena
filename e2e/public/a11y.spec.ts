@@ -81,16 +81,37 @@ test.describe("Accessibilité — reliquat de l'audit d'affichage", () => {
     });
   }
 
-  test("téléphone — l'en-tête public ne grossit pas pour autant", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 839 });
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
-    const height = await page
-      .locator("[data-public-header]")
-      .evaluate((el) => el.getBoundingClientRect().height);
-    // 168 px avant ce lot (rangée de liens à 36 px, deux lignes) ; 150 px après, avec
-    // toutes les cibles à 44. Le plafond est ce qu'il mesurait AVANT : agrandir une
-    // cible ne doit jamais se payer en hauteur d'écran.
-    expect(height).toBeLessThanOrEqual(168);
-  });
+  for (const width of [360, 390]) {
+    test(`téléphone ${width} px — l'en-tête public tient en deux rangées et ne décale pas la page`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width, height: 780 });
+      // Le décalage se mesure depuis le tout premier rendu : l'observateur est posé avant.
+      await page.addInitScript(() => {
+        const state = window as unknown as { __cls: number };
+        state.__cls = 0;
+        new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            const shift = entry as unknown as { value: number; hadRecentInput: boolean };
+            if (!shift.hadRecentInput) state.__cls += shift.value;
+          }
+        }).observe({ type: "layout-shift", buffered: true });
+      });
+      await page.goto("/");
+      await page.waitForLoadState("networkidle");
+      // La session se lit après l'hydratation : c'est là que « Créer mon compte » arrive.
+      await expect(page.getByTestId("header-signup")).toBeVisible();
+
+      const { height, cls } = await page.evaluate(() => ({
+        height: document.querySelector("[data-public-header]")!.getBoundingClientRect().height,
+        cls: (window as unknown as { __cls: number }).__cls,
+      }));
+      // 168 px à l'audit (rangée de liens sur deux lignes, cibles de 36 px) ; 106 px
+      // depuis, avec toutes les cibles à 44 : une barre, une rangée de navigation.
+      expect(height).toBeLessThanOrEqual(110);
+      // CLS 0,116 mesuré à 360 px avant que la place du bouton ne soit réservée.
+      // Seuil « bon » des Core Web Vitals : 0,1 ; on exige bien mieux.
+      expect(cls).toBeLessThan(0.02);
+    });
+  }
 });

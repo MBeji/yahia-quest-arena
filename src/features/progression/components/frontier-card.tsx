@@ -70,7 +70,7 @@ export function FrontierCard({ rows }: { rows: LearningFrontierRow[] }) {
             {row.entry_exercise_id ? (
               <button
                 type="button"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 mt-3 rounded-md px-3 py-1.5 text-xs font-semibold"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 mt-3 inline-flex items-center rounded-md px-3 py-1.5 text-xs font-semibold [@media(pointer:coarse)]:min-h-11"
                 onClick={() => {
                   void navigate({
                     to: "/quest/$exerciseId",

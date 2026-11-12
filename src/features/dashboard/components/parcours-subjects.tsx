@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, BookOpen, ChevronRight, Clock } from "lucide-react";
+import { ArrowRight, BookOpen, ChevronRight, Clock } from "lucide-react";
+import { BackLink } from "@/components/ui/back-link";
 import { useI18n, useT } from "@/lib/i18n";
 import { isRtlText } from "@/shared/lib/utils";
 import { parcoursName } from "@/shared/lib/parcours-locale";
@@ -59,13 +60,9 @@ export function ParcoursSubjects({
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
-      <Link
-        to={isExtra ? "/extras" : "/programme"}
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition hover:text-primary"
-      >
-        <ArrowLeft className="h-4 w-4 rtl:-scale-x-100" />{" "}
+      <BackLink to={isExtra ? "/extras" : "/programme"} className="mb-0">
         {isExtra ? t.public.niveau.backExtras : t.public.niveau.backProgramme}
-      </Link>
+      </BackLink>
 
       <header className="mb-8 mt-3">
         <h1
@@ -81,7 +78,7 @@ export function ParcoursSubjects({
               type="button"
               onClick={onChoose}
               disabled={isChoosing}
-              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90 disabled:opacity-60"
+              className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90 disabled:opacity-60 [@media(pointer:coarse)]:min-h-11"
             >
               {isChoosing ? t.public.niveau.choosing : t.public.niveau.choose}
               <ArrowRight className="h-4 w-4 rtl:-scale-x-100" />
