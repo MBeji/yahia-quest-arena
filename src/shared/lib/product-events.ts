@@ -31,7 +31,8 @@ import { captureProductEvent } from "@/shared/lib/product-analytics";
 
 /**
  * La liste fermée des événements produit (é31 §3.6), amendée par écrit : deux par é34 (la
- * progression), trois par é38 lot 0 (le tunnel sans compte → compte). Rien d'autre ne part.
+ * progression), trois par é38 lot 0 (le tunnel sans compte → compte), quatre par é39 (le test de niveau), un par
+ * é38 lot 5 (le retour du visiteur). Rien d'autre ne part.
  */
 export type ProductEventName =
   | "signup"
@@ -65,7 +66,12 @@ export type ProductEventName =
   | "placement_started"
   | "placement_completed"
   | "placement_shared"
-  | "placement_claimed";
+  | "placement_claimed"
+  // Étude 38 lot 5 — la continuité du visiteur. UN événement, pas un de plus : le clic sur la carte
+  // « Reprendre ». Il dit d'où (accueil ou programme) et depuis combien de jours l'appareil n'avait
+  // pas lu — `days_since >= 1` est un RETOUR, la chose que ce lot existe pour produire. Ni le
+  // chapitre ni rien de la personne : la mémoire reste sur l'appareil, seul le clic se compte.
+  | "resume_card_clicked";
 
 export type ProductEventEntry = {
   readonly name: ProductEventName;
@@ -154,6 +160,12 @@ export const PRODUCT_EVENT_CATALOGUE: readonly ProductEventEntry[] = [
     name: "placement_claimed",
     fires:
       "Tests de niveau de l'appareil rattachés au compte qui vient de se connecter — la conversion test → compte (étude 39)",
+    live: true,
+  },
+  {
+    name: "resume_card_clicked",
+    fires:
+      "Clic sur la carte « Reprendre » d'un visiteur sans compte : accueil ou programme, et le nombre de jours depuis sa dernière lecture (étude 38 lot 5)",
     live: true,
   },
 ] as const;

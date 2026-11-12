@@ -135,6 +135,20 @@ pas contre la divulgation.
 | `rate_limit_events`    | Horodatages par utilisateur                | Anti-abus                                                                                                                                                                                                                                                |
 | `beta_access_requests` | **`email` + `name` en clair**              | ⚠️ La **seule** table applicative portant de l'état civil. Héritée de la phase bêta ; le code existe encore (`src/features/subscription/beta-access.server.ts`) alors que l'application est publique et gratuite depuis le 2026-06-21 — à vérifier au §7 |
 
+**Mémoire de l'appareil du visiteur sans compte — hors base, hors serveur** (étude 38 lot 5,
+2026-11-12). Ce n'est pas une table : deux clés du `localStorage` du navigateur, que le serveur ne
+reçoit jamais (ce n'est pas un cookie, rien ne les joint à une requête).
+
+| Clé (`localStorage`)        | Contenu                                                             | Remarque                                                                                                                                             |
+| --------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `na9ra.anon.lastChapter.v1` | Dernier chapitre lu : identifiant de catalogue, titre, langue, date | Sert la carte « Reprendre » (accueil, `/programme`). Écrite **seulement sans session**. Durée : **30 jours** après la dernière lecture, puis ignorée |
+| `na9ra.anon.quizPassed.v1`  | Quiz de compréhension réussis : identifiant de chapitre → date      | Garde ouverte la porte d'un quiz réussi. **Aucun score, aucune réponse.** 30 jours par réussite                                                      |
+
+Aucune identité, aucun identifiant de personne ou d'appareil ; le bouton « Oublier » de la carte
+efface les deux clés sur-le-champ, comme le fait vider les données du site. La seule chose qui
+part vers la mesure est le clic sur la carte (`resume_card_clicked` : la surface et un nombre de
+jours — ni le chapitre, ni le lecteur). Code : `src/shared/lib/anon-continuity.ts`.
+
 ### 3.6 Étage IA — **dormant**, tables créées, aucune donnée
 
 `ai_credentials` (clé d'API d'une famille, chiffrée AES-256-GCM à clé maîtresse

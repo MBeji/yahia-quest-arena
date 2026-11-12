@@ -100,7 +100,7 @@ function ExercicePage() {
       homeTo: "/",
       startSession: async ({ quizGated, chapterId, mode }): Promise<StartOutcome> => {
         // The quiz itself is always playable; only a gated non-quiz exercise locks
-        // until this session has passed the chapter's comprehension quiz.
+        // until this device has passed the chapter's comprehension quiz.
         if (
           mode !== "quiz" &&
           isQuizGateLocked({ quizGated, quizPassed: hasPassedChapterQuiz(chapterId) })

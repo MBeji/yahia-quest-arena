@@ -131,7 +131,7 @@ export type SubjectHubRecall = {
  * divergé sur l'anti-précipitation. Voir `docs/etoiles-et-sceaux.md`.
  *
  * Anonymous parity: same layout; the quiz-pass state merges the server map with
- * the browser-session gate (anon-quiz-gate), read after mount so SSR and the
+ * the device-local gate (anon-quiz-gate, 30 days), read after mount so SSR and the
  * first client render agree. Exercise links stay auth-aware (`exerciseRouteFor`).
  * Sans compte, `progress` est `null` : on garde la FORME des chapitres (leurs
  * crans, éteints) et une promesse en une ligne, sans rien calculer (R-16).
@@ -181,7 +181,7 @@ export function SubjectHub({
   // suit le traite comme « pas de compte », jamais comme « zéro ».
   const progress = useMemo(() => parseSubjectProgress(rawProgress), [rawProgress]);
 
-  // Anonymous quiz passes live in sessionStorage — read after mount only, so
+  // Anonymous quiz passes live on the device (localStorage) — read after mount only, so
   // SSR and the first client render agree (same pattern as the course reader).
   const [anonPassed, setAnonPassed] = useState<Record<string, boolean>>({});
   useEffect(() => {
