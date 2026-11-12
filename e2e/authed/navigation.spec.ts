@@ -60,7 +60,7 @@ test.describe("Primary navigation", () => {
     await page.goto("/parametrage");
     // Les réglages rapides du menu s'y retrouvent en entier…
     await expect(page.getByRole("switch")).toHaveCount(2, { timeout: 15_000 });
-    await expect(page.getByRole("menuitemradio")).toHaveCount(5);
+    await expect(page.getByRole("radio")).toHaveCount(5);
     // …plus ce que le menu ne porte pas : compte, parcours, mentions.
     await expect(page.getByTestId("settings-sign-out")).toBeVisible();
     for (const href of ["/boutique", "/programme", "/conditions", "/confidentialite"]) {

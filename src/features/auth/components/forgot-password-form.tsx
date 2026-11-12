@@ -34,7 +34,7 @@ export function ForgotPasswordForm({
           value={email}
           onChange={(e) => onEmailChange(e.target.value)}
           placeholder={t.auth.emailLabel}
-          className="w-full rounded-lg border border-input bg-background/60 py-2.5 ps-10 pe-3 text-sm focus:border-gold focus:outline-none"
+          className="w-full rounded-lg border border-input bg-background/60 min-h-11 py-2.5 ps-10 pe-3 text-base focus:border-gold focus:outline-none sm:text-sm"
         />
       </div>
       <div role="alert" aria-live="polite">
@@ -55,7 +55,7 @@ export function ForgotPasswordForm({
       <Link
         to="/auth"
         search={{ mode: "login" }}
-        className="block py-2 text-center text-xs font-medium text-muted-foreground transition hover:text-foreground"
+        className="flex min-h-11 items-center justify-center text-center text-xs font-medium text-muted-foreground transition hover:text-foreground"
       >
         {t.auth.forgotBack}
       </Link>

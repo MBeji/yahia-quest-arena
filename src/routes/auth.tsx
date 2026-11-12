@@ -412,7 +412,7 @@ function AuthPage() {
     <main className="relative min-h-[100dvh] overflow-hidden bg-black-deep">
       <div className="absolute inset-0 bg-grid opacity-50" />
       <div className="relative mx-auto flex min-h-[100dvh] max-w-md flex-col items-center justify-center px-4 pt-[max(3rem,env(safe-area-inset-top))] pb-[max(3rem,env(safe-area-inset-bottom))] sm:px-6">
-        <Link to="/" className="mb-8 flex items-center gap-2">
+        <Link to="/" className="mb-8 flex min-h-11 items-center gap-2">
           <div className="grid h-10 w-10 place-items-center rounded-lg bg-[image:var(--gradient-gold)] shadow-gold">
             <CrownMark className="h-6 w-6 text-primary-foreground" />
           </div>
@@ -507,7 +507,7 @@ function AuthPage() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder={t.auth.heroNameLabel}
-                      className="w-full rounded-lg border border-input bg-background/60 py-3 ps-10 pe-3 text-sm focus:border-gold focus:outline-none"
+                      className="w-full rounded-lg border border-input bg-background/60 py-3 ps-10 pe-3 text-base focus:border-gold focus:outline-none sm:text-sm"
                     />
                   </div>
                 )}
@@ -524,7 +524,7 @@ function AuthPage() {
                       onChange={(e) => setAllianceCode(e.target.value)}
                       placeholder={t.auth.allianceCodeLabel}
                       aria-describedby="auth-alliance-code-hint"
-                      className="w-full rounded-lg border border-input bg-background/60 py-2.5 px-3 text-sm focus:border-gold focus:outline-none"
+                      className="w-full rounded-lg border border-input bg-background/60 min-h-11 py-2.5 px-3 text-base focus:border-gold focus:outline-none sm:text-sm"
                     />
                     <p id="auth-alliance-code-hint" className="mt-1 text-xs text-muted-foreground">
                       {t.auth.allianceCodeHint}
@@ -543,7 +543,7 @@ function AuthPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder={t.auth.emailLabel}
-                    className="w-full rounded-lg border border-input bg-background/60 py-2.5 ps-10 pe-3 text-sm focus:border-gold focus:outline-none"
+                    className="w-full rounded-lg border border-input bg-background/60 py-2.5 ps-10 pe-3 text-base min-h-11 focus:border-gold focus:outline-none sm:text-sm"
                   />
                 </div>
                 <div className="relative">
@@ -564,7 +564,7 @@ function AuthPage() {
                     placeholder={t.auth.passwordLabel}
                     aria-invalid={passwordError ? true : undefined}
                     aria-describedby={passwordError ? "auth-password-error" : undefined}
-                    className="w-full rounded-lg border border-input bg-background/60 py-2.5 ps-10 pe-3 text-sm focus:border-gold focus:outline-none"
+                    className="w-full rounded-lg border border-input bg-background/60 py-2.5 ps-10 pe-3 text-base min-h-11 focus:border-gold focus:outline-none sm:text-sm"
                   />
                   {passwordError && (
                     <p id="auth-password-error" className="mt-1 text-xs text-gold">
@@ -575,11 +575,11 @@ function AuthPage() {
 
                 {/* Password recovery entry (login only) — the previously missing US-8 flow. */}
                 {!isSignup && (
-                  <div className="text-end">
+                  <div className="-my-2 text-end">
                     <Link
                       to="/auth"
                       search={{ mode: "forgot" }}
-                      className="text-xs font-semibold text-gold hover:underline"
+                      className="inline-flex min-h-11 items-center text-xs font-semibold text-gold hover:underline"
                     >
                       {t.auth.forgotCta}
                     </Link>
@@ -623,7 +623,7 @@ function AuthPage() {
                 <Link
                   to="/auth"
                   search={{ mode: isSignup ? "login" : "signup" }}
-                  className="inline-block py-2 font-semibold text-gold hover:underline"
+                  className="inline-flex min-h-11 items-center px-1 font-semibold text-gold hover:underline"
                 >
                   {isSignup ? t.common.signIn : t.auth.switchToSignup}
                 </Link>

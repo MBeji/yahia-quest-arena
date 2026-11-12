@@ -162,7 +162,7 @@ function SuiviPublicPage() {
             onChange={(e) => setCode(e.target.value)}
             placeholder={t.parentReport.codePlaceholder}
             aria-label={t.parentReport.codePlaceholder}
-            className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+            className="min-h-11 rounded-lg border border-border bg-background px-3 py-2 text-base text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none sm:text-sm"
           />
           <button
             type="submit"

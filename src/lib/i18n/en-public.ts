@@ -2,7 +2,6 @@ import type { TranslationKeys } from "./types";
 
 export const enPublic: TranslationKeys["public"] = {
   header: {
-    homeAria: "Na9ra Nal3ab — home",
     navAria: "Catalogue",
     programme: "Programme",
     extras: "Extras",
