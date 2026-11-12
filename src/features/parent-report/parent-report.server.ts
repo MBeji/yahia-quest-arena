@@ -18,10 +18,12 @@ import { parseAttemptDetail, parseDailyReport } from "./insights/daily-report.sc
 // Les schémas de niveau module vivent à part (2026-10-31) : voir ce fichier.
 import {
   dailyGoalSchema,
+  examSummarySchema,
   isoDate,
   parseStudentReportPayload,
   tutorCountersSchema,
   weeklyGoalSchema,
+  type StudentExamSummary,
 } from "./parent-report.schemas";
 
 type ParentStudent = {
@@ -628,4 +630,31 @@ export const getTutorParentCounters = createServerFn({ method: "GET" })
         count: theme.count,
       })),
     };
+  });
+
+// ---------------------------------------------------------------------------
+// ÉTUDE 08 LOT 1 (US-5) — LES EXAMENS BLANCS DE L'ENFANT.
+// ---------------------------------------------------------------------------
+// Même double frontière que les compteurs du tuteur ci-dessus : la lecture passe
+// par une RPC à part (`parent-report` n'importe pas `@/features/exam`), et elle
+// ne rejoint PAS `_student_report_json` — le chemin public au code alliance ne
+// la sert donc pas. Le lien actif est jugé dans la RPC.
+//
+// `null` sur refus comme sur panne : la section disparaît, le reste du bilan —
+// déjà chargé — reste lisible. Une section qui échoue ne casse pas la page.
+export const getStudentExamSummary = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .validator((d: unknown) => z.object({ studentId: z.guid() }).parse(d))
+  .handler(async ({ data, context }): Promise<StudentExamSummary | null> => {
+    const { supabase } = context;
+
+    const { data: raw, error } = await supabase.rpc("get_student_exam_summary", {
+      p_student: data.studentId,
+    });
+    if (error) {
+      logger.warn("parentReport.examSummary", { error: errorMessage(error) });
+      return null;
+    }
+    const parsed = examSummarySchema.safeParse(raw);
+    return parsed.success ? parsed.data : null;
   });

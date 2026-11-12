@@ -18,6 +18,7 @@ import {
   DailyDashboard,
   getLinkedStudents,
   getStudentDailyGoal,
+  getStudentExamSummary,
   getStudentReport,
   getStudentWeeklyGoal,
   getTutorParentCounters,
@@ -57,6 +58,7 @@ function ParentReport() {
   const getStudentsFn = useServerFn(getLinkedStudents);
   const getReportFn = useServerFn(getStudentReport);
   const getTutorCountersFn = useServerFn(getTutorParentCounters);
+  const getExamSummaryFn = useServerFn(getStudentExamSummary);
   const linkByCodeFn = useServerFn(linkStudentByCode);
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
   const [studentCode, setStudentCode] = useState("");
@@ -84,6 +86,14 @@ function ParentReport() {
   const { data: tutorCounters } = useQuery({
     queryKey: ["parent-tutor-counters", selectedStudent],
     queryFn: () => getTutorCountersFn({ data: { studentId: selectedStudent! } }),
+    enabled: !!selectedStudent,
+  });
+
+  // Étude 08 lot 1 (US-5) — les examens blancs, lus à part pour la même raison
+  // que les compteurs du tuteur : le bilan sert aussi le chemin public au code.
+  const { data: examSummary } = useQuery({
+    queryKey: ["parent-exam-summary", selectedStudent],
+    queryFn: () => getExamSummaryFn({ data: { studentId: selectedStudent! } }),
     enabled: !!selectedStudent,
   });
 
@@ -375,6 +385,7 @@ function ParentReport() {
         <ReportContent
           report={report}
           tutorCounters={tutorCounters}
+          examSummary={examSummary}
           /* Étude 11 lot 6 (US-14) — le bilan hebdomadaire d'El Ostedh, composé
              ICI parce que `parent-report` n'importe pas `tutor`. Il porte sa
              propre lecture (`get_tutor_parent_digest`), qui rejuge le lien

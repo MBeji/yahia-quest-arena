@@ -24,6 +24,8 @@ import { useEntrance } from "@/shared/lib/motion";
 import { isolateLtrRuns } from "@/shared/lib/bidi";
 import { buildWeeklyAdvice, type ReportData } from "../report-share";
 import type { TutorParentCounters } from "../parent-report.server";
+import type { StudentExamSummary } from "../parent-report.schemas";
+import { ExamSection } from "./exam-section";
 export type { ReportData } from "../report-share";
 
 /**
@@ -56,10 +58,17 @@ export function ReportContent({
    * correction). Absent ⇒ rien à l'écran, sans branche à écrire ici.
    */
   renderTutorDigest,
+  /**
+   * Étude 08 lot 1 (US-5) — les examens blancs. OPTIONNEL pour la même raison
+   * que les deux props ci-dessus : seule la route authentifiée le remplit, le
+   * chemin public au code alliance ne l'a pas.
+   */
+  examSummary,
 }: {
   report: ReportData;
   tutorCounters?: TutorParentCounters | null;
   renderTutorDigest?: ReactNode;
+  examSummary?: StudentExamSummary | null;
 }) {
   const { locale } = useI18n();
   const t = useParentT();
@@ -334,6 +343,8 @@ export function ReportContent({
           même `ReportContent` sans lien parent vérifié, et n'a rien à passer
           ici. La même garde que `tutorCounters`, par le même moyen. */}
       {renderTutorDigest}
+
+      {examSummary ? <ExamSection summary={examSummary} /> : null}
 
       {/* Score trend */}
       <div className="bg-surface-2 border border-border/50 rounded-xl p-4 flex items-center gap-3">

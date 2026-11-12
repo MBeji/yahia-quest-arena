@@ -74,6 +74,12 @@ export const arParent: ParentTranslations = {
     namedErrorsImproving: "في تراجع",
     namedErrorsWorsening: "في ازدياد",
     namedErrorsStable: "مستقرّ",
+    examsTitle: "الامتحانات التجريبيّة",
+    examsPoints: "{points} نقطة",
+    examsPercentile: "أفضل من {pct}٪ من {n} مترشّحا.",
+    examsPending: "يظهر الترتيب ابتداء من {n} مترشّحا.",
+    examsNone: "لم يُنجَز أيّ امتحان تجريبي بعد: توجد امتحانات مفتوحة في مساره.",
+    examsHint: "الامتحان التجريبي تمرين: كلّ تلميذ يتقدّم بنسقه.",
     tutorHelpTitle: "مساعدة الأستاذ",
     tutorHelpSubtitle:
       "كم مرّة طلب طفلك المساعدة، وفي أيّ المواضيع. أمّا ما قاله فعلاً فيبقى بينه وبين الأستاذ.",
