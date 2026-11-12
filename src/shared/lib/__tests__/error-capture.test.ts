@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { consumeLastCapturedError } from "@/shared/lib/error-capture";
+import { captureError, consumeLastCapturedError } from "@/shared/lib/error-capture";
 
 describe("consumeLastCapturedError", () => {
   beforeEach(() => {
@@ -41,6 +41,24 @@ describe("consumeLastCapturedError", () => {
     );
 
     expect(consumeLastCapturedError()).toBe(reason);
+  });
+
+  // La voie Node : aucun événement global n'y existe pour un throw que le
+  // framework attrape, c'est donc le middleware de requête qui dépose l'erreur.
+  it("returns an error handed over explicitly, once", () => {
+    const error = new Error("seen by the request middleware");
+    captureError(error);
+
+    expect(consumeLastCapturedError()).toBe(error);
+    expect(consumeLastCapturedError()).toBeUndefined();
+  });
+
+  it("keeps the most recent error when two are captured before a consume", () => {
+    captureError(new Error("first"));
+    const second = new Error("second");
+    captureError(second);
+
+    expect(consumeLastCapturedError()).toBe(second);
   });
 
   it("returns undefined and clears state once the TTL (5s) elapses", () => {
