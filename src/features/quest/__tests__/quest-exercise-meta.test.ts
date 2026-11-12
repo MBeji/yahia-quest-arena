@@ -76,7 +76,7 @@ describe("getExerciseMeta", () => {
         title: "Mission 3 — Fractions",
         mode: "practice",
         chapters: { title: "Les fractions" },
-        subjects: { name_fr: "Mathématiques" },
+        subjects: { name_fr: "Mathématiques", content_language: "ar" },
       },
       error: null,
     });
@@ -86,6 +86,7 @@ describe("getExerciseMeta", () => {
       mode: "practice",
       chapterTitle: "Les fractions",
       subjectName: "Mathématiques",
+      contentLanguage: "ar",
     });
     expect(mockFrom).toHaveBeenCalledTimes(1);
     expect(mockFrom).toHaveBeenCalledWith("exercises");
@@ -105,6 +106,7 @@ describe("getExerciseMeta", () => {
       mode: "boss",
       chapterTitle: null,
       subjectName: null,
+      contentLanguage: null,
     });
   });
 

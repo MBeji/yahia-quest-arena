@@ -3,6 +3,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { notFound } from "@tanstack/react-router";
 import {
   META_DESCRIPTION_MAX,
+  breadcrumbJsonLd,
+  itemListJsonLd,
   isUuid,
   SITE_TITLE_SUFFIX,
   plainExcerpt,
@@ -157,5 +159,107 @@ describe("serializeJsonLd", () => {
     const out = serializeJsonLd({ name: "</script><script>alert(1)</script>" });
     expect(out).not.toContain("<");
     expect(JSON.parse(out)).toEqual({ name: "</script><script>alert(1)</script>" });
+  });
+});
+
+describe("breadcrumbJsonLd", () => {
+  // Niveau › matière › cours : positions à partir de 1, adresses absolues sur
+  // l'origine canonique — ce que Google affiche à la place de l'URL brute.
+  it("numbers the trail from the widest page to the page itself", () => {
+    expect(
+      breadcrumbJsonLd([
+        { name: "6ème année", path: "/niveau/ecole-6eme-base" },
+        { name: "Mathématiques", path: "/matiere/math-6eme" },
+        { name: "Les fractions", path: "/chapitre/abc" },
+      ]),
+    ).toEqual({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "6ème année",
+          item: "https://www.na9ranal3ab.tn/niveau/ecole-6eme-base",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Mathématiques",
+          item: "https://www.na9ranal3ab.tn/matiere/math-6eme",
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Les fractions",
+          item: "https://www.na9ranal3ab.tn/chapitre/abc",
+        },
+      ],
+    });
+  });
+});
+
+describe("itemListJsonLd", () => {
+  it("lists the pages in order, with their count", () => {
+    expect(
+      itemListJsonLd("Mathématiques — 6ème année", [
+        { name: "Les fractions", path: "/chapitre/a" },
+        { name: "Les décimaux", path: "/chapitre/b" },
+      ]),
+    ).toEqual({
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: "Mathématiques — 6ème année",
+      numberOfItems: 2,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Les fractions",
+          url: "https://www.na9ranal3ab.tn/chapitre/a",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Les décimaux",
+          url: "https://www.na9ranal3ab.tn/chapitre/b",
+        },
+      ],
+    });
+  });
+});
+
+describe("publicPageHead — langue du contenu et données structurées multiples", () => {
+  // Un cours d'arabe partagé est un contenu ARABE, quelle que soit la langue
+  // d'interface du visiteur.
+  it("declares og:locale from the content language", () => {
+    const locale = (lang: string | null | undefined) =>
+      publicPageHead({ title: "T", path: "/x", contentLanguage: lang }).meta.find(
+        (tag) => "property" in tag && tag.property === "og:locale",
+      );
+    expect(locale("ar")).toEqual({ property: "og:locale", content: "ar_AR" });
+    expect(locale("fr")).toEqual({ property: "og:locale", content: "fr_FR" });
+    expect(locale("en")).toEqual({ property: "og:locale", content: "en_US" });
+  });
+
+  it("declares no og:locale rather than a wrong one", () => {
+    for (const lang of [undefined, null, "", "tzm"]) {
+      const head = publicPageHead({ title: "T", path: "/x", contentLanguage: lang });
+      expect(head.meta.some((tag) => "property" in tag && tag.property === "og:locale")).toBe(
+        false,
+      );
+    }
+  });
+
+  it("emits one ld+json script per structured-data object, each one escaped", () => {
+    const head = publicPageHead({
+      title: "T",
+      path: "/x",
+      jsonLd: [{ "@type": "LearningResource", name: "</script>" }, { "@type": "BreadcrumbList" }],
+    });
+    expect(head.scripts).toHaveLength(2);
+    expect(head.scripts?.every((script) => script.type === "application/ld+json")).toBe(true);
+    expect(head.scripts?.[0]?.children).not.toContain("</script>");
+    expect(JSON.parse(head.scripts?.[1]?.children ?? "{}")).toEqual({ "@type": "BreadcrumbList" });
   });
 });

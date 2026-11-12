@@ -319,6 +319,38 @@ npm i @electric-sql/pglite   # dans un dossier temporaire, JAMAIS dans le projet
 exécuter les RPC de bout en bout — c'est ainsi que le clamp anti-triche, le masquage de la
 correction d'un quiz et la garde d'accès ont été vérifiés avant livraison.
 
+## Le bilan du dimanche soir — générique par défaut, chiffré sur demande
+
+Étude 08 lot 2 (2026-11-12). Chaque dimanche (19 h, Tunis) le cron des notifications envoie un
+push à tout parent ayant un lien **actif**. Deux contenus, jamais les deux :
+
+| le parent…                       | reçoit                                                                                  |
+| -------------------------------- | --------------------------------------------------------------------------------------- |
+| n'a rien demandé (**le défaut**) | le générique « le bilan famille de la semaine est prêt »                                |
+| a activé le « résumé chiffré »   | la semaine de son enfant : temps d'apprentissage, missions, série, un chapitre à revoir |
+
+- **Opt-in, désactivé par défaut** (é08 Q-1) : l'interrupteur vit dans la carte « bilan du
+  dimanche » de `/parent-report` (`ParentDigestCard`, feature `notifications`). Si les
+  notifications ne sont pas encore autorisées sur l'appareil, le même clic les demande. Le réglage
+  est une ligne de `parent_digest_prefs` (lecture owner-only, écriture par
+  `set_parent_digest_pref`) : pas de ligne = générique. Changer le défaut est un choix produit
+  réversible, pas un chantier.
+- **Les chiffres sont ceux de l'écran** : `get_parent_digest_summary(p_parent)` appelle
+  `student_activity_totals` sur les 7 derniers jours civils de Tunis. Elle prend le parent en
+  paramètre, donc elle est `REVOKE` de tout rôle client — seul le cron (service-role) l'appelle —
+  et elle part de `parent_student_links` : aucun identifiant d'élève n'y entre ni n'en sort.
+- **« Un chapitre à revoir »** = le chapitre travaillé cette semaine au score moyen le plus bas,
+  s'il est sous 60 %. Dit « à revoir ensemble », jamais comme un échec ; une semaine sans activité
+  se dit comme un fait et une invitation. Les textes vivent dans `push-copy.ts`, trois langues.
+- **L'URL du push reste `/parent-report`** : les chiffres sont dans le texte, jamais dans une adresse.
+- **Le repli est le générique** : préférences illisibles, résumé en panne, forme inattendue ou
+  vide — le parent reçoit le rappel simple, et le cron reste vert.
+- **La mesure** (é08 KPI-4) : `admin_parent_digest_overview()` rend `linkedParents`, `optedIn`,
+  `everSent` et `cutAfterFirstSend` (le premier envoi réel est daté dans
+  `first_enriched_sent_at`). Taux d'opt-in = `optedIn / linkedParents` ; taux de coupure =
+  `cutAfterFirstSend / everSent`. Le cron journalise aussi `parentDigestKinds`
+  (`optedIn` / `enriched` / `fallback`) chaque dimanche.
+
 ## Ce que le module ne fait pas
 
 - Il ne remplace pas le **Bilan famille** (`ReportContent`), qui reste la synthèse historique.

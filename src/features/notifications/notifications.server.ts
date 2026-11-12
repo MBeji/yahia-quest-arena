@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
+import { isRateLimited } from "@/shared/lib/rate-limit";
 import { failWithClientError } from "@/shared/lib/safe-error";
 
 /**
@@ -55,4 +56,53 @@ export const deletePushSubscription = createServerFn({ method: "POST" })
         "Impossible de désactiver les notifications.",
       );
     return { ok: true } as const;
+  });
+
+/**
+ * Étude 08 lot 2 (US-7, R-7) — le digest hebdo ENRICHI est-il demandé ?
+ *
+ * Pas de ligne = pas demandé : le réglage est désactivé par défaut (Q-1), et le
+ * parent reçoit le bilan générique tant qu'il n'a rien choisi. La lecture passe
+ * par RLS (owner-only) — aucun identifiant n'entre dans cette fonction.
+ */
+export const getParentDigestPref = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { data, error } = await supabase
+      .from("parent_digest_prefs")
+      .select("enriched_digest")
+      .eq("parent_user_id", userId)
+      .maybeSingle();
+    if (error)
+      failWithClientError(
+        "notifications.getParentDigestPref",
+        error,
+        "Impossible de charger votre réglage du bilan hebdomadaire.",
+      );
+    return { enriched: data?.enriched_digest === true };
+  });
+
+/**
+ * Demande — ou coupe — le digest enrichi. L'écriture vit dans la RPC
+ * `set_parent_digest_pref`, self-scopée : on ne règle que SA préférence.
+ */
+export const setParentDigestPref = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((d) => z.object({ enabled: z.boolean() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    if (await isRateLimited(supabase, `digest_pref_${userId}`, 30, 60_000)) {
+      throw new Error("Too many preference updates. Please slow down.");
+    }
+
+    const { error } = await supabase.rpc("set_parent_digest_pref", { p_enabled: data.enabled });
+    if (error)
+      failWithClientError(
+        "notifications.setParentDigestPref",
+        error,
+        "Impossible d'enregistrer votre réglage du bilan hebdomadaire.",
+      );
+    return { enriched: data.enabled };
   });

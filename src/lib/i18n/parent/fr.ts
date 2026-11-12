@@ -97,6 +97,21 @@ export const frParent: ParentTranslations = {
     pushTitle: "Recevez le bilan chaque dimanche",
     pushDesc:
       "Activez les notifications pour être prévenu·e quand le bilan hebdomadaire de votre enfant est prêt.",
+    digestTitle: "Le résumé chiffré de la semaine",
+    digestDesc:
+      "Chaque dimanche soir, la notification donne le temps d'apprentissage, les missions, la série et un chapitre à revoir ensemble — au lieu du simple rappel.",
+    digestLockNote:
+      "Le message cite le prénom de votre enfant et peut s'afficher sur l'écran verrouillé de votre téléphone.",
+    digestOn: "C'est noté : le résumé arrivera dimanche soir.",
+    digestOff: "Résumé coupé. Vous recevrez le rappel simple.",
+    digestError: "Réglage non enregistré. Réessayez.",
+    digestNeedsPush: "Autorisez d'abord les notifications : le résumé passe par elles.",
+    digestOtherDevice:
+      "Résumé demandé, mais les notifications ne sont pas activées sur cet appareil.",
+    digestNoChild: "Associez d'abord un enfant ci-dessus : le résumé part dès qu'un lien existe.",
+    digestUnsupported:
+      "Ce navigateur ne reçoit pas de notifications. Sur iPhone, ajoutez l'application à l'écran d'accueil ; sinon ouvrez-la dans Chrome, puis revenez ici.",
+    digestBlocked: "Notifications bloquées. Autorisez-les dans les réglages de votre navigateur.",
     goalTitle: "Objectif famille",
     goalPeriodDay: "Par jour",
     goalPeriodWeek: "Par semaine",
