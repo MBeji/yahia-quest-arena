@@ -712,7 +712,11 @@ export function ExercisePlayer({
   const currentHintRevealed = current ? current.id in hints.revealed : false;
 
   return (
-    <PageShell width="narrow" dir={isRtlSubject ? "rtl" : undefined}>
+    // Sur téléphone, l'écran de jeu se resserre : sous l'en-tête public (168 px), le bouton
+    // Valider tombait SOUS la ligne de flottaison d'un écran de 780 px — un défilement par
+    // question (relevé « première visite » du 2026-11-12, C-6). Les marges d'origine reviennent
+    // dès `sm`.
+    <PageShell width="narrow" className="py-4 sm:py-8" dir={isRtlSubject ? "rtl" : undefined}>
       <QuestProgressHeader
         subjectId={exSubjectId}
         homeTo={strategy.homeTo}
@@ -727,7 +731,9 @@ export function ExercisePlayer({
         idx={idx}
         total={total}
         progress={progress}
-        saveStatus={autosave.status}
+        // Sans compte rien n'est enregistré : la pastille ne doit pas dire « Travail
+        // enregistré » à un visiteur (elle le disait après sa première correction).
+        saveStatus={capabilities.rewards ? autosave.status : "idle"}
       />
 
       {unrestricted && (
@@ -756,14 +762,14 @@ export function ExercisePlayer({
           // clicking its stale submit — and then stalls on the real one.
           data-question-id={current.id}
           {...questionSlide(reduced)}
-          className={`rounded-3xl border p-6 backdrop-blur-xl sm:p-8 ${bossMode ? "border-destructive/30 bg-destructive/5" : "border-border/50 bg-surface-3"}`}
+          className={`rounded-3xl border p-4 backdrop-blur-xl sm:p-8 ${bossMode ? "border-destructive/30 bg-destructive/5" : "border-border/50 bg-surface-3"}`}
         >
           <RichField
             raw={current.prompt}
             as="h2"
             className="font-display text-xl font-semibold sm:text-2xl"
           />
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="mt-1.5 text-xs text-muted-foreground sm:mt-2 sm:text-sm">
             {bossMode ? t.quest.bossStrike : isQuiz ? QL.quizRecorded : t.quest.feedbackMsg}
           </p>
           <QuestionInput
@@ -818,7 +824,7 @@ export function ExercisePlayer({
             />
           )}
 
-          <div className="mt-6 flex justify-end">
+          <div className="mt-4 flex justify-end sm:mt-6">
             <QuestSubmitButton
               feedbackShown={Boolean(feedback)}
               disabled={
