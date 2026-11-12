@@ -1,11 +1,29 @@
-// Captures the original Error out-of-band so server.ts can recover the stack
-// when h3 has already swallowed the throw into a generic 500 Response.
+// Garde l'erreur d'origine hors bande, pour que server.ts retrouve sa pile quand
+// le framework a déjà transformé le throw en réponse 500 générique.
+//
+// Deux sources, parce qu'aucune ne couvre les deux runtimes :
+//   • `captureError()`, appelée par le middleware de requête (src/start.ts) au
+//     moment où il laisse remonter une erreur. C'est la SEULE voie qui marche sous
+//     Node (Vercel) : TanStack Start attrape le throw lui-même, donc ni
+//     `uncaughtException` ni `unhandledRejection` ne se déclenchent — mesuré le
+//     2026-11-12 sur Node 24.22 (zéro événement `process` pour un throw avalé), et
+//     `globalThis.addEventListener` n'y existe pas ;
+//   • l'écouteur global ci-dessous, pour le navigateur et un runtime Worker.
+//
+// S'abonner à `process.on("uncaughtException")` n'apporterait donc rien ici, et
+// coûterait cher : la seule présence de cet écouteur empêche Node de terminer le
+// processus sur une exception non rattrapée.
 
 let lastCapturedError: { error: unknown; at: number } | undefined;
 const TTL_MS = 5_000;
 
 function record(error: unknown) {
   lastCapturedError = { error, at: Date.now() };
+}
+
+/** À appeler là où une erreur est vue AVANT que le framework ne l'avale. */
+export function captureError(error: unknown): void {
+  record(error);
 }
 
 if (typeof globalThis.addEventListener === "function") {
