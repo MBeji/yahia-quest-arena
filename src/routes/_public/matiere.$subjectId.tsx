@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { CloudOff } from "lucide-react";
@@ -10,6 +10,7 @@ import { getSubject } from "@/features/quest";
 import { useAuth } from "@/features/auth";
 import { SubjectHub } from "@/features/quest/components/subject-hub";
 import { publicPageHead, seedOnServer } from "@/shared/lib/public-page-seo";
+import { CatalogueNotFound } from "./-catalogue-not-found";
 
 /**
  * Public subject page — « Référence » register (chantier C8). Thin: fetches the
@@ -25,6 +26,9 @@ export const Route = createFileRoute("/_public/matiere/$subjectId")({
   loader: ({ params }) => (import.meta.env.SSR ? seedMatiere(params.subjectId) : null),
   head: ({ loaderData }) => loaderData?.head ?? { meta: [{ title: "Matière · Na9ra Nal3ab" }] },
   component: MatierePage,
+  // Une matière qui n'existe pas : HTTP 404 dans la coquille publique (voir
+  // `seedMatiere`), pas un écran d'erreur servi en 200.
+  notFoundComponent: () => <CatalogueNotFound />,
 });
 
 /** SSR seulement : le sommaire anonyme de la matière et son <head>. */
@@ -33,7 +37,18 @@ async function seedMatiere(subjectId: string) {
     const server = await import("@/features/quest/quest.server");
     return server.getSubject({ data: { subjectId } });
   });
-  if (!data?.subject) return null;
+  if (!data?.subject) {
+    // `getSubject` lève la même erreur pour une matière absente et pour une lecture
+    // en échec. On tranche par une lecture d'une ligne, sur ce chemin d'échec
+    // seulement : `false` = elle n'existe pas → 404 ; `null` = la panne est
+    // confirmée (ou cette lecture-ci a échoué aussi) → 200, le client recharge.
+    const exists = await seedOnServer("matiere-existe", async () => {
+      const server = await import("@/features/quest/quest.lesson.server");
+      return server.checkSubjectExists({ data: { subjectId } });
+    });
+    if (exists === false) throw notFound();
+    return null;
+  }
   const { subject, parcours, chapters } = data;
   const chapterTitles = chapters.map((c) => c.title).join(" · ");
   const head = publicPageHead({
