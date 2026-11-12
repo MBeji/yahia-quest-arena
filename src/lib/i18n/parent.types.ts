@@ -117,6 +117,17 @@ export type ParentTranslations = {
     printGenerated: string;
     pushTitle: string;
     pushDesc: string;
+    digestTitle: string;
+    digestDesc: string;
+    digestLockNote: string;
+    digestOn: string;
+    digestOff: string;
+    digestError: string;
+    digestNeedsPush: string;
+    digestOtherDevice: string;
+    digestNoChild: string;
+    digestUnsupported: string;
+    digestBlocked: string;
     goalTitle: string;
     goalHint: string;
     goalPeriodDay: string;

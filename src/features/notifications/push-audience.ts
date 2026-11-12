@@ -19,7 +19,9 @@ export {
   PARENT_DIGEST_TAG,
   payloadFor,
   parentDigestPayload,
+  enrichedParentDigestPayload,
   safeLocale,
+  type DigestChild,
   type PushTag,
   type PushPayload,
 } from "./push-copy";
