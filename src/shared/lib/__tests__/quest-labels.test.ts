@@ -30,7 +30,7 @@ describe("buildQuestLabels", () => {
 
   it("keeps the lock/unlock journey wording (quiz gate contract)", () => {
     const fr = buildQuestLabels("fr");
-    expect(fr.lockedTitle).toContain("verrouillé");
+    expect(fr.lockedTitle).toContain("quiz du chapitre");
     expect(fr.lockedBody).toContain("quiz");
     expect(fr.quizFailedBanner).toContain("80%");
     expect(fr.quizPassedBanner).toContain("débloqués");

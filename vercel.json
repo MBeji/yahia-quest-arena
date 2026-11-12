@@ -2,5 +2,21 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "buildCommand": "node scripts/build-vercel.mjs",
-  "crons": [{ "path": "/api/cron/notify", "schedule": "0 18 * * *" }]
+  "git": {
+    "deploymentEnabled": {
+      "claude/**": false,
+      "codex/**": false,
+      "copilot/**": false,
+      "dependabot/**": false,
+      "wip/**": false,
+      "draft/**": false,
+      "rescue/**": false
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/notify",
+      "schedule": "0 18 * * *"
+    }
+  ]
 }

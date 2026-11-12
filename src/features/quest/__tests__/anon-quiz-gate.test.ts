@@ -5,11 +5,29 @@ import {
   isQuizGateLocked,
 } from "@/features/quest/anon-quiz-gate";
 
-// The anonymous gate stores "passed chapter quizzes" in sessionStorage. jsdom
-// provides a real sessionStorage, so these exercise the actual persistence.
+// The anonymous gate stores "passed chapter quizzes" on the DEVICE (localStorage, 30 days —
+// étude 38 lot 5; it was sessionStorage before, so the gate closed with the tab). jsdom
+// provides a real localStorage, so these exercise the actual persistence.
+const KEY = "na9ra.anon.quizPassed.v1";
 describe("anon-quiz-gate", () => {
   beforeEach(() => {
+    window.localStorage.clear();
     window.sessionStorage.clear();
+  });
+
+  it("⭐ é38 lot 5 : une porte réussie reste ouverte dans un NOUVEL onglet", () => {
+    markChapterQuizPassed("ch1");
+    // Un nouvel onglet partage `localStorage` avec le premier, jamais `sessionStorage` :
+    // la réussite ne doit donc rien devoir à ce dernier.
+    expect(window.sessionStorage.length).toBe(0);
+    expect(window.localStorage.getItem(KEY)).not.toBeNull();
+    expect(hasPassedChapterQuiz("ch1")).toBe(true);
+  });
+
+  it("localStorage jeté ⇒ la porte se referme, comme avant le lot", () => {
+    markChapterQuizPassed("ch1");
+    window.localStorage.clear();
+    expect(hasPassedChapterQuiz("ch1")).toBe(false);
   });
 
   describe("hasPassedChapterQuiz / markChapterQuizPassed", () => {
@@ -39,11 +57,11 @@ describe("anon-quiz-gate", () => {
       markChapterQuizPassed(null);
       markChapterQuizPassed("");
       // Nothing was stored.
-      expect(window.sessionStorage.getItem("na9ra.anonQuizPassed")).toBeNull();
+      expect(window.localStorage.getItem(KEY)).toBeNull();
     });
 
-    it("recovers (no throw) when sessionStorage holds malformed JSON", () => {
-      window.sessionStorage.setItem("na9ra.anonQuizPassed", "{not json");
+    it("recovers (no throw) when localStorage holds malformed JSON", () => {
+      window.localStorage.setItem(KEY, "{not json");
       expect(hasPassedChapterQuiz("ch1")).toBe(false);
       // A subsequent mark overwrites the bad value cleanly.
       markChapterQuizPassed("ch1");

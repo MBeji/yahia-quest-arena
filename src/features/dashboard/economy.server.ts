@@ -29,19 +29,6 @@ import { logger } from "@/shared/lib/logger";
 
 const LOAD_ERROR_FR = "Impossible de charger les indicateurs économiques.";
 
-/**
- * `admin_economy_overview` est postérieure aux types Supabase générés, qui ne
- * peuvent pas être régénérés sans accès DB : on fige son contrat ici, même patron
- * que les RPC de `progression.server.ts` et `dashboard.server.ts`. À supprimer à la
- * prochaine régénération des types.
- */
-type EconomyOverviewRpcClient = {
-  rpc: (fn: "admin_economy_overview") => PromiseLike<{
-    data: unknown;
-    error: { message: string } | null;
-  }>;
-};
-
 /** Seuil de déclenchement du lot 3 (é09 §3, observabilité). */
 const SLOW_RPC_MS = 2000;
 
@@ -116,8 +103,7 @@ export const getEconomyOverview = createServerFn({ method: "GET" })
     const { supabase } = context;
     const startedAt = Date.now();
 
-    const client = supabase as unknown as EconomyOverviewRpcClient;
-    const { data, error } = await client.rpc("admin_economy_overview");
+    const { data, error } = await supabase.rpc("admin_economy_overview");
     if (error) failWithClientError("economy.overview", error, LOAD_ERROR_FR);
 
     const elapsedMs = Date.now() - startedAt;

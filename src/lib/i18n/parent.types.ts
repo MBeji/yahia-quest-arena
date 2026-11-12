@@ -102,6 +102,12 @@ export type ParentTranslations = {
      * un parent qui croit lire les échanges de son enfant les cherchera, et un
      * enfant qui croit être rapporté mot à mot se taira.
      */
+    examsTitle: string;
+    examsPoints: string;
+    examsPercentile: string;
+    examsPending: string;
+    examsNone: string;
+    examsHint: string;
     tutorHelpTitle: string;
     tutorHelpSubtitle: string;
     /** `{n}` = le nombre de demandes sur 7 jours. */
@@ -121,6 +127,17 @@ export type ParentTranslations = {
     printGenerated: string;
     pushTitle: string;
     pushDesc: string;
+    digestTitle: string;
+    digestDesc: string;
+    digestLockNote: string;
+    digestOn: string;
+    digestOff: string;
+    digestError: string;
+    digestNeedsPush: string;
+    digestOtherDevice: string;
+    digestNoChild: string;
+    digestUnsupported: string;
+    digestBlocked: string;
     goalTitle: string;
     goalHint: string;
     goalPeriodDay: string;

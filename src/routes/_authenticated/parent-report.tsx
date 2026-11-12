@@ -18,6 +18,7 @@ import {
   DailyDashboard,
   getLinkedStudents,
   getStudentDailyGoal,
+  getStudentExamSummary,
   getStudentReport,
   getStudentWeeklyGoal,
   getTutorParentCounters,
@@ -27,7 +28,7 @@ import {
   setStudentDailyGoal,
   setStudentWeeklyGoal,
 } from "@/features/parent-report";
-import { EnablePushCard } from "@/features/notifications";
+import { ParentDigestCard } from "@/features/notifications";
 import { pageTitle } from "@/lib/i18n/head";
 // Import DIRECT et non `@/features/tutor` : le barrel de la feature tuteur
 // réexporte toutes ses server fns (chat, forge ciblée, énergie), qui
@@ -58,6 +59,7 @@ function ParentReport() {
   const getStudentsFn = useServerFn(getLinkedStudents);
   const getReportFn = useServerFn(getStudentReport);
   const getTutorCountersFn = useServerFn(getTutorParentCounters);
+  const getExamSummaryFn = useServerFn(getStudentExamSummary);
   const linkByCodeFn = useServerFn(linkStudentByCode);
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
   const [studentCode, setStudentCode] = useState("");
@@ -85,6 +87,14 @@ function ParentReport() {
   const { data: tutorCounters } = useQuery({
     queryKey: ["parent-tutor-counters", selectedStudent],
     queryFn: () => getTutorCountersFn({ data: { studentId: selectedStudent! } }),
+    enabled: !!selectedStudent,
+  });
+
+  // Étude 08 lot 1 (US-5) — les examens blancs, lus à part pour la même raison
+  // que les compteurs du tuteur : le bilan sert aussi le chemin public au code.
+  const { data: examSummary } = useQuery({
+    queryKey: ["parent-exam-summary", selectedStudent],
+    queryFn: () => getExamSummaryFn({ data: { studentId: selectedStudent! } }),
     enabled: !!selectedStudent,
   });
 
@@ -232,11 +242,12 @@ function ParentReport() {
         </div>
       )}
 
-      {/* Opt-in au digest hebdo (dimanche soir) — la carte s'auto-masque si le
-          push est impossible ici (navigateur non supporté / VAPID absent). */}
+      {/* Le bilan du dimanche soir : le canal (push) puis, sur demande, le résumé
+          chiffré de la semaine (é08 lot 2). La carte dit ses états vides et ne
+          se tait que si le push n'est pas configuré dans ce build. */}
       {!isAdmin && (
         <div className="mb-6 print:hidden">
-          <EnablePushCard title={t.parentReport.pushTitle} desc={t.parentReport.pushDesc} />
+          <ParentDigestCard hasLinkedStudent={students.length > 0} />
         </div>
       )}
 
@@ -375,6 +386,7 @@ function ParentReport() {
         <ReportContent
           report={report}
           tutorCounters={tutorCounters}
+          examSummary={examSummary}
           /* Étude 11 lot 6 (US-14) — le bilan hebdomadaire d'El Ostedh, composé
              ICI parce que `parent-report` n'importe pas `tutor`. Il porte sa
              propre lecture (`get_tutor_parent_digest`), qui rejuge le lien

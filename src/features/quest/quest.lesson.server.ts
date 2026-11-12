@@ -6,6 +6,7 @@
 
 import { notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { optionalSupabaseAuth } from "@/shared/integrations/supabase/optional-auth-middleware";
@@ -13,6 +14,7 @@ import { MIN_SECONDS_PER_QUESTION, QUIZ_PASS_THRESHOLD_PCT } from "@/shared/cons
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
 import type { CompiledVideo } from "@/shared/content/schema";
+import type { Database } from "@/shared/integrations/supabase/types";
 import { isUnrestrictedViewer } from "./quest.access";
 
 // ---------- Get chapter lesson content ----------
@@ -32,8 +34,55 @@ type ChapterLessonRow = {
    */
   domain: string | null;
   videos: CompiledVideo[] | null;
-  subjects: { grade_id?: string | null; name_fr: string; content_language?: string } | null;
+  subjects: {
+    grade_id?: string | null;
+    theme_id?: string | null;
+    name_fr: string;
+    content_language?: string;
+  } | null;
 };
+
+/** Le niveau (parcours) auquel une matière appartient — de quoi le nommer et y renvoyer. */
+export type SubjectParcours = {
+  id: string;
+  name_fr: string;
+  name_en: string | null;
+  name_ar: string | null;
+};
+
+/**
+ * Le niveau d'une matière, lu DIRECTEMENT dans `parcours` (lisible par tous) par
+ * sa paire `(theme_id, grade_id)` — unique par construction, `grade_id` nul pour
+ * un parcours libre.
+ *
+ * Pourquoi pas la RPC `resolve_subject_parcours`, qui fait la même chose : elle
+ * est refusée à l'anonyme (`REVOKE … FROM anon`). Or le rendu serveur d'une page
+ * publique est TOUJOURS anonyme : ni la page de cours ni celle de matière ne
+ * savaient donc dire à un moteur de recherche à quel niveau elles appartiennent
+ * (constat du 2026-11-12 : 88 pages de matière sur 129 partageaient leur titre —
+ * « English » × 21, « الرياضيات » × 9). Lecture d'appoint : une panne rend `null`,
+ * la page s'affiche sans son niveau.
+ */
+async function readSubjectParcours(
+  supabase: SupabaseClient<Database>,
+  themeId: string | null | undefined,
+  gradeId: string | null | undefined,
+): Promise<SubjectParcours | null> {
+  if (!themeId) return null;
+  const base = supabase
+    .from("parcours")
+    .select("id,name_fr,name_en,name_ar")
+    .eq("theme_id", themeId);
+  const { data, error } = await (gradeId ? base.eq("grade_id", gradeId) : base.is("grade_id", null))
+    .order("id")
+    .limit(1)
+    .maybeSingle();
+  if (error) {
+    logger.warn("quest.readSubjectParcours: lookup failed", { error: error.message });
+    return null;
+  }
+  return data;
+}
 
 export const getChapterLesson = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
@@ -43,7 +92,7 @@ export const getChapterLesson = createServerFn({ method: "GET" })
     const { data: chapterRow, error } = await supabase
       .from("chapters")
       .select(
-        "id, title, description, lesson_content, summary, subject_id, display_order, domain, videos, subjects(id, name_fr, color_token, icon, content_language, grade_id)",
+        "id, title, description, lesson_content, summary, subject_id, display_order, domain, videos, subjects(id, name_fr, color_token, icon, content_language, grade_id, theme_id)",
       )
       .eq("id", data.chapterId)
       .maybeSingle();
@@ -77,21 +126,24 @@ export const getChapterLesson = createServerFn({ method: "GET" })
     // just to derive a boolean (a subject with N chapters × ~30 KB each). Split
     // into two tiny reads: the metadata for all siblings, and the id-only set of
     // those that actually carry a lesson.
-    const [{ data: siblings }, { data: siblingsWithLesson }, unrestricted] = await Promise.all([
-      supabase
-        .from("chapters")
-        .select("id, title, display_order")
-        .eq("subject_id", chapter.subject_id)
-        .order("display_order"),
-      supabase
-        .from("chapters")
-        .select("id")
-        .eq("subject_id", chapter.subject_id)
-        .not("lesson_content", "is", null)
-        // Preserve the old `!!lesson_content` semantics: an empty string is "no lesson".
-        .neq("lesson_content", ""),
-      isUnrestrictedViewer(supabase, userId),
-    ]);
+    const [{ data: siblings }, { data: siblingsWithLesson }, unrestricted, parcours] =
+      await Promise.all([
+        supabase
+          .from("chapters")
+          .select("id, title, display_order")
+          .eq("subject_id", chapter.subject_id)
+          .order("display_order"),
+        supabase
+          .from("chapters")
+          .select("id")
+          .eq("subject_id", chapter.subject_id)
+          .not("lesson_content", "is", null)
+          // Preserve the old `!!lesson_content` semantics: an empty string is "no lesson".
+          .neq("lesson_content", ""),
+        isUnrestrictedViewer(supabase, userId),
+        // Le niveau du chapitre : fil d'Ariane (niveau › matière › cours) et titre.
+        readSubjectParcours(supabase, chapter.subjects?.theme_id, chapter.subjects?.grade_id),
+      ]);
 
     const withLesson = new Set((siblingsWithLesson ?? []).map((s) => s.id));
     const allChapters = (siblings ?? []).map((s) => ({
@@ -116,7 +168,7 @@ export const getChapterLesson = createServerFn({ method: "GET" })
     // chapter's quiz id, whether the gate applies (school subjects only — same
     // rule as getSubject), and — signed-in only — whether THIS user already
     // passed it (score ≥ threshold AND not rushed, mirroring getSubject).
-    // Anonymous visitors resolve their pass client-side (sessionStorage, see
+    // Anonymous visitors resolve their pass client-side (device memory, see
     // anon-quiz-gate.ts), so quizPassed stays null for them.
     const quizExerciseId = (chapterExercises ?? []).find((e) => e.mode === "quiz")?.id ?? null;
     const isSchoolSubject =
@@ -139,12 +191,37 @@ export const getChapterLesson = createServerFn({ method: "GET" })
 
     return {
       chapter: { ...chapter, videos },
+      parcours,
       allChapters,
       practiceExerciseId,
       quizExerciseId,
       quizGated,
       quizPassed,
     };
+  });
+
+// ---------- The level a subject belongs to (public, anonymous-capable) ----------
+
+/**
+ * Le niveau d'une matière, pour la page publique `/matiere/$id` : `getSubject` le
+ * résout par une RPC refusée à l'anonyme (voir `readSubjectParcours`), donc ne le
+ * rend jamais au rendu serveur ni à un visiteur sans compte. `null` si la matière
+ * n'existe pas ou n'a pas de niveau.
+ */
+export const getSubjectParcours = createServerFn({ method: "GET" })
+  .middleware([optionalSupabaseAuth])
+  .validator((d) => z.object({ subjectId: z.string().min(1) }).parse(d))
+  .handler(async ({ data, context }): Promise<SubjectParcours | null> => {
+    const { data: subject, error } = await context.supabase
+      .from("subjects")
+      .select("theme_id, grade_id")
+      .eq("id", data.subjectId)
+      .maybeSingle();
+    if (error) {
+      failWithClientError("quest.getSubjectParcours", error, "Impossible de charger la matière.");
+    }
+    if (!subject) return null;
+    return readSubjectParcours(context.supabase, subject.theme_id, subject.grade_id);
   });
 
 // ---------- Does this subject exist? (the public page's 404) ----------

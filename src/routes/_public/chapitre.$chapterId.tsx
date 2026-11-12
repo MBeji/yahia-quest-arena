@@ -1,4 +1,4 @@
-import { createFileRoute, isNotFound, notFound } from "@tanstack/react-router";
+import { createFileRoute, isNotFound, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useCallback, useEffect, useState } from "react";
@@ -6,7 +6,7 @@ import { CloudOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
-import { useT } from "@/lib/i18n";
+import { useI18n, useT } from "@/lib/i18n";
 import { getChapterLesson } from "@/features/quest";
 import { hasPassedChapterQuiz } from "@/features/quest/anon-quiz-gate";
 import { useAuth } from "@/features/auth";
@@ -20,7 +20,14 @@ import { TutorChatPanel } from "@/features/tutor/components/tutor-chat-panel";
 import { PageShell } from "@/components/ui/page-shell";
 import { LessonReader } from "@/features/quest/components/lesson-reader";
 import { SITE_URL } from "@/shared/constants/site";
-import { isUuid, publicPageHead, seedOnServer } from "@/shared/lib/public-page-seo";
+import { dropLastChapter, rememberLastChapter } from "@/shared/lib/anon-continuity";
+import { parcoursName } from "@/shared/lib/parcours-locale";
+import {
+  breadcrumbJsonLd,
+  isUuid,
+  publicPageHead,
+  seedOnServer,
+} from "@/shared/lib/public-page-seo";
 import { CatalogueNotFound } from "./-catalogue-not-found";
 
 /**
@@ -63,25 +70,40 @@ async function seedChapitre(chapterId: string) {
     return server.getChapterLesson({ data: { chapterId } });
   });
   if (!data) return null;
-  const { chapter } = data;
+  const { chapter, parcours } = data;
   const subject = chapter.subjects as { name_fr?: string; content_language?: string } | null;
   const path = `/chapitre/${chapterId}`;
+  // Le titre nomme le NIVEAU : « Les fractions — Mathématiques · 6ème année ». Sans
+  // lui, le même chapitre enseigné à deux niveaux donnait deux pages au même titre.
+  const where = [subject?.name_fr, parcours?.name_fr].filter(Boolean).join(" · ");
   const head = publicPageHead({
-    title: subject?.name_fr ? `${chapter.title} — ${subject.name_fr}` : chapter.title,
+    title: where ? `${chapter.title} — ${where}` : chapter.title,
     description: chapter.description || chapter.summary || chapter.lesson_content || "",
     type: "article",
     path,
-    jsonLd: {
-      "@context": "https://schema.org",
-      "@type": "LearningResource",
-      name: chapter.title,
-      learningResourceType: "lesson",
-      isAccessibleForFree: true,
-      ...(subject?.content_language ? { inLanguage: subject.content_language } : {}),
-      ...(subject?.name_fr ? { about: subject.name_fr } : {}),
-      url: `${SITE_URL}${path}`,
-      publisher: { "@type": "Organization", name: "Na9ra Nal3ab" },
-    },
+    contentLanguage: subject?.content_language,
+    jsonLd: [
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        name: chapter.title,
+        learningResourceType: "lesson",
+        isAccessibleForFree: true,
+        ...(subject?.content_language ? { inLanguage: subject.content_language } : {}),
+        ...(subject?.name_fr ? { about: subject.name_fr } : {}),
+        ...(parcours ? { educationalLevel: parcours.name_fr } : {}),
+        url: `${SITE_URL}${path}`,
+        publisher: { "@type": "Organization", name: "Na9ra Nal3ab" },
+      },
+      // Fil d'Ariane : niveau › matière › cours.
+      breadcrumbJsonLd([
+        ...(parcours ? [{ name: parcours.name_fr, path: `/niveau/${parcours.id}` }] : []),
+        ...(subject?.name_fr
+          ? [{ name: subject.name_fr, path: `/matiere/${chapter.subject_id}` }]
+          : []),
+        { name: chapter.title, path },
+      ]),
+    ],
   });
   return { data, head };
 }
@@ -109,6 +131,7 @@ function ChapitrePage() {
   }, [navigate]);
   const fetchLesson = useServerFn(getChapterLesson);
   const t = useT();
+  const { locale } = useI18n();
   const seed = Route.useLoaderData();
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["lesson", chapterId],
@@ -119,16 +142,29 @@ function ChapitrePage() {
     retry: (failures, err) => !isNotFound(err) && failures < 3,
   });
 
-  // Anonymous pass state lives in sessionStorage (anon-quiz-gate) — read it
+  // Anonymous pass state lives on the device (anon-quiz-gate, 30 days) — read it
   // after mount only, so SSR and the first client render agree.
   const [anonQuizPassed, setAnonQuizPassed] = useState(false);
   useEffect(() => {
     if (!user && data?.quizGated) setAnonQuizPassed(hasPassedChapterQuiz(chapterId));
   }, [user, data?.quizGated, chapterId]);
 
+  // é38 lot 5 : l'APPAREIL d'un visiteur sans compte retient le chapitre qu'il lit (30 jours),
+  // pour la carte « Reprendre » de l'accueil. Jamais pour un connecté, ni avant de savoir qui lit.
+  // Et un chapitre disparu du catalogue est oublié : la carte ne ramène pas à une page introuvable.
+  const lessonTitle = data?.chapter.id === chapterId ? data.chapter.title : null;
+  const lessonLang = data?.chapter.subjects?.content_language ?? null;
+  const gone = isError && isNotFound(error);
+  useEffect(() => {
+    if (gone) dropLastChapter(chapterId);
+    else if (!authLoading && !user && lessonTitle) {
+      rememberLastChapter({ id: chapterId, title: lessonTitle, lang: lessonLang });
+    }
+  }, [gone, authLoading, user, chapterId, lessonTitle, lessonLang]);
+
   // Navigation client vers un chapitre disparu : la fonction serveur a répondu
   // « introuvable » — proposer « réessayer » ne mènerait nulle part.
-  if (isError && isNotFound(error)) return <CatalogueNotFound />;
+  if (gone) return <CatalogueNotFound />;
 
   if (isError) {
     return (
@@ -151,7 +187,7 @@ function ChapitrePage() {
   }
 
   // While the chapter's comprehension quiz is still to pass for THIS visitor
-  // (signed-in: server truth; anonymous: session state), the reader's single
+  // (signed-in: server truth; anonymous: device memory), the reader's single
   // CTA targets the quiz — never a locked exercise (étude 15, audit §D-4).
   const quizPassed = user ? data.quizPassed === true : anonQuizPassed;
   const quizCta =
@@ -161,6 +197,20 @@ function ChapitrePage() {
 
   return (
     <>
+      {/* Le chemin de retour vers le NIVEAU, dans le HTML du serveur : le lecteur
+          renvoie à la matière, rien ne remontait d'un cran de plus — ni pour l'élève
+          arrivé par un lien partagé, ni pour un robot qui suit les liens. */}
+      {data.parcours && (
+        <PageShell width="reading" className="pb-0 pt-4">
+          <Link
+            to="/niveau/$parcoursId"
+            params={{ parcoursId: data.parcours.id }}
+            className="text-sm font-medium text-muted-foreground transition hover:text-primary"
+          >
+            {parcoursName(data.parcours, locale)}
+          </Link>
+        </PageShell>
+      )}
       <LessonReader
         chapterId={chapterId}
         chapter={data.chapter}

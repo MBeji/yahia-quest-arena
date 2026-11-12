@@ -16,6 +16,7 @@ export type TranslationKeys = {
     loading: string;
     retry: string;
     home: string;
+    close: string;
     continue: string;
     completed: string;
     leaderboard: string;
@@ -1074,7 +1075,6 @@ export type TranslationKeys = {
   // course reader, subject hub, anonymous practice + shared public chrome.
   public: {
     header: {
-      homeAria: string;
       navAria: string;
       programme: string;
       extras: string;
@@ -1085,14 +1085,7 @@ export type TranslationKeys = {
       signup: string;
       account: string;
     };
-    footer: {
-      tagline: string;
-      rights: string;
-      legalLink: string;
-      /** Libellés des liens vers /confidentialite et /conditions (les pages, elles, restent en français). */
-      privacy: string;
-      terms: string;
-    };
+    footer: { tagline: string; rights: string; legalLink: string };
     /** Titres d'onglet des pages publiques (`pageTitle`, `src/lib/i18n/head.ts`) — le français est celui que lisent les robots. */
     titles: { programme: string; extras: string; suivi: string; auth: string };
     landing: {
@@ -1290,6 +1283,12 @@ export type TranslationKeys = {
       lawTitle: string;
       lawBody: string;
       updated: string;
+    };
+    /** Étude 38 lot 5 — la carte « Reprendre » du visiteur sans compte (accueil, programme). */
+    resume: {
+      kicker: string;
+      forget: string;
+      forgetLabel: string;
     };
   };
   // Motivational quotes

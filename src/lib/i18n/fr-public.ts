@@ -2,7 +2,6 @@ import type { TranslationKeys } from "./types";
 
 export const frPublic: TranslationKeys["public"] = {
   header: {
-    homeAria: "Na9ra Nal3ab — accueil",
     navAria: "Catalogue",
     programme: "Programme",
     extras: "Extras",
@@ -16,8 +15,6 @@ export const frPublic: TranslationKeys["public"] = {
     tagline: "100 % gratuit · toute l’école tunisienne",
     rights: "Tous droits réservés",
     legalLink: "Mentions légales",
-    privacy: "Confidentialité",
-    terms: "Conditions",
   },
   titles: {
     programme: "Programme scolaire tunisien",
@@ -231,5 +228,10 @@ export const frPublic: TranslationKeys["public"] = {
     lawTitle: "Droit applicable",
     lawBody: "Les présentes mentions sont régies par le droit tunisien.",
     updated: "Dernière mise à jour : juin 2026.",
+  },
+  resume: {
+    kicker: "Reprendre",
+    forget: "Oublier",
+    forgetLabel: "Ne plus retenir ma lecture sur cet appareil",
   },
 };

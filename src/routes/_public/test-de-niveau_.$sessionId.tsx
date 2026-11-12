@@ -139,6 +139,7 @@ function PlacementSessionPage() {
       <PageShell width="narrow" className="py-16">
         <EmptyState
           icon={CloudOff}
+          tone="error"
           title={t.placement.summary.loadFailed}
           action={
             <Button variant="outline" onClick={() => sessionQuery.refetch()}>

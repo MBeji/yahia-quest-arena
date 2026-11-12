@@ -16,6 +16,12 @@ type SitemapClient = ReturnType<typeof createPublicSupabaseClient>;
 const STATIC_PATHS = [
   "/",
   "/programme",
+  // Les trois années du lycée qui se déclinent en sections : c'est par ces pages
+  // seules que le catalogue mène aux niveaux du secondaire. Liste fermée, la même
+  // que `YEARS` dans la route (`programme_.lycee.$annee.tsx`).
+  "/programme/lycee/2eme",
+  "/programme/lycee/3eme",
+  "/programme/lycee/bac",
   "/extras",
   // Pages légales : URL stables et indexables — la déclaration « child-directed »
   // auprès de Google exige une politique de confidentialité atteignable (é23 Q-3).
@@ -59,11 +65,22 @@ async function fetchAllRows<Row>(query: PageQuery): Promise<Page<Row>> {
   }
 }
 
+/** La paire qui rattache une matière à son niveau — `grade_id` nul pour un parcours libre. */
+type LevelKey = { theme_id: string | null; grade_id: string | null };
+
+function levelKey(row: LevelKey): string {
+  return `${row.theme_id ?? ""}::${row.grade_id ?? ""}`;
+}
+
 /**
  * Collect every public, indexable path from the anon-visible catalogue. RLS
  * already restricts the anon client to public content; on top of that we drop
  * pages that have no real indexable content:
  *  - levels (`parcours`) that are not yet `available` (they render "bientôt"),
+ *  - levels that hold NO subject — an empty page (constat du 2026-11-12 :
+ *    `/niveau/arabe`, « available », zéro matière, retiré exprès du menu des
+ *    extras, mais listé ici). Si la lecture des matières échoue on ne sait pas
+ *    lesquels sont vides : tous les niveaux disponibles restent listés.
  *  - chapters with no `lesson_content` (the reader shows a coming-soon state),
  *  - comprehension quizzes (`mode: "quiz"`) and any non-`admin` exercise (the
  *    public practice page only renders an account upsell for those).
@@ -75,11 +92,11 @@ export async function collectSitemapPaths(supabase: SitemapClient): Promise<stri
   const paths: string[] = [...STATIC_PATHS];
 
   const [parcours, subjects, chapters, exercises] = await Promise.all([
-    fetchAllRows<{ id: string; status: string }>((from, to) =>
-      supabase.from("parcours").select("id,status").order("id").range(from, to),
+    fetchAllRows<{ id: string; status: string } & LevelKey>((from, to) =>
+      supabase.from("parcours").select("id,status,theme_id,grade_id").order("id").range(from, to),
     ),
-    fetchAllRows<{ id: string }>((from, to) =>
-      supabase.from("subjects").select("id").order("id").range(from, to),
+    fetchAllRows<{ id: string } & LevelKey>((from, to) =>
+      supabase.from("subjects").select("id,theme_id,grade_id").order("id").range(from, to),
     ),
     // Le filtre « a une leçon » se fait EN BASE et seul l'id voyage. Lire
     // `lesson_content` pour le tester ici (~30 Ko par leçon, 1 000 par page, triées)
@@ -100,11 +117,19 @@ export async function collectSitemapPaths(supabase: SitemapClient): Promise<stri
     ),
   ]);
 
+  // Un niveau « tient » des matières quand elles partagent sa paire (thème, classe).
+  // `null` = la lecture des matières a échoué : on ne retire alors aucun niveau.
+  const populatedLevels = subjects.error
+    ? null
+    : new Set((subjects.data ?? []).map((s) => levelKey(s)));
+
   if (parcours.error) {
     logger.warn("sitemap: parcours query failed", { error: parcours.error.message });
   } else {
     for (const p of parcours.data ?? []) {
-      if (p.status === "available") paths.push(`/niveau/${p.id}`);
+      if (p.status !== "available") continue;
+      if (populatedLevels && !populatedLevels.has(levelKey(p))) continue;
+      paths.push(`/niveau/${p.id}`);
     }
   }
 
@@ -148,9 +173,20 @@ export function renderSitemap(paths: string[]): string {
  * `/sitemap.xml` handler in `src/server.ts`, which runs outside a server-fn
  * middleware context — so this creates its own anon Supabase client.
  *
- * A single sitemap holds up to 50 000 URLs / 50 MB (sitemaps.org). The catalogue
- * is far below that today; if it ever approaches the cap, split into a sitemap
- * index keyed by section (one child sitemap per parcours/subject).
+ * UN SEUL DOCUMENT, PAS D'INDEX — décision du 2026-11-12, mesurée : 6 815 URL
+ * (14 % du plafond de 50 000 par fichier), 0,7 Mo (plafond 50 Mo), généré en 0,8 s.
+ * Un index de sitemaps n'apporterait rien à l'exploration ; son seul intérêt serait
+ * de lire l'indexation PAR TYPE de page dans la Search Console. À rouvrir si le
+ * catalogue approche 40 000 URL — découper alors par type (niveaux et matières,
+ * cours, exercices).
+ *
+ * PAS DE `<lastmod>` — même date, même raison : aucune date de MODIFICATION fiable
+ * n'existe en base. `chapters` et `exercises` n'ont que `created_at` (999 des 1 171
+ * chapitres portent le 2026-05-22, jour de la reprise du corpus, alors que leurs
+ * leçons ont été réécrites depuis — le pipeline de contenu met à jour en place) ;
+ * `subjects` et `parcours` n'ont aucune date. Une date fausse est pire qu'une date
+ * absente : Google apprend à ignorer le `lastmod` d'un site qui se trompe. Pour en
+ * émettre un, il faut une colonne `updated_at` tenue par un trigger (migration).
  */
 export async function generateSitemap(): Promise<string> {
   const supabase = createPublicSupabaseClient();

@@ -633,6 +633,7 @@ export function ExercisePlayer({
         strategy={strategy}
         labels={QL}
         exerciseId={exerciseId}
+        exerciseTitle={data.exercise.title ?? null}
         chapterId={chapterId}
         subjectId={exSubjectId}
         chapterQuizId={data.chapterQuizId}
