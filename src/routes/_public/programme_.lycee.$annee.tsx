@@ -1,7 +1,7 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { CloudOff, Compass } from "lucide-react";
+import { CloudOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
@@ -12,6 +12,8 @@ import {
   LyceeYearSections,
   type CatalogueParcours,
 } from "@/features/dashboard/components/parcours-catalogue";
+import { seedOnServer } from "@/shared/lib/public-page-seo";
+import { CatalogueNotFound } from "./-catalogue-not-found";
 
 /**
  * Public lycée year page — the sections of ONE secondary year (étude 16 D-5,
@@ -26,9 +28,27 @@ const YEARS = ["2eme", "3eme", "bac"] as const;
 type Year = (typeof YEARS)[number];
 
 export const Route = createFileRoute("/_public/programme_/lycee/$annee")({
+  // Une année qui n'existe pas (`/programme/lycee/xyz`) : HTTP 404, tranché sans
+  // lecture. Sinon, rendu serveur des sections de l'année (`public-page-seo.ts`) :
+  // cette page partait du serveur avec « Chargement… » — or c'est par elle seule
+  // que le catalogue mène aux 15 niveaux du lycée. Derrière `import.meta.env.SSR`,
+  // le préchargement sort du bundle client.
+  loader: ({ params }) => {
+    if (!YEARS.includes(params.annee as Year)) throw notFound();
+    return import.meta.env.SSR ? seedLycee() : null;
+  },
   head: () => ({ meta: [{ title: "Lycée · Na9ra Nal3ab" }] }),
   component: LyceeYearPage,
+  notFoundComponent: () => <CatalogueNotFound />,
 });
+
+/** SSR seulement : le catalogue anonyme des niveaux. `null` en cas de panne (le client recharge). */
+function seedLycee() {
+  return seedOnServer("programme-lycee", async () => {
+    const server = await import("@/features/dashboard/dashboard.server");
+    return server.getParcours();
+  });
+}
 
 function LyceeYearPage() {
   const t = useT();
@@ -37,23 +57,17 @@ function LyceeYearPage() {
   const { user } = useAuth();
   const fetchParcours = useServerFn(getParcours);
 
+  const seed = Route.useLoaderData();
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["parcours", "catalogue"],
     queryFn: () => fetchParcours(),
+    placeholderData: seed ?? undefined,
   });
 
   const interest = useParcoursInterest({
     canVote: user != null,
     onRequireAuth: () => navigate({ to: "/auth", search: { mode: "login" } }),
   });
-
-  if (!YEARS.includes(annee as Year)) {
-    return (
-      <div className="mx-auto max-w-md px-6 py-20">
-        <EmptyState icon={Compass} title={t.errors.notFoundTitle} />
-      </div>
-    );
-  }
 
   if (isError) {
     return (
