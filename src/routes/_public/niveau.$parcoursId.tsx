@@ -75,6 +75,8 @@ async function seedNiveau(parcoursId: string) {
         : []),
     ],
   });
+  // Un niveau sans aucune matière est une page vide : servie (200), pas indexée.
+  if (subjects.length === 0) head.meta.push({ name: "robots", content: "noindex" });
   return { data, head };
 }
 

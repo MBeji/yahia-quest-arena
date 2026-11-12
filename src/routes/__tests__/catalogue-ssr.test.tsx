@@ -232,6 +232,54 @@ describe("/niveau/$parcoursId — fil d'Ariane et liste des matières", () => {
   });
 });
 
+describe("/niveau/$parcoursId — un niveau sans matière n'est pas indexé", () => {
+  // Constat du 2026-11-12 : `/niveau/arabe`, disponible mais vide.
+  it("zéro matière : la page est servie, avec noindex", async () => {
+    getParcoursSubjects.mockResolvedValue({
+      parcours: { id: "arabe", name_fr: "Améliore ton arabe" },
+      subjects: [],
+    });
+    const seeded = (await options<{ parcoursId: string }>(NiveauRoute).loader({
+      params: { parcoursId: "arabe" },
+    })) as Seeded;
+    expect(seeded!.head.meta).toContainEqual({ name: "robots", content: "noindex" });
+  });
+
+  it("un niveau peuplé reste indexable", async () => {
+    getParcoursSubjects.mockResolvedValue({
+      parcours: { id: "anglais", name_fr: "Améliore ton anglais" },
+      subjects: [{ id: "anglais-a1", name_fr: "English — Beginner (A1)" }],
+    });
+    const seeded = (await options<{ parcoursId: string }>(NiveauRoute).loader({
+      params: { parcoursId: "anglais" },
+    })) as Seeded;
+    expect(seeded!.head.meta.some((tag) => tag.name === "robots")).toBe(false);
+  });
+});
+
+describe("/programme/lycee/$annee — un titre par année", () => {
+  const lyceeHead = (annee: string) =>
+    (LyceeRoute as unknown as { head: (ctx: { params: { annee: string } }) => Head }).head({
+      params: { annee },
+    });
+
+  it("les trois années ne partagent plus le même titre, et se décrivent", () => {
+    const titles = ["2eme", "3eme", "bac"].map((annee) => titleOf(lyceeHead(annee)));
+    expect(new Set(titles).size).toBe(3);
+    expect(titles[2]).toBe(
+      "Baccalauréat (4ème année secondaire) — toutes les sections du lycée · Na9ra Nal3ab",
+    );
+    expect(metaOf(lyceeHead("bac"), "og:url")).toBe(
+      "https://www.na9ranal3ab.tn/programme/lycee/bac",
+    );
+    expect(lyceeHead("2eme").meta.some((tag) => tag.name === "description")).toBe(true);
+  });
+
+  it("année inconnue (page 404) : titre générique, rien d'inventé", () => {
+    expect(lyceeHead("xyz")).toEqual({ meta: [{ title: "Lycée · Na9ra Nal3ab" }] });
+  });
+});
+
 describe("le catalogue part du serveur avec ses niveaux — /programme, /programme/lycee, /extras", () => {
   const catalogue = { parcours: [{ id: "ecole-6eme-base" }] };
 
