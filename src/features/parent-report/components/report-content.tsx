@@ -24,8 +24,9 @@ import { useEntrance } from "@/shared/lib/motion";
 import { isolateLtrRuns } from "@/shared/lib/bidi";
 import { buildWeeklyAdvice, type ReportData } from "../report-share";
 import type { TutorParentCounters } from "../parent-report.server";
-import type { StudentExamSummary } from "../parent-report.schemas";
+import type { ParcoursComparison, StudentExamSummary } from "../parent-report.schemas";
 import { ExamSection } from "./exam-section";
+import { ParcoursComparisonSection } from "./parcours-comparison";
 export type { ReportData } from "../report-share";
 
 /**
@@ -64,11 +65,14 @@ export function ReportContent({
    * chemin public au code alliance ne l'a pas.
    */
   examSummary,
+  /** Étude 08 lot 3 (US-8) — le repère du parcours. Même garde : route authentifiée seule. */
+  parcoursComparison,
 }: {
   report: ReportData;
   tutorCounters?: TutorParentCounters | null;
   renderTutorDigest?: ReactNode;
   examSummary?: StudentExamSummary | null;
+  parcoursComparison?: ParcoursComparison;
 }) {
   const { locale } = useI18n();
   const t = useParentT();
@@ -345,6 +349,8 @@ export function ReportContent({
       {renderTutorDigest}
 
       {examSummary ? <ExamSection summary={examSummary} /> : null}
+
+      {parcoursComparison ? <ParcoursComparisonSection comparison={parcoursComparison} /> : null}
 
       {/* Score trend */}
       <div className="bg-surface-2 border border-border/50 rounded-xl p-4 flex items-center gap-3">

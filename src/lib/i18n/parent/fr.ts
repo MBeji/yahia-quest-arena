@@ -78,12 +78,17 @@ export const frParent: ParentTranslations = {
     namedErrorsImproving: "en recul",
     namedErrorsWorsening: "en hausse",
     namedErrorsStable: "stable",
+    compareTitle: "Repère sur son parcours",
+    compareSource:
+      "Moyenne des {n} élèves actifs de la plateforme sur « {parcours} », 4 semaines. Un repère, pas un classement.",
+    compareScore: "Score moyen : {child} % · plateforme {avg} %",
+    compareTime: "Par semaine : {child} min · plateforme {avg} min",
     examsTitle: "Examens blancs",
     examsPoints: "{points} points",
     examsPercentile: "Mieux que {pct} % des {n} candidats.",
     examsPending: "Classement affiché à partir de {n} candidats.",
     examsNone: "Pas encore d'examen blanc rendu : il y en a d'ouverts dans son parcours.",
-    examsHint: "Un examen blanc sert à s'entraîner : chaque élève avance à son rythme.",
+    examsHint: "Un examen blanc sert à s'entraîner : chacun avance à son rythme.",
     tutorHelpTitle: "L'aide d'El Ostedh",
     tutorHelpSubtitle:
       "Combien de fois votre enfant a demandé de l'aide, et sur quels thèmes. Le contenu des échanges reste entre El Ostedh et lui.",
@@ -108,19 +113,18 @@ export const frParent: ParentTranslations = {
       "Activez les notifications pour être prévenu·e quand le bilan hebdomadaire de votre enfant est prêt.",
     digestTitle: "Le résumé chiffré de la semaine",
     digestDesc:
-      "Chaque dimanche soir, la notification donne le temps d'apprentissage, les missions, la série et un chapitre à revoir ensemble — au lieu du simple rappel.",
+      "Chaque dimanche soir : temps d'apprentissage, missions, série et un chapitre à revoir ensemble, au lieu du simple rappel.",
     digestLockNote:
-      "Le message cite le prénom de votre enfant et peut s'afficher sur l'écran verrouillé de votre téléphone.",
+      "Le message cite le prénom de votre enfant et peut s'afficher sur l'écran verrouillé.",
     digestOn: "C'est noté : le résumé arrivera dimanche soir.",
     digestOff: "Résumé coupé. Vous recevrez le rappel simple.",
     digestError: "Réglage non enregistré. Réessayez.",
-    digestNeedsPush: "Autorisez d'abord les notifications : le résumé passe par elles.",
-    digestOtherDevice:
-      "Résumé demandé, mais les notifications ne sont pas activées sur cet appareil.",
-    digestNoChild: "Associez d'abord un enfant ci-dessus : le résumé part dès qu'un lien existe.",
+    digestOtherDevice: "Résumé demandé, mais notifications inactives sur cet appareil.",
+    digestNoChild: "Associez d'abord un enfant : le résumé part dès qu'un lien existe.",
     digestUnsupported:
-      "Ce navigateur ne reçoit pas de notifications. Sur iPhone, ajoutez l'application à l'écran d'accueil ; sinon ouvrez-la dans Chrome, puis revenez ici.",
-    digestBlocked: "Notifications bloquées. Autorisez-les dans les réglages de votre navigateur.",
+      "Ce navigateur ne reçoit pas de notifications. Sur iPhone, ajoutez l'application à l'écran d'accueil ; ailleurs, ouvrez-la dans Chrome.",
+    digestBlocked:
+      "Notifications non autorisées. Autorisez-les dans les réglages de votre navigateur.",
     goalTitle: "Objectif famille",
     goalPeriodDay: "Par jour",
     goalPeriodWeek: "Par semaine",
