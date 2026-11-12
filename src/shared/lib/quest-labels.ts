@@ -93,14 +93,17 @@ export type QuestLabels = {
 export function buildQuestLabels(qlang: QuestContentLang): QuestLabels {
   return {
     lockedTitle: {
-      ar: "🔒 التمرين مقفل",
-      fr: "🔒 Exercice verrouillé",
-      en: "🔒 Exercise locked",
+      ar: "🧠 أوّلًا اختبار فهم الدرس",
+      fr: "🧠 D'abord le quiz du chapitre",
+      en: "🧠 First, the chapter quiz",
     }[qlang],
     lockedBody: {
-      ar: "عليك أوّلًا اجتياز اختبار فهم الدرس بنجاح للوصول إلى التمارين. عُد لمراجعة الدرس ثمّ أعِد المحاولة.",
-      fr: "Tu dois d'abord réussir le quiz de compréhension du chapitre pour accéder aux exercices. Relis le cours, puis réessaie.",
-      en: "You must first pass the chapter comprehension quiz to unlock the exercises. Review the lesson, then try again.",
+      // Relevé « première visite » (2026-11-12, C-1) : 4 657 pages de mission s'ouvrent sur cet
+      // écran pour un visiteur neuf. La phrase dit ce qui OUVRE la mission et ce que ça coûte
+      // (é31 R-20 : le gain, jamais la perte) — plus « réessaie » à qui n'a rien essayé.
+      ar: "تُفتح هذه المهمّة حالما تنجح في اختبار فهم الدرس: بضعة أسئلة حول الدرس. يمكنك قراءة الدرس قبل ذلك.",
+      fr: "Cette mission s'ouvre dès que tu réussis le quiz de compréhension du chapitre : quelques questions sur le cours. Tu peux lire le cours avant.",
+      en: "This mission opens as soon as you pass the chapter's comprehension quiz: a few questions on the lesson. You can read the lesson first.",
     }[qlang],
     takeQuiz: {
       ar: "🧠 إجراء اختبار الفهم",
@@ -129,9 +132,11 @@ export function buildQuestLabels(qlang: QuestContentLang): QuestLabels {
     // Quiz answers are deliberately NOT corrected on screen — the student must
     // validate on their own. So the in-quiz message must not promise a correction.
     quizRecorded: {
-      ar: "تم تسجيل إجابتك. ستظهر نتيجتك في نهاية الاختبار.",
-      fr: "Réponse enregistrée. Ton résultat s'affichera à la fin du quiz.",
-      en: "Answer recorded. Your result will appear at the end of the quiz.",
+      // Affichée SOUS la question, donc avant toute réponse : elle annonce la règle du quiz, elle
+      // ne peut pas dire « réponse enregistrée » (relevé du 2026-11-12, C-6).
+      ar: "تظهر نتيجتك في نهاية الاختبار، دون تصحيح أثناءه.",
+      fr: "Ton résultat s'affiche à la fin du quiz, sans correction en cours de route.",
+      en: "Your result appears at the end of the quiz, with no correction along the way.",
     }[qlang],
     eliteLockedTitle: {
       ar: "👑 تحدّي النخبة مقفل",
