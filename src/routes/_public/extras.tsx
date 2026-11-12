@@ -12,6 +12,7 @@ import {
   type CatalogueParcours,
 } from "@/features/dashboard/components/parcours-catalogue";
 import { seedOnServer } from "@/shared/lib/public-page-seo";
+import { WaitingForNetwork, isWaitingForNetwork } from "@/components/ui/query-wait-state";
 
 /**
  * Public catalogue — the optional `libre` extras (« Référence » register, chantier C8,
@@ -49,7 +50,7 @@ function ExtrasPage() {
   const fetchParcours = useServerFn(getParcours);
   const t = useT();
   const seed = Route.useLoaderData();
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, isError, refetch, fetchStatus } = useQuery({
     queryKey: ["parcours", "catalogue"],
     queryFn: () => fetchParcours(),
     placeholderData: seed ?? undefined,
@@ -70,6 +71,12 @@ function ExtrasPage() {
         />
       </div>
     );
+  }
+
+  // é38 lot 4 (R-9) : sans réseau la lecture est en PAUSE, pas en cours — le dire,
+  // au lieu d'un chargement qui ne finira pas. Elle repart seule à son retour.
+  if (isWaitingForNetwork({ fetchStatus, data })) {
+    return <WaitingForNetwork onRetry={() => refetch()} />;
   }
 
   if (isLoading || !data) {

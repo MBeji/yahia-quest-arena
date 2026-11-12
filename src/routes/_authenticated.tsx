@@ -19,6 +19,7 @@ import { supabase } from "@/shared/integrations/supabase/client";
 import { toast } from "sonner";
 import { useT } from "@/lib/i18n";
 import { rememberReturnTo } from "@/shared/lib/return-to";
+import { NetworkBanner } from "@/components/ui/network-banner";
 import { SettingsMenu } from "@/components/ui/settings-menu";
 import { GoldAmbient } from "@/components/visual/gold-ambient";
 import { AccountHud } from "@/components/account-hud";
@@ -263,6 +264,8 @@ function AuthenticatedLayout() {
           </div>
         </div>
       </header>
+      {/* é38 lot 4 — l'en-tête connecté défile avec la page : le bandeau, lui, reste. */}
+      <NetworkBanner className="sticky top-0 z-20" />
       <main
         className={
           immersive || !showPrimaryNav
