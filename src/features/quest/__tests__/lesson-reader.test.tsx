@@ -175,7 +175,14 @@ describe("LessonReader", () => {
         isAuthenticated={false}
       />,
     );
-    expect(screen.getByText(/entraîner sur ce chapitre/i)).toBeInTheDocument();
+    // Deux accès, même destination : en haut de page (relevé « première visite » C-4 — le
+    // seul lien était à huit écrans de téléphone) et en bas du cours.
+    expect(screen.getAllByText(/entraîner sur ce chapitre/i)).toHaveLength(2);
+    const [top, bottom] = [...container.querySelectorAll('a[href="/exercice/$exerciseId"]')];
+    // Le haut vient AVANT le contenu du cours, le bas après.
+    const content = container.querySelector(".lesson-content") as Element;
+    expect(top.compareDocumentPosition(content) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(bottom.compareDocumentPosition(content) & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
     expect(container.querySelector('a[href="/exercice/$exerciseId"]')).not.toBeNull();
     expect(container.querySelector('a[href="/quest/$exerciseId"]')).toBeNull();
   });
@@ -248,8 +255,9 @@ describe("LessonReader", () => {
         isAuthenticated={false}
       />,
     );
-    // One CTA only, targeting the quiz — never a locked exercise.
-    expect(screen.getByText(/Commencer par le quiz de compréhension/)).toBeInTheDocument();
+    // One destination only, the quiz — never a locked exercise — offered at the top of
+    // the page and again under the lesson.
+    expect(screen.getAllByText(/Commencer par le quiz de compréhension/)).toHaveLength(2);
     expect(screen.queryByText(/entraîner sur ce chapitre/i)).not.toBeInTheDocument();
     expect(container.querySelector('a[href="/exercice/$exerciseId"]')).not.toBeNull();
   });

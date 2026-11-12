@@ -22,6 +22,7 @@ export function QuestStartGate({
   strategy,
   labels,
   exerciseId,
+  exerciseTitle,
   chapterId,
   subjectId,
   chapterQuizId,
@@ -32,6 +33,8 @@ export function QuestStartGate({
   strategy: Pick<ExercisePlayerStrategy, "quizExerciseTo" | "renderPremiumLock">;
   labels: QuestLabels;
   exerciseId: string;
+  /** Le titre de la mission demandée — repris en surtitre de la porte du quiz. */
+  exerciseTitle: string | null;
   chapterId: string | null;
   subjectId: string | null;
   chapterQuizId: string | null;
@@ -45,6 +48,7 @@ export function QuestStartGate({
   if (gate.kind === "quiz") {
     return (
       <QuizLockScreen
+        missionTitle={exerciseTitle}
         title={labels.lockedTitle}
         body={labels.lockedBody}
         takeQuizLabel={labels.takeQuiz}
