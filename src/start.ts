@@ -1,6 +1,7 @@
 import { createStart, createMiddleware, createCsrfMiddleware } from "@tanstack/react-start";
 import { attachSupabaseAuth } from "@/shared/integrations/supabase/auth-attacher";
 import { captureError } from "@/shared/lib/error-capture";
+import { logger } from "@/shared/lib/logger";
 import { renderErrorPage } from "@/shared/lib/error-page";
 
 const csrfMiddleware = createCsrfMiddleware({
@@ -17,7 +18,10 @@ const errorMiddleware = createMiddleware().server(async ({ next }) => {
       captureError(error);
       throw error;
     }
-    console.error(error);
+    // Par le logger, pas par `console` : la ligne est structurée, les clés
+    // sensibles masquées, et l'erreur part aussi vers le monitoring — ce que
+    // `console.error` ne faisait pas.
+    logger.error("SSR request failed", { error });
     return new Response(renderErrorPage(), {
       status: 500,
       headers: { "content-type": "text/html; charset=utf-8" },
