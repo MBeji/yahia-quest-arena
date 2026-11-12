@@ -1,19 +1,37 @@
+import type { ReactNode } from "react";
 import { Bell, BellRing, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useT } from "@/lib/i18n";
-import { usePush } from "../use-push";
+import { usePush, type PushState } from "../use-push";
+
+type PushController = {
+  state: PushState;
+  busy: boolean;
+  enable: () => Promise<boolean>;
+  disable: () => Promise<void>;
+};
 
 /**
- * Card to opt into Web Push reminders (streak-at-risk on the dashboard, the
- * weekly family digest on the parent report — the copy is overridable per
- * surface). Self-hides when push can't work here (unsupported browser /
- * iOS-not-installed / no VAPID key configured) so we never tease a dead control.
+ * Le corps de la carte d'opt-in, sans son état : la carte parent (é08 lot 2) y
+ * loge l'interrupteur du digest sous le MÊME contrôleur — deux `usePush()` côte à
+ * côte ne se verraient pas changer l'un l'autre.
  */
-export function EnablePushCard({ title, desc }: { title?: string; desc?: string } = {}) {
+export function PushCardShell({
+  push,
+  title,
+  desc,
+  blocked,
+  children,
+}: {
+  push: PushController;
+  title?: string;
+  desc?: string;
+  /** Le texte « bloqué » de la surface (le parent se vouvoie, l'élève se tutoie). */
+  blocked?: string;
+  children?: ReactNode;
+}) {
   const t = useT();
-  const { state, busy, enable, disable } = usePush();
-
-  if (state === "loading" || state === "unsupported" || state === "unconfigured") return null;
+  const { state, busy, enable, disable } = push;
 
   const onEnable = async () => {
     try {
@@ -38,7 +56,7 @@ export function EnablePushCard({ title, desc }: { title?: string; desc?: string 
           </p>
 
           {state === "denied" ? (
-            <p className="mt-2 text-xs text-gold">{t.pushNotifications.blocked}</p>
+            <p className="mt-2 text-xs text-gold">{blocked ?? t.pushNotifications.blocked}</p>
           ) : null}
 
           <div className="mt-3 flex items-center gap-3">
@@ -68,8 +86,25 @@ export function EnablePushCard({ title, desc }: { title?: string; desc?: string 
               </button>
             )}
           </div>
+
+          {children}
         </div>
       </div>
     </section>
   );
+}
+
+/**
+ * Card to opt into Web Push reminders (streak-at-risk on the dashboard — the copy
+ * is overridable per surface). Self-hides when push can't work here (unsupported
+ * browser / iOS-not-installed / no VAPID key configured) so we never tease a dead
+ * control.
+ */
+export function EnablePushCard({ title, desc }: { title?: string; desc?: string } = {}) {
+  const push = usePush();
+  const { state } = push;
+
+  if (state === "loading" || state === "unsupported" || state === "unconfigured") return null;
+
+  return <PushCardShell push={push} title={title} desc={desc} />;
 }
