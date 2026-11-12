@@ -217,6 +217,28 @@ describe("ExercisePlayer", () => {
     expect(screen.queryByTestId("quest-save-status")).not.toBeInTheDocument();
   });
 
+  // Relevé « première visite », §7 — l'entonnoir ne voyait que la FIN d'un entraînement.
+  it("signale la première réponse validée une fois par partie, et de nouveau après un rejeu", async () => {
+    const onFirstAnswer = vi.fn();
+    const renderResultFooter = vi.fn(({ onReplay }: { onReplay: () => void }) => (
+      <button type="button" data-testid="replay" onClick={onReplay}>
+        rejouer
+      </button>
+    ));
+    renderPlayer(anonStrategy({ onFirstAnswer, renderResultFooter }));
+
+    fireEvent.click(await screen.findByText("2"));
+    expect(onFirstAnswer).not.toHaveBeenCalled(); // choisir n'est pas répondre
+    fireEvent.click(screen.getByTestId("quest-submit"));
+    expect(onFirstAnswer).toHaveBeenCalledTimes(1);
+    expect(onFirstAnswer).toHaveBeenCalledWith({ exerciseId: EXERCISE_ID, isQuiz: false });
+
+    fireEvent.click(await screen.findByTestId("replay"));
+    fireEvent.click(await screen.findByText("2"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+    expect(onFirstAnswer).toHaveBeenCalledTimes(2);
+  });
+
   // é38 lot 1 (R-8) — la récompense de la mission est lue sur la ligne `exercises` déjà servie
   // aux deux registres, et traverse jusqu'au pied de résultat de la route.
   it.each([
