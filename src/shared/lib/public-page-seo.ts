@@ -1,3 +1,4 @@
+import { isNotFound } from "@tanstack/react-router";
 import { SITE_URL } from "@/shared/constants/site";
 import { logger } from "@/shared/lib/logger";
 
@@ -30,6 +31,13 @@ export const META_DESCRIPTION_MAX = 160;
  *   chargement d'avant ; à l'hydratation elle relit la valeur du serveur.
  * - **Panne** : `null` et une ligne de journal. Une page qui n'a pas pu être
  *   préchargée retombe sur le chargement client, elle ne casse jamais le rendu.
+ * - **Introuvable** : un `notFound()` levé par `load` TRAVERSE — ce n'est pas une
+ *   panne, c'est une réponse. Le routeur en fait un HTTP 404 (constat du
+ *   2026-11-12 : `/chapitre/<id inconnu>` répondait 200 avec un écran d'erreur,
+ *   ce que Google appelle un « soft 404 »). La règle qui sépare les deux : seule
+ *   une lecture qui a RÉUSSI et n'a rien trouvé lève `notFound()` ; une lecture en
+ *   échec lève une erreur ordinaire, donc reste une panne, donc reste un 200 que
+ *   le client recharge.
  *
  * ⚠️ Dans `load`, la fonction serveur s'importe À LA DEMANDE (`await import(…)`),
  * jamais en tête de la route. Le `loader` d'une route vit dans le chunk d'entrée,
@@ -44,9 +52,22 @@ export async function seedOnServer<T>(label: string, load: () => Promise<T>): Pr
   try {
     return await load();
   } catch (error) {
+    if (isNotFound(error)) throw error;
     logger.warn("public page SSR seed failed — falling back to client fetch", { label, error });
     return null;
   }
+}
+
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
+ * Un identifiant d'URL a-t-il la FORME d'un uuid ? Les chapitres et les exercices
+ * sont adressés par uuid : `/chapitre/pas-un-uuid` ne peut désigner aucune page,
+ * et la route le sait sans interroger la base (la fonction serveur, elle, le
+ * refuserait par une erreur de validation — indiscernable d'une panne).
+ */
+export function isUuid(value: string): boolean {
+  return UUID_PATTERN.test(value);
 }
 
 /**

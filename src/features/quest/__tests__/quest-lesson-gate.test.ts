@@ -203,3 +203,53 @@ describe("gamification.quest — getChapterLesson quiz gate (étude 15, lot 1)",
     expect(res.quizPassed).toBeNull();
   });
 });
+
+describe("gamification.quest — « n'existe pas » n'est pas « lecture en échec »", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    mockFrom.mockReset();
+    mockRpc.mockReset();
+  });
+
+  // Le faux 404 du 2026-11-12 : `.single()` confondait les deux en une même
+  // erreur, et `/chapitre/<id inconnu>` répondait HTTP 200 avec un écran d'erreur.
+  it("getChapterLesson : chapitre absent → notFound(), pas une erreur de chargement", async () => {
+    mockFrom.mockImplementation(() => mockQuery(null));
+    const { isNotFound } = await import("@tanstack/react-router");
+    const thrown = await callGetChapterLesson().catch((e: unknown) => e);
+    expect(isNotFound(thrown)).toBe(true);
+    // Une seule lecture : rien n'est cherché autour d'un chapitre qui n'existe pas.
+    expect(mockFrom).toHaveBeenCalledTimes(1);
+  });
+
+  it("getChapterLesson : lecture en échec → erreur ordinaire, jamais un 404", async () => {
+    mockFrom.mockImplementation(() => mockQuery(null, { message: "timeout" }));
+    const { isNotFound } = await import("@tanstack/react-router");
+    const thrown = await callGetChapterLesson().catch((e: unknown) => e);
+    expect(isNotFound(thrown)).toBe(false);
+    expect((thrown as Error).message).toBe("Impossible de charger la leçon.");
+  });
+
+  async function callCheckSubjectExists(): Promise<boolean> {
+    const { checkSubjectExists } = await import("@/features/quest/quest.lesson.server");
+    return (checkSubjectExists as unknown as (d: unknown) => Promise<boolean>)({
+      subjectId: "math-6eme",
+    });
+  }
+
+  it("checkSubjectExists : une ligne → true ; aucune → false ; une seule colonne lue", async () => {
+    const found = mockQuery({ id: "math-6eme" });
+    mockFrom.mockImplementation(() => found);
+    await expect(callCheckSubjectExists()).resolves.toBe(true);
+    expect(mockFrom).toHaveBeenCalledWith("subjects");
+    expect(found.select).toHaveBeenCalledWith("id");
+
+    mockFrom.mockImplementation(() => mockQuery(null));
+    await expect(callCheckSubjectExists()).resolves.toBe(false);
+  });
+
+  it("checkSubjectExists : lecture en échec → lève, ne dit jamais « absente »", async () => {
+    mockFrom.mockImplementation(() => mockQuery(null, { message: "timeout" }));
+    await expect(callCheckSubjectExists()).rejects.toThrow("Impossible de charger la matière.");
+  });
+});

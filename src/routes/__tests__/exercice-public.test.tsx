@@ -18,6 +18,8 @@ vi.mock("@/shared/lib/product-events", () => ({
 }));
 
 vi.mock("@tanstack/react-router", () => ({
+  notFound: () => ({ isNotFound: true }),
+  isNotFound: (e: unknown) => (e as { isNotFound?: boolean } | null)?.isNotFound === true,
   createFileRoute: () => (opts: Record<string, unknown>) => ({
     ...opts,
     useParams: () => ({ exerciseId: "ex-1" }),
@@ -76,6 +78,8 @@ import { Route } from "../_public/exercice.$exerciseId";
 import { peekReturnTo } from "@/shared/lib/return-to";
 
 const Page = (Route as unknown as { component: React.ComponentType }).component;
+
+const EX_ID = "6e7219be-5c5a-586e-bedd-318a6262ec8f";
 
 type HeadTags = { meta: Array<Record<string, string>> };
 const routeOptions = Route as unknown as {
@@ -296,10 +300,10 @@ describe("entraînement public — le <head> rendu par le serveur", () => {
       subjectName: "Mathématiques",
     });
 
-    const seeded = await routeOptions.loader({ params: { exerciseId: "ex-1" } });
+    const seeded = await routeOptions.loader({ params: { exerciseId: EX_ID } });
     const head = routeOptions.head({ loaderData: seeded });
 
-    expect(getExerciseMeta).toHaveBeenCalledWith({ data: { exerciseId: "ex-1" } });
+    expect(getExerciseMeta).toHaveBeenCalledWith({ data: { exerciseId: EX_ID } });
     expect(head.meta).toContainEqual({ title: "Mission 3 — Les fractions · Na9ra Nal3ab" });
     expect(head.meta).toContainEqual({
       name: "description",
@@ -308,7 +312,7 @@ describe("entraînement public — le <head> rendu par le serveur", () => {
     });
     expect(head.meta).toContainEqual({
       property: "og:url",
-      content: "https://www.na9ranal3ab.tn/exercice/ex-1",
+      content: `https://www.na9ranal3ab.tn/exercice/${EX_ID}`,
     });
   });
 
@@ -320,7 +324,7 @@ describe("entraînement public — le <head> rendu par le serveur", () => {
       chapterTitle: null,
       subjectName: null,
     });
-    const seeded = await routeOptions.loader({ params: { exerciseId: "ex-1" } });
+    const seeded = await routeOptions.loader({ params: { exerciseId: EX_ID } });
     const head = routeOptions.head({ loaderData: seeded });
     expect(head.meta).toContainEqual({ title: "Quiz · Na9ra Nal3ab" });
     expect(head.meta).toContainEqual({
@@ -329,22 +333,38 @@ describe("entraînement public — le <head> rendu par le serveur", () => {
     });
   });
 
-  it("exercice inconnu ou lecture en panne : le titre générique reste", async () => {
+  // « Lecture en échec » n'est pas « n'existe pas » : une panne garde la page en
+  // 200, avec son titre générique, et le lecteur charge côté client.
+  it("lecture en panne : pas de 404, le titre générique reste", async () => {
     vi.stubEnv("SSR", true);
-    getExerciseMeta.mockResolvedValue(null);
-    expect(await routeOptions.loader({ params: { exerciseId: "ex-1" } })).toBeNull();
-
     getExerciseMeta.mockRejectedValue(new Error("db down"));
-    expect(await routeOptions.loader({ params: { exerciseId: "ex-1" } })).toBeNull();
+    expect(await routeOptions.loader({ params: { exerciseId: EX_ID } })).toBeNull();
 
     expect(routeOptions.head({ loaderData: null })).toEqual({
       meta: [{ title: "Entraînement · Na9ra Nal3ab" }],
     });
   });
 
+  // Le faux 404 du 2026-11-12 : `/exercice/<id inconnu>` répondait HTTP 200.
+  it("exercice inconnu : la lecture a réussi sans rien rendre, la page répond 404", async () => {
+    vi.stubEnv("SSR", true);
+    getExerciseMeta.mockResolvedValue(null);
+    await expect(routeOptions.loader({ params: { exerciseId: EX_ID } })).rejects.toEqual({
+      isNotFound: true,
+    });
+  });
+
+  it("adresse qui n'a pas la forme d'un uuid : 404 sans interroger la base", async () => {
+    vi.stubEnv("SSR", true);
+    await expect(routeOptions.loader({ params: { exerciseId: "pas-un-uuid" } })).rejects.toEqual({
+      isNotFound: true,
+    });
+    expect(getExerciseMeta).not.toHaveBeenCalled();
+  });
+
   it("dans le navigateur, le loader ne lit rien", () => {
     vi.stubEnv("SSR", false);
-    expect(routeOptions.loader({ params: { exerciseId: "ex-1" } })).toBeNull();
+    expect(routeOptions.loader({ params: { exerciseId: EX_ID } })).toBeNull();
     expect(getExerciseMeta).not.toHaveBeenCalled();
   });
 });

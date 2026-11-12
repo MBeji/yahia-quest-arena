@@ -4,6 +4,7 @@
 // était à 746 lignes de code pour un plafond de 750, et lire un chapitre n'a
 // rien à voir avec jouer un exercice. Texte déplacé à l'identique.
 
+import { notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
@@ -45,10 +46,17 @@ export const getChapterLesson = createServerFn({ method: "GET" })
         "id, title, description, lesson_content, summary, subject_id, display_order, domain, videos, subjects(id, name_fr, color_token, icon, content_language, grade_id)",
       )
       .eq("id", data.chapterId)
-      .single();
+      .maybeSingle();
     if (error) {
       failWithClientError("quest.getChapterLesson", error, "Impossible de charger la leçon.");
     }
+    // « N'existe pas » n'est pas « lecture en échec » : la lecture a réussi et n'a
+    // rien rendu (`chapters` est lisible par tous, donc l'absence vaut pour tout
+    // visiteur). `notFound()` traverse la fonction serveur telle quelle — au rendu
+    // serveur la page répond 404, en navigation client la route montre « introuvable »
+    // au lieu d'un « réessayer » qui ne peut pas aboutir. Avant le 2026-11-12,
+    // `.single()` confondait les deux en une même erreur, journalisée en `error`.
+    if (!chapterRow) throw notFound();
 
     // Selecting the étude-23 `videos` column and `domain` (both absent from the
     // pre-existing generated types) makes the row loosely typed — narrow it once,
@@ -137,6 +145,34 @@ export const getChapterLesson = createServerFn({ method: "GET" })
       quizGated,
       quizPassed,
     };
+  });
+
+// ---------- Does this subject exist? (the public page's 404) ----------
+
+/**
+ * Une matière existe-t-elle ? Une ligne, une colonne — de quoi répondre 404 sur
+ * `/matiere/<id inconnu>` au rendu serveur.
+ *
+ * Pourquoi une fonction à part : `getSubject` lit la matière par `.single()` et
+ * lève la MÊME erreur qu'elle soit absente ou que la lecture ait échoué. La page
+ * publique n'appelle donc celle-ci que lorsque `getSubject` a échoué, pour trancher :
+ * `false` (lecture réussie, aucune ligne) = 404 ; une erreur levée = panne, la page
+ * reste un 200 que le client recharge. `subjects` est lisible par tous : l'absence
+ * vaut pour tout visiteur.
+ */
+export const checkSubjectExists = createServerFn({ method: "GET" })
+  .middleware([optionalSupabaseAuth])
+  .validator((d) => z.object({ subjectId: z.string().min(1) }).parse(d))
+  .handler(async ({ data, context }): Promise<boolean> => {
+    const { data: row, error } = await context.supabase
+      .from("subjects")
+      .select("id")
+      .eq("id", data.subjectId)
+      .maybeSingle();
+    if (error) {
+      failWithClientError("quest.checkSubjectExists", error, "Impossible de charger la matière.");
+    }
+    return row !== null;
   });
 
 // ---------- Manuel élève pages (login-gated) ----------
