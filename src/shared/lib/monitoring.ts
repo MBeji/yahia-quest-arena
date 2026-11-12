@@ -20,6 +20,8 @@
  * client bundle by design).
  */
 
+import { redactSecrets } from "./redact";
+
 type CaptureContext = {
   /** Where the error came from, e.g. "server.fetch" or "window.onerror". */
   source?: string;
@@ -78,7 +80,7 @@ export function parseDsn(dsn: string): ParsedDsn | undefined {
 
 /** Remove e-mail addresses from any string (defence-in-depth for PII). */
 function scrubString(value: string): string {
-  return value.replace(EMAIL_RE, "[redacted-email]");
+  return redactSecrets(value).replace(EMAIL_RE, "[redacted-email]");
 }
 
 /** Recursively scrub a plain value: drop sensitive keys, redact e-mails. */
