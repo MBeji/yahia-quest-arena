@@ -198,6 +198,25 @@ describe("ExercisePlayer", () => {
     );
   });
 
+  // Relevé « première visite » du 2026-11-12 : sans compte rien n'est enregistré, et pourtant la
+  // pastille « Travail enregistré » s'affichait au visiteur dès qu'il rejouait après sa
+  // première correction.
+  it("ne dit jamais « travail enregistré » à un visiteur sans compte, même après un rejeu", async () => {
+    const renderResultFooter = vi.fn(({ onReplay }: { onReplay: () => void }) => (
+      <button type="button" data-testid="replay" onClick={onReplay}>
+        rejouer
+      </button>
+    ));
+    renderPlayer(anonStrategy({ renderResultFooter }));
+
+    fireEvent.click(await screen.findByText("2"));
+    fireEvent.click(screen.getByTestId("quest-submit"));
+    fireEvent.click(await screen.findByTestId("replay"));
+
+    expect(await screen.findByTestId("quest-submit")).toBeInTheDocument();
+    expect(screen.queryByTestId("quest-save-status")).not.toBeInTheDocument();
+  });
+
   // é38 lot 1 (R-8) — la récompense de la mission est lue sur la ligne `exercises` déjà servie
   // aux deux registres, et traverse jusqu'au pied de résultat de la route.
   it.each([
