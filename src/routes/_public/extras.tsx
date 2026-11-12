@@ -11,6 +11,7 @@ import {
   ExtrasCatalogue,
   type CatalogueParcours,
 } from "@/features/dashboard/components/parcours-catalogue";
+import { seedOnServer } from "@/shared/lib/public-page-seo";
 
 /**
  * Public catalogue — the optional `libre` extras (« Référence » register, chantier C8,
@@ -18,6 +19,11 @@ import {
  * the rows to <ExtrasCatalogue/>, which keeps only the `libre` tracks. No auth guard.
  */
 export const Route = createFileRoute("/_public/extras")({
+  // Rendu serveur du catalogue (`public-page-seo.ts`), comme `/programme` : cette
+  // page partait du serveur avec « Chargement… », or c'est par elle seule que le
+  // site mène aux six parcours libres (langues, culture générale, logique…).
+  // Derrière `import.meta.env.SSR`, le préchargement sort du bundle client.
+  loader: () => (import.meta.env.SSR ? seedExtras() : null),
   head: () => ({
     meta: [
       { title: "Extras · langues, culture générale, logique · Na9ra Nal3ab" },
@@ -31,12 +37,22 @@ export const Route = createFileRoute("/_public/extras")({
   component: ExtrasPage,
 });
 
+/** SSR seulement : le catalogue anonyme des niveaux. `null` en cas de panne (le client recharge). */
+function seedExtras() {
+  return seedOnServer("extras", async () => {
+    const server = await import("@/features/dashboard/dashboard.server");
+    return server.getParcours();
+  });
+}
+
 function ExtrasPage() {
   const fetchParcours = useServerFn(getParcours);
   const t = useT();
+  const seed = Route.useLoaderData();
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["parcours", "catalogue"],
     queryFn: () => fetchParcours(),
+    placeholderData: seed ?? undefined,
   });
 
   if (isError) {
