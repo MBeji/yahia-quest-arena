@@ -85,6 +85,8 @@ describe("catalogues i18n — un chunk par locale", () => {
       join(I18N_DIR, "index.ts"),
       join(I18N_DIR, "catalogues.ts"),
       join(I18N_DIR, "meta.ts"),
+      join(I18N_DIR, "shell-locale.ts"),
+      join(process.cwd(), "src", "router.tsx"),
       join(process.cwd(), "src", "routes", "__root.tsx"),
     ];
     for (const file of statique) {
