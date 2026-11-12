@@ -130,6 +130,8 @@ export const PAQUETS_NAVIGATEUR_SUR: Record<string, string> = {
   zod: "schémas isomorphes — aucun builtin Node, tourne tel quel dans le navigateur",
   "@tanstack/react-start":
     "le framework lui-même ; c'est lui qui sert le module au navigateur, et Vite en résout l'entrée client",
+  "@tanstack/react-router":
+    "le routeur que chaque route importe déjà dans le navigateur ; un fichier serveur y prend `notFound()` pour dire « n'existe pas » (→ HTTP 404) au lieu d'une erreur de chargement",
   "@supabase/supabase-js":
     "client isomorphe, publié avec une entrée navigateur — c'est déjà celui qu'utilise le code client",
 };
