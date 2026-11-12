@@ -251,6 +251,52 @@ describe("entraînement public — la suite après une réussite (relevé premi�
   });
 });
 
+describe("entraînement public — la première réponse et la porte se mesurent (relevé première visite, §7)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    holder.strategy = null;
+    window.sessionStorage.clear();
+    window.localStorage.clear();
+    authState.user = null;
+  });
+  afterEach(() => {
+    authState.user = null;
+  });
+
+  const gated = {
+    exerciseId: "ex-1",
+    quizGated: true,
+    chapterId: "c1",
+    variant: "classic" as const,
+  };
+
+  it("la première réponse validée émet public_practice_started, identifiant de catalogue et booléen seulement", () => {
+    mountStrategy().onFirstAnswer?.({ exerciseId: "ex-1", isQuiz: true });
+    expect(trackProductEvent).toHaveBeenCalledWith("public_practice_started", {
+      exercise_id: "ex-1",
+      is_quiz: true,
+    });
+  });
+
+  it("la porte du quiz vue par un visiteur sans compte émet public_gate_shown", async () => {
+    const outcome = await mountStrategy().startSession({ ...gated, mode: "practice" });
+    expect(outcome).toEqual({ ok: false, kind: "quiz" });
+    expect(trackProductEvent).toHaveBeenCalledWith("public_gate_shown", { exercise_id: "ex-1" });
+  });
+
+  it("le quiz lui-même n'est jamais une porte : rien n'est émis", async () => {
+    const outcome = await mountStrategy().startSession({ ...gated, mode: "quiz" });
+    expect(outcome).toEqual({ ok: true, sessionId: "anon" });
+    expect(trackProductEvent).not.toHaveBeenCalled();
+  });
+
+  it("un élève connecté qui passe par cette page n'est pas compté comme visiteur", async () => {
+    authState.user = { id: "u1" };
+    await mountStrategy().startSession({ ...gated, mode: "practice" });
+    expect(trackProductEvent).not.toHaveBeenCalled();
+  });
+});
+
 describe("entraînement public — le retour au point de départ (é38 lot 1)", () => {
   it("l'invitation du résultat retient la page de l'entraînement", () => {
     window.localStorage.clear();

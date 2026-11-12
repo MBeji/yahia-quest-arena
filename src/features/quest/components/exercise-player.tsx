@@ -138,6 +138,12 @@ export type ExercisePlayerStrategy = {
     questionId: string;
     choice: string;
   }) => Promise<QuestionVerdict | null>;
+  /**
+   * La PREMIÈRE réponse validée d'une partie — une fois par partie, rejeu compris. Optionnelle :
+   * seul le registre sans compte s'en sert, pour dire qu'un entraînement a commencé (l'entonnoir
+   * ne voyait que sa fin — relevé « première visite » du 2026-11-12, §7).
+   */
+  onFirstAnswer?: (ctx: { exerciseId: string; isQuiz: boolean }) => void;
   /** Premium paywall (connected only). */
   renderPremiumLock?: (ctx: {
     message: string;
@@ -406,6 +412,8 @@ export function ExercisePlayer({
   useQuestPulse(data?.exercise ?? null, exerciseId, isRecall, capabilities.rewards);
 
   const answeredQuestionRef = useRef<string | null>(null);
+  /** La partie a-t-elle déjà reçu sa première réponse validée ? (`strategy.onFirstAnswer`) */
+  const firstAnswerSentRef = useRef(false);
   /** La réponse figée au moment de la correction, rejouée à « Continuer ». */
   const committedChoiceRef = useRef<string | null>(null);
   // Miroirs en ref des seuls états lus depuis un callback dont l'identité ne doit
@@ -459,6 +467,7 @@ export function ExercisePlayer({
 
   const resetRun = useCallback(() => {
     answeredQuestionRef.current = null;
+    firstAnswerSentRef.current = false;
     resetBossTiming();
     resetSession();
     setResult(null);
@@ -566,6 +575,10 @@ export function ExercisePlayer({
     // en découlent, correction immédiate comprise) : c'est donc ici, et une seule
     // fois par question, que le chronomètre est lu.
     if (current?.id) commitBossTiming(current.id);
+    if (!firstAnswerSentRef.current) {
+      firstAnswerSentRef.current = true;
+      strategy.onFirstAnswer?.({ exerciseId, isQuiz: data?.exercise?.mode === "quiz" });
+    }
     if (!feedbackEnabled || !current?.id) {
       advanceWithChoice(selected);
       return;
@@ -603,6 +616,9 @@ export function ExercisePlayer({
     feedbackChecking,
     current?.id,
     commitBossTiming,
+    strategy,
+    exerciseId,
+    data?.exercise?.mode,
   ]);
 
   useQuestKeyboard({
