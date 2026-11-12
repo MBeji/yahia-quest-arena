@@ -74,6 +74,7 @@ function mockQuery(data: unknown, error: unknown = null) {
   chain.gte = vi.fn().mockReturnValue(chain);
   chain.not = vi.fn().mockReturnValue(chain);
   chain.neq = vi.fn().mockReturnValue(chain);
+  chain.is = vi.fn().mockReturnValue(chain);
   chain.then = (fn: (v: unknown) => unknown) => fn(result);
   Object.assign(chain, result);
   return chain;
@@ -251,5 +252,82 @@ describe("gamification.quest — « n'existe pas » n'est pas « lecture en éch
   it("checkSubjectExists : lecture en échec → lève, ne dit jamais « absente »", async () => {
     mockFrom.mockImplementation(() => mockQuery(null, { message: "timeout" }));
     await expect(callCheckSubjectExists()).rejects.toThrow("Impossible de charger la matière.");
+  });
+});
+
+describe("gamification.quest — le niveau d'une matière, lisible sans compte", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    mockFrom.mockReset();
+    mockRpc.mockReset();
+  });
+
+  const PARCOURS = { id: "ecole-6eme-base", name_fr: "6ème année", name_en: null, name_ar: null };
+
+  async function callGetSubjectParcours(): Promise<unknown> {
+    const { getSubjectParcours } = await import("@/features/quest/quest.lesson.server");
+    return (getSubjectParcours as unknown as (d: unknown) => Promise<unknown>)({
+      subjectId: "math-6eme",
+    });
+  }
+
+  // La RPC `resolve_subject_parcours` est refusée à l'anonyme : le rendu serveur
+  // (toujours anonyme) ne connaissait jamais le niveau. Lecture directe de la table.
+  it("getSubjectParcours : lit `parcours` par (thème, classe), sans la RPC", async () => {
+    const parcoursQuery = mockQuery(PARCOURS);
+    mockFrom.mockImplementation((table: string) =>
+      table === "subjects" ? mockQuery({ theme_id: "scolaire", grade_id: "g-6" }) : parcoursQuery,
+    );
+    await expect(callGetSubjectParcours()).resolves.toEqual(PARCOURS);
+    expect(parcoursQuery.eq).toHaveBeenCalledWith("theme_id", "scolaire");
+    expect(parcoursQuery.eq).toHaveBeenCalledWith("grade_id", "g-6");
+    expect(mockRpc).not.toHaveBeenCalled();
+  });
+
+  it("getSubjectParcours : un parcours libre se cherche par classe NULLE", async () => {
+    const parcoursQuery = mockQuery(PARCOURS);
+    mockFrom.mockImplementation((table: string) =>
+      table === "subjects" ? mockQuery({ theme_id: "anglais", grade_id: null }) : parcoursQuery,
+    );
+    await callGetSubjectParcours();
+    expect(parcoursQuery.is).toHaveBeenCalledWith("grade_id", null);
+  });
+
+  it("getSubjectParcours : matière absente → null ; niveau illisible → null, sans lever", async () => {
+    mockFrom.mockImplementation(() => mockQuery(null));
+    await expect(callGetSubjectParcours()).resolves.toBeNull();
+
+    mockFrom.mockImplementation((table: string) =>
+      table === "subjects"
+        ? mockQuery({ theme_id: "scolaire", grade_id: "g-6" })
+        : mockQuery(null, { message: "timeout" }),
+    );
+    await expect(callGetSubjectParcours()).resolves.toBeNull();
+  });
+
+  it("getChapterLesson : rend le niveau du chapitre, pour le fil d'Ariane", async () => {
+    let chapterReads = 0;
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "parcours") return mockQuery(PARCOURS);
+      if (table === "chapters") {
+        chapterReads += 1;
+        return chapterReads === 1
+          ? mockQuery({
+              id: "ch-1",
+              title: "C1",
+              subject_id: "math-6eme",
+              subjects: {
+                id: "math-6eme",
+                name_fr: "Maths",
+                grade_id: "g-6",
+                theme_id: "scolaire",
+              },
+            })
+          : mockQuery([]);
+      }
+      return mockQuery([]);
+    });
+    const res = (await callGetChapterLesson()) as unknown as { parcours: unknown };
+    expect(res.parcours).toEqual(PARCOURS);
   });
 });
