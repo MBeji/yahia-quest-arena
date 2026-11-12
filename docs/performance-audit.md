@@ -782,6 +782,178 @@ américain ; les chiffres « Tunisie » sont des estimations, nommées comme tel
 
 ---
 
+## 0-quater. Ce que l'élève attend — mesure du 2026-11-12 (`main` à #1255)
+
+> Première mesure **en production** des cinq types de page publique depuis que les pages de
+> cours, de matière et de niveau sont rendues côté serveur avec leur contenu (#1246, #1251).
+> Aucune optimisation n'a précédé ces chiffres. Sonde : `perf/runtime/measure-pages.mjs`
+> (Chromium, cache froid, un contexte neuf par chargement, médiane de 3) ; pages :
+> `/`, `/niveau/concours-6eme`, `/matiere/math`, un cours et un exercice de cette matière.
+> **Production mesurée : `2dd1f8b` (#1255), entre 08:17 et 08:30 UTC.** Depuis ~09:00 UTC ce
+> jour-là Vercel refuse tout déploiement (plafond quotidien du plan atteint) : rien de ce qui
+> est « livré » plus bas n'est en ligne, et **aucun chiffre « après » n'est pris en
+> production dans cette section** — ils sont tous locaux, même méthode avant et après.
+
+**Lire les temps avec leur trajet.** Le conteneur de mesure sort par un proxy et atteint le
+PoP `iad1` (États-Unis) ; la fonction tourne à `arn1` (Stockholm). Les **poids**, les
+**requêtes** et l'**élément LCP** sont exacts où qu'on soit. Les **millisecondes** portent ce
+détour (≈ 100 ms d'aller-retour `iad1`↔`arn1` qu'un élève tunisien, servi par un PoP européen,
+ne paie pas en entier) et ne valent que comparées entre elles. Le proxy, de plus, ne
+transmet pas les priorités HTTP/2 : les temps de rendu bridés ci-dessous sont un **majorant**
+(voir « Ce que la mesure locale corrige »).
+
+### Profil téléphone — 150 ms de RTT, 1,6 Mbit/s, CPU ÷ 4, écran 360×740
+
+| Page     | TTFB (ms) | FCP (ms) |  LCP (ms) | Transféré (Ko) | Requêtes | HTML br / brut (Ko) | JS (Ko) | CSS (Ko) | Polices (Ko) | Élément LCP                                                 |
+| -------- | --------: | -------: | --------: | -------------: | -------: | ------------------: | ------: | -------: | -----------: | ----------------------------------------------------------- |
+| accueil  |       541 |    2 264 |     2 264 |          434,5 |       37 |          8,8 / 41,5 |   363,2 |     20,7 |         40,5 | `H1`, dans le HTML du serveur                               |
+| niveau   |       299 |    1 988 |     1 988 |          612,5 |       40 |          6,8 / 26,8 |   541,7 |     20,7 |         40,7 | `H1`, dans le HTML du serveur                               |
+| matière  |       295 |    3 116 | **5 048** |          665,2 |       50 |    **36,0 / 284,8** |   566,9 |     20,8 |         40,5 | `SPAN` de la carte du guide — **posée après l'hydratation** |
+| cours    |       452 |    2 624 |     2 624 |          497,7 |       50 |         21,2 / 99,5 |   403,9 |     20,8 |         40,4 | `H1`, dans le HTML du serveur                               |
+| exercice |       627 |    2 524 | **4 976** |          487,1 |       58 |          5,3 / 19,5 |   418,0 |     20,7 |         40,5 | `P` du lecteur — **rendu après l'appel client**             |
+
+Le JS « transféré » inclut `gtag.js` (178,7 Ko br, 534 Ko décodés) quand il a fini d'arriver
+dans la fenêtre de mesure ; il part après le premier rendu mais dispute le même débit.
+
+### Sans bridage (même trajet) — ce que coûte la page hors débit simulé
+
+| Page     | TTFB (ms) | FCP (ms) | LCP (ms) | Chargement complet (ms) |
+| -------- | --------: | -------: | -------: | ----------------------: |
+| accueil  |       485 |      836 |      836 |                     883 |
+| niveau   |       485 |    1 072 |    1 072 |                   1 091 |
+| matière  |       291 |    1 336 |    1 988 |                   1 502 |
+| cours    |       381 |      968 |      968 |                   1 043 |
+| exercice |       504 |      820 |    1 660 |                     917 |
+
+### Temps serveur — connexion déjà ouverte, 5 passes espacées de 3 s (`curl`, UA navigateur)
+
+`x-vercel-cache: MISS` sur **toutes** les pages, à chaque passe ; `cache-control: public,
+max-age=0, must-revalidate`. Chaque visite anonyme exécute la fonction et lit la base.
+
+| Ressource                   | TTFB, 5 passes (ms)         | Médiane | Au-dessus d'un fichier servi par le PoP |
+| --------------------------- | --------------------------- | ------: | --------------------------------------: |
+| `/favicon.svg` (HIT au PoP) | 50 · 39 · 36 · 34 · 41      |      39 |                                       — |
+| accueil                     | 164 · 165 · 167 · 163 · 175 |     165 |                                    +126 |
+| exercice                    | 183 · 197 · 190 · 199 · 383 |     197 |                                    +158 |
+| niveau                      | 255 · 249 · 234 · 223 · 234 |     234 |                                    +195 |
+| cours                       | 276 · 250 · 284 · 256 · 255 |     256 |                                    +217 |
+| **matière** (`math`)        | 675 · 708 · 682 · 666 · 708 | **682** |                                **+643** |
+
+Le plancher (+126 ms, accueil : aucune lecture de contenu) est le trajet PoP → `arn1` et un
+rendu de shell. Au-dessus du plancher : niveau +69 ms, cours +91 ms, **matière +517 ms**. La
+matière rend 285 Ko de HTML (dont le sommaire sérialisé une seconde fois pour l'hydratation)
+après quatre vagues de lectures en série (`getSubject` : le lot parallèle, puis
+`fetchRecallAvailability`, puis `resolve_subject_parcours`, puis `parcours`).
+
+### Ce que la mesure locale corrige
+
+Le même bundle de production servi en local (`npm run perf:budget`, mêmes 150 ms / 1,6 Mbit/s /
+CPU ÷ 4, mais sans proxy : le navigateur ordonne lui-même CSS, polices et scripts) rend
+l'accueil en **≈ 1,0 s de LCP** (5 passes : 820-1 032 ms) pour 369,5 Ko transférés. L'écart
+avec les 2,0-2,6 s relevés en prod pour un `H1` déjà présent dans le HTML se décompose donc
+en TTFB (300-540 ms de poignée de main et de fonction) et en un artefact du proxy de mesure —
+**pas** en CSS bloquant ni en polices. Conséquence : inliner le CSS critique (20,7 Ko br, une
+seule feuille) rendrait au plus un aller-retour ; ce n'est pas là qu'est le temps, et la
+piste est **fermée sans action**. Les polices (40,5 Ko, trois fichiers, deux préchargées,
+immuables depuis ssr-01) sont au plancher.
+
+### Constats, par impact — et à qui ils reviennent
+
+| ID         | Constat (mesuré)                                                                                                                                                                                                                                                                                              | Enjeu                                                                                               | Tenu par                                             |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| **rt-01**  | **Matière : LCP 5,0 s** (bridé). L'élément LCP est la carte d'introduction du guide, absente du HTML du serveur et posée après l'hydratation ; elle détrône le titre. Sans JavaScript la même page peint en 1,6-2,0 s                                                                                         | Le plus gros écart du site : 3 s de LCP sur la page d'entrée d'une matière                          | axe SEO (route) + composant guide                    |
+| **rt-02**  | **Matière : le sommaire voyage deux fois.** Le HTML le porte (285 Ko, 36,0 br), puis `useQuery` le redemande à l'hydratation (`placeholderData` ne compte pas comme donnée fraîche) : `_serverFn` de **210,2 Ko / 26,8 Ko br**. Idem cours (38,9 / 10,2), niveau (3,5 / 1,5)                                  | +26,8 Ko et un second passage par la fonction (≈ 0,5 s serveur) pour une donnée déjà à l'écran      | axe SEO (`seedOnServer` → `initialData`/hydratation) |
+| **rt-03**  | **Exercice : LCP 5,0 s** (bridé). Le HTML (19,5 Ko) ne porte que le shell et le titre ; l'énoncé arrive par un appel client après l'hydratation                                                                                                                                                               | Page la plus nombreuse du sitemap (5 477 URL)                                                       | axe SEO (route `exercice`)                           |
+| **rt-04**  | **Temps serveur de la matière : +517 ms** au-dessus du plancher, contre +69 à +91 ms pour niveau et cours. Quatre vagues de lectures en série dans `getSubject`, 285 Ko à rendre et à sérialiser                                                                                                              | TTFB de 682 ms à chaud pour tout visiteur, élève connecté compris (même server fn)                  | ✅ livré, voir « Livré »                             |
+| **rt-05**  | **`@dnd-kit` (44 Ko, ≈ 15 Ko br) sur toutes les pages.** Par source map : `vendor-dndkit` contient `react` (7,4 Ko) et un morceau de `react-dom` (3,4 Ko) que le bundler y a hissés ; le chunk d'entrée l'importe donc statiquement, et avec lui tout le glisser-déposer, utile aux seuls plateaux d'exercice | 18,8 Ko br téléchargés et analysés au premier rendu de chaque page                                  | ✅ livré, voir « Livré »                             |
+| **rt-06**  | **Socle JS du premier rendu : 305 Ko br** (accueil, local). `index` 136,7 · `vendor-supabase` 55,4 · `vendor-motion` 48,5 · `vendor-radix` 28,7 · `i18n-fr` 23,6 · `vendor-dndkit` 18,8 · `vendor-icons` 10,8. Supabase et motion sont importés statiquement par le chunk d'entrée                            | À 1,6 Mbit/s : 1,5 s de téléchargement avant l'interactivité                                        | à arbitrer — touche l'auth et les animations         |
+| **rt-07**  | **`gtag.js` : 178,7 Ko br / 534 Ko décodés**, sur chaque page — plus que le chunk d'entrée                                                                                                                                                                                                                    | Après le premier rendu, mais 0,9 s de débit et du temps de processeur sur un téléphone              | décision produit (mesure d'audience)                 |
+| **ssr-04** | **Aucune page publique n'est servie par le CDN** (MISS partout). Enjeu désormais chiffré : 126 à 643 ms de TTFB par visite anonyme, et une lecture de base à chaque fois. **Nouveau bloqueur, absent de l'analyse du 2026-11-03** : un HIT au PoP ne passe plus par `guardRequest` (`bot-guard.ts`)           | Le plus gros gain de TTFB disponible — mais il retire la couche 2 anti-aspiration des pages cachées | **décision du propriétaire**, voir ci-dessous        |
+
+### Livré dans la foulée — chaque gain avec sa mesure, même méthode avant et après
+
+| ID        | Ce qui change                                                                                                                                                                                                                                                                  | Avant → après                                                                                                                                                                                                                                                                | Méthode                                                                                                                                                           |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **rt-05** | Un groupe `vendor-react` prioritaire (`vite.config.ts`, `codeSplitting`). Un groupe emporte les dépendances de ce qu'il capture : `react`, que personne ne réclamait, partait avec `@dnd-kit`. Une règle de plus dans la fonction ne suffisait pas (essayé : module déjà pris) | Accueil : JS du premier rendu **305,0 → 251,3 Ko br** (−17,6 %), transféré 369,5 → 315,8 Ko, 34 → 33 requêtes. `vendor-dndkit` importé par 69 chunks → **1** ; `vendor-motion` par 93 → **13**, plus par le chunk d'entrée. Entrée 413,80 → 238,2 KB + `vendor-react` 188,68 | `npm run perf:budget`, même commit ; `grep` des imports statiques de `dist/client/assets`                                                                         |
+| —         | Moteur de son chargé au premier geste (`src/lib/sound/lazy.ts`) : la synthèse sort de l'entrée, les préférences y restent. Safari exige `resume()` dans le geste : l'écouteur reste posé jusqu'au premier geste où le moteur est déjà là                                       | Entrée 243 967 → 239 717 octets ; chunk `audio` de 4 753 octets, demandé après un geste (vérifié en navigateur sur une page d'exercice). JS du premier rendu 251,3 → 250,3 Ko br                                                                                             | `ls -l` des chunks ; `perf:budget` ; Chromium sur le bundle de prod                                                                                               |
+| **rt-04** | `getSubject` : la disponibilité des Rappels et l'ancre de parcours partent avec les lectures de contenu au lieu de les attendre, puis de s'attendre l'une l'autre                                                                                                              | Rendu serveur de `/matiere/math`, à chaud : **1 070 · 1 132 · 1 126 → 744 · 844 · 637 ms** ; lectures en série 3 → 1. Le rendu React et la sérialisation ne comptent que pour ≈ 20 ms des 285 Ko : tout le temps est dans les lectures                                       | Bundle de prod en local, catalogue lu en anonyme, `fetch` chronométré (≈ 155 ms de trajet par lecture depuis le conteneur — les rapports valent, pas les valeurs) |
+
+Vérifié en navigateur sur le bundle de production, catalogue réel lu en anonyme : matière,
+cours et exercice rendent sans erreur de page avec le nouveau découpage ; matière et cours ne
+chargent plus ni `motion` ni `@dnd-kit`, l'exercice les charge (il s'en sert).
+
+**À re-mesurer à la reprise du déploiement**, sans rien changer à la méthode :
+`node perf/runtime/measure-pages.mjs --base https://www.na9ranal3ab.tn --page accueil=/ --page niveau=/niveau/concours-6eme --page matiere=/matiere/math --page cours=/chapitre/e602ea95-36fe-5fdd-b6bc-3c71484ff81c --page exercice=/exercice/eb9749ae-771e-5c17-8c92-e4d9d3883622 --runs 3`,
+puis les cinq passes `curl` à connexion ouverte du tableau « Temps serveur ». Attendu : JS
+transféré −50 Ko br environ sur accueil, niveau, matière et cours ; TTFB de la matière sous
+500 ms.
+
+### Ce que les lots ont fait apparaître
+
+| ID        | Constat (mesuré)                                                                                                                                                                                                                                                                                                                                                                                                                                                | Tenu par                                                                                 |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| **rt-08** | **`get_recall_availability` est désormais le plancher de la page matière** : 613 ms pour `math` contre 316 ms pour la plus lourde des lectures de contenu (115 Ko), soit ≈ 450 ms de base hors trajet. Elle évalue `is_question_recall_eligible(q)` sur chaque question de chaque mission de la matière, à chaque visite, pour une valeur dérivée du contenu                                                                                                    | `supabase/**` — à précalculer à l'application du contenu (compte éligible par mission)   |
+| **rt-09** | **Base injoignable = 7 s d'attente avant le premier octet** d'une page publique rendue côté serveur. `postgrest-js` 2.119 rejoue trois fois une panne réseau (1 s, 2 s, 4 s) et `seedOnServer` attend la fin. Vu le jour même où `/programme` est passée au rendu serveur (#1266) : le budget runtime a rougi à 7,8 s de LCP sur cette page, base factice en face                                                                                               | axe SEO (`seedOnServer` : borner l'attente, 1,5 s par exemple, puis rendre le squelette) |
+| **rt-10** | `getParcours` (`/programme`) fait trois lectures en série — `parcours`, `grades`, `subjects` — dont aucune ne dépend de la précédente ; `getChapterLesson` lit les missions du chapitre dans une troisième vague alors qu'elles ne dépendent que de `chapterId`. Ce second point n'est **pas** pris : un test du jour pose « une seule lecture autour d'un chapitre absent », et le gain (un aller-retour sur +91 ms) ne vaut pas de défaire un invariant voulu | axe Dette (`dashboard.server.ts`) ; `quest.lesson.server.ts` laissé tel quel             |
+
+### De l'affichage à l'interactivité — ce qui compose l'écart
+
+La session « première visite » relève le même jour, sur un profil comparable (360×780,
+CPU ÷ 4, 1,6 Mbit/s) : premier affichage 1,0 à 1,6 s, **interactif 5,2 à 6,4 s**, et un
+décalage de mise en page de 0,11-0,12 vers 4 s (en-tête public, relayé à l'axe Accessibilité ;
+détail dans `docs/audit-premiere-visite-2026-11-12.md`). Décomposition, mesurée ici sur le
+bundle de production en local (accueil, trois passes, après rt-05) :
+
+| Étape                           |     Instant | Ce qui la détermine                                                 |
+| ------------------------------- | ----------: | ------------------------------------------------------------------- |
+| Premier affichage (FCP)         | 0,76-0,98 s | HTML + feuille de style ; le JS ne le retient pas                   |
+| Dernier script reçu             | 2,51-2,86 s | **le débit** : 254 Ko br à 1,6 Mbit/s                               |
+| Fin de la dernière tâche longue | 2,76-3,18 s | hydratation : 3 tâches longues, 226-267 ms au total (TBT 76-117 ms) |
+
+L'écart est donc du **téléchargement**, pas du processeur : ≈ 1,7 s de transfert pour ≈ 0,25 s
+d'exécution. En production s'y ajoutent ce que la mesure locale n'a pas — `gtag.js`
+(178,7 Ko br, soit 0,9 s du même débit, rt-07), le second voyage des données (rt-02) et le
+TTFB. Ce qui raccourcit l'attente est donc ce qui retire des octets du premier rendu :
+rt-05 (fait, −54 Ko), puis `vendor-supabase` (55,4 Ko br) et `gtag.js`, tous deux à arbitrer
+(rt-06, rt-07). Travailler l'hydratation n'y changerait presque rien.
+
+### ssr-04 — pourquoi ce n'est pas livré, et ce qu'il faut décider
+
+La voie A (CSP par hachage, variantes par cookie) reste la seule permise, et elle tient
+techniquement. Mais la mesure a fait apparaître ce que l'analyse du 2026-11-03 n'avait pas
+vu : `src/server.ts` appelle `guardRequest` **dans la fonction**. Une page servie par le PoP
+n'y entre jamais. Cacher les pages de cours, c'est donc servir leur contenu (62 Ko de leçon
+par page) aux robots d'entraînement déclarés et aux aspirateurs en rafale **sans** le refus
+403 ni le plafond par IP — c'est-à-dire lever la « couche 2 du plan de protection IP » sur
+exactement les pages qu'elle protège. Ce n'est pas un réglage de perf.
+
+Trois issues, à trancher par le propriétaire :
+
+1. **Cacher, et porter le refus des agents déclarés au bord** : la liste `BLOCKED_AI_UA`
+   devient des routes `has: header user-agent` → 403 dans `vercel-routes.mjs`, générées
+   depuis la même source. Le plafond de rafale par IP, lui, disparaît pour les pages cachées
+   (il est en mémoire, par instance, « best-effort » de son propre aveu). Gain : TTFB d'une
+   visite anonyme ≈ celui d'un fichier statique (39 ms d'ici, contre 165-682).
+2. **Ne cacher que ce qui n'est pas du contenu** : accueil, niveau, `/programme` (sommaires).
+   Gain limité au plancher (+126 à +195 ms), aucune leçon exposée hors garde.
+3. **Ne rien cacher** et traiter le temps serveur à la source (rt-04 fait, rt-08, rt-02).
+   C'est ce que fait cet axe en attendant la décision.
+
+### Le garde-fou posé
+
+`npm run perf:budget` (étape de `ci.yml`, après `smoke:shell`) : le bundle de production
+servi en local, `/` et `/programme` dans un Chromium bridé, plafonds dans
+`perf/runtime/budget.mjs`. Poids et requêtes sont déterministes (trois passes, mêmes
+chiffres à l'octet) ; le LCP se lit sur la médiane de cinq chargements contre un plafond au
+double du réel. La dette « pas de budget de perf runtime » est soldée
+(`docs/dette-technique.md`). Limite écrite dans le budget : sans base, les pages à contenu ne
+rendent pas en CI — leurs chiffres sont ceux de cette section, à re-mesurer après chaque lot.
+
+Il a servi le jour de sa pose : rouge sur `/programme` (LCP 7,8 s) dès la fusion de #1266,
+ce qui a donné rt-09. Pour que la mesure ne dépende plus de la façon dont une machine échoue
+à joindre un hôte inconnu, la base factice répond une erreur HTTP immédiate
+(`check-budget.mjs`) : « pas de base » veut dire réponse tout de suite, pas attente.
+
 ## 1. Executive summary
 
 The architecture is **correct and reasonably mature** for its current size: hot

@@ -310,4 +310,51 @@ describe("gamification.quest — getSubject", () => {
     expect(result.viewer).toMatchObject({ unrestricted: false });
     expect(tables).toContain("attempts");
   });
+
+  // Audit perf rt-04 (2026-11-12). La disponibilité des Rappels et l'ancre de parcours
+  // attendaient la fin des lectures de contenu, puis l'une l'autre : quatre vagues en
+  // série pour une page publique. Elles partent maintenant AVEC le contenu. Le test
+  // retient la lecture des missions et regarde ce qui est déjà parti — sans le
+  // correctif, ni l'une ni l'autre ne l'est.
+  it("lance les Rappels et l'ancre de parcours sans attendre les lectures de contenu", async () => {
+    let releaseExercises: (v: unknown) => void = () => {};
+    const exercisesPending = new Promise((resolve) => {
+      releaseExercises = resolve;
+    });
+    const subjectReads: string[] = [];
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "subjects") {
+        subjectReads.push(table);
+        return mockQuery({ id: "subj-1", name_fr: "Math", theme_id: "school", grade_id: "g6" });
+      }
+      if (table === "exercises") {
+        const chain = mockQuery([]);
+        chain.then = (fn: (v: unknown) => unknown) => exercisesPending.then(fn);
+        return chain;
+      }
+      if (table === "parcours") return mockQuery({ id: "p-1", name_fr: "6e", is_premium: false });
+      return mockQuery([]);
+    });
+    const rpcCalls: string[] = [];
+    mockRpc.mockImplementation((fn: string) => {
+      rpcCalls.push(fn);
+      if (fn === "resolve_subject_parcours") return Promise.resolve({ data: "p-1", error: null });
+      return Promise.resolve({ data: null, error: null });
+    });
+
+    const { getSubject } = await import("@/features/quest");
+    const pending = (
+      getSubject as unknown as (d: unknown) => Promise<{ parcours: { id: string } | null }>
+    )({ subjectId: "subj-1" });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(rpcCalls).toContain("get_recall_availability");
+    expect(rpcCalls).toContain("resolve_subject_parcours");
+
+    releaseExercises({ data: [], error: null });
+    const result = await pending;
+    expect(result.parcours).toMatchObject({ id: "p-1" });
+    // La ligne `subjects` sert deux lecteurs (le lot et l'ancre) : UNE seule requête.
+    expect(subjectReads).toHaveLength(1);
+  });
 });

@@ -13,6 +13,7 @@ import {
 import { playSound, playCombo, unlockAudio } from "../engine";
 import { vibrateFor } from "../haptics";
 import { startMusic, stopMusic } from "../music";
+import { __resetLazyAudioForTests, audioIfLoaded, loadAudio } from "../lazy";
 
 vi.mock("../engine", () => ({
   playSound: vi.fn(),
@@ -52,6 +53,7 @@ function renderProvider() {
 
 beforeEach(() => {
   localStorage.clear();
+  __resetLazyAudioForTests();
   vi.mocked(playSound).mockClear();
   vi.mocked(playCombo).mockClear();
   vi.mocked(unlockAudio).mockClear();
@@ -92,28 +94,56 @@ describe("SoundProvider", () => {
     expect(screen.getByTestId("music")).toHaveTextContent("on");
   });
 
-  it("plays effects AND fires haptics when enabled", () => {
+  it("ne charge pas le moteur audio au montage : aucun son ne peut partir avant un geste", async () => {
     renderProvider();
+    await Promise.resolve();
+    expect(audioIfLoaded()).toBeNull();
+  });
+
+  it("plays effects AND fires haptics when enabled", async () => {
+    renderProvider();
+    fireEvent.click(screen.getByText("play"));
+    // Le retour haptique ne dépend pas du moteur : il part dans le geste.
+    expect(vibrateFor).toHaveBeenCalledWith("victory");
+    await vi.waitFor(() => expect(playSound).toHaveBeenCalledWith("victory"));
+  });
+
+  it("plays escalating combos when enabled", async () => {
+    renderProvider();
+    fireEvent.click(screen.getByText("combo"));
+    await vi.waitFor(() => expect(playCombo).toHaveBeenCalledWith(5));
+  });
+
+  it("joue dans le geste, sans attendre, une fois le moteur chargé", async () => {
+    renderProvider();
+    await loadAudio();
     fireEvent.click(screen.getByText("play"));
     expect(playSound).toHaveBeenCalledWith("victory");
-    expect(vibrateFor).toHaveBeenCalledWith("victory");
   });
 
-  it("plays escalating combos when enabled", () => {
-    renderProvider();
-    fireEvent.click(screen.getByText("combo"));
-    expect(playCombo).toHaveBeenCalledWith(5);
-  });
-
-  it("does not play effects or combos when disabled", () => {
+  it("does not play effects or combos when disabled", async () => {
     renderProvider();
     act(() => fireEvent.click(screen.getByText("fx-off")));
-    vi.mocked(playSound).mockClear();
-    vi.mocked(playCombo).mockClear();
     fireEvent.click(screen.getByText("play"));
     fireEvent.click(screen.getByText("combo"));
+    await loadAudio();
     expect(playSound).not.toHaveBeenCalled();
     expect(playCombo).not.toHaveBeenCalled();
+    expect(vibrateFor).not.toHaveBeenCalled();
+  });
+
+  it("le premier geste fait venir le moteur et le déverrouille ; le suivant déverrouille DANS le geste puis se retire", async () => {
+    renderProvider();
+    fireEvent.pointerDown(window);
+    expect(unlockAudio).not.toHaveBeenCalled();
+    await vi.waitFor(() => expect(unlockAudio).toHaveBeenCalledTimes(1));
+
+    fireEvent.pointerDown(window);
+    expect(unlockAudio).toHaveBeenCalledTimes(2);
+
+    fireEvent.pointerDown(window);
+    fireEvent.keyDown(window);
+    expect(unlockAudio).toHaveBeenCalledTimes(2);
   });
 
   it("persists both preferences to localStorage", () => {
@@ -124,11 +154,19 @@ describe("SoundProvider", () => {
     expect(localStorage.getItem(MUSIC_STORAGE_KEY)).toBe("on");
   });
 
-  it("starts the ambient loop when music is enabled and stops it when disabled", () => {
+  it("starts the ambient loop when music is enabled and stops it when disabled", async () => {
     renderProvider();
     act(() => fireEvent.click(screen.getByText("music-on")));
-    expect(startMusic).toHaveBeenCalled();
+    await vi.waitFor(() => expect(startMusic).toHaveBeenCalled());
     act(() => fireEvent.click(screen.getByText("music-off")));
     expect(stopMusic).toHaveBeenCalled();
+  });
+
+  it("ne démarre pas la musique si elle a été coupée avant l'arrivée du moteur", async () => {
+    renderProvider();
+    act(() => fireEvent.click(screen.getByText("music-on")));
+    act(() => fireEvent.click(screen.getByText("music-off")));
+    await loadAudio();
+    expect(startMusic).not.toHaveBeenCalled();
   });
 });

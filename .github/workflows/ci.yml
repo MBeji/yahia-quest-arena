@@ -230,6 +230,17 @@ jobs:
       - name: Production shell smoke (real browser)
         run: npm run smoke:shell
 
+      # Budget de perf RUNTIME (2026-11-12, dette « pas de budget de perf runtime »).
+      # `build:check` borne chaque chunk ; ceci borne ce qu'une page publique fait
+      # réellement télécharger et attendre à un téléphone bridé : requêtes, octets
+      # transférés, JavaScript, LCP. Même bundle que le smoke ci-dessus (`--no-build`
+      # réutilise son `dist/`), même herméticité : aucun secret, aucun tiers.
+      # Poids et requêtes sont déterministes ; le LCP se lit sur la médiane de cinq
+      # chargements, contre un plafond au double du réel. Plafonds et règle :
+      # perf/runtime/budget.mjs.
+      - name: Runtime perf budget (real browser, phone profile)
+        run: npm run perf:budget -- --no-build
+
       - name: Runtime dependency audit
         run: npm run audit:deps
 
