@@ -108,16 +108,21 @@ describe("getExerciseMeta", () => {
     });
   });
 
-  it("returns null for an unknown exercise — the page keeps its generic title", async () => {
+  // `null` = la lecture a RÉUSSI et n'a rien rendu : la page répond 404.
+  it("returns null for an unknown exercise — the page answers 404", async () => {
     mockLookup({ data: null, error: null });
     await expect(getExerciseMeta({ data: { exerciseId: EXERCISE_ID } })).resolves.toBeNull();
-    expect(logger.warn).not.toHaveBeenCalled();
+    expect(logger.error).not.toHaveBeenCalled();
   });
 
-  it("returns null and logs when the lookup fails", async () => {
+  // Une lecture en ÉCHEC ne doit jamais passer pour « introuvable » : elle lève,
+  // la page garde son 200 et son titre générique, le lecteur charge côté client.
+  it("throws when the lookup fails — a failed read is not a missing exercise", async () => {
     mockLookup({ data: null, error: { message: "boom" } });
-    await expect(getExerciseMeta({ data: { exerciseId: EXERCISE_ID } })).resolves.toBeNull();
-    expect(logger.warn).toHaveBeenCalledWith(
+    await expect(getExerciseMeta({ data: { exerciseId: EXERCISE_ID } })).rejects.toThrow(
+      "Impossible de charger l'exercice.",
+    );
+    expect(logger.error).toHaveBeenCalledWith(
       expect.stringContaining("getExerciseMeta"),
       expect.objectContaining({ error: "boom" }),
     );
