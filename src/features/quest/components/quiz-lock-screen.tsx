@@ -24,6 +24,7 @@ export function QuizContractHint({ className = "" }: { className?: string }) {
  * condition and supplies already-localized copy so this stays i18n-agnostic.
  */
 export function QuizLockScreen({
+  missionTitle = null,
   title,
   body,
   takeQuizLabel,
@@ -35,6 +36,12 @@ export function QuizLockScreen({
   rtl,
   quizExerciseTo = "/quest/$exerciseId",
 }: {
+  /**
+   * Le nom de la mission demandée. Un visiteur arrivé par un lien direct (moteur de recherche,
+   * partage) ne voyait qu'un cadenas : plus rien ne disait ce qu'il était venu chercher (relevé
+   * « première visite » du 2026-11-12, C-1). Absent = l'écran d'avant, sans surtitre.
+   */
+  missionTitle?: string | null;
   title: string;
   body: string;
   takeQuizLabel: string;
@@ -62,7 +69,18 @@ export function QuizLockScreen({
     <div className="mx-auto max-w-md px-6 py-16 text-center" dir={rtl ? "rtl" : undefined}>
       <div className="rounded-3xl border border-[color:var(--neon-gold)]/40 bg-[color:var(--neon-gold)]/5 p-8">
         <Lock className="mx-auto h-12 w-12 text-[color:var(--neon-gold)]" />
-        <h1 className="mt-4 font-display text-2xl font-bold">{title}</h1>
+        {missionTitle && (
+          <p
+            dir="auto"
+            data-testid="lock-mission-title"
+            className="mt-4 text-sm font-semibold text-muted-foreground"
+          >
+            {missionTitle}
+          </p>
+        )}
+        <h1 className={`${missionTitle ? "mt-1" : "mt-4"} font-display text-2xl font-bold`}>
+          {title}
+        </h1>
         <p className="mt-3 text-sm text-muted-foreground">{body}</p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           {quizId &&

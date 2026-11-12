@@ -191,6 +191,66 @@ describe("entraînement public — public_practice_completed (é38 lot 0)", () =
   });
 });
 
+describe("entraînement public — la suite après une réussite (relevé première visite, C-3)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    holder.strategy = null;
+    window.sessionStorage.clear();
+    getChapterLesson.mockResolvedValue({ practiceExerciseId: null });
+  });
+
+  const footer = (strategy: ExercisePlayerStrategy, scorePct: number) =>
+    render(
+      <div>
+        {strategy.renderResultFooter({
+          exerciseId: "ex-1",
+          subjectId: "s1",
+          nextExerciseId: "ex-2",
+          xpReward: null,
+          onReplay: () => {},
+          result: { scorePct } as never,
+        })}
+      </div>,
+    ).container.querySelector('a[href="/exercice/$exerciseId"]');
+
+  it("le registre sans compte demande la mission suivante au lecteur", () => {
+    expect(mountStrategy().capabilities.next).toBe(true);
+  });
+
+  it("mission réussie : la suivante est offerte, dans le registre sans compte", async () => {
+    checkAnswersPublic.mockResolvedValue({
+      correct: 5,
+      total: 6,
+      scorePct: 83,
+      reviewable: true,
+      review: [],
+    });
+    const strategy = mountStrategy();
+    await strategy.submit({ ...run, durationSeconds: 60, isQuiz: false, totalQuestions: 6 });
+    expect(footer(strategy, 83)?.getAttribute("href")).toBe("/exercice/$exerciseId");
+  });
+
+  it("mission ratée : pas de mission suivante, rejouer vient d'abord", async () => {
+    checkAnswersPublic.mockResolvedValue({
+      correct: 1,
+      total: 6,
+      scorePct: 17,
+      reviewable: true,
+      review: [],
+    });
+    const strategy = mountStrategy();
+    await strategy.submit({ ...run, durationSeconds: 60, isQuiz: false, totalQuestions: 6 });
+    expect(footer(strategy, 17)).toBeNull();
+  });
+
+  it("quiz raté à 70 % : la mission suivante est derrière la porte, elle n'est pas offerte", async () => {
+    scoreQuizPublic.mockResolvedValue({ correct: 7, total: 10, scorePct: 70 });
+    const strategy = mountStrategy();
+    await strategy.submit({ ...run, durationSeconds: 60, isQuiz: true, totalQuestions: 10 });
+    expect(footer(strategy, 70)).toBeNull();
+  });
+});
+
 describe("entraînement public — le retour au point de départ (é38 lot 1)", () => {
   it("l'invitation du résultat retient la page de l'entraînement", () => {
     window.localStorage.clear();
