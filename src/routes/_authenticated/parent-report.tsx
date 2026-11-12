@@ -28,6 +28,7 @@ import {
   setStudentWeeklyGoal,
 } from "@/features/parent-report";
 import { EnablePushCard } from "@/features/notifications";
+import { pageTitle } from "@/lib/i18n/head";
 // Import DIRECT et non `@/features/tutor` : le barrel de la feature tuteur
 // réexporte toutes ses server fns (chat, forge ciblée, énergie), qui
 // atterriraient dans le chunk de cette route pour un seul composant.
@@ -44,7 +45,7 @@ import { LoadingState } from "@/components/ui/loading-state";
 import { GOAL_TARGET_MAX } from "@/shared/constants/gamification";
 
 export const Route = createFileRoute("/_authenticated/parent-report")({
-  head: () => ({ meta: [{ title: "Suivi parental · Na9ra Nal3ab" }] }),
+  head: () => ({ meta: [{ title: pageTitle((t) => t.layout.parentReport) }] }),
   component: ParentReport,
 });
 

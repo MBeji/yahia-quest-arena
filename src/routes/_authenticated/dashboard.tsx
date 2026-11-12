@@ -27,6 +27,7 @@ import type { DashboardGoalAction } from "@/features/dashboard";
 // Import direct, même raison que sur le lecteur de chapitre : le barrel de
 // la feature IA tirerait la console parent et la Forge dans ce chunk.
 import { ForgeEntry } from "@/features/ai/components/forge-entry";
+import { pageTitle } from "@/lib/i18n/head";
 // Import direct, même raison que ci-dessus : le barrel de `tutor` tirerait le
 // panneau de correction et ses server fns dans le chunk du tableau de bord,
 // alors que ces deux composants-ci sont purs et sans appel réseau.
@@ -113,7 +114,7 @@ import { HeroAvatar } from "@/features/dashboard/components/hero-avatar";
 import { HeroStatChips } from "@/features/dashboard/components/hero-stat-chips";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Hall des Héros · Na9ra Nal3ab" }] }),
+  head: () => ({ meta: [{ title: pageTitle((t) => t.layout.heroesHall) }] }),
   component: Dashboard,
 });
 

@@ -18,9 +18,10 @@ import { useI18n, useT } from "@/lib/i18n";
 import { useLearningPulse } from "@/hooks/use-learning-pulse";
 import { computeOutcome } from "@/features/duel/duel-outcome";
 import { trackProductEvent } from "@/shared/lib/product-events";
+import { pageTitle } from "@/lib/i18n/head";
 
 export const Route = createFileRoute("/_authenticated/duel/$duelId")({
-  head: () => ({ meta: [{ title: "Duel · Na9ra Nal3ab" }] }),
+  head: () => ({ meta: [{ title: pageTitle((t) => t.duel.title) }] }),
   component: DuelPlayPage,
 });
 

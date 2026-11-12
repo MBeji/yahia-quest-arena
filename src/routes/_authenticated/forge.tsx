@@ -6,6 +6,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { useT } from "@/lib/i18n";
 import { getAiStudentSurfaces } from "@/features/ai/ai-access.server";
 import { ForgePanel } from "@/features/ai/components/forge-panel";
+import { pageTitle } from "@/lib/i18n/head";
 
 /**
  * La Forge — étude 29 lot 4, US-6.
@@ -26,7 +27,7 @@ export const Route = createFileRoute("/_authenticated/forge")({
   // `examen.$examId` et de `quest.$exerciseId`, appris avant nous.
   validateSearch: (search: Record<string, unknown>): { chapitre?: string } =>
     typeof search.chapitre === "string" ? { chapitre: search.chapitre } : {},
-  head: () => ({ meta: [{ title: "La Forge · Na9ra Nal3ab" }] }),
+  head: () => ({ meta: [{ title: pageTitle((t) => t.ai.forgeTitle) }] }),
   component: ForgePage,
 });
 

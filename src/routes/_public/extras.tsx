@@ -11,6 +11,7 @@ import {
   ExtrasCatalogue,
   type CatalogueParcours,
 } from "@/features/dashboard/components/parcours-catalogue";
+import { pageTitle } from "@/lib/i18n/head";
 
 /**
  * Public catalogue — the optional `libre` extras (« Référence » register, chantier C8,
@@ -20,7 +21,7 @@ import {
 export const Route = createFileRoute("/_public/extras")({
   head: () => ({
     meta: [
-      { title: "Extras · langues, culture générale, logique · Na9ra Nal3ab" },
+      { title: pageTitle((t) => t.public.titles.extras) },
       {
         name: "description",
         content:

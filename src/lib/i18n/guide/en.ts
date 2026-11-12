@@ -53,7 +53,7 @@ export const enGuide: GuideTranslations = {
       lessonPracticeCta:
         "The quiz is already passed: this button takes you straight to the missions to practise.",
       parentLink:
-        "The code is in your child's account: gear ⚙️ › “All settings” › “My account” › “Alliance Code”. They copy it and give it to you.",
+        "The code is in your child's account: gear ⚙️ › “All settings” › “My account” › “Alliance code”. They copy it and give it to you.",
     },
     intro: {
       badge: "First visit",
@@ -231,11 +231,11 @@ export const enGuide: GuideTranslations = {
           {
             icon: "1️⃣",
             label: "Ask your child for their code",
-            text: "In their account: gear ⚙️ › “All settings” › “My account” › “Alliance Code”.",
+            text: "In their account: gear ⚙️ › “All settings” › “My account” › “Alliance code”.",
           },
           {
             icon: "2️⃣",
-            label: "“Link a student via Alliance Code”",
+            label: "“Link a student with their alliance code”",
             text: "Type the code in the box, then tap the golden button.",
           },
           {
@@ -257,7 +257,7 @@ export const enGuide: GuideTranslations = {
           {
             icon: "🔑",
             label: "Your child's code",
-            text: "In their account: gear ⚙️ › “All settings” › “My account” › “Alliance Code”.",
+            text: "In their account: gear ⚙️ › “All settings” › “My account” › “Alliance code”.",
           },
           {
             icon: "⌨️",
@@ -277,7 +277,7 @@ export const enGuide: GuideTranslations = {
         items: [
           {
             icon: "🔑",
-            label: "“Alliance Code”",
+            label: "“Alliance code”",
             text: "The code to give your parent so they can follow your progress. Tap “Copy”.",
           },
           {

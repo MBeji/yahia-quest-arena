@@ -28,11 +28,12 @@ import { GoogleSignInButton } from "@/features/auth/components/google-sign-in-bu
 import { useEntrance } from "@/shared/lib/motion";
 import { trackProductEvent } from "@/shared/lib/product-events";
 import { consumeReturnTo, rememberReturnTo } from "@/shared/lib/return-to";
+import { pageTitle } from "@/lib/i18n/head";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Rejoindre l'Académie · Na9ra Nal3ab" },
+      { title: pageTitle((t) => t.public.titles.auth) },
       {
         name: "description",
         content:

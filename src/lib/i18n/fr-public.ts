@@ -16,6 +16,14 @@ export const frPublic: TranslationKeys["public"] = {
     tagline: "100 % gratuit · toute l’école tunisienne",
     rights: "Tous droits réservés",
     legalLink: "Mentions légales",
+    privacy: "Confidentialité",
+    terms: "Conditions",
+  },
+  titles: {
+    programme: "Programme scolaire tunisien",
+    extras: "Extras · langues, culture générale, logique",
+    suivi: "Suivi de mon enfant",
+    auth: "Rejoindre l'Académie",
   },
   landing: {
     freeBadge: "100 % gratuit · sans inscription",
@@ -76,7 +84,7 @@ export const frPublic: TranslationKeys["public"] = {
     familleStepsTitle: "Comment ça marche ?",
     familleStep1: "Votre enfant crée son compte élève et s'entraîne",
     familleStep2: "Vous créez votre compte parent en quelques secondes",
-    familleStep3: "Vous liez les deux avec son code Alliance — c'est tout",
+    familleStep3: "Vous liez les deux avec son code alliance — c'est tout",
     familleCta: "Créer mon compte parent",
     familleCtaAuthed: "Ouvrir le suivi parental",
   },

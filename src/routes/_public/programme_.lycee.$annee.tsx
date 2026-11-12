@@ -12,6 +12,7 @@ import {
   LyceeYearSections,
   type CatalogueParcours,
 } from "@/features/dashboard/components/parcours-catalogue";
+import { pageTitle } from "@/lib/i18n/head";
 
 /**
  * Public lycée year page — the sections of ONE secondary year (étude 16 D-5,
@@ -26,7 +27,7 @@ const YEARS = ["2eme", "3eme", "bac"] as const;
 type Year = (typeof YEARS)[number];
 
 export const Route = createFileRoute("/_public/programme_/lycee/$annee")({
-  head: () => ({ meta: [{ title: "Lycée · Na9ra Nal3ab" }] }),
+  head: () => ({ meta: [{ title: pageTitle((t) => t.public.cycles.lycee) }] }),
   component: LyceeYearPage,
 });
 

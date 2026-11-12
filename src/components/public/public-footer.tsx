@@ -26,14 +26,15 @@ export function PublicFooter() {
             {t.public.header.parentTracking}
           </Link>
           <span aria-hidden="true">·</span>
-          {/* Libellés en dur, comme le contenu des pages : trois pages légales
-              en trois langues feraient sortir le chunk i18n de son budget. */}
+          {/* Les LIBELLÉS suivent la langue de l'interface ; le contenu des deux
+              pages reste en français (trois pages légales en trois langues
+              feraient sortir le chunk i18n de son budget). */}
           <Link to="/confidentialite" className="hover:underline">
-            Confidentialité
+            {t.public.footer.privacy}
           </Link>
           <span aria-hidden="true">·</span>
           <Link to="/conditions" className="hover:underline">
-            Conditions
+            {t.public.footer.terms}
           </Link>
           <span aria-hidden="true">·</span>
           <LegalNoticeDialog />

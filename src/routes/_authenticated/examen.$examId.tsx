@@ -8,6 +8,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import { PageShell } from "@/components/ui/page-shell";
 import { useI18n, useT } from "@/lib/i18n";
+import { pageTitle } from "@/lib/i18n/head";
 // Imports profonds route→feature (même convention que `dungeon` et
 // `quest.$exerciseId`) : passer par le barrel de `quest` tirerait
 // `quest.server.ts` — et toute la boucle de récompense — dans le graphe de
@@ -52,7 +53,7 @@ type ExamSearch = { kind: "ranked" | "practice" };
 const EMPTY_OPTIONS: DisplayOption[] = [];
 
 export const Route = createFileRoute("/_authenticated/examen/$examId")({
-  head: () => ({ meta: [{ title: "Examen blanc · Na9ra Nal3ab" }] }),
+  head: () => ({ meta: [{ title: pageTitle((t) => t.exam.title) }] }),
   validateSearch: (search: Record<string, unknown>): ExamSearch => ({
     kind: search.kind === "practice" ? "practice" : "ranked",
   }),

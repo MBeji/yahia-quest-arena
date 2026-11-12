@@ -1085,7 +1085,16 @@ export type TranslationKeys = {
       signup: string;
       account: string;
     };
-    footer: { tagline: string; rights: string; legalLink: string };
+    footer: {
+      tagline: string;
+      rights: string;
+      legalLink: string;
+      /** Libellés des liens vers /confidentialite et /conditions (les pages, elles, restent en français). */
+      privacy: string;
+      terms: string;
+    };
+    /** Titres d'onglet des pages publiques (`pageTitle`, `src/lib/i18n/head.ts`) — le français est celui que lisent les robots. */
+    titles: { programme: string; extras: string; suivi: string; auth: string };
     landing: {
       freeBadge: string;
       heroTitle: string;

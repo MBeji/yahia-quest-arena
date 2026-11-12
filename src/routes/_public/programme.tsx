@@ -11,6 +11,7 @@ import {
   ProgrammeCatalogue,
   type CatalogueParcours,
 } from "@/features/dashboard/components/parcours-catalogue";
+import { pageTitle } from "@/lib/i18n/head";
 
 /**
  * Public catalogue — the official school programme (« Référence » register, chantier
@@ -20,7 +21,7 @@ import {
 export const Route = createFileRoute("/_public/programme")({
   head: () => ({
     meta: [
-      { title: "Programme scolaire tunisien · Na9ra Nal3ab" },
+      { title: pageTitle((t) => t.public.titles.programme) },
       {
         name: "description",
         content:

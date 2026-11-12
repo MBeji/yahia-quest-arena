@@ -17,11 +17,12 @@ import {
 import { useParentT } from "@/lib/i18n/parent";
 import { GuideIntroCard } from "@/components/guide/guide-intro-card";
 import { useRedirectConnectedParent } from "@/features/auth";
+import { pageTitle } from "@/lib/i18n/head";
 
 /**
  * Suivi parental PUBLIC par code — aucun compte, aucune connexion requise.
  *
- * Le parent colle l'Alliance Code de son enfant (affiché sur le tableau de bord de
+ * Le parent colle le code alliance de son enfant (affiché sur le tableau de bord de
  * l'élève) et voit le bilan en lecture seule. Le code peut arriver pré-rempli via
  * `?code=…` (deep-link depuis la landing / lien partagé) ou depuis la mémoire de
  * l'appareil (case « se souvenir » — sans elle, cette page sans session redemandait
@@ -33,11 +34,11 @@ export const Route = createFileRoute("/_public/suivi")({
     typeof s.code === "string" && s.code.trim() ? { code: s.code.trim() } : {},
   head: () => ({
     meta: [
-      { title: "Suivi de mon enfant · Na9ra Nal3ab" },
+      { title: pageTitle((t) => t.public.titles.suivi) },
       {
         name: "description",
         content:
-          "Suivez la progression de votre enfant avec son code d'alliance — sans compte ni connexion.",
+          "Suivez la progression de votre enfant avec son code alliance — sans compte ni connexion.",
       },
     ],
   }),
@@ -154,7 +155,7 @@ function SuiviPublicPage() {
       >
         <div className="mb-3 flex items-center gap-2 text-primary">
           <LinkIcon className="h-4 w-4" />
-          <span className="font-semibold">{t.parentReport.linkTitle}</span>
+          <span className="font-semibold">{t.parentReport.viewTitle}</span>
         </div>
         <div className="grid gap-2 md:grid-cols-[1fr_auto]">
           <input
@@ -169,7 +170,7 @@ function SuiviPublicPage() {
             disabled={code.trim().length < 8 || reportMutation.isPending}
             className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-50 [@media(pointer:coarse)]:min-h-11"
           >
-            {reportMutation.isPending ? t.parentReport.linking : t.parentReport.linkCta}
+            {reportMutation.isPending ? t.parentReport.viewing : t.parentReport.viewCta}
           </button>
         </div>
         <p className="mt-2 text-xs text-muted-foreground">{t.parentReport.linkHint}</p>

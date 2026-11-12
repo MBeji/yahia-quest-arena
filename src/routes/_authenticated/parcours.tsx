@@ -3,9 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { getDashboard } from "@/features/dashboard";
 import { JourneyMap, JourneySkeleton, buildSubjectNodes } from "@/features/parcours";
+import { pageTitle } from "@/lib/i18n/head";
 
 export const Route = createFileRoute("/_authenticated/parcours")({
-  head: () => ({ meta: [{ title: "Parcours · Na9ra Nal3ab" }] }),
+  head: () => ({ meta: [{ title: pageTitle((t) => t.layout.parcours) }] }),
   component: ParcoursPage,
 });
 

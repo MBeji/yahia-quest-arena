@@ -29,6 +29,7 @@ import { usePlacementT } from "@/lib/i18n/placement";
 import { parcoursName } from "@/shared/lib/parcours-locale";
 import { trackProductEvent } from "@/shared/lib/product-events";
 import { isRtlText } from "@/shared/lib/utils";
+import { pageTitle } from "@/lib/i18n/head";
 
 /**
  * L'ENTRÉE DU TEST DE NIVEAU (étude 39, US-1) — publique, partageable, auth-aware.
@@ -49,7 +50,7 @@ const SLUG = /^[a-z0-9][a-z0-9_-]{0,63}$/i;
 export const Route = createFileRoute("/_public/test-de-niveau")({
   head: () => ({
     meta: [
-      { title: "Test de niveau · Na9ra Nal3ab" },
+      { title: pageTitle((t) => t.public.header.placement) },
       {
         name: "description",
         content:
