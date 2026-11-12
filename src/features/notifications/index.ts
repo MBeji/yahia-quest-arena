@@ -3,6 +3,8 @@
 // (Node-only) and is intentionally NOT re-exported here — it is imported
 // directly by src/server.ts so it never leaks into a client bundle.
 export { EnablePushCard } from "./components/enable-push-card";
+// Étude 08 lot 2 — la carte du bilan dominical (canal + digest enrichi opt-in).
+export { ParentDigestCard } from "./components/parent-digest-card";
 export { savePushSubscription, deletePushSubscription } from "./notifications.server";
 // Exporté pour les surfaces qui doivent SAVOIR si le push est armé sur cet
 // appareil avant de proposer un rappel : le tuteur (é11 US-7) ne montre son

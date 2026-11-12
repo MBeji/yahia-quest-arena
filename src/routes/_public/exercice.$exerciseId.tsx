@@ -69,6 +69,7 @@ async function seedExercice(exerciseId: string) {
     title: meta.chapterTitle ? `${meta.title} — ${meta.chapterTitle}` : meta.title,
     description: `${kind}, gratuit et sans inscription : ${meta.title}${where ? ` (${where})` : ""}.`,
     path: `/exercice/${exerciseId}`,
+    contentLanguage: meta.contentLanguage,
   });
   return { head };
 }

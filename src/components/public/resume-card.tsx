@@ -94,10 +94,29 @@ export function ResumeCardView({
   );
 }
 
-/** La carte autonome : rend `null` tant qu'il n'y a rien à reprendre pour ce lecteur. */
-export function ResumeCard({ surface, className }: { surface: ResumeSurface; className?: string }) {
+/**
+ * La carte autonome, pour une page qui ne peut pas lui réserver de place dans son flux
+ * (`/programme` : rendu côté serveur, et son en-tête appartient à une feature). Elle rend `null`
+ * tant qu'il n'y a rien à reprendre pour ce lecteur.
+ *
+ * FLOTTANTE, EN BAS D'ÉCRAN : arrivant après l'hydratation sur une page déjà peinte, une carte
+ * insérée en tête pousserait tout le catalogue (CLS ≈ 0,1 sur téléphone). Posée par-dessus, elle ne
+ * déplace rien. La cale qui la suit garde le pied de page lisible en fin de défilement ; elle est
+ * sous le catalogue, hors de la première vue.
+ */
+export function ResumeCard({ surface }: { surface: ResumeSurface }) {
   const chapter = useResumeChapter();
-  return chapter ? (
-    <ResumeCardView chapter={chapter} surface={surface} className={className} />
-  ) : null;
+  if (!chapter) return null;
+  return (
+    <>
+      <div aria-hidden="true" className="h-24 print:hidden" />
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-20 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] print:hidden">
+        <ResumeCardView
+          chapter={chapter}
+          surface={surface}
+          className="pointer-events-auto shadow-lg"
+        />
+      </div>
+    </>
+  );
 }

@@ -26,7 +26,11 @@ vi.mock("@/shared/lib/logger", () => ({
 
 // Les pages ne sont pas montées ici : seuls leurs loaders tournent. Leurs
 // composants (et les barrels de feature qu'ils tirent) sont remplacés.
-vi.mock("@/features/quest", () => ({ getChapterLesson: vi.fn(), getSubject: vi.fn() }));
+vi.mock("@/features/quest", () => ({
+  getChapterLesson: vi.fn(),
+  getSubject: vi.fn(),
+  getSubjectParcours: vi.fn(),
+}));
 vi.mock("@/features/quest/anon-quiz-gate", () => ({ hasPassedChapterQuiz: () => false }));
 vi.mock("@/features/quest/components/lesson-reader", () => ({ LessonReader: () => null }));
 vi.mock("@/features/quest/components/subject-hub", () => ({ SubjectHub: () => null }));
@@ -50,6 +54,7 @@ const checkSubjectExists = vi.fn();
 vi.mock("@/features/quest/quest.lesson.server", () => ({
   getChapterLesson: (...a: unknown[]) => getChapterLesson(...a),
   checkSubjectExists: (...a: unknown[]) => checkSubjectExists(...a),
+  getSubjectParcours: vi.fn().mockResolvedValue(null),
 }));
 const getSubject = vi.fn();
 vi.mock("@/features/quest/quest.server", () => ({

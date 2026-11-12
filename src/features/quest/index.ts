@@ -8,7 +8,7 @@ export {
   submitAttempt,
   revealHint,
 } from "./quest.server";
-export { getChapterLesson, getManuelPageUrls } from "./quest.lesson.server";
+export { getChapterLesson, getManuelPageUrls, getSubjectParcours } from "./quest.lesson.server";
 export type { ManuelPage } from "./quest.lesson.server";
 export { checkAnswersPublic, scoreQuizPublic } from "./quest.practice.server";
 export { getExerciseParcours } from "./quest.parcours.server";
