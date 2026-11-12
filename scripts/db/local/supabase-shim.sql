@@ -86,6 +86,14 @@ ALTER TABLE storage.buckets ENABLE ROW LEVEL SECURITY;
 GRANT USAGE ON SCHEMA auth, storage, extensions, public TO anon, authenticated, service_role;
 GRANT SELECT ON auth.users TO service_role;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO postgres;
+-- Les privilèges par défaut HISTORIQUES de Supabase sur les fonctions : toute fonction créée
+-- dans `public` naît exécutable par anon, authenticated et service_role (un projet hébergé
+-- créé avant mi-2026 les porte toujours). Sans cette ligne, un `REVOKE … FROM PUBLIC, anon`
+-- qui oublie `authenticated` passait ici pour étanche alors qu'il ne l'est pas en production
+-- (constat du 2026-11-12, `award_badge_if_new`). Le shim rejoue donc le PIRE cas ; pgTAP 111
+-- est le cliquet. Les tables, elles, restent sans privilège par défaut : c'est ce que fait la
+-- pile locale de la CLI depuis supabase/postgres 17.6.1.134, et la chaîne porte ses GRANT.
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO anon, authenticated, service_role;
 -- (auth.uid/role/email re-defined to read the JSON claims blob, as Supabase does)
 CREATE OR REPLACE FUNCTION auth.uid() RETURNS UUID LANGUAGE sql STABLE AS $$
   SELECT COALESCE(
