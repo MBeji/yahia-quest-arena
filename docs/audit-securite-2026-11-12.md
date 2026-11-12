@@ -12,7 +12,7 @@ Suite de [`audit-global-2026-09-12.md`](./audit-global-2026-09-12.md) §3.2 (S-1
 
 | #   | Gravité | Constat                                                                                                                                                                                                                                                                                                                      | Correction                                                                                                                                                   | Preuve                                                   | État                         |
 | --- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------- | ---------------------------- |
-| A   | Élevée¹ | `award_badge_if_new` (SECURITY DEFINER, aucun contrôle de l'appelant) n'a été révoquée que de `PUBLIC, anon` : un compte connecté peut s'attribuer n'importe quel badge par PostgREST. Même motif, en lecture : `resolve_ai_access` (qui paie le mode IA d'un élève), `app_daily_mission_pool`, `cleanup_rate_limit_events`. | `REVOKE … FROM authenticated` sur les quatre ; le shim local rejoue les privilèges par défaut ; cliquet pgTAP sur toute SECURITY DEFINER exposée sans garde. | pgTAP 110                                                | **Prête, en attente** (§3)   |
+| A   | Élevée¹ | `award_badge_if_new` (SECURITY DEFINER, aucun contrôle de l'appelant) n'a été révoquée que de `PUBLIC, anon` : un compte connecté peut s'attribuer n'importe quel badge par PostgREST. Même motif, en lecture : `resolve_ai_access` (qui paie le mode IA d'un élève), `app_daily_mission_pool`, `cleanup_rate_limit_events`. | `REVOKE … FROM authenticated` sur les quatre ; le shim local rejoue les privilèges par défaut ; cliquet pgTAP sur toute SECURITY DEFINER exposée sans garde. | pgTAP 111                                                | PR suivante (§3)             |
 | B   | Moyenne | `/api/client-log` écrit sans jeton dans `client_errors`, 8 ko par requête, sans plafond durable ni purge : ~290 Mo/h depuis un poste, puis base en lecture seule.                                                                                                                                                            | Trigger : 30/min, 1 000/jour, 20 000 au total, purge à 30 jours ; ligne ignorée sans erreur.                                                                 | pgTAP 109                                                | Fusionnée (#1260), appliquée |
 | C   | Moyenne | 14 RPC SECURITY DEFINER exécutables par `anon` (8 en septembre), limitées par une `Map` en mémoire par instance, contournable en appelant PostgREST directement.                                                                                                                                                             | `enforce_rpc_rate_limit` : paliers compte / source / global comptés en base, seuils en données, refus `PT429` (HTTP 429), sur les 8 RPC volatiles.           | pgTAP 108                                                | Fusionnée (#1260), appliquée |
 | D   | Moyenne | `check_rate_limit` prenait la clé telle que fournie : un compte vidait le seau `submit_<uuid>` d'un autre élève (déni de service ciblé) ou gonflait `rate_limit_events` sans borne.                                                                                                                                          | Clé préfixée par `auth.uid()` ; plafonds 1 000 événements / 1 h.                                                                                             | pgTAP 108 (§9)                                           | Fusionnée (#1260), appliquée |
@@ -49,16 +49,17 @@ ce n'est pas le cas, A est sans effet en production — et la correction reste j
 - **Server fns.** Chacune porte son middleware (`local/require-server-fn-auth`, dans le
   gate) ; les 19 fonctions publiques (`optionalSupabaseAuth`) valident leur entrée par zod.
 
-## 3. Ce qui attend
+## 3. Le lot A, parti seul
 
-**Le lot A est prêt et n'est pas poussé.** Vercel refuse tout déploiement depuis ~09:00 UTC
-(plafond du plan) ; consigne de la session orchestratrice : aucun `REVOKE` tant que la
-production est figée. Le lot ne touche pourtant aucun chemin que le code déployé emprunte
-(les appelants sont des fonctions SECURITY DEFINER ou la clé service). Il tient en une
-migration (`REVOKE EXECUTE … FROM PUBLIC, anon, authenticated` sur les quatre fonctions du
-constat A, puis `GRANT … TO service_role`), une ligne dans `scripts/db/local/supabase-shim.sql`
-(`ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO anon, authenticated,
-service_role`) et `supabase/tests/110_internal_functions_not_exposed.test.sql`.
+Le `REVOKE` du constat A a attendu la reprise des déploiements (Vercel a refusé tout
+déploiement de ~09:00 à ~15:00 UTC, plafond du plan), puis est parti seul dans sa PR, comme
+la DoD §7 le demande pour une migration destructive :
+`20261112150000_revoke_internal_functions_from_authenticated.sql`, la ligne de
+`scripts/db/local/supabase-shim.sql` qui fait rejouer au shim local les privilèges par défaut
+de Supabase sur les fonctions, et `supabase/tests/111_internal_functions_not_exposed.test.sql`.
+Re-vérifié sur `main` avant l'envoi : aucun `.rpc()` du client ne vise ces quatre fonctions
+(`resolve_ai_access` passe par la clé service), et leurs appelants SQL sont tous
+SECURITY DEFINER.
 
 ## 4. Noté, non corrigé (pas d'exploitation réaliste, ou hors périmètre)
 
@@ -84,7 +85,7 @@ service_role`) et `supabase/tests/110_internal_functions_not_exposed.test.sql`.
   le connaît lit son rapport. Aucun classement ni duel ne le rend ; à garder vrai.
 - **`has_parcours_entitlement`, `can_play_open_questions`, `ai_forge_quota_left`** répondent
   pour l'uuid de n'importe qui (un booléen, un compteur de 0 à 3). Accepté, nommé dans la
-  liste d'exemptions de pgTAP 110.
+  liste d'exemptions de pgTAP 111.
 - **Secret des routes cron comparé par `!==`** (pas à temps constant), routes placées avant le
   garde : non exploitable à travers le réseau contre un secret long.
 - **Tables anciennes** : `anon` y garde les privilèges par défaut (`TRUNCATE` compris), sans
