@@ -58,6 +58,8 @@ vi.mock("@tanstack/react-router", () => ({
 
 vi.mock("@/lib/i18n", () => ({
   useT: () => ({
+    // La croix du dialogue lit son nom dans le catalogue.
+    common: { close: "Fermer" },
     ai: new Proxy({} as Record<string, string>, { get: (_t, key: string) => `ai.${key}` }),
   }),
 }));

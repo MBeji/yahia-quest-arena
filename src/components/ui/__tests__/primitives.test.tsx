@@ -53,6 +53,13 @@ describe("BackLink", () => {
 });
 
 describe("EmptyState", () => {
+  it("un échec de chargement est annoncé ; un état simplement vide reste silencieux", () => {
+    const { rerender } = render(<EmptyState title="Aucun badge" />);
+    expect(screen.queryByRole("alert")).toBeNull();
+    rerender(<EmptyState tone="error" title="Impossible de charger le programme." />);
+    expect(screen.getByRole("alert")).toHaveTextContent("Impossible de charger le programme.");
+  });
+
   it("renders title, description, icon and action", () => {
     render(
       <EmptyState

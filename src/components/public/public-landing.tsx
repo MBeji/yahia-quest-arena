@@ -322,14 +322,16 @@ export function PublicLanding({ stats }: { stats?: CatalogueStats | null }) {
               to={p.to}
               hash={p.hash}
               data-testid="persona-door"
-              className="group rounded-2xl border border-border bg-card p-6 transition hover:border-primary/60 hover:shadow-sm"
+              // Colonne flex : le lien d'action se cale en BAS de la carte, donc les trois
+              // s'alignent quelle que soit la longueur du texte au-dessus.
+              className="group flex flex-col rounded-2xl border border-border bg-card p-6 transition hover:border-primary/60 hover:shadow-sm"
             >
               <span className="grid h-12 w-12 place-items-center rounded-xl bg-secondary text-primary">
                 <p.icon className="h-6 w-6" />
               </span>
               <h2 className="mt-4 font-display text-lg font-bold">{p.title}</h2>
               <p className="mt-1 text-sm text-muted-foreground">{p.desc}</p>
-              <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary">
+              <span className="mt-auto inline-flex items-center gap-1 pt-3 text-sm font-semibold text-primary">
                 {p.cta}
                 <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5 rtl:-scale-x-100" />
               </span>
@@ -509,7 +511,7 @@ export function PublicLanding({ stats }: { stats?: CatalogueStats | null }) {
                 to="/auth"
                 search={{ mode: "signup", role: "parent" }}
                 onClick={() => trackProductEvent("account_invite_clicked", { surface: "landing" })}
-                className="mt-3 inline-flex items-center justify-center gap-1.5 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+                className="mt-1 inline-flex min-h-11 items-center justify-center gap-1.5 text-sm font-medium text-muted-foreground transition hover:text-foreground"
               >
                 {t.public.landing.familleCta}
               </Link>

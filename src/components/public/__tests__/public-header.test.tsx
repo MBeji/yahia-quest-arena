@@ -76,7 +76,7 @@ describe("PublicHeader", () => {
     // aria-label est traduit, et le défaut est le français (GAP-010).
     await userEvent.click(screen.getByTestId("settings-trigger"));
     for (const label of ["English", "Français", "العربية"]) {
-      expect(screen.getByRole("menuitemradio", { name: label })).toBeInTheDocument();
+      expect(screen.getByRole("radio", { name: label })).toBeInTheDocument();
     }
   });
 

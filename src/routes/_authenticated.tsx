@@ -182,11 +182,13 @@ function AuthenticatedLayout() {
           {/* The logo goes to the user's OWN hub: a parent has no Heroes' Hall, and
               pointing them at /dashboard only to bounce them back to /parent-report
               made the header look like it looped. */}
-          <Link to={hub} className="flex items-center gap-2">
+          <Link to={hub} className="flex min-h-11 min-w-11 items-center gap-2">
             <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[image:var(--gradient-gold)] shadow-gold">
               <CrownMark className="h-5 w-5 text-primary-foreground" />
             </div>
-            <span className="hidden font-display text-base font-bold tracking-wider sm:inline">
+            {/* Masquée À L'ŒIL sous `sm`, jamais au lecteur d'écran : un `hidden` retirait
+                aussi le nom du lien, qui n'était plus qu'une image muette sur téléphone. */}
+            <span className="sr-only font-display text-base font-bold tracking-wider sm:not-sr-only">
               Na9ra <span className="text-gradient-gold">Nal3ab</span>
             </span>
           </Link>

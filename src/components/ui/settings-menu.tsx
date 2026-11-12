@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ChevronRight, LogOut, Settings } from "lucide-react";
 
@@ -33,6 +33,7 @@ export function SettingsMenu({
   const t = useT();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const panelId = useId();
 
   useEffect(() => {
     if (!open) return;
@@ -59,8 +60,12 @@ export function SettingsMenu({
         onClick={() => setOpen(!open)}
         className="flex min-h-11 min-w-11 items-center justify-center rounded-md border border-border/50 bg-background/50 px-2 py-1.5 text-muted-foreground backdrop-blur-md transition hover:border-[color:var(--gold)]/50 hover:text-foreground"
         aria-label={t.settings.menuAria}
-        aria-haspopup="menu"
+        // Un panneau à déplier, pas un menu : il porte deux groupes de choix, deux
+        // interrupteurs et, connecté, un lien — rien de tout cela n'est un `menuitem`,
+        // et un `role="menu"` qui les contient est un contrat ARIA rompu (axe
+        // `aria-required-children`, critique).
         aria-expanded={open}
+        aria-controls={open ? panelId : undefined}
         data-testid="settings-trigger"
       >
         <Settings className="h-4 w-4" />
@@ -68,7 +73,9 @@ export function SettingsMenu({
 
       {open && (
         <div
-          role="menu"
+          id={panelId}
+          role="group"
+          aria-label={t.settings.quickTitle}
           data-testid="settings-menu"
           className="absolute end-0 top-full z-50 mt-1.5 max-h-[70vh] w-64 overflow-y-auto rounded-xl border border-border/60 bg-popover/95 p-2 shadow-lg backdrop-blur-xl"
         >

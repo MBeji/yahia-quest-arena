@@ -31,24 +31,38 @@ import { initHiddenTimeTracking } from "@/shared/lib/client-log";
 
 import appCss from "../styles.css?url";
 
+/** Une issue d'écran sans issue : 44 px de haut, la garde tactile. */
+const EXIT_PRIMARY =
+  "inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-5 text-sm font-semibold text-primary-foreground hover:opacity-90";
+const EXIT_SECONDARY =
+  "inline-flex min-h-11 items-center justify-center rounded-md border border-input bg-background px-5 text-sm font-medium hover:bg-accent";
+
+/**
+ * La page 404. Elle se rend HORS de toute coquille (aucune route n'a répondu) : elle
+ * porte donc elle-même son `<main>`, dans le registre sobre des pages publiques — c'est
+ * un visiteur venu d'un lien mort qui la voit, pas un élève en mission — et deux issues,
+ * l'accueil et le programme, là où il n'y en avait qu'une.
+ */
 function NotFoundComponent() {
   const t = useT();
   return (
-    <div className="flex min-h-screen items-center justify-center bg-black-deep px-4">
+    <main className="flex min-h-[100dvh] items-center justify-center bg-background px-4 text-foreground">
       <div className="max-w-md text-center">
-        <h1 className="font-display text-6xl text-gradient-gold sm:text-8xl">404</h1>
-        <h2 className="mt-4 text-xl font-semibold">{t.errors.notFoundTitle}</h2>
+        <p aria-hidden="true" className="font-display text-6xl font-bold text-primary sm:text-8xl">
+          404
+        </p>
+        <h1 className="mt-4 text-xl font-semibold">{t.errors.notFoundTitle}</h1>
         <p className="mt-2 text-sm text-muted-foreground">{t.errors.notFoundDesc}</p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-[image:var(--gradient-gold)] px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-gold hover:opacity-90"
-          >
+        <div className="mt-6 flex flex-wrap justify-center gap-2">
+          <Link to="/" className={EXIT_PRIMARY}>
             {t.errors.notFoundAction}
+          </Link>
+          <Link to="/programme" className={EXIT_SECONDARY}>
+            {t.public.header.programme}
           </Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
@@ -75,11 +89,13 @@ function ErrorComponent({ error: thrown, reset }: { error: unknown; reset: () =>
     // doit pouvoir nommer sans dépendre de la langue (`errorTitle` existe en
     // fr/en/ar). C'est l'écran qu'une session morte ne doit JAMAIS produire —
     // voir `e2e/authed/session-invalidation.spec.ts` (#938).
-    <div
+    <main
       data-testid="root-error-boundary"
-      className="flex min-h-screen items-center justify-center bg-black-deep px-4"
+      className="flex min-h-[100dvh] items-center justify-center bg-background px-4 text-foreground"
     >
-      <div className="max-w-md text-center">
+      {/* `role="alert"` : l'écran remplace la page sans rechargement, donc un lecteur
+          d'écran n'apprenait rien de la panne tant qu'il ne relisait pas tout. */}
+      <div role="alert" className="max-w-md text-center">
         <h1 className="font-display text-2xl">{t.errors.errorTitle}</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           {error.message || t.errors.errorFallback}
@@ -95,20 +111,21 @@ function ErrorComponent({ error: thrown, reset }: { error: unknown; reset: () =>
         ) : null}
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
+            type="button"
             onClick={() => {
               router.invalidate();
               reset();
             }}
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
+            className={EXIT_PRIMARY}
           >
             {t.common.retry}
           </button>
-          <a href="/" className="rounded-md border border-input bg-black-deep px-4 py-2 text-sm">
+          <a href="/" className={EXIT_SECONDARY}>
             {t.common.home}
           </a>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 

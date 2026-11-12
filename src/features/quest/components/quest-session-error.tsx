@@ -26,6 +26,7 @@ export function QuestSessionError({
     <div className="mx-auto max-w-md px-6 py-12">
       <EmptyState
         icon={AlertTriangle}
+        tone="error"
         title={title}
         description={message}
         action={
@@ -33,7 +34,7 @@ export function QuestSessionError({
             type="button"
             data-testid="quest-session-retry"
             onClick={onRetry}
-            className="inline-flex items-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-gold transition"
+            className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-[image:var(--gradient-gold)] px-6 text-sm font-bold text-primary-foreground shadow-gold transition"
           >
             {retryLabel}
           </button>
