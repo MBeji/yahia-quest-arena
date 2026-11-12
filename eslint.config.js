@@ -104,6 +104,11 @@ export default tseslint.config(
       // « Une feature n'importe jamais une autre » (AGENTS.md) — née verte le
       // 2026-10-27, une fois la porte IA passée dans `src/shared/` : voir l'en-tête.
       "local/no-cross-feature-import": "error",
+      // Le client Supabase ne se caste plus vers une « vue d'ombre » — née verte
+      // le 2026-11-12, après le retrait de 22 de ces casts. Les neuf fichiers
+      // encore à nettoyer sont nommés dans la règle (`PENDING_FILES`), et son
+      // test échoue dès que l'un d'eux est propre : la liste ne peut que rétrécir.
+      "local/no-supabase-shadow-view": "error",
     },
   },
   eslintPluginPrettier,
