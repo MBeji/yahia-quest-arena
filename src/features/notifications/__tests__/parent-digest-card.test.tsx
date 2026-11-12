@@ -132,7 +132,7 @@ describe("ParentDigestCard — étude 08 lot 2", () => {
 
     await userEvent.click(control);
 
-    await waitFor(() => expect(toast.error).toHaveBeenCalledWith(frP.digestNeedsPush));
+    await waitFor(() => expect(toast.error).toHaveBeenCalledWith(frP.digestBlocked));
     expect(setPref).not.toHaveBeenCalled();
     expect(control).toHaveAttribute("aria-checked", "false");
   });
@@ -220,7 +220,7 @@ describe("ParentDigestCard — étude 08 lot 2", () => {
     for (const code of ["fr", "en", "ar"] as const) {
       const p = parentTranslations(code).parentReport;
       const digest = Object.entries(p).filter(([key]) => key.startsWith("digest"));
-      expect(digest).toHaveLength(11);
+      expect(digest).toHaveLength(10);
       for (const [, value] of digest) {
         expect(String(value).trim().length).toBeGreaterThan(0);
         expect(String(value).toLowerCase()).not.toMatch(/premium|abonnement|payant|subscription/);

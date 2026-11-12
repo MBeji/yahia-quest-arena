@@ -20,9 +20,11 @@ import {
   dailyGoalSchema,
   examSummarySchema,
   isoDate,
+  parcoursComparisonSchema,
   parseStudentReportPayload,
   tutorCountersSchema,
   weeklyGoalSchema,
+  type ParcoursComparison,
   type StudentExamSummary,
 } from "./parent-report.schemas";
 
@@ -656,5 +658,28 @@ export const getStudentExamSummary = createServerFn({ method: "GET" })
       return null;
     }
     const parsed = examSummarySchema.safeParse(raw);
+    return parsed.success ? parsed.data : null;
+  });
+
+// ---------------------------------------------------------------------------
+// ÉTUDE 08 LOT 3 (US-8) — L'ENFANT FACE AU REPÈRE DE SON PARCOURS.
+// ---------------------------------------------------------------------------
+// Le seuil (30 élèves, R-6) est appliqué EN BASE : sous lui, aucun chiffre ne
+// quitte Postgres. Cette fonction ne fait que relire la forme. `null` sur refus,
+// panne ou élève sans parcours : la section disparaît, le bilan reste.
+export const getStudentParcoursComparison = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .validator((d: unknown) => z.object({ studentId: z.guid() }).parse(d))
+  .handler(async ({ data, context }): Promise<ParcoursComparison> => {
+    const { supabase } = context;
+
+    const { data: raw, error } = await supabase.rpc("get_student_parcours_comparison", {
+      p_student: data.studentId,
+    });
+    if (error) {
+      logger.warn("parentReport.parcoursComparison", { error: errorMessage(error) });
+      return null;
+    }
+    const parsed = parcoursComparisonSchema.safeParse(raw);
     return parsed.success ? parsed.data : null;
   });

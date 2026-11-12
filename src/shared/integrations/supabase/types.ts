@@ -3203,6 +3203,14 @@ export type Database = {
         };
         Returns: Json;
       };
+      _parcours_student_stats: {
+        Args: { p_parcours: string; p_student: string };
+        Returns: {
+          avg_score: number;
+          user_id: string;
+          weekly_minutes: number;
+        }[];
+      };
       _resolve_ai_platform: {
         Args: { p_reason: string };
         Returns: {
@@ -4011,6 +4019,10 @@ export type Database = {
           trend: string;
         }[];
       };
+      get_parcours_platform_stats: {
+        Args: { p_parcours: string };
+        Returns: Json;
+      };
       get_parent_digest_summary: { Args: { p_parent: string }; Returns: Json };
       get_placement_session: {
         Args: { p_session_id: string; p_token?: string };
@@ -4085,6 +4097,10 @@ export type Database = {
             Returns: Json;
           };
       get_student_exam_summary: { Args: { p_student: string }; Returns: Json };
+      get_student_parcours_comparison: {
+        Args: { p_student: string };
+        Returns: Json;
+      };
       get_student_report: { Args: { p_student: string }; Returns: Json };
       get_student_report_by_code: { Args: { p_code: string }; Returns: Json };
       get_subject_leaderboard: {
