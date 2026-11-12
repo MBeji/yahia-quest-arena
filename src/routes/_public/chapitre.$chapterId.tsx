@@ -20,6 +20,7 @@ import { TutorChatPanel } from "@/features/tutor/components/tutor-chat-panel";
 import { PageShell } from "@/components/ui/page-shell";
 import { LessonReader } from "@/features/quest/components/lesson-reader";
 import { SITE_URL } from "@/shared/constants/site";
+import { dropLastChapter, rememberLastChapter } from "@/shared/lib/anon-continuity";
 import { parcoursName } from "@/shared/lib/parcours-locale";
 import {
   breadcrumbJsonLd,
@@ -141,16 +142,29 @@ function ChapitrePage() {
     retry: (failures, err) => !isNotFound(err) && failures < 3,
   });
 
-  // Anonymous pass state lives in sessionStorage (anon-quiz-gate) — read it
+  // Anonymous pass state lives on the device (anon-quiz-gate, 30 days) — read it
   // after mount only, so SSR and the first client render agree.
   const [anonQuizPassed, setAnonQuizPassed] = useState(false);
   useEffect(() => {
     if (!user && data?.quizGated) setAnonQuizPassed(hasPassedChapterQuiz(chapterId));
   }, [user, data?.quizGated, chapterId]);
 
+  // é38 lot 5 : l'APPAREIL d'un visiteur sans compte retient le chapitre qu'il lit (30 jours),
+  // pour la carte « Reprendre » de l'accueil. Jamais pour un connecté, ni avant de savoir qui lit.
+  // Et un chapitre disparu du catalogue est oublié : la carte ne ramène pas à une page introuvable.
+  const lessonTitle = data?.chapter.id === chapterId ? data.chapter.title : null;
+  const lessonLang = data?.chapter.subjects?.content_language ?? null;
+  const gone = isError && isNotFound(error);
+  useEffect(() => {
+    if (gone) dropLastChapter(chapterId);
+    else if (!authLoading && !user && lessonTitle) {
+      rememberLastChapter({ id: chapterId, title: lessonTitle, lang: lessonLang });
+    }
+  }, [gone, authLoading, user, chapterId, lessonTitle, lessonLang]);
+
   // Navigation client vers un chapitre disparu : la fonction serveur a répondu
   // « introuvable » — proposer « réessayer » ne mènerait nulle part.
-  if (isError && isNotFound(error)) return <CatalogueNotFound />;
+  if (gone) return <CatalogueNotFound />;
 
   if (isError) {
     return (
@@ -173,7 +187,7 @@ function ChapitrePage() {
   }
 
   // While the chapter's comprehension quiz is still to pass for THIS visitor
-  // (signed-in: server truth; anonymous: session state), the reader's single
+  // (signed-in: server truth; anonymous: device memory), the reader's single
   // CTA targets the quiz — never a locked exercise (étude 15, audit §D-4).
   const quizPassed = user ? data.quizPassed === true : anonQuizPassed;
   const quizCta =
