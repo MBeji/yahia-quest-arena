@@ -29,12 +29,6 @@ export type ActiveEvent = {
   badgeCode: string | null;
 };
 
-type EventClient = {
-  rpc: (
-    fn: "get_active_event" | "claim_event_badge",
-  ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
-};
-
 /**
  * L'événement du moment, avec la progression de l'appelant. Lecture PUBLIQUE
  * assumée (`optionalSupabaseAuth`) : l'affiche est la même pour un visiteur, la
@@ -43,8 +37,7 @@ type EventClient = {
 export const getActiveEvent = createServerFn({ method: "GET" })
   .middleware([optionalSupabaseAuth])
   .handler(async ({ context }): Promise<ActiveEvent | null> => {
-    const client = context.supabase as unknown as EventClient;
-    const { data, error } = await client.rpc("get_active_event");
+    const { data, error } = await context.supabase.rpc("get_active_event");
     if (error) failWithClientError("dashboard.getActiveEvent", error, LOAD_ERROR_FR);
     if (!data || typeof data !== "object") return null;
 
@@ -69,8 +62,7 @@ export const getActiveEvent = createServerFn({ method: "GET" })
 export const claimEventBadge = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<{ granted: boolean }> => {
-    const client = context.supabase as unknown as EventClient;
-    const { data, error } = await client.rpc("claim_event_badge");
+    const { data, error } = await context.supabase.rpc("claim_event_badge");
     if (error) failWithClientError("dashboard.claimEventBadge", error, LOAD_ERROR_FR);
     return { granted: (data as { granted?: boolean } | null)?.granted === true };
   });

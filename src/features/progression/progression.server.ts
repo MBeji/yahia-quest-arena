@@ -7,19 +7,12 @@ import { streakRecoveryBlock } from "@/shared/lib/streak-recovery";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { isRateLimited } from "@/shared/lib/rate-limit";
 import { logger } from "@/shared/lib/logger";
+import {
+  competencyExerciseSchema,
+  learningFrontierRowSchema,
+  parseRpcRows,
+} from "@/shared/integrations/supabase/rpc-rows";
 import type { CompetencyExercise, LearningFrontierRow } from "@/shared/types/competency";
-
-/**
- * `get_exercises_for_competency` (étude 07 lot 4) est postérieure aux types Supabase générés,
- * qui ne peuvent être régénérés sans accès DB : on fige son contrat ici (même patron que les
- * RPC de `dashboard.server.ts`). L'accès est arbitré côté SQL par `resolve_exercise_access`.
- */
-type CompetencyExercisesRpcClient = {
-  rpc: (
-    fn: "get_exercises_for_competency",
-    args: { p_competency: string },
-  ) => PromiseLike<{ data: CompetencyExercise[] | null; error: { message: string } | null }>;
-};
 
 // ---------- Streak Recovery (buy back streak with coins) ----------
 export const recoverStreak = createServerFn({ method: "POST" })
@@ -104,38 +97,19 @@ export const getCompetencyExercises = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .validator((d) => z.object({ competency: z.string().min(1) }).parse(d))
   .handler(async ({ data, context }): Promise<CompetencyExercise[]> => {
-    const client = context.supabase as unknown as CompetencyExercisesRpcClient;
-    const res = await client.rpc("get_exercises_for_competency", { p_competency: data.competency });
+    const res = await context.supabase.rpc("get_exercises_for_competency", {
+      p_competency: data.competency,
+    });
     if (res.error) {
       logger.warn("getCompetencyExercises: RPC failed, defaulting to empty", {
         error: res.error.message,
       });
       return [];
     }
-    return res.data ?? [];
+    return parseRpcRows(competencyExerciseSchema, res.data, "getCompetencyExercises");
   });
 
 // ---------- Tuteur déterministe : les lectures de croyance (étude 30 lot 3) ----------
-/**
- * Les trois RPC du lot 3 sont, elles aussi, postérieures aux types Supabase générés (qui ne
- * peuvent être régénérés sans accès DB) : on fige leurs contrats ici, même patron que la
- * voisine ci-dessus. Le périmètre est `auth.uid()` EN DUR côté SQL — aucune de ces fonctions
- * ne prend d'identifiant d'élève, et le test pgTAP le prouve par leur signature (R-6).
- */
-type LearningRpcClient = {
-  rpc: ((
-    fn: "get_learning_frontier",
-    args: { p_family: string | null; p_limit: number },
-  ) => PromiseLike<{ data: LearningFrontierRow[] | null; error: { message: string } | null }>) &
-    ((
-      fn: "dispute_inference",
-      args: { p_competency: string },
-    ) => PromiseLike<{
-      data: { competency_id: string; p_known: number; state: string }[] | null;
-      error: { message: string } | null;
-    }>);
-};
-
 // « Où tu en es » (§3.10) n'est plus une server fn : `getDashboard` lit l'état une fois
 // (`readLearningState`, `@/shared/lib/adaptive-inputs`) et le passe à `LearningPanels` en prop.
 
@@ -153,9 +127,9 @@ export const getLearningFrontier = createServerFn({ method: "GET" })
       .parse(d),
   )
   .handler(async ({ data, context }): Promise<LearningFrontierRow[]> => {
-    const client = context.supabase as unknown as LearningRpcClient;
-    const res = await client.rpc("get_learning_frontier", {
-      p_family: data.family,
+    const res = await context.supabase.rpc("get_learning_frontier", {
+      // `p_family TEXT DEFAULT NULL` : omettre l'argument EST « toutes les familles ».
+      p_family: data.family ?? undefined,
       p_limit: data.limit,
     });
     if (res.error) {
@@ -164,7 +138,7 @@ export const getLearningFrontier = createServerFn({ method: "GET" })
       });
       return [];
     }
-    return res.data ?? [];
+    return parseRpcRows(learningFrontierRowSchema, res.data, "getLearningFrontier");
   });
 
 /**
@@ -185,8 +159,7 @@ export const disputeInference = createServerFn({ method: "POST" })
     if (await isRateLimited(context.supabase, `dispute_inference_${userId}`, 10, 60_000)) {
       throw new Error("Trop de contestations d'affilée. Réessaie dans une minute.");
     }
-    const client = context.supabase as unknown as LearningRpcClient;
-    const res = await client.rpc("dispute_inference", { p_competency: data.competency });
+    const res = await context.supabase.rpc("dispute_inference", { p_competency: data.competency });
     if (res.error) {
       logger.warn("disputeInference: RPC failed", { error: res.error.message });
       return { disputed: false };

@@ -382,9 +382,12 @@ describe("la comptabilité ne casse jamais l'écran de l'élève", () => {
     status: "ok" as const,
   };
 
+  /** Le client typé qu'attend `logAiUsage` ; le faux n'en porte que `rpc`. */
+  const usageClient = (rpc: unknown) => ({ rpc }) as unknown as Parameters<typeof logAiUsage>[0];
+
   it("écrit l'événement par la RPC, avec son payeur (R-7)", async () => {
     const rpc = vi.fn().mockResolvedValue({ data: 1, error: null });
-    await expect(logAiUsage({ rpc }, event)).resolves.toBe(true);
+    await expect(logAiUsage(usageClient(rpc), event)).resolves.toBe(true);
     expect(rpc).toHaveBeenCalledWith(
       "log_ai_usage",
       expect.objectContaining({ p_payer: "family", p_credential_owner: "p1" }),
@@ -393,12 +396,12 @@ describe("la comptabilité ne casse jamais l'écran de l'élève", () => {
 
   it("rend `false` sans lever quand l'écriture échoue", async () => {
     const rpc = vi.fn().mockResolvedValue({ data: null, error: { message: "boom" } });
-    await expect(logAiUsage({ rpc }, event)).resolves.toBe(false);
+    await expect(logAiUsage(usageClient(rpc), event)).resolves.toBe(false);
   });
 
   it("n'envoie ni texte d'élève, ni sortie de modèle — la liste des champs est fermée (§3.9)", async () => {
     const rpc = vi.fn().mockResolvedValue({ data: 1, error: null });
-    await logAiUsage({ rpc }, event);
+    await logAiUsage(usageClient(rpc), event);
     const args = rpc.mock.calls[0][1] as Record<string, unknown>;
     expect(Object.keys(args).sort()).toEqual([
       "p_cached_tokens",

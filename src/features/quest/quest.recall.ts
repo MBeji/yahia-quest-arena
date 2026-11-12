@@ -174,32 +174,6 @@ export async function buildAttemptReview(
   });
 }
 
-/** Une ligne du vocabulaire des erreurs, telle que l'écran la consommera. */
-type MisconceptionRow = {
-  tag: string;
-  label_fr: string;
-  label_en: string;
-  label_ar: string;
-  competency: string | null;
-};
-
-/**
- * `public.misconceptions` (étude 04 A1.2b) est postérieure aux types Supabase
- * générés, qui ne peuvent pas être régénérés sans accès DB : on fige son contrat
- * ici, même patron que les RPC de `progression.server.ts` et `dashboard.server.ts`.
- * À supprimer à la prochaine régénération des types.
- */
-type MisconceptionsTableClient = {
-  from: (table: "misconceptions") => {
-    select: (columns: string) => {
-      in: (
-        column: "tag",
-        values: string[],
-      ) => PromiseLike<{ data: MisconceptionRow[] | null; error: { message: string } | null }>;
-    };
-  };
-};
-
 /**
  * Met les tags en mots depuis le vocabulaire versionné (étude 04 A1.2b).
  *
@@ -219,8 +193,7 @@ async function fetchMisconceptionLabels(
   const unique = [...new Set(tags.filter((t): t is string => Boolean(t)))];
   if (unique.length === 0) return new Map();
 
-  const client = supabase as unknown as MisconceptionsTableClient;
-  const { data, error } = await client
+  const { data, error } = await supabase
     .from("misconceptions")
     .select("tag, label_fr, label_en, label_ar, competency")
     .in("tag", unique);

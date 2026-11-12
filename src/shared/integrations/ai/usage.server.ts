@@ -9,23 +9,13 @@
 // la clé, un fragment de clé au-delà de `last4`, le texte de l'élève, la sortie
 // du modèle. Une ligne de comptabilité dit COMBIEN et QUOI, jamais QUEL CONTENU.
 
+import type { SupabaseClient } from "@supabase/supabase-js";
+
+import type { Database } from "@/shared/integrations/supabase/types";
 import { logger } from "@/shared/lib/logger";
 import { errorMessage } from "@/shared/lib/safe-error";
 import type { AiFeature, AiPayer, AiTier } from "@/shared/constants/ai";
 import type { AiErrorCode } from "./errors";
-
-/**
- * `log_ai_usage` est postérieure aux types Supabase générés (non régénérables
- * sans accès DB) : on fige son contrat ici, même patron que `exam.server.ts`,
- * `economy.server.ts` et `dashboard.server.ts`. À supprimer à la prochaine
- * régénération des types.
- */
-type AiUsageRpcClient = {
-  rpc: (
-    fn: "log_ai_usage",
-    args?: Record<string, unknown>,
-  ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
-};
 
 /** L'état terminal d'un appel. Miroir du CHECK de `ai_usage_events.status`. */
 export type AiUsageStatus = "ok" | "rejected" | "error" | "degraded" | "discarded";
@@ -60,11 +50,17 @@ export type AiUsageEvent = {
  * cette table mais de `ai_spend_ledger`, écrit dans la même transaction que la
  * réservation (R-11, D-8).
  */
-export async function logAiUsage(client: AiUsageRpcClient, event: AiUsageEvent): Promise<boolean> {
+export async function logAiUsage(
+  client: SupabaseClient<Database>,
+  event: AiUsageEvent,
+): Promise<boolean> {
+  // Les quatre `?? undefined` : `p_user`, `p_credential_owner`, `p_error_code` et
+  // `p_latency_ms` sont `DEFAULT NULL` dans la signature SQL — omettre l'argument
+  // EST écrire NULL, sans cast et sans élargir le type généré.
   const { error } = await client.rpc("log_ai_usage", {
-    p_user: event.userId,
+    p_user: event.userId ?? undefined,
     p_payer: event.payer,
-    p_credential_owner: event.credentialOwner,
+    p_credential_owner: event.credentialOwner ?? undefined,
     p_provider: event.provider,
     p_feature: event.feature,
     p_model: event.model,
@@ -73,8 +69,8 @@ export async function logAiUsage(client: AiUsageRpcClient, event: AiUsageEvent):
     p_cached_tokens: event.cachedTokens ?? 0,
     p_cost_usd_micros: event.costUsdMicros ?? 0,
     p_status: event.status,
-    p_error_code: event.errorCode ?? null,
-    p_latency_ms: event.latencyMs ?? null,
+    p_error_code: event.errorCode ?? undefined,
+    p_latency_ms: event.latencyMs,
   });
 
   if (error) {
