@@ -38,6 +38,19 @@
  * premier rendu, et un plafond ne monte qu'avec, ici même, la ligne qui dit pourquoi ce
  * poids ne pouvait pas être différé. Quand un lot ALLÈGE une page, on ramène son plafond
  * près du nouveau réel dans le même lot : une marge rendue n'est pas un crédit à dépenser.
+ *
+ * PLAFONDS RELEVÉS, chacun avec sa ligne :
+ *
+ *   • 2026-11-12, étude 40 lot 0 — `/programme` : 40 → 41 requêtes. `main` (eca2a89) était à
+ *     40/40 avant ce lot. La requête de plus est `visit-beacon` (3,4 Ko bruts) : la mesure du
+ *     retour (« première visite » / « revenu un autre jour »), chargée par `import()` APRÈS
+ *     l'hydratation — elle est déjà hors du premier rendu, c'est le décompte qui ne distingue pas.
+ *     Ce qui a été fait pour ne pas en ajouter deux : le jour de Tunis est calculé par la racine
+ *     (sinon `app-day` devenait un chunk partagé de plus). Ce qui a été écarté : l'inliner dans le
+ *     chunk d'entrée (+3,4 Ko sur un budget à 3 Ko de sa limite, et sur le chemin de tout le
+ *     monde), ou le loger de force dans un chunk voisin par une règle de découpage (les groupes
+ *     emportent leurs dépendances : c'est le cycle `index` ⇄ chunk que `vite.config.ts` raconte).
+ *     `/` reste à 37 (36 mesurées). Poids : inchangés, aucun plafond d'octets ne bouge.
  */
 
 /** Chargements par page ; le budget se lit sur la médiane. */
@@ -45,5 +58,5 @@ export const LCP_RUNS = 5;
 
 export const BUDGETS = {
   "/": { requests: 37, transferredKb: 328, jsKb: 262, htmlKb: 8.5, lcpMs: 2000 },
-  "/programme": { requests: 40, transferredKb: 327, jsKb: 263, htmlKb: 5, lcpMs: 2000 },
+  "/programme": { requests: 41, transferredKb: 327, jsKb: 263, htmlKb: 5, lcpMs: 2000 },
 };

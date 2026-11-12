@@ -29,6 +29,7 @@ import { initAnalytics, trackPageview, pagePathFromLocation } from "@/shared/lib
 import { notePageForFunnel } from "@/shared/lib/funnel-origin";
 import { initWebVitals } from "@/shared/lib/web-vitals";
 import { initHiddenTimeTracking } from "@/shared/lib/client-log";
+import { appLocalDate } from "@/shared/lib/app-day";
 
 import appCss from "../styles.css?url";
 
@@ -255,6 +256,17 @@ function RootComponent() {
     if (import.meta.env.PROD && typeof navigator !== "undefined" && "serviceWorker" in navigator) {
       navigator.serviceWorker.register("/sw.js").catch(() => {});
     }
+  }, []);
+
+  // La mesure du retour (étude 40, lot 0) : « première visite » ou « revenu un autre jour », au
+  // plus une fois par jour et par appareil. Import DYNAMIQUE après hydratation — la mémoire de
+  // visite, la source d'entrée et l'émission arrivent dans leur propre chunk, hors du chemin du
+  // premier rendu. Seuls entrent ici l'appel et le calcul du jour de Tunis (`app-day`, 150 octets) :
+  // importé depuis le chunk différé, il devenait un chunk partagé, donc une requête de plus par page.
+  useEffect(() => {
+    void import("@/shared/lib/visit-beacon")
+      .then((m) => m.trackVisit(appLocalDate(new Date())))
+      .catch(() => {});
   }, []);
 
   // Le filet de sauvegarde, installé pour toute l'application.

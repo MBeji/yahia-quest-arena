@@ -112,7 +112,7 @@ jobs:
           echo "/usr/lib/postgresql/17/bin" >> "$GITHUB_PATH"
 
       # Le seul accès à la production, et il est en LECTURE : `set_config` est
-      # local à la transaction, la RPC est STABLE, le COMMIT ne persiste rien.
+      # local à la transaction, les deux RPC sont STABLE, le COMMIT ne persiste rien.
       # `ON_ERROR_STOP=1` + `set -e` : une lecture en échec fait échouer le job.
       - name: Relever la CURR (lecture seule)
         if: steps.guard.outputs.configured == 'true'
@@ -131,7 +131,11 @@ jobs:
             END IF;
             PERFORM set_config('request.jwt.claims', json_build_object('sub', v_admin)::text, true);
           END $$;
-          SELECT public.admin_engagement_overview();
+          -- Étude 40 lot 0 : la mesure du retour voyage dans le MÊME JSON, sous la clé
+          -- `return`. Deux fonctions, une seule lecture, une seule transaction — et la
+          -- mise en forme sait dire « non relevé » si la clé manque.
+          SELECT public.admin_engagement_overview()
+                 || jsonb_build_object('return', public.admin_return_overview());
           COMMIT;
           SQL
           if [ ! -s overview.json ]; then

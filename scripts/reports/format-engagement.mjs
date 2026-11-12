@@ -95,6 +95,48 @@ export function maxActive(curr) {
   return curr.reduce((max, w) => Math.max(max, w.active ?? 0), 0);
 }
 
+/**
+ * LE RETOUR — étude 40 lot 0 : trois lignes, lues dans `overview.return`
+ * (`admin_return_overview()`, que le workflow joint au JSON de la console).
+ *
+ *   1. PREMIÈRE QUÊTE : x/y — y ne compte que les comptes des huit dernières
+ *      semaines dont les sept premiers jours sont ÉCOULÉS. Les autres sont en
+ *      attente, ni perdus ni gagnés, et la ligne dit combien.
+ *   2. PORTÉE DU PUSH : combien de personnes le seul canal de rappel atteint.
+ *   3. JAMAIS JOUÉ : avec son dénominateur, toujours.
+ *
+ * ⚠️ Les deux refus du haut de ce fichier tiennent ici aussi : une base à zéro
+ * rend « — », jamais « 0/0 » ni « 0 % » ; et aucun taux ne voyage sans son `n`.
+ * Lecture ABSENTE (migration pas encore appliquée, clé manquante) ⇒ une ligne
+ * qui le dit, pas trois zéros.
+ */
+export function returnLines(ret) {
+  if (!ret || !Array.isArray(ret.cohorts) || !ret.push) {
+    return ["**Le retour** — non relevé : `admin_return_overview()` n'a rien rendu."];
+  }
+  const sum = (key) => ret.cohorts.reduce((n, c) => n + (c[key] ?? 0), 0);
+  const played = sum("played_7d");
+  const base = sum("played_7d_base");
+  const pending = sum("signups") - base;
+  const rate = base > 0 ? Math.round((1000 * played) / base) / 10 : null;
+  const { push } = ret;
+
+  return [
+    "**Le retour (étude 40)** — côté comptes ; celui des visiteurs sans compte se lit dans PostHog :",
+    "",
+    base > 0
+      ? `- **Première quête : ${played}/${base}** (${pct(rate)}) — comptes des huit dernières ` +
+        `semaines ayant joué dans les sept jours de leur inscription ; ${pending} en attente ` +
+        "(fenêtre non écoulée, ni perdus ni gagnés)."
+      : `- **Première quête : —** — aucun compte des huit dernières semaines n'a encore sa ` +
+        `première semaine écoulée (${pending} en attente).`,
+    `- **Portée du push : ${push.students_reachable ?? 0} élève(s) joignable(s)** pour ` +
+      `${push.students_active_30d ?? 0} actif(s) sur 30 jours · ` +
+      `${push.parents_reachable ?? 0} parent(s) joignable(s) sur ${push.parents_linked ?? 0} lié(s).`,
+    `- **Jamais joué : ${ret.never_played ?? 0}/${ret.students ?? 0}** élèves sans aucun jour d'activité.`,
+  ];
+}
+
 /** Le relevé complet, en Markdown. `today` est injectable pour les tests. */
 export function formatEngagementReport(overview, today = new Date()) {
   const curr = overview?.curr ?? [];
@@ -144,6 +186,9 @@ export function formatEngagementReport(overview, today = new Date()) {
     `| ${pct(learning.accuracy_avg_pct ?? null)} | ${pct(learning.accuracy_p50_pct ?? null)} | ` +
       `${num(learning.chapters_per_active ?? null)} | ${num(learning.attempts_30d ?? null)} |`,
   );
+
+  lines.push("");
+  lines.push(...returnLines(overview?.return));
 
   lines.push("");
   if (n > 0 && n < 30) {

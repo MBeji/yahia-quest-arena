@@ -70,7 +70,9 @@ vi.mock("@/features/dashboard", () => ({
   ParcoursInterestAdmin: () =>
     React.createElement("div", { "data-testid": "parcours-interest-admin" }),
   getEngagementOverview: vi.fn(() => Promise.resolve({})),
+  getReturnOverview: vi.fn(() => Promise.resolve({})),
   EngagementAdmin: () => React.createElement("div", { "data-testid": "engagement-admin" }),
+  ReturnBlock: () => React.createElement("div", { "data-testid": "return-block" }),
 }));
 
 vi.mock("@tanstack/react-start", () => ({

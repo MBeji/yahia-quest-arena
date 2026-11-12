@@ -33,7 +33,8 @@ import { captureProductEvent } from "@/shared/lib/product-analytics";
  * La liste fermée des événements produit (é31 §3.6), amendée par écrit : deux par é34 (la
  * progression), trois par é38 lot 0 (le tunnel sans compte → compte), quatre par é39 (le test de niveau), un par
  * é38 lot 5 (le retour du visiteur), deux par le relevé « première visite » du 2026-11-12 (la
- * première réponse, la porte du quiz). Rien d'autre ne part.
+ * première réponse, la porte du quiz), quatre par é40 lot 0 (la mesure du retour). Rien d'autre ne
+ * part.
  */
 export type ProductEventName =
   | "signup"
@@ -80,7 +81,18 @@ export type ProductEventName =
   // pas un de plus. Consommateur daté : la fiche D-1 du relevé (« essai d'une mission scolaire
   // avant le quiz »), que `public_gate_shown` rapproché de `public_practice_started` tranche.
   | "public_practice_started"
-  | "public_gate_shown";
+  | "public_gate_shown"
+  // Étude 40 lot 0 — la mesure du retour. Quatre événements, pas un de plus, chacun avec son
+  // consommateur daté. `visit_first` est le dénominateur de KPI-1 (un navigateur neuf),
+  // `visit_returned` son numérateur (le même appareil, un AUTRE jour) — lu par `entry` pour juger
+  // les lots 3, 4 et 5. Les deux autres sont DÉCLARÉS ici et câblés par leur lot : `install_invite`
+  // (KPI-5, lot 3) et `content_shared` (lots 4 et 5, rapproché de `visit_returned{entry}`).
+  // Aucune propriété ne porte d'identifiant de compte, de chapitre, de score ou de texte saisi :
+  // des étiquettes fermées, des tranches de jours, des booléens (é40 R-3, R-4).
+  | "visit_first"
+  | "visit_returned"
+  | "install_invite"
+  | "content_shared";
 
 export type ProductEventEntry = {
   readonly name: ProductEventName;
@@ -188,6 +200,32 @@ export const PRODUCT_EVENT_CATALOGUE: readonly ProductEventEntry[] = [
     fires:
       "La porte du quiz s'affiche à un visiteur sans compte qui ouvre une mission scolaire (relevé « première visite » du 2026-11-12)",
     live: true,
+  },
+  {
+    name: "visit_first",
+    fires:
+      "Première ouverture d'un navigateur sans mémoire de visite : le genre de page d'arrivée, installée ou non (étude 40 lot 0)",
+    live: true,
+  },
+  {
+    name: "visit_returned",
+    fires:
+      "Réouverture un AUTRE jour sur le même appareil, au plus une par jour : tranche de jours, session ou non, source d'entrée, installée ou non (étude 40 lot 0)",
+    live: true,
+  },
+  {
+    name: "install_invite",
+    fires:
+      "Invitation à installer l'application : montrée, acceptée ou écartée, par plateforme et par audience (étude 40)",
+    live: false,
+    note: "étude 40 lot 3",
+  },
+  {
+    name: "content_shared",
+    fires:
+      "Partage d'un contenu par la personne : intention (reprise, réussite, parent), surface et méthode (étude 40)",
+    live: false,
+    note: "étude 40 lot 4",
   },
 ] as const;
 

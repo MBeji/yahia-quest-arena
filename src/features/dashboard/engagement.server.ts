@@ -4,6 +4,7 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
+import { returnOverviewSchema, type ReturnOverview } from "./return-overview";
 
 /**
  * Étude 31 lot 1 — la boucle de mesure du RETOUR (US-13, KPI-A…KPI-E).
@@ -175,5 +176,29 @@ export const getEngagementOverview = createServerFn({ method: "GET" })
       // remplie : sur un tableau de bord, un chiffre partiel se décide dessus.
       failWithClientError("engagement.overview", parsed.error, LOAD_ERROR_FR);
     }
+    return parsed.data;
+  });
+
+/**
+ * Étude 40 lot 0 — la mesure du RETOUR côté comptes : première quête et retour à sept jours par
+ * cohorte d'inscription, élèves jamais actifs, portée du push.
+ *
+ * Lecture SÉPARÉE de `getEngagementOverview`, comme la fonction SQL qu'elle appelle l'est de
+ * `admin_engagement_overview` : le bloc « Le retour » a ses propres états (chargement, vide,
+ * erreur) et ne peut pas emporter le reste de la console dans sa panne. Même porte : SECURITY
+ * DEFINER, gardée par `is_admin()`. Read-only, aucune entrée.
+ */
+const RETURN_LOAD_ERROR_FR = "Impossible de charger la mesure du retour.";
+
+export const getReturnOverview = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<ReturnOverview> => {
+    const { data, error } = await context.supabase.rpc("admin_return_overview");
+    if (error) failWithClientError("engagement.return", error, RETURN_LOAD_ERROR_FR);
+
+    const parsed = returnOverviewSchema.safeParse(data);
+    // Une forme inattendue est une panne de lecture, pas un bloc à moitié rempli.
+    if (!parsed.success)
+      failWithClientError("engagement.return", parsed.error, RETURN_LOAD_ERROR_FR);
     return parsed.data;
   });
