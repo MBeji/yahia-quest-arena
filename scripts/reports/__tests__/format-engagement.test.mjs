@@ -8,6 +8,7 @@ import {
   maxActive,
   pct,
   pooled,
+  returnLines,
   shortDay,
 } from "../format-engagement.mjs";
 
@@ -156,5 +157,88 @@ describe("shortDay", () => {
   it("lit la date, ne la calcule pas — aucun décalage de fuseau possible", () => {
     expect(shortDay("2026-08-17")).toBe("17/08");
     expect(shortDay("2027-01-04")).toBe("04/01");
+  });
+});
+
+/**
+ * Étude 40 lot 0 — les trois lignes du RETOUR. Le décor reprend les agrégats de
+ * production du 2026-11-12 au matin : 60 élèves, 36 sans aucun jour d'activité,
+ * personne de joignable par push, 2 parents liés.
+ */
+const RETOUR = {
+  cohorts: [
+    {
+      week: "2026-10-19",
+      signups: 8,
+      played_7d: 3,
+      played_7d_base: 8,
+      back_7d: 1,
+      back_7d_base: 8,
+    },
+    {
+      week: "2026-10-26",
+      signups: 5,
+      played_7d: 3,
+      played_7d_base: 5,
+      back_7d: 2,
+      back_7d_base: 5,
+    },
+    // Semaine en cours : quatre inscrits, aucun mesurable.
+    {
+      week: "2026-11-09",
+      signups: 4,
+      played_7d: 0,
+      played_7d_base: 0,
+      back_7d: 0,
+      back_7d_base: 0,
+    },
+  ],
+  students: 60,
+  never_played: 36,
+  push: { students_active_30d: 8, students_reachable: 0, parents_linked: 2, parents_reachable: 0 },
+};
+
+describe("le retour (étude 40 lot 0)", () => {
+  const md = formatEngagementReport({ ...RELEVE_REEL, return: RETOUR }, LE_3_SEPTEMBRE);
+
+  it("⭐ le relevé dit « première quête : x/y » — et y ne compte que les fenêtres écoulées", () => {
+    expect(md).toContain("**Première quête : 6/13** (46,2 %)");
+    // Les quatre inscrits de la semaine en cours ne sont NI au dénominateur NI perdus.
+    expect(md).toContain("4 en attente");
+  });
+
+  it("dit la portée du push, élèves et parents, chacun avec sa population", () => {
+    expect(md).toContain(
+      "**Portée du push : 0 élève(s) joignable(s)** pour 8 actif(s) sur 30 jours",
+    );
+    expect(md).toContain("0 parent(s) joignable(s) sur 2 lié(s)");
+  });
+
+  it("⭐ « jamais joué » voyage avec son dénominateur", () => {
+    expect(md).toContain("**Jamais joué : 36/60**");
+  });
+
+  it("ajoute exactement trois lignes de chiffres", () => {
+    expect(returnLines(RETOUR).filter((l) => l.startsWith("- "))).toHaveLength(3);
+  });
+
+  it("⭐ sans aucune fenêtre écoulée, la première quête est « — », jamais 0/0 ni 0 %", () => {
+    const jeune = returnLines({ ...RETOUR, cohorts: [RETOUR.cohorts[2]] }).join("\n");
+    expect(jeune).toContain("**Première quête : —**");
+    expect(jeune).not.toContain("0/0");
+    expect(jeune).not.toContain("0 %");
+  });
+
+  it("⭐ lecture absente ⇒ une ligne qui le dit, pas trois zéros", () => {
+    const sans = formatEngagementReport(RELEVE_REEL, LE_3_SEPTEMBRE);
+    expect(sans).toContain("non relevé");
+    expect(sans).not.toContain("Jamais joué");
+    expect(returnLines(null)).toHaveLength(1);
+    expect(returnLines({ cohorts: [] })).toHaveLength(1);
+  });
+
+  it("le reste du relevé n'a pas bougé : la CURR et la métrique de garde sont toujours là", () => {
+    expect(md).toContain("**CURR = 60 %**");
+    expect(md).toContain("Métrique de garde (R-1)");
   });
 });

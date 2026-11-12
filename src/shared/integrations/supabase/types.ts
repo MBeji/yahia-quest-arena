@@ -3408,6 +3408,7 @@ export type Database = {
         Args: { p_report: string; p_status: string };
         Returns: undefined;
       };
+      admin_return_overview: { Args: Record<PropertyKey, never>; Returns: Json };
       admin_review_beta_request: {
         Args: { p_approve: boolean; p_request: string };
         Returns: undefined;

@@ -27,11 +27,14 @@ export {
 export { EconomyAdmin } from "./components/economy-admin";
 export {
   getEngagementOverview,
+  getReturnOverview,
   type EngagementOverview,
   type EngagementCohort,
   type EngagementCurrWeek,
 } from "./engagement.server";
 export { EngagementAdmin } from "./components/engagement-admin";
+export { ReturnBlock } from "./components/return-block";
+export type { ReturnOverview } from "./return-overview";
 export { getWeeklyRecap, type WeeklyRecap } from "./weekly-recap.server";
 export { WeeklyRecapCard } from "./components/weekly-recap-card";
 export { getActiveEvent, claimEventBadge, type ActiveEvent } from "./events.server";
