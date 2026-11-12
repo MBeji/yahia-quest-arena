@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/shared/integrations/supabase/auth-middleware";
 import { optionalSupabaseAuth } from "@/shared/integrations/supabase/optional-auth-middleware";
@@ -8,7 +9,7 @@ import {
   PASS_THRESHOLD_PCT,
 } from "@/shared/constants/gamification";
 import type { BadgeRow, DashboardShopItem, InventoryRow } from "@/shared/types/gamification";
-import { buildBadgeCollection, type BadgeCatalogueClient } from "@/features/dashboard/badges";
+import { buildBadgeCollection } from "@/features/dashboard/badges";
 import type { DailyPlanItem } from "@/shared/types/daily-plan";
 import type { CompetencyBlocker, CompetencyMasteryRow } from "@/shared/types/competency";
 import type { WeaknessRow } from "@/shared/types/weakness";
@@ -18,63 +19,21 @@ import { failWithClientError } from "@/shared/lib/safe-error";
 import { logger } from "@/shared/lib/logger";
 import { resolveNextAction } from "@/shared/lib/next-action";
 import { readSubjectStars, type SubjectStarSummary } from "@/shared/lib/progress-stars";
+import { readLearningState, resolveAdaptiveInputs } from "@/shared/lib/adaptive-inputs";
 import {
-  readLearningState,
-  resolveAdaptiveInputs,
-  type AdaptiveRpcClient,
-} from "@/shared/lib/adaptive-inputs";
+  competencyBlockerSchema,
+  competencyMasteryRowSchema,
+  dailyPlanItemSchema,
+  parseRpcRows,
+  weaknessRowSchema,
+} from "@/shared/integrations/supabase/rpc-rows";
+import type { Database } from "@/shared/integrations/supabase/types";
 import { resolvePromotionTarget, shouldOfferPromotion } from "@/shared/lib/back-to-school";
 import { lyceeYearOf } from "./program-families";
 
+type Supabase = SupabaseClient<Database>;
+
 const DASHBOARD_ERROR_FR = "Impossible de charger le tableau de bord. Veuillez réessayer.";
-
-/**
- * Progression par matière — étude 22 R-16 (chapitres complétés / chapitres publiés).
- *
- * La RPC `get_user_parcours_progress` (migration `20260720120000`) n'est pas encore dans les
- * types Supabase générés : `supabase gen types` exige un accès DB indisponible en session et
- * le fichier est généré (hook anti-édition). Même précédent que la colonne `chapters.videos`
- * de l'étude 23 (lot 2) — narrowing local ici, types régénérés au prochain accès DB. Le
- * contrat est figé par la migration, pas par ce type.
- */
-type SubjectStarsRow = {
-  subject_id: string;
-  chapters_total: number;
-  chapters_started: number;
-  chapters_star1: number;
-  chapters_star2: number;
-  chapters_star3: number;
-  chapters_star4: number;
-  seal_star: number | null;
-  seal_at: string | null;
-  new_chapters: number;
-  new_missions: number;
-};
-
-/**
- * Vue étroite du client Supabase, limitée à cette seule RPC. Les types générés n'exposent que
- * les fonctions qu'ils connaissent, donc `rpc` refuse un nom inconnu : c'est l'unique point de
- * cast de ce fichier, et il disparaîtra à la prochaine régénération des types. L'appel reste
- * une méthode de l'objet pour ne pas perdre son `this`.
- */
-type SubjectStarsRpcClient = {
-  rpc: (
-    fn: "get_user_subject_stars",
-    args: { p_subject_ids: string[] },
-  ) => PromiseLike<{ data: SubjectStarsRow[] | null; error: { message: string } | null }>;
-};
-
-/**
- * « Révision du jour » — étude 04, lot A1.1. Même raison d'être que les deux vues étroites
- * ci-dessus : `get_daily_plan` (migration `20260721120000`) est postérieure aux types Supabase
- * générés, qui ne peuvent être régénérés sans accès DB. Le contrat est figé par la migration.
- */
-type DailyPlanRpcClient = {
-  rpc: (
-    fn: "get_daily_plan",
-    args: { p_limit: number },
-  ) => PromiseLike<{ data: DailyPlanItem[] | null; error: { message: string } | null }>;
-};
 
 /**
  * Le plan de révision du jour — LA source de la priorité 1 de `resolveNextAction` (étude 22,
@@ -90,9 +49,8 @@ type DailyPlanRpcClient = {
  * migration pas encore appliquée), le tableau de bord s'affiche sans révision plutôt que de
  * casser. Le pire cas est une priorité 1 muette, pas une page blanche.
  */
-async function fetchDailyPlan(supabase: unknown, limit: number): Promise<DailyPlanItem[]> {
-  const client = supabase as DailyPlanRpcClient;
-  const res = await client.rpc("get_daily_plan", { p_limit: limit });
+async function fetchDailyPlan(supabase: Supabase, limit: number): Promise<DailyPlanItem[]> {
+  const res = await supabase.rpc("get_daily_plan", { p_limit: limit });
 
   if (res.error) {
     logger.warn("getDashboard.dailyPlan: daily-plan RPC failed, defaulting to empty", {
@@ -100,52 +58,27 @@ async function fetchDailyPlan(supabase: unknown, limit: number): Promise<DailyPl
     });
     return [];
   }
-  return res.data ?? [];
+  return parseRpcRows(dailyPlanItemSchema, res.data, "getDashboard.dailyPlan");
 }
 
 /**
- * Carte de compétences (étude 07 lot 4, US-1) + « ce qui te bloque » (R-5). Deux RPC
- * postérieures aux types Supabase générés — contrat figé ici, comme `get_daily_plan`.
+ * « Tes points faibles » (étude 04 lot A2.1, US-2) : sans erreur active — ce qui est
+ * le cas de tout élève qui n'a pas encore joué de question taguée — la RPC rend un
+ * tableau vide et le panneau ne s'affiche pas. Un écran vide serait un reproche ;
+ * l'absence, non.
  */
-type CompetencyMapRpcClient = {
-  rpc: (
-    fn: "get_my_competency_map",
-    args: { p_subject_family: string | null },
-  ) => PromiseLike<{ data: CompetencyMasteryRow[] | null; error: { message: string } | null }>;
-};
-type CompetencyBlockersRpcClient = {
-  rpc: (
-    fn: "get_competency_blockers",
-    args: { p_competency: string },
-  ) => PromiseLike<{ data: CompetencyBlocker[] | null; error: { message: string } | null }>;
-};
-
-/**
- * « Tes points faibles » (étude 04 lot A2.1, US-2). Même contrat figé que les deux
- * au-dessus, et même dégradation : sans erreur active — ce qui est le cas de tout
- * élève qui n'a pas encore joué de question taguée — la RPC rend un tableau vide et
- * le panneau ne s'affiche pas. Un écran vide serait un reproche ; l'absence, non.
- */
-type WeaknessesRpcClient = {
-  rpc: (
-    fn: "get_my_weaknesses",
-    args: { p_limit: number },
-  ) => PromiseLike<{ data: WeaknessRow[] | null; error: { message: string } | null }>;
-};
-
 /** R-4, même esprit que le plan du jour : cinq au plus, décidé côté serveur ET ici. */
 const WEAKNESSES_LIMIT = 5;
 
-async function fetchWeaknesses(supabase: unknown): Promise<WeaknessRow[]> {
-  const client = supabase as WeaknessesRpcClient;
-  const res = await client.rpc("get_my_weaknesses", { p_limit: WEAKNESSES_LIMIT });
+async function fetchWeaknesses(supabase: Supabase): Promise<WeaknessRow[]> {
+  const res = await supabase.rpc("get_my_weaknesses", { p_limit: WEAKNESSES_LIMIT });
   if (res.error) {
     logger.warn("getDashboard.weaknesses: RPC failed, defaulting to empty", {
       error: res.error.message,
     });
     return [];
   }
-  return res.data ?? [];
+  return parseRpcRows(weaknessRowSchema, res.data, "getDashboard.weaknesses");
 }
 
 /** Seuil « compétence en échec » (R-5) : sous 50, on cherche ses prérequis faibles. */
@@ -157,16 +90,16 @@ const COMPETENCY_FAILING_THRESHOLD = 50;
  * une RPC absente (migration en cours de déploiement) laisse le tableau de bord s'afficher sans
  * la carte plutôt que de casser la page.
  */
-async function fetchCompetencyMap(supabase: unknown): Promise<CompetencyMasteryRow[]> {
-  const client = supabase as CompetencyMapRpcClient;
-  const res = await client.rpc("get_my_competency_map", { p_subject_family: null });
+async function fetchCompetencyMap(supabase: Supabase): Promise<CompetencyMasteryRow[]> {
+  // Sans argument : `p_subject_family TEXT DEFAULT NULL` — toutes les familles.
+  const res = await supabase.rpc("get_my_competency_map");
   if (res.error) {
     logger.warn("getDashboard.competencyMap: RPC failed, defaulting to empty", {
       error: res.error.message,
     });
     return [];
   }
-  return res.data ?? [];
+  return parseRpcRows(competencyMasteryRowSchema, res.data, "getDashboard.competencyMap");
 }
 
 /**
@@ -175,7 +108,7 @@ async function fetchCompetencyMap(supabase: unknown): Promise<CompetencyMasteryR
  * le plus besoin de comprendre le blocage. Rien sous le seuil → pas d'appel, pas de bloc.
  */
 async function fetchWeakestBlockers(
-  supabase: unknown,
+  supabase: Supabase,
   map: CompetencyMasteryRow[],
 ): Promise<{ blockedSlug: string | null; blockers: CompetencyBlocker[] }> {
   const weakest = map
@@ -183,26 +116,27 @@ async function fetchWeakestBlockers(
     .sort((a, b) => a.mastery - b.mastery)[0];
   if (!weakest) return { blockedSlug: null, blockers: [] };
 
-  const client = supabase as CompetencyBlockersRpcClient;
-  const res = await client.rpc("get_competency_blockers", { p_competency: weakest.slug });
+  const res = await supabase.rpc("get_competency_blockers", { p_competency: weakest.slug });
   if (res.error) {
     logger.warn("getDashboard.competencyBlockers: RPC failed, defaulting to empty", {
       error: res.error.message,
     });
     return { blockedSlug: weakest.slug, blockers: [] };
   }
-  return { blockedSlug: weakest.slug, blockers: res.data ?? [] };
+  return {
+    blockedSlug: weakest.slug,
+    blockers: parseRpcRows(competencyBlockerSchema, res.data, "getDashboard.competencyBlockers"),
+  };
 }
 
 async function fetchSubjectStars(
-  supabase: unknown,
+  supabase: Supabase,
   subjectIds: string[],
 ): Promise<Record<string, SubjectStarSummary>> {
   const stars: Record<string, SubjectStarSummary> = {};
   if (subjectIds.length === 0) return stars;
 
-  const client = supabase as SubjectStarsRpcClient;
-  const res = await client.rpc("get_user_subject_stars", { p_subject_ids: subjectIds });
+  const res = await supabase.rpc("get_user_subject_stars", { p_subject_ids: subjectIds });
 
   // Dégradation gracieuse, comme `stats` : si la RPC échoue (migration pas encore appliquée
   // pendant un déploiement), la carte s'affiche sans sceau plutôt que de casser la page.
@@ -288,7 +222,7 @@ export const getDashboard = createServerFn({ method: "GET" })
       // Les erreurs NOMMÉES (A2.1). Distinctes de la carte : celle-ci dit « fractions
       // 41 % », celles-là disent « tu additionnes les dénominateurs ».
       fetchWeaknesses(supabase),
-      readLearningState(supabase as unknown as AdaptiveRpcClient, null),
+      readLearningState(supabase, null),
     ]);
 
     if (profileRes.error)
@@ -419,7 +353,7 @@ export const getDashboard = createServerFn({ method: "GET" })
         supabase,
         subjects.map((s) => s.id),
       ),
-      resolveAdaptiveInputs(supabase as unknown as AdaptiveRpcClient, learningState),
+      resolveAdaptiveInputs(supabase, learningState),
     ]);
     const { blockedSlug: competencyBlockedSlug, blockers: competencyBlockers } = blockersOut;
 
@@ -431,13 +365,7 @@ export const getDashboard = createServerFn({ method: "GET" })
       // R-4 : proposée, jamais imposée. La condition combine la fenêtre (1ᵉʳ sept → 31 oct) et
       // « le choix de classe précède cette rentrée » — sans quoi on proposerait de changer de
       // classe à quelqu'un qui vient précisément de la choisir.
-      // `current_parcours_set_at` est créée par la migration `20260721090000` et manque donc
-      // aux types Supabase générés (`supabase gen types` exige un accès DB, et le fichier est
-      // généré). Même précédent que la RPC de progression du lot 1 : narrowing local ici,
-      // types régénérés au prochain accès DB.
-      const parcoursSetAt = (profile as { current_parcours_set_at?: string | null })
-        .current_parcours_set_at;
-      if (shouldOfferPromotion({ parcoursSetAt: parcoursSetAt ?? null })) {
+      if (shouldOfferPromotion({ parcoursSetAt: profile.current_parcours_set_at })) {
         // `resolvePromotionTarget` renvoie null pour une classe terminale (bac — Q-3), et
         // signale les années à sections au lieu d'en choisir une d'office.
         const target = resolvePromotionTarget(grades, profile.current_grade_id);
@@ -540,13 +468,7 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
       // é31 lot 2 — le CATALOGUE, pas seulement les badges obtenus. Une collection
       // qui ne montre que le déjà-gagné ne donne aucune raison de revenir : c'est
       // la carte verrouillée, avec sa condition, qui en donne une (US-3, R-13).
-      // ⚠️ `family` est postérieure aux types Supabase générés, qui ne peuvent pas
-      // être régénérés sans accès DB (même patron que les RPC de `economy.server`
-      // et `progression.server`) : la colonne est lue via un client au contrat
-      // étroit, à supprimer à la prochaine régénération des types.
-      (supabase as unknown as BadgeCatalogueClient)
-        .from("badges")
-        .select("code,name,description,rarity,icon_name,family"),
+      supabase.from("badges").select("code,name,description,rarity,icon_name,family"),
       supabase
         .from("inventory_items")
         .select(
@@ -609,12 +531,7 @@ export const getDashboardSecondary = createServerFn({ method: "GET" })
       string,
       { subjectId: string; subjectName: string; star: number; reachedAt: string }
     >();
-    for (const row of (sealsRes.data ?? []) as unknown as {
-      subject_id: string;
-      star: number;
-      reached_at: string;
-      subjects: { name_fr: string } | null;
-    }[]) {
+    for (const row of sealsRes.data ?? []) {
       if (bySubject.has(row.subject_id)) continue;
       bySubject.set(row.subject_id, {
         subjectId: row.subject_id,

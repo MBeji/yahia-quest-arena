@@ -21,22 +21,11 @@ import { logger } from "@/shared/lib/logger";
  * tag. Dégradation gracieuse — une RPC absente rend une liste vide, donc le bouton
  * ne mène nulle part plutôt que de casser l'écran de résultat.
  */
-type CompetencyExercisesRpc = {
-  rpc: (
-    fn: "get_exercises_for_competency",
-    args: { p_competency: string },
-  ) => PromiseLike<{
-    data: Array<{ exercise_id: string }> | null;
-    error: { message: string } | null;
-  }>;
-};
-
 export const getTrainingForMisconception = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .validator((d) => z.object({ competency: z.string().trim().min(1).max(120) }).parse(d))
   .handler(async ({ data, context }): Promise<{ exerciseId: string | null }> => {
-    const client = context.supabase as unknown as CompetencyExercisesRpc;
-    const res = await client.rpc("get_exercises_for_competency", {
+    const res = await context.supabase.rpc("get_exercises_for_competency", {
       p_competency: data.competency,
     });
     if (res.error) {
