@@ -199,3 +199,28 @@ export const tutorCountersSchema = z.object({
   interactions_30d: numberish,
   top_themes: z.array(tutorThemeSchema).catch([]),
 });
+
+// Examens blancs (`get_student_exam_summary`, étude 08 lot 1). Le percentile est
+// `null` sous le seuil de l'étude 02 — et le seuil voyage dans la réponse.
+const nullableNumber = z.coerce.number().nullable().catch(null);
+
+const examSummaryItemSchema = z.object({
+  examId: z.string(),
+  titleFr: z.string().catch(""),
+  titleEn: z.string().nullable().catch(null),
+  titleAr: z.string().nullable().catch(null),
+  finishedAt: z.string().catch(""),
+  scorePoints: numberish,
+  maxPoints: numberish,
+  scoreOn20: numberish,
+  candidates: numberish,
+  percentile: nullableNumber,
+});
+
+export const examSummarySchema = z.object({
+  minCandidates: numberish,
+  openExams: numberish,
+  exams: z.array(examSummaryItemSchema).catch([]),
+});
+
+export type StudentExamSummary = z.infer<typeof examSummarySchema>;

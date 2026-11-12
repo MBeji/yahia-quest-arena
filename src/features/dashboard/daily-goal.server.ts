@@ -28,24 +28,11 @@ const LOAD_ERROR_FR = "Impossible de charger ton objectif du jour.";
 /** Le refus « déjà changé aujourd'hui » remonte par ce code, pas par un message. */
 export const DAILY_GOAL_ALREADY_SET = "DAILY_GOAL_ALREADY_SET_TODAY";
 
-/**
- * `set_daily_xp_goal` est postérieure aux types Supabase générés (qui ne peuvent
- * pas être régénérés sans accès DB) : contrat figé ici, même patron que
- * `economy.server.ts`. À supprimer à la prochaine régénération.
- */
-type DailyGoalRpcClient = {
-  rpc: (
-    fn: "set_daily_xp_goal",
-    args: { p_goal: number },
-  ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
-};
-
 export const setDailyXpGoal = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .validator(z.object({ goal: z.union([z.literal(50), z.literal(100), z.literal(200)]) }))
   .handler(async ({ context, data }): Promise<{ goal: number }> => {
-    const client = context.supabase as unknown as DailyGoalRpcClient;
-    const { error } = await client.rpc("set_daily_xp_goal", { p_goal: data.goal });
+    const { error } = await context.supabase.rpc("set_daily_xp_goal", { p_goal: data.goal });
 
     if (error) {
       // Le refus du jour n'est pas une panne : il remonte tel quel pour que
@@ -57,33 +44,6 @@ export const setDailyXpGoal = createServerFn({ method: "POST" })
     }
     return { goal: data.goal };
   });
-
-/**
- * Les quatre colonnes du lot 3 sont postérieures aux types générés : contrat
- * étroit, à supprimer à la prochaine régénération (même patron que le catalogue
- * de badges).
- */
-type DailyRingClient = {
-  from: (table: "profiles") => {
-    select: (columns: string) => {
-      eq: (
-        column: string,
-        value: string,
-      ) => {
-        maybeSingle: () => PromiseLike<{
-          data: {
-            xp: number;
-            daily_xp_day: string | null;
-            daily_xp_base: number | null;
-            daily_xp_goal: number;
-            daily_xp_goal_set_on: string | null;
-          } | null;
-          error: { message: string } | null;
-        }>;
-      };
-    };
-  };
-};
 
 /**
  * é31 lot 3 (R-12) — L'ANNEAU DU JOUR, honnête.
@@ -99,7 +59,7 @@ export const getDailyRing = createServerFn({ method: "GET" })
     const { supabase, userId } = context;
     const today = getTodayUtc();
 
-    const { data, error } = await (supabase as unknown as DailyRingClient)
+    const { data, error } = await supabase
       .from("profiles")
       .select("xp,daily_xp_day,daily_xp_base,daily_xp_goal,daily_xp_goal_set_on")
       .eq("id", userId)

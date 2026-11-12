@@ -284,7 +284,7 @@ export const setAiCredential = createServerFn({ method: "POST" })
     // La vérification est une dépense RÉELLE sur la clé de la famille : elle est
     // comptée (R-7). Moins d'un millième de dollar, mais la ligne commence par
     // une dépense honnête plutôt que par rien.
-    await logAiUsage(supabaseAdmin as unknown as Parameters<typeof logAiUsage>[0], {
+    await logAiUsage(supabaseAdmin, {
       userId: null,
       payer: "family",
       credentialOwner: userId,
@@ -445,7 +445,7 @@ export const setAiModels = createServerFn({ method: "POST" })
     }
 
     // La vérification est une dépense réelle sur la clé de la famille (R-7).
-    await logAiUsage(supabaseAdmin as unknown as Parameters<typeof logAiUsage>[0], {
+    await logAiUsage(supabaseAdmin, {
       userId: null,
       payer: "family",
       credentialOwner: userId,

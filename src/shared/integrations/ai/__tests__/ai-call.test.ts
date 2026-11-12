@@ -291,10 +291,11 @@ describe("le chemin PLATEFORME (D-2, Q-5)", () => {
     expect(outcome.ok).toBe(true);
     expect(outcome.ok && outcome.payer).toBe("platform");
     // R-7 : payer=platform n'a PAS de porteur — la base le refuserait.
-    expect(called("log_ai_usage")[0].args).toMatchObject({
-      p_payer: "platform",
-      p_credential_owner: null,
-    });
+    // Le porteur est OMIS, pas envoyé à `null` : `p_credential_owner UUID DEFAULT
+    // NULL` — l'argument absent EST le NULL que la base exige ici.
+    const usage = called("log_ai_usage")[0].args as Record<string, unknown>;
+    expect(usage.p_payer).toBe("platform");
+    expect(usage.p_credential_owner).toBeUndefined();
   });
 
   it("la vérification y est TOUJOURS complète (R-18bis.4)", async () => {
