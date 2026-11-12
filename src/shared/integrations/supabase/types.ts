@@ -2245,6 +2245,33 @@ export type Database = {
         };
         Relationships: [];
       };
+      rpc_rate_limit_policies: {
+        Row: {
+          anon_global_max: number;
+          anon_source_max: number;
+          note: string | null;
+          scope: string;
+          user_max: number;
+          window_seconds: number;
+        };
+        Insert: {
+          anon_global_max: number;
+          anon_source_max: number;
+          note?: string | null;
+          scope: string;
+          user_max: number;
+          window_seconds: number;
+        };
+        Update: {
+          anon_global_max?: number;
+          anon_source_max?: number;
+          note?: string | null;
+          scope?: string;
+          user_max?: number;
+          window_seconds?: number;
+        };
+        Relationships: [];
+      };
       shop_items: {
         Row: {
           code: string;
@@ -3647,6 +3674,7 @@ export type Database = {
         Returns: string;
       };
       duel_league_tier_coins: { Args: { p_tier: string }; Returns: number };
+      enforce_rpc_rate_limit: { Args: { p_scope: string }; Returns: undefined };
       ensure_daily_weekly_goals: {
         Args: { p_user: string };
         Returns: undefined;
