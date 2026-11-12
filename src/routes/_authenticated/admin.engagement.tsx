@@ -5,7 +5,12 @@ import { Flame, Loader2 } from "lucide-react";
 import { BackLink } from "@/components/ui/back-link";
 
 import { useMyRole } from "@/features/auth";
-import { getEngagementOverview, EngagementAdmin } from "@/features/dashboard";
+import {
+  getEngagementOverview,
+  getReturnOverview,
+  EngagementAdmin,
+  ReturnBlock,
+} from "@/features/dashboard";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/admin/engagement")({
@@ -30,6 +35,15 @@ function AdminEngagementPage() {
     queryKey: ["admin-engagement-overview"],
     enabled: isAdmin,
     queryFn: () => fetchOverview(),
+  });
+
+  // Étude 40 lot 0 — lecture SÉPARÉE : le bloc « Le retour » a ses propres états, et sa panne
+  // n'emporte pas le reste de la console.
+  const fetchReturn = useServerFn(getReturnOverview);
+  const returnQuery = useQuery({
+    queryKey: ["admin-return-overview"],
+    enabled: isAdmin,
+    queryFn: () => fetchReturn(),
   });
 
   if (role !== null && !isAdmin) {
@@ -70,7 +84,18 @@ function AdminEngagementPage() {
             Impossible de charger les indicateurs d'engagement.
           </p>
         )}
-        {overviewQuery.data && <EngagementAdmin data={overviewQuery.data} />}
+        {overviewQuery.data && (
+          <EngagementAdmin
+            data={overviewQuery.data}
+            returnBlock={
+              <ReturnBlock
+                data={returnQuery.data}
+                isPending={returnQuery.isPending}
+                isError={returnQuery.isError}
+              />
+            }
+          />
+        )}
       </div>
     </div>
   );

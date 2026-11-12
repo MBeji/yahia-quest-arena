@@ -64,6 +64,12 @@ const ETUDE_31_CLOSED_LIST: ProductEventName[] = [
   // validée sans compte et la porte du quiz vue. Consommateur : la fiche D-1 du relevé.
   "public_practice_started",
   "public_gate_shown",
+  // Étude 40 lot 0 — sixième amendement écrit : la mesure du retour. Deux câblés (`visit_first`,
+  // `visit_returned`), deux déclarés pour leur lot (`install_invite` lot 3, `content_shared` lot 4).
+  "visit_first",
+  "visit_returned",
+  "install_invite",
+  "content_shared",
 ];
 
 const SRC = join(process.cwd(), "src");

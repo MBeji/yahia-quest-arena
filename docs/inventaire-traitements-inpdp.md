@@ -149,6 +149,22 @@ efface les deux clés sur-le-champ, comme le fait vider les données du site. La
 part vers la mesure est le clic sur la carte (`resume_card_clicked` : la surface et un nombre de
 jours — ni le chapitre, ni le lecteur). Code : `src/shared/lib/anon-continuity.ts`.
 
+**Mémoire de visite — hors base, hors serveur** (étude 40 lot 0, 2026-11-12). Même statut que la
+mémoire ci-dessus : une clé du `localStorage`, que le serveur ne reçoit jamais.
+
+| Clé (`localStorage`) | Contenu                                                                                   | Remarque                                                                                                                                                                               |
+| -------------------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `na9ra.visit`        | Deux jours civils (fuseau de Tunis) : `first` = première visite, `last` = dernière visite | Dit à l'appareil s'il est déjà venu. **Ni heure, ni page, ni identifiant.** Écrite pour tout navigateur, avec ou sans session. Sans limite de durée ; effacée avec les données du site |
+
+Aucune identité, aucun identifiant de personne ou d'appareil. Ce qui part vers la mesure n'est pas
+la mémoire mais son **verdict**, au plus une fois par jour et par appareil : `visit_first` (le genre
+de page d'arrivée, application installée ou non) ou `visit_returned` (une **tranche** de jours —
+« 1 », « 2-7 », « 8-30 », « 31+ », jamais le nombre ni la date —, session présente ou non, source
+d'entrée, application installée ou non). Stockage indisponible ⇒ aucun événement. Le paramètre
+d'adresse `?src=` qui porte la source d'entrée est retiré de l'adresse affichée dès sa lecture.
+Code : `src/shared/lib/visit-memory.ts`, `src/shared/lib/entry-source.ts`,
+`src/shared/lib/visit-beacon.ts`.
+
 ### 3.6 Étage IA — **dormant**, tables créées, aucune donnée
 
 `ai_credentials` (clé d'API d'une famille, chiffrée AES-256-GCM à clé maîtresse

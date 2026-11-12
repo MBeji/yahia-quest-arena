@@ -210,10 +210,22 @@ describe("EngagementAdmin — l'engagement ne se lit jamais seul", () => {
     for (const entry of PRODUCT_EVENT_CATALOGUE) {
       expect(events, `${entry.name} absent de la carte`).toContain(entry.name);
     }
-    // Depuis le lot 5, les douze événements sont câblés : plus aucune mention
-    // « pas encore émis ». Le MARQUEUR, lui, reste tenu par
-    // `product-events.test.ts`, qui échoue si un événement déclaré non câblé est
-    // émis quelque part — ou l'inverse.
-    expect(events).not.toContain("pas encore émis");
+    // Un événement DÉCLARÉ mais pas encore câblé le dit, avec le lot qui le câblera — c'est
+    // tout l'objet de la carte. Depuis l'étude 40 lot 0, deux le sont à dessein
+    // (`install_invite`, `content_shared`). Le MARQUEUR reste tenu par
+    // `product-events.test.ts`, qui échoue si un événement déclaré non câblé est émis
+    // quelque part — ou l'inverse.
+    const pending = PRODUCT_EVENT_CATALOGUE.filter((entry) => !entry.live);
+    expect(events.split("pas encore émis").length - 1).toBe(pending.length);
+    for (const entry of pending) {
+      expect(events).toContain(`(pas encore émis : ${entry.note})`);
+    }
+  });
+
+  it("⭐ le bloc « Le retour » (é40) vient APRÈS la métrique de garde, jamais avant (R-1)", () => {
+    render(<EngagementAdmin data={overview()} returnBlock={<div data-testid="slot-retour" />} />);
+    const guard = screen.getByTestId("eng-learning");
+    const slot = screen.getByTestId("slot-retour");
+    expect(guard.compareDocumentPosition(slot) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 });
