@@ -55,6 +55,14 @@ export class PracticePage {
   get leaveLink(): Locator {
     return this.page.locator('a[href^="/matiere/"]').first();
   }
+  /** The quiz-lock screen's own title — present ONLY while the mission is locked behind its quiz. */
+  get lockTitle(): Locator {
+    return this.page.getByTestId("lock-mission-title");
+  }
+  /** The quiz-lock « re-read the lesson » link — its href carries the chapter id. */
+  get lockLessonLink(): Locator {
+    return this.page.locator('main a[href^="/chapitre/"]').first();
+  }
   /** The quiz-lock « take the quiz » CTA (anon → public quiz flow). */
   get takeQuizLink(): Locator {
     return this.page.locator('a[href^="/exercice/"]').first();
