@@ -23,6 +23,7 @@ import {
 } from "./quest.recall";
 import type { AttemptReviewItem } from "./quest.recall";
 import { isUnrestrictedViewer, openEveryGate } from "./quest.access";
+import { resolveSubjectParcours, type SubjectParcours } from "./quest.parcours.server";
 import {
   arbitrateQuestOpenAnswers,
   canPlayOpenQuestions,
@@ -331,35 +332,13 @@ export const getSubject = createServerFn({ method: "GET" })
     // (étude 15 lot 7, D-6 : the kicker shows the CLASS, not the RPG attribute, and
     // the hub gets a way back up to /niveau). Resolved for EVERYONE (anon included);
     // a resolution failure degrades to "no anchor", never a broken page.
-    type ParcoursAnchorRow = {
-      id: string;
-      name_fr: string;
-      name_en: string | null;
-      name_ar: string | null;
-      is_premium: boolean;
-    };
-    let parcoursRow: ParcoursAnchorRow | null = null;
+    let parcoursRow: SubjectParcours | null = null;
     try {
-      const themeId = (subj.data as { theme_id?: string | null }).theme_id ?? null;
-      const gradeId = (subj.data as { grade_id?: string | null }).grade_id ?? null;
-      if (themeId) {
-        // resolve_subject_parcours matches grade_id with IS NOT DISTINCT FROM, so a
-        // null grade is valid (grade-agnostic themes resolve their own parcours); the
-        // generated arg type narrows p_grade to string, hence the cast on the nullable.
-        const parcoursIdRes = await supabase.rpc("resolve_subject_parcours", {
-          p_theme: themeId,
-          p_grade: gradeId as string,
-        });
-        const parcoursId = (parcoursIdRes as { data?: string | null }).data ?? null;
-        if (parcoursId) {
-          const { data: p } = await supabase
-            .from("parcours")
-            .select("id,name_fr,name_en,name_ar,is_premium")
-            .eq("id", parcoursId)
-            .maybeSingle();
-          parcoursRow = (p as ParcoursAnchorRow | null) ?? null;
-        }
-      }
+      // Une seule définition de la dérivation, partagée avec la quête (é38 lot 2).
+      parcoursRow = await resolveSubjectParcours(
+        supabase,
+        subj.data as { theme_id?: string | null; grade_id?: string | null },
+      );
     } catch (err) {
       logger.warn("quest.getSubject: parcours anchor fetch failed", {
         subjectId: data.subjectId,

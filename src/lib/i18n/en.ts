@@ -960,6 +960,9 @@ export const en: TranslationKeys = {
     celebrateDashboardCta: "Go to my dashboard",
     welcomeCoins: "+{coins} welcome coins",
     welcomeFirstQuestCta: "Start my first quest",
+    quickPickTitle: "This chapter is in {parcours} — is that your class?",
+    quickPickCta: "Choose",
+    quickPickLater: "Later",
   },
   cycles: {
     primaire: "Primary",
