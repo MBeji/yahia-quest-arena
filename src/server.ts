@@ -71,13 +71,30 @@ function isCatastrophicSsrErrorBody(body: string, responseStatus: number): boole
 // Le framework avale un throw du handler en réponse 500 normale, de corps
 // {"status":500,"statusText":"","unhandled":true,"message":"HTTPError"} — un
 // try/catch seul ne se déclenche jamais pour ceux-là.
-async function normalizeCatastrophicSsrResponse(response: Response): Promise<Response> {
+async function normalizeCatastrophicSsrResponse(
+  response: Response,
+  request: Request,
+): Promise<Response> {
   if (response.status < 500) return response;
   const contentType = response.headers.get("content-type") ?? "";
   if (!contentType.includes("application/json")) return response;
 
   const body = await response.clone().text();
   if (!isCatastrophicSsrErrorBody(body, response.status)) {
+    return response;
+  }
+
+  // Le client est parti (onglet fermé, navigation interrompue) : Node coupe la
+  // lecture du corps par « Error: aborted » (ECONNRESET), que le framework avale
+  // en ce même 500. Ce n'est PAS une panne du rendu, et personne ne lira la
+  // réponse — la compter au niveau erreur remplirait le journal, et l'alerte qui
+  // le lit, à chaque chargement abandonné. Mesuré le 2026-11-12 : un POST coupé
+  // en plein corps produisait une ligne d'erreur par requête.
+  if (request.signal.aborted) {
+    consumeLastCapturedError();
+    logger.info("SSR request abandoned by the client", {
+      path: new URL(request.url).pathname,
+    });
     return response;
   }
 
@@ -203,7 +220,7 @@ export default {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      return await normalizeCatastrophicSsrResponse(response, request);
     } catch (error) {
       logger.error("Unhandled server fetch error", {
         path: new URL(request.url).pathname,
