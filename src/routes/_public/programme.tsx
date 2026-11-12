@@ -69,6 +69,7 @@ function ProgrammePage() {
       <div className="mx-auto max-w-md px-6 py-20">
         <EmptyState
           icon={CloudOff}
+          tone="error"
           title={t.errors.programmeLoadFailed}
           action={
             <Button variant="outline" onClick={() => refetch()}>

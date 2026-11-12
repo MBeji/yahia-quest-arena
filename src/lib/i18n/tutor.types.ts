@@ -21,7 +21,6 @@ export interface TutorTranslations {
   helpful: string;
   notHelpful: string;
   rated: string;
-  close: string;
   /** Servi depuis le pot commun : aucune énergie dépensée (R-15.2). */
   fromCache: string;
   /**

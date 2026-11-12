@@ -11,6 +11,8 @@ vi.mock("../../quest.lesson.server", () => ({
 }));
 vi.mock("@/lib/i18n", () => ({
   useT: () => ({
+    // La croix de la visionneuse lit son nom dans le catalogue.
+    common: { close: "Fermer" },
     public: {
       reader: {
         manuelTitle: "Pages du manuel",

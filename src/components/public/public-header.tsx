@@ -8,6 +8,10 @@ import { AccountHud } from "@/components/account-hud";
 import { GuideButton } from "@/components/guide/guide-button";
 import { useStickyHeaderOffset } from "@/components/public/use-sticky-header-offset";
 
+/** Un lien de la rangée de navigation sous `lg` : 44 px de haut, la garde tactile. */
+const PHONE_NAV_LINK =
+  "inline-flex min-h-11 items-center rounded-lg px-2.5 text-sm font-medium text-muted-foreground transition hover:text-foreground";
+
 /**
  * Header of the public (Référence register) shell. Sober, content-first, and
  * AUTH-AWARE: a signed-in visitor — who now reaches public content via the
@@ -43,7 +47,9 @@ export function PublicHeader() {
       data-public-header
       className="sticky top-0 z-30 border-b border-border bg-card/90 pt-[env(safe-area-inset-top)] backdrop-blur print:hidden"
     >
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-3 sm:gap-3 sm:px-6">
+      {/* Sous 360 px (iPhone SE 1re génération, petits Android) la barre débordait déjà de
+          6 à 11 px : marge et marque y sont resserrées pour que tout tienne sur la ligne. */}
+      <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-2 max-[359px]:gap-1 max-[359px]:px-2 sm:gap-3 sm:px-6 sm:py-3">
         <div className="flex items-center gap-3 sm:gap-6">
           {/* Brand = home. AUTH-AWARE destination: a signed-in visitor who reached
               this public shell via the converged « Découvrir » nav is sent back to
@@ -52,12 +58,17 @@ export function PublicHeader() {
               "not logged in" (issue #312). Logged-out visitors still go to `/`. */}
           <Link
             to={isAuthed ? "/dashboard" : "/"}
-            className="flex items-baseline gap-2"
-            aria-label={isAuthed ? t.public.header.account : t.public.header.homeAria}
+            // 44 px de haut : la marque est le premier lien que le pouce cherche.
+            className="flex min-h-11 items-center gap-2"
           >
-            <span className="font-display text-lg font-bold tracking-tight whitespace-nowrap text-primary">
+            <span className="font-display text-lg font-bold tracking-tight whitespace-nowrap text-primary max-[359px]:text-base">
               Na9ra Nal3ab
             </span>
+            {/* Le nom accessible COMMENCE par la marque visible, puis dit où mène le lien.
+                Un `aria-label` la remplaçait : « Mon espace » pour un connecté, et en arabe
+                « نقرا نلعب — الرئيسية » — dans les deux cas le texte affiché n'y était plus,
+                donc « clique Na9ra Nal3ab » ne trouvait rien (WCAG 2.5.3). */}
+            <span className="sr-only">{isAuthed ? t.public.header.account : t.common.home}</span>
             <span
               lang="ar"
               dir="rtl"
@@ -116,7 +127,7 @@ export function PublicHeader() {
                 to="/login"
                 onClick={() => rememberCurrentPage()}
                 data-testid="header-login"
-                className="hidden rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground sm:inline-block"
+                className="hidden min-h-11 items-center rounded-lg px-3 text-sm font-medium text-muted-foreground transition hover:text-foreground sm:inline-flex"
               >
                 {t.public.header.login}
               </Link>
@@ -127,7 +138,7 @@ export function PublicHeader() {
                   trackProductEvent("account_invite_clicked", { surface: "header" });
                 }}
                 data-testid="header-signup"
-                className="rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90 sm:px-4"
+                className="inline-flex min-h-11 items-center rounded-lg bg-primary px-3 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90 max-[359px]:px-2 sm:px-4"
               >
                 {t.public.header.signup}
               </Link>
@@ -140,33 +151,26 @@ export function PublicHeader() {
           buttons on ONE line overflowed the viewport by 38 px (nightly #1219). Below
           `lg` they live in this compact wrapping row instead. Login joins it below `sm`
           only — from `sm` up the top bar shows it. */}
+      {/* Cibles tactiles : chaque lien fait 44 px de haut (ils en faisaient 36). Pour que
+          l'en-tête ne GROSSISSE pas — il occupait déjà 168 px sur un téléphone de 839 —
+          la hauteur vient des liens eux-mêmes : plus de marge verticale ni d'interligne
+          sur la rangée, et la barre du haut est resserrée sous `sm`. Mesuré à 390 px :
+          168 → 150 px, toutes les cibles à 44. */}
       <nav
-        className="flex flex-wrap items-center gap-x-1 gap-y-0.5 border-t border-border px-4 py-1.5 sm:px-6 lg:hidden"
+        className="flex flex-wrap items-center gap-x-1 border-t border-border px-4 sm:px-6 lg:hidden"
         aria-label={t.public.header.navAria}
       >
-        <Link
-          to="/programme"
-          className="rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
-        >
+        <Link to="/programme" className={PHONE_NAV_LINK}>
           {t.public.header.programme}
         </Link>
-        <Link
-          to="/extras"
-          className="rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
-        >
+        <Link to="/extras" className={PHONE_NAV_LINK}>
           {t.public.header.extras}
         </Link>
-        <Link
-          to="/test-de-niveau"
-          className="rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
-        >
+        <Link to="/test-de-niveau" className={PHONE_NAV_LINK}>
           {t.public.header.placement}
         </Link>
         {showParentTracking && (
-          <Link
-            to="/suivi"
-            className="rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
-          >
+          <Link to="/suivi" className={PHONE_NAV_LINK}>
             {t.public.header.parentTracking}
           </Link>
         )}
@@ -175,7 +179,7 @@ export function PublicHeader() {
             to="/login"
             onClick={() => rememberCurrentPage()}
             data-testid="header-login-phone"
-            className="rounded-lg sm:hidden px-2.5 py-2 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+            className={`${PHONE_NAV_LINK} sm:hidden`}
           >
             {t.public.header.login}
           </Link>
