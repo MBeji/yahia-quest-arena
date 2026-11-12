@@ -47,14 +47,15 @@ export function usePush() {
     })();
   }, []);
 
-  const enable = useCallback(async () => {
-    if (!isPushSupported() || !VAPID_PUBLIC_KEY) return;
+  /** Rend `true` si le push est armé à la sortie — l'appelant peut enchaîner (é08 lot 2). */
+  const enable = useCallback(async (): Promise<boolean> => {
+    if (!isPushSupported() || !VAPID_PUBLIC_KEY) return false;
     setBusy(true);
     try {
       const permission = await Notification.requestPermission();
       if (permission !== "granted") {
         setState(permission === "denied" ? "denied" : "default");
-        return;
+        return false;
       }
       const reg = await navigator.serviceWorker.ready;
       const sub = await reg.pushManager.subscribe({
@@ -75,6 +76,7 @@ export function usePush() {
       // compte que la bascule effective, dans les deux sens (le côté serveur en
       // journalise la vérité durable dans `push_consent_events`).
       trackProductEvent("push_optin");
+      return true;
     } finally {
       setBusy(false);
     }

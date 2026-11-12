@@ -1814,6 +1814,27 @@ export type Database = {
         };
         Relationships: [];
       };
+      parent_digest_prefs: {
+        Row: {
+          enriched_digest: boolean;
+          first_enriched_sent_at: string | null;
+          parent_user_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          enriched_digest?: boolean;
+          first_enriched_sent_at?: string | null;
+          parent_user_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          enriched_digest?: boolean;
+          first_enriched_sent_at?: string | null;
+          parent_user_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       parent_student_links: {
         Row: {
           created_at: string;
@@ -3363,6 +3384,10 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: number;
       };
+      admin_parent_digest_overview: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
       admin_pending_beta_count: {
         Args: Record<PropertyKey, never>;
         Returns: number;
@@ -3986,6 +4011,7 @@ export type Database = {
           trend: string;
         }[];
       };
+      get_parent_digest_summary: { Args: { p_parent: string }; Returns: Json };
       get_placement_session: {
         Args: { p_session_id: string; p_token?: string };
         Returns: Json;
@@ -4690,6 +4716,7 @@ export type Database = {
         Args: { p_student: string; p_target: number };
         Returns: Json;
       };
+      set_parent_digest_pref: { Args: { p_enabled: boolean }; Returns: Json };
       set_parent_weekly_goal: {
         Args: { p_student: string; p_target: number };
         Returns: Json;
